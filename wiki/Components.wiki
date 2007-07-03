@@ -11,3 +11,7 @@ Please list any components that you would like to work on.
 
 == Game Logic: ==
   * kenzotomita
+  * cuypers.cedric
+
+== Hand Evaluator: ==
+  * cuypers.cedric
