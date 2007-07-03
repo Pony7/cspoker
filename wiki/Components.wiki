@@ -9,3 +9,5 @@ Please list any components that you would like to work on.
 == Communication: ==
   * guyvdb
 
+== Game Logic: ==
+  * kenzotomita
