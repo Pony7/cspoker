@@ -1,0 +1,7 @@
+#summary What does the future hold?
+#labels Featured
+
+= Timeline: =
+
+  * July 18th: Kenzo returns from holiday and wants to do most of the coding.
+
