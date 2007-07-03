@@ -20,7 +20,7 @@ package game;
  * All the rounds a game can be in.
  * 
  * @author Kenzo
- *
+ * @edit	River and showdown round added and edited by Cedric
  */
 public enum Round {
 	
@@ -40,13 +40,20 @@ public enum Round {
 	
 	TURN_ROUND{
 		public Round getNextRound(){
-			return FINAL_ROUND;
+			return RIVER_ROUND;
 		}
 		
 	}, 
 	
 	
-	FINAL_ROUND{
+	RIVER_ROUND{
+		public Round getNextRound(){
+			return SHOWDOWN_ROUND;
+		}
+		
+	},
+	
+	SHOWDOWN_ROUND{
 		public Round getNextRound(){
 			return null;
 		}
