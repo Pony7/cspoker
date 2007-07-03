@@ -16,6 +16,78 @@
 
 package game.cards;
 
-public class CardImpl {
+/**
+ * 
+ * @author Kenzo
+ *
+ */
+public class CardImpl implements Card, Comparable<CardImpl>{
+	
+	/**********************************************************
+	 * Variables
+	 **********************************************************/
+	
+	private final  Rank rank;
+	
+	private final Suit suit;
+	
+	/**********************************************************
+	 * Constructor
+	 **********************************************************/
+	
+	public CardImpl(Suit suit, Rank rank){
+		this.rank = rank;
+		this.suit = suit;
+	}
+	
+	/**********************************************************
+	 * Methods
+	 **********************************************************/
 
+
+	public Rank getRank() {
+		return rank;
+	}
+
+	public Suit getSuit() {
+		return suit;
+	}
+
+	
+	/**********************************************************
+	 * Equals, HashCode and CompareTo
+	 **********************************************************/
+
+	@Override
+	public int hashCode() {
+		final int PRIME = 31;
+		int result = 1;
+		result = PRIME * result + ((rank == null) ? 0 : rank.hashCode());
+		result = PRIME * result + ((suit == null) ? 0 : suit.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		final CardImpl other = (CardImpl) obj;
+		
+		if (rank!=other.rank){
+			return false;
+		}
+		if (suit!=other.suit){
+			return false;
+		}
+		return true;
+	}
+	
+	public int compareTo(CardImpl o) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 }
