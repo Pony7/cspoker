@@ -19,13 +19,30 @@ package game.deck;
 import game.cards.Card;
 
 public class CardDeck {
+	/**
+	 * The sequence of cards in this deck
+	 */
+	private Card[] card;
 	
 	/**
-	 * Returns the card on top of the deck.
-	 *
+	 * Draw the card on the top of this deck.
+	 * @post	The second card in the deck becomes the new top card
+	 * @result	The top card from the deck is returned
+	 * @throws	IllegalStateException
+	 * 			There must be at least one card in the deck
+	 * 			| getDeckSize()<=0
 	 */
-	public Card getCard(){
-		return null;
+	public Card drawCard(){
+		if(getDeckSize()<=0)
+			throw new IllegalStateException();
+		Card topcard=card[0];
+		
+		Card[] editedDeck=new Card[getDeckSize()-1];
+		for(int j=0;j<editedDeck.length;j++){
+			editedDeck[j]=card[j+1];
+		}
+		this.card=editedDeck;
+		return topcard;
 	}
 	
 	/**
@@ -42,5 +59,21 @@ public class CardDeck {
 	 */
 	private void shuffle(){
 		
+	}
+	/**
+	 * Returns the number of cards left in this deck
+	 */
+	public int getDeckSize(){
+		return card.length;
+	}
+	/**
+	 * Returns the textual representation of this deck
+	 */
+	public String toString(){
+		String result="";
+		for(int j=0;j<getDeckSize();j++){
+			result=result+"/n"+card[j].toString();
+		}
+		return result;
 	}
 }
