@@ -22,7 +22,9 @@ public class CardDeck {
 	/**
 	 * The sequence of cards in this deck
 	 */
-	private Card[] card;
+	private Card[] cards;
+	
+	private int lastCardDealt;
 	
 	/**
 	 * Draw the card on the top of this deck.
@@ -33,16 +35,10 @@ public class CardDeck {
 	 * 			| getDeckSize()<=0
 	 */
 	public Card drawCard(){
-		if(getDeckSize()<=0)
+		if(lastCardDealt>=getDeckSize())
 			throw new IllegalStateException();
-		Card topcard=card[0];
-		
-		Card[] editedDeck=new Card[getDeckSize()-1];
-		for(int j=0;j<editedDeck.length;j++){
-			editedDeck[j]=card[j+1];
-		}
-		this.card=editedDeck;
-		return topcard;
+		lastCardDealt++;
+		return cards[lastCardDealt-1];
 	}
 	
 	/**
@@ -51,7 +47,8 @@ public class CardDeck {
 	 *
 	 */
 	public void newDeal(){
-		
+		lastCardDealt=0;
+		shuffle();
 	}
 	
 	/**
@@ -64,7 +61,7 @@ public class CardDeck {
 	 * Returns the number of cards left in this deck
 	 */
 	public int getDeckSize(){
-		return card.length;
+		return cards.length;
 	}
 	/**
 	 * Returns the textual representation of this deck
@@ -72,7 +69,7 @@ public class CardDeck {
 	public String toString(){
 		String result="";
 		for(int j=0;j<getDeckSize();j++){
-			result=result+"/n"+card[j].toString();
+			result=result+"/n"+cards[j].toString();
 		}
 		return result;
 	}

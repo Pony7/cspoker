@@ -15,6 +15,8 @@
  */
 package game.cards.hand;
 
+import game.cards.Card;
+
 /**
  * Enumeration containing all the possible types of hands and their ranking
  * and textual representation
@@ -30,6 +32,9 @@ public enum HandType {
 		public int getRanking(){
 			return 0;
 		}
+		public int getNumberOfDeterminingCards(){
+			return 1;
+		}
 	},
 	PAIR{
 		public String toString(){
@@ -38,13 +43,19 @@ public enum HandType {
 		public int getRanking(){
 			return 1;
 		}
+		public int getNumberOfDeterminingCards(){
+			return 2;
+		}
 	},
 	DOUBLE_PAIR{
 		public String toString(){
 			return "double pair";
 		}
 		public int getRanking(){
-			return 0;
+			return 2;
+		}
+		public int getNumberOfDeterminingCards(){
+			return 4;
 		}
 	},
 	THREE_OF_A_KIND{
@@ -52,7 +63,32 @@ public enum HandType {
 			return "three of a kind";
 		}
 		public int getRanking(){
-			return 0;
+			return 3;
+		}
+		public int getNumberOfDeterminingCards(){
+			return 3;
+		}
+	},
+	STRAIGHT{
+		public String toString(){
+			return "straight";
+		}
+		public int getRanking(){
+			return 4;
+		}
+		public int getNumberOfDeterminingCards(){
+			return 5;
+		}
+	},
+	FLUSH{
+		public String toString(){
+			return "flush";
+		}
+		public int getRanking(){
+			return 5;
+		}
+		public int getNumberOfDeterminingCards(){
+			return 5;
 		}
 	},
 	FULL_HOUSE{
@@ -60,15 +96,32 @@ public enum HandType {
 			return "full house";
 		}
 		public int getRanking(){
-			return 0;
+			return 6;
+		}
+		public int getNumberOfDeterminingCards(){
+			return 5;
 		}
 	},
 	FOUR_OF_A_KIND{
 		public String toString(){
-			return "four a kind";
+			return "four of a kind";
 		}
 		public int getRanking(){
-			return 0;
+			return 7;
+		}
+		public int getNumberOfDeterminingCards(){
+			return 4;
+		}
+	},
+	STRAIGHT_FLUSH{
+		public String toString(){
+			return "flush";
+		}
+		public int getRanking(){
+			return 8;
+		}
+		public int getNumberOfDeterminingCards(){
+			return 5;
 		}
 	};
 	/**
@@ -81,4 +134,8 @@ public enum HandType {
 	 * 			| result >=0
 	 */
 	public abstract int getRanking();
+	/**
+	 * Returns the number of cards that determine that hand type
+	 */
+	public abstract int getNumberOfDeterminingCards();
 }
