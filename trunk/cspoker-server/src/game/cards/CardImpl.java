@@ -16,12 +16,14 @@
 
 package game.cards;
 
+import java.util.Comparator;
+
 /**
  * 
  * @author Kenzo
  *
  */
-public class CardImpl implements Card, Comparable<CardImpl>{
+public class CardImpl implements Card, Comparable<Card>{
 	
 	/**********************************************************
 	 * Variables
@@ -85,9 +87,22 @@ public class CardImpl implements Card, Comparable<CardImpl>{
 		}
 		return true;
 	}
-	
-	public int compareTo(CardImpl o) {
-		// TODO Auto-generated method stub
+	/**
+	 * Compares this card to a given other card by it's rank
+	 * @param other
+	 * 			the given other car
+	 */
+	public int compareTo(Card other) {
+		if(other.getRank().getValue()>this.getRank().getValue())
+			return -1;
+		if(this.getRank().getValue()>other.getRank().getValue())
+			return 1;
 		return 0;
+	}
+	/**
+	 * Returns a textual representation of this card
+	 */
+	public String toString(){
+		return getSuit().toString()+" "+getRank().toString();
 	}
 }
