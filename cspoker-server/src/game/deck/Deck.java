@@ -17,14 +17,21 @@
 package game.deck;
 
 import game.cards.Card;
+import game.cards.hand.Hand;
 
-public class CardDeck {
+public class Deck {
+	/**
+	 * The total number of cards in a deck
+	 */
+	public static final int TOTAL_NB_CARDS=52;
 	/**
 	 * The sequence of cards in this deck
 	 */
 	private Card[] cards;
-	
-	private int lastCardDealt;
+	/**
+	 * The position of the last card dealt
+	 */
+	private int position;
 	
 	/**
 	 * Draw the card on the top of this deck.
@@ -35,10 +42,10 @@ public class CardDeck {
 	 * 			| getDeckSize()<=0
 	 */
 	public Card drawCard(){
-		if(lastCardDealt>=getDeckSize())
+		if(position>=getDeckSize())
 			throw new IllegalStateException();
-		lastCardDealt++;
-		return cards[lastCardDealt-1];
+		position++;
+		return cards[position-1];
 	}
 	
 	/**
@@ -47,7 +54,7 @@ public class CardDeck {
 	 *
 	 */
 	public void newDeal(){
-		lastCardDealt=0;
+		position=0;
 		shuffle();
 	}
 	
@@ -72,5 +79,11 @@ public class CardDeck {
 			result=result+"/n"+cards[j].toString();
 		}
 		return result;
+	}
+	/**
+	 * Returns the position of the top card
+	 */
+	public int getTopCardIndex() {
+		return position;
 	}
 }

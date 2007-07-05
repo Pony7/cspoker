@@ -25,6 +25,17 @@ import game.cards.Card;
  */
 public enum HandType {
 
+	UNKNOWN{
+		public String toString(){
+			return "unknown";
+		}
+		public int getRanking(){
+			return -1;
+		}
+		public int getNumberOfDeterminingCards(){
+			return 0;
+		}
+	},
 	HIGH_CARD{
 		public String toString(){
 			return "high card";

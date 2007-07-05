@@ -18,6 +18,10 @@ package game.cards;
 
 public interface Card {
 	
+	public final static int NUM_SUITS = 4;
+	   public final static int NUM_RANKS = 13;
+	   public final static int NUM_CARDS = 52;
+
 	public Rank getRank();
 	
 	public Suit getSuit();
