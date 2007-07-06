@@ -8,10 +8,13 @@ Please list any components that you would like to work on.
 
 == Communication: ==
   * guyvdb
+  * Jef M
+
 
 == Game Logic: ==
   * kenzotomita
   * cuypers.cedric
+  * Jef M
 
 == Hand Evaluator: ==
   * cuypers.cedric
