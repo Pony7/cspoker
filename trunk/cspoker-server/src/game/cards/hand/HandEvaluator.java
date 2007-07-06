@@ -16,7 +16,6 @@
 package game.cards.hand;
 
 import game.cards.Card;
-import game.deck.Deck;
 
 /**
  * A class for evaluating and comparing hands
@@ -38,7 +37,6 @@ public class HandEvaluator {
 	   public static Hand bestFiveOfSeven(Hand hand){ 
 		   Hand five = new Hand();
 		   Hand bestHand = new Hand();
-		    int bestValue = -1;
 		    for(int i = 0; i<hand.getNBCards()-1; i++){
 		      for(int j = i+1; j<hand.getNBCards(); j++){
 		        // build a 5 card hand skipping cards i and j
@@ -48,7 +46,7 @@ public class HandEvaluator {
 		        }
 		       
 		        // keep it if it is the new winner
-		        if(compareHands(five,bestHand)==1){
+		        if(compareFiveCardHands(five,bestHand)==1){
 		          bestHand=new Hand(five);  
 		        }
 		      }
@@ -56,7 +54,28 @@ public class HandEvaluator {
 		    return bestHand;
 		  }
 	   /**
-	    * Compares two hands against each other.
+	    * Compares two hands of minimum 5 cards against each other
+	    * @param h1
+	    * 			the first hand
+	    * @param h2
+	    * 			the second hand
+	    * @return 1 = first hand is best, -1 = second hand is best, 0 = tie
+	    */
+	   public static int compareHands(Hand h1,Hand h2){
+		   Hand best1,best2;
+		   if(h1.getNBCards()!=5){
+			   best1=bestFiveOfSeven(h1);
+		   }else
+			   best1=h1;
+		   if(h2.getNBCards()!=5){
+			   best2=bestFiveOfSeven(h2);
+		   }else
+			   best2=h2;
+		   
+		   return compareFiveCardHands(best1,best2);
+	   }
+	   /**
+	    * Compares two hands of 5 cards against each other.
 	    * 
 	    * @param h1
 	    *           The first hand
@@ -64,13 +83,14 @@ public class HandEvaluator {
 	    *           The second hand
 	    * @return 1 = first hand is best, -1 = second hand is best, 0 = tie
 	    */
-	   public static int compareHands(Hand h1, Hand h2) {
-	      Hand best1=HandEvaluator.bestFiveOfSeven(h1);
-	      Hand best2=HandEvaluator.bestFiveOfSeven(h2);
-		  best1.sort();
-	      best2.sort();
-	      int rank1= best1.getHandType().getRanking();
-	      int rank2=best2.getHandType().getRanking();
+	   public static int compareFiveCardHands(Hand h1, Hand h2) {
+		   
+		   if(h1.getNBCards() !=5 || h2.getNBCards()!=5)
+			   throw new IllegalArgumentException();
+		  h1.sort();
+	      h2.sort();
+	      int rank1= HandTypeCalculator.calculateHandType(h1).getRanking();
+	      int rank2=HandTypeCalculator.calculateHandType(h2).getRanking();
 	      
 	      if(rank1>rank2)
 	    	  return 1;
@@ -80,37 +100,37 @@ public class HandEvaluator {
 	    	  switch (rank1) {
 			case 0:
 				//HIGH_CARD
-				return compareHighCardHands(best1,best2);
+				return compareHighCardHands(h1,h2);
 			case 1:
 				//PAIR
-				return comparePairHands(best1,best2);
+				return comparePairHands(h1,h2);
 			case 2:
 				//DOUBLE_PAIR
-				return compareDoublePairHands(best1,best2);
+				return compareDoublePairHands(h1,h2);
 			case 3:
 				//THREE_OF_A_KIND
-				return compareThreeOfAKindHands(best1,best2);
+				return compareThreeOfAKindHands(h1,h2);
 			case 4:
 				//STRAIGHT
-				return compareStraightHands(best1,best2);
+				return compareStraightHands(h1,h2);
 			case 5:
 				//FLUSH
-				return compareFlushHands(best1,best2);
+				return compareFlushHands(h1,h2);
 			case 6:
 				//FULL_HOUSE
-				return compareFullHouseHands(best1,best2);
+				return compareFullHouseHands(h1,h2);
 			case 7:
 				//FOUR_OF_A_KIND
-				return compareFourOfAKindHands(best1,best2);
+				return compareFourOfAKindHands(h1,h2);
 			case 8:
 				//STRAIGHT_FLUSH
-				return compareStraightFlushHands(best1,best2);
+				return compareStraightFlushHands(h1,h2);
 			}
 	      }
 	      //cannot occur
 	      throw new IllegalStateException();
 	   }
-   private static int compareDoublePairHands(Hand h1, Hand h2) {
+	   public static int compareDoublePairHands(Hand h1, Hand h2) {
 	   Card[] card1=new Card[4];
 		Card[] card2=new Card[4];
 		
@@ -139,10 +159,10 @@ public class HandEvaluator {
 		   
 		   return HandEvaluator.compareHighCardHands(temp1,temp2);
 	}
-private static int compareStraightFlushHands(Hand h1, Hand h2) {
+   public static int compareStraightFlushHands(Hand h1, Hand h2) {
 	   	return compareStraightHands(h1,h2);
    }
-	private static int compareFourOfAKindHands(Hand h1, Hand h2) {
+public static int compareFourOfAKindHands(Hand h1, Hand h2) {
 		Card[] four1=new Card[4];
 		   Card[] four2=new Card[4];
 		   four1=HandTypeCalculator.getDeterminatingCards(h1);
@@ -167,7 +187,7 @@ private static int compareStraightFlushHands(Hand h1, Hand h2) {
 		   
 		   return HandEvaluator.compareHighCardHands(temp1,temp2);
 	}
-	private static int compareFullHouseHands(Hand h1, Hand h2) {
+	public static int compareFullHouseHands(Hand h1, Hand h2) {
 		Card[] card1=new Card[5];
 		Card[] card2=new Card[5];
 		
@@ -184,20 +204,20 @@ private static int compareStraightFlushHands(Hand h1, Hand h2) {
 			   return -1;
 		return 0;
 	}
-	private static int compareFlushHands(Hand h1, Hand h2) {
+	public static int compareFlushHands(Hand h1, Hand h2) {
 		return compareHighCardHands(h1,h2);
 	}
-	private static int compareStraightHands(Hand h1, Hand h2) {
-		h1.sort();
-		h2.sort();
+	public static int compareStraightHands(Hand h1, Hand h2) {
+		Card[] cards1=HandTypeCalculator.getDeterminatingCards(h1);
+		Card[] cards2=HandTypeCalculator.getDeterminatingCards(h2);
 		
-		if(h1.getCard(0).getRank().getValue()>h2.getCard(0).getRank().getValue())
+		if(cards1[0].getRank().getValue()>cards2[0].getRank().getValue())
 			return 1;
-		if(h1.getCard(0).getRank().getValue()<h2.getCard(0).getRank().getValue())
+		if(cards1[0].getRank().getValue()<cards2[0].getRank().getValue())
 			return -1;
 		return 0;
 	}
-	private static int compareThreeOfAKindHands(Hand h1, Hand h2) {
+	public static int compareThreeOfAKindHands(Hand h1, Hand h2) {
 		Card[] three1=new Card[3];
 		   Card[] three2=new Card[3];
 		   three1=HandTypeCalculator.getDeterminatingCards(h1);
@@ -232,12 +252,15 @@ private static int compareStraightFlushHands(Hand h1, Hand h2) {
 	   public static int compareHighCardHands(Hand h1,Hand h2){
 		   if(h1.getNBCards()!=h2.getNBCards())
 			   throw new IllegalArgumentException();
-		   h1.sort();
-		   h2.sort();
-		   for(int j=0;j<5;j++){
-			   if(h1.getCard(j).getRank().getValue()>h2.getCard(j).getRank().getValue())
+		  
+		   Hand temp1=new Hand(h1);
+		   Hand temp2=new Hand(h2);
+		   temp1.sort();
+		   temp2.sort();
+		   for(int j=0;j<Math.min(h1.getNBCards(),5);j++){
+			   if(temp1.getCard(j).getRank().getValue()>temp2.getCard(j).getRank().getValue())
 				   return 1;
-			   if(h1.getCard(j).getRank().getValue()<h2.getCard(j).getRank().getValue())
+			   if(temp1.getCard(j).getRank().getValue()<temp2.getCard(j).getRank().getValue())
 				   return -1;
 		   }
 		   return 0;
