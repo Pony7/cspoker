@@ -42,7 +42,7 @@ public class Hand {
     */
    public Hand() {
       cards = new CardImpl[MAX_CARDS];
-      updateType();
+      //updateType();
    }
    /**
     * Duplicate an existing hand.
@@ -93,7 +93,7 @@ public class Hand {
 	   if(isFull() || this.contains(card))
 		   throw new IllegalArgumentException();
 	   cards[getNBCards()]=card;
-	   updateType();
+	   //updateType();
    }
    /**
     * Checks wether this hand is full of cards

@@ -27,4 +27,6 @@ public interface Card {
 	public Suit getSuit();
 	
 	public String toString();
+
+	public boolean equalRank(Card card);
 }
