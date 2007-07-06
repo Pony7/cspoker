@@ -1,3 +1,18 @@
+/**
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *  
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ */
 package game.cards.hand;
 
 import game.cards.Card;
@@ -84,16 +99,61 @@ public class TestHandEvaluator extends TestCase {
 //		
 //		hand2.makeEmpty();
 //	}
-	public void testGetPairHands() {
+	public void testPairHand() {
 		hand1.addCard(new CardImpl(Suit.SPADES,Rank.FOUR));
 		hand1.addCard(new CardImpl(Suit.DIAMONDS,Rank.FOUR));
 		hand1.addCard(new CardImpl(Suit.HEARTS,Rank.ACE));
 		hand1.addCard(new CardImpl(Suit.SPADES,Rank.FIVE));
 		hand1.addCard(new CardImpl(Suit.SPADES,Rank.EIGHT));
 		
+		assertTrue(HandTypeCalculator.checkForPair(hand1));
+		
 		Card[] pairCards=HandTypeCalculator.getPairCards(hand1);
 		assertTrue(pairCards.length==2);
-		assertTrue(pairCards[0].equals(pairCards[1]));
+		assertTrue(pairCards[0].equalRank(pairCards[1]));
 		assertTrue(pairCards[0].getRank().getValue()==4);
+		
+		
+		hand2.addCard(new CardImpl(Suit.SPADES,Rank.FOUR));
+		hand2.addCard(new CardImpl(Suit.DIAMONDS,Rank.SIX));
+		hand2.addCard(new CardImpl(Suit.HEARTS,Rank.ACE));
+		hand2.addCard(new CardImpl(Suit.SPADES,Rank.FIVE));
+		hand2.addCard(new CardImpl(Suit.SPADES,Rank.EIGHT));
+		
+		assertFalse(HandTypeCalculator.checkForPair(hand2));
+		try {
+			HandTypeCalculator.getPairCards(hand2);
+			assert(false);
+		} catch (IllegalArgumentException e) {
+		}
+	}
+	public void testDoublePairHand(){
+		hand1.addCard(new CardImpl(Suit.SPADES,Rank.FOUR));
+		hand1.addCard(new CardImpl(Suit.DIAMONDS,Rank.FOUR));
+		hand1.addCard(new CardImpl(Suit.HEARTS,Rank.FIVE));
+		hand1.addCard(new CardImpl(Suit.SPADES,Rank.FIVE));
+		hand1.addCard(new CardImpl(Suit.SPADES,Rank.EIGHT));
+		
+		assertTrue(HandTypeCalculator.checkForDoublePair(hand1));
+		
+		Card[] pairCards=HandTypeCalculator.getDoublePairCards(hand1);
+		assertTrue(pairCards.length==4);
+		assertTrue(pairCards[0].equalRank(pairCards[1]));
+		assertTrue(pairCards[2].equalRank(pairCards[3]));
+		assertTrue(pairCards[0].getRank().getValue()==5);
+		assertTrue(pairCards[2].getRank().getValue()==4);
+		
+		hand2.addCard(new CardImpl(Suit.SPADES,Rank.FOUR));
+		hand2.addCard(new CardImpl(Suit.DIAMONDS,Rank.SIX));
+		hand2.addCard(new CardImpl(Suit.HEARTS,Rank.ACE));
+		hand2.addCard(new CardImpl(Suit.SPADES,Rank.FIVE));
+		hand2.addCard(new CardImpl(Suit.SPADES,Rank.EIGHT));
+		
+		assertFalse(HandTypeCalculator.checkForDoublePair(hand2));
+		try {
+			HandTypeCalculator.getDoublePairCards(hand2);
+			assert(false);
+		} catch (IllegalArgumentException e) {
+		}
 	}
 }

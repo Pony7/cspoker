@@ -105,4 +105,8 @@ public class CardImpl implements Card, Comparable<Card>{
 	public String toString(){
 		return getSuit().toString()+" "+getRank().toString();
 	}
+
+	public boolean equalRank(Card card) {
+		return this.getRank().getValue()==card.getRank().getValue();
+	}
 }
