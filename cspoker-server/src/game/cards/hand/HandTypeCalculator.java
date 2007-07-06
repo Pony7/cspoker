@@ -16,6 +16,8 @@
 package game.cards.hand;
 
 import game.cards.Card;
+import game.cards.Rank;
+import game.cards.Suit;
 
 public class HandTypeCalculator {
 
@@ -33,14 +35,15 @@ public class HandTypeCalculator {
 			best=hand;
 		}
 		if(checkForPair(best)){
-			if(checkForDoublePair(best))
-				return HandType.DOUBLE_PAIR;
-			if(checkForThreeOfAKind(best))
-				return HandType.THREE_OF_A_KIND;
+			if(checkForFourOfAKind(best))
+				return HandType.FOUR_OF_A_KIND;
 			if(checkForFullHouse(best))
 				return HandType.FULL_HOUSE;
-			if(checkForFourOfAKind(best))
-				return HandType.FULL_HOUSE;
+			if(checkForThreeOfAKind(best))
+				return HandType.THREE_OF_A_KIND;
+			if(checkForDoublePair(best))
+				return HandType.DOUBLE_PAIR;
+			return HandType.PAIR;
 		}else{
 			boolean flush=checkForFlush(best);
 			boolean straight=checkForStraigth(best);
@@ -63,7 +66,7 @@ public class HandTypeCalculator {
 	 */
 	public static boolean checkForPair(Hand hand) {
 		if(hand.getNBCards()<2)
-			throw new IllegalArgumentException();
+			return false;
 		boolean pairFound=false;
 		for(int j=0;j<hand.getNBCards();j++){
 			for(int i=j+1;i<hand.getNBCards();i++){
@@ -81,7 +84,7 @@ public class HandTypeCalculator {
 	 */
 	public static boolean checkForDoublePair(Hand hand) {
 		if(hand.getNBCards()<4)
-			throw new IllegalArgumentException();
+			return false;
 		boolean doublePairFound=false;
 		boolean singlePairFound=false;
 		Card firstPairCard=null;
@@ -111,9 +114,17 @@ public class HandTypeCalculator {
 	 */
 	public static boolean checkForThreeOfAKind(Hand hand) {
 		if(hand.getNBCards()<3)
-			throw new IllegalArgumentException();
-		// TODO Auto-generated method stub
-		return false;
+			return false;
+		boolean threeOfAKindFound=false;
+		for(int j=0;j<hand.getNBCards();j++){
+			for(int i=j+1;i<hand.getNBCards();i++){
+				for(int k=i+1;k<hand.getNBCards();k++){
+					if(hand.getCard(j).equalRank(hand.getCard(i)) && hand.getCard(k).equalRank(hand.getCard(i)) )
+						threeOfAKindFound=true;
+				}
+			}
+		}
+		return threeOfAKindFound;
 	}
 	/**
 	 * Checks if the given hand contains a straigth 
@@ -122,9 +133,50 @@ public class HandTypeCalculator {
 	 */
 	public static boolean checkForStraigth(Hand hand) {
 		if(hand.getNBCards()<5)
-			throw new IllegalArgumentException();
-		// TODO Auto-generated method stub
-		return false;
+			return false;
+		boolean straightFound=false;
+		boolean prevRankOk=true;
+		Hand temp=new Hand(hand);
+		temp.sort();
+		int i=0;
+		for(int j=0;j<temp.getNBCards();j++){
+			i=j;
+			while(i-j<5 && i<temp.getNBCards()-1 && prevRankOk){
+				prevRankOk=(temp.getCard(i).getRank().getValue()==temp.getCard(i+1).getRank().getValue()+1);
+				i++;
+			}
+			if(prevRankOk && i-j+1==5){
+				straightFound=true;
+				break;
+			}
+			prevRankOk=true;
+		}
+		if(!straightFound){
+			Card tempCard=null;
+			for(int k=0;k<Math.round(temp.getNBCards()/2);k++){
+				tempCard=temp.getCard(k);
+				//place ace at the back of the hand
+				if(tempCard.getRank().equals(Rank.ACE)){
+					temp.removeCard(tempCard);
+					temp.sort();
+					temp.addCard(tempCard);
+				}
+			}
+			int l=0;
+			for(int j=0;j<temp.getNBCards();j++){
+				l=j;
+				while(l-j<5 && l<temp.getNBCards()-1 && prevRankOk){
+					prevRankOk=(temp.getCard(l).getRank().getValue()==(temp.getCard(l+1).getRank().getValue()%13)+1);
+					l++;
+				}
+				if(prevRankOk && l-j+1==5){
+					straightFound=true;
+					break;
+				}
+				prevRankOk=true;
+			}
+		}
+		return straightFound;
 	}
 	/**
 	 * Checks if the given hand contains a flush, being 5 cards with equal suit
@@ -133,8 +185,19 @@ public class HandTypeCalculator {
 	 */
 	public static boolean checkForFlush(Hand hand) {
 		if(hand.getNBCards()<5)
-			throw new IllegalArgumentException();
-		// TODO Auto-generated method stub
+			return false;
+		int suitCount=0;
+		Suit flushSuit;
+		for(int i=0;i<hand.getNBCards();i++){
+			flushSuit=hand.getCard(i).getSuit();
+			for(int j=0;j<hand.getNBCards();j++){
+				if(j!= i && hand.getCard(j).getSuit().equals(flushSuit))
+					suitCount++;
+				if(suitCount==4)
+					return true;
+			}
+			suitCount=0;
+		}
 		return false;
 	}
 	/**
@@ -145,9 +208,35 @@ public class HandTypeCalculator {
 	 */
 	public static boolean checkForFullHouse(Hand hand) {
 		if(hand.getNBCards()<5)
-			throw new IllegalArgumentException();
-		// TODO Auto-generated method stub
-		return false;
+			return false;
+		boolean fullHouseFound;
+		boolean threeOfAKindFound=false;
+		boolean pairFound=false;
+		Card threeOfAKindCard=null;
+		
+		for(int j=0;j<hand.getNBCards();j++){
+			for(int i=j+1;i<hand.getNBCards();i++){
+				for(int k=i+1;k<hand.getNBCards();k++){
+					if(hand.getCard(j).equalRank(hand.getCard(i)) && hand.getCard(k).equalRank(hand.getCard(i)) ){
+						threeOfAKindFound=true;
+						threeOfAKindCard=hand.getCard(j);
+					}
+						
+				}
+			}
+		}
+		if(threeOfAKindFound){
+			for(int j=0;j<hand.getNBCards();j++){
+				for(int i=j+1;i<hand.getNBCards();i++){
+					if(hand.getCard(j).equalRank(hand.getCard(i)) && !hand.getCard(j).equalRank(threeOfAKindCard)){
+						pairFound=true;
+					}
+				}
+			}
+		}
+		
+		fullHouseFound= threeOfAKindFound && pairFound;
+		return fullHouseFound;
 	}
 	/**
 	 * Checks if the given hand contains 4 cards with an equal rank
@@ -156,9 +245,20 @@ public class HandTypeCalculator {
 	 */
 	public static boolean checkForFourOfAKind(Hand hand) {
 		if(hand.getNBCards()<4)
-			throw new IllegalArgumentException();
-		// TODO Auto-generated method stub
-		return false;
+			return false;
+		boolean fourOfAKindFound=false;
+		for(int j=0;j<hand.getNBCards();j++){
+			for(int i=j+1;i<hand.getNBCards();i++){
+				for(int k=i+1;k<hand.getNBCards();k++){
+					for(int l=k+1;l<hand.getNBCards();l++){
+						if(hand.getCard(j).equalRank(hand.getCard(i)) && hand.getCard(k).equalRank(hand.getCard(i))
+								&& hand.getCard(k).equalRank(hand.getCard(l)))
+							fourOfAKindFound=true;
+					}
+				}
+			}
+		}
+		return fourOfAKindFound;
 	}
 	/**
 	 * Checks if the given hand contains a straight flush
@@ -167,8 +267,13 @@ public class HandTypeCalculator {
 	 */
 	public static boolean checkForStraightFlush(Hand hand) {
 		if(hand.getNBCards()<5)
-			throw new IllegalArgumentException();
-		return checkForFlush(hand) && checkForStraigth(hand);
+			return false;
+		if(checkForFlush(hand) && checkForStraigth(hand)){
+			Card [] temp1=HandTypeCalculator.getStraightCard(hand);
+			Card[] temp2=HandTypeCalculator.getFlushCard(hand);
+			return temp1[0].getSuit().equals(temp2[0].getSuit());
+		}
+		return false;
 	}
 	/**
 	 * Returns the determinating cards for a given hand
@@ -184,7 +289,76 @@ public class HandTypeCalculator {
 			return getThreeOfAKindCards(hand);
 		if(type.equals(HandType.FOUR_OF_A_KIND))
 			return getFourOfAKindCards(hand);
-		return hand.getCards();
+		if(type.equals(HandType.FULL_HOUSE))
+			return getFullHouseCards(hand);
+		if(type.equals(HandType.STRAIGHT)|| type.equals(HandType.STRAIGHT_FLUSH))
+			return getStraightCard(hand);
+		if(type.equals(HandType.FLUSH))
+			return getFlushCard(hand);
+		return null;
+	}
+	public static Card[] getFlushCard(Hand hand) {
+		int suitCount=0;
+		Suit flushSuit;
+		for(int i=0;i<hand.getNBCards();i++){
+			flushSuit=hand.getCard(i).getSuit();
+			for(int j=0;j<hand.getNBCards();j++){
+				if(j!= i && hand.getCard(j).getSuit().equals(flushSuit))
+					suitCount++;
+				if(suitCount==5){
+					Card[] result={hand.getCard(i)};
+					return result;
+				}
+			}
+		}
+		return null;
+	}
+	public static Card[] getStraightCard(Hand hand) {
+		Hand temp=new Hand(hand);
+		temp.sort();
+		Card tempCard=null;
+		for(int i=0;i<Math.round(temp.getNBCards()/2);i++){
+			tempCard=temp.getCard(i);
+			//place ace at the back of the hand
+			if(tempCard.getRank().equals(Rank.ACE)){
+				temp.removeCard(tempCard);
+				temp.sort();
+				temp.addCard(tempCard);
+			}
+		}
+		Card[] result={temp.getCard(0)};
+		return result;
+	}
+	public static Card[] getFullHouseCards(Hand hand) {
+		if(!checkForFullHouse(hand))
+			throw new IllegalArgumentException();
+		
+		Card threeOfAKindCard1=null;
+		Card threeOfAKindCard2=null;
+		Card threeOfAKindCard3=null;
+		for(int j=0;j<hand.getNBCards();j++){
+			for(int i=j+1;i<hand.getNBCards();i++){
+				for(int k=i+1;k<hand.getNBCards();k++){
+					if(hand.getCard(j).equalRank(hand.getCard(i)) && hand.getCard(k).equalRank(hand.getCard(i))){
+						threeOfAKindCard1=hand.getCard(j);
+						threeOfAKindCard2=hand.getCard(i);
+						threeOfAKindCard3=hand.getCard(k);
+					}
+				}
+			}
+		}
+		Card pairCard1=null;
+		Card pairCard2=null;
+		for(int j=0;j<hand.getNBCards();j++){
+			for(int i=j+1;i<hand.getNBCards();i++){
+				if(hand.getCard(j).equalRank(hand.getCard(i)) && !hand.getCard(j).equalRank(threeOfAKindCard1)){
+					pairCard1=hand.getCard(j);
+					pairCard2=hand.getCard(i);
+				}
+			}
+		}
+		Card[] result={threeOfAKindCard1,threeOfAKindCard2,threeOfAKindCard3,pairCard1,pairCard2};
+		return result;
 	}
 	/**
 	 * Returns the 4 cards of equal rank of the given four-of-a-kind hand
@@ -194,8 +368,24 @@ public class HandTypeCalculator {
 	public static Card[] getFourOfAKindCards(Hand hand) {
 		if(!checkForFourOfAKind(hand))
 			throw new IllegalArgumentException();
-		// TODO Auto-generated method stub
-		return null;
+		Card card1 = null,card2 = null,card3 = null,card4 = null;
+		for(int j=0;j<hand.getNBCards();j++){
+			for(int i=j+1;i<hand.getNBCards();i++){
+				for(int k=i+1;k<hand.getNBCards();k++){
+					for(int l=k+1;l<hand.getNBCards();l++){
+						if(hand.getCard(j).equalRank(hand.getCard(i)) && hand.getCard(k).equalRank(hand.getCard(i))
+								&& hand.getCard(k).equalRank(hand.getCard(l))){
+							card1=hand.getCard(j);
+							card2=hand.getCard(i);
+							card3=hand.getCard(k);
+							card4=hand.getCard(l);
+						}
+					}
+				}
+			}
+		}
+		Card[] result={card1,card2,card3,card4};
+		return result;
 	}
 	/**
 	 * Returns the 3 cards of equal rank of the given three-of-a-kind hand
@@ -205,8 +395,20 @@ public class HandTypeCalculator {
 	public static Card[] getThreeOfAKindCards(Hand hand) {
 		if(!checkForThreeOfAKind(hand))
 			throw new IllegalArgumentException();
-		// TODO Auto-generated method stub
-		return null;
+		Card card1=null,card2=null,card3=null;
+		for(int j=0;j<hand.getNBCards();j++){
+			for(int i=j+1;i<hand.getNBCards();i++){
+				for(int k=i+1;k<hand.getNBCards();k++){
+					if(hand.getCard(j).equalRank(hand.getCard(i)) && hand.getCard(k).equalRank(hand.getCard(i)) ){
+						card1=hand.getCard(j);
+						card2=hand.getCard(i);
+						card3=hand.getCard(k);
+					}
+				}
+			}
+		}
+		Card[] result={card1,card2,card3};
+		return result;
 	}
 	/**
 	 * Returns the two pairs of a given double-pair hand

@@ -15,8 +15,6 @@
  */
 package game.cards.hand;
 
-import java.util.Arrays;
-
 import game.cards.Card;
 import game.cards.CardImpl;
 
@@ -32,11 +30,6 @@ public class Hand {
 	 * Private array containing the cards of this hand
 	 */
    private Card[] cards;
-   
-   /**
-    * The type of this hand
-    */
-   private HandType type;
    /**
     * Creates a new empty hand
     */
@@ -51,8 +44,7 @@ public class Hand {
     */
    public Hand(Hand h) {
       cards = new CardImpl[MAX_CARDS];
-      cards=h.getCards();
-      type=h.getHandType();
+      cards=h.getCards().clone();
    }
    /**
     * Returns the cards in this hand
@@ -77,7 +69,6 @@ public class Hand {
     */
    public void makeEmpty() {
 	   cards = new CardImpl[MAX_CARDS];
-	   updateType();
    }
    /**
     * Adds the given card to this hand if there is room
@@ -93,7 +84,6 @@ public class Hand {
 	   if(isFull() || this.contains(card))
 		   throw new IllegalArgumentException();
 	   cards[getNBCards()]=card;
-	   //updateType();
    }
    /**
     * Checks wether this hand is full of cards
@@ -163,7 +153,6 @@ public class Hand {
 	   
 	   cards[index]=cards[finalCardIndex];
 	   cards[finalCardIndex]=null;
-	   updateType();
    }
    /**
     * Sorts the cards in this hand by their rank from highest to lowest rank
@@ -199,16 +188,15 @@ public class Hand {
 	   return result;
    }
    /**
-    * Returns the type of this hand
+    * Swaps the cards at the given indices
+    * @param index1
+    * 			the first given index
+    * @param index2
+    * 			the second given index
     */
-   public HandType getHandType(){
-	   return type;
+   public void swapCardsAt(int index1,int index2){
+	   Card temp=cards[index2];
+	   cards[index2]=cards[index1];
+	   cards[index1]=temp;
    }
-   /**
-    * Updates the type of this hand
-    */
-   private void updateType(){
-	   type=HandTypeCalculator.calculateHandType(this);
-   }
-
 }

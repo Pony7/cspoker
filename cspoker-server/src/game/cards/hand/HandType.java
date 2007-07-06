@@ -15,7 +15,6 @@
  */
 package game.cards.hand;
 
-import game.cards.Card;
 
 /**
  * Enumeration containing all the possible types of hands and their ranking

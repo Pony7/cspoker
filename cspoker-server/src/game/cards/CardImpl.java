@@ -16,7 +16,6 @@
 
 package game.cards;
 
-import java.util.Comparator;
 
 /**
  * 
@@ -106,6 +105,11 @@ public class CardImpl implements Card, Comparable<Card>{
 		return getSuit().toString()+" "+getRank().toString();
 	}
 
+	/**
+	 * Checks if this card and the given card of an equal rank
+	 * @param	card
+	 * 			the given card to check with
+	 */
 	public boolean equalRank(Card card) {
 		return this.getRank().getValue()==card.getRank().getValue();
 	}
