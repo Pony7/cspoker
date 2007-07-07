@@ -187,16 +187,4 @@ public class Hand {
 	   }
 	   return result;
    }
-   /**
-    * Swaps the cards at the given indices
-    * @param index1
-    * 			the first given index
-    * @param index2
-    * 			the second given index
-    */
-   public void swapCardsAt(int index1,int index2){
-	   Card temp=cards[index2];
-	   cards[index2]=cards[index1];
-	   cards[index1]=temp;
-   }
 }

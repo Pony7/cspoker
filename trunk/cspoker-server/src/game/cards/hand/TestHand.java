@@ -84,9 +84,6 @@ public class TestHand extends TestCase {
 		assertFalse(new CardImpl(Suit.DIAMONDS,Rank.DEUCE).equals(new CardImpl(Suit.CLUBS,Rank.DEUCE)));
 		assertTrue(new CardImpl(Suit.CLUBS,Rank.DEUCE).equals(new CardImpl(Suit.CLUBS,Rank.DEUCE)));
 		
-		System.out.println("voor sort "+"\n"+hand1.toString());
-		hand1.sort();
-		System.out.println("na sort "+"\n"+hand1.toString());
 		
 	}
 }

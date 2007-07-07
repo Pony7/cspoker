@@ -34,23 +34,50 @@ public class HandEvaluator {
 	    * @return	the resulting hand consists of 5 cards
 	    * 			| result.getNBCards()==5
 	    */
-	   public static Hand bestFiveOfSeven(Hand hand){ 
+	   public static Hand getBestHand(Hand hand){ 
+		   if(hand.getNBCards()<5)
+			   return hand;
 		   Hand five = new Hand();
 		   Hand bestHand = new Hand();
-		    for(int i = 0; i<hand.getNBCards()-1; i++){
-		      for(int j = i+1; j<hand.getNBCards(); j++){
-		        // build a 5 card hand skipping cards i and j
-		        for(int m = 0; m<hand.getNBCards(); m++){
-		          if(m != i && m!= j) 
-		        	  five.addCard(hand.getCard(m)); 
-		        }
-		       
-		        // keep it if it is the new winner
-		        if(compareFiveCardHands(five,bestHand)==1){
-		          bestHand=new Hand(five);  
-		        }
-		      }
-		    }
+		   if(hand.getNBCards()==7){
+			   for(int i = 0; i<hand.getNBCards(); i++){
+				      for(int j = i+1; j<hand.getNBCards(); j++){
+				        // build a 5 card hand skipping cards i and j
+				        for(int m = 0; m<hand.getNBCards(); m++){
+				          if(m != i && m!= j) 
+				        	  five.addCard(hand.getCard(m)); 
+				        }
+				        // keep it if it is the new winner
+				        if(bestHand.getNBCards()==0){
+				        	bestHand=new Hand(five);
+				        }else{
+				        	if(compareFiveCardHands(five,bestHand)==1){
+						          bestHand=new Hand(five);  
+						        }
+				        }
+				        five.makeEmpty();
+				      }
+				      
+				    }
+		   }
+		   if(hand.getNBCards()==6){
+			   for(int i = 0; i<hand.getNBCards(); i++){
+				        for(int m = 0; m<hand.getNBCards(); m++){
+				          if(m != i) 
+				        	  five.addCard(hand.getCard(m)); 
+				        }
+				        // keep it if it is the new winner
+				        if(bestHand.getNBCards()==0){
+				        	bestHand=new Hand(five);
+				        }else{
+				        	if(compareFiveCardHands(five,bestHand)==1){
+						          bestHand=new Hand(five);  
+						        }
+				        }
+				        five.makeEmpty();
+				      }
+		   }
+		  
 		    return bestHand;
 		  }
 	   /**
@@ -64,11 +91,11 @@ public class HandEvaluator {
 	   public static int compareHands(Hand h1,Hand h2){
 		   Hand best1,best2;
 		   if(h1.getNBCards()!=5){
-			   best1=bestFiveOfSeven(h1);
+			   best1=getBestHand(h1);
 		   }else
 			   best1=h1;
 		   if(h2.getNBCards()!=5){
-			   best2=bestFiveOfSeven(h2);
+			   best2=getBestHand(h2);
 		   }else
 			   best2=h2;
 		   
@@ -85,12 +112,13 @@ public class HandEvaluator {
 	    */
 	   public static int compareFiveCardHands(Hand h1, Hand h2) {
 		   
-		   if(h1.getNBCards() !=5 || h2.getNBCards()!=5)
-			   throw new IllegalArgumentException();
-		  h1.sort();
-	      h2.sort();
-	      int rank1= HandTypeCalculator.calculateHandType(h1).getRanking();
-	      int rank2=HandTypeCalculator.calculateHandType(h2).getRanking();
+
+		  Hand temp1=new Hand(h1);
+		  Hand temp2=new Hand(h2);
+		  temp1.sort();
+	      temp2.sort();
+	      int rank1= HandTypeCalculator.calculateHandType(temp1).getRanking();
+	      int rank2=HandTypeCalculator.calculateHandType(temp2).getRanking();
 	      
 	      if(rank1>rank2)
 	    	  return 1;

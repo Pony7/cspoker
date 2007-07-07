@@ -40,7 +40,6 @@ public class TestHandEvaluator extends TestCase {
 		hand2.addCard(new CardImpl(Suit.SPADES,Rank.FOUR));
 		hand2.addCard(new CardImpl(Suit.SPADES,Rank.EIGHT));
 		
-		System.out.println(HandTypeCalculator.calculateHandType(hand1).toString());
 		assertTrue(HandTypeCalculator.calculateHandType(hand1).equals(HandType.HIGH_CARD));
 		assertTrue(HandTypeCalculator.calculateHandType(hand2).equals(HandType.HIGH_CARD));
 		assertTrue(HandEvaluator.compareHands(hand1,hand2)==1);
@@ -433,6 +432,104 @@ public class TestHandEvaluator extends TestCase {
 		//hand1 =hand 2
 		hand2=new Hand(hand1);
 		assertTrue(HandTypeCalculator.calculateHandType(hand2).equals(HandType.STRAIGHT_FLUSH));
+		assertTrue(HandEvaluator.compareHands(hand1,hand2)==0);
+	}
+	
+	public void testSixCardHand(){
+		hand1.addCard(new CardImpl(Suit.SPADES,Rank.FOUR));
+		hand1.addCard(new CardImpl(Suit.SPADES,Rank.FIVE));
+		hand1.addCard(new CardImpl(Suit.SPADES,Rank.SEVEN));
+		hand1.addCard(new CardImpl(Suit.SPADES,Rank.SIX));
+		hand1.addCard(new CardImpl(Suit.SPADES,Rank.EIGHT));
+		hand1.addCard(new CardImpl(Suit.SPADES,Rank.ACE));
+		
+		assertTrue(HandTypeCalculator.checkForStraigth(hand1));
+		assertTrue(HandTypeCalculator.checkForFlush(hand1));
+		assertTrue(HandTypeCalculator.checkForStraightFlush(hand1));
+		assertTrue(HandTypeCalculator.calculateHandType(hand1).equals(HandType.STRAIGHT_FLUSH));
+	
+		hand2.addCard(new CardImpl(Suit.HEARTS,Rank.FOUR));
+		hand2.addCard(new CardImpl(Suit.SPADES,Rank.FOUR));
+		hand2.addCard(new CardImpl(Suit.CLUBS,Rank.FOUR));
+		hand2.addCard(new CardImpl(Suit.SPADES,Rank.SIX));
+		hand2.addCard(new CardImpl(Suit.SPADES,Rank.EIGHT));
+		hand2.addCard(new CardImpl(Suit.SPADES,Rank.ACE));
+		
+		assertTrue(HandTypeCalculator.calculateHandType(hand2).equals(HandType.THREE_OF_A_KIND));
+		
+		//test hand1>hand 2
+		assertTrue(HandEvaluator.compareHands(hand1,hand2)==1);
+		
+		//test hand1<hand 2
+		
+		hand1.makeEmpty();
+		hand1.addCard(new CardImpl(Suit.CLUBS,Rank.DEUCE));
+		hand1.addCard(new CardImpl(Suit.SPADES,Rank.DEUCE));
+		hand1.addCard(new CardImpl(Suit.HEARTS,Rank.SEVEN));
+		hand1.addCard(new CardImpl(Suit.DIAMONDS,Rank.SEVEN));
+		hand1.addCard(new CardImpl(Suit.SPADES,Rank.EIGHT));
+		hand1.addCard(new CardImpl(Suit.SPADES,Rank.ACE));
+		
+		assertTrue(HandEvaluator.compareHands(hand1,hand2)==-1);
+		
+		//test hand1==hand2
+		hand1.makeEmpty();
+		hand1.addCard(new CardImpl(Suit.HEARTS,Rank.FOUR));
+		hand1.addCard(new CardImpl(Suit.SPADES,Rank.FOUR));
+		hand1.addCard(new CardImpl(Suit.CLUBS,Rank.FOUR));
+		hand1.addCard(new CardImpl(Suit.SPADES,Rank.SEVEN));
+		hand1.addCard(new CardImpl(Suit.SPADES,Rank.EIGHT));
+		hand1.addCard(new CardImpl(Suit.SPADES,Rank.ACE));
+		
+		assertTrue(HandEvaluator.compareHands(hand1,hand2)==0);
+	}
+	public void testSevenCardHand(){
+		hand1.addCard(new CardImpl(Suit.HEARTS,Rank.FOUR));
+		hand1.addCard(new CardImpl(Suit.SPADES,Rank.FIVE));
+		hand1.addCard(new CardImpl(Suit.SPADES,Rank.SEVEN));
+		hand1.addCard(new CardImpl(Suit.SPADES,Rank.SIX));
+		hand1.addCard(new CardImpl(Suit.SPADES,Rank.EIGHT));
+		hand1.addCard(new CardImpl(Suit.DIAMONDS,Rank.ACE));
+		hand1.addCard(new CardImpl(Suit.SPADES,Rank.NINE));
+		
+		assertTrue(HandTypeCalculator.calculateHandType(hand1).equals(HandType.STRAIGHT_FLUSH));
+	
+		hand2.addCard(new CardImpl(Suit.HEARTS,Rank.FOUR));
+		hand2.addCard(new CardImpl(Suit.SPADES,Rank.FOUR));
+		hand2.addCard(new CardImpl(Suit.CLUBS,Rank.FOUR));
+		hand2.addCard(new CardImpl(Suit.SPADES,Rank.SIX));
+		hand2.addCard(new CardImpl(Suit.SPADES,Rank.EIGHT));
+		hand2.addCard(new CardImpl(Suit.SPADES,Rank.ACE));
+		hand2.addCard(new CardImpl(Suit.CLUBS,Rank.KING));
+		
+		assertTrue(HandTypeCalculator.calculateHandType(hand2).equals(HandType.THREE_OF_A_KIND));
+		
+		//test hand1>hand 2
+		assertTrue(HandEvaluator.compareHands(hand1,hand2)==1);
+		
+		//test hand1<hand 2
+		
+		hand1.makeEmpty();
+		hand1.addCard(new CardImpl(Suit.CLUBS,Rank.DEUCE));
+		hand1.addCard(new CardImpl(Suit.SPADES,Rank.DEUCE));
+		hand1.addCard(new CardImpl(Suit.HEARTS,Rank.SEVEN));
+		hand1.addCard(new CardImpl(Suit.DIAMONDS,Rank.SEVEN));
+		hand1.addCard(new CardImpl(Suit.SPADES,Rank.EIGHT));
+		hand1.addCard(new CardImpl(Suit.SPADES,Rank.ACE));
+		hand1.addCard(new CardImpl(Suit.HEARTS,Rank.ACE));
+		
+		assertTrue(HandEvaluator.compareHands(hand1,hand2)==-1);
+		
+		//test hand1==hand2
+		hand1.makeEmpty();
+		hand1.addCard(new CardImpl(Suit.HEARTS,Rank.FOUR));
+		hand1.addCard(new CardImpl(Suit.SPADES,Rank.FOUR));
+		hand1.addCard(new CardImpl(Suit.CLUBS,Rank.FOUR));
+		hand1.addCard(new CardImpl(Suit.SPADES,Rank.SEVEN));
+		hand1.addCard(new CardImpl(Suit.SPADES,Rank.EIGHT));
+		hand1.addCard(new CardImpl(Suit.SPADES,Rank.ACE));
+		hand1.addCard(new CardImpl(Suit.DIAMONDS,Rank.KING));
+		
 		assertTrue(HandEvaluator.compareHands(hand1,hand2)==0);
 	}
 }

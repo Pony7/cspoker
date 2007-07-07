@@ -15,6 +15,9 @@
  */
 package game.cards.hand;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+
 import game.cards.Card;
 import game.cards.Rank;
 import game.cards.Suit;
@@ -30,7 +33,7 @@ public class HandTypeCalculator {
 	public static HandType calculateHandType(Hand hand){
 		Hand best;
 		if(hand.getNBCards()!=5){
-			best=HandEvaluator.bestFiveOfSeven(hand);
+			best=HandEvaluator.getBestHand(hand);
 		}else{
 			best=hand;
 		}
@@ -298,20 +301,38 @@ public class HandTypeCalculator {
 		return null;
 	}
 	public static Card[] getFlushCard(Hand hand) {
+		if(!checkForFlush(hand))
+			throw new IllegalArgumentException();
 		int suitCount=0;
-		Suit flushSuit;
+		Suit flushSuit = null;
 		for(int i=0;i<hand.getNBCards();i++){
-			flushSuit=hand.getCard(i).getSuit();
 			for(int j=0;j<hand.getNBCards();j++){
-				if(j!= i && hand.getCard(j).getSuit().equals(flushSuit))
+				if(j!= i && hand.getCard(j).getSuit().equals(hand.getCard(i).getSuit()))
 					suitCount++;
 				if(suitCount==5){
-					Card[] result={hand.getCard(i)};
-					return result;
+					flushSuit=hand.getCard(j).getSuit();
+					break;
 				}
 			}
 		}
-		return null;
+		Hand temp=new Hand(hand);
+		ArrayList<Card> cardsToRemove=new ArrayList<Card>();
+		for(int j=0;j<temp.getNBCards();j++){
+			if(! temp.getCard(j).getSuit().equals(flushSuit))
+				cardsToRemove.add(temp.getCard(j));
+		}
+		Iterator iterator=cardsToRemove.iterator();
+		while(iterator.hasNext()){
+			temp.removeCard((Card) iterator.next());
+		}
+		temp.sort();
+		if(temp.getNBCards()==5)
+			return temp.getCards();
+		Hand result=new Hand();
+		for(int k=0;k<5;k++){
+			result.addCard(temp.getCard(k));
+		}
+		return result.getCards();
 	}
 	public static Card[] getStraightCard(Hand hand) {
 		Hand temp=new Hand(hand);
