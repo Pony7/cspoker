@@ -334,95 +334,139 @@ public static int compareFourOfAKindHands(Hand h1, Hand h2) {
 	    * 			the given hand
 	    */
 	   public static double getHandQuality(Hand hand){
-		   
-		   int primaryRank=HandTypeCalculator.calculateHandType(hand).getRanking();
+		   Hand temp=HandEvaluator.getBestHand(hand);
+		   int primaryRank=HandTypeCalculator.calculateHandType(temp).getRanking();
 		   double secondaryRank=0;
 		   switch (primaryRank) {
 			case 0:
 				//HIGH_CARD
-				secondaryRank= getHighCardHandQuality(hand);
+				secondaryRank= getHighCardHandQuality(temp);
 				break;
 			case 1:
 				//PAIR
-				secondaryRank= getPairHandQuality(hand);
+				secondaryRank= getPairHandQuality(temp);
 				break;
 			case 2:
 				//DOUBLE_PAIR
-				secondaryRank= getDoublePairHighCardHandQuality(hand);
+				secondaryRank= getDoublePairHighCardHandQuality(temp);
 				break;
 			case 3:
 				//THREE_OF_A_KIND
-				secondaryRank= getThreeOfAKindHandQuality(hand);
+				secondaryRank= getThreeOfAKindHandQuality(temp);
 				break;
 			case 4:
 				//STRAIGHT
-				secondaryRank= getStraightHandQuality(hand);
+				secondaryRank= getStraightHandQuality(temp);
 				break;
 			case 5:
 				//FLUSH
-				secondaryRank= getFlushHandQuality(hand);
+				secondaryRank= getFlushHandQuality(temp);
 				break;
 			case 6:
 				//FULL_HOUSE
-				secondaryRank= getFullHouseHandQuality(hand);
+				secondaryRank= getFullHouseHandQuality(temp);
 				break;
 			case 7:
 				//FOUR_OF_A_KIND
-				secondaryRank= getFourOfAKindHandQuality(hand);
+				secondaryRank= getFourOfAKindHandQuality(temp);
 				break;
 			case 8:
 				//STRAIGHT_FLUSH
-				secondaryRank= getStraigthFlushHandQuality(hand);
+				secondaryRank= getStraigthFlushHandQuality(temp);
 				break;
 			}
 		   //cannot occur
 		   return (double)primaryRank+secondaryRank;
 	   }
 	public static double getStraigthFlushHandQuality(Hand hand) {
-		// TODO Auto-generated method stub
-		return 0;
+		return getStraightHandQuality(hand);
 	}
 	public static double getFourOfAKindHandQuality(Hand hand) {
-		// TODO Auto-generated method stub
-		return 0;
+		Card[] fourCards=HandTypeCalculator.getDeterminatingCards(hand);
+		double pairQuality=1/(getNumberCombinations(1)+1)*(fourCards[0].getRank().getValue()-1);
+		Hand temp=new Hand(hand);
+		temp.removeCard(fourCards[0]);
+		temp.removeCard(fourCards[1]);
+		temp.removeCard(fourCards[2]);
+		temp.removeCard(fourCards[3]);
+		
+		double restHandQuality=1/(getNumberCombinations(1)+1)*getHighCardHandQuality(temp);
+		
+		return pairQuality+restHandQuality;
 	}
 	public static double getFullHouseHandQuality(Hand hand) {
-		// TODO Auto-generated method stub
-		return 0;
+		Card[] fullHouseCards=HandTypeCalculator.getDeterminatingCards(hand);
+		
+		double threeQuality=1/(getNumberCombinations(1)+1)*(fullHouseCards[0].getRank().getValue()-1);
+		double pairQuality=1/(getNumberCombinations(1)+1)*1/(getNumberCombinations(1)+1)*(fullHouseCards[3].getRank().getValue()-1);
+		
+		return threeQuality+pairQuality;
 	}
 	public static double getFlushHandQuality(Hand hand) {
-		// TODO Auto-generated method stub
-		return 0;
+		return getHighCardHandQuality(hand);
 	}
 	public static double getStraightHandQuality(Hand hand) {
-		// TODO Auto-generated method stub
-		return 0;
+		Card[] straightCard=HandTypeCalculator.getDeterminatingCards(hand);
+		return 0.1*((straightCard[0].getRank().getValue())-5.0);
 	}
 	public static double getThreeOfAKindHandQuality(Hand hand) {
-		// TODO Auto-generated method stub
-		return 0;
+		Card[] threeCards=HandTypeCalculator.getDeterminatingCards(hand);
+		double pairQuality=1/(getNumberCombinations(1)+1)*(threeCards[0].getRank().getValue()-1);
+		Hand temp=new Hand(hand);
+		temp.removeCard(threeCards[0]);
+		temp.removeCard(threeCards[1]);
+		temp.removeCard(threeCards[2]);
+		double restHandQuality=1/(getNumberCombinations(2)+1)*getHighCardHandQuality(temp);
+		
+		return pairQuality+restHandQuality;
 	}
 	public static double getDoublePairHighCardHandQuality(Hand hand) {
-		// TODO Auto-generated method stub
-		return 0;
+		Card[] doublePairCards=HandTypeCalculator.getDeterminatingCards(hand);
+
+		double firstPairQuality=1/(getNumberCombinations(1)+1)*(doublePairCards[0].getRank().getValue()-1);
+		double secondPairQuality=1/(getNumberCombinations(1)+1)*1/(getNumberCombinations(1)+2)*(doublePairCards[2].getRank().getValue()-1);
+		double doublePairQuality=firstPairQuality+secondPairQuality;
+		Hand temp=new Hand(hand);
+		
+		temp.removeCard(doublePairCards[0]);
+		temp.removeCard(doublePairCards[1]);
+		temp.removeCard(doublePairCards[2]);
+		temp.removeCard(doublePairCards[3]);
+		double restHandQuality=1/(Math.pow(getNumberCombinations(1)+1,5))*getHighCardHandQuality(temp);
+		return doublePairQuality+restHandQuality;
 	}
 	public static double getPairHandQuality(Hand hand) {
 		Card[] pairCards=HandTypeCalculator.getDeterminatingCards(hand);
-		System.out.println(pairCards.toString());
-		double pairQuality=1/14*(pairCards[0].getRank().getValue()-1);
+		double pairQuality=1/(getNumberCombinations(1)+1)*(pairCards[0].getRank().getValue()-1);
 		Hand temp=new Hand(hand);
 		temp.removeCard(pairCards[0]);
-		temp.removeCard(pairCards[0]);
-		double restHandQuality=getHighCardHandQuality(temp);
+		temp.removeCard(pairCards[1]);
+		double restHandQuality=1/(getNumberCombinations(3)+1)*getHighCardHandQuality(temp);
 		
 		return pairQuality+restHandQuality;
 	}
 	public static double getHighCardHandQuality(Hand hand) {
-		double sumRanks=0;
-		for(int j=0;j<hand.getNBCards();j++){
-			sumRanks+=hand.getCard(j).getRank().getValue();
+		Hand temp=new Hand(hand);
+		temp.sort();
+		double quality=0;
+		for(int j=0;j<temp.getNBCards();j++){
+			quality+=1/(Math.pow(getNumberCombinations(1)+1,j+1))*(temp.getCard(j).getRank().getValue()-1);
 		}
-		double maxRank=Rank.ACE.getValue()*hand.getNBCards();
-		return sumRanks/maxRank;
+		return quality;
 	}
+	
+	/**
+	 * Returns the number of possible combinations of the given number of cards,
+	 * the exact sequence doesn't matter
+	 */
+	public static double getNumberCombinations(int nBCards){
+		return factorial(13)/(factorial(nBCards)*factorial(13-nBCards));
+	}
+	
+    public static double factorial(int n) {
+        if      (n <  0) throw new RuntimeException("Underflow error in factorial");
+        else if (n > 20) throw new RuntimeException("Overflow error in factorial");
+        else if (n == 0) return 1;
+        else             return n * factorial(n-1);
+    }
 }
