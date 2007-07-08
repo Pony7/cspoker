@@ -16,27 +16,45 @@
 
 package game;
 
-import game.chips.Chips;
+
+import game.player.Player;
 
 /**
+ * A class to control the player's actions.
  * 
- * The flops, turn and river are visible on the table.
+ * It is the interface to the user.
  * 
  * @author Kenzo
  *
  */
-public class Table {
+public class PlayerControl {
 	
-	public Table(){
-		
+	private Player player;
+	
+	private GameControl gameControl;
+	
+	public void call(){
+		gameControl.call(player);
 	}
 	
-	public Chips getPot(){
-		return null;
+	public void bet(int amount){
+		gameControl.bet(player, amount);
 	}
 	
-	/**
-	 * TODO Denk aan All-in spelen, dus meerdere pots.
-	 */
+	public void fold(){
+		gameControl.fold(player);
+	}
+	
+	public void check(){
+		gameControl.check(player);
+	}
+	
+	public void raise(int amount){
+		gameControl.raise(player, amount);
+	}
+	
+	public void deal(){
+		gameControl.deal(player);
+	}
 
 }

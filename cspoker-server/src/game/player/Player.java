@@ -16,7 +16,6 @@
 
 package game.player;
 
-import game.cards.PrivateCards;
 import game.chips.Chips;
 
 /**
@@ -50,7 +49,7 @@ public class Player {
 	/**
 	 * The hidden cards.
 	 */
-	private PrivateCards privateCards;
+	private PocketCards pocketCards;
 	
 	/**********************************************************
 	 * Constructor
@@ -64,22 +63,9 @@ public class Player {
 	public String getName(){
 		return name;
 	}
-
-	
-	/**
-	 * State pattern welke acties de player mag doen als een state modelleren?
-	 */
-	
-	public void fold(){
-		
-	}
 	
 	public long getId(){
-		return 0;
+		return id;
 	}
 	
-	public long getPrivateKey(){
-		return 0;
-	}
-
 }

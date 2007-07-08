@@ -14,51 +14,40 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-package game;
+package game.rounds;
+
+import game.Game;
+
 
 /**
- * All the rounds a game can be in.
+ * The round after the initial 2 cards are dealt.
  * 
  * @author Kenzo
- * @edit	River and showdown round added and edited by Cedric
+ *
  */
-public enum Round {
-	
-	PREFLOP_ROUND{
-		public Round getNextRound(){
-			return FLOP_ROUND;
-		}
-	}, 
-	
-	
-	FLOP_ROUND{
-		public Round getNextRound(){
-			return TURN_ROUND;
-		}
-	}, 
-	
-	
-	TURN_ROUND{
-		public Round getNextRound(){
-			return RIVER_ROUND;
-		}
-		
-	}, 
-	
-	
-	RIVER_ROUND{
-		public Round getNextRound(){
-			return SHOWDOWN_ROUND;
-		}
-		
-	},
-	
-	SHOWDOWN_ROUND{
-		public Round getNextRound(){
-			return null;
-		}
-		
-	};
-	
-	public abstract Round getNextRound();
+public class PreFlopRound extends Round{
+
+	public PreFlopRound(Game game) {
+		super(game);
+		// TODO Auto-generated constructor stub
 	}
+
+	public void endRound() {
+		// get 3 cards from deck and add to the game.
+		
+		
+		// TODO Auto-generated method stub
+		
+	}
+
+	public Round getNextRound() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public boolean roundEnded() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+}

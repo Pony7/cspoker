@@ -49,6 +49,22 @@ public class Chips {
 		setValue(initalValue);
 	}
 	
+	/**
+	 * Construct a new chips pile with 0 as initial value.
+	 * 
+	 * @effect Set the value of these chips to 0.
+	 *		   |setValue(0)
+	 */
+	public Chips(){
+		
+		try{
+			setValue(0);
+		}catch (IllegalValueException e) {
+			// 0 is always a valid value.
+			assert false;
+		}
+	}
+	
 	/**********************************************************
 	 * Value
 	 **********************************************************/
