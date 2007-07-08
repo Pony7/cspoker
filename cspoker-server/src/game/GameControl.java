@@ -59,6 +59,9 @@ public class GameControl implements PlayerAction{
 	 * Constructor
 	 **********************************************************/
 	
+	/**
+	 * Construct a new game control.
+	 */
 	public GameControl(){
 		//TODO
 		game = new Game(new GameProperty());
@@ -103,12 +106,20 @@ public class GameControl implements PlayerAction{
 	 * Round change logic
 	 **********************************************************/
 	
+	/**
+	 * Check if this round has ended and change to
+	 * the next round if it's the case.
+	 */
 	private void checkIfEndedAndChangeRound(){
 		if(round.roundEnded()){
 			changeToNextRound();
 		}
 	}
 	
+	/**
+	 * End this round and change the round to the next round.
+	 * 
+	 */
 	private void changeToNextRound(){
 		round.endRound();
 		round = round.getNextRound();

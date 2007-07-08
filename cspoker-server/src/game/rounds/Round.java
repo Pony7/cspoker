@@ -24,7 +24,7 @@ import game.player.Player;
  * A player can do actions in a round,
  * such as checking, betting, ...
  * 
- * A quasi-state pattern is used.
+ * A state pattern is used.
  * 
  * @author Kenzo
  *
