@@ -14,15 +14,32 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-package game.cards;
+package game.rounds;
 
-/**
- * A container for private cards.
- * It can be used for Texas Hold'em and other card games.
- * 
- * @author Kenzo
- *
- */
-public class PrivateCards {
+import game.Game;
+
+public class WaitingRound extends Round {
+	
+	
+
+	public WaitingRound(Game game) {
+		super(game);
+		// TODO Auto-generated constructor stub
+	}
+
+	public void endRound() {
+		// TODO showdown
+
+	}
+
+	public Round getNextRound() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public boolean roundEnded() {
+		// TODO Auto-generated method stub
+		return false;
+	}
 
 }

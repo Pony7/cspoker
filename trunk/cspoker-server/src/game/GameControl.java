@@ -17,6 +17,8 @@
 package game;
 
 import game.player.Player;
+import game.rounds.PreFlopRound;
+import game.rounds.Round;
 
 /**
  * This class is responsable to control the flow of the game.
@@ -25,7 +27,7 @@ import game.player.Player;
  * @author Kenzo
  *
  */
-public class GameControl {
+public class GameControl implements PlayerAction{
 	
 	/**********************************************************
 	 * Variables
@@ -37,12 +39,13 @@ public class GameControl {
 	 * such as a raise.
 	 * 
 	 * If the next player is the last event player,
-	 * the betting round is over.
+	 * the round is over.
 	 * 
 	 * It is initialised in each game as the first better
-	 * after the big blind.
+	 * after the big blind, in every next round,
+	 * it is the player on to the left side of the player
+	 * with the dealer-button.
 	 */
-	private Player lastEventPlayer;
 	
 	/**
 	 * This variable contains all game elements,
@@ -57,32 +60,57 @@ public class GameControl {
 	 **********************************************************/
 	
 	public GameControl(){
-		round = Round.PREFLOP_ROUND;
-		
+		//TODO
+		game = new Game(new GameProperty());
+		round = new PreFlopRound(game);
 	}
 	
 	/**********************************************************
 	 * Player methods
 	 **********************************************************/
 	
+	public void bet(Player player, int amount) {
+		round.bet(player, amount);
+		checkIfEndedAndChangeRound();
+	}
+
+	public void call(Player player) {
+		round.call(player);
+		checkIfEndedAndChangeRound();
+	}
+	
 	public void check(Player player){
-		
+		round.check(player);
+		checkIfEndedAndChangeRound();
 	}
 	
 	public void raise(Player player, int amount){
-		lastEventPlayer = player;
+		round.raise(player, amount);
+		checkIfEndedAndChangeRound();
 	}
 	
-	public void deal(Player player, int amount){
-		
+	public void fold(Player player){
+		round.fold(player);
+		checkIfEndedAndChangeRound();
 	}
 	
-	private boolean roundEnded(){
-		return lastEventPlayer == game.getCurrentPlayer();
+	public void deal(Player player){
+		round.deal(player);
+		checkIfEndedAndChangeRound();
 	}
 	
-	private void endRound(){
-
+	/**********************************************************
+	 * Round change logic
+	 **********************************************************/
+	
+	private void checkIfEndedAndChangeRound(){
+		if(round.roundEnded()){
+			changeToNextRound();
+		}
 	}
-
+	
+	private void changeToNextRound(){
+		round.endRound();
+		round = round.getNextRound();
+	}
 }

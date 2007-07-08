@@ -16,16 +16,22 @@
 
 package game;
 
+import game.cards.Card;
+import game.chips.Pot;
+import game.chips.SidePots;
+import game.deck.Deck;
 import game.player.Player;
+import game.utilities.LoopingList;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 
 /**
  * 
  * This class contains all game elements,
- * such as the players, table,...
+ * such as the players, open cards, pots,...
  * 
  * @author Kenzo
  *
@@ -38,11 +44,19 @@ public class Game {
 	
 	private GameProperty gameProperty;
 	
-	private Table table;
+	private List<Player> players = new CopyOnWriteArrayList<Player>();
 	
-	private List<Player> players = new ArrayList<Player>();
+	private LoopingList<Player> currentHandPlayers;
 	
 	private Player currentPlayer;
+	
+	private Deck deck;
+	
+	private List<Card> openCards;
+	
+	private SidePots sidePots;
+	
+	private Pot pot;
 	
 	/**********************************************************
 	 * Constructor
@@ -50,7 +64,6 @@ public class Game {
 	
 	public Game(GameProperty gameProperty){
 		this.gameProperty = gameProperty;
-		this.table = new Table();
 	}
 	
 	/**********************************************************
@@ -66,7 +79,19 @@ public class Game {
 	}
 	
 	public List<Player> getPlayers(){
-		return players;
+		return Collections.unmodifiableList(players);
+	}
+	
+	/**********************************************************
+	 * Add/Remove Players to/from the game.
+	 **********************************************************/
+	
+	public void removePlayer(Player player){
+		players.remove(player);
+	}
+	
+	public void addPlayer(Player player){
+		players.add(player);
 	}
 
 }
