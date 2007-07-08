@@ -31,8 +31,7 @@ public class FlopRound extends Round {
 	}
 
 	public Round getNextRound() {
-		// TODO Auto-generated method stub
-		return null;
+		return new TurnRound(getGame());
 	}
 
 	public boolean roundEnded() {

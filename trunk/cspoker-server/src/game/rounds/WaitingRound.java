@@ -33,8 +33,7 @@ public class WaitingRound extends Round {
 	}
 
 	public Round getNextRound() {
-		// TODO Auto-generated method stub
-		return null;
+		return new PreFlopRound(getGame());
 	}
 
 	public boolean roundEnded() {

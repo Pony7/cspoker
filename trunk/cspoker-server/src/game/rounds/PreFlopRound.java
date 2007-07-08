@@ -41,8 +41,7 @@ public class PreFlopRound extends Round{
 	}
 
 	public Round getNextRound() {
-		// TODO Auto-generated method stub
-		return null;
+		return new FlopRound(getGame());
 	}
 
 	public boolean roundEnded() {
