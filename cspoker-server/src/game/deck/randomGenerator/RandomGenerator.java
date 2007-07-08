@@ -16,6 +16,8 @@
 
 package game.deck.randomGenerator;
 
+import game.cards.Card;
+
 /**
  * An interface for random generators for card games.
  * 
@@ -45,5 +47,10 @@ public interface RandomGenerator {
 	 * 			|	0<=number && number<=51
 	 */
 	public int[] getRandomSequence();
+	
+	/**
+	 * Returns a card with a random suit and a random rank
+	 */
+	public Card getRandomCard();
 
 }

@@ -16,6 +16,7 @@
 package game.cards.hand;
 
 import game.cards.Card;
+import game.cards.Rank;
 
 /**
  * A class for evaluating and comparing hands
@@ -325,4 +326,103 @@ public static int compareFourOfAKindHands(Hand h1, Hand h2) {
 		   
 		   return HandEvaluator.compareHighCardHands(temp1,temp2);
 	   }
+	   
+	   /**
+	    * Returns the quality of the given hand, expressed by a number:
+	    * the higher the number the better the quality of the hand
+	    * @param hand
+	    * 			the given hand
+	    */
+	   public static double getHandQuality(Hand hand){
+		   
+		   int primaryRank=HandTypeCalculator.calculateHandType(hand).getRanking();
+		   double secondaryRank=0;
+		   switch (primaryRank) {
+			case 0:
+				//HIGH_CARD
+				secondaryRank= getHighCardHandQuality(hand);
+				break;
+			case 1:
+				//PAIR
+				secondaryRank= getPairHandQuality(hand);
+				break;
+			case 2:
+				//DOUBLE_PAIR
+				secondaryRank= getDoublePairHighCardHandQuality(hand);
+				break;
+			case 3:
+				//THREE_OF_A_KIND
+				secondaryRank= getThreeOfAKindHandQuality(hand);
+				break;
+			case 4:
+				//STRAIGHT
+				secondaryRank= getStraightHandQuality(hand);
+				break;
+			case 5:
+				//FLUSH
+				secondaryRank= getFlushHandQuality(hand);
+				break;
+			case 6:
+				//FULL_HOUSE
+				secondaryRank= getFullHouseHandQuality(hand);
+				break;
+			case 7:
+				//FOUR_OF_A_KIND
+				secondaryRank= getFourOfAKindHandQuality(hand);
+				break;
+			case 8:
+				//STRAIGHT_FLUSH
+				secondaryRank= getStraigthFlushHandQuality(hand);
+				break;
+			}
+		   //cannot occur
+		   return (double)primaryRank+secondaryRank;
+	   }
+	public static double getStraigthFlushHandQuality(Hand hand) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+	public static double getFourOfAKindHandQuality(Hand hand) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+	public static double getFullHouseHandQuality(Hand hand) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+	public static double getFlushHandQuality(Hand hand) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+	public static double getStraightHandQuality(Hand hand) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+	public static double getThreeOfAKindHandQuality(Hand hand) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+	public static double getDoublePairHighCardHandQuality(Hand hand) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+	public static double getPairHandQuality(Hand hand) {
+		Card[] pairCards=HandTypeCalculator.getDeterminatingCards(hand);
+		System.out.println(pairCards.toString());
+		double pairQuality=1/14*(pairCards[0].getRank().getValue()-1);
+		Hand temp=new Hand(hand);
+		temp.removeCard(pairCards[0]);
+		temp.removeCard(pairCards[0]);
+		double restHandQuality=getHighCardHandQuality(temp);
+		
+		return pairQuality+restHandQuality;
+	}
+	public static double getHighCardHandQuality(Hand hand) {
+		double sumRanks=0;
+		for(int j=0;j<hand.getNBCards();j++){
+			sumRanks+=hand.getCard(j).getRank().getValue();
+		}
+		double maxRank=Rank.ACE.getValue()*hand.getNBCards();
+		return sumRanks/maxRank;
+	}
 }
