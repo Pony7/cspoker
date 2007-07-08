@@ -17,6 +17,7 @@
 package game.deck.randomGenerator;
 
 import game.cards.Card;
+import game.cards.hand.Hand;
 
 /**
  * An interface for random generators for card games.
@@ -52,5 +53,11 @@ public interface RandomGenerator {
 	 * Returns a card with a random suit and a random rank
 	 */
 	public Card getRandomCard();
+	
+	/**
+	 * Returns a random hand with the given number of cards
+	 * @return
+	 */
+	public Hand getRandomHand(int nBCards);
 
 }

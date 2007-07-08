@@ -461,6 +461,15 @@ public class HandTypeCalculator {
 				}
 			}
 		}
+		Card temp1,temp2;
+		if(pairCard1.getRank().getValue()<pairCard3.getRank().getValue()){
+			temp1=pairCard1;
+			temp2=pairCard2;
+			pairCard1=pairCard3;
+			pairCard2=pairCard4;
+			pairCard3=temp1;
+			pairCard4=temp2;
+		}
 		Card[] result={pairCard1,pairCard2,pairCard3,pairCard4};
 		return result;
 	}

@@ -23,6 +23,7 @@ import game.cards.Card;
 import game.cards.CardImpl;
 import game.cards.Rank;
 import game.cards.Suit;
+import game.cards.hand.Hand;
 
 
 public class RandomOrgSeededRandomGenerator implements RandomGenerator {
@@ -35,8 +36,8 @@ public class RandomOrgSeededRandomGenerator implements RandomGenerator {
 	public Card getRandomCard() {
 		Random generator = new Random();
 		
-		int suitNumber=generator.nextInt(5);
-		int rankNumber=1+generator.nextInt(14);
+		int suitNumber=generator.nextInt(4);
+		int rankNumber=2+generator.nextInt(13);
 		Suit randomSuit=null;
 		Rank randomRank=null;
 		switch (suitNumber) {
@@ -94,8 +95,17 @@ public class RandomOrgSeededRandomGenerator implements RandomGenerator {
 			randomRank=Rank.ACE;
 			break;
 		}
-		
 		return new CardImpl(randomSuit, randomRank);
+	}
+
+	public Hand getRandomHand(int nBCards) {
+		Hand result=new Hand();
+		while(result.getNBCards()<nBCards){
+			Card randomCard=getRandomCard();
+			if(!result.contains(randomCard))
+				result.addCard(randomCard);
+		}
+		return result;
 	}
 
 }
