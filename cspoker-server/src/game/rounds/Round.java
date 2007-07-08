@@ -48,8 +48,18 @@ public abstract class Round {
 	
 	private Game game;
 	
+	/**
+	 * Initialise a new round for given game.
+	 * 
+	 * @param 	game
+	 * 			The game to create a new round for.
+	 */
 	public Round(Game game){
 		this.game = game;
+	}
+	
+	protected Game getGame(){
+		return game;
 	}
 	
 	public void check(Player player){

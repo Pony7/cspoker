@@ -31,8 +31,7 @@ public class TurnRound extends Round{
 	}
 
 	public Round getNextRound() {
-		// TODO Auto-generated method stub
-		return null;
+		return new FinalRound(getGame());
 	}
 
 	public boolean roundEnded() {
