@@ -17,8 +17,8 @@
 package game;
 
 import game.cards.Card;
-import game.chips.Pot;
-import game.chips.SidePots;
+import game.chips.pot.Pot;
+import game.chips.pot.SidePots;
 import game.deck.Deck;
 import game.player.Player;
 import game.utilities.LoopingList;
@@ -42,15 +42,13 @@ public class Game {
 	 * Variables
 	 **********************************************************/
 	
-	private GameProperty gameProperty;
+	private final GameProperty gameProperty;
 	
 	private List<Player> players = new CopyOnWriteArrayList<Player>();
 	
 	private LoopingList<Player> currentHandPlayers;
 	
-	private Player currentPlayer;
-	
-	private Deck deck;
+	private final Deck deck;
 	
 	private List<Card> openCards;
 	
@@ -62,20 +60,26 @@ public class Game {
 	 * Constructor
 	 **********************************************************/
 	
+	/**
+	 * Construct a new game with given game property.
+	 * 
+	 */
 	public Game(GameProperty gameProperty){
+		deck = new Deck();
 		this.gameProperty = gameProperty;
+		//set initial dealer-button holder
 	}
 	
 	/**********************************************************
 	 * Getters
 	 **********************************************************/
 	
-	public GameProperty GetGameProperty(){
+	public GameProperty getGameProperty(){
 		return gameProperty;
 	}
 	
 	public Player getCurrentPlayer(){
-		return currentPlayer;
+		return currentHandPlayers.getCurrent();
 	}
 	
 	public List<Player> getPlayers(){
@@ -91,7 +95,32 @@ public class Game {
 	}
 	
 	public void addPlayer(Player player){
+		//TODO check if full
+		
 		players.add(player);
+	}
+	
+	/**********************************************************
+	 * Round manipulation.
+	 **********************************************************/
+	
+	public void nextPlayer(){
+		currentHandPlayers.next();
+	}
+	
+	public void setCurrentPlayer(Player player){
+		currentHandPlayers.setCurrent(player);
+	}
+	
+	public void removePlayerFromCurrentDeal(Player player){
+		currentHandPlayers.remove(player);
+	}
+	
+	public void dealNewHand(){
+		deck.newDeal();
+		currentHandPlayers = new LoopingList<Player>(players);
+		//small, large blinds must be collected.
+		//
 	}
 
 }

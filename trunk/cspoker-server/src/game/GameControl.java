@@ -17,6 +17,7 @@
 package game;
 
 import game.player.Player;
+import game.rounds.IllegalActionException;
 import game.rounds.PreFlopRound;
 import game.rounds.Round;
 
@@ -34,25 +35,15 @@ public class GameControl implements PlayerAction{
 	 **********************************************************/
 	
 	/**
-	 * The last event player is the last player
-	 * that has done significant change,
-	 * such as a raise.
-	 * 
-	 * If the next player is the last event player,
-	 * the round is over.
-	 * 
-	 * It is initialised in each game as the first better
-	 * after the big blind, in every next round,
-	 * it is the player on to the left side of the player
-	 * with the dealer-button.
-	 */
-	
-	/**
 	 * This variable contains all game elements,
 	 * such as players and table.
 	 */
 	private Game game;
 	
+	/**
+	 * The variable containing the round in which the current game is.
+	 * 
+	 */
 	private Round round;
 	
 	/**********************************************************
@@ -72,32 +63,40 @@ public class GameControl implements PlayerAction{
 	 * Player methods
 	 **********************************************************/
 	
-	public void bet(Player player, int amount) {
+	/**
+	 * If there is no bet on the table and you do not wish to place a bet.
+	 * You may only check when there are no prior bets.
+	 * 
+	 * @param	player
+	 * 			The player who checks.
+	 * @see PlayerAction
+	 */
+	public void bet(Player player, int amount) throws IllegalActionException{
 		round.bet(player, amount);
 		checkIfEndedAndChangeRound();
 	}
 
-	public void call(Player player) {
+	public void call(Player player) throws IllegalActionException{
 		round.call(player);
 		checkIfEndedAndChangeRound();
 	}
 	
-	public void check(Player player){
+	public void check(Player player) throws IllegalActionException{
 		round.check(player);
 		checkIfEndedAndChangeRound();
 	}
 	
-	public void raise(Player player, int amount){
+	public void raise(Player player, int amount) throws IllegalActionException{
 		round.raise(player, amount);
 		checkIfEndedAndChangeRound();
 	}
 	
-	public void fold(Player player){
+	public void fold(Player player) throws IllegalActionException{
 		round.fold(player);
 		checkIfEndedAndChangeRound();
 	}
 	
-	public void deal(Player player){
+	public void deal(Player player) throws IllegalActionException{
 		round.deal(player);
 		checkIfEndedAndChangeRound();
 	}

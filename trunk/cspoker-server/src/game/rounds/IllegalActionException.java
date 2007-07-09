@@ -14,26 +14,8 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-package game.chips;
+package game.rounds;
 
-import java.util.Iterator;
-import java.util.List;
-
-import game.player.Player;
-
-public class SidePots implements Pot, Iterable<Pot>{
-	
-	List<PotImpl> pots;
-	
-	public void addShowdownPlayer(Player player){
-		for(PotImpl pot:pots){
-			pot.addShowdownPlayer(player);
-		}
-	}
-
-	public Iterator<Pot> iterator() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+public class IllegalActionException extends Exception {
 
 }
