@@ -13,12 +13,16 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package game.cards.hand;
+package game.cards.hand.test;
 
 import game.cards.Card;
 import game.cards.CardImpl;
 import game.cards.Rank;
 import game.cards.Suit;
+import game.cards.hand.Hand;
+import game.cards.hand.HandEvaluator;
+import game.cards.hand.HandType;
+import game.cards.hand.HandTypeCalculator;
 import junit.framework.TestCase;
 
 public class TestHandEvaluator extends TestCase {

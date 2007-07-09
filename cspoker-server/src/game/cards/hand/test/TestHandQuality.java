@@ -1,9 +1,13 @@
-package game.cards.hand;
+package game.cards.hand.test;
 
 import game.cards.Card;
 import game.cards.CardImpl;
 import game.cards.Rank;
 import game.cards.Suit;
+import game.cards.hand.Hand;
+import game.cards.hand.HandEvaluator;
+import game.cards.hand.HandType;
+import game.cards.hand.HandTypeCalculator;
 import game.deck.randomGenerator.RandomOrgSeededRandomGenerator;
 import junit.framework.TestCase;
 
@@ -169,30 +173,45 @@ public class TestHandQuality extends TestCase {
 	
 	public void testHandQuality(){
 		RandomOrgSeededRandomGenerator rng=new RandomOrgSeededRandomGenerator();
-		boolean qualityGreater;
+		boolean qualityGreater,qualitySmaller,qualityEqual;
+		int compare;
 		double quality1,quality2;
 		hand1.makeEmpty();
 		hand2.makeEmpty();
-		Hand best1;
-		Hand best2;
-		for(int j=0;j<1000000;j++){
-			hand1=rng.getRandomHand(7);
-			hand2=rng.getRandomHand(7);
-			
-			qualityGreater=(HandEvaluator.compareHands(hand1,hand2)==1);
+		double[] numbers=new double[9];
+		double totalTests=100000000.0;
+		for(int j=0;j<totalTests;j++){
+			hand1=rng.getRandomHand(5);
+			hand2=rng.getRandomHand(5);
+			compare=HandEvaluator.compareHands(hand1,hand2);
+			qualityGreater=(compare==1);
+			qualitySmaller=(compare==-1);
+			qualityEqual=(compare==0);
 			quality1=HandEvaluator.getHandQuality(hand1);
 			quality2=HandEvaluator.getHandQuality(hand2);
-			best1=HandEvaluator.getBestHand(hand1);
-			best2=HandEvaluator.getBestHand(hand2);
-			best1.sort();
-			best2.sort();
+
+		
+			int rank1= HandTypeCalculator.calculateHandType(hand1).getRanking();
+			numbers[rank1]++;
 			
-			//System.out.println("hand1 "+best1.toString()+" type "+HandTypeCalculator.calculateHandType(hand1).toString()+" quality "+quality1);
-			//System.out.println("hand2 "+best2.toString()+" type "+HandTypeCalculator.calculateHandType(hand2).toString()+" quality "+quality1);
 			assertTrue(qualityGreater==(quality1>quality2));
-			
+			assertTrue(qualitySmaller==(quality1<quality2));
+			assertTrue(qualityEqual==(quality1==quality2));
 			hand1.makeEmpty();
 			hand2.makeEmpty();
+			if(j%(totalTests/10)==0)
+				System.out.println(j);
 		}
+		System.out.println("high cards % "+numbers[0]/totalTests);
+		System.out.println("pair % "+numbers[1]/totalTests);
+		System.out.println("double pair % "+numbers[2]/totalTests);
+		System.out.println("three of a kind % "+numbers[3]/totalTests);
+		System.out.println("straight% "+numbers[4]/totalTests);
+		System.out.println("flush % "+numbers[5]/totalTests);
+		System.out.println("full house % "+numbers[6]/totalTests);
+		System.out.println("four of a kind % "+numbers[7]/totalTests);
+		System.out.println("straight flush % "+numbers[8]/totalTests);
+		
 	}
+	
 }

@@ -36,7 +36,7 @@ public class HandEvaluator {
 	    * 			| result.getNBCards()==5
 	    */
 	   public static Hand getBestHand(Hand hand){ 
-		   if(hand.getNBCards()<5)
+		   if(hand.getNBCards()<=5)
 			   return hand;
 		   Hand five = new Hand();
 		   Hand bestHand = new Hand();
@@ -376,7 +376,7 @@ public static int compareFourOfAKindHands(Hand h1, Hand h2) {
 				break;
 			}
 		   //cannot occur
-		   return (double)primaryRank+secondaryRank;
+		   return ((double)primaryRank)+secondaryRank;
 	   }
 	public static double getStraigthFlushHandQuality(Hand hand) {
 		return getStraightHandQuality(hand);
