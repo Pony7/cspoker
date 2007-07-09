@@ -16,6 +16,12 @@
 
 package game.cards;
 
+/**
+ * An enumeration to represent suits.
+ * 
+ * @author Kenzo
+ *
+ */
 public enum Suit {
 	
 	SPADES{

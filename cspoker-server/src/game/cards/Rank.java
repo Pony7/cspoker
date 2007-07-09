@@ -16,6 +16,12 @@
 
 package game.cards;
 
+/**
+ * An enumeration to represent ranks.
+ * 
+ * @author Kenzo
+ *
+ */
 public enum Rank {
 	DEUCE{
 		public int getValue(){
