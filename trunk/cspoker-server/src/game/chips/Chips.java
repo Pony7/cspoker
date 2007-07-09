@@ -37,11 +37,11 @@ public class Chips {
 	 * Construct a new chips pile with given initial value.
 	 * 
 	 * @param initalValue
-	 * 		  The inital value for this new chips pile.
+	 * 		  The initial value for this new chips pile.
 	 * @effect Set the value of these chips to the given value.
 	 *		   |setValue(initalValue)
 	 * @throws 	IllegalValueException [must]
-	 *			The given inital value is not a legal value for
+	 *			The given initial value is not a legal value for
 	 * 			the chips.
 	 *			| !canHaveAsValue(initalValue)
 	 */
@@ -79,7 +79,7 @@ public class Chips {
 	 *
 	 */
 	public int getValue() {
-		return this.value;
+		return value;
 	}
 
 	/**
@@ -134,9 +134,8 @@ public class Chips {
 	 *			| !canHaveAsValue(new.getValue())
 	 */
 	private void increaseWith(int amount) throws IllegalValueException{
-		if(amount<0){
+		if(amount<0)
 			throw new IllegalArgumentException();
-		}
 		setValue(getValue()+amount);
 	}
 	
@@ -156,9 +155,8 @@ public class Chips {
 	 *			| !canHaveAsValue(new.getValue())
 	 */
 	private void decreaseWith(int amount) throws IllegalValueException{
-		if(amount<0){
+		if(amount<0)
 			throw new IllegalArgumentException();
-		}
 		setValue(getValue()-amount);
 	}
 	
@@ -186,9 +184,8 @@ public class Chips {
 	 * 			exiting the method.
 	 */
 	public synchronized void transferAmountTo(int amount, Chips receiver) throws IllegalValueException{
-		if(amount<0 || receiver==null){
+		if((amount<0) || (receiver==null))
 			throw new IllegalArgumentException();
-		}
 		decreaseWith(amount);
 		receiver.increaseWith(amount);
 	}

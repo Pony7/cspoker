@@ -55,11 +55,12 @@ public class RandomOrgSeededRandomGenerator extends RandomGenerator{
 	 * 
 	 * This implementation uses a seed obtained from random.org
 	 * 
-	 * After serveral randoms have been requested,
+	 * After several random-objects have been requested,
 	 * a fresh seed from random.org is used.
 	 * 
 	 * @return A random-object.
 	 */
+	@Override
 	public Random getRandom() {
 		if(counter>THRESHOLD){
 			setNewRandom();
@@ -78,6 +79,7 @@ public class RandomOrgSeededRandomGenerator extends RandomGenerator{
 	 * No overflow occurs, but not the whole range of long is covered.
 	 * The result is between -10^18 and 10^18.
 	 */
+	@Override
 	protected long getRandomSeed(){
 		try {
 	        URL url = new URL("http://www.random.org/integers/?num=2&min=-1000000000&max=1000000000&col=1&base=10&format=plain&rnd=new");
@@ -90,7 +92,6 @@ public class RandomOrgSeededRandomGenerator extends RandomGenerator{
 	        for (int i = 0; i < 2; i++) {
 	        	str = in.readLine();
 				randomValues[i] = Integer.parseInt(str);
-				System.out.println(str);
 			}
 	        in.close();
 	        return ((long)randomValues[0]) * randomValues[1];

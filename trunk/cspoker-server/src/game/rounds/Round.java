@@ -17,6 +17,9 @@
 package game.rounds;
 
 import game.Game;
+import game.PlayerAction;
+import game.actions.Action;
+import game.chips.IllegalValueException;
 import game.player.Player;
 
 /**
@@ -29,7 +32,11 @@ import game.player.Player;
  * @author Kenzo
  *
  */
-public abstract class Round {
+public abstract class Round implements PlayerAction{
+	
+	/**********************************************************
+	 * Variables
+	 **********************************************************/
 	
 	/**
 	 * The last event player is the last player
@@ -46,12 +53,16 @@ public abstract class Round {
 	 */
 	private Player lastEventPlayer;
 	
-	private Game game;
+	private final Game game;
 	
 	private int bet;
 	
+	/**********************************************************
+	 * Constructor
+	 **********************************************************/
+	
 	/**
-	 * Initialise a new round for given game.
+	 * Initialize a new round for given game.
 	 * 
 	 * @param 	game
 	 * 			The game to create a new round for.
@@ -64,11 +75,25 @@ public abstract class Round {
 		return game;
 	}
 	
+	/**********************************************************
+	 * Bidding methods
+	 **********************************************************/
+	
+	/**
+	 * If there is no bet on the table and you do not wish to place a bet.
+	 * You may only check when there are no prior bets.
+	 * 
+	 * @param	player
+	 * 			The player who checks.
+	 * @see PlayerAction
+	 */
+	@Override
 	public void check(Player player) throws IllegalActionException{
-		//Only if player may check.
-		if(bet>0){
-			throw new IllegalActionException();
+		if(Action.CHECK.canDoAction(this, player)){
+			
 		}
+		
+		//Only if player may check.
 		game.nextPlayer();
 	}
 	
@@ -82,7 +107,13 @@ public abstract class Round {
 		
 	}
 	
-	public void raise(Player player, int amount){
+	public void raise(Player player, int amount) throws IllegalActionException{
+		try {
+			player.getChips().transferAmountTo((bet+amount)-player.getBettedChips().getValue(), player.getBettedChips());
+		} catch (IllegalValueException e) {
+			throw new IllegalActionException(player, Action.RAISE, e.getMessage());
+		}
+		bet=bet+amount;
 		playerMadeEvent(player);
 	}
 	
@@ -120,11 +151,15 @@ public abstract class Round {
 	}
 	
 	private boolean canCheck(Player player){
-		return onTurn(player) && bet==0;
+		return onTurn(player) && (bet==0);
 	}
 	
-	private boolean onTurn(Player player){
-		return game.getCurrentPlayer() == player;
+	public boolean someOneHasBet(){
+		return bet>0;
+	}
+	
+	public boolean onTurn(Player player){
+		return game.getCurrentPlayer().equals(player);
 	}
 
 }

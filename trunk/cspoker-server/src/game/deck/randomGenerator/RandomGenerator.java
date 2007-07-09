@@ -86,7 +86,6 @@ public class RandomGenerator {
 	}
 	
 	protected void setNewRandom(){
-		System.out.println(getRandomSeed());
 		random = new Random(getRandomSeed());
 	}
 	

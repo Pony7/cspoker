@@ -16,34 +16,99 @@
 
 package game.actions;
 
-import game.Game;
 import game.player.Player;
+import game.rounds.Round;
 
+/**
+ * An enumeration of all actions a player can do.
+ * 
+ * @author Kenzo
+ *
+ */
 public enum Action {
 	
-	FOLD,
+	FOLD{
+		@Override
+		public boolean canDoAction(Round round, Player player){
+			return false;
+		}
+		
+		@Override
+		public String toString(){
+			return "Fold";
+		}
+	},
 	
-	CHECK,
+	CHECK{
+		@Override
+		public boolean canDoAction(Round round, Player player){
+			return false;
+		}
+		
+		@Override
+		public String toString(){
+			return "Check";
+		}
+	},
 	
-	BET,
+	BET{
+		@Override
+		public boolean canDoAction(Round round, Player player){
+			return false;
+		}
+		
+		@Override
+		public String toString(){
+			return "Bet";
+		}
+	},
 	
-	CALL,
+	CALL{
+		@Override
+		public boolean canDoAction(Round round, Player player){
+			return false;
+		}
+		
+		@Override
+		public String toString(){
+			return "Call";
+		}
+	},
 	
-	RAISE,
+	RAISE{
+		@Override
+		public boolean canDoAction(Round round, Player player){
+			return false;
+		}
+		
+		@Override
+		public String toString(){
+			return "Raise";
+		}
+	},
 	
-	DEAL;
+	DEAL{
+		@Override
+		public boolean canDoAction(Round round, Player player){
+			return false;
+		}
+		
+		@Override
+		public String toString(){
+			return "Deal";
+		}
+	};
 	
 	/**
 	 * Check whether the given player can take this action in the given game.
 	 * 
-	 * @param game
-	 * @param player
-	 * @return
+	 * @param 	round
+	 * 			The round in which the action occurs.
+	 * @param 	player
+	 * 			The player to check.
+	 * @return	True if the action is allowed, false otherwise.
 	 */
-	public boolean canDoAction(Game game, Player player){
-		//TODO
-		return false;
-	}
+	public abstract boolean canDoAction(Round round, Player player);
 	
 
 }

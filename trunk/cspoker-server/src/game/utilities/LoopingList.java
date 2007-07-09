@@ -45,7 +45,7 @@ public class LoopingList<T> {
 	
 	/**
 	 * Construct a new looping list from given list.
-	 * There is no dependance between the given list
+	 * There is no dependence between the given list
 	 * and this looping list.
 	 * 
 	 * @param 	list
@@ -85,7 +85,7 @@ public class LoopingList<T> {
 	/**
 	 * Returns the current element in the looping list.
 	 * 
-	 * @return The currrent element in the looping list.
+	 * @return The current element in the looping list.
 	 * 
 	 */
 	public T getCurrent(){
@@ -112,7 +112,7 @@ public class LoopingList<T> {
 	}
 	
 	/**
-	 * Remove the occurence of the given element of the list.
+	 * Remove the occurrence of the given element of the list.
 	 * 
 	 * After removal, there are no instances present of the given element,
 	 * because the class-invariance imposes no duplicate elements.
