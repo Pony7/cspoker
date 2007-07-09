@@ -17,6 +17,7 @@
 package game.player;
 
 import game.chips.Chips;
+import game.chips.IllegalValueException;
 
 /**
  * A class to represent players: bots or humans.
@@ -31,7 +32,7 @@ public class Player {
 	 **********************************************************/
 	
 	/**
-	 * This id should be guarenteed unique upon creation
+	 * This id should be guaranteed unique upon creation
 	 * of a player.
 	 */
 	private final long id;
@@ -44,7 +45,13 @@ public class Player {
 	/**
 	 * The available chips of this player.
 	 */
-	private Chips chips;
+	private final Chips chips;
+	
+	/**
+	 * The chips the player has bet in this round.
+	 * 
+	 */
+	private final Chips bettedChips;
 	
 	/**
 	 * The hidden cards.
@@ -55,9 +62,26 @@ public class Player {
 	 * Constructor
 	 **********************************************************/
 	
-	public Player(long id, String name){
+	/**
+	 * Construct a new player with given id, 
+	 * name and initial number of chips.
+	 * 
+	 * @throws 	IllegalValueException
+	 * 			The given initial value is not valid.
+	 * 
+	 * @post	The chips pile is effective and 
+	 * 			the value of chips is the same
+	 * 			as the given initial value.
+	 *		 	|new.getBettedChips()!=null && new.getChips.getValue()==initialNbChips
+	 * @post 	The betted chips pile is effective and
+	 * 			There are no chips on this pile.
+	 *		 	|new.getBettedChips()!=null && new.getBettedChips().getValue()==0
+	 */
+	public Player(long id, String name, int initialNbChips) throws IllegalValueException{
 		this.id = id;
 		this.name = name;
+		chips = new Chips(initialNbChips);
+		bettedChips = new Chips();
 	}
 	
 	public String getName(){
@@ -66,6 +90,14 @@ public class Player {
 	
 	public long getId(){
 		return id;
+	}
+	
+	public Chips getChips(){
+		return chips;
+	}
+	
+	public Chips getBettedChips(){
+		return bettedChips;
 	}
 	
 }

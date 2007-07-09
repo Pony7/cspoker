@@ -20,7 +20,7 @@ import game.player.Player;
 import game.rounds.IllegalActionException;
 
 /**
- * An interface to definine all actions a player can do in one deal.
+ * An interface defining all actions a player can do in one deal.
  * 
  * @author Kenzo
  *
@@ -68,7 +68,7 @@ public interface PlayerAction {
 	/**
 	 * Fold the cards.
 	 * The player will not be able to take any actions
-	 * in the comming rounds of the current deal.
+	 * in the coming rounds of the current deal.
 	 * 
 	 * @param 	player
 	 * 			The player who folds.

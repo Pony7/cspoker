@@ -42,7 +42,7 @@ public class Deck {
 	/**
 	 * The sequence of cards in this deck.
 	 */
-	private List<Card> cards = new ArrayList<Card>(TOTAL_NB_CARDS);
+	private final List<Card> cards = new ArrayList<Card>(TOTAL_NB_CARDS);
 	
 	/**
 	 * The position of the last card dealt.
@@ -96,7 +96,9 @@ public class Deck {
 	 * 
 	 */
 	private void shuffle(){
-		Collections.shuffle(cards, generator.getRandom());
+		for (int i = 0; i < 2; i++) {
+			Collections.shuffle(cards, generator.getRandom());
+		}
 	}
 	/**
 	 * Returns the number of cards left in this deck.
@@ -109,11 +111,16 @@ public class Deck {
 	 * Returns the textual representation of this deck.
 	 * 
 	 */
+	@Override
 	public String toString(){
 		String result="";
 		for(int j=0;j<TOTAL_NB_CARDS;j++){
-			result=result+"/n"+cards.get(j).toString();
+			result=result+"\n"+cards.get(j).toString();
 		}
 		return result;
+	}
+	
+	public static void main(String[] args) {
+		System.out.println(new Deck());
 	}
 }

@@ -16,6 +16,32 @@
 
 package game.rounds;
 
-public class IllegalActionException extends Exception {
+import game.actions.Action;
+import game.player.Player;
 
+public class IllegalActionException extends Exception {
+	
+	private static final long serialVersionUID = -5675804638273023229L;
+	
+	private final Player player;
+	
+	private final Action action;
+	
+	public IllegalActionException(Player player, Action action){
+		this(player, action, "");
+	}
+	
+	public IllegalActionException(Player player, Action action, String message){
+		super(player.getName()+" performed an illegal action. "+action+" is not a valid action. "+message);
+		this.player = player;
+		this.action = action;
+	}
+	
+	public Player getPlayer(){
+		return player;
+	}
+	
+	public Action getAction(){
+		return action;
+	}
 }
