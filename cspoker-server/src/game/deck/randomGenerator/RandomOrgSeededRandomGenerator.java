@@ -16,96 +16,88 @@
 
 package game.deck.randomGenerator;
 
-import java.security.SecureRandom;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Random;
 
-import game.cards.Card;
-import game.cards.CardImpl;
-import game.cards.Rank;
-import game.cards.Suit;
-import game.cards.hand.Hand;
-
-
-public class RandomOrgSeededRandomGenerator implements RandomGenerator {
-
-	public int[] getRandomSequence() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public Card getRandomCard() {
-		Random generator = new Random();
-		
-		int suitNumber=generator.nextInt(4);
-		int rankNumber=2+generator.nextInt(13);
-		Suit randomSuit=null;
-		Rank randomRank=null;
-		switch (suitNumber) {
-		case 0:
-			randomSuit=Suit.CLUBS;
-			break;
-		case 1:
-			randomSuit=Suit.DIAMONDS;
-			break;
-		case 2:
-			randomSuit=Suit.HEARTS;
-			break;
-		case 3:
-			randomSuit=Suit.SPADES;
-			break;
+/**
+ * A random.org seeded random generator.
+ * 
+ * After a threshold number of times a random is returned,
+ * a new random is used in stead, with a seed from random.org
+ * 
+ * @author Kenzo
+ *
+ */
+public class RandomOrgSeededRandomGenerator extends RandomGenerator{
+	
+	private final static int THRESHOLD = 20; 
+	
+	/**
+	 * An internal counter.
+	 */
+	private volatile int counter;
+	
+	/**
+	 * Construct a new random.org seeded random generator.
+	 *
+	 */
+	public RandomOrgSeededRandomGenerator(){
+		super();
+		counter = 0;
+	}	
+	
+	/**
+	 * Returns a random-object.
+	 * 
+	 * This implementation uses a seed obtained from random.org
+	 * 
+	 * After serveral randoms have been requested,
+	 * a fresh seed from random.org is used.
+	 * 
+	 * @return A random-object.
+	 */
+	public Random getRandom() {
+		if(counter>THRESHOLD){
+			setNewRandom();
+			counter = 0;
 		}
-		switch (rankNumber) {
-		case 2:
-			randomRank=Rank.DEUCE;
-			break;
-		case 3:
-			randomRank=Rank.THREE;
-			break;
-		case 4:
-			randomRank=Rank.FOUR;
-			break;
-		case 5:
-			randomRank=Rank.FIVE;
-			break;
-		case 6:
-			randomRank=Rank.SIX;
-			break;
-		case 7:
-			randomRank=Rank.SEVEN;
-			break;
-		case 8:
-			randomRank=Rank.EIGHT;
-			break;
-		case 9:
-			randomRank=Rank.NINE;
-			break;
-		case 10:
-			randomRank=Rank.TEN;
-			break;
-		case 11:
-			randomRank=Rank.JACK;
-			break;
-		case 12:
-			randomRank=Rank.QUEEN;
-			break;
-		case 13:
-			randomRank=Rank.KING;
-			break;
-		case 14:
-			randomRank=Rank.ACE;
-			break;
-		}
-		return new CardImpl(randomSuit, randomRank);
+		counter++;
+		return random;
 	}
-
-	public Hand getRandomHand(int nBCards) {
-		Hand result=new Hand();
-		while(result.getNBCards()<nBCards){
-			Card randomCard=getRandomCard();
-			if(!result.contains(randomCard))
-				result.addCard(randomCard);
-		}
-		return result;
+	
+	/**
+	 * Returns a random long, obtained from random.org
+	 * 
+	 * The long is constructed as the multiplication of
+	 * 2 integers, returned by the random.org
+	 * 
+	 * No overflow occurs, but not the whole range of long is covered.
+	 * The result is between -10^18 and 10^18.
+	 */
+	protected long getRandomSeed(){
+		try {
+	        URL url = new URL("http://www.random.org/integers/?num=2&min=-1000000000&max=1000000000&col=1&base=10&format=plain&rnd=new");
+	    
+	        BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
+	        String str;
+	        
+	        int[] randomValues = new int[2];
+	        
+	        for (int i = 0; i < 2; i++) {
+	        	str = in.readLine();
+				randomValues[i] = Integer.parseInt(str);
+				System.out.println(str);
+			}
+	        in.close();
+	        return ((long)randomValues[0]) * randomValues[1];
+	    } catch (MalformedURLException e) {
+	    } catch (IOException e) {
+	    }
+	    System.out.println("Exception occured, default seed is used.");
+	    return super.getRandomSeed();
 	}
-
 }
