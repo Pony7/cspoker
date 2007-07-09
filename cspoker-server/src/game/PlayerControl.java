@@ -18,6 +18,7 @@ package game;
 
 
 import game.player.Player;
+import game.rounds.IllegalActionException;
 
 /**
  * A class to control the player's actions.
@@ -33,27 +34,27 @@ public class PlayerControl {
 	
 	private GameControl gameControl;
 	
-	public void call(){
+	public void call() throws IllegalActionException{
 		gameControl.call(player);
 	}
 	
-	public void bet(int amount){
+	public void bet(int amount) throws IllegalActionException{
 		gameControl.bet(player, amount);
 	}
 	
-	public void fold(){
+	public void fold() throws IllegalActionException{
 		gameControl.fold(player);
 	}
 	
-	public void check(){
+	public void check() throws IllegalActionException{
 		gameControl.check(player);
 	}
 	
-	public void raise(int amount){
+	public void raise(int amount) throws IllegalActionException{
 		gameControl.raise(player, amount);
 	}
 	
-	public void deal(){
+	public void deal() throws IllegalActionException{
 		gameControl.deal(player);
 	}
 

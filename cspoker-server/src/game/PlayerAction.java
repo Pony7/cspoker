@@ -17,6 +17,7 @@
 package game;
 
 import game.player.Player;
+import game.rounds.IllegalActionException;
 
 /**
  * An interface to definine all actions a player can do in one deal.
@@ -30,50 +31,58 @@ public interface PlayerAction {
 	 * If there is no bet on the table and you do not wish to place a bet.
 	 * You may only check when there are no prior bets.
 	 * 
-	 * @param player
+	 * @param	player
+	 * 			The player who checks.
 	 */
-	public void check(Player player);
+	public void check(Player player) throws IllegalActionException;
 	
 	/**
 	 * The player puts money in the pot.
 	 * 
-	 * @param player
-	 * @param amount
+	 * @param 	player
+	 * 			The player who puts a bet.
+	 * @param 	amount
+	 * 			The amount of the bet.
 	 */
-	public void bet(Player player, int amount);
+	public void bet(Player player, int amount) throws IllegalActionException;
 	
 	/**
 	 * To put into the pot an amount of money equal to
 	 * the most recent bet or raise.
 	 * 
-	 * @param player
+	 * @param 	player
+	 * 			The player who calls.
 	 */
-	public void call(Player player);
+	public void call(Player player) throws IllegalActionException;
 	
 	/**
 	 * Raise the bet with given amount.
 	 * 
-	 * @param player
-	 * @param amount
+	 * @param	player
+	 * 			The player who raises the current bet.
+	 * @param 	amount
+	 * 			The amount with which to raise the bet.
 	 */
-	public void raise(Player player, int amount);
+	public void raise(Player player, int amount) throws IllegalActionException;
 	
 	/**
 	 * Fold the cards.
 	 * The player will not be able to take any actions
 	 * in the comming rounds of the current deal.
 	 * 
-	 * @param player
+	 * @param 	player
+	 * 			The player who folds.
 	 */
-	public void fold(Player player);
+	public void fold(Player player) throws IllegalActionException;
 	
 	/**
 	 * The player who the dealer-button has been dealt to
 	 * can choose to start the deal.
 	 * From that moment, new players can not join the on-going deal.
 	 * 
-	 * @param player
+	 * @param 	player
+	 * 			The player who deals.
 	 */
-	public void deal(Player player);
+	public void deal(Player player) throws IllegalActionException;
 
 }

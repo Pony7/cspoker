@@ -14,11 +14,26 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-package game.chips;
+package game.chips.pot;
+
+import java.util.Iterator;
+import java.util.List;
 
 import game.player.Player;
 
-public interface Pot{
+public class SidePots implements Pot, Iterable<Pot>{
 	
-	public void addShowdownPlayer(Player player);
+	List<PotImpl> pots;
+	
+	public void addShowdownPlayer(Player player){
+		for(PotImpl pot:pots){
+			pot.addShowdownPlayer(player);
+		}
+	}
+
+	public Iterator<Pot> iterator() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

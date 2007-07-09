@@ -39,7 +39,7 @@ public abstract class Round {
 	 * If the next player is the last event player,
 	 * the round is over.
 	 * 
-	 * It is initialised in each game as the first better
+	 * It is initialized in each game as the first better
 	 * after the big blind, in every next round,
 	 * it is the player on to the left side of the player
 	 * with the dealer-button.
@@ -47,6 +47,8 @@ public abstract class Round {
 	private Player lastEventPlayer;
 	
 	private Game game;
+	
+	private int bet;
 	
 	/**
 	 * Initialise a new round for given game.
@@ -62,11 +64,17 @@ public abstract class Round {
 		return game;
 	}
 	
-	public void check(Player player){
-		
+	public void check(Player player) throws IllegalActionException{
+		//Only if player may check.
+		if(bet>0){
+			throw new IllegalActionException();
+		}
+		game.nextPlayer();
 	}
 	
 	public void bet(Player player, int amount){
+		
+		
 		playerMadeEvent(player);
 	}
 	
@@ -79,7 +87,7 @@ public abstract class Round {
 	}
 	
 	public void fold(Player player){
-		
+		game.removePlayerFromCurrentDeal(player);
 	}
 	
 	public void deal(Player player){
@@ -93,21 +101,30 @@ public abstract class Round {
 	
 	/**
 	 * End the current round.
+	 * 
 	 */
 	public abstract void endRound();
 	
 	/**
 	 * Returns the next round.
+	 * 
 	 */
 	public abstract Round getNextRound();
 	
 	/**
 	 * 
-	 * 
 	 * @param player
 	 */
 	private void playerMadeEvent(Player player){
 		lastEventPlayer = player;
+	}
+	
+	private boolean canCheck(Player player){
+		return onTurn(player) && bet==0;
+	}
+	
+	private boolean onTurn(Player player){
+		return game.getCurrentPlayer() == player;
 	}
 
 }

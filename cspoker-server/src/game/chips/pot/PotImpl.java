@@ -14,8 +14,9 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-package game.chips;
+package game.chips.pot;
 
+import game.chips.Chips;
 import game.player.Player;
 
 import java.util.Collections;
