@@ -15,11 +15,9 @@
  */
 
 package game.cards;
-
-
 /**
- * 
- * @author Kenzo
+ * A class of cards that can be compared 
+ * @author Cedric
  *
  */
 public class CardImpl implements Card, Comparable<Card>{
@@ -27,15 +25,30 @@ public class CardImpl implements Card, Comparable<Card>{
 	/**********************************************************
 	 * Variables
 	 **********************************************************/
-	
+	/**
+	 * The rank of this card
+	 */
 	private final  Rank rank;
-	
+	/**
+	 * The suit of this card
+	 */
 	private final Suit suit;
 	
 	/**********************************************************
 	 * Constructor
 	 **********************************************************/
 	
+	/**
+	 * Creates a new card with the given suit and rank.
+	 * @param	suit
+	 * 			the given suit
+	 * @param	rank
+	 * 			the given rank
+	 * @post	the suit of this card is equal to the given suit
+	 *			| new.getSuit().equals(suit)
+	 * @post	the rank of this card is equal to the given rank
+	 * 			| new.getRank().equals(rank)
+	 */
 	public CardImpl(Suit suit, Rank rank){
 		this.rank = rank;
 		this.suit = suit;
@@ -46,10 +59,17 @@ public class CardImpl implements Card, Comparable<Card>{
 	 **********************************************************/
 
 
+	/**
+	 * Returns the rank of this card
+	 * @see Card
+	 */
 	public Rank getRank() {
 		return rank;
 	}
-
+	/**
+	 * Returns the suit of this card
+	 * @see Card
+	 */
 	public Suit getSuit() {
 		return suit;
 	}
@@ -68,6 +88,15 @@ public class CardImpl implements Card, Comparable<Card>{
 		return result;
 	}
 
+	/**
+	 * Checks wether this card is equal to a given object
+	 * @param	obj
+	 * 			the given object
+	 * @return	False if the given object is null or if the given object isn't a card
+	 * 			| if(obj == null || getClass() != obj.getClass() ) result ==false
+	 * @return	Else check if this card equals the given card
+	 * 			| result == this.equals((Card) obj)
+	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -76,20 +105,26 @@ public class CardImpl implements Card, Comparable<Card>{
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		final CardImpl other = (CardImpl) obj;
 		
-		if (rank!=other.rank){
+		return equals((Card) obj);
+		
+	}
+	/**
+	 * Checks if this card equals a given other card
+	 * @see	Card
+	 */
+	public boolean equals(Card other){
+		if (rank!=other.getRank()){
 			return false;
 		}
-		if (suit!=other.suit){
+		if (suit!=other.getSuit()){
 			return false;
 		}
 		return true;
 	}
 	/**
 	 * Compares this card to a given other card by it's rank
-	 * @param other
-	 * 			the given other car
+	 * @see Card
 	 */
 	public int compareTo(Card other) {
 		if(other.getRank().getValue()>this.getRank().getValue())
@@ -106,11 +141,17 @@ public class CardImpl implements Card, Comparable<Card>{
 	}
 
 	/**
-	 * Checks if this card and the given card of an equal rank
-	 * @param	card
-	 * 			the given card to check with
+	 * Checks if this card and the given card have an equal rank
+	 * @see Card
 	 */
 	public boolean equalRank(Card card) {
 		return this.getRank().getValue()==card.getRank().getValue();
+	}
+	/**
+	 * Checks if this card and the given card have an equal rank
+	 * @see Card
+	 */
+	public boolean equalSuit(Card card){
+		return this.getSuit().equals(card.getSuit());
 	}
 }

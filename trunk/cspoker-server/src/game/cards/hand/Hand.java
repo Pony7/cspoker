@@ -15,11 +15,19 @@
  */
 package game.cards.hand;
 
+import java.util.Iterator;
+
 import game.cards.Card;
 import game.cards.CardImpl;
+/**
+ * A class of hands, that contain 0 to 7 cards
+ * @author Cedric
+ */
+public class Hand implements Iterable<Card>{
 
-public class Hand {
-
+	/**********************************************************
+	 * Variables
+	 **********************************************************/
 	/**
 	 * The maximum number of cards in a hand
 	 * being 7 in Texas Hold'em (5 on the table and 2 private cards)
@@ -29,28 +37,41 @@ public class Hand {
 	/**
 	 * Private array containing the cards of this hand
 	 */
-   private Card[] cards;
+   Card[] cards;
+
+
+   /**********************************************************
+	 * Constructors
+	 **********************************************************/
+   
    /**
     * Creates a new empty hand
+    * @post	there are no cards in the new hand
+    * 		| new.getNBCards()==0
     */
    public Hand() {
       cards = new CardImpl[MAX_CARDS];
       //updateType();
    }
    /**
-    * Duplicate an existing hand.
+    * Create a new hand with the same cards as the given hand
     * @param h 
-    * 			the hand to clone.
+    * 		the hand to clone.
+    * @post	the new hand contains every card of the given hand
+    * 		| for each Card x|h.contains(x) -> result.contains(x)
     */
    public Hand(Hand h) {
       cards = new CardImpl[MAX_CARDS];
       cards=h.getCards().clone();
    }
+   /**********************************************************
+	 * Methods
+	 **********************************************************/
    /**
-    * Returns the cards in this hand
+    * Returns an array with the cards in this hand
     */
    public Card[] getCards() {
-	return cards;
+	return this.cards.clone();
    }
    /**
     * Returns the number of cards in this hand
@@ -79,6 +100,8 @@ public class Hand {
     * 			| isFull() || this.contains(card)
     * @post		the new hand contains the given card
     * 			| new.contains(card)
+    * @post		the number of cards in this hand has increased by one
+    * 			| new.getNBCards()=this.getNBCards()+1
     */
    public void addCard(Card card){
 	   if(isFull() || this.contains(card))
@@ -88,6 +111,7 @@ public class Hand {
    /**
     * Checks wether this hand is full of cards
     * @return	True if the number of cards in this hand equals the maximum number of cards of any hand
+    * 			; false otherwise
     * 			| result == (getNBCards()==MAX_CARDS)
     */
    public boolean isFull(){
@@ -102,6 +126,8 @@ public class Hand {
     * 			| index < 0 || index > getNBCards()-1
     * @result	This hand contains the resulting card
     * 			| this.contains(result)
+    * @result	This hand contains the resulting card at the given index
+    * 			| index==this.getIndexOf(result)
     */
    public Card getCard(int index) {
       if (index < 0 || index > getNBCards()-1)
@@ -115,6 +141,8 @@ public class Hand {
     * @throws	IllegalArgumentException
     * 			if this hand doesn't contain a card equal to the given card
     * 			| ! this.contains(card)
+    * @result	This hand contains the given card at the resulting index
+    * 			| card=this.getCard(result) 
     */
    public int getIndexOf(Card card){
 	   if(! contains(card))
@@ -129,6 +157,9 @@ public class Hand {
     * Checks wether this hand contains a card equal to the given card
     * @param card
     * 			the given card
+    * @result	True if there exists a card in this hand that is equal to the given card
+    * 			; false otherwise
+    * 			| result == (for a Card x in this.getCards() : x.equals(card))
     */
    public boolean contains(Card card){
 	   for(int j=0;j<getNBCards();j++){
@@ -138,12 +169,30 @@ public class Hand {
 	   return false;
    }
    /**
+    * Checks wether this hand contains the given array of cards
+    * @param array
+    * 			the given array of cards
+    * @result	True if for every card in the array there exists a card in this hand
+    * 			that is equal to the given card; false otherwise
+    * 			| result == (for every Card x in array:(for a Card x in this.getCards() : x.equals(card)))
+    */
+   public boolean contains(Card[] array){
+	   boolean contains=true;
+	   for(int j=0;j<array.length-1;j++){
+		   if(!contains(array[j]))
+			   contains=false;
+	   }
+	   return contains;
+   }
+   /**
     * Removes a card equal to the given card from this hand
     * @param card
     * 			the given card
     * @throws	IllegalArgumentException
     * 			if this hand doesn't contain a card equal to the given card
     * 			| ! this.contains(card)
+    * @post	The hand doesn't contain the given card anymore
+    * 		| !new.contains(card)
     */
    public void removeCard(Card card){
 	   if(! contains(card))
@@ -155,10 +204,27 @@ public class Hand {
 	   cards[finalCardIndex]=null;
    }
    /**
+    * Removes all the cards in the given array from this hand
+    * @param array
+    * 			the given hand
+    * @throws	IllegalArgumentException
+    * 			if this hand doesn't contain the cards of the given array
+    * 			| ! this.contains(array)
+    * @post	The hand doesn't contain the cards of the given array anymore
+    * 		| !new.contains(array)
+    */
+   public void removeCard(Card[] array){
+	   if(! contains(array))
+		   throw new IllegalArgumentException();
+	   for(int j=0;j<array.length-1;j++){
+		   this.removeCard(array[j]);
+	   }
+   }
+   /**
     * Sorts the cards in this hand by their rank from highest to lowest rank
+    * (bubble sort variant)
     */
    public void sort(){
-	   // bubble sort variant
 	   int i,j;
 	   boolean swapped;
 	   Card temp=null;
@@ -186,5 +252,47 @@ public class Hand {
 		   result+=" "+j+" "+cards[j].toString()+"\n";
 	   }
 	   return result;
+   }
+   /**
+    * Returns an iterator that iterates over the cards in this hand
+    */
+   public Iterator<Card> iterator(){
+	   return new Iterator<Card>(){
+	   
+	   /**
+	    * The current position of the iterator
+	    */
+	   private int position=0;
+	   /**
+	    * The array with the cards in this hand
+	    */
+	   private Card[] card=cards.clone();
+	   /**
+	    * Checks wether the iterator has another card
+	    */
+	   public boolean hasNext(){
+		return( position < card.length-1 );
+	   }
+	   /**
+	    * Get the next card of this iterator
+	    */
+	   public Card next() throws IndexOutOfBoundsException
+	   {
+		if ( position >= card.length-1 )
+	    	  throw new IndexOutOfBoundsException();
+
+	      return card[position++];
+	   }
+	   /**
+	    * Removes the current card from the iterator
+	    */
+		public void remove() {
+			int index=position;
+			int finalCardIndex=card.length-1;
+			   
+			cards[index]=cards[finalCardIndex];
+			cards[finalCardIndex]=null;
+		}
+	   };
    }
 }

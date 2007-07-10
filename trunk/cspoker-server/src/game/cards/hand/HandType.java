@@ -146,6 +146,8 @@ public enum HandType {
 	public abstract int getRanking();
 	/**
 	 * Returns the number of cards that determine that hand type
+	 * @result the result is a integer between zero and 5
+	 * 			| result >=0 && result <=5
 	 */
 	public abstract int getNumberOfDeterminingCards();
 }

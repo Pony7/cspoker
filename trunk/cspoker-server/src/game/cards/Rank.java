@@ -17,7 +17,7 @@
 package game.cards;
 
 /**
- * An enumeration to represent ranks.
+ * An enumeration to represent the different ranks a card can have.
  * 
  * @author Kenzo
  *
@@ -113,7 +113,14 @@ public enum Rank {
 		}
 	};
 	
+	/**
+	 * Returns the numeral value of this rank
+	 * @return the numeral value of this rank
+	 */
 	public abstract int getValue();
+	/**
+	 * Returns a textual representation of this rank
+	 */
 	public String toString(){
 		return Integer.toString(getValue());
 	}
