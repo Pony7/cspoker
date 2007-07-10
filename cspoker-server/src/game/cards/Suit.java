@@ -17,7 +17,7 @@
 package game.cards;
 
 /**
- * An enumeration to represent suits.
+ * An enumeration to represent the different suits a card can have.
  * 
  * @author Kenzo
  *
@@ -51,7 +51,9 @@ public enum Suit {
 		}
 	};
 	
-	
+	/**
+	 * Returns a textual representation of this suit
+	 */
 	public abstract String toString();
 
 }

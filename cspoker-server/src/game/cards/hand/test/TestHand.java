@@ -15,6 +15,8 @@
  */
 package game.cards.hand.test;
 
+import java.util.Iterator;
+
 import game.cards.CardImpl;
 import game.cards.Rank;
 import game.cards.Suit;
@@ -24,7 +26,7 @@ import junit.framework.TestCase;
 public class TestHand extends TestCase {
 
 	protected Hand hand1;
-	public void test1(){
+	public void test(){
 		hand1=new Hand();
 		hand1.addCard(new CardImpl(Suit.HEARTS,Rank.THREE));
 		assertTrue(hand1.getNBCards()==1);
@@ -86,5 +88,20 @@ public class TestHand extends TestCase {
 		assertTrue(new CardImpl(Suit.CLUBS,Rank.DEUCE).equals(new CardImpl(Suit.CLUBS,Rank.DEUCE)));
 		
 		
+	}
+	public void testIterator(){
+		hand1=new Hand();
+		hand1.addCard(new CardImpl(Suit.CLUBS,Rank.ACE));
+		hand1.addCard(new CardImpl(Suit.DIAMONDS,Rank.DEUCE));
+		hand1.addCard(new CardImpl(Suit.HEARTS,Rank.FOUR));
+		hand1.addCard(new CardImpl(Suit.HEARTS,Rank.EIGHT));
+		hand1.addCard(new CardImpl(Suit.HEARTS,Rank.KING));
+		hand1.addCard(new CardImpl(Suit.HEARTS,Rank.JACK));
+		
+		Iterator iterator=hand1.iterator();
+		
+		while(iterator.hasNext()){
+			System.out.println(iterator.next().toString());
+		}
 	}
 }

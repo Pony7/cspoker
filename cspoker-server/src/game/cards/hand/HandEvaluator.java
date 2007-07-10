@@ -16,15 +16,15 @@
 package game.cards.hand;
 
 import game.cards.Card;
-import game.cards.Rank;
-
 /**
  * A class for evaluating and comparing hands
  * @author Cedric
- *
  */
 public class HandEvaluator {
 	
+	/**********************************************************
+	 * Auxiliary Methods
+	 **********************************************************/
 	   /**
 	    * Returns the best hand of 5 cards out of a given hand of 7 cards
 	    * @param hand
@@ -81,6 +81,9 @@ public class HandEvaluator {
 		  
 		    return bestHand;
 		  }
+	   /**********************************************************
+		 * Methods for comparing any hands
+		 **********************************************************/
 	   /**
 	    * Compares two hands of minimum 5 cards against each other
 	    * @param h1
@@ -103,16 +106,19 @@ public class HandEvaluator {
 		   return compareFiveCardHands(best1,best2);
 	   }
 	   /**
-	    * Compares two hands of 5 cards against each other.
-	    * 
+	    * Compares two hands of maximally 5 cards against each other.
 	    * @param h1
 	    *           The first hand
 	    * @param h2
 	    *           The second hand
+	    * @throws	IllegalArgumentException
+	    * 			if the given hands don't consist of maximally 5 cards
+	    * 			| h1.getNBCards()>6 || h2.getNBCards()>6
 	    * @return 1 = first hand is best, -1 = second hand is best, 0 = tie
 	    */
 	   public static int compareFiveCardHands(Hand h1, Hand h2) {
-		   
+		   if(h1.getNBCards()>6 || h2.getNBCards()>6)
+			   throw new IllegalArgumentException();
 
 		  Hand temp1=new Hand(h1);
 		  Hand temp2=new Hand(h2);
@@ -159,8 +165,130 @@ public class HandEvaluator {
 	      //cannot occur
 	      throw new IllegalStateException();
 	   }
+	   /**********************************************************
+		 * Methods for compairing hands with equal HandTypes
+		 **********************************************************/
+	   /**
+	    * Compares two high cards hands
+	    * @param h1
+	    *           The first hand
+	    * @param h2
+	    *           The second hand
+	    * @pre	The given hands consist of maximally 5 cards
+	    * 		| h1.getNBCards()<=5 || h2.getNBCards()<=5
+	    * @pre	The given hands consist of minimally 1 card
+	    * 		| h1.getNBCards()>=1 || h2.getNBCards()>=1
+	    * @return 1 = first hand is best, -1 = second hand is best, 0 = tie
+	    */
+	   public static int compareHighCardHands(Hand h1,Hand h2){
+		   Hand temp1=new Hand(h1);
+		   Hand temp2=new Hand(h2);
+		   temp1.sort();
+		   temp2.sort();
+		   for(int j=0;j<Math.min(Math.min(h1.getNBCards(),5),h2.getNBCards());j++){
+			   if(temp1.getCard(j).getRank().getValue()>temp2.getCard(j).getRank().getValue())
+				   return 1;
+			   if(temp1.getCard(j).getRank().getValue()<temp2.getCard(j).getRank().getValue())
+				   return -1;
+		   }
+		   return 0;
+	   }
+	
+	   /**
+	    * Compares two pair hands
+	    * @param h1
+	    *           The first hand
+	    * @param h2
+	    *           The second hand
+	    * @throws	IllegalArgumentException
+	    * 			if the given hands aren't pair hands
+	    * 			| !HandTypeCalculator.calculateHandType(h1).equals(HandType.PAIR) || 
+	    * 			|			!HandTypeCalculator.calculateHandType(h2).equals(HandType.PAIR)
+	    * @pre	The given hands consist of maximally 5 cards
+	    * 		| h1.getNBCards()<=5 || h2.getNBCards()<=5
+	    * @pre	The given hands consist of minimally 2 cards
+	    * 		| h1.getNBCards()>=2 || h2.getNBCards()>=2
+	    * @return 1 = first hand is best, -1 = second hand is best, 0 = tie
+	    * @return	One if the pair of the fist hand has a greater rank than the pair of the second hand
+	    * 			| if(HandTypeCalculator.getDeterminatingCards(h1)[0].getRank().getValue()>
+	    * 			|		HandTypeCalculator.getDeterminatingCards(h2)[0].getRank().getValue())
+	    * 			|	result==1
+	    * @return	Minus one if the pair of the fist hand has a lower rank than the pair of the second hand
+	    * 			| if(HandTypeCalculator.getDeterminatingCards(h1)[0].getRank().getValue()<
+	    * 			|		HandTypeCalculator.getDeterminatingCards(h2)[0].getRank().getValue())
+	    * 			|	result==-1
+	    * @return	Else the remaining cards are compared
+	    * 			| return HandEvaluator.compareHighCardHands(new Hand(h1).removeCard(pair1),new Hand(h2).removeCard(pair2));
+	    */
+	   public static int comparePairHands(Hand h1,Hand h2){
+		   if(!HandTypeCalculator.calculateHandType(h1).equals(HandType.PAIR) || 
+					!HandTypeCalculator.calculateHandType(h2).equals(HandType.PAIR))
+				throw new IllegalArgumentException();Card[] pair1=new Card[2];
+		   Card[] pair2=new Card[2];
+		   pair1=HandTypeCalculator.getDeterminatingCards(h1);
+		   pair2=HandTypeCalculator.getDeterminatingCards(h2);
+		   
+		   if(pair1[0].getRank().getValue()>pair2[0].getRank().getValue())
+			   return 1;
+		   if(pair1[0].getRank().getValue()<pair2[0].getRank().getValue())
+			   return -1;
+		   
+		  Hand temp1=new Hand(h1);
+		  Hand temp2=new Hand(h2);
+		  temp1.removeCard(pair1);
+		  temp2.removeCard(pair2);
+		   
+		   return HandEvaluator.compareHighCardHands(temp1,temp2);
+	   }
+	   /**
+	    * Compares two given double-pair hands
+	    * @param h1
+	    *           The first hand
+	    * @param h2
+	    *           The second hand
+	    * @throws	IllegalArgumentException
+	    * 			if the given hands aren't double-pair hands
+	    * 			| !HandTypeCalculator.calculateHandType(h1).equals(HandType.DOUBLE_PAIR) || 
+	    * 			|			!HandTypeCalculator.calculateHandType(h2).equals(HandType.DOUBLE_PAIR)
+	    * @pre	The given hands consist of maximally 5 cards
+	    * 		| h1.getNBCards()<=5 || h2.getNBCards()<=5
+	    * @pre 	The given hands consist of minimally 4 cards
+	    * 		| h1.getNBCards()>=4 || h2.getNBCards()>=4
+	    * @return 1 = first hand is best, -1 = second hand is best, 0 = tie
+	    * @return	One if the first pair of the fist hand has a greater rank than the first pair of the second hand
+	    * 			| if(HandTypeCalculator.getDeterminatingCards(h1)[0].getRank().getValue()>
+	    * 			|		HandTypeCalculator.getDeterminatingCards(h2)[0].getRank().getValue())
+	    * 			|	result==1
+	    * @return	Minus one if the first pair of the fist hand has a lower rank than the first pair of the second hand
+	    * 			| if(HandTypeCalculator.getDeterminatingCards(h1)[0].getRank().getValue()<
+	    * 			|		HandTypeCalculator.getDeterminatingCards(h2)[0].getRank().getValue())
+	    * 			|	result==-1
+	    * @return	One if the first pair of the fist hand has an equal rank as the first pair of the second hand
+	    * 			and the second pair of the first hand has a greater rank than the second pair of the second hand
+	    * 			| if(HandTypeCalculator.getDeterminatingCards(h1)[0].getRank().getValue()==
+	    * 			|		HandTypeCalculator.getDeterminatingCards(h2)[0].getRank().getValue()
+	    * 			|		&& HandTypeCalculator.getDeterminatingCards(h1)[2].getRank().getValue()>
+	    * 			|		HandTypeCalculator.getDeterminatingCards(h2)[2].getRank().getValue())
+	    * 			|	result==1
+	    * @return	Minus one if the first pair of the fist hand has an equal rank as the first pair of the second hand
+	    * 			and the second pair of the first hand has a lower rank than the second pair of the second hand
+	    * 			| if(HandTypeCalculator.getDeterminatingCards(h1)[0].getRank().getValue()==
+	    * 			|		HandTypeCalculator.getDeterminatingCards(h2)[0].getRank().getValue()
+	    * 			|		&& HandTypeCalculator.getDeterminatingCards(h1)[2].getRank().getValue()<
+	    * 			|		HandTypeCalculator.getDeterminatingCards(h2)[2].getRank().getValue())
+	    * 			|	result==1
+	    * @return	Else the non-pair cards are compared if the given hands have 5 cards
+	    * 			| else if(h1.getNBCards()==5 && h1.getNBCards()==5)
+	    * 			|		return (h1.removeCard(HandTypeCalculator.getDeterminatingCards(h1))).getCard(0).compareTo(
+	    * 			|				h2.removeCard(HandTypeCalculator.getDeterminatingCards(h2))).getCard(0))
+	    * @return	Else return 0
+	    * 			| else result == 0
+	    */
 	   public static int compareDoublePairHands(Hand h1, Hand h2) {
-	   Card[] card1=new Card[4];
+		if(!HandTypeCalculator.calculateHandType(h1).equals(HandType.DOUBLE_PAIR) || 
+				!HandTypeCalculator.calculateHandType(h2).equals(HandType.DOUBLE_PAIR))
+			throw new IllegalArgumentException();
+	    Card[] card1=new Card[4];
 		Card[] card2=new Card[4];
 		
 		card1=HandTypeCalculator.getDeterminatingCards(h1);
@@ -174,25 +302,229 @@ public class HandEvaluator {
 			   return 1;
 		if(card1[2].getRank().getValue()<card2[2].getRank().getValue())
 			   return -1;
+		//clone hands and remove pair cards
 		 Hand temp1=new Hand(h1);
-		   Hand temp2=new Hand(h2);
-		   
-		   temp1.removeCard(card1[0]);
-		   temp1.removeCard(card1[1]);
-		   temp1.removeCard(card1[2]);
-		   temp1.removeCard(card1[3]);
-		   temp2.removeCard(card2[0]);
-		   temp2.removeCard(card2[1]);
-		   temp2.removeCard(card2[2]);
-		   temp2.removeCard(card2[3]);
-		   
-		   return HandEvaluator.compareHighCardHands(temp1,temp2);
-	}
-   public static int compareStraightFlushHands(Hand h1, Hand h2) {
-	   	return compareStraightHands(h1,h2);
-   }
-public static int compareFourOfAKindHands(Hand h1, Hand h2) {
-		Card[] four1=new Card[4];
+		 Hand temp2=new Hand(h2);
+		 temp1.removeCard(card1);
+		 temp2.removeCard(card2);
+		 // compare the remaining card
+		 return temp1.getCard(0).compareTo(temp2.getCard(0));
+	   }
+	   /**
+	    * Compares two three-of-a-kind hands
+	    * @param h1
+	    *           The first hand
+	    * @param h2
+	    *           The second hand
+	    * @throws	IllegalArgumentException
+	    * 			if the given hands aren't three-of-a-kind hands
+	    * 			| !HandTypeCalculator.calculateHandType(h1).equals(HandType.THREE_OF_A_KIND) || 
+	    * 			|			!HandTypeCalculator.calculateHandType(h2).equals(HandType.THREE_OF_A_KIND)
+	    * @pre	The given hands consist of maximally 5 cards
+	    * 		| h1.getNBCards()<=5 || h2.getNBCards()<=5
+	    * @pre	The given hands consist of minimally 5 cards
+	    * 		| h1.getNBCards()>=3 || h2.getNBCards()>=3
+	    * @return 1 = first hand is best, -1 = second hand is best, 0 = tie
+	    * @return	One if the three cards of equal rank of the fist hand have a greater rank than the three cards 
+	    * 			of equal rank of the second hand
+	    * 			| if(HandTypeCalculator.getDeterminatingCards(h1)[0].getRank().getValue()>
+	    * 			|		HandTypeCalculator.getDeterminatingCards(h2)[0].getRank().getValue())
+	    * 			|	result==1
+	    * @return	Minus one if the three cards of equal rank of the fist hand have a lower rank than the three cards 
+	    * 			of equal rank of the second hand
+	    * 			| if(HandTypeCalculator.getDeterminatingCards(h1)[0].getRank().getValue()<
+	    * 			|		HandTypeCalculator.getDeterminatingCards(h2)[0].getRank().getValue())
+	    * 			|	result==-1
+	    * @return	Else the remaining cards are compared
+	    * 			| return HandEvaluator.compareHighCardHands(new Hand(h1).removeCard(
+	    * 			|	HandTypeCalculator.getDeterminatingCards(h1)),new Hand(h2).removeCard(
+	    * 			|		HandTypeCalculator.getDeterminatingCards(h2)));
+	    */
+	   public static int compareThreeOfAKindHands(Hand h1, Hand h2) {
+		   if(!HandTypeCalculator.calculateHandType(h1).equals(HandType.THREE_OF_A_KIND) || 
+					!HandTypeCalculator.calculateHandType(h2).equals(HandType.THREE_OF_A_KIND))
+				throw new IllegalArgumentException();
+		   Card[] three1=new Card[3];
+		   Card[] three2=new Card[3];
+		   three1=HandTypeCalculator.getDeterminatingCards(h1);
+		   three2=HandTypeCalculator.getDeterminatingCards(h2);
+			   
+		   if(three1[0].getRank().getValue()>three2[0].getRank().getValue())
+			   return 1;
+		   if(three1[0].getRank().getValue()<three2[0].getRank().getValue())
+			   return -1;
+			   // clone hands and remove three-of-a-kind cards
+			   Hand temp1=new Hand(h1);
+			   Hand temp2=new Hand(h2);
+			   temp1.removeCard(three1);
+			   temp2.removeCard(three2);
+			   // compare the remaining card
+			   return HandEvaluator.compareHighCardHands(temp1,temp2);
+	   }
+	   /**
+	    * Compares two straight hands
+	    * @param h1
+	    *           The first hand
+	    * @param h2
+	    *           The second hand
+	    * @throws	IllegalArgumentException
+	    * 			if the given hands aren't straight hands
+	    * 			| !HandTypeCalculator.calculateHandType(h1).equals(HandType.STRAIGHT) || 
+	    * 			|			!HandTypeCalculator.calculateHandType(h2).equals(HandType.STRAIGHT)
+	    * @pre	The given hands consist of 5 cards
+	    * 		| h1.getNBCards()==5 || h2.getNBCards()==5
+	    * @return 1 = first hand is best, -1 = second hand is best, 0 = tie
+	    * @return	One if the rank of the starting card of the straight of the first hand is greater than
+	    * 			the rank of the starting card of the straight of the second hand
+	    * 			| if(HandTypeCalculator.getDeterminatingCards(h1)[0].getRank().getValue()>
+	    * 			|		HandTypeCalculator.getDeterminatingCards(h2)[0].getRank().getValue())
+	    * 			|	result==1
+	    * @return	Minus one if the rank of the starting card of the straight of the first hand is smaller than
+	    * 			the rank of the starting card of the straight of the second hand
+	    * 			| if(HandTypeCalculator.getDeterminatingCards(h1)[0].getRank().getValue()<
+	    * 			|		HandTypeCalculator.getDeterminatingCards(h2)[0].getRank().getValue())
+	    * 			|	result==1
+	    * @return	Else result is zero
+	    * 			| else result==0
+	    */
+	   public static int compareStraightHands(Hand h1, Hand h2) {
+		   if(!HandTypeCalculator.calculateHandType(h1).equals(HandType.STRAIGHT) || 
+					!HandTypeCalculator.calculateHandType(h2).equals(HandType.STRAIGHT))
+				throw new IllegalArgumentException();
+		   Card[] cards1=HandTypeCalculator.getDeterminatingCards(h1);
+		   Card[] cards2=HandTypeCalculator.getDeterminatingCards(h2);
+			
+		   if(cards1[0].getRank().getValue()>cards2[0].getRank().getValue())
+			   return 1;
+		   if(cards1[0].getRank().getValue()<cards2[0].getRank().getValue())
+			   return -1;
+		   return 0;
+	   }
+	   /**
+	    * Compares two flush hands
+	    * @param h1
+	    *           The first hand
+	    * @param h2
+	    *           The second hand
+	    * @throws	IllegalArgumentException
+	    * 			if the given hands aren't flush hands
+	    * 			| !HandTypeCalculator.calculateHandType(h1).equals(HandType.FLUSH) || 
+	    * 			|			!HandTypeCalculator.calculateHandType(h2).equals(HandType.FLUSH)
+	    * @pre	The given hands consist of 5 cards
+	    * 		| h1.getNBCards()==5 || h2.getNBCards()==5
+	    * @return 1 = first hand is best, -1 = second hand is best, 0 = tie
+	    * @return	the hands are compared as high card hands
+	    * 			| result == compareHighCardHands(h1,h2)
+	    */
+	   public static int compareFlushHands(Hand h1, Hand h2) {
+		   if(!HandTypeCalculator.calculateHandType(h1).equals(HandType.FLUSH) || 
+					!HandTypeCalculator.calculateHandType(h2).equals(HandType.FLUSH))
+				throw new IllegalArgumentException();
+		   return compareHighCardHands(h1,h2);
+	   }
+	   /**
+	    * Compares two given full-house hands
+	    * @param h1
+	    *           The first hand
+	    * @param h2
+	    *           The second hand
+	    * @throws	IllegalArgumentException
+	    * 			if the given hands aren't double-pair hands
+	    * 			| !HandTypeCalculator.calculateHandType(h1).equals(HandType.FULL_HOUSE) || 
+	    * 			|			!HandTypeCalculator.calculateHandType(h2).equals(HandType.FULL_HOUSE)
+	    * @pre	The given hands consist of 5 card
+	    * 		| h1.getNBCards()==5 || h2.getNBCards()==5
+	    * @return 1 = first hand is best, -1 = second hand is best, 0 = tie
+	    * @return	One if the three cards of equal rank of the fist hand have a greater rank than the three cards 
+	    * 			of equal rank of the second hand
+	    * 			| if(HandTypeCalculator.getDeterminatingCards(h1)[0].getRank().getValue()>
+	    * 			|		HandTypeCalculator.getDeterminatingCards(h2)[0].getRank().getValue())
+	    * 			|	result==1
+	    * @return	Minus one if the three cards of equal rank of the fist hand have a lower rank than the three cards 
+	    * 			of equal rank of the second hand
+	    * 			| if(HandTypeCalculator.getDeterminatingCards(h1)[0].getRank().getValue()<
+	    * 			|		HandTypeCalculator.getDeterminatingCards(h2)[0].getRank().getValue())
+	    * 			|	result==-1
+	    * @return	One if the three cards of equal rank of the fist hand have an equal rank than the three cards 
+	    * 			of equal rank of the second hand and the second pair of the first hand 
+	    * 			has a greater rank than the second pair of the second hand
+	    * 			| if(HandTypeCalculator.getDeterminatingCards(h1)[0].getRank().getValue()==
+	    * 			|		HandTypeCalculator.getDeterminatingCards(h2)[0].getRank().getValue()
+	    * 			|		&& HandTypeCalculator.getDeterminatingCards(h1)[2].getRank().getValue()>
+	    * 			|		HandTypeCalculator.getDeterminatingCards(h2)[2].getRank().getValue())
+	    * 			|	result==1
+	    * @return	Minus one if the three cards of equal rank of the fist hand have an equal rank than the three cards 
+	    * 			of equal rank of the second hand and the second pair of the first hand 
+	    * 			has a lower rank than the second pair of the second hand
+	    * 			| if(HandTypeCalculator.getDeterminatingCards(h1)[0].getRank().getValue()==
+	    * 			|		HandTypeCalculator.getDeterminatingCards(h2)[0].getRank().getValue()
+	    * 			|		&& HandTypeCalculator.getDeterminatingCards(h1)[2].getRank().getValue()<
+	    * 			|		HandTypeCalculator.getDeterminatingCards(h2)[2].getRank().getValue())
+	    * 			|	result==1
+	    * @return	Else the non-pair cards are compared if the given hands have 5 cards
+	    * 			| else if(h1.getNBCards()==5 && h1.getNBCards()==5)
+	    * 			|		return (h1.removeCard(HandTypeCalculator.getDeterminatingCards(h1))).getCard(0).compareTo(
+	    * 			|				h2.removeCard(HandTypeCalculator.getDeterminatingCards(h2))).getCard(0))
+	    * @return	Else return 0
+	    * 			| else result == 0
+	    */
+	   public static int compareFullHouseHands(Hand h1, Hand h2) {
+		   if(!HandTypeCalculator.calculateHandType(h1).equals(HandType.FULL_HOUSE) || 
+					!HandTypeCalculator.calculateHandType(h2).equals(HandType.FULL_HOUSE))
+				throw new IllegalArgumentException();
+			Card[] card1=new Card[5];
+			Card[] card2=new Card[5];
+			
+			card1=HandTypeCalculator.getDeterminatingCards(h1);
+			card2=HandTypeCalculator.getDeterminatingCards(h2);
+			
+			if(card1[0].getRank().getValue()>card2[0].getRank().getValue())
+				   return 1;
+			if(card1[0].getRank().getValue()<card2[0].getRank().getValue())
+				   return -1;
+			if(card1[3].getRank().getValue()>card2[3].getRank().getValue())
+				   return 1;
+			if(card1[3].getRank().getValue()<card2[3].getRank().getValue())
+				   return -1;
+			return 0;
+	   }
+	   /**
+	    * Compares two four-of-a-kind hands
+	    * @param h1
+	    *           The first hand
+	    * @param h2
+	    *           The second hand
+	    * @throws	IllegalArgumentException
+	    * 			if the given hands aren't three-of-a-kind hands
+	    * 			| !HandTypeCalculator.calculateHandType(h1).equals(HandType.FOUR_OF_A_KIND) || 
+	    * 			|			!HandTypeCalculator.calculateHandType(h2).equals(HandType.FOUR_OF_A_KIND)
+	    * @pre	The given hands consist of maximally 5 cards
+	    * 		| h1.getNBCards()<=5 || h2.getNBCards()<=5
+	    * @pre	The given hands consist of minimally 4 cards
+	    * 		| h1.getNBCards()>=4 || h2.getNBCards()>=4
+	    * @return 1 = first hand is best, -1 = second hand is best, 0 = tie
+	    * @return	One if the four cards of equal rank of the fist hand have a greater rank than the four cards 
+	    * 			of equal rank of the second hand
+	    * 			| if(HandTypeCalculator.getDeterminatingCards(h1)[0].getRank().getValue()>
+	    * 			|		HandTypeCalculator.getDeterminatingCards(h2)[0].getRank().getValue())
+	    * 			|	result==1
+	    * @return	Minus one if the four cards of equal rank of the fist hand have a lower rank than the four cards 
+	    * 			of equal rank of the second hand
+	    * 			| if(HandTypeCalculator.getDeterminatingCards(h1)[0].getRank().getValue()<
+	    * 			|		HandTypeCalculator.getDeterminatingCards(h2)[0].getRank().getValue())
+	    * 			|	result==-1
+	    * @return	Else the non-pair cards are compared if the given hands have 5 cards
+	    * 			| else if(h1.getNBCards()==5 && h1.getNBCards()==5)
+	    * 			|		return (h1.removeCard(HandTypeCalculator.getDeterminatingCards(h1))).getCard(0).compareTo(
+	    * 			|				h2.removeCard(HandTypeCalculator.getDeterminatingCards(h2))).getCard(0))
+	    * @return	Else return 0
+	    * 			| else result == 0
+	    */
+	   public static int compareFourOfAKindHands(Hand h1, Hand h2) {
+		   if(!HandTypeCalculator.calculateHandType(h1).equals(HandType.FOUR_OF_A_KIND) || 
+					!HandTypeCalculator.calculateHandType(h2).equals(HandType.FOUR_OF_A_KIND))
+				throw new IllegalArgumentException();
+		   Card[] four1=new Card[4];
 		   Card[] four2=new Card[4];
 		   four1=HandTypeCalculator.getDeterminatingCards(h1);
 		   four2=HandTypeCalculator.getDeterminatingCards(h2);
@@ -205,133 +537,55 @@ public static int compareFourOfAKindHands(Hand h1, Hand h2) {
 		   Hand temp1=new Hand(h1);
 		   Hand temp2=new Hand(h2);
 		   
-		   temp1.removeCard(four1[0]);
-		   temp1.removeCard(four1[1]);
-		   temp1.removeCard(four1[2]);
-		   temp1.removeCard(four1[3]);
-		   temp2.removeCard(four2[0]);
-		   temp2.removeCard(four2[1]);
-		   temp2.removeCard(four2[2]);
-		   temp2.removeCard(four2[3]);
+		   temp1.removeCard(four1);
+		   temp2.removeCard(four2);
 		   
-		   return HandEvaluator.compareHighCardHands(temp1,temp2);
-	}
-	public static int compareFullHouseHands(Hand h1, Hand h2) {
-		Card[] card1=new Card[5];
-		Card[] card2=new Card[5];
-		
-		card1=HandTypeCalculator.getDeterminatingCards(h1);
-		card2=HandTypeCalculator.getDeterminatingCards(h2);
-		
-		if(card1[0].getRank().getValue()>card2[0].getRank().getValue())
-			   return 1;
-		if(card1[0].getRank().getValue()<card2[0].getRank().getValue())
-			   return -1;
-		if(card1[3].getRank().getValue()>card2[3].getRank().getValue())
-			   return 1;
-		if(card1[3].getRank().getValue()<card2[3].getRank().getValue())
-			   return -1;
-		return 0;
-	}
-	public static int compareFlushHands(Hand h1, Hand h2) {
-		return compareHighCardHands(h1,h2);
-	}
-	public static int compareStraightHands(Hand h1, Hand h2) {
-		Card[] cards1=HandTypeCalculator.getDeterminatingCards(h1);
-		Card[] cards2=HandTypeCalculator.getDeterminatingCards(h2);
-		
-		if(cards1[0].getRank().getValue()>cards2[0].getRank().getValue())
-			return 1;
-		if(cards1[0].getRank().getValue()<cards2[0].getRank().getValue())
-			return -1;
-		return 0;
-	}
-	public static int compareThreeOfAKindHands(Hand h1, Hand h2) {
-		Card[] three1=new Card[3];
-		   Card[] three2=new Card[3];
-		   three1=HandTypeCalculator.getDeterminatingCards(h1);
-		   three2=HandTypeCalculator.getDeterminatingCards(h2);
-		   
-		   if(three1[0].getRank().getValue()>three2[0].getRank().getValue())
-			   return 1;
-		   if(three1[0].getRank().getValue()<three2[0].getRank().getValue())
-			   return -1;
-		   
-		   Hand temp1=new Hand(h1);
-		   Hand temp2=new Hand(h2);
-		   
-		   temp1.removeCard(three1[0]);
-		   temp1.removeCard(three1[1]);
-		   temp1.removeCard(three1[2]);
-		   temp2.removeCard(three2[0]);
-		   temp2.removeCard(three2[1]);
-		   temp2.removeCard(three2[2]);
-		   
-		   return HandEvaluator.compareHighCardHands(temp1,temp2);
-	}
-	
-	/**
-	    * Compares two high cards hands
-	    * @param h1
-	    * 			the first high card hand
-	    * @param h2
-	    * 			the second high card hand
-	    * @return 1 = first hand is best, -1 = second hand is best, 0 = tie
-	    */
-	   public static int compareHighCardHands(Hand h1,Hand h2){
-		   if(h1.getNBCards()!=h2.getNBCards())
-			   throw new IllegalArgumentException();
-		  
-		   Hand temp1=new Hand(h1);
-		   Hand temp2=new Hand(h2);
-		   temp1.sort();
-		   temp2.sort();
-		   for(int j=0;j<Math.min(h1.getNBCards(),5);j++){
-			   if(temp1.getCard(j).getRank().getValue()>temp2.getCard(j).getRank().getValue())
-				   return 1;
-			   if(temp1.getCard(j).getRank().getValue()<temp2.getCard(j).getRank().getValue())
-				   return -1;
-		   }
-		   return 0;
+		   // compare the remaining card
+		   return temp1.getCard(0).compareTo(temp2.getCard(0));
 	   }
-	
 	   /**
-	    * Compares two pair hands
+	    * Compares two straight-flush hands
 	    * @param h1
-	    * 			the first high card hand
+	    *           The first hand
 	    * @param h2
-	    * 			the second high card hand
+	    *           The second hand
+	    * @throws	IllegalArgumentException
+	    * 			if the given hands aren't flush hands
+	    * 			| !HandTypeCalculator.calculateHandType(h1).equals(STRAIGHT_FLUSH) || 
+	    * 			|			!HandTypeCalculator.calculateHandType(h2).equals(STRAIGHT_FLUSH)
+	    * @pre	The given hands consist of 5 cards
+	    * 		| h1.getNBCards()==5 || h2.getNBCards()==5
 	    * @return 1 = first hand is best, -1 = second hand is best, 0 = tie
-	    * @pre	the given hands both consist of 5 cards
-	    * 		| h1.getNBCards()==5 && h2.getNBCards()==5
+	    * @return	the hands are compared as straight hands
+	    * 			| result == compareStraightHands(h1,h2)
 	    */
-	   public static int comparePairHands(Hand h1,Hand h2){
-		   Card[] pair1=new Card[2];
-		   Card[] pair2=new Card[2];
-		   pair1=HandTypeCalculator.getDeterminatingCards(h1);
-		   pair2=HandTypeCalculator.getDeterminatingCards(h2);
-		   
-		   if(pair1[0].getRank().getValue()>pair2[0].getRank().getValue())
-			   return 1;
-		   if(pair1[0].getRank().getValue()<pair2[0].getRank().getValue())
-			   return -1;
-		   
-		   Hand temp1=new Hand(h1);
-		   Hand temp2=new Hand(h2);
-		   
-		   temp1.removeCard(pair1[0]);
-		   temp1.removeCard(pair1[1]);
-		   temp2.removeCard(pair2[0]);
-		   temp2.removeCard(pair2[1]);
-		   
-		   return HandEvaluator.compareHighCardHands(temp1,temp2);
+	   public static int compareStraightFlushHands(Hand h1, Hand h2) {
+		   if(!HandTypeCalculator.calculateHandType(h1).equals(HandType.STRAIGHT_FLUSH) || 
+					!HandTypeCalculator.calculateHandType(h2).equals(HandType.STRAIGHT_FLUSH))
+				throw new IllegalArgumentException();
+		   return compareStraightHands(h1,h2);
 	   }
 	   
+	   /**********************************************************
+		 * Methods expressing the quality of any hand
+		 **********************************************************/
 	   /**
 	    * Returns the quality of the given hand, expressed by a number:
 	    * the higher the number the better the quality of the hand
 	    * @param hand
 	    * 			the given hand
+	    * @return	If the quality of one hand is greater than the quality of another hand,
+	    * 			the first hand is better than the second.
+	    * 			| if(getHandQuality(first)>getHandQuality(second)
+	    * 			|	then first.compareTo(second)==1
+	    * @return	If the quality of one hand is smaller than the quality of another hand,
+	    * 			the first hand is worse than the second.
+	    * 			| if(getHandQuality(first)<getHandQuality(second)
+	    * 			|	then first.compareTo(second)==-1
+	    * @return	If the quality of one hand is equal to the quality of another hand,
+	    * 			the first hand is as good as the second.
+	    * 			| if(getHandQuality(first)==getHandQuality(second)
+	    * 			|	then first.compareTo(second)==0
 	    */
 	   public static double getHandQuality(Hand hand){
 		   Hand temp=HandEvaluator.getBestHand(hand);
