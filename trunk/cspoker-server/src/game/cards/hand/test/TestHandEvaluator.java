@@ -25,6 +25,11 @@ import game.cards.hand.HandType;
 import game.cards.hand.HandTypeCalculator;
 import junit.framework.TestCase;
 
+/**
+ * A test class for all the methods in the HandEvaluator class
+ * @author Cedric
+ *
+ */
 public class TestHandEvaluator extends TestCase {
 
 	protected Hand hand1=new Hand();
