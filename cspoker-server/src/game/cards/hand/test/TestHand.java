@@ -23,6 +23,11 @@ import game.cards.Suit;
 import game.cards.hand.Hand;
 import junit.framework.TestCase;
 
+/**
+ * A test class for the general testing of hands
+ * @author Cedric
+ *
+ */
 public class TestHand extends TestCase {
 
 	protected Hand hand1;
