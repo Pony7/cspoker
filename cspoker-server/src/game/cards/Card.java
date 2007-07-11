@@ -15,6 +15,10 @@
  */
 
 package game.cards;
+
+import game.cards.cardElements.Rank;
+import game.cards.cardElements.Suit;
+
 /**
  * An interface of cards with a suit and a rank
  * @author Cedric

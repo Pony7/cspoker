@@ -71,14 +71,14 @@ public class Hand implements Iterable<Card>{
     * Returns an array with the cards in this hand
     */
    public Card[] getCards() {
-	return this.cards.clone();
+	return cards.clone();
    }
    /**
     * Returns the number of cards in this hand
     */
    public int getNBCards() {
 	int index=0;
-	while(index<MAX_CARDS && cards[index]!=null){
+	while((index<MAX_CARDS) && (cards[index]!=null)){
 		index++;
 	}
 	return index;
@@ -109,7 +109,7 @@ public class Hand implements Iterable<Card>{
 	   cards[getNBCards()]=card;
    }
    /**
-    * Checks wether this hand is full of cards
+    * Checks whether this hand is full of cards
     * @return	True if the number of cards in this hand equals the maximum number of cards of any hand
     * 			; false otherwise
     * 			| result == (getNBCards()==MAX_CARDS)
@@ -130,7 +130,7 @@ public class Hand implements Iterable<Card>{
     * 			| index==this.getIndexOf(result)
     */
    public Card getCard(int index) {
-      if (index < 0 || index > getNBCards()-1)
+      if ((index < 0) || (index > getNBCards()-1))
     	  throw new IllegalArgumentException();
       return cards[index];
    }
@@ -154,7 +154,7 @@ public class Hand implements Iterable<Card>{
 	   return -1; //cannot occur due to exception
    }
    /**
-    * Checks wether this hand contains a card equal to the given card
+    * Checks whether this hand contains a card equal to the given card
     * @param card
     * 			the given card
     * @result	True if there exists a card in this hand that is equal to the given card
@@ -169,7 +169,7 @@ public class Hand implements Iterable<Card>{
 	   return false;
    }
    /**
-    * Checks wether this hand contains the given array of cards
+    * Checks whether this hand contains the given array of cards
     * @param array
     * 			the given array of cards
     * @result	True if for every card in the array there exists a card in this hand
@@ -245,7 +245,8 @@ public class Hand implements Iterable<Card>{
    /**
     * Returns a textual representation of this hand
     */
-   public String toString(){
+   @Override
+public String toString(){
 	   String result="";
 	   
 	   for(int j=0;j<getNBCards();j++){
@@ -266,7 +267,7 @@ public class Hand implements Iterable<Card>{
 	   /**
 	    * The array with the cards in this hand
 	    */
-	   private Card[] card=cards.clone();
+	   private final Card[] card=cards.clone();
 	   /**
 	    * Checks wether the iterator has another card
 	    */

@@ -17,6 +17,7 @@
 package game.utilities;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -36,7 +37,7 @@ public class LoopingList<T> {
 	/**
 	 * The internal representation of the looping list.
 	 */
-	private List<T> list = new ArrayList<T>();
+	private final List<T> list = new ArrayList<T>();
 	
 	/**
 	 * The position of the current element.
@@ -131,9 +132,8 @@ public class LoopingList<T> {
 	 * 			will be set to the next element in the looping list.
 	 */
 	public boolean remove(T o){
-		if(!contains(o)){
+		if(!contains(o))
 			return false;
-		}
 		if(currentPosition>list.indexOf(o)){
 			currentPosition--;
 		}
@@ -164,5 +164,20 @@ public class LoopingList<T> {
 	 */
 	public boolean contains(T o){
 		return list.contains(o);
+	}
+	
+	/**
+	 * Returns an unmodifiable list,
+	 * containing all elements of this looping list.
+	 * 
+	 * The current element of the looping list
+	 * does not necessarily correspond to the
+	 * first element of the returned list.
+	 * 
+	 * @return A list containing all elements in the looping list.
+	 * 
+	 */
+	public List<T> getList(){
+		return Collections.unmodifiableList(list);
 	}
 }

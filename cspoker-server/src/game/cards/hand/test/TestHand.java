@@ -18,8 +18,8 @@ package game.cards.hand.test;
 import java.util.Iterator;
 
 import game.cards.CardImpl;
-import game.cards.Rank;
-import game.cards.Suit;
+import game.cards.cardElements.Rank;
+import game.cards.cardElements.Suit;
 import game.cards.hand.Hand;
 import junit.framework.TestCase;
 

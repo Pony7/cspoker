@@ -27,8 +27,13 @@ public class FinalRound extends Round{
 
 	@Override
 	public void endRound() {
-		// TODO Auto-generated method stub
+		collectChips();
 		
+		
+		if(onlyOnePlayerLeft()){
+
+		}
+		//TODO determine winner.
 	}
 
 	@Override
@@ -36,11 +41,6 @@ public class FinalRound extends Round{
 		return new WaitingRound(getGame());
 	}
 
-	@Override
-	public boolean roundEnded() {
-		// TODO Auto-generated method stub
-		return false;
-	}
 	/**
 	 * The amount to raise with must be n times the big bet
 	 */

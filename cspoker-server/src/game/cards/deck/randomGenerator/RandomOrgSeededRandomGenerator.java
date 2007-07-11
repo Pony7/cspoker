@@ -14,7 +14,7 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-package game.deck.randomGenerator;
+package game.cards.deck.randomGenerator;
 
 import java.io.BufferedReader;
 import java.io.IOException;

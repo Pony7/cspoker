@@ -16,8 +16,12 @@
 
 package game.player;
 
+import game.cards.Card;
 import game.chips.Chips;
 import game.chips.IllegalValueException;
+
+import java.util.Collections;
+import java.util.List;
 
 /**
  * A class to represent players: bots or humans.
@@ -56,7 +60,7 @@ public class Player {
 	/**
 	 * The hidden cards.
 	 */
-	private PocketCards pocketCards;
+	private List<Card> pocketCards;
 	
 	private boolean isDealer;
 	
@@ -115,4 +119,23 @@ public class Player {
 		getChips().transferAmountTo(amount, getBettedChips());
 	}
 	
+	public void transferAllChipsToBettedPile() throws IllegalValueException{
+		getChips().transferAllChipsTo(getBettedChips());
+	}
+	
+	/**********************************************************
+	 * Cards
+	 **********************************************************/
+	
+	/**
+	 * Deal a pocket card to this player.
+	 * 
+	 */
+	public void dealPocketCard(Card card){
+		pocketCards.add(card);
+	}
+	
+	public List<Card> getPocketCards(){
+		return Collections.unmodifiableList(pocketCards);
+	}
 }

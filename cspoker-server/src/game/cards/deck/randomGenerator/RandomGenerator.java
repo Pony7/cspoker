@@ -14,12 +14,12 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-package game.deck.randomGenerator;
+package game.cards.deck.randomGenerator;
 
 import game.cards.Card;
 import game.cards.CardImpl;
-import game.cards.Rank;
-import game.cards.Suit;
+import game.cards.cardElements.Rank;
+import game.cards.cardElements.Suit;
 import game.cards.hand.Hand;
 
 import java.util.Random;

@@ -19,8 +19,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import game.cards.Card;
-import game.cards.Rank;
-import game.cards.Suit;
+import game.cards.cardElements.Rank;
+import game.cards.cardElements.Suit;
 
 /**
  * A class for calculating the HandType of any hand
@@ -54,11 +54,11 @@ public class HandTypeCalculator {
 			return HandType.PAIR;
 		}else{
 			boolean flush=checkForFlush(best);
-			boolean straight=checkForStraigth(best);
+			boolean straight=checkForStraight(best);
 			
-			if(flush && straight){
+			if(flush && straight)
 				return HandType.STRAIGHT_FLUSH;
-			}else{
+			else{
 				if(flush)
 					return HandType.FLUSH;
 				if(straight)
@@ -74,7 +74,7 @@ public class HandTypeCalculator {
 	 * Checks if the given hand contains a pair of cards with equal rank
 	 * @param hand
 	 * 			the given hand to check
-	 * @result	True of this hand contains atleast a pair, being two cards of the same rank; false otherwise
+	 * @result	True of this hand contains at least a pair, being two cards of the same rank; false otherwise
 	 * 			| result== (x.equalRank(y) && hand.contains(x) && hand.contains(y))
 	 */
 	public static boolean checkForPair(Hand hand) {
@@ -146,7 +146,7 @@ public class HandTypeCalculator {
 		return threeOfAKindFound;
 	}
 	/**
-	 * Checks if the given hand contains a straigth 
+	 * Checks if the given hand contains a straight 
 	 * @param hand
 	 * 			the given hand to check
 	 * @result	True if this hand contains at least a sequence of five cards with consequetive ranks; false otherwise
@@ -154,7 +154,7 @@ public class HandTypeCalculator {
 	 * 			|				&& x.getRank()=y.getRank()+1 && y.getRank()=z.getRank()+1 && z.getRank()=u.getRank()+1
 	 * 			|				&& u.getRank()=v.getRank()+1 )
 	 */
-	public static boolean checkForStraigth(Hand hand) {
+	public static boolean checkForStraight(Hand hand) {
 		if(hand.getNBCards()<5)
 			return false;
 		boolean straightFound=false;
@@ -164,11 +164,11 @@ public class HandTypeCalculator {
 		int i=0;
 		for(int j=0;j<temp.getNBCards();j++){
 			i=j;
-			while(i-j<5 && i<temp.getNBCards()-1 && prevRankOk){
+			while((i-j<5) && (i<temp.getNBCards()-1) && prevRankOk){
 				prevRankOk=(temp.getCard(i).getRank().getValue()==temp.getCard(i+1).getRank().getValue()+1);
 				i++;
 			}
-			if(prevRankOk && i-j+1==5){
+			if(prevRankOk && (i-j+1==5)){
 				straightFound=true;
 				break;
 			}
@@ -188,11 +188,11 @@ public class HandTypeCalculator {
 			int l=0;
 			for(int j=0;j<temp.getNBCards();j++){
 				l=j;
-				while(l-j<5 && l<temp.getNBCards()-1 && prevRankOk){
+				while((l-j<5) && (l<temp.getNBCards()-1) && prevRankOk){
 					prevRankOk=(temp.getCard(l).getRank().getValue()==(temp.getCard(l+1).getRank().getValue()%13)+1);
 					l++;
 				}
-				if(prevRankOk && l-j+1==5){
+				if(prevRankOk && (l-j+1==5)){
 					straightFound=true;
 					break;
 				}
@@ -217,7 +217,7 @@ public class HandTypeCalculator {
 		for(int i=0;i<hand.getNBCards();i++){
 			flushSuit=hand.getCard(i).getSuit();
 			for(int j=0;j<hand.getNBCards();j++){
-				if(j!= i && hand.getCard(j).getSuit().equals(flushSuit))
+				if((j!= i) && hand.getCard(j).getSuit().equals(flushSuit))
 					suitCount++;
 				if(suitCount==4)
 					return true;
@@ -306,7 +306,7 @@ public class HandTypeCalculator {
 	public static boolean checkForStraightFlush(Hand hand) {
 		if(hand.getNBCards()<5)
 			return false;
-		if(checkForFlush(hand) && checkForStraigth(hand)){
+		if(checkForFlush(hand) && checkForStraight(hand)){
 			Card [] temp1=HandTypeCalculator.getStraightCard(hand);
 			Card[] temp2=HandTypeCalculator.getFlushCard(hand);
 			return temp1[0].getSuit().equals(temp2[0].getSuit());
@@ -486,7 +486,7 @@ public class HandTypeCalculator {
 	 * 			| hand.contains(result)
 	 */
 	public static Card[] getStraightCard(Hand hand) {
-		if(!checkForStraigth(hand))
+		if(!checkForStraight(hand))
 			throw new IllegalArgumentException();
 		Hand temp=new Hand(hand);
 		temp.sort();
@@ -530,7 +530,7 @@ public class HandTypeCalculator {
 		Suit flushSuit = null;
 		for(int i=0;i<hand.getNBCards();i++){
 			for(int j=0;j<hand.getNBCards();j++){
-				if(j!= i && hand.getCard(j).getSuit().equals(hand.getCard(i).getSuit()))
+				if((j!= i) && hand.getCard(j).getSuit().equals(hand.getCard(i).getSuit()))
 					suitCount++;
 				if(suitCount==5){
 					flushSuit=hand.getCard(j).getSuit();

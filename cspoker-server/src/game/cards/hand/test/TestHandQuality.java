@@ -16,13 +16,13 @@
 package game.cards.hand.test;
 
 import game.cards.CardImpl;
-import game.cards.Rank;
-import game.cards.Suit;
+import game.cards.cardElements.Rank;
+import game.cards.cardElements.Suit;
+import game.cards.deck.randomGenerator.RandomOrgSeededRandomGenerator;
 import game.cards.hand.Hand;
 import game.cards.hand.HandEvaluator;
 import game.cards.hand.HandType;
 import game.cards.hand.HandTypeCalculator;
-import game.deck.randomGenerator.RandomOrgSeededRandomGenerator;
 import junit.framework.TestCase;
 /**
  * A test class for the quality of a hand

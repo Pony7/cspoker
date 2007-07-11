@@ -17,11 +17,8 @@
 package game;
 
 import game.cards.Card;
-import game.chips.IllegalValueException;
-import game.chips.pot.Pot;
-import game.chips.pot.SidePots;
-import game.deck.Deck;
-import game.player.AllInPlayer;
+import game.cards.deck.Deck;
+import game.chips.pot.Pots;
 import game.player.Player;
 import game.utilities.LoopingList;
 
@@ -55,15 +52,11 @@ public class Game {
 	
 	private List<Card> openCards;
 	
-	private SidePots sidePots;
-	
-	private Pot pot;
+	private Pots pots;
 	
 	private Player dealer;
 	
 	private Player firstToActPlayer;
-	
-	private final List<Player> allInPlayers = new ArrayList<Player>();
 	
 	/**********************************************************
 	 * Constructor
@@ -87,12 +80,8 @@ public class Game {
 		return gameProperty;
 	}
 	
-	public Player getCurrentPlayer(){
-		return currentHandPlayers.getCurrent();
-	}
-	
-	public List<Player> getPlayers(){
-		return Collections.unmodifiableList(players);
+	public Pots getPots(){
+		return pots;
 	}
 	
 	/**********************************************************
@@ -139,12 +128,20 @@ public class Game {
 	public boolean hasAsPlayer(Player player){
 		return players.contains(player);
 	}
+	public List<Player> getPlayers(){
+		return Collections.unmodifiableList(players);
+	}
+	
 	/**********************************************************
 	 * Round manipulation.
 	 **********************************************************/
 	
 	public void nextPlayer(){
 		currentHandPlayers.next();
+	}
+	
+	public Player getCurrentPlayer(){
+		return currentHandPlayers.getCurrent();
 	}
 	
 	public void setCurrentPlayer(Player player){
@@ -155,74 +152,81 @@ public class Game {
 		currentHandPlayers.remove(player);
 	}
 	
+	public List<Player> getCurrentHandPlayers(){
+		return currentHandPlayers.getList();
+	}
+	
+	/**
+	 * Returns the number of players that
+	 * can act at this moment.
+	 * 
+	 * @return The number of players that
+	 * 			can act at this moment.
+	 */
+	public int getNbCurrentDealPlayers(){
+		return currentHandPlayers.size();
+	}
+	
+	
+	/**
+	 * Deal a new hand.
+	 * 
+	 */
 	public void dealNewHand(){
+		openCards = new ArrayList<Card>();
+		//TODO clear player private cards
 		deck.newDeal();
 		currentHandPlayers = new LoopingList<Player>(players);
-		setCurrentPlayer(dealer);
+		setCurrentPlayer(dealer);		
 		nextPlayer();
-		try {
-			collectSmallBlind(getCurrentPlayer());
-		} catch (IllegalValueException e) {
-			
-			//All-in logic
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		setDealer(getCurrentPlayer());
 		nextPlayer();
-		try {
-			collectBigBlind(getCurrentPlayer());
-		} catch (IllegalValueException e) {
-			// TODO Auto-generated catch block
-			//All-in logic
-			e.printStackTrace();
-		}
-		
-		nextPlayer();
-
-		//special case with 2 players
-		//and if the small blind player
-		//is all-in, other player can call
-		//the all-in bet.
-	}
-	
-	/**
-	 * Collect small blind from given player.
-	 * 
-	 * @param 	player
-	 * 			The player to collect the small blind from.
-	 * @throws IllegalValueException
-	 */
-	private void collectSmallBlind(Player player) throws IllegalValueException{
-		player.transferAmountToBettedPile(gameProperty.getSmallBlind());
-	}
-	
-	/**
-	 * Collect big blind from given player.
-	 * 
-	 * @param 	player
-	 * 			The player to collect the big blind from.
-	 * @throws IllegalValueException
-	 */
-	private void collectBigBlind(Player player) throws IllegalValueException{
-		player.transferAmountToBettedPile(gameProperty.getBigBlind());
+		setFirstToActPlayer(getCurrentPlayer());
 	}
 	
 	/**********************************************************
-	 * All-In Logic
-	 **********************************************************/
+	 * Card Logic
+	 **********************************************************/	
 	
-	
-	private void allIn(Player player){
-		allInPlayers.add(player);
-		removePlayerFromCurrentDeal(player);
+	public Card drawCard(){
+		return deck.drawCard();
 	}
 	
-	public List<AllInPlayer> getAllInPlayers(){
-		return null;
+	public void addOpenCard(Card card){
+		openCards.add(card);
 	}
 	
-	public void newRound(){
-		
+	public void addMuckCard(Card card){
+		//only for formalism :)
+		//it does what is says it does...
+	}
+	
+	public List<Card> getOpenCards(){
+		return Collections.unmodifiableList(openCards);
+	}
+	
+	/**********************************************************
+	 * First to act player
+	 **********************************************************/	
+	
+	public Player getFirstToActPlayer(){
+		return firstToActPlayer;
+	}
+	
+	public void setFirstToActPlayer(Player player){
+		firstToActPlayer = player;
+	}
+	
+	/**********************************************************
+	 * Dealer
+	 **********************************************************/	
+	
+	public Player getDealer(){
+		return dealer;
+	}
+	
+	public void setDealer(Player dealer){
+		this.dealer = dealer;
 	}
 
 }
