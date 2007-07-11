@@ -16,13 +16,13 @@
 
 package game;
 
+import game.actions.IllegalActionException;
 import game.player.Player;
-import game.rounds.IllegalActionException;
 import game.rounds.PreFlopRound;
 import game.rounds.Round;
 
 /**
- * This class is responsable to control the flow of the game.
+ * This class is responsible to control the flow of the game.
  * This class can change the state of users and the table.
  * 
  * @author Kenzo
@@ -38,7 +38,7 @@ public class GameControl implements PlayerAction{
 	 * This variable contains all game elements,
 	 * such as players and table.
 	 */
-	private Game game;
+	private final Game game;
 	
 	/**
 	 * The variable containing the round in which the current game is.
@@ -71,33 +71,45 @@ public class GameControl implements PlayerAction{
 	 * 			The player who checks.
 	 * @see PlayerAction
 	 */
+	@Override
 	public void bet(Player player, int amount) throws IllegalActionException{
 		round.bet(player, amount);
 		checkIfEndedAndChangeRound();
 	}
-
+	
+	@Override
 	public void call(Player player) throws IllegalActionException{
 		round.call(player);
 		checkIfEndedAndChangeRound();
 	}
 	
+	@Override
 	public void check(Player player) throws IllegalActionException{
 		round.check(player);
 		checkIfEndedAndChangeRound();
 	}
 	
+	@Override
 	public void raise(Player player, int amount) throws IllegalActionException{
 		round.raise(player, amount);
 		checkIfEndedAndChangeRound();
 	}
 	
+	@Override
 	public void fold(Player player) throws IllegalActionException{
 		round.fold(player);
 		checkIfEndedAndChangeRound();
 	}
 	
+	@Override
 	public void deal(Player player) throws IllegalActionException{
 		round.deal(player);
+		checkIfEndedAndChangeRound();
+	}
+	
+	@Override
+	public void allIn(Player player) throws IllegalActionException {
+		round.allIn(player);
 		checkIfEndedAndChangeRound();
 	}
 	

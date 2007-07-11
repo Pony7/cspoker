@@ -58,6 +58,8 @@ public class Player {
 	 */
 	private PocketCards pocketCards;
 	
+	private boolean isDealer;
+	
 	/**********************************************************
 	 * Constructor
 	 **********************************************************/
@@ -98,6 +100,19 @@ public class Player {
 	
 	public Chips getBettedChips(){
 		return bettedChips;
+	}
+	
+	public boolean isDealer(){
+		return isDealer;
+	}
+	
+	public void setDealer(boolean isDealer){
+		this.isDealer = isDealer;
+	}
+
+	
+	public void transferAmountToBettedPile(int amount) throws IllegalValueException{
+		getChips().transferAmountTo(amount, getBettedChips());
 	}
 	
 }

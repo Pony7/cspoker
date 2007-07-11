@@ -17,12 +17,15 @@
 package game;
 
 import game.cards.Card;
+import game.chips.IllegalValueException;
 import game.chips.pot.Pot;
 import game.chips.pot.SidePots;
 import game.deck.Deck;
+import game.player.AllInPlayer;
 import game.player.Player;
 import game.utilities.LoopingList;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -44,7 +47,7 @@ public class Game {
 	
 	private final GameProperty gameProperty;
 	
-	private List<Player> players = new CopyOnWriteArrayList<Player>();
+	private final List<Player> players = new CopyOnWriteArrayList<Player>();
 	
 	private LoopingList<Player> currentHandPlayers;
 	
@@ -55,6 +58,12 @@ public class Game {
 	private SidePots sidePots;
 	
 	private Pot pot;
+	
+	private Player dealer;
+	
+	private Player firstToActPlayer;
+	
+	private final List<Player> allInPlayers = new ArrayList<Player>();
 	
 	/**********************************************************
 	 * Constructor
@@ -119,8 +128,71 @@ public class Game {
 	public void dealNewHand(){
 		deck.newDeal();
 		currentHandPlayers = new LoopingList<Player>(players);
-		//small, large blinds must be collected.
-		//
+		setCurrentPlayer(dealer);
+		nextPlayer();
+		try {
+			collectSmallBlind(getCurrentPlayer());
+		} catch (IllegalValueException e) {
+			
+			//All-in logic
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		nextPlayer();
+		try {
+			collectBigBlind(getCurrentPlayer());
+		} catch (IllegalValueException e) {
+			// TODO Auto-generated catch block
+			//All-in logic
+			e.printStackTrace();
+		}
+		
+		nextPlayer();
+
+		//special case with 2 players
+		//and if the small blind player
+		//is all-in, other player can call
+		//the all-in bet.
+	}
+	
+	/**
+	 * Collect small blind from given player.
+	 * 
+	 * @param 	player
+	 * 			The player to collect the small blind from.
+	 * @throws IllegalValueException
+	 */
+	private void collectSmallBlind(Player player) throws IllegalValueException{
+		player.transferAmountToBettedPile(gameProperty.getSmallBlind());
+	}
+	
+	/**
+	 * Collect big blind from given player.
+	 * 
+	 * @param 	player
+	 * 			The player to collect the big blind from.
+	 * @throws IllegalValueException
+	 */
+	private void collectBigBlind(Player player) throws IllegalValueException{
+		player.transferAmountToBettedPile(gameProperty.getBigBlind());
+	}
+	
+	/**********************************************************
+	 * All-In Logic
+	 **********************************************************/
+	
+	
+	private void allIn(Player player){
+		allInPlayers.add(player);
+		removePlayerFromCurrentDeal(player);
+	}
+	
+	public List<AllInPlayer> getAllInPlayers(){
+		return null;
+	}
+	
+	public void newRound(){
+		
 	}
 
 }

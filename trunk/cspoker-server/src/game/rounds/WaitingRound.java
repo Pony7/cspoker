@@ -27,17 +27,25 @@ public class WaitingRound extends Round {
 		// TODO Auto-generated constructor stub
 	}
 
+	@Override
 	public void endRound() {
 		// TODO showdown
 
 	}
 
+	@Override
 	public Round getNextRound() {
 		return new PreFlopRound(getGame());
 	}
 
+	@Override
 	public boolean roundEnded() {
 		// TODO Auto-generated method stub
+		return false;
+	}
+	
+	@Override
+	public boolean isBettingRound(){
 		return false;
 	}
 
