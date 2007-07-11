@@ -17,6 +17,7 @@
 package game.rounds;
 
 import game.Game;
+import game.chips.IllegalValueException;
 
 
 /**
@@ -29,26 +30,40 @@ public class PreFlopRound extends Round{
 
 	public PreFlopRound(Game game) {
 		super(game);
-		// TODO Auto-generated constructor stub
+		try {
+			collectSmallBlind(getGame().getCurrentPlayer());
+		} catch (IllegalValueException e) {
+			goAllIn(getGame().getCurrentPlayer());
+		}
+		
+		getGame().nextPlayer();
+		//TODO problem if there are only 2 players left.
+		//2nd player can only call the small blind.
+		
+		try {
+			collectBigBlind(getGame().getCurrentPlayer());
+		} catch (IllegalValueException e) {
+			goAllIn(getGame().getCurrentPlayer());
+		}
+		
+		setBet(getGame().getCurrentPlayer().getBettedChips().getValue());
+		
+		getGame().nextPlayer();
 	}
 
+	@Override
 	public void endRound() {
-		// get 3 cards from deck and add to the game.
-		
-		
-		// TODO Auto-generated method stub
-		
+		collectChips();
+		drawMuckCard();
+		drawOpenCard();
+		drawOpenCard();
+		drawOpenCard();
 	}
 
+	@Override
 	public Round getNextRound() {
 		return new FlopRound(getGame());
 	}
-
-	public boolean roundEnded() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
 	/**
 	 * The amount to raise with must be n times the small bet
 	 */

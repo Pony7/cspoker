@@ -15,6 +15,10 @@
  */
 
 package game.cards;
+
+import game.cards.cardElements.Rank;
+import game.cards.cardElements.Suit;
+
 /**
  * A class of cards that can be compared 
  * @author Cedric

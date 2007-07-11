@@ -22,22 +22,22 @@ public class FlopRound extends Round {
 
 	public FlopRound(Game game) {
 		super(game);
-		// TODO Auto-generated constructor stub
 	}
 
+	@Override
 	public void endRound() {
-		// TODO Auto-generated method stub
-
+		collectChips();
+		
+		
+		drawMuckCard();
+		drawOpenCard();
 	}
 
+	@Override
 	public Round getNextRound() {
 		return new TurnRound(getGame());
 	}
 
-	public boolean roundEnded() {
-		// TODO Auto-generated method stub
-		return false;
-	}
 	/**
 	 * The amount to raise with must be n times the small bet
 	 */

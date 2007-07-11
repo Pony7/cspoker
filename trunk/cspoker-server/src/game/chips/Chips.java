@@ -164,6 +164,11 @@ public class Chips {
 	 * Transfer the given amount from this pile of chips to
 	 * the given pile of chips.
 	 * 
+	 * @param 	amount
+	 * 			The amount to transfer.
+	 * @param	receiver
+	 * 			The pile of chips to transfer
+	 * 			the amount of chips to.
 	 * @pre The receiver should be effective.
 	 * 		| receiver!=null
 	 * @pre The amount should be positive.
@@ -188,6 +193,24 @@ public class Chips {
 			throw new IllegalArgumentException();
 		decreaseWith(amount);
 		receiver.increaseWith(amount);
+	}
+	
+	/**
+	 * Transfer the all chips from this pile
+	 * to the given pile of chips.
+	 * 
+	 * @param 	receiver
+	 * 			The pile of chips to transfer
+	 * 			all the chips to.
+	 * @effect 	All the chips of this pile are
+	 * 			transfered to the given pile of chips.
+	 *		  	|transferAmountTo(getValue(), receiver)
+	 * @throws 	IllegalValueException [must]
+	 * 			This given pile of chips can not have the new value as its value.
+	 * 			| !canHaveAsValue(new.receiver.getValue())
+	 */
+	public synchronized void transferAllChipsTo(Chips receiver) throws IllegalValueException{
+		transferAmountTo(getValue(), receiver);
 	}
 
 }

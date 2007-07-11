@@ -16,9 +16,79 @@
 
 package game.chips.pot;
 
+import game.chips.Chips;
+import game.chips.IllegalValueException;
 import game.player.Player;
 
-public interface Pot{
+import java.util.Collections;
+import java.util.List;
+
+/**
+ * The pot contains both a list of players and the chips
+ * that should be divided between them.
+ * 
+ * There can be several pots, especially with the case of an all-in player.
+ * 
+ * 
+ * @author Kenzo
+ * 
+ * @invar The chips of this pot is effective.
+ *		  |getChips()!=null
+ *
+ */
+public class Pot{
 	
-	public void addShowdownPlayer(Player player);
+	/**
+	 * All the players that can take a share
+	 * of this pot.
+	 */
+	private List<Player> players ;
+	
+	/**
+	 * The pile of chips in this pot.
+	 */
+	private final Chips chips;
+	
+	/**********************************************************
+	 * Constructor
+	 **********************************************************/
+	
+	/**
+	 * Construct an empty pot.
+	 * 
+	 * @post The initial amount of chips is zero.
+	 *		 |getChips().getValue()==0
+	 */
+	public Pot(){
+		chips = new Chips();
+	}
+	
+	/**
+	 * Get the pile of chips in this pot.
+	 */
+	public Chips getChips(){
+		return chips;
+	}
+	
+	public List<Player> getPlayers(){
+		return Collections.unmodifiableList(players);
+	}
+
+	public void addShowdownPlayer(Player player) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	public void transferAmountToPot(int amount, Pot pot) throws IllegalValueException{
+		getChips().transferAmountTo(amount, pot.getChips());
+	}
+	
+	public void transferAllChipsTo(Pot pot){
+		try {
+			getChips().transferAmountTo(getChips().getValue(), pot.getChips());
+		} catch (IllegalValueException e) {
+			assert false;
+		}
+	}
+	
 }

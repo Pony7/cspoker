@@ -20,9 +20,15 @@ import game.Game;
 import game.PlayerAction;
 import game.actions.Action;
 import game.actions.IllegalActionException;
+import game.cards.Card;
 import game.chips.IllegalValueException;
+import game.chips.pot.Pot;
 import game.player.AllInPlayer;
 import game.player.Player;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * An abstract class to represent rounds.
@@ -59,6 +65,8 @@ public abstract class Round implements PlayerAction{
 	
 	private int bet;
 	
+	private final List<AllInPlayer> allInPlayers;
+	
 	/**********************************************************
 	 * Constructor
 	 **********************************************************/
@@ -71,6 +79,10 @@ public abstract class Round implements PlayerAction{
 	 */
 	public Round(Game game){
 		this.game = game;
+		allInPlayers = new ArrayList<AllInPlayer>();
+		bet = 0;
+		lastEventPlayer = getGame().getFirstToActPlayer();
+		getGame().setCurrentPlayer(getGame().getFirstToActPlayer());
 	}
 	
 	protected Game getGame(){
@@ -85,7 +97,7 @@ public abstract class Round implements PlayerAction{
 	 * Set the bet of this round to the given value.
 	 * 
 	 */
-	private void setBet(int value){
+	protected void setBet(int value){
 		bet = value; 
 	}
 	
@@ -96,6 +108,16 @@ public abstract class Round implements PlayerAction{
 	 */
 	public int getBet(){
 		return bet;
+	}
+	
+	/**
+	 * Returns true if someone has bet.
+	 * 
+	 * @return 	True if someone has bet,
+	 * 			False otherwise.
+	 */
+	public boolean someoneHasBet(){
+		return bet>0;
 	}
 	
 	/**
@@ -115,6 +137,33 @@ public abstract class Round implements PlayerAction{
 		setBet(getBet()+amount);
 	}
 	protected abstract boolean isValidRaise(int amount);
+	/**********************************************************
+	 * Collect blinds
+	 **********************************************************/	
+	
+	/**
+	 * Collect small blind from given player.
+	 * 
+	 * @param 	player
+	 * 			The player to collect the small blind from.
+	 * @throws IllegalValueException
+	 */
+	protected void collectSmallBlind(Player player) throws IllegalValueException{
+		player.transferAmountToBettedPile(getGame().getGameProperty().getSmallBlind());
+	}
+	
+	/**
+	 * Collect big blind from given player.
+	 * 
+	 * @param 	player
+	 * 			The player to collect the big blind from.
+	 * @throws IllegalValueException
+	 */
+	protected void collectBigBlind(Player player) throws IllegalValueException{
+		player.transferAmountToBettedPile(getGame().getGameProperty().getBigBlind());
+		setBet(getGame().getGameProperty().getBigBlind());
+	}
+	
 	/**********************************************************
 	 * Bidding methods
 	 **********************************************************/
@@ -224,7 +273,7 @@ public abstract class Round implements PlayerAction{
 	 * @return 	True if the round is ended,
 	 * 			false otherwise.
 	 */
-	public boolean roundEnded(){
+	public boolean isRoundEnded(){
 		return lastEventPlayer.equals(game.getCurrentPlayer());
 	}
 	
@@ -247,12 +296,8 @@ public abstract class Round implements PlayerAction{
 	 * @param 	player
 	 * 			The player who did the last event.
 	 */
-	private void playerMadeEvent(Player player){
+	protected void playerMadeEvent(Player player){
 		lastEventPlayer = player;
-	}
-	
-	public boolean someOneHasBet(){
-		return bet>0;
 	}
 	
 	public boolean onTurn(Player player){
@@ -263,10 +308,67 @@ public abstract class Round implements PlayerAction{
 		return true;
 	}
 	
-	protected void makeSidePots(){
-		for(AllInPlayer player:game.getAllInPlayers()){
-			int betToSidePot = player.getBetValue();			
+	protected void goAllIn(Player player){
+		try {
+			player.transferAllChipsToBettedPile();
+		} catch (IllegalValueException e) {
+			assert false;
 		}
+		allInPlayers.add(new AllInPlayer(player));
+		getGame().removePlayerFromCurrentDeal(player);
+		if(player.getBettedChips().getValue()>getBet()){
+			setBet(player.getBettedChips().getValue());
+		}
+		
+		//TODO problem if all-in player is
+		//last event player?
+	}
+	
+	/**
+	 * Returns true if there is only one
+	 * player left, false otherwise.
+	 * 
+	 * This also implies there are no all-in players,
+	 * otherwise there will be a showdown.
+	 * 
+	 * @return 	True if there is only one player left,
+	 * 			False otherwise.
+	 */
+	public boolean onlyOnePlayerLeft(){
+		return (getGame().getNbCurrentDealPlayers()==1) && (allInPlayers.size()==0);
+	}
+	
+	/**********************************************************
+	 * Collect Chips
+	 **********************************************************/
+
+	/**
+	 * Collect the betted chips pile from all players.
+	 * Also creates new side pots if necessary
+	 * in the case of all-in players.
+	 * 
+	 */
+	protected void collectChips(){
+		makeSidePots();
+		collectBets();
+	}
+	
+	private void makeSidePots(){
+		Collections.sort(allInPlayers);
+		List<Player> players = game.getCurrentHandPlayers();
+		for(AllInPlayer player:allInPlayers){
+			try {
+				game.getPots().collectAmountFromPlayersToSidePot(player.getBetValue(), players);
+			} catch (IllegalValueException e) {
+				assert false;
+			}
+			game.getPots().addShowdownPlayer(player.getPlayer());
+		}
+		allInPlayers.clear();
+	}
+	
+	private void collectBets(){
+			game.getPots().collectChipsToPot(game.getCurrentHandPlayers());
 	}
 	
 	/**
@@ -274,7 +376,7 @@ public abstract class Round implements PlayerAction{
 	 * must transfer to the betted pile
 	 * to equal the current bet.
 	 * 
-	 * @param player
+	 * @param 	player
 	 * 			The player who wants to know
 	 * 			how many chips to transfer.
 	 * @return	The number of chips the player
@@ -283,6 +385,39 @@ public abstract class Round implements PlayerAction{
 	 */
 	protected int amountToIncreaseBettedPileWith(Player player){
 		return getBet()-player.getBettedChips().getValue();
+	}
+	
+	protected void winner(Pot pot, Player player){
+		
+	}
+	
+	/**********************************************************
+	 * Cards
+	 **********************************************************/
+
+	/**
+	 * Draw a card from the deck and send it to the muck.
+	 * 
+	 */
+	protected void drawMuckCard(){
+		getGame().addMuckCard(drawCard());
+	}
+	
+	/**
+	 * Draw a card from the deck and add it to the community cards.
+	 * 
+	 */
+	protected void drawOpenCard(){
+		getGame().addOpenCard(drawCard());
+	}
+	
+	/**
+	 * Draw a card from the deck.
+	 * 
+	 * @return The top card from the deck is returned.
+	 */
+	protected Card drawCard(){
+		return getGame().drawCard();
 	}
 
 }

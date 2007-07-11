@@ -22,7 +22,7 @@ public class AllInPlayer implements Comparable<AllInPlayer>{
 	private final Player player;
 
 	
-	AllInPlayer(Player player){
+	public AllInPlayer(Player player){
 		this.player = player;
 	}
 	

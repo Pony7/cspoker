@@ -17,8 +17,8 @@ package game.cards.hand.test;
 
 import game.cards.Card;
 import game.cards.CardImpl;
-import game.cards.Rank;
-import game.cards.Suit;
+import game.cards.cardElements.Rank;
+import game.cards.cardElements.Suit;
 import game.cards.hand.Hand;
 import game.cards.hand.HandEvaluator;
 import game.cards.hand.HandType;
@@ -452,7 +452,7 @@ public class TestHandEvaluator extends TestCase {
 		hand1.addCard(new CardImpl(Suit.SPADES,Rank.EIGHT));
 		hand1.addCard(new CardImpl(Suit.SPADES,Rank.ACE));
 		
-		assertTrue(HandTypeCalculator.checkForStraigth(hand1));
+		assertTrue(HandTypeCalculator.checkForStraight(hand1));
 		assertTrue(HandTypeCalculator.checkForFlush(hand1));
 		assertTrue(HandTypeCalculator.checkForStraightFlush(hand1));
 		assertTrue(HandTypeCalculator.calculateHandType(hand1).equals(HandType.STRAIGHT_FLUSH));

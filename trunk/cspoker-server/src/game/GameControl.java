@@ -20,6 +20,7 @@ import game.actions.IllegalActionException;
 import game.player.Player;
 import game.rounds.PreFlopRound;
 import game.rounds.Round;
+import game.rounds.WaitingRound;
 
 /**
  * This class is responsible to control the flow of the game.
@@ -77,12 +78,28 @@ public class GameControl implements PlayerAction{
 		checkIfEndedAndChangeRound();
 	}
 	
+	/**
+	 * To put into the pot an amount of money equal to
+	 * the most recent bet or raise.
+	 * 
+	 * @param 	player
+	 * 			The player who calls.
+	 * @see PlayerAction
+	 */
 	@Override
 	public void call(Player player) throws IllegalActionException{
 		round.call(player);
 		checkIfEndedAndChangeRound();
 	}
 	
+	/**
+	 * If there is no bet on the table and you do not wish to place a bet.
+	 * You may only check when there are no prior bets.
+	 * 
+	 * @param	player
+	 * 			The player who checks.
+	 * @see PlayerAction
+	 */
 	@Override
 	public void check(Player player) throws IllegalActionException{
 		round.check(player);
@@ -122,7 +139,7 @@ public class GameControl implements PlayerAction{
 	 * the next round if it's the case.
 	 */
 	private void checkIfEndedAndChangeRound(){
-		if(round.roundEnded()){
+		if(round.isRoundEnded()){
 			changeToNextRound();
 		}
 	}
@@ -130,9 +147,16 @@ public class GameControl implements PlayerAction{
 	/**
 	 * End this round and change the round to the next round.
 	 * 
+	 * If only one player is left, the next round should
+	 * be a waiting round.
+	 * 
 	 */
 	private void changeToNextRound(){
 		round.endRound();
-		round = round.getNextRound();
+		if(round.onlyOnePlayerLeft()){
+			round = new WaitingRound(game);
+		}else{
+			round = round.getNextRound();
+		}
 	}
 }

@@ -17,6 +17,7 @@
 package game.rounds;
 
 import game.Game;
+import game.player.Player;
 
 public class WaitingRound extends Round {
 	
@@ -24,24 +25,22 @@ public class WaitingRound extends Round {
 
 	public WaitingRound(Game game) {
 		super(game);
-		// TODO Auto-generated constructor stub
+		//TODO all logic for new deal
+		//should be placed here.
 	}
 
 	@Override
 	public void endRound() {
-		// TODO showdown
-
+		
+		for(Player player:getGame().getCurrentHandPlayers()){
+			player.dealPocketCard(drawCard());
+			player.dealPocketCard(drawCard());
+		}
 	}
 
 	@Override
 	public Round getNextRound() {
 		return new PreFlopRound(getGame());
-	}
-
-	@Override
-	public boolean roundEnded() {
-		// TODO Auto-generated method stub
-		return false;
 	}
 	
 	@Override

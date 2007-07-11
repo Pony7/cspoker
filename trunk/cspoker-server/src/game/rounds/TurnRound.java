@@ -22,22 +22,24 @@ public class TurnRound extends Round{
 
 	public TurnRound(Game game) {
 		super(game);
-		// TODO Auto-generated constructor stub
 	}
-
+	
+	/**
+	 * Deal the river card to the public cards.
+	 * 
+	 */
+	@Override
 	public void endRound() {
-		// TODO Auto-generated method stub
-		
+		collectChips();
+		drawMuckCard();
+		drawOpenCard();
 	}
 
+	@Override
 	public Round getNextRound() {
 		return new FinalRound(getGame());
 	}
 
-	public boolean roundEnded() {
-		// TODO Auto-generated method stub
-		return false;
-	}
 	/**
 	 * The amount to raise with must be n times the big bet
 	 */
@@ -49,4 +51,5 @@ public class TurnRound extends Round{
 	protected String getIllegalRaiseMessage() {
 		return "The amount must be n times the big bet";
 	}
+
 }

@@ -97,6 +97,18 @@ public enum Action {
 		public String toString(){
 			return "Deal";
 		}
+	},
+	
+	ALL_IN{
+		@Override
+		public boolean canDoAction(Round round, Player player){
+			return false;
+		}
+		
+		@Override
+		public String toString(){
+			return "All-in";
+		}
 	};
 	
 	/**
