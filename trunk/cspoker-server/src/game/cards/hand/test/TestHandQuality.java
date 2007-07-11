@@ -15,7 +15,6 @@
  */
 package game.cards.hand.test;
 
-import game.cards.Card;
 import game.cards.CardImpl;
 import game.cards.Rank;
 import game.cards.Suit;

@@ -99,16 +99,46 @@ public class Game {
 	 * Add/Remove Players to/from the game.
 	 **********************************************************/
 	
+	/**
+	 * Removes the given player from this game
+	 * @throws	IllegalArgumentException
+	 * 			if the given player isn't part of this game
+	 * 			| !hasAsPlayer(player)
+	 * @post	The given player isn't part of this game anymore
+	 * 			| !new.hasAsPlayer(player)
+	 */
 	public void removePlayer(Player player){
+		if(!hasAsPlayer(player))
+			throw new IllegalArgumentException();
 		players.remove(player);
 	}
-	
-	public void addPlayer(Player player){
-		//TODO check if full
-		
+	/**
+	 * Adds the given player to this game
+	 * @param player
+	 * 			the given player
+	 * @throws PlayerListFullException
+	 * 			if this game is full of players
+	 * 			| fullOfPlayers()
+	 */
+	public void addPlayer(Player player) throws PlayerListFullException{
+		if(fullOfPlayers())
+			throw new PlayerListFullException();
 		players.add(player);
 	}
-	
+	/**
+	 * Checks wether this game is full of players
+	 */
+	public boolean fullOfPlayers(){
+		return players.size()>=getGameProperty().getMaxNbPlayers();
+	}
+	/**
+	 * Checks wether the given player is part of this game
+	 * @param player
+	 * 			the given player
+	 */
+	public boolean hasAsPlayer(Player player){
+		return players.contains(player);
+	}
 	/**********************************************************
 	 * Round manipulation.
 	 **********************************************************/
