@@ -110,11 +110,11 @@ public abstract class Round implements PlayerAction{
 	 *		   	|setBet(getBet()+amount)
 	 */
 	private void raiseBetWith(int amount){
-		if(amount<=0)
+		if(amount<=0 || !isValidRaise(amount))
 			throw new IllegalArgumentException();
 		setBet(getBet()+amount);
 	}
-	
+	protected abstract boolean isValidRaise(int amount);
 	/**********************************************************
 	 * Bidding methods
 	 **********************************************************/
@@ -138,7 +138,8 @@ public abstract class Round implements PlayerAction{
 	public void bet(Player player, int amount) throws IllegalActionException{
 		if(!Action.BET.canDoAction(this, player))
 			throw new IllegalActionException(player, Action.BET);
-		
+		if(!isValidRaise(amount))
+			throw new IllegalActionException(player,Action.BET, getIllegalRaiseMessage());
 		if(amount==0)
 			throw new IllegalActionException(player, Action.RAISE, "Can not bet with 0 chips. Did you mean check?");
 		
@@ -152,11 +153,12 @@ public abstract class Round implements PlayerAction{
 		game.nextPlayer();
 	}
 	
+	protected abstract String getIllegalRaiseMessage();
+
 	@Override
 	public void call(Player player) throws IllegalActionException{
 		if(!Action.CALL.canDoAction(this, player))
 			throw new IllegalActionException(player, Action.CALL);
-		
 		try {
 			player.transferAmountToBettedPile(amountToIncreaseBettedPileWith(player));
 		} catch (IllegalValueException e) {
@@ -171,6 +173,9 @@ public abstract class Round implements PlayerAction{
 		if(!Action.RAISE.canDoAction(this, player))
 			throw new IllegalActionException(player, Action.RAISE);
 
+		if(!isValidRaise(amount))
+			throw new IllegalActionException(player,Action.RAISE, getIllegalRaiseMessage());
+		
 		if(amount==0)
 			throw new IllegalActionException(player, Action.RAISE, "Can not raise with 0 chips. Did you mean call?");
 		

@@ -22,21 +22,103 @@ package game;
  * such as maximum number of players, maximum bet/raise,
  * the amount for small/big blinds,...
  * 
- * @author Kenzo
+ * @author Kenzo & Cedric
  *
+ * @invar	This game property must have valid parameters
+ * 			| hasValidParameters()
  */
 public class GameProperty {
-	
-	private final int smallBlind;
-	
-	private final int bigBlind;
-	
+	/**********************************************************
+	 * Variables
+	 **********************************************************/
+	/**
+	 * The minimum value of chips the first player after the dealer button
+	 * must place in the pot
+	 */
+	private final int smallBlind=getSmallBet()/2;
+	/**
+	 * The minimum value of chips the second player after the dealer button
+	 * must place in the pot
+	 */
+	private final int bigBlind=getSmallBet();
+	/**
+	 * The value of a small bet, used in the first three rounds
+	 */
+	private final int smallBet;
+	/**
+	 * The value of a big bet, used in the fourth and final round
+	 */
+	private final int bigBet=getSmallBet()*2;
+	/**
+	 * The maximum number of players in a game
+	 */
+	private static final int maxNbPlayers=10;
+	/**********************************************************
+	 * Constructors
+	 **********************************************************/
+	/**
+	 * Constructs a new game property with smallbet 10 
+	 * @post	This game has valid parameters
+	 * 			| new.hasValidParameters()
+	 * @post	The smallbet of this game property is 10
+	 * 			| new.getSmallBet()==10
+	 * @post	The bigbet of this game property is 20
+	 * 			| new.getBigBlind()==20
+	 * @post	The smallblind of this game property is 5
+	 * 			| new.getSmallBlind()==25
+	 * @post	The bigblind of this game property is 10
+	 * 			| new.getBigBlind()==50
+	 *
+	 */
 	public GameProperty(){
-		smallBlind = 25;
-		bigBlind = 50;
+		smallBet=10;
 	}
-	
-	
+	/**
+	 * Constructs a new game property with the given smallbet
+	 * @param	smallBet
+	 * 			the given smallBet
+	 * @throws	IllegalArgumentException
+	 * 			if this game property can't have the given smallBet as smallBet
+	 * 			| !canHaveAsSmallBet(smallBet)
+	 * @post	This game has valid parameters
+	 * 			| new.hasValidParameters()
+	 * @post	The smallbet of this game property is the given smallbet
+	 * 			| new.getSmallBet()==smallBet
+	 * @post	The bigbet of this game property is twice the given smallbet
+	 * 			| new.getBigBlind()==2*smallBet
+	 * @post	The smallblind of this game property is half the given smallbet
+	 * 			| new.getSmallBlind()==smallBet/2
+	 * @post	The bigblind of this game property is the given smallbet
+	 * 			| new.getBigBlind()==smallBet
+	 *
+	 */
+	public GameProperty(int smallBet){
+		if(!canHaveAsSmallBet(smallBet))
+			throw new IllegalArgumentException();
+		this.smallBet=smallBet;
+	}
+	/**********************************************************
+	 * Bets
+	 **********************************************************/
+	public int getSmallBet(){
+		return smallBet;
+	}
+	public int getBigBet(){
+		return bigBet;
+	}
+	/**
+	 * Checks wether a game property can have the given smallBet as a smallBet
+	 * @param smallBet
+	 * 			the given smallBet
+	 * @return	True if smallBet is strictly positive and even
+	 * 			| result == (smallBet>0)&&(smallBet%2==0)
+	 */
+	public static boolean canHaveAsSmallBet(int smallBet) {
+		return (smallBet>0)&&(smallBet%2==0);
+	}
+	/**********************************************************
+	 * Blinds
+	 **********************************************************/
 	public int getSmallBlind(){
 		return smallBlind;
 	}
@@ -44,13 +126,28 @@ public class GameProperty {
 	public int getBigBlind(){
 		return bigBlind;
 	}
-	
+	/**
+	 * Checks wether this game property has valid blinds
+	 * @return	True if the bigblind equals the smallbet and the smallblind equals half the smallbet
+	 * 			and the bigbet equals double the smallbet and a game property can have the smallbet of this game
+	 * 			property as it's smallbet
+	 * 			| result == (canHaveAsSmallBet(getSmallBet()))&&(getSmallBlind()==getSmallBet()/2)
+	 * 			|				&&(getBigBlind()==getSmallBet())&&(getBigBet()==2*getSmallBet())
+	 */
+	public boolean hasValidParameters(){
+		return (canHaveAsSmallBet(getSmallBet()))&&(getSmallBlind()==getSmallBet()/2)
+					&&(getBigBlind()==getSmallBet())&&(getBigBet()==2*getSmallBet());
+	}
+	/**********************************************************
+	 * Other methods
+	 **********************************************************/
+
 	public boolean isClosedGame(){
 		return false;
+		//TODO: doel v deze methode? -> commentaar :p
 	}
 	
 	public int getMaxNbPlayers(){
-		return 10;
+		return maxNbPlayers;
 	}
-
 }

@@ -38,5 +38,15 @@ public class FlopRound extends Round {
 		// TODO Auto-generated method stub
 		return false;
 	}
-
+	/**
+	 * The amount to raise with must be n times the small bet
+	 */
+	@Override
+	protected boolean isValidRaise(int amount) {
+		return amount%getGame().getGameProperty().getSmallBet()==0;
+	}
+	@Override
+	protected String getIllegalRaiseMessage() {
+		return "The amount must be n times the small bet";
+	}
 }
