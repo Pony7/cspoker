@@ -26,5 +26,31 @@ package game;
  *
  */
 public class GameProperty {
+	
+	private final int smallBlind;
+	
+	private final int bigBlind;
+	
+	public GameProperty(){
+		smallBlind = 25;
+		bigBlind = 50;
+	}
+	
+	
+	public int getSmallBlind(){
+		return smallBlind;
+	}
+	
+	public int getBigBlind(){
+		return bigBlind;
+	}
+	
+	public boolean isClosedGame(){
+		return false;
+	}
+	
+	public int getMaxNbPlayers(){
+		return 10;
+	}
 
 }

@@ -16,8 +16,8 @@
 
 package game;
 
+import game.actions.IllegalActionException;
 import game.player.Player;
-import game.rounds.IllegalActionException;
 
 /**
  * An interface defining all actions a player can do in one deal.
@@ -66,7 +66,8 @@ public interface PlayerAction {
 	public void raise(Player player, int amount) throws IllegalActionException;
 	
 	/**
-	 * Fold the cards.
+	 * The given player folds the cards.
+	 * 
 	 * The player will not be able to take any actions
 	 * in the coming rounds of the current deal.
 	 * 
@@ -84,5 +85,14 @@ public interface PlayerAction {
 	 * 			The player who deals.
 	 */
 	public void deal(Player player) throws IllegalActionException;
+	
+	/**
+	 * The given player goes all-in.
+	 * 
+	 * @param 	player
+	 * 			The player who goes all-in.
+	 * @throws 	IllegalActionException [must]
+	 */
+	public void allIn(Player player) throws IllegalActionException;
 
 }

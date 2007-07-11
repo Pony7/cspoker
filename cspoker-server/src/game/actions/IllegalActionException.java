@@ -14,9 +14,8 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-package game.rounds;
+package game.actions;
 
-import game.actions.Action;
 import game.player.Player;
 
 public class IllegalActionException extends Exception {

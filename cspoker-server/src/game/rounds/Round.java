@@ -19,7 +19,9 @@ package game.rounds;
 import game.Game;
 import game.PlayerAction;
 import game.actions.Action;
+import game.actions.IllegalActionException;
 import game.chips.IllegalValueException;
+import game.player.AllInPlayer;
 import game.player.Player;
 
 /**
@@ -76,6 +78,44 @@ public abstract class Round implements PlayerAction{
 	}
 	
 	/**********************************************************
+	 * Bet
+	 **********************************************************/
+	
+	/**
+	 * Set the bet of this round to the given value.
+	 * 
+	 */
+	private void setBet(int value){
+		bet = value; 
+	}
+	
+	/**
+	 * Returns the current bet value of this round.
+	 * 
+	 * @return The current bet value of this round.
+	 */
+	public int getBet(){
+		return bet;
+	}
+	
+	/**
+	 * Raise the bet with given amount.
+	 * 
+	 * @param 	amount
+	 * 			The amount to raise the bet with.
+	 * @pre 	The amount should be positive.
+	 *			|amount>0
+	 * @effect	Set the bet of this round to the current bet
+	 * 			raised with given amount.
+	 *		   	|setBet(getBet()+amount)
+	 */
+	private void raiseBetWith(int amount){
+		if(amount<=0)
+			throw new IllegalArgumentException();
+		setBet(getBet()+amount);
+	}
+	
+	/**********************************************************
 	 * Bidding methods
 	 **********************************************************/
 	
@@ -89,45 +129,98 @@ public abstract class Round implements PlayerAction{
 	 */
 	@Override
 	public void check(Player player) throws IllegalActionException{
-		if(Action.CHECK.canDoAction(this, player)){
-			
-		}
-		
-		//Only if player may check.
+		if(!Action.CHECK.canDoAction(this, player))
+			throw new IllegalActionException(player, Action.CHECK);
 		game.nextPlayer();
 	}
 	
-	public void bet(Player player, int amount){
+	@Override
+	public void bet(Player player, int amount) throws IllegalActionException{
+		if(!Action.BET.canDoAction(this, player))
+			throw new IllegalActionException(player, Action.BET);
 		
+		if(amount==0)
+			throw new IllegalActionException(player, Action.RAISE, "Can not bet with 0 chips. Did you mean check?");
 		
-		playerMadeEvent(player);
-	}
-	
-	public void call(Player player){
-		
-	}
-	
-	public void raise(Player player, int amount) throws IllegalActionException{
 		try {
-			player.getChips().transferAmountTo((bet+amount)-player.getBettedChips().getValue(), player.getBettedChips());
+			player.transferAmountToBettedPile(amountToIncreaseBettedPileWith(player)+amount);
 		} catch (IllegalValueException e) {
 			throw new IllegalActionException(player, Action.RAISE, e.getMessage());
 		}
-		bet=bet+amount;
+		raiseBetWith(amount);
 		playerMadeEvent(player);
+		game.nextPlayer();
 	}
 	
-	public void fold(Player player){
+	@Override
+	public void call(Player player) throws IllegalActionException{
+		if(!Action.CALL.canDoAction(this, player))
+			throw new IllegalActionException(player, Action.CALL);
+		
+		try {
+			player.transferAmountToBettedPile(amountToIncreaseBettedPileWith(player));
+		} catch (IllegalValueException e) {
+			throw new IllegalActionException(player, Action.CALL, e.getMessage());
+		}
+		
+		game.nextPlayer();
+	}
+	
+	@Override
+	public void raise(Player player, int amount) throws IllegalActionException{
+		if(!Action.RAISE.canDoAction(this, player))
+			throw new IllegalActionException(player, Action.RAISE);
+
+		if(amount==0)
+			throw new IllegalActionException(player, Action.RAISE, "Can not raise with 0 chips. Did you mean call?");
+		
+		try {
+			player.transferAmountToBettedPile(amountToIncreaseBettedPileWith(player)+amount);
+		} catch (IllegalValueException e) {
+			throw new IllegalActionException(player, Action.RAISE, e.getMessage());
+		}
+		raiseBetWith(amount);
+		playerMadeEvent(player);
+		game.nextPlayer();
+	}
+	
+	@Override
+	public void fold(Player player) throws IllegalActionException{
+		if(!Action.FOLD.canDoAction(this, player))
+			throw new IllegalActionException(player, Action.FOLD);
+		
 		game.removePlayerFromCurrentDeal(player);
+		
+		//removing from game, automatically switches
+		//to next player.
 	}
 	
-	public void deal(Player player){
+	@Override
+	public void deal(Player player) throws IllegalActionException{
+		if(!Action.DEAL.canDoAction(this, player))
+			throw new IllegalActionException(player, Action.DEAL);
 		
 	}
 	
+	@Override
+	public void allIn(Player player) throws IllegalActionException {
+		// TODO Auto-generated method stub
+		
+	}
 	
+	/**********************************************************
+	 * Round Logic
+	 **********************************************************/
+	
+	
+	/**
+	 * Check whether the round is ended or not.
+	 * 
+	 * @return 	True if the round is ended,
+	 * 			false otherwise.
+	 */
 	public boolean roundEnded(){
-		return lastEventPlayer == game.getCurrentPlayer();
+		return lastEventPlayer.equals(game.getCurrentPlayer());
 	}
 	
 	/**
@@ -143,15 +236,14 @@ public abstract class Round implements PlayerAction{
 	public abstract Round getNextRound();
 	
 	/**
+	 * Set the last event player
+	 * to the given player.
 	 * 
-	 * @param player
+	 * @param 	player
+	 * 			The player who did the last event.
 	 */
 	private void playerMadeEvent(Player player){
 		lastEventPlayer = player;
-	}
-	
-	private boolean canCheck(Player player){
-		return onTurn(player) && (bet==0);
 	}
 	
 	public boolean someOneHasBet(){
@@ -160,6 +252,32 @@ public abstract class Round implements PlayerAction{
 	
 	public boolean onTurn(Player player){
 		return game.getCurrentPlayer().equals(player);
+	}
+	
+	public boolean isBettingRound(){
+		return true;
+	}
+	
+	protected void makeSidePots(){
+		for(AllInPlayer player:game.getAllInPlayers()){
+			int betToSidePot = player.getBetValue();			
+		}
+	}
+	
+	/**
+	 * Returns how many chips a player
+	 * must transfer to the betted pile
+	 * to equal the current bet.
+	 * 
+	 * @param player
+	 * 			The player who wants to know
+	 * 			how many chips to transfer.
+	 * @return	The number of chips the player
+	 * 			must transfer to the betted pile
+	 * 			to equal the current bet.
+	 */
+	protected int amountToIncreaseBettedPileWith(Player player){
+		return getBet()-player.getBettedChips().getValue();
 	}
 
 }

@@ -17,8 +17,8 @@
 package game;
 
 
+import game.actions.IllegalActionException;
 import game.player.Player;
-import game.rounds.IllegalActionException;
 
 /**
  * A class to control the player's actions.

@@ -25,18 +25,23 @@ public class FinalRound extends Round{
 		// TODO Auto-generated constructor stub
 	}
 
+	@Override
 	public void endRound() {
 		// TODO Auto-generated method stub
 		
 	}
 
+	@Override
 	public Round getNextRound() {
 		return new WaitingRound(getGame());
 	}
 
+	@Override
 	public boolean roundEnded() {
 		// TODO Auto-generated method stub
 		return false;
 	}
+
+
 
 }
