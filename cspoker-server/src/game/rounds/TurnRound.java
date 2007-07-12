@@ -19,7 +19,7 @@ package game.rounds;
 import game.Game;
 import rules.BettingRules;
 
-public class TurnRound extends Round{
+public class TurnRound extends Round implements LowBettingRound{
 
 	public TurnRound(Game game, BettingRules bettingRules) {
 		super(game,bettingRules);
