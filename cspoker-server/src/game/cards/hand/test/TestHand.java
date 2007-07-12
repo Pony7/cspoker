@@ -15,12 +15,13 @@
  */
 package game.cards.hand.test;
 
-import java.util.Iterator;
-
 import game.cards.CardImpl;
 import game.cards.cardElements.Rank;
 import game.cards.cardElements.Suit;
 import game.cards.hand.Hand;
+
+import java.util.Iterator;
+
 import junit.framework.TestCase;
 
 /**
