@@ -9,9 +9,8 @@ Where are developpers currently working on?
 
 *Cedric* _(last update: 12-07-07)_
 
-  * Hand Logic _(95%)_
-  * Option for limit, pot-limit, no-limit hold'em  _(10%)_
-
+  * Hand Logic _(99%)_
+  * Betting Rules  _(50%)_
 
 
 
