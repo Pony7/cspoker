@@ -48,7 +48,7 @@ public class RandomGenerator {
 	 * 
 	 * @return A random card.
 	 */
-	public Card getRandomCard() {
+	public static Card getRandomCard() {
 		Random generator = new Random();
 		
 		int suitIndex=generator.nextInt(4);
@@ -64,7 +64,7 @@ public class RandomGenerator {
 	 * 			The number of cards in the hand.
 	 * @return 	A random hand.
 	 */
-	public Hand getRandomHand(int nBCards) {
+	public static Hand getRandomHand(int nBCards) {
 		Hand result=new Hand();
 		while(result.getNBCards()<nBCards){
 			Card randomCard=getRandomCard();

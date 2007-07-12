@@ -19,14 +19,33 @@ package game.chips.pot;
 import game.chips.IllegalValueException;
 import game.player.Player;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * A class to represent a group of pots.
+ * 
+ * @author Kenzo
+ *
+ */
 public class Pots {
 	
-	private List<Pot> pots;
+	private final List<Pot> pots;
 	
-	private Pot pot;
+	private final Pot pot;
+	
+	private boolean isClosed;
+	
+	/**
+	 * Construct a new group of pots. 
+	 * 
+	 */
+	public Pots(){
+		pot = new Pot();
+		pots = new ArrayList<Pot>();
+		isClosed = false;
+	}
 	
 	/**
 	 * Collect the given amount of chips
@@ -42,6 +61,8 @@ public class Pots {
 	 * @throws IllegalValueException
 	 */
 	public void collectAmountFromPlayersToSidePot(int amount, List<Player> players) throws IllegalValueException{
+		if(isClosed())
+			return;
 		if((amount>0) || (pot.getChips().getValue()>0)){
 			Pot sidePot = new Pot();
 			pot.transferAllChipsTo(sidePot);
@@ -52,15 +73,29 @@ public class Pots {
 		}
 	}
 	
+	public Pot getMainPot(){
+		if(isClosed())
+			return null;
+		return pot;
+	}
+	
+	public List<Pot> getSidePots(){
+		if(isClosed)
+			return null;
+		return Collections.unmodifiableList(pots);
+	}
+
 	/**
 	 * Collect all chips from the betted chips pile
-	 * of all players in the given list.
+	 * of all players in the given list to the main pot.
 	 * 
 	 * @param 	players
 	 * 			The list of players from who
 	 * 			to collect the betted chips from.
 	 */
 	public void collectChipsToPot(List<Player> players){
+		if(isClosed())
+			return;
 		for(Player player:players){
 			try {
 				player.getBettedChips().transferAllChipsTo(pot.getChips());
@@ -79,36 +114,45 @@ public class Pots {
 	 * 			to show his cards at the end.
 	 */
 	public void addShowdownPlayer(Player player) {
+		if(isClosed())
+			return;
 		for(Pot pot:pots){
 			pot.addShowdownPlayer(player);
 		}
 	}
 	
 	/**
-	 * Add the given list of players
-	 * to the players who are able
-	 * to win every pot.
+	 * Close the pots. It is impossible
+	 * to a
 	 * 
 	 * @param showdownPlayers
 	 */
-	public void showDown(List<Player> showdownPlayers){
+	public void close(List<Player> showdownPlayers){
+		if(isClosed())
+			return;
 		pots.add(pot);
-		for(Pot pot:pots){
-			for(Player player: showdownPlayers){
-				pot.addShowdownPlayer(player);
-			}
+		for(Player player: showdownPlayers){
+			addShowdownPlayer(player);
 		}
+		isClosed = true;
+	}
+	
+	public boolean isClosed(){
+		return isClosed;
 	}
 
 	
 	/**
 	 * Return a list of all pots.
-	 * If showdown has been called, 
+	 * If the pot is closed,
+	 * also the current pot is included in the list of pots.
+	 * Otherwise, only the side pots are returned.
 	 * 
-	 * @param showdownPlayers
 	 * @return
 	 */
 	public List<Pot> getPots(){
+		if(!isClosed())
+			return null;
 		return Collections.unmodifiableList(pots);
 	}
 }

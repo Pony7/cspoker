@@ -15,6 +15,7 @@
  */
 package game.cards.hand.test;
 
+import game.cards.Card;
 import game.cards.CardImpl;
 import game.cards.cardElements.Rank;
 import game.cards.cardElements.Suit;
@@ -104,7 +105,7 @@ public class TestHand extends TestCase {
 		hand1.addCard(new CardImpl(Suit.HEARTS,Rank.KING));
 		hand1.addCard(new CardImpl(Suit.HEARTS,Rank.JACK));
 		
-		Iterator iterator=hand1.iterator();
+		Iterator<Card> iterator=hand1.iterator();
 		
 		while(iterator.hasNext()){
 			System.out.println(iterator.next().toString());

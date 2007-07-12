@@ -45,7 +45,7 @@ public class HandEvaluator {
 				      for(int j = i+1; j<hand.getNBCards(); j++){
 				        // build a 5 card hand skipping cards i and j
 				        for(int m = 0; m<hand.getNBCards(); m++){
-				          if(m != i && m!= j) 
+				          if((m != i) && (m!= j)) 
 				        	  five.addCard(hand.getCard(m)); 
 				        }
 				        // keep it if it is the new winner
@@ -117,7 +117,7 @@ public class HandEvaluator {
 	    * @return 1 = first hand is best, -1 = second hand is best, 0 = tie
 	    */
 	   public static int compareFiveCardHands(Hand h1, Hand h2) {
-		   if(h1.getNBCards()>6 || h2.getNBCards()>6)
+		   if((h1.getNBCards()>6) || (h2.getNBCards()>6))
 			   throw new IllegalArgumentException();
 
 		  Hand temp1=new Hand(h1);
@@ -166,7 +166,7 @@ public class HandEvaluator {
 	      throw new IllegalStateException();
 	   }
 	   /**********************************************************
-		 * Methods for compairing hands with equal HandTypes
+		 * Methods for comparing hands with equal HandTypes
 		 **********************************************************/
 	   /**
 	    * Compares two high cards hands
@@ -628,7 +628,7 @@ public class HandEvaluator {
 				break;
 			}
 		   //cannot occur
-		   return ((double)primaryRank)+secondaryRank;
+		   return (primaryRank)+secondaryRank;
 	   }
 	public static double getStraigthFlushHandQuality(Hand hand) {
 		return getStraightHandQuality(hand);

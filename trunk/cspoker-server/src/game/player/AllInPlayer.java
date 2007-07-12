@@ -16,7 +16,12 @@
 
 package game.player;
 
-
+/**
+ * A class to represent all-in players.
+ * 
+ * @author Kenzo
+ *
+ */
 public class AllInPlayer implements Comparable<AllInPlayer>{
 	
 	private final Player player;
