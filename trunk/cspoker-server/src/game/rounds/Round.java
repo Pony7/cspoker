@@ -25,13 +25,12 @@ import game.chips.IllegalValueException;
 import game.chips.pot.Pot;
 import game.player.AllInPlayer;
 import game.player.Player;
+import game.rounds.rules.BettingRules;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import rules.BettingRules;
-import rules.Limit;
 
 /**
  * An abstract class to represent rounds.
@@ -75,14 +74,6 @@ public abstract class Round implements PlayerAction{
 	/**********************************************************
 	 * Constructor
 	 **********************************************************/
-	public Round(Game game){
-		this.game = game;
-		setBettingRules(new Limit(this));
-		allInPlayers = new ArrayList<AllInPlayer>();
-		bet = 0;
-		lastEventPlayer = getGame().getFirstToActPlayer();
-		getGame().setCurrentPlayer(getGame().getFirstToActPlayer());
-	}
 	/**
 	 * Initialize a new round for given game.
 	 * 
@@ -151,13 +142,14 @@ public abstract class Round implements PlayerAction{
 	 * Betting Rules
 	 **********************************************************/
 	/**
-	 * Returns the betting rules for this round
+	 * Returns the betting game.rounds.rules for this round
 	 */
 	public BettingRules getBettingRules(){
 		return bettingRules;
 	}
 	protected void setBettingRules(BettingRules bettingRules){
 		this.bettingRules=bettingRules;
+		this.bettingRules.setRound(this);
 	}
 	/**********************************************************
 	 * Collect blinds
@@ -218,6 +210,8 @@ public abstract class Round implements PlayerAction{
 			throw new IllegalActionException(player, Action.BET, e.getMessage());
 		}
 		raiseBetWith(amount);
+		getBettingRules().setBetPlaced(true);
+		getBettingRules().setLastBetAmount(amount);
 		playerMadeEvent(player);
 		game.nextPlayer();
 	}
@@ -247,6 +241,8 @@ public abstract class Round implements PlayerAction{
 			throw new IllegalActionException(player, Action.RAISE, e.getMessage());
 		}
 		raiseBetWith(amount);
+		getBettingRules().incrementNBRaises();
+		getBettingRules().setLastBetAmount(amount);
 		playerMadeEvent(player);
 		game.nextPlayer();
 	}
