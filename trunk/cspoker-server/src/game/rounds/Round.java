@@ -145,8 +145,6 @@ public abstract class Round implements PlayerAction{
 	 *		   	|setBet(getBet()+amount)
 	 */
 	private void raiseBetWith(int amount){
-		if(amount<=0 || !getBettingRules().isValidRaise(amount))
-			throw new IllegalArgumentException();
 		setBet(getBet()+amount);
 	}
 	/**********************************************************

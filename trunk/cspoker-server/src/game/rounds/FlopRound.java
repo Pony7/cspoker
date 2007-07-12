@@ -19,7 +19,7 @@ package game.rounds;
 import game.Game;
 import rules.BettingRules;
 
-public class FlopRound extends Round {
+public class FlopRound extends Round implements LowBettingRound{
 
 	public FlopRound(Game game, BettingRules bettingRules) {
 		super(game,bettingRules);

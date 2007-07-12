@@ -28,7 +28,7 @@ import rules.Limit;
  * @author Kenzo
  *
  */
-public class PreFlopRound extends Round{
+public class PreFlopRound extends Round implements LowBettingRound{
 
 	public PreFlopRound(Game game) {
 		super(game);

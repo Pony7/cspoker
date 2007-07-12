@@ -1,36 +1,28 @@
 package rules;
 
 import game.rounds.Round;
-
-public class NoLimit extends BettingRules {
-
+/**
+ * Class for the NoLimit betting rules used in Texas Hold'em.
+ * @author Cedric
+ */
+public class NoLimit extends BettingRules {	
+	/**********************************************************
+	 * Constructors
+	 **********************************************************/
 	public NoLimit(Round round) {
 		super(round);
-		// TODO Auto-generated constructor stub
 	}
 
+	/**********************************************************
+	 * Raise
+	 **********************************************************/
 	@Override
 	public boolean isValidRaise(int amount) {
-		// TODO Auto-generated method stub
-		return false;
+		if(amount<getLastBetAmount()){
+			setLastRaiseErrorMessage("ERROR : the betted amount must be atleast the amount of the previous bet/raise" +
+					"in the current round");
+			return false;
+		}
+		return super.isValidRaise(amount);
 	}
-
-	@Override
-	public boolean isValidBet(int amount) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public String getLastRaiseErrorMessage() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String getLastBetErrorMessage() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }
