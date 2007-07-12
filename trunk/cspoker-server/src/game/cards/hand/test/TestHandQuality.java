@@ -231,5 +231,4 @@ public class TestHandQuality extends TestCase {
 		System.out.println("straight flush % "+numbers[8]/totalTests);
 		
 	}
-	
 }

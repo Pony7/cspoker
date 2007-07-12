@@ -15,10 +15,11 @@
  */
 package game.cards.hand;
 
-import java.util.Iterator;
-
 import game.cards.Card;
 import game.cards.CardImpl;
+
+import java.util.Iterator;
+import java.util.List;
 /**
  * A class of hands, that contain 0 to 7 cards
  * @author Cedric
@@ -57,22 +58,51 @@ public class Hand implements Iterable<Card>{
     * Create a new hand with the same cards as the given hand
     * @param h 
     * 		the hand to clone.
+    * @throws	IllegalArgumentException
+    * 			if the given hand isn't effective
+    * 			| h==null
     * @post	the new hand contains every card of the given hand
     * 		| for each Card x|h.contains(x) -> result.contains(x)
     */
    public Hand(Hand h) {
+	   if(h==null)
+		   throw new IllegalArgumentException();
       cards = new CardImpl[MAX_CARDS];
-      cards=h.getCards().clone();
+      cards=h.getCardsCopy();
    }
-   /**********************************************************
+   /**
+    * Constructs a new hand with the same cards as in the given card list
+    * @param cardList
+    * 			the given card list
+    * @throws	IllegalArgumentException
+    * 			if the number of cards in the card list is greater than the maximum number
+    * 			of cards allowed in any hand or if the card list isn't effective
+    * 			| cardList.size()>MAX_CARDS || cardList==null
+    */
+   public Hand(List<Card> cardList){
+	   if(cardList.size()>MAX_CARDS || cardList==null)
+		   throw new IllegalArgumentException();
+	   cardList.toArray(cards);
+   }
+/**********************************************************
 	 * Methods
 	 **********************************************************/
    /**
     * Returns an array with the cards in this hand
     */
-   public Card[] getCards() {
-	return cards.clone();
+   Card[] getCards() {
+	return cards;
    }
+   /**
+    * Returns a copy of the cards in this hand
+    */
+   public Card[] getCardsCopy() {
+		Card[] result=new Card[getCards().length];
+		for(int j=0;j<getCards().length;j++){
+			result[j]=getCards()[j];
+		}
+		return result;
+	}
    /**
     * Returns the number of cards in this hand
     */
@@ -267,7 +297,7 @@ public String toString(){
 	   /**
 	    * The array with the cards in this hand
 	    */
-	   private final Card[] card=cards.clone();
+	   private final Card[] card=getCardsCopy();
 	   /**
 	    * Checks wether the iterator has another card
 	    */

@@ -369,8 +369,7 @@ public class HandEvaluator {
 	    *           The second hand
 	    * @throws	IllegalArgumentException
 	    * 			if the given hands aren't straight hands
-	    * 			| !HandTypeCalculator.calculateHandType(h1).equals(HandType.STRAIGHT) || 
-	    * 			|			!HandTypeCalculator.calculateHandType(h2).equals(HandType.STRAIGHT)
+	    * 			| !HandTypeCalculator.checkForStraight(h1) || !HandTypeCalculator.checkForStraight(h2)
 	    * @pre	The given hands consist of 5 cards
 	    * 		| h1.getNBCards()==5 || h2.getNBCards()==5
 	    * @return 1 = first hand is best, -1 = second hand is best, 0 = tie
@@ -388,8 +387,7 @@ public class HandEvaluator {
 	    * 			| else result==0
 	    */
 	   public static int compareStraightHands(Hand h1, Hand h2) {
-		   if(!HandTypeCalculator.calculateHandType(h1).equals(HandType.STRAIGHT) || 
-					!HandTypeCalculator.calculateHandType(h2).equals(HandType.STRAIGHT))
+		   if(!HandTypeCalculator.checkForStraight(h1) || !HandTypeCalculator.checkForStraight(h2))
 				throw new IllegalArgumentException();
 		   Card[] cards1=HandTypeCalculator.getDeterminatingCards(h1);
 		   Card[] cards2=HandTypeCalculator.getDeterminatingCards(h2);

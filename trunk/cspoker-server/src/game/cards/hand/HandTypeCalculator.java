@@ -15,12 +15,12 @@
  */
 package game.cards.hand;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-
 import game.cards.Card;
 import game.cards.cardElements.Rank;
 import game.cards.cardElements.Suit;
+
+import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  * A class for calculating the HandType of any hand
