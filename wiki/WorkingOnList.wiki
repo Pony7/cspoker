@@ -7,6 +7,11 @@ Where are developpers currently working on?
   * Round Logic _(80%)_
   * Pots Logic _(90%)_
 
+*Cedric* _(last update: 12-07-07)_
+
+  * Hand Logic _(95%)_
+  * Option for limit, pot-limit, no-limit hold'em  _(10%)_
+
 
 
 
