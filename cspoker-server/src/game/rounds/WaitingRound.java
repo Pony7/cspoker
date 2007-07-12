@@ -18,7 +18,6 @@ package game.rounds;
 
 import game.Game;
 import game.player.Player;
-import game.rounds.rules.BettingRules;
 
 public class WaitingRound extends Round {
 	
