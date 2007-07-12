@@ -18,8 +18,7 @@ package game.rounds;
 
 import game.Game;
 import game.chips.IllegalValueException;
-import rules.BettingRules;
-import rules.Limit;
+import game.rounds.rules.BettingRules;
 
 
 /**
@@ -30,13 +29,8 @@ import rules.Limit;
  */
 public class PreFlopRound extends Round implements LowBettingRound{
 
-	public PreFlopRound(Game game) {
-		super(game);
-	}
-
 	public PreFlopRound(Game game, BettingRules bettingRules) {
-		super(game);
-		setBettingRules(new Limit(this));
+		super(game,bettingRules);
 		try {
 			collectSmallBlind(getGame().getCurrentPlayer());
 		} catch (IllegalValueException e) {

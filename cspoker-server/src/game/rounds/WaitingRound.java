@@ -18,20 +18,14 @@ package game.rounds;
 
 import game.Game;
 import game.player.Player;
-import rules.BettingRules;
+import game.rounds.rules.BettingRules;
 
 public class WaitingRound extends Round {
 	
-	
-
 	public WaitingRound(Game game, BettingRules bettingRules) {
 		super(game,bettingRules);
 		//TODO all logic for new deal
 		//should be placed here.
-	}
-
-	public WaitingRound(Game game) {
-		super(game);
 	}
 
 	@Override

@@ -21,6 +21,7 @@ import game.player.Player;
 import game.rounds.PreFlopRound;
 import game.rounds.Round;
 import game.rounds.WaitingRound;
+import game.rounds.rules.Limit;
 
 /**
  * This class is responsible to control the flow of the game.
@@ -56,7 +57,7 @@ public class GameControl implements PlayerAction{
 	public GameControl(){
 		//TODO
 		game = new Game(new GameProperty());
-		round = new PreFlopRound(game);
+		round = new PreFlopRound(game,new Limit());
 	}
 	
 	/**********************************************************
@@ -146,7 +147,7 @@ public class GameControl implements PlayerAction{
 	private void changeToNextRound(){
 		round.endRound();
 		if(round.onlyOnePlayerLeft()){
-			round = new WaitingRound(game);
+			round = new WaitingRound(game,round.getBettingRules());
 		}else{
 			round = round.getNextRound();
 		}
