@@ -1,4 +1,6 @@
-package game.rounds;
+package game.rules;
+
+import game.rounds.Round;
 
 /**
  * Superclass for all the possible betting game.rounds.rules used in Texas Hold'em

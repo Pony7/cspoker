@@ -17,6 +17,7 @@
 package game.rounds;
 
 import game.Game;
+import game.rules.BettingRules;
 
 public class FinalRound extends Round implements HighBettingRound{
 
