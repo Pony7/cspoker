@@ -18,6 +18,8 @@ package game.rounds;
 
 import game.Game;
 import game.chips.IllegalValueException;
+import rules.BettingRules;
+import rules.Limit;
 
 
 /**
@@ -30,6 +32,11 @@ public class PreFlopRound extends Round{
 
 	public PreFlopRound(Game game) {
 		super(game);
+	}
+
+	public PreFlopRound(Game game, BettingRules bettingRules) {
+		super(game);
+		setBettingRules(new Limit(this));
 		try {
 			collectSmallBlind(getGame().getCurrentPlayer());
 		} catch (IllegalValueException e) {
@@ -62,18 +69,6 @@ public class PreFlopRound extends Round{
 
 	@Override
 	public Round getNextRound() {
-		return new FlopRound(getGame());
-	}
-	/**
-	 * The amount to raise with must be n times the small bet
-	 */
-	@Override
-	protected boolean isValidRaise(int amount) {
-		return amount%getGame().getGameProperty().getSmallBet()==0;
-	}
-
-	@Override
-	protected String getIllegalRaiseMessage() {
-		return "The amount must be n times the small bet";
+		return new FlopRound(getGame(),getBettingRules());
 	}
 }

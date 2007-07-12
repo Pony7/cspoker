@@ -30,6 +30,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import rules.BettingRules;
+import rules.Limit;
+
 /**
  * An abstract class to represent rounds.
  * A player can do actions in a round,
@@ -67,18 +70,28 @@ public abstract class Round implements PlayerAction{
 	
 	private final List<AllInPlayer> allInPlayers;
 	
+	private BettingRules bettingRules;
+	
 	/**********************************************************
 	 * Constructor
 	 **********************************************************/
-	
+	public Round(Game game){
+		this.game = game;
+		setBettingRules(new Limit(this));
+		allInPlayers = new ArrayList<AllInPlayer>();
+		bet = 0;
+		lastEventPlayer = getGame().getFirstToActPlayer();
+		getGame().setCurrentPlayer(getGame().getFirstToActPlayer());
+	}
 	/**
 	 * Initialize a new round for given game.
 	 * 
 	 * @param 	game
 	 * 			The game to create a new round for.
 	 */
-	public Round(Game game){
+	public Round(Game game,BettingRules bettingRules){
 		this.game = game;
+		setBettingRules(bettingRules);
 		allInPlayers = new ArrayList<AllInPlayer>();
 		bet = 0;
 		lastEventPlayer = getGame().getFirstToActPlayer();
@@ -132,11 +145,22 @@ public abstract class Round implements PlayerAction{
 	 *		   	|setBet(getBet()+amount)
 	 */
 	private void raiseBetWith(int amount){
-		if(amount<=0 || !isValidRaise(amount))
+		if(amount<=0 || !getBettingRules().isValidRaise(amount))
 			throw new IllegalArgumentException();
 		setBet(getBet()+amount);
 	}
-	protected abstract boolean isValidRaise(int amount);
+	/**********************************************************
+	 * Betting Rules
+	 **********************************************************/
+	/**
+	 * Returns the betting rules for this round
+	 */
+	public BettingRules getBettingRules(){
+		return bettingRules;
+	}
+	protected void setBettingRules(BettingRules bettingRules){
+		this.bettingRules=bettingRules;
+	}
 	/**********************************************************
 	 * Collect blinds
 	 **********************************************************/	
@@ -176,35 +200,29 @@ public abstract class Round implements PlayerAction{
 	 * 			The player who checks.
 	 * @see PlayerAction
 	 */
-	@Override
 	public void check(Player player) throws IllegalActionException{
 		if(!Action.CHECK.canDoAction(this, player))
 			throw new IllegalActionException(player, Action.CHECK);
 		game.nextPlayer();
 	}
 	
-	@Override
 	public void bet(Player player, int amount) throws IllegalActionException{
+		if(!getBettingRules().isValidBet(amount))
+			throw new IllegalActionException(player, Action.BET,getBettingRules().getLastBetErrorMessage());
 		if(!Action.BET.canDoAction(this, player))
 			throw new IllegalActionException(player, Action.BET);
-		if(!isValidRaise(amount))
-			throw new IllegalActionException(player,Action.BET, getIllegalRaiseMessage());
 		if(amount==0)
-			throw new IllegalActionException(player, Action.RAISE, "Can not bet with 0 chips. Did you mean check?");
+			throw new IllegalActionException(player, Action.BET, "Can not bet with 0 chips. Did you mean check?");
 		
 		try {
 			player.transferAmountToBettedPile(amountToIncreaseBettedPileWith(player)+amount);
 		} catch (IllegalValueException e) {
-			throw new IllegalActionException(player, Action.RAISE, e.getMessage());
+			throw new IllegalActionException(player, Action.BET, e.getMessage());
 		}
 		raiseBetWith(amount);
 		playerMadeEvent(player);
 		game.nextPlayer();
 	}
-	
-	protected abstract String getIllegalRaiseMessage();
-
-	@Override
 	public void call(Player player) throws IllegalActionException{
 		if(!Action.CALL.canDoAction(this, player))
 			throw new IllegalActionException(player, Action.CALL);
@@ -217,14 +235,11 @@ public abstract class Round implements PlayerAction{
 		game.nextPlayer();
 	}
 	
-	@Override
 	public void raise(Player player, int amount) throws IllegalActionException{
+		if(!getBettingRules().isValidRaise(amount))
+			throw new IllegalActionException(player, Action.RAISE,getBettingRules().getLastRaiseErrorMessage());
 		if(!Action.RAISE.canDoAction(this, player))
 			throw new IllegalActionException(player, Action.RAISE);
-
-		if(!isValidRaise(amount))
-			throw new IllegalActionException(player,Action.RAISE, getIllegalRaiseMessage());
-		
 		if(amount==0)
 			throw new IllegalActionException(player, Action.RAISE, "Can not raise with 0 chips. Did you mean call?");
 		
@@ -238,7 +253,6 @@ public abstract class Round implements PlayerAction{
 		game.nextPlayer();
 	}
 	
-	@Override
 	public void fold(Player player) throws IllegalActionException{
 		if(!Action.FOLD.canDoAction(this, player))
 			throw new IllegalActionException(player, Action.FOLD);
@@ -249,14 +263,12 @@ public abstract class Round implements PlayerAction{
 		//to next player.
 	}
 	
-	@Override
 	public void deal(Player player) throws IllegalActionException{
 		if(!Action.DEAL.canDoAction(this, player))
 			throw new IllegalActionException(player, Action.DEAL);
 		
 	}
 	
-	@Override
 	public void allIn(Player player) throws IllegalActionException {
 		// TODO Auto-generated method stub
 		

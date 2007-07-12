@@ -33,8 +33,6 @@ public class AllInPlayer implements Comparable<AllInPlayer>{
 	public int getBetValue(){
 		return player.getBettedChips().getValue();
 	}
-
-	@Override
 	public int compareTo(AllInPlayer o) {
 		return getBetValue()-o.getBetValue();
 	}

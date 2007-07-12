@@ -17,11 +17,12 @@
 package game.rounds;
 
 import game.Game;
+import rules.BettingRules;
 
 public class FlopRound extends Round {
 
-	public FlopRound(Game game) {
-		super(game);
+	public FlopRound(Game game, BettingRules bettingRules) {
+		super(game,bettingRules);
 	}
 
 	@Override
@@ -35,18 +36,6 @@ public class FlopRound extends Round {
 
 	@Override
 	public Round getNextRound() {
-		return new TurnRound(getGame());
-	}
-
-	/**
-	 * The amount to raise with must be n times the small bet
-	 */
-	@Override
-	protected boolean isValidRaise(int amount) {
-		return amount%getGame().getGameProperty().getSmallBet()==0;
-	}
-	@Override
-	protected String getIllegalRaiseMessage() {
-		return "The amount must be n times the small bet";
+		return new TurnRound(getGame(),getBettingRules());
 	}
 }
