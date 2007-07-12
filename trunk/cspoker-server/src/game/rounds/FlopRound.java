@@ -21,8 +21,8 @@ import game.rules.BettingRules;
 
 public class FlopRound extends Round implements LowBettingRound{
 
-	public FlopRound(Game game, BettingRules bettingRules) {
-		super(game,bettingRules);
+	public FlopRound(Game game) {
+		super(game);
 	}
 
 	@Override
@@ -36,6 +36,6 @@ public class FlopRound extends Round implements LowBettingRound{
 
 	@Override
 	public Round getNextRound() {
-		return new TurnRound(getGame(),getBettingRules());
+		return new TurnRound(getGame());
 	}
 }
