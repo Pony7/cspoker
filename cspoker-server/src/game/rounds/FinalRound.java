@@ -21,8 +21,8 @@ import game.rules.BettingRules;
 
 public class FinalRound extends Round implements HighBettingRound{
 
-	public FinalRound(Game game, BettingRules bettingRules) {
-		super(game,bettingRules);
+	public FinalRound(Game game) {
+		super(game);
 		// TODO Auto-generated constructor stub
 	}
 
@@ -39,6 +39,6 @@ public class FinalRound extends Round implements HighBettingRound{
 
 	@Override
 	public Round getNextRound() {
-		return new WaitingRound(getGame(),getBettingRules());
+		return new WaitingRound(getGame());
 	}
 }

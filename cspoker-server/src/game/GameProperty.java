@@ -16,6 +16,9 @@
 
 package game;
 
+import game.rules.BettingRules;
+import game.rules.NoLimit;
+
 /**
  * 
  * This class should contain all parameters of a game,
@@ -53,25 +56,20 @@ public class GameProperty {
 	 * The maximum number of players in a game
 	 */
 	private static final int maxNbPlayers=10;
+	/**
+	 * The betting rules applied to this game
+	 */
+	private BettingRules bettingRules;
 	/**********************************************************
 	 * Constructors
 	 **********************************************************/
 	/**
 	 * Constructs a new game property with smallbet 10 
-	 * @post	This game has valid parameters
-	 * 			| new.hasValidParameters()
-	 * @post	The smallbet of this game property is 10
-	 * 			| new.getSmallBet()==10
-	 * @post	The bigbet of this game property is 20
-	 * 			| new.getBigBlind()==20
-	 * @post	The smallblind of this game property is 5
-	 * 			| new.getSmallBlind()==25
-	 * @post	The bigblind of this game property is 10
-	 * 			| new.getBigBlind()==50
-	 *
+	 * @effet	
+	 * 			| this(10)
 	 */
 	public GameProperty(){
-		smallBet=10;
+		this(10);
 	}
 	/**
 	 * Constructs a new game property with the given smallbet
@@ -93,9 +91,13 @@ public class GameProperty {
 	 *
 	 */
 	public GameProperty(int smallBet){
-		if(!canHaveAsSmallBet(smallBet))
+		this(smallBet,new NoLimit());
+	}
+	public GameProperty(int smallBet,BettingRules bettingRules){
+		if(!canHaveAsSmallBet(smallBet) || bettingRules==null)
 			throw new IllegalArgumentException();
 		this.smallBet=smallBet;
+		this.bettingRules=bettingRules;
 	}
 	/**********************************************************
 	 * Bets
@@ -115,6 +117,12 @@ public class GameProperty {
 	 */
 	public static boolean canHaveAsSmallBet(int smallBet) {
 		return (smallBet>0)&&(smallBet%2==0);
+	}
+	/**
+	 * Returns the betting game.rounds.rules for this round
+	 */
+	public BettingRules getBettingRules(){
+		return bettingRules;
 	}
 	/**********************************************************
 	 * Blinds

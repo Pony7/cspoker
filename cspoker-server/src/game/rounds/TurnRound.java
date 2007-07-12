@@ -21,8 +21,8 @@ import game.rules.BettingRules;
 
 public class TurnRound extends Round implements LowBettingRound{
 
-	public TurnRound(Game game, BettingRules bettingRules) {
-		super(game,bettingRules);
+	public TurnRound(Game game) {
+		super(game);
 	}
 	
 	/**
@@ -38,6 +38,6 @@ public class TurnRound extends Round implements LowBettingRound{
 
 	@Override
 	public Round getNextRound() {
-		return new FinalRound(getGame(),getBettingRules());
+		return new FinalRound(getGame());
 	}
 }

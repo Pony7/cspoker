@@ -22,8 +22,8 @@ import game.rules.BettingRules;
 
 public class WaitingRound extends Round {
 	
-	public WaitingRound(Game game, BettingRules bettingRules) {
-		super(game,bettingRules);
+	public WaitingRound(Game game) {
+		super(game);
 		//TODO all logic for new deal
 		//should be placed here.
 	}
@@ -39,7 +39,7 @@ public class WaitingRound extends Round {
 
 	@Override
 	public Round getNextRound() {
-		return new PreFlopRound(getGame(),getBettingRules());
+		return new PreFlopRound(getGame());
 	}
 	
 	@Override

@@ -57,7 +57,7 @@ public class GameControl implements PlayerAction{
 	public GameControl(){
 		//TODO
 		game = new Game(new GameProperty());
-		round = new PreFlopRound(game,new Limit());
+		round = new PreFlopRound(game);
 	}
 	
 	/**********************************************************
@@ -147,7 +147,7 @@ public class GameControl implements PlayerAction{
 	private void changeToNextRound(){
 		round.endRound();
 		if(round.onlyOnePlayerLeft()){
-			round = new WaitingRound(game,round.getBettingRules());
+			round = new WaitingRound(game);
 		}else{
 			round = round.getNextRound();
 		}

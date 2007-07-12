@@ -29,8 +29,8 @@ import game.rules.BettingRules;
  */
 public class PreFlopRound extends Round implements LowBettingRound{
 
-	public PreFlopRound(Game game, BettingRules bettingRules) {
-		super(game,bettingRules);
+	public PreFlopRound(Game game) {
+		super(game);
 		try {
 			collectSmallBlind(getGame().getCurrentPlayer());
 		} catch (IllegalValueException e) {
@@ -63,6 +63,6 @@ public class PreFlopRound extends Round implements LowBettingRound{
 
 	@Override
 	public Round getNextRound() {
-		return new FlopRound(getGame(),getBettingRules());
+		return new FlopRound(getGame());
 	}
 }

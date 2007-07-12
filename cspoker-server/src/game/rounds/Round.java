@@ -69,8 +69,6 @@ public abstract class Round implements PlayerAction{
 	
 	private final List<AllInPlayer> allInPlayers;
 	
-	private BettingRules bettingRules;
-	
 	/**********************************************************
 	 * Constructor
 	 **********************************************************/
@@ -80,9 +78,8 @@ public abstract class Round implements PlayerAction{
 	 * @param 	game
 	 * 			The game to create a new round for.
 	 */
-	public Round(Game game,BettingRules bettingRules){
+	public Round(Game game){
 		this.game = game;
-		setBettingRules(bettingRules);
 		allInPlayers = new ArrayList<AllInPlayer>();
 		bet = 0;
 		lastEventPlayer = getGame().getFirstToActPlayer();
@@ -145,11 +142,7 @@ public abstract class Round implements PlayerAction{
 	 * Returns the betting game.rounds.rules for this round
 	 */
 	public BettingRules getBettingRules(){
-		return bettingRules;
-	}
-	protected void setBettingRules(BettingRules bettingRules){
-		this.bettingRules=bettingRules;
-		this.bettingRules.setRound(this);
+		return getGame().getGameProperty().getBettingRules();
 	}
 	/**********************************************************
 	 * Collect blinds
