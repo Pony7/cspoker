@@ -1,17 +1,18 @@
 #labels Featured
 Where are developpers currently working on?
 
-*Kenzo* _(last update: 12-07-07)_
+*Kenzo* _(last update: 13-07-07)_
 
   * All-in Logic _(90%)_
-  * Round Logic _(80%)_
-  * Pots Logic _(90%)_
+  * Round Logic _(85%)_
+  * Pots Logic _(95%)_
+  * Showdown _(95%)_
+
 
 *Cedric* _(last update: 12-07-07)_
 
   * Hand Logic _(99%)_
   * Betting Rules  _(75%)_
-
 
 
 
