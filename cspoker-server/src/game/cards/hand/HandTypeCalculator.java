@@ -544,9 +544,9 @@ public class HandTypeCalculator {
 			if(! temp.getCard(j).getSuit().equals(flushSuit))
 				cardsToRemove.add(temp.getCard(j));
 		}
-		Iterator iterator=cardsToRemove.iterator();
+		Iterator<Card> iterator=cardsToRemove.iterator();
 		while(iterator.hasNext()){
-			temp.removeCard((Card) iterator.next());
+			temp.removeCard(iterator.next());
 		}
 		temp.sort();
 		if(temp.getNBCards()==5)

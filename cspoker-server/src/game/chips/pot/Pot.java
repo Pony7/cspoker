@@ -20,6 +20,7 @@ import game.chips.Chips;
 import game.chips.IllegalValueException;
 import game.player.Player;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -42,7 +43,7 @@ public class Pot{
 	 * All the players that can take a share
 	 * of this pot.
 	 */
-	private List<Player> players ;
+	private final List<Player> players ;
 	
 	/**
 	 * The pile of chips in this pot.
@@ -61,6 +62,7 @@ public class Pot{
 	 */
 	public Pot(){
 		chips = new Chips();
+		players = new ArrayList<Player>();
 	}
 	
 	/**
@@ -75,8 +77,7 @@ public class Pot{
 	}
 
 	public void addShowdownPlayer(Player player) {
-		// TODO Auto-generated method stub
-		
+		players.add(player);
 	}
 	
 	public void transferAmountToPot(int amount, Pot pot) throws IllegalValueException{

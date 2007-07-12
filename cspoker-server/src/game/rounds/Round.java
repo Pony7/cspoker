@@ -334,7 +334,7 @@ public abstract class Round implements PlayerAction{
 	 * 			False otherwise.
 	 */
 	public boolean onlyOnePlayerLeft(){
-		return (getGame().getNbCurrentDealPlayers()==1) && (allInPlayers.size()==0);
+		return (getGame().getNbCurrentDealPlayers()+allInPlayers.size()==1);
 	}
 	
 	/**********************************************************
@@ -352,6 +352,10 @@ public abstract class Round implements PlayerAction{
 		collectBets();
 	}
 	
+	/***
+	 * Move all-in players to side pot.
+	 * 
+	 */
 	private void makeSidePots(){
 		Collections.sort(allInPlayers);
 		List<Player> players = game.getCurrentHandPlayers();
@@ -366,6 +370,10 @@ public abstract class Round implements PlayerAction{
 		allInPlayers.clear();
 	}
 	
+	/**
+	 * Collect the bets from all players.
+	 * 
+	 */
 	private void collectBets(){
 			game.getPots().collectChipsToPot(game.getCurrentHandPlayers());
 	}

@@ -23,7 +23,6 @@ public class FinalRound extends Round implements HighBettingRound{
 
 	public FinalRound(Game game) {
 		super(game);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
