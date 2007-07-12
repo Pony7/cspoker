@@ -17,11 +17,12 @@
 package game.rounds;
 
 import game.Game;
+import rules.BettingRules;
 
 public class TurnRound extends Round{
 
-	public TurnRound(Game game) {
-		super(game);
+	public TurnRound(Game game, BettingRules bettingRules) {
+		super(game,bettingRules);
 	}
 	
 	/**
@@ -37,19 +38,6 @@ public class TurnRound extends Round{
 
 	@Override
 	public Round getNextRound() {
-		return new FinalRound(getGame());
+		return new FinalRound(getGame(),getBettingRules());
 	}
-
-	/**
-	 * The amount to raise with must be n times the big bet
-	 */
-	@Override
-	protected boolean isValidRaise(int amount) {
-		return amount%getGame().getGameProperty().getBigBet()==0;
-	}
-	@Override
-	protected String getIllegalRaiseMessage() {
-		return "The amount must be n times the big bet";
-	}
-
 }

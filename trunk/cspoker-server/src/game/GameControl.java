@@ -45,8 +45,7 @@ public class GameControl implements PlayerAction{
 	 * The variable containing the round in which the current game is.
 	 * 
 	 */
-	private Round round;
-	
+	private Round round;	
 	/**********************************************************
 	 * Constructor
 	 **********************************************************/
@@ -72,7 +71,6 @@ public class GameControl implements PlayerAction{
 	 * 			The player who checks.
 	 * @see PlayerAction
 	 */
-	@Override
 	public void bet(Player player, int amount) throws IllegalActionException{
 		round.bet(player, amount);
 		checkIfEndedAndChangeRound();
@@ -86,7 +84,6 @@ public class GameControl implements PlayerAction{
 	 * 			The player who calls.
 	 * @see PlayerAction
 	 */
-	@Override
 	public void call(Player player) throws IllegalActionException{
 		round.call(player);
 		checkIfEndedAndChangeRound();
@@ -100,31 +97,26 @@ public class GameControl implements PlayerAction{
 	 * 			The player who checks.
 	 * @see PlayerAction
 	 */
-	@Override
 	public void check(Player player) throws IllegalActionException{
 		round.check(player);
 		checkIfEndedAndChangeRound();
 	}
 	
-	@Override
 	public void raise(Player player, int amount) throws IllegalActionException{
 		round.raise(player, amount);
 		checkIfEndedAndChangeRound();
 	}
 	
-	@Override
 	public void fold(Player player) throws IllegalActionException{
 		round.fold(player);
 		checkIfEndedAndChangeRound();
 	}
 	
-	@Override
 	public void deal(Player player) throws IllegalActionException{
 		round.deal(player);
 		checkIfEndedAndChangeRound();
 	}
 	
-	@Override
 	public void allIn(Player player) throws IllegalActionException {
 		round.allIn(player);
 		checkIfEndedAndChangeRound();

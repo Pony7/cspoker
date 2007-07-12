@@ -18,15 +18,20 @@ package game.rounds;
 
 import game.Game;
 import game.player.Player;
+import rules.BettingRules;
 
 public class WaitingRound extends Round {
 	
 	
 
-	public WaitingRound(Game game) {
-		super(game);
+	public WaitingRound(Game game, BettingRules bettingRules) {
+		super(game,bettingRules);
 		//TODO all logic for new deal
 		//should be placed here.
+	}
+
+	public WaitingRound(Game game) {
+		super(game);
 	}
 
 	@Override
@@ -40,24 +45,11 @@ public class WaitingRound extends Round {
 
 	@Override
 	public Round getNextRound() {
-		return new PreFlopRound(getGame());
+		return new PreFlopRound(getGame(),getBettingRules());
 	}
 	
 	@Override
 	public boolean isBettingRound(){
 		return false;
 	}
-
-	/**
-	 * The amount to raise with must be n times the small bet
-	 */
-	@Override
-	protected boolean isValidRaise(int amount) {
-		return amount%getGame().getGameProperty().getSmallBet()==0;
-	}
-	@Override
-	protected String getIllegalRaiseMessage() {
-		return "The amount must be n times the small bet";
-	}
-
 }
