@@ -59,7 +59,7 @@ public class GameProperty {
 	/**
 	 * The betting rules applied to this game
 	 */
-	private BettingRules bettingRules;
+	private final BettingRules bettingRules;
 	/**********************************************************
 	 * Constructors
 	 **********************************************************/
@@ -94,7 +94,7 @@ public class GameProperty {
 		this(smallBet,new NoLimit());
 	}
 	public GameProperty(int smallBet,BettingRules bettingRules){
-		if(!canHaveAsSmallBet(smallBet) || bettingRules==null)
+		if(!canHaveAsSmallBet(smallBet) || (bettingRules==null))
 			throw new IllegalArgumentException();
 		this.smallBet=smallBet;
 		this.bettingRules=bettingRules;
@@ -109,7 +109,7 @@ public class GameProperty {
 		return bigBet;
 	}
 	/**
-	 * Checks wether a game property can have the given smallBet as a smallBet
+	 * Checks whether a game property can have the given smallBet as a smallBet
 	 * @param smallBet
 	 * 			the given smallBet
 	 * @return	True if smallBet is strictly positive and even
@@ -135,7 +135,7 @@ public class GameProperty {
 		return bigBlind;
 	}
 	/**
-	 * Checks wether this game property has valid blinds
+	 * Checks whether this game property has valid blinds
 	 * @return	True if the bigblind equals the smallbet and the smallblind equals half the smallbet
 	 * 			and the bigbet equals double the smallbet and a game property can have the smallbet of this game
 	 * 			property as it's smallbet
@@ -149,7 +149,17 @@ public class GameProperty {
 	/**********************************************************
 	 * Other methods
 	 **********************************************************/
-
+	
+	/**
+	 * Check if this game is open or closed.
+	 * 
+	 * In an open game new players can enter
+	 * the game and take a place at the table.
+	 * 
+	 * In a closed game it is impossible
+	 * for new players to seat at the table.
+	 * 
+	 */
 	public boolean isClosedGame(){
 		return false;
 		//TODO: doel v deze methode? -> commentaar :p

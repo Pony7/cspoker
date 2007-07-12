@@ -18,14 +18,12 @@ package game;
 
 import game.actions.IllegalActionException;
 import game.player.Player;
-import game.rounds.PreFlopRound;
 import game.rounds.Round;
 import game.rounds.WaitingRound;
-import game.rules.Limit;
 
 /**
  * This class is responsible to control the flow of the game.
- * This class can change the state of users and the table.
+ * This class changes the state (round) in which the players are.
  * 
  * @author Kenzo
  *
@@ -54,10 +52,10 @@ public class GameControl implements PlayerAction{
 	/**
 	 * Construct a new game control.
 	 */
-	public GameControl(){
+	public GameControl(GameProperty gameProperty){
 		//TODO
-		game = new Game(new GameProperty());
-		round = new PreFlopRound(game);
+		game = new Game(gameProperty);
+		round = new WaitingRound(game);
 	}
 	
 	/**********************************************************
