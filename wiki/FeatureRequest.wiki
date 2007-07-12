@@ -1,0 +1,17 @@
+#labels Featured
+  * easy to chose between limit, pot-limit, no-limit hold'em
+  * statistical analyzing module
+  * save/load player state
+  * player authentication
+  * resume from network failure
+  * securing xml-rpc messages (other players can eventually cheat by sniffing the network)
+  * jar to ease the programming work for java bot developpers.
+  * GUI-client for human poker players
+  
+
+
+
+
+
+
+
