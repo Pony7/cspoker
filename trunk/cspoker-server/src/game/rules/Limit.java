@@ -1,4 +1,8 @@
-package game.rounds;
+package game.rules;
+
+import game.rounds.HighBettingRound;
+import game.rounds.LowBettingRound;
+import game.rounds.Round;
 
 /**
  * Class for the Limit betting game.rounds.rules used in Texas Hold'em.

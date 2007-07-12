@@ -18,10 +18,10 @@ package game;
 
 import game.actions.IllegalActionException;
 import game.player.Player;
-import game.rounds.Limit;
 import game.rounds.PreFlopRound;
 import game.rounds.Round;
 import game.rounds.WaitingRound;
+import game.rules.Limit;
 
 /**
  * This class is responsible to control the flow of the game.

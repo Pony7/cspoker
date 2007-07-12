@@ -1,18 +1,19 @@
-package game.rounds;
+package game.rules;
+
+import game.rounds.Round;
 
 /**
- * Class for the PotLimit betting game.rounds.rules used in Texas Hold'em.
+ * Class for the NoLimit betting game.rounds.rules used in Texas Hold'em.
  * @author Cedric
  */
-public class PotLimit extends BettingRules {
-
+public class NoLimit extends BettingRules {	
 	/**********************************************************
 	 * Constructors
 	 **********************************************************/
-	public PotLimit(Round round) {
+	public NoLimit(Round round) {
 		super(round);
 	}
-	public PotLimit(){
+	public NoLimit(){
 		super();
 	}
 
@@ -26,17 +27,6 @@ public class PotLimit extends BettingRules {
 					"in the current round");
 			return false;
 		}
-		//TODO: @kenzo amount mag niet groter zijn dan het total bedrag dat op dit moment in de pot zit
-		//if(amount>)
 		return super.isValidRaise(amount);
-	}
-
-	/**********************************************************
-	 * Betting
-	 **********************************************************/
-	@Override
-	public boolean isValidBet(int amount) {
-		// TODO @kenzo amount mag niet groter zijn dan het total bedrag dat op dit moment in de pot zit
-		return super.isValidBet(amount);
 	}
 }
