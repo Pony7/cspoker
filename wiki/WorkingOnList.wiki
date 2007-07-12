@@ -1,11 +1,10 @@
-Where are code writers currently working on?
+Where are developpers currently working on?
 
 *Kenzo* _(last update: 12-07-07)_
 
   * All-in Logic _(90%)_
   * Round Logic _(80%)_
   * Pots Logic _(90%)_
-
 
 
 
