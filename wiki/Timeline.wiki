@@ -2,6 +2,6 @@
 #labels Featured
 
 = Timeline: =
-
-  * July 18th: Kenzo returns from holiday and wants to do most of the coding.
+  * July 7th:  Kenzo is still on holiday, but has found a computer and internet :)
+  * July 14th: A simulated game of poker should be playable. Dealer, blind, all-in, betting logic should be completed.
 
