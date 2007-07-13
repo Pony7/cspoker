@@ -46,9 +46,8 @@ public class TestHandQuality extends TestCase {
 		
 	}
 	public void testRandomCard(){
-		RandomOrgSeededRandomGenerator rng=new RandomOrgSeededRandomGenerator();
 		for(int j=0;j<1000;j++){
-			System.out.println("random card "+rng.getRandomCard().toString()+"\n");
+			System.out.println("random card "+RandomOrgSeededRandomGenerator.getRandomCard().toString()+"\n");
 		}
 	}
 	public void testHighCardHand(){
@@ -190,7 +189,6 @@ public class TestHandQuality extends TestCase {
 	}
 	
 	public void testHandQuality(){
-		RandomOrgSeededRandomGenerator rng=new RandomOrgSeededRandomGenerator();
 		boolean qualityGreater,qualitySmaller,qualityEqual;
 		int compare;
 		double quality1,quality2;
@@ -199,8 +197,8 @@ public class TestHandQuality extends TestCase {
 		double[] numbers=new double[9];
 		double totalTests=10000.0;
 		for(int j=0;j<totalTests;j++){
-			hand1=rng.getRandomHand(5);
-			hand2=rng.getRandomHand(5);
+			hand1=RandomOrgSeededRandomGenerator.getRandomHand(5);
+			hand2=RandomOrgSeededRandomGenerator.getRandomHand(5);
 			compare=HandEvaluator.compareHands(hand1,hand2);
 			qualityGreater=(compare==1);
 			qualitySmaller=(compare==-1);
@@ -220,15 +218,15 @@ public class TestHandQuality extends TestCase {
 			if(j%(totalTests/10)==0)
 				System.out.println(j);
 		}
-		System.out.println("high cards % "+numbers[0]/totalTests);
-		System.out.println("pair % "+numbers[1]/totalTests);
-		System.out.println("double pair % "+numbers[2]/totalTests);
-		System.out.println("three of a kind % "+numbers[3]/totalTests);
-		System.out.println("straight% "+numbers[4]/totalTests);
-		System.out.println("flush % "+numbers[5]/totalTests);
-		System.out.println("full house % "+numbers[6]/totalTests);
-		System.out.println("four of a kind % "+numbers[7]/totalTests);
-		System.out.println("straight flush % "+numbers[8]/totalTests);
+		System.out.println("high cards % "+100*numbers[0]/totalTests);
+		System.out.println("pair % "+100*numbers[1]/totalTests);
+		System.out.println("double pair % "+100*numbers[2]/totalTests);
+		System.out.println("three of a kind % "+100*numbers[3]/totalTests);
+		System.out.println("straight% "+100*numbers[4]/totalTests);
+		System.out.println("flush % "+100*numbers[5]/totalTests);
+		System.out.println("full house % "+100*numbers[6]/totalTests);
+		System.out.println("four of a kind % "+100*numbers[7]/totalTests);
+		System.out.println("straight flush % "+100*numbers[8]/totalTests);
 		
 	}
 }
