@@ -17,7 +17,7 @@
 package game.rounds;
 
 import game.Game;
-import game.rules.BettingRules;
+import game.Showdown;
 
 public class FinalRound extends Round implements HighBettingRound{
 
@@ -28,12 +28,14 @@ public class FinalRound extends Round implements HighBettingRound{
 	@Override
 	public void endRound() {
 		collectChips();
-		
-		
 		if(onlyOnePlayerLeft()){
-
+			getGame().getPots().close(getGame().getCurrentHandPlayers());
+			winner(getGame().getPots());
+		}else{
+			getGame().getPots().close(getGame().getCurrentHandPlayers());
+			Showdown showdown = new Showdown(getGame());
+			showdown.determineWinners();
 		}
-		//TODO determine winner.
 	}
 
 	@Override

@@ -17,7 +17,6 @@
 package game.rounds;
 
 import game.Game;
-import game.rules.BettingRules;
 
 public class TurnRound extends Round implements LowBettingRound{
 
@@ -32,8 +31,13 @@ public class TurnRound extends Round implements LowBettingRound{
 	@Override
 	public void endRound() {
 		collectChips();
+		if(onlyOnePlayerLeft()){
+			getGame().getPots().close(getGame().getCurrentHandPlayers());
+			winner(getGame().getPots());
+		}else{
 		drawMuckCard();
 		drawOpenCard();
+		}
 	}
 
 	@Override

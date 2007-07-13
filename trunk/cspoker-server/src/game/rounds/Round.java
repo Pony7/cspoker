@@ -22,7 +22,7 @@ import game.actions.Action;
 import game.actions.IllegalActionException;
 import game.cards.Card;
 import game.chips.IllegalValueException;
-import game.chips.pot.Pot;
+import game.chips.pot.Pots;
 import game.player.AllInPlayer;
 import game.player.Player;
 import game.rules.BettingRules;
@@ -69,6 +69,8 @@ public abstract class Round implements PlayerAction{
 	
 	private final List<AllInPlayer> allInPlayers;
 	
+	private final List<Player> foldedPlayersWithBet;
+	
 	/**********************************************************
 	 * Constructor
 	 **********************************************************/
@@ -81,12 +83,13 @@ public abstract class Round implements PlayerAction{
 	public Round(Game game){
 		this.game = game;
 		allInPlayers = new ArrayList<AllInPlayer>();
-		bet = 0;
+		foldedPlayersWithBet = new ArrayList<Player>();
+		setBet(0);
 		lastEventPlayer = getGame().getFirstToActPlayer();
 		getGame().setCurrentPlayer(getGame().getFirstToActPlayer());
 	}
 	
-	protected Game getGame(){
+	public Game getGame(){
 		return game;
 	}
 	
@@ -157,6 +160,7 @@ public abstract class Round implements PlayerAction{
 	 */
 	protected void collectSmallBlind(Player player) throws IllegalValueException{
 		player.transferAmountToBettedPile(getGame().getGameProperty().getSmallBlind());
+		setBet(getGame().getGameProperty().getSmallBlind());
 	}
 	
 	/**
@@ -243,7 +247,10 @@ public abstract class Round implements PlayerAction{
 	public void fold(Player player) throws IllegalActionException{
 		if(!Action.FOLD.canDoAction(this, player))
 			throw new IllegalActionException(player, Action.FOLD);
-		
+		player.clearPocketCards();
+		if(player.getBettedChips().getValue()>0){
+			foldedPlayersWithBet.add(player);
+		}
 		game.removePlayerFromCurrentDeal(player);
 		
 		//removing from game, automatically switches
@@ -253,12 +260,14 @@ public abstract class Round implements PlayerAction{
 	public void deal(Player player) throws IllegalActionException{
 		if(!Action.DEAL.canDoAction(this, player))
 			throw new IllegalActionException(player, Action.DEAL);
-		
+		getGame().dealNewHand();
+		playerMadeEvent(player);
 	}
 	
 	public void allIn(Player player) throws IllegalActionException {
-		// TODO Auto-generated method stub
-		
+		if(!Action.ALL_IN.canDoAction(this, player))
+			throw new IllegalActionException(player, Action.ALL_IN);
+		goAllIn(player);
 	}
 	
 	/**********************************************************
@@ -273,7 +282,7 @@ public abstract class Round implements PlayerAction{
 	 * 			false otherwise.
 	 */
 	public boolean isRoundEnded(){
-		return lastEventPlayer.equals(game.getCurrentPlayer());
+		return lastEventPlayer.equals(game.getCurrentPlayer())  || (getGame().getNbCurrentDealPlayers()==0);
 	}
 	
 	/**
@@ -317,10 +326,8 @@ public abstract class Round implements PlayerAction{
 		getGame().removePlayerFromCurrentDeal(player);
 		if(player.getBettedChips().getValue()>getBet()){
 			setBet(player.getBettedChips().getValue());
+			lastEventPlayer = player;
 		}
-		
-		//TODO problem if all-in player is
-		//last event player?
 	}
 	
 	/**
@@ -359,13 +366,22 @@ public abstract class Round implements PlayerAction{
 	private void makeSidePots(){
 		Collections.sort(allInPlayers);
 		List<Player> players = game.getCurrentHandPlayers();
-		for(AllInPlayer player:allInPlayers){
+		for(AllInPlayer allInPlayer:allInPlayers){
 			try {
-				game.getPots().collectAmountFromPlayersToSidePot(player.getBetValue(), players);
+				game.getPots().collectAmountFromPlayersToSidePot(allInPlayer.getBetValue(), players);
+				for(Player foldedPlayer:foldedPlayersWithBet){
+					if(foldedPlayer.getBettedChips().getValue()>allInPlayer.getBetValue()){
+						foldedPlayer.getBettedChips().transferAmountTo(allInPlayer.getBetValue(), game.getPots().getNewestSidePot().getChips());
+					}else{
+						foldedPlayer.getBettedChips().transferAllChipsTo(game.getPots().getNewestSidePot().getChips());
+						foldedPlayersWithBet.remove(foldedPlayer);
+					}
+				}
+				
 			} catch (IllegalValueException e) {
 				assert false;
 			}
-			game.getPots().addShowdownPlayer(player.getPlayer());
+			game.getPots().addShowdownPlayer(allInPlayer.getPlayer());
 		}
 		allInPlayers.clear();
 	}
@@ -376,6 +392,8 @@ public abstract class Round implements PlayerAction{
 	 */
 	private void collectBets(){
 			game.getPots().collectChipsToPot(game.getCurrentHandPlayers());
+			game.getPots().collectChipsToPot(foldedPlayersWithBet);
+			foldedPlayersWithBet.clear();
 	}
 	
 	/**
@@ -394,8 +412,12 @@ public abstract class Round implements PlayerAction{
 		return getBet()-player.getBettedChips().getValue();
 	}
 	
-	protected void winner(Pot pot, Player player){
-		
+	protected void winner(Pots pots){
+		try {
+			pots.getPots().get(0).getChips().transferAllChipsTo(pots.getPots().get(0).getPlayers().get(0).getChips());
+		} catch (IllegalValueException e) {
+			assert false;
+		}
 	}
 	
 	/**********************************************************
