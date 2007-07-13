@@ -61,7 +61,6 @@ public class ShowdownPlayer implements Comparable<ShowdownPlayer>{
 	 * 
 	 * -1 = first hand is best, 1 = second hand is best, 0 = tie
 	 */
-	@Override
 	public int compareTo(ShowdownPlayer o) {
 		return HandEvaluator.compareHands(o.getBestHand(),getBestHand());
 	}

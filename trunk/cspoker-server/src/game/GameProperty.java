@@ -162,7 +162,6 @@ public class GameProperty {
 	 */
 	public boolean isClosedGame(){
 		return false;
-		//TODO: doel v deze methode? -> commentaar :p
 	}
 	
 	public int getMaxNbPlayers(){
