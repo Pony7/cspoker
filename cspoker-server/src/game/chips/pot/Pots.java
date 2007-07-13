@@ -84,6 +84,12 @@ public class Pots {
 			return null;
 		return Collections.unmodifiableList(pots);
 	}
+	
+	public Pot getNewestSidePot(){
+		if(isClosed || pots.isEmpty())
+			return null;
+		return pots.get(pots.size()-1);
+	}
 
 	/**
 	 * Collect all chips from the betted chips pile

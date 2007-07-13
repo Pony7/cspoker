@@ -17,12 +17,10 @@
 package game;
 
 import game.cards.Card;
-import game.cards.deck.randomGenerator.RandomGenerator;
 import game.cards.hand.Hand;
 import game.cards.hand.HandEvaluator;
 import game.chips.IllegalValueException;
 import game.chips.pot.Pot;
-import game.chips.pot.Pots;
 import game.player.Player;
 import game.player.ShowdownPlayer;
 
@@ -44,27 +42,19 @@ public class Showdown {
 	private final Game game;
 	
 	/**
-	 * The pots that have to be divided.
-	 */
-	private final Pots pots;
-	
-	/**
 	 * Construct a new showdown with given game and pots.
 	 * 
 	 * @param 	game
 	 * 			The game in which the showdown takes place.
 	 * @param 	pots
 	 * 			The pots to divide.
-	 * @pre 	The pots must be effective.
-	 *			|pots!=null
-	 * @pre 	The pots must be closed.
-	 *			|pots!=null && pots.isClosed()
 	 * @pre 	The game must be effective.
 	 *			|game!=null
+	 * @pre 	The pots must be closed.
+	 *			|game!=null && game.getPots().isClosed()
 	 */
-	public Showdown(Game game, Pots pots){
+	public Showdown(Game game){
 		this.game = game;
-		this.pots = pots;
 	}
 	
 	/**
@@ -82,7 +72,7 @@ public class Showdown {
 	 * 
 	 */
 	public void determineWinners(){
-		for(Pot pot:pots.getPots()){
+		for(Pot pot:game.getPots().getPots()){
 			splitPot(getWinners(pot), pot);
 		}
 	}
@@ -185,18 +175,4 @@ public class Showdown {
 		cards.addAll(player.getPocketCards());
 		return HandEvaluator.getBestHand(new Hand(cards));
 	}
-	
-	public static void main(String[] args) throws IllegalValueException {
-		List<ShowdownPlayer> players = new ArrayList<ShowdownPlayer>();
-		
-		players.add(new ShowdownPlayer(new Player(456,"Kenzo", 1000), RandomGenerator.getRandomHand(7)));
-		players.add(new ShowdownPlayer(new Player(489,"Cedric", 1000), RandomGenerator.getRandomHand(7)));
-		
-		Collections.sort(players);
-		System.out.println(players.get(0));
-		System.out.println(players.get(1));
-		System.out.println(players.get(0).getBestHand());
-		System.out.println(players.get(1).getBestHand());
-	}
-
 }

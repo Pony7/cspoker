@@ -115,13 +115,13 @@ public class Game {
 		players.add(player);
 	}
 	/**
-	 * Checks wether this game is full of players
+	 * Checks whether this game is full of players
 	 */
 	public boolean fullOfPlayers(){
 		return players.size()>=getGameProperty().getMaxNbPlayers();
 	}
 	/**
-	 * Checks wether the given player is part of this game
+	 * Checks whether the given player is part of this game
 	 * @param player
 	 * 			the given player
 	 */
@@ -130,6 +130,10 @@ public class Game {
 	}
 	public List<Player> getPlayers(){
 		return Collections.unmodifiableList(players);
+	}
+	
+	public int getNbWaitingPlayers(){
+		return players.size();
 	}
 	
 	/**********************************************************
@@ -150,6 +154,9 @@ public class Game {
 	
 	public void removePlayerFromCurrentDeal(Player player){
 		currentHandPlayers.remove(player);
+		if(getFirstToActPlayer().equals(player)){
+			setFirstToActPlayer(getCurrentPlayer());
+		}
 	}
 	
 	public List<Player> getCurrentHandPlayers(){
@@ -174,12 +181,10 @@ public class Game {
 	 */
 	public void dealNewHand(){
 		openCards = new ArrayList<Card>();
-		//TODO clear player private cards
 		deck.newDeal();
+		pots = new Pots();
 		currentHandPlayers = new LoopingList<Player>(players);
 		setCurrentPlayer(dealer);		
-		nextPlayer();
-		setDealer(getCurrentPlayer());
 		nextPlayer();
 		setFirstToActPlayer(getCurrentPlayer());
 	}

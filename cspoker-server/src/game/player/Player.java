@@ -138,4 +138,8 @@ public class Player {
 	public List<Card> getPocketCards(){
 		return Collections.unmodifiableList(pocketCards);
 	}
+	
+	public void clearPocketCards(){
+		pocketCards.clear();
+	}
 }

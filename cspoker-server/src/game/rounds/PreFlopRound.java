@@ -18,7 +18,6 @@ package game.rounds;
 
 import game.Game;
 import game.chips.IllegalValueException;
-import game.rules.BettingRules;
 
 
 /**
@@ -33,32 +32,33 @@ public class PreFlopRound extends Round implements LowBettingRound{
 		super(game);
 		try {
 			collectSmallBlind(getGame().getCurrentPlayer());
+			getGame().nextPlayer();
 		} catch (IllegalValueException e) {
 			goAllIn(getGame().getCurrentPlayer());
 		}
 		
-		getGame().nextPlayer();
-		//TODO problem if there are only 2 players left.
-		//2nd player can only call the small blind.
-		
-		try {
-			collectBigBlind(getGame().getCurrentPlayer());
-		} catch (IllegalValueException e) {
-			goAllIn(getGame().getCurrentPlayer());
-		}
-		
-		setBet(getGame().getCurrentPlayer().getBettedChips().getValue());
-		
-		getGame().nextPlayer();
+		if(getGame().getNbCurrentDealPlayers()!=1){
+			try {
+				collectBigBlind(getGame().getCurrentPlayer());
+				getGame().nextPlayer();
+			} catch (IllegalValueException e) {
+				goAllIn(getGame().getCurrentPlayer());
+			}
+		}		
 	}
 
 	@Override
 	public void endRound() {
 		collectChips();
-		drawMuckCard();
-		drawOpenCard();
-		drawOpenCard();
-		drawOpenCard();
+		if(onlyOnePlayerLeft()){
+			getGame().getPots().close(getGame().getCurrentHandPlayers());
+			winner(getGame().getPots());
+		}else{
+			drawMuckCard();
+			drawOpenCard();
+			drawOpenCard();
+			drawOpenCard();
+		}
 	}
 
 	@Override

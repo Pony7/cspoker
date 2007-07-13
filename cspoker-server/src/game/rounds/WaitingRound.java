@@ -18,12 +18,20 @@ package game.rounds;
 
 import game.Game;
 import game.player.Player;
-import game.rules.BettingRules;
 
 public class WaitingRound extends Round {
 	
 	public WaitingRound(Game game) {
 		super(game);
+		
+		game.setCurrentPlayer(game.getDealer());
+		
+		//TODO
+		game.nextPlayer();
+		game.setDealer(game.getCurrentPlayer());
+		
+		//new dealer
+		
 		//TODO all logic for new deal
 		//should be placed here.
 	}

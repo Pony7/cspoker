@@ -30,7 +30,7 @@ public enum Action {
 	FOLD{
 		@Override
 		public boolean canDoAction(Round round, Player player){
-			return false;
+			return round.isBettingRound() && round.onTurn(player);
 		}
 		
 		@Override
@@ -42,7 +42,9 @@ public enum Action {
 	CHECK{
 		@Override
 		public boolean canDoAction(Round round, Player player){
-			return false;
+			return round.isBettingRound()
+			&& round.onTurn(player)
+			&& !round.someoneHasBet();
 		}
 		
 		@Override
@@ -54,7 +56,9 @@ public enum Action {
 	BET{
 		@Override
 		public boolean canDoAction(Round round, Player player){
-			return false;
+			return round.isBettingRound()
+			&& round.onTurn(player)
+			&& !round.someoneHasBet();
 		}
 		
 		@Override
@@ -66,7 +70,9 @@ public enum Action {
 	CALL{
 		@Override
 		public boolean canDoAction(Round round, Player player){
-			return false;
+			return round.isBettingRound()
+			&& round.onTurn(player)
+			&& round.someoneHasBet();
 		}
 		
 		@Override
@@ -78,7 +84,9 @@ public enum Action {
 	RAISE{
 		@Override
 		public boolean canDoAction(Round round, Player player){
-			return false;
+			return round.isBettingRound()
+			&& round.onTurn(player)
+			&& round.someoneHasBet();
 		}
 		
 		@Override
@@ -90,7 +98,9 @@ public enum Action {
 	DEAL{
 		@Override
 		public boolean canDoAction(Round round, Player player){
-			return false;
+			return !round.isBettingRound()
+			&& round.onTurn(player)
+			&& (round.getGame().getNbWaitingPlayers()>1);
 		}
 		
 		@Override
@@ -102,7 +112,8 @@ public enum Action {
 	ALL_IN{
 		@Override
 		public boolean canDoAction(Round round, Player player){
-			return false;
+			return round.isBettingRound()
+			&& round.onTurn(player);
 		}
 		
 		@Override

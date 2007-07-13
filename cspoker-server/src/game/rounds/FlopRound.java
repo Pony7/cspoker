@@ -17,7 +17,6 @@
 package game.rounds;
 
 import game.Game;
-import game.rules.BettingRules;
 
 public class FlopRound extends Round implements LowBettingRound{
 
@@ -28,10 +27,13 @@ public class FlopRound extends Round implements LowBettingRound{
 	@Override
 	public void endRound() {
 		collectChips();
-		
-		
-		drawMuckCard();
-		drawOpenCard();
+		if(onlyOnePlayerLeft()){
+			getGame().getPots().close(getGame().getCurrentHandPlayers());
+			winner(getGame().getPots());
+		}else{
+			drawMuckCard();
+			drawOpenCard();
+		}
 	}
 
 	@Override
