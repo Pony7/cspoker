@@ -53,7 +53,6 @@ public class GameControl implements PlayerAction{
 	 * Construct a new game control.
 	 */
 	public GameControl(GameProperty gameProperty){
-		//TODO
 		game = new Game(gameProperty);
 		round = new WaitingRound(game);
 	}

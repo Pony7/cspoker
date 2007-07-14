@@ -22,11 +22,14 @@ package game.cards.cardElements;
  * @author Kenzo
  *
  */
-public enum Suit {
+public enum Suit implements Comparable<Suit>{
 	
 	SPADES{
 		public String toString(){
 			return "spades";
+		}
+		public int getValue(){
+			return 4;
 		}
 	}, 
 	
@@ -35,12 +38,18 @@ public enum Suit {
 		public String toString(){
 			return "hearts";
 		}
+		public int getValue(){
+			return 3;
+		}
 	}
 	,
 	
 	DIAMONDS{
 		public String toString(){
 			return "diamonds";
+		}
+		public int getValue(){
+			return 2;
 		}
 	}
 	,
@@ -49,11 +58,20 @@ public enum Suit {
 		public String toString(){
 			return "clubs";
 		}
+		public int getValue(){
+			return 1;
+		}
 	};
 	
 	/**
 	 * Returns a textual representation of this suit
 	 */
 	public abstract String toString();
-
+	/**
+	 * Returns the relative value of this suit
+	 * (clubs ranking the lowest, followed by diamonds,
+	 * hearts, and spades as in bridge)
+	 */
+	public abstract int getValue();
+	
 }
