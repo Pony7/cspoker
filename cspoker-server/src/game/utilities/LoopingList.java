@@ -113,6 +113,24 @@ public class LoopingList<T> {
 	}
 	
 	/**
+	 * Returns the next element of this looping list.
+	 * 
+	 * @return The next element of this looping list.
+	 */
+	public T getNext(){
+		return list.get((currentPosition+1)%size());
+	}
+	
+	/**
+	 * Returns the previous element of this looping list.
+	 * 
+	 * @return The previous element of this looping list.
+	 */
+	public T getPrevious(){
+		return list.get((currentPosition+size()-1)%size());
+	}
+	
+	/**
 	 * Remove the occurrence of the given element of the list.
 	 * 
 	 * After removal, there are no instances present of the given element,

@@ -38,12 +38,12 @@ public class GameProperty {
 	 * The minimum value of chips the first player after the dealer button
 	 * must place in the pot
 	 */
-	private final int smallBlind=getSmallBet()/2;
+	private final int smallBlind;
 	/**
 	 * The minimum value of chips the second player after the dealer button
 	 * must place in the pot
 	 */
-	private final int bigBlind=getSmallBet();
+	private final int bigBlind;
 	/**
 	 * The value of a small bet, used in the first three rounds
 	 */
@@ -51,7 +51,7 @@ public class GameProperty {
 	/**
 	 * The value of a big bet, used in the fourth and final round
 	 */
-	private final int bigBet=getSmallBet()*2;
+	private final int bigBet;
 	/**
 	 * The maximum number of players in a game
 	 */
@@ -98,6 +98,9 @@ public class GameProperty {
 			throw new IllegalArgumentException();
 		this.smallBet=smallBet;
 		this.bettingRules=bettingRules;
+		smallBlind=getSmallBet()/2;
+		bigBlind=getSmallBet();
+		bigBet=getSmallBet()*2;
 	}
 	/**********************************************************
 	 * Bets

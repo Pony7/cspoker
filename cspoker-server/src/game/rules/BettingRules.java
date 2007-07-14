@@ -66,7 +66,7 @@ public abstract class BettingRules {
 		return round;
 	}
 	public void setRound(Round round){
-		this.numberofRaises=0;
+		numberofRaises=0;
 		setBetPlaced(false);
 	}
 	/**********************************************************
@@ -96,7 +96,7 @@ public abstract class BettingRules {
 		return lastErrorRaiseMessage;
 	}
 	public void setLastRaiseErrorMessage(String error){
-		this.lastErrorRaiseMessage=error;
+		lastErrorRaiseMessage=error;
 	}
 	public int getNBRaises(){
 		return numberofRaises;
@@ -105,7 +105,7 @@ public abstract class BettingRules {
 	 * Increases the number of raises in this round by one
 	 */
 	public void incrementNBRaises() {
-		incrementNBRaises();
+		numberofRaises++;
 	}
 	/**********************************************************
 	 * Bets
@@ -138,7 +138,7 @@ public abstract class BettingRules {
 		return lastErrorBetMessage;
 	}
 	public void setLastBetErrorMessage(String error){
-		this.lastErrorBetMessage=error;
+		lastErrorBetMessage=error;
 	}
 	/**
 	 * Checks whether a bet has been placed
@@ -147,12 +147,12 @@ public abstract class BettingRules {
 		return betPlaced;
 	}
 	public void setBetPlaced(boolean flag){
-		this.betPlaced=flag;
+		betPlaced=flag;
 	}
 	public int getLastBetAmount(){
 		return lastBetAmount;
 	}
 	public void setLastBetAmount(int amount){
-		this.lastBetAmount=amount;
+		lastBetAmount=amount;
 	}
 }

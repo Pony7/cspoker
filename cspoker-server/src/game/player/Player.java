@@ -20,6 +20,7 @@ import game.cards.Card;
 import game.chips.Chips;
 import game.chips.IllegalValueException;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -47,7 +48,7 @@ public class Player {
 	private final String name;
 	
 	/**
-	 * The available chips of this player.
+	 * The stack of this player.
 	 */
 	private final Chips chips;
 	
@@ -60,9 +61,7 @@ public class Player {
 	/**
 	 * The hidden cards.
 	 */
-	private List<Card> pocketCards;
-	
-	private boolean isDealer;
+	private final List<Card> pocketCards;
 	
 	/**********************************************************
 	 * Constructor
@@ -88,17 +87,33 @@ public class Player {
 		this.name = name;
 		chips = new Chips(initialNbChips);
 		bettedChips = new Chips();
+		pocketCards = new ArrayList<Card>();
 	}
+	
+	/**********************************************************
+	 * Name
+	 **********************************************************/
+	
 	
 	public String getName(){
 		return name;
 	}
 	
+	/**********************************************************
+	 * Id
+	 **********************************************************/
+	
+	
 	public long getId(){
 		return id;
 	}
 	
-	public Chips getChips(){
+	/**********************************************************
+	 * Chips
+	 **********************************************************/
+	
+	
+	public Chips getStack(){
 		return chips;
 	}
 	
@@ -106,21 +121,12 @@ public class Player {
 		return bettedChips;
 	}
 	
-	public boolean isDealer(){
-		return isDealer;
-	}
-	
-	public void setDealer(boolean isDealer){
-		this.isDealer = isDealer;
-	}
-
-	
 	public void transferAmountToBettedPile(int amount) throws IllegalValueException{
-		getChips().transferAmountTo(amount, getBettedChips());
+		getStack().transferAmountTo(amount, getBettedChips());
 	}
 	
 	public void transferAllChipsToBettedPile() throws IllegalValueException{
-		getChips().transferAllChipsTo(getBettedChips());
+		getStack().transferAllChipsTo(getBettedChips());
 	}
 	
 	/**********************************************************
@@ -141,5 +147,32 @@ public class Player {
 	
 	public void clearPocketCards(){
 		pocketCards.clear();
+	}
+	
+	@Override
+	public String toString(){
+		return "ID: "+getId()+", Name: "+getName()+", Stack: "+getStack();
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + (int) (id ^ (id >>> 32));
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		final Player other = (Player) obj;
+		if (id != other.id)
+			return false;
+		return true;
 	}
 }

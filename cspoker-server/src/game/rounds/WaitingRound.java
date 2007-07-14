@@ -23,20 +23,13 @@ public class WaitingRound extends Round {
 	
 	public WaitingRound(Game game) {
 		super(game);
-		game.setCurrentPlayer(game.getDealer());
-		
-		//TODO
-		game.nextPlayer();
-		game.setDealer(game.getCurrentPlayer());
-		
-		//new dealer
-		
-		//TODO all logic for new deal
-		//should be placed here.
+		System.out.println("** Waiting Round **");
+		game.setDealer(game.getNextDealer());
 	}
 
 	@Override
 	public void endRound() {
+		getGame().dealNewHand();
 		for(Player player:getGame().getCurrentDealPlayers()){
 			player.dealPocketCard(drawCard());
 			player.dealPocketCard(drawCard());

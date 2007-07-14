@@ -23,8 +23,8 @@ public class NoLimit extends BettingRules {
 	@Override
 	public boolean isValidRaise(int amount) {
 		if(amount<getLastBetAmount()){
-			setLastRaiseErrorMessage("ERROR : the betted amount must be atleast the amount of the previous bet/raise" +
-					"in the current round");
+			setLastRaiseErrorMessage("ERROR : the betted amount must be at least the amount of the previous bet/raise" +
+					" in the current round");
 			return false;
 		}
 		return super.isValidRaise(amount);

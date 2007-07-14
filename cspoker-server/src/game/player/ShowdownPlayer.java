@@ -52,7 +52,7 @@ public class ShowdownPlayer implements Comparable<ShowdownPlayer>{
 	
 	@Override
 	public String toString(){
-		return player.getName()+" has a "+HandTypeCalculator.calculateHandType(getBestHand())+".";
+		return player.getName()+" has a "+HandTypeCalculator.calculateHandType(getBestHand());
 	}
 	
 	/**

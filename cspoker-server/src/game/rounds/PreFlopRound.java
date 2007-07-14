@@ -30,6 +30,7 @@ public class PreFlopRound extends Round implements LowBettingRound{
 
 	public PreFlopRound(Game game) {
 		super(game);
+		System.out.println("** PreFlop Round **");
 		try {
 			collectSmallBlind(getGame().getCurrentPlayer());
 			getGame().nextPlayer();

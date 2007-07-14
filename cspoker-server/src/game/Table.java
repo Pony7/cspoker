@@ -182,7 +182,7 @@ public class Table {
 	public void addPlayer(Player player) throws PlayerListFullException{
 		if(fullOfPlayers())
 			throw new PlayerListFullException();
-		if(!hasAsPlayer(player))
+		if(hasAsPlayer(player))
 			throw new IllegalArgumentException(player+" is already seated at this table.");
 		players.add(player);
 	}

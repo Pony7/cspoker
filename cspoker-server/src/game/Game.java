@@ -42,16 +42,35 @@ public class Game {
 	 * Variables
 	 **********************************************************/
 	
+	/**
+	 * This variable contains the table of this game.
+	 */
 	private final Table table;
 	
+	/**
+	 * This variable contains the game property of this game.
+	 */
 	private final GameProperty gameProperty;
 	
+	/**
+	 * This looping list contains the active players
+	 * of this game.
+	 */
 	private LoopingList<Player> currentHandPlayers;
 	
+	/**
+	 * This variable contains the deck of cards of this game.
+	 */
 	private final Deck deck;
 	
+	/**
+	 * This list contains all common cards.
+	 */
 	private List<Card> openCards;
 	
+	/**
+	 * This variable contains all the pots in this game.
+	 */
 	private Pots pots;
 	
 	/**
@@ -65,7 +84,7 @@ public class Game {
 	private Player firstToActPlayer;
 	
 	/**
-	 * This variable contains the nextDealer of this game.
+	 * This variable contains the next dealer of this game.
 	 */
 	private Player nextDealer;
 
@@ -76,6 +95,12 @@ public class Game {
 	
 	/**
 	 * Construct a new game with given table.
+	 * 
+	 * @pre 	The table should be effective
+	 *			|table!=null
+	 * @pre 	The table should be effective and there must
+	 * 			be at least 2 players.
+	 *			|table!=null && table.getNbPlayer()>1
 	 * 
 	 */
 	public Game(Table table){
@@ -89,87 +114,14 @@ public class Game {
 		setDealer(currentHandPlayers.getList().get(new Random().nextInt(currentHandPlayers.size())));
 		setCurrentPlayer(getDealer());
 		nextPlayer();
-		setFirstToActPlayer(currentHandPlayers.getCurrent());
+		setFirstToActPlayer(getCurrentPlayer());
+		setNextDealer(getCurrentPlayer());
 	}
 	
 	/**********************************************************
-	 * Getters
-	 **********************************************************/
-	
-	/**
-	 * Returns the game property of this game.
-	 * 
-	 * @return	The game property of this game.
-	 */
-	public GameProperty getGameProperty(){
-		return gameProperty;
-	}
-	
-	/**
-	 * Returns the pots of this game.
-	 * 
-	 * @return The pots of this game.
-	 */
-	public Pots getPots(){
-		return pots;
-	}
-	
-	/**********************************************************
-	 * Table
-	 **********************************************************/
-	
-	/**
-	 * Returns the table of this game.
-	 * 
-	 * @return The table of this game.
-	 * 
-	 */
-	public Table getTable(){
-		return table;
-	}
-	
-	/**********************************************************
-	 * Round manipulation.
-	 **********************************************************/
-	
-	public void nextPlayer(){
-		currentHandPlayers.next();
-	}
-	
-	public Player getCurrentPlayer(){
-		return currentHandPlayers.getCurrent();
-	}
-	
-	public void setCurrentPlayer(Player player){
-		currentHandPlayers.setCurrent(player);
-	}
-	
-	public void removePlayerFromCurrentDeal(Player player){
-		currentHandPlayers.remove(player);
-		if(getFirstToActPlayer().equals(player)){
-			setFirstToActPlayer(getCurrentPlayer());
-		}
-	}
-	
-	public List<Player> getCurrentDealPlayers(){
-		return currentHandPlayers.getList();
-	}
-	
-	/**
-	 * Returns the number of players that
-	 * can act at in this deal.
-	 * 
-	 * @return The number of players that
-	 * 			can act in the current deal.
-	 */
-	public int getNbCurrentDealPlayers(){
-		return currentHandPlayers.size();
-	}
-	
-	public boolean hasAsActivePlayer(Player player){
-		return currentHandPlayers.contains(player);
-	}
-	
+	 * Deal new hand.
+	 **********************************************************/	
+		
 	/**
 	 * Deal a new hand.
 	 * 
@@ -179,30 +131,13 @@ public class Game {
 		deck.newDeal();
 		pots = new Pots();
 		currentHandPlayers = new LoopingList<Player>(getTable().getPlayers());
+		for(Player player:currentHandPlayers.getList()){
+			player.clearPocketCards();
+		}
 		setCurrentPlayer(dealer);		
 		nextPlayer();
 		setFirstToActPlayer(getCurrentPlayer());
-	}
-	
-	/**********************************************************
-	 * Card Logic
-	 **********************************************************/	
-	
-	public Card drawCard(){
-		return deck.drawCard();
-	}
-	
-	public void addOpenCard(Card card){
-		openCards.add(card);
-	}
-	
-	public void addMuckCard(Card card){
-		//only for formalism :)
-		//it does what is says it does...
-	}
-	
-	public List<Card> getOpenCards(){
-		return Collections.unmodifiableList(openCards);
+		setNextDealer(getCurrentPlayer());
 	}
 	
 	/**********************************************************
@@ -334,4 +269,218 @@ public class Game {
 	public void setNextDealer(Player nextDealer) {
 		this.nextDealer = nextDealer;
 	}
+	
+	/**********************************************************
+	 * Game Property
+	 **********************************************************/
+	
+	/**
+	 * Returns the game property of this game.
+	 * 
+	 * @return	The game property of this game.
+	 */
+	public GameProperty getGameProperty(){
+		return gameProperty;
+	}
+	
+	/**********************************************************
+	 * Pots
+	 **********************************************************/
+	
+	/**
+	 * Returns the pots of this game.
+	 * 
+	 * @return The pots of this game.
+	 */
+	public Pots getPots(){
+		return pots;
+	}
+	
+	/**********************************************************
+	 * Table
+	 **********************************************************/
+	
+	/**
+	 * Returns the table of this game.
+	 * 
+	 * @return The table of this game.
+	 * 
+	 */
+	public Table getTable(){
+		return table;
+	}
+	
+	/**********************************************************
+	 * Round manipulation.
+	 **********************************************************/
+	
+	/**
+	 * Change the current player to the next player.
+	 */
+	public void nextPlayer(){
+		currentHandPlayers.next();
+	}
+	
+	/**
+	 * Returns the current player of this game.
+	 * 
+	 * @return The current player of this game.
+	 */
+	public Player getCurrentPlayer(){
+		return currentHandPlayers.getCurrent();
+	}
+	
+	/**
+	 * Returns the previous player of this game.
+	 * 
+	 * @return The previous player of this game.
+	 */
+	public Player getPreviousPlayer(){
+		return currentHandPlayers.getPrevious();
+	}
+	
+	/**
+	 * Returns the next player of this game.
+	 * 
+	 * @return The next player of this game.
+	 */
+	public Player getNextPlayer(){
+		return currentHandPlayers.getNext();
+	}
+	
+	/**
+	 * Set the current player to the given player.
+	 * 
+	 * @param 	player
+	 * 			The given player
+	 * @pre    	This game must be able to have the given player
+	 * 			as its current player.
+	 * 			| canHaveAsCurrentPlayer(player)
+	 * @post 	The current player is set to the given player
+	 *		 	|new.getCurrentPlayer()==player
+	 */
+	public void setCurrentPlayer(Player player){
+		currentHandPlayers.setCurrent(player);
+	}
+	
+	/**
+	 * Check whether this game can have the given player
+	 * as its current player.
+	 *  
+	 * @param	player
+	 * 			The player to check.
+	 * @return	True if the player is effective
+	 * 			and if the given player is seated at this table,
+	 * 			False otherwise.
+	 * 			| result == (player!=null) && hasAsActivePlayer(player)
+	 */
+	public boolean canHaveAsCurrentPlayer(Player player){
+		return (player!=null) && hasAsActivePlayer(player);
+	}
+	
+	/**
+	 * Remove the given player from current deal.
+	 * 
+	 * @param 	player
+	 * 			The player to remove.
+	 * @pre 	The given player is an active player at this table.
+	 *			|hasAsActivePlayer(player)
+	 * @post	The given player is no active player
+	 * 			any more in this game.
+	 * 			|!new.hasAsActivePlayer(player)
+	 * @post	If the removed player is the first to act
+	 * 			player in the game, change the first
+	 * 			to act player to the next player.
+	 * @post 	If the given player is the current player,
+	 * 			the current player is changed to the next player.
+	 */
+	public void removePlayerFromCurrentDeal(Player player){
+		if(getFirstToActPlayer().equals(player)){
+			Player currentPlayer = getCurrentPlayer();
+			currentHandPlayers.setCurrent(player);
+			setFirstToActPlayer(currentHandPlayers.getNext());
+			setCurrentPlayer(currentPlayer);
+		}
+		currentHandPlayers.remove(player);
+	}
+	
+	/**
+	 * Returns the list of all active players in this game.
+	 * 
+	 * @return The list of all active players in this game.
+	 */
+	public List<Player> getCurrentDealPlayers(){
+		return currentHandPlayers.getList();
+	}
+	
+	/**
+	 * Returns the number of players that
+	 * can act at in this deal.
+	 * 
+	 * @return The number of players that
+	 * 			can act in the current deal.
+	 */
+	public int getNbCurrentDealPlayers(){
+		return currentHandPlayers.size();
+	}
+	
+	/**
+	 * Check whether this game has the given player
+	 * as an active player.
+	 * 
+	 * @param 	player
+	 * 			The player to check.
+	 * @return	True if the given player is contained
+	 * 			in the list of current deal players,
+	 * 			False otherwise.
+	 */
+	public boolean hasAsActivePlayer(Player player){
+		return currentHandPlayers.contains(player);
+	}
+	
+
+	/**********************************************************
+	 * Card Logic
+	 **********************************************************/	
+	
+	/**
+	 * Draw a card from the deck.
+	 */
+	public Card drawCard(){
+		return deck.drawCard();
+	}
+	
+	/**
+	 * Add the given card to the common cards.
+	 * 
+	 * @param 	card
+	 * 			The card to add to the common cards.
+	 */
+	public void addOpenCard(Card card){
+		openCards.add(card);
+	}
+	
+	/**
+	 * Add the given card to the muck.
+	 * The given card is not added to the common cards.
+	 * 
+	 * @param 	card
+	 * 			The card to add to the muck.
+	 */
+	public void addMuckCard(Card card){
+		//only for formalism :)
+		//it does what is says it does...
+	}
+	
+	/**
+	 * Returns the list of all common cards.
+	 * 
+	 * @return The list of all common cards.
+	 */
+	public List<Card> getOpenCards(){
+		return Collections.unmodifiableList(openCards);
+	}
+	
+	//TODO remove player from table if stack is zero
+	//TODO leave game method that takes care of dealer/next dealer consistency.
 }

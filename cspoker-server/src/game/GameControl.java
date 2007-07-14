@@ -50,11 +50,20 @@ public class GameControl implements PlayerAction{
 	 **********************************************************/
 	
 	/**
-	 * Construct a new game control.
+	 * Construct a new game control with given table.
 	 */
 	public GameControl(Table table){
 		game = new Game(table);
 		round = new WaitingRound(game);
+	}
+	
+	/**
+	 * Returns the game controlled by this game controller.
+	 * 
+	 * @return The game controlled by this game controller.
+	 */
+	public Game getGame(){
+		return game;
 	}
 	
 	/**********************************************************
@@ -71,6 +80,7 @@ public class GameControl implements PlayerAction{
 	 */
 	public void bet(Player player, int amount) throws IllegalActionException{
 		round.bet(player, amount);
+		System.out.println(player+" bets "+amount+".");
 		checkIfEndedAndChangeRound();
 	}
 	
@@ -84,6 +94,7 @@ public class GameControl implements PlayerAction{
 	 */
 	public void call(Player player) throws IllegalActionException{
 		round.call(player);
+		System.out.println(player.getName()+" calls.");
 		checkIfEndedAndChangeRound();
 	}
 	
@@ -97,26 +108,31 @@ public class GameControl implements PlayerAction{
 	 */
 	public void check(Player player) throws IllegalActionException{
 		round.check(player);
+		System.out.println(player.getName()+" checks.");
 		checkIfEndedAndChangeRound();
 	}
 	
 	public void raise(Player player, int amount) throws IllegalActionException{
 		round.raise(player, amount);
+		System.out.println(player.getName()+" raises with "+amount+".");
 		checkIfEndedAndChangeRound();
 	}
 	
 	public void fold(Player player) throws IllegalActionException{
 		round.fold(player);
+		System.out.println(player.getName()+" folds.");
 		checkIfEndedAndChangeRound();
 	}
 	
 	public void deal(Player player) throws IllegalActionException{
 		round.deal(player);
+		System.out.println(player.getName()+" deals.");
 		checkIfEndedAndChangeRound();
 	}
 	
 	public void allIn(Player player) throws IllegalActionException {
 		round.allIn(player);
+		System.out.println(player.getName()+" goes all in.");
 		checkIfEndedAndChangeRound();
 	}
 	

@@ -63,17 +63,33 @@ public abstract class Round implements PlayerAction{
 	 */
 	private Player lastEventPlayer;
 	
+	/**
+	 * The variable containing the game in which
+	 * this round takes place.
+	 */
 	private final Game game;
 	
+	/**
+	 * The current bet in this round.
+	 */
 	private int bet;
 	
+	/**
+	 * This list contains all players who go
+	 * all-in in this round.
+	 */
 	private final List<AllInPlayer> allInPlayers;
 	
+	/**
+	 * This list contains all players who folded,
+	 * but who have placed chips on their betted chips pile.
+	 */
 	private final List<Player> foldedPlayersWithBet;
 	
 	/**********************************************************
 	 * Constructor
 	 **********************************************************/
+	
 	/**
 	 * Initialize a new round for given game.
 	 * 
@@ -89,6 +105,11 @@ public abstract class Round implements PlayerAction{
 		getGame().setCurrentPlayer(getGame().getFirstToActPlayer());
 	}
 	
+	/**
+	 * Returns the game this round is part of.
+	 * 
+	 * @return The game this round is part of.
+	 */
 	public Game getGame(){
 		return game;
 	}
@@ -98,20 +119,41 @@ public abstract class Round implements PlayerAction{
 	 **********************************************************/
 	
 	/**
-	 * Set the bet of this round to the given value.
+	 * Returns the current bet of this round.
 	 * 
+	 * @return The current bet of this round.
 	 */
-	protected void setBet(int value){
-		bet = value; 
-	}
-	
-	/**
-	 * Returns the current bet value of this round.
-	 * 
-	 * @return The current bet value of this round.
-	 */
-	public int getBet(){
+	public int getBet() {
 		return bet;
+	}
+
+	/**
+	 * Check whether rounds can have the given bet
+	 * as their bet.
+	 *  
+	 * @param	bet
+	 * 			The bet to check.
+	 * @return	The bet must be positive.
+	 * 			| result == (bet>=0)
+	 */
+	public static boolean canHaveAsBet(int bet) {
+		return bet>=0;
+	}
+
+	/**
+	 * Set the bet of this round to the given bet.
+	 * 
+	 * @param	bet
+	 * 			The new bet for this round.
+	 * @pre    	This round must be able to have the given bet
+	 * 			as its bet.
+	 * 			| canHaveAsBet(bet)
+	 * @post	The bet of this round is set to the given
+	 * 			bet.
+	 * 			| new.getBet() == bet
+	 */
+	private void setBet(int bet) {
+		this.bet = bet;
 	}
 	
 	/**
@@ -160,7 +202,10 @@ public abstract class Round implements PlayerAction{
 	 */
 	protected void collectSmallBlind(Player player) throws IllegalValueException{
 		player.transferAmountToBettedPile(getGame().getGameProperty().getSmallBlind());
-		setBet(getGame().getGameProperty().getSmallBlind());
+		raiseBetWith(getGame().getGameProperty().getSmallBlind());
+		getBettingRules().setBetPlaced(true);
+		getBettingRules().setLastBetAmount(getGame().getGameProperty().getSmallBlind());
+		playerMadeEvent(player);
 	}
 	
 	/**
@@ -172,7 +217,10 @@ public abstract class Round implements PlayerAction{
 	 */
 	protected void collectBigBlind(Player player) throws IllegalValueException{
 		player.transferAmountToBettedPile(getGame().getGameProperty().getBigBlind());
+		getBettingRules().setBetPlaced(true);
+		getBettingRules().setLastBetAmount(getGame().getGameProperty().getBigBlind());
 		setBet(getGame().getGameProperty().getBigBlind());
+		playerMadeEvent(player);
 	}
 	
 	/**********************************************************
@@ -220,7 +268,8 @@ public abstract class Round implements PlayerAction{
 		} catch (IllegalValueException e) {
 			throw new IllegalActionException(player, Action.CALL, e.getMessage());
 		}
-		
+		if(!game.hasAsActivePlayer(lastEventPlayer))
+			playerMadeEvent(player);
 		game.nextPlayer();
 	}
 	
@@ -260,7 +309,6 @@ public abstract class Round implements PlayerAction{
 	public void deal(Player player) throws IllegalActionException{
 		if(!Action.DEAL.canDoAction(this, player))
 			throw new IllegalActionException(player, Action.DEAL);
-		getGame().dealNewHand();
 		playerMadeEvent(player);
 	}
 	
@@ -322,11 +370,12 @@ public abstract class Round implements PlayerAction{
 		} catch (IllegalValueException e) {
 			assert false;
 		}
+		System.out.println(player.getName()+" goes all-in.");
 		allInPlayers.add(new AllInPlayer(player));
 		getGame().removePlayerFromCurrentDeal(player);
 		if(player.getBettedChips().getValue()>getBet()){
 			setBet(player.getBettedChips().getValue());
-			lastEventPlayer = player;
+			playerMadeEvent(player);
 		}
 	}
 	
@@ -414,7 +463,7 @@ public abstract class Round implements PlayerAction{
 	
 	protected void winner(Pots pots){
 		try {
-			pots.getPots().get(0).getChips().transferAllChipsTo(pots.getPots().get(0).getPlayers().get(0).getChips());
+			pots.getPots().get(0).getChips().transferAllChipsTo(pots.getPots().get(0).getPlayers().get(0).getStack());
 		} catch (IllegalValueException e) {
 			assert false;
 		}
