@@ -162,15 +162,20 @@ public class Pots {
 		return Collections.unmodifiableList(pots);
 	}
 	/**
-	 * Returns the total value of all pots
+	 * Returns the total value of all pots.
 	 */
 	public int getTotalValue(){
-		//TODO: @Kenzo: kwas nie zeker van verschil pot-pots
-		//gelieve deze methode te controleren: ik zou de totale huidige waarde ingezet over het ganse spel moeten hebben
 		int value=0;
-		for(Pot pot:getSidePots()){
-			value+=pot.getValue();
+		if(isClosed()){
+			for(Pot pot:getPots()){
+				value+=pot.getValue();
+			}
+		}else{
+			for(Pot pot:getSidePots()){
+				value+=pot.getValue();
+			}
+			value+=getMainPot().getValue();
 		}
-		return value+getMainPot().getValue();
+		return value;
 	}
 }

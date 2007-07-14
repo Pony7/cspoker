@@ -22,6 +22,7 @@ public class TurnRound extends Round implements LowBettingRound{
 
 	public TurnRound(Game game) {
 		super(game);
+		System.out.println("** Turn Round **");
 	}
 	
 	/**

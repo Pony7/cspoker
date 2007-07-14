@@ -23,10 +23,12 @@ public class FinalRound extends Round implements HighBettingRound{
 
 	public FinalRound(Game game) {
 		super(game);
+		System.out.println("** Final Round **");
 	}
 
 	@Override
 	public void endRound() {
+		
 		collectChips();
 		if(onlyOnePlayerLeft()){
 			getGame().getPots().close(getGame().getCurrentDealPlayers());

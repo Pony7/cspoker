@@ -38,7 +38,7 @@ public class Hand implements Iterable<Card>{
 	/**
 	 * Private array containing the cards of this hand
 	 */
-   Card[] cards;
+   Card[] cards = new CardImpl[MAX_CARDS];
 
 
    /**********************************************************
@@ -80,7 +80,7 @@ public class Hand implements Iterable<Card>{
     * 			| cardList.size()>MAX_CARDS || cardList==null
     */
    public Hand(List<Card> cardList){
-	   if(cardList.size()>MAX_CARDS || cardList==null)
+	   if((cardList.size()>MAX_CARDS) || (cardList==null))
 		   throw new IllegalArgumentException();
 	   cardList.toArray(cards);
    }
@@ -283,7 +283,7 @@ public class Hand implements Iterable<Card>{
 		   if(compareTo==1){
 			   highestRankCard=cards[i];
 		   }else{
-			   if(compareTo==0 && cards[i].getSuit().getValue()>highestRankCard.getSuit().getValue())
+			   if((compareTo==0) && (cards[i].getSuit().getValue()>highestRankCard.getSuit().getValue()))
 				   highestRankCard=cards[i];
 		   }
 			  

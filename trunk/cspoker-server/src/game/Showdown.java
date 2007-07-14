@@ -73,7 +73,9 @@ public class Showdown {
 	 */
 	public void determineWinners(){
 		for(Pot pot:game.getPots().getPots()){
-			splitPot(getWinners(pot), pot);
+			List<Player> winners = getWinners(pot);
+			System.out.println("Winners: "+winners);
+			splitPot(winners, pot);
 		}
 	}
 	
@@ -100,7 +102,7 @@ public class Showdown {
 		//only one winner
 		if(nbWinners ==1){
 			try {
-				pot.getChips().transferAllChipsTo(winners.get(0).getChips());
+				pot.getChips().transferAllChipsTo(winners.get(0).getStack());
 			} catch (IllegalValueException e) {
 				assert false;
 			}
@@ -112,7 +114,7 @@ public class Showdown {
 			if(nbChips_per_winner*nbWinners==pot.getChips().getValue()){
 				for(Player player:winners){
 					try {
-						pot.getChips().transferAmountTo(nbChips_per_winner, player.getChips());
+						pot.getChips().transferAmountTo(nbChips_per_winner, player.getStack());
 					} catch (IllegalValueException e) {
 						assert false;
 					}
@@ -128,8 +130,8 @@ public class Showdown {
 					if(compareSingleBestCard==1){
 						playerWithHighestSingleCard=player;
 					}else{
-						if(compareSingleBestCard==0 && getBestFiveCardHand(player).getHighestRankCard().getSuit()
-								.getValue()>getBestFiveCardHand(playerWithHighestSingleCard).getHighestRankCard().getSuit().getValue())
+						if((compareSingleBestCard==0) && (getBestFiveCardHand(player).getHighestRankCard().getSuit()
+								.getValue()>getBestFiveCardHand(playerWithHighestSingleCard).getHighestRankCard().getSuit().getValue()))
 							playerWithHighestSingleCard=player;
 					}
 						
@@ -137,7 +139,7 @@ public class Showdown {
 				//transfer chips to all winners
 				for(Player player:winners){
 					try {
-						pot.getChips().transferAmountTo(nbChips_per_winner, player.getChips());
+						pot.getChips().transferAmountTo(nbChips_per_winner, player.getStack());
 					} catch (IllegalValueException e) {
 						assert false;
 					}
@@ -145,7 +147,7 @@ public class Showdown {
 				//playerWithHighestSingleCard gets the odd chip, that can't be divided over all winners
 				int oddChipsValue=pot.getChips().getValue()-nbChips_per_winner*nbWinners;
 				try {
-					pot.getChips().transferAmountTo(oddChipsValue, playerWithHighestSingleCard.getChips());
+					pot.getChips().transferAmountTo(oddChipsValue, playerWithHighestSingleCard.getStack());
 				} catch (IllegalValueException e) {
 					assert(false);
 				}
@@ -163,9 +165,10 @@ public class Showdown {
 	private List<Player> getWinners(Pot pot){
 		List<ShowdownPlayer> players = getShowdownPlayersFromPot(pot);
 		Collections.sort(players);
+		System.out.println(players);
 		ShowdownPlayer winner = players.get(0);
 		List<Player> winners = new ArrayList<Player>();
-		int i=1;
+		int i=0;
 		while((i<players.size()) && winner.equals(players.get(i))){
 			winners.add(players.get(i).getPlayer());
 			i++;

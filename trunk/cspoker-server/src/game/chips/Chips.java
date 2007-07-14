@@ -212,5 +212,10 @@ public class Chips {
 	public synchronized void transferAllChipsTo(Chips receiver) throws IllegalValueException{
 		transferAmountTo(getValue(), receiver);
 	}
+	
+	@Override
+	public String toString(){
+		return getValue()+" chips";
+	}
 
 }
