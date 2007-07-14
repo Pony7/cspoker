@@ -161,4 +161,16 @@ public class Pots {
 			return null;
 		return Collections.unmodifiableList(pots);
 	}
+	/**
+	 * Returns the total value of all pots
+	 */
+	public int getTotalValue(){
+		//TODO: @Kenzo: kwas nie zeker van verschil pot-pots
+		//gelieve deze methode te controleren: ik zou de totale huidige waarde ingezet over het ganse spel moeten hebben
+		int value=0;
+		for(Pot pot:getSidePots()){
+			value+=pot.getValue();
+		}
+		return value+getMainPot().getValue();
+	}
 }

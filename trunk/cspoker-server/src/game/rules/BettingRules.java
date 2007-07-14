@@ -62,7 +62,7 @@ public abstract class BettingRules {
 	/**
 	 * Returns the game for which these betting game.rounds.rules apply
 	 */
-	public Round getCurrentRound(){
+	public Round getRound(){
 		return round;
 	}
 	public void setRound(Round round){

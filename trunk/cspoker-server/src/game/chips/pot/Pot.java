@@ -91,5 +91,11 @@ public class Pot{
 			assert false;
 		}
 	}
+	/**
+	 * Returns the value of the chips in this post
+	 */
+	public int getValue(){
+		return getChips().getValue();
+	}
 	
 }

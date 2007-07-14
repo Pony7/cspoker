@@ -77,11 +77,11 @@ public class Limit extends BettingRules{
 			setLastRaiseErrorMessage("ERROR : the maximum number of raises in this round has been reached");
 			return false;
 		}
-		if(getCurrentRound() instanceof LowBettingRound && (amount%getSmallBet()!=0)){
+		if(getRound() instanceof LowBettingRound && (amount%getSmallBet()!=0)){
 			setLastRaiseErrorMessage("ERROR : the betted amount must be n times the small bet of this round being "+getSmallBet());
 			return false;
 		}
-		if(getCurrentRound() instanceof HighBettingRound && (amount%getBigBet()!=0)){
+		if(getRound() instanceof HighBettingRound && (amount%getBigBet()!=0)){
 			setLastRaiseErrorMessage("ERROR : the betted amount must be n times the big bet of this round being "+getBigBet());
 			return false;
 		}
@@ -101,11 +101,11 @@ public class Limit extends BettingRules{
 	 **********************************************************/
 	@Override
 	public boolean isValidBet(int amount) {
-		if(getCurrentRound() instanceof LowBettingRound && (amount%getSmallBet()!=0)){
+		if(getRound() instanceof LowBettingRound && (amount%getSmallBet()!=0)){
 			setLastRaiseErrorMessage("ERROR : the betted amount must be n times the small bet of this round being "+getSmallBet());
 			return false;
 		}
-		if(getCurrentRound() instanceof HighBettingRound && (amount%getBigBet()!=0)){
+		if(getRound() instanceof HighBettingRound && (amount%getBigBet()!=0)){
 			setLastRaiseErrorMessage("ERROR : the betted amount must be n times the big bet of this round being "+getBigBet());
 			return false;
 		}
