@@ -23,7 +23,6 @@ public class WaitingRound extends Round {
 	
 	public WaitingRound(Game game) {
 		super(game);
-		
 		game.setCurrentPlayer(game.getDealer());
 		
 		//TODO

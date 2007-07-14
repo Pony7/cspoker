@@ -273,6 +273,24 @@ public class Hand implements Iterable<Card>{
 	    }
    }
    /**
+    * Returns the card with the highest rank in this hand. If there are plural cards with equal highest rank, the suits
+    * of the cards are used.(clubs ranking the lowest, followed by diamonds,hearts, and spades as in bridge)
+    */
+   public Card getHighestRankCard(){
+	   Card highestRankCard=cards[0];
+	   for(int i=0;i<getNBCards();i++){
+		   int compareTo=cards[i].compareTo(highestRankCard);
+		   if(compareTo==1){
+			   highestRankCard=cards[i];
+		   }else{
+			   if(compareTo==0 && cards[i].getSuit().getValue()>highestRankCard.getSuit().getValue())
+				   highestRankCard=cards[i];
+		   }
+			  
+	   }
+	   return highestRankCard;
+   }
+   /**
     * Returns a textual representation of this hand
     */
    @Override

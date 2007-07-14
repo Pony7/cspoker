@@ -120,7 +120,35 @@ public class Showdown {
 				assert pot.getChips().getValue()==0;
 			//more difficult logic.
 			}else{
-				//TODO
+				// the player with the single highest card gets the odd chips that can't be divided over the winners
+				Player playerWithHighestSingleCard=winners.get(0);
+				for(Player player:winners){
+					int compareSingleBestCard=getBestFiveCardHand(playerWithHighestSingleCard).getHighestRankCard().compareTo(
+					getBestFiveCardHand(player).getHighestRankCard());
+					if(compareSingleBestCard==1){
+						playerWithHighestSingleCard=player;
+					}else{
+						if(compareSingleBestCard==0 && getBestFiveCardHand(player).getHighestRankCard().getSuit()
+								.getValue()>getBestFiveCardHand(playerWithHighestSingleCard).getHighestRankCard().getSuit().getValue())
+							playerWithHighestSingleCard=player;
+					}
+						
+				}
+				//transfer chips to all winners
+				for(Player player:winners){
+					try {
+						pot.getChips().transferAmountTo(nbChips_per_winner, player.getChips());
+					} catch (IllegalValueException e) {
+						assert false;
+					}
+				}
+				//playerWithHighestSingleCard gets the odd chip, that can't be divided over all winners
+				int oddChipsValue=pot.getChips().getValue()-nbChips_per_winner*nbWinners;
+				try {
+					pot.getChips().transferAmountTo(oddChipsValue, playerWithHighestSingleCard.getChips());
+				} catch (IllegalValueException e) {
+					assert(false);
+				}
 			}
 		}
 	}
