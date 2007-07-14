@@ -29,10 +29,10 @@ public class FinalRound extends Round implements HighBettingRound{
 	public void endRound() {
 		collectChips();
 		if(onlyOnePlayerLeft()){
-			getGame().getPots().close(getGame().getCurrentHandPlayers());
+			getGame().getPots().close(getGame().getCurrentDealPlayers());
 			winner(getGame().getPots());
 		}else{
-			getGame().getPots().close(getGame().getCurrentHandPlayers());
+			getGame().getPots().close(getGame().getCurrentDealPlayers());
 			Showdown showdown = new Showdown(getGame());
 			showdown.determineWinners();
 		}
