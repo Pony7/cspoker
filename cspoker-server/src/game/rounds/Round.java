@@ -365,7 +365,7 @@ public abstract class Round implements PlayerAction{
 	 */
 	private void makeSidePots(){
 		Collections.sort(allInPlayers);
-		List<Player> players = game.getCurrentHandPlayers();
+		List<Player> players = game.getCurrentDealPlayers();
 		for(AllInPlayer allInPlayer:allInPlayers){
 			try {
 				game.getPots().collectAmountFromPlayersToSidePot(allInPlayer.getBetValue(), players);
@@ -391,7 +391,7 @@ public abstract class Round implements PlayerAction{
 	 * 
 	 */
 	private void collectBets(){
-			game.getPots().collectChipsToPot(game.getCurrentHandPlayers());
+			game.getPots().collectChipsToPot(game.getCurrentDealPlayers());
 			game.getPots().collectChipsToPot(foldedPlayersWithBet);
 			foldedPlayersWithBet.clear();
 	}

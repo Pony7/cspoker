@@ -37,8 +37,7 @@ public class WaitingRound extends Round {
 
 	@Override
 	public void endRound() {
-		
-		for(Player player:getGame().getCurrentHandPlayers()){
+		for(Player player:getGame().getCurrentDealPlayers()){
 			player.dealPocketCard(drawCard());
 			player.dealPocketCard(drawCard());
 		}

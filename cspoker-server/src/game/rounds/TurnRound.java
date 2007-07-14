@@ -32,7 +32,7 @@ public class TurnRound extends Round implements LowBettingRound{
 	public void endRound() {
 		collectChips();
 		if(onlyOnePlayerLeft()){
-			getGame().getPots().close(getGame().getCurrentHandPlayers());
+			getGame().getPots().close(getGame().getCurrentDealPlayers());
 			winner(getGame().getPots());
 		}else{
 		drawMuckCard();

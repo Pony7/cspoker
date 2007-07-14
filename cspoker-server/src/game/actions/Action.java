@@ -30,7 +30,8 @@ public enum Action {
 	FOLD{
 		@Override
 		public boolean canDoAction(Round round, Player player){
-			return round.isBettingRound() && round.onTurn(player);
+			return round.isBettingRound()
+			&& round.onTurn(player);
 		}
 		
 		@Override
@@ -100,7 +101,7 @@ public enum Action {
 		public boolean canDoAction(Round round, Player player){
 			return !round.isBettingRound()
 			&& round.onTurn(player)
-			&& (round.getGame().getNbWaitingPlayers()>1);
+			&& (round.getGame().getTable().getNbPlayers()>1);
 		}
 		
 		@Override

@@ -25,7 +25,7 @@ import game.utilities.LoopingList;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.Random;
 
 
 /**
@@ -42,9 +42,9 @@ public class Game {
 	 * Variables
 	 **********************************************************/
 	
-	private final GameProperty gameProperty;
+	private final Table table;
 	
-	private final List<Player> players = new CopyOnWriteArrayList<Player>();
+	private final GameProperty gameProperty;
 	
 	private LoopingList<Player> currentHandPlayers;
 	
@@ -54,86 +54,78 @@ public class Game {
 	
 	private Pots pots;
 	
+	/**
+	 * This variable contains the dealer of this game.
+	 */
 	private Player dealer;
 	
+	/**
+	 * This variable contains the firstToActPlayer of this game.
+	 */
 	private Player firstToActPlayer;
+	
+	/**
+	 * This variable contains the nextDealer of this game.
+	 */
+	private Player nextDealer;
+
 	
 	/**********************************************************
 	 * Constructor
 	 **********************************************************/
 	
 	/**
-	 * Construct a new game with given game property.
+	 * Construct a new game with given table.
 	 * 
 	 */
-	public Game(GameProperty gameProperty){
+	public Game(Table table){
+		this.table = table;
+		table.setPlaying(true);
+		gameProperty = table.getGameProperty();
+		currentHandPlayers = new LoopingList<Player>(table.getPlayers());
 		deck = new Deck();
-		this.gameProperty = gameProperty;
-		//set initial dealer-button holder
+		openCards = new ArrayList<Card>();
+		pots = new Pots();
+		setDealer(currentHandPlayers.getList().get(new Random().nextInt(currentHandPlayers.size())));
+		setCurrentPlayer(getDealer());
+		nextPlayer();
+		setFirstToActPlayer(currentHandPlayers.getCurrent());
 	}
 	
 	/**********************************************************
 	 * Getters
 	 **********************************************************/
 	
+	/**
+	 * Returns the game property of this game.
+	 * 
+	 * @return	The game property of this game.
+	 */
 	public GameProperty getGameProperty(){
 		return gameProperty;
 	}
 	
+	/**
+	 * Returns the pots of this game.
+	 * 
+	 * @return The pots of this game.
+	 */
 	public Pots getPots(){
 		return pots;
 	}
 	
 	/**********************************************************
-	 * Add/Remove Players to/from the game.
+	 * Table
 	 **********************************************************/
 	
 	/**
-	 * Removes the given player from this game
-	 * @throws	IllegalArgumentException
-	 * 			if the given player isn't part of this game
-	 * 			| !hasAsPlayer(player)
-	 * @post	The given player isn't part of this game anymore
-	 * 			| !new.hasAsPlayer(player)
+	 * Returns the table of this game.
+	 * 
+	 * @return The table of this game.
+	 * 
 	 */
-	public void removePlayer(Player player){
-		if(!hasAsPlayer(player))
-			throw new IllegalArgumentException();
-		players.remove(player);
-	}
-	/**
-	 * Adds the given player to this game
-	 * @param player
-	 * 			the given player
-	 * @throws PlayerListFullException
-	 * 			if this game is full of players
-	 * 			| fullOfPlayers()
-	 */
-	public void addPlayer(Player player) throws PlayerListFullException{
-		if(fullOfPlayers())
-			throw new PlayerListFullException();
-		players.add(player);
-	}
-	/**
-	 * Checks whether this game is full of players
-	 */
-	public boolean fullOfPlayers(){
-		return players.size()>=getGameProperty().getMaxNbPlayers();
-	}
-	/**
-	 * Checks whether the given player is part of this game
-	 * @param player
-	 * 			the given player
-	 */
-	public boolean hasAsPlayer(Player player){
-		return players.contains(player);
-	}
-	public List<Player> getPlayers(){
-		return Collections.unmodifiableList(players);
-	}
-	
-	public int getNbWaitingPlayers(){
-		return players.size();
+	public Table getTable(){
+		return table;
 	}
 	
 	/**********************************************************
@@ -159,21 +151,24 @@ public class Game {
 		}
 	}
 	
-	public List<Player> getCurrentHandPlayers(){
+	public List<Player> getCurrentDealPlayers(){
 		return currentHandPlayers.getList();
 	}
 	
 	/**
 	 * Returns the number of players that
-	 * can act at this moment.
+	 * can act at in this deal.
 	 * 
 	 * @return The number of players that
-	 * 			can act at this moment.
+	 * 			can act in the current deal.
 	 */
 	public int getNbCurrentDealPlayers(){
 		return currentHandPlayers.size();
 	}
 	
+	public boolean hasAsActivePlayer(Player player){
+		return currentHandPlayers.contains(player);
+	}
 	
 	/**
 	 * Deal a new hand.
@@ -183,7 +178,7 @@ public class Game {
 		openCards = new ArrayList<Card>();
 		deck.newDeal();
 		pots = new Pots();
-		currentHandPlayers = new LoopingList<Player>(players);
+		currentHandPlayers = new LoopingList<Player>(getTable().getPlayers());
 		setCurrentPlayer(dealer);		
 		nextPlayer();
 		setFirstToActPlayer(getCurrentPlayer());
@@ -214,24 +209,129 @@ public class Game {
 	 * First to act player
 	 **********************************************************/	
 	
-	public Player getFirstToActPlayer(){
+	/**
+	 * Return the firstToActPlayer of this game.
+	 *
+	 */
+	public Player getFirstToActPlayer() {
 		return firstToActPlayer;
 	}
-	
-	public void setFirstToActPlayer(Player player){
-		firstToActPlayer = player;
+
+	/**
+	 * Check whether this game can have the given firstToActPlayer
+	 * as their firstToActPlayer.
+	 *  
+	 * @param	firstToActPlayer
+	 * 			The firstToActPlayer to check.
+	 * @return	True if the firstToActPlayer is effective
+	 * 			and if the given player is part of this game.
+	 * 			| result == firstToActPlayer!=null && hasAsActivePlayer(firstToActPlayer)
+	 */
+	public boolean canHaveAsFirstToActPlayer(Player firstToActPlayer) {
+		return (firstToActPlayer!=null) && hasAsActivePlayer(firstToActPlayer);
+	}
+
+	/**
+	 * Set the firstToActPlayer of this game to the given firstToActPlayer.
+	 * 
+	 * @param	firstToActPlayer
+	 * 			The new firstToActPlayer for this game.
+	 * @pre    	This game must be able to have the given firstToActPlayer
+	 * 			as its firstToActPlayer.
+	 * 			| canHaveAsFirstToActPlayer(firstToActPlayer)
+	 * @post	The firstToActPlayer of this game is set to the given
+	 * 			firstToActPlayer.
+	 * 			| new.getFirstToActPlayer() == firstToActPlayer
+	 */
+	public void setFirstToActPlayer(Player firstToActPlayer) {
+		this.firstToActPlayer = firstToActPlayer;
 	}
 	
 	/**********************************************************
 	 * Dealer
-	 **********************************************************/	
+	 **********************************************************/
 	
-	public Player getDealer(){
+	/**
+	 * Return the dealer of this game.
+	 * 
+	 * @return The dealer of this game.
+	 *
+	 */
+	public Player getDealer() {
 		return dealer;
 	}
-	
-	public void setDealer(Player dealer){
-		this.dealer = dealer;
+
+	/**
+	 * Check whether this game can have the given dealer
+	 * as their dealer.
+	 *  
+	 * @param	dealer
+	 * 			The dealer to check.
+	 * @return	True if the dealer is effective
+	 * 			and if the given player is seated at this table.
+	 * 			| result == (dealer!=null) && getTable().hasAsPlayer(dealer)
+	 */
+	public boolean canHaveAsDealer(Player dealer) {
+		return (dealer!=null) && getTable().hasAsPlayer(dealer);
 	}
 
+	/**
+	 * Set the dealer of this game to the given dealer.
+	 * 
+	 * @param	dealer
+	 * 			The new dealer for this game.
+	 * @pre    	This game must be able to have the given dealer
+	 * 			as its dealer.
+	 * 			| canHaveAsDealer(dealer)
+	 * @post	The dealer of this game is set to the given
+	 * 			dealer.
+	 * 			| new.getDealer() == dealer
+	 */
+	public void setDealer(Player dealer) {
+		this.dealer = dealer;
+	}
+	
+	/**********************************************************
+	 * Next Dealer
+	 **********************************************************/	
+	
+	/**
+	 * Return the next dealer of this game.
+	 * 
+	 * @return The next dealer of this game.
+	 *
+	 */
+	public Player getNextDealer() {
+		return nextDealer;
+	}
+
+	/**
+	 * Check whether this game can have the given next dealer
+	 * as their next dealer.
+	 *  
+	 * @param	nextDealer
+	 * 			The next dealer to check.
+	 * @return	True if the next dealer is effective
+	 * 			and if the given player is seated at this table.
+	 * 			| result == (nextDealer!=null) && getTable().hasAsPlayer(nextDealer)
+	 */
+	public boolean canHaveAsNextDealer(Player nextDealer) {
+		return (nextDealer!=null) && getTable().hasAsPlayer(nextDealer);
+	}
+
+	/**
+	 * Set the next dealer of this game to the given next dealer.
+	 * 
+	 * @param	nextDealer
+	 * 			The new next dealer for this game.
+	 * @pre    	This game must be able to have the given next dealer
+	 * 			as its next dealer.
+	 * 			| canHaveAsNextDealer(nextDealer)
+	 * @post	The next dealer of this game is set to the given
+	 * 			next dealer.
+	 * 			| new.getNextDealer() == nextDealer
+	 */
+	public void setNextDealer(Player nextDealer) {
+		this.nextDealer = nextDealer;
+	}
 }
