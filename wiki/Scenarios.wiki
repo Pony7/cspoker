@@ -1,5 +1,5 @@
 #summary All possible scenarios that can occur in a poker game and should be tested.
-#labels Featured
+#labels Featured,Phase-QA
 
 = Introduction =
 
@@ -32,7 +32,6 @@ The other player must call the all-in amount and not enter the big blind.
 
 The other players must call the all-in amount, not the big blind amount.
 [http://www.learn-texas-holdem.com/questions/big-blind-all-in.htm link]
-
 
 
 
