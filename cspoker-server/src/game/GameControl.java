@@ -193,7 +193,7 @@ public class GameControl implements PlayerAction{
 			do{
 				round.endRound();
 				round = round.getNextRound();
-			}while(!(round instanceof WaitingRound) && (getGame().getNbCurrentDealPlayers()==0));
+			}while(!(round instanceof WaitingRound) && (getGame().getNbCurrentDealPlayers()<=1));
 		}
 	}
 }
