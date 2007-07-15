@@ -186,11 +186,14 @@ public class GameControl implements PlayerAction{
 	 * 
 	 */
 	private void changeToNextRound(){
-		round.endRound();
 		if(round.onlyOnePlayerLeft()){
+			round.endRound();
 			round = new WaitingRound(game);
 		}else{
-			round = round.getNextRound();
+			do{
+				round.endRound();
+				round = round.getNextRound();
+			}while(!(round instanceof WaitingRound) && (getGame().getNbCurrentDealPlayers()==0));
 		}
 	}
 }
