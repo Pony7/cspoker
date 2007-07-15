@@ -1,0 +1,39 @@
+#summary All possible scenarios that can occur in a poker game and should be tested.
+#labels Featured
+
+= Introduction =
+
+All possible scenarios that can occur in a poker game and should be tested. Please add any if you feel a scenario is missing.
+
+= Scenarios =
+
+== 1 active player left ==
+
+The active player collects all the chips.
+
+== 1 all-in player left ==
+
+The all-in player collects all the chips.
+
+== only all-in players and maximum 1 active player ==
+
+The game control should automatically change to next rounds, without betting, until showdown.
+
+== small blind goes all in ==
+
+The next player must bet the big blind, which everyone else calls/raises.
+[http://www.learn-texas-holdem.com/questions/small-blind-not-enough-chips.htm link]
+
+== 2 players and small blind goes all-in ==
+
+The other player must call the all-in amount and not enter the big blind.
+
+== big blind goes all in ==
+
+The other players must call the all-in amount, not the big blind amount.
+[http://www.learn-texas-holdem.com/questions/big-blind-all-in.htm link]
+
+
+
+
+
