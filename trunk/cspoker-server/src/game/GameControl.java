@@ -190,5 +190,7 @@ public class GameControl implements PlayerAction{
 		}else{
 			round = round.getNextRound();
 		}
+		if(round.onlyAllInPlayers())
+			changeToNextRound();
 	}
 }

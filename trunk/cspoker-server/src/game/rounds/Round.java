@@ -372,7 +372,6 @@ public abstract class Round implements PlayerAction{
 		} catch (IllegalValueException e) {
 			assert false;
 		}
-		System.out.println(player.getName()+" goes all-in.");
 		allInPlayers.add(new AllInPlayer(player));
 		getGame().removePlayerFromCurrentDeal(player);
 		if(player.getBettedChips().getValue()>getBet()){
@@ -393,6 +392,9 @@ public abstract class Round implements PlayerAction{
 	 */
 	public boolean onlyOnePlayerLeft(){
 		return (getGame().getNbCurrentDealPlayers()+allInPlayers.size()==1);
+	}
+	public boolean onlyAllInPlayers(){
+		return (getGame().getNbCurrentDealPlayers()==0);
 	}
 	
 	/**********************************************************
