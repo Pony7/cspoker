@@ -373,6 +373,7 @@ public abstract class Round implements PlayerAction{
 		} catch (IllegalValueException e) {
 			assert false;
 		}
+		System.out.println(player.getName()+" goes all-in.");
 		allInPlayers.add(new AllInPlayer(player));
 		getGame().removePlayerFromCurrentDeal(player);
 		if(player.getBettedChips().getValue()>getBet()){
@@ -468,6 +469,14 @@ public abstract class Round implements PlayerAction{
 			pots.getPots().get(0).getChips().transferAllChipsTo(pots.getPots().get(0).getPlayers().get(0).getStack());
 		} catch (IllegalValueException e) {
 			assert false;
+		}
+	}
+	
+	protected void removeBrokePlayers(){
+		for(Player player:getGame().getTable().getPlayers()){
+			if(player.getStack().getValue()==0){
+				getGame().leaveGame(player);
+			}
 		}
 	}
 	

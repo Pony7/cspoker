@@ -24,6 +24,7 @@ public class WaitingRound extends Round {
 	public WaitingRound(Game game) {
 		super(game);
 		System.out.println("** Waiting Round **");
+		removeBrokePlayers();
 		game.setDealer(game.getNextDealer());
 	}
 

@@ -169,6 +169,10 @@ public class Table {
 	 * 
 	 * @param 	player
 	 * 			The given player
+	 * @pre 	The given player should be effective.
+	 *			| player!=null
+	 * @pre 	The given player should have chips.
+	*			|player!=null && player.getStack().getValue()>0
 	 * @throws 	PlayerListFullException [must]
 	 * 			If this game is full of players or if
 	 * 			players are playing and the game is closed.
@@ -180,10 +184,14 @@ public class Table {
 	 * 			| new.hasAsPlayer(player)
 	 */
 	public void addPlayer(Player player) throws PlayerListFullException{
+		if(player==null)
+			throw new IllegalArgumentException("player should be effective.");
 		if(fullOfPlayers())
 			throw new PlayerListFullException();
 		if(hasAsPlayer(player))
 			throw new IllegalArgumentException(player+" is already seated at this table.");
+		if(player.getStack().getValue()==0)
+			throw new IllegalArgumentException(player+" has no chips to bet.");
 		players.add(player);
 	}
 	

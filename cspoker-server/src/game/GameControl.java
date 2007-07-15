@@ -104,15 +104,19 @@ public class GameControl implements PlayerAction{
 	public void call(Player player) throws IllegalActionException{
 		if(round.getBet()==player.getStack().getValue()){
 			allIn(player);
+		}else{
+			round.call(player);
+			System.out.println(player.getName()+" calls.");
+			checkIfEndedAndChangeRound();
 		}
-		if(round.getBet()>player.getStack().getValue()){
-			//TODO: split pots
-		}
-		else{
-		round.call(player);
-		System.out.println(player.getName()+" calls.");
-		checkIfEndedAndChangeRound();
-		}
+//		if(round.getBet()>player.getStack().getValue()){
+//			//TODO: you can't split the pot here,
+//			//it should be done at the end of the round.
+//			//it is taken care of by goAllIn() method.
+//			//and makeSidePots()
+//		}
+//		else{
+//		}
 	}
 	
 	/**
@@ -131,6 +135,9 @@ public class GameControl implements PlayerAction{
 	
 	public void raise(Player player, int amount) throws IllegalActionException{
 		if(amount==player.getStack().getValue()){
+			//TODO This does not work. The call value should
+			//also be considered.
+			//see amountToIncreaseBettedPileWith method.
 			allIn(player);
 		}else{
 			round.raise(player, amount);
@@ -153,7 +160,7 @@ public class GameControl implements PlayerAction{
 	
 	public void allIn(Player player) throws IllegalActionException {
 		round.allIn(player);
-		System.out.println(player.getName()+" goes all in.");
+//		System.out.println(player.getName()+" goes all in.");
 		checkIfEndedAndChangeRound();
 	}
 	
