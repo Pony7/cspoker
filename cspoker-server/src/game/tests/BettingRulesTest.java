@@ -89,11 +89,45 @@ private Player kenzo;
 			System.out.println(e.getMessage());
 		}
 		try {
-			gameControl.bet(game.getCurrentPlayer(),100);
-			assert(false);
+			gameControl.raise(game.getCurrentPlayer(),80);
+			gameControl.allIn(game.getCurrentPlayer());
+			gameControl.allIn(game.getCurrentPlayer());
+			gameControl.allIn(game.getCurrentPlayer());
 		} catch (IllegalActionException e) {
-			System.out.println(e.getMessage());
+			fail(e.getMessage());
 		}
+		
+		System.out.println(game.getCurrentDealPlayers());
+		System.out.println("Common Cards: "+game.getOpenCards());
+		
+		//Flop Round
+		try {
+			gameControl.call(game.getCurrentPlayer());
+			
+		} catch (IllegalActionException e) {
+			fail(e.getMessage());
+		}
+		System.out.println("Common Cards: "+game.getOpenCards());
+		
+		//Turn Round
+		try {
+			gameControl.check(game.getCurrentPlayer());
+			gameControl.check(game.getCurrentPlayer());
+			gameControl.check(game.getCurrentPlayer());
+		} catch (IllegalActionException e) {
+			fail(e.getMessage());
+		}
+		System.out.println("Common Cards: "+game.getOpenCards());
+		
+		//Final Round
+		try {
+			gameControl.check(game.getCurrentPlayer());
+			gameControl.check(game.getCurrentPlayer());
+			gameControl.check(game.getCurrentPlayer());
+		} catch (IllegalActionException e) {
+			fail(e.getMessage());
+		}
+		System.out.println("\n\n");
 	}
 
 }

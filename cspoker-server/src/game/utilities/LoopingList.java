@@ -175,7 +175,11 @@ public class LoopingList<T> {
 			currentPosition--;
 		}
 		list.remove(o);
-		currentPosition = currentPosition%(size());
+		if(size()!=0){
+			currentPosition = currentPosition%(size());
+		}else{
+			currentPosition=0;
+		}
 		return true;
 	}
 

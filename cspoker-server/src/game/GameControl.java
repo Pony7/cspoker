@@ -16,6 +16,7 @@
 
 package game;
 
+import game.actions.Action;
 import game.actions.IllegalActionException;
 import game.player.Player;
 import game.rounds.Round;
@@ -84,8 +85,10 @@ public class GameControl implements PlayerAction{
 	 * @see PlayerAction
 	 */
 	public void bet(Player player, int amount) throws IllegalActionException{
-		if(amount==player.getStack().getValue()){
-			allIn(player);
+		if(amount>=player.getStack().getValue()){
+			//player should go explicitly all-in
+			throw new IllegalActionException(player,Action.BET,"Can not bet an amount higher than your current amount of chips;" +
+					" did you mean all-in??");
 		}else{
 		round.bet(player, amount);
 		System.out.println(player.getName()+" bets "+amount+".");
@@ -102,21 +105,16 @@ public class GameControl implements PlayerAction{
 	 * @see PlayerAction
 	 */
 	public void call(Player player) throws IllegalActionException{
-		if(round.getBet()==player.getStack().getValue()){
-			allIn(player);
-		}else{
-			round.call(player);
-			System.out.println(player.getName()+" calls.");
-			checkIfEndedAndChangeRound();
+		if(round.getBet()>=player.getStack().getValue()){
+			//player should go explicitly all-in
+			throw new IllegalActionException(player,Action.CALL,"Can not call a bet higher than your current amount of chips;" +
+					" did you mean all-in??");
 		}
-//		if(round.getBet()>player.getStack().getValue()){
-//			//TODO: you can't split the pot here,
-//			//it should be done at the end of the round.
-//			//it is taken care of by goAllIn() method.
-//			//and makeSidePots()
-//		}
-//		else{
-//		}
+		else{
+		round.call(player);
+		System.out.println(player.getName()+" calls.");
+		checkIfEndedAndChangeRound();
+		}
 	}
 	
 	/**
@@ -134,11 +132,10 @@ public class GameControl implements PlayerAction{
 	}
 	
 	public void raise(Player player, int amount) throws IllegalActionException{
-		if(amount==player.getStack().getValue()){
-			//TODO This does not work. The call value should
-			//also be considered.
-			//see amountToIncreaseBettedPileWith method.
-			allIn(player);
+		if((amount+round.getBet())>=player.getStack().getValue()){
+			// player should go explicitly all-in
+			throw new IllegalActionException(player,Action.RAISE,"Can not raise with an amount higher than your current amount of chips;" +
+					" did you mean all-in??");
 		}else{
 			round.raise(player, amount);
 			System.out.println(player.getName()+" raises with "+amount+".");
@@ -159,8 +156,9 @@ public class GameControl implements PlayerAction{
 	}
 	
 	public void allIn(Player player) throws IllegalActionException {
+		int chips=player.getStack().getValue();
 		round.allIn(player);
-//		System.out.println(player.getName()+" goes all in.");
+		System.out.println(player.getName()+" goes all in with "+chips+" chips.");
 		checkIfEndedAndChangeRound();
 	}
 	
@@ -186,14 +184,11 @@ public class GameControl implements PlayerAction{
 	 * 
 	 */
 	private void changeToNextRound(){
+		round.endRound();
 		if(round.onlyOnePlayerLeft()){
-			round.endRound();
 			round = new WaitingRound(game);
 		}else{
-			do{
-				round.endRound();
-				round = round.getNextRound();
-			}while(!(round instanceof WaitingRound) && (getGame().getNbCurrentDealPlayers()<=1));
+			round = round.getNextRound();
 		}
 	}
 }
