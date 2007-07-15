@@ -19,7 +19,7 @@ package game.rounds;
 import game.Game;
 import game.Showdown;
 
-public class FinalRound extends Round implements HighBettingRound{
+public class FinalRound extends Round{
 
 	public FinalRound(Game game) {
 		super(game);
@@ -43,5 +43,14 @@ public class FinalRound extends Round implements HighBettingRound{
 	@Override
 	public Round getNextRound() {
 		return new WaitingRound(getGame());
+	}
+	@Override
+	public boolean isLowBettingRound() {
+		return false;
+	}
+
+	@Override
+	public boolean isHighBettingRound() {
+		return !isLowBettingRound();
 	}
 }

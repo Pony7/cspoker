@@ -18,7 +18,7 @@ package game.rounds;
 
 import game.Game;
 
-public class TurnRound extends Round implements LowBettingRound{
+public class TurnRound extends Round{
 
 	public TurnRound(Game game) {
 		super(game);
@@ -44,5 +44,15 @@ public class TurnRound extends Round implements LowBettingRound{
 	@Override
 	public Round getNextRound() {
 		return new FinalRound(getGame());
+	}
+
+	@Override
+	public boolean isLowBettingRound() {
+		return true;
+	}
+
+	@Override
+	public boolean isHighBettingRound() {
+		return !isLowBettingRound();
 	}
 }

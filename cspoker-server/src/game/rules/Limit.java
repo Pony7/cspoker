@@ -1,8 +1,6 @@
 package game.rules;
 
-import game.rounds.HighBettingRound;
-import game.rounds.LowBettingRound;
-import game.rounds.Round;
+import game.GameProperty;
 
 /**
  * Class for the Limit betting game.rounds.rules used in Texas Hold'em.
@@ -13,23 +11,22 @@ public class Limit extends BettingRules{
 	/**********************************************************
 	 * Constructors
 	 **********************************************************/
-	public Limit(Round round,int smallBet){
-		super(round);
+	public Limit(int smallBet,GameProperty gameProperty){
+		super(gameProperty);
 		if(!canHaveAsSmallBet(smallBet))
 			throw new IllegalArgumentException();
 		this.smallBet=smallBet;
+		this.bigBet=getSmallBet()*2;
 	}
-    public Limit(Round round) {
-		super(round);
-		this.smallBet=10;
-	}
-    public Limit(){
-    	super();
-    	this.smallBet=10;
+    public Limit(GameProperty gameProperty){
+    	this(10,gameProperty);
     }
     public Limit(int smallBet){
     	super();
-    	this.smallBet=smallBet;
+		if(!canHaveAsSmallBet(smallBet))
+			throw new IllegalArgumentException();
+		this.smallBet=smallBet;
+		this.bigBet=getSmallBet()*2;
     }
     /**********************************************************
 	 * Variables
@@ -41,7 +38,7 @@ public class Limit extends BettingRules{
 	/**
 	 * The value of a big bet, used in the fourth and final round
 	 */
-	private final int bigBet=getSmallBet()*2;
+	private int bigBet=getSmallBet()*2;
 	/**
 	 * The maximum number of raises that can be made during any round
 	 */
@@ -72,16 +69,15 @@ public class Limit extends BettingRules{
 	 **********************************************************/
 	@Override
 	public boolean isValidRaise(int amount) {
-		
 		if(getNBRaises()>=maxNBRaises){
 			setLastRaiseErrorMessage("ERROR : the maximum number of raises in this round has been reached");
 			return false;
 		}
-		if(getRound() instanceof LowBettingRound && (amount%getSmallBet()!=0)){
+		if(getRound().isLowBettingRound() && (amount%getSmallBet()!=0)){
 			setLastRaiseErrorMessage("ERROR : the betted amount must be n times the small bet of this round being "+getSmallBet());
 			return false;
 		}
-		if(getRound() instanceof HighBettingRound && (amount%getBigBet()!=0)){
+		if(getRound().isHighBettingRound() && (amount%getBigBet()!=0)){
 			setLastRaiseErrorMessage("ERROR : the betted amount must be n times the big bet of this round being "+getBigBet());
 			return false;
 		}
@@ -94,21 +90,26 @@ public class Limit extends BettingRules{
 	public void incrementNBRaises() {
 		if(getNBRaises()>=maxNBRaises)
 			throw new IllegalStateException();
-		incrementNBRaises();
+		super.incrementNBRaises();
 	}
 	/**********************************************************
 	 * Betting
 	 **********************************************************/
 	@Override
 	public boolean isValidBet(int amount) {
-		if(getRound() instanceof LowBettingRound && (amount%getSmallBet()!=0)){
+		if(getRound().isLowBettingRound() && (amount%getSmallBet()!=0)){
 			setLastRaiseErrorMessage("ERROR : the betted amount must be n times the small bet of this round being "+getSmallBet());
 			return false;
 		}
-		if(getRound() instanceof HighBettingRound && (amount%getBigBet()!=0)){
+		if(getRound().isHighBettingRound() && (amount%getBigBet()!=0)){
 			setLastRaiseErrorMessage("ERROR : the betted amount must be n times the big bet of this round being "+getBigBet());
 			return false;
 		}
 		return super.isValidBet(amount);
 	}
+	@Override
+	public String toString() {
+		return "Limit Poker: small bet "+getSmallBet()+" high bet "+getBigBet();
+	}
+	
 }

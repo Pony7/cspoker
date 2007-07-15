@@ -1,6 +1,6 @@
 package game.rules;
 
-import game.rounds.Round;
+import game.GameProperty;
 
 /**
  * Class for the NoLimit betting game.rounds.rules used in Texas Hold'em.
@@ -10,13 +10,11 @@ public class NoLimit extends BettingRules {
 	/**********************************************************
 	 * Constructors
 	 **********************************************************/
-	public NoLimit(Round round) {
-		super(round);
+	public NoLimit(GameProperty gameProperty) {
+		super(gameProperty);
 	}
-	public NoLimit(){
-		super();
+	public NoLimit() {
 	}
-
 	/**********************************************************
 	 * Raise
 	 **********************************************************/
@@ -28,5 +26,9 @@ public class NoLimit extends BettingRules {
 			return false;
 		}
 		return super.isValidRaise(amount);
+	}
+	@Override
+	public String toString() {
+		return "No Limit Poker";
 	}
 }

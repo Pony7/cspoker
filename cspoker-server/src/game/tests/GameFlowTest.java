@@ -62,7 +62,7 @@ public class GameFlowTest extends TestCase {
 		System.out.println("Game Properties:");
 		System.out.println("Small Blind: "+table.getGameProperty().getSmallBlind());
 		System.out.println("Big Blind: "+table.getGameProperty().getBigBlind());
-		System.out.println("");
+		System.out.println("Betting Rules: "+gameControl.getGame().getGameProperty().getBettingRules().toString());
 		Game game = gameControl.getGame();
 		
 		Player dealer  = game.getDealer();
@@ -116,7 +116,7 @@ public class GameFlowTest extends TestCase {
 		} catch (IllegalActionException e) {
 			fail(e.getMessage());
 		}
-		
+		System.out.println("\n\n");
 		//New game
 		
 		System.out.println(game.getCurrentDealPlayers());
@@ -173,6 +173,7 @@ public class GameFlowTest extends TestCase {
 		}
 		System.out.println(game.getCurrentDealPlayers());
 		System.out.println("Dealer: "+game.getDealer().getName());
+		System.out.println("\n\n");
 	}
 	
 	public void testAllInBigBlindCase(){
