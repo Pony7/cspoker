@@ -481,6 +481,16 @@ public class Game {
 		return Collections.unmodifiableList(openCards);
 	}
 	
-	//TODO remove player from table if stack is zero
-	//TODO leave game method that takes care of dealer/next dealer consistency.
+	/**********************************************************
+	 * Leave Game
+	 **********************************************************/
+	
+	public void leaveGame(Player player){
+		if(!table.hasAsPlayer(player))
+			return;
+		if(getNextDealer().equals(player)){
+			setNextDealer(currentHandPlayers.getNextTo(player));
+		}
+		table.removePlayer(player);
+	}
 }

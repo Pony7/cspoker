@@ -131,6 +131,25 @@ public class LoopingList<T> {
 	}
 	
 	/**
+	 * Returns the element next to the given element
+	 * in this looping list.
+	 * 
+	 * @param 	o
+	 * 			The element for which the next element
+	 * 			should be returned.
+	 * @return	The element next to the given element
+	 * 			in this looping list.
+	 * @return	Null, if the given element is not an element
+	 * 			of this looping list. 
+	 */
+	public T getNextTo(T o){
+		int index = list.indexOf(o);
+		if(index>=0)
+			return list.get((index+1)%size());
+		return null;
+	}
+	
+	/**
 	 * Remove the occurrence of the given element of the list.
 	 * 
 	 * After removal, there are no instances present of the given element,
