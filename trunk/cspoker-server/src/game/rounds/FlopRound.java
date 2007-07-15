@@ -18,7 +18,7 @@ package game.rounds;
 
 import game.Game;
 
-public class FlopRound extends Round implements LowBettingRound{
+public class FlopRound extends Round{
 
 	public FlopRound(Game game) {
 		super(game);
@@ -40,5 +40,14 @@ public class FlopRound extends Round implements LowBettingRound{
 	@Override
 	public Round getNextRound() {
 		return new TurnRound(getGame());
+	}
+	@Override
+	public boolean isLowBettingRound() {
+		return true;
+	}
+
+	@Override
+	public boolean isHighBettingRound() {
+		return !isLowBettingRound();
 	}
 }

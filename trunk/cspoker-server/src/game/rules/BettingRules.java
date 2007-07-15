@@ -1,5 +1,6 @@
 package game.rules;
 
+import game.GameProperty;
 import game.rounds.Round;
 
 /**
@@ -14,28 +15,14 @@ public abstract class BettingRules {
 	/**********************************************************
 	 * Constructors
 	 **********************************************************/
-	/**
-	 * Creates a new set of betting game.rounds.rules for the given round
-	 * @param game
-	 * 			the given game
-	 * @post	The round of this set of betting game.rounds.rules is the given round
-	 * 			| new.getRound()==round
-	 */
-	public BettingRules(Round round){
-		if(round==null)
-			throw new IllegalArgumentException();
-		setRound(round);
+	public BettingRules(GameProperty gameProperty){
+		this.gameProperty=gameProperty;
 	}
-	
 	public BettingRules(){
 	}
 	/**********************************************************
 	 * Variables
 	 **********************************************************/
-	/**
-	 * The game for which these betting game.rounds.rules apply
-	 */
-	private Round round;
 	/**
 	 * The error message for the last raise-attempt that failed
 	 */
@@ -56,18 +43,18 @@ public abstract class BettingRules {
 	 * The last amount that was bet/raised during the current round
 	 */
 	private int lastBetAmount=0;
+	private GameProperty gameProperty;
 	/**********************************************************
 	 * Round
 	 **********************************************************/
+	public void setGameProperty(GameProperty gameProperty){
+		this.gameProperty=gameProperty;
+	}
 	/**
 	 * Returns the game for which these betting game.rounds.rules apply
 	 */
 	public Round getRound(){
-		return round;
-	}
-	public void setRound(Round round){
-		numberofRaises=0;
-		setBetPlaced(false);
+		return gameProperty.getGameControl().getRound();
 	}
 	/**********************************************************
 	 * Raise's
@@ -155,4 +142,6 @@ public abstract class BettingRules {
 	public void setLastBetAmount(int amount){
 		lastBetAmount=amount;
 	}
+	
+	public abstract String toString();
 }

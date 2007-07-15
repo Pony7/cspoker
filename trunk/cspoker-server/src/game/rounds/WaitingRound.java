@@ -45,4 +45,13 @@ public class WaitingRound extends Round {
 	public boolean isBettingRound(){
 		return false;
 	}
+	@Override
+	public boolean isLowBettingRound() {
+		return false;
+	}
+
+	@Override
+	public boolean isHighBettingRound() {
+		return false;
+	}
 }

@@ -26,13 +26,15 @@ import game.chips.IllegalValueException;
  * @author Kenzo
  *
  */
-public class PreFlopRound extends Round implements LowBettingRound{
+public class PreFlopRound extends Round{
 
 	public PreFlopRound(Game game) {
 		super(game);
 		System.out.println("** PreFlop Round **");
 		try {
 			collectSmallBlind(getGame().getCurrentPlayer());
+			System.out.println(getGame().getCurrentPlayer().getName()+" has placed small blind of "
+					+getGame().getGameProperty().getSmallBlind());
 			getGame().nextPlayer();
 		} catch (IllegalValueException e) {
 			goAllIn(getGame().getCurrentPlayer());
@@ -41,6 +43,8 @@ public class PreFlopRound extends Round implements LowBettingRound{
 		if(getGame().getNbCurrentDealPlayers()!=1){
 			try {
 				collectBigBlind(getGame().getCurrentPlayer());
+				System.out.println(getGame().getCurrentPlayer().getName()+" has placed big blind of "
+						+getGame().getGameProperty().getBigBlind());
 				getGame().nextPlayer();
 			} catch (IllegalValueException e) {
 				goAllIn(getGame().getCurrentPlayer());
@@ -65,5 +69,14 @@ public class PreFlopRound extends Round implements LowBettingRound{
 	@Override
 	public Round getNextRound() {
 		return new FlopRound(getGame());
+	}
+	@Override
+	public boolean isLowBettingRound() {
+		return true;
+	}
+
+	@Override
+	public boolean isHighBettingRound() {
+		return !isLowBettingRound();
 	}
 }

@@ -55,6 +55,7 @@ public class GameControl implements PlayerAction{
 	public GameControl(Table table){
 		game = new Game(table);
 		round = new WaitingRound(game);
+		table.getGameProperty().setGameControl(this);
 	}
 	
 	/**
@@ -64,6 +65,10 @@ public class GameControl implements PlayerAction{
 	 */
 	public Game getGame(){
 		return game;
+	}
+	
+	public Round getRound(){
+		return round;
 	}
 	
 	/**********************************************************
@@ -79,9 +84,13 @@ public class GameControl implements PlayerAction{
 	 * @see PlayerAction
 	 */
 	public void bet(Player player, int amount) throws IllegalActionException{
+		if(amount==player.getStack().getValue()){
+			allIn(player);
+		}else{
 		round.bet(player, amount);
-		System.out.println(player+" bets "+amount+".");
+		System.out.println(player.getName()+" bets "+amount+".");
 		checkIfEndedAndChangeRound();
+		}
 	}
 	
 	/**
@@ -93,9 +102,17 @@ public class GameControl implements PlayerAction{
 	 * @see PlayerAction
 	 */
 	public void call(Player player) throws IllegalActionException{
+		if(round.getBet()==player.getStack().getValue()){
+			allIn(player);
+		}
+		if(round.getBet()>player.getStack().getValue()){
+			//TODO: split pots
+		}
+		else{
 		round.call(player);
 		System.out.println(player.getName()+" calls.");
 		checkIfEndedAndChangeRound();
+		}
 	}
 	
 	/**
@@ -113,9 +130,13 @@ public class GameControl implements PlayerAction{
 	}
 	
 	public void raise(Player player, int amount) throws IllegalActionException{
-		round.raise(player, amount);
-		System.out.println(player.getName()+" raises with "+amount+".");
-		checkIfEndedAndChangeRound();
+		if(amount==player.getStack().getValue()){
+			allIn(player);
+		}else{
+			round.raise(player, amount);
+			System.out.println(player.getName()+" raises with "+amount+".");
+			checkIfEndedAndChangeRound();
+		}
 	}
 	
 	public void fold(Player player) throws IllegalActionException{

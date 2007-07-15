@@ -1,6 +1,6 @@
 package game.rules;
 
-import game.rounds.Round;
+import game.GameProperty;
 
 /**
  * Class for the PotLimit betting game.rounds.rules used in Texas Hold'em.
@@ -11,11 +11,10 @@ public class PotLimit extends BettingRules {
 	/**********************************************************
 	 * Constructors
 	 **********************************************************/
-	public PotLimit(Round round) {
-		super(round);
+	public PotLimit(GameProperty gameProperty){
+		super(gameProperty);
 	}
 	public PotLimit(){
-		super();
 	}
 
 	/**********************************************************
@@ -49,5 +48,9 @@ public class PotLimit extends BettingRules {
 			return false;
 		}
 		return super.isValidBet(amount);
+	}
+	@Override
+	public String toString() {
+		return "Pot Limit Poker ";
 	}
 }

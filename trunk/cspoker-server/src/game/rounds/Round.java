@@ -274,6 +274,9 @@ public abstract class Round implements PlayerAction{
 	}
 	
 	public void raise(Player player, int amount) throws IllegalActionException{
+		System.out.println("amount "+amount+" stack "+player.getStack().getValue());
+		if(amount>player.getStack().getValue())
+			throw new IllegalActionException(player, Action.RAISE,"Can not raise with more chips than your stack obtains");
 		if(!getBettingRules().isValidRaise(amount))
 			throw new IllegalActionException(player, Action.RAISE,getBettingRules().getLastRaiseErrorMessage());
 		if(!Action.RAISE.canDoAction(this, player))
@@ -370,7 +373,6 @@ public abstract class Round implements PlayerAction{
 		} catch (IllegalValueException e) {
 			assert false;
 		}
-		System.out.println(player.getName()+" goes all-in.");
 		allInPlayers.add(new AllInPlayer(player));
 		getGame().removePlayerFromCurrentDeal(player);
 		if(player.getBettedChips().getValue()>getBet()){
@@ -497,5 +499,8 @@ public abstract class Round implements PlayerAction{
 	protected Card drawCard(){
 		return getGame().drawCard();
 	}
+	
+	public abstract boolean isLowBettingRound();
+	public abstract boolean isHighBettingRound();
 
 }
