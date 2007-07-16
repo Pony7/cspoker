@@ -190,6 +190,7 @@ public class GameControl implements PlayerAction{
 		}else{
 			round = round.getNextRound();
 		}
+		System.out.println("There are "+round.getCurrentPotValue()+" chips in the pot.");
 		if(round.onlyAllInPlayers())
 			changeToNextRound();
 	}

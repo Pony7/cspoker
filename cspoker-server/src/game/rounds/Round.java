@@ -513,4 +513,15 @@ public abstract class Round implements PlayerAction{
 	public abstract boolean isLowBettingRound();
 	public abstract boolean isHighBettingRound();
 
+	public int getCurrentPotValue(){
+		int currentPlayerBets=0;
+		for(Player player:game.getCurrentDealPlayers()){
+			currentPlayerBets+=player.getBettedChips().getValue();
+		}
+		int foldedPlayerBets=0;
+		for(Player player:foldedPlayersWithBet){
+			foldedPlayerBets+=player.getBettedChips().getValue();
+		}
+		return game.getPots().getTotalValue()+currentPlayerBets+foldedPlayerBets;
+	}
 }

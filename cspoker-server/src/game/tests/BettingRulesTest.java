@@ -63,7 +63,6 @@ private Player kenzo;
 		System.out.println("Kenzo's Cards: "+kenzo.getPocketCards());
 		System.out.println("Cedric's Cards: "+cedric.getPocketCards());
 		System.out.println("Guy's Cards: "+guy.getPocketCards());
-		
 		try {
 			gameControl.raise(game.getCurrentPlayer(), 10);
 			gameControl.raise(game.getCurrentPlayer(), 5);
@@ -116,8 +115,7 @@ private Player kenzo;
 		}
 		
 		try {
-			System.out.println("amount "+game.getPots().getTotalValue());
-			gameControl.raise(game.getCurrentPlayer(), game.getPots().getTotalValue());
+			gameControl.raise(game.getCurrentPlayer(),gameControl.getRound().getCurrentPotValue()+10);
 			assert(false);
 		} catch (IllegalActionException e) {
 			System.out.println(e.getMessage());
