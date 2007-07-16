@@ -226,7 +226,6 @@ private Player kenzo;
 		} catch (IllegalActionException e) {
 			fail(e.getMessage());
 		}
-		
 		System.out.println(game.getCurrentDealPlayers());
 		System.out.println("Common Cards: "+game.getOpenCards());
 		

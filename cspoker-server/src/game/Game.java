@@ -486,9 +486,12 @@ public class Game {
 	 **********************************************************/
 	
 	public void leaveGame(Player player){
+		System.out.println("Throw out: "+player.getName());
+		System.out.println("Next dealer: "+getNextDealer());
 		if(!table.hasAsPlayer(player))
 			return;
-		if(getNextDealer().equals(player)){
+		System.out.println(currentHandPlayers.getList());
+		if((getNextDealer()==null) || getNextDealer().equals(player)){
 			setNextDealer(currentHandPlayers.getNextTo(player));
 		}
 		table.removePlayer(player);
