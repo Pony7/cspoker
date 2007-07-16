@@ -66,7 +66,7 @@ private Player kenzo;
 		try {
 			gameControl.raise(game.getCurrentPlayer(), 10);
 			gameControl.raise(game.getCurrentPlayer(), 5);
-			assert(false);
+			fail("Exception Expected.");
 		} catch (IllegalActionException e) {
 			System.out.println(e.getMessage());
 		}
