@@ -41,6 +41,8 @@ public class FinalRound extends Round{
 			Showdown showdown = new Showdown(getGame());
 			showdown.determineWinners();
 		}
+		
+		getGame().setDealer(getGame().getNextDealer());
 	}
 
 	@Override

@@ -25,7 +25,7 @@ public class WaitingRound extends Round {
 		super(game);
 		System.out.println("** Waiting Round **");
 		removeBrokePlayers();
-		game.setDealer(game.getNextDealer());
+		getGame().setCurrentPlayer(getGame().getDealer());
 	}
 
 	@Override

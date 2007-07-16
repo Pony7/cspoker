@@ -111,11 +111,7 @@ public class Game {
 		deck = new Deck();
 		openCards = new ArrayList<Card>();
 		pots = new Pots();
-		setDealer(currentHandPlayers.getList().get(new Random().nextInt(currentHandPlayers.size())));
-		setCurrentPlayer(getDealer());
-		nextPlayer();
-		setFirstToActPlayer(getCurrentPlayer());
-		setNextDealer(getCurrentPlayer());
+		changeDealer(currentHandPlayers.getList().get(new Random().nextInt(currentHandPlayers.size())));
 	}
 	
 	/**********************************************************
@@ -482,18 +478,40 @@ public class Game {
 	}
 	
 	/**********************************************************
-	 * Leave Game
+	 * Leave/Join Game
+	 * @throws PlayerListFullException 
 	 **********************************************************/
+	
+	public void joinGame(Player player) throws PlayerListFullException{
+		table.addPlayer(player);
+		if(getDealer()==null){
+			setDealer(player);
+		}else if(getNextDealer()==null){
+			setNextDealer(player);
+		}
+	}
 	
 	public void leaveGame(Player player){
 		System.out.println("Throw out: "+player.getName());
-		System.out.println("Next dealer: "+getNextDealer());
 		if(!table.hasAsPlayer(player))
 			return;
-		System.out.println(currentHandPlayers.getList());
 		if((getNextDealer()==null) || getNextDealer().equals(player)){
 			setNextDealer(currentHandPlayers.getNextTo(player));
 		}
+		if((getDealer()==null) || getDealer().equals(player)){
+			setDealer(getNextDealer());
+		}
 		table.removePlayer(player);
+	}
+	
+	/**
+	 * 
+	 * @param dealer
+	 */
+	public void changeDealer(Player dealer){
+		setDealer(dealer);
+		setNextDealer(currentHandPlayers.getNextTo(dealer));
+		setFirstToActPlayer(currentHandPlayers.getNextTo(dealer));
+		setCurrentPlayer(dealer);
 	}
 }

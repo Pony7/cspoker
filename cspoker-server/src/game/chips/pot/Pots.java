@@ -136,7 +136,9 @@ public class Pots {
 	public void close(List<Player> showdownPlayers){
 		if(isClosed())
 			return;
-		pots.add(pot);
+		if(pot.getValue()>0){
+			pots.add(pot);
+		}
 		for(Player player: showdownPlayers){
 			addShowdownPlayer(player);
 		}
@@ -177,5 +179,27 @@ public class Pots {
 			value+=getMainPot().getValue();
 		}
 		return value;
+	}
+	
+	@Override
+	public String toString(){
+		String toReturn="Pot is ";
+		if(isClosed()){
+			toReturn+="closed.\n";
+			List<Pot> pots = getPots();
+			for (int i = 0; i < pots.size(); i++) {
+				Pot pot = pots.get(i);
+				toReturn+="Pot "+i+": "+pot+"\n";
+			}
+		}else{
+			toReturn+="open.\n";
+			toReturn+="Main pot: "+getMainPot()+"\n";
+			List<Pot> sidePots = getSidePots();
+			for (int i = 0; i < sidePots.size(); i++) {
+				Pot pot = sidePots.get(i);
+				toReturn+="Side Pot "+i+": "+pot+"\n";
+			}
+		}
+		return toReturn;
 	}
 }

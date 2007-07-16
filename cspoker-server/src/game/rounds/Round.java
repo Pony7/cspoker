@@ -378,6 +378,7 @@ public abstract class Round implements PlayerAction{
 			setBet(player.getBettedChips().getValue());
 			playerMadeEvent(player);
 		}
+		System.out.println(player.getName()+" goes all-in.");
 	}
 	
 	/**

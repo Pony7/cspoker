@@ -178,8 +178,8 @@ public class GameFlowTest extends TestCase {
 	
 	public void testAllInBigBlindCase(){
 		try {
-			kenzo = new Player(1, "Kenzo", 9);
-			cedric = new Player(2, "Cedric", 9);
+			kenzo = new Player(1, "Kenzo", 100);
+			cedric = new Player(2, "Cedric", 100);
 			guy = new Player(3, "Guy", 9);
 			
 			table = new Table(new GameProperty());
@@ -192,17 +192,20 @@ public class GameFlowTest extends TestCase {
 		} catch (PlayerListFullException e) {
 			fail(e.getMessage());
 		}
-		
+
 		System.out.println("Game Properties:");
 		System.out.println("Small Blind: "+table.getGameProperty().getSmallBlind());
 		System.out.println("Big Blind: "+table.getGameProperty().getBigBlind());
 		System.out.println("");
 		Game game = gameControl.getGame();
 		
+		game.changeDealer(kenzo);
+		
 		Player dealer  = game.getDealer();
 		System.out.println("Dealer: "+game.getDealer().getName());
 		
 		try {
+			System.out.println(game.getCurrentPlayer());
 			gameControl.deal(dealer);
 		} catch (IllegalActionException e) {
 			fail(e.getMessage());
@@ -220,7 +223,8 @@ public class GameFlowTest extends TestCase {
 		}
 		System.out.println(game.getCurrentDealPlayers());
 		System.out.println("Common Cards: "+game.getOpenCards());
-		
+		System.out.println("Side pots: "+game.getPots().getSidePots());
+		System.out.println("Main pot: "+game.getPots().getMainPot());
 		//Flop Round
 		try {
 			gameControl.check(game.getCurrentPlayer());
