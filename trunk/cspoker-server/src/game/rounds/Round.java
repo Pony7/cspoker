@@ -372,7 +372,6 @@ public abstract class Round implements PlayerAction{
 		} catch (IllegalValueException e) {
 			assert false;
 		}
-		System.out.println("allin 2");
 		allInPlayers.add(new AllInPlayer(player));
 		getGame().removePlayerFromCurrentDeal(player);
 		if(player.getBettedChips().getValue()>getBet()){
