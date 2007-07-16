@@ -16,6 +16,9 @@
 
 package game.player;
 
+import game.chips.IllegalValueException;
+import game.chips.pot.Pot;
+
 /**
  * A class to represent all-in players.
  * 
@@ -38,6 +41,19 @@ public class AllInPlayer implements Comparable<AllInPlayer>{
 	public int getBetValue(){
 		return player.getBettedChips().getValue();
 	}
+	
+	public void transferAllChipsTo(Pot pot){
+		try {
+			transferAmountTo(player.getBettedChips().getValue(), pot);
+		} catch (IllegalValueException e) {
+			assert false;
+		}
+	}
+	
+	public void transferAmountTo(int amount,Pot pot) throws IllegalValueException{
+		player.getBettedChips().transferAmountTo(amount,pot.getChips());
+	}
+	
 	public int compareTo(AllInPlayer o) {
 		return getBetValue()-o.getBetValue();
 	}

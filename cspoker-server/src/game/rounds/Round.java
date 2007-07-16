@@ -423,7 +423,12 @@ public abstract class Round implements PlayerAction{
 		for(AllInPlayer allInPlayer:allInPlayers){
 			try {
 				game.getPots().collectAmountFromPlayersToSidePot(allInPlayer.getBetValue(), players);
-				allInPlayer.getPlayer().getBettedChips().transferAllChipsTo(game.getPots().getNewestSidePot().getChips());
+				int betValue = allInPlayer.getBetValue();
+				for(AllInPlayer otherAllInPlayer:allInPlayers){
+					if(otherAllInPlayer.getBetValue()>0){
+						otherAllInPlayer.transferAmountTo(betValue,game.getPots().getNewestSidePot());
+					}
+				}
 				for(Player foldedPlayer:foldedPlayersWithBet){
 					if(foldedPlayer.getBettedChips().getValue()>allInPlayer.getBetValue()){
 						foldedPlayer.getBettedChips().transferAmountTo(allInPlayer.getBetValue(), game.getPots().getNewestSidePot().getChips());
