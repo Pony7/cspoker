@@ -372,6 +372,7 @@ public abstract class Round implements PlayerAction{
 		} catch (IllegalValueException e) {
 			assert false;
 		}
+		System.out.println("allin 2");
 		allInPlayers.add(new AllInPlayer(player));
 		getGame().removePlayerFromCurrentDeal(player);
 		if(player.getBettedChips().getValue()>getBet()){
@@ -393,8 +394,8 @@ public abstract class Round implements PlayerAction{
 	public boolean onlyOnePlayerLeft(){
 		return (getGame().getNbCurrentDealPlayers()+allInPlayers.size()==1);
 	}
-	public boolean onlyAllInPlayers(){
-		return (getGame().getNbCurrentDealPlayers()==0);
+	public boolean onlyAllInPlayersAndAtMostOneActivePlayer(){
+		return (getGame().getNbCurrentDealPlayers()<=1);
 	}
 	
 	/**********************************************************
@@ -422,6 +423,7 @@ public abstract class Round implements PlayerAction{
 		for(AllInPlayer allInPlayer:allInPlayers){
 			try {
 				game.getPots().collectAmountFromPlayersToSidePot(allInPlayer.getBetValue(), players);
+				allInPlayer.getPlayer().getBettedChips().transferAllChipsTo(game.getPots().getNewestSidePot().getChips());
 				for(Player foldedPlayer:foldedPlayersWithBet){
 					if(foldedPlayer.getBettedChips().getValue()>allInPlayer.getBetValue()){
 						foldedPlayer.getBettedChips().transferAmountTo(allInPlayer.getBetValue(), game.getPots().getNewestSidePot().getChips());
@@ -522,6 +524,11 @@ public abstract class Round implements PlayerAction{
 		for(Player player:foldedPlayersWithBet){
 			foldedPlayerBets+=player.getBettedChips().getValue();
 		}
-		return game.getPots().getTotalValue()+currentPlayerBets+foldedPlayerBets;
+		
+		int allInPlayerBets=0;
+		for(AllInPlayer player:allInPlayers){
+			allInPlayerBets+=player.getBetValue();
+		}
+		return game.getPots().getTotalValue()+currentPlayerBets+foldedPlayerBets+allInPlayerBets;
 	}
 }

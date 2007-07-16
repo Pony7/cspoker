@@ -32,24 +32,54 @@ import game.cards.hand.HandTypeCalculator;
  */
 public class ShowdownPlayer implements Comparable<ShowdownPlayer>{
 	
+	/**
+	 * This variable contains the showdown player.
+	 */
 	private final Player player;
 	
+	/**
+	 * This variable contains the showdown player's best hand.
+	 */
 	private final Hand bestHand;
 	
+	/**
+	 * Construct a new showdown player with given player
+	 * and given best hand.
+	 * 
+	 * @param 	player
+	 * 			The player for this showdown player.
+	 * @param 	bestHand
+	 * 			The player's best hand.
+	 */
 	public ShowdownPlayer(Player player, Hand bestHand){
 		this.player = player;
 		this.bestHand = bestHand;
 
 	}
 	
+	/**
+	 * Returns the effective showdown player,
+	 * as a player.
+	 * 
+	 * @return 	The effective showdown player,
+	 * 			as a player.
+	 */
 	public Player getPlayer() {
 		return player;
 	}
 	
+	/**
+	 * Return the best hand.
+	 * 
+	 * @return The best hand.
+	 */
 	public Hand getBestHand(){
 		return bestHand;
 	}
 	
+	/**
+	 * Returns a textual representation of this showdown player.
+	 */
 	@Override
 	public String toString(){
 		return player.getName()+" has a "+HandTypeCalculator.calculateHandType(getBestHand());
