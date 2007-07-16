@@ -27,10 +27,9 @@ public class PotLimit extends BettingRules {
 					"in the current round.");
 			return false;
 		}
-		int potValue=getRound().getGame().getPots().getTotalValue();
-		if(amount>potValue){
-			setLastRaiseErrorMessage("ERROR : the betted amount mustn't be greater than the total amount of chips in the" +
-					"current pot, being "+potValue+" !");
+		if(amount>getRound().getCurrentPotValue()){
+			setLastRaiseErrorMessage("ERROR : the betted amount mustn't be greater than the total amount of chips in the " +
+					"current pot, being "+getRound().getCurrentPotValue()+" !");
 			return false;
 		}
 		return super.isValidRaise(amount);
@@ -41,7 +40,7 @@ public class PotLimit extends BettingRules {
 	 **********************************************************/
 	@Override
 	public boolean isValidBet(int amount) {
-		int potValue=getRound().getGame().getPots().getTotalValue();
+		int potValue=getRound().getCurrentPotValue();
 		if(amount>potValue){
 			setLastRaiseErrorMessage("ERROR : the betted amount mustn't be greater than the total amount of chips in the" +
 					"current pot, being "+potValue+" !");
