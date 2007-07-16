@@ -49,12 +49,12 @@ public interface Card {
 	 */
 	public Suit getSuit();
 	/**
-	 * Returns a textual represenation for this card
+	 * Returns a textual representation for this card
 	 */
 	public String toString();
 
 	/**
-	 * Checks wether this card has an equal rank as the given card
+	 * Checks whether this card has an equal rank as the given card
 	 * @param card
 	 * 			the given card to check
 	 * @return true if the rank of the given hand is equal to the rank of this card;false otherwise
@@ -62,7 +62,7 @@ public interface Card {
 	 */
 	public boolean equalRank(Card card);
 	/**
-	 * Checks wether this card has an equal suit as the given card
+	 * Checks whether this card has an equal suit as the given card
 	 * @param card
 	 * 			the given card to check
 	 * @return true if the suit of the given rank is equal to the suit of this card;false otherwise

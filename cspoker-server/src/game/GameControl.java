@@ -42,7 +42,8 @@ public class GameControl implements PlayerAction{
 	private final Game game;
 	
 	/**
-	 * The variable containing the round in which the current game is.
+	 * The variable containing the round
+	 * in which the current game is.
 	 * 
 	 */
 	private Round round;	
@@ -52,6 +53,7 @@ public class GameControl implements PlayerAction{
 	
 	/**
 	 * Construct a new game control with given table.
+	 * 
 	 */
 	public GameControl(Table table){
 		game = new Game(table);
@@ -85,11 +87,11 @@ public class GameControl implements PlayerAction{
 	 * @see PlayerAction
 	 */
 	public void bet(Player player, int amount) throws IllegalActionException{
-		if(amount>=player.getStack().getValue()){
+		if(amount>=player.getStack().getValue())
 			//player should go explicitly all-in
 			throw new IllegalActionException(player,Action.BET,"Can not bet an amount higher than your current amount of chips;" +
 					" did you mean all-in??");
-		}else{
+		else{
 		round.bet(player, amount);
 		System.out.println(player.getName()+" bets "+amount+".");
 		checkIfEndedAndChangeRound();
@@ -105,11 +107,10 @@ public class GameControl implements PlayerAction{
 	 * @see PlayerAction
 	 */
 	public void call(Player player) throws IllegalActionException{
-		if(round.getBet()>=player.getStack().getValue()){
+		if(round.getBet()>=player.getStack().getValue())
 			//player should go explicitly all-in
 			throw new IllegalActionException(player,Action.CALL,"Can not call a bet higher than your current amount of chips;" +
 					" did you mean all-in??");
-		}
 		else{
 		round.call(player);
 		System.out.println(player.getName()+" calls.");
@@ -132,11 +133,11 @@ public class GameControl implements PlayerAction{
 	}
 	
 	public void raise(Player player, int amount) throws IllegalActionException{
-		if((amount+round.getBet())>=player.getStack().getValue()){
+		if((amount+round.getBet())>=player.getStack().getValue())
 			// player should go explicitly all-in
 			throw new IllegalActionException(player,Action.RAISE,"Can not raise with an amount higher than your current amount of chips;" +
 					" did you mean all-in??");
-		}else{
+		else{
 			round.raise(player, amount);
 			System.out.println(player.getName()+" raises with "+amount+".");
 			checkIfEndedAndChangeRound();
@@ -191,7 +192,7 @@ public class GameControl implements PlayerAction{
 			round = round.getNextRound();
 		}
 		System.out.println("There are "+round.getCurrentPotValue()+" chips in the pot.");
-		if(round.onlyAllInPlayers())
+		if(round.onlyAllInPlayersAndAtMostOneActivePlayer() && !(round instanceof WaitingRound))
 			changeToNextRound();
 	}
 }

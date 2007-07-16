@@ -33,7 +33,7 @@ public class FinalRound extends Round{
 		if(onlyOnePlayerLeft()){
 			getGame().getPots().close(getGame().getCurrentDealPlayers());
 			winner(getGame().getPots());
-		}if(onlyAllInPlayers()){
+		}if(onlyAllInPlayersAndAtMostOneActivePlayer()){
 			
 			
 		}else{

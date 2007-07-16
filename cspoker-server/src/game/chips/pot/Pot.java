@@ -98,4 +98,12 @@ public class Pot{
 		return getChips().getValue();
 	}
 	
+	@Override
+	public String toString(){
+		String toReturn = getValue()+" chips in this pot. Showdown players: ";
+		for(Player player:players){
+			toReturn+=player.getName()+" ";
+		}
+		return toReturn;
+	}
 }
