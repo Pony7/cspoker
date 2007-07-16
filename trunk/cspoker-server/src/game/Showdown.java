@@ -72,6 +72,7 @@ public class Showdown {
 	 * 
 	 */
 	public void determineWinners(){
+		System.out.println(game.getPots());
 		for(Pot pot:game.getPots().getPots()){
 			List<Player> winners = getWinners(pot);
 			System.out.println("Winners: "+winners);
