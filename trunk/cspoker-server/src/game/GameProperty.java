@@ -61,7 +61,6 @@ public class GameProperty {
 	 */
 	private final BettingRules bettingRules;
 	
-	private GameControl gameControl;
 	/**********************************************************
 	 * Constructors
 	 **********************************************************/
@@ -100,7 +99,6 @@ public class GameProperty {
 			throw new IllegalArgumentException();
 		this.smallBet=smallBet;
 		this.bettingRules=bettingRules;
-		this.bettingRules.setGameProperty(this);
 		smallBlind=getSmallBet()/2;
 		bigBlind=getSmallBet();
 		bigBet=getSmallBet()*2;

@@ -176,6 +176,10 @@ public class GameFlowTest extends TestCase {
 		System.out.println("\n\n");
 	}
 	
+	public void testAllInSmallBlindCase(){
+		
+	}
+	
 	public void testAllInBigBlindCase(){
 		try {
 			kenzo = new Player(1, "Kenzo", 100);
@@ -259,6 +263,22 @@ public class GameFlowTest extends TestCase {
 			fail(e.getMessage());
 		}
 		System.out.println(game.getCurrentDealPlayers());
+	}
+	
+	public void testBothBlindsAllInCase(){
+		
+	}
+	
+	public void test2AllInOneActivePlayerCase(){
+		
+	}
+	
+	public void testAllAllInCase(){
+		
+	}
+	
+	public void testMultiplePotsCase(){
+		
 	}
 	
 	public void testCase2(){
