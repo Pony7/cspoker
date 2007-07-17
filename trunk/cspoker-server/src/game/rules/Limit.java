@@ -1,6 +1,7 @@
 package game.rules;
 
 import game.GameProperty;
+import game.rounds.Round;
 
 /**
  * Class for the Limit betting game.rounds.rules used in Texas Hold'em.
@@ -16,7 +17,7 @@ public class Limit extends BettingRules{
 		if(!canHaveAsSmallBet(smallBet))
 			throw new IllegalArgumentException();
 		this.smallBet=smallBet;
-		this.bigBet=getSmallBet()*2;
+		bigBet=getSmallBet()*2;
 	}
     public Limit(GameProperty gameProperty){
     	this(10,gameProperty);
@@ -26,7 +27,7 @@ public class Limit extends BettingRules{
 		if(!canHaveAsSmallBet(smallBet))
 			throw new IllegalArgumentException();
 		this.smallBet=smallBet;
-		this.bigBet=getSmallBet()*2;
+		bigBet=getSmallBet()*2;
     }
     /**********************************************************
 	 * Variables
@@ -68,20 +69,20 @@ public class Limit extends BettingRules{
 	 * Raise
 	 **********************************************************/
 	@Override
-	public boolean isValidRaise(int amount) {
+	public boolean isValidRaise(int amount, Round round) {
 		if(getNBRaises()>=maxNBRaises){
 			setLastRaiseErrorMessage("ERROR : the maximum number of raises in this round has been reached");
 			return false;
 		}
-		if(getRound().isLowBettingRound() && (amount%getSmallBet()!=0)){
+		if(round.isLowBettingRound() && (amount%getSmallBet()!=0)){
 			setLastRaiseErrorMessage("ERROR : the betted amount must be n times the small bet of this round being "+getSmallBet());
 			return false;
 		}
-		if(getRound().isHighBettingRound() && (amount%getBigBet()!=0)){
+		if(round.isHighBettingRound() && (amount%getBigBet()!=0)){
 			setLastRaiseErrorMessage("ERROR : the betted amount must be n times the big bet of this round being "+getBigBet());
 			return false;
 		}
-		return super.isValidRaise(amount);
+		return super.isValidRaise(amount, round);
 	}
 	/**
 	 * Increases the number of raises in this round by one
@@ -96,16 +97,16 @@ public class Limit extends BettingRules{
 	 * Betting
 	 **********************************************************/
 	@Override
-	public boolean isValidBet(int amount) {
-		if(getRound().isLowBettingRound() && (amount%getSmallBet()!=0)){
+	public boolean isValidBet(int amount, Round round) {
+		if(round.isLowBettingRound() && (amount%getSmallBet()!=0)){
 			setLastRaiseErrorMessage("ERROR : the betted amount must be n times the small bet of this round being "+getSmallBet());
 			return false;
 		}
-		if(getRound().isHighBettingRound() && (amount%getBigBet()!=0)){
+		if(round.isHighBettingRound() && (amount%getBigBet()!=0)){
 			setLastRaiseErrorMessage("ERROR : the betted amount must be n times the big bet of this round being "+getBigBet());
 			return false;
 		}
-		return super.isValidBet(amount);
+		return super.isValidBet(amount, round);
 	}
 	@Override
 	public String toString() {

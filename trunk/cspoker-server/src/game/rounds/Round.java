@@ -242,7 +242,7 @@ public abstract class Round implements PlayerAction{
 	}
 	
 	public void bet(Player player, int amount) throws IllegalActionException{
-		if(!getBettingRules().isValidBet(amount))
+		if(!getBettingRules().isValidBet(amount, this))
 			throw new IllegalActionException(player, Action.BET,getBettingRules().getLastBetErrorMessage());
 		if(!Action.BET.canDoAction(this, player))
 			throw new IllegalActionException(player, Action.BET);
@@ -276,7 +276,7 @@ public abstract class Round implements PlayerAction{
 	public void raise(Player player, int amount) throws IllegalActionException{
 		if(amount>player.getStack().getValue())
 			throw new IllegalActionException(player, Action.RAISE,"Can not raise with more chips than your stack obtains");
-		if(!getBettingRules().isValidRaise(amount))
+		if(!getBettingRules().isValidRaise(amount, this))
 			throw new IllegalActionException(player, Action.RAISE,getBettingRules().getLastRaiseErrorMessage());
 		if(!Action.RAISE.canDoAction(this, player))
 			throw new IllegalActionException(player, Action.RAISE);
@@ -372,15 +372,16 @@ public abstract class Round implements PlayerAction{
 		} catch (IllegalValueException e) {
 			assert false;
 		}
+
 		allInPlayers.add(new AllInPlayer(player));
 		getGame().removePlayerFromCurrentDeal(player);
 		if(player.getBettedChips().getValue()>getBet()){
 			setBet(player.getBettedChips().getValue());
 			playerMadeEvent(player);
 		}
-		// TODO: @kenzo: Laat dien SYSO nu nekeer weg :p kheb al ene gezet in allIn methode in gamecontrol
-		// die ook het aantal chips uitprint
-		//System.out.println(player.getName()+" goes all-in.");
+		// TODO: @Cedric ja, ma iemand kan ook all-in gaan
+		// door de blinds, die zag ik ni :)
+		System.out.println(player.getName()+" goes all in with "+player.getBettedChips().getValue()+" chips.");
 	}
 	
 	/**
