@@ -1,6 +1,5 @@
 package game.rules;
 
-import game.GameProperty;
 import game.rounds.Round;
 
 /**
@@ -11,9 +10,7 @@ public class NoLimit extends BettingRules {
 	/**********************************************************
 	 * Constructors
 	 **********************************************************/
-	public NoLimit(GameProperty gameProperty) {
-		super(gameProperty);
-	}
+	
 	public NoLimit() {
 	}
 	/**********************************************************

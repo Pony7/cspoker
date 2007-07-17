@@ -1,6 +1,5 @@
 package game.rules;
 
-import game.GameProperty;
 import game.rounds.Round;
 
 /**
@@ -12,9 +11,6 @@ public class PotLimit extends BettingRules {
 	/**********************************************************
 	 * Constructors
 	 **********************************************************/
-	public PotLimit(GameProperty gameProperty){
-		super(gameProperty);
-	}
 	public PotLimit(){
 	}
 

@@ -1,6 +1,5 @@
 package game.rules;
 
-import game.GameProperty;
 import game.rounds.Round;
 
 /**
@@ -12,15 +11,8 @@ public class Limit extends BettingRules{
 	/**********************************************************
 	 * Constructors
 	 **********************************************************/
-	public Limit(int smallBet,GameProperty gameProperty){
-		super(gameProperty);
-		if(!canHaveAsSmallBet(smallBet))
-			throw new IllegalArgumentException();
-		this.smallBet=smallBet;
-		bigBet=getSmallBet()*2;
-	}
-    public Limit(GameProperty gameProperty){
-    	this(10,gameProperty);
+    public Limit(){
+    	this(10);
     }
     public Limit(int smallBet){
     	super();

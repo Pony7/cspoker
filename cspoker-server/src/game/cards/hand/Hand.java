@@ -253,6 +253,8 @@ public class Hand implements Iterable<Card>{
    /**
     * Sorts the cards in this hand by their rank from highest to lowest rank
     * (bubble sort variant)
+    * 
+    * TODO: @Cedric Er bestaat Collections.sort(List list) ;)
     */
    public void sort(){
 	   int i,j;
@@ -317,7 +319,7 @@ public String toString(){
 	    */
 	   private final Card[] card=getCardsCopy();
 	   /**
-	    * Checks wether the iterator has another card
+	    * Checks whether the iterator has another card
 	    */
 	   public boolean hasNext(){
 		return( position < card.length-1 );

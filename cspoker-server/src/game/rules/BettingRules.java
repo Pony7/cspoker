@@ -1,6 +1,5 @@
 package game.rules;
 
-import game.GameProperty;
 import game.rounds.Round;
 
 /**
@@ -15,9 +14,6 @@ public abstract class BettingRules {
 	/**********************************************************
 	 * Constructors
 	 **********************************************************/
-	public BettingRules(GameProperty gameProperty){
-		this.gameProperty=gameProperty;
-	}
 	public BettingRules(){
 	}
 	/**********************************************************
@@ -43,13 +39,7 @@ public abstract class BettingRules {
 	 * The last amount that was bet/raised during the current round
 	 */
 	private int lastBetAmount=0;
-	private GameProperty gameProperty;
-	/**********************************************************
-	 * Round
-	 **********************************************************/
-	public void setGameProperty(GameProperty gameProperty){
-		this.gameProperty=gameProperty;
-	}
+	
 
 	/**********************************************************
 	 * Raise's
