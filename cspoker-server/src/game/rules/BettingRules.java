@@ -50,12 +50,7 @@ public abstract class BettingRules {
 	public void setGameProperty(GameProperty gameProperty){
 		this.gameProperty=gameProperty;
 	}
-	/**
-	 * Returns the game for which these betting game.rounds.rules apply
-	 */
-	public Round getRound(){
-		return gameProperty.getGameControl().getRound();
-	}
+
 	/**********************************************************
 	 * Raise's
 	 **********************************************************/
@@ -64,7 +59,7 @@ public abstract class BettingRules {
 	 * @param amount
 	 * 			the given amount
 	 */
-	public boolean isValidRaise(int amount){
+	public boolean isValidRaise(int amount, Round round){
 		if(!betPlaced()){
 			setLastRaiseErrorMessage("ERROR : cannot raise if a bet hasn't been placed yet in this round; " +
 					"did you mean bet??");
@@ -102,7 +97,7 @@ public abstract class BettingRules {
 	 * @param amount
 	 * 			the given amount
 	 */
-	public boolean isValidBet(int amount){
+	public boolean isValidBet(int amount, Round round){
 		if(getNBRaises()!=0){
 			setLastBetErrorMessage("ERROR : you can't bet if someone already raised during this round!!" +
 					"; did you mean raise??");
@@ -143,5 +138,6 @@ public abstract class BettingRules {
 		lastBetAmount=amount;
 	}
 	
+	@Override
 	public abstract String toString();
 }

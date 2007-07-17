@@ -1,6 +1,7 @@
 package game.rules;
 
 import game.GameProperty;
+import game.rounds.Round;
 
 /**
  * Class for the NoLimit betting game.rounds.rules used in Texas Hold'em.
@@ -19,13 +20,13 @@ public class NoLimit extends BettingRules {
 	 * Raise
 	 **********************************************************/
 	@Override
-	public boolean isValidRaise(int amount) {
+	public boolean isValidRaise(int amount, Round round) {
 		if(amount<getLastBetAmount()){
 			setLastRaiseErrorMessage("ERROR : the betted amount must be at least the amount of the previous bet/raise" +
 					" in the current round");
 			return false;
 		}
-		return super.isValidRaise(amount);
+		return super.isValidRaise(amount, round);
 	}
 	@Override
 	public String toString() {

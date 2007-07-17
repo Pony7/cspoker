@@ -58,7 +58,6 @@ public class GameControl implements PlayerAction{
 	public GameControl(Table table){
 		game = new Game(table);
 		round = new WaitingRound(game);
-		table.getGameProperty().setGameControl(this);
 	}
 	
 	/**
@@ -159,7 +158,6 @@ public class GameControl implements PlayerAction{
 	public void allIn(Player player) throws IllegalActionException {
 		int chips=player.getBettedChips().getValue()+player.getStack().getValue();
 		round.allIn(player);
-		System.out.println(player.getName()+" goes all in with "+chips+" chips.");
 		checkIfEndedAndChangeRound();
 	}
 	

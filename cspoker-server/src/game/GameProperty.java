@@ -173,10 +173,4 @@ public class GameProperty {
 	public int getMaxNbPlayers(){
 		return maxNbPlayers;
 	}
-	public GameControl getGameControl() {
-		return gameControl;
-	}
-	public void setGameControl(GameControl gameControl) {
-		this.gameControl = gameControl;
-	}
 }
