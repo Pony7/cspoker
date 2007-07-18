@@ -255,6 +255,9 @@ public class Hand implements Iterable<Card>{
     * (bubble sort variant)
     * 
     * TODO: @Cedric Er bestaat Collections.sort(List list) ;)
+    * TODO: @Kenzo weetk :) ma kwou bubble sort implementeren :p
+    * 			as ge perse sort uit collections wilt, be my guest ma dan moet
+    * 			ge array vervangen door List
     */
    public void sort(){
 	   int i,j;

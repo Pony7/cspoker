@@ -156,7 +156,6 @@ public class GameControl implements PlayerAction{
 	}
 	
 	public void allIn(Player player) throws IllegalActionException {
-		int chips=player.getBettedChips().getValue()+player.getStack().getValue();
 		round.allIn(player);
 		checkIfEndedAndChangeRound();
 	}
