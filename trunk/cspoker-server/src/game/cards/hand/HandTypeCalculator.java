@@ -3,12 +3,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
+ *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
- *  
+ *
  *  You should have received a copy of the GNU General Public License
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
@@ -55,7 +55,7 @@ public class HandTypeCalculator {
 		}else{
 			boolean flush=checkForFlush(best);
 			boolean straight=checkForStraight(best);
-			
+
 			if(flush && straight)
 				return HandType.STRAIGHT_FLUSH;
 			else{
@@ -146,7 +146,7 @@ public class HandTypeCalculator {
 		return threeOfAKindFound;
 	}
 	/**
-	 * Checks if the given hand contains a straight 
+	 * Checks if the given hand contains a straight
 	 * @param hand
 	 * 			the given hand to check
 	 * @result	True if this hand contains at least a sequence of five cards with consequetive ranks; false otherwise
@@ -243,7 +243,7 @@ public class HandTypeCalculator {
 		boolean threeOfAKindFound=false;
 		boolean pairFound=false;
 		Card threeOfAKindCard=null;
-		
+
 		for(int j=0;j<hand.getNBCards();j++){
 			for(int i=j+1;i<hand.getNBCards();i++){
 				for(int k=i+1;k<hand.getNBCards();k++){
@@ -251,7 +251,7 @@ public class HandTypeCalculator {
 						threeOfAKindFound=true;
 						threeOfAKindCard=hand.getCard(j);
 					}
-						
+
 				}
 			}
 		}
@@ -264,7 +264,7 @@ public class HandTypeCalculator {
 				}
 			}
 		}
-		
+
 		fullHouseFound= threeOfAKindFound && pairFound;
 		return fullHouseFound;
 	}
@@ -273,7 +273,7 @@ public class HandTypeCalculator {
 	 * @param hand
 	 * 			the given hand to check
 	 * @result	True if the given hand contains four cards with equal rank
-	 * 			| result == (x.equalRank(y)&& x.equalRank(z) && x.equalRank(u) && hand.contains(x) 
+	 * 			| result == (x.equalRank(y)&& x.equalRank(z) && x.equalRank(u) && hand.contains(x)
 	 * 			|				&& hand.contains(y)&& hand.contains(z))&& hand.contains(u))
 	 */
 	public static boolean checkForFourOfAKind(Hand hand) {
@@ -326,7 +326,7 @@ public class HandTypeCalculator {
 	public static Card[] getDeterminatingCards(Hand hand){
 		Hand best=HandEvaluator.getBestHand(hand);
 		HandType type=calculateHandType(best);
-		
+
 		if(type.equals(HandType.PAIR))
 			return getPairCards(best);
 		if(type.equals(HandType.DOUBLE_PAIR))
@@ -448,7 +448,7 @@ public class HandTypeCalculator {
 	 * @result	There are 3 cards in the resulting array
 	 * 			| result.length==3
 	 * @result	The three cards in the resulting array have the same rank but are not equal
-	 * 			| result[0].equalRank(result[1])&& result[0].equalRank(result[2]) 
+	 * 			| result[0].equalRank(result[1])&& result[0].equalRank(result[2])
 	 * 			|	&& !result[0].equals(result[1]) && !result[0].equals(result[2])
 	 * @return	The given hand contains the resulting array
 	 * 			| hand.contains(result)
@@ -578,7 +578,7 @@ public class HandTypeCalculator {
 	public static Card[] getFullHouseCards(Hand hand) {
 		if(!checkForFullHouse(hand))
 			throw new IllegalArgumentException();
-		
+
 		Card threeOfAKindCard1=null;
 		Card threeOfAKindCard2=null;
 		Card threeOfAKindCard3=null;
@@ -607,7 +607,8 @@ public class HandTypeCalculator {
 		return result;
 	}
 	/**
-	 * Returns the 4 cards of equal rank of the given four-of-a-kind hand
+	 * Returns the 4 cards of equal rank of the given four-of-a-kind hand.
+	 *
 	 * @param hand
 	 * 			the given four-of-a-kind hand
 	 * @throws	IllegalArgumentException

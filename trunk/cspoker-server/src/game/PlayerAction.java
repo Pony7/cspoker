@@ -33,6 +33,10 @@ public interface PlayerAction {
 	 * 
 	 * @param	player
 	 * 			The player who checks.
+	 * @throws  IllegalActionException [must]
+	 * 			It's not the turn of the given player.
+	 * @throws  IllegalActionException [must]
+     *          The action performed is not a valid action.	
 	 */
 	public void check(Player player) throws IllegalActionException;
 	
@@ -43,6 +47,10 @@ public interface PlayerAction {
 	 * 			The player who puts a bet.
 	 * @param 	amount
 	 * 			The amount of the bet.
+	 * @throws  IllegalActionException [must]
+	 * 			It's not the turn of the given player.
+	 * @throws  IllegalActionException [must]
+     *          The action performed is not a valid action.	
 	 */
 	public void bet(Player player, int amount) throws IllegalActionException;
 	
@@ -52,6 +60,10 @@ public interface PlayerAction {
 	 * 
 	 * @param 	player
 	 * 			The player who calls.
+	 * @throws  IllegalActionException [must]
+	 * 			It's not the turn of the given player.
+	 * @throws  IllegalActionException [must]
+     *          The action performed is not a valid action.	
 	 */
 	public void call(Player player) throws IllegalActionException;
 	
@@ -62,6 +74,10 @@ public interface PlayerAction {
 	 * 			The player who raises the current bet.
 	 * @param 	amount
 	 * 			The amount with which to raise the bet.
+	 * @throws  IllegalActionException [must]
+	 * 			It's not the turn of the given player.
+	 * @throws  IllegalActionException [must]
+     *          The action performed is not a valid action.			
 	 */
 	public void raise(Player player, int amount) throws IllegalActionException;
 	
@@ -73,6 +89,10 @@ public interface PlayerAction {
 	 * 
 	 * @param 	player
 	 * 			The player who folds.
+	 * @throws  IllegalActionException [must]
+	 * 			It's not the turn of the given player.
+	 * @throws  IllegalActionException [must]
+     *          The action performed is not a valid action.	
 	 */
 	public void fold(Player player) throws IllegalActionException;
 	
@@ -83,7 +103,11 @@ public interface PlayerAction {
 	 * 
 	 * @param 	player
 	 * 			The player who deals.
-	 */
+	 * @throws  IllegalActionException [must]
+	 * 			It's not the turn of the given player.
+	 * @throws  IllegalActionException [must]
+     *          The action performed is not a valid action.	
+	 */ 
 	public void deal(Player player) throws IllegalActionException;
 	
 	/**
@@ -91,7 +115,10 @@ public interface PlayerAction {
 	 * 
 	 * @param 	player
 	 * 			The player who goes all-in.
-	 * @throws 	IllegalActionException [must]
+	 * @throws  IllegalActionException [must]
+	 * 			It's not the turn of the given player.
+	 * @throws  IllegalActionException [must]
+     *          The action performed is not a valid action.	
 	 */
 	public void allIn(Player player) throws IllegalActionException;
 
