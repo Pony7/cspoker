@@ -5,6 +5,7 @@
 
 Please list any components that you would like to work on.
 
+= Server: =
 
 == Communication: ==
   * guyvdb
@@ -23,5 +24,11 @@ Please list any components that you would like to work on.
 == Statistical Module: ==
   * cuypers.cedric
 
-== Mediators, Listeners for game events ==
+== Mediators, Listeners for game events: ==
   * kenzotomita
+
+= Java Client: =
+
+== GUI design: ==
+  * vg_aram
+
