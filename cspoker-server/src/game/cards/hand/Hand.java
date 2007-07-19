@@ -3,12 +3,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
+ *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
- *  
+ *
  *  You should have received a copy of the GNU General Public License
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
@@ -34,7 +34,7 @@ public class Hand implements Iterable<Card>{
 	 * being 7 in Texas Hold'em (5 on the table and 2 private cards)
 	 */
 	public final static int MAX_CARDS = 7;
-	   
+
 	/**
 	 * Private array containing the cards of this hand
 	 */
@@ -44,7 +44,7 @@ public class Hand implements Iterable<Card>{
    /**********************************************************
 	 * Constructors
 	 **********************************************************/
-   
+
    /**
     * Creates a new empty hand
     * @post	there are no cards in the new hand
@@ -56,7 +56,7 @@ public class Hand implements Iterable<Card>{
    }
    /**
     * Create a new hand with the same cards as the given hand
-    * @param h 
+    * @param h
     * 		the hand to clone.
     * @throws	IllegalArgumentException
     * 			if the given hand isn't effective
@@ -172,7 +172,7 @@ public class Hand implements Iterable<Card>{
     * 			if this hand doesn't contain a card equal to the given card
     * 			| ! this.contains(card)
     * @result	This hand contains the given card at the resulting index
-    * 			| card=this.getCard(result) 
+    * 			| card=this.getCard(result)
     */
    public int getIndexOf(Card card){
 	   if(! contains(card))
@@ -229,7 +229,7 @@ public class Hand implements Iterable<Card>{
 		   throw new IllegalArgumentException();
 	   int index=getIndexOf(card);
 	   int finalCardIndex=getNBCards()-1;
-	   
+
 	   cards[index]=cards[finalCardIndex];
 	   cards[finalCardIndex]=null;
    }
@@ -253,11 +253,7 @@ public class Hand implements Iterable<Card>{
    /**
     * Sorts the cards in this hand by their rank from highest to lowest rank
     * (bubble sort variant)
-    * 
-    * TODO: @Cedric Er bestaat Collections.sort(List list) ;)
-    * TODO: @Kenzo weetk :) ma kwou bubble sort implementeren :p
-    * 			as ge perse sort uit collections wilt, be my guest ma dan moet
-    * 			ge array vervangen door List
+    *
     */
    public void sort(){
 	   int i,j;
@@ -273,7 +269,7 @@ public class Hand implements Iterable<Card>{
 	             swapped=true;
 	          }
 	       }
-	       if(!swapped) 
+	       if(!swapped)
 	    	   return;
 	    }
    }
@@ -291,7 +287,7 @@ public class Hand implements Iterable<Card>{
 			   if((compareTo==0) && (cards[i].getSuit().getValue()>highestRankCard.getSuit().getValue()))
 				   highestRankCard=cards[i];
 		   }
-			  
+
 	   }
 	   return highestRankCard;
    }
@@ -301,7 +297,7 @@ public class Hand implements Iterable<Card>{
    @Override
 public String toString(){
 	   String result="";
-	   
+
 	   for(int j=0;j<getNBCards();j++){
 		   result+=" "+j+" "+cards[j].toString()+"\n";
 	   }
@@ -312,7 +308,7 @@ public String toString(){
     */
    public Iterator<Card> iterator(){
 	   return new Iterator<Card>(){
-	   
+
 	   /**
 	    * The current position of the iterator
 	    */
@@ -343,7 +339,7 @@ public String toString(){
 		public void remove() {
 			int index=position;
 			int finalCardIndex=card.length-1;
-			   
+
 			cards[index]=cards[finalCardIndex];
 			cards[finalCardIndex]=null;
 		}

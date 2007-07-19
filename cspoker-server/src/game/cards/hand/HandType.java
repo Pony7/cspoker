@@ -15,11 +15,23 @@
  */
 package game.cards.hand;
 
+import game.cards.hand.compareHands.CompareDoublePairHands;
+import game.cards.hand.compareHands.CompareFlushHands;
+import game.cards.hand.compareHands.CompareFourOfAKindHands;
+import game.cards.hand.compareHands.CompareFullHouseHands;
+import game.cards.hand.compareHands.CompareHands;
+import game.cards.hand.compareHands.CompareHighCardHands;
+import game.cards.hand.compareHands.ComparePairHands;
+import game.cards.hand.compareHands.CompareStraightFlushHands;
+import game.cards.hand.compareHands.CompareStraightHands;
+import game.cards.hand.compareHands.CompareThreeOfAKindHands;
+
 
 /**
  * Enumeration containing all the possible types of hands and their ranking
  * and textual representation
- * @author Cedric
+ * 
+ * @author Cedric & Kenzo(refactoring)
  *
  */
 public enum HandType {
@@ -34,6 +46,15 @@ public enum HandType {
 		public int getNumberOfDeterminingCards(){
 			return 0;
 		}
+		public CompareHands getEqualRankHandsComparator(){
+			return new CompareHands(){
+				@Override
+				public int compareHands(Hand h1, Hand h2) {
+					return 0;
+				}
+				
+			};
+		}
 	},
 	HIGH_CARD{
 		public String toString(){
@@ -44,6 +65,9 @@ public enum HandType {
 		}
 		public int getNumberOfDeterminingCards(){
 			return 1;
+		}
+		public CompareHands getEqualRankHandsComparator(){
+			return new CompareHighCardHands();
 		}
 	},
 	PAIR{
@@ -56,6 +80,9 @@ public enum HandType {
 		public int getNumberOfDeterminingCards(){
 			return 2;
 		}
+		public CompareHands getEqualRankHandsComparator(){
+			return new ComparePairHands();
+		}
 	},
 	DOUBLE_PAIR{
 		public String toString(){
@@ -66,6 +93,9 @@ public enum HandType {
 		}
 		public int getNumberOfDeterminingCards(){
 			return 4;
+		}
+		public CompareHands getEqualRankHandsComparator(){
+			return new CompareDoublePairHands();
 		}
 	},
 	THREE_OF_A_KIND{
@@ -78,6 +108,9 @@ public enum HandType {
 		public int getNumberOfDeterminingCards(){
 			return 3;
 		}
+		public CompareHands getEqualRankHandsComparator(){
+			return new CompareThreeOfAKindHands();
+		}
 	},
 	STRAIGHT{
 		public String toString(){
@@ -88,6 +121,9 @@ public enum HandType {
 		}
 		public int getNumberOfDeterminingCards(){
 			return 5;
+		}
+		public CompareHands getEqualRankHandsComparator(){
+			return new CompareStraightHands();
 		}
 	},
 	FLUSH{
@@ -100,6 +136,9 @@ public enum HandType {
 		public int getNumberOfDeterminingCards(){
 			return 5;
 		}
+		public CompareHands getEqualRankHandsComparator(){
+			return new CompareFlushHands();
+		}
 	},
 	FULL_HOUSE{
 		public String toString(){
@@ -110,6 +149,9 @@ public enum HandType {
 		}
 		public int getNumberOfDeterminingCards(){
 			return 5;
+		}
+		public CompareHands getEqualRankHandsComparator(){
+			return new CompareFullHouseHands();
 		}
 	},
 	FOUR_OF_A_KIND{
@@ -122,6 +164,9 @@ public enum HandType {
 		public int getNumberOfDeterminingCards(){
 			return 4;
 		}
+		public CompareHands getEqualRankHandsComparator(){
+			return new CompareFourOfAKindHands();
+		}
 	},
 	STRAIGHT_FLUSH{
 		public String toString(){
@@ -132,6 +177,9 @@ public enum HandType {
 		}
 		public int getNumberOfDeterminingCards(){
 			return 5;
+		}
+		public CompareHands getEqualRankHandsComparator(){
+			return new CompareStraightFlushHands();
 		}
 	};
 	/**
@@ -150,4 +198,19 @@ public enum HandType {
 	 * 			| result >=0 && result <=5
 	 */
 	public abstract int getNumberOfDeterminingCards();
+	
+	/**
+	 * Compares 2 hands from the same hand type.
+	 * 
+	 * @param 	h1
+	 *          The first hand
+	 * @param 	h2
+	 *          The second hand
+	 *          
+	 * @throws  IllegalArgumentException [can]
+	 * 			The given hands are not from the same hand type.
+	 *          
+	 * @return 1 = first hand is best, -1 = second hand is best, 0 = tie
+	 */
+	public abstract CompareHands getEqualRankHandsComparator();
 }
