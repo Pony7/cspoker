@@ -42,6 +42,8 @@ public class Table {
 	/**
 	 * The list of players in the waiting room.
 	 */
+        //TODO: question from guy: shouldn't thread safety be guaranteed by 
+    	//	some higher level locking? then why thread safe list?
 	private final List<Player> players = new CopyOnWriteArrayList<Player>();
 	
 	/**
