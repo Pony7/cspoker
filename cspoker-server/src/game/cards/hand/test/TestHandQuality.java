@@ -33,18 +33,6 @@ public class TestHandQuality extends TestCase {
 
 	protected Hand hand1=new Hand();
 	protected Hand hand2=new Hand();
-	public void testCombinations(){
-		System.out.println(HandEvaluator.getNumberCombinations(1));
-		System.out.println(HandEvaluator.getNumberCombinations(2));
-		System.out.println(HandEvaluator.getNumberCombinations(3));
-		System.out.println(HandEvaluator.getNumberCombinations(4));
-		System.out.println(HandEvaluator.getNumberCombinations(5));
-		System.out.println(HandEvaluator.getNumberCombinations(6));
-		System.out.println(HandEvaluator.getNumberCombinations(7));
-		System.out.println(HandEvaluator.getNumberCombinations(8));
-		System.out.println(HandEvaluator.getNumberCombinations(9));
-		
-	}
 	public void testRandomCard(){
 		for(int j=0;j<1000;j++){
 			System.out.println("random card "+RandomOrgSeededRandomGenerator.getRandomCard().toString()+"\n");
@@ -195,7 +183,7 @@ public class TestHandQuality extends TestCase {
 		hand1.makeEmpty();
 		hand2.makeEmpty();
 		double[] numbers=new double[9];
-		double totalTests=10000.0;
+		double totalTests=1000000.0;
 		for(int j=0;j<totalTests;j++){
 			hand1=RandomOrgSeededRandomGenerator.getRandomHand(5);
 			hand2=RandomOrgSeededRandomGenerator.getRandomHand(5);
@@ -209,10 +197,16 @@ public class TestHandQuality extends TestCase {
 		
 			int rank1= HandTypeCalculator.calculateHandType(hand1).getRanking();
 			numbers[rank1]++;
-			
-			assertTrue(qualityGreater==(quality1>quality2));
-			assertTrue(qualitySmaller==(quality1<quality2));
-			assertTrue(qualityEqual==(quality1==quality2));
+			if(qualityGreater!=(quality1>quality2) || qualitySmaller!=(quality1<quality2) || qualityEqual!=(quality1==quality2)){
+				System.out.println("compareTo "+HandEvaluator.compareHands(hand1,hand2));
+				System.out.println(hand1.toString());
+				System.out.println(HandTypeCalculator.calculateHandType(hand1));
+				System.out.println("quality 1 "+quality1);
+				System.out.println(hand2.toString());
+				System.out.println(HandTypeCalculator.calculateHandType(hand2));
+				System.out.println("quality 2 "+quality2);
+				fail("error");
+			}
 			hand1.makeEmpty();
 			hand2.makeEmpty();
 			if(j%(totalTests/10)==0)

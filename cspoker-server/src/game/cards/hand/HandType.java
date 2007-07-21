@@ -25,6 +25,16 @@ import game.cards.hand.compareHands.ComparePairHands;
 import game.cards.hand.compareHands.CompareStraightFlushHands;
 import game.cards.hand.compareHands.CompareStraightHands;
 import game.cards.hand.compareHands.CompareThreeOfAKindHands;
+import game.cards.hand.handQuality.DoublePairQualityCalculator;
+import game.cards.hand.handQuality.FlushQualityCalculator;
+import game.cards.hand.handQuality.FourOfAKindQualityCalculator;
+import game.cards.hand.handQuality.FullHouseQualityCalculator;
+import game.cards.hand.handQuality.HandQualityCalculator;
+import game.cards.hand.handQuality.HighCardQualityCalculator;
+import game.cards.hand.handQuality.PairQualityCalculator;
+import game.cards.hand.handQuality.StraightFlushQualityCalculator;
+import game.cards.hand.handQuality.StraightQualityCalculator;
+import game.cards.hand.handQuality.ThreeOfAKindQualtiyCalculator;
 
 
 /**
@@ -43,9 +53,6 @@ public enum HandType {
 		public int getRanking(){
 			return -1;
 		}
-		public int getNumberOfDeterminingCards(){
-			return 0;
-		}
 		public CompareHands getEqualRankHandsComparator(){
 			return new CompareHands(){
 				@Override
@@ -53,6 +60,14 @@ public enum HandType {
 					return 0;
 				}
 				
+			};
+		}
+		public HandQualityCalculator getHandQualityCalculator(){
+			return new HandQualityCalculator(){
+				@Override
+				public double calculateQualityWithinType(Hand hand) {
+					return 0;
+				}
 			};
 		}
 	},
@@ -63,11 +78,11 @@ public enum HandType {
 		public int getRanking(){
 			return 0;
 		}
-		public int getNumberOfDeterminingCards(){
-			return 1;
-		}
 		public CompareHands getEqualRankHandsComparator(){
 			return new CompareHighCardHands();
+		}
+		public HandQualityCalculator getHandQualityCalculator(){
+			return new HighCardQualityCalculator();
 		}
 	},
 	PAIR{
@@ -77,11 +92,11 @@ public enum HandType {
 		public int getRanking(){
 			return 1;
 		}
-		public int getNumberOfDeterminingCards(){
-			return 2;
-		}
 		public CompareHands getEqualRankHandsComparator(){
 			return new ComparePairHands();
+		}
+		public HandQualityCalculator getHandQualityCalculator(){
+			return new PairQualityCalculator();
 		}
 	},
 	DOUBLE_PAIR{
@@ -91,11 +106,11 @@ public enum HandType {
 		public int getRanking(){
 			return 2;
 		}
-		public int getNumberOfDeterminingCards(){
-			return 4;
-		}
 		public CompareHands getEqualRankHandsComparator(){
 			return new CompareDoublePairHands();
+		}
+		public HandQualityCalculator getHandQualityCalculator(){
+			return new DoublePairQualityCalculator();
 		}
 	},
 	THREE_OF_A_KIND{
@@ -105,11 +120,11 @@ public enum HandType {
 		public int getRanking(){
 			return 3;
 		}
-		public int getNumberOfDeterminingCards(){
-			return 3;
-		}
 		public CompareHands getEqualRankHandsComparator(){
 			return new CompareThreeOfAKindHands();
+		}
+		public HandQualityCalculator getHandQualityCalculator(){
+			return new ThreeOfAKindQualtiyCalculator();
 		}
 	},
 	STRAIGHT{
@@ -119,11 +134,11 @@ public enum HandType {
 		public int getRanking(){
 			return 4;
 		}
-		public int getNumberOfDeterminingCards(){
-			return 5;
-		}
 		public CompareHands getEqualRankHandsComparator(){
 			return new CompareStraightHands();
+		}
+		public HandQualityCalculator getHandQualityCalculator(){
+			return new StraightQualityCalculator();
 		}
 	},
 	FLUSH{
@@ -133,11 +148,11 @@ public enum HandType {
 		public int getRanking(){
 			return 5;
 		}
-		public int getNumberOfDeterminingCards(){
-			return 5;
-		}
 		public CompareHands getEqualRankHandsComparator(){
 			return new CompareFlushHands();
+		}
+		public HandQualityCalculator getHandQualityCalculator(){
+			return new FlushQualityCalculator();
 		}
 	},
 	FULL_HOUSE{
@@ -147,11 +162,11 @@ public enum HandType {
 		public int getRanking(){
 			return 6;
 		}
-		public int getNumberOfDeterminingCards(){
-			return 5;
-		}
 		public CompareHands getEqualRankHandsComparator(){
 			return new CompareFullHouseHands();
+		}
+		public HandQualityCalculator getHandQualityCalculator(){
+			return new FullHouseQualityCalculator();
 		}
 	},
 	FOUR_OF_A_KIND{
@@ -161,11 +176,11 @@ public enum HandType {
 		public int getRanking(){
 			return 7;
 		}
-		public int getNumberOfDeterminingCards(){
-			return 4;
-		}
 		public CompareHands getEqualRankHandsComparator(){
 			return new CompareFourOfAKindHands();
+		}
+		public HandQualityCalculator getHandQualityCalculator(){
+			return new FourOfAKindQualityCalculator();
 		}
 	},
 	STRAIGHT_FLUSH{
@@ -175,11 +190,11 @@ public enum HandType {
 		public int getRanking(){
 			return 8;
 		}
-		public int getNumberOfDeterminingCards(){
-			return 5;
-		}
 		public CompareHands getEqualRankHandsComparator(){
 			return new CompareStraightFlushHands();
+		}
+		public HandQualityCalculator getHandQualityCalculator(){
+			return new StraightFlushQualityCalculator();
 		}
 	};
 	/**
@@ -192,13 +207,6 @@ public enum HandType {
 	 * 			| result >=0
 	 */
 	public abstract int getRanking();
-	/**
-	 * Returns the number of cards that determine that hand type
-	 * @result the result is a integer between zero and 5
-	 * 			| result >=0 && result <=5
-	 */
-	public abstract int getNumberOfDeterminingCards();
-	
 	/**
 	 * Compares 2 hands from the same hand type.
 	 * 
@@ -213,4 +221,6 @@ public enum HandType {
 	 * @return 1 = first hand is best, -1 = second hand is best, 0 = tie
 	 */
 	public abstract CompareHands getEqualRankHandsComparator();
+	
+	public abstract HandQualityCalculator getHandQualityCalculator();
 }

@@ -246,7 +246,7 @@ public class Hand implements Iterable<Card>{
    public void removeCard(Card[] array){
 	   if(! contains(array))
 		   throw new IllegalArgumentException();
-	   for(int j=0;j<array.length-1;j++){
+	   for(int j=0;j<array.length;j++){
 		   this.removeCard(array[j]);
 	   }
    }
@@ -296,7 +296,9 @@ public class Hand implements Iterable<Card>{
     */
    @Override
 public String toString(){
-	   String result="";
+	   
+	   String result="type "+HandTypeCalculator.calculateHandType(this).toString();
+	   result+=" cards: ";
 
 	   for(int j=0;j<getNBCards();j++){
 		   result+=" "+j+" "+cards[j].toString()+"\n";
