@@ -1,0 +1,29 @@
+#summary Description of the server API.
+#labels Phase-Design
+
+= Introduction =
+
+Communication with the poker server happens through a HTTP connection. The client initiates the connection and send a POST request with a XML body. The server responds with some more XML.
+
+= Details =
+
+==Login==
+====Request====
+{{{
+<?xml version="1.0" encoding="UTF-8"?>
+<!--CSPoker login request-->
+<login>
+ <username>guy</username>
+</login>
+}}}
+====Response====
+{{{
+<?xml version="1.0" encoding="UTF-8"?>
+<!--CSPoker login response-->
+<login>
+ <id>-3172786091566172558</id>
+</login>
+}}}
+
+
+
