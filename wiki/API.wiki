@@ -1,11 +1,13 @@
 #summary Description of the server API.
-#labels Phase-Design
+#labels Phase-Design,Featured
 
 = Introduction =
 
 Communication with the poker server happens through a HTTP connection. The client initiates the connection and send a POST request with a XML body. The server responds with some more XML.
 
 = Details =
+
+The following code snippets are examples of normal requests and responses.
 
 ==Login==
 ====Request====
@@ -24,6 +26,26 @@ Communication with the poker server happens through a HTTP connection. The clien
  <id>-3172786091566172558</id>
 </login>
 }}}
+
+==Join Table==
+====Request====
+{{{
+<?xml version="1.0" encoding="UTF-8"?>
+<!--CSPoker join table request-->
+<jointable>
+ <id>-3172786091566172558</id>
+ <table>default</table>
+</jointable>
+}}}
+====Response====
+{{{
+<?xml version="1.0" encoding="UTF-8"?>
+<!--CSPoker join table response-->
+<jointable>
+ <status>ok</status>
+</jointable>
+}}}
+
 
 
 
