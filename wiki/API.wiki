@@ -15,7 +15,7 @@ The following code snippets are examples of normal requests and responses.
 <?xml version="1.0" encoding="UTF-8"?>
 <!--CSPoker login request-->
 <login>
- <username>guy</username>
+    <username>guy</username>
 </login>
 }}}
 ====Response====
@@ -23,7 +23,7 @@ The following code snippets are examples of normal requests and responses.
 <?xml version="1.0" encoding="UTF-8"?>
 <!--CSPoker login response-->
 <login>
- <id>-3172786091566172558</id>
+    <id>-3172786091566172558</id>
 </login>
 }}}
 
@@ -33,19 +33,30 @@ The following code snippets are examples of normal requests and responses.
 <?xml version="1.0" encoding="UTF-8"?>
 <!--CSPoker join table request-->
 <jointable>
- <id>-3172786091566172558</id>
- <table>default</table>
+    <id>-3172786091566172558</id>
+    <table>default</table>
 </jointable>
 }}}
-====Response====
+====Standard Response====
 {{{
 <?xml version="1.0" encoding="UTF-8"?>
 <!--CSPoker join table response-->
 <jointable>
- <status>ok</status>
+    <status>ok</status>
+    <players>
+        <player>kenzo</player>
+        <player>cedric</player>
+    </players>
 </jointable>
 }}}
-
+====Alternative Response====
+{{{
+<?xml version="1.0" encoding="UTF-8"?>
+<!--CSPoker join table response (table full)-->
+<jointable>
+    <status>full</status>
+</jointable>
+}}}
 
 
 
