@@ -1,4 +1,5 @@
-/** This program is free software; you can redistribute it and/or modify
+/**
+ * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
@@ -12,33 +13,26 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package xmlrpc;
+package api;
 
-import game.PlayerListFullException;
+import java.io.IOException;
 
-/**
- * Provides the basic actions available at the server as a public webservice.
- */
-public class WebService{
+import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.HttpHandler;
 
-    private static ClientControl control = new ClientControl();
-    
-    
-    public WebService() {
-	
-    }
-    
-    public long login(String username){
-	return control.login(username);
-    }
+public class ClientHandler implements HttpHandler {
 
-    public int joinTable(long id, String tablename) {
-	try {
-	    control.joinTable(id, tablename);
-	    return 0;
-	} catch (PlayerListFullException e) {
-	    return 1;
+    LoginHandler loginHandler = new LoginHandler();
+
+    public void handle(HttpExchange http) throws IOException {
+	System.out.println("Request recieved from " + http.getRemoteAddress());
+
+	http.sendResponseHeaders(200, 0);
+
+	if (http.getRequestURI().getPath().equals("/cspoker/login")) {
+	    loginHandler.handle(http.getRequestBody(), http.getResponseBody());
 	}
+	http.close();
     }
-    
+
 }
