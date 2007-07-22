@@ -17,12 +17,15 @@ package org.cspoker.client.xmlrpc.exceptions;
 
 import org.xml.sax.SAXException;
 
-public class TableFullException extends SAXException {
+public class LoginFailedException extends SAXException {
 
-    private static final long serialVersionUID = 2536253103149632849L;
+    /**
+         * 
+         */
+    private static final long serialVersionUID = 6431049764073464089L;
 
-    public TableFullException(String tableName) {
-	super(tableName);
+    public LoginFailedException(String msg) {
+	super(msg);
     }
 
 }
