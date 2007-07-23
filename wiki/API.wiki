@@ -65,6 +65,27 @@ The following code snippets are examples of normal requests and responses.
     <exception>The table is full.</exception>
 </jointable>
 }}}
-
+==Get Players==
+====Request====
+{{{
+<?xml version="1.0" encoding="UTF-8"?>
+<!--CSPoker get players request-->
+<getplayers>
+    <id>-3172786091566172558</id>
+    <table>default<table>
+</getplayers>
+}}}
+====Standard Response====
+{{{
+<?xml version="1.0" encoding="UTF-8"?>
+<!--CSPoker get players response-->
+<getplayers>
+    <players>
+        <player>cedric</player> 
+        <player dealer="true">guy</player>
+        <player>kenzo</player>
+    </players>
+</getplayers>
+}}}
 
 
