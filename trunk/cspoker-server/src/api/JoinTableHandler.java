@@ -20,8 +20,18 @@ import game.PlayerListFullException;
 import game.Table;
 import game.player.Player;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.XMLReader;
+import org.xml.sax.helpers.XMLReaderFactory;
 
 public class JoinTableHandler {
 
@@ -38,6 +48,26 @@ public class JoinTableHandler {
 	    throws PlayerListFullException {
 
 	Player player = loginHandler.getPlayer(id);
+	if (player == null){
+	    System.out.println("Join table from bad player.");
+	    throw new IllegalStateException("You must be logged in("+id+").");
+	}
+	Table table = tables.get(tablename);
+	if (table == null){
+	    System.out.println(player.getName() +" tried to join non existent table "+tablename);
+	    throw new IllegalArgumentException("There is no table called "
+		    + tablename);
+	}
+	synchronized (table) {
+	    table.addPlayer(player);
+	    
+	}
+	System.out.println(player.getName()+" joined table "+tablename);
+
+    }
+    
+    public List<String> getPlayersExceptFor(long id, String tablename){
+	Player player = loginHandler.getPlayer(id);
 	if (player == null)
 	    throw new IllegalStateException("You must be logged in.");
 
@@ -46,10 +76,31 @@ public class JoinTableHandler {
 	    throw new IllegalArgumentException("There is no table called "
 		    + tablename);
 
-	synchronized (table) {
-	    table.addPlayer(player);
+	List<Player> players = table.getPlayers();
+	List<String> playernames = new ArrayList<String>(players.size()-1);
+	
+	for(Player p:players){
+	    if(!p.equals(player)){
+		playernames.add(p.getName());
+	    }
 	}
+	
+	return playernames;
+	
+    }
 
+    public void handle(InputStream requestBody, OutputStream responseBody) throws IOException {
+	try {
+	    XMLReader xr = XMLReaderFactory.createXMLReader();
+	    JoinTableContentHandler handler = new JoinTableContentHandler(this, responseBody);
+	    xr.setContentHandler(handler);
+	    xr.setErrorHandler(handler);
+	    xr.parse(new InputSource(requestBody));
+	} catch (SAXException e) {
+	    // TODO Auto-generated catch block
+	    e.printStackTrace();
+	}
+	
     }
 
 }

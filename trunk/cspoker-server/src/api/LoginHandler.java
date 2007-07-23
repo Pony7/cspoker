@@ -78,7 +78,7 @@ public class LoginHandler {
 		e.printStackTrace();
 	    }
 	}
-	System.out.println(username + " logged in");
+	System.out.println(username + " logged in with id "+id);
 	return id;
 
     }
