@@ -66,7 +66,7 @@ public class Server {
          */
     public Server(int port) throws IOException {
 	server = HttpServer.create(new InetSocketAddress(port), 0);
-	server.createContext("/cspoker/", new ClientHandler());
+	server.createContext("/cspoker/", new RequestHandler());
 	// server.setExecutor(null); // creates a default executor
 	System.out.println("Server created for port " + port + ".");
     }

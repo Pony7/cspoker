@@ -18,4 +18,9 @@ package game;
 public class PlayerListFullException extends Exception {
 
 	private static final long serialVersionUID = 916632130086756048L;
+	
+	@Override
+	public String getMessage() {
+	    return "The player list is full.";
+	}
 }

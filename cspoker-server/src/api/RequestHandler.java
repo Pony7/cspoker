@@ -20,18 +20,33 @@ import java.io.IOException;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
-public class ClientHandler implements HttpHandler {
+public class RequestHandler implements HttpHandler {
 
-    LoginHandler loginHandler = new LoginHandler();
 
+    private LoginHandler loginHandler;
+    private JoinTableHandler joinTableHandler;
+
+
+    public RequestHandler() {
+	    loginHandler = new LoginHandler();
+	    joinTableHandler = new JoinTableHandler(loginHandler);
+    }
+    
+    
     public void handle(HttpExchange http) throws IOException {
 	System.out.println("Request recieved from " + http.getRemoteAddress());
 
-	http.sendResponseHeaders(200, 0);
-
 	if (http.getRequestURI().getPath().equals("/cspoker/login")) {
+	    http.sendResponseHeaders(200, 0);
 	    loginHandler.handle(http.getRequestBody(), http.getResponseBody());
+	}else if(http.getRequestURI().getPath().equals("/cspoker/jointable")) {
+	    http.sendResponseHeaders(200, 0);
+	    joinTableHandler.handle(http.getRequestBody(), http.getResponseBody());
+	}else{	
+	    //Send code for "Bad Request"
+	    http.sendResponseHeaders(400, 0);
 	}
+	http.getResponseBody().flush();
 	http.close();
     }
 
