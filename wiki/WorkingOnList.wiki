@@ -13,4 +13,10 @@ Where are developpers currently working on?
 
   * Hand Logic _(100%)_
   * Betting Rules  _(100%)_
-  * Odds Calculator  _(0%)
+  * Odds Calculator  _(0%)_
+
+*Guy* _(last update: 23-07-07)_
+
+  * Server _(99%)_
+  * Console Client _(15%)_
+  * API _(15%)_
