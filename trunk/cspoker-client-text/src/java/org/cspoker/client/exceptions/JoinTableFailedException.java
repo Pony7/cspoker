@@ -13,16 +13,19 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.client.xmlrpc.exceptions;
+package org.cspoker.client.exceptions;
 
 import org.xml.sax.SAXException;
 
-public class TableFullException extends SAXException {
+public class JoinTableFailedException extends SAXException {
 
-    private static final long serialVersionUID = 2536253103149632849L;
 
-    public TableFullException(String tableName) {
-	super(tableName);
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -9089131627731831878L;
+
+    public JoinTableFailedException(String msg) {
+	super(msg);
     }
-
 }

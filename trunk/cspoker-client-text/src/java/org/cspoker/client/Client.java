@@ -19,18 +19,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
-import java.net.URLConnection;
+import java.util.List;
 
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.sax.SAXTransformerFactory;
-import javax.xml.transform.sax.TransformerHandler;
-import javax.xml.transform.stream.StreamResult;
-
-import org.cspoker.client.xmlrpc.exceptions.LoginFailedException;
-import org.cspoker.client.xmlrpc.exceptions.TableFullException;
-import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
-import org.xml.sax.helpers.AttributesImpl;
+import org.cspoker.client.exceptions.JoinTableFailedException;
+import org.cspoker.client.exceptions.LoginFailedException;
 
 /**
  * Connect to the given server and passes on user commands.
@@ -38,7 +30,7 @@ import org.xml.sax.helpers.AttributesImpl;
 public class Client {
 
     public static void main(String[] args) throws NumberFormatException,
-	    IOException, TableFullException {
+	    IOException {
 	if (args.length != 2) {
 	    System.out
 		    .println("usage: java -jar cspoker-client-text.jar [server] [portnumber]");
@@ -57,7 +49,7 @@ public class Client {
 	    loggedin = true;
 	} catch (LoginFailedException e) {
 	    System.out.println("Login failed: ");
-	    System.out.println(e.getMessage());
+	    System.out.println("-"+e.getMessage());
 
 	}
 	if (loggedin) {
@@ -65,25 +57,34 @@ public class Client {
 	    System.out.print(">");
 	    String tableName = in.readLine();
 
-	    String[] players = client.joinTable(tableName);
-	    System.out.println("Joined table " + tableName);
-	    System.out.println("The current players are:");
-	    for (String name : players) {
-		System.out.println(name);
+	    try {
+		client.joinTable(tableName);
+		List<String> players = client.getOtherPlayerNames();
+		System.out.println("Joined table " + tableName);
+		if (players.size() > 0)
+		    System.out.println("The current players are:");
+		for (String name : players) {
+		    System.out.println(name);
+		}
+	    } catch (JoinTableFailedException e) {
+		System.out.println("Login failed:");
+		System.out.println("-"+e.getMessage());
 	    }
+
 	}
 
     }
 
-    private URL url;
-
-    private long id;
+    private String server;
 
     private LoginHandler loginHandler;
 
-    public Client(String server, int port) throws IOException {
-	url = new URL("http://" + server + ":" + port + "/cspoker/login");
+    private JoinTableHandler joinTableHandler;
+
+    public Client(String url, int port) throws IOException {
+	url = "http://" + url + ":" + port + "/cspoker/";
 	loginHandler = new LoginHandler(url);
+	joinTableHandler = new JoinTableHandler(url, loginHandler);
     }
 
     private void login(String username) throws IOException,
@@ -91,51 +92,13 @@ public class Client {
 	loginHandler.login(username);
     }
 
-    private String[] joinTable(String tableName) throws IOException {
-	URLConnection connection = url.openConnection();
-	connection.setUseCaches(false);
-	connection.setDoOutput(true);
+    private void joinTable(String tableName) throws IOException,
+	    JoinTableFailedException {
+	joinTableHandler.joinTable(tableName);
+    }
 
-	StreamResult requestResult = new StreamResult(connection
-		.getOutputStream());
-	SAXTransformerFactory tf = (SAXTransformerFactory) SAXTransformerFactory
-		.newInstance();
-	TransformerHandler request;
-
-	try {
-	    request = tf.newTransformerHandler();
-	    request.setResult(requestResult);
-	    request.startDocument();
-	    String comment = "CSPoker jointable request";
-	    request.comment(comment.toCharArray(), 0, comment.length());
-	    Attributes noattrs = new AttributesImpl();
-	    request.startElement("", "jointable", "jointable", noattrs);
-	    request.startElement("", "id", "id", noattrs);
-	    request.characters(String.valueOf(id).toCharArray(), 0, String
-		    .valueOf(id).length());
-	    request.endElement("", "id", "id");
-	    request.startElement("", "table", "table", noattrs);
-	    request.characters(tableName.toCharArray(), 0, tableName.length());
-	    request.endElement("", "table", "table");
-	    request.endElement("", "jointable", "jointable");
-	    request.endDocument();
-	} catch (SAXException e) {
-	    // TODO Auto-generated catch block
-	    e.printStackTrace();
-	} catch (TransformerConfigurationException e) {
-	    // TODO Auto-generated catch block
-	    e.printStackTrace();
-	}
-
-	BufferedReader reader = new BufferedReader(new InputStreamReader(
-		connection.getInputStream()));
-	String line;
-	while ((line = reader.readLine()) != null) {
-	    System.out.println(line);
-	}
-	reader.close();
-
-	return new String[0];
+    public List<String> getOtherPlayerNames() {
+	return joinTableHandler.getOtherPlayerNames();
     }
 
 }
