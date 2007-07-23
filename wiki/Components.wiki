@@ -29,6 +29,8 @@ Please list any components that you would like to work on.
 
 = Java Client: =
 
+== Console Client: ==
+  * guyvdb
+
 == GUI design: ==
   * vg_aram
-
