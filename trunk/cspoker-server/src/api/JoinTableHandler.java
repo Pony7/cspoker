@@ -15,10 +15,10 @@
  */
 package api;
 
-import game.GameProperty;
-import game.PlayerListFullException;
-import game.Table;
-import game.player.Player;
+import game.elements.player.Player;
+import game.elements.table.PlayerListFullException;
+import game.elements.table.Table;
+import game.gameControl.GameProperty;
 
 import java.io.IOException;
 import java.io.InputStream;

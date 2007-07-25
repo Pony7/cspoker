@@ -15,8 +15,8 @@
  */
 package api;
 
-import game.chips.IllegalValueException;
-import game.player.Player;
+import game.elements.chips.IllegalValueException;
+import game.elements.player.Player;
 
 import java.io.IOException;
 import java.io.InputStream;

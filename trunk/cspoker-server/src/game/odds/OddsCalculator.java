@@ -1,8 +1,8 @@
 package game.odds;
 
-import game.Game;
-import game.GameControl;
-import game.player.Player;
+import game.elements.player.Player;
+import game.gameControl.Game;
+import game.gameControl.GameControl;
 
 /**
  * Class for calculating and estimating the odds involved for a certain
