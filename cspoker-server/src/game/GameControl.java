@@ -227,6 +227,7 @@ public class GameControl implements PlayerAction{
 	 *
 	 */
 	private void changeToNextRound(){
+		System.out.println("Changing Round...");
 		round.endRound();
 		if(round.onlyOnePlayerLeft()){
 			round = new WaitingRound(game);
@@ -234,7 +235,7 @@ public class GameControl implements PlayerAction{
 			round = round.getNextRound();
 		}
 		System.out.println("There are "+round.getCurrentPotValue()+" chips in the pot.");
-		if(round.onlyAllInPlayersAndAtMostOneActivePlayer() && !(round instanceof WaitingRound))
+		if(round.onlyAllInPlayers() && !(round instanceof WaitingRound))
 			changeToNextRound();
 	}
 }

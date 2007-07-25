@@ -467,7 +467,7 @@ public abstract class Round implements PlayerAction{
 	 * 			false otherwise.
 	 */
 	public boolean isRoundEnded(){
-		return (getGame().getNbCurrentDealPlayers()==0) || lastEventPlayer.equals(game.getCurrentPlayer());
+		return (getGame().getNbCurrentDealPlayers()==0) || onlyOnePlayerLeft() || lastEventPlayer.equals(game.getCurrentPlayer());
 	}
 
 	/**
@@ -530,9 +530,9 @@ public abstract class Round implements PlayerAction{
 	 * 			False otherwise.
 	 */
 	public boolean onlyOnePlayerLeft(){
-		return (getGame().getNbCurrentDealPlayers()+getGame().getPots().getNbSidePots()==1);
+		return (getGame().getNbCurrentDealPlayers()+allInPlayers.size()+getGame().getPots().getNbSidePots()<=1);
 	}
-	public boolean onlyAllInPlayersAndAtMostOneActivePlayer(){
+	public boolean onlyAllInPlayers(){
 		return (getGame().getNbCurrentDealPlayers()==0);
 	}
 
@@ -614,7 +614,9 @@ public abstract class Round implements PlayerAction{
 
 	protected void winner(Pots pots){
 		try {
+			System.out.println("** Only One Player Left **");
 			pots.getPots().get(0).getChips().transferAllChipsTo(pots.getPots().get(0).getPlayers().get(0).getStack());
+			System.out.println("Winner: "+pots.getPots().get(0).getPlayers().get(0).getName());
 		} catch (IllegalValueException e) {
 			assert false;
 		}

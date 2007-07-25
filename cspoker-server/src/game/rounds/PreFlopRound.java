@@ -56,8 +56,6 @@ public class PreFlopRound extends Round{
 	public void endRound() {
 		collectChips();
 		if(onlyOnePlayerLeft()){
-			System.out.println(getGame().getPots());
-			System.out.println(getGame().getCurrentDealPlayers());
 			getGame().getPots().close(getGame().getCurrentDealPlayers());
 			winner(getGame().getPots());
 		}else{
