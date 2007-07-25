@@ -3,12 +3,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
+ *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
- *  
+ *
  *  You should have received a copy of the GNU General Public License
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
@@ -30,20 +30,20 @@ import java.util.List;
 
 /**
  * A class to determine who has won each pot.
- * 
+ *
  * @author Kenzo
  *
  */
 public class Showdown {
-	
+
 	/**
 	 * The game in which the showdown takes place.
 	 */
 	private final Game game;
-	
+
 	/**
 	 * Construct a new showdown with given game and pots.
-	 * 
+	 *
 	 * @param 	game
 	 * 			The game in which the showdown takes place.
 	 * @param 	pots
@@ -56,42 +56,50 @@ public class Showdown {
 	public Showdown(Game game){
 		this.game = game;
 	}
-	
+
 	/**
 	 * Returns the game in which this showdown takes place.
-	 * 
+	 *
 	 * @return The game in which this showdown takes place.
 	 */
 	public Game getGame(){
 		return game;
 	}
-	
+
 	/**
 	 * Determine the winners of each pot.
 	 * Each pot is splitted between all winners of that pot.
-	 * 
+	 *
 	 */
 	public void determineWinners(){
+		System.out.println("");
+		System.out.println("*** Determine Winners ***");
+		System.out.println("");
 		System.out.println(game.getPots());
 		for(Pot pot:game.getPots().getPots()){
 			List<Player> winners = getWinners(pot);
-			System.out.println("Winners: "+winners);
+			System.out.print("Winners: ");
+			for(Player player:winners){
+				System.out.print(player.getName()+" ");
+			}
+			System.out.println("");
+			System.out.println("");
 			splitPot(winners, pot);
 		}
 	}
-	
+
 	/**
 	 * Split the pot between all winners.
-	 * 
+	 *
 	 * If splitting a pot because of tied hands,
 	 * award the odd chip to the hand that contains
 	 * the highest-ranking single card,
 	 * using suits to break ties if necessary
 	 * (clubs ranking the lowest, followed by diamonds,
 	 * hearts, and spades as in bridge).
-	 * 
+	 *
 	 * http://en.wikipedia.org/wiki/Split_(poker)
-	 * 
+	 *
 	 * @param 	winners
 	 * 			The list of winners of the pot.
 	 * @param 	pot
@@ -99,7 +107,7 @@ public class Showdown {
 	 */
 	private void splitPot(List<Player> winners, Pot pot){
 		int nbWinners = winners.size();
-		
+
 		//only one winner
 		if(nbWinners ==1){
 			try {
@@ -107,10 +115,10 @@ public class Showdown {
 			} catch (IllegalValueException e) {
 				assert false;
 			}
-			
+
 		}else{
 			int nbChips_per_winner = pot.getChips().getValue()/nbWinners;
-			
+
 			//can be divided easily.
 			if(nbChips_per_winner*nbWinners==pot.getChips().getValue()){
 				for(Player player:winners){
@@ -135,7 +143,7 @@ public class Showdown {
 								.getValue()>getBestFiveCardHand(playerWithHighestSingleCard).getHighestRankCard().getSuit().getValue()))
 							playerWithHighestSingleCard=player;
 					}
-						
+
 				}
 				//transfer chips to all winners
 				for(Player player:winners){
@@ -155,10 +163,10 @@ public class Showdown {
 			}
 		}
 	}
-	
+
 	/**
 	 * Returns the list of winners of the given pot in the current game.
-	 * 
+	 *
 	 * @param 	pot
 	 * 			The pot in which the winner(s) must be chosen.
 	 * @return	The list of winners of the pot in the current game.
@@ -166,7 +174,9 @@ public class Showdown {
 	private List<Player> getWinners(Pot pot){
 		List<ShowdownPlayer> players = getShowdownPlayersFromPot(pot);
 		Collections.sort(players);
-		System.out.println(players);
+		for(ShowdownPlayer player:players){
+			System.out.println(player);
+		}
 		ShowdownPlayer winner = players.get(0);
 		List<Player> winners = new ArrayList<Player>();
 		int i=0;
@@ -176,10 +186,10 @@ public class Showdown {
 		}
 		return winners;
 	}
-	
+
 	/**
 	 * Returns the list of showdown players in the current game.
-	 * 
+	 *
 	 * @param 	pot
 	 * 			The pot from which the showdown players must be returned.
 	 * @return	The list of showdown players in the current game.
@@ -191,14 +201,14 @@ public class Showdown {
 		}
 		return showDownPlayers;
 	}
-	
+
 	/**
 	 * Get the best hand for the given player in the current game.
-	 * 
+	 *
 	 * @param 	player
 	 * 			The player to determine the best hand for.
 	 * @return	The best hand that can be made with both common and pocket cards.
-	 * 
+	 *
 	 * @note 	By using this method, the recalculation of finding the best 5 card hand is omitted.
 	 */
 	private Hand getBestFiveCardHand(Player player){

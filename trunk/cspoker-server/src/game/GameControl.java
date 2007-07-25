@@ -234,7 +234,6 @@ public class GameControl implements PlayerAction{
 			round = round.getNextRound();
 		}
 		System.out.println("There are "+round.getCurrentPotValue()+" chips in the pot.");
-		System.out.println(game.getPots());
 		if(round.onlyAllInPlayersAndAtMostOneActivePlayer() && !(round instanceof WaitingRound))
 			changeToNextRound();
 	}
