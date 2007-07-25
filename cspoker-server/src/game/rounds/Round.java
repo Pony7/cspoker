@@ -530,10 +530,10 @@ public abstract class Round implements PlayerAction{
 	 * 			False otherwise.
 	 */
 	public boolean onlyOnePlayerLeft(){
-		return (getGame().getNbCurrentDealPlayers()+allInPlayers.size()==1);
+		return (getGame().getNbCurrentDealPlayers()+getGame().getPots().getNbSidePots()==1);
 	}
 	public boolean onlyAllInPlayersAndAtMostOneActivePlayer(){
-		return (getGame().getNbCurrentDealPlayers()<=1);
+		return (getGame().getNbCurrentDealPlayers()==0);
 	}
 
 	/**********************************************************
@@ -558,6 +558,7 @@ public abstract class Round implements PlayerAction{
 	private void makeSidePots(){
 		Collections.sort(allInPlayers);
 		List<Player> players = game.getCurrentDealPlayers();
+		System.out.println(allInPlayers);
 		for(AllInPlayer allInPlayer:allInPlayers){
 			try {
 				game.getPots().collectAmountFromPlayersToSidePot(allInPlayer.getBetValue(), players);
@@ -579,6 +580,7 @@ public abstract class Round implements PlayerAction{
 			} catch (IllegalValueException e) {
 				assert false;
 			}
+			System.out.println(game.getPots());
 			game.getPots().addShowdownPlayer(allInPlayer.getPlayer());
 		}
 		allInPlayers.clear();
@@ -656,6 +658,7 @@ public abstract class Round implements PlayerAction{
 	}
 
 	public abstract boolean isLowBettingRound();
+
 	public abstract boolean isHighBettingRound();
 
 	public int getCurrentPotValue(){
