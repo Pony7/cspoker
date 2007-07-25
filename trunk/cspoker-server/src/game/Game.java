@@ -398,10 +398,7 @@ public class Game {
 	 */
 	public void removePlayerFromCurrentDeal(Player player){
 		if(getFirstToActPlayer().equals(player)){
-			Player currentPlayer = getCurrentPlayer();
-			currentHandPlayers.setCurrent(player);
-			setFirstToActPlayer(currentHandPlayers.getNext());
-			setCurrentPlayer(currentPlayer);
+			setFirstToActPlayer(currentHandPlayers.getNextTo(player));
 		}
 		currentHandPlayers.remove(player);
 	}
