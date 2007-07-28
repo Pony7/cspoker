@@ -13,16 +13,14 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.client;
+package java.org.cspoker.client;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.URL;
+import java.org.cspoker.client.exceptions.JoinTableFailedException;
+import java.org.cspoker.client.exceptions.LoginFailedException;
 import java.util.List;
-
-import org.cspoker.client.exceptions.JoinTableFailedException;
-import org.cspoker.client.exceptions.LoginFailedException;
 
 /**
  * Connect to the given server and passes on user commands.
