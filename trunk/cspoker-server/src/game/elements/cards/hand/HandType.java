@@ -35,6 +35,7 @@ import game.elements.cards.hand.handQuality.PairQualityCalculator;
 import game.elements.cards.hand.handQuality.StraightFlushQualityCalculator;
 import game.elements.cards.hand.handQuality.StraightQualityCalculator;
 import game.elements.cards.hand.handQuality.ThreeOfAKindQualtiyCalculator;
+import game.odds.NBOutsCalculator;
 
 
 /**
@@ -223,4 +224,8 @@ public enum HandType {
 	public abstract CompareHands getEqualRankHandsComparator();
 	
 	public abstract HandQualityCalculator getHandQualityCalculator();
+	public NBOutsCalculator getNBOutsCalculator() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
