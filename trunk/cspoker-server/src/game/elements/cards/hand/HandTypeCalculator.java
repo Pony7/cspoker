@@ -488,19 +488,52 @@ public class HandTypeCalculator {
 	public static Card[] getStraightCard(Hand hand) {
 		if(!checkForStraight(hand))
 			throw new IllegalArgumentException();
+		boolean straightFound=false;
+		boolean prevRankOk=true;
 		Hand temp=new Hand(hand);
 		temp.sort();
-		Card tempCard=null;
-		for(int i=0;i<Math.round(temp.getNBCards()/2);i++){
-			tempCard=temp.getCard(i);
-			//place ace at the back of the hand
-			if(tempCard.getRank().equals(Rank.ACE)){
-				temp.removeCard(tempCard);
-				temp.sort();
-				temp.addCard(tempCard);
+		Card tempCard,startingCard = null;
+		int i=0;
+		for(int j=0;j<temp.getNBCards();j++){
+			i=j;
+			while((i-j<5) && (i<temp.getNBCards()-1) && prevRankOk){
+				prevRankOk=(temp.getCard(i).getRank().getValue()==temp.getCard(i+1).getRank().getValue()+1);
+				i++;
+			}
+			if(prevRankOk && (i-j+1==5)){
+				startingCard=temp.getCard(j);
+				straightFound=true;
+				break;
+			}
+			prevRankOk=true;
+		}
+		if(!straightFound){
+			tempCard=null;
+			for(int k=0;k<Math.round(temp.getNBCards()/2);k++){
+				tempCard=temp.getCard(k);
+				//place ace at the back of the hand
+				if(tempCard.getRank().equals(Rank.ACE)){
+					temp.removeCard(tempCard);
+					temp.sort();
+					temp.addCard(tempCard);
+				}
+			}
+			int l=0;
+			for(int j=0;j<temp.getNBCards();j++){
+				l=j;
+				while((l-j<5) && (l<temp.getNBCards()-1) && prevRankOk){
+					prevRankOk=(temp.getCard(l).getRank().getValue()==(temp.getCard(l+1).getRank().getValue()%13)+1);
+					l++;
+				}
+				if(prevRankOk && (l-j+1==5)){
+					startingCard=temp.getCard(j);
+					straightFound=true;
+					break;
+				}
+				prevRankOk=true;
 			}
 		}
-		Card[] result={temp.getCard(0)};
+		Card[] result={startingCard};
 		return result;
 	}
 	/**
