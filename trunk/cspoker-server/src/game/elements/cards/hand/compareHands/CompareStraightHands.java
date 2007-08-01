@@ -61,13 +61,7 @@ public class CompareStraightHands extends CompareHands {
 			throw new IllegalArgumentException();
 		Card[] cards1 = HandTypeCalculator.getDeterminatingCards(h1);
 		Card[] cards2 = HandTypeCalculator.getDeterminatingCards(h2);
-
-		for(int j=0;j<cards1.length;j++){
-			System.out.println("hand1 "+cards1[j].toString());
-		}
-		for(int j=0;j<cards2.length;j++){
-			System.out.println("hand2 "+cards2[j].toString());
-		}
+		
 		if (cards1[0].getRank().getValue() > cards2[0].getRank().getValue())
 			return 1;
 		if (cards1[0].getRank().getValue() < cards2[0].getRank().getValue())
