@@ -541,4 +541,23 @@ public class TestHandEvaluator extends TestCase {
 		
 		assertTrue(HandEvaluator.compareHands(hand1,hand2)==0);
 	}
+	public void testAceHighStraightVSKingHighStraight(){
+		hand1.addCard(new CardImpl(Suit.HEARTS,Rank.KING));
+		hand1.addCard(new CardImpl(Suit.SPADES,Rank.QUEEN));
+		hand1.addCard(new CardImpl(Suit.CLUBS,Rank.JACK));
+		hand1.addCard(new CardImpl(Suit.SPADES,Rank.TEN));
+		hand1.addCard(new CardImpl(Suit.SPADES,Rank.NINE));
+		hand1.addCard(new CardImpl(Suit.SPADES,Rank.DEUCE));
+		hand1.addCard(new CardImpl(Suit.DIAMONDS,Rank.THREE));
+		
+		hand2.addCard(new CardImpl(Suit.HEARTS,Rank.KING));
+		hand2.addCard(new CardImpl(Suit.SPADES,Rank.QUEEN));
+		hand2.addCard(new CardImpl(Suit.CLUBS,Rank.JACK));
+		hand2.addCard(new CardImpl(Suit.SPADES,Rank.TEN));
+		hand2.addCard(new CardImpl(Suit.SPADES,Rank.NINE));
+		hand2.addCard(new CardImpl(Suit.SPADES,Rank.ACE));
+		hand2.addCard(new CardImpl(Suit.DIAMONDS,Rank.THREE));
+		
+		assertTrue(HandEvaluator.compareHands(hand1,hand2)==-1);
+	}
 }
