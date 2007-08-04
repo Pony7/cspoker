@@ -16,6 +16,7 @@
 
 package game.gameControl.rounds;
 
+import game.GameMediator;
 import game.elements.chips.IllegalValueException;
 import game.gameControl.Game;
 
@@ -28,8 +29,8 @@ import game.gameControl.Game;
  */
 public class PreFlopRound extends Round{
 
-	public PreFlopRound(Game game) {
-		super(game);
+	public PreFlopRound(GameMediator gameMediator, Game game) {
+		super(gameMediator, game);
 		System.out.println("** PreFlop Round **");
 		try {
 			collectSmallBlind(getGame().getCurrentPlayer());
@@ -68,7 +69,7 @@ public class PreFlopRound extends Round{
 
 	@Override
 	public Round getNextRound() {
-		return new FlopRound(getGame());
+		return new FlopRound(gameMediator, getGame());
 	}
 	@Override
 	public boolean isLowBettingRound() {

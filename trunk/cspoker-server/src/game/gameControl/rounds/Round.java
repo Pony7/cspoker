@@ -16,11 +16,13 @@
 
 package game.gameControl.rounds;
 
+import game.GameMediator;
 import game.elements.cards.Card;
 import game.elements.chips.IllegalValueException;
 import game.elements.chips.pot.Pots;
 import game.elements.player.AllInPlayer;
 import game.elements.player.Player;
+import game.events.playerActionEvents.AllInEvent;
 import game.gameControl.Game;
 import game.gameControl.PlayerAction;
 import game.gameControl.actions.Action;
@@ -85,6 +87,8 @@ public abstract class Round implements PlayerAction{
 	 * but who have placed chips on their betted chips pile.
 	 */
 	private final List<Player> foldedPlayersWithBet;
+	
+	protected final GameMediator gameMediator;
 
 	/**********************************************************
 	 * Constructor
@@ -96,7 +100,8 @@ public abstract class Round implements PlayerAction{
 	 * @param 	game
 	 * 			The game to create a new round for.
 	 */
-	public Round(Game game){
+	public Round(GameMediator gameMediator, Game game){
+		this.gameMediator = gameMediator;
 		this.game = game;
 		allInPlayers = new ArrayList<AllInPlayer>();
 		foldedPlayersWithBet = new ArrayList<Player>();
@@ -516,6 +521,7 @@ public abstract class Round implements PlayerAction{
 			setBet(player.getBettedChips().getValue());
 			playerMadeEvent(player);
 		}
+		gameMediator.onAllInEvent(new AllInEvent(player));
 		System.out.println(player.getName()+" goes all in with "+player.getBettedChips().getValue()+" chips.");
 	}
 

@@ -54,7 +54,7 @@ public class GameFlowTest extends TestCase {
 			table.addPlayer(kenzo);
 			table.addPlayer(cedric);
 			table.addPlayer(guy);
-			gameControl = new GameControl(table);
+			gameControl = new GameControl(null, table);
 		} catch (IllegalValueException e) {
 			fail(e.getMessage());
 		} catch (PlayerListFullException e) {
@@ -254,7 +254,7 @@ public class GameFlowTest extends TestCase {
 			table.addPlayer(kenzo);
 			table.addPlayer(cedric);
 			table.addPlayer(guy);
-			gameControl = new GameControl(table);
+			gameControl = new GameControl(null, table);
 		} catch (IllegalValueException e) {
 			fail(e.getMessage());
 		} catch (PlayerListFullException e) {
@@ -340,7 +340,7 @@ public class GameFlowTest extends TestCase {
 			table.addPlayer(kenzo);
 			table.addPlayer(cedric);
 			table.addPlayer(guy);
-			gameControl = new GameControl(table);
+			gameControl = new GameControl(null, table);
 		} catch (IllegalValueException e) {
 			fail(e.getMessage());
 		} catch (PlayerListFullException e) {
@@ -425,7 +425,7 @@ public class GameFlowTest extends TestCase {
 			table.addPlayer(kenzo);
 			table.addPlayer(cedric);
 			table.addPlayer(guy);
-			gameControl = new GameControl(table);
+			gameControl = new GameControl(null, table);
 		} catch (IllegalValueException e) {
 			fail(e.getMessage());
 		} catch (PlayerListFullException e) {
@@ -497,7 +497,7 @@ public class GameFlowTest extends TestCase {
 			table.addPlayer(kenzo);
 			table.addPlayer(cedric);
 			table.addPlayer(guy);
-			gameControl = new GameControl(table);
+			gameControl = new GameControl(null, table);
 		} catch (IllegalValueException e) {
 			fail(e.getMessage());
 		} catch (PlayerListFullException e) {
@@ -570,7 +570,7 @@ public class GameFlowTest extends TestCase {
 			table.addPlayer(kenzo);
 			table.addPlayer(cedric);
 			table.addPlayer(guy);
-			gameControl = new GameControl(table);
+			gameControl = new GameControl(null, table);
 		} catch (IllegalValueException e) {
 			fail(e.getMessage());
 		} catch (PlayerListFullException e) {
@@ -693,7 +693,7 @@ public class GameFlowTest extends TestCase {
 			table.addPlayer(kenzo);
 			table.addPlayer(cedric);
 			table.addPlayer(guy);
-			gameControl = new GameControl(table);
+			gameControl = new GameControl(null, table);
 		} catch (IllegalValueException e) {
 			fail(e.getMessage());
 		} catch (PlayerListFullException e) {

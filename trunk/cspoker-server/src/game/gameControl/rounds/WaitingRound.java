@@ -16,13 +16,14 @@
 
 package game.gameControl.rounds;
 
+import game.GameMediator;
 import game.elements.player.Player;
 import game.gameControl.Game;
 
 public class WaitingRound extends Round {
 
-	public WaitingRound(Game game) {
-		super(game);
+	public WaitingRound(GameMediator gameMediator, Game game) {
+		super(gameMediator, game);
 		removeBrokePlayers();
 		getGame().setToInitialHandPlayers();
 		getGame().setCurrentPlayer(getGame().getDealer());
@@ -39,7 +40,7 @@ public class WaitingRound extends Round {
 
 	@Override
 	public Round getNextRound() {
-		return new PreFlopRound(getGame());
+		return new PreFlopRound(gameMediator, getGame());
 	}
 
 	@Override

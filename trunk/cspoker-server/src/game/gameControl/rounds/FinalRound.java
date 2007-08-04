@@ -16,13 +16,14 @@
 
 package game.gameControl.rounds;
 
+import game.GameMediator;
 import game.gameControl.Game;
 import game.gameControl.Showdown;
 
 public class FinalRound extends Round{
 
-	public FinalRound(Game game) {
-		super(game);
+	public FinalRound(GameMediator gameMediator, Game game) {
+		super(gameMediator, game);
 		System.out.println("** Final Round **");
 	}
 
@@ -44,7 +45,7 @@ public class FinalRound extends Round{
 
 	@Override
 	public Round getNextRound() {
-		return new WaitingRound(getGame());
+		return new WaitingRound(gameMediator, getGame());
 	}
 	@Override
 	public boolean isLowBettingRound() {

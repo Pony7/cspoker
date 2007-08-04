@@ -3,52 +3,53 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
+ *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
- *  
+ *
  *  You should have received a copy of the GNU General Public License
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-package game.gameControl.rounds;
+package game;
 
-import game.GameMediator;
-import game.gameControl.Game;
-
-public class FlopRound extends Round{
-
-	public FlopRound(GameMediator gameMediator, Game game) {
-		super(gameMediator, game);
-		System.out.println("** Flop Round **");
+/**
+ * A class to represent table id's.
+ * 
+ * @author Kenzo
+ *
+ */
+public class TableId {
+	
+	private final long id;
+	
+	public TableId(long id){
+		this.id = id;
 	}
 
 	@Override
-	public void endRound() {
-		collectChips();
-		if(onlyOnePlayerLeft()){
-			getGame().getPots().close(getGame().getCurrentDealPlayers());
-			winner(getGame().getPots());
-		}else{
-			drawMuckCard();
-			drawOpenCard();
-		}
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + (int) (id ^ (id >>> 32));
+		return result;
 	}
 
 	@Override
-	public Round getNextRound() {
-		return new TurnRound(gameMediator, getGame());
-	}
-	@Override
-	public boolean isLowBettingRound() {
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		final TableId other = (TableId) obj;
+		if (id != other.id)
+			return false;
 		return true;
 	}
 
-	@Override
-	public boolean isHighBettingRound() {
-		return !isLowBettingRound();
-	}
 }

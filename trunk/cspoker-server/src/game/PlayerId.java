@@ -14,47 +14,52 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-package game.gameControl.rounds;
+package game;
 
-import game.GameMediator;
-import game.gameControl.Game;
-
-public class TurnRound extends Round{
-
-	public TurnRound(GameMediator gameMediator, Game game) {
-		super(gameMediator, game);
-		System.out.println("** Turn Round **");
-	}
-
+/**
+ * A class to represent player id's.
+ * 
+ * @author Kenzo
+ *
+ */
+public class PlayerId {
+	
 	/**
-	 * Deal the river card to the public cards.
-	 *
+	 * The variable containing the id.
 	 */
-	@Override
-	public void endRound() {
-		collectChips();
-		System.out.println(onlyOnePlayerLeft());
-		if(onlyOnePlayerLeft()){
-			getGame().getPots().close(getGame().getCurrentDealPlayers());
-			winner(getGame().getPots());
-		}else{
-		drawMuckCard();
-		drawOpenCard();
-		}
+	private final long id;
+	
+	/**
+	 * Construct a new player id
+	 * with given long id.
+	 * 
+	 * @param 	id
+	 * 			The long id to for the player id.
+	 */
+	public PlayerId(long id){
+		this.id = id;
 	}
 
 	@Override
-	public Round getNextRound() {
-		return new FinalRound(gameMediator, getGame());
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + (int) (id ^ (id >>> 32));
+		return result;
 	}
 
 	@Override
-	public boolean isLowBettingRound() {
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		final PlayerId other = (PlayerId) obj;
+		if (id != other.id)
+			return false;
 		return true;
 	}
 
-	@Override
-	public boolean isHighBettingRound() {
-		return !isLowBettingRound();
-	}
 }
