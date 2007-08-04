@@ -44,7 +44,7 @@ private Player kenzo;
 		} catch (PlayerListFullException e) {
 			fail(e.getMessage());
 		}
-		gameControl = new GameControl(table);
+		gameControl = new GameControl(null, table);
 		System.out.println("Game Properties:");
 		System.out.println("Small Blind: "+table.getGameProperty().getSmallBlind());
 		System.out.println("Big Blind: "+table.getGameProperty().getBigBlind());
@@ -81,7 +81,7 @@ private Player kenzo;
 		} catch (PlayerListFullException e) {
 			fail(e.getMessage());
 		}
-		gameControl = new GameControl(table);
+		gameControl = new GameControl(null, table);
 		System.out.println("Game Properties:");
 		System.out.println("Small Blind: "+table.getGameProperty().getSmallBlind());
 		System.out.println("Big Blind: "+table.getGameProperty().getBigBlind());
@@ -131,7 +131,7 @@ private Player kenzo;
 		} catch (PlayerListFullException e) {
 			fail(e.getMessage());
 		}
-		gameControl = new GameControl(table);
+		gameControl = new GameControl(null, table);
 		System.out.println("Game Properties:");
 		System.out.println("Small Blind: "+table.getGameProperty().getSmallBlind());
 		System.out.println("Big Blind: "+table.getGameProperty().getBigBlind());
@@ -173,7 +173,7 @@ private Player kenzo;
 		} catch (PlayerListFullException e) {
 			fail(e.getMessage());
 		}
-		gameControl = new GameControl(table);
+		gameControl = new GameControl(null, table);
 		System.out.println("Game Properties:");
 		System.out.println("Small Blind: "+table.getGameProperty().getSmallBlind());
 		System.out.println("Big Blind: "+table.getGameProperty().getBigBlind());

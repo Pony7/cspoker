@@ -16,8 +16,16 @@
 
 package game.gameControl;
 
+import game.GameMediator;
 import game.elements.player.Player;
+import game.elements.table.PlayerListFullException;
 import game.elements.table.Table;
+import game.events.playerActionEvents.BetEvent;
+import game.events.playerActionEvents.CallEvent;
+import game.events.playerActionEvents.CheckEvent;
+import game.events.playerActionEvents.DealEvent;
+import game.events.playerActionEvents.FoldEvent;
+import game.events.playerActionEvents.RaiseEvent;
 import game.gameControl.actions.IllegalActionException;
 import game.gameControl.rounds.Round;
 import game.gameControl.rounds.WaitingRound;
@@ -47,6 +55,10 @@ public class GameControl implements PlayerAction{
 	 *
 	 */
 	private Round round;
+	
+	
+	private final GameMediator gameMediator;
+	
 	/**********************************************************
 	 * Constructor
 	 **********************************************************/
@@ -55,9 +67,10 @@ public class GameControl implements PlayerAction{
 	 * Construct a new game control with given table.
 	 *
 	 */
-	public GameControl(Table table){
+	public GameControl(GameMediator gameMediator, Table table){
+		this.gameMediator = gameMediator;
 		game = new Game(table);
-		round = new WaitingRound(game);
+		round = new WaitingRound(gameMediator, game);
 	}
 
 	/**
@@ -72,6 +85,7 @@ public class GameControl implements PlayerAction{
 	public Round getRound(){
 		return round;
 	}
+	
 
 	/**********************************************************
 	 * Player methods
@@ -92,6 +106,7 @@ public class GameControl implements PlayerAction{
 	 */
 	public void bet(Player player, int amount) throws IllegalActionException{
 		round.bet(player, amount);
+		gameMediator.onBetEvent(new BetEvent(player, amount));
 		System.out.println(player.getName()+" bets "+amount+".");
 		checkIfEndedAndChangeRound();
 	}
@@ -110,6 +125,7 @@ public class GameControl implements PlayerAction{
 	 */
 	public void call(Player player) throws IllegalActionException{
 		round.call(player);
+		gameMediator.onCallEvent(new CallEvent(player));
 		System.out.println(player.getName()+" calls.");
 		checkIfEndedAndChangeRound();
 	}
@@ -128,6 +144,7 @@ public class GameControl implements PlayerAction{
 	 */
 	public void check(Player player) throws IllegalActionException{
 		round.check(player);
+		gameMediator.onCheckEvent(new CheckEvent(player));
 		System.out.println(player.getName()+" checks.");
 		checkIfEndedAndChangeRound();
 	}
@@ -147,6 +164,7 @@ public class GameControl implements PlayerAction{
 	 */
 	public void raise(Player player, int amount) throws IllegalActionException{
 		round.raise(player, amount);
+		gameMediator.onRaiseEvent(new RaiseEvent(player, amount));
 		System.out.println(player.getName()+" raises with "+amount+".");
 		checkIfEndedAndChangeRound();
 	}
@@ -167,6 +185,7 @@ public class GameControl implements PlayerAction{
 	 */
 	public void fold(Player player) throws IllegalActionException{
 		round.fold(player);
+		gameMediator.onFoldEvent(new FoldEvent(player));
 		System.out.println(player.getName()+" folds.");
 		checkIfEndedAndChangeRound();
 	}
@@ -186,6 +205,7 @@ public class GameControl implements PlayerAction{
 	 */
 	public void deal(Player player) throws IllegalActionException{
 		round.deal(player);
+		gameMediator.onDealEvent(new DealEvent(player));
 		System.out.println(player.getName()+" deals.");
 		checkIfEndedAndChangeRound();
 	}
@@ -204,6 +224,14 @@ public class GameControl implements PlayerAction{
 	public void allIn(Player player) throws IllegalActionException {
 		round.allIn(player);
 		checkIfEndedAndChangeRound();
+	}
+	
+	public void joinGame(Player player) throws IllegalActionException, PlayerListFullException{
+		game.joinGame(player);
+	}
+	
+	public void leaveGame(Player player){
+		game.leaveGame(player);
 	}
 
 	/**********************************************************
@@ -231,7 +259,7 @@ public class GameControl implements PlayerAction{
 		System.out.println("Changing Round...");
 		round.endRound();
 		if(round.onlyOnePlayerLeft()){
-			round = new WaitingRound(game);
+			round = new WaitingRound(gameMediator, game);
 		}else{
 			round = round.getNextRound();
 		}
