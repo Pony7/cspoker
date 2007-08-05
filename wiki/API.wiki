@@ -3,89 +3,17 @@
 
 = Introduction =
 
-Communication with the poker server happens through a HTTP connection. The client initiates the connection and send a POST request with a XML body. The server responds with some more XML.
+Communication with the poker server happens through a HTTP connection. The [http://www.xfront.com/REST-Web-Services.html REST]-style architecture uses all the built-in features of HTTP such as caching, authentication and error codes.
 
-= Details =
+=Authentication=
+There is no explicit login functionality. The client can ask the user for credentials and then try to access the */server/status* page with basic authentication headers set to see if they are accepted. In every following request (with a few exceptions) those same headers must be included.
 
-The following code snippets are examples of normal requests and responses.
+=Pages=
+ * [PingAPI /ping]
+ * [JoinTableAPI /table/join]
 
-==Login==
-====Request====
-{{{
-<?xml version="1.0" encoding="UTF-8"?>
-<!--CSPoker login request-->
-<login>
-    <username>guy</username>
-</login>
-}}}
-====Standard Response====
-{{{
-<?xml version="1.0" encoding="UTF-8"?>
-<!--CSPoker login response-->
-<login>
-    <id>-3172786091566172558</id>
-</login>
-}}}
-====Alternative Response====
-{{{
-<?xml version="1.0" encoding="UTF-8"?>
-<!--CSPoker login response-->
-<login>
-    <exception>You must provide a correct username.</exception>
-</login>
-}}}
 
-==Join Table==
-====Request====
-{{{
-<?xml version="1.0" encoding="UTF-8"?>
-<!--CSPoker join table request-->
-<jointable>
-    <id>-3172786091566172558</id>
-    <table>default</table>
-</jointable>
-}}}
-====Standard Response====
-{{{
-<?xml version="1.0" encoding="UTF-8"?>
-<!--CSPoker join table response-->
-<jointable>
-    <status>ok</status>
-    <players>
-        <player>kenzo</player>
-        <player>cedric</player>
-    </players>
-</jointable>
-}}}
-====Alternative Response====
-{{{
-<?xml version="1.0" encoding="UTF-8"?>
-<!--CSPoker join table response (table full)-->
-<jointable>
-    <exception>The table is full.</exception>
-</jointable>
-}}}
-==Get Players==
-====Request====
-{{{
-<?xml version="1.0" encoding="UTF-8"?>
-<!--CSPoker get players request-->
-<getplayers>
-    <id>-3172786091566172558</id>
-    <table>default<table>
-</getplayers>
-}}}
-====Standard Response====
-{{{
-<?xml version="1.0" encoding="UTF-8"?>
-<!--CSPoker get players response-->
-<getplayers>
-    <players>
-        <player>cedric</player> 
-        <player dealer="true">guy</player>
-        <player>kenzo</player>
-    </players>
-</getplayers>
-}}}
+
+
 
 
