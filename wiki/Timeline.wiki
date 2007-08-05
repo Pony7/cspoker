@@ -2,4 +2,4 @@
 #labels Featured
 
 = Timeline: =
-  * ?: The first Alpha release
+  * August 31: The first Alpha release deadline
