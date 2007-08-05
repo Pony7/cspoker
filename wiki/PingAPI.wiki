@@ -1,0 +1,20 @@
+#summary Description of the /ping page.
+#labels Phase-Design
+
+=== Introduction ===
+The ping page is used to check whether the server is online or not. 
+
+=== Authentication ===
+No authentication is required.
+
+=== Method ===
+HTTP GET 
+
+=== Response ===
+{{{
+<?xml version="1.0" encoding="UTF-8"?>
+<pong/>
+}}}
+
+
+
