@@ -1,12 +1,13 @@
 #labels Featured
 Where are developpers currently working on?
 
-*Kenzo* _(last update: 24-07-07)_
+*Kenzo* _(last update: 06-08-07)_
 
   * Game Logic _(100%)_
-  * Game Logic Tests_(99%)_
+  * Game Logic Tests_(100%)_
   * Tests with leaving and joining players _(0%)_
-  * Mediator/Observer structure to communicate with game control _(0%)_
+  * Mediator/Observer structure to communicate with game control _(80%)_
+  * PlayerCommunication _(60%)_
 
 
 *Cedric* _(last update: 12-07-07)_
