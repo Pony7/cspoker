@@ -13,58 +13,44 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-
 package game;
 
+import java.util.concurrent.ConcurrentHashMap;
+
 /**
- * A class to represent player id's.
+ * A class for game managers.
+ *
+ * This class has static methods to access all game mediators.
  *
  * @author Kenzo
  *
  */
-public class PlayerId {
+public class GameManager {
 
 	/**
-	 * The variable containing the id.
+	 * The hash map containing all the game mediators.
 	 */
-	private final long id;
+	private static ConcurrentHashMap<TableId, GameMediator> hashMap = new ConcurrentHashMap<TableId, GameMediator>();
 
 	/**
-	 * Construct a new player id with given long id.
+	 * Returns the game mediator for the game with given id.
 	 *
 	 * @param 	id
-	 * 			The id to use as player id.
+	 * 			The id of the game corresponding to the game mediator.
+	 * @pre 	The id should be effective.
+	 *			|id!=null
+	 * @return	The game mediator for the game with given id.
 	 */
-	public PlayerId(long id){
-		this.id = id;
+	public static GameMediator getGame(TableId id){
+		return hashMap.get(id);
 	}
 
-	/**
-	 * Returns a hash code value for this player id.
-	 */
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + (int) (id ^ (id >>> 32));
-		return result;
+	public static void removeGame(TableId id){
+		hashMap.remove(id);
 	}
 
-	/**
-	 * Indicates whether some other object is "equal to" this one.
-	 */
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		final PlayerId other = (PlayerId) obj;
-		if (id != other.id)
-			return false;
-		return true;
+	public static void addGame(TableId id, GameMediator gameMediator){
+		hashMap.put(id, gameMediator);
 	}
 
 }
