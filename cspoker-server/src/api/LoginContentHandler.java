@@ -3,17 +3,19 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
+ *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
- *  
+ *
  *  You should have received a copy of the GNU General Public License
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 package api;
+
+import game.PlayerId;
 
 import java.io.OutputStream;
 
@@ -29,7 +31,7 @@ import org.xml.sax.helpers.DefaultHandler;
 
 public class LoginContentHandler extends DefaultHandler {
 
-    private LoginHandler handler;
+    private final LoginHandler handler;
 
     private boolean started = false;
 
@@ -37,11 +39,11 @@ public class LoginContentHandler extends DefaultHandler {
 
     private boolean userstarted = false;
 
-    private StringBuilder chars = new StringBuilder();
+    private final StringBuilder chars = new StringBuilder();
 
     private String username = "defaultuser";
 
-    private OutputStream out;
+    private final OutputStream out;
 
     public LoginContentHandler(LoginHandler handler, OutputStream out) {
 	this.handler = handler;
@@ -65,7 +67,7 @@ public class LoginContentHandler extends DefaultHandler {
 		.newInstance();
 	TransformerHandler request;
 
-	long id;
+	PlayerId id;
 	try {
 	    id = handler.login(username);
 	} catch (RuntimeException e) {
@@ -124,9 +126,8 @@ public class LoginContentHandler extends DefaultHandler {
 	    loginstarted = true;
 	} else if ("username".equals(qName)) {
 	    userstarted = true;
-	} else {
-	    throw new SAXException("Illegal syntax:" + qName);
-	}
+	} else
+		throw new SAXException("Illegal syntax:" + qName);
 	chars.setLength(0);
     }
 
@@ -138,9 +139,8 @@ public class LoginContentHandler extends DefaultHandler {
 	} else if ("username".equals(qName)) {
 	    userstarted = false;
 	    username = chars.toString();
-	} else {
-	    throw new SAXException("Illegal syntax:" + qName);
-	}
+	} else
+		throw new SAXException("Illegal syntax:" + qName);
 	chars.setLength(0);
     }
 

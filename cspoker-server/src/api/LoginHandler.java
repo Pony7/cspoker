@@ -3,18 +3,19 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
+ *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
- *  
+ *
  *  You should have received a copy of the GNU General Public License
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 package api;
 
+import game.PlayerId;
 import game.elements.chips.IllegalValueException;
 import game.elements.player.Player;
 
@@ -45,22 +46,22 @@ public class LoginHandler {
 
     /**
          * Log in to this game server.
-         * 
+         *
          * @param username
          *                The name of the new user.
          * @return The user id of the new user.
          * @throws IllegalValueException
          */
 
-    private Object playerNameAndIdLock = new Object();
+    private final Object playerNameAndIdLock = new Object();
 
-    public long login(String username) {
-	if (username == null || !username.matches("[A-Za-z][A-Za-z0-9]*")) {
+    public PlayerId login(String username) {
+	if ((username == null) || !username.matches("[A-Za-z][A-Za-z0-9]*")) {
 	    System.out.println("Login denied.");
 	    throw new IllegalArgumentException(
 		    "You must provide a correct username.");
 	}
-	long id;
+	PlayerId id;
 
 	synchronized (playerNameAndIdLock) {
 	    if (getPlayer(username) != null) {
@@ -69,7 +70,7 @@ public class LoginHandler {
 			"The username is already in use.");
 	    }
 	    do {
-		id = random.nextLong();
+		id = new PlayerId(random.nextLong());
 	    } while (getPlayer(id) != null);
 
 	    try {
@@ -106,11 +107,11 @@ public class LoginHandler {
 	return null;
     }
 
-    protected Player getPlayer(long id) {
+    protected Player getPlayer(PlayerId id) {
 	Iterator<Player> iter = players.iterator();
 	while (iter.hasNext()) {
 	    Player player = iter.next();
-	    if (player.getId() == id)
+	    if (player.getId().equals(id))
 		return player;
 	}
 	return null;

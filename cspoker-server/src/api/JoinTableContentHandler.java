@@ -1,5 +1,7 @@
 package api;
 
+import game.PlayerId;
+
 import java.io.OutputStream;
 import java.util.List;
 
@@ -15,22 +17,22 @@ import org.xml.sax.helpers.DefaultHandler;
 
 public class JoinTableContentHandler extends DefaultHandler {
 
-    private OutputStream out;
-    private JoinTableHandler handler;
+    private final OutputStream out;
+    private final JoinTableHandler handler;
 
-    private StringBuilder chars = new StringBuilder();
+    private final StringBuilder chars = new StringBuilder();
     private long id;
     private String tablename;
-    
+
     private boolean idset=false;
     private boolean tableset=false;
-    
+
     public JoinTableContentHandler(JoinTableHandler handler, OutputStream out) {
 	this.handler = handler;
 	this.out = out;
     }
 
-    
+
     @Override
     public void endDocument() throws SAXException {
 	respond();
@@ -43,12 +45,13 @@ public class JoinTableContentHandler extends DefaultHandler {
 	TransformerHandler request;
 
 	List<String> players;
-	
+
 	try {
 	    if(!idset || !tableset)
 		throw new SAXException("Illegal syntax.");
-	    handler.joinTable(id, tablename);
-	    players = handler.getPlayersExceptFor(id, tablename);
+	    PlayerId playerId = new PlayerId(id);
+	    handler.joinTable(playerId, tablename);
+	    players = handler.getPlayersExceptFor(playerId, tablename);
 	} catch (Exception e) {
 	    try {
 		request = tf.newTransformerHandler();
@@ -91,12 +94,12 @@ public class JoinTableContentHandler extends DefaultHandler {
 		for(String name:players){
 		    request.startElement("", "player", "player", noattrs);
 		    request.characters(name.toCharArray(), 0, name.length());
-		    request.endElement("", "player", "player");  
+		    request.endElement("", "player", "player");
 		}
 		request.endElement("", "players", "players");
 	    }
 
-	    
+
 	    request.endElement("", "jointable", "jointable");
 	    request.endDocument();
 	} catch (SAXException e) {
@@ -114,9 +117,8 @@ public class JoinTableContentHandler extends DefaultHandler {
 	    Attributes attributes) throws SAXException {
 	if ("jointable".equals(qName)||"id".equals(qName)||"table".equals(qName)) {
 	    // no op
-	} else {
-	    throw new SAXException("Illegal syntax:" + qName);
-	}
+	} else
+		throw new SAXException("Illegal syntax:" + qName);
 	chars.setLength(0);
     }
 
@@ -131,9 +133,8 @@ public class JoinTableContentHandler extends DefaultHandler {
 	} else if ("table".equals(qName)) {
 	    tablename = chars.toString();
 	    tableset=true;
-	} else {
-	    throw new SAXException("Illegal syntax:" + qName);
-	}
+	} else
+		throw new SAXException("Illegal syntax:" + qName);
 	chars.setLength(0);
     }
 
@@ -143,5 +144,5 @@ public class JoinTableContentHandler extends DefaultHandler {
 	chars.append(ch, start, length);
 
     }
-    
+
 }

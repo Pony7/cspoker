@@ -16,9 +16,12 @@
 
 package game.elements.table;
 
+import game.PlayerId;
+import game.TableId;
 import game.elements.player.Player;
 import game.gameControl.GameProperty;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -40,11 +43,16 @@ public class Table {
 	 **********************************************************/
 
 	/**
+	 * The variable containing the id of this table.
+	 */
+	private final TableId id;
+
+	/**
 	 * The list of players in the waiting room.
 	 */
         //TODO: question from guy: shouldn't thread safety be guaranteed by
     	//	some higher level locking? then why thread safe list?
-	
+
 		//TODO: answer from Kenzo: while some thread tries to add/remove a player
 		//other threads should be able to iterate over all players this table contains,
 		//without having a ConcurrentModificationException.
@@ -52,17 +60,17 @@ public class Table {
 		//otherwise it will be a potential bottleneck.
 		//Off course there is the overhead of copying the internal array at each add/remove
 		//but iteration is more frequent, so should be done quicker/easier,
-		//without the need to synchronize to keep the list consistent. 
+		//without the need to synchronize to keep the list consistent.
 
 	private final List<Player> players = new CopyOnWriteArrayList<Player>();
 
 	/**
-	 * The game property.
+	 * The variable containing the game property of this table.
 	 */
 	private GameProperty gameProperty;
 
 	/**
-	 * Playing status.
+	 * The variable containing the playing status of this table.
 	 */
 	private boolean playing;
 
@@ -82,9 +90,19 @@ public class Table {
 	 * @effect 	Set the playing status to false.
 	 *		   	|setPlaying(false)
 	 */
-	public Table(GameProperty gameProperty){
+	public Table(TableId id, GameProperty gameProperty){
+		this.id = id;
 		setGameProperty(gameProperty);
 		setPlaying(false);
+	}
+
+	/**
+	 * Returns the id of this table.
+	 *
+	 * @return The id of this table.
+	 */
+	public TableId getId(){
+		return id;
 	}
 
 	/**********************************************************
@@ -139,7 +157,7 @@ public class Table {
 	 * @return 	True if players are playing at this table,
 	 * 			False otherwise.
 	 */
-	public boolean isPlaying() {
+	public synchronized boolean isPlaying() {
 		return playing;
 	}
 
@@ -152,7 +170,7 @@ public class Table {
 	 * 			playing status.
 	 * 			| new.isPlaying() == playing
 	 */
-	public void setPlaying(boolean playing) {
+	public synchronized void setPlaying(boolean playing) {
 		this.playing = playing;
 	}
 
@@ -170,7 +188,7 @@ public class Table {
 	 * @post	The given player isn't seated at this table anymore.
 	 * 			| !new.hasAsPlayer(player)
 	 */
-	public void removePlayer(Player player){
+	public synchronized void removePlayer(Player player){
 		if(!hasAsPlayer(player))
 			throw new IllegalArgumentException(player+" is not a player of this table.");
 		players.remove(player);
@@ -195,7 +213,7 @@ public class Table {
 	 * @post	The given player is seated at this table.
 	 * 			| new.hasAsPlayer(player)
 	 */
-	public void addPlayer(Player player) throws PlayerListFullException{
+	public synchronized void addPlayer(Player player) throws PlayerListFullException{
 		if(player==null)
 			throw new IllegalArgumentException("player should be effective.");
 		if(fullOfPlayers())
@@ -231,10 +249,27 @@ public class Table {
 	 *
 	 * The returned list is unmodifiable.
 	 *
-	 * @return The list with all the players at this table.
+	 * @return 	The list with all the players at this table.
 	 */
 	public List<Player> getPlayers(){
 		return Collections.unmodifiableList(players);
+	}
+
+	/**
+	 * Returns the list with all the player id's
+	 * of all the players at the table.
+	 *
+	 * The returned list is unmodifiable.
+	 *
+	 * @return	The list with all the player id's
+	 * 			of all the players at the table.
+	 */
+	public List<PlayerId> getPlayerIds(){
+		List<PlayerId> toReturn = new ArrayList<PlayerId>();
+		for(Player player:players){
+			toReturn.add(player.getId());
+		}
+		return Collections.unmodifiableList(toReturn);
 	}
 
 	/**

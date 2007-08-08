@@ -23,17 +23,27 @@ import game.elements.player.Player;
  *
  * @author Kenzo
  *
+ * TODO refactor
+ *
  */
 public class IllegalActionException extends Exception {
 
 	private static final long serialVersionUID = -5675804638273023229L;
 
-	private final Player player;
+	private Player player;
 
-	private final Action action;
+	private Action action;
+
+	public IllegalActionException(){
+		this("You have performed an invalid action.");
+	}
 
 	public IllegalActionException(Player player, Action action){
 		this(player, action, "");
+	}
+
+	public IllegalActionException(String message){
+		super(message);
 	}
 
 	public IllegalActionException(Player player, Action action, String message){

@@ -17,6 +17,9 @@
 
 package game.gameControl.tests;
 
+import game.GameMediator;
+import game.PlayerId;
+import game.TableId;
 import game.elements.chips.IllegalValueException;
 import game.elements.player.Player;
 import game.elements.table.PlayerListFullException;
@@ -39,6 +42,8 @@ public class GameFlowTest extends TestCase {
 
 	private GameControl gameControl;
 
+	private GameMediator gameMediator;
+
 	@Override
 	protected void setUp(){
 		System.out.println("");
@@ -46,15 +51,17 @@ public class GameFlowTest extends TestCase {
 		System.out.println("* New Game                                               *");
 		System.out.println("**********************************************************");
 		try {
-			kenzo = new Player(1, "Kenzo", 100);
-			cedric = new Player(2, "Cedric", 100);
-			guy = new Player(3, "Guy", 100);
+			kenzo = new Player(new PlayerId(1), "Kenzo", 100);
+			cedric = new Player(new PlayerId(2), "Cedric", 100);
+			guy = new Player(new PlayerId(3), "Guy", 100);
 
-			table = new Table(new GameProperty());
+			gameMediator = new GameMediator();
+
+			table = new Table(new TableId(0), new GameProperty());
 			table.addPlayer(kenzo);
 			table.addPlayer(cedric);
 			table.addPlayer(guy);
-			gameControl = new GameControl(null, table);
+			gameControl = new GameControl(gameMediator, table);
 		} catch (IllegalValueException e) {
 			fail(e.getMessage());
 		} catch (PlayerListFullException e) {
@@ -246,15 +253,15 @@ public class GameFlowTest extends TestCase {
 
 	public void testAllInSmallBlindCase(){
 		try {
-			kenzo = new Player(1, "Kenzo", 100);
-			cedric = new Player(2, "Cedric", 4);
-			guy = new Player(3, "Guy", 100);
+			kenzo = new Player(new PlayerId(1), "Kenzo", 100);
+			cedric = new Player(new PlayerId(2), "Cedric", 4);
+			guy = new Player(new PlayerId(3), "Guy", 100);
 
-			table = new Table(new GameProperty());
+			table = new Table(new TableId(0), new GameProperty());
 			table.addPlayer(kenzo);
 			table.addPlayer(cedric);
 			table.addPlayer(guy);
-			gameControl = new GameControl(null, table);
+			gameControl = new GameControl(gameMediator, table);
 		} catch (IllegalValueException e) {
 			fail(e.getMessage());
 		} catch (PlayerListFullException e) {
@@ -332,15 +339,15 @@ public class GameFlowTest extends TestCase {
 
 	public void testAllInBigBlindCase(){
 		try {
-			kenzo = new Player(1, "Kenzo", 100);
-			cedric = new Player(2, "Cedric", 100);
-			guy = new Player(3, "Guy", 9);
+			kenzo = new Player(new PlayerId(1), "Kenzo", 100);
+			cedric = new Player(new PlayerId(2), "Cedric", 100);
+			guy = new Player(new PlayerId(3), "Guy", 9);
 
-			table = new Table(new GameProperty());
+			table = new Table(new TableId(0), new GameProperty());
 			table.addPlayer(kenzo);
 			table.addPlayer(cedric);
 			table.addPlayer(guy);
-			gameControl = new GameControl(null, table);
+			gameControl = new GameControl(gameMediator, table);
 		} catch (IllegalValueException e) {
 			fail(e.getMessage());
 		} catch (PlayerListFullException e) {
@@ -417,15 +424,15 @@ public class GameFlowTest extends TestCase {
 
 	public void testBothBlindsAllInCase(){
 		try {
-			kenzo = new Player(1, "Kenzo", 100);
-			cedric = new Player(2, "Cedric", 4);
-			guy = new Player(3, "Guy", 9);
+			kenzo = new Player(new PlayerId(1), "Kenzo", 100);
+			cedric = new Player(new PlayerId(2), "Cedric", 4);
+			guy = new Player(new PlayerId(3), "Guy", 9);
 
-			table = new Table(new GameProperty());
+			table = new Table(new TableId(0), new GameProperty());
 			table.addPlayer(kenzo);
 			table.addPlayer(cedric);
 			table.addPlayer(guy);
-			gameControl = new GameControl(null, table);
+			gameControl = new GameControl(gameMediator, table);
 		} catch (IllegalValueException e) {
 			fail(e.getMessage());
 		} catch (PlayerListFullException e) {
@@ -489,15 +496,15 @@ public class GameFlowTest extends TestCase {
 
 	public void test2AllInOneActivePlayerCase(){
 		try {
-			kenzo = new Player(1, "Kenzo", 100);
-			cedric = new Player(2, "Cedric", 100);
-			guy = new Player(3, "Guy", 200);
+			kenzo = new Player(new PlayerId(1), "Kenzo", 100);
+			cedric = new Player(new PlayerId(2), "Cedric", 100);
+			guy = new Player(new PlayerId(3), "Guy", 200);
 
-			table = new Table(new GameProperty());
+			table = new Table(new TableId(0), new GameProperty());
 			table.addPlayer(kenzo);
 			table.addPlayer(cedric);
 			table.addPlayer(guy);
-			gameControl = new GameControl(null, table);
+			gameControl = new GameControl(gameMediator, table);
 		} catch (IllegalValueException e) {
 			fail(e.getMessage());
 		} catch (PlayerListFullException e) {
@@ -562,15 +569,15 @@ public class GameFlowTest extends TestCase {
 
 	public void testAllAllInCase(){
 		try {
-			kenzo = new Player(1, "Kenzo", 200);
-			cedric = new Player(2, "Cedric", 100);
-			guy = new Player(3, "Guy", 150);
+			kenzo = new Player(new PlayerId(1), "Kenzo", 200);
+			cedric = new Player(new PlayerId(2), "Cedric", 100);
+			guy = new Player(new PlayerId(3), "Guy", 150);
 
-			table = new Table(new GameProperty());
+			table = new Table(new TableId(0), new GameProperty());
 			table.addPlayer(kenzo);
 			table.addPlayer(cedric);
 			table.addPlayer(guy);
-			gameControl = new GameControl(null, table);
+			gameControl = new GameControl(gameMediator, table);
 		} catch (IllegalValueException e) {
 			fail(e.getMessage());
 		} catch (PlayerListFullException e) {
@@ -685,15 +692,15 @@ public class GameFlowTest extends TestCase {
 
 	public void testOnlyOneAllInPlayer2(){
 		try {
-			kenzo = new Player(1, "Kenzo", 100);
-			cedric = new Player(2, "Cedric", 200);
-			guy = new Player(3, "Guy", 200);
+			kenzo = new Player(new PlayerId(1), "Kenzo", 100);
+			cedric = new Player(new PlayerId(2), "Cedric", 200);
+			guy = new Player(new PlayerId(3), "Guy", 200);
 
-			table = new Table(new GameProperty());
+			table = new Table(new TableId(0), new GameProperty());
 			table.addPlayer(kenzo);
 			table.addPlayer(cedric);
 			table.addPlayer(guy);
-			gameControl = new GameControl(null, table);
+			gameControl = new GameControl(gameMediator, table);
 		} catch (IllegalValueException e) {
 			fail(e.getMessage());
 		} catch (PlayerListFullException e) {
