@@ -43,7 +43,6 @@ public class GameEventsCollector implements GameEventListener{
 	 * @param 	event
 	 * 			The event object containing all information of the occurred event.
 	 */
-	@Override
 	public void onGameEvent(GameEvent event) {
 		events.add(event);
 	}

@@ -129,8 +129,6 @@ public class PlayerCommunicationImpl implements PlayerCommunication {
 	public void leaveTable() throws IllegalActionException{
 		state.leaveTable();
 	}
-
-	@Override
 	public TableId createTable() throws IllegalActionException {
 		return state.createTable();
 	}
