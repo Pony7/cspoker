@@ -71,7 +71,7 @@ public class Player {
 	 * Construct a new player with given id,
 	 * name and initial number of chips.
 	 *
-	 * @throws 	IllegalValueException
+	 * @throws 	IllegalValueException [must]
 	 * 			The given initial value is not valid.
 	 *
 	 * @post	The chips pile is effective and
@@ -82,7 +82,7 @@ public class Player {
 	 * 			There are no chips on this pile.
 	 *		 	|new.getBettedChips()!=null && new.getBettedChips().getValue()==0
 	 */
-	public Player(PlayerId id, String name, int initialNbChips) throws IllegalValueException{
+	Player(PlayerId id, String name, int initialNbChips) throws IllegalValueException{
 		this.id = id;
 		this.name = name;
 		chips = new Chips(initialNbChips);

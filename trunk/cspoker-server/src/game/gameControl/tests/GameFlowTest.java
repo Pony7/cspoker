@@ -18,7 +18,6 @@
 package game.gameControl.tests;
 
 import game.GameMediator;
-import game.PlayerId;
 import game.TableId;
 import game.elements.chips.IllegalValueException;
 import game.elements.table.PlayerListFullException;
@@ -28,6 +27,7 @@ import game.gameControl.GameControl;
 import game.gameControl.GameProperty;
 import game.gameControl.actions.IllegalActionException;
 import game.player.Player;
+import game.player.PlayerFactory;
 import junit.framework.TestCase;
 
 public class GameFlowTest extends TestCase {
@@ -43,17 +43,20 @@ public class GameFlowTest extends TestCase {
 	private GameControl gameControl;
 
 	private GameMediator gameMediator;
+	
+	private PlayerFactory playerFactory;
 
 	@Override
 	protected void setUp(){
+		playerFactory = new PlayerFactory();
 		System.out.println("");
 		System.out.println("**********************************************************");
 		System.out.println("* New Game                                               *");
 		System.out.println("**********************************************************");
 		try {
-			kenzo = new Player(new PlayerId(1), "Kenzo", 100);
-			cedric = new Player(new PlayerId(2), "Cedric", 100);
-			guy = new Player(new PlayerId(3), "Guy", 100);
+			kenzo = playerFactory.createNewPlayer("Kenzo",100);
+			cedric = playerFactory.createNewPlayer("Cedric", 100); 
+			guy = playerFactory.createNewPlayer("Guy", 100);
 
 			gameMediator = new GameMediator();
 
@@ -253,9 +256,9 @@ public class GameFlowTest extends TestCase {
 
 	public void testAllInSmallBlindCase(){
 		try {
-			kenzo = new Player(new PlayerId(1), "Kenzo", 100);
-			cedric = new Player(new PlayerId(2), "Cedric", 4);
-			guy = new Player(new PlayerId(3), "Guy", 100);
+			kenzo = playerFactory.createNewPlayer("Kenzo",100);
+			cedric = playerFactory.createNewPlayer("Cedric", 4); 
+			guy = playerFactory.createNewPlayer("Guy", 100);
 
 			table = new Table(new TableId(0), new GameProperty());
 			table.addPlayer(kenzo);
@@ -339,9 +342,9 @@ public class GameFlowTest extends TestCase {
 
 	public void testAllInBigBlindCase(){
 		try {
-			kenzo = new Player(new PlayerId(1), "Kenzo", 100);
-			cedric = new Player(new PlayerId(2), "Cedric", 100);
-			guy = new Player(new PlayerId(3), "Guy", 9);
+			kenzo = playerFactory.createNewPlayer("Kenzo",100);
+			cedric = playerFactory.createNewPlayer("Cedric", 100); 
+			guy = playerFactory.createNewPlayer("Guy", 9);
 
 			table = new Table(new TableId(0), new GameProperty());
 			table.addPlayer(kenzo);
@@ -424,9 +427,9 @@ public class GameFlowTest extends TestCase {
 
 	public void testBothBlindsAllInCase(){
 		try {
-			kenzo = new Player(new PlayerId(1), "Kenzo", 100);
-			cedric = new Player(new PlayerId(2), "Cedric", 4);
-			guy = new Player(new PlayerId(3), "Guy", 9);
+			kenzo = playerFactory.createNewPlayer("Kenzo",100);
+			cedric = playerFactory.createNewPlayer("Cedric", 4); 
+			guy = playerFactory.createNewPlayer("Guy", 9);
 
 			table = new Table(new TableId(0), new GameProperty());
 			table.addPlayer(kenzo);
@@ -495,10 +498,10 @@ public class GameFlowTest extends TestCase {
 	}
 
 	public void test2AllInOneActivePlayerCase(){
-		try {
-			kenzo = new Player(new PlayerId(1), "Kenzo", 100);
-			cedric = new Player(new PlayerId(2), "Cedric", 100);
-			guy = new Player(new PlayerId(3), "Guy", 200);
+		try {	
+			kenzo = playerFactory.createNewPlayer("Kenzo",100);
+			cedric = playerFactory.createNewPlayer("Cedric", 100); 
+			guy = playerFactory.createNewPlayer("Guy", 200);
 
 			table = new Table(new TableId(0), new GameProperty());
 			table.addPlayer(kenzo);
@@ -569,9 +572,9 @@ public class GameFlowTest extends TestCase {
 
 	public void testAllAllInCase(){
 		try {
-			kenzo = new Player(new PlayerId(1), "Kenzo", 200);
-			cedric = new Player(new PlayerId(2), "Cedric", 100);
-			guy = new Player(new PlayerId(3), "Guy", 150);
+			kenzo = playerFactory.createNewPlayer("Kenzo",200);
+			cedric = playerFactory.createNewPlayer("Cedric", 100); 
+			guy = playerFactory.createNewPlayer("Guy", 150);
 
 			table = new Table(new TableId(0), new GameProperty());
 			table.addPlayer(kenzo);
@@ -691,10 +694,10 @@ public class GameFlowTest extends TestCase {
 	}
 
 	public void testOnlyOneAllInPlayer2(){
-		try {
-			kenzo = new Player(new PlayerId(1), "Kenzo", 100);
-			cedric = new Player(new PlayerId(2), "Cedric", 200);
-			guy = new Player(new PlayerId(3), "Guy", 200);
+		try {	
+			kenzo = playerFactory.createNewPlayer("Kenzo",100);
+			cedric = playerFactory.createNewPlayer("Cedric", 200); 
+			guy = playerFactory.createNewPlayer("Guy", 200);
 
 			table = new Table(new TableId(0), new GameProperty());
 			table.addPlayer(kenzo);

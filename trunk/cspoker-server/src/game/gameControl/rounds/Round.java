@@ -20,13 +20,13 @@ import game.GameMediator;
 import game.elements.cards.Card;
 import game.elements.chips.IllegalValueException;
 import game.elements.chips.pot.Pots;
+import game.elements.player.AllInPlayer;
 import game.events.playerActionEvents.AllInEvent;
 import game.gameControl.Game;
 import game.gameControl.PlayerAction;
 import game.gameControl.actions.Action;
 import game.gameControl.actions.IllegalActionException;
 import game.gameControl.rules.BettingRules;
-import game.player.AllInPlayer;
 import game.player.Player;
 
 import java.util.ArrayList;
