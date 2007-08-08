@@ -14,10 +14,11 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-package game.player;
+package game.elements.player;
 
 import game.elements.chips.IllegalValueException;
 import game.elements.chips.pot.Pot;
+import game.player.Player;
 
 /**
  * A class to represent all-in players.

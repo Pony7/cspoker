@@ -18,6 +18,7 @@ package api;
 import game.PlayerId;
 import game.elements.chips.IllegalValueException;
 import game.player.Player;
+import game.player.PlayerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -39,6 +40,8 @@ public class LoginHandler {
     private static List<Player> players = new ArrayList<Player>(8);
 
     private static Random random = new Random();
+    
+    private static PlayerFactory playerFactory = new PlayerFactory();
 
     public LoginHandler() {
 	super();
@@ -74,7 +77,7 @@ public class LoginHandler {
 	    } while (getPlayer(id) != null);
 
 	    try {
-		players.add(new Player(id, username, DEFAULT_NB_CHIPS));
+	    players.add(playerFactory.createNewPlayer(username, DEFAULT_NB_CHIPS));
 	    } catch (IllegalValueException e) {
 		e.printStackTrace();
 	    }

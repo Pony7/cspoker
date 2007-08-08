@@ -21,8 +21,8 @@ import game.elements.cards.hand.Hand;
 import game.elements.cards.hand.HandEvaluator;
 import game.elements.chips.IllegalValueException;
 import game.elements.chips.pot.Pot;
+import game.elements.player.ShowdownPlayer;
 import game.player.Player;
-import game.player.ShowdownPlayer;
 
 import java.util.ArrayList;
 import java.util.Collections;

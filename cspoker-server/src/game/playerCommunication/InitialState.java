@@ -90,8 +90,7 @@ class InitialState extends PlayerCommunicationState {
 		try {
 			table.addPlayer(playerCommunication.getPlayer());
 		} catch (PlayerListFullException e) {
-			//A newly constructed table should always have a free place.
-			assert false;
+			throw new IllegalStateException("A newly created table should have at least a place for one player.");
 		}
 		playerCommunication.setPlayerCommunicationState(new TableCreatedState(playerCommunication, table));
 		//TODO low priority Enhancement: Give a name to the table?

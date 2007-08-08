@@ -1,7 +1,6 @@
 package game.gameControl.tests;
 
 import game.GameMediator;
-import game.PlayerId;
 import game.TableId;
 import game.elements.chips.IllegalValueException;
 import game.elements.table.PlayerListFullException;
@@ -14,6 +13,7 @@ import game.gameControl.rules.Limit;
 import game.gameControl.rules.NoLimit;
 import game.gameControl.rules.PotLimit;
 import game.player.Player;
+import game.player.PlayerFactory;
 import junit.framework.TestCase;
 
 public class BettingRulesTest extends TestCase {
@@ -29,13 +29,16 @@ private Player kenzo;
 	private GameControl gameControl;
 
 	private GameMediator gameMediator;
+	
+	private PlayerFactory playerFactory;
 
 	@Override
 	protected void setUp(){
+		playerFactory = new PlayerFactory();
 		try {
-			kenzo = new Player(new PlayerId(1), "Kenzo", 100);
-			cedric = new Player(new PlayerId(2), "Cedric", 100);
-			guy = new Player(new PlayerId(3), "Guy", 100);
+			kenzo = playerFactory.createNewPlayer("Kenzo",100);
+			cedric = playerFactory.createNewPlayer("Cedric", 100); 
+			guy = playerFactory.createNewPlayer("Guy", 100);
 			gameMediator = new GameMediator();
 		} catch (IllegalValueException e) {
 			fail(e.getMessage());

@@ -14,11 +14,12 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-package game.player;
+package game.elements.player;
 
 import game.elements.cards.hand.Hand;
 import game.elements.cards.hand.HandEvaluator;
 import game.elements.cards.hand.HandTypeCalculator;
+import game.player.Player;
 
 /**
  * A class to represent a showdown player.
