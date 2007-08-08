@@ -16,7 +16,6 @@
 
 package game;
 
-import game.elements.player.Player;
 import game.events.GameEvent;
 import game.events.GameEventListener;
 import game.events.NewCommonCardsEvent;
@@ -42,6 +41,7 @@ import game.events.playerActionEvents.RaiseListener;
 import game.gameControl.GameControl;
 import game.gameControl.PlayerAction;
 import game.gameControl.actions.IllegalActionException;
+import game.player.Player;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;

@@ -17,7 +17,6 @@
 package game.gameControl;
 
 import game.GameMediator;
-import game.elements.player.Player;
 import game.elements.table.PlayerListFullException;
 import game.elements.table.Table;
 import game.events.playerActionEvents.BetEvent;
@@ -29,6 +28,7 @@ import game.events.playerActionEvents.RaiseEvent;
 import game.gameControl.actions.IllegalActionException;
 import game.gameControl.rounds.Round;
 import game.gameControl.rounds.WaitingRound;
+import game.player.Player;
 
 /**
  * This class is responsible to control the flow of the game.

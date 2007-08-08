@@ -14,7 +14,7 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-package game.elements.player;
+package game.player;
 
 import game.elements.cards.hand.Hand;
 import game.elements.cards.hand.HandEvaluator;

@@ -17,8 +17,8 @@
 package game.gameControl.rounds;
 
 import game.GameMediator;
-import game.elements.player.Player;
 import game.gameControl.Game;
+import game.player.Player;
 
 public class WaitingRound extends Round {
 

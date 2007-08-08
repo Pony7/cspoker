@@ -18,8 +18,8 @@ package game.elements.table;
 
 import game.PlayerId;
 import game.TableId;
-import game.elements.player.Player;
 import game.gameControl.GameProperty;
+import game.player.Player;
 
 import java.util.ArrayList;
 import java.util.Collections;

@@ -17,7 +17,7 @@
 package game.elements.chips.pot;
 
 import game.elements.chips.IllegalValueException;
-import game.elements.player.Player;
+import game.player.Player;
 
 import java.util.ArrayList;
 import java.util.Collections;

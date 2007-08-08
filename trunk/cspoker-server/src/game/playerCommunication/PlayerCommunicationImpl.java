@@ -17,9 +17,9 @@
 package game.playerCommunication;
 
 import game.TableId;
-import game.elements.player.Player;
 import game.events.GameEvent;
 import game.gameControl.actions.IllegalActionException;
+import game.player.Player;
 
 import java.util.List;
 

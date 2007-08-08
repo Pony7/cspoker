@@ -2,11 +2,11 @@ package game.odds;
 
 import game.elements.cards.hand.Hand;
 import game.elements.cards.hand.HandType;
-import game.elements.player.Player;
 import game.gameControl.GameControl;
 import game.gameControl.rounds.FlopRound;
 import game.gameControl.rounds.PreFlopRound;
 import game.gameControl.rounds.TurnRound;
+import game.player.Player;
 
 /**
  * Class for calculating and estimating the odds involved for a certain
