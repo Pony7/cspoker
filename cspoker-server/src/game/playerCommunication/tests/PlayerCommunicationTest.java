@@ -17,8 +17,8 @@ package game.playerCommunication.tests;
 
 import game.PlayerFactory;
 import game.TableId;
-import game.elements.player.Player;
 import game.gameControl.actions.IllegalActionException;
+import game.player.Player;
 import game.playerCommunication.PlayerCommunication;
 import game.playerCommunication.PlayerCommunicationImpl;
 import game.playerCommunication.PlayerCommunicationManager;

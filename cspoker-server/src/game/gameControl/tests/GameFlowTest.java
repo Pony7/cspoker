@@ -21,13 +21,13 @@ import game.GameMediator;
 import game.PlayerId;
 import game.TableId;
 import game.elements.chips.IllegalValueException;
-import game.elements.player.Player;
 import game.elements.table.PlayerListFullException;
 import game.elements.table.Table;
 import game.gameControl.Game;
 import game.gameControl.GameControl;
 import game.gameControl.GameProperty;
 import game.gameControl.actions.IllegalActionException;
+import game.player.Player;
 import junit.framework.TestCase;
 
 public class GameFlowTest extends TestCase {

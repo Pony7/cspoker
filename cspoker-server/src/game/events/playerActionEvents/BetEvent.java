@@ -16,9 +16,9 @@
 
 package game.events.playerActionEvents;
 
-import game.elements.player.Player;
 import game.events.GameEvent;
 import game.gameControl.actions.Action;
+import game.player.Player;
 
 /**
  * A class to represent bet events.

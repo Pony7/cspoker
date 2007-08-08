@@ -17,7 +17,7 @@ package api;
 
 import game.PlayerId;
 import game.elements.chips.IllegalValueException;
-import game.elements.player.Player;
+import game.player.Player;
 
 import java.io.IOException;
 import java.io.InputStream;

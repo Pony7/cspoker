@@ -16,8 +16,8 @@
 
 package game.gameControl.actions;
 
-import game.elements.player.Player;
 import game.gameControl.rounds.Round;
+import game.player.Player;
 
 /**
  * An enumeration of all actions a player can do.

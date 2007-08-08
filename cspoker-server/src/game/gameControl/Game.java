@@ -19,9 +19,9 @@ package game.gameControl;
 import game.elements.cards.Card;
 import game.elements.cards.deck.Deck;
 import game.elements.chips.pot.Pots;
-import game.elements.player.Player;
 import game.elements.table.PlayerListFullException;
 import game.elements.table.Table;
+import game.player.Player;
 import game.utilities.LoopingList;
 
 import java.util.ArrayList;

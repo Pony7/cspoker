@@ -16,7 +16,7 @@
 
 package game.gameControl.actions;
 
-import game.elements.player.Player;
+import game.player.Player;
 
 /**
  * Thrown to indicate that the trying action is not a valid action.

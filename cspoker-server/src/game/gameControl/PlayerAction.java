@@ -16,8 +16,8 @@
 
 package game.gameControl;
 
-import game.elements.player.Player;
 import game.gameControl.actions.IllegalActionException;
+import game.player.Player;
 
 /**
  * An interface defining all actions a player can do in one deal.
