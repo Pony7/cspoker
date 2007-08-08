@@ -48,38 +48,27 @@ abstract class PlayerCommunicationState implements PlayerCommunication{
 	 * Player Actions
 	 **********************************************************/
 
-	@Override
 	public void bet(int amount) throws IllegalActionException {
 		throw new IllegalActionException("Bet is not a valid action. "+getStdErrorMessage());
 	}
 
-	@Override
 	public void raise(int amount) throws IllegalActionException {
 		throw new IllegalActionException("Raise is not a valid action. "+getStdErrorMessage());
 	}
 
-	@Override
 	public void call() throws IllegalActionException {
 		throw new IllegalActionException("Call is not a valid action. "+getStdErrorMessage());
 	}
-
-	@Override
 	public void check() throws IllegalActionException {
 		throw new IllegalActionException("Check is not a valid action. "+getStdErrorMessage());
 	}
-
-	@Override
 	public void deal() throws IllegalActionException {
 		throw new IllegalActionException("Deal is not a valid action. "+getStdErrorMessage());
 
 	}
-
-	@Override
 	public void fold() throws IllegalActionException {
 		throw new IllegalActionException("Fold is not a valid action. "+getStdErrorMessage());
 	}
-
-	@Override
 	public void allIn() throws IllegalActionException {
 		throw new IllegalActionException("Going all-in is not a valid action. "+getStdErrorMessage());
 
@@ -97,12 +86,9 @@ abstract class PlayerCommunicationState implements PlayerCommunication{
 	 * @throws  IllegalActionException [must]
 	 *          This actions is not a valid action in the current state.
 	 */
-	@Override
 	public void join(TableId id) throws IllegalActionException {
 		throw new IllegalActionException();
 	}
-
-	@Override
 	public void leaveTable() throws IllegalActionException {
 		throw new IllegalActionException();
 	}
@@ -111,13 +97,9 @@ abstract class PlayerCommunicationState implements PlayerCommunication{
 	/**********************************************************
 	 * Create/Start Game
 	 **********************************************************/
-
-	@Override
 	public TableId createTable() throws IllegalActionException {
 		throw new IllegalActionException();
 	}
-
-	@Override
 	public void startGame() throws IllegalActionException {
 		throw new IllegalActionException();
 	}
@@ -125,13 +107,9 @@ abstract class PlayerCommunicationState implements PlayerCommunication{
 	/**********************************************************
 	 * Actions list
 	 **********************************************************/
-
-	@Override
 	public List<GameEvent> getLatestGameEvents() throws IllegalActionException {
 		throw new IllegalActionException();
 	}
-
-	@Override
 	public List<GameEvent> getLatestGameEventsAndAck(long ack) throws IllegalActionException {
 		throw new IllegalActionException();
 	}

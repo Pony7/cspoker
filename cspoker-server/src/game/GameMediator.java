@@ -83,7 +83,6 @@ public class GameMediator implements PlayerAction, FoldListener, RaiseListener, 
 	 * @throws  IllegalActionException [must]
      *          The action performed is not a valid action.	
 	 */
-	@Override
 	public void allIn(Player player) throws IllegalActionException {
 		gameControl.allIn(player);
 	}
@@ -100,7 +99,6 @@ public class GameMediator implements PlayerAction, FoldListener, RaiseListener, 
 	 * @throws  IllegalActionException [must]
      *          The action performed is not a valid action.	
 	 */
-	@Override
 	public void bet(Player player, int amount) throws IllegalActionException {
 		gameControl.bet(player, amount);
 	}
@@ -116,7 +114,6 @@ public class GameMediator implements PlayerAction, FoldListener, RaiseListener, 
 	 * @throws  IllegalActionException [must]
      *          The action performed is not a valid action.	
 	 */
-	@Override
 	public void call(Player player) throws IllegalActionException {
 		gameControl.call(player);
 	}
@@ -132,7 +129,6 @@ public class GameMediator implements PlayerAction, FoldListener, RaiseListener, 
 	 * @throws  IllegalActionException [must]
      *          The action performed is not a valid action.	
 	 */
-	@Override
 	public void check(Player player) throws IllegalActionException {
 		gameControl.check(player);
 	}
@@ -149,7 +145,6 @@ public class GameMediator implements PlayerAction, FoldListener, RaiseListener, 
 	 * @throws  IllegalActionException [must]
      *          The action performed is not a valid action.	
 	 */ 
-	@Override
 	public void deal(Player player) throws IllegalActionException {
 		gameControl.deal(player);
 	}
@@ -167,7 +162,6 @@ public class GameMediator implements PlayerAction, FoldListener, RaiseListener, 
 	 * @throws  IllegalActionException [must]
      *          The action performed is not a valid action.	
 	 */
-	@Override
 	public void fold(Player player) throws IllegalActionException {
 		gameControl.fold(player);
 	}
@@ -184,7 +178,6 @@ public class GameMediator implements PlayerAction, FoldListener, RaiseListener, 
 	 * @throws  IllegalActionException [must]
      *          The action performed is not a valid action.			
 	 */
-	@Override
 	public void raise(Player player, int amount) throws IllegalActionException {
 		gameControl.raise(player, amount);
 	}
