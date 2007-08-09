@@ -69,6 +69,7 @@ public class GameControl implements PlayerAction{
 	 */
 	public GameControl(GameMediator gameMediator, Table table){
 		this.gameMediator = gameMediator;
+		gameMediator.setGameControl(this);
 		game = new Game(table);
 		round = new WaitingRound(gameMediator, game);
 	}
@@ -230,7 +231,7 @@ public class GameControl implements PlayerAction{
 		game.joinGame(player);
 	}
 	
-	public void leaveGame(Player player){
+	public void leaveGame(Player player) throws IllegalActionException{
 		game.leaveGame(player);
 	}
 

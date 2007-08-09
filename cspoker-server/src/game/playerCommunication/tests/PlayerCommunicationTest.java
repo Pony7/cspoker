@@ -93,6 +93,14 @@ public class PlayerCommunicationTest extends TestCase {
 			guyComm.join(tableId);
 			kenzoComm.startGame();
 			System.out.println(kenzoComm.getLatestGameEvents());
+			try {
+				kenzoComm.deal();
+			} catch (IllegalActionException e) {
+				try {
+					guyComm.deal();
+				} catch (IllegalActionException e1) {
+				}
+			}
 		} catch (IllegalActionException e) {
 			fail(e.getMessage());
 		}finally{

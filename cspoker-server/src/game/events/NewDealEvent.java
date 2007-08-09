@@ -16,6 +16,12 @@
 
 package game.events;
 
+import game.player.Player;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 /**
  * A class to represent new deal events.
  * 
@@ -23,11 +29,34 @@ package game.events;
  *
  */
 public class NewDealEvent extends GameEvent {
+	
+	private final List<Player> players;
+	
+	private final Player dealer;
+	
+	public NewDealEvent(List<Player> players, Player dealer){
+		this.players = Collections.unmodifiableList(new ArrayList<Player>(players));
+		this.dealer = dealer;
+	}
+	
+	public Player getDealer(){
+		return dealer;
+	}
 
 	@Override
 	public String[] getAction() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	@Override
+	public String toString(){
+		String toReturn ="A new deal with ";
+		for(Player player:players){
+			toReturn+=player.getName();
+			toReturn+=", ";
+		}
+		return toReturn.substring(0, toReturn.length()-2)+". "+dealer.getName()+" is dealer.";
 	}
 
 }

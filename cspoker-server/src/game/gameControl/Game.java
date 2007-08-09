@@ -21,6 +21,7 @@ import game.elements.cards.deck.Deck;
 import game.elements.chips.pot.Pots;
 import game.elements.table.PlayerListFullException;
 import game.elements.table.Table;
+import game.gameControl.actions.IllegalActionException;
 import game.player.Player;
 import game.utilities.LoopingList;
 
@@ -501,10 +502,12 @@ public class Game {
 		}
 	}
 
-	public void leaveGame(Player player){
+	public void leaveGame(Player player) throws IllegalActionException{
 		System.out.println("Kick out: "+player.getName());
 		if(!table.hasAsPlayer(player))
 			return;
+		if(hasAsActivePlayer(player))
+			throw new IllegalActionException("An active player can not be removed. He should fold first.");
 		if((getNextDealer()==null) || getNextDealer().equals(player)){
 			setNextDealer(initialCurrentHandPlayers.getNextTo(player));
 		}

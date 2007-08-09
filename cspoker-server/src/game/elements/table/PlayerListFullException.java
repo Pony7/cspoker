@@ -27,6 +27,6 @@ public class PlayerListFullException extends Exception {
 	
 	@Override
 	public String getMessage() {
-	    return "The player list is full.";
+	    return "The table is full.";
 	}
 }

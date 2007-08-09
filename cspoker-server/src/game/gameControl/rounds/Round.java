@@ -626,7 +626,11 @@ public abstract class Round implements PlayerAction{
 	protected void removeBrokePlayers(){
 		for(Player player:getGame().getTable().getPlayers()){
 			if(player.getStack().getValue()==0){
-				getGame().leaveGame(player);
+				try {
+					getGame().leaveGame(player);
+				} catch (IllegalActionException e) {
+					throw new IllegalStateException();
+				}
 			}
 		}
 	}

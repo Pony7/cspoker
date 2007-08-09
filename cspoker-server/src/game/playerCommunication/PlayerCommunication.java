@@ -118,7 +118,7 @@ public interface PlayerCommunication {
 	 *
 	 * @pre 	The given id should be effective
 	 *			|id!=null
-	 * @throws  IllegalActionException [can]
+	 * @throws  IllegalActionException [must]
 	 *          This actions is not a valid action in the current state.
 	 */
 	public void join(TableId id) throws IllegalActionException;
@@ -138,7 +138,7 @@ public interface PlayerCommunication {
 	/**
 	 * This player creates a table.
 	 *
-	 * @throws  IllegalActionException [can]
+	 * @throws  IllegalActionException [must]
 	 *          This actions is not a valid action in the current state.
 	 */
 	public TableId createTable() throws IllegalActionException;
@@ -147,7 +147,7 @@ public interface PlayerCommunication {
 	 * This player starts the game.
 	 * Only the player who has created the table can start the game.
 	 *
-	 * @throws  IllegalActionException [can]
+	 * @throws  IllegalActionException [must]
 	 *          This actions is not a valid action in the current state.
 	 */
 	public void startGame() throws IllegalActionException;
