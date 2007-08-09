@@ -516,10 +516,20 @@ public class Game {
 	}
 
 	/**
+	 * Change the dealer of this game to the given dealer.
 	 *
-	 * @param dealer
+	 * @param 	dealer
+	 * 			The dealer to change to.
+	 * @pre 	The given dealer should be effective.
+	 *			|dealer!=null
+	 * @pre 	The given dealer should be an active player at the table.
+	 *			|dealer!=null && hasAsActivePlayer(dealer)
 	 */
 	public void changeDealer(Player dealer){
+		if(dealer==null)
+			throw new IllegalArgumentException("The given dealer should be effective");
+		if(!hasAsActivePlayer(dealer))
+			throw new IllegalArgumentException("The dealer should be an active player of the current deal");
 		setDealer(dealer);
 		setNextDealer(initialCurrentHandPlayers.getNextTo(dealer));
 		setFirstToActPlayer(initialCurrentHandPlayers.getNextTo(dealer));

@@ -18,6 +18,7 @@ package game.playerCommunication;
 import game.GameManager;
 import game.GameMediator;
 import game.PlayerId;
+import game.TableManager;
 import game.elements.table.Table;
 import game.gameControl.GameControl;
 import game.gameControl.actions.IllegalActionException;
@@ -73,17 +74,23 @@ class TableCreatedState extends WaitingAtTableState {
 		}
 
 		System.out.println("Game Started.");
-
-		/**
-		 * TODO Concurrency: table set to isPlaying, but game does not exist
-		 * in the GameManager
-		 */
+	}
+	
+	@Override
+	public void leaveTable() throws IllegalActionException{
+		synchronized (table) {
+			if(table.getNbPlayers()==1){
+				TableManager.removeTable(table);
+				table.removePlayer(playerCommunication.getPlayer());
+				playerCommunication.setPlayerCommunicationState(new InitialState(playerCommunication));
+			} else
+				throw new IllegalActionException("The owner can only leave if he is the only player at the table.");
+		}
 	}
 
 	@Override
 	protected String getStdErrorMessage() {
-		// TODO Auto-generated method stub
-		return "";
+		return "You have not yet started the game.";
 	}
 
 }

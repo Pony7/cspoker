@@ -16,12 +16,15 @@
 
 package game;
 
+import net.jcip.annotations.Immutable;
+
 /**
  * A class to represent table id's.
  *
  * @author Kenzo
  *
  */
+@Immutable
 public class TableId {
 
 	/**

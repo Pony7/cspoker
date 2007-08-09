@@ -140,7 +140,7 @@ public class CardImpl implements Card, Comparable<Card>{
 	 */
 	@Override
 	public String toString(){
-		return getSuit().toString()+" "+getRank().toString();
+		return getRank().toString()+" of "+getSuit().toString();
 	}
 
 	/**

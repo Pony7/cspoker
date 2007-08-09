@@ -94,6 +94,7 @@ class PlayingState extends PlayerCommunicationState {
 	@Override
 	public void leaveTable(){
 		//TODO if playing, fold?
+		//TODO leave game
 		gameMediator.unsubscribeGameEventListener(gameEventsCollector);
 		playerCommunication.setPlayerCommunicationState(new InitialState(playerCommunication));
 	}

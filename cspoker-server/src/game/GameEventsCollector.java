@@ -24,8 +24,7 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
- * A class to collect and to manage
- * game events.
+ * A class to collect and to manage game events.
  *
  * @author Kenzo
  *

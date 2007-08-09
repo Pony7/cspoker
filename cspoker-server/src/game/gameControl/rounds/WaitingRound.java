@@ -17,7 +17,11 @@
 package game.gameControl.rounds;
 
 import game.GameMediator;
+import game.events.privateEvents.NewPocketCardsEvent;
 import game.gameControl.Game;
+import game.gameControl.PlayerAction;
+import game.gameControl.actions.Action;
+import game.gameControl.actions.IllegalActionException;
 import game.player.Player;
 
 public class WaitingRound extends Round {
@@ -28,6 +32,29 @@ public class WaitingRound extends Round {
 		getGame().setToInitialHandPlayers();
 		getGame().setCurrentPlayer(getGame().getDealer());
 	}
+	
+	/**
+	 * The player who the dealer-button has been dealt to
+	 * can choose to start the deal.
+	 * From that moment, new players can not join the on-going deal.
+	 *
+	 * @param 	player
+	 * 			The player who deals.
+	 * @throws  IllegalActionException [must]
+	 * 			It's not the turn of the given player.
+	 * @throws  IllegalActionException [must]
+     *          The action performed is not a valid action.
+	 * @see		PlayerAction
+	 */
+	@Override
+	public void deal(Player player) throws IllegalActionException{
+		//Check whether the given player can do this action.
+		if(!Action.DEAL.canDoAction(this, player))
+			throw new IllegalActionException(player, Action.DEAL);
+		playerMadeEvent(player);
+		//This will force the game control to end the waiting round
+		//and change to the preflop round.
+	}
 
 	@Override
 	public void endRound() {
@@ -35,6 +62,8 @@ public class WaitingRound extends Round {
 		for(Player player:getGame().getCurrentDealPlayers()){
 			player.dealPocketCard(drawCard());
 			player.dealPocketCard(drawCard());
+			gameMediator.publishNewPocketCardsEvent(
+					player.getId(), new NewPocketCardsEvent(player));
 		}
 	}
 
