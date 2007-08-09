@@ -1,4 +1,4 @@
-#summary Description of the /ping page.
+#summary Description of the /ping/ page.
 #labels Phase-Design
 
 === Introduction ===
@@ -12,6 +12,5 @@ HTTP GET
 <?xml version="1.0" encoding="UTF-8"?>
 <pong/>
 }}}
-
 
 
