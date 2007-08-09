@@ -1,0 +1,16 @@
+#summary Description of the /table/create/ page.
+
+=== Introduction ===
+The table create page is used to create a table on the server.
+
+=== Method ===
+HTTP PUT 
+
+=== Request ===
+{{{
+<?xml version="1.0" encoding="UTF-8"?>
+<table>mgm</table>
+}}}
+
+=== Response ===
+_none_
