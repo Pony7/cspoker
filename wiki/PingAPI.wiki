@@ -2,10 +2,7 @@
 #labels Phase-Design
 
 === Introduction ===
-The ping page is used to check whether the server is online or not. 
-
-=== Authentication ===
-No authentication is required.
+The ping page is used to check whether the server is online or not. It can also be used to check basic authentication credentials.
 
 === Method ===
 HTTP GET 
