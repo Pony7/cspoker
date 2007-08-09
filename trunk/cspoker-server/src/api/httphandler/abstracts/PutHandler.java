@@ -13,21 +13,16 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package api;
+package api.httphandler.abstracts;
 
-import com.sun.net.httpserver.BasicAuthenticator;
 
-public class HardCodedBasicAuthentication extends BasicAuthenticator {
+public abstract class PutHandler extends RequestStreamHandler {
 
-    public HardCodedBasicAuthentication() {
-	super("cspoker");
+    public PutHandler() {
+	super();
     }
     
-    @Override
-    public boolean checkCredentials(String user, String pass) {
-	System.out.println("login "+(user.equalsIgnoreCase("guy") && pass.equalsIgnoreCase("test")));
-	return user.equalsIgnoreCase("guy") && pass.equalsIgnoreCase("test");
+    protected int getDefaultStatusCode(){
+	return 201;
     }
-
-
 }

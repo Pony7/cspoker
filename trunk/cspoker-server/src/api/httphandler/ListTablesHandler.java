@@ -15,6 +15,11 @@
  */
 package api.httphandler;
 
+import game.TableId;
+import game.TableManager;
+
+import java.util.Set;
+
 import javax.xml.transform.sax.TransformerHandler;
 
 import org.xml.sax.SAXException;
@@ -22,13 +27,20 @@ import org.xml.sax.helpers.AttributesImpl;
 
 import api.httphandler.abstracts.GetHandler;
 
-public class PingHandler extends GetHandler {
+public class ListTablesHandler extends GetHandler {
     
     @Override
     protected void respond(TransformerHandler response)
 	    throws SAXException {
-	response.startElement("", "pong", "pong", new AttributesImpl());
-	response.endElement("", "pong", "pong");
+	response.startElement("", "tables", "tables", new AttributesImpl());
+	Set<TableId> tables = TableManager.getAllTableIds();
+	for(TableId id:tables){
+	    response.startElement("", "table", "table", new AttributesImpl());
+	    String idStr = String.valueOf(id.getID());
+	    response.characters(idStr.toCharArray(), 0, idStr.length());
+	    response.endElement("", "table", "table");
+	}
+	response.endElement("", "tables", "tables");
     }
 
 
