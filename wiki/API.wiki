@@ -3,14 +3,52 @@
 
 = Introduction =
 
-Communication with the poker server happens through a HTTP connection. The [http://www.xfront.com/REST-Web-Services.html REST]-style architecture uses all the built-in features of HTTP such as caching, authentication and error codes.
+Communication with the poker server happens through a HTTP connection. 
 
-=Authentication=
-There is no explicit login functionality. The client can ask the user for credentials and then try to access the [ServerStatusAPI /server/status/] page with basic authentication headers set to see if they are accepted. In every following request (with a few exceptions) those same headers must be included.
+|| *HTTP methods:* || PUT || GET || POST || DELETE ||
+|| *CRUD operation:* || CREATE || READ || UPDATE || DELETE ||
 
-=Pages=
+The [http://www.xfront.com/REST-Web-Services.html REST]-style architecture uses all the built-in features of HTTP such as caching, authentication and error codes.
+
+= Authentication =
+There is no explicit login functionality. The client can ask the user for credentials and then try to access the [PingAPI /ping/] page with basic authentication headers set to see if they are accepted. In every following request those same headers must be included.
+
+= CSPoker API = 
+== PUT ==
+ * [CreateTableAPI /table/create/]
+== GET ==
  * [PingAPI /ping/]
- * [JoinTableAPI /table/join/]
+ * [EventsGameAPI /game/events/]
+== POST ==
+ * [JoinTableGameAPI /table/join/]
+ * [LeaveTableGameAPI /table/leave/]
+ * [CallGameAPI /game/call/]
+ * [BetGameAPI /game/bet/]
+ * [FoldGameAPI /game/fold/]
+ * [CheckGameAPI /game/check/]
+ * [RaiseGameAPI /game/raise/]
+ * [DealGameAPI /game/deal/]
+ * [AllInGameAPI /game/allin/]
+ * [StartGameAPI /game/start/]
+ * [AckEventsGameAPI /game/events/ack]
+== DELETE ==
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
