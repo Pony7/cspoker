@@ -16,6 +16,7 @@
 
 package game;
 
+import game.elements.table.PlayerListFullException;
 import game.events.GameEvent;
 import game.events.GameEventListener;
 import game.events.NewCommonCardsEvent;
@@ -184,6 +185,18 @@ public class GameMediator implements PlayerAction{
 	 */
 	public void raise(Player player, int amount) throws IllegalActionException {
 		gameControl.raise(player, amount);
+	}
+	
+	public void joinGame(Player player) throws IllegalActionException{
+		try {
+			gameControl.joinGame(player);
+		} catch (PlayerListFullException e) {
+			throw new IllegalActionException(e.getMessage());
+		}
+	}
+	
+	public void leaveGame(Player player) throws IllegalActionException{
+		gameControl.leaveGame(player);
 	}
 	
 	/**********************************************************

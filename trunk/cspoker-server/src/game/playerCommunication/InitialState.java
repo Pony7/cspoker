@@ -70,7 +70,7 @@ class InitialState extends PlayerCommunicationState {
 
 		if(table.isPlaying()){
 			GameMediator mediator = GameManager.getGame(id);
-			//TODO join game
+			mediator.joinGame(playerCommunication.getPlayer());
 			playerCommunication.setPlayerCommunicationState(
 					new PlayingState(playerCommunication, mediator));
 		}else{

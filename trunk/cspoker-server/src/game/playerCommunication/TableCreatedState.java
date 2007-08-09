@@ -31,13 +31,13 @@ import game.gameControl.actions.IllegalActionException;
  *
  *
  * InitialState  --------------------------------> 	TableCreatedState
- *                    createTable()							|
- *                    										| startGame()
- *                    										|
- *                    										|
- *                    										\/
- *                    								PlayingState
- *                    						(for all players at the table)
+ *       /\             createTable()						|	|
+ *       |__________________________________________________|	| startGame()
+ *             leaveTable() && only player at table.        	|
+ *                    											|
+ *                    											\/
+ *                    									PlayingState
+ *                    							(for all players at the table)
  *
  * @author Kenzo
  *
@@ -45,9 +45,12 @@ import game.gameControl.actions.IllegalActionException;
 class TableCreatedState extends WaitingAtTableState {
 
 	/**
-	 * Construct a new table created state
-	 * @param playerCommunication
-	 * @param table
+	 * Construct a new table created state with given player communication and table.
+	 * 
+	 * @param 	playerCommunication
+	 * 			The playerCommunication of the player.
+	 * @param 	table
+	 * 			The created table.
 	 */
 	public TableCreatedState(PlayerCommunicationImpl playerCommunication, Table table) {
 		super(playerCommunication, table);
@@ -65,11 +68,11 @@ class TableCreatedState extends WaitingAtTableState {
 		 */
 		synchronized (table) {
 			GameMediator gameMediator = new GameMediator();
-			new GameControl(gameMediator, table);
 			for(PlayerId id:table.getPlayerIds()){
 				PlayerCommunicationImpl comm = PlayerCommunicationManager.getPlayerCommunication(id);
 				comm.setPlayerCommunicationState(new PlayingState(comm, gameMediator));
 			}
+			new GameControl(gameMediator, table);
 			GameManager.addGame(table.getId(), gameMediator);
 		}
 

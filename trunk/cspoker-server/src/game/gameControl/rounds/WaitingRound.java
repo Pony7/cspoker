@@ -17,6 +17,7 @@
 package game.gameControl.rounds;
 
 import game.GameMediator;
+import game.events.NewDealEvent;
 import game.events.privateEvents.NewPocketCardsEvent;
 import game.gameControl.Game;
 import game.gameControl.PlayerAction;
@@ -28,6 +29,7 @@ public class WaitingRound extends Round {
 
 	public WaitingRound(GameMediator gameMediator, Game game) {
 		super(gameMediator, game);
+		gameMediator.publishNewDealEvent(new NewDealEvent(game.getCurrentDealPlayers(), game.getDealer()));
 		removeBrokePlayers();
 		getGame().setToInitialHandPlayers();
 		getGame().setCurrentPlayer(getGame().getDealer());

@@ -56,6 +56,7 @@ class PlayingState extends PlayerCommunicationState {
 		super(playerCommunication);
 		this.gameMediator = gameMediator;
 		gameEventsCollector = new GameEventsCollector();
+		gameMediator.subscribeGameEventListener(gameEventsCollector);
 	}
 
 	@Override
