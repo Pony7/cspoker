@@ -19,6 +19,7 @@ There is no explicit login functionality. The client can ask the user for creden
 == GET ==
  * [PingAPI /ping/]
  * [EventsGameAPI /game/events/]
+ * [ListTableAPI /table/list/]
 == POST ==
  * [JoinTableGameAPI /table/join/]
  * [LeaveTableGameAPI /table/leave/]
@@ -32,6 +33,7 @@ There is no explicit login functionality. The client can ask the user for creden
  * [StartGameAPI /game/start/]
  * [AckEventsGameAPI /game/events/ack]
 == DELETE ==
+
 
 
 
