@@ -129,11 +129,10 @@ public class PlayerCommunicationImpl implements PlayerCommunication {
 	public void leaveTable() throws IllegalActionException{
 		state.leaveTable();
 	}
+	
 	public TableId createTable() throws IllegalActionException {
 		return state.createTable();
 	}
-
-
 
 	public void startGame() throws IllegalActionException{
 		state.startGame();

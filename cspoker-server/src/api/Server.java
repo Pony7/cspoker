@@ -18,9 +18,10 @@ package api;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 
+import api.httphandler.CreateTableHandler;
+import api.httphandler.ListTablesHandler;
 import api.httphandler.PingHandler;
 
-import com.sun.net.httpserver.Authenticator;
 import com.sun.net.httpserver.HttpContext;
 import com.sun.net.httpserver.HttpServer;
 
@@ -63,8 +64,17 @@ public class Server {
          */
     public Server(int port) throws IOException {
 	server = HttpServer.create(new InetSocketAddress(port), 0);
+	
 	HttpContext pingContext = server.createContext("/ping/", new PingHandler());
 	pingContext.setAuthenticator(new HardCodedBasicAuthentication());
+	
+	HttpContext listTableContext = server.createContext("/table/list/", new ListTablesHandler());
+	listTableContext.setAuthenticator(new HardCodedBasicAuthentication());
+	
+	HttpContext createTableContext = server.createContext("/table/create/", new CreateTableHandler());
+	createTableContext.setAuthenticator(new HardCodedBasicAuthentication());
+	
+	
 	System.out.println("Server created for port " + port + ".");
     }
 

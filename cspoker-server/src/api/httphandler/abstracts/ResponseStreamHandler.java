@@ -13,21 +13,25 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package api;
+package api.httphandler.abstracts;
 
-import com.sun.net.httpserver.BasicAuthenticator;
+import java.io.IOException;
 
-public class HardCodedBasicAuthentication extends BasicAuthenticator {
+import org.xml.sax.ContentHandler;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.XMLReader;
+import org.xml.sax.helpers.XMLReaderFactory;
 
-    public HardCodedBasicAuthentication() {
-	super("cspoker");
-    }
+import com.sun.net.httpserver.HttpExchange;
+
+public abstract class ResponseStreamHandler extends HttpHandlerImpl {
     
-    @Override
-    public boolean checkCredentials(String user, String pass) {
-	System.out.println("login "+(user.equalsIgnoreCase("guy") && pass.equalsIgnoreCase("test")));
-	return user.equalsIgnoreCase("guy") && pass.equalsIgnoreCase("test");
+    public void handle(HttpExchange http) throws IOException {
+	handleResponse(http);
     }
+
+    protected abstract void handleResponse(HttpExchange http) throws IOException;
 
 
 }

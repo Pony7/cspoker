@@ -74,5 +74,9 @@ public class TableId {
 	public String toString(){
 		return "table: "+String.valueOf(id);
 	}
+	
+	public long getID(){
+	    return id;
+	}
 
 }
