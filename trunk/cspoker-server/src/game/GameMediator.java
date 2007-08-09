@@ -38,12 +38,16 @@ import game.events.playerActionEvents.FoldEvent;
 import game.events.playerActionEvents.FoldListener;
 import game.events.playerActionEvents.RaiseEvent;
 import game.events.playerActionEvents.RaiseListener;
+import game.events.privateEvents.NewPocketCardsEvent;
+import game.events.privateEvents.NewPrivateCardsListener;
 import game.gameControl.GameControl;
 import game.gameControl.PlayerAction;
 import game.gameControl.actions.IllegalActionException;
 import game.player.Player;
 
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
@@ -53,7 +57,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * @author Kenzo
  *
  */
-public class GameMediator implements PlayerAction, FoldListener, RaiseListener, CheckListener, CallListener, BetListener, AllInListener, DealListener{
+public class GameMediator implements PlayerAction{
 	
 	/**
 	 * This variable contains the game control to mediate to.
@@ -205,15 +209,14 @@ public class GameMediator implements PlayerAction, FoldListener, RaiseListener, 
 	 * Inform all subscribed fold listeners a fold event has occurred.
 	 * 
 	 * Each subscribed fold listener is updated
-	 * by calling the onFoldEvent() method
-	 * of each subscribed fold listener.
+	 * by calling their onFoldEvent() method.
 	 * 
 	 */
-	public void onFoldEvent(FoldEvent event){
+	public void publishFoldEvent(FoldEvent event){
 		for(FoldListener listener:foldListeners){
 			listener.onFoldEvent(event);
 		}
-		onGameEvent(event);
+		publishGameEvent(event);
 	}
 	
 	/**
@@ -248,15 +251,14 @@ public class GameMediator implements PlayerAction, FoldListener, RaiseListener, 
 	 * Inform all subscribed raise listeners a raise event has occurred.
 	 * 
 	 * Each subscribed raise listener is updated
-	 * by calling the onRaiseEvent() method
-	 * of each subscribed raise listener.
+	 * by calling their onRaiseEvent() method.
 	 * 
 	 */
-	public void onRaiseEvent(RaiseEvent event){
+	public void publishRaiseEvent(RaiseEvent event){
 		for(RaiseListener listener:raiseListeners){
 			listener.onRaiseEvent(event);
 		}
-		onGameEvent(event);
+		publishGameEvent(event);
 	}
 	
 	/**
@@ -291,15 +293,14 @@ public class GameMediator implements PlayerAction, FoldListener, RaiseListener, 
 	 * Inform all subscribed check listeners a check event has occurred.
 	 * 
 	 * Each subscribed check listener is updated
-	 * by calling the onCheckEvent() method
-	 * of each subscribed check listener.
+	 * by calling their onCheckEvent() method.
 	 * 
 	 */
-	public void onCheckEvent(CheckEvent event){
+	public void publishCheckEvent(CheckEvent event){
 		for(CheckListener listener:checkListeners){
 			listener.onCheckEvent(event);
 		}
-		onGameEvent(event);
+		publishGameEvent(event);
 	}
 	
 	/**
@@ -334,15 +335,14 @@ public class GameMediator implements PlayerAction, FoldListener, RaiseListener, 
 	 * Inform all subscribed call listeners a call event has occurred.
 	 * 
 	 * Each subscribed call listener is updated
-	 * by calling the onCallEvent() method
-	 * of each subscribed call listener.
+	 * by calling their onCallEvent() method.
 	 * 
 	 */
-	public void onCallEvent(CallEvent event){
+	public void publishCallEvent(CallEvent event){
 		for(CallListener listener:callListeners){
 			listener.onCallEvent(event);
 		}
-		onGameEvent(event);
+		publishGameEvent(event);
 	}
 	
 	/**
@@ -377,15 +377,14 @@ public class GameMediator implements PlayerAction, FoldListener, RaiseListener, 
 	 * Inform all subscribed bet listeners a bet event has occurred.
 	 * 
 	 * Each subscribed bet listener is updated
-	 * by calling the onBetEvent() method
-	 * of each subscribed bet listener.
+	 * by calling their onBetEvent() method.
 	 * 
 	 */
-	public void onBetEvent(BetEvent event){
+	public void publishBetEvent(BetEvent event){
 		for(BetListener listener:betListeners){
 			listener.onBetEvent(event);
 		}
-		onGameEvent(event);
+		publishGameEvent(event);
 	}
 	
 	/**
@@ -420,15 +419,14 @@ public class GameMediator implements PlayerAction, FoldListener, RaiseListener, 
 	 * Inform all subscribed all-in listeners a all-in event has occurred.
 	 * 
 	 * Each subscribed all-in listener is updated
-	 * by calling the onAllInEvent() method
-	 * of each subscribed all-in listener.
+	 * by calling their onAllInEvent() method.
 	 * 
 	 */
-	public void onAllInEvent(AllInEvent event){
+	public void publishAllInEvent(AllInEvent event){
 		for(AllInListener listener:allInListeners){
 			listener.onAllInEvent(event);
 		}
-		onGameEvent(event);
+		publishGameEvent(event);
 	}
 	
 	/**
@@ -463,15 +461,14 @@ public class GameMediator implements PlayerAction, FoldListener, RaiseListener, 
 	 * Inform all subscribed deal listeners a deal event has occurred.
 	 * 
 	 * Each subscribed deal listener is updated
-	 * by calling the onDealEvent() method
-	 * of each subscribed deal listener.
+	 * by calling their onDealEvent() method.
 	 * 
 	 */
-	public void onDealEvent(DealEvent event){
+	public void publishDealEvent(DealEvent event){
 		for(DealListener listener:dealListeners){
 			listener.onDealEvent(event);
 		}
-		onGameEvent(event);
+		publishGameEvent(event);
 	}
 	
 	/**
@@ -506,15 +503,14 @@ public class GameMediator implements PlayerAction, FoldListener, RaiseListener, 
 	 * Inform all subscribed new round listeners a new round event has occurred.
 	 * 
 	 * Each subscribed new round listener is updated
-	 * by calling the onNewRoundEvent() method
-	 * of each subscribed new round listener.
+	 * by calling their onNewRoundEvent() method.
 	 * 
 	 */
-	public void onNewRoundEvent(NewRoundEvent event){
+	public void publishNewRoundEvent(NewRoundEvent event){
 		for(NewRoundListener listener: newRoundListeners){
 			listener.onNewRoundEvent(event);
 		}
-		onGameEvent(event);
+		publishGameEvent(event);
 	}
 	
 	/**
@@ -549,15 +545,14 @@ public class GameMediator implements PlayerAction, FoldListener, RaiseListener, 
 	 * Inform all subscribed new common cards listeners a new common cards event has occurred.
 	 * 
 	 * Each subscribed new common cards listener is updated
-	 * by calling the onNewCommonCardsEvent() method
-	 * of each subscribed new common cards listener.
+	 * by calling their onNewCommonCardsEvent() method.
 	 * 
 	 */
-	public void onNewCommonCardsEvent(NewCommonCardsEvent event){
+	public void publishNewCommonCardsEvent(NewCommonCardsEvent event){
 		for(NewCommonCardsListener listener:newCommonCardsListeners){
 			listener.onNewCommonCardsEvent(event);
 		}
-		onGameEvent(event);
+		publishGameEvent(event);
 	}
 	
 	/**
@@ -592,15 +587,14 @@ public class GameMediator implements PlayerAction, FoldListener, RaiseListener, 
 	 * Inform all subscribed new deal listeners a new deal event has occurred.
 	 * 
 	 * Each subscribed new deal listener is updated
-	 * by calling the onNewDealEvent() method
-	 * of each subscribed new deal listener.
+	 * by calling their onNewDealEvent() method.
 	 * 
 	 */
-	public void onNewDealEvent(NewDealEvent event){
+	public void publishNewDealEvent(NewDealEvent event){
 		for(NewDealListener listener:newDealListeners){
 			listener.onNewDealEvent(event);
 		}
-		onGameEvent(event);
+		publishGameEvent(event);
 	}
 	
 	/**
@@ -630,6 +624,70 @@ public class GameMediator implements PlayerAction, FoldListener, RaiseListener, 
 	private final List<NewDealListener> newDealListeners = new CopyOnWriteArrayList<NewDealListener>();
 	
 	/**********************************************************
+	 * Personal Events
+	 **********************************************************/
+	
+	/**
+	 * Inform all subscribed new private cards listeners a new private cards event event has occurred.
+	 * 
+	 * Each subscribed new private cards listener is updated
+	 * by calling their onNewPrivateCards() method.
+	 * 
+	 */
+	public void publishNewPocketCardsEvent(PlayerId id, NewPocketCardsEvent event) {
+		List<NewPrivateCardsListener> listeners = newPrivateCardsListeners.get(id);
+		if(listeners!=null){
+			for(NewPrivateCardsListener listener:listeners){
+				listener.onNewPrivateCardsEvent(event);
+			}
+		}
+		publishPrivateEvent(event);
+	}
+	
+	/**
+	 * Subscribe the given new private cards listener for new private cards events.
+	 * 
+	 * @param	id
+	 * 			The id of the player to get the new private cards events from.
+	 * @param 	listener
+	 * 			The listener to subscribe.
+	 */
+	public void subscribeNewPocketCardsListener(PlayerId id, NewPrivateCardsListener listener) {
+		
+		//TODO problems with removing an id mapping...
+		
+		List<NewPrivateCardsListener> listeners = newPrivateCardsListeners.get(id);
+		if(listeners!=null){
+			listeners.add(listener);
+		}else{
+			listeners = new CopyOnWriteArrayList<NewPrivateCardsListener>();
+			listeners.add(listener);
+			List<NewPrivateCardsListener> changedListener = newPrivateCardsListeners.putIfAbsent(id, listeners);
+			if(changedListener!=null){
+				changedListener.add(listener);
+			}
+		}
+	}
+
+	/**
+	 * Unsubscribe the given new private cards listener for new private cards events.
+	 * 
+	 * @param 	listener
+	 * 			The listener to unsubscribe.
+	 */
+	public void unsubscribeNewPocketCardsListener(NewPrivateCardsListener listener) {
+		newPrivateCardsListeners.remove(listener);
+	}
+
+	/**
+	 * This list contains all new private cards listeners that
+	 * should be alerted on a new private cards.
+	 */
+	private final ConcurrentMap<PlayerId,List<NewPrivateCardsListener>> newPrivateCardsListeners = new ConcurrentHashMap<PlayerId, List<NewPrivateCardsListener>>();
+	
+	
+	
+	/**********************************************************
 	 * All game events listener
 	 **********************************************************/
 
@@ -637,11 +695,10 @@ public class GameMediator implements PlayerAction, FoldListener, RaiseListener, 
 	 * Inform all subscribed game event listeners a game event has occurred.
 	 * 
 	 * Each subscribed game event listener is updated
-	 * by calling the onGameEvent() method
-	 * of each subscribed game event listener.
+	 * by calling their onGameEvent() method.
 	 * 
 	 */
-	public void onGameEvent(GameEvent event){
+	public void publishGameEvent(GameEvent event){
 		for(GameEventListener listener:gameEventListeners){
 			listener.onGameEvent(event);
 		}
@@ -672,4 +729,51 @@ public class GameMediator implements PlayerAction, FoldListener, RaiseListener, 
 	 * should be alerted on a game event.
 	 */
 	private final List<GameEventListener> gameEventListeners = new CopyOnWriteArrayList<GameEventListener>();
+	
+	/**********************************************************
+	 * Private game events listener
+	 * 
+	 * Game loggers can also obtain private events
+	 * all other players can only receive personally.
+	 **********************************************************/
+	
+	/**
+	 * Inform all subscribed game listeners a private event has occurred.
+	 * 
+	 * Each subscribed game listener is updated
+	 * by calling their onGameEvent() method.
+	 * 
+	 */
+
+	public void publishPrivateEvent(GameEvent event){
+		for(GameEventListener listener:privateEventsListeners){
+			listener.onGameEvent(event);
+		}
+	}
+	
+	/**
+	 * Subscribe the given game events listener for private events events.
+	 * 
+	 * @param 	listener
+	 * 			The listener to subscribe.
+	 */
+	public void subscribePrivateEventsListener(GameEventListener listener) {
+		privateEventsListeners.add(listener);
+	}
+
+	/**
+	 * Unsubscribe the given game events listener for private events events.
+	 * 
+	 * @param 	listener
+	 * 			The listener to unsubscribe.
+	 */
+	public void unsubscribePrivateEventsListener(GameEventListener listener) {
+		privateEventsListeners.remove(listener);
+	}
+
+	/**
+	 * This list contains all game events listeners that
+	 * should be alerted on a private events.
+	 */
+	private final List<GameEventListener> privateEventsListeners = new CopyOnWriteArrayList<GameEventListener>();
 }

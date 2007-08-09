@@ -431,12 +431,7 @@ public abstract class Round implements PlayerAction{
 	 * @see		PlayerAction
 	 */
 	public void deal(Player player) throws IllegalActionException{
-		//Check whether the given player can do this action.
-		if(!Action.DEAL.canDoAction(this, player))
-			throw new IllegalActionException(player, Action.DEAL);
-		playerMadeEvent(player);
-		//This will force the game control to end the waiting round
-		//and change to the preflop round.
+		throw new IllegalActionException(player.getName()+" can not deal in this round.");
 	}
 
 	/**
@@ -521,7 +516,7 @@ public abstract class Round implements PlayerAction{
 			setBet(player.getBettedChips().getValue());
 			playerMadeEvent(player);
 		}
-		gameMediator.onAllInEvent(new AllInEvent(player));
+		gameMediator.publishAllInEvent(new AllInEvent(player));
 		System.out.println(player.getName()+" goes all in with "+player.getBettedChips().getValue()+" chips.");
 	}
 

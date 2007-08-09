@@ -49,7 +49,7 @@ class WaitingAtTableState extends PlayerCommunicationState {
 
 	@Override
 	protected String getStdErrorMessage() {
-		return "";
+		return "You are waiting at a table for a game to begin.";
 	}
 
 }

@@ -106,7 +106,7 @@ public class GameControl implements PlayerAction{
 	 */
 	public void bet(Player player, int amount) throws IllegalActionException{
 		round.bet(player, amount);
-		gameMediator.onBetEvent(new BetEvent(player, amount));
+		gameMediator.publishBetEvent(new BetEvent(player, amount));
 		System.out.println(player.getName()+" bets "+amount+".");
 		checkIfEndedAndChangeRound();
 	}
@@ -125,7 +125,7 @@ public class GameControl implements PlayerAction{
 	 */
 	public void call(Player player) throws IllegalActionException{
 		round.call(player);
-		gameMediator.onCallEvent(new CallEvent(player));
+		gameMediator.publishCallEvent(new CallEvent(player));
 		System.out.println(player.getName()+" calls.");
 		checkIfEndedAndChangeRound();
 	}
@@ -144,7 +144,7 @@ public class GameControl implements PlayerAction{
 	 */
 	public void check(Player player) throws IllegalActionException{
 		round.check(player);
-		gameMediator.onCheckEvent(new CheckEvent(player));
+		gameMediator.publishCheckEvent(new CheckEvent(player));
 		System.out.println(player.getName()+" checks.");
 		checkIfEndedAndChangeRound();
 	}
@@ -164,7 +164,7 @@ public class GameControl implements PlayerAction{
 	 */
 	public void raise(Player player, int amount) throws IllegalActionException{
 		round.raise(player, amount);
-		gameMediator.onRaiseEvent(new RaiseEvent(player, amount));
+		gameMediator.publishRaiseEvent(new RaiseEvent(player, amount));
 		System.out.println(player.getName()+" raises with "+amount+".");
 		checkIfEndedAndChangeRound();
 	}
@@ -185,7 +185,7 @@ public class GameControl implements PlayerAction{
 	 */
 	public void fold(Player player) throws IllegalActionException{
 		round.fold(player);
-		gameMediator.onFoldEvent(new FoldEvent(player));
+		gameMediator.publishFoldEvent(new FoldEvent(player));
 		System.out.println(player.getName()+" folds.");
 		checkIfEndedAndChangeRound();
 	}
@@ -205,7 +205,7 @@ public class GameControl implements PlayerAction{
 	 */
 	public void deal(Player player) throws IllegalActionException{
 		round.deal(player);
-		gameMediator.onDealEvent(new DealEvent(player));
+		gameMediator.publishDealEvent(new DealEvent(player));
 		System.out.println(player.getName()+" deals.");
 		checkIfEndedAndChangeRound();
 	}
