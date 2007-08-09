@@ -18,38 +18,35 @@ package api;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 
+import api.httphandler.PingHandler;
+
+import com.sun.net.httpserver.Authenticator;
+import com.sun.net.httpserver.HttpContext;
 import com.sun.net.httpserver.HttpServer;
 
 /**
- * Creates a new XMLRPC server and starts it. The webservice is the public
- * interface defined by the <code>WebService</code> class.
+ * Creates a new web server and starts it.
  */
 public class Server {
 
-    /**
-         * Creates and starts the server.
-         * 
-         * @param args
-         *                The arguments. Must be only the port number.
-         * @throws NumberFormatException
-         *                 The port argument was not a number.
-         * @throws XmlRpcException
-         *                 The XmlRpcServer could not be created.
-         * @throws IOException
-         *                 There was a problem opening the given port.
-         * 
-         */
     public static void main(String[] args) throws NumberFormatException,
 	    IOException {
+	
 	if (args.length != 1) {
-	    System.out
-		    .println("usage: java -jar cspoker-server.jar [portnumber]");
+	    System.out.println("usage: java -jar cspoker-server.jar [portnumber]");
 	    System.exit(0);
 	}
-	Server server = new Server(Integer.parseInt(args[0]));
-
+	
+	int port=0;
+	try {
+	    port=Integer.parseInt(args[0]);
+	} catch (NumberFormatException e) {
+	    System.out.println("usage: java -jar cspoker-server.jar [portnumber]");
+	    System.exit(0);
+	}
+	
+	Server server = new Server(port);
 	server.start();
-
     }
 
     /**
@@ -66,8 +63,8 @@ public class Server {
          */
     public Server(int port) throws IOException {
 	server = HttpServer.create(new InetSocketAddress(port), 0);
-	server.createContext("/cspoker/", new RequestHandler());
-	// server.setExecutor(null); // creates a default executor
+	HttpContext pingContext = server.createContext("/ping/", new PingHandler());
+	pingContext.setAuthenticator(new HardCodedBasicAuthentication());
 	System.out.println("Server created for port " + port + ".");
     }
 
