@@ -1,0 +1,21 @@
+#summary Description of the /table/list/ page.
+#labels Phase-Design
+
+=== Introduction ===
+The table list page is used to list all tables on the server.
+
+=== Method ===
+HTTP GET 
+
+=== Response ===
+{{{
+<?xml version="1.0" encoding="UTF-8"?>
+<tables>
+ <table>-895775123216846124</table>
+ <table>-8654132154231524545</table>
+ <table>1245846435468464</table>
+</tables>
+}}}
+
+
+
