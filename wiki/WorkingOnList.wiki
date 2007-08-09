@@ -6,8 +6,8 @@ Where are developpers currently working on?
   * Game Logic _(100%)_
   * Game Logic Tests_(100%)_
   * Tests with leaving and joining players _(0%)_
-  * Mediator/Observer structure to communicate with game control _(80%)_
-  * PlayerCommunication _(60%)_
+  * Mediator/Observer structure to communicate with game control _(90%)_
+  * PlayerCommunication _(90%)_
 
 
 *Cedric* _(last update: 12-07-07)_
