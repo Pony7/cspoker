@@ -16,12 +16,14 @@
 package org.cspoker.client;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import org.cspoker.client.exceptions.FailedAuthenticationException;
 
-public class Main {
+public class Console {
 
     /**
      * @param args
@@ -33,10 +35,10 @@ public class Main {
 	    System.exit(0);
 	}
 	Client client;
-	
+	BufferedReader in = new BufferedReader(new InputStreamReader(
+		System.in));
 	do {
-	    BufferedReader in = new BufferedReader(new InputStreamReader(
-		    System.in));
+
 	    System.out.println("Enter username:");
 	    System.out.print(">");
 	    String username = in.readLine();
@@ -46,12 +48,51 @@ public class Main {
 	    client=new Client(args[0], Integer.parseInt(args[1]), username, password);
 	} while (!canPing(client));
 
+	System.out.println("     __________________");
+	System.out.println("    /Welcome to CSPoker\\");
+	System.out.println("   /____________________\\");
+	System.out.println("");
+	System.out.println("Enter HELP for a list of supported commands.");
+	System.out.println("");
 	
+	boolean running=true;
+
+	while(running){
+	    System.out.print(">");
+	    String line = in.readLine();
+	    if(line.equalsIgnoreCase("QUIT")||line.equalsIgnoreCase("EXIT"))
+		running=false;
+	    else{
+		try {
+		    System.out.println(parse(client,line));
+		} catch (Exception e) {
+		    System.out.println("ERROR: "+e.getMessage()+CommandExecutor.n);
+		    System.out.println("-----details-----");
+		    e.printStackTrace(System.out);
+		    System.out.println("-----------------");
+		}
+	    }
+	}
     }
+
+
+
+    private static String parse(Client client, String line) throws Exception {
+	String[] words=line.split(" ");
+	if(words.length<1)
+	    return "";
+	List<String> list=new ArrayList<String>();
+	list.addAll(Arrays.asList(words));
+	String command=list.remove(0);
+	return client.execute(command, list.toArray(new String[list.size()]));
+
+    }
+
+
 
     private static boolean canPing(Client client) throws Exception {
 	try {
-	    client.ping();
+	    client.execute("PING");
 	} catch (FailedAuthenticationException e) {
 	    System.out.println("Error: "+e.getLocalizedMessage());
 	    return false;

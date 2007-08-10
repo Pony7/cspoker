@@ -13,27 +13,29 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.client.request;
+package org.cspoker.client.request.abstracts;
 
 import java.net.MalformedURLException;
 
-import org.cspoker.client.request.abstracts.HttpGetRequest;
+import javax.xml.transform.sax.TransformerHandler;
 
-public class PingRequest extends HttpGetRequest{
+public abstract class HttpGetRequest extends HttpRequest {
 
-    public PingRequest(String url) throws MalformedURLException {
-	super(url);
+    public HttpGetRequest(String address) throws MalformedURLException {
+	super(address);
     }
 
     @Override
-    protected String getPath() {
-	return "/ping/";
+    protected void doOutput(TransformerHandler request, String... args) {
+	// no op
     }
 
     @Override
-    protected String getResult() {
-	return "PONG"+n;
+    protected boolean isDoOutput() {
+	return false;
     }
 
-
+    protected String getRequestMethod() {
+	return "GET";
+    }
 }

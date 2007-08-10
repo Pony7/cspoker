@@ -17,8 +17,12 @@ package org.cspoker.client;
 
 import java.io.IOException;
 import java.net.Authenticator;
+import java.net.MalformedURLException;
 import java.net.PasswordAuthentication;
+import java.util.HashMap;
 
+import org.cspoker.client.request.CreateTableRequest;
+import org.cspoker.client.request.ListTablesRequest;
 import org.cspoker.client.request.PingRequest;
 
 /**
@@ -26,7 +30,7 @@ import org.cspoker.client.request.PingRequest;
  */
 public class Client {
 
-    PingRequest ping;
+    private HashMap<String, CommandExecutor> commands = new HashMap<String,CommandExecutor>();
     
     public Client(String serverIP, int port, final String user, final String pass) throws IOException {
 	Authenticator.setDefault(new Authenticator() {
@@ -35,12 +39,26 @@ public class Client {
 	    }
 	});
 	String address = "http://"+serverIP + ":" + port;
-	ping= new PingRequest(address);
+	
+	registerCommands(address);
     }
 
-    public void ping() throws Exception{
-	ping.send();
-	
+    private void registerCommands(String address) throws MalformedURLException {
+	commands.put("PING", new PingRequest(address));
+	commands.put("HELP", new HelpCommand());
+	commands.put("LISTTABLES", new ListTablesRequest(address));
+	commands.put("CREATETABLE", new CreateTableRequest(address));
+    }
+
+    private CommandExecutor getCommand(String name){
+	return commands.get(name.toUpperCase());
+    }
+    
+    public String execute(String command, String... args) throws Exception{
+	CommandExecutor c=getCommand(command);
+	if(c==null)
+	    throw new IllegalArgumentException("Not a valid command.");
+	return c.send(args);
     }
 
 }
