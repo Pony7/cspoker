@@ -17,7 +17,6 @@ package api.httphandler.abstracts;
 
 import java.io.IOException;
 import java.io.PrintStream;
-import java.io.StringWriter;
 import java.util.List;
 
 import api.httphandler.util.Base64;
@@ -32,19 +31,23 @@ public abstract class HttpHandlerImpl implements HttpHandler {
 	super();
     }
     
-    protected void throwException(HttpExchange http, Exception e){
+    protected void throwException(HttpExchange http, Exception e, int status){
 	//local error msg
 	System.out.println("Exception occured:");
 	e.printStackTrace();
 	//remote error msg
 	try {
-	    http.sendResponseHeaders(500, 0);
+	    http.sendResponseHeaders(status, 0);
 	} catch (IOException e1) {}
 	e.printStackTrace(new PrintStream(http.getResponseBody()));
         try {
 	    http.getResponseBody().close();
 	} catch (IOException e1) {}
 	http.close();
+    }
+    
+    protected void throwException(HttpExchange http, Exception e){
+	throwException(http, e, 500);
     }
 
     public static String toPlayerName(Headers requestHeaders) {
@@ -59,5 +62,7 @@ public abstract class HttpHandlerImpl implements HttpHandler {
 	    throw new IllegalStateException(e);
 	}
     }
+    
+    protected abstract int getDefaultStatusCode();
 
 }
