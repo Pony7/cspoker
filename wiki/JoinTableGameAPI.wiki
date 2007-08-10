@@ -1,0 +1,21 @@
+#summary Description of the /table/join/ page.
+
+=== Introduction ===
+The table join page is used to join a table on the server.
+
+=== Method ===
+HTTP POST 
+
+=== Request ===
+{{{
+<?xml version="1.0" encoding="UTF-8"?>
+<id>5</id>
+}}}
+
+=== Response ===
+{{{
+<?xml version="1.0" encoding="UTF-8"?>
+<ok/>
+}}}
+
+
