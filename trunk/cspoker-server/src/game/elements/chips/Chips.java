@@ -213,6 +213,14 @@ public class Chips {
 		transferAmountTo(getValue(), receiver);
 	}
 	
+	public Chips getCopy(){
+		try {
+			return new Chips(value);
+		} catch (IllegalValueException e) {
+			throw new IllegalStateException("Class-invariant is not respected. Chips must have valid values.");
+		}
+	}
+	
 	@Override
 	public String toString(){
 		return getValue()+" chips";

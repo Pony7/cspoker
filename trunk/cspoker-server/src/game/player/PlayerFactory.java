@@ -19,8 +19,6 @@ package game.player;
 import game.PlayerId;
 import game.elements.chips.IllegalValueException;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
