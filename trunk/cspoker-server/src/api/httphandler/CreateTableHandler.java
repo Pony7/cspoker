@@ -15,13 +15,13 @@
  */
 package api.httphandler;
 
-import game.gameControl.actions.IllegalActionException;
-import game.playerCommunication.PlayerCommunication;
+import javax.xml.transform.sax.TransformerHandler;
 
-import java.util.List;
+import game.gameControl.actions.IllegalActionException;
 
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
+import org.xml.sax.helpers.AttributesImpl;
 import org.xml.sax.helpers.DefaultHandler;
 
 import api.PlayerRegistry;
@@ -33,8 +33,7 @@ import com.sun.net.httpserver.HttpExchange;
 public class CreateTableHandler extends PutHandler {
 
     @Override
-    protected ContentHandler getRequestHandler(final HttpExchange http){
-	
+    protected ContentHandler getRequestHandler(final HttpExchange http, final TransformerHandler response){
 	
 	return new DefaultHandler(){
 	    @Override
@@ -43,8 +42,10 @@ public class CreateTableHandler extends PutHandler {
 		try {
 		    PlayerRegistry.getRegisteredPlayerCommunication(username).createTable();
 		} catch (IllegalActionException e) {
-		    throwException(http, e);
+		    // no op
 		}
+		response.startElement("", "ok", "ok", new AttributesImpl());
+		response.endElement("", "ok", "ok");
 	    }
 	};
     }

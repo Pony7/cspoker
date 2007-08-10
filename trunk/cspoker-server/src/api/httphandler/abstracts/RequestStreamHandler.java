@@ -15,7 +15,12 @@
  */
 package api.httphandler.abstracts;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+
+import javax.xml.transform.sax.SAXTransformerFactory;
+import javax.xml.transform.sax.TransformerHandler;
+import javax.xml.transform.stream.StreamResult;
 
 import org.xml.sax.ContentHandler;
 import org.xml.sax.InputSource;
@@ -28,14 +33,36 @@ import com.sun.net.httpserver.HttpExchange;
 public abstract class RequestStreamHandler extends HttpHandlerImpl {
 
     public void handle(HttpExchange http) throws IOException {
+	ByteArrayOutputStream responseBody = new ByteArrayOutputStream();
+	TransformerHandler response=null;
+	StreamResult requestResult;
 	try {
-	    XMLReader xr = XMLReaderFactory.createXMLReader();
-	    xr.setContentHandler(getRequestHandler(http));
-	    xr.parse(new InputSource(http.getRequestBody()));
-	} catch (SAXException e) {
-	    throw new IOException(e);
+	    requestResult = new StreamResult(responseBody);
+	    SAXTransformerFactory tf = (SAXTransformerFactory) SAXTransformerFactory
+	    .newInstance();
+	    response = tf.newTransformerHandler();
+	    response.setResult(requestResult);
+	    response.startDocument();
+	    try {
+		XMLReader xr = XMLReaderFactory.createXMLReader();
+		xr.setContentHandler(getRequestHandler(http, response));
+		xr.parse(new InputSource(http.getRequestBody()));
+	    } catch (SAXException e) {
+		throw new IOException(e);
+	    }
+	    response.endDocument();
+	} catch (Exception e) {
+	    throwException(http, e);
+	    return;
 	}
+	
+	http.sendResponseHeaders(getDefaultStatusCode(), responseBody.size());
+	responseBody.writeTo(http.getResponseBody());
+	http.getResponseBody().close();
+	http.close();
+
     }
-    protected abstract ContentHandler getRequestHandler(HttpExchange http);
+    
+    protected abstract ContentHandler getRequestHandler(HttpExchange http, TransformerHandler response);
 
 }
