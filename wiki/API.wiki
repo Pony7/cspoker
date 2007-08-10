@@ -34,6 +34,43 @@ There is no explicit login functionality. The client can ask the user for creden
  * [AckEventsGameAPI /game/events/ack]
 == DELETE ==
 
+= Exceptions =
+Exceptions are returned with a Http status code in the 400s and 500s. The body will contain a short description of the exception with optionally a stack trace.
+
+{{{
+HTTP/1.1 403 Forbidden
+
+Content-length: 1682
+
+<?xml version="1.0" encoding="UTF-8"?>
+<exception>
+ <msg>You have performed an invalid action.</msg>
+ <stacktrace>
+  game.gameControl.actions.IllegalActionException: You have performed an invalid action.
+	at api.httphandler.CreateTableHandler$1.endDocument(CreateTableHandler.java:46)
+	at com.sun.org.apache.xerces.internal.parsers.AbstractSAXParser.endDocument(AbstractSAXParser.java:737)
+	at com.sun.org.apache.xerces.internal.impl.XMLDocumentFragmentScannerImpl.scanDocument(XMLDocumentFragmentScannerImpl.java:513)
+	at com.sun.org.apache.xerces.internal.parsers.XML11Configuration.parse(XML11Configuration.java:807)
+	at com.sun.org.apache.xerces.internal.parsers.XML11Configuration.parse(XML11Configuration.java:737)
+	at com.sun.org.apache.xerces.internal.parsers.XMLParser.parse(XMLParser.java:107)
+	at com.sun.org.apache.xerces.internal.parsers.AbstractSAXParser.parse(AbstractSAXParser.java:1205)
+	at api.httphandler.abstracts.RequestStreamHandler.handle(RequestStreamHandler.java:48)
+	at com.sun.net.httpserver.Filter$Chain.doFilter(Filter.java:65)
+	at sun.net.httpserver.AuthFilter.doFilter(AuthFilter.java:54)
+	at com.sun.net.httpserver.Filter$Chain.doFilter(Filter.java:68)
+	at sun.net.httpserver.ServerImpl$Exchange$LinkHandler.handle(ServerImpl.java:556)
+	at com.sun.net.httpserver.Filter$Chain.doFilter(Filter.java:65)
+	at sun.net.httpserver.ServerImpl$Exchange.run(ServerImpl.java:528)
+	at sun.net.httpserver.ServerImpl$DefaultExecutor.execute(ServerImpl.java:125)
+	at sun.net.httpserver.ServerImpl$Dispatcher.handle(ServerImpl.java:353)
+	at sun.net.httpserver.ServerImpl$Dispatcher.run(ServerImpl.java:327)
+	at java.lang.Thread.run(Thread.java:619)
+ </stacktrace>
+</exception>
+}}}
+
+
+
 
 
 
