@@ -22,8 +22,8 @@ import game.elements.chips.Chips;
 import game.elements.chips.IllegalValueException;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * A class to represent players: bots or humans.
@@ -87,7 +87,7 @@ public class Player {
 		this.name = name;
 		chips = new Chips(initialNbChips);
 		bettedChips = new Chips();
-		pocketCards = new ArrayList<Card>();
+		pocketCards = new CopyOnWriteArrayList<Card>();
 	}
 
 	/**********************************************************
@@ -148,9 +148,16 @@ public class Player {
 	public void dealPocketCard(Card card){
 		pocketCards.add(card);
 	}
-
+	
+	/**
+	 * Returns the pocket cards of this player.
+	 * 
+	 * A change in the returned list, does not change the internal representation.
+	 * 
+	 * @return The pocket cards of this player.
+	 */
 	public List<Card> getPocketCards(){
-		return Collections.unmodifiableList(pocketCards);
+		return new ArrayList<Card>(pocketCards);
 	}
 
 	public void clearPocketCards(){
@@ -191,5 +198,9 @@ public class Player {
 		} else if (!id.equals(other.id))
 			return false;
 		return true;
+	}
+	
+	public  SavedPlayer getMemento(){
+		return new SavedPlayer(this);
 	}
 }
