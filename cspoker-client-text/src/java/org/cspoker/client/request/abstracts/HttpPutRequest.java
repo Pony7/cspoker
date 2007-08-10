@@ -13,29 +13,24 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.client.request;
+package org.cspoker.client.request.abstracts;
 
 import java.net.MalformedURLException;
 
 import javax.xml.transform.sax.TransformerHandler;
 
-public abstract class HttpGetRequest extends HttpRequest {
+public abstract class HttpPutRequest extends HttpRequest {
 
-    public HttpGetRequest(String address) throws MalformedURLException {
+    public HttpPutRequest(String address) throws MalformedURLException {
 	super(address);
     }
 
     @Override
-    protected void doOutput(TransformerHandler request) {
-	// no op
-    }
-
-    @Override
     protected boolean isDoOutput() {
-	return false;
+	return true;
     }
 
     protected String getRequestMethod() {
-	return "GET";
+	return "PUT";
     }
 }
