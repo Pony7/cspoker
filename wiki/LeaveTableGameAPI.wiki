@@ -1,0 +1,18 @@
+#summary Description of the /table/leave/ page.
+
+=== Introduction ===
+The table leave page is used to leave the table you're at.
+
+=== Method ===
+HTTP POST 
+
+=== Request ===
+_none_
+
+=== Response ===
+{{{
+<?xml version="1.0" encoding="UTF-8"?>
+<ok/>
+}}}
+
+
