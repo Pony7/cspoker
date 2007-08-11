@@ -1,4 +1,5 @@
 #summary Description of the /table/leave/ page.
+#labels Phase-Design
 
 === Introduction ===
 The table leave page is used to leave the table you're at.
@@ -14,5 +15,4 @@ _none_
 <?xml version="1.0" encoding="UTF-8"?>
 <ok/>
 }}}
-
 
