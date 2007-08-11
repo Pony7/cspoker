@@ -15,22 +15,48 @@
  */
 package org.cspoker.server.api.httphandler;
 
+
+import java.util.List;
+
 import javax.xml.transform.sax.TransformerHandler;
 
+import org.cspoker.server.api.PlayerRegistry;
+import org.cspoker.server.api.httphandler.abstracts.HttpHandlerImpl;
 import org.cspoker.server.api.httphandler.abstracts.NoRequestStreamHandler;
+import org.cspoker.server.api.httphandler.exception.HttpSaxException;
+import org.cspoker.server.game.events.GameEvent;
+import org.cspoker.server.game.gameControl.actions.IllegalActionException;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
 import com.sun.net.httpserver.HttpExchange;
 
 
-public class PingHandler extends NoRequestStreamHandler {
+public class GameEventsHandler extends NoRequestStreamHandler {
     
     @Override
     protected void respond(TransformerHandler response, HttpExchange http)
 	    throws SAXException {
-	response.startElement("", "pong", "pong", new AttributesImpl());
-	response.endElement("", "pong", "pong");
+	String username= HttpHandlerImpl.toPlayerName(http.getRequestHeaders());
+	List<GameEvent> events;
+	try {
+	     events = PlayerRegistry.getRegisteredPlayerCommunication(username).getLatestGameEvents();
+	} catch (IllegalActionException e) {
+	    throw new HttpSaxException(e, 403);
+	}
+	
+	response.startElement("", "events", "events", new AttributesImpl());
+	for(GameEvent event:events){
+	    AttributesImpl attrs = new AttributesImpl();
+	    attrs.addAttribute("", "id", "id", "CDATA", "0");
+	    response.startElement("", "event", "event", attrs);
+
+	    String s=event.toString();
+	    response.characters(s.toCharArray(), 0, s.length());
+	    
+	    response.endElement("", "event", "event");
+	}
+	response.endElement("", "events", "events");
     }
 
     @Override

@@ -20,9 +20,12 @@ import java.net.InetSocketAddress;
 
 import org.cspoker.server.api.authentication.HardCodedBasicAuthentication;
 import org.cspoker.server.api.httphandler.CreateTableHandler;
+import org.cspoker.server.api.httphandler.GameEventsHandler;
 import org.cspoker.server.api.httphandler.JoinTableHandler;
+import org.cspoker.server.api.httphandler.LeaveTableHandler;
 import org.cspoker.server.api.httphandler.ListTablesHandler;
 import org.cspoker.server.api.httphandler.PingHandler;
+import org.cspoker.server.api.httphandler.StartGameHandler;
 
 import com.sun.net.httpserver.Authenticator;
 import com.sun.net.httpserver.HttpContext;
@@ -80,7 +83,16 @@ public class Server {
 
 	HttpContext joinTableContext = server.createContext("/table/join/", new JoinTableHandler());
 	joinTableContext.setAuthenticator(authenticator);
+	
+	HttpContext leaveTableContext = server.createContext("/table/leave/", new LeaveTableHandler());
+	leaveTableContext.setAuthenticator(authenticator);
 
+	HttpContext gameEventsContext = server.createContext("/game/events/", new GameEventsHandler());
+	gameEventsContext.setAuthenticator(authenticator);
+	
+	HttpContext startGameContext = server.createContext("/game/start/", new StartGameHandler());
+	startGameContext.setAuthenticator(authenticator);
+	
 	System.out.println("Server created for port " + port + ".");
     }
 

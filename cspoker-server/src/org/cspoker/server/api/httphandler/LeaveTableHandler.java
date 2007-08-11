@@ -15,28 +15,45 @@
  */
 package org.cspoker.server.api.httphandler;
 
+
 import javax.xml.transform.sax.TransformerHandler;
 
+import org.cspoker.server.api.PlayerRegistry;
+import org.cspoker.server.api.httphandler.abstracts.HttpHandlerImpl;
 import org.cspoker.server.api.httphandler.abstracts.NoRequestStreamHandler;
+import org.cspoker.server.api.httphandler.exception.HttpSaxException;
+import org.cspoker.server.game.gameControl.actions.IllegalActionException;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
 import com.sun.net.httpserver.HttpExchange;
 
-
-public class PingHandler extends NoRequestStreamHandler {
-    
-    @Override
-    protected void respond(TransformerHandler response, HttpExchange http)
-	    throws SAXException {
-	response.startElement("", "pong", "pong", new AttributesImpl());
-	response.endElement("", "pong", "pong");
-    }
+public class LeaveTableHandler extends NoRequestStreamHandler {
 
     @Override
     protected int getDefaultStatusCode() {
 	return 200;
     }
+
+    @Override
+    protected void respond(TransformerHandler response, HttpExchange http) throws SAXException {
+	String username= HttpHandlerImpl.toPlayerName(http.getRequestHeaders());
+
+	try {
+	    PlayerRegistry.getRegisteredPlayerCommunication(username)
+	    .leaveTable();
+	} catch (IllegalActionException e) {
+	    throw new HttpSaxException(e, 403);
+	}
+
+	try {
+	    response.startElement("", "ok", "ok", new AttributesImpl());
+	    response.endElement("", "ok", "ok");
+	} catch (SAXException e) {
+	    throw new HttpSaxException(e, 500);
+	}
+	
+    };
 
 
 }

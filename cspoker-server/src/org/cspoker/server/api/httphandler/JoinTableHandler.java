@@ -20,7 +20,7 @@ import javax.xml.transform.sax.TransformerHandler;
 
 import org.cspoker.server.api.PlayerRegistry;
 import org.cspoker.server.api.httphandler.abstracts.HttpHandlerImpl;
-import org.cspoker.server.api.httphandler.abstracts.PostHandler;
+import org.cspoker.server.api.httphandler.abstracts.RequestStreamHandler;
 import org.cspoker.server.api.httphandler.exception.HttpSaxException;
 import org.cspoker.server.game.TableId;
 import org.cspoker.server.game.gameControl.actions.IllegalActionException;
@@ -29,10 +29,9 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 import org.xml.sax.helpers.DefaultHandler;
 
-
 import com.sun.net.httpserver.HttpExchange;
 
-public class JoinTableHandler extends PostHandler {
+public class JoinTableHandler extends RequestStreamHandler {
 
     @Override
     protected ContentHandler getRequestHandler(final HttpExchange http, final TransformerHandler response){
@@ -64,6 +63,11 @@ public class JoinTableHandler extends PostHandler {
 		response.endElement("", "ok", "ok");
 	    }
 	};
+    }
+
+    @Override
+    protected int getDefaultStatusCode() {
+	return 200;
     }
 
 }

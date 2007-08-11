@@ -26,7 +26,7 @@ import org.xml.sax.SAXException;
 
 import com.sun.net.httpserver.HttpExchange;
 
-public abstract class ResponseStreamHandler extends HttpHandlerImpl {
+public abstract class NoRequestStreamHandler extends HttpHandlerImpl {
 
     public void handle(HttpExchange http) throws IOException{
 	ByteArrayOutputStream responseBody = new ByteArrayOutputStream();
@@ -39,7 +39,7 @@ public abstract class ResponseStreamHandler extends HttpHandlerImpl {
 	    response = tf.newTransformerHandler();
 	    response.setResult(requestResult);
 	    response.startDocument();
-	    respond(response);
+	    respond(response, http);
 	    response.endDocument();
 	} catch (Exception e) {
 	    //send the exception over
@@ -53,7 +53,7 @@ public abstract class ResponseStreamHandler extends HttpHandlerImpl {
 	http.close(); 
     }
 
-    protected abstract void respond(TransformerHandler response)
+    protected abstract void respond(TransformerHandler response, HttpExchange http)
     throws SAXException;
 
 }
