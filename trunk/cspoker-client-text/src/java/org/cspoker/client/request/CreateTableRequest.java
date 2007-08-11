@@ -4,14 +4,20 @@ import java.net.MalformedURLException;
 
 import javax.xml.transform.sax.TransformerHandler;
 
-import org.cspoker.client.request.abstracts.HttpPutRequest;
+import org.cspoker.client.request.abstracts.OutputRequest;
+import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
-public class CreateTableRequest extends HttpPutRequest{
+public class CreateTableRequest extends OutputRequest{
 
     public CreateTableRequest(String address) throws MalformedURLException {
 	super(address);
+    }
+    
+    @Override
+    protected String getRequestMethod() {
+        return "PUT";
     }
 
     @Override
@@ -29,7 +35,30 @@ public class CreateTableRequest extends HttpPutRequest{
 
     @Override
     protected String getResult() {
-	return "Table created."+n;
+	return "Table created with ID "+ id + "."+n;
+    }
+    
+    private String id="unknown";
+    private StringBuilder sb=new StringBuilder();
+    
+    @Override
+    public void characters(char[] ch, int start, int length)
+            throws SAXException {
+        sb.append(ch, start, length);
+    }
+    
+    @Override
+    public void startElement(String uri, String localName, String name,
+            Attributes attributes) throws SAXException {
+        sb.setLength(0);
+    }
+    
+    @Override
+    public void endElement(String uri, String localName, String name)
+            throws SAXException {
+        if(name.equalsIgnoreCase("id"))
+            id=sb.toString();
+	sb.setLength(0);
     }
 
 }

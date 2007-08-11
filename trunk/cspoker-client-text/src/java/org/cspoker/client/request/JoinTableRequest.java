@@ -4,11 +4,11 @@ import java.net.MalformedURLException;
 
 import javax.xml.transform.sax.TransformerHandler;
 
-import org.cspoker.client.request.abstracts.HttpPostRequest;
+import org.cspoker.client.request.abstracts.OutputRequest;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
-public class JoinTableRequest extends HttpPostRequest{
+public class JoinTableRequest extends OutputRequest{
 
     public JoinTableRequest(String address) throws MalformedURLException {
 	super(address);

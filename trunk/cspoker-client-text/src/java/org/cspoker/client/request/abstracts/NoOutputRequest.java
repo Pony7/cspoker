@@ -19,9 +19,9 @@ import java.net.MalformedURLException;
 
 import javax.xml.transform.sax.TransformerHandler;
 
-public abstract class HttpGetRequest extends HttpRequest {
+public abstract class NoOutputRequest extends HttpRequest {
 
-    public HttpGetRequest(String address) throws MalformedURLException {
+    public NoOutputRequest(String address) throws MalformedURLException {
 	super(address);
     }
 

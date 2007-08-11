@@ -18,7 +18,6 @@ package org.cspoker.client.request.abstracts;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
-import java.net.ProtocolException;
 import java.net.URL;
 
 import javax.xml.transform.sax.SAXTransformerFactory;
@@ -46,7 +45,7 @@ public abstract class HttpRequest extends DefaultHandler implements CommandExecu
 	return url;
     }
     
-    public String send(String... args) throws Exception{
+    public String execute(String... args) throws Exception{
 	HttpURLConnection connection = (HttpURLConnection)url.openConnection();
 	connection.setAllowUserInteraction(true);
 	connection.setInstanceFollowRedirects(false);

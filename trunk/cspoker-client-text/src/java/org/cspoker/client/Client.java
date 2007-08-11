@@ -22,9 +22,12 @@ import java.net.PasswordAuthentication;
 import java.util.HashMap;
 
 import org.cspoker.client.request.CreateTableRequest;
+import org.cspoker.client.request.GameEventsRequest;
 import org.cspoker.client.request.JoinTableRequest;
+import org.cspoker.client.request.LeaveTableRequest;
 import org.cspoker.client.request.ListTablesRequest;
 import org.cspoker.client.request.PingRequest;
+import org.cspoker.client.request.StartGameRequest;
 
 /**
  * Connect to the given server and passes on user commands.
@@ -46,12 +49,17 @@ public class Client {
 
     private void registerCommands(String address) throws MalformedURLException {
 	commands.put("PING", new PingRequest(address));
-	commands.put("HELP", new HelpCommand());
 	commands.put("LISTTABLES", new ListTablesRequest(address));
 	commands.put("CREATETABLE", new CreateTableRequest(address));
 	commands.put("JOINTABLE", new JoinTableRequest(address));
+	commands.put("LEAVETABLE", new LeaveTableRequest(address));
+	commands.put("GAMEEVENTS", new GameEventsRequest(address));
+	commands.put("STARTGAME", new StartGameRequest(address));
+	
+	HelpCommand help = new HelpCommand();
+	commands.put("HELP", help);
     }
-
+    
     private CommandExecutor getCommand(String name){
 	return commands.get(name.toUpperCase());
     }
@@ -60,7 +68,7 @@ public class Client {
 	CommandExecutor c=getCommand(command);
 	if(c==null)
 	    throw new IllegalArgumentException("Not a valid command.");
-	return c.send(args);
+	return c.execute(args);
     }
 
 }
