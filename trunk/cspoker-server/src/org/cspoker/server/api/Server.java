@@ -26,6 +26,7 @@ import org.cspoker.server.api.httphandler.CheckHandler;
 import org.cspoker.server.api.httphandler.CreateTableHandler;
 import org.cspoker.server.api.httphandler.DealHandler;
 import org.cspoker.server.api.httphandler.FoldHandler;
+import org.cspoker.server.api.httphandler.GameEventsAckHandler;
 import org.cspoker.server.api.httphandler.GameEventsHandler;
 import org.cspoker.server.api.httphandler.JoinTableHandler;
 import org.cspoker.server.api.httphandler.LeaveTableHandler;
@@ -104,6 +105,9 @@ public class Server {
 
 	HttpContext gameEventsContext = server.createContext("/game/events/", new GameEventsHandler());
 	gameEventsContext.setAuthenticator(authenticator);
+	
+	HttpContext gameEventsAckContext = server.createContext("/game/events/ack/", new GameEventsAckHandler());
+	gameEventsAckContext.setAuthenticator(authenticator);
 	
 	HttpContext startGameContext = server.createContext("/game/start/", new StartGameHandler());
 	startGameContext.setAuthenticator(authenticator);

@@ -35,6 +35,10 @@ import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
+/**
+ * A HttpHandler that supports Exceptions over Http.
+ *
+ */
 public abstract class HttpHandlerImpl implements HttpHandler {
 
     public HttpHandlerImpl() {
@@ -80,7 +84,7 @@ public abstract class HttpHandlerImpl implements HttpHandler {
 	    response.startElement("", "exception", "exception", new AttributesImpl());
 
 	    response.startElement("", "msg", "msg", new AttributesImpl());
-	    String msg=e.getMessage();
+	    String msg=(e.getMessage()==null?"unknown error":e.getMessage());
 	    response.characters(msg.toCharArray(), 0, msg.length());
 	    response.endElement("", "msg", "msg");
 

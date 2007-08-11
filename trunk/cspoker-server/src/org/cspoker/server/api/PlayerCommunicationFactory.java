@@ -23,6 +23,10 @@ import org.cspoker.server.game.player.Player;
 import org.cspoker.server.game.player.PlayerFactory;
 import org.cspoker.server.game.playerCommunication.PlayerCommunicationImpl;
 
+/**
+ * Creates a unique player communication instance for every player name and provides
+ * it when requested. 
+ */
 public class PlayerCommunicationFactory {
 
     private static Map<String,PlayerCommunicationImpl> playerComs=new HashMap<String,PlayerCommunicationImpl>();
