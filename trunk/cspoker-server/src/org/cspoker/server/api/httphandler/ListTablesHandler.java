@@ -20,17 +20,19 @@ import java.util.Set;
 
 import javax.xml.transform.sax.TransformerHandler;
 
-import org.cspoker.server.api.httphandler.abstracts.GetHandler;
+import org.cspoker.server.api.httphandler.abstracts.NoRequestStreamHandler;
 import org.cspoker.server.game.TableId;
 import org.cspoker.server.game.TableManager;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
+import com.sun.net.httpserver.HttpExchange;
 
-public class ListTablesHandler extends GetHandler {
+
+public class ListTablesHandler extends NoRequestStreamHandler {
     
     @Override
-    protected void respond(TransformerHandler response)
+    protected void respond(TransformerHandler response, HttpExchange http)
 	    throws SAXException {
 	response.startElement("", "tables", "tables", new AttributesImpl());
 	Set<TableId> tables = TableManager.getAllTableIds();
@@ -41,6 +43,11 @@ public class ListTablesHandler extends GetHandler {
 	    response.endElement("", "table", "table");
 	}
 	response.endElement("", "tables", "tables");
+    }
+
+    @Override
+    protected int getDefaultStatusCode() {
+	return 200;
     }
 
 

@@ -22,6 +22,7 @@ import javax.xml.transform.sax.SAXTransformerFactory;
 import javax.xml.transform.sax.TransformerHandler;
 import javax.xml.transform.stream.StreamResult;
 
+import org.cspoker.server.api.httphandler.exception.HttpSaxException;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
@@ -65,6 +66,6 @@ public abstract class RequestStreamHandler extends HttpHandlerImpl {
 
     }
 
-    protected abstract ContentHandler getRequestHandler(HttpExchange http, TransformerHandler response);
+    protected abstract ContentHandler getRequestHandler(HttpExchange http, TransformerHandler response) throws HttpSaxException;
 
 }

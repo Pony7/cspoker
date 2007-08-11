@@ -17,10 +17,9 @@ package org.cspoker.server.api.httphandler;
 
 import javax.xml.transform.sax.TransformerHandler;
 
-
 import org.cspoker.server.api.PlayerRegistry;
 import org.cspoker.server.api.httphandler.abstracts.HttpHandlerImpl;
-import org.cspoker.server.api.httphandler.abstracts.PutHandler;
+import org.cspoker.server.api.httphandler.abstracts.RequestStreamHandler;
 import org.cspoker.server.api.httphandler.exception.HttpSaxException;
 import org.cspoker.server.game.gameControl.actions.IllegalActionException;
 import org.xml.sax.ContentHandler;
@@ -28,10 +27,9 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 import org.xml.sax.helpers.DefaultHandler;
 
-
 import com.sun.net.httpserver.HttpExchange;
 
-public class CreateTableHandler extends PutHandler {
+public class CreateTableHandler extends RequestStreamHandler {
 
     @Override
     protected ContentHandler getRequestHandler(final HttpExchange http, final TransformerHandler response){
@@ -40,15 +38,23 @@ public class CreateTableHandler extends PutHandler {
 	    @Override
 	    public void endDocument() throws SAXException {
 		String username= HttpHandlerImpl.toPlayerName(http.getRequestHeaders());
+		long id;
 		try {
-		    PlayerRegistry.getRegisteredPlayerCommunication(username).createTable();
+		    id=PlayerRegistry.getRegisteredPlayerCommunication(username).createTable().getID();
 		} catch (IllegalActionException e) {
 		    throw new HttpSaxException(e, 403);
 		}
-		response.startElement("", "ok", "ok", new AttributesImpl());
-		response.endElement("", "ok", "ok");
+		response.startElement("", "id", "id", new AttributesImpl());
+		String chars=String.valueOf(id);
+		response.characters(chars.toCharArray(), 0, chars.length());
+		response.endElement("", "id", "id");
 	    }
 	};
+    }
+
+    @Override
+    protected int getDefaultStatusCode() {
+	return 201;
     }
 
 }
