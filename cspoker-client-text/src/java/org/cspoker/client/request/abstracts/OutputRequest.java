@@ -17,9 +17,9 @@ package org.cspoker.client.request.abstracts;
 
 import java.net.MalformedURLException;
 
-public abstract class HttpPostRequest extends HttpRequest {
+public abstract class OutputRequest extends HttpRequest {
 
-    public HttpPostRequest(String address) throws MalformedURLException {
+    public OutputRequest(String address) throws MalformedURLException {
 	super(address);
     }
 

@@ -17,9 +17,9 @@ package org.cspoker.client.request;
 
 import java.net.MalformedURLException;
 
-import org.cspoker.client.request.abstracts.HttpGetRequest;
+import org.cspoker.client.request.abstracts.NoOutputRequest;
 
-public class PingRequest extends HttpGetRequest{
+public class PingRequest extends NoOutputRequest{
 
     public PingRequest(String url) throws MalformedURLException {
 	super(url);
