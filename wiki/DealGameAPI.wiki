@@ -1,0 +1,19 @@
+#summary Description of the /game/deal/ page.
+#labels Phase-Design
+
+=== Introduction ===
+The deal page is used to deal in the game you're in.
+
+=== Method ===
+HTTP POST 
+
+=== Request ===
+_none_
+
+=== Response ===
+{{{
+<?xml version="1.0" encoding="UTF-8"?>
+<ok/>
+}}}
+
+
