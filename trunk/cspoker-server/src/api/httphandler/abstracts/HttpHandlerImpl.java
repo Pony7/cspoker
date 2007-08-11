@@ -15,10 +15,20 @@
  */
 package api.httphandler.abstracts;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.PrintStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.List;
 
+import javax.xml.transform.sax.SAXTransformerFactory;
+import javax.xml.transform.sax.TransformerHandler;
+import javax.xml.transform.stream.StreamResult;
+
+import org.xml.sax.helpers.AttributesImpl;
+
+import api.httphandler.exception.HttpSaxException;
+import api.httphandler.exception.HttpException;
 import api.httphandler.util.Base64;
 
 import com.sun.net.httpserver.Headers;
@@ -30,23 +40,75 @@ public abstract class HttpHandlerImpl implements HttpHandler {
     public HttpHandlerImpl() {
 	super();
     }
-    
-    protected void throwException(HttpExchange http, Exception e, int status){
-	//local error msg
-	System.out.println("Exception occured:");
-	e.printStackTrace();
-	//remote error msg
+
+    /**
+     * Throws an exception over the Http connection in XML format. 
+     * 
+     * @param http
+     *        The http context.
+     * @param e
+     *        The throwable to throw.
+     * @param status
+     * 	      The http error code to send.
+     * @throws IOException
+     * 	       An exception occured while creating the error response.
+     */
+    protected void throwException(HttpExchange http, Throwable e, int status) throws IOException{
 	try {
-	    http.sendResponseHeaders(status, 0);
-	} catch (IOException e1) {}
-	e.printStackTrace(new PrintStream(http.getResponseBody()));
-        try {
+	    
+	    if (e instanceof HttpException) {
+		//e has http status information
+		status=((HttpSaxException)e).getStatus();
+	    }
+	    if(e.getCause()!=null) {
+		//e is a wrapper class.
+		e=e.getCause();
+	    }
+	    
+	    //local error msg
+	    e.printStackTrace();
+	    //remote error msg
+	    ByteArrayOutputStream responseBody = new ByteArrayOutputStream();
+	    TransformerHandler response=null;
+	    StreamResult requestResult= new StreamResult(responseBody);
+
+	    SAXTransformerFactory tf = (SAXTransformerFactory) SAXTransformerFactory
+	    .newInstance();
+	    response = tf.newTransformerHandler();
+	    response.setResult(requestResult);
+	    response.startDocument();
+	    response.startElement("", "exception", "exception", new AttributesImpl());
+
+	    response.startElement("", "msg", "msg", new AttributesImpl());
+	    String msg=e.getMessage();
+	    response.characters(msg.toCharArray(), 0, msg.length());
+	    response.endElement("", "msg", "msg");
+
+	    response.startElement("", "stacktrace", "stacktrace", new AttributesImpl());
+	    StringWriter sw = new StringWriter();
+	    PrintWriter pw = new PrintWriter(sw, true);
+	    e.printStackTrace(pw);
+	    pw.flush();
+	    sw.flush();
+	    String trace=sw.toString();
+	    response.characters(trace.toCharArray(), 0, trace.length());
+	    response.endElement("", "stacktrace", "stacktrace");
+
+	    response.endElement("", "exception", "exception");
+	    response.endDocument();
+
+
+	    http.sendResponseHeaders(status, responseBody.size());
+	    responseBody.writeTo(http.getResponseBody());
 	    http.getResponseBody().close();
-	} catch (IOException e1) {}
-	http.close();
+	    http.close();
+	} catch (Exception e1) {
+	    e1.printStackTrace();
+	    throw new IOException(e1);
+	} 
     }
-    
-    protected void throwException(HttpExchange http, Exception e){
+
+    protected void throwException(HttpExchange http, Throwable e) throws IOException{
 	throwException(http, e, 500);
     }
 
@@ -62,7 +124,7 @@ public abstract class HttpHandlerImpl implements HttpHandler {
 	    throw new IllegalStateException(e);
 	}
     }
-    
+
     protected abstract int getDefaultStatusCode();
 
 }

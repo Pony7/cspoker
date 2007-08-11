@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 
 import api.httphandler.CreateTableHandler;
+import api.httphandler.JoinTableHandler;
 import api.httphandler.ListTablesHandler;
 import api.httphandler.PingHandler;
 
@@ -30,14 +31,13 @@ import com.sun.net.httpserver.HttpServer;
  */
 public class Server {
 
-    public static void main(String[] args) throws NumberFormatException,
-	    IOException {
-	
+    public static void main(String[] args) throws NumberFormatException, IOException {
+
 	if (args.length != 1) {
 	    System.out.println("usage: java -jar cspoker-server.jar [portnumber]");
 	    System.exit(0);
 	}
-	
+
 	int port=0;
 	try {
 	    port=Integer.parseInt(args[0]);
@@ -45,45 +45,47 @@ public class Server {
 	    System.out.println("usage: java -jar cspoker-server.jar [portnumber]");
 	    System.exit(0);
 	}
-	
+
 	Server server = new Server(port);
 	server.start();
     }
 
     /**
-         * Variable holding the server object.
-         */
+     * Variable holding the server object.
+     */
     private HttpServer server;
 
     /**
-         * Creates a new server at the given port.
-         * 
-         * @param port
-         *                The port to listen at.
-         * @throws IOException
-         */
+     * Creates a new server at the given port.
+     * 
+     * @param port
+     *        The port to listen at.
+     * @throws IOException
+     */
     public Server(int port) throws IOException {
 	server = HttpServer.create(new InetSocketAddress(port), 0);
-	
+
 	HttpContext pingContext = server.createContext("/ping/", new PingHandler());
 	pingContext.setAuthenticator(new HardCodedBasicAuthentication());
-	
+
 	HttpContext listTableContext = server.createContext("/table/list/", new ListTablesHandler());
 	listTableContext.setAuthenticator(new HardCodedBasicAuthentication());
-	
+
 	HttpContext createTableContext = server.createContext("/table/create/", new CreateTableHandler());
 	createTableContext.setAuthenticator(new HardCodedBasicAuthentication());
-	
-	
+
+	HttpContext joinTableContext = server.createContext("/table/join/", new JoinTableHandler());
+	joinTableContext.setAuthenticator(new HardCodedBasicAuthentication());
+
 	System.out.println("Server created for port " + port + ".");
     }
 
     /**
-         * Starts this server.
-         * 
-         * @throws IOException
-         *                 There was a problem opening this server's port.
-         */
+     * Starts this server.
+     * 
+     * @throws IOException
+     *                 There was a problem opening this server's port.
+     */
     public void start() throws IOException {
 	server.start();
     }

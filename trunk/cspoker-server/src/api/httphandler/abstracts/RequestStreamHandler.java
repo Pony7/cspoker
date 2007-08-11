@@ -24,7 +24,6 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.xml.sax.ContentHandler;
 import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
 
@@ -34,35 +33,38 @@ public abstract class RequestStreamHandler extends HttpHandlerImpl {
 
     public void handle(HttpExchange http) throws IOException {
 	ByteArrayOutputStream responseBody = new ByteArrayOutputStream();
-	TransformerHandler response=null;
-	StreamResult requestResult;
 	try {
-	    requestResult = new StreamResult(responseBody);
+	    TransformerHandler response=null;
+	    StreamResult requestResult = new StreamResult(responseBody);
+
 	    SAXTransformerFactory tf = (SAXTransformerFactory) SAXTransformerFactory
 	    .newInstance();
 	    response = tf.newTransformerHandler();
 	    response.setResult(requestResult);
 	    response.startDocument();
-	    try {
-		XMLReader xr = XMLReaderFactory.createXMLReader();
-		xr.setContentHandler(getRequestHandler(http, response));
-		xr.parse(new InputSource(http.getRequestBody()));
-	    } catch (SAXException e) {
-		throw new IOException(e);
-	    }
+
+	    XMLReader xr = XMLReaderFactory.createXMLReader();
+	    xr.setContentHandler(getRequestHandler(http, response));
+	    xr.parse(new InputSource(http.getRequestBody()));
+
 	    response.endDocument();
+	} catch (IOException e){
+	    //if the connection is lost then throw the exception as expected.
+	    //this will probably never be able to happen here but you never know
+	    throw e;
 	} catch (Exception e) {
+	    //otherwise send the exception over
 	    throwException(http, e);
 	    return;
 	}
-	
+	//send the default status code (no exception occured)
 	http.sendResponseHeaders(getDefaultStatusCode(), responseBody.size());
 	responseBody.writeTo(http.getResponseBody());
 	http.getResponseBody().close();
 	http.close();
 
     }
-    
+
     protected abstract ContentHandler getRequestHandler(HttpExchange http, TransformerHandler response);
 
 }

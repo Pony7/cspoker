@@ -18,6 +18,7 @@ package api.httphandler.abstracts;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
+import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.sax.SAXTransformerFactory;
 import javax.xml.transform.sax.TransformerHandler;
 import javax.xml.transform.stream.StreamResult;
@@ -30,29 +31,30 @@ public abstract class ResponseStreamHandler extends HttpHandlerImpl {
 
     public void handle(HttpExchange http) throws IOException{
 	ByteArrayOutputStream responseBody = new ByteArrayOutputStream();
-        TransformerHandler response=null;
-        StreamResult requestResult;
-        try {
-            requestResult = new StreamResult(responseBody);
-            SAXTransformerFactory tf = (SAXTransformerFactory) SAXTransformerFactory
-            .newInstance();
-            response = tf.newTransformerHandler();
-            response.setResult(requestResult);
-            response.startDocument();
-            respond(response);
-            response.endDocument();
-        } catch (Exception e) {
-            throwException(http, e);
-            return;
-        }
+	TransformerHandler response=null;
+	StreamResult requestResult = new StreamResult(responseBody);
 
-        http.sendResponseHeaders(getDefaultStatusCode(), responseBody.size());
-        responseBody.writeTo(http.getResponseBody());
-        http.getResponseBody().close();
-        http.close(); 
+	SAXTransformerFactory tf = (SAXTransformerFactory) SAXTransformerFactory
+	.newInstance();
+	try {
+	    response = tf.newTransformerHandler();
+	    response.setResult(requestResult);
+	    response.startDocument();
+	    respond(response);
+	    response.endDocument();
+	} catch (Exception e) {
+	    //send the exception over
+	    throwException(http, e);
+	    return;
+	} 
+
+	http.sendResponseHeaders(getDefaultStatusCode(), responseBody.size());
+	responseBody.writeTo(http.getResponseBody());
+	http.getResponseBody().close();
+	http.close(); 
     }
-    
+
     protected abstract void respond(TransformerHandler response)
-	    throws SAXException;
-    
+    throws SAXException;
+
 }
