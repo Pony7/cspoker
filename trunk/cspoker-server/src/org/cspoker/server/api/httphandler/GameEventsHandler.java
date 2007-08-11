@@ -20,7 +20,7 @@ import java.util.List;
 
 import javax.xml.transform.sax.TransformerHandler;
 
-import org.cspoker.server.api.PlayerRegistry;
+import org.cspoker.server.api.PlayerCommunicationFactory;
 import org.cspoker.server.api.httphandler.abstracts.HttpHandlerImpl;
 import org.cspoker.server.api.httphandler.abstracts.NoRequestStreamHandler;
 import org.cspoker.server.api.httphandler.exception.HttpSaxException;
@@ -40,7 +40,7 @@ public class GameEventsHandler extends NoRequestStreamHandler {
 	String username= HttpHandlerImpl.toPlayerName(http.getRequestHeaders());
 	List<GameEvent> events;
 	try {
-	     events = PlayerRegistry.getRegisteredPlayerCommunication(username).getLatestGameEvents();
+	     events = PlayerCommunicationFactory.getRegisteredPlayerCommunication(username).getLatestGameEvents();
 	} catch (IllegalActionException e) {
 	    throw new HttpSaxException(e, 403);
 	}
