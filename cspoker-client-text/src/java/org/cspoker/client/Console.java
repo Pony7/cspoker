@@ -110,8 +110,8 @@ public class Console {
 
     private String parse(Client client, String line) throws Exception {
 	String[] words=line.split(" ");
-	if(words.length<1)
-	    return "";
+	if(words.length<1 || words[0].equalsIgnoreCase(""))
+	    return parse(client, "GAMEEVENTS");
 	List<String> list=new ArrayList<String>();
 	list.addAll(Arrays.asList(words));
 	String command=list.remove(0);

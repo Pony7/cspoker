@@ -21,12 +21,19 @@ import java.net.MalformedURLException;
 import java.net.PasswordAuthentication;
 import java.util.HashMap;
 
+import org.cspoker.client.request.AllInRequest;
+import org.cspoker.client.request.BetRequest;
+import org.cspoker.client.request.CallRequest;
+import org.cspoker.client.request.CheckRequest;
 import org.cspoker.client.request.CreateTableRequest;
+import org.cspoker.client.request.DealRequest;
+import org.cspoker.client.request.FoldRequest;
 import org.cspoker.client.request.GameEventsRequest;
 import org.cspoker.client.request.JoinTableRequest;
 import org.cspoker.client.request.LeaveTableRequest;
 import org.cspoker.client.request.ListTablesRequest;
 import org.cspoker.client.request.PingRequest;
+import org.cspoker.client.request.RaiseRequest;
 import org.cspoker.client.request.StartGameRequest;
 
 /**
@@ -53,8 +60,18 @@ public class Client {
 	commands.put("CREATETABLE", new CreateTableRequest(address));
 	commands.put("JOINTABLE", new JoinTableRequest(address));
 	commands.put("LEAVETABLE", new LeaveTableRequest(address));
-	commands.put("GAMEEVENTS", new GameEventsRequest(address));
+	
 	commands.put("STARTGAME", new StartGameRequest(address));
+	commands.put("DEAL", new DealRequest(address));
+	commands.put("CALL", new CallRequest(address));
+	commands.put("BET", new BetRequest(address));
+	commands.put("CHECK", new CheckRequest(address));
+	commands.put("FOLD", new FoldRequest(address));
+	commands.put("RAISE", new RaiseRequest(address));
+	commands.put("ALLIN", new AllInRequest(address));
+	
+	commands.put("GAMEEVENTS", new GameEventsCommand(address));
+	
 	
 	HelpCommand help = new HelpCommand();
 	commands.put("HELP", help);
