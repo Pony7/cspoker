@@ -1,0 +1,20 @@
+#summary Description of the /game/raise/ page.
+#labels Phase-Design
+
+=== Introduction ===
+The raise page is used to raise a certain amount in the game you're in.
+
+=== Method ===
+HTTP POST 
+
+=== Request ===
+{{{
+<?xml version="1.0" encoding="UTF-8"?>
+<amount>5</amount>
+}}}
+
+=== Response ===
+{{{
+<?xml version="1.0" encoding="UTF-8"?>
+<ok/>
+}}}
