@@ -14,8 +14,7 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-package org.cspoker.server.game;
-
+package org.cspoker.server.game.playerCommunication;
 
 import java.util.Collections;
 import java.util.List;
@@ -25,7 +24,8 @@ import org.cspoker.server.game.events.GameEvent;
 import org.cspoker.server.game.events.GameEventListener;
 
 /**
- * A class to collect and to manage game events.
+ * A class to collect and to manage
+ * game events.
  *
  * @author Kenzo
  *
@@ -43,6 +43,7 @@ public class GameEventsCollector implements GameEventListener{
 	 * @param 	event
 	 * 			The event object containing all information of the occurred event.
 	 */
+	@Override
 	public void onGameEvent(GameEvent event) {
 		events.add(event);
 	}
