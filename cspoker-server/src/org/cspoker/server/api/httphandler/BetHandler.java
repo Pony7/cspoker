@@ -22,7 +22,6 @@ import org.cspoker.server.api.PlayerCommunicationFactory;
 import org.cspoker.server.api.httphandler.abstracts.HttpHandlerImpl;
 import org.cspoker.server.api.httphandler.abstracts.RequestStreamHandler;
 import org.cspoker.server.api.httphandler.exception.HttpSaxException;
-import org.cspoker.server.game.TableId;
 import org.cspoker.server.game.gameControl.actions.IllegalActionException;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;

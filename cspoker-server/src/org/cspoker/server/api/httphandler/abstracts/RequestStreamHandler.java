@@ -29,7 +29,9 @@ import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
 
 import com.sun.net.httpserver.HttpExchange;
-
+/**
+ * A HttpHandler for requests that have an input stream from the request.
+ */
 public abstract class RequestStreamHandler extends HttpHandlerImpl {
 
     public void handle(HttpExchange http) throws IOException {

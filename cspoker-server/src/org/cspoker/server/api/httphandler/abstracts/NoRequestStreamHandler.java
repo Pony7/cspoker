@@ -26,6 +26,9 @@ import org.xml.sax.SAXException;
 
 import com.sun.net.httpserver.HttpExchange;
 
+/**
+ * A HttpHandler for requests that do not have an input stream from the request.
+ */
 public abstract class NoRequestStreamHandler extends HttpHandlerImpl {
 
     public void handle(HttpExchange http) throws IOException{
