@@ -1,0 +1,22 @@
+#summary Description of the /game/bet/ page.
+#labels Phase-Design
+
+=== Introduction ===
+The bet page is used to bet a certain amount in the game you're in.
+
+=== Method ===
+HTTP POST 
+
+=== Request ===
+{{{
+<?xml version="1.0" encoding="UTF-8"?>
+<amount>5</amount>
+}}}
+
+=== Response ===
+{{{
+<?xml version="1.0" encoding="UTF-8"?>
+<ok/>
+}}}
+
+
