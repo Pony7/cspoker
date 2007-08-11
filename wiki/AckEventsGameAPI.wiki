@@ -1,0 +1,25 @@
+#summary Description of the /table/join/ page.
+#labels Phase-Design
+
+=== Introduction ===
+The game events + ack page is used to get all game events from a certain id onwards. All events before 'ack' are removed from the list.
+
+=== Method ===
+HTTP POST 
+
+=== Request ===
+{{{
+<?xml version="1.0" encoding="UTF-8"?>
+<ack>57</ack>
+}}}
+
+=== Response ===
+{{{
+<?xml version="1.0" encoding="UTF-8"?>
+<events>
+ <event id="58">Kenzo raises.</event>
+ <event id="59">Guy folds.</event>
+ <event id="60">Cedric calls.</event>
+</events>
+}}}
+
