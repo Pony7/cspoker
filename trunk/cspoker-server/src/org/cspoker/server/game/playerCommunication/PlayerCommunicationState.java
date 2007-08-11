@@ -87,10 +87,10 @@ abstract class PlayerCommunicationState implements PlayerCommunication{
 	 *          This actions is not a valid action in the current state.
 	 */
 	public void join(TableId id) throws IllegalActionException {
-		throw new IllegalActionException();
+		throw new IllegalActionException("Joining "+id+"is not a valid action. " +getStdErrorMessage());
 	}
 	public void leaveTable() throws IllegalActionException {
-		throw new IllegalActionException();
+		throw new IllegalActionException("Leaving the table is not a valid action. " +getStdErrorMessage());
 	}
 
 
@@ -98,20 +98,20 @@ abstract class PlayerCommunicationState implements PlayerCommunication{
 	 * Create/Start Game
 	 **********************************************************/
 	public TableId createTable() throws IllegalActionException {
-		throw new IllegalActionException();
+		throw new IllegalActionException("Creating a table is not a valid action. " +getStdErrorMessage());
 	}
 	public void startGame() throws IllegalActionException {
-		throw new IllegalActionException();
+		throw new IllegalActionException("Starting a game is not a valid action. "+getStdErrorMessage());
 	}
 
 	/**********************************************************
 	 * Actions list
 	 **********************************************************/
 	public List<GameEvent> getLatestGameEvents() throws IllegalActionException {
-		throw new IllegalActionException();
+		throw new IllegalActionException("Requesting the latest game events is not a valid action. "+getStdErrorMessage());
 	}
 	public List<GameEvent> getLatestGameEventsAndAck(long ack) throws IllegalActionException {
-		throw new IllegalActionException();
+		throw new IllegalActionException("Requesting the latest game events is not a valid action. "+getStdErrorMessage());
 	}
 
 	protected abstract String getStdErrorMessage();

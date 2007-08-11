@@ -17,7 +17,6 @@ package org.cspoker.server.game.playerCommunication;
 
 import java.util.List;
 
-import org.cspoker.server.game.GameEventsCollector;
 import org.cspoker.server.game.GameMediator;
 import org.cspoker.server.game.events.GameEvent;
 import org.cspoker.server.game.gameControl.actions.IllegalActionException;
@@ -93,9 +92,9 @@ class PlayingState extends PlayerCommunicationState {
 	}
 
 	@Override
-	public void leaveTable(){
+	public void leaveTable() throws IllegalActionException{
 		//TODO if playing, fold?
-		//TODO leave game
+		gameMediator.leaveGame(playerCommunication.getPlayer());
 		gameMediator.unsubscribeGameEventListener(gameEventsCollector);
 		playerCommunication.setPlayerCommunicationState(new InitialState(playerCommunication));
 	}

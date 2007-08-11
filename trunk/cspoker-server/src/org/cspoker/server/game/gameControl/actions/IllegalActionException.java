@@ -34,10 +34,6 @@ public class IllegalActionException extends Exception {
 
 	private Action action;
 
-	public IllegalActionException(){
-		this("You have performed an invalid action.");
-	}
-
 	public IllegalActionException(Player player, Action action){
 		this(player, action, "");
 	}
