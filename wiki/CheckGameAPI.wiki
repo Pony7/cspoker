@@ -1,0 +1,17 @@
+#summary Description of the /game/check/ page.
+#labels Phase-Design
+
+=== Introduction ===
+The check page is used to check in the game you're in.
+
+=== Method ===
+HTTP POST 
+
+=== Request ===
+_none_
+
+=== Response ===
+{{{
+<?xml version="1.0" encoding="UTF-8"?>
+<ok/>
+}}}
