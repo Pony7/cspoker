@@ -28,11 +28,11 @@ import org.xml.sax.helpers.AttributesImpl;
 
 import com.sun.net.httpserver.HttpExchange;
 
-public class StartGameHandler extends NoRequestStreamHandler {
+public class AllInHandler extends NoRequestStreamHandler {
 
     @Override
     protected int getDefaultStatusCode() {
-	return 201;
+	return 200;
     }
 
     @Override
@@ -41,7 +41,7 @@ public class StartGameHandler extends NoRequestStreamHandler {
 
 	try {
 	    PlayerCommunicationFactory.getRegisteredPlayerCommunication(username)
-	    	.startGame();
+	    .allIn();
 	} catch (IllegalActionException e) {
 	    throw new HttpSaxException(e, 403);
 	}

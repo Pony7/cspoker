@@ -32,7 +32,7 @@ import org.xml.sax.helpers.DefaultHandler;
 
 import com.sun.net.httpserver.HttpExchange;
 
-public class JoinTableHandler extends RequestStreamHandler {
+public class RaiseHandler extends RequestStreamHandler {
 
     @Override
     protected ContentHandler getRequestHandler(final HttpExchange http, final TransformerHandler response){
@@ -40,7 +40,7 @@ public class JoinTableHandler extends RequestStreamHandler {
 	return new DefaultHandler(){
 	    
 	    private StringBuilder sb=new StringBuilder();
-	    private String id;
+	    private String amount;
 	    
 	    
 	    @Override
@@ -52,8 +52,8 @@ public class JoinTableHandler extends RequestStreamHandler {
 	    @Override
 	    public void endElement(String uri, String localName, String name)
 	            throws SAXException {
-	        if(name.equalsIgnoreCase("id"))
-	            id=sb.toString();
+	        if(name.equalsIgnoreCase("amount"))
+	            amount=sb.toString();
 		sb.setLength(0);
 	    }
 	    
@@ -69,7 +69,7 @@ public class JoinTableHandler extends RequestStreamHandler {
 
 		try {
 		    PlayerCommunicationFactory.getRegisteredPlayerCommunication(username)
-		        	.join(new TableId(Long.parseLong(id)));
+		        	.raise(Integer.parseInt(amount));
 		} catch (NumberFormatException e) {
 		    throw new HttpSaxException(e, 400);
 		} catch (IllegalActionException e) {
@@ -79,6 +79,7 @@ public class JoinTableHandler extends RequestStreamHandler {
 		response.startElement("", "ok", "ok", new AttributesImpl());
 		response.endElement("", "ok", "ok");
 	    }
+	
 	};
     }
 

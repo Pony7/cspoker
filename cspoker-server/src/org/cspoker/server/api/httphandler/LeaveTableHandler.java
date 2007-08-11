@@ -18,7 +18,7 @@ package org.cspoker.server.api.httphandler;
 
 import javax.xml.transform.sax.TransformerHandler;
 
-import org.cspoker.server.api.PlayerRegistry;
+import org.cspoker.server.api.PlayerCommunicationFactory;
 import org.cspoker.server.api.httphandler.abstracts.HttpHandlerImpl;
 import org.cspoker.server.api.httphandler.abstracts.NoRequestStreamHandler;
 import org.cspoker.server.api.httphandler.exception.HttpSaxException;
@@ -40,7 +40,7 @@ public class LeaveTableHandler extends NoRequestStreamHandler {
 	String username= HttpHandlerImpl.toPlayerName(http.getRequestHeaders());
 
 	try {
-	    PlayerRegistry.getRegisteredPlayerCommunication(username)
+	    PlayerCommunicationFactory.getRegisteredPlayerCommunication(username)
 	    .leaveTable();
 	} catch (IllegalActionException e) {
 	    throw new HttpSaxException(e, 403);

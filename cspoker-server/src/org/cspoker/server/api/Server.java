@@ -19,12 +19,19 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 
 import org.cspoker.server.api.authentication.HardCodedBasicAuthentication;
+import org.cspoker.server.api.httphandler.AllInHandler;
+import org.cspoker.server.api.httphandler.BetHandler;
+import org.cspoker.server.api.httphandler.CallHandler;
+import org.cspoker.server.api.httphandler.CheckHandler;
 import org.cspoker.server.api.httphandler.CreateTableHandler;
+import org.cspoker.server.api.httphandler.DealHandler;
+import org.cspoker.server.api.httphandler.FoldHandler;
 import org.cspoker.server.api.httphandler.GameEventsHandler;
 import org.cspoker.server.api.httphandler.JoinTableHandler;
 import org.cspoker.server.api.httphandler.LeaveTableHandler;
 import org.cspoker.server.api.httphandler.ListTablesHandler;
 import org.cspoker.server.api.httphandler.PingHandler;
+import org.cspoker.server.api.httphandler.RaiseHandler;
 import org.cspoker.server.api.httphandler.StartGameHandler;
 
 import com.sun.net.httpserver.Authenticator;
@@ -54,6 +61,8 @@ public class Server {
 	Server server = new Server(port);
 	server.start();
     }
+    
+    private Authenticator authenticator;
 
     /**
      * Variable holding the server object.
@@ -70,8 +79,14 @@ public class Server {
     public Server(int port) throws IOException {
 	server = HttpServer.create(new InetSocketAddress(port), 0);
 
-	Authenticator authenticator = new HardCodedBasicAuthentication();
+	authenticator = new HardCodedBasicAuthentication();
 	
+	loadContext();
+	
+	System.out.println("Server created for port " + port + ".");
+    }
+    
+    protected void loadContext(){
 	HttpContext pingContext = server.createContext("/ping/", new PingHandler());
 	pingContext.setAuthenticator(authenticator);
 
@@ -93,7 +108,26 @@ public class Server {
 	HttpContext startGameContext = server.createContext("/game/start/", new StartGameHandler());
 	startGameContext.setAuthenticator(authenticator);
 	
-	System.out.println("Server created for port " + port + ".");
+	HttpContext dealContext = server.createContext("/game/deal/", new DealHandler());
+	dealContext.setAuthenticator(authenticator);
+	
+	HttpContext callContext = server.createContext("/game/call/", new CallHandler());
+	callContext.setAuthenticator(authenticator);
+	
+	HttpContext betContext = server.createContext("/game/bet/", new BetHandler());
+	betContext.setAuthenticator(authenticator);
+	
+	HttpContext checkContext = server.createContext("/game/check/", new CheckHandler());
+	checkContext.setAuthenticator(authenticator);
+    
+	HttpContext foldContext = server.createContext("/game/fold/", new FoldHandler());
+	foldContext.setAuthenticator(authenticator);
+	
+	HttpContext raiseContext = server.createContext("/game/raise/", new RaiseHandler());
+	raiseContext.setAuthenticator(authenticator);
+	
+	HttpContext allInContext = server.createContext("/game/allin/", new AllInHandler());
+	allInContext.setAuthenticator(authenticator);
     }
 
     /**

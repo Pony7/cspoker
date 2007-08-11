@@ -16,6 +16,8 @@
 package org.cspoker.server.api.httphandler;
 
 
+import java.util.List;
+
 import javax.xml.transform.sax.TransformerHandler;
 
 import org.cspoker.server.api.PlayerCommunicationFactory;
@@ -23,6 +25,7 @@ import org.cspoker.server.api.httphandler.abstracts.HttpHandlerImpl;
 import org.cspoker.server.api.httphandler.abstracts.RequestStreamHandler;
 import org.cspoker.server.api.httphandler.exception.HttpSaxException;
 import org.cspoker.server.game.TableId;
+import org.cspoker.server.game.events.GameEvent;
 import org.cspoker.server.game.gameControl.actions.IllegalActionException;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
@@ -32,7 +35,7 @@ import org.xml.sax.helpers.DefaultHandler;
 
 import com.sun.net.httpserver.HttpExchange;
 
-public class JoinTableHandler extends RequestStreamHandler {
+public class GameEventsAckHandler extends RequestStreamHandler {
 
     @Override
     protected ContentHandler getRequestHandler(final HttpExchange http, final TransformerHandler response){
@@ -40,7 +43,7 @@ public class JoinTableHandler extends RequestStreamHandler {
 	return new DefaultHandler(){
 	    
 	    private StringBuilder sb=new StringBuilder();
-	    private String id;
+	    private String ack;
 	    
 	    
 	    @Override
@@ -52,8 +55,8 @@ public class JoinTableHandler extends RequestStreamHandler {
 	    @Override
 	    public void endElement(String uri, String localName, String name)
 	            throws SAXException {
-	        if(name.equalsIgnoreCase("id"))
-	            id=sb.toString();
+	        if(name.equalsIgnoreCase("ack"))
+	            ack=sb.toString();
 		sb.setLength(0);
 	    }
 	    
@@ -66,18 +69,27 @@ public class JoinTableHandler extends RequestStreamHandler {
 	    @Override
 	    public void endDocument() throws SAXException {
 		String username= HttpHandlerImpl.toPlayerName(http.getRequestHeaders());
-
+		List<GameEvent> events;
 		try {
-		    PlayerCommunicationFactory.getRegisteredPlayerCommunication(username)
-		        	.join(new TableId(Long.parseLong(id)));
+		    events=PlayerCommunicationFactory.getRegisteredPlayerCommunication(username)
+		        	.getLatestGameEventsAndAck(Long.parseLong(ack));
 		} catch (NumberFormatException e) {
 		    throw new HttpSaxException(e, 400);
 		} catch (IllegalActionException e) {
 		    throw new HttpSaxException(e, 403);
 		}
+		response.startElement("", "events", "events", new AttributesImpl());
+		for(GameEvent event:events){
+		    AttributesImpl attrs = new AttributesImpl();
+		    attrs.addAttribute("", "id", "id", "CDATA", "0");
+		    response.startElement("", "event", "event", attrs);
 
-		response.startElement("", "ok", "ok", new AttributesImpl());
-		response.endElement("", "ok", "ok");
+		    String s=event.toString();
+		    response.characters(s.toCharArray(), 0, s.length());
+		    
+		    response.endElement("", "event", "event");
+		}
+		response.endElement("", "events", "events");
 	    }
 	};
     }

@@ -23,7 +23,7 @@ import org.cspoker.server.game.player.Player;
 import org.cspoker.server.game.player.PlayerFactory;
 import org.cspoker.server.game.playerCommunication.PlayerCommunicationImpl;
 
-public class PlayerRegistry {
+public class PlayerCommunicationFactory {
 
     private static Map<String,PlayerCommunicationImpl> playerComs=new HashMap<String,PlayerCommunicationImpl>();
     

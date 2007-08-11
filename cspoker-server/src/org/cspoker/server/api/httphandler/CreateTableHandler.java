@@ -17,7 +17,7 @@ package org.cspoker.server.api.httphandler;
 
 import javax.xml.transform.sax.TransformerHandler;
 
-import org.cspoker.server.api.PlayerRegistry;
+import org.cspoker.server.api.PlayerCommunicationFactory;
 import org.cspoker.server.api.httphandler.abstracts.HttpHandlerImpl;
 import org.cspoker.server.api.httphandler.abstracts.RequestStreamHandler;
 import org.cspoker.server.api.httphandler.exception.HttpSaxException;
@@ -40,7 +40,7 @@ public class CreateTableHandler extends RequestStreamHandler {
 		String username= HttpHandlerImpl.toPlayerName(http.getRequestHeaders());
 		long id;
 		try {
-		    id=PlayerRegistry.getRegisteredPlayerCommunication(username).createTable().getID();
+		    id=PlayerCommunicationFactory.getRegisteredPlayerCommunication(username).createTable().getID();
 		} catch (IllegalActionException e) {
 		    throw new HttpSaxException(e, 403);
 		}
