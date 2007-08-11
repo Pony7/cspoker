@@ -8,11 +8,16 @@ The table create page is used to create a table on the server.
 HTTP PUT 
 
 === Request ===
-_none_
+{{{
+<?xml version="1.0" encoding="UTF-8"?>
+<name>lasvegas</name>
+}}}
 
-*There should be a table name parameter being passed here. Currently this is not supported.*
+*The table name is not being used at the moment.*
 
 === Response ===
-_none_
-
+{{{
+<?xml version="1.0" encoding="UTF-8"?>
+<id>5689456</id>
+}}}
 
