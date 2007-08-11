@@ -22,18 +22,33 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.cspoker.client.exceptions.FailedAuthenticationException;
+import org.cspoker.client.exceptions.StackTraceWrapper;
 
 public class Console {
 
+    public static void main(String[] args) throws Exception {
+	new Console(args);
+    }
+    
+    private boolean verbose=false;
+    
     /**
      * @param args
      * @throws Exception
      */
-    public static void main(String[] args) throws Exception {
-	if (args.length != 2) {
-	    System.out.println("usage: java -jar cspoker-client-text.jar [server] [portnumber]");
+    public Console(String[] args) throws Exception {
+	if (args.length != 2 && args.length != 3) {
+	    System.out.println("usage: java -jar cspoker-client-text.jar [server] [portnumber] -[options]");
+	    System.out.println("options:");
+	    System.out.println(" -v verbose");
 	    System.exit(0);
 	}
+	if(args.length==3){
+	    if(args[2].contains("v")){
+		verbose=true;
+	    }
+	}
+	
 	Client client;
 	BufferedReader in = new BufferedReader(new InputStreamReader(
 		System.in));
@@ -54,22 +69,20 @@ public class Console {
 	System.out.println("");
 	System.out.println("Enter HELP for a list of supported commands.");
 	System.out.println("");
-	
+
 	boolean running=true;
 
 	while(running){
 	    System.out.print(">");
 	    String line = in.readLine();
-	    if(line.equalsIgnoreCase("QUIT")||line.equalsIgnoreCase("EXIT"))
+	    if(line.equalsIgnoreCase("QUIT")||line.equalsIgnoreCase("EXIT")){
+		System.out.println("Shutting down...");
 		running=false;
-	    else{
+	    } else{
 		try {
 		    System.out.println(parse(client,line));
 		} catch (Exception e) {
-		    System.out.println("ERROR: "+e.getMessage()+CommandExecutor.n);
-		    System.out.println("-----details-----");
-		    e.printStackTrace(System.out);
-		    System.out.println("-----------------");
+		    handle(e);
 		}
 	    }
 	}
@@ -77,7 +90,25 @@ public class Console {
 
 
 
-    private static String parse(Client client, String line) throws Exception {
+    private void handle(Exception e) {
+	System.out.println("ERROR: "+e.getMessage());
+	System.out.println("");
+	if (verbose) {
+	    System.out.println("-----details-----");
+	    if (e instanceof StackTraceWrapper) {
+		System.out.println(((StackTraceWrapper) e)
+			.getStackTraceString());
+	    } else {
+		e.printStackTrace(System.out);
+	    }
+	    System.out.println("-----------------");
+	    System.out.println("");
+	}
+    }
+
+
+
+    private String parse(Client client, String line) throws Exception {
 	String[] words=line.split(" ");
 	if(words.length<1)
 	    return "";
@@ -90,11 +121,15 @@ public class Console {
 
 
 
-    private static boolean canPing(Client client) throws Exception {
+    private boolean canPing(Client client) {
 	try {
 	    client.execute("PING");
 	} catch (FailedAuthenticationException e) {
 	    System.out.println("Error: "+e.getLocalizedMessage());
+	    System.out.println("");
+	    return false;
+	} catch (Exception e){
+	    handle(e);
 	    return false;
 	}
 	return true;

@@ -26,6 +26,7 @@ import javax.xml.transform.sax.TransformerHandler;
 import javax.xml.transform.stream.StreamResult;
 
 import org.cspoker.client.CommandExecutor;
+import org.cspoker.client.exceptions.ExceptionParser;
 import org.cspoker.client.exceptions.FailedAuthenticationException;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -66,21 +67,28 @@ public abstract class HttpRequest extends DefaultHandler implements CommandExecu
 	    connection.getOutputStream().flush();
 	    connection.getOutputStream().close();
 	}
-	
+	if(connection.getResponseCode()==401){
+	    throw new FailedAuthenticationException("Authentication failed.");
+	}else if(connection.getResponseCode()/100==4||connection.getResponseCode()/100==5){
+	    throw getException(connection);
+	}
 	XMLReader xr = XMLReaderFactory.createXMLReader();
 	xr.setContentHandler(this);
 	xr.setErrorHandler(this);
-	try {
-	    xr.parse(new InputSource(connection.getInputStream()));
-	} catch (ProtocolException e) {
-	    //TODO fix problem with 20 redirects when login fails.
-	    throw new FailedAuthenticationException("Authentication failed.");
-	} catch (IOException e){
-	    e.getMessage().concat("Server returned HTTP response code: 500");
-	}
+	xr.parse(new InputSource(connection.getInputStream()));
+
 	return getResult();
     }
     
+    private Exception getException(HttpURLConnection connection) throws SAXException, IOException {
+	XMLReader xr = XMLReaderFactory.createXMLReader();
+	ExceptionParser parser=new ExceptionParser();
+	xr.setContentHandler(parser);
+	xr.setErrorHandler(parser);
+	xr.parse(new InputSource(connection.getErrorStream()));
+	return parser.getException();
+    }
+
     protected abstract String getResult();
     
     protected abstract String getPath();

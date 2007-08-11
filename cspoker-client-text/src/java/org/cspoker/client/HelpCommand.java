@@ -12,6 +12,7 @@ public class HelpCommand implements CommandExecutor {
 			"-Tables:"+n +
 			"  CREATETABLE"+n +
 			"  LISTTABLES"+n +
+			"  JOINTABLE"+n +
 			"";
     }
 

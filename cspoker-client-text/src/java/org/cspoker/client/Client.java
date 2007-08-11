@@ -22,6 +22,7 @@ import java.net.PasswordAuthentication;
 import java.util.HashMap;
 
 import org.cspoker.client.request.CreateTableRequest;
+import org.cspoker.client.request.JoinTableRequest;
 import org.cspoker.client.request.ListTablesRequest;
 import org.cspoker.client.request.PingRequest;
 
@@ -48,6 +49,7 @@ public class Client {
 	commands.put("HELP", new HelpCommand());
 	commands.put("LISTTABLES", new ListTablesRequest(address));
 	commands.put("CREATETABLE", new CreateTableRequest(address));
+	commands.put("JOINTABLE", new JoinTableRequest(address));
     }
 
     private CommandExecutor getCommand(String name){
