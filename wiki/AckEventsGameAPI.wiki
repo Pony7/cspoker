@@ -1,4 +1,4 @@
-#summary Description of the /table/join/ page.
+#summary Description of the /game/events/ack/ page.
 #labels Phase-Design
 
 === Introduction ===
@@ -22,4 +22,3 @@ HTTP POST
  <event id="60">Cedric calls.</event>
 </events>
 }}}
-
