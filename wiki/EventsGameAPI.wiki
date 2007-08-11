@@ -1,0 +1,24 @@
+#summary Description of the /game/events/ page.
+#labels Phase-Design
+
+=== Introduction ===
+The game events page is used to get the latest game events.
+
+=== Method ===
+HTTP GET 
+
+=== Request ===
+_none_
+
+=== Response ===
+{{{
+<?xml version="1.0" encoding="UTF-8"?>
+<events>
+ <event id="58">Kenzo raises.</event>
+ <event id="59">Guy folds.</event>
+ <event id="60">Cedric calls.</event>
+</events>
+}}}
+
+
+
