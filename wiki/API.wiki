@@ -31,7 +31,7 @@ There is no explicit login functionality. The client can ask the user for creden
  * [DealGameAPI /game/deal/]
  * [AllInGameAPI /game/allin/]
  * [StartGameAPI /game/start/]
- * [AckEventsGameAPI /game/events/ack]
+ * [AckEventsGameAPI /game/events/ack/]
 == DELETE ==
 
 = Exceptions =
@@ -68,7 +68,6 @@ Content-length: 1682
  </stacktrace>
 </exception>
 }}}
-
 
 
 
