@@ -1,0 +1,17 @@
+#summary Description of the /game/allin/ page.
+#labels Phase-Design
+
+=== Introduction ===
+The call page is used to go "all in".
+
+=== Method ===
+HTTP POST 
+
+=== Request ===
+_none_
+
+=== Response ===
+{{{
+<?xml version="1.0" encoding="UTF-8"?>
+<ok/>
+}}}
