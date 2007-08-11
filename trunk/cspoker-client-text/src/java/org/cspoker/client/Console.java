@@ -24,6 +24,9 @@ import java.util.List;
 import org.cspoker.client.exceptions.FailedAuthenticationException;
 import org.cspoker.client.exceptions.StackTraceWrapper;
 
+/**
+ * A console poker client.
+ */
 public class Console {
 
     public static void main(String[] args) throws Exception {
