@@ -13,31 +13,30 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.client.request;
+package org.cspoker.client.commands;
 
 import java.net.MalformedURLException;
 
-import org.cspoker.client.request.abstracts.NoOutputRequest;
+import org.cspoker.client.request.GameEventsAckRequest;
+import org.cspoker.client.request.GameEventsRequest;
 
-public class AllInRequest extends NoOutputRequest{
+public class GameEventsCommand implements CommandExecutor {
 
-    public AllInRequest(String address) throws MalformedURLException {
-	super(address);
+    private GameEventsRequest noack;
+    private GameEventsAckRequest ack;
+
+    public GameEventsCommand(String address) throws MalformedURLException{
+	this.noack = new GameEventsRequest(address);
+	this.ack = new GameEventsAckRequest(address);
     }
-
+    
     @Override
-    protected String getRequestMethod() {
-        return "POST";
-    }
-
-    @Override
-    protected String getPath() {
-	return "/game/allin/";
-    }
-
-    @Override
-    protected String getResult() {
-	return "Went All In."+n;
+    public String execute(String... args) throws Exception {
+	if(args.length==0){
+	    return noack.execute(args);
+	}else{
+	    return ack.execute(args);
+	}
     }
 
 }

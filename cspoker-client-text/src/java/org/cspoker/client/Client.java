@@ -21,6 +21,9 @@ import java.net.MalformedURLException;
 import java.net.PasswordAuthentication;
 import java.util.HashMap;
 
+import org.cspoker.client.commands.CommandExecutor;
+import org.cspoker.client.commands.GameEventsCommand;
+import org.cspoker.client.commands.HelpCommand;
 import org.cspoker.client.request.AllInRequest;
 import org.cspoker.client.request.BetRequest;
 import org.cspoker.client.request.CallRequest;
@@ -28,7 +31,6 @@ import org.cspoker.client.request.CheckRequest;
 import org.cspoker.client.request.CreateTableRequest;
 import org.cspoker.client.request.DealRequest;
 import org.cspoker.client.request.FoldRequest;
-import org.cspoker.client.request.GameEventsRequest;
 import org.cspoker.client.request.JoinTableRequest;
 import org.cspoker.client.request.LeaveTableRequest;
 import org.cspoker.client.request.ListTablesRequest;
