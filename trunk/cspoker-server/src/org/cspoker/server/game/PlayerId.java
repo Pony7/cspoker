@@ -70,4 +70,9 @@ public class PlayerId {
 		return true;
 	}
 
+	@Override
+	public String toString(){
+		return "player id: "+id;
+	}
+
 }

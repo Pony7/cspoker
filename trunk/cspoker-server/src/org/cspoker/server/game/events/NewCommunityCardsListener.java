@@ -17,18 +17,18 @@
 package org.cspoker.server.game.events;
 
 /**
- * An interface for new common cards listeners.
- * 
+ * An interface for new community cards listeners.
+ *
  * @author Kenzo
  *
  */
-public interface NewCommonCardsListener {
-	
+public interface NewCommunityCardsListener {
+
 	/**
-	 * This method is called when subscribed to inform a new common cards event occurred.
-	 * 
+	 * This method is called when subscribed to inform a new community cards event occurred.
+	 *
 	 * @param 	event
 	 * 			The event object containing all information of the occurred event.
 	 */
-	public void onNewCommonCardsEvent(NewCommonCardsEvent event);
+	public void onNewCommunityCardsEvent(NewCommunityCardsEvent event);
 }

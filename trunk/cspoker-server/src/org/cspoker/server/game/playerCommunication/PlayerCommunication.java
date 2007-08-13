@@ -174,6 +174,6 @@ public interface PlayerCommunication {
 	 * @return
 	 * @throws IllegalActionException
 	 */
-	public List<GameEvent> getLatestGameEventsAndAck(long ack) throws IllegalActionException;
+	public List<GameEvent> getLatestGameEventsAndAck(int ack) throws IllegalActionException;
 
 }

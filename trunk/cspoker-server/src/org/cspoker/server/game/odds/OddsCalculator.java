@@ -151,6 +151,6 @@ public class OddsCalculator {
 	 * 			the given type
 	 */
 	public double getNBOuts(Hand hand,HandType type){
-		return type.getNBOutsCalculator().getNBOuts(hand,gameControl.getGame().getOpenCards());
+		return type.getNBOutsCalculator().getNBOuts(hand,gameControl.getGame().getCommunityCards());
 	}
 }

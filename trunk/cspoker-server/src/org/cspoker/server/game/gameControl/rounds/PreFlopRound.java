@@ -18,7 +18,12 @@ package org.cspoker.server.game.gameControl.rounds;
 
 import org.cspoker.server.game.GameMediator;
 import org.cspoker.server.game.elements.chips.IllegalValueException;
+import org.cspoker.server.game.events.NewCommunityCardsEvent;
+import org.cspoker.server.game.events.NextPlayerEvent;
+import org.cspoker.server.game.events.playerActionEvents.BigBlindEvent;
+import org.cspoker.server.game.events.playerActionEvents.SmallBlindEvent;
 import org.cspoker.server.game.gameControl.Game;
+import org.cspoker.server.game.player.Player;
 
 
 /**
@@ -33,8 +38,10 @@ public class PreFlopRound extends Round{
 		super(gameMediator, game);
 		System.out.println("** PreFlop Round **");
 		try {
-			collectSmallBlind(getGame().getCurrentPlayer());
-			System.out.println(getGame().getCurrentPlayer().getName()+" has placed small blind of "
+			Player player = getGame().getCurrentPlayer();
+			collectSmallBlind(player);
+			gameMediator.publishSmallBlindEvent(new SmallBlindEvent(player.getSavedPlayer(), getGame().getGameProperty().getSmallBlind()));
+			System.out.println(player.getName()+" has placed small blind of "
 					+getGame().getGameProperty().getSmallBlind());
 			getGame().nextPlayer();
 		} catch (IllegalValueException e) {
@@ -43,13 +50,19 @@ public class PreFlopRound extends Round{
 
 		if(getGame().getNbCurrentDealPlayers()!=1){
 			try {
-				collectBigBlind(getGame().getCurrentPlayer());
+				Player player = getGame().getCurrentPlayer();
+				collectBigBlind(player);
+				gameMediator.publishBigBlindEvent(new BigBlindEvent(player.getSavedPlayer(), getGame().getGameProperty().getBigBlind()));
 				System.out.println(getGame().getCurrentPlayer().getName()+" has placed big blind of "
 						+getGame().getGameProperty().getBigBlind());
 				getGame().nextPlayer();
 			} catch (IllegalValueException e) {
 				goAllIn(getGame().getCurrentPlayer());
 			}
+		}
+
+		if(getGame().getNbCurrentDealPlayers()>1){
+			gameMediator.publishNextPlayerEvent(new NextPlayerEvent(game.getCurrentPlayer().getSavedPlayer()));
 		}
 	}
 
@@ -64,6 +77,7 @@ public class PreFlopRound extends Round{
 			drawOpenCard();
 			drawOpenCard();
 			drawOpenCard();
+			gameMediator.publishNewCommonCardsEvent(new NewCommunityCardsEvent(getGame().getCommunityCards()));
 		}
 	}
 

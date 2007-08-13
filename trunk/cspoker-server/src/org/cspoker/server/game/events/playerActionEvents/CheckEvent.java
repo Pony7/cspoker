@@ -18,20 +18,20 @@ package org.cspoker.server.game.events.playerActionEvents;
 
 import org.cspoker.server.game.events.GameEvent;
 import org.cspoker.server.game.gameControl.actions.Action;
-import org.cspoker.server.game.player.Player;
+import org.cspoker.server.game.player.SavedPlayer;
 
 
 /**
  * A class to represent check events.
- * 
+ *
  * @author Kenzo
  *
  */
 public class CheckEvent extends GameEvent {
-	
-	private final Player player;
-	
-	public CheckEvent(Player player){
+
+	private final SavedPlayer player;
+
+	public CheckEvent(SavedPlayer player){
 		this.player = player;
 	}
 
@@ -39,7 +39,7 @@ public class CheckEvent extends GameEvent {
 	public String[] getAction() {
 		return new String[] {String.valueOf(player.getId()),Action.CHECK.toString()};
 	}
-	
+
 	@Override
 	public String toString(){
 		return player.getName()+" checks.";

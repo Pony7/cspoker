@@ -34,7 +34,7 @@ public class WaitingRound extends Round {
 		getGame().setToInitialHandPlayers();
 		getGame().setCurrentPlayer(getGame().getDealer());
 	}
-	
+
 	/**
 	 * The player who the dealer-button has been dealt to
 	 * can choose to start the deal.
@@ -65,7 +65,7 @@ public class WaitingRound extends Round {
 			player.dealPocketCard(drawCard());
 			player.dealPocketCard(drawCard());
 			gameMediator.publishNewPocketCardsEvent(
-					player.getId(), new NewPocketCardsEvent(player));
+					player.getId(), new NewPocketCardsEvent(player.getSavedPlayer()));
 		}
 	}
 

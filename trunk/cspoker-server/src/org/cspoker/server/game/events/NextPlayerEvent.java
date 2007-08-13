@@ -14,9 +14,32 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-package org.cspoker.server.game.events.playerActionEvents;
+package org.cspoker.server.game.events;
 
-public interface PlayerActionEventsListener extends AllInListener, BetListener,
-		CallListener, CheckListener, DealListener, FoldListener, RaiseListener {
+import org.cspoker.server.game.player.SavedPlayer;
 
+/**
+ * A class to represent new player events.
+ *
+ * @author Kenzo
+ *
+ */
+public class NextPlayerEvent extends GameEvent{
+
+	private final SavedPlayer player;
+
+	public NextPlayerEvent(SavedPlayer player){
+		this.player = player;
+	}
+
+	@Override
+	public String[] getAction() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String toString(){
+		return "It's "+player.getName()+"'s turn.";
+	}
 }

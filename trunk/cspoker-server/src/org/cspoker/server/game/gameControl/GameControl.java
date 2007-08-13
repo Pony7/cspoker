@@ -19,6 +19,7 @@ package org.cspoker.server.game.gameControl;
 import org.cspoker.server.game.GameMediator;
 import org.cspoker.server.game.elements.table.PlayerListFullException;
 import org.cspoker.server.game.elements.table.Table;
+import org.cspoker.server.game.events.NextPlayerEvent;
 import org.cspoker.server.game.events.playerActionEvents.BetEvent;
 import org.cspoker.server.game.events.playerActionEvents.CallEvent;
 import org.cspoker.server.game.events.playerActionEvents.CheckEvent;
@@ -55,10 +56,10 @@ public class GameControl implements PlayerAction{
 	 *
 	 */
 	private Round round;
-	
-	
+
+
 	private final GameMediator gameMediator;
-	
+
 	/**********************************************************
 	 * Constructor
 	 **********************************************************/
@@ -86,7 +87,7 @@ public class GameControl implements PlayerAction{
 	public Round getRound(){
 		return round;
 	}
-	
+
 
 	/**********************************************************
 	 * Player methods
@@ -107,7 +108,7 @@ public class GameControl implements PlayerAction{
 	 */
 	public void bet(Player player, int amount) throws IllegalActionException{
 		round.bet(player, amount);
-		gameMediator.publishBetEvent(new BetEvent(player, amount));
+		gameMediator.publishBetEvent(new BetEvent(player.getSavedPlayer(), amount));
 		System.out.println(player.getName()+" bets "+amount+".");
 		checkIfEndedAndChangeRound();
 	}
@@ -126,7 +127,7 @@ public class GameControl implements PlayerAction{
 	 */
 	public void call(Player player) throws IllegalActionException{
 		round.call(player);
-		gameMediator.publishCallEvent(new CallEvent(player));
+		gameMediator.publishCallEvent(new CallEvent(player.getSavedPlayer()));
 		System.out.println(player.getName()+" calls.");
 		checkIfEndedAndChangeRound();
 	}
@@ -145,7 +146,7 @@ public class GameControl implements PlayerAction{
 	 */
 	public void check(Player player) throws IllegalActionException{
 		round.check(player);
-		gameMediator.publishCheckEvent(new CheckEvent(player));
+		gameMediator.publishCheckEvent(new CheckEvent(player.getSavedPlayer()));
 		System.out.println(player.getName()+" checks.");
 		checkIfEndedAndChangeRound();
 	}
@@ -165,7 +166,7 @@ public class GameControl implements PlayerAction{
 	 */
 	public void raise(Player player, int amount) throws IllegalActionException{
 		round.raise(player, amount);
-		gameMediator.publishRaiseEvent(new RaiseEvent(player, amount));
+		gameMediator.publishRaiseEvent(new RaiseEvent(player.getSavedPlayer(), amount));
 		System.out.println(player.getName()+" raises with "+amount+".");
 		checkIfEndedAndChangeRound();
 	}
@@ -186,7 +187,7 @@ public class GameControl implements PlayerAction{
 	 */
 	public void fold(Player player) throws IllegalActionException{
 		round.fold(player);
-		gameMediator.publishFoldEvent(new FoldEvent(player));
+		gameMediator.publishFoldEvent(new FoldEvent(player.getSavedPlayer()));
 		System.out.println(player.getName()+" folds.");
 		checkIfEndedAndChangeRound();
 	}
@@ -206,7 +207,7 @@ public class GameControl implements PlayerAction{
 	 */
 	public void deal(Player player) throws IllegalActionException{
 		round.deal(player);
-		gameMediator.publishDealEvent(new DealEvent(player));
+		gameMediator.publishDealEvent(new DealEvent(player.getSavedPlayer()));
 		System.out.println(player.getName()+" deals.");
 		checkIfEndedAndChangeRound();
 	}
@@ -226,11 +227,11 @@ public class GameControl implements PlayerAction{
 		round.allIn(player);
 		checkIfEndedAndChangeRound();
 	}
-	
+
 	public void joinGame(Player player) throws IllegalActionException, PlayerListFullException{
 		game.joinGame(player);
 	}
-	
+
 	public void leaveGame(Player player) throws IllegalActionException{
 		game.leaveGame(player);
 	}
@@ -246,6 +247,8 @@ public class GameControl implements PlayerAction{
 	private void checkIfEndedAndChangeRound(){
 		if(round.isRoundEnded()){
 			changeToNextRound();
+		}else{
+			gameMediator.publishNextPlayerEvent(new NextPlayerEvent(game.getCurrentPlayer().getSavedPlayer()));
 		}
 	}
 

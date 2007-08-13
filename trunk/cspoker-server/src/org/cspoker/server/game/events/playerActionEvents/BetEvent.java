@@ -18,23 +18,23 @@ package org.cspoker.server.game.events.playerActionEvents;
 
 import org.cspoker.server.game.events.GameEvent;
 import org.cspoker.server.game.gameControl.actions.Action;
-import org.cspoker.server.game.player.Player;
+import org.cspoker.server.game.player.SavedPlayer;
 
 
 /**
  * A class to represent bet events.
- * 
+ *
  * @author Kenzo
  *
  */
 public class BetEvent extends GameEvent {
-	
-	private final Player player;
-	
+
+	private final SavedPlayer player;
+
 	private final int amount;
-	
-	
-	public BetEvent(Player player, int amount){
+
+
+	public BetEvent(SavedPlayer player, int amount){
 		this.player = player;
 		this.amount = amount;
 	}
@@ -43,7 +43,7 @@ public class BetEvent extends GameEvent {
 	public String[] getAction() {
 		return new String[] {String.valueOf(player.getId()),Action.BET.toString(), String.valueOf(amount)};
 	}
-	
+
 	@Override
 	public String toString(){
 		return player.getName()+" bets "+amount+".";

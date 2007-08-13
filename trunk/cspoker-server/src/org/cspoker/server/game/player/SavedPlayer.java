@@ -23,11 +23,17 @@ import net.jcip.annotations.Immutable;
 
 import org.cspoker.server.game.PlayerId;
 import org.cspoker.server.game.elements.cards.Card;
-import org.cspoker.server.game.elements.chips.Chips;
 
+/**
+ * A class of immutable saved players.
+ *
+ *
+ * @author Kenzo
+ *
+ */
 @Immutable
 public class SavedPlayer {
-	
+
 	/**
 	 * The variable containing the id of the player.
 	 */
@@ -41,25 +47,70 @@ public class SavedPlayer {
 	/**
 	 * The stack of this player.
 	 */
-	private final Chips chips;
+	private final int stackValue;
 
 	/**
 	 * The chips the player has bet in this round.
 	 *
 	 */
-	private final Chips bettedChips;
+	private final int bettedChipsValue;
 
 	/**
 	 * The hidden cards.
 	 */
 	private final List<Card> pocketCards;
-	
+
 	public SavedPlayer(Player player){
 		id = player.getId();
 		name = player.getName();
-		chips = player.getStack().getCopy();
-		bettedChips = player.getBettedChips().getCopy();
+		stackValue = player.getStack().getValue();
+		bettedChipsValue = player.getBettedChips().getValue();
 		pocketCards = Collections.unmodifiableList(player.getPocketCards());
+	}
+
+	/**
+	 * Returns the id of this saved player.
+	 *
+	 * @return The id of this saved player.
+	 */
+	public PlayerId getId(){
+		return id;
+	}
+
+	/**
+	 * Returns the name of this saved player.
+	 *
+	 * @return The name of this saved player.
+	 */
+	public String getName(){
+		return name;
+	}
+
+	/**
+	 * Returns the stack value of this saved player.
+	 *
+	 * @return The stack value of this saved player.
+	 */
+	public int getStackValue(){
+		return stackValue;
+	}
+
+	/**
+	 * Returns the betted chips value of this saved player.
+	 *
+	 * @return The betted chips value of this saved player.
+	 */
+	public int getBettedChipsValue(){
+		return bettedChipsValue;
+	}
+
+	/**
+	 * The pocket cards of this saved player.
+	 *
+	 * @return The pocket cards of this saved player.
+	 */
+	public List<Card> getPocketCards(){
+		return pocketCards;
 	}
 
 }

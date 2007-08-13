@@ -87,7 +87,7 @@ public abstract class Round implements PlayerAction{
 	 * but who have placed chips on their betted chips pile.
 	 */
 	private final List<Player> foldedPlayersWithBet;
-	
+
 	protected final GameMediator gameMediator;
 
 	/**********************************************************
@@ -206,6 +206,8 @@ public abstract class Round implements PlayerAction{
 	 * @throws IllegalValueException
 	 */
 	protected void collectSmallBlind(Player player) throws IllegalValueException{
+		if(player.getStack().getValue()<=getGame().getGameProperty().getSmallBlind())
+			throw new IllegalValueException();
 		player.transferAmountToBettedPile(getGame().getGameProperty().getSmallBlind());
 		raiseBetWith(getGame().getGameProperty().getSmallBlind());
 		getBettingRules().setBetPlaced(true);
@@ -221,6 +223,8 @@ public abstract class Round implements PlayerAction{
 	 * @throws IllegalValueException
 	 */
 	protected void collectBigBlind(Player player) throws IllegalValueException{
+		if(player.getStack().getValue()<=getGame().getGameProperty().getBigBlind())
+			throw new IllegalValueException();
 		player.transferAmountToBettedPile(getGame().getGameProperty().getBigBlind());
 		getBettingRules().setBetPlaced(true);
 		getBettingRules().setLastBetAmount(getGame().getGameProperty().getBigBlind());
@@ -516,7 +520,7 @@ public abstract class Round implements PlayerAction{
 			setBet(player.getBettedChips().getValue());
 			playerMadeEvent(player);
 		}
-		gameMediator.publishAllInEvent(new AllInEvent(player));
+		gameMediator.publishAllInEvent(new AllInEvent(player.getSavedPlayer()));
 		System.out.println(player.getName()+" goes all in with "+player.getBettedChips().getValue()+" chips.");
 	}
 

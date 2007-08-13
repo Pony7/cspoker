@@ -18,22 +18,22 @@ package org.cspoker.server.game.events.playerActionEvents;
 
 import org.cspoker.server.game.events.GameEvent;
 import org.cspoker.server.game.gameControl.actions.Action;
-import org.cspoker.server.game.player.Player;
+import org.cspoker.server.game.player.SavedPlayer;
 
 
 /**
  * A class to represent raise events.
- * 
+ *
  * @author Kenzo
  *
  */
 public class RaiseEvent extends GameEvent {
-	
-	private final Player player;
-	
+
+	private final SavedPlayer player;
+
 	private final int amount;
-	
-	public RaiseEvent(Player player, int amount){
+
+	public RaiseEvent(SavedPlayer player, int amount){
 		this.player = player;
 		this.amount = amount;
 	}
@@ -42,10 +42,11 @@ public class RaiseEvent extends GameEvent {
 	public String[] getAction() {
 		return new String[] {String.valueOf(player.getId()),Action.RAISE.toString(), String.valueOf(amount)};
 	}
-	
+
 	@Override
 	public String toString(){
-		return player.getName()+" raises with "+amount+".";
+		return "bla";
+		//return player.getName()+" raises with "+amount+".";
 	}
 
 }

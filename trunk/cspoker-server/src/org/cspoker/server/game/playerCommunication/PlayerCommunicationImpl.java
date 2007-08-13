@@ -129,7 +129,7 @@ public class PlayerCommunicationImpl implements PlayerCommunication {
 	public void leaveTable() throws IllegalActionException{
 		state.leaveTable();
 	}
-	
+
 	public TableId createTable() throws IllegalActionException {
 		return state.createTable();
 	}
@@ -144,7 +144,7 @@ public class PlayerCommunicationImpl implements PlayerCommunication {
 	}
 
 
-	public List<GameEvent> getLatestGameEventsAndAck(long ack) throws IllegalActionException{
+	public List<GameEvent> getLatestGameEventsAndAck(int ack) throws IllegalActionException{
 		return state.getLatestGameEventsAndAck(ack);
 	}
 

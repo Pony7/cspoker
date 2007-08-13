@@ -148,12 +148,12 @@ public class Player {
 	public void dealPocketCard(Card card){
 		pocketCards.add(card);
 	}
-	
+
 	/**
 	 * Returns the pocket cards of this player.
-	 * 
+	 *
 	 * A change in the returned list, does not change the internal representation.
-	 * 
+	 *
 	 * @return The pocket cards of this player.
 	 */
 	public List<Card> getPocketCards(){
@@ -199,8 +199,8 @@ public class Player {
 			return false;
 		return true;
 	}
-	
-	public  SavedPlayer getMemento(){
+
+	public  SavedPlayer getSavedPlayer(){
 		return new SavedPlayer(this);
 	}
 }

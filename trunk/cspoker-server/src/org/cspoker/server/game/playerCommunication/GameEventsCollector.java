@@ -16,9 +16,9 @@
 
 package org.cspoker.server.game.playerCommunication;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.cspoker.server.game.events.GameEvent;
 import org.cspoker.server.game.events.GameEventListener;
@@ -32,10 +32,12 @@ import org.cspoker.server.game.events.GameEventListener;
  */
 public class GameEventsCollector implements GameEventListener{
 
+	private int ackedToNumber=0;
+
 	/**
 	 * This variable contains the game events.
 	 */
-	private final List<GameEvent> events = new CopyOnWriteArrayList<GameEvent>();
+	private final List<GameEvent> events = new ArrayList<GameEvent>();
 
 	/**
 	 * This method is called when subscribed to inform a new game event occurred.
@@ -44,7 +46,7 @@ public class GameEventsCollector implements GameEventListener{
 	 * 			The event object containing all information of the occurred event.
 	 */
 	@Override
-	public void onGameEvent(GameEvent event) {
+	public synchronized void onGameEvent(GameEvent event) {
 		events.add(event);
 	}
 
@@ -53,17 +55,18 @@ public class GameEventsCollector implements GameEventListener{
 	 *
 	 * @return The latest game events.
 	 */
-	public List<GameEvent> getLatestEvents(){
-		return Collections.unmodifiableList(events);
+	public synchronized List<GameEvent> getLatestEvents(){
+		return Collections.unmodifiableList(new ArrayList<GameEvent>(events.subList(ackedToNumber, events.size())));
 	}
 
-	public List<GameEvent> getLatestEventsAndAck(long ack){
-		//TODO
-		return null;
-	}
+	public synchronized List<GameEvent> getLatestEventsAndAck(int ack){
+		if(ack<=ackedToNumber)
+			return getLatestEvents();
+		if((ack>events.size()))
+			ack = events.size();
+		ackedToNumber = ack;
 
-	public void clear() {
-		events.clear();
+		return Collections.unmodifiableList(new ArrayList<GameEvent>(events.subList(ack, events.size())));
 	}
 
 }

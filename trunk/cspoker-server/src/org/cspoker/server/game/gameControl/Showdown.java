@@ -213,7 +213,7 @@ public class Showdown {
 	 */
 	private Hand getBestFiveCardHand(Player player){
 		List<Card> cards = new ArrayList<Card>(7);
-		cards.addAll(getGame().getOpenCards());
+		cards.addAll(getGame().getCommunityCards());
 		cards.addAll(player.getPocketCards());
 		return HandEvaluator.getBestHand(new Hand(cards));
 	}

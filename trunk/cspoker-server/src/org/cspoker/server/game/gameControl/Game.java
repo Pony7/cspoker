@@ -17,7 +17,6 @@
 package org.cspoker.server.game.gameControl;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -71,7 +70,7 @@ public class Game {
 	/**
 	 * This list contains all common cards.
 	 */
-	private List<Card> openCards;
+	private List<Card> communityCards;
 
 	/**
 	 * This variable contains all the pots in this game.
@@ -116,7 +115,7 @@ public class Game {
 		currentHandPlayers = new LoopingList<Player>(players);
 		initialCurrentHandPlayers = new LoopingList<Player>(players);
 		deck = new Deck();
-		openCards = new ArrayList<Card>();
+		communityCards = new ArrayList<Card>();
 		pots = new Pots();
 		changeDealer(currentHandPlayers.getList().get(new Random().nextInt(currentHandPlayers.size())));
 	}
@@ -130,7 +129,7 @@ public class Game {
 	 *
 	 */
 	public void dealNewHand(){
-		openCards = new ArrayList<Card>();
+		communityCards = new ArrayList<Card>();
 		deck.newDeal();
 		pots = new Pots();
 		List<Player> players = table.getPlayers();
@@ -453,18 +452,18 @@ public class Game {
 	}
 
 	/**
-	 * Add the given card to the common cards.
+	 * Add the given card to the community cards.
 	 *
 	 * @param 	card
-	 * 			The card to add to the common cards.
+	 * 			The card to add to the community cards.
 	 */
 	public void addOpenCard(Card card){
-		openCards.add(card);
+		communityCards.add(card);
 	}
 
 	/**
 	 * Add the given card to the muck.
-	 * The given card is not added to the common cards.
+	 * The given card is not added to the community cards.
 	 *
 	 * @param 	card
 	 * 			The card to add to the muck.
@@ -475,12 +474,12 @@ public class Game {
 	}
 
 	/**
-	 * Returns the list of all common cards.
+	 * Returns the list of all community cards.
 	 *
-	 * @return The list of all common cards.
+	 * @return The list of all community cards.
 	 */
-	public List<Card> getOpenCards(){
-		return Collections.unmodifiableList(openCards);
+	public List<Card> getCommunityCards(){
+		return new ArrayList<Card>(communityCards);
 	}
 
 
