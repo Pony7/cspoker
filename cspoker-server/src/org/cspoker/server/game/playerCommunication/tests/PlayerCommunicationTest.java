@@ -104,6 +104,19 @@ public class PlayerCommunicationTest extends TestCase {
 			}
 			System.out.println("Kenzo's events:"+kenzoComm.getLatestGameEvents());
 			System.out.println("Guy's events:"+guyComm.getLatestGameEvents());
+
+			try {
+				kenzoComm.call();
+			} catch (IllegalActionException e) {
+				try {
+					guyComm.call();
+				} catch (IllegalActionException e1) {
+				}
+			}
+
+			System.out.println("Kenzo's events:"+kenzoComm.getLatestGameEvents());
+			System.out.println("Guy's events:"+guyComm.getLatestGameEvents());
+
 		} catch (IllegalActionException e) {
 			fail(e.getMessage());
 		}finally{

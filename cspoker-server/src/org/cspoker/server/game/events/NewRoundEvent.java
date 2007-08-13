@@ -16,18 +16,34 @@
 
 package org.cspoker.server.game.events;
 
+import org.cspoker.server.game.player.SavedPlayer;
+
 /**
  * A class to represent new round events.
- * 
+ *
  * @author Kenzo
  *
  */
 public class NewRoundEvent extends GameEvent {
 
+	private final String roundName;
+
+	private final SavedPlayer player;
+
+	public NewRoundEvent(String roundName, SavedPlayer player){
+		this.roundName = roundName;
+		this.player = player;
+	}
+
 	@Override
 	public String[] getAction() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public String toString(){
+		return player.getName()+" can begin to act.";
 	}
 
 }

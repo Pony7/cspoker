@@ -827,7 +827,6 @@ public class GameMediator implements PlayerAction{
 	 */
 	public void unsubscribeNewPocketCardsListener(NewPrivateCardsListener listener) {
 		//TODO
-		newPrivateCardsListeners.remove(listener);
 	}
 
 	/**
@@ -941,7 +940,6 @@ public class GameMediator implements PlayerAction{
 	 */
 	public void unsubscribePersonalGameEventEventListener(GameEventListener listener) {
 		//TODO
-		personalEventsListeners.remove(listener);
 	}
 
 	/**
