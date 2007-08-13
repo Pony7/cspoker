@@ -18,7 +18,7 @@ package org.cspoker.server.game.gameControl.rounds;
 
 import org.cspoker.server.game.GameMediator;
 import org.cspoker.server.game.elements.chips.IllegalValueException;
-import org.cspoker.server.game.events.NewCommunityCardsEvent;
+import org.cspoker.server.game.events.NewRoundEvent;
 import org.cspoker.server.game.events.NextPlayerEvent;
 import org.cspoker.server.game.events.playerActionEvents.BigBlindEvent;
 import org.cspoker.server.game.events.playerActionEvents.SmallBlindEvent;
@@ -37,6 +37,7 @@ public class PreFlopRound extends Round{
 	public PreFlopRound(GameMediator gameMediator, Game game) {
 		super(gameMediator, game);
 		System.out.println("** PreFlop Round **");
+		gameMediator.publishNewRoundEvent(new NewRoundEvent(toString(), getGame().getCurrentPlayer().getSavedPlayer()));
 		try {
 			Player player = getGame().getCurrentPlayer();
 			collectSmallBlind(player);
@@ -72,12 +73,6 @@ public class PreFlopRound extends Round{
 		if(onlyOnePlayerLeft()){
 			getGame().getPots().close(getGame().getCurrentDealPlayers());
 			winner(getGame().getPots());
-		}else{
-			drawMuckCard();
-			drawOpenCard();
-			drawOpenCard();
-			drawOpenCard();
-			gameMediator.publishNewCommonCardsEvent(new NewCommunityCardsEvent(getGame().getCommunityCards()));
 		}
 	}
 
@@ -93,5 +88,10 @@ public class PreFlopRound extends Round{
 	@Override
 	public boolean isHighBettingRound() {
 		return !isLowBettingRound();
+	}
+
+	@Override
+	public String toString(){
+		return "pre-flop round";
 	}
 }

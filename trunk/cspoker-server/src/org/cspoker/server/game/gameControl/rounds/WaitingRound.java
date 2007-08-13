@@ -87,4 +87,9 @@ public class WaitingRound extends Round {
 	public boolean isHighBettingRound() {
 		return false;
 	}
+
+	@Override
+	public String toString(){
+		return "waiting round";
+	}
 }

@@ -17,6 +17,7 @@
 package org.cspoker.server.game.gameControl.rounds;
 
 import org.cspoker.server.game.GameMediator;
+import org.cspoker.server.game.events.NewCommunityCardsEvent;
 import org.cspoker.server.game.gameControl.Game;
 
 public class TurnRound extends Round{
@@ -24,6 +25,10 @@ public class TurnRound extends Round{
 	public TurnRound(GameMediator gameMediator, Game game) {
 		super(gameMediator, game);
 		System.out.println("** Turn Round **");
+		//gameMediator.publishNewRoundEvent(new NewRoundEvent(toString(), getGame().getCurrentPlayer().getSavedPlayer()));
+		drawMuckCard();
+		drawOpenCard();
+		gameMediator.publishNewCommonCardsEvent(new NewCommunityCardsEvent(getGame().getCommunityCards()));
 	}
 
 	/**
@@ -37,9 +42,6 @@ public class TurnRound extends Round{
 		if(onlyOnePlayerLeft()){
 			getGame().getPots().close(getGame().getCurrentDealPlayers());
 			winner(getGame().getPots());
-		}else{
-		drawMuckCard();
-		drawOpenCard();
 		}
 	}
 
@@ -56,5 +58,10 @@ public class TurnRound extends Round{
 	@Override
 	public boolean isHighBettingRound() {
 		return !isLowBettingRound();
+	}
+
+	@Override
+	public String toString(){
+		return "turn round";
 	}
 }
