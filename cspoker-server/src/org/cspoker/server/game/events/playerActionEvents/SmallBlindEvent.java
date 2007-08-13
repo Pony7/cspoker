@@ -14,10 +14,37 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-package org.cspoker.server.game.events;
+package org.cspoker.server.game.events.playerActionEvents;
 
-import org.cspoker.server.game.events.playerActionEvents.PlayerActionEventsListener;
+import org.cspoker.server.game.events.GameEvent;
+import org.cspoker.server.game.player.SavedPlayer;
 
-public interface AllGameEventsListener extends PlayerActionEventsListener {
+/**
+ * A class to represent small blind events.
+ *
+ * @author Kenzo
+ *
+ */
+public class SmallBlindEvent extends GameEvent{
+
+	private final SavedPlayer player;
+
+	private final int amount;
+
+	public SmallBlindEvent(SavedPlayer player, int amount){
+		this.player = player;
+		this.amount = amount;
+	}
+
+	@Override
+	public String[] getAction() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String toString(){
+		return player.getName()+" bets the small blind of "+amount+".";
+	}
 
 }

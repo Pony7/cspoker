@@ -101,7 +101,7 @@ public class GameFlowTest extends TestCase {
 			fail(e.getMessage());
 		}
 		System.out.println(game.getCurrentDealPlayers());
-		System.out.println("Common Cards: "+game.getOpenCards());
+		System.out.println("Common Cards: "+game.getCommunityCards());
 
 		//Flop Round
 		try {
@@ -111,7 +111,7 @@ public class GameFlowTest extends TestCase {
 		} catch (IllegalActionException e) {
 			fail(e.getMessage());
 		}
-		System.out.println("Common Cards: "+game.getOpenCards());
+		System.out.println("Common Cards: "+game.getCommunityCards());
 
 		//Turn Round
 		try {
@@ -121,7 +121,7 @@ public class GameFlowTest extends TestCase {
 		} catch (IllegalActionException e) {
 			fail(e.getMessage());
 		}
-		System.out.println("Common Cards: "+game.getOpenCards());
+		System.out.println("Common Cards: "+game.getCommunityCards());
 
 		//Final Round
 		try {
@@ -156,7 +156,7 @@ public class GameFlowTest extends TestCase {
 			fail(e.getMessage());
 		}
 		System.out.println(game.getCurrentDealPlayers());
-		System.out.println("Common Cards: "+game.getOpenCards());
+		System.out.println("Common Cards: "+game.getCommunityCards());
 
 		//Flop Round
 		try {
@@ -166,7 +166,7 @@ public class GameFlowTest extends TestCase {
 		} catch (IllegalActionException e) {
 			fail(e.getMessage());
 		}
-		System.out.println("Common Cards: "+game.getOpenCards());
+		System.out.println("Common Cards: "+game.getCommunityCards());
 
 		//Turn Round
 		try {
@@ -176,7 +176,7 @@ public class GameFlowTest extends TestCase {
 		} catch (IllegalActionException e) {
 			fail(e.getMessage());
 		}
-		System.out.println("Common Cards: "+game.getOpenCards());
+		System.out.println("Common Cards: "+game.getCommunityCards());
 
 		//Final Round
 		try {
@@ -223,7 +223,7 @@ public class GameFlowTest extends TestCase {
 			fail(e.getMessage());
 		}
 		System.out.println(game.getCurrentDealPlayers());
-		System.out.println("Common Cards: "+game.getOpenCards());
+		System.out.println("Common Cards: "+game.getCommunityCards());
 
 		//Flop Round
 		try {
@@ -233,7 +233,7 @@ public class GameFlowTest extends TestCase {
 		} catch (IllegalActionException e) {
 			fail(e.getMessage());
 		}
-		System.out.println("Common Cards: "+game.getOpenCards());
+		System.out.println("Common Cards: "+game.getCommunityCards());
 
 		//Turn Round
 		try {
@@ -243,7 +243,7 @@ public class GameFlowTest extends TestCase {
 		} catch (IllegalActionException e) {
 			fail(e.getMessage());
 		}
-		System.out.println("Common Cards: "+game.getOpenCards());
+		System.out.println("Common Cards: "+game.getCommunityCards());
 
 		//Final Round
 		try {
@@ -299,7 +299,7 @@ public class GameFlowTest extends TestCase {
 			fail(e.getMessage());
 		}
 		System.out.println(game.getCurrentDealPlayers());
-		System.out.println("Common Cards: "+game.getOpenCards());
+		System.out.println("Common Cards: "+game.getCommunityCards());
 		//Flop Round
 		try {
 			gameControl.check(game.getCurrentPlayer());
@@ -307,7 +307,7 @@ public class GameFlowTest extends TestCase {
 		} catch (IllegalActionException e) {
 			fail(e.getMessage());
 		}
-		System.out.println("Common Cards: "+game.getOpenCards());
+		System.out.println("Common Cards: "+game.getCommunityCards());
 
 		//Turn Round
 		try {
@@ -316,7 +316,7 @@ public class GameFlowTest extends TestCase {
 		} catch (IllegalActionException e) {
 			fail(e.getMessage());
 		}
-		System.out.println("Common Cards: "+game.getOpenCards());
+		System.out.println("Common Cards: "+game.getCommunityCards());
 
 		//Final Round
 		try {
@@ -387,7 +387,7 @@ public class GameFlowTest extends TestCase {
 			fail(e.getMessage());
 		}
 		System.out.println(game.getCurrentDealPlayers());
-		System.out.println("Common Cards: "+game.getOpenCards());
+		System.out.println("Common Cards: "+game.getCommunityCards());
 		System.out.println("Side pots: "+game.getPots().getSidePots());
 		System.out.println("Main pot: "+game.getPots().getMainPot());
 		//Flop Round
@@ -397,7 +397,7 @@ public class GameFlowTest extends TestCase {
 		} catch (IllegalActionException e) {
 			fail(e.getMessage());
 		}
-		System.out.println("Common Cards: "+game.getOpenCards());
+		System.out.println("Common Cards: "+game.getCommunityCards());
 
 		//Turn Round
 		try {
@@ -406,7 +406,7 @@ public class GameFlowTest extends TestCase {
 		} catch (IllegalActionException e) {
 			fail(e.getMessage());
 		}
-		System.out.println("Common Cards: "+game.getOpenCards());
+		System.out.println("Common Cards: "+game.getCommunityCards());
 
 		//Final Round
 		try {
@@ -471,7 +471,7 @@ public class GameFlowTest extends TestCase {
 			fail(e.getMessage());
 		}
 		System.out.println(game.getCurrentDealPlayers());
-		System.out.println("Common Cards: "+game.getOpenCards());
+		System.out.println("Common Cards: "+game.getCommunityCards());
 		System.out.println("Side pots: "+game.getPots().getSidePots());
 		System.out.println("Main pot: "+game.getPots().getMainPot());
 		//Flop Round
@@ -480,7 +480,7 @@ public class GameFlowTest extends TestCase {
 		} catch (IllegalActionException e) {
 			fail(e.getMessage());
 		}
-		System.out.println("Common Cards: "+game.getOpenCards());
+		System.out.println("Common Cards: "+game.getCommunityCards());
 
 		//Turn Round
 		try {
@@ -488,7 +488,7 @@ public class GameFlowTest extends TestCase {
 		} catch (IllegalActionException e) {
 			fail(e.getMessage());
 		}
-		System.out.println("Common Cards: "+game.getOpenCards());
+		System.out.println("Common Cards: "+game.getCommunityCards());
 
 		//Final Round
 		try {
@@ -544,7 +544,7 @@ public class GameFlowTest extends TestCase {
 			fail(e.getMessage());
 		}
 		System.out.println(game.getCurrentDealPlayers());
-		System.out.println("Common Cards: "+game.getOpenCards());
+		System.out.println("Common Cards: "+game.getCommunityCards());
 		System.out.println("Side pots: "+game.getPots().getSidePots());
 		System.out.println("Main pot: "+game.getPots().getMainPot());
 		//Flop Round
@@ -553,7 +553,7 @@ public class GameFlowTest extends TestCase {
 		} catch (IllegalActionException e) {
 			fail(e.getMessage());
 		}
-		System.out.println("Common Cards: "+game.getOpenCards());
+		System.out.println("Common Cards: "+game.getCommunityCards());
 
 		//Turn Round
 		try {
@@ -561,7 +561,7 @@ public class GameFlowTest extends TestCase {
 		} catch (IllegalActionException e) {
 			fail(e.getMessage());
 		}
-		System.out.println("Common Cards: "+game.getOpenCards());
+		System.out.println("Common Cards: "+game.getCommunityCards());
 
 		//Final Round
 		try {
@@ -615,7 +615,7 @@ public class GameFlowTest extends TestCase {
 			fail(e.getMessage());
 		}
 		System.out.println(game.getCurrentDealPlayers());
-		System.out.println("Common Cards: "+game.getOpenCards());
+		System.out.println("Common Cards: "+game.getCommunityCards());
 
 		//Flop Round
 		try {
@@ -625,7 +625,7 @@ public class GameFlowTest extends TestCase {
 		} catch (IllegalActionException e) {
 			fail(e.getMessage());
 		}
-		System.out.println("Common Cards: "+game.getOpenCards());
+		System.out.println("Common Cards: "+game.getCommunityCards());
 
 		System.out.println("\n\n");
 		//New game

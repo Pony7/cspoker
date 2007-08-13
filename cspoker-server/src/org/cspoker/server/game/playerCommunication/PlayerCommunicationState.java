@@ -110,7 +110,7 @@ abstract class PlayerCommunicationState implements PlayerCommunication{
 	public List<GameEvent> getLatestGameEvents() throws IllegalActionException {
 		throw new IllegalActionException("Requesting the latest game events is not a valid action. "+getStdErrorMessage());
 	}
-	public List<GameEvent> getLatestGameEventsAndAck(long ack) throws IllegalActionException {
+	public List<GameEvent> getLatestGameEventsAndAck(int ack) throws IllegalActionException {
 		throw new IllegalActionException("Requesting the latest game events is not a valid action. "+getStdErrorMessage());
 	}
 

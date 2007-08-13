@@ -26,16 +26,20 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import org.cspoker.server.game.elements.table.PlayerListFullException;
 import org.cspoker.server.game.events.GameEvent;
 import org.cspoker.server.game.events.GameEventListener;
-import org.cspoker.server.game.events.NewCommonCardsEvent;
-import org.cspoker.server.game.events.NewCommonCardsListener;
+import org.cspoker.server.game.events.NewCommunityCardsEvent;
+import org.cspoker.server.game.events.NewCommunityCardsListener;
 import org.cspoker.server.game.events.NewDealEvent;
 import org.cspoker.server.game.events.NewDealListener;
 import org.cspoker.server.game.events.NewRoundEvent;
 import org.cspoker.server.game.events.NewRoundListener;
+import org.cspoker.server.game.events.NextPlayerEvent;
+import org.cspoker.server.game.events.NextPlayerListener;
 import org.cspoker.server.game.events.playerActionEvents.AllInEvent;
 import org.cspoker.server.game.events.playerActionEvents.AllInListener;
 import org.cspoker.server.game.events.playerActionEvents.BetEvent;
 import org.cspoker.server.game.events.playerActionEvents.BetListener;
+import org.cspoker.server.game.events.playerActionEvents.BigBlindEvent;
+import org.cspoker.server.game.events.playerActionEvents.BigBlindListener;
 import org.cspoker.server.game.events.playerActionEvents.CallEvent;
 import org.cspoker.server.game.events.playerActionEvents.CallListener;
 import org.cspoker.server.game.events.playerActionEvents.CheckEvent;
@@ -46,6 +50,8 @@ import org.cspoker.server.game.events.playerActionEvents.FoldEvent;
 import org.cspoker.server.game.events.playerActionEvents.FoldListener;
 import org.cspoker.server.game.events.playerActionEvents.RaiseEvent;
 import org.cspoker.server.game.events.playerActionEvents.RaiseListener;
+import org.cspoker.server.game.events.playerActionEvents.SmallBlindEvent;
+import org.cspoker.server.game.events.playerActionEvents.SmallBlindListener;
 import org.cspoker.server.game.events.privateEvents.NewPocketCardsEvent;
 import org.cspoker.server.game.events.privateEvents.NewPrivateCardsListener;
 import org.cspoker.server.game.gameControl.GameControl;
@@ -512,7 +518,86 @@ public class GameMediator implements PlayerAction{
 	 */
 	private final List<DealListener> dealListeners = new CopyOnWriteArrayList<DealListener>();
 
+	/**
+	 * Inform all subscribed small blind listeners a small blind event has occurred.
+	 *
+	 * Each subscribed small blind listener is updated
+	 * by calling their onSmallBlindEvent() method.
+	 *
+	 */
+	public void publishSmallBlindEvent(SmallBlindEvent event){
+		for(SmallBlindListener listener: smallBlindListeners){
+			listener.onSmallBlindEvent(event);
+		}
+		publishGameEvent(event);
+	}
 
+	/**
+	 * Subscribe the given small blind listener for small blind events.
+	 *
+	 * @param 	listener
+	 * 			The listener to subscribe.
+	 */
+	public void subscribeSmallBlindListener(SmallBlindListener listener) {
+		smallBlindListeners.add(listener);
+	}
+
+	/**
+	 * Unsubscribe the given small blind listener for small blind events.
+	 *
+	 * @param 	listener
+	 * 			The listener to unsubscribe.
+	 */
+	public void unsubscribeSmallBlindListener(SmallBlindListener listener) {
+		smallBlindListeners.remove(listener);
+	}
+
+	/**
+	 * This list contains all small blind listeners that
+	 * should be alerted on a small blind event.
+	 */
+	private final List<SmallBlindListener> smallBlindListeners = new CopyOnWriteArrayList<SmallBlindListener>();
+
+
+	/**
+	 * Inform all subscribed big blind listeners a big blind event has occurred.
+	 *
+	 * Each subscribed big blind listener is updated
+	 * by calling their onBigBlindEvent() method.
+	 *
+	 */
+	public void publishBigBlindEvent(BigBlindEvent event) {
+		for (BigBlindListener listener : bigBlindListeners) {
+			listener.onBigBlindEvent(event);
+		}
+		publishGameEvent(event);
+	}
+
+	/**
+	 * Subscribe the given big blind listener for big blind events.
+	 *
+	 * @param 	listener
+	 * 			The listener to subscribe.
+	 */
+	public void subscribeBigBlindListener(BigBlindListener listener) {
+		bigBlindListeners.add(listener);
+	}
+
+	/**
+	 * Unsubscribe the given big blind listener for big blind events.
+	 *
+	 * @param 	listener
+	 * 			The listener to unsubscribe.
+	 */
+	public void unsubscribeBigBlindListener(BigBlindListener listener) {
+		bigBlindListeners.remove(listener);
+	}
+
+	/**
+	 * This list contains all big blind listeners that
+	 * should be alerted on a big blind.
+	 */
+	private final List<BigBlindListener> bigBlindListeners = new CopyOnWriteArrayList<BigBlindListener>();
 
 	/**
 	 * Inform all subscribed new round listeners a new round event has occurred.
@@ -563,9 +648,9 @@ public class GameMediator implements PlayerAction{
 	 * by calling their onNewCommonCardsEvent() method.
 	 *
 	 */
-	public void publishNewCommonCardsEvent(NewCommonCardsEvent event){
-		for(NewCommonCardsListener listener:newCommonCardsListeners){
-			listener.onNewCommonCardsEvent(event);
+	public void publishNewCommonCardsEvent(NewCommunityCardsEvent event){
+		for(NewCommunityCardsListener listener:newCommonCardsListeners){
+			listener.onNewCommunityCardsEvent(event);
 		}
 		publishGameEvent(event);
 	}
@@ -576,7 +661,7 @@ public class GameMediator implements PlayerAction{
 	 * @param 	listener
 	 * 			The listener to subscribe.
 	 */
-	public void subscribeNewCommonCardsListener(NewCommonCardsListener listener) {
+	public void subscribeNewCommonCardsListener(NewCommunityCardsListener listener) {
 		newCommonCardsListeners.add(listener);
 	}
 
@@ -586,7 +671,7 @@ public class GameMediator implements PlayerAction{
 	 * @param 	listener
 	 * 			The listener to unsubscribe.
 	 */
-	public void unsubscribeNewCommonCardsListener(NewCommonCardsListener listener) {
+	public void unsubscribeNewCommonCardsListener(NewCommunityCardsListener listener) {
 		newCommonCardsListeners.remove(listener);
 	}
 
@@ -594,7 +679,7 @@ public class GameMediator implements PlayerAction{
 	 * This list contains all new common cards listeners that
 	 * should be alerted on new common cards.
 	 */
-	private final List<NewCommonCardsListener> newCommonCardsListeners = new CopyOnWriteArrayList<NewCommonCardsListener>();
+	private final List<NewCommunityCardsListener> newCommonCardsListeners = new CopyOnWriteArrayList<NewCommunityCardsListener>();
 
 
 
@@ -638,6 +723,46 @@ public class GameMediator implements PlayerAction{
 	 */
 	private final List<NewDealListener> newDealListeners = new CopyOnWriteArrayList<NewDealListener>();
 
+	/**
+	 * Inform all subscribed next player listeners a next player event has occurred.
+	 *
+	 * Each subscribed next player listener is updated
+	 * by calling their onNextPlayerEvent() method.
+	 *
+	 */
+	public void publishNextPlayerEvent(NextPlayerEvent event) {
+		for (NextPlayerListener listener : nextPlayerListeners) {
+			listener.onNextPlayerEvent(event);
+		}
+		publishGameEvent(event);
+	}
+
+	/**
+	 * Subscribe the given next player listener for next player events.
+	 *
+	 * @param 	listener
+	 * 			The listener to subscribe.
+	 */
+	public void subscribeNextPlayerListener(NextPlayerListener listener) {
+		nextPlayerListeners.add(listener);
+	}
+
+	/**
+	 * Unsubscribe the given next player listener for next player events.
+	 *
+	 * @param 	listener
+	 * 			The listener to unsubscribe.
+	 */
+	public void unsubscribeNextPlayerListener(NextPlayerListener listener) {
+		nextPlayerListeners.remove(listener);
+	}
+
+	/**
+	 * This list contains all next player listeners that
+	 * should be alerted on a next player.
+	 */
+	private final List<NextPlayerListener> nextPlayerListeners = new CopyOnWriteArrayList<NextPlayerListener>();
+
 	/**********************************************************
 	 * Personal Events
 	 **********************************************************/
@@ -656,7 +781,7 @@ public class GameMediator implements PlayerAction{
 				listener.onNewPrivateCardsEvent(event);
 			}
 		}
-		publishPrivateEvent(event);
+		publishPersonalGameEvent(id, event);
 	}
 
 
@@ -667,6 +792,8 @@ public class GameMediator implements PlayerAction{
 	 * 			The id of the player to get the new private cards events from.
 	 * @param 	listener
 	 * 			The listener to subscribe.
+	 *
+	 * @note This method is both non-blocking and thread-safe.
 	 */
 	public void subscribeNewPocketCardsListener(PlayerId id, NewPrivateCardsListener listener) {
 		List<NewPrivateCardsListener> currentListeners;
@@ -699,6 +826,7 @@ public class GameMediator implements PlayerAction{
 	 * 			The listener to unsubscribe.
 	 */
 	public void unsubscribeNewPocketCardsListener(NewPrivateCardsListener listener) {
+		//TODO
 		newPrivateCardsListeners.remove(listener);
 	}
 
@@ -754,49 +882,118 @@ public class GameMediator implements PlayerAction{
 	private final List<GameEventListener> gameEventListeners = new CopyOnWriteArrayList<GameEventListener>();
 
 	/**********************************************************
-	 * Private game events listener
+	 * Personal game events listener
+	 *
+	 * All personal events for one player can easily be collected.
+	 **********************************************************/
+
+	/**
+	 * Inform all subscribed personal event listeners a personal event event has occurred.
+	 *
+	 * Each subscribed personal event listener is updated
+	 * by calling their onGameEvent() method.
+	 *
+	 */
+	public void publishPersonalGameEvent(PlayerId id, GameEvent event) {
+		List<GameEventListener> listeners = personalEventsListeners.get(id);
+		if(listeners!=null){
+			for(GameEventListener listener:listeners){
+				listener.onGameEvent(event);
+			}
+		}
+		publishAllPersonalEvents(event);
+	}
+
+	/**
+	 * Subscribe the given personal event listener for personal event events.
+	 *
+	 * @param 	listener
+	 * 			The listener to subscribe.
+	 */
+	public void subscribePersonalGameEventListener(PlayerId id, GameEventListener listener) {
+		List<GameEventListener> currentListeners;
+		List<GameEventListener> newListeners;
+
+		boolean notAdded;
+
+		do{
+			notAdded = false;
+			currentListeners = personalEventsListeners.get(id);
+			if(currentListeners==null){
+				newListeners = new ArrayList<GameEventListener>();
+			}else{
+				newListeners = new ArrayList<GameEventListener>(currentListeners);
+			}
+			newListeners.add(listener);
+			if(currentListeners==null){
+				notAdded = (personalEventsListeners.putIfAbsent(id, Collections.unmodifiableList(newListeners))!=null);
+			}else{
+				notAdded = !personalEventsListeners.replace(id, currentListeners, Collections.unmodifiableList(newListeners));
+			}
+		}while(notAdded);
+	}
+
+	/**
+	 * Unsubscribe the given personal event listener for personal event events.
+	 *
+	 * @param 	listener
+	 * 			The listener to unsubscribe.
+	 */
+	public void unsubscribePersonalGameEventEventListener(GameEventListener listener) {
+		//TODO
+		personalEventsListeners.remove(listener);
+	}
+
+	/**
+	 * This hash map contains all personal event listeners that
+	 * should be alerted on a personal event for a given id.
+	 */
+	private final ConcurrentMap<PlayerId,List<GameEventListener>> personalEventsListeners = new ConcurrentHashMap<PlayerId, List<GameEventListener>>();
+
+	/**********************************************************
+	 * All personal game events listener
 	 *
 	 * Game loggers can also obtain private events
 	 * all other players can only receive personally.
 	 **********************************************************/
 
+
 	/**
-	 * Inform all subscribed game listeners a private event has occurred.
+	 * Inform all subscribed personal listeners a personal event has occurred.
 	 *
-	 * Each subscribed game listener is updated
+	 * Each subscribed personal listener is updated
 	 * by calling their onGameEvent() method.
 	 *
 	 */
-
-	public void publishPrivateEvent(GameEvent event){
-		for(GameEventListener listener:privateEventsListeners){
+	public void publishAllPersonalEvents(GameEvent event) {
+		for (GameEventListener listener : allPersonalEventsListeners) {
 			listener.onGameEvent(event);
 		}
 	}
 
 	/**
-	 * Subscribe the given game events listener for private events events.
+	 * Subscribe the given personal listener for personal events.
 	 *
 	 * @param 	listener
 	 * 			The listener to subscribe.
 	 */
-	public void subscribePrivateEventsListener(GameEventListener listener) {
-		privateEventsListeners.add(listener);
+	public void subscribeAllPersonalEventsListener(GameEventListener listener) {
+		allPersonalEventsListeners.add(listener);
 	}
 
 	/**
-	 * Unsubscribe the given game events listener for private events events.
+	 * Unsubscribe the given personal listener for personal events.
 	 *
 	 * @param 	listener
 	 * 			The listener to unsubscribe.
 	 */
-	public void unsubscribePrivateEventsListener(GameEventListener listener) {
-		privateEventsListeners.remove(listener);
+	public void unsubscribeAllPersonalEventsListener(GameEventListener listener) {
+		allPersonalEventsListeners.remove(listener);
 	}
 
 	/**
-	 * This list contains all game events listeners that
-	 * should be alerted on a private events.
+	 * This list contains all personal listeners that
+	 * should be alerted on a personal.
 	 */
-	private final List<GameEventListener> privateEventsListeners = new CopyOnWriteArrayList<GameEventListener>();
+	private final List<GameEventListener> allPersonalEventsListeners = new CopyOnWriteArrayList<GameEventListener>();
 }

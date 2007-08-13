@@ -16,18 +16,43 @@
 
 package org.cspoker.server.game.events;
 
+import java.util.Collections;
+import java.util.List;
+
+import org.cspoker.server.game.elements.cards.Card;
+
 /**
- * A class to represent new common cards events.
- * 
+ * A class to represent new community cards events.
+ *
  * @author Kenzo
  *
  */
-public class NewCommonCardsEvent extends GameEvent {
+public class NewCommunityCardsEvent extends GameEvent {
+
+	private final List<Card> communityCards;
+
+	public NewCommunityCardsEvent(List<Card> commonCards){
+		communityCards = Collections.unmodifiableList(commonCards);
+	}
+
+	public List<Card> getCommonCards(){
+		return communityCards;
+	}
 
 	@Override
 	public String[] getAction() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public String toString(){
+		String toReturn = "New Community Cards: ";
+		for(Card card:communityCards){
+			toReturn+=card;
+			toReturn+=", ";
+		}
+		return toReturn.substring(0, toReturn.length()-2)+".";
 	}
 
 }

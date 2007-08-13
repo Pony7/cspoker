@@ -16,40 +16,20 @@
 
 package org.cspoker.server.game.events.playerActionEvents;
 
-import org.cspoker.server.game.events.GameEvent;
-import org.cspoker.server.game.gameControl.actions.Action;
-import org.cspoker.server.game.player.SavedPlayer;
-
-
 /**
- * A class to represent all-in events.
+ * An interface for big blind listeners.
  *
  * @author Kenzo
  *
  */
-public class AllInEvent extends GameEvent {
+public interface BigBlindListener {
 
 	/**
-	 * The variable containing the saved player.
-	 */
-	private final SavedPlayer player;
-
-	/**
+	 * This method is called when subscribed to inform a big blind has been bet.
 	 *
-	 * @param player
+	 * @param 	event
+	 * 			The event object containing all information of the occurred event.
 	 */
-	public AllInEvent(SavedPlayer player){
-		this.player = player;
-	}
-
-	@Override
-	public String[] getAction() {
-		return new String[] {String.valueOf(player.getId()), Action.ALL_IN.toString()};
-	}
-
-	@Override
-	public String toString(){
-		return player.getName()+" goes all-in.";
-	}
+	public void onBigBlindEvent(BigBlindEvent event);
 
 }

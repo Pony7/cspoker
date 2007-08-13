@@ -56,6 +56,7 @@ class PlayingState extends PlayerCommunicationState {
 		this.gameMediator = gameMediator;
 		gameEventsCollector = new GameEventsCollector();
 		gameMediator.subscribeGameEventListener(gameEventsCollector);
+		gameMediator.subscribePersonalGameEventListener(playerCommunication.getPlayer().getId(),gameEventsCollector);
 	}
 
 	@Override
@@ -110,7 +111,7 @@ class PlayingState extends PlayerCommunicationState {
 
 
 	@Override
-	public List<GameEvent> getLatestGameEventsAndAck(long ack){
+	public List<GameEvent> getLatestGameEventsAndAck(int ack){
 		return gameEventsCollector.getLatestEventsAndAck(ack);
 	}
 

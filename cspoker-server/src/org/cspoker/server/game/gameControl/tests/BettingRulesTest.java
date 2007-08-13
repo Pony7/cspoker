@@ -238,7 +238,7 @@ private Player kenzo;
 		}
 		System.out.println(game.getCurrentDealPlayers());
 
-		System.out.println("Common Cards: "+game.getOpenCards());
+		System.out.println("Common Cards: "+game.getCommunityCards());
 		System.out.println("\n\n");
 	}
 

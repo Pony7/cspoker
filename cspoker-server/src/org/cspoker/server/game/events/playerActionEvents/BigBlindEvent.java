@@ -17,39 +17,34 @@
 package org.cspoker.server.game.events.playerActionEvents;
 
 import org.cspoker.server.game.events.GameEvent;
-import org.cspoker.server.game.gameControl.actions.Action;
 import org.cspoker.server.game.player.SavedPlayer;
 
-
 /**
- * A class to represent all-in events.
+ * A class to represent big blind events.
  *
  * @author Kenzo
  *
  */
-public class AllInEvent extends GameEvent {
+public class BigBlindEvent extends GameEvent{
 
-	/**
-	 * The variable containing the saved player.
-	 */
 	private final SavedPlayer player;
 
-	/**
-	 *
-	 * @param player
-	 */
-	public AllInEvent(SavedPlayer player){
+	private final int amount;
+
+	public BigBlindEvent(SavedPlayer player, int amount){
 		this.player = player;
+		this.amount = amount;
 	}
 
 	@Override
 	public String[] getAction() {
-		return new String[] {String.valueOf(player.getId()), Action.ALL_IN.toString()};
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	@Override
 	public String toString(){
-		return player.getName()+" goes all-in.";
+		return player.getName()+" bets the big blind of "+amount+".";
 	}
 
 }

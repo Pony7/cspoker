@@ -18,21 +18,17 @@ package org.cspoker.server.game.events.privateEvents;
 import java.util.List;
 
 import org.cspoker.server.game.elements.cards.Card;
-import org.cspoker.server.game.elements.cards.CardImpl;
-import org.cspoker.server.game.elements.cards.cardElements.Rank;
-import org.cspoker.server.game.elements.cards.cardElements.Suit;
 import org.cspoker.server.game.events.GameEvent;
-import org.cspoker.server.game.player.Player;
-import org.cspoker.server.game.player.PlayerFactory;
+import org.cspoker.server.game.player.SavedPlayer;
 
 public class NewPocketCardsEvent extends GameEvent{
-	
-	private final Player player;
-	
-	public NewPocketCardsEvent(Player player){
+
+	private final SavedPlayer player;
+
+	public NewPocketCardsEvent(SavedPlayer player){
 		this.player = player;
 	}
-	
+
 	public List<Card> getPocketCards() {
 		return player.getPocketCards();
 	}
@@ -42,7 +38,7 @@ public class NewPocketCardsEvent extends GameEvent{
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
+
 	@Override
 	public String toString(){
 		String toReturn = player.getName()+" has received new pocket cards: ";
@@ -52,14 +48,4 @@ public class NewPocketCardsEvent extends GameEvent{
 		}
 		return toReturn.substring(0, toReturn.length()-2)+".";
 	}
-	
-	public static void main(String[] args) {
-		PlayerFactory factory = new PlayerFactory();
-		Player kenzo = factory.createNewPlayer("Kenzo");
-		kenzo.dealPocketCard(new CardImpl(Suit.SPADES, Rank.DEUCE));
-		kenzo.dealPocketCard(new CardImpl(Suit.DIAMONDS, Rank.ACE));
-		System.out.println(new NewPocketCardsEvent(kenzo));
-	}
-	
-
 }
