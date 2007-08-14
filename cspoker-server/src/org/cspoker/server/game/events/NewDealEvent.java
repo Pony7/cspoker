@@ -57,7 +57,7 @@ public class NewDealEvent extends GameEvent {
 			toReturn+=player.getName();
 			toReturn+=", ";
 		}
-		return toReturn.substring(0, toReturn.length()-2)+". "+dealer.getName()+" is dealer.";
+		return toReturn.substring(0, toReturn.length()-2)+" as initial players of this table. "+dealer.getName()+" is dealer.";
 	}
 
 }

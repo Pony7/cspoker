@@ -15,6 +15,18 @@
  */
 package org.cspoker.server.game.events;
 
-public interface PlayerLeftGameListener {
+/**
+ * A class to represent show hand events.
+ *
+ * @author Kenzo
+ *
+ */
+public class ShowHandEvent extends GameEvent{
+
+	@Override
+	public String[] getAction() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 }

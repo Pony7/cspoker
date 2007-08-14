@@ -43,7 +43,7 @@ public class NewRoundEvent extends GameEvent {
 
 	@Override
 	public String toString(){
-		return player.getName()+" can begin to act.";
+		return roundName+": "+player.getName()+" can begin to act.";
 	}
 
 }
