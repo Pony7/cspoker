@@ -13,8 +13,21 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
+
 package org.cspoker.server.game.events;
 
-public interface PlayerJoinsGameListener {
+/**
+ * A class to represent winner events.
+ *
+ * @author Kenzo
+ *
+ */
+public class WinnerEvent extends GameEvent{
+
+	@Override
+	public String[] getAction() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 }

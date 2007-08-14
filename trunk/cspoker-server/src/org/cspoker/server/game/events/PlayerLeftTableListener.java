@@ -13,21 +13,22 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-
 package org.cspoker.server.game.events;
 
 /**
- * An interface for next player listeners.
+ * An interface for leaving player listeners.
  *
  * @author Kenzo
  *
  */
-public interface NextPlayerListener {
+public interface PlayerLeftTableListener {
+	
 	/**
-	 * This method is called when subscribed to inform a next player event occurred.
+	 * This method is called when subscribed to inform a player left the table.
 	 *
 	 * @param 	event
 	 * 			The event object containing all information of the occurred event.
 	 */
-	public void onNextPlayerEvent(NextPlayerEvent event);
+	public void onPlayerLeftTableEvent(PlayerLeftTableEvent event);
+
 }

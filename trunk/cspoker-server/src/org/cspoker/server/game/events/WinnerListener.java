@@ -17,17 +17,19 @@
 package org.cspoker.server.game.events;
 
 /**
- * An interface for next player listeners.
+ * An interface for winner listeners.
  *
  * @author Kenzo
  *
  */
-public interface NextPlayerListener {
+public interface WinnerListener {
+	
 	/**
-	 * This method is called when subscribed to inform a next player event occurred.
+	 * This method is called when subscribed to inform a player / players have won the pot of this hand.
 	 *
 	 * @param 	event
 	 * 			The event object containing all information of the occurred event.
 	 */
-	public void onNextPlayerEvent(NextPlayerEvent event);
+	public void onWinnerEvent(WinnerEvent event);
+
 }
