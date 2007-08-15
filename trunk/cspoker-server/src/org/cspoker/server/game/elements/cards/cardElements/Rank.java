@@ -24,103 +24,122 @@ package org.cspoker.server.game.elements.cards.cardElements;
  */
 public enum Rank {
 	DEUCE{
+		@Override
 		public int getValue(){
 			return 2;
 		}
 	}, 
 	
 	THREE{
+		@Override
 		public int getValue(){
 			return 3;
 		} 
 	},
 	
 	FOUR{
+		@Override
 		public int getValue(){
 			return 4;
 		} 
 	}, 
 	
 	FIVE{
+		@Override
 		public int getValue(){
 			return 5;
 		} 	
 	}, 
 	
 	SIX{
+		@Override
 		public int getValue(){
 			return 6;
 		} 
 	},
 
     SEVEN{
+		@Override
 		public int getValue(){
 			return 7;
 		} 
 	}, 
     
     EIGHT{
+		@Override
 		public int getValue(){
 			return 8;
 		} 
 	},
     
     NINE{
+		@Override
 		public int getValue(){
 			return 9;
 		} 
 	}, 
     
     TEN{
+		@Override
 		public int getValue(){
 			return 10;
 		} 
 	}, 
     
     JACK{
+		@Override
 		public int getValue(){
 			return 11;
 		}
+		@Override
 		public String toString(){
 			return "jack";
 		}
 	}, 
     
     QUEEN{
+		@Override
 		public int getValue(){
 			return 12;
 		}
+		@Override
 		public String toString(){
 			return "queen";
 		}
 	}, 
     
     KING{
+		@Override
 		public int getValue(){
 			return 13;
 		}
+		@Override
 		public String toString(){
 			return "king";
 		}
 	},
     
     ACE{
+		@Override
 		public int getValue(){
 			return 14;
 		}
+		@Override
 		public String toString(){
 			return "ace";
 		}
 	};
 	
 	/**
-	 * Returns the numeral value of this rank
-	 * @return the numeral value of this rank
+	 * Returns the numeral value of this rank.
+	 * 
+	 * @return The numeral value of this rank.
 	 */
 	public abstract int getValue();
 	/**
 	 * Returns a textual representation of this rank
 	 */
+	@Override
 	public String toString(){
 		return Integer.toString(getValue());
 	}

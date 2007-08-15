@@ -18,14 +18,18 @@ package org.cspoker.server.game.gameControl;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.cspoker.server.game.PlayerId;
 import org.cspoker.server.game.elements.cards.Card;
 import org.cspoker.server.game.elements.cards.hand.Hand;
 import org.cspoker.server.game.elements.cards.hand.HandEvaluator;
 import org.cspoker.server.game.elements.chips.IllegalValueException;
 import org.cspoker.server.game.elements.chips.pot.Pot;
 import org.cspoker.server.game.elements.player.ShowdownPlayer;
+import org.cspoker.server.game.elements.player.Winner;
 import org.cspoker.server.game.player.Player;
 
 /**
@@ -40,6 +44,8 @@ public class Showdown {
 	 * The game in which the showdown takes place.
 	 */
 	private final Game game;
+	
+	private final Map<PlayerId, Winner> winnersMap = new HashMap<PlayerId, Winner>();
 
 	/**
 	 * Construct a new showdown with given game and pots.
@@ -72,6 +78,10 @@ public class Showdown {
 	 *
 	 */
 	public void determineWinners(){
+
+		//TODO The amounts the winner collects are collected elsewhere, so the total profit of the winner
+		//can easily be returned.
+		
 		System.out.println("");
 		System.out.println("*** Determine Winners ***");
 		System.out.println("");
@@ -107,59 +117,52 @@ public class Showdown {
 	 */
 	private void splitPot(List<Player> winners, Pot pot){
 		int nbWinners = winners.size();
+//		for(Player winner:winners){
+//			if(!winnersMap.containsKey(winner.getId())){
+//				winnersMap.put(winner.getId(), new Winner(winner));
+//			}
+//		}
+//
+//		try {
+//			Chips chips = new Chips(100);
+//			chips.transferAllChipsTo(winnersMap.get(winners.get(0).getId()).getGainedChipsPile());
+//			System.out.println(winnersMap.get(winners.get(0).getId()));
+//		} catch (IllegalValueException e1) {
+//			// TODO Auto-generated catch block
+//			e1.printStackTrace();
+//		}
 
-		//only one winner
-		if(nbWinners ==1){
+		int nbChips_per_winner = pot.getChips().getValue()/nbWinners;
+
+		for(Player player:winners){
 			try {
-				pot.getChips().transferAllChipsTo(winners.get(0).getStack());
+				pot.getChips().transferAmountTo(nbChips_per_winner, player.getStack());
 			} catch (IllegalValueException e) {
 				assert false;
 			}
+		}
+		
+		//TODO Only pocket cards must be considered.
 
-		}else{
-			int nbChips_per_winner = pot.getChips().getValue()/nbWinners;
-
-			//can be divided easily.
-			if(nbChips_per_winner*nbWinners==pot.getChips().getValue()){
-				for(Player player:winners){
-					try {
-						pot.getChips().transferAmountTo(nbChips_per_winner, player.getStack());
-					} catch (IllegalValueException e) {
-						assert false;
-					}
+		// the player with the single highest card gets the odd chips that can't be divided over the winners
+		if(pot.getChips().getValue()!=0){
+			Player playerWithHighestSingleCard=winners.get(0);
+			Card highestCard = getBestFiveCardHand(playerWithHighestSingleCard).getHighestRankCard();
+			for(Player player:winners){
+				Card otherHighestCard = getBestFiveCardHand(player).getHighestRankCard();
+				
+				int compareSingleBestCard=highestCard.compareTo(otherHighestCard);
+				if((compareSingleBestCard>0) || ((compareSingleBestCard==0) && (otherHighestCard.getSuit().compareTo(highestCard.getSuit())>0))){
+					playerWithHighestSingleCard=player;
+					highestCard = otherHighestCard;
 				}
-				assert pot.getChips().getValue()==0;
-			//more difficult logic.
-			}else{
-				// the player with the single highest card gets the odd chips that can't be divided over the winners
-				Player playerWithHighestSingleCard=winners.get(0);
-				for(Player player:winners){
-					int compareSingleBestCard=getBestFiveCardHand(playerWithHighestSingleCard).getHighestRankCard().compareTo(
-					getBestFiveCardHand(player).getHighestRankCard());
-					if(compareSingleBestCard==1){
-						playerWithHighestSingleCard=player;
-					}else{
-						if((compareSingleBestCard==0) && (getBestFiveCardHand(player).getHighestRankCard().getSuit()
-								.getValue()>getBestFiveCardHand(playerWithHighestSingleCard).getHighestRankCard().getSuit().getValue()))
-							playerWithHighestSingleCard=player;
-					}
-
-				}
-				//transfer chips to all winners
-				for(Player player:winners){
-					try {
-						pot.getChips().transferAmountTo(nbChips_per_winner, player.getStack());
-					} catch (IllegalValueException e) {
-						assert false;
-					}
-				}
-				//playerWithHighestSingleCard gets the odd chip, that can't be divided over all winners
-				int oddChipsValue=pot.getChips().getValue()-nbChips_per_winner*nbWinners;
-				try {
-					pot.getChips().transferAmountTo(oddChipsValue, playerWithHighestSingleCard.getStack());
-				} catch (IllegalValueException e) {
-					assert(false);
-				}
+			}
+			//playerWithHighestSingleCard gets the odd chip, that can't be divided over all winners
+			try {
+				System.out.println("Odd chips to player with highest card in hand");
+				pot.getChips().transferAllChipsTo(playerWithHighestSingleCard.getStack());
+			} catch (IllegalValueException e) {
+				throw new IllegalStateException("Overflow");
 			}
 		}
 	}

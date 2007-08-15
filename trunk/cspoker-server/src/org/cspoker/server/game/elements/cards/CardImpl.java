@@ -24,7 +24,7 @@ import org.cspoker.server.game.elements.cards.cardElements.Suit;
  * @author Cedric
  *
  */
-public class CardImpl implements Card, Comparable<Card>{
+public class CardImpl implements Card{
 
 	/**********************************************************
 	 * Variables
