@@ -13,33 +13,36 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.server.game.events;
+package org.cspoker.server.game.player;
 
-import org.cspoker.server.game.player.SavedShowdownPlayer;
+import org.cspoker.server.game.elements.cards.Card;
+import org.cspoker.server.game.elements.cards.hand.Hand;
+import org.cspoker.server.game.elements.cards.hand.HandTypeCalculator;
 
-/**
- * A class to represent show hand events.
- *
- * @author Kenzo
- *
- */
-public class ShowHandEvent extends GameEvent{
+public class SavedShowdownPlayer {
 	
-	private final SavedShowdownPlayer player;
+	private final SavedPlayer player;
 	
-	public ShowHandEvent(SavedShowdownPlayer player){
+	private final Hand hand;
+	
+	public SavedShowdownPlayer(SavedPlayer player, Hand hand){
 		this.player = player;
-	}
-
-	@Override
-	public String[] getAction() {
-		// TODO Auto-generated method stub
-		return null;
+		this.hand = hand;
 	}
 	
+	//TODO Hand is not immutable
+	
+	/**
+	 * Returns a textual representation of this showdown player.
+	 */
 	@Override
 	public String toString(){
-		return player.toString();
+		String toReturn = player.getName()+" has a "+HandTypeCalculator.calculateHandType(hand)+". His best hand: ";
+		for(Card card:hand){
+			toReturn+=card;
+			toReturn+=", ";
+		}
+		return toReturn.substring(0, toReturn.length()-2)+".";
 	}
 
 }

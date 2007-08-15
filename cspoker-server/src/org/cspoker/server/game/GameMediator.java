@@ -34,6 +34,10 @@ import org.cspoker.server.game.events.NewRoundEvent;
 import org.cspoker.server.game.events.NewRoundListener;
 import org.cspoker.server.game.events.NextPlayerEvent;
 import org.cspoker.server.game.events.NextPlayerListener;
+import org.cspoker.server.game.events.ShowHandEvent;
+import org.cspoker.server.game.events.ShowHandListener;
+import org.cspoker.server.game.events.WinnerEvent;
+import org.cspoker.server.game.events.WinnerListener;
 import org.cspoker.server.game.events.playerActionEvents.AllInEvent;
 import org.cspoker.server.game.events.playerActionEvents.AllInListener;
 import org.cspoker.server.game.events.playerActionEvents.BetEvent;
@@ -762,7 +766,89 @@ public class GameMediator implements PlayerAction{
 	 * should be alerted on a next player.
 	 */
 	private final List<NextPlayerListener> nextPlayerListeners = new CopyOnWriteArrayList<NextPlayerListener>();
+	
+	
+	/**
+	 * Inform all subscribed winner listeners a winner event has occurred.
+	 *
+	 * Each subscribed winner listener is updated
+	 * by calling their onWinnerEvent() method.
+	 *
+	 */
+	public void publishWinner(WinnerEvent event) {
+		for (WinnerListener listener : winnerListeners) {
+			listener.onWinnerEvent(event);
+		}
+		publishGameEvent(event);
+	}
 
+	/**
+	 * Subscribe the given winner listener for winner events.
+	 *
+	 * @param 	listener
+	 * 			The listener to subscribe.
+	 */
+	public void subscribeWinnerListener(WinnerListener listener) {
+		winnerListeners.add(listener);
+	}
+
+	/**
+	 * Unsubscribe the given winner listener for winner events.
+	 *
+	 * @param 	listener
+	 * 			The listener to unsubscribe.
+	 */
+	public void unsubscribeWinnerListener(WinnerListener listener) {
+		winnerListeners.remove(listener);
+	}
+
+	/**
+	 * This list contains all winner listeners that
+	 * should be alerted on a winner.
+	 */
+	private final List<WinnerListener> winnerListeners = new CopyOnWriteArrayList<WinnerListener>();
+	
+	
+	/**
+	 * Inform all subscribed show hand listeners a show hand event has occurred.
+	 *
+	 * Each subscribed show hand listener is updated
+	 * by calling their onShowHandEvent() method.
+	 *
+	 */
+	public void publishShowHand(ShowHandEvent event) {
+		for (ShowHandListener listener : showHandListeners) {
+			listener.onShowHandEvent(event);
+		}
+		publishGameEvent(event);
+	}
+
+	/**
+	 * Subscribe the given show hand listener for show hand events.
+	 *
+	 * @param 	listener
+	 * 			The listener to subscribe.
+	 */
+	public void subscribeShowHandListener(ShowHandListener listener) {
+		showHandListeners.add(listener);
+	}
+
+	/**
+	 * Unsubscribe the given show hand listener for show hand events.
+	 *
+	 * @param 	listener
+	 * 			The listener to unsubscribe.
+	 */
+	public void unsubscribeShowHandListener(ShowHandListener listener) {
+		showHandListeners.remove(listener);
+	}
+
+	/**
+	 * This list contains all show hand listeners that
+	 * should be alerted on a show hand.
+	 */
+	private final List<ShowHandListener> showHandListeners = new CopyOnWriteArrayList<ShowHandListener>();
+	
 	/**********************************************************
 	 * Personal Events
 	 **********************************************************/

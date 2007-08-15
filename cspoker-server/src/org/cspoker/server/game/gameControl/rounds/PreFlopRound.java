@@ -37,7 +37,9 @@ public class PreFlopRound extends Round{
 	public PreFlopRound(GameMediator gameMediator, Game game) {
 		super(gameMediator, game);
 		System.out.println("** PreFlop Round **");
-		gameMediator.publishNewRoundEvent(new NewRoundEvent(toString(), getGame().getCurrentPlayer().getSavedPlayer()));
+		Player currentPlayer = getGame().getCurrentPlayer();
+		if(currentPlayer!=null)
+			gameMediator.publishNewRoundEvent(new NewRoundEvent(toString(), currentPlayer.getSavedPlayer()));
 		try {
 			Player player = getGame().getCurrentPlayer();
 			collectSmallBlind(player);

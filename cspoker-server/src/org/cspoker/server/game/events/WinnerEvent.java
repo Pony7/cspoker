@@ -16,6 +16,11 @@
 
 package org.cspoker.server.game.events;
 
+import java.util.Collections;
+import java.util.List;
+
+import org.cspoker.server.game.player.SavedWinner;
+
 /**
  * A class to represent winner events.
  *
@@ -23,11 +28,32 @@ package org.cspoker.server.game.events;
  *
  */
 public class WinnerEvent extends GameEvent{
+		
+	private final List<SavedWinner> winners;
+	
+	public WinnerEvent(List<SavedWinner> winners){
+		this.winners = Collections.unmodifiableList(winners);
+	}
+	
+	public List<SavedWinner> getWinners(){
+		return winners;
+	}
 
 	@Override
 	public String[] getAction() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	@Override
+	public String toString(){
+		String toReturn = "Winners: ";
+		for(SavedWinner winner:winners){
+			String winnerString = winner.toString();
+			toReturn+=winnerString.substring(0, winnerString.length()-1);
+			toReturn+=", ";
+		}
+		return toReturn.substring(0, toReturn.length()-2)+".";
 	}
 
 }

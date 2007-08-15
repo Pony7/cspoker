@@ -20,13 +20,16 @@ import org.cspoker.server.game.GameMediator;
 import org.cspoker.server.game.events.NewCommunityCardsEvent;
 import org.cspoker.server.game.events.NewRoundEvent;
 import org.cspoker.server.game.gameControl.Game;
+import org.cspoker.server.game.player.Player;
 
 public class FlopRound extends Round{
 
 	public FlopRound(GameMediator gameMediator, Game game) {
 		super(gameMediator, game);
 		System.out.println("** Flop Round **");
-		gameMediator.publishNewRoundEvent(new NewRoundEvent(toString(), getGame().getCurrentPlayer().getSavedPlayer()));
+		Player currentPlayer = getGame().getCurrentPlayer();
+		if(currentPlayer!=null)
+			gameMediator.publishNewRoundEvent(new NewRoundEvent(toString(), currentPlayer.getSavedPlayer()));
 		drawMuckCard();
 		drawOpenCard();
 		drawOpenCard();

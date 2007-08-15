@@ -563,7 +563,6 @@ public abstract class Round implements PlayerAction{
 	private void makeSidePots(){
 		Collections.sort(allInPlayers);
 		List<Player> players = game.getCurrentDealPlayers();
-		System.out.println(allInPlayers);
 		for(AllInPlayer allInPlayer:allInPlayers){
 			try {
 				game.getPots().collectAmountFromPlayersToSidePot(allInPlayer.getBetValue(), players);
