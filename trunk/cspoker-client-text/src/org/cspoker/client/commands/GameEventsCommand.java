@@ -22,21 +22,20 @@ import org.cspoker.client.request.GameEventsRequest;
 
 public class GameEventsCommand implements CommandExecutor {
 
-    private GameEventsRequest noack;
-    private GameEventsAckRequest ack;
+    private final GameEventsRequest noack;
+    private final GameEventsAckRequest ack;
 
     public GameEventsCommand(String address) throws MalformedURLException{
-	this.noack = new GameEventsRequest(address);
-	this.ack = new GameEventsAckRequest(address);
+	noack = new GameEventsRequest(address);
+	ack = new GameEventsAckRequest(address);
     }
     
     @Override
     public String execute(String... args) throws Exception {
-	if(args.length==0){
-	    return noack.execute(args);
-	}else{
-	    return ack.execute(args);
-	}
+	if(args.length==0)
+		return noack.execute(args);
+	else
+		return ack.execute(args);
     }
 
 }

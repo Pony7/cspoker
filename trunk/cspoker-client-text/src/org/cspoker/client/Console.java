@@ -40,7 +40,7 @@ public class Console {
      * @throws Exception
      */
     public Console(String[] args) throws Exception {
-	if (args.length != 2 && args.length != 3) {
+	if ((args.length != 2) && (args.length != 3)) {
 	    System.out.println("usage: java -jar cspoker-client-text.jar [server] [portnumber] -[options]");
 	    System.out.println("options:");
 	    System.out.println(" -v verbose");
@@ -113,7 +113,7 @@ public class Console {
 
     private String parse(Client client, String line) throws Exception {
 	String[] words=line.split(" ");
-	if(words.length<1 || words[0].equalsIgnoreCase(""))
+	if((words.length<1) || words[0].equalsIgnoreCase(""))
 	    return parse(client, "GAMEEVENTS");
 	List<String> list=new ArrayList<String>();
 	list.addAll(Arrays.asList(words));
