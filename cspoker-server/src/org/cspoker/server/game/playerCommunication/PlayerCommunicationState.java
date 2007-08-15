@@ -15,10 +15,7 @@
  */
 package org.cspoker.server.game.playerCommunication;
 
-import java.util.List;
-
 import org.cspoker.server.game.TableId;
-import org.cspoker.server.game.events.GameEvent;
 import org.cspoker.server.game.gameControl.actions.IllegalActionException;
 
 /**
@@ -107,10 +104,10 @@ abstract class PlayerCommunicationState implements PlayerCommunication{
 	/**********************************************************
 	 * Actions list
 	 **********************************************************/
-	public List<GameEvent> getLatestGameEvents() throws IllegalActionException {
+	public GameEvents getLatestGameEvents() throws IllegalActionException {
 		throw new IllegalActionException("Requesting the latest game events is not a valid action. "+getStdErrorMessage());
 	}
-	public List<GameEvent> getLatestGameEventsAndAck(int ack) throws IllegalActionException {
+	public GameEvents getLatestGameEventsAndAck(int ack) throws IllegalActionException {
 		throw new IllegalActionException("Requesting the latest game events is not a valid action. "+getStdErrorMessage());
 	}
 

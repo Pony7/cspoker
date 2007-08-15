@@ -16,10 +16,7 @@
 package org.cspoker.server.game.playerCommunication;
 
 
-import java.util.List;
-
 import org.cspoker.server.game.TableId;
-import org.cspoker.server.game.events.GameEvent;
 import org.cspoker.server.game.gameControl.actions.IllegalActionException;
 
 /**
@@ -164,7 +161,7 @@ public interface PlayerCommunication {
 	 * times without changing the result. (i.e. retry after network error)
 	 *
 	 */
-	public List<GameEvent> getLatestGameEvents() throws IllegalActionException;
+	public GameEvents getLatestGameEvents() throws IllegalActionException;
 
 	/**
 	 * Returns the latest game events,
@@ -174,6 +171,6 @@ public interface PlayerCommunication {
 	 * @return
 	 * @throws IllegalActionException
 	 */
-	public List<GameEvent> getLatestGameEventsAndAck(int ack) throws IllegalActionException;
+	public GameEvents getLatestGameEventsAndAck(int ack) throws IllegalActionException;
 
 }

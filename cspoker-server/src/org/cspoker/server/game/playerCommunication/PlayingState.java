@@ -15,10 +15,7 @@
  */
 package org.cspoker.server.game.playerCommunication;
 
-import java.util.List;
-
 import org.cspoker.server.game.GameMediator;
-import org.cspoker.server.game.events.GameEvent;
 import org.cspoker.server.game.gameControl.actions.IllegalActionException;
 
 /**
@@ -105,13 +102,13 @@ class PlayingState extends PlayerCommunicationState {
 	 **********************************************************/
 
 	@Override
-	public List<GameEvent> getLatestGameEvents(){
+	public GameEvents getLatestGameEvents(){
 		return gameEventsCollector.getLatestEvents();
 	}
 
 
 	@Override
-	public List<GameEvent> getLatestGameEventsAndAck(int ack){
+	public GameEvents getLatestGameEventsAndAck(int ack){
 		return gameEventsCollector.getLatestEventsAndAck(ack);
 	}
 
