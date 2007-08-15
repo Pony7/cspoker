@@ -20,52 +20,60 @@ package org.cspoker.server.game.elements.cards.cardElements;
  * An enumeration to represent the different suits a card can have.
  * 
  * @author Kenzo
+ * 
  *
  */
-public enum Suit implements Comparable<Suit>{
-	
-	SPADES{
-		public String toString(){
-			return "spades";
-		}
-		public int getValue(){
-			return 4;
-		}
-	}, 
-	
-	
-	HEARTS{
-		public String toString(){
-			return "hearts";
-		}
-		public int getValue(){
-			return 3;
-		}
-	}
-	,
-	
-	DIAMONDS{
-		public String toString(){
-			return "diamonds";
-		}
-		public int getValue(){
-			return 2;
-		}
-	}
-	,
+public enum Suit{
 	
 	CLUBS{
+		@Override
 		public String toString(){
 			return "clubs";
 		}
+		@Override
 		public int getValue(){
 			return 1;
 		}
-	};
+	},
+	
+	DIAMONDS{
+		@Override
+		public String toString(){
+			return "diamonds";
+		}
+		@Override
+		public int getValue(){
+			return 2;
+		}
+	}, 
+	
+	HEARTS{
+		@Override
+		public String toString(){
+			return "hearts";
+		}
+		@Override
+		public int getValue(){
+			return 3;
+		}
+	},
+	
+	SPADES{
+		@Override
+		public String toString(){
+			return "spades";
+		}
+		@Override
+		public int getValue(){
+			return 4;
+		}
+	}
+	;
 	
 	/**
 	 * Returns a textual representation of this suit
 	 */
+	@Override
 	public abstract String toString();
 	/**
 	 * Returns the relative value of this suit

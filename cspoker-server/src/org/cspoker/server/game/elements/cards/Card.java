@@ -24,7 +24,7 @@ import org.cspoker.server.game.elements.cards.cardElements.Suit;
  * @author Cedric
  *
  */
-public interface Card {
+public interface Card extends Comparable<Card>{
 	/**
 	 * The number of different suits a card can have
 	 */
