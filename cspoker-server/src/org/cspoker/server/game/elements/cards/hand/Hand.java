@@ -52,7 +52,6 @@ public class Hand implements Iterable<Card>{
     */
    public Hand() {
       cards = new CardImpl[MAX_CARDS];
-      //updateType();
    }
    /**
     * Create a new hand with the same cards as the given hand
@@ -67,7 +66,6 @@ public class Hand implements Iterable<Card>{
    public Hand(Hand h) {
 	   if(h==null)
 		   throw new IllegalArgumentException();
-      cards = new CardImpl[MAX_CARDS];
       cards=h.getCardsCopy();
    }
    /**
@@ -84,9 +82,9 @@ public class Hand implements Iterable<Card>{
 		   throw new IllegalArgumentException();
 	   cardList.toArray(cards);
    }
-/**********************************************************
-	 * Methods
-	 **********************************************************/
+   /**********************************************************
+	* Methods
+	**********************************************************/
    /**
     * Returns an array with the cards in this hand
     */
@@ -314,7 +312,7 @@ public String toString(){
 	   /**
 	    * The current position of the iterator
 	    */
-	   private int position=0;
+	   private int position=-1;
 	   /**
 	    * The array with the cards in this hand
 	    */
@@ -323,17 +321,17 @@ public String toString(){
 	    * Checks whether the iterator has another card
 	    */
 	   public boolean hasNext(){
-		return( position < card.length-1 );
+		return( position < getNBCards()-1 );
 	   }
 	   /**
 	    * Get the next card of this iterator
 	    */
 	   public Card next() throws IndexOutOfBoundsException
 	   {
-		if ( position >= card.length-1 )
+		if ( position >= getNBCards()-1 )
 	    	  throw new IndexOutOfBoundsException();
-
-	      return card[position++];
+		position++;
+	    return card[position];
 	   }
 	   /**
 	    * Removes the current card from the iterator
