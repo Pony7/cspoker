@@ -331,6 +331,8 @@ public class Game {
 	 * @return The current player of this game.
 	 */
 	public Player getCurrentPlayer(){
+		if(currentHandPlayers.size()==0)
+			return null;
 		return currentHandPlayers.getCurrent();
 	}
 
