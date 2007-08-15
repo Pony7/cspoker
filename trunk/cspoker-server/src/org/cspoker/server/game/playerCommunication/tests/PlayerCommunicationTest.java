@@ -15,15 +15,23 @@
  */
 package org.cspoker.server.game.playerCommunication.tests;
 
+import java.util.List;
+
+import junit.framework.TestCase;
+
+import org.cspoker.server.game.GameManager;
 import org.cspoker.server.game.TableId;
+import org.cspoker.server.game.events.GameEvent;
+import org.cspoker.server.game.events.NewRoundEvent;
+import org.cspoker.server.game.events.NewRoundListener;
+import org.cspoker.server.game.events.NextPlayerEvent;
+import org.cspoker.server.game.events.NextPlayerListener;
 import org.cspoker.server.game.gameControl.actions.IllegalActionException;
 import org.cspoker.server.game.player.Player;
 import org.cspoker.server.game.player.PlayerFactory;
 import org.cspoker.server.game.playerCommunication.PlayerCommunication;
 import org.cspoker.server.game.playerCommunication.PlayerCommunicationImpl;
 import org.cspoker.server.game.playerCommunication.PlayerCommunicationManager;
-
-import junit.framework.TestCase;
 
 public class PlayerCommunicationTest extends TestCase {
 
@@ -83,16 +91,41 @@ public class PlayerCommunicationTest extends TestCase {
 			PlayerCommunicationManager.clear();
 		}
 	}
+	
+	private PlayerCommunication currentComm;
 
 	public void testPlayingGame(){
 		Player kenzo = playerFactory.createNewPlayer("Kenzo");
 		Player guy = playerFactory.createNewPlayer("Guy");
 		PlayerCommunication kenzoComm = new PlayerCommunicationImpl(kenzo);
 		PlayerCommunication guyComm = new PlayerCommunicationImpl(guy);
+		
+		NewRoundListener newRoundListener = new NewRoundListener(){
+
+			@Override
+			public void onNewRoundEvent(NewRoundEvent event) {
+				currentComm = PlayerCommunicationManager.getPlayerCommunication(event.getPlayer().getId());
+				System.out.println("Changed to "+currentComm);
+			}
+			
+		};
+		
+		NextPlayerListener nextPlayerListener = new NextPlayerListener(){
+
+			@Override
+			public void onNextPlayerEvent(NextPlayerEvent event) {
+				currentComm = PlayerCommunicationManager.getPlayerCommunication(event.getPlayer().getId());
+				System.out.println("Changed to "+currentComm);
+			}
+			
+		};
+				
 		try {
 			TableId tableId = kenzoComm.createTable();
 			guyComm.join(tableId);
 			kenzoComm.startGame();
+			GameManager.getGame(tableId).subscribeNewRoundListener(newRoundListener);
+			GameManager.getGame(tableId).subscribeNextPlayerListener(nextPlayerListener);
 			System.out.println(kenzoComm.getLatestGameEvents());
 			try {
 				kenzoComm.deal();
@@ -105,22 +138,36 @@ public class PlayerCommunicationTest extends TestCase {
 			System.out.println("Kenzo's events:"+kenzoComm.getLatestGameEvents());
 			System.out.println("Guy's events:"+guyComm.getLatestGameEvents());
 
-			try {
-				kenzoComm.call();
-			} catch (IllegalActionException e) {
-				try {
-					guyComm.call();
-				} catch (IllegalActionException e1) {
-				}
-			}
+			System.out.println(currentComm);
+			
+			currentComm.call();
 
 			System.out.println("Kenzo's events:"+kenzoComm.getLatestGameEvents());
-			System.out.println("Guy's events:"+guyComm.getLatestGameEvents());
+			System.out.println("Guy's events:");
+			showEvents(guyComm.getLatestGameEvents());
+			
+			currentComm.check();
+			currentComm.check();
+			
+			currentComm.check();
+			currentComm.check();
+			
+			currentComm.check();
+			currentComm.check();
+			
+			System.out.println("Guy's events:");
+			showEvents(guyComm.getLatestGameEvents());
 
 		} catch (IllegalActionException e) {
 			fail(e.getMessage());
 		}finally{
 			PlayerCommunicationManager.clear();
+		}
+	}
+	
+	public void showEvents(List<GameEvent> events){
+		for(GameEvent event:events){
+			System.out.println("++ "+event);
 		}
 	}
 

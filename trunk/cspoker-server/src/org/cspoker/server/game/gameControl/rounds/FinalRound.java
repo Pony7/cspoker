@@ -18,14 +18,18 @@ package org.cspoker.server.game.gameControl.rounds;
 
 import org.cspoker.server.game.GameMediator;
 import org.cspoker.server.game.events.NewCommunityCardsEvent;
+import org.cspoker.server.game.events.NewRoundEvent;
 import org.cspoker.server.game.gameControl.Game;
 import org.cspoker.server.game.gameControl.Showdown;
+import org.cspoker.server.game.player.Player;
 
 public class FinalRound extends Round{
 
 	public FinalRound(GameMediator gameMediator, Game game) {
 		super(gameMediator, game);
-		//gameMediator.publishNewRoundEvent(new NewRoundEvent(toString(), getGame().getCurrentPlayer().getSavedPlayer()));
+		Player currentPlayer = getGame().getCurrentPlayer();
+		if(currentPlayer!=null)
+			gameMediator.publishNewRoundEvent(new NewRoundEvent(toString(), currentPlayer.getSavedPlayer()));
 		System.out.println("** Final Round **");
 		drawMuckCard();
 		drawOpenCard();
@@ -41,7 +45,7 @@ public class FinalRound extends Round{
 			winner(getGame().getPots());
 		}else{
 			getGame().getPots().close(getGame().getCurrentDealPlayers());
-			Showdown showdown = new Showdown(getGame());
+			Showdown showdown = new Showdown(gameMediator, getGame());
 			showdown.determineWinners();
 		}
 

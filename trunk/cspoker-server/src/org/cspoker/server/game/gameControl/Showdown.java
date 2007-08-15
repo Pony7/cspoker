@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.cspoker.server.game.GameMediator;
 import org.cspoker.server.game.PlayerId;
 import org.cspoker.server.game.elements.cards.Card;
 import org.cspoker.server.game.elements.cards.hand.Hand;
@@ -30,7 +31,10 @@ import org.cspoker.server.game.elements.chips.IllegalValueException;
 import org.cspoker.server.game.elements.chips.pot.Pot;
 import org.cspoker.server.game.elements.player.ShowdownPlayer;
 import org.cspoker.server.game.elements.player.Winner;
+import org.cspoker.server.game.events.ShowHandEvent;
+import org.cspoker.server.game.events.WinnerEvent;
 import org.cspoker.server.game.player.Player;
+import org.cspoker.server.game.player.SavedWinner;
 
 /**
  * A class to determine who has won each pot.
@@ -44,6 +48,8 @@ public class Showdown {
 	 * The game in which the showdown takes place.
 	 */
 	private final Game game;
+	
+	private final GameMediator gameMediator;
 	
 	private final Map<PlayerId, Winner> winnersMap = new HashMap<PlayerId, Winner>();
 
@@ -59,7 +65,8 @@ public class Showdown {
 	 * @pre 	The pots must be closed.
 	 *			|game!=null && game.getPots().isClosed()
 	 */
-	public Showdown(Game game){
+	public Showdown(GameMediator gameMediator, Game game){
+		this.gameMediator = gameMediator;
 		this.game = game;
 	}
 
@@ -77,15 +84,21 @@ public class Showdown {
 	 * Each pot is splitted between all winners of that pot.
 	 *
 	 */
-	public void determineWinners(){
-
-		//TODO The amounts the winner collects are collected elsewhere, so the total profit of the winner
-		//can easily be returned.
-		
+	public void determineWinners(){	
 		System.out.println("");
 		System.out.println("*** Determine Winners ***");
 		System.out.println("");
 		System.out.println(game.getPots());
+		
+		//TODO all-in players always, others can choose to show or fold.
+		
+		List<ShowdownPlayer> showdownPlayers = getShowdownPlayersFromPot(game.getPots().getPots().get(0));
+		
+		for(ShowdownPlayer player:showdownPlayers){
+			gameMediator.publishShowHand(new ShowHandEvent(player.getSavedShowdownPlayer()));
+		}
+		
+		
 		for(Pot pot:game.getPots().getPots()){
 			List<Player> winners = getWinners(pot);
 			System.out.print("Winners: ");
@@ -93,9 +106,20 @@ public class Showdown {
 				System.out.print(player.getName()+" ");
 			}
 			System.out.println("");
-			System.out.println("");
 			splitPot(winners, pot);
 		}
+		
+		List<SavedWinner> savedWinners = new ArrayList<SavedWinner>();
+		
+		for(Winner winner:winnersMap.values()){
+			if(winner.hasGainedChips()){
+				savedWinners.add(winner.getSavedWinner());
+				System.out.println(winner);
+				winner.transferGainedChipsToPlayer();
+			}
+		}
+		gameMediator.publishWinner(new WinnerEvent(savedWinners));
+		
 	}
 
 	/**
@@ -116,41 +140,28 @@ public class Showdown {
 	 * 			The pot to divide between all winners.
 	 */
 	private void splitPot(List<Player> winners, Pot pot){
-		int nbWinners = winners.size();
-//		for(Player winner:winners){
-//			if(!winnersMap.containsKey(winner.getId())){
-//				winnersMap.put(winner.getId(), new Winner(winner));
-//			}
-//		}
-//
-//		try {
-//			Chips chips = new Chips(100);
-//			chips.transferAllChipsTo(winnersMap.get(winners.get(0).getId()).getGainedChipsPile());
-//			System.out.println(winnersMap.get(winners.get(0).getId()));
-//		} catch (IllegalValueException e1) {
-//			// TODO Auto-generated catch block
-//			e1.printStackTrace();
-//		}
+		for(Player winner:winners){
+			if(!winnersMap.containsKey(winner.getId())){
+				winnersMap.put(winner.getId(), new Winner(winner));
+			}
+		}
 
-		int nbChips_per_winner = pot.getChips().getValue()/nbWinners;
+		int nbChips_per_winner = pot.getChips().getValue()/winners.size();
 
 		for(Player player:winners){
 			try {
-				pot.getChips().transferAmountTo(nbChips_per_winner, player.getStack());
+				pot.getChips().transferAmountTo(nbChips_per_winner, winnersMap.get(player.getId()).getGainedChipsPile());
 			} catch (IllegalValueException e) {
 				assert false;
 			}
 		}
 		
-		//TODO Only pocket cards must be considered.
-
 		// the player with the single highest card gets the odd chips that can't be divided over the winners
 		if(pot.getChips().getValue()!=0){
 			Player playerWithHighestSingleCard=winners.get(0);
-			Card highestCard = getBestFiveCardHand(playerWithHighestSingleCard).getHighestRankCard();
+			Card highestCard = new Hand(playerWithHighestSingleCard.getPocketCards()).getHighestRankCard();
 			for(Player player:winners){
-				Card otherHighestCard = getBestFiveCardHand(player).getHighestRankCard();
-				
+				Card otherHighestCard = new Hand(player.getPocketCards()).getHighestRankCard();
 				int compareSingleBestCard=highestCard.compareTo(otherHighestCard);
 				if((compareSingleBestCard>0) || ((compareSingleBestCard==0) && (otherHighestCard.getSuit().compareTo(highestCard.getSuit())>0))){
 					playerWithHighestSingleCard=player;
@@ -160,7 +171,7 @@ public class Showdown {
 			//playerWithHighestSingleCard gets the odd chip, that can't be divided over all winners
 			try {
 				System.out.println("Odd chips to player with highest card in hand");
-				pot.getChips().transferAllChipsTo(playerWithHighestSingleCard.getStack());
+				pot.getChips().transferAllChipsTo(winnersMap.get(playerWithHighestSingleCard.getId()).getGainedChipsPile());
 			} catch (IllegalValueException e) {
 				throw new IllegalStateException("Overflow");
 			}

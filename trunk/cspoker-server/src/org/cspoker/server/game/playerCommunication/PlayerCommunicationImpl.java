@@ -151,5 +151,10 @@ public class PlayerCommunicationImpl implements PlayerCommunication {
 	void setPlayerCommunicationState(PlayerCommunicationState state){
 		this.state = state;
 	}
+	
+	@Override
+	public String toString(){
+		return "player communication of "+player.getName();
+	}
 
 }

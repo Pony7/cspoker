@@ -279,11 +279,8 @@ public class Hand implements Iterable<Card>{
 	   Card highestRankCard=cards[0];
 	   for(int i=0;i<getNBCards();i++){
 		   int compareTo=cards[i].compareTo(highestRankCard);
-		   if(compareTo==1){
+		   if((compareTo==1) || ((compareTo==0) && (cards[i].getSuit().getValue()>highestRankCard.getSuit().getValue()))){
 			   highestRankCard=cards[i];
-		   }else{
-			   if((compareTo==0) && (cards[i].getSuit().getValue()>highestRankCard.getSuit().getValue()))
-				   highestRankCard=cards[i];
 		   }
 
 	   }

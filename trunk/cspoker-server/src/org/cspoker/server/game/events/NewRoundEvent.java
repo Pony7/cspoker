@@ -34,6 +34,11 @@ public class NewRoundEvent extends GameEvent {
 		this.roundName = roundName;
 		this.player = player;
 	}
+	
+	public SavedPlayer getPlayer(){
+		return player;
+	}
+	
 
 	@Override
 	public String[] getAction() {

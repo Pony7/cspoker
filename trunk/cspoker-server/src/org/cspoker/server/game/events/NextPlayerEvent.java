@@ -31,6 +31,10 @@ public class NextPlayerEvent extends GameEvent{
 	public NextPlayerEvent(SavedPlayer player){
 		this.player = player;
 	}
+	
+	public SavedPlayer getPlayer(){
+		return player;
+	}
 
 	@Override
 	public String[] getAction() {

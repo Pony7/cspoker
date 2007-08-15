@@ -21,6 +21,7 @@ import org.cspoker.server.game.elements.cards.hand.Hand;
 import org.cspoker.server.game.elements.cards.hand.HandEvaluator;
 import org.cspoker.server.game.elements.cards.hand.HandTypeCalculator;
 import org.cspoker.server.game.player.Player;
+import org.cspoker.server.game.player.SavedShowdownPlayer;
 
 
 /**
@@ -78,6 +79,10 @@ public class ShowdownPlayer implements Comparable<ShowdownPlayer>{
 	 */
 	public Hand getBestHand(){
 		return bestHand;
+	}
+	
+	public SavedShowdownPlayer getSavedShowdownPlayer(){
+		return new SavedShowdownPlayer(player.getSavedPlayer(), getBestHand());
 	}
 	
 	/**
