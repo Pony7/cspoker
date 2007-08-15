@@ -22,7 +22,7 @@ public class ExceptionParser extends DefaultHandler {
 
     private HttpException exception;
 
-    private StringBuilder sb=new StringBuilder();
+    private final StringBuilder sb=new StringBuilder();
     
     @Override
     public void characters(char[] ch, int start, int length)

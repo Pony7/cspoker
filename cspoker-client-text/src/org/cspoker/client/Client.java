@@ -47,7 +47,8 @@ public class Client {
     
     public Client(String serverIP, int port, final String user, final String pass) throws IOException {
 	Authenticator.setDefault(new Authenticator() {
-	    protected PasswordAuthentication getPasswordAuthentication() {
+	    @Override
+		protected PasswordAuthentication getPasswordAuthentication() {
 	        return new PasswordAuthentication (user, pass.toCharArray());
 	    }
 	});

@@ -50,10 +50,10 @@ import org.xml.sax.helpers.XMLReaderFactory;
  */
 public abstract class HttpRequest extends DefaultHandler implements CommandExecutor{
 
-    private URL url;
+    private final URL url;
 
     public HttpRequest(String address) throws MalformedURLException {
-	this.url=new URL(address+getPath());
+	url=new URL(address+getPath());
     }
     
     protected URL getURL(){
@@ -81,11 +81,10 @@ public abstract class HttpRequest extends DefaultHandler implements CommandExecu
 	    connection.getOutputStream().flush();
 	    connection.getOutputStream().close();
 	}
-	if(connection.getResponseCode()==401){
-	    throw new FailedAuthenticationException("Authentication failed.");
-	}else if(connection.getResponseCode()/100==4||connection.getResponseCode()/100==5){
-	    throw getException(connection);
-	}
+	if(connection.getResponseCode()==401)
+		throw new FailedAuthenticationException("Authentication failed.");
+	else if((connection.getResponseCode()/100==4)||(connection.getResponseCode()/100==5))
+		throw getException(connection);
 	XMLReader xr = XMLReaderFactory.createXMLReader();
 	xr.setContentHandler(this);
 	xr.setErrorHandler(this);
