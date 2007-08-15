@@ -44,7 +44,7 @@ public class BigBlindEvent extends GameEvent{
 
 	@Override
 	public String toString(){
-		return player.getName()+" bets the big blind of "+amount+".";
+		return player.getName()+" bets the big blind of "+amount+" chips.";
 	}
 
 }

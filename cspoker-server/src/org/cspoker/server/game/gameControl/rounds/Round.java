@@ -106,6 +106,7 @@ public abstract class Round implements PlayerAction{
 		allInPlayers = new ArrayList<AllInPlayer>();
 		foldedPlayersWithBet = new ArrayList<Player>();
 		setBet(0);
+		getBettingRules().setBetPlaced(false);
 		lastEventPlayer = getGame().getFirstToActPlayer();
 		getGame().setCurrentPlayer(getGame().getFirstToActPlayer());
 	}

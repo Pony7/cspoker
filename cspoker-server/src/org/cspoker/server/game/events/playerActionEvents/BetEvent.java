@@ -46,7 +46,7 @@ public class BetEvent extends GameEvent {
 
 	@Override
 	public String toString(){
-		return player.getName()+" bets "+amount+".";
+		return player.getName()+" bets "+amount+" chips.";
 	}
 
 }

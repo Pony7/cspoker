@@ -144,7 +144,9 @@ public class PlayerCommunicationTest extends TestCase {
 			showEvents(guyComm.getLatestGameEvents().getGameEvents());
 			
 			currentComm.check();
-			currentComm.check();
+			currentComm.bet(10);
+			currentComm.raise(10);
+			currentComm.call();
 			
 			currentComm.check();
 			currentComm.check();

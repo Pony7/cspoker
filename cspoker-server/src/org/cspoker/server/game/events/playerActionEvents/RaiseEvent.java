@@ -45,8 +45,7 @@ public class RaiseEvent extends GameEvent {
 
 	@Override
 	public String toString(){
-		return "bla";
-		//return player.getName()+" raises with "+amount+".";
+		return player.getName()+" raises with "+amount+" chips.";
 	}
 
 }
