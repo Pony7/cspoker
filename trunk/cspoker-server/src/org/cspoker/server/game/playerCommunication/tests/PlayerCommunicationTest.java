@@ -137,14 +137,11 @@ public class PlayerCommunicationTest extends TestCase {
 			}
 			System.out.println("Kenzo's events:"+kenzoComm.getLatestGameEvents());
 			System.out.println("Guy's events:"+guyComm.getLatestGameEvents());
-
-			System.out.println(currentComm);
 			
 			currentComm.call();
 
-			System.out.println("Kenzo's events:"+kenzoComm.getLatestGameEvents());
 			System.out.println("Guy's events:");
-			showEvents(guyComm.getLatestGameEvents());
+			showEvents(guyComm.getLatestGameEvents().getGameEvents());
 			
 			currentComm.check();
 			currentComm.check();
@@ -156,7 +153,7 @@ public class PlayerCommunicationTest extends TestCase {
 			currentComm.check();
 			
 			System.out.println("Guy's events:");
-			showEvents(guyComm.getLatestGameEvents());
+			showEvents(guyComm.getLatestGameEvents().getGameEvents());
 
 		} catch (IllegalActionException e) {
 			fail(e.getMessage());

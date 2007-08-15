@@ -16,10 +16,7 @@
 
 package org.cspoker.server.game.playerCommunication;
 
-import java.util.List;
-
 import org.cspoker.server.game.TableId;
-import org.cspoker.server.game.events.GameEvent;
 import org.cspoker.server.game.gameControl.actions.IllegalActionException;
 import org.cspoker.server.game.player.Player;
 
@@ -139,12 +136,12 @@ public class PlayerCommunicationImpl implements PlayerCommunication {
 	}
 
 
-	public List<GameEvent> getLatestGameEvents() throws IllegalActionException{
+	public GameEvents getLatestGameEvents() throws IllegalActionException{
 		return state.getLatestGameEvents();
 	}
 
 
-	public List<GameEvent> getLatestGameEventsAndAck(int ack) throws IllegalActionException{
+	public GameEvents getLatestGameEventsAndAck(int ack) throws IllegalActionException{
 		return state.getLatestGameEventsAndAck(ack);
 	}
 

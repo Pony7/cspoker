@@ -40,7 +40,7 @@ public class GameEventsHandler extends NoRequestStreamHandler {
 	String username= HttpHandlerImpl.toPlayerName(http.getRequestHeaders());
 	List<GameEvent> events;
 	try {
-	     events = PlayerCommunicationFactory.getRegisteredPlayerCommunication(username).getLatestGameEvents();
+	     events = PlayerCommunicationFactory.getRegisteredPlayerCommunication(username).getLatestGameEvents().getGameEvents();
 	} catch (IllegalActionException e) {
 	    throw new HttpSaxException(e, 403);
 	}

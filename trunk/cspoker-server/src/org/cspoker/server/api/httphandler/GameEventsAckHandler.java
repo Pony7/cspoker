@@ -71,7 +71,7 @@ public class GameEventsAckHandler extends RequestStreamHandler {
 		List<GameEvent> events;
 		try {
 		    events=PlayerCommunicationFactory.getRegisteredPlayerCommunication(username)
-		        	.getLatestGameEventsAndAck(Integer.parseInt(ack));
+		        	.getLatestGameEventsAndAck(Integer.parseInt(ack)).getGameEvents();
 		} catch (NumberFormatException e) {
 		    throw new HttpSaxException(e, 400);
 		} catch (IllegalActionException e) {

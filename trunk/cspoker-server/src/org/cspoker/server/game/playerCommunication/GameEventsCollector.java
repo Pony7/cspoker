@@ -33,6 +33,8 @@ import org.cspoker.server.game.events.GameEventListener;
 public class GameEventsCollector implements GameEventListener{
 
 	private int ackedToNumber=0;
+	
+	private int latestEventNumber=0;
 
 	/**
 	 * This variable contains the game events.
@@ -48,6 +50,7 @@ public class GameEventsCollector implements GameEventListener{
 	@Override
 	public synchronized void onGameEvent(GameEvent event) {
 		events.add(event);
+		latestEventNumber++;
 	}
 
 	/**
@@ -55,18 +58,17 @@ public class GameEventsCollector implements GameEventListener{
 	 *
 	 * @return The latest game events.
 	 */
-	public synchronized List<GameEvent> getLatestEvents(){
-		return Collections.unmodifiableList(new ArrayList<GameEvent>(events.subList(ackedToNumber, events.size())));
+	public synchronized GameEvents getLatestEvents(){
+		return new GameEvents(Collections.unmodifiableList(new ArrayList<GameEvent>(events)), latestEventNumber);
 	}
 
-	public synchronized List<GameEvent> getLatestEventsAndAck(int ack){
+	public synchronized GameEvents getLatestEventsAndAck(int ack){
 		if(ack<=ackedToNumber)
 			return getLatestEvents();
-		if((ack>events.size()))
-			ack = events.size();
+		if((ack>latestEventNumber))
+			ack = latestEventNumber;
+		events.subList(0, ack-ackedToNumber).clear();
 		ackedToNumber = ack;
-
-		return Collections.unmodifiableList(new ArrayList<GameEvent>(events.subList(ack, events.size())));
+		return getLatestEvents();
 	}
-
 }
