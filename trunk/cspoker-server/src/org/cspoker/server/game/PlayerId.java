@@ -15,7 +15,7 @@
  */
 
 package org.cspoker.server.game;
-import net.jcip.annotations.*;
+import net.jcip.annotations.Immutable;
 
 /**
  * A class to represent player id's.
