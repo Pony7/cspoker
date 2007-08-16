@@ -2,17 +2,19 @@ package org.cspoker.server.game.elements.cards.hand.test;
 
 import java.util.Iterator;
 
+import junit.framework.TestCase;
+
+import org.cspoker.server.game.elements.cards.Card;
 import org.cspoker.server.game.elements.cards.CardImpl;
 import org.cspoker.server.game.elements.cards.cardElements.Rank;
 import org.cspoker.server.game.elements.cards.cardElements.Suit;
 import org.cspoker.server.game.elements.cards.hand.Hand;
 import org.cspoker.server.game.elements.cards.hand.HandEvaluator;
 
-import junit.framework.TestCase;
-
 public class TestHandIterator extends TestCase {
 
 	protected Hand hand1;
+	@Override
 	protected void setUp() throws Exception {
 		hand1=new Hand();
 		
@@ -27,7 +29,7 @@ public class TestHandIterator extends TestCase {
 	}
 	
 	public void testHandIterator1(){
-		Iterator iterator=hand1.iterator();
+		Iterator<Card> iterator=hand1.iterator();
 		while(iterator.hasNext()){
 			System.out.println(iterator.next().toString());
 		}
@@ -38,7 +40,7 @@ public class TestHandIterator extends TestCase {
 		}
 	}
 	public void testHandIterator2(){
-		Iterator iterator=HandEvaluator.getBestHand(hand1).iterator();
+		Iterator<Card> iterator=HandEvaluator.getBestHand(hand1).iterator();
 		while(iterator.hasNext()){
 			System.out.println(iterator.next().toString());
 		}
