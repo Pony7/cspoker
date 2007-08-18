@@ -20,6 +20,7 @@ import org.cspoker.server.game.GameMediator;
 import org.cspoker.server.game.elements.table.PlayerListFullException;
 import org.cspoker.server.game.elements.table.Table;
 import org.cspoker.server.game.events.NextPlayerEvent;
+import org.cspoker.server.game.events.StackChangedEvent;
 import org.cspoker.server.game.events.playerActionEvents.BetEvent;
 import org.cspoker.server.game.events.playerActionEvents.CallEvent;
 import org.cspoker.server.game.events.playerActionEvents.CheckEvent;
@@ -109,6 +110,7 @@ public class GameControl implements PlayerAction{
 	public void bet(Player player, int amount) throws IllegalActionException{
 		round.bet(player, amount);
 		gameMediator.publishBetEvent(new BetEvent(player.getSavedPlayer(), amount));
+		gameMediator.publishStackChanged(new StackChangedEvent(player.getSavedPlayer()));
 		System.out.println(player.getName()+" bets "+amount+".");
 		checkIfEndedAndChangeRound();
 	}
@@ -128,6 +130,7 @@ public class GameControl implements PlayerAction{
 	public void call(Player player) throws IllegalActionException{
 		round.call(player);
 		gameMediator.publishCallEvent(new CallEvent(player.getSavedPlayer()));
+		gameMediator.publishStackChanged(new StackChangedEvent(player.getSavedPlayer()));
 		System.out.println(player.getName()+" calls.");
 		checkIfEndedAndChangeRound();
 	}
@@ -167,6 +170,7 @@ public class GameControl implements PlayerAction{
 	public void raise(Player player, int amount) throws IllegalActionException{
 		round.raise(player, amount);
 		gameMediator.publishRaiseEvent(new RaiseEvent(player.getSavedPlayer(), amount));
+		gameMediator.publishStackChanged(new StackChangedEvent(player.getSavedPlayer()));
 		System.out.println(player.getName()+" raises with "+amount+".");
 		checkIfEndedAndChangeRound();
 	}

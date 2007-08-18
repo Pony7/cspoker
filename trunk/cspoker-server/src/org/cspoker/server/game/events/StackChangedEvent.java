@@ -13,34 +13,26 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-
 package org.cspoker.server.game.events;
-
-
-import java.util.Collections;
-import java.util.List;
 
 import org.cspoker.server.game.player.SavedPlayer;
 
 /**
- * A class to represent new deal events.
- * 
+ * A class to represent stack changed events.
+ *
  * @author Kenzo
  *
  */
-public class NewDealEvent extends GameEvent {
+public class StackChangedEvent extends GameEvent{
 	
-	private final List<SavedPlayer> players;
+	private final SavedPlayer player;
 	
-	private final SavedPlayer dealer;
-	
-	public NewDealEvent(List<SavedPlayer> players, SavedPlayer dealer){
-		this.players = Collections.unmodifiableList(players);
-		this.dealer = dealer;
+	public StackChangedEvent(SavedPlayer player){
+		this.player = player;
 	}
 	
-	public SavedPlayer getDealer(){
-		return dealer;
+	public SavedPlayer getPlayer(){
+		return player;
 	}
 
 	@Override
@@ -51,14 +43,9 @@ public class NewDealEvent extends GameEvent {
 	
 	@Override
 	public String toString(){
-		String toReturn ="A new deal with ";
-		for(SavedPlayer player:players){
-			toReturn+=player.getName();
-			toReturn+=" (";
-			toReturn+=player.getStackValue();
-			toReturn+=" chips), ";
-		}
-		return toReturn.substring(0, toReturn.length()-2)+" as initial players of this table. "+dealer.getName()+" is dealer.";
+		return player.getName()+"'s stack has changed to "+player.getStackValue()+" chips.";
 	}
+	
+	
 
 }

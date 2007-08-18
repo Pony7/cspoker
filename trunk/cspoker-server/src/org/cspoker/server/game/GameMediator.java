@@ -36,6 +36,8 @@ import org.cspoker.server.game.events.NextPlayerEvent;
 import org.cspoker.server.game.events.NextPlayerListener;
 import org.cspoker.server.game.events.ShowHandEvent;
 import org.cspoker.server.game.events.ShowHandListener;
+import org.cspoker.server.game.events.StackChangedEvent;
+import org.cspoker.server.game.events.StackChangedListener;
 import org.cspoker.server.game.events.WinnerEvent;
 import org.cspoker.server.game.events.WinnerListener;
 import org.cspoker.server.game.events.playerActionEvents.AllInEvent;
@@ -848,6 +850,47 @@ public class GameMediator implements PlayerAction{
 	 * should be alerted on a show hand.
 	 */
 	private final List<ShowHandListener> showHandListeners = new CopyOnWriteArrayList<ShowHandListener>();
+	
+	
+	/**
+	 * Inform all subscribed stack changed listeners a stack changed event has occurred.
+	 *
+	 * Each subscribed stack changed listener is updated
+	 * by calling their onStackChangedEvent() method.
+	 *
+	 */
+	public void publishStackChanged(StackChangedEvent event) {
+		for (StackChangedListener listener : stackChangedListeners) {
+			listener.onStackChangedEvent(event);
+		}
+		publishGameEvent(event);
+	}
+
+	/**
+	 * Subscribe the given stack changed listener for stack changed events.
+	 *
+	 * @param 	listener
+	 * 			The listener to subscribe.
+	 */
+	public void subscribeStackChangedListener(StackChangedListener listener) {
+		stackChangedListeners.add(listener);
+	}
+
+	/**
+	 * Unsubscribe the given stack changed listener for stack changed events.
+	 *
+	 * @param 	listener
+	 * 			The listener to unsubscribe.
+	 */
+	public void unsubscribeStackChangedListener(StackChangedListener listener) {
+		stackChangedListeners.remove(listener);
+	}
+
+	/**
+	 * This list contains all stack changed listeners that
+	 * should be alerted on a stack changed.
+	 */
+	private final List<StackChangedListener> stackChangedListeners = new CopyOnWriteArrayList<StackChangedListener>();
 	
 	/**********************************************************
 	 * Personal Events
