@@ -1,18 +1,32 @@
-package java.org.cspoker.client.request.abstracts;
-
+/**
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *  
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ */
+package org.cspoker.client.request.abstracts;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.org.cspoker.client.commands.CommandExecutor;
-import java.org.cspoker.client.exceptions.ExceptionParser;
-import java.org.cspoker.client.exceptions.FailedAuthenticationException;
 
 import javax.xml.transform.sax.SAXTransformerFactory;
 import javax.xml.transform.sax.TransformerHandler;
 import javax.xml.transform.stream.StreamResult;
 
+import org.cspoker.client.commands.CommandExecutor;
+import org.cspoker.client.exceptions.ExceptionParser;
+import org.cspoker.client.exceptions.FailedAuthenticationException;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
@@ -36,10 +50,10 @@ import org.xml.sax.helpers.XMLReaderFactory;
  */
 public abstract class HttpRequest extends DefaultHandler implements CommandExecutor{
 
-    private final URL url;
+    private URL url;
 
     public HttpRequest(String address) throws MalformedURLException {
-	url=new URL(address+getPath());
+	this.url=new URL(address+getPath());
     }
     
     protected URL getURL(){
@@ -67,10 +81,11 @@ public abstract class HttpRequest extends DefaultHandler implements CommandExecu
 	    connection.getOutputStream().flush();
 	    connection.getOutputStream().close();
 	}
-	if(connection.getResponseCode()==401)
-		throw new FailedAuthenticationException("Authentication failed.");
-	else if((connection.getResponseCode()/100==4)||(connection.getResponseCode()/100==5))
-		throw getException(connection);
+	if(connection.getResponseCode()==401){
+	    throw new FailedAuthenticationException("Authentication failed.");
+	}else if(connection.getResponseCode()/100==4||connection.getResponseCode()/100==5){
+	    throw getException(connection);
+	}
 	XMLReader xr = XMLReaderFactory.createXMLReader();
 	xr.setContentHandler(this);
 	xr.setErrorHandler(this);

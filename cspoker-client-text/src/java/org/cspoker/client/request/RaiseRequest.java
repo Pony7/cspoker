@@ -13,13 +13,13 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package java.org.cspoker.client.request;
+package org.cspoker.client.request;
 
 import java.net.MalformedURLException;
-import java.org.cspoker.client.request.abstracts.OutputRequest;
 
 import javax.xml.transform.sax.TransformerHandler;
 
+import org.cspoker.client.request.abstracts.OutputRequest;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
