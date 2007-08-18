@@ -17,11 +17,11 @@
 package org.cspoker.server.game.events;
 
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import org.cspoker.server.game.player.Player;
+import org.cspoker.server.game.player.SavedPlayer;
 
 /**
  * A class to represent new deal events.
@@ -31,12 +31,12 @@ import org.cspoker.server.game.player.Player;
  */
 public class NewDealEvent extends GameEvent {
 	
-	private final List<Player> players;
+	private final List<SavedPlayer> players;
 	
 	private final Player dealer;
 	
-	public NewDealEvent(List<Player> players, Player dealer){
-		this.players = Collections.unmodifiableList(new ArrayList<Player>(players));
+	public NewDealEvent(List<SavedPlayer> players, Player dealer){
+		this.players = Collections.unmodifiableList(players);
 		this.dealer = dealer;
 	}
 	
@@ -53,7 +53,7 @@ public class NewDealEvent extends GameEvent {
 	@Override
 	public String toString(){
 		String toReturn ="A new deal with ";
-		for(Player player:players){
+		for(SavedPlayer player:players){
 			toReturn+=player.getName();
 			toReturn+=", ";
 		}

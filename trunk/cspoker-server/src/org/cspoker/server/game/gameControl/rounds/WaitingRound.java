@@ -16,6 +16,9 @@
 
 package org.cspoker.server.game.gameControl.rounds;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.cspoker.server.game.GameMediator;
 import org.cspoker.server.game.events.NewDealEvent;
 import org.cspoker.server.game.events.privateEvents.NewPocketCardsEvent;
@@ -24,12 +27,17 @@ import org.cspoker.server.game.gameControl.PlayerAction;
 import org.cspoker.server.game.gameControl.actions.Action;
 import org.cspoker.server.game.gameControl.actions.IllegalActionException;
 import org.cspoker.server.game.player.Player;
+import org.cspoker.server.game.player.SavedPlayer;
 
 public class WaitingRound extends Round {
 
 	public WaitingRound(GameMediator gameMediator, Game game) {
 		super(gameMediator, game);
-		gameMediator.publishNewDealEvent(new NewDealEvent(game.getCurrentDealPlayers(), game.getDealer()));
+		List<SavedPlayer> players = new ArrayList<SavedPlayer>(game.getNbCurrentDealPlayers());
+		for(Player player:game.getCurrentDealPlayers()){
+			players.add(player.getSavedPlayer());
+		}
+		gameMediator.publishNewDealEvent(new NewDealEvent(players, game.getDealer()));
 		removeBrokePlayers();
 		getGame().setToInitialHandPlayers();
 		getGame().setCurrentPlayer(getGame().getDealer());
