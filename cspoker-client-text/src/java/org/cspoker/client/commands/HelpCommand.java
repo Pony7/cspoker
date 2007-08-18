@@ -35,7 +35,7 @@ public class HelpCommand implements CommandExecutor {
 			"-Game:"+n +
 			"  STARTGAME - start a new game at your table"+n +
 			"  GAMEEVENTS - get recent game events"+n +
-			"  	      - just press enter to get all game events quickly"+n+
+			"               (just press enter to get all game events quickly)"+n+
 			"  GAMEEVENTS [ackID] - get recent game events and acknowledge all previous ones"+n +
 			"  DEAL - deal"+n +
 			"  CHECK - check"+n +

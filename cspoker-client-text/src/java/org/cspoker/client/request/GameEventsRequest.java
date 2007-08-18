@@ -42,6 +42,7 @@ public class GameEventsRequest extends NoOutputRequest {
 	for(String event:events){
 	    r+=event+n;
 	}
+	r+="Last event number is "+lastID+n;
 	return r;
     }
 
@@ -65,14 +66,16 @@ public class GameEventsRequest extends NoOutputRequest {
     public void startElement(String uri, String localName, String name,
             Attributes attributes) throws SAXException {
         sb.setLength(0);
-        lastID=attributes.getValue("id");
+        if(name.equalsIgnoreCase("events")){
+            lastID=attributes.getValue("lastEventNumber");
+        }
     }
     
     @Override
     public void endElement(String uri, String localName, String name)
             throws SAXException {
         if(name.equalsIgnoreCase("event")){
-            events.add(lastID+": "+sb.toString());
+            events.add(sb.toString());
             sb.setLength(0);
         }
     }
