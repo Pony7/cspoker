@@ -16,8 +16,6 @@
 
 package org.cspoker.server.game.gameControl.actions;
 
-import org.cspoker.server.game.gameControl.rounds.Round;
-import org.cspoker.server.game.player.Player;
 
 
 /**
@@ -29,11 +27,6 @@ import org.cspoker.server.game.player.Player;
 public enum Action {
 
 	FOLD{
-		@Override
-		public boolean canDoAction(Round round, Player player){
-			return round.isBettingRound()
-			&& round.onTurn(player);
-		}
 
 		@Override
 		public String toString(){
@@ -42,12 +35,6 @@ public enum Action {
 	},
 
 	CHECK{
-		@Override
-		public boolean canDoAction(Round round, Player player){
-			return round.isBettingRound()
-			&& round.onTurn(player)
-			&& !round.someoneHasBet();
-		}
 
 		@Override
 		public String toString(){
@@ -56,13 +43,6 @@ public enum Action {
 	},
 
 	BET{
-		@Override
-		public boolean canDoAction(Round round, Player player){
-			return round.isBettingRound()
-			&& round.onTurn(player)
-			&& !round.someoneHasBet()
-			&& !round.onlyOnePlayerLeft();
-		}
 
 		@Override
 		public String toString(){
@@ -71,12 +51,6 @@ public enum Action {
 	},
 
 	CALL{
-		@Override
-		public boolean canDoAction(Round round, Player player){
-			return round.isBettingRound()
-			&& round.onTurn(player)
-			&& round.someoneHasBet();
-		}
 
 		@Override
 		public String toString(){
@@ -85,13 +59,6 @@ public enum Action {
 	},
 
 	RAISE{
-		@Override
-		public boolean canDoAction(Round round, Player player){
-			return round.isBettingRound()
-			&& round.onTurn(player)
-			&& round.someoneHasBet()
-			&& !round.onlyOnePlayerLeft();
-		}
 
 		@Override
 		public String toString(){
@@ -101,41 +68,16 @@ public enum Action {
 
 	DEAL{
 		@Override
-		public boolean canDoAction(Round round, Player player){
-			return !round.isBettingRound()
-			&& round.onTurn(player)
-			&& (round.getGame().getTable().getNbPlayers()>1);
-		}
-
-		@Override
 		public String toString(){
 			return "Deal";
 		}
 	},
 
 	ALL_IN{
-		@Override
-		public boolean canDoAction(Round round, Player player){
-			return round.isBettingRound()
-			&& round.onTurn(player);
-		}
 
 		@Override
 		public String toString(){
 			return "All-in";
 		}
 	};
-
-	/**
-	 * Check whether the given player can take this action in the given game.
-	 *
-	 * @param 	round
-	 * 			The round in which the action occurs.
-	 * @param 	player
-	 * 			The player to check.
-	 * @return	True if the action is allowed, false otherwise.
-	 */
-	public abstract boolean canDoAction(Round round, Player player);
-
-
 }

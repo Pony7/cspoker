@@ -28,7 +28,6 @@ import org.cspoker.server.game.elements.player.AllInPlayer;
 import org.cspoker.server.game.events.playerActionEvents.AllInEvent;
 import org.cspoker.server.game.gameControl.Game;
 import org.cspoker.server.game.gameControl.PlayerAction;
-import org.cspoker.server.game.gameControl.actions.Action;
 import org.cspoker.server.game.gameControl.actions.IllegalActionException;
 import org.cspoker.server.game.gameControl.rules.BettingRules;
 import org.cspoker.server.game.player.Player;
@@ -63,13 +62,13 @@ public abstract class Round implements PlayerAction{
 	 * it is the player on to the left side of the player
 	 * with the dealer-button.
 	 */
-	private Player lastEventPlayer;
+	protected Player lastEventPlayer;
 
 	/**
 	 * The variable containing the game in which
 	 * this round takes place.
 	 */
-	private final Game game;
+	protected final Game game;
 
 	/**
 	 * The current bet in this round.
@@ -86,7 +85,7 @@ public abstract class Round implements PlayerAction{
 	 * This list contains all players who folded,
 	 * but who have placed chips on their betted chips pile.
 	 */
-	private final List<Player> foldedPlayersWithBet;
+	protected final List<Player> foldedPlayersWithBet;
 
 	protected final GameMediator gameMediator;
 
@@ -183,7 +182,7 @@ public abstract class Round implements PlayerAction{
 	 * 			raised with given amount.
 	 *		   	|setBet(getBet()+amount)
 	 */
-	private void raiseBetWith(int amount){
+	protected void raiseBetWith(int amount){
 		setBet(getBet()+amount);
 	}
 	/**********************************************************
@@ -237,6 +236,8 @@ public abstract class Round implements PlayerAction{
 	 * Bidding methods
 	 **********************************************************/
 
+	//TODO onTurn() here.
+	
 	/**
 	 * If there is no bet on the table and you do not wish to place a bet.
 	 * You may only check when there are no prior bets.
@@ -250,9 +251,7 @@ public abstract class Round implements PlayerAction{
      * @see		PlayerAction
 	 */
 	public void check(Player player) throws IllegalActionException{
-		if(!Action.CHECK.canDoAction(this, player))
-			throw new IllegalActionException(player, Action.CHECK);
-		game.nextPlayer();
+		throw new IllegalActionException(player.getName()+"can not check in this round.");
 	}
 
 	/**
@@ -269,31 +268,7 @@ public abstract class Round implements PlayerAction{
      * @see		PlayerAction
 	 */
 	public void bet(Player player, int amount) throws IllegalActionException{
-		//Check whether the given player can do this action.
-		if(!Action.BET.canDoAction(this, player))
-			throw new IllegalActionException(player, Action.BET);
-
-		//Check whether the bet is valid, according to the betting rules.
-		if(!getBettingRules().isValidBet(amount, this))
-			throw new IllegalActionException(player, Action.BET,getBettingRules().getLastBetErrorMessage());
-
-		//Can not bet with zero, it is equal to check. Please use check.
-		if(amount==0)
-			throw new IllegalActionException(player, Action.BET, "Can not bet with 0 chips. Did you mean check?");
-		if(amount>=player.getStack().getValue())
-			throw new IllegalActionException(player,Action.BET,"Can not bet an amount higher than your current amount of chips;" +
-					" did you mean all-in??");
-
-		try {
-			player.transferAmountToBettedPile(amountToIncreaseBettedPileWith(player)+amount);
-		} catch (IllegalValueException e) {
-			throw new IllegalActionException(player, Action.BET, e.getMessage());
-		}
-		raiseBetWith(amount);
-		getBettingRules().setBetPlaced(true);
-		getBettingRules().setLastBetAmount(amount);
-		playerMadeEvent(player);
-		game.nextPlayer();
+		throw new IllegalActionException(player.getName()+" can not bet "+amount+" chips in this round.");
 	}
 
 	/**
@@ -309,32 +284,7 @@ public abstract class Round implements PlayerAction{
 	 * @see		PlayerAction
 	 */
 	public void call(Player player) throws IllegalActionException{
-		//Check whether the given player can do this action.
-		if(!Action.CALL.canDoAction(this, player))
-			throw new IllegalActionException(player, Action.CALL);
-
-		//Check whether the amount with which the betted chips pile
-		//is increased exceeds the player's stack.
-		if(amountToIncreaseBettedPileWith(player)>=player.getStack().getValue())
-			throw new IllegalActionException(player,Action.CALL,"Can not call a bet higher than your current amount of chips;" +
-					" did you mean all-in??");
-
-		//Try to transfer the amount to the betted pile.
-		try {
-			player.transferAmountToBettedPile(amountToIncreaseBettedPileWith(player));
-		} catch (IllegalValueException e) {
-			throw new IllegalActionException(player, Action.CALL, e.getMessage());
-		}
-
-		/**
-		 * If the last event player is an all-in player,
-		 * change the last event player to the calling player.
-		 */
-		if(!game.hasAsActivePlayer(lastEventPlayer))
-			playerMadeEvent(player);
-
-		//Change to next player
-		game.nextPlayer();
+		throw new IllegalActionException(player.getName()+" can not call in this round.");
 	}
 
 	/**
@@ -351,36 +301,7 @@ public abstract class Round implements PlayerAction{
 	 * @see		PlayerAction
 	 */
 	public void raise(Player player, int amount) throws IllegalActionException{
-		//Check whether the given player can do this action.
-		if(!Action.RAISE.canDoAction(this, player))
-			throw new IllegalActionException(player, Action.RAISE);
-
-		//Check whether the raise is valid.
-		if(!getBettingRules().isValidRaise(amount, this))
-			throw new IllegalActionException(player, Action.RAISE,getBettingRules().getLastRaiseErrorMessage());
-
-		//Can not raise with zero, it is equal to call. Please use call.
-		if(amount==0)
-			throw new IllegalActionException(player, Action.RAISE, "Can not raise with 0 chips. Did you mean call?");
-
-		//If the total number of chips needed for this raise,
-		//exceeds or equals the stack of the player, the player should
-		//go all-in explicitly.
-		if((amount+amountToIncreaseBettedPileWith(player))>=player.getStack().getValue())
-			throw new IllegalActionException(player,Action.RAISE,"Can not raise with an amount higher than your current amount of chips;" +
-					" did you mean all-in??");
-
-		//Try to transfer the amount to the betted pile.
-		try {
-			player.transferAmountToBettedPile(amountToIncreaseBettedPileWith(player)+amount);
-		} catch (IllegalValueException e) {
-			throw new IllegalActionException(player, Action.RAISE, e.getMessage());
-		}
-		raiseBetWith(amount);
-		getBettingRules().incrementNBRaises();
-		getBettingRules().setLastBetAmount(amount);
-		playerMadeEvent(player);
-		game.nextPlayer();
+		throw new IllegalActionException(player.getName()+" can not raise with "+amount+" chips in this round.");
 	}
 
 	/**
@@ -397,29 +318,7 @@ public abstract class Round implements PlayerAction{
      *          The action performed is not a valid action.
 	 */
 	public void fold(Player player) throws IllegalActionException{
-		//Check whether the given player can do this action.
-		if(!Action.FOLD.canDoAction(this, player))
-			throw new IllegalActionException(player, Action.FOLD);
-
-		player.clearPocketCards();
-
-		/**
-		 * If the folding player has done a bet in this round,
-		 * he should be remembered until the end of the round.
-		 * It had to be implemented this way and not directly
-		 * collected to the main pot, because all-in logic
-		 * would be to complicated.
-		 *
-		 * By doing the all-in logic at the end of a round,
-		 * the code is easier to write.
-		 */
-		if(player.getBettedChips().getValue()>0){
-			foldedPlayersWithBet.add(player);
-		}
-		game.removePlayerFromCurrentDeal(player);
-
-		//removing from game, automatically switches
-		//to next player.
+		throw new IllegalActionException(player.getName()+" can not fold in this round.");
 	}
 
 	/**
@@ -451,10 +350,7 @@ public abstract class Round implements PlayerAction{
 	 * @see		PlayerAction
 	 */
 	public void allIn(Player player) throws IllegalActionException {
-		//Check whether the given player can do this action.
-		if(!Action.ALL_IN.canDoAction(this, player))
-			throw new IllegalActionException(player, Action.ALL_IN);
-		goAllIn(player);
+		throw new IllegalActionException(player.getName()+" can not go all-in in this round.");
 	}
 
 	/**********************************************************
