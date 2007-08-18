@@ -37,7 +37,7 @@ public class WaitingRound extends Round {
 		for(Player player:game.getCurrentDealPlayers()){
 			players.add(player.getSavedPlayer());
 		}
-		gameMediator.publishNewDealEvent(new NewDealEvent(players, game.getDealer()));
+		gameMediator.publishNewDealEvent(new NewDealEvent(players, game.getDealer().getSavedPlayer()));
 		removeBrokePlayers();
 		getGame().setToInitialHandPlayers();
 		getGame().setCurrentPlayer(getGame().getDealer());

@@ -20,7 +20,6 @@ package org.cspoker.server.game.events;
 import java.util.Collections;
 import java.util.List;
 
-import org.cspoker.server.game.player.Player;
 import org.cspoker.server.game.player.SavedPlayer;
 
 /**
@@ -33,14 +32,14 @@ public class NewDealEvent extends GameEvent {
 	
 	private final List<SavedPlayer> players;
 	
-	private final Player dealer;
+	private final SavedPlayer dealer;
 	
-	public NewDealEvent(List<SavedPlayer> players, Player dealer){
+	public NewDealEvent(List<SavedPlayer> players, SavedPlayer dealer){
 		this.players = Collections.unmodifiableList(players);
 		this.dealer = dealer;
 	}
 	
-	public Player getDealer(){
+	public SavedPlayer getDealer(){
 		return dealer;
 	}
 
