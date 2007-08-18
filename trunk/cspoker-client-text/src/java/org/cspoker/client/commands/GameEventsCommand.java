@@ -13,30 +13,30 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package java.org.cspoker.client.commands;
+package org.cspoker.client.commands;
 
 import java.net.MalformedURLException;
-import java.org.cspoker.client.request.GameEventsAckRequest;
-import java.org.cspoker.client.request.GameEventsRequest;
 
-
+import org.cspoker.client.request.GameEventsAckRequest;
+import org.cspoker.client.request.GameEventsRequest;
 
 public class GameEventsCommand implements CommandExecutor {
 
-    private final GameEventsRequest noack;
-    private final GameEventsAckRequest ack;
+    private GameEventsRequest noack;
+    private GameEventsAckRequest ack;
 
     public GameEventsCommand(String address) throws MalformedURLException{
-	noack = new GameEventsRequest(address);
-	ack = new GameEventsAckRequest(address);
+	this.noack = new GameEventsRequest(address);
+	this.ack = new GameEventsAckRequest(address);
     }
     
     @Override
     public String execute(String... args) throws Exception {
-	if(args.length==0)
-		return noack.execute(args);
-	else
-		return ack.execute(args);
+	if(args.length==0){
+	    return noack.execute(args);
+	}else{
+	    return ack.execute(args);
+	}
     }
 
 }

@@ -13,31 +13,30 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package java.org.cspoker.client;
+package org.cspoker.client;
 
 import java.io.IOException;
 import java.net.Authenticator;
 import java.net.MalformedURLException;
 import java.net.PasswordAuthentication;
-import java.org.cspoker.client.commands.CommandExecutor;
-import java.org.cspoker.client.commands.GameEventsCommand;
-import java.org.cspoker.client.commands.HelpCommand;
-import java.org.cspoker.client.request.AllInRequest;
-import java.org.cspoker.client.request.BetRequest;
-import java.org.cspoker.client.request.CallRequest;
-import java.org.cspoker.client.request.CheckRequest;
-import java.org.cspoker.client.request.CreateTableRequest;
-import java.org.cspoker.client.request.DealRequest;
-import java.org.cspoker.client.request.FoldRequest;
-import java.org.cspoker.client.request.JoinTableRequest;
-import java.org.cspoker.client.request.LeaveTableRequest;
-import java.org.cspoker.client.request.ListTablesRequest;
-import java.org.cspoker.client.request.PingRequest;
-import java.org.cspoker.client.request.RaiseRequest;
-import java.org.cspoker.client.request.StartGameRequest;
 import java.util.HashMap;
 
-
+import org.cspoker.client.commands.CommandExecutor;
+import org.cspoker.client.commands.GameEventsCommand;
+import org.cspoker.client.commands.HelpCommand;
+import org.cspoker.client.request.AllInRequest;
+import org.cspoker.client.request.BetRequest;
+import org.cspoker.client.request.CallRequest;
+import org.cspoker.client.request.CheckRequest;
+import org.cspoker.client.request.CreateTableRequest;
+import org.cspoker.client.request.DealRequest;
+import org.cspoker.client.request.FoldRequest;
+import org.cspoker.client.request.JoinTableRequest;
+import org.cspoker.client.request.LeaveTableRequest;
+import org.cspoker.client.request.ListTablesRequest;
+import org.cspoker.client.request.PingRequest;
+import org.cspoker.client.request.RaiseRequest;
+import org.cspoker.client.request.StartGameRequest;
 
 /**
  * Connect to the given server and passes on user commands.
@@ -48,8 +47,7 @@ public class Client {
     
     public Client(String serverIP, int port, final String user, final String pass) throws IOException {
 	Authenticator.setDefault(new Authenticator() {
-	    @Override
-		protected PasswordAuthentication getPasswordAuthentication() {
+	    protected PasswordAuthentication getPasswordAuthentication() {
 	        return new PasswordAuthentication (user, pass.toCharArray());
 	    }
 	});

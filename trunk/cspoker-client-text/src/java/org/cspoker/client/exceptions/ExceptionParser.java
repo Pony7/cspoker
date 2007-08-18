@@ -13,7 +13,7 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package java.org.cspoker.client.exceptions;
+package org.cspoker.client.exceptions;
 
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -22,7 +22,7 @@ public class ExceptionParser extends DefaultHandler {
 
     private HttpException exception;
 
-    private final StringBuilder sb=new StringBuilder();
+    private StringBuilder sb=new StringBuilder();
     
     @Override
     public void characters(char[] ch, int start, int length)

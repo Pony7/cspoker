@@ -13,16 +13,16 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package java.org.cspoker.client;
+package org.cspoker.client;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.org.cspoker.client.exceptions.FailedAuthenticationException;
-import java.org.cspoker.client.exceptions.StackTraceWrapper;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.cspoker.client.exceptions.FailedAuthenticationException;
+import org.cspoker.client.exceptions.StackTraceWrapper;
 
 /**
  * A console poker client.
@@ -40,7 +40,7 @@ public class Console {
      * @throws Exception
      */
     public Console(String[] args) throws Exception {
-	if ((args.length != 2) && (args.length != 3)) {
+	if (args.length != 2 && args.length != 3) {
 	    System.out.println("usage: java -jar cspoker-client-text.jar [server] [portnumber] -[options]");
 	    System.out.println("options:");
 	    System.out.println(" -v verbose");
@@ -113,7 +113,7 @@ public class Console {
 
     private String parse(Client client, String line) throws Exception {
 	String[] words=line.split(" ");
-	if((words.length<1) || words[0].equalsIgnoreCase(""))
+	if(words.length<1 || words[0].equalsIgnoreCase(""))
 	    return parse(client, "GAMEEVENTS");
 	List<String> list=new ArrayList<String>();
 	list.addAll(Arrays.asList(words));
