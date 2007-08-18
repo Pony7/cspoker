@@ -13,12 +13,11 @@ _none_
 === Response ===
 {{{
 <?xml version="1.0" encoding="UTF-8"?>
-<events>
- <event id="58">Kenzo raises.</event>
- <event id="59">Guy folds.</event>
- <event id="60">Cedric calls.</event>
+<events lastEventNumber="58">
+ <event>Kenzo raises.</event>
+ <event>Guy folds.</event>
+ <event>Cedric calls.</event>
 </events>
 }}}
-
 
 
