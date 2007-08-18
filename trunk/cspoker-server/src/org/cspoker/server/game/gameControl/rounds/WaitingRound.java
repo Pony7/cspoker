@@ -24,7 +24,6 @@ import org.cspoker.server.game.events.NewDealEvent;
 import org.cspoker.server.game.events.privateEvents.NewPocketCardsEvent;
 import org.cspoker.server.game.gameControl.Game;
 import org.cspoker.server.game.gameControl.PlayerAction;
-import org.cspoker.server.game.gameControl.actions.Action;
 import org.cspoker.server.game.gameControl.actions.IllegalActionException;
 import org.cspoker.server.game.player.Player;
 import org.cspoker.server.game.player.SavedPlayer;
@@ -59,8 +58,12 @@ public class WaitingRound extends Round {
 	@Override
 	public void deal(Player player) throws IllegalActionException{
 		//Check whether the given player can do this action.
-		if(!Action.DEAL.canDoAction(this, player))
-			throw new IllegalActionException(player, Action.DEAL);
+		if(!onTurn(player))
+			throw new IllegalActionException(player.getName()+" can not deal in this round.");
+		
+		if(!(game.getTable().getNbPlayers()>1))
+			throw new IllegalActionException("There should at least be 2 players to begin a new deal.");
+
 		playerMadeEvent(player);
 		//This will force the game control to end the waiting round
 		//and change to the preflop round.

@@ -32,7 +32,7 @@ import org.cspoker.server.game.player.Player;
  * @author Kenzo
  *
  */
-public class PreFlopRound extends Round{
+public class PreFlopRound extends BettingRound{
 
 	public PreFlopRound(GameMediator gameMediator, Game game) {
 		super(gameMediator, game);

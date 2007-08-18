@@ -22,7 +22,7 @@ import org.cspoker.server.game.events.NewRoundEvent;
 import org.cspoker.server.game.gameControl.Game;
 import org.cspoker.server.game.player.Player;
 
-public class FlopRound extends Round{
+public class FlopRound extends BettingRound{
 
 	public FlopRound(GameMediator gameMediator, Game game) {
 		super(gameMediator, game);

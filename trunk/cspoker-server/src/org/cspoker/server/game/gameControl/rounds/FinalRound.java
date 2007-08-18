@@ -23,7 +23,7 @@ import org.cspoker.server.game.gameControl.Game;
 import org.cspoker.server.game.gameControl.Showdown;
 import org.cspoker.server.game.player.Player;
 
-public class FinalRound extends Round{
+public class FinalRound extends BettingRound{
 
 	public FinalRound(GameMediator gameMediator, Game game) {
 		super(gameMediator, game);
