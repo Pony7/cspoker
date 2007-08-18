@@ -15,11 +15,12 @@
  */
 package org.cspoker.server.game.playerCommunication;
 
+import java.util.Iterator;
 import java.util.List;
 
 import org.cspoker.server.game.events.GameEvent;
 
-public class GameEvents {
+public class GameEvents implements Iterable<GameEvent>{
 	
 	private final List<GameEvent> events;
 	
@@ -41,6 +42,11 @@ public class GameEvents {
 	@Override
 	public String toString(){
 		return "events until "+latestEventNumber+". "+events.toString();
+	}
+
+	@Override
+	public Iterator<GameEvent> iterator() {
+	    return events.iterator();
 	}
 
 }

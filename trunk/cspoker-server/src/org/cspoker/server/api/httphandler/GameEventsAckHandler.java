@@ -16,8 +16,6 @@
 package org.cspoker.server.api.httphandler;
 
 
-import java.util.List;
-
 import javax.xml.transform.sax.TransformerHandler;
 
 import org.cspoker.server.api.PlayerCommunicationFactory;
@@ -26,6 +24,7 @@ import org.cspoker.server.api.httphandler.abstracts.RequestStreamHandler;
 import org.cspoker.server.api.httphandler.exception.HttpSaxException;
 import org.cspoker.server.game.events.GameEvent;
 import org.cspoker.server.game.gameControl.actions.IllegalActionException;
+import org.cspoker.server.game.playerCommunication.GameEvents;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
@@ -68,24 +67,22 @@ public class GameEventsAckHandler extends RequestStreamHandler {
 	    @Override
 	    public void endDocument() throws SAXException {
 		String username= HttpHandlerImpl.toPlayerName(http.getRequestHeaders());
-		List<GameEvent> events;
+		GameEvents events;
 		try {
 		    events=PlayerCommunicationFactory.getRegisteredPlayerCommunication(username)
-		        	.getLatestGameEventsAndAck(Integer.parseInt(ack)).getGameEvents();
+		        	.getLatestGameEventsAndAck(Integer.parseInt(ack));
 		} catch (NumberFormatException e) {
 		    throw new HttpSaxException(e, 400);
 		} catch (IllegalActionException e) {
 		    throw new HttpSaxException(e, 403);
 		}
-		response.startElement("", "events", "events", new AttributesImpl());
+		AttributesImpl eventsAttrs = new AttributesImpl();
+		eventsAttrs.addAttribute("", "lastEventNumber", "lastEventNumber", "CDATA", String.valueOf(events.getLastEventNumber()));
+		response.startElement("", "events", "events", eventsAttrs);
 		for(GameEvent event:events){
-		    AttributesImpl attrs = new AttributesImpl();
-		    attrs.addAttribute("", "id", "id", "CDATA", "0");
-		    response.startElement("", "event", "event", attrs);
-
+		    response.startElement("", "event", "event", new AttributesImpl());
 		    String s=event.toString();
 		    response.characters(s.toCharArray(), 0, s.length());
-
 		    response.endElement("", "event", "event");
 		}
 		response.endElement("", "events", "events");
