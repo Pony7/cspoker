@@ -30,7 +30,6 @@ public class GameEventsCommand implements CommandExecutor {
 	this.ack = new GameEventsAckRequest(address);
     }
     
-    @Override
     public String execute(String... args) throws Exception {
 	if(args.length==0){
 	    return noack.execute(args);

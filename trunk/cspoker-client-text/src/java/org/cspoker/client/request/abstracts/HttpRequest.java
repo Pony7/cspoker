@@ -62,6 +62,7 @@ public abstract class HttpRequest extends DefaultHandler implements CommandExecu
     
     public String execute(String... args) throws Exception{
 	HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+	connection.setConnectTimeout(20000);
 	connection.setAllowUserInteraction(true);
 	connection.setInstanceFollowRedirects(false);
 	connection.setDoOutput(isDoOutput());
