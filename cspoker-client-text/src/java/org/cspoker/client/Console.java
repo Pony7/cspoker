@@ -66,9 +66,9 @@ public class Console {
 	    client=new Client(args[0], Integer.parseInt(args[1]), username, password);
 	} while (!canPing(client));
 
-	System.out.println("     __________________");
-	System.out.println("    /Welcome to CSPoker\\");
-	System.out.println("   /____________________\\");
+	System.out.println("     ____________________________");
+	System.out.println("    /Welcome to CSPoker 0.1 alpha\\");
+	System.out.println("   /______________________________\\");
 	System.out.println("");
 	System.out.println("Enter HELP for a list of supported commands.");
 	System.out.println("");
@@ -90,8 +90,6 @@ public class Console {
 	    }
 	}
     }
-
-
 
     private void handle(Exception e) {
 	System.out.println("ERROR: "+e.getMessage());
