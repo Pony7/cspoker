@@ -27,4 +27,16 @@
 		<name>cedric</name>
 		<password>test</password>
 	</user>
+	<user>
+		<name>seppe</name>
+		<password>test</password>
+	</user>
+		<user>
+		<name>roel</name>
+		<password>test</password>
+	</user>
+	<user>
+		<name>jef</name>
+		<password>test</password>
+	</user>
 </users>
