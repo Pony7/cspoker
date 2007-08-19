@@ -19,7 +19,6 @@ package org.cspoker.client.commands;
 
 public class HelpCommand implements CommandExecutor {
 
-    @Override
     public String execute(String... args) throws Exception {
 	
 	return "Supported commands:"+n +
@@ -32,6 +31,7 @@ public class HelpCommand implements CommandExecutor {
 			"  CREATETABLE - create your table"+n +
 			"  LISTTABLES - list all available tables"+n +
 			"  JOINTABLE [id] - join the table with id [id]"+n +
+			"  LEAVETABLE - leave the table you're at"+n +
 			"-Game:"+n +
 			"  STARTGAME - start a new game at your table"+n +
 			"  GAMEEVENTS - get recent game events"+n +
