@@ -32,13 +32,13 @@ public class WaitingRound extends Round {
 
 	public WaitingRound(GameMediator gameMediator, Game game) {
 		super(gameMediator, game);
+		removeBrokePlayers();
+		getGame().setToInitialHandPlayers();
 		List<SavedPlayer> players = new ArrayList<SavedPlayer>(game.getNbCurrentDealPlayers());
 		for(Player player:game.getCurrentDealPlayers()){
 			players.add(player.getSavedPlayer());
 		}
 		gameMediator.publishNewDealEvent(new NewDealEvent(players, game.getDealer().getSavedPlayer()));
-		removeBrokePlayers();
-		getGame().setToInitialHandPlayers();
 		getGame().setCurrentPlayer(getGame().getDealer());
 	}
 

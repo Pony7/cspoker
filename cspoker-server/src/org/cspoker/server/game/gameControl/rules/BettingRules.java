@@ -79,6 +79,11 @@ public abstract class BettingRules {
 	public void incrementNBRaises() {
 		numberofRaises++;
 	}
+	
+	public void clearNBRaises(){
+		numberofRaises=0;
+	}
+	
 	/**********************************************************
 	 * Bets
 	 **********************************************************/

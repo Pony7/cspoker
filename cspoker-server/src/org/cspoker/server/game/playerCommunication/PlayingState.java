@@ -88,6 +88,11 @@ class PlayingState extends PlayerCommunicationState {
 	public void deal() throws IllegalActionException{
 		gameMediator.deal(playerCommunication.getPlayer());;
 	}
+	
+	@Override
+	public void allIn() throws IllegalActionException{
+		gameMediator.allIn(playerCommunication.getPlayer());;
+	}
 
 	@Override
 	public void leaveTable() throws IllegalActionException{
