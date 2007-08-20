@@ -164,6 +164,68 @@ public class PlayerCommunicationTest extends TestCase {
 		}
 	}
 	
+	public void testPlayingGame2(){
+		Player kenzo = playerFactory.createNewPlayer("Kenzo");
+		Player guy = playerFactory.createNewPlayer("Guy");
+		PlayerCommunication kenzoComm = new PlayerCommunicationImpl(kenzo);
+		PlayerCommunication guyComm = new PlayerCommunicationImpl(guy);
+		
+		NewRoundListener newRoundListener = new NewRoundListener(){
+
+			@Override
+			public void onNewRoundEvent(NewRoundEvent event) {
+				currentComm = PlayerCommunicationManager.getPlayerCommunication(event.getPlayer().getId());
+				System.out.println("Changed to "+currentComm);
+			}
+			
+		};
+		
+		NextPlayerListener nextPlayerListener = new NextPlayerListener(){
+
+			@Override
+			public void onNextPlayerEvent(NextPlayerEvent event) {
+				currentComm = PlayerCommunicationManager.getPlayerCommunication(event.getPlayer().getId());
+				System.out.println("Changed to "+currentComm);
+			}
+			
+		};
+				
+		try {
+			TableId tableId = kenzoComm.createTable();
+			guyComm.join(tableId);
+			kenzoComm.startGame();
+			GameManager.getGame(tableId).subscribeNewRoundListener(newRoundListener);
+			GameManager.getGame(tableId).subscribeNextPlayerListener(nextPlayerListener);
+			System.out.println(kenzoComm.getLatestGameEvents());
+			try {
+				kenzoComm.deal();
+			} catch (IllegalActionException e) {
+				try {
+					guyComm.deal();
+				} catch (IllegalActionException e1) {
+				}
+			}
+			System.out.println("Kenzo's events:"+kenzoComm.getLatestGameEvents());
+			System.out.println("Guy's events:"+guyComm.getLatestGameEvents());
+			
+			currentComm.call();
+
+			System.out.println("Guy's events:");
+			showEvents(guyComm.getLatestGameEvents().getGameEvents());
+			
+			currentComm.allIn();
+			currentComm.allIn();
+			
+			System.out.println("Guy's events:");
+			showEvents(guyComm.getLatestGameEvents().getGameEvents());
+
+		} catch (IllegalActionException e) {
+			fail(e.getMessage());
+		}finally{
+			PlayerCommunicationManager.clear();
+		}
+	}
+	
 	public void showEvents(List<GameEvent> events){
 		for(GameEvent event:events){
 			System.out.println("++ "+event);

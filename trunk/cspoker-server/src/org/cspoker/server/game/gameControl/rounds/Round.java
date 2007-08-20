@@ -25,12 +25,14 @@ import org.cspoker.server.game.elements.cards.Card;
 import org.cspoker.server.game.elements.chips.IllegalValueException;
 import org.cspoker.server.game.elements.chips.pot.Pots;
 import org.cspoker.server.game.elements.player.AllInPlayer;
+import org.cspoker.server.game.events.WinnerEvent;
 import org.cspoker.server.game.events.playerActionEvents.AllInEvent;
 import org.cspoker.server.game.gameControl.Game;
 import org.cspoker.server.game.gameControl.PlayerAction;
 import org.cspoker.server.game.gameControl.actions.IllegalActionException;
 import org.cspoker.server.game.gameControl.rules.BettingRules;
 import org.cspoker.server.game.player.Player;
+import org.cspoker.server.game.player.SavedWinner;
 
 
 /**
@@ -433,7 +435,7 @@ public abstract class Round implements PlayerAction{
 	 * 			False otherwise.
 	 */
 	public boolean onlyOnePlayerLeft(){
-		return (getGame().getNbCurrentDealPlayers()+allInPlayers.size()+getGame().getPots().getNbSidePots()<=1);
+		return (getGame().getNbCurrentDealPlayers()+allInPlayers.size()+getGame().getPots().getNbShowdownPlayers()<=1);
 	}
 	public boolean onlyAllInPlayers(){
 		return (getGame().getNbCurrentDealPlayers()==0);
@@ -517,8 +519,15 @@ public abstract class Round implements PlayerAction{
 	protected void winner(Pots pots){
 		try {
 			System.out.println("** Only One Player Left **");
-			pots.getPots().get(0).getChips().transferAllChipsTo(pots.getPots().get(0).getPlayers().get(0).getStack());
-			System.out.println("Winner: "+pots.getPots().get(0).getPlayers().get(0).getName());
+			
+			Player winner = pots.getPots().get(0).getPlayers().get(0);
+			int gainedChipsValue = pots.getPots().get(0).getChips().getValue();
+			List<SavedWinner> savedWinner = new ArrayList<SavedWinner>(1);
+			savedWinner.add(new SavedWinner(winner.getSavedPlayer(),gainedChipsValue));
+			pots.getPots().get(0).getChips().transferAllChipsTo(winner.getStack());
+			
+			gameMediator.publishWinner(new WinnerEvent(savedWinner));
+			System.out.println("Winner: "+winner.getName());
 		} catch (IllegalValueException e) {
 			assert false;
 		}
