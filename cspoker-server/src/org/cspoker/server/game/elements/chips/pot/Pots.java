@@ -134,6 +134,13 @@ public class Pots {
 		for(Pot pot:pots){
 			pot.addShowdownPlayer(player);
 		}
+		nbShowdownPlayers++;
+	}
+	
+	private int nbShowdownPlayers;
+	
+	public int getNbShowdownPlayers(){
+		return nbShowdownPlayers;
 	}
 
 	/**
