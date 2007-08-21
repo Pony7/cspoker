@@ -17,7 +17,7 @@ package org.cspoker.server.game.playerCommunication;
 
 
 import org.cspoker.server.game.TableId;
-import org.cspoker.server.game.gameControl.actions.IllegalActionException;
+import org.cspoker.server.game.gameControl.IllegalActionException;
 
 /**
  * An interface to define all possible invocations a player can do.

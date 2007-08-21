@@ -16,7 +16,7 @@
 package org.cspoker.server.game.playerCommunication;
 
 import org.cspoker.server.game.GameMediator;
-import org.cspoker.server.game.gameControl.actions.IllegalActionException;
+import org.cspoker.server.game.gameControl.IllegalActionException;
 
 /**
  * A class to represent the playing state of the player.

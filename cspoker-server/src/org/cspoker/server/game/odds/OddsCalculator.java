@@ -3,6 +3,7 @@ package org.cspoker.server.game.odds;
 import org.cspoker.server.game.elements.cards.hand.Hand;
 import org.cspoker.server.game.elements.cards.hand.HandType;
 import org.cspoker.server.game.gameControl.GameControl;
+import org.cspoker.server.game.gameControl.rounds.BettingRound;
 import org.cspoker.server.game.gameControl.rounds.FlopRound;
 import org.cspoker.server.game.gameControl.rounds.PreFlopRound;
 import org.cspoker.server.game.gameControl.rounds.TurnRound;
@@ -40,7 +41,7 @@ public class OddsCalculator {
 	 * in the current game and the amount of chips you get if you win the game
 	 */
 	public double getPotOdds(Player player){
-		int amountToBet=gameControl.getRound().getBet()-player.getBettedChips().getValue();
+		int amountToBet=((BettingRound)gameControl.getRound()).getBet()-player.getBettedChips().getValue();
 		int amountInPot=gameControl.getRound().getCurrentPotValue();
 		return amountToBet/amountInPot;
 	}
@@ -58,7 +59,7 @@ public class OddsCalculator {
 	 * 			| hand==null || goal==null
 	 */
 	public double getHandOdds(Hand hand,Hand goal){
-		if(hand==null || goal==null)
+		if((hand==null) || (goal==null))
 			throw new IllegalArgumentException();
 		//double oddsForHandOfLow
 		return 0;
@@ -77,10 +78,9 @@ public class OddsCalculator {
 			return getFlopHandOdds(hand,type);
 		if(gameControl.getRound() instanceof TurnRound)
 			return getTurnHandOdds(hand,type);
-		else{
+		else
 			//calculating odds is useless in the waiting or final round
 			return 0;
-		}
 	}
 	/**
 	 * Returns the odds of turning the given hand into the given type from the flop to the river
@@ -96,7 +96,7 @@ public class OddsCalculator {
 	 * 			| result == getNBOuts(hand,type)/getNBPossibleCardsRemaining()
 	 */
 	public double getPreFlopHandOdds(Hand hand,HandType type){
-		if(hand==null || type==null)
+		if((hand==null) || (type==null))
 			throw new IllegalArgumentException();
 		double nBOuts=getNBOuts(hand,type);
 		//in the pre-flop there are 52 - 2 pocketcards = 50 unknown cards
@@ -116,7 +116,7 @@ public class OddsCalculator {
 	 * 			| result == getNBOuts(hand,type)/getNBPossibleCardsRemaining()
 	 */
 	public double getFlopHandOdds(Hand hand,HandType type){
-		if(hand==null || type==null)
+		if((hand==null) || (type==null))
 			throw new IllegalArgumentException();
 		double nBOuts=getNBOuts(hand,type);
 		//in the flop there are 52 - 2 pocketcards - 3 common cards= 47 unknown cards
@@ -137,7 +137,7 @@ public class OddsCalculator {
 	 * 			| result == getNBOuts(hand,type)/getNBPossibleCardsRemaining()
 	 */
 	public double getTurnHandOdds(Hand hand,HandType type){
-		if(hand==null || type==null)
+		if((hand==null) || (type==null))
 			throw new IllegalArgumentException();
 		double nBOuts=getNBOuts(hand,type);
 		//in the turn there are 52 - 2 pocketcards - 4 common cards= 46 unknown cards

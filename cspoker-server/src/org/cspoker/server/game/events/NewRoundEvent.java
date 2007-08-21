@@ -40,11 +40,6 @@ public class NewRoundEvent extends GameEvent {
 	}
 	
 
-	@Override
-	public String[] getAction() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	@Override
 	public String toString(){

@@ -39,11 +39,6 @@ public class NewCommunityCardsEvent extends GameEvent {
 		return communityCards;
 	}
 
-	@Override
-	public String[] getAction() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	@Override
 	public String toString(){

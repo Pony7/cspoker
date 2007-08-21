@@ -37,12 +37,6 @@ public class SmallBlindEvent extends GameEvent{
 	}
 
 	@Override
-	public String[] getAction() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public String toString(){
 		return player.getName()+" bets the small blind of "+amount+" chips.";
 	}

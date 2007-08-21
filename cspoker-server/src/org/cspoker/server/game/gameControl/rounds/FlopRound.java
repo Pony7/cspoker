@@ -48,6 +48,8 @@ public class FlopRound extends BettingRound{
 
 	@Override
 	public Round getNextRound() {
+		if(onlyOnePlayerLeft())
+			return new WaitingRound(gameMediator, game);
 		return new TurnRound(gameMediator, getGame());
 	}
 	@Override

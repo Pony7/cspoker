@@ -25,16 +25,5 @@ package org.cspoker.server.game.events;
  *
  */
 public abstract class GameEvent {
-	
-	/**
-	 * Returns a representation from the game event
-	 * that can be easily returned and parsed.
-	 * 
-	 * TODO: Guy should see if the current representation
-	 * 		is easy to work with for the server.
-	 * 
-	 * @return A representation from the game event.
-	 */
-	public abstract String[] getAction();
 
 }

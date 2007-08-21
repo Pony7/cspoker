@@ -16,31 +16,18 @@
 
 package org.cspoker.server.game.gameControl.rounds;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import org.cspoker.server.game.GameMediator;
-import org.cspoker.server.game.elements.cards.Card;
-import org.cspoker.server.game.elements.chips.IllegalValueException;
-import org.cspoker.server.game.elements.chips.pot.Pots;
-import org.cspoker.server.game.elements.player.AllInPlayer;
-import org.cspoker.server.game.events.WinnerEvent;
-import org.cspoker.server.game.events.playerActionEvents.AllInEvent;
 import org.cspoker.server.game.gameControl.Game;
+import org.cspoker.server.game.gameControl.IllegalActionException;
 import org.cspoker.server.game.gameControl.PlayerAction;
-import org.cspoker.server.game.gameControl.actions.IllegalActionException;
 import org.cspoker.server.game.gameControl.rules.BettingRules;
 import org.cspoker.server.game.player.Player;
-import org.cspoker.server.game.player.SavedWinner;
 
 
 /**
  * An abstract class to represent rounds.
  * A player can do actions in a round,
  * such as checking, betting, ...
- *
- * A state pattern is used.
  *
  * @author Kenzo
  *
@@ -71,24 +58,10 @@ public abstract class Round implements PlayerAction{
 	 * this round takes place.
 	 */
 	protected final Game game;
-
+	
 	/**
-	 * The current bet in this round.
+	 * The variable containing the game mediator.
 	 */
-	private int bet;
-
-	/**
-	 * This list contains all players who go
-	 * all-in in this round.
-	 */
-	private final List<AllInPlayer> allInPlayers;
-
-	/**
-	 * This list contains all players who folded,
-	 * but who have placed chips on their betted chips pile.
-	 */
-	protected final List<Player> foldedPlayersWithBet;
-
 	protected final GameMediator gameMediator;
 
 	/**********************************************************
@@ -104,13 +77,10 @@ public abstract class Round implements PlayerAction{
 	public Round(GameMediator gameMediator, Game game){
 		this.gameMediator = gameMediator;
 		this.game = game;
-		allInPlayers = new ArrayList<AllInPlayer>();
-		foldedPlayersWithBet = new ArrayList<Player>();
-		setBet(0);
 		getBettingRules().setBetPlaced(false);
 		getBettingRules().clearNBRaises();
-		lastEventPlayer = getGame().getFirstToActPlayer();
-		getGame().setCurrentPlayer(getGame().getFirstToActPlayer());
+		lastEventPlayer = game.getFirstToActPlayer();
+		game.setCurrentPlayer(getGame().getFirstToActPlayer());
 	}
 
 	/**
@@ -123,72 +93,6 @@ public abstract class Round implements PlayerAction{
 	}
 
 	/**********************************************************
-	 * Bet
-	 **********************************************************/
-
-	/**
-	 * Returns the current bet of this round.
-	 *
-	 * @return The current bet of this round.
-	 */
-	public int getBet() {
-		return bet;
-	}
-
-	/**
-	 * Check whether rounds can have the given bet
-	 * as their bet.
-	 *
-	 * @param	bet
-	 * 			The bet to check.
-	 * @return	The bet must be positive.
-	 * 			| result == (bet>=0)
-	 */
-	public static boolean canHaveAsBet(int bet) {
-		return bet>=0;
-	}
-
-	/**
-	 * Set the bet of this round to the given bet.
-	 *
-	 * @param	bet
-	 * 			The new bet for this round.
-	 * @pre    	This round must be able to have the given bet
-	 * 			as its bet.
-	 * 			| canHaveAsBet(bet)
-	 * @post	The bet of this round is set to the given
-	 * 			bet.
-	 * 			| new.getBet() == bet
-	 */
-	private void setBet(int bet) {
-		this.bet = bet;
-	}
-
-	/**
-	 * Returns true if someone has bet.
-	 *
-	 * @return 	True if someone has bet,
-	 * 			False otherwise.
-	 */
-	public boolean someoneHasBet(){
-		return bet>0;
-	}
-
-	/**
-	 * Raise the bet with given amount.
-	 *
-	 * @param 	amount
-	 * 			The amount to raise the bet with.
-	 * @pre 	The amount should be positive.
-	 *			|amount>0
-	 * @effect	Set the bet of this round to the current bet
-	 * 			raised with given amount.
-	 *		   	|setBet(getBet()+amount)
-	 */
-	protected void raiseBetWith(int amount){
-		setBet(getBet()+amount);
-	}
-	/**********************************************************
 	 * Betting Rules
 	 **********************************************************/
 	/**
@@ -197,50 +101,11 @@ public abstract class Round implements PlayerAction{
 	public BettingRules getBettingRules(){
 		return getGame().getGameProperty().getBettingRules();
 	}
-	/**********************************************************
-	 * Collect blinds
-	 **********************************************************/
-
-	/**
-	 * Collect small blind from given player.
-	 *
-	 * @param 	player
-	 * 			The player to collect the small blind from.
-	 * @throws IllegalValueException
-	 */
-	protected void collectSmallBlind(Player player) throws IllegalValueException{
-		if(player.getStack().getValue()<=getGame().getGameProperty().getSmallBlind())
-			throw new IllegalValueException();
-		player.transferAmountToBettedPile(getGame().getGameProperty().getSmallBlind());
-		raiseBetWith(getGame().getGameProperty().getSmallBlind());
-		getBettingRules().setBetPlaced(true);
-		getBettingRules().setLastBetAmount(getGame().getGameProperty().getSmallBlind());
-		playerMadeEvent(player);
-	}
-
-	/**
-	 * Collect big blind from given player.
-	 *
-	 * @param 	player
-	 * 			The player to collect the big blind from.
-	 * @throws IllegalValueException
-	 */
-	protected void collectBigBlind(Player player) throws IllegalValueException{
-		if(player.getStack().getValue()<=getGame().getGameProperty().getBigBlind())
-			throw new IllegalValueException();
-		player.transferAmountToBettedPile(getGame().getGameProperty().getBigBlind());
-		getBettingRules().setBetPlaced(true);
-		getBettingRules().setLastBetAmount(getGame().getGameProperty().getBigBlind());
-		setBet(getGame().getGameProperty().getBigBlind());
-		playerMadeEvent(player);
-	}
 
 	/**********************************************************
 	 * Bidding methods
 	 **********************************************************/
 
-	//TODO onTurn() here.
-	
 	/**
 	 * If there is no bet on the table and you do not wish to place a bet.
 	 * You may only check when there are no prior bets.
@@ -254,7 +119,7 @@ public abstract class Round implements PlayerAction{
      * @see		PlayerAction
 	 */
 	public void check(Player player) throws IllegalActionException{
-		throw new IllegalActionException(player.getName()+"can not check in this round.");
+		throw new IllegalActionException(player.getName()+" can not check in this round.");
 	}
 
 	/**
@@ -371,7 +236,7 @@ public abstract class Round implements PlayerAction{
 	 * 			false otherwise.
 	 */
 	public boolean isRoundEnded(){
-		return (getGame().getNbCurrentDealPlayers()==0) || onlyOnePlayerLeft() || lastEventPlayer.equals(game.getCurrentPlayer());
+		return lastEventPlayer.equals(game.getCurrentPlayer());
 	}
 
 	/**
@@ -403,135 +268,6 @@ public abstract class Round implements PlayerAction{
 		return game.getCurrentPlayer().equals(player);
 	}
 
-	public boolean isBettingRound(){
-		return true;
-	}
-
-	protected void goAllIn(Player player){
-		try {
-			player.transferAllChipsToBettedPile();
-		} catch (IllegalValueException e) {
-			assert false;
-		}
-
-		allInPlayers.add(new AllInPlayer(player));
-		getGame().removePlayerFromCurrentDeal(player);
-		if(player.getBettedChips().getValue()>getBet()){
-			setBet(player.getBettedChips().getValue());
-			playerMadeEvent(player);
-		}
-		gameMediator.publishAllInEvent(new AllInEvent(player.getSavedPlayer()));
-		System.out.println(player.getName()+" goes all in with "+player.getBettedChips().getValue()+" chips.");
-	}
-
-	/**
-	 * Returns true if there is only one
-	 * player left, false otherwise.
-	 *
-	 * This also implies there are no all-in players,
-	 * otherwise there will be a showdown.
-	 *
-	 * @return 	True if there is only one player left,
-	 * 			False otherwise.
-	 */
-	public boolean onlyOnePlayerLeft(){
-		return (getGame().getNbCurrentDealPlayers()+allInPlayers.size()+getGame().getPots().getNbShowdownPlayers()<=1);
-	}
-	public boolean onlyAllInPlayers(){
-		return (getGame().getNbCurrentDealPlayers()==0);
-	}
-
-	/**********************************************************
-	 * Collect Chips
-	 **********************************************************/
-
-	/**
-	 * Collect the betted chips pile from all players.
-	 * Also creates new side pots if necessary
-	 * in the case of all-in players.
-	 *
-	 */
-	protected void collectChips(){
-		makeSidePots();
-		collectBets();
-	}
-
-	/***
-	 * Move all-in players to side pot.
-	 *
-	 */
-	private void makeSidePots(){
-		Collections.sort(allInPlayers);
-		List<Player> players = game.getCurrentDealPlayers();
-		for(AllInPlayer allInPlayer:allInPlayers){
-			try {
-				game.getPots().collectAmountFromPlayersToSidePot(allInPlayer.getBetValue(), players);
-				int betValue = allInPlayer.getBetValue();
-				for(AllInPlayer otherAllInPlayer:allInPlayers){
-					if(otherAllInPlayer.getBetValue()>0){
-						otherAllInPlayer.transferAmountTo(betValue,game.getPots().getNewestSidePot());
-					}
-				}
-				for(Player foldedPlayer:foldedPlayersWithBet){
-					if(foldedPlayer.getBettedChips().getValue()>allInPlayer.getBetValue()){
-						foldedPlayer.getBettedChips().transferAmountTo(allInPlayer.getBetValue(), game.getPots().getNewestSidePot().getChips());
-					}else{
-						foldedPlayer.getBettedChips().transferAllChipsTo(game.getPots().getNewestSidePot().getChips());
-						foldedPlayersWithBet.remove(foldedPlayer);
-					}
-				}
-
-			} catch (IllegalValueException e) {
-				assert false;
-			}
-			System.out.println(game.getPots());
-			game.getPots().addShowdownPlayer(allInPlayer.getPlayer());
-		}
-		allInPlayers.clear();
-	}
-
-	/**
-	 * Collect the bets from all players.
-	 *
-	 */
-	private void collectBets(){
-			game.getPots().collectChipsToPot(game.getCurrentDealPlayers());
-			game.getPots().collectChipsToPot(foldedPlayersWithBet);
-			foldedPlayersWithBet.clear();
-	}
-
-	/**
-	 * Returns how many chips a player
-	 * must transfer to the betted pile
-	 * to equal the current bet.
-	 *
-	 * @param 	player
-	 * 			The player who wants to know
-	 * 			how many chips to transfer.
-	 * @return	The number of chips the player
-	 * 			must transfer to the betted pile
-	 * 			to equal the current bet.
-	 */
-	protected int amountToIncreaseBettedPileWith(Player player){
-		return getBet()-player.getBettedChips().getValue();
-	}
-
-	protected void winner(Pots pots){
-		try {
-			System.out.println("** Only One Player Left **");
-			
-			Player winner = pots.getPots().get(0).getPlayers().get(0);
-			int gainedChipsValue = pots.getPots().get(0).getChips().getValue();
-			List<SavedWinner> savedWinner = new ArrayList<SavedWinner>(1);
-			savedWinner.add(new SavedWinner(winner.getSavedPlayer(),gainedChipsValue));
-			pots.getPots().get(0).getChips().transferAllChipsTo(winner.getStack());
-			
-			gameMediator.publishWinner(new WinnerEvent(savedWinner));
-			System.out.println("Winner: "+winner.getName());
-		} catch (IllegalValueException e) {
-			assert false;
-		}
-	}
 
 	protected void removeBrokePlayers(){
 		for(Player player:getGame().getTable().getPlayers()){
@@ -545,53 +281,13 @@ public abstract class Round implements PlayerAction{
 		}
 	}
 
-	/**********************************************************
-	 * Cards
-	 **********************************************************/
 
-	/**
-	 * Draw a card from the deck and send it to the muck.
-	 *
-	 */
-	protected void drawMuckCard(){
-		getGame().addMuckCard(drawCard());
-	}
-
-	/**
-	 * Draw a card from the deck and add it to the community cards.
-	 *
-	 */
-	protected void drawOpenCard(){
-		getGame().addOpenCard(drawCard());
-	}
-
-	/**
-	 * Draw a card from the deck.
-	 *
-	 * @return The top card from the deck is returned.
-	 */
-	protected Card drawCard(){
-		return getGame().drawCard();
-	}
 
 	public abstract boolean isLowBettingRound();
 
 	public abstract boolean isHighBettingRound();
 
 	public int getCurrentPotValue(){
-		int currentPlayerBets=0;
-		for(Player player:game.getCurrentDealPlayers()){
-			currentPlayerBets+=player.getBettedChips().getValue();
-		}
-		int foldedPlayerBets=0;
-		for(Player player:foldedPlayersWithBet){
-			foldedPlayerBets+=player.getBettedChips().getValue();
-		}
-
-		int allInPlayerBets=0;
-		for(AllInPlayer player:allInPlayers){
-			allInPlayerBets+=player.getBetValue();
-		}
-		return game.getPots().getTotalValue()+currentPlayerBets+foldedPlayerBets+allInPlayerBets;
+		return 0;
 	}
 }

@@ -26,7 +26,7 @@ import org.cspoker.server.game.events.NewRoundEvent;
 import org.cspoker.server.game.events.NewRoundListener;
 import org.cspoker.server.game.events.NextPlayerEvent;
 import org.cspoker.server.game.events.NextPlayerListener;
-import org.cspoker.server.game.gameControl.actions.IllegalActionException;
+import org.cspoker.server.game.gameControl.IllegalActionException;
 import org.cspoker.server.game.player.Player;
 import org.cspoker.server.game.player.PlayerFactory;
 import org.cspoker.server.game.playerCommunication.PlayerCommunication;

@@ -25,7 +25,6 @@ import org.cspoker.server.game.elements.cards.deck.Deck;
 import org.cspoker.server.game.elements.chips.pot.Pots;
 import org.cspoker.server.game.elements.table.PlayerListFullException;
 import org.cspoker.server.game.elements.table.Table;
-import org.cspoker.server.game.gameControl.actions.IllegalActionException;
 import org.cspoker.server.game.player.Player;
 import org.cspoker.server.game.utilities.LoopingList;
 

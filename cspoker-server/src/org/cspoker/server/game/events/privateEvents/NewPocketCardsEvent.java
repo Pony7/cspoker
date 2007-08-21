@@ -34,12 +34,6 @@ public class NewPocketCardsEvent extends GameEvent{
 	}
 
 	@Override
-	public String[] getAction() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public String toString(){
 		String toReturn = player.getName()+" has received new pocket cards: ";
 		for(Card card:player.getPocketCards()){

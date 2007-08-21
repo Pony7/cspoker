@@ -16,12 +16,25 @@
 
 package org.cspoker.server.game.events;
 
+import org.cspoker.server.game.player.SavedPlayer;
+
 /**
  * A class to represent leaving player events.
  *
  * @author Kenzo
  *
  */
-public class PlayerLeftTableEvent {
+public class PlayerLeftTableEvent extends GameEvent{
+	
+	private final SavedPlayer player;
+	
+	public PlayerLeftTableEvent(SavedPlayer player){
+		this.player = player;
+	}
+	
+	@Override
+	public String toString(){
+		return player.getName()+" has left this table.";
+	}
 
 }

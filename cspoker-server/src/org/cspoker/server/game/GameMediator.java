@@ -61,8 +61,8 @@ import org.cspoker.server.game.events.playerActionEvents.SmallBlindListener;
 import org.cspoker.server.game.events.privateEvents.NewPocketCardsEvent;
 import org.cspoker.server.game.events.privateEvents.NewPrivateCardsListener;
 import org.cspoker.server.game.gameControl.GameControl;
+import org.cspoker.server.game.gameControl.IllegalActionException;
 import org.cspoker.server.game.gameControl.PlayerAction;
-import org.cspoker.server.game.gameControl.actions.IllegalActionException;
 import org.cspoker.server.game.player.Player;
 
 /**

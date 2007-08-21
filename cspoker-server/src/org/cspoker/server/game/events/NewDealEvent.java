@@ -43,11 +43,6 @@ public class NewDealEvent extends GameEvent {
 		return dealer;
 	}
 
-	@Override
-	public String[] getAction() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 	
 	@Override
 	public String toString(){

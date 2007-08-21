@@ -16,12 +16,24 @@
 
 package org.cspoker.server.game.events;
 
+import org.cspoker.server.game.player.SavedPlayer;
+
 /**
  * A class to represent player joining events.
  *
  * @author Kenzo
  *
  */
-public class PlayerJoinsEvent {
-
+public class PlayerJoinsEvent extends GameEvent{
+	
+	private final SavedPlayer player;
+	
+	public PlayerJoinsEvent(SavedPlayer player){
+		this.player = player;
+	}
+	
+	@Override
+	public String toString(){
+		return player.getName()+" joined the table.";
+	}
 }

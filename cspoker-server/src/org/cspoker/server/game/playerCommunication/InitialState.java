@@ -21,7 +21,7 @@ import org.cspoker.server.game.TableId;
 import org.cspoker.server.game.TableManager;
 import org.cspoker.server.game.elements.table.PlayerListFullException;
 import org.cspoker.server.game.elements.table.Table;
-import org.cspoker.server.game.gameControl.actions.IllegalActionException;
+import org.cspoker.server.game.gameControl.IllegalActionException;
 
 /**
  * A class to represent the initial state of the player.

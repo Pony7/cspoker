@@ -27,7 +27,7 @@ import org.cspoker.server.game.events.playerActionEvents.CheckEvent;
 import org.cspoker.server.game.events.playerActionEvents.DealEvent;
 import org.cspoker.server.game.events.playerActionEvents.FoldEvent;
 import org.cspoker.server.game.events.playerActionEvents.RaiseEvent;
-import org.cspoker.server.game.gameControl.actions.IllegalActionException;
+import org.cspoker.server.game.gameControl.rounds.BettingRound;
 import org.cspoker.server.game.gameControl.rounds.Round;
 import org.cspoker.server.game.gameControl.rounds.WaitingRound;
 import org.cspoker.server.game.player.Player;
@@ -264,15 +264,9 @@ public class GameControl implements PlayerAction{
 	 *
 	 */
 	private void changeToNextRound(){
-		System.out.println("Changing Round...");
 		round.endRound();
-		if(round.onlyOnePlayerLeft()){
-			round = new WaitingRound(gameMediator, game);
-		}else{
-			round = round.getNextRound();
-		}
-		System.out.println("There are "+round.getCurrentPotValue()+" chips in the pot.");
-		if(round.onlyAllInPlayers() && !(round instanceof WaitingRound))
+		round = round.getNextRound();
+		if((round instanceof BettingRound) && ((BettingRound)round).onlyAllInPlayers())
 			changeToNextRound();
 	}
 }

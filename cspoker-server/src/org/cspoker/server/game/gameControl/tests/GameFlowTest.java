@@ -25,7 +25,7 @@ import org.cspoker.server.game.elements.table.Table;
 import org.cspoker.server.game.gameControl.Game;
 import org.cspoker.server.game.gameControl.GameControl;
 import org.cspoker.server.game.gameControl.GameProperty;
-import org.cspoker.server.game.gameControl.actions.IllegalActionException;
+import org.cspoker.server.game.gameControl.IllegalActionException;
 import org.cspoker.server.game.player.Player;
 import org.cspoker.server.game.player.PlayerFactory;
 
