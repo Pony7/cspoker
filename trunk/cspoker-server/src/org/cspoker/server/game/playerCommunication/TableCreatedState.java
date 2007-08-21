@@ -21,7 +21,7 @@ import org.cspoker.server.game.PlayerId;
 import org.cspoker.server.game.TableManager;
 import org.cspoker.server.game.elements.table.Table;
 import org.cspoker.server.game.gameControl.GameControl;
-import org.cspoker.server.game.gameControl.actions.IllegalActionException;
+import org.cspoker.server.game.gameControl.IllegalActionException;
 
 /**
  * A player who has created the table goes to the table created state.

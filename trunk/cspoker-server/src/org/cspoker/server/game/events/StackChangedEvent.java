@@ -35,11 +35,6 @@ public class StackChangedEvent extends GameEvent{
 		return player;
 	}
 
-	@Override
-	public String[] getAction() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 	
 	@Override
 	public String toString(){

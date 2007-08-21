@@ -51,6 +51,8 @@ public class TurnRound extends BettingRound{
 
 	@Override
 	public Round getNextRound() {
+		if(onlyOnePlayerLeft())
+			return new WaitingRound(gameMediator, game);
 		return new FinalRound(gameMediator, getGame());
 	}
 

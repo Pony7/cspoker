@@ -39,11 +39,6 @@ public class WinnerEvent extends GameEvent{
 		return winners;
 	}
 
-	@Override
-	public String[] getAction() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 	
 	@Override
 	public String toString(){

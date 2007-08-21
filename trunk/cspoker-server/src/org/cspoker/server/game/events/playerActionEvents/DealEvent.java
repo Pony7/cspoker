@@ -17,7 +17,6 @@
 package org.cspoker.server.game.events.playerActionEvents;
 
 import org.cspoker.server.game.events.GameEvent;
-import org.cspoker.server.game.gameControl.actions.Action;
 import org.cspoker.server.game.player.SavedPlayer;
 
 
@@ -35,10 +34,6 @@ public class DealEvent extends GameEvent {
 		this.player = player;
 	}
 
-	@Override
-	public String[] getAction() {
-		return new String[] {String.valueOf(player.getId()),Action.DEAL.toString()};
-	}
 
 	@Override
 	public String toString(){

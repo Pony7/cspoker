@@ -31,11 +31,6 @@ public class ShowHandEvent extends GameEvent{
 		this.player = player;
 	}
 
-	@Override
-	public String[] getAction() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 	
 	@Override
 	public String toString(){

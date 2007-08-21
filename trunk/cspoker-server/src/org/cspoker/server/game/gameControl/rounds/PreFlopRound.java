@@ -22,6 +22,7 @@ import org.cspoker.server.game.events.NewRoundEvent;
 import org.cspoker.server.game.events.NextPlayerEvent;
 import org.cspoker.server.game.events.playerActionEvents.BigBlindEvent;
 import org.cspoker.server.game.events.playerActionEvents.SmallBlindEvent;
+import org.cspoker.server.game.events.privateEvents.NewPocketCardsEvent;
 import org.cspoker.server.game.gameControl.Game;
 import org.cspoker.server.game.player.Player;
 
@@ -37,6 +38,13 @@ public class PreFlopRound extends BettingRound{
 	public PreFlopRound(GameMediator gameMediator, Game game) {
 		super(gameMediator, game);
 		System.out.println("** PreFlop Round **");
+		for(Player player:getGame().getCurrentDealPlayers()){
+			player.dealPocketCard(drawCard());
+			player.dealPocketCard(drawCard());
+			gameMediator.publishNewPocketCardsEvent(
+					player.getId(), new NewPocketCardsEvent(player.getSavedPlayer()));
+		}
+		
 		Player currentPlayer = getGame().getCurrentPlayer();
 		if(currentPlayer!=null)
 			gameMediator.publishNewRoundEvent(new NewRoundEvent(toString(), currentPlayer.getSavedPlayer()));
@@ -80,6 +88,8 @@ public class PreFlopRound extends BettingRound{
 
 	@Override
 	public Round getNextRound() {
+		if(onlyOnePlayerLeft())
+			return new WaitingRound(gameMediator, game);
 		return new FlopRound(gameMediator, getGame());
 	}
 	@Override

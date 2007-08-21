@@ -14,70 +14,35 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-package org.cspoker.server.game.gameControl.actions;
+package org.cspoker.server.game.gameControl;
 
-
+import org.cspoker.server.game.player.Player;
 
 /**
- * An enumeration of all actions a player can do.
+ * Thrown to indicate that the trying action is not a valid action.
  *
  * @author Kenzo
  *
+ * TODO refactor
+ *
  */
-public enum Action {
+public class IllegalActionException extends Exception {
 
-	FOLD{
+	private static final long serialVersionUID = -5675804638273023229L;
 
-		@Override
-		public String toString(){
-			return "Fold";
-		}
-	},
+	private Player player;
 
-	CHECK{
 
-		@Override
-		public String toString(){
-			return "Check";
-		}
-	},
+	public IllegalActionException(String message){
+		super(message);
+	}
 
-	BET{
+	public IllegalActionException(Player player, String message){
+		super(player.getName()+" performed an illegal action. "+message);
+		this.player = player;
+	}
 
-		@Override
-		public String toString(){
-			return "Bet";
-		}
-	},
-
-	CALL{
-
-		@Override
-		public String toString(){
-			return "Call";
-		}
-	},
-
-	RAISE{
-
-		@Override
-		public String toString(){
-			return "Raise";
-		}
-	},
-
-	DEAL{
-		@Override
-		public String toString(){
-			return "Deal";
-		}
-	},
-
-	ALL_IN{
-
-		@Override
-		public String toString(){
-			return "All-in";
-		}
-	};
+	public Player getPlayer(){
+		return player;
+	}
 }

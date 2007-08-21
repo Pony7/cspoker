@@ -23,7 +23,7 @@ import org.cspoker.server.api.httphandler.abstracts.HttpHandlerImpl;
 import org.cspoker.server.api.httphandler.abstracts.RequestStreamHandler;
 import org.cspoker.server.api.httphandler.exception.HttpSaxException;
 import org.cspoker.server.game.events.GameEvent;
-import org.cspoker.server.game.gameControl.actions.IllegalActionException;
+import org.cspoker.server.game.gameControl.IllegalActionException;
 import org.cspoker.server.game.playerCommunication.GameEvents;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;

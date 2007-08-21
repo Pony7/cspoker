@@ -21,10 +21,9 @@ import java.util.List;
 
 import org.cspoker.server.game.GameMediator;
 import org.cspoker.server.game.events.NewDealEvent;
-import org.cspoker.server.game.events.privateEvents.NewPocketCardsEvent;
 import org.cspoker.server.game.gameControl.Game;
+import org.cspoker.server.game.gameControl.IllegalActionException;
 import org.cspoker.server.game.gameControl.PlayerAction;
-import org.cspoker.server.game.gameControl.actions.IllegalActionException;
 import org.cspoker.server.game.player.Player;
 import org.cspoker.server.game.player.SavedPlayer;
 
@@ -33,7 +32,7 @@ public class WaitingRound extends Round {
 	public WaitingRound(GameMediator gameMediator, Game game) {
 		super(gameMediator, game);
 		removeBrokePlayers();
-		getGame().setToInitialHandPlayers();
+		game.setToInitialHandPlayers();
 		List<SavedPlayer> players = new ArrayList<SavedPlayer>(game.getNbCurrentDealPlayers());
 		for(Player player:game.getCurrentDealPlayers()){
 			players.add(player.getSavedPlayer());
@@ -72,12 +71,6 @@ public class WaitingRound extends Round {
 	@Override
 	public void endRound() {
 		getGame().dealNewHand();
-		for(Player player:getGame().getCurrentDealPlayers()){
-			player.dealPocketCard(drawCard());
-			player.dealPocketCard(drawCard());
-			gameMediator.publishNewPocketCardsEvent(
-					player.getId(), new NewPocketCardsEvent(player.getSavedPlayer()));
-		}
 	}
 
 	@Override
@@ -85,10 +78,6 @@ public class WaitingRound extends Round {
 		return new PreFlopRound(gameMediator, getGame());
 	}
 
-	@Override
-	public boolean isBettingRound(){
-		return false;
-	}
 	@Override
 	public boolean isLowBettingRound() {
 		return false;
