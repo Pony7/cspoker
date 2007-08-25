@@ -14,10 +14,21 @@ _none_
 {{{
 <?xml version="1.0" encoding="UTF-8"?>
 <events lastEventNumber="58">
- <event>Kenzo raises.</event>
- <event>Guy folds.</event>
- <event>Cedric calls.</event>
+ <event>
+  <msg>Deal in the river.</msg>
+  <cards type="river">
+    <card suit="hearts">K</card>
+  </cards>
+ </event>
+ <event>
+  <msg>Deal to you personally.</msg>
+  <cards type="private">
+    <card suit="hearts">2</card>
+  </cards>
+ </event>
+ <event><msg>Kenzo bets.</msg></event>
 </events>
 }}}
+
 
 
