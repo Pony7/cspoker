@@ -14,11 +14,4 @@ HTTP POST
 }}}
 
 === Response ===
-{{{
-<?xml version="1.0" encoding="UTF-8"?>
-<events lastEventNumber="58">
- <event>Kenzo raises.</event>
- <event>Guy folds.</event>
- <event>Cedric calls.</event>
-</events>
-}}}
+see [EventsGameAPI]
