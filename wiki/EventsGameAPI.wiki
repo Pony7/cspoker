@@ -13,22 +13,35 @@ _none_
 === Response ===
 {{{
 <?xml version="1.0" encoding="UTF-8"?>
-<events lastEventNumber="58">
- <event>
-  <msg>Deal in the river.</msg>
-  <cards type="river">
-    <card suit="hearts">K</card>
-  </cards>
- </event>
- <event>
-  <msg>Deal to you personally.</msg>
-  <cards type="private">
-    <card suit="hearts">2</card>
-  </cards>
- </event>
- <event><msg>Kenzo bets.</msg></event>
+<events lastEventNumber="7">
+  <event>
+    <msg>A new deal with guy (100 chips), kenzo (100 chips) as initial players of this table. kenzo is dealer.</msg>
+  </event>
+  <event>
+    <msg>kenzo deals.</msg>
+  </event>
+  <event>
+    <msg>kenzo has received new pocket cards: 6 of spades, 5 of hearts.</msg>
+    <cards type="private">
+      <card suit="spades">6</card>
+      <card suit="hearts">5</card>
+    </cards>
+  </event>
+  <event>
+    <msg>pre-flop round: guy can begin to act.</msg>
+  </event>
+  <event>
+    <msg>guy bets the small blind of 5 chips.</msg>
+  </event>
+  <event>
+    <msg>kenzo bets the big blind of 10 chips.</msg>
+  </event>
+  <event>
+    <msg>It's guy's turn.</msg>
+  </event>
 </events>
 }}}
+
 
 
 
