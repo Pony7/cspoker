@@ -29,9 +29,9 @@ import org.cspoker.server.game.playerCommunication.PlayerCommunicationImpl;
  */
 public class PlayerCommunicationFactory {
 
-    private static Map<String,PlayerCommunicationImpl> playerComs=new HashMap<String,PlayerCommunicationImpl>();
+    private final static Map<String,PlayerCommunicationImpl> playerComs=new HashMap<String,PlayerCommunicationImpl>();
     
-    private static PlayerFactory factory=new PlayerFactory();
+    private final static PlayerFactory factory=new PlayerFactory();
     
     public static synchronized PlayerCommunicationImpl getRegisteredPlayerCommunication(String name){
 	PlayerCommunicationImpl result=playerComs.get(name);
