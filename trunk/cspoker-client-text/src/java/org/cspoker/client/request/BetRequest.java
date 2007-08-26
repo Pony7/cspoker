@@ -20,8 +20,10 @@ import java.net.MalformedURLException;
 import javax.xml.transform.sax.TransformerHandler;
 
 import org.cspoker.client.request.abstracts.OutputRequest;
+import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
+import org.xml.sax.helpers.DefaultHandler;
 
 public class BetRequest extends OutputRequest{
 
@@ -51,6 +53,15 @@ public class BetRequest extends OutputRequest{
     @Override
     protected String getResult() {
 	return "Betted "+amount+"."+n;
+    }
+    
+
+    @Override
+    protected ContentHandler getContentHandler() {
+
+	return new DefaultHandler(){
+
+	};
     }
 
 }

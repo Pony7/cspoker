@@ -20,7 +20,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.cspoker.client.request.abstracts.NoOutputRequest;
+import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
+import org.xml.sax.helpers.DefaultHandler;
 
 public class ListTablesRequest extends NoOutputRequest {
 
@@ -42,29 +44,39 @@ public class ListTablesRequest extends NoOutputRequest {
 	return r;
     }
 
+
     @Override
     protected String getPath() {
 	return "/table/list/";
     }
     
     @Override
-    public void startDocument() throws SAXException {
-        tables=new ArrayList<String>();
-    }
-    
-    @Override
-    public void characters(char[] ch, int start, int length)
-            throws SAXException {
-        sb.append(ch, start, length);
-    }
-    
-    @Override
-    public void endElement(String uri, String localName, String name)
-            throws SAXException {
-        if(name.equalsIgnoreCase("table")){
-            tables.add(sb.toString());
-            sb.setLength(0);
-        }
+    protected ContentHandler getContentHandler() {
+
+	return new DefaultHandler(){
+
+	    
+	    @Override
+	    public void startDocument() throws SAXException {
+	        tables=new ArrayList<String>();
+	    }
+	    
+	    @Override
+	    public void characters(char[] ch, int start, int length)
+	            throws SAXException {
+	        sb.append(ch, start, length);
+	    }
+	    
+	    @Override
+	    public void endElement(String uri, String localName, String name)
+	            throws SAXException {
+	        if(name.equalsIgnoreCase("table")){
+	            tables.add(sb.toString());
+	            sb.setLength(0);
+	        }
+	    }
+	    
+	};
     }
 
 }

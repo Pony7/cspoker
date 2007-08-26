@@ -18,6 +18,8 @@ package org.cspoker.client.request;
 import java.net.MalformedURLException;
 
 import org.cspoker.client.request.abstracts.NoOutputRequest;
+import org.xml.sax.ContentHandler;
+import org.xml.sax.helpers.DefaultHandler;
 
 public class StartGameRequest extends NoOutputRequest{
 
@@ -38,6 +40,14 @@ public class StartGameRequest extends NoOutputRequest{
     @Override
     protected String getResult() {
 	return "Started Game."+n;
+    }
+    
+    @Override
+    protected ContentHandler getContentHandler() {
+
+	return new DefaultHandler(){
+
+	};
     }
 
 }

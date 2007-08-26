@@ -18,6 +18,8 @@ package org.cspoker.client.request;
 import java.net.MalformedURLException;
 
 import org.cspoker.client.request.abstracts.NoOutputRequest;
+import org.xml.sax.ContentHandler;
+import org.xml.sax.helpers.DefaultHandler;
 
 public class AllInRequest extends NoOutputRequest{
 
@@ -27,7 +29,7 @@ public class AllInRequest extends NoOutputRequest{
 
     @Override
     protected String getRequestMethod() {
-        return "POST";
+	return "POST";
     }
 
     @Override
@@ -39,5 +41,14 @@ public class AllInRequest extends NoOutputRequest{
     protected String getResult() {
 	return "Went All In."+n;
     }
+
+    @Override
+    protected ContentHandler getContentHandler() {
+
+	return new DefaultHandler(){
+
+	};
+    }
+
 
 }

@@ -21,8 +21,10 @@ import javax.xml.transform.sax.TransformerHandler;
 
 import org.cspoker.client.request.abstracts.OutputRequest;
 import org.xml.sax.Attributes;
+import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
+import org.xml.sax.helpers.DefaultHandler;
 
 public class CreateTableRequest extends OutputRequest{
 
@@ -56,24 +58,31 @@ public class CreateTableRequest extends OutputRequest{
     private String id="unknown";
     private StringBuilder sb=new StringBuilder();
     
+
     @Override
-    public void characters(char[] ch, int start, int length)
-            throws SAXException {
-        sb.append(ch, start, length);
-    }
-    
-    @Override
-    public void startElement(String uri, String localName, String name,
-            Attributes attributes) throws SAXException {
-        sb.setLength(0);
-    }
-    
-    @Override
-    public void endElement(String uri, String localName, String name)
-            throws SAXException {
-        if(name.equalsIgnoreCase("id"))
-            id=sb.toString();
-	sb.setLength(0);
+    protected ContentHandler getContentHandler() {
+
+	return new DefaultHandler(){
+	    @Override
+	    public void characters(char[] ch, int start, int length)
+	            throws SAXException {
+	        sb.append(ch, start, length);
+	    }
+	    
+	    @Override
+	    public void startElement(String uri, String localName, String name,
+	            Attributes attributes) throws SAXException {
+	        sb.setLength(0);
+	    }
+	    
+	    @Override
+	    public void endElement(String uri, String localName, String name)
+	            throws SAXException {
+	        if(name.equalsIgnoreCase("id"))
+	            id=sb.toString();
+		sb.setLength(0);
+	    }
+	};
     }
 
 }

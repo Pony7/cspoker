@@ -18,6 +18,8 @@ package org.cspoker.client.request;
 import java.net.MalformedURLException;
 
 import org.cspoker.client.request.abstracts.NoOutputRequest;
+import org.xml.sax.ContentHandler;
+import org.xml.sax.helpers.DefaultHandler;
 
 public class PingRequest extends NoOutputRequest{
 
@@ -33,6 +35,14 @@ public class PingRequest extends NoOutputRequest{
     @Override
     protected String getResult() {
 	return "PONG"+n;
+    }
+    
+    @Override
+    protected ContentHandler getContentHandler() {
+
+	return new DefaultHandler(){
+
+	};
     }
 
 
