@@ -19,22 +19,29 @@ package org.cspoker.server.api.httphandler;
 import javax.xml.transform.sax.TransformerHandler;
 
 import org.cspoker.server.api.PlayerCommunicationFactory;
+import org.cspoker.server.api.events.EventsToEventsTag;
 import org.cspoker.server.api.httphandler.abstracts.HttpHandlerImpl;
 import org.cspoker.server.api.httphandler.abstracts.RequestStreamHandler;
 import org.cspoker.server.api.httphandler.exception.HttpSaxException;
-import org.cspoker.server.game.events.GameEvent;
 import org.cspoker.server.game.gameControl.IllegalActionException;
 import org.cspoker.server.game.playerCommunication.GameEvents;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
-import org.xml.sax.helpers.AttributesImpl;
 import org.xml.sax.helpers.DefaultHandler;
 
 import com.sun.net.httpserver.HttpExchange;
 
 public class GameEventsAckHandler extends RequestStreamHandler {
 
+    
+    private final EventsToEventsTag eventsToXml;
+    
+    public GameEventsAckHandler() {
+	super();
+	eventsToXml = new EventsToEventsTag();
+    }
+    
     @Override
     protected ContentHandler getRequestHandler(final HttpExchange http, final TransformerHandler response){
 
@@ -76,16 +83,8 @@ public class GameEventsAckHandler extends RequestStreamHandler {
 		} catch (IllegalActionException e) {
 		    throw new HttpSaxException(e, 403);
 		}
-		AttributesImpl eventsAttrs = new AttributesImpl();
-		eventsAttrs.addAttribute("", "lastEventNumber", "lastEventNumber", "CDATA", String.valueOf(events.getLastEventNumber()));
-		response.startElement("", "events", "events", eventsAttrs);
-		for(GameEvent event:events){
-		    response.startElement("", "event", "event", new AttributesImpl());
-		    String s=event.toString();
-		    response.characters(s.toCharArray(), 0, s.length());
-		    response.endElement("", "event", "event");
-		}
-		response.endElement("", "events", "events");
+		
+		eventsToXml.transform(response, events);
 	    }
 	};
     }
