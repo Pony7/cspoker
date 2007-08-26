@@ -25,6 +25,7 @@ import org.cspoker.server.game.elements.cards.Card;
 import org.cspoker.server.game.elements.chips.IllegalValueException;
 import org.cspoker.server.game.elements.chips.pot.Pots;
 import org.cspoker.server.game.elements.player.AllInPlayer;
+import org.cspoker.server.game.events.PotChangedEvent;
 import org.cspoker.server.game.events.WinnerEvent;
 import org.cspoker.server.game.events.playerActionEvents.AllInEvent;
 import org.cspoker.server.game.gameControl.Game;
@@ -34,50 +35,50 @@ import org.cspoker.server.game.player.SavedWinner;
 
 /**
  * A class to represent betting rounds.
- * 
- * 
+ *
+ *
  * @author Kenzo
  *
  */
 public abstract class BettingRound extends Round {
-	
+
 	/**
 	 * The current bet in this round.
 	 */
 	private int bet;
-	
+
 	/**
 	 * This list contains all players who go
 	 * all-in in this round.
 	 */
 	protected final List<AllInPlayer> allInPlayers;
-	
+
 	/**
 	 * This list contains all players who folded,
 	 * but who have placed chips on their betted chips pile.
 	 */
 	protected final List<Player> foldedPlayersWithBet;
 
-	
+
 	public BettingRound(GameMediator gameMediator, Game game){
 		super(gameMediator, game);
 		allInPlayers = new ArrayList<AllInPlayer>();
 		foldedPlayersWithBet = new ArrayList<Player>();
 		setBet(0);
 	}
-	
+
 	@Override
 	public void check(Player player) throws IllegalActionException{
 		if(!onTurn(player) || someoneHasBet())
 			throw new IllegalActionException(player.getName()+" can not check in this round.");
 		game.nextPlayer();
 	}
-	
+
 	@Override
 	public void bet(Player player, int amount) throws IllegalActionException{
 		if(!onTurn(player) || someoneHasBet() || onlyOnePlayerLeft())
 			throw new IllegalActionException(player.getName()+" can not bet "+amount+" chips in this round.");
-		
+
 		//Check whether the bet is valid, according to the betting rules.
 		if(!getBettingRules().isValidBet(amount, this))
 			throw new IllegalActionException(player, getBettingRules().getLastBetErrorMessage());
@@ -100,12 +101,12 @@ public abstract class BettingRound extends Round {
 		playerMadeEvent(player);
 		game.nextPlayer();
 	}
-	
+
 	@Override
 	public void call(Player player) throws IllegalActionException{
 		if(!onTurn(player) || !someoneHasBet())
 			throw new IllegalActionException(player.getName()+" can not call in this round.");
-		
+
 		//Check whether the amount with which the betted chips pile
 		//is increased exceeds the player's stack.
 		if(amountToIncreaseBettedPileWith(player)>=player.getStack().getValue())
@@ -129,12 +130,12 @@ public abstract class BettingRound extends Round {
 		//Change to next player
 		game.nextPlayer();
 	}
-	
+
 	@Override
 	public void raise(Player player, int amount) throws IllegalActionException{
 		if(!onTurn(player) || !someoneHasBet() || onlyOnePlayerLeft())
 			throw new IllegalActionException(player.getName()+" can not raise with "+amount+" chips in this round.");
-		
+
 		//Check whether the raise is valid.
 		if(!getBettingRules().isValidRaise(amount, this))
 			throw new IllegalActionException(player, getBettingRules().getLastRaiseErrorMessage());
@@ -162,12 +163,12 @@ public abstract class BettingRound extends Round {
 		playerMadeEvent(player);
 		game.nextPlayer();
 	}
-	
+
 	@Override
 	public void fold(Player player) throws IllegalActionException{
 		if(!onTurn(player))
 			throw new IllegalActionException(player.getName()+" can not fold. It should be his turn to do an action.");
-		
+
 		player.clearPocketCards();
 
 		/**
@@ -188,14 +189,14 @@ public abstract class BettingRound extends Round {
 		//removing from game, automatically switches
 		//to next player.
 	}
-	
+
 	@Override
 	public void allIn(Player player) throws IllegalActionException {
 		if(!onTurn(player))
 			throw new IllegalActionException(player.getName()+" can not go all-in. It should be his turn to do an action.");
 		goAllIn(player);
 	}
-	
+
 	protected void goAllIn(Player player){
 		try {
 			player.transferAllChipsToBettedPile();
@@ -210,9 +211,10 @@ public abstract class BettingRound extends Round {
 			playerMadeEvent(player);
 		}
 		gameMediator.publishAllInEvent(new AllInEvent(player.getSavedPlayer()));
+		gameMediator.publishPotChangedEvent(new PotChangedEvent(getCurrentPotValue()));
 		System.out.println(player.getName()+" goes all in with "+player.getBettedChips().getValue()+" chips.");
 	}
-	
+
 	/**********************************************************
 	 * Bet
 	 **********************************************************/
@@ -279,7 +281,7 @@ public abstract class BettingRound extends Round {
 	protected void raiseBetWith(int amount){
 		setBet(getBet()+amount);
 	}
-	
+
 	/**********************************************************
 	 * Collect blinds
 	 **********************************************************/
@@ -317,7 +319,7 @@ public abstract class BettingRound extends Round {
 		setBet(getGame().getGameProperty().getBigBlind());
 		playerMadeEvent(player);
 	}
-	
+
 	/**
 	 * Returns how many chips a player
 	 * must transfer to the betted pile
@@ -333,12 +335,12 @@ public abstract class BettingRound extends Round {
 	protected int amountToIncreaseBettedPileWith(Player player){
 		return getBet()-player.getBettedChips().getValue();
 	}
-	
+
 	/**********************************************************
 	 * Cards
 	 **********************************************************/
 
-	
+
 	/**
 	 * Draw a card from the deck and send it to the muck.
 	 *
@@ -354,7 +356,7 @@ public abstract class BettingRound extends Round {
 	protected void drawOpenCard(){
 		game.addOpenCard(drawCard());
 	}
-	
+
 	/**
 	 * Draw a card from the deck.
 	 *
@@ -363,7 +365,7 @@ public abstract class BettingRound extends Round {
 	protected Card drawCard(){
 		return game.drawCard();
 	}
-	
+
 	/**********************************************************
 	 * Collect Chips
 	 **********************************************************/
@@ -422,7 +424,7 @@ public abstract class BettingRound extends Round {
 			game.getPots().collectChipsToPot(foldedPlayersWithBet);
 			foldedPlayersWithBet.clear();
 	}
-	
+
 	/**********************************************************
 	 * Winner
 	 **********************************************************/
@@ -430,24 +432,24 @@ public abstract class BettingRound extends Round {
 	protected void winner(Pots pots){
 		try {
 			System.out.println("** Only One Player Left **");
-			
+
 			Player winner = pots.getPots().get(0).getPlayers().get(0);
 			int gainedChipsValue = pots.getPots().get(0).getChips().getValue();
 			List<SavedWinner> savedWinner = new ArrayList<SavedWinner>(1);
 			savedWinner.add(new SavedWinner(winner.getSavedPlayer(),gainedChipsValue));
 			pots.getPots().get(0).getChips().transferAllChipsTo(winner.getStack());
-			
+
 			gameMediator.publishWinner(new WinnerEvent(savedWinner));
 			System.out.println("Winner: "+winner.getName());
 		} catch (IllegalValueException e) {
 			assert false;
 		}
 	}
-	
+
 	public boolean onlyAllInPlayers(){
 		return game.getNbCurrentDealPlayers()==0;
 	}
-	
+
 	/**
 	 * Returns true if there is only one
 	 * player left, false otherwise.
@@ -461,7 +463,7 @@ public abstract class BettingRound extends Round {
 	public boolean onlyOnePlayerLeft(){
 		return (getGame().getNbCurrentDealPlayers()+allInPlayers.size()+getGame().getPots().getNbShowdownPlayers()<=1);
 	}
-	
+
 	/**********************************************************
 	 * Round Logic
 	 **********************************************************/
@@ -480,7 +482,7 @@ public abstract class BettingRound extends Round {
 	public boolean isRoundEnded(){
 		return super.isRoundEnded() || (getGame().getNbCurrentDealPlayers()==0) || onlyOnePlayerLeft();
 	}
-	
+
 	@Override
 	public int getCurrentPotValue(){
 		int currentPlayerBets=0;
@@ -498,5 +500,5 @@ public abstract class BettingRound extends Round {
 		}
 		return game.getPots().getTotalValue()+currentPlayerBets+foldedPlayerBets+allInPlayerBets;
 	}
-	
+
 }

@@ -34,6 +34,8 @@ import org.cspoker.server.game.events.NewRoundEvent;
 import org.cspoker.server.game.events.NewRoundListener;
 import org.cspoker.server.game.events.NextPlayerEvent;
 import org.cspoker.server.game.events.NextPlayerListener;
+import org.cspoker.server.game.events.PotChangedEvent;
+import org.cspoker.server.game.events.PotChangedListener;
 import org.cspoker.server.game.events.ShowHandEvent;
 import org.cspoker.server.game.events.ShowHandListener;
 import org.cspoker.server.game.events.StackChangedEvent;
@@ -768,8 +770,8 @@ public class GameMediator implements PlayerAction{
 	 * should be alerted on a next player.
 	 */
 	private final List<NextPlayerListener> nextPlayerListeners = new CopyOnWriteArrayList<NextPlayerListener>();
-	
-	
+
+
 	/**
 	 * Inform all subscribed winner listeners a winner event has occurred.
 	 *
@@ -809,8 +811,8 @@ public class GameMediator implements PlayerAction{
 	 * should be alerted on a winner.
 	 */
 	private final List<WinnerListener> winnerListeners = new CopyOnWriteArrayList<WinnerListener>();
-	
-	
+
+
 	/**
 	 * Inform all subscribed show hand listeners a show hand event has occurred.
 	 *
@@ -850,8 +852,8 @@ public class GameMediator implements PlayerAction{
 	 * should be alerted on a show hand.
 	 */
 	private final List<ShowHandListener> showHandListeners = new CopyOnWriteArrayList<ShowHandListener>();
-	
-	
+
+
 	/**
 	 * Inform all subscribed stack changed listeners a stack changed event has occurred.
 	 *
@@ -891,7 +893,48 @@ public class GameMediator implements PlayerAction{
 	 * should be alerted on a stack changed.
 	 */
 	private final List<StackChangedListener> stackChangedListeners = new CopyOnWriteArrayList<StackChangedListener>();
-	
+
+	/**
+	 * Inform all subscribed pot changed listeners a pot changed event has occurred.
+	 *
+	 * Each subscribed pot changed listener is updated
+	 * by calling their onPotChangedEvent() method.
+	 *
+	 */
+	public void publishPotChangedEvent(PotChangedEvent event) {
+		for (PotChangedListener listener : potChangedListeners) {
+			listener.onPotChangedEvent(event);
+		}
+		publishGameEvent(event);
+	}
+
+	/**
+	 * Subscribe the given pot changed listener for pot changed events.
+	 *
+	 * @param 	listener
+	 * 			The listener to subscribe.
+	 */
+	public void subscribePotChangedListener(PotChangedListener listener) {
+		potChangedListeners.add(listener);
+	}
+
+	/**
+	 * Unsubscribe the given pot changed listener for pot changed events.
+	 *
+	 * @param 	listener
+	 * 			The listener to unsubscribe.
+	 */
+	public void unsubscribePotChangedListener(PotChangedListener listener) {
+		potChangedListeners.remove(listener);
+	}
+
+	/**
+	 * This list contains all pot changed listeners that
+	 * should be alerted on a pot changed.
+	 */
+	private final List<PotChangedListener> potChangedListeners = new CopyOnWriteArrayList<PotChangedListener>();
+
+
 	/**********************************************************
 	 * Personal Events
 	 **********************************************************/

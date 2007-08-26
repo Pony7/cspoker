@@ -20,6 +20,7 @@ import org.cspoker.server.game.GameMediator;
 import org.cspoker.server.game.elements.chips.IllegalValueException;
 import org.cspoker.server.game.events.NewRoundEvent;
 import org.cspoker.server.game.events.NextPlayerEvent;
+import org.cspoker.server.game.events.PotChangedEvent;
 import org.cspoker.server.game.events.playerActionEvents.BigBlindEvent;
 import org.cspoker.server.game.events.playerActionEvents.SmallBlindEvent;
 import org.cspoker.server.game.events.privateEvents.NewPocketCardsEvent;
@@ -44,7 +45,7 @@ public class PreFlopRound extends BettingRound{
 			gameMediator.publishNewPocketCardsEvent(
 					player.getId(), new NewPocketCardsEvent(player.getSavedPlayer()));
 		}
-		
+
 		Player currentPlayer = getGame().getCurrentPlayer();
 		if(currentPlayer!=null)
 			gameMediator.publishNewRoundEvent(new NewRoundEvent(toString(), currentPlayer.getSavedPlayer()));
@@ -52,6 +53,7 @@ public class PreFlopRound extends BettingRound{
 			Player player = getGame().getCurrentPlayer();
 			collectSmallBlind(player);
 			gameMediator.publishSmallBlindEvent(new SmallBlindEvent(player.getSavedPlayer(), getGame().getGameProperty().getSmallBlind()));
+			gameMediator.publishPotChangedEvent(new PotChangedEvent(getCurrentPotValue()));
 			System.out.println(player.getName()+" has placed small blind of "
 					+getGame().getGameProperty().getSmallBlind());
 			getGame().nextPlayer();
@@ -64,6 +66,7 @@ public class PreFlopRound extends BettingRound{
 				Player player = getGame().getCurrentPlayer();
 				collectBigBlind(player);
 				gameMediator.publishBigBlindEvent(new BigBlindEvent(player.getSavedPlayer(), getGame().getGameProperty().getBigBlind()));
+				gameMediator.publishPotChangedEvent(new PotChangedEvent(getCurrentPotValue()));
 				System.out.println(getGame().getCurrentPlayer().getName()+" has placed big blind of "
 						+getGame().getGameProperty().getBigBlind());
 				getGame().nextPlayer();
