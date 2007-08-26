@@ -20,6 +20,7 @@ import org.cspoker.server.game.GameMediator;
 import org.cspoker.server.game.elements.table.PlayerListFullException;
 import org.cspoker.server.game.elements.table.Table;
 import org.cspoker.server.game.events.NextPlayerEvent;
+import org.cspoker.server.game.events.PotChangedEvent;
 import org.cspoker.server.game.events.StackChangedEvent;
 import org.cspoker.server.game.events.playerActionEvents.BetEvent;
 import org.cspoker.server.game.events.playerActionEvents.CallEvent;
@@ -111,6 +112,7 @@ public class GameControl implements PlayerAction{
 		round.bet(player, amount);
 		gameMediator.publishBetEvent(new BetEvent(player.getSavedPlayer(), amount));
 		gameMediator.publishStackChanged(new StackChangedEvent(player.getSavedPlayer()));
+		gameMediator.publishPotChangedEvent(new PotChangedEvent(round.getCurrentPotValue()));
 		System.out.println(player.getName()+" bets "+amount+".");
 		checkIfEndedAndChangeRound();
 	}
@@ -131,6 +133,7 @@ public class GameControl implements PlayerAction{
 		round.call(player);
 		gameMediator.publishCallEvent(new CallEvent(player.getSavedPlayer()));
 		gameMediator.publishStackChanged(new StackChangedEvent(player.getSavedPlayer()));
+		gameMediator.publishPotChangedEvent(new PotChangedEvent(round.getCurrentPotValue()));
 		System.out.println(player.getName()+" calls.");
 		checkIfEndedAndChangeRound();
 	}
@@ -171,6 +174,7 @@ public class GameControl implements PlayerAction{
 		round.raise(player, amount);
 		gameMediator.publishRaiseEvent(new RaiseEvent(player.getSavedPlayer(), amount));
 		gameMediator.publishStackChanged(new StackChangedEvent(player.getSavedPlayer()));
+		gameMediator.publishPotChangedEvent(new PotChangedEvent(round.getCurrentPotValue()));
 		System.out.println(player.getName()+" raises with "+amount+".");
 		checkIfEndedAndChangeRound();
 	}
