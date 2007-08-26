@@ -20,8 +20,10 @@ import java.net.MalformedURLException;
 import javax.xml.transform.sax.TransformerHandler;
 
 import org.cspoker.client.request.abstracts.OutputRequest;
+import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
+import org.xml.sax.helpers.DefaultHandler;
 
 public class RaiseRequest extends OutputRequest{
 
@@ -51,6 +53,14 @@ public class RaiseRequest extends OutputRequest{
     @Override
     protected String getResult() {
 	return "Raised "+amount+"."+n;
+    }
+    
+    @Override
+    protected ContentHandler getContentHandler() {
+
+	return new DefaultHandler(){
+
+	};
     }
 
 }

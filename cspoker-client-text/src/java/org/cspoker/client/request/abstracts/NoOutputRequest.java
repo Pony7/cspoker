@@ -38,4 +38,5 @@ public abstract class NoOutputRequest extends HttpRequest {
     protected String getRequestMethod() {
 	return "GET";
     }
+    
 }

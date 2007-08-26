@@ -27,10 +27,10 @@ import javax.xml.transform.stream.StreamResult;
 import org.cspoker.client.commands.CommandExecutor;
 import org.cspoker.client.exceptions.ExceptionParser;
 import org.cspoker.client.exceptions.FailedAuthenticationException;
+import org.xml.sax.ContentHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
-import org.xml.sax.helpers.DefaultHandler;
 import org.xml.sax.helpers.XMLReaderFactory;
 
 /**
@@ -48,7 +48,7 @@ import org.xml.sax.helpers.XMLReaderFactory;
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-public abstract class HttpRequest extends DefaultHandler implements CommandExecutor{
+public abstract class HttpRequest implements CommandExecutor{
 
     private URL url;
 
@@ -78,7 +78,6 @@ public abstract class HttpRequest extends DefaultHandler implements CommandExecu
 	    request.startDocument();
 	    doOutput(request, args);
 	    request.endDocument();
-	    //TODO remove?
 	    connection.getOutputStream().flush();
 	    connection.getOutputStream().close();
 	}
@@ -88,13 +87,14 @@ public abstract class HttpRequest extends DefaultHandler implements CommandExecu
 	    throw getException(connection);
 	}
 	XMLReader xr = XMLReaderFactory.createXMLReader();
-	xr.setContentHandler(this);
-	xr.setErrorHandler(this);
+	xr.setContentHandler(getContentHandler());
 	xr.parse(new InputSource(connection.getInputStream()));
 
 	return getResult();
     }
-    
+
+    protected abstract ContentHandler getContentHandler();
+
     private Exception getException(HttpURLConnection connection) throws SAXException, IOException {
 	XMLReader xr = XMLReaderFactory.createXMLReader();
 	ExceptionParser parser=new ExceptionParser();
