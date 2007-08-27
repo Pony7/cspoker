@@ -102,7 +102,6 @@ public class PlayerCommunicationTest extends TestCase {
 		
 		NewRoundListener newRoundListener = new NewRoundListener(){
 
-			@Override
 			public void onNewRoundEvent(NewRoundEvent event) {
 				currentComm = PlayerCommunicationManager.getPlayerCommunication(event.getPlayer().getId());
 				System.out.println("Changed to "+currentComm);
@@ -112,7 +111,6 @@ public class PlayerCommunicationTest extends TestCase {
 		
 		NextPlayerListener nextPlayerListener = new NextPlayerListener(){
 
-			@Override
 			public void onNextPlayerEvent(NextPlayerEvent event) {
 				currentComm = PlayerCommunicationManager.getPlayerCommunication(event.getPlayer().getId());
 				System.out.println("Changed to "+currentComm);
@@ -172,7 +170,6 @@ public class PlayerCommunicationTest extends TestCase {
 		
 		NewRoundListener newRoundListener = new NewRoundListener(){
 
-			@Override
 			public void onNewRoundEvent(NewRoundEvent event) {
 				currentComm = PlayerCommunicationManager.getPlayerCommunication(event.getPlayer().getId());
 				System.out.println("Changed to "+currentComm);
@@ -182,7 +179,6 @@ public class PlayerCommunicationTest extends TestCase {
 		
 		NextPlayerListener nextPlayerListener = new NextPlayerListener(){
 
-			@Override
 			public void onNextPlayerEvent(NextPlayerEvent event) {
 				currentComm = PlayerCommunicationManager.getPlayerCommunication(event.getPlayer().getId());
 				System.out.println("Changed to "+currentComm);

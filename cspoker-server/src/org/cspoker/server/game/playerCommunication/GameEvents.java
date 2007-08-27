@@ -43,8 +43,6 @@ public class GameEvents implements Iterable<GameEvent>{
 	public String toString(){
 		return "events until "+latestEventNumber+". "+events.toString();
 	}
-
-	@Override
 	public Iterator<GameEvent> iterator() {
 	    return events.iterator();
 	}
