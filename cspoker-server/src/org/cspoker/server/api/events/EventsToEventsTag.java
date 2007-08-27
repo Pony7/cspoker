@@ -20,6 +20,7 @@ import javax.xml.transform.sax.TransformerHandler;
 import org.cspoker.server.game.events.GameEvent;
 import org.cspoker.server.game.events.NewCommunityCardsEvent;
 import org.cspoker.server.game.events.NewRoundEvent;
+import org.cspoker.server.game.events.PotChangedEvent;
 import org.cspoker.server.game.events.playerActionEvents.DealEvent;
 import org.cspoker.server.game.events.privateEvents.NewPocketCardsEvent;
 import org.cspoker.server.game.playerCommunication.GameEvents;
@@ -28,14 +29,16 @@ import org.xml.sax.helpers.AttributesImpl;
 
 public class EventsToEventsTag {
     
-    private EventToEventTag eventToEventtag;
-    private CardEventToEventTag cardEventToEventTag;
-    private DealEventToEventTag dealEventToTag ;
+    private EventToEventTag generalEvent;
+    private CardEventToEventTag cardEvent;
+    private DealEventToEventTag dealEvent ;
+    private PotChangedEventToEventTag potChangedEvent;
     
     public EventsToEventsTag() {
-	this.eventToEventtag = new EventToEventTag();
-	this.cardEventToEventTag = new CardEventToEventTag();
-	this.dealEventToTag = new DealEventToEventTag();
+	this.generalEvent = new EventToEventTag();
+	this.cardEvent = new CardEventToEventTag();
+	this.dealEvent = new DealEventToEventTag();
+	this.potChangedEvent = new PotChangedEventToEventTag();
     }
 
     public void transform(TransformerHandler response, GameEvents events) throws SAXException{
@@ -50,10 +53,13 @@ public class EventsToEventsTag {
     
     public EventToEventTag getEventToEventsTag(GameEvent event){
 	if(event instanceof NewCommunityCardsEvent || event instanceof NewPocketCardsEvent)
-	    return cardEventToEventTag;
+	    return cardEvent;
 	if(event instanceof DealEvent)
-	    return dealEventToTag;
-	return eventToEventtag;
+	    return dealEvent;
+	if(event instanceof PotChangedEvent)
+	    return potChangedEvent;
+	
+	return generalEvent;
     }
     
 }
