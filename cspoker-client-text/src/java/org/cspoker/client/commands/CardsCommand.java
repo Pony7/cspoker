@@ -59,4 +59,8 @@ public class CardsCommand implements CommandExecutor {
 	return result;
     }
 
+    public boolean requiresEventUpdate() {
+	return false;
+    }
+
 }

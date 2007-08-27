@@ -15,11 +15,10 @@
  */
 package org.cspoker.client;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Scanner;
 
 import org.cspoker.client.exceptions.FailedAuthenticationException;
 import org.cspoker.client.exceptions.StackTraceWrapper;
@@ -32,9 +31,9 @@ public class Console {
     public static void main(String[] args) throws Exception {
 	new Console(args);
     }
-    
+
     private boolean verbose=false;
-    
+
     /**
      * @param args
      * @throws Exception
@@ -51,33 +50,42 @@ public class Console {
 		verbose=true;
 	    }
 	}
-	
-	Client client;
-	BufferedReader in = new BufferedReader(new InputStreamReader(
-		System.in));
-	do {
-
-	    System.out.println("Enter username:");
-	    System.out.print(">");
-	    String username = in.readLine();
-	    System.out.println("Enter password:");
-	    System.out.print(">");
-	    String password = in.readLine();
-	    client=new Client(args[0], Integer.parseInt(args[1]), username, password);
-	} while (!canPing(client));
-
-	System.out.println("     ____________________________");
-	System.out.println("    /Welcome to CSPoker 0.1 alpha\\");
-	System.out.println("   /______________________________\\");
-	System.out.println("");
-	System.out.println("Enter HELP for a list of supported commands.");
-	System.out.println("");
 
 	boolean running=true;
 
+	Client client = null;
+	Scanner in = new Scanner(System.in);
+	do {
+	    if(client !=null){
+		client.close();
+	    }
+	    System.out.println("Enter username:");
+	    System.out.print(">");
+	    String username = in.nextLine();
+	    System.out.println("Enter password:");
+	    System.out.print(">");
+	    String password = in.nextLine();
+	    if(username.equalsIgnoreCase("QUIT")||username.equalsIgnoreCase("EXIT") || password.equalsIgnoreCase("QUIT")||password.equalsIgnoreCase("EXIT")){
+		System.out.println("Shutting down...");
+		running=false;
+	    }else{
+		client=new Client(args[0], Integer.parseInt(args[1]), username, password, this);
+	    }
+	} while (running &&!canPing(client));
+
+	if(running){
+	    System.out.println("     ____________________________");
+	    System.out.println("    /Welcome to CSPoker 0.1 alpha\\");
+	    System.out.println("   /______________________________\\");
+	    System.out.println("");
+	    System.out.println("Enter HELP for a list of supported commands.");
+	    System.out.println("");
+	}
+
+
 	while(running){
 	    System.out.print(">");
-	    String line = in.readLine();
+	    String line = in.nextLine();
 	    if(line.equalsIgnoreCase("QUIT")||line.equalsIgnoreCase("EXIT")){
 		System.out.println("Shutting down...");
 		running=false;
@@ -88,6 +96,9 @@ public class Console {
 		    handle(e);
 		}
 	    }
+	}
+	if(client !=null){
+	    client.close();
 	}
     }
 
@@ -111,16 +122,12 @@ public class Console {
 
     private String parse(Client client, String line) throws Exception {
 	String[] words=line.split(" ");
-	if(words.length<1 || words[0].equalsIgnoreCase(""))
-	    return parse(client, "GAMEEVENTS");
 	List<String> list=new ArrayList<String>();
 	list.addAll(Arrays.asList(words));
 	String command=list.remove(0);
 	return client.execute(command, list.toArray(new String[list.size()]));
 
     }
-
-
 
     private boolean canPing(Client client) {
 	try {
@@ -135,5 +142,6 @@ public class Console {
 	}
 	return true;
     }
+
 
 }

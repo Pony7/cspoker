@@ -39,7 +39,7 @@ public class StartGameRequest extends NoOutputRequest{
 
     @Override
     protected String getResult() {
-	return "Started Game."+n;
+	return "";
     }
     
     @Override

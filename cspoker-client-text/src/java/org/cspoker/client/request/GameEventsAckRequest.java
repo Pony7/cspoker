@@ -37,11 +37,8 @@ public class GameEventsAckRequest extends OutputRequest{
 
     @Override
     protected void doOutput(TransformerHandler request, String... args) throws SAXException {
-	if(args.length<1)
-	    throw new IllegalArgumentException("Not enough arguments.");
-	
 	request.startElement("", "ack", "ack", new AttributesImpl());
-	String s=args[0];
+	String s=String.valueOf(getLastId());
 	request.characters(s.toCharArray(), 0, s.length());
 	request.endElement("", "ack", "ack");
     }
@@ -55,7 +52,7 @@ public class GameEventsAckRequest extends OutputRequest{
     protected String getResult() {
 	List<String> events = contentHandler.getEvents();
 	if(events.size()==0)
-	    return "No events found."+n;
+	    return null;
 	String r="";
 	for(String event:events){
 	    r+=event+n;
@@ -71,6 +68,11 @@ public class GameEventsAckRequest extends OutputRequest{
     @Override
     protected ContentHandler getContentHandler() {
 	return contentHandler;
+    }
+    
+    @Override
+    public boolean requiresEventUpdate() {
+        return false;
     }
 
 }

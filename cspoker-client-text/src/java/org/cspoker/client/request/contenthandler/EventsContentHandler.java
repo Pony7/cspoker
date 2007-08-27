@@ -18,7 +18,7 @@ public class EventsContentHandler extends DefaultHandler {
 
     private List<String> events;
     
-    private String lastID;
+    private String lastID = "0";
     
     private StringBuilder sb=new StringBuilder();
 
@@ -29,6 +29,9 @@ public class EventsContentHandler extends DefaultHandler {
     private Suit lastSuit;
 
     private Pot pot;
+    
+    private String lastMsg;
+    private boolean showLastMsg = true;
     
     public EventsContentHandler(Cards cards, Pot pot) {
 	this.cards = cards;
@@ -60,6 +63,7 @@ public class EventsContentHandler extends DefaultHandler {
         
         if(name.equalsIgnoreCase("events")){
             lastID=attributes.getValue("lastEventNumber");
+            showLastMsg = true;
         }else if(name.equalsIgnoreCase("cards")){
             newCards.removeAll(newCards);
             if(attributes.getValue("type").equalsIgnoreCase("private")){
@@ -77,7 +81,7 @@ public class EventsContentHandler extends DefaultHandler {
     public void endElement(String uri, String localName, String name)
             throws SAXException {
         if(name.equalsIgnoreCase("msg")){
-            events.add(sb.toString());
+            lastMsg = sb.toString();
         }else if(name.equalsIgnoreCase("card")){
             Rank rank = Rank.getRank(sb.toString());
             if(rank==null || lastSuit==null)
@@ -93,6 +97,10 @@ public class EventsContentHandler extends DefaultHandler {
             pot.resetPot();
         }else if (name.equalsIgnoreCase("pot")){
             pot.setAmount(Integer.parseInt(sb.toString()));
+            showLastMsg = false;
+        }else if (name.equalsIgnoreCase("event")){
+            if(showLastMsg)
+        	events.add(lastMsg);
         }
         sb.setLength(0);
     }

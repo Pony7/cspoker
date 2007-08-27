@@ -39,7 +39,7 @@ public class CheckRequest extends NoOutputRequest{
 
     @Override
     protected String getResult() {
-	return "Checked."+n;
+	return "";
     }
     
 

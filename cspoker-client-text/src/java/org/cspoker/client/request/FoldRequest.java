@@ -39,7 +39,7 @@ public class FoldRequest extends NoOutputRequest{
 
     @Override
     protected String getResult() {
-	return "Folded."+n;
+	return "";
     }
     
     @Override

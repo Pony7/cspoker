@@ -52,7 +52,7 @@ public class BetRequest extends OutputRequest{
     
     @Override
     protected String getResult() {
-	return "Betted "+amount+"."+n;
+	return "";
     }
     
 
