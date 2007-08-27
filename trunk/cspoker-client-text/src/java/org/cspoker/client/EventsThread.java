@@ -1,9 +1,6 @@
 package org.cspoker.client;
 
 import java.net.MalformedURLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 import org.cspoker.client.request.GameEventsAckRequest;
 import org.cspoker.client.request.contenthandler.EventsContentHandler;
