@@ -20,16 +20,19 @@ public class HelpCommand implements CommandExecutor {
     public String execute(String... args) throws Exception {
 	
 	return "Supported commands:"+n +
+			""+n+
 			"-General:"+n +
 			"  HELP - what you're looking at now"+n +
 			"  PING - ping the server"+n +
 			"  QUIT - close the client"+n +
 			"  EXIT - close the client"+n +
+			""+n+
 			"-Tables:"+n +
 			"  CREATETABLE - create your table"+n +
 			"  LISTTABLES - list all available tables"+n +
 			"  JOINTABLE [id] - join the table with id [id]"+n +
 			"  LEAVETABLE - leave the table you're at"+n +
+			""+n+
 			"-Game:"+n +
 			"  STARTGAME - start a new game at your table"+n +
 			"  GAMEEVENTS - get recent game events"+n +
@@ -42,6 +45,7 @@ public class HelpCommand implements CommandExecutor {
 			"  RAISE [amount] - raise with a certain amount"+n+
 			"  ALLIN - go all in"+n+
 			"  CARDS - see all card"+n+
+			"  POT - see what's in the pot"+n+
 			"";
     }
 

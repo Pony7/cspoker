@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.cspoker.client.savedstate.Cards;
+import org.cspoker.client.savedstate.Pot;
 import org.cspoker.common.game.elements.cards.Card;
 import org.cspoker.common.game.elements.cards.CardImpl;
 import org.cspoker.common.game.elements.cards.cardElements.Rank;
@@ -26,9 +27,12 @@ public class EventsContentHandler extends DefaultHandler {
     private List<Card> newCards = new ArrayList<Card>(5);
     private boolean privateCards = false;
     private Suit lastSuit;
+
+    private Pot pot;
     
-    public EventsContentHandler(Cards cards) {
+    public EventsContentHandler(Cards cards, Pot pot) {
 	this.cards = cards;
+	this.pot = pot;
     }
     
     public List<String> getEvents() {
@@ -86,6 +90,9 @@ public class EventsContentHandler extends DefaultHandler {
         	cards.addRiverCards(newCards);
         }else if(name.equalsIgnoreCase("deal")){
             cards.resetCards();
+            pot.resetPot();
+        }else if (name.equalsIgnoreCase("pot")){
+            pot.setAmount(Integer.parseInt(sb.toString()));
         }
         sb.setLength(0);
     }
