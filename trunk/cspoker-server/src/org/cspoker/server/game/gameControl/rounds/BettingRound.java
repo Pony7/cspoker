@@ -25,6 +25,7 @@ import org.cspoker.server.game.elements.cards.Card;
 import org.cspoker.server.game.elements.chips.IllegalValueException;
 import org.cspoker.server.game.elements.chips.pot.Pots;
 import org.cspoker.server.game.elements.player.AllInPlayer;
+import org.cspoker.server.game.events.NewCommunityCardsEvent;
 import org.cspoker.server.game.events.PotChangedEvent;
 import org.cspoker.server.game.events.WinnerEvent;
 import org.cspoker.server.game.events.playerActionEvents.AllInEvent;
@@ -355,6 +356,14 @@ public abstract class BettingRound extends Round {
 	 */
 	protected void drawOpenCard(){
 		game.addOpenCard(drawCard());
+	}
+
+	protected void drawOpenCardAndPublishCommonCard(){
+		Card card = drawCard();
+		game.addOpenCard(card);
+		List<Card> cards = new ArrayList<Card>(1);
+		cards.add(card);
+		gameMediator.publishNewCommonCardsEvent(new NewCommunityCardsEvent(cards));
 	}
 
 	/**
