@@ -17,7 +17,6 @@
 package org.cspoker.server.game.gameControl.rounds;
 
 import org.cspoker.server.game.GameMediator;
-import org.cspoker.server.game.events.NewCommunityCardsEvent;
 import org.cspoker.server.game.events.NewRoundEvent;
 import org.cspoker.server.game.gameControl.Game;
 import org.cspoker.server.game.player.Player;
@@ -31,8 +30,7 @@ public class TurnRound extends BettingRound{
 		if(currentPlayer!=null)
 			gameMediator.publishNewRoundEvent(new NewRoundEvent(toString(), currentPlayer.getSavedPlayer()));
 		drawMuckCard();
-		drawOpenCard();
-		gameMediator.publishNewCommonCardsEvent(new NewCommunityCardsEvent(getGame().getCommunityCards()));
+		drawOpenCardAndPublishCommonCard();
 	}
 
 	/**
