@@ -25,6 +25,7 @@ import org.cspoker.client.commands.CardsCommand;
 import org.cspoker.client.commands.CommandExecutor;
 import org.cspoker.client.commands.GameEventsCommand;
 import org.cspoker.client.commands.HelpCommand;
+import org.cspoker.client.commands.PotCommand;
 import org.cspoker.client.request.AllInRequest;
 import org.cspoker.client.request.BetRequest;
 import org.cspoker.client.request.CallRequest;
@@ -40,6 +41,7 @@ import org.cspoker.client.request.RaiseRequest;
 import org.cspoker.client.request.StartGameRequest;
 import org.cspoker.client.request.contenthandler.EventsContentHandler;
 import org.cspoker.client.savedstate.Cards;
+import org.cspoker.client.savedstate.Pot;
 
 /**
  * Connect to the given server and passes on user commands.
@@ -76,11 +78,15 @@ public class Client {
 	commands.put("ALLIN", new AllInRequest(address));
 	
 	Cards cards = new Cards();
-	EventsContentHandler events = new EventsContentHandler(cards);
+	Pot pot = new Pot();
+	EventsContentHandler events = new EventsContentHandler(cards, pot);
 	commands.put("GAMEEVENTS", new GameEventsCommand(address, events));
 	
 	CardsCommand cardsCommand = new CardsCommand(cards);
 	commands.put("CARDS", cardsCommand);
+	PotCommand potCommand = new PotCommand(pot);
+	commands.put("POT", potCommand);
+	
 	HelpCommand help = new HelpCommand();
 	commands.put("HELP", help);
     }
