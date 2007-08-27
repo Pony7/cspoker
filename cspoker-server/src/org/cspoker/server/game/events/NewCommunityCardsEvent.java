@@ -19,7 +19,7 @@ package org.cspoker.server.game.events;
 import java.util.Collections;
 import java.util.List;
 
-import org.cspoker.server.game.elements.cards.Card;
+import org.cspoker.common.game.elements.cards.Card;
 
 /**
  * A class to represent new community cards events.

@@ -17,9 +17,9 @@ package org.cspoker.server.game.elements.cards.hand.test;
 
 import junit.framework.TestCase;
 
-import org.cspoker.server.game.elements.cards.CardImpl;
-import org.cspoker.server.game.elements.cards.cardElements.Rank;
-import org.cspoker.server.game.elements.cards.cardElements.Suit;
+import org.cspoker.common.game.elements.cards.CardImpl;
+import org.cspoker.common.game.elements.cards.cardElements.Rank;
+import org.cspoker.common.game.elements.cards.cardElements.Suit;
 import org.cspoker.server.game.elements.cards.deck.randomGenerator.RandomOrgSeededRandomGenerator;
 import org.cspoker.server.game.elements.cards.hand.Hand;
 import org.cspoker.server.game.elements.cards.hand.HandEvaluator;

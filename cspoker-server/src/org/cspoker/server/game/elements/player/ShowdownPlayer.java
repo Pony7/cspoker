@@ -16,7 +16,7 @@
 
 package org.cspoker.server.game.elements.player;
 
-import org.cspoker.server.game.elements.cards.Card;
+import org.cspoker.common.game.elements.cards.Card;
 import org.cspoker.server.game.elements.cards.hand.Hand;
 import org.cspoker.server.game.elements.cards.hand.HandEvaluator;
 import org.cspoker.server.game.elements.cards.hand.HandTypeCalculator;

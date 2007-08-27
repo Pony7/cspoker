@@ -22,7 +22,7 @@ import java.util.List;
 import net.jcip.annotations.Immutable;
 
 import org.cspoker.server.game.PlayerId;
-import org.cspoker.server.game.elements.cards.Card;
+import org.cspoker.common.game.elements.cards.Card;
 
 /**
  * A class of immutable saved players.

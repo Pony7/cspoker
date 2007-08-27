@@ -18,9 +18,9 @@ package org.cspoker.server.game.elements.cards.hand;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import org.cspoker.server.game.elements.cards.Card;
-import org.cspoker.server.game.elements.cards.cardElements.Rank;
-import org.cspoker.server.game.elements.cards.cardElements.Suit;
+import org.cspoker.common.game.elements.cards.Card;
+import org.cspoker.common.game.elements.cards.cardElements.Rank;
+import org.cspoker.common.game.elements.cards.cardElements.Suit;
 
 /**
  * A class for calculating the HandType of any hand

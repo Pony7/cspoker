@@ -21,26 +21,13 @@ import org.cspoker.server.game.events.GameEvent;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
-public class EventToEventTag {
+public class DealEventToEventTag extends EventToEventTag{
 
-    public void transform(TransformerHandler response, GameEvent event) throws SAXException{
-	AttributesImpl attrs = new AttributesImpl();
-	response.startElement("", "event", "event", attrs);
-	
-	addChildren(response, event);
-	
-	response.endElement("", "event", "event");
-    }
-
-    protected void addMsg(TransformerHandler response, String eventMsg) throws SAXException{
-	AttributesImpl attrs = new AttributesImpl();
-	response.startElement("", "msg", "msg", attrs);
-	response.characters(eventMsg.toCharArray(), 0, eventMsg.length());
-	response.endElement("", "msg", "msg");
-    }
-    
     protected void addChildren(TransformerHandler response, GameEvent event) throws SAXException{
-	addMsg(response, event.toString());
+	super.addChildren(response, event);
+	AttributesImpl attrs = new AttributesImpl();
+	response.startElement("", "deal", "deal", attrs);
+	response.endElement("", "deal", "deal");
+
     }
-    
 }

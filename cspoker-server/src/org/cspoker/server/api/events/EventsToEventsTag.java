@@ -18,6 +18,10 @@ package org.cspoker.server.api.events;
 import javax.xml.transform.sax.TransformerHandler;
 
 import org.cspoker.server.game.events.GameEvent;
+import org.cspoker.server.game.events.NewCommunityCardsEvent;
+import org.cspoker.server.game.events.NewRoundEvent;
+import org.cspoker.server.game.events.playerActionEvents.DealEvent;
+import org.cspoker.server.game.events.privateEvents.NewPocketCardsEvent;
 import org.cspoker.server.game.playerCommunication.GameEvents;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
@@ -25,9 +29,13 @@ import org.xml.sax.helpers.AttributesImpl;
 public class EventsToEventsTag {
     
     private EventToEventTag eventToEventtag;
-
+    private CardEventToEventTag cardEventToEventTag;
+    private DealEventToEventTag dealEventToTag ;
+    
     public EventsToEventsTag() {
 	this.eventToEventtag = new EventToEventTag();
+	this.cardEventToEventTag = new CardEventToEventTag();
+	this.dealEventToTag = new DealEventToEventTag();
     }
 
     public void transform(TransformerHandler response, GameEvents events) throws SAXException{
@@ -41,6 +49,10 @@ public class EventsToEventsTag {
     }
     
     public EventToEventTag getEventToEventsTag(GameEvent event){
+	if(event instanceof NewCommunityCardsEvent || event instanceof NewPocketCardsEvent)
+	    return cardEventToEventTag;
+	if(event instanceof DealEvent)
+	    return dealEventToTag;
 	return eventToEventtag;
     }
     
