@@ -18,7 +18,6 @@ There is no explicit login functionality. The client can ask the user for creden
  * [CreateTableAPI /table/create/]
 == GET ==
  * [PingAPI /ping/]
- * [EventsGameAPI /game/events/]
  * [ListTableAPI /table/list/]
 == POST ==
  * [JoinTableGameAPI /table/join/]
@@ -68,7 +67,6 @@ Content-length: 1682
  </stacktrace>
 </exception>
 }}}
-
 
 
 
