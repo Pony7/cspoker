@@ -15,8 +15,6 @@
  */
 package org.cspoker.client.commands;
 
-
-
 public class HelpCommand implements CommandExecutor {
 
     public String execute(String... args) throws Exception {
@@ -36,7 +34,6 @@ public class HelpCommand implements CommandExecutor {
 			"  STARTGAME - start a new game at your table"+n +
 			"  GAMEEVENTS - get recent game events"+n +
 			"               (just press enter to get all game events quickly)"+n+
-			"  GAMEEVENTS [ackID] - get recent game events and acknowledge all previous ones"+n +
 			"  DEAL - deal"+n +
 			"  CHECK - check"+n +
 			"  BET [amount] - bet a certain amount"+n+
@@ -44,6 +41,7 @@ public class HelpCommand implements CommandExecutor {
 			"  FOLD - fold"+n +
 			"  RAISE [amount] - raise with a certain amount"+n+
 			"  ALLIN - go all in"+n+
+			"  CARDS - see all card"+n+
 			"";
     }
 
