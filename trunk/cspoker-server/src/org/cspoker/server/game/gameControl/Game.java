@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import org.cspoker.server.game.elements.cards.Card;
+import org.cspoker.common.game.elements.cards.Card;
 import org.cspoker.server.game.elements.cards.deck.Deck;
 import org.cspoker.server.game.elements.chips.pot.Pots;
 import org.cspoker.server.game.elements.table.PlayerListFullException;

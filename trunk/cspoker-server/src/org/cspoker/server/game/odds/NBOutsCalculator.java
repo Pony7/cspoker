@@ -2,7 +2,7 @@ package org.cspoker.server.game.odds;
 
 import java.util.List;
 
-import org.cspoker.server.game.elements.cards.Card;
+import org.cspoker.common.game.elements.cards.Card;
 import org.cspoker.server.game.elements.cards.hand.Hand;
 
 public abstract class NBOutsCalculator {

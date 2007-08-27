@@ -21,7 +21,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.cspoker.server.game.GameMediator;
-import org.cspoker.server.game.elements.cards.Card;
+import org.cspoker.common.game.elements.cards.Card;
 import org.cspoker.server.game.elements.chips.IllegalValueException;
 import org.cspoker.server.game.elements.chips.pot.Pots;
 import org.cspoker.server.game.elements.player.AllInPlayer;

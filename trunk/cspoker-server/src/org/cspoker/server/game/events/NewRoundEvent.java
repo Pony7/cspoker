@@ -38,8 +38,6 @@ public class NewRoundEvent extends GameEvent {
 	public SavedPlayer getPlayer(){
 		return player;
 	}
-	
-
 
 	@Override
 	public String toString(){

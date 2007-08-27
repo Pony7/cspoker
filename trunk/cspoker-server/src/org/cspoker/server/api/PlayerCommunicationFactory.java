@@ -19,7 +19,6 @@ package org.cspoker.server.api;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.cspoker.server.game.player.Player;
 import org.cspoker.server.game.player.PlayerFactory;
 import org.cspoker.server.game.playerCommunication.PlayerCommunicationImpl;
 
@@ -41,10 +40,6 @@ public class PlayerCommunicationFactory {
 	    
 	}
 	return result;
-    }
-    
-    public Player getRegisteredPlayer(String name){
-	return getRegisteredPlayerCommunication(name).getPlayer();
     }
     
 }
