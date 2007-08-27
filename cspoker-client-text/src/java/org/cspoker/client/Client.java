@@ -21,6 +21,7 @@ import java.net.MalformedURLException;
 import java.net.PasswordAuthentication;
 import java.util.HashMap;
 
+import org.cspoker.client.commands.CardsCommand;
 import org.cspoker.client.commands.CommandExecutor;
 import org.cspoker.client.commands.GameEventsCommand;
 import org.cspoker.client.commands.HelpCommand;
@@ -37,6 +38,8 @@ import org.cspoker.client.request.ListTablesRequest;
 import org.cspoker.client.request.PingRequest;
 import org.cspoker.client.request.RaiseRequest;
 import org.cspoker.client.request.StartGameRequest;
+import org.cspoker.client.request.contenthandler.EventsContentHandler;
+import org.cspoker.client.savedstate.Cards;
 
 /**
  * Connect to the given server and passes on user commands.
@@ -72,9 +75,12 @@ public class Client {
 	commands.put("RAISE", new RaiseRequest(address));
 	commands.put("ALLIN", new AllInRequest(address));
 	
-	commands.put("GAMEEVENTS", new GameEventsCommand(address));
+	Cards cards = new Cards();
+	EventsContentHandler events = new EventsContentHandler(cards);
+	commands.put("GAMEEVENTS", new GameEventsCommand(address, events));
 	
-	
+	CardsCommand cardsCommand = new CardsCommand(cards);
+	commands.put("CARDS", cardsCommand);
 	HelpCommand help = new HelpCommand();
 	commands.put("HELP", help);
     }
