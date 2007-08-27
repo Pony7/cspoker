@@ -19,7 +19,6 @@ import javax.xml.transform.sax.TransformerHandler;
 
 import org.cspoker.server.game.events.GameEvent;
 import org.cspoker.server.game.events.NewCommunityCardsEvent;
-import org.cspoker.server.game.events.NewRoundEvent;
 import org.cspoker.server.game.events.PotChangedEvent;
 import org.cspoker.server.game.events.playerActionEvents.DealEvent;
 import org.cspoker.server.game.events.privateEvents.NewPocketCardsEvent;
