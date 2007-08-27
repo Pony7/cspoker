@@ -63,7 +63,6 @@ public class EventsContentHandler extends DefaultHandler {
         
         if(name.equalsIgnoreCase("events")){
             lastID=attributes.getValue("lastEventNumber");
-            showLastMsg = true;
         }else if(name.equalsIgnoreCase("cards")){
             newCards.removeAll(newCards);
             if(attributes.getValue("type").equalsIgnoreCase("private")){
@@ -73,6 +72,8 @@ public class EventsContentHandler extends DefaultHandler {
             }
         }else if(name.equalsIgnoreCase("card")){
             lastSuit = Suit.getSuit(attributes.getValue("suit"));
+        }else if( name.equalsIgnoreCase("event")){
+            showLastMsg = true;
         }
         sb.setLength(0);
     }
