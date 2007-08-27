@@ -39,7 +39,7 @@ public class CallRequest extends NoOutputRequest{
 
     @Override
     protected String getResult() {
-	return "Called."+n;
+	return "";
     }
     
 

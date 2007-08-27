@@ -35,8 +35,6 @@ public class HelpCommand implements CommandExecutor {
 			""+n+
 			"-Game:"+n +
 			"  STARTGAME - start a new game at your table"+n +
-			"  GAMEEVENTS - get recent game events"+n +
-			"               (just press enter to get all game events quickly)"+n+
 			"  DEAL - deal"+n +
 			"  CHECK - check"+n +
 			"  BET [amount] - bet a certain amount"+n+
@@ -49,4 +47,7 @@ public class HelpCommand implements CommandExecutor {
 			"";
     }
 
+    public boolean requiresEventUpdate() {
+	return false;
+    }
 }

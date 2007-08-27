@@ -39,7 +39,7 @@ public class DealRequest extends NoOutputRequest{
 
     @Override
     protected String getResult() {
-	return "Dealt."+n;
+	return "";
     }
     
     @Override

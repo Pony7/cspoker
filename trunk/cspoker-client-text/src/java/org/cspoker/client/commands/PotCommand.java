@@ -28,5 +28,9 @@ public class PotCommand implements CommandExecutor {
     public String execute(String... args) throws Exception {
 	return "The total pot is "+pot.getPot()+" chips.";
     }
+    
+    public boolean requiresEventUpdate() {
+	return false;
+    }
 
 }

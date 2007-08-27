@@ -114,6 +114,8 @@ public abstract class HttpRequest implements CommandExecutor{
     
     protected abstract String getRequestMethod();
 
-
+    public boolean requiresEventUpdate(){
+	return true;
+    }
     
 }

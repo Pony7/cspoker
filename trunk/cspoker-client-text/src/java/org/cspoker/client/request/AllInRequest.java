@@ -39,7 +39,7 @@ public class AllInRequest extends NoOutputRequest{
 
     @Override
     protected String getResult() {
-	return "Went All In."+n;
+	return "";
     }
 
     @Override

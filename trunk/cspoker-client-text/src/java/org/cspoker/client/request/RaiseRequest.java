@@ -52,7 +52,7 @@ public class RaiseRequest extends OutputRequest{
     
     @Override
     protected String getResult() {
-	return "Raised "+amount+"."+n;
+	return "";
     }
     
     @Override

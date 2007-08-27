@@ -23,7 +23,6 @@ import java.util.HashMap;
 
 import org.cspoker.client.commands.CardsCommand;
 import org.cspoker.client.commands.CommandExecutor;
-import org.cspoker.client.commands.GameEventsCommand;
 import org.cspoker.client.commands.HelpCommand;
 import org.cspoker.client.commands.PotCommand;
 import org.cspoker.client.request.AllInRequest;
@@ -39,7 +38,6 @@ import org.cspoker.client.request.ListTablesRequest;
 import org.cspoker.client.request.PingRequest;
 import org.cspoker.client.request.RaiseRequest;
 import org.cspoker.client.request.StartGameRequest;
-import org.cspoker.client.request.contenthandler.EventsContentHandler;
 import org.cspoker.client.savedstate.Cards;
 import org.cspoker.client.savedstate.Pot;
 
@@ -49,15 +47,17 @@ import org.cspoker.client.savedstate.Pot;
 public class Client {
 
     private HashMap<String, CommandExecutor> commands = new HashMap<String,CommandExecutor>();
+    private Console console;
+    private EventsThread eventsThread;
     
-    public Client(String serverIP, int port, final String user, final String pass) throws IOException {
+    public Client(String serverIP, int port, final String user, final String pass, Console console) throws IOException {
 	Authenticator.setDefault(new Authenticator() {
 	    protected PasswordAuthentication getPasswordAuthentication() {
 	        return new PasswordAuthentication (user, pass.toCharArray());
 	    }
 	});
 	String address = "http://"+serverIP + ":" + port;
-	
+	this.console = console;
 	registerCommands(address);
     }
 
@@ -79,13 +79,13 @@ public class Client {
 	
 	Cards cards = new Cards();
 	Pot pot = new Pot();
-	EventsContentHandler events = new EventsContentHandler(cards, pot);
-	commands.put("GAMEEVENTS", new GameEventsCommand(address, events));
-	
 	CardsCommand cardsCommand = new CardsCommand(cards);
 	commands.put("CARDS", cardsCommand);
 	PotCommand potCommand = new PotCommand(pot);
 	commands.put("POT", potCommand);
+	
+	eventsThread = new EventsThread(address, cards, pot, console);
+	(new Thread(eventsThread)).start();
 	
 	HelpCommand help = new HelpCommand();
 	commands.put("HELP", help);
@@ -99,7 +99,14 @@ public class Client {
 	CommandExecutor c=getCommand(command);
 	if(c==null)
 	    throw new IllegalArgumentException("Not a valid command.");
-	return c.execute(args);
+	String result = c.execute(args);
+	if(c.requiresEventUpdate())
+	    eventsThread.resetWait();
+	return result;
+    }
+
+    public void close() {
+	eventsThread.setRunning(false);	
     }
 
 }
