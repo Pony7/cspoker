@@ -29,6 +29,7 @@ import org.cspoker.server.game.events.playerActionEvents.DealEvent;
 import org.cspoker.server.game.events.playerActionEvents.FoldEvent;
 import org.cspoker.server.game.events.playerActionEvents.RaiseEvent;
 import org.cspoker.server.game.gameControl.rounds.BettingRound;
+import org.cspoker.server.game.gameControl.rounds.FinalRound;
 import org.cspoker.server.game.gameControl.rounds.Round;
 import org.cspoker.server.game.gameControl.rounds.WaitingRound;
 import org.cspoker.server.game.player.Player;
@@ -270,7 +271,7 @@ public class GameControl implements PlayerAction{
 	private void changeToNextRound(){
 		round.endRound();
 		round = round.getNextRound();
-		if((round instanceof BettingRound) && ((BettingRound)round).onlyAllInPlayers())
-			changeToNextRound();
+		if(round instanceof BettingRound && ((BettingRound) round).onlyOnePlayerLeftBesidesAllInPlayers())
+			checkIfEndedAndChangeRound();
 	}
 }

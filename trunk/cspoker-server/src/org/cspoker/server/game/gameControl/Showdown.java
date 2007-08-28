@@ -91,7 +91,6 @@ public class Showdown {
 		System.out.println(game.getPots());
 		
 		//TODO all-in players always, others can choose to show or fold.
-		
 		List<ShowdownPlayer> showdownPlayers = getShowdownPlayersFromPot(game.getPots().getPots().get(0));
 		
 		for(ShowdownPlayer player:showdownPlayers){

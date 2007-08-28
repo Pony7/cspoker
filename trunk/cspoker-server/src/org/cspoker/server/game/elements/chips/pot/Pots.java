@@ -69,9 +69,13 @@ public class Pots {
 			pot.transferAllChipsTo(sidePot);
 			System.out.println(players);
 			for(Player player:players){
-				player.getBettedChips().transferAmountTo(amount, sidePot.getChips());
+				try {
+					player.getBettedChips().transferAmountTo(amount, sidePot.getChips());
+				} catch (IllegalArgumentException e) {
+					System.out.println(e.getStackTrace());
+				}
 			}
-			System.out.println(sidePot);
+			System.out.println(sidePot.toString());
 			pots.add(sidePot);
 		}
 	}

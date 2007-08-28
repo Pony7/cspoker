@@ -194,7 +194,7 @@ public abstract class BettingRound extends Round {
 	@Override
 	public void allIn(Player player) throws IllegalActionException {
 		if(!onTurn(player))
-			throw new IllegalActionException(player.getName()+" can not go all-in. It should be his turn to do an action.");
+			throw new IllegalActionException(player.getName()+" can not go all-in. It isn't his turn to do an action.");
 		goAllIn(player);
 	}
 
@@ -204,7 +204,6 @@ public abstract class BettingRound extends Round {
 		} catch (IllegalValueException e) {
 			assert false;
 		}
-
 		allInPlayers.add(new AllInPlayer(player));
 		getGame().removePlayerFromCurrentDeal(player);
 		if(player.getBettedChips().getValue()>getBet()){
@@ -298,7 +297,7 @@ public abstract class BettingRound extends Round {
 		if(player.getStack().getValue()<=getGame().getGameProperty().getSmallBlind())
 			throw new IllegalValueException();
 		player.transferAmountToBettedPile(getGame().getGameProperty().getSmallBlind());
-		raiseBetWith(getGame().getGameProperty().getSmallBlind());
+		setBet(getGame().getGameProperty().getSmallBlind());
 		getBettingRules().setBetPlaced(true);
 		getBettingRules().setLastBetAmount(getGame().getGameProperty().getSmallBlind());
 		playerMadeEvent(player);
@@ -399,7 +398,9 @@ public abstract class BettingRound extends Round {
 		List<Player> players = game.getCurrentDealPlayers();
 		for(AllInPlayer allInPlayer:allInPlayers){
 			try {
+				System.out.println(game.getPots());
 				game.getPots().collectAmountFromPlayersToSidePot(allInPlayer.getBetValue(), players);
+				System.out.println(game.getPots());
 				int betValue = allInPlayer.getBetValue();
 				for(AllInPlayer otherAllInPlayer:allInPlayers){
 					if(otherAllInPlayer.getBetValue()>0){
@@ -455,14 +456,6 @@ public abstract class BettingRound extends Round {
 		}
 	}
 
-	public boolean onlyAllInPlayers(){
-		return game.getNbCurrentDealPlayers()==0;
-	}
-	
-	public boolean onlyOneActivePlayer(){
-		return game.getNbCurrentDealPlayers()==1;
-	}
-
 	/**
 	 * Returns true if there is only one
 	 * player left, false otherwise.
@@ -475,6 +468,11 @@ public abstract class BettingRound extends Round {
 	 */
 	public boolean onlyOnePlayerLeft(){
 		return (getGame().getNbCurrentDealPlayers()+allInPlayers.size()+getGame().getPots().getNbShowdownPlayers()<=1);
+	}
+	
+	public boolean onlyOnePlayerLeftBesidesAllInPlayers(){
+		return ((getGame().getNbCurrentDealPlayers()==1)&& 
+		(allInPlayers.size()+getGame().getPots().getNbShowdownPlayers()>1));
 	}
 
 	/**********************************************************
@@ -517,6 +515,7 @@ public abstract class BettingRound extends Round {
 	@Override
 	public void endRound(){
 		collectChips();
+		// if there are no all-in players and only one active player left
 		if(onlyOnePlayerLeft()){
 			game.getPots().close(game.getCurrentDealPlayers());
 			winner(game.getPots());

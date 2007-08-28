@@ -464,35 +464,9 @@ public class GameFlowTest extends TestCase {
 		System.out.println("Kenzo's Cards: "+kenzo.getPocketCards());
 		System.out.println("Cedric's Cards: "+cedric.getPocketCards());
 		System.out.println("Guy's Cards: "+guy.getPocketCards());
-
+		
 		try {
 			gameControl.call(game.getCurrentPlayer());
-		} catch (IllegalActionException e) {
-			fail(e.getMessage());
-		}
-		System.out.println(game.getCurrentDealPlayers());
-		System.out.println("Common Cards: "+game.getCommunityCards());
-		System.out.println("Side pots: "+game.getPots().getSidePots());
-		System.out.println("Main pot: "+game.getPots().getMainPot());
-		//Flop Round
-		try {
-			gameControl.check(game.getCurrentPlayer());
-		} catch (IllegalActionException e) {
-			fail(e.getMessage());
-		}
-		System.out.println("Common Cards: "+game.getCommunityCards());
-
-		//Turn Round
-		try {
-			gameControl.check(game.getCurrentPlayer());
-		} catch (IllegalActionException e) {
-			fail(e.getMessage());
-		}
-		System.out.println("Common Cards: "+game.getCommunityCards());
-
-		//Final Round
-		try {
-			gameControl.check(game.getCurrentPlayer());
 		} catch (IllegalActionException e) {
 			fail(e.getMessage());
 		}
@@ -543,32 +517,7 @@ public class GameFlowTest extends TestCase {
 		} catch (IllegalActionException e) {
 			fail(e.getMessage());
 		}
-		System.out.println(game.getCurrentDealPlayers());
-		System.out.println("Common Cards: "+game.getCommunityCards());
-		System.out.println("Side pots: "+game.getPots().getSidePots());
-		System.out.println("Main pot: "+game.getPots().getMainPot());
-		//Flop Round
-		try {
-			gameControl.check(game.getCurrentPlayer());
-		} catch (IllegalActionException e) {
-			fail(e.getMessage());
-		}
-		System.out.println("Common Cards: "+game.getCommunityCards());
-
-		//Turn Round
-		try {
-			gameControl.check(game.getCurrentPlayer());
-		} catch (IllegalActionException e) {
-			fail(e.getMessage());
-		}
-		System.out.println("Common Cards: "+game.getCommunityCards());
-
-		//Final Round
-		try {
-			gameControl.check(game.getCurrentPlayer());
-		} catch (IllegalActionException e) {
-			fail(e.getMessage());
-		}
+		//Game continues automatically
 	}
 
 	public void testAllAllInCase(){
