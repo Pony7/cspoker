@@ -38,15 +38,6 @@ public class FlopRound extends BettingRound{
 	}
 
 	@Override
-	public void endRound() {
-		collectChips();
-		if(onlyOnePlayerLeft()){
-			getGame().getPots().close(getGame().getCurrentDealPlayers());
-			winner(getGame().getPots());
-		}
-	}
-
-	@Override
 	public Round getNextRound() {
 		if(onlyOnePlayerLeft())
 			return new WaitingRound(gameMediator, game);

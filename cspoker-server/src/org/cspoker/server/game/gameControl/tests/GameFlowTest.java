@@ -744,5 +744,45 @@ public class GameFlowTest extends TestCase {
 			fail(e.getMessage());
 		}
 	}
+	
+	public void test2PlayersOneFold(){
+		try {
+			kenzo = playerFactory.createNewPlayer("Kenzo",100);
+			cedric = playerFactory.createNewPlayer("Cedric", 100); 
+
+			table = new Table(new TableId(0), new GameProperty());
+			table.addPlayer(kenzo);
+			table.addPlayer(cedric);
+			gameControl = new GameControl(gameMediator, table);
+		} catch (IllegalValueException e) {
+			fail(e.getMessage());
+		} catch (PlayerListFullException e) {
+			fail(e.getMessage());
+		}
+
+		System.out.println("Game Properties:");
+		System.out.println("Small Blind: "+table.getGameProperty().getSmallBlind());
+		System.out.println("Big Blind: "+table.getGameProperty().getBigBlind());
+		System.out.println("");
+		Game game = gameControl.getGame();
+
+		game.changeDealer(kenzo);
+
+		Player dealer  = game.getDealer();
+		System.out.println("Dealer: "+game.getDealer().getName());
+
+		try {
+			System.out.println(game.getCurrentPlayer());
+			gameControl.deal(dealer);
+		} catch (IllegalActionException e) {
+			fail(e.getMessage());
+		}
+		
+		try {
+			gameControl.fold(cedric);
+		} catch (IllegalActionException e) {
+			fail(e.getMessage());
+		}
+	}
 
 }

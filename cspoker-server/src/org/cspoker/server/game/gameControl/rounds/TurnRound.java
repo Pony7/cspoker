@@ -33,19 +33,6 @@ public class TurnRound extends BettingRound{
 		drawOpenCardAndPublishCommonCard();
 	}
 
-	/**
-	 * Deal the river card to the public cards.
-	 *
-	 */
-	@Override
-	public void endRound() {
-		collectChips();
-		System.out.println(onlyOnePlayerLeft());
-		if(onlyOnePlayerLeft()){
-			getGame().getPots().close(getGame().getCurrentDealPlayers());
-			winner(getGame().getPots());
-		}
-	}
 
 	@Override
 	public Round getNextRound() {
