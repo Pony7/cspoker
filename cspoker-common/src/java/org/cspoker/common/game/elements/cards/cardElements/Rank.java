@@ -16,139 +16,75 @@
 
 package org.cspoker.common.game.elements.cards.cardElements;
 
+import java.math.BigInteger;
+
 /**
  * An enumeration to represent the different ranks a card can have.
  * 
  * @author Kenzo
- *
+ * 
  */
 public enum Rank {
-	DEUCE{
-		@Override
-		public int getValue(){
-			return 2;
-		}
-	}, 
-	
-	THREE{
-		@Override
-		public int getValue(){
-			return 3;
-		} 
-	},
-	
-	FOUR{
-		@Override
-		public int getValue(){
-			return 4;
-		} 
-	}, 
-	
-	FIVE{
-		@Override
-		public int getValue(){
-			return 5;
-		} 	
-	}, 
-	
-	SIX{
-		@Override
-		public int getValue(){
-			return 6;
-		} 
-	},
+	DEUCE("Two", "2"), THREE("Three", "3"), FOUR("Four", "4"), FIVE("Five", "5"), SIX("Six", "6"), SEVEN("Seven", "7"), EIGHT("Eight", "8"), NINE(
+			"Nine", "9"), TEN("Ten", "T"), JACK("Jack", "J"), QUEEN("Queen", "Q"), KING("King", "K"), ACE("Ace", "A");
 
-    SEVEN{
-		@Override
-		public int getValue(){
-			return 7;
-		} 
-	}, 
-    
-    EIGHT{
-		@Override
-		public int getValue(){
-			return 8;
-		} 
-	},
-    
-    NINE{
-		@Override
-		public int getValue(){
-			return 9;
-		} 
-	}, 
-    
-    TEN{
-		@Override
-		public int getValue(){
-			return 10;
-		} 
-	}, 
-    
-    JACK{
-		@Override
-		public int getValue(){
-			return 11;
+	private int prime;
+	private String longDescription;
+	private String shortDescription;
+
+	private Rank(final String longDescription, final String shortDescription) {
+		this.prime = PrimeInitializer.getNextPrime();
+		this.longDescription = longDescription;
+		this.shortDescription = shortDescription;
+	}
+
+	public String getLongDescription() {
+		return this.longDescription;
+	}
+
+	public int getPrime() {
+		return this.prime;
+	}
+
+	public String getShortDescription() {
+		return this.shortDescription;
+	}
+
+	/**
+	 * Returns a textual representation of this rank
+	 */
+	@Override
+	public String toString() {
+		return this.getLongDescription();
+	}
+
+	private static final class PrimeInitializer {
+		private static BigInteger nextPrime = BigInteger.valueOf(1);
+
+		public static int getNextPrime() {
+			PrimeInitializer.nextPrime = PrimeInitializer.nextPrime.nextProbablePrime();
+			return PrimeInitializer.nextPrime.intValue();
 		}
-		@Override
-		public String toString(){
-			return "jack";
+
+		private PrimeInitializer() {
+			// Utility class, should not be instantiated
 		}
-	}, 
-    
-    QUEEN{
-		@Override
-		public int getValue(){
-			return 12;
-		}
-		@Override
-		public String toString(){
-			return "queen";
-		}
-	}, 
-    
-    KING{
-		@Override
-		public int getValue(){
-			return 13;
-		}
-		@Override
-		public String toString(){
-			return "king";
-		}
-	},
-    
-    ACE{
-		@Override
-		public int getValue(){
-			return 14;
-		}
-		@Override
-		public String toString(){
-			return "ace";
-		}
-	};
-	
+	}
+
 	/**
 	 * Returns the numeral value of this rank.
 	 * 
 	 * @return The numeral value of this rank.
 	 */
-	public abstract int getValue();
-	/**
-	 * Returns a textual representation of this rank
-	 */
-	@Override
-	public String toString(){
-	    return Integer.toString(getValue());
+	public int getValue() {
+		return this.ordinal() + 2;
 	}
-	
-	public static Rank getRank(String value){
-	    for(Rank rank:Rank.values()){
-		if(rank.toString().equalsIgnoreCase(value))
-		    return rank;
-	    }
-	    return null;
+
+	public static Rank getRank(String value) {
+		for (Rank rank : Rank.values()) {
+			if (rank.toString().equalsIgnoreCase(value))
+				return rank;
+		}
+		return null;
 	}
 }
