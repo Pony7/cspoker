@@ -39,4 +39,8 @@
 		<name>jef</name>
 		<password>test</password>
 	</user>
+	<user>
+		<name>craig</name>
+		<password>test</password>
+	</user>
 </users>
