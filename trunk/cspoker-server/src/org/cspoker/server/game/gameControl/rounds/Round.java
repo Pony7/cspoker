@@ -281,8 +281,6 @@ public abstract class Round implements PlayerAction{
 		}
 	}
 
-
-
 	public abstract boolean isLowBettingRound();
 
 	public abstract boolean isHighBettingRound();

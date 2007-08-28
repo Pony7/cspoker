@@ -26,7 +26,7 @@ public class FinalRound extends BettingRound{
 
 	public FinalRound(GameMediator gameMediator, Game game) {
 		super(gameMediator, game);
-		Player currentPlayer = getGame().getCurrentPlayer();
+		Player currentPlayer = game.getCurrentPlayer();
 		if(currentPlayer!=null)
 			gameMediator.publishNewRoundEvent(new NewRoundEvent(toString(), currentPlayer.getSavedPlayer()));
 		System.out.println("** Final Round **");
@@ -36,18 +36,15 @@ public class FinalRound extends BettingRound{
 
 	@Override
 	public void endRound() {
-
-		collectChips();
 		if(onlyOnePlayerLeft()){
-			getGame().getPots().close(getGame().getCurrentDealPlayers());
-			winner(getGame().getPots());
+			super.endRound();
 		}else{
-			getGame().getPots().close(getGame().getCurrentDealPlayers());
+			collectChips();
+			game.getPots().close(game.getCurrentDealPlayers());
 			Showdown showdown = new Showdown(gameMediator, getGame());
 			showdown.determineWinners();
 		}
-
-		getGame().setDealer(getGame().getNextDealer());
+		game.setDealer(game.getNextDealer());
 	}
 
 	@Override

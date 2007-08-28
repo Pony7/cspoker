@@ -458,6 +458,10 @@ public abstract class BettingRound extends Round {
 	public boolean onlyAllInPlayers(){
 		return game.getNbCurrentDealPlayers()==0;
 	}
+	
+	public boolean onlyOneActivePlayer(){
+		return game.getNbCurrentDealPlayers()==1;
+	}
 
 	/**
 	 * Returns true if there is only one
@@ -508,6 +512,15 @@ public abstract class BettingRound extends Round {
 			allInPlayerBets+=player.getBetValue();
 		}
 		return game.getPots().getTotalValue()+currentPlayerBets+foldedPlayerBets+allInPlayerBets;
+	}
+	
+	@Override
+	public void endRound(){
+		collectChips();
+		if(onlyOnePlayerLeft()){
+			game.getPots().close(game.getCurrentDealPlayers());
+			winner(game.getPots());
+		}
 	}
 
 }
