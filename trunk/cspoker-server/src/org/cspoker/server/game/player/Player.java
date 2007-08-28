@@ -56,7 +56,7 @@ public class Player {
 	 * The chips the player has bet in this round.
 	 *
 	 */
-	private final Chips bettedChips;
+	private final Chips betChips;
 
 	/**
 	 * The hidden cards.
@@ -77,16 +77,16 @@ public class Player {
 	 * @post	The chips pile is effective and
 	 * 			the value of chips is the same
 	 * 			as the given initial value.
-	 *		 	|new.getBettedChips()!=null && new.getChips.getValue()==initialNbChips
-	 * @post 	The betted chips pile is effective and
+	 *		 	|new.getBetChips()!=null && new.getChips.getValue()==initialNbChips
+	 * @post 	The bet chips pile is effective and
 	 * 			There are no chips on this pile.
-	 *		 	|new.getBettedChips()!=null && new.getBettedChips().getValue()==0
+	 *		 	|new.getBetChips()!=null && new.getBetChips().getValue()==0
 	 */
 	Player(PlayerId id, String name, int initialNbChips) throws IllegalValueException{
 		this.id = id;
 		this.name = name;
 		chips = new Chips(initialNbChips);
-		bettedChips = new Chips();
+		betChips = new Chips();
 		pocketCards = new CopyOnWriteArrayList<Card>();
 	}
 
@@ -125,16 +125,16 @@ public class Player {
 		return chips;
 	}
 
-	public Chips getBettedChips(){
-		return bettedChips;
+	public Chips getBetChips(){
+		return betChips;
 	}
 
-	public void transferAmountToBettedPile(int amount) throws IllegalValueException{
-		getStack().transferAmountTo(amount, getBettedChips());
+	public void transferAmountToBetPile(int amount) throws IllegalValueException{
+		getStack().transferAmountTo(amount, getBetChips());
 	}
 
-	public void transferAllChipsToBettedPile() throws IllegalValueException{
-		getStack().transferAllChipsTo(getBettedChips());
+	public void transferAllChipsToBetPile() throws IllegalValueException{
+		getStack().transferAllChipsTo(getBetChips());
 	}
 
 	/**********************************************************

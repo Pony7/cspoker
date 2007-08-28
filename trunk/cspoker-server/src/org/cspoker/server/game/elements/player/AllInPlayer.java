@@ -40,19 +40,19 @@ public class AllInPlayer implements Comparable<AllInPlayer>{
 	}
 	
 	public int getBetValue(){
-		return player.getBettedChips().getValue();
+		return player.getBetChips().getValue();
 	}
 	
 	public void transferAllChipsTo(Pot pot){
 		try {
-			transferAmountTo(player.getBettedChips().getValue(), pot);
+			transferAmountTo(player.getBetChips().getValue(), pot);
 		} catch (IllegalValueException e) {
 			assert false;
 		}
 	}
 	
 	public void transferAmountTo(int amount,Pot pot) throws IllegalValueException{
-		player.getBettedChips().transferAmountTo(amount,pot.getChips());
+		player.getBetChips().transferAmountTo(amount,pot.getChips());
 	}
 	
 	public int compareTo(AllInPlayer o) {

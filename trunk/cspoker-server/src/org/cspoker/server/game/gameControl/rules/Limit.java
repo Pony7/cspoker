@@ -67,11 +67,11 @@ public class Limit extends BettingRules{
 			return false;
 		}
 		if(round.isLowBettingRound() && (amount%getSmallBet()!=0)){
-			setLastRaiseErrorMessage("ERROR : the betted amount must be n times the small bet of this round being "+getSmallBet());
+			setLastRaiseErrorMessage("ERROR : the bet amount must be n times the small bet of this round being "+getSmallBet());
 			return false;
 		}
 		if(round.isHighBettingRound() && (amount%getBigBet()!=0)){
-			setLastRaiseErrorMessage("ERROR : the betted amount must be n times the big bet of this round being "+getBigBet());
+			setLastRaiseErrorMessage("ERROR : the bet amount must be n times the big bet of this round being "+getBigBet());
 			return false;
 		}
 		return super.isValidRaise(amount, round);
@@ -91,11 +91,11 @@ public class Limit extends BettingRules{
 	@Override
 	public boolean isValidBet(int amount, Round round) {
 		if(round.isLowBettingRound() && (amount%getSmallBet()!=0)){
-			setLastRaiseErrorMessage("ERROR : the betted amount must be n times the small bet of this round being "+getSmallBet());
+			setLastRaiseErrorMessage("ERROR : the bet amount must be n times the small bet of this round being "+getSmallBet());
 			return false;
 		}
 		if(round.isHighBettingRound() && (amount%getBigBet()!=0)){
-			setLastRaiseErrorMessage("ERROR : the betted amount must be n times the big bet of this round being "+getBigBet());
+			setLastRaiseErrorMessage("ERROR : the bet amount must be n times the big bet of this round being "+getBigBet());
 			return false;
 		}
 		return super.isValidBet(amount, round);

@@ -56,7 +56,7 @@ public abstract class BettingRound extends Round {
 
 	/**
 	 * This list contains all players who folded,
-	 * but who have placed chips on their betted chips pile.
+	 * but who have placed chips on their bet chips pile.
 	 */
 	protected final List<Player> foldedPlayersWithBet;
 
@@ -92,7 +92,7 @@ public abstract class BettingRound extends Round {
 					" did you mean all-in??");
 
 		try {
-			player.transferAmountToBettedPile(amountToIncreaseBettedPileWith(player)+amount);
+			player.transferAmountToBetPile(amountToIncreaseBetPileWith(player)+amount);
 		} catch (IllegalValueException e) {
 			throw new IllegalActionException(player, e.getMessage());
 		}
@@ -108,15 +108,15 @@ public abstract class BettingRound extends Round {
 		if(!onTurn(player) || !someoneHasBet())
 			throw new IllegalActionException(player.getName()+" can not call in this round.");
 
-		//Check whether the amount with which the betted chips pile
+		//Check whether the amount with which the bet chips pile
 		//is increased exceeds the player's stack.
-		if(amountToIncreaseBettedPileWith(player)>=player.getStack().getValue())
+		if(amountToIncreaseBetPileWith(player)>=player.getStack().getValue())
 			throw new IllegalActionException(player, "Can not call a bet higher than your current amount of chips;" +
 					" did you mean all-in??");
 
-		//Try to transfer the amount to the betted pile.
+		//Try to transfer the amount to the bet pile.
 		try {
-			player.transferAmountToBettedPile(amountToIncreaseBettedPileWith(player));
+			player.transferAmountToBetPile(amountToIncreaseBetPileWith(player));
 		} catch (IllegalValueException e) {
 			throw new IllegalActionException(player, e.getMessage());
 		}
@@ -148,13 +148,13 @@ public abstract class BettingRound extends Round {
 		//If the total number of chips needed for this raise,
 		//exceeds or equals the stack of the player, the player should
 		//go all-in explicitly.
-		if((amount+amountToIncreaseBettedPileWith(player))>=player.getStack().getValue())
+		if((amount+amountToIncreaseBetPileWith(player))>=player.getStack().getValue())
 			throw new IllegalActionException(player, "Can not raise with an amount higher than your current amount of chips;" +
 					" did you mean all-in??");
 
-		//Try to transfer the amount to the betted pile.
+		//Try to transfer the amount to the bet pile.
 		try {
-			player.transferAmountToBettedPile(amountToIncreaseBettedPileWith(player)+amount);
+			player.transferAmountToBetPile(amountToIncreaseBetPileWith(player)+amount);
 		} catch (IllegalValueException e) {
 			throw new IllegalActionException(player, e.getMessage());
 		}
@@ -182,7 +182,7 @@ public abstract class BettingRound extends Round {
 		 * By doing the all-in logic at the end of a round,
 		 * the code is easier to write.
 		 */
-		if(player.getBettedChips().getValue()>0){
+		if(player.getBetChips().getValue()>0){
 			foldedPlayersWithBet.add(player);
 		}
 		game.removePlayerFromCurrentDeal(player);
@@ -200,19 +200,19 @@ public abstract class BettingRound extends Round {
 
 	protected void goAllIn(Player player){
 		try {
-			player.transferAllChipsToBettedPile();
+			player.transferAllChipsToBetPile();
 		} catch (IllegalValueException e) {
 			assert false;
 		}
 		allInPlayers.add(new AllInPlayer(player));
 		getGame().removePlayerFromCurrentDeal(player);
-		if(player.getBettedChips().getValue()>getBet()){
-			setBet(player.getBettedChips().getValue());
+		if(player.getBetChips().getValue()>getBet()){
+			setBet(player.getBetChips().getValue());
 			playerMadeEvent(player);
 		}
 		gameMediator.publishAllInEvent(new AllInEvent(player.getSavedPlayer()));
 		gameMediator.publishPotChangedEvent(new PotChangedEvent(getCurrentPotValue()));
-		System.out.println(player.getName()+" goes all in with "+player.getBettedChips().getValue()+" chips.");
+		System.out.println(player.getName()+" goes all in with "+player.getBetChips().getValue()+" chips.");
 	}
 
 	/**********************************************************
@@ -296,7 +296,7 @@ public abstract class BettingRound extends Round {
 	protected void collectSmallBlind(Player player) throws IllegalValueException{
 		if(player.getStack().getValue()<=getGame().getGameProperty().getSmallBlind())
 			throw new IllegalValueException();
-		player.transferAmountToBettedPile(getGame().getGameProperty().getSmallBlind());
+		player.transferAmountToBetPile(getGame().getGameProperty().getSmallBlind());
 		setBet(getGame().getGameProperty().getSmallBlind());
 		getBettingRules().setBetPlaced(true);
 		getBettingRules().setLastBetAmount(getGame().getGameProperty().getSmallBlind());
@@ -313,7 +313,7 @@ public abstract class BettingRound extends Round {
 	protected void collectBigBlind(Player player) throws IllegalValueException{
 		if(player.getStack().getValue()<=getGame().getGameProperty().getBigBlind())
 			throw new IllegalValueException();
-		player.transferAmountToBettedPile(getGame().getGameProperty().getBigBlind());
+		player.transferAmountToBetPile(getGame().getGameProperty().getBigBlind());
 		getBettingRules().setBetPlaced(true);
 		getBettingRules().setLastBetAmount(getGame().getGameProperty().getBigBlind());
 		setBet(getGame().getGameProperty().getBigBlind());
@@ -322,18 +322,18 @@ public abstract class BettingRound extends Round {
 
 	/**
 	 * Returns how many chips a player
-	 * must transfer to the betted pile
+	 * must transfer to the bet pile
 	 * to equal the current bet.
 	 *
 	 * @param 	player
 	 * 			The player who wants to know
 	 * 			how many chips to transfer.
 	 * @return	The number of chips the player
-	 * 			must transfer to the betted pile
+	 * 			must transfer to the bet pile
 	 * 			to equal the current bet.
 	 */
-	protected int amountToIncreaseBettedPileWith(Player player){
-		return getBet()-player.getBettedChips().getValue();
+	protected int amountToIncreaseBetPileWith(Player player){
+		return getBet()-player.getBetChips().getValue();
 	}
 
 	/**********************************************************
@@ -379,7 +379,7 @@ public abstract class BettingRound extends Round {
 	 **********************************************************/
 
 	/**
-	 * Collect the betted chips pile from all players.
+	 * Collect the bet chips pile from all players.
 	 * Also creates new side pots if necessary
 	 * in the case of all-in players.
 	 *
@@ -408,10 +408,10 @@ public abstract class BettingRound extends Round {
 					}
 				}
 				for(Player foldedPlayer:foldedPlayersWithBet){
-					if(foldedPlayer.getBettedChips().getValue()>allInPlayer.getBetValue()){
-						foldedPlayer.getBettedChips().transferAmountTo(allInPlayer.getBetValue(), game.getPots().getNewestSidePot().getChips());
+					if(foldedPlayer.getBetChips().getValue()>allInPlayer.getBetValue()){
+						foldedPlayer.getBetChips().transferAmountTo(allInPlayer.getBetValue(), game.getPots().getNewestSidePot().getChips());
 					}else{
-						foldedPlayer.getBettedChips().transferAllChipsTo(game.getPots().getNewestSidePot().getChips());
+						foldedPlayer.getBetChips().transferAllChipsTo(game.getPots().getNewestSidePot().getChips());
 						foldedPlayersWithBet.remove(foldedPlayer);
 					}
 				}
@@ -498,11 +498,11 @@ public abstract class BettingRound extends Round {
 	public int getCurrentPotValue(){
 		int currentPlayerBets=0;
 		for(Player player:game.getCurrentDealPlayers()){
-			currentPlayerBets+=player.getBettedChips().getValue();
+			currentPlayerBets+=player.getBetChips().getValue();
 		}
 		int foldedPlayerBets=0;
 		for(Player player:foldedPlayersWithBet){
-			foldedPlayerBets+=player.getBettedChips().getValue();
+			foldedPlayerBets+=player.getBetChips().getValue();
 		}
 
 		int allInPlayerBets=0;
