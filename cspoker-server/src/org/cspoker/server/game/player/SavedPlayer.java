@@ -53,7 +53,7 @@ public class SavedPlayer {
 	 * The chips the player has bet in this round.
 	 *
 	 */
-	private final int bettedChipsValue;
+	private final int betChipsValue;
 
 	/**
 	 * The hidden cards.
@@ -64,7 +64,7 @@ public class SavedPlayer {
 		id = player.getId();
 		name = player.getName();
 		stackValue = player.getStack().getValue();
-		bettedChipsValue = player.getBettedChips().getValue();
+		betChipsValue = player.getBetChips().getValue();
 		pocketCards = Collections.unmodifiableList(player.getPocketCards());
 	}
 
@@ -96,12 +96,12 @@ public class SavedPlayer {
 	}
 
 	/**
-	 * Returns the betted chips value of this saved player.
+	 * Returns the bet chips value of this saved player.
 	 *
-	 * @return The betted chips value of this saved player.
+	 * @return The bet chips value of this saved player.
 	 */
-	public int getBettedChipsValue(){
-		return bettedChipsValue;
+	public int getBetChipsValue(){
+		return betChipsValue;
 	}
 
 	/**

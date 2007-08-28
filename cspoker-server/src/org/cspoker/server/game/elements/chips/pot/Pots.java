@@ -70,7 +70,7 @@ public class Pots {
 			System.out.println(players);
 			for(Player player:players){
 				try {
-					player.getBettedChips().transferAmountTo(amount, sidePot.getChips());
+					player.getBetChips().transferAmountTo(amount, sidePot.getChips());
 				} catch (IllegalArgumentException e) {
 					System.out.println(e.getStackTrace());
 				}
@@ -105,19 +105,19 @@ public class Pots {
 	}
 
 	/**
-	 * Collect all chips from the betted chips pile
+	 * Collect all chips from the bet chips pile
 	 * of all players in the given list to the main pot.
 	 *
 	 * @param 	players
 	 * 			The list of players from who
-	 * 			to collect the betted chips from.
+	 * 			to collect the bet chips from.
 	 */
 	public void collectChipsToPot(List<Player> players){
 		if(isClosed())
 			return;
 		for(Player player:players){
 			try {
-				player.getBettedChips().transferAllChipsTo(pot.getChips());
+				player.getBetChips().transferAllChipsTo(pot.getChips());
 			} catch (IllegalValueException e) {
 				assert false;
 			}

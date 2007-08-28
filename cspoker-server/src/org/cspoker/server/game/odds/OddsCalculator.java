@@ -41,7 +41,7 @@ public class OddsCalculator {
 	 * in the current game and the amount of chips you get if you win the game
 	 */
 	public double getPotOdds(Player player){
-		int amountToBet=((BettingRound)gameControl.getRound()).getBet()-player.getBettedChips().getValue();
+		int amountToBet=((BettingRound)gameControl.getRound()).getBet()-player.getBetChips().getValue();
 		int amountInPot=gameControl.getRound().getCurrentPotValue();
 		return amountToBet/amountInPot;
 	}
