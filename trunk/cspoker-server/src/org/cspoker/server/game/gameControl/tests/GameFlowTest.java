@@ -98,12 +98,6 @@ public class GameFlowTest extends TestCase {
 			gameControl.call(game.getCurrentPlayer());
 			gameControl.call(game.getCurrentPlayer());
 
-			try {
-				gameControl.call(game.getCurrentPlayer());
-				fail("Exception Expected");
-			} catch (IllegalActionException e) {
-			}
-
 			//Big Blind Checks.
 			gameControl.check(game.getCurrentPlayer());
 
@@ -148,6 +142,11 @@ public class GameFlowTest extends TestCase {
 		dealer  = game.getDealer();
 		System.out.println("Dealer: "+game.getDealer().getName());
 
+//		try {
+//			gameControl.deal(dealer);
+//		} catch (IllegalActionException e) {
+//			fail(e.getMessage());
+//		}
 		System.out.println(game.getCurrentDealPlayers());
 		System.out.println("Kenzo's Cards: "+kenzo.getPocketCards());
 		System.out.println("Cedric's Cards: "+cedric.getPocketCards());
@@ -407,6 +406,11 @@ public class GameFlowTest extends TestCase {
 		System.out.println("Next Dealer:"+game.getNextDealer());
 		System.out.println(game.getFirstToActPlayer());
 		System.out.println("Dealer: "+dealer.getName());
+//		try {
+//			gameControl.deal(dealer);
+//		} catch (IllegalActionException e) {
+//			fail(e.getMessage());
+//		}
 		System.out.println(game.getCurrentDealPlayers());
 	}
 
@@ -487,6 +491,11 @@ public class GameFlowTest extends TestCase {
 
 		dealer  = game.getDealer();
 		System.out.println("Dealer: "+dealer.getName());
+//		try {
+//			gameControl.deal(dealer);
+//		} catch (IllegalActionException e) {
+//			fail(e.getMessage());
+//		}
 		System.out.println(game.getCurrentDealPlayers());
 	}
 

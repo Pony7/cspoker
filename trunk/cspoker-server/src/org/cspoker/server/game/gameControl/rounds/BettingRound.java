@@ -412,32 +412,33 @@ public abstract class BettingRound extends Round {
 	private void makeSidePots(){
 		Collections.sort(allInPlayers);
 		List<Player> players = game.getCurrentDealPlayers();
-		for(AllInPlayer allInPlayer:allInPlayers){
-			try {
-				System.out.println(game.getPots());
-				game.getPots().collectAmountFromPlayersToSidePot(allInPlayer.getBetValue(), players);
-				System.out.println(game.getPots());
-				int betValue = allInPlayer.getBetValue();
-				for(AllInPlayer otherAllInPlayer:allInPlayers){
-					if(otherAllInPlayer.getBetValue()>0){
-						otherAllInPlayer.transferAmountTo(betValue,game.getPots().getNewestSidePot());
+			for(AllInPlayer allInPlayer:allInPlayers){
+				try {
+					System.out.println(game.getPots());
+					game.getPots().collectAmountFromPlayersToSidePot(allInPlayer.getBetValue(), players);
+					System.out.println(game.getPots());
+					int betValue = allInPlayer.getBetValue();
+					for(AllInPlayer otherAllInPlayer:allInPlayers){
+						if(otherAllInPlayer.getBetValue()>0){
+							otherAllInPlayer.transferAmountTo(betValue,game.getPots().getNewestSidePot());
+						}
 					}
-				}
-				for(Player foldedPlayer:foldedPlayersWithBet){
-					if(foldedPlayer.getBetChips().getValue()>allInPlayer.getBetValue()){
-						foldedPlayer.getBetChips().transferAmountTo(allInPlayer.getBetValue(), game.getPots().getNewestSidePot().getChips());
-					}else{
-						foldedPlayer.getBetChips().transferAllChipsTo(game.getPots().getNewestSidePot().getChips());
-						foldedPlayersWithBet.remove(foldedPlayer);
+					for(Player foldedPlayer:foldedPlayersWithBet){
+						if(foldedPlayer.getBetChips().getValue()>allInPlayer.getBetValue()){
+							foldedPlayer.getBetChips().transferAmountTo(allInPlayer.getBetValue(), game.getPots().getNewestSidePot().getChips());
+						}else{
+							foldedPlayer.getBetChips().transferAllChipsTo(game.getPots().getNewestSidePot().getChips());
+							foldedPlayersWithBet.remove(foldedPlayer);
+						}
 					}
-				}
 
-			} catch (IllegalValueException e) {
-				assert false;
+				} catch (IllegalValueException e) {
+					assert false;
+				}
+				System.out.println(game.getPots());
+				game.getPots().addShowdownPlayer(allInPlayer.getPlayer());
 			}
-			System.out.println(game.getPots());
-			game.getPots().addShowdownPlayer(allInPlayer.getPlayer());
-		}
+		
 		allInPlayers.clear();
 	}
 
@@ -458,28 +459,21 @@ public abstract class BettingRound extends Round {
 	protected void winner(Pots pots){
 		try {
 			System.out.println("** Only One Player Left **");
-
+			setPotsDividedToWinner(true);
 			Player winner = pots.getPots().get(0).getPlayers().get(0);
+			System.out.println("Winner: "+winner.getName()+" wins "+pots.getTotalValue()+" chips");
+			
+			
 			int gainedChipsValue = pots.getPots().get(0).getChips().getValue();
 			List<SavedWinner> savedWinner = new ArrayList<SavedWinner>(1);
 			savedWinner.add(new SavedWinner(winner.getSavedPlayer(),gainedChipsValue));
 			pots.getPots().get(0).getChips().transferAllChipsTo(winner.getStack());
 
 			gameMediator.publishWinner(new WinnerEvent(savedWinner));
-			System.out.println("Winner: "+winner.getName());
-		} catch (IllegalValueException e) {
+			} catch (IllegalValueException e) {
 			assert false;
 		}
 	}
-
-	public boolean onlyAllInPlayers(){
-		return game.getNbCurrentDealPlayers()==0;
-	}
-
-	public boolean onlyOneActivePlayer(){
-		return game.getNbCurrentDealPlayers()==1;
-	}
-
 	/**
 	 * Returns true if there is only one
 	 * player left, false otherwise.
@@ -493,12 +487,24 @@ public abstract class BettingRound extends Round {
 	public boolean onlyOnePlayerLeft(){
 		return (getGame().getNbCurrentDealPlayers()+allInPlayers.size()+getGame().getPots().getNbShowdownPlayers()<=1);
 	}
-
+	
 	public boolean onlyOnePlayerLeftBesidesAllInPlayers(){
+		//the player must have called
 		return ((getGame().getNbCurrentDealPlayers()==1)&&
-		(allInPlayers.size()+getGame().getPots().getNbShowdownPlayers()>1));
+		(allInPlayers.size()+getGame().getPots().getNbShowdownPlayers()>1)
+		&& (getGame().getCurrentDealPlayers().get(0).getBetChips().getValue()==
+			getBet()));
 	}
-
+	public boolean onlyOneActivePlayer(){
+		return (game.getNbCurrentDealPlayers()==1 && getGame().getCurrentDealPlayers()
+				.get(0).getBetChips().getValue()==getBet())
+		||(game.getNbCurrentDealPlayers()==0 && 
+				allInPlayers.size()+getGame().getPots().getNbShowdownPlayers()==1);
+	}
+	public boolean onlyAllInPlayers(){
+		return game.getNbCurrentDealPlayers()==0 &&
+		(allInPlayers.size()+getGame().getPots().getNbShowdownPlayers()>1);
+	}
 	/**********************************************************
 	 * Round Logic
 	 **********************************************************/
@@ -515,7 +521,8 @@ public abstract class BettingRound extends Round {
 	 */
 	@Override
 	public boolean isRoundEnded(){
-		return super.isRoundEnded() || (getGame().getNbCurrentDealPlayers()==0) || onlyOnePlayerLeft();
+		return super.isRoundEnded() || onlyAllInPlayers()||onlyOnePlayerLeftBesidesAllInPlayers()
+		|| onlyOneActivePlayer();
 	}
 
 	@Override

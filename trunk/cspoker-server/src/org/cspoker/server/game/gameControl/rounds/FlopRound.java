@@ -39,7 +39,7 @@ public class FlopRound extends BettingRound{
 
 	@Override
 	public Round getNextRound() {
-		if(onlyOnePlayerLeft())
+		if(potsDividedToWinner())
 			return getNewDealRound();
 		return new TurnRound(gameMediator, getGame());
 	}
