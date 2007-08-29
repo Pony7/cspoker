@@ -33,8 +33,10 @@ import org.cspoker.server.game.events.GameEventListener;
 public class GameEventsCollector implements GameEventListener{
 
 	private int ackedToNumber=0;
-	
+
 	private int latestEventNumber=0;
+
+	private final int latestAckedToNumber = 0;
 
 	/**
 	 * This variable contains the game events.

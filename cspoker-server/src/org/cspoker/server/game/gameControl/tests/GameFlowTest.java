@@ -44,7 +44,7 @@ public class GameFlowTest extends TestCase {
 	private GameControl gameControl;
 
 	private GameMediator gameMediator;
-	
+
 	private PlayerFactory playerFactory;
 
 	@Override
@@ -56,7 +56,7 @@ public class GameFlowTest extends TestCase {
 		System.out.println("**********************************************************");
 		try {
 			kenzo = playerFactory.createNewPlayer("Kenzo",100);
-			cedric = playerFactory.createNewPlayer("Cedric", 100); 
+			cedric = playerFactory.createNewPlayer("Cedric", 100);
 			guy = playerFactory.createNewPlayer("Guy", 100);
 
 			gameMediator = new GameMediator();
@@ -97,6 +97,10 @@ public class GameFlowTest extends TestCase {
 		try {
 			gameControl.call(game.getCurrentPlayer());
 			gameControl.call(game.getCurrentPlayer());
+
+			//Big Blind Checks.
+			gameControl.check(game.getCurrentPlayer());
+
 		} catch (IllegalActionException e) {
 			fail(e.getMessage());
 		}
@@ -152,6 +156,7 @@ public class GameFlowTest extends TestCase {
 		try {
 			gameControl.call(game.getCurrentPlayer());
 			gameControl.call(game.getCurrentPlayer());
+			gameControl.check(game.getCurrentPlayer());
 		} catch (IllegalActionException e) {
 			fail(e.getMessage());
 		}
@@ -255,10 +260,77 @@ public class GameFlowTest extends TestCase {
 		}
 	}
 
+	public void testBigBlindRaisesCase(){
+		System.out.println("Game Properties:");
+		System.out.println("Small Blind: "+table.getGameProperty().getSmallBlind());
+		System.out.println("Big Blind: "+table.getGameProperty().getBigBlind());
+		System.out.println("Betting Rules: "+gameControl.getGame().getGameProperty().getBettingRules().toString());
+		Game game = gameControl.getGame();
+
+		Player dealer  = game.getDealer();
+		System.out.println("Dealer: "+game.getDealer().getName());
+
+		try {
+			gameControl.deal(dealer);
+		} catch (IllegalActionException e) {
+			fail(e.getMessage());
+		}
+		System.out.println(game.getCurrentDealPlayers());
+		System.out.println("Kenzo's Cards: "+kenzo.getPocketCards());
+		System.out.println("Cedric's Cards: "+cedric.getPocketCards());
+		System.out.println("Guy's Cards: "+guy.getPocketCards());
+
+
+		try {
+			gameControl.call(game.getCurrentPlayer());
+			gameControl.call(game.getCurrentPlayer());
+
+			//Big Blind Raises.
+			gameControl.raise(game.getCurrentPlayer(),20);
+
+			gameControl.call(game.getCurrentPlayer());
+			gameControl.call(game.getCurrentPlayer());
+
+		} catch (IllegalActionException e) {
+			fail(e.getMessage());
+		}
+		System.out.println(game.getCurrentDealPlayers());
+		System.out.println("Common Cards: "+game.getCommunityCards());
+
+		//Flop Round
+		try {
+			gameControl.check(game.getCurrentPlayer());
+			gameControl.check(game.getCurrentPlayer());
+			gameControl.check(game.getCurrentPlayer());
+		} catch (IllegalActionException e) {
+			fail(e.getMessage());
+		}
+		System.out.println("Common Cards: "+game.getCommunityCards());
+
+		//Turn Round
+		try {
+			gameControl.check(game.getCurrentPlayer());
+			gameControl.check(game.getCurrentPlayer());
+			gameControl.check(game.getCurrentPlayer());
+		} catch (IllegalActionException e) {
+			fail(e.getMessage());
+		}
+		System.out.println("Common Cards: "+game.getCommunityCards());
+
+		//Final Round
+		try {
+			gameControl.check(game.getCurrentPlayer());
+			gameControl.check(game.getCurrentPlayer());
+			gameControl.check(game.getCurrentPlayer());
+		} catch (IllegalActionException e) {
+			fail(e.getMessage());
+		}
+	}
+
 	public void testAllInSmallBlindCase(){
 		try {
 			kenzo = playerFactory.createNewPlayer("Kenzo",100);
-			cedric = playerFactory.createNewPlayer("Cedric", 4); 
+			cedric = playerFactory.createNewPlayer("Cedric", 4);
 			guy = playerFactory.createNewPlayer("Guy", 100);
 
 			table = new Table(new TableId(0), new GameProperty());
@@ -295,6 +367,7 @@ public class GameFlowTest extends TestCase {
 
 		try {
 			gameControl.call(game.getCurrentPlayer());
+			gameControl.check(game.getCurrentPlayer());
 		} catch (IllegalActionException e) {
 			fail(e.getMessage());
 		}
@@ -344,7 +417,7 @@ public class GameFlowTest extends TestCase {
 	public void testAllInBigBlindCase(){
 		try {
 			kenzo = playerFactory.createNewPlayer("Kenzo",100);
-			cedric = playerFactory.createNewPlayer("Cedric", 100); 
+			cedric = playerFactory.createNewPlayer("Cedric", 100);
 			guy = playerFactory.createNewPlayer("Guy", 9);
 
 			table = new Table(new TableId(0), new GameProperty());
@@ -429,7 +502,7 @@ public class GameFlowTest extends TestCase {
 	public void testBothBlindsAllInCase(){
 		try {
 			kenzo = playerFactory.createNewPlayer("Kenzo",100);
-			cedric = playerFactory.createNewPlayer("Cedric", 4); 
+			cedric = playerFactory.createNewPlayer("Cedric", 4);
 			guy = playerFactory.createNewPlayer("Guy", 9);
 
 			table = new Table(new TableId(0), new GameProperty());
@@ -464,7 +537,7 @@ public class GameFlowTest extends TestCase {
 		System.out.println("Kenzo's Cards: "+kenzo.getPocketCards());
 		System.out.println("Cedric's Cards: "+cedric.getPocketCards());
 		System.out.println("Guy's Cards: "+guy.getPocketCards());
-		
+
 		try {
 			gameControl.call(game.getCurrentPlayer());
 		} catch (IllegalActionException e) {
@@ -473,9 +546,9 @@ public class GameFlowTest extends TestCase {
 	}
 
 	public void test2AllInOneActivePlayerCase(){
-		try {	
+		try {
 			kenzo = playerFactory.createNewPlayer("Kenzo",100);
-			cedric = playerFactory.createNewPlayer("Cedric", 100); 
+			cedric = playerFactory.createNewPlayer("Cedric", 100);
 			guy = playerFactory.createNewPlayer("Guy", 200);
 
 			table = new Table(new TableId(0), new GameProperty());
@@ -523,7 +596,7 @@ public class GameFlowTest extends TestCase {
 	public void testAllAllInCase(){
 		try {
 			kenzo = playerFactory.createNewPlayer("Kenzo",200);
-			cedric = playerFactory.createNewPlayer("Cedric", 100); 
+			cedric = playerFactory.createNewPlayer("Cedric", 100);
 			guy = playerFactory.createNewPlayer("Guy", 150);
 
 			table = new Table(new TableId(0), new GameProperty());
@@ -560,6 +633,7 @@ public class GameFlowTest extends TestCase {
 		try {
 			gameControl.call(game.getCurrentPlayer());
 			gameControl.call(game.getCurrentPlayer());
+			gameControl.check(game.getCurrentPlayer());
 		} catch (IllegalActionException e) {
 			fail(e.getMessage());
 		}
@@ -644,9 +718,9 @@ public class GameFlowTest extends TestCase {
 	}
 
 	public void testOnlyOneAllInPlayer2(){
-		try {	
+		try {
 			kenzo = playerFactory.createNewPlayer("Kenzo",100);
-			cedric = playerFactory.createNewPlayer("Cedric", 200); 
+			cedric = playerFactory.createNewPlayer("Cedric", 200);
 			guy = playerFactory.createNewPlayer("Guy", 200);
 
 			table = new Table(new TableId(0), new GameProperty());
@@ -693,11 +767,11 @@ public class GameFlowTest extends TestCase {
 			fail(e.getMessage());
 		}
 	}
-	
+
 	public void test2PlayersOneFold(){
 		try {
-			kenzo = playerFactory.createNewPlayer("Kenzo",100);
-			cedric = playerFactory.createNewPlayer("Cedric", 100); 
+			kenzo = playerFactory.createNewPlayer("Kenzo",500);
+			cedric = playerFactory.createNewPlayer("Cedric", 500);
 
 			table = new Table(new TableId(0), new GameProperty());
 			table.addPlayer(kenzo);
@@ -726,9 +800,22 @@ public class GameFlowTest extends TestCase {
 		} catch (IllegalActionException e) {
 			fail(e.getMessage());
 		}
-		
+
 		try {
+			gameControl.raise(cedric,20);
+			gameControl.call(kenzo);
+
+			gameControl.bet(cedric,20);
+			gameControl.call(kenzo);
+
+			gameControl.bet(cedric,20);
+			gameControl.call(kenzo);
+
+			gameControl.bet(cedric,20);
+			gameControl.raise(kenzo,50);
 			gameControl.fold(cedric);
+
+
 		} catch (IllegalActionException e) {
 			fail(e.getMessage());
 		}
