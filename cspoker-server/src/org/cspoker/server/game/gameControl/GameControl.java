@@ -272,6 +272,8 @@ public class GameControl implements PlayerAction{
 		round.endRound();
 		round = round.getNextRound();
 		if(round instanceof BettingRound && ((BettingRound) round).onlyOnePlayerLeftBesidesAllInPlayers())
-			checkIfEndedAndChangeRound();
+			changeToNextRound();
+		if(round instanceof BettingRound && ((BettingRound) round).onlyAllInPlayers())
+			changeToNextRound();
 	}
 }

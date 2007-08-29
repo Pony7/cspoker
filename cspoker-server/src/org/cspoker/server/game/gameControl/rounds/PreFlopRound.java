@@ -104,8 +104,9 @@ public class PreFlopRound extends BettingRound{
 
 	@Override
 	public boolean isRoundEnded(){
-		return (super.isRoundEnded() && (someoneHasRaised() || bigBlindAllIn() || someoneBigAllIn()))
-				|| bigBlindChecked();
+		return (super.isRoundEnded() && (someoneHasRaised() || bigBlindAllIn() 
+				|| someoneBigAllIn() || onlyOneActivePlayer())
+				|| bigBlindChecked());
 	}
 
 	private boolean bigBlindAllIn(){
@@ -120,7 +121,7 @@ public class PreFlopRound extends BettingRound{
 
 	@Override
 	public Round getNextRound() {
-		if(onlyOnePlayerLeft())
+		if(potsDividedToWinner())
 			return getNewDealRound();
 		return new FlopRound(gameMediator, getGame());
 	}

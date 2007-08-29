@@ -243,7 +243,6 @@ public abstract class Round implements PlayerAction{
 	public boolean isRoundEnded(){
 		return lastEventPlayer.equals(game.getCurrentPlayer());
 	}
-
 	/**
 	 * End the current round.
 	 *
@@ -313,5 +312,13 @@ public abstract class Round implements PlayerAction{
 			game.dealNewHand();
 			return new PreFlopRound(gameMediator, game);
 		}
+	}
+	
+	private boolean potsDividedToWinner;
+	public boolean potsDividedToWinner(){
+		return potsDividedToWinner;
+	}
+	protected void setPotsDividedToWinner(boolean flag){
+		this.potsDividedToWinner=flag;
 	}
 }

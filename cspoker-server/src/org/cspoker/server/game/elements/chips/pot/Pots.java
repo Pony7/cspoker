@@ -67,7 +67,6 @@ public class Pots {
 		if((amount>0) || (pot.getChips().getValue()>0)){
 			Pot sidePot = new Pot();
 			pot.transferAllChipsTo(sidePot);
-			System.out.println(players);
 			for(Player player:players){
 				try {
 					player.getBetChips().transferAmountTo(amount, sidePot.getChips());
@@ -75,7 +74,6 @@ public class Pots {
 					System.out.println(e.getStackTrace());
 				}
 			}
-			System.out.println(sidePot.toString());
 			pots.add(sidePot);
 		}
 	}
