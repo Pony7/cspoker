@@ -49,7 +49,7 @@ public class FinalRound extends BettingRound{
 
 	@Override
 	public Round getNextRound() {
-		return new WaitingRound(gameMediator, getGame());
+		return getNewDealRound();
 	}
 	@Override
 	public boolean isLowBettingRound() {
