@@ -16,12 +16,17 @@
 
 package org.cspoker.server.game.gameControl.rounds;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.cspoker.server.game.GameMediator;
+import org.cspoker.server.game.events.NewDealEvent;
 import org.cspoker.server.game.gameControl.Game;
 import org.cspoker.server.game.gameControl.IllegalActionException;
 import org.cspoker.server.game.gameControl.PlayerAction;
 import org.cspoker.server.game.gameControl.rules.BettingRules;
 import org.cspoker.server.game.player.Player;
+import org.cspoker.server.game.player.SavedPlayer;
 
 
 /**
@@ -58,7 +63,7 @@ public abstract class Round implements PlayerAction{
 	 * this round takes place.
 	 */
 	protected final Game game;
-	
+
 	/**
 	 * The variable containing the game mediator.
 	 */
@@ -287,5 +292,26 @@ public abstract class Round implements PlayerAction{
 
 	public int getCurrentPotValue(){
 		return 0;
+	}
+
+	protected void newDealRound(){
+		removeBrokePlayers();
+		game.setToInitialHandPlayers();
+		List<SavedPlayer> players = new ArrayList<SavedPlayer>(game.getNbCurrentDealPlayers());
+		for(Player player:game.getCurrentDealPlayers()){
+			players.add(player.getSavedPlayer());
+		}
+		gameMediator.publishNewDealEvent(new NewDealEvent(players, game.getDealer().getSavedPlayer()));
+		game.setCurrentPlayer(game.getDealer());
+	}
+
+	protected Round getNewDealRound(){
+		if(game.getNbCurrentDealPlayers()<=1)
+			return new WaitingRound(gameMediator, game);
+		else{
+			newDealRound();
+			game.dealNewHand();
+			return new PreFlopRound(gameMediator, game);
+		}
 	}
 }

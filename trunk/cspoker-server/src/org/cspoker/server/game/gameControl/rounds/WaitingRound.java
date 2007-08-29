@@ -16,29 +16,17 @@
 
 package org.cspoker.server.game.gameControl.rounds;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.cspoker.server.game.GameMediator;
-import org.cspoker.server.game.events.NewDealEvent;
 import org.cspoker.server.game.gameControl.Game;
 import org.cspoker.server.game.gameControl.IllegalActionException;
 import org.cspoker.server.game.gameControl.PlayerAction;
 import org.cspoker.server.game.player.Player;
-import org.cspoker.server.game.player.SavedPlayer;
 
 public class WaitingRound extends Round {
 
 	public WaitingRound(GameMediator gameMediator, Game game) {
 		super(gameMediator, game);
-		removeBrokePlayers();
-		game.setToInitialHandPlayers();
-		List<SavedPlayer> players = new ArrayList<SavedPlayer>(game.getNbCurrentDealPlayers());
-		for(Player player:game.getCurrentDealPlayers()){
-			players.add(player.getSavedPlayer());
-		}
-		gameMediator.publishNewDealEvent(new NewDealEvent(players, game.getDealer().getSavedPlayer()));
-		getGame().setCurrentPlayer(getGame().getDealer());
+		newDealRound();
 	}
 
 	/**
@@ -59,7 +47,7 @@ public class WaitingRound extends Round {
 		//Check whether the given player can do this action.
 		if(!onTurn(player))
 			throw new IllegalActionException(player.getName()+" can not deal in this round.");
-		
+
 		if(!(game.getTable().getNbPlayers()>1))
 			throw new IllegalActionException("There should at least be 2 players to begin a new deal.");
 
