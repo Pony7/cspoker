@@ -112,6 +112,9 @@ public abstract class BettingRound extends Round {
 		if(!onTurn(player) || !someoneHasBet())
 			throw new IllegalActionException(player.getName()+" can not call in this round.");
 
+		if(getBet()==player.getBetChips().getValue())
+			throw new IllegalActionException(player.getName()+" can not call in this round.");
+
 		//Check whether the amount with which the bet chips pile
 		//is increased exceeds the player's stack.
 		if(amountToIncreaseBetPileWith(player)>=player.getStack().getValue())

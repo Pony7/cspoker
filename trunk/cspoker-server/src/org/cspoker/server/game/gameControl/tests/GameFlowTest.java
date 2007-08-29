@@ -98,6 +98,12 @@ public class GameFlowTest extends TestCase {
 			gameControl.call(game.getCurrentPlayer());
 			gameControl.call(game.getCurrentPlayer());
 
+			try {
+				gameControl.call(game.getCurrentPlayer());
+				fail("Exception Expected");
+			} catch (IllegalActionException e) {
+			}
+
 			//Big Blind Checks.
 			gameControl.check(game.getCurrentPlayer());
 
