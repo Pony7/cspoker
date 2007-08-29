@@ -60,6 +60,8 @@ public abstract class BettingRound extends Round {
 	 */
 	protected final List<Player> foldedPlayersWithBet;
 
+	protected boolean someoneBigAllIn = false;
+
 
 	public BettingRound(GameMediator gameMediator, Game game){
 		super(gameMediator, game);
@@ -70,8 +72,10 @@ public abstract class BettingRound extends Round {
 
 	@Override
 	public void check(Player player) throws IllegalActionException{
-		if(!onTurn(player) || someoneHasBet())
-			throw new IllegalActionException(player.getName()+" can not check in this round.");
+		if(!onTurn(player))
+			throw new IllegalActionException(player.getName()+" can not check in this round. It should be your turn.");
+		if(someoneHasBet())
+			throw new IllegalActionException(player.getName()+" can not check in this round. Someone has already bet.");
 		game.nextPlayer();
 	}
 
@@ -209,10 +213,15 @@ public abstract class BettingRound extends Round {
 		if(player.getBetChips().getValue()>getBet()){
 			setBet(player.getBetChips().getValue());
 			playerMadeEvent(player);
+			someoneBigAllIn = true;
 		}
 		gameMediator.publishAllInEvent(new AllInEvent(player.getSavedPlayer()));
 		gameMediator.publishPotChangedEvent(new PotChangedEvent(getCurrentPotValue()));
 		System.out.println(player.getName()+" goes all in with "+player.getBetChips().getValue()+" chips.");
+	}
+
+	protected boolean someoneBigAllIn(){
+		return someoneBigAllIn;
 	}
 
 	/**********************************************************
@@ -265,6 +274,10 @@ public abstract class BettingRound extends Round {
 	 */
 	public boolean someoneHasBet(){
 		return bet>0;
+	}
+
+	public boolean someoneHasRaised(){
+		return game.getGameProperty().getBettingRules().getNBRaises()>0;
 	}
 
 	/**
@@ -456,6 +469,14 @@ public abstract class BettingRound extends Round {
 		}
 	}
 
+	public boolean onlyAllInPlayers(){
+		return game.getNbCurrentDealPlayers()==0;
+	}
+
+	public boolean onlyOneActivePlayer(){
+		return game.getNbCurrentDealPlayers()==1;
+	}
+
 	/**
 	 * Returns true if there is only one
 	 * player left, false otherwise.
@@ -469,9 +490,9 @@ public abstract class BettingRound extends Round {
 	public boolean onlyOnePlayerLeft(){
 		return (getGame().getNbCurrentDealPlayers()+allInPlayers.size()+getGame().getPots().getNbShowdownPlayers()<=1);
 	}
-	
+
 	public boolean onlyOnePlayerLeftBesidesAllInPlayers(){
-		return ((getGame().getNbCurrentDealPlayers()==1)&& 
+		return ((getGame().getNbCurrentDealPlayers()==1)&&
 		(allInPlayers.size()+getGame().getPots().getNbShowdownPlayers()>1));
 	}
 
@@ -511,7 +532,7 @@ public abstract class BettingRound extends Round {
 		}
 		return game.getPots().getTotalValue()+currentPlayerBets+foldedPlayerBets+allInPlayerBets;
 	}
-	
+
 	@Override
 	public void endRound(){
 		collectChips();

@@ -25,6 +25,7 @@ import org.cspoker.server.game.events.playerActionEvents.BigBlindEvent;
 import org.cspoker.server.game.events.playerActionEvents.SmallBlindEvent;
 import org.cspoker.server.game.events.privateEvents.NewPocketCardsEvent;
 import org.cspoker.server.game.gameControl.Game;
+import org.cspoker.server.game.gameControl.IllegalActionException;
 import org.cspoker.server.game.player.Player;
 
 
@@ -35,6 +36,13 @@ import org.cspoker.server.game.player.Player;
  *
  */
 public class PreFlopRound extends BettingRound{
+
+	private boolean bigBlindChecked = false;
+
+	private Player bigBlindPlayer;
+
+	private boolean bigBlindAllIn = false;
+
 
 	public PreFlopRound(GameMediator gameMediator, Game game) {
 		super(gameMediator, game);
@@ -59,19 +67,21 @@ public class PreFlopRound extends BettingRound{
 			getGame().nextPlayer();
 		} catch (IllegalValueException e) {
 			goAllIn(getGame().getCurrentPlayer());
+			someoneBigAllIn = false;
 		}
 
 		if(getGame().getNbCurrentDealPlayers()!=1){
 			try {
-				Player player = getGame().getCurrentPlayer();
-				collectBigBlind(player);
-				gameMediator.publishBigBlindEvent(new BigBlindEvent(player.getSavedPlayer(), getGame().getGameProperty().getBigBlind()));
+				bigBlindPlayer = getGame().getCurrentPlayer();
+				collectBigBlind(bigBlindPlayer);
+				gameMediator.publishBigBlindEvent(new BigBlindEvent(bigBlindPlayer.getSavedPlayer(), getGame().getGameProperty().getBigBlind()));
 				gameMediator.publishPotChangedEvent(new PotChangedEvent(getCurrentPotValue()));
 				System.out.println(getGame().getCurrentPlayer().getName()+" has placed big blind of "
 						+getGame().getGameProperty().getBigBlind());
 				getGame().nextPlayer();
 			} catch (IllegalValueException e) {
 				goAllIn(getGame().getCurrentPlayer());
+				bigBlindAllIn = true;
 			}
 		}
 
@@ -79,6 +89,34 @@ public class PreFlopRound extends BettingRound{
 			gameMediator.publishNextPlayerEvent(new NextPlayerEvent(game.getCurrentPlayer().getSavedPlayer()));
 		}
 	}
+
+	@Override
+	public void check(Player player) throws IllegalActionException{
+		if(!onTurn(player))
+			throw new IllegalActionException(player.getName()+" can not check in this round.");
+		if(!bigBlindPlayer.equals(player) && someoneHasBet())
+			throw new IllegalActionException(player.getName()+" can not check in this round. Someone has already bet.");
+		else{
+			bigBlindChecked = true;
+		}
+		game.nextPlayer();
+	}
+
+	@Override
+	public boolean isRoundEnded(){
+		return (super.isRoundEnded() && (someoneHasRaised() || bigBlindAllIn() || someoneBigAllIn()))
+				|| bigBlindChecked();
+	}
+
+	private boolean bigBlindAllIn(){
+		return bigBlindAllIn;
+	}
+
+	private boolean bigBlindChecked(){
+		return bigBlindChecked;
+	}
+
+
 
 	@Override
 	public Round getNextRound() {
