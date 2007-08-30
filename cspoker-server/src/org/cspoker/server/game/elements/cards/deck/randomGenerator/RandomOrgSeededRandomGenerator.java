@@ -21,84 +21,69 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.security.SecureRandom;
 import java.util.Random;
+
+import org.apache.log4j.Logger;
 
 /**
  * A random.org seeded random generator.
  * 
- * After a threshold number of times a random is returned,
- * a new random is used in stead, with a seed from random.org
- * 
  * @author Kenzo
  *
  */
-public class RandomOrgSeededRandomGenerator extends RandomGenerator{
-	
-	private final static int THRESHOLD = 20; 
-	
-	/**
-	 * An internal counter.
-	 */
-	private volatile int counter;
-	
+public class RandomOrgSeededRandomGenerator implements RandomSource {
+	private static RandomOrgSeededRandomGenerator instance = new RandomOrgSeededRandomGenerator();
+	private static Logger logger = Logger.getLogger(RandomOrgSeededRandomGenerator.class);
+
+	private Random random;
+
 	/**
 	 * Construct a new random.org seeded random generator.
-	 *
+	 * 
 	 */
-	public RandomOrgSeededRandomGenerator(){
-		super();
-		counter = 0;
-	}	
-	
+	private RandomOrgSeededRandomGenerator() {
+
+		try {
+			final URL url = new URL("http://www.random.org/strings/?num=10&len=10&digits=on&unique=on&format=plain&rnd=new");
+			final BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
+
+			final StringBuilder stringBuilder = new StringBuilder();
+			
+			String line;
+			while ((line = in.readLine()) != null) {
+				stringBuilder.append(line);
+			}
+
+			in.close();
+
+			final byte[] seed = stringBuilder.toString().getBytes();
+
+			this.random = new SecureRandom(seed);
+			return;
+		} catch (final MalformedURLException e) {
+			e.printStackTrace();
+			RandomOrgSeededRandomGenerator.logger.error(e.getMessage(), e);
+		} catch (final IOException e) {
+			e.printStackTrace();
+			RandomOrgSeededRandomGenerator.logger.error(e.getMessage(), e);
+		}
+
+		this.random = new SecureRandom();
+	}
+
+	public static RandomOrgSeededRandomGenerator getInstance() {
+		return RandomOrgSeededRandomGenerator.instance;
+	}
+
 	/**
 	 * Returns a random-object.
-	 * 
-	 * This implementation uses a seed obtained from random.org
-	 * 
-	 * After several random-objects have been requested,
-	 * a fresh seed from random.org is used.
-	 * 
+	 *
+	 * The default implementation uses the current time as seed.
+	 *
 	 * @return A random-object.
 	 */
-	@Override
 	public Random getRandom() {
-		if(counter>THRESHOLD){
-			setNewRandom();
-			counter = 0;
-		}
-		counter++;
-		return random;
-	}
-	
-	/**
-	 * Returns a random long, obtained from random.org
-	 * 
-	 * The long is constructed as the multiplication of
-	 * 2 integers, returned by the random.org
-	 * 
-	 * No overflow occurs, but not the whole range of long is covered.
-	 * The result is between -10^18 and 10^18.
-	 */
-	@Override
-	protected long getRandomSeed(){
-		try {
-	        URL url = new URL("http://www.random.org/integers/?num=2&min=-1000000000&max=1000000000&col=1&base=10&format=plain&rnd=new");
-	    
-	        BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
-	        String str;
-	        
-	        int[] randomValues = new int[2];
-	        
-	        for (int i = 0; i < 2; i++) {
-	        	str = in.readLine();
-				randomValues[i] = Integer.parseInt(str);
-			}
-	        in.close();
-	        return ((long)randomValues[0]) * randomValues[1];
-	    } catch (MalformedURLException e) {
-	    } catch (IOException e) {
-	    }
-	    System.out.println("Exception occured, default seed is used.");
-	    return super.getRandomSeed();
+		return this.random;
 	}
 }
