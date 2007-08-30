@@ -33,8 +33,8 @@ import org.apache.log4j.Logger;
  *
  */
 public class RandomOrgSeededRandomGenerator implements RandomSource {
-	private static RandomOrgSeededRandomGenerator instance = new RandomOrgSeededRandomGenerator();
 	private static Logger logger = Logger.getLogger(RandomOrgSeededRandomGenerator.class);
+	private static RandomOrgSeededRandomGenerator instance = new RandomOrgSeededRandomGenerator();
 
 	private Random random;
 
