@@ -15,6 +15,8 @@
  */
 package org.cspoker.server.game.elements.cards.hand;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -341,5 +343,13 @@ public String toString(){
 			cards[finalCardIndex]=null;
 		}
 	   };
+   }
+   
+   public List<Card> getAsList() {
+	   List<Card> list = new ArrayList<Card>(Arrays.asList(this.cards));
+	   while (list.get(list.size()-1) == null) {
+		   list.remove(list.size()-1);
+	   }
+	   return list;
    }
 }

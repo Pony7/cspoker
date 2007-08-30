@@ -15,6 +15,10 @@
  */
 package org.cspoker.server.game.elements.cards.hand;
 
+import java.util.List;
+
+import org.cspoker.common.game.elements.cards.Card;
+
 /**
  * A class for evaluating and comparing hands
  * @author Cedric
@@ -104,6 +108,25 @@ public class HandEvaluator {
 
 		   return compareFiveCardHands(best1,best2);
 	   }
+	   
+	   public static int compareHands2(Hand h1, Hand h2) {
+		   List<Card> hand1 = h1.getAsList();
+		   List<Card> hand2 = h2.getAsList();
+		   
+		   if (hand1.size()!=5) {
+			   hand1 = NewHandEvaluator.getBestFive(hand1);
+		   }
+		   
+		   if (hand2.size()!=5) {
+			   hand2 = NewHandEvaluator.getBestFive(hand2);
+		   }
+		   
+		   Integer rank1 = Integer.valueOf(NewHandEvaluator.getRank(hand1));
+		   Integer rank2 = Integer.valueOf(NewHandEvaluator.getRank(hand2));
+		   return rank2.compareTo(rank1);
+	   }
+	   
+	   
 	   /**
 	    * Compares two hands of maximally 5 cards against each other.
 	    * @param h1
