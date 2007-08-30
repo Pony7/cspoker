@@ -16,13 +16,8 @@
 
 package org.cspoker.server.game.elements.cards.deck.randomGenerator;
 
+import java.security.SecureRandom;
 import java.util.Random;
-
-import org.cspoker.common.game.elements.cards.Card;
-import org.cspoker.common.game.elements.cards.CardImpl;
-import org.cspoker.common.game.elements.cards.cardElements.Rank;
-import org.cspoker.common.game.elements.cards.cardElements.Suit;
-import org.cspoker.server.game.elements.cards.hand.Hand;
 
 /**
  * A class of random generators.
@@ -30,48 +25,20 @@ import org.cspoker.server.game.elements.cards.hand.Hand;
  * @author Kenzo & Cedric
  *
  */
-public class RandomGenerator {
-
-
-	protected volatile Random random;
+public class RandomGenerator implements RandomSource {
+	private static RandomSource instance = new RandomGenerator();
+	private final Random random;
 
 	/**
 	 * Construct a new default random generator.
 	 *
 	 */
-	public RandomGenerator(){
-		setNewRandom();
+	private RandomGenerator() {
+		this.random = new SecureRandom();
 	}
 
-	/**
-	 * Returns a random card.
-	 *
-	 * @return A random card.
-	 */
-	public static Card getRandomCard() {
-		Random generator = new Random();
-
-		int suitIndex=generator.nextInt(4);
-		int rankIndex=generator.nextInt(13);
-
-		return new CardImpl(Suit.values()[suitIndex], Rank.values()[rankIndex]);
-	}
-
-	/**
-	 * Returns a random hand.
-	 *
-	 * @param 	nBCards
-	 * 			The number of cards in the hand.
-	 * @return 	A random hand.
-	 */
-	public static Hand getRandomHand(int nBCards) {
-		Hand result=new Hand();
-		while(result.getNBCards()<nBCards){
-			Card randomCard=getRandomCard();
-			if(!result.contains(randomCard))
-				result.addCard(randomCard);
-		}
-		return result;
+	public static RandomSource getInstance() {
+		return RandomGenerator.instance;
 	}
 
 	/**
@@ -82,21 +49,6 @@ public class RandomGenerator {
 	 * @return A random-object.
 	 */
 	public Random getRandom() {
-		return random;
-	}
-
-	protected void setNewRandom(){
-		random = new Random(getRandomSeed());
-	}
-
-	/**
-	 * The seed used for the random.
-	 *
-	 * The default implementation uses the current time as seed.
-	 *
-	 * @return
-	 */
-	protected long getRandomSeed(){
-		return System.currentTimeMillis();
+		return this.random;
 	}
 }

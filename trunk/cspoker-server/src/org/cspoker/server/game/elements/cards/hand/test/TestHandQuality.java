@@ -20,7 +20,7 @@ import junit.framework.TestCase;
 import org.cspoker.common.game.elements.cards.CardImpl;
 import org.cspoker.common.game.elements.cards.cardElements.Rank;
 import org.cspoker.common.game.elements.cards.cardElements.Suit;
-import org.cspoker.server.game.elements.cards.deck.randomGenerator.RandomOrgSeededRandomGenerator;
+import org.cspoker.server.game.elements.cards.deck.randomGenerator.RandomUtils;
 import org.cspoker.server.game.elements.cards.hand.Hand;
 import org.cspoker.server.game.elements.cards.hand.HandEvaluator;
 import org.cspoker.server.game.elements.cards.hand.HandType;
@@ -36,7 +36,7 @@ public class TestHandQuality extends TestCase {
 	protected Hand hand2=new Hand();
 	public void testRandomCard(){
 		for(int j=0;j<1000;j++){
-			System.out.println("random card "+RandomOrgSeededRandomGenerator.getRandomCard().toString()+"\n");
+			System.out.println("random card "+RandomUtils.getRandomCard().toString()+"\n");
 		}
 	}
 	public void testHighCardHand(){
@@ -186,8 +186,8 @@ public class TestHandQuality extends TestCase {
 		double[] numbers=new double[9];
 		double totalTests=1000000.0;
 		for(int j=0;j<totalTests;j++){
-			hand1=RandomOrgSeededRandomGenerator.getRandomHand(5);
-			hand2=RandomOrgSeededRandomGenerator.getRandomHand(5);
+			hand1=RandomUtils.getRandomHand(5);
+			hand2=RandomUtils.getRandomHand(5);
 			compare=HandEvaluator.compareHands(hand1,hand2);
 			qualityGreater=(compare==1);
 			qualitySmaller=(compare==-1);
