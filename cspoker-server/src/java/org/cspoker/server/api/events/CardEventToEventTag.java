@@ -28,6 +28,7 @@ import org.xml.sax.helpers.AttributesImpl;
 
 public class CardEventToEventTag extends EventToEventTag{
 
+    @Override
     protected void addChildren(TransformerHandler response, GameEvent event) throws SAXException{
 	super.addChildren(response, event);
 

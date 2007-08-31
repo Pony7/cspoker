@@ -18,46 +18,58 @@ package org.cspoker.server.api.httphandler.abstracts;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
+import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.sax.SAXTransformerFactory;
 import javax.xml.transform.sax.TransformerHandler;
 import javax.xml.transform.stream.StreamResult;
 
-import org.xml.sax.SAXException;
+import org.cspoker.server.api.httphandler.exception.HttpSaxException;
+import org.xml.sax.ContentHandler;
+import org.xml.sax.InputSource;
+import org.xml.sax.XMLReader;
+import org.xml.sax.helpers.XMLReaderFactory;
 
 import com.sun.net.httpserver.HttpExchange;
-
 /**
- * A HttpHandler for requests that do not have an input stream from the request.
+ * A HttpHandler for requests that have an input stream from the request.
  */
-public abstract class NoRequestStreamHandler extends HttpHandlerImpl {
+public abstract class RequestStreamHandler extends HttpHandlerImpl {
 
-    public void handle(HttpExchange http) throws IOException{
+    public void handle(HttpExchange http) throws IOException {
 	http.getResponseHeaders().add("Cache-Control", "no-cache");
 	ByteArrayOutputStream responseBody = new ByteArrayOutputStream();
-	TransformerHandler response=null;
-	StreamResult requestResult = new StreamResult(responseBody);
-
-	SAXTransformerFactory tf = (SAXTransformerFactory) SAXTransformerFactory
-	.newInstance();
 	try {
+	    TransformerHandler response=null;
+	    StreamResult requestResult = new StreamResult(responseBody);
+
+	    SAXTransformerFactory tf = (SAXTransformerFactory) TransformerFactory
+	    .newInstance();
 	    response = tf.newTransformerHandler();
 	    response.setResult(requestResult);
 	    response.startDocument();
-	    respond(response, http);
+
+	    XMLReader xr = XMLReaderFactory.createXMLReader();
+	    xr.setContentHandler(getRequestHandler(http, response));
+	    xr.parse(new InputSource(http.getRequestBody()));
+
 	    response.endDocument();
+	} catch (IOException e){
+	    //if the connection is lost then throw the exception as expected.
+	    //this will probably never be able to happen here but you never know
+	    throw e;
 	} catch (Exception e) {
-	    //send the exception over
+	    //otherwise send the exception over
 	    throwException(http, e);
 	    return;
-	} 
-
+	}
+	//send the default status code (no exception occured)
 	http.sendResponseHeaders(getDefaultStatusCode(), responseBody.size());
 	responseBody.writeTo(http.getResponseBody());
 	http.getResponseBody().close();
-	http.close(); 
+	http.close();
+
     }
 
-    protected abstract void respond(TransformerHandler response, HttpExchange http)
-    throws SAXException;
+    protected abstract ContentHandler getRequestHandler(HttpExchange http, TransformerHandler response) throws HttpSaxException;
 
 }

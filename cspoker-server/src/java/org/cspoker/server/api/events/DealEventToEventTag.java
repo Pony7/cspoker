@@ -18,20 +18,17 @@ package org.cspoker.server.api.events;
 import javax.xml.transform.sax.TransformerHandler;
 
 import org.cspoker.server.game.events.GameEvent;
-import org.cspoker.server.game.events.PotChangedEvent;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
-public class PotChangedEventToEventTag extends EventToEventTag{
+public class DealEventToEventTag extends EventToEventTag{
 
+    @Override
     protected void addChildren(TransformerHandler response, GameEvent event) throws SAXException{
 	super.addChildren(response, event);
 	AttributesImpl attrs = new AttributesImpl();
-	PotChangedEvent potevent = (PotChangedEvent)event;
-	response.startElement("", "pot", "pot", attrs);
-	String value = String.valueOf(potevent.getAmount());
-	response.characters(value.toCharArray(), 0, value.length());
-	response.endElement("", "pot", "pot");
+	response.startElement("", "deal", "deal", attrs);
+	response.endElement("", "deal", "deal");
 
     }
 }

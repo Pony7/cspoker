@@ -48,12 +48,15 @@ import org.cspoker.server.game.odds.NBOutsCalculator;
 public enum HandType {
 
 	UNKNOWN{
+		@Override
 		public String toString(){
 			return "unknown";
 		}
+		@Override
 		public int getRanking(){
 			return -1;
 		}
+		@Override
 		public CompareHands getEqualRankHandsComparator(){
 			return new CompareHands(){
 				@Override
@@ -63,6 +66,7 @@ public enum HandType {
 				
 			};
 		}
+		@Override
 		public HandQualityCalculator getHandQualityCalculator(){
 			return new HandQualityCalculator(){
 				@Override
@@ -73,127 +77,163 @@ public enum HandType {
 		}
 	},
 	HIGH_CARD{
+		@Override
 		public String toString(){
 			return "high card";
 		}
+		@Override
 		public int getRanking(){
 			return 0;
 		}
+		@Override
 		public CompareHands getEqualRankHandsComparator(){
 			return new CompareHighCardHands();
 		}
+		@Override
 		public HandQualityCalculator getHandQualityCalculator(){
 			return new HighCardQualityCalculator();
 		}
 	},
 	PAIR{
+		@Override
 		public String toString(){
 			return "pair";
 		}
+		@Override
 		public int getRanking(){
 			return 1;
 		}
+		@Override
 		public CompareHands getEqualRankHandsComparator(){
 			return new ComparePairHands();
 		}
+		@Override
 		public HandQualityCalculator getHandQualityCalculator(){
 			return new PairQualityCalculator();
 		}
 	},
 	DOUBLE_PAIR{
+		@Override
 		public String toString(){
 			return "double pair";
 		}
+		@Override
 		public int getRanking(){
 			return 2;
 		}
+		@Override
 		public CompareHands getEqualRankHandsComparator(){
 			return new CompareDoublePairHands();
 		}
+		@Override
 		public HandQualityCalculator getHandQualityCalculator(){
 			return new DoublePairQualityCalculator();
 		}
 	},
 	THREE_OF_A_KIND{
+		@Override
 		public String toString(){
 			return "three of a kind";
 		}
+		@Override
 		public int getRanking(){
 			return 3;
 		}
+		@Override
 		public CompareHands getEqualRankHandsComparator(){
 			return new CompareThreeOfAKindHands();
 		}
+		@Override
 		public HandQualityCalculator getHandQualityCalculator(){
 			return new ThreeOfAKindQualtiyCalculator();
 		}
 	},
 	STRAIGHT{
+		@Override
 		public String toString(){
 			return "straight";
 		}
+		@Override
 		public int getRanking(){
 			return 4;
 		}
+		@Override
 		public CompareHands getEqualRankHandsComparator(){
 			return new CompareStraightHands();
 		}
+		@Override
 		public HandQualityCalculator getHandQualityCalculator(){
 			return new StraightQualityCalculator();
 		}
 	},
 	FLUSH{
+		@Override
 		public String toString(){
 			return "flush";
 		}
+		@Override
 		public int getRanking(){
 			return 5;
 		}
+		@Override
 		public CompareHands getEqualRankHandsComparator(){
 			return new CompareFlushHands();
 		}
+		@Override
 		public HandQualityCalculator getHandQualityCalculator(){
 			return new FlushQualityCalculator();
 		}
 	},
 	FULL_HOUSE{
+		@Override
 		public String toString(){
 			return "full house";
 		}
+		@Override
 		public int getRanking(){
 			return 6;
 		}
+		@Override
 		public CompareHands getEqualRankHandsComparator(){
 			return new CompareFullHouseHands();
 		}
+		@Override
 		public HandQualityCalculator getHandQualityCalculator(){
 			return new FullHouseQualityCalculator();
 		}
 	},
 	FOUR_OF_A_KIND{
+		@Override
 		public String toString(){
 			return "four of a kind";
 		}
+		@Override
 		public int getRanking(){
 			return 7;
 		}
+		@Override
 		public CompareHands getEqualRankHandsComparator(){
 			return new CompareFourOfAKindHands();
 		}
+		@Override
 		public HandQualityCalculator getHandQualityCalculator(){
 			return new FourOfAKindQualityCalculator();
 		}
 	},
 	STRAIGHT_FLUSH{
+		@Override
 		public String toString(){
 			return "flush";
 		}
+		@Override
 		public int getRanking(){
 			return 8;
 		}
+		@Override
 		public CompareHands getEqualRankHandsComparator(){
 			return new CompareStraightFlushHands();
 		}
+		@Override
 		public HandQualityCalculator getHandQualityCalculator(){
 			return new StraightFlushQualityCalculator();
 		}
@@ -201,6 +241,7 @@ public enum HandType {
 	/**
 	 * Returns the textual representation of this type
 	 */
+	@Override
 	public abstract String toString();
 	/**
 	 * Returns the raking of this type
