@@ -35,6 +35,7 @@ public abstract class NoOutputRequest extends HttpRequest {
 	return false;
     }
 
+    @Override
     protected String getRequestMethod() {
 	return "GET";
     }

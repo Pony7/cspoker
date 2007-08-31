@@ -24,13 +24,12 @@ import org.cspoker.common.game.elements.cards.Card;
 
 public class Cards {
 
-    private final List<Card> privateCards;
+    private List<Card> privateCards;
 
-    private final List<Card> riverCards;
+    private List<Card> riverCards;
     
     public Cards() {
-	privateCards = new ArrayList<Card>(2);
-	riverCards = new ArrayList<Card>(5);
+	resetCards();
     }
 
     public synchronized List<Card> getPrivateCards() {
@@ -42,8 +41,8 @@ public class Cards {
     }
     
     public synchronized void resetCards(){
-	privateCards.removeAll(privateCards);
-	riverCards.removeAll(riverCards);
+	privateCards = new ArrayList<Card>(2);
+	riverCards = new ArrayList<Card>(5);
     }
     
     public synchronized void setPrivateCards(List<Card> cards){
