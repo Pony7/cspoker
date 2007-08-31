@@ -47,8 +47,10 @@ public class Server {
 
     public static void main(String[] args) throws NumberFormatException, IOException {
 
-	if (args.length != 1) {
-	    System.out.println("usage: java -jar cspoker-server.jar [portnumber]");
+	if (args.length < 1) {
+	    System.out.println("usage: java -jar cspoker-server.jar [portnumber] [optional arguments]");
+	    System.out.println("  optional arguments:");
+	    System.out.println("  -authentication=[xml file]"  );
 	    System.exit(0);
 	}
 
@@ -56,11 +58,17 @@ public class Server {
 	try {
 	    port=Integer.parseInt(args[0]);
 	} catch (NumberFormatException e) {
-	    System.out.println("usage: java -jar cspoker-server.jar [portnumber]");
+	    System.out.println("usage: java -jar cspoker-server.jar [portnumber] [optional arguments]");
+	    System.out.println("  optional arguments:");
+	    System.out.println("  -authentication=[xml file]"  );
 	    System.exit(0);
 	}
 
-	Server server = new Server(port);
+	String authenticationFile = null;
+	if(args.length>=2 && args[1].startsWith("-authentication="))
+	    authenticationFile = args[1].replace("-authentication=", "");
+	
+	Server server = new Server(port, authenticationFile);
 	server.start();
     }
     
@@ -76,12 +84,13 @@ public class Server {
      * 
      * @param port
      *        The port to listen at.
+     * @param authenticationFile 
      * @throws IOException
      */
-    public Server(int port) throws IOException {
+    public Server(int port, String authenticationFile) throws IOException {
 	server = HttpServer.create(new InetSocketAddress(port), 0);
 
-	authenticator = new HardCodedBasicAuthentication();
+	authenticator = new HardCodedBasicAuthentication(authenticationFile);
 	
 	loadContext();
 	
@@ -134,7 +143,7 @@ public class Server {
 	HttpContext allInContext = server.createContext("/game/allin/", new AllInHandler());
 	allInContext.setAuthenticator(authenticator);
 	
-	HttpContext crossDomainContext = server.createContext("/", new CrossDomain());
+	server.createContext("/", new CrossDomain());
 	
     }
 
