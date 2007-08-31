@@ -18,7 +18,7 @@ public class EventsContentHandler extends DefaultHandler {
 
     private List<String> events;
     
-    private String lastID = "0";
+    private volatile String lastID = "0";
     
     private StringBuilder sb=new StringBuilder();
 
@@ -100,8 +100,9 @@ public class EventsContentHandler extends DefaultHandler {
             pot.setAmount(Integer.parseInt(sb.toString()));
             showLastMsg = false;
         }else if (name.equalsIgnoreCase("event")){
-            if(showLastMsg)
+            if(showLastMsg){
         	events.add(lastMsg);
+            }
         }
         sb.setLength(0);
     }

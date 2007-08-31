@@ -1,6 +1,7 @@
 package org.cspoker.client;
 
 import java.net.MalformedURLException;
+import java.util.List;
 
 import org.cspoker.client.request.GameEventsAckRequest;
 import org.cspoker.client.request.contenthandler.EventsContentHandler;
@@ -11,29 +12,27 @@ public class EventsThread implements Runnable {
 
     private final EventsContentHandler handler;
     private final GameEventsAckRequest request;
-    private final Console console;
 
     private boolean running;
     private volatile int waitSlots;
     private final int waitUnit;
 
-    public EventsThread(String address, Cards cards, Pot pot, Console console) throws MalformedURLException {
+    public EventsThread(String address, Cards cards, Pot pot) throws MalformedURLException {
 	handler = new EventsContentHandler(cards, pot);
 	request = new GameEventsAckRequest(address, handler);
-	this.console = console;
 	running = true;
 	waitSlots=1;
-	waitUnit = 150;
+	waitUnit = 200;
     }
 
     public void run() {
 	while (running) {
 	    try {
-		String response = request.execute("");
-		if(response != null){
-		    String[] responses = response.split(request.n);
+		request.execute("");
+		List<String> events = handler.getEvents();
+		if(events.size()>0){
 		    System.out.println("");
-		    for(String line:responses){
+		    for(String line:events){
 			System.out.println(line);
 		    }
 		    System.out.print(">");
@@ -41,7 +40,9 @@ public class EventsThread implements Runnable {
 		}else{
 		    doubleWait();
 		}
-	    } catch (Exception e1) {
+	    } catch (Exception e) {
+		if(!e.getMessage().equals("Requesting the latest game events is not a valid action. You have not yet started the game."))
+		    System.out.println("Error: "+e.getMessage());
 		doubleWait();
 	    }
 
@@ -67,7 +68,7 @@ public class EventsThread implements Runnable {
     }
 
     public synchronized void doubleWait () {
-	if(waitSlots<30)
+	if(waitSlots<20)
 	    waitSlots*=2;
     }
 

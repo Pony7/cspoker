@@ -20,6 +20,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.sax.SAXTransformerFactory;
 import javax.xml.transform.sax.TransformerHandler;
 import javax.xml.transform.stream.StreamResult;
@@ -71,7 +72,7 @@ public abstract class HttpRequest implements CommandExecutor{
 	if (isDoOutput()) {
 	    StreamResult requestResult = new StreamResult(connection
 		    .getOutputStream());
-	    SAXTransformerFactory tf = (SAXTransformerFactory) SAXTransformerFactory
+	    SAXTransformerFactory tf = (SAXTransformerFactory) TransformerFactory
 		    .newInstance();
 	    TransformerHandler request = tf.newTransformerHandler();
 	    request.setResult(requestResult);

@@ -16,7 +16,6 @@
 package org.cspoker.client.request;
 
 import java.net.MalformedURLException;
-import java.util.List;
 
 import javax.xml.transform.sax.TransformerHandler;
 
@@ -50,14 +49,7 @@ public class GameEventsAckRequest extends OutputRequest{
     
     @Override
     protected String getResult() {
-	List<String> events = contentHandler.getEvents();
-	if(events.size()==0)
-	    return null;
-	String r="";
-	for(String event:events){
-	    r+=event+n;
-	}
-	return r;
+	return "";
     }
     
     public String getLastId(){

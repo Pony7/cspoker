@@ -28,6 +28,7 @@ public abstract class OutputRequest extends HttpRequest {
 	return true;
     }
 
+    @Override
     protected String getRequestMethod() {
 	return "POST";
     }

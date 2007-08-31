@@ -52,6 +52,7 @@ public class Client {
     
     public Client(String serverIP, int port, final String user, final String pass, Console console) throws IOException {
 	Authenticator.setDefault(new Authenticator() {
+	    @Override
 	    protected PasswordAuthentication getPasswordAuthentication() {
 	        return new PasswordAuthentication (user, pass.toCharArray());
 	    }
@@ -84,7 +85,7 @@ public class Client {
 	PotCommand potCommand = new PotCommand(pot);
 	commands.put("POT", potCommand);
 	
-	eventsThread = new EventsThread(address, cards, pot, console);
+	eventsThread = new EventsThread(address, cards, pot);
 	(new Thread(eventsThread)).start();
 	
 	HelpCommand help = new HelpCommand();
