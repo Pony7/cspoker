@@ -33,6 +33,8 @@ public class PlayerCommunicationFactory {
     private final static PlayerFactory factory=new PlayerFactory();
     
     public static synchronized PlayerCommunicationImpl getRegisteredPlayerCommunication(String name){
+	if(name==null || name.equals(""))
+	    throw new IllegalArgumentException("illegal name");
 	PlayerCommunicationImpl result=playerComs.get(name);
 	if(result==null){
 	    result=new PlayerCommunicationImpl(factory.createNewPlayer(name));

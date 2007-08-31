@@ -35,6 +35,7 @@ import com.sun.net.httpserver.HttpExchange;
 public abstract class RequestStreamHandler extends HttpHandlerImpl {
 
     public void handle(HttpExchange http) throws IOException {
+	http.getResponseHeaders().add("Cache-Control", "no-cache");
 	ByteArrayOutputStream responseBody = new ByteArrayOutputStream();
 	try {
 	    TransformerHandler response=null;

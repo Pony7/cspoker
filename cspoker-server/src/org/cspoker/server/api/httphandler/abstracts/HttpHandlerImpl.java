@@ -59,7 +59,6 @@ public abstract class HttpHandlerImpl implements HttpHandler {
      */
     protected void throwException(HttpExchange http, Throwable e, int status) throws IOException{
 	try {
-	    
 	    if (e instanceof HttpException) {
 		//e has http status information
 		status=((HttpSaxException)e).getStatus();

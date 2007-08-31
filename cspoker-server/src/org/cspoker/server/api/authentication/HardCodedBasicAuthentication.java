@@ -31,8 +31,8 @@ import com.sun.net.httpserver.BasicAuthenticator;
 public class HardCodedBasicAuthentication extends BasicAuthenticator {
 
     private HashMap<String, String> passwords;
-    
-    
+
+
     public HardCodedBasicAuthentication() {
 	super("cspoker");
 	XMLReader xr;
@@ -44,9 +44,9 @@ public class HardCodedBasicAuthentication extends BasicAuthenticator {
 	DefaultHandler handler=getHandler();
 	xr.setContentHandler(handler);
 	xr.setErrorHandler(handler);
-	
+
 	InputStream is = getClass().getClassLoader().getResourceAsStream("org/cspoker/server/api/authentication/authentication.xml");
-	
+
 	try {
 	    xr.parse(new InputSource(is));
 	} catch (IOException e) {
@@ -55,43 +55,43 @@ public class HardCodedBasicAuthentication extends BasicAuthenticator {
 	    throw new IllegalStateException("Error parsing XML.");
 	}
     }
-    
+
     private DefaultHandler getHandler() {
 	return new DefaultHandler(){
-	  
+
 	    private StringBuilder sb=new StringBuilder();
-	    
+
 	    @Override
 	    public void startDocument() throws SAXException {
-	        passwords=new HashMap<String, String>();
+		passwords=new HashMap<String, String>();
 	    }
-	    
+
 	    @Override
 	    public void characters(char[] ch, int start, int length)
-	            throws SAXException {
-	        sb.append(ch, start, length);
+	    throws SAXException {
+		sb.append(ch, start, length);
 	    }
-	    
+
 	    @Override
 	    public void startElement(String uri, String localName, String name,
-	            Attributes attributes) throws SAXException {
-	        sb.setLength(0);
+		    Attributes attributes) throws SAXException {
+		sb.setLength(0);
 	    }
-	    
+
 	    private String lastname;
-	    
+
 	    @Override
 	    public void endElement(String uri, String localName, String name)
-	            throws SAXException {
-	        if(name.equalsIgnoreCase("name")){
-	            lastname=sb.toString();
-	        }else if(name.equalsIgnoreCase("password")){
-	            passwords.put(lastname, sb.toString());
-	            System.out.println("Added credentials for "+lastname);
-	        }
-	        sb.setLength(0);
+	    throws SAXException {
+		if(name.equalsIgnoreCase("name")){
+		    lastname=sb.toString();
+		}else if(name.equalsIgnoreCase("password")){
+		    passwords.put(lastname, sb.toString());
+		    System.out.println("Added credentials for "+lastname);
+		}
+		sb.setLength(0);
 	    }
-	    
+
 	};
     }
 
