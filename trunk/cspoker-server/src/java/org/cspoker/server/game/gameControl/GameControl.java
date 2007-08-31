@@ -29,7 +29,6 @@ import org.cspoker.server.game.events.playerActionEvents.DealEvent;
 import org.cspoker.server.game.events.playerActionEvents.FoldEvent;
 import org.cspoker.server.game.events.playerActionEvents.RaiseEvent;
 import org.cspoker.server.game.gameControl.rounds.BettingRound;
-import org.cspoker.server.game.gameControl.rounds.FinalRound;
 import org.cspoker.server.game.gameControl.rounds.Round;
 import org.cspoker.server.game.gameControl.rounds.WaitingRound;
 import org.cspoker.server.game.player.Player;

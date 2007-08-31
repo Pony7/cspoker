@@ -21,6 +21,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.List;
 
+import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.sax.SAXTransformerFactory;
 import javax.xml.transform.sax.TransformerHandler;
 import javax.xml.transform.stream.StreamResult;
@@ -75,7 +76,7 @@ public abstract class HttpHandlerImpl implements HttpHandler {
 	    TransformerHandler response=null;
 	    StreamResult requestResult= new StreamResult(responseBody);
 
-	    SAXTransformerFactory tf = (SAXTransformerFactory) SAXTransformerFactory
+	    SAXTransformerFactory tf = (SAXTransformerFactory) TransformerFactory
 	    .newInstance();
 	    response = tf.newTransformerHandler();
 	    response.setResult(requestResult);

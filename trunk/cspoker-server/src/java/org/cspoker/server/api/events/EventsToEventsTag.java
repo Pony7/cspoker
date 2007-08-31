@@ -21,7 +21,6 @@ import org.cspoker.server.game.events.GameEvent;
 import org.cspoker.server.game.events.NewCommunityCardsEvent;
 import org.cspoker.server.game.events.NewDealEvent;
 import org.cspoker.server.game.events.PotChangedEvent;
-import org.cspoker.server.game.events.playerActionEvents.DealEvent;
 import org.cspoker.server.game.events.privateEvents.NewPocketCardsEvent;
 import org.cspoker.server.game.playerCommunication.GameEvents;
 import org.xml.sax.SAXException;
