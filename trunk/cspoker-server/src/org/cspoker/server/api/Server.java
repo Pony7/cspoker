@@ -24,6 +24,7 @@ import org.cspoker.server.api.httphandler.BetHandler;
 import org.cspoker.server.api.httphandler.CallHandler;
 import org.cspoker.server.api.httphandler.CheckHandler;
 import org.cspoker.server.api.httphandler.CreateTableHandler;
+import org.cspoker.server.api.httphandler.CrossDomain;
 import org.cspoker.server.api.httphandler.DealHandler;
 import org.cspoker.server.api.httphandler.FoldHandler;
 import org.cspoker.server.api.httphandler.GameEventsAckHandler;
@@ -132,6 +133,9 @@ public class Server {
 	
 	HttpContext allInContext = server.createContext("/game/allin/", new AllInHandler());
 	allInContext.setAuthenticator(authenticator);
+	
+	HttpContext crossDomainContext = server.createContext("/", new CrossDomain());
+	
     }
 
     /**
