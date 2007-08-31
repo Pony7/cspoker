@@ -19,6 +19,7 @@ import javax.xml.transform.sax.TransformerHandler;
 
 import org.cspoker.server.game.events.GameEvent;
 import org.cspoker.server.game.events.NewCommunityCardsEvent;
+import org.cspoker.server.game.events.NewDealEvent;
 import org.cspoker.server.game.events.PotChangedEvent;
 import org.cspoker.server.game.events.playerActionEvents.DealEvent;
 import org.cspoker.server.game.events.privateEvents.NewPocketCardsEvent;
@@ -53,7 +54,7 @@ public class EventsToEventsTag {
     public EventToEventTag getEventToEventsTag(GameEvent event){
 	if(event instanceof NewCommunityCardsEvent || event instanceof NewPocketCardsEvent)
 	    return cardEvent;
-	if(event instanceof DealEvent)
+	if(event instanceof NewDealEvent)
 	    return dealEvent;
 	if(event instanceof PotChangedEvent)
 	    return potChangedEvent;

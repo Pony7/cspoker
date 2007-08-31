@@ -15,6 +15,8 @@
  */
 package org.cspoker.server.api.authentication;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
@@ -33,7 +35,7 @@ public class HardCodedBasicAuthentication extends BasicAuthenticator {
     private HashMap<String, String> passwords;
 
 
-    public HardCodedBasicAuthentication() {
+    public HardCodedBasicAuthentication(String file) {
 	super("cspoker");
 	XMLReader xr;
 	try {
@@ -45,14 +47,24 @@ public class HardCodedBasicAuthentication extends BasicAuthenticator {
 	xr.setContentHandler(handler);
 	xr.setErrorHandler(handler);
 
-	InputStream is = getClass().getClassLoader().getResourceAsStream("org/cspoker/server/api/authentication/authentication.xml");
-
+	
+	InputSource source;
 	try {
-	    xr.parse(new InputSource(is));
+	    if(file==null)
+		throw new FileNotFoundException("no authentication file passes as argument");
+	    FileInputStream fstream = new FileInputStream(file);
+	    source = new InputSource(fstream);
+	} catch (FileNotFoundException e1) {
+	    InputStream is = getClass().getClassLoader().getResourceAsStream("org/cspoker/server/api/authentication/authentication.xml");
+	    source = new InputSource(is);
+	}
+	
+	try {
+	    xr.parse(source);
 	} catch (IOException e) {
-	    throw new IllegalStateException("Error reading authentication file.");
+	    throw new IllegalStateException("Error reading authentication file: "+e.getMessage());
 	} catch (SAXException e) {
-	    throw new IllegalStateException("Error parsing XML.");
+	    throw new IllegalStateException("Error parsing XML: "+e.getMessage());
 	}
     }
 
