@@ -15,7 +15,7 @@
  */
 
 
-package org.cspoker.server.game.gameControl.tests;
+package org.cspoker.server.game.gameControl;
 
 import org.cspoker.server.game.GameMediator;
 import org.cspoker.server.game.TableId;

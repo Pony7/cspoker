@@ -1,4 +1,4 @@
-package org.cspoker.server.game.elements.cards.hand.test;
+package org.cspoker.server.game.elements.cards.hand;
 
 import java.util.Iterator;
 
