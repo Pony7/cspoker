@@ -17,19 +17,15 @@
 
 package org.cspoker.server.game.gameControl;
 
+import junit.framework.TestCase;
+
 import org.cspoker.server.game.GameMediator;
 import org.cspoker.server.game.TableId;
 import org.cspoker.server.game.elements.chips.IllegalValueException;
 import org.cspoker.server.game.elements.table.PlayerListFullException;
 import org.cspoker.server.game.elements.table.Table;
-import org.cspoker.server.game.gameControl.Game;
-import org.cspoker.server.game.gameControl.GameControl;
-import org.cspoker.server.game.gameControl.GameProperty;
-import org.cspoker.server.game.gameControl.IllegalActionException;
 import org.cspoker.server.game.player.Player;
 import org.cspoker.server.game.player.PlayerFactory;
-
-import junit.framework.TestCase;
 
 public class GameFlowTest extends TestCase {
 
@@ -802,6 +798,7 @@ public class GameFlowTest extends TestCase {
 		}
 
 		try {
+			gameControl.call(kenzo);
 			gameControl.raise(cedric,20);
 			gameControl.call(kenzo);
 
