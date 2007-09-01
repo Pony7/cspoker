@@ -17,7 +17,7 @@
 package org.cspoker.server.game.gameControl.rounds;
 
 import org.cspoker.server.game.GameMediator;
-import org.cspoker.server.game.events.NewRoundEvent;
+import org.cspoker.server.game.events.gameEvents.NewRoundEvent;
 import org.cspoker.server.game.gameControl.Game;
 import org.cspoker.server.game.gameControl.Showdown;
 import org.cspoker.server.game.player.Player;

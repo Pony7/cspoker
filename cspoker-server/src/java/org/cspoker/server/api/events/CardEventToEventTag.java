@@ -20,9 +20,9 @@ import java.util.List;
 import javax.xml.transform.sax.TransformerHandler;
 
 import org.cspoker.common.game.elements.cards.Card;
-import org.cspoker.server.game.events.GameEvent;
-import org.cspoker.server.game.events.NewCommunityCardsEvent;
-import org.cspoker.server.game.events.privateEvents.NewPocketCardsEvent;
+import org.cspoker.server.game.events.gameEvents.GameEvent;
+import org.cspoker.server.game.events.gameEvents.NewCommunityCardsEvent;
+import org.cspoker.server.game.events.gameEvents.privateEvents.NewPocketCardsEvent;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 

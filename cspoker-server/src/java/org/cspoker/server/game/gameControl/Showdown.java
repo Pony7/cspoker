@@ -31,8 +31,8 @@ import org.cspoker.server.game.elements.chips.IllegalValueException;
 import org.cspoker.server.game.elements.chips.pot.Pot;
 import org.cspoker.server.game.elements.player.ShowdownPlayer;
 import org.cspoker.server.game.elements.player.Winner;
-import org.cspoker.server.game.events.ShowHandEvent;
-import org.cspoker.server.game.events.WinnerEvent;
+import org.cspoker.server.game.events.gameEvents.ShowHandEvent;
+import org.cspoker.server.game.events.gameEvents.WinnerEvent;
 import org.cspoker.server.game.player.Player;
 import org.cspoker.server.game.player.SavedWinner;
 

@@ -17,8 +17,8 @@ package org.cspoker.server.api.events;
 
 import javax.xml.transform.sax.TransformerHandler;
 
-import org.cspoker.server.game.events.GameEvent;
-import org.cspoker.server.game.events.PotChangedEvent;
+import org.cspoker.server.game.events.gameEvents.GameEvent;
+import org.cspoker.server.game.events.gameEvents.PotChangedEvent;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
