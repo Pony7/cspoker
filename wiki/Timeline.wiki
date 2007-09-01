@@ -3,3 +3,4 @@
 
 = Timeline: =
   * August 31: The first Alpha release deadline
+  * September ?: The first Beta release deadline
