@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.cspoker.server.game.GameMediator;
-import org.cspoker.server.game.events.NewDealEvent;
+import org.cspoker.server.game.events.gameEvents.NewDealEvent;
 import org.cspoker.server.game.gameControl.Game;
 import org.cspoker.server.game.gameControl.IllegalActionException;
 import org.cspoker.server.game.gameControl.PlayerAction;

@@ -21,11 +21,11 @@ import junit.framework.TestCase;
 
 import org.cspoker.server.game.GameManager;
 import org.cspoker.server.game.TableId;
-import org.cspoker.server.game.events.GameEvent;
-import org.cspoker.server.game.events.NewRoundEvent;
-import org.cspoker.server.game.events.NewRoundListener;
-import org.cspoker.server.game.events.NextPlayerEvent;
-import org.cspoker.server.game.events.NextPlayerListener;
+import org.cspoker.server.game.events.gameEvents.GameEvent;
+import org.cspoker.server.game.events.gameEvents.NewRoundEvent;
+import org.cspoker.server.game.events.gameEvents.NewRoundListener;
+import org.cspoker.server.game.events.gameEvents.NextPlayerEvent;
+import org.cspoker.server.game.events.gameEvents.NextPlayerListener;
 import org.cspoker.server.game.gameControl.IllegalActionException;
 import org.cspoker.server.game.player.Player;
 import org.cspoker.server.game.player.PlayerFactory;

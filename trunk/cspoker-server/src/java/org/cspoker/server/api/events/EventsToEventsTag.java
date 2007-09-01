@@ -17,11 +17,11 @@ package org.cspoker.server.api.events;
 
 import javax.xml.transform.sax.TransformerHandler;
 
-import org.cspoker.server.game.events.GameEvent;
-import org.cspoker.server.game.events.NewCommunityCardsEvent;
-import org.cspoker.server.game.events.NewDealEvent;
-import org.cspoker.server.game.events.PotChangedEvent;
-import org.cspoker.server.game.events.privateEvents.NewPocketCardsEvent;
+import org.cspoker.server.game.events.gameEvents.GameEvent;
+import org.cspoker.server.game.events.gameEvents.NewCommunityCardsEvent;
+import org.cspoker.server.game.events.gameEvents.NewDealEvent;
+import org.cspoker.server.game.events.gameEvents.PotChangedEvent;
+import org.cspoker.server.game.events.gameEvents.privateEvents.NewPocketCardsEvent;
 import org.cspoker.server.game.playerCommunication.GameEvents;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;

@@ -20,8 +20,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.cspoker.server.game.events.GameEvent;
-import org.cspoker.server.game.events.GameEventListener;
+import org.cspoker.server.game.events.gameEvents.GameEvent;
+import org.cspoker.server.game.events.gameEvents.GameEventListener;
 
 /**
  * A class to collect and to manage

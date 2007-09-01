@@ -13,38 +13,41 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.server.game.playerCommunication;
 
-import java.util.Iterator;
+package org.cspoker.server.game.events.gameEvents;
+
+import java.util.Collections;
 import java.util.List;
 
-import org.cspoker.server.game.events.gameEvents.GameEvent;
+import org.cspoker.common.game.elements.cards.Card;
 
-public class GameEvents implements Iterable<GameEvent>{
-	
-	private final List<GameEvent> events;
-	
-	private final int latestEventNumber; 
-	
-	public GameEvents(List<GameEvent> events, int latestEventNumber){
-		this.events = events;
-		this.latestEventNumber = latestEventNumber;
+/**
+ * A class to represent new community cards events.
+ *
+ * @author Kenzo
+ *
+ */
+public class NewCommunityCardsEvent extends GameEvent {
+
+	private final List<Card> communityCards;
+
+	public NewCommunityCardsEvent(List<Card> commonCards){
+		communityCards = Collections.unmodifiableList(commonCards);
 	}
-	
-	public List<GameEvent> getGameEvents(){
-		return events;
+
+	public List<Card> getCommonCards(){
+		return communityCards;
 	}
-	
-	public int getLastEventNumber(){
-		return latestEventNumber;
-	}
-	
+
+
 	@Override
 	public String toString(){
-		return "events until "+latestEventNumber+". "+events.toString();
-	}
-	public Iterator<GameEvent> iterator() {
-	    return events.iterator();
+		String toReturn = "New Community Cards: ";
+		for(Card card:communityCards){
+			toReturn+=card;
+			toReturn+=", ";
+		}
+		return toReturn.substring(0, toReturn.length()-2)+".";
 	}
 
 }
