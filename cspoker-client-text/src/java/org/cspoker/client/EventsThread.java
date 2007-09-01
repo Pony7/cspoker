@@ -41,8 +41,6 @@ public class EventsThread implements Runnable {
 		    doubleWait();
 		}
 	    } catch (Exception e) {
-		if(!e.getMessage().equals("Requesting the latest game events is not a valid action. You have not yet started the game."))
-		    System.out.println("Error: "+e.getMessage());
 		doubleWait();
 	    }
 
