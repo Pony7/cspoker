@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.cspoker.common.game.elements.cards.Card;
 import org.cspoker.server.game.GameMediator;
 import org.cspoker.server.game.elements.chips.IllegalValueException;
@@ -42,6 +43,7 @@ import org.cspoker.server.game.player.SavedWinner;
  *
  */
 public abstract class BettingRound extends Round {
+	private static Logger logger = Logger.getLogger(BettingRound.class);
 
 	/**
 	 * The current bet in this round.
@@ -220,7 +222,7 @@ public abstract class BettingRound extends Round {
 		}
 		gameMediator.publishAllInEvent(new AllInEvent(player.getSavedPlayer()));
 		gameMediator.publishPotChangedEvent(new PotChangedEvent(getCurrentPotValue()));
-		System.out.println(player.getName()+" goes all in with "+player.getBetChips().getValue()+" chips.");
+		BettingRound.logger.info(player.getName() + " goes all in with " + player.getBetChips().getValue() + " chips.");
 	}
 
 	protected boolean someoneBigAllIn(){
@@ -414,9 +416,9 @@ public abstract class BettingRound extends Round {
 		List<Player> players = game.getCurrentDealPlayers();
 			for(AllInPlayer allInPlayer:allInPlayers){
 				try {
-					System.out.println(game.getPots());
+					BettingRound.logger.info(game.getPots());
 					game.getPots().collectAmountFromPlayersToSidePot(allInPlayer.getBetValue(), players);
-					System.out.println(game.getPots());
+					BettingRound.logger.info(game.getPots());
 					int betValue = allInPlayer.getBetValue();
 					for(AllInPlayer otherAllInPlayer:allInPlayers){
 						if(otherAllInPlayer.getBetValue()>0){
@@ -433,9 +435,10 @@ public abstract class BettingRound extends Round {
 					}
 
 				} catch (IllegalValueException e) {
+					BettingRound.logger.error(e.getLocalizedMessage(), e);
 					assert false;
 				}
-				System.out.println(game.getPots());
+				BettingRound.logger.info(game.getPots());
 				game.getPots().addShowdownPlayer(allInPlayer.getPlayer());
 			}
 		
@@ -458,10 +461,10 @@ public abstract class BettingRound extends Round {
 
 	protected void winner(Pots pots){
 		try {
-			System.out.println("** Only One Player Left **");
+			BettingRound.logger.info("** Only One Player Left **");
 			setPotsDividedToWinner(true);
 			Player winner = pots.getPots().get(0).getPlayers().get(0);
-			System.out.println("Winner: "+winner.getName()+" wins "+pots.getTotalValue()+" chips");
+			BettingRound.logger.info("Winner: " + winner.getName() + " wins " + pots.getTotalValue() + " chips");
 			
 			
 			int gainedChipsValue = pots.getPots().get(0).getChips().getValue();

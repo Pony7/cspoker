@@ -17,6 +17,7 @@ package org.cspoker.server.game.elements.cards.hand;
 
 import junit.framework.TestCase;
 
+import org.apache.log4j.Logger;
 import org.cspoker.common.game.elements.cards.CardImpl;
 import org.cspoker.common.game.elements.cards.cardElements.Rank;
 import org.cspoker.common.game.elements.cards.cardElements.Suit;
@@ -31,12 +32,13 @@ import org.cspoker.server.game.elements.cards.hand.HandTypeCalculator;
  *
  */
 public class TestHandQuality extends TestCase {
+	private static Logger logger = Logger.getLogger(TestHandQuality.class);
 
 	protected Hand hand1=new Hand();
 	protected Hand hand2=new Hand();
 	public void testRandomCard(){
 		for(int j=0;j<1000;j++){
-			System.out.println("random card "+RandomUtils.getRandomCard().toString()+"\n");
+			TestHandQuality.logger.info("random card " + RandomUtils.getRandomCard().toString());
 		}
 	}
 	public void testHighCardHand(){
@@ -46,7 +48,7 @@ public class TestHandQuality extends TestCase {
 		hand1.addCard(new CardImpl(Suit.SPADES,Rank.THREE));
 		hand1.addCard(new CardImpl(Suit.SPADES,Rank.EIGHT));
 		assertTrue(HandTypeCalculator.calculateHandType(hand1).equals(HandType.HIGH_CARD));
-		System.out.println(HandEvaluator.getHandQuality(hand1));
+		TestHandQuality.logger.info(Double.valueOf(HandEvaluator.getHandQuality(hand1)));
 		
 		hand2.addCard(new CardImpl(Suit.SPADES,Rank.NINE));
 		hand2.addCard(new CardImpl(Suit.DIAMONDS,Rank.KING));
@@ -54,7 +56,7 @@ public class TestHandQuality extends TestCase {
 		hand2.addCard(new CardImpl(Suit.SPADES,Rank.FOUR));
 		hand2.addCard(new CardImpl(Suit.SPADES,Rank.EIGHT));
 		assertTrue(HandTypeCalculator.calculateHandType(hand2).equals(HandType.HIGH_CARD));
-		System.out.println(HandEvaluator.getHandQuality(hand2));
+		TestHandQuality.logger.info(Double.valueOf(HandEvaluator.getHandQuality(hand2)));
 		
 	}
 	public void testPairHand(){
@@ -64,7 +66,7 @@ public class TestHandQuality extends TestCase {
 		hand1.addCard(new CardImpl(Suit.SPADES,Rank.FOUR));
 		hand1.addCard(new CardImpl(Suit.SPADES,Rank.SEVEN));
 		assertTrue(HandTypeCalculator.calculateHandType(hand1).equals(HandType.PAIR));
-		System.out.println(HandEvaluator.getHandQuality(hand1));
+		TestHandQuality.logger.info(Double.valueOf(HandEvaluator.getHandQuality(hand1)));
 		
 		hand2.addCard(new CardImpl(Suit.SPADES,Rank.KING));
 		hand2.addCard(new CardImpl(Suit.DIAMONDS,Rank.KING));
@@ -72,7 +74,7 @@ public class TestHandQuality extends TestCase {
 		hand2.addCard(new CardImpl(Suit.SPADES,Rank.FOUR));
 		hand2.addCard(new CardImpl(Suit.SPADES,Rank.EIGHT));
 		assertTrue(HandTypeCalculator.calculateHandType(hand2).equals(HandType.PAIR));
-		System.out.println(HandEvaluator.getHandQuality(hand2));
+		TestHandQuality.logger.info(Double.valueOf(HandEvaluator.getHandQuality(hand2)));
 	}
 	public void testDoublePairHand(){
 		hand1.addCard(new CardImpl(Suit.SPADES,Rank.ACE));
@@ -81,7 +83,7 @@ public class TestHandQuality extends TestCase {
 		hand1.addCard(new CardImpl(Suit.CLUBS,Rank.ACE));
 		hand1.addCard(new CardImpl(Suit.SPADES,Rank.SEVEN));
 		assertTrue(HandTypeCalculator.calculateHandType(hand1).equals(HandType.DOUBLE_PAIR));
-		System.out.println(HandEvaluator.getHandQuality(hand1));
+		TestHandQuality.logger.info(Double.valueOf(HandEvaluator.getHandQuality(hand1)));
 		
 		hand2.addCard(new CardImpl(Suit.SPADES,Rank.FIVE));
 		hand2.addCard(new CardImpl(Suit.DIAMONDS,Rank.FIVE));
@@ -89,7 +91,7 @@ public class TestHandQuality extends TestCase {
 		hand2.addCard(new CardImpl(Suit.SPADES,Rank.KING));
 		hand2.addCard(new CardImpl(Suit.SPADES,Rank.EIGHT));
 		assertTrue(HandTypeCalculator.calculateHandType(hand2).equals(HandType.DOUBLE_PAIR));
-		System.out.println(HandEvaluator.getHandQuality(hand2));
+		TestHandQuality.logger.info(Double.valueOf(HandEvaluator.getHandQuality(hand2)));
 	}
 	public void testThreeOfAKindHand(){
 		hand1.addCard(new CardImpl(Suit.SPADES,Rank.KING));
@@ -98,7 +100,7 @@ public class TestHandQuality extends TestCase {
 		hand1.addCard(new CardImpl(Suit.CLUBS,Rank.KING));
 		hand1.addCard(new CardImpl(Suit.SPADES,Rank.EIGHT));
 		assertTrue(HandTypeCalculator.calculateHandType(hand1).equals(HandType.THREE_OF_A_KIND));
-		System.out.println(HandEvaluator.getHandQuality(hand1));
+		TestHandQuality.logger.info(Double.valueOf(HandEvaluator.getHandQuality(hand1)));
 		
 		hand2.addCard(new CardImpl(Suit.SPADES,Rank.SIX));
 		hand2.addCard(new CardImpl(Suit.DIAMONDS,Rank.KING));
@@ -106,7 +108,7 @@ public class TestHandQuality extends TestCase {
 		hand2.addCard(new CardImpl(Suit.SPADES,Rank.KING));
 		hand2.addCard(new CardImpl(Suit.SPADES,Rank.EIGHT));
 		assertTrue(HandTypeCalculator.calculateHandType(hand2).equals(HandType.THREE_OF_A_KIND));
-		System.out.println(HandEvaluator.getHandQuality(hand2));
+		TestHandQuality.logger.info(Double.valueOf(HandEvaluator.getHandQuality(hand2)));
 	}
 	public void testFourOfAKindHand(){
 		hand1.addCard(new CardImpl(Suit.SPADES,Rank.ACE));
@@ -115,7 +117,7 @@ public class TestHandQuality extends TestCase {
 		hand1.addCard(new CardImpl(Suit.CLUBS,Rank.ACE));
 		hand1.addCard(new CardImpl(Suit.SPADES,Rank.KING));
 		assertTrue(HandTypeCalculator.calculateHandType(hand1).equals(HandType.FOUR_OF_A_KIND));
-		System.out.println(HandEvaluator.getHandQuality(hand1));
+		TestHandQuality.logger.info(Double.valueOf(HandEvaluator.getHandQuality(hand1)));
 		
 		hand2.addCard(new CardImpl(Suit.SPADES,Rank.ACE));
 		hand2.addCard(new CardImpl(Suit.DIAMONDS,Rank.ACE));
@@ -123,7 +125,7 @@ public class TestHandQuality extends TestCase {
 		hand2.addCard(new CardImpl(Suit.CLUBS,Rank.ACE));
 		hand2.addCard(new CardImpl(Suit.SPADES,Rank.EIGHT));
 		assertTrue(HandTypeCalculator.calculateHandType(hand2).equals(HandType.FOUR_OF_A_KIND));
-		System.out.println(HandEvaluator.getHandQuality(hand2));
+		TestHandQuality.logger.info(Double.valueOf(HandEvaluator.getHandQuality(hand2)));
 	}
 	public void testFlushHand(){
 		hand1.addCard(new CardImpl(Suit.SPADES,Rank.ACE));
@@ -132,7 +134,7 @@ public class TestHandQuality extends TestCase {
 		hand1.addCard(new CardImpl(Suit.SPADES,Rank.THREE));
 		hand1.addCard(new CardImpl(Suit.SPADES,Rank.DEUCE));
 		assertTrue(HandTypeCalculator.calculateHandType(hand1).equals(HandType.FLUSH));
-		System.out.println(HandEvaluator.getHandQuality(hand1));
+		TestHandQuality.logger.info(Double.valueOf(HandEvaluator.getHandQuality(hand1)));
 		
 		hand2.addCard(new CardImpl(Suit.DIAMONDS,Rank.ACE));
 		hand2.addCard(new CardImpl(Suit.DIAMONDS,Rank.KING));
@@ -140,7 +142,7 @@ public class TestHandQuality extends TestCase {
 		hand2.addCard(new CardImpl(Suit.DIAMONDS,Rank.SEVEN));
 		hand2.addCard(new CardImpl(Suit.DIAMONDS,Rank.EIGHT));
 		assertTrue(HandTypeCalculator.calculateHandType(hand2).equals(HandType.FLUSH));
-		System.out.println(HandEvaluator.getHandQuality(hand2));
+		TestHandQuality.logger.info(Double.valueOf(HandEvaluator.getHandQuality(hand2)));
 	}
 	public void testStraightHand(){
 		hand1.addCard(new CardImpl(Suit.SPADES,Rank.ACE));
@@ -149,7 +151,7 @@ public class TestHandQuality extends TestCase {
 		hand1.addCard(new CardImpl(Suit.SPADES,Rank.THREE));
 		hand1.addCard(new CardImpl(Suit.SPADES,Rank.DEUCE));
 		assertTrue(HandTypeCalculator.calculateHandType(hand1).equals(HandType.STRAIGHT));
-		System.out.println(HandEvaluator.getHandQuality(hand1));
+		TestHandQuality.logger.info(Double.valueOf(HandEvaluator.getHandQuality(hand1)));
 		
 		hand2.addCard(new CardImpl(Suit.DIAMONDS,Rank.NINE));
 		hand2.addCard(new CardImpl(Suit.HEARTS,Rank.FIVE));
@@ -157,7 +159,7 @@ public class TestHandQuality extends TestCase {
 		hand2.addCard(new CardImpl(Suit.DIAMONDS,Rank.SEVEN));
 		hand2.addCard(new CardImpl(Suit.DIAMONDS,Rank.EIGHT));
 		assertTrue(HandTypeCalculator.calculateHandType(hand2).equals(HandType.STRAIGHT));
-		System.out.println(HandEvaluator.getHandQuality(hand2));
+		TestHandQuality.logger.info(Double.valueOf(HandEvaluator.getHandQuality(hand2)));
 	}
 	public void testFullHouseHand(){
 		hand1.addCard(new CardImpl(Suit.SPADES,Rank.KING));
@@ -166,7 +168,7 @@ public class TestHandQuality extends TestCase {
 		hand1.addCard(new CardImpl(Suit.CLUBS,Rank.KING));
 		hand1.addCard(new CardImpl(Suit.SPADES,Rank.FIVE));
 		assertTrue(HandTypeCalculator.calculateHandType(hand1).equals(HandType.FULL_HOUSE));
-		System.out.println(HandEvaluator.getHandQuality(hand1));
+		TestHandQuality.logger.info(Double.valueOf(HandEvaluator.getHandQuality(hand1)));
 		
 		hand2.addCard(new CardImpl(Suit.SPADES,Rank.SIX));
 		hand2.addCard(new CardImpl(Suit.DIAMONDS,Rank.KING));
@@ -174,7 +176,7 @@ public class TestHandQuality extends TestCase {
 		hand2.addCard(new CardImpl(Suit.SPADES,Rank.KING));
 		hand2.addCard(new CardImpl(Suit.CLUBS,Rank.SIX));
 		assertTrue(HandTypeCalculator.calculateHandType(hand2).equals(HandType.FULL_HOUSE));
-		System.out.println(HandEvaluator.getHandQuality(hand2));
+		TestHandQuality.logger.info(Double.valueOf(HandEvaluator.getHandQuality(hand2)));
 	}
 	
 	public void testHandQuality(){
@@ -199,29 +201,29 @@ public class TestHandQuality extends TestCase {
 			int rank1= HandTypeCalculator.calculateHandType(hand1).getRanking();
 			numbers[rank1]++;
 			if(qualityGreater!=(quality1>quality2) || qualitySmaller!=(quality1<quality2) || qualityEqual!=(quality1==quality2)){
-				System.out.println("compareTo "+HandEvaluator.compareHands(hand1,hand2));
-				System.out.println(hand1.toString());
-				System.out.println(HandTypeCalculator.calculateHandType(hand1));
-				System.out.println("quality 1 "+quality1);
-				System.out.println(hand2.toString());
-				System.out.println(HandTypeCalculator.calculateHandType(hand2));
-				System.out.println("quality 2 "+quality2);
+				TestHandQuality.logger.info("compareTo " + HandEvaluator.compareHands(hand1, hand2));
+				TestHandQuality.logger.info(hand1.toString());
+				TestHandQuality.logger.info(HandTypeCalculator.calculateHandType(hand1));
+				TestHandQuality.logger.info("quality 1 " + quality1);
+				TestHandQuality.logger.info(hand2.toString());
+				TestHandQuality.logger.info(HandTypeCalculator.calculateHandType(hand2));
+				TestHandQuality.logger.info("quality 2 " + quality2);
 				fail("error");
 			}
 			hand1.makeEmpty();
 			hand2.makeEmpty();
 			if(j%(totalTests/10)==0)
-				System.out.println(j);
+				TestHandQuality.logger.info(j);
 		}
-		System.out.println("high cards % "+100*numbers[0]/totalTests);
-		System.out.println("pair % "+100*numbers[1]/totalTests);
-		System.out.println("double pair % "+100*numbers[2]/totalTests);
-		System.out.println("three of a kind % "+100*numbers[3]/totalTests);
-		System.out.println("straight% "+100*numbers[4]/totalTests);
-		System.out.println("flush % "+100*numbers[5]/totalTests);
-		System.out.println("full house % "+100*numbers[6]/totalTests);
-		System.out.println("four of a kind % "+100*numbers[7]/totalTests);
-		System.out.println("straight flush % "+100*numbers[8]/totalTests);
+		TestHandQuality.logger.info("high cards % " + 100 * numbers[0] / totalTests);
+		TestHandQuality.logger.info("pair % " + 100 * numbers[1] / totalTests);
+		TestHandQuality.logger.info("double pair % " + 100 * numbers[2] / totalTests);
+		TestHandQuality.logger.info("three of a kind % " + 100 * numbers[3] / totalTests);
+		TestHandQuality.logger.info("straight% " + 100 * numbers[4] / totalTests);
+		TestHandQuality.logger.info("flush % " + 100 * numbers[5] / totalTests);
+		TestHandQuality.logger.info("full house % " + 100 * numbers[6] / totalTests);
+		TestHandQuality.logger.info("four of a kind % " + 100 * numbers[7] / totalTests);
+		TestHandQuality.logger.info("straight flush % " + 100 * numbers[8] / totalTests);
 		
 	}
 }

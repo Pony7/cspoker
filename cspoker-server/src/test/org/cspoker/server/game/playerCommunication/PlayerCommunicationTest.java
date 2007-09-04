@@ -19,6 +19,7 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
+import org.apache.log4j.Logger;
 import org.cspoker.server.game.GameManager;
 import org.cspoker.server.game.TableId;
 import org.cspoker.server.game.events.gameEvents.GameEvent;
@@ -34,6 +35,7 @@ import org.cspoker.server.game.playerCommunication.PlayerCommunicationImpl;
 import org.cspoker.server.game.playerCommunication.PlayerCommunicationManager;
 
 public class PlayerCommunicationTest extends TestCase {
+	private static Logger logger = Logger.getLogger(PlayerCommunicationTest.class);
 
 	private PlayerFactory playerFactory;
 
@@ -104,7 +106,7 @@ public class PlayerCommunicationTest extends TestCase {
 
 			public void onNewRoundEvent(NewRoundEvent event) {
 				currentComm = PlayerCommunicationManager.getPlayerCommunication(event.getPlayer().getId());
-				System.out.println("Changed to "+currentComm);
+				PlayerCommunicationTest.logger.info("Changed to " + currentComm);
 			}
 			
 		};
@@ -113,7 +115,7 @@ public class PlayerCommunicationTest extends TestCase {
 
 			public void onNextPlayerEvent(NextPlayerEvent event) {
 				currentComm = PlayerCommunicationManager.getPlayerCommunication(event.getPlayer().getId());
-				System.out.println("Changed to "+currentComm);
+				PlayerCommunicationTest.logger.info("Changed to " + currentComm);
 			}
 			
 		};
@@ -124,7 +126,7 @@ public class PlayerCommunicationTest extends TestCase {
 			kenzoComm.startGame();
 			GameManager.getGame(tableId).subscribeNewRoundListener(newRoundListener);
 			GameManager.getGame(tableId).subscribeNextPlayerListener(nextPlayerListener);
-			System.out.println(kenzoComm.getLatestGameEvents());
+			PlayerCommunicationTest.logger.info(kenzoComm.getLatestGameEvents());
 			try {
 				kenzoComm.deal();
 			} catch (IllegalActionException e) {
@@ -133,12 +135,12 @@ public class PlayerCommunicationTest extends TestCase {
 				} catch (IllegalActionException e1) {
 				}
 			}
-			System.out.println("Kenzo's events:"+kenzoComm.getLatestGameEvents());
-			System.out.println("Guy's events:"+guyComm.getLatestGameEvents());
+			PlayerCommunicationTest.logger.info("Kenzo's events:" + kenzoComm.getLatestGameEvents());
+			PlayerCommunicationTest.logger.info("Guy's events:" + guyComm.getLatestGameEvents());
 			
 			currentComm.call();
 
-			System.out.println("Guy's events:");
+			PlayerCommunicationTest.logger.info("Guy's events:");
 			showEvents(guyComm.getLatestGameEvents().getGameEvents());
 			
 			currentComm.check();
@@ -152,7 +154,7 @@ public class PlayerCommunicationTest extends TestCase {
 			currentComm.check();
 			currentComm.check();
 			
-			System.out.println("Guy's events:");
+			PlayerCommunicationTest.logger.info("Guy's events:");
 			showEvents(guyComm.getLatestGameEvents().getGameEvents());
 
 		} catch (IllegalActionException e) {
@@ -172,7 +174,7 @@ public class PlayerCommunicationTest extends TestCase {
 
 			public void onNewRoundEvent(NewRoundEvent event) {
 				currentComm = PlayerCommunicationManager.getPlayerCommunication(event.getPlayer().getId());
-				System.out.println("Changed to "+currentComm);
+				PlayerCommunicationTest.logger.info("Changed to " + currentComm);
 			}
 			
 		};
@@ -181,7 +183,7 @@ public class PlayerCommunicationTest extends TestCase {
 
 			public void onNextPlayerEvent(NextPlayerEvent event) {
 				currentComm = PlayerCommunicationManager.getPlayerCommunication(event.getPlayer().getId());
-				System.out.println("Changed to "+currentComm);
+				PlayerCommunicationTest.logger.info("Changed to " + currentComm);
 			}
 			
 		};
@@ -192,7 +194,7 @@ public class PlayerCommunicationTest extends TestCase {
 			kenzoComm.startGame();
 			GameManager.getGame(tableId).subscribeNewRoundListener(newRoundListener);
 			GameManager.getGame(tableId).subscribeNextPlayerListener(nextPlayerListener);
-			System.out.println(kenzoComm.getLatestGameEvents());
+			PlayerCommunicationTest.logger.info(kenzoComm.getLatestGameEvents());
 			try {
 				kenzoComm.deal();
 			} catch (IllegalActionException e) {
@@ -201,18 +203,18 @@ public class PlayerCommunicationTest extends TestCase {
 				} catch (IllegalActionException e1) {
 				}
 			}
-			System.out.println("Kenzo's events:"+kenzoComm.getLatestGameEvents());
-			System.out.println("Guy's events:"+guyComm.getLatestGameEvents());
+			PlayerCommunicationTest.logger.info("Kenzo's events:" + kenzoComm.getLatestGameEvents());
+			PlayerCommunicationTest.logger.info("Guy's events:" + guyComm.getLatestGameEvents());
 			
 			currentComm.call();
 
-			System.out.println("Guy's events:");
+			PlayerCommunicationTest.logger.info("Guy's events:");
 			showEvents(guyComm.getLatestGameEvents().getGameEvents());
 			
 			currentComm.allIn();
 			currentComm.allIn();
 			
-			System.out.println("Guy's events:");
+			PlayerCommunicationTest.logger.info("Guy's events:");
 			showEvents(guyComm.getLatestGameEvents().getGameEvents());
 
 		} catch (IllegalActionException e) {
@@ -224,7 +226,7 @@ public class PlayerCommunicationTest extends TestCase {
 	
 	public void showEvents(List<GameEvent> events){
 		for(GameEvent event:events){
-			System.out.println("++ "+event);
+			PlayerCommunicationTest.logger.info("++ " + event);
 		}
 	}
 

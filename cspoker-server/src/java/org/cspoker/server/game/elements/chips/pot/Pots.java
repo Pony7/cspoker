@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.cspoker.server.game.elements.chips.IllegalValueException;
 import org.cspoker.server.game.player.Player;
 
@@ -30,6 +31,7 @@ import org.cspoker.server.game.player.Player;
  *
  */
 public class Pots {
+	private static Logger logger = Logger.getLogger(Pots.class);
 
 	private final List<Pot> pots;
 
@@ -63,7 +65,7 @@ public class Pots {
 	public void collectAmountFromPlayersToSidePot(int amount, List<Player> players) throws IllegalValueException{
 		if(isClosed())
 			return;
-		System.out.println("collect "+amount);
+		Pots.logger.info("collect " + amount);
 		if((amount>0) || (pot.getChips().getValue()>0)){
 			Pot sidePot = new Pot();
 			pot.transferAllChipsTo(sidePot);
@@ -71,7 +73,7 @@ public class Pots {
 				try {
 					player.getBetChips().transferAmountTo(amount, sidePot.getChips());
 				} catch (IllegalArgumentException e) {
-					System.out.println(e.getStackTrace());
+					Pots.logger.error(e.getLocalizedMessage(), e);
 				}
 			}
 			pots.add(sidePot);
