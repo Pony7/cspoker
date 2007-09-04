@@ -16,6 +16,7 @@
 
 package org.cspoker.server.game.gameControl.rounds;
 
+import org.apache.log4j.Logger;
 import org.cspoker.server.game.GameMediator;
 import org.cspoker.server.game.elements.chips.IllegalValueException;
 import org.cspoker.server.game.events.gameEvents.NewRoundEvent;
@@ -36,7 +37,8 @@ import org.cspoker.server.game.player.Player;
  *
  */
 public class PreFlopRound extends BettingRound{
-
+	private static Logger logger = Logger.getLogger(PreFlopRound.class);
+	
 	private boolean bigBlindChecked = false;
 
 	private Player bigBlindPlayer;
@@ -46,7 +48,7 @@ public class PreFlopRound extends BettingRound{
 
 	public PreFlopRound(GameMediator gameMediator, Game game) {
 		super(gameMediator, game);
-		System.out.println("** PreFlop Round **");
+		PreFlopRound.logger.info("** PreFlop Round **");
 		for(Player player:getGame().getCurrentDealPlayers()){
 			player.dealPocketCard(drawCard());
 			player.dealPocketCard(drawCard());
@@ -64,10 +66,10 @@ public class PreFlopRound extends BettingRound{
 			collectSmallBlind(player);
 			gameMediator.publishSmallBlindEvent(new SmallBlindEvent(player.getSavedPlayer(), getGame().getGameProperty().getSmallBlind()));
 			gameMediator.publishPotChangedEvent(new PotChangedEvent(getCurrentPotValue()));
-			System.out.println(player.getName()+" has placed small blind of "
-					+getGame().getGameProperty().getSmallBlind());
+			PreFlopRound.logger.info(player.getName() + " has placed small blind of " + getGame().getGameProperty().getSmallBlind());
 			getGame().nextPlayer();
 		} catch (IllegalValueException e) {
+			PreFlopRound.logger.error(e.getLocalizedMessage(), e);
 			goAllIn(getGame().getCurrentPlayer());
 			someoneBigAllIn = false;
 		}
@@ -78,10 +80,11 @@ public class PreFlopRound extends BettingRound{
 				collectBigBlind(bigBlindPlayer);
 				gameMediator.publishBigBlindEvent(new BigBlindEvent(bigBlindPlayer.getSavedPlayer(), getGame().getGameProperty().getBigBlind()));
 				gameMediator.publishPotChangedEvent(new PotChangedEvent(getCurrentPotValue()));
-				System.out.println(getGame().getCurrentPlayer().getName()+" has placed big blind of "
-						+getGame().getGameProperty().getBigBlind());
+				PreFlopRound.logger.info(getGame().getCurrentPlayer().getName() + " has placed big blind of "
+						+ getGame().getGameProperty().getBigBlind());
 				getGame().nextPlayer();
 			} catch (IllegalValueException e) {
+				PreFlopRound.logger.error(e.getLocalizedMessage(), e);
 				goAllIn(getGame().getCurrentPlayer());
 				bigBlindAllIn = true;
 			}

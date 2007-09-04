@@ -3,12 +3,14 @@ package org.cspoker.client;
 import java.net.MalformedURLException;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.cspoker.client.request.GameEventsAckRequest;
 import org.cspoker.client.request.contenthandler.EventsContentHandler;
 import org.cspoker.client.savedstate.Cards;
 import org.cspoker.client.savedstate.Pot;
 
 public class EventsThread implements Runnable {
+	private static Logger logger = Logger.getLogger(EventsThread.class);
 
     private final EventsContentHandler handler;
     private final GameEventsAckRequest request;
@@ -31,9 +33,9 @@ public class EventsThread implements Runnable {
 		request.execute("");
 		List<String> events = handler.getEvents();
 		if(events.size()>0){
-		    System.out.println("");
+			EventsThread.logger.info("");
 		    for(String line:events){
-			System.out.println(line);
+		    	EventsThread.logger.info(line);
 		    }
 		    System.out.print(">");
 		    halfWait();

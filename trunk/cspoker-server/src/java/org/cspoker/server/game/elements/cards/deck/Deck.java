@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.cspoker.common.game.elements.cards.Card;
 import org.cspoker.common.game.elements.cards.CardImpl;
 import org.cspoker.common.game.elements.cards.cardElements.Rank;
@@ -34,6 +35,8 @@ import org.cspoker.server.game.elements.cards.deck.randomGenerator.RandomOrgSeed
  *
  */
 public class Deck {
+	private static Logger logger = Logger.getLogger(Deck.class);
+	
 	/**
 	 * The total number of cards in a deck.
 	 */
@@ -119,6 +122,6 @@ public class Deck {
 	}
 
 	public static void main(String[] args) {
-		System.out.println(new Deck());
+		Deck.logger.info(new Deck());
 	}
 }

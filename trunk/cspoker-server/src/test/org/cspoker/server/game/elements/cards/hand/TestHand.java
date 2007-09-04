@@ -19,6 +19,7 @@ import java.util.Iterator;
 
 import junit.framework.TestCase;
 
+import org.apache.log4j.Logger;
 import org.cspoker.common.game.elements.cards.Card;
 import org.cspoker.common.game.elements.cards.CardImpl;
 import org.cspoker.common.game.elements.cards.cardElements.Rank;
@@ -31,6 +32,7 @@ import org.cspoker.server.game.elements.cards.hand.Hand;
  *
  */
 public class TestHand extends TestCase {
+	private static Logger logger = Logger.getLogger(TestHand.class);
 
 	protected Hand hand1;
 	public void test(){
@@ -108,7 +110,7 @@ public class TestHand extends TestCase {
 		Iterator<Card> iterator=hand1.iterator();
 		
 		while(iterator.hasNext()){
-			System.out.println(iterator.next().toString());
+			TestHand.logger.info(iterator.next().toString());
 		}
 	}
 }

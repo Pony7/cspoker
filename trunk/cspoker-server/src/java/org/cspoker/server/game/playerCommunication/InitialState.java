@@ -15,6 +15,7 @@
  */
 package org.cspoker.server.game.playerCommunication;
 
+import org.apache.log4j.Logger;
 import org.cspoker.server.game.GameManager;
 import org.cspoker.server.game.GameMediator;
 import org.cspoker.server.game.TableId;
@@ -45,6 +46,7 @@ import org.cspoker.server.game.gameControl.IllegalActionException;
  *
  */
 class InitialState extends PlayerCommunicationState {
+	private static Logger logger = Logger.getLogger(InitialState.class);
 
 	/**
 	 * Construct a new initial state with given player communication.
@@ -82,7 +84,7 @@ class InitialState extends PlayerCommunicationState {
 			playerCommunication.setPlayerCommunicationState(
 					new WaitingAtTableState(playerCommunication, table));
 		}
-		System.out.println(playerCommunication.getPlayer().getName()+" joined "+id+".");
+		InitialState.logger.info(playerCommunication.getPlayer().getName() + " joined " + id + ".");
 	}
 
 	@Override
@@ -95,7 +97,7 @@ class InitialState extends PlayerCommunicationState {
 		}
 		playerCommunication.setPlayerCommunicationState(new TableCreatedState(playerCommunication, table));
 		//TODO low priority Enhancement: Give a name to the table?
-		System.out.println(playerCommunication.getPlayer().getName()+" created "+table.getId()+".");
+		InitialState.logger.info(playerCommunication.getPlayer().getName() + " created " + table.getId() + ".");
 		return table.getId();
 	}
 

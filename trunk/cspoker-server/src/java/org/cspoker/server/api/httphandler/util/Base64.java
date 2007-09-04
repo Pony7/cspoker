@@ -89,8 +89,11 @@ package org.cspoker.server.api.httphandler.util;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
+import org.apache.log4j.Logger;
+
 public final class Base64
 {
+	private static Logger logger = Logger.getLogger(Base64.class);
 
   // No constructor.
   private Base64() { }
@@ -295,7 +298,7 @@ public final class Base64
                 // We should only see whitespace after this.
                 if (!Character.isWhitespace(b64.charAt(i)))
                   {
-                    System.err.println(b64.charAt(i));
+                	Base64.logger.error(Character.valueOf(b64.charAt(i)));
                     throw new IOException("malformed Base64 sequence");
                   }
               }

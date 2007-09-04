@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.cspoker.server.game.GameMediator;
 import org.cspoker.server.game.PlayerId;
 import org.cspoker.common.game.elements.cards.Card;
@@ -43,6 +44,7 @@ import org.cspoker.server.game.player.SavedWinner;
  *
  */
 public class Showdown {
+	private static Logger logger = Logger.getLogger(Showdown.class);
 
 	/**
 	 * The game in which the showdown takes place.
@@ -85,10 +87,8 @@ public class Showdown {
 	 *
 	 */
 	public void determineWinners(){	
-		System.out.println("");
-		System.out.println("*** Determine Winners ***");
-		System.out.println("");
-		System.out.println(game.getPots());
+		Showdown.logger.info("*** Determine Winners ***");
+		Showdown.logger.info(game.getPots());
 		
 		//TODO all-in players always, others can choose to show or fold.
 		List<ShowdownPlayer> showdownPlayers = getShowdownPlayersFromPot(game.getPots().getPots().get(0));
@@ -104,7 +104,6 @@ public class Showdown {
 			for(Player player:winners){
 				System.out.print(player.getName()+" ");
 			}
-			System.out.println("");
 			splitPot(winners, pot);
 		}
 		
@@ -113,7 +112,7 @@ public class Showdown {
 		for(Winner winner:winnersMap.values()){
 			if(winner.hasGainedChips()){
 				savedWinners.add(winner.getSavedWinner());
-				System.out.println(winner);
+				Showdown.logger.info(winner);
 				winner.transferGainedChipsToPlayer();
 			}
 		}
@@ -169,7 +168,7 @@ public class Showdown {
 			}
 			//playerWithHighestSingleCard gets the odd chip, that can't be divided over all winners
 			try {
-				System.out.println("Odd chips to player with highest card in hand");
+				Showdown.logger.info("Odd chips to player with highest card in hand");
 				pot.getChips().transferAllChipsTo(winnersMap.get(playerWithHighestSingleCard.getId()).getGainedChipsPile());
 			} catch (IllegalValueException e) {
 				throw new IllegalStateException("Overflow");
@@ -188,7 +187,7 @@ public class Showdown {
 		List<ShowdownPlayer> players = getShowdownPlayersFromPot(pot);
 		Collections.sort(players);
 		for(ShowdownPlayer player:players){
-			System.out.println(player);
+			Showdown.logger.info(player);
 		}
 		ShowdownPlayer winner = players.get(0);
 		List<Player> winners = new ArrayList<Player>();

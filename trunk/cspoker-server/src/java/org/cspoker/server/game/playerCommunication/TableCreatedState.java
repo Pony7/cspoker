@@ -15,6 +15,7 @@
  */
 package org.cspoker.server.game.playerCommunication;
 
+import org.apache.log4j.Logger;
 import org.cspoker.server.game.GameManager;
 import org.cspoker.server.game.GameMediator;
 import org.cspoker.server.game.PlayerId;
@@ -43,7 +44,7 @@ import org.cspoker.server.game.gameControl.IllegalActionException;
  *
  */
 class TableCreatedState extends WaitingAtTableState {
-
+	private static Logger logger = Logger.getLogger(TableCreatedState.class);
 	/**
 	 * Construct a new table created state with given player communication and table.
 	 * 
@@ -76,7 +77,7 @@ class TableCreatedState extends WaitingAtTableState {
 			GameManager.addGame(table.getId(), gameMediator);
 		}
 
-		System.out.println("Game Started.");
+		TableCreatedState.logger.info("Game Started.");
 	}
 	
 	@Override

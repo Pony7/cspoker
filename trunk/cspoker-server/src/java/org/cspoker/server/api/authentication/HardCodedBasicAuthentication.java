@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 
+import org.apache.log4j.Logger;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -31,6 +32,7 @@ import org.xml.sax.helpers.XMLReaderFactory;
 import com.sun.net.httpserver.BasicAuthenticator;
 
 public class HardCodedBasicAuthentication extends BasicAuthenticator {
+	private static Logger logger = Logger.getLogger(HardCodedBasicAuthentication.class);
 
     private HashMap<String, String> passwords;
 
@@ -99,7 +101,7 @@ public class HardCodedBasicAuthentication extends BasicAuthenticator {
 		    lastname=sb.toString();
 		}else if(name.equalsIgnoreCase("password")){
 		    passwords.put(lastname, sb.toString());
-		    System.out.println("Added credentials for "+lastname);
+		    HardCodedBasicAuthentication.logger.info("Added credentials for " + lastname);
 		}
 		sb.setLength(0);
 	    }
@@ -111,10 +113,10 @@ public class HardCodedBasicAuthentication extends BasicAuthenticator {
     public boolean checkCredentials(String user, String pass) {
 	boolean ok=false;
 	if(pass.equals(passwords.get(user))){
-	    System.out.println("Authentication for "+user+" succeeded.");
+		HardCodedBasicAuthentication.logger.info("Authentication for " + user + " succeeded.");
 	    ok=true;
 	}else{
-	    System.out.println("Authentication for "+user+" failed.");		
+		HardCodedBasicAuthentication.logger.info("Authentication for " + user + " failed.");		
 	}
 	return ok;
     }

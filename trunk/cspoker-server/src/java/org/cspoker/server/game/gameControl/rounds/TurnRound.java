@@ -16,16 +16,18 @@
 
 package org.cspoker.server.game.gameControl.rounds;
 
+import org.apache.log4j.Logger;
 import org.cspoker.server.game.GameMediator;
 import org.cspoker.server.game.events.gameEvents.NewRoundEvent;
 import org.cspoker.server.game.gameControl.Game;
 import org.cspoker.server.game.player.Player;
 
 public class TurnRound extends BettingRound{
+	private static Logger logger = Logger.getLogger(TurnRound.class);
 
 	public TurnRound(GameMediator gameMediator, Game game) {
 		super(gameMediator, game);
-		System.out.println("** Turn Round **");
+		TurnRound.logger.info("** Turn Round **");
 		Player currentPlayer = getGame().getCurrentPlayer();
 		if(currentPlayer!=null)
 			gameMediator.publishNewRoundEvent(new NewRoundEvent(toString(), currentPlayer.getSavedPlayer()));

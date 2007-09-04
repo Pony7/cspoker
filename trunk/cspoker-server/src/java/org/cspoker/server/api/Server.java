@@ -18,6 +18,7 @@ package org.cspoker.server.api;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 
+import org.apache.log4j.Logger;
 import org.cspoker.server.api.authentication.HardCodedBasicAuthentication;
 import org.cspoker.server.api.httphandler.AllInHandler;
 import org.cspoker.server.api.httphandler.BetHandler;
@@ -44,24 +45,19 @@ import com.sun.net.httpserver.HttpServer;
  * Creates a new web server and starts it.
  */
 public class Server {
+	private static Logger logger = Logger.getLogger(Server.class);
 
     public static void main(String[] args) throws NumberFormatException, IOException {
 
 	if (args.length < 1) {
-	    System.out.println("usage: java -jar cspoker-server.jar [portnumber] [optional arguments]");
-	    System.out.println("  optional arguments:");
-	    System.out.println("  -authentication=[xml file]"  );
-	    System.exit(0);
+		usage();
 	}
 
 	int port=0;
 	try {
 	    port=Integer.parseInt(args[0]);
 	} catch (NumberFormatException e) {
-	    System.out.println("usage: java -jar cspoker-server.jar [portnumber] [optional arguments]");
-	    System.out.println("  optional arguments:");
-	    System.out.println("  -authentication=[xml file]"  );
-	    System.exit(0);
+		usage();
 	}
 
 	String authenticationFile = null;
@@ -71,6 +67,13 @@ public class Server {
 	Server server = new Server(port, authenticationFile);
 	server.start();
     }
+
+	private static void usage() {
+		Server.logger.fatal("usage: java -jar cspoker-server.jar [portnumber] [optional arguments]");
+		Server.logger.fatal("  optional arguments:");
+		Server.logger.fatal("  -authentication=[xml file]"  );
+	    System.exit(0);
+	}
     
     private Authenticator authenticator;
 
@@ -94,7 +97,7 @@ public class Server {
 	
 	loadContext();
 	
-	System.out.println("Server created for port " + port + ".");
+	Server.logger.info("Server created for port " + port + ".");
     }
     
     protected void loadContext(){
