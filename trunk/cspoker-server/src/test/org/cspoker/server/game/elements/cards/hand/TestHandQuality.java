@@ -186,7 +186,7 @@ public class TestHandQuality extends TestCase {
 		hand1.makeEmpty();
 		hand2.makeEmpty();
 		double[] numbers=new double[9];
-		double totalTests=100000.0;
+		double totalTests=10000.0;
 		for(int j=0;j<totalTests;j++){
 			hand1=RandomUtils.getRandomHand(5);
 			hand2=RandomUtils.getRandomHand(5);

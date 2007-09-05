@@ -16,6 +16,11 @@
 
 package org.cspoker.server.game.gameControl;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+
 import org.apache.log4j.Logger;
 import org.cspoker.server.game.GameMediator;
 import org.cspoker.server.game.elements.table.PlayerListFullException;
@@ -64,9 +69,11 @@ public class GameControl implements PlayerAction{
 
 	private final GameMediator gameMediator;
 
-	/**********************************************************
+	private static final DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd - HH:mm:ss (z)");
+
+	/***************************************************************************
 	 * Constructor
-	 **********************************************************/
+	 **************************************************************************/
 
 	/**
 	 * Construct a new game control with given table.
@@ -77,6 +84,15 @@ public class GameControl implements PlayerAction{
 		gameMediator.setGameControl(this);
 		game = new Game(table);
 		round = new WaitingRound(gameMediator, game);
+		
+		Date date = new Date();
+		GameControl.logger.info(this.getGame().getGameProperty().getBettingRules().toString() + " " + "($" + table.getGameProperty().getSmallBlind()
+				+ "/" + table.getGameProperty().getBigBlind() + ") - " + GameControl.dateFormat.format(date));
+		
+		List<Player> players = game.getCurrentDealPlayers();
+		for (Player player : players) {
+			GameControl.logger.info(player.toString());
+		}
 	}
 
 	/**
@@ -177,7 +193,7 @@ public class GameControl implements PlayerAction{
 		gameMediator.publishRaiseEvent(new RaiseEvent(player.getSavedPlayer(), amount));
 		gameMediator.publishStackChanged(new StackChangedEvent(player.getSavedPlayer()));
 		gameMediator.publishPotChangedEvent(new PotChangedEvent(round.getCurrentPotValue()));
-		GameControl.logger.info(player.getName() + " raises with " + amount + ".");
+		GameControl.logger.info(player.getName() + ": raises $" + amount + " to $" + player.getSavedPlayer().getBetChipsValue());
 		checkIfEndedAndChangeRound();
 	}
 
@@ -198,7 +214,7 @@ public class GameControl implements PlayerAction{
 	public void fold(Player player) throws IllegalActionException{
 		round.fold(player);
 		gameMediator.publishFoldEvent(new FoldEvent(player.getSavedPlayer()));
-		GameControl.logger.info(player.getName() + " folds.");
+		GameControl.logger.info(player.getName() + ": folds");
 		checkIfEndedAndChangeRound();
 	}
 
@@ -216,9 +232,9 @@ public class GameControl implements PlayerAction{
 	 * @see 	PlayerAction
 	 */
 	public void deal(Player player) throws IllegalActionException{
+		GameControl.logger.info("Dealer: " + player.getName());
 		round.deal(player);
 		gameMediator.publishDealEvent(new DealEvent(player.getSavedPlayer()));
-		GameControl.logger.info(player.getName() + " deals.");
 		checkIfEndedAndChangeRound();
 	}
 

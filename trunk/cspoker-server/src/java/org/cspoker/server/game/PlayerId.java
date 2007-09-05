@@ -71,7 +71,7 @@ public class PlayerId {
 
 	@Override
 	public String toString(){
-		return "player id: "+id;
+		return Long.valueOf(id).toString();
 	}
 
 }

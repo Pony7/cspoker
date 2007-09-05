@@ -28,7 +28,6 @@ public class FlopRound extends BettingRound{
 
 	public FlopRound(GameMediator gameMediator, Game game) {
 		super(gameMediator, game);
-		FlopRound.logger.info("** Flop Round **");
 		Player currentPlayer = getGame().getCurrentPlayer();
 		if(currentPlayer!=null)
 			gameMediator.publishNewRoundEvent(new NewRoundEvent(toString(), currentPlayer.getSavedPlayer()));
@@ -37,6 +36,7 @@ public class FlopRound extends BettingRound{
 		drawOpenCard();
 		drawOpenCard();
 		gameMediator.publishNewCommonCardsEvent(new NewCommunityCardsEvent(getGame().getCommunityCards()));
+		FlopRound.logger.info("*** FLOP *** " + game.getCommunityCards());
 	}
 
 	@Override

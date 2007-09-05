@@ -87,7 +87,7 @@ public class Showdown {
 	 *
 	 */
 	public void determineWinners(){	
-		Showdown.logger.info("*** Determine Winners ***");
+		Showdown.logger.info("*** SHOW DOWN ***");
 		Showdown.logger.info(game.getPots());
 		
 		//TODO all-in players always, others can choose to show or fold.

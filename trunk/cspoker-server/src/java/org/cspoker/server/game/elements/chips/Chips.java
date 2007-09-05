@@ -223,7 +223,7 @@ public class Chips {
 	
 	@Override
 	public String toString(){
-		return getValue()+" chips";
+		return Integer.valueOf(getValue()).toString();
 	}
 
 }

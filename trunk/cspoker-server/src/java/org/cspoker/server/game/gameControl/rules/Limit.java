@@ -102,7 +102,7 @@ public class Limit extends BettingRules{
 	}
 	@Override
 	public String toString() {
-		return "Limit Poker: small bet "+getSmallBet()+" high bet "+getBigBet();
+		return "Hold'em Limit";
 	}
 	
 }

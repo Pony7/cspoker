@@ -57,24 +57,16 @@ public class BettingRulesTest extends TestCase {
 			fail(e.getMessage());
 		}
 		gameControl = new GameControl(gameMediator, table);
-		BettingRulesTest.logger.info("Game Properties:");
-		BettingRulesTest.logger.info("Small Blind: " + table.getGameProperty().getSmallBlind());
-		BettingRulesTest.logger.info("Big Blind: " + table.getGameProperty().getBigBlind());
-		BettingRulesTest.logger.info("Betting Rules: " + gameControl.getGame().getGameProperty().getBettingRules().toString());
 		Game game = gameControl.getGame();
 
 		Player dealer  = game.getDealer();
-		BettingRulesTest.logger.info("Dealer: " + game.getDealer().getName());
 
 		try {
 			gameControl.deal(dealer);
 		} catch (IllegalActionException e) {
 			fail(e.getMessage());
 		}
-		BettingRulesTest.logger.info(game.getCurrentDealPlayers());
-		BettingRulesTest.logger.info("Kenzo's Cards: " + kenzo.getPocketCards());
-		BettingRulesTest.logger.info("Cedric's Cards: " + cedric.getPocketCards());
-		BettingRulesTest.logger.info("Guy's Cards: " + guy.getPocketCards());
+
 		try {
 			gameControl.raise(game.getCurrentPlayer(), 10);
 			gameControl.raise(game.getCurrentPlayer(), 5);
@@ -93,24 +85,15 @@ public class BettingRulesTest extends TestCase {
 			fail(e.getMessage());
 		}
 		gameControl = new GameControl(gameMediator, table);
-		BettingRulesTest.logger.info("Game Properties:");
-		BettingRulesTest.logger.info("Small Blind: " + table.getGameProperty().getSmallBlind());
-		BettingRulesTest.logger.info("Big Blind: " + table.getGameProperty().getBigBlind());
-		BettingRulesTest.logger.info("Betting Rules: " + gameControl.getGame().getGameProperty().getBettingRules().toString());
 		Game game = gameControl.getGame();
 
 		Player dealer  = game.getDealer();
-		BettingRulesTest.logger.info("Dealer: " + game.getDealer().getName());
 
 		try {
 			gameControl.deal(dealer);
 		} catch (IllegalActionException e) {
 			fail(e.getMessage());
 		}
-		BettingRulesTest.logger.info(game.getCurrentDealPlayers());
-		BettingRulesTest.logger.info("Kenzo's Cards: " + kenzo.getPocketCards());
-		BettingRulesTest.logger.info("Cedric's Cards: " + cedric.getPocketCards());
-		BettingRulesTest.logger.info("Guy's Cards: " + guy.getPocketCards());
 
 		try {
 			gameControl.raise(game.getCurrentPlayer(), 10);
@@ -142,24 +125,15 @@ public class BettingRulesTest extends TestCase {
 			fail(e.getMessage());
 		}
 		gameControl = new GameControl(gameMediator, table);
-		BettingRulesTest.logger.info("Game Properties:");
-		BettingRulesTest.logger.info("Small Blind: " + table.getGameProperty().getSmallBlind());
-		BettingRulesTest.logger.info("Big Blind: " + table.getGameProperty().getBigBlind());
-		BettingRulesTest.logger.info("Betting Rules: " + gameControl.getGame().getGameProperty().getBettingRules().toString());
 		Game game = gameControl.getGame();
 
 		Player dealer  = game.getDealer();
-		BettingRulesTest.logger.info("Dealer: " + game.getDealer().getName());
 
 		try {
 			gameControl.deal(dealer);
 		} catch (IllegalActionException e) {
 			fail(e.getMessage());
 		}
-		BettingRulesTest.logger.info(game.getCurrentDealPlayers());
-		BettingRulesTest.logger.info("Kenzo's Cards: " + kenzo.getPocketCards());
-		BettingRulesTest.logger.info("Cedric's Cards: " + cedric.getPocketCards());
-		BettingRulesTest.logger.info("Guy's Cards: " + guy.getPocketCards());
 		try {
 			gameControl.raise(game.getCurrentPlayer(), 10);
 			gameControl.raise(game.getCurrentPlayer(), 10);

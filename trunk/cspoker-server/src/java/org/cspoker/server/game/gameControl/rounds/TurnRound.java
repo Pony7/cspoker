@@ -27,12 +27,12 @@ public class TurnRound extends BettingRound{
 
 	public TurnRound(GameMediator gameMediator, Game game) {
 		super(gameMediator, game);
-		TurnRound.logger.info("** Turn Round **");
 		Player currentPlayer = getGame().getCurrentPlayer();
 		if(currentPlayer!=null)
 			gameMediator.publishNewRoundEvent(new NewRoundEvent(toString(), currentPlayer.getSavedPlayer()));
 		drawMuckCard();
 		drawOpenCardAndPublishCommonCard();
+		TurnRound.logger.info("*** TURN *** " + game.getCommunityCards());
 	}
 
 
