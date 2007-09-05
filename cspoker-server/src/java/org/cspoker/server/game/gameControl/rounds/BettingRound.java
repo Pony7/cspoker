@@ -31,6 +31,7 @@ import org.cspoker.server.game.events.gameEvents.PotChangedEvent;
 import org.cspoker.server.game.events.gameEvents.WinnerEvent;
 import org.cspoker.server.game.events.gameEvents.playerActionEvents.AllInEvent;
 import org.cspoker.server.game.gameControl.Game;
+import org.cspoker.server.game.gameControl.GameControl;
 import org.cspoker.server.game.gameControl.IllegalActionException;
 import org.cspoker.server.game.player.Player;
 import org.cspoker.server.game.player.SavedWinner;
@@ -222,7 +223,8 @@ public abstract class BettingRound extends Round {
 		}
 		gameMediator.publishAllInEvent(new AllInEvent(player.getSavedPlayer()));
 		gameMediator.publishPotChangedEvent(new PotChangedEvent(getCurrentPotValue()));
-		BettingRound.logger.info(player.getName() + " goes all in with " + player.getBetChips().getValue() + " chips.");
+		// TODO put amount of raise
+		BettingRound.logger.info(player.getName() + ": raises to $" + player.getSavedPlayer().getBetChipsValue() + " and is all-in");
 	}
 
 	protected boolean someoneBigAllIn(){

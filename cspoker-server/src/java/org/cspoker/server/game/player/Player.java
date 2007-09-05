@@ -166,7 +166,7 @@ public class Player {
 
 	@Override
 	public String toString(){
-		return "ID: "+getId()+", Name: "+getName()+", Stack: "+getStack();
+		return getId() + ": " + getName() + " ($" + getStack() + " in chips)";
 	}
 
 	/**

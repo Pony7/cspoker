@@ -27,6 +27,6 @@ public class NoLimit extends BettingRules {
 	}
 	@Override
 	public String toString() {
-		return "No Limit Poker";
+		return "Hold'em No Limit";
 	}
 }

@@ -47,6 +47,6 @@ public class PotLimit extends BettingRules {
 	}
 	@Override
 	public String toString() {
-		return "Pot Limit Poker ";
+		return "Hold'em Pot Limit";
 	}
 }

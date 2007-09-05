@@ -48,13 +48,6 @@ public class PreFlopRound extends BettingRound{
 
 	public PreFlopRound(GameMediator gameMediator, Game game) {
 		super(gameMediator, game);
-		PreFlopRound.logger.info("** PreFlop Round **");
-		for(Player player:getGame().getCurrentDealPlayers()){
-			player.dealPocketCard(drawCard());
-			player.dealPocketCard(drawCard());
-			gameMediator.publishNewPocketCardsEvent(
-					player.getId(), new NewPocketCardsEvent(player.getSavedPlayer()));
-		}
 
 		Player currentPlayer = getGame().getCurrentPlayer();
 		if(currentPlayer!=null)
@@ -66,7 +59,7 @@ public class PreFlopRound extends BettingRound{
 			collectSmallBlind(player);
 			gameMediator.publishSmallBlindEvent(new SmallBlindEvent(player.getSavedPlayer(), getGame().getGameProperty().getSmallBlind()));
 			gameMediator.publishPotChangedEvent(new PotChangedEvent(getCurrentPotValue()));
-			PreFlopRound.logger.info(player.getName() + " has placed small blind of " + getGame().getGameProperty().getSmallBlind());
+			PreFlopRound.logger.info(player.getName() + ": posts small blind $" + getGame().getGameProperty().getSmallBlind());
 			getGame().nextPlayer();
 		} catch (IllegalValueException e) {
 			PreFlopRound.logger.error(e.getLocalizedMessage(), e);
@@ -80,7 +73,7 @@ public class PreFlopRound extends BettingRound{
 				collectBigBlind(bigBlindPlayer);
 				gameMediator.publishBigBlindEvent(new BigBlindEvent(bigBlindPlayer.getSavedPlayer(), getGame().getGameProperty().getBigBlind()));
 				gameMediator.publishPotChangedEvent(new PotChangedEvent(getCurrentPotValue()));
-				PreFlopRound.logger.info(getGame().getCurrentPlayer().getName() + " has placed big blind of "
+				PreFlopRound.logger.info(getGame().getCurrentPlayer().getName() + ": posts big blind $"
 						+ getGame().getGameProperty().getBigBlind());
 				getGame().nextPlayer();
 			} catch (IllegalValueException e) {
@@ -88,6 +81,17 @@ public class PreFlopRound extends BettingRound{
 				goAllIn(getGame().getCurrentPlayer());
 				bigBlindAllIn = true;
 			}
+		}
+		
+		PreFlopRound.logger.info("*** HOLE CARDS ***");
+		for(Player player:getGame().getCurrentDealPlayers()){
+			player.dealPocketCard(drawCard());
+			player.dealPocketCard(drawCard());
+			
+			PreFlopRound.logger.info("Dealt to " + player.getName() + " " + player.getPocketCards());
+			
+			gameMediator.publishNewPocketCardsEvent(
+					player.getId(), new NewPocketCardsEvent(player.getSavedPlayer()));
 		}
 
 		if(getGame().getNbCurrentDealPlayers()>1){
