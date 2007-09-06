@@ -25,7 +25,7 @@ package org.cspoker.common.game.elements.cards.cardElements;
  */
 public enum Suit {
 
-	CLUBS("Clubs", "C"), DIAMONDS("Diamonds", "D"), HEARTS("Hearts", "H"), SPADES("Spades", "S");
+	CLUBS("Clubs", "c"), DIAMONDS("Diamonds", "d"), HEARTS("Hearts", "h"), SPADES("Spades", "s");
 
 	private String longDescription;
 	private String shortDescription;
@@ -48,7 +48,7 @@ public enum Suit {
 	 */
 	@Override
 	public String toString() {
-		return this.getLongDescription();
+		return this.getShortDescription();
 	}
 
 	/**

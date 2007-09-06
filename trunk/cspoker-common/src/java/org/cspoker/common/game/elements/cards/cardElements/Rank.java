@@ -55,7 +55,7 @@ public enum Rank {
 	 */
 	@Override
 	public String toString() {
-		return this.getLongDescription();
+		return this.getShortDescription();
 	}
 
 	private static final class PrimeInitializer {
