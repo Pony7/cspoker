@@ -71,6 +71,10 @@ abstract class PlayerCommunicationState implements PlayerCommunication{
 
 	}
 
+	public void say(String message){
+
+	}
+
 	/**********************************************************
 	 * Leave/Join Game
 	 **********************************************************/
@@ -104,10 +108,10 @@ abstract class PlayerCommunicationState implements PlayerCommunication{
 	/**********************************************************
 	 * Actions list
 	 **********************************************************/
-	public GameEvents getLatestGameEvents() throws IllegalActionException {
+	public Events getLatestEvents() throws IllegalActionException {
 		throw new IllegalActionException("Requesting the latest game events is not a valid action. "+getStdErrorMessage());
 	}
-	public GameEvents getLatestGameEventsAndAck(int ack) throws IllegalActionException {
+	public Events getLatestEventsAndAck(int ack) throws IllegalActionException {
 		throw new IllegalActionException("Requesting the latest game events is not a valid action. "+getStdErrorMessage());
 	}
 

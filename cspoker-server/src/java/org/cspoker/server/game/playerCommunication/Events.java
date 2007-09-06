@@ -13,25 +13,38 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.server.game.elements.cards.hand;
+package org.cspoker.server.game.playerCommunication;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-/**
- * A test suite for collecting all test relating to the hand package
- * @author Cedric
- *
- */
-public class AllHandTests {
+import java.util.Iterator;
+import java.util.List;
 
-	public static Test suite() {
-		TestSuite suite = new TestSuite("Test for game.cards.hand.test");
-		//$JUnit-BEGIN$
-		suite.addTestSuite(TestHand.class);
-		suite.addTestSuite(TestHandEvaluator.class);
-		suite.addTestSuite(TestHandQuality.class);
-		//$JUnit-END$
-		return suite;
+import org.cspoker.server.game.events.Event;
+
+public class Events implements Iterable<Event>{
+
+	private final List<Event> events;
+
+	private final int latestEventNumber;
+
+	public Events(List<Event> events, int latestEventNumber){
+		this.events = events;
+		this.latestEventNumber = latestEventNumber;
+	}
+
+	public List<Event> getGameEvents(){
+		return events;
+	}
+
+	public int getLastEventNumber(){
+		return latestEventNumber;
+	}
+
+	@Override
+	public String toString(){
+		return "events until "+latestEventNumber+". "+events.toString();
+	}
+	public Iterator<Event> iterator() {
+	    return events.iterator();
 	}
 
 }

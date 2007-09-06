@@ -24,6 +24,7 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.cspoker.server.game.elements.table.PlayerListFullException;
+import org.cspoker.server.game.events.EventListener;
 import org.cspoker.server.game.events.gameEvents.GameEvent;
 import org.cspoker.server.game.events.gameEvents.GameEventListener;
 import org.cspoker.server.game.events.gameEvents.NewCommunityCardsEvent;
@@ -1037,8 +1038,8 @@ public class GameMediator implements PlayerAction{
 	 *
 	 */
 	public void publishGameEvent(GameEvent event){
-		for(GameEventListener listener:gameEventListeners){
-			listener.onGameEvent(event);
+		for(EventListener listener:gameEventListeners){
+			listener.onEvent(event);
 		}
 	}
 
@@ -1048,7 +1049,7 @@ public class GameMediator implements PlayerAction{
 	 * @param 	listener
 	 * 			The listener to subscribe.
 	 */
-	public void subscribeGameEventListener(GameEventListener listener) {
+	public void subscribeGameEventListener(EventListener listener) {
 		gameEventListeners.add(listener);
 	}
 
@@ -1058,7 +1059,7 @@ public class GameMediator implements PlayerAction{
 	 * @param 	listener
 	 * 			The listener to unsubscribe.
 	 */
-	public void unsubscribeGameEventListener(GameEventListener listener) {
+	public void unsubscribeGameEventListener(EventListener listener) {
 		gameEventListeners.remove(listener);
 	}
 
@@ -1066,7 +1067,7 @@ public class GameMediator implements PlayerAction{
 	 * This list contains all game event listeners that
 	 * should be alerted on a game event.
 	 */
-	private final List<GameEventListener> gameEventListeners = new CopyOnWriteArrayList<GameEventListener>();
+	private final List<EventListener> gameEventListeners = new CopyOnWriteArrayList<EventListener>();
 
 	/**********************************************************
 	 * Personal game events listener
@@ -1082,10 +1083,10 @@ public class GameMediator implements PlayerAction{
 	 *
 	 */
 	public void publishPersonalGameEvent(PlayerId id, GameEvent event) {
-		List<GameEventListener> listeners = personalEventsListeners.get(id);
+		List<EventListener> listeners = personalEventsListeners.get(id);
 		if(listeners!=null){
-			for(GameEventListener listener:listeners){
-				listener.onGameEvent(event);
+			for(EventListener listener:listeners){
+				listener.onEvent(event);
 			}
 		}
 		publishAllPersonalEvents(event);
@@ -1097,9 +1098,9 @@ public class GameMediator implements PlayerAction{
 	 * @param 	listener
 	 * 			The listener to subscribe.
 	 */
-	public void subscribePersonalGameEventListener(PlayerId id, GameEventListener listener) {
-		List<GameEventListener> currentListeners;
-		List<GameEventListener> newListeners;
+	public void subscribePersonalGameEventListener(PlayerId id, EventListener listener) {
+		List<EventListener> currentListeners;
+		List<EventListener> newListeners;
 
 		boolean notAdded;
 
@@ -1107,9 +1108,9 @@ public class GameMediator implements PlayerAction{
 			notAdded = false;
 			currentListeners = personalEventsListeners.get(id);
 			if(currentListeners==null){
-				newListeners = new ArrayList<GameEventListener>();
+				newListeners = new ArrayList<EventListener>();
 			}else{
-				newListeners = new ArrayList<GameEventListener>(currentListeners);
+				newListeners = new ArrayList<EventListener>(currentListeners);
 			}
 			newListeners.add(listener);
 			if(currentListeners==null){
@@ -1126,9 +1127,9 @@ public class GameMediator implements PlayerAction{
 	 * @param 	listener
 	 * 			The listener to unsubscribe.
 	 */
-	public void unsubscribePersonalGameEventEventListener(PlayerId id, GameEventListener listener) {
-		List<GameEventListener> currentListeners;
-		List<GameEventListener> newListeners;
+	public void unsubscribePersonalGameEventListener(PlayerId id, EventListener listener) {
+		List<EventListener> currentListeners;
+		List<EventListener> newListeners;
 
 		boolean removed;
 
@@ -1136,7 +1137,7 @@ public class GameMediator implements PlayerAction{
 			currentListeners = personalEventsListeners.get(id);
 			if(currentListeners==null)
 				return;
-			newListeners = new ArrayList<GameEventListener>(currentListeners);
+			newListeners = new ArrayList<EventListener>(currentListeners);
 			newListeners.remove(listener);
 			if(newListeners.size()==0){
 				removed = personalEventsListeners.remove(id, currentListeners);
@@ -1150,7 +1151,7 @@ public class GameMediator implements PlayerAction{
 	 * This hash map contains all personal event listeners that
 	 * should be alerted on a personal event for a given id.
 	 */
-	private final ConcurrentMap<PlayerId,List<GameEventListener>> personalEventsListeners = new ConcurrentHashMap<PlayerId, List<GameEventListener>>();
+	private final ConcurrentMap<PlayerId,List<EventListener>> personalEventsListeners = new ConcurrentHashMap<PlayerId, List<EventListener>>();
 
 	/**********************************************************
 	 * All personal game events listener

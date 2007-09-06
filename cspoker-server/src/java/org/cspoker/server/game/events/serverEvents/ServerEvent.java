@@ -13,25 +13,10 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.server.game.elements.cards.hand;
+package org.cspoker.server.game.events.serverEvents;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-/**
- * A test suite for collecting all test relating to the hand package
- * @author Cedric
- *
- */
-public class AllHandTests {
+import org.cspoker.server.game.events.Event;
 
-	public static Test suite() {
-		TestSuite suite = new TestSuite("Test for game.cards.hand.test");
-		//$JUnit-BEGIN$
-		suite.addTestSuite(TestHand.class);
-		suite.addTestSuite(TestHandEvaluator.class);
-		suite.addTestSuite(TestHandQuality.class);
-		//$JUnit-END$
-		return suite;
-	}
+public class ServerEvent extends Event{
 
 }

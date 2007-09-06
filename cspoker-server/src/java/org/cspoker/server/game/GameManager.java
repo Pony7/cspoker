@@ -30,7 +30,13 @@ public class GameManager {
 	/**
 	 * The hash map containing all the game mediators.
 	 */
-	private static ConcurrentHashMap<TableId, GameMediator> hashMap = new ConcurrentHashMap<TableId, GameMediator>();
+	private final static ConcurrentHashMap<TableId, GameMediator> hashMap = new ConcurrentHashMap<TableId, GameMediator>();
+
+	private final static ServerMediator serverMediator = new ServerMediator();
+
+	public static ServerMediator getServerMediator(){
+		return serverMediator;
+	}
 
 	/**
 	 * Returns the game mediator for the game with given id.

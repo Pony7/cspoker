@@ -106,6 +106,9 @@ public interface PlayerCommunication {
 	 */
 	public void allIn() throws IllegalActionException;
 
+
+	public void say(String message);
+
 	/**********************************************************
 	 * Leave/Join Game
 	 **********************************************************/
@@ -161,7 +164,7 @@ public interface PlayerCommunication {
 	 * times without changing the result. (i.e. retry after network error)
 	 *
 	 */
-	public GameEvents getLatestGameEvents() throws IllegalActionException;
+	public Events getLatestEvents() throws IllegalActionException;
 
 	/**
 	 * Returns the latest game events,
@@ -171,6 +174,6 @@ public interface PlayerCommunication {
 	 * @return
 	 * @throws IllegalActionException
 	 */
-	public GameEvents getLatestGameEventsAndAck(int ack) throws IllegalActionException;
+	public Events getLatestEventsAndAck(int ack) throws IllegalActionException;
 
 }

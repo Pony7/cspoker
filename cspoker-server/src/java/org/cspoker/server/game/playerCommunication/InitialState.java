@@ -22,6 +22,8 @@ import org.cspoker.server.game.TableId;
 import org.cspoker.server.game.TableManager;
 import org.cspoker.server.game.elements.table.PlayerListFullException;
 import org.cspoker.server.game.elements.table.Table;
+import org.cspoker.server.game.events.serverEvents.PlayerJoinedEvent;
+import org.cspoker.server.game.events.serverEvents.TableCreatedEvent;
 import org.cspoker.server.game.gameControl.IllegalActionException;
 
 /**
@@ -85,6 +87,7 @@ class InitialState extends PlayerCommunicationState {
 					new WaitingAtTableState(playerCommunication, table));
 		}
 		InitialState.logger.info(playerCommunication.getPlayer().getName() + " joined " + id + ".");
+		GameManager.getServerMediator().publishPlayerJoinedEvent(new PlayerJoinedEvent(playerCommunication.getPlayer().getSavedPlayer(), id));
 	}
 
 	@Override
@@ -98,6 +101,7 @@ class InitialState extends PlayerCommunicationState {
 		playerCommunication.setPlayerCommunicationState(new TableCreatedState(playerCommunication, table));
 		//TODO low priority Enhancement: Give a name to the table?
 		InitialState.logger.info(playerCommunication.getPlayer().getName() + " created " + table.getId() + ".");
+		GameManager.getServerMediator().publishTableCreatedEvent(new TableCreatedEvent(playerCommunication.getPlayer().getSavedPlayer(), table.getId()));
 		return table.getId();
 	}
 

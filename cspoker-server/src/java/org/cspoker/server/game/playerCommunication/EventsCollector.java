@@ -20,8 +20,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.cspoker.server.game.events.gameEvents.GameEvent;
-import org.cspoker.server.game.events.gameEvents.GameEventListener;
+import org.cspoker.server.game.events.Event;
+import org.cspoker.server.game.events.EventListener;
 
 /**
  * A class to collect and to manage
@@ -30,18 +30,16 @@ import org.cspoker.server.game.events.gameEvents.GameEventListener;
  * @author Kenzo
  *
  */
-public class GameEventsCollector implements GameEventListener{
+public class EventsCollector implements EventListener{
 
 	private int ackedToNumber=0;
 
 	private int latestEventNumber=0;
 
-	private final int latestAckedToNumber = 0;
-
 	/**
 	 * This variable contains the game events.
 	 */
-	private final List<GameEvent> events = new ArrayList<GameEvent>();
+	private final List<Event> events = new ArrayList<Event>();
 
 	/**
 	 * This method is called when subscribed to inform a new game event occurred.
@@ -49,7 +47,7 @@ public class GameEventsCollector implements GameEventListener{
 	 * @param 	event
 	 * 			The event object containing all information of the occurred event.
 	 */
-	public synchronized void onGameEvent(GameEvent event) {
+	public synchronized void onEvent(Event event) {
 		events.add(event);
 		latestEventNumber++;
 	}
@@ -59,11 +57,11 @@ public class GameEventsCollector implements GameEventListener{
 	 *
 	 * @return The latest game events.
 	 */
-	public synchronized GameEvents getLatestEvents(){
-		return new GameEvents(Collections.unmodifiableList(new ArrayList<GameEvent>(events)), latestEventNumber);
+	public synchronized Events getLatestEvents(){
+		return new Events(Collections.unmodifiableList(new ArrayList<Event>(events)), latestEventNumber);
 	}
 
-	public synchronized GameEvents getLatestEventsAndAck(int ack){
+	public synchronized Events getLatestEventsAndAck(int ack){
 		if(ack<=ackedToNumber)
 			return getLatestEvents();
 		if((ack>latestEventNumber))
