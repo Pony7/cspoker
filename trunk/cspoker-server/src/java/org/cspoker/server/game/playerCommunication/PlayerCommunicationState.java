@@ -15,7 +15,9 @@
  */
 package org.cspoker.server.game.playerCommunication;
 
+import org.cspoker.server.game.GameManager;
 import org.cspoker.server.game.TableId;
+import org.cspoker.server.game.events.MessageEvent;
 import org.cspoker.server.game.gameControl.IllegalActionException;
 
 /**
@@ -72,7 +74,7 @@ abstract class PlayerCommunicationState implements PlayerCommunication{
 	}
 
 	public void say(String message){
-
+		GameManager.getServerMediator().publishMessageEvent(new MessageEvent(playerCommunication.getPlayer().getSavedPlayer(), message));
 	}
 
 	/**********************************************************

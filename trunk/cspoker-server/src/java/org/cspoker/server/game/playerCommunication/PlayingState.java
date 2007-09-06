@@ -17,6 +17,7 @@ package org.cspoker.server.game.playerCommunication;
 
 import org.cspoker.server.game.GameManager;
 import org.cspoker.server.game.GameMediator;
+import org.cspoker.server.game.events.MessageEvent;
 import org.cspoker.server.game.gameControl.IllegalActionException;
 
 /**
@@ -87,6 +88,11 @@ class PlayingState extends PlayerCommunicationState {
 	@Override
 	public void allIn() throws IllegalActionException{
 		gameMediator.allIn(playerCommunication.getPlayer());;
+	}
+
+	@Override
+	public void say(String message){
+		gameMediator.publishMessageEvent(new MessageEvent(playerCommunication.getPlayer().getSavedPlayer(), message));
 	}
 
 	@Override

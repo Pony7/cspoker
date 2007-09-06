@@ -19,12 +19,14 @@ package org.cspoker.server.game;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import org.cspoker.server.game.events.Event;
 import org.cspoker.server.game.events.EventListener;
+import org.cspoker.server.game.events.MessageEvent;
+import org.cspoker.server.game.events.MessageListener;
 import org.cspoker.server.game.events.serverEvents.PlayerJoinedEvent;
 import org.cspoker.server.game.events.serverEvents.PlayerJoinedListener;
 import org.cspoker.server.game.events.serverEvents.PlayerLeftEvent;
 import org.cspoker.server.game.events.serverEvents.PlayerLeftListener;
-import org.cspoker.server.game.events.serverEvents.ServerEvent;
 import org.cspoker.server.game.events.serverEvents.TableCreatedEvent;
 import org.cspoker.server.game.events.serverEvents.TableCreatedListener;
 
@@ -155,13 +157,59 @@ public class ServerMediator {
 	private final List<PlayerJoinedListener> playerJoinedListeners = new CopyOnWriteArrayList<PlayerJoinedListener>();
 
 	/**
+	 * Inform all subscribed message listeners a message event has occurred.
+	 *
+	 * Each subscribed message listener is updated
+	 * by calling their onMessageEvent() method.
+	 *
+	 */
+	public void publishMessageEvent(MessageEvent event) {
+		for (MessageListener listener : messageListeners) {
+			listener.onMessageEvent(event);
+		}
+		publishServerEvent(event);
+	}
+
+	/**
+	 * Subscribe the given message listener for message events.
+	 *
+	 * @param 	listener
+	 * 			The listener to subscribe.
+	 */
+	public void subscribeMessageListener(MessageListener listener) {
+		messageListeners.add(listener);
+	}
+
+	/**
+	 * Unsubscribe the given message listener for message events.
+	 *
+	 * @param 	listener
+	 * 			The listener to unsubscribe.
+	 */
+	public void unsubscribeMessageListener(MessageListener listener) {
+		messageListeners.remove(listener);
+	}
+
+	/**
+	 * This list contains all message listeners that
+	 * should be alerted on a message.
+	 */
+	private final List<MessageListener> messageListeners = new CopyOnWriteArrayList<MessageListener>();
+
+
+	/**********************************************************
+	 * Server Events
+	 **********************************************************/
+
+
+	/**
 	 * Inform all subscribed server event listeners a server event has occurred.
 	 *
 	 * Each subscribed server event listener is updated
 	 * by calling their onEvent() method.
 	 *
 	 */
-	private void publishServerEvent(ServerEvent event) {
+	private void publishServerEvent(Event event) {
 		for (EventListener listener : serverEventListeners) {
 			listener.onEvent(event);
 		}

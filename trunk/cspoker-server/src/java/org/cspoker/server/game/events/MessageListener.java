@@ -13,19 +13,11 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
+package org.cspoker.server.game.events;
 
-package org.cspoker.server.game.events.gameEvents;
 
-import org.cspoker.server.game.events.Event;
+public interface MessageListener {
 
-/**
- * A class of game events.
- *
- * All game events should inherit from this abstract class.
- *
- * @author Kenzo
- *
- */
-public abstract class GameEvent extends Event{
+	public void onMessageEvent(MessageEvent event);
 
 }
