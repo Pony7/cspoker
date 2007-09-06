@@ -140,7 +140,7 @@ public class CardImpl implements Card{
 	 */
 	@Override
 	public String toString(){
-		return getRank().toString()+" of "+getSuit().toString();
+		return getRank().toString() + getSuit().toString();
 	}
 
 	/**
