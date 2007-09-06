@@ -84,11 +84,16 @@ public class GameControl implements PlayerAction{
 		gameMediator.setGameControl(this);
 		game = new Game(table);
 		round = new WaitingRound(gameMediator, game);
-		
+		try {
+			deal(game.getDealer());
+		} catch (IllegalActionException e) {
+			e.printStackTrace();
+		}
+
 		Date date = new Date();
-		GameControl.logger.info(this.getGame().getGameProperty().getBettingRules().toString() + " " + "($" + table.getGameProperty().getSmallBlind()
+		GameControl.logger.info(getGame().getGameProperty().getBettingRules().toString() + " " + "($" + table.getGameProperty().getSmallBlind()
 				+ "/" + table.getGameProperty().getBigBlind() + ") - " + GameControl.dateFormat.format(date));
-		
+
 		List<Player> players = game.getCurrentDealPlayers();
 		for (Player player : players) {
 			GameControl.logger.info(player.toString());
@@ -288,9 +293,9 @@ public class GameControl implements PlayerAction{
 	private void changeToNextRound(){
 		round.endRound();
 		round = round.getNextRound();
-		if(round instanceof BettingRound && ((BettingRound) round).onlyOnePlayerLeftBesidesAllInPlayers())
+		if((round instanceof BettingRound) && ((BettingRound) round).onlyOnePlayerLeftBesidesAllInPlayers())
 			changeToNextRound();
-		if(round instanceof BettingRound && ((BettingRound) round).onlyAllInPlayers())
+		if((round instanceof BettingRound) && ((BettingRound) round).onlyAllInPlayers())
 			changeToNextRound();
 	}
 }
