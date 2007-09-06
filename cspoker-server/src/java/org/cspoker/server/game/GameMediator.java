@@ -24,7 +24,10 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.cspoker.server.game.elements.table.PlayerListFullException;
+import org.cspoker.server.game.events.Event;
 import org.cspoker.server.game.events.EventListener;
+import org.cspoker.server.game.events.MessageEvent;
+import org.cspoker.server.game.events.MessageListener;
 import org.cspoker.server.game.events.gameEvents.GameEvent;
 import org.cspoker.server.game.events.gameEvents.GameEventListener;
 import org.cspoker.server.game.events.gameEvents.NewCommunityCardsEvent;
@@ -935,6 +938,46 @@ public class GameMediator implements PlayerAction{
 	 */
 	private final List<PotChangedListener> potChangedListeners = new CopyOnWriteArrayList<PotChangedListener>();
 
+	/**
+	 * Inform all subscribed message listeners a message event has occurred.
+	 *
+	 * Each subscribed message listener is updated
+	 * by calling their onMessageEvent() method.
+	 *
+	 */
+	public void publishMessageEvent(MessageEvent event) {
+		for (MessageListener listener : messageListeners) {
+			listener.onMessageEvent(event);
+		}
+		publishGameEvent(event);
+	}
+
+	/**
+	 * Subscribe the given message listener for message events.
+	 *
+	 * @param 	listener
+	 * 			The listener to subscribe.
+	 */
+	public void subscribeMessageListener(MessageListener listener) {
+		messageListeners.add(listener);
+	}
+
+	/**
+	 * Unsubscribe the given message listener for message events.
+	 *
+	 * @param 	listener
+	 * 			The listener to unsubscribe.
+	 */
+	public void unsubscribeMessageListener(MessageListener listener) {
+		messageListeners.remove(listener);
+	}
+
+	/**
+	 * This list contains all message listeners that
+	 * should be alerted on a message.
+	 */
+	private final List<MessageListener> messageListeners = new CopyOnWriteArrayList<MessageListener>();
+
 
 	/**********************************************************
 	 * Personal Events
@@ -1037,7 +1080,7 @@ public class GameMediator implements PlayerAction{
 	 * by calling their onGameEvent() method.
 	 *
 	 */
-	public void publishGameEvent(GameEvent event){
+	private void publishGameEvent(Event event){
 		for(EventListener listener:gameEventListeners){
 			listener.onEvent(event);
 		}
