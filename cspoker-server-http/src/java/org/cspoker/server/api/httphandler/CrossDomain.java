@@ -7,7 +7,6 @@ import com.sun.net.httpserver.HttpHandler;
 
 public class CrossDomain implements HttpHandler {
 
-    @Override
     public void handle(HttpExchange http) throws IOException {
 	if(http.getRequestURI().getPath()!=null && http.getRequestURI().getPath().endsWith("crossdomain.xml")){
 	    byte[] result="<?xml version=\"1.0\"?><!DOCTYPE cross-domain-policy SYSTEM \"http://www.macromedia.com/xml/dtds/cross-domain-policy.dtd\"><cross-domain-policy><allow-access-from domain=\"*\" /></cross-domain-policy>".getBytes();
