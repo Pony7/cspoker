@@ -997,8 +997,24 @@ public class GameMediator implements PlayerAction{
 	 * @param 	listener
 	 * 			The listener to unsubscribe.
 	 */
-	public void unsubscribeNewPocketCardsListener(NewPrivateCardsListener listener) {
-		//TODO
+	public void unsubscribeNewPocketCardsListener(PlayerId id, NewPrivateCardsListener listener) {
+		List<NewPrivateCardsListener> currentListeners;
+		List<NewPrivateCardsListener> newListeners;
+
+		boolean removed;
+
+		do{
+			currentListeners = newPrivateCardsListeners.get(id);
+			if(currentListeners==null)
+				return;
+			newListeners = new ArrayList<NewPrivateCardsListener>(currentListeners);
+			newListeners.remove(listener);
+			if(newListeners.size()==0){
+				removed = newPrivateCardsListeners.remove(id, currentListeners);
+			}else{
+				removed = newPrivateCardsListeners.replace(id, currentListeners, Collections.unmodifiableList(newListeners));
+			}
+		}while(!removed);
 	}
 
 	/**
@@ -1110,8 +1126,24 @@ public class GameMediator implements PlayerAction{
 	 * @param 	listener
 	 * 			The listener to unsubscribe.
 	 */
-	public void unsubscribePersonalGameEventEventListener(GameEventListener listener) {
-		//TODO
+	public void unsubscribePersonalGameEventEventListener(PlayerId id, GameEventListener listener) {
+		List<GameEventListener> currentListeners;
+		List<GameEventListener> newListeners;
+
+		boolean removed;
+
+		do{
+			currentListeners = personalEventsListeners.get(id);
+			if(currentListeners==null)
+				return;
+			newListeners = new ArrayList<GameEventListener>(currentListeners);
+			newListeners.remove(listener);
+			if(newListeners.size()==0){
+				removed = personalEventsListeners.remove(id, currentListeners);
+			}else{
+				removed = personalEventsListeners.replace(id, currentListeners, Collections.unmodifiableList(newListeners));
+			}
+		}while(!removed);
 	}
 
 	/**
