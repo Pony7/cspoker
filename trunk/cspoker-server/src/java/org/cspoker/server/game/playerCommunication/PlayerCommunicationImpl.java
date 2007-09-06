@@ -16,6 +16,7 @@
 
 package org.cspoker.server.game.playerCommunication;
 
+import org.cspoker.server.game.GameManager;
 import org.cspoker.server.game.TableId;
 import org.cspoker.server.game.gameControl.IllegalActionException;
 import org.cspoker.server.game.player.Player;
@@ -44,6 +45,8 @@ public class PlayerCommunicationImpl implements PlayerCommunication {
 	 */
 	private PlayerCommunicationState state;
 
+	private final EventsCollector eventsCollector = new EventsCollector();
+
 
 	/**********************************************************
 	 * Constructor
@@ -58,6 +61,7 @@ public class PlayerCommunicationImpl implements PlayerCommunication {
 	public PlayerCommunicationImpl(Player player){
 		this.player = player;
 		state = new InitialState(this);
+		GameManager.getServerMediator().subscribeServerEventListener(getEventsCollector());
 
 		//TODO Temporary...
 		PlayerCommunicationManager.addPlayerCommunication(player.getId(), this);
@@ -104,6 +108,10 @@ public class PlayerCommunicationImpl implements PlayerCommunication {
 		state.allIn();
 	}
 
+	public void say(String message){
+
+	}
+
 	/**********************************************************
 	 * Leave/Join Game
 	 **********************************************************/
@@ -136,19 +144,23 @@ public class PlayerCommunicationImpl implements PlayerCommunication {
 	}
 
 
-	public GameEvents getLatestGameEvents() throws IllegalActionException{
-		return state.getLatestGameEvents();
+	public Events getLatestEvents() throws IllegalActionException{
+		return eventsCollector.getLatestEvents();
 	}
 
 
-	public GameEvents getLatestGameEventsAndAck(int ack) throws IllegalActionException{
-		return state.getLatestGameEventsAndAck(ack);
+	public Events getLatestEventsAndAck(int ack) throws IllegalActionException{
+		return eventsCollector.getLatestEventsAndAck(ack);
+	}
+
+	EventsCollector getEventsCollector(){
+		return eventsCollector;
 	}
 
 	void setPlayerCommunicationState(PlayerCommunicationState state){
 		this.state = state;
 	}
-	
+
 	@Override
 	public String toString(){
 		return "player communication of "+player.getName();

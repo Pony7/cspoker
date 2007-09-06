@@ -16,6 +16,22 @@
 
 package org.cspoker.server.game.events.serverEvents;
 
-public class TableCreatedEvent {
+import org.cspoker.server.game.TableId;
+import org.cspoker.server.game.player.SavedPlayer;
 
+public class TableCreatedEvent extends ServerEvent{
+
+	private final TableId id;
+
+	private final SavedPlayer player;
+
+	public TableCreatedEvent(SavedPlayer player, TableId id){
+		this.player = player;
+		this.id = id;
+	}
+
+	@Override
+	public String toString(){
+		return player.getName()+" has created a new table ["+id+"].";
+	}
 }

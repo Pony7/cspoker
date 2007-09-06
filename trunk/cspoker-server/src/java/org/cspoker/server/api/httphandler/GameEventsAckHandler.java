@@ -24,7 +24,7 @@ import org.cspoker.server.api.httphandler.abstracts.HttpHandlerImpl;
 import org.cspoker.server.api.httphandler.abstracts.RequestStreamHandler;
 import org.cspoker.server.api.httphandler.exception.HttpSaxException;
 import org.cspoker.server.game.gameControl.IllegalActionException;
-import org.cspoker.server.game.playerCommunication.GameEvents;
+import org.cspoker.server.game.playerCommunication.Events;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
@@ -74,10 +74,10 @@ public class GameEventsAckHandler extends RequestStreamHandler {
 	    @Override
 	    public void endDocument() throws SAXException {
 		String username= HttpHandlerImpl.toPlayerName(http.getRequestHeaders());
-		GameEvents events;
+		Events events;
 		try {
 		    events=PlayerCommunicationFactory.getRegisteredPlayerCommunication(username)
-		        	.getLatestGameEventsAndAck(Integer.parseInt(ack));
+		        	.getLatestEventsAndAck(Integer.parseInt(ack));
 		} catch (NumberFormatException e) {
 		    throw new HttpSaxException(e, 400);
 		} catch (IllegalActionException e) {

@@ -21,6 +21,7 @@ import org.cspoker.server.game.GameMediator;
 import org.cspoker.server.game.PlayerId;
 import org.cspoker.server.game.TableManager;
 import org.cspoker.server.game.elements.table.Table;
+import org.cspoker.server.game.events.serverEvents.PlayerLeftEvent;
 import org.cspoker.server.game.gameControl.GameControl;
 import org.cspoker.server.game.gameControl.IllegalActionException;
 
@@ -47,7 +48,7 @@ class TableCreatedState extends WaitingAtTableState {
 	private static Logger logger = Logger.getLogger(TableCreatedState.class);
 	/**
 	 * Construct a new table created state with given player communication and table.
-	 * 
+	 *
 	 * @param 	playerCommunication
 	 * 			The playerCommunication of the player.
 	 * @param 	table
@@ -79,7 +80,7 @@ class TableCreatedState extends WaitingAtTableState {
 
 		TableCreatedState.logger.info("Game Started.");
 	}
-	
+
 	@Override
 	public void leaveTable() throws IllegalActionException{
 		synchronized (table) {
@@ -87,6 +88,7 @@ class TableCreatedState extends WaitingAtTableState {
 				TableManager.removeTable(table);
 				table.removePlayer(playerCommunication.getPlayer());
 				playerCommunication.setPlayerCommunicationState(new InitialState(playerCommunication));
+				GameManager.getServerMediator().publishPlayerLeftEvent(new PlayerLeftEvent(playerCommunication.getPlayer().getSavedPlayer(), table.getId()));
 			} else
 				throw new IllegalActionException("The owner can only leave if he is the only player at the table.");
 		}
