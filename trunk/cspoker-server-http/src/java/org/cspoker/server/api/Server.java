@@ -19,7 +19,7 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 
 import org.apache.log4j.Logger;
-import org.cspoker.server.api.authentication.HardCodedBasicAuthentication;
+import org.cspoker.server.api.authentication.XmlFileBasicAuthentication;
 import org.cspoker.server.api.httphandler.AllInHandler;
 import org.cspoker.server.api.httphandler.BetHandler;
 import org.cspoker.server.api.httphandler.CallHandler;
@@ -36,6 +36,8 @@ import org.cspoker.server.api.httphandler.ListTablesHandler;
 import org.cspoker.server.api.httphandler.PingHandler;
 import org.cspoker.server.api.httphandler.RaiseHandler;
 import org.cspoker.server.api.httphandler.StartGameHandler;
+import org.cspoker.server.common.authentication.XmlFileAuthenticator;
+import org.cspoker.server.utils.Log4JPropertiesLoader;
 
 import com.sun.net.httpserver.Authenticator;
 import com.sun.net.httpserver.HttpContext;
@@ -45,36 +47,31 @@ import com.sun.net.httpserver.HttpServer;
  * Creates a new web server and starts it.
  */
 public class Server {
-	private static Logger logger = Logger.getLogger(Server.class);
+    private static Logger logger = Logger.getLogger(Server.class);
 
     public static void main(String[] args) throws NumberFormatException, IOException {
-
+	Log4JPropertiesLoader.load("org/cspoker/server/http/logging/log4j.properties");
+	
 	if (args.length < 1) {
-		usage();
+	    usage();
 	}
 
 	int port=0;
 	try {
 	    port=Integer.parseInt(args[0]);
 	} catch (NumberFormatException e) {
-		usage();
+	    usage();
 	}
 
-	String authenticationFile = null;
-	if(args.length>=2 && args[1].startsWith("-authentication="))
-	    authenticationFile = args[1].replace("-authentication=", "");
-	
-	Server server = new Server(port, authenticationFile);
+	Server server = new Server(port);
 	server.start();
     }
 
-	private static void usage() {
-		Server.logger.fatal("usage: java -jar cspoker-server.jar [portnumber] [optional arguments]");
-		Server.logger.fatal("  optional arguments:");
-		Server.logger.fatal("  -authentication=[xml file]"  );
-	    System.exit(0);
-	}
-    
+    private static void usage() {
+	Server.logger.fatal("usage: java -jar cspoker-server.jar [portnumber] [optional arguments]");
+	System.exit(0);
+    }
+
     private Authenticator authenticator;
 
     /**
@@ -88,18 +85,23 @@ public class Server {
      * @param port
      *        The port to listen at.
      * @param authenticationFile 
+     * @throws IOException 
      * @throws IOException
      */
-    public Server(int port, String authenticationFile) throws IOException {
+
+    public Server(int port) throws IOException {
+	this(port, new XmlFileAuthenticator());
+    }
+    public Server(int port, XmlFileAuthenticator auth) throws IOException {
 	server = HttpServer.create(new InetSocketAddress(port), 0);
 
-	authenticator = new HardCodedBasicAuthentication(authenticationFile);
-	
+	authenticator = new XmlFileBasicAuthentication(auth);
+
 	loadContext();
-	
+
 	Server.logger.info("Server created for port " + port + ".");
     }
-    
+
     protected void loadContext(){
 	HttpContext pingContext = server.createContext("/ping/", new PingHandler());
 	pingContext.setAuthenticator(authenticator);
@@ -112,42 +114,42 @@ public class Server {
 
 	HttpContext joinTableContext = server.createContext("/table/join/", new JoinTableHandler());
 	joinTableContext.setAuthenticator(authenticator);
-	
+
 	HttpContext leaveTableContext = server.createContext("/table/leave/", new LeaveTableHandler());
 	leaveTableContext.setAuthenticator(authenticator);
 
 	HttpContext gameEventsContext = server.createContext("/game/events/", new GameEventsHandler());
 	gameEventsContext.setAuthenticator(authenticator);
-	
+
 	HttpContext gameEventsAckContext = server.createContext("/game/events/ack/", new GameEventsAckHandler());
 	gameEventsAckContext.setAuthenticator(authenticator);
-	
+
 	HttpContext startGameContext = server.createContext("/game/start/", new StartGameHandler());
 	startGameContext.setAuthenticator(authenticator);
-	
+
 	HttpContext dealContext = server.createContext("/game/deal/", new DealHandler());
 	dealContext.setAuthenticator(authenticator);
-	
+
 	HttpContext callContext = server.createContext("/game/call/", new CallHandler());
 	callContext.setAuthenticator(authenticator);
-	
+
 	HttpContext betContext = server.createContext("/game/bet/", new BetHandler());
 	betContext.setAuthenticator(authenticator);
-	
+
 	HttpContext checkContext = server.createContext("/game/check/", new CheckHandler());
 	checkContext.setAuthenticator(authenticator);
-    
+
 	HttpContext foldContext = server.createContext("/game/fold/", new FoldHandler());
 	foldContext.setAuthenticator(authenticator);
-	
+
 	HttpContext raiseContext = server.createContext("/game/raise/", new RaiseHandler());
 	raiseContext.setAuthenticator(authenticator);
-	
+
 	HttpContext allInContext = server.createContext("/game/allin/", new AllInHandler());
 	allInContext.setAuthenticator(authenticator);
-	
+
 	server.createContext("/", new CrossDomain());
-	
+
     }
 
     /**
