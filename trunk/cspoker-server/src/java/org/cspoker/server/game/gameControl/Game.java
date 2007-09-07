@@ -18,7 +18,6 @@ package org.cspoker.server.game.gameControl;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import org.apache.log4j.Logger;
 import org.cspoker.common.game.elements.cards.Card;
@@ -109,6 +108,10 @@ public class Game {
 	 *
 	 */
 	public Game(Table table){
+		this(table, table.getRandomPlayer());
+	}
+
+	public Game(Table table, Player dealer){
 		this.table = table;
 		table.setPlaying(true);
 		gameProperty = table.getGameProperty();
@@ -118,7 +121,7 @@ public class Game {
 		deck = new Deck();
 		communityCards = new ArrayList<Card>();
 		pots = new Pots();
-		changeDealer(currentHandPlayers.getList().get(new Random().nextInt(currentHandPlayers.size())));
+		changeDealer(dealer);
 	}
 
 	/**********************************************************

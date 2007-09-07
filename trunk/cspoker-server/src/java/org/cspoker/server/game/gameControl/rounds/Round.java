@@ -313,12 +313,13 @@ public abstract class Round implements PlayerAction{
 			return new PreFlopRound(gameMediator, game);
 		}
 	}
-	
+
 	private boolean potsDividedToWinner;
+
 	public boolean potsDividedToWinner(){
 		return potsDividedToWinner;
 	}
 	protected void setPotsDividedToWinner(boolean flag){
-		this.potsDividedToWinner=flag;
+		potsDividedToWinner=flag;
 	}
 }
