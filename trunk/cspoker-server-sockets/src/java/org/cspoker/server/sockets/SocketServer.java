@@ -32,18 +32,38 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
+import org.cspoker.server.common.authentication.XmlFileAuthenticator;
 import org.cspoker.server.sockets.threading.LoggingThreadPool;
 import org.cspoker.server.sockets.threading.Prioritizable;
 import org.cspoker.server.sockets.threading.SocketRunnableComparator;
-import org.xml.sax.SAXException;
+import org.cspoker.server.utils.Log4JPropertiesLoader;
 
 public class SocketServer 
 {
 
-    public static void main(String args[]) throws IOException, SAXException{
-	new SocketServer();
+    public static void main(String[] args) throws NumberFormatException, IOException {
+	
+	Log4JPropertiesLoader.load("org/cspoker/server/sockets/logging/log4j.properties");
+	
+	if (args.length < 1) {
+	    usage();
+	}
+	
+	int port=0;
+	try {
+	    port=Integer.parseInt(args[0]);
+	} catch (NumberFormatException e) {
+	    usage();
+	}
+
+	SocketServer server = new SocketServer(port);
     }
-    
+
+    private static void usage() {
+	logger.fatal("usage: java -jar cspoker-server-sockets.jar [portnumber]");
+	System.exit(0);
+    }
+
     private static Logger logger = Logger.getLogger(SocketServer.class);
 
     public final static int bufferSize = 1024;
@@ -57,14 +77,20 @@ public class SocketServer
 
     private final ThreadPoolExecutor executor;
 
-    public SocketServer() throws IOException {
+    private final Charset charset;
+    private final CharsetDecoder decoder;
+
+    private final Authenticator auth;
+
+    public SocketServer(int port) throws IOException {
+
 	// Create the server socket channel
 	server = ServerSocketChannel.open();
 	// nonblocking I/O
 	server.configureBlocking(false);
 	// host-port 8000
-	server.socket().bind(new java.net.InetSocketAddress(8000));
-	logger.info("Server running on port 8000");
+	server.socket().bind(new java.net.InetSocketAddress(port));
+	logger.info("Server running on port "+port);
 	// Create the selector
 	selector = Selector.open();
 	// Recording server to selector (type OP_ACCEPT)
@@ -73,6 +99,11 @@ public class SocketServer
 	// Direct buffers should be long-lived and be reused as much as possible.
 	buffer = ByteBuffer.allocateDirect(bufferSize);
 	filteredBuffer = ByteBuffer.allocateDirect(bufferSize);
+
+	charset=Charset.forName("UTF-8");
+	decoder = charset.newDecoder();
+
+	this.auth = new Authenticator(new XmlFileAuthenticator());
 
 	executor = new LoggingThreadPool(
 		1,
@@ -88,27 +119,42 @@ public class SocketServer
     }
 
     private class WaitForIO implements Runnable, Prioritizable{
-	
-	    public void run() {
-		waitForWork();
-		executor.submit(new WaitForIO());
-	    }
 
-	    public int getPriority() {
-		return -1;
-	    }
+	public void run() {
+	    waitForWork();
+	    executor.submit(new WaitForIO());
+	}
+
+	public int getPriority() {
+	    return -1;
+	}
     }
 
     private class ProcessXML implements Runnable, Prioritizable{
 
 	private String xml;
-	
-	public ProcessXML(String xml) {
+	private ClientContext context;
+
+	public ProcessXML(String xml, ClientContext context) {
 	    this.xml=xml;
+	    this.context = context;
 	}
 
 	public void run() {
 	    System.out.println("got xml:"+xml);
+	    if(!context.isAuthenticated()){
+		if(!auth.authenticate(context, xml)){
+		    try {
+			context.closeConnection();
+		    } catch (IOException e) {
+			logger.error("can't close socket: "+e.getMessage());
+		    }
+		}else{
+		    context.send("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<login/>");
+		}
+	    }else{
+		context.send("recieved: "+xml);
+	    }
 	}
 
 	public int getPriority() {
@@ -127,21 +173,29 @@ public class SocketServer
 
 	    // For each keys...
 	    while(i.hasNext()) {
-		SelectionKey key = i.next();
+		SelectionKey key = (SelectionKey)i.next();
 
-		// Remove the current key
-		i.remove();
+		int kro = key.readyOps();
 
-		if (key.isAcceptable()) {
-		    acceptConnection();
-		}
-		else if (key.isReadable()) {
+
+		if((kro & SelectionKey.OP_READ) == SelectionKey.OP_READ){
 		    readSocket(key);
+		    logger.trace("read from socket");
 		}
+		if((kro & SelectionKey.OP_WRITE) == SelectionKey.OP_WRITE){
+		    getContext(key, (SocketChannel) key.channel()).writeBufferToClient();
+		    logger.trace("wrote data to socket");
+		}
+		if((kro & SelectionKey.OP_ACCEPT) == SelectionKey.OP_ACCEPT){
+		    acceptConnection();
+		    logger.trace("accepted new connection");
+		}
+		i.remove();			// remove the key
 
 	    }
 	} catch (IOException e) {
 	    //no op
+	    logger.error(e.getMessage());
 	    e.printStackTrace();
 	}
 
@@ -157,29 +211,33 @@ public class SocketServer
 
 	if (numBytesRead == -1) {
 	    // No more bytes can be read from the channel
-	    //client.close();
+	    client.close();
 	} else {
 	    // To read the bytes, flip the buffer
 	    buffer.flip();
-	    ClientContext context = (ClientContext)(key.attachment());
-	    if(context==null){
-		context = new ClientContext();
-		key.attach(context);
-	    }
+	    ClientContext context = getContext(key, client);
 	    StringBuilder stringBuilder = context.getBuffer();
 
 	    while (buffer.hasRemaining()) {
 		boolean hasEnded = filterUntilEndNode();
 
-		Charset charset=Charset.forName("UTF-8");
-		CharsetDecoder decoder = charset.newDecoder();
 		CharBuffer decoded = decoder.decode(filteredBuffer);
 		stringBuilder.append(decoded);
 		if(hasEnded){
-		    endNode(stringBuilder);
+		    endNode(stringBuilder, context);
 		}
 	    }
 	}
+
+    }
+
+    private ClientContext getContext(SelectionKey key, SocketChannel client) {
+	ClientContext context = (ClientContext)(key.attachment());
+	if(context==null){
+	    context = new ClientContext(client, selector);
+	    key.attach(context);
+	}
+	return context;
 
     }
 
@@ -206,11 +264,10 @@ public class SocketServer
 	client.configureBlocking(false);
 	// recording to the selector (reading)
 	client.register(selector, SelectionKey.OP_READ);
-	logger.debug("accepted new connection");
     }
 
-    private void endNode(StringBuilder stringBuilder){
-	executor.submit(new ProcessXML(stringBuilder.toString()));
+    private void endNode(StringBuilder stringBuilder, ClientContext context){
+	executor.submit(new ProcessXML(stringBuilder.toString(), context));
 	stringBuilder.setLength(0);
 	logger.debug("ended an xml node");
     }
