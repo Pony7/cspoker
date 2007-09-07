@@ -1,10 +1,11 @@
-package org.cspoker.server.sockets;
+package org.cspoker.server.sockets.security;
 
 import java.io.IOException;
 import java.io.StringReader;
 
 import org.apache.log4j.Logger;
 import org.cspoker.server.common.authentication.XmlFileAuthenticator;
+import org.cspoker.server.sockets.ClientContext;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -12,13 +13,15 @@ import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 import org.xml.sax.helpers.XMLReaderFactory;
 
-public class Authenticator {
+public class SocketsAuthenticator{
 
-    private static Logger logger = Logger.getLogger(Authenticator.class);
+    private static Logger logger = Logger.getLogger(SocketsAuthenticator.class);
     
     private XmlFileAuthenticator auth;
 
-    public Authenticator(XmlFileAuthenticator auth) {
+    public final static String POSITIVE_RESPONSE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<login/>";
+
+    public SocketsAuthenticator(XmlFileAuthenticator auth) {
 	this.auth = auth;
     }
 
