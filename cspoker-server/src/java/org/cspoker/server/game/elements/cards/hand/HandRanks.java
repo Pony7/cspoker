@@ -83,7 +83,7 @@ public final class HandRanks {
 	}
 
 	private void loadHandRanks() {
-		final InputStream in = getClass().getClassLoader().getResourceAsStream("org/cspoker/server/game/elements/cards/handhandRanks.txt");
+		final InputStream in = getClass().getClassLoader().getResourceAsStream("org/cspoker/server/game/elements/cards/hand/handRanks.txt");
 		try {
 			final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in));
 
@@ -109,11 +109,9 @@ public final class HandRanks {
 
 			bufferedReader.close();
 		} catch (final FileNotFoundException e) {
-			e.printStackTrace();
-			HandRanks.logger.error(e.getMessage(), e);
+			HandRanks.logger.error(e.getLocalizedMessage(), e);
 		} catch (final IOException e) {
-			e.printStackTrace();
-			HandRanks.logger.error(e.getMessage(), e);
+			HandRanks.logger.error(e.getLocalizedMessage(), e);
 		}
 	}
 }
