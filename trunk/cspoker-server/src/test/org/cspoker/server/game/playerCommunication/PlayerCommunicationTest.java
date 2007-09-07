@@ -128,7 +128,11 @@ public class PlayerCommunicationTest extends TestCase {
 			PlayerCommunicationTest.logger.info("Kenzo's events:" + kenzoComm.getLatestEvents());
 			PlayerCommunicationTest.logger.info("Guy's events:" + guyComm.getLatestEvents());
 
-			currentComm.call();
+			try {
+				kenzoComm.call();
+			} catch (IllegalActionException e) {
+				guyComm.call();
+			}
 
 			PlayerCommunicationTest.logger.info("Guy's events:");
 			showEvents(guyComm.getLatestEvents().getGameEvents());
@@ -189,7 +193,12 @@ public class PlayerCommunicationTest extends TestCase {
 			PlayerCommunicationTest.logger.info("Kenzo's events:" + kenzoComm.getLatestEvents());
 			PlayerCommunicationTest.logger.info("Guy's events:" + guyComm.getLatestEvents());
 
-			currentComm.call();
+			try {
+				kenzoComm.call();
+			} catch (IllegalActionException e) {
+				guyComm.call();
+			}
+
 
 			PlayerCommunicationTest.logger.info("Guy's events:");
 			showEvents(guyComm.getLatestEvents().getGameEvents());
