@@ -32,7 +32,7 @@ public class PlayerLeftEvent extends ServerEvent{
 
 	@Override
 	public String toString(){
-		return player.getName()+" has lef the table ["+id+"].";
+		return player.getName()+" has left the table ["+id+"].";
 	}
 
 }
