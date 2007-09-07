@@ -46,8 +46,8 @@ import com.sun.net.httpserver.HttpServer;
 /**
  * Creates a new web server and starts it.
  */
-public class Server {
-    private static Logger logger = Logger.getLogger(Server.class);
+public class HttpCSPokerServer {
+    private static Logger logger = Logger.getLogger(HttpCSPokerServer.class);
 
     public static void main(String[] args) throws NumberFormatException, IOException {
 	Log4JPropertiesLoader.load("org/cspoker/server/http/logging/log4j.properties");
@@ -63,12 +63,12 @@ public class Server {
 	    usage();
 	}
 
-	Server server = new Server(port);
+	HttpCSPokerServer server = new HttpCSPokerServer(port);
 	server.start();
     }
 
     private static void usage() {
-	Server.logger.fatal("usage: java -jar cspoker-server.jar [portnumber] [optional arguments]");
+	HttpCSPokerServer.logger.fatal("usage: java -jar cspoker-server.jar [portnumber] [optional arguments]");
 	System.exit(0);
     }
 
@@ -89,17 +89,17 @@ public class Server {
      * @throws IOException
      */
 
-    public Server(int port) throws IOException {
+    public HttpCSPokerServer(int port) throws IOException {
 	this(port, new XmlFileAuthenticator());
     }
-    public Server(int port, XmlFileAuthenticator auth) throws IOException {
+    public HttpCSPokerServer(int port, XmlFileAuthenticator auth) throws IOException {
 	server = HttpServer.create(new InetSocketAddress(port), 0);
 
 	authenticator = new XmlFileBasicAuthentication(auth);
 
 	loadContext();
 
-	Server.logger.info("Server created for port " + port + ".");
+	HttpCSPokerServer.logger.info("Server created for port " + port + ".");
     }
 
     protected void loadContext(){
