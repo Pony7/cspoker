@@ -1,4 +1,3 @@
-
 /**
  * Copyright (C) 2007 Craig Motlin
  * 
@@ -21,8 +20,9 @@ package org.cspoker.server.game.elements.cards.hand;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -31,12 +31,10 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 import org.apache.oro.text.perl.Perl5Util;
 import org.cspoker.common.game.elements.cards.cardElements.Rank;
-import org.cspoker.server.utils.Configuration;
 
 
 /**
  * @author Craig Motlin
- * 
  */
 public final class HandRanks {
 	private static Logger logger = Logger.getLogger(HandRanks.class);
@@ -85,10 +83,9 @@ public final class HandRanks {
 	}
 
 	private void loadHandRanks() {
-		final String handRanksFile = Configuration.getProperties().getProperty("ranks", "cfg/handRanks.txt");
-
+		final InputStream in = getClass().getClassLoader().getResourceAsStream("org/cspoker/server/game/elements/cards/handhandRanks.txt");
 		try {
-			final BufferedReader bufferedReader = new BufferedReader(new FileReader(handRanksFile));
+			final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in));
 
 			String line = null;
 			while ((line = bufferedReader.readLine()) != null) {
