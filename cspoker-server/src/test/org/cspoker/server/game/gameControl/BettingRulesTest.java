@@ -1,22 +1,18 @@
 package org.cspoker.server.game.gameControl;
 
+import junit.framework.TestCase;
+
 import org.apache.log4j.Logger;
 import org.cspoker.server.game.GameMediator;
 import org.cspoker.server.game.TableId;
 import org.cspoker.server.game.elements.chips.IllegalValueException;
 import org.cspoker.server.game.elements.table.PlayerListFullException;
 import org.cspoker.server.game.elements.table.Table;
-import org.cspoker.server.game.gameControl.Game;
-import org.cspoker.server.game.gameControl.GameControl;
-import org.cspoker.server.game.gameControl.GameProperty;
-import org.cspoker.server.game.gameControl.IllegalActionException;
 import org.cspoker.server.game.gameControl.rules.Limit;
 import org.cspoker.server.game.gameControl.rules.NoLimit;
 import org.cspoker.server.game.gameControl.rules.PotLimit;
 import org.cspoker.server.game.player.Player;
 import org.cspoker.server.game.player.PlayerFactory;
-
-import junit.framework.TestCase;
 
 public class BettingRulesTest extends TestCase {
 	private static Logger logger = Logger.getLogger(BettingRulesTest.class);
@@ -32,7 +28,7 @@ public class BettingRulesTest extends TestCase {
 	private GameControl gameControl;
 
 	private GameMediator gameMediator;
-	
+
 	private PlayerFactory playerFactory;
 
 	@Override
@@ -40,7 +36,7 @@ public class BettingRulesTest extends TestCase {
 		playerFactory = new PlayerFactory();
 		try {
 			kenzo = playerFactory.createNewPlayer("Kenzo",100);
-			cedric = playerFactory.createNewPlayer("Cedric", 100); 
+			cedric = playerFactory.createNewPlayer("Cedric", 100);
 			guy = playerFactory.createNewPlayer("Guy", 100);
 			gameMediator = new GameMediator();
 		} catch (IllegalValueException e) {
@@ -58,14 +54,6 @@ public class BettingRulesTest extends TestCase {
 		}
 		gameControl = new GameControl(gameMediator, table);
 		Game game = gameControl.getGame();
-
-		Player dealer  = game.getDealer();
-
-		try {
-			gameControl.deal(dealer);
-		} catch (IllegalActionException e) {
-			fail(e.getMessage());
-		}
 
 		try {
 			gameControl.raise(game.getCurrentPlayer(), 10);
@@ -86,14 +74,6 @@ public class BettingRulesTest extends TestCase {
 		}
 		gameControl = new GameControl(gameMediator, table);
 		Game game = gameControl.getGame();
-
-		Player dealer  = game.getDealer();
-
-		try {
-			gameControl.deal(dealer);
-		} catch (IllegalActionException e) {
-			fail(e.getMessage());
-		}
 
 		try {
 			gameControl.raise(game.getCurrentPlayer(), 10);
@@ -127,13 +107,6 @@ public class BettingRulesTest extends TestCase {
 		gameControl = new GameControl(gameMediator, table);
 		Game game = gameControl.getGame();
 
-		Player dealer  = game.getDealer();
-
-		try {
-			gameControl.deal(dealer);
-		} catch (IllegalActionException e) {
-			fail(e.getMessage());
-		}
 		try {
 			gameControl.raise(game.getCurrentPlayer(), 10);
 			gameControl.raise(game.getCurrentPlayer(), 10);
@@ -164,14 +137,8 @@ public class BettingRulesTest extends TestCase {
 		BettingRulesTest.logger.info("Betting Rules: " + gameControl.getGame().getGameProperty().getBettingRules().toString());
 		Game game = gameControl.getGame();
 
-		Player dealer  = game.getDealer();
 		BettingRulesTest.logger.info("Dealer: "+game.getDealer().getName());
 
-		try {
-			gameControl.deal(dealer);
-		} catch (IllegalActionException e) {
-			fail(e.getMessage());
-		}
 		BettingRulesTest.logger.info(game.getCurrentDealPlayers());
 		BettingRulesTest.logger.info("Kenzo's Cards: " + kenzo.getPocketCards());
 		BettingRulesTest.logger.info("Cedric's Cards: " + cedric.getPocketCards());

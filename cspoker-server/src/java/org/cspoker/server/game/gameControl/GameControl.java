@@ -80,9 +80,13 @@ public class GameControl implements PlayerAction{
 	 *
 	 */
 	public GameControl(GameMediator gameMediator, Table table){
+		this(gameMediator, table, table.getRandomPlayer());
+	}
+
+	public GameControl(GameMediator gameMediator, Table table, Player dealer){
 		this.gameMediator = gameMediator;
 		gameMediator.setGameControl(this);
-		game = new Game(table);
+		game = new Game(table, dealer);
 		round = new WaitingRound(gameMediator, game);
 		try {
 			deal(game.getDealer());

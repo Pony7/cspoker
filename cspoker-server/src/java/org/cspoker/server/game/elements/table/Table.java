@@ -19,6 +19,7 @@ package org.cspoker.server.game.elements.table;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.cspoker.server.game.PlayerId;
@@ -50,18 +51,6 @@ public class Table {
 	/**
 	 * The list of players in the waiting room.
 	 */
-        //TODO: question from guy: shouldn't thread safety be guaranteed by
-    	//	some higher level locking? then why thread safe list?
-
-		//TODO: answer from Kenzo: while some thread tries to add/remove a player
-		//other threads should be able to iterate over all players this table contains,
-		//without having a ConcurrentModificationException.
-		//No higher level of locking is necessary for the table itself,
-		//otherwise it will be a potential bottleneck.
-		//Off course there is the overhead of copying the internal array at each add/remove
-		//but iteration is more frequent, so should be done quicker/easier,
-		//without the need to synchronize to keep the list consistent.
-
 	private final List<Player> players = new CopyOnWriteArrayList<Player>();
 
 	/**
@@ -270,6 +259,10 @@ public class Table {
 			toReturn.add(player.getId());
 		}
 		return Collections.unmodifiableList(toReturn);
+	}
+
+	public synchronized Player getRandomPlayer(){
+		return players.get(new Random().nextInt(getNbPlayers()));
 	}
 
 	/**
