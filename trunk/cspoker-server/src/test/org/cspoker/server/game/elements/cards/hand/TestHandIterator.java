@@ -42,7 +42,7 @@ public class TestHandIterator extends TestCase {
 		}
 	}
 	public void testHandIterator2(){
-		Iterator<Card> iterator=HandEvaluator.getBestHand(hand1).iterator();
+		Iterator<Card> iterator=HandEvaluator.getBestFive(hand1).iterator();
 		while(iterator.hasNext()){
 			TestHandIterator.logger.info(iterator.next().toString());
 		}
