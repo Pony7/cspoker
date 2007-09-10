@@ -227,6 +227,6 @@ public class Showdown {
 		List<Card> cards = new ArrayList<Card>(7);
 		cards.addAll(getGame().getCommunityCards());
 		cards.addAll(player.getPocketCards());
-		return HandEvaluator.getBestHand(new Hand(cards));
+		return HandEvaluator.getBestFive(new Hand(cards));
 	}
 }

@@ -18,15 +18,10 @@ package org.cspoker.server.game.elements.cards.hand;
 import junit.framework.TestCase;
 
 import org.apache.log4j.Logger;
-import org.cspoker.common.game.elements.cards.Card;
 import org.cspoker.common.game.elements.cards.CardImpl;
 import org.cspoker.common.game.elements.cards.cardElements.Rank;
 import org.cspoker.common.game.elements.cards.cardElements.Suit;
 import org.cspoker.server.game.elements.cards.deck.Deck;
-import org.cspoker.server.game.elements.cards.hand.Hand;
-import org.cspoker.server.game.elements.cards.hand.HandEvaluator;
-import org.cspoker.server.game.elements.cards.hand.HandType;
-import org.cspoker.server.game.elements.cards.hand.HandTypeCalculator;
 
 /**
  * A test class for all the methods in the HandEvaluator class
@@ -53,10 +48,9 @@ public class TestHandEvaluator extends TestCase {
 		hand2.addCard(new CardImpl(Suit.SPADES,Rank.FOUR));
 		hand2.addCard(new CardImpl(Suit.SPADES,Rank.EIGHT));
 		
-		assertTrue(HandTypeCalculator.calculateHandType(hand1).equals(HandType.HIGH_CARD));
-		assertTrue(HandTypeCalculator.calculateHandType(hand2).equals(HandType.HIGH_CARD));
+		assertTrue(HandEvaluator.getShortDescription(this.hand1).equals(HandType.HIGH_CARD));
+		assertTrue(HandEvaluator.getShortDescription(this.hand2).equals(HandType.HIGH_CARD));
 		assertTrue(HandEvaluator.compareHands(hand1,hand2)==1);
-		assertTrue(HandEvaluator.compareHands2(hand1,hand2)==1);
 		
 		//test hand2>hand1
 		hand2.makeEmpty();
@@ -65,9 +59,8 @@ public class TestHandEvaluator extends TestCase {
 		hand2.addCard(new CardImpl(Suit.HEARTS,Rank.THREE));
 		hand2.addCard(new CardImpl(Suit.SPADES,Rank.FOUR));
 		hand2.addCard(new CardImpl(Suit.SPADES,Rank.EIGHT));
-		assertTrue(HandTypeCalculator.calculateHandType(hand2).equals(HandType.HIGH_CARD));
+		assertTrue(HandEvaluator.getShortDescription(this.hand2).equals(HandType.HIGH_CARD));
 		assertTrue(HandEvaluator.compareHands(hand1,hand2)==-1);
-		assertTrue(HandEvaluator.compareHands2(hand1,hand2)==-1);
 		//test hand2==hand1
 		hand2.makeEmpty();
 		hand2.addCard(new CardImpl(Suit.SPADES,Rank.ACE));
@@ -75,9 +68,8 @@ public class TestHandEvaluator extends TestCase {
 		hand2.addCard(new CardImpl(Suit.HEARTS,Rank.THREE));
 		hand2.addCard(new CardImpl(Suit.SPADES,Rank.FOUR));
 		hand2.addCard(new CardImpl(Suit.SPADES,Rank.EIGHT));
-		assertTrue(HandTypeCalculator.calculateHandType(hand2).equals(HandType.HIGH_CARD));
+		assertTrue(HandEvaluator.getShortDescription(this.hand2).equals(HandType.HIGH_CARD));
 		assertTrue(HandEvaluator.compareHands(hand1,hand2)==0);
-		assertTrue(HandEvaluator.compareHands2(hand1,hand2)==0);
 	}
 	public void testPairHands(){
 		//test hand1>hand2
@@ -93,10 +85,9 @@ public class TestHandEvaluator extends TestCase {
 		hand2.addCard(new CardImpl(Suit.SPADES,Rank.FOUR));
 		hand2.addCard(new CardImpl(Suit.SPADES,Rank.EIGHT));
 		
-		assertTrue(HandTypeCalculator.calculateHandType(hand1).equals(HandType.PAIR));
-		assertTrue(HandTypeCalculator.calculateHandType(hand2).equals(HandType.PAIR));
+		assertTrue(HandEvaluator.getShortDescription(this.hand1).equals(HandType.PAIR));
+		assertTrue(HandEvaluator.getShortDescription(this.hand2).equals(HandType.PAIR));
 		assertTrue(HandEvaluator.compareHands(hand1,hand2)==1);
-		assertTrue(HandEvaluator.compareHands2(hand1,hand2)==1);
 		
 		
 		hand2.makeEmpty();
@@ -106,9 +97,8 @@ public class TestHandEvaluator extends TestCase {
 		hand2.addCard(new CardImpl(Suit.SPADES,Rank.FIVE));
 		hand2.addCard(new CardImpl(Suit.SPADES,Rank.EIGHT));
 		
-		assertTrue(HandTypeCalculator.calculateHandType(hand2).equals(HandType.PAIR));
+		assertTrue(HandEvaluator.getShortDescription(this.hand2).equals(HandType.PAIR));
 		assertTrue(HandEvaluator.compareHands(hand1,hand2)==1);
-		assertTrue(HandEvaluator.compareHands2(hand1,hand2)==1);
 
 		//test hand2>hand1
 		hand2.makeEmpty();
@@ -118,9 +108,8 @@ public class TestHandEvaluator extends TestCase {
 		hand2.addCard(new CardImpl(Suit.SPADES,Rank.FOUR));
 		hand2.addCard(new CardImpl(Suit.SPADES,Rank.EIGHT));
 		
-		assertTrue(HandTypeCalculator.calculateHandType(hand2).equals(HandType.PAIR));
+		assertTrue(HandEvaluator.getShortDescription(this.hand2).equals(HandType.PAIR));
 		assertTrue(HandEvaluator.compareHands(hand1,hand2)==-1);
-		assertTrue(HandEvaluator.compareHands2(hand1,hand2)==-1);
 		
 		//test hand2==hand1
 		
@@ -131,9 +120,8 @@ public class TestHandEvaluator extends TestCase {
 		hand2.addCard(new CardImpl(Suit.SPADES,Rank.FIVE));
 		hand2.addCard(new CardImpl(Suit.SPADES,Rank.EIGHT));
 		
-		assertTrue(HandTypeCalculator.calculateHandType(hand2).equals(HandType.PAIR));
+		assertTrue(HandEvaluator.getShortDescription(this.hand2).equals(HandType.PAIR));
 		assertTrue(HandEvaluator.compareHands(hand1,hand2)==0);
-		assertTrue(HandEvaluator.compareHands2(hand1,hand2)==0);
 	}
 	public void testDoublePairHands(){
 		hand1.addCard(new CardImpl(Suit.SPADES,Rank.FOUR));
@@ -142,14 +130,7 @@ public class TestHandEvaluator extends TestCase {
 		hand1.addCard(new CardImpl(Suit.SPADES,Rank.FIVE));
 		hand1.addCard(new CardImpl(Suit.SPADES,Rank.EIGHT));
 		
-		assertTrue(HandTypeCalculator.checkForDoublePair(hand1));
-		
-		Card[] pairCards=HandTypeCalculator.getDoublePairCards(hand1);
-		assertTrue(pairCards.length==4);
-		assertTrue(pairCards[0].equalRank(pairCards[1]));
-		assertTrue(pairCards[2].equalRank(pairCards[3]));
-		assertTrue(pairCards[0].getRank().getValue()==5);
-		assertTrue(pairCards[2].getRank().getValue()==4);
+		assertTrue(HandEvaluator.getShortDescription(this.hand1).equals(HandType.TWO_PAIR));
 		
 		hand2.addCard(new CardImpl(Suit.SPADES,Rank.FOUR));
 		hand2.addCard(new CardImpl(Suit.DIAMONDS,Rank.SIX));
@@ -157,12 +138,7 @@ public class TestHandEvaluator extends TestCase {
 		hand2.addCard(new CardImpl(Suit.SPADES,Rank.FIVE));
 		hand2.addCard(new CardImpl(Suit.SPADES,Rank.EIGHT));
 		
-		assertFalse(HandTypeCalculator.checkForDoublePair(hand2));
-		try {
-			HandTypeCalculator.getDoublePairCards(hand2);
-			assert(false);
-		} catch (IllegalArgumentException e) {
-		}
+		assertFalse(HandEvaluator.getShortDescription(this.hand2).equals(HandType.TWO_PAIR));
 		
 		//hand1 >hand 2
 		hand2.makeEmpty();
@@ -171,9 +147,8 @@ public class TestHandEvaluator extends TestCase {
 		hand2.addCard(new CardImpl(Suit.HEARTS,Rank.FIVE));
 		hand2.addCard(new CardImpl(Suit.SPADES,Rank.FIVE));
 		hand2.addCard(new CardImpl(Suit.SPADES,Rank.EIGHT));
-		assertTrue(HandTypeCalculator.checkForDoublePair(hand2));
+		assertTrue(HandEvaluator.getShortDescription(this.hand2).equals(HandType.TWO_PAIR));
 		assertTrue(HandEvaluator.compareHands(hand1,hand2)==1);
-		assertTrue(HandEvaluator.compareHands2(hand1,hand2)==1);
 		
 		
 		//hand1 <hand 2
@@ -183,15 +158,13 @@ public class TestHandEvaluator extends TestCase {
 		hand2.addCard(new CardImpl(Suit.HEARTS,Rank.SIX));
 		hand2.addCard(new CardImpl(Suit.SPADES,Rank.SIX));
 		hand2.addCard(new CardImpl(Suit.SPADES,Rank.EIGHT));
-		assertTrue(HandTypeCalculator.checkForDoublePair(hand2));
+		assertTrue(HandEvaluator.getShortDescription(this.hand2).equals(HandType.TWO_PAIR));
 		assertTrue(HandEvaluator.compareHands(hand1,hand2)==-1);
-		assertTrue(HandEvaluator.compareHands2(hand1,hand2)==-1);
 		
 		//hand1 =hand 2
 		hand2=new Hand(hand1);
-		assertTrue(HandTypeCalculator.checkForDoublePair(hand2));
+		assertTrue(HandEvaluator.getShortDescription(this.hand2).equals(HandType.TWO_PAIR));
 		assertTrue(HandEvaluator.compareHands(hand1,hand2)==0);
-		assertTrue(HandEvaluator.compareHands2(hand1,hand2)==0);
 	}
 	public void testThreeOfAKindHands(){
 		hand1.addCard(new CardImpl(Suit.SPADES,Rank.FOUR));
@@ -200,7 +173,7 @@ public class TestHandEvaluator extends TestCase {
 		hand1.addCard(new CardImpl(Suit.SPADES,Rank.FIVE));
 		hand1.addCard(new CardImpl(Suit.SPADES,Rank.EIGHT));
 		
-		assertTrue(HandTypeCalculator.calculateHandType(hand1).equals(HandType.THREE_OF_A_KIND));
+		assertTrue(HandEvaluator.getShortDescription(this.hand1).equals(HandType.THREE_OF_A_KIND));
 	
 		hand2.addCard(new CardImpl(Suit.SPADES,Rank.FOUR));
 		hand2.addCard(new CardImpl(Suit.DIAMONDS,Rank.SIX));
@@ -208,7 +181,7 @@ public class TestHandEvaluator extends TestCase {
 		hand2.addCard(new CardImpl(Suit.SPADES,Rank.FIVE));
 		hand2.addCard(new CardImpl(Suit.SPADES,Rank.EIGHT));
 		
-		assertFalse(HandTypeCalculator.calculateHandType(hand2).equals(HandType.THREE_OF_A_KIND));
+		assertFalse(HandEvaluator.getShortDescription(this.hand2).equals(HandType.THREE_OF_A_KIND));
 		
 		
 		//hand1 >hand 2
@@ -218,9 +191,8 @@ public class TestHandEvaluator extends TestCase {
 		hand2.addCard(new CardImpl(Suit.HEARTS,Rank.DEUCE));
 		hand2.addCard(new CardImpl(Suit.SPADES,Rank.FIVE));
 		hand2.addCard(new CardImpl(Suit.SPADES,Rank.EIGHT));
-		assertTrue(HandTypeCalculator.calculateHandType(hand2).equals(HandType.THREE_OF_A_KIND));
+		assertTrue(HandEvaluator.getShortDescription(this.hand2).equals(HandType.THREE_OF_A_KIND));
 		assertTrue(HandEvaluator.compareHands(hand1,hand2)==1);
-		assertTrue(HandEvaluator.compareHands2(hand1,hand2)==1);
 		
 		
 		//hand1 <hand 2
@@ -230,15 +202,13 @@ public class TestHandEvaluator extends TestCase {
 		hand2.addCard(new CardImpl(Suit.HEARTS,Rank.SIX));
 		hand2.addCard(new CardImpl(Suit.CLUBS,Rank.SIX));
 		hand2.addCard(new CardImpl(Suit.SPADES,Rank.EIGHT));
-		assertTrue(HandTypeCalculator.calculateHandType(hand2).equals(HandType.THREE_OF_A_KIND));
+		assertTrue(HandEvaluator.getShortDescription(this.hand2).equals(HandType.THREE_OF_A_KIND));
 		assertTrue(HandEvaluator.compareHands(hand1,hand2)==-1);
-		assertTrue(HandEvaluator.compareHands2(hand1,hand2)==-1);
 		
 		//hand1 =hand 2
 		hand2=new Hand(hand1);
-		assertTrue(HandTypeCalculator.calculateHandType(hand2).equals(HandType.THREE_OF_A_KIND));
+		assertTrue(HandEvaluator.getShortDescription(this.hand2).equals(HandType.THREE_OF_A_KIND));
 		assertTrue(HandEvaluator.compareHands(hand1,hand2)==0);
-		assertTrue(HandEvaluator.compareHands2(hand1,hand2)==0);
 	}
 	public void testFourOfAKindHands(){
 		hand1.addCard(new CardImpl(Suit.SPADES,Rank.FOUR));
@@ -247,7 +217,7 @@ public class TestHandEvaluator extends TestCase {
 		hand1.addCard(new CardImpl(Suit.CLUBS,Rank.FOUR));
 		hand1.addCard(new CardImpl(Suit.SPADES,Rank.EIGHT));
 		
-		assertTrue(HandTypeCalculator.calculateHandType(hand1).equals(HandType.FOUR_OF_A_KIND));
+		assertTrue(HandEvaluator.getShortDescription(this.hand1).equals(HandType.FOUR_OF_A_KIND));
 	
 		hand2.addCard(new CardImpl(Suit.SPADES,Rank.FOUR));
 		hand2.addCard(new CardImpl(Suit.DIAMONDS,Rank.FOUR));
@@ -255,7 +225,7 @@ public class TestHandEvaluator extends TestCase {
 		hand2.addCard(new CardImpl(Suit.SPADES,Rank.FIVE));
 		hand2.addCard(new CardImpl(Suit.SPADES,Rank.EIGHT));
 		
-		assertFalse(HandTypeCalculator.calculateHandType(hand2).equals(HandType.FOUR_OF_A_KIND));
+		assertFalse(HandEvaluator.getShortDescription(this.hand2).equals(HandType.FOUR_OF_A_KIND));
 		
 		
 		//hand1 >hand 2
@@ -265,9 +235,8 @@ public class TestHandEvaluator extends TestCase {
 		hand2.addCard(new CardImpl(Suit.HEARTS,Rank.DEUCE));
 		hand2.addCard(new CardImpl(Suit.CLUBS,Rank.DEUCE));
 		hand2.addCard(new CardImpl(Suit.SPADES,Rank.EIGHT));
-		assertTrue(HandTypeCalculator.calculateHandType(hand2).equals(HandType.FOUR_OF_A_KIND));
+		assertTrue(HandEvaluator.getShortDescription(this.hand2).equals(HandType.FOUR_OF_A_KIND));
 		assertTrue(HandEvaluator.compareHands(hand1,hand2)==1);
-		assertTrue(HandEvaluator.compareHands2(hand1,hand2)==1);
 		
 		
 		//hand1 <hand 2
@@ -277,15 +246,13 @@ public class TestHandEvaluator extends TestCase {
 		hand2.addCard(new CardImpl(Suit.HEARTS,Rank.SIX));
 		hand2.addCard(new CardImpl(Suit.CLUBS,Rank.SIX));
 		hand2.addCard(new CardImpl(Suit.SPADES,Rank.EIGHT));
-		assertTrue(HandTypeCalculator.calculateHandType(hand2).equals(HandType.FOUR_OF_A_KIND));
+		assertTrue(HandEvaluator.getShortDescription(this.hand2).equals(HandType.FOUR_OF_A_KIND));
 		assertTrue(HandEvaluator.compareHands(hand1,hand2)==-1);
-		assertTrue(HandEvaluator.compareHands2(hand1,hand2)==-1);
 		
 		//hand1 =hand 2
 		hand2=new Hand(hand1);
-		assertTrue(HandTypeCalculator.calculateHandType(hand2).equals(HandType.FOUR_OF_A_KIND));
+		assertTrue(HandEvaluator.getShortDescription(this.hand2).equals(HandType.FOUR_OF_A_KIND));
 		assertTrue(HandEvaluator.compareHands(hand1,hand2)==0);
-		assertTrue(HandEvaluator.compareHands2(hand1,hand2)==0);
 	}
 	public void testFullHouseHands(){
 		hand1.addCard(new CardImpl(Suit.SPADES,Rank.FOUR));
@@ -294,7 +261,7 @@ public class TestHandEvaluator extends TestCase {
 		hand1.addCard(new CardImpl(Suit.CLUBS,Rank.EIGHT));
 		hand1.addCard(new CardImpl(Suit.SPADES,Rank.EIGHT));
 		
-		assertTrue(HandTypeCalculator.calculateHandType(hand1).equals(HandType.FULL_HOUSE));
+		assertTrue(HandEvaluator.getShortDescription(this.hand1).equals(HandType.FULL_HOUSE));
 	
 		hand2.addCard(new CardImpl(Suit.SPADES,Rank.FOUR));
 		hand2.addCard(new CardImpl(Suit.DIAMONDS,Rank.FOUR));
@@ -302,7 +269,7 @@ public class TestHandEvaluator extends TestCase {
 		hand2.addCard(new CardImpl(Suit.SPADES,Rank.SIX));
 		hand2.addCard(new CardImpl(Suit.SPADES,Rank.EIGHT));
 		
-		assertFalse(HandTypeCalculator.calculateHandType(hand2).equals(HandType.FULL_HOUSE));
+		assertFalse(HandEvaluator.getShortDescription(this.hand2).equals(HandType.FULL_HOUSE));
 		
 		
 		//hand1 >hand 2
@@ -312,9 +279,8 @@ public class TestHandEvaluator extends TestCase {
 		hand2.addCard(new CardImpl(Suit.HEARTS,Rank.FOUR));
 		hand2.addCard(new CardImpl(Suit.CLUBS,Rank.DEUCE));
 		hand2.addCard(new CardImpl(Suit.SPADES,Rank.DEUCE));
-		assertTrue(HandTypeCalculator.calculateHandType(hand2).equals(HandType.FULL_HOUSE));
+		assertTrue(HandEvaluator.getShortDescription(this.hand2).equals(HandType.FULL_HOUSE));
 		assertTrue(HandEvaluator.compareHands(hand1,hand2)==1);
-		assertTrue(HandEvaluator.compareHands2(hand1,hand2)==1);
 		
 		
 		//hand1 <hand 2
@@ -324,15 +290,13 @@ public class TestHandEvaluator extends TestCase {
 		hand2.addCard(new CardImpl(Suit.HEARTS,Rank.SIX));
 		hand2.addCard(new CardImpl(Suit.CLUBS,Rank.DEUCE));
 		hand2.addCard(new CardImpl(Suit.SPADES,Rank.SIX));
-		assertTrue(HandTypeCalculator.calculateHandType(hand2).equals(HandType.FULL_HOUSE));
+		assertTrue(HandEvaluator.getShortDescription(this.hand2).equals(HandType.FULL_HOUSE));
 		assertTrue(HandEvaluator.compareHands(hand1,hand2)==-1);
-		assertTrue(HandEvaluator.compareHands2(hand1,hand2)==-1);
 		
 		//hand1 =hand 2
 		hand2=new Hand(hand1);
-		assertTrue(HandTypeCalculator.calculateHandType(hand2).equals(HandType.FULL_HOUSE));
+		assertTrue(HandEvaluator.getShortDescription(this.hand2).equals(HandType.FULL_HOUSE));
 		assertTrue(HandEvaluator.compareHands(hand1,hand2)==0);
-		assertTrue(HandEvaluator.compareHands2(hand1,hand2)==0);
 	}
 	public void testFlushHands(){
 		hand1.addCard(new CardImpl(Suit.SPADES,Rank.FOUR));
@@ -341,7 +305,7 @@ public class TestHandEvaluator extends TestCase {
 		hand1.addCard(new CardImpl(Suit.SPADES,Rank.EIGHT));
 		hand1.addCard(new CardImpl(Suit.SPADES,Rank.SEVEN));
 		
-		assertTrue(HandTypeCalculator.calculateHandType(hand1).equals(HandType.FLUSH));
+		assertTrue(HandEvaluator.getShortDescription(this.hand1).equals(HandType.FLUSH));
 	
 		hand2.addCard(new CardImpl(Suit.SPADES,Rank.FOUR));
 		hand2.addCard(new CardImpl(Suit.DIAMONDS,Rank.FOUR));
@@ -349,7 +313,7 @@ public class TestHandEvaluator extends TestCase {
 		hand2.addCard(new CardImpl(Suit.SPADES,Rank.SIX));
 		hand2.addCard(new CardImpl(Suit.SPADES,Rank.EIGHT));
 		
-		assertFalse(HandTypeCalculator.calculateHandType(hand2).equals(HandType.FLUSH));
+		assertFalse(HandEvaluator.getShortDescription(this.hand2).equals(HandType.FLUSH));
 		
 		
 		//hand1 >hand 2
@@ -359,9 +323,8 @@ public class TestHandEvaluator extends TestCase {
 		hand2.addCard(new CardImpl(Suit.CLUBS,Rank.FIVE));
 		hand2.addCard(new CardImpl(Suit.CLUBS,Rank.SIX));
 		hand2.addCard(new CardImpl(Suit.CLUBS,Rank.SEVEN));
-		assertTrue(HandTypeCalculator.calculateHandType(hand2).equals(HandType.FLUSH));
+		assertTrue(HandEvaluator.getShortDescription(this.hand2).equals(HandType.FLUSH));
 		assertTrue(HandEvaluator.compareHands(hand1,hand2)==1);
-		assertTrue(HandEvaluator.compareHands2(hand1,hand2)==1);
 		
 		
 		//hand1 <hand 2
@@ -371,15 +334,13 @@ public class TestHandEvaluator extends TestCase {
 		hand2.addCard(new CardImpl(Suit.HEARTS,Rank.NINE));
 		hand2.addCard(new CardImpl(Suit.HEARTS,Rank.DEUCE));
 		hand2.addCard(new CardImpl(Suit.HEARTS,Rank.THREE));
-		assertTrue(HandTypeCalculator.calculateHandType(hand2).equals(HandType.FLUSH));
+		assertTrue(HandEvaluator.getShortDescription(this.hand2).equals(HandType.FLUSH));
 		assertTrue(HandEvaluator.compareHands(hand1,hand2)==-1);
-		assertTrue(HandEvaluator.compareHands2(hand1,hand2)==-1);
 		
 		//hand1 =hand 2
 		hand2=new Hand(hand1);
-		assertTrue(HandTypeCalculator.calculateHandType(hand2).equals(HandType.FLUSH));
+		assertTrue(HandEvaluator.getShortDescription(this.hand2).equals(HandType.FLUSH));
 		assertTrue(HandEvaluator.compareHands(hand1,hand2)==0);
-		assertTrue(HandEvaluator.compareHands2(hand1,hand2)==0);
 	}
 	public void testStraightHands(){
 		hand1.addCard(new CardImpl(Suit.SPADES,Rank.FOUR));
@@ -388,7 +349,7 @@ public class TestHandEvaluator extends TestCase {
 		hand1.addCard(new CardImpl(Suit.CLUBS,Rank.SIX));
 		hand1.addCard(new CardImpl(Suit.SPADES,Rank.EIGHT));
 		
-		assertTrue(HandTypeCalculator.calculateHandType(hand1).equals(HandType.STRAIGHT));
+		assertTrue(HandEvaluator.getShortDescription(this.hand1).equals(HandType.STRAIGHT));
 	
 		hand2.addCard(new CardImpl(Suit.SPADES,Rank.FOUR));
 		hand2.addCard(new CardImpl(Suit.DIAMONDS,Rank.FOUR));
@@ -396,7 +357,7 @@ public class TestHandEvaluator extends TestCase {
 		hand2.addCard(new CardImpl(Suit.SPADES,Rank.SIX));
 		hand2.addCard(new CardImpl(Suit.SPADES,Rank.EIGHT));
 		
-		assertFalse(HandTypeCalculator.calculateHandType(hand2).equals(HandType.STRAIGHT));
+		assertFalse(HandEvaluator.getShortDescription(this.hand2).equals(HandType.STRAIGHT));
 		
 		
 		//hand1 >hand 2
@@ -406,9 +367,8 @@ public class TestHandEvaluator extends TestCase {
 		hand2.addCard(new CardImpl(Suit.HEARTS,Rank.DEUCE));
 		hand2.addCard(new CardImpl(Suit.CLUBS,Rank.THREE));
 		hand2.addCard(new CardImpl(Suit.SPADES,Rank.FOUR));
-		assertTrue(HandTypeCalculator.calculateHandType(hand2).equals(HandType.STRAIGHT));
+		assertTrue(HandEvaluator.getShortDescription(this.hand2).equals(HandType.STRAIGHT));
 		assertTrue(HandEvaluator.compareHands(hand1,hand2)==1);
-		assertTrue(HandEvaluator.compareHands2(hand1,hand2)==1);
 		
 		
 		//hand1 <hand 2
@@ -418,15 +378,13 @@ public class TestHandEvaluator extends TestCase {
 		hand2.addCard(new CardImpl(Suit.HEARTS,Rank.KING));
 		hand2.addCard(new CardImpl(Suit.CLUBS,Rank.JACK));
 		hand2.addCard(new CardImpl(Suit.SPADES,Rank.TEN));
-		assertTrue(HandTypeCalculator.calculateHandType(hand2).equals(HandType.STRAIGHT));
+		assertTrue(HandEvaluator.getShortDescription(this.hand2).equals(HandType.STRAIGHT));
 		assertTrue(HandEvaluator.compareHands(hand1,hand2)==-1);
-		assertTrue(HandEvaluator.compareHands2(hand1,hand2)==-1);
 		
 		//hand1 =hand 2
 		hand2=new Hand(hand1);
-		assertTrue(HandTypeCalculator.calculateHandType(hand2).equals(HandType.STRAIGHT));
+		assertTrue(HandEvaluator.getShortDescription(this.hand2).equals(HandType.STRAIGHT));
 		assertTrue(HandEvaluator.compareHands(hand1,hand2)==0);
-		assertTrue(HandEvaluator.compareHands2(hand1,hand2)==0);
 	}
 	public void testStraightFlushHands(){
 		hand1.addCard(new CardImpl(Suit.SPADES,Rank.FOUR));
@@ -435,7 +393,7 @@ public class TestHandEvaluator extends TestCase {
 		hand1.addCard(new CardImpl(Suit.SPADES,Rank.SIX));
 		hand1.addCard(new CardImpl(Suit.SPADES,Rank.EIGHT));
 		
-		assertTrue(HandTypeCalculator.calculateHandType(hand1).equals(HandType.STRAIGHT_FLUSH));
+		assertTrue(HandEvaluator.getShortDescription(this.hand1).equals(HandType.STRAIGHT_FLUSH));
 	
 		hand2.addCard(new CardImpl(Suit.DIAMONDS,Rank.FOUR));
 		hand2.addCard(new CardImpl(Suit.DIAMONDS,Rank.SEVEN));
@@ -443,7 +401,7 @@ public class TestHandEvaluator extends TestCase {
 		hand2.addCard(new CardImpl(Suit.DIAMONDS,Rank.SIX));
 		hand2.addCard(new CardImpl(Suit.DIAMONDS,Rank.EIGHT));
 		
-		assertFalse(HandTypeCalculator.calculateHandType(hand2).equals(HandType.STRAIGHT_FLUSH));
+		assertFalse(HandEvaluator.getShortDescription(this.hand2).equals(HandType.STRAIGHT_FLUSH));
 		
 		
 		//hand1 >hand 2
@@ -453,9 +411,8 @@ public class TestHandEvaluator extends TestCase {
 		hand2.addCard(new CardImpl(Suit.HEARTS,Rank.DEUCE));
 		hand2.addCard(new CardImpl(Suit.HEARTS,Rank.THREE));
 		hand2.addCard(new CardImpl(Suit.HEARTS,Rank.FOUR));
-		assertTrue(HandTypeCalculator.calculateHandType(hand2).equals(HandType.STRAIGHT_FLUSH));
+		assertTrue(HandEvaluator.getShortDescription(this.hand2).equals(HandType.STRAIGHT_FLUSH));
 		assertTrue(HandEvaluator.compareHands(hand1,hand2)==1);
-		assertTrue(HandEvaluator.compareHands2(hand1,hand2)==1);
 		
 		
 		//hand1 <hand 2
@@ -465,15 +422,13 @@ public class TestHandEvaluator extends TestCase {
 		hand2.addCard(new CardImpl(Suit.CLUBS,Rank.KING));
 		hand2.addCard(new CardImpl(Suit.CLUBS,Rank.JACK));
 		hand2.addCard(new CardImpl(Suit.CLUBS,Rank.TEN));
-		assertTrue(HandTypeCalculator.calculateHandType(hand2).equals(HandType.STRAIGHT_FLUSH));
+		assertTrue(HandEvaluator.getShortDescription(this.hand2).equals(HandType.STRAIGHT_FLUSH));
 		assertTrue(HandEvaluator.compareHands(hand1,hand2)==-1);
-		assertTrue(HandEvaluator.compareHands2(hand1,hand2)==-1);
 		
 		//hand1 =hand 2
 		hand2=new Hand(hand1);
-		assertTrue(HandTypeCalculator.calculateHandType(hand2).equals(HandType.STRAIGHT_FLUSH));
+		assertTrue(HandEvaluator.getShortDescription(this.hand2).equals(HandType.STRAIGHT_FLUSH));
 		assertTrue(HandEvaluator.compareHands(hand1,hand2)==0);
-		assertTrue(HandEvaluator.compareHands2(hand1,hand2)==0);
 	}
 	
 	public void testSixCardHand(){
@@ -484,10 +439,7 @@ public class TestHandEvaluator extends TestCase {
 		hand1.addCard(new CardImpl(Suit.SPADES,Rank.EIGHT));
 		hand1.addCard(new CardImpl(Suit.SPADES,Rank.ACE));
 		
-		assertTrue(HandTypeCalculator.checkForStraight(hand1));
-		assertTrue(HandTypeCalculator.checkForFlush(hand1));
-		assertTrue(HandTypeCalculator.checkForStraightFlush(hand1));
-		assertTrue(HandTypeCalculator.calculateHandType(hand1).equals(HandType.STRAIGHT_FLUSH));
+		assertTrue(HandEvaluator.getShortDescription(HandEvaluator.getBestFive(hand1)).equals(HandType.STRAIGHT_FLUSH));
 	
 		hand2.addCard(new CardImpl(Suit.HEARTS,Rank.FOUR));
 		hand2.addCard(new CardImpl(Suit.SPADES,Rank.FOUR));
@@ -496,11 +448,10 @@ public class TestHandEvaluator extends TestCase {
 		hand2.addCard(new CardImpl(Suit.SPADES,Rank.EIGHT));
 		hand2.addCard(new CardImpl(Suit.SPADES,Rank.ACE));
 		
-		assertTrue(HandTypeCalculator.calculateHandType(hand2).equals(HandType.THREE_OF_A_KIND));
+		assertTrue(HandEvaluator.getShortDescription(HandEvaluator.getBestFive(hand2)).equals(HandType.THREE_OF_A_KIND));
 		
 		//test hand1>hand 2
 		assertTrue(HandEvaluator.compareHands(hand1,hand2)==1);
-		assertTrue(HandEvaluator.compareHands2(hand1,hand2)==1);
 		 
 		//test hand1<hand 2
 		
@@ -513,7 +464,6 @@ public class TestHandEvaluator extends TestCase {
 		hand1.addCard(new CardImpl(Suit.SPADES,Rank.ACE));
 		
 		assertTrue(HandEvaluator.compareHands(hand1,hand2)==-1);
-		assertTrue(HandEvaluator.compareHands2(hand1,hand2)==-1);
 		
 		//test hand1==hand2
 		hand1.makeEmpty();
@@ -525,7 +475,6 @@ public class TestHandEvaluator extends TestCase {
 		hand1.addCard(new CardImpl(Suit.SPADES,Rank.ACE));
 		
 		assertTrue(HandEvaluator.compareHands(hand1,hand2)==0);
-		assertTrue(HandEvaluator.compareHands2(hand1,hand2)==0);
 	}
 	public void testSevenCardHand(){
 		hand1.addCard(new CardImpl(Suit.HEARTS,Rank.FOUR));
@@ -536,7 +485,7 @@ public class TestHandEvaluator extends TestCase {
 		hand1.addCard(new CardImpl(Suit.DIAMONDS,Rank.ACE));
 		hand1.addCard(new CardImpl(Suit.SPADES,Rank.NINE));
 		
-		assertTrue(HandTypeCalculator.calculateHandType(hand1).equals(HandType.STRAIGHT_FLUSH));
+		assertTrue(HandEvaluator.getShortDescription(HandEvaluator.getBestFive(hand1)).equals(HandType.STRAIGHT_FLUSH));
 	
 		hand2.addCard(new CardImpl(Suit.HEARTS,Rank.FOUR));
 		hand2.addCard(new CardImpl(Suit.SPADES,Rank.FOUR));
@@ -546,11 +495,10 @@ public class TestHandEvaluator extends TestCase {
 		hand2.addCard(new CardImpl(Suit.SPADES,Rank.ACE));
 		hand2.addCard(new CardImpl(Suit.CLUBS,Rank.KING));
 		
-		assertTrue(HandTypeCalculator.calculateHandType(hand2).equals(HandType.THREE_OF_A_KIND));
+		assertTrue(HandEvaluator.getShortDescription(HandEvaluator.getBestFive(hand2)).equals(HandType.THREE_OF_A_KIND));
 		
 		//test hand1>hand 2
 		assertTrue(HandEvaluator.compareHands(hand1,hand2)==1);
-		assertTrue(HandEvaluator.compareHands2(hand1,hand2)==1);
 		
 		//test hand1<hand 2
 		
@@ -564,7 +512,6 @@ public class TestHandEvaluator extends TestCase {
 		hand1.addCard(new CardImpl(Suit.HEARTS,Rank.ACE));
 		
 		assertTrue(HandEvaluator.compareHands(hand1,hand2)==-1);
-		assertTrue(HandEvaluator.compareHands2(hand1,hand2)==-1);
 		
 		//test hand1==hand2
 		hand1.makeEmpty();
@@ -577,7 +524,6 @@ public class TestHandEvaluator extends TestCase {
 		hand1.addCard(new CardImpl(Suit.DIAMONDS,Rank.KING));
 		
 		assertTrue(HandEvaluator.compareHands(hand1,hand2)==0);
-		assertTrue(HandEvaluator.compareHands2(hand1,hand2)==0);
 	}
 	public void testAceHighStraightVSKingHighStraight(){
 		hand1.addCard(new CardImpl(Suit.HEARTS,Rank.KING));
@@ -597,7 +543,6 @@ public class TestHandEvaluator extends TestCase {
 		hand2.addCard(new CardImpl(Suit.DIAMONDS,Rank.THREE));
 		
 		assertTrue(HandEvaluator.compareHands(hand1,hand2)==-1);
-		assertTrue(HandEvaluator.compareHands2(hand1,hand2)==-1);
 	}
 	
 	public void testOldEvaluatorPerformance() {
@@ -620,23 +565,4 @@ public class TestHandEvaluator extends TestCase {
 		TestHandEvaluator.logger.info("Elapsed: " + (endTime - startTime));
 	}
 
-	public void testNewEvaluatorPerformance() {
-		Deck deck = new Deck();
-		long startTime = System.currentTimeMillis();
-
-		for (int i = 0; i < 1000; i++) {
-			deck.newDeal();
-			hand1.makeEmpty();
-			hand2.makeEmpty();
-			for (int j = 0; j < 7; j++) {
-				hand1.addCard(deck.drawCard());
-				hand2.addCard(deck.drawCard());
-			}
-
-			HandEvaluator.compareHands2(hand1, hand2);
-		}
-
-		long endTime = System.currentTimeMillis();
-		TestHandEvaluator.logger.info("Elapsed: " + (endTime - startTime));
-	}
 }

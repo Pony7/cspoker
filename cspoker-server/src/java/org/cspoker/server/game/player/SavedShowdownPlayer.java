@@ -17,7 +17,7 @@ package org.cspoker.server.game.player;
 
 import org.cspoker.common.game.elements.cards.Card;
 import org.cspoker.server.game.elements.cards.hand.Hand;
-import org.cspoker.server.game.elements.cards.hand.HandTypeCalculator;
+import org.cspoker.server.game.elements.cards.hand.HandEvaluator;
 
 public class SavedShowdownPlayer {
 	
@@ -37,7 +37,7 @@ public class SavedShowdownPlayer {
 	 */
 	@Override
 	public String toString(){
-		String toReturn = player.getName()+" has a "+HandTypeCalculator.calculateHandType(hand)+". His best hand: ";
+		String toReturn = player.getName()+" has a "+HandEvaluator.getDescription(hand)+". His best hand: ";
 		for(Card card:hand){
 			toReturn+=card;
 			toReturn+=", ";

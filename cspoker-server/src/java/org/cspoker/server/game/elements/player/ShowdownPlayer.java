@@ -19,7 +19,6 @@ package org.cspoker.server.game.elements.player;
 import org.cspoker.common.game.elements.cards.Card;
 import org.cspoker.server.game.elements.cards.hand.Hand;
 import org.cspoker.server.game.elements.cards.hand.HandEvaluator;
-import org.cspoker.server.game.elements.cards.hand.HandTypeCalculator;
 import org.cspoker.server.game.player.Player;
 import org.cspoker.server.game.player.SavedShowdownPlayer;
 
@@ -90,12 +89,12 @@ public class ShowdownPlayer implements Comparable<ShowdownPlayer>{
 	 */
 	@Override
 	public String toString(){
-		String toReturn = player.getName()+" has a "+HandTypeCalculator.calculateHandType(getBestHand())+". His best hand: ";
-		for(Card card:bestHand){
-			toReturn+=card;
-			toReturn+=", ";
+		String toReturn = player.getName() + " has a " + HandEvaluator.getDescription(getBestHand()) + ". His best hand: ";
+		for (Card card : bestHand) {
+			toReturn += card;
+			toReturn += ", ";
 		}
-		return toReturn.substring(0, toReturn.length()-2)+".";
+		return toReturn.substring(0, toReturn.length() - 2) + ".";
 	}
 	
 	/**

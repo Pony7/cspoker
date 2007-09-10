@@ -17,6 +17,7 @@ package org.cspoker.server.game.elements.cards.hand;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
@@ -79,7 +80,7 @@ public class Hand implements Iterable<Card>{
     * 			of cards allowed in any hand or if the card list isn't effective
     * 			| cardList.size()>MAX_CARDS || cardList==null
     */
-   public Hand(List<Card> cardList){
+   public Hand(Collection<Card> cardList){
 	   if((cardList.size()>MAX_CARDS) || (cardList==null))
 		   throw new IllegalArgumentException();
 	   cardList.toArray(cards);
@@ -250,29 +251,9 @@ public class Hand implements Iterable<Card>{
 		   this.removeCard(array[j]);
 	   }
    }
-   /**
-    * Sorts the cards in this hand by their rank from highest to lowest rank
-    * (bubble sort variant)
-    *
-    */
-   public void sort(){
-	   int i,j;
-	   boolean swapped;
-	   Card temp=null;
-	    for (i=getNBCards(); --i >=0;) {
-	       swapped=false;
-	       for (j=0; j<i;j++) {
-	          if (((CardImpl) cards[j]).compareTo(cards[j+1])<0){
-	             temp=cards[j];
-	             cards[j]=cards[j+1];
-	             cards[j+1]=temp;
-	             swapped=true;
-	          }
-	       }
-	       if(!swapped)
-	    	   return;
-	    }
-   }
+   
+  
+   // TODO delete this method - who gets the extra chip should not be determined by the highest card, it is more common to give it to the closest player to the dealer's left.  At least it should be configurable
    /**
     * Returns the card with the highest rank in this hand. If there are plural cards with equal highest rank, the suits
     * of the cards are used.(clubs ranking the lowest, followed by diamonds,hearts, and spades as in bridge)
@@ -288,20 +269,26 @@ public class Hand implements Iterable<Card>{
 	   }
 	   return highestRankCard;
    }
+   
    /**
-    * Returns a textual representation of this hand
-    */
-   @Override
-public String toString(){
-	   
-	   String result="type "+HandTypeCalculator.calculateHandType(this).toString();
-	   result+=" cards: ";
+	 * Returns a textual representation of this hand
+	 */
+	@Override
+	public String toString() {
+		String result = "";
 
-	   for(int j=0;j<getNBCards();j++){
-		   result+=" "+j+" "+cards[j].toString()+"\n";
-	   }
-	   return result;
-   }
+		if (this.getNBCards() >= 5) {
+			Hand bestFive = HandEvaluator.getBestFive(this);
+			result = "type: " + HandEvaluator.getDescription(bestFive.getAsList());
+		}
+		result += " cards: ";
+
+		for (int j = 0; j < getNBCards(); j++) {
+			result += " " + j + " " + cards[j].toString() + "\n";
+		}
+		return result;
+	}
+   
    /**
     * Returns an iterator that iterates over the cards in this hand
     */

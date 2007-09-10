@@ -32,20 +32,16 @@ import org.apache.log4j.Logger;
 import org.apache.oro.text.perl.Perl5Util;
 import org.cspoker.common.game.elements.cards.cardElements.Rank;
 
-
 /**
  * @author Craig Motlin
  */
 public final class HandRanks {
 	private static Logger logger = Logger.getLogger(HandRanks.class);
 	private static HandRanks instance = new HandRanks();
-	private final Map<Integer, Integer> unsuitedRankMap = new HashMap<Integer, Integer>();
-	private final Map<Integer, String> unsuitedShortDescriptionMap = new HashMap<Integer, String>();
-	private final Map<Integer, String> unsuitedLongDescriptionMap = new HashMap<Integer, String>();
 
-	private final Map<Integer, Integer> flushRankMap = new HashMap<Integer, Integer>();
-	private final Map<Integer, String> flushShortDescriptionMap = new HashMap<Integer, String>();
-	private final Map<Integer, String> flushLongDescriptionMap = new HashMap<Integer, String>();
+	private final Map<HandInfo, Integer> rankMap = new HashMap<HandInfo, Integer>();
+	private final Map<HandInfo, String> shortDescriptionMap = new HashMap<HandInfo, String>();
+	private final Map<HandInfo, String> longDescriptionMap = new HashMap<HandInfo, String>();
 
 	private HandRanks() {
 		this.loadHandRanks();
@@ -55,35 +51,26 @@ public final class HandRanks {
 		return HandRanks.instance;
 	}
 
-	public Integer getHandRank(final Integer product, final boolean flush) {
-		if (flush) {
-			return this.flushRankMap.get(product);
-		}
-		return this.unsuitedRankMap.get(product);
+	public Integer getHandRank(final HandInfo handInfo) {
+		return this.rankMap.get(handInfo);
 	}
 
-	public String getLongDescription(final Integer product, final boolean flush) {
-		if (flush) {
-			return this.flushLongDescriptionMap.get(product);
-		}
-		return this.unsuitedLongDescriptionMap.get(product);
+	public String getShortDescription(final HandInfo handInfo) {
+		return this.shortDescriptionMap.get(handInfo);
 	}
 
-	private void addHandRank(final Integer product, final Integer rank, final String shortDescription, final String longDescription,
-			final boolean flush) {
-		if (flush) {
-			this.flushRankMap.put(product, rank);
-			this.flushShortDescriptionMap.put(product, shortDescription);
-			this.flushLongDescriptionMap.put(product, longDescription);
-		} else {
-			this.unsuitedRankMap.put(product, rank);
-			this.unsuitedShortDescriptionMap.put(product, shortDescription);
-			this.unsuitedLongDescriptionMap.put(product, longDescription);
-		}
+	public String getLongDescription(final HandInfo handInfo) {
+		return this.longDescriptionMap.get(handInfo);
+	}
+
+	private void addHandRank(final HandInfo handInfo, final Integer rank, final String shortDescription, final String longDescription) {
+		this.rankMap.put(handInfo, rank);
+		this.shortDescriptionMap.put(handInfo, shortDescription);
+		this.longDescriptionMap.put(handInfo, longDescription);
 	}
 
 	private void loadHandRanks() {
-		final InputStream in = getClass().getClassLoader().getResourceAsStream("org/cspoker/server/game/elements/cards/hand/handRanks.txt");
+		final InputStream in = this.getClass().getClassLoader().getResourceAsStream("org/cspoker/server/game/elements/cards/hand/handRanks.txt");
 		try {
 			final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in));
 
@@ -104,7 +91,10 @@ public final class HandRanks {
 				final int rank = Integer.parseInt(rankStrings.get(8).trim());
 				final String shortDescription = rankStrings.get(5);
 				final String longDescription = rankStrings.get(6);
-				this.addHandRank(Integer.valueOf(product), Integer.valueOf(rank), shortDescription, longDescription, flush);
+
+				final HandInfo handInfo = new HandInfo(product, flush);
+
+				this.addHandRank(handInfo, Integer.valueOf(rank), shortDescription, longDescription);
 			}
 
 			bufferedReader.close();
