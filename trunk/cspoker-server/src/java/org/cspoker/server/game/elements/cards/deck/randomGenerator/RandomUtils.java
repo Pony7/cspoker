@@ -32,10 +32,10 @@ public class RandomUtils {
 	 */
 	public static Hand getRandomHand(int nBCards) {
 		Hand result = new Hand();
-		while (result.getNBCards() < nBCards) {
+		while (result.size() < nBCards) {
 			Card randomCard = getRandomCard();
 			if (!result.contains(randomCard))
-				result.addCard(randomCard);
+				result.add(randomCard);
 		}
 		return result;
 	}
