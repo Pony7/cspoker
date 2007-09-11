@@ -80,4 +80,7 @@ public abstract class Window {
 	public GC getGC(){
 		return gc;
 	}
+	void setAsCurrentWindow(){
+		gui.setAsCurrentWindow(this);
+	}
 }

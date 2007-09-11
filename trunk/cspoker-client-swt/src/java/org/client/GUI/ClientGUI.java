@@ -42,6 +42,9 @@ public class ClientGUI {
 		display = new Display();
 		this.clientCore =clientCore;
 	}
+	public void setAsCurrentWindow(Window window){
+		this.currentWindow=window;
+	}
 	/**********************************************************
 	 * LOGIN
 	 **********************************************************/
@@ -50,7 +53,7 @@ public class ClientGUI {
 	 */
 	public void start(){
 		disposeCurrentShell();
-		this.currentWindow=new WindowLogin(display,this);
+		new WindowLogin(display,this);
 	}
 	/**
 	 * Logs in a new user with the given username and password to the given
@@ -93,7 +96,10 @@ public class ClientGUI {
 	 * 			the given error message
 	 */
 	public void displayErrorMessage(String message){
-		System.out.println("Exception : "+message);
-		new WindowError(display,this,message);
+		this.currentWindow.getShell().setEnabled(false);
+		Window errorWindow=new WindowError(display,this,message);
+	}
+	public void continueFlow(){
+		this.currentWindow.getShell().setEnabled(true);
 	}
 }
