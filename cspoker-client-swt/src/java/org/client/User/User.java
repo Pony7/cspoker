@@ -9,7 +9,7 @@ public class User {
 	/**
 	 * The name of this user
 	 */
-	private String Username;
+	private final String userName;
 	/**********************************************************
 	 * Constructor
 	 **********************************************************/
@@ -17,6 +17,15 @@ public class User {
 	 * Creates a new User with the given name and user id
 	 */
 	public User(String name){
-		this.Username=name;
+		this.userName=name;
+	}
+	/**********************************************************
+	 * Methods
+	 **********************************************************/
+	/**
+	 * Returns the name of this user
+	 */
+	public String getUserName(){
+		return userName;
 	}
 }

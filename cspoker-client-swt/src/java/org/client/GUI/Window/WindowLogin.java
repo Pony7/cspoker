@@ -4,45 +4,34 @@ import org.client.GUI.ClientGUI;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.Device;
-import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-
+/**
+ * A class of login windows
+ * @author Cedric
+ */
 public class WindowLogin extends Window {
-
-	/**
-	 * The user name entered by the user
-	 */
-	private String userName;
-	/**
-	 * The url of the server entered by the user
-	 */
-	private String url;
-	/**
-	 * The port of the server entered by the user
-	 */
-	private int port;
-	/**
-	 * The password of this user, entered by the user
-	 */
-	private String password;
 	
 	/**********************************************************
 	 * Constructor
 	 **********************************************************/
+	/**
+	 * Creates a new login window with the given display and gui
+	 * The user is asked to enter his user name, password, the 
+	 * url and the port of the server he wants to connect to.
+	 * @super
+	 */
 	public WindowLogin(Display display, final ClientGUI gui) {
 		super(display, gui);
+		Shell loginShell=getShell();
 		//Shell constants
 		int shellWidth=300;
 		int shellHeigth=320;
 		loginShell.setSize(shellWidth, shellHeigth);
+		loginShell.setText("Login");
 		
 		Label cspoker=new Label(loginShell,SWT.CENTER);
 		cspoker.setText("CSPOKER");
@@ -113,34 +102,15 @@ public class WindowLogin extends Window {
 		
 		button.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
-				gui.login(url.getText(),port.getText(),userName.getText(),password.getText());
+				gui.login(url.getText(),Integer.parseInt(port.getText()),userName.getText(),password.getText());
 			}
 		});
-		
+		//open the login shell
 		loginShell.open();
-		gc = new GC(loginShell);
-		
 		while (!loginShell.isDisposed()){
 			if (!display.readAndDispatch()){
 				display.sleep();
 			}
 		}
-	}
-	
-	/**********************************************************
-	 * Functions
-	 **********************************************************/
-	
-	public String getUserName() {
-		return userName;
-	}
-	public String getUrl(){
-		return url;
-	}
-	public int getPort(){
-		return port;
-	}
-	public String getPassword(){
-		return password;
 	}
 }

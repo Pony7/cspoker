@@ -2,6 +2,7 @@ package org.client.GUI;
 
 import org.client.ClientCore;
 import org.client.GUI.Window.Window;
+import org.client.GUI.Window.WindowError;
 import org.client.GUI.Window.WindowLogin;
 import org.client.User.User;
 import org.eclipse.swt.widgets.Display;
@@ -9,7 +10,6 @@ import org.eclipse.swt.widgets.Display;
 /**
  * A class for a gui of a client
  * @author Cedric
- *
  */
 public class ClientGUI {
 
@@ -40,16 +40,42 @@ public class ClientGUI {
 	public ClientGUI(ClientCore clientCore){
 		display = new Display();
 		this.clientCore =clientCore;
-		start();
 	}
 	/**********************************************************
-	 * Functions
+	 * LOGIN
 	 **********************************************************/
+	/**
+	 * Starts the new gui by creating a new login screen
+	 */
 	public void start(){
 		this.currentWindow=new WindowLogin(display,this);
 	}
-	public void login(String url, String port, String userName, String password){
+	/**
+	 * Logs in a new user with the given username and password to the given
+	 * server url and port.
+	 * @param url
+	 * 			the given server url
+	 * @param port
+	 * 			the given server port
+	 * @param userName
+	 * 			the given user name
+	 * @param password
+	 * 			the given password
+	 */
+	public void login(String url, int port, String userName, String password){
 		this.user=new User(userName);
 		clientCore.createCommunication(url,port,userName,password);
+	}
+	/**********************************************************
+	 * ERRORS
+	 **********************************************************/
+	/**
+	 * Displays a fresh window with the given error message
+	 * @param	message
+	 * 			the given error message
+	 */
+	public void displayErrorMessage(String message){
+		System.out.println("Exception : "+message);
+		new WindowError(display,this,message);
 	}
 }
