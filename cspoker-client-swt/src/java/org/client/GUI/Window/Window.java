@@ -14,6 +14,10 @@ public abstract class Window {
 	 * Variables
 	 **********************************************************/
 	/**
+	 * The display for this window
+	 */
+	private final Display display;
+	/**
 	 * The gui that uses this window
 	 */
 	private final ClientGUI gui;
@@ -36,6 +40,7 @@ public abstract class Window {
 	 * 			the given gui
 	 */
 	public Window(Display display,ClientGUI gui){
+		this.display=display;
 		this.shell = new Shell(display);
 		this.gui = gui;
 		this.gc=new GC(this.shell);
@@ -43,6 +48,14 @@ public abstract class Window {
 	/**********************************************************
 	 * Methods
 	 **********************************************************/
+	public void draw(){
+		shell.open();
+		while (!shell.isDisposed()){
+			if (!display.readAndDispatch()){
+				display.sleep();
+			}
+		}
+	}
 	/**
 	 * Returns the gui used in this window
 	 */
@@ -55,5 +68,16 @@ public abstract class Window {
 	public Shell getShell(){
 		return shell;
 	}
-	
+	/**
+	 * Returns the display used in this window
+	 */
+	public Display getDisplay(){
+		return display;
+	}
+	/**
+	 * Returns the graphical context used in this window
+	 */
+	public GC getGC(){
+		return gc;
+	}
 }

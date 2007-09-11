@@ -3,6 +3,7 @@ package org.client.GUI;
 import org.client.ClientCore;
 import org.client.GUI.Window.Window;
 import org.client.GUI.Window.WindowError;
+import org.client.GUI.Window.WindowGame;
 import org.client.GUI.Window.WindowLogin;
 import org.client.User.User;
 import org.eclipse.swt.widgets.Display;
@@ -48,6 +49,7 @@ public class ClientGUI {
 	 * Starts the new gui by creating a new login screen
 	 */
 	public void start(){
+		disposeCurrentShell();
 		this.currentWindow=new WindowLogin(display,this);
 	}
 	/**
@@ -65,6 +67,22 @@ public class ClientGUI {
 	public void login(String url, int port, String userName, String password){
 		this.user=new User(userName);
 		clientCore.createCommunication(url,port,userName,password);
+	}
+	/**********************************************************
+	 * START
+	 **********************************************************/
+	public void disposeCurrentShell(){
+		try {
+			display.getActiveShell().dispose();
+		} catch (NullPointerException e) {
+		}
+	}
+	/**
+	 * Starts a new game
+	 */
+	public void startGame(){
+		disposeCurrentShell();
+		this.currentWindow=new WindowGame(display,this);
 	}
 	/**********************************************************
 	 * ERRORS

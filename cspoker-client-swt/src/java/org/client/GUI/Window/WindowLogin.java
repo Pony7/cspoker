@@ -6,7 +6,10 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 /**
@@ -26,12 +29,21 @@ public class WindowLogin extends Window {
 	 */
 	public WindowLogin(Display display, final ClientGUI gui) {
 		super(display, gui);
-		Shell loginShell=getShell();
+		final Shell loginShell=getShell();
 		//Shell constants
 		int shellWidth=300;
 		int shellHeigth=320;
 		loginShell.setSize(shellWidth, shellHeigth);
 		loginShell.setText("Login");
+		loginShell.addListener(SWT.Close, new Listener() {
+		      public void handleEvent(Event event) {
+		        int style = SWT.APPLICATION_MODAL | SWT.YES | SWT.NO;
+		        MessageBox messageBox = new MessageBox(loginShell, style);
+		        messageBox.setText("Information");
+		        messageBox.setMessage("Close the login screen?");
+		        event.doit = messageBox.open() == SWT.YES;
+		      }
+		    });
 		
 		Label cspoker=new Label(loginShell,SWT.CENTER);
 		cspoker.setText("CSPOKER");
@@ -105,12 +117,6 @@ public class WindowLogin extends Window {
 				gui.login(url.getText(),Integer.parseInt(port.getText()),userName.getText(),password.getText());
 			}
 		});
-		//open the login shell
-		loginShell.open();
-		while (!loginShell.isDisposed()){
-			if (!display.readAndDispatch()){
-				display.sleep();
-			}
-		}
+		draw();
 	}
 }

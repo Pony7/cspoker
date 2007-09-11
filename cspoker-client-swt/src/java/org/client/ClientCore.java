@@ -17,11 +17,11 @@ public class ClientCore {
 	/**
 	 * The communication used by this client
 	 */
-	private PlayerCommunication comm;
+	//private PlayerCommunication comm;
 	/**
 	 * The sockets client used by this client core
 	 */
-	private SocketsClient socketsClient;
+	//private SocketsClient socketsClient;
 	/**********************************************************
 	 * Constructor
 	 **********************************************************/
@@ -46,11 +46,12 @@ public class ClientCore {
 		System.out.println("port : "+port);
 		System.out.println("user name : "+userName);
 		System.out.println("password : "+password);
-		try {
-			this.socketsClient=new SocketsClient(url,port,userName,password);
-		} catch (IOException e) {
-			gui.displayErrorMessage(e.getMessage());
-		}
-		this.comm=socketsClient.getPlayerCommunication();
+//		try {
+//			this.socketsClient=new SocketsClient(url,port,userName,password);
+//		} catch (IOException e) {
+//			gui.displayErrorMessage(e.getMessage());
+//		}
+//		this.comm=socketsClient.getPlayerCommunication();
+		gui.startGame();
 	}
 }

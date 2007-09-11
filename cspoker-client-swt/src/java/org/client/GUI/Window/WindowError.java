@@ -31,12 +31,7 @@ public class WindowError extends Window {
 		error.setText(message);
 		error.setBounds(50, 50, 100, 20);
 		
-		errorShell.open();
-		while (!errorShell.isDisposed()){
-			if (!display.readAndDispatch()){
-				display.sleep();
-			}
-		}
+		draw();
 	}
 
 }
