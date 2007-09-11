@@ -1,12 +1,16 @@
 package org.client;
-
+/**
+ * A class to test the client
+ * @author Cedric
+ */
 public class ClientTest {
 
+	private static ClientCore clientCore;
 	/**
-	 * @param args
+	 * Starts a new client
 	 */
 	public static void main(String[] args) {
-		ClientCore clientCore=new ClientCore();
+		clientCore=new ClientCore();
 	}
 
 }
