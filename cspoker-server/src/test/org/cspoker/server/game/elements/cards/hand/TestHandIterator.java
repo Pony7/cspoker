@@ -1,6 +1,7 @@
 package org.cspoker.server.game.elements.cards.hand;
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 import junit.framework.TestCase;
 
@@ -20,14 +21,14 @@ public class TestHandIterator extends TestCase {
 	protected void setUp() throws Exception {
 		hand1=new Hand();
 		
-		hand1.addCard(new CardImpl(Suit.HEARTS,Rank.THREE));
-		hand1.addCard(new CardImpl(Suit.HEARTS,Rank.FOUR));
-		hand1.addCard(new CardImpl(Suit.HEARTS,Rank.FIVE));
-		hand1.addCard(new CardImpl(Suit.HEARTS,Rank.SIX));
-		hand1.addCard(new CardImpl(Suit.HEARTS,Rank.SEVEN));
+		hand1.add(new CardImpl(Suit.HEARTS,Rank.THREE));
+		hand1.add(new CardImpl(Suit.HEARTS,Rank.FOUR));
+		hand1.add(new CardImpl(Suit.HEARTS,Rank.FIVE));
+		hand1.add(new CardImpl(Suit.HEARTS,Rank.SIX));
+		hand1.add(new CardImpl(Suit.HEARTS,Rank.SEVEN));
 		
-		hand1.addCard(new CardImpl(Suit.SPADES,Rank.THREE));
-		hand1.addCard(new CardImpl(Suit.HEARTS,Rank.ACE));
+		hand1.add(new CardImpl(Suit.SPADES,Rank.THREE));
+		hand1.add(new CardImpl(Suit.HEARTS,Rank.ACE));
 	}
 	
 	public void testHandIterator1(){
@@ -38,7 +39,7 @@ public class TestHandIterator extends TestCase {
 		try {
 			iterator.next();
 			assert(false);
-		} catch (IndexOutOfBoundsException e) {
+		} catch (NoSuchElementException e) {
 		}
 	}
 	public void testHandIterator2(){
@@ -49,7 +50,7 @@ public class TestHandIterator extends TestCase {
 		try {
 			iterator.next();
 			assert(false);
-		} catch (IndexOutOfBoundsException e) {
+		} catch (NoSuchElementException e) {
 		}
 	}
 }

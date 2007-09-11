@@ -65,7 +65,7 @@ public class Game {
 	/**
 	 * This variable contains the deck of cards of this game.
 	 */
-	private final Deck deck;
+	private Deck deck;
 
 	/**
 	 * This list contains all common cards.
@@ -134,7 +134,7 @@ public class Game {
 	 */
 	public void dealNewHand(){
 		communityCards = new ArrayList<Card>();
-		deck.newDeal();
+		deck = new Deck();
 		pots = new Pots();
 		List<Player> players = table.getPlayers();
 		currentHandPlayers = new LoopingList<Player>(players);
