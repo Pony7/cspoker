@@ -29,6 +29,7 @@ public class WindowLogin extends Window {
 	 */
 	public WindowLogin(Display display, final ClientGUI gui) {
 		super(display, gui);
+		setAsCurrentWindow();
 		final Shell loginShell=getShell();
 		//Shell constants
 		int shellWidth=300;
