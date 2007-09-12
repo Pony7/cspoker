@@ -4,6 +4,7 @@ import org.client.GUI.ClientGUI;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
@@ -17,7 +18,15 @@ import org.eclipse.swt.widgets.Text;
  * @author Cedric
  */
 public class WindowLogin extends Window {
-	
+	/**
+	 * Create a scaled version of the cspoker-logo
+	 */
+	final Image logo = new Image(getDisplay(),"images/cspoker8.jpg");
+	final int width = logo.getBounds().width;
+	final int height = logo.getBounds().height;
+	final double scaleFactor=0.3;
+	final Image scaledLogo = new Image(getDisplay(),
+			logo.getImageData().scaledTo((int)(width*scaleFactor),(int)(height*scaleFactor)));
 	/**********************************************************
 	 * Constructor
 	 **********************************************************/
@@ -46,11 +55,11 @@ public class WindowLogin extends Window {
 		      }
 		    });
 		
-		Label cspoker=new Label(loginShell,SWT.CENTER);
-		cspoker.setText("CSPOKER");
-		cspoker.setBounds(125, 35, 50, 20);
-		cspoker.setForeground(display.getSystemColor(SWT.COLOR_YELLOW));
-		cspoker.setBackground(display.getSystemColor(SWT.COLOR_DARK_CYAN));
+//		Label cspoker=new Label(loginShell,SWT.CENTER);
+//		cspoker.setText("CSPOKER");
+//		cspoker.setBounds(125, 35, 50, 20);
+//		cspoker.setForeground(display.getSystemColor(SWT.COLOR_YELLOW));
+//		cspoker.setBackground(display.getSystemColor(SWT.COLOR_DARK_CYAN));
 		
 		//Label constants
 		int xStartLabels=25;
@@ -120,4 +129,9 @@ public class WindowLogin extends Window {
 		});
 		draw();
 	}
+	@Override
+	public void drawImages() {
+		getGC().drawImage(scaledLogo, 115, 15);
+	}
+
 }

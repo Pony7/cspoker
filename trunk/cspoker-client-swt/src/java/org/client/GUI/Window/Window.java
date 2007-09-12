@@ -51,11 +51,13 @@ public abstract class Window {
 	public void draw(){
 		shell.open();
 		while (!shell.isDisposed()){
+			drawImages();
 			if (!display.readAndDispatch()){
 				display.sleep();
 			}
 		}
 	}
+	public abstract void drawImages();
 	/**
 	 * Returns the gui used in this window
 	 */
