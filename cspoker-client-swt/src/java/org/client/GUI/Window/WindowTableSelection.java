@@ -14,4 +14,10 @@ public class WindowTableSelection extends Window {
 		super(display, gui);
 	}
 
+	@Override
+	public void drawImages() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

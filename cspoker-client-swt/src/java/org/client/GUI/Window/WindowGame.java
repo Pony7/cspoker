@@ -83,15 +83,6 @@ public class WindowGame extends Window {
 	/**********************************************************
 	 * Images
 	 **********************************************************/
-	@Override public void draw(){
-		getShell().open();
-		while (!getShell().isDisposed()){
-			drawImages();
-			if (!getDisplay().readAndDispatch()){
-				getDisplay().sleep();
-			}
-		}
-	}
 	/**
 	 * Load the images from the respective files
 	 */
@@ -101,7 +92,7 @@ public class WindowGame extends Window {
 	/**
 	 * Draws the images
 	 */
-	private void drawImages(){
+	@Override public void drawImages(){
 		getGC().drawImage(table,100, 50);
 	}
 	/**********************************************************

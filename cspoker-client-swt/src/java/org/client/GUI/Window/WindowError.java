@@ -46,15 +46,9 @@ public class WindowError extends Window {
 		
 		draw();
 	}
-	
-	@Override public void draw(){
-		getShell().open();
-		while (!getShell().isDisposed()){
-			getGC().drawImage(warning,5,5);
-			if (!getDisplay().readAndDispatch()){
-				getDisplay().sleep();
-			}
-		}
+	@Override
+	public void drawImages() {
+		getGC().drawImage(warning,5,5);
 	}
 
 }
