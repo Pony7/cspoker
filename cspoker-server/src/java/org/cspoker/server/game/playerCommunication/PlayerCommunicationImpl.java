@@ -16,8 +16,24 @@
 
 package org.cspoker.server.game.playerCommunication;
 
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
+
 import org.cspoker.server.game.GameManager;
 import org.cspoker.server.game.TableId;
+import org.cspoker.server.game.events.AllEventsListener;
+import org.cspoker.server.game.events.gameEvents.playerActionEvents.AllInEvent;
+import org.cspoker.server.game.events.gameEvents.playerActionEvents.AllInListener;
+import org.cspoker.server.game.events.gameEvents.playerActionEvents.BetEvent;
+import org.cspoker.server.game.events.gameEvents.playerActionEvents.BetListener;
+import org.cspoker.server.game.events.gameEvents.playerActionEvents.BigBlindEvent;
+import org.cspoker.server.game.events.gameEvents.playerActionEvents.BigBlindListener;
+import org.cspoker.server.game.events.gameEvents.playerActionEvents.CallEvent;
+import org.cspoker.server.game.events.gameEvents.playerActionEvents.CheckEvent;
+import org.cspoker.server.game.events.gameEvents.playerActionEvents.DealEvent;
+import org.cspoker.server.game.events.gameEvents.playerActionEvents.FoldEvent;
+import org.cspoker.server.game.events.gameEvents.playerActionEvents.RaiseEvent;
+import org.cspoker.server.game.events.gameEvents.playerActionEvents.SmallBlindEvent;
 import org.cspoker.server.game.gameControl.IllegalActionException;
 import org.cspoker.server.game.player.Player;
 
@@ -109,7 +125,7 @@ public class PlayerCommunicationImpl implements PlayerCommunication {
 	}
 
 	public void say(String message){
-
+		state.say(message);
 	}
 
 	/**********************************************************
@@ -164,6 +180,162 @@ public class PlayerCommunicationImpl implements PlayerCommunication {
 	@Override
 	public String toString(){
 		return "player communication of "+player.getName();
+	}
+
+	/**********************************************************
+	 * Publisher
+	 **********************************************************/
+
+
+	/**
+	 * Subscribe the given all-in listener for all-in events.
+	 *
+	 * @param 	listener
+	 * 			The listener to subscribe.
+	 */
+	public void subscribeAllInListener(AllInListener listener) {
+		allInListeners.add(listener);
+	}
+
+	/**
+	 * Unsubscribe the given all-in listener for all-in events.
+	 *
+	 * @param 	listener
+	 * 			The listener to unsubscribe.
+	 */
+	public void unsubscribeAllInListener(AllInListener listener) {
+		allInListeners.remove(listener);
+	}
+
+	/**
+	 * This list contains all all-in listeners that
+	 * should be alerted on a all-in.
+	 */
+	private final List<AllInListener> allInListeners = new CopyOnWriteArrayList<AllInListener>();
+
+	/**
+	 * Subscribe the given bet listener for bet events.
+	 *
+	 * @param 	listener
+	 * 			The listener to subscribe.
+	 */
+	public void subscribeBetListener(BetListener listener) {
+		betListeners.add(listener);
+	}
+
+	/**
+	 * Unsubscribe the given bet listener for bet events.
+	 *
+	 * @param 	listener
+	 * 			The listener to unsubscribe.
+	 */
+	public void unsubscribeBetListener(BetListener listener) {
+		betListeners.remove(listener);
+	}
+
+	/**
+	 * This list contains all bet listeners that
+	 * should be alerted on a bet.
+	 */
+	private final List<BetListener> betListeners = new CopyOnWriteArrayList<BetListener>();
+
+	/**
+	 * Subscribe the given big blind listener for big blind events.
+	 *
+	 * @param 	listener
+	 * 			The listener to subscribe.
+	 */
+	public void subscribeBigBlindListener(BigBlindListener listener) {
+		bigBlindListeners.add(listener);
+	}
+
+	/**
+	 * Unsubscribe the given big blind listener for big blind events.
+	 *
+	 * @param 	listener
+	 * 			The listener to unsubscribe.
+	 */
+	public void unsubscribeBigBlindListener(BigBlindListener listener) {
+		bigBlindListeners.remove(listener);
+	}
+
+	/**
+	 * This list contains all big blind listeners that
+	 * should be alerted on a big blind.
+	 */
+	private final List<BigBlindListener> bigBlindListeners = new CopyOnWriteArrayList<BigBlindListener>();
+
+
+
+
+
+	AllEventsListener getAllEventsListener(){
+		return allEventsListener;
+	}
+
+	private final AllEventsListener allEventsListener = new AllEventsListenerImpl();
+
+	private class AllEventsListenerImpl implements AllEventsListener{
+
+		@Override
+		public void onAllInEvent(AllInEvent event) {
+			for(AllInListener listener:allInListeners){
+				listener.onAllInEvent(event);
+			}
+		}
+
+		@Override
+		public void onBetEvent(BetEvent event) {
+			for(BetListener listener: betListeners){
+				listener.onBetEvent(event);
+			}
+
+		}
+
+		@Override
+		public void onBigBlindEvent(BigBlindEvent event) {
+			for(BigBlindListener listener: bigBlindListeners){
+				listener.onBigBlindEvent(event);
+			}
+
+		}
+
+		@Override
+		public void onCallEvent(CallEvent event) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void onCheckEvent(CheckEvent event) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void onDealEvent(DealEvent event) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void onFoldEvent(FoldEvent event) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void onRaiseEvent(RaiseEvent event) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void onSmallBlindEvent(SmallBlindEvent event) {
+			// TODO Auto-generated method stub
+
+		}
+
 	}
 
 }
