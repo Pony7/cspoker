@@ -47,6 +47,7 @@ class PlayingState extends PlayerCommunicationState {
 	public PlayingState(PlayerCommunicationImpl playerCommunication, GameMediator gameMediator) {
 		super(playerCommunication);
 		this.gameMediator = gameMediator;
+		gameMediator.subscribeAllInListener(playerCommunication.getAllEventsListener());
 		GameManager.getServerMediator().unsubscribeServerEventListener(playerCommunication.getEventsCollector());
 		gameMediator.subscribeGameEventListener(playerCommunication.getEventsCollector());
 		gameMediator.subscribePersonalGameEventListener(playerCommunication.getPlayer().getId(),playerCommunication.getEventsCollector());
@@ -99,6 +100,7 @@ class PlayingState extends PlayerCommunicationState {
 	public void leaveTable() throws IllegalActionException{
 		//TODO if playing, fold?
 		gameMediator.leaveGame(playerCommunication.getPlayer());
+		gameMediator.unsubscribeAllInListener(playerCommunication.getAllEventsListener());
 		gameMediator.unsubscribeGameEventListener(playerCommunication.getEventsCollector());
 		gameMediator.unsubscribePersonalGameEventListener(playerCommunication.getPlayer().getId(),playerCommunication.getEventsCollector());
 		GameManager.getServerMediator().subscribeServerEventListener(playerCommunication.getEventsCollector());

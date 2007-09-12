@@ -13,20 +13,9 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.server.game.events.gameEvents.privateEvents;
 
+package org.cspoker.server.game.events;
 
-
-public interface NewPrivateCardsListener {
-
-	/**
-	 * This method is called when subscribed to inform a new private cards event occurred.
-	 *
-	 * @param 	id
-	 * 			The id of the player to inform.
-	 * @param 	event
-	 * 			The event object containing all information of the occurred event.
-	 */
-	public void onNewPrivateCardsEvent(NewPocketCardsEvent event);
+public interface AllEventsPublisher {
 
 }
