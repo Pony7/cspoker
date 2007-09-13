@@ -11,7 +11,6 @@ import org.cspoker.common.game.elements.cards.CardImpl;
 import org.cspoker.common.game.elements.cards.cardElements.Rank;
 import org.cspoker.common.game.elements.cards.cardElements.Suit;
 import org.cspoker.server.game.elements.cards.hand.Hand;
-import org.cspoker.server.game.elements.cards.hand.HandEvaluator;
 
 public class TestHandIterator extends TestCase {
 	private static Logger logger = Logger.getLogger(TestHandIterator.class);
@@ -43,7 +42,7 @@ public class TestHandIterator extends TestCase {
 		}
 	}
 	public void testHandIterator2(){
-		Iterator<Card> iterator=HandEvaluator.getBestFive(hand1).iterator();
+		Iterator<Card> iterator=this.hand1.getBestFive().iterator();
 		while(iterator.hasNext()){
 			TestHandIterator.logger.info(iterator.next().toString());
 		}

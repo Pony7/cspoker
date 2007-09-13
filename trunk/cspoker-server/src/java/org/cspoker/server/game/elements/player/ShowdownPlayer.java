@@ -16,9 +16,7 @@
 
 package org.cspoker.server.game.elements.player;
 
-import org.cspoker.common.game.elements.cards.Card;
 import org.cspoker.server.game.elements.cards.hand.Hand;
-import org.cspoker.server.game.elements.cards.hand.HandEvaluator;
 import org.cspoker.server.game.player.Player;
 import org.cspoker.server.game.player.SavedShowdownPlayer;
 
@@ -89,12 +87,7 @@ public class ShowdownPlayer implements Comparable<ShowdownPlayer>{
 	 */
 	@Override
 	public String toString(){
-		String toReturn = player.getName() + " has a " + HandEvaluator.getDescription(getBestHand()) + ". His best hand: ";
-		for (Card card : bestHand) {
-			toReturn += card;
-			toReturn += ", ";
-		}
-		return toReturn.substring(0, toReturn.length() - 2) + ".";
+		return this.player.getName() + " has a " + getBestHand();
 	}
 	
 	/**
@@ -104,7 +97,7 @@ public class ShowdownPlayer implements Comparable<ShowdownPlayer>{
 	 * -1 = first hand is best, 1 = second hand is best, 0 = tie
 	 */
 	public int compareTo(ShowdownPlayer o) {
-		return HandEvaluator.compareHands(o.getBestHand(),getBestHand());
+		return o.getBestHand().compareTo(getBestHand());
 	}
 	/**
 	 * 2 showdown players are equal if both their hands
@@ -120,10 +113,10 @@ public class ShowdownPlayer implements Comparable<ShowdownPlayer>{
 		if (getClass() != obj.getClass())
 			return false;
 		final ShowdownPlayer other = (ShowdownPlayer) obj;
-		if (bestHand == null)
+		if (this.bestHand == null)
 			return other.bestHand == null;
 		else
-			return HandEvaluator.compareHands(getBestHand(), other.getBestHand())==0;
+			return getBestHand().equals(other.getBestHand());
 	}
 
 }

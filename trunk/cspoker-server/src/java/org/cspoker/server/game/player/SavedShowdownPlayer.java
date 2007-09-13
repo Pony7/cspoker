@@ -15,9 +15,7 @@
  */
 package org.cspoker.server.game.player;
 
-import org.cspoker.common.game.elements.cards.Card;
 import org.cspoker.server.game.elements.cards.hand.Hand;
-import org.cspoker.server.game.elements.cards.hand.HandEvaluator;
 
 public class SavedShowdownPlayer {
 	
@@ -37,12 +35,7 @@ public class SavedShowdownPlayer {
 	 */
 	@Override
 	public String toString(){
-		String toReturn = player.getName()+" has a "+HandEvaluator.getDescription(hand)+". His best hand: ";
-		for(Card card:hand){
-			toReturn+=card;
-			toReturn+=", ";
-		}
-		return toReturn.substring(0, toReturn.length()-2)+".";
+		return this.player.getName() + " has a " + this.hand;
 	}
 
 }
