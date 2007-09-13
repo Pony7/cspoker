@@ -93,7 +93,7 @@ public class CardImpl implements Card{
 	}
 
 	/**
-	 * Checks wether this card is equal to a given object
+	 * Checks whether this card is equal to a given object
 	 * @param	obj
 	 * 			the given object
 	 * @return	False if the given object is null or if the given object isn't a card
