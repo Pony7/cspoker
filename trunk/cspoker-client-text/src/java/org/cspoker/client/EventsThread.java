@@ -66,7 +66,7 @@ public class EventsThread implements Runnable {
 		try {
 		    Thread.sleep(waitUnit);
 		} catch (InterruptedException e) {
-		    e.printStackTrace();
+		    EventsThread.logger.error(e.getLocalizedMessage(), e);
 		}
 		i++;
 	    }
