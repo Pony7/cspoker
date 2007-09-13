@@ -31,6 +31,7 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 import org.apache.oro.text.perl.Perl5Util;
 import org.cspoker.common.game.elements.cards.cardElements.Rank;
+import org.cspoker.server.game.elements.cards.hand.Hand.HandInfo;
 
 /**
  * @author Craig Motlin
@@ -51,16 +52,16 @@ public final class HandRanks {
 		return HandRanks.instance;
 	}
 
-	public Integer getHandRank(final HandInfo handInfo) {
-		return this.rankMap.get(handInfo);
+	public Integer getHandRank(final Hand hand) {
+		return this.rankMap.get(hand.getHandInfo());
 	}
 
-	public String getShortDescription(final HandInfo handInfo) {
-		return this.shortDescriptionMap.get(handInfo);
+	public String getShortDescription(final Hand hand) {
+		return this.shortDescriptionMap.get(hand.getHandInfo());
 	}
 
-	public String getLongDescription(final HandInfo handInfo) {
-		return this.longDescriptionMap.get(handInfo);
+	public String getLongDescription(final Hand hand) {
+		return this.longDescriptionMap.get(hand.getHandInfo());
 	}
 
 	private void addHandRank(final HandInfo handInfo, final Integer rank, final String shortDescription, final String longDescription) {

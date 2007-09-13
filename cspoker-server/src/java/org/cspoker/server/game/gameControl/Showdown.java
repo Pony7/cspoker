@@ -27,7 +27,6 @@ import org.cspoker.server.game.GameMediator;
 import org.cspoker.server.game.PlayerId;
 import org.cspoker.common.game.elements.cards.Card;
 import org.cspoker.server.game.elements.cards.hand.Hand;
-import org.cspoker.server.game.elements.cards.hand.HandEvaluator;
 import org.cspoker.server.game.elements.chips.IllegalValueException;
 import org.cspoker.server.game.elements.chips.pot.Pot;
 import org.cspoker.server.game.elements.player.ShowdownPlayer;
@@ -227,6 +226,6 @@ public class Showdown {
 		List<Card> cards = new ArrayList<Card>(7);
 		cards.addAll(getGame().getCommunityCards());
 		cards.addAll(player.getPocketCards());
-		return HandEvaluator.getBestFive(new Hand(cards));
+		return new Hand(cards).getBestFive();
 	}
 }
