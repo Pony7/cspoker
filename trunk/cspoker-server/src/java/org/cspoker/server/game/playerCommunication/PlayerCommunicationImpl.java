@@ -130,6 +130,11 @@ public class PlayerCommunicationImpl implements PlayerCommunication {
 		return player;
 	}
 	
+	/**
+	 * Returns the player id from the player contained in this player communication.
+	 * 
+	 * @return The player id from the player contained in this player communication.
+	 */
 	public PlayerId getId(){
 		return player.getId();
 	}
