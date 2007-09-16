@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 
 import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
 import org.cspoker.server.api.authentication.XmlFileBasicAuthentication;
 import org.cspoker.server.api.httphandler.AllInHandler;
 import org.cspoker.server.api.httphandler.BetHandler;
@@ -37,7 +38,7 @@ import org.cspoker.server.api.httphandler.PingHandler;
 import org.cspoker.server.api.httphandler.RaiseHandler;
 import org.cspoker.server.api.httphandler.StartGameHandler;
 import org.cspoker.server.common.authentication.XmlFileAuthenticator;
-import org.cspoker.server.utils.Log4JPropertiesLoader;
+import org.cspoker.server.utils.Configuration;
 
 import com.sun.net.httpserver.Authenticator;
 import com.sun.net.httpserver.HttpContext;
@@ -50,7 +51,7 @@ public class HttpCSPokerServer {
     private static Logger logger = Logger.getLogger(HttpCSPokerServer.class);
 
     public static void main(String[] args) throws NumberFormatException, IOException {
-	Log4JPropertiesLoader.load("org/cspoker/server/http/logging/log4j.properties");
+	PropertyConfigurator.configure(Configuration.LOG4J_PROPERTIES);
 	
 	if (args.length < 1) {
 	    usage();
