@@ -20,7 +20,6 @@ import java.util.List;
 import junit.framework.TestCase;
 
 import org.apache.log4j.Logger;
-import org.cspoker.server.game.GameManager;
 import org.cspoker.server.game.TableId;
 import org.cspoker.server.game.events.Event;
 import org.cspoker.server.game.events.gameEvents.NewRoundEvent;
@@ -120,19 +119,15 @@ public class PlayerCommunicationTest extends TestCase {
 		try {
 			TableId tableId = kenzoComm.createTable();
 			guyComm.join(tableId);
+			guyComm.subscribeNewRoundListener(newRoundListener);
+			guyComm.subscribeNextPlayerListener(nextPlayerListener);
 			kenzoComm.startGame();
-			GameManager.getGame(tableId).subscribeNewRoundListener(newRoundListener);
-			GameManager.getGame(tableId).subscribeNextPlayerListener(nextPlayerListener);
 			PlayerCommunicationTest.logger.info(kenzoComm.getLatestEvents());
 
 			PlayerCommunicationTest.logger.info("Kenzo's events:" + kenzoComm.getLatestEvents());
 			PlayerCommunicationTest.logger.info("Guy's events:" + guyComm.getLatestEvents());
 
-			try {
-				kenzoComm.call();
-			} catch (IllegalActionException e) {
-				guyComm.call();
-			}
+			currentComm.call();
 
 			PlayerCommunicationTest.logger.info("Guy's events:");
 			showEvents(guyComm.getLatestEvents().getGameEvents());
@@ -184,21 +179,16 @@ public class PlayerCommunicationTest extends TestCase {
 
 		try {
 			TableId tableId = kenzoComm.createTable();
+			guyComm.subscribeNewRoundListener(newRoundListener);
+			guyComm.subscribeNextPlayerListener(nextPlayerListener);
 			guyComm.join(tableId);
 			kenzoComm.startGame();
-			GameManager.getGame(tableId).subscribeNewRoundListener(newRoundListener);
-			GameManager.getGame(tableId).subscribeNextPlayerListener(nextPlayerListener);
 			PlayerCommunicationTest.logger.info(kenzoComm.getLatestEvents());
 
 			PlayerCommunicationTest.logger.info("Kenzo's events:" + kenzoComm.getLatestEvents());
 			PlayerCommunicationTest.logger.info("Guy's events:" + guyComm.getLatestEvents());
 
-			try {
-				kenzoComm.call();
-			} catch (IllegalActionException e) {
-				guyComm.call();
-			}
-
+			currentComm.call();
 
 			PlayerCommunicationTest.logger.info("Guy's events:");
 			showEvents(guyComm.getLatestEvents().getGameEvents());
