@@ -47,10 +47,8 @@ class PlayingState extends PlayerCommunicationState {
 	public PlayingState(PlayerCommunicationImpl playerCommunication, GameMediator gameMediator) {
 		super(playerCommunication);
 		this.gameMediator = gameMediator;
+		GameManager.getServerMediator().unsubscribeAllServerEventsListener(playerCommunication.getId(), playerCommunication.getAllEventsListener());
 		gameMediator.subscribeAllGameEventsListener(playerCommunication.getId(), playerCommunication.getAllEventsListener());
-		GameManager.getServerMediator().unsubscribeServerEventListener(playerCommunication.getEventsCollector());
-		gameMediator.subscribeGameEventListener(playerCommunication.getEventsCollector());
-		gameMediator.subscribePersonalGameEventListener(playerCommunication.getPlayer().getId(),playerCommunication.getEventsCollector());
 	}
 
 	@Override
@@ -101,9 +99,6 @@ class PlayingState extends PlayerCommunicationState {
 		//TODO if playing, fold?
 		gameMediator.leaveGame(playerCommunication.getPlayer());
 		gameMediator.unsubscribeAllGameEventsListener(playerCommunication.getId(), playerCommunication.getAllEventsListener());
-		gameMediator.unsubscribeGameEventListener(playerCommunication.getEventsCollector());
-		gameMediator.unsubscribePersonalGameEventListener(playerCommunication.getPlayer().getId(),playerCommunication.getEventsCollector());
-		GameManager.getServerMediator().subscribeServerEventListener(playerCommunication.getEventsCollector());
 		GameManager.getServerMediator().subscribeAllServerEventsListener(playerCommunication.getId(), playerCommunication.getAllEventsListener());
 		playerCommunication.setPlayerCommunicationState(new InitialState(playerCommunication));
 	}
