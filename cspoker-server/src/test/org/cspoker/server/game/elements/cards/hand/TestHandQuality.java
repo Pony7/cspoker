@@ -15,6 +15,7 @@
  */
 package org.cspoker.server.game.elements.cards.hand;
 
+import java.awt.event.TextEvent;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -23,11 +24,11 @@ import java.util.Map.Entry;
 import junit.framework.TestCase;
 
 import org.apache.log4j.Logger;
-import org.cspoker.common.game.elements.cards.CardImpl;
 import org.cspoker.common.game.elements.cards.cardElements.Rank;
 import org.cspoker.common.game.elements.cards.cardElements.Suit;
-import org.cspoker.server.game.elements.cards.deck.randomGenerator.RandomUtils;
+import org.cspoker.server.game.elements.cards.deck.Deck;
 import org.cspoker.server.game.elements.cards.hand.Hand;
+import org.cspoker.server.game.utilities.TestExactCard;
 
 /**
  * A test class for the quality of a hand
@@ -36,30 +37,25 @@ import org.cspoker.server.game.elements.cards.hand.Hand;
  */
 public class TestHandQuality extends TestCase {
 	private static Logger logger = Logger.getLogger(TestHandQuality.class);
+	private static TestExactCard testExactCard = new TestExactCard(); 
 
-
-	public void testRandomCard(){
-		for(int j=0;j<1000;j++){
-			TestHandQuality.logger.info("random card " + RandomUtils.getRandomCard().toString());
-		}
-	}
 	public void testHighCardHand(){
 		Hand hand1 = new Hand();
 		Hand hand2 = new Hand();
 
-		hand1.add(new CardImpl(Suit.SPADES,Rank.ACE));
-		hand1.add(new CardImpl(Suit.DIAMONDS,Rank.KING));
-		hand1.add(new CardImpl(Suit.HEARTS,Rank.NINE));
-		hand1.add(new CardImpl(Suit.SPADES,Rank.THREE));
-		hand1.add(new CardImpl(Suit.SPADES,Rank.EIGHT));
+		hand1.add(testExactCard.getExactCard(Rank.ACE, Suit.SPADES));
+		hand1.add(testExactCard.getExactCard(Rank.KING, Suit.DIAMONDS));
+		hand1.add(testExactCard.getExactCard(Rank.NINE, Suit.HEARTS));
+		hand1.add(testExactCard.getExactCard(Rank.THREE, Suit.SPADES));
+		hand1.add(testExactCard.getExactCard(Rank.EIGHT, Suit.SPADES));
 		assertTrue(hand1.getShortDescription().equals(HandType.HIGH_CARD.getDescription()));
 		TestHandQuality.logger.info(hand1.getShortDescription());
 		
-		hand2.add(new CardImpl(Suit.SPADES,Rank.NINE));
-		hand2.add(new CardImpl(Suit.DIAMONDS,Rank.KING));
-		hand2.add(new CardImpl(Suit.HEARTS,Rank.ACE));
-		hand2.add(new CardImpl(Suit.SPADES,Rank.FOUR));
-		hand2.add(new CardImpl(Suit.SPADES,Rank.EIGHT));
+		hand2.add(testExactCard.getExactCard(Rank.NINE, Suit.SPADES));
+		hand2.add(testExactCard.getExactCard(Rank.KING, Suit.DIAMONDS));
+		hand2.add(testExactCard.getExactCard(Rank.ACE, Suit.HEARTS));
+		hand2.add(testExactCard.getExactCard(Rank.FOUR, Suit.SPADES));
+		hand2.add(testExactCard.getExactCard(Rank.EIGHT, Suit.SPADES));
 		assertTrue(hand2.getShortDescription().equals(HandType.HIGH_CARD.getDescription()));
 		TestHandQuality.logger.info(hand2.getShortDescription());
 		
@@ -68,19 +64,19 @@ public class TestHandQuality extends TestCase {
 		Hand hand1 = new Hand();
 		Hand hand2 = new Hand();
 
-		hand1.add(new CardImpl(Suit.SPADES,Rank.KING));
-		hand1.add(new CardImpl(Suit.DIAMONDS,Rank.KING));
-		hand1.add(new CardImpl(Suit.HEARTS,Rank.ACE));
-		hand1.add(new CardImpl(Suit.SPADES,Rank.FOUR));
-		hand1.add(new CardImpl(Suit.SPADES,Rank.SEVEN));
+		hand1.add(testExactCard.getExactCard(Rank.KING, Suit.SPADES));
+		hand1.add(testExactCard.getExactCard(Rank.KING, Suit.DIAMONDS));
+		hand1.add(testExactCard.getExactCard(Rank.ACE, Suit.HEARTS));
+		hand1.add(testExactCard.getExactCard(Rank.FOUR, Suit.SPADES));
+		hand1.add(testExactCard.getExactCard(Rank.SEVEN, Suit.SPADES));
 		assertTrue(hand1.getShortDescription().equals(HandType.PAIR.getDescription()));
 		TestHandQuality.logger.info(hand1.getShortDescription());
 		
-		hand2.add(new CardImpl(Suit.SPADES,Rank.KING));
-		hand2.add(new CardImpl(Suit.DIAMONDS,Rank.KING));
-		hand2.add(new CardImpl(Suit.HEARTS,Rank.ACE));
-		hand2.add(new CardImpl(Suit.SPADES,Rank.FOUR));
-		hand2.add(new CardImpl(Suit.SPADES,Rank.EIGHT));
+		hand2.add(testExactCard.getExactCard(Rank.KING, Suit.SPADES));
+		hand2.add(testExactCard.getExactCard(Rank.KING, Suit.DIAMONDS));
+		hand2.add(testExactCard.getExactCard(Rank.ACE, Suit.HEARTS));
+		hand2.add(testExactCard.getExactCard(Rank.FOUR, Suit.SPADES));
+		hand2.add(testExactCard.getExactCard(Rank.EIGHT, Suit.SPADES));
 		assertTrue(hand2.getShortDescription().equals(HandType.PAIR.getDescription()));
 		TestHandQuality.logger.info(hand2.getShortDescription());
 	}
@@ -88,19 +84,19 @@ public class TestHandQuality extends TestCase {
 		Hand hand1 = new Hand();
 		Hand hand2 = new Hand();
 
-		hand1.add(new CardImpl(Suit.SPADES,Rank.ACE));
-		hand1.add(new CardImpl(Suit.DIAMONDS,Rank.FIVE));
-		hand1.add(new CardImpl(Suit.HEARTS,Rank.FIVE));
-		hand1.add(new CardImpl(Suit.CLUBS,Rank.ACE));
-		hand1.add(new CardImpl(Suit.SPADES,Rank.SEVEN));
+		hand1.add(testExactCard.getExactCard(Rank.ACE, Suit.SPADES));
+		hand1.add(testExactCard.getExactCard(Rank.FIVE, Suit.DIAMONDS));
+		hand1.add(testExactCard.getExactCard(Rank.FIVE, Suit.HEARTS));
+		hand1.add(testExactCard.getExactCard(Rank.ACE, Suit.CLUBS));
+		hand1.add(testExactCard.getExactCard(Rank.SEVEN, Suit.SPADES));
 		assertTrue(hand1.getShortDescription().equals(HandType.TWO_PAIR.getDescription()));
 		TestHandQuality.logger.info(hand1.getShortDescription());
 		
-		hand2.add(new CardImpl(Suit.SPADES,Rank.FIVE));
-		hand2.add(new CardImpl(Suit.DIAMONDS,Rank.FIVE));
-		hand2.add(new CardImpl(Suit.HEARTS,Rank.KING));
-		hand2.add(new CardImpl(Suit.SPADES,Rank.KING));
-		hand2.add(new CardImpl(Suit.SPADES,Rank.EIGHT));
+		hand2.add(testExactCard.getExactCard(Rank.FIVE, Suit.SPADES));
+		hand2.add(testExactCard.getExactCard(Rank.FIVE, Suit.DIAMONDS));
+		hand2.add(testExactCard.getExactCard(Rank.KING, Suit.HEARTS));
+		hand2.add(testExactCard.getExactCard(Rank.KING, Suit.SPADES));
+		hand2.add(testExactCard.getExactCard(Rank.EIGHT, Suit.SPADES));
 		assertTrue(hand2.getShortDescription().equals(HandType.TWO_PAIR.getDescription()));
 		TestHandQuality.logger.info(hand2.getShortDescription());
 	}
@@ -108,19 +104,19 @@ public class TestHandQuality extends TestCase {
 		Hand hand1 = new Hand();
 		Hand hand2 = new Hand();
 
-		hand1.add(new CardImpl(Suit.SPADES,Rank.KING));
-		hand1.add(new CardImpl(Suit.DIAMONDS,Rank.KING));
-		hand1.add(new CardImpl(Suit.HEARTS,Rank.FIVE));
-		hand1.add(new CardImpl(Suit.CLUBS,Rank.KING));
-		hand1.add(new CardImpl(Suit.SPADES,Rank.EIGHT));
+		hand1.add(testExactCard.getExactCard(Rank.KING, Suit.SPADES));
+		hand1.add(testExactCard.getExactCard(Rank.KING, Suit.DIAMONDS));
+		hand1.add(testExactCard.getExactCard(Rank.FIVE, Suit.HEARTS));
+		hand1.add(testExactCard.getExactCard(Rank.KING, Suit.CLUBS));
+		hand1.add(testExactCard.getExactCard(Rank.EIGHT, Suit.SPADES));
 		assertTrue(hand1.getShortDescription().equals(HandType.THREE_OF_A_KIND.getDescription()));
 		TestHandQuality.logger.info(hand1.getShortDescription());
 		
-		hand2.add(new CardImpl(Suit.SPADES,Rank.SIX));
-		hand2.add(new CardImpl(Suit.DIAMONDS,Rank.KING));
-		hand2.add(new CardImpl(Suit.HEARTS,Rank.KING));
-		hand2.add(new CardImpl(Suit.SPADES,Rank.KING));
-		hand2.add(new CardImpl(Suit.SPADES,Rank.EIGHT));
+		hand2.add(testExactCard.getExactCard(Rank.SIX, Suit.SPADES));
+		hand2.add(testExactCard.getExactCard(Rank.KING, Suit.DIAMONDS));
+		hand2.add(testExactCard.getExactCard(Rank.KING, Suit.HEARTS));
+		hand2.add(testExactCard.getExactCard(Rank.KING, Suit.SPADES));
+		hand2.add(testExactCard.getExactCard(Rank.EIGHT, Suit.SPADES));
 		assertTrue(hand2.getShortDescription().equals(HandType.THREE_OF_A_KIND.getDescription()));
 		TestHandQuality.logger.info(hand2.getShortDescription());
 	}
@@ -128,19 +124,19 @@ public class TestHandQuality extends TestCase {
 		Hand hand1 = new Hand();
 		Hand hand2 = new Hand();
 
-		hand1.add(new CardImpl(Suit.SPADES,Rank.ACE));
-		hand1.add(new CardImpl(Suit.DIAMONDS,Rank.ACE));
-		hand1.add(new CardImpl(Suit.HEARTS,Rank.ACE));
-		hand1.add(new CardImpl(Suit.CLUBS,Rank.ACE));
-		hand1.add(new CardImpl(Suit.SPADES,Rank.KING));
+		hand1.add(testExactCard.getExactCard(Rank.ACE, Suit.SPADES));
+		hand1.add(testExactCard.getExactCard(Rank.ACE, Suit.DIAMONDS));
+		hand1.add(testExactCard.getExactCard(Rank.ACE, Suit.HEARTS));
+		hand1.add(testExactCard.getExactCard(Rank.ACE, Suit.CLUBS));
+		hand1.add(testExactCard.getExactCard(Rank.KING, Suit.SPADES));
 		assertTrue(hand1.getShortDescription().equals(HandType.FOUR_OF_A_KIND.getDescription()));
 		TestHandQuality.logger.info(hand1.getShortDescription());
 		
-		hand2.add(new CardImpl(Suit.SPADES,Rank.ACE));
-		hand2.add(new CardImpl(Suit.DIAMONDS,Rank.ACE));
-		hand2.add(new CardImpl(Suit.HEARTS,Rank.ACE));
-		hand2.add(new CardImpl(Suit.CLUBS,Rank.ACE));
-		hand2.add(new CardImpl(Suit.SPADES,Rank.EIGHT));
+		hand2.add(testExactCard.getExactCard(Rank.ACE, Suit.SPADES));
+		hand2.add(testExactCard.getExactCard(Rank.ACE, Suit.DIAMONDS));
+		hand2.add(testExactCard.getExactCard(Rank.ACE, Suit.HEARTS));
+		hand2.add(testExactCard.getExactCard(Rank.ACE, Suit.CLUBS));
+		hand2.add(testExactCard.getExactCard(Rank.EIGHT, Suit.SPADES));
 		assertTrue(hand2.getShortDescription().equals(HandType.FOUR_OF_A_KIND.getDescription()));
 		TestHandQuality.logger.info(hand2.getShortDescription());
 	}
@@ -148,19 +144,19 @@ public class TestHandQuality extends TestCase {
 		Hand hand1 = new Hand();
 		Hand hand2 = new Hand();
 
-		hand1.add(new CardImpl(Suit.SPADES,Rank.ACE));
-		hand1.add(new CardImpl(Suit.SPADES,Rank.KING));
-		hand1.add(new CardImpl(Suit.SPADES,Rank.EIGHT));
-		hand1.add(new CardImpl(Suit.SPADES,Rank.THREE));
-		hand1.add(new CardImpl(Suit.SPADES,Rank.DEUCE));
+		hand1.add(testExactCard.getExactCard(Rank.ACE, Suit.SPADES));
+		hand1.add(testExactCard.getExactCard(Rank.KING, Suit.SPADES));
+		hand1.add(testExactCard.getExactCard(Rank.EIGHT, Suit.SPADES));
+		hand1.add(testExactCard.getExactCard(Rank.THREE, Suit.SPADES));
+		hand1.add(testExactCard.getExactCard(Rank.DEUCE, Suit.SPADES));
 		assertTrue(hand1.getShortDescription().equals(HandType.FLUSH.getDescription()));
 		TestHandQuality.logger.info(hand1.getShortDescription());
 		
-		hand2.add(new CardImpl(Suit.DIAMONDS,Rank.ACE));
-		hand2.add(new CardImpl(Suit.DIAMONDS,Rank.KING));
-		hand2.add(new CardImpl(Suit.DIAMONDS,Rank.SIX));
-		hand2.add(new CardImpl(Suit.DIAMONDS,Rank.SEVEN));
-		hand2.add(new CardImpl(Suit.DIAMONDS,Rank.EIGHT));
+		hand2.add(testExactCard.getExactCard(Rank.ACE, Suit.DIAMONDS));
+		hand2.add(testExactCard.getExactCard(Rank.KING, Suit.DIAMONDS));
+		hand2.add(testExactCard.getExactCard(Rank.SIX, Suit.DIAMONDS));
+		hand2.add(testExactCard.getExactCard(Rank.SEVEN, Suit.DIAMONDS));
+		hand2.add(testExactCard.getExactCard(Rank.EIGHT, Suit.DIAMONDS));
 		assertTrue(hand2.getShortDescription().equals(HandType.FLUSH.getDescription()));
 		TestHandQuality.logger.info(hand2.getShortDescription());
 	}
@@ -168,19 +164,19 @@ public class TestHandQuality extends TestCase {
 		Hand hand1 = new Hand();
 		Hand hand2 = new Hand();
 
-		hand1.add(new CardImpl(Suit.SPADES,Rank.ACE));
-		hand1.add(new CardImpl(Suit.CLUBS,Rank.FOUR));
-		hand1.add(new CardImpl(Suit.SPADES,Rank.FIVE));
-		hand1.add(new CardImpl(Suit.SPADES,Rank.THREE));
-		hand1.add(new CardImpl(Suit.SPADES,Rank.DEUCE));
+		hand1.add(testExactCard.getExactCard(Rank.ACE, Suit.SPADES));
+		hand1.add(testExactCard.getExactCard(Rank.FOUR, Suit.CLUBS));
+		hand1.add(testExactCard.getExactCard(Rank.FIVE, Suit.SPADES));
+		hand1.add(testExactCard.getExactCard(Rank.THREE, Suit.SPADES));
+		hand1.add(testExactCard.getExactCard(Rank.DEUCE, Suit.SPADES));
 		assertTrue(hand1.getShortDescription().equals(HandType.STRAIGHT.getDescription()));
 		TestHandQuality.logger.info(hand1.getShortDescription());
 		
-		hand2.add(new CardImpl(Suit.DIAMONDS,Rank.NINE));
-		hand2.add(new CardImpl(Suit.HEARTS,Rank.FIVE));
-		hand2.add(new CardImpl(Suit.DIAMONDS,Rank.SIX));
-		hand2.add(new CardImpl(Suit.DIAMONDS,Rank.SEVEN));
-		hand2.add(new CardImpl(Suit.DIAMONDS,Rank.EIGHT));
+		hand2.add(testExactCard.getExactCard(Rank.NINE, Suit.DIAMONDS));
+		hand2.add(testExactCard.getExactCard(Rank.FIVE, Suit.HEARTS));
+		hand2.add(testExactCard.getExactCard(Rank.SIX, Suit.DIAMONDS));
+		hand2.add(testExactCard.getExactCard(Rank.SEVEN, Suit.DIAMONDS));
+		hand2.add(testExactCard.getExactCard(Rank.EIGHT, Suit.DIAMONDS));
 		assertTrue(hand2.getShortDescription().equals(HandType.STRAIGHT.getDescription()));
 		TestHandQuality.logger.info(hand2.getShortDescription());
 	}
@@ -188,19 +184,19 @@ public class TestHandQuality extends TestCase {
 		Hand hand1 = new Hand();
 		Hand hand2 = new Hand();
 
-		hand1.add(new CardImpl(Suit.SPADES,Rank.KING));
-		hand1.add(new CardImpl(Suit.DIAMONDS,Rank.KING));
-		hand1.add(new CardImpl(Suit.HEARTS,Rank.FIVE));
-		hand1.add(new CardImpl(Suit.CLUBS,Rank.KING));
-		hand1.add(new CardImpl(Suit.SPADES,Rank.FIVE));
+		hand1.add(testExactCard.getExactCard(Rank.KING, Suit.SPADES));
+		hand1.add(testExactCard.getExactCard(Rank.KING, Suit.DIAMONDS));
+		hand1.add(testExactCard.getExactCard(Rank.FIVE, Suit.HEARTS));
+		hand1.add(testExactCard.getExactCard(Rank.KING, Suit.CLUBS));
+		hand1.add(testExactCard.getExactCard(Rank.FIVE, Suit.SPADES));
 		assertTrue(hand1.getShortDescription().equals(HandType.FULL_HOUSE.getDescription()));
 		TestHandQuality.logger.info(hand1.getShortDescription());
 		
-		hand2.add(new CardImpl(Suit.SPADES,Rank.SIX));
-		hand2.add(new CardImpl(Suit.DIAMONDS,Rank.KING));
-		hand2.add(new CardImpl(Suit.HEARTS,Rank.KING));
-		hand2.add(new CardImpl(Suit.SPADES,Rank.KING));
-		hand2.add(new CardImpl(Suit.CLUBS,Rank.SIX));
+		hand2.add(testExactCard.getExactCard(Rank.SIX, Suit.SPADES));
+		hand2.add(testExactCard.getExactCard(Rank.KING, Suit.DIAMONDS));
+		hand2.add(testExactCard.getExactCard(Rank.KING, Suit.HEARTS));
+		hand2.add(testExactCard.getExactCard(Rank.KING, Suit.SPADES));
+		hand2.add(testExactCard.getExactCard(Rank.SIX, Suit.CLUBS));
 		assertTrue(hand2.getShortDescription().equals(HandType.FULL_HOUSE.getDescription()));
 		TestHandQuality.logger.info(hand2.getShortDescription());
 	}
@@ -213,10 +209,10 @@ public class TestHandQuality extends TestCase {
 		Map<String, Integer> rankMap = new HashMap<String, Integer>();
 		double totalTests=10000.0;
 		for(int j=0;j<totalTests;j++){
-			Hand hand1 = new Hand();
-			Hand hand2 = new Hand();
-			hand1=RandomUtils.getRandomHand(5);
-			hand2=RandomUtils.getRandomHand(5);
+			Deck deck = new Deck();
+			Hand hand1 = new Hand(deck.deal(5));
+			Hand hand2 = new Hand(deck.deal(5));
+			
 			compare=hand1.compareTo(hand2);
 			qualityGreater=(compare==1);
 			qualitySmaller=(compare==-1);

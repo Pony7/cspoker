@@ -17,7 +17,7 @@ package org.cspoker.server.game.events.gameEvents.privateEvents;
 
 import java.util.List;
 
-import org.cspoker.common.game.elements.cards.Card;
+import org.cspoker.server.game.elements.cards.deck.Deck.Card;
 import org.cspoker.server.game.events.gameEvents.GameEvent;
 import org.cspoker.server.game.player.SavedPlayer;
 

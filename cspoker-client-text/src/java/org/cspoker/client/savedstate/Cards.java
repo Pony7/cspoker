@@ -19,8 +19,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.cspoker.common.game.elements.cards.Card;
-
+import org.cspoker.common.game.elements.cards.cardElements.Card;
 
 public class Cards {
 

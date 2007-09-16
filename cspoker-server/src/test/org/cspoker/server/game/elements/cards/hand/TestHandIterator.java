@@ -6,28 +6,28 @@ import java.util.NoSuchElementException;
 import junit.framework.TestCase;
 
 import org.apache.log4j.Logger;
-import org.cspoker.common.game.elements.cards.Card;
-import org.cspoker.common.game.elements.cards.CardImpl;
 import org.cspoker.common.game.elements.cards.cardElements.Rank;
 import org.cspoker.common.game.elements.cards.cardElements.Suit;
-import org.cspoker.server.game.elements.cards.hand.Hand;
+import org.cspoker.server.game.elements.cards.deck.Deck.Card;
+import org.cspoker.server.game.utilities.TestExactCard;
 
 public class TestHandIterator extends TestCase {
 	private static Logger logger = Logger.getLogger(TestHandIterator.class);
+	private static TestExactCard testExactCard = new TestExactCard();
 
 	protected Hand hand1;
 	@Override
 	protected void setUp() throws Exception {
 		hand1=new Hand();
 		
-		hand1.add(new CardImpl(Suit.HEARTS,Rank.THREE));
-		hand1.add(new CardImpl(Suit.HEARTS,Rank.FOUR));
-		hand1.add(new CardImpl(Suit.HEARTS,Rank.FIVE));
-		hand1.add(new CardImpl(Suit.HEARTS,Rank.SIX));
-		hand1.add(new CardImpl(Suit.HEARTS,Rank.SEVEN));
+		hand1.add(testExactCard.getExactCard(Rank.THREE, Suit.HEARTS));
+		hand1.add(testExactCard.getExactCard(Rank.FOUR, Suit.HEARTS));
+		hand1.add(testExactCard.getExactCard(Rank.FIVE, Suit.HEARTS));
+		hand1.add(testExactCard.getExactCard(Rank.SIX, Suit.HEARTS));
+		hand1.add(testExactCard.getExactCard(Rank.SEVEN, Suit.HEARTS));
 		
-		hand1.add(new CardImpl(Suit.SPADES,Rank.THREE));
-		hand1.add(new CardImpl(Suit.HEARTS,Rank.ACE));
+		hand1.add(testExactCard.getExactCard(Rank.THREE, Suit.SPADES));
+		hand1.add(testExactCard.getExactCard(Rank.ACE, Suit.HEARTS));
 	}
 	
 	public void testHandIterator1(){

@@ -25,7 +25,7 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 import org.cspoker.server.game.GameMediator;
 import org.cspoker.server.game.PlayerId;
-import org.cspoker.common.game.elements.cards.Card;
+import org.cspoker.server.game.elements.cards.deck.Deck.Card;
 import org.cspoker.server.game.elements.cards.hand.Hand;
 import org.cspoker.server.game.elements.chips.IllegalValueException;
 import org.cspoker.server.game.elements.chips.pot.Pot;
