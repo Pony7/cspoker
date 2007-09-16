@@ -53,6 +53,7 @@ public class Table {
 	 */
 	private final List<Player> players = new CopyOnWriteArrayList<Player>();
 
+
 	/**
 	 * The variable containing the game property of this table.
 	 */
@@ -80,9 +81,14 @@ public class Table {
 	 *		   	|setPlaying(false)
 	 */
 	public Table(TableId id, GameProperty gameProperty){
+		this(id, null, gameProperty);
+	}
+	
+	public Table(TableId id, String name, GameProperty gameProperty){
 		this.id = id;
 		setGameProperty(gameProperty);
 		setPlaying(false);
+		setName(name);
 	}
 
 	/**
@@ -93,6 +99,83 @@ public class Table {
 	public TableId getId(){
 		return id;
 	}
+	
+	/**********************************************************
+	 * Name
+	 **********************************************************/
+	
+	/**
+	 * Return the name of this table.
+	 *
+	 */
+	public String getName() {
+		return name;
+	}
+
+	/**
+	 * Check whether tables can have the given name
+	 * as their name.
+	 *  
+	 * @param	name
+	 * 			The name to check.
+	 * @return	The given name should be effective
+	 * 			| name!=null
+	 * @return	The given name should be at least one character long.
+	 * 			| name!=null && name.length()>0
+	 */
+	public static boolean canHaveAsName(String name) {
+		if(name==null)
+			return false;
+		return name.length()>0;
+	}
+
+	/**
+	 * Set the name of this table to the given name.
+	 * 
+	 * @param	name
+	 * 			The new name for this table.
+	 * @post	If the given name is a valid name for this table
+	 *			the name of this table is set to the given name,
+	 *			else the default name is used.
+	 * 			| if(canHaveAsName(name))
+	 *			| then new.getName().equals(name)
+	 *			| else new.getName().equals(getDefaultName())
+	 */
+	private void setName(String name) {
+		if (!canHaveAsName(name)) {
+			this.name = getDefaultName();
+		} else {
+			this.name = name;
+		}
+	}
+	
+	/**
+	 * Change the name of this table to the given name.
+	 * 
+	 * @param	name
+	 * 			The new name for this table.
+	 * @post	If the given name is a valid name for this table
+	 *			the name of this table is set to the given name,
+	 *			else the previous name is kept.
+	 * 			| if(canHaveAsName(name))
+	 *			| then new.getName().equals(name)
+	 *			| else new.getName().equals(getName())
+	 */
+	public void changeName(String name){
+		if(!canHaveAsName(name)){
+			setName(name);
+		}
+	}
+	
+	private String getDefaultName(){
+		return "default table";
+	}
+
+	/**
+	 * This variable contains the name of this table.
+	 */
+	private String name;
+	
 
 	/**********************************************************
 	 * Game Property
