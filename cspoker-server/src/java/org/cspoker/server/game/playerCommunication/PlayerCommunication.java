@@ -16,7 +16,9 @@
 package org.cspoker.server.game.playerCommunication;
 
 
+import org.cspoker.server.game.PlayerId;
 import org.cspoker.server.game.TableId;
+import org.cspoker.server.game.events.AllEventsListener;
 import org.cspoker.server.game.events.gameEvents.GameMessageListener;
 import org.cspoker.server.game.events.gameEvents.NewCommunityCardsListener;
 import org.cspoker.server.game.events.gameEvents.NewDealListener;
@@ -43,6 +45,7 @@ import org.cspoker.server.game.events.serverEvents.PlayerLeftListener;
 import org.cspoker.server.game.events.serverEvents.ServerMessageListener;
 import org.cspoker.server.game.events.serverEvents.TableCreatedListener;
 import org.cspoker.server.game.gameControl.IllegalActionException;
+import org.cspoker.server.game.player.Player;
 
 /**
  * An interface to define all possible invocations a player can do.
@@ -52,6 +55,20 @@ import org.cspoker.server.game.gameControl.IllegalActionException;
  *
  */
 public interface PlayerCommunication {
+	
+	/**
+	 * Returns the player contained in this player communication.
+	 *
+	 * @return The player contained in this player communication.
+	 */
+	public Player getPlayer();
+	
+	/**
+	 * Returns the player id from the player contained in this player communication.
+	 * 
+	 * @return The player id from the player contained in this player communication.
+	 */
+	public PlayerId getId();
 
 	/**********************************************************
 	 * Player Actions
@@ -628,4 +645,20 @@ public interface PlayerCommunication {
 	 * 			The listener to unsubscribe.
 	 */
 	public void unsubscribeServerMessageListener(ServerMessageListener listener);
+	
+	/**
+	 * Subscribe the given all events listener for all events a player can receive.
+	 * 
+	 * @param 	listener
+	 * 			The listener to subscribe.
+	 */
+	public void subscribeAllEventsListener(AllEventsListener listener);
+	
+	/**
+	 * Unsubscribe the given all events listener from all events a player can receive.
+	 * 
+	 * @param 	listener
+	 * 			The listener to subscribe.
+	 */
+	public void unsubscribeAllEventsListener(AllEventsListener listener);
 }
