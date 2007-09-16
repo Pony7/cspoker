@@ -17,35 +17,26 @@
 package org.cspoker.server.sockets;
 
 import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.nio.CharBuffer;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
-import java.nio.channels.SocketChannel;
-import java.nio.charset.Charset;
-import java.nio.charset.CharsetDecoder;
-import java.util.Iterator;
-import java.util.Set;
 import java.util.concurrent.PriorityBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
-import org.cspoker.server.common.authentication.XmlFileAuthenticator;
-import org.cspoker.server.sockets.runnables.ProcessXML;
+import org.apache.log4j.PropertyConfigurator;
 import org.cspoker.server.sockets.runnables.WaitForIO;
 import org.cspoker.server.sockets.threading.LoggingThreadPool;
-import org.cspoker.server.sockets.threading.Prioritizable;
 import org.cspoker.server.sockets.threading.SocketRunnableComparator;
-import org.cspoker.server.utils.Log4JPropertiesLoader;
+import org.cspoker.server.utils.Configuration;
 
 public class SocketServer 
 {
 
     public static void main(String[] args) throws NumberFormatException, IOException {
 
-	Log4JPropertiesLoader.load("org/cspoker/server/sockets/logging/log4j.properties");
+    	PropertyConfigurator.configure(Configuration.LOG4J_PROPERTIES);
 
 	if (args.length < 1) {
 	    usage();
