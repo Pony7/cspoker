@@ -19,7 +19,7 @@ import java.util.List;
 
 import javax.xml.transform.sax.TransformerHandler;
 
-import org.cspoker.common.game.elements.cards.Card;
+import org.cspoker.server.game.elements.cards.deck.Deck.Card;
 import org.cspoker.server.game.events.Event;
 import org.cspoker.server.game.events.gameEvents.NewCommunityCardsEvent;
 import org.cspoker.server.game.events.gameEvents.privateEvents.NewPocketCardsEvent;

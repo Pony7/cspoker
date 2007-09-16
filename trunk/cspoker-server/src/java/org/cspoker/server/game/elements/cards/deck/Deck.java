@@ -21,8 +21,6 @@ import java.util.Collections;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.cspoker.common.game.elements.cards.Card;
-import org.cspoker.common.game.elements.cards.CardImpl;
 import org.cspoker.common.game.elements.cards.cardElements.Rank;
 import org.cspoker.common.game.elements.cards.cardElements.Suit;
 import org.cspoker.server.game.elements.cards.deck.randomGenerator.RandomOrgSeededRandomGenerator;
@@ -34,8 +32,47 @@ import org.cspoker.server.game.elements.cards.deck.randomGenerator.RandomOrgSeed
  *
  */
 public class Deck {
+	public static final class Card implements Comparable<Card> {
+		private final Rank rank;
+		private final Suit suit;
+
+		private Card(final Rank rank, final Suit suit) {
+			this.rank = rank;
+			this.suit = suit;
+		}
+
+		/**
+		 * Compares this card to a given other card by it's rank
+		 * 
+		 * @see Card
+		 */
+		public int compareTo(final Card other) {
+			final int thisVal = (this.getRank().getValue());
+			final int anotherVal = (other.getRank().getValue());
+
+			return (thisVal < anotherVal ? -1 : (thisVal == anotherVal ? 0 : 1));
+		}
+
+		public String getLongDescription() {
+			return this.rank + " of " + this.suit;
+		}
+
+		public Rank getRank() {
+			return this.rank;
+		}
+
+		public Suit getSuit() {
+			return this.suit;
+		}
+
+		@Override
+		public String toString() {
+			return this.rank.getShortDescription() + this.suit.getShortDescription();
+		}
+	}
+
 	private static Logger logger = Logger.getLogger(Deck.class);
-	
+
 	/*
 	 * Sorted prototype deck for copying
 	 */
@@ -45,9 +82,13 @@ public class Deck {
 		// Initialize prototype deck
 		for (final Suit suit : Suit.values()) {
 			for (final Rank rank : Rank.values()) {
-				Deck.PROTO_DECK.add(new CardImpl(suit, rank));
+				Deck.PROTO_DECK.add(new Card(rank, suit));
 			}
 		}
+	}
+
+	public static void main(final String[] args) {
+		Deck.logger.info(new Deck());
 	}
 
 	/**
@@ -58,23 +99,9 @@ public class Deck {
 	/**
 	 * Construct a new deck of cards and shuffle it.
 	 */
-	public Deck(){
+	public Deck() {
 		this.cards = new ArrayList<Card>(Deck.PROTO_DECK);
 		Collections.shuffle(this.cards, RandomOrgSeededRandomGenerator.getInstance().getRandom());
-	}
-
-	// TODO delete this method
-	/**
-	 * Draw the card on the top of this deck.
-	 *
-	 * @post	The second card in the deck becomes the new top card
-	 * @result	The top card from the deck is returned
-	 * @throws	IllegalStateException
-	 * 			There must be at least one card in the deck
-	 * 			| getDeckSize()<=0
-	 */
-	public Card drawCard(){
-		return this.deal(1).get(0);
 	}
 
 	/**
@@ -93,16 +120,25 @@ public class Deck {
 		return hand;
 	}
 
+	// TODO delete this method
+	/**
+	 * Draw the card on the top of this deck.
+	 *
+	 * @post	The second card in the deck becomes the new top card
+	 * @result	The top card from the deck is returned
+	 * @throws	IllegalStateException
+	 * 			There must be at least one card in the deck
+	 * 			| getDeckSize()<=0
+	 */
+	public Card drawCard() {
+		return this.deal(1).get(0);
+	}
 
 	/**
 	 * Returns the textual representation of this deck.
 	 */
 	@Override
-	public String toString(){
+	public String toString() {
 		return this.cards.toString();
-	}
-
-	public static void main(String[] args) {
-		Deck.logger.info(new Deck());
 	}
 }

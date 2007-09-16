@@ -21,8 +21,8 @@ import java.util.Collections;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.cspoker.common.game.elements.cards.Card;
 import org.cspoker.server.game.GameMediator;
+import org.cspoker.server.game.elements.cards.deck.Deck.Card;
 import org.cspoker.server.game.elements.chips.IllegalValueException;
 import org.cspoker.server.game.elements.chips.pot.Pots;
 import org.cspoker.server.game.elements.player.AllInPlayer;
@@ -31,7 +31,6 @@ import org.cspoker.server.game.events.gameEvents.PotChangedEvent;
 import org.cspoker.server.game.events.gameEvents.WinnerEvent;
 import org.cspoker.server.game.events.gameEvents.playerActionEvents.AllInEvent;
 import org.cspoker.server.game.gameControl.Game;
-import org.cspoker.server.game.gameControl.GameControl;
 import org.cspoker.server.game.gameControl.IllegalActionException;
 import org.cspoker.server.game.player.Player;
 import org.cspoker.server.game.player.SavedWinner;

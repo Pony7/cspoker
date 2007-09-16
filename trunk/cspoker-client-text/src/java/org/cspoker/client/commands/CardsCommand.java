@@ -18,7 +18,7 @@ package org.cspoker.client.commands;
 import java.util.List;
 
 import org.cspoker.client.savedstate.Cards;
-import org.cspoker.common.game.elements.cards.Card;
+import org.cspoker.common.game.elements.cards.cardElements.Card;
 
 public class CardsCommand implements CommandExecutor {
 

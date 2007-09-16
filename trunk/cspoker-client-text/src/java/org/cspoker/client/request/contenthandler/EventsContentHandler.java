@@ -21,8 +21,7 @@ import java.util.List;
 
 import org.cspoker.client.savedstate.Cards;
 import org.cspoker.client.savedstate.Pot;
-import org.cspoker.common.game.elements.cards.Card;
-import org.cspoker.common.game.elements.cards.CardImpl;
+import org.cspoker.common.game.elements.cards.cardElements.Card;
 import org.cspoker.common.game.elements.cards.cardElements.Rank;
 import org.cspoker.common.game.elements.cards.cardElements.Suit;
 import org.xml.sax.Attributes;
@@ -102,7 +101,7 @@ public class EventsContentHandler extends DefaultHandler {
             Rank rank = Rank.getRank(sb.toString());
             if(rank==null || lastSuit==null)
         	throw new SAXException("Problem parsing XML response");
-            newCards.add(new CardImpl(lastSuit, rank));
+            newCards.add(new Card(rank, lastSuit));
         }else if(name.equalsIgnoreCase("cards")){
             if(privateCards)
         	cards.setPrivateCards(newCards);
