@@ -22,7 +22,6 @@ import java.util.List;
 
 import org.cspoker.server.game.events.AllEventsListener;
 import org.cspoker.server.game.events.Event;
-import org.cspoker.server.game.events.EventListener;
 import org.cspoker.server.game.events.gameEvents.GameMessageEvent;
 import org.cspoker.server.game.events.gameEvents.NewCommunityCardsEvent;
 import org.cspoker.server.game.events.gameEvents.NewDealEvent;
@@ -56,7 +55,7 @@ import org.cspoker.server.game.events.serverEvents.TableCreatedEvent;
  * @author Kenzo
  *
  */
-public class EventsCollector implements EventListener, AllEventsListener{
+public class EventsCollector implements AllEventsListener{
 
 	private int ackedToNumber=0;
 
@@ -73,7 +72,7 @@ public class EventsCollector implements EventListener, AllEventsListener{
 	 * @param 	event
 	 * 			The event object containing all information of the occurred event.
 	 */
-	public synchronized void onEvent(Event event) {
+	private synchronized void onEvent(Event event) {
 		events.add(event);
 		latestEventNumber++;
 	}
