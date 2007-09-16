@@ -1,4 +1,4 @@
-package org.cspoker.server.utils;
+package org.cspoker.server.game.utilities;
 
 public class Configuration {
 
