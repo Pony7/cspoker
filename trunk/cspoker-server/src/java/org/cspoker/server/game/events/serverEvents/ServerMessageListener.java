@@ -13,27 +13,11 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
+package org.cspoker.server.game.events.serverEvents;
 
-package org.cspoker.server.game.events.gameEvents;
+public interface ServerMessageListener {
+	
+	public void onServerMessageEvent(ServerMessageEvent event);
 
-import org.cspoker.server.game.player.SavedPlayer;
 
-/**
- * A class to represent player joining events.
- *
- * @author Kenzo
- *
- */
-public class PlayerJoinsEvent extends GameEvent{
-	
-	private final SavedPlayer player;
-	
-	public PlayerJoinsEvent(SavedPlayer player){
-		this.player = player;
-	}
-	
-	@Override
-	public String toString(){
-		return player.getName()+" joined the table.";
-	}
 }

@@ -26,10 +26,11 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import org.cspoker.server.game.elements.table.PlayerListFullException;
 import org.cspoker.server.game.events.Event;
 import org.cspoker.server.game.events.EventListener;
-import org.cspoker.server.game.events.MessageEvent;
-import org.cspoker.server.game.events.MessageListener;
+import org.cspoker.server.game.events.gameEvents.AllGameEventsListener;
 import org.cspoker.server.game.events.gameEvents.GameEvent;
 import org.cspoker.server.game.events.gameEvents.GameEventListener;
+import org.cspoker.server.game.events.gameEvents.GameMessageEvent;
+import org.cspoker.server.game.events.gameEvents.GameMessageListener;
 import org.cspoker.server.game.events.gameEvents.NewCommunityCardsEvent;
 import org.cspoker.server.game.events.gameEvents.NewCommunityCardsListener;
 import org.cspoker.server.game.events.gameEvents.NewDealEvent;
@@ -38,6 +39,10 @@ import org.cspoker.server.game.events.gameEvents.NewRoundEvent;
 import org.cspoker.server.game.events.gameEvents.NewRoundListener;
 import org.cspoker.server.game.events.gameEvents.NextPlayerEvent;
 import org.cspoker.server.game.events.gameEvents.NextPlayerListener;
+import org.cspoker.server.game.events.gameEvents.PlayerJoinedGameEvent;
+import org.cspoker.server.game.events.gameEvents.PlayerJoinedGameListener;
+import org.cspoker.server.game.events.gameEvents.PlayerLeftTableEvent;
+import org.cspoker.server.game.events.gameEvents.PlayerLeftTableListener;
 import org.cspoker.server.game.events.gameEvents.PotChangedEvent;
 import org.cspoker.server.game.events.gameEvents.PotChangedListener;
 import org.cspoker.server.game.events.gameEvents.ShowHandEvent;
@@ -65,7 +70,7 @@ import org.cspoker.server.game.events.gameEvents.playerActionEvents.RaiseListene
 import org.cspoker.server.game.events.gameEvents.playerActionEvents.SmallBlindEvent;
 import org.cspoker.server.game.events.gameEvents.playerActionEvents.SmallBlindListener;
 import org.cspoker.server.game.events.gameEvents.privateEvents.NewPocketCardsEvent;
-import org.cspoker.server.game.events.gameEvents.privateEvents.NewPrivateCardsListener;
+import org.cspoker.server.game.events.gameEvents.privateEvents.NewPocketCardsListener;
 import org.cspoker.server.game.gameControl.GameControl;
 import org.cspoker.server.game.gameControl.IllegalActionException;
 import org.cspoker.server.game.gameControl.PlayerAction;
@@ -210,6 +215,7 @@ public class GameMediator implements PlayerAction{
 	public void joinGame(Player player) throws IllegalActionException{
 		try {
 			gameControl.joinGame(player);
+			publishPlayerJoinedGame(new PlayerJoinedGameEvent(player.getSavedPlayer()));
 		} catch (PlayerListFullException e) {
 			throw new IllegalActionException(e.getMessage());
 		}
@@ -217,6 +223,7 @@ public class GameMediator implements PlayerAction{
 
 	public void leaveGame(Player player) throws IllegalActionException{
 		gameControl.leaveGame(player);
+		publishPlayerLeftTable(new PlayerLeftTableEvent(player.getSavedPlayer()));
 	}
 
 	/**********************************************************
@@ -661,7 +668,7 @@ public class GameMediator implements PlayerAction{
 	 *
 	 */
 	public void publishNewCommonCardsEvent(NewCommunityCardsEvent event){
-		for(NewCommunityCardsListener listener:newCommonCardsListeners){
+		for(NewCommunityCardsListener listener:newCommunityCardsListeners){
 			listener.onNewCommunityCardsEvent(event);
 		}
 		publishGameEvent(event);
@@ -674,7 +681,7 @@ public class GameMediator implements PlayerAction{
 	 * 			The listener to subscribe.
 	 */
 	public void subscribeNewCommonCardsListener(NewCommunityCardsListener listener) {
-		newCommonCardsListeners.add(listener);
+		newCommunityCardsListeners.add(listener);
 	}
 
 	/**
@@ -684,14 +691,14 @@ public class GameMediator implements PlayerAction{
 	 * 			The listener to unsubscribe.
 	 */
 	public void unsubscribeNewCommonCardsListener(NewCommunityCardsListener listener) {
-		newCommonCardsListeners.remove(listener);
+		newCommunityCardsListeners.remove(listener);
 	}
 
 	/**
 	 * This list contains all new common cards listeners that
 	 * should be alerted on new common cards.
 	 */
-	private final List<NewCommunityCardsListener> newCommonCardsListeners = new CopyOnWriteArrayList<NewCommunityCardsListener>();
+	private final List<NewCommunityCardsListener> newCommunityCardsListeners = new CopyOnWriteArrayList<NewCommunityCardsListener>();
 
 
 
@@ -939,15 +946,95 @@ public class GameMediator implements PlayerAction{
 	private final List<PotChangedListener> potChangedListeners = new CopyOnWriteArrayList<PotChangedListener>();
 
 	/**
+	 * Inform all subscribed player joined game listeners a player joined game event has occurred.
+	 *
+	 * Each subscribed player joined game listener is updated
+	 * by calling their onPlayerJoinedGameEvent() method.
+	 *
+	 */
+	public void publishPlayerJoinedGame(PlayerJoinedGameEvent event) {
+		for (PlayerJoinedGameListener listener : playerJoinedGameListeners) {
+			listener.onPlayerJoinedGameEvent(event);
+		}
+		publishGameEvent(event);
+	}
+
+	/**
+	 * Subscribe the given player joined game listener for player joined game events.
+	 *
+	 * @param 	listener
+	 * 			The listener to subscribe.
+	 */
+	public void subscribePlayerJoinedGameListener(PlayerJoinedGameListener listener) {
+		playerJoinedGameListeners.add(listener);
+	}
+
+	/**
+	 * Unsubscribe the given player joined game listener for player joined game events.
+	 *
+	 * @param 	listener
+	 * 			The listener to unsubscribe.
+	 */
+	public void unsubscribePlayerJoinedGameListener(PlayerJoinedGameListener listener) {
+		playerJoinedGameListeners.remove(listener);
+	}
+
+	/**
+	 * This list contains all player joined game listeners that
+	 * should be alerted on a player joined game.
+	 */
+	private final List<PlayerJoinedGameListener> playerJoinedGameListeners = new CopyOnWriteArrayList<PlayerJoinedGameListener>();
+	
+	/**
+	 * Inform all subscribed player left table listeners a player left table event has occurred.
+	 *
+	 * Each subscribed player left table listener is updated
+	 * by calling their onPlayerLeftTableEvent() method.
+	 *
+	 */
+	public void publishPlayerLeftTable(PlayerLeftTableEvent event) {
+		for (PlayerLeftTableListener listener : playerLeftTableListeners) {
+			listener.onPlayerLeftTableEvent(event);
+		}
+		publishGameEvent(event);
+	}
+
+	/**
+	 * Subscribe the given player left table listener for player left table events.
+	 *
+	 * @param 	listener
+	 * 			The listener to subscribe.
+	 */
+	public void subscribePlayerLeftTableListener(PlayerLeftTableListener listener) {
+		playerLeftTableListeners.add(listener);
+	}
+
+	/**
+	 * Unsubscribe the given player left table listener for player left table events.
+	 *
+	 * @param 	listener
+	 * 			The listener to unsubscribe.
+	 */
+	public void unsubscribePlayerLeftTableListener(PlayerLeftTableListener listener) {
+		playerLeftTableListeners.remove(listener);
+	}
+
+	/**
+	 * This list contains all player left table listeners that
+	 * should be alerted on a player left table.
+	 */
+	private final List<PlayerLeftTableListener> playerLeftTableListeners = new CopyOnWriteArrayList<PlayerLeftTableListener>();
+	
+	/**
 	 * Inform all subscribed message listeners a message event has occurred.
 	 *
 	 * Each subscribed message listener is updated
 	 * by calling their onMessageEvent() method.
 	 *
 	 */
-	public void publishMessageEvent(MessageEvent event) {
-		for (MessageListener listener : messageListeners) {
-			listener.onMessageEvent(event);
+	public void publishGameMessageEvent(GameMessageEvent event) {
+		for (GameMessageListener listener : gameMessageListeners) {
+			listener.onGameMessageEvent(event);
 		}
 		publishGameEvent(event);
 	}
@@ -958,8 +1045,8 @@ public class GameMediator implements PlayerAction{
 	 * @param 	listener
 	 * 			The listener to subscribe.
 	 */
-	public void subscribeMessageListener(MessageListener listener) {
-		messageListeners.add(listener);
+	public void subscribeGameMessageListener(GameMessageListener listener) {
+		gameMessageListeners.add(listener);
 	}
 
 	/**
@@ -968,15 +1055,15 @@ public class GameMediator implements PlayerAction{
 	 * @param 	listener
 	 * 			The listener to unsubscribe.
 	 */
-	public void unsubscribeMessageListener(MessageListener listener) {
-		messageListeners.remove(listener);
+	public void unsubscribeGameMessageListener(GameMessageListener listener) {
+		gameMessageListeners.remove(listener);
 	}
 
 	/**
 	 * This list contains all message listeners that
 	 * should be alerted on a message.
 	 */
-	private final List<MessageListener> messageListeners = new CopyOnWriteArrayList<MessageListener>();
+	private final List<GameMessageListener> gameMessageListeners = new CopyOnWriteArrayList<GameMessageListener>();
 
 
 	/**********************************************************
@@ -991,10 +1078,10 @@ public class GameMediator implements PlayerAction{
 	 *
 	 */
 	public void publishNewPocketCardsEvent(PlayerId id, NewPocketCardsEvent event) {
-		List<NewPrivateCardsListener> listeners = newPrivateCardsListeners.get(id);
+		List<NewPocketCardsListener> listeners = newPocketCardsListeners.get(id);
 		if(listeners!=null){
-			for(NewPrivateCardsListener listener:listeners){
-				listener.onNewPrivateCardsEvent(event);
+			for(NewPocketCardsListener listener:listeners){
+				listener.onNewPocketCardsEvent(event);
 			}
 		}
 		publishPersonalGameEvent(id, event);
@@ -1011,25 +1098,25 @@ public class GameMediator implements PlayerAction{
 	 *
 	 * @note This method is both non-blocking and thread-safe.
 	 */
-	public void subscribeNewPocketCardsListener(PlayerId id, NewPrivateCardsListener listener) {
-		List<NewPrivateCardsListener> currentListeners;
-		List<NewPrivateCardsListener> newListeners;
+	public void subscribeNewPocketCardsListener(PlayerId id, NewPocketCardsListener listener) {
+		List<NewPocketCardsListener> currentListeners;
+		List<NewPocketCardsListener> newListeners;
 
 		boolean notAdded;
 
 		do{
 			notAdded = false;
-			currentListeners = newPrivateCardsListeners.get(id);
+			currentListeners = newPocketCardsListeners.get(id);
 			if(currentListeners==null){
-				newListeners = new ArrayList<NewPrivateCardsListener>();
+				newListeners = new ArrayList<NewPocketCardsListener>();
 			}else{
-				newListeners = new ArrayList<NewPrivateCardsListener>(currentListeners);
+				newListeners = new ArrayList<NewPocketCardsListener>(currentListeners);
 			}
 			newListeners.add(listener);
 			if(currentListeners==null){
-				notAdded = (newPrivateCardsListeners.putIfAbsent(id, Collections.unmodifiableList(newListeners))!=null);
+				notAdded = (newPocketCardsListeners.putIfAbsent(id, Collections.unmodifiableList(newListeners))!=null);
 			}else{
-				notAdded = !newPrivateCardsListeners.replace(id, currentListeners, Collections.unmodifiableList(newListeners));
+				notAdded = !newPocketCardsListeners.replace(id, currentListeners, Collections.unmodifiableList(newListeners));
 			}
 		}while(notAdded);
 	}
@@ -1041,22 +1128,22 @@ public class GameMediator implements PlayerAction{
 	 * @param 	listener
 	 * 			The listener to unsubscribe.
 	 */
-	public void unsubscribeNewPocketCardsListener(PlayerId id, NewPrivateCardsListener listener) {
-		List<NewPrivateCardsListener> currentListeners;
-		List<NewPrivateCardsListener> newListeners;
+	public void unsubscribeNewPocketCardsListener(PlayerId id, NewPocketCardsListener listener) {
+		List<NewPocketCardsListener> currentListeners;
+		List<NewPocketCardsListener> newListeners;
 
 		boolean removed;
 
 		do{
-			currentListeners = newPrivateCardsListeners.get(id);
+			currentListeners = newPocketCardsListeners.get(id);
 			if(currentListeners==null)
 				return;
-			newListeners = new ArrayList<NewPrivateCardsListener>(currentListeners);
+			newListeners = new ArrayList<NewPocketCardsListener>(currentListeners);
 			newListeners.remove(listener);
 			if(newListeners.size()==0){
-				removed = newPrivateCardsListeners.remove(id, currentListeners);
+				removed = newPocketCardsListeners.remove(id, currentListeners);
 			}else{
-				removed = newPrivateCardsListeners.replace(id, currentListeners, Collections.unmodifiableList(newListeners));
+				removed = newPocketCardsListeners.replace(id, currentListeners, Collections.unmodifiableList(newListeners));
 			}
 		}while(!removed);
 	}
@@ -1065,7 +1152,7 @@ public class GameMediator implements PlayerAction{
 	 * This list contains all new private cards listeners that
 	 * should be alerted on a new private cards.
 	 */
-	private final ConcurrentMap<PlayerId,List<NewPrivateCardsListener>> newPrivateCardsListeners = new ConcurrentHashMap<PlayerId, List<NewPrivateCardsListener>>();
+	private final ConcurrentMap<PlayerId,List<NewPocketCardsListener>> newPocketCardsListeners = new ConcurrentHashMap<PlayerId, List<NewPocketCardsListener>>();
 
 
 
@@ -1242,4 +1329,52 @@ public class GameMediator implements PlayerAction{
 	 * should be alerted on a personal.
 	 */
 	private final List<GameEventListener> allPersonalEventsListeners = new CopyOnWriteArrayList<GameEventListener>();
+	
+	public void subscribeAllGameEventsListener(PlayerId id, AllGameEventsListener listener){
+		subscribeAllInListener(listener);
+		subscribeBetListener(listener);
+		subscribeBigBlindListener(listener);
+		subscribeCallListener(listener);
+		subscribeCheckListener(listener);
+		subscribeDealListener(listener);
+		subscribeFoldListener(listener);
+		subscribeGameMessageListener(listener);
+		subscribeNewCommonCardsListener(listener);
+		subscribeNewDealListener(listener);
+		subscribeNewPocketCardsListener(id, listener);
+		subscribeNewRoundListener(listener);
+		subscribeNextPlayerListener(listener);
+		subscribePlayerJoinedGameListener(listener);
+		subscribePlayerLeftTableListener(listener);
+		subscribePotChangedListener(listener);
+		subscribeRaiseListener(listener);
+		subscribeShowHandListener(listener);
+		subscribeSmallBlindListener(listener);
+		subscribeStackChangedListener(listener);
+		subscribeWinnerListener(listener);
+	}
+	
+	public void unsubscribeAllGameEventsListener(PlayerId id, AllGameEventsListener listener){
+		unsubscribeAllInListener(listener);
+		unsubscribeBetListener(listener);
+		unsubscribeBigBlindListener(listener);
+		unsubscribeCallListener(listener);
+		unsubscribeCheckListener(listener);
+		unsubscribeDealListener(listener);
+		unsubscribeFoldListener(listener);
+		unsubscribeGameMessageListener(listener);
+		unsubscribeNewCommonCardsListener(listener);
+		unsubscribeNewDealListener(listener);
+		unsubscribeNewPocketCardsListener(id, listener);
+		unsubscribeNewRoundListener(listener);
+		unsubscribeNextPlayerListener(listener);
+		unsubscribePlayerJoinedGameListener(listener);
+		unsubscribePlayerLeftTableListener(listener);
+		unsubscribePotChangedListener(listener);
+		unsubscribeRaiseListener(listener);
+		unsubscribeShowHandListener(listener);
+		unsubscribeSmallBlindListener(listener);
+		unsubscribeStackChangedListener(listener);
+		unsubscribeWinnerListener(listener);
+	}
 }

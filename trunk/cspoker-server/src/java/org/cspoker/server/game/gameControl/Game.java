@@ -510,7 +510,7 @@ public class Game {
 	public void leaveGame(Player player) throws IllegalActionException{
 		Game.logger.info("Kick out: " + player.getName());
 		if(!table.hasAsPlayer(player))
-			return;
+			throw new IllegalActionException(player.getName()+" is not seated at this table.");
 		if(hasAsActivePlayer(player))
 			throw new IllegalActionException("An active player can not be removed. He should fold first.");
 		if((getNextDealer()==null) || getNextDealer().equals(player)){

@@ -17,6 +17,31 @@ package org.cspoker.server.game.playerCommunication;
 
 
 import org.cspoker.server.game.TableId;
+import org.cspoker.server.game.events.gameEvents.GameMessageListener;
+import org.cspoker.server.game.events.gameEvents.NewCommunityCardsListener;
+import org.cspoker.server.game.events.gameEvents.NewDealListener;
+import org.cspoker.server.game.events.gameEvents.NewRoundListener;
+import org.cspoker.server.game.events.gameEvents.NextPlayerListener;
+import org.cspoker.server.game.events.gameEvents.PlayerJoinedGameListener;
+import org.cspoker.server.game.events.gameEvents.PlayerLeftTableListener;
+import org.cspoker.server.game.events.gameEvents.PotChangedListener;
+import org.cspoker.server.game.events.gameEvents.ShowHandListener;
+import org.cspoker.server.game.events.gameEvents.StackChangedListener;
+import org.cspoker.server.game.events.gameEvents.WinnerListener;
+import org.cspoker.server.game.events.gameEvents.playerActionEvents.AllInListener;
+import org.cspoker.server.game.events.gameEvents.playerActionEvents.BetListener;
+import org.cspoker.server.game.events.gameEvents.playerActionEvents.BigBlindListener;
+import org.cspoker.server.game.events.gameEvents.playerActionEvents.CallListener;
+import org.cspoker.server.game.events.gameEvents.playerActionEvents.CheckListener;
+import org.cspoker.server.game.events.gameEvents.playerActionEvents.DealListener;
+import org.cspoker.server.game.events.gameEvents.playerActionEvents.FoldListener;
+import org.cspoker.server.game.events.gameEvents.playerActionEvents.RaiseListener;
+import org.cspoker.server.game.events.gameEvents.playerActionEvents.SmallBlindListener;
+import org.cspoker.server.game.events.gameEvents.privateEvents.NewPocketCardsListener;
+import org.cspoker.server.game.events.serverEvents.PlayerJoinedListener;
+import org.cspoker.server.game.events.serverEvents.PlayerLeftListener;
+import org.cspoker.server.game.events.serverEvents.ServerMessageListener;
+import org.cspoker.server.game.events.serverEvents.TableCreatedListener;
 import org.cspoker.server.game.gameControl.IllegalActionException;
 
 /**
@@ -176,4 +201,431 @@ public interface PlayerCommunication {
 	 */
 	public Events getLatestEventsAndAck(int ack) throws IllegalActionException;
 
+	
+	/**********************************************************
+	 * Publisher
+	 **********************************************************/	
+	
+	/**********************************************************
+	 * Game Events Publisher
+	 **********************************************************/	
+	
+	/**********************************************************
+	 * Player Action Events Publisher
+	 **********************************************************/	
+	
+	/**
+	 * Subscribe the given all-in listener for all-in events.
+	 *
+	 * @param 	listener
+	 * 			The listener to subscribe.
+	 */
+	public void subscribeAllInListener(AllInListener listener);
+
+	/**
+	 * Unsubscribe the given all-in listener for all-in events.
+	 *
+	 * @param 	listener
+	 * 			The listener to unsubscribe.
+	 */
+	public void unsubscribeAllInListener(AllInListener listener);
+
+	/**
+	 * Subscribe the given bet listener for bet events.
+	 *
+	 * @param 	listener
+	 * 			The listener to subscribe.
+	 */
+	public void subscribeBetListener(BetListener listener);
+
+	/**
+	 * Unsubscribe the given bet listener for bet events.
+	 *
+	 * @param 	listener
+	 * 			The listener to unsubscribe.
+	 */
+	public void unsubscribeBetListener(BetListener listener);
+
+
+	/**
+	 * Subscribe the given big blind listener for big blind events.
+	 *
+	 * @param 	listener
+	 * 			The listener to subscribe.
+	 */
+	public void subscribeBigBlindListener(BigBlindListener listener);
+
+	/**
+	 * Unsubscribe the given big blind listener for big blind events.
+	 *
+	 * @param 	listener
+	 * 			The listener to unsubscribe.
+	 */
+	public void unsubscribeBigBlindListener(BigBlindListener listener);
+
+	/**
+	 * Subscribe the given call listener for call events.
+	 *
+	 * @param 	listener
+	 * 			The listener to subscribe.
+	 */
+	public void subscribeCallListener(CallListener listener);
+
+	/**
+	 * Unsubscribe the given call listener for call events.
+	 *
+	 * @param 	listener
+	 * 			The listener to unsubscribe.
+	 */
+	public void unsubscribeCallListener(CallListener listener);
+
+	/**
+	 * Subscribe the given check listener for check events.
+	 *
+	 * @param 	listener
+	 * 			The listener to subscribe.
+	 */
+	public void subscribeCheckListener(CheckListener listener);
+
+	/**
+	 * Unsubscribe the given check listener for check events.
+	 *
+	 * @param 	listener
+	 * 			The listener to unsubscribe.
+	 */
+	public void unsubscribeCheckListener(CheckListener listener);
+
+	/**
+	 * Subscribe the given deal listener for deal events.
+	 *
+	 * @param 	listener
+	 * 			The listener to subscribe.
+	 */
+	public void subscribeDealListener(DealListener listener);
+
+	/**
+	 * Unsubscribe the given deal listener for deal events.
+	 *
+	 * @param 	listener
+	 * 			The listener to unsubscribe.
+	 */
+	public void unsubscribeDealListener(DealListener listener);
+
+	/**
+	 * Subscribe the given fold listener for fold events.
+	 *
+	 * @param 	listener
+	 * 			The listener to subscribe.
+	 */
+	public void subscribeFoldListener(FoldListener listener);
+
+	/**
+	 * Unsubscribe the given fold listener for fold events.
+	 *
+	 * @param 	listener
+	 * 			The listener to unsubscribe.
+	 */
+	public void unsubscribeFoldListener(FoldListener listener);
+
+
+	/**
+	 * Subscribe the given raise listener for raise events.
+	 *
+	 * @param 	listener
+	 * 			The listener to subscribe.
+	 */
+	public void subscribeRaiseListener(RaiseListener listener);
+
+	/**
+	 * Unsubscribe the given raise listener for raise events.
+	 *
+	 * @param 	listener
+	 * 			The listener to unsubscribe.
+	 */
+	public void unsubscribeRaiseListener(RaiseListener listener);
+
+	/**
+	 * Subscribe the given small blind listener for small blind events.
+	 *
+	 * @param 	listener
+	 * 			The listener to subscribe.
+	 */
+	public void subscribeSmallBlindListener(SmallBlindListener listener);
+
+	/**
+	 * Unsubscribe the given small blind listener for small blind events.
+	 *
+	 * @param 	listener
+	 * 			The listener to unsubscribe.
+	 */
+	public void unsubscribeSmallBlindListener(SmallBlindListener listener);
+
+	
+	/**********************************************************
+	 * Private Events Publisher
+	 **********************************************************/	
+	
+	/**
+	 * Subscribe the given new pocket cards listener for new pocket cards events.
+	 *
+	 * @param 	listener
+	 * 			The listener to subscribe.
+	 */
+	public void subscribeNewPocketCardsListener(NewPocketCardsListener listener);
+
+
+	/**
+	 * Unsubscribe the given new pocket cards listener for new pocket cards events.
+	 *
+	 * @param 	listener
+	 * 			The listener to unsubscribe.
+	 */
+	public void unsubscribeNewPocketCardsListener(NewPocketCardsListener listener);
+	
+	/**********************************************************
+	 * Other Game Events Publisher
+	 **********************************************************/	
+	
+	/**
+	 * Subscribe the given new common cards listener for new common cards events.
+	 *
+	 * @param 	listener
+	 * 			The listener to subscribe.
+	 */
+	public void subscribeNewCommonCardsListener(NewCommunityCardsListener listener);
+
+	/**
+	 * Unsubscribe the given new common cards listener for new common cards events.
+	 *
+	 * @param 	listener
+	 * 			The listener to unsubscribe.
+	 */
+	public void unsubscribeNewCommonCardsListener(NewCommunityCardsListener listener);
+
+	/**
+	 * Subscribe the given new deal listener for new deal events.
+	 *
+	 * @param 	listener
+	 * 			The listener to subscribe.
+	 */
+	public void subscribeNewDealListener(NewDealListener listener);
+
+	/**
+	 * Unsubscribe the given new deal listener for new deal events.
+	 *
+	 * @param 	listener
+	 * 			The listener to unsubscribe.
+	 */
+	public void unsubscribeNewDealListener(NewDealListener listener);
+	
+	/**
+	 * Subscribe the given new round listener for new round events.
+	 *
+	 * @param 	listener
+	 * 			The listener to subscribe.
+	 */
+	public void subscribeNewRoundListener(NewRoundListener listener);
+
+	/**
+	 * Unsubscribe the given new round listener for new round events.
+	 *
+	 * @param 	listener
+	 * 			The listener to unsubscribe.
+	 */
+	public void unsubscribeNewRoundListener(NewRoundListener listener);
+	
+	/**
+	 * Subscribe the given next player listener for next player events.
+	 *
+	 * @param 	listener
+	 * 			The listener to subscribe.
+	 */
+	public void subscribeNextPlayerListener(NextPlayerListener listener);
+
+	/**
+	 * Unsubscribe the given next player listener for next player events.
+	 *
+	 * @param 	listener
+	 * 			The listener to unsubscribe.
+	 */
+	public void unsubscribeNextPlayerListener(NextPlayerListener listener);
+	
+	/**
+	 * Subscribe the given player joined game listener for player joined game events.
+	 *
+	 * @param 	listener
+	 * 			The listener to subscribe.
+	 */
+	public void subscribePlayerJoinedGameListener(PlayerJoinedGameListener listener);
+
+	/**
+	 * Unsubscribe the given player joined game listener for player joined game events.
+	 *
+	 * @param 	listener
+	 * 			The listener to unsubscribe.
+	 */
+	public void unsubscribePlayerJoinedGameListener(PlayerJoinedGameListener listener);
+	
+	/**
+	 * Subscribe the given pot changed listener for pot changed events.
+	 *
+	 * @param 	listener
+	 * 			The listener to subscribe.
+	 */
+	public void subscribePotChangedListener(PotChangedListener listener);
+
+	/**
+	 * Unsubscribe the given pot changed listener for pot changed events.
+	 *
+	 * @param 	listener
+	 * 			The listener to unsubscribe.
+	 */
+	public void unsubscribePotChangedListener(PotChangedListener listener);
+
+
+	/**
+	 * Subscribe the given show hand listener for show hand events.
+	 *
+	 * @param 	listener
+	 * 			The listener to subscribe.
+	 */
+	public void subscribeShowHandListener(ShowHandListener listener);
+
+	/**
+	 * Unsubscribe the given show hand listener for show hand events.
+	 *
+	 * @param 	listener
+	 * 			The listener to unsubscribe.
+	 */
+	public void unsubscribeShowHandListener(ShowHandListener listener);
+
+	/**
+	 * Subscribe the given stack changed listener for stack changed events.
+	 *
+	 * @param 	listener
+	 * 			The listener to subscribe.
+	 */
+	public void subscribeStackChangedListener(StackChangedListener listener);
+
+	/**
+	 * Unsubscribe the given stack changed listener for stack changed events.
+	 *
+	 * @param 	listener
+	 * 			The listener to unsubscribe.
+	 */
+	public void unsubscribeStackChangedListener(StackChangedListener listener);
+	
+	/**
+	 * Subscribe the given winner listener for winner events.
+	 *
+	 * @param 	listener
+	 * 			The listener to subscribe.
+	 */
+	public void subscribeWinnerListener(WinnerListener listener);
+
+	/**
+	 * Unsubscribe the given winner listener for winner events.
+	 *
+	 * @param 	listener
+	 * 			The listener to unsubscribe.
+	 */
+	public void unsubscribeWinnerListener(WinnerListener listener);
+
+	/**
+	 * Subscribe the given player left table listener for player left table events.
+	 *
+	 * @param 	listener
+	 * 			The listener to subscribe.
+	 */
+	public void subscribePlayerLeftTableListener(PlayerLeftTableListener listener);
+
+	/**
+	 * Unsubscribe the given player left table listener for player left table events.
+	 *
+	 * @param 	listener
+	 * 			The listener to unsubscribe.
+	 */
+	public void unsubscribePlayerLeftTableListener(PlayerLeftTableListener listener);
+	/**
+	 * Subscribe the given message listener for message events.
+	 *
+	 * @param 	listener
+	 * 			The listener to subscribe.
+	 */
+	public void subscribeGameMessageListener(GameMessageListener listener);
+	/**
+	 * Unsubscribe the given message listener for message events.
+	 *
+	 * @param 	listener
+	 * 			The listener to unsubscribe.
+	 */
+	public void unsubscribeGameMessageListener(GameMessageListener listener);
+	
+	/**********************************************************
+	 * Server Events Publisher
+	 **********************************************************/	
+
+	/**
+	 * Subscribe the given player joined listener for player joined events.
+	 *
+	 * @param 	listener
+	 * 			The listener to subscribe.
+	 */
+	public void subscribePlayerJoinedListener(PlayerJoinedListener listener);
+	
+	/**
+	 * Unsubscribe the given player joined listener for player joined events.
+	 *
+	 * @param 	listener
+	 * 			The listener to unsubscribe.
+	 */
+	public void unsubscribePlayerJoinedListener(PlayerJoinedListener listener);
+
+	/**
+	 * Subscribe the given table created listener for table created events.
+	 *
+	 * @param 	listener
+	 * 			The listener to subscribe.
+	 */
+	public void subscribeTableCreatedListener(TableCreatedListener listener);
+
+	/**
+	 * Unsubscribe the given table created listener for table created events.
+	 *
+	 * @param 	listener
+	 * 			The listener to unsubscribe.
+	 */
+	public void unsubscribeTableCreatedListener(TableCreatedListener listener);
+
+	/**
+	 * Subscribe the given player left listener for player left events.
+	 *
+	 * @param 	listener
+	 * 			The listener to subscribe.
+	 */
+	public void subscribePlayerLeftListener(PlayerLeftListener listener);
+
+	/**
+	 * Unsubscribe the given player left listener for player left events.
+	 *
+	 * @param 	listener
+	 * 			The listener to unsubscribe.
+	 */
+	public void unsubscribePlayerLeftListener(PlayerLeftListener listener);
+
+	/**
+	 * Subscribe the given message listener for message events.
+	 *
+	 * @param 	listener
+	 * 			The listener to subscribe.
+	 */
+	public void subscribeServerMessageListener(ServerMessageListener listener);
+
+	/**
+	 * Unsubscribe the given message listener for message events.
+	 *
+	 * @param 	listener
+	 * 			The listener to unsubscribe.
+	 */
+	public void unsubscribeServerMessageListener(ServerMessageListener listener);
 }
