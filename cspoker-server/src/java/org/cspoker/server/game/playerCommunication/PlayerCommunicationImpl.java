@@ -20,8 +20,31 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.cspoker.server.game.GameManager;
+import org.cspoker.server.game.PlayerId;
 import org.cspoker.server.game.TableId;
 import org.cspoker.server.game.events.AllEventsListener;
+import org.cspoker.server.game.events.gameEvents.GameMessageEvent;
+import org.cspoker.server.game.events.gameEvents.GameMessageListener;
+import org.cspoker.server.game.events.gameEvents.NewCommunityCardsEvent;
+import org.cspoker.server.game.events.gameEvents.NewCommunityCardsListener;
+import org.cspoker.server.game.events.gameEvents.NewDealEvent;
+import org.cspoker.server.game.events.gameEvents.NewDealListener;
+import org.cspoker.server.game.events.gameEvents.NewRoundEvent;
+import org.cspoker.server.game.events.gameEvents.NewRoundListener;
+import org.cspoker.server.game.events.gameEvents.NextPlayerEvent;
+import org.cspoker.server.game.events.gameEvents.NextPlayerListener;
+import org.cspoker.server.game.events.gameEvents.PlayerJoinedGameEvent;
+import org.cspoker.server.game.events.gameEvents.PlayerJoinedGameListener;
+import org.cspoker.server.game.events.gameEvents.PlayerLeftTableEvent;
+import org.cspoker.server.game.events.gameEvents.PlayerLeftTableListener;
+import org.cspoker.server.game.events.gameEvents.PotChangedEvent;
+import org.cspoker.server.game.events.gameEvents.PotChangedListener;
+import org.cspoker.server.game.events.gameEvents.ShowHandEvent;
+import org.cspoker.server.game.events.gameEvents.ShowHandListener;
+import org.cspoker.server.game.events.gameEvents.StackChangedEvent;
+import org.cspoker.server.game.events.gameEvents.StackChangedListener;
+import org.cspoker.server.game.events.gameEvents.WinnerEvent;
+import org.cspoker.server.game.events.gameEvents.WinnerListener;
 import org.cspoker.server.game.events.gameEvents.playerActionEvents.AllInEvent;
 import org.cspoker.server.game.events.gameEvents.playerActionEvents.AllInListener;
 import org.cspoker.server.game.events.gameEvents.playerActionEvents.BetEvent;
@@ -29,11 +52,27 @@ import org.cspoker.server.game.events.gameEvents.playerActionEvents.BetListener;
 import org.cspoker.server.game.events.gameEvents.playerActionEvents.BigBlindEvent;
 import org.cspoker.server.game.events.gameEvents.playerActionEvents.BigBlindListener;
 import org.cspoker.server.game.events.gameEvents.playerActionEvents.CallEvent;
+import org.cspoker.server.game.events.gameEvents.playerActionEvents.CallListener;
 import org.cspoker.server.game.events.gameEvents.playerActionEvents.CheckEvent;
+import org.cspoker.server.game.events.gameEvents.playerActionEvents.CheckListener;
 import org.cspoker.server.game.events.gameEvents.playerActionEvents.DealEvent;
+import org.cspoker.server.game.events.gameEvents.playerActionEvents.DealListener;
 import org.cspoker.server.game.events.gameEvents.playerActionEvents.FoldEvent;
+import org.cspoker.server.game.events.gameEvents.playerActionEvents.FoldListener;
 import org.cspoker.server.game.events.gameEvents.playerActionEvents.RaiseEvent;
+import org.cspoker.server.game.events.gameEvents.playerActionEvents.RaiseListener;
 import org.cspoker.server.game.events.gameEvents.playerActionEvents.SmallBlindEvent;
+import org.cspoker.server.game.events.gameEvents.playerActionEvents.SmallBlindListener;
+import org.cspoker.server.game.events.gameEvents.privateEvents.NewPocketCardsEvent;
+import org.cspoker.server.game.events.gameEvents.privateEvents.NewPocketCardsListener;
+import org.cspoker.server.game.events.serverEvents.PlayerJoinedEvent;
+import org.cspoker.server.game.events.serverEvents.PlayerJoinedListener;
+import org.cspoker.server.game.events.serverEvents.PlayerLeftEvent;
+import org.cspoker.server.game.events.serverEvents.PlayerLeftListener;
+import org.cspoker.server.game.events.serverEvents.ServerMessageEvent;
+import org.cspoker.server.game.events.serverEvents.ServerMessageListener;
+import org.cspoker.server.game.events.serverEvents.TableCreatedEvent;
+import org.cspoker.server.game.events.serverEvents.TableCreatedListener;
 import org.cspoker.server.game.gameControl.IllegalActionException;
 import org.cspoker.server.game.player.Player;
 
@@ -77,9 +116,8 @@ public class PlayerCommunicationImpl implements PlayerCommunication {
 	public PlayerCommunicationImpl(Player player){
 		this.player = player;
 		state = new InitialState(this);
-		GameManager.getServerMediator().subscribeServerEventListener(getEventsCollector());
-
-		//TODO Temporary...
+		GameManager.getServerMediator().subscribeAllServerEventsListener(player.getId(), getAllEventsListener());
+		subscribeAllEventsListener(getEventsCollector());
 		PlayerCommunicationManager.addPlayerCommunication(player.getId(), this);
 	}
 
@@ -90,6 +128,10 @@ public class PlayerCommunicationImpl implements PlayerCommunication {
 	 */
 	public Player getPlayer(){
 		return player;
+	}
+	
+	public PlayerId getId(){
+		return player.getId();
 	}
 
 	/**********************************************************
@@ -265,10 +307,642 @@ public class PlayerCommunicationImpl implements PlayerCommunication {
 	 */
 	private final List<BigBlindListener> bigBlindListeners = new CopyOnWriteArrayList<BigBlindListener>();
 
+	/**
+	 * Subscribe the given call listener for call events.
+	 *
+	 * @param 	listener
+	 * 			The listener to subscribe.
+	 */
+	public void subscribeCallListener(CallListener listener) {
+		callListeners.add(listener);
+	}
+
+	/**
+	 * Unsubscribe the given call listener for call events.
+	 *
+	 * @param 	listener
+	 * 			The listener to unsubscribe.
+	 */
+	public void unsubscribeCallListener(CallListener listener) {
+		callListeners.remove(listener);
+	}
+
+	/**
+	 * This list contains all call listeners that
+	 * should be alerted on a call.
+	 */
+	private final List<CallListener> callListeners = new CopyOnWriteArrayList<CallListener>();
+
+	/**
+	 * Subscribe the given check listener for check events.
+	 *
+	 * @param 	listener
+	 * 			The listener to subscribe.
+	 */
+	public void subscribeCheckListener(CheckListener listener) {
+		checkListeners.add(listener);
+	}
+
+	/**
+	 * Unsubscribe the given check listener for check events.
+	 *
+	 * @param 	listener
+	 * 			The listener to unsubscribe.
+	 */
+	public void unsubscribeCheckListener(CheckListener listener) {
+		checkListeners.remove(listener);
+	}
+
+	/**
+	 * This list contains all check listeners that
+	 * should be alerted on a check.
+	 */
+	private final List<CheckListener> checkListeners = new CopyOnWriteArrayList<CheckListener>();
+	
+	/**
+	 * Subscribe the given deal listener for deal events.
+	 *
+	 * @param 	listener
+	 * 			The listener to subscribe.
+	 */
+	public void subscribeDealListener(DealListener listener) {
+		dealListeners.add(listener);
+	}
+
+	/**
+	 * Unsubscribe the given deal listener for deal events.
+	 *
+	 * @param 	listener
+	 * 			The listener to unsubscribe.
+	 */
+	public void unsubscribeDealListener(DealListener listener) {
+		dealListeners.remove(listener);
+	}
+
+	/**
+	 * This list contains all deal listeners that
+	 * should be alerted on a deal.
+	 */
+	private final List<DealListener> dealListeners = new CopyOnWriteArrayList<DealListener>();
+
+	/**
+	 * Subscribe the given fold listener for fold events.
+	 *
+	 * @param 	listener
+	 * 			The listener to subscribe.
+	 */
+	public void subscribeFoldListener(FoldListener listener) {
+		foldListeners.add(listener);
+	}
+
+	/**
+	 * Unsubscribe the given fold listener for fold events.
+	 *
+	 * @param 	listener
+	 * 			The listener to unsubscribe.
+	 */
+	public void unsubscribeFoldListener(FoldListener listener) {
+		foldListeners.remove(listener);
+	}
+
+	/**
+	 * This list contains all fold listeners that
+	 * should be alerted on a fold.
+	 */
+	private final List<FoldListener> foldListeners = new CopyOnWriteArrayList<FoldListener>();
+	
+	/**
+	 * Subscribe the given raise listener for raise events.
+	 *
+	 * @param 	listener
+	 * 			The listener to subscribe.
+	 */
+	public void subscribeRaiseListener(RaiseListener listener) {
+		raiseListeners.add(listener);
+	}
+
+	/**
+	 * Unsubscribe the given raise listener for raise events.
+	 *
+	 * @param 	listener
+	 * 			The listener to unsubscribe.
+	 */
+	public void unsubscribeRaiseListener(RaiseListener listener) {
+		raiseListeners.remove(listener);
+	}
+
+	/**
+	 * This list contains all raise listeners that
+	 * should be alerted on a raise.
+	 */
+	private final List<RaiseListener> raiseListeners = new CopyOnWriteArrayList<RaiseListener>();
+
+	/**
+	 * Subscribe the given small blind listener for small blind events.
+	 *
+	 * @param 	listener
+	 * 			The listener to subscribe.
+	 */
+	public void subscribeSmallBlindListener(SmallBlindListener listener) {
+		smallBlindListeners.add(listener);
+	}
+
+	/**
+	 * Unsubscribe the given small blind listener for small blind events.
+	 *
+	 * @param 	listener
+	 * 			The listener to unsubscribe.
+	 */
+	public void unsubscribeSmallBlindListener(SmallBlindListener listener) {
+		smallBlindListeners.remove(listener);
+	}
+
+	/**
+	 * This list contains all small blind listeners that
+	 * should be alerted on a small blind event.
+	 */
+	private final List<SmallBlindListener> smallBlindListeners = new CopyOnWriteArrayList<SmallBlindListener>();
+
+	/**
+	 * Subscribe the given new pocket cards listener for new pocket cards events.
+	 *
+	 * @param 	listener
+	 * 			The listener to subscribe.
+	 */
+	public void subscribeNewPocketCardsListener(NewPocketCardsListener listener) {
+		newPocketCardsListeners.add(listener);
+	}
 
 
+	/**
+	 * Unsubscribe the given new pocket cards listener for new pocket cards events.
+	 *
+	 * @param 	listener
+	 * 			The listener to unsubscribe.
+	 */
+	public void unsubscribeNewPocketCardsListener(NewPocketCardsListener listener) {
+		newPocketCardsListeners.remove(listener);
+	}
 
+	/**
+	 * This list contains all new private cards listeners that
+	 * should be alerted on a new private cards.
+	 */
+	private final List<NewPocketCardsListener> newPocketCardsListeners = new CopyOnWriteArrayList<NewPocketCardsListener>();
 
+	/**
+	 * Subscribe the given new common cards listener for new common cards events.
+	 *
+	 * @param 	listener
+	 * 			The listener to subscribe.
+	 */
+	public void subscribeNewCommonCardsListener(NewCommunityCardsListener listener) {
+		newCommunityCardsListeners.add(listener);
+	}
+
+	/**
+	 * Unsubscribe the given new common cards listener for new common cards events.
+	 *
+	 * @param 	listener
+	 * 			The listener to unsubscribe.
+	 */
+	public void unsubscribeNewCommonCardsListener(NewCommunityCardsListener listener) {
+		newCommunityCardsListeners.remove(listener);
+	}
+
+	/**
+	 * This list contains all new common cards listeners that
+	 * should be alerted on new common cards.
+	 */
+	private final List<NewCommunityCardsListener> newCommunityCardsListeners = new CopyOnWriteArrayList<NewCommunityCardsListener>();
+
+	/**
+	 * Subscribe the given new deal listener for new deal events.
+	 *
+	 * @param 	listener
+	 * 			The listener to subscribe.
+	 */
+	public void subscribeNewDealListener(NewDealListener listener) {
+		newDealListeners.add(listener);
+	}
+
+	/**
+	 * Unsubscribe the given new deal listener for new deal events.
+	 *
+	 * @param 	listener
+	 * 			The listener to unsubscribe.
+	 */
+	public void unsubscribeNewDealListener(NewDealListener listener) {
+		newDealListeners.remove(listener);
+	}
+
+	/**
+	 * This list contains all new deal listeners that
+	 * should be alerted on a new deal.
+	 */
+	private final List<NewDealListener> newDealListeners = new CopyOnWriteArrayList<NewDealListener>();
+
+	/**
+	 * Subscribe the given new round listener for new round events.
+	 *
+	 * @param 	listener
+	 * 			The listener to subscribe.
+	 */
+	public void subscribeNewRoundListener(NewRoundListener listener) {
+		newRoundListeners.add(listener);
+	}
+
+	/**
+	 * Unsubscribe the given new round listener for new round events.
+	 *
+	 * @param 	listener
+	 * 			The listener to unsubscribe.
+	 */
+	public void unsubscribeNewRoundListener(NewRoundListener listener) {
+		newRoundListeners.remove(listener);
+	}
+
+	/**
+	 * This list contains all new round listeners that
+	 * should be alerted on a new round.
+	 */
+	private final List<NewRoundListener> newRoundListeners = new CopyOnWriteArrayList<NewRoundListener>();
+	
+	/**
+	 * Subscribe the given next player listener for next player events.
+	 *
+	 * @param 	listener
+	 * 			The listener to subscribe.
+	 */
+	public void subscribeNextPlayerListener(NextPlayerListener listener) {
+		nextPlayerListeners.add(listener);
+	}
+
+	/**
+	 * Unsubscribe the given next player listener for next player events.
+	 *
+	 * @param 	listener
+	 * 			The listener to unsubscribe.
+	 */
+	public void unsubscribeNextPlayerListener(NextPlayerListener listener) {
+		nextPlayerListeners.remove(listener);
+	}
+
+	/**
+	 * This list contains all next player listeners that
+	 * should be alerted on a next player.
+	 */
+	private final List<NextPlayerListener> nextPlayerListeners = new CopyOnWriteArrayList<NextPlayerListener>();
+	
+	/**
+	 * Subscribe the given player joined game listener for player joined game events.
+	 *
+	 * @param 	listener
+	 * 			The listener to subscribe.
+	 */
+	public void subscribePlayerJoinedGameListener(PlayerJoinedGameListener listener) {
+		playerJoinedGameListeners.add(listener);
+	}
+
+	/**
+	 * Unsubscribe the given player joined game listener for player joined game events.
+	 *
+	 * @param 	listener
+	 * 			The listener to unsubscribe.
+	 */
+	public void unsubscribePlayerJoinedGameListener(PlayerJoinedGameListener listener) {
+		playerJoinedGameListeners.remove(listener);
+	}
+
+	/**
+	 * This list contains all player joined game listeners that
+	 * should be alerted on a player joined game.
+	 */
+	private final List<PlayerJoinedGameListener> playerJoinedGameListeners = new CopyOnWriteArrayList<PlayerJoinedGameListener>();
+	
+	/**
+	 * Subscribe the given pot changed listener for pot changed events.
+	 *
+	 * @param 	listener
+	 * 			The listener to subscribe.
+	 */
+	public void subscribePotChangedListener(PotChangedListener listener) {
+		potChangedListeners.add(listener);
+	}
+
+	/**
+	 * Unsubscribe the given pot changed listener for pot changed events.
+	 *
+	 * @param 	listener
+	 * 			The listener to unsubscribe.
+	 */
+	public void unsubscribePotChangedListener(PotChangedListener listener) {
+		potChangedListeners.remove(listener);
+	}
+
+	/**
+	 * This list contains all pot changed listeners that
+	 * should be alerted on a pot changed.
+	 */
+	private final List<PotChangedListener> potChangedListeners = new CopyOnWriteArrayList<PotChangedListener>();
+
+	/**
+	 * Subscribe the given show hand listener for show hand events.
+	 *
+	 * @param 	listener
+	 * 			The listener to subscribe.
+	 */
+	public void subscribeShowHandListener(ShowHandListener listener) {
+		showHandListeners.add(listener);
+	}
+
+	/**
+	 * Unsubscribe the given show hand listener for show hand events.
+	 *
+	 * @param 	listener
+	 * 			The listener to unsubscribe.
+	 */
+	public void unsubscribeShowHandListener(ShowHandListener listener) {
+		showHandListeners.remove(listener);
+	}
+
+	/**
+	 * This list contains all show hand listeners that
+	 * should be alerted on a show hand.
+	 */
+	private final List<ShowHandListener> showHandListeners = new CopyOnWriteArrayList<ShowHandListener>();
+
+	/**
+	 * Subscribe the given stack changed listener for stack changed events.
+	 *
+	 * @param 	listener
+	 * 			The listener to subscribe.
+	 */
+	public void subscribeStackChangedListener(StackChangedListener listener) {
+		stackChangedListeners.add(listener);
+	}
+
+	/**
+	 * Unsubscribe the given stack changed listener for stack changed events.
+	 *
+	 * @param 	listener
+	 * 			The listener to unsubscribe.
+	 */
+	public void unsubscribeStackChangedListener(StackChangedListener listener) {
+		stackChangedListeners.remove(listener);
+	}
+
+	/**
+	 * This list contains all stack changed listeners that
+	 * should be alerted on a stack changed.
+	 */
+	private final List<StackChangedListener> stackChangedListeners = new CopyOnWriteArrayList<StackChangedListener>();
+
+	/**
+	 * Subscribe the given winner listener for winner events.
+	 *
+	 * @param 	listener
+	 * 			The listener to subscribe.
+	 */
+	public void subscribeWinnerListener(WinnerListener listener) {
+		winnerListeners.add(listener);
+	}
+
+	/**
+	 * Unsubscribe the given winner listener for winner events.
+	 *
+	 * @param 	listener
+	 * 			The listener to unsubscribe.
+	 */
+	public void unsubscribeWinnerListener(WinnerListener listener) {
+		winnerListeners.remove(listener);
+	}
+
+	/**
+	 * This list contains all winner listeners that
+	 * should be alerted on a winner.
+	 */
+	private final List<WinnerListener> winnerListeners = new CopyOnWriteArrayList<WinnerListener>();
+
+	/**
+	 * Subscribe the given player left table listener for player left table events.
+	 *
+	 * @param 	listener
+	 * 			The listener to subscribe.
+	 */
+	public void subscribePlayerLeftTableListener(PlayerLeftTableListener listener) {
+		playerLeftTableListeners.add(listener);
+	}
+
+	/**
+	 * Unsubscribe the given player left table listener for player left table events.
+	 *
+	 * @param 	listener
+	 * 			The listener to unsubscribe.
+	 */
+	public void unsubscribePlayerLeftTableListener(PlayerLeftTableListener listener) {
+		playerLeftTableListeners.remove(listener);
+	}
+
+	/**
+	 * This list contains all player left table listeners that
+	 * should be alerted on a player left table.
+	 */
+	private final List<PlayerLeftTableListener> playerLeftTableListeners = new CopyOnWriteArrayList<PlayerLeftTableListener>();
+	
+	/**
+	 * Subscribe the given message listener for message events.
+	 *
+	 * @param 	listener
+	 * 			The listener to subscribe.
+	 */
+	public void subscribeGameMessageListener(GameMessageListener listener) {
+		gameMessageListeners.add(listener);
+	}
+
+	/**
+	 * Unsubscribe the given message listener for message events.
+	 *
+	 * @param 	listener
+	 * 			The listener to unsubscribe.
+	 */
+	public void unsubscribeGameMessageListener(GameMessageListener listener) {
+		gameMessageListeners.remove(listener);
+	}
+
+	/**
+	 * This list contains all message listeners that
+	 * should be alerted on a message.
+	 */
+	private final List<GameMessageListener> gameMessageListeners = new CopyOnWriteArrayList<GameMessageListener>();
+
+	
+	
+	/**
+	 * Subscribe the given player joined listener for player joined events.
+	 *
+	 * @param 	listener
+	 * 			The listener to subscribe.
+	 */
+	public void subscribePlayerJoinedListener(PlayerJoinedListener listener) {
+		playerJoinedListeners.add(listener);
+	}
+
+	/**
+	 * Unsubscribe the given player joined listener for player joined events.
+	 *
+	 * @param 	listener
+	 * 			The listener to unsubscribe.
+	 */
+	public void unsubscribePlayerJoinedListener(PlayerJoinedListener listener) {
+		playerJoinedListeners.remove(listener);
+	}
+
+	/**
+	 * This list contains all player joined listeners that
+	 * should be alerted on a player joined event.
+	 */
+	private final List<PlayerJoinedListener> playerJoinedListeners = new CopyOnWriteArrayList<PlayerJoinedListener>();
+	
+	/**
+	 * Subscribe the given table created listener for table created events.
+	 *
+	 * @param 	listener
+	 * 			The listener to subscribe.
+	 */
+	public void subscribeTableCreatedListener(TableCreatedListener listener) {
+		tableCreatedListeners.add(listener);
+	}
+
+	/**
+	 * Unsubscribe the given table created listener for table created events.
+	 *
+	 * @param 	listener
+	 * 			The listener to unsubscribe.
+	 */
+	public void unsubscribeTableCreatedListener(TableCreatedListener listener) {
+		tableCreatedListeners.remove(listener);
+	}
+
+	/**
+	 * This list contains all table created listeners that
+	 * should be alerted on a table created.
+	 */
+	private final List<TableCreatedListener> tableCreatedListeners = new CopyOnWriteArrayList<TableCreatedListener>();
+	
+	/**
+	 * Subscribe the given player left listener for player left events.
+	 *
+	 * @param 	listener
+	 * 			The listener to subscribe.
+	 */
+	public void subscribePlayerLeftListener(PlayerLeftListener listener) {
+		playerLeftListeners.add(listener);
+	}
+
+	/**
+	 * Unsubscribe the given player left listener for player left events.
+	 *
+	 * @param 	listener
+	 * 			The listener to unsubscribe.
+	 */
+	public void unsubscribePlayerLeftListener(PlayerLeftListener listener) {
+		playerLeftListeners.remove(listener);
+	}
+
+	/**
+	 * This list contains all player left listeners that
+	 * should be alerted on a player left.
+	 */
+	private final List<PlayerLeftListener> playerLeftListeners = new CopyOnWriteArrayList<PlayerLeftListener>();
+	
+	/**
+	 * Subscribe the given message listener for message events.
+	 *
+	 * @param 	listener
+	 * 			The listener to subscribe.
+	 */
+	public void subscribeServerMessageListener(ServerMessageListener listener) {
+		serverMessageListeners.add(listener);
+	}
+
+	/**
+	 * Unsubscribe the given message listener for message events.
+	 *
+	 * @param 	listener
+	 * 			The listener to unsubscribe.
+	 */
+	public void unsubscribeServerMessageListener(ServerMessageListener listener) {
+		serverMessageListeners.remove(listener);
+	}
+	
+	public void subscribeAllEventsListener(AllEventsListener listener){
+		subscribeAllInListener(listener);
+		subscribeBetListener(listener);
+		subscribeBigBlindListener(listener);
+		subscribeCallListener(listener);
+		subscribeCheckListener(listener);
+		subscribeDealListener(listener);
+		subscribeFoldListener(listener);
+		subscribeGameMessageListener(listener);
+		subscribeNewCommonCardsListener(listener);
+		subscribeNewDealListener(listener);
+		subscribeNewPocketCardsListener(listener);
+		subscribeNewRoundListener(listener);
+		subscribeNextPlayerListener(listener);
+		subscribePlayerJoinedGameListener(listener);
+		subscribePlayerJoinedListener(listener);
+		subscribePlayerLeftListener(listener);
+		subscribePlayerLeftTableListener(listener);
+		subscribePotChangedListener(listener);
+		subscribeRaiseListener(listener);
+		subscribeServerMessageListener(listener);
+		subscribeShowHandListener(listener);
+		subscribeSmallBlindListener(listener);
+		subscribeStackChangedListener(listener);
+		subscribeTableCreatedListener(listener);
+		subscribeWinnerListener(listener);
+	}
+	
+	public void unsubscribeAllEventsListener(AllEventsListener listener){
+		unsubscribeAllInListener(listener);
+		unsubscribeBetListener(listener);
+		unsubscribeBigBlindListener(listener);
+		unsubscribeCallListener(listener);
+		unsubscribeCheckListener(listener);
+		unsubscribeDealListener(listener);
+		unsubscribeFoldListener(listener);
+		unsubscribeGameMessageListener(listener);
+		unsubscribeNewCommonCardsListener(listener);
+		unsubscribeNewDealListener(listener);
+		unsubscribeNewPocketCardsListener(listener);
+		unsubscribeNewRoundListener(listener);
+		unsubscribeNextPlayerListener(listener);
+		unsubscribePlayerJoinedGameListener(listener);
+		unsubscribePlayerJoinedListener(listener);
+		unsubscribePlayerLeftListener(listener);
+		unsubscribePlayerLeftTableListener(listener);
+		unsubscribePotChangedListener(listener);
+		unsubscribeRaiseListener(listener);
+		unsubscribeServerMessageListener(listener);
+		unsubscribeShowHandListener(listener);
+		unsubscribeSmallBlindListener(listener);
+		unsubscribeStackChangedListener(listener);
+		unsubscribeTableCreatedListener(listener);
+		unsubscribeWinnerListener(listener);
+	}
+
+	/**
+	 * This list contains all message listeners that
+	 * should be alerted on a message.
+	 */
+	private final List<ServerMessageListener> serverMessageListeners = new CopyOnWriteArrayList<ServerMessageListener>();
+
+	
+	/**********************************************************
+	 * all events listener
+	 **********************************************************/
+	
 	AllEventsListener getAllEventsListener(){
 		return allEventsListener;
 	}
@@ -302,40 +976,168 @@ public class PlayerCommunicationImpl implements PlayerCommunication {
 
 		@Override
 		public void onCallEvent(CallEvent event) {
-			// TODO Auto-generated method stub
-
+			for(CallListener listener: callListeners){
+				listener.onCallEvent(event);
+			}
 		}
 
 		@Override
 		public void onCheckEvent(CheckEvent event) {
-			// TODO Auto-generated method stub
-
+			for(CheckListener listener: checkListeners){
+				listener.onCheckEvent(event);
+			}
 		}
 
 		@Override
 		public void onDealEvent(DealEvent event) {
-			// TODO Auto-generated method stub
-
+			for(DealListener listener: dealListeners){
+				listener.onDealEvent(event);
+			}
 		}
 
 		@Override
 		public void onFoldEvent(FoldEvent event) {
-			// TODO Auto-generated method stub
+			for(FoldListener listener: foldListeners){
+				listener.onFoldEvent(event);
+			}
 
 		}
 
 		@Override
 		public void onRaiseEvent(RaiseEvent event) {
-			// TODO Auto-generated method stub
-
+			for(RaiseListener listener: raiseListeners){
+				listener.onRaiseEvent(event);
+			}
 		}
 
 		@Override
 		public void onSmallBlindEvent(SmallBlindEvent event) {
-			// TODO Auto-generated method stub
-
+			for(SmallBlindListener listener: smallBlindListeners){
+				listener.onSmallBlindEvent(event);
+			}
 		}
 
-	}
+		@Override
+		public void onNewPocketCardsEvent(NewPocketCardsEvent event) {
+			for(NewPocketCardsListener listener: newPocketCardsListeners){
+				listener.onNewPocketCardsEvent(event);
+			}
+			
+		}
 
+		@Override
+		public void onNewCommunityCardsEvent(NewCommunityCardsEvent event) {
+			for(NewCommunityCardsListener listener: newCommunityCardsListeners){
+				listener.onNewCommunityCardsEvent(event);
+			}
+		}
+
+		@Override
+		public void onNewDealEvent(NewDealEvent event) {
+			for(NewDealListener listener: newDealListeners){
+				listener.onNewDealEvent(event);
+			}
+			
+		}
+
+		@Override
+		public void onNewRoundEvent(NewRoundEvent event) {
+			for(NewRoundListener listener: newRoundListeners){
+				listener.onNewRoundEvent(event);
+			}
+			
+		}
+
+		@Override
+		public void onNextPlayerEvent(NextPlayerEvent event) {
+			for(NextPlayerListener listener: nextPlayerListeners){
+				listener.onNextPlayerEvent(event);
+			}
+		}
+
+		@Override
+		public void onPlayerJoinedGameEvent(PlayerJoinedGameEvent event) {
+			for(PlayerJoinedGameListener listener: playerJoinedGameListeners){
+				listener.onPlayerJoinedGameEvent(event);
+			}
+		}
+
+		@Override
+		public void onPotChangedEvent(PotChangedEvent event) {
+			for(PotChangedListener listener: potChangedListeners){
+				listener.onPotChangedEvent(event);
+			}
+		}
+
+		@Override
+		public void onShowHandEvent(ShowHandEvent event) {
+			for(ShowHandListener listener:showHandListeners){
+				listener.onShowHandEvent(event);
+			}
+		}
+
+		@Override
+		public void onStackChangedEvent(StackChangedEvent event) {
+			for(StackChangedListener listener: stackChangedListeners){
+				listener.onStackChangedEvent(event);
+			}
+			
+		}
+
+		@Override
+		public void onWinnerEvent(WinnerEvent event) {
+			for(WinnerListener listener: winnerListeners){
+				listener.onWinnerEvent(event);
+			}
+		}
+		
+		@Override
+		public void onPlayerLeftTableEvent(PlayerLeftTableEvent event) {
+			for(PlayerLeftTableListener listener: playerLeftTableListeners){
+				listener.onPlayerLeftTableEvent(event);
+			}
+			
+		}
+		
+		@Override
+		public void onGameMessageEvent(GameMessageEvent event) {
+			for(GameMessageListener listener: gameMessageListeners){
+				listener.onGameMessageEvent(event);
+			}
+		}
+		
+		/**********************************************************
+		 * Server Events
+		 **********************************************************/
+
+
+		@Override
+		public void onPlayerJoinedEvent(PlayerJoinedEvent event) {
+			for(PlayerJoinedListener listener: playerJoinedListeners){
+				listener.onPlayerJoinedEvent(event);
+			}
+			
+		}
+
+		@Override
+		public void onTableCreatedEvent(TableCreatedEvent event) {
+			for(TableCreatedListener listener: tableCreatedListeners){
+				listener.onTableCreatedEvent(event);
+			}
+		}
+		
+		@Override
+		public void onPlayerLeftEvent(PlayerLeftEvent event) {
+			for(PlayerLeftListener listener: playerLeftListeners){
+				listener.onPlayerLeftEvent(event);
+			}
+		}
+
+		@Override
+		public void onServerMessageEvent(ServerMessageEvent event) {
+			for(ServerMessageListener listener: serverMessageListeners){
+				listener.onServerMessageEvent(event);
+			}
+		}
+	}
 }

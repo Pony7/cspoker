@@ -20,8 +20,34 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.cspoker.server.game.events.AllEventsListener;
 import org.cspoker.server.game.events.Event;
 import org.cspoker.server.game.events.EventListener;
+import org.cspoker.server.game.events.gameEvents.GameMessageEvent;
+import org.cspoker.server.game.events.gameEvents.NewCommunityCardsEvent;
+import org.cspoker.server.game.events.gameEvents.NewDealEvent;
+import org.cspoker.server.game.events.gameEvents.NewRoundEvent;
+import org.cspoker.server.game.events.gameEvents.NextPlayerEvent;
+import org.cspoker.server.game.events.gameEvents.PlayerJoinedGameEvent;
+import org.cspoker.server.game.events.gameEvents.PlayerLeftTableEvent;
+import org.cspoker.server.game.events.gameEvents.PotChangedEvent;
+import org.cspoker.server.game.events.gameEvents.ShowHandEvent;
+import org.cspoker.server.game.events.gameEvents.StackChangedEvent;
+import org.cspoker.server.game.events.gameEvents.WinnerEvent;
+import org.cspoker.server.game.events.gameEvents.playerActionEvents.AllInEvent;
+import org.cspoker.server.game.events.gameEvents.playerActionEvents.BetEvent;
+import org.cspoker.server.game.events.gameEvents.playerActionEvents.BigBlindEvent;
+import org.cspoker.server.game.events.gameEvents.playerActionEvents.CallEvent;
+import org.cspoker.server.game.events.gameEvents.playerActionEvents.CheckEvent;
+import org.cspoker.server.game.events.gameEvents.playerActionEvents.DealEvent;
+import org.cspoker.server.game.events.gameEvents.playerActionEvents.FoldEvent;
+import org.cspoker.server.game.events.gameEvents.playerActionEvents.RaiseEvent;
+import org.cspoker.server.game.events.gameEvents.playerActionEvents.SmallBlindEvent;
+import org.cspoker.server.game.events.gameEvents.privateEvents.NewPocketCardsEvent;
+import org.cspoker.server.game.events.serverEvents.PlayerJoinedEvent;
+import org.cspoker.server.game.events.serverEvents.PlayerLeftEvent;
+import org.cspoker.server.game.events.serverEvents.ServerMessageEvent;
+import org.cspoker.server.game.events.serverEvents.TableCreatedEvent;
 
 /**
  * A class to collect and to manage
@@ -30,7 +56,7 @@ import org.cspoker.server.game.events.EventListener;
  * @author Kenzo
  *
  */
-public class EventsCollector implements EventListener{
+public class EventsCollector implements EventListener, AllEventsListener{
 
 	private int ackedToNumber=0;
 
@@ -69,5 +95,130 @@ public class EventsCollector implements EventListener{
 		events.subList(0, ack-ackedToNumber).clear();
 		ackedToNumber = ack;
 		return getLatestEvents();
+	}
+
+	@Override
+	public void onAllInEvent(AllInEvent event) {
+		onEvent(event);
+	}
+
+	@Override
+	public void onBetEvent(BetEvent event) {
+		onEvent(event);
+	}
+
+	@Override
+	public void onBigBlindEvent(BigBlindEvent event) {
+		onEvent(event);
+	}
+
+	@Override
+	public void onCallEvent(CallEvent event) {
+		onEvent(event);
+	}
+
+	@Override
+	public void onCheckEvent(CheckEvent event) {
+		onEvent(event);
+	}
+
+	@Override
+	public void onDealEvent(DealEvent event) {
+		onEvent(event);
+	}
+
+	@Override
+	public void onFoldEvent(FoldEvent event) {
+		onEvent(event);
+	}
+
+	@Override
+	public void onRaiseEvent(RaiseEvent event) {
+		onEvent(event);
+	}
+
+	@Override
+	public void onSmallBlindEvent(SmallBlindEvent event) {
+		onEvent(event);
+	}
+
+	@Override
+	public void onNewPocketCardsEvent(NewPocketCardsEvent event) {
+		onEvent(event);
+	}
+
+	@Override
+	public void onNewCommunityCardsEvent(NewCommunityCardsEvent event) {
+		onEvent(event);
+	}
+
+	@Override
+	public void onNewDealEvent(NewDealEvent event) {
+		onEvent(event);
+	}
+
+	@Override
+	public void onNewRoundEvent(NewRoundEvent event) {
+		onEvent(event);
+	}
+
+	@Override
+	public void onNextPlayerEvent(NextPlayerEvent event) {
+		onEvent(event);
+	}
+
+	@Override
+	public void onPlayerJoinedGameEvent(PlayerJoinedGameEvent event) {
+		onEvent(event);
+	}
+
+	@Override
+	public void onPlayerLeftTableEvent(PlayerLeftTableEvent event) {
+		onEvent(event);
+	}
+
+	@Override
+	public void onPotChangedEvent(PotChangedEvent event) {
+		onEvent(event);
+	}
+
+	@Override
+	public void onShowHandEvent(ShowHandEvent event) {
+		onEvent(event);
+	}
+
+	@Override
+	public void onStackChangedEvent(StackChangedEvent event) {
+		onEvent(event);
+	}
+
+	@Override
+	public void onWinnerEvent(WinnerEvent event) {
+		onEvent(event);
+	}
+
+	@Override
+	public void onGameMessageEvent(GameMessageEvent event) {
+		onEvent(event);
+	}
+
+	@Override
+	public void onPlayerJoinedEvent(PlayerJoinedEvent event) {
+		onEvent(event);
+	}
+
+	@Override
+	public void onPlayerLeftEvent(PlayerLeftEvent event) {
+		onEvent(event);
+	}
+
+	@Override
+	public void onTableCreatedEvent(TableCreatedEvent event) {
+		onEvent(event);
+	}
+
+	@Override
+	public void onServerMessageEvent(ServerMessageEvent event) {
+		onEvent(event);
 	}
 }

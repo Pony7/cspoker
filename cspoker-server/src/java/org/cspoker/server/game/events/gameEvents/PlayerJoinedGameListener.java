@@ -13,12 +13,22 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
+package org.cspoker.server.game.events.gameEvents;
 
-package org.cspoker.server.game.events;
-
-import org.cspoker.server.game.events.gameEvents.AllGameEventsListener;
-import org.cspoker.server.game.events.serverEvents.AllServerEventsListener;
-
-public interface AllEventsListener extends AllGameEventsListener, AllServerEventsListener{
+/**
+ * An interface for player joining games listeners.
+ *
+ * @author Kenzo
+ *
+ */
+public interface PlayerJoinedGameListener {
+	
+	/**
+	 * This method is called when subscribed to inform a player joined the game.
+	 *
+	 * @param 	event
+	 * 			The event object containing all information of the occurred event.
+	 */
+	public void onPlayerJoinedGameEvent(PlayerJoinedGameEvent event);
 
 }

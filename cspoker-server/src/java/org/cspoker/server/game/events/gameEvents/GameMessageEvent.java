@@ -13,12 +13,24 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
+package org.cspoker.server.game.events.gameEvents;
 
-package org.cspoker.server.game.events;
+import org.cspoker.server.game.player.SavedPlayer;
 
-import org.cspoker.server.game.events.gameEvents.AllGameEventsListener;
-import org.cspoker.server.game.events.serverEvents.AllServerEventsListener;
+public class GameMessageEvent extends GameEvent{
 
-public interface AllEventsListener extends AllGameEventsListener, AllServerEventsListener{
+	private final SavedPlayer player;
+
+	private final String message;
+
+	public GameMessageEvent(SavedPlayer player, String message){
+		this.player = player;
+		this.message = message;
+	}
+
+	@Override
+	public String toString(){
+		return player.getName()+" says: "+message;
+	}
 
 }

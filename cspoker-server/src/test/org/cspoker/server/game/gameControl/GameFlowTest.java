@@ -609,8 +609,6 @@ public class GameFlowTest extends TestCase {
 		GameFlowTest.logger.info("Small Blind: " + table.getGameProperty().getSmallBlind());
 		GameFlowTest.logger.info("Big Blind: " + table.getGameProperty().getBigBlind());
 		Game game = gameControl.getGame();
-
-		Player dealer  = game.getDealer();
 		GameFlowTest.logger.info("Dealer: " + game.getDealer().getName());
 
 		GameFlowTest.logger.info(game.getCurrentDealPlayers());

@@ -21,12 +21,13 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.cspoker.server.game.events.Event;
 import org.cspoker.server.game.events.EventListener;
-import org.cspoker.server.game.events.MessageEvent;
-import org.cspoker.server.game.events.MessageListener;
+import org.cspoker.server.game.events.serverEvents.AllServerEventsListener;
 import org.cspoker.server.game.events.serverEvents.PlayerJoinedEvent;
 import org.cspoker.server.game.events.serverEvents.PlayerJoinedListener;
 import org.cspoker.server.game.events.serverEvents.PlayerLeftEvent;
 import org.cspoker.server.game.events.serverEvents.PlayerLeftListener;
+import org.cspoker.server.game.events.serverEvents.ServerMessageEvent;
+import org.cspoker.server.game.events.serverEvents.ServerMessageListener;
 import org.cspoker.server.game.events.serverEvents.TableCreatedEvent;
 import org.cspoker.server.game.events.serverEvents.TableCreatedListener;
 
@@ -163,9 +164,9 @@ public class ServerMediator {
 	 * by calling their onMessageEvent() method.
 	 *
 	 */
-	public void publishMessageEvent(MessageEvent event) {
-		for (MessageListener listener : messageListeners) {
-			listener.onMessageEvent(event);
+	public void publishServerMessageEvent(ServerMessageEvent event) {
+		for (ServerMessageListener listener : serverMessageListeners) {
+			listener.onServerMessageEvent(event);
 		}
 		publishServerEvent(event);
 	}
@@ -176,8 +177,8 @@ public class ServerMediator {
 	 * @param 	listener
 	 * 			The listener to subscribe.
 	 */
-	public void subscribeMessageListener(MessageListener listener) {
-		messageListeners.add(listener);
+	public void subscribeServerMessageListener(ServerMessageListener listener) {
+		serverMessageListeners.add(listener);
 	}
 
 	/**
@@ -186,15 +187,15 @@ public class ServerMediator {
 	 * @param 	listener
 	 * 			The listener to unsubscribe.
 	 */
-	public void unsubscribeMessageListener(MessageListener listener) {
-		messageListeners.remove(listener);
+	public void unsubscribeServerMessageListener(ServerMessageListener listener) {
+		serverMessageListeners.remove(listener);
 	}
 
 	/**
 	 * This list contains all message listeners that
 	 * should be alerted on a message.
 	 */
-	private final List<MessageListener> messageListeners = new CopyOnWriteArrayList<MessageListener>();
+	private final List<ServerMessageListener> serverMessageListeners = new CopyOnWriteArrayList<ServerMessageListener>();
 
 
 	/**********************************************************
@@ -240,4 +241,18 @@ public class ServerMediator {
 	 * should be alerted on a server event.
 	 */
 	private final List<EventListener> serverEventListeners = new CopyOnWriteArrayList<EventListener>();
+	
+	public void subscribeAllServerEventsListener(PlayerId id, AllServerEventsListener listener){
+		subscribePlayerJoinedListener(listener);
+		subscribePlayerLeftListener(listener);
+		subscribeServerMessageListener(listener);
+		subscribeTableCreatedListener(listener);
+	}
+	
+	public void unsubscribeAllServerEventsListener(PlayerId id, AllServerEventsListener listener){
+		unsubscribePlayerJoinedListener(listener);
+		unsubscribePlayerLeftListener(listener);
+		unsubscribeServerMessageListener(listener);
+		unsubscribeTableCreatedListener(listener);
+	}
 }

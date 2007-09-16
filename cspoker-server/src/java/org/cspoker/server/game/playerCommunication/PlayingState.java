@@ -17,7 +17,7 @@ package org.cspoker.server.game.playerCommunication;
 
 import org.cspoker.server.game.GameManager;
 import org.cspoker.server.game.GameMediator;
-import org.cspoker.server.game.events.MessageEvent;
+import org.cspoker.server.game.events.gameEvents.GameMessageEvent;
 import org.cspoker.server.game.gameControl.IllegalActionException;
 
 /**
@@ -47,7 +47,7 @@ class PlayingState extends PlayerCommunicationState {
 	public PlayingState(PlayerCommunicationImpl playerCommunication, GameMediator gameMediator) {
 		super(playerCommunication);
 		this.gameMediator = gameMediator;
-		gameMediator.subscribeAllInListener(playerCommunication.getAllEventsListener());
+		gameMediator.subscribeAllGameEventsListener(playerCommunication.getId(), playerCommunication.getAllEventsListener());
 		GameManager.getServerMediator().unsubscribeServerEventListener(playerCommunication.getEventsCollector());
 		gameMediator.subscribeGameEventListener(playerCommunication.getEventsCollector());
 		gameMediator.subscribePersonalGameEventListener(playerCommunication.getPlayer().getId(),playerCommunication.getEventsCollector());
@@ -93,17 +93,18 @@ class PlayingState extends PlayerCommunicationState {
 
 	@Override
 	public void say(String message){
-		gameMediator.publishMessageEvent(new MessageEvent(playerCommunication.getPlayer().getSavedPlayer(), message));
+		gameMediator.publishGameMessageEvent(new GameMessageEvent(playerCommunication.getPlayer().getSavedPlayer(), message));
 	}
 
 	@Override
 	public void leaveTable() throws IllegalActionException{
 		//TODO if playing, fold?
 		gameMediator.leaveGame(playerCommunication.getPlayer());
-		gameMediator.unsubscribeAllInListener(playerCommunication.getAllEventsListener());
+		gameMediator.unsubscribeAllGameEventsListener(playerCommunication.getId(), playerCommunication.getAllEventsListener());
 		gameMediator.unsubscribeGameEventListener(playerCommunication.getEventsCollector());
 		gameMediator.unsubscribePersonalGameEventListener(playerCommunication.getPlayer().getId(),playerCommunication.getEventsCollector());
 		GameManager.getServerMediator().subscribeServerEventListener(playerCommunication.getEventsCollector());
+		GameManager.getServerMediator().subscribeAllServerEventsListener(playerCommunication.getId(), playerCommunication.getAllEventsListener());
 		playerCommunication.setPlayerCommunicationState(new InitialState(playerCommunication));
 	}
 
