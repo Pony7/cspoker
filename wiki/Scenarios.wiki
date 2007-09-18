@@ -1,5 +1,5 @@
 #summary All possible scenarios that can occur in a poker game and should be tested.
-#labels Featured,Phase-QA
+#labels Phase-QA
 
 = Introduction =
 
@@ -39,3 +39,4 @@ The other players must call the all-in amount, not the big blind amount.
 
 
 
+ 
