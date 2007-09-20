@@ -26,10 +26,10 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
+import org.cspoker.server.game.utilities.Configuration;
 import org.cspoker.server.sockets.runnables.WaitForIO;
 import org.cspoker.server.sockets.threading.LoggingThreadPool;
 import org.cspoker.server.sockets.threading.SocketRunnableComparator;
-import org.cspoker.server.utils.Configuration;
 
 public class SocketServer 
 {
