@@ -38,7 +38,7 @@ import org.cspoker.server.api.httphandler.PingHandler;
 import org.cspoker.server.api.httphandler.RaiseHandler;
 import org.cspoker.server.api.httphandler.StartGameHandler;
 import org.cspoker.server.common.authentication.XmlFileAuthenticator;
-import org.cspoker.server.utils.Configuration;
+import org.cspoker.server.game.utilities.Configuration;
 
 import com.sun.net.httpserver.Authenticator;
 import com.sun.net.httpserver.HttpContext;
