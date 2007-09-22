@@ -41,8 +41,6 @@ public class GameFlowTest extends TestCase {
 	
 	private Table table;
 
-	private GameControl gameControl;
-
 	private GameMediator gameMediator;
 
 	private PlayerFactory playerFactory;
@@ -64,7 +62,7 @@ public class GameFlowTest extends TestCase {
 			table.addPlayer(kenzo);
 			table.addPlayer(cedric);
 			table.addPlayer(guy);
-			gameControl = new GameControl(gameMediator, table);
+			
 		} catch (IllegalValueException e) {
 			fail(e.getMessage());
 		} catch (PlayerListFullException e) {
@@ -73,6 +71,7 @@ public class GameFlowTest extends TestCase {
 	}
 
 	public void testCase1(){
+		GameControl gameControl = new GameControl(gameMediator, table);
 		GameFlowTest.logger.info("Game Properties:");
 		GameFlowTest.logger.info("Small Blind: " + table.getGameProperty().getSmallBlind());
 		GameFlowTest.logger.info("Big Blind: " + table.getGameProperty().getBigBlind());
@@ -187,6 +186,7 @@ public class GameFlowTest extends TestCase {
 	}
 
 	public void testCase2(){
+		GameControl gameControl = new GameControl(gameMediator, table);
 		GameFlowTest.logger.info("Game Properties:");
 		GameFlowTest.logger.info("Small Blind: " + table.getGameProperty().getSmallBlind());
 		GameFlowTest.logger.info("Big Blind: " + table.getGameProperty().getBigBlind());
@@ -244,6 +244,7 @@ public class GameFlowTest extends TestCase {
 	}
 
 	public void testBigBlindRaisesCase(){
+		GameControl gameControl = new GameControl(gameMediator, table);
 		GameFlowTest.logger.info("Game Properties:");
 		GameFlowTest.logger.info("Small Blind: " + table.getGameProperty().getSmallBlind());
 		GameFlowTest.logger.info("Big Blind: " + table.getGameProperty().getBigBlind());
@@ -314,12 +315,13 @@ public class GameFlowTest extends TestCase {
 			table.addPlayer(kenzo);
 			table.addPlayer(cedric);
 			table.addPlayer(guy);
-			gameControl = new GameControl(gameMediator, table, kenzo);
 		} catch (IllegalValueException e) {
 			fail(e.getMessage());
 		} catch (PlayerListFullException e) {
 			fail(e.getMessage());
 		}
+		
+		GameControl gameControl = new GameControl(gameMediator, table, kenzo);
 
 		GameFlowTest.logger.info("Game Properties:");
 		GameFlowTest.logger.info("Small Blind: " + table.getGameProperty().getSmallBlind());
@@ -391,7 +393,6 @@ public class GameFlowTest extends TestCase {
 			table.addPlayer(kenzo);
 			table.addPlayer(cedric);
 			table.addPlayer(guy);
-			gameControl = new GameControl(gameMediator, table, kenzo);
 		} catch (IllegalValueException e) {
 			fail(e.getMessage());
 		} catch (PlayerListFullException e) {
@@ -401,6 +402,8 @@ public class GameFlowTest extends TestCase {
 		GameFlowTest.logger.info("Game Properties:");
 		GameFlowTest.logger.info("Small Blind: " + table.getGameProperty().getSmallBlind());
 		GameFlowTest.logger.info("Big Blind: " + table.getGameProperty().getBigBlind());
+		
+		GameControl gameControl = new GameControl(gameMediator, table, kenzo);
 		Game game = gameControl.getGame();
 
 		GameFlowTest.logger.info("Dealer: " + game.getDealer().getName());
@@ -461,16 +464,15 @@ public class GameFlowTest extends TestCase {
 			table.addPlayer(kenzo);
 			table.addPlayer(cedric);
 			table.addPlayer(guy);
-			gameControl = new GameControl(gameMediator, table, kenzo);
 		} catch (IllegalValueException e) {
 			fail(e.getMessage());
 		} catch (PlayerListFullException e) {
 			fail(e.getMessage());
-		}
-
+		}	
 		GameFlowTest.logger.info("Game Properties:");
 		GameFlowTest.logger.info("Small Blind: " + table.getGameProperty().getSmallBlind());
 		GameFlowTest.logger.info("Big Blind: " + table.getGameProperty().getBigBlind());
+		GameControl gameControl = new GameControl(gameMediator, table, kenzo);
 		Game game = gameControl.getGame();
 
 
@@ -498,7 +500,6 @@ public class GameFlowTest extends TestCase {
 			table.addPlayer(kenzo);
 			table.addPlayer(cedric);
 			table.addPlayer(guy);
-			gameControl = new GameControl(gameMediator, table, kenzo);
 		} catch (IllegalValueException e) {
 			fail(e.getMessage());
 		} catch (PlayerListFullException e) {
@@ -508,6 +509,7 @@ public class GameFlowTest extends TestCase {
 		GameFlowTest.logger.info("Game Properties:");
 		GameFlowTest.logger.info("Small Blind: " + table.getGameProperty().getSmallBlind());
 		GameFlowTest.logger.info("Big Blind: " + table.getGameProperty().getBigBlind());
+		GameControl gameControl = new GameControl(gameMediator, table, kenzo);
 		Game game = gameControl.getGame();
 
 		GameFlowTest.logger.info("Dealer: " + game.getDealer().getName());
@@ -537,12 +539,13 @@ public class GameFlowTest extends TestCase {
 			table.addPlayer(kenzo);
 			table.addPlayer(cedric);
 			table.addPlayer(guy);
-			gameControl = new GameControl(gameMediator, table);
 		} catch (IllegalValueException e) {
 			fail(e.getMessage());
 		} catch (PlayerListFullException e) {
 			fail(e.getMessage());
 		}
+		
+		GameControl gameControl = new GameControl(gameMediator, table);
 
 		GameFlowTest.logger.info("Game Properties:");
 		GameFlowTest.logger.info("Small Blind: " + table.getGameProperty().getSmallBlind());
@@ -600,16 +603,17 @@ public class GameFlowTest extends TestCase {
 			table.addPlayer(kenzo);
 			table.addPlayer(cedric);
 			table.addPlayer(guy);
-			gameControl = new GameControl(gameMediator, table);
 		} catch (IllegalValueException e) {
 			fail(e.getMessage());
 		} catch (PlayerListFullException e) {
 			fail(e.getMessage());
 		}
-
 		GameFlowTest.logger.info("Game Properties:");
 		GameFlowTest.logger.info("Small Blind: " + table.getGameProperty().getSmallBlind());
 		GameFlowTest.logger.info("Big Blind: " + table.getGameProperty().getBigBlind());
+		
+		GameControl gameControl = new GameControl(gameMediator, table, kenzo);
+		
 		GameFlowTest.logger.info("Betting Rules: " + gameControl.getGame().getGameProperty().getBettingRules().toString());
 		Game game = gameControl.getGame();
 
@@ -651,7 +655,6 @@ public class GameFlowTest extends TestCase {
 			table.addPlayer(kenzo);
 			table.addPlayer(cedric);
 			table.addPlayer(guy);
-			gameControl = new GameControl(gameMediator, table);
 		} catch (IllegalValueException e) {
 			fail(e.getMessage());
 		} catch (PlayerListFullException e) {
@@ -661,6 +664,9 @@ public class GameFlowTest extends TestCase {
 		GameFlowTest.logger.info("Game Properties:");
 		GameFlowTest.logger.info("Small Blind: " + table.getGameProperty().getSmallBlind());
 		GameFlowTest.logger.info("Big Blind: " + table.getGameProperty().getBigBlind());
+		
+		GameControl gameControl = new GameControl(gameMediator, table, kenzo);
+		
 		GameFlowTest.logger.info("Betting Rules: " + gameControl.getGame().getGameProperty().getBettingRules().toString());
 		Game game = gameControl.getGame();
 
@@ -699,8 +705,6 @@ public class GameFlowTest extends TestCase {
 			table = new Table(new TableId(0), new GameProperty());
 			table.addPlayer(guy);
 			table.addPlayer(craig);
-
-			gameControl = new GameControl(gameMediator, table);
 		} catch (IllegalValueException e) {
 			fail(e.getMessage());
 		} catch (PlayerListFullException e) {
@@ -710,6 +714,9 @@ public class GameFlowTest extends TestCase {
 		GameFlowTest.logger.info("Game Properties:");
 		GameFlowTest.logger.info("Small Blind: " + table.getGameProperty().getSmallBlind());
 		GameFlowTest.logger.info("Big Blind: " + table.getGameProperty().getBigBlind());
+		
+		GameControl gameControl = new GameControl(gameMediator, table);
+		
 		GameFlowTest.logger.info("Betting Rules: " + gameControl.getGame().getGameProperty().getBettingRules().toString());
 		Game game = gameControl.getGame();
 
@@ -734,6 +741,9 @@ public class GameFlowTest extends TestCase {
 		GameFlowTest.logger.info("Game Properties:");
 		GameFlowTest.logger.info("Small Blind: " + table.getGameProperty().getSmallBlind());
 		GameFlowTest.logger.info("Big Blind: " + table.getGameProperty().getBigBlind());
+		
+		GameControl gameControl = new GameControl(gameMediator, table);
+		
 		Game game = gameControl.getGame();
 
 		GameFlowTest.logger.info("Dealer: " + game.getDealer().getName());
@@ -755,6 +765,9 @@ public class GameFlowTest extends TestCase {
 		GameFlowTest.logger.info("Game Properties:");
 		GameFlowTest.logger.info("Small Blind: " + table.getGameProperty().getSmallBlind());
 		GameFlowTest.logger.info("Big Blind: " + table.getGameProperty().getBigBlind());
+		
+		GameControl gameControl = new GameControl(gameMediator, table);
+		
 		Game game = gameControl.getGame();
 		GameFlowTest.logger.info("Dealer: " + game.getDealer().getName());
 
@@ -782,7 +795,6 @@ public class GameFlowTest extends TestCase {
 			table.addPlayer(kenzo);
 			table.addPlayer(cedric);
 			table.addPlayer(guy);
-			gameControl = new GameControl(gameMediator, table, kenzo);
 		} catch (IllegalValueException e) {
 			fail(e.getMessage());
 		} catch (PlayerListFullException e) {
@@ -792,6 +804,9 @@ public class GameFlowTest extends TestCase {
 		GameFlowTest.logger.info("Game Properties:");
 		GameFlowTest.logger.info("Small Blind: " + table.getGameProperty().getSmallBlind());
 		GameFlowTest.logger.info("Big Blind: " + table.getGameProperty().getBigBlind());
+		
+		GameControl gameControl = new GameControl(gameMediator, table, kenzo);
+		
 		Game game = gameControl.getGame();
 
 		GameFlowTest.logger.info("Dealer: " + game.getDealer().getName());
@@ -821,7 +836,6 @@ public class GameFlowTest extends TestCase {
 			table = new Table(new TableId(0), new GameProperty());
 			table.addPlayer(kenzo);
 			table.addPlayer(cedric);
-			gameControl = new GameControl(gameMediator, table, kenzo);
 		} catch (IllegalValueException e) {
 			fail(e.getMessage());
 		} catch (PlayerListFullException e) {
@@ -831,6 +845,8 @@ public class GameFlowTest extends TestCase {
 		GameFlowTest.logger.info("Game Properties:");
 		GameFlowTest.logger.info("Small Blind: " + table.getGameProperty().getSmallBlind());
 		GameFlowTest.logger.info("Big Blind: " + table.getGameProperty().getBigBlind());
+		
+		GameControl gameControl = new GameControl(gameMediator, table, kenzo);
 		Game game = gameControl.getGame();
 
 		GameFlowTest.logger.info("Dealer: " + game.getDealer().getName());
