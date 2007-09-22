@@ -582,6 +582,107 @@ public class GameFlowTest extends TestCase {
 
 		GameFlowTest.logger.info("Dealer: " + game.getDealer().getName());
 	}
+	
+	/*
+	 * An all-in raise that is smaller than half the previous raise does not open up the round for more betting.  Only calls are allowed.
+	 */
+	public void testAllInCallCase() {
+		try {
+			kenzo = playerFactory.createNewPlayer("Kenzo", 200);
+			cedric = playerFactory.createNewPlayer("Cedric", 220);
+			guy = playerFactory.createNewPlayer("Guy", 100);
+
+			gameMediator = new GameMediator();
+
+			table = new Table(new TableId(0), new GameProperty());
+			table.addPlayer(kenzo);
+			table.addPlayer(cedric);
+			table.addPlayer(guy);
+			gameControl = new GameControl(gameMediator, table);
+		} catch (IllegalValueException e) {
+			fail(e.getMessage());
+		} catch (PlayerListFullException e) {
+			fail(e.getMessage());
+		}
+
+		GameFlowTest.logger.info("Game Properties:");
+		GameFlowTest.logger.info("Small Blind: " + table.getGameProperty().getSmallBlind());
+		GameFlowTest.logger.info("Big Blind: " + table.getGameProperty().getBigBlind());
+		GameFlowTest.logger.info("Betting Rules: " + gameControl.getGame().getGameProperty().getBettingRules().toString());
+		Game game = gameControl.getGame();
+
+		GameFlowTest.logger.info("Dealer: " + game.getDealer());
+
+		GameFlowTest.logger.info(game.getCurrentDealPlayers());
+		GameFlowTest.logger.info("Kenzo's Cards: " + kenzo.getPocketCards());
+		GameFlowTest.logger.info("Cedric's Cards: " + cedric.getPocketCards());
+		GameFlowTest.logger.info("Guy's Cards: " + guy.getPocketCards());
+
+		try {
+			gameControl.raise(kenzo, 75);
+			gameControl.call(cedric);
+			gameControl.allIn(guy);
+		} catch (IllegalActionException e) {
+			fail(e.getMessage());
+		}
+
+		try {
+			gameControl.raise(kenzo, 75);
+			fail("Previous all in was not big enough to open up betting!");
+		} catch (IllegalActionException e1) {
+			// Should not reach here
+		}
+	}
+	
+	/*
+	 * An all-in raise that is greater than half the previous raise opens up the round for more betting.
+	 */
+	public void testAllInRaiseCase() {
+		try {
+			kenzo = playerFactory.createNewPlayer("Kenzo", 200);
+			cedric = playerFactory.createNewPlayer("Cedric", 220);
+			guy = playerFactory.createNewPlayer("Guy", 100);
+
+			gameMediator = new GameMediator();
+
+			table = new Table(new TableId(0), new GameProperty());
+			table.addPlayer(kenzo);
+			table.addPlayer(cedric);
+			table.addPlayer(guy);
+			gameControl = new GameControl(gameMediator, table);
+		} catch (IllegalValueException e) {
+			fail(e.getMessage());
+		} catch (PlayerListFullException e) {
+			fail(e.getMessage());
+		}
+
+		GameFlowTest.logger.info("Game Properties:");
+		GameFlowTest.logger.info("Small Blind: " + table.getGameProperty().getSmallBlind());
+		GameFlowTest.logger.info("Big Blind: " + table.getGameProperty().getBigBlind());
+		GameFlowTest.logger.info("Betting Rules: " + gameControl.getGame().getGameProperty().getBettingRules().toString());
+		Game game = gameControl.getGame();
+
+		GameFlowTest.logger.info("Dealer: " + game.getDealer());
+
+		GameFlowTest.logger.info(game.getCurrentDealPlayers());
+		GameFlowTest.logger.info("Kenzo's Cards: " + kenzo.getPocketCards());
+		GameFlowTest.logger.info("Cedric's Cards: " + cedric.getPocketCards());
+		GameFlowTest.logger.info("Guy's Cards: " + guy.getPocketCards());
+
+		try {
+			gameControl.raise(kenzo, 20);
+			gameControl.call(cedric);
+			gameControl.allIn(guy);
+		} catch (IllegalActionException e) {
+			fail(e.getMessage());
+		}
+
+		try {
+			gameControl.raise(kenzo, 75);
+		} catch (IllegalActionException e1) {
+			fail("Previous all in big enough to open up betting!");
+		}
+	}
 
 	public void testOnlyOneActivePlayer(){
 		GameFlowTest.logger.info("Game Properties:");
