@@ -500,13 +500,13 @@ public abstract class BettingRound extends Round {
 			getBet()));
 	}
 	public boolean onlyOneActivePlayer(){
-		return (game.getNbCurrentDealPlayers()==1 && getGame().getCurrentDealPlayers()
-				.get(0).getBetChips().getValue()==getBet())
-		||(game.getNbCurrentDealPlayers()==0 && 
-				allInPlayers.size()+getGame().getPots().getNbShowdownPlayers()==1);
+		return ((game.getNbCurrentDealPlayers()==1) && (getGame().getCurrentDealPlayers()
+				.get(0).getBetChips().getValue()==getBet()))
+		||((game.getNbCurrentDealPlayers()==0) && 
+				(allInPlayers.size()+getGame().getPots().getNbShowdownPlayers()==1));
 	}
 	public boolean onlyAllInPlayers(){
-		return game.getNbCurrentDealPlayers()==0 &&
+		return (game.getNbCurrentDealPlayers()==0) &&
 		(allInPlayers.size()+getGame().getPots().getNbShowdownPlayers()>1);
 	}
 	/**********************************************************
