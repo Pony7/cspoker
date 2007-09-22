@@ -37,6 +37,8 @@ public class GameFlowTest extends TestCase {
 
 	private  Player guy;
 
+	private Player craig;
+	
 	private Table table;
 
 	private GameControl gameControl;
@@ -681,6 +683,50 @@ public class GameFlowTest extends TestCase {
 			gameControl.raise(kenzo, 75);
 		} catch (IllegalActionException e1) {
 			fail("Previous all in big enough to open up betting!");
+		}
+	}
+
+	/*
+	 * Test that the dealer gets to act first on the first round in a heads up game
+	 */
+	public void testHeadsUpDealerSwitch() {
+		try {
+			guy = playerFactory.createNewPlayer("Guy", 100);
+			craig = playerFactory.createNewPlayer("Craig", 100);
+
+			gameMediator = new GameMediator();
+
+			table = new Table(new TableId(0), new GameProperty());
+			table.addPlayer(guy);
+			table.addPlayer(craig);
+
+			gameControl = new GameControl(gameMediator, table);
+		} catch (IllegalValueException e) {
+			fail(e.getMessage());
+		} catch (PlayerListFullException e) {
+			fail(e.getMessage());
+		}
+
+		GameFlowTest.logger.info("Game Properties:");
+		GameFlowTest.logger.info("Small Blind: " + table.getGameProperty().getSmallBlind());
+		GameFlowTest.logger.info("Big Blind: " + table.getGameProperty().getBigBlind());
+		GameFlowTest.logger.info("Betting Rules: " + gameControl.getGame().getGameProperty().getBettingRules().toString());
+		Game game = gameControl.getGame();
+
+		GameFlowTest.logger.info("Dealer: " + game.getDealer());
+
+		GameFlowTest.logger.info(game.getCurrentDealPlayers());
+		GameFlowTest.logger.info("Guy's Cards: " + guy.getPocketCards());
+		GameFlowTest.logger.info("Craig's Cards: " + craig.getPocketCards());
+
+		try {
+			gameControl.call(game.getDealer());
+			gameControl.check(game.getCurrentPlayer());
+
+			gameControl.check(game.getCurrentPlayer());
+			gameControl.check(game.getDealer());
+		} catch (IllegalActionException e) {
+			fail(e.getMessage());
 		}
 	}
 
