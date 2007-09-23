@@ -1,4 +1,3 @@
-#labels Featured
 Where are developpers currently working on?
 
 *Kenzo* _(last update: 06-08-07)_
@@ -21,3 +20,4 @@ Where are developpers currently working on?
   * Server _(100%)_
   * Console Client _(100%)_
   * API _(100%)_
+ 
