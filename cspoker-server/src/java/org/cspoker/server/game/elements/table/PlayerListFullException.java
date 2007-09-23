@@ -17,16 +17,16 @@ package org.cspoker.server.game.elements.table;
 
 /**
  * Thrown to indicate that the table/game is full.
- *
+ * 
  * @author Cedric
- *
+ * 
  */
 public class PlayerListFullException extends Exception {
 
-	private static final long serialVersionUID = 916632130086756048L;
-	
-	@Override
-	public String getMessage() {
-	    return "The table is full.";
-	}
+    private static final long serialVersionUID = 916632130086756048L;
+
+    @Override
+    public String getMessage() {
+	return "The table is full.";
+    }
 }

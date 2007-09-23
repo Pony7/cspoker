@@ -19,22 +19,21 @@ import org.cspoker.server.game.player.SavedShowdownPlayer;
 
 /**
  * A class to represent show hand events.
- *
+ * 
  * @author Kenzo
- *
+ * 
  */
-public class ShowHandEvent extends GameEvent{
-	
-	private final SavedShowdownPlayer player;
-	
-	public ShowHandEvent(SavedShowdownPlayer player){
-		this.player = player;
-	}
+public class ShowHandEvent extends GameEvent {
 
-	
-	@Override
-	public String toString(){
-		return player.toString();
-	}
+    private final SavedShowdownPlayer player;
+
+    public ShowHandEvent(SavedShowdownPlayer player) {
+	this.player = player;
+    }
+
+    @Override
+    public String toString() {
+	return player.toString();
+    }
 
 }

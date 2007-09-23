@@ -15,63 +15,64 @@
  */
 
 package org.cspoker.server.game;
+
 import net.jcip.annotations.Immutable;
 
 /**
  * A class to represent player id's.
- *
+ * 
  * @author Kenzo
- *
+ * 
  */
 @Immutable
 public class PlayerId {
 
-	/**
-	 * The variable containing the id.
-	 */
-	private final long id;
+    /**
+     * The variable containing the id.
+     */
+    private final long id;
 
-	/**
-	 * Construct a new player id with given long id.
-	 *
-	 * @param 	id
-	 * 			The id to use as player id.
-	 */
-	public PlayerId(long id){
-		this.id = id;
-	}
+    /**
+     * Construct a new player id with given long id.
+     * 
+     * @param id
+     *                The id to use as player id.
+     */
+    public PlayerId(long id) {
+	this.id = id;
+    }
 
-	/**
-	 * Returns a hash code value for this player id.
-	 */
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + (int) (id ^ (id >>> 32));
-		return result;
-	}
+    /**
+     * Returns a hash code value for this player id.
+     */
+    @Override
+    public int hashCode() {
+	final int prime = 31;
+	int result = 1;
+	result = prime * result + (int) (id ^ (id >>> 32));
+	return result;
+    }
 
-	/**
-	 * Indicates whether some other object is "equal to" this one.
-	 */
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		final PlayerId other = (PlayerId) obj;
-		if (id != other.id)
-			return false;
-		return true;
-	}
+    /**
+     * Indicates whether some other object is "equal to" this one.
+     */
+    @Override
+    public boolean equals(Object obj) {
+	if (this == obj)
+	    return true;
+	if (obj == null)
+	    return false;
+	if (getClass() != obj.getClass())
+	    return false;
+	final PlayerId other = (PlayerId) obj;
+	if (id != other.id)
+	    return false;
+	return true;
+    }
 
-	@Override
-	public String toString(){
-		return Long.valueOf(id).toString();
-	}
+    @Override
+    public String toString() {
+	return Long.valueOf(id).toString();
+    }
 
 }

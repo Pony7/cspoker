@@ -37,72 +37,82 @@ import org.cspoker.server.game.elements.cards.hand.Hand.HandInfo;
  * @author Craig Motlin
  */
 public final class HandRanks {
-	private static Logger logger = Logger.getLogger(HandRanks.class);
-	private static HandRanks instance = new HandRanks();
+    private static Logger logger = Logger.getLogger(HandRanks.class);
 
-	private final Map<HandInfo, Integer> rankMap = new HashMap<HandInfo, Integer>();
-	private final Map<HandInfo, String> shortDescriptionMap = new HashMap<HandInfo, String>();
-	private final Map<HandInfo, String> longDescriptionMap = new HashMap<HandInfo, String>();
+    private static HandRanks instance = new HandRanks();
 
-	private HandRanks() {
-		this.loadHandRanks();
-	}
+    private final Map<HandInfo, Integer> rankMap = new HashMap<HandInfo, Integer>();
 
-	public static HandRanks getInstance() {
-		return HandRanks.instance;
-	}
+    private final Map<HandInfo, String> shortDescriptionMap = new HashMap<HandInfo, String>();
 
-	public Integer getHandRank(final Hand hand) {
-		return this.rankMap.get(hand.getHandInfo());
-	}
+    private final Map<HandInfo, String> longDescriptionMap = new HashMap<HandInfo, String>();
 
-	public String getShortDescription(final Hand hand) {
-		return this.shortDescriptionMap.get(hand.getHandInfo());
-	}
+    private HandRanks() {
+	this.loadHandRanks();
+    }
 
-	public String getLongDescription(final Hand hand) {
-		return this.longDescriptionMap.get(hand.getHandInfo());
-	}
+    public static HandRanks getInstance() {
+	return HandRanks.instance;
+    }
 
-	private void addHandRank(final HandInfo handInfo, final Integer rank, final String shortDescription, final String longDescription) {
-		this.rankMap.put(handInfo, rank);
-		this.shortDescriptionMap.put(handInfo, shortDescription);
-		this.longDescriptionMap.put(handInfo, longDescription);
-	}
+    public Integer getHandRank(final Hand hand) {
+	return this.rankMap.get(hand.getHandInfo());
+    }
 
-	private void loadHandRanks() {
-		final InputStream in = this.getClass().getClassLoader().getResourceAsStream("org/cspoker/server/game/elements/cards/hand/handRanks.txt");
-		try {
-			final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in));
+    public String getShortDescription(final Hand hand) {
+	return this.shortDescriptionMap.get(hand.getHandInfo());
+    }
 
-			String line = null;
-			while ((line = bufferedReader.readLine()) != null) {
-				final Perl5Util util = new Perl5Util();
-				final List<String> rankStrings = new ArrayList<String>();
-				util.split(rankStrings, "/\\s*,\\s*/", line);
+    public String getLongDescription(final Hand hand) {
+	return this.longDescriptionMap.get(hand.getHandInfo());
+    }
 
-				int product = 1;
-				// First 5 columns are card ranks
-				for (int i = 0; i < 5; i++) {
-					product *= Rank.valueOf(rankStrings.get(i)).getPrime();
-				}
+    private void addHandRank(final HandInfo handInfo, final Integer rank,
+	    final String shortDescription, final String longDescription) {
+	this.rankMap.put(handInfo, rank);
+	this.shortDescriptionMap.put(handInfo, shortDescription);
+	this.longDescriptionMap.put(handInfo, longDescription);
+    }
 
-				final boolean flush = "true".equals(rankStrings.get(7));
+    private void loadHandRanks() {
+	final InputStream in = this
+		.getClass()
+		.getClassLoader()
+		.getResourceAsStream(
+			"org/cspoker/server/game/elements/cards/hand/handRanks.txt");
+	try {
+	    final BufferedReader bufferedReader = new BufferedReader(
+		    new InputStreamReader(in));
 
-				final int rank = Integer.parseInt(rankStrings.get(8).trim());
-				final String shortDescription = rankStrings.get(5);
-				final String longDescription = rankStrings.get(6);
+	    String line = null;
+	    while ((line = bufferedReader.readLine()) != null) {
+		final Perl5Util util = new Perl5Util();
+		final List<String> rankStrings = new ArrayList<String>();
+		util.split(rankStrings, "/\\s*,\\s*/", line);
 
-				final HandInfo handInfo = new HandInfo(product, flush);
-
-				this.addHandRank(handInfo, Integer.valueOf(rank), shortDescription, longDescription);
-			}
-
-			bufferedReader.close();
-		} catch (final FileNotFoundException e) {
-			HandRanks.logger.error(e.getLocalizedMessage(), e);
-		} catch (final IOException e) {
-			HandRanks.logger.error(e.getLocalizedMessage(), e);
+		int product = 1;
+		// First 5 columns are card ranks
+		for (int i = 0; i < 5; i++) {
+		    product *= Rank.valueOf(rankStrings.get(i)).getPrime();
 		}
+
+		final boolean flush = "true".equals(rankStrings.get(7));
+
+		final int rank = Integer.parseInt(rankStrings.get(8).trim());
+		final String shortDescription = rankStrings.get(5);
+		final String longDescription = rankStrings.get(6);
+
+		final HandInfo handInfo = new HandInfo(product, flush);
+
+		this.addHandRank(handInfo, Integer.valueOf(rank),
+			shortDescription, longDescription);
+	    }
+
+	    bufferedReader.close();
+	} catch (final FileNotFoundException e) {
+	    HandRanks.logger.error(e.getLocalizedMessage(), e);
+	} catch (final IOException e) {
+	    HandRanks.logger.error(e.getLocalizedMessage(), e);
 	}
+    }
 }

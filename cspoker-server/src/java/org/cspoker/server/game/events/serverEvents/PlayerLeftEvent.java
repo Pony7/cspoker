@@ -19,20 +19,20 @@ package org.cspoker.server.game.events.serverEvents;
 import org.cspoker.server.game.TableId;
 import org.cspoker.server.game.player.SavedPlayer;
 
-public class PlayerLeftEvent extends ServerEvent{
+public class PlayerLeftEvent extends ServerEvent {
 
-	private final SavedPlayer player;
+    private final SavedPlayer player;
 
-	private final TableId id;
+    private final TableId id;
 
-	public PlayerLeftEvent(SavedPlayer player, TableId id){
-		this.player = player;
-		this.id = id;
-	}
+    public PlayerLeftEvent(SavedPlayer player, TableId id) {
+	this.player = player;
+	this.id = id;
+    }
 
-	@Override
-	public String toString(){
-		return player.getName()+" has left the table ["+id+"].";
-	}
+    @Override
+    public String toString() {
+	return player.getName() + " has left the table [" + id + "].";
+    }
 
 }

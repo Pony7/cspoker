@@ -21,24 +21,25 @@ import org.cspoker.server.game.player.SavedPlayer;
 
 /**
  * A class to represent big blind events.
- *
+ * 
  * @author Kenzo
- *
+ * 
  */
-public class BigBlindEvent extends GameEvent{
+public class BigBlindEvent extends GameEvent {
 
-	private final SavedPlayer player;
+    private final SavedPlayer player;
 
-	private final int amount;
+    private final int amount;
 
-	public BigBlindEvent(SavedPlayer player, int amount){
-		this.player = player;
-		this.amount = amount;
-	}
+    public BigBlindEvent(SavedPlayer player, int amount) {
+	this.player = player;
+	this.amount = amount;
+    }
 
-	@Override
-	public String toString(){
-		return player.getName()+" bets the big blind of "+amount+" chips.";
-	}
+    @Override
+    public String toString() {
+	return player.getName() + " bets the big blind of " + amount
+		+ " chips.";
+    }
 
 }

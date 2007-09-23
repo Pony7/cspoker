@@ -21,34 +21,35 @@ import java.util.Random;
 
 /**
  * A class of random generators.
- *
+ * 
  * @author Kenzo & Cedric
- *
+ * 
  */
 public class RandomGenerator implements RandomSource {
-	private static RandomSource instance = new RandomGenerator();
-	private final Random random;
+    private static RandomSource instance = new RandomGenerator();
 
-	/**
-	 * Construct a new default random generator.
-	 *
-	 */
-	private RandomGenerator() {
-		this.random = new SecureRandom();
-	}
+    private final Random random;
 
-	public static RandomSource getInstance() {
-		return RandomGenerator.instance;
-	}
+    /**
+     * Construct a new default random generator.
+     * 
+     */
+    private RandomGenerator() {
+	this.random = new SecureRandom();
+    }
 
-	/**
-	 * Returns a random-object.
-	 *
-	 * The default implementation uses the current time as seed.
-	 *
-	 * @return A random-object.
-	 */
-	public Random getRandom() {
-		return this.random;
-	}
+    public static RandomSource getInstance() {
+	return RandomGenerator.instance;
+    }
+
+    /**
+     * Returns a random-object.
+     * 
+     * The default implementation uses the current time as seed.
+     * 
+     * @return A random-object.
+     */
+    public Random getRandom() {
+	return this.random;
+    }
 }

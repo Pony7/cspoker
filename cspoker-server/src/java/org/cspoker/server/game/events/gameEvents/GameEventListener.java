@@ -20,16 +20,18 @@ package org.cspoker.server.game.events.gameEvents;
  * A class to represent game events.
  * 
  * @author Kenzo
- *
+ * 
  */
 public interface GameEventListener {
-	
-	/**
-	 * This method is called when subscribed to inform a new game event occurred.
-	 * 
-	 * @param 	event
-	 * 			The event object containing all information of the occurred event.
-	 */
-	public void onGameEvent(GameEvent event);
+
+    /**
+     * This method is called when subscribed to inform a new game event
+     * occurred.
+     * 
+     * @param event
+     *                The event object containing all information of the
+     *                occurred event.
+     */
+    public void onGameEvent(GameEvent event);
 
 }

@@ -18,12 +18,12 @@ package org.cspoker.server.game.elements.chips;
 
 /**
  * Thrown to indicate that the transfer of chips involves illegal amounts.
- *
+ * 
  * @author Kenzo
- *
+ * 
  */
 public class IllegalValueException extends Exception {
 
-	private static final long serialVersionUID = -7047452830268859725L;
+    private static final long serialVersionUID = -7047452830268859725L;
 
 }

@@ -20,28 +20,28 @@ import org.cspoker.server.game.player.SavedPlayer;
 
 /**
  * A class to represent new round events.
- *
+ * 
  * @author Kenzo
- *
+ * 
  */
 public class NewRoundEvent extends GameEvent {
 
-	private final String roundName;
+    private final String roundName;
 
-	private final SavedPlayer player;
+    private final SavedPlayer player;
 
-	public NewRoundEvent(String roundName, SavedPlayer player){
-		this.roundName = roundName;
-		this.player = player;
-	}
-	
-	public SavedPlayer getPlayer(){
-		return player;
-	}
+    public NewRoundEvent(String roundName, SavedPlayer player) {
+	this.roundName = roundName;
+	this.player = player;
+    }
 
-	@Override
-	public String toString(){
-		return roundName+": "+player.getName()+" can begin to act.";
-	}
+    public SavedPlayer getPlayer() {
+	return player;
+    }
+
+    @Override
+    public String toString() {
+	return roundName + ": " + player.getName() + " can begin to act.";
+    }
 
 }

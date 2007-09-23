@@ -15,9 +15,8 @@
  */
 package org.cspoker.server.game.events;
 
-
 public interface EventListener {
 
-	public void onEvent(Event event);
+    public void onEvent(Event event);
 
 }

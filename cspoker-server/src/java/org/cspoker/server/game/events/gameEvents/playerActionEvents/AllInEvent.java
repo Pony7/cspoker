@@ -19,31 +19,30 @@ package org.cspoker.server.game.events.gameEvents.playerActionEvents;
 import org.cspoker.server.game.events.gameEvents.GameEvent;
 import org.cspoker.server.game.player.SavedPlayer;
 
-
 /**
  * A class to represent all-in events.
- *
+ * 
  * @author Kenzo
- *
+ * 
  */
 public class AllInEvent extends GameEvent {
 
-	/**
-	 * The variable containing the saved player.
-	 */
-	private final SavedPlayer player;
+    /**
+     * The variable containing the saved player.
+     */
+    private final SavedPlayer player;
 
-	/**
-	 *
-	 * @param player
-	 */
-	public AllInEvent(SavedPlayer player){
-		this.player = player;
-	}
+    /**
+     * 
+     * @param player
+     */
+    public AllInEvent(SavedPlayer player) {
+	this.player = player;
+    }
 
-	@Override
-	public String toString(){
-		return player.getName()+" goes all-in.";
-	}
+    @Override
+    public String toString() {
+	return player.getName() + " goes all-in.";
+    }
 
 }

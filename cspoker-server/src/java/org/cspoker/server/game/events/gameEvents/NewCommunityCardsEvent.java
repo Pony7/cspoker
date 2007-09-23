@@ -23,31 +23,30 @@ import org.cspoker.server.game.elements.cards.deck.Deck.Card;
 
 /**
  * A class to represent new community cards events.
- *
+ * 
  * @author Kenzo
- *
+ * 
  */
 public class NewCommunityCardsEvent extends GameEvent {
 
-	private final List<Card> communityCards;
+    private final List<Card> communityCards;
 
-	public NewCommunityCardsEvent(List<Card> commonCards){
-		communityCards = Collections.unmodifiableList(commonCards);
+    public NewCommunityCardsEvent(List<Card> commonCards) {
+	communityCards = Collections.unmodifiableList(commonCards);
+    }
+
+    public List<Card> getCommonCards() {
+	return communityCards;
+    }
+
+    @Override
+    public String toString() {
+	String toReturn = "New Community Cards: ";
+	for (Card card : communityCards) {
+	    toReturn += card;
+	    toReturn += ", ";
 	}
-
-	public List<Card> getCommonCards(){
-		return communityCards;
-	}
-
-
-	@Override
-	public String toString(){
-		String toReturn = "New Community Cards: ";
-		for(Card card:communityCards){
-			toReturn+=card;
-			toReturn+=", ";
-		}
-		return toReturn.substring(0, toReturn.length()-2)+".";
-	}
+	return toReturn.substring(0, toReturn.length() - 2) + ".";
+    }
 
 }

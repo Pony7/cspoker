@@ -17,6 +17,6 @@ package org.cspoker.server.game.events.serverEvents;
 
 import org.cspoker.server.game.events.Event;
 
-public class ServerEvent extends Event{
+public class ServerEvent extends Event {
 
 }

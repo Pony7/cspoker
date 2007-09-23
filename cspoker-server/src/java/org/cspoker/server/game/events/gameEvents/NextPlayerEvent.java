@@ -20,25 +20,24 @@ import org.cspoker.server.game.player.SavedPlayer;
 
 /**
  * A class to represent new player events.
- *
+ * 
  * @author Kenzo
- *
+ * 
  */
-public class NextPlayerEvent extends GameEvent{
+public class NextPlayerEvent extends GameEvent {
 
-	private final SavedPlayer player;
+    private final SavedPlayer player;
 
-	public NextPlayerEvent(SavedPlayer player){
-		this.player = player;
-	}
-	
-	public SavedPlayer getPlayer(){
-		return player;
-	}
+    public NextPlayerEvent(SavedPlayer player) {
+	this.player = player;
+    }
 
+    public SavedPlayer getPlayer() {
+	return player;
+    }
 
-	@Override
-	public String toString(){
-		return "It's "+player.getName()+"'s turn.";
-	}
+    @Override
+    public String toString() {
+	return "It's " + player.getName() + "'s turn.";
+    }
 }

@@ -17,18 +17,19 @@ package org.cspoker.server.game.events.gameEvents;
 
 /**
  * An interface for player joining games listeners.
- *
+ * 
  * @author Kenzo
- *
+ * 
  */
 public interface PlayerJoinedGameListener {
-	
-	/**
-	 * This method is called when subscribed to inform a player joined the game.
-	 *
-	 * @param 	event
-	 * 			The event object containing all information of the occurred event.
-	 */
-	public void onPlayerJoinedGameEvent(PlayerJoinedGameEvent event);
+
+    /**
+     * This method is called when subscribed to inform a player joined the game.
+     * 
+     * @param event
+     *                The event object containing all information of the
+     *                occurred event.
+     */
+    public void onPlayerJoinedGameEvent(PlayerJoinedGameEvent event);
 
 }

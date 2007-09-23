@@ -20,16 +20,17 @@ package org.cspoker.server.game.events.gameEvents.playerActionEvents;
  * An interface for call listeners.
  * 
  * @author Kenzo
- *
+ * 
  */
 public interface CallListener {
-	
-	/**
-	 * This method is called when subscribed to inform a call occurred.
-	 * 
-	 * @param 	event
-	 * 			The event object containing all information of the occurred event.
-	 */
-	public void onCallEvent(CallEvent event);
+
+    /**
+     * This method is called when subscribed to inform a call occurred.
+     * 
+     * @param event
+     *                The event object containing all information of the
+     *                occurred event.
+     */
+    public void onCallEvent(CallEvent event);
 
 }

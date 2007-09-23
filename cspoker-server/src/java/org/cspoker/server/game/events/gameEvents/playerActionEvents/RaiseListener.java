@@ -20,16 +20,17 @@ package org.cspoker.server.game.events.gameEvents.playerActionEvents;
  * An interface for raise listeners.
  * 
  * @author Kenzo
- *
+ * 
  */
 public interface RaiseListener {
-	
-	/**
-	 * This method is called when subscribed to inform a raise occurred.
-	 * 
-	 * @param 	event
-	 * 			The event object containing all information of the occurred event.
-	 */
-	public void onRaiseEvent(RaiseEvent event);
+
+    /**
+     * This method is called when subscribed to inform a raise occurred.
+     * 
+     * @param event
+     *                The event object containing all information of the
+     *                occurred event.
+     */
+    public void onRaiseEvent(RaiseEvent event);
 
 }

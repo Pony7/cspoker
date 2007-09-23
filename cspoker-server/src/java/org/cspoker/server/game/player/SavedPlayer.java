@@ -26,91 +26,91 @@ import org.cspoker.server.game.elements.cards.deck.Deck.Card;
 
 /**
  * A class of immutable saved players.
- *
- *
+ * 
+ * 
  * @author Kenzo
- *
+ * 
  */
 @Immutable
 public class SavedPlayer {
 
-	/**
-	 * The variable containing the id of the player.
-	 */
-	private final PlayerId id;
+    /**
+     * The variable containing the id of the player.
+     */
+    private final PlayerId id;
 
-	/**
-	 * The name of the player.
-	 */
-	private final String name;
+    /**
+     * The name of the player.
+     */
+    private final String name;
 
-	/**
-	 * The stack of this player.
-	 */
-	private final int stackValue;
+    /**
+     * The stack of this player.
+     */
+    private final int stackValue;
 
-	/**
-	 * The chips the player has bet in this round.
-	 *
-	 */
-	private final int betChipsValue;
+    /**
+     * The chips the player has bet in this round.
+     * 
+     */
+    private final int betChipsValue;
 
-	/**
-	 * The hidden cards.
-	 */
-	private final List<Card> pocketCards;
+    /**
+     * The hidden cards.
+     */
+    private final List<Card> pocketCards;
 
-	public SavedPlayer(Player player){
-		id = player.getId();
-		name = player.getName();
-		stackValue = player.getStack().getValue();
-		betChipsValue = player.getBetChips().getValue();
-		pocketCards = Collections.unmodifiableList(player.getPocketCards());
-	}
+    public SavedPlayer(Player player) {
+	id = player.getId();
+	name = player.getName();
+	stackValue = player.getStack().getValue();
+	betChipsValue = player.getBetChips().getValue();
+	pocketCards = Collections.unmodifiableList(player.getPocketCards());
+    }
 
-	/**
-	 * Returns the id of this saved player.
-	 *
-	 * @return The id of this saved player.
-	 */
-	public PlayerId getId(){
-		return id;
-	}
+    /**
+     * Returns the id of this saved player.
+     * 
+     * @return The id of this saved player.
+     */
+    public PlayerId getId() {
+	return id;
+    }
 
-	/**
-	 * Returns the name of this saved player.
-	 *
-	 * @return The name of this saved player.
-	 */
-	public String getName(){
-		return name;
-	}
+    /**
+     * Returns the name of this saved player.
+     * 
+     * @return The name of this saved player.
+     */
+    public String getName() {
+	return name;
+    }
 
-	/**
-	 * Returns the stack value of this saved player.
-	 *
-	 * @return The stack value of this saved player.
-	 */
-	public int getStackValue(){
-		return stackValue;
-	}
+    /**
+     * Returns the stack value of this saved player.
+     * 
+     * @return The stack value of this saved player.
+     */
+    public int getStackValue() {
+	return stackValue;
+    }
 
-	/**
-	 * Returns the bet chips value of this saved player.
-	 *
-	 * @return The bet chips value of this saved player.
-	 */
-	public int getBetChipsValue(){
-		return betChipsValue;
-	}
+    /**
+     * Returns the bet chips value of this saved player.
+     * 
+     * @return The bet chips value of this saved player.
+     */
+    public int getBetChipsValue() {
+	return betChipsValue;
+    }
 
-	/**
-	 * The pocket cards of this saved player.
-	 *
-	 * @return The pocket cards of this saved player.
-	 */
-	public List<Card> getPocketCards(){
-		return pocketCards;
-	}
+    /**
+     * The pocket cards of this saved player.
+     * 
+     * @return The pocket cards of this saved player.
+     */
+    public List<Card> getPocketCards() {
+	return pocketCards;
+    }
 
 }

@@ -19,25 +19,23 @@ package org.cspoker.server.game.events.gameEvents.playerActionEvents;
 import org.cspoker.server.game.events.gameEvents.GameEvent;
 import org.cspoker.server.game.player.SavedPlayer;
 
-
 /**
  * A class to represent deal events.
- *
+ * 
  * @author Kenzo
- *
+ * 
  */
 public class DealEvent extends GameEvent {
 
-	private final SavedPlayer player;
+    private final SavedPlayer player;
 
-	public DealEvent(SavedPlayer player){
-		this.player = player;
-	}
+    public DealEvent(SavedPlayer player) {
+	this.player = player;
+    }
 
-
-	@Override
-	public String toString(){
-		return player.getName()+" deals.";
-	}
+    @Override
+    public String toString() {
+	return player.getName() + " deals.";
+    }
 
 }

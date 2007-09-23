@@ -33,226 +33,229 @@ import org.cspoker.server.game.events.serverEvents.TableCreatedListener;
 
 public class ServerMediator {
 
-	public ServerMediator(){
+    public ServerMediator() {
 
+    }
+
+    /**
+     * Inform all subscribed player left listeners a player left event has
+     * occurred.
+     * 
+     * Each subscribed player left listener is updated by calling their
+     * onPlayerLeftEvent() method.
+     * 
+     */
+    public void publishPlayerLeftEvent(PlayerLeftEvent event) {
+	for (PlayerLeftListener listener : playerLeftListeners) {
+	    listener.onPlayerLeftEvent(event);
 	}
+	publishServerEvent(event);
+    }
 
-	/**
-	 * Inform all subscribed player left listeners a player left event has occurred.
-	 *
-	 * Each subscribed player left listener is updated
-	 * by calling their onPlayerLeftEvent() method.
-	 *
-	 */
-	public void publishPlayerLeftEvent(PlayerLeftEvent event) {
-		for (PlayerLeftListener listener : playerLeftListeners) {
-			listener.onPlayerLeftEvent(event);
-		}
-		publishServerEvent(event);
+    /**
+     * Subscribe the given player left listener for player left events.
+     * 
+     * @param listener
+     *                The listener to subscribe.
+     */
+    public void subscribePlayerLeftListener(PlayerLeftListener listener) {
+	playerLeftListeners.add(listener);
+    }
+
+    /**
+     * Unsubscribe the given player left listener for player left events.
+     * 
+     * @param listener
+     *                The listener to unsubscribe.
+     */
+    public void unsubscribePlayerLeftListener(PlayerLeftListener listener) {
+	playerLeftListeners.remove(listener);
+    }
+
+    /**
+     * This list contains all player left listeners that should be alerted on a
+     * player left.
+     */
+    private final List<PlayerLeftListener> playerLeftListeners = new CopyOnWriteArrayList<PlayerLeftListener>();
+
+    /**
+     * Inform all subscribed table created listeners a table created event has
+     * occurred.
+     * 
+     * Each subscribed table created listener is updated by calling their
+     * onTableCreatedEvent() method.
+     * 
+     */
+    public void publishTableCreatedEvent(TableCreatedEvent event) {
+	for (TableCreatedListener listener : tableCreatedListeners) {
+	    listener.onTableCreatedEvent(event);
 	}
+	publishServerEvent(event);
+    }
 
-	/**
-	 * Subscribe the given player left listener for player left events.
-	 *
-	 * @param 	listener
-	 * 			The listener to subscribe.
-	 */
-	public void subscribePlayerLeftListener(PlayerLeftListener listener) {
-		playerLeftListeners.add(listener);
+    /**
+     * Subscribe the given table created listener for table created events.
+     * 
+     * @param listener
+     *                The listener to subscribe.
+     */
+    public void subscribeTableCreatedListener(TableCreatedListener listener) {
+	tableCreatedListeners.add(listener);
+    }
+
+    /**
+     * Unsubscribe the given table created listener for table created events.
+     * 
+     * @param listener
+     *                The listener to unsubscribe.
+     */
+    public void unsubscribeTableCreatedListener(TableCreatedListener listener) {
+	tableCreatedListeners.remove(listener);
+    }
+
+    /**
+     * This list contains all table created listeners that should be alerted on
+     * a table created.
+     */
+    private final List<TableCreatedListener> tableCreatedListeners = new CopyOnWriteArrayList<TableCreatedListener>();
+
+    /**
+     * Inform all subscribed player joined listeners a player joined event has
+     * occurred.
+     * 
+     * Each subscribed player joined listener is updated by calling their
+     * onPlayerJoinedEvent() method.
+     * 
+     */
+    public void publishPlayerJoinedEvent(PlayerJoinedEvent event) {
+	for (PlayerJoinedListener listener : playerJoinedListeners) {
+	    listener.onPlayerJoinedEvent(event);
 	}
+	publishServerEvent(event);
+    }
 
-	/**
-	 * Unsubscribe the given player left listener for player left events.
-	 *
-	 * @param 	listener
-	 * 			The listener to unsubscribe.
-	 */
-	public void unsubscribePlayerLeftListener(PlayerLeftListener listener) {
-		playerLeftListeners.remove(listener);
+    /**
+     * Subscribe the given player joined listener for player joined events.
+     * 
+     * @param listener
+     *                The listener to subscribe.
+     */
+    public void subscribePlayerJoinedListener(PlayerJoinedListener listener) {
+	playerJoinedListeners.add(listener);
+    }
+
+    /**
+     * Unsubscribe the given player joined listener for player joined events.
+     * 
+     * @param listener
+     *                The listener to unsubscribe.
+     */
+    public void unsubscribePlayerJoinedListener(PlayerJoinedListener listener) {
+	playerJoinedListeners.remove(listener);
+    }
+
+    /**
+     * This list contains all player joined listeners that should be alerted on
+     * a player joined event.
+     */
+    private final List<PlayerJoinedListener> playerJoinedListeners = new CopyOnWriteArrayList<PlayerJoinedListener>();
+
+    /**
+     * Inform all subscribed message listeners a message event has occurred.
+     * 
+     * Each subscribed message listener is updated by calling their
+     * onMessageEvent() method.
+     * 
+     */
+    public void publishServerMessageEvent(ServerMessageEvent event) {
+	for (ServerMessageListener listener : serverMessageListeners) {
+	    listener.onServerMessageEvent(event);
 	}
+	publishServerEvent(event);
+    }
 
-	/**
-	 * This list contains all player left listeners that
-	 * should be alerted on a player left.
-	 */
-	private final List<PlayerLeftListener> playerLeftListeners = new CopyOnWriteArrayList<PlayerLeftListener>();
+    /**
+     * Subscribe the given message listener for message events.
+     * 
+     * @param listener
+     *                The listener to subscribe.
+     */
+    public void subscribeServerMessageListener(ServerMessageListener listener) {
+	serverMessageListeners.add(listener);
+    }
 
-	/**
-	 * Inform all subscribed table created listeners a table created event has occurred.
-	 *
-	 * Each subscribed table created listener is updated
-	 * by calling their onTableCreatedEvent() method.
-	 *
-	 */
-	public void publishTableCreatedEvent(TableCreatedEvent event) {
-		for (TableCreatedListener listener : tableCreatedListeners) {
-			listener.onTableCreatedEvent(event);
-		}
-		publishServerEvent(event);
+    /**
+     * Unsubscribe the given message listener for message events.
+     * 
+     * @param listener
+     *                The listener to unsubscribe.
+     */
+    public void unsubscribeServerMessageListener(ServerMessageListener listener) {
+	serverMessageListeners.remove(listener);
+    }
+
+    /**
+     * This list contains all message listeners that should be alerted on a
+     * message.
+     */
+    private final List<ServerMessageListener> serverMessageListeners = new CopyOnWriteArrayList<ServerMessageListener>();
+
+    /***************************************************************************
+     * Server Events
+     **************************************************************************/
+
+    /**
+     * Inform all subscribed server event listeners a server event has occurred.
+     * 
+     * Each subscribed server event listener is updated by calling their
+     * onEvent() method.
+     * 
+     */
+    private void publishServerEvent(Event event) {
+	for (EventListener listener : serverEventListeners) {
+	    listener.onEvent(event);
 	}
+    }
 
-	/**
-	 * Subscribe the given table created listener for table created events.
-	 *
-	 * @param 	listener
-	 * 			The listener to subscribe.
-	 */
-	public void subscribeTableCreatedListener(TableCreatedListener listener) {
-		tableCreatedListeners.add(listener);
-	}
+    /**
+     * Subscribe the given server event listener for server events.
+     * 
+     * @param listener
+     *                The listener to subscribe.
+     */
+    public void subscribeServerEventListener(EventListener listener) {
+	serverEventListeners.add(listener);
+    }
 
-	/**
-	 * Unsubscribe the given table created listener for table created events.
-	 *
-	 * @param 	listener
-	 * 			The listener to unsubscribe.
-	 */
-	public void unsubscribeTableCreatedListener(TableCreatedListener listener) {
-		tableCreatedListeners.remove(listener);
-	}
+    /**
+     * Unsubscribe the given server event listener for server events.
+     * 
+     * @param listener
+     *                The listener to unsubscribe.
+     */
+    public void unsubscribeServerEventListener(EventListener listener) {
+	serverEventListeners.remove(listener);
+    }
 
-	/**
-	 * This list contains all table created listeners that
-	 * should be alerted on a table created.
-	 */
-	private final List<TableCreatedListener> tableCreatedListeners = new CopyOnWriteArrayList<TableCreatedListener>();
+    /**
+     * This list contains all server event listeners that should be alerted on a
+     * server event.
+     */
+    private final List<EventListener> serverEventListeners = new CopyOnWriteArrayList<EventListener>();
 
-	/**
-	 * Inform all subscribed player joined listeners a player joined event has occurred.
-	 *
-	 * Each subscribed player joined listener is updated
-	 * by calling their onPlayerJoinedEvent() method.
-	 *
-	 */
-	public void publishPlayerJoinedEvent(PlayerJoinedEvent event) {
-		for (PlayerJoinedListener listener : playerJoinedListeners) {
-			listener.onPlayerJoinedEvent(event);
-		}
-		publishServerEvent(event);
-	}
+    public void subscribeAllServerEventsListener(PlayerId id,
+	    AllServerEventsListener listener) {
+	subscribePlayerJoinedListener(listener);
+	subscribePlayerLeftListener(listener);
+	subscribeServerMessageListener(listener);
+	subscribeTableCreatedListener(listener);
+    }
 
-	/**
-	 * Subscribe the given player joined listener for player joined events.
-	 *
-	 * @param 	listener
-	 * 			The listener to subscribe.
-	 */
-	public void subscribePlayerJoinedListener(PlayerJoinedListener listener) {
-		playerJoinedListeners.add(listener);
-	}
-
-	/**
-	 * Unsubscribe the given player joined listener for player joined events.
-	 *
-	 * @param 	listener
-	 * 			The listener to unsubscribe.
-	 */
-	public void unsubscribePlayerJoinedListener(PlayerJoinedListener listener) {
-		playerJoinedListeners.remove(listener);
-	}
-
-	/**
-	 * This list contains all player joined listeners that
-	 * should be alerted on a player joined event.
-	 */
-	private final List<PlayerJoinedListener> playerJoinedListeners = new CopyOnWriteArrayList<PlayerJoinedListener>();
-
-	/**
-	 * Inform all subscribed message listeners a message event has occurred.
-	 *
-	 * Each subscribed message listener is updated
-	 * by calling their onMessageEvent() method.
-	 *
-	 */
-	public void publishServerMessageEvent(ServerMessageEvent event) {
-		for (ServerMessageListener listener : serverMessageListeners) {
-			listener.onServerMessageEvent(event);
-		}
-		publishServerEvent(event);
-	}
-
-	/**
-	 * Subscribe the given message listener for message events.
-	 *
-	 * @param 	listener
-	 * 			The listener to subscribe.
-	 */
-	public void subscribeServerMessageListener(ServerMessageListener listener) {
-		serverMessageListeners.add(listener);
-	}
-
-	/**
-	 * Unsubscribe the given message listener for message events.
-	 *
-	 * @param 	listener
-	 * 			The listener to unsubscribe.
-	 */
-	public void unsubscribeServerMessageListener(ServerMessageListener listener) {
-		serverMessageListeners.remove(listener);
-	}
-
-	/**
-	 * This list contains all message listeners that
-	 * should be alerted on a message.
-	 */
-	private final List<ServerMessageListener> serverMessageListeners = new CopyOnWriteArrayList<ServerMessageListener>();
-
-
-	/**********************************************************
-	 * Server Events
-	 **********************************************************/
-
-
-	/**
-	 * Inform all subscribed server event listeners a server event has occurred.
-	 *
-	 * Each subscribed server event listener is updated
-	 * by calling their onEvent() method.
-	 *
-	 */
-	private void publishServerEvent(Event event) {
-		for (EventListener listener : serverEventListeners) {
-			listener.onEvent(event);
-		}
-	}
-
-	/**
-	 * Subscribe the given server event listener for server events.
-	 *
-	 * @param 	listener
-	 * 			The listener to subscribe.
-	 */
-	public void subscribeServerEventListener(EventListener listener) {
-		serverEventListeners.add(listener);
-	}
-
-	/**
-	 * Unsubscribe the given server event listener for server events.
-	 *
-	 * @param 	listener
-	 * 			The listener to unsubscribe.
-	 */
-	public void unsubscribeServerEventListener(EventListener listener) {
-		serverEventListeners.remove(listener);
-	}
-
-	/**
-	 * This list contains all server event listeners that
-	 * should be alerted on a server event.
-	 */
-	private final List<EventListener> serverEventListeners = new CopyOnWriteArrayList<EventListener>();
-	
-	public void subscribeAllServerEventsListener(PlayerId id, AllServerEventsListener listener){
-		subscribePlayerJoinedListener(listener);
-		subscribePlayerLeftListener(listener);
-		subscribeServerMessageListener(listener);
-		subscribeTableCreatedListener(listener);
-	}
-	
-	public void unsubscribeAllServerEventsListener(PlayerId id, AllServerEventsListener listener){
-		unsubscribePlayerJoinedListener(listener);
-		unsubscribePlayerLeftListener(listener);
-		unsubscribeServerMessageListener(listener);
-		unsubscribeTableCreatedListener(listener);
-	}
+    public void unsubscribeAllServerEventsListener(PlayerId id,
+	    AllServerEventsListener listener) {
+	unsubscribePlayerJoinedListener(listener);
+	unsubscribePlayerLeftListener(listener);
+	unsubscribeServerMessageListener(listener);
+	unsubscribeTableCreatedListener(listener);
+    }
 }

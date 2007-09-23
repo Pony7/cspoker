@@ -18,18 +18,20 @@ package org.cspoker.server.game.events.gameEvents.playerActionEvents;
 
 /**
  * An interface for small blind listeners.
- *
+ * 
  * @author Kenzo
- *
+ * 
  */
 public interface SmallBlindListener {
 
-	/**
-	 * This method is called when subscribed to inform a small blind has been bet.
-	 *
-	 * @param 	event
-	 * 			The event object containing all information of the occurred event.
-	 */
-	public void onSmallBlindEvent(SmallBlindEvent event);
+    /**
+     * This method is called when subscribed to inform a small blind has been
+     * bet.
+     * 
+     * @param event
+     *                The event object containing all information of the
+     *                occurred event.
+     */
+    public void onSmallBlindEvent(SmallBlindEvent event);
 
 }

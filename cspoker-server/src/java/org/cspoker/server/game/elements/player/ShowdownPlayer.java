@@ -20,103 +20,97 @@ import org.cspoker.server.game.elements.cards.hand.Hand;
 import org.cspoker.server.game.player.Player;
 import org.cspoker.server.game.player.SavedShowdownPlayer;
 
-
 /**
  * A class to represent a showdown player.
  * 
- * This class implements the comparable interface
- * to easily get the player(s) with the best hand
- * on top of the list.
+ * This class implements the comparable interface to easily get the player(s)
+ * with the best hand on top of the list.
  * 
  * @author Kenzo
- *
+ * 
  */
-public class ShowdownPlayer implements Comparable<ShowdownPlayer>{
-	
-	/**
-	 * This variable contains the showdown player.
-	 */
-	private final Player player;
-	
-	/**
-	 * This variable contains the showdown player's best hand.
-	 */
-	private final Hand bestHand;
-	
-	/**
-	 * Construct a new showdown player with given player
-	 * and given best hand.
-	 * 
-	 * @param 	player
-	 * 			The player for this showdown player.
-	 * @param 	bestHand
-	 * 			The player's best hand.
-	 */
-	public ShowdownPlayer(Player player, Hand bestHand){
-		this.player = player;
-		this.bestHand = bestHand;
+public class ShowdownPlayer implements Comparable<ShowdownPlayer> {
 
-	}
-	
-	/**
-	 * Returns the effective showdown player,
-	 * as a player.
-	 * 
-	 * @return 	The effective showdown player,
-	 * 			as a player.
-	 */
-	public Player getPlayer() {
-		return player;
-	}
-	
-	/**
-	 * Return the best hand.
-	 * 
-	 * @return The best hand.
-	 */
-	public Hand getBestHand(){
-		return bestHand;
-	}
-	
-	public SavedShowdownPlayer getSavedShowdownPlayer(){
-		return new SavedShowdownPlayer(player.getSavedPlayer(), getBestHand());
-	}
-	
-	/**
-	 * Returns a textual representation of this showdown player.
-	 */
-	@Override
-	public String toString(){
-		return this.player.getName() + " has a " + getBestHand();
-	}
-	
-	/**
-	 * After sorting, the first player is the
-	 * player with the best hand.
-	 * 
-	 * -1 = first hand is best, 1 = second hand is best, 0 = tie
-	 */
-	public int compareTo(ShowdownPlayer o) {
-		return o.getBestHand().compareTo(getBestHand());
-	}
-	/**
-	 * 2 showdown players are equal if both their hands
-	 * have the same value.
-	 * 
-	 */
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		final ShowdownPlayer other = (ShowdownPlayer) obj;
-		if (this.bestHand == null)
-			return other.bestHand == null;
-		else
-			return getBestHand().equals(other.getBestHand());
-	}
+    /**
+     * This variable contains the showdown player.
+     */
+    private final Player player;
+
+    /**
+     * This variable contains the showdown player's best hand.
+     */
+    private final Hand bestHand;
+
+    /**
+     * Construct a new showdown player with given player and given best hand.
+     * 
+     * @param player
+     *                The player for this showdown player.
+     * @param bestHand
+     *                The player's best hand.
+     */
+    public ShowdownPlayer(Player player, Hand bestHand) {
+	this.player = player;
+	this.bestHand = bestHand;
+
+    }
+
+    /**
+     * Returns the effective showdown player, as a player.
+     * 
+     * @return The effective showdown player, as a player.
+     */
+    public Player getPlayer() {
+	return player;
+    }
+
+    /**
+     * Return the best hand.
+     * 
+     * @return The best hand.
+     */
+    public Hand getBestHand() {
+	return bestHand;
+    }
+
+    public SavedShowdownPlayer getSavedShowdownPlayer() {
+	return new SavedShowdownPlayer(player.getSavedPlayer(), getBestHand());
+    }
+
+    /**
+     * Returns a textual representation of this showdown player.
+     */
+    @Override
+    public String toString() {
+	return this.player.getName() + " has a " + getBestHand();
+    }
+
+    /**
+     * After sorting, the first player is the player with the best hand.
+     * 
+     * -1 = first hand is best, 1 = second hand is best, 0 = tie
+     */
+    public int compareTo(ShowdownPlayer o) {
+	return o.getBestHand().compareTo(getBestHand());
+    }
+
+    /**
+     * 2 showdown players are equal if both their hands have the same value.
+     * 
+     */
+    @Override
+    public boolean equals(Object obj) {
+	if (this == obj)
+	    return true;
+	if (obj == null)
+	    return false;
+	if (getClass() != obj.getClass())
+	    return false;
+	final ShowdownPlayer other = (ShowdownPlayer) obj;
+	if (this.bestHand == null)
+	    return other.bestHand == null;
+	else
+	    return getBestHand().equals(other.getBestHand());
+    }
 
 }

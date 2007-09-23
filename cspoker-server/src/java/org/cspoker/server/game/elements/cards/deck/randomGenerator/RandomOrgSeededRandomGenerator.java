@@ -30,60 +30,64 @@ import org.apache.log4j.Logger;
  * A random.org seeded random generator.
  * 
  * @author Kenzo
- *
+ * 
  */
 public class RandomOrgSeededRandomGenerator implements RandomSource {
-	private static Logger logger = Logger.getLogger(RandomOrgSeededRandomGenerator.class);
-	private static RandomOrgSeededRandomGenerator instance = new RandomOrgSeededRandomGenerator();
+    private static Logger logger = Logger
+	    .getLogger(RandomOrgSeededRandomGenerator.class);
 
-	private Random random;
+    private static RandomOrgSeededRandomGenerator instance = new RandomOrgSeededRandomGenerator();
 
-	/**
-	 * Construct a new random.org seeded random generator.
-	 * 
-	 */
-	private RandomOrgSeededRandomGenerator() {
+    private Random random;
 
-		try {
-			final URL url = new URL("http://www.random.org/strings/?num=10&len=10&digits=on&unique=on&format=plain&rnd=new");
-			final BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
+    /**
+     * Construct a new random.org seeded random generator.
+     * 
+     */
+    private RandomOrgSeededRandomGenerator() {
 
-			final StringBuilder stringBuilder = new StringBuilder();
-			
-			String line;
-			while ((line = in.readLine()) != null) {
-				stringBuilder.append(line);
-			}
+	try {
+	    final URL url = new URL(
+		    "http://www.random.org/strings/?num=10&len=10&digits=on&unique=on&format=plain&rnd=new");
+	    final BufferedReader in = new BufferedReader(new InputStreamReader(
+		    url.openStream()));
 
-			in.close();
+	    final StringBuilder stringBuilder = new StringBuilder();
 
-			final byte[] seed = stringBuilder.toString().getBytes();
+	    String line;
+	    while ((line = in.readLine()) != null) {
+		stringBuilder.append(line);
+	    }
 
-			this.random = new SecureRandom(seed);
-			return;
-		} catch (final MalformedURLException e) {
-			e.printStackTrace();
-			RandomOrgSeededRandomGenerator.logger.error(e.getMessage(), e);
-		} catch (final IOException e) {
-			e.printStackTrace();
-			RandomOrgSeededRandomGenerator.logger.error(e.getMessage(), e);
-		}
+	    in.close();
 
-		this.random = new SecureRandom();
+	    final byte[] seed = stringBuilder.toString().getBytes();
+
+	    this.random = new SecureRandom(seed);
+	    return;
+	} catch (final MalformedURLException e) {
+	    e.printStackTrace();
+	    RandomOrgSeededRandomGenerator.logger.error(e.getMessage(), e);
+	} catch (final IOException e) {
+	    e.printStackTrace();
+	    RandomOrgSeededRandomGenerator.logger.error(e.getMessage(), e);
 	}
 
-	public static RandomOrgSeededRandomGenerator getInstance() {
-		return RandomOrgSeededRandomGenerator.instance;
-	}
+	this.random = new SecureRandom();
+    }
 
-	/**
-	 * Returns a random-object.
-	 *
-	 * The default implementation uses the current time as seed.
-	 *
-	 * @return A random-object.
-	 */
-	public Random getRandom() {
-		return this.random;
-	}
+    public static RandomOrgSeededRandomGenerator getInstance() {
+	return RandomOrgSeededRandomGenerator.instance;
+    }
+
+    /**
+     * Returns a random-object.
+     * 
+     * The default implementation uses the current time as seed.
+     * 
+     * @return A random-object.
+     */
+    public Random getRandom() {
+	return this.random;
+    }
 }

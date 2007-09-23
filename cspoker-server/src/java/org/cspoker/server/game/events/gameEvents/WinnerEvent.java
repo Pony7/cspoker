@@ -23,32 +23,31 @@ import org.cspoker.server.game.player.SavedWinner;
 
 /**
  * A class to represent winner events.
- *
+ * 
  * @author Kenzo
- *
+ * 
  */
-public class WinnerEvent extends GameEvent{
-		
-	private final List<SavedWinner> winners;
-	
-	public WinnerEvent(List<SavedWinner> winners){
-		this.winners = Collections.unmodifiableList(winners);
-	}
-	
-	public List<SavedWinner> getWinners(){
-		return winners;
-	}
+public class WinnerEvent extends GameEvent {
 
-	
-	@Override
-	public String toString(){
-		String toReturn = "Winners: ";
-		for(SavedWinner winner:winners){
-			String winnerString = winner.toString();
-			toReturn+=winnerString.substring(0, winnerString.length()-1);
-			toReturn+=", ";
-		}
-		return toReturn.substring(0, toReturn.length()-2)+".";
+    private final List<SavedWinner> winners;
+
+    public WinnerEvent(List<SavedWinner> winners) {
+	this.winners = Collections.unmodifiableList(winners);
+    }
+
+    public List<SavedWinner> getWinners() {
+	return winners;
+    }
+
+    @Override
+    public String toString() {
+	String toReturn = "Winners: ";
+	for (SavedWinner winner : winners) {
+	    String winnerString = winner.toString();
+	    toReturn += winnerString.substring(0, winnerString.length() - 1);
+	    toReturn += ", ";
 	}
+	return toReturn.substring(0, toReturn.length() - 2) + ".";
+    }
 
 }
