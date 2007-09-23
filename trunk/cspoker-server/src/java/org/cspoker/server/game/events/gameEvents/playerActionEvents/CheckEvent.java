@@ -19,25 +19,23 @@ package org.cspoker.server.game.events.gameEvents.playerActionEvents;
 import org.cspoker.server.game.events.gameEvents.GameEvent;
 import org.cspoker.server.game.player.SavedPlayer;
 
-
 /**
  * A class to represent check events.
- *
+ * 
  * @author Kenzo
- *
+ * 
  */
 public class CheckEvent extends GameEvent {
 
-	private final SavedPlayer player;
+    private final SavedPlayer player;
 
-	public CheckEvent(SavedPlayer player){
-		this.player = player;
-	}
+    public CheckEvent(SavedPlayer player) {
+	this.player = player;
+    }
 
-
-	@Override
-	public String toString(){
-		return player.getName()+" checks.";
-	}
+    @Override
+    public String toString() {
+	return player.getName() + " checks.";
+    }
 
 }

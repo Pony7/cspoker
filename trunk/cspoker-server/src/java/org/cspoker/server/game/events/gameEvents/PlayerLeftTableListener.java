@@ -17,18 +17,19 @@ package org.cspoker.server.game.events.gameEvents;
 
 /**
  * An interface for leaving player listeners.
- *
+ * 
  * @author Kenzo
- *
+ * 
  */
 public interface PlayerLeftTableListener {
-	
-	/**
-	 * This method is called when subscribed to inform a player left the table.
-	 *
-	 * @param 	event
-	 * 			The event object containing all information of the occurred event.
-	 */
-	public void onPlayerLeftTableEvent(PlayerLeftTableEvent event);
+
+    /**
+     * This method is called when subscribed to inform a player left the table.
+     * 
+     * @param event
+     *                The event object containing all information of the
+     *                occurred event.
+     */
+    public void onPlayerLeftTableEvent(PlayerLeftTableEvent event);
 
 }

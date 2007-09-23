@@ -20,16 +20,17 @@ package org.cspoker.server.game.events.gameEvents.playerActionEvents;
  * An interface for deal listeners.
  * 
  * @author Kenzo
- *
+ * 
  */
 public interface DealListener {
-	
-	/**
-	 * This method is called when subscribed to inform a deal occurred.
-	 * 
-	 * @param 	event
-	 * 			The event object containing all information of the occurred event.
-	 */
-	public void onDealEvent(DealEvent event);
+
+    /**
+     * This method is called when subscribed to inform a deal occurred.
+     * 
+     * @param event
+     *                The event object containing all information of the
+     *                occurred event.
+     */
+    public void onDealEvent(DealEvent event);
 
 }

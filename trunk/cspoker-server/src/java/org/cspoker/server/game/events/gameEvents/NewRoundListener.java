@@ -20,16 +20,18 @@ package org.cspoker.server.game.events.gameEvents;
  * An interface for new round listeners.
  * 
  * @author Kenzo
- *
+ * 
  */
 public interface NewRoundListener {
-	
-	/**
-	 * This method is called when subscribed to inform a new round event occurred.
-	 * 
-	 * @param 	event
-	 * 			The event object containing all information of the occurred event.
-	 */
-	public void onNewRoundEvent(NewRoundEvent event);
+
+    /**
+     * This method is called when subscribed to inform a new round event
+     * occurred.
+     * 
+     * @param event
+     *                The event object containing all information of the
+     *                occurred event.
+     */
+    public void onNewRoundEvent(NewRoundEvent event);
 
 }

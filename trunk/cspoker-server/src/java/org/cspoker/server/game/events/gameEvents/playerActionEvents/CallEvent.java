@@ -19,25 +19,23 @@ package org.cspoker.server.game.events.gameEvents.playerActionEvents;
 import org.cspoker.server.game.events.gameEvents.GameEvent;
 import org.cspoker.server.game.player.SavedPlayer;
 
-
 /**
  * A class to represent call events.
- *
+ * 
  * @author Kenzo
- *
+ * 
  */
 public class CallEvent extends GameEvent {
 
-	private final SavedPlayer player;
+    private final SavedPlayer player;
 
-	public CallEvent(SavedPlayer player){
-		this.player = player;
-	}
+    public CallEvent(SavedPlayer player) {
+	this.player = player;
+    }
 
-
-	@Override
-	public String toString(){
-		return player.getName()+" calls.";
-	}
+    @Override
+    public String toString() {
+	return player.getName() + " calls.";
+    }
 
 }

@@ -21,25 +21,25 @@ import org.cspoker.server.game.elements.cards.deck.Deck.Card;
 import org.cspoker.server.game.events.gameEvents.GameEvent;
 import org.cspoker.server.game.player.SavedPlayer;
 
-public class NewPocketCardsEvent extends GameEvent{
+public class NewPocketCardsEvent extends GameEvent {
 
-	private final SavedPlayer player;
+    private final SavedPlayer player;
 
-	public NewPocketCardsEvent(SavedPlayer player){
-		this.player = player;
+    public NewPocketCardsEvent(SavedPlayer player) {
+	this.player = player;
+    }
+
+    public List<Card> getPocketCards() {
+	return player.getPocketCards();
+    }
+
+    @Override
+    public String toString() {
+	String toReturn = player.getName() + " has received new pocket cards: ";
+	for (Card card : player.getPocketCards()) {
+	    toReturn += card;
+	    toReturn += ", ";
 	}
-
-	public List<Card> getPocketCards() {
-		return player.getPocketCards();
-	}
-
-	@Override
-	public String toString(){
-		String toReturn = player.getName()+" has received new pocket cards: ";
-		for(Card card:player.getPocketCards()){
-			toReturn+=card;
-			toReturn+=", ";
-		}
-		return toReturn.substring(0, toReturn.length()-2)+".";
-	}
+	return toReturn.substring(0, toReturn.length() - 2) + ".";
+    }
 }

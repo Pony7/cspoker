@@ -17,14 +17,16 @@ package org.cspoker.server.game.events.gameEvents.privateEvents;
 
 public interface NewPocketCardsListener {
 
-	/**
-	 * This method is called when subscribed to inform a new private cards event occurred.
-	 *
-	 * @param 	id
-	 * 			The id of the player to inform.
-	 * @param 	event
-	 * 			The event object containing all information of the occurred event.
-	 */
-	public void onNewPocketCardsEvent(NewPocketCardsEvent event);
+    /**
+     * This method is called when subscribed to inform a new private cards event
+     * occurred.
+     * 
+     * @param id
+     *                The id of the player to inform.
+     * @param event
+     *                The event object containing all information of the
+     *                occurred event.
+     */
+    public void onNewPocketCardsEvent(NewPocketCardsEvent event);
 
 }

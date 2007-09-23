@@ -17,6 +17,6 @@ package org.cspoker.server.game.events.serverEvents;
 
 public interface PlayerJoinedListener {
 
-	public void onPlayerJoinedEvent(PlayerJoinedEvent event);
+    public void onPlayerJoinedEvent(PlayerJoinedEvent event);
 
 }

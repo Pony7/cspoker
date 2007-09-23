@@ -17,25 +17,25 @@ package org.cspoker.server.game.events.gameEvents;
 
 /**
  * A class to represent pot changed events.
- *
+ * 
  * @author Kenzo
- *
+ * 
  */
-public class PotChangedEvent extends GameEvent{
+public class PotChangedEvent extends GameEvent {
 
-	private final int amount;
+    private final int amount;
 
-	public PotChangedEvent(int amount){
-		this.amount = amount;
-	}
+    public PotChangedEvent(int amount) {
+	this.amount = amount;
+    }
 
-	public int getAmount(){
-		return amount;
-	}
+    public int getAmount() {
+	return amount;
+    }
 
-	@Override
-	public String toString(){
-		return "The total pot increases to "+amount+" chips.";
-	}
+    @Override
+    public String toString() {
+	return "The total pot increases to " + amount + " chips.";
+    }
 
 }

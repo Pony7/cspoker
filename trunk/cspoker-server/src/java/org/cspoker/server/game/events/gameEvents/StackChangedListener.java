@@ -17,18 +17,20 @@ package org.cspoker.server.game.events.gameEvents;
 
 /**
  * An interface for stack changed listeners.
- *
+ * 
  * @author Kenzo
- *
+ * 
  */
 public interface StackChangedListener {
-	
-	/**
-	 * This method is called when subscribed to inform the stack of a player has changed.
-	 *
-	 * @param 	event
-	 * 			The event object containing all information of the occurred event.
-	 */
-	public void onStackChangedEvent(StackChangedEvent event);
+
+    /**
+     * This method is called when subscribed to inform the stack of a player has
+     * changed.
+     * 
+     * @param event
+     *                The event object containing all information of the
+     *                occurred event.
+     */
+    public void onStackChangedEvent(StackChangedEvent event);
 
 }

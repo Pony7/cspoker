@@ -20,40 +20,40 @@ import org.cspoker.server.game.elements.table.Table;
 import org.cspoker.server.game.events.serverEvents.PlayerLeftEvent;
 import org.cspoker.server.game.gameControl.IllegalActionException;
 
-
 /**
- * A class to represent the state where the player is waiting
- * for the game to start.
- *
- * WaitingAtTableState  --------------------------------> 	InitialState
- *        \            		leaveTable()
- *         \
- *          \
- *           ------------------------------------------->	PlayingState
- *           				The owner of the table
- *           				calls startGame()
+ * A class to represent the state where the player is waiting for the game to
+ * start.
+ * 
+ * WaitingAtTableState --------------------------------> InitialState \
+ * leaveTable() \ \ -------------------------------------------> PlayingState
+ * The owner of the table calls startGame()
+ * 
  * @author Kenzo
- *
+ * 
  */
 class WaitingAtTableState extends PlayerCommunicationState {
 
-	protected final Table table;
+    protected final Table table;
 
-	public WaitingAtTableState(PlayerCommunicationImpl playerCommunication, Table table) {
-		super(playerCommunication);
-		this.table = table;
-	}
+    public WaitingAtTableState(PlayerCommunicationImpl playerCommunication,
+	    Table table) {
+	super(playerCommunication);
+	this.table = table;
+    }
 
-	@Override
-	public void leaveTable() throws IllegalActionException{
-		table.removePlayer(playerCommunication.getPlayer());
-		playerCommunication.setPlayerCommunicationState(new InitialState(playerCommunication));
-		GameManager.getServerMediator().publishPlayerLeftEvent(new PlayerLeftEvent(playerCommunication.getPlayer().getSavedPlayer(), table.getId()));
-	}
+    @Override
+    public void leaveTable() throws IllegalActionException {
+	table.removePlayer(playerCommunication.getPlayer());
+	playerCommunication.setPlayerCommunicationState(new InitialState(
+		playerCommunication));
+	GameManager.getServerMediator().publishPlayerLeftEvent(
+		new PlayerLeftEvent(playerCommunication.getPlayer()
+			.getSavedPlayer(), table.getId()));
+    }
 
-	@Override
-	protected String getStdErrorMessage() {
-		return "You are waiting at a table for a game to begin.";
-	}
+    @Override
+    protected String getStdErrorMessage() {
+	return "You are waiting at a table for a game to begin.";
+    }
 
 }

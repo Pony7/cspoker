@@ -19,20 +19,20 @@ package org.cspoker.server.game.events.serverEvents;
 import org.cspoker.server.game.TableId;
 import org.cspoker.server.game.player.SavedPlayer;
 
-public class PlayerJoinedEvent extends ServerEvent{
+public class PlayerJoinedEvent extends ServerEvent {
 
-	private final SavedPlayer player;
+    private final SavedPlayer player;
 
-	private final TableId id;
+    private final TableId id;
 
-	public PlayerJoinedEvent(SavedPlayer player, TableId id){
-		this.player = player;
-		this.id = id;
-	}
+    public PlayerJoinedEvent(SavedPlayer player, TableId id) {
+	this.player = player;
+	this.id = id;
+    }
 
-	@Override
-	public String toString(){
-		return player.getName()+" has joined a table ["+id+"].";
-	}
+    @Override
+    public String toString() {
+	return player.getName() + " has joined a table [" + id + "].";
+    }
 
 }

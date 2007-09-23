@@ -21,24 +21,25 @@ import org.cspoker.server.game.player.SavedPlayer;
 
 /**
  * A class to represent small blind events.
- *
+ * 
  * @author Kenzo
- *
+ * 
  */
-public class SmallBlindEvent extends GameEvent{
+public class SmallBlindEvent extends GameEvent {
 
-	private final SavedPlayer player;
+    private final SavedPlayer player;
 
-	private final int amount;
+    private final int amount;
 
-	public SmallBlindEvent(SavedPlayer player, int amount){
-		this.player = player;
-		this.amount = amount;
-	}
+    public SmallBlindEvent(SavedPlayer player, int amount) {
+	this.player = player;
+	this.amount = amount;
+    }
 
-	@Override
-	public String toString(){
-		return player.getName()+" bets the small blind of "+amount+" chips.";
-	}
+    @Override
+    public String toString() {
+	return player.getName() + " bets the small blind of " + amount
+		+ " chips.";
+    }
 
 }

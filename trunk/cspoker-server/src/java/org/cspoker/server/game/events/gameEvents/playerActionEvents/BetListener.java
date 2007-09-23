@@ -20,16 +20,17 @@ package org.cspoker.server.game.events.gameEvents.playerActionEvents;
  * An interface for bet listeners.
  * 
  * @author Kenzo
- *
+ * 
  */
 public interface BetListener {
-	
-	/**
-	 * This method is called when subscribed to inform a bet occurred.
-	 * 
-	 * @param 	event
-	 * 			The event object containing all information of the occurred event.
-	 */
-	public void onBetEvent(BetEvent event);
+
+    /**
+     * This method is called when subscribed to inform a bet occurred.
+     * 
+     * @param event
+     *                The event object containing all information of the
+     *                occurred event.
+     */
+    public void onBetEvent(BetEvent event);
 
 }

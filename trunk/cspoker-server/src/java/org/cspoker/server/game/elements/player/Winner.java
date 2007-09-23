@@ -22,38 +22,38 @@ import org.cspoker.server.game.player.Player;
 import org.cspoker.server.game.player.SavedWinner;
 
 public class Winner {
-	
-	private final Player winner;
-	
-	private final Chips chips = new Chips();
-	
-	public Winner(Player winner){
-		this.winner = winner;
+
+    private final Player winner;
+
+    private final Chips chips = new Chips();
+
+    public Winner(Player winner) {
+	this.winner = winner;
+    }
+
+    public Chips getGainedChipsPile() {
+	return chips;
+    }
+
+    public void transferGainedChipsToPlayer() {
+	try {
+	    chips.transferAllChipsTo(winner.getStack());
+	} catch (IllegalValueException e) {
+	    throw new IllegalStateException("Overflow Exception");
 	}
-	
-	public Chips getGainedChipsPile(){
-		return chips;
-	}
-	
-	public void transferGainedChipsToPlayer(){
-		try {
-			chips.transferAllChipsTo(winner.getStack());
-		} catch (IllegalValueException e) {
-			throw new IllegalStateException("Overflow Exception");
-		}
-	}
-	
-	public boolean hasGainedChips(){
-		return chips.getValue()>0;
-	}
-	
-	public SavedWinner getSavedWinner(){
-		return new SavedWinner(winner.getSavedPlayer(), chips.getValue());
-	}
-	
-	@Override
-	public String toString(){
-		return winner.getName()+" has gained "+ chips+".";
-	}
+    }
+
+    public boolean hasGainedChips() {
+	return chips.getValue() > 0;
+    }
+
+    public SavedWinner getSavedWinner() {
+	return new SavedWinner(winner.getSavedPlayer(), chips.getValue());
+    }
+
+    @Override
+    public String toString() {
+	return winner.getName() + " has gained " + chips + ".";
+    }
 
 }

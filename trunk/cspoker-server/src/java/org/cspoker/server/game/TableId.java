@@ -20,63 +20,63 @@ import net.jcip.annotations.Immutable;
 
 /**
  * A class to represent table id's.
- *
+ * 
  * @author Kenzo
- *
+ * 
  */
 @Immutable
 public class TableId {
 
-	/**
-	 * The variable containing the long representation of the id.
-	 */
-	private final long id;
+    /**
+     * The variable containing the long representation of the id.
+     */
+    private final long id;
 
-	/**
-	 * Construct a new table id with given id.
-	 *
-	 * @param 	id
-	 * 			The long to use as id.
-	 */
-	public TableId(long id){
-		this.id = id;
-	}
+    /**
+     * Construct a new table id with given id.
+     * 
+     * @param id
+     *                The long to use as id.
+     */
+    public TableId(long id) {
+	this.id = id;
+    }
 
-	/**
-	 * Returns a hash code value for this table id.
-	 */
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + (int) (id ^ (id >>> 32));
-		return result;
-	}
+    /**
+     * Returns a hash code value for this table id.
+     */
+    @Override
+    public int hashCode() {
+	final int prime = 31;
+	int result = 1;
+	result = prime * result + (int) (id ^ (id >>> 32));
+	return result;
+    }
 
-	/**
-	 * Indicates whether some other object is "equal to" this one.
-	 */
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		final TableId other = (TableId) obj;
-		if (id != other.id)
-			return false;
-		return true;
-	}
+    /**
+     * Indicates whether some other object is "equal to" this one.
+     */
+    @Override
+    public boolean equals(Object obj) {
+	if (this == obj)
+	    return true;
+	if (obj == null)
+	    return false;
+	if (getClass() != obj.getClass())
+	    return false;
+	final TableId other = (TableId) obj;
+	if (id != other.id)
+	    return false;
+	return true;
+    }
 
-	@Override
-	public String toString(){
-		return "table: "+String.valueOf(id);
-	}
-	
-	public long getID(){
-	    return id;
-	}
+    @Override
+    public String toString() {
+	return "table: " + String.valueOf(id);
+    }
+
+    public long getID() {
+	return id;
+    }
 
 }

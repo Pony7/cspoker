@@ -20,12 +20,12 @@ import org.cspoker.server.game.events.Event;
 
 /**
  * A class of game events.
- *
+ * 
  * All game events should inherit from this abstract class.
- *
+ * 
  * @author Kenzo
- *
+ * 
  */
-public abstract class GameEvent extends Event{
+public abstract class GameEvent extends Event {
 
 }

@@ -19,44 +19,43 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * A class for game managers.
- *
+ * 
  * This class has static methods to access all game mediators.
- *
+ * 
  * @author Kenzo
- *
+ * 
  */
 public class GameManager {
 
-	/**
-	 * The hash map containing all the game mediators.
-	 */
-	private final static ConcurrentHashMap<TableId, GameMediator> hashMap = new ConcurrentHashMap<TableId, GameMediator>();
+    /**
+     * The hash map containing all the game mediators.
+     */
+    private final static ConcurrentHashMap<TableId, GameMediator> hashMap = new ConcurrentHashMap<TableId, GameMediator>();
 
-	private final static ServerMediator serverMediator = new ServerMediator();
+    private final static ServerMediator serverMediator = new ServerMediator();
 
-	public static ServerMediator getServerMediator(){
-		return serverMediator;
-	}
+    public static ServerMediator getServerMediator() {
+	return serverMediator;
+    }
 
-	/**
-	 * Returns the game mediator for the game with given id.
-	 *
-	 * @param 	id
-	 * 			The id of the game corresponding to the game mediator.
-	 * @pre 	The id should be effective.
-	 *			|id!=null
-	 * @return	The game mediator for the game with given id.
-	 */
-	public static GameMediator getGame(TableId id){
-		return hashMap.get(id);
-	}
+    /**
+     * Returns the game mediator for the game with given id.
+     * 
+     * @param id
+     *                The id of the game corresponding to the game mediator.
+     * @pre The id should be effective. |id!=null
+     * @return The game mediator for the game with given id.
+     */
+    public static GameMediator getGame(TableId id) {
+	return hashMap.get(id);
+    }
 
-	public static void removeGame(TableId id){
-		hashMap.remove(id);
-	}
+    public static void removeGame(TableId id) {
+	hashMap.remove(id);
+    }
 
-	public static void addGame(TableId id, GameMediator gameMediator){
-		hashMap.put(id, gameMediator);
-	}
+    public static void addGame(TableId id, GameMediator gameMediator) {
+	hashMap.put(id, gameMediator);
+    }
 
 }

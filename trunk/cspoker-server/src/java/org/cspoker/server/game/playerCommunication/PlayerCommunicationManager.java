@@ -22,18 +22,19 @@ import org.cspoker.server.game.PlayerId;
 
 public class PlayerCommunicationManager {
 
-	private static final ConcurrentHashMap<PlayerId, PlayerCommunicationImpl> hashMap = new ConcurrentHashMap<PlayerId, PlayerCommunicationImpl>();
+    private static final ConcurrentHashMap<PlayerId, PlayerCommunicationImpl> hashMap = new ConcurrentHashMap<PlayerId, PlayerCommunicationImpl>();
 
-	public static PlayerCommunicationImpl getPlayerCommunication(PlayerId id){
-		return hashMap.get(id);
-	}
+    public static PlayerCommunicationImpl getPlayerCommunication(PlayerId id) {
+	return hashMap.get(id);
+    }
 
-	public static void addPlayerCommunication(PlayerId id, PlayerCommunicationImpl playerCommunication){
-		hashMap.put(id, playerCommunication);
-	}
+    public static void addPlayerCommunication(PlayerId id,
+	    PlayerCommunicationImpl playerCommunication) {
+	hashMap.put(id, playerCommunication);
+    }
 
-	public static void clear(){
-		hashMap.clear();
-	}
+    public static void clear() {
+	hashMap.clear();
+    }
 
 }

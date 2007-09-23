@@ -15,9 +15,8 @@
  */
 package org.cspoker.server.game.events.gameEvents;
 
-
 public interface GameMessageListener {
 
-	public void onGameMessageEvent(GameMessageEvent event);
+    public void onGameMessageEvent(GameMessageEvent event);
 
 }

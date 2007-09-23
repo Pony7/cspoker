@@ -19,28 +19,26 @@ import org.cspoker.server.game.player.SavedPlayer;
 
 /**
  * A class to represent stack changed events.
- *
+ * 
  * @author Kenzo
- *
+ * 
  */
-public class StackChangedEvent extends GameEvent{
-	
-	private final SavedPlayer player;
-	
-	public StackChangedEvent(SavedPlayer player){
-		this.player = player;
-	}
-	
-	public SavedPlayer getPlayer(){
-		return player;
-	}
+public class StackChangedEvent extends GameEvent {
 
-	
-	@Override
-	public String toString(){
-		return player.getName()+"'s stack has changed to "+player.getStackValue()+" chips.";
-	}
-	
-	
+    private final SavedPlayer player;
+
+    public StackChangedEvent(SavedPlayer player) {
+	this.player = player;
+    }
+
+    public SavedPlayer getPlayer() {
+	return player;
+    }
+
+    @Override
+    public String toString() {
+	return player.getName() + "'s stack has changed to "
+		+ player.getStackValue() + " chips.";
+    }
 
 }

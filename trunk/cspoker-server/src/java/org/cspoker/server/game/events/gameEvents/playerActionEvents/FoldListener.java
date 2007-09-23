@@ -20,16 +20,17 @@ package org.cspoker.server.game.events.gameEvents.playerActionEvents;
  * An interface for fold listeners.
  * 
  * @author Kenzo
- *
+ * 
  */
 public interface FoldListener {
-	
-	/**
-	 * This method is called when subscribed to inform a fold occurred.
-	 * 
-	 * @param 	event
-	 * 			The event object containing all information of the occurred event.
-	 */
-	public void onFoldEvent(FoldEvent event);
+
+    /**
+     * This method is called when subscribed to inform a fold occurred.
+     * 
+     * @param event
+     *                The event object containing all information of the
+     *                occurred event.
+     */
+    public void onFoldEvent(FoldEvent event);
 
 }

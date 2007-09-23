@@ -18,6 +18,6 @@ package org.cspoker.server.game.events.serverEvents;
 
 public interface PlayerLeftListener {
 
-	public void onPlayerLeftEvent(PlayerLeftEvent event);
+    public void onPlayerLeftEvent(PlayerLeftEvent event);
 
 }

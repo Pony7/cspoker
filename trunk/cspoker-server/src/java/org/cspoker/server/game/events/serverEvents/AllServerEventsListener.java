@@ -1,4 +1,3 @@
-
 /**
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,8 +15,7 @@
  */
 package org.cspoker.server.game.events.serverEvents;
 
-public interface AllServerEventsListener extends
-PlayerJoinedListener, PlayerLeftListener, TableCreatedListener,
-ServerMessageListener{
+public interface AllServerEventsListener extends PlayerJoinedListener,
+	PlayerLeftListener, TableCreatedListener, ServerMessageListener {
 
 }

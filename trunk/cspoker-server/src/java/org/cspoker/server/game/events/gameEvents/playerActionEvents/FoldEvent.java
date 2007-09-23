@@ -19,24 +19,23 @@ package org.cspoker.server.game.events.gameEvents.playerActionEvents;
 import org.cspoker.server.game.events.gameEvents.GameEvent;
 import org.cspoker.server.game.player.SavedPlayer;
 
-
 /**
  * A class to represent fold events.
- *
+ * 
  * @author Kenzo
- *
+ * 
  */
 public class FoldEvent extends GameEvent {
 
-	private final SavedPlayer player;
+    private final SavedPlayer player;
 
-	public FoldEvent(SavedPlayer player){
-		this.player = player;
-	}
+    public FoldEvent(SavedPlayer player) {
+	this.player = player;
+    }
 
-	@Override
-	public String toString(){
-		return player.getName()+" folds.";
-	}
+    @Override
+    public String toString() {
+	return player.getName() + " folds.";
+    }
 
 }

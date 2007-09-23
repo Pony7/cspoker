@@ -17,6 +17,6 @@ package org.cspoker.server.game.events.serverEvents;
 
 public interface TableCreatedListener {
 
-	public void onTableCreatedEvent(TableCreatedEvent event);
+    public void onTableCreatedEvent(TableCreatedEvent event);
 
 }

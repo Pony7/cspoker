@@ -19,28 +19,26 @@ package org.cspoker.server.game.events.gameEvents.playerActionEvents;
 import org.cspoker.server.game.events.gameEvents.GameEvent;
 import org.cspoker.server.game.player.SavedPlayer;
 
-
 /**
  * A class to represent raise events.
- *
+ * 
  * @author Kenzo
- *
+ * 
  */
 public class RaiseEvent extends GameEvent {
 
-	private final SavedPlayer player;
+    private final SavedPlayer player;
 
-	private final int amount;
+    private final int amount;
 
-	public RaiseEvent(SavedPlayer player, int amount){
-		this.player = player;
-		this.amount = amount;
-	}
+    public RaiseEvent(SavedPlayer player, int amount) {
+	this.player = player;
+	this.amount = amount;
+    }
 
-
-	@Override
-	public String toString(){
-		return player.getName()+" raises with "+amount+" chips.";
-	}
+    @Override
+    public String toString() {
+	return player.getName() + " raises with " + amount + " chips.";
+    }
 
 }

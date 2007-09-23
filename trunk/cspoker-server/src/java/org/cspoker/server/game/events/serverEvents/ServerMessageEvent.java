@@ -17,20 +17,20 @@ package org.cspoker.server.game.events.serverEvents;
 
 import org.cspoker.server.game.player.SavedPlayer;
 
-public class ServerMessageEvent extends ServerEvent{
-	
-	private final SavedPlayer player;
+public class ServerMessageEvent extends ServerEvent {
 
-	private final String message;
+    private final SavedPlayer player;
 
-	public ServerMessageEvent(SavedPlayer player, String message){
-		this.player = player;
-		this.message = message;
-	}
+    private final String message;
 
-	@Override
-	public String toString(){
-		return player.getName()+" says: "+message;
-	}
+    public ServerMessageEvent(SavedPlayer player, String message) {
+	this.player = player;
+	this.message = message;
+    }
+
+    @Override
+    public String toString() {
+	return player.getName() + " says: " + message;
+    }
 
 }

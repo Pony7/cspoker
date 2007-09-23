@@ -18,18 +18,19 @@ package org.cspoker.server.game.events.gameEvents.playerActionEvents;
 
 /**
  * An interface for big blind listeners.
- *
+ * 
  * @author Kenzo
- *
+ * 
  */
 public interface BigBlindListener {
 
-	/**
-	 * This method is called when subscribed to inform a big blind has been bet.
-	 *
-	 * @param 	event
-	 * 			The event object containing all information of the occurred event.
-	 */
-	public void onBigBlindEvent(BigBlindEvent event);
+    /**
+     * This method is called when subscribed to inform a big blind has been bet.
+     * 
+     * @param event
+     *                The event object containing all information of the
+     *                occurred event.
+     */
+    public void onBigBlindEvent(BigBlindEvent event);
 
 }

@@ -16,19 +16,19 @@
 package org.cspoker.server.game.player;
 
 public class SavedWinner {
-	
-	private final int gainedAmount;
-	
-	private final SavedPlayer player;
-	
-	public SavedWinner(SavedPlayer player, int gainedAmount){
-		this.player = player;
-		this.gainedAmount = gainedAmount;	
-	}
-	
-	@Override
-	public String toString(){
-		return player.getName()+" has gained "+gainedAmount+" chips.";
-	}
+
+    private final int gainedAmount;
+
+    private final SavedPlayer player;
+
+    public SavedWinner(SavedPlayer player, int gainedAmount) {
+	this.player = player;
+	this.gainedAmount = gainedAmount;
+    }
+
+    @Override
+    public String toString() {
+	return player.getName() + " has gained " + gainedAmount + " chips.";
+    }
 
 }

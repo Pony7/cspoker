@@ -18,7 +18,6 @@ public class XmlFileAuthenticator {
 
     private volatile HashMap<String, String> passwords;
 
-
     public XmlFileAuthenticator() {
 
 	XMLReader xr;
@@ -28,38 +27,40 @@ public class XmlFileAuthenticator {
 	    logger.error(e.getMessage(), e);
 	    throw new IllegalStateException("Error creating XML parser.");
 	}
-	DefaultHandler handler=getHandler();
+	DefaultHandler handler = getHandler();
 	xr.setContentHandler(handler);
 	xr.setErrorHandler(handler);
 
-	InputStream is = getClass().getClassLoader().getResourceAsStream("org/cspoker/server/common/authentication/authentication.xml");
+	InputStream is = getClass().getClassLoader().getResourceAsStream(
+		"org/cspoker/server/common/authentication/authentication.xml");
 	InputSource source = new InputSource(is);
-
 
 	try {
 	    xr.parse(source);
 	} catch (IOException e) {
 	    logger.error(e.getMessage(), e);
-	    throw new IllegalStateException("Error reading authentication file: "+e.getMessage());
+	    throw new IllegalStateException(
+		    "Error reading authentication file: " + e.getMessage());
 	} catch (SAXException e) {
 	    logger.error(e.getMessage(), e);
-	    throw new IllegalStateException("Error parsing XML: "+e.getMessage());
+	    throw new IllegalStateException("Error parsing XML: "
+		    + e.getMessage());
 	}
     }
 
     private DefaultHandler getHandler() {
-	return new DefaultHandler(){
+	return new DefaultHandler() {
 
-	    private StringBuilder sb=new StringBuilder();
+	    private StringBuilder sb = new StringBuilder();
 
 	    @Override
 	    public void startDocument() throws SAXException {
-		passwords=new HashMap<String, String>();
+		passwords = new HashMap<String, String>();
 	    }
 
 	    @Override
 	    public void characters(char[] ch, int start, int length)
-	    throws SAXException {
+		    throws SAXException {
 		sb.append(ch, start, length);
 	    }
 
@@ -73,10 +74,10 @@ public class XmlFileAuthenticator {
 
 	    @Override
 	    public void endElement(String uri, String localName, String name)
-	    throws SAXException {
-		if(name.equalsIgnoreCase("name")){
-		    lastname=sb.toString();
-		}else if(name.equalsIgnoreCase("password")){
+		    throws SAXException {
+		if (name.equalsIgnoreCase("name")) {
+		    lastname = sb.toString();
+		} else if (name.equalsIgnoreCase("password")) {
 		    passwords.put(lastname, sb.toString());
 		    logger.info("Added credentials for " + lastname);
 		}

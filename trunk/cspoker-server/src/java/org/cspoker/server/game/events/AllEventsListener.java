@@ -19,6 +19,7 @@ package org.cspoker.server.game.events;
 import org.cspoker.server.game.events.gameEvents.AllGameEventsListener;
 import org.cspoker.server.game.events.serverEvents.AllServerEventsListener;
 
-public interface AllEventsListener extends AllGameEventsListener, AllServerEventsListener{
+public interface AllEventsListener extends AllGameEventsListener,
+	AllServerEventsListener {
 
 }

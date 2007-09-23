@@ -20,16 +20,17 @@ package org.cspoker.server.game.events.gameEvents.playerActionEvents;
  * An interface for all-in listeners.
  * 
  * @author Kenzo
- *
+ * 
  */
 public interface AllInListener {
-	
-	/**
-	 * This method is called when subscribed to inform an all-in event occurred.
-	 * 
-	 * @param 	event
-	 * 			The event object containing all information of the occurred event.
-	 */
-	public void onAllInEvent(AllInEvent event);
+
+    /**
+     * This method is called when subscribed to inform an all-in event occurred.
+     * 
+     * @param event
+     *                The event object containing all information of the
+     *                occurred event.
+     */
+    public void onAllInEvent(AllInEvent event);
 
 }
