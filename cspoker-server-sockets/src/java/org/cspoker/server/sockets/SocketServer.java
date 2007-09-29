@@ -25,37 +25,11 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
-import org.apache.log4j.PropertyConfigurator;
-import org.cspoker.server.game.utilities.Configuration;
 import org.cspoker.server.sockets.runnables.WaitForIO;
 import org.cspoker.server.sockets.threading.LoggingThreadPool;
 import org.cspoker.server.sockets.threading.SocketRunnableComparator;
 
-public class SocketServer 
-{
-
-    public static void main(String[] args) throws NumberFormatException, IOException {
-
-    	PropertyConfigurator.configure(Configuration.LOG4J_PROPERTIES);
-
-	if (args.length < 1) {
-	    usage();
-	}
-
-	int port=0;
-	try {
-	    port=Integer.parseInt(args[0]);
-	} catch (NumberFormatException e) {
-	    usage();
-	}
-
-	SocketServer server = new SocketServer(port);
-    }
-
-    private static void usage() {
-	logger.fatal("usage: java -jar cspoker-server-sockets.jar [portnumber]");
-	System.exit(0);
-    }
+public class SocketServer {
 
     private static Logger logger = Logger.getLogger(SocketServer.class);
 
@@ -90,7 +64,6 @@ public class SocketServer
 
 	// Infinite server loop
 	executor.submit(new WaitForIO(executor, selector, server));
-	
 	
     }
 
