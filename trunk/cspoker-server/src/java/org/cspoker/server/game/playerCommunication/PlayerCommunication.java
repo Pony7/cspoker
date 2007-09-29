@@ -15,7 +15,6 @@
  */
 package org.cspoker.server.game.playerCommunication;
 
-import org.cspoker.server.game.PlayerId;
 import org.cspoker.server.game.TableId;
 import org.cspoker.server.game.events.AllEventsListener;
 import org.cspoker.server.game.events.gameEvents.GameMessageListener;
@@ -44,7 +43,6 @@ import org.cspoker.server.game.events.serverEvents.PlayerLeftListener;
 import org.cspoker.server.game.events.serverEvents.ServerMessageListener;
 import org.cspoker.server.game.events.serverEvents.TableCreatedListener;
 import org.cspoker.server.game.gameControl.IllegalActionException;
-import org.cspoker.server.game.player.Player;
 
 /**
  * An interface to define all possible invocations a player can do.
@@ -54,22 +52,6 @@ import org.cspoker.server.game.player.Player;
  * 
  */
 public interface PlayerCommunication {
-
-    /**
-     * Returns the player contained in this player communication.
-     * 
-     * @return The player contained in this player communication.
-     */
-    public Player getPlayer();
-
-    /**
-     * Returns the player id from the player contained in this player
-     * communication.
-     * 
-     * @return The player id from the player contained in this player
-     *         communication.
-     */
-    public PlayerId getId();
 
     /***************************************************************************
      * Player Actions
@@ -195,32 +177,6 @@ public interface PlayerCommunication {
      */
     public void startGame() throws IllegalActionException;
 
-    /***************************************************************************
-     * Actions list
-     **************************************************************************/
-
-    /**
-     * Returns the latest game events.
-     * 
-     * All method calls are idempotent, which means that calling the method,
-     * does not change any internal state and can be called multiple times
-     * without changing the result. (i.e. retry after network error)
-     * 
-     */
-    public Events getLatestEvents() throws IllegalActionException;
-
-    /**
-     * Returns the latest game events, while acknowledging until the given ack.
-     * 
-     * @param ack
-     * @return
-     * @throws IllegalActionException
-     */
-    public Events getLatestEventsAndAck(int ack) throws IllegalActionException;
-
-    /***************************************************************************
-     * Publisher
-     **************************************************************************/
 
     /***************************************************************************
      * Game Events Publisher
