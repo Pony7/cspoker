@@ -31,7 +31,7 @@ import org.cspoker.server.sockets.threading.SocketRunnableComparator;
 
 public class SocketServer {
 
-    private static Logger logger = Logger.getLogger(SocketServer.class);
+    private final static Logger logger = Logger.getLogger(SocketServer.class);
 
     private final ServerSocketChannel server;
 

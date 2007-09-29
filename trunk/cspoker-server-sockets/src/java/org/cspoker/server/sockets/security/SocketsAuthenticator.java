@@ -48,7 +48,7 @@ public class SocketsAuthenticator{
 	    xr.parse(new InputSource(new StringReader(xml)));
 	    if(!auth.hasPassword(handler.getUsername(), handler.getPassword())){
 		logger.info("login failed for "+handler.getUsername());
-		discardClient(context);
+		context.closeConnection();
 		return false;
 	    }
 	    context.login(handler.getUsername(), handler.getPassword(), handler.getUseragent());
@@ -56,20 +56,12 @@ public class SocketsAuthenticator{
 	    return true;
 	} catch(SAXException e){
 	    logger.error("error parsing login: "+e.getMessage());
-	    discardClient(context);
+	    context.closeConnection();
 	    return false;
 	} catch (IOException e) {
 	    logger.error("error parsing login: "+e.getMessage());
-	    discardClient(context);
-	    return false;
-	}
-    }
-    
-    private void discardClient(ClientContext context){
-	try {
 	    context.closeConnection();
-	} catch (IOException e) {
-	    logger.error("can't close socket: "+e.getMessage());
+	    return false;
 	}
     }
 

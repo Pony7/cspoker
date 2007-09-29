@@ -32,6 +32,7 @@ import org.apache.log4j.Logger;
 import org.cspoker.server.common.xmlcommunication.XmlEventCollector;
 import org.cspoker.server.common.xmlcommunication.XmlPlayerCommunication;
 import org.cspoker.server.common.xmlcommunication.XmlPlayerCommunicationFactory;
+import org.cspoker.server.common.xmlcommunication.handler.XmlEventType;
 
 
 public class ClientContext implements XmlEventCollector{
@@ -114,10 +115,14 @@ public class ClientContext implements XmlEventCollector{
 	}
     }
 
-    public void closeConnection() throws IOException {
+    public void closeConnection(){
 	if(playerComm!=null)
 	    XmlPlayerCommunicationFactory.unRegister(playerComm.getPlayerName());
-	client.close();
+	try {
+	    client.close();
+	} catch (IOException e) {
+	    logger.error("Can't close connection.", e);
+	}
     }
 
     public void send(String xml){
@@ -134,7 +139,7 @@ public class ClientContext implements XmlEventCollector{
 	return playerComm;
     }
 
-    public void collect(String xmlEvent) {
+    public void collect(String xmlEvent, XmlEventType type) {
 	send(xmlEvent);
     }
 
