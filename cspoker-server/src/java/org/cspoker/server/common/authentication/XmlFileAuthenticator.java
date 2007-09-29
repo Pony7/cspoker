@@ -17,8 +17,11 @@ public class XmlFileAuthenticator {
     private static Logger logger = Logger.getLogger(XmlFileAuthenticator.class);
 
     private volatile HashMap<String, String> passwords;
-
     public XmlFileAuthenticator() {
+	this("org/cspoker/server/common/authentication/authentication.xml");
+    }
+
+    public XmlFileAuthenticator(String file) {
 
 	XMLReader xr;
 	try {
@@ -32,7 +35,7 @@ public class XmlFileAuthenticator {
 	xr.setErrorHandler(handler);
 
 	InputStream is = getClass().getClassLoader().getResourceAsStream(
-		"org/cspoker/server/common/authentication/authentication.xml");
+		file);
 	InputSource source = new InputSource(is);
 
 	try {
@@ -60,7 +63,7 @@ public class XmlFileAuthenticator {
 
 	    @Override
 	    public void characters(char[] ch, int start, int length)
-		    throws SAXException {
+	    throws SAXException {
 		sb.append(ch, start, length);
 	    }
 
@@ -74,7 +77,7 @@ public class XmlFileAuthenticator {
 
 	    @Override
 	    public void endElement(String uri, String localName, String name)
-		    throws SAXException {
+	    throws SAXException {
 		if (name.equalsIgnoreCase("name")) {
 		    lastname = sb.toString();
 		} else if (name.equalsIgnoreCase("password")) {

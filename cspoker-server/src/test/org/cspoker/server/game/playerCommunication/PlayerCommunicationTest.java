@@ -49,7 +49,7 @@ public class PlayerCommunicationTest extends TestCase {
 
     public void testCreateTable() {
 	Player kenzo = playerFactory.createNewPlayer("Kenzo");
-	PlayerCommunication kenzoComm = new PlayerCommunicationImpl(kenzo);
+	PlayerCommunicationImpl kenzoComm = new PlayerCommunicationImpl(kenzo);
 	try {
 	    kenzoComm.createTable();
 	} catch (IllegalActionException e) {
@@ -62,8 +62,8 @@ public class PlayerCommunicationTest extends TestCase {
     public void testJoinTable() {
 	Player kenzo = playerFactory.createNewPlayer("Kenzo");
 	Player guy = playerFactory.createNewPlayer("Guy");
-	PlayerCommunication kenzoComm = new PlayerCommunicationImpl(kenzo);
-	PlayerCommunication guyComm = new PlayerCommunicationImpl(guy);
+	PlayerCommunicationImpl kenzoComm = new PlayerCommunicationImpl(kenzo);
+	PlayerCommunicationImpl guyComm = new PlayerCommunicationImpl(guy);
 	try {
 	    TableId tableId = kenzoComm.createTable();
 	    guyComm.join(tableId);
@@ -95,8 +95,8 @@ public class PlayerCommunicationTest extends TestCase {
     public void testPlayingGame() {
 	Player kenzo = playerFactory.createNewPlayer("Kenzo");
 	Player guy = playerFactory.createNewPlayer("Guy");
-	PlayerCommunication kenzoComm = new PlayerCommunicationImpl(kenzo);
-	PlayerCommunication guyComm = new PlayerCommunicationImpl(guy);
+	PlayerCommunicationImpl kenzoComm = new PlayerCommunicationImpl(kenzo);
+	PlayerCommunicationImpl guyComm = new PlayerCommunicationImpl(guy);
 
 	NewRoundListener newRoundListener = new NewRoundListener() {
 
@@ -162,8 +162,8 @@ public class PlayerCommunicationTest extends TestCase {
     public void testPlayingGame2() {
 	Player kenzo = playerFactory.createNewPlayer("Kenzo");
 	Player guy = playerFactory.createNewPlayer("Guy");
-	PlayerCommunication kenzoComm = new PlayerCommunicationImpl(kenzo);
-	PlayerCommunication guyComm = new PlayerCommunicationImpl(guy);
+	PlayerCommunicationImpl kenzoComm = new PlayerCommunicationImpl(kenzo);
+	PlayerCommunicationImpl guyComm = new PlayerCommunicationImpl(guy);
 
 	NewRoundListener newRoundListener = new NewRoundListener() {
 

@@ -46,7 +46,7 @@ public class PlayerFactory {
      *                The name for this new player.
      * @return A new player with given name and standard stack value.
      */
-    public Player createNewPlayer(String name) {
+    public static Player createNewPlayer(String name) {
 	try {
 	    return createNewPlayer(name, getStdStackValue());
 	} catch (IllegalValueException e) {
@@ -66,7 +66,7 @@ public class PlayerFactory {
      * @throws IllegalValueException
      *                 [must] The given initial value is not valid.
      */
-    public Player createNewPlayer(String name, int initialValue)
+    public static Player createNewPlayer(String name, int initialValue)
 	    throws IllegalValueException {
 	return new Player(getUniquePlayerId(), name, initialValue);
     }
@@ -76,7 +76,7 @@ public class PlayerFactory {
      * 
      * @return The standard stack value.
      */
-    public int getStdStackValue() {
+    public static int getStdStackValue() {
 	return 100;
     }
 
@@ -87,7 +87,7 @@ public class PlayerFactory {
      * 
      * @return A unique player id.
      */
-    protected PlayerId getUniquePlayerId() {
+    protected static PlayerId getUniquePlayerId() {
 	return new PlayerId(counter.getAndIncrement());
     }
 
