@@ -1,3 +1,18 @@
+/**
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *  
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ */
 package org.cspoker.server.sockets.security;
 
 import java.io.IOException;
@@ -33,19 +48,28 @@ public class SocketsAuthenticator{
 	    xr.parse(new InputSource(new StringReader(xml)));
 	    if(!auth.hasPassword(handler.getUsername(), handler.getPassword())){
 		logger.info("login failed for "+handler.getUsername());
+		discardClient(context);
 		return false;
 	    }
-	    context.setPassword(handler.getPassword());
-	    context.setUsername(handler.getUsername());
-	    context.setUseragent(handler.getUseragent());
-	    context.setAuthenticated();
+	    context.login(handler.getUsername(), handler.getPassword(), handler.getUseragent());
+	    context.send(SocketsAuthenticator.POSITIVE_RESPONSE);
 	    return true;
-	} catch (SAXException e) {
+	} catch(SAXException e){
 	    logger.error("error parsing login: "+e.getMessage());
+	    discardClient(context);
 	    return false;
 	} catch (IOException e) {
 	    logger.error("error parsing login: "+e.getMessage());
+	    discardClient(context);
 	    return false;
+	}
+    }
+    
+    private void discardClient(ClientContext context){
+	try {
+	    context.closeConnection();
+	} catch (IOException e) {
+	    logger.error("can't close socket: "+e.getMessage());
 	}
     }
 

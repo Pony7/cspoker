@@ -1,3 +1,18 @@
+/**
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *  
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ */
 package org.cspoker.server.sockets;
 
 import java.io.IOException;
@@ -14,76 +29,46 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.cspoker.server.common.xmlcommunication.XmlEventCollector;
+import org.cspoker.server.common.xmlcommunication.XmlPlayerCommunication;
+import org.cspoker.server.common.xmlcommunication.XmlPlayerCommunicationFactory;
 
 
-public class ClientContext {
+public class ClientContext implements XmlEventCollector{
 
-    private static Logger logger = Logger.getLogger(ClientContext.class);
-    
+    private final static Logger logger = Logger.getLogger(ClientContext.class);
+
     private final StringBuilder buffer;
-    
-    private volatile String useragent="unknown";
-    private volatile String username="John Doe";
-    private volatile String password="";
-    
-    private volatile boolean authenticated=false;
+    private XmlPlayerCommunication playerComm;
     
     private final List<ByteBuffer> writeBuffer = new ArrayList<ByteBuffer>();
+
     private final Object writeBufferLock = new Object();
-    
+    private final Object authenticateLock = new Object();
+
+
     private final SocketChannel client;
     private final Selector selector;
 
     private final Charset charset;
+    //CharsetEncoder is not thread safe!
     private final CharsetEncoder encoder;
-    
-    
-    
+
+
+
     public ClientContext(SocketChannel client, Selector selector) {
 	this.client = client;
 	this.selector = selector;
 	buffer = new StringBuilder();
-	
+
 	charset=Charset.forName("UTF-8");
 	encoder = charset.newEncoder();
     }
-    
+
     public StringBuilder getBuffer(){
 	return buffer;
     }
 
-    public String getUseragent() {
-        return useragent;
-    }
-
-    public void setUseragent(String useragent) {
-        this.useragent = useragent;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-    
-    public boolean isAuthenticated(){
-	return authenticated;
-    }
-    
-    public void setAuthenticated(){
-	authenticated=true;
-    }
-    
     /**
      * Writes the current buffer to the client. 
      * If the buffer is emptied, the selector is removed 
@@ -109,18 +94,18 @@ public class ClientContext {
 	    logger.trace("finished entire write operation");
 	}
     }
-    
+
     private void unregisterWriteInterest(){
 	client.keyFor(selector).interestOps(SelectionKey.OP_READ);
 	logger.trace("removed write interest");
-	
+
     }
-    
+
     private void registerWriteInterest(){
 	client.keyFor(selector).interestOps(SelectionKey.OP_READ);
 	client.keyFor(selector).interestOps(SelectionKey.OP_READ | SelectionKey.OP_WRITE);
     }
-    
+
     public void appendToWriteBuffer(ByteBuffer bytes){
 	synchronized (writeBufferLock) {
 	    writeBuffer.add(bytes);
@@ -130,9 +115,11 @@ public class ClientContext {
     }
 
     public void closeConnection() throws IOException {
+	if(playerComm!=null)
+	    XmlPlayerCommunicationFactory.unRegister(playerComm.getPlayerName());
 	client.close();
     }
-    
+
     public void send(String xml){
 	try {
 	    appendToWriteBuffer(encoder.encode(CharBuffer.wrap(xml+((char)0x00))));
@@ -142,6 +129,28 @@ public class ClientContext {
 	    throw new IllegalStateException(e);
 	}
     }
-    
-    
+
+    public XmlPlayerCommunication getXmlPlayerCommunication(){
+	return playerComm;
+    }
+
+    public void collect(String xmlEvent) {
+	send(xmlEvent);
+    }
+
+    public void login(String username, String password, String useragent) {
+	synchronized (authenticateLock ) {
+	    if (isAuthenticated())
+		throw new IllegalStateException("Can't login twice");
+	    playerComm = XmlPlayerCommunicationFactory.getRegisteredXmlPlayerCommunication(username, this);
+	}
+    }
+
+    public boolean isAuthenticated() {
+	synchronized (authenticateLock ) {
+	    return playerComm!=null;
+	}
+    }
+
+
 }

@@ -1,3 +1,18 @@
+/**
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *  
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ */
 package org.cspoker.server.sockets.runnables;
 
 import java.io.IOException;
@@ -34,8 +49,6 @@ public class WaitForIO implements Runnable, Prioritizable{
     private final Charset charset;
     private final CharsetDecoder decoder;
 
-    private final SocketsAuthenticator auth;
-
     public WaitForIO(ThreadPoolExecutor executor, Selector selector, ServerSocketChannel server) {
 	this.executor = executor;
 	this.selector = selector;
@@ -47,9 +60,6 @@ public class WaitForIO implements Runnable, Prioritizable{
 
 	charset=Charset.forName("UTF-8");
 	decoder = charset.newDecoder();
-
-	auth = new SocketsAuthenticator(new XmlFileAuthenticator());
-
     }
 
     public void run() {
@@ -165,7 +175,7 @@ public class WaitForIO implements Runnable, Prioritizable{
     }
 
     private void endNode(StringBuilder stringBuilder, ClientContext context){
-	executor.submit(new ProcessXML(stringBuilder.toString(), context, auth));
+	executor.submit(new ProcessXML(stringBuilder.toString(), context));
 	stringBuilder.setLength(0);
 	logger.debug("ended an xml node");
     }
