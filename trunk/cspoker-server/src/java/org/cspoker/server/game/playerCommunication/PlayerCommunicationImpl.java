@@ -189,7 +189,7 @@ public class PlayerCommunicationImpl implements PlayerCommunication {
      *                 [can] This actions is not a valid action in the current
      *                 state.
      */
-    public void join(TableId id) throws IllegalActionException {
+    public void joinTable(TableId id) throws IllegalActionException {
 	if (id == null)
 	    throw new IllegalArgumentException(
 		    "The given table id is not effective.");

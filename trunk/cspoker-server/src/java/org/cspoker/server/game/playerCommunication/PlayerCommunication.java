@@ -144,7 +144,7 @@ public interface PlayerCommunication {
      *                 [must] This actions is not a valid action in the current
      *                 state.
      */
-    public void join(TableId id) throws IllegalActionException;
+    public void joinTable(TableId id) throws IllegalActionException;
 
     /**
      * Leave the table the player is sitting at.
