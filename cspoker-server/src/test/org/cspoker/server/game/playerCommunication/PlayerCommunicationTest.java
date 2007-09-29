@@ -66,7 +66,7 @@ public class PlayerCommunicationTest extends TestCase {
 	PlayerCommunicationImpl guyComm = new PlayerCommunicationImpl(guy);
 	try {
 	    TableId tableId = kenzoComm.createTable();
-	    guyComm.join(tableId);
+	    guyComm.joinTable(tableId);
 	} catch (IllegalActionException e) {
 	    fail(e.getMessage());
 	} finally {
@@ -81,7 +81,7 @@ public class PlayerCommunicationTest extends TestCase {
 	PlayerCommunication guyComm = new PlayerCommunicationImpl(guy);
 	try {
 	    TableId tableId = kenzoComm.createTable();
-	    guyComm.join(tableId);
+	    guyComm.joinTable(tableId);
 	    kenzoComm.startGame();
 	} catch (IllegalActionException e) {
 	    fail(e.getMessage());
@@ -122,7 +122,7 @@ public class PlayerCommunicationTest extends TestCase {
 
 	try {
 	    TableId tableId = kenzoComm.createTable();
-	    guyComm.join(tableId);
+	    guyComm.joinTable(tableId);
 	    guyComm.subscribeNewRoundListener(newRoundListener);
 	    guyComm.subscribeNextPlayerListener(nextPlayerListener);
 	    kenzoComm.startGame();
@@ -191,7 +191,7 @@ public class PlayerCommunicationTest extends TestCase {
 	    TableId tableId = kenzoComm.createTable();
 	    guyComm.subscribeNewRoundListener(newRoundListener);
 	    guyComm.subscribeNextPlayerListener(nextPlayerListener);
-	    guyComm.join(tableId);
+	    guyComm.joinTable(tableId);
 	    kenzoComm.startGame();
 	    PlayerCommunicationTest.logger.info(kenzoComm.getLatestEvents());
 
