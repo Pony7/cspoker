@@ -48,9 +48,9 @@ public class BetEvent extends GameEvent {
 	return amount;
     }
 
-public SavedPlayer getPlayer() {
-    return player;
-}
+    public SavedPlayer getPlayer() {
+	return player;
+    }
 
     @Override
     public void toXml(ContentHandler handler) throws SAXException {

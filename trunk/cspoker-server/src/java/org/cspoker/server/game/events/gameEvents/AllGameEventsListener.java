@@ -33,6 +33,6 @@ public interface AllGameEventsListener extends AllInListener, BetListener,
 	NewPocketCardsListener, NewCommunityCardsListener, NewDealListener,
 	NewRoundListener, NextPlayerListener, PlayerJoinedGameListener,
 	PlayerLeftTableListener, PotChangedListener, ShowHandListener,
-	WinnerListener, GameMessageListener {
+	StackChangedListener, WinnerListener, GameMessageListener {
 
 }

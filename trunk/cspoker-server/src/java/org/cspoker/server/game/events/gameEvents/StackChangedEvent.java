@@ -16,6 +16,9 @@
 package org.cspoker.server.game.events.gameEvents;
 
 import org.cspoker.server.game.player.SavedPlayer;
+import org.xml.sax.ContentHandler;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * A class to represent stack changed events.
@@ -39,6 +42,22 @@ public class StackChangedEvent extends GameEvent {
     public String toString() {
 	return player.getName() + "'s stack has changed to "
 		+ player.getStackValue() + " chips.";
+    }
+    
+    @Override
+    public void toXml(ContentHandler handler) throws SAXException {
+	AttributesImpl attrs = new AttributesImpl();
+	attrs.addAttribute("", "type", "type", "CDATA", "stackchanged");
+	attrs.addAttribute("", "player", "player", "CDATA", getPlayer().getName());
+	handler.startElement("", "event", "event", attrs);
+
+	handler.startElement("", "amount", "amount", new AttributesImpl());
+	String msg=String.valueOf(getPlayer().getStackValue());
+	handler.characters(msg.toCharArray(), 0, msg.length());
+	handler.endElement("", "amount", "amount");
+
+	handler.endElement("", "event", "event");
+
     }
 
 }
