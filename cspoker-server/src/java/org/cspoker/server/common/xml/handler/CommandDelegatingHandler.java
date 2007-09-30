@@ -1,3 +1,18 @@
+/**
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ */
 package org.cspoker.server.common.xmlcommunication.handler;
 
 import java.io.PrintWriter;
@@ -11,6 +26,7 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.apache.log4j.Logger;
 import org.cspoker.server.common.xmlcommunication.XmlEventCollector;
+import org.cspoker.server.common.xmlcommunication.XmlEventType;
 import org.cspoker.server.game.TableId;
 import org.cspoker.server.game.gameControl.IllegalActionException;
 import org.cspoker.server.game.playerCommunication.PlayerCommunication;
@@ -82,10 +98,10 @@ ContentHandler {
 	response.startDocument();
 	response.startElement("", "exception", "exception", new AttributesImpl());
 
-	response.startElement("", "msg", "msg", new AttributesImpl());
+	response.startElement("", "message", "message", new AttributesImpl());
 	String msg=(e.getMessage()==null?"unknown error":e.getMessage());
 	response.characters(msg.toCharArray(), 0, msg.length());
-	response.endElement("", "msg", "msg");
+	response.endElement("", "message", "message");
 
 	response.startElement("", "stacktrace", "stacktrace", new AttributesImpl());
 	StringWriter sw = new StringWriter();
