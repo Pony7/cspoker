@@ -17,6 +17,9 @@
 package org.cspoker.server.game.events.gameEvents;
 
 import org.cspoker.server.game.player.SavedPlayer;
+import org.xml.sax.ContentHandler;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * A class to represent leaving player events.
@@ -35,6 +38,20 @@ public class PlayerLeftTableEvent extends GameEvent {
     @Override
     public String toString() {
 	return player.getName() + " has left this table.";
+    }
+    
+    public SavedPlayer getPlayer(){
+	return player;
+    }
+    
+    @Override
+    public void toXml(ContentHandler handler) throws SAXException {
+	AttributesImpl attrs = new AttributesImpl();
+	attrs.addAttribute("", "type", "type", "CDATA", "playerlefttable");
+	attrs.addAttribute("", "player", "player", "CDATA", getPlayer().getName());
+	handler.startElement("", "event", "event", attrs);
+
+	handler.endElement("", "event", "event");
     }
 
 }

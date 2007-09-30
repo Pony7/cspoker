@@ -37,5 +37,13 @@ public class SavedShowdownPlayer {
     public String toString() {
 	return this.player.getName() + " has a " + this.hand;
     }
+    
+    public SavedPlayer getPlayer() {
+	return player;
+    }
+    
+    public String getHandDescription() {
+	return hand.toString();
+    }
 
 }

@@ -20,6 +20,9 @@ import java.util.Collections;
 import java.util.List;
 
 import org.cspoker.server.game.elements.cards.deck.Deck.Card;
+import org.xml.sax.ContentHandler;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * A class to represent new community cards events.
@@ -49,4 +52,24 @@ public class NewCommunityCardsEvent extends GameEvent {
 	return toReturn.substring(0, toReturn.length() - 2) + ".";
     }
 
+    @Override
+    public void toXml(ContentHandler handler) throws SAXException {
+	AttributesImpl attrs = new AttributesImpl();
+	attrs.addAttribute("", "type", "type", "CDATA", "newcommunitycards");
+	handler.startElement("", "event", "event", attrs);
+
+	handler.startElement("", "cards", "cards", new AttributesImpl());
+	for(Card card : getCommonCards()){
+	    attrs = new AttributesImpl();
+	    attrs.addAttribute("", "suit", "suit", "CDATA", card.getSuit().getShortDescription());
+	    handler.startElement("", "card", "card", new AttributesImpl());
+	    String msg=card.getRank().getShortDescription();
+	    handler.characters(msg.toCharArray(), 0, msg.length());
+	    handler.endElement("", "card", "card");
+	}
+	handler.endElement("", "cards", "cards");
+
+	handler.endElement("", "event", "event");
+
+    }
 }

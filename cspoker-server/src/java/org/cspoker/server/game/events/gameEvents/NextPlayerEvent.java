@@ -17,6 +17,9 @@
 package org.cspoker.server.game.events.gameEvents;
 
 import org.cspoker.server.game.player.SavedPlayer;
+import org.xml.sax.ContentHandler;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * A class to represent new player events.
@@ -39,5 +42,15 @@ public class NextPlayerEvent extends GameEvent {
     @Override
     public String toString() {
 	return "It's " + player.getName() + "'s turn.";
+    }
+    
+    @Override
+    public void toXml(ContentHandler handler) throws SAXException {
+	AttributesImpl attrs = new AttributesImpl();
+	attrs.addAttribute("", "type", "type", "CDATA", "nextplayer");
+	attrs.addAttribute("", "player", "player", "CDATA", getPlayer().getName());
+	handler.startElement("", "event", "event", attrs);
+
+	handler.endElement("", "event", "event");
     }
 }

@@ -16,6 +16,9 @@
 package org.cspoker.server.game.events.gameEvents;
 
 import org.cspoker.server.game.player.SavedPlayer;
+import org.xml.sax.ContentHandler;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.AttributesImpl;
 
 public class GameMessageEvent extends GameEvent {
 
@@ -30,7 +33,30 @@ public class GameMessageEvent extends GameEvent {
 
     @Override
     public String toString() {
-	return player.getName() + " says: " + message;
+	return getPlayer().getName() + " says: " + getMessage();
+    }
+    
+    
+    public String getMessage(){
+	return message;
     }
 
+    public SavedPlayer getPlayer() {
+	return player;
+    }
+
+    @Override
+    public void toXml(ContentHandler handler) throws SAXException {
+	AttributesImpl attrs = new AttributesImpl();
+	attrs.addAttribute("", "type", "type", "CDATA", "gamemessage");
+	attrs.addAttribute("", "player", "player", "CDATA", getPlayer().getName());
+	handler.startElement("", "event", "event", attrs);
+
+	handler.startElement("", "message", "message", new AttributesImpl());
+	String msg=String.valueOf(getMessage());
+	handler.characters(msg.toCharArray(), 0, msg.length());
+	handler.endElement("", "message", "message");
+
+	handler.endElement("", "event", "event");
+    }
 }

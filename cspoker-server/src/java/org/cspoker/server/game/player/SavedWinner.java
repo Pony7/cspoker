@@ -25,6 +25,14 @@ public class SavedWinner {
 	this.player = player;
 	this.gainedAmount = gainedAmount;
     }
+    
+    public int getGainedAmount() {
+	return gainedAmount;
+    }
+    
+    public SavedPlayer getPlayer() {
+	return player;
+    }
 
     @Override
     public String toString() {

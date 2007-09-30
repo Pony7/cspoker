@@ -17,6 +17,9 @@
 package org.cspoker.server.game.events.gameEvents;
 
 import org.cspoker.server.game.player.SavedPlayer;
+import org.xml.sax.ContentHandler;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * A class to represent new round events.
@@ -42,6 +45,34 @@ public class NewRoundEvent extends GameEvent {
     @Override
     public String toString() {
 	return roundName + ": " + player.getName() + " can begin to act.";
+    }
+
+    public String getRoundName(){
+	return roundName;
+    }
+
+    public SavedPlayer getInitialPlayer(){
+	return player;
+    }
+
+    @Override
+    public void toXml(ContentHandler handler) throws SAXException {
+	AttributesImpl attrs = new AttributesImpl();
+	attrs.addAttribute("", "type", "type", "CDATA", "newround");
+	handler.startElement("", "event", "event", attrs);
+
+	attrs = new AttributesImpl();
+	handler.startElement("", "name", "name", attrs);
+	String msg=getRoundName();
+	handler.characters(msg.toCharArray(), 0, msg.length());
+	handler.endElement("", "name", "name");
+
+	handler.startElement("", "initialplayer", "initialplayer", attrs);
+	msg=getInitialPlayer().getName();
+	handler.characters(msg.toCharArray(), 0, msg.length());
+	handler.endElement("", "initialplayer", "initialplayer");
+
+	handler.endElement("", "event", "event");
     }
 
 }

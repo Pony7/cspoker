@@ -16,6 +16,11 @@
 
 package org.cspoker.server.game.events;
 
-public class Event {
+import org.xml.sax.ContentHandler;
+import org.xml.sax.SAXException;
 
+public abstract class Event {
+
+    public abstract void toXml(ContentHandler handler) throws SAXException;
+    
 }

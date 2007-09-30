@@ -18,6 +18,9 @@ package org.cspoker.server.game.events.gameEvents.playerActionEvents;
 
 import org.cspoker.server.game.events.gameEvents.GameEvent;
 import org.cspoker.server.game.player.SavedPlayer;
+import org.xml.sax.ContentHandler;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * A class to represent fold events.
@@ -35,7 +38,20 @@ public class FoldEvent extends GameEvent {
 
     @Override
     public String toString() {
-	return player.getName() + " folds.";
+	return getPlayer().getName() + " folds.";
+    }  
+    
+    public SavedPlayer getPlayer() {
+	return player;
+    }
+
+    @Override
+    public void toXml(ContentHandler handler) throws SAXException {
+	AttributesImpl attrs = new AttributesImpl();
+	attrs.addAttribute("", "type", "type", "CDATA", "fold");
+	attrs.addAttribute("", "player", "player", "CDATA", getPlayer().getName());
+	handler.startElement("", "event", "event", attrs);
+	handler.endElement("", "event", "event");
     }
 
 }
