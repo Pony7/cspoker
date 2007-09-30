@@ -15,8 +15,6 @@
  */
 package org.cspoker.server.sockets.runnables;
 
-import java.io.IOException;
-
 import org.apache.log4j.Logger;
 import org.cspoker.server.common.authentication.XmlFileAuthenticator;
 import org.cspoker.server.sockets.ClientContext;

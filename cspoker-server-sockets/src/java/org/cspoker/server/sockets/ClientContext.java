@@ -30,9 +30,9 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.cspoker.server.common.xmlcommunication.XmlEventCollector;
+import org.cspoker.server.common.xmlcommunication.XmlEventType;
 import org.cspoker.server.common.xmlcommunication.XmlPlayerCommunication;
 import org.cspoker.server.common.xmlcommunication.XmlPlayerCommunicationFactory;
-import org.cspoker.server.common.xmlcommunication.handler.XmlEventType;
 
 
 public class ClientContext implements XmlEventCollector{

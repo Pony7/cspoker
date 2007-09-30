@@ -39,6 +39,7 @@ public class LoggingThreadPool extends ThreadPoolExecutor {
     private final AtomicLong totalTime = new AtomicLong();
     private static Logger logger = Logger.getLogger(LoggingThreadPool.class);
 
+    @Override
     protected void beforeExecute(Thread t, Runnable r) {
 	super.beforeExecute(t, r);
 	
@@ -46,6 +47,7 @@ public class LoggingThreadPool extends ThreadPoolExecutor {
 	startTime.set(System.nanoTime());
     }
 
+    @Override
     protected void afterExecute(Runnable r, Throwable t) {
 	try {
 	    long endTime = System.nanoTime();
@@ -59,6 +61,7 @@ public class LoggingThreadPool extends ThreadPoolExecutor {
 	}
     }
 
+    @Override
     protected void terminated() {
 	try {
 	    logger.trace(String.format("Terminated: avg time=%dns",

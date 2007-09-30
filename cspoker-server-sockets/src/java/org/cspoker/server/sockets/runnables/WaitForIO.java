@@ -29,9 +29,7 @@ import java.util.Set;
 import java.util.concurrent.ThreadPoolExecutor;
 
 import org.apache.log4j.Logger;
-import org.cspoker.server.common.authentication.XmlFileAuthenticator;
 import org.cspoker.server.sockets.ClientContext;
-import org.cspoker.server.sockets.security.SocketsAuthenticator;
 import org.cspoker.server.sockets.threading.Prioritizable;
 
 public class WaitForIO implements Runnable, Prioritizable{
@@ -81,7 +79,7 @@ public class WaitForIO implements Runnable, Prioritizable{
 
 	    // For each keys...
 	    while(i.hasNext()) {
-		SelectionKey key = (SelectionKey)i.next();
+		SelectionKey key = i.next();
 
 		int kro = key.readyOps();
 
