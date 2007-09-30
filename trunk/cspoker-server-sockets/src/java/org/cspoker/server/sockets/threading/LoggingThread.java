@@ -40,6 +40,7 @@ public class LoggingThread extends Thread {
         });
     }
 
+    @Override
     public void run() {
         logger.debug("Created " + getName());
         try {

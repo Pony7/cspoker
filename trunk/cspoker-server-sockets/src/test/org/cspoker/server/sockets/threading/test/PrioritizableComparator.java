@@ -80,6 +80,7 @@ public class PrioritizableComparator extends TestCase {
 	    return priority;
 	}
 	
+	@Override
 	public String toString(){
 	    return name+" with priority "+priority;
 	}
@@ -99,6 +100,7 @@ public class PrioritizableComparator extends TestCase {
 	    // no op
 	}
 
+	@Override
 	public String toString(){
 	    return name;
 	}
