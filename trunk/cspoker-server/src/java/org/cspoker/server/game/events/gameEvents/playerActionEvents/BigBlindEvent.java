@@ -18,6 +18,9 @@ package org.cspoker.server.game.events.gameEvents.playerActionEvents;
 
 import org.cspoker.server.game.events.gameEvents.GameEvent;
 import org.cspoker.server.game.player.SavedPlayer;
+import org.xml.sax.ContentHandler;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * A class to represent big blind events.
@@ -38,8 +41,33 @@ public class BigBlindEvent extends GameEvent {
 
     @Override
     public String toString() {
-	return player.getName() + " bets the big blind of " + amount
+	return getPlayer().getName() + " bets the big blind of " + getAmount()
 		+ " chips.";
+    }
+    
+
+    public int getAmount(){
+	return amount;
+    }
+
+    public SavedPlayer getPlayer() {
+	return player;
+    }
+
+    @Override
+    public void toXml(ContentHandler handler) throws SAXException {
+	AttributesImpl attrs = new AttributesImpl();
+	attrs.addAttribute("", "type", "type", "CDATA", "bigblind");
+	attrs.addAttribute("", "player", "player", "CDATA", getPlayer().getName());
+	handler.startElement("", "event", "event", attrs);
+
+	handler.startElement("", "amount", "amount", new AttributesImpl());
+	String msg=String.valueOf(getAmount());
+	handler.characters(msg.toCharArray(), 0, msg.length());
+	handler.endElement("", "amount", "amount");
+
+	handler.endElement("", "event", "event");
+
     }
 
 }

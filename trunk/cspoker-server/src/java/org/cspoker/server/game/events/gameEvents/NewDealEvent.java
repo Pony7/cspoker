@@ -20,6 +20,9 @@ import java.util.Collections;
 import java.util.List;
 
 import org.cspoker.server.game.player.SavedPlayer;
+import org.xml.sax.ContentHandler;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * A class to represent new deal events.
@@ -52,8 +55,30 @@ public class NewDealEvent extends GameEvent {
 	    toReturn += " chips), ";
 	}
 	return toReturn.substring(0, toReturn.length() - 2)
-		+ " as initial players of this table. " + dealer.getName()
-		+ " is dealer.";
+	+ " as initial players of this table. " + dealer.getName()
+	+ " is dealer.";
+    }
+
+    @Override
+    public void toXml(ContentHandler handler) throws SAXException {
+	AttributesImpl attrs = new AttributesImpl();
+	attrs.addAttribute("", "type", "type", "CDATA", "newdeal");
+	handler.startElement("", "event", "event", attrs);
+
+	handler.startElement("", "players", "players", new AttributesImpl());
+	for(SavedPlayer player : players){
+	    attrs = new AttributesImpl();
+	    if(player.equals(getDealer())){
+		attrs.addAttribute("", "dealer", "dealer", "CDATA", "true");
+	    }
+	    handler.startElement("", "player", "player", attrs);
+	    String msg=String.valueOf(player.getName());
+	    handler.characters(msg.toCharArray(), 0, msg.length());
+	    handler.endElement("", "player", "player");
+	}
+	handler.endElement("", "players", "players");
+
+	handler.endElement("", "event", "event");
     }
 
 }

@@ -18,6 +18,9 @@ package org.cspoker.server.game.events.serverEvents;
 
 import org.cspoker.server.game.TableId;
 import org.cspoker.server.game.player.SavedPlayer;
+import org.xml.sax.ContentHandler;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.AttributesImpl;
 
 public class PlayerJoinedEvent extends ServerEvent {
 
@@ -33,6 +36,27 @@ public class PlayerJoinedEvent extends ServerEvent {
     @Override
     public String toString() {
 	return player.getName() + " has joined a table [" + id + "].";
+    }
+    
+    public SavedPlayer getPlayer(){
+	return player;
+    }
+    
+    public TableId getId() {
+	return id;
+    }
+    
+    @Override
+    public void toXml(ContentHandler handler) throws SAXException {
+	AttributesImpl attrs = new AttributesImpl();
+	attrs.addAttribute("", "type", "type", "CDATA", "playerjoined");
+	attrs.addAttribute("", "player", "player", "CDATA", getPlayer().getName());
+	handler.startElement("", "event", "event", attrs);
+	handler.startElement("", "id", "id", attrs);
+	String msg=String.valueOf(getId().getID());
+	handler.characters(msg.toCharArray(), 0, msg.length());
+	handler.endElement("", "id", "id");
+	handler.endElement("", "event", "event");
     }
 
 }

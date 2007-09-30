@@ -19,7 +19,11 @@ package org.cspoker.server.game.events.gameEvents;
 import java.util.Collections;
 import java.util.List;
 
+import org.cspoker.server.game.player.SavedPlayer;
 import org.cspoker.server.game.player.SavedWinner;
+import org.xml.sax.ContentHandler;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * A class to represent winner events.
@@ -50,4 +54,23 @@ public class WinnerEvent extends GameEvent {
 	return toReturn.substring(0, toReturn.length() - 2) + ".";
     }
 
+    @Override
+    public void toXml(ContentHandler handler) throws SAXException {
+	AttributesImpl attrs = new AttributesImpl();
+	attrs.addAttribute("", "type", "type", "CDATA", "winner");
+	handler.startElement("", "event", "event", attrs);
+
+	handler.startElement("", "winners", "winners", new AttributesImpl());
+	for(SavedWinner winner : getWinners()){
+	    attrs = new AttributesImpl();
+	    attrs.addAttribute("", "name", "name", "CDATA", winner.getPlayer().getName());
+	    handler.startElement("", "winner", "winner", attrs);
+	    String msg=String.valueOf(winner.getGainedAmount());
+	    handler.characters(msg.toCharArray(), 0, msg.length());
+	    handler.endElement("", "winner", "winner");
+	}
+	handler.endElement("", "winners", "winners");
+
+	handler.endElement("", "event", "event");
+    }
 }

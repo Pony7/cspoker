@@ -27,5 +27,7 @@ import org.cspoker.server.game.events.Event;
  * 
  */
 public abstract class GameEvent extends Event {
+    
+    
 
 }
