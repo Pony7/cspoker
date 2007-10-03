@@ -33,6 +33,9 @@ import org.cspoker.server.common.xmlcommunication.XmlEventCollector;
 import org.cspoker.server.common.xmlcommunication.XmlEventType;
 import org.cspoker.server.common.xmlcommunication.XmlPlayerCommunication;
 import org.cspoker.server.common.xmlcommunication.XmlPlayerCommunicationFactory;
+import org.cspoker.server.game.player.IllegalNameException;
+import org.cspoker.server.game.player.Player;
+import org.cspoker.server.game.player.PlayerFactory;
 
 
 public class ClientContext implements XmlEventCollector{
@@ -54,6 +57,8 @@ public class ClientContext implements XmlEventCollector{
     private final Charset charset;
     //CharsetEncoder is not thread safe!
     private final CharsetEncoder encoder;
+
+    private Player player;
 
 
 
@@ -143,12 +148,17 @@ public class ClientContext implements XmlEventCollector{
 	send(xmlEvent);
     }
 
-    public void login(String username, String password, String useragent) {
+    public void login(String username, String password, String useragent) throws IllegalNameException {
 	synchronized (authenticateLock ) {
 	    if (isAuthenticated())
 		throw new IllegalStateException("Can't login twice");
-	    playerComm = XmlPlayerCommunicationFactory.getRegisteredXmlPlayerCommunication(username, this);
+	    player = PlayerFactory.getUniquePlayer(username);
+	    playerComm = XmlPlayerCommunicationFactory.getRegisteredXmlPlayerCommunication(player, this);
 	}
+    }
+
+    private Player getPlayer() {
+	return player;
     }
 
     public boolean isAuthenticated() {

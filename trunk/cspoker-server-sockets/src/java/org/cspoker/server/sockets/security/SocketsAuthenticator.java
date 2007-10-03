@@ -20,6 +20,7 @@ import java.io.StringReader;
 
 import org.apache.log4j.Logger;
 import org.cspoker.server.common.authentication.XmlFileAuthenticator;
+import org.cspoker.server.game.player.IllegalNameException;
 import org.cspoker.server.sockets.ClientContext;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
@@ -60,6 +61,10 @@ public class SocketsAuthenticator{
 	    return false;
 	} catch (IOException e) {
 	    logger.error("error parsing login: "+e.getMessage());
+	    context.closeConnection();
+	    return false;
+	} catch (IllegalNameException e) {
+	    logger.error("bad username: "+e.getMessage());
 	    context.closeConnection();
 	    return false;
 	}

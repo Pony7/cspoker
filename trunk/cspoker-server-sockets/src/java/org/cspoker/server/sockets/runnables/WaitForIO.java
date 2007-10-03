@@ -40,7 +40,7 @@ public class WaitForIO implements Runnable, Prioritizable{
     private final Selector selector;
     private ServerSocketChannel server;
     
-    public final static int bufferSize = 1024;
+    public final static int bufferSize = 1024*4;
     private final ByteBuffer buffer;
     private final ByteBuffer filteredBuffer;
 

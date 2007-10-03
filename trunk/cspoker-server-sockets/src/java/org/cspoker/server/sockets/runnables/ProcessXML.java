@@ -15,12 +15,15 @@
  */
 package org.cspoker.server.sockets.runnables;
 
+import java.io.StringReader;
+
 import org.apache.log4j.Logger;
 import org.cspoker.server.common.authentication.XmlFileAuthenticator;
 import org.cspoker.server.sockets.ClientContext;
 import org.cspoker.server.sockets.security.PolicyFile;
 import org.cspoker.server.sockets.security.SocketsAuthenticator;
 import org.cspoker.server.sockets.threading.Prioritizable;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 public class ProcessXML implements Runnable, Prioritizable{
@@ -54,7 +57,7 @@ public class ProcessXML implements Runnable, Prioritizable{
 	else{
 	    //Perform the other requests
 	    try {
-		context.getXmlPlayerCommunication().handle(xml);
+		context.getXmlPlayerCommunication().handle(new InputSource(new StringReader(xml)));
 	    } catch (SAXException e) {
 		logger.error("Error parsing xml request. Closing connection.", e.getCause());
 		context.closeConnection();
