@@ -80,7 +80,9 @@ public class Player {
      *       pile. |new.getBetChips()!=null && new.getBetChips().getValue()==0
      */
     Player(PlayerId id, String name, int initialNbChips)
-	    throws IllegalValueException {
+	    throws IllegalValueException, IllegalNameException {
+	if(!isValidName(name))
+	    throw new IllegalNameException();
 	this.id = id;
 	this.name = name;
 	chips = new Chips(initialNbChips);
@@ -91,6 +93,12 @@ public class Player {
     /***************************************************************************
      * Name
      **************************************************************************/
+
+    public static boolean isValidName(String name) {
+	if(name!=null && name.matches("[\\w]{3,}"))
+	    return true;
+	return false;
+    }
 
     /**
      * Returns the name of this player.

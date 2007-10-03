@@ -24,6 +24,14 @@ package org.cspoker.server.game.elements.chips;
  */
 public class IllegalValueException extends Exception {
 
+    public IllegalValueException() {
+	super();
+    }
+    
+    public IllegalValueException(String msg) {
+	super(msg);
+    }
+    
     private static final long serialVersionUID = -7047452830268859725L;
 
 }

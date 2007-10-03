@@ -44,11 +44,11 @@ public class XmlPlayerCommunication {
 	playerComm.subscribeAllEventsListener(new XmlAllEventsListener(collector));
     }
 
-    public void handle(String xml) throws SAXException {
+    public void handle(InputSource xml) throws SAXException {
 	XMLReader xr = XMLReaderFactory.createXMLReader();
 	xr.setContentHandler(new DelegatingToOneHandler(new CommandDelegatingHandler(playerComm, collector)));
 	try {
-	    xr.parse(new InputSource(new StringReader(xml)));
+	    xr.parse(xml);
 	} catch (IOException e) {
 	    logger.error("IOException when parsing xml request.",e);
 	    throw new IllegalStateException("IOException when parsing xml request.");

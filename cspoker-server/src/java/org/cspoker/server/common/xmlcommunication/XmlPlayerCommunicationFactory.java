@@ -19,7 +19,7 @@ package org.cspoker.server.common.xmlcommunication;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.cspoker.server.game.player.PlayerFactory;
+import org.cspoker.server.game.player.Player;
 
 /**
  * Creates a unique player communication instance for every player name and provides
@@ -27,15 +27,14 @@ import org.cspoker.server.game.player.PlayerFactory;
  */
 public class XmlPlayerCommunicationFactory {
 
-    private final static Map<String,XmlPlayerCommunication> playerComs=new HashMap<String,XmlPlayerCommunication>();
+    private final static Map<Player,XmlPlayerCommunication> playerComs=new HashMap<Player,XmlPlayerCommunication>();
     
-    public static synchronized XmlPlayerCommunication getRegisteredXmlPlayerCommunication(String name, XmlEventCollector collector){
-	XmlPlayerCommunication result=playerComs.get(name);
+    public static synchronized XmlPlayerCommunication getRegisteredXmlPlayerCommunication(Player player, XmlEventCollector collector){
+	XmlPlayerCommunication result=playerComs.get(player);
 	if(result==null){
-	    if(name==null || name.equals(""))
-		    throw new IllegalArgumentException("illegal name");
-	    result=new XmlPlayerCommunication(PlayerFactory.createNewPlayer(name), collector);
-	    playerComs.put(name, result);
+	    
+	    result=new XmlPlayerCommunication(player, collector);
+	    playerComs.put(player, result);
 	    
 	}
 	return result;

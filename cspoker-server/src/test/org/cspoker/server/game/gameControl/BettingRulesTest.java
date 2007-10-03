@@ -11,6 +11,7 @@ import org.cspoker.server.game.elements.table.Table;
 import org.cspoker.server.game.gameControl.rules.Limit;
 import org.cspoker.server.game.gameControl.rules.NoLimit;
 import org.cspoker.server.game.gameControl.rules.PotLimit;
+import org.cspoker.server.game.player.IllegalNameException;
 import org.cspoker.server.game.player.Player;
 import org.cspoker.server.game.player.PlayerFactory;
 
@@ -35,11 +36,13 @@ public class BettingRulesTest extends TestCase {
     protected void setUp() {
 	playerFactory = new PlayerFactory();
 	try {
-	    kenzo = playerFactory.createNewPlayer("Kenzo", 100);
-	    cedric = playerFactory.createNewPlayer("Cedric", 100);
-	    guy = playerFactory.createNewPlayer("Guy", 100);
+	    kenzo = playerFactory.getUniquePlayer("Kenzo", 100);
+	    cedric = playerFactory.getUniquePlayer("Cedric", 100);
+	    guy = playerFactory.getUniquePlayer("Guy", 100);
 	    gameMediator = new GameMediator();
 	} catch (IllegalValueException e) {
+	    fail(e.getMessage());
+	} catch (IllegalNameException e) {
 	    fail(e.getMessage());
 	}
     }
