@@ -13,30 +13,28 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.server.http.httphandler;
-
-import javax.xml.transform.sax.TransformerHandler;
-
-import org.cspoker.server.http.httphandler.abstracts.NoRequestStreamHandler;
-import org.xml.sax.SAXException;
-import org.xml.sax.helpers.AttributesImpl;
-
-import com.sun.net.httpserver.HttpExchange;
+package org.cspoker.server.http.httphandler.exception;
 
 
-public class PingHandler extends NoRequestStreamHandler {
+/**
+ * A wrapper exception for exceptions thrown inside a SAX ContentHandler with 
+ * support for Http status codes.
+ */
+public class HttpExceptionImpl extends Exception implements HttpException{
+
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -3469421889116184022L;
+    private final int status;
     
-    @Override
-    protected void respond(TransformerHandler response, HttpExchange http)
-	    throws SAXException {
-	response.startElement("", "pong", "pong", new AttributesImpl());
-	response.endElement("", "pong", "pong");
+    public HttpExceptionImpl(Exception e, int status) {
+	super(e);
+	this.status=status;
     }
-
-    @Override
-    protected int getDefaultStatusCode() {
-	return 200;
+    
+    public int getStatus(){
+	return status;
     }
-
-
+    
 }

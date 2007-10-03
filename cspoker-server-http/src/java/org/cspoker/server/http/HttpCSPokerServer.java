@@ -21,22 +21,8 @@ import java.net.InetSocketAddress;
 import org.apache.log4j.Logger;
 import org.cspoker.server.common.authentication.XmlFileAuthenticator;
 import org.cspoker.server.http.authentication.XmlFileBasicAuthentication;
-import org.cspoker.server.http.httphandler.AllInHandler;
-import org.cspoker.server.http.httphandler.BetHandler;
-import org.cspoker.server.http.httphandler.CallHandler;
-import org.cspoker.server.http.httphandler.CheckHandler;
-import org.cspoker.server.http.httphandler.CreateTableHandler;
+import org.cspoker.server.http.httphandler.CSPokerHandler;
 import org.cspoker.server.http.httphandler.CrossDomain;
-import org.cspoker.server.http.httphandler.DealHandler;
-import org.cspoker.server.http.httphandler.FoldHandler;
-import org.cspoker.server.http.httphandler.GameEventsAckHandler;
-import org.cspoker.server.http.httphandler.GameEventsHandler;
-import org.cspoker.server.http.httphandler.JoinTableHandler;
-import org.cspoker.server.http.httphandler.LeaveTableHandler;
-import org.cspoker.server.http.httphandler.ListTablesHandler;
-import org.cspoker.server.http.httphandler.PingHandler;
-import org.cspoker.server.http.httphandler.RaiseHandler;
-import org.cspoker.server.http.httphandler.StartGameHandler;
 
 import com.sun.net.httpserver.Authenticator;
 import com.sun.net.httpserver.HttpContext;
@@ -79,50 +65,9 @@ public class HttpCSPokerServer {
     }
 
     protected void loadContext(){
-	HttpContext pingContext = server.createContext("/ping/", new PingHandler());
+	HttpContext pingContext = server.createContext("/cspoker/", new CSPokerHandler());
 	pingContext.setAuthenticator(authenticator);
 
-	HttpContext listTableContext = server.createContext("/table/list/", new ListTablesHandler());
-	listTableContext.setAuthenticator(authenticator);
-
-	HttpContext createTableContext = server.createContext("/table/create/", new CreateTableHandler());
-	createTableContext.setAuthenticator(authenticator);
-
-	HttpContext joinTableContext = server.createContext("/table/join/", new JoinTableHandler());
-	joinTableContext.setAuthenticator(authenticator);
-
-	HttpContext leaveTableContext = server.createContext("/table/leave/", new LeaveTableHandler());
-	leaveTableContext.setAuthenticator(authenticator);
-
-	HttpContext gameEventsContext = server.createContext("/game/events/", new GameEventsHandler());
-	gameEventsContext.setAuthenticator(authenticator);
-
-	HttpContext gameEventsAckContext = server.createContext("/game/events/ack/", new GameEventsAckHandler());
-	gameEventsAckContext.setAuthenticator(authenticator);
-
-	HttpContext startGameContext = server.createContext("/game/start/", new StartGameHandler());
-	startGameContext.setAuthenticator(authenticator);
-
-	HttpContext dealContext = server.createContext("/game/deal/", new DealHandler());
-	dealContext.setAuthenticator(authenticator);
-
-	HttpContext callContext = server.createContext("/game/call/", new CallHandler());
-	callContext.setAuthenticator(authenticator);
-
-	HttpContext betContext = server.createContext("/game/bet/", new BetHandler());
-	betContext.setAuthenticator(authenticator);
-
-	HttpContext checkContext = server.createContext("/game/check/", new CheckHandler());
-	checkContext.setAuthenticator(authenticator);
-
-	HttpContext foldContext = server.createContext("/game/fold/", new FoldHandler());
-	foldContext.setAuthenticator(authenticator);
-
-	HttpContext raiseContext = server.createContext("/game/raise/", new RaiseHandler());
-	raiseContext.setAuthenticator(authenticator);
-
-	HttpContext allInContext = server.createContext("/game/allin/", new AllInHandler());
-	allInContext.setAuthenticator(authenticator);
 
 	server.createContext("/", new CrossDomain());
 

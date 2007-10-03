@@ -19,29 +19,27 @@ package org.cspoker.server.http;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.cspoker.server.game.player.PlayerFactory;
-import org.cspoker.server.game.playerCommunication.PlayerCommunicationImpl;
+import org.cspoker.server.game.player.Player;
 
 /**
  * Creates a unique player communication instance for every player name and provides
  * it when requested. 
  */
-public class PlayerCommunicationFactory {
+public class StringCollectorFactory {
 
-    private final static Map<String,PlayerCommunicationImpl> playerComs=new HashMap<String,PlayerCommunicationImpl>();
+    private final static Map<Player,StringCollector> playerComs=new HashMap<Player,StringCollector>();
     
-    private final static PlayerFactory factory=new PlayerFactory();
-    
-    public static synchronized PlayerCommunicationImpl getRegisteredPlayerCommunication(String name){
-	if(name==null || name.equals(""))
-	    throw new IllegalArgumentException("illegal name");
-	PlayerCommunicationImpl result=playerComs.get(name);
+    public static synchronized StringCollector getUniqueStringCollector(Player player){
+	StringCollector result=playerComs.get(player);
 	if(result==null){
-	    result=new PlayerCommunicationImpl(factory.createNewPlayer(name));
-	    playerComs.put(name, result);
-	    
+	    result=new StringCollector();
+	    playerComs.put(player, result);
 	}
 	return result;
+    }
+    
+    public static synchronized void unRegister(Player player) {
+	playerComs.remove(player);
     }
     
 }
