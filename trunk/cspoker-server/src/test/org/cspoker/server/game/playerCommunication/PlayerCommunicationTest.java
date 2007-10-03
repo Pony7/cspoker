@@ -27,6 +27,7 @@ import org.cspoker.server.game.events.gameEvents.NewRoundListener;
 import org.cspoker.server.game.events.gameEvents.NextPlayerEvent;
 import org.cspoker.server.game.events.gameEvents.NextPlayerListener;
 import org.cspoker.server.game.gameControl.IllegalActionException;
+import org.cspoker.server.game.player.IllegalNameException;
 import org.cspoker.server.game.player.Player;
 import org.cspoker.server.game.player.PlayerFactory;
 
@@ -41,14 +42,14 @@ public class PlayerCommunicationTest extends TestCase {
 	playerFactory = new PlayerFactory();
     }
 
-    public void testConstructor() {
-	Player kenzo = playerFactory.createNewPlayer("Kenzo");
+    public void testConstructor() throws IllegalNameException {
+	Player kenzo = playerFactory.getUniquePlayer("Kenzo");
 	new PlayerCommunicationImpl(kenzo);
 	PlayerCommunicationManager.clear();
     }
 
-    public void testCreateTable() {
-	Player kenzo = playerFactory.createNewPlayer("Kenzo");
+    public void testCreateTable() throws IllegalNameException {
+	Player kenzo = playerFactory.getUniquePlayer("Kenzo");
 	PlayerCommunicationImpl kenzoComm = new PlayerCommunicationImpl(kenzo);
 	try {
 	    kenzoComm.createTable();
@@ -59,9 +60,9 @@ public class PlayerCommunicationTest extends TestCase {
 	}
     }
 
-    public void testJoinTable() {
-	Player kenzo = playerFactory.createNewPlayer("Kenzo");
-	Player guy = playerFactory.createNewPlayer("Guy");
+    public void testJoinTable() throws IllegalNameException {
+	Player kenzo = playerFactory.getUniquePlayer("Kenzo");
+	Player guy = playerFactory.getUniquePlayer("Guy");
 	PlayerCommunicationImpl kenzoComm = new PlayerCommunicationImpl(kenzo);
 	PlayerCommunicationImpl guyComm = new PlayerCommunicationImpl(guy);
 	try {
@@ -74,9 +75,9 @@ public class PlayerCommunicationTest extends TestCase {
 	}
     }
 
-    public void testStartGame() {
-	Player kenzo = playerFactory.createNewPlayer("Kenzo");
-	Player guy = playerFactory.createNewPlayer("Guy");
+    public void testStartGame() throws IllegalNameException {
+	Player kenzo = playerFactory.getUniquePlayer("Kenzo");
+	Player guy = playerFactory.getUniquePlayer("Guy");
 	PlayerCommunication kenzoComm = new PlayerCommunicationImpl(kenzo);
 	PlayerCommunication guyComm = new PlayerCommunicationImpl(guy);
 	try {
@@ -92,9 +93,9 @@ public class PlayerCommunicationTest extends TestCase {
 
     private PlayerCommunication currentComm;
 
-    public void testPlayingGame() {
-	Player kenzo = playerFactory.createNewPlayer("Kenzo");
-	Player guy = playerFactory.createNewPlayer("Guy");
+    public void testPlayingGame() throws IllegalNameException {
+	Player kenzo = playerFactory.getUniquePlayer("Kenzo");
+	Player guy = playerFactory.getUniquePlayer("Guy");
 	PlayerCommunicationImpl kenzoComm = new PlayerCommunicationImpl(kenzo);
 	PlayerCommunicationImpl guyComm = new PlayerCommunicationImpl(guy);
 
@@ -159,9 +160,9 @@ public class PlayerCommunicationTest extends TestCase {
 	}
     }
 
-    public void testPlayingGame2() {
-	Player kenzo = playerFactory.createNewPlayer("Kenzo");
-	Player guy = playerFactory.createNewPlayer("Guy");
+    public void testPlayingGame2() throws IllegalNameException {
+	Player kenzo = playerFactory.getUniquePlayer("Kenzo");
+	Player guy = playerFactory.getUniquePlayer("Guy");
 	PlayerCommunicationImpl kenzoComm = new PlayerCommunicationImpl(kenzo);
 	PlayerCommunicationImpl guyComm = new PlayerCommunicationImpl(guy);
 

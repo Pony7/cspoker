@@ -89,10 +89,6 @@ public class Deck {
 	}
     }
 
-    public static void main(final String[] args) {
-	Deck.logger.info(new Deck());
-    }
-
     /**
      * The sequence of cards in this deck.
      */
