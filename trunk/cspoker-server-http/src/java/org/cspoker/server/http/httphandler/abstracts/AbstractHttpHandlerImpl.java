@@ -27,10 +27,9 @@ import javax.xml.transform.sax.TransformerHandler;
 import javax.xml.transform.stream.StreamResult;
 
 import org.cspoker.server.http.httphandler.exception.HttpException;
-import org.cspoker.server.http.httphandler.exception.HttpSaxException;
+import org.cspoker.server.http.httphandler.exception.HttpExceptionImpl;
 import org.cspoker.server.http.httphandler.util.Base64;
 import org.xml.sax.helpers.AttributesImpl;
-
 
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
@@ -40,11 +39,29 @@ import com.sun.net.httpserver.HttpHandler;
  * A HttpHandler that supports Exceptions over Http.
  *
  */
-public abstract class HttpHandlerImpl implements HttpHandler {
+public abstract class AbstractHttpHandlerImpl implements HttpHandler {
 
-    public HttpHandlerImpl() {
+    public AbstractHttpHandlerImpl() {
 	super();
     }
+    
+    public void handle(HttpExchange http) throws IOException {
+	try {
+	    http.getResponseHeaders().add("Cache-Control", "no-cache");
+	    byte[] response = getResponse(http).getBytes();
+	    
+	    //send the default status code (no exception occured)
+	    http.sendResponseHeaders(getDefaultStatusCode(), response.length);
+	    http.getResponseBody().write(response);
+	    http.getResponseBody().close();
+	    http.close();
+	} catch (Exception e) {
+	    throwException(http, e);
+	}
+
+    }
+
+    protected abstract String getResponse(HttpExchange http) throws HttpExceptionImpl;
 
     /**
      * Throws an exception over the Http connection in XML format. 
@@ -62,15 +79,12 @@ public abstract class HttpHandlerImpl implements HttpHandler {
 	try {
 	    if (e instanceof HttpException) {
 		//e has http status information
-		status=((HttpSaxException)e).getStatus();
+		status=((HttpException)e).getStatus();
 	    }
 	    if(e.getCause()!=null) {
 		//e is a wrapper class.
 		e=e.getCause();
 	    }
-	    
-	    //local error msg
-	    e.printStackTrace();
 	    //remote error msg
 	    ByteArrayOutputStream responseBody = new ByteArrayOutputStream();
 	    TransformerHandler response=null;
@@ -116,19 +130,21 @@ public abstract class HttpHandlerImpl implements HttpHandler {
 	throwException(http, e, 500);
     }
 
-    public static String toPlayerName(Headers requestHeaders) {
+    public static String toPlayerName(Headers requestHeaders) throws HttpExceptionImpl {
 	List<String> auth=requestHeaders.get("Authorization");
 	if(auth==null||auth.size()!=1)
-	    throw new IllegalStateException("Incorrect Authorization");
+	    throw new HttpExceptionImpl(new IllegalArgumentException("Incorrect Authorization"),401);
 	String base64=auth.get(0);
 	try {
 	    String decoded=new String(Base64.decode(base64.split(" ")[1]));
 	    return decoded.split(":")[0];
 	} catch (IOException e) {
-	    throw new IllegalStateException(e);
+	    throw new HttpExceptionImpl(e,401);
 	}
     }
 
-    protected abstract int getDefaultStatusCode();
+    protected int getDefaultStatusCode(){
+	return 201;
+    }
 
 }
