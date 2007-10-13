@@ -42,7 +42,7 @@ public class PlayerFactory {
     
     public synchronized static Player getUniquePlayer(String name) throws IllegalNameException{
 	Player p = knownPlayers.get(name);
-	if(name==null){
+	if(p==null){
 	    p=createNewPlayer(name);
 	    knownPlayers.put(name, p);
 	}
@@ -51,7 +51,7 @@ public class PlayerFactory {
     
     public static synchronized Player getUniquePlayer(String name, int initialValue) throws IllegalValueException, IllegalNameException{
 	Player p = knownPlayers.get(name);
-	if(name==null){
+	if(p==null){
 	    p=createNewPlayer(name, initialValue);
 	    knownPlayers.put(name, p);
 	}else{
@@ -71,7 +71,7 @@ public class PlayerFactory {
      * @return A new player with given name and standard stack value.
      * @throws IllegalNameException 
      */
-    private static Player createNewPlayer(String name) throws IllegalNameException {
+    public static Player createNewPlayer(String name) throws IllegalNameException {
 	try {
 	    return createNewPlayer(name, getStdStackValue());
 	} catch (IllegalValueException e) {
