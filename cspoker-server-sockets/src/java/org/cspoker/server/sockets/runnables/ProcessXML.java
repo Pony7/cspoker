@@ -19,10 +19,10 @@ import java.io.StringReader;
 
 import org.apache.log4j.Logger;
 import org.cspoker.server.common.authentication.XmlFileAuthenticator;
+import org.cspoker.server.common.threading.Prioritizable;
 import org.cspoker.server.sockets.ClientContext;
 import org.cspoker.server.sockets.security.PolicyFile;
 import org.cspoker.server.sockets.security.SocketsAuthenticator;
-import org.cspoker.server.sockets.threading.Prioritizable;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
