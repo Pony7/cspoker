@@ -38,9 +38,11 @@ import org.cspoker.server.game.elements.chips.IllegalValueException;
  */
 public class PlayerFactory {
     
-    private final static HashMap<String,Player> knownPlayers = new HashMap<String,Player>();
+    public final static PlayerFactory global_Player_Factory = new PlayerFactory();
     
-    public synchronized static Player getUniquePlayer(String name) throws IllegalNameException{
+    private final HashMap<String,Player> knownPlayers = new HashMap<String,Player>();
+    
+    public synchronized Player getUniquePlayer(String name) throws IllegalNameException{
 	Player p = knownPlayers.get(name);
 	if(p==null){
 	    p=createNewPlayer(name);
@@ -49,7 +51,7 @@ public class PlayerFactory {
 	return p;
     }
     
-    public static synchronized Player getUniquePlayer(String name, int initialValue) throws IllegalValueException, IllegalNameException{
+    public synchronized Player getUniquePlayer(String name, int initialValue) throws IllegalValueException, IllegalNameException{
 	Player p = knownPlayers.get(name);
 	if(p==null){
 	    p=createNewPlayer(name, initialValue);
@@ -71,7 +73,7 @@ public class PlayerFactory {
      * @return A new player with given name and standard stack value.
      * @throws IllegalNameException 
      */
-    public static Player createNewPlayer(String name) throws IllegalNameException {
+    private Player createNewPlayer(String name) throws IllegalNameException {
 	try {
 	    return createNewPlayer(name, getStdStackValue());
 	} catch (IllegalValueException e) {
@@ -92,7 +94,7 @@ public class PlayerFactory {
      *                 [must] The given initial value is not valid.
      * @throws IllegalNameException 
      */
-    private static Player createNewPlayer(String name, int initialValue)
+    private Player createNewPlayer(String name, int initialValue)
 	    throws IllegalValueException, IllegalNameException {
 	return new Player(getUniquePlayerId(), name, initialValue);
     }
@@ -102,7 +104,7 @@ public class PlayerFactory {
      * 
      * @return The standard stack value.
      */
-    private static int getStdStackValue() {
+    private int getStdStackValue() {
 	return 100;
     }
 
@@ -113,7 +115,7 @@ public class PlayerFactory {
      * 
      * @return A unique player id.
      */
-    private static PlayerId getUniquePlayerId() {
+    private PlayerId getUniquePlayerId() {
 	return new PlayerId(counter.getAndIncrement());
     }
 
