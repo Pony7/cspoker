@@ -58,10 +58,6 @@ public class ClientContext implements XmlEventCollector{
     //CharsetEncoder is not thread safe!
     private final CharsetEncoder encoder;
 
-    private Player player;
-
-
-
     public ClientContext(SocketChannel client, Selector selector) {
 	this.client = client;
 	this.selector = selector;
@@ -90,7 +86,7 @@ public class ClientContext implements XmlEventCollector{
 		client.write(bytes);
 		if(bytes.remaining()>0){
 		    logger.trace("stopping write early because there are "+bytes.remaining()+" bytes unwritten.");
-		    //registerWriteInterest(); //bug workaround?
+		    /*//registerWriteInterest(); //bug workaround?*/
 		    return;
 		}
 		logger.trace("removing bytebuffer from the buffer list.");
@@ -152,13 +148,9 @@ public class ClientContext implements XmlEventCollector{
 	synchronized (authenticateLock ) {
 	    if (isAuthenticated())
 		throw new IllegalStateException("Can't login twice");
-	    player = PlayerFactory.getUniquePlayer(username);
+	    Player player = PlayerFactory.global_Player_Factory.getUniquePlayer(username);
 	    playerComm = XmlPlayerCommunicationFactory.getRegisteredXmlPlayerCommunication(player, this);
 	}
-    }
-
-    private Player getPlayer() {
-	return player;
     }
 
     public boolean isAuthenticated() {

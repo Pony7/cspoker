@@ -20,14 +20,11 @@ import java.io.IOException;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
-import java.util.concurrent.PriorityBlockingQueue;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.Executor;
 
 import org.apache.log4j.Logger;
+import org.cspoker.server.common.threading.RequestExecutor;
 import org.cspoker.server.sockets.runnables.WaitForIO;
-import org.cspoker.server.sockets.threading.LoggingThreadPool;
-import org.cspoker.server.sockets.threading.SocketRunnableComparator;
 
 public class SocketServer {
 
@@ -37,7 +34,7 @@ public class SocketServer {
 
     private final Selector selector;
 
-    private final ThreadPoolExecutor executor;
+    private final Executor executor;
 
     public SocketServer(int port) throws IOException {
 
@@ -53,17 +50,10 @@ public class SocketServer {
 	// Recording server to selector (type OP_ACCEPT)
 	server.register(selector,SelectionKey.OP_ACCEPT);
 	
-	executor = new LoggingThreadPool(
-		1,
-		Runtime.getRuntime().availableProcessors()+1, 
-		1, TimeUnit.SECONDS,
-		new PriorityBlockingQueue<Runnable>(1000, new SocketRunnableComparator()),
-		"TestServer"
-	);
-	executor.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
+	executor = RequestExecutor.getInstance();
 
 	// Infinite server loop
-	executor.submit(new WaitForIO(executor, selector, server));
+	executor.execute(new WaitForIO(executor, selector, server));
 	
     }
 

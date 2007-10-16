@@ -26,17 +26,17 @@ import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
 import java.util.Iterator;
 import java.util.Set;
-import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.Executor;
 
 import org.apache.log4j.Logger;
+import org.cspoker.server.common.threading.Prioritizable;
 import org.cspoker.server.sockets.ClientContext;
-import org.cspoker.server.sockets.threading.Prioritizable;
 
 public class WaitForIO implements Runnable, Prioritizable{
 
     private final static Logger logger = Logger.getLogger(WaitForIO.class);
 
-    private final ThreadPoolExecutor executor;
+    private final Executor executor;
     private final Selector selector;
     private ServerSocketChannel server;
     
@@ -47,7 +47,7 @@ public class WaitForIO implements Runnable, Prioritizable{
     private final Charset charset;
     private final CharsetDecoder decoder;
 
-    public WaitForIO(ThreadPoolExecutor executor, Selector selector, ServerSocketChannel server) {
+    public WaitForIO(Executor executor, Selector selector, ServerSocketChannel server) {
 	this.executor = executor;
 	this.selector = selector;
 	this.server =server;
@@ -173,7 +173,7 @@ public class WaitForIO implements Runnable, Prioritizable{
     }
 
     private void endNode(StringBuilder stringBuilder, ClientContext context){
-	executor.submit(new ProcessXML(stringBuilder.toString(), context));
+	executor.execute(new ProcessXML(stringBuilder.toString(), context));
 	stringBuilder.setLength(0);
 	logger.debug("ended an xml node");
     }
