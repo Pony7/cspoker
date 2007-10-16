@@ -20,6 +20,7 @@ import java.net.InetSocketAddress;
 
 import org.apache.log4j.Logger;
 import org.cspoker.server.common.authentication.XmlFileAuthenticator;
+import org.cspoker.server.common.threading.RequestExecutor;
 import org.cspoker.server.http.authentication.XmlFileBasicAuthentication;
 import org.cspoker.server.http.httphandler.CSPokerHandler;
 import org.cspoker.server.http.httphandler.CrossDomain;
@@ -68,7 +69,7 @@ public class HttpCSPokerServer {
 	HttpContext pingContext = server.createContext("/cspoker/", new CSPokerHandler());
 	pingContext.setAuthenticator(authenticator);
 
-
+	server.setExecutor(RequestExecutor.getInstance());
 	server.createContext("/", new CrossDomain());
 
     }

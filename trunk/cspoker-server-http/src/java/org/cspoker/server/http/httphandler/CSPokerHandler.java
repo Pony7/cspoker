@@ -38,7 +38,7 @@ public class CSPokerHandler extends AbstractHttpHandlerImpl{
 	    String username= AbstractHttpHandlerImpl.toPlayerName(http.getRequestHeaders());
 	    Player player;
 	    try {
-		player = PlayerFactory.getUniquePlayer(username);
+		player = PlayerFactory.global_Player_Factory.getUniquePlayer(username);
 	    } catch (IllegalNameException e) {
 		throw new HttpExceptionImpl(e,400);
 	    }
