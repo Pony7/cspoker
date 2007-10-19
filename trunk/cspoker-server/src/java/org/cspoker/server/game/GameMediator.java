@@ -242,7 +242,7 @@ public class GameMediator implements PlayerAction {
      * method.
      *
      */
-    public void publishFoldEvent(FoldEvent event) {
+    public synchronized void publishFoldEvent(FoldEvent event) {
 	for (FoldListener listener : foldListeners) {
 	    listener.onFoldEvent(event);
 	}
@@ -281,7 +281,7 @@ public class GameMediator implements PlayerAction {
      * method.
      *
      */
-    public void publishRaiseEvent(RaiseEvent event) {
+    public synchronized void publishRaiseEvent(RaiseEvent event) {
 	for (RaiseListener listener : raiseListeners) {
 	    listener.onRaiseEvent(event);
 	}
@@ -320,7 +320,7 @@ public class GameMediator implements PlayerAction {
      * method.
      *
      */
-    public void publishCheckEvent(CheckEvent event) {
+    public synchronized void publishCheckEvent(CheckEvent event) {
 	for (CheckListener listener : checkListeners) {
 	    listener.onCheckEvent(event);
 	}
@@ -359,7 +359,7 @@ public class GameMediator implements PlayerAction {
      * method.
      *
      */
-    public void publishCallEvent(CallEvent event) {
+    public synchronized void publishCallEvent(CallEvent event) {
 	for (CallListener listener : callListeners) {
 	    listener.onCallEvent(event);
 	}
@@ -398,7 +398,7 @@ public class GameMediator implements PlayerAction {
      * method.
      *
      */
-    public void publishBetEvent(BetEvent event) {
+    public synchronized void publishBetEvent(BetEvent event) {
 	for (BetListener listener : betListeners) {
 	    listener.onBetEvent(event);
 	}
@@ -437,7 +437,7 @@ public class GameMediator implements PlayerAction {
      * onAllInEvent() method.
      *
      */
-    public void publishAllInEvent(AllInEvent event) {
+    public synchronized void publishAllInEvent(AllInEvent event) {
 	for (AllInListener listener : allInListeners) {
 	    listener.onAllInEvent(event);
 	}
@@ -478,7 +478,7 @@ public class GameMediator implements PlayerAction {
      * onSmallBlindEvent() method.
      *
      */
-    public void publishSmallBlindEvent(SmallBlindEvent event) {
+    public synchronized void publishSmallBlindEvent(SmallBlindEvent event) {
 	for (SmallBlindListener listener : smallBlindListeners) {
 	    listener.onSmallBlindEvent(event);
 	}
@@ -518,7 +518,7 @@ public class GameMediator implements PlayerAction {
      * onBigBlindEvent() method.
      *
      */
-    public void publishBigBlindEvent(BigBlindEvent event) {
+    public synchronized void publishBigBlindEvent(BigBlindEvent event) {
 	for (BigBlindListener listener : bigBlindListeners) {
 	    listener.onBigBlindEvent(event);
 	}
@@ -558,7 +558,7 @@ public class GameMediator implements PlayerAction {
      * onNewRoundEvent() method.
      *
      */
-    public void publishNewRoundEvent(NewRoundEvent event) {
+    public synchronized void publishNewRoundEvent(NewRoundEvent event) {
 	for (NewRoundListener listener : newRoundListeners) {
 	    listener.onNewRoundEvent(event);
 	}
@@ -599,7 +599,7 @@ public class GameMediator implements PlayerAction {
      * onNewCommonCardsEvent() method.
      *
      */
-    public void publishNewCommonCardsEvent(NewCommunityCardsEvent event) {
+    public synchronized void publishNewCommonCardsEvent(NewCommunityCardsEvent event) {
 	for (NewCommunityCardsListener listener : newCommunityCardsListeners) {
 	    listener.onNewCommunityCardsEvent(event);
 	}
@@ -643,7 +643,7 @@ public class GameMediator implements PlayerAction {
      * onNewDealEvent() method.
      *
      */
-    public void publishNewDealEvent(NewDealEvent event) {
+    public synchronized void publishNewDealEvent(NewDealEvent event) {
 	for (NewDealListener listener : newDealListeners) {
 	    listener.onNewDealEvent(event);
 	}
@@ -684,7 +684,7 @@ public class GameMediator implements PlayerAction {
      * onNextPlayerEvent() method.
      *
      */
-    public void publishNextPlayerEvent(NextPlayerEvent event) {
+    public synchronized void publishNextPlayerEvent(NextPlayerEvent event) {
 	for (NextPlayerListener listener : nextPlayerListeners) {
 	    listener.onNextPlayerEvent(event);
 	}
@@ -724,7 +724,7 @@ public class GameMediator implements PlayerAction {
      * onWinnerEvent() method.
      *
      */
-    public void publishWinner(WinnerEvent event) {
+    public synchronized void publishWinner(WinnerEvent event) {
 	for (WinnerListener listener : winnerListeners) {
 	    listener.onWinnerEvent(event);
 	}
@@ -764,7 +764,7 @@ public class GameMediator implements PlayerAction {
      * onShowHandEvent() method.
      *
      */
-    public void publishShowHand(ShowHandEvent event) {
+    public synchronized void publishShowHand(ShowHandEvent event) {
 	for (ShowHandListener listener : showHandListeners) {
 	    listener.onShowHandEvent(event);
 	}
@@ -806,7 +806,7 @@ public class GameMediator implements PlayerAction {
      * onPlayerJoinedGameEvent() method.
      *
      */
-    public void publishPlayerJoinedGame(PlayerJoinedGameEvent event) {
+    public synchronized void publishPlayerJoinedGame(PlayerJoinedGameEvent event) {
 	for (PlayerJoinedGameListener listener : playerJoinedGameListeners) {
 	    listener.onPlayerJoinedGameEvent(event);
 	}
@@ -851,7 +851,7 @@ public class GameMediator implements PlayerAction {
      * onPlayerLeftTableEvent() method.
      *
      */
-    public void publishPlayerLeftTable(PlayerLeftTableEvent event) {
+    public synchronized void publishPlayerLeftTable(PlayerLeftTableEvent event) {
 	for (PlayerLeftTableListener listener : playerLeftTableListeners) {
 	    listener.onPlayerLeftTableEvent(event);
 	}
@@ -895,7 +895,7 @@ public class GameMediator implements PlayerAction {
      * onMessageEvent() method.
      *
      */
-    public void publishGameMessageEvent(GameMessageEvent event) {
+    public synchronized void publishGameMessageEvent(GameMessageEvent event) {
 	for (GameMessageListener listener : gameMessageListeners) {
 	    listener.onGameMessageEvent(event);
 	}
@@ -940,7 +940,7 @@ public class GameMediator implements PlayerAction {
      * onNewPrivateCards() method.
      *
      */
-    public void publishNewPocketCardsEvent(PlayerId id,
+    public synchronized void publishNewPocketCardsEvent(PlayerId id,
 	    NewPocketCardsEvent event) {
 	List<NewPocketCardsListener> listeners = newPocketCardsListeners
 		.get(id);
@@ -1039,7 +1039,7 @@ public class GameMediator implements PlayerAction {
      * onGameEvent() method.
      *
      */
-    private void publishGameEvent(Event event) {
+    private synchronized void publishGameEvent(Event event) {
 	for (EventListener listener : gameEventListeners) {
 	    listener.onEvent(event);
 	}
@@ -1085,7 +1085,7 @@ public class GameMediator implements PlayerAction {
      * onGameEvent() method.
      *
      */
-    public void publishPersonalGameEvent(PlayerId id, GameEvent event) {
+    public synchronized void publishPersonalGameEvent(PlayerId id, GameEvent event) {
 	List<EventListener> listeners = personalEventsListeners.get(id);
 	if (listeners != null) {
 	    for (EventListener listener : listeners) {
@@ -1176,7 +1176,7 @@ public class GameMediator implements PlayerAction {
      * onGameEvent() method.
      *
      */
-    public void publishAllPersonalEvents(GameEvent event) {
+    public synchronized void publishAllPersonalEvents(GameEvent event) {
 	for (GameEventListener listener : allPersonalEventsListeners) {
 	    listener.onGameEvent(event);
 	}
