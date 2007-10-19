@@ -41,12 +41,12 @@ public class ServerMediator {
     /**
      * Inform all subscribed player left listeners a player left event has
      * occurred.
-     * 
+     *
      * Each subscribed player left listener is updated by calling their
      * onPlayerLeftEvent() method.
-     * 
+     *
      */
-    public void publishPlayerLeftEvent(PlayerLeftEvent event) {
+    public synchronized void publishPlayerLeftEvent(PlayerLeftEvent event) {
 	for (PlayerLeftListener listener : playerLeftListeners) {
 	    listener.onPlayerLeftEvent(event);
 	}
@@ -55,7 +55,7 @@ public class ServerMediator {
 
     /**
      * Subscribe the given player left listener for player left events.
-     * 
+     *
      * @param listener
      *                The listener to subscribe.
      */
@@ -65,7 +65,7 @@ public class ServerMediator {
 
     /**
      * Unsubscribe the given player left listener for player left events.
-     * 
+     *
      * @param listener
      *                The listener to unsubscribe.
      */
@@ -82,12 +82,12 @@ public class ServerMediator {
     /**
      * Inform all subscribed table created listeners a table created event has
      * occurred.
-     * 
+     *
      * Each subscribed table created listener is updated by calling their
      * onTableCreatedEvent() method.
-     * 
+     *
      */
-    public void publishTableCreatedEvent(TableCreatedEvent event) {
+    public synchronized void publishTableCreatedEvent(TableCreatedEvent event) {
 	for (TableCreatedListener listener : tableCreatedListeners) {
 	    listener.onTableCreatedEvent(event);
 	}
@@ -96,7 +96,7 @@ public class ServerMediator {
 
     /**
      * Subscribe the given table created listener for table created events.
-     * 
+     *
      * @param listener
      *                The listener to subscribe.
      */
@@ -106,7 +106,7 @@ public class ServerMediator {
 
     /**
      * Unsubscribe the given table created listener for table created events.
-     * 
+     *
      * @param listener
      *                The listener to unsubscribe.
      */
@@ -123,12 +123,12 @@ public class ServerMediator {
     /**
      * Inform all subscribed player joined listeners a player joined event has
      * occurred.
-     * 
+     *
      * Each subscribed player joined listener is updated by calling their
      * onPlayerJoinedEvent() method.
-     * 
+     *
      */
-    public void publishPlayerJoinedEvent(PlayerJoinedEvent event) {
+    public synchronized void publishPlayerJoinedEvent(PlayerJoinedEvent event) {
 	for (PlayerJoinedListener listener : playerJoinedListeners) {
 	    listener.onPlayerJoinedEvent(event);
 	}
@@ -137,7 +137,7 @@ public class ServerMediator {
 
     /**
      * Subscribe the given player joined listener for player joined events.
-     * 
+     *
      * @param listener
      *                The listener to subscribe.
      */
@@ -147,7 +147,7 @@ public class ServerMediator {
 
     /**
      * Unsubscribe the given player joined listener for player joined events.
-     * 
+     *
      * @param listener
      *                The listener to unsubscribe.
      */
@@ -163,12 +163,12 @@ public class ServerMediator {
 
     /**
      * Inform all subscribed message listeners a message event has occurred.
-     * 
+     *
      * Each subscribed message listener is updated by calling their
      * onMessageEvent() method.
-     * 
+     *
      */
-    public void publishServerMessageEvent(ServerMessageEvent event) {
+    public synchronized void publishServerMessageEvent(ServerMessageEvent event) {
 	for (ServerMessageListener listener : serverMessageListeners) {
 	    listener.onServerMessageEvent(event);
 	}
@@ -177,7 +177,7 @@ public class ServerMediator {
 
     /**
      * Subscribe the given message listener for message events.
-     * 
+     *
      * @param listener
      *                The listener to subscribe.
      */
@@ -187,7 +187,7 @@ public class ServerMediator {
 
     /**
      * Unsubscribe the given message listener for message events.
-     * 
+     *
      * @param listener
      *                The listener to unsubscribe.
      */
@@ -207,12 +207,12 @@ public class ServerMediator {
 
     /**
      * Inform all subscribed server event listeners a server event has occurred.
-     * 
+     *
      * Each subscribed server event listener is updated by calling their
      * onEvent() method.
-     * 
+     *
      */
-    private void publishServerEvent(Event event) {
+    private synchronized void publishServerEvent(Event event) {
 	for (EventListener listener : serverEventListeners) {
 	    listener.onEvent(event);
 	}
@@ -220,7 +220,7 @@ public class ServerMediator {
 
     /**
      * Subscribe the given server event listener for server events.
-     * 
+     *
      * @param listener
      *                The listener to subscribe.
      */
@@ -230,7 +230,7 @@ public class ServerMediator {
 
     /**
      * Unsubscribe the given server event listener for server events.
-     * 
+     *
      * @param listener
      *                The listener to unsubscribe.
      */
