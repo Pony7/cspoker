@@ -19,7 +19,8 @@ package org.cspoker.server.http;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.cspoker.server.game.player.Player;
+import org.cspoker.common.game.player.Player;
+import org.cspoker.server.game.player.GamePlayer;
 
 /**
  * Creates a unique player communication instance for every player name and provides
@@ -27,9 +28,9 @@ import org.cspoker.server.game.player.Player;
  */
 public class StringCollectorFactory {
 
-    private final static Map<Player,StringCollector> playerComs=new HashMap<Player,StringCollector>();
+    private final static Map<GamePlayer,StringCollector> playerComs=new HashMap<GamePlayer,StringCollector>();
     
-    public static synchronized StringCollector getUniqueStringCollector(Player player){
+    public static synchronized StringCollector getUniqueStringCollector(GamePlayer player){
 	StringCollector result=playerComs.get(player);
 	if(result==null){
 	    result=new StringCollector();
