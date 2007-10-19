@@ -17,8 +17,8 @@ package org.cspoker.server.http.httphandler;
 
 import org.cspoker.server.common.xmlcommunication.XmlPlayerCommunication;
 import org.cspoker.server.common.xmlcommunication.XmlPlayerCommunicationFactory;
+import org.cspoker.server.game.player.GamePlayer;
 import org.cspoker.server.game.player.IllegalNameException;
-import org.cspoker.server.game.player.Player;
 import org.cspoker.server.game.player.PlayerFactory;
 import org.cspoker.server.http.StringCollector;
 import org.cspoker.server.http.StringCollectorFactory;
@@ -36,7 +36,7 @@ public class CSPokerHandler extends AbstractHttpHandlerImpl{
     protected String getResponse(HttpExchange http) throws HttpExceptionImpl{
 	
 	    String username= AbstractHttpHandlerImpl.toPlayerName(http.getRequestHeaders());
-	    Player player;
+	    GamePlayer player;
 	    try {
 		player = PlayerFactory.global_Player_Factory.getUniquePlayer(username);
 	    } catch (IllegalNameException e) {
