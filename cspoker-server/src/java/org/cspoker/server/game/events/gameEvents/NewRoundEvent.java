@@ -16,7 +16,7 @@
 
 package org.cspoker.server.game.events.gameEvents;
 
-import org.cspoker.server.game.player.SavedPlayer;
+import org.cspoker.common.game.player.Player;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
@@ -31,14 +31,14 @@ public class NewRoundEvent extends GameEvent {
 
     private final String roundName;
 
-    private final SavedPlayer player;
+    private final Player player;
 
-    public NewRoundEvent(String roundName, SavedPlayer player) {
+    public NewRoundEvent(String roundName, Player player) {
 	this.roundName = roundName;
 	this.player = player;
     }
 
-    public SavedPlayer getPlayer() {
+    public Player getPlayer() {
 	return player;
     }
 
@@ -51,7 +51,7 @@ public class NewRoundEvent extends GameEvent {
 	return roundName;
     }
 
-    public SavedPlayer getInitialPlayer(){
+    public Player getInitialPlayer(){
 	return player;
     }
 

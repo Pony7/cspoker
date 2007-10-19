@@ -15,18 +15,18 @@
  */
 package org.cspoker.server.game.events.gameEvents;
 
-import org.cspoker.server.game.player.SavedPlayer;
+import org.cspoker.common.game.player.Player;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
 public class GameMessageEvent extends GameEvent {
 
-    private final SavedPlayer player;
+    private final Player player;
 
     private final String message;
 
-    public GameMessageEvent(SavedPlayer player, String message) {
+    public GameMessageEvent(Player player, String message) {
 	this.player = player;
 	this.message = message;
     }
@@ -41,7 +41,7 @@ public class GameMessageEvent extends GameEvent {
 	return message;
     }
 
-    public SavedPlayer getPlayer() {
+    public Player getPlayer() {
 	return player;
     }
 

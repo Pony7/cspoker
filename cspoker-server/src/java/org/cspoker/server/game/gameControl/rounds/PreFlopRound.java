@@ -17,50 +17,48 @@
 package org.cspoker.server.game.gameControl.rounds;
 
 import org.apache.log4j.Logger;
+import org.cspoker.common.game.elements.pots.Pots;
 import org.cspoker.server.game.GameMediator;
 import org.cspoker.server.game.elements.chips.IllegalValueException;
 import org.cspoker.server.game.events.gameEvents.NewRoundEvent;
 import org.cspoker.server.game.events.gameEvents.NextPlayerEvent;
-import org.cspoker.server.game.events.gameEvents.PotChangedEvent;
 import org.cspoker.server.game.events.gameEvents.playerActionEvents.BigBlindEvent;
 import org.cspoker.server.game.events.gameEvents.playerActionEvents.SmallBlindEvent;
 import org.cspoker.server.game.events.gameEvents.privateEvents.NewPocketCardsEvent;
 import org.cspoker.server.game.gameControl.Game;
 import org.cspoker.server.game.gameControl.IllegalActionException;
-import org.cspoker.server.game.player.Player;
+import org.cspoker.server.game.player.GamePlayer;
 
 /**
  * The round after the initial 2 cards are dealt.
- * 
+ *
  * @author Kenzo
- * 
+ *
  */
 public class PreFlopRound extends BettingRound {
     private static Logger logger = Logger.getLogger(PreFlopRound.class);
 
     private boolean bigBlindChecked = false;
 
-    private Player bigBlindPlayer;
+    private GamePlayer bigBlindPlayer;
 
     private boolean bigBlindAllIn = false;
 
     public PreFlopRound(GameMediator gameMediator, Game game) {
 	super(gameMediator, game);
 
-	Player currentPlayer = getGame().getCurrentPlayer();
+	GamePlayer currentPlayer = getGame().getCurrentPlayer();
 	if (currentPlayer != null)
 	    gameMediator.publishNewRoundEvent(new NewRoundEvent(toString(),
 		    currentPlayer.getSavedPlayer()));
 	try {
 	    if (game.getNbCurrentDealPlayers() == 2)
 		game.nextPlayer();
-	    Player player = getGame().getCurrentPlayer();
+	    GamePlayer player = getGame().getCurrentPlayer();
 	    collectSmallBlind(player);
 	    gameMediator.publishSmallBlindEvent(new SmallBlindEvent(player
 		    .getSavedPlayer(), getGame().getGameProperty()
-		    .getSmallBlind()));
-	    gameMediator.publishPotChangedEvent(new PotChangedEvent(
-		    getCurrentPotValue()));
+		    .getSmallBlind(), new Pots(getCurrentPotValue())));
 	    PreFlopRound.logger.info(player.getName() + ": posts small blind $"
 		    + getGame().getGameProperty().getSmallBlind());
 	    getGame().nextPlayer();
@@ -76,9 +74,7 @@ public class PreFlopRound extends BettingRound {
 		collectBigBlind(bigBlindPlayer);
 		gameMediator.publishBigBlindEvent(new BigBlindEvent(
 			bigBlindPlayer.getSavedPlayer(), getGame()
-				.getGameProperty().getBigBlind()));
-		gameMediator.publishPotChangedEvent(new PotChangedEvent(
-			getCurrentPotValue()));
+				.getGameProperty().getBigBlind(), new Pots(getCurrentPotValue())));
 		PreFlopRound.logger.info(getGame().getCurrentPlayer().getName()
 			+ ": posts big blind $"
 			+ getGame().getGameProperty().getBigBlind());
@@ -91,7 +87,7 @@ public class PreFlopRound extends BettingRound {
 	}
 
 	PreFlopRound.logger.info("*** HOLE CARDS ***");
-	for (Player player : getGame().getCurrentDealPlayers()) {
+	for (GamePlayer player : getGame().getCurrentDealPlayers()) {
 	    player.dealPocketCard(drawCard());
 	    player.dealPocketCard(drawCard());
 
@@ -99,7 +95,7 @@ public class PreFlopRound extends BettingRound {
 		    + player.getPocketCards());
 
 	    gameMediator.publishNewPocketCardsEvent(player.getId(),
-		    new NewPocketCardsEvent(player.getSavedPlayer()));
+		    new NewPocketCardsEvent(player.getSavedPlayer(), player.getPocketCards()));
 	}
 
 	if (getGame().getNbCurrentDealPlayers() > 1) {
@@ -109,7 +105,7 @@ public class PreFlopRound extends BettingRound {
     }
 
     @Override
-    public void check(Player player) throws IllegalActionException {
+    public void check(GamePlayer player) throws IllegalActionException {
 	if (!onTurn(player))
 	    throw new IllegalActionException(player.getName()
 		    + " can not check in this round.");

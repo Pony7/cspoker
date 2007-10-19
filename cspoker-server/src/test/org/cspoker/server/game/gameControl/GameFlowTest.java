@@ -24,20 +24,20 @@ import org.cspoker.server.game.TableId;
 import org.cspoker.server.game.elements.chips.IllegalValueException;
 import org.cspoker.server.game.elements.table.PlayerListFullException;
 import org.cspoker.server.game.elements.table.Table;
+import org.cspoker.server.game.player.GamePlayer;
 import org.cspoker.server.game.player.IllegalNameException;
-import org.cspoker.server.game.player.Player;
 import org.cspoker.server.game.player.PlayerFactory;
 
 public class GameFlowTest extends TestCase {
     private static Logger logger = Logger.getLogger(GameFlowTest.class);
 
-    private Player kenzo;
+    private GamePlayer kenzo;
 
-    private Player cedric;
+    private GamePlayer cedric;
 
-    private Player guy;
+    private GamePlayer guy;
 
-    private Player craig;
+    private GamePlayer craig;
 
     private Table table;
 
@@ -47,7 +47,7 @@ public class GameFlowTest extends TestCase {
 
     @Override
     protected void setUp() {
-	playerFactory = new PlayerFactory();
+	playerFactory = new TestPlayerFactory();
 	GameFlowTest.logger
 		.info("**********************************************************");
 	GameFlowTest.logger

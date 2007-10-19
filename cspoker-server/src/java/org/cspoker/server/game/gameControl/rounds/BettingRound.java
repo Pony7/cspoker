@@ -21,26 +21,26 @@ import java.util.Collections;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.cspoker.common.game.elements.pots.Pots;
 import org.cspoker.server.game.GameMediator;
 import org.cspoker.server.game.elements.cards.deck.Deck.Card;
 import org.cspoker.server.game.elements.chips.IllegalValueException;
-import org.cspoker.server.game.elements.chips.pot.Pots;
+import org.cspoker.server.game.elements.chips.pot.GamePots;
 import org.cspoker.server.game.elements.player.AllInPlayer;
 import org.cspoker.server.game.events.gameEvents.NewCommunityCardsEvent;
-import org.cspoker.server.game.events.gameEvents.PotChangedEvent;
 import org.cspoker.server.game.events.gameEvents.WinnerEvent;
 import org.cspoker.server.game.events.gameEvents.playerActionEvents.AllInEvent;
 import org.cspoker.server.game.gameControl.Game;
 import org.cspoker.server.game.gameControl.IllegalActionException;
-import org.cspoker.server.game.player.Player;
+import org.cspoker.server.game.player.GamePlayer;
 import org.cspoker.server.game.player.SavedWinner;
 
 /**
  * A class to represent betting rounds.
- * 
- * 
+ *
+ *
  * @author Kenzo
- * 
+ *
  */
 public abstract class BettingRound extends Round {
     private static Logger logger = Logger.getLogger(BettingRound.class);
@@ -59,19 +59,19 @@ public abstract class BettingRound extends Round {
      * This list contains all players who folded, but who have placed chips on
      * their bet chips pile.
      */
-    protected final List<Player> foldedPlayersWithBet;
+    protected final List<GamePlayer> foldedPlayersWithBet;
 
     protected boolean someoneBigAllIn = false;
 
     public BettingRound(GameMediator gameMediator, Game game) {
 	super(gameMediator, game);
 	allInPlayers = new ArrayList<AllInPlayer>();
-	foldedPlayersWithBet = new ArrayList<Player>();
+	foldedPlayersWithBet = new ArrayList<GamePlayer>();
 	setBet(0);
     }
 
     @Override
-    public void check(Player player) throws IllegalActionException {
+    public void check(GamePlayer player) throws IllegalActionException {
 	if (!onTurn(player))
 	    throw new IllegalActionException(player.getName()
 		    + " can not check in this round. It should be your turn.");
@@ -82,7 +82,7 @@ public abstract class BettingRound extends Round {
     }
 
     @Override
-    public void bet(Player player, int amount) throws IllegalActionException {
+    public void bet(GamePlayer player, int amount) throws IllegalActionException {
 	if (!onTurn(player) || someoneHasBet() || onlyOnePlayerLeft())
 	    throw new IllegalActionException(player.getName() + " can not bet "
 		    + amount + " chips in this round.");
@@ -115,7 +115,7 @@ public abstract class BettingRound extends Round {
     }
 
     @Override
-    public void call(Player player) throws IllegalActionException {
+    public void call(GamePlayer player) throws IllegalActionException {
 	if (!onTurn(player) || !someoneHasBet())
 	    throw new IllegalActionException(player.getName()
 		    + " can not call in this round.");
@@ -150,7 +150,7 @@ public abstract class BettingRound extends Round {
     }
 
     @Override
-    public void raise(Player player, int amount) throws IllegalActionException {
+    public void raise(GamePlayer player, int amount) throws IllegalActionException {
 	if (!onTurn(player) || !someoneHasBet() || onlyOnePlayerLeft())
 	    throw new IllegalActionException(player.getName()
 		    + " can not raise with " + amount + " chips in this round.");
@@ -189,7 +189,7 @@ public abstract class BettingRound extends Round {
     }
 
     @Override
-    public void fold(Player player) throws IllegalActionException {
+    public void fold(GamePlayer player) throws IllegalActionException {
 	if (!onTurn(player))
 	    throw new IllegalActionException(player.getName()
 		    + " can not fold. It should be his turn to do an action.");
@@ -201,7 +201,7 @@ public abstract class BettingRound extends Round {
 	 * remembered until the end of the round. It had to be implemented this
 	 * way and not directly collected to the main pot, because all-in logic
 	 * would be to complicated.
-	 * 
+	 *
 	 * By doing the all-in logic at the end of a round, the code is easier
 	 * to write.
 	 */
@@ -215,14 +215,14 @@ public abstract class BettingRound extends Round {
     }
 
     @Override
-    public void allIn(Player player) throws IllegalActionException {
+    public void allIn(GamePlayer player) throws IllegalActionException {
 	if (!onTurn(player))
 	    throw new IllegalActionException(player.getName()
 		    + " can not go all-in. It isn't his turn to do an action.");
 	goAllIn(player);
     }
 
-    protected void goAllIn(Player player) {
+    protected void goAllIn(GamePlayer player) {
 	try {
 	    player.transferAllChipsToBetPile();
 	} catch (IllegalValueException e) {
@@ -235,9 +235,7 @@ public abstract class BettingRound extends Round {
 	    playerMadeEvent(player);
 	    someoneBigAllIn = true;
 	}
-	gameMediator.publishAllInEvent(new AllInEvent(player.getSavedPlayer()));
-	gameMediator.publishPotChangedEvent(new PotChangedEvent(
-		getCurrentPotValue()));
+	gameMediator.publishAllInEvent(new AllInEvent(player.getSavedPlayer(), new Pots(getCurrentPotValue())));
 	// TODO put amount of raise
 	BettingRound.logger
 		.info(player.getName() + ": raises to $"
@@ -255,7 +253,7 @@ public abstract class BettingRound extends Round {
 
     /**
      * Returns the current bet of this round.
-     * 
+     *
      * @return The current bet of this round.
      */
     public int getBet() {
@@ -264,7 +262,7 @@ public abstract class BettingRound extends Round {
 
     /**
      * Check whether rounds can have the given bet as their bet.
-     * 
+     *
      * @param bet
      *                The bet to check.
      * @return The bet must be positive. | result == (bet>=0)
@@ -275,7 +273,7 @@ public abstract class BettingRound extends Round {
 
     /**
      * Set the bet of this round to the given bet.
-     * 
+     *
      * @param bet
      *                The new bet for this round.
      * @pre This round must be able to have the given bet as its bet. |
@@ -289,7 +287,7 @@ public abstract class BettingRound extends Round {
 
     /**
      * Returns true if someone has bet.
-     * 
+     *
      * @return True if someone has bet, False otherwise.
      */
     public boolean someoneHasBet() {
@@ -302,7 +300,7 @@ public abstract class BettingRound extends Round {
 
     /**
      * Raise the bet with given amount.
-     * 
+     *
      * @param amount
      *                The amount to raise the bet with.
      * @pre The amount should be positive. |amount>0
@@ -319,12 +317,12 @@ public abstract class BettingRound extends Round {
 
     /**
      * Collect small blind from given player.
-     * 
+     *
      * @param player
      *                The player to collect the small blind from.
      * @throws IllegalValueException
      */
-    protected void collectSmallBlind(Player player)
+    protected void collectSmallBlind(GamePlayer player)
 	    throws IllegalValueException {
 	if (player.getStack().getValue() <= getGame().getGameProperty()
 		.getSmallBlind())
@@ -340,12 +338,12 @@ public abstract class BettingRound extends Round {
 
     /**
      * Collect big blind from given player.
-     * 
+     *
      * @param player
      *                The player to collect the big blind from.
      * @throws IllegalValueException
      */
-    protected void collectBigBlind(Player player) throws IllegalValueException {
+    protected void collectBigBlind(GamePlayer player) throws IllegalValueException {
 	if (player.getStack().getValue() <= getGame().getGameProperty()
 		.getBigBlind())
 	    throw new IllegalValueException();
@@ -361,13 +359,13 @@ public abstract class BettingRound extends Round {
     /**
      * Returns how many chips a player must transfer to the bet pile to equal
      * the current bet.
-     * 
+     *
      * @param player
      *                The player who wants to know how many chips to transfer.
      * @return The number of chips the player must transfer to the bet pile to
      *         equal the current bet.
      */
-    protected int amountToIncreaseBetPileWith(Player player) {
+    protected int amountToIncreaseBetPileWith(GamePlayer player) {
 	return getBet() - player.getBetChips().getValue();
     }
 
@@ -377,7 +375,7 @@ public abstract class BettingRound extends Round {
 
     /**
      * Draw a card from the deck and send it to the muck.
-     * 
+     *
      */
     protected void drawMuckCard() {
 	game.addMuckCard(drawCard());
@@ -385,7 +383,7 @@ public abstract class BettingRound extends Round {
 
     /**
      * Draw a card from the deck and add it to the community cards.
-     * 
+     *
      */
     protected void drawOpenCard() {
 	game.addOpenCard(drawCard());
@@ -402,7 +400,7 @@ public abstract class BettingRound extends Round {
 
     /**
      * Draw a card from the deck.
-     * 
+     *
      * @return The top card from the deck is returned.
      */
     protected Card drawCard() {
@@ -416,7 +414,7 @@ public abstract class BettingRound extends Round {
     /**
      * Collect the bet chips pile from all players. Also creates new side pots
      * if necessary in the case of all-in players.
-     * 
+     *
      */
     protected void collectChips() {
 	makeSidePots();
@@ -425,11 +423,11 @@ public abstract class BettingRound extends Round {
 
     /***************************************************************************
      * Move all-in players to side pot.
-     * 
+     *
      */
     private void makeSidePots() {
 	Collections.sort(allInPlayers);
-	List<Player> players = game.getCurrentDealPlayers();
+	List<GamePlayer> players = game.getCurrentDealPlayers();
 	for (AllInPlayer allInPlayer : allInPlayers) {
 	    try {
 		BettingRound.logger.info(game.getPots());
@@ -443,7 +441,7 @@ public abstract class BettingRound extends Round {
 				.getPots().getNewestSidePot());
 		    }
 		}
-		for (Player foldedPlayer : foldedPlayersWithBet) {
+		for (GamePlayer foldedPlayer : foldedPlayersWithBet) {
 		    if (foldedPlayer.getBetChips().getValue() > allInPlayer
 			    .getBetValue()) {
 			foldedPlayer.getBetChips().transferAmountTo(
@@ -469,7 +467,7 @@ public abstract class BettingRound extends Round {
 
     /**
      * Collect the bets from all players.
-     * 
+     *
      */
     private void collectBets() {
 	game.getPots().collectChipsToPot(game.getCurrentDealPlayers());
@@ -481,11 +479,11 @@ public abstract class BettingRound extends Round {
      * Winner
      **************************************************************************/
 
-    protected void winner(Pots pots) {
+    protected void winner(GamePots pots) {
 	try {
 	    BettingRound.logger.info("** Only One Player Left **");
 	    setPotsDividedToWinner(true);
-	    Player winner = pots.getPots().get(0).getPlayers().get(0);
+	    GamePlayer winner = pots.getPots().get(0).getPlayers().get(0);
 	    BettingRound.logger.info("Winner: " + winner.getName() + " wins "
 		    + pots.getTotalValue() + " chips");
 
@@ -504,10 +502,10 @@ public abstract class BettingRound extends Round {
 
     /**
      * Returns true if there is only one player left, false otherwise.
-     * 
+     *
      * This also implies there are no all-in players, otherwise there will be a
      * showdown.
-     * 
+     *
      * @return True if there is only one player left, False otherwise.
      */
     public boolean onlyOnePlayerLeft() {
@@ -543,10 +541,10 @@ public abstract class BettingRound extends Round {
 
     /**
      * Check whether the round is ended or not.
-     * 
+     *
      * It is the case when there are no more active players, or when the last
      * event player is the next player.
-     * 
+     *
      * @return True if the round is ended, false otherwise.
      */
     @Override
@@ -559,11 +557,11 @@ public abstract class BettingRound extends Round {
     @Override
     public int getCurrentPotValue() {
 	int currentPlayerBets = 0;
-	for (Player player : game.getCurrentDealPlayers()) {
+	for (GamePlayer player : game.getCurrentDealPlayers()) {
 	    currentPlayerBets += player.getBetChips().getValue();
 	}
 	int foldedPlayerBets = 0;
-	for (Player player : foldedPlayersWithBet) {
+	for (GamePlayer player : foldedPlayersWithBet) {
 	    foldedPlayerBets += player.getBetChips().getValue();
 	}
 

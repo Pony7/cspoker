@@ -11,18 +11,18 @@ import org.cspoker.server.game.elements.table.Table;
 import org.cspoker.server.game.gameControl.rules.Limit;
 import org.cspoker.server.game.gameControl.rules.NoLimit;
 import org.cspoker.server.game.gameControl.rules.PotLimit;
+import org.cspoker.server.game.player.GamePlayer;
 import org.cspoker.server.game.player.IllegalNameException;
-import org.cspoker.server.game.player.Player;
 import org.cspoker.server.game.player.PlayerFactory;
 
 public class BettingRulesTest extends TestCase {
     private static Logger logger = Logger.getLogger(BettingRulesTest.class);
 
-    private Player kenzo;
+    private GamePlayer kenzo;
 
-    private Player cedric;
+    private GamePlayer cedric;
 
-    private Player guy;
+    private GamePlayer guy;
 
     private Table table;
 
@@ -34,7 +34,7 @@ public class BettingRulesTest extends TestCase {
 
     @Override
     protected void setUp() {
-	playerFactory = new PlayerFactory();
+	playerFactory = new TestPlayerFactory();
 	try {
 	    kenzo = playerFactory.getUniquePlayer("Kenzo", 100);
 	    cedric = playerFactory.getUniquePlayer("Cedric", 100);

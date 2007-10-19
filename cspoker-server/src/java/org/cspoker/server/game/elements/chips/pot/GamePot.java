@@ -22,7 +22,7 @@ import java.util.List;
 
 import org.cspoker.server.game.elements.chips.Chips;
 import org.cspoker.server.game.elements.chips.IllegalValueException;
-import org.cspoker.server.game.player.Player;
+import org.cspoker.server.game.player.GamePlayer;
 
 /**
  * The pot contains both a list of players and the chips that should be divided
@@ -36,12 +36,12 @@ import org.cspoker.server.game.player.Player;
  * @invar The chips of this pot is effective. |getChips()!=null
  * 
  */
-public class Pot {
+public class GamePot {
 
     /**
      * All the players that can take a share of this pot.
      */
-    private final List<Player> players;
+    private final List<GamePlayer> players;
 
     /**
      * The pile of chips in this pot.
@@ -57,9 +57,9 @@ public class Pot {
      * 
      * @post The initial amount of chips is zero. |getChips().getValue()==0
      */
-    public Pot() {
+    public GamePot() {
 	chips = new Chips();
-	players = new ArrayList<Player>();
+	players = new ArrayList<GamePlayer>();
     }
 
     /**
@@ -69,20 +69,20 @@ public class Pot {
 	return chips;
     }
 
-    public List<Player> getPlayers() {
+    public List<GamePlayer> getPlayers() {
 	return Collections.unmodifiableList(players);
     }
 
-    public void addShowdownPlayer(Player player) {
+    public void addShowdownPlayer(GamePlayer player) {
 	players.add(player);
     }
 
-    public void transferAmountToPot(int amount, Pot pot)
+    public void transferAmountToPot(int amount, GamePot pot)
 	    throws IllegalValueException {
 	getChips().transferAmountTo(amount, pot.getChips());
     }
 
-    public void transferAllChipsTo(Pot pot) {
+    public void transferAllChipsTo(GamePot pot) {
 	try {
 	    getChips().transferAmountTo(getChips().getValue(), pot.getChips());
 	} catch (IllegalValueException e) {
@@ -100,7 +100,7 @@ public class Pot {
     @Override
     public String toString() {
 	String toReturn = getValue() + " chips in this pot. Showdown players: ";
-	for (Player player : players) {
+	for (GamePlayer player : players) {
 	    toReturn += player.getName() + " ";
 	}
 	return toReturn;

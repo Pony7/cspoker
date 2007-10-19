@@ -21,6 +21,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
+import org.cspoker.common.game.player.PlayerId;
 import org.cspoker.server.game.elements.table.Table;
 import org.cspoker.server.game.gameControl.GameProperty;
 

@@ -16,40 +16,41 @@
 
 package org.cspoker.server.game.events.gameEvents.playerActionEvents;
 
-import org.cspoker.server.game.events.gameEvents.GameEvent;
-import org.cspoker.server.game.player.SavedPlayer;
+import org.cspoker.common.game.elements.pots.Pots;
+import org.cspoker.common.game.player.Player;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * A class to represent raise events.
- * 
+ *
  * @author Kenzo
- * 
+ *
  */
-public class RaiseEvent extends GameEvent {
+public class RaiseEvent extends ActionChangedPotEvent {
 
-    private final SavedPlayer player;
+    private final Player player;
 
     private final int amount;
 
-    public RaiseEvent(SavedPlayer player, int amount) {
-	this.player = player;
-	this.amount = amount;
+    public RaiseEvent(Player player, int amount, Pots pots) {
+    super(pots);
+    this.player = player;
+    this.amount = amount;
     }
 
     @Override
     public String toString() {
 	return getPlayer().getName() + " raises with " + getAmount() + " chips.";
     }
-    
+
 
     public int getAmount(){
 	return amount;
     }
 
-    public SavedPlayer getPlayer(){
+    public Player getPlayer(){
 	return player;
     }
 

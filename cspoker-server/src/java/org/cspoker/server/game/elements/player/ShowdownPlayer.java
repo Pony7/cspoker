@@ -17,7 +17,7 @@
 package org.cspoker.server.game.elements.player;
 
 import org.cspoker.server.game.elements.cards.hand.Hand;
-import org.cspoker.server.game.player.Player;
+import org.cspoker.server.game.player.GamePlayer;
 import org.cspoker.server.game.player.SavedShowdownPlayer;
 
 /**
@@ -34,7 +34,7 @@ public class ShowdownPlayer implements Comparable<ShowdownPlayer> {
     /**
      * This variable contains the showdown player.
      */
-    private final Player player;
+    private final GamePlayer player;
 
     /**
      * This variable contains the showdown player's best hand.
@@ -49,7 +49,7 @@ public class ShowdownPlayer implements Comparable<ShowdownPlayer> {
      * @param bestHand
      *                The player's best hand.
      */
-    public ShowdownPlayer(Player player, Hand bestHand) {
+    public ShowdownPlayer(GamePlayer player, Hand bestHand) {
 	this.player = player;
 	this.bestHand = bestHand;
 
@@ -60,7 +60,7 @@ public class ShowdownPlayer implements Comparable<ShowdownPlayer> {
      * 
      * @return The effective showdown player, as a player.
      */
-    public Player getPlayer() {
+    public GamePlayer getPlayer() {
 	return player;
     }
 

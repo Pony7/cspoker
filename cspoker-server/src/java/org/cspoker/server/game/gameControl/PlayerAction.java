@@ -16,7 +16,7 @@
 
 package org.cspoker.server.game.gameControl;
 
-import org.cspoker.server.game.player.Player;
+import org.cspoker.server.game.player.GamePlayer;
 
 /**
  * An interface defining all actions a player can do in one deal.
@@ -37,7 +37,7 @@ public interface PlayerAction {
      * @throws IllegalActionException
      *                 [must] The action performed is not a valid action.
      */
-    public void check(Player player) throws IllegalActionException;
+    public void check(GamePlayer player) throws IllegalActionException;
 
     /**
      * The player puts money in the pot.
@@ -51,7 +51,7 @@ public interface PlayerAction {
      * @throws IllegalActionException
      *                 [must] The action performed is not a valid action.
      */
-    public void bet(Player player, int amount) throws IllegalActionException;
+    public void bet(GamePlayer player, int amount) throws IllegalActionException;
 
     /**
      * To put into the pot an amount of money equal to the most recent bet or
@@ -64,7 +64,7 @@ public interface PlayerAction {
      * @throws IllegalActionException
      *                 [must] The action performed is not a valid action.
      */
-    public void call(Player player) throws IllegalActionException;
+    public void call(GamePlayer player) throws IllegalActionException;
 
     /**
      * Raise the bet with given amount.
@@ -78,7 +78,7 @@ public interface PlayerAction {
      * @throws IllegalActionException
      *                 [must] The action performed is not a valid action.
      */
-    public void raise(Player player, int amount) throws IllegalActionException;
+    public void raise(GamePlayer player, int amount) throws IllegalActionException;
 
     /**
      * The given player folds the cards.
@@ -93,7 +93,7 @@ public interface PlayerAction {
      * @throws IllegalActionException
      *                 [must] The action performed is not a valid action.
      */
-    public void fold(Player player) throws IllegalActionException;
+    public void fold(GamePlayer player) throws IllegalActionException;
 
     /**
      * The player who the dealer-button has been dealt to can choose to start
@@ -106,7 +106,7 @@ public interface PlayerAction {
      * @throws IllegalActionException
      *                 [must] The action performed is not a valid action.
      */
-    public void deal(Player player) throws IllegalActionException;
+    public void deal(GamePlayer player) throws IllegalActionException;
 
     /**
      * The given player goes all-in.
@@ -118,6 +118,6 @@ public interface PlayerAction {
      * @throws IllegalActionException
      *                 [must] The action performed is not a valid action.
      */
-    public void allIn(Player player) throws IllegalActionException;
+    public void allIn(GamePlayer player) throws IllegalActionException;
 
 }

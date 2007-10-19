@@ -17,8 +17,8 @@
 package org.cspoker.server.game.elements.player;
 
 import org.cspoker.server.game.elements.chips.IllegalValueException;
-import org.cspoker.server.game.elements.chips.pot.Pot;
-import org.cspoker.server.game.player.Player;
+import org.cspoker.server.game.elements.chips.pot.GamePot;
+import org.cspoker.server.game.player.GamePlayer;
 
 /**
  * A class to represent all-in players.
@@ -28,13 +28,13 @@ import org.cspoker.server.game.player.Player;
  */
 public class AllInPlayer implements Comparable<AllInPlayer> {
 
-    private final Player player;
+    private final GamePlayer player;
 
-    public AllInPlayer(Player player) {
+    public AllInPlayer(GamePlayer player) {
 	this.player = player;
     }
 
-    public Player getPlayer() {
+    public GamePlayer getPlayer() {
 	return player;
     }
 
@@ -42,7 +42,7 @@ public class AllInPlayer implements Comparable<AllInPlayer> {
 	return player.getBetChips().getValue();
     }
 
-    public void transferAllChipsTo(Pot pot) {
+    public void transferAllChipsTo(GamePot pot) {
 	try {
 	    transferAmountTo(player.getBetChips().getValue(), pot);
 	} catch (IllegalValueException e) {
@@ -50,7 +50,7 @@ public class AllInPlayer implements Comparable<AllInPlayer> {
 	}
     }
 
-    public void transferAmountTo(int amount, Pot pot)
+    public void transferAmountTo(int amount, GamePot pot)
 	    throws IllegalValueException {
 	player.getBetChips().transferAmountTo(amount, pot.getChips());
     }

@@ -19,14 +19,14 @@ package org.cspoker.server.game.gameControl.rounds;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.cspoker.common.game.player.Player;
 import org.cspoker.server.game.GameMediator;
 import org.cspoker.server.game.events.gameEvents.NewDealEvent;
 import org.cspoker.server.game.gameControl.Game;
 import org.cspoker.server.game.gameControl.IllegalActionException;
 import org.cspoker.server.game.gameControl.PlayerAction;
 import org.cspoker.server.game.gameControl.rules.BettingRules;
-import org.cspoker.server.game.player.Player;
-import org.cspoker.server.game.player.SavedPlayer;
+import org.cspoker.server.game.player.GamePlayer;
 
 /**
  * An abstract class to represent rounds. A player can do actions in a round,
@@ -51,7 +51,7 @@ public abstract class Round implements PlayerAction {
      * in every next round, it is the player on to the left side of the player
      * with the dealer-button.
      */
-    protected Player lastEventPlayer;
+    protected GamePlayer lastEventPlayer;
 
     /**
      * The variable containing the game in which this round takes place.
@@ -117,7 +117,7 @@ public abstract class Round implements PlayerAction {
      *                 [must] The action performed is not a valid action.
      * @see PlayerAction
      */
-    public void check(Player player) throws IllegalActionException {
+    public void check(GamePlayer player) throws IllegalActionException {
 	throw new IllegalActionException(player.getName()
 		+ " can not check in this round.");
     }
@@ -135,7 +135,7 @@ public abstract class Round implements PlayerAction {
      *                 [must] The action performed is not a valid action.
      * @see PlayerAction
      */
-    public void bet(Player player, int amount) throws IllegalActionException {
+    public void bet(GamePlayer player, int amount) throws IllegalActionException {
 	throw new IllegalActionException(player.getName() + " can not bet "
 		+ amount + " chips in this round.");
     }
@@ -152,7 +152,7 @@ public abstract class Round implements PlayerAction {
      *                 [must] The action performed is not a valid action.
      * @see PlayerAction
      */
-    public void call(Player player) throws IllegalActionException {
+    public void call(GamePlayer player) throws IllegalActionException {
 	throw new IllegalActionException(player.getName()
 		+ " can not call in this round.");
     }
@@ -170,7 +170,7 @@ public abstract class Round implements PlayerAction {
      *                 [must] The action performed is not a valid action.
      * @see PlayerAction
      */
-    public void raise(Player player, int amount) throws IllegalActionException {
+    public void raise(GamePlayer player, int amount) throws IllegalActionException {
 	throw new IllegalActionException(player.getName()
 		+ " can not raise with " + amount + " chips in this round.");
     }
@@ -188,7 +188,7 @@ public abstract class Round implements PlayerAction {
      * @throws IllegalActionException
      *                 [must] The action performed is not a valid action.
      */
-    public void fold(Player player) throws IllegalActionException {
+    public void fold(GamePlayer player) throws IllegalActionException {
 	throw new IllegalActionException(player.getName()
 		+ " can not fold in this round.");
     }
@@ -205,7 +205,7 @@ public abstract class Round implements PlayerAction {
      *                 [must] The action performed is not a valid action.
      * @see PlayerAction
      */
-    public void deal(Player player) throws IllegalActionException {
+    public void deal(GamePlayer player) throws IllegalActionException {
 	throw new IllegalActionException(player.getName()
 		+ " can not deal in this round.");
     }
@@ -221,7 +221,7 @@ public abstract class Round implements PlayerAction {
      *                 [must] The action performed is not a valid action.
      * @see PlayerAction
      */
-    public void allIn(Player player) throws IllegalActionException {
+    public void allIn(GamePlayer player) throws IllegalActionException {
 	throw new IllegalActionException(player.getName()
 		+ " can not go all-in in this round.");
     }
@@ -260,16 +260,16 @@ public abstract class Round implements PlayerAction {
      * @param player
      *                The player who did the last event.
      */
-    protected void playerMadeEvent(Player player) {
+    protected void playerMadeEvent(GamePlayer player) {
 	lastEventPlayer = player;
     }
 
-    public boolean onTurn(Player player) {
+    public boolean onTurn(GamePlayer player) {
 	return game.getCurrentPlayer().equals(player);
     }
 
     protected void removeBrokePlayers() {
-	for (Player player : getGame().getTable().getPlayers()) {
+	for (GamePlayer player : getGame().getTable().getPlayers()) {
 	    if (player.getStack().getValue() == 0) {
 		try {
 		    getGame().leaveGame(player);
@@ -291,9 +291,9 @@ public abstract class Round implements PlayerAction {
     protected void newDealRound() {
 	removeBrokePlayers();
 	game.setToInitialHandPlayers();
-	List<SavedPlayer> players = new ArrayList<SavedPlayer>(game
+	List<Player> players = new ArrayList<Player>(game
 		.getNbCurrentDealPlayers());
-	for (Player player : game.getCurrentDealPlayers()) {
+	for (GamePlayer player : game.getCurrentDealPlayers()) {
 	    players.add(player.getSavedPlayer());
 	}
 	gameMediator.publishNewDealEvent(new NewDealEvent(players, game

@@ -16,32 +16,33 @@
 
 package org.cspoker.server.game.events.gameEvents.playerActionEvents;
 
-import org.cspoker.server.game.events.gameEvents.GameEvent;
-import org.cspoker.server.game.player.SavedPlayer;
+import org.cspoker.common.game.elements.pots.Pots;
+import org.cspoker.common.game.player.Player;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * A class to represent call events.
- * 
+ *
  * @author Kenzo
- * 
+ *
  */
-public class CallEvent extends GameEvent {
+public class CallEvent extends ActionChangedPotEvent {
 
-    private final SavedPlayer player;
+    private final Player player;
 
-    public CallEvent(SavedPlayer player) {
-	this.player = player;
+    public CallEvent(Player player, Pots pots) {
+    	super(pots);
+    	this.player = player;
     }
 
     @Override
     public String toString() {
 	return getPlayer().getName() + " calls.";
     }
-    
-public SavedPlayer getPlayer() {
+
+public Player getPlayer() {
     return player;
 }
 

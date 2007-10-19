@@ -29,16 +29,13 @@ import org.cspoker.server.game.events.gameEvents.NewRoundEvent;
 import org.cspoker.server.game.events.gameEvents.NextPlayerEvent;
 import org.cspoker.server.game.events.gameEvents.PlayerJoinedGameEvent;
 import org.cspoker.server.game.events.gameEvents.PlayerLeftTableEvent;
-import org.cspoker.server.game.events.gameEvents.PotChangedEvent;
 import org.cspoker.server.game.events.gameEvents.ShowHandEvent;
-import org.cspoker.server.game.events.gameEvents.StackChangedEvent;
 import org.cspoker.server.game.events.gameEvents.WinnerEvent;
 import org.cspoker.server.game.events.gameEvents.playerActionEvents.AllInEvent;
 import org.cspoker.server.game.events.gameEvents.playerActionEvents.BetEvent;
 import org.cspoker.server.game.events.gameEvents.playerActionEvents.BigBlindEvent;
 import org.cspoker.server.game.events.gameEvents.playerActionEvents.CallEvent;
 import org.cspoker.server.game.events.gameEvents.playerActionEvents.CheckEvent;
-import org.cspoker.server.game.events.gameEvents.playerActionEvents.DealEvent;
 import org.cspoker.server.game.events.gameEvents.playerActionEvents.FoldEvent;
 import org.cspoker.server.game.events.gameEvents.playerActionEvents.RaiseEvent;
 import org.cspoker.server.game.events.gameEvents.playerActionEvents.SmallBlindEvent;
@@ -50,9 +47,9 @@ import org.cspoker.server.game.events.serverEvents.TableCreatedEvent;
 
 /**
  * A class to collect and to manage game events.
- * 
+ *
  * @author Kenzo
- * 
+ *
  */
 public class EventsCollector implements AllEventsListener {
 
@@ -68,7 +65,7 @@ public class EventsCollector implements AllEventsListener {
     /**
      * This method is called when subscribed to inform a new game event
      * occurred.
-     * 
+     *
      * @param event
      *                The event object containing all information of the
      *                occurred event.
@@ -80,7 +77,7 @@ public class EventsCollector implements AllEventsListener {
 
     /**
      * Returns the latest game events.
-     * 
+     *
      * @return The latest game events.
      */
     public synchronized Events getLatestEvents() {
@@ -118,9 +115,6 @@ public class EventsCollector implements AllEventsListener {
 	onEvent(event);
     }
 
-    public void onDealEvent(DealEvent event) {
-	onEvent(event);
-    }
 
     public void onFoldEvent(FoldEvent event) {
 	onEvent(event);
@@ -162,17 +156,11 @@ public class EventsCollector implements AllEventsListener {
 	onEvent(event);
     }
 
-    public void onPotChangedEvent(PotChangedEvent event) {
-	onEvent(event);
-    }
 
     public void onShowHandEvent(ShowHandEvent event) {
 	onEvent(event);
     }
 
-    public void onStackChangedEvent(StackChangedEvent event) {
-	onEvent(event);
-    }
 
     public void onWinnerEvent(WinnerEvent event) {
 	onEvent(event);

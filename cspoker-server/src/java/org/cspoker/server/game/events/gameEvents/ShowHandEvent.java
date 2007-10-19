@@ -15,7 +15,7 @@
  */
 package org.cspoker.server.game.events.gameEvents;
 
-import org.cspoker.server.game.player.SavedPlayer;
+import org.cspoker.common.game.player.Player;
 import org.cspoker.server.game.player.SavedShowdownPlayer;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;

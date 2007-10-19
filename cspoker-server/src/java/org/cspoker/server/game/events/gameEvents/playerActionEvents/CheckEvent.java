@@ -16,32 +16,32 @@
 
 package org.cspoker.server.game.events.gameEvents.playerActionEvents;
 
+import org.cspoker.common.game.player.Player;
 import org.cspoker.server.game.events.gameEvents.GameEvent;
-import org.cspoker.server.game.player.SavedPlayer;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * A class to represent check events.
- * 
+ *
  * @author Kenzo
- * 
+ *
  */
 public class CheckEvent extends GameEvent {
 
-    private final SavedPlayer player;
+    private final Player player;
 
-    public CheckEvent(SavedPlayer player) {
-	this.player = player;
+    public CheckEvent(Player player) {
+    	this.player = player;
     }
 
     @Override
     public String toString() {
 	return getPlayer().getName() + " checks.";
     }
-    
-    public SavedPlayer getPlayer() {
+
+    public Player getPlayer() {
 	return player;
     }
 

@@ -34,16 +34,13 @@ import org.cspoker.server.game.events.gameEvents.NewRoundEvent;
 import org.cspoker.server.game.events.gameEvents.NextPlayerEvent;
 import org.cspoker.server.game.events.gameEvents.PlayerJoinedGameEvent;
 import org.cspoker.server.game.events.gameEvents.PlayerLeftTableEvent;
-import org.cspoker.server.game.events.gameEvents.PotChangedEvent;
 import org.cspoker.server.game.events.gameEvents.ShowHandEvent;
-import org.cspoker.server.game.events.gameEvents.StackChangedEvent;
 import org.cspoker.server.game.events.gameEvents.WinnerEvent;
 import org.cspoker.server.game.events.gameEvents.playerActionEvents.AllInEvent;
 import org.cspoker.server.game.events.gameEvents.playerActionEvents.BetEvent;
 import org.cspoker.server.game.events.gameEvents.playerActionEvents.BigBlindEvent;
 import org.cspoker.server.game.events.gameEvents.playerActionEvents.CallEvent;
 import org.cspoker.server.game.events.gameEvents.playerActionEvents.CheckEvent;
-import org.cspoker.server.game.events.gameEvents.playerActionEvents.DealEvent;
 import org.cspoker.server.game.events.gameEvents.playerActionEvents.FoldEvent;
 import org.cspoker.server.game.events.gameEvents.playerActionEvents.RaiseEvent;
 import org.cspoker.server.game.events.gameEvents.playerActionEvents.SmallBlindEvent;
@@ -62,7 +59,7 @@ public class XmlAllEventsListener implements AllEventsListener {
     public XmlAllEventsListener(XmlEventCollector collector) {
 	this.collector = collector;
     }
-    
+
     public void eventToCollector(Event event){
 	try {
 	    StringWriter xml = new StringWriter();
@@ -102,10 +99,6 @@ public class XmlAllEventsListener implements AllEventsListener {
     }
 
     public void onCheckEvent(CheckEvent event) {
-	eventToCollector(event);
-    }
-
-    public void onDealEvent(DealEvent event) {
 	eventToCollector(event);
     }
 
@@ -154,17 +147,7 @@ public class XmlAllEventsListener implements AllEventsListener {
 
     }
 
-    public void onPotChangedEvent(PotChangedEvent event) {
-	eventToCollector(event);
-
-    }
-
     public void onShowHandEvent(ShowHandEvent event) {
-	eventToCollector(event);
-
-    }
-
-    public void onStackChangedEvent(StackChangedEvent event) {
 	eventToCollector(event);
 
     }

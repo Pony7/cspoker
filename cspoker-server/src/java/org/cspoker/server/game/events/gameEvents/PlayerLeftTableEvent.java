@@ -16,7 +16,7 @@
 
 package org.cspoker.server.game.events.gameEvents;
 
-import org.cspoker.server.game.player.SavedPlayer;
+import org.cspoker.common.game.player.Player;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
@@ -29,9 +29,9 @@ import org.xml.sax.helpers.AttributesImpl;
  */
 public class PlayerLeftTableEvent extends GameEvent {
 
-    private final SavedPlayer player;
+    private final Player player;
 
-    public PlayerLeftTableEvent(SavedPlayer player) {
+    public PlayerLeftTableEvent(Player player) {
 	this.player = player;
     }
 
@@ -40,7 +40,7 @@ public class PlayerLeftTableEvent extends GameEvent {
 	return player.getName() + " has left this table.";
     }
     
-    public SavedPlayer getPlayer(){
+    public Player getPlayer(){
 	return player;
     }
     

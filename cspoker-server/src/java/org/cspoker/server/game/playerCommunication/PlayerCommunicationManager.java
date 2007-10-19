@@ -18,7 +18,7 @@ package org.cspoker.server.game.playerCommunication;
 
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.cspoker.server.game.PlayerId;
+import org.cspoker.common.game.player.PlayerId;
 
 public class PlayerCommunicationManager {
 

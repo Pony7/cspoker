@@ -16,21 +16,27 @@
 
 package org.cspoker.server.game.events.gameEvents.playerActionEvents;
 
-/**
- * An interface for deal listeners.
- * 
- * @author Kenzo
- * 
- */
-public interface DealListener {
+import org.cspoker.common.game.elements.pots.Pots;
+import org.cspoker.server.game.events.gameEvents.GameEvent;
+import org.xml.sax.ContentHandler;
+import org.xml.sax.SAXException;
 
-    /**
-     * This method is called when subscribed to inform a deal occurred.
-     * 
-     * @param event
-     *                The event object containing all information of the
-     *                occurred event.
-     */
-    public void onDealEvent(DealEvent event);
+public class ActionChangedPotEvent extends GameEvent{
+
+	private final Pots pots;
+
+	public ActionChangedPotEvent(Pots pots){
+		this.pots = pots;
+	}
+
+	public Pots getPots(){
+		return pots;
+	}
+
+	@Override
+	public void toXml(ContentHandler handler) throws SAXException {
+		// TODO Auto-generated method stub
+
+	}
 
 }

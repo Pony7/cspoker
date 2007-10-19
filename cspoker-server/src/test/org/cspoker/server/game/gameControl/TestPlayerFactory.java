@@ -13,35 +13,27 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-
 package org.cspoker.server.game.gameControl;
 
+import org.cspoker.server.game.elements.chips.IllegalValueException;
 import org.cspoker.server.game.player.GamePlayer;
+import org.cspoker.server.game.player.IllegalNameException;
+import org.cspoker.server.game.player.PlayerFactory;
 
-/**
- * Thrown to indicate that the trying action is not a valid action.
- * 
- * @author Kenzo
- * 
- * TODO refactor
- * 
- */
-public class IllegalActionException extends Exception {
+class TestPlayerFactory extends PlayerFactory{
 
-    private static final long serialVersionUID = -5675804638273023229L;
+	@Override
+	public synchronized GamePlayer getUniquePlayer(String name) throws IllegalNameException{
+		return createNewPlayer(name);
+	}
 
-    private GamePlayer player;
-
-    public IllegalActionException(String message) {
-	super(message);
-    }
-
-    public IllegalActionException(GamePlayer player, String message) {
-	super(player.getName() + " performed an illegal action. " + message);
-	this.player = player;
-    }
-
-    public GamePlayer getPlayer() {
-	return player;
-    }
+	@Override
+	public synchronized GamePlayer getUniquePlayer(String name, int initialValue) throws IllegalValueException, IllegalNameException{
+		try {
+			return createNewPlayer(name, initialValue);
+		} catch (IllegalValueException e) {
+			throw new IllegalStateException(getStdStackValue()
+					+ " should be a valid value.");
+		}
+	}
 }

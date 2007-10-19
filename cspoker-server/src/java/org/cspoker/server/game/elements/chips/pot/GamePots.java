@@ -22,7 +22,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.cspoker.server.game.elements.chips.IllegalValueException;
-import org.cspoker.server.game.player.Player;
+import org.cspoker.server.game.player.GamePlayer;
 
 /**
  * A class to represent a group of pots.
@@ -30,12 +30,12 @@ import org.cspoker.server.game.player.Player;
  * @author Kenzo
  * 
  */
-public class Pots {
-    private static Logger logger = Logger.getLogger(Pots.class);
+public class GamePots {
+    private static Logger logger = Logger.getLogger(GamePots.class);
 
-    private final List<Pot> pots;
+    private final List<GamePot> pots;
 
-    private final Pot pot;
+    private final GamePot pot;
 
     private boolean isClosed;
 
@@ -43,9 +43,9 @@ public class Pots {
      * Construct a new group of pots.
      * 
      */
-    public Pots() {
-	pot = new Pot();
-	pots = new ArrayList<Pot>();
+    public GamePots() {
+	pot = new GamePot();
+	pots = new ArrayList<GamePot>();
 	isClosed = false;
     }
 
@@ -60,38 +60,38 @@ public class Pots {
      * @throws IllegalValueException
      */
     public void collectAmountFromPlayersToSidePot(int amount,
-	    List<Player> players) throws IllegalValueException {
+	    List<GamePlayer> players) throws IllegalValueException {
 	if (isClosed())
 	    return;
-	Pots.logger.info("collect " + amount);
+	GamePots.logger.info("collect " + amount);
 	if ((amount > 0) || (pot.getChips().getValue() > 0)) {
-	    Pot sidePot = new Pot();
+	    GamePot sidePot = new GamePot();
 	    pot.transferAllChipsTo(sidePot);
-	    for (Player player : players) {
+	    for (GamePlayer player : players) {
 		try {
 		    player.getBetChips().transferAmountTo(amount,
 			    sidePot.getChips());
 		} catch (IllegalArgumentException e) {
-		    Pots.logger.error(e.getLocalizedMessage(), e);
+		    GamePots.logger.error(e.getLocalizedMessage(), e);
 		}
 	    }
 	    pots.add(sidePot);
 	}
     }
 
-    public Pot getMainPot() {
+    public GamePot getMainPot() {
 	if (isClosed())
 	    return null;
 	return pot;
     }
 
-    public List<Pot> getSidePots() {
+    public List<GamePot> getSidePots() {
 	if (isClosed)
 	    return null;
 	return Collections.unmodifiableList(pots);
     }
 
-    public Pot getNewestSidePot() {
+    public GamePot getNewestSidePot() {
 	if (isClosed || pots.isEmpty())
 	    return null;
 	return pots.get(pots.size() - 1);
@@ -111,10 +111,10 @@ public class Pots {
      *                The list of players from who to collect the bet chips
      *                from.
      */
-    public void collectChipsToPot(List<Player> players) {
+    public void collectChipsToPot(List<GamePlayer> players) {
 	if (isClosed())
 	    return;
-	for (Player player : players) {
+	for (GamePlayer player : players) {
 	    try {
 		player.getBetChips().transferAllChipsTo(pot.getChips());
 	    } catch (IllegalValueException e) {
@@ -129,10 +129,10 @@ public class Pots {
      * @param player
      *                The player who will have to show his cards at the end.
      */
-    public void addShowdownPlayer(Player player) {
+    public void addShowdownPlayer(GamePlayer player) {
 	if (isClosed())
 	    return;
-	for (Pot pot : pots) {
+	for (GamePot pot : pots) {
 	    pot.addShowdownPlayer(player);
 	}
 	nbShowdownPlayers++;
@@ -149,13 +149,13 @@ public class Pots {
      * 
      * @param showdownPlayers
      */
-    public void close(List<Player> showdownPlayers) {
+    public void close(List<GamePlayer> showdownPlayers) {
 	if (isClosed())
 	    return;
 	if (pot.getValue() > 0) {
 	    pots.add(pot);
 	}
-	for (Player player : showdownPlayers) {
+	for (GamePlayer player : showdownPlayers) {
 	    addShowdownPlayer(player);
 	}
 	isClosed = true;
@@ -171,7 +171,7 @@ public class Pots {
      * 
      * @return
      */
-    public List<Pot> getPots() {
+    public List<GamePot> getPots() {
 	if (!isClosed())
 	    return null;
 	return Collections.unmodifiableList(pots);
@@ -183,11 +183,11 @@ public class Pots {
     public int getTotalValue() {
 	int value = 0;
 	if (isClosed()) {
-	    for (Pot pot : getPots()) {
+	    for (GamePot pot : getPots()) {
 		value += pot.getValue();
 	    }
 	} else {
-	    for (Pot pot : getSidePots()) {
+	    for (GamePot pot : getSidePots()) {
 		value += pot.getValue();
 	    }
 	    value += getMainPot().getValue();
@@ -200,17 +200,17 @@ public class Pots {
 	String toReturn = "Pot is ";
 	if (isClosed()) {
 	    toReturn += "closed.\n";
-	    List<Pot> pots = getPots();
+	    List<GamePot> pots = getPots();
 	    for (int i = 0; i < pots.size(); i++) {
-		Pot pot = pots.get(i);
+		GamePot pot = pots.get(i);
 		toReturn += "Pot " + i + ": " + pot + "\n";
 	    }
 	} else {
 	    toReturn += "open.\n";
 	    toReturn += "Main pot: " + getMainPot() + "\n";
-	    List<Pot> sidePots = getSidePots();
+	    List<GamePot> sidePots = getSidePots();
 	    for (int i = 0; i < sidePots.size(); i++) {
-		Pot pot = sidePots.get(i);
+		GamePot pot = sidePots.get(i);
 		toReturn += "Side Pot " + i + ": " + pot + "\n";
 	    }
 	}

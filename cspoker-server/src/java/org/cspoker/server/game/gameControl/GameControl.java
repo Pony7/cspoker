@@ -22,29 +22,27 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.cspoker.common.game.elements.pots.Pots;
 import org.cspoker.server.game.GameMediator;
 import org.cspoker.server.game.elements.table.PlayerListFullException;
 import org.cspoker.server.game.elements.table.Table;
 import org.cspoker.server.game.events.gameEvents.NextPlayerEvent;
-import org.cspoker.server.game.events.gameEvents.PotChangedEvent;
-import org.cspoker.server.game.events.gameEvents.StackChangedEvent;
 import org.cspoker.server.game.events.gameEvents.playerActionEvents.BetEvent;
 import org.cspoker.server.game.events.gameEvents.playerActionEvents.CallEvent;
 import org.cspoker.server.game.events.gameEvents.playerActionEvents.CheckEvent;
-import org.cspoker.server.game.events.gameEvents.playerActionEvents.DealEvent;
 import org.cspoker.server.game.events.gameEvents.playerActionEvents.FoldEvent;
 import org.cspoker.server.game.events.gameEvents.playerActionEvents.RaiseEvent;
 import org.cspoker.server.game.gameControl.rounds.BettingRound;
 import org.cspoker.server.game.gameControl.rounds.Round;
 import org.cspoker.server.game.gameControl.rounds.WaitingRound;
-import org.cspoker.server.game.player.Player;
+import org.cspoker.server.game.player.GamePlayer;
 
 /**
  * This class is responsible to control the flow of the game. This class changes
  * the state (round) in which the players are.
- * 
+ *
  * @author Kenzo
- * 
+ *
  */
 public class GameControl implements PlayerAction {
     private static Logger logger = Logger.getLogger(GameControl.class);
@@ -60,7 +58,7 @@ public class GameControl implements PlayerAction {
 
     /**
      * The variable containing the round in which the current game is.
-     * 
+     *
      */
     private Round round;
 
@@ -75,13 +73,13 @@ public class GameControl implements PlayerAction {
 
     /**
      * Construct a new game control with given table.
-     * 
+     *
      */
     public GameControl(GameMediator gameMediator, Table table) {
 	this(gameMediator, table, table.getRandomPlayer());
     }
 
-    public GameControl(GameMediator gameMediator, Table table, Player dealer) {
+    public GameControl(GameMediator gameMediator, Table table, GamePlayer dealer) {
 	this.gameMediator = gameMediator;
 	gameMediator.setGameControl(this);
 	game = new Game(table, dealer);
@@ -103,15 +101,15 @@ public class GameControl implements PlayerAction {
 		+ ") - "
 		+ GameControl.dateFormat.format(date));
 
-	List<Player> players = game.getCurrentDealPlayers();
-	for (Player player : players) {
+	List<GamePlayer> players = game.getCurrentDealPlayers();
+	for (GamePlayer player : players) {
 	    GameControl.logger.info(player.toString());
 	}
     }
 
     /**
      * Returns the game controlled by this game controller.
-     * 
+     *
      * @return The game controlled by this game controller.
      */
     public Game getGame() {
@@ -128,7 +126,7 @@ public class GameControl implements PlayerAction {
 
     /**
      * The player puts money in the pot.
-     * 
+     *
      * @param player
      *                The player who puts a bet.
      * @param amount
@@ -139,14 +137,10 @@ public class GameControl implements PlayerAction {
      *                 [must] The action performed is not a valid action.
      * @see PlayerAction
      */
-    public void bet(Player player, int amount) throws IllegalActionException {
+    public void bet(GamePlayer player, int amount) throws IllegalActionException {
 	round.bet(player, amount);
 	gameMediator.publishBetEvent(new BetEvent(player.getSavedPlayer(),
-		amount));
-	gameMediator.publishStackChanged(new StackChangedEvent(player
-		.getSavedPlayer()));
-	gameMediator.publishPotChangedEvent(new PotChangedEvent(round
-		.getCurrentPotValue()));
+		amount, new Pots(round.getCurrentPotValue())));
 	GameControl.logger.info(player.getName() + " bets " + amount + ".");
 	checkIfEndedAndChangeRound();
     }
@@ -154,7 +148,7 @@ public class GameControl implements PlayerAction {
     /**
      * To put into the pot an amount of money equal to the most recent bet or
      * raise.
-     * 
+     *
      * @param player
      *                The player who calls.
      * @throws IllegalActionException
@@ -163,13 +157,9 @@ public class GameControl implements PlayerAction {
      *                 [must] The action performed is not a valid action.
      * @see PlayerAction
      */
-    public void call(Player player) throws IllegalActionException {
+    public void call(GamePlayer player) throws IllegalActionException {
 	round.call(player);
-	gameMediator.publishCallEvent(new CallEvent(player.getSavedPlayer()));
-	gameMediator.publishStackChanged(new StackChangedEvent(player
-		.getSavedPlayer()));
-	gameMediator.publishPotChangedEvent(new PotChangedEvent(round
-		.getCurrentPotValue()));
+	gameMediator.publishCallEvent(new CallEvent(player.getSavedPlayer(), new Pots(round.getCurrentPotValue())));
 	GameControl.logger.info(player.getName() + " calls.");
 	checkIfEndedAndChangeRound();
     }
@@ -177,7 +167,7 @@ public class GameControl implements PlayerAction {
     /**
      * If there is no bet on the table and you do not wish to place a bet. You
      * may only check when there are no prior bets.
-     * 
+     *
      * @param player
      *                The player who checks.
      * @throws IllegalActionException
@@ -186,7 +176,7 @@ public class GameControl implements PlayerAction {
      *                 [must] The action performed is not a valid action.
      * @see PlayerAction
      */
-    public void check(Player player) throws IllegalActionException {
+    public void check(GamePlayer player) throws IllegalActionException {
 	round.check(player);
 	gameMediator.publishCheckEvent(new CheckEvent(player.getSavedPlayer()));
 	GameControl.logger.info(player.getName() + " checks.");
@@ -195,7 +185,7 @@ public class GameControl implements PlayerAction {
 
     /**
      * Raise the bet with given amount.
-     * 
+     *
      * @param player
      *                The player who raises the current bet.
      * @param amount
@@ -206,14 +196,10 @@ public class GameControl implements PlayerAction {
      *                 [must] The action performed is not a valid action.
      * @see PlayerAction
      */
-    public void raise(Player player, int amount) throws IllegalActionException {
+    public void raise(GamePlayer player, int amount) throws IllegalActionException {
 	round.raise(player, amount);
 	gameMediator.publishRaiseEvent(new RaiseEvent(player.getSavedPlayer(),
-		amount));
-	gameMediator.publishStackChanged(new StackChangedEvent(player
-		.getSavedPlayer()));
-	gameMediator.publishPotChangedEvent(new PotChangedEvent(round
-		.getCurrentPotValue()));
+		amount, new Pots(round.getCurrentPotValue())));
 	GameControl.logger.info(player.getName() + ": raises $" + amount
 		+ " to $" + player.getSavedPlayer().getBetChipsValue());
 	checkIfEndedAndChangeRound();
@@ -221,10 +207,10 @@ public class GameControl implements PlayerAction {
 
     /**
      * The given player folds the cards.
-     * 
+     *
      * The player will not be able to take any actions in the coming rounds of
      * the current deal.
-     * 
+     *
      * @param player
      *                The player who folds.
      * @throws IllegalActionException
@@ -233,7 +219,7 @@ public class GameControl implements PlayerAction {
      *                 [must] The action performed is not a valid action.
      * @see PlayerAction
      */
-    public void fold(Player player) throws IllegalActionException {
+    public void fold(GamePlayer player) throws IllegalActionException {
 	round.fold(player);
 	gameMediator.publishFoldEvent(new FoldEvent(player.getSavedPlayer()));
 	GameControl.logger.info(player.getName() + ": folds");
@@ -243,7 +229,7 @@ public class GameControl implements PlayerAction {
     /**
      * The player who the dealer-button has been dealt to can choose to start
      * the deal. From that moment, new players can not join the on-going deal.
-     * 
+     *
      * @param player
      *                The player who deals.
      * @throws IllegalActionException
@@ -252,16 +238,15 @@ public class GameControl implements PlayerAction {
      *                 [must] The action performed is not a valid action.
      * @see PlayerAction
      */
-    public void deal(Player player) throws IllegalActionException {
+    public void deal(GamePlayer player) throws IllegalActionException {
 	GameControl.logger.info("Dealer: " + player.getName());
 	round.deal(player);
-	gameMediator.publishDealEvent(new DealEvent(player.getSavedPlayer()));
 	checkIfEndedAndChangeRound();
     }
 
     /**
      * The given player goes all-in.
-     * 
+     *
      * @param player
      *                The player who goes all-in.
      * @throws IllegalActionException
@@ -270,17 +255,17 @@ public class GameControl implements PlayerAction {
      *                 [must] The action performed is not a valid action.
      * @see PlayerAction
      */
-    public void allIn(Player player) throws IllegalActionException {
+    public void allIn(GamePlayer player) throws IllegalActionException {
 	round.allIn(player);
 	checkIfEndedAndChangeRound();
     }
 
-    public void joinGame(Player player) throws IllegalActionException,
+    public void joinGame(GamePlayer player) throws IllegalActionException,
 	    PlayerListFullException {
 	game.joinGame(player);
     }
 
-    public void leaveGame(Player player) throws IllegalActionException {
+    public void leaveGame(GamePlayer player) throws IllegalActionException {
 	game.leaveGame(player);
     }
 
@@ -303,9 +288,9 @@ public class GameControl implements PlayerAction {
 
     /**
      * End this round and change the round to the next round.
-     * 
+     *
      * If only one player is left, the next round should be a waiting round.
-     * 
+     *
      */
     private void changeToNextRound() {
 	round.endRound();

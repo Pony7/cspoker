@@ -22,10 +22,10 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.cspoker.server.game.elements.cards.deck.Deck;
 import org.cspoker.server.game.elements.cards.deck.Deck.Card;
-import org.cspoker.server.game.elements.chips.pot.Pots;
+import org.cspoker.server.game.elements.chips.pot.GamePots;
 import org.cspoker.server.game.elements.table.PlayerListFullException;
 import org.cspoker.server.game.elements.table.Table;
-import org.cspoker.server.game.player.Player;
+import org.cspoker.server.game.player.GamePlayer;
 import org.cspoker.server.game.utilities.LoopingList;
 
 /**
@@ -56,9 +56,9 @@ public class Game {
     /**
      * This looping list contains the active players of this game.
      */
-    private LoopingList<Player> currentHandPlayers;
+    private LoopingList<GamePlayer> currentHandPlayers;
 
-    private LoopingList<Player> initialCurrentHandPlayers;
+    private LoopingList<GamePlayer> initialCurrentHandPlayers;
 
     /**
      * This variable contains the deck of cards of this game.
@@ -73,22 +73,22 @@ public class Game {
     /**
      * This variable contains all the pots in this game.
      */
-    private Pots pots;
+    private GamePots pots;
 
     /**
      * This variable contains the dealer of this game.
      */
-    private Player dealer;
+    private GamePlayer dealer;
 
     /**
      * This variable contains the firstToActPlayer of this game.
      */
-    private Player firstToActPlayer;
+    private GamePlayer firstToActPlayer;
 
     /**
      * This variable contains the next dealer of this game.
      */
-    private Player nextDealer;
+    private GamePlayer nextDealer;
 
     /***************************************************************************
      * Constructor
@@ -106,16 +106,16 @@ public class Game {
 	this(table, table.getRandomPlayer());
     }
 
-    public Game(Table table, Player dealer) {
+    public Game(Table table, GamePlayer dealer) {
 	this.table = table;
 	table.setPlaying(true);
 	gameProperty = table.getGameProperty();
-	List<Player> players = table.getPlayers();
-	currentHandPlayers = new LoopingList<Player>(players);
-	initialCurrentHandPlayers = new LoopingList<Player>(players);
+	List<GamePlayer> players = table.getPlayers();
+	currentHandPlayers = new LoopingList<GamePlayer>(players);
+	initialCurrentHandPlayers = new LoopingList<GamePlayer>(players);
 	deck = new Deck();
 	communityCards = new ArrayList<Card>();
-	pots = new Pots();
+	pots = new GamePots();
 	changeDealer(dealer);
     }
 
@@ -130,11 +130,11 @@ public class Game {
     public void dealNewHand() {
 	communityCards = new ArrayList<Card>();
 	deck = new Deck();
-	pots = new Pots();
-	List<Player> players = table.getPlayers();
-	currentHandPlayers = new LoopingList<Player>(players);
-	initialCurrentHandPlayers = new LoopingList<Player>(players);
-	for (Player player : currentHandPlayers.getList()) {
+	pots = new GamePots();
+	List<GamePlayer> players = table.getPlayers();
+	currentHandPlayers = new LoopingList<GamePlayer>(players);
+	initialCurrentHandPlayers = new LoopingList<GamePlayer>(players);
+	for (GamePlayer player : currentHandPlayers.getList()) {
 	    player.clearPocketCards();
 	}
 	setCurrentPlayer(dealer);
@@ -151,7 +151,7 @@ public class Game {
      * Return the firstToActPlayer of this game.
      * 
      */
-    public Player getFirstToActPlayer() {
+    public GamePlayer getFirstToActPlayer() {
 	return firstToActPlayer;
     }
 
@@ -165,7 +165,7 @@ public class Game {
      *         is part of this game. | result == firstToActPlayer!=null &&
      *         hasAsActivePlayer(firstToActPlayer)
      */
-    public boolean canHaveAsFirstToActPlayer(Player firstToActPlayer) {
+    public boolean canHaveAsFirstToActPlayer(GamePlayer firstToActPlayer) {
 	return (firstToActPlayer != null)
 		&& hasAsActivePlayer(firstToActPlayer);
     }
@@ -180,7 +180,7 @@ public class Game {
      * @post The firstToActPlayer of this game is set to the given
      *       firstToActPlayer. | new.getFirstToActPlayer() == firstToActPlayer
      */
-    public void setFirstToActPlayer(Player firstToActPlayer) {
+    public void setFirstToActPlayer(GamePlayer firstToActPlayer) {
 	this.firstToActPlayer = firstToActPlayer;
     }
 
@@ -194,7 +194,7 @@ public class Game {
      * @return The dealer of this game.
      * 
      */
-    public Player getDealer() {
+    public GamePlayer getDealer() {
 	return dealer;
     }
 
@@ -207,7 +207,7 @@ public class Game {
      *         at this table. | result == (dealer!=null) &&
      *         getTable().hasAsPlayer(dealer)
      */
-    public boolean canHaveAsDealer(Player dealer) {
+    public boolean canHaveAsDealer(GamePlayer dealer) {
 	return (dealer != null) && getTable().hasAsPlayer(dealer);
     }
 
@@ -221,7 +221,7 @@ public class Game {
      * @post The dealer of this game is set to the given dealer. |
      *       new.getDealer() == dealer
      */
-    public void setDealer(Player dealer) {
+    public void setDealer(GamePlayer dealer) {
 	this.dealer = dealer;
     }
 
@@ -235,7 +235,7 @@ public class Game {
      * @return The next dealer of this game.
      * 
      */
-    public Player getNextDealer() {
+    public GamePlayer getNextDealer() {
 	return nextDealer;
     }
 
@@ -249,7 +249,7 @@ public class Game {
      *         seated at this table. | result == (nextDealer!=null) &&
      *         getTable().hasAsPlayer(nextDealer)
      */
-    public boolean canHaveAsNextDealer(Player nextDealer) {
+    public boolean canHaveAsNextDealer(GamePlayer nextDealer) {
 	return (nextDealer != null) && getTable().hasAsPlayer(nextDealer);
     }
 
@@ -263,7 +263,7 @@ public class Game {
      * @post The next dealer of this game is set to the given next dealer. |
      *       new.getNextDealer() == nextDealer
      */
-    public void setNextDealer(Player nextDealer) {
+    public void setNextDealer(GamePlayer nextDealer) {
 	this.nextDealer = nextDealer;
     }
 
@@ -289,7 +289,7 @@ public class Game {
      * 
      * @return The pots of this game.
      */
-    public Pots getPots() {
+    public GamePots getPots() {
 	return pots;
     }
 
@@ -323,7 +323,7 @@ public class Game {
      * 
      * @return The current player of this game.
      */
-    public Player getCurrentPlayer() {
+    public GamePlayer getCurrentPlayer() {
 	if (currentHandPlayers.size() == 0)
 	    return null;
 	return currentHandPlayers.getCurrent();
@@ -334,7 +334,7 @@ public class Game {
      * 
      * @return The previous player of this game.
      */
-    public Player getPreviousPlayer() {
+    public GamePlayer getPreviousPlayer() {
 	return currentHandPlayers.getPrevious();
     }
 
@@ -343,7 +343,7 @@ public class Game {
      * 
      * @return The next player of this game.
      */
-    public Player getNextPlayer() {
+    public GamePlayer getNextPlayer() {
 	return currentHandPlayers.getNext();
     }
 
@@ -357,7 +357,7 @@ public class Game {
      * @post The current player is set to the given player
      *       |new.getCurrentPlayer()==player
      */
-    public void setCurrentPlayer(Player player) {
+    public void setCurrentPlayer(GamePlayer player) {
 	currentHandPlayers.setCurrent(player);
     }
 
@@ -370,7 +370,7 @@ public class Game {
      *         at this table, False otherwise. | result == (player!=null) &&
      *         hasAsActivePlayer(player)
      */
-    public boolean canHaveAsCurrentPlayer(Player player) {
+    public boolean canHaveAsCurrentPlayer(GamePlayer player) {
 	return (player != null) && hasAsActivePlayer(player);
     }
 
@@ -388,7 +388,7 @@ public class Game {
      * @post If the given player is the current player, the current player is
      *       changed to the next player.
      */
-    public void removePlayerFromCurrentDeal(Player player) {
+    public void removePlayerFromCurrentDeal(GamePlayer player) {
 	if (getFirstToActPlayer().equals(player)) {
 	    setFirstToActPlayer(currentHandPlayers.getNextTo(player));
 	}
@@ -400,7 +400,7 @@ public class Game {
      * 
      * @return The list of all active players in this game.
      */
-    public List<Player> getCurrentDealPlayers() {
+    public List<GamePlayer> getCurrentDealPlayers() {
 	return currentHandPlayers.getList();
     }
 
@@ -421,7 +421,7 @@ public class Game {
      * @return True if the given player is contained in the list of current deal
      *         players, False otherwise.
      */
-    public boolean hasAsActivePlayer(Player player) {
+    public boolean hasAsActivePlayer(GamePlayer player) {
 	return currentHandPlayers.contains(player);
     }
 
@@ -477,7 +477,7 @@ public class Game {
      * @throws PlayerListFullException
      **************************************************************************/
 
-    public void joinGame(Player player) throws PlayerListFullException {
+    public void joinGame(GamePlayer player) throws PlayerListFullException {
 	table.addPlayer(player);
 	if (getDealer() == null) {
 	    setDealer(player);
@@ -486,7 +486,7 @@ public class Game {
 	}
     }
 
-    public void leaveGame(Player player) throws IllegalActionException {
+    public void leaveGame(GamePlayer player) throws IllegalActionException {
 	Game.logger.info("Kick out: " + player.getName());
 	if (!table.hasAsPlayer(player))
 	    throw new IllegalActionException(player.getName()
@@ -513,7 +513,7 @@ public class Game {
      * @pre The given dealer should be an active player at the table.
      *      |dealer!=null && hasAsActivePlayer(dealer)
      */
-    public void changeDealer(Player dealer) {
+    public void changeDealer(GamePlayer dealer) {
 	if (dealer == null)
 	    throw new IllegalArgumentException(
 		    "The given dealer should be effective");

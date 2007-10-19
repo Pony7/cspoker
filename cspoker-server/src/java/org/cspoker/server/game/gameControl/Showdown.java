@@ -23,17 +23,17 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.cspoker.common.game.player.PlayerId;
 import org.cspoker.server.game.GameMediator;
-import org.cspoker.server.game.PlayerId;
 import org.cspoker.server.game.elements.cards.deck.Deck.Card;
 import org.cspoker.server.game.elements.cards.hand.Hand;
 import org.cspoker.server.game.elements.chips.IllegalValueException;
-import org.cspoker.server.game.elements.chips.pot.Pot;
+import org.cspoker.server.game.elements.chips.pot.GamePot;
 import org.cspoker.server.game.elements.player.ShowdownPlayer;
 import org.cspoker.server.game.elements.player.Winner;
 import org.cspoker.server.game.events.gameEvents.ShowHandEvent;
 import org.cspoker.server.game.events.gameEvents.WinnerEvent;
-import org.cspoker.server.game.player.Player;
+import org.cspoker.server.game.player.GamePlayer;
 import org.cspoker.server.game.player.SavedWinner;
 
 /**
@@ -96,10 +96,10 @@ public class Showdown {
 		    .getSavedShowdownPlayer()));
 	}
 
-	for (Pot pot : game.getPots().getPots()) {
-	    List<Player> winners = getWinners(pot);
+	for (GamePot pot : game.getPots().getPots()) {
+	    List<GamePlayer> winners = getWinners(pot);
 	    System.out.print("Winners: ");
-	    for (Player player : winners) {
+	    for (GamePlayer player : winners) {
 		System.out.print(player.getName() + " ");
 	    }
 	    splitPot(winners, pot);
@@ -133,8 +133,8 @@ public class Showdown {
      * @param pot
      *                The pot to divide between all winners.
      */
-    private void splitPot(List<Player> winners, Pot pot) {
-	for (Player winner : winners) {
+    private void splitPot(List<GamePlayer> winners, GamePot pot) {
+	for (GamePlayer winner : winners) {
 	    if (!winnersMap.containsKey(winner.getId())) {
 		winnersMap.put(winner.getId(), new Winner(winner));
 	    }
@@ -142,7 +142,7 @@ public class Showdown {
 
 	int nbChips_per_winner = pot.getChips().getValue() / winners.size();
 
-	for (Player player : winners) {
+	for (GamePlayer player : winners) {
 	    try {
 		pot.getChips().transferAmountTo(nbChips_per_winner,
 			winnersMap.get(player.getId()).getGainedChipsPile());
@@ -154,10 +154,10 @@ public class Showdown {
 	// the player with the single highest card gets the odd chips that can't
 	// be divided over the winners
 	if (pot.getChips().getValue() != 0) {
-	    Player playerWithHighestSingleCard = winners.get(0);
+	    GamePlayer playerWithHighestSingleCard = winners.get(0);
 	    Card highestCard = new Hand(playerWithHighestSingleCard
 		    .getPocketCards()).getHighestRankCard();
-	    for (Player player : winners) {
+	    for (GamePlayer player : winners) {
 		Card otherHighestCard = new Hand(player.getPocketCards())
 			.getHighestRankCard();
 		int compareSingleBestCard = highestCard
@@ -190,14 +190,14 @@ public class Showdown {
      *                The pot in which the winner(s) must be chosen.
      * @return The list of winners of the pot in the current game.
      */
-    private List<Player> getWinners(Pot pot) {
+    private List<GamePlayer> getWinners(GamePot pot) {
 	List<ShowdownPlayer> players = getShowdownPlayersFromPot(pot);
 	Collections.sort(players);
 	for (ShowdownPlayer player : players) {
 	    Showdown.logger.info(player);
 	}
 	ShowdownPlayer winner = players.get(0);
-	List<Player> winners = new ArrayList<Player>();
+	List<GamePlayer> winners = new ArrayList<GamePlayer>();
 	int i = 0;
 	while ((i < players.size()) && winner.equals(players.get(i))) {
 	    winners.add(players.get(i).getPlayer());
@@ -213,9 +213,9 @@ public class Showdown {
      *                The pot from which the showdown players must be returned.
      * @return The list of showdown players in the current game.
      */
-    private List<ShowdownPlayer> getShowdownPlayersFromPot(Pot pot) {
+    private List<ShowdownPlayer> getShowdownPlayersFromPot(GamePot pot) {
 	List<ShowdownPlayer> showDownPlayers = new ArrayList<ShowdownPlayer>();
-	for (Player player : pot.getPlayers()) {
+	for (GamePlayer player : pot.getPlayers()) {
 	    showDownPlayers.add(new ShowdownPlayer(player,
 		    getBestFiveCardHand(player)));
 	}
@@ -232,7 +232,7 @@ public class Showdown {
      * @note By using this method, the recalculation of finding the best 5 card
      *       hand is omitted.
      */
-    private Hand getBestFiveCardHand(Player player) {
+    private Hand getBestFiveCardHand(GamePlayer player) {
 	List<Card> cards = new ArrayList<Card>(7);
 	cards.addAll(getGame().getCommunityCards());
 	cards.addAll(player.getPocketCards());

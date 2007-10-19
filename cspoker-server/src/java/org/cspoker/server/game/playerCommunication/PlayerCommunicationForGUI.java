@@ -48,7 +48,7 @@ import org.cspoker.server.game.gameControl.IllegalActionException;
  * @author Kenzo
  *
  */
-public interface PlayerCommunication {
+public interface PlayerCommunicationForGUI {
 
     /***************************************************************************
      * Player Actions
@@ -263,6 +263,7 @@ public interface PlayerCommunication {
      */
     public void unsubscribeCheckListener(CheckListener listener);
 
+
     /**
      * Subscribe the given fold listener for fold events.
      *
@@ -426,6 +427,22 @@ public interface PlayerCommunication {
     public void unsubscribePlayerJoinedGameListener(
 	    PlayerJoinedGameListener listener);
 
+//    /**
+//     * Subscribe the given pot changed listener for pot changed events.
+//     *
+//     * @param listener
+//     *                The listener to subscribe.
+//     */
+//    public void subscribePotChangedListener(PotChangedListener listener);
+//
+//    /**
+//     * Unsubscribe the given pot changed listener for pot changed events.
+//     *
+//     * @param listener
+//     *                The listener to unsubscribe.
+//     */
+//    public void unsubscribePotChangedListener(PotChangedListener listener);
+
     /**
      * Subscribe the given show hand listener for show hand events.
      *
@@ -441,6 +458,22 @@ public interface PlayerCommunication {
      *                The listener to unsubscribe.
      */
     public void unsubscribeShowHandListener(ShowHandListener listener);
+
+//    /**
+//     * Subscribe the given stack changed listener for stack changed events.
+//     *
+//     * @param listener
+//     *                The listener to subscribe.
+//     */
+//    public void subscribeStackChangedListener(StackChangedListener listener);
+//
+//    /**
+//     * Unsubscribe the given stack changed listener for stack changed events.
+//     *
+//     * @param listener
+//     *                The listener to unsubscribe.
+//     */
+//    public void unsubscribeStackChangedListener(StackChangedListener listener);
 
     /**
      * Subscribe the given winner listener for winner events.
