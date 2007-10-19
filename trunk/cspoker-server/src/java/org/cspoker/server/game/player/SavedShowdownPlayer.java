@@ -15,15 +15,16 @@
  */
 package org.cspoker.server.game.player;
 
+import org.cspoker.common.game.player.Player;
 import org.cspoker.server.game.elements.cards.hand.Hand;
 
 public class SavedShowdownPlayer {
 
-    private final SavedPlayer player;
+    private final Player player;
 
     private final Hand hand;
 
-    public SavedShowdownPlayer(SavedPlayer player, Hand hand) {
+    public SavedShowdownPlayer(Player player, Hand hand) {
 	this.player = player;
 	this.hand = hand;
     }
@@ -38,7 +39,7 @@ public class SavedShowdownPlayer {
 	return this.player.getName() + " has a " + this.hand;
     }
     
-    public SavedPlayer getPlayer() {
+    public Player getPlayer() {
 	return player;
     }
     

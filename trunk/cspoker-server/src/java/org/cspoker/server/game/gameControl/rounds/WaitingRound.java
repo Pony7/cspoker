@@ -20,7 +20,7 @@ import org.cspoker.server.game.GameMediator;
 import org.cspoker.server.game.gameControl.Game;
 import org.cspoker.server.game.gameControl.IllegalActionException;
 import org.cspoker.server.game.gameControl.PlayerAction;
-import org.cspoker.server.game.player.Player;
+import org.cspoker.server.game.player.GamePlayer;
 
 public class WaitingRound extends Round {
 
@@ -42,7 +42,7 @@ public class WaitingRound extends Round {
      * @see PlayerAction
      */
     @Override
-    public void deal(Player player) throws IllegalActionException {
+    public void deal(GamePlayer player) throws IllegalActionException {
 	// Check whether the given player can do this action.
 	if (!onTurn(player))
 	    throw new IllegalActionException(player.getName()

@@ -15,13 +15,15 @@
  */
 package org.cspoker.server.game.player;
 
+import org.cspoker.common.game.player.Player;
+
 public class SavedWinner {
 
     private final int gainedAmount;
 
-    private final SavedPlayer player;
+    private final Player player;
 
-    public SavedWinner(SavedPlayer player, int gainedAmount) {
+    public SavedWinner(Player player, int gainedAmount) {
 	this.player = player;
 	this.gainedAmount = gainedAmount;
     }
@@ -30,7 +32,7 @@ public class SavedWinner {
 	return gainedAmount;
     }
     
-    public SavedPlayer getPlayer() {
+    public Player getPlayer() {
 	return player;
     }
 

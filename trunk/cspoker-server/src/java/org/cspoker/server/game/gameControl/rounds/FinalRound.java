@@ -21,14 +21,14 @@ import org.cspoker.server.game.GameMediator;
 import org.cspoker.server.game.events.gameEvents.NewRoundEvent;
 import org.cspoker.server.game.gameControl.Game;
 import org.cspoker.server.game.gameControl.Showdown;
-import org.cspoker.server.game.player.Player;
+import org.cspoker.server.game.player.GamePlayer;
 
 public class FinalRound extends BettingRound {
     private static Logger logger = Logger.getLogger(FinalRound.class);
 
     public FinalRound(GameMediator gameMediator, Game game) {
 	super(gameMediator, game);
-	Player currentPlayer = game.getCurrentPlayer();
+	GamePlayer currentPlayer = game.getCurrentPlayer();
 	if (currentPlayer != null)
 	    gameMediator.publishNewRoundEvent(new NewRoundEvent(toString(),
 		    currentPlayer.getSavedPlayer()));

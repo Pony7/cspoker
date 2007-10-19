@@ -19,6 +19,7 @@ package org.cspoker.server.game;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import org.cspoker.common.game.player.PlayerId;
 import org.cspoker.server.game.events.Event;
 import org.cspoker.server.game.events.EventListener;
 import org.cspoker.server.game.events.serverEvents.AllServerEventsListener;

@@ -18,16 +18,16 @@ package org.cspoker.server.game.elements.player;
 
 import org.cspoker.server.game.elements.chips.Chips;
 import org.cspoker.server.game.elements.chips.IllegalValueException;
-import org.cspoker.server.game.player.Player;
+import org.cspoker.server.game.player.GamePlayer;
 import org.cspoker.server.game.player.SavedWinner;
 
 public class Winner {
 
-    private final Player winner;
+    private final GamePlayer winner;
 
     private final Chips chips = new Chips();
 
-    public Winner(Player winner) {
+    public Winner(GamePlayer winner) {
 	this.winner = winner;
     }
 

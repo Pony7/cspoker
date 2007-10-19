@@ -16,19 +16,19 @@
 
 package org.cspoker.server.game.events.serverEvents;
 
+import org.cspoker.common.game.player.Player;
 import org.cspoker.server.game.TableId;
-import org.cspoker.server.game.player.SavedPlayer;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
 public class PlayerJoinedEvent extends ServerEvent {
 
-    private final SavedPlayer player;
+    private final Player player;
 
     private final TableId id;
 
-    public PlayerJoinedEvent(SavedPlayer player, TableId id) {
+    public PlayerJoinedEvent(Player player, TableId id) {
 	this.player = player;
 	this.id = id;
     }
@@ -38,7 +38,7 @@ public class PlayerJoinedEvent extends ServerEvent {
 	return player.getName() + " has joined a table [" + id + "].";
     }
     
-    public SavedPlayer getPlayer(){
+    public Player getPlayer(){
 	return player;
     }
     

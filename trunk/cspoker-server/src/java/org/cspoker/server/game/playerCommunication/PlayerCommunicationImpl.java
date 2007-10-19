@@ -19,8 +19,8 @@ package org.cspoker.server.game.playerCommunication;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import org.cspoker.common.game.player.PlayerId;
 import org.cspoker.server.game.GameManager;
-import org.cspoker.server.game.PlayerId;
 import org.cspoker.server.game.TableId;
 import org.cspoker.server.game.events.AllEventsListener;
 import org.cspoker.server.game.events.gameEvents.GameMessageEvent;
@@ -37,12 +37,8 @@ import org.cspoker.server.game.events.gameEvents.PlayerJoinedGameEvent;
 import org.cspoker.server.game.events.gameEvents.PlayerJoinedGameListener;
 import org.cspoker.server.game.events.gameEvents.PlayerLeftTableEvent;
 import org.cspoker.server.game.events.gameEvents.PlayerLeftTableListener;
-import org.cspoker.server.game.events.gameEvents.PotChangedEvent;
-import org.cspoker.server.game.events.gameEvents.PotChangedListener;
 import org.cspoker.server.game.events.gameEvents.ShowHandEvent;
 import org.cspoker.server.game.events.gameEvents.ShowHandListener;
-import org.cspoker.server.game.events.gameEvents.StackChangedEvent;
-import org.cspoker.server.game.events.gameEvents.StackChangedListener;
 import org.cspoker.server.game.events.gameEvents.WinnerEvent;
 import org.cspoker.server.game.events.gameEvents.WinnerListener;
 import org.cspoker.server.game.events.gameEvents.playerActionEvents.AllInEvent;
@@ -55,8 +51,6 @@ import org.cspoker.server.game.events.gameEvents.playerActionEvents.CallEvent;
 import org.cspoker.server.game.events.gameEvents.playerActionEvents.CallListener;
 import org.cspoker.server.game.events.gameEvents.playerActionEvents.CheckEvent;
 import org.cspoker.server.game.events.gameEvents.playerActionEvents.CheckListener;
-import org.cspoker.server.game.events.gameEvents.playerActionEvents.DealEvent;
-import org.cspoker.server.game.events.gameEvents.playerActionEvents.DealListener;
 import org.cspoker.server.game.events.gameEvents.playerActionEvents.FoldEvent;
 import org.cspoker.server.game.events.gameEvents.playerActionEvents.FoldListener;
 import org.cspoker.server.game.events.gameEvents.playerActionEvents.RaiseEvent;
@@ -74,15 +68,15 @@ import org.cspoker.server.game.events.serverEvents.ServerMessageListener;
 import org.cspoker.server.game.events.serverEvents.TableCreatedEvent;
 import org.cspoker.server.game.events.serverEvents.TableCreatedListener;
 import org.cspoker.server.game.gameControl.IllegalActionException;
-import org.cspoker.server.game.player.Player;
+import org.cspoker.server.game.player.GamePlayer;
 
 /**
  * A class of player communications.
- * 
+ *
  * It's the interface to all game control actions.
- * 
+ *
  * @author Kenzo
- * 
+ *
  */
 public class PlayerCommunicationImpl implements PlayerCommunication {
 
@@ -93,7 +87,7 @@ public class PlayerCommunicationImpl implements PlayerCommunication {
     /**
      * The variable containing the player.
      */
-    private final Player player;
+    private final GamePlayer player;
 
     /**
      * This variable contains the player communication state.
@@ -108,11 +102,11 @@ public class PlayerCommunicationImpl implements PlayerCommunication {
 
     /**
      * Construct a new player communication with given player.
-     * 
+     *
      * @param player
      *                The given player
      */
-    public PlayerCommunicationImpl(Player player) {
+    public PlayerCommunicationImpl(GamePlayer player) {
 	this.player = player;
 	state = new InitialState(this);
 	GameManager.getServerMediator().subscribeAllServerEventsListener(
@@ -123,17 +117,17 @@ public class PlayerCommunicationImpl implements PlayerCommunication {
 
     /**
      * Returns the player contained in this player communication.
-     * 
+     *
      * @return The player contained in this player communication.
      */
-    public Player getPlayer() {
+    public GamePlayer getPlayer() {
 	return player;
     }
 
     /**
      * Returns the player id from the player contained in this player
      * communication.
-     * 
+     *
      * @return The player id from the player contained in this player
      *         communication.
      */
@@ -183,7 +177,7 @@ public class PlayerCommunicationImpl implements PlayerCommunication {
 
     /**
      * Join the table with given table id.
-     * 
+     *
      * @pre The given id should be effective. |id!=null
      * @throws IllegalActionException
      *                 [can] This actions is not a valid action in the current
@@ -235,7 +229,7 @@ public class PlayerCommunicationImpl implements PlayerCommunication {
 
     /**
      * Subscribe the given all-in listener for all-in events.
-     * 
+     *
      * @param listener
      *                The listener to subscribe.
      */
@@ -245,7 +239,7 @@ public class PlayerCommunicationImpl implements PlayerCommunication {
 
     /**
      * Unsubscribe the given all-in listener for all-in events.
-     * 
+     *
      * @param listener
      *                The listener to unsubscribe.
      */
@@ -261,7 +255,7 @@ public class PlayerCommunicationImpl implements PlayerCommunication {
 
     /**
      * Subscribe the given bet listener for bet events.
-     * 
+     *
      * @param listener
      *                The listener to subscribe.
      */
@@ -271,7 +265,7 @@ public class PlayerCommunicationImpl implements PlayerCommunication {
 
     /**
      * Unsubscribe the given bet listener for bet events.
-     * 
+     *
      * @param listener
      *                The listener to unsubscribe.
      */
@@ -286,7 +280,7 @@ public class PlayerCommunicationImpl implements PlayerCommunication {
 
     /**
      * Subscribe the given big blind listener for big blind events.
-     * 
+     *
      * @param listener
      *                The listener to subscribe.
      */
@@ -296,7 +290,7 @@ public class PlayerCommunicationImpl implements PlayerCommunication {
 
     /**
      * Unsubscribe the given big blind listener for big blind events.
-     * 
+     *
      * @param listener
      *                The listener to unsubscribe.
      */
@@ -312,7 +306,7 @@ public class PlayerCommunicationImpl implements PlayerCommunication {
 
     /**
      * Subscribe the given call listener for call events.
-     * 
+     *
      * @param listener
      *                The listener to subscribe.
      */
@@ -322,7 +316,7 @@ public class PlayerCommunicationImpl implements PlayerCommunication {
 
     /**
      * Unsubscribe the given call listener for call events.
-     * 
+     *
      * @param listener
      *                The listener to unsubscribe.
      */
@@ -337,7 +331,7 @@ public class PlayerCommunicationImpl implements PlayerCommunication {
 
     /**
      * Subscribe the given check listener for check events.
-     * 
+     *
      * @param listener
      *                The listener to subscribe.
      */
@@ -347,7 +341,7 @@ public class PlayerCommunicationImpl implements PlayerCommunication {
 
     /**
      * Unsubscribe the given check listener for check events.
-     * 
+     *
      * @param listener
      *                The listener to unsubscribe.
      */
@@ -361,33 +355,8 @@ public class PlayerCommunicationImpl implements PlayerCommunication {
     private final List<CheckListener> checkListeners = new CopyOnWriteArrayList<CheckListener>();
 
     /**
-     * Subscribe the given deal listener for deal events.
-     * 
-     * @param listener
-     *                The listener to subscribe.
-     */
-    public void subscribeDealListener(DealListener listener) {
-	dealListeners.add(listener);
-    }
-
-    /**
-     * Unsubscribe the given deal listener for deal events.
-     * 
-     * @param listener
-     *                The listener to unsubscribe.
-     */
-    public void unsubscribeDealListener(DealListener listener) {
-	dealListeners.remove(listener);
-    }
-
-    /**
-     * This list contains all deal listeners that should be alerted on a deal.
-     */
-    private final List<DealListener> dealListeners = new CopyOnWriteArrayList<DealListener>();
-
-    /**
      * Subscribe the given fold listener for fold events.
-     * 
+     *
      * @param listener
      *                The listener to subscribe.
      */
@@ -397,7 +366,7 @@ public class PlayerCommunicationImpl implements PlayerCommunication {
 
     /**
      * Unsubscribe the given fold listener for fold events.
-     * 
+     *
      * @param listener
      *                The listener to unsubscribe.
      */
@@ -412,7 +381,7 @@ public class PlayerCommunicationImpl implements PlayerCommunication {
 
     /**
      * Subscribe the given raise listener for raise events.
-     * 
+     *
      * @param listener
      *                The listener to subscribe.
      */
@@ -422,7 +391,7 @@ public class PlayerCommunicationImpl implements PlayerCommunication {
 
     /**
      * Unsubscribe the given raise listener for raise events.
-     * 
+     *
      * @param listener
      *                The listener to unsubscribe.
      */
@@ -437,7 +406,7 @@ public class PlayerCommunicationImpl implements PlayerCommunication {
 
     /**
      * Subscribe the given small blind listener for small blind events.
-     * 
+     *
      * @param listener
      *                The listener to subscribe.
      */
@@ -447,7 +416,7 @@ public class PlayerCommunicationImpl implements PlayerCommunication {
 
     /**
      * Unsubscribe the given small blind listener for small blind events.
-     * 
+     *
      * @param listener
      *                The listener to unsubscribe.
      */
@@ -464,7 +433,7 @@ public class PlayerCommunicationImpl implements PlayerCommunication {
     /**
      * Subscribe the given new pocket cards listener for new pocket cards
      * events.
-     * 
+     *
      * @param listener
      *                The listener to subscribe.
      */
@@ -475,7 +444,7 @@ public class PlayerCommunicationImpl implements PlayerCommunication {
     /**
      * Unsubscribe the given new pocket cards listener for new pocket cards
      * events.
-     * 
+     *
      * @param listener
      *                The listener to unsubscribe.
      */
@@ -493,7 +462,7 @@ public class PlayerCommunicationImpl implements PlayerCommunication {
     /**
      * Subscribe the given new common cards listener for new common cards
      * events.
-     * 
+     *
      * @param listener
      *                The listener to subscribe.
      */
@@ -505,7 +474,7 @@ public class PlayerCommunicationImpl implements PlayerCommunication {
     /**
      * Unsubscribe the given new common cards listener for new common cards
      * events.
-     * 
+     *
      * @param listener
      *                The listener to unsubscribe.
      */
@@ -522,7 +491,7 @@ public class PlayerCommunicationImpl implements PlayerCommunication {
 
     /**
      * Subscribe the given new deal listener for new deal events.
-     * 
+     *
      * @param listener
      *                The listener to subscribe.
      */
@@ -532,7 +501,7 @@ public class PlayerCommunicationImpl implements PlayerCommunication {
 
     /**
      * Unsubscribe the given new deal listener for new deal events.
-     * 
+     *
      * @param listener
      *                The listener to unsubscribe.
      */
@@ -548,7 +517,7 @@ public class PlayerCommunicationImpl implements PlayerCommunication {
 
     /**
      * Subscribe the given new round listener for new round events.
-     * 
+     *
      * @param listener
      *                The listener to subscribe.
      */
@@ -558,7 +527,7 @@ public class PlayerCommunicationImpl implements PlayerCommunication {
 
     /**
      * Unsubscribe the given new round listener for new round events.
-     * 
+     *
      * @param listener
      *                The listener to unsubscribe.
      */
@@ -574,7 +543,7 @@ public class PlayerCommunicationImpl implements PlayerCommunication {
 
     /**
      * Subscribe the given next player listener for next player events.
-     * 
+     *
      * @param listener
      *                The listener to subscribe.
      */
@@ -584,7 +553,7 @@ public class PlayerCommunicationImpl implements PlayerCommunication {
 
     /**
      * Unsubscribe the given next player listener for next player events.
-     * 
+     *
      * @param listener
      *                The listener to unsubscribe.
      */
@@ -601,7 +570,7 @@ public class PlayerCommunicationImpl implements PlayerCommunication {
     /**
      * Subscribe the given player joined game listener for player joined game
      * events.
-     * 
+     *
      * @param listener
      *                The listener to subscribe.
      */
@@ -613,7 +582,7 @@ public class PlayerCommunicationImpl implements PlayerCommunication {
     /**
      * Unsubscribe the given player joined game listener for player joined game
      * events.
-     * 
+     *
      * @param listener
      *                The listener to unsubscribe.
      */
@@ -629,34 +598,8 @@ public class PlayerCommunicationImpl implements PlayerCommunication {
     private final List<PlayerJoinedGameListener> playerJoinedGameListeners = new CopyOnWriteArrayList<PlayerJoinedGameListener>();
 
     /**
-     * Subscribe the given pot changed listener for pot changed events.
-     * 
-     * @param listener
-     *                The listener to subscribe.
-     */
-    public void subscribePotChangedListener(PotChangedListener listener) {
-	potChangedListeners.add(listener);
-    }
-
-    /**
-     * Unsubscribe the given pot changed listener for pot changed events.
-     * 
-     * @param listener
-     *                The listener to unsubscribe.
-     */
-    public void unsubscribePotChangedListener(PotChangedListener listener) {
-	potChangedListeners.remove(listener);
-    }
-
-    /**
-     * This list contains all pot changed listeners that should be alerted on a
-     * pot changed.
-     */
-    private final List<PotChangedListener> potChangedListeners = new CopyOnWriteArrayList<PotChangedListener>();
-
-    /**
      * Subscribe the given show hand listener for show hand events.
-     * 
+     *
      * @param listener
      *                The listener to subscribe.
      */
@@ -666,7 +609,7 @@ public class PlayerCommunicationImpl implements PlayerCommunication {
 
     /**
      * Unsubscribe the given show hand listener for show hand events.
-     * 
+     *
      * @param listener
      *                The listener to unsubscribe.
      */
@@ -681,34 +624,8 @@ public class PlayerCommunicationImpl implements PlayerCommunication {
     private final List<ShowHandListener> showHandListeners = new CopyOnWriteArrayList<ShowHandListener>();
 
     /**
-     * Subscribe the given stack changed listener for stack changed events.
-     * 
-     * @param listener
-     *                The listener to subscribe.
-     */
-    public void subscribeStackChangedListener(StackChangedListener listener) {
-	stackChangedListeners.add(listener);
-    }
-
-    /**
-     * Unsubscribe the given stack changed listener for stack changed events.
-     * 
-     * @param listener
-     *                The listener to unsubscribe.
-     */
-    public void unsubscribeStackChangedListener(StackChangedListener listener) {
-	stackChangedListeners.remove(listener);
-    }
-
-    /**
-     * This list contains all stack changed listeners that should be alerted on
-     * a stack changed.
-     */
-    private final List<StackChangedListener> stackChangedListeners = new CopyOnWriteArrayList<StackChangedListener>();
-
-    /**
      * Subscribe the given winner listener for winner events.
-     * 
+     *
      * @param listener
      *                The listener to subscribe.
      */
@@ -718,7 +635,7 @@ public class PlayerCommunicationImpl implements PlayerCommunication {
 
     /**
      * Unsubscribe the given winner listener for winner events.
-     * 
+     *
      * @param listener
      *                The listener to unsubscribe.
      */
@@ -735,7 +652,7 @@ public class PlayerCommunicationImpl implements PlayerCommunication {
     /**
      * Subscribe the given player left table listener for player left table
      * events.
-     * 
+     *
      * @param listener
      *                The listener to subscribe.
      */
@@ -747,7 +664,7 @@ public class PlayerCommunicationImpl implements PlayerCommunication {
     /**
      * Unsubscribe the given player left table listener for player left table
      * events.
-     * 
+     *
      * @param listener
      *                The listener to unsubscribe.
      */
@@ -764,7 +681,7 @@ public class PlayerCommunicationImpl implements PlayerCommunication {
 
     /**
      * Subscribe the given message listener for message events.
-     * 
+     *
      * @param listener
      *                The listener to subscribe.
      */
@@ -774,7 +691,7 @@ public class PlayerCommunicationImpl implements PlayerCommunication {
 
     /**
      * Unsubscribe the given message listener for message events.
-     * 
+     *
      * @param listener
      *                The listener to unsubscribe.
      */
@@ -790,7 +707,7 @@ public class PlayerCommunicationImpl implements PlayerCommunication {
 
     /**
      * Subscribe the given player joined listener for player joined events.
-     * 
+     *
      * @param listener
      *                The listener to subscribe.
      */
@@ -800,7 +717,7 @@ public class PlayerCommunicationImpl implements PlayerCommunication {
 
     /**
      * Unsubscribe the given player joined listener for player joined events.
-     * 
+     *
      * @param listener
      *                The listener to unsubscribe.
      */
@@ -816,7 +733,7 @@ public class PlayerCommunicationImpl implements PlayerCommunication {
 
     /**
      * Subscribe the given table created listener for table created events.
-     * 
+     *
      * @param listener
      *                The listener to subscribe.
      */
@@ -826,7 +743,7 @@ public class PlayerCommunicationImpl implements PlayerCommunication {
 
     /**
      * Unsubscribe the given table created listener for table created events.
-     * 
+     *
      * @param listener
      *                The listener to unsubscribe.
      */
@@ -842,7 +759,7 @@ public class PlayerCommunicationImpl implements PlayerCommunication {
 
     /**
      * Subscribe the given player left listener for player left events.
-     * 
+     *
      * @param listener
      *                The listener to subscribe.
      */
@@ -852,7 +769,7 @@ public class PlayerCommunicationImpl implements PlayerCommunication {
 
     /**
      * Unsubscribe the given player left listener for player left events.
-     * 
+     *
      * @param listener
      *                The listener to unsubscribe.
      */
@@ -868,7 +785,7 @@ public class PlayerCommunicationImpl implements PlayerCommunication {
 
     /**
      * Subscribe the given message listener for message events.
-     * 
+     *
      * @param listener
      *                The listener to subscribe.
      */
@@ -878,7 +795,7 @@ public class PlayerCommunicationImpl implements PlayerCommunication {
 
     /**
      * Unsubscribe the given message listener for message events.
-     * 
+     *
      * @param listener
      *                The listener to unsubscribe.
      */
@@ -892,7 +809,6 @@ public class PlayerCommunicationImpl implements PlayerCommunication {
 	subscribeBigBlindListener(listener);
 	subscribeCallListener(listener);
 	subscribeCheckListener(listener);
-	subscribeDealListener(listener);
 	subscribeFoldListener(listener);
 	subscribeGameMessageListener(listener);
 	subscribeNewCommonCardsListener(listener);
@@ -904,12 +820,10 @@ public class PlayerCommunicationImpl implements PlayerCommunication {
 	subscribePlayerJoinedListener(listener);
 	subscribePlayerLeftListener(listener);
 	subscribePlayerLeftTableListener(listener);
-	subscribePotChangedListener(listener);
 	subscribeRaiseListener(listener);
 	subscribeServerMessageListener(listener);
 	subscribeShowHandListener(listener);
 	subscribeSmallBlindListener(listener);
-	subscribeStackChangedListener(listener);
 	subscribeTableCreatedListener(listener);
 	subscribeWinnerListener(listener);
     }
@@ -920,7 +834,6 @@ public class PlayerCommunicationImpl implements PlayerCommunication {
 	unsubscribeBigBlindListener(listener);
 	unsubscribeCallListener(listener);
 	unsubscribeCheckListener(listener);
-	unsubscribeDealListener(listener);
 	unsubscribeFoldListener(listener);
 	unsubscribeGameMessageListener(listener);
 	unsubscribeNewCommonCardsListener(listener);
@@ -932,12 +845,10 @@ public class PlayerCommunicationImpl implements PlayerCommunication {
 	unsubscribePlayerJoinedListener(listener);
 	unsubscribePlayerLeftListener(listener);
 	unsubscribePlayerLeftTableListener(listener);
-	unsubscribePotChangedListener(listener);
 	unsubscribeRaiseListener(listener);
 	unsubscribeServerMessageListener(listener);
 	unsubscribeShowHandListener(listener);
 	unsubscribeSmallBlindListener(listener);
-	unsubscribeStackChangedListener(listener);
 	unsubscribeTableCreatedListener(listener);
 	unsubscribeWinnerListener(listener);
     }
@@ -989,12 +900,6 @@ public class PlayerCommunicationImpl implements PlayerCommunication {
 	public void onCheckEvent(CheckEvent event) {
 	    for (CheckListener listener : checkListeners) {
 		listener.onCheckEvent(event);
-	    }
-	}
-
-	public void onDealEvent(DealEvent event) {
-	    for (DealListener listener : dealListeners) {
-		listener.onDealEvent(event);
 	    }
 	}
 
@@ -1056,23 +961,10 @@ public class PlayerCommunicationImpl implements PlayerCommunication {
 	    }
 	}
 
-	public void onPotChangedEvent(PotChangedEvent event) {
-	    for (PotChangedListener listener : potChangedListeners) {
-		listener.onPotChangedEvent(event);
-	    }
-	}
-
 	public void onShowHandEvent(ShowHandEvent event) {
 	    for (ShowHandListener listener : showHandListeners) {
 		listener.onShowHandEvent(event);
 	    }
-	}
-
-	public void onStackChangedEvent(StackChangedEvent event) {
-	    for (StackChangedListener listener : stackChangedListeners) {
-		listener.onStackChangedEvent(event);
-	    }
-
 	}
 
 	public void onWinnerEvent(WinnerEvent event) {
@@ -1087,7 +979,7 @@ public class PlayerCommunicationImpl implements PlayerCommunication {
 	    }
 
 	}
-	
+
 	public void onGameMessageEvent(GameMessageEvent event) {
 	    for (GameMessageListener listener : gameMessageListeners) {
 		listener.onGameMessageEvent(event);

@@ -19,7 +19,7 @@ package org.cspoker.server.common.xmlcommunication;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.cspoker.server.game.player.Player;
+import org.cspoker.server.game.player.GamePlayer;
 
 /**
  * Creates a unique player communication instance for every player name and provides
@@ -27,9 +27,9 @@ import org.cspoker.server.game.player.Player;
  */
 public class XmlPlayerCommunicationFactory {
 
-    private final static Map<Player,XmlPlayerCommunication> playerComs=new HashMap<Player,XmlPlayerCommunication>();
+    private final static Map<GamePlayer,XmlPlayerCommunication> playerComs=new HashMap<GamePlayer,XmlPlayerCommunication>();
     
-    public static synchronized XmlPlayerCommunication getRegisteredXmlPlayerCommunication(Player player, XmlEventCollector collector){
+    public static synchronized XmlPlayerCommunication getRegisteredXmlPlayerCommunication(GamePlayer player, XmlEventCollector collector){
 	XmlPlayerCommunication result=playerComs.get(player);
 	if(result==null){
 	    

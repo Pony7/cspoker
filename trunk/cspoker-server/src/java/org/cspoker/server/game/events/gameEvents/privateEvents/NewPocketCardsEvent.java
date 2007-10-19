@@ -15,25 +15,29 @@
  */
 package org.cspoker.server.game.events.gameEvents.privateEvents;
 
+import java.util.Collections;
 import java.util.List;
 
+import org.cspoker.common.game.player.Player;
 import org.cspoker.server.game.elements.cards.deck.Deck.Card;
 import org.cspoker.server.game.events.gameEvents.GameEvent;
-import org.cspoker.server.game.player.SavedPlayer;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
 public class NewPocketCardsEvent extends GameEvent {
 
-    private final SavedPlayer player;
+    private final Player player;
 
-    public NewPocketCardsEvent(SavedPlayer player) {
+    private final List<Card> pocketCards;
+
+    public NewPocketCardsEvent(Player player, List<Card> pocketCards) {
 	this.player = player;
+	this.pocketCards = Collections.unmodifiableList(pocketCards);
     }
 
     public List<Card> getPocketCards() {
-	return player.getPocketCards();
+	return pocketCards;
     }
 
     @Override
@@ -47,7 +51,7 @@ public class NewPocketCardsEvent extends GameEvent {
     }
 
 
-    public SavedPlayer getPlayer() {
+    public Player getPlayer() {
 	return player;
     }
 

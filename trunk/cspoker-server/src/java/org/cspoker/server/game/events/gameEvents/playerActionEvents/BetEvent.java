@@ -16,27 +16,28 @@
 
 package org.cspoker.server.game.events.gameEvents.playerActionEvents;
 
-import org.cspoker.server.game.events.gameEvents.GameEvent;
-import org.cspoker.server.game.player.SavedPlayer;
+import org.cspoker.common.game.elements.pots.Pots;
+import org.cspoker.common.game.player.Player;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * A class to represent bet events.
- * 
+ *
  * @author Kenzo
- * 
+ *
  */
-public class BetEvent extends GameEvent {
+public class BetEvent extends ActionChangedPotEvent {
 
-    private final SavedPlayer player;
+    private final Player player;
 
     private final int amount;
 
-    public BetEvent(SavedPlayer player, int amount) {
-	this.player = player;
-	this.amount = amount;
+    public BetEvent(Player player, int amount, Pots pots) {
+    	super(pots);
+    	this.player = player;
+    	this.amount = amount;
     }
 
     @Override
@@ -48,7 +49,7 @@ public class BetEvent extends GameEvent {
 	return amount;
     }
 
-    public SavedPlayer getPlayer() {
+    public Player getPlayer() {
 	return player;
     }
 

@@ -21,11 +21,11 @@ import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * A class to represent pot changed events.
- * 
+ *
  * @author Kenzo
- * 
+ *
  */
-public class PotChangedEvent extends GameEvent {
+class PotChangedEvent extends GameEvent {
 
     private final int amount;
 
@@ -41,18 +41,18 @@ public class PotChangedEvent extends GameEvent {
     public String toString() {
 	return "The total pot increases to " + amount + " chips.";
     }
-    
+
     @Override
     public void toXml(ContentHandler handler) throws SAXException {
 	AttributesImpl attrs = new AttributesImpl();
 	attrs.addAttribute("", "type", "type", "CDATA", "potchanged");
 	handler.startElement("", "event", "event", attrs);
-	
+
 	handler.startElement("", "amount", "amount", new AttributesImpl());
 	String msg=String.valueOf(getAmount());
 	handler.characters(msg.toCharArray(), 0, msg.length());
 	handler.endElement("", "amount", "amount");
-	
+
 	handler.endElement("", "event", "event");
     }
 

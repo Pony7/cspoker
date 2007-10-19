@@ -16,32 +16,32 @@
 
 package org.cspoker.server.game.events.gameEvents.playerActionEvents;
 
+import org.cspoker.common.game.player.Player;
 import org.cspoker.server.game.events.gameEvents.GameEvent;
-import org.cspoker.server.game.player.SavedPlayer;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * A class to represent fold events.
- * 
+ *
  * @author Kenzo
- * 
+ *
  */
 public class FoldEvent extends GameEvent {
 
-    private final SavedPlayer player;
+    private final Player player;
 
-    public FoldEvent(SavedPlayer player) {
+    public FoldEvent(Player player) {
 	this.player = player;
     }
 
     @Override
     public String toString() {
 	return getPlayer().getName() + " folds.";
-    }  
-    
-    public SavedPlayer getPlayer() {
+    }
+
+    public Player getPlayer() {
 	return player;
     }
 

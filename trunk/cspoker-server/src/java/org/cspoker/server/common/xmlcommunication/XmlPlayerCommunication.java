@@ -21,7 +21,7 @@ import java.io.StringReader;
 import org.apache.log4j.Logger;
 import org.cspoker.server.common.xmlcommunication.handler.CommandDelegatingHandler;
 import org.cspoker.server.common.xmlcommunication.handler.DelegatingToOneHandler;
-import org.cspoker.server.game.player.Player;
+import org.cspoker.server.game.player.GamePlayer;
 import org.cspoker.server.game.playerCommunication.PlayerCommunication;
 import org.cspoker.server.game.playerCommunication.PlayerCommunicationImpl;
 import org.xml.sax.InputSource;
@@ -33,11 +33,11 @@ public class XmlPlayerCommunication {
 
     private final PlayerCommunication playerComm;
     private final XmlEventCollector collector;
-    private final Player player;
+    private final GamePlayer player;
 
     private final static Logger logger = Logger.getLogger(XmlPlayerCommunication.class);
     
-    XmlPlayerCommunication(Player player, XmlEventCollector collector) {
+    XmlPlayerCommunication(GamePlayer player, XmlEventCollector collector) {
 	this.playerComm = new PlayerCommunicationImpl(player);
 	this.collector = collector;
 	this.player = player;

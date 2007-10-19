@@ -20,18 +20,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import org.cspoker.server.game.PlayerId;
+import org.cspoker.common.game.player.Player;
+import org.cspoker.common.game.player.PlayerId;
 import org.cspoker.server.game.elements.cards.deck.Deck.Card;
 import org.cspoker.server.game.elements.chips.Chips;
 import org.cspoker.server.game.elements.chips.IllegalValueException;
 
 /**
  * A class to represent players: bots or humans.
- * 
+ *
  * @author Kenzo
- * 
+ *
  */
-public class Player {
+public class GamePlayer {
 
     /***************************************************************************
      * Variables
@@ -54,7 +55,7 @@ public class Player {
 
     /**
      * The chips the player has bet in this round.
-     * 
+     *
      */
     private final Chips betChips;
 
@@ -69,17 +70,17 @@ public class Player {
 
     /**
      * Construct a new player with given id, name and initial number of chips.
-     * 
+     *
      * @throws IllegalValueException
      *                 [must] The given initial value is not valid.
-     * 
+     *
      * @post The chips pile is effective and the value of chips is the same as
      *       the given initial value. |new.getBetChips()!=null &&
      *       new.getChips.getValue()==initialNbChips
      * @post The bet chips pile is effective and There are no chips on this
      *       pile. |new.getBetChips()!=null && new.getBetChips().getValue()==0
      */
-    Player(PlayerId id, String name, int initialNbChips)
+    GamePlayer(PlayerId id, String name, int initialNbChips)
 	    throws IllegalValueException, IllegalNameException {
 	if(!isValidName(name))
 	    throw new IllegalNameException();
@@ -95,14 +96,14 @@ public class Player {
      **************************************************************************/
 
     public static boolean isValidName(String name) {
-	if(name!=null && name.matches("[\\w]{3,}"))
+	if((name!=null) && name.matches("[\\w]{3,}"))
 	    return true;
 	return false;
     }
 
     /**
      * Returns the name of this player.
-     * 
+     *
      * @return The name of this player.
      */
     public String getName() {
@@ -115,7 +116,7 @@ public class Player {
 
     /**
      * Returns the id of this player.
-     * 
+     *
      * @return The id of this player.
      */
     public PlayerId getId() {
@@ -134,12 +135,12 @@ public class Player {
 	return betChips;
     }
 
-    public void transferAmountToBetPile(int amount)
+    public synchronized void transferAmountToBetPile(int amount)
 	    throws IllegalValueException {
 	getStack().transferAmountTo(amount, getBetChips());
     }
 
-    public void transferAllChipsToBetPile() throws IllegalValueException {
+    public synchronized void transferAllChipsToBetPile() throws IllegalValueException {
 	getStack().transferAllChipsTo(getBetChips());
     }
 
@@ -149,7 +150,7 @@ public class Player {
 
     /**
      * Deal a pocket card to this player.
-     * 
+     *
      */
     public void dealPocketCard(Card card) {
 	pocketCards.add(card);
@@ -157,10 +158,10 @@ public class Player {
 
     /**
      * Returns the pocket cards of this player.
-     * 
+     *
      * A change in the returned list, does not change the internal
      * representation.
-     * 
+     *
      * @return The pocket cards of this player.
      */
     public List<Card> getPocketCards() {
@@ -198,7 +199,7 @@ public class Player {
 	    return false;
 	if (getClass() != obj.getClass())
 	    return false;
-	final Player other = (Player) obj;
+	final GamePlayer other = (GamePlayer) obj;
 	if (id == null) {
 	    if (other.id != null)
 		return false;
@@ -207,7 +208,7 @@ public class Player {
 	return true;
     }
 
-    public SavedPlayer getSavedPlayer() {
-	return new SavedPlayer(this);
+    public synchronized Player getSavedPlayer() {
+	return new Player(getId(), getName(), getStack().getValue(), getBetChips().getValue());
     }
 }

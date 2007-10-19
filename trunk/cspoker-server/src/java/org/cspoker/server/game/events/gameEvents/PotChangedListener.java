@@ -17,15 +17,15 @@ package org.cspoker.server.game.events.gameEvents;
 
 /**
  * An interface for pot changed listeners.
- * 
+ *
  * @author Kenzo
- * 
+ *
  */
-public interface PotChangedListener {
+interface PotChangedListener {
 
     /**
      * This method is called when subscribed to inform the pot has changed.
-     * 
+     *
      * @param event
      *                The event object containing all information of the
      *                occurred event.

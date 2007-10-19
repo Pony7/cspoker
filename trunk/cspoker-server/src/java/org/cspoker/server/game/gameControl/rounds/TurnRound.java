@@ -20,14 +20,14 @@ import org.apache.log4j.Logger;
 import org.cspoker.server.game.GameMediator;
 import org.cspoker.server.game.events.gameEvents.NewRoundEvent;
 import org.cspoker.server.game.gameControl.Game;
-import org.cspoker.server.game.player.Player;
+import org.cspoker.server.game.player.GamePlayer;
 
 public class TurnRound extends BettingRound {
     private static Logger logger = Logger.getLogger(TurnRound.class);
 
     public TurnRound(GameMediator gameMediator, Game game) {
 	super(gameMediator, game);
-	Player currentPlayer = getGame().getCurrentPlayer();
+	GamePlayer currentPlayer = getGame().getCurrentPlayer();
 	if (currentPlayer != null)
 	    gameMediator.publishNewRoundEvent(new NewRoundEvent(toString(),
 		    currentPlayer.getSavedPlayer()));

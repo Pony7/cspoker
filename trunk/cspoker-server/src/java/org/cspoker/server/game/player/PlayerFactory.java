@@ -19,40 +19,44 @@ package org.cspoker.server.game.player;
 import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
-import org.cspoker.server.game.PlayerId;
+import org.cspoker.common.game.player.PlayerId;
 import org.cspoker.server.game.elements.chips.IllegalValueException;
 
 /**
- * 
+ *
  * A class for player factories.
- * 
+ *
  * Each player should be created by using the given factory methods.
- * 
+ *
  * This will ensure each player id and player name is unique.
- * 
+ *
  * Also note that the constructor of player is for this reason only-package
  * accessible.
- * 
+ *
  * @author Kenzo
- * 
+ *
  */
 public class PlayerFactory {
-    
+
     public final static PlayerFactory global_Player_Factory = new PlayerFactory();
-    
-    private final HashMap<String,Player> knownPlayers = new HashMap<String,Player>();
-    
-    public synchronized Player getUniquePlayer(String name) throws IllegalNameException{
-	Player p = knownPlayers.get(name);
+
+    private final HashMap<String,GamePlayer> knownPlayers = new HashMap<String,GamePlayer>();
+
+    protected PlayerFactory(){
+
+    };
+
+    public synchronized GamePlayer getUniquePlayer(String name) throws IllegalNameException{
+	GamePlayer p = knownPlayers.get(name);
 	if(p==null){
 	    p=createNewPlayer(name);
 	    knownPlayers.put(name, p);
 	}
 	return p;
     }
-    
-    public synchronized Player getUniquePlayer(String name, int initialValue) throws IllegalValueException, IllegalNameException{
-	Player p = knownPlayers.get(name);
+
+    public synchronized GamePlayer getUniquePlayer(String name, int initialValue) throws IllegalValueException, IllegalNameException{
+	GamePlayer p = knownPlayers.get(name);
 	if(p==null){
 	    p=createNewPlayer(name, initialValue);
 	    knownPlayers.put(name, p);
@@ -67,13 +71,13 @@ public class PlayerFactory {
 
     /**
      * Create a new player with given name and standard stack value.
-     * 
+     *
      * @param name
      *                The name for this new player.
      * @return A new player with given name and standard stack value.
-     * @throws IllegalNameException 
+     * @throws IllegalNameException
      */
-    private Player createNewPlayer(String name) throws IllegalNameException {
+    protected GamePlayer createNewPlayer(String name) throws IllegalNameException {
 	try {
 	    return createNewPlayer(name, getStdStackValue());
 	} catch (IllegalValueException e) {
@@ -84,7 +88,7 @@ public class PlayerFactory {
 
     /**
      * Create a new player with given name and initial stack value.
-     * 
+     *
      * @param name
      *                The name for this new player.
      * @param initialValue
@@ -92,27 +96,27 @@ public class PlayerFactory {
      * @return A new player with given name and initial stack value.
      * @throws IllegalValueException
      *                 [must] The given initial value is not valid.
-     * @throws IllegalNameException 
+     * @throws IllegalNameException
      */
-    private Player createNewPlayer(String name, int initialValue)
+    protected GamePlayer createNewPlayer(String name, int initialValue)
 	    throws IllegalValueException, IllegalNameException {
-	return new Player(getUniquePlayerId(), name, initialValue);
+	return new GamePlayer(getUniquePlayerId(), name, initialValue);
     }
 
     /**
      * Returns the standard stack value.
-     * 
+     *
      * @return The standard stack value.
      */
-    private int getStdStackValue() {
+    protected int getStdStackValue() {
 	return 100;
     }
 
     /**
      * Returns at each call a unique player id.
-     * 
+     *
      * This method is thread-safe.
-     * 
+     *
      * @return A unique player id.
      */
     private PlayerId getUniquePlayerId() {

@@ -21,18 +21,16 @@ import org.cspoker.server.game.events.gameEvents.playerActionEvents.BetListener;
 import org.cspoker.server.game.events.gameEvents.playerActionEvents.BigBlindListener;
 import org.cspoker.server.game.events.gameEvents.playerActionEvents.CallListener;
 import org.cspoker.server.game.events.gameEvents.playerActionEvents.CheckListener;
-import org.cspoker.server.game.events.gameEvents.playerActionEvents.DealListener;
 import org.cspoker.server.game.events.gameEvents.playerActionEvents.FoldListener;
 import org.cspoker.server.game.events.gameEvents.playerActionEvents.RaiseListener;
 import org.cspoker.server.game.events.gameEvents.playerActionEvents.SmallBlindListener;
 import org.cspoker.server.game.events.gameEvents.privateEvents.NewPocketCardsListener;
 
 public interface AllGameEventsListener extends AllInListener, BetListener,
-	BigBlindListener, CallListener, CheckListener, DealListener,
+	BigBlindListener, CallListener, CheckListener,
 	FoldListener, RaiseListener, SmallBlindListener,
 	NewPocketCardsListener, NewCommunityCardsListener, NewDealListener,
 	NewRoundListener, NextPlayerListener, PlayerJoinedGameListener,
-	PlayerLeftTableListener, PotChangedListener, ShowHandListener,
-	StackChangedListener, WinnerListener, GameMessageListener {
+	PlayerLeftTableListener, ShowHandListener, WinnerListener, GameMessageListener {
 
 }

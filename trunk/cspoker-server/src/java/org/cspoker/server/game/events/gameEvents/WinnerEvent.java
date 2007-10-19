@@ -19,7 +19,6 @@ package org.cspoker.server.game.events.gameEvents;
 import java.util.Collections;
 import java.util.List;
 
-import org.cspoker.server.game.player.SavedPlayer;
 import org.cspoker.server.game.player.SavedWinner;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
@@ -27,9 +26,9 @@ import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * A class to represent winner events.
- * 
+ *
  * @author Kenzo
- * 
+ *
  */
 public class WinnerEvent extends GameEvent {
 

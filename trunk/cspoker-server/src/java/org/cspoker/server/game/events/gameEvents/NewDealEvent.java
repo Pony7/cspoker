@@ -19,7 +19,7 @@ package org.cspoker.server.game.events.gameEvents;
 import java.util.Collections;
 import java.util.List;
 
-import org.cspoker.server.game.player.SavedPlayer;
+import org.cspoker.common.game.player.Player;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
@@ -32,23 +32,23 @@ import org.xml.sax.helpers.AttributesImpl;
  */
 public class NewDealEvent extends GameEvent {
 
-    private final List<SavedPlayer> players;
+    private final List<Player> players;
 
-    private final SavedPlayer dealer;
+    private final Player dealer;
 
-    public NewDealEvent(List<SavedPlayer> players, SavedPlayer dealer) {
+    public NewDealEvent(List<Player> players, Player dealer) {
 	this.players = Collections.unmodifiableList(players);
 	this.dealer = dealer;
     }
 
-    public SavedPlayer getDealer() {
+    public Player getDealer() {
 	return dealer;
     }
 
     @Override
     public String toString() {
 	String toReturn = "A new deal with ";
-	for (SavedPlayer player : players) {
+	for (Player player : players) {
 	    toReturn += player.getName();
 	    toReturn += " (";
 	    toReturn += player.getStackValue();
@@ -66,7 +66,7 @@ public class NewDealEvent extends GameEvent {
 	handler.startElement("", "event", "event", attrs);
 
 	handler.startElement("", "players", "players", new AttributesImpl());
-	for(SavedPlayer player : players){
+	for(Player player : players){
 	    attrs = new AttributesImpl();
 	    if(player.equals(getDealer())){
 		attrs.addAttribute("", "dealer", "dealer", "CDATA", "true");
