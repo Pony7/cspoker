@@ -3,12 +3,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
+ *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
- *  
+ *
  *  You should have received a copy of the GNU General Public License
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
@@ -33,8 +33,8 @@ import org.cspoker.server.common.xmlcommunication.XmlEventCollector;
 import org.cspoker.server.common.xmlcommunication.XmlEventType;
 import org.cspoker.server.common.xmlcommunication.XmlPlayerCommunication;
 import org.cspoker.server.common.xmlcommunication.XmlPlayerCommunicationFactory;
+import org.cspoker.server.game.player.GamePlayer;
 import org.cspoker.server.game.player.IllegalNameException;
-import org.cspoker.server.game.player.Player;
 import org.cspoker.server.game.player.PlayerFactory;
 
 
@@ -44,7 +44,7 @@ public class ClientContext implements XmlEventCollector{
 
     private final StringBuilder buffer;
     private XmlPlayerCommunication playerComm;
-    
+
     private final List<ByteBuffer> writeBuffer = new ArrayList<ByteBuffer>();
 
     private final Object writeBufferLock = new Object();
@@ -72,10 +72,10 @@ public class ClientContext implements XmlEventCollector{
     }
 
     /**
-     * Writes the current buffer to the client. 
-     * If the buffer is emptied, the selector is removed 
+     * Writes the current buffer to the client.
+     * If the buffer is emptied, the selector is removed
      * from the client.
-     * @throws IOException 
+     * @throws IOException
      */
     public void writeBufferToClient() throws IOException{
 	synchronized (writeBufferLock) {
@@ -148,7 +148,7 @@ public class ClientContext implements XmlEventCollector{
 	synchronized (authenticateLock ) {
 	    if (isAuthenticated())
 		throw new IllegalStateException("Can't login twice");
-	    Player player = PlayerFactory.global_Player_Factory.getUniquePlayer(username);
+	    GamePlayer player = PlayerFactory.global_Player_Factory.getUniquePlayer(username);
 	    playerComm = XmlPlayerCommunicationFactory.getRegisteredXmlPlayerCommunication(player, this);
 	}
     }
