@@ -19,7 +19,7 @@ package org.cspoker.server.common.xmlcommunication;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.cspoker.common.xmlcommunication.XmlEventCollector;
+import org.cspoker.common.xmlcommunication.XmlEventListener;
 import org.cspoker.server.game.player.GamePlayer;
 
 /**
@@ -30,7 +30,7 @@ public class XmlPlayerCommunicationFactory {
 
     private final static Map<GamePlayer,XmlPlayerCommunication> playerComs=new HashMap<GamePlayer,XmlPlayerCommunication>();
     
-    public static synchronized XmlPlayerCommunication getRegisteredXmlPlayerCommunication(GamePlayer player, XmlEventCollector collector){
+    public static synchronized XmlPlayerCommunication getRegisteredXmlPlayerCommunication(GamePlayer player, XmlEventListener collector){
 	XmlPlayerCommunication result=playerComs.get(player);
 	if(result==null){
 	    

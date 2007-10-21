@@ -29,7 +29,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.cspoker.common.xmlcommunication.XmlEventCollector;
+import org.cspoker.common.xmlcommunication.XmlEventListener;
 import org.cspoker.server.common.xmlcommunication.XmlPlayerCommunication;
 import org.cspoker.server.common.xmlcommunication.XmlPlayerCommunicationFactory;
 import org.cspoker.server.game.player.GamePlayer;
@@ -37,7 +37,7 @@ import org.cspoker.server.game.player.IllegalNameException;
 import org.cspoker.server.game.player.PlayerFactory;
 
 
-public class ClientContext implements XmlEventCollector{
+public class ClientContext implements XmlEventListener{
 
     private final static Logger logger = Logger.getLogger(ClientContext.class);
 

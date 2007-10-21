@@ -18,7 +18,7 @@ package org.cspoker.server.common.xmlcommunication;
 import java.io.IOException;
 
 import org.apache.log4j.Logger;
-import org.cspoker.common.xmlcommunication.XmlEventCollector;
+import org.cspoker.common.xmlcommunication.XmlEventListener;
 import org.cspoker.server.common.xmlcommunication.handler.CommandDelegatingHandler;
 import org.cspoker.server.common.xmlcommunication.handler.DelegatingToOneHandler;
 import org.cspoker.server.game.player.GamePlayer;
@@ -32,12 +32,12 @@ import org.xml.sax.helpers.XMLReaderFactory;
 public class XmlPlayerCommunication {
 
     private final PlayerCommunication playerComm;
-    private final XmlEventCollector collector;
+    private final XmlEventListener collector;
     private final GamePlayer player;
 
     private final static Logger logger = Logger.getLogger(XmlPlayerCommunication.class);
     
-    XmlPlayerCommunication(GamePlayer player, XmlEventCollector collector) {
+    XmlPlayerCommunication(GamePlayer player, XmlEventListener collector) {
 	this.playerComm = new PlayerCommunicationImpl(player);
 	this.collector = collector;
 	this.player = player;

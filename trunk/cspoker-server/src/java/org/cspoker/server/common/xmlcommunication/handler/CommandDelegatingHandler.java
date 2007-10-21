@@ -25,7 +25,7 @@ import javax.xml.transform.sax.TransformerHandler;
 import javax.xml.transform.stream.StreamResult;
 
 import org.apache.log4j.Logger;
-import org.cspoker.common.xmlcommunication.XmlEventCollector;
+import org.cspoker.common.xmlcommunication.XmlEventListener;
 import org.cspoker.server.game.TableId;
 import org.cspoker.server.game.gameControl.IllegalActionException;
 import org.cspoker.server.game.playerCommunication.PlayerCommunication;
@@ -40,10 +40,10 @@ ContentHandler {
     private final static Logger logger = Logger.getLogger(CommandDelegatingHandler.class);
 
     private final PlayerCommunication playerComm;
-    private final XmlEventCollector collector;
+    private final XmlEventListener collector;
 
     public CommandDelegatingHandler(PlayerCommunication playerComm,
-	    XmlEventCollector collector) {
+	    XmlEventListener collector) {
 	this.playerComm = playerComm;
 	this.collector = collector;
     }

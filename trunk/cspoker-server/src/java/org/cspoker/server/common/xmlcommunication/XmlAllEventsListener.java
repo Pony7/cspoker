@@ -25,7 +25,7 @@ import javax.xml.transform.sax.TransformerHandler;
 import javax.xml.transform.stream.StreamResult;
 
 import org.apache.log4j.Logger;
-import org.cspoker.common.xmlcommunication.XmlEventCollector;
+import org.cspoker.common.xmlcommunication.XmlEventListener;
 import org.cspoker.server.game.events.AllEventsListener;
 import org.cspoker.server.game.events.Event;
 import org.cspoker.server.game.events.gameEvents.GameMessageEvent;
@@ -55,9 +55,9 @@ import org.xml.sax.SAXException;
 public class XmlAllEventsListener implements AllEventsListener {
 
     private final static Logger logger = Logger.getLogger(XmlAllEventsListener.class);
-    private final XmlEventCollector collector;
+    private final XmlEventListener collector;
 
-    public XmlAllEventsListener(XmlEventCollector collector) {
+    public XmlAllEventsListener(XmlEventListener collector) {
 	this.collector = collector;
     }
 

@@ -15,9 +15,9 @@
  */
 package org.cspoker.server.http;
 
-import org.cspoker.common.xmlcommunication.XmlEventCollector;
+import org.cspoker.common.xmlcommunication.XmlEventListener;
 
-public class StringCollector implements XmlEventCollector{
+public class StringCollector implements XmlEventListener{
 
     	StringCollector() {
 	    // no op
