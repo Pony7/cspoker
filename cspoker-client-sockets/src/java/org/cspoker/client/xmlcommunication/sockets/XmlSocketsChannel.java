@@ -13,7 +13,7 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.client.sockets;
+package org.cspoker.client.xmlcommunication.sockets;
 
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -24,44 +24,70 @@ import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.apache.log4j.Logger;
-import org.cspoker.client.sockets.exceptions.ConnectionLostException;
-import org.cspoker.client.sockets.exceptions.LoginFailedException;
-import org.cspoker.common.xmlcommunication.XmlEventCollector;
+import org.cspoker.client.xmlcommunication.common.XmlChannel;
+import org.cspoker.client.xmlcommunication.sockets.exceptions.ConnectionLostException;
+import org.cspoker.client.xmlcommunication.sockets.exceptions.LoginFailedException;
+import org.cspoker.common.xmlcommunication.XmlEventListener;
 
-public class XmlSocketsChannel {
+public class XmlSocketsChannel implements XmlChannel{
 
     private final static Logger logger = Logger.getLogger(XmlSocketsChannel.class);
 
     public final static byte DELIMITER = 0x00;
     public final static char[] DELIMITER_ARRAY = new char[]{(char)DELIMITER};
 
-    private final Socket s;
-    private final Writer w;
+    private Socket s;
+    private Writer w;
 
-    private XmlEventCollector collector;
-    private final ExecutorService executor;
+    private ExecutorService executor;
 
     private CharsetDecoder decoder;
 
+    private List<XmlEventListener> xmlEventListeners = new ArrayList<XmlEventListener>();
 
-    public XmlSocketsChannel(String server, int port, String username, String password
-	    , XmlEventCollector collector) throws UnknownHostException, IOException, LoginFailedException {
-	this.s=new Socket(server, port);
-	this.w=new OutputStreamWriter(s.getOutputStream());
-	this.collector = collector;
+    private final String server;
+    private final int port;
+    private final String username;
+    private final String password;
 
+    public XmlSocketsChannel(String server, int port, String username, String password){
+	this.server = server;
+	this.port=port;
+	this.username = username;
+	this.password = password;
 	Charset charset=Charset.forName("UTF-8");
 	decoder = charset.newDecoder();
+    }
+    
 
+    public void open() throws UnknownHostException, IOException, LoginFailedException {
+	this.s=new Socket(server, port);
+	this.w=new OutputStreamWriter(s.getOutputStream());
 	if(!login(username, password))
 	    throw new LoginFailedException();
 	executor = Executors.newSingleThreadExecutor();
 	executor.execute(new WaitForEvents());
+    }
+    
+    public void registerXmlEventListener(XmlEventListener listener){
+	xmlEventListeners.add(listener);
+    }
+    
+    public void unRegisterXmlEventListener(XmlEventListener listener){
+	xmlEventListeners.remove(listener);
+    }
+    
+    private void fireXmlEvent(String xmlEvent){
+	for(XmlEventListener listener:xmlEventListeners){
+	    listener.collect(xmlEvent);
+	}
     }
 
     private boolean login(String username, String password) throws IOException{
@@ -76,7 +102,7 @@ public class XmlSocketsChannel {
 	return false;
     }
 
-    public void sendXML(final String xml) throws IOException{
+    public void send(final String xml) throws IOException{
 	w.write(xml);
 	w.write(DELIMITER_ARRAY);
     }
@@ -124,7 +150,7 @@ public class XmlSocketsChannel {
 	public void run() {
 	    try {
 		String s = readUntilDelimiter();
-		collector.collect(s);
+		fireXmlEvent(s);
 	    } catch (IOException e) {
 		close();
 	    } catch (ConnectionLostException e) {
@@ -135,6 +161,7 @@ public class XmlSocketsChannel {
 	}
 
     }
+
 
 
 }
