@@ -29,8 +29,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.cspoker.server.common.xmlcommunication.XmlEventCollector;
-import org.cspoker.server.common.xmlcommunication.XmlEventType;
+import org.cspoker.common.xmlcommunication.XmlEventCollector;
 import org.cspoker.server.common.xmlcommunication.XmlPlayerCommunication;
 import org.cspoker.server.common.xmlcommunication.XmlPlayerCommunicationFactory;
 import org.cspoker.server.game.player.GamePlayer;
@@ -140,7 +139,7 @@ public class ClientContext implements XmlEventCollector{
 	return playerComm;
     }
 
-    public void collect(String xmlEvent, XmlEventType type) {
+    public void collect(String xmlEvent) {
 	send(xmlEvent);
     }
 

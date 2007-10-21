@@ -25,6 +25,7 @@ import javax.xml.transform.sax.TransformerHandler;
 import javax.xml.transform.stream.StreamResult;
 
 import org.apache.log4j.Logger;
+import org.cspoker.common.xmlcommunication.XmlEventCollector;
 import org.cspoker.server.game.events.AllEventsListener;
 import org.cspoker.server.game.events.Event;
 import org.cspoker.server.game.events.gameEvents.GameMessageEvent;
@@ -69,7 +70,7 @@ public class XmlAllEventsListener implements AllEventsListener {
 	    response.startDocument();
 	    event.toXml(response);
 	    response.endDocument();
-	    collector.collect(xml.toString(), XmlEventType.NOTICE);
+	    collector.collect(xml.toString());
 	} catch (TransformerConfigurationException e) {
 	    logger.error("Can't send event.",e);
 	    throw new IllegalStateException(e);

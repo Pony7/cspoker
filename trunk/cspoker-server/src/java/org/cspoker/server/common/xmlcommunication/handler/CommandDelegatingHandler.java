@@ -25,8 +25,7 @@ import javax.xml.transform.sax.TransformerHandler;
 import javax.xml.transform.stream.StreamResult;
 
 import org.apache.log4j.Logger;
-import org.cspoker.server.common.xmlcommunication.XmlEventCollector;
-import org.cspoker.server.common.xmlcommunication.XmlEventType;
+import org.cspoker.common.xmlcommunication.XmlEventCollector;
 import org.cspoker.server.game.TableId;
 import org.cspoker.server.game.gameControl.IllegalActionException;
 import org.cspoker.server.game.playerCommunication.PlayerCommunication;
@@ -115,7 +114,7 @@ ContentHandler {
 
 	response.endElement("", "exception", "exception");
 	response.endDocument();
-	collector.collect(xml.toString(), XmlEventType.EXCEPTION);
+	collector.collect(xml.toString());
 
     }
 

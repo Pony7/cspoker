@@ -15,8 +15,7 @@
  */
 package org.cspoker.server.http;
 
-import org.cspoker.server.common.xmlcommunication.XmlEventCollector;
-import org.cspoker.server.common.xmlcommunication.XmlEventType;
+import org.cspoker.common.xmlcommunication.XmlEventCollector;
 
 public class StringCollector implements XmlEventCollector{
 
@@ -26,7 +25,7 @@ public class StringCollector implements XmlEventCollector{
     	
 	private StringBuilder sb = new StringBuilder();
 	
-	public synchronized void collect(String xml, XmlEventType xmlEventType) {
+	public synchronized void collect(String xml) {
 	    sb.append(xml);
 	}
 	

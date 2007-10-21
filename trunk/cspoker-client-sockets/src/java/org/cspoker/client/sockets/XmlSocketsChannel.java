@@ -26,10 +26,12 @@ import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.apache.log4j.Logger;
 import org.cspoker.client.sockets.exceptions.ConnectionLostException;
 import org.cspoker.client.sockets.exceptions.LoginFailedException;
+import org.cspoker.common.xmlcommunication.XmlEventCollector;
 
 public class XmlSocketsChannel {
 
@@ -41,14 +43,14 @@ public class XmlSocketsChannel {
     private final Socket s;
     private final Writer w;
 
-    private XmlEventListener collector;
+    private XmlEventCollector collector;
     private final ExecutorService executor;
 
     private CharsetDecoder decoder;
 
 
     public XmlSocketsChannel(String server, int port, String username, String password
-	    , XmlEventListener collector) throws UnknownHostException, IOException, LoginFailedException {
+	    , XmlEventCollector collector) throws UnknownHostException, IOException, LoginFailedException {
 	this.s=new Socket(server, port);
 	this.w=new OutputStreamWriter(s.getOutputStream());
 	this.collector = collector;
@@ -99,10 +101,10 @@ public class XmlSocketsChannel {
 	}
     }
 
-    private boolean closed=false;
+    private AtomicBoolean closed = new AtomicBoolean(false);
 
-    public synchronized void close(){
-	if(!closed){
+    public void close(){
+	if(!closed.getAndSet(true)){
 	    executor.shutdownNow();
 	    try {
 		w.close();
@@ -114,7 +116,6 @@ public class XmlSocketsChannel {
 	    } catch (IOException e) {
 		logger.error(e); 
 	    }
-	    closed=true;
 	}
     }
 

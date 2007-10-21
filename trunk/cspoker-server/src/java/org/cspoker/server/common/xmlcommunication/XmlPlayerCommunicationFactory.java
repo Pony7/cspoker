@@ -19,6 +19,7 @@ package org.cspoker.server.common.xmlcommunication;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.cspoker.common.xmlcommunication.XmlEventCollector;
 import org.cspoker.server.game.player.GamePlayer;
 
 /**
