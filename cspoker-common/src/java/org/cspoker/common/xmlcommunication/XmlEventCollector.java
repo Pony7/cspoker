@@ -13,10 +13,21 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.server.common.xmlcommunication;
 
-public enum XmlEventType {
+package org.cspoker.common.xmlcommunication;
 
-    NOTICE,EXCEPTION,RETURNVALUE;
+/**
+ * Interface for collecting XML messages encoded as a String.
+ */
+public interface XmlEventCollector {
+
+    /**
+     * This method should queue up the XML for handling rather than
+     * block during handling.
+     *  
+     * @param xml
+     * 	      The XML message to collect.
+     */
+    public void collect(String xml);
     
 }
