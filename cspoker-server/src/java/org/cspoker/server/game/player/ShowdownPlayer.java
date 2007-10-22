@@ -18,13 +18,13 @@ package org.cspoker.server.game.player;
 import org.cspoker.common.game.player.Player;
 import org.cspoker.server.game.elements.cards.hand.Hand;
 
-public class SavedShowdownPlayer {
+public class ShowdownPlayer {
 
     private final Player player;
 
     private final Hand hand;
 
-    public SavedShowdownPlayer(Player player, Hand hand) {
+    public ShowdownPlayer(Player player, Hand hand) {
 	this.player = player;
 	this.hand = hand;
     }

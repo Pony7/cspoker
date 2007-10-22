@@ -15,7 +15,7 @@
  */
 package org.cspoker.server.game.events.gameEvents;
 
-import org.cspoker.server.game.player.SavedShowdownPlayer;
+import org.cspoker.server.game.player.ShowdownPlayer;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
@@ -28,9 +28,9 @@ import org.xml.sax.helpers.AttributesImpl;
  */
 public class ShowHandEvent extends GameEvent {
 
-    private final SavedShowdownPlayer player;
+    private final ShowdownPlayer player;
 
-    public ShowHandEvent(SavedShowdownPlayer player) {
+    public ShowHandEvent(ShowdownPlayer player) {
 	this.player = player;
     }
 
@@ -39,7 +39,7 @@ public class ShowHandEvent extends GameEvent {
 	return player.toString();
     }
     
-    public SavedShowdownPlayer getShowdownPlayer(){
+    public ShowdownPlayer getShowdownPlayer(){
 	return player;
     }
     

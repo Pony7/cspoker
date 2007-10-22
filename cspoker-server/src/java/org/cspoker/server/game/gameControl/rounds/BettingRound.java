@@ -22,18 +22,18 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.cspoker.common.game.elements.pots.Pots;
+import org.cspoker.common.game.player.Winner;
 import org.cspoker.server.game.GameMediator;
 import org.cspoker.server.game.elements.cards.deck.Deck.Card;
 import org.cspoker.server.game.elements.chips.IllegalValueException;
 import org.cspoker.server.game.elements.chips.pot.GamePots;
-import org.cspoker.server.game.elements.player.AllInPlayer;
 import org.cspoker.server.game.events.gameEvents.NewCommunityCardsEvent;
 import org.cspoker.server.game.events.gameEvents.WinnerEvent;
 import org.cspoker.server.game.events.gameEvents.playerActionEvents.AllInEvent;
 import org.cspoker.server.game.gameControl.Game;
 import org.cspoker.server.game.gameControl.IllegalActionException;
+import org.cspoker.server.game.player.GameAllInPlayer;
 import org.cspoker.server.game.player.GamePlayer;
-import org.cspoker.server.game.player.SavedWinner;
 
 /**
  * A class to represent betting rounds.
@@ -53,7 +53,7 @@ public abstract class BettingRound extends Round {
     /**
      * This list contains all players who go all-in in this round.
      */
-    protected final List<AllInPlayer> allInPlayers;
+    protected final List<GameAllInPlayer> allInPlayers;
 
     /**
      * This list contains all players who folded, but who have placed chips on
@@ -65,7 +65,7 @@ public abstract class BettingRound extends Round {
 
     public BettingRound(GameMediator gameMediator, Game game) {
 	super(gameMediator, game);
-	allInPlayers = new ArrayList<AllInPlayer>();
+	allInPlayers = new ArrayList<GameAllInPlayer>();
 	foldedPlayersWithBet = new ArrayList<GamePlayer>();
 	setBet(0);
     }
@@ -228,7 +228,7 @@ public abstract class BettingRound extends Round {
 	} catch (IllegalValueException e) {
 	    assert false;
 	}
-	allInPlayers.add(new AllInPlayer(player));
+	allInPlayers.add(new GameAllInPlayer(player));
 	getGame().removePlayerFromCurrentDeal(player);
 	if (player.getBetChips().getValue() > getBet()) {
 	    setBet(player.getBetChips().getValue());
@@ -428,14 +428,14 @@ public abstract class BettingRound extends Round {
     private void makeSidePots() {
 	Collections.sort(allInPlayers);
 	List<GamePlayer> players = game.getCurrentDealPlayers();
-	for (AllInPlayer allInPlayer : allInPlayers) {
+	for (GameAllInPlayer allInPlayer : allInPlayers) {
 	    try {
 		BettingRound.logger.info(game.getPots());
 		game.getPots().collectAmountFromPlayersToSidePot(
 			allInPlayer.getBetValue(), players);
 		BettingRound.logger.info(game.getPots());
 		int betValue = allInPlayer.getBetValue();
-		for (AllInPlayer otherAllInPlayer : allInPlayers) {
+		for (GameAllInPlayer otherAllInPlayer : allInPlayers) {
 		    if (otherAllInPlayer.getBetValue() > 0) {
 			otherAllInPlayer.transferAmountTo(betValue, game
 				.getPots().getNewestSidePot());
@@ -488,8 +488,8 @@ public abstract class BettingRound extends Round {
 		    + pots.getTotalValue() + " chips");
 
 	    int gainedChipsValue = pots.getPots().get(0).getChips().getValue();
-	    List<SavedWinner> savedWinner = new ArrayList<SavedWinner>(1);
-	    savedWinner.add(new SavedWinner(winner.getSavedPlayer(),
+	    List<Winner> savedWinner = new ArrayList<Winner>(1);
+	    savedWinner.add(new Winner(winner.getSavedPlayer(),
 		    gainedChipsValue));
 	    pots.getPots().get(0).getChips().transferAllChipsTo(
 		    winner.getStack());
@@ -566,7 +566,7 @@ public abstract class BettingRound extends Round {
 	}
 
 	int allInPlayerBets = 0;
-	for (AllInPlayer player : allInPlayers) {
+	for (GameAllInPlayer player : allInPlayers) {
 	    allInPlayerBets += player.getBetValue();
 	}
 	return game.getPots().getTotalValue() + currentPlayerBets

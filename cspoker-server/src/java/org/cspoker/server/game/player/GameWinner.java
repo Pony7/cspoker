@@ -14,20 +14,19 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-package org.cspoker.server.game.elements.player;
+package org.cspoker.server.game.player;
 
+import org.cspoker.common.game.player.Winner;
 import org.cspoker.server.game.elements.chips.Chips;
 import org.cspoker.server.game.elements.chips.IllegalValueException;
-import org.cspoker.server.game.player.GamePlayer;
-import org.cspoker.server.game.player.SavedWinner;
 
-public class Winner {
+public class GameWinner {
 
     private final GamePlayer winner;
 
     private final Chips chips = new Chips();
 
-    public Winner(GamePlayer winner) {
+    public GameWinner(GamePlayer winner) {
 	this.winner = winner;
     }
 
@@ -47,8 +46,8 @@ public class Winner {
 	return chips.getValue() > 0;
     }
 
-    public SavedWinner getSavedWinner() {
-	return new SavedWinner(winner.getSavedPlayer(), chips.getValue());
+    public Winner getSavedWinner() {
+	return new Winner(winner.getSavedPlayer(), chips.getValue());
     }
 
     @Override

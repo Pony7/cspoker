@@ -14,11 +14,10 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-package org.cspoker.server.game.elements.player;
+package org.cspoker.server.game.player;
 
 import org.cspoker.server.game.elements.chips.IllegalValueException;
 import org.cspoker.server.game.elements.chips.pot.GamePot;
-import org.cspoker.server.game.player.GamePlayer;
 
 /**
  * A class to represent all-in players.
@@ -26,11 +25,11 @@ import org.cspoker.server.game.player.GamePlayer;
  * @author Kenzo
  * 
  */
-public class AllInPlayer implements Comparable<AllInPlayer> {
+public class GameAllInPlayer implements Comparable<GameAllInPlayer> {
 
     private final GamePlayer player;
 
-    public AllInPlayer(GamePlayer player) {
+    public GameAllInPlayer(GamePlayer player) {
 	this.player = player;
     }
 
@@ -55,7 +54,7 @@ public class AllInPlayer implements Comparable<AllInPlayer> {
 	player.getBetChips().transferAmountTo(amount, pot.getChips());
     }
 
-    public int compareTo(AllInPlayer o) {
+    public int compareTo(GameAllInPlayer o) {
 	return getBetValue() - o.getBetValue();
     }
 
@@ -67,7 +66,7 @@ public class AllInPlayer implements Comparable<AllInPlayer> {
 	    return false;
 	if (getClass() != obj.getClass())
 	    return false;
-	final AllInPlayer other = (AllInPlayer) obj;
+	final GameAllInPlayer other = (GameAllInPlayer) obj;
 	if (player == null) {
 	    if (other.player != null)
 		return false;
