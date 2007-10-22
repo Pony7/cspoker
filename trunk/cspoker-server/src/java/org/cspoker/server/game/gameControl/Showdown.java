@@ -24,17 +24,17 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.cspoker.common.game.player.PlayerId;
+import org.cspoker.common.game.player.Winner;
 import org.cspoker.server.game.GameMediator;
 import org.cspoker.server.game.elements.cards.deck.Deck.Card;
 import org.cspoker.server.game.elements.cards.hand.Hand;
 import org.cspoker.server.game.elements.chips.IllegalValueException;
 import org.cspoker.server.game.elements.chips.pot.GamePot;
-import org.cspoker.server.game.elements.player.ShowdownPlayer;
-import org.cspoker.server.game.elements.player.Winner;
 import org.cspoker.server.game.events.gameEvents.ShowHandEvent;
 import org.cspoker.server.game.events.gameEvents.WinnerEvent;
 import org.cspoker.server.game.player.GamePlayer;
-import org.cspoker.server.game.player.SavedWinner;
+import org.cspoker.server.game.player.GameShowdownPlayer;
+import org.cspoker.server.game.player.GameWinner;
 
 /**
  * A class to determine who has won each pot.
@@ -52,7 +52,7 @@ public class Showdown {
 
     private final GameMediator gameMediator;
 
-    private final Map<PlayerId, Winner> winnersMap = new HashMap<PlayerId, Winner>();
+    private final Map<PlayerId, GameWinner> winnersMap = new HashMap<PlayerId, GameWinner>();
 
     /**
      * Construct a new showdown with given game and pots.
@@ -88,10 +88,10 @@ public class Showdown {
 	Showdown.logger.info(game.getPots());
 
 	// TODO all-in players always, others can choose to show or fold.
-	List<ShowdownPlayer> showdownPlayers = getShowdownPlayersFromPot(game
+	List<GameShowdownPlayer> showdownPlayers = getShowdownPlayersFromPot(game
 		.getPots().getPots().get(0));
 
-	for (ShowdownPlayer player : showdownPlayers) {
+	for (GameShowdownPlayer player : showdownPlayers) {
 	    gameMediator.publishShowHand(new ShowHandEvent(player
 		    .getSavedShowdownPlayer()));
 	}
@@ -105,9 +105,9 @@ public class Showdown {
 	    splitPot(winners, pot);
 	}
 
-	List<SavedWinner> savedWinners = new ArrayList<SavedWinner>();
+	List<Winner> savedWinners = new ArrayList<Winner>();
 
-	for (Winner winner : winnersMap.values()) {
+	for (GameWinner winner : winnersMap.values()) {
 	    if (winner.hasGainedChips()) {
 		savedWinners.add(winner.getSavedWinner());
 		Showdown.logger.info(winner);
@@ -136,7 +136,7 @@ public class Showdown {
     private void splitPot(List<GamePlayer> winners, GamePot pot) {
 	for (GamePlayer winner : winners) {
 	    if (!winnersMap.containsKey(winner.getId())) {
-		winnersMap.put(winner.getId(), new Winner(winner));
+		winnersMap.put(winner.getId(), new GameWinner(winner));
 	    }
 	}
 
@@ -191,12 +191,12 @@ public class Showdown {
      * @return The list of winners of the pot in the current game.
      */
     private List<GamePlayer> getWinners(GamePot pot) {
-	List<ShowdownPlayer> players = getShowdownPlayersFromPot(pot);
+	List<GameShowdownPlayer> players = getShowdownPlayersFromPot(pot);
 	Collections.sort(players);
-	for (ShowdownPlayer player : players) {
+	for (GameShowdownPlayer player : players) {
 	    Showdown.logger.info(player);
 	}
-	ShowdownPlayer winner = players.get(0);
+	GameShowdownPlayer winner = players.get(0);
 	List<GamePlayer> winners = new ArrayList<GamePlayer>();
 	int i = 0;
 	while ((i < players.size()) && winner.equals(players.get(i))) {
@@ -213,10 +213,10 @@ public class Showdown {
      *                The pot from which the showdown players must be returned.
      * @return The list of showdown players in the current game.
      */
-    private List<ShowdownPlayer> getShowdownPlayersFromPot(GamePot pot) {
-	List<ShowdownPlayer> showDownPlayers = new ArrayList<ShowdownPlayer>();
+    private List<GameShowdownPlayer> getShowdownPlayersFromPot(GamePot pot) {
+	List<GameShowdownPlayer> showDownPlayers = new ArrayList<GameShowdownPlayer>();
 	for (GamePlayer player : pot.getPlayers()) {
-	    showDownPlayers.add(new ShowdownPlayer(player,
+	    showDownPlayers.add(new GameShowdownPlayer(player,
 		    getBestFiveCardHand(player)));
 	}
 	return showDownPlayers;

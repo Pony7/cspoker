@@ -14,11 +14,9 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-package org.cspoker.server.game.elements.player;
+package org.cspoker.server.game.player;
 
 import org.cspoker.server.game.elements.cards.hand.Hand;
-import org.cspoker.server.game.player.GamePlayer;
-import org.cspoker.server.game.player.SavedShowdownPlayer;
 
 /**
  * A class to represent a showdown player.
@@ -29,7 +27,7 @@ import org.cspoker.server.game.player.SavedShowdownPlayer;
  * @author Kenzo
  * 
  */
-public class ShowdownPlayer implements Comparable<ShowdownPlayer> {
+public class GameShowdownPlayer implements Comparable<GameShowdownPlayer> {
 
     /**
      * This variable contains the showdown player.
@@ -49,7 +47,7 @@ public class ShowdownPlayer implements Comparable<ShowdownPlayer> {
      * @param bestHand
      *                The player's best hand.
      */
-    public ShowdownPlayer(GamePlayer player, Hand bestHand) {
+    public GameShowdownPlayer(GamePlayer player, Hand bestHand) {
 	this.player = player;
 	this.bestHand = bestHand;
 
@@ -73,8 +71,8 @@ public class ShowdownPlayer implements Comparable<ShowdownPlayer> {
 	return bestHand;
     }
 
-    public SavedShowdownPlayer getSavedShowdownPlayer() {
-	return new SavedShowdownPlayer(player.getSavedPlayer(), getBestHand());
+    public ShowdownPlayer getSavedShowdownPlayer() {
+	return new ShowdownPlayer(player.getSavedPlayer(), getBestHand());
     }
 
     /**
@@ -90,7 +88,7 @@ public class ShowdownPlayer implements Comparable<ShowdownPlayer> {
      * 
      * -1 = first hand is best, 1 = second hand is best, 0 = tie
      */
-    public int compareTo(ShowdownPlayer o) {
+    public int compareTo(GameShowdownPlayer o) {
 	return o.getBestHand().compareTo(getBestHand());
     }
 
@@ -106,7 +104,7 @@ public class ShowdownPlayer implements Comparable<ShowdownPlayer> {
 	    return false;
 	if (getClass() != obj.getClass())
 	    return false;
-	final ShowdownPlayer other = (ShowdownPlayer) obj;
+	final GameShowdownPlayer other = (GameShowdownPlayer) obj;
 	if (this.bestHand == null)
 	    return other.bestHand == null;
 	else

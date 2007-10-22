@@ -16,7 +16,6 @@
 
 package org.cspoker.server.game;
 
-import net.jcip.annotations.Immutable;
 
 /**
  * A class to represent table id's.
@@ -24,7 +23,6 @@ import net.jcip.annotations.Immutable;
  * @author Kenzo
  * 
  */
-@Immutable
 public class TableId {
 
     /**
@@ -72,7 +70,7 @@ public class TableId {
 
     @Override
     public String toString() {
-	return "table: " + String.valueOf(id);
+    	return "table: " + String.valueOf(id);
     }
 
     public long getID() {

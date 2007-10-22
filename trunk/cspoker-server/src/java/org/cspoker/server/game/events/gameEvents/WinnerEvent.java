@@ -19,7 +19,7 @@ package org.cspoker.server.game.events.gameEvents;
 import java.util.Collections;
 import java.util.List;
 
-import org.cspoker.server.game.player.SavedWinner;
+import org.cspoker.common.game.player.Winner;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
@@ -32,20 +32,20 @@ import org.xml.sax.helpers.AttributesImpl;
  */
 public class WinnerEvent extends GameEvent {
 
-    private final List<SavedWinner> winners;
+    private final List<Winner> winners;
 
-    public WinnerEvent(List<SavedWinner> winners) {
+    public WinnerEvent(List<Winner> winners) {
 	this.winners = Collections.unmodifiableList(winners);
     }
 
-    public List<SavedWinner> getWinners() {
+    public List<Winner> getWinners() {
 	return winners;
     }
 
     @Override
     public String toString() {
 	String toReturn = "Winners: ";
-	for (SavedWinner winner : winners) {
+	for (Winner winner : winners) {
 	    String winnerString = winner.toString();
 	    toReturn += winnerString.substring(0, winnerString.length() - 1);
 	    toReturn += ", ";
@@ -60,7 +60,7 @@ public class WinnerEvent extends GameEvent {
 	handler.startElement("", "event", "event", attrs);
 
 	handler.startElement("", "winners", "winners", new AttributesImpl());
-	for(SavedWinner winner : getWinners()){
+	for(Winner winner : getWinners()){
 	    attrs = new AttributesImpl();
 	    attrs.addAttribute("", "name", "name", "CDATA", winner.getPlayer().getName());
 	    handler.startElement("", "winner", "winner", attrs);
