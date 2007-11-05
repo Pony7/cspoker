@@ -18,7 +18,7 @@ package org.cspoker.server.game.playerCommunication;
 import java.util.Iterator;
 import java.util.List;
 
-import org.cspoker.server.game.events.Event;
+import org.cspoker.common.game.events.Event;
 
 public class Events implements Iterable<Event> {
 

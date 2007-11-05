@@ -16,14 +16,14 @@
 package org.cspoker.server.game.playerCommunication;
 
 import org.apache.log4j.Logger;
+import org.cspoker.common.game.elements.table.TableId;
+import org.cspoker.common.game.events.serverEvents.PlayerJoinedEvent;
+import org.cspoker.common.game.events.serverEvents.TableCreatedEvent;
 import org.cspoker.server.game.GameManager;
 import org.cspoker.server.game.GameMediator;
-import org.cspoker.server.game.TableId;
 import org.cspoker.server.game.TableManager;
 import org.cspoker.server.game.elements.table.PlayerListFullException;
 import org.cspoker.server.game.elements.table.Table;
-import org.cspoker.server.game.events.serverEvents.PlayerJoinedEvent;
-import org.cspoker.server.game.events.serverEvents.TableCreatedEvent;
 import org.cspoker.server.game.gameControl.IllegalActionException;
 
 /**

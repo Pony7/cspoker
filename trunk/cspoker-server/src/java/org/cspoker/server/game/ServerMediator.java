@@ -19,18 +19,18 @@ package org.cspoker.server.game;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import org.cspoker.common.game.events.Event;
+import org.cspoker.common.game.events.EventListener;
+import org.cspoker.common.game.events.serverEvents.AllServerEventsListener;
+import org.cspoker.common.game.events.serverEvents.PlayerJoinedEvent;
+import org.cspoker.common.game.events.serverEvents.PlayerJoinedListener;
+import org.cspoker.common.game.events.serverEvents.PlayerLeftEvent;
+import org.cspoker.common.game.events.serverEvents.PlayerLeftListener;
+import org.cspoker.common.game.events.serverEvents.ServerMessageEvent;
+import org.cspoker.common.game.events.serverEvents.ServerMessageListener;
+import org.cspoker.common.game.events.serverEvents.TableCreatedEvent;
+import org.cspoker.common.game.events.serverEvents.TableCreatedListener;
 import org.cspoker.common.game.player.PlayerId;
-import org.cspoker.server.game.events.Event;
-import org.cspoker.server.game.events.EventListener;
-import org.cspoker.server.game.events.serverEvents.AllServerEventsListener;
-import org.cspoker.server.game.events.serverEvents.PlayerJoinedEvent;
-import org.cspoker.server.game.events.serverEvents.PlayerJoinedListener;
-import org.cspoker.server.game.events.serverEvents.PlayerLeftEvent;
-import org.cspoker.server.game.events.serverEvents.PlayerLeftListener;
-import org.cspoker.server.game.events.serverEvents.ServerMessageEvent;
-import org.cspoker.server.game.events.serverEvents.ServerMessageListener;
-import org.cspoker.server.game.events.serverEvents.TableCreatedEvent;
-import org.cspoker.server.game.events.serverEvents.TableCreatedListener;
 
 public class ServerMediator {
 

@@ -23,15 +23,15 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.cspoker.common.game.elements.cards.cardElements.Card;
+import org.cspoker.common.game.events.gameEvents.ShowHandEvent;
+import org.cspoker.common.game.events.gameEvents.WinnerEvent;
 import org.cspoker.common.game.player.PlayerId;
 import org.cspoker.common.game.player.Winner;
 import org.cspoker.server.game.GameMediator;
-import org.cspoker.server.game.elements.cards.deck.Deck.Card;
 import org.cspoker.server.game.elements.cards.hand.Hand;
 import org.cspoker.server.game.elements.chips.IllegalValueException;
 import org.cspoker.server.game.elements.chips.pot.GamePot;
-import org.cspoker.server.game.events.gameEvents.ShowHandEvent;
-import org.cspoker.server.game.events.gameEvents.WinnerEvent;
 import org.cspoker.server.game.player.GamePlayer;
 import org.cspoker.server.game.player.GameShowdownPlayer;
 import org.cspoker.server.game.player.GameWinner;

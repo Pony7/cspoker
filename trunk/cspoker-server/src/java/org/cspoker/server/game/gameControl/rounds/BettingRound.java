@@ -21,15 +21,15 @@ import java.util.Collections;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.cspoker.common.game.elements.cards.cardElements.Card;
 import org.cspoker.common.game.elements.pots.Pots;
+import org.cspoker.common.game.events.gameEvents.NewCommunityCardsEvent;
+import org.cspoker.common.game.events.gameEvents.WinnerEvent;
+import org.cspoker.common.game.events.gameEvents.playerActionEvents.AllInEvent;
 import org.cspoker.common.game.player.Winner;
 import org.cspoker.server.game.GameMediator;
-import org.cspoker.server.game.elements.cards.deck.Deck.Card;
 import org.cspoker.server.game.elements.chips.IllegalValueException;
 import org.cspoker.server.game.elements.chips.pot.GamePots;
-import org.cspoker.server.game.events.gameEvents.NewCommunityCardsEvent;
-import org.cspoker.server.game.events.gameEvents.WinnerEvent;
-import org.cspoker.server.game.events.gameEvents.playerActionEvents.AllInEvent;
 import org.cspoker.server.game.gameControl.Game;
 import org.cspoker.server.game.gameControl.IllegalActionException;
 import org.cspoker.server.game.player.GameAllInPlayer;
@@ -405,6 +405,10 @@ public abstract class BettingRound extends Round {
      */
     protected Card drawCard() {
 	return game.drawCard();
+    }
+    
+    protected List<Card> drawCard(final int nbCards){
+    	return game.drawCards(nbCards);
     }
 
     /***************************************************************************
