@@ -15,9 +15,9 @@
  */
 package org.cspoker.server.game.playerCommunication;
 
+import org.cspoker.common.game.events.serverEvents.PlayerLeftEvent;
 import org.cspoker.server.game.GameManager;
 import org.cspoker.server.game.elements.table.Table;
-import org.cspoker.server.game.events.serverEvents.PlayerLeftEvent;
 import org.cspoker.server.game.gameControl.IllegalActionException;
 
 /**

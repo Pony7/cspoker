@@ -20,9 +20,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import org.cspoker.common.game.elements.cards.cardElements.Card;
 import org.cspoker.common.game.player.Player;
 import org.cspoker.common.game.player.PlayerId;
-import org.cspoker.server.game.elements.cards.deck.Deck.Card;
 import org.cspoker.server.game.elements.chips.Chips;
 import org.cspoker.server.game.elements.chips.IllegalValueException;
 
@@ -152,8 +152,10 @@ public class GamePlayer {
      * Deal a pocket card to this player.
      *
      */
-    public void dealPocketCard(Card card) {
-	pocketCards.add(card);
+    public void dealPocketCard(Card...cards) {
+    	for(Card card:cards){
+    		pocketCards.add(card);
+    	}
     }
 
     /**

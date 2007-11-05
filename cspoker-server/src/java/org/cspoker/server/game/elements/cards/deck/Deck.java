@@ -21,6 +21,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.cspoker.common.game.elements.cards.cardElements.Card;
 import org.cspoker.common.game.elements.cards.cardElements.Rank;
 import org.cspoker.common.game.elements.cards.cardElements.Suit;
 import org.cspoker.server.game.elements.cards.deck.randomGenerator.RandomOrgSeededRandomGenerator;
@@ -32,61 +33,23 @@ import org.cspoker.server.game.elements.cards.deck.randomGenerator.RandomOrgSeed
  * 
  */
 public class Deck {
-    public static final class Card implements Comparable<Card> {
-	private final Rank rank;
-
-	private final Suit suit;
-
-	private Card(final Rank rank, final Suit suit) {
-	    this.rank = rank;
-	    this.suit = suit;
-	}
-
-	/**
-	 * Compares this card to a given other card by it's rank
-	 * 
-	 * @see Card
-	 */
-	public int compareTo(final Card other) {
-	    final int thisVal = (this.getRank().getValue());
-	    final int anotherVal = (other.getRank().getValue());
-
-	    return (thisVal < anotherVal ? -1 : (thisVal == anotherVal ? 0 : 1));
-	}
-
-	public String getLongDescription() {
-	    return this.rank + " of " + this.suit;
-	}
-
-	public Rank getRank() {
-	    return this.rank;
-	}
-
-	public Suit getSuit() {
-	    return this.suit;
-	}
-
-	@Override
-	public String toString() {
-	    return this.rank.getShortDescription()
-		    + this.suit.getShortDescription();
-	}
-    }
 
     private static Logger logger = Logger.getLogger(Deck.class);
 
     /*
      * Sorted prototype deck for copying
      */
-    private static final List<Card> PROTO_DECK = new ArrayList<Card>();
+    private static final List<Card> PROTO_DECK;
 
     static {
-	// Initialize prototype deck
-	for (final Suit suit : Suit.values()) {
-	    for (final Rank rank : Rank.values()) {
-		Deck.PROTO_DECK.add(new Card(rank, suit));
-	    }
-	}
+    	// Initialize prototype deck
+    	List<Card> deck = new ArrayList<Card>();
+    	for (final Suit suit : Suit.values()) {
+    		for (final Rank rank : Rank.values()) {
+    			deck.add(new Card(rank, suit));
+    		}
+    	}
+    	PROTO_DECK = Collections.unmodifiableList(deck);
     }
 
     /**
@@ -112,7 +75,7 @@ public class Deck {
      *                number of cards to return
      * @return {@link List} of Cards
      */
-    public List<Card> deal(final int number) {
+    public synchronized List<Card> deal(final int number) {
 	final int deckSize = this.cards.size();
 	final List<Card> handView = this.cards.subList(deckSize - number,
 		deckSize);
@@ -131,8 +94,8 @@ public class Deck {
      *                 There must be at least one card in the deck |
      *                 getDeckSize()<=0
      */
-    public Card drawCard() {
-	return this.deal(1).get(0);
+    public synchronized Card drawCard() {
+		return deal(1).get(0);
     }
 
     /**

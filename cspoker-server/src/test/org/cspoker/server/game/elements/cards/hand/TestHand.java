@@ -20,9 +20,9 @@ import java.util.Iterator;
 import junit.framework.TestCase;
 
 import org.apache.log4j.Logger;
+import org.cspoker.common.game.elements.cards.cardElements.Card;
 import org.cspoker.common.game.elements.cards.cardElements.Rank;
 import org.cspoker.common.game.elements.cards.cardElements.Suit;
-import org.cspoker.server.game.elements.cards.deck.Deck.Card;
 import org.cspoker.server.game.utilities.TestExactCard;
 
 /**
@@ -107,6 +107,8 @@ public class TestHand extends TestCase {
 
 	assertTrue(testExactCard.getExactCard(Rank.ACE, Suit.CLUBS).compareTo(
 		testExactCard.getExactCard(Rank.KING, Suit.DIAMONDS)) == 1);
+	System.out.println(testExactCard.getExactCard(Rank.DEUCE, Suit.HEARTS)
+			.compareTo(testExactCard.getExactCard(Rank.KING, Suit.SPADES)));
 	assertTrue(testExactCard.getExactCard(Rank.DEUCE, Suit.HEARTS)
 		.compareTo(testExactCard.getExactCard(Rank.KING, Suit.SPADES)) == -1);
 	assertTrue(testExactCard.getExactCard(Rank.DEUCE, Suit.DIAMONDS)

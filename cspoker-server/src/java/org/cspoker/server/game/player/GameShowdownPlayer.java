@@ -16,6 +16,7 @@
 
 package org.cspoker.server.game.player;
 
+import org.cspoker.common.game.player.ShowdownPlayer;
 import org.cspoker.server.game.elements.cards.hand.Hand;
 
 /**
@@ -72,7 +73,7 @@ public class GameShowdownPlayer implements Comparable<GameShowdownPlayer> {
     }
 
     public ShowdownPlayer getSavedShowdownPlayer() {
-	return new ShowdownPlayer(player.getSavedPlayer(), getBestHand());
+	return new ShowdownPlayer(player.getSavedPlayer(), getBestHand().getCards(), getBestHand().getDescription());
     }
 
     /**
