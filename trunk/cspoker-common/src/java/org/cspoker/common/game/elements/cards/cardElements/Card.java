@@ -28,16 +28,11 @@ public final class Card implements Comparable<Card> {
 
 	/**
 	 * Compares this card to a given other card by it's rank
-	 * 
-	 * @see Card
 	 */
 	public int compareTo(final Card other) {
-		if (this.getSuit().getValue() > other.getSuit().getValue()) {
-			return -1;
-		}
-		if (this.getRank().getValue() > other.getRank().getValue()) {
-			return 1;
-		}
-		return 0;
+	    final int thisVal = (this.getRank().getValue());
+	    final int anotherVal = (other.getRank().getValue());
+
+	    return (thisVal < anotherVal ? -1 : (thisVal == anotherVal ? 0 : 1));
 	}
 }
