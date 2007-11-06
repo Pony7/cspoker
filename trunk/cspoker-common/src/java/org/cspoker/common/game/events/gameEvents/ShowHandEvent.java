@@ -28,6 +28,8 @@ import org.xml.sax.helpers.AttributesImpl;
  */
 public class ShowHandEvent extends GameEvent {
 
+    private static final long serialVersionUID = -3412700183566852150L;
+
     private final ShowdownPlayer player;
 
     public ShowHandEvent(ShowdownPlayer player) {

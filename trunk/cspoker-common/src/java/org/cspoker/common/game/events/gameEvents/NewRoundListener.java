@@ -16,13 +16,15 @@
 
 package org.cspoker.common.game.events.gameEvents;
 
+import java.io.Serializable;
+
 /**
  * An interface for new round listeners.
  * 
  * @author Kenzo
  * 
  */
-public interface NewRoundListener {
+public interface NewRoundListener extends Serializable {
 
     /**
      * This method is called when subscribed to inform a new round event

@@ -15,7 +15,9 @@
  */
 package org.cspoker.common.game.events.serverEvents;
 
-public interface ServerMessageListener {
+import java.io.Serializable;
+
+public interface ServerMessageListener extends Serializable{
 
     public void onServerMessageEvent(ServerMessageEvent event);
 

@@ -16,6 +16,8 @@
 
 package org.cspoker.common.game.elements.table;
 
+import java.io.Serializable;
+
 
 /**
  * A class to represent table id's.
@@ -23,8 +25,10 @@ package org.cspoker.common.game.elements.table;
  * @author Kenzo
  * 
  */
-public class TableId {
+public class TableId implements Serializable {
 
+    private static final long serialVersionUID = -3605432117019173699L;
+    
     /**
      * The variable containing the long representation of the id.
      */

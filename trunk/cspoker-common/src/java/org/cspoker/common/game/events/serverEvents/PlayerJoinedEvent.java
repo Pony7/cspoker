@@ -24,6 +24,8 @@ import org.xml.sax.helpers.AttributesImpl;
 
 public class PlayerJoinedEvent extends ServerEvent {
 
+    private static final long serialVersionUID = -6470646766839190620L;
+
     private final Player player;
 
     private final TableId id;

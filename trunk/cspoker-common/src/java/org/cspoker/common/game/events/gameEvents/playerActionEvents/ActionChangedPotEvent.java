@@ -23,23 +23,25 @@ import org.xml.sax.SAXException;
 
 public class ActionChangedPotEvent extends GameEvent{
 
-	private final Pots pots;
+    private static final long serialVersionUID = -4260315075072948801L;
 
-	public ActionChangedPotEvent(Pots pots){
-		this.pots = pots;
-	}
-	/**
-	 * Returns the pots.
-	 * @return
-	 */
-	public Pots getPots(){
-		return pots;
-	}
+    private final Pots pots;
 
-	@Override
-	public void toXml(ContentHandler handler) throws SAXException {
-		// TODO Auto-generated method stub
-  
-	}
+    public ActionChangedPotEvent(Pots pots){
+	this.pots = pots;
+    }
+    /**
+     * Returns the pots.
+     * @return
+     */
+    public Pots getPots(){
+	return pots;
+    }
+
+    @Override
+    public void toXml(ContentHandler handler) throws SAXException {
+	// TODO Auto-generated method stub
+
+    }
 
 }

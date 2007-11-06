@@ -16,7 +16,9 @@
 
 package org.cspoker.common.game.events.serverEvents;
 
-public interface PlayerLeftListener {
+import java.io.Serializable;
+
+public interface PlayerLeftListener extends Serializable {
 
     public void onPlayerLeftEvent(PlayerLeftEvent event);
 

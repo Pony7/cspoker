@@ -16,13 +16,15 @@
 
 package org.cspoker.common.game.events.gameEvents;
 
+import java.io.Serializable;
+
 /**
  * An interface for new community cards listeners.
  * 
  * @author Kenzo
  * 
  */
-public interface NewCommunityCardsListener {
+public interface NewCommunityCardsListener extends Serializable {
 
     /**
      * This method is called when subscribed to inform a new community cards

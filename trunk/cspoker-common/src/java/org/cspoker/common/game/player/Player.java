@@ -16,6 +16,8 @@
 
 package org.cspoker.common.game.player;
 
+import java.io.Serializable;
+
 
 /**
  * A class of immutable saved players.
@@ -24,7 +26,9 @@ package org.cspoker.common.game.player;
  * @author Kenzo
  *
  */
-public class Player{
+public class Player implements Serializable{
+
+    private static final long serialVersionUID = -9200622390366978194L;
 
     /**
      * The variable containing the id of the player.

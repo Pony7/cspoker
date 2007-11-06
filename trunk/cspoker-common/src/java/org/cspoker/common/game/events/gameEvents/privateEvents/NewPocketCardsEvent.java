@@ -27,6 +27,8 @@ import org.xml.sax.helpers.AttributesImpl;
 
 public class NewPocketCardsEvent extends GameEvent {
 
+    private static final long serialVersionUID = -3328895783353781276L;
+
     private final Player player;
 
     private final List<Card> pocketCards;

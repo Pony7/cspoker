@@ -15,7 +15,9 @@
  */
 package org.cspoker.common.game.events.serverEvents;
 
-public interface TableCreatedListener {
+import java.io.Serializable;
+
+public interface TableCreatedListener extends Serializable{
 
     public void onTableCreatedEvent(TableCreatedEvent event);
 

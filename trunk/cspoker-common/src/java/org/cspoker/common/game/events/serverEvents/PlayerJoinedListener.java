@@ -15,7 +15,9 @@
  */
 package org.cspoker.common.game.events.serverEvents;
 
-public interface PlayerJoinedListener {
+import java.io.Serializable;
+
+public interface PlayerJoinedListener extends Serializable{
 
     public void onPlayerJoinedEvent(PlayerJoinedEvent event);
 

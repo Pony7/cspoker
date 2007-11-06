@@ -16,10 +16,12 @@
 
 package org.cspoker.common.game.events;
 
+import java.io.Serializable;
+
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
-public abstract class Event {
+public abstract class Event implements Serializable{
 
     public abstract void toXml(ContentHandler handler) throws SAXException;
     

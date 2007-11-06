@@ -15,13 +15,15 @@
  */
 package org.cspoker.common.game.events.gameEvents;
 
+import java.io.Serializable;
+
 /**
  * An interface for pot changed listeners.
  *
  * @author Kenzo
  *
  */
-interface PotChangedListener {
+interface PotChangedListener extends Serializable {
 
     /**
      * This method is called when subscribed to inform the pot has changed.

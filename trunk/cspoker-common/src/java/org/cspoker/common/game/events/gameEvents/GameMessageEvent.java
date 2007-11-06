@@ -22,6 +22,8 @@ import org.xml.sax.helpers.AttributesImpl;
 
 public class GameMessageEvent extends GameEvent {
 
+    private static final long serialVersionUID = -3097280563115901972L;
+
     private final Player player;
 
     private final String message;

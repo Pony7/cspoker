@@ -32,6 +32,8 @@ import org.xml.sax.helpers.AttributesImpl;
  */
 public class WinnerEvent extends GameEvent {
 
+    private static final long serialVersionUID = -2384964708734525969L;
+
     private final List<Winner> winners;
 
     public WinnerEvent(List<Winner> winners) {

@@ -16,13 +16,15 @@
 
 package org.cspoker.common.game.events.gameEvents.playerActionEvents;
 
+import java.io.Serializable;
+
 /**
  * An interface for small blind listeners.
  * 
  * @author Kenzo
  * 
  */
-public interface SmallBlindListener {
+public interface SmallBlindListener extends Serializable {
 
     /**
      * This method is called when subscribed to inform a small blind has been

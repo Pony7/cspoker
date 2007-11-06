@@ -16,13 +16,15 @@
 
 package org.cspoker.common.game.events.gameEvents.playerActionEvents;
 
+import java.io.Serializable;
+
 /**
  * An interface for bet listeners.
  * 
  * @author Kenzo
  * 
  */
-public interface BetListener {
+public interface BetListener extends Serializable {
 
     /**
      * This method is called when subscribed to inform a bet occurred.

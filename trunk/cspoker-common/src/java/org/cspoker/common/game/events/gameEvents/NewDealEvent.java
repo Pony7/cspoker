@@ -32,6 +32,8 @@ import org.xml.sax.helpers.AttributesImpl;
  */
 public class NewDealEvent extends GameEvent {
 
+    private static final long serialVersionUID = 8048593844056212117L;
+
     private final List<Player> players;
 
     private final Player dealer;

@@ -29,6 +29,8 @@ import org.xml.sax.helpers.AttributesImpl;
  */
 public class NextPlayerEvent extends GameEvent {
 
+    private static final long serialVersionUID = -2048233796443189725L;
+    
     private final Player player;
 
     public NextPlayerEvent(Player player) {

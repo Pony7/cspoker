@@ -15,13 +15,15 @@
  */
 package org.cspoker.common.game.events.gameEvents;
 
+import java.io.Serializable;
+
 /**
  * An interface for leaving player listeners.
  * 
  * @author Kenzo
  * 
  */
-public interface PlayerLeftTableListener {
+public interface PlayerLeftTableListener extends Serializable {
 
     /**
      * This method is called when subscribed to inform a player left the table.

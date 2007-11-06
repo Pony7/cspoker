@@ -16,14 +16,17 @@
 
 package org.cspoker.common.game.player;
 
+import java.io.Serializable;
+
 /**
  * A class to represent player id's.
  *
  * @author Kenzo
  *
  */
-public class PlayerId {
+public class PlayerId implements Serializable{
 
+    private static final long serialVersionUID = -3259296410499422525L;
     /**
      * The variable containing the id.
      */

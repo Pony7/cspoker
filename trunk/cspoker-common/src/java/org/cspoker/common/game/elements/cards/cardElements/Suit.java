@@ -23,7 +23,7 @@ package org.cspoker.common.game.elements.cards.cardElements;
  * 
  * 
  */
-public enum Suit {
+public enum Suit{
 
 	CLUBS("Clubs", "c"), DIAMONDS("Diamonds", "d"), HEARTS("Hearts", "h"), SPADES("Spades", "s");
 

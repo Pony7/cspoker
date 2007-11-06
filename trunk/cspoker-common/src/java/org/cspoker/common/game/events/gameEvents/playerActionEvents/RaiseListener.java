@@ -16,13 +16,15 @@
 
 package org.cspoker.common.game.events.gameEvents.playerActionEvents;
 
+import java.io.Serializable;
+
 /**
  * An interface for raise listeners.
  * 
  * @author Kenzo
  * 
  */
-public interface RaiseListener {
+public interface RaiseListener extends Serializable {
 
     /**
      * This method is called when subscribed to inform a raise occurred.

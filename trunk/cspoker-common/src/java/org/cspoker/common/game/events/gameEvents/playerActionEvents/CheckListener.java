@@ -16,13 +16,15 @@
 
 package org.cspoker.common.game.events.gameEvents.playerActionEvents;
 
+import java.io.Serializable;
+
 /**
  * An interface for check listeners.
  * 
  * @author Kenzo
  * 
  */
-public interface CheckListener {
+public interface CheckListener extends Serializable {
 
     /**
      * This method is called when subscribed to inform a check occurred.

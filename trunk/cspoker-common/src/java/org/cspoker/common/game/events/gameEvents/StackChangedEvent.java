@@ -28,6 +28,8 @@ import org.xml.sax.helpers.AttributesImpl;
  */
 class StackChangedEvent extends GameEvent {
 
+    private static final long serialVersionUID = 4587490473704241612L;
+
     private final Player player;
 
     public StackChangedEvent(Player player) {

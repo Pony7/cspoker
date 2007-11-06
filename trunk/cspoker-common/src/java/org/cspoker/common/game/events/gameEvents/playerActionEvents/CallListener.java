@@ -16,13 +16,15 @@
 
 package org.cspoker.common.game.events.gameEvents.playerActionEvents;
 
+import java.io.Serializable;
+
 /**
  * An interface for call listeners.
  * 
  * @author Kenzo
  * 
  */
-public interface CallListener {
+public interface CallListener extends Serializable {
 
     /**
      * This method is called when subscribed to inform a call occurred.

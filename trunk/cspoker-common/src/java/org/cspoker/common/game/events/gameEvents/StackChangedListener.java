@@ -15,13 +15,15 @@
  */
 package org.cspoker.common.game.events.gameEvents;
 
+import java.io.Serializable;
+
 /**
  * An interface for stack changed listeners.
  *
  * @author Kenzo
  *
  */
-interface StackChangedListener {
+interface StackChangedListener extends Serializable {
 
     /**
      * This method is called when subscribed to inform the stack of a player has

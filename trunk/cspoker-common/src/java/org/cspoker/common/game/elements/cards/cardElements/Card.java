@@ -1,38 +1,43 @@
 package org.cspoker.common.game.elements.cards.cardElements;
 
-public final class Card implements Comparable<Card> {
-	private final Rank rank;
-	private final Suit suit;
+import java.io.Serializable;
 
-	public Card(final Rank rank, final Suit suit) {
-		this.rank = rank;
-		this.suit = suit;
-	}
+public final class Card implements Comparable<Card>, Serializable {
 
-	public String getLongDescription() {
-		return this.rank + " of " + this.suit;
-	}
+    private static final long serialVersionUID = 1370688591501465441L;
 
-	public Rank getRank() {
-		return this.rank;
-	}
+    private final Rank rank;
+    private final Suit suit;
 
-	public Suit getSuit() {
-		return this.suit;
-	}
+    public Card(final Rank rank, final Suit suit) {
+	this.rank = rank;
+	this.suit = suit;
+    }
 
-	@Override
-	public String toString() {
-		return this.rank.getShortDescription() + this.suit.getShortDescription();
-	}
+    public String getLongDescription() {
+	return this.rank + " of " + this.suit;
+    }
 
-	/**
-	 * Compares this card to a given other card by it's rank
-	 */
-	public int compareTo(final Card other) {
-	    final int thisVal = (this.getRank().getValue());
-	    final int anotherVal = (other.getRank().getValue());
+    public Rank getRank() {
+	return this.rank;
+    }
 
-	    return (thisVal < anotherVal ? -1 : (thisVal == anotherVal ? 0 : 1));
-	}
+    public Suit getSuit() {
+	return this.suit;
+    }
+
+    @Override
+    public String toString() {
+	return this.rank.getShortDescription() + this.suit.getShortDescription();
+    }
+
+    /**
+     * Compares this card to a given other card by it's rank
+     */
+    public int compareTo(final Card other) {
+	final int thisVal = (this.getRank().getValue());
+	final int anotherVal = (other.getRank().getValue());
+
+	return (thisVal < anotherVal ? -1 : (thisVal == anotherVal ? 0 : 1));
+    }
 }

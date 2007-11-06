@@ -16,13 +16,15 @@
 
 package org.cspoker.common.game.events.gameEvents.playerActionEvents;
 
+import java.io.Serializable;
+
 /**
  * An interface for big blind listeners.
  * 
  * @author Kenzo
  * 
  */
-public interface BigBlindListener {
+public interface BigBlindListener extends Serializable {
 
     /**
      * This method is called when subscribed to inform a big blind has been bet.
