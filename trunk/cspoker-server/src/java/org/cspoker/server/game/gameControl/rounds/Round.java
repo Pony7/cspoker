@@ -19,11 +19,11 @@ package org.cspoker.server.game.gameControl.rounds;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.cspoker.common.game.IllegalActionException;
 import org.cspoker.common.game.events.gameEvents.NewDealEvent;
 import org.cspoker.common.game.player.Player;
 import org.cspoker.server.game.GameMediator;
 import org.cspoker.server.game.gameControl.Game;
-import org.cspoker.server.game.gameControl.IllegalActionException;
 import org.cspoker.server.game.gameControl.PlayerAction;
 import org.cspoker.server.game.gameControl.rules.BettingRules;
 import org.cspoker.server.game.player.GamePlayer;

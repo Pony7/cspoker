@@ -25,10 +25,10 @@ import javax.xml.transform.sax.TransformerHandler;
 import javax.xml.transform.stream.StreamResult;
 
 import org.apache.log4j.Logger;
+import org.cspoker.common.game.IllegalActionException;
+import org.cspoker.common.game.PlayerCommunication;
 import org.cspoker.common.game.elements.table.TableId;
 import org.cspoker.common.xmlcommunication.XmlEventListener;
-import org.cspoker.server.game.gameControl.IllegalActionException;
-import org.cspoker.server.game.playerCommunication.PlayerCommunication;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;

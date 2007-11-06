@@ -20,13 +20,14 @@ import java.util.List;
 import junit.framework.TestCase;
 
 import org.apache.log4j.Logger;
+import org.cspoker.common.game.IllegalActionException;
+import org.cspoker.common.game.PlayerCommunication;
 import org.cspoker.common.game.elements.table.TableId;
 import org.cspoker.common.game.events.Event;
 import org.cspoker.common.game.events.gameEvents.NewRoundEvent;
 import org.cspoker.common.game.events.gameEvents.NewRoundListener;
 import org.cspoker.common.game.events.gameEvents.NextPlayerEvent;
 import org.cspoker.common.game.events.gameEvents.NextPlayerListener;
-import org.cspoker.server.game.gameControl.IllegalActionException;
 import org.cspoker.server.game.player.GamePlayer;
 import org.cspoker.server.game.player.IllegalNameException;
 import org.cspoker.server.game.player.PlayerFactory;

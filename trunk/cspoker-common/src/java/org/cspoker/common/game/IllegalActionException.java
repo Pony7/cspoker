@@ -14,9 +14,10 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-package org.cspoker.server.game.gameControl;
+package org.cspoker.common.game;
 
-import org.cspoker.server.game.player.GamePlayer;
+import org.cspoker.common.game.player.Player;
+
 
 /**
  * Thrown to indicate that the trying action is not a valid action.
@@ -30,18 +31,18 @@ public class IllegalActionException extends Exception {
 
     private static final long serialVersionUID = -5675804638273023229L;
 
-    private GamePlayer player;
+    private Player player;
 
     public IllegalActionException(String message) {
 	super(message);
     }
 
-    public IllegalActionException(GamePlayer player, String message) {
+    public IllegalActionException(Player player, String message) {
 	super(player.getName() + " performed an illegal action. " + message);
 	this.player = player;
     }
 
-    public GamePlayer getPlayer() {
+    public Player getPlayer() {
 	return player;
     }
 }

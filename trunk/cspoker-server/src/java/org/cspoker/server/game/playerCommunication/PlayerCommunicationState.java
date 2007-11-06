@@ -15,10 +15,10 @@
  */
 package org.cspoker.server.game.playerCommunication;
 
+import org.cspoker.common.game.IllegalActionException;
 import org.cspoker.common.game.elements.table.TableId;
 import org.cspoker.common.game.events.serverEvents.ServerMessageEvent;
 import org.cspoker.server.game.GameManager;
-import org.cspoker.server.game.gameControl.IllegalActionException;
 
 /**
  * An abstract class to represent player communication states.

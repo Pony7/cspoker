@@ -16,9 +16,9 @@
 
 package org.cspoker.server.game.gameControl.rounds;
 
+import org.cspoker.common.game.IllegalActionException;
 import org.cspoker.server.game.GameMediator;
 import org.cspoker.server.game.gameControl.Game;
-import org.cspoker.server.game.gameControl.IllegalActionException;
 import org.cspoker.server.game.gameControl.PlayerAction;
 import org.cspoker.server.game.player.GamePlayer;
 

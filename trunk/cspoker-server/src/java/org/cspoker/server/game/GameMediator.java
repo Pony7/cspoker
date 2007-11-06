@@ -23,6 +23,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import org.cspoker.common.game.IllegalActionException;
 import org.cspoker.common.game.events.Event;
 import org.cspoker.common.game.events.EventListener;
 import org.cspoker.common.game.events.gameEvents.AllGameEventsListener;
@@ -67,7 +68,6 @@ import org.cspoker.common.game.events.gameEvents.privateEvents.NewPocketCardsLis
 import org.cspoker.common.game.player.PlayerId;
 import org.cspoker.server.game.elements.table.PlayerListFullException;
 import org.cspoker.server.game.gameControl.GameControl;
-import org.cspoker.server.game.gameControl.IllegalActionException;
 import org.cspoker.server.game.gameControl.PlayerAction;
 import org.cspoker.server.game.player.GamePlayer;
 
