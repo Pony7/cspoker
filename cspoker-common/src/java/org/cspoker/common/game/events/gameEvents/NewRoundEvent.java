@@ -29,6 +29,8 @@ import org.xml.sax.helpers.AttributesImpl;
  */
 public class NewRoundEvent extends GameEvent {
 
+    private static final long serialVersionUID = 5282936949568835084L;
+
     private final String roundName;
 
     private final Player player;

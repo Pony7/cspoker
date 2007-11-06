@@ -22,6 +22,8 @@ import org.xml.sax.helpers.AttributesImpl;
 
 public class ServerMessageEvent extends ServerEvent {
 
+    private static final long serialVersionUID = -1396985826399601557L;
+
     private final Player player;
 
     private final String message;

@@ -15,12 +15,15 @@
  */
 package org.cspoker.common.game.player;
 
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
 
 import org.cspoker.common.game.elements.cards.cardElements.Card;
 
-public class ShowdownPlayer {
+public class ShowdownPlayer implements Serializable{
+
+    private static final long serialVersionUID = -1618593137613219527L;
 
     private final Player player;
 

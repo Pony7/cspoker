@@ -30,6 +30,8 @@ import org.xml.sax.helpers.AttributesImpl;
  */
 public class AllInEvent extends ActionChangedPotEvent {
 
+    private static final long serialVersionUID = 7331085187957524812L;
+
     /**
      * The variable containing the saved player.
      */

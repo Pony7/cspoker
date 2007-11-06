@@ -30,6 +30,8 @@ import org.xml.sax.helpers.AttributesImpl;
  */
 public class RaiseEvent extends ActionChangedPotEvent {
 
+    private static final long serialVersionUID = -5634645028675762487L;
+
     private final Player player;
 
     private final int amount;

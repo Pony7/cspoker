@@ -15,8 +15,12 @@
  */
 package org.cspoker.common.game.player;
 
+import java.io.Serializable;
 
-public class Winner {
+
+public class Winner implements Serializable{
+
+    private static final long serialVersionUID = 2432656140806034623L;
 
     private final int gainedAmount;
 

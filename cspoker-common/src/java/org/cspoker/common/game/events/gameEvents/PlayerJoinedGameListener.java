@@ -15,13 +15,15 @@
  */
 package org.cspoker.common.game.events.gameEvents;
 
+import java.io.Serializable;
+
 /**
  * An interface for player joining games listeners.
  * 
  * @author Kenzo
  * 
  */
-public interface PlayerJoinedGameListener {
+public interface PlayerJoinedGameListener extends Serializable {
 
     /**
      * This method is called when subscribed to inform a player joined the game.

@@ -16,13 +16,15 @@
 
 package org.cspoker.common.game.events.gameEvents.playerActionEvents;
 
+import java.io.Serializable;
+
 /**
  * An interface for fold listeners.
  * 
  * @author Kenzo
  * 
  */
-public interface FoldListener {
+public interface FoldListener extends Serializable {
 
     /**
      * This method is called when subscribed to inform a fold occurred.

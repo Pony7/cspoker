@@ -27,6 +27,8 @@ import org.xml.sax.helpers.AttributesImpl;
  */
 class PotChangedEvent extends GameEvent {
 
+    private static final long serialVersionUID = 4108642423966541161L;
+
     private final int amount;
 
     public PotChangedEvent(int amount) {

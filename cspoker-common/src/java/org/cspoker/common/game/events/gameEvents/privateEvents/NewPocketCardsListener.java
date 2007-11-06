@@ -15,7 +15,9 @@
  */
 package org.cspoker.common.game.events.gameEvents.privateEvents;
 
-public interface NewPocketCardsListener {
+import java.io.Serializable;
+
+public interface NewPocketCardsListener extends Serializable {
 
     /**
      * This method is called when subscribed to inform a new private cards event

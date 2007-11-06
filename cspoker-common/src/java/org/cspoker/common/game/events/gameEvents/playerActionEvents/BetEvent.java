@@ -30,6 +30,8 @@ import org.xml.sax.helpers.AttributesImpl;
  */
 public class BetEvent extends ActionChangedPotEvent {
 
+    private static final long serialVersionUID = -1968724398831151650L;
+
     private final Player player;
 
     private final int amount;

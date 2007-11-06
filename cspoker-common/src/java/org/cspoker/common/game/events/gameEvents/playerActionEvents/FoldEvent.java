@@ -30,6 +30,8 @@ import org.xml.sax.helpers.AttributesImpl;
  */
 public class FoldEvent extends GameEvent {
 
+    private static final long serialVersionUID = -7805526864154493974L;
+    
     private final Player player;
 
     public FoldEvent(Player player) {

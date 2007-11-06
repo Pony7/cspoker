@@ -24,6 +24,8 @@ import org.xml.sax.helpers.AttributesImpl;
 
 public class TableCreatedEvent extends ServerEvent {
 
+    private static final long serialVersionUID = -3408596246641282753L;
+
     private final TableId id;
 
     private final Player player;

@@ -29,6 +29,8 @@ import org.xml.sax.helpers.AttributesImpl;
  */
 public class PlayerJoinedGameEvent extends GameEvent {
 
+    private static final long serialVersionUID = 3276571712883586966L;
+    
     private final Player player;
 
     public PlayerJoinedGameEvent(Player player) {

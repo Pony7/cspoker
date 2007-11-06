@@ -16,29 +16,32 @@
 
 package org.cspoker.common.game.elements.pots;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Pots{
+public class Pots implements Serializable{
 
-	private final int totalValue;
+    private static final long serialVersionUID = 2133563839323145402L;
 
-	public Pots(int totalValue){
-		this.totalValue = totalValue;
-	}
+    private final int totalValue;
 
-	public List<Pot> getActivePot() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    public Pots(int totalValue){
+	this.totalValue = totalValue;
+    }
 
-	public List<Pot> getAllPots() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    public List<Pot> getActivePot() {
+	// TODO Auto-generated method stub
+	return null;
+    }
 
-	public int getTotalValue() {
-		return totalValue;
-	}
+    public List<Pot> getAllPots() {
+	// TODO Auto-generated method stub
+	return null;
+    }
+
+    public int getTotalValue() {
+	return totalValue;
+    }
 
 
 

@@ -16,13 +16,15 @@
 
 package org.cspoker.common.game.events.gameEvents.playerActionEvents;
 
+import java.io.Serializable;
+
 /**
  * An interface for all-in listeners.
  * 
  * @author Kenzo
  * 
  */
-public interface AllInListener {
+public interface AllInListener extends Serializable {
 
     /**
      * This method is called when subscribed to inform an all-in event occurred.

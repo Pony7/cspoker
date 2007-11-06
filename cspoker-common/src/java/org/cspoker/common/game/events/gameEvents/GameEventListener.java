@@ -16,13 +16,15 @@
 
 package org.cspoker.common.game.events.gameEvents;
 
+import java.io.Serializable;
+
 /**
  * A class to represent game events.
  * 
  * @author Kenzo
  * 
  */
-public interface GameEventListener {
+public interface GameEventListener extends Serializable {
 
     /**
      * This method is called when subscribed to inform a new game event

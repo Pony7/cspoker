@@ -16,20 +16,23 @@
 
 package org.cspoker.common.game.elements.pots;
 
+import java.io.Serializable;
 import java.util.List;
 
 import org.cspoker.common.game.player.Player;
 
-public class Pot {
+public class Pot implements Serializable {
 
-	public int getValue(){
-		//TODO
-		return 0;
-	}
+    private static final long serialVersionUID = -6468969689319977981L;
 
-	public List<Player> getPlayers(){
-		//TODO
-		return null;
-	}
+    public int getValue(){
+	//TODO
+	return 0;
+    }
+
+    public List<Player> getPlayers(){
+	//TODO
+	return null;
+    }
 
 }

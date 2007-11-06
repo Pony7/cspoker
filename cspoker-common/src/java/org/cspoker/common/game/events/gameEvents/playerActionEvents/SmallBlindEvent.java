@@ -30,6 +30,8 @@ import org.xml.sax.helpers.AttributesImpl;
  */
 public class SmallBlindEvent extends ActionChangedPotEvent {
 
+    private static final long serialVersionUID = 8729210630280570765L;
+
     private final Player player;
 
     private final int amount;

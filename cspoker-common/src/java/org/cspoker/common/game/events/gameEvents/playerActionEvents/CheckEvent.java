@@ -30,6 +30,8 @@ import org.xml.sax.helpers.AttributesImpl;
  */
 public class CheckEvent extends GameEvent {
 
+    private static final long serialVersionUID = -1128439307716720778L;
+
     private final Player player;
 
     public CheckEvent(Player player) {

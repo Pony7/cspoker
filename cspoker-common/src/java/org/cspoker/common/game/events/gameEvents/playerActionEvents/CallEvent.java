@@ -30,6 +30,8 @@ import org.xml.sax.helpers.AttributesImpl;
  */
 public class CallEvent extends ActionChangedPotEvent {
 
+    private static final long serialVersionUID = -78379299188217626L;
+    
     private final Player player;
 
     public CallEvent(Player player, Pots pots) {

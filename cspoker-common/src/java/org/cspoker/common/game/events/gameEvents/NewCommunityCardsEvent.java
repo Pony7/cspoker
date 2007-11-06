@@ -31,6 +31,8 @@ import org.xml.sax.helpers.AttributesImpl;
  */
 public class NewCommunityCardsEvent extends GameEvent {
 
+    private static final long serialVersionUID = -5063239366087788741L;
+
     private final List<Card> communityCards;
 
     public NewCommunityCardsEvent(List<Card> commonCards) {
