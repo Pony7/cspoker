@@ -19,6 +19,8 @@ package org.cspoker.server.game.playerCommunication;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import org.cspoker.common.game.IllegalActionException;
+import org.cspoker.common.game.PlayerCommunication;
 import org.cspoker.common.game.elements.table.TableId;
 import org.cspoker.common.game.events.AllEventsListener;
 import org.cspoker.common.game.events.gameEvents.GameMessageEvent;
@@ -67,7 +69,6 @@ import org.cspoker.common.game.events.serverEvents.TableCreatedEvent;
 import org.cspoker.common.game.events.serverEvents.TableCreatedListener;
 import org.cspoker.common.game.player.PlayerId;
 import org.cspoker.server.game.GameManager;
-import org.cspoker.server.game.gameControl.IllegalActionException;
 import org.cspoker.server.game.player.GamePlayer;
 
 /**

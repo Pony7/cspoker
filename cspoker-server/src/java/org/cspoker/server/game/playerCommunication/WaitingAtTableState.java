@@ -15,10 +15,10 @@
  */
 package org.cspoker.server.game.playerCommunication;
 
+import org.cspoker.common.game.IllegalActionException;
 import org.cspoker.common.game.events.serverEvents.PlayerLeftEvent;
 import org.cspoker.server.game.GameManager;
 import org.cspoker.server.game.elements.table.Table;
-import org.cspoker.server.game.gameControl.IllegalActionException;
 
 /**
  * A class to represent the state where the player is waiting for the game to

@@ -21,17 +21,18 @@ import java.util.Collections;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.cspoker.common.game.IllegalActionException;
 import org.cspoker.common.game.elements.cards.cardElements.Card;
 import org.cspoker.common.game.elements.pots.Pots;
 import org.cspoker.common.game.events.gameEvents.NewCommunityCardsEvent;
 import org.cspoker.common.game.events.gameEvents.WinnerEvent;
 import org.cspoker.common.game.events.gameEvents.playerActionEvents.AllInEvent;
+import org.cspoker.common.game.player.Player;
 import org.cspoker.common.game.player.Winner;
 import org.cspoker.server.game.GameMediator;
 import org.cspoker.server.game.elements.chips.IllegalValueException;
 import org.cspoker.server.game.elements.chips.pot.GamePots;
 import org.cspoker.server.game.gameControl.Game;
-import org.cspoker.server.game.gameControl.IllegalActionException;
 import org.cspoker.server.game.player.GameAllInPlayer;
 import org.cspoker.server.game.player.GamePlayer;
 
@@ -89,15 +90,15 @@ public abstract class BettingRound extends Round {
 
 	// Check whether the bet is valid, according to the betting rules.
 	if (!getBettingRules().isValidBet(amount, this))
-	    throw new IllegalActionException(player, getBettingRules()
+	    throw new IllegalActionException(player.getSavedPlayer(), getBettingRules()
 		    .getLastBetErrorMessage());
 
 	// Can not bet with zero, it is equal to check. Please use check.
 	if (amount == 0)
-	    throw new IllegalActionException(player,
+	    throw new IllegalActionException(player.getSavedPlayer(),
 		    "Can not bet with 0 chips. Did you mean check?");
 	if (amount >= player.getStack().getValue())
-	    throw new IllegalActionException(player,
+	    throw new IllegalActionException(player.getSavedPlayer(),
 		    "Can not bet an amount higher than your current amount of chips;"
 			    + " did you mean all-in??");
 
@@ -105,7 +106,7 @@ public abstract class BettingRound extends Round {
 	    player.transferAmountToBetPile(amountToIncreaseBetPileWith(player)
 		    + amount);
 	} catch (IllegalValueException e) {
-	    throw new IllegalActionException(player, e.getMessage());
+	    throw new IllegalActionException(player.getSavedPlayer(), e.getMessage());
 	}
 	raiseBetWith(amount);
 	getBettingRules().setBetPlaced(true);
@@ -127,7 +128,7 @@ public abstract class BettingRound extends Round {
 	// Check whether the amount with which the bet chips pile
 	// is increased exceeds the player's stack.
 	if (amountToIncreaseBetPileWith(player) >= player.getStack().getValue())
-	    throw new IllegalActionException(player,
+	    throw new IllegalActionException(player.getSavedPlayer(),
 		    "Can not call a bet higher than your current amount of chips;"
 			    + " did you mean all-in??");
 
@@ -135,7 +136,7 @@ public abstract class BettingRound extends Round {
 	try {
 	    player.transferAmountToBetPile(amountToIncreaseBetPileWith(player));
 	} catch (IllegalValueException e) {
-	    throw new IllegalActionException(player, e.getMessage());
+	    throw new IllegalActionException(player.getSavedPlayer(), e.getMessage());
 	}
 
 	/**
@@ -157,12 +158,12 @@ public abstract class BettingRound extends Round {
 
 	// Check whether the raise is valid.
 	if (!getBettingRules().isValidRaise(amount, this))
-	    throw new IllegalActionException(player, getBettingRules()
+	    throw new IllegalActionException(player.getSavedPlayer(), getBettingRules()
 		    .getLastRaiseErrorMessage());
 
 	// Can not raise with zero, it is equal to call. Please use call.
 	if (amount == 0)
-	    throw new IllegalActionException(player,
+	    throw new IllegalActionException(player.getSavedPlayer(),
 		    "Can not raise with 0 chips. Did you mean call?");
 
 	// If the total number of chips needed for this raise,
@@ -170,7 +171,7 @@ public abstract class BettingRound extends Round {
 	// go all-in explicitly.
 	if ((amount + amountToIncreaseBetPileWith(player)) >= player.getStack()
 		.getValue())
-	    throw new IllegalActionException(player,
+	    throw new IllegalActionException(player.getSavedPlayer(),
 		    "Can not raise with an amount higher than your current amount of chips;"
 			    + " did you mean all-in??");
 
@@ -179,7 +180,7 @@ public abstract class BettingRound extends Round {
 	    player.transferAmountToBetPile(amountToIncreaseBetPileWith(player)
 		    + amount);
 	} catch (IllegalValueException e) {
-	    throw new IllegalActionException(player, e.getMessage());
+	    throw new IllegalActionException(player.getSavedPlayer(), e.getMessage());
 	}
 	raiseBetWith(amount);
 	getBettingRules().incrementNBRaises();

@@ -19,7 +19,6 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.net.Socket;
-import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.Charset;
@@ -67,7 +66,7 @@ public class XmlSocketsChannel implements XmlChannel{
     }
     
 
-    public void open() throws UnknownHostException, IOException, LoginFailedException {
+    public void open() throws IOException, LoginFailedException {
 	this.s=new Socket(server, port);
 	this.w=new OutputStreamWriter(s.getOutputStream());
 	if(!login(username, password))
@@ -145,12 +144,13 @@ public class XmlSocketsChannel implements XmlChannel{
 	}
     }
 
-    public class WaitForEvents implements Runnable {
+    private class WaitForEvents implements Runnable {
 
 	public void run() {
 	    try {
 		String s = readUntilDelimiter();
 		fireXmlEvent(s);
+		executor.execute(this);
 	    } catch (IOException e) {
 		close();
 	    } catch (ConnectionLostException e) {
@@ -161,7 +161,5 @@ public class XmlSocketsChannel implements XmlChannel{
 	}
 
     }
-
-
 
 }

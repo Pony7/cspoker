@@ -15,6 +15,7 @@
  */
 package org.cspoker.server.game.playerCommunication;
 
+import org.cspoker.common.game.IllegalActionException;
 import org.cspoker.common.game.elements.table.TableId;
 import org.cspoker.common.game.events.AllEventsListener;
 import org.cspoker.common.game.events.gameEvents.GameMessageListener;
@@ -39,7 +40,6 @@ import org.cspoker.common.game.events.serverEvents.PlayerJoinedListener;
 import org.cspoker.common.game.events.serverEvents.PlayerLeftListener;
 import org.cspoker.common.game.events.serverEvents.ServerMessageListener;
 import org.cspoker.common.game.events.serverEvents.TableCreatedListener;
-import org.cspoker.server.game.gameControl.IllegalActionException;
 
 /**
  * An interface to define all possible invocations a player can do.

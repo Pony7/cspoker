@@ -18,11 +18,11 @@ package org.cspoker.server.common.xmlcommunication;
 import java.io.IOException;
 
 import org.apache.log4j.Logger;
+import org.cspoker.common.game.PlayerCommunication;
 import org.cspoker.common.xmlcommunication.XmlEventListener;
 import org.cspoker.server.common.xmlcommunication.handler.CommandDelegatingHandler;
 import org.cspoker.server.common.xmlcommunication.handler.DelegatingToOneHandler;
 import org.cspoker.server.game.player.GamePlayer;
-import org.cspoker.server.game.playerCommunication.PlayerCommunication;
 import org.cspoker.server.game.playerCommunication.PlayerCommunicationImpl;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;

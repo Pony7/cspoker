@@ -13,7 +13,7 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.server.game.playerCommunication;
+package org.cspoker.common.game;
 
 import org.cspoker.common.game.elements.table.TableId;
 import org.cspoker.common.game.events.AllEventsListener;
@@ -39,7 +39,6 @@ import org.cspoker.common.game.events.serverEvents.PlayerJoinedListener;
 import org.cspoker.common.game.events.serverEvents.PlayerLeftListener;
 import org.cspoker.common.game.events.serverEvents.ServerMessageListener;
 import org.cspoker.common.game.events.serverEvents.TableCreatedListener;
-import org.cspoker.server.game.gameControl.IllegalActionException;
 
 /**
  * An interface to define all possible invocations a player can do.

@@ -16,6 +16,7 @@
 
 package org.cspoker.server.game.gameControl;
 
+import org.cspoker.common.game.IllegalActionException;
 import org.cspoker.server.game.player.GamePlayer;
 
 /**
