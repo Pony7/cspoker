@@ -72,7 +72,8 @@ public class GamePlayer {
      * Construct a new player with given id, name and initial number of chips.
      *
      * @throws IllegalValueException
-     *                 [must] The given initial value is not valid.
+     *         [must] The given initial value is not valid.
+     *         | !isValidName(name)
      *
      * @post The chips pile is effective and the value of chips is the same as
      *       the given initial value. |new.getBetChips()!=null &&
@@ -81,24 +82,12 @@ public class GamePlayer {
      *       pile. |new.getBetChips()!=null && new.getBetChips().getValue()==0
      */
     GamePlayer(PlayerId id, String name, int initialNbChips)
-	    throws IllegalValueException, IllegalNameException {
-	if(!isValidName(name))
-	    throw new IllegalNameException();
+	    throws IllegalValueException {
 	this.id = id;
 	this.name = name;
 	chips = new Chips(initialNbChips);
 	betChips = new Chips();
 	pocketCards = new CopyOnWriteArrayList<Card>();
-    }
-
-    /***************************************************************************
-     * Name
-     **************************************************************************/
-
-    public static boolean isValidName(String name) {
-	if((name!=null) && name.matches("[\\w]{3,}"))
-	    return true;
-	return false;
     }
 
     /**

@@ -25,7 +25,7 @@ import javax.xml.transform.sax.TransformerHandler;
 import javax.xml.transform.stream.StreamResult;
 
 import org.apache.log4j.Logger;
-import org.cspoker.common.game.events.AllEventsListener;
+import org.cspoker.common.game.eventlisteners.AllEventsListener;
 import org.cspoker.common.game.events.Event;
 import org.cspoker.common.game.events.gameEvents.GameMessageEvent;
 import org.cspoker.common.game.events.gameEvents.NewCommunityCardsEvent;

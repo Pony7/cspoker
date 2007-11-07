@@ -51,7 +51,7 @@ public class PlayerId implements Serializable{
 	int result = 1;
 	result = prime * result + (int) (id ^ (id >>> 32));
 	return result;
-    }
+    }    
 
     /**
      * Indicates whether some other object is "equal to" this one.

@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.cspoker.common.game.events.AllEventsListener;
+import org.cspoker.common.game.eventlisteners.AllEventsListener;
 import org.cspoker.common.game.events.Event;
 import org.cspoker.common.game.events.gameEvents.GameMessageEvent;
 import org.cspoker.common.game.events.gameEvents.NewCommunityCardsEvent;

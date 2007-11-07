@@ -19,17 +19,17 @@ package org.cspoker.server.game;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import org.cspoker.common.game.eventlisteners.EventListener;
+import org.cspoker.common.game.eventlisteners.server.PlayerJoinedListener;
+import org.cspoker.common.game.eventlisteners.server.PlayerLeftListener;
+import org.cspoker.common.game.eventlisteners.server.RemoteAllServerEventsListener;
+import org.cspoker.common.game.eventlisteners.server.ServerMessageListener;
+import org.cspoker.common.game.eventlisteners.server.TableCreatedListener;
 import org.cspoker.common.game.events.Event;
-import org.cspoker.common.game.events.EventListener;
-import org.cspoker.common.game.events.serverEvents.AllServerEventsListener;
 import org.cspoker.common.game.events.serverEvents.PlayerJoinedEvent;
-import org.cspoker.common.game.events.serverEvents.PlayerJoinedListener;
 import org.cspoker.common.game.events.serverEvents.PlayerLeftEvent;
-import org.cspoker.common.game.events.serverEvents.PlayerLeftListener;
 import org.cspoker.common.game.events.serverEvents.ServerMessageEvent;
-import org.cspoker.common.game.events.serverEvents.ServerMessageListener;
 import org.cspoker.common.game.events.serverEvents.TableCreatedEvent;
-import org.cspoker.common.game.events.serverEvents.TableCreatedListener;
 import org.cspoker.common.game.player.PlayerId;
 
 public class ServerMediator {
@@ -245,7 +245,7 @@ public class ServerMediator {
     private final List<EventListener> serverEventListeners = new CopyOnWriteArrayList<EventListener>();
 
     public void subscribeAllServerEventsListener(PlayerId id,
-	    AllServerEventsListener listener) {
+	    RemoteAllServerEventsListener listener) {
 	subscribePlayerJoinedListener(listener);
 	subscribePlayerLeftListener(listener);
 	subscribeServerMessageListener(listener);
@@ -253,7 +253,7 @@ public class ServerMediator {
     }
 
     public void unsubscribeAllServerEventsListener(PlayerId id,
-	    AllServerEventsListener listener) {
+	    RemoteAllServerEventsListener listener) {
 	unsubscribePlayerJoinedListener(listener);
 	unsubscribePlayerLeftListener(listener);
 	unsubscribeServerMessageListener(listener);
