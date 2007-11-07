@@ -31,7 +31,7 @@ public class RunRMIServer {
     }
 
     private static void usage() {
-	logger.fatal("usage: java -jar cspoker-server-sockets.jar [portnumber]");
+	logger.fatal("usage: java -jar cspoker-server-rmi.jar [portnumber]");
 	System.exit(0);
     }
     
