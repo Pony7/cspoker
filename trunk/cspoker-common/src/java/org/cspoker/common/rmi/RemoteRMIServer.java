@@ -1,4 +1,4 @@
-package org.cspoker.server.rmi;
+package org.cspoker.common.rmi;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
