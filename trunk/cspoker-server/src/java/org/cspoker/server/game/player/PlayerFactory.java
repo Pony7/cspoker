@@ -16,7 +16,6 @@
 
 package org.cspoker.server.game.player;
 
-import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.cspoker.common.game.player.PlayerId;
@@ -40,33 +39,10 @@ public class PlayerFactory {
 
     public final static PlayerFactory global_Player_Factory = new PlayerFactory();
 
-    private final HashMap<String,GamePlayer> knownPlayers = new HashMap<String,GamePlayer>();
-
     protected PlayerFactory(){
 
-    };
-
-    public synchronized GamePlayer getUniquePlayer(String name) throws IllegalNameException{
-	GamePlayer p = knownPlayers.get(name);
-	if(p==null){
-	    p=createNewPlayer(name);
-	    knownPlayers.put(name, p);
-	}
-	return p;
     }
-
-    public synchronized GamePlayer getUniquePlayer(String name, int initialValue) throws IllegalValueException, IllegalNameException{
-	GamePlayer p = knownPlayers.get(name);
-	if(p==null){
-	    p=createNewPlayer(name, initialValue);
-	    knownPlayers.put(name, p);
-	}else{
-	    if(p.getStack().getValue()!=initialValue)
-		throw new IllegalValueException("There already exists a player called "+name+" and his stack is not "+initialValue);
-	}
-	return p;
-    }
-
+    
     private final static AtomicLong counter = new AtomicLong(0);
 
     /**
@@ -75,9 +51,8 @@ public class PlayerFactory {
      * @param name
      *                The name for this new player.
      * @return A new player with given name and standard stack value.
-     * @throws IllegalNameException
      */
-    protected GamePlayer createNewPlayer(String name) throws IllegalNameException {
+    public GamePlayer createNewPlayer(String name){
 	try {
 	    return createNewPlayer(name, getStdStackValue());
 	} catch (IllegalValueException e) {
@@ -96,10 +71,9 @@ public class PlayerFactory {
      * @return A new player with given name and initial stack value.
      * @throws IllegalValueException
      *                 [must] The given initial value is not valid.
-     * @throws IllegalNameException
      */
     protected GamePlayer createNewPlayer(String name, int initialValue)
-	    throws IllegalValueException, IllegalNameException {
+	    throws IllegalValueException {
 	return new GamePlayer(getUniquePlayerId(), name, initialValue);
     }
 

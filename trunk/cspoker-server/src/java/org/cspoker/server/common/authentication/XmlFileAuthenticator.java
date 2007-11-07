@@ -12,11 +12,12 @@ import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 import org.xml.sax.helpers.XMLReaderFactory;
 
-public class XmlFileAuthenticator {
+public class XmlFileAuthenticator{
 
     private static Logger logger = Logger.getLogger(XmlFileAuthenticator.class);
 
     private volatile HashMap<String, String> passwords;
+    
     public XmlFileAuthenticator() {
 	this("org/cspoker/server/common/authentication/authentication.xml");
     }

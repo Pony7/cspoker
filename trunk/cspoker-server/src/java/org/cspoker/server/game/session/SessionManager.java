@@ -13,28 +13,28 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-
-package org.cspoker.server.game.playerCommunication;
+package org.cspoker.server.game.session;
 
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.cspoker.common.game.player.PlayerId;
+public class SessionManager {
 
-public class PlayerCommunicationManager {
+    public final static SessionManager global_session_manager = new SessionManager();
 
-    private static final ConcurrentHashMap<PlayerId, PlayerCommunicationImpl> hashMap = new ConcurrentHashMap<PlayerId, PlayerCommunicationImpl>();
+    private ConcurrentHashMap<String, Session> sessions = new ConcurrentHashMap<String,Session>();
 
-    public static PlayerCommunicationImpl getPlayerCommunication(PlayerId id) {
-	return hashMap.get(id);
+    public Session getSession(String username) {
+	Session newSession = new Session(username);
+	Session oldSession = sessions.putIfAbsent(username, newSession);
+	if(oldSession==null)
+	    return newSession;
+	return oldSession;
     }
-
-    public static void addPlayerCommunication(PlayerId id,
-	    PlayerCommunicationImpl playerCommunication) {
-	hashMap.put(id, playerCommunication);
-    }
-
-    public static void clear() {
-	hashMap.clear();
+    
+    public void killSession(String username){
+	Session s = getSession(username);
+	s.kill();
+	sessions.remove(s.getUserName());
     }
 
 }

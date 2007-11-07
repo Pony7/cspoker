@@ -18,22 +18,22 @@ package org.cspoker.common.game.eventlisteners.game;
 
 import java.rmi.Remote;
 
-import org.cspoker.common.game.eventlisteners.game.actions.AllInListener;
-import org.cspoker.common.game.eventlisteners.game.actions.BetListener;
-import org.cspoker.common.game.eventlisteners.game.actions.BigBlindListener;
-import org.cspoker.common.game.eventlisteners.game.actions.CallListener;
-import org.cspoker.common.game.eventlisteners.game.actions.CheckListener;
-import org.cspoker.common.game.eventlisteners.game.actions.FoldListener;
-import org.cspoker.common.game.eventlisteners.game.actions.RaiseListener;
-import org.cspoker.common.game.eventlisteners.game.actions.SmallBlindListener;
-import org.cspoker.common.game.eventlisteners.game.privatelistener.NewPocketCardsListener;
+import org.cspoker.common.game.eventlisteners.game.actions.RemoteAllInListener;
+import org.cspoker.common.game.eventlisteners.game.actions.RemoteBetListener;
+import org.cspoker.common.game.eventlisteners.game.actions.RemoteBigBlindListener;
+import org.cspoker.common.game.eventlisteners.game.actions.RemoteCallListener;
+import org.cspoker.common.game.eventlisteners.game.actions.RemoteCheckListener;
+import org.cspoker.common.game.eventlisteners.game.actions.RemoteFoldListener;
+import org.cspoker.common.game.eventlisteners.game.actions.RemoteRaiseListener;
+import org.cspoker.common.game.eventlisteners.game.actions.RemoteSmallBlindListener;
+import org.cspoker.common.game.eventlisteners.game.privatelistener.RemoteNewPocketCardsListener;
 
 public interface RemoteAllGameEventsListener extends Remote,
- 	AllInListener, BetListener,
-	BigBlindListener, CallListener, CheckListener,
-	FoldListener, RaiseListener, SmallBlindListener,
-	NewPocketCardsListener, NewCommunityCardsListener, NewDealListener,
-	NewRoundListener, NextPlayerListener, PlayerJoinedGameListener,
-	PlayerLeftTableListener, ShowHandListener, WinnerListener, GameMessageListener {
+RemoteAllInListener, RemoteBetListener,
+RemoteBigBlindListener, RemoteCallListener, RemoteCheckListener,
+RemoteFoldListener, RemoteRaiseListener, RemoteSmallBlindListener,
+RemoteNewPocketCardsListener, RemoteNewCommunityCardsListener, RemoteNewDealListener,
+RemoteNewRoundListener, RemoteNextPlayerListener, RemotePlayerJoinedGameListener,
+RemotePlayerLeftTableListener, RemoteShowHandListener, RemoteWinnerListener, RemoteGameMessageListener {
 
 }

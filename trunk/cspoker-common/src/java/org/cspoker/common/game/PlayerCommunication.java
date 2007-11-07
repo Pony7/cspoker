@@ -16,29 +16,29 @@
 package org.cspoker.common.game;
 
 import org.cspoker.common.game.elements.table.TableId;
-import org.cspoker.common.game.eventlisteners.AllEventsListener;
-import org.cspoker.common.game.eventlisteners.game.GameMessageListener;
-import org.cspoker.common.game.eventlisteners.game.NewCommunityCardsListener;
-import org.cspoker.common.game.eventlisteners.game.NewDealListener;
-import org.cspoker.common.game.eventlisteners.game.NewRoundListener;
-import org.cspoker.common.game.eventlisteners.game.NextPlayerListener;
-import org.cspoker.common.game.eventlisteners.game.PlayerJoinedGameListener;
-import org.cspoker.common.game.eventlisteners.game.PlayerLeftTableListener;
-import org.cspoker.common.game.eventlisteners.game.ShowHandListener;
-import org.cspoker.common.game.eventlisteners.game.WinnerListener;
-import org.cspoker.common.game.eventlisteners.game.actions.AllInListener;
-import org.cspoker.common.game.eventlisteners.game.actions.BetListener;
-import org.cspoker.common.game.eventlisteners.game.actions.BigBlindListener;
-import org.cspoker.common.game.eventlisteners.game.actions.CallListener;
-import org.cspoker.common.game.eventlisteners.game.actions.CheckListener;
-import org.cspoker.common.game.eventlisteners.game.actions.FoldListener;
-import org.cspoker.common.game.eventlisteners.game.actions.RaiseListener;
-import org.cspoker.common.game.eventlisteners.game.actions.SmallBlindListener;
-import org.cspoker.common.game.eventlisteners.game.privatelistener.NewPocketCardsListener;
-import org.cspoker.common.game.eventlisteners.server.PlayerJoinedListener;
-import org.cspoker.common.game.eventlisteners.server.PlayerLeftListener;
-import org.cspoker.common.game.eventlisteners.server.ServerMessageListener;
-import org.cspoker.common.game.eventlisteners.server.TableCreatedListener;
+import org.cspoker.common.game.eventlisteners.RemoteAllEventsListener;
+import org.cspoker.common.game.eventlisteners.game.RemoteGameMessageListener;
+import org.cspoker.common.game.eventlisteners.game.RemoteNewCommunityCardsListener;
+import org.cspoker.common.game.eventlisteners.game.RemoteNewDealListener;
+import org.cspoker.common.game.eventlisteners.game.RemoteNewRoundListener;
+import org.cspoker.common.game.eventlisteners.game.RemoteNextPlayerListener;
+import org.cspoker.common.game.eventlisteners.game.RemotePlayerJoinedGameListener;
+import org.cspoker.common.game.eventlisteners.game.RemotePlayerLeftTableListener;
+import org.cspoker.common.game.eventlisteners.game.RemoteShowHandListener;
+import org.cspoker.common.game.eventlisteners.game.RemoteWinnerListener;
+import org.cspoker.common.game.eventlisteners.game.actions.RemoteAllInListener;
+import org.cspoker.common.game.eventlisteners.game.actions.RemoteBetListener;
+import org.cspoker.common.game.eventlisteners.game.actions.RemoteBigBlindListener;
+import org.cspoker.common.game.eventlisteners.game.actions.RemoteCallListener;
+import org.cspoker.common.game.eventlisteners.game.actions.RemoteCheckListener;
+import org.cspoker.common.game.eventlisteners.game.actions.RemoteFoldListener;
+import org.cspoker.common.game.eventlisteners.game.actions.RemoteRaiseListener;
+import org.cspoker.common.game.eventlisteners.game.actions.RemoteSmallBlindListener;
+import org.cspoker.common.game.eventlisteners.game.privatelistener.RemoteNewPocketCardsListener;
+import org.cspoker.common.game.eventlisteners.server.RemotePlayerJoinedListener;
+import org.cspoker.common.game.eventlisteners.server.RemotePlayerLeftListener;
+import org.cspoker.common.game.eventlisteners.server.RemoteServerMessageListener;
+import org.cspoker.common.game.eventlisteners.server.RemoteTableCreatedListener;
 
 
 /**
@@ -50,6 +50,9 @@ import org.cspoker.common.game.eventlisteners.server.TableCreatedListener;
  */
 public interface PlayerCommunication extends RemotePlayerCommunication{
 
+    
+    void destruct();
+    
     /**
      * The player calls.
      *
@@ -168,7 +171,7 @@ public interface PlayerCommunication extends RemotePlayerCommunication{
      * @param listener
      *                The listener to subscribe.
      */
-    void subscribeAllInListener(AllInListener listener);
+    void subscribeAllInListener(RemoteAllInListener listener);
 
     /**
      * Unsubscribe the given all-in listener for all-in events.
@@ -176,7 +179,7 @@ public interface PlayerCommunication extends RemotePlayerCommunication{
      * @param listener
      *                The listener to unsubscribe.
      */
-    void unsubscribeAllInListener(AllInListener listener);
+    void unsubscribeAllInListener(RemoteAllInListener listener);
 
     /**
      * Subscribe the given bet listener for bet events.
@@ -184,7 +187,7 @@ public interface PlayerCommunication extends RemotePlayerCommunication{
      * @param listener
      *                The listener to subscribe.
      */
-    void subscribeBetListener(BetListener listener);
+    void subscribeBetListener(RemoteBetListener listener);
 
     /**
      * Unsubscribe the given bet listener for bet events.
@@ -192,7 +195,7 @@ public interface PlayerCommunication extends RemotePlayerCommunication{
      * @param listener
      *                The listener to unsubscribe.
      */
-    void unsubscribeBetListener(BetListener listener);
+    void unsubscribeBetListener(RemoteBetListener listener);
 
     /**
      * Subscribe the given big blind listener for big blind events.
@@ -200,7 +203,7 @@ public interface PlayerCommunication extends RemotePlayerCommunication{
      * @param listener
      *                The listener to subscribe.
      */
-    void subscribeBigBlindListener(BigBlindListener listener);
+    void subscribeBigBlindListener(RemoteBigBlindListener listener);
 
     /**
      * Unsubscribe the given big blind listener for big blind events.
@@ -208,7 +211,7 @@ public interface PlayerCommunication extends RemotePlayerCommunication{
      * @param listener
      *                The listener to unsubscribe.
      */
-    void unsubscribeBigBlindListener(BigBlindListener listener);
+    void unsubscribeBigBlindListener(RemoteBigBlindListener listener);
 
     /**
      * Subscribe the given call listener for call events.
@@ -216,7 +219,7 @@ public interface PlayerCommunication extends RemotePlayerCommunication{
      * @param listener
      *                The listener to subscribe.
      */
-    void subscribeCallListener(CallListener listener);
+    void subscribeCallListener(RemoteCallListener listener);
 
     /**
      * Unsubscribe the given call listener for call events.
@@ -224,7 +227,7 @@ public interface PlayerCommunication extends RemotePlayerCommunication{
      * @param listener
      *                The listener to unsubscribe.
      */
-    void unsubscribeCallListener(CallListener listener);
+    void unsubscribeCallListener(RemoteCallListener listener);
 
     /**
      * Subscribe the given check listener for check events.
@@ -232,7 +235,7 @@ public interface PlayerCommunication extends RemotePlayerCommunication{
      * @param listener
      *                The listener to subscribe.
      */
-    void subscribeCheckListener(CheckListener listener);
+    void subscribeCheckListener(RemoteCheckListener listener);
 
     /**
      * Unsubscribe the given check listener for check events.
@@ -240,7 +243,7 @@ public interface PlayerCommunication extends RemotePlayerCommunication{
      * @param listener
      *                The listener to unsubscribe.
      */
-    void unsubscribeCheckListener(CheckListener listener);
+    void unsubscribeCheckListener(RemoteCheckListener listener);
 
     /**
      * Subscribe the given fold listener for fold events.
@@ -248,7 +251,7 @@ public interface PlayerCommunication extends RemotePlayerCommunication{
      * @param listener
      *                The listener to subscribe.
      */
-    void subscribeFoldListener(FoldListener listener);
+    void subscribeFoldListener(RemoteFoldListener listener);
 
     /**
      * Unsubscribe the given fold listener for fold events.
@@ -256,7 +259,7 @@ public interface PlayerCommunication extends RemotePlayerCommunication{
      * @param listener
      *                The listener to unsubscribe.
      */
-    void unsubscribeFoldListener(FoldListener listener);
+    void unsubscribeFoldListener(RemoteFoldListener listener);
 
     /**
      * Subscribe the given raise listener for raise events.
@@ -264,7 +267,7 @@ public interface PlayerCommunication extends RemotePlayerCommunication{
      * @param listener
      *                The listener to subscribe.
      */
-    void subscribeRaiseListener(RaiseListener listener);
+    void subscribeRaiseListener(RemoteRaiseListener listener);
 
     /**
      * Unsubscribe the given raise listener for raise events.
@@ -272,7 +275,7 @@ public interface PlayerCommunication extends RemotePlayerCommunication{
      * @param listener
      *                The listener to unsubscribe.
      */
-    void unsubscribeRaiseListener(RaiseListener listener);
+    void unsubscribeRaiseListener(RemoteRaiseListener listener);
 
     /**
      * Subscribe the given small blind listener for small blind events.
@@ -280,7 +283,7 @@ public interface PlayerCommunication extends RemotePlayerCommunication{
      * @param listener
      *                The listener to subscribe.
      */
-    void subscribeSmallBlindListener(SmallBlindListener listener);
+    void subscribeSmallBlindListener(RemoteSmallBlindListener listener);
 
     /**
      * Unsubscribe the given small blind listener for small blind events.
@@ -288,7 +291,7 @@ public interface PlayerCommunication extends RemotePlayerCommunication{
      * @param listener
      *                The listener to unsubscribe.
      */
-    void unsubscribeSmallBlindListener(SmallBlindListener listener);
+    void unsubscribeSmallBlindListener(RemoteSmallBlindListener listener);
 
     /**
      * Subscribe the given new pocket cards listener for new pocket cards
@@ -297,7 +300,7 @@ public interface PlayerCommunication extends RemotePlayerCommunication{
      * @param listener
      *                The listener to subscribe.
      */
-    void subscribeNewPocketCardsListener(NewPocketCardsListener listener);
+    void subscribeNewPocketCardsListener(RemoteNewPocketCardsListener listener);
 
     /**
      * Unsubscribe the given new pocket cards listener for new pocket cards
@@ -306,7 +309,7 @@ public interface PlayerCommunication extends RemotePlayerCommunication{
      * @param listener
      *                The listener to unsubscribe.
      */
-    void unsubscribeNewPocketCardsListener(NewPocketCardsListener listener);
+    void unsubscribeNewPocketCardsListener(RemoteNewPocketCardsListener listener);
 
     /**
      * Subscribe the given new common cards listener for new common cards
@@ -315,7 +318,7 @@ public interface PlayerCommunication extends RemotePlayerCommunication{
      * @param listener
      *                The listener to subscribe.
      */
-    void subscribeNewCommonCardsListener(NewCommunityCardsListener listener);
+    void subscribeNewCommonCardsListener(RemoteNewCommunityCardsListener listener);
 
     /**
      * Unsubscribe the given new common cards listener for new common cards
@@ -324,7 +327,7 @@ public interface PlayerCommunication extends RemotePlayerCommunication{
      * @param listener
      *                The listener to unsubscribe.
      */
-    void unsubscribeNewCommonCardsListener(NewCommunityCardsListener listener);
+    void unsubscribeNewCommonCardsListener(RemoteNewCommunityCardsListener listener);
 
     /**
      * Subscribe the given new deal listener for new deal events.
@@ -332,7 +335,7 @@ public interface PlayerCommunication extends RemotePlayerCommunication{
      * @param listener
      *                The listener to subscribe.
      */
-    void subscribeNewDealListener(NewDealListener listener);
+    void subscribeNewDealListener(RemoteNewDealListener listener);
 
     /**
      * Unsubscribe the given new deal listener for new deal events.
@@ -340,7 +343,7 @@ public interface PlayerCommunication extends RemotePlayerCommunication{
      * @param listener
      *                The listener to unsubscribe.
      */
-    void unsubscribeNewDealListener(NewDealListener listener);
+    void unsubscribeNewDealListener(RemoteNewDealListener listener);
 
     /**
      * Subscribe the given new round listener for new round events.
@@ -348,7 +351,7 @@ public interface PlayerCommunication extends RemotePlayerCommunication{
      * @param listener
      *                The listener to subscribe.
      */
-    void subscribeNewRoundListener(NewRoundListener listener);
+    void subscribeNewRoundListener(RemoteNewRoundListener listener);
 
     /**
      * Unsubscribe the given new round listener for new round events.
@@ -356,7 +359,7 @@ public interface PlayerCommunication extends RemotePlayerCommunication{
      * @param listener
      *                The listener to unsubscribe.
      */
-    void unsubscribeNewRoundListener(NewRoundListener listener);
+    void unsubscribeNewRoundListener(RemoteNewRoundListener listener);
 
     /**
      * Subscribe the given next player listener for next player events.
@@ -364,7 +367,7 @@ public interface PlayerCommunication extends RemotePlayerCommunication{
      * @param listener
      *                The listener to subscribe.
      */
-    void subscribeNextPlayerListener(NextPlayerListener listener);
+    void subscribeNextPlayerListener(RemoteNextPlayerListener listener);
 
     /**
      * Unsubscribe the given next player listener for next player events.
@@ -372,7 +375,7 @@ public interface PlayerCommunication extends RemotePlayerCommunication{
      * @param listener
      *                The listener to unsubscribe.
      */
-    void unsubscribeNextPlayerListener(NextPlayerListener listener);
+    void unsubscribeNextPlayerListener(RemoteNextPlayerListener listener);
 
     /**
      * Subscribe the given player joined game listener for player joined game
@@ -381,7 +384,7 @@ public interface PlayerCommunication extends RemotePlayerCommunication{
      * @param listener
      *                The listener to subscribe.
      */
-    void subscribePlayerJoinedGameListener(PlayerJoinedGameListener listener);
+    void subscribePlayerJoinedGameListener(RemotePlayerJoinedGameListener listener);
 
     /**
      * Unsubscribe the given player joined game listener for player joined game
@@ -390,7 +393,7 @@ public interface PlayerCommunication extends RemotePlayerCommunication{
      * @param listener
      *                The listener to unsubscribe.
      */
-    void unsubscribePlayerJoinedGameListener(PlayerJoinedGameListener listener);
+    void unsubscribePlayerJoinedGameListener(RemotePlayerJoinedGameListener listener);
 
     /**
      * Subscribe the given show hand listener for show hand events.
@@ -398,7 +401,7 @@ public interface PlayerCommunication extends RemotePlayerCommunication{
      * @param listener
      *                The listener to subscribe.
      */
-    void subscribeShowHandListener(ShowHandListener listener);
+    void subscribeShowHandListener(RemoteShowHandListener listener);
 
     /**
      * Unsubscribe the given show hand listener for show hand events.
@@ -406,7 +409,7 @@ public interface PlayerCommunication extends RemotePlayerCommunication{
      * @param listener
      *                The listener to unsubscribe.
      */
-    void unsubscribeShowHandListener(ShowHandListener listener);
+    void unsubscribeShowHandListener(RemoteShowHandListener listener);
 
     /**
      * Subscribe the given winner listener for winner events.
@@ -414,7 +417,7 @@ public interface PlayerCommunication extends RemotePlayerCommunication{
      * @param listener
      *                The listener to subscribe.
      */
-    void subscribeWinnerListener(WinnerListener listener);
+    void subscribeWinnerListener(RemoteWinnerListener listener);
 
     /**
      * Unsubscribe the given winner listener for winner events.
@@ -422,7 +425,7 @@ public interface PlayerCommunication extends RemotePlayerCommunication{
      * @param listener
      *                The listener to unsubscribe.
      */
-    void unsubscribeWinnerListener(WinnerListener listener);
+    void unsubscribeWinnerListener(RemoteWinnerListener listener);
 
     /**
      * Subscribe the given player left table listener for player left table
@@ -431,7 +434,7 @@ public interface PlayerCommunication extends RemotePlayerCommunication{
      * @param listener
      *                The listener to subscribe.
      */
-    void subscribePlayerLeftTableListener(PlayerLeftTableListener listener);
+    void subscribePlayerLeftTableListener(RemotePlayerLeftTableListener listener);
 
     /**
      * Unsubscribe the given player left table listener for player left table
@@ -440,7 +443,7 @@ public interface PlayerCommunication extends RemotePlayerCommunication{
      * @param listener
      *                The listener to unsubscribe.
      */
-    void unsubscribePlayerLeftTableListener(PlayerLeftTableListener listener);
+    void unsubscribePlayerLeftTableListener(RemotePlayerLeftTableListener listener);
 
     /**
      * Subscribe the given message listener for message events.
@@ -448,7 +451,7 @@ public interface PlayerCommunication extends RemotePlayerCommunication{
      * @param listener
      *                The listener to subscribe.
      */
-    void subscribeGameMessageListener(GameMessageListener listener);
+    void subscribeGameMessageListener(RemoteGameMessageListener listener);
 
     /**
      * Unsubscribe the given message listener for message events.
@@ -456,7 +459,7 @@ public interface PlayerCommunication extends RemotePlayerCommunication{
      * @param listener
      *                The listener to unsubscribe.
      */
-    void unsubscribeGameMessageListener(GameMessageListener listener);
+    void unsubscribeGameMessageListener(RemoteGameMessageListener listener);
 
     /**
      * Subscribe the given player joined listener for player joined events.
@@ -464,7 +467,7 @@ public interface PlayerCommunication extends RemotePlayerCommunication{
      * @param listener
      *                The listener to subscribe.
      */
-    void subscribePlayerJoinedListener(PlayerJoinedListener listener);
+    void subscribePlayerJoinedListener(RemotePlayerJoinedListener listener);
 
     /**
      * Unsubscribe the given player joined listener for player joined events.
@@ -472,7 +475,7 @@ public interface PlayerCommunication extends RemotePlayerCommunication{
      * @param listener
      *                The listener to unsubscribe.
      */
-    void unsubscribePlayerJoinedListener(PlayerJoinedListener listener);
+    void unsubscribePlayerJoinedListener(RemotePlayerJoinedListener listener);
 
     /**
      * Subscribe the given table created listener for table created events.
@@ -480,7 +483,7 @@ public interface PlayerCommunication extends RemotePlayerCommunication{
      * @param listener
      *                The listener to subscribe.
      */
-    void subscribeTableCreatedListener(TableCreatedListener listener);
+    void subscribeTableCreatedListener(RemoteTableCreatedListener listener);
 
     /**
      * Unsubscribe the given table created listener for table created events.
@@ -488,7 +491,7 @@ public interface PlayerCommunication extends RemotePlayerCommunication{
      * @param listener
      *                The listener to unsubscribe.
      */
-    void unsubscribeTableCreatedListener(TableCreatedListener listener);
+    void unsubscribeTableCreatedListener(RemoteTableCreatedListener listener);
 
     /**
      * Subscribe the given player left listener for player left events.
@@ -496,7 +499,7 @@ public interface PlayerCommunication extends RemotePlayerCommunication{
      * @param listener
      *                The listener to subscribe.
      */
-    void subscribePlayerLeftListener(PlayerLeftListener listener);
+    void subscribePlayerLeftListener(RemotePlayerLeftListener listener);
 
     /**
      * Unsubscribe the given player left listener for player left events.
@@ -504,7 +507,7 @@ public interface PlayerCommunication extends RemotePlayerCommunication{
      * @param listener
      *                The listener to unsubscribe.
      */
-    void unsubscribePlayerLeftListener(PlayerLeftListener listener);
+    void unsubscribePlayerLeftListener(RemotePlayerLeftListener listener);
 
     /**
      * Subscribe the given message listener for message events.
@@ -512,7 +515,7 @@ public interface PlayerCommunication extends RemotePlayerCommunication{
      * @param listener
      *                The listener to subscribe.
      */
-    void subscribeServerMessageListener(ServerMessageListener listener);
+    void subscribeServerMessageListener(RemoteServerMessageListener listener);
 
     /**
      * Unsubscribe the given message listener for message events.
@@ -520,7 +523,7 @@ public interface PlayerCommunication extends RemotePlayerCommunication{
      * @param listener
      *                The listener to unsubscribe.
      */
-    void unsubscribeServerMessageListener(ServerMessageListener listener);
+    void unsubscribeServerMessageListener(RemoteServerMessageListener listener);
 
     /**
      * Subscribe the given all events listener for all events a player can
@@ -529,7 +532,7 @@ public interface PlayerCommunication extends RemotePlayerCommunication{
      * @param listener
      *                The listener to subscribe.
      */
-    void subscribeAllEventsListener(AllEventsListener listener);
+    void subscribeAllEventsListener(RemoteAllEventsListener listener);
 
     /**
      * Unsubscribe the given all events listener from all events a player can
@@ -538,5 +541,5 @@ public interface PlayerCommunication extends RemotePlayerCommunication{
      * @param listener
      *                The listener to subscribe.
      */
-    void unsubscribeAllEventsListener(AllEventsListener listener);
+    void unsubscribeAllEventsListener(RemoteAllEventsListener listener);
 }
