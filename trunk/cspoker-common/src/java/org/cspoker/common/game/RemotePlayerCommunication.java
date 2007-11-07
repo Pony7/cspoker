@@ -19,29 +19,29 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 import org.cspoker.common.game.elements.table.TableId;
-import org.cspoker.common.game.eventlisteners.AllEventsListener;
-import org.cspoker.common.game.eventlisteners.game.GameMessageListener;
-import org.cspoker.common.game.eventlisteners.game.NewCommunityCardsListener;
-import org.cspoker.common.game.eventlisteners.game.NewDealListener;
-import org.cspoker.common.game.eventlisteners.game.NewRoundListener;
-import org.cspoker.common.game.eventlisteners.game.NextPlayerListener;
-import org.cspoker.common.game.eventlisteners.game.PlayerJoinedGameListener;
-import org.cspoker.common.game.eventlisteners.game.PlayerLeftTableListener;
-import org.cspoker.common.game.eventlisteners.game.ShowHandListener;
-import org.cspoker.common.game.eventlisteners.game.WinnerListener;
-import org.cspoker.common.game.eventlisteners.game.actions.AllInListener;
-import org.cspoker.common.game.eventlisteners.game.actions.BetListener;
-import org.cspoker.common.game.eventlisteners.game.actions.BigBlindListener;
-import org.cspoker.common.game.eventlisteners.game.actions.CallListener;
-import org.cspoker.common.game.eventlisteners.game.actions.CheckListener;
-import org.cspoker.common.game.eventlisteners.game.actions.FoldListener;
-import org.cspoker.common.game.eventlisteners.game.actions.RaiseListener;
-import org.cspoker.common.game.eventlisteners.game.actions.SmallBlindListener;
-import org.cspoker.common.game.eventlisteners.game.privatelistener.NewPocketCardsListener;
-import org.cspoker.common.game.eventlisteners.server.PlayerJoinedListener;
-import org.cspoker.common.game.eventlisteners.server.PlayerLeftListener;
-import org.cspoker.common.game.eventlisteners.server.ServerMessageListener;
-import org.cspoker.common.game.eventlisteners.server.TableCreatedListener;
+import org.cspoker.common.game.eventlisteners.RemoteAllEventsListener;
+import org.cspoker.common.game.eventlisteners.game.RemoteGameMessageListener;
+import org.cspoker.common.game.eventlisteners.game.RemoteNewCommunityCardsListener;
+import org.cspoker.common.game.eventlisteners.game.RemoteNewDealListener;
+import org.cspoker.common.game.eventlisteners.game.RemoteNewRoundListener;
+import org.cspoker.common.game.eventlisteners.game.RemoteNextPlayerListener;
+import org.cspoker.common.game.eventlisteners.game.RemotePlayerJoinedGameListener;
+import org.cspoker.common.game.eventlisteners.game.RemotePlayerLeftTableListener;
+import org.cspoker.common.game.eventlisteners.game.RemoteShowHandListener;
+import org.cspoker.common.game.eventlisteners.game.RemoteWinnerListener;
+import org.cspoker.common.game.eventlisteners.game.actions.RemoteAllInListener;
+import org.cspoker.common.game.eventlisteners.game.actions.RemoteBetListener;
+import org.cspoker.common.game.eventlisteners.game.actions.RemoteBigBlindListener;
+import org.cspoker.common.game.eventlisteners.game.actions.RemoteCallListener;
+import org.cspoker.common.game.eventlisteners.game.actions.RemoteCheckListener;
+import org.cspoker.common.game.eventlisteners.game.actions.RemoteFoldListener;
+import org.cspoker.common.game.eventlisteners.game.actions.RemoteRaiseListener;
+import org.cspoker.common.game.eventlisteners.game.actions.RemoteSmallBlindListener;
+import org.cspoker.common.game.eventlisteners.game.privatelistener.RemoteNewPocketCardsListener;
+import org.cspoker.common.game.eventlisteners.server.RemotePlayerJoinedListener;
+import org.cspoker.common.game.eventlisteners.server.RemotePlayerLeftListener;
+import org.cspoker.common.game.eventlisteners.server.RemoteServerMessageListener;
+import org.cspoker.common.game.eventlisteners.server.RemoteTableCreatedListener;
 
 public interface RemotePlayerCommunication extends Remote{
 
@@ -163,7 +163,7 @@ public interface RemotePlayerCommunication extends Remote{
      * @param listener
      *                The listener to subscribe.
      */
-    void subscribeAllInListener(AllInListener listener) throws RemoteException;
+    void subscribeAllInListener(RemoteAllInListener listener) throws RemoteException;
 
     /**
      * Unsubscribe the given all-in listener for all-in events.
@@ -171,7 +171,7 @@ public interface RemotePlayerCommunication extends Remote{
      * @param listener
      *                The listener to unsubscribe.
      */
-    void unsubscribeAllInListener(AllInListener listener) throws RemoteException;
+    void unsubscribeAllInListener(RemoteAllInListener listener) throws RemoteException;
 
     /**
      * Subscribe the given bet listener for bet events.
@@ -179,7 +179,7 @@ public interface RemotePlayerCommunication extends Remote{
      * @param listener
      *                The listener to subscribe.
      */
-    void subscribeBetListener(BetListener listener) throws RemoteException;
+    void subscribeBetListener(RemoteBetListener listener) throws RemoteException;
 
     /**
      * Unsubscribe the given bet listener for bet events.
@@ -187,7 +187,7 @@ public interface RemotePlayerCommunication extends Remote{
      * @param listener
      *                The listener to unsubscribe.
      */
-    void unsubscribeBetListener(BetListener listener) throws RemoteException;
+    void unsubscribeBetListener(RemoteBetListener listener) throws RemoteException;
 
     /**
      * Subscribe the given big blind listener for big blind events.
@@ -195,7 +195,7 @@ public interface RemotePlayerCommunication extends Remote{
      * @param listener
      *                The listener to subscribe.
      */
-    void subscribeBigBlindListener(BigBlindListener listener) throws RemoteException;
+    void subscribeBigBlindListener(RemoteBigBlindListener listener) throws RemoteException;
 
     /**
      * Unsubscribe the given big blind listener for big blind events.
@@ -203,7 +203,7 @@ public interface RemotePlayerCommunication extends Remote{
      * @param listener
      *                The listener to unsubscribe.
      */
-    void unsubscribeBigBlindListener(BigBlindListener listener) throws RemoteException;
+    void unsubscribeBigBlindListener(RemoteBigBlindListener listener) throws RemoteException;
 
     /**
      * Subscribe the given call listener for call events.
@@ -211,7 +211,7 @@ public interface RemotePlayerCommunication extends Remote{
      * @param listener
      *                The listener to subscribe.
      */
-    void subscribeCallListener(CallListener listener) throws RemoteException;
+    void subscribeCallListener(RemoteCallListener listener) throws RemoteException;
 
     /**
      * Unsubscribe the given call listener for call events.
@@ -219,7 +219,7 @@ public interface RemotePlayerCommunication extends Remote{
      * @param listener
      *                The listener to unsubscribe.
      */
-    void unsubscribeCallListener(CallListener listener) throws RemoteException;
+    void unsubscribeCallListener(RemoteCallListener listener) throws RemoteException;
 
     /**
      * Subscribe the given check listener for check events.
@@ -227,7 +227,7 @@ public interface RemotePlayerCommunication extends Remote{
      * @param listener
      *                The listener to subscribe.
      */
-    void subscribeCheckListener(CheckListener listener) throws RemoteException;
+    void subscribeCheckListener(RemoteCheckListener listener) throws RemoteException;
 
     /**
      * Unsubscribe the given check listener for check events.
@@ -235,7 +235,7 @@ public interface RemotePlayerCommunication extends Remote{
      * @param listener
      *                The listener to unsubscribe.
      */
-    void unsubscribeCheckListener(CheckListener listener) throws RemoteException;
+    void unsubscribeCheckListener(RemoteCheckListener listener) throws RemoteException;
 
     /**
      * Subscribe the given fold listener for fold events.
@@ -243,7 +243,7 @@ public interface RemotePlayerCommunication extends Remote{
      * @param listener
      *                The listener to subscribe.
      */
-    void subscribeFoldListener(FoldListener listener) throws RemoteException;
+    void subscribeFoldListener(RemoteFoldListener listener) throws RemoteException;
 
     /**
      * Unsubscribe the given fold listener for fold events.
@@ -251,7 +251,7 @@ public interface RemotePlayerCommunication extends Remote{
      * @param listener
      *                The listener to unsubscribe.
      */
-    void unsubscribeFoldListener(FoldListener listener) throws RemoteException;
+    void unsubscribeFoldListener(RemoteFoldListener listener) throws RemoteException;
 
     /**
      * Subscribe the given raise listener for raise events.
@@ -259,7 +259,7 @@ public interface RemotePlayerCommunication extends Remote{
      * @param listener
      *                The listener to subscribe.
      */
-    void subscribeRaiseListener(RaiseListener listener) throws RemoteException;
+    void subscribeRaiseListener(RemoteRaiseListener listener) throws RemoteException;
 
     /**
      * Unsubscribe the given raise listener for raise events.
@@ -267,7 +267,7 @@ public interface RemotePlayerCommunication extends Remote{
      * @param listener
      *                The listener to unsubscribe.
      */
-    void unsubscribeRaiseListener(RaiseListener listener) throws RemoteException;
+    void unsubscribeRaiseListener(RemoteRaiseListener listener) throws RemoteException;
 
     /**
      * Subscribe the given small blind listener for small blind events.
@@ -275,7 +275,7 @@ public interface RemotePlayerCommunication extends Remote{
      * @param listener
      *                The listener to subscribe.
      */
-    void subscribeSmallBlindListener(SmallBlindListener listener) throws RemoteException;
+    void subscribeSmallBlindListener(RemoteSmallBlindListener listener) throws RemoteException;
 
     /**
      * Unsubscribe the given small blind listener for small blind events.
@@ -283,7 +283,7 @@ public interface RemotePlayerCommunication extends Remote{
      * @param listener
      *                The listener to unsubscribe.
      */
-    void unsubscribeSmallBlindListener(SmallBlindListener listener) throws RemoteException;
+    void unsubscribeSmallBlindListener(RemoteSmallBlindListener listener) throws RemoteException;
 
     /**
      * Subscribe the given new pocket cards listener for new pocket cards
@@ -292,7 +292,7 @@ public interface RemotePlayerCommunication extends Remote{
      * @param listener
      *                The listener to subscribe.
      */
-    void subscribeNewPocketCardsListener(NewPocketCardsListener listener) throws RemoteException;
+    void subscribeNewPocketCardsListener(RemoteNewPocketCardsListener listener) throws RemoteException;
 
     /**
      * Unsubscribe the given new pocket cards listener for new pocket cards
@@ -301,7 +301,7 @@ public interface RemotePlayerCommunication extends Remote{
      * @param listener
      *                The listener to unsubscribe.
      */
-    void unsubscribeNewPocketCardsListener(NewPocketCardsListener listener) throws RemoteException;
+    void unsubscribeNewPocketCardsListener(RemoteNewPocketCardsListener listener) throws RemoteException;
 
     /**
      * Subscribe the given new common cards listener for new common cards
@@ -310,7 +310,7 @@ public interface RemotePlayerCommunication extends Remote{
      * @param listener
      *                The listener to subscribe.
      */
-    void subscribeNewCommonCardsListener(NewCommunityCardsListener listener) throws RemoteException;
+    void subscribeNewCommonCardsListener(RemoteNewCommunityCardsListener listener) throws RemoteException;
 
     /**
      * Unsubscribe the given new common cards listener for new common cards
@@ -319,7 +319,7 @@ public interface RemotePlayerCommunication extends Remote{
      * @param listener
      *                The listener to unsubscribe.
      */
-    void unsubscribeNewCommonCardsListener(NewCommunityCardsListener listener) throws RemoteException;
+    void unsubscribeNewCommonCardsListener(RemoteNewCommunityCardsListener listener) throws RemoteException;
 
     /**
      * Subscribe the given new deal listener for new deal events.
@@ -327,7 +327,7 @@ public interface RemotePlayerCommunication extends Remote{
      * @param listener
      *                The listener to subscribe.
      */
-    void subscribeNewDealListener(NewDealListener listener) throws RemoteException;
+    void subscribeNewDealListener(RemoteNewDealListener listener) throws RemoteException;
 
     /**
      * Unsubscribe the given new deal listener for new deal events.
@@ -335,7 +335,7 @@ public interface RemotePlayerCommunication extends Remote{
      * @param listener
      *                The listener to unsubscribe.
      */
-    void unsubscribeNewDealListener(NewDealListener listener) throws RemoteException;
+    void unsubscribeNewDealListener(RemoteNewDealListener listener) throws RemoteException;
 
     /**
      * Subscribe the given new round listener for new round events.
@@ -343,7 +343,7 @@ public interface RemotePlayerCommunication extends Remote{
      * @param listener
      *                The listener to subscribe.
      */
-    void subscribeNewRoundListener(NewRoundListener listener) throws RemoteException;
+    void subscribeNewRoundListener(RemoteNewRoundListener listener) throws RemoteException;
 
     /**
      * Unsubscribe the given new round listener for new round events.
@@ -351,7 +351,7 @@ public interface RemotePlayerCommunication extends Remote{
      * @param listener
      *                The listener to unsubscribe.
      */
-    void unsubscribeNewRoundListener(NewRoundListener listener) throws RemoteException;
+    void unsubscribeNewRoundListener(RemoteNewRoundListener listener) throws RemoteException;
 
     /**
      * Subscribe the given next player listener for next player events.
@@ -359,7 +359,7 @@ public interface RemotePlayerCommunication extends Remote{
      * @param listener
      *                The listener to subscribe.
      */
-    void subscribeNextPlayerListener(NextPlayerListener listener) throws RemoteException;
+    void subscribeNextPlayerListener(RemoteNextPlayerListener listener) throws RemoteException;
 
     /**
      * Unsubscribe the given next player listener for next player events.
@@ -367,7 +367,7 @@ public interface RemotePlayerCommunication extends Remote{
      * @param listener
      *                The listener to unsubscribe.
      */
-    void unsubscribeNextPlayerListener(NextPlayerListener listener) throws RemoteException;
+    void unsubscribeNextPlayerListener(RemoteNextPlayerListener listener) throws RemoteException;
 
     /**
      * Subscribe the given player joined game listener for player joined game
@@ -376,7 +376,7 @@ public interface RemotePlayerCommunication extends Remote{
      * @param listener
      *                The listener to subscribe.
      */
-    void subscribePlayerJoinedGameListener(PlayerJoinedGameListener listener) throws RemoteException;
+    void subscribePlayerJoinedGameListener(RemotePlayerJoinedGameListener listener) throws RemoteException;
 
     /**
      * Unsubscribe the given player joined game listener for player joined game
@@ -385,7 +385,7 @@ public interface RemotePlayerCommunication extends Remote{
      * @param listener
      *                The listener to unsubscribe.
      */
-    void unsubscribePlayerJoinedGameListener(PlayerJoinedGameListener listener) throws RemoteException;
+    void unsubscribePlayerJoinedGameListener(RemotePlayerJoinedGameListener listener) throws RemoteException;
 
     /**
      * Subscribe the given show hand listener for show hand events.
@@ -393,7 +393,7 @@ public interface RemotePlayerCommunication extends Remote{
      * @param listener
      *                The listener to subscribe.
      */
-    void subscribeShowHandListener(ShowHandListener listener) throws RemoteException;
+    void subscribeShowHandListener(RemoteShowHandListener listener) throws RemoteException;
 
     /**
      * Unsubscribe the given show hand listener for show hand events.
@@ -401,7 +401,7 @@ public interface RemotePlayerCommunication extends Remote{
      * @param listener
      *                The listener to unsubscribe.
      */
-    void unsubscribeShowHandListener(ShowHandListener listener) throws RemoteException;
+    void unsubscribeShowHandListener(RemoteShowHandListener listener) throws RemoteException;
 
     /**
      * Subscribe the given winner listener for winner events.
@@ -409,7 +409,7 @@ public interface RemotePlayerCommunication extends Remote{
      * @param listener
      *                The listener to subscribe.
      */
-    void subscribeWinnerListener(WinnerListener listener) throws RemoteException;
+    void subscribeWinnerListener(RemoteWinnerListener listener) throws RemoteException;
 
     /**
      * Unsubscribe the given winner listener for winner events.
@@ -417,7 +417,7 @@ public interface RemotePlayerCommunication extends Remote{
      * @param listener
      *                The listener to unsubscribe.
      */
-    void unsubscribeWinnerListener(WinnerListener listener) throws RemoteException;
+    void unsubscribeWinnerListener(RemoteWinnerListener listener) throws RemoteException;
 
     /**
      * Subscribe the given player left table listener for player left table
@@ -426,7 +426,7 @@ public interface RemotePlayerCommunication extends Remote{
      * @param listener
      *                The listener to subscribe.
      */
-    void subscribePlayerLeftTableListener(PlayerLeftTableListener listener) throws RemoteException;
+    void subscribePlayerLeftTableListener(RemotePlayerLeftTableListener listener) throws RemoteException;
 
     /**
      * Unsubscribe the given player left table listener for player left table
@@ -435,7 +435,7 @@ public interface RemotePlayerCommunication extends Remote{
      * @param listener
      *                The listener to unsubscribe.
      */
-    void unsubscribePlayerLeftTableListener(PlayerLeftTableListener listener) throws RemoteException;
+    void unsubscribePlayerLeftTableListener(RemotePlayerLeftTableListener listener) throws RemoteException;
 
     /**
      * Subscribe the given message listener for message events.
@@ -443,7 +443,7 @@ public interface RemotePlayerCommunication extends Remote{
      * @param listener
      *                The listener to subscribe.
      */
-    void subscribeGameMessageListener(GameMessageListener listener) throws RemoteException;
+    void subscribeGameMessageListener(RemoteGameMessageListener listener) throws RemoteException;
 
     /**
      * Unsubscribe the given message listener for message events.
@@ -451,7 +451,7 @@ public interface RemotePlayerCommunication extends Remote{
      * @param listener
      *                The listener to unsubscribe.
      */
-    void unsubscribeGameMessageListener(GameMessageListener listener) throws RemoteException;
+    void unsubscribeGameMessageListener(RemoteGameMessageListener listener) throws RemoteException;
 
     /**
      * Subscribe the given player joined listener for player joined events.
@@ -459,7 +459,7 @@ public interface RemotePlayerCommunication extends Remote{
      * @param listener
      *                The listener to subscribe.
      */
-    void subscribePlayerJoinedListener(PlayerJoinedListener listener) throws RemoteException;
+    void subscribePlayerJoinedListener(RemotePlayerJoinedListener listener) throws RemoteException;
 
     /**
      * Unsubscribe the given player joined listener for player joined events.
@@ -467,7 +467,7 @@ public interface RemotePlayerCommunication extends Remote{
      * @param listener
      *                The listener to unsubscribe.
      */
-    void unsubscribePlayerJoinedListener(PlayerJoinedListener listener) throws RemoteException;
+    void unsubscribePlayerJoinedListener(RemotePlayerJoinedListener listener) throws RemoteException;
 
     /**
      * Subscribe the given table created listener for table created events.
@@ -475,7 +475,7 @@ public interface RemotePlayerCommunication extends Remote{
      * @param listener
      *                The listener to subscribe.
      */
-    void subscribeTableCreatedListener(TableCreatedListener listener) throws RemoteException;
+    void subscribeTableCreatedListener(RemoteTableCreatedListener listener) throws RemoteException;
 
     /**
      * Unsubscribe the given table created listener for table created events.
@@ -483,7 +483,7 @@ public interface RemotePlayerCommunication extends Remote{
      * @param listener
      *                The listener to unsubscribe.
      */
-    void unsubscribeTableCreatedListener(TableCreatedListener listener) throws RemoteException;
+    void unsubscribeTableCreatedListener(RemoteTableCreatedListener listener) throws RemoteException;
 
     /**
      * Subscribe the given player left listener for player left events.
@@ -491,7 +491,7 @@ public interface RemotePlayerCommunication extends Remote{
      * @param listener
      *                The listener to subscribe.
      */
-    void subscribePlayerLeftListener(PlayerLeftListener listener) throws RemoteException;
+    void subscribePlayerLeftListener(RemotePlayerLeftListener listener) throws RemoteException;
 
     /**
      * Unsubscribe the given player left listener for player left events.
@@ -499,7 +499,7 @@ public interface RemotePlayerCommunication extends Remote{
      * @param listener
      *                The listener to unsubscribe.
      */
-    void unsubscribePlayerLeftListener(PlayerLeftListener listener) throws RemoteException;
+    void unsubscribePlayerLeftListener(RemotePlayerLeftListener listener) throws RemoteException;
 
     /**
      * Subscribe the given message listener for message events.
@@ -507,7 +507,7 @@ public interface RemotePlayerCommunication extends Remote{
      * @param listener
      *                The listener to subscribe.
      */
-    void subscribeServerMessageListener(ServerMessageListener listener) throws RemoteException;
+    void subscribeServerMessageListener(RemoteServerMessageListener listener) throws RemoteException;
 
     /**
      * Unsubscribe the given message listener for message events.
@@ -515,7 +515,7 @@ public interface RemotePlayerCommunication extends Remote{
      * @param listener
      *                The listener to unsubscribe.
      */
-    void unsubscribeServerMessageListener(ServerMessageListener listener) throws RemoteException;
+    void unsubscribeServerMessageListener(RemoteServerMessageListener listener) throws RemoteException;
 
     /**
      * Subscribe the given all events listener for all events a player can
@@ -524,7 +524,7 @@ public interface RemotePlayerCommunication extends Remote{
      * @param listener
      *                The listener to subscribe.
      */
-    void subscribeAllEventsListener(AllEventsListener listener) throws RemoteException;
+    void subscribeAllEventsListener(RemoteAllEventsListener listener) throws RemoteException;
 
     /**
      * Unsubscribe the given all events listener from all events a player can
@@ -533,6 +533,6 @@ public interface RemotePlayerCommunication extends Remote{
      * @param listener
      *                The listener to subscribe.
      */
-    void unsubscribeAllEventsListener(AllEventsListener listener) throws RemoteException;
+    void unsubscribeAllEventsListener(RemoteAllEventsListener listener) throws RemoteException;
 
 }
