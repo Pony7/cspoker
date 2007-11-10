@@ -26,10 +26,7 @@ public class ClientGUI {
 	 * The current window of this client gui
 	 */
 	private Window currentWindow;
-	/**
-	 * The user of this gui
-	 */
-	private User user;
+
 	/**********************************************************
 	 * Constructor
 	 **********************************************************/
@@ -42,8 +39,25 @@ public class ClientGUI {
 		display = new Display();
 		this.clientCore =clientCore;
 	}
+	/**********************************************************
+	 * Window & shell
+	 **********************************************************/
+	/**
+	 * Sets the given window as the current window
+	 * @param window
+	 * 			the given window
+	 */
 	public void setAsCurrentWindow(Window window){
 		this.currentWindow=window;
+	}
+	/**
+	 * Disposes the current shell
+	 */
+	public void disposeCurrentShell(){
+		try {
+			display.getActiveShell().dispose();
+		} catch (NullPointerException e) {
+		}
 	}
 	/**********************************************************
 	 * LOGIN
@@ -53,39 +67,17 @@ public class ClientGUI {
 	 */
 	public void start(){
 		disposeCurrentShell();
-		new WindowLogin(display,this);
-	}
-	/**
-	 * Logs in a new user with the given username and password to the given
-	 * server url and port.
-	 * @param url
-	 * 			the given server url
-	 * @param port
-	 * 			the given server port
-	 * @param userName
-	 * 			the given user name
-	 * @param password
-	 * 			the given password
-	 */
-	public void login(String url, int port, String userName, String password){
-		this.user=new User(userName);
-		clientCore.createCommunication(url,port,userName,password);
+		new WindowLogin(display,this,clientCore);
 	}
 	/**********************************************************
 	 * START
 	 **********************************************************/
-	public void disposeCurrentShell(){
-		try {
-			display.getActiveShell().dispose();
-		} catch (NullPointerException e) {
-		}
-	}
 	/**
 	 * Starts a new game
 	 */
 	public void startGame(){
 		disposeCurrentShell();
-		this.currentWindow=new WindowGame(display,this);
+		new WindowGame(display,this,clientCore);
 	}
 	/**********************************************************
 	 * ERRORS
@@ -97,8 +89,11 @@ public class ClientGUI {
 	 */
 	public void displayErrorMessage(String message){
 		this.currentWindow.getShell().setEnabled(false);
-		Window errorWindow=new WindowError(display,this,message);
+		new WindowError(display,this,clientCore,message);
 	}
+	/**
+	 * Continues the flow of this gui (by enabling the shell of the current window)
+	 */
 	public void continueFlow(){
 		this.currentWindow.getShell().setEnabled(true);
 	}

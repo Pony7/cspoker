@@ -1,14 +1,16 @@
 package org.client.GUI.Window;
 
+import java.awt.GraphicsEnvironment;
+
+import org.client.ClientCore;
 import org.client.GUI.ClientGUI;
+import org.client.GUI.Images.ImageFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
@@ -17,12 +19,15 @@ import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+
+import com.sun.media.sound.Toolkit;
 /**
  * A class of game windows
  * @author Cedric
  */
 public class WindowGame extends Window {
 
+	
 	/**********************************************************
 	 * Variables
 	 **********************************************************/
@@ -43,10 +48,12 @@ public class WindowGame extends Window {
 	/**
 	 * The different images
 	 */
-	private Image table;
+	private Image table=createTableImage();
 	/**********************************************************
 	 * Layout Constants
 	 **********************************************************/
+	private int tableXPosition=(int) (getWindowWidth()*0.1);
+	private int tableYPosition=(int) (getWindowHeight()*0.1);
 	/**
 	 * the height of the game buttons
 	 */
@@ -70,30 +77,55 @@ public class WindowGame extends Window {
 	 * Creates a new game window
 	 * @super
 	 */
-	public WindowGame(Display display, ClientGUI gui) {
-		super(display, gui);
-		setAsCurrentWindow();
-		getShell().setSize(750, 450);
-		getShell().setText("Game Window");
-		loadImages();
+	public WindowGame(Display display, ClientGUI gui,ClientCore clientCore) {
+		super(display, gui,clientCore);
+		createGameShell();
 		loadMenuBar();
 		loadButtons();
+		setAsCurrentWindow();
 		draw();
+	}
+	/**********************************************************
+	 * Shell
+	 **********************************************************/
+	/**
+	 * Creates a new game shell
+	 */
+	private void createGameShell() {
+		GraphicsEnvironment ge
+	      = GraphicsEnvironment.getLocalGraphicsEnvironment();
+	    java.awt.Rectangle rec = ge.getMaximumWindowBounds();
+	    int height = (int) (rec.height*0.9);
+	    int width = (int) (rec.width*0.9);
+		getShell().setSize(width,height);
+		getShell().setText("Game Window");
 	}
 	/**********************************************************
 	 * Images
 	 **********************************************************/
 	/**
-	 * Load the images from the respective files
-	 */
-	private void loadImages(){
-		table=new Image(getDisplay(),"images/pokertafel.png");
-	}
-	/**
 	 * Draws the images
 	 */
 	@Override public void drawImages(){
-		getGC().drawImage(table,100, 50);
+		drawTable();
+	}
+	/**********************************************************
+	 * Table
+	 **********************************************************/
+	/**
+	 * Creates a new scaled table image for this game window
+	 */
+	private Image createTableImage() {
+		Image temp=imageFactory.getImage(getDisplay(),"pokertafel");
+		int width = (int) (getWindowWidth()*0.8);
+		int height = (int) (getWindowHeight()*0.7);
+		return new Image(getDisplay(),temp.getImageData().scaledTo(width,height));
+	}
+	/**
+	 * Draws the table on this window game
+	 */
+	private void drawTable() {
+		getGC().drawImage(table,tableXPosition,tableYPosition);
 	}
 	/**********************************************************
 	 * Menu Bar
@@ -102,23 +134,22 @@ public class WindowGame extends Window {
 	 * Loads the menu bar
 	 */
 	private void loadMenuBar(){
-		final Shell gameShell=getShell();
-		gameShell.addListener(SWT.Close, new Listener() {
+		getShell().addListener(SWT.Close, new Listener() {
 		      public void handleEvent(Event event) {
 		        int style = SWT.APPLICATION_MODAL | SWT.YES | SWT.NO;
-		        MessageBox messageBox = new MessageBox(gameShell, style);
+		        MessageBox messageBox = new MessageBox(getShell(), style);
 		        messageBox.setText("Information");
 		        messageBox.setMessage("Are you sure you want to exit the game?");
 		        event.doit = messageBox.open() == SWT.YES;
 		      }
 		    });
 		
-		menuBar = new Menu(gameShell , SWT.BAR);
-		gameShell.setMenuBar(menuBar);
+		menuBar = new Menu(getShell() , SWT.BAR);
+		getShell().setMenuBar(menuBar);
 		
 		gameItem = new MenuItem(menuBar,SWT.CASCADE);
 		gameItem.setText("actions");
-		gameMenu = new Menu(gameShell,SWT.DROP_DOWN);
+		gameMenu = new Menu(getShell(),SWT.DROP_DOWN);
 		gameItem.setMenu(gameMenu);
 		
 		addJoinButton();
@@ -129,6 +160,9 @@ public class WindowGame extends Window {
 	/**********************************************************
 	 * Menu Buttons
 	 **********************************************************/
+	/**
+	 * Adds the start game button to this game window
+	 */
 	private void addStartGameButton() {
 		startGameItem = new MenuItem(gameMenu,SWT.PUSH);
 		startGameItem.setText("Start Game &Ctrl+S");
@@ -139,11 +173,14 @@ public class WindowGame extends Window {
 		{
 			public void handleEvent(Event e) {
 				System.out.println("Attempt to start a game");
-				//TODO: handle event
+				getClientCore().startGame();
 			}
 		}
 		);
 	}
+	/**
+	 * Adds the create table button to this game window
+	 */
 	private void addCreateTableButton() {
 		createTableItem = new MenuItem(gameMenu,SWT.PUSH);
 		createTableItem.setText("Create Table &Ctrl+C");
@@ -154,11 +191,14 @@ public class WindowGame extends Window {
 		{
 			public void handleEvent(Event e) {
 				System.out.println("Attempt to create a table");
-				//TODO: handle event
+				getClientCore().createTable();
 			}
 		}
 		);
 	}
+	/**
+	 * Adds the leave table button to this game window
+	 */
 	private void addLeaveTableButton() {
 		leaveTableItem = new MenuItem(gameMenu,SWT.PUSH);
 		leaveTableItem.setText("Leave Table &Ctrl+L");
@@ -169,11 +209,14 @@ public class WindowGame extends Window {
 		{
 			public void handleEvent(Event e) {
 				System.out.println("Attempt to leave the table");
-				//TODO: handle event
+				getClientCore().leaveTable();
 			}
 		}
 		);
 	}
+	/**
+	 * Adds the join button to this game window
+	 */
 	private void addJoinButton() {
 		joinTableItem = new MenuItem(gameMenu,SWT.PUSH);
 		joinTableItem.setText("Join Table &Ctrl+J");
@@ -214,8 +257,7 @@ public class WindowGame extends Window {
 		foldButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				System.out.println("Attempt to fold");
-				//TODO: handle event
-				getGui().displayErrorMessage("test");
+				getClientCore().fold();
 			}
 		});
 	}
@@ -229,7 +271,7 @@ public class WindowGame extends Window {
 		callButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				System.out.println("Attempt to call");
-				//TODO: handle event
+				getClientCore().call();
 			}
 		});
 	}
@@ -243,7 +285,7 @@ public class WindowGame extends Window {
 		checkButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				System.out.println("Attempt to check");
-				//TODO: handle event
+				getClientCore().check();
 			}
 		});
 	}
@@ -257,7 +299,7 @@ public class WindowGame extends Window {
 		dealButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				System.out.println("Attempt to deal");
-				//TODO: handle event
+				getClientCore().deal();
 			}
 		});
 	}
@@ -270,9 +312,10 @@ public class WindowGame extends Window {
 		betButton.setBounds(xButtons, 50+4*buttonDistance, buttonWidth, buttonHeight);
 		betButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
-				System.out.println("Attempt to bet "+betAmount.getText());
+				int amount=Integer.parseInt(betAmount.getText());
+				System.out.println("Attempt to bet "+amount);
+				getClientCore().bet(amount);
 				betAmount.setText("0");
-				//TODO: handle event
 			}
 		});
 		betAmount=new Text(getShell(),SWT.BORDER);
@@ -288,9 +331,10 @@ public class WindowGame extends Window {
 		raiseButton.setBounds(xButtons, 50+5*buttonDistance, buttonWidth, buttonHeight);
 		raiseButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
-				System.out.println("Attempt to raise "+raiseAmount.getText());
+				int amount=Integer.parseInt(betAmount.getText());
+				System.out.println("Attempt to raise "+amount);
+				getClientCore().raise(amount);
 				raiseAmount.setText("0");
-				//TODO: handle event
 			}
 		});
 		raiseAmount=new Text(getShell(),SWT.BORDER);
@@ -307,7 +351,7 @@ public class WindowGame extends Window {
 		allInButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				System.out.println("Attempt to go all in");
-				//TODO: handle event
+				getClientCore().allIn();
 			}
 		});
 	}
