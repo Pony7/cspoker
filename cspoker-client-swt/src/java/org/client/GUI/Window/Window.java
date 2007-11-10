@@ -1,6 +1,8 @@
 package org.client.GUI.Window;
 
+import org.client.ClientCore;
 import org.client.GUI.ClientGUI;
+import org.client.GUI.Images.ImageFactory;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
@@ -13,6 +15,8 @@ public abstract class Window {
 	/**********************************************************
 	 * Variables
 	 **********************************************************/
+	
+	protected final ImageFactory imageFactory=ImageFactory.getImageFactory();
 	/**
 	 * The display for this window
 	 */
@@ -29,6 +33,10 @@ public abstract class Window {
 	 * The graphical context of this window
 	 */
 	private final GC gc;
+	/**
+	 * The client core of this window
+	 */
+	private final ClientCore clientCore;
 	/**********************************************************
 	 * Constructor
 	 **********************************************************/
@@ -39,15 +47,31 @@ public abstract class Window {
 	 * @param gui
 	 * 			the given gui
 	 */
-	public Window(Display display,ClientGUI gui){
+	public Window(Display display,final ClientGUI gui,final ClientCore clientCore){
 		this.display=display;
 		this.shell = new Shell(display);
 		this.gui = gui;
 		this.gc=new GC(this.shell);
+		this.clientCore=clientCore;
 	}
 	/**********************************************************
 	 * Methods
 	 **********************************************************/
+	protected void setAsCurrentWindow(){
+		gui.setAsCurrentWindow(this);
+	}
+	/**
+	 * Returns the width of this window
+	 */
+	public int getWindowWidth(){
+		return (int) (getShell().getBounds().width);
+	}
+	/**
+	 * Returns the height of this window
+	 */
+	public int getWindowHeight(){
+		return (int) (getShell().getBounds().height);
+	}
 	public void draw(){
 		shell.open();
 		while (!shell.isDisposed()){
@@ -82,7 +106,10 @@ public abstract class Window {
 	public GC getGC(){
 		return gc;
 	}
-	void setAsCurrentWindow(){
-		gui.setAsCurrentWindow(this);
+	/**
+	 * Returns the client core of this window
+	 */
+	public ClientCore getClientCore(){
+		return clientCore;
 	}
 }

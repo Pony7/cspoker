@@ -1,5 +1,6 @@
 package org.client.GUI.Window;
 
+import org.client.ClientCore;
 import org.client.GUI.ClientGUI;
 import org.eclipse.swt.widgets.Display;
 
@@ -10,8 +11,8 @@ import org.eclipse.swt.widgets.Display;
  */
 public class WindowTableSelection extends Window {
 
-	public WindowTableSelection(Display display, ClientGUI gui) {
-		super(display, gui);
+	public WindowTableSelection(Display display, ClientGUI gui,ClientCore clientCore) {
+		super(display, gui,clientCore);
 	}
 
 	@Override
