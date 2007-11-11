@@ -23,7 +23,7 @@ import org.cspoker.common.game.events.gameEvents.PlayerLeftTableEvent;
  * @author Kenzo
  * 
  */
-public interface PlayerLeftTableListener extends RemotePlayerLeftTableListener {
+public interface PlayerLeftTableListener {
 
     /**
      * This method is called when subscribed to inform a player left the table.

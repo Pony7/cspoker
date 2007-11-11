@@ -24,7 +24,7 @@ import org.cspoker.common.game.events.gameEvents.playerActionEvents.CallEvent;
  * @author Kenzo
  * 
  */
-public interface CallListener extends RemoteCallListener {
+public interface CallListener{
 
     /**
      * This method is called when subscribed to inform a call occurred.

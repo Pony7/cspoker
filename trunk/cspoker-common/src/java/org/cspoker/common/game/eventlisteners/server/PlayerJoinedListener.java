@@ -17,7 +17,7 @@ package org.cspoker.common.game.eventlisteners.server;
 
 import org.cspoker.common.game.events.serverEvents.PlayerJoinedEvent;
 
-public interface PlayerJoinedListener extends RemotePlayerJoinedListener{
+public interface PlayerJoinedListener{
 
     public void onPlayerJoinedEvent(PlayerJoinedEvent event);
 

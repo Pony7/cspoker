@@ -24,7 +24,7 @@ import org.cspoker.common.game.events.gameEvents.NewCommunityCardsEvent;
  * @author Kenzo
  * 
  */
-public interface NewCommunityCardsListener extends RemoteNewCommunityCardsListener {
+public interface NewCommunityCardsListener{
 
     /**
      * This method is called when subscribed to inform a new community cards

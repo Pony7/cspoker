@@ -24,7 +24,7 @@ import org.cspoker.common.game.events.gameEvents.playerActionEvents.RaiseEvent;
  * @author Kenzo
  * 
  */
-public interface RaiseListener extends RemoteRaiseListener {
+public interface RaiseListener{
 
     /**
      * This method is called when subscribed to inform a raise occurred.

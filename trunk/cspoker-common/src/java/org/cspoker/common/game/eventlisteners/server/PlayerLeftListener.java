@@ -18,7 +18,7 @@ package org.cspoker.common.game.eventlisteners.server;
 
 import org.cspoker.common.game.events.serverEvents.PlayerLeftEvent;
 
-public interface PlayerLeftListener extends RemotePlayerLeftListener {
+public interface PlayerLeftListener{
 
     public void onPlayerLeftEvent(PlayerLeftEvent event);
 

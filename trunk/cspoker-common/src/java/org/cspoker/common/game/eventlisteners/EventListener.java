@@ -17,7 +17,7 @@ package org.cspoker.common.game.eventlisteners;
 
 import org.cspoker.common.game.events.Event;
 
-public interface EventListener extends RemoteEventListener {
+public interface EventListener{
 
     public void onEvent(Event event);
 
