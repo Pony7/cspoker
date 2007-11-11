@@ -75,6 +75,7 @@ public class WindowGame extends Window {
 	public WindowGame(Display display, ClientGUI gui,ClientCore clientCore) {
 		super(display, gui,clientCore);
 		createGameShell();
+		createCloseListener();
 		loadMenuBar();
 		loadButtons();
 		setAsCurrentWindow();
@@ -124,16 +125,6 @@ public class WindowGame extends Window {
 	 * Loads the menu bar
 	 */
 	private void loadMenuBar(){
-		getShell().addListener(SWT.Close, new Listener() {
-		      public void handleEvent(Event event) {
-		        int style = SWT.APPLICATION_MODAL | SWT.YES | SWT.NO;
-		        MessageBox messageBox = new MessageBox(getShell(), style);
-		        messageBox.setText("Information");
-		        messageBox.setMessage("Are you sure you want to exit the game?");
-		        event.doit = messageBox.open() == SWT.YES;
-		      }
-		    });
-		
 		menuBar = new Menu(getShell() , SWT.BAR);
 		getShell().setMenuBar(menuBar);
 		
