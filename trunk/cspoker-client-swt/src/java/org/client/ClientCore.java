@@ -1,9 +1,17 @@
 package org.client;
 
+import java.rmi.AccessException;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.client.GUI.ClientGUI;
 import org.client.User.User;
+import org.client.rmi.RemotePlayerCommunicationFactory;
 import org.cspoker.common.game.IllegalActionException;
 import org.cspoker.common.game.PlayerCommunication;
+import org.cspoker.common.game.RemotePlayerCommunication;
 import org.cspoker.common.game.elements.table.TableId;
 
 /**
@@ -23,7 +31,7 @@ public class ClientCore {
 	/**
 	 * The communication used by this client
 	 */
-	private PlayerCommunication communication;
+	private RemotePlayerCommunication communication;
 
 	/**********************************************************
 	 * Constructor
@@ -43,14 +51,18 @@ public class ClientCore {
 	 * Creates a new communication with a server at the given url and port
 	 * for a user with the given user name and password
 	 */
-	public void createCommunication(String url, int port, String userName, String password){
+	public void createCommunication(String url, int port, String username, String password){
 		System.out.println("LOGIN ATTEMPT");
 		System.out.println("url : "+url);
 		System.out.println("port : "+port);
-		System.out.println("user name : "+userName);
+		System.out.println("user name : "+username);
 		System.out.println("password : "+password);
 		//TODO: create communication module
-		gui.startGame();
+//		try {
+//			this.communication=new RemotePlayerCommunicationFactory(url,port).login(username, password);
+//		} catch (Exception e) {
+//			gui.displayErrorMessage(e.getMessage());
+//		} 
 	}
 	/**********************************************************
 	 * Login
@@ -70,6 +82,7 @@ public class ClientCore {
 	public void login(String url, int port, String userName, String password){
 		this.client=new User(userName);
 		createCommunication(url,port,userName,password);
+		gui.selectTable();
 	}
 	/**********************************************************
 	 * Bet
@@ -77,73 +90,79 @@ public class ClientCore {
 	public void call(){
 		try {
 			communication.call();
-		} catch (IllegalActionException e) {
+		} catch (Exception e) {
 			gui.displayErrorMessage(e.getMessage());
 		}
 	}
 	public void bet(int amount){
 		try {
 			communication.bet(amount);
-		} catch (IllegalActionException e) {
+		} catch (Exception e) {
 			gui.displayErrorMessage(e.getMessage());
 		}
 	}
 	public void fold(){
 		try {
 			communication.fold();
-		} catch (IllegalActionException e) {
+		} catch (Exception e) {
 			gui.displayErrorMessage(e.getMessage());
 		}
 	}
 	public void check(){
 		try {
 			communication.check();
-		} catch (IllegalActionException e) {
+		} catch (Exception e) {
 			gui.displayErrorMessage(e.getMessage());
 		}
 	}
 	public void raise(int amount){
 		try {
 			communication.raise(amount);
-		} catch (IllegalActionException e) {
+		} catch (Exception e) {
 			gui.displayErrorMessage(e.getMessage());
 		}
 	}
 	public void deal(){
 		try {
 			communication.deal();
-		} catch (IllegalActionException e) {
+		} catch (Exception e) {
 			gui.displayErrorMessage(e.getMessage());
 		}
 	}
 	public void allIn(){
 		try {
 			communication.allIn();
-		} catch (IllegalActionException e) {
+		} catch (Exception e) {
 			gui.displayErrorMessage(e.getMessage());
 		}
 	}
 	public void say(String message){
-		communication.say(message);
-	}
-	public void joinTable(TableId id){
 		try {
-			communication.joinTable(id);
-		} catch (IllegalActionException e) {
+			communication.say(message);
+		} catch (Exception e) {
 			gui.displayErrorMessage(e.getMessage());
 		}
+	}
+	public void joinTable(TableId id){
+		//TODO: change when communication is fully implemented and tested
+//		try {
+//			communication.joinTable(id);
+//		} catch (Exception e) {
+//			gui.displayErrorMessage(e.getMessage());
+//		}
+		gui.startGame();
 	}
 	public void leaveTable(){
 		try {
 			communication.leaveTable();
-		} catch (IllegalActionException e) {
+		} catch (Exception e) {
 			gui.displayErrorMessage(e.getMessage());
 		}
 	}
 	public TableId createTable(){
 		try {
 			return communication.createTable();
-		} catch (IllegalActionException e) {
+		} catch (Exception e) {
 			gui.displayErrorMessage(e.getMessage());
 			return null;
 		}
@@ -151,8 +170,16 @@ public class ClientCore {
 	public void startGame(){
 		try {
 			communication.startGame();
-		} catch (IllegalActionException e) {
+		} catch (Exception e) {
 			gui.displayErrorMessage(e.getMessage());
 		}
+	}
+
+	public List<TableId> getTableList() {
+		// TODO create method to ask the server for a list of table id's
+		List<TableId> result=new ArrayList<TableId>();
+		result.add(new TableId(0));
+		result.add(new TableId(1));
+		return result;
 	}
 }

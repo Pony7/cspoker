@@ -4,12 +4,10 @@ import java.awt.GraphicsEnvironment;
 
 import org.client.ClientCore;
 import org.client.GUI.ClientGUI;
-import org.client.GUI.Images.ImageFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
@@ -17,10 +15,7 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.MessageBox;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-
-import com.sun.media.sound.Toolkit;
 /**
  * A class of game windows
  * @author Cedric
@@ -92,12 +87,7 @@ public class WindowGame extends Window {
 	 * Creates a new game shell
 	 */
 	private void createGameShell() {
-		GraphicsEnvironment ge
-	      = GraphicsEnvironment.getLocalGraphicsEnvironment();
-	    java.awt.Rectangle rec = ge.getMaximumWindowBounds();
-	    int height = (int) (rec.height*0.9);
-	    int width = (int) (rec.width*0.9);
-		getShell().setSize(width,height);
+		getShell().setMaximized(true);
 		getShell().setText("Game Window");
 	}
 	/**********************************************************

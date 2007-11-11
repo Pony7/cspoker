@@ -20,15 +20,15 @@ public abstract class Window {
 	/**
 	 * The display for this window
 	 */
-	private final Display display;
+	protected final Display display;
 	/**
 	 * The gui that uses this window
 	 */
-	private final ClientGUI gui;
+	protected final ClientGUI gui;
 	/**
 	 * The shell used in this window
 	 */
-	private final Shell shell;
+	protected Shell shell;
 	/**
 	 * The graphical context of this window
 	 */

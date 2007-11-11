@@ -5,7 +5,7 @@ import org.client.GUI.Window.Window;
 import org.client.GUI.Window.WindowError;
 import org.client.GUI.Window.WindowGame;
 import org.client.GUI.Window.WindowLogin;
-import org.client.User.User;
+import org.client.GUI.Window.WindowTableSelection;
 import org.eclipse.swt.widgets.Display;
 
 /**
@@ -72,6 +72,10 @@ public class ClientGUI {
 	/**********************************************************
 	 * START
 	 **********************************************************/
+	public void selectTable(){
+		disposeCurrentShell();
+		new WindowTableSelection(display,this,clientCore);
+	}
 	/**
 	 * Starts a new game
 	 */
