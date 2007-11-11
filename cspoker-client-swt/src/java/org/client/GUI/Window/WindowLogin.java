@@ -12,7 +12,6 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.MessageBox;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 /**
  * A class of login windows
@@ -131,7 +130,7 @@ public class WindowLogin extends Window {
 		urlLabel.setLocation(xStartLabels,yUrl);
 		urlLabel.setSize(labelWidth,labelHeigth);
 		url = new Text(getShell(), SWT.BORDER);
-		url.setText("192.168.1.100");
+		url.setText("localhost");
 		url.setBounds(xStartFields,yUrl,fieldWidth,fieldHeigth);
 		url.setTextLimit(500);
 	}
