@@ -23,7 +23,7 @@ import org.cspoker.common.game.events.gameEvents.ShowHandEvent;
  * @author Kenzo
  * 
  */
-public interface ShowHandListener extends RemoteShowHandListener{
+public interface ShowHandListener{
 
     /**
      * This method is called when subscribed to inform a player shows his hand.

@@ -24,7 +24,7 @@ import org.cspoker.common.game.events.gameEvents.NextPlayerEvent;
  * @author Kenzo
  * 
  */
-public interface NextPlayerListener extends RemoteNextPlayerListener{
+public interface NextPlayerListener{
     /**
      * This method is called when subscribed to inform a next player event
      * occurred.

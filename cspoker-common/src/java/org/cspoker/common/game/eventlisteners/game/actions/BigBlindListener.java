@@ -24,7 +24,7 @@ import org.cspoker.common.game.events.gameEvents.playerActionEvents.BigBlindEven
  * @author Kenzo
  * 
  */
-public interface BigBlindListener extends RemoteBigBlindListener {
+public interface BigBlindListener{
 
     /**
      * This method is called when subscribed to inform a big blind has been bet.

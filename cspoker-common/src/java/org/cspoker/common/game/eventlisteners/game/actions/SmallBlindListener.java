@@ -24,7 +24,7 @@ import org.cspoker.common.game.events.gameEvents.playerActionEvents.SmallBlindEv
  * @author Kenzo
  * 
  */
-public interface SmallBlindListener extends RemoteSmallBlindListener {
+public interface SmallBlindListener{
 
     /**
      * This method is called when subscribed to inform a small blind has been

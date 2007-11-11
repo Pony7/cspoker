@@ -24,7 +24,7 @@ import org.cspoker.common.game.events.gameEvents.playerActionEvents.BetEvent;
  * @author Kenzo
  * 
  */
-public interface BetListener extends RemoteBetListener {
+public interface BetListener{
 
     /**
      * This method is called when subscribed to inform a bet occurred.

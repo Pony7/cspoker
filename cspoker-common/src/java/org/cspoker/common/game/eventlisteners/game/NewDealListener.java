@@ -24,7 +24,7 @@ import org.cspoker.common.game.events.gameEvents.NewDealEvent;
  * @author Kenzo
  * 
  */
-public interface NewDealListener extends RemoteNewDealListener {
+public interface NewDealListener{
 
     /**
      * This method is called when subscribed to inform a new deal event

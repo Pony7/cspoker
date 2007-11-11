@@ -17,7 +17,7 @@ package org.cspoker.common.game.eventlisteners.server;
 
 import org.cspoker.common.game.events.serverEvents.ServerMessageEvent;
 
-public interface ServerMessageListener extends RemoteServerMessageListener{
+public interface ServerMessageListener{
 
     public void onServerMessageEvent(ServerMessageEvent event);
 

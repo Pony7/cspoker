@@ -24,7 +24,7 @@ import org.cspoker.common.game.events.gameEvents.WinnerEvent;
  * @author Kenzo
  *
  */
-public interface WinnerListener extends RemoteWinnerListener {
+public interface WinnerListener{
 
     /**
      * This method is called when subscribed to inform a player / players have

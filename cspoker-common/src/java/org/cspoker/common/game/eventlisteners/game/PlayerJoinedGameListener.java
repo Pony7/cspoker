@@ -23,7 +23,7 @@ import org.cspoker.common.game.events.gameEvents.PlayerJoinedGameEvent;
  * @author Kenzo
  * 
  */
-public interface PlayerJoinedGameListener extends RemotePlayerJoinedGameListener {
+public interface PlayerJoinedGameListener{
 
     /**
      * This method is called when subscribed to inform a player joined the game.

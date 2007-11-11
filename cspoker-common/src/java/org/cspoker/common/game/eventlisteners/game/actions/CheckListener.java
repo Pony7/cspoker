@@ -24,7 +24,7 @@ import org.cspoker.common.game.events.gameEvents.playerActionEvents.CheckEvent;
  * @author Kenzo
  * 
  */
-public interface CheckListener extends RemoteCheckListener {
+public interface CheckListener{
 
     /**
      * This method is called when subscribed to inform a check occurred.

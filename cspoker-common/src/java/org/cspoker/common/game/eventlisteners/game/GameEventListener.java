@@ -24,7 +24,7 @@ import org.cspoker.common.game.events.gameEvents.GameEvent;
  * @author Kenzo
  * 
  */
-public interface GameEventListener extends RemoteGameEventListener {
+public interface GameEventListener{
 
     /**
      * This method is called when subscribed to inform a new game event
