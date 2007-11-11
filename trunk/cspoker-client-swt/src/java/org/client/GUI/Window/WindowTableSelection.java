@@ -52,7 +52,7 @@ public class WindowTableSelection extends Window {
 	/**
 	 * Layout constants of the shell
 	 */
-	private int shellHeigth=250;
+	private int shellHeigth=350;
 	private int shellWidth=300;
 	/**
 	 * The text field of this table selection window and it's layout constants
@@ -68,7 +68,7 @@ public class WindowTableSelection extends Window {
 	private int xList=xLabel;
 	private int yList=yLabel+heigthText+5;
 	
-	private Button joinButton,refreshButton;
+	private Button joinButton,refreshButton,createButton;
 	/**********************************************************
 	 * Constructor
 	 **********************************************************/
@@ -83,15 +83,31 @@ public class WindowTableSelection extends Window {
 	 */
 	private void intitializeWindow() {
 		createSelectionShell();
+		createCloseListener();
 		createSelectionList();
 		createTextField();
-		refreshTables();
 		loadJoinButton();
 		loadRefreshButton();
+		loadCreateButton();
+		refreshTables();
+	}
+	private void loadCreateButton(){
+		int x=text.getBounds().x;
+		int y=text.getBounds().y+2*(buttonHeight+5);
+		createButton=new Button(getShell(),SWT.PUSH);
+		createButton.setText("CREATE TABLE");
+		createButton.setBounds(x, y, 2*buttonWidth, buttonHeight);
+		createButton.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				System.out.println("Attempt to create a new table ");
+				clientCore.createTable();
+				refreshTables();
+			}
+		});
 	}
 	private void loadRefreshButton() {
 		int x=text.getBounds().x+buttonWidth+5;
-		int y=text.getBounds().y+buttonHeight+10;
+		int y=text.getBounds().y+buttonHeight+5;
 		refreshButton=new Button(getShell(),SWT.PUSH);
 		refreshButton.setText("REFRESH");
 		refreshButton.setBounds(x, y, buttonWidth, buttonHeight);
@@ -103,7 +119,7 @@ public class WindowTableSelection extends Window {
 	}
 	private void loadJoinButton() {
 		int x=text.getBounds().x;
-		int y=text.getBounds().y+buttonHeight+10;
+		int y=text.getBounds().y+buttonHeight+5;
 		joinButton=new Button(getShell(),SWT.PUSH);
 		joinButton.setText("JOIN");
 		joinButton.setBounds(x, y, buttonWidth, buttonHeight);
@@ -156,15 +172,6 @@ public class WindowTableSelection extends Window {
 	private void createSelectionShell() {
 		shell.setSize(shellWidth, shellHeigth);
 		shell.setText("Select your table ");
-		shell.addListener(SWT.Close, new Listener() {
-		      public void handleEvent(Event event) {
-		        int style = SWT.APPLICATION_MODAL | SWT.YES | SWT.NO;
-		        MessageBox messageBox = new MessageBox(getShell(), style);
-		        messageBox.setText("Information");
-		        messageBox.setMessage("Close the login screen?");
-		        event.doit = messageBox.open() == SWT.YES;
-		      }
-		    });
 		shell.setBackground(display.getSystemColor(SWT.COLOR_YELLOW));
 	}
 	/**********************************************************
@@ -202,6 +209,16 @@ public class WindowTableSelection extends Window {
 		int yText=10+selectionList.getLocation().y+selectionList.getItemCount()*selectionList.getItemHeight();
 		text.setBounds(xText,yText,widthText,heigthText);
 		text.setText(defaultText);
+		
+		int x=text.getBounds().x;
+		int y=text.getBounds().y+buttonHeight+5;
+		joinButton.setBounds(x, y, buttonWidth, buttonHeight);
+		x=text.getBounds().x+buttonWidth+5;
+		y=text.getBounds().y+buttonHeight+5;
+		refreshButton.setBounds(x, y, buttonWidth, buttonHeight);
+		x=text.getBounds().x;
+		y=text.getBounds().y+2*(buttonHeight+5);
+		createButton.setBounds(x, y, 2*buttonWidth, buttonHeight);
 	}
 	/**********************************************************
 	 * Images

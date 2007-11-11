@@ -5,6 +5,7 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import org.client.GUI.ClientGUI;
 import org.client.User.User;
@@ -160,12 +161,14 @@ public class ClientCore {
 		}
 	}
 	public TableId createTable(){
-		try {
-			return communication.createTable();
-		} catch (Exception e) {
-			gui.displayErrorMessage(e.getMessage());
-			return null;
-		}
+		//TODO: change when communication is fully implemented and tested
+//		try {
+//			return communication.createTable();
+//		} catch (Exception e) {
+//			gui.displayErrorMessage(e.getMessage());
+//			return null;
+//		}
+		return new TableId(0);
 	}
 	public void startGame(){
 		try {
@@ -178,8 +181,11 @@ public class ClientCore {
 	public List<TableId> getTableList() {
 		// TODO create method to ask the server for a list of table id's
 		List<TableId> result=new ArrayList<TableId>();
-		result.add(new TableId(0));
-		result.add(new TableId(1));
+		Random generator = new Random();
+		int random=generator.nextInt(10);
+		for(int j=0;j<random;j++){
+			result.add(new TableId(j));
+		}
 		return result;
 	}
 }

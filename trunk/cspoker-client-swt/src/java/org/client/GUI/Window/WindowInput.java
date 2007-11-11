@@ -6,29 +6,32 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ShellAdapter;
 import org.eclipse.swt.events.ShellEvent;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
+
 /**
- * A class for windows displaying an error message
+ * A class of windows to ask the user for input
  * @author Cedric
  */
-public class WindowError extends Window {
+public class WindowInput extends Window {
 
 	/**********************************************************
 	 * Variables
 	 **********************************************************/
 	/**
-	 * The warning image
-	 */
-	private final Image warning=imageFactory.getImage(getDisplay(),"warning");
-	/**
-	 * The message of this error window
+	 * The message of this input window
 	 */
 	private final String message;
 	/**
-	 * The error label of this error window
+	 * The error label of this input window
 	 */
-	private Label error;
+	private Label input;
+	/**
+	 * The button the user has to press to submit his input
+	 */
+	private Button enterButton;
+	
 	/**********************************************************
 	 * Constructor
 	 **********************************************************/
@@ -38,49 +41,40 @@ public class WindowError extends Window {
 	 * @param message
 	 * 			the given error message
 	 */
-	public WindowError(Display display, final ClientGUI gui,ClientCore clientCore,String message) {
+	public WindowInput(Display display, final ClientGUI gui,ClientCore clientCore,String message) {
 		super(display, gui,clientCore);
 		this.message=message;
-		createErrorShell();
+		createInputShell();
 		createCloseListener();
-		createErrorLabel();
+		createInputLabel();
 		draw();
 	}
 	/**********************************************************
 	 * Labels
 	 **********************************************************/
-	private void createErrorLabel() {
-		error=new Label(getShell(),SWT.BORDER | SWT.CENTER);
-		error.setText(message);
-		error.setLocation(60, 10);
-		error.setSize(100, 50);
+	private void createInputLabel() {
+		input=new Label(getShell(),SWT.BORDER | SWT.CENTER);
+		input.setText(message);
+		input.setLocation(60, 10);
+		input.setSize(100, 50);
 	}
 	/**********************************************************
 	 * Listeners
 	 **********************************************************/
-	@Override
-	protected void createCloseListener() {
-		getShell().addShellListener(new ShellAdapter(){
-			@Override
-			public void shellClosed(ShellEvent arg0) {
-				getGui().continueFlow();
-			}
-		});
-	}
 	/**********************************************************
 	 * Shell
 	 **********************************************************/
-	private void createErrorShell() {
+	private void createInputShell() {
 		int shellWidth=200;
 		int shellHeigth=100;
 		getShell().setSize(shellWidth, shellHeigth);
-		getShell().setText("Exception");
+		getShell().setText("Input Window");
 	}
 	/**********************************************************
 	 * Images
 	 **********************************************************/
 	@Override
 	public void drawImages() {
-		getGC().drawImage(warning,5,5);
 	}
+
 }

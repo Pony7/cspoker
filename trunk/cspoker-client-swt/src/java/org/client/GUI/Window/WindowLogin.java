@@ -85,6 +85,7 @@ public class WindowLogin extends Window {
 	 */
 	private void initializeWindow() {
 		createLoginShell();
+		createCloseListener();
 		createUserNameLabel();
 		createPasswordLabel();
 		createUrlLabel();
@@ -173,15 +174,6 @@ public class WindowLogin extends Window {
 	private void createLoginShell() {
 		getShell().setSize(shellWidth, shellHeigth);
 		getShell().setText("Login");
-		getShell().addListener(SWT.Close, new Listener() {
-		      public void handleEvent(Event event) {
-		        int style = SWT.APPLICATION_MODAL | SWT.YES | SWT.NO;
-		        MessageBox messageBox = new MessageBox(getShell(), style);
-		        messageBox.setText("Information");
-		        messageBox.setMessage("Close the login screen?");
-		        event.doit = messageBox.open() == SWT.YES;
-		      }
-		    });
 	}
 	
 	/**

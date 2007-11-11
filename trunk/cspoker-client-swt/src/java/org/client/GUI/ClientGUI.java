@@ -4,6 +4,7 @@ import org.client.ClientCore;
 import org.client.GUI.Window.Window;
 import org.client.GUI.Window.WindowError;
 import org.client.GUI.Window.WindowGame;
+import org.client.GUI.Window.WindowInput;
 import org.client.GUI.Window.WindowLogin;
 import org.client.GUI.Window.WindowTableSelection;
 import org.eclipse.swt.widgets.Display;
@@ -94,6 +95,19 @@ public class ClientGUI {
 	public void displayErrorMessage(String message){
 		this.currentWindow.getShell().setEnabled(false);
 		new WindowError(display,this,clientCore,message);
+	}
+	/**********************************************************
+	 * INPUT
+	 **********************************************************/
+	/**
+	 * Asks the user for an input to the given question
+	 * @param question
+	 * 			the given question for the input
+	 */
+	public String askUserForInput(String question){
+		this.currentWindow.getShell().setEnabled(false);
+		new WindowInput(display,this,clientCore,question);
+		return null;
 	}
 	/**
 	 * Continues the flow of this gui (by enabling the shell of the current window)

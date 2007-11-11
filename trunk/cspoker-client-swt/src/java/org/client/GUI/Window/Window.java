@@ -3,8 +3,14 @@ package org.client.GUI.Window;
 import org.client.ClientCore;
 import org.client.GUI.ClientGUI;
 import org.client.GUI.Images.ImageFactory;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ShellAdapter;
+import org.eclipse.swt.events.ShellEvent;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 /**
  * A superclass of all windows
@@ -32,11 +38,11 @@ public abstract class Window {
 	/**
 	 * The graphical context of this window
 	 */
-	private final GC gc;
+	protected final GC gc;
 	/**
 	 * The client core of this window
 	 */
-	private final ClientCore clientCore;
+	protected final ClientCore clientCore;
 	/**********************************************************
 	 * Constructor
 	 **********************************************************/
@@ -111,5 +117,16 @@ public abstract class Window {
 	 */
 	public ClientCore getClientCore(){
 		return clientCore;
+	}
+	protected void createCloseListener() {
+		getShell().addListener(SWT.Close, new Listener() {
+		      public void handleEvent(Event event) {
+		        int style = SWT.APPLICATION_MODAL | SWT.YES | SWT.NO;
+		        MessageBox messageBox = new MessageBox(getShell(), style);
+		        messageBox.setText("Information");
+		        messageBox.setMessage("Are you sure you want to exit?");
+		        event.doit = messageBox.open() == SWT.YES;
+		      }
+		    });
 	}
 }
