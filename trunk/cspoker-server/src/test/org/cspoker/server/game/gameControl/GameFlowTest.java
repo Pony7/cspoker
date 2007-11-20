@@ -26,7 +26,6 @@ import org.cspoker.server.game.elements.chips.IllegalValueException;
 import org.cspoker.server.game.elements.table.PlayerListFullException;
 import org.cspoker.server.game.elements.table.Table;
 import org.cspoker.server.game.player.GamePlayer;
-import org.cspoker.server.game.player.IllegalNameException;
 import org.cspoker.server.game.player.PlayerFactory;
 
 public class GameFlowTest extends TestCase {
@@ -56,9 +55,9 @@ public class GameFlowTest extends TestCase {
 	GameFlowTest.logger
 		.info("**********************************************************");
 	try {
-	    kenzo = playerFactory.getUniquePlayer("Kenzo", 100);
-	    cedric = playerFactory.getUniquePlayer("Cedric", 100);
-	    guy = playerFactory.getUniquePlayer("Guy", 100);
+	    kenzo = playerFactory.createNewPlayer("Kenzo", 100);
+	    cedric = playerFactory.createNewPlayer("Cedric", 100);
+	    guy = playerFactory.createNewPlayer("Guy", 100);
 
 	    gameMediator = new GameMediator();
 
@@ -70,8 +69,6 @@ public class GameFlowTest extends TestCase {
 	} catch (IllegalValueException e) {
 	    fail(e.getMessage());
 	} catch (PlayerListFullException e) {
-	    fail(e.getMessage());
-	}catch (IllegalNameException e) {
 	    fail(e.getMessage());
 	}
     }
@@ -319,9 +316,9 @@ public class GameFlowTest extends TestCase {
 
     public void testAllInSmallBlindCase() {
 	try {
-	    kenzo = playerFactory.getUniquePlayer("Kenzo", 100);
-	    cedric = playerFactory.getUniquePlayer("Cedric", 4);
-	    guy = playerFactory.getUniquePlayer("Guy", 100);
+	    kenzo = playerFactory.createNewPlayer("Kenzo", 100);
+	    cedric = playerFactory.createNewPlayer("Cedric", 4);
+	    guy = playerFactory.createNewPlayer("Guy", 100);
 
 	    table = new Table(new TableId(0), new GameProperty());
 	    table.addPlayer(kenzo);
@@ -330,8 +327,6 @@ public class GameFlowTest extends TestCase {
 	} catch (IllegalValueException e) {
 	    fail(e.getMessage());
 	} catch (PlayerListFullException e) {
-	    fail(e.getMessage());
-	}catch (IllegalNameException e) {
 	    fail(e.getMessage());
 	}
 
@@ -401,9 +396,9 @@ public class GameFlowTest extends TestCase {
 
     public void testAllInBigBlindCase() {
 	try {
-	    kenzo = playerFactory.getUniquePlayer("Kenzo", 100);
-	    cedric = playerFactory.getUniquePlayer("Cedric", 100);
-	    guy = playerFactory.getUniquePlayer("Guy", 9);
+	    kenzo = playerFactory.createNewPlayer("Kenzo", 100);
+	    cedric = playerFactory.createNewPlayer("Cedric", 100);
+	    guy = playerFactory.createNewPlayer("Guy", 9);
 
 	    table = new Table(new TableId(0), new GameProperty());
 	    table.addPlayer(kenzo);
@@ -412,8 +407,6 @@ public class GameFlowTest extends TestCase {
 	} catch (IllegalValueException e) {
 	    fail(e.getMessage());
 	} catch (PlayerListFullException e) {
-	    fail(e.getMessage());
-	}catch (IllegalNameException e) {
 	    fail(e.getMessage());
 	}
 
@@ -476,9 +469,9 @@ public class GameFlowTest extends TestCase {
 
     public void testBothBlindsAllInCase() {
 	try {
-	    kenzo = playerFactory.getUniquePlayer("Kenzo", 100);
-	    cedric = playerFactory.getUniquePlayer("Cedric", 4);
-	    guy = playerFactory.getUniquePlayer("Guy", 9);
+	    kenzo = playerFactory.createNewPlayer("Kenzo", 100);
+	    cedric = playerFactory.createNewPlayer("Cedric", 4);
+	    guy = playerFactory.createNewPlayer("Guy", 9);
 
 	    table = new Table(new TableId(0), new GameProperty());
 	    table.addPlayer(kenzo);
@@ -488,9 +481,8 @@ public class GameFlowTest extends TestCase {
 	    fail(e.getMessage());
 	} catch (PlayerListFullException e) {
 	    fail(e.getMessage());
-	}catch (IllegalNameException e) {
-	    fail(e.getMessage());
 	}
+	
 	GameFlowTest.logger.info("Game Properties:");
 	GameFlowTest.logger.info("Small Blind: "
 		+ table.getGameProperty().getSmallBlind());
@@ -515,9 +507,9 @@ public class GameFlowTest extends TestCase {
 
     public void test2AllInOneActivePlayerCase() {
 	try {
-	    kenzo = playerFactory.getUniquePlayer("Kenzo", 100);
-	    cedric = playerFactory.getUniquePlayer("Cedric", 100);
-	    guy = playerFactory.getUniquePlayer("Guy", 200);
+	    kenzo = playerFactory.createNewPlayer("Kenzo", 100);
+	    cedric = playerFactory.createNewPlayer("Cedric", 100);
+	    guy = playerFactory.createNewPlayer("Guy", 200);
 
 	    table = new Table(new TableId(0), new GameProperty());
 	    table.addPlayer(kenzo);
@@ -526,8 +518,6 @@ public class GameFlowTest extends TestCase {
 	} catch (IllegalValueException e) {
 	    fail(e.getMessage());
 	} catch (PlayerListFullException e) {
-	    fail(e.getMessage());
-	}catch (IllegalNameException e) {
 	    fail(e.getMessage());
 	}
 
@@ -558,9 +548,9 @@ public class GameFlowTest extends TestCase {
 
     public void testAllAllInCase() {
 	try {
-	    kenzo = playerFactory.getUniquePlayer("Kenzo", 200);
-	    cedric = playerFactory.getUniquePlayer("Cedric", 100);
-	    guy = playerFactory.getUniquePlayer("Guy", 150);
+	    kenzo = playerFactory.createNewPlayer("Kenzo", 200);
+	    cedric = playerFactory.createNewPlayer("Cedric", 100);
+	    guy = playerFactory.createNewPlayer("Guy", 150);
 
 	    table = new Table(new TableId(0), new GameProperty());
 	    table.addPlayer(kenzo);
@@ -569,8 +559,6 @@ public class GameFlowTest extends TestCase {
 	} catch (IllegalValueException e) {
 	    fail(e.getMessage());
 	} catch (PlayerListFullException e) {
-	    fail(e.getMessage());
-	}catch (IllegalNameException e) {
 	    fail(e.getMessage());
 	}
 
@@ -626,9 +614,9 @@ public class GameFlowTest extends TestCase {
      */
     public void testAllInCallCase() {
 	try {
-	    kenzo = playerFactory.getUniquePlayer("Kenzo", 200);
-	    cedric = playerFactory.getUniquePlayer("Cedric", 220);
-	    guy = playerFactory.getUniquePlayer("Guy", 100);
+	    kenzo = playerFactory.createNewPlayer("Kenzo", 200);
+	    cedric = playerFactory.createNewPlayer("Cedric", 220);
+	    guy = playerFactory.createNewPlayer("Guy", 100);
 
 	    gameMediator = new GameMediator();
 
@@ -640,9 +628,8 @@ public class GameFlowTest extends TestCase {
 	    fail(e.getMessage());
 	} catch (PlayerListFullException e) {
 	    fail(e.getMessage());
-	}catch (IllegalNameException e) {
-	    fail(e.getMessage());
 	}
+
 	GameFlowTest.logger.info("Game Properties:");
 	GameFlowTest.logger.info("Small Blind: "
 		+ table.getGameProperty().getSmallBlind());
@@ -685,9 +672,9 @@ public class GameFlowTest extends TestCase {
      */
     public void testAllInRaiseCase() {
 	try {
-	    kenzo = playerFactory.getUniquePlayer("Kenzo", 200);
-	    cedric = playerFactory.getUniquePlayer("Cedric", 220);
-	    guy = playerFactory.getUniquePlayer("Guy", 100);
+	    kenzo = playerFactory.createNewPlayer("Kenzo", 200);
+	    cedric = playerFactory.createNewPlayer("Cedric", 220);
+	    guy = playerFactory.createNewPlayer("Guy", 100);
 
 	    gameMediator = new GameMediator();
 
@@ -698,8 +685,6 @@ public class GameFlowTest extends TestCase {
 	} catch (IllegalValueException e) {
 	    fail(e.getMessage());
 	} catch (PlayerListFullException e) {
-	    fail(e.getMessage());
-	}catch (IllegalNameException e) {
 	    fail(e.getMessage());
 	}
 
@@ -744,8 +729,8 @@ public class GameFlowTest extends TestCase {
      */
     public void testHeadsUpDealerSwitch() {
 	try {
-	    guy = playerFactory.getUniquePlayer("Guy", 100);
-	    craig = playerFactory.getUniquePlayer("Craig", 100);
+	    guy = playerFactory.createNewPlayer("Guy", 100);
+	    craig = playerFactory.createNewPlayer("Craig", 100);
 
 	    gameMediator = new GameMediator();
 
@@ -755,8 +740,6 @@ public class GameFlowTest extends TestCase {
 	} catch (IllegalValueException e) {
 	    fail(e.getMessage());
 	} catch (PlayerListFullException e) {
-	    fail(e.getMessage());
-	}catch (IllegalNameException e) {
 	    fail(e.getMessage());
 	}
 
@@ -844,9 +827,9 @@ public class GameFlowTest extends TestCase {
 
     public void testOnlyOneAllInPlayer2() {
 	try {
-	    kenzo = playerFactory.getUniquePlayer("Kenzo", 100);
-	    cedric = playerFactory.getUniquePlayer("Cedric", 200);
-	    guy = playerFactory.getUniquePlayer("Guy", 200);
+	    kenzo = playerFactory.createNewPlayer("Kenzo", 100);
+	    cedric = playerFactory.createNewPlayer("Cedric", 200);
+	    guy = playerFactory.createNewPlayer("Guy", 200);
 
 	    table = new Table(new TableId(0), new GameProperty());
 	    table.addPlayer(kenzo);
@@ -855,8 +838,6 @@ public class GameFlowTest extends TestCase {
 	} catch (IllegalValueException e) {
 	    fail(e.getMessage());
 	} catch (PlayerListFullException e) {
-	    fail(e.getMessage());
-	}catch (IllegalNameException e) {
 	    fail(e.getMessage());
 	}
 
@@ -891,8 +872,8 @@ public class GameFlowTest extends TestCase {
 
     public void test2PlayersOneFold() {
 	try {
-	    kenzo = playerFactory.getUniquePlayer("Kenzo", 500);
-	    cedric = playerFactory.getUniquePlayer("Cedric", 500);
+	    kenzo = playerFactory.createNewPlayer("Kenzo", 500);
+	    cedric = playerFactory.createNewPlayer("Cedric", 500);
 
 	    table = new Table(new TableId(0), new GameProperty());
 	    table.addPlayer(kenzo);
@@ -900,8 +881,6 @@ public class GameFlowTest extends TestCase {
 	} catch (IllegalValueException e) {
 	    fail(e.getMessage());
 	} catch (PlayerListFullException e) {
-	    fail(e.getMessage());
-	}catch (IllegalNameException e) {
 	    fail(e.getMessage());
 	}
 

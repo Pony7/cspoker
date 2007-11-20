@@ -19,7 +19,6 @@ import org.cspoker.common.game.IllegalActionException;
 import org.cspoker.common.game.elements.table.TableId;
 import org.cspoker.common.game.events.serverEvents.ServerMessageEvent;
 import org.cspoker.server.game.GameManager;
-import org.cspoker.server.game.player.GamePlayer;
 
 /**
  * An abstract class to represent player communication states.

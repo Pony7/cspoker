@@ -19,7 +19,6 @@ import org.cspoker.common.game.IllegalActionException;
 import org.cspoker.common.game.events.gameEvents.GameMessageEvent;
 import org.cspoker.server.game.GameManager;
 import org.cspoker.server.game.GameMediator;
-import org.cspoker.server.game.player.GamePlayer;
 
 /**
  * A class to represent the playing state of the player.

@@ -15,7 +15,6 @@
  */
 package org.cspoker.server.game.session;
 
-import org.cspoker.common.game.player.PlayerId;
 import org.cspoker.server.game.player.GamePlayer;
 import org.cspoker.server.game.player.PlayerFactory;
 import org.cspoker.server.game.playerCommunication.PlayerCommunicationImpl;
