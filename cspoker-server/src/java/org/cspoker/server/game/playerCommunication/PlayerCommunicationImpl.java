@@ -20,6 +20,7 @@ import java.rmi.RemoteException;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import org.apache.log4j.Logger;
 import org.cspoker.common.game.IllegalActionException;
 import org.cspoker.common.game.PlayerCommunication;
 import org.cspoker.common.game.elements.table.TableId;
@@ -72,6 +73,7 @@ import org.cspoker.common.game.events.serverEvents.TableCreatedEvent;
 import org.cspoker.common.game.player.PlayerId;
 import org.cspoker.server.game.GameManager;
 import org.cspoker.server.game.player.GamePlayer;
+import org.cspoker.server.game.session.SessionManager;
 
 /**
  * A class of player communications.
@@ -81,8 +83,10 @@ import org.cspoker.server.game.player.GamePlayer;
  * @author Kenzo
  *
  */
-public class PlayerCommunicationImpl implements PlayerCommunication {
+public class PlayerCommunicationImpl extends PlayerCommunication {
 
+    private static Logger logger = Logger.getLogger(PlayerCommunicationImpl.class);
+    
     /***************************************************************************
      * Variables
      **************************************************************************/
@@ -140,8 +144,9 @@ public class PlayerCommunicationImpl implements PlayerCommunication {
     /***************************************************************************
      * Maintenance Actions
      **************************************************************************/
-    public void destruct(){
-	//TODO ?
+
+    public void kill() {
+	state.kill();
     }
     
     /***************************************************************************
@@ -236,762 +241,233 @@ public class PlayerCommunicationImpl implements PlayerCommunication {
      * Publisher
      **************************************************************************/
 
-    /**
-     * Subscribe the given all-in listener for all-in events.
-     *
-     * @param listener
-     *                The listener to subscribe.
-     */
-    public void subscribeAllInListener(RemoteAllInListener listener) {
-	allInListeners.add(listener);
-    }
-
-    /**
-     * Unsubscribe the given all-in listener for all-in events.
-     *
-     * @param listener
-     *                The listener to unsubscribe.
-     */
-    public void unsubscribeAllInListener(RemoteAllInListener listener) {
-	allInListeners.remove(listener);
-    }
-
-    /**
-     * This list contains all all-in listeners that should be alerted on a
-     * all-in.
-     */
-    private final List<RemoteAllInListener> allInListeners = new CopyOnWriteArrayList<RemoteAllInListener>();
-
-    /**
-     * Subscribe the given bet listener for bet events.
-     *
-     * @param listener
-     *                The listener to subscribe.
-     */
-    public void subscribeBetListener(RemoteBetListener listener) {
-	betListeners.add(listener);
-    }
-
-    /**
-     * Unsubscribe the given bet listener for bet events.
-     *
-     * @param listener
-     *                The listener to unsubscribe.
-     */
-    public void unsubscribeBetListener(RemoteBetListener listener) {
-	betListeners.remove(listener);
-    }
-
-    /**
-     * This list contains all bet listeners that should be alerted on a bet.
-     */
-    private final List<RemoteBetListener> betListeners = new CopyOnWriteArrayList<RemoteBetListener>();
-
-    /**
-     * Subscribe the given big blind listener for big blind events.
-     *
-     * @param listener
-     *                The listener to subscribe.
-     */
-    public void subscribeBigBlindListener(RemoteBigBlindListener listener) {
-	bigBlindListeners.add(listener);
-    }
-
-    /**
-     * Unsubscribe the given big blind listener for big blind events.
-     *
-     * @param listener
-     *                The listener to unsubscribe.
-     */
-    public void unsubscribeBigBlindListener(RemoteBigBlindListener listener) {
-	bigBlindListeners.remove(listener);
-    }
-
-    /**
-     * This list contains all big blind listeners that should be alerted on a
-     * big blind.
-     */
-    private final List<RemoteBigBlindListener> bigBlindListeners = new CopyOnWriteArrayList<RemoteBigBlindListener>();
-
-    /**
-     * Subscribe the given call listener for call events.
-     *
-     * @param listener
-     *                The listener to subscribe.
-     */
-    public void subscribeCallListener(RemoteCallListener listener) {
-	callListeners.add(listener);
-    }
-
-    /**
-     * Unsubscribe the given call listener for call events.
-     *
-     * @param listener
-     *                The listener to unsubscribe.
-     */
-    public void unsubscribeCallListener(RemoteCallListener listener) {
-	callListeners.remove(listener);
-    }
-
-    /**
-     * This list contains all call listeners that should be alerted on a call.
-     */
-    private final List<RemoteCallListener> callListeners = new CopyOnWriteArrayList<RemoteCallListener>();
-
-    /**
-     * Subscribe the given check listener for check events.
-     *
-     * @param listener
-     *                The listener to subscribe.
-     */
-    public void subscribeCheckListener(RemoteCheckListener listener) {
-	checkListeners.add(listener);
-    }
-
-    /**
-     * Unsubscribe the given check listener for check events.
-     *
-     * @param listener
-     *                The listener to unsubscribe.
-     */
-    public void unsubscribeCheckListener(RemoteCheckListener listener) {
-	checkListeners.remove(listener);
-    }
-
-    /**
-     * This list contains all check listeners that should be alerted on a check.
-     */
-    private final List<RemoteCheckListener> checkListeners = new CopyOnWriteArrayList<RemoteCheckListener>();
-
-    /**
-     * Subscribe the given fold listener for fold events.
-     *
-     * @param listener
-     *                The listener to subscribe.
-     */
-    public void subscribeFoldListener(RemoteFoldListener listener) {
-	foldListeners.add(listener);
-    }
-
-    /**
-     * Unsubscribe the given fold listener for fold events.
-     *
-     * @param listener
-     *                The listener to unsubscribe.
-     */
-    public void unsubscribeFoldListener(RemoteFoldListener listener) {
-	foldListeners.remove(listener);
-    }
-
-    /**
-     * This list contains all fold listeners that should be alerted on a fold.
-     */
-    private final List<RemoteFoldListener> foldListeners = new CopyOnWriteArrayList<RemoteFoldListener>();
-
-    /**
-     * Subscribe the given raise listener for raise events.
-     *
-     * @param listener
-     *                The listener to subscribe.
-     */
-    public void subscribeRaiseListener(RemoteRaiseListener listener) {
-	raiseListeners.add(listener);
-    }
-
-    /**
-     * Unsubscribe the given raise listener for raise events.
-     *
-     * @param listener
-     *                The listener to unsubscribe.
-     */
-    public void unsubscribeRaiseListener(RemoteRaiseListener listener) {
-	raiseListeners.remove(listener);
-    }
-
-    /**
-     * This list contains all raise listeners that should be alerted on a raise.
-     */
-    private final List<RemoteRaiseListener> raiseListeners = new CopyOnWriteArrayList<RemoteRaiseListener>();
-
-    /**
-     * Subscribe the given small blind listener for small blind events.
-     *
-     * @param listener
-     *                The listener to subscribe.
-     */
-    public void subscribeSmallBlindListener(RemoteSmallBlindListener listener) {
-	smallBlindListeners.add(listener);
-    }
-
-    /**
-     * Unsubscribe the given small blind listener for small blind events.
-     *
-     * @param listener
-     *                The listener to unsubscribe.
-     */
-    public void unsubscribeSmallBlindListener(RemoteSmallBlindListener listener) {
-	smallBlindListeners.remove(listener);
-    }
-
-    /**
-     * This list contains all small blind listeners that should be alerted on a
-     * small blind event.
-     */
-    private final List<RemoteSmallBlindListener> smallBlindListeners = new CopyOnWriteArrayList<RemoteSmallBlindListener>();
-
-    /**
-     * Subscribe the given new pocket cards listener for new pocket cards
-     * events.
-     *
-     * @param listener
-     *                The listener to subscribe.
-     */
-    public void subscribeNewPocketCardsListener(RemoteNewPocketCardsListener listener) {
-	newPocketCardsListeners.add(listener);
-    }
-
-    /**
-     * Unsubscribe the given new pocket cards listener for new pocket cards
-     * events.
-     *
-     * @param listener
-     *                The listener to unsubscribe.
-     */
-    public void unsubscribeNewPocketCardsListener(
-	    RemoteNewPocketCardsListener listener) {
-	newPocketCardsListeners.remove(listener);
-    }
-
-    /**
-     * This list contains all new private cards listeners that should be alerted
-     * on a new private cards.
-     */
-    private final List<RemoteNewPocketCardsListener> newPocketCardsListeners = new CopyOnWriteArrayList<RemoteNewPocketCardsListener>();
-
-    /**
-     * Subscribe the given new common cards listener for new common cards
-     * events.
-     *
-     * @param listener
-     *                The listener to subscribe.
-     */
-    public void subscribeNewCommonCardsListener(
-	    RemoteNewCommunityCardsListener listener) {
-	newCommunityCardsListeners.add(listener);
-    }
-
-    /**
-     * Unsubscribe the given new common cards listener for new common cards
-     * events.
-     *
-     * @param listener
-     *                The listener to unsubscribe.
-     */
-    public void unsubscribeNewCommonCardsListener(
-	    RemoteNewCommunityCardsListener listener) {
-	newCommunityCardsListeners.remove(listener);
-    }
-
-    /**
-     * This list contains all new common cards listeners that should be alerted
-     * on new common cards.
-     */
-    private final List<RemoteNewCommunityCardsListener> newCommunityCardsListeners = new CopyOnWriteArrayList<RemoteNewCommunityCardsListener>();
-
-    /**
-     * Subscribe the given new deal listener for new deal events.
-     *
-     * @param listener
-     *                The listener to subscribe.
-     */
-    public void subscribeNewDealListener(RemoteNewDealListener listener) {
-	newDealListeners.add(listener);
-    }
-
-    /**
-     * Unsubscribe the given new deal listener for new deal events.
-     *
-     * @param listener
-     *                The listener to unsubscribe.
-     */
-    public void unsubscribeNewDealListener(RemoteNewDealListener listener) {
-	newDealListeners.remove(listener);
-    }
-
-    /**
-     * This list contains all new deal listeners that should be alerted on a new
-     * deal.
-     */
-    private final List<RemoteNewDealListener> newDealListeners = new CopyOnWriteArrayList<RemoteNewDealListener>();
-
-    /**
-     * Subscribe the given new round listener for new round events.
-     *
-     * @param listener
-     *                The listener to subscribe.
-     */
-    public void subscribeNewRoundListener(RemoteNewRoundListener listener) {
-	newRoundListeners.add(listener);
-    }
-
-    /**
-     * Unsubscribe the given new round listener for new round events.
-     *
-     * @param listener
-     *                The listener to unsubscribe.
-     */
-    public void unsubscribeNewRoundListener(RemoteNewRoundListener listener) {
-	newRoundListeners.remove(listener);
-    }
-
-    /**
-     * This list contains all new round listeners that should be alerted on a
-     * new round.
-     */
-    private final List<RemoteNewRoundListener> newRoundListeners = new CopyOnWriteArrayList<RemoteNewRoundListener>();
-
-    /**
-     * Subscribe the given next player listener for next player events.
-     *
-     * @param listener
-     *                The listener to subscribe.
-     */
-    public void subscribeNextPlayerListener(RemoteNextPlayerListener listener) {
-	nextPlayerListeners.add(listener);
-    }
-
-    /**
-     * Unsubscribe the given next player listener for next player events.
-     *
-     * @param listener
-     *                The listener to unsubscribe.
-     */
-    public void unsubscribeNextPlayerListener(RemoteNextPlayerListener listener) {
-	nextPlayerListeners.remove(listener);
-    }
-
-    /**
-     * This list contains all next player listeners that should be alerted on a
-     * next player.
-     */
-    private final List<RemoteNextPlayerListener> nextPlayerListeners = new CopyOnWriteArrayList<RemoteNextPlayerListener>();
-
-    /**
-     * Subscribe the given player joined game listener for player joined game
-     * events.
-     *
-     * @param listener
-     *                The listener to subscribe.
-     */
-    public void subscribePlayerJoinedGameListener(
-	    RemotePlayerJoinedGameListener listener) {
-	playerJoinedGameListeners.add(listener);
-    }
-
-    /**
-     * Unsubscribe the given player joined game listener for player joined game
-     * events.
-     *
-     * @param listener
-     *                The listener to unsubscribe.
-     */
-    public void unsubscribePlayerJoinedGameListener(
-	    RemotePlayerJoinedGameListener listener) {
-	playerJoinedGameListeners.remove(listener);
-    }
-
-    /**
-     * This list contains all player joined game listeners that should be
-     * alerted on a player joined game.
-     */
-    private final List<RemotePlayerJoinedGameListener> playerJoinedGameListeners = new CopyOnWriteArrayList<RemotePlayerJoinedGameListener>();
-
-    /**
-     * Subscribe the given show hand listener for show hand events.
-     *
-     * @param listener
-     *                The listener to subscribe.
-     */
-    public void subscribeShowHandListener(RemoteShowHandListener listener) {
-	showHandListeners.add(listener);
-    }
-
-    /**
-     * Unsubscribe the given show hand listener for show hand events.
-     *
-     * @param listener
-     *                The listener to unsubscribe.
-     */
-    public void unsubscribeShowHandListener(RemoteShowHandListener listener) {
-	showHandListeners.remove(listener);
-    }
-
-    /**
-     * This list contains all show hand listeners that should be alerted on a
-     * show hand.
-     */
-    private final List<RemoteShowHandListener> showHandListeners = new CopyOnWriteArrayList<RemoteShowHandListener>();
-
-    /**
-     * Subscribe the given winner listener for winner events.
-     *
-     * @param listener
-     *                The listener to subscribe.
-     */
-    public void subscribeWinnerListener(RemoteWinnerListener listener) {
-	winnerListeners.add(listener);
-    }
-
-    /**
-     * Unsubscribe the given winner listener for winner events.
-     *
-     * @param listener
-     *                The listener to unsubscribe.
-     */
-    public void unsubscribeWinnerListener(RemoteWinnerListener listener) {
-	winnerListeners.remove(listener);
-    }
-
-    /**
-     * This list contains all winner listeners that should be alerted on a
-     * winner.
-     */
-    private final List<RemoteWinnerListener> winnerListeners = new CopyOnWriteArrayList<RemoteWinnerListener>();
-
-    /**
-     * Subscribe the given player left table listener for player left table
-     * events.
-     *
-     * @param listener
-     *                The listener to subscribe.
-     */
-    public void subscribePlayerLeftTableListener(
-	    RemotePlayerLeftTableListener listener) {
-	playerLeftTableListeners.add(listener);
-    }
-
-    /**
-     * Unsubscribe the given player left table listener for player left table
-     * events.
-     *
-     * @param listener
-     *                The listener to unsubscribe.
-     */
-    public void unsubscribePlayerLeftTableListener(
-	    RemotePlayerLeftTableListener listener) {
-	playerLeftTableListeners.remove(listener);
-    }
-
-    /**
-     * This list contains all player left table listeners that should be alerted
-     * on a player left table.
-     */
-    private final List<RemotePlayerLeftTableListener> playerLeftTableListeners = new CopyOnWriteArrayList<RemotePlayerLeftTableListener>();
-
-    /**
-     * Subscribe the given message listener for message events.
-     *
-     * @param listener
-     *                The listener to subscribe.
-     */
-    public void subscribeGameMessageListener(RemoteGameMessageListener listener) {
-	gameMessageListeners.add(listener);
-    }
-
-    /**
-     * Unsubscribe the given message listener for message events.
-     *
-     * @param listener
-     *                The listener to unsubscribe.
-     */
-    public void unsubscribeGameMessageListener(RemoteGameMessageListener listener) {
-	gameMessageListeners.remove(listener);
-    }
-
-    /**
-     * This list contains all message listeners that should be alerted on a
-     * message.
-     */
-    private final List<RemoteGameMessageListener> gameMessageListeners = new CopyOnWriteArrayList<RemoteGameMessageListener>();
-
-    /**
-     * Subscribe the given player joined listener for player joined events.
-     *
-     * @param listener
-     *                The listener to subscribe.
-     */
-    public void subscribePlayerJoinedListener(RemotePlayerJoinedListener listener) {
-	playerJoinedListeners.add(listener);
-    }
-
-    /**
-     * Unsubscribe the given player joined listener for player joined events.
-     *
-     * @param listener
-     *                The listener to unsubscribe.
-     */
-    public void unsubscribePlayerJoinedListener(RemotePlayerJoinedListener listener) {
-	playerJoinedListeners.remove(listener);
-    }
-
-    /**
-     * This list contains all player joined listeners that should be alerted on
-     * a player joined event.
-     */
-    private final List<RemotePlayerJoinedListener> playerJoinedListeners = new CopyOnWriteArrayList<RemotePlayerJoinedListener>();
-
-    /**
-     * Subscribe the given table created listener for table created events.
-     *
-     * @param listener
-     *                The listener to subscribe.
-     */
-    public void subscribeTableCreatedListener(RemoteTableCreatedListener listener) {
-	tableCreatedListeners.add(listener);
-    }
-
-    /**
-     * Unsubscribe the given table created listener for table created events.
-     *
-     * @param listener
-     *                The listener to unsubscribe.
-     */
-    public void unsubscribeTableCreatedListener(RemoteTableCreatedListener listener) {
-	tableCreatedListeners.remove(listener);
-    }
-
-    /**
-     * This list contains all table created listeners that should be alerted on
-     * a table created.
-     */
-    private final List<RemoteTableCreatedListener> tableCreatedListeners = new CopyOnWriteArrayList<RemoteTableCreatedListener>();
-
-    /**
-     * Subscribe the given player left listener for player left events.
-     *
-     * @param listener
-     *                The listener to subscribe.
-     */
-    public void subscribePlayerLeftListener(RemotePlayerLeftListener listener) {
-	playerLeftListeners.add(listener);
-    }
-
-    /**
-     * Unsubscribe the given player left listener for player left events.
-     *
-     * @param listener
-     *                The listener to unsubscribe.
-     */
-    public void unsubscribePlayerLeftListener(RemotePlayerLeftListener listener) {
-	playerLeftListeners.remove(listener);
-    }
-
-    /**
-     * This list contains all player left listeners that should be alerted on a
-     * player left.
-     */
-    private final List<RemotePlayerLeftListener> playerLeftListeners = new CopyOnWriteArrayList<RemotePlayerLeftListener>();
-
-    /**
-     * Subscribe the given message listener for message events.
-     *
-     * @param listener
-     *                The listener to subscribe.
-     */
-    public void subscribeServerMessageListener(RemoteServerMessageListener listener) {
-	serverMessageListeners.add(listener);
-    }
-
-    /**
-     * Unsubscribe the given message listener for message events.
-     *
-     * @param listener
-     *                The listener to unsubscribe.
-     */
-    public void unsubscribeServerMessageListener(RemoteServerMessageListener listener) {
-	serverMessageListeners.remove(listener);
-    }
-
     public void subscribeAllEventsListener(RemoteAllEventsListener listener) {
-	subscribeAllInListener(listener);
-	subscribeBetListener(listener);
-	subscribeBigBlindListener(listener);
-	subscribeCallListener(listener);
-	subscribeCheckListener(listener);
-	subscribeFoldListener(listener);
-	subscribeGameMessageListener(listener);
-	subscribeNewCommonCardsListener(listener);
-	subscribeNewDealListener(listener);
-	subscribeNewPocketCardsListener(listener);
-	subscribeNewRoundListener(listener);
-	subscribeNextPlayerListener(listener);
-	subscribePlayerJoinedGameListener(listener);
-	subscribePlayerJoinedListener(listener);
-	subscribePlayerLeftListener(listener);
-	subscribePlayerLeftTableListener(listener);
-	subscribeRaiseListener(listener);
-	subscribeServerMessageListener(listener);
-	subscribeShowHandListener(listener);
-	subscribeSmallBlindListener(listener);
-	subscribeTableCreatedListener(listener);
-	subscribeWinnerListener(listener);
+	eventListeners.add(listener);
     }
 
     public void unsubscribeAllEventsListener(RemoteAllEventsListener listener) {
-	unsubscribeAllInListener(listener);
-	unsubscribeBetListener(listener);
-	unsubscribeBigBlindListener(listener);
-	unsubscribeCallListener(listener);
-	unsubscribeCheckListener(listener);
-	unsubscribeFoldListener(listener);
-	unsubscribeGameMessageListener(listener);
-	unsubscribeNewCommonCardsListener(listener);
-	unsubscribeNewDealListener(listener);
-	unsubscribeNewPocketCardsListener(listener);
-	unsubscribeNewRoundListener(listener);
-	unsubscribeNextPlayerListener(listener);
-	unsubscribePlayerJoinedGameListener(listener);
-	unsubscribePlayerJoinedListener(listener);
-	unsubscribePlayerLeftListener(listener);
-	unsubscribePlayerLeftTableListener(listener);
-	unsubscribeRaiseListener(listener);
-	unsubscribeServerMessageListener(listener);
-	unsubscribeShowHandListener(listener);
-	unsubscribeSmallBlindListener(listener);
-	unsubscribeTableCreatedListener(listener);
-	unsubscribeWinnerListener(listener);
+	eventListeners.remove(listener);
     }
 
     /**
      * This list contains all message listeners that should be alerted on a
      * message.
      */
-    private final List<RemoteServerMessageListener> serverMessageListeners = new CopyOnWriteArrayList<RemoteServerMessageListener>();
+    private final List<RemoteAllEventsListener> eventListeners = new CopyOnWriteArrayList<RemoteAllEventsListener>();
 
     /***************************************************************************
      * all events listener
      **************************************************************************/
 
-    RemoteAllEventsListener getAllEventsListener() {
+    AllEventsListener getAllEventsListener() {
 	return allEventsListener;
     }
 
-    private final RemoteAllEventsListener allEventsListener = new AllEventsListenerImpl();
+    private final AllEventsListener allEventsListener = new AllEventsListenerImpl();
 
-    private class AllEventsListenerImpl implements RemoteAllEventsListener {
+    private class AllEventsListenerImpl implements AllEventsListener {
 
-	public void onAllInEvent(AllInEvent event) throws RemoteException {
-	    for (RemoteAllInListener listener : allInListeners) {
-		listener.onAllInEvent(event);
+	public void onAllInEvent(AllInEvent event)  {
+	    for (RemoteAllInListener listener : eventListeners) {
+		try {
+		    listener.onAllInEvent(event);
+		} catch (RemoteException e) {
+		    logger.error("RemoteException from event handler",e);
+		    SessionManager.global_session_manager.killSession(getPlayer().getName());
+		}
 	    }
 	}
 
-	public void onBetEvent(BetEvent event) throws RemoteException {
-	    for (RemoteBetListener listener : betListeners) {
-		listener.onBetEvent(event);
-	    }
-
-	}
-
-	public void onBigBlindEvent(BigBlindEvent event) throws RemoteException {
-	    for (RemoteBigBlindListener listener : bigBlindListeners) {
-		listener.onBigBlindEvent(event);
-	    }
-
-	}
-
-	public void onCallEvent(CallEvent event) throws RemoteException  {
-	    for (RemoteCallListener listener : callListeners) {
-		listener.onCallEvent(event);
-	    }
-	}
-
-	public void onCheckEvent(CheckEvent event) throws RemoteException {
-	    for (RemoteCheckListener listener : checkListeners) {
-		listener.onCheckEvent(event);
-	    }
-	}
-
-	public void onFoldEvent(FoldEvent event) throws RemoteException {
-	    for (RemoteFoldListener listener : foldListeners) {
-		listener.onFoldEvent(event);
+	public void onBetEvent(BetEvent event)  {
+	    for (RemoteBetListener listener : eventListeners) {
+		try {
+		    listener.onBetEvent(event);
+		} catch (RemoteException e) {
+		    logger.error("RemoteException from event handler",e);
+		    SessionManager.global_session_manager.killSession(getPlayer().getName());
+		}
 	    }
 
 	}
 
-	public void onRaiseEvent(RaiseEvent event) throws RemoteException {
-	    for (RemoteRaiseListener listener : raiseListeners) {
-		listener.onRaiseEvent(event);
-	    }
-	}
-
-	public void onSmallBlindEvent(SmallBlindEvent event) throws RemoteException {
-	    for (RemoteSmallBlindListener listener : smallBlindListeners) {
-		listener.onSmallBlindEvent(event);
-	    }
-	}
-
-	public void onNewPocketCardsEvent(NewPocketCardsEvent event) throws RemoteException {
-	    for (RemoteNewPocketCardsListener listener : newPocketCardsListeners) {
-		listener.onNewPocketCardsEvent(event);
+	public void onBigBlindEvent(BigBlindEvent event)  {
+	    for (RemoteBigBlindListener listener : eventListeners) {
+		try {
+		    listener.onBigBlindEvent(event);
+		} catch (RemoteException e) {
+		    logger.error("RemoteException from event handler",e);
+		    SessionManager.global_session_manager.killSession(getPlayer().getName());
+		}
 	    }
 
 	}
 
-	public void onNewCommunityCardsEvent(NewCommunityCardsEvent event) throws RemoteException  {
-	    for (RemoteNewCommunityCardsListener listener : newCommunityCardsListeners) {
-		listener.onNewCommunityCardsEvent(event);
+	public void onCallEvent(CallEvent event)   {
+	    for (RemoteCallListener listener : eventListeners) {
+		try {
+		    listener.onCallEvent(event);
+		} catch (RemoteException e) {
+		    logger.error("RemoteException from event handler",e);
+		    SessionManager.global_session_manager.killSession(getPlayer().getName());
+		}
 	    }
 	}
 
-	public void onNewDealEvent(NewDealEvent event) throws RemoteException {
-	    for (RemoteNewDealListener listener : newDealListeners) {
-		listener.onNewDealEvent(event);
-	    }
-
-	}
-
-	public void onNewRoundEvent(NewRoundEvent event) throws RemoteException {
-	    for (RemoteNewRoundListener listener : newRoundListeners) {
-		listener.onNewRoundEvent(event);
-	    }
-
-	}
-
-	public void onNextPlayerEvent(NextPlayerEvent event) throws RemoteException {
-	    for (RemoteNextPlayerListener listener : nextPlayerListeners) {
-		listener.onNextPlayerEvent(event);
+	public void onCheckEvent(CheckEvent event)  {
+	    for (RemoteCheckListener listener : eventListeners) {
+		try {
+		    listener.onCheckEvent(event);
+		} catch (RemoteException e) {
+		    logger.error("RemoteException from event handler",e);
+		    SessionManager.global_session_manager.killSession(getPlayer().getName());
+		}
 	    }
 	}
 
-	public void onPlayerJoinedGameEvent(PlayerJoinedGameEvent event) throws RemoteException {
-	    for (RemotePlayerJoinedGameListener listener : playerJoinedGameListeners) {
-		listener.onPlayerJoinedGameEvent(event);
-	    }
-	}
-
-	public void onShowHandEvent(ShowHandEvent event) throws RemoteException {
-	    for (RemoteShowHandListener listener : showHandListeners) {
-		listener.onShowHandEvent(event);
-	    }
-	}
-
-	public void onWinnerEvent(WinnerEvent event) throws RemoteException {
-	    for (RemoteWinnerListener listener : winnerListeners) {
-		listener.onWinnerEvent(event);
-	    }
-	}
-
-	public void onPlayerLeftTableEvent(PlayerLeftTableEvent event) throws RemoteException {
-	    for (RemotePlayerLeftTableListener listener : playerLeftTableListeners) {
-		listener.onPlayerLeftTableEvent(event);
+	public void onFoldEvent(FoldEvent event)  {
+	    for (RemoteFoldListener listener : eventListeners) {
+		try {
+		    listener.onFoldEvent(event);
+		} catch (RemoteException e) {
+		    logger.error("RemoteException from event handler",e);
+		    SessionManager.global_session_manager.killSession(getPlayer().getName());
+		}
 	    }
 
 	}
 
-	public void onGameMessageEvent(GameMessageEvent event)throws RemoteException  {
-	    for (RemoteGameMessageListener listener : gameMessageListeners) {
-		listener.onGameMessageEvent(event);
+	public void onRaiseEvent(RaiseEvent event)  {
+	    for (RemoteRaiseListener listener : eventListeners) {
+		try {
+		    listener.onRaiseEvent(event);
+		} catch (RemoteException e) {
+		    logger.error("RemoteException from event handler",e);
+		    SessionManager.global_session_manager.killSession(getPlayer().getName());
+		}
+	    }
+	}
+
+	public void onSmallBlindEvent(SmallBlindEvent event)  {
+	    for (RemoteSmallBlindListener listener : eventListeners) {
+		try {
+		    listener.onSmallBlindEvent(event);
+		} catch (RemoteException e) {
+		    logger.error("RemoteException from event handler",e);
+		    SessionManager.global_session_manager.killSession(getPlayer().getName());
+		}
+	    }
+	}
+
+	public void onNewPocketCardsEvent(NewPocketCardsEvent event)  {
+	    for (RemoteNewPocketCardsListener listener : eventListeners) {
+		try {
+		    listener.onNewPocketCardsEvent(event);
+		} catch (RemoteException e) {
+		    logger.error("RemoteException from event handler",e);
+		    SessionManager.global_session_manager.killSession(getPlayer().getName());
+		}
+	    }
+
+	}
+
+	public void onNewCommunityCardsEvent(NewCommunityCardsEvent event)   {
+	    for (RemoteNewCommunityCardsListener listener : eventListeners) {
+		try {
+		    listener.onNewCommunityCardsEvent(event);
+		} catch (RemoteException e) {
+		    logger.error("RemoteException from event handler",e);
+		    SessionManager.global_session_manager.killSession(getPlayer().getName());
+		}
+	    }
+	}
+
+	public void onNewDealEvent(NewDealEvent event)  {
+	    for (RemoteNewDealListener listener : eventListeners) {
+		try {
+		    listener.onNewDealEvent(event);
+		} catch (RemoteException e) {
+		    logger.error("RemoteException from event handler",e);
+		    SessionManager.global_session_manager.killSession(getPlayer().getName());
+		}
+	    }
+
+	}
+
+	public void onNewRoundEvent(NewRoundEvent event)  {
+	    for (RemoteNewRoundListener listener : eventListeners) {
+		try {
+		    listener.onNewRoundEvent(event);
+		} catch (RemoteException e) {
+		    logger.error("RemoteException from event handler",e);
+		    SessionManager.global_session_manager.killSession(getPlayer().getName());
+		}
+	    }
+
+	}
+
+	public void onNextPlayerEvent(NextPlayerEvent event)  {
+	    for (RemoteNextPlayerListener listener : eventListeners) {
+		try {
+		    listener.onNextPlayerEvent(event);
+		} catch (RemoteException e) {
+		    logger.error("RemoteException from event handler",e);
+		    SessionManager.global_session_manager.killSession(getPlayer().getName());
+		}
+	    }
+	}
+
+	public void onPlayerJoinedGameEvent(PlayerJoinedGameEvent event)  {
+	    for (RemotePlayerJoinedGameListener listener : eventListeners) {
+		try {
+		    listener.onPlayerJoinedGameEvent(event);
+		} catch (RemoteException e) {
+		    logger.error("RemoteException from event handler",e);
+		    SessionManager.global_session_manager.killSession(getPlayer().getName());
+		}
+	    }
+	}
+
+	public void onShowHandEvent(ShowHandEvent event)  {
+	    for (RemoteShowHandListener listener : eventListeners) {
+		try {
+		    listener.onShowHandEvent(event);
+		} catch (RemoteException e) {
+		    logger.error("RemoteException from event handler",e);
+		    SessionManager.global_session_manager.killSession(getPlayer().getName());
+		}
+	    }
+	}
+
+	public void onWinnerEvent(WinnerEvent event)  {
+	    for (RemoteWinnerListener listener : eventListeners) {
+		try {
+		    listener.onWinnerEvent(event);
+		} catch (RemoteException e) {
+		    logger.error("RemoteException from event handler",e);
+		    SessionManager.global_session_manager.killSession(getPlayer().getName());
+		}
+	    }
+	}
+
+	public void onPlayerLeftTableEvent(PlayerLeftTableEvent event)  {
+	    for (RemotePlayerLeftTableListener listener : eventListeners) {
+		try {
+		    listener.onPlayerLeftTableEvent(event);
+		} catch (RemoteException e) {
+		    logger.error("RemoteException from event handler",e);
+		    SessionManager.global_session_manager.killSession(getPlayer().getName());
+		}
+	    }
+
+	}
+
+	public void onGameMessageEvent(GameMessageEvent event)  {
+	    for (RemoteGameMessageListener listener : eventListeners) {
+		try {
+		    listener.onGameMessageEvent(event);
+		} catch (RemoteException e) {
+		    logger.error("RemoteException from event handler, ignoring",e);
+		}
 	    }
 	}
 
@@ -999,29 +475,46 @@ public class PlayerCommunicationImpl implements PlayerCommunication {
 	 * Server Events
 	 **********************************************************************/
 
-	public void onPlayerJoinedEvent(PlayerJoinedEvent event) throws RemoteException {
-	    for (RemotePlayerJoinedListener listener : playerJoinedListeners) {
-		listener.onPlayerJoinedEvent(event);
+	public void onPlayerJoinedEvent(PlayerJoinedEvent event)  {
+	    for (RemotePlayerJoinedListener listener : eventListeners) {
+		try {
+		    listener.onPlayerJoinedEvent(event);
+		} catch (RemoteException e) {
+		    logger.error("RemoteException from event handler, ignoring",e);
+		}
 	    }
 
 	}
 
-	public void onTableCreatedEvent(TableCreatedEvent event) throws RemoteException {
-	    for (RemoteTableCreatedListener listener : tableCreatedListeners) {
-		listener.onTableCreatedEvent(event);
+	public void onTableCreatedEvent(TableCreatedEvent event)  {
+	    for (RemoteTableCreatedListener listener : eventListeners) {
+		try {
+		    listener.onTableCreatedEvent(event);
+		} catch (RemoteException e) {
+		    logger.error("RemoteException from event handler, ignoring",e);
+		}
 	    }
 	}
 
-	public void onPlayerLeftEvent(PlayerLeftEvent event) throws RemoteException {
-	    for (RemotePlayerLeftListener listener : playerLeftListeners) {
-		listener.onPlayerLeftEvent(event);
+	public void onPlayerLeftEvent(PlayerLeftEvent event)  {
+	    for (RemotePlayerLeftListener listener : eventListeners) {
+		try {
+		    listener.onPlayerLeftEvent(event);
+		} catch (RemoteException e) {
+		    logger.error("RemoteException from event handler, ignoring",e);
+		}
 	    }
 	}
 
-	public void onServerMessageEvent(ServerMessageEvent event) throws RemoteException {
-	    for (RemoteServerMessageListener listener : serverMessageListeners) {
-		listener.onServerMessageEvent(event);
+	public void onServerMessageEvent(ServerMessageEvent event) {
+	    for (RemoteServerMessageListener listener : eventListeners) {
+		try {
+		    listener.onServerMessageEvent(event);
+		} catch (RemoteException e) {
+		    logger.error("RemoteException from event handler, ignoring",e);
+		}
 	    }
 	}
     }
+
 }

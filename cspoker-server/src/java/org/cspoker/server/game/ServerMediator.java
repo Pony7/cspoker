@@ -20,9 +20,9 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.cspoker.common.game.eventlisteners.EventListener;
+import org.cspoker.common.game.eventlisteners.server.AllServerEventsListener;
 import org.cspoker.common.game.eventlisteners.server.PlayerJoinedListener;
 import org.cspoker.common.game.eventlisteners.server.PlayerLeftListener;
-import org.cspoker.common.game.eventlisteners.server.RemoteAllServerEventsListener;
 import org.cspoker.common.game.eventlisteners.server.ServerMessageListener;
 import org.cspoker.common.game.eventlisteners.server.TableCreatedListener;
 import org.cspoker.common.game.events.Event;
@@ -245,7 +245,7 @@ public class ServerMediator {
     private final List<EventListener> serverEventListeners = new CopyOnWriteArrayList<EventListener>();
 
     public void subscribeAllServerEventsListener(PlayerId id,
-	    RemoteAllServerEventsListener listener) {
+	    AllServerEventsListener listener) {
 	subscribePlayerJoinedListener(listener);
 	subscribePlayerLeftListener(listener);
 	subscribeServerMessageListener(listener);
@@ -253,7 +253,7 @@ public class ServerMediator {
     }
 
     public void unsubscribeAllServerEventsListener(PlayerId id,
-	    RemoteAllServerEventsListener listener) {
+	    AllServerEventsListener listener) {
 	unsubscribePlayerJoinedListener(listener);
 	unsubscribePlayerLeftListener(listener);
 	unsubscribeServerMessageListener(listener);

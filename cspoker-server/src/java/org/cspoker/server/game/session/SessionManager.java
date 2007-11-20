@@ -17,24 +17,47 @@ package org.cspoker.server.game.session;
 
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.cspoker.common.game.player.PlayerId;
+
 public class SessionManager {
 
     public final static SessionManager global_session_manager = new SessionManager();
 
     private ConcurrentHashMap<String, Session> sessions = new ConcurrentHashMap<String,Session>();
-
+    private ConcurrentHashMap<PlayerId, Session> sessionByID = new ConcurrentHashMap<PlayerId, Session>();
+    
     public Session getSession(String username) {
 	Session newSession = new Session(username);
 	Session oldSession = sessions.putIfAbsent(username, newSession);
-	if(oldSession==null)
+	if(oldSession==null){
+	    try {
+		sessionByID.put(newSession.getPlayer().getId(), newSession);
+	    } catch (PlayerKilledExcepion e) {
+		// no op
+	    }
 	    return newSession;
+	}
 	return oldSession;
     }
     
     public void killSession(String username){
 	Session s = getSession(username);
+	PlayerId id = null;
+	try {
+	    id = s.getPlayer().getId();
+	} catch (PlayerKilledExcepion e) {
+	    // no op
+	    // ID will be removed elsewhere?
+	}
 	s.kill();
 	sessions.remove(s.getUserName());
+	if(id!=null)
+		sessionByID.remove(id);
+
+    }
+
+    public Session getSession(PlayerId id) {
+	return sessionByID.get(id);	    
     }
 
 }
