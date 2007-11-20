@@ -72,7 +72,7 @@ public class PlayerFactory {
      * @throws IllegalValueException
      *                 [must] The given initial value is not valid.
      */
-    protected GamePlayer createNewPlayer(String name, int initialValue)
+    public GamePlayer createNewPlayer(String name, int initialValue)
 	    throws IllegalValueException {
 	return new GamePlayer(getUniquePlayerId(), name, initialValue);
     }

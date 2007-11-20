@@ -27,7 +27,6 @@ import org.cspoker.common.game.elements.pots.Pots;
 import org.cspoker.common.game.events.gameEvents.NewCommunityCardsEvent;
 import org.cspoker.common.game.events.gameEvents.WinnerEvent;
 import org.cspoker.common.game.events.gameEvents.playerActionEvents.AllInEvent;
-import org.cspoker.common.game.player.Player;
 import org.cspoker.common.game.player.Winner;
 import org.cspoker.server.game.GameMediator;
 import org.cspoker.server.game.elements.chips.IllegalValueException;

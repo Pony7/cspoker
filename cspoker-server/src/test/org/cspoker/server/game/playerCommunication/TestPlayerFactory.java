@@ -15,25 +15,8 @@
  */
 package org.cspoker.server.game.playerCommunication;
 
-import org.cspoker.server.game.elements.chips.IllegalValueException;
-import org.cspoker.server.game.player.GamePlayer;
-import org.cspoker.server.game.player.IllegalNameException;
 import org.cspoker.server.game.player.PlayerFactory;
 
 class TestPlayerFactory extends PlayerFactory{
 
-	@Override
-	public synchronized GamePlayer getUniquePlayer(String name) throws IllegalNameException{
-		return createNewPlayer(name);
-	}
-
-	@Override
-	public synchronized GamePlayer getUniquePlayer(String name, int initialValue) throws IllegalValueException, IllegalNameException{
-		try {
-			return createNewPlayer(name, initialValue);
-		} catch (IllegalValueException e) {
-			throw new IllegalStateException(getStdStackValue()
-					+ " should be a valid value.");
-		}
-	}
 }

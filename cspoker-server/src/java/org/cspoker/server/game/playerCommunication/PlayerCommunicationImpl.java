@@ -145,6 +145,7 @@ public class PlayerCommunicationImpl extends PlayerCommunication {
      * Maintenance Actions
      **************************************************************************/
 
+    @Override
     public void kill() {
 	state.kill();
     }
@@ -153,34 +154,42 @@ public class PlayerCommunicationImpl extends PlayerCommunication {
      * Player Actions
      **************************************************************************/
 
+    @Override
     public void call() throws IllegalActionException {
 	state.call();
     }
 
+    @Override
     public void bet(int amount) throws IllegalActionException {
 	state.bet(amount);
     }
 
+    @Override
     public void fold() throws IllegalActionException {
 	state.fold();
     }
 
+    @Override
     public void check() throws IllegalActionException {
 	state.check();
     }
 
+    @Override
     public void raise(int amount) throws IllegalActionException {
 	state.raise(amount);
     }
 
+    @Override
     public void deal() throws IllegalActionException {
 	state.deal();
     }
 
+    @Override
     public void allIn() throws IllegalActionException {
 	state.allIn();
     }
 
+    @Override
     public void say(String message) {
 	state.say(message);
     }
@@ -197,6 +206,7 @@ public class PlayerCommunicationImpl extends PlayerCommunication {
      *                 [can] This actions is not a valid action in the current
      *                 state.
      */
+    @Override
     public void joinTable(TableId id) throws IllegalActionException {
 	if (id == null)
 	    throw new IllegalArgumentException(
@@ -204,14 +214,17 @@ public class PlayerCommunicationImpl extends PlayerCommunication {
 	state.join(id);
     }
 
+    @Override
     public void leaveTable() throws IllegalActionException {
 	state.leaveTable();
     }
 
+    @Override
     public TableId createTable() throws IllegalActionException {
 	return state.createTable();
     }
 
+    @Override
     public void startGame() throws IllegalActionException {
 	state.startGame();
     }
@@ -241,10 +254,12 @@ public class PlayerCommunicationImpl extends PlayerCommunication {
      * Publisher
      **************************************************************************/
 
+    @Override
     public void subscribeAllEventsListener(RemoteAllEventsListener listener) {
 	eventListeners.add(listener);
     }
 
+    @Override
     public void unsubscribeAllEventsListener(RemoteAllEventsListener listener) {
 	eventListeners.remove(listener);
     }
