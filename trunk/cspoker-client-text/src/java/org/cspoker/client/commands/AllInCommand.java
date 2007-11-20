@@ -13,20 +13,19 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.client.exceptions;
+package org.cspoker.client.commands;
 
-public class FailedAuthenticationException extends Exception {
+import org.cspoker.client.Console;
+import org.cspoker.common.game.RemotePlayerCommunication;
 
-    public FailedAuthenticationException(String msg) {
-	super(msg);
+public class AllInCommand extends AbstractCommand {
+
+    public AllInCommand(RemotePlayerCommunication rpc, Console console) {
+	super(rpc, console);
     }
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = -3857697586731860674L;
+    public void execute(String... args) throws Exception {
+	rpc.allIn();
+    }
 
-
-    
-    
 }

@@ -15,15 +15,17 @@
  */
 package org.cspoker.client.commands;
 
-/**
- * Interface for handling console commands.
- */
-public interface CommandExecutor {
-    
-    public static String n=System.getProperty("line.separator");
-    
-    public String execute(String... args) throws Exception;
-    
-    public boolean requiresEventUpdate();
-	
+import org.cspoker.client.Console;
+import org.cspoker.common.game.RemotePlayerCommunication;
+
+public abstract class AbstractCommand implements Command {
+
+    protected RemotePlayerCommunication rpc;
+    protected Console console;
+
+    public AbstractCommand(RemotePlayerCommunication rpc, Console console) {
+	this.rpc = rpc;
+	this.console = console;
+    }
+
 }

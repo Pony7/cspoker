@@ -13,41 +13,19 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.client.request;
+package org.cspoker.client.commands;
 
-import java.net.MalformedURLException;
+import org.cspoker.client.Console;
+import org.cspoker.common.game.RemotePlayerCommunication;
 
-import org.cspoker.client.request.abstracts.NoOutputRequest;
-import org.xml.sax.ContentHandler;
-import org.xml.sax.helpers.DefaultHandler;
+public class StartGameCommand extends AbstractCommand {
 
-public class StartGameRequest extends NoOutputRequest{
-
-    public StartGameRequest(String address) throws MalformedURLException {
-	super(address);
+    public StartGameCommand(RemotePlayerCommunication rpc, Console console) {
+	super(rpc, console);
     }
 
-    @Override
-    protected String getRequestMethod() {
-        return "POST";
-    }
-
-    @Override
-    protected String getPath() {
-	return "/game/start/";
-    }
-
-    @Override
-    protected String getResult() {
-	return "";
-    }
-    
-    @Override
-    protected ContentHandler getContentHandler() {
-
-	return new DefaultHandler(){
-
-	};
+    public void execute(String... args) throws Exception {
+	rpc.startGame();
     }
 
 }

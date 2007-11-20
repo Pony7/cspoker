@@ -13,10 +13,28 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.client.exceptions;
+package org.cspoker.client.commands;
 
-public interface StackTraceWrapper {
-    
-    public String getStackTraceString();
-    
+import org.cspoker.client.Console;
+import org.cspoker.common.game.RemotePlayerCommunication;
+
+public class SayCommand extends AbstractCommand {
+
+    public SayCommand(RemotePlayerCommunication rpc, Console console) {
+	super(rpc, console);
+    }
+
+    public void execute(String... args) throws Exception {
+	rpc.say(toString(args));
+    }
+
+    private String toString(String[] args) {
+	StringBuilder sb = new StringBuilder();
+	for(String a:args){
+	    sb.append(a);
+	    sb.append(" ");
+	}
+	return sb.toString();
+    }
+
 }

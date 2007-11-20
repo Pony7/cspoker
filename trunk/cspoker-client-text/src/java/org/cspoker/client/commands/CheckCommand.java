@@ -13,24 +13,19 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.client.exceptions;
+package org.cspoker.client.commands;
 
-public class HttpException extends RuntimeException implements StackTraceWrapper{
-    
-    private static final long serialVersionUID = 6555631439629401358L;
+import org.cspoker.client.Console;
+import org.cspoker.common.game.RemotePlayerCommunication;
 
-    public HttpException(String msg) {
-	super(msg);
-    }
-    
-    private String stackTraceString="";
+public class CheckCommand extends AbstractCommand {
 
-    public String getStackTraceString() {
-        return stackTraceString;
+    public CheckCommand(RemotePlayerCommunication rpc, Console console) {
+	super(rpc, console);
     }
 
-    public void setStackTraceString(String stackTraceString) {
-        this.stackTraceString = stackTraceString;
+    public void execute(String... args) throws Exception {
+	rpc.check();
     }
-    
+
 }
