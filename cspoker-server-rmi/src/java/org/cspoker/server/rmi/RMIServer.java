@@ -21,6 +21,7 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 
+import org.apache.log4j.Logger;
 import org.cspoker.common.game.RemotePlayerCommunication;
 import org.cspoker.common.rmi.RemoteRMIServer;
 import org.cspoker.server.common.authentication.XmlFileAuthenticator;
@@ -29,15 +30,16 @@ import org.cspoker.server.game.session.SessionManager;
 
 public class RMIServer implements RemoteRMIServer {
 
+    private final static Logger logger = Logger.getLogger(RMIServer.class);
+    
     private final XmlFileAuthenticator authenticator;
-    private final int port;
 
-    public RMIServer(XmlFileAuthenticator authenticator, int port) {
+    public RMIServer(XmlFileAuthenticator authenticator) {
 	this.authenticator = authenticator;
-	this.port = port;
     }
 
     public RemotePlayerCommunication login(String username, String password) throws RemoteException {
+	logger.trace("Login attempt from "+username);
 	if(authenticator.hasPassword(username, password)){
 	    try {
 		RemotePlayerCommunication p = SessionManager.global_session_manager.getSession(username).getPlayerCommunication();
@@ -48,6 +50,7 @@ public class RMIServer implements RemoteRMIServer {
 		return null;
 	    }
 	}else{
+	    logger.trace("Login attempt from "+username+" failed");
 	    throw new IllegalArgumentException("Login Failed");
 	}
     }
@@ -55,7 +58,7 @@ public class RMIServer implements RemoteRMIServer {
     void start() throws AccessException, RemoteException {
 	System.setSecurityManager(null);
 	RemoteRMIServer stub=(RemoteRMIServer)UnicastRemoteObject.exportObject(this, 0);
-	Registry registry= LocateRegistry.getRegistry(port);
+	Registry registry= LocateRegistry.getRegistry();
 	registry.rebind("CSPokerServer",stub);
     }
 
