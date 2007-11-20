@@ -24,6 +24,8 @@ import org.cspoker.server.game.GameMediator;
 import org.cspoker.server.game.TableManager;
 import org.cspoker.server.game.elements.table.Table;
 import org.cspoker.server.game.gameControl.GameControl;
+import org.cspoker.server.game.session.PlayerKilledExcepion;
+import org.cspoker.server.game.session.SessionManager;
 
 /**
  * A player who has created the table goes to the table created state.
@@ -70,10 +72,16 @@ class TableCreatedState extends WaitingAtTableState {
 	synchronized (table) {
 	    GameMediator gameMediator = new GameMediator();
 	    for (PlayerId id : table.getPlayerIds()) {
-		PlayerCommunicationImpl comm = PlayerCommunicationManager
-			.getPlayerCommunication(id);
-		comm.setPlayerCommunicationState(new PlayingState(comm,
-			gameMediator));
+		PlayerCommunicationImpl comm;
+		try {
+		    comm = SessionManager.global_session_manager
+		    	.getSession(id).getPlayerCommunication();
+		    comm.setPlayerCommunicationState(new PlayingState(comm,
+			    gameMediator));
+		} catch (PlayerKilledExcepion e) {
+		    // no op
+		    // killed players should have been removed from the table already
+		}
 	    }
 	    new GameControl(gameMediator, table);
 	    GameManager.addGame(table.getId(), gameMediator);
@@ -89,8 +97,8 @@ class TableCreatedState extends WaitingAtTableState {
 		TableManager.removeTable(table);
 		table.removePlayer(playerCommunication.getPlayer());
 		playerCommunication
-			.setPlayerCommunicationState(new InitialState(
-				playerCommunication));
+		.setPlayerCommunicationState(new InitialState(
+			playerCommunication));
 		GameManager.getServerMediator().publishPlayerLeftEvent(
 			new PlayerLeftEvent(playerCommunication.getPlayer()
 				.getSavedPlayer(), table.getId()));

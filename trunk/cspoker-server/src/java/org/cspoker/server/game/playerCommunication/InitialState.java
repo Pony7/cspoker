@@ -25,6 +25,7 @@ import org.cspoker.server.game.GameMediator;
 import org.cspoker.server.game.TableManager;
 import org.cspoker.server.game.elements.table.PlayerListFullException;
 import org.cspoker.server.game.elements.table.Table;
+import org.cspoker.server.game.player.GamePlayer;
 
 /**
  * A class to represent the initial state of the player.
@@ -112,5 +113,10 @@ class InitialState extends PlayerCommunicationState {
     @Override
     protected String getStdErrorMessage() {
 	return "You have to be in a game to perform this action.";
+    }
+
+    @Override
+    public void kill() {
+	//no op
     }
 }

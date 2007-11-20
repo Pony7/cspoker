@@ -56,4 +56,10 @@ class WaitingAtTableState extends PlayerCommunicationState {
 	return "You are waiting at a table for a game to begin.";
     }
 
+    @Override
+    public void kill() {
+	// remove to killed player from the table
+	table.removePlayer(playerCommunication.getPlayer());
+    }
+
 }
