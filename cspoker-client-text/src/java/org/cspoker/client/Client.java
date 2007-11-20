@@ -15,99 +15,92 @@
  */
 package org.cspoker.client;
 
-import java.io.IOException;
-import java.net.Authenticator;
-import java.net.MalformedURLException;
-import java.net.PasswordAuthentication;
+import java.rmi.ConnectException;
+import java.rmi.RemoteException;
 import java.util.HashMap;
 
+import org.cspoker.client.commands.AllInCommand;
+import org.cspoker.client.commands.BetCommand;
+import org.cspoker.client.commands.CallCommand;
 import org.cspoker.client.commands.CardsCommand;
-import org.cspoker.client.commands.CommandExecutor;
+import org.cspoker.client.commands.CheckCommand;
+import org.cspoker.client.commands.Command;
+import org.cspoker.client.commands.CreateTableCommand;
+import org.cspoker.client.commands.DealCommand;
+import org.cspoker.client.commands.FoldCommand;
 import org.cspoker.client.commands.HelpCommand;
+import org.cspoker.client.commands.JoinTableCommand;
+import org.cspoker.client.commands.LeaveTableCommand;
 import org.cspoker.client.commands.PotCommand;
-import org.cspoker.client.request.AllInRequest;
-import org.cspoker.client.request.BetRequest;
-import org.cspoker.client.request.CallRequest;
-import org.cspoker.client.request.CheckRequest;
-import org.cspoker.client.request.CreateTableRequest;
-import org.cspoker.client.request.DealRequest;
-import org.cspoker.client.request.FoldRequest;
-import org.cspoker.client.request.JoinTableRequest;
-import org.cspoker.client.request.LeaveTableRequest;
-import org.cspoker.client.request.ListTablesRequest;
-import org.cspoker.client.request.PingRequest;
-import org.cspoker.client.request.RaiseRequest;
-import org.cspoker.client.request.StartGameRequest;
+import org.cspoker.client.commands.RaiseCommand;
+import org.cspoker.client.commands.SayCommand;
+import org.cspoker.client.commands.StartGameCommand;
+import org.cspoker.client.common.RemotePlayerCommunicationFactoryImpl;
+import org.cspoker.client.common.RemotePlayerCommunicationFactory.NoProviderException;
+import org.cspoker.client.eventlistener.StatefulConsoleListener;
 import org.cspoker.client.savedstate.Cards;
 import org.cspoker.client.savedstate.Pot;
+import org.cspoker.common.game.RemotePlayerCommunication;
 
 /**
  * Connect to the given server and passes on user commands.
  */
 public class Client {
 
-    private HashMap<String, CommandExecutor> commands = new HashMap<String,CommandExecutor>();
+    private HashMap<String, Command> commands = new HashMap<String,Command>();
     private Console console;
-    private EventsThread eventsThread;
+    private final RemotePlayerCommunication rpc;
     
-    public Client(String serverIP, int port, final String user, final String pass, Console console) throws IOException {
-	Authenticator.setDefault(new Authenticator() {
-	    @Override
-	    protected PasswordAuthentication getPasswordAuthentication() {
-	        return new PasswordAuthentication (user, pass.toCharArray());
-	    }
-	});
-	String address = "http://"+serverIP + ":" + port;
+    public Client(String server, int port, final String username
+	    , final String password, Console console) throws NoProviderException, RemoteException {
 	this.console = console;
-	registerCommands(address);
+	rpc = RemotePlayerCommunicationFactoryImpl.global_factory
+		.getRemotePlayerCommunication(server, port, username, password);
+	registerCommands();
     }
 
-    private void registerCommands(String address) throws MalformedURLException {
-	commands.put("PING", new PingRequest(address));
-	commands.put("LISTTABLES", new ListTablesRequest(address));
-	commands.put("CREATETABLE", new CreateTableRequest(address));
-	commands.put("JOINTABLE", new JoinTableRequest(address));
-	commands.put("LEAVETABLE", new LeaveTableRequest(address));
+    private void registerCommands() throws RemoteException {
+	commands.put("CREATETABLE", new CreateTableCommand(rpc, console));
+	commands.put("JOINTABLE", new JoinTableCommand(rpc, console));
+	commands.put("LEAVETABLE", new LeaveTableCommand(rpc, console));
 	
-	commands.put("STARTGAME", new StartGameRequest(address));
-	commands.put("DEAL", new DealRequest(address));
-	commands.put("CALL", new CallRequest(address));
-	commands.put("BET", new BetRequest(address));
-	commands.put("CHECK", new CheckRequest(address));
-	commands.put("FOLD", new FoldRequest(address));
-	commands.put("RAISE", new RaiseRequest(address));
-	commands.put("ALLIN", new AllInRequest(address));
+	commands.put("STARTGAME", new StartGameCommand(rpc, console));
+	commands.put("DEAL", new DealCommand(rpc, console));
+	commands.put("CALL", new CallCommand(rpc, console));
+	commands.put("BET", new BetCommand(rpc, console));
+	commands.put("CHECK", new CheckCommand(rpc, console));
+	commands.put("FOLD", new FoldCommand(rpc, console));
+	commands.put("RAISE", new RaiseCommand(rpc, console));
+	commands.put("ALLIN", new AllInCommand(rpc, console));
+	
+	commands.put("SAY", new SayCommand(rpc, console));
 	
 	Cards cards = new Cards();
 	Pot pot = new Pot();
-	CardsCommand cardsCommand = new CardsCommand(cards);
+	CardsCommand cardsCommand = new CardsCommand(console, cards);
 	commands.put("CARDS", cardsCommand);
-	PotCommand potCommand = new PotCommand(pot);
+	PotCommand potCommand = new PotCommand(console, pot);
 	commands.put("POT", potCommand);
 	
-	eventsThread = new EventsThread(address, cards, pot);
-	(new Thread(eventsThread)).start();
-	
-	HelpCommand help = new HelpCommand();
+	HelpCommand help = new HelpCommand(console);
 	commands.put("HELP", help);
+	
+	rpc.subscribeAllEventsListener(new StatefulConsoleListener(console,cards,pot));
     }
     
-    private CommandExecutor getCommand(String name){
+    private Command getCommand(String name){
 	return commands.get(name.toUpperCase());
     }
     
-    public String execute(String command, String... args) throws Exception{
-	CommandExecutor c=getCommand(command);
+    public void execute(String command, String... args) throws Exception{
+	Command c=getCommand(command);
 	if(c==null)
 	    throw new IllegalArgumentException("Not a valid command.");
-	String result = c.execute(args);
-	if(c.requiresEventUpdate())
-	    eventsThread.resetWait();
-	return result;
+	c.execute(args);
     }
 
     public void close() {
-	eventsThread.setRunning(false);	
+	// no op
     }
 
 }

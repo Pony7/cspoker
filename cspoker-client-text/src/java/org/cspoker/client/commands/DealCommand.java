@@ -13,23 +13,19 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.client.request.abstracts;
+package org.cspoker.client.commands;
 
-import java.net.MalformedURLException;
+import org.cspoker.client.Console;
+import org.cspoker.common.game.RemotePlayerCommunication;
 
-public abstract class OutputRequest extends HttpRequest {
+public class DealCommand extends AbstractCommand {
 
-    public OutputRequest(String address) throws MalformedURLException {
-	super(address);
+    public DealCommand(RemotePlayerCommunication rpc, Console console) {
+	super(rpc, console);
     }
 
-    @Override
-    protected boolean isDoOutput() {
-	return true;
+    public void execute(String... args) throws Exception {
+	rpc.deal();
     }
 
-    @Override
-    protected String getRequestMethod() {
-	return "POST";
-    }
 }

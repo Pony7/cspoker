@@ -13,37 +13,19 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.client.request;
+package org.cspoker.client.commands;
 
-import java.net.MalformedURLException;
+import org.cspoker.client.Console;
+import org.cspoker.common.game.RemotePlayerCommunication;
 
-import org.cspoker.client.request.abstracts.NoOutputRequest;
-import org.xml.sax.ContentHandler;
-import org.xml.sax.helpers.DefaultHandler;
+public class CreateTableCommand extends AbstractCommand {
 
-public class PingRequest extends NoOutputRequest{
-
-    public PingRequest(String url) throws MalformedURLException {
-	super(url);
+    public CreateTableCommand(RemotePlayerCommunication rpc, Console console) {
+	super(rpc, console);
     }
 
-    @Override
-    protected String getPath() {
-	return "/ping/";
+    public void execute(String... args) throws Exception {
+	rpc.createTable();
     }
-
-    @Override
-    protected String getResult() {
-	return "PONG"+n;
-    }
-    
-    @Override
-    protected ContentHandler getContentHandler() {
-
-	return new DefaultHandler(){
-
-	};
-    }
-
 
 }

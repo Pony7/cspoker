@@ -17,23 +17,26 @@ package org.cspoker.client.commands;
 
 import java.util.List;
 
+import org.cspoker.client.Console;
 import org.cspoker.client.savedstate.Cards;
 import org.cspoker.common.game.elements.cards.cardElements.Card;
 
-public class CardsCommand implements CommandExecutor {
+public class CardsCommand implements Command {
 
     private Cards cards;
+    private Console console;
 
-    public CardsCommand(Cards cards) {
+    public CardsCommand(Console console, Cards cards) {
 	this.cards = cards;
+	this.console = console;
     }
 
-    public String execute(String... args) throws Exception {
+    public void execute(String... args) throws Exception {
 	List<Card> privateCards;
 	List<Card> communityCards;
 	synchronized (cards) {
 	    privateCards = cards.getPrivateCards();
-	    communityCards = cards.getRiverCards();
+	    communityCards = cards.getCommonCards();
 	}
 	String result = "You hold: ";
 	if(privateCards.size()!=2){
@@ -56,11 +59,7 @@ public class CardsCommand implements CommandExecutor {
 	    }
 	}
 	result+="."+n;
-	return result;
-    }
-
-    public boolean requiresEventUpdate() {
-	return false;
+	console.print(result);
     }
 
 }

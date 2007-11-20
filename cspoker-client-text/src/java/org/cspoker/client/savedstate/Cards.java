@@ -35,7 +35,7 @@ public class Cards {
         return Collections.unmodifiableList(privateCards);
     }
 
-    public synchronized List<Card> getRiverCards() {
+    public synchronized List<Card> getCommonCards() {
         return Collections.unmodifiableList(riverCards);
     }
     
@@ -52,7 +52,7 @@ public class Cards {
 	privateCards.addAll(cards);
     }
     
-    public synchronized void addRiverCards(List<Card> cards){
+    public synchronized void addCommonCards(List<Card> cards){
 	if(riverCards.size()+cards.size()>5)
 	    throw new IllegalStateException("Can't have more than 5 cards in the river.");
 	riverCards.addAll(cards);

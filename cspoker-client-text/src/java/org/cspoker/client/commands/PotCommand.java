@@ -15,22 +15,21 @@
  */
 package org.cspoker.client.commands;
 
+import org.cspoker.client.Console;
 import org.cspoker.client.savedstate.Pot;
 
-public class PotCommand implements CommandExecutor {
+public class PotCommand implements Command {
 
     private Pot pot;
+    private Console console;
 
-    public PotCommand(Pot pot) {
+    public PotCommand(Console console, Pot pot) {
 	this.pot = pot;
+	this.console = console;
     }
 
-    public String execute(String... args) throws Exception {
-	return "The total pot is "+pot.getPot()+" chips.";
-    }
-    
-    public boolean requiresEventUpdate() {
-	return false;
+    public void execute(String... args) throws Exception {
+	console.print("The total pot is "+pot.getPot()+" chips.");
     }
 
 }
