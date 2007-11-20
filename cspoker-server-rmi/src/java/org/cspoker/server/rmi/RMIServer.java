@@ -16,6 +16,7 @@
 package org.cspoker.server.rmi;
 
 import java.rmi.AccessException;
+import java.rmi.NoSuchObjectException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -34,8 +35,11 @@ public class RMIServer implements RemoteRMIServer {
     
     private final XmlFileAuthenticator authenticator;
 
-    public RMIServer(XmlFileAuthenticator authenticator) {
+    private int port;
+
+    public RMIServer(XmlFileAuthenticator authenticator, int port) {
 	this.authenticator = authenticator;
+	this.port = port;
     }
 
     public RemotePlayerCommunication login(String username, String password) throws RemoteException {
@@ -43,6 +47,11 @@ public class RMIServer implements RemoteRMIServer {
 	if(authenticator.hasPassword(username, password)){
 	    try {
 		RemotePlayerCommunication p = SessionManager.global_session_manager.getSession(username).getPlayerCommunication();
+		try {
+		    UnicastRemoteObject.unexportObject(p, true);
+		} catch (NoSuchObjectException e) {
+		    // ignore
+		}
 		RemotePlayerCommunication stub=(RemotePlayerCommunication)UnicastRemoteObject.exportObject(p, 0);
 		return stub;
 	    } catch (PlayerKilledExcepion e) {
@@ -58,7 +67,7 @@ public class RMIServer implements RemoteRMIServer {
     void start() throws AccessException, RemoteException {
 	System.setSecurityManager(null);
 	RemoteRMIServer stub=(RemoteRMIServer)UnicastRemoteObject.exportObject(this, 0);
-	Registry registry= LocateRegistry.getRegistry();
+	Registry registry= LocateRegistry.getRegistry(port);
 	registry.rebind("CSPokerServer",stub);
     }
 

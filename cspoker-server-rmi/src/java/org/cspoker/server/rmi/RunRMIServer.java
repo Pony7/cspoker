@@ -15,8 +15,11 @@ public class RunRMIServer {
     private final static Logger logger = Logger.getLogger(RunRMIServer.class);
         
     public static void main(String[] args) throws NumberFormatException, IOException {
+	if(args.length!=1)
+	    usage();
+	int port = Integer.parseInt(args[0]);
 	logger.info("Starting RMI server");
-	RMIServer server = new RMIServer(new XmlFileAuthenticator());
+	RMIServer server = new RMIServer(new XmlFileAuthenticator(), port);
 	server.start();
     }
 
