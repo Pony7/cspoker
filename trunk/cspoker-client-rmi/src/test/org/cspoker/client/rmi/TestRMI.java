@@ -19,7 +19,7 @@ import java.rmi.AccessException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 
-import org.cspoker.client.rmi.src.java.RemotePlayerCommunicationFactory;
+import org.cspoker.client.rmi.RemotePlayerCommunicationFactory;
 import org.cspoker.common.game.IllegalActionException;
 import org.cspoker.common.game.RemotePlayerCommunication;
 import org.cspoker.common.game.elements.table.TableId;
