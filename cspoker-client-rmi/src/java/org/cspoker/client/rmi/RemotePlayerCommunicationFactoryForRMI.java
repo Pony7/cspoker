@@ -29,11 +29,11 @@ import org.cspoker.common.game.eventlisteners.RemoteAllEventsListener;
 import org.cspoker.common.rmi.RemoteRMIServer;
 
 
-public class RemotePlayerCommunicationFactory {
+public class RemotePlayerCommunicationFactoryForRMI {
 
     private RemoteRMIServer server;
 
-    public RemotePlayerCommunicationFactory(String server) throws AccessException, RemoteException, NotBoundException{
+    public RemotePlayerCommunicationFactoryForRMI(String server) throws AccessException, RemoteException, NotBoundException{
 	System.setSecurityManager(null);
 	Registry registry= LocateRegistry.getRegistry(server);
 	this.server = (RemoteRMIServer)registry.lookup("CSPokerServer");

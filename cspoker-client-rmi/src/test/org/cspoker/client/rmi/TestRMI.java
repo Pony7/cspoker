@@ -19,7 +19,7 @@ import java.rmi.AccessException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 
-import org.cspoker.client.rmi.RemotePlayerCommunicationFactory;
+import org.cspoker.client.rmi.RemotePlayerCommunicationFactoryForRMI;
 import org.cspoker.common.game.IllegalActionException;
 import org.cspoker.common.game.RemotePlayerCommunication;
 import org.cspoker.common.game.elements.table.TableId;
@@ -58,7 +58,7 @@ public class TestRMI {
      * @throws IllegalActionException 
      */
     public static void main(String[] args) throws AccessException, RemoteException, NotBoundException, IllegalActionException {
-	RemotePlayerCommunicationFactory f = new RemotePlayerCommunicationFactory("localhost");
+	RemotePlayerCommunicationFactoryForRMI f = new RemotePlayerCommunicationFactoryForRMI("localhost");
 	RemotePlayerCommunication guy = f.login("guy", "test");
 	System.out.println("Guy Logged In and will print events to sout");
 
