@@ -66,8 +66,8 @@ public class HttpCSPokerServer {
     }
 
     protected void loadContext(){
-	HttpContext pingContext = server.createContext("/cspoker/", new CSPokerHandler());
-	pingContext.setAuthenticator(authenticator);
+	HttpContext mainContext = server.createContext("/cspoker/", new CSPokerHandler());
+	mainContext.setAuthenticator(authenticator);
 
 	server.setExecutor(RequestExecutor.getInstance());
 	server.createContext("/", new CrossDomain());
