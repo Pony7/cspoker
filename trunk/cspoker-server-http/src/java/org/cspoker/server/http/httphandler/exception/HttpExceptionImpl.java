@@ -17,8 +17,7 @@ package org.cspoker.server.http.httphandler.exception;
 
 
 /**
- * A wrapper exception for exceptions thrown inside a SAX ContentHandler with 
- * support for Http status codes.
+ * A wrapper exception for exceptions with support for Http status codes.
  */
 public class HttpExceptionImpl extends Exception implements HttpException{
 

@@ -23,40 +23,73 @@ import org.cspoker.common.xmlcommunication.XmlEventListener;
 import org.cspoker.server.common.xmlcommunication.handler.CommandDelegatingHandler;
 import org.cspoker.server.common.xmlcommunication.handler.DelegatingToOneHandler;
 import org.cspoker.server.game.player.GamePlayer;
-import org.cspoker.server.game.playerCommunication.PlayerCommunicationImpl;
+import org.cspoker.server.game.session.PlayerKilledExcepion;
+import org.cspoker.server.game.session.Session;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
 
-public class XmlPlayerCommunication {
+public class XmlPlayerCommunication implements XmlEventListener{
 
     private final PlayerCommunication playerComm;
-    private final XmlEventListener collector;
+    private XmlEventListener listener;
     private final GamePlayer player;
+
+    private final StringBuilder cache;
 
     private final static Logger logger = Logger.getLogger(XmlPlayerCommunication.class);
     
-    XmlPlayerCommunication(GamePlayer player, XmlEventListener collector) {
-	this.playerComm = new PlayerCommunicationImpl(player);
-	this.collector = collector;
-	this.player = player;
-	playerComm.subscribeAllEventsListener(new XmlAllEventsListener(collector));
+    XmlPlayerCommunication(Session session, XmlEventListener listener) throws PlayerKilledExcepion {
+	this.playerComm = session.getPlayerCommunication();
+	this.listener = listener;
+	this.player = session.getPlayer();
+	cache = new StringBuilder();
+	playerComm.subscribeAllEventsListener(new XmlAllEventsListener(listener));
     }
 
     public void handle(InputSource xml) throws SAXException {
 	XMLReader xr = XMLReaderFactory.createXMLReader();
-	xr.setContentHandler(new DelegatingToOneHandler(new CommandDelegatingHandler(playerComm, collector)));
+	xr.setContentHandler(new DelegatingToOneHandler(new CommandDelegatingHandler(playerComm, this)));
 	try {
 	    xr.parse(xml);
 	} catch (IOException e) {
 	    logger.error("IOException when parsing xml request.",e);
 	    throw new IllegalStateException("IOException when parsing xml request.");
 	}
-
     }
-
+    
     public String getPlayerName() {
 	return player.getName();
+    }
+
+    public XmlEventListener getXmlEventListener() {
+	return listener;
+    }
+
+    public synchronized void cache(String xml) {
+	cache.append(xml);
+    }
+
+    public synchronized String getAndFlushCache(){
+	String s = cache.toString();
+	cache.setLength(0);
+	return s;
+    }
+    
+    public synchronized void flushToListener(){
+	if(listener!=null){
+	    listener.collect(getAndFlushCache());
+	}
+    }
+    
+    public synchronized void updateEventListener(XmlEventListener newlist){
+	listener = newlist;
+	flushToListener();
+    }
+
+    public void collect(String xmlEvent) {
+	cache(xmlEvent);
+	flushToListener();
     }
 }

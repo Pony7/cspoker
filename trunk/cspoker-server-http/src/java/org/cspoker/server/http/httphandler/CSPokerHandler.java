@@ -17,11 +17,9 @@ package org.cspoker.server.http.httphandler;
 
 import org.cspoker.server.common.xmlcommunication.XmlPlayerCommunication;
 import org.cspoker.server.common.xmlcommunication.XmlPlayerCommunicationFactory;
-import org.cspoker.server.game.player.GamePlayer;
-import org.cspoker.server.game.player.IllegalNameException;
-import org.cspoker.server.game.player.PlayerFactory;
-import org.cspoker.server.http.StringCollector;
-import org.cspoker.server.http.StringCollectorFactory;
+import org.cspoker.server.game.session.PlayerKilledExcepion;
+import org.cspoker.server.game.session.Session;
+import org.cspoker.server.game.session.SessionManager;
 import org.cspoker.server.http.httphandler.abstracts.AbstractHttpHandlerImpl;
 import org.cspoker.server.http.httphandler.exception.HttpExceptionImpl;
 import org.xml.sax.InputSource;
@@ -36,21 +34,20 @@ public class CSPokerHandler extends AbstractHttpHandlerImpl{
     protected String getResponse(HttpExchange http) throws HttpExceptionImpl{
 	
 	    String username= AbstractHttpHandlerImpl.toPlayerName(http.getRequestHeaders());
-	    GamePlayer player;
+	    Session session = SessionManager.global_session_manager.getSession(username);
 	    try {
-		player = PlayerFactory.global_Player_Factory.getUniquePlayer(username);
-	    } catch (IllegalNameException e) {
-		throw new HttpExceptionImpl(e,400);
-	    }
-	    StringCollector collector = StringCollectorFactory.getUniqueStringCollector(player);
-	    XmlPlayerCommunication playerComm = XmlPlayerCommunicationFactory.getRegisteredXmlPlayerCommunication(player, collector);
-	    try {
-		playerComm.handle(new InputSource(http.getRequestBody()));
-	    } catch (SAXException e) {
+		XmlPlayerCommunication playerComm = XmlPlayerCommunicationFactory
+			.getRegisteredXmlPlayerCommunication(session, null);
+		try {
+		    playerComm.handle(new InputSource(http.getRequestBody()));
+		} catch (SAXException e) {
+		    throw new HttpExceptionImpl(e, 400);
+		}
+		return playerComm.getAndFlushCache();
+		
+	    } catch (PlayerKilledExcepion e) {
 		throw new HttpExceptionImpl(e, 400);
 	    }
-	    return collector.getAndFlush();
-
     }
     
     

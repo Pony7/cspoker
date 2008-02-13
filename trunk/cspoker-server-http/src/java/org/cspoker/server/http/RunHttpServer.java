@@ -44,7 +44,7 @@ public class RunHttpServer {
     }
 
     private static void usage() {
-	logger.fatal("usage: java -jar cspoker-server.jar [portnumber] [optional arguments]");
+	logger.fatal("usage: java -jar cspoker-server.jar [portnumber]");
 	System.exit(0);
     }
 }

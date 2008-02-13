@@ -27,7 +27,7 @@ import org.cspoker.server.game.elements.chips.IllegalValueException;
  *
  * Each player should be created by using the given factory methods.
  *
- * This will ensure each player id and player name is unique.
+ * This will ensure each player id is unique.
  *
  * Also note that the constructor of player is for this reason only-package
  * accessible.

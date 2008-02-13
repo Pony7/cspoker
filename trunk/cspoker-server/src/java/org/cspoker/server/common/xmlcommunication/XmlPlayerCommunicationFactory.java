@@ -16,11 +16,12 @@
 package org.cspoker.server.common.xmlcommunication;
 
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.cspoker.common.xmlcommunication.XmlEventListener;
-import org.cspoker.server.game.player.GamePlayer;
+import org.cspoker.server.game.session.PlayerKilledExcepion;
+import org.cspoker.server.game.session.Session;
 
 /**
  * Creates a unique player communication instance for every player name and provides
@@ -28,21 +29,21 @@ import org.cspoker.server.game.player.GamePlayer;
  */
 public class XmlPlayerCommunicationFactory {
 
-    private final static Map<GamePlayer,XmlPlayerCommunication> playerComs=new HashMap<GamePlayer,XmlPlayerCommunication>();
+    private final static Map<Session,XmlPlayerCommunication> playerComs=new ConcurrentHashMap<Session,XmlPlayerCommunication>();
     
-    public static synchronized XmlPlayerCommunication getRegisteredXmlPlayerCommunication(GamePlayer player, XmlEventListener collector){
-	XmlPlayerCommunication result=playerComs.get(player);
+    public static synchronized XmlPlayerCommunication getRegisteredXmlPlayerCommunication(Session session, XmlEventListener listener) throws PlayerKilledExcepion{
+	XmlPlayerCommunication result=playerComs.get(session);
 	if(result==null){
-	    
-	    result=new XmlPlayerCommunication(player, collector);
-	    playerComs.put(player, result);
-	    
+	    result=new XmlPlayerCommunication(session,listener);
+	    playerComs.put(session, result);
+	}else{
+	    result.updateEventListener(listener);
 	}
 	return result;
     }
     
-    public static synchronized void unRegister(String name) {
-	playerComs.remove(name);
+    public static synchronized void unRegister(Session session) {
+	playerComs.remove(session);
     }
     
 }

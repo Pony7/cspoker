@@ -66,6 +66,8 @@ ContentHandler {
 		return new DealHandler(attrs);
 	    }else if ("allin".equalsIgnoreCase(localName)){
 		return new AllinHandler(attrs);
+	    }else if ("say".equalsIgnoreCase(localName)){
+		return new SayHandler(attrs);
 	    }else if ("jointable".equalsIgnoreCase(localName)){
 		return new JointableHandler(attrs);
 	    }else if ("leavetable".equalsIgnoreCase(localName)){
@@ -74,6 +76,8 @@ ContentHandler {
 		return new CreatetableHandler(attrs);
 	    }else if ("startgame".equalsIgnoreCase(localName)){
 		return new StartgameHandler(attrs);
+	    }else if ("kill".equalsIgnoreCase(localName)){
+		return new KillHandler(attrs);
 	    }
 	} catch (IllegalActionException e) {
 	    try {
@@ -118,6 +122,7 @@ ContentHandler {
 
     }
 
+    
 
     private class StartgameHandler extends DefaultHandler {
 	public StartgameHandler(Attributes attrs) throws IllegalActionException {
@@ -155,6 +160,34 @@ ContentHandler {
 	    playerComm.allIn();
 	}
 
+    }
+    
+    private class SayHandler extends DefaultHandler {
+
+	private StringBuilder sb = new StringBuilder();
+	
+	public SayHandler(Attributes attrs) throws IllegalActionException {
+	    
+	}
+	
+	@Override
+	public void startElement(String uri, String localName, String name,
+		Attributes attributes) throws SAXException {
+	    sb.setLength(0);
+	}
+	
+	@Override
+	public void characters(char[] ch, int start, int length)
+		throws SAXException {
+	    sb.append(ch,start,length);
+	}
+	
+	@Override
+	public void endElement(String uri, String localName, String name)
+		throws SAXException {
+	    playerComm.say(sb.toString());
+	}
+	
     }
 
     private class DealHandler extends DefaultHandler {
@@ -201,6 +234,14 @@ ContentHandler {
 
 	public CallHandler(Attributes attrs) throws IllegalActionException {
 	    playerComm.call();
+	}
+
+    }
+    
+    private class KillHandler extends DefaultHandler {
+
+	public KillHandler(Attributes attrs) throws IllegalActionException {
+	    playerComm.kill();
 	}
 
     }
