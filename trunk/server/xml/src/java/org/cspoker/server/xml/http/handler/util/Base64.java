@@ -84,7 +84,7 @@ SOFTWARE, EVEN IF IBM IS APPRISED OF THE POSSIBILITY OF SUCH
 DAMAGES.  */
 
 
-package org.cspoker.server.xml.http.httphandler.util;
+package org.cspoker.server.xml.http.handler.util;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
