@@ -1,4 +1,4 @@
-package org.cspoker.server.game.gameControl;
+package org.cspoker.server.common.game.gameControl;
 
 import junit.framework.TestCase;
 
