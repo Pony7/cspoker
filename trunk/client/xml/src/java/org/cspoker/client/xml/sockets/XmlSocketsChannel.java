@@ -13,7 +13,7 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.client.xmlcommunication.sockets;
+package org.cspoker.client.xml.sockets;
 
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -30,10 +30,10 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.apache.log4j.Logger;
-import org.cspoker.client.xmlcommunication.common.XmlChannel;
-import org.cspoker.client.xmlcommunication.sockets.exceptions.ConnectionLostException;
-import org.cspoker.client.xmlcommunication.sockets.exceptions.LoginFailedException;
-import org.cspoker.server.XmlEventListener;
+import org.cspoker.client.xml.common.XmlChannel;
+import org.cspoker.client.xml.sockets.exceptions.ConnectionLostException;
+import org.cspoker.client.xml.sockets.exceptions.LoginFailedException;
+import org.cspoker.common.xml.XmlEventListener;
 
 public class XmlSocketsChannel implements XmlChannel{
 

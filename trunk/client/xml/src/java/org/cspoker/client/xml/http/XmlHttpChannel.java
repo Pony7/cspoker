@@ -13,7 +13,7 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.client.xmlcommunication.http;
+package org.cspoker.client.xml.http;
 
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -28,9 +28,9 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import org.cspoker.client.xmlcommunication.common.XmlChannel;
-import org.cspoker.client.xmlcommunication.sockets.exceptions.LoginFailedException;
-import org.cspoker.server.XmlEventListener;
+import org.cspoker.client.xml.common.XmlChannel;
+import org.cspoker.client.xml.sockets.exceptions.LoginFailedException;
+import org.cspoker.common.xml.XmlEventListener;
 
 public class XmlHttpChannel implements XmlChannel {
 
