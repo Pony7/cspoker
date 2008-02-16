@@ -13,10 +13,22 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.server.game.playerCommunication;
+package org.cspoker.server.common.game.session;
 
-import org.cspoker.server.common.player.PlayerFactory;
+import org.cspoker.server.common.player.GamePlayer;
 
-class TestPlayerFactory extends PlayerFactory{
+public class PlayerKilledExcepion extends Exception {
 
+    private static final long serialVersionUID = -6931653111428546063L;
+    
+    private GamePlayer player;
+
+    public PlayerKilledExcepion(GamePlayer player) {
+	this.player = player;
+    }
+    
+    public GamePlayer getPlayer(){
+	return player;
+    }
+    
 }

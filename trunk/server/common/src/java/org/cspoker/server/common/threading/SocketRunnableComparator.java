@@ -20,19 +20,19 @@ import java.util.Comparator;
 
 public class SocketRunnableComparator implements Comparator<Runnable> {
 
-    /**
-     * Note: this comparator imposes orderings that are inconsistent with equals.
-     */
-    public int compare(Runnable o1, Runnable o2) {
-	int priority1=getPriority(o1);
-	int priority2=getPriority(o2);
-	//negative if 1 is less than 2; if 1 comes before 2; of 1 has a higher priority than 2
-	return -priority1+priority2;
-    }
-    
-    public int getPriority(Runnable o){
-	if(o instanceof Prioritizable)
-	    return ((Prioritizable)o).getPriority();
-	return 0;
-    }
+	/**
+	 * Note: this comparator imposes orderings that are inconsistent with equals.
+	 */
+	public int compare(Runnable o1, Runnable o2) {
+		int priority1=getPriority(o1);
+		int priority2=getPriority(o2);
+		//negative if 1 is less than 2; if 1 comes before 2; of 1 has a higher priority than 2
+		return -priority1+priority2;
+	}
+
+	public int getPriority(Runnable o){
+		if(o instanceof Prioritizable)
+			return ((Prioritizable)o).getPriority();
+		return 0;
+	}
 }
