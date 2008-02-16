@@ -17,7 +17,7 @@ package org.cspoker.server.common.game.session;
 
 import org.cspoker.server.common.game.player.GamePlayer;
 import org.cspoker.server.common.game.player.PlayerFactory;
-import org.cspoker.server.common.game.playerCommunication.PlayerCommunicationImpl;
+import org.cspoker.server.common.game.playercommunication.PlayerCommunicationImpl;
 
 public class Session {
 

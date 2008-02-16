@@ -16,7 +16,7 @@
 package org.cspoker.server.xml.http.authentication;
 
 import org.apache.log4j.Logger;
-import org.cspoker.server.common.authentication.XmlFileAuthenticator;
+import org.cspoker.server.common.common.authentication.XmlFileAuthenticator;
 
 import com.sun.net.httpserver.BasicAuthenticator;
 

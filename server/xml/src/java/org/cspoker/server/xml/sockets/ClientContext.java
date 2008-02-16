@@ -31,11 +31,11 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.cspoker.server.common.xmlcommunication.XmlPlayerCommunication;
-import org.cspoker.server.common.xmlcommunication.XmlPlayerCommunicationFactory;
-import org.cspoker.server.game.player.GamePlayer;
-import org.cspoker.server.game.player.IllegalNameException;
-import org.cspoker.server.game.player.PlayerFactory;
+import org.cspoker.server.common.common.xmlcommunication.XmlPlayerCommunication;
+import org.cspoker.server.common.common.xmlcommunication.XmlPlayerCommunicationFactory;
+import org.cspoker.server.common.player.GamePlayer;
+import org.cspoker.server.common.player.IllegalNameException;
+import org.cspoker.server.common.player.PlayerFactory;
 
 
 public class ClientContext implements XmlEventListener{

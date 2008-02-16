@@ -23,7 +23,7 @@ import java.nio.channels.ServerSocketChannel;
 import java.util.concurrent.Executor;
 
 import org.apache.log4j.Logger;
-import org.cspoker.server.common.threading.RequestExecutor;
+import org.cspoker.server.common.common.threading.RequestExecutor;
 import org.cspoker.server.xml.sockets.runnables.WaitForIO;
 
 public class SocketServer {

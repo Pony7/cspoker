@@ -18,8 +18,8 @@ package org.cspoker.server.xml.sockets.runnables;
 import java.io.StringReader;
 
 import org.apache.log4j.Logger;
-import org.cspoker.server.common.authentication.XmlFileAuthenticator;
-import org.cspoker.server.common.threading.Prioritizable;
+import org.cspoker.server.common.common.authentication.XmlFileAuthenticator;
+import org.cspoker.server.common.common.threading.Prioritizable;
 import org.cspoker.server.xml.sockets.ClientContext;
 import org.cspoker.server.xml.sockets.security.PolicyFile;
 import org.cspoker.server.xml.sockets.security.SocketsAuthenticator;
