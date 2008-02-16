@@ -24,10 +24,10 @@ import org.cspoker.common.events.gameEvents.playerActionEvents.BigBlindEvent;
 import org.cspoker.common.events.gameEvents.playerActionEvents.SmallBlindEvent;
 import org.cspoker.common.events.gameEvents.privateEvents.NewPocketCardsEvent;
 import org.cspoker.common.exceptions.IllegalActionException;
-import org.cspoker.server.common.GameMediator;
-import org.cspoker.server.common.elements.chips.IllegalValueException;
-import org.cspoker.server.common.gameControl.Game;
-import org.cspoker.server.common.player.GamePlayer;
+import org.cspoker.server.common.game.GameMediator;
+import org.cspoker.server.common.game.elements.chips.IllegalValueException;
+import org.cspoker.server.common.game.gameControl.Game;
+import org.cspoker.server.common.game.player.GamePlayer;
 
 /**
  * The round after the initial 2 cards are dealt.

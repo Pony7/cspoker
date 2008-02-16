@@ -71,9 +71,9 @@ import org.cspoker.common.events.serverEvents.ServerMessageEvent;
 import org.cspoker.common.events.serverEvents.TableCreatedEvent;
 import org.cspoker.common.exceptions.IllegalActionException;
 import org.cspoker.common.player.PlayerId;
-import org.cspoker.server.common.GameManager;
-import org.cspoker.server.common.player.GamePlayer;
-import org.cspoker.server.common.session.SessionManager;
+import org.cspoker.server.common.game.GameManager;
+import org.cspoker.server.common.game.player.GamePlayer;
+import org.cspoker.server.common.game.session.SessionManager;
 
 /**
  * A class of player communications.

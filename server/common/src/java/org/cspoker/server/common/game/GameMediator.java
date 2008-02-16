@@ -66,10 +66,10 @@ import org.cspoker.common.events.gameEvents.playerActionEvents.SmallBlindEvent;
 import org.cspoker.common.events.gameEvents.privateEvents.NewPocketCardsEvent;
 import org.cspoker.common.exceptions.IllegalActionException;
 import org.cspoker.common.player.PlayerId;
-import org.cspoker.server.common.elements.table.PlayerListFullException;
-import org.cspoker.server.common.gameControl.GameControl;
-import org.cspoker.server.common.gameControl.PlayerAction;
-import org.cspoker.server.common.player.GamePlayer;
+import org.cspoker.server.common.game.elements.table.PlayerListFullException;
+import org.cspoker.server.common.game.gameControl.GameControl;
+import org.cspoker.server.common.game.gameControl.PlayerAction;
+import org.cspoker.server.common.game.player.GamePlayer;
 
 /**
  * A class of game mediators to decouple the game control from all users:

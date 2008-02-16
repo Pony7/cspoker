@@ -28,13 +28,13 @@ import org.cspoker.common.events.gameEvents.ShowHandEvent;
 import org.cspoker.common.events.gameEvents.WinnerEvent;
 import org.cspoker.common.player.PlayerId;
 import org.cspoker.common.player.Winner;
-import org.cspoker.server.common.GameMediator;
-import org.cspoker.server.common.elements.cards.hand.Hand;
-import org.cspoker.server.common.elements.chips.IllegalValueException;
-import org.cspoker.server.common.elements.chips.pot.GamePot;
-import org.cspoker.server.common.player.GamePlayer;
-import org.cspoker.server.common.player.GameShowdownPlayer;
-import org.cspoker.server.common.player.GameWinner;
+import org.cspoker.server.common.game.GameMediator;
+import org.cspoker.server.common.game.elements.cards.hand.Hand;
+import org.cspoker.server.common.game.elements.chips.IllegalValueException;
+import org.cspoker.server.common.game.elements.chips.pot.GamePot;
+import org.cspoker.server.common.game.player.GamePlayer;
+import org.cspoker.server.common.game.player.GameShowdownPlayer;
+import org.cspoker.server.common.game.player.GameWinner;
 
 /**
  * A class to determine who has won each pot.

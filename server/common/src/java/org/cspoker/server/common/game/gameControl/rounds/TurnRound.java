@@ -18,9 +18,9 @@ package org.cspoker.server.common.game.gameControl.rounds;
 
 import org.apache.log4j.Logger;
 import org.cspoker.common.events.gameEvents.NewRoundEvent;
-import org.cspoker.server.common.GameMediator;
-import org.cspoker.server.common.gameControl.Game;
-import org.cspoker.server.common.player.GamePlayer;
+import org.cspoker.server.common.game.GameMediator;
+import org.cspoker.server.common.game.gameControl.Game;
+import org.cspoker.server.common.game.player.GamePlayer;
 
 public class TurnRound extends BettingRound {
     private static Logger logger = Logger.getLogger(TurnRound.class);

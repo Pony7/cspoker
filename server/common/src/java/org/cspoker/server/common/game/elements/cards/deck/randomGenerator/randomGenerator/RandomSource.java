@@ -1,4 +1,4 @@
-package org.cspoker.server.elements.cards.deck.randomGenerator;
+package org.cspoker.server.common.game.elements.cards.deck.randomGenerator.randomGenerator;
 
 import java.util.Random;
 

@@ -22,11 +22,11 @@ import java.util.List;
 import org.cspoker.common.events.gameEvents.NewDealEvent;
 import org.cspoker.common.exceptions.IllegalActionException;
 import org.cspoker.common.player.Player;
-import org.cspoker.server.common.GameMediator;
-import org.cspoker.server.common.gameControl.Game;
-import org.cspoker.server.common.gameControl.PlayerAction;
-import org.cspoker.server.common.gameControl.rules.BettingRules;
-import org.cspoker.server.common.player.GamePlayer;
+import org.cspoker.server.common.game.GameMediator;
+import org.cspoker.server.common.game.gameControl.Game;
+import org.cspoker.server.common.game.gameControl.PlayerAction;
+import org.cspoker.server.common.game.gameControl.rules.BettingRules;
+import org.cspoker.server.common.game.player.GamePlayer;
 
 /**
  * An abstract class to represent rounds. A player can do actions in a round,

@@ -28,12 +28,12 @@ import org.cspoker.common.events.gameEvents.WinnerEvent;
 import org.cspoker.common.events.gameEvents.playerActionEvents.AllInEvent;
 import org.cspoker.common.exceptions.IllegalActionException;
 import org.cspoker.common.player.Winner;
-import org.cspoker.server.common.GameMediator;
-import org.cspoker.server.common.elements.chips.IllegalValueException;
-import org.cspoker.server.common.elements.chips.pot.GamePots;
-import org.cspoker.server.common.gameControl.Game;
-import org.cspoker.server.common.player.GameAllInPlayer;
-import org.cspoker.server.common.player.GamePlayer;
+import org.cspoker.server.common.game.GameMediator;
+import org.cspoker.server.common.game.elements.chips.IllegalValueException;
+import org.cspoker.server.common.game.elements.chips.pot.GamePots;
+import org.cspoker.server.common.game.gameControl.Game;
+import org.cspoker.server.common.game.player.GameAllInPlayer;
+import org.cspoker.server.common.game.player.GamePlayer;
 
 /**
  * A class to represent betting rounds.

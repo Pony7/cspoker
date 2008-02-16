@@ -1,4 +1,4 @@
-package org.cspoker.server.game.elements.cards.hand;
+package org.cspoker.server.common.game.elements.cards.hand;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -9,8 +9,8 @@ import org.apache.log4j.Logger;
 import org.cspoker.common.elements.cards.Card;
 import org.cspoker.common.elements.cards.Rank;
 import org.cspoker.common.elements.cards.Suit;
-import org.cspoker.server.common.elements.cards.hand.Hand;
-import org.cspoker.server.game.utilities.TestExactCard;
+import org.cspoker.server.common.game.elements.cards.hand.Hand;
+import org.cspoker.server.common.game.utilities.TestExactCard;
 
 public class TestHandIterator extends TestCase {
     private static Logger logger = Logger.getLogger(TestHandIterator.class);

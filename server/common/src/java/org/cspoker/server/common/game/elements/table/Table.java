@@ -24,8 +24,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.cspoker.common.elements.table.TableId;
 import org.cspoker.common.player.PlayerId;
-import org.cspoker.server.common.gameControl.GameProperty;
-import org.cspoker.server.common.player.GamePlayer;
+import org.cspoker.server.common.game.gameControl.GameProperty;
+import org.cspoker.server.common.game.player.GamePlayer;
 
 /**
  * A class to represent players at the table.

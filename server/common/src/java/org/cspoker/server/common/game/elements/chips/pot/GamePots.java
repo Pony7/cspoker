@@ -21,8 +21,8 @@ import java.util.Collections;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.cspoker.server.common.elements.chips.IllegalValueException;
-import org.cspoker.server.common.player.GamePlayer;
+import org.cspoker.server.common.game.elements.chips.IllegalValueException;
+import org.cspoker.server.common.game.player.GamePlayer;
 
 /**
  * A class to represent a group of pots.

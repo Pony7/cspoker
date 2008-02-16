@@ -16,8 +16,8 @@
 
 package org.cspoker.server.common.game.gameControl;
 
-import org.cspoker.server.common.gameControl.rules.BettingRules;
-import org.cspoker.server.common.gameControl.rules.NoLimit;
+import org.cspoker.server.common.game.gameControl.rules.BettingRules;
+import org.cspoker.server.common.game.gameControl.rules.NoLimit;
 
 /**
  * 

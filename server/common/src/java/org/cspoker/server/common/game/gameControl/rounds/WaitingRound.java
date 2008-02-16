@@ -17,10 +17,10 @@
 package org.cspoker.server.common.game.gameControl.rounds;
 
 import org.cspoker.common.exceptions.IllegalActionException;
-import org.cspoker.server.common.GameMediator;
-import org.cspoker.server.common.gameControl.Game;
-import org.cspoker.server.common.gameControl.PlayerAction;
-import org.cspoker.server.common.player.GamePlayer;
+import org.cspoker.server.common.game.GameMediator;
+import org.cspoker.server.common.game.gameControl.Game;
+import org.cspoker.server.common.game.gameControl.PlayerAction;
+import org.cspoker.server.common.game.player.GamePlayer;
 
 public class WaitingRound extends Round {
 
