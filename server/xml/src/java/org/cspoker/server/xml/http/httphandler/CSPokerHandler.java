@@ -13,15 +13,15 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.server.http.httphandler;
+package org.cspoker.server.xml.http.httphandler;
 
 import org.cspoker.server.common.xmlcommunication.XmlPlayerCommunication;
 import org.cspoker.server.common.xmlcommunication.XmlPlayerCommunicationFactory;
 import org.cspoker.server.game.session.PlayerKilledExcepion;
 import org.cspoker.server.game.session.Session;
 import org.cspoker.server.game.session.SessionManager;
-import org.cspoker.server.http.httphandler.abstracts.AbstractHttpHandlerImpl;
-import org.cspoker.server.http.httphandler.exception.HttpExceptionImpl;
+import org.cspoker.server.xml.http.httphandler.abstracts.AbstractHttpHandlerImpl;
+import org.cspoker.server.xml.http.httphandler.exception.HttpExceptionImpl;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 

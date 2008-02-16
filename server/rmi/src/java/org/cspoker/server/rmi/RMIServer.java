@@ -24,7 +24,6 @@ import java.rmi.server.UnicastRemoteObject;
 
 import org.apache.log4j.Logger;
 import org.cspoker.common.game.RemotePlayerCommunication;
-import org.cspoker.common.rmi.RemoteRMIServer;
 import org.cspoker.server.common.authentication.XmlFileAuthenticator;
 import org.cspoker.server.game.session.PlayerKilledExcepion;
 import org.cspoker.server.game.session.SessionManager;

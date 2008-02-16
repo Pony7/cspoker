@@ -13,7 +13,7 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.server.sockets.runnables;
+package org.cspoker.server.xml.sockets.runnables;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -30,7 +30,7 @@ import java.util.concurrent.Executor;
 
 import org.apache.log4j.Logger;
 import org.cspoker.server.common.threading.Prioritizable;
-import org.cspoker.server.sockets.ClientContext;
+import org.cspoker.server.xml.sockets.ClientContext;
 
 public class WaitForIO implements Runnable, Prioritizable{
 

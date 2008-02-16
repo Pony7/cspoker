@@ -13,16 +13,16 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.server.sockets.runnables;
+package org.cspoker.server.xml.sockets.runnables;
 
 import java.io.StringReader;
 
 import org.apache.log4j.Logger;
 import org.cspoker.server.common.authentication.XmlFileAuthenticator;
 import org.cspoker.server.common.threading.Prioritizable;
-import org.cspoker.server.sockets.ClientContext;
-import org.cspoker.server.sockets.security.PolicyFile;
-import org.cspoker.server.sockets.security.SocketsAuthenticator;
+import org.cspoker.server.xml.sockets.ClientContext;
+import org.cspoker.server.xml.sockets.security.PolicyFile;
+import org.cspoker.server.xml.sockets.security.SocketsAuthenticator;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 

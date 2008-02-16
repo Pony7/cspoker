@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.cspoker.common.game.elements.cards.cardElements.Card;
+import org.cspoker.common.game.elements.cards.Card;
 import org.cspoker.common.game.events.gameEvents.ShowHandEvent;
 import org.cspoker.common.game.events.gameEvents.WinnerEvent;
 import org.cspoker.common.game.player.PlayerId;

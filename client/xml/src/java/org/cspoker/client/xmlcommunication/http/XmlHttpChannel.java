@@ -30,7 +30,7 @@ import java.util.concurrent.Executors;
 
 import org.cspoker.client.xmlcommunication.common.XmlChannel;
 import org.cspoker.client.xmlcommunication.sockets.exceptions.LoginFailedException;
-import org.cspoker.common.xmlcommunication.XmlEventListener;
+import org.cspoker.server.XmlEventListener;
 
 public class XmlHttpChannel implements XmlChannel {
 

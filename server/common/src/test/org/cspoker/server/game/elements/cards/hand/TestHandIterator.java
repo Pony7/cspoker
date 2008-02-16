@@ -6,9 +6,9 @@ import java.util.NoSuchElementException;
 import junit.framework.TestCase;
 
 import org.apache.log4j.Logger;
-import org.cspoker.common.game.elements.cards.cardElements.Card;
-import org.cspoker.common.game.elements.cards.cardElements.Rank;
-import org.cspoker.common.game.elements.cards.cardElements.Suit;
+import org.cspoker.common.game.elements.cards.Card;
+import org.cspoker.common.game.elements.cards.Rank;
+import org.cspoker.common.game.elements.cards.Suit;
 import org.cspoker.server.game.utilities.TestExactCard;
 
 public class TestHandIterator extends TestCase {

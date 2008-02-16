@@ -13,7 +13,7 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.server.sockets.security;
+package org.cspoker.server.xml.sockets.security;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -21,7 +21,7 @@ import java.io.StringReader;
 import org.apache.log4j.Logger;
 import org.cspoker.server.common.authentication.XmlFileAuthenticator;
 import org.cspoker.server.game.player.IllegalNameException;
-import org.cspoker.server.sockets.ClientContext;
+import org.cspoker.server.xml.sockets.ClientContext;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;

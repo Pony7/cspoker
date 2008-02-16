@@ -33,7 +33,7 @@ import org.apache.log4j.Logger;
 import org.cspoker.client.xmlcommunication.common.XmlChannel;
 import org.cspoker.client.xmlcommunication.sockets.exceptions.ConnectionLostException;
 import org.cspoker.client.xmlcommunication.sockets.exceptions.LoginFailedException;
-import org.cspoker.common.xmlcommunication.XmlEventListener;
+import org.cspoker.server.XmlEventListener;
 
 public class XmlSocketsChannel implements XmlChannel{
 
