@@ -13,10 +13,20 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.server.game.playerCommunication;
+package org.cspoker.server.common.game.elements.table;
 
-import org.cspoker.server.common.player.PlayerFactory;
+/**
+ * Thrown to indicate that the table/game is full.
+ * 
+ * @author Cedric
+ * 
+ */
+public class PlayerListFullException extends Exception {
 
-class TestPlayerFactory extends PlayerFactory{
+    private static final long serialVersionUID = 916632130086756048L;
 
+    @Override
+    public String getMessage() {
+	return "The table is full.";
+    }
 }

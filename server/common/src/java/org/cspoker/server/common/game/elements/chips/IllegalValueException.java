@@ -13,10 +13,25 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.server.game.playerCommunication;
 
-import org.cspoker.server.common.player.PlayerFactory;
+package org.cspoker.server.common.game.elements.chips;
 
-class TestPlayerFactory extends PlayerFactory{
+/**
+ * Thrown to indicate that the transfer of chips involves illegal amounts.
+ * 
+ * @author Kenzo
+ * 
+ */
+public class IllegalValueException extends Exception {
+
+    public IllegalValueException() {
+	super();
+    }
+    
+    public IllegalValueException(String msg) {
+	super(msg);
+    }
+    
+    private static final long serialVersionUID = -7047452830268859725L;
 
 }

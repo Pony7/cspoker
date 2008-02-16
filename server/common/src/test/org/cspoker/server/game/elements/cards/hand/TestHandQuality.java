@@ -25,7 +25,9 @@ import junit.framework.TestCase;
 import org.apache.log4j.Logger;
 import org.cspoker.common.elements.cards.Rank;
 import org.cspoker.common.elements.cards.Suit;
-import org.cspoker.server.game.elements.cards.deck.Deck;
+import org.cspoker.server.common.elements.cards.deck.Deck;
+import org.cspoker.server.common.elements.cards.hand.Hand;
+import org.cspoker.server.common.elements.cards.hand.HandType;
 import org.cspoker.server.game.utilities.TestExactCard;
 
 /**

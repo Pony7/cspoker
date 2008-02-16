@@ -28,9 +28,10 @@ import org.cspoker.common.events.Event;
 import org.cspoker.common.events.gameEvents.NewRoundEvent;
 import org.cspoker.common.events.gameEvents.NextPlayerEvent;
 import org.cspoker.common.exceptions.IllegalActionException;
-import org.cspoker.server.game.player.GamePlayer;
-import org.cspoker.server.game.player.IllegalNameException;
-import org.cspoker.server.game.player.PlayerFactory;
+import org.cspoker.server.common.player.GamePlayer;
+import org.cspoker.server.common.player.IllegalNameException;
+import org.cspoker.server.common.player.PlayerFactory;
+import org.cspoker.server.common.playerCommunication.PlayerCommunicationImpl;
 
 public class PlayerCommunicationTest extends TestCase {
     private static Logger logger = Logger

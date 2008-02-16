@@ -5,15 +5,18 @@ import junit.framework.TestCase;
 import org.apache.log4j.Logger;
 import org.cspoker.common.elements.table.TableId;
 import org.cspoker.common.exceptions.IllegalActionException;
-import org.cspoker.server.game.GameMediator;
-import org.cspoker.server.game.elements.chips.IllegalValueException;
-import org.cspoker.server.game.elements.table.PlayerListFullException;
-import org.cspoker.server.game.elements.table.Table;
-import org.cspoker.server.game.gameControl.rules.Limit;
-import org.cspoker.server.game.gameControl.rules.NoLimit;
-import org.cspoker.server.game.gameControl.rules.PotLimit;
-import org.cspoker.server.game.player.GamePlayer;
-import org.cspoker.server.game.player.PlayerFactory;
+import org.cspoker.server.common.GameMediator;
+import org.cspoker.server.common.elements.chips.IllegalValueException;
+import org.cspoker.server.common.elements.table.PlayerListFullException;
+import org.cspoker.server.common.elements.table.Table;
+import org.cspoker.server.common.gameControl.Game;
+import org.cspoker.server.common.gameControl.GameControl;
+import org.cspoker.server.common.gameControl.GameProperty;
+import org.cspoker.server.common.gameControl.rules.Limit;
+import org.cspoker.server.common.gameControl.rules.NoLimit;
+import org.cspoker.server.common.gameControl.rules.PotLimit;
+import org.cspoker.server.common.player.GamePlayer;
+import org.cspoker.server.common.player.PlayerFactory;
 
 public class BettingRulesTest extends TestCase {
     private static Logger logger = Logger.getLogger(BettingRulesTest.class);
