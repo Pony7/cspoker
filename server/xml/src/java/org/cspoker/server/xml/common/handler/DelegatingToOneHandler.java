@@ -1,4 +1,4 @@
-package org.cspoker.server.common.xmlcommunication.handler;
+package org.cspoker.server.xml.common.handler;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;

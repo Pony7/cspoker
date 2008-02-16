@@ -13,15 +13,15 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.server.common.xmlcommunication;
+package org.cspoker.server.xml.common;
 
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.cspoker.common.xml.XmlEventListener;
-import org.cspoker.server.common.session.PlayerKilledExcepion;
-import org.cspoker.server.common.session.Session;
+import org.cspoker.server.common.game.session.PlayerKilledExcepion;
+import org.cspoker.server.common.game.session.Session;
 
 /**
  * Creates a unique player communication instance for every player name and provides

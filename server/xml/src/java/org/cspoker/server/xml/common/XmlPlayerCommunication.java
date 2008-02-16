@@ -13,18 +13,18 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.server.common.xmlcommunication;
+package org.cspoker.server.xml.common;
 
 import java.io.IOException;
 
 import org.apache.log4j.Logger;
 import org.cspoker.common.PlayerCommunication;
 import org.cspoker.common.xml.XmlEventListener;
-import org.cspoker.server.common.common.xmlcommunication.handler.CommandDelegatingHandler;
-import org.cspoker.server.common.common.xmlcommunication.handler.DelegatingToOneHandler;
-import org.cspoker.server.common.player.GamePlayer;
-import org.cspoker.server.common.session.PlayerKilledExcepion;
-import org.cspoker.server.common.session.Session;
+import org.cspoker.server.common.game.player.GamePlayer;
+import org.cspoker.server.common.game.session.PlayerKilledExcepion;
+import org.cspoker.server.common.game.session.Session;
+import org.cspoker.server.xml.common.handler.CommandDelegatingHandler;
+import org.cspoker.server.xml.common.handler.DelegatingToOneHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;

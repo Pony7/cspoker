@@ -25,9 +25,9 @@ import java.rmi.server.UnicastRemoteObject;
 import org.apache.log4j.Logger;
 import org.cspoker.common.RemoteLoginServer;
 import org.cspoker.common.RemotePlayerCommunication;
-import org.cspoker.server.common.common.authentication.XmlFileAuthenticator;
-import org.cspoker.server.common.session.PlayerKilledExcepion;
-import org.cspoker.server.common.session.SessionManager;
+import org.cspoker.server.common.authentication.XmlFileAuthenticator;
+import org.cspoker.server.common.game.session.PlayerKilledExcepion;
+import org.cspoker.server.common.game.session.SessionManager;
 
 public class RMIServer implements RemoteLoginServer {
 
