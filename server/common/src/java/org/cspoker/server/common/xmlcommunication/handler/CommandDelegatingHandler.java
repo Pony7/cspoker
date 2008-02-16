@@ -28,7 +28,7 @@ import org.apache.log4j.Logger;
 import org.cspoker.common.game.IllegalActionException;
 import org.cspoker.common.game.PlayerCommunication;
 import org.cspoker.common.game.elements.table.TableId;
-import org.cspoker.server.XmlEventListener;
+import org.cspoker.common.xml.XmlEventListener;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
