@@ -1,6 +1,6 @@
 package org.cspoker.server.common.game.gameControl.rules;
 
-import org.cspoker.server.common.gameControl.rounds.Round;
+import org.cspoker.server.common.game.gameControl.rounds.Round;
 
 /**
  * Superclass for all the possible betting game.rounds.rules used in Texas

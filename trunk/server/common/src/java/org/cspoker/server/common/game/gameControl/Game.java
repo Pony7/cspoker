@@ -22,12 +22,12 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.cspoker.common.elements.cards.Card;
 import org.cspoker.common.exceptions.IllegalActionException;
-import org.cspoker.server.common.common.utilities.LoopingList;
-import org.cspoker.server.common.elements.cards.deck.Deck;
-import org.cspoker.server.common.elements.chips.pot.GamePots;
-import org.cspoker.server.common.elements.table.PlayerListFullException;
-import org.cspoker.server.common.elements.table.Table;
-import org.cspoker.server.common.player.GamePlayer;
+import org.cspoker.server.common.game.elements.cards.deck.Deck;
+import org.cspoker.server.common.game.elements.chips.pot.GamePots;
+import org.cspoker.server.common.game.elements.table.PlayerListFullException;
+import org.cspoker.server.common.game.elements.table.Table;
+import org.cspoker.server.common.game.player.GamePlayer;
+import org.cspoker.server.common.util.LoopingList;
 
 /**
  * 

@@ -13,7 +13,7 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.server.game.elements.cards.hand;
+package org.cspoker.server.common.game.elements.cards.hand;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -25,10 +25,10 @@ import junit.framework.TestCase;
 import org.apache.log4j.Logger;
 import org.cspoker.common.elements.cards.Rank;
 import org.cspoker.common.elements.cards.Suit;
-import org.cspoker.server.common.elements.cards.deck.Deck;
-import org.cspoker.server.common.elements.cards.hand.Hand;
-import org.cspoker.server.common.elements.cards.hand.HandType;
-import org.cspoker.server.game.utilities.TestExactCard;
+import org.cspoker.server.common.game.elements.cards.deck.Deck;
+import org.cspoker.server.common.game.elements.cards.hand.Hand;
+import org.cspoker.server.common.game.elements.cards.hand.HandType;
+import org.cspoker.server.common.game.utilities.TestExactCard;
 
 /**
  * A test class for the quality of a hand

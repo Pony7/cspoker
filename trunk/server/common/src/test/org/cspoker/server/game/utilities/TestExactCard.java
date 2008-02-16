@@ -10,7 +10,7 @@ import java.util.Map;
 import org.cspoker.common.elements.cards.Card;
 import org.cspoker.common.elements.cards.Rank;
 import org.cspoker.common.elements.cards.Suit;
-import org.cspoker.server.common.elements.cards.deck.Deck;
+import org.cspoker.server.common.game.elements.cards.deck.Deck;
 
 /**
  * @author Duplicity

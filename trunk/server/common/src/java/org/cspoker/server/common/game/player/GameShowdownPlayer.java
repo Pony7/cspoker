@@ -17,7 +17,7 @@
 package org.cspoker.server.common.game.player;
 
 import org.cspoker.common.player.ShowdownPlayer;
-import org.cspoker.server.common.elements.cards.hand.Hand;
+import org.cspoker.server.common.game.elements.cards.hand.Hand;
 
 /**
  * A class to represent a showdown player.

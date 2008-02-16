@@ -19,13 +19,13 @@ import org.apache.log4j.Logger;
 import org.cspoker.common.events.serverEvents.PlayerLeftEvent;
 import org.cspoker.common.exceptions.IllegalActionException;
 import org.cspoker.common.player.PlayerId;
-import org.cspoker.server.common.GameManager;
-import org.cspoker.server.common.GameMediator;
-import org.cspoker.server.common.TableManager;
-import org.cspoker.server.common.elements.table.Table;
-import org.cspoker.server.common.gameControl.GameControl;
-import org.cspoker.server.common.session.PlayerKilledExcepion;
-import org.cspoker.server.common.session.SessionManager;
+import org.cspoker.server.common.game.GameManager;
+import org.cspoker.server.common.game.GameMediator;
+import org.cspoker.server.common.game.TableManager;
+import org.cspoker.server.common.game.elements.table.Table;
+import org.cspoker.server.common.game.gameControl.GameControl;
+import org.cspoker.server.common.game.session.PlayerKilledExcepion;
+import org.cspoker.server.common.game.session.SessionManager;
 
 /**
  * A player who has created the table goes to the table created state.

@@ -30,13 +30,13 @@ import org.cspoker.common.events.gameEvents.playerActionEvents.CheckEvent;
 import org.cspoker.common.events.gameEvents.playerActionEvents.FoldEvent;
 import org.cspoker.common.events.gameEvents.playerActionEvents.RaiseEvent;
 import org.cspoker.common.exceptions.IllegalActionException;
-import org.cspoker.server.common.GameMediator;
-import org.cspoker.server.common.elements.table.PlayerListFullException;
-import org.cspoker.server.common.elements.table.Table;
-import org.cspoker.server.common.gameControl.rounds.BettingRound;
-import org.cspoker.server.common.gameControl.rounds.Round;
-import org.cspoker.server.common.gameControl.rounds.WaitingRound;
-import org.cspoker.server.common.player.GamePlayer;
+import org.cspoker.server.common.game.GameMediator;
+import org.cspoker.server.common.game.elements.table.PlayerListFullException;
+import org.cspoker.server.common.game.elements.table.Table;
+import org.cspoker.server.common.game.gameControl.rounds.BettingRound;
+import org.cspoker.server.common.game.gameControl.rounds.Round;
+import org.cspoker.server.common.game.gameControl.rounds.WaitingRound;
+import org.cspoker.server.common.game.player.GamePlayer;
 
 /**
  * This class is responsible to control the flow of the game. This class changes

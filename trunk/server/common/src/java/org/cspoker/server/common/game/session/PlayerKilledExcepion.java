@@ -15,7 +15,7 @@
  */
 package org.cspoker.server.common.game.session;
 
-import org.cspoker.server.common.player.GamePlayer;
+import org.cspoker.server.common.game.player.GamePlayer;
 
 public class PlayerKilledExcepion extends Exception {
 

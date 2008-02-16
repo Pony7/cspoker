@@ -17,7 +17,7 @@
 package org.cspoker.server.common.game.gameControl;
 
 import org.cspoker.common.exceptions.IllegalActionException;
-import org.cspoker.server.common.player.GamePlayer;
+import org.cspoker.server.common.game.player.GamePlayer;
 
 /**
  * An interface defining all actions a player can do in one deal.

@@ -20,11 +20,11 @@ import org.cspoker.common.elements.table.TableId;
 import org.cspoker.common.events.serverEvents.PlayerJoinedEvent;
 import org.cspoker.common.events.serverEvents.TableCreatedEvent;
 import org.cspoker.common.exceptions.IllegalActionException;
-import org.cspoker.server.common.GameManager;
-import org.cspoker.server.common.GameMediator;
-import org.cspoker.server.common.TableManager;
-import org.cspoker.server.common.elements.table.PlayerListFullException;
-import org.cspoker.server.common.elements.table.Table;
+import org.cspoker.server.common.game.GameManager;
+import org.cspoker.server.common.game.GameMediator;
+import org.cspoker.server.common.game.TableManager;
+import org.cspoker.server.common.game.elements.table.PlayerListFullException;
+import org.cspoker.server.common.game.elements.table.Table;
 
 /**
  * A class to represent the initial state of the player.
