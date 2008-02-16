@@ -24,21 +24,21 @@ import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 
 import org.cspoker.client.common.RemotePlayerCommunicationFactory;
+import org.cspoker.common.RemoteLoginServer;
 import org.cspoker.common.game.IllegalActionException;
 import org.cspoker.common.game.RemotePlayerCommunication;
 import org.cspoker.common.game.elements.table.TableId;
 import org.cspoker.common.game.eventlisteners.RemoteAllEventsListener;
-import org.cspoker.server.rmi.RemoteRMIServer;
 
 
 public class RMIServerConnection{
 
-    private RemoteRMIServer server;
+    private RemoteLoginServer server;
 
     public RMIServerConnection(String server, int port) throws AccessException, RemoteException, NotBoundException{
 	System.setSecurityManager(null);
 	Registry registry= LocateRegistry.getRegistry(server,port);
-	this.server = (RemoteRMIServer)registry.lookup("CSPokerServer");
+	this.server = (RemoteLoginServer)registry.lookup("CSPokerServer");
     }
 
     public RemotePlayerCommunication login(String username, String password) throws RemoteException{

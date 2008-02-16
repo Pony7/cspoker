@@ -23,12 +23,13 @@ import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 
 import org.apache.log4j.Logger;
+import org.cspoker.common.RemoteLoginServer;
 import org.cspoker.common.game.RemotePlayerCommunication;
 import org.cspoker.server.common.authentication.XmlFileAuthenticator;
 import org.cspoker.server.game.session.PlayerKilledExcepion;
 import org.cspoker.server.game.session.SessionManager;
 
-public class RMIServer implements RemoteRMIServer {
+public class RMIServer implements RemoteLoginServer {
 
     private final static Logger logger = Logger.getLogger(RMIServer.class);
     
@@ -65,7 +66,7 @@ public class RMIServer implements RemoteRMIServer {
     
     void start() throws AccessException, RemoteException {
 	System.setSecurityManager(null);
-	RemoteRMIServer stub=(RemoteRMIServer)UnicastRemoteObject.exportObject(this, 0);
+	RemoteLoginServer stub=(RemoteLoginServer)UnicastRemoteObject.exportObject(this, 0);
 	Registry registry= LocateRegistry.getRegistry(port);
 	registry.rebind("CSPokerServer",stub);
     }
