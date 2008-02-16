@@ -22,8 +22,8 @@ import org.apache.log4j.Logger;
 import org.cspoker.server.common.authentication.XmlFileAuthenticator;
 import org.cspoker.server.common.util.threading.RequestExecutor;
 import org.cspoker.server.xml.http.authentication.XmlFileBasicAuthentication;
-import org.cspoker.server.xml.http.httphandler.CSPokerHandler;
-import org.cspoker.server.xml.http.httphandler.CrossDomain;
+import org.cspoker.server.xml.http.handler.CSPokerHandler;
+import org.cspoker.server.xml.http.handler.CrossDomain;
 
 import com.sun.net.httpserver.Authenticator;
 import com.sun.net.httpserver.HttpContext;

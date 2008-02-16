@@ -13,7 +13,7 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.server.xml.http.httphandler.abstracts;
+package org.cspoker.server.xml.http.handler.abstracts;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -26,9 +26,9 @@ import javax.xml.transform.sax.SAXTransformerFactory;
 import javax.xml.transform.sax.TransformerHandler;
 import javax.xml.transform.stream.StreamResult;
 
-import org.cspoker.server.xml.http.httphandler.exception.HttpException;
-import org.cspoker.server.xml.http.httphandler.exception.HttpExceptionImpl;
-import org.cspoker.server.xml.http.httphandler.util.Base64;
+import org.cspoker.server.xml.http.handler.exception.HttpException;
+import org.cspoker.server.xml.http.handler.exception.HttpExceptionImpl;
+import org.cspoker.server.xml.http.handler.util.Base64;
 import org.xml.sax.helpers.AttributesImpl;
 
 import com.sun.net.httpserver.Headers;

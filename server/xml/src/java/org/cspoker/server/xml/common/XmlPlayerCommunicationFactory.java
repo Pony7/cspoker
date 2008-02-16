@@ -29,9 +29,11 @@ import org.cspoker.server.common.game.session.Session;
  */
 public class XmlPlayerCommunicationFactory {
 
-    private final static Map<Session,XmlPlayerCommunication> playerComs=new ConcurrentHashMap<Session,XmlPlayerCommunication>();
+	public final static XmlPlayerCommunicationFactory global_factory = new XmlPlayerCommunicationFactory();
+	
+    private final Map<Session,XmlPlayerCommunication> playerComs=new ConcurrentHashMap<Session,XmlPlayerCommunication>();
     
-    public static synchronized XmlPlayerCommunication getRegisteredXmlPlayerCommunication(Session session, XmlEventListener listener) throws PlayerKilledExcepion{
+    public synchronized XmlPlayerCommunication getRegisteredXmlPlayerCommunication(Session session, XmlEventListener listener) throws PlayerKilledExcepion{
 	XmlPlayerCommunication result=playerComs.get(session);
 	if(result==null){
 	    result=new XmlPlayerCommunication(session,listener);
@@ -42,7 +44,7 @@ public class XmlPlayerCommunicationFactory {
 	return result;
     }
     
-    public static synchronized void unRegister(Session session) {
+    public synchronized void unRegister(Session session) {
 	playerComs.remove(session);
     }
     
