@@ -3,7 +3,7 @@ package org.cspoker.client.xmlcommunication.common;
 import java.io.IOException;
 
 import org.cspoker.client.xmlcommunication.sockets.exceptions.LoginFailedException;
-import org.cspoker.common.xmlcommunication.XmlEventListener;
+import org.cspoker.server.XmlEventListener;
 
 public interface XmlChannel {
 

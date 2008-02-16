@@ -20,8 +20,8 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-import org.cspoker.common.game.elements.cards.cardElements.Card;
-import org.cspoker.common.game.elements.cards.cardElements.Suit;
+import org.cspoker.common.game.elements.cards.Card;
+import org.cspoker.common.game.elements.cards.Suit;
 
 /**
  * A class of hands, that contain 0 to 7 cards

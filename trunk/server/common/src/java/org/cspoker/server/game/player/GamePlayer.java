@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import org.cspoker.common.game.elements.cards.cardElements.Card;
+import org.cspoker.common.game.elements.cards.Card;
 import org.cspoker.common.game.player.Player;
 import org.cspoker.common.game.player.PlayerId;
 import org.cspoker.server.game.elements.chips.Chips;

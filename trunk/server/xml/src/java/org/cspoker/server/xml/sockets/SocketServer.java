@@ -14,7 +14,7 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-package org.cspoker.server.sockets;
+package org.cspoker.server.xml.sockets;
 
 import java.io.IOException;
 import java.nio.channels.SelectionKey;
@@ -24,7 +24,7 @@ import java.util.concurrent.Executor;
 
 import org.apache.log4j.Logger;
 import org.cspoker.server.common.threading.RequestExecutor;
-import org.cspoker.server.sockets.runnables.WaitForIO;
+import org.cspoker.server.xml.sockets.runnables.WaitForIO;
 
 public class SocketServer {
 

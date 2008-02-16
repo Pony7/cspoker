@@ -13,7 +13,7 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.server.sockets;
+package org.cspoker.server.xml.sockets;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -29,12 +29,12 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.cspoker.common.xmlcommunication.XmlEventListener;
 import org.cspoker.server.common.xmlcommunication.XmlPlayerCommunication;
 import org.cspoker.server.common.xmlcommunication.XmlPlayerCommunicationFactory;
 import org.cspoker.server.game.player.GamePlayer;
 import org.cspoker.server.game.player.IllegalNameException;
 import org.cspoker.server.game.player.PlayerFactory;
+import org.cspoker.server.xml.common.XmlEventListener;
 
 
 public class ClientContext implements XmlEventListener{

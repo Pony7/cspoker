@@ -26,7 +26,7 @@ public interface RemotePlayerCommunicationFactory {
     
     public class NoProviderException extends Exception{
 
-	private static final long serialVersionUID = 5577851499713555195L;
+    	private static final long serialVersionUID = 5577851499713555195L;
 	
     }
 }

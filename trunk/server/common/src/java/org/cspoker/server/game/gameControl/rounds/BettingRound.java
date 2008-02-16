@@ -22,7 +22,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.cspoker.common.game.IllegalActionException;
-import org.cspoker.common.game.elements.cards.cardElements.Card;
+import org.cspoker.common.game.elements.cards.Card;
 import org.cspoker.common.game.elements.pots.Pots;
 import org.cspoker.common.game.events.gameEvents.NewCommunityCardsEvent;
 import org.cspoker.common.game.events.gameEvents.WinnerEvent;

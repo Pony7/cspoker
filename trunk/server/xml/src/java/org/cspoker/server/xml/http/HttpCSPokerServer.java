@@ -13,7 +13,7 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.server.http;
+package org.cspoker.server.xml.http;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -21,9 +21,9 @@ import java.net.InetSocketAddress;
 import org.apache.log4j.Logger;
 import org.cspoker.server.common.authentication.XmlFileAuthenticator;
 import org.cspoker.server.common.threading.RequestExecutor;
-import org.cspoker.server.http.authentication.XmlFileBasicAuthentication;
-import org.cspoker.server.http.httphandler.CSPokerHandler;
-import org.cspoker.server.http.httphandler.CrossDomain;
+import org.cspoker.server.xml.http.authentication.XmlFileBasicAuthentication;
+import org.cspoker.server.xml.http.httphandler.CSPokerHandler;
+import org.cspoker.server.xml.http.httphandler.CrossDomain;
 
 import com.sun.net.httpserver.Authenticator;
 import com.sun.net.httpserver.HttpContext;

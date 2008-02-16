@@ -28,7 +28,7 @@ import org.cspoker.common.game.IllegalActionException;
 import org.cspoker.common.game.RemotePlayerCommunication;
 import org.cspoker.common.game.elements.table.TableId;
 import org.cspoker.common.game.eventlisteners.RemoteAllEventsListener;
-import org.cspoker.common.rmi.RemoteRMIServer;
+import org.cspoker.server.rmi.RemoteRMIServer;
 
 
 public class RMIServerConnection{

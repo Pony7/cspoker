@@ -1,4 +1,4 @@
-package org.cspoker.common.game.elements.cards.cardElements;
+package org.cspoker.common.game.elements.cards;
 
 import java.io.Serializable;
 

@@ -14,26 +14,23 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-package org.cspoker.common.game.elements.cards.cardElements;
-
-import java.math.BigInteger;
+package org.cspoker.common.game.elements.cards;
 
 /**
- * An enumeration to represent the different ranks a card can have.
+ * An enumeration to represent the different suits a card can have.
  * 
  * @author Kenzo
  * 
+ * 
  */
-public enum Rank {
-	DEUCE("Two", "2"), THREE("Three", "3"), FOUR("Four", "4"), FIVE("Five", "5"), SIX("Six", "6"), SEVEN("Seven", "7"), EIGHT("Eight", "8"), NINE(
-			"Nine", "9"), TEN("Ten", "T"), JACK("Jack", "J"), QUEEN("Queen", "Q"), KING("King", "K"), ACE("Ace", "A");
+public enum Suit{
 
-	private int prime;
+	CLUBS("Clubs", "c"), DIAMONDS("Diamonds", "d"), HEARTS("Hearts", "h"), SPADES("Spades", "s");
+
 	private String longDescription;
 	private String shortDescription;
 
-	private Rank(final String longDescription, final String shortDescription) {
-		this.prime = PrimeInitializer.getNextPrime();
+	private Suit(final String longDescription, final String shortDescription) {
 		this.longDescription = longDescription;
 		this.shortDescription = shortDescription;
 	}
@@ -42,46 +39,28 @@ public enum Rank {
 		return this.longDescription;
 	}
 
-	public int getPrime() {
-		return this.prime;
-	}
-
 	public String getShortDescription() {
 		return this.shortDescription;
 	}
 
 	/**
-	 * Returns a textual representation of this rank
+	 * Returns a textual representation of this suit
 	 */
 	@Override
 	public String toString() {
 		return this.getShortDescription();
 	}
 
-	private static final class PrimeInitializer {
-		private static BigInteger nextPrime = BigInteger.valueOf(1);
-
-		public static int getNextPrime() {
-			PrimeInitializer.nextPrime = PrimeInitializer.nextPrime.nextProbablePrime();
-			return PrimeInitializer.nextPrime.intValue();
-		}
-
-		private PrimeInitializer() {
-			// Utility class, should not be instantiated
-		}
-	}
-
 	/**
-	 * Returns the numeral value of this rank.
-	 * 
-	 * @return The numeral value of this rank.
+	 * Returns the relative value of this suit (clubs ranking the lowest,
+	 * followed by diamonds, hearts, and spades as in bridge)
 	 */
 	public int getValue() {
-		return this.ordinal() + 2;
+		return this.ordinal();
 	}
 
-	public static Rank getRank(String value) {
-		for (Rank rank : Rank.values()) {
+	public static Suit getSuit(String value) {
+		for (Suit rank : Suit.values()) {
 			if (rank.toString().equalsIgnoreCase(value))
 				return rank;
 		}

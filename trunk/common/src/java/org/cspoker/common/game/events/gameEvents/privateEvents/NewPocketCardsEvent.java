@@ -18,7 +18,7 @@ package org.cspoker.common.game.events.gameEvents.privateEvents;
 import java.util.Collections;
 import java.util.List;
 
-import org.cspoker.common.game.elements.cards.cardElements.Card;
+import org.cspoker.common.game.elements.cards.Card;
 import org.cspoker.common.game.events.gameEvents.GameEvent;
 import org.cspoker.common.game.player.Player;
 import org.xml.sax.ContentHandler;
