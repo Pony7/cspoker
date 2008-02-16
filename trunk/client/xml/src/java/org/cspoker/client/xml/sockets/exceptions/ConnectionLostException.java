@@ -17,4 +17,9 @@ package org.cspoker.client.xml.sockets.exceptions;
 
 public class ConnectionLostException extends Exception {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 454411028096632954L;
+
 }

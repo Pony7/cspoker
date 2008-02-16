@@ -28,178 +28,180 @@ import org.cspoker.server.common.game.elements.chips.IllegalValueException;
 
 /**
  * A class to represent players: bots or humans.
- *
+ * 
  * @author Kenzo
- *
+ * 
  */
 public class GamePlayer {
 
-    /***************************************************************************
-     * Variables
-     **************************************************************************/
+	/***************************************************************************
+	 * Variables
+	 **************************************************************************/
 
-    /**
-     * The variable containing the id of the player.
-     */
-    private final PlayerId id;
+	/**
+	 * The variable containing the id of the player.
+	 */
+	private final PlayerId id;
 
-    /**
-     * The name of the player.
-     */
-    private final String name;
+	/**
+	 * The name of the player.
+	 */
+	private final String name;
 
-    /**
-     * The stack of this player.
-     */
-    private final Chips chips;
+	/**
+	 * The stack of this player.
+	 */
+	private final Chips chips;
 
-    /**
-     * The chips the player has bet in this round.
-     *
-     */
-    private final Chips betChips;
+	/**
+	 * The chips the player has bet in this round.
+	 * 
+	 */
+	private final Chips betChips;
 
-    /**
-     * The hidden cards.
-     */
-    private final List<Card> pocketCards;
+	/**
+	 * The hidden cards.
+	 */
+	private final List<Card> pocketCards;
 
-    /***************************************************************************
-     * Constructor
-     **************************************************************************/
+	/***************************************************************************
+	 * Constructor
+	 **************************************************************************/
 
-    /**
-     * Construct a new player with given id, name and initial number of chips.
-     *
-     * @throws IllegalValueException
-     *         [must] The given initial value is not valid.
-     *         | !isValidName(name)
-     *
-     * @post The chips pile is effective and the value of chips is the same as
-     *       the given initial value. |new.getBetChips()!=null &&
-     *       new.getChips.getValue()==initialNbChips
-     * @post The bet chips pile is effective and There are no chips on this
-     *       pile. |new.getBetChips()!=null && new.getBetChips().getValue()==0
-     */
-    GamePlayer(PlayerId id, String name, int initialNbChips)
-	    throws IllegalValueException {
-	this.id = id;
-	this.name = name;
-	chips = new Chips(initialNbChips);
-	betChips = new Chips();
-	pocketCards = new CopyOnWriteArrayList<Card>();
-    }
+	/**
+	 * Construct a new player with given id, name and initial number of chips.
+	 * 
+	 * @throws IllegalValueException
+	 *             [must] The given initial value is not valid. |
+	 *             !isValidName(name)
+	 * 
+	 * @post The chips pile is effective and the value of chips is the same as
+	 *       the given initial value. |new.getBetChips()!=null &&
+	 *       new.getChips.getValue()==initialNbChips
+	 * @post The bet chips pile is effective and There are no chips on this
+	 *       pile. |new.getBetChips()!=null && new.getBetChips().getValue()==0
+	 */
+	GamePlayer(PlayerId id, String name, int initialNbChips)
+			throws IllegalValueException {
+		this.id = id;
+		this.name = name;
+		chips = new Chips(initialNbChips);
+		betChips = new Chips();
+		pocketCards = new CopyOnWriteArrayList<Card>();
+	}
 
-    /**
-     * Returns the name of this player.
-     *
-     * @return The name of this player.
-     */
-    public String getName() {
-	return name;
-    }
+	/**
+	 * Returns the name of this player.
+	 * 
+	 * @return The name of this player.
+	 */
+	public String getName() {
+		return name;
+	}
 
-    /***************************************************************************
-     * Id
-     **************************************************************************/
+	/***************************************************************************
+	 * Id
+	 **************************************************************************/
 
-    /**
-     * Returns the id of this player.
-     *
-     * @return The id of this player.
-     */
-    public PlayerId getId() {
-	return id;
-    }
+	/**
+	 * Returns the id of this player.
+	 * 
+	 * @return The id of this player.
+	 */
+	public PlayerId getId() {
+		return id;
+	}
 
-    /***************************************************************************
-     * Chips
-     **************************************************************************/
+	/***************************************************************************
+	 * Chips
+	 **************************************************************************/
 
-    public Chips getStack() {
-	return chips;
-    }
+	public Chips getStack() {
+		return chips;
+	}
 
-    public Chips getBetChips() {
-	return betChips;
-    }
+	public Chips getBetChips() {
+		return betChips;
+	}
 
-    public synchronized void transferAmountToBetPile(int amount)
-	    throws IllegalValueException {
-	getStack().transferAmountTo(amount, getBetChips());
-    }
+	public synchronized void transferAmountToBetPile(int amount)
+			throws IllegalValueException {
+		getStack().transferAmountTo(amount, getBetChips());
+	}
 
-    public synchronized void transferAllChipsToBetPile() throws IllegalValueException {
-	getStack().transferAllChipsTo(getBetChips());
-    }
+	public synchronized void transferAllChipsToBetPile()
+			throws IllegalValueException {
+		getStack().transferAllChipsTo(getBetChips());
+	}
 
-    /***************************************************************************
-     * Cards
-     **************************************************************************/
+	/***************************************************************************
+	 * Cards
+	 **************************************************************************/
 
-    /**
-     * Deal a pocket card to this player.
-     *
-     */
-    public void dealPocketCard(Card...cards) {
-    	for(Card card:cards){
-    		pocketCards.add(card);
-    	}
-    }
+	/**
+	 * Deal a pocket card to this player.
+	 * 
+	 */
+	public void dealPocketCard(Card... cards) {
+		for (Card card : cards) {
+			pocketCards.add(card);
+		}
+	}
 
-    /**
-     * Returns the pocket cards of this player.
-     *
-     * A change in the returned list, does not change the internal
-     * representation.
-     *
-     * @return The pocket cards of this player.
-     */
-    public List<Card> getPocketCards() {
-	return new ArrayList<Card>(pocketCards);
-    }
+	/**
+	 * Returns the pocket cards of this player.
+	 * 
+	 * A change in the returned list, does not change the internal
+	 * representation.
+	 * 
+	 * @return The pocket cards of this player.
+	 */
+	public List<Card> getPocketCards() {
+		return new ArrayList<Card>(pocketCards);
+	}
 
-    public void clearPocketCards() {
-	pocketCards.clear();
-    }
+	public void clearPocketCards() {
+		pocketCards.clear();
+	}
 
-    @Override
-    public String toString() {
-	return getId() + ": " + getName() + " ($" + getStack() + " in chips)";
-    }
+	@Override
+	public String toString() {
+		return getId() + ": " + getName() + " ($" + getStack() + " in chips)";
+	}
 
-    /**
-     * Returns a hash code value for this player.
-     */
-    @Override
-    public int hashCode() {
-	final int prime = 31;
-	int result = 1;
-	result = prime * result + ((id == null) ? 0 : id.hashCode());
-	return result;
-    }
+	/**
+	 * Returns a hash code value for this player.
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		return result;
+	}
 
-    /**
-     * Indicates whether some other object is "equal to" this one.
-     */
-    @Override
-    public boolean equals(Object obj) {
-	if (this == obj)
-	    return true;
-	if (obj == null)
-	    return false;
-	if (getClass() != obj.getClass())
-	    return false;
-	final GamePlayer other = (GamePlayer) obj;
-	if (id == null) {
-	    if (other.id != null)
-		return false;
-	} else if (!id.equals(other.id))
-	    return false;
-	return true;
-    }
+	/**
+	 * Indicates whether some other object is "equal to" this one.
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		final GamePlayer other = (GamePlayer) obj;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		return true;
+	}
 
-    public synchronized Player getSavedPlayer() {
-	return new Player(getId(), getName(), getStack().getValue(), getBetChips().getValue());
-    }
+	public synchronized Player getSavedPlayer() {
+		return new Player(getId(), getName(), getStack().getValue(),
+				getBetChips().getValue());
+	}
 }

@@ -19,16 +19,16 @@ import org.cspoker.common.events.gameEvents.privateEvents.NewPocketCardsEvent;
 
 public interface NewPocketCardsListener extends RemoteNewPocketCardsListener {
 
-    /**
-     * This method is called when subscribed to inform a new private cards event
-     * occurred.
-     * 
-     * @param id
-     *                The id of the player to inform.
-     * @param event
-     *                The event object containing all information of the
-     *                occurred event.
-     */
-    public void onNewPocketCardsEvent(NewPocketCardsEvent event);
+	/**
+	 * This method is called when subscribed to inform a new private cards event
+	 * occurred.
+	 * 
+	 * @param id
+	 *            The id of the player to inform.
+	 * @param event
+	 *            The event object containing all information of the occurred
+	 *            event.
+	 */
+	public void onNewPocketCardsEvent(NewPocketCardsEvent event);
 
 }

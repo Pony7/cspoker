@@ -26,30 +26,30 @@ import java.util.Random;
  * 
  */
 public class RandomGenerator implements RandomSource {
-    private static RandomSource instance = new RandomGenerator();
+	private static RandomSource instance = new RandomGenerator();
 
-    private final Random random;
+	private final Random random;
 
-    /**
-     * Construct a new default random generator.
-     * 
-     */
-    private RandomGenerator() {
-	this.random = new SecureRandom();
-    }
+	/**
+	 * Construct a new default random generator.
+	 * 
+	 */
+	private RandomGenerator() {
+		random = new SecureRandom();
+	}
 
-    public static RandomSource getInstance() {
-	return RandomGenerator.instance;
-    }
+	public static RandomSource getInstance() {
+		return RandomGenerator.instance;
+	}
 
-    /**
-     * Returns a random-object.
-     * 
-     * The default implementation uses the current time as seed.
-     * 
-     * @return A random-object.
-     */
-    public Random getRandom() {
-	return this.random;
-    }
+	/**
+	 * Returns a random-object.
+	 * 
+	 * The default implementation uses the current time as seed.
+	 * 
+	 * @return A random-object.
+	 */
+	public Random getRandom() {
+		return random;
+	}
 }

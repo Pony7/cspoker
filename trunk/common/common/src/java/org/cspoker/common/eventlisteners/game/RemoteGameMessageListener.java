@@ -22,6 +22,7 @@ import org.cspoker.common.events.gameEvents.GameMessageEvent;
 
 public interface RemoteGameMessageListener extends Remote {
 
-    public void onGameMessageEvent(GameMessageEvent event) throws RemoteException;
+	public void onGameMessageEvent(GameMessageEvent event)
+			throws RemoteException;
 
 }

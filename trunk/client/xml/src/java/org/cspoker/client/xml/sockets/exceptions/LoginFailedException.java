@@ -17,4 +17,9 @@ package org.cspoker.client.xml.sockets.exceptions;
 
 public class LoginFailedException extends Exception {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4726847964458830749L;
+
 }

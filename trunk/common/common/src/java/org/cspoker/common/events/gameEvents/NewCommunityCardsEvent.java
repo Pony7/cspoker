@@ -31,45 +31,46 @@ import org.xml.sax.helpers.AttributesImpl;
  */
 public class NewCommunityCardsEvent extends GameEvent {
 
-    private static final long serialVersionUID = -5063239366087788741L;
+	private static final long serialVersionUID = -5063239366087788741L;
 
-    private final List<Card> communityCards;
+	private final List<Card> communityCards;
 
-    public NewCommunityCardsEvent(List<Card> commonCards) {
-	communityCards = Collections.unmodifiableList(commonCards);
-    }
-
-    public List<Card> getCommonCards() {
-	return communityCards;
-    }
-
-    @Override
-    public String toString() {
-	String toReturn = "New Community Cards: ";
-	for (Card card : communityCards) {
-	    toReturn += card;
-	    toReturn += ", ";
+	public NewCommunityCardsEvent(List<Card> commonCards) {
+		communityCards = Collections.unmodifiableList(commonCards);
 	}
-	return toReturn.substring(0, toReturn.length() - 2) + ".";
-    }
 
-    @Override
-    public void toXml(ContentHandler handler) throws SAXException {
-	AttributesImpl attrs = new AttributesImpl();
-	attrs.addAttribute("", "type", "type", "CDATA", "newcommunitycards");
-	handler.startElement("", "event", "event", attrs);
-
-	handler.startElement("", "cards", "cards", new AttributesImpl());
-	for(Card card : getCommonCards()){
-	    attrs = new AttributesImpl();
-	    attrs.addAttribute("", "suit", "suit", "CDATA", card.getSuit().getShortDescription());
-	    handler.startElement("", "card", "card", new AttributesImpl());
-	    String msg=card.getRank().getShortDescription();
-	    handler.characters(msg.toCharArray(), 0, msg.length());
-	    handler.endElement("", "card", "card");
+	public List<Card> getCommonCards() {
+		return communityCards;
 	}
-	handler.endElement("", "cards", "cards");
 
-	handler.endElement("", "event", "event");
-    }
+	@Override
+	public String toString() {
+		String toReturn = "New Community Cards: ";
+		for (Card card : communityCards) {
+			toReturn += card;
+			toReturn += ", ";
+		}
+		return toReturn.substring(0, toReturn.length() - 2) + ".";
+	}
+
+	@Override
+	public void toXml(ContentHandler handler) throws SAXException {
+		AttributesImpl attrs = new AttributesImpl();
+		attrs.addAttribute("", "type", "type", "CDATA", "newcommunitycards");
+		handler.startElement("", "event", "event", attrs);
+
+		handler.startElement("", "cards", "cards", new AttributesImpl());
+		for (Card card : getCommonCards()) {
+			attrs = new AttributesImpl();
+			attrs.addAttribute("", "suit", "suit", "CDATA", card.getSuit()
+					.getShortDescription());
+			handler.startElement("", "card", "card", new AttributesImpl());
+			String msg = card.getRank().getShortDescription();
+			handler.characters(msg.toCharArray(), 0, msg.length());
+			handler.endElement("", "card", "card");
+		}
+		handler.endElement("", "cards", "cards");
+
+		handler.endElement("", "event", "event");
+	}
 }

@@ -18,6 +18,6 @@ package org.cspoker.server.common.util.threading;
 
 public interface Prioritizable {
 
-    public int getPriority();
-    
+	public int getPriority();
+
 }

@@ -29,13 +29,13 @@ import org.cspoker.common.events.gameEvents.playerActionEvents.AllInEvent;
  */
 public interface RemoteAllInListener extends Remote {
 
-    /**
-     * This method is called when subscribed to inform an all-in event occurred.
-     * 
-     * @param event
-     *                The event object containing all information of the
-     *                occurred event.
-     */
-    public void onAllInEvent(AllInEvent event) throws RemoteException;
+	/**
+	 * This method is called when subscribed to inform an all-in event occurred.
+	 * 
+	 * @param event
+	 *            The event object containing all information of the occurred
+	 *            event.
+	 */
+	public void onAllInEvent(AllInEvent event) throws RemoteException;
 
 }

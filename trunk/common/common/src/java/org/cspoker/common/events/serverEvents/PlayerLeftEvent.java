@@ -24,41 +24,42 @@ import org.xml.sax.helpers.AttributesImpl;
 
 public class PlayerLeftEvent extends ServerEvent {
 
-    private static final long serialVersionUID = -7738200564330377186L;
+	private static final long serialVersionUID = -7738200564330377186L;
 
-    private final Player player;
+	private final Player player;
 
-    private final TableId id;
+	private final TableId id;
 
-    public PlayerLeftEvent(Player player, TableId id) {
-	this.player = player;
-	this.id = id;
-    }
+	public PlayerLeftEvent(Player player, TableId id) {
+		this.player = player;
+		this.id = id;
+	}
 
-    @Override
-    public String toString() {
-	return player.getName() + " has left the table [" + id + "].";
-    }
-    
-    public Player getPlayer(){
-	return player;
-    }
-    
-    public TableId getId() {
-	return id;
-    }
-    
-    @Override
-    public void toXml(ContentHandler handler) throws SAXException {
-	AttributesImpl attrs = new AttributesImpl();
-	attrs.addAttribute("", "type", "type", "CDATA", "playerleft");
-	attrs.addAttribute("", "player", "player", "CDATA", getPlayer().getName());
-	handler.startElement("", "event", "event", attrs);
-	handler.startElement("", "id", "id", attrs);
-	String msg=String.valueOf(getId().getID());
-	handler.characters(msg.toCharArray(), 0, msg.length());
-	handler.endElement("", "id", "id");
-	handler.endElement("", "event", "event");
-    }
+	@Override
+	public String toString() {
+		return player.getName() + " has left the table [" + id + "].";
+	}
+
+	public Player getPlayer() {
+		return player;
+	}
+
+	public TableId getId() {
+		return id;
+	}
+
+	@Override
+	public void toXml(ContentHandler handler) throws SAXException {
+		AttributesImpl attrs = new AttributesImpl();
+		attrs.addAttribute("", "type", "type", "CDATA", "playerleft");
+		attrs.addAttribute("", "player", "player", "CDATA", getPlayer()
+				.getName());
+		handler.startElement("", "event", "event", attrs);
+		handler.startElement("", "id", "id", attrs);
+		String msg = String.valueOf(getId().getID());
+		handler.characters(msg.toCharArray(), 0, msg.length());
+		handler.endElement("", "id", "id");
+		handler.endElement("", "event", "event");
+	}
 
 }

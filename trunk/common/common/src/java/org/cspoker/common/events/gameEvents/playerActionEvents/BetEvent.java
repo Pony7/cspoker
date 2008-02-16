@@ -24,51 +24,52 @@ import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * A class to represent bet events.
- *
+ * 
  * @author Kenzo
- *
+ * 
  */
 public class BetEvent extends ActionChangedPotEvent {
 
-    private static final long serialVersionUID = -1968724398831151650L;
+	private static final long serialVersionUID = -1968724398831151650L;
 
-    private final Player player;
+	private final Player player;
 
-    private final int amount;
+	private final int amount;
 
-    public BetEvent(Player player, int amount, Pots pots) {
-    	super(pots);
-    	this.player = player;
-    	this.amount = amount;
-    }
+	public BetEvent(Player player, int amount, Pots pots) {
+		super(pots);
+		this.player = player;
+		this.amount = amount;
+	}
 
-    @Override
-    public String toString() {
-	return getPlayer().getName() + " bets " + getAmount() + " chips.";
-    }
+	@Override
+	public String toString() {
+		return getPlayer().getName() + " bets " + getAmount() + " chips.";
+	}
 
-    public int getAmount(){
-	return amount;
-    }
+	public int getAmount() {
+		return amount;
+	}
 
-    public Player getPlayer() {
-	return player;
-    }
+	public Player getPlayer() {
+		return player;
+	}
 
-    @Override
-    public void toXml(ContentHandler handler) throws SAXException {
-	AttributesImpl attrs = new AttributesImpl();
-	attrs.addAttribute("", "type", "type", "CDATA", "bet");
-	attrs.addAttribute("", "player", "player", "CDATA", getPlayer().getName());
-	handler.startElement("", "event", "event", attrs);
+	@Override
+	public void toXml(ContentHandler handler) throws SAXException {
+		AttributesImpl attrs = new AttributesImpl();
+		attrs.addAttribute("", "type", "type", "CDATA", "bet");
+		attrs.addAttribute("", "player", "player", "CDATA", getPlayer()
+				.getName());
+		handler.startElement("", "event", "event", attrs);
 
-	handler.startElement("", "amount", "amount", new AttributesImpl());
-	String msg=String.valueOf(getAmount());
-	handler.characters(msg.toCharArray(), 0, msg.length());
-	handler.endElement("", "amount", "amount");
+		handler.startElement("", "amount", "amount", new AttributesImpl());
+		String msg = String.valueOf(getAmount());
+		handler.characters(msg.toCharArray(), 0, msg.length());
+		handler.endElement("", "amount", "amount");
 
-	handler.endElement("", "event", "event");
+		handler.endElement("", "event", "event");
 
-    }
+	}
 
 }

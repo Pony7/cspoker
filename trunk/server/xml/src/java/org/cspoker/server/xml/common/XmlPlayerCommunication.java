@@ -30,66 +30,71 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
 
-public class XmlPlayerCommunication implements XmlEventListener{
+public class XmlPlayerCommunication implements XmlEventListener {
 
-    private final PlayerCommunication playerComm;
-    private XmlEventListener listener;
-    private final GamePlayer player;
+	private final PlayerCommunication playerComm;
+	private XmlEventListener listener;
+	private final GamePlayer player;
 
-    private final StringBuilder cache;
+	private final StringBuilder cache;
 
-    private final static Logger logger = Logger.getLogger(XmlPlayerCommunication.class);
-    
-    XmlPlayerCommunication(Session session, XmlEventListener listener) throws PlayerKilledExcepion {
-	this.playerComm = session.getPlayerCommunication();
-	this.listener = listener;
-	this.player = session.getPlayer();
-	cache = new StringBuilder();
-	playerComm.subscribeAllEventsListener(new XmlAllEventsListener(listener));
-    }
+	private final static Logger logger = Logger
+			.getLogger(XmlPlayerCommunication.class);
 
-    public void handle(InputSource xml) throws SAXException {
-	XMLReader xr = XMLReaderFactory.createXMLReader();
-	xr.setContentHandler(new DelegatingToOneHandler(new CommandDelegatingHandler(playerComm, this)));
-	try {
-	    xr.parse(xml);
-	} catch (IOException e) {
-	    logger.error("IOException when parsing xml request.",e);
-	    throw new IllegalStateException("IOException when parsing xml request.");
+	XmlPlayerCommunication(Session session, XmlEventListener listener)
+			throws PlayerKilledExcepion {
+		playerComm = session.getPlayerCommunication();
+		this.listener = listener;
+		player = session.getPlayer();
+		cache = new StringBuilder();
+		playerComm
+				.subscribeAllEventsListener(new XmlAllEventsListener(listener));
 	}
-    }
-    
-    public String getPlayerName() {
-	return player.getName();
-    }
 
-    public XmlEventListener getXmlEventListener() {
-	return listener;
-    }
-
-    public synchronized void cache(String xml) {
-	cache.append(xml);
-    }
-
-    public synchronized String getAndFlushCache(){
-	String s = cache.toString();
-	cache.setLength(0);
-	return s;
-    }
-    
-    public synchronized void flushToListener(){
-	if(listener!=null){
-	    listener.collect(getAndFlushCache());
+	public void handle(InputSource xml) throws SAXException {
+		XMLReader xr = XMLReaderFactory.createXMLReader();
+		xr.setContentHandler(new DelegatingToOneHandler(
+				new CommandDelegatingHandler(playerComm, this)));
+		try {
+			xr.parse(xml);
+		} catch (IOException e) {
+			logger.error("IOException when parsing xml request.", e);
+			throw new IllegalStateException(
+					"IOException when parsing xml request.");
+		}
 	}
-    }
-    
-    public synchronized void updateEventListener(XmlEventListener newlist){
-	listener = newlist;
-	flushToListener();
-    }
 
-    public void collect(String xmlEvent) {
-	cache(xmlEvent);
-	flushToListener();
-    }
+	public String getPlayerName() {
+		return player.getName();
+	}
+
+	public XmlEventListener getXmlEventListener() {
+		return listener;
+	}
+
+	public synchronized void cache(String xml) {
+		cache.append(xml);
+	}
+
+	public synchronized String getAndFlushCache() {
+		String s = cache.toString();
+		cache.setLength(0);
+		return s;
+	}
+
+	public synchronized void flushToListener() {
+		if (listener != null) {
+			listener.collect(getAndFlushCache());
+		}
+	}
+
+	public synchronized void updateEventListener(XmlEventListener newlist) {
+		listener = newlist;
+		flushToListener();
+	}
+
+	public void collect(String xmlEvent) {
+		cache(xmlEvent);
+		flushToListener();
+	}
 }

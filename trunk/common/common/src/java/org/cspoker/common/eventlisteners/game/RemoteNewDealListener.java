@@ -29,14 +29,14 @@ import org.cspoker.common.events.gameEvents.NewDealEvent;
  */
 public interface RemoteNewDealListener extends Remote {
 
-    /**
-     * This method is called when subscribed to inform a new deal event
-     * occurred.
-     * 
-     * @param event
-     *                The event object containing all information of the
-     *                occurred event.
-     */
-    public void onNewDealEvent(NewDealEvent event) throws RemoteException;
+	/**
+	 * This method is called when subscribed to inform a new deal event
+	 * occurred.
+	 * 
+	 * @param event
+	 *            The event object containing all information of the occurred
+	 *            event.
+	 */
+	public void onNewDealEvent(NewDealEvent event) throws RemoteException;
 
 }

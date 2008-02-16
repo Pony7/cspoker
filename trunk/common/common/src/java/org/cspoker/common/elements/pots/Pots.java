@@ -19,30 +19,28 @@ package org.cspoker.common.elements.pots;
 import java.io.Serializable;
 import java.util.List;
 
-public class Pots implements Serializable{
+public class Pots implements Serializable {
 
-    private static final long serialVersionUID = 2133563839323145402L;
+	private static final long serialVersionUID = 2133563839323145402L;
 
-    private final int totalValue;
+	private final int totalValue;
 
-    public Pots(int totalValue){
-	this.totalValue = totalValue;
-    }
+	public Pots(int totalValue) {
+		this.totalValue = totalValue;
+	}
 
-    public List<Pot> getActivePot() {
-	// TODO Auto-generated method stub
-	return null;
-    }
+	public List<Pot> getActivePot() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
-    public List<Pot> getAllPots() {
-	// TODO Auto-generated method stub
-	return null;
-    }
+	public List<Pot> getAllPots() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
-    public int getTotalValue() {
-	return totalValue;
-    }
-
-
+	public int getTotalValue() {
+		return totalValue;
+	}
 
 }

@@ -22,79 +22,79 @@ import org.cspoker.common.player.PlayerId;
 import org.cspoker.server.common.game.elements.chips.IllegalValueException;
 
 /**
- *
+ * 
  * A class for player factories.
- *
+ * 
  * Each player should be created by using the given factory methods.
- *
+ * 
  * This will ensure each player id is unique.
- *
+ * 
  * Also note that the constructor of player is for this reason only-package
  * accessible.
- *
+ * 
  * @author Kenzo
- *
+ * 
  */
 public class PlayerFactory {
 
-    public final static PlayerFactory global_Player_Factory = new PlayerFactory();
+	public final static PlayerFactory global_Player_Factory = new PlayerFactory();
 
-    protected PlayerFactory(){
+	protected PlayerFactory() {
 
-    }
-    
-    private final static AtomicLong counter = new AtomicLong(0);
-
-    /**
-     * Create a new player with given name and standard stack value.
-     *
-     * @param name
-     *                The name for this new player.
-     * @return A new player with given name and standard stack value.
-     */
-    public GamePlayer createNewPlayer(String name){
-	try {
-	    return createNewPlayer(name, getStdStackValue());
-	} catch (IllegalValueException e) {
-	    throw new IllegalStateException(getStdStackValue()
-		    + " should be a valid value.");
 	}
-    }
 
-    /**
-     * Create a new player with given name and initial stack value.
-     *
-     * @param name
-     *                The name for this new player.
-     * @param initialValue
-     *                The initial stack value for this new player.
-     * @return A new player with given name and initial stack value.
-     * @throws IllegalValueException
-     *                 [must] The given initial value is not valid.
-     */
-    public GamePlayer createNewPlayer(String name, int initialValue)
-	    throws IllegalValueException {
-	return new GamePlayer(getUniquePlayerId(), name, initialValue);
-    }
+	private final static AtomicLong counter = new AtomicLong(0);
 
-    /**
-     * Returns the standard stack value.
-     *
-     * @return The standard stack value.
-     */
-    protected int getStdStackValue() {
-	return 100;
-    }
+	/**
+	 * Create a new player with given name and standard stack value.
+	 * 
+	 * @param name
+	 *            The name for this new player.
+	 * @return A new player with given name and standard stack value.
+	 */
+	public GamePlayer createNewPlayer(String name) {
+		try {
+			return createNewPlayer(name, getStdStackValue());
+		} catch (IllegalValueException e) {
+			throw new IllegalStateException(getStdStackValue()
+					+ " should be a valid value.");
+		}
+	}
 
-    /**
-     * Returns at each call a unique player id.
-     *
-     * This method is thread-safe.
-     *
-     * @return A unique player id.
-     */
-    private PlayerId getUniquePlayerId() {
-	return new PlayerId(counter.getAndIncrement());
-    }
+	/**
+	 * Create a new player with given name and initial stack value.
+	 * 
+	 * @param name
+	 *            The name for this new player.
+	 * @param initialValue
+	 *            The initial stack value for this new player.
+	 * @return A new player with given name and initial stack value.
+	 * @throws IllegalValueException
+	 *             [must] The given initial value is not valid.
+	 */
+	public GamePlayer createNewPlayer(String name, int initialValue)
+			throws IllegalValueException {
+		return new GamePlayer(getUniquePlayerId(), name, initialValue);
+	}
+
+	/**
+	 * Returns the standard stack value.
+	 * 
+	 * @return The standard stack value.
+	 */
+	protected int getStdStackValue() {
+		return 100;
+	}
+
+	/**
+	 * Returns at each call a unique player id.
+	 * 
+	 * This method is thread-safe.
+	 * 
+	 * @return A unique player id.
+	 */
+	private PlayerId getUniquePlayerId() {
+		return new PlayerId(counter.getAndIncrement());
+	}
 
 }

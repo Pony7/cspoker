@@ -28,35 +28,33 @@ import org.cspoker.server.xml.sockets.runnables.WaitForIO;
 
 public class SocketServer {
 
-    private final static Logger logger = Logger.getLogger(SocketServer.class);
+	private final static Logger logger = Logger.getLogger(SocketServer.class);
 
-    private final ServerSocketChannel server;
+	private final ServerSocketChannel server;
 
-    private final Selector selector;
+	private final Selector selector;
 
-    private final Executor executor;
+	private final Executor executor;
 
-    public SocketServer(int port) throws IOException {
+	public SocketServer(int port) throws IOException {
 
-	// Create the server socket channel
-	server = ServerSocketChannel.open();
-	// nonblocking I/O
-	server.configureBlocking(false);
-	// host-port 8000
-	server.socket().bind(new java.net.InetSocketAddress(port));
-	logger.info("Server running on port "+port);
-	// Create the selector
-	selector = Selector.open();
-	// Recording server to selector (type OP_ACCEPT)
-	server.register(selector,SelectionKey.OP_ACCEPT);
-	
-	executor = RequestExecutor.getInstance();
+		// Create the server socket channel
+		server = ServerSocketChannel.open();
+		// nonblocking I/O
+		server.configureBlocking(false);
+		// host-port 8000
+		server.socket().bind(new java.net.InetSocketAddress(port));
+		logger.info("Server running on port " + port);
+		// Create the selector
+		selector = Selector.open();
+		// Recording server to selector (type OP_ACCEPT)
+		server.register(selector, SelectionKey.OP_ACCEPT);
 
-	// Infinite server loop
-	executor.execute(new WaitForIO(executor, selector, server));
-	
-    }
+		executor = RequestExecutor.getInstance();
 
-    
+		// Infinite server loop
+		executor.execute(new WaitForIO(executor, selector, server));
+
+	}
 
 }

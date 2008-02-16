@@ -27,31 +27,30 @@ import org.xml.sax.SAXException;
 
 import com.sun.net.httpserver.HttpExchange;
 
-
-public class CSPokerHandler extends AbstractHttpHandlerImpl{
+public class CSPokerHandler extends AbstractHttpHandlerImpl {
 
 	private final XmlPlayerCommunicationFactory f = XmlPlayerCommunicationFactory.global_factory;
-	
-    @Override
-    protected String getResponse(HttpExchange http) throws HttpExceptionImpl{
-	
-	    String username= AbstractHttpHandlerImpl.toPlayerName(http.getRequestHeaders());
-	    Session session = SessionManager.global_session_manager.getSession(username);
-	    try {
-		XmlPlayerCommunication playerComm = f.getRegisteredXmlPlayerCommunication(session, null);
+
+	@Override
+	protected String getResponse(HttpExchange http) throws HttpExceptionImpl {
+
+		String username = AbstractHttpHandlerImpl.toPlayerName(http
+				.getRequestHeaders());
+		Session session = SessionManager.global_session_manager
+				.getSession(username);
 		try {
-		    playerComm.handle(new InputSource(http.getRequestBody()));
-		} catch (SAXException e) {
-		    throw new HttpExceptionImpl(e, 400);
+			XmlPlayerCommunication playerComm = f
+					.getRegisteredXmlPlayerCommunication(session, null);
+			try {
+				playerComm.handle(new InputSource(http.getRequestBody()));
+			} catch (SAXException e) {
+				throw new HttpExceptionImpl(e, 400);
+			}
+			return playerComm.getAndFlushCache();
+
+		} catch (PlayerKilledExcepion e) {
+			throw new HttpExceptionImpl(e, 400);
 		}
-		return playerComm.getAndFlushCache();
-		
-	    } catch (PlayerKilledExcepion e) {
-		throw new HttpExceptionImpl(e, 400);
-	    }
-    }
-    
-    
-   
+	}
 
 }

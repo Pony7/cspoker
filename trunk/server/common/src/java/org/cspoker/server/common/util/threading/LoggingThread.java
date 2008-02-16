@@ -20,43 +20,42 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.apache.log4j.Logger;
 
 public class LoggingThread extends Thread {
-    public static final String DEFAULT_NAME = "LogginThread";
-    private static final AtomicInteger created = new AtomicInteger();
-    private static final AtomicInteger alive = new AtomicInteger();
-    
-    private static Logger logger = Logger.getLogger(LoggingThread.class);
+	public static final String DEFAULT_NAME = "LogginThread";
+	private static final AtomicInteger created = new AtomicInteger();
+	private static final AtomicInteger alive = new AtomicInteger();
 
-    public LoggingThread(Runnable r) {
-        this(r, DEFAULT_NAME);
-    }
+	private static Logger logger = Logger.getLogger(LoggingThread.class);
 
-    public LoggingThread(Runnable runnable, String name) {
-        super(runnable, name + "-" + created.incrementAndGet());
-        setUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
-            public void uncaughtException(Thread t,
-                                          Throwable e) {
-                logger.error("UNCAUGHT in thread " + t.getName(), e);
-            }
-        });
-    }
+	public LoggingThread(Runnable r) {
+		this(r, DEFAULT_NAME);
+	}
 
-    @Override
-    public void run() {
-        logger.debug("Created " + getName());
-        try {
-            alive.incrementAndGet();
-            super.run();
-        } finally {
-            alive.decrementAndGet();
-            logger.debug("Exiting " + getName());
-        }
-    }
+	public LoggingThread(Runnable runnable, String name) {
+		super(runnable, name + "-" + created.incrementAndGet());
+		setUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
+			public void uncaughtException(Thread t, Throwable e) {
+				logger.error("UNCAUGHT in thread " + t.getName(), e);
+			}
+		});
+	}
 
-    public static int getThreadsCreated() {
-        return created.get();
-    }
+	@Override
+	public void run() {
+		logger.debug("Created " + getName());
+		try {
+			alive.incrementAndGet();
+			super.run();
+		} finally {
+			alive.decrementAndGet();
+			logger.debug("Exiting " + getName());
+		}
+	}
 
-    public static int getThreadsAlive() {
-        return alive.get();
-    }
+	public static int getThreadsCreated() {
+		return created.get();
+	}
+
+	public static int getThreadsAlive() {
+		return alive.get();
+	}
 }

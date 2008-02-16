@@ -30,112 +30,114 @@ import org.cspoker.common.elements.table.TableId;
 import org.cspoker.common.eventlisteners.RemoteAllEventsListener;
 import org.cspoker.common.exceptions.IllegalActionException;
 
+public class RMIServerConnection {
 
-public class RMIServerConnection{
+	private RemoteLoginServer server;
 
-    private RemoteLoginServer server;
+	public RMIServerConnection(String server, int port) throws AccessException,
+			RemoteException, NotBoundException {
+		System.setSecurityManager(null);
+		Registry registry = LocateRegistry.getRegistry(server, port);
+		this.server = (RemoteLoginServer) registry.lookup("CSPokerServer");
+	}
 
-    public RMIServerConnection(String server, int port) throws AccessException, RemoteException, NotBoundException{
-	System.setSecurityManager(null);
-	Registry registry= LocateRegistry.getRegistry(server,port);
-	this.server = (RemoteLoginServer)registry.lookup("CSPokerServer");
-    }
+	public RemotePlayerCommunication login(String username, String password)
+			throws RemoteException {
 
-    public RemotePlayerCommunication login(String username, String password) throws RemoteException{
+		final RemotePlayerCommunication p = server.login(username, password);
 
-	final RemotePlayerCommunication p =  server.login(username, password);
+		return new RemotePlayerCommunication() {
 
-	return new RemotePlayerCommunication(){
+			public void allIn() throws IllegalActionException, RemoteException {
+				p.allIn();
+			}
 
-	    public void allIn() throws IllegalActionException, RemoteException {
-		p.allIn();
-	    }
+			public void bet(int amount) throws IllegalActionException,
+					RemoteException {
+				p.bet(amount);
 
-	    public void bet(int amount) throws IllegalActionException,
-	    RemoteException {
-		p.bet(amount);
+			}
 
-	    }
+			public void call() throws IllegalActionException, RemoteException {
+				p.call();
+			}
 
-	    public void call() throws IllegalActionException, RemoteException {
-		p.call();
-	    }
+			public void check() throws IllegalActionException, RemoteException {
+				p.check();
+			}
 
-	    public void check() throws IllegalActionException, RemoteException {
-		p.check();
-	    }
+			public TableId createTable() throws IllegalActionException,
+					RemoteException {
+				return p.createTable();
+			}
 
-	    public TableId createTable() throws IllegalActionException,RemoteException {
-		return p.createTable();
-	    }
+			public void deal() throws IllegalActionException, RemoteException {
+				p.deal();
 
-	    public void deal() throws IllegalActionException, RemoteException {
-		p.deal();
+			}
 
-	    }
+			public void fold() throws IllegalActionException, RemoteException {
+				p.fold();
+			}
 
-	    public void fold() throws IllegalActionException, RemoteException {
-		p.fold();
-	    }
+			public void joinTable(TableId id) throws IllegalActionException,
+					RemoteException {
+				p.joinTable(id);
+			}
 
-	    public void joinTable(TableId id) throws IllegalActionException,
-	    RemoteException {
-		p.joinTable(id);
-	    }
+			public void leaveTable() throws IllegalActionException,
+					RemoteException {
+				p.leaveTable();
+			}
 
-	    public void leaveTable() throws IllegalActionException,
-	    RemoteException {
-		p.leaveTable();
-	    }
+			public void raise(int amount) throws IllegalActionException,
+					RemoteException {
+				p.raise(amount);
+			}
 
-	    public void raise(int amount) throws IllegalActionException,
-	    RemoteException {
-		p.raise(amount);
-	    }
+			public void say(String message) throws RemoteException {
+				p.say(message);
+			}
 
-	    public void say(String message) throws RemoteException {
-		p.say(message);
-	    }
+			public void startGame() throws IllegalActionException,
+					RemoteException {
+				p.startGame();
+			}
 
-	    public void startGame() throws IllegalActionException,
-	    RemoteException {
-		p.startGame();
-	    }
+			public void subscribeAllEventsListener(
+					RemoteAllEventsListener listener) throws RemoteException {
+				RemoteAllEventsListener listenerStub = (RemoteAllEventsListener) UnicastRemoteObject
+						.exportObject(listener, 0);
+				p.subscribeAllEventsListener(listenerStub);
+			}
 
-	    public void subscribeAllEventsListener(
-		    RemoteAllEventsListener listener) throws RemoteException {
-		RemoteAllEventsListener listenerStub 
-		= (RemoteAllEventsListener)UnicastRemoteObject.exportObject(listener, 0);
-		p.subscribeAllEventsListener(listenerStub);
-	    }
+			public void unsubscribeAllEventsListener(
+					RemoteAllEventsListener listener) throws RemoteException {
+				p.unsubscribeAllEventsListener(listener);
+			}
 
-	    public void unsubscribeAllEventsListener(
-		    RemoteAllEventsListener listener) throws RemoteException {
-		p.unsubscribeAllEventsListener(listener);
-	    }
+		};
+	}
 
-	};
-    }
+	public static RemotePlayerCommunicationFactory getRemotePlayerCommunicationFactory() {
+		return new RemotePlayerCommunicationFactory() {
+			public RemotePlayerCommunication getRemotePlayerCommunication(
+					String server, int port, String username, String password)
+					throws ConnectException {
 
-    public static RemotePlayerCommunicationFactory getRemotePlayerCommunicationFactory(){
-	return new RemotePlayerCommunicationFactory(){
-	    public RemotePlayerCommunication getRemotePlayerCommunication(
-		    String server, int port, String username, String password)
-		    throws ConnectException {
-		
-		try {
-		    RMIServerConnection f = new RMIServerConnection(server, port);
-		    return f.login(username, password);
-		} catch (AccessException e) {
-		    throw new ConnectException("Connect failed",e);
-		} catch (RemoteException e) {
-		    throw new ConnectException("Connect failed",e);
-		} catch (NotBoundException e) {
-		    throw new ConnectException("Connect failed",e);
-		}
-	    }	    
-	};
-    }
-
+				try {
+					RMIServerConnection f = new RMIServerConnection(server,
+							port);
+					return f.login(username, password);
+				} catch (AccessException e) {
+					throw new ConnectException("Connect failed", e);
+				} catch (RemoteException e) {
+					throw new ConnectException("Connect failed", e);
+				} catch (NotBoundException e) {
+					throw new ConnectException("Connect failed", e);
+				}
+			}
+		};
+	}
 
 }

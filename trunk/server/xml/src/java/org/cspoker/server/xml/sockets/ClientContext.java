@@ -30,17 +30,14 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.cspoker.common.xml.XmlEventListener;
-import org.cspoker.server.common.game.player.GamePlayer;
 import org.cspoker.server.common.game.player.IllegalNameException;
-import org.cspoker.server.common.game.player.PlayerFactory;
 import org.cspoker.server.common.game.session.PlayerKilledExcepion;
 import org.cspoker.server.common.game.session.Session;
 import org.cspoker.server.common.game.session.SessionManager;
 import org.cspoker.server.xml.common.XmlPlayerCommunication;
 import org.cspoker.server.xml.common.XmlPlayerCommunicationFactory;
 
-
-public class ClientContext implements XmlEventListener{
+public class ClientContext implements XmlEventListener {
 
 	private final static Logger logger = Logger.getLogger(ClientContext.class);
 
@@ -53,12 +50,11 @@ public class ClientContext implements XmlEventListener{
 	private final Object writeBufferLock = new Object();
 	private final Object authenticateLock = new Object();
 
-
 	private final SocketChannel client;
 	private final Selector selector;
 
 	private final Charset charset;
-	//CharsetEncoder is not thread safe!
+	// CharsetEncoder is not thread safe!
 	private final CharsetEncoder encoder;
 
 	public ClientContext(SocketChannel client, Selector selector) {
@@ -66,30 +62,33 @@ public class ClientContext implements XmlEventListener{
 		this.selector = selector;
 		buffer = new StringBuilder();
 
-		charset=Charset.forName("UTF-8");
+		charset = Charset.forName("UTF-8");
 		encoder = charset.newEncoder();
 	}
 
-	public StringBuilder getBuffer(){
+	public StringBuilder getBuffer() {
 		return buffer;
 	}
 
 	/**
-	 * Writes the current buffer to the client.
-	 * If the buffer is emptied, the selector is removed
-	 * from the client.
+	 * Writes the current buffer to the client. If the buffer is emptied, the
+	 * selector is removed from the client.
+	 * 
 	 * @throws IOException
 	 */
-	public void writeBufferToClient() throws IOException{
+	public void writeBufferToClient() throws IOException {
 		synchronized (writeBufferLock) {
 			Iterator<ByteBuffer> i = writeBuffer.iterator();
-			while(i.hasNext()){
+			while (i.hasNext()) {
 				ByteBuffer bytes = i.next();
-				logger.trace("trying to write "+bytes.remaining()+" bytes.");
+				logger
+						.trace("trying to write " + bytes.remaining()
+								+ " bytes.");
 				client.write(bytes);
-				if(bytes.remaining()>0){
-					logger.trace("stopping write early because there are "+bytes.remaining()+" bytes unwritten.");
-					/*//registerWriteInterest(); //bug workaround?*/
+				if (bytes.remaining() > 0) {
+					logger.trace("stopping write early because there are "
+							+ bytes.remaining() + " bytes unwritten.");
+					/* //registerWriteInterest(); //bug workaround? */
 					return;
 				}
 				logger.trace("removing bytebuffer from the buffer list.");
@@ -100,40 +99,44 @@ public class ClientContext implements XmlEventListener{
 		}
 	}
 
-	private void unregisterWriteInterest(){
+	private void unregisterWriteInterest() {
 		client.keyFor(selector).interestOps(SelectionKey.OP_READ);
 		logger.trace("removed write interest");
 
 	}
 
-	private void registerWriteInterest(){
+	private void registerWriteInterest() {
 		client.keyFor(selector).interestOps(SelectionKey.OP_READ);
-		client.keyFor(selector).interestOps(SelectionKey.OP_READ | SelectionKey.OP_WRITE);
+		client.keyFor(selector).interestOps(
+				SelectionKey.OP_READ | SelectionKey.OP_WRITE);
 	}
 
-	public void appendToWriteBuffer(ByteBuffer bytes){
+	public void appendToWriteBuffer(ByteBuffer bytes) {
 		synchronized (writeBufferLock) {
 			writeBuffer.add(bytes);
-			logger.trace("adding write interest, added "+bytes.remaining()+" bytes to the buffer.");
+			logger.trace("adding write interest, added " + bytes.remaining()
+					+ " bytes to the buffer.");
 			registerWriteInterest();
 		}
 	}
 
-	public void closeConnection(){
-		if(playerComm!=null)
-			//TODO will this sequence of calls end?
+	public void closeConnection() {
+		if (playerComm != null)
+			// TODO will this sequence of calls end?
 			XmlPlayerCommunicationFactory.global_factory.unRegister(session);
-			SessionManager.global_session_manager.killSession(session.getUserName());
-			try {
-				client.close();
-			} catch (IOException e) {
-				logger.error("Can't close connection.", e);
-			}
+		SessionManager.global_session_manager
+				.killSession(session.getUserName());
+		try {
+			client.close();
+		} catch (IOException e) {
+			logger.error("Can't close connection.", e);
+		}
 	}
 
-	public void send(String xml){
+	public void send(String xml) {
 		try {
-			appendToWriteBuffer(encoder.encode(CharBuffer.wrap(xml+((char)0x00))));
+			appendToWriteBuffer(encoder.encode(CharBuffer.wrap(xml
+					+ ((char) 0x00))));
 			logger.trace("wrote reply to write buffer list");
 		} catch (CharacterCodingException e) {
 			logger.error(e.getMessage());
@@ -141,7 +144,7 @@ public class ClientContext implements XmlEventListener{
 		}
 	}
 
-	public XmlPlayerCommunication getXmlPlayerCommunication(){
+	public XmlPlayerCommunication getXmlPlayerCommunication() {
 		return playerComm;
 	}
 
@@ -149,25 +152,27 @@ public class ClientContext implements XmlEventListener{
 		send(xmlEvent);
 	}
 
-	public void login(String username, String password, String useragent) throws IllegalNameException {
-		synchronized (authenticateLock ) {
+	public void login(String username, String password, String useragent)
+			throws IllegalNameException {
+		synchronized (authenticateLock) {
 			if (isAuthenticated())
 				throw new IllegalStateException("Can't login twice");
-		    session = SessionManager.global_session_manager.getSession(username);
-		    try {
-				playerComm = XmlPlayerCommunicationFactory.global_factory.getRegisteredXmlPlayerCommunication(session, null);
+			session = SessionManager.global_session_manager
+					.getSession(username);
+			try {
+				playerComm = XmlPlayerCommunicationFactory.global_factory
+						.getRegisteredXmlPlayerCommunication(session, null);
 			} catch (PlayerKilledExcepion e) {
-				logger.error("player killed right after login",e);
+				logger.error("player killed right after login", e);
 				// ignore
 			}
 		}
 	}
 
 	public boolean isAuthenticated() {
-		synchronized (authenticateLock ) {
-			return playerComm!=null;
+		synchronized (authenticateLock) {
+			return playerComm != null;
 		}
 	}
-
 
 }

@@ -33,33 +33,33 @@ import org.cspoker.server.common.game.elements.table.Table;
  */
 class WaitingAtTableState extends PlayerCommunicationState {
 
-    protected final Table table;
+	protected final Table table;
 
-    public WaitingAtTableState(PlayerCommunicationImpl playerCommunication,
-	    Table table) {
-	super(playerCommunication);
-	this.table = table;
-    }
+	public WaitingAtTableState(PlayerCommunicationImpl playerCommunication,
+			Table table) {
+		super(playerCommunication);
+		this.table = table;
+	}
 
-    @Override
-    public void leaveTable() throws IllegalActionException {
-	table.removePlayer(playerCommunication.getPlayer());
-	playerCommunication.setPlayerCommunicationState(new InitialState(
-		playerCommunication));
-	GameManager.getServerMediator().publishPlayerLeftEvent(
-		new PlayerLeftEvent(playerCommunication.getPlayer()
-			.getSavedPlayer(), table.getId()));
-    }
+	@Override
+	public void leaveTable() throws IllegalActionException {
+		table.removePlayer(playerCommunication.getPlayer());
+		playerCommunication.setPlayerCommunicationState(new InitialState(
+				playerCommunication));
+		GameManager.getServerMediator().publishPlayerLeftEvent(
+				new PlayerLeftEvent(playerCommunication.getPlayer()
+						.getSavedPlayer(), table.getId()));
+	}
 
-    @Override
-    protected String getStdErrorMessage() {
-	return "You are waiting at a table for a game to begin.";
-    }
+	@Override
+	protected String getStdErrorMessage() {
+		return "You are waiting at a table for a game to begin.";
+	}
 
-    @Override
-    public void kill() {
-	// remove to killed player from the table
-	table.removePlayer(playerCommunication.getPlayer());
-    }
+	@Override
+	public void kill() {
+		// remove to killed player from the table
+		table.removePlayer(playerCommunication.getPlayer());
+	}
 
 }

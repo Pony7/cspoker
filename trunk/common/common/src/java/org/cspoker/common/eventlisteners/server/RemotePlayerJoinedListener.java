@@ -20,8 +20,9 @@ import java.rmi.RemoteException;
 
 import org.cspoker.common.events.serverEvents.PlayerJoinedEvent;
 
-public interface RemotePlayerJoinedListener extends Remote{
+public interface RemotePlayerJoinedListener extends Remote {
 
-    public void onPlayerJoinedEvent(PlayerJoinedEvent event) throws RemoteException;
+	public void onPlayerJoinedEvent(PlayerJoinedEvent event)
+			throws RemoteException;
 
 }

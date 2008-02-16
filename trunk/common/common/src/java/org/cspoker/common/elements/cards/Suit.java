@@ -23,9 +23,10 @@ package org.cspoker.common.elements.cards;
  * 
  * 
  */
-public enum Suit{
+public enum Suit {
 
-	CLUBS("Clubs", "c"), DIAMONDS("Diamonds", "d"), HEARTS("Hearts", "h"), SPADES("Spades", "s");
+	CLUBS("Clubs", "c"), DIAMONDS("Diamonds", "d"), HEARTS("Hearts", "h"), SPADES(
+			"Spades", "s");
 
 	private String longDescription;
 	private String shortDescription;
@@ -36,11 +37,11 @@ public enum Suit{
 	}
 
 	public String getLongDescription() {
-		return this.longDescription;
+		return longDescription;
 	}
 
 	public String getShortDescription() {
-		return this.shortDescription;
+		return shortDescription;
 	}
 
 	/**
@@ -48,7 +49,7 @@ public enum Suit{
 	 */
 	@Override
 	public String toString() {
-		return this.getShortDescription();
+		return getShortDescription();
 	}
 
 	/**
@@ -56,7 +57,7 @@ public enum Suit{
 	 * followed by diamonds, hearts, and spades as in bridge)
 	 */
 	public int getValue() {
-		return this.ordinal();
+		return ordinal();
 	}
 
 	public static Suit getSuit(String value) {

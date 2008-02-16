@@ -21,30 +21,32 @@ import org.apache.log4j.Logger;
 import org.cspoker.server.common.config.Log4JPropertiesLoader;
 
 public class RunHttpServer {
-    
-    static{
-	Log4JPropertiesLoader.load("org/cspoker/server/http/logging/log4j.properties");
-    }
-    private final static Logger logger = Logger.getLogger(RunHttpServer.class);
-    
-    public static void main(String[] args) throws NumberFormatException, IOException {
-	if (args.length < 1) {
-	    usage();
+
+	static {
+		Log4JPropertiesLoader
+				.load("org/cspoker/server/http/logging/log4j.properties");
+	}
+	private final static Logger logger = Logger.getLogger(RunHttpServer.class);
+
+	public static void main(String[] args) throws NumberFormatException,
+			IOException {
+		if (args.length < 1) {
+			usage();
+		}
+
+		int port = 0;
+		try {
+			port = Integer.parseInt(args[0]);
+		} catch (NumberFormatException e) {
+			usage();
+		}
+
+		HttpCSPokerServer server = new HttpCSPokerServer(port);
+		server.start();
 	}
 
-	int port=0;
-	try {
-	    port=Integer.parseInt(args[0]);
-	} catch (NumberFormatException e) {
-	    usage();
+	private static void usage() {
+		logger.fatal("usage: java -jar cspoker-server.jar [portnumber]");
+		System.exit(0);
 	}
-
-	HttpCSPokerServer server = new HttpCSPokerServer(port);
-	server.start();
-    }
-
-    private static void usage() {
-	logger.fatal("usage: java -jar cspoker-server.jar [portnumber]");
-	System.exit(0);
-    }
 }

@@ -26,14 +26,14 @@ import org.cspoker.common.events.gameEvents.NewRoundEvent;
  */
 public interface NewRoundListener extends RemoteNewRoundListener {
 
-    /**
-     * This method is called when subscribed to inform a new round event
-     * occurred.
-     * 
-     * @param event
-     *                The event object containing all information of the
-     *                occurred event.
-     */
-    public void onNewRoundEvent(NewRoundEvent event);
+	/**
+	 * This method is called when subscribed to inform a new round event
+	 * occurred.
+	 * 
+	 * @param event
+	 *            The event object containing all information of the occurred
+	 *            event.
+	 */
+	public void onNewRoundEvent(NewRoundEvent event);
 
 }

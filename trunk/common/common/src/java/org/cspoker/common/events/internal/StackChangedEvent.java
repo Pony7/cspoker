@@ -23,44 +23,45 @@ import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * A class to represent stack changed events.
- *
+ * 
  * @author Kenzo
- *
+ * 
  */
 class StackChangedEvent extends GameEvent {
 
-    private static final long serialVersionUID = 4587490473704241612L;
+	private static final long serialVersionUID = 4587490473704241612L;
 
-    private final Player player;
+	private final Player player;
 
-    public StackChangedEvent(Player player) {
-	this.player = player;
-    }
+	public StackChangedEvent(Player player) {
+		this.player = player;
+	}
 
-    public Player getPlayer() {
-	return player;
-    }
+	public Player getPlayer() {
+		return player;
+	}
 
-    @Override
-    public String toString() {
-	return player.getName() + "'s stack has changed to "
-		+ player.getStackValue() + " chips.";
-    }
+	@Override
+	public String toString() {
+		return player.getName() + "'s stack has changed to "
+				+ player.getStackValue() + " chips.";
+	}
 
-    @Override
-    public void toXml(ContentHandler handler) throws SAXException {
-	AttributesImpl attrs = new AttributesImpl();
-	attrs.addAttribute("", "type", "type", "CDATA", "stackchanged");
-	attrs.addAttribute("", "player", "player", "CDATA", getPlayer().getName());
-	handler.startElement("", "event", "event", attrs);
+	@Override
+	public void toXml(ContentHandler handler) throws SAXException {
+		AttributesImpl attrs = new AttributesImpl();
+		attrs.addAttribute("", "type", "type", "CDATA", "stackchanged");
+		attrs.addAttribute("", "player", "player", "CDATA", getPlayer()
+				.getName());
+		handler.startElement("", "event", "event", attrs);
 
-	handler.startElement("", "amount", "amount", new AttributesImpl());
-	String msg=String.valueOf(getPlayer().getStackValue());
-	handler.characters(msg.toCharArray(), 0, msg.length());
-	handler.endElement("", "amount", "amount");
+		handler.startElement("", "amount", "amount", new AttributesImpl());
+		String msg = String.valueOf(getPlayer().getStackValue());
+		handler.characters(msg.toCharArray(), 0, msg.length());
+		handler.endElement("", "amount", "amount");
 
-	handler.endElement("", "event", "event");
+		handler.endElement("", "event", "event");
 
-    }
+	}
 
 }

@@ -29,30 +29,31 @@ import org.xml.sax.helpers.AttributesImpl;
  */
 public class PlayerJoinedGameEvent extends GameEvent {
 
-    private static final long serialVersionUID = 3276571712883586966L;
-    
-    private final Player player;
+	private static final long serialVersionUID = 3276571712883586966L;
 
-    public PlayerJoinedGameEvent(Player player) {
-	this.player = player;
-    }
+	private final Player player;
 
-    @Override
-    public String toString() {
-	return player.getName() + " joined the table.";
-    }
-    
-    public Player getPlayer(){
-	return player;
-    }
-    
-    @Override
-    public void toXml(ContentHandler handler) throws SAXException {
-	AttributesImpl attrs = new AttributesImpl();
-	attrs.addAttribute("", "type", "type", "CDATA", "playerjoinedgame");
-	attrs.addAttribute("", "player", "player", "CDATA", getPlayer().getName());
-	handler.startElement("", "event", "event", attrs);
+	public PlayerJoinedGameEvent(Player player) {
+		this.player = player;
+	}
 
-	handler.endElement("", "event", "event");
-    }
+	@Override
+	public String toString() {
+		return player.getName() + " joined the table.";
+	}
+
+	public Player getPlayer() {
+		return player;
+	}
+
+	@Override
+	public void toXml(ContentHandler handler) throws SAXException {
+		AttributesImpl attrs = new AttributesImpl();
+		attrs.addAttribute("", "type", "type", "CDATA", "playerjoinedgame");
+		attrs.addAttribute("", "player", "player", "CDATA", getPlayer()
+				.getName());
+		handler.startElement("", "event", "event", attrs);
+
+		handler.endElement("", "event", "event");
+	}
 }

@@ -27,55 +27,57 @@ import org.xml.sax.helpers.AttributesImpl;
 
 public class NewPocketCardsEvent extends GameEvent {
 
-    private static final long serialVersionUID = -3328895783353781276L;
+	private static final long serialVersionUID = -3328895783353781276L;
 
-    private final Player player;
+	private final Player player;
 
-    private final List<Card> pocketCards;
+	private final List<Card> pocketCards;
 
-    public NewPocketCardsEvent(Player player, List<Card> pocketCards) {
-	this.player = player;
-	this.pocketCards = Collections.unmodifiableList(pocketCards);
-    }
-
-    public List<Card> getPocketCards() {
-	return pocketCards;
-    }
-
-    @Override
-    public String toString() {
-	String toReturn = getPlayer().getName() + " has received new pocket cards: ";
-	for (Card card : getPocketCards()) {
-	    toReturn += card;
-	    toReturn += ", ";
+	public NewPocketCardsEvent(Player player, List<Card> pocketCards) {
+		this.player = player;
+		this.pocketCards = Collections.unmodifiableList(pocketCards);
 	}
-	return toReturn.substring(0, toReturn.length() - 2) + ".";
-    }
 
-
-    public Player getPlayer() {
-	return player;
-    }
-
-    @Override
-    public void toXml(ContentHandler handler) throws SAXException {
-	AttributesImpl attrs = new AttributesImpl();
-	attrs.addAttribute("", "type", "type", "CDATA", "newpocketcards");
-	attrs.addAttribute("", "player", "player", "CDATA", getPlayer().getName());
-	handler.startElement("", "event", "event", attrs);
-
-	handler.startElement("", "cards", "cards", new AttributesImpl());
-	for(Card card : getPocketCards()){
-	    attrs = new AttributesImpl();
-	    attrs.addAttribute("", "suit", "suit", "CDATA", card.getSuit().getShortDescription());
-	    handler.startElement("", "card", "card", new AttributesImpl());
-	    String msg=card.getRank().getShortDescription();
-	    handler.characters(msg.toCharArray(), 0, msg.length());
-	    handler.endElement("", "card", "card");
+	public List<Card> getPocketCards() {
+		return pocketCards;
 	}
-	handler.endElement("", "cards", "cards");
 
-	handler.endElement("", "event", "event");
+	@Override
+	public String toString() {
+		String toReturn = getPlayer().getName()
+				+ " has received new pocket cards: ";
+		for (Card card : getPocketCards()) {
+			toReturn += card;
+			toReturn += ", ";
+		}
+		return toReturn.substring(0, toReturn.length() - 2) + ".";
+	}
 
-    }
+	public Player getPlayer() {
+		return player;
+	}
+
+	@Override
+	public void toXml(ContentHandler handler) throws SAXException {
+		AttributesImpl attrs = new AttributesImpl();
+		attrs.addAttribute("", "type", "type", "CDATA", "newpocketcards");
+		attrs.addAttribute("", "player", "player", "CDATA", getPlayer()
+				.getName());
+		handler.startElement("", "event", "event", attrs);
+
+		handler.startElement("", "cards", "cards", new AttributesImpl());
+		for (Card card : getPocketCards()) {
+			attrs = new AttributesImpl();
+			attrs.addAttribute("", "suit", "suit", "CDATA", card.getSuit()
+					.getShortDescription());
+			handler.startElement("", "card", "card", new AttributesImpl());
+			String msg = card.getRank().getShortDescription();
+			handler.characters(msg.toCharArray(), 0, msg.length());
+			handler.endElement("", "card", "card");
+		}
+		handler.endElement("", "cards", "cards");
+
+		handler.endElement("", "event", "event");
+
+	}
 }

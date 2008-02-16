@@ -22,7 +22,6 @@ import org.cspoker.common.eventlisteners.game.RemoteAllGameEventsListener;
 import org.cspoker.common.eventlisteners.server.RemoteAllServerEventsListener;
 
 public interface RemoteAllEventsListener extends Remote,
-	RemoteAllGameEventsListener,
-	RemoteAllServerEventsListener {
+		RemoteAllGameEventsListener, RemoteAllServerEventsListener {
 
 }

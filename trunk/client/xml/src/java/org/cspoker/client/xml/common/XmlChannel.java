@@ -22,14 +22,14 @@ import org.cspoker.common.xml.XmlEventListener;
 
 public interface XmlChannel {
 
-    public void open() throws IOException, LoginFailedException;
-    
-    public void send(final String xml) throws IOException, LoginFailedException;
-    
-    public void registerXmlEventListener(XmlEventListener listener);
-    
-    public void unRegisterXmlEventListener(XmlEventListener listener);
-    
-    public void close();
-    
+	public void open() throws IOException, LoginFailedException;
+
+	public void send(final String xml) throws IOException, LoginFailedException;
+
+	public void registerXmlEventListener(XmlEventListener listener);
+
+	public void unRegisterXmlEventListener(XmlEventListener listener);
+
+	public void close();
+
 }

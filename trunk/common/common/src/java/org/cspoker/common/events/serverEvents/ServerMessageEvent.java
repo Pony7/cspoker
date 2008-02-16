@@ -22,43 +22,43 @@ import org.xml.sax.helpers.AttributesImpl;
 
 public class ServerMessageEvent extends ServerEvent {
 
-    private static final long serialVersionUID = -1396985826399601557L;
+	private static final long serialVersionUID = -1396985826399601557L;
 
-    private final Player player;
+	private final Player player;
 
-    private final String message;
+	private final String message;
 
-    public ServerMessageEvent(Player player, String message) {
-	this.player = player;
-	this.message = message;
-    }
+	public ServerMessageEvent(Player player, String message) {
+		this.player = player;
+		this.message = message;
+	}
 
-    @Override
-    public String toString() {
-	return player.getName() + " says: " + message;
-    }
-    
-    public String getMessage(){
-	return message;
-    }
+	@Override
+	public String toString() {
+		return player.getName() + " says: " + message;
+	}
 
-    public String getPlayerName(){
-	return player.getName();
-    }
+	public String getMessage() {
+		return message;
+	}
 
-    @Override
-    public void toXml(ContentHandler handler) throws SAXException {
-	AttributesImpl attrs = new AttributesImpl();
-	attrs.addAttribute("", "type", "type", "CDATA", "servermessage");
-	attrs.addAttribute("", "player", "player", "CDATA", getPlayerName());
-	handler.startElement("", "event", "event", attrs);
+	public String getPlayerName() {
+		return player.getName();
+	}
 
-	handler.startElement("", "message", "message", new AttributesImpl());
-	String msg=String.valueOf(getMessage());
-	handler.characters(msg.toCharArray(), 0, msg.length());
-	handler.endElement("", "message", "message");
+	@Override
+	public void toXml(ContentHandler handler) throws SAXException {
+		AttributesImpl attrs = new AttributesImpl();
+		attrs.addAttribute("", "type", "type", "CDATA", "servermessage");
+		attrs.addAttribute("", "player", "player", "CDATA", getPlayerName());
+		handler.startElement("", "event", "event", attrs);
 
-	handler.endElement("", "event", "event");
-    }
+		handler.startElement("", "message", "message", new AttributesImpl());
+		String msg = String.valueOf(getMessage());
+		handler.characters(msg.toCharArray(), 0, msg.length());
+		handler.endElement("", "message", "message");
+
+		handler.endElement("", "event", "event");
+	}
 
 }

@@ -24,36 +24,37 @@ import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * A class to represent fold events.
- *
+ * 
  * @author Kenzo
- *
+ * 
  */
 public class FoldEvent extends GameEvent {
 
-    private static final long serialVersionUID = -7805526864154493974L;
-    
-    private final Player player;
+	private static final long serialVersionUID = -7805526864154493974L;
 
-    public FoldEvent(Player player) {
-	this.player = player;
-    }
+	private final Player player;
 
-    @Override
-    public String toString() {
-	return getPlayer().getName() + " folds.";
-    }
+	public FoldEvent(Player player) {
+		this.player = player;
+	}
 
-    public Player getPlayer() {
-	return player;
-    }
+	@Override
+	public String toString() {
+		return getPlayer().getName() + " folds.";
+	}
 
-    @Override
-    public void toXml(ContentHandler handler) throws SAXException {
-	AttributesImpl attrs = new AttributesImpl();
-	attrs.addAttribute("", "type", "type", "CDATA", "fold");
-	attrs.addAttribute("", "player", "player", "CDATA", getPlayer().getName());
-	handler.startElement("", "event", "event", attrs);
-	handler.endElement("", "event", "event");
-    }
+	public Player getPlayer() {
+		return player;
+	}
+
+	@Override
+	public void toXml(ContentHandler handler) throws SAXException {
+		AttributesImpl attrs = new AttributesImpl();
+		attrs.addAttribute("", "type", "type", "CDATA", "fold");
+		attrs.addAttribute("", "player", "player", "CDATA", getPlayer()
+				.getName());
+		handler.startElement("", "event", "event", attrs);
+		handler.endElement("", "event", "event");
+	}
 
 }

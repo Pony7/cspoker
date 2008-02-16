@@ -30,101 +30,101 @@ import org.cspoker.server.common.game.GameMediator;
  */
 class PlayingState extends PlayerCommunicationState {
 
-    /**
-     * The mediator the player is in.
-     */
-    private final GameMediator gameMediator;
+	/**
+	 * The mediator the player is in.
+	 */
+	private final GameMediator gameMediator;
 
-    /**
-     * Create a new playing state with given player communication and game
-     * mediator
-     * 
-     * @param playerCommunication
-     *                The player communication for this playing state.
-     * @param gameMediator
-     *                The game mediator for this playing state.
-     */
-    public PlayingState(PlayerCommunicationImpl playerCommunication,
-	    GameMediator gameMediator) {
-	super(playerCommunication);
-	this.gameMediator = gameMediator;
-	GameManager.getServerMediator().unsubscribeAllServerEventsListener(
-		playerCommunication.getId(),
-		playerCommunication.getAllEventsListener());
-	gameMediator.subscribeAllGameEventsListener(
-		playerCommunication.getId(), playerCommunication
-			.getAllEventsListener());
-    }
-
-    @Override
-    public void call() throws IllegalActionException {
-	gameMediator.call(playerCommunication.getPlayer());
-    }
-
-    @Override
-    public void bet(int amount) throws IllegalActionException {
-	gameMediator.bet(playerCommunication.getPlayer(), amount);
-    }
-
-    @Override
-    public void fold() throws IllegalActionException {
-	gameMediator.fold(playerCommunication.getPlayer());
-    }
-
-    @Override
-    public void check() throws IllegalActionException {
-	gameMediator.check(playerCommunication.getPlayer());
-    }
-
-    @Override
-    public void raise(int amount) throws IllegalActionException {
-	gameMediator.raise(playerCommunication.getPlayer(), amount);
-    }
-
-    @Override
-    public void deal() throws IllegalActionException {
-	gameMediator.deal(playerCommunication.getPlayer());
-	;
-    }
-
-    @Override
-    public void allIn() throws IllegalActionException {
-	gameMediator.allIn(playerCommunication.getPlayer());
-	;
-    }
-
-    @Override
-    public void say(String message) {
-	gameMediator.publishGameMessageEvent(new GameMessageEvent(
-		playerCommunication.getPlayer().getSavedPlayer(), message));
-    }
-
-    @Override
-    public void leaveTable() throws IllegalActionException {
-	// TODO if playing, fold?
-	gameMediator.leaveGame(playerCommunication.getPlayer());
-	gameMediator.unsubscribeAllGameEventsListener(playerCommunication
-		.getId(), playerCommunication.getAllEventsListener());
-	GameManager.getServerMediator().subscribeAllServerEventsListener(
-		playerCommunication.getId(),
-		playerCommunication.getAllEventsListener());
-	playerCommunication.setPlayerCommunicationState(new InitialState(
-		playerCommunication));
-    }
-
-    @Override
-    protected String getStdErrorMessage() {
-	return "You can not perform this action while playing.";
-    }
-
-    @Override
-    public void kill() {
-	try {
-	    leaveTable();
-	} catch (IllegalActionException e) {
-	    // kill the hard way?
-	    //TODO
+	/**
+	 * Create a new playing state with given player communication and game
+	 * mediator
+	 * 
+	 * @param playerCommunication
+	 *            The player communication for this playing state.
+	 * @param gameMediator
+	 *            The game mediator for this playing state.
+	 */
+	public PlayingState(PlayerCommunicationImpl playerCommunication,
+			GameMediator gameMediator) {
+		super(playerCommunication);
+		this.gameMediator = gameMediator;
+		GameManager.getServerMediator().unsubscribeAllServerEventsListener(
+				playerCommunication.getId(),
+				playerCommunication.getAllEventsListener());
+		gameMediator.subscribeAllGameEventsListener(
+				playerCommunication.getId(), playerCommunication
+						.getAllEventsListener());
 	}
-    }
+
+	@Override
+	public void call() throws IllegalActionException {
+		gameMediator.call(playerCommunication.getPlayer());
+	}
+
+	@Override
+	public void bet(int amount) throws IllegalActionException {
+		gameMediator.bet(playerCommunication.getPlayer(), amount);
+	}
+
+	@Override
+	public void fold() throws IllegalActionException {
+		gameMediator.fold(playerCommunication.getPlayer());
+	}
+
+	@Override
+	public void check() throws IllegalActionException {
+		gameMediator.check(playerCommunication.getPlayer());
+	}
+
+	@Override
+	public void raise(int amount) throws IllegalActionException {
+		gameMediator.raise(playerCommunication.getPlayer(), amount);
+	}
+
+	@Override
+	public void deal() throws IllegalActionException {
+		gameMediator.deal(playerCommunication.getPlayer());
+		;
+	}
+
+	@Override
+	public void allIn() throws IllegalActionException {
+		gameMediator.allIn(playerCommunication.getPlayer());
+		;
+	}
+
+	@Override
+	public void say(String message) {
+		gameMediator.publishGameMessageEvent(new GameMessageEvent(
+				playerCommunication.getPlayer().getSavedPlayer(), message));
+	}
+
+	@Override
+	public void leaveTable() throws IllegalActionException {
+		// TODO if playing, fold?
+		gameMediator.leaveGame(playerCommunication.getPlayer());
+		gameMediator.unsubscribeAllGameEventsListener(playerCommunication
+				.getId(), playerCommunication.getAllEventsListener());
+		GameManager.getServerMediator().subscribeAllServerEventsListener(
+				playerCommunication.getId(),
+				playerCommunication.getAllEventsListener());
+		playerCommunication.setPlayerCommunicationState(new InitialState(
+				playerCommunication));
+	}
+
+	@Override
+	protected String getStdErrorMessage() {
+		return "You can not perform this action while playing.";
+	}
+
+	@Override
+	public void kill() {
+		try {
+			leaveTable();
+		} catch (IllegalActionException e) {
+			// kill the hard way?
+			// TODO
+		}
+	}
 
 }

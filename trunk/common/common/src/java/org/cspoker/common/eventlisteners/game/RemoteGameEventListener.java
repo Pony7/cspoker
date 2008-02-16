@@ -29,14 +29,14 @@ import org.cspoker.common.events.gameEvents.GameEvent;
  */
 public interface RemoteGameEventListener extends Remote {
 
-    /**
-     * This method is called when subscribed to inform a new game event
-     * occurred.
-     * 
-     * @param event
-     *                The event object containing all information of the
-     *                occurred event.
-     */
-    public void onGameEvent(GameEvent event) throws RemoteException;
+	/**
+	 * This method is called when subscribed to inform a new game event
+	 * occurred.
+	 * 
+	 * @param event
+	 *            The event object containing all information of the occurred
+	 *            event.
+	 */
+	public void onGameEvent(GameEvent event) throws RemoteException;
 
 }

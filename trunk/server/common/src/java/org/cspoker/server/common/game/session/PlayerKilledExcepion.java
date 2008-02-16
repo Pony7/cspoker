@@ -19,16 +19,16 @@ import org.cspoker.server.common.game.player.GamePlayer;
 
 public class PlayerKilledExcepion extends Exception {
 
-    private static final long serialVersionUID = -6931653111428546063L;
-    
-    private GamePlayer player;
+	private static final long serialVersionUID = -6931653111428546063L;
 
-    public PlayerKilledExcepion(GamePlayer player) {
-	this.player = player;
-    }
-    
-    public GamePlayer getPlayer(){
-	return player;
-    }
-    
+	private GamePlayer player;
+
+	public PlayerKilledExcepion(GamePlayer player) {
+		this.player = player;
+	}
+
+	public GamePlayer getPlayer() {
+		return player;
+	}
+
 }

@@ -31,199 +31,198 @@ import org.cspoker.common.exceptions.IllegalActionException;
 import org.cspoker.server.common.game.player.GamePlayer;
 import org.cspoker.server.common.game.player.IllegalNameException;
 import org.cspoker.server.common.game.player.PlayerFactory;
-import org.cspoker.server.common.game.playercommunication.PlayerCommunicationImpl;
 
 public class PlayerCommunicationTest extends TestCase {
-    private static Logger logger = Logger
-	    .getLogger(PlayerCommunicationTest.class);
+	private static Logger logger = Logger
+			.getLogger(PlayerCommunicationTest.class);
 
-    private PlayerFactory playerFactory;
+	private PlayerFactory playerFactory;
 
-    @Override
-    public void setUp() {
-	playerFactory = new TestPlayerFactory();
-    }
-
-    public void testConstructor() throws IllegalNameException {
-	GamePlayer kenzo = playerFactory.createNewPlayer("Kenzo");
-	new PlayerCommunicationImpl(kenzo);
-    }
-
-    public void testCreateTable() throws IllegalNameException {
-	GamePlayer kenzo = playerFactory.createNewPlayer("Kenzo");
-	PlayerCommunicationImpl kenzoComm = new PlayerCommunicationImpl(kenzo);
-	try {
-	    kenzoComm.createTable();
-	} catch (IllegalActionException e) {
-	    fail(e.getMessage());
-	} finally {
-	    PlayerCommunicationManager.clear();
+	@Override
+	public void setUp() {
+		playerFactory = new TestPlayerFactory();
 	}
-    }
 
-    public void testJoinTable() throws IllegalNameException {
-	GamePlayer kenzo = playerFactory.createNewPlayer("Kenzo");
-	GamePlayer guy = playerFactory.createNewPlayer("Guy");
-	PlayerCommunicationImpl kenzoComm = new PlayerCommunicationImpl(kenzo);
-	PlayerCommunicationImpl guyComm = new PlayerCommunicationImpl(guy);
-	try {
-	    TableId tableId = kenzoComm.createTable();
-	    guyComm.joinTable(tableId);
-	} catch (IllegalActionException e) {
-	    fail(e.getMessage());
-	} finally {
-	    PlayerCommunicationManager.clear();
+	public void testConstructor() throws IllegalNameException {
+		GamePlayer kenzo = playerFactory.createNewPlayer("Kenzo");
+		new PlayerCommunicationImpl(kenzo);
 	}
-    }
 
-    public void testStartGame() throws IllegalNameException {
-	GamePlayer kenzo = playerFactory.createNewPlayer("Kenzo");
-	GamePlayer guy = playerFactory.createNewPlayer("Guy");
-	PlayerCommunication kenzoComm = new PlayerCommunicationImpl(kenzo);
-	PlayerCommunication guyComm = new PlayerCommunicationImpl(guy);
-	try {
-	    TableId tableId = kenzoComm.createTable();
-	    guyComm.joinTable(tableId);
-	    kenzoComm.startGame();
-	} catch (IllegalActionException e) {
-	    fail(e.getMessage());
-	} finally {
-	    PlayerCommunicationManager.clear();
+	public void testCreateTable() throws IllegalNameException {
+		GamePlayer kenzo = playerFactory.createNewPlayer("Kenzo");
+		PlayerCommunicationImpl kenzoComm = new PlayerCommunicationImpl(kenzo);
+		try {
+			kenzoComm.createTable();
+		} catch (IllegalActionException e) {
+			fail(e.getMessage());
+		} finally {
+			PlayerCommunicationManager.clear();
+		}
 	}
-    }
 
-    private PlayerCommunication currentComm;
-
-    public void testPlayingGame() throws IllegalNameException {
-	GamePlayer kenzo = playerFactory.createNewPlayer("Kenzo");
-	GamePlayer guy = playerFactory.createNewPlayer("Guy");
-	PlayerCommunicationImpl kenzoComm = new PlayerCommunicationImpl(kenzo);
-	PlayerCommunicationImpl guyComm = new PlayerCommunicationImpl(guy);
-
-	NewRoundListener newRoundListener = new NewRoundListener() {
-
-	    public void onNewRoundEvent(NewRoundEvent event) {
-		currentComm = PlayerCommunicationManager
-			.getPlayerCommunication(event.getPlayer().getId());
-		PlayerCommunicationTest.logger
-			.info("Changed to " + currentComm);
-	    }
-
-	};
-
-	NextPlayerListener nextPlayerListener = new NextPlayerListener() {
-
-	    public void onNextPlayerEvent(NextPlayerEvent event) {
-		currentComm = PlayerCommunicationManager
-			.getPlayerCommunication(event.getPlayer().getId());
-		PlayerCommunicationTest.logger
-			.info("Changed to " + currentComm);
-	    }
-
-	};
-
-	try {
-	    TableId tableId = kenzoComm.createTable();
-	    guyComm.joinTable(tableId);
-	    guyComm.subscribeNewRoundListener(newRoundListener);
-	    guyComm.subscribeNextPlayerListener(nextPlayerListener);
-	    kenzoComm.startGame();
-	    PlayerCommunicationTest.logger.info(kenzoComm.getLatestEvents());
-
-	    PlayerCommunicationTest.logger.info("Kenzo's events:"
-		    + kenzoComm.getLatestEvents());
-	    PlayerCommunicationTest.logger.info("Guy's events:"
-		    + guyComm.getLatestEvents());
-
-	    currentComm.call();
-
-	    PlayerCommunicationTest.logger.info("Guy's events:");
-	    showEvents(guyComm.getLatestEvents().getGameEvents());
-
-	    currentComm.check();
-	    currentComm.bet(10);
-	    currentComm.raise(10);
-	    currentComm.call();
-
-	    currentComm.check();
-	    currentComm.check();
-
-	    currentComm.check();
-	    currentComm.check();
-
-	    PlayerCommunicationTest.logger.info("Guy's events:");
-	    showEvents(guyComm.getLatestEvents().getGameEvents());
-
-	} catch (IllegalActionException e) {
-	    fail(e.getMessage());
-	} finally {
-	    PlayerCommunicationManager.clear();
+	public void testJoinTable() throws IllegalNameException {
+		GamePlayer kenzo = playerFactory.createNewPlayer("Kenzo");
+		GamePlayer guy = playerFactory.createNewPlayer("Guy");
+		PlayerCommunicationImpl kenzoComm = new PlayerCommunicationImpl(kenzo);
+		PlayerCommunicationImpl guyComm = new PlayerCommunicationImpl(guy);
+		try {
+			TableId tableId = kenzoComm.createTable();
+			guyComm.joinTable(tableId);
+		} catch (IllegalActionException e) {
+			fail(e.getMessage());
+		} finally {
+			PlayerCommunicationManager.clear();
+		}
 	}
-    }
 
-    public void testPlayingGame2() throws IllegalNameException {
-	GamePlayer kenzo = playerFactory.createNewPlayer("Kenzo");
-	GamePlayer guy = playerFactory.createNewPlayer("Guy");
-	PlayerCommunicationImpl kenzoComm = new PlayerCommunicationImpl(kenzo);
-	PlayerCommunicationImpl guyComm = new PlayerCommunicationImpl(guy);
-
-	NewRoundListener newRoundListener = new NewRoundListener() {
-
-	    public void onNewRoundEvent(NewRoundEvent event) {
-		currentComm = PlayerCommunicationManager
-			.getPlayerCommunication(event.getPlayer().getId());
-		PlayerCommunicationTest.logger
-			.info("Changed to " + currentComm);
-	    }
-
-	};
-
-	NextPlayerListener nextPlayerListener = new NextPlayerListener() {
-
-	    public void onNextPlayerEvent(NextPlayerEvent event) {
-		currentComm = PlayerCommunicationManager
-			.getPlayerCommunication(event.getPlayer().getId());
-		PlayerCommunicationTest.logger
-			.info("Changed to " + currentComm);
-	    }
-
-	};
-
-	try {
-	    TableId tableId = kenzoComm.createTable();
-	    guyComm.subscribeNewRoundListener(newRoundListener);
-	    guyComm.subscribeNextPlayerListener(nextPlayerListener);
-	    guyComm.joinTable(tableId);
-	    kenzoComm.startGame();
-	    PlayerCommunicationTest.logger.info(kenzoComm.getLatestEvents());
-
-	    PlayerCommunicationTest.logger.info("Kenzo's events:"
-		    + kenzoComm.getLatestEvents());
-	    PlayerCommunicationTest.logger.info("Guy's events:"
-		    + guyComm.getLatestEvents());
-
-	    currentComm.call();
-
-	    PlayerCommunicationTest.logger.info("Guy's events:");
-	    showEvents(guyComm.getLatestEvents().getGameEvents());
-
-	    currentComm.allIn();
-	    currentComm.allIn();
-
-	    PlayerCommunicationTest.logger.info("Guy's events:");
-	    showEvents(guyComm.getLatestEvents().getGameEvents());
-
-	} catch (IllegalActionException e) {
-	    fail(e.getMessage());
-	} finally {
-	    PlayerCommunicationManager.clear();
+	public void testStartGame() throws IllegalNameException {
+		GamePlayer kenzo = playerFactory.createNewPlayer("Kenzo");
+		GamePlayer guy = playerFactory.createNewPlayer("Guy");
+		PlayerCommunication kenzoComm = new PlayerCommunicationImpl(kenzo);
+		PlayerCommunication guyComm = new PlayerCommunicationImpl(guy);
+		try {
+			TableId tableId = kenzoComm.createTable();
+			guyComm.joinTable(tableId);
+			kenzoComm.startGame();
+		} catch (IllegalActionException e) {
+			fail(e.getMessage());
+		} finally {
+			PlayerCommunicationManager.clear();
+		}
 	}
-    }
 
-    public void showEvents(List<Event> events) {
-	for (Event event : events) {
-	    PlayerCommunicationTest.logger.info("++ " + event);
+	private PlayerCommunication currentComm;
+
+	public void testPlayingGame() throws IllegalNameException {
+		GamePlayer kenzo = playerFactory.createNewPlayer("Kenzo");
+		GamePlayer guy = playerFactory.createNewPlayer("Guy");
+		PlayerCommunicationImpl kenzoComm = new PlayerCommunicationImpl(kenzo);
+		PlayerCommunicationImpl guyComm = new PlayerCommunicationImpl(guy);
+
+		NewRoundListener newRoundListener = new NewRoundListener() {
+
+			public void onNewRoundEvent(NewRoundEvent event) {
+				currentComm = PlayerCommunicationManager
+						.getPlayerCommunication(event.getPlayer().getId());
+				PlayerCommunicationTest.logger
+						.info("Changed to " + currentComm);
+			}
+
+		};
+
+		NextPlayerListener nextPlayerListener = new NextPlayerListener() {
+
+			public void onNextPlayerEvent(NextPlayerEvent event) {
+				currentComm = PlayerCommunicationManager
+						.getPlayerCommunication(event.getPlayer().getId());
+				PlayerCommunicationTest.logger
+						.info("Changed to " + currentComm);
+			}
+
+		};
+
+		try {
+			TableId tableId = kenzoComm.createTable();
+			guyComm.joinTable(tableId);
+			guyComm.subscribeNewRoundListener(newRoundListener);
+			guyComm.subscribeNextPlayerListener(nextPlayerListener);
+			kenzoComm.startGame();
+			PlayerCommunicationTest.logger.info(kenzoComm.getLatestEvents());
+
+			PlayerCommunicationTest.logger.info("Kenzo's events:"
+					+ kenzoComm.getLatestEvents());
+			PlayerCommunicationTest.logger.info("Guy's events:"
+					+ guyComm.getLatestEvents());
+
+			currentComm.call();
+
+			PlayerCommunicationTest.logger.info("Guy's events:");
+			showEvents(guyComm.getLatestEvents().getGameEvents());
+
+			currentComm.check();
+			currentComm.bet(10);
+			currentComm.raise(10);
+			currentComm.call();
+
+			currentComm.check();
+			currentComm.check();
+
+			currentComm.check();
+			currentComm.check();
+
+			PlayerCommunicationTest.logger.info("Guy's events:");
+			showEvents(guyComm.getLatestEvents().getGameEvents());
+
+		} catch (IllegalActionException e) {
+			fail(e.getMessage());
+		} finally {
+			PlayerCommunicationManager.clear();
+		}
 	}
-    }
+
+	public void testPlayingGame2() throws IllegalNameException {
+		GamePlayer kenzo = playerFactory.createNewPlayer("Kenzo");
+		GamePlayer guy = playerFactory.createNewPlayer("Guy");
+		PlayerCommunicationImpl kenzoComm = new PlayerCommunicationImpl(kenzo);
+		PlayerCommunicationImpl guyComm = new PlayerCommunicationImpl(guy);
+
+		NewRoundListener newRoundListener = new NewRoundListener() {
+
+			public void onNewRoundEvent(NewRoundEvent event) {
+				currentComm = PlayerCommunicationManager
+						.getPlayerCommunication(event.getPlayer().getId());
+				PlayerCommunicationTest.logger
+						.info("Changed to " + currentComm);
+			}
+
+		};
+
+		NextPlayerListener nextPlayerListener = new NextPlayerListener() {
+
+			public void onNextPlayerEvent(NextPlayerEvent event) {
+				currentComm = PlayerCommunicationManager
+						.getPlayerCommunication(event.getPlayer().getId());
+				PlayerCommunicationTest.logger
+						.info("Changed to " + currentComm);
+			}
+
+		};
+
+		try {
+			TableId tableId = kenzoComm.createTable();
+			guyComm.subscribeNewRoundListener(newRoundListener);
+			guyComm.subscribeNextPlayerListener(nextPlayerListener);
+			guyComm.joinTable(tableId);
+			kenzoComm.startGame();
+			PlayerCommunicationTest.logger.info(kenzoComm.getLatestEvents());
+
+			PlayerCommunicationTest.logger.info("Kenzo's events:"
+					+ kenzoComm.getLatestEvents());
+			PlayerCommunicationTest.logger.info("Guy's events:"
+					+ guyComm.getLatestEvents());
+
+			currentComm.call();
+
+			PlayerCommunicationTest.logger.info("Guy's events:");
+			showEvents(guyComm.getLatestEvents().getGameEvents());
+
+			currentComm.allIn();
+			currentComm.allIn();
+
+			PlayerCommunicationTest.logger.info("Guy's events:");
+			showEvents(guyComm.getLatestEvents().getGameEvents());
+
+		} catch (IllegalActionException e) {
+			fail(e.getMessage());
+		} finally {
+			PlayerCommunicationManager.clear();
+		}
+	}
+
+	public void showEvents(List<Event> events) {
+		for (Event event : events) {
+			PlayerCommunicationTest.logger.info("++ " + event);
+		}
+	}
 
 }

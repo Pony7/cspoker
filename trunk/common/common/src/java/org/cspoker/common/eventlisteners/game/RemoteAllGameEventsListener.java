@@ -29,11 +29,13 @@ import org.cspoker.common.eventlisteners.game.actions.RemoteSmallBlindListener;
 import org.cspoker.common.eventlisteners.game.privatelistener.RemoteNewPocketCardsListener;
 
 public interface RemoteAllGameEventsListener extends Remote,
-RemoteAllInListener, RemoteBetListener,
-RemoteBigBlindListener, RemoteCallListener, RemoteCheckListener,
-RemoteFoldListener, RemoteRaiseListener, RemoteSmallBlindListener,
-RemoteNewPocketCardsListener, RemoteNewCommunityCardsListener, RemoteNewDealListener,
-RemoteNewRoundListener, RemoteNextPlayerListener, RemotePlayerJoinedGameListener,
-RemotePlayerLeftTableListener, RemoteShowHandListener, RemoteWinnerListener, RemoteGameMessageListener {
+		RemoteAllInListener, RemoteBetListener, RemoteBigBlindListener,
+		RemoteCallListener, RemoteCheckListener, RemoteFoldListener,
+		RemoteRaiseListener, RemoteSmallBlindListener,
+		RemoteNewPocketCardsListener, RemoteNewCommunityCardsListener,
+		RemoteNewDealListener, RemoteNewRoundListener,
+		RemoteNextPlayerListener, RemotePlayerJoinedGameListener,
+		RemotePlayerLeftTableListener, RemoteShowHandListener,
+		RemoteWinnerListener, RemoteGameMessageListener {
 
 }

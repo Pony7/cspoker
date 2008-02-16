@@ -18,8 +18,8 @@ package org.cspoker.server.xml.http.handler.exception;
 /**
  * An interface for exceptions that contain a Http status code.
  */
-public interface HttpException{
-    
-    public int getStatus();
+public interface HttpException {
+
+	public int getStatus();
 
 }

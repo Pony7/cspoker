@@ -30,121 +30,121 @@ import org.cspoker.server.common.game.GameManager;
  */
 abstract class PlayerCommunicationState {
 
-    /**
-     * The variable containing the player communication.
-     */
-    protected final PlayerCommunicationImpl playerCommunication;
+	/**
+	 * The variable containing the player communication.
+	 */
+	protected final PlayerCommunicationImpl playerCommunication;
 
-    /***************************************************************************
-     * Constructor
-     **************************************************************************/
+	/***************************************************************************
+	 * Constructor
+	 **************************************************************************/
 
-    public PlayerCommunicationState(PlayerCommunicationImpl playerCommunication) {
-	this.playerCommunication = playerCommunication;
-    }
+	public PlayerCommunicationState(PlayerCommunicationImpl playerCommunication) {
+		this.playerCommunication = playerCommunication;
+	}
 
-    /***************************************************************************
-     * Player Actions
-     **************************************************************************/
+	/***************************************************************************
+	 * Player Actions
+	 **************************************************************************/
 
-    public void bet(int amount) throws IllegalActionException {
-	throw new IllegalActionException("Bet is not a valid action. "
-		+ getStdErrorMessage());
-    }
+	public void bet(int amount) throws IllegalActionException {
+		throw new IllegalActionException("Bet is not a valid action. "
+				+ getStdErrorMessage());
+	}
 
-    public void raise(int amount) throws IllegalActionException {
-	throw new IllegalActionException("Raise is not a valid action. "
-		+ getStdErrorMessage());
-    }
+	public void raise(int amount) throws IllegalActionException {
+		throw new IllegalActionException("Raise is not a valid action. "
+				+ getStdErrorMessage());
+	}
 
-    public void call() throws IllegalActionException {
-	throw new IllegalActionException("Call is not a valid action. "
-		+ getStdErrorMessage());
-    }
+	public void call() throws IllegalActionException {
+		throw new IllegalActionException("Call is not a valid action. "
+				+ getStdErrorMessage());
+	}
 
-    public void check() throws IllegalActionException {
-	throw new IllegalActionException("Check is not a valid action. "
-		+ getStdErrorMessage());
-    }
+	public void check() throws IllegalActionException {
+		throw new IllegalActionException("Check is not a valid action. "
+				+ getStdErrorMessage());
+	}
 
-    public void deal() throws IllegalActionException {
-	throw new IllegalActionException("Deal is not a valid action. "
-		+ getStdErrorMessage());
+	public void deal() throws IllegalActionException {
+		throw new IllegalActionException("Deal is not a valid action. "
+				+ getStdErrorMessage());
 
-    }
+	}
 
-    public void fold() throws IllegalActionException {
-	throw new IllegalActionException("Fold is not a valid action. "
-		+ getStdErrorMessage());
-    }
+	public void fold() throws IllegalActionException {
+		throw new IllegalActionException("Fold is not a valid action. "
+				+ getStdErrorMessage());
+	}
 
-    public void allIn() throws IllegalActionException {
-	throw new IllegalActionException("Going all-in is not a valid action. "
-		+ getStdErrorMessage());
+	public void allIn() throws IllegalActionException {
+		throw new IllegalActionException("Going all-in is not a valid action. "
+				+ getStdErrorMessage());
 
-    }
+	}
 
-    public void say(String message) {
-	GameManager.getServerMediator().publishServerMessageEvent(
-		new ServerMessageEvent(playerCommunication.getPlayer()
-			.getSavedPlayer(), message));
-    }
+	public void say(String message) {
+		GameManager.getServerMediator().publishServerMessageEvent(
+				new ServerMessageEvent(playerCommunication.getPlayer()
+						.getSavedPlayer(), message));
+	}
 
-    /***************************************************************************
-     * Leave/Join Game
-     **************************************************************************/
+	/***************************************************************************
+	 * Leave/Join Game
+	 **************************************************************************/
 
-    /**
-     * Join the table with given table id.
-     * 
-     * @pre The given id should be effective. |id!=null
-     * @throws IllegalActionException
-     *                 [must] This actions is not a valid action in the current
-     *                 state.
-     */
-    public void join(TableId id) throws IllegalActionException {
-	throw new IllegalActionException("Joining " + id
-		+ "is not a valid action. " + getStdErrorMessage());
-    }
+	/**
+	 * Join the table with given table id.
+	 * 
+	 * @pre The given id should be effective. |id!=null
+	 * @throws IllegalActionException
+	 *             [must] This actions is not a valid action in the current
+	 *             state.
+	 */
+	public void join(TableId id) throws IllegalActionException {
+		throw new IllegalActionException("Joining " + id
+				+ "is not a valid action. " + getStdErrorMessage());
+	}
 
-    public void leaveTable() throws IllegalActionException {
-	throw new IllegalActionException(
-		"Leaving the table is not a valid action. "
-			+ getStdErrorMessage());
-    }
+	public void leaveTable() throws IllegalActionException {
+		throw new IllegalActionException(
+				"Leaving the table is not a valid action. "
+						+ getStdErrorMessage());
+	}
 
-    /***************************************************************************
-     * Create/Start Game
-     **************************************************************************/
-    public TableId createTable() throws IllegalActionException {
-	throw new IllegalActionException(
-		"Creating a table is not a valid action. "
-			+ getStdErrorMessage());
-    }
+	/***************************************************************************
+	 * Create/Start Game
+	 **************************************************************************/
+	public TableId createTable() throws IllegalActionException {
+		throw new IllegalActionException(
+				"Creating a table is not a valid action. "
+						+ getStdErrorMessage());
+	}
 
-    public void startGame() throws IllegalActionException {
-	throw new IllegalActionException(
-		"Starting a game is not a valid action. "
-			+ getStdErrorMessage());
-    }
+	public void startGame() throws IllegalActionException {
+		throw new IllegalActionException(
+				"Starting a game is not a valid action. "
+						+ getStdErrorMessage());
+	}
 
-    /***************************************************************************
-     * Actions list
-     **************************************************************************/
-    public Events getLatestEvents() throws IllegalActionException {
-	throw new IllegalActionException(
-		"Requesting the latest game events is not a valid action. "
-			+ getStdErrorMessage());
-    }
+	/***************************************************************************
+	 * Actions list
+	 **************************************************************************/
+	public Events getLatestEvents() throws IllegalActionException {
+		throw new IllegalActionException(
+				"Requesting the latest game events is not a valid action. "
+						+ getStdErrorMessage());
+	}
 
-    public Events getLatestEventsAndAck(int ack) throws IllegalActionException {
-	throw new IllegalActionException(
-		"Requesting the latest game events is not a valid action. "
-			+ getStdErrorMessage());
-    }
+	public Events getLatestEventsAndAck(int ack) throws IllegalActionException {
+		throw new IllegalActionException(
+				"Requesting the latest game events is not a valid action. "
+						+ getStdErrorMessage());
+	}
 
-    protected abstract String getStdErrorMessage();
+	protected abstract String getStdErrorMessage();
 
-    public abstract void kill();
+	public abstract void kill();
 
 }

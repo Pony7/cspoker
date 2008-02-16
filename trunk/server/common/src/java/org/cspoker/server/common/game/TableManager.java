@@ -34,57 +34,57 @@ import org.cspoker.server.common.game.gamecontrol.GameProperty;
  */
 public class TableManager {
 
-    /**
-     * The atomic variable used as atomic counter.
-     */
-    private static AtomicLong counter = new AtomicLong(0);
+	/**
+	 * The atomic variable used as atomic counter.
+	 */
+	private static AtomicLong counter = new AtomicLong(0);
 
-    /**
-     * The hash map containing all the tables of this server.
-     */
-    private static ConcurrentHashMap<TableId, Table> hashMap = new ConcurrentHashMap<TableId, Table>();
+	/**
+	 * The hash map containing all the tables of this server.
+	 */
+	private static ConcurrentHashMap<TableId, Table> hashMap = new ConcurrentHashMap<TableId, Table>();
 
-    /**
-     * Get the table with the given id.
-     * 
-     * @param id
-     *                The id of the player to return.
-     * @pre The given id should be effective. |id!=null
-     * @return The table with the given id.
-     * @throws IllegalArgumentException
-     *                 [must] There does not exist a table with given table id. |
-     *                 !hasATableWithId(id)
-     */
-    public static Table getTable(TableId id) {
-	if (!hasATableWithId(id))
-	    throw new IllegalArgumentException();
-	return hashMap.get(id);
-    }
+	/**
+	 * Get the table with the given id.
+	 * 
+	 * @param id
+	 *            The id of the player to return.
+	 * @pre The given id should be effective. |id!=null
+	 * @return The table with the given id.
+	 * @throws IllegalArgumentException
+	 *             [must] There does not exist a table with given table id. |
+	 *             !hasATableWithId(id)
+	 */
+	public static Table getTable(TableId id) {
+		if (!hasATableWithId(id))
+			throw new IllegalArgumentException();
+		return hashMap.get(id);
+	}
 
-    /**
-     * Check whether this table manager has a table with given id.
-     * 
-     * @param id
-     *                The table id to check.
-     * @return True if there exists a table with given id, False otherwise.
-     */
-    public static boolean hasATableWithId(TableId id) {
-	return hashMap.containsKey(id);
-    }
+	/**
+	 * Check whether this table manager has a table with given id.
+	 * 
+	 * @param id
+	 *            The table id to check.
+	 * @return True if there exists a table with given id, False otherwise.
+	 */
+	public static boolean hasATableWithId(TableId id) {
+		return hashMap.containsKey(id);
+	}
 
-    public static void removeTable(Table id) {
-	hashMap.remove(id);
-    }
+	public static void removeTable(Table id) {
+		hashMap.remove(id);
+	}
 
-    public static Table createTable(PlayerId id) {
-	TableId tableId = new TableId(counter.getAndIncrement());
-	Table table = new Table(tableId, new GameProperty());
-	hashMap.put(tableId, table);
-	return table;
-    }
+	public static Table createTable(PlayerId id) {
+		TableId tableId = new TableId(counter.getAndIncrement());
+		Table table = new Table(tableId, new GameProperty());
+		hashMap.put(tableId, table);
+		return table;
+	}
 
-    public static Set<TableId> getAllTableIds() {
-	return Collections.unmodifiableSet(hashMap.keySet());
-    }
+	public static Set<TableId> getAllTableIds() {
+		return Collections.unmodifiableSet(hashMap.keySet());
+	}
 
 }

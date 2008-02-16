@@ -24,49 +24,49 @@ import org.cspoker.server.common.game.gamecontrol.Showdown;
 import org.cspoker.server.common.game.player.GamePlayer;
 
 public class FinalRound extends BettingRound {
-    private static Logger logger = Logger.getLogger(FinalRound.class);
+	private static Logger logger = Logger.getLogger(FinalRound.class);
 
-    public FinalRound(GameMediator gameMediator, Game game) {
-	super(gameMediator, game);
-	GamePlayer currentPlayer = game.getCurrentPlayer();
-	if (currentPlayer != null)
-	    gameMediator.publishNewRoundEvent(new NewRoundEvent(toString(),
-		    currentPlayer.getSavedPlayer()));
-	drawMuckCard();
-	drawOpenCardAndPublishCommonCard();
-	FinalRound.logger.info("*** RIVER *** " + game.getCommunityCards());
-    }
-
-    @Override
-    public void endRound() {
-	if (onlyOnePlayerLeft()) {
-	    super.endRound();
-	} else {
-	    collectChips();
-	    game.getPots().close(game.getCurrentDealPlayers());
-	    Showdown showdown = new Showdown(gameMediator, getGame());
-	    showdown.determineWinners();
+	public FinalRound(GameMediator gameMediator, Game game) {
+		super(gameMediator, game);
+		GamePlayer currentPlayer = game.getCurrentPlayer();
+		if (currentPlayer != null)
+			gameMediator.publishNewRoundEvent(new NewRoundEvent(toString(),
+					currentPlayer.getSavedPlayer()));
+		drawMuckCard();
+		drawOpenCardAndPublishCommonCard();
+		FinalRound.logger.info("*** RIVER *** " + game.getCommunityCards());
 	}
-	game.setDealer(game.getNextDealer());
-    }
 
-    @Override
-    public Round getNextRound() {
-	return getNewDealRound();
-    }
+	@Override
+	public void endRound() {
+		if (onlyOnePlayerLeft()) {
+			super.endRound();
+		} else {
+			collectChips();
+			game.getPots().close(game.getCurrentDealPlayers());
+			Showdown showdown = new Showdown(gameMediator, getGame());
+			showdown.determineWinners();
+		}
+		game.setDealer(game.getNextDealer());
+	}
 
-    @Override
-    public boolean isLowBettingRound() {
-	return false;
-    }
+	@Override
+	public Round getNextRound() {
+		return getNewDealRound();
+	}
 
-    @Override
-    public boolean isHighBettingRound() {
-	return !isLowBettingRound();
-    }
+	@Override
+	public boolean isLowBettingRound() {
+		return false;
+	}
 
-    @Override
-    public String toString() {
-	return "final round";
-    }
+	@Override
+	public boolean isHighBettingRound() {
+		return !isLowBettingRound();
+	}
+
+	@Override
+	public String toString() {
+		return "final round";
+	}
 }

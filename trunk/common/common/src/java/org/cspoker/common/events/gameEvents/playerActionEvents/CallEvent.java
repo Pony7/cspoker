@@ -24,37 +24,38 @@ import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * A class to represent call events.
- *
+ * 
  * @author Kenzo
- *
+ * 
  */
 public class CallEvent extends ActionChangedPotEvent {
 
-    private static final long serialVersionUID = -78379299188217626L;
-    
-    private final Player player;
+	private static final long serialVersionUID = -78379299188217626L;
 
-    public CallEvent(Player player, Pots pots) {
-    	super(pots);
-    	this.player = player;
-    }
+	private final Player player;
 
-    @Override
-    public String toString() {
-	return getPlayer().getName() + " calls.";
-    }
+	public CallEvent(Player player, Pots pots) {
+		super(pots);
+		this.player = player;
+	}
 
-public Player getPlayer() {
-    return player;
-}
+	@Override
+	public String toString() {
+		return getPlayer().getName() + " calls.";
+	}
 
-    @Override
-    public void toXml(ContentHandler handler) throws SAXException {
-	AttributesImpl attrs = new AttributesImpl();
-	attrs.addAttribute("", "type", "type", "CDATA", "call");
-	attrs.addAttribute("", "player", "player", "CDATA", getPlayer().getName());
-	handler.startElement("", "event", "event", attrs);
-	handler.endElement("", "event", "event");
-    }
+	public Player getPlayer() {
+		return player;
+	}
+
+	@Override
+	public void toXml(ContentHandler handler) throws SAXException {
+		AttributesImpl attrs = new AttributesImpl();
+		attrs.addAttribute("", "type", "type", "CDATA", "call");
+		attrs.addAttribute("", "player", "player", "CDATA", getPlayer()
+				.getName());
+		handler.startElement("", "event", "event", attrs);
+		handler.endElement("", "event", "event");
+	}
 
 }

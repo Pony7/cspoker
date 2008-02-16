@@ -16,17 +16,17 @@
 package org.cspoker.server.common.game.elements.cards.hand;
 
 public enum HandType {
-    HIGH_CARD("HC"), PAIR("1P"), TWO_PAIR("2P"), THREE_OF_A_KIND("3K"), FOUR_OF_A_KIND(
-	    "4K"), FULL_HOUSE("FH"), FLUSH("F"), STRAIGHT("S"), STRAIGHT_FLUSH(
-	    "SF");
+	HIGH_CARD("HC"), PAIR("1P"), TWO_PAIR("2P"), THREE_OF_A_KIND("3K"), FOUR_OF_A_KIND(
+			"4K"), FULL_HOUSE("FH"), FLUSH("F"), STRAIGHT("S"), STRAIGHT_FLUSH(
+			"SF");
 
-    private String description;
+	private String description;
 
-    private HandType(final String description) {
-	this.description = description;
-    }
+	private HandType(final String description) {
+		this.description = description;
+	}
 
-    public String getDescription() {
-	return this.description;
-    }
+	public String getDescription() {
+		return description;
+	}
 }

@@ -23,38 +23,38 @@ import org.cspoker.server.common.game.gamecontrol.Game;
 import org.cspoker.server.common.game.player.GamePlayer;
 
 public class TurnRound extends BettingRound {
-    private static Logger logger = Logger.getLogger(TurnRound.class);
+	private static Logger logger = Logger.getLogger(TurnRound.class);
 
-    public TurnRound(GameMediator gameMediator, Game game) {
-	super(gameMediator, game);
-	GamePlayer currentPlayer = getGame().getCurrentPlayer();
-	if (currentPlayer != null)
-	    gameMediator.publishNewRoundEvent(new NewRoundEvent(toString(),
-		    currentPlayer.getSavedPlayer()));
-	drawMuckCard();
-	drawOpenCardAndPublishCommonCard();
-	TurnRound.logger.info("*** TURN *** " + game.getCommunityCards());
-    }
+	public TurnRound(GameMediator gameMediator, Game game) {
+		super(gameMediator, game);
+		GamePlayer currentPlayer = getGame().getCurrentPlayer();
+		if (currentPlayer != null)
+			gameMediator.publishNewRoundEvent(new NewRoundEvent(toString(),
+					currentPlayer.getSavedPlayer()));
+		drawMuckCard();
+		drawOpenCardAndPublishCommonCard();
+		TurnRound.logger.info("*** TURN *** " + game.getCommunityCards());
+	}
 
-    @Override
-    public Round getNextRound() {
-	if (potsDividedToWinner())
-	    return getNewDealRound();
-	return new FinalRound(gameMediator, getGame());
-    }
+	@Override
+	public Round getNextRound() {
+		if (potsDividedToWinner())
+			return getNewDealRound();
+		return new FinalRound(gameMediator, getGame());
+	}
 
-    @Override
-    public boolean isLowBettingRound() {
-	return true;
-    }
+	@Override
+	public boolean isLowBettingRound() {
+		return true;
+	}
 
-    @Override
-    public boolean isHighBettingRound() {
-	return !isLowBettingRound();
-    }
+	@Override
+	public boolean isHighBettingRound() {
+		return !isLowBettingRound();
+	}
 
-    @Override
-    public String toString() {
-	return "turn round";
-    }
+	@Override
+	public String toString() {
+		return "turn round";
+	}
 }

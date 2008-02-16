@@ -34,77 +34,61 @@ import org.cspoker.common.xml.XmlEventListener;
 
 public class XmlHttpChannel implements XmlChannel {
 
-    private ExecutorService executor;
+	private ExecutorService executor;
 
-    private List<XmlEventListener> xmlEventListeners = new ArrayList<XmlEventListener>();
+	private List<XmlEventListener> xmlEventListeners = new ArrayList<XmlEventListener>();
 
-    private final String server;
-    private final int port;
-    private final String username;
-    private final String password;
+	private URL url;
 
-    private URL url;
-    
-    
-    public XmlHttpChannel(String server, int port, String path, final String username, final String password) throws MalformedURLException{
-	this.server = server;
-	this.port=port;
-	this.username = username;
-	this.password = password;
-	Authenticator.setDefault(new Authenticator() {
-	    @Override
-	    protected PasswordAuthentication getPasswordAuthentication() {
-	        return new PasswordAuthentication (username, password.toCharArray());
-	    }
-	});
-	String address = "http://"+server + ":" + port;
-	this.url=new URL(address+path);
-    }
-
-    public void open() throws IOException{
-	executor = Executors.newSingleThreadExecutor();
-    }
-    
-    public void close() {
-	executor.shutdownNow();
-    }
-
-
-    public void send(String xml) throws IOException, LoginFailedException {
-	HttpURLConnection connection = (HttpURLConnection)url.openConnection();
-	connection.setConnectTimeout(20000);
-	connection.setAllowUserInteraction(true);
-	connection.setInstanceFollowRedirects(false);
-	connection.setDoOutput(true);
-	connection.setRequestMethod("POST");
-	
-	Writer w = new OutputStreamWriter(connection.getOutputStream());
-	w.write(xml);
-	connection.getOutputStream().close();
-	
-	if(connection.getResponseCode()==401){
-	    throw new LoginFailedException();
-	}else if(connection.getResponseCode()/100==4||connection.getResponseCode()/100==5){
-	    throw new IOException("Unknown error from the server.");
+	public XmlHttpChannel(String server, int port, String path,
+			final String username, final String password)
+			throws MalformedURLException {
+		Authenticator.setDefault(new Authenticator() {
+			@Override
+			protected PasswordAuthentication getPasswordAuthentication() {
+				return new PasswordAuthentication(username, password
+						.toCharArray());
+			}
+		});
+		String address = "http://" + server + ":" + port;
+		url = new URL(address + path);
 	}
-	
-	
-	
-    }
-    
-    public void registerXmlEventListener(XmlEventListener listener){
-	xmlEventListeners.add(listener);
-    }
-    
-    public void unRegisterXmlEventListener(XmlEventListener listener){
-	xmlEventListeners.remove(listener);
-    }
-    
-    private void fireXmlEvent(String xmlEvent){
-	for(XmlEventListener listener:xmlEventListeners){
-	    listener.collect(xmlEvent);
-	}
-    }
 
+	public void open() throws IOException {
+		executor = Executors.newSingleThreadExecutor();
+	}
+
+	public void close() {
+		executor.shutdownNow();
+	}
+
+	public void send(String xml) throws IOException, LoginFailedException {
+		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+		connection.setConnectTimeout(20000);
+		connection.setAllowUserInteraction(true);
+		connection.setInstanceFollowRedirects(false);
+		connection.setDoOutput(true);
+		connection.setRequestMethod("POST");
+
+		Writer w = new OutputStreamWriter(connection.getOutputStream());
+		w.write(xml);
+		connection.getOutputStream().close();
+
+		if (connection.getResponseCode() == 401) {
+			throw new LoginFailedException();
+		} else if (connection.getResponseCode() / 100 == 4
+				|| connection.getResponseCode() / 100 == 5) {
+			throw new IOException("Unknown error from the server.");
+		}
+
+	}
+
+	public void registerXmlEventListener(XmlEventListener listener) {
+		xmlEventListeners.add(listener);
+	}
+
+	public void unRegisterXmlEventListener(XmlEventListener listener) {
+		xmlEventListeners.remove(listener);
+	}
 
 }

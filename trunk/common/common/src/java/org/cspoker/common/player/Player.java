@@ -18,81 +18,79 @@ package org.cspoker.common.player;
 
 import java.io.Serializable;
 
-
 /**
  * A class of immutable saved players.
- *
- *
+ * 
+ * 
  * @author Kenzo
- *
+ * 
  */
-public class Player implements Serializable{
+public class Player implements Serializable {
 
-    private static final long serialVersionUID = -9200622390366978194L;
+	private static final long serialVersionUID = -9200622390366978194L;
 
-    /**
-     * The variable containing the id of the player.
-     */
-    private final PlayerId id;
+	/**
+	 * The variable containing the id of the player.
+	 */
+	private final PlayerId id;
 
-    /**
-     * The name of the player.
-     */
-    private final String name;
+	/**
+	 * The name of the player.
+	 */
+	private final String name;
 
-    /**
-     * The stack of this player.
-     */
-    private final int stackValue;
+	/**
+	 * The stack of this player.
+	 */
+	private final int stackValue;
 
-    /**
-     * The chips the player has bet in this round.
-     *
-     */
-    private final int betChipsValue;
+	/**
+	 * The chips the player has bet in this round.
+	 * 
+	 */
+	private final int betChipsValue;
 
+	public Player(PlayerId id, String name, int stackValue, int betChipsValue) {
+		this.id = id;
+		this.name = name;
+		this.stackValue = stackValue;
+		this.betChipsValue = betChipsValue;
+	}
 
-    public Player(PlayerId id, String name, int stackValue, int betChipsValue) {
-	this.id = id;
-	this.name = name;
-	this.stackValue = stackValue;
-	this.betChipsValue = betChipsValue;
-    }
+	/**
+	 * Returns the id of this saved player.
+	 * 
+	 * @return The id of this saved player.
+	 */
+	public PlayerId getId() {
+		return id;
+	}
 
-    /**
-     * Returns the id of this saved player.
-     *
-     * @return The id of this saved player.
-     */
-    public PlayerId getId() {
-	return id;
-    }
+	/**
+	 * Returns the name of this saved player.
+	 * 
+	 * @return The name of this saved player.
+	 */
+	public String getName() {
+		return name;
+	}
 
-    /**
-     * Returns the name of this saved player.
-     *
-     * @return The name of this saved player.
-     */
-    public String getName() {
-	return name;
-    }
+	/**
+	 * Returns the stack value of this saved player.
+	 * 
+	 * @return The stack value of this saved player.
+	 */
+	public int getStackValue() {
+		return stackValue;
+	}
 
-    /**
-     * Returns the stack value of this saved player.
-     *
-     * @return The stack value of this saved player.
-     */
-    public int getStackValue() {
-	return stackValue;
-    }
-
-    /**
-     * Returns the bet chips value of this saved player.
-     *
-     * @return The bet chips value of this saved player.
-     */
-    public int getBetChipsValue() {
-	return betChipsValue;
-    }
+	/**
+	 * Returns the bet chips value of this saved player.
+	 * 
+	 * @return The bet chips value of this saved player.
+	 */
+	public int getBetChipsValue() {
+		return betChipsValue;
+	}
 
 }

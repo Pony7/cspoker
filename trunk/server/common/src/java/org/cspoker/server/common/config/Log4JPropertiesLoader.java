@@ -23,24 +23,29 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 
 public final class Log4JPropertiesLoader {
-    
-    private static Logger logger = Logger.getLogger(Log4JPropertiesLoader.class);
-    
-    public static void load(String path){
-	Properties properties = new Properties();
-	try {
-	    InputStream is = ClassLoader.getSystemClassLoader().getResourceAsStream(path);
-	    properties.load(is);
-	} catch (final IOException e) {
-	    //logger will log to the default logger and write a warning to the error stream?
-	    logger.error("Could not load log4j properties. "+e.getMessage(), e);
-	    e.printStackTrace();
-	} catch (final NullPointerException e) {
-	    //logger will log to the default logger and write a warning to the error stream?
-	    logger.error("Could not load log4j properties. "+e.getMessage(), e);
-	    e.printStackTrace();
-	}
-	PropertyConfigurator.configure(properties);
-    }
-}
 
+	private static Logger logger = Logger
+			.getLogger(Log4JPropertiesLoader.class);
+
+	public static void load(String path) {
+		Properties properties = new Properties();
+		try {
+			InputStream is = ClassLoader.getSystemClassLoader()
+					.getResourceAsStream(path);
+			properties.load(is);
+		} catch (final IOException e) {
+			// logger will log to the default logger and write a warning to the
+			// error stream?
+			logger.error("Could not load log4j properties. " + e.getMessage(),
+					e);
+			e.printStackTrace();
+		} catch (final NullPointerException e) {
+			// logger will log to the default logger and write a warning to the
+			// error stream?
+			logger.error("Could not load log4j properties. " + e.getMessage(),
+					e);
+			e.printStackTrace();
+		}
+		PropertyConfigurator.configure(properties);
+	}
+}

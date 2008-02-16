@@ -19,6 +19,6 @@ import org.cspoker.common.events.Event;
 
 public interface EventListener {
 
-    public void onEvent(Event event);
+	public void onEvent(Event event);
 
 }

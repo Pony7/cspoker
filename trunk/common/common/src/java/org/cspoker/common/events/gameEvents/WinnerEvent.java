@@ -26,52 +26,53 @@ import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * A class to represent winner events.
- *
+ * 
  * @author Kenzo
- *
+ * 
  */
 public class WinnerEvent extends GameEvent {
 
-    private static final long serialVersionUID = -2384964708734525969L;
+	private static final long serialVersionUID = -2384964708734525969L;
 
-    private final List<Winner> winners;
+	private final List<Winner> winners;
 
-    public WinnerEvent(List<Winner> winners) {
-	this.winners = Collections.unmodifiableList(winners);
-    }
-
-    public List<Winner> getWinners() {
-	return winners;
-    }
-
-    @Override
-    public String toString() {
-	String toReturn = "Winners: ";
-	for (Winner winner : winners) {
-	    String winnerString = winner.toString();
-	    toReturn += winnerString.substring(0, winnerString.length() - 1);
-	    toReturn += ", ";
+	public WinnerEvent(List<Winner> winners) {
+		this.winners = Collections.unmodifiableList(winners);
 	}
-	return toReturn.substring(0, toReturn.length() - 2) + ".";
-    }
 
-    @Override
-    public void toXml(ContentHandler handler) throws SAXException {
-	AttributesImpl attrs = new AttributesImpl();
-	attrs.addAttribute("", "type", "type", "CDATA", "winner");
-	handler.startElement("", "event", "event", attrs);
-
-	handler.startElement("", "winners", "winners", new AttributesImpl());
-	for(Winner winner : getWinners()){
-	    attrs = new AttributesImpl();
-	    attrs.addAttribute("", "name", "name", "CDATA", winner.getPlayer().getName());
-	    handler.startElement("", "winner", "winner", attrs);
-	    String msg=String.valueOf(winner.getGainedAmount());
-	    handler.characters(msg.toCharArray(), 0, msg.length());
-	    handler.endElement("", "winner", "winner");
+	public List<Winner> getWinners() {
+		return winners;
 	}
-	handler.endElement("", "winners", "winners");
 
-	handler.endElement("", "event", "event");
-    }
+	@Override
+	public String toString() {
+		String toReturn = "Winners: ";
+		for (Winner winner : winners) {
+			String winnerString = winner.toString();
+			toReturn += winnerString.substring(0, winnerString.length() - 1);
+			toReturn += ", ";
+		}
+		return toReturn.substring(0, toReturn.length() - 2) + ".";
+	}
+
+	@Override
+	public void toXml(ContentHandler handler) throws SAXException {
+		AttributesImpl attrs = new AttributesImpl();
+		attrs.addAttribute("", "type", "type", "CDATA", "winner");
+		handler.startElement("", "event", "event", attrs);
+
+		handler.startElement("", "winners", "winners", new AttributesImpl());
+		for (Winner winner : getWinners()) {
+			attrs = new AttributesImpl();
+			attrs.addAttribute("", "name", "name", "CDATA", winner.getPlayer()
+					.getName());
+			handler.startElement("", "winner", "winner", attrs);
+			String msg = String.valueOf(winner.getGainedAmount());
+			handler.characters(msg.toCharArray(), 0, msg.length());
+			handler.endElement("", "winner", "winner");
+		}
+		handler.endElement("", "winners", "winners");
+
+		handler.endElement("", "event", "event");
+	}
 }

@@ -22,37 +22,37 @@ import org.cspoker.server.common.game.elements.chips.IllegalValueException;
 
 public class GameWinner {
 
-    private final GamePlayer winner;
+	private final GamePlayer winner;
 
-    private final Chips chips = new Chips();
+	private final Chips chips = new Chips();
 
-    public GameWinner(GamePlayer winner) {
-	this.winner = winner;
-    }
-
-    public Chips getGainedChipsPile() {
-	return chips;
-    }
-
-    public void transferGainedChipsToPlayer() {
-	try {
-	    chips.transferAllChipsTo(winner.getStack());
-	} catch (IllegalValueException e) {
-	    throw new IllegalStateException("Overflow Exception");
+	public GameWinner(GamePlayer winner) {
+		this.winner = winner;
 	}
-    }
 
-    public boolean hasGainedChips() {
-	return chips.getValue() > 0;
-    }
+	public Chips getGainedChipsPile() {
+		return chips;
+	}
 
-    public Winner getSavedWinner() {
-	return new Winner(winner.getSavedPlayer(), chips.getValue());
-    }
+	public void transferGainedChipsToPlayer() {
+		try {
+			chips.transferAllChipsTo(winner.getStack());
+		} catch (IllegalValueException e) {
+			throw new IllegalStateException("Overflow Exception");
+		}
+	}
 
-    @Override
-    public String toString() {
-	return winner.getName() + " has gained " + chips + ".";
-    }
+	public boolean hasGainedChips() {
+		return chips.getValue() > 0;
+	}
+
+	public Winner getSavedWinner() {
+		return new Winner(winner.getSavedPlayer(), chips.getValue());
+	}
+
+	@Override
+	public String toString() {
+		return winner.getName() + " has gained " + chips + ".";
+	}
 
 }
