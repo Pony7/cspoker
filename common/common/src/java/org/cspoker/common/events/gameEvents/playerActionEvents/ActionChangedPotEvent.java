@@ -21,27 +21,29 @@ import org.cspoker.common.events.gameEvents.GameEvent;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
-public class ActionChangedPotEvent extends GameEvent{
+public class ActionChangedPotEvent extends GameEvent {
 
-    private static final long serialVersionUID = -4260315075072948801L;
+	private static final long serialVersionUID = -4260315075072948801L;
 
-    private final Pots pots;
+	private final Pots pots;
 
-    public ActionChangedPotEvent(Pots pots){
-	this.pots = pots;
-    }
-    /**
-     * Returns the pots.
-     * @return
-     */
-    public Pots getPots(){
-	return pots;
-    }
+	public ActionChangedPotEvent(Pots pots) {
+		this.pots = pots;
+	}
 
-    @Override
-    public void toXml(ContentHandler handler) throws SAXException {
-	// TODO Auto-generated method stub
+	/**
+	 * Returns the pots.
+	 * 
+	 * @return
+	 */
+	public Pots getPots() {
+		return pots;
+	}
 
-    }
+	@Override
+	public void toXml(ContentHandler handler) throws SAXException {
+		// TODO Auto-generated method stub
+
+	}
 
 }

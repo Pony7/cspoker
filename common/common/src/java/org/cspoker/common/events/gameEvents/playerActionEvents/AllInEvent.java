@@ -24,44 +24,45 @@ import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * A class to represent all-in events.
- *
+ * 
  * @author Kenzo
- *
+ * 
  */
 public class AllInEvent extends ActionChangedPotEvent {
 
-    private static final long serialVersionUID = 7331085187957524812L;
+	private static final long serialVersionUID = 7331085187957524812L;
 
-    /**
-     * The variable containing the saved player.
-     */
-    private final Player player;
+	/**
+	 * The variable containing the saved player.
+	 */
+	private final Player player;
 
-    /**
-     *
-     * @param player
-     */
-    public AllInEvent(Player player, Pots pots) {
-    	super(pots);
-    	this.player = player;
-    }
+	/**
+	 * 
+	 * @param player
+	 */
+	public AllInEvent(Player player, Pots pots) {
+		super(pots);
+		this.player = player;
+	}
 
-    @Override
-    public String toString() {
-	return getPlayer().getName() + " goes all-in.";
-    }
+	@Override
+	public String toString() {
+		return getPlayer().getName() + " goes all-in.";
+	}
 
-    public Player getPlayer() {
-	return player;
-    }
+	public Player getPlayer() {
+		return player;
+	}
 
-    @Override
-    public void toXml(ContentHandler handler) throws SAXException {
-	AttributesImpl attrs = new AttributesImpl();
-	attrs.addAttribute("", "type", "type", "CDATA", "allin");
-	attrs.addAttribute("", "player", "player", "CDATA", getPlayer().getName());
-	handler.startElement("", "event", "event", attrs);
-	handler.endElement("", "event", "event");
-    }
+	@Override
+	public void toXml(ContentHandler handler) throws SAXException {
+		AttributesImpl attrs = new AttributesImpl();
+		attrs.addAttribute("", "type", "type", "CDATA", "allin");
+		attrs.addAttribute("", "player", "player", "CDATA", getPlayer()
+				.getName());
+		handler.startElement("", "event", "event", attrs);
+		handler.endElement("", "event", "event");
+	}
 
 }

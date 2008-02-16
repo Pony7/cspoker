@@ -8,14 +8,16 @@ import org.cspoker.server.common.config.Log4JPropertiesLoader;
 
 public class RunRMIServer {
 
-	static{
-		Log4JPropertiesLoader.load("org/cspoker/server/rmi/logging/log4j.properties");
+	static {
+		Log4JPropertiesLoader
+				.load("org/cspoker/server/rmi/logging/log4j.properties");
 	}
 
 	private final static Logger logger = Logger.getLogger(RunRMIServer.class);
 
-	public static void main(String[] args) throws NumberFormatException, IOException {
-		if(args.length!=1)
+	public static void main(String[] args) throws NumberFormatException,
+			IOException {
+		if (args.length != 1)
 			usage();
 		int port = Integer.parseInt(args[0]);
 		logger.info("Starting RMI server");

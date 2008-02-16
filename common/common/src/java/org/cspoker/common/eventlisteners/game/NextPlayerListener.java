@@ -24,14 +24,14 @@ import org.cspoker.common.events.gameEvents.NextPlayerEvent;
  * @author Kenzo
  * 
  */
-public interface NextPlayerListener extends RemoteNextPlayerListener{
-    /**
-     * This method is called when subscribed to inform a next player event
-     * occurred.
-     * 
-     * @param event
-     *                The event object containing all information of the
-     *                occurred event.
-     */
-    public void onNextPlayerEvent(NextPlayerEvent event);
+public interface NextPlayerListener extends RemoteNextPlayerListener {
+	/**
+	 * This method is called when subscribed to inform a next player event
+	 * occurred.
+	 * 
+	 * @param event
+	 *            The event object containing all information of the occurred
+	 *            event.
+	 */
+	public void onNextPlayerEvent(NextPlayerEvent event);
 }

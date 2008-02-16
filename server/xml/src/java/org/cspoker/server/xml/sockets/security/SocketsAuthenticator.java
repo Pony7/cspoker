@@ -29,78 +29,79 @@ import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 import org.xml.sax.helpers.XMLReaderFactory;
 
-public class SocketsAuthenticator{
+public class SocketsAuthenticator {
 
-    private static Logger logger = Logger.getLogger(SocketsAuthenticator.class);
-    
-    private XmlFileAuthenticator auth;
+	private static Logger logger = Logger.getLogger(SocketsAuthenticator.class);
 
-    public final static String POSITIVE_RESPONSE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<login/>";
+	private XmlFileAuthenticator auth;
 
-    public SocketsAuthenticator(XmlFileAuthenticator auth) {
-	this.auth = auth;
-    }
+	public final static String POSITIVE_RESPONSE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<login/>";
 
-    public boolean authenticate(ClientContext context, String xml){
-	try {
-	    XMLReader xr = XMLReaderFactory.createXMLReader();
-	    LoginHandler handler = new LoginHandler();
-	    xr.setContentHandler(handler);
-	    xr.parse(new InputSource(new StringReader(xml)));
-	    if(!auth.hasPassword(handler.getUsername(), handler.getPassword())){
-		logger.info("login failed for "+handler.getUsername());
-		context.closeConnection();
-		return false;
-	    }
-	    context.login(handler.getUsername(), handler.getPassword(), handler.getUseragent());
-	    context.send(SocketsAuthenticator.POSITIVE_RESPONSE);
-	    return true;
-	} catch(SAXException e){
-	    logger.error("error parsing login: "+e.getMessage());
-	    context.closeConnection();
-	    return false;
-	} catch (IOException e) {
-	    logger.error("error parsing login: "+e.getMessage());
-	    context.closeConnection();
-	    return false;
-	} catch (IllegalNameException e) {
-	    logger.error("bad username: "+e.getMessage());
-	    context.closeConnection();
-	    return false;
-	}
-    }
-
-    private class LoginHandler extends DefaultHandler{
-
-	private String useragent="unknown";
-	private String username="John Doe";
-	private String password="";
-
-	public String getUseragent() {
-	    return useragent;
+	public SocketsAuthenticator(XmlFileAuthenticator auth) {
+		this.auth = auth;
 	}
 
-	public String getUsername() {
-	    return username;
+	public boolean authenticate(ClientContext context, String xml) {
+		try {
+			XMLReader xr = XMLReaderFactory.createXMLReader();
+			LoginHandler handler = new LoginHandler();
+			xr.setContentHandler(handler);
+			xr.parse(new InputSource(new StringReader(xml)));
+			if (!auth.hasPassword(handler.getUsername(), handler.getPassword())) {
+				logger.info("login failed for " + handler.getUsername());
+				context.closeConnection();
+				return false;
+			}
+			context.login(handler.getUsername(), handler.getPassword(), handler
+					.getUseragent());
+			context.send(SocketsAuthenticator.POSITIVE_RESPONSE);
+			return true;
+		} catch (SAXException e) {
+			logger.error("error parsing login: " + e.getMessage());
+			context.closeConnection();
+			return false;
+		} catch (IOException e) {
+			logger.error("error parsing login: " + e.getMessage());
+			context.closeConnection();
+			return false;
+		} catch (IllegalNameException e) {
+			logger.error("bad username: " + e.getMessage());
+			context.closeConnection();
+			return false;
+		}
 	}
 
-	public String getPassword() {
-	    return password;
-	}
+	private class LoginHandler extends DefaultHandler {
 
-	@Override
-	public void startElement(String uri, String localName, String name,
-		Attributes attributes) throws SAXException {
-	    if (name.equals("login")) {
-		if(attributes.getValue("useragent")!=null)
-		    useragent = attributes.getValue("useragent");
-		if(attributes.getValue("username")!=null)
-		    username = attributes.getValue("username");
-		if(attributes.getValue("password")!=null)
-		password = attributes.getValue("password");
-	    }
-	}
+		private String useragent = "unknown";
+		private String username = "John Doe";
+		private String password = "";
 
-    }
+		public String getUseragent() {
+			return useragent;
+		}
+
+		public String getUsername() {
+			return username;
+		}
+
+		public String getPassword() {
+			return password;
+		}
+
+		@Override
+		public void startElement(String uri, String localName, String name,
+				Attributes attributes) throws SAXException {
+			if (name.equals("login")) {
+				if (attributes.getValue("useragent") != null)
+					useragent = attributes.getValue("useragent");
+				if (attributes.getValue("username") != null)
+					username = attributes.getValue("username");
+				if (attributes.getValue("password") != null)
+					password = attributes.getValue("password");
+			}
+		}
+
+	}
 
 }

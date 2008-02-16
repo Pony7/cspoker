@@ -32,55 +32,55 @@ import org.xml.sax.helpers.AttributesImpl;
  */
 public class NewDealEvent extends GameEvent {
 
-    private static final long serialVersionUID = 8048593844056212117L;
+	private static final long serialVersionUID = 8048593844056212117L;
 
-    private final List<Player> players;
+	private final List<Player> players;
 
-    private final Player dealer;
+	private final Player dealer;
 
-    public NewDealEvent(List<Player> players, Player dealer) {
-	this.players = Collections.unmodifiableList(players);
-	this.dealer = dealer;
-    }
-
-    public Player getDealer() {
-	return dealer;
-    }
-
-    @Override
-    public String toString() {
-	String toReturn = "A new deal with ";
-	for (Player player : players) {
-	    toReturn += player.getName();
-	    toReturn += " (";
-	    toReturn += player.getStackValue();
-	    toReturn += " chips), ";
+	public NewDealEvent(List<Player> players, Player dealer) {
+		this.players = Collections.unmodifiableList(players);
+		this.dealer = dealer;
 	}
-	return toReturn.substring(0, toReturn.length() - 2)
-	+ " as initial players of this table. " + dealer.getName()
-	+ " is dealer.";
-    }
 
-    @Override
-    public void toXml(ContentHandler handler) throws SAXException {
-	AttributesImpl attrs = new AttributesImpl();
-	attrs.addAttribute("", "type", "type", "CDATA", "newdeal");
-	handler.startElement("", "event", "event", attrs);
-
-	handler.startElement("", "players", "players", new AttributesImpl());
-	for(Player player : players){
-	    attrs = new AttributesImpl();
-	    if(player.equals(getDealer())){
-		attrs.addAttribute("", "dealer", "dealer", "CDATA", "true");
-	    }
-	    handler.startElement("", "player", "player", attrs);
-	    String msg=String.valueOf(player.getName());
-	    handler.characters(msg.toCharArray(), 0, msg.length());
-	    handler.endElement("", "player", "player");
+	public Player getDealer() {
+		return dealer;
 	}
-	handler.endElement("", "players", "players");
 
-	handler.endElement("", "event", "event");
-    }
+	@Override
+	public String toString() {
+		String toReturn = "A new deal with ";
+		for (Player player : players) {
+			toReturn += player.getName();
+			toReturn += " (";
+			toReturn += player.getStackValue();
+			toReturn += " chips), ";
+		}
+		return toReturn.substring(0, toReturn.length() - 2)
+				+ " as initial players of this table. " + dealer.getName()
+				+ " is dealer.";
+	}
+
+	@Override
+	public void toXml(ContentHandler handler) throws SAXException {
+		AttributesImpl attrs = new AttributesImpl();
+		attrs.addAttribute("", "type", "type", "CDATA", "newdeal");
+		handler.startElement("", "event", "event", attrs);
+
+		handler.startElement("", "players", "players", new AttributesImpl());
+		for (Player player : players) {
+			attrs = new AttributesImpl();
+			if (player.equals(getDealer())) {
+				attrs.addAttribute("", "dealer", "dealer", "CDATA", "true");
+			}
+			handler.startElement("", "player", "player", attrs);
+			String msg = String.valueOf(player.getName());
+			handler.characters(msg.toCharArray(), 0, msg.length());
+			handler.endElement("", "player", "player");
+		}
+		handler.endElement("", "players", "players");
+
+		handler.endElement("", "event", "event");
+	}
 
 }

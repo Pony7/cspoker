@@ -26,47 +26,50 @@ import org.cspoker.server.xml.sockets.security.SocketsAuthenticator;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-public class ProcessXML implements Runnable, Prioritizable{
+public class ProcessXML implements Runnable, Prioritizable {
 
-    private final static Logger logger = Logger.getLogger(ProcessXML.class);
-    public final static char DELIM = (char)0x00;
+	private final static Logger logger = Logger.getLogger(ProcessXML.class);
+	public final static char DELIM = (char) 0x00;
 
-    private final String xml;
-    private final ClientContext context;
+	private final String xml;
+	private final ClientContext context;
 
-    private final static SocketsAuthenticator auth = new SocketsAuthenticator(new XmlFileAuthenticator());
+	private final static SocketsAuthenticator auth = new SocketsAuthenticator(
+			new XmlFileAuthenticator());
 
-    public ProcessXML(String xml, ClientContext context) {
-	this.xml=xml;
-	this.context = context;
-    }
-
-    public void run() {
-	logger.trace("recieved xml:\n"+xml);
-
-	if(!context.isAuthenticated()){
-	    //Flash client request for authorization to connect from a different host
-	    if(xml.startsWith(PolicyFile.request)){
-		logger.info("handling flash security manager request.");
-		context.send(PolicyFile.POLICY+DELIM);
-	    }else{
-		//Check the credentials
-		auth.authenticate(context, xml);
-	    }
+	public ProcessXML(String xml, ClientContext context) {
+		this.xml = xml;
+		this.context = context;
 	}
-	else{
-	    //Perform the other requests
-	    try {
-		context.getXmlPlayerCommunication().handle(new InputSource(new StringReader(xml)));
-	    } catch (SAXException e) {
-		logger.error("Error parsing xml request. Closing connection.", e.getCause());
-		context.closeConnection();
-	    }
-	}
-    }
 
-    public int getPriority() {
-	return 1;
-    }
+	public void run() {
+		logger.trace("recieved xml:\n" + xml);
+
+		if (!context.isAuthenticated()) {
+			// Flash client request for authorization to connect from a
+			// different host
+			if (xml.startsWith(PolicyFile.request)) {
+				logger.info("handling flash security manager request.");
+				context.send(PolicyFile.POLICY + DELIM);
+			} else {
+				// Check the credentials
+				auth.authenticate(context, xml);
+			}
+		} else {
+			// Perform the other requests
+			try {
+				context.getXmlPlayerCommunication().handle(
+						new InputSource(new StringReader(xml)));
+			} catch (SAXException e) {
+				logger.error("Error parsing xml request. Closing connection.",
+						e.getCause());
+				context.closeConnection();
+			}
+		}
+	}
+
+	public int getPriority() {
+		return 1;
+	}
 
 }

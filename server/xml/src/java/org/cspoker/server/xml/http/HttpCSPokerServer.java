@@ -33,55 +33,58 @@ import com.sun.net.httpserver.HttpServer;
  * Creates a new web server and starts it.
  */
 public class HttpCSPokerServer {
-    private static Logger logger = Logger.getLogger(HttpCSPokerServer.class);
+	private static Logger logger = Logger.getLogger(HttpCSPokerServer.class);
 
-    private Authenticator authenticator;
+	private Authenticator authenticator;
 
-    /**
-     * Variable holding the server object.
-     */
-    private HttpServer server;
+	/**
+	 * Variable holding the server object.
+	 */
+	private HttpServer server;
 
-    /**
-     * Creates a new server at the given port.
-     * 
-     * @param port
-     *        The port to listen at.
-     * @param authenticationFile 
-     * @throws IOException 
-     * @throws IOException
-     */
+	/**
+	 * Creates a new server at the given port.
+	 * 
+	 * @param port
+	 *            The port to listen at.
+	 * @param authenticationFile
+	 * @throws IOException
+	 * @throws IOException
+	 */
 
-    public HttpCSPokerServer(int port) throws IOException {
-	this(port, new XmlFileAuthenticator());
-    }
-    public HttpCSPokerServer(int port, XmlFileAuthenticator auth) throws IOException {
-	server = HttpServer.create(new InetSocketAddress(port), 0);
+	public HttpCSPokerServer(int port) throws IOException {
+		this(port, new XmlFileAuthenticator());
+	}
 
-	authenticator = new XmlFileBasicAuthentication(auth);
+	public HttpCSPokerServer(int port, XmlFileAuthenticator auth)
+			throws IOException {
+		server = HttpServer.create(new InetSocketAddress(port), 0);
 
-	loadContext();
+		authenticator = new XmlFileBasicAuthentication(auth);
 
-	HttpCSPokerServer.logger.info("Server created for port " + port + ".");
-    }
+		loadContext();
 
-    protected void loadContext(){
-	HttpContext mainContext = server.createContext("/cspoker/", new CSPokerHandler());
-	mainContext.setAuthenticator(authenticator);
+		HttpCSPokerServer.logger.info("Server created for port " + port + ".");
+	}
 
-	server.setExecutor(RequestExecutor.getInstance());
-	server.createContext("/", new CrossDomain());
+	protected void loadContext() {
+		HttpContext mainContext = server.createContext("/cspoker/",
+				new CSPokerHandler());
+		mainContext.setAuthenticator(authenticator);
 
-    }
+		server.setExecutor(RequestExecutor.getInstance());
+		server.createContext("/", new CrossDomain());
 
-    /**
-     * Starts this server.
-     * 
-     * @throws IOException
-     *                 There was a problem opening this server's port.
-     */
-    public void start() throws IOException {
-	server.start();
-    }
+	}
+
+	/**
+	 * Starts this server.
+	 * 
+	 * @throws IOException
+	 *             There was a problem opening this server's port.
+	 */
+	public void start() throws IOException {
+		server.start();
+	}
 
 }

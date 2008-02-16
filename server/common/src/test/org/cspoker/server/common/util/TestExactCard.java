@@ -17,86 +17,84 @@ import org.cspoker.server.common.game.elements.cards.deck.Deck;
  * 
  */
 public class TestExactCard {
-    private final Map<CardShell, Card> cardMap;
+	private final Map<CardShell, Card> cardMap;
 
-    public TestExactCard() {
-	this.cardMap = new HashMap<CardShell, Card>();
+	public TestExactCard() {
+		cardMap = new HashMap<CardShell, Card>();
 
-	final Deck deck = new Deck();
-	final List<Card> list = deck.deal(52);
-	for (final Card card : list) {
-	    final Rank rank = card.getRank();
-	    final Suit suit = card.getSuit();
+		final Deck deck = new Deck();
+		final List<Card> list = deck.deal(52);
+		for (final Card card : list) {
+			final Rank rank = card.getRank();
+			final Suit suit = card.getSuit();
 
-	    this.cardMap.put(new CardShell(rank, suit), card);
+			cardMap.put(new CardShell(rank, suit), card);
+		}
 	}
-    }
 
-    public Card getExactCard(final Rank rank, final Suit suit) {
-	return this.cardMap.get(new CardShell(rank, suit));
-    }
-
-    /*
-     * Pair containing rank and suit just for hashing cards.
-     */
-    private static class CardShell {
-	private final Rank rank;
-
-	private final Suit suit;
-
-	public CardShell(final Rank rank, final Suit suit) {
-	    this.rank = rank;
-	    this.suit = suit;
+	public Card getExactCard(final Rank rank, final Suit suit) {
+		return cardMap.get(new CardShell(rank, suit));
 	}
 
 	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#hashCode()
+	 * Pair containing rank and suit just for hashing cards.
 	 */
-	@Override
-	public int hashCode() {
-	    final int prime = 31;
-	    int result = 1;
-	    result = prime * result
-		    + ((this.rank == null) ? 0 : this.rank.hashCode());
-	    result = prime * result
-		    + ((this.suit == null) ? 0 : this.suit.hashCode());
-	    return result;
-	}
+	private static class CardShell {
+		private final Rank rank;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
-	@Override
-	public boolean equals(final Object obj) {
-	    if (this == obj) {
-		return true;
-	    }
-	    if (obj == null) {
-		return false;
-	    }
-	    if (this.getClass() != obj.getClass()) {
-		return false;
-	    }
-	    final CardShell other = (CardShell) obj;
-	    if (this.rank == null) {
-		if (other.rank != null) {
-		    return false;
+		private final Suit suit;
+
+		public CardShell(final Rank rank, final Suit suit) {
+			this.rank = rank;
+			this.suit = suit;
 		}
-	    } else if (!this.rank.equals(other.rank)) {
-		return false;
-	    }
-	    if (this.suit == null) {
-		if (other.suit != null) {
-		    return false;
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see java.lang.Object#hashCode()
+		 */
+		@Override
+		public int hashCode() {
+			final int prime = 31;
+			int result = 1;
+			result = prime * result + ((rank == null) ? 0 : rank.hashCode());
+			result = prime * result + ((suit == null) ? 0 : suit.hashCode());
+			return result;
 		}
-	    } else if (!this.suit.equals(other.suit)) {
-		return false;
-	    }
-	    return true;
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see java.lang.Object#equals(java.lang.Object)
+		 */
+		@Override
+		public boolean equals(final Object obj) {
+			if (this == obj) {
+				return true;
+			}
+			if (obj == null) {
+				return false;
+			}
+			if (this.getClass() != obj.getClass()) {
+				return false;
+			}
+			final CardShell other = (CardShell) obj;
+			if (rank == null) {
+				if (other.rank != null) {
+					return false;
+				}
+			} else if (!rank.equals(other.rank)) {
+				return false;
+			}
+			if (suit == null) {
+				if (other.suit != null) {
+					return false;
+				}
+			} else if (!suit.equals(other.suit)) {
+				return false;
+			}
+			return true;
+		}
 	}
-    }
 }

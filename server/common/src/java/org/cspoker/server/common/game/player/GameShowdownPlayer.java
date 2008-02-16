@@ -30,86 +30,87 @@ import org.cspoker.server.common.game.elements.cards.hand.Hand;
  */
 public class GameShowdownPlayer implements Comparable<GameShowdownPlayer> {
 
-    /**
-     * This variable contains the showdown player.
-     */
-    private final GamePlayer player;
+	/**
+	 * This variable contains the showdown player.
+	 */
+	private final GamePlayer player;
 
-    /**
-     * This variable contains the showdown player's best hand.
-     */
-    private final Hand bestHand;
+	/**
+	 * This variable contains the showdown player's best hand.
+	 */
+	private final Hand bestHand;
 
-    /**
-     * Construct a new showdown player with given player and given best hand.
-     * 
-     * @param player
-     *                The player for this showdown player.
-     * @param bestHand
-     *                The player's best hand.
-     */
-    public GameShowdownPlayer(GamePlayer player, Hand bestHand) {
-	this.player = player;
-	this.bestHand = bestHand;
+	/**
+	 * Construct a new showdown player with given player and given best hand.
+	 * 
+	 * @param player
+	 *            The player for this showdown player.
+	 * @param bestHand
+	 *            The player's best hand.
+	 */
+	public GameShowdownPlayer(GamePlayer player, Hand bestHand) {
+		this.player = player;
+		this.bestHand = bestHand;
 
-    }
+	}
 
-    /**
-     * Returns the effective showdown player, as a player.
-     * 
-     * @return The effective showdown player, as a player.
-     */
-    public GamePlayer getPlayer() {
-	return player;
-    }
+	/**
+	 * Returns the effective showdown player, as a player.
+	 * 
+	 * @return The effective showdown player, as a player.
+	 */
+	public GamePlayer getPlayer() {
+		return player;
+	}
 
-    /**
-     * Return the best hand.
-     * 
-     * @return The best hand.
-     */
-    public Hand getBestHand() {
-	return bestHand;
-    }
+	/**
+	 * Return the best hand.
+	 * 
+	 * @return The best hand.
+	 */
+	public Hand getBestHand() {
+		return bestHand;
+	}
 
-    public ShowdownPlayer getSavedShowdownPlayer() {
-	return new ShowdownPlayer(player.getSavedPlayer(), getBestHand().getCards(), getBestHand().getDescription());
-    }
+	public ShowdownPlayer getSavedShowdownPlayer() {
+		return new ShowdownPlayer(player.getSavedPlayer(), getBestHand()
+				.getCards(), getBestHand().getDescription());
+	}
 
-    /**
-     * Returns a textual representation of this showdown player.
-     */
-    @Override
-    public String toString() {
-	return this.player.getName() + " has a " + getBestHand();
-    }
+	/**
+	 * Returns a textual representation of this showdown player.
+	 */
+	@Override
+	public String toString() {
+		return player.getName() + " has a " + getBestHand();
+	}
 
-    /**
-     * After sorting, the first player is the player with the best hand.
-     * 
-     * -1 = first hand is best, 1 = second hand is best, 0 = tie
-     */
-    public int compareTo(GameShowdownPlayer o) {
-	return o.getBestHand().compareTo(getBestHand());
-    }
+	/**
+	 * After sorting, the first player is the player with the best hand.
+	 * 
+	 * -1 = first hand is best, 1 = second hand is best, 0 = tie
+	 */
+	public int compareTo(GameShowdownPlayer o) {
+		return o.getBestHand().compareTo(getBestHand());
+	}
 
-    /**
-     * 2 showdown players are equal if both their hands have the same value.
-     * 
-     */
-    @Override
-    public boolean equals(Object obj) {
-	if (this == obj)
-	    return true;
-	if (obj == null)
-	    return false;
-	if (getClass() != obj.getClass())
-	    return false;
-	final GameShowdownPlayer other = (GameShowdownPlayer) obj;
-	if (this.bestHand == null)
-	    return other.bestHand == null;
-	else
-	    return getBestHand().equals(other.getBestHand());
-    }
+	/**
+	 * 2 showdown players are equal if both their hands have the same value.
+	 * 
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		final GameShowdownPlayer other = (GameShowdownPlayer) obj;
+		if (bestHand == null)
+			return other.bestHand == null;
+		else
+			return getBestHand().equals(other.getBestHand());
+	}
 
 }

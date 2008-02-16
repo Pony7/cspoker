@@ -19,7 +19,6 @@ import java.rmi.AccessException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 
-import org.cspoker.client.rmi.RemotePlayerCommunicationFactoryForRMI;
 import org.cspoker.common.RemotePlayerCommunication;
 import org.cspoker.common.elements.table.TableId;
 import org.cspoker.common.eventlisteners.RemoteAllEventsListener;
@@ -47,190 +46,176 @@ import org.cspoker.common.events.serverEvents.ServerMessageEvent;
 import org.cspoker.common.events.serverEvents.TableCreatedEvent;
 import org.cspoker.common.exceptions.IllegalActionException;
 
-
 public class TestRMI {
 
-    /**
-     * @param args
-     * @throws NotBoundException 
-     * @throws RemoteException 
-     * @throws AccessException 
-     * @throws IllegalActionException 
-     */
-    public static void main(String[] args) throws AccessException, RemoteException, NotBoundException, IllegalActionException {
-	RemotePlayerCommunicationFactoryForRMI f = new RemotePlayerCommunicationFactoryForRMI("localhost");
-	RemotePlayerCommunication guy = f.login("guy", "test");
-	System.out.println("Guy Logged In and will print events to sout");
+	/**
+	 * @param args
+	 * @throws NotBoundException
+	 * @throws RemoteException
+	 * @throws AccessException
+	 * @throws IllegalActionException
+	 */
+	public static void main(String[] args) throws AccessException,
+			RemoteException, NotBoundException, IllegalActionException {
+		RemotePlayerCommunicationFactoryForRMI f = new RemotePlayerCommunicationFactoryForRMI(
+				"localhost");
+		RemotePlayerCommunication guy = f.login("guy", "test");
+		System.out.println("Guy Logged In and will print events to sout");
 
-	guy.subscribeAllEventsListener(new RemoteAllEventsListener(){
+		guy.subscribeAllEventsListener(new RemoteAllEventsListener() {
 
-	    public void onAllInEvent(AllInEvent event)  {
-		System.out.println(event.toString());
+			public void onAllInEvent(AllInEvent event) {
+				System.out.println(event.toString());
 
-	    }
+			}
 
-	    public void onBetEvent(BetEvent event)  {
-		System.out.println(event.toString());
+			public void onBetEvent(BetEvent event) {
+				System.out.println(event.toString());
 
-	    }
+			}
 
-	    public void onBigBlindEvent(BigBlindEvent event)
-	    {
-		System.out.println(event.toString());
+			public void onBigBlindEvent(BigBlindEvent event) {
+				System.out.println(event.toString());
 
-	    }
+			}
 
-	    public void onCallEvent(CallEvent event)  {
-		System.out.println(event.toString());
+			public void onCallEvent(CallEvent event) {
+				System.out.println(event.toString());
 
-	    }
+			}
 
-	    public void onCheckEvent(CheckEvent event)  {
-		System.out.println(event.toString());
+			public void onCheckEvent(CheckEvent event) {
+				System.out.println(event.toString());
 
-	    }
+			}
 
-	    public void onFoldEvent(FoldEvent event)  {
-		System.out.println(event.toString());
+			public void onFoldEvent(FoldEvent event) {
+				System.out.println(event.toString());
 
-	    }
+			}
 
-	    public void onRaiseEvent(RaiseEvent event)  {
-		System.out.println(event.toString());
+			public void onRaiseEvent(RaiseEvent event) {
+				System.out.println(event.toString());
 
-	    }
+			}
 
-	    public void onSmallBlindEvent(SmallBlindEvent event)
-	    {
-		System.out.println(event.toString());
+			public void onSmallBlindEvent(SmallBlindEvent event) {
+				System.out.println(event.toString());
 
-	    }
+			}
 
-	    public void onNewPocketCardsEvent(NewPocketCardsEvent event)
-	    {
-		System.out.println(event.toString());
+			public void onNewPocketCardsEvent(NewPocketCardsEvent event) {
+				System.out.println(event.toString());
 
-	    }
+			}
 
-	    public void onNewCommunityCardsEvent(NewCommunityCardsEvent event)
-	    {
-		System.out.println(event.toString());
+			public void onNewCommunityCardsEvent(NewCommunityCardsEvent event) {
+				System.out.println(event.toString());
 
-	    }
+			}
 
-	    public void onNewDealEvent(NewDealEvent event)
-	    {
-		System.out.println(event.toString());
+			public void onNewDealEvent(NewDealEvent event) {
+				System.out.println(event.toString());
 
-	    }
+			}
 
-	    public void onNewRoundEvent(NewRoundEvent event)
-	    {
-		System.out.println(event.toString());
+			public void onNewRoundEvent(NewRoundEvent event) {
+				System.out.println(event.toString());
 
-	    }
+			}
 
-	    public void onNextPlayerEvent(NextPlayerEvent event)
-	    {
-		System.out.println(event.toString());
+			public void onNextPlayerEvent(NextPlayerEvent event) {
+				System.out.println(event.toString());
 
-	    }
+			}
 
-	    public void onPlayerJoinedGameEvent(PlayerJoinedGameEvent event)
-	    {
-		System.out.println(event.toString());
+			public void onPlayerJoinedGameEvent(PlayerJoinedGameEvent event) {
+				System.out.println(event.toString());
 
-	    }
+			}
 
-	    public void onPlayerLeftTableEvent(PlayerLeftTableEvent event)
-	    {
-		System.out.println(event.toString());
+			public void onPlayerLeftTableEvent(PlayerLeftTableEvent event) {
+				System.out.println(event.toString());
 
-	    }
+			}
 
-	    public void onShowHandEvent(ShowHandEvent event)
-	    {
-		System.out.println(event.toString());
+			public void onShowHandEvent(ShowHandEvent event) {
+				System.out.println(event.toString());
 
-	    }
+			}
 
-	    public void onWinnerEvent(WinnerEvent event)  {
-		System.out.println(event.toString());
+			public void onWinnerEvent(WinnerEvent event) {
+				System.out.println(event.toString());
 
-	    }
+			}
 
-	    public void onGameMessageEvent(GameMessageEvent event)
-	    {
-		System.out.println(event.toString());
+			public void onGameMessageEvent(GameMessageEvent event) {
+				System.out.println(event.toString());
 
-	    }
+			}
 
-	    public void onPlayerJoinedEvent(PlayerJoinedEvent event)
-	    {
-		System.out.println(event.toString());
+			public void onPlayerJoinedEvent(PlayerJoinedEvent event) {
+				System.out.println(event.toString());
 
-	    }
+			}
 
-	    public void onPlayerLeftEvent(PlayerLeftEvent event)
-	    {
-		System.out.println(event.toString());
+			public void onPlayerLeftEvent(PlayerLeftEvent event) {
+				System.out.println(event.toString());
 
-	    }
+			}
 
-	    public void onTableCreatedEvent(TableCreatedEvent event)
-	    {
-		System.out.println(event.toString());
+			public void onTableCreatedEvent(TableCreatedEvent event) {
+				System.out.println(event.toString());
 
-	    }
+			}
 
-	    public void onServerMessageEvent(ServerMessageEvent event)
-	    {
-		System.out.println(event.toString());
+			public void onServerMessageEvent(ServerMessageEvent event) {
+				System.out.println(event.toString());
 
-	    }
+			}
 
-	});
+		});
 
-	RemotePlayerCommunication kenzo = f.login("kenzo", "test");
-	RemotePlayerCommunication cedric = f.login("cedric", "test");
+		RemotePlayerCommunication kenzo = f.login("kenzo", "test");
+		RemotePlayerCommunication cedric = f.login("cedric", "test");
 
-	guy.createTable();
+		guy.createTable();
 
-	kenzo.joinTable(new TableId(0));
-	cedric.joinTable(new TableId(0));
+		kenzo.joinTable(new TableId(0));
+		cedric.joinTable(new TableId(0));
 
-	guy.startGame();
+		guy.startGame();
 
-	for (int i = 0; i < 10; i++) {
-	    try {
-		guy.check();
-	    } catch (IllegalActionException e) {
-		try {
-		    guy.call();
-		} catch (IllegalActionException e2) {
-		    
+		for (int i = 0; i < 10; i++) {
+			try {
+				guy.check();
+			} catch (IllegalActionException e) {
+				try {
+					guy.call();
+				} catch (IllegalActionException e2) {
+
+				}
+			}
+			try {
+				kenzo.check();
+			} catch (IllegalActionException e) {
+				try {
+					kenzo.call();
+				} catch (IllegalActionException e2) {
+
+				}
+			}
+			try {
+				cedric.check();
+			} catch (IllegalActionException e) {
+				try {
+					cedric.call();
+				} catch (IllegalActionException e2) {
+
+				}
+			}
 		}
-	    }
-	    try {
-		kenzo.check();
-	    } catch (IllegalActionException e) {
-		try {
-		    kenzo.call();
-		} catch (IllegalActionException e2) {
-		    
-		}
-	    }
-	    try {
-		cedric.check();
-	    } catch (IllegalActionException e) {
-		try {
-		    cedric.call();
-		} catch (IllegalActionException e2) {
-		    
-		}
-	    }
+
 	}
-
-    }
 
 }

@@ -21,40 +21,40 @@ import java.util.List;
 
 import org.cspoker.common.elements.cards.Card;
 
-public class ShowdownPlayer implements Serializable{
+public class ShowdownPlayer implements Serializable {
 
-    private static final long serialVersionUID = -1618593137613219527L;
+	private static final long serialVersionUID = -1618593137613219527L;
 
-    private final Player player;
+	private final Player player;
 
-    private final List<Card> cards;
-    
-    private final String description;
+	private final List<Card> cards;
 
-    public ShowdownPlayer(Player player, List<Card> cards, String description) {
-	this.player = player;
-	this.cards = Collections.unmodifiableList(cards);
-	this.description = description;
-    }
+	private final String description;
 
-    /**
-     * Returns a textual representation of this showdown player.
-     */
-    @Override
-    public String toString() {
-	return this.player.getName() + " has a " + this.description;
-    }
-    
-    public Player getPlayer() {
-	return player;
-    }
-    
-    public List<Card> getHandCards(){
-    	return cards;
-    }
-    
-    public String getHandDescription() {
-	return description;
-    }
+	public ShowdownPlayer(Player player, List<Card> cards, String description) {
+		this.player = player;
+		this.cards = Collections.unmodifiableList(cards);
+		this.description = description;
+	}
+
+	/**
+	 * Returns a textual representation of this showdown player.
+	 */
+	@Override
+	public String toString() {
+		return player.getName() + " has a " + description;
+	}
+
+	public Player getPlayer() {
+		return player;
+	}
+
+	public List<Card> getHandCards() {
+		return cards;
+	}
+
+	public String getHandDescription() {
+		return description;
+	}
 
 }

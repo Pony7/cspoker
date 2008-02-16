@@ -19,6 +19,6 @@ import org.cspoker.common.events.gameEvents.GameMessageEvent;
 
 public interface GameMessageListener extends RemoteGameMessageListener {
 
-    public void onGameMessageEvent(GameMessageEvent event);
+	public void onGameMessageEvent(GameMessageEvent event);
 
 }

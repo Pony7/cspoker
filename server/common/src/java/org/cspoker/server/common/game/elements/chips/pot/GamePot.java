@@ -38,71 +38,71 @@ import org.cspoker.server.common.game.player.GamePlayer;
  */
 public class GamePot {
 
-    /**
-     * All the players that can take a share of this pot.
-     */
-    private final List<GamePlayer> players;
+	/**
+	 * All the players that can take a share of this pot.
+	 */
+	private final List<GamePlayer> players;
 
-    /**
-     * The pile of chips in this pot.
-     */
-    private final Chips chips;
+	/**
+	 * The pile of chips in this pot.
+	 */
+	private final Chips chips;
 
-    /***************************************************************************
-     * Constructor
-     **************************************************************************/
+	/***************************************************************************
+	 * Constructor
+	 **************************************************************************/
 
-    /**
-     * Construct an empty pot.
-     * 
-     * @post The initial amount of chips is zero. |getChips().getValue()==0
-     */
-    public GamePot() {
-	chips = new Chips();
-	players = new ArrayList<GamePlayer>();
-    }
-
-    /**
-     * Get the pile of chips in this pot.
-     */
-    public Chips getChips() {
-	return chips;
-    }
-
-    public List<GamePlayer> getPlayers() {
-	return Collections.unmodifiableList(players);
-    }
-
-    public void addShowdownPlayer(GamePlayer player) {
-	players.add(player);
-    }
-
-    public void transferAmountToPot(int amount, GamePot pot)
-	    throws IllegalValueException {
-	getChips().transferAmountTo(amount, pot.getChips());
-    }
-
-    public void transferAllChipsTo(GamePot pot) {
-	try {
-	    getChips().transferAmountTo(getChips().getValue(), pot.getChips());
-	} catch (IllegalValueException e) {
-	    assert false;
+	/**
+	 * Construct an empty pot.
+	 * 
+	 * @post The initial amount of chips is zero. |getChips().getValue()==0
+	 */
+	public GamePot() {
+		chips = new Chips();
+		players = new ArrayList<GamePlayer>();
 	}
-    }
 
-    /**
-     * Returns the value of the chips in this post
-     */
-    public int getValue() {
-	return getChips().getValue();
-    }
-
-    @Override
-    public String toString() {
-	String toReturn = getValue() + " chips in this pot. Showdown players: ";
-	for (GamePlayer player : players) {
-	    toReturn += player.getName() + " ";
+	/**
+	 * Get the pile of chips in this pot.
+	 */
+	public Chips getChips() {
+		return chips;
 	}
-	return toReturn;
-    }
+
+	public List<GamePlayer> getPlayers() {
+		return Collections.unmodifiableList(players);
+	}
+
+	public void addShowdownPlayer(GamePlayer player) {
+		players.add(player);
+	}
+
+	public void transferAmountToPot(int amount, GamePot pot)
+			throws IllegalValueException {
+		getChips().transferAmountTo(amount, pot.getChips());
+	}
+
+	public void transferAllChipsTo(GamePot pot) {
+		try {
+			getChips().transferAmountTo(getChips().getValue(), pot.getChips());
+		} catch (IllegalValueException e) {
+			assert false;
+		}
+	}
+
+	/**
+	 * Returns the value of the chips in this post
+	 */
+	public int getValue() {
+		return getChips().getValue();
+	}
+
+	@Override
+	public String toString() {
+		String toReturn = getValue() + " chips in this pot. Showdown players: ";
+		for (GamePlayer player : players) {
+			toReturn += player.getName() + " ";
+		}
+		return toReturn;
+	}
 }

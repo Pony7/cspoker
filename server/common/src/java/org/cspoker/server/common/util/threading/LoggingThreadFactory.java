@@ -18,14 +18,14 @@ package org.cspoker.server.common.util.threading;
 import java.util.concurrent.ThreadFactory;
 
 public class LoggingThreadFactory implements ThreadFactory {
-    private final String poolName;
-    private long number=0;
-    
-    public LoggingThreadFactory(String poolName) {
-        this.poolName = poolName;
-    }
+	private final String poolName;
+	private long number = 0;
 
-    public Thread newThread(Runnable runnable) {
-        return new LoggingThread(runnable, poolName+"-"+number++);
-    }
+	public LoggingThreadFactory(String poolName) {
+		this.poolName = poolName;
+	}
+
+	public Thread newThread(Runnable runnable) {
+		return new LoggingThread(runnable, poolName + "-" + number++);
+	}
 }

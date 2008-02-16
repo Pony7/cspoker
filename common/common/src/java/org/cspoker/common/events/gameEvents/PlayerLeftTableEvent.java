@@ -29,31 +29,32 @@ import org.xml.sax.helpers.AttributesImpl;
  */
 public class PlayerLeftTableEvent extends GameEvent {
 
-    private static final long serialVersionUID = -5339079807813674278L;
+	private static final long serialVersionUID = -5339079807813674278L;
 
-    private final Player player;
+	private final Player player;
 
-    public PlayerLeftTableEvent(Player player) {
-	this.player = player;
-    }
+	public PlayerLeftTableEvent(Player player) {
+		this.player = player;
+	}
 
-    @Override
-    public String toString() {
-	return player.getName() + " has left this table.";
-    }
-    
-    public Player getPlayer(){
-	return player;
-    }
-    
-    @Override
-    public void toXml(ContentHandler handler) throws SAXException {
-	AttributesImpl attrs = new AttributesImpl();
-	attrs.addAttribute("", "type", "type", "CDATA", "playerlefttable");
-	attrs.addAttribute("", "player", "player", "CDATA", getPlayer().getName());
-	handler.startElement("", "event", "event", attrs);
+	@Override
+	public String toString() {
+		return player.getName() + " has left this table.";
+	}
 
-	handler.endElement("", "event", "event");
-    }
+	public Player getPlayer() {
+		return player;
+	}
+
+	@Override
+	public void toXml(ContentHandler handler) throws SAXException {
+		AttributesImpl attrs = new AttributesImpl();
+		attrs.addAttribute("", "type", "type", "CDATA", "playerlefttable");
+		attrs.addAttribute("", "player", "player", "CDATA", getPlayer()
+				.getName());
+		handler.startElement("", "event", "event", attrs);
+
+		handler.endElement("", "event", "event");
+	}
 
 }

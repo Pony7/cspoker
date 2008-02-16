@@ -48,7 +48,7 @@ public class Hand implements Iterable<Card>, Comparable<Hand> {
 	 * @post there are no cards in the new hand | new.getNBCards()==0
 	 */
 	public Hand() {
-		this.cards = new ArrayList<Card>();
+		cards = new ArrayList<Card>();
 	}
 
 	/**
@@ -63,28 +63,28 @@ public class Hand implements Iterable<Card>, Comparable<Hand> {
 	 * Constructs a new hand with the same cards as in the given card list
 	 * 
 	 * @param cardCollection
-	 *                the given card list
+	 *            the given card list
 	 * @throws IllegalArgumentException
-	 *                 if the number of cards in the card list is greater than
-	 *                 the maximum number of cards allowed in any hand or if the
-	 *                 card list isn't effective | cardList.size()>MAX_CARDS ||
-	 *                 cardList==null
+	 *             if the number of cards in the card list is greater than the
+	 *             maximum number of cards allowed in any hand or if the card
+	 *             list isn't effective | cardList.size()>MAX_CARDS ||
+	 *             cardList==null
 	 */
 	public Hand(final Collection<Card> cardCollection) {
 		if ((cardCollection.size() > Hand.MAX_CARDS)
 				|| (cardCollection == null)) {
 			throw new IllegalArgumentException();
 		}
-		this.cards = new ArrayList<Card>(cardCollection);
+		cards = new ArrayList<Card>(cardCollection);
 	}
 
 	/**
 	 * Create a new hand with the same cards as the given hand
 	 * 
 	 * @param h
-	 *                the hand to clone.
+	 *            the hand to clone.
 	 * @throws IllegalArgumentException
-	 *                 if the given hand isn't effective | h==null
+	 *             if the given hand isn't effective | h==null
 	 * @post the new hand contains every card of the given hand | for each Card
 	 *       x|h.contains(x) -> result.contains(x)
 	 */
@@ -92,31 +92,30 @@ public class Hand implements Iterable<Card>, Comparable<Hand> {
 		if (h == null) {
 			throw new IllegalArgumentException();
 		}
-		this.cards = new ArrayList<Card>(h.cards);
+		cards = new ArrayList<Card>(h.cards);
 	}
 
 	/**
 	 * Adds the given card to this hand if there is room
 	 * 
 	 * @param card
-	 *                the given card
+	 *            the given card
 	 * @throws IllegalArgumentException
-	 *                 if this hand is full or if this hand already contains a
-	 *                 card equal to the given card | isFull() ||
-	 *                 this.contains(card)
+	 *             if this hand is full or if this hand already contains a card
+	 *             equal to the given card | isFull() || this.contains(card)
 	 * @post the new hand contains the given card | new.contains(card)
 	 * @post the number of cards in this hand has increased by one |
 	 *       new.getNBCards()=this.getNBCards()+1
 	 */
 	public boolean add(final Card card) {
-		if (this.isFull() || this.contains(card)) {
+		if (isFull() || this.contains(card)) {
 			throw new IllegalArgumentException();
 		}
 
 		// TODO take this out if we make Hand immutable
-		this.handInfo = null;
+		handInfo = null;
 
-		return this.cards.add(card);
+		return cards.add(card);
 	}
 
 	/***************************************************************************
@@ -127,20 +126,20 @@ public class Hand implements Iterable<Card>, Comparable<Hand> {
 	 * Checks whether this hand contains a card equal to the given card
 	 * 
 	 * @param card
-	 *                the given card
+	 *            the given card
 	 * @result True if there exists a card in this hand that is equal to the
 	 *         given card ; false otherwise | result == (for a Card x in
 	 *         this.getCards() : x.equals(card))
 	 */
 	public boolean contains(final Card card) {
-		return this.cards.contains(card);
+		return cards.contains(card);
 	}
 
 	/**
 	 * Checks whether this hand contains the given array of cards
 	 * 
 	 * @param array
-	 *                the given array of cards
+	 *            the given array of cards
 	 * @result True if for every card in the array there exists a card in this
 	 *         hand that is equal to the given card; false otherwise | result ==
 	 *         (for every Card x in array:(for a Card x in this.getCards() :
@@ -149,7 +148,7 @@ public class Hand implements Iterable<Card>, Comparable<Hand> {
 	public boolean contains(final Card[] array) {
 		boolean contains = true;
 		for (int j = 0; j < array.length - 1; j++) {
-			if (!this.cards.contains(array[j])) {
+			if (!cards.contains(array[j])) {
 				contains = false;
 			}
 		}
@@ -160,33 +159,33 @@ public class Hand implements Iterable<Card>, Comparable<Hand> {
 	 * Get the card at the given position in this hand
 	 * 
 	 * @param index
-	 *                the position of the card in the hand
+	 *            the position of the card in the hand
 	 * @throws IllegalArgumentException
-	 *                 if the given index is negative or greater than the number
-	 *                 of cards in this hand minus one | index < 0 || index >
-	 *                 getNBCards()-1
+	 *             if the given index is negative or greater than the number of
+	 *             cards in this hand minus one | index < 0 || index >
+	 *             getNBCards()-1
 	 * @result This hand contains the resulting card | this.contains(result)
 	 * @result This hand contains the resulting card at the given index |
 	 *         index==this.getIndexOf(result)
 	 */
 	public Card get(final int index) {
-		if ((index < 0) || (index > this.cards.size() - 1)) {
+		if ((index < 0) || (index > cards.size() - 1)) {
 			throw new IllegalArgumentException();
 		}
-		return this.cards.get(index);
+		return cards.get(index);
 	}
 
 	// TODO make private again
 	HandInfo getHandInfo() {
-		assert this.size() == 5 : "Illegal argument, hand size != 5";
+		assert size() == 5 : "Illegal argument, hand size != 5";
 
-		if (this.handInfo == null) {
-			final int product = this.getProduct();
-			final boolean flush = this.isFlush();
-			this.handInfo = new HandInfo(product, flush);
+		if (handInfo == null) {
+			final int product = getProduct();
+			final boolean flush = isFlush();
+			handInfo = new HandInfo(product, flush);
 
 		}
-		return this.handInfo;
+		return handInfo;
 	}
 
 	// TODO delete this method - who gets the extra chip should not be
@@ -198,24 +197,24 @@ public class Hand implements Iterable<Card>, Comparable<Hand> {
 	 * ranking the lowest, followed by diamonds,hearts, and spades as in bridge)
 	 */
 	public Card getHighestRankCard() {
-		Card highestRankCard = this.cards.get(0);
-		for (int i = 0; i < this.cards.size(); i++) {
-			final int compareTo = this.cards.get(i).compareTo(highestRankCard);
+		Card highestRankCard = cards.get(0);
+		for (int i = 0; i < cards.size(); i++) {
+			final int compareTo = cards.get(i).compareTo(highestRankCard);
 			if ((compareTo == 1)
-					|| ((compareTo == 0) && (this.cards.get(i).getSuit()
-							.getValue() > highestRankCard.getSuit().getValue()))) {
-				highestRankCard = this.cards.get(i);
+					|| ((compareTo == 0) && (cards.get(i).getSuit().getValue() > highestRankCard
+							.getSuit().getValue()))) {
+				highestRankCard = cards.get(i);
 			}
 		}
 		return highestRankCard;
 	}
-	
+
 	/**
 	 * Returns a list with alle the cards in the hand.
 	 * 
 	 * @return A list with alle the cards in the hand.
 	 */
-	public List<Card> getCards(){
+	public List<Card> getCards() {
 		return new ArrayList<Card>(cards);
 	}
 
@@ -223,24 +222,24 @@ public class Hand implements Iterable<Card>, Comparable<Hand> {
 	 * Returns the index a card equal to the given card in this hand
 	 * 
 	 * @param card
-	 *                the given card
+	 *            the given card
 	 * @throws IllegalArgumentException
-	 *                 if this hand doesn't contain a card equal to the given
-	 *                 card | ! this.contains(card)
+	 *             if this hand doesn't contain a card equal to the given card | !
+	 *             this.contains(card)
 	 * @result This hand contains the given card at the resulting index |
 	 *         card=this.getCard(result)
 	 */
 	public int indexOf(final Card card) {
-		if (!this.cards.contains(card)) {
+		if (!cards.contains(card)) {
 			throw new IllegalArgumentException();
 		}
-		return this.cards.indexOf(card);
+		return cards.indexOf(card);
 	}
 
 	public boolean isFlush() {
-		assert this.size() == 5 : "Illegal argument, hand size != 5";
+		assert size() == 5 : "Illegal argument, hand size != 5";
 
-		final Iterator<Card> iterator = this.iterator();
+		final Iterator<Card> iterator = iterator();
 		final Suit suit = iterator.next().getSuit();
 
 		while (iterator.hasNext()) {
@@ -260,46 +259,46 @@ public class Hand implements Iterable<Card>, Comparable<Hand> {
 	 *         (getNBCards()==MAX_CARDS)
 	 */
 	public boolean isFull() {
-		return this.cards.size() == Hand.MAX_CARDS;
+		return cards.size() == Hand.MAX_CARDS;
 	}
 
 	/**
 	 * Returns an iterator that iterates over the cards in this hand
 	 */
 	public Iterator<Card> iterator() {
-		return this.cards.iterator();
+		return cards.iterator();
 	}
 
 	/**
 	 * Removes a card equal to the given card from this hand
 	 * 
 	 * @param card
-	 *                the given card
+	 *            the given card
 	 * @throws IllegalArgumentException
-	 *                 if this hand doesn't contain a card equal to the given
-	 *                 card | ! this.contains(card)
+	 *             if this hand doesn't contain a card equal to the given card | !
+	 *             this.contains(card)
 	 * @post The hand doesn't contain the given card anymore |
 	 *       !new.contains(card)
 	 */
 	public void removeCard(final Card card) {
-		if (!this.cards.contains(card)) {
+		if (!cards.contains(card)) {
 			throw new IllegalArgumentException();
 		}
 
 		// TODO take this out if we make Hand immutable
-		this.handInfo = null;
+		handInfo = null;
 
-		this.cards.remove(card);
+		cards.remove(card);
 	}
 
 	/**
 	 * Removes all the cards in the given array from this hand
 	 * 
 	 * @param array
-	 *                the given hand
+	 *            the given hand
 	 * @throws IllegalArgumentException
-	 *                 if this hand doesn't contain the cards of the given array | !
-	 *                 this.contains(array)
+	 *             if this hand doesn't contain the cards of the given array | !
+	 *             this.contains(array)
 	 * @post The hand doesn't contain the cards of the given array anymore |
 	 *       !new.contains(array)
 	 */
@@ -309,7 +308,7 @@ public class Hand implements Iterable<Card>, Comparable<Hand> {
 		}
 
 		// TODO take this out if we make Hand immutable
-		this.handInfo = null;
+		handInfo = null;
 
 		for (final Card element : array) {
 			this.removeCard(element);
@@ -320,7 +319,7 @@ public class Hand implements Iterable<Card>, Comparable<Hand> {
 	 * Returns the number of cards in this hand
 	 */
 	public int size() {
-		return this.cards.size();
+		return cards.size();
 	}
 
 	/**
@@ -330,20 +329,20 @@ public class Hand implements Iterable<Card>, Comparable<Hand> {
 	public String toString() {
 		String result = "";
 
-		if (this.cards.size() >= 5) {
-			final Hand bestFive = this.getBestFive();
+		if (cards.size() >= 5) {
+			final Hand bestFive = getBestFive();
 			result = bestFive.getDescription();
 			result += ": ";
 		}
-		result += this.cards.toString();
+		result += cards.toString();
 		return result;
 	}
 
 	private int getProduct() {
-		assert this.size() == 5 : "Illegal argument, hand size != 5";
+		assert size() == 5 : "Illegal argument, hand size != 5";
 
 		int product = 1;
-		for (final Card card : this.cards) {
+		for (final Card card : cards) {
 			product *= card.getRank().getPrime();
 		}
 		return product;
@@ -373,10 +372,10 @@ public class Hand implements Iterable<Card>, Comparable<Hand> {
 				return false;
 			}
 			final HandInfo other = (HandInfo) obj;
-			if (this.flush != other.flush) {
+			if (flush != other.flush) {
 				return false;
 			}
-			if (this.product != other.product) {
+			if (product != other.product) {
 				return false;
 			}
 			return true;
@@ -384,14 +383,14 @@ public class Hand implements Iterable<Card>, Comparable<Hand> {
 
 		@Override
 		public int hashCode() {
-			if (this.hashCode == null) {
+			if (hashCode == null) {
 				final int prime = 31;
 				int result = 1;
-				result = prime * result + (this.flush ? 1231 : 1237);
-				result = prime * result + this.product;
-				this.hashCode = Integer.valueOf(result);
+				result = prime * result + (flush ? 1231 : 1237);
+				result = prime * result + product;
+				hashCode = Integer.valueOf(result);
 			}
-			return this.hashCode.intValue();
+			return hashCode.intValue();
 		}
 	}
 
@@ -399,7 +398,7 @@ public class Hand implements Iterable<Card>, Comparable<Hand> {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + (this.getHandInfo().hashCode());
+		result = prime * result + (getHandInfo().hashCode());
 		return result;
 	}
 
@@ -412,7 +411,7 @@ public class Hand implements Iterable<Card>, Comparable<Hand> {
 		if (getClass() != obj.getClass())
 			return false;
 		final Hand other = (Hand) obj;
-		return this.getHandInfo().equals(other.getHandInfo());
+		return getHandInfo().equals(other.getHandInfo());
 	}
 
 	public Integer getRank() {
@@ -432,39 +431,38 @@ public class Hand implements Iterable<Card>, Comparable<Hand> {
 	 * that is a subset
 	 * 
 	 * @param hand
-	 *                The seven card hand
+	 *            The seven card hand
 	 * @return The best five card hand that is a subset
 	 */
 	public Hand getBestFive() {
-		if (this.cards.size() == 5) {
+		if (cards.size() == 5) {
 			return this;
 		}
 
-		assert this.cards.size() == 7 || this.cards.size() == 6 : "Illegal state, hand size != 7 or 6 or 5";
+		assert cards.size() == 7 || cards.size() == 6 : "Illegal state, hand size != 7 or 6 or 5";
 
 		int minRank = Integer.MAX_VALUE;
 		List<Card> bestHand = null;
 
 		// Refactor
-		if (this.cards.size() == 7) {
+		if (cards.size() == 7) {
 			for (int i = 0; i < 6; i++) {
 				for (int j = i + 1; j < 7; j++) {
-					final List<Card> fiveCardHand = new ArrayList<Card>(
-							this.cards);
+					final List<Card> fiveCardHand = new ArrayList<Card>(cards);
 					fiveCardHand.remove(j);
 					fiveCardHand.remove(i);
 
 					final int rank = (new Hand(fiveCardHand)).getRank()
-					.intValue();
+							.intValue();
 					if (rank < minRank) {
 						minRank = rank;
 						bestHand = fiveCardHand;
 					}
 				}
 			}
-		} else if (this.cards.size() == 6) {
+		} else if (cards.size() == 6) {
 			for (int i = 0; i < 6; i++) {
-				final List<Card> fiveCardHand = new ArrayList<Card>(this.cards);
+				final List<Card> fiveCardHand = new ArrayList<Card>(cards);
 				fiveCardHand.remove(i);
 
 				final int rank = (new Hand(fiveCardHand)).getRank().intValue();
@@ -479,7 +477,7 @@ public class Hand implements Iterable<Card>, Comparable<Hand> {
 	}
 
 	public int compareTo(Hand other) {
-		Integer thisRank = this.getBestFive().getRank();
+		Integer thisRank = getBestFive().getRank();
 		Integer otherRank = other.getBestFive().getRank();
 		return otherRank.compareTo(thisRank);
 	}

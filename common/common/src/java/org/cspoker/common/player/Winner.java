@@ -17,31 +17,30 @@ package org.cspoker.common.player;
 
 import java.io.Serializable;
 
+public class Winner implements Serializable {
 
-public class Winner implements Serializable{
+	private static final long serialVersionUID = 2432656140806034623L;
 
-    private static final long serialVersionUID = 2432656140806034623L;
+	private final int gainedAmount;
 
-    private final int gainedAmount;
+	private final Player player;
 
-    private final Player player;
+	public Winner(Player player, int gainedAmount) {
+		this.player = player;
+		this.gainedAmount = gainedAmount;
+	}
 
-    public Winner(Player player, int gainedAmount) {
-	this.player = player;
-	this.gainedAmount = gainedAmount;
-    }
-    
-    public int getGainedAmount() {
-	return gainedAmount;
-    }
-    
-    public Player getPlayer() {
-	return player;
-    }
+	public int getGainedAmount() {
+		return gainedAmount;
+	}
 
-    @Override
-    public String toString() {
-	return player.getName() + " has gained " + gainedAmount + " chips.";
-    }
+	public Player getPlayer() {
+		return player;
+	}
+
+	@Override
+	public String toString() {
+		return player.getName() + " has gained " + gainedAmount + " chips.";
+	}
 
 }

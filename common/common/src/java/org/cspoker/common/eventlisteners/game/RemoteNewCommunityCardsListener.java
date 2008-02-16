@@ -29,13 +29,14 @@ import org.cspoker.common.events.gameEvents.NewCommunityCardsEvent;
  */
 public interface RemoteNewCommunityCardsListener extends Remote {
 
-    /**
-     * This method is called when subscribed to inform a new community cards
-     * event occurred.
-     * 
-     * @param event
-     *                The event object containing all information of the
-     *                occurred event.
-     */
-    public void onNewCommunityCardsEvent(NewCommunityCardsEvent event) throws RemoteException;
+	/**
+	 * This method is called when subscribed to inform a new community cards
+	 * event occurred.
+	 * 
+	 * @param event
+	 *            The event object containing all information of the occurred
+	 *            event.
+	 */
+	public void onNewCommunityCardsEvent(NewCommunityCardsEvent event)
+			throws RemoteException;
 }

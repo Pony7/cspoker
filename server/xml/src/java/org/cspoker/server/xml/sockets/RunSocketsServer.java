@@ -21,30 +21,34 @@ import org.apache.log4j.Logger;
 import org.cspoker.server.common.config.Log4JPropertiesLoader;
 
 public class RunSocketsServer {
-    
-    static{
-	Log4JPropertiesLoader.load("org/cspoker/server/sockets/logging/log4j.properties");
-    }
-    private final static Logger logger = Logger.getLogger(RunSocketsServer.class);
-    
-    public static void main(String[] args) throws NumberFormatException, IOException {
 
-	if (args.length < 1) {
-	    usage();
+	static {
+		Log4JPropertiesLoader
+				.load("org/cspoker/server/sockets/logging/log4j.properties");
+	}
+	private final static Logger logger = Logger
+			.getLogger(RunSocketsServer.class);
+
+	public static void main(String[] args) throws NumberFormatException,
+			IOException {
+
+		if (args.length < 1) {
+			usage();
+		}
+
+		int port = 0;
+		try {
+			port = Integer.parseInt(args[0]);
+		} catch (NumberFormatException e) {
+			usage();
+		}
+
+		SocketServer server = new SocketServer(port);
 	}
 
-	int port=0;
-	try {
-	    port=Integer.parseInt(args[0]);
-	} catch (NumberFormatException e) {
-	    usage();
+	private static void usage() {
+		logger
+				.fatal("usage: java -jar cspoker-server-sockets.jar [portnumber]");
+		System.exit(0);
 	}
-
-	SocketServer server = new SocketServer(port);
-    }
-
-    private static void usage() {
-	logger.fatal("usage: java -jar cspoker-server-sockets.jar [portnumber]");
-	System.exit(0);
-    }
 }

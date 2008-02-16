@@ -29,13 +29,13 @@ import org.cspoker.common.events.gameEvents.playerActionEvents.BigBlindEvent;
  */
 public interface RemoteBigBlindListener extends Remote {
 
-    /**
-     * This method is called when subscribed to inform a big blind has been bet.
-     * 
-     * @param event
-     *                The event object containing all information of the
-     *                occurred event.
-     */
-    public void onBigBlindEvent(BigBlindEvent event) throws RemoteException;
+	/**
+	 * This method is called when subscribed to inform a big blind has been bet.
+	 * 
+	 * @param event
+	 *            The event object containing all information of the occurred
+	 *            event.
+	 */
+	public void onBigBlindEvent(BigBlindEvent event) throws RemoteException;
 
 }

@@ -21,68 +21,69 @@ import org.cspoker.server.common.game.playercommunication.PlayerCommunicationImp
 
 public class Session {
 
-    private final String username;
+	private final String username;
 
-    private GamePlayer player = null;
-    private PlayerCommunicationImpl playerComm = null;
-    private boolean killed = false;
-    
-    public Session(String username) {
-	this.username = username;
-    }
-    
-    public synchronized String getUserName(){
-	return username;
-    }
-    
-    public synchronized GamePlayer getPlayer() throws PlayerKilledExcepion {
-	if(killed)
-	    throw new PlayerKilledExcepion(player);
-	if(player==null){
-	    player = PlayerFactory.global_Player_Factory.createNewPlayer(username);
+	private GamePlayer player = null;
+	private PlayerCommunicationImpl playerComm = null;
+	private boolean killed = false;
+
+	public Session(String username) {
+		this.username = username;
 	}
-	return player;
-    }
-    
-    
-    public synchronized PlayerCommunicationImpl getPlayerCommunication() throws PlayerKilledExcepion{
-	if(killed)
-	    throw new PlayerKilledExcepion(player);
-	if(playerComm==null){
-	    playerComm = new PlayerCommunicationImpl(getPlayer());
+
+	public synchronized String getUserName() {
+		return username;
 	}
-	return playerComm;
-    }
 
-    public synchronized void kill() {
-	killed = true;    
-	playerComm.kill();
-    }
+	public synchronized GamePlayer getPlayer() throws PlayerKilledExcepion {
+		if (killed)
+			throw new PlayerKilledExcepion(player);
+		if (player == null) {
+			player = PlayerFactory.global_Player_Factory
+					.createNewPlayer(username);
+		}
+		return player;
+	}
 
-    @Override
-    public int hashCode() {
-	final int prime = 31;
-	int result = 1;
-	result = prime * result
-		+ ((username == null) ? 0 : username.hashCode());
-	return result;
-    }
+	public synchronized PlayerCommunicationImpl getPlayerCommunication()
+			throws PlayerKilledExcepion {
+		if (killed)
+			throw new PlayerKilledExcepion(player);
+		if (playerComm == null) {
+			playerComm = new PlayerCommunicationImpl(getPlayer());
+		}
+		return playerComm;
+	}
 
-    @Override
-    public boolean equals(Object obj) {
-	if (this == obj)
-	    return true;
-	if (obj == null)
-	    return false;
-	if (getClass() != obj.getClass())
-	    return false;
-	final Session other = (Session) obj;
-	if (username == null) {
-	    if (other.username != null)
-		return false;
-	} else if (!username.equals(other.username))
-	    return false;
-	return true;
-    }    
-    
+	public synchronized void kill() {
+		killed = true;
+		playerComm.kill();
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((username == null) ? 0 : username.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		final Session other = (Session) obj;
+		if (username == null) {
+			if (other.username != null)
+				return false;
+		} else if (!username.equals(other.username))
+			return false;
+		return true;
+	}
+
 }

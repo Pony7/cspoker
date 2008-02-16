@@ -25,29 +25,31 @@ import java.math.BigInteger;
  * 
  */
 public enum Rank {
-	DEUCE("Two", "2"), THREE("Three", "3"), FOUR("Four", "4"), FIVE("Five", "5"), SIX("Six", "6"), SEVEN("Seven", "7"), EIGHT("Eight", "8"), NINE(
-			"Nine", "9"), TEN("Ten", "T"), JACK("Jack", "J"), QUEEN("Queen", "Q"), KING("King", "K"), ACE("Ace", "A");
+	DEUCE("Two", "2"), THREE("Three", "3"), FOUR("Four", "4"), FIVE("Five", "5"), SIX(
+			"Six", "6"), SEVEN("Seven", "7"), EIGHT("Eight", "8"), NINE("Nine",
+			"9"), TEN("Ten", "T"), JACK("Jack", "J"), QUEEN("Queen", "Q"), KING(
+			"King", "K"), ACE("Ace", "A");
 
 	private int prime;
 	private String longDescription;
 	private String shortDescription;
 
 	private Rank(final String longDescription, final String shortDescription) {
-		this.prime = PrimeInitializer.getNextPrime();
+		prime = PrimeInitializer.getNextPrime();
 		this.longDescription = longDescription;
 		this.shortDescription = shortDescription;
 	}
 
 	public String getLongDescription() {
-		return this.longDescription;
+		return longDescription;
 	}
 
 	public int getPrime() {
-		return this.prime;
+		return prime;
 	}
 
 	public String getShortDescription() {
-		return this.shortDescription;
+		return shortDescription;
 	}
 
 	/**
@@ -55,14 +57,15 @@ public enum Rank {
 	 */
 	@Override
 	public String toString() {
-		return this.getShortDescription();
+		return getShortDescription();
 	}
 
 	private static final class PrimeInitializer {
 		private static BigInteger nextPrime = BigInteger.valueOf(1);
 
 		public static int getNextPrime() {
-			PrimeInitializer.nextPrime = PrimeInitializer.nextPrime.nextProbablePrime();
+			PrimeInitializer.nextPrime = PrimeInitializer.nextPrime
+					.nextProbablePrime();
 			return PrimeInitializer.nextPrime.intValue();
 		}
 
@@ -77,7 +80,7 @@ public enum Rank {
 	 * @return The numeral value of this rank.
 	 */
 	public int getValue() {
-		return this.ordinal() + 2;
+		return ordinal() + 2;
 	}
 
 	public static Rank getRank(String value) {

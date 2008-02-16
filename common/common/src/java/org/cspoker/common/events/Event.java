@@ -21,8 +21,8 @@ import java.io.Serializable;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
-public abstract class Event implements Serializable{
+public abstract class Event implements Serializable {
 
-    public abstract void toXml(ContentHandler handler) throws SAXException;
-    
+	public abstract void toXml(ContentHandler handler) throws SAXException;
+
 }

@@ -23,16 +23,16 @@ import org.cspoker.common.player.Player;
 
 public class Pot implements Serializable {
 
-    private static final long serialVersionUID = -6468969689319977981L;
+	private static final long serialVersionUID = -6468969689319977981L;
 
-    public int getValue(){
-	//TODO
-	return 0;
-    }
+	public int getValue() {
+		// TODO
+		return 0;
+	}
 
-    public List<Player> getPlayers(){
-	//TODO
-	return null;
-    }
+	public List<Player> getPlayers() {
+		// TODO
+		return null;
+	}
 
 }

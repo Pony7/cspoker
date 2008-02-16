@@ -21,12 +21,13 @@ import org.cspoker.common.RemotePlayerCommunication;
 
 public interface RemotePlayerCommunicationFactory {
 
-    public RemotePlayerCommunication getRemotePlayerCommunication(String server, 
-	    int port, String username, String password) throws ConnectException, NoProviderException;
-    
-    public class NoProviderException extends Exception{
+	public RemotePlayerCommunication getRemotePlayerCommunication(
+			String server, int port, String username, String password)
+			throws ConnectException, NoProviderException;
 
-    	private static final long serialVersionUID = 5577851499713555195L;
-	
-    }
+	public class NoProviderException extends Exception {
+
+		private static final long serialVersionUID = 5577851499713555195L;
+
+	}
 }

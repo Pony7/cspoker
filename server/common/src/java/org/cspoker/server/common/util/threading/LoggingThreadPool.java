@@ -24,50 +24,48 @@ import org.apache.log4j.Logger;
 
 public class LoggingThreadPool extends ThreadPoolExecutor {
 
-    public LoggingThreadPool(int corePoolSize,
-	    int maximumPoolSize,
-	    long keepAliveTime,
-	    TimeUnit unit,
-	    BlockingQueue<Runnable> queue,
-	    String name) {
-	super(corePoolSize, maximumPoolSize, keepAliveTime, unit, queue);
-	setThreadFactory(new LoggingThreadFactory(name));
-    }
-
-    private final ThreadLocal<Long> startTime = new ThreadLocal<Long>();
-    private final AtomicLong numTasks = new AtomicLong();
-    private final AtomicLong totalTime = new AtomicLong();
-    private static Logger logger = Logger.getLogger(LoggingThreadPool.class);
-
-    @Override
-    protected void beforeExecute(Thread t, Runnable r) {
-	super.beforeExecute(t, r);
-	
-	logger.trace(String.format("Thread %s: start %s", t, r));
-	startTime.set(System.nanoTime());
-    }
-
-    @Override
-    protected void afterExecute(Runnable r, Throwable t) {
-	try {
-	    long endTime = System.nanoTime();
-	    long taskTime = endTime - startTime.get();
-	    numTasks.incrementAndGet();
-	    totalTime.addAndGet(taskTime);
-	    logger.trace(String.format("Thread %s: end %s, time=%dns",
-		    t, r, taskTime));
-	} finally {
-	    super.afterExecute(r, t);
+	public LoggingThreadPool(int corePoolSize, int maximumPoolSize,
+			long keepAliveTime, TimeUnit unit, BlockingQueue<Runnable> queue,
+			String name) {
+		super(corePoolSize, maximumPoolSize, keepAliveTime, unit, queue);
+		setThreadFactory(new LoggingThreadFactory(name));
 	}
-    }
 
-    @Override
-    protected void terminated() {
-	try {
-	    logger.trace(String.format("Terminated: avg time=%dns",
-		    totalTime.get() / numTasks.get()));
-	} finally {
-	    super.terminated();
+	private final ThreadLocal<Long> startTime = new ThreadLocal<Long>();
+	private final AtomicLong numTasks = new AtomicLong();
+	private final AtomicLong totalTime = new AtomicLong();
+	private static Logger logger = Logger.getLogger(LoggingThreadPool.class);
+
+	@Override
+	protected void beforeExecute(Thread t, Runnable r) {
+		super.beforeExecute(t, r);
+
+		logger.trace(String.format("Thread %s: start %s", t, r));
+		startTime.set(System.nanoTime());
 	}
-    }
+
+	@Override
+	protected void afterExecute(Runnable r, Throwable t) {
+		try {
+			long endTime = System.nanoTime();
+			long taskTime = endTime - startTime.get();
+			numTasks.incrementAndGet();
+			totalTime.addAndGet(taskTime);
+			logger.trace(String.format("Thread %s: end %s, time=%dns", t, r,
+					taskTime));
+		} finally {
+			super.afterExecute(r, t);
+		}
+	}
+
+	@Override
+	protected void terminated() {
+		try {
+			logger.trace(String.format("Terminated: avg time=%dns", totalTime
+					.get()
+					/ numTasks.get()));
+		} finally {
+			super.terminated();
+		}
+	}
 }

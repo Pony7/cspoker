@@ -28,29 +28,30 @@ import org.cspoker.common.elements.table.TableId;
 import org.cspoker.common.eventlisteners.RemoteAllEventsListener;
 import org.cspoker.common.exceptions.IllegalActionException;
 
-
 public class RemotePlayerCommunicationFactoryForRMI {
 
 	private RemoteLoginServer server;
 
-	public RemotePlayerCommunicationFactoryForRMI(String server) throws AccessException, RemoteException, NotBoundException{
+	public RemotePlayerCommunicationFactoryForRMI(String server)
+			throws AccessException, RemoteException, NotBoundException {
 		System.setSecurityManager(null);
-		Registry registry= LocateRegistry.getRegistry(server);
-		this.server = (RemoteLoginServer)registry.lookup("CSPokerServer");
+		Registry registry = LocateRegistry.getRegistry(server);
+		this.server = (RemoteLoginServer) registry.lookup("CSPokerServer");
 	}
 
-	public RemotePlayerCommunication login(String username, String password) throws RemoteException{
+	public RemotePlayerCommunication login(String username, String password)
+			throws RemoteException {
 
-		final RemotePlayerCommunication p =  server.login(username, password);
+		final RemotePlayerCommunication p = server.login(username, password);
 
-		return new RemotePlayerCommunication(){
+		return new RemotePlayerCommunication() {
 
 			public void allIn() throws IllegalActionException, RemoteException {
 				p.allIn();
 			}
 
 			public void bet(int amount) throws IllegalActionException,
-			RemoteException {
+					RemoteException {
 				p.bet(amount);
 
 			}
@@ -63,7 +64,8 @@ public class RemotePlayerCommunicationFactoryForRMI {
 				p.check();
 			}
 
-			public TableId createTable() throws IllegalActionException,RemoteException {
+			public TableId createTable() throws IllegalActionException,
+					RemoteException {
 				return p.createTable();
 			}
 
@@ -77,17 +79,17 @@ public class RemotePlayerCommunicationFactoryForRMI {
 			}
 
 			public void joinTable(TableId id) throws IllegalActionException,
-			RemoteException {
+					RemoteException {
 				p.joinTable(id);
 			}
 
 			public void leaveTable() throws IllegalActionException,
-			RemoteException {
+					RemoteException {
 				p.leaveTable();
 			}
 
 			public void raise(int amount) throws IllegalActionException,
-			RemoteException {
+					RemoteException {
 				p.raise(amount);
 			}
 
@@ -96,14 +98,14 @@ public class RemotePlayerCommunicationFactoryForRMI {
 			}
 
 			public void startGame() throws IllegalActionException,
-			RemoteException {
+					RemoteException {
 				p.startGame();
 			}
 
 			public void subscribeAllEventsListener(
 					RemoteAllEventsListener listener) throws RemoteException {
-				RemoteAllEventsListener listenerStub 
-				= (RemoteAllEventsListener)UnicastRemoteObject.exportObject(listener, 0);
+				RemoteAllEventsListener listenerStub = (RemoteAllEventsListener) UnicastRemoteObject
+						.exportObject(listener, 0);
 				p.subscribeAllEventsListener(listenerStub);
 			}
 

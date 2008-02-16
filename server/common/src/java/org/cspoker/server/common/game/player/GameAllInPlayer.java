@@ -27,57 +27,57 @@ import org.cspoker.server.common.game.elements.chips.pot.GamePot;
  */
 public class GameAllInPlayer implements Comparable<GameAllInPlayer> {
 
-    private final GamePlayer player;
+	private final GamePlayer player;
 
-    public GameAllInPlayer(GamePlayer player) {
-	this.player = player;
-    }
-
-    public GamePlayer getPlayer() {
-	return player;
-    }
-
-    public int getBetValue() {
-	return player.getBetChips().getValue();
-    }
-
-    public void transferAllChipsTo(GamePot pot) {
-	try {
-	    transferAmountTo(player.getBetChips().getValue(), pot);
-	} catch (IllegalValueException e) {
-	    assert false;
+	public GameAllInPlayer(GamePlayer player) {
+		this.player = player;
 	}
-    }
 
-    public void transferAmountTo(int amount, GamePot pot)
-	    throws IllegalValueException {
-	player.getBetChips().transferAmountTo(amount, pot.getChips());
-    }
+	public GamePlayer getPlayer() {
+		return player;
+	}
 
-    public int compareTo(GameAllInPlayer o) {
-	return getBetValue() - o.getBetValue();
-    }
+	public int getBetValue() {
+		return player.getBetChips().getValue();
+	}
 
-    @Override
-    public boolean equals(Object obj) {
-	if (this == obj)
-	    return true;
-	if (obj == null)
-	    return false;
-	if (getClass() != obj.getClass())
-	    return false;
-	final GameAllInPlayer other = (GameAllInPlayer) obj;
-	if (player == null) {
-	    if (other.player != null)
-		return false;
-	} else if (getBetValue() != other.getBetValue())
-	    return false;
-	return true;
-    }
+	public void transferAllChipsTo(GamePot pot) {
+		try {
+			transferAmountTo(player.getBetChips().getValue(), pot);
+		} catch (IllegalValueException e) {
+			assert false;
+		}
+	}
 
-    @Override
-    public String toString() {
-	return String.valueOf(getBetValue());
-    }
+	public void transferAmountTo(int amount, GamePot pot)
+			throws IllegalValueException {
+		player.getBetChips().transferAmountTo(amount, pot.getChips());
+	}
+
+	public int compareTo(GameAllInPlayer o) {
+		return getBetValue() - o.getBetValue();
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		final GameAllInPlayer other = (GameAllInPlayer) obj;
+		if (player == null) {
+			if (other.player != null)
+				return false;
+		} else if (getBetValue() != other.getBetValue())
+			return false;
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return String.valueOf(getBetValue());
+	}
 
 }

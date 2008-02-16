@@ -26,12 +26,12 @@ import org.cspoker.common.eventlisteners.game.actions.RaiseListener;
 import org.cspoker.common.eventlisteners.game.actions.SmallBlindListener;
 import org.cspoker.common.eventlisteners.game.privatelistener.NewPocketCardsListener;
 
-public interface AllGameEventsListener extends RemoteAllGameEventsListener
-  	, AllInListener, BetListener,
-  	BigBlindListener, CallListener, CheckListener,
-  	FoldListener, RaiseListener, SmallBlindListener,
-  	NewPocketCardsListener, NewCommunityCardsListener, NewDealListener,
-  	NewRoundListener, NextPlayerListener, PlayerJoinedGameListener,
-  	PlayerLeftTableListener, ShowHandListener, WinnerListener, GameMessageListener {
+public interface AllGameEventsListener extends RemoteAllGameEventsListener,
+		AllInListener, BetListener, BigBlindListener, CallListener,
+		CheckListener, FoldListener, RaiseListener, SmallBlindListener,
+		NewPocketCardsListener, NewCommunityCardsListener, NewDealListener,
+		NewRoundListener, NextPlayerListener, PlayerJoinedGameListener,
+		PlayerLeftTableListener, ShowHandListener, WinnerListener,
+		GameMessageListener {
 
 }

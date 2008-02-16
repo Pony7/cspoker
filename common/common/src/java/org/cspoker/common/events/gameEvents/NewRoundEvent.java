@@ -29,52 +29,52 @@ import org.xml.sax.helpers.AttributesImpl;
  */
 public class NewRoundEvent extends GameEvent {
 
-    private static final long serialVersionUID = 5282936949568835084L;
+	private static final long serialVersionUID = 5282936949568835084L;
 
-    private final String roundName;
+	private final String roundName;
 
-    private final Player player;
+	private final Player player;
 
-    public NewRoundEvent(String roundName, Player player) {
-	this.roundName = roundName;
-	this.player = player;
-    }
+	public NewRoundEvent(String roundName, Player player) {
+		this.roundName = roundName;
+		this.player = player;
+	}
 
-    public Player getPlayer() {
-	return player;
-    }
+	public Player getPlayer() {
+		return player;
+	}
 
-    @Override
-    public String toString() {
-	return roundName + ": " + player.getName() + " can begin to act.";
-    }
+	@Override
+	public String toString() {
+		return roundName + ": " + player.getName() + " can begin to act.";
+	}
 
-    public String getRoundName(){
-	return roundName;
-    }
+	public String getRoundName() {
+		return roundName;
+	}
 
-    public Player getInitialPlayer(){
-	return player;
-    }
+	public Player getInitialPlayer() {
+		return player;
+	}
 
-    @Override
-    public void toXml(ContentHandler handler) throws SAXException {
-	AttributesImpl attrs = new AttributesImpl();
-	attrs.addAttribute("", "type", "type", "CDATA", "newround");
-	handler.startElement("", "event", "event", attrs);
+	@Override
+	public void toXml(ContentHandler handler) throws SAXException {
+		AttributesImpl attrs = new AttributesImpl();
+		attrs.addAttribute("", "type", "type", "CDATA", "newround");
+		handler.startElement("", "event", "event", attrs);
 
-	attrs = new AttributesImpl();
-	handler.startElement("", "name", "name", attrs);
-	String msg=getRoundName();
-	handler.characters(msg.toCharArray(), 0, msg.length());
-	handler.endElement("", "name", "name");
+		attrs = new AttributesImpl();
+		handler.startElement("", "name", "name", attrs);
+		String msg = getRoundName();
+		handler.characters(msg.toCharArray(), 0, msg.length());
+		handler.endElement("", "name", "name");
 
-	handler.startElement("", "initialplayer", "initialplayer", attrs);
-	msg=getInitialPlayer().getName();
-	handler.characters(msg.toCharArray(), 0, msg.length());
-	handler.endElement("", "initialplayer", "initialplayer");
+		handler.startElement("", "initialplayer", "initialplayer", attrs);
+		msg = getInitialPlayer().getName();
+		handler.characters(msg.toCharArray(), 0, msg.length());
+		handler.endElement("", "initialplayer", "initialplayer");
 
-	handler.endElement("", "event", "event");
-    }
+		handler.endElement("", "event", "event");
+	}
 
 }

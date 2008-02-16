@@ -28,13 +28,14 @@ import org.cspoker.common.events.gameEvents.PlayerLeftTableEvent;
  */
 public interface RemotePlayerLeftTableListener extends Remote {
 
-    /**
-     * This method is called when subscribed to inform a player left the table.
-     * 
-     * @param event
-     *                The event object containing all information of the
-     *                occurred event.
-     */
-    public void onPlayerLeftTableEvent(PlayerLeftTableEvent event) throws RemoteException;
+	/**
+	 * This method is called when subscribed to inform a player left the table.
+	 * 
+	 * @param event
+	 *            The event object containing all information of the occurred
+	 *            event.
+	 */
+	public void onPlayerLeftTableEvent(PlayerLeftTableEvent event)
+			throws RemoteException;
 
 }

@@ -77,459 +77,482 @@ import org.cspoker.server.common.game.session.SessionManager;
 
 /**
  * A class of player communications.
- *
+ * 
  * It's the interface to all game control actions.
- *
+ * 
  * @author Kenzo
- *
+ * 
  */
 public class PlayerCommunicationImpl extends PlayerCommunication {
 
-    private static Logger logger = Logger.getLogger(PlayerCommunicationImpl.class);
-    
-    /***************************************************************************
-     * Variables
-     **************************************************************************/
+	private static Logger logger = Logger
+			.getLogger(PlayerCommunicationImpl.class);
 
-    /**
-     * The variable containing the player.
-     */
-    private final GamePlayer player;
+	/***************************************************************************
+	 * Variables
+	 **************************************************************************/
 
-    /**
-     * This variable contains the player communication state.
-     */
-    private PlayerCommunicationState state;
+	/**
+	 * The variable containing the player.
+	 */
+	private final GamePlayer player;
 
-    private final EventsCollector eventsCollector = new EventsCollector();
+	/**
+	 * This variable contains the player communication state.
+	 */
+	private PlayerCommunicationState state;
 
-    /***************************************************************************
-     * Constructor
-     **************************************************************************/
+	private final EventsCollector eventsCollector = new EventsCollector();
 
-    /**
-     * Construct a new player communication with given player.
-     *
-     * @param player
-     *                The given player
-     */
-    public PlayerCommunicationImpl(GamePlayer player) {
-	this.player = player;
-	state = new InitialState(this);
-	GameManager.getServerMediator().subscribeAllServerEventsListener(
-		player.getId(), getAllEventsListener());
-	subscribeAllEventsListener(getEventsCollector());
-    }
+	/***************************************************************************
+	 * Constructor
+	 **************************************************************************/
 
-    /**
-     * Returns the player contained in this player communication.
-     *
-     * @return The player contained in this player communication.
-     */
-    public GamePlayer getPlayer() {
-	return player;
-    }
-
-    /**
-     * Returns the player id from the player contained in this player
-     * communication.
-     *
-     * @return The player id from the player contained in this player
-     *         communication.
-     */
-    public PlayerId getId() {
-	return player.getId();
-    }
-    
-    /***************************************************************************
-     * Maintenance Actions
-     **************************************************************************/
-
-    @Override
-    public void kill() {
-	state.kill();
-    }
-    
-    /***************************************************************************
-     * Player Actions
-     **************************************************************************/
-
-    @Override
-    public void call() throws IllegalActionException {
-	state.call();
-    }
-
-    @Override
-    public void bet(int amount) throws IllegalActionException {
-	state.bet(amount);
-    }
-
-    @Override
-    public void fold() throws IllegalActionException {
-	state.fold();
-    }
-
-    @Override
-    public void check() throws IllegalActionException {
-	state.check();
-    }
-
-    @Override
-    public void raise(int amount) throws IllegalActionException {
-	state.raise(amount);
-    }
-
-    @Override
-    public void deal() throws IllegalActionException {
-	state.deal();
-    }
-
-    @Override
-    public void allIn() throws IllegalActionException {
-	state.allIn();
-    }
-
-    @Override
-    public void say(String message) {
-	state.say(message);
-    }
-
-    /***************************************************************************
-     * Leave/Join Game
-     **************************************************************************/
-
-    /**
-     * Join the table with given table id.
-     *
-     * @pre The given id should be effective. |id!=null
-     * @throws IllegalActionException
-     *                 [can] This actions is not a valid action in the current
-     *                 state.
-     */
-    @Override
-    public void joinTable(TableId id) throws IllegalActionException {
-	if (id == null)
-	    throw new IllegalArgumentException(
-		    "The given table id is not effective.");
-	state.join(id);
-    }
-
-    @Override
-    public void leaveTable() throws IllegalActionException {
-	state.leaveTable();
-    }
-
-    @Override
-    public TableId createTable() throws IllegalActionException {
-	return state.createTable();
-    }
-
-    @Override
-    public void startGame() throws IllegalActionException {
-	state.startGame();
-    }
-
-    public Events getLatestEvents() throws IllegalActionException {
-	return eventsCollector.getLatestEvents();
-    }
-
-    public Events getLatestEventsAndAck(int ack) throws IllegalActionException {
-	return eventsCollector.getLatestEventsAndAck(ack);
-    }
-
-    EventsCollector getEventsCollector() {
-	return eventsCollector;
-    }
-
-    void setPlayerCommunicationState(PlayerCommunicationState state) {
-	this.state = state;
-    }
-
-    @Override
-    public String toString() {
-	return "player communication of " + player.getName();
-    }
-
-    /***************************************************************************
-     * Publisher
-     **************************************************************************/
-
-    @Override
-    public void subscribeAllEventsListener(RemoteAllEventsListener listener) {
-	eventListeners.add(listener);
-    }
-
-    @Override
-    public void unsubscribeAllEventsListener(RemoteAllEventsListener listener) {
-	eventListeners.remove(listener);
-    }
-
-    /**
-     * This list contains all message listeners that should be alerted on a
-     * message.
-     */
-    private final List<RemoteAllEventsListener> eventListeners = new CopyOnWriteArrayList<RemoteAllEventsListener>();
-
-    /***************************************************************************
-     * all events listener
-     **************************************************************************/
-
-    AllEventsListener getAllEventsListener() {
-	return allEventsListener;
-    }
-
-    private final AllEventsListener allEventsListener = new AllEventsListenerImpl();
-
-    private class AllEventsListenerImpl implements AllEventsListener {
-
-	public void onAllInEvent(AllInEvent event)  {
-	    for (RemoteAllInListener listener : eventListeners) {
-		try {
-		    listener.onAllInEvent(event);
-		} catch (RemoteException e) {
-		    logger.error("RemoteException from event handler",e);
-		    SessionManager.global_session_manager.killSession(getPlayer().getName());
-		}
-	    }
+	/**
+	 * Construct a new player communication with given player.
+	 * 
+	 * @param player
+	 *            The given player
+	 */
+	public PlayerCommunicationImpl(GamePlayer player) {
+		this.player = player;
+		state = new InitialState(this);
+		GameManager.getServerMediator().subscribeAllServerEventsListener(
+				player.getId(), getAllEventsListener());
+		subscribeAllEventsListener(getEventsCollector());
 	}
 
-	public void onBetEvent(BetEvent event)  {
-	    for (RemoteBetListener listener : eventListeners) {
-		try {
-		    listener.onBetEvent(event);
-		} catch (RemoteException e) {
-		    logger.error("RemoteException from event handler",e);
-		    SessionManager.global_session_manager.killSession(getPlayer().getName());
-		}
-	    }
-
+	/**
+	 * Returns the player contained in this player communication.
+	 * 
+	 * @return The player contained in this player communication.
+	 */
+	public GamePlayer getPlayer() {
+		return player;
 	}
 
-	public void onBigBlindEvent(BigBlindEvent event)  {
-	    for (RemoteBigBlindListener listener : eventListeners) {
-		try {
-		    listener.onBigBlindEvent(event);
-		} catch (RemoteException e) {
-		    logger.error("RemoteException from event handler",e);
-		    SessionManager.global_session_manager.killSession(getPlayer().getName());
-		}
-	    }
-
+	/**
+	 * Returns the player id from the player contained in this player
+	 * communication.
+	 * 
+	 * @return The player id from the player contained in this player
+	 *         communication.
+	 */
+	public PlayerId getId() {
+		return player.getId();
 	}
 
-	public void onCallEvent(CallEvent event)   {
-	    for (RemoteCallListener listener : eventListeners) {
-		try {
-		    listener.onCallEvent(event);
-		} catch (RemoteException e) {
-		    logger.error("RemoteException from event handler",e);
-		    SessionManager.global_session_manager.killSession(getPlayer().getName());
-		}
-	    }
+	/***************************************************************************
+	 * Maintenance Actions
+	 **************************************************************************/
+
+	@Override
+	public void kill() {
+		state.kill();
 	}
 
-	public void onCheckEvent(CheckEvent event)  {
-	    for (RemoteCheckListener listener : eventListeners) {
-		try {
-		    listener.onCheckEvent(event);
-		} catch (RemoteException e) {
-		    logger.error("RemoteException from event handler",e);
-		    SessionManager.global_session_manager.killSession(getPlayer().getName());
-		}
-	    }
+	/***************************************************************************
+	 * Player Actions
+	 **************************************************************************/
+
+	@Override
+	public void call() throws IllegalActionException {
+		state.call();
 	}
 
-	public void onFoldEvent(FoldEvent event)  {
-	    for (RemoteFoldListener listener : eventListeners) {
-		try {
-		    listener.onFoldEvent(event);
-		} catch (RemoteException e) {
-		    logger.error("RemoteException from event handler",e);
-		    SessionManager.global_session_manager.killSession(getPlayer().getName());
-		}
-	    }
-
+	@Override
+	public void bet(int amount) throws IllegalActionException {
+		state.bet(amount);
 	}
 
-	public void onRaiseEvent(RaiseEvent event)  {
-	    for (RemoteRaiseListener listener : eventListeners) {
-		try {
-		    listener.onRaiseEvent(event);
-		} catch (RemoteException e) {
-		    logger.error("RemoteException from event handler",e);
-		    SessionManager.global_session_manager.killSession(getPlayer().getName());
-		}
-	    }
+	@Override
+	public void fold() throws IllegalActionException {
+		state.fold();
 	}
 
-	public void onSmallBlindEvent(SmallBlindEvent event)  {
-	    for (RemoteSmallBlindListener listener : eventListeners) {
-		try {
-		    listener.onSmallBlindEvent(event);
-		} catch (RemoteException e) {
-		    logger.error("RemoteException from event handler",e);
-		    SessionManager.global_session_manager.killSession(getPlayer().getName());
-		}
-	    }
+	@Override
+	public void check() throws IllegalActionException {
+		state.check();
 	}
 
-	public void onNewPocketCardsEvent(NewPocketCardsEvent event)  {
-	    for (RemoteNewPocketCardsListener listener : eventListeners) {
-		try {
-		    listener.onNewPocketCardsEvent(event);
-		} catch (RemoteException e) {
-		    logger.error("RemoteException from event handler",e);
-		    SessionManager.global_session_manager.killSession(getPlayer().getName());
-		}
-	    }
-
+	@Override
+	public void raise(int amount) throws IllegalActionException {
+		state.raise(amount);
 	}
 
-	public void onNewCommunityCardsEvent(NewCommunityCardsEvent event)   {
-	    for (RemoteNewCommunityCardsListener listener : eventListeners) {
-		try {
-		    listener.onNewCommunityCardsEvent(event);
-		} catch (RemoteException e) {
-		    logger.error("RemoteException from event handler",e);
-		    SessionManager.global_session_manager.killSession(getPlayer().getName());
-		}
-	    }
+	@Override
+	public void deal() throws IllegalActionException {
+		state.deal();
 	}
 
-	public void onNewDealEvent(NewDealEvent event)  {
-	    for (RemoteNewDealListener listener : eventListeners) {
-		try {
-		    listener.onNewDealEvent(event);
-		} catch (RemoteException e) {
-		    logger.error("RemoteException from event handler",e);
-		    SessionManager.global_session_manager.killSession(getPlayer().getName());
-		}
-	    }
-
+	@Override
+	public void allIn() throws IllegalActionException {
+		state.allIn();
 	}
 
-	public void onNewRoundEvent(NewRoundEvent event)  {
-	    for (RemoteNewRoundListener listener : eventListeners) {
-		try {
-		    listener.onNewRoundEvent(event);
-		} catch (RemoteException e) {
-		    logger.error("RemoteException from event handler",e);
-		    SessionManager.global_session_manager.killSession(getPlayer().getName());
-		}
-	    }
-
+	@Override
+	public void say(String message) {
+		state.say(message);
 	}
 
-	public void onNextPlayerEvent(NextPlayerEvent event)  {
-	    for (RemoteNextPlayerListener listener : eventListeners) {
-		try {
-		    listener.onNextPlayerEvent(event);
-		} catch (RemoteException e) {
-		    logger.error("RemoteException from event handler",e);
-		    SessionManager.global_session_manager.killSession(getPlayer().getName());
-		}
-	    }
+	/***************************************************************************
+	 * Leave/Join Game
+	 **************************************************************************/
+
+	/**
+	 * Join the table with given table id.
+	 * 
+	 * @pre The given id should be effective. |id!=null
+	 * @throws IllegalActionException
+	 *             [can] This actions is not a valid action in the current
+	 *             state.
+	 */
+	@Override
+	public void joinTable(TableId id) throws IllegalActionException {
+		if (id == null)
+			throw new IllegalArgumentException(
+					"The given table id is not effective.");
+		state.join(id);
 	}
 
-	public void onPlayerJoinedGameEvent(PlayerJoinedGameEvent event)  {
-	    for (RemotePlayerJoinedGameListener listener : eventListeners) {
-		try {
-		    listener.onPlayerJoinedGameEvent(event);
-		} catch (RemoteException e) {
-		    logger.error("RemoteException from event handler",e);
-		    SessionManager.global_session_manager.killSession(getPlayer().getName());
-		}
-	    }
+	@Override
+	public void leaveTable() throws IllegalActionException {
+		state.leaveTable();
 	}
 
-	public void onShowHandEvent(ShowHandEvent event)  {
-	    for (RemoteShowHandListener listener : eventListeners) {
-		try {
-		    listener.onShowHandEvent(event);
-		} catch (RemoteException e) {
-		    logger.error("RemoteException from event handler",e);
-		    SessionManager.global_session_manager.killSession(getPlayer().getName());
-		}
-	    }
+	@Override
+	public TableId createTable() throws IllegalActionException {
+		return state.createTable();
 	}
 
-	public void onWinnerEvent(WinnerEvent event)  {
-	    for (RemoteWinnerListener listener : eventListeners) {
-		try {
-		    listener.onWinnerEvent(event);
-		} catch (RemoteException e) {
-		    logger.error("RemoteException from event handler",e);
-		    SessionManager.global_session_manager.killSession(getPlayer().getName());
-		}
-	    }
+	@Override
+	public void startGame() throws IllegalActionException {
+		state.startGame();
 	}
 
-	public void onPlayerLeftTableEvent(PlayerLeftTableEvent event)  {
-	    for (RemotePlayerLeftTableListener listener : eventListeners) {
-		try {
-		    listener.onPlayerLeftTableEvent(event);
-		} catch (RemoteException e) {
-		    logger.error("RemoteException from event handler",e);
-		    SessionManager.global_session_manager.killSession(getPlayer().getName());
-		}
-	    }
-
+	public Events getLatestEvents() throws IllegalActionException {
+		return eventsCollector.getLatestEvents();
 	}
 
-	public void onGameMessageEvent(GameMessageEvent event)  {
-	    for (RemoteGameMessageListener listener : eventListeners) {
-		try {
-		    listener.onGameMessageEvent(event);
-		} catch (RemoteException e) {
-		    logger.error("RemoteException from event handler, ignoring",e);
-		}
-	    }
+	public Events getLatestEventsAndAck(int ack) throws IllegalActionException {
+		return eventsCollector.getLatestEventsAndAck(ack);
 	}
 
-	/***********************************************************************
-	 * Server Events
-	 **********************************************************************/
-
-	public void onPlayerJoinedEvent(PlayerJoinedEvent event)  {
-	    for (RemotePlayerJoinedListener listener : eventListeners) {
-		try {
-		    listener.onPlayerJoinedEvent(event);
-		} catch (RemoteException e) {
-		    logger.error("RemoteException from event handler, ignoring",e);
-		}
-	    }
-
+	EventsCollector getEventsCollector() {
+		return eventsCollector;
 	}
 
-	public void onTableCreatedEvent(TableCreatedEvent event)  {
-	    for (RemoteTableCreatedListener listener : eventListeners) {
-		try {
-		    listener.onTableCreatedEvent(event);
-		} catch (RemoteException e) {
-		    logger.error("RemoteException from event handler, ignoring",e);
-		}
-	    }
+	void setPlayerCommunicationState(PlayerCommunicationState state) {
+		this.state = state;
 	}
 
-	public void onPlayerLeftEvent(PlayerLeftEvent event)  {
-	    for (RemotePlayerLeftListener listener : eventListeners) {
-		try {
-		    listener.onPlayerLeftEvent(event);
-		} catch (RemoteException e) {
-		    logger.error("RemoteException from event handler, ignoring",e);
-		}
-	    }
+	@Override
+	public String toString() {
+		return "player communication of " + player.getName();
 	}
 
-	public void onServerMessageEvent(ServerMessageEvent event) {
-	    for (RemoteServerMessageListener listener : eventListeners) {
-		try {
-		    listener.onServerMessageEvent(event);
-		} catch (RemoteException e) {
-		    logger.error("RemoteException from event handler, ignoring",e);
-		}
-	    }
+	/***************************************************************************
+	 * Publisher
+	 **************************************************************************/
+
+	@Override
+	public void subscribeAllEventsListener(RemoteAllEventsListener listener) {
+		eventListeners.add(listener);
 	}
-    }
+
+	@Override
+	public void unsubscribeAllEventsListener(RemoteAllEventsListener listener) {
+		eventListeners.remove(listener);
+	}
+
+	/**
+	 * This list contains all message listeners that should be alerted on a
+	 * message.
+	 */
+	private final List<RemoteAllEventsListener> eventListeners = new CopyOnWriteArrayList<RemoteAllEventsListener>();
+
+	/***************************************************************************
+	 * all events listener
+	 **************************************************************************/
+
+	AllEventsListener getAllEventsListener() {
+		return allEventsListener;
+	}
+
+	private final AllEventsListener allEventsListener = new AllEventsListenerImpl();
+
+	private class AllEventsListenerImpl implements AllEventsListener {
+
+		public void onAllInEvent(AllInEvent event) {
+			for (RemoteAllInListener listener : eventListeners) {
+				try {
+					listener.onAllInEvent(event);
+				} catch (RemoteException e) {
+					logger.error("RemoteException from event handler", e);
+					SessionManager.global_session_manager
+							.killSession(getPlayer().getName());
+				}
+			}
+		}
+
+		public void onBetEvent(BetEvent event) {
+			for (RemoteBetListener listener : eventListeners) {
+				try {
+					listener.onBetEvent(event);
+				} catch (RemoteException e) {
+					logger.error("RemoteException from event handler", e);
+					SessionManager.global_session_manager
+							.killSession(getPlayer().getName());
+				}
+			}
+
+		}
+
+		public void onBigBlindEvent(BigBlindEvent event) {
+			for (RemoteBigBlindListener listener : eventListeners) {
+				try {
+					listener.onBigBlindEvent(event);
+				} catch (RemoteException e) {
+					logger.error("RemoteException from event handler", e);
+					SessionManager.global_session_manager
+							.killSession(getPlayer().getName());
+				}
+			}
+
+		}
+
+		public void onCallEvent(CallEvent event) {
+			for (RemoteCallListener listener : eventListeners) {
+				try {
+					listener.onCallEvent(event);
+				} catch (RemoteException e) {
+					logger.error("RemoteException from event handler", e);
+					SessionManager.global_session_manager
+							.killSession(getPlayer().getName());
+				}
+			}
+		}
+
+		public void onCheckEvent(CheckEvent event) {
+			for (RemoteCheckListener listener : eventListeners) {
+				try {
+					listener.onCheckEvent(event);
+				} catch (RemoteException e) {
+					logger.error("RemoteException from event handler", e);
+					SessionManager.global_session_manager
+							.killSession(getPlayer().getName());
+				}
+			}
+		}
+
+		public void onFoldEvent(FoldEvent event) {
+			for (RemoteFoldListener listener : eventListeners) {
+				try {
+					listener.onFoldEvent(event);
+				} catch (RemoteException e) {
+					logger.error("RemoteException from event handler", e);
+					SessionManager.global_session_manager
+							.killSession(getPlayer().getName());
+				}
+			}
+
+		}
+
+		public void onRaiseEvent(RaiseEvent event) {
+			for (RemoteRaiseListener listener : eventListeners) {
+				try {
+					listener.onRaiseEvent(event);
+				} catch (RemoteException e) {
+					logger.error("RemoteException from event handler", e);
+					SessionManager.global_session_manager
+							.killSession(getPlayer().getName());
+				}
+			}
+		}
+
+		public void onSmallBlindEvent(SmallBlindEvent event) {
+			for (RemoteSmallBlindListener listener : eventListeners) {
+				try {
+					listener.onSmallBlindEvent(event);
+				} catch (RemoteException e) {
+					logger.error("RemoteException from event handler", e);
+					SessionManager.global_session_manager
+							.killSession(getPlayer().getName());
+				}
+			}
+		}
+
+		public void onNewPocketCardsEvent(NewPocketCardsEvent event) {
+			for (RemoteNewPocketCardsListener listener : eventListeners) {
+				try {
+					listener.onNewPocketCardsEvent(event);
+				} catch (RemoteException e) {
+					logger.error("RemoteException from event handler", e);
+					SessionManager.global_session_manager
+							.killSession(getPlayer().getName());
+				}
+			}
+
+		}
+
+		public void onNewCommunityCardsEvent(NewCommunityCardsEvent event) {
+			for (RemoteNewCommunityCardsListener listener : eventListeners) {
+				try {
+					listener.onNewCommunityCardsEvent(event);
+				} catch (RemoteException e) {
+					logger.error("RemoteException from event handler", e);
+					SessionManager.global_session_manager
+							.killSession(getPlayer().getName());
+				}
+			}
+		}
+
+		public void onNewDealEvent(NewDealEvent event) {
+			for (RemoteNewDealListener listener : eventListeners) {
+				try {
+					listener.onNewDealEvent(event);
+				} catch (RemoteException e) {
+					logger.error("RemoteException from event handler", e);
+					SessionManager.global_session_manager
+							.killSession(getPlayer().getName());
+				}
+			}
+
+		}
+
+		public void onNewRoundEvent(NewRoundEvent event) {
+			for (RemoteNewRoundListener listener : eventListeners) {
+				try {
+					listener.onNewRoundEvent(event);
+				} catch (RemoteException e) {
+					logger.error("RemoteException from event handler", e);
+					SessionManager.global_session_manager
+							.killSession(getPlayer().getName());
+				}
+			}
+
+		}
+
+		public void onNextPlayerEvent(NextPlayerEvent event) {
+			for (RemoteNextPlayerListener listener : eventListeners) {
+				try {
+					listener.onNextPlayerEvent(event);
+				} catch (RemoteException e) {
+					logger.error("RemoteException from event handler", e);
+					SessionManager.global_session_manager
+							.killSession(getPlayer().getName());
+				}
+			}
+		}
+
+		public void onPlayerJoinedGameEvent(PlayerJoinedGameEvent event) {
+			for (RemotePlayerJoinedGameListener listener : eventListeners) {
+				try {
+					listener.onPlayerJoinedGameEvent(event);
+				} catch (RemoteException e) {
+					logger.error("RemoteException from event handler", e);
+					SessionManager.global_session_manager
+							.killSession(getPlayer().getName());
+				}
+			}
+		}
+
+		public void onShowHandEvent(ShowHandEvent event) {
+			for (RemoteShowHandListener listener : eventListeners) {
+				try {
+					listener.onShowHandEvent(event);
+				} catch (RemoteException e) {
+					logger.error("RemoteException from event handler", e);
+					SessionManager.global_session_manager
+							.killSession(getPlayer().getName());
+				}
+			}
+		}
+
+		public void onWinnerEvent(WinnerEvent event) {
+			for (RemoteWinnerListener listener : eventListeners) {
+				try {
+					listener.onWinnerEvent(event);
+				} catch (RemoteException e) {
+					logger.error("RemoteException from event handler", e);
+					SessionManager.global_session_manager
+							.killSession(getPlayer().getName());
+				}
+			}
+		}
+
+		public void onPlayerLeftTableEvent(PlayerLeftTableEvent event) {
+			for (RemotePlayerLeftTableListener listener : eventListeners) {
+				try {
+					listener.onPlayerLeftTableEvent(event);
+				} catch (RemoteException e) {
+					logger.error("RemoteException from event handler", e);
+					SessionManager.global_session_manager
+							.killSession(getPlayer().getName());
+				}
+			}
+
+		}
+
+		public void onGameMessageEvent(GameMessageEvent event) {
+			for (RemoteGameMessageListener listener : eventListeners) {
+				try {
+					listener.onGameMessageEvent(event);
+				} catch (RemoteException e) {
+					logger.error(
+							"RemoteException from event handler, ignoring", e);
+				}
+			}
+		}
+
+		/***********************************************************************
+		 * Server Events
+		 **********************************************************************/
+
+		public void onPlayerJoinedEvent(PlayerJoinedEvent event) {
+			for (RemotePlayerJoinedListener listener : eventListeners) {
+				try {
+					listener.onPlayerJoinedEvent(event);
+				} catch (RemoteException e) {
+					logger.error(
+							"RemoteException from event handler, ignoring", e);
+				}
+			}
+
+		}
+
+		public void onTableCreatedEvent(TableCreatedEvent event) {
+			for (RemoteTableCreatedListener listener : eventListeners) {
+				try {
+					listener.onTableCreatedEvent(event);
+				} catch (RemoteException e) {
+					logger.error(
+							"RemoteException from event handler, ignoring", e);
+				}
+			}
+		}
+
+		public void onPlayerLeftEvent(PlayerLeftEvent event) {
+			for (RemotePlayerLeftListener listener : eventListeners) {
+				try {
+					listener.onPlayerLeftEvent(event);
+				} catch (RemoteException e) {
+					logger.error(
+							"RemoteException from event handler, ignoring", e);
+				}
+			}
+		}
+
+		public void onServerMessageEvent(ServerMessageEvent event) {
+			for (RemoteServerMessageListener listener : eventListeners) {
+				try {
+					listener.onServerMessageEvent(event);
+				} catch (RemoteException e) {
+					logger.error(
+							"RemoteException from event handler, ignoring", e);
+				}
+			}
+		}
+	}
 
 }

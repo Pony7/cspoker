@@ -29,13 +29,13 @@ import org.cspoker.common.events.gameEvents.playerActionEvents.BetEvent;
  */
 public interface RemoteBetListener extends Remote {
 
-    /**
-     * This method is called when subscribed to inform a bet occurred.
-     * 
-     * @param event
-     *                The event object containing all information of the
-     *                occurred event.
-     */
-    public void onBetEvent(BetEvent event) throws RemoteException;
+	/**
+	 * This method is called when subscribed to inform a bet occurred.
+	 * 
+	 * @param event
+	 *            The event object containing all information of the occurred
+	 *            event.
+	 */
+	public void onBetEvent(BetEvent event) throws RemoteException;
 
 }

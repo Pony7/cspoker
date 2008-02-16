@@ -24,42 +24,42 @@ import org.cspoker.server.common.game.gamecontrol.Game;
 import org.cspoker.server.common.game.player.GamePlayer;
 
 public class FlopRound extends BettingRound {
-    private static Logger logger = Logger.getLogger(FlopRound.class);
+	private static Logger logger = Logger.getLogger(FlopRound.class);
 
-    public FlopRound(GameMediator gameMediator, Game game) {
-	super(gameMediator, game);
-	GamePlayer currentPlayer = getGame().getCurrentPlayer();
-	if (currentPlayer != null)
-	    gameMediator.publishNewRoundEvent(new NewRoundEvent(toString(),
-		    currentPlayer.getSavedPlayer()));
-	drawMuckCard();
-	drawOpenCard();
-	drawOpenCard();
-	drawOpenCard();
-	gameMediator.publishNewCommonCardsEvent(new NewCommunityCardsEvent(
-		getGame().getCommunityCards()));
-	FlopRound.logger.info("*** FLOP *** " + game.getCommunityCards());
-    }
+	public FlopRound(GameMediator gameMediator, Game game) {
+		super(gameMediator, game);
+		GamePlayer currentPlayer = getGame().getCurrentPlayer();
+		if (currentPlayer != null)
+			gameMediator.publishNewRoundEvent(new NewRoundEvent(toString(),
+					currentPlayer.getSavedPlayer()));
+		drawMuckCard();
+		drawOpenCard();
+		drawOpenCard();
+		drawOpenCard();
+		gameMediator.publishNewCommonCardsEvent(new NewCommunityCardsEvent(
+				getGame().getCommunityCards()));
+		FlopRound.logger.info("*** FLOP *** " + game.getCommunityCards());
+	}
 
-    @Override
-    public Round getNextRound() {
-	if (potsDividedToWinner())
-	    return getNewDealRound();
-	return new TurnRound(gameMediator, getGame());
-    }
+	@Override
+	public Round getNextRound() {
+		if (potsDividedToWinner())
+			return getNewDealRound();
+		return new TurnRound(gameMediator, getGame());
+	}
 
-    @Override
-    public boolean isLowBettingRound() {
-	return true;
-    }
+	@Override
+	public boolean isLowBettingRound() {
+		return true;
+	}
 
-    @Override
-    public boolean isHighBettingRound() {
-	return !isLowBettingRound();
-    }
+	@Override
+	public boolean isHighBettingRound() {
+		return !isLowBettingRound();
+	}
 
-    @Override
-    public String toString() {
-	return "flop round";
-    }
+	@Override
+	public String toString() {
+		return "flop round";
+	}
 }

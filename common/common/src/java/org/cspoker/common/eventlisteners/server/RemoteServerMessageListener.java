@@ -20,8 +20,9 @@ import java.rmi.RemoteException;
 
 import org.cspoker.common.events.serverEvents.ServerMessageEvent;
 
-public interface RemoteServerMessageListener extends Remote{
+public interface RemoteServerMessageListener extends Remote {
 
-    public void onServerMessageEvent(ServerMessageEvent event) throws RemoteException;
+	public void onServerMessageEvent(ServerMessageEvent event)
+			throws RemoteException;
 
 }

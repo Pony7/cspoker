@@ -20,6 +20,6 @@ import org.cspoker.common.events.serverEvents.PlayerLeftEvent;
 
 public interface PlayerLeftListener extends RemotePlayerLeftListener {
 
-    public void onPlayerLeftEvent(PlayerLeftEvent event);
+	public void onPlayerLeftEvent(PlayerLeftEvent event);
 
 }

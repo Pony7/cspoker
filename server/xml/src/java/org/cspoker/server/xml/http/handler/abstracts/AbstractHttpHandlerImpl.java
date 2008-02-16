@@ -37,114 +37,121 @@ import com.sun.net.httpserver.HttpHandler;
 
 /**
  * A HttpHandler that supports Exceptions over Http.
- *
+ * 
  */
 public abstract class AbstractHttpHandlerImpl implements HttpHandler {
 
-    public AbstractHttpHandlerImpl() {
-	super();
-    }
-    
-    public void handle(HttpExchange http) throws IOException {
-	try {
-	    http.getResponseHeaders().add("Cache-Control", "no-cache");
-	    byte[] response = getResponse(http).getBytes();
-	    
-	    //send the default status code (no exception occured)
-	    http.sendResponseHeaders(getDefaultStatusCode(), response.length);
-	    http.getResponseBody().write(response);
-	    http.getResponseBody().close();
-	    http.close();
-	} catch (Exception e) {
-	    throwException(http, e);
+	public AbstractHttpHandlerImpl() {
+		super();
 	}
 
-    }
+	public void handle(HttpExchange http) throws IOException {
+		try {
+			http.getResponseHeaders().add("Cache-Control", "no-cache");
+			byte[] response = getResponse(http).getBytes();
 
-    protected abstract String getResponse(HttpExchange http) throws HttpExceptionImpl;
+			// send the default status code (no exception occured)
+			http.sendResponseHeaders(getDefaultStatusCode(), response.length);
+			http.getResponseBody().write(response);
+			http.getResponseBody().close();
+			http.close();
+		} catch (Exception e) {
+			throwException(http, e);
+		}
 
-    /**
-     * Throws an exception over the Http connection in XML format. 
-     * 
-     * @param http
-     *        The http context.
-     * @param e
-     *        The throwable to throw.
-     * @param status
-     * 	      The http error code to send.
-     * @throws IOException
-     * 	       An exception occured while creating the error response.
-     */
-    protected void throwException(HttpExchange http, Throwable e, int status) throws IOException{
-	try {
-	    if (e instanceof HttpException) {
-		//e has http status information
-		status=((HttpException)e).getStatus();
-	    }
-	    if(e.getCause()!=null) {
-		//e is a wrapper class.
-		e=e.getCause();
-	    }
-	    //remote error msg
-	    ByteArrayOutputStream responseBody = new ByteArrayOutputStream();
-	    TransformerHandler response=null;
-	    StreamResult requestResult= new StreamResult(responseBody);
-
-	    SAXTransformerFactory tf = (SAXTransformerFactory) TransformerFactory
-	    .newInstance();
-	    response = tf.newTransformerHandler();
-	    response.setResult(requestResult);
-	    response.startDocument();
-	    response.startElement("", "exception", "exception", new AttributesImpl());
-
-	    response.startElement("", "msg", "msg", new AttributesImpl());
-	    String msg=(e.getMessage()==null?"unknown error":e.getMessage());
-	    response.characters(msg.toCharArray(), 0, msg.length());
-	    response.endElement("", "msg", "msg");
-
-	    response.startElement("", "stacktrace", "stacktrace", new AttributesImpl());
-	    StringWriter sw = new StringWriter();
-	    PrintWriter pw = new PrintWriter(sw, true);
-	    e.printStackTrace(pw);
-	    pw.flush();
-	    sw.flush();
-	    String trace=sw.toString();
-	    response.characters(trace.toCharArray(), 0, trace.length());
-	    response.endElement("", "stacktrace", "stacktrace");
-
-	    response.endElement("", "exception", "exception");
-	    response.endDocument();
-
-
-	    http.sendResponseHeaders(status, responseBody.size());
-	    responseBody.writeTo(http.getResponseBody());
-	    http.getResponseBody().close();
-	    http.close();
-	} catch (Exception e1) {
-	    e1.printStackTrace();
-	    throw new IOException(e1);
-	} 
-    }
-
-    protected void throwException(HttpExchange http, Throwable e) throws IOException{
-	throwException(http, e, 500);
-    }
-
-    public static String toPlayerName(Headers requestHeaders) throws HttpExceptionImpl {
-	List<String> auth=requestHeaders.get("Authorization");
-	if(auth==null||auth.size()!=1)
-	    throw new HttpExceptionImpl(new IllegalArgumentException("Incorrect Authorization"),401);
-	String base64=auth.get(0);
-	try {
-	    String decoded=new String(Base64.decode(base64.split(" ")[1]));
-	    return decoded.split(":")[0];
-	} catch (IOException e) {
-	    throw new HttpExceptionImpl(e,401);
 	}
-    }
 
-    protected int getDefaultStatusCode(){
-	return 201;
-    }
+	protected abstract String getResponse(HttpExchange http)
+			throws HttpExceptionImpl;
+
+	/**
+	 * Throws an exception over the Http connection in XML format.
+	 * 
+	 * @param http
+	 *            The http context.
+	 * @param e
+	 *            The throwable to throw.
+	 * @param status
+	 *            The http error code to send.
+	 * @throws IOException
+	 *             An exception occured while creating the error response.
+	 */
+	protected void throwException(HttpExchange http, Throwable e, int status)
+			throws IOException {
+		try {
+			if (e instanceof HttpException) {
+				// e has http status information
+				status = ((HttpException) e).getStatus();
+			}
+			if (e.getCause() != null) {
+				// e is a wrapper class.
+				e = e.getCause();
+			}
+			// remote error msg
+			ByteArrayOutputStream responseBody = new ByteArrayOutputStream();
+			TransformerHandler response = null;
+			StreamResult requestResult = new StreamResult(responseBody);
+
+			SAXTransformerFactory tf = (SAXTransformerFactory) TransformerFactory
+					.newInstance();
+			response = tf.newTransformerHandler();
+			response.setResult(requestResult);
+			response.startDocument();
+			response.startElement("", "exception", "exception",
+					new AttributesImpl());
+
+			response.startElement("", "msg", "msg", new AttributesImpl());
+			String msg = (e.getMessage() == null ? "unknown error" : e
+					.getMessage());
+			response.characters(msg.toCharArray(), 0, msg.length());
+			response.endElement("", "msg", "msg");
+
+			response.startElement("", "stacktrace", "stacktrace",
+					new AttributesImpl());
+			StringWriter sw = new StringWriter();
+			PrintWriter pw = new PrintWriter(sw, true);
+			e.printStackTrace(pw);
+			pw.flush();
+			sw.flush();
+			String trace = sw.toString();
+			response.characters(trace.toCharArray(), 0, trace.length());
+			response.endElement("", "stacktrace", "stacktrace");
+
+			response.endElement("", "exception", "exception");
+			response.endDocument();
+
+			http.sendResponseHeaders(status, responseBody.size());
+			responseBody.writeTo(http.getResponseBody());
+			http.getResponseBody().close();
+			http.close();
+		} catch (Exception e1) {
+			e1.printStackTrace();
+			throw new IOException(e1);
+		}
+	}
+
+	protected void throwException(HttpExchange http, Throwable e)
+			throws IOException {
+		throwException(http, e, 500);
+	}
+
+	public static String toPlayerName(Headers requestHeaders)
+			throws HttpExceptionImpl {
+		List<String> auth = requestHeaders.get("Authorization");
+		if (auth == null || auth.size() != 1)
+			throw new HttpExceptionImpl(new IllegalArgumentException(
+					"Incorrect Authorization"), 401);
+		String base64 = auth.get(0);
+		try {
+			String decoded = new String(Base64.decode(base64.split(" ")[1]));
+			return decoded.split(":")[0];
+		} catch (IOException e) {
+			throw new HttpExceptionImpl(e, 401);
+		}
+	}
+
+	protected int getDefaultStatusCode() {
+		return 201;
+	}
 
 }

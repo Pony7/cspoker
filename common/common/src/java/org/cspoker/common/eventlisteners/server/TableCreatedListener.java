@@ -17,8 +17,8 @@ package org.cspoker.common.eventlisteners.server;
 
 import org.cspoker.common.events.serverEvents.TableCreatedEvent;
 
-public interface TableCreatedListener extends RemoteTableCreatedListener{
+public interface TableCreatedListener extends RemoteTableCreatedListener {
 
-    public void onTableCreatedEvent(TableCreatedEvent event);
+	public void onTableCreatedEvent(TableCreatedEvent event);
 
 }

@@ -54,133 +54,135 @@ import org.xml.sax.SAXException;
 
 public class XmlAllEventsListener implements AllEventsListener {
 
-    private final static Logger logger = Logger.getLogger(XmlAllEventsListener.class);
-    private final XmlEventListener collector;
+	private final static Logger logger = Logger
+			.getLogger(XmlAllEventsListener.class);
+	private final XmlEventListener collector;
 
-    public XmlAllEventsListener(XmlEventListener collector) {
-	this.collector = collector;
-    }
-
-    public void eventToCollector(Event event){
-	try {
-	    StringWriter xml = new StringWriter();
-	    SAXTransformerFactory tf = (SAXTransformerFactory) TransformerFactory.newInstance();
-	    TransformerHandler response = tf.newTransformerHandler();
-	    response.setResult(new StreamResult(xml));
-	    response.startDocument();
-	    event.toXml(response);
-	    response.endDocument();
-	    collector.collect(xml.toString());
-	} catch (TransformerConfigurationException e) {
-	    logger.error("Can't send event.",e);
-	    throw new IllegalStateException(e);
-	} catch (TransformerFactoryConfigurationError e) {
-	    logger.error("Can't send event.",e);
-	    throw new IllegalStateException(e);
-	} catch (SAXException e) {
-	    logger.error("Can't send event.",e);
-	    throw new IllegalStateException(e);
+	public XmlAllEventsListener(XmlEventListener collector) {
+		this.collector = collector;
 	}
-    }
 
-    public void onAllInEvent(AllInEvent event) {
-	eventToCollector(event);
-    }
+	public void eventToCollector(Event event) {
+		try {
+			StringWriter xml = new StringWriter();
+			SAXTransformerFactory tf = (SAXTransformerFactory) TransformerFactory
+					.newInstance();
+			TransformerHandler response = tf.newTransformerHandler();
+			response.setResult(new StreamResult(xml));
+			response.startDocument();
+			event.toXml(response);
+			response.endDocument();
+			collector.collect(xml.toString());
+		} catch (TransformerConfigurationException e) {
+			logger.error("Can't send event.", e);
+			throw new IllegalStateException(e);
+		} catch (TransformerFactoryConfigurationError e) {
+			logger.error("Can't send event.", e);
+			throw new IllegalStateException(e);
+		} catch (SAXException e) {
+			logger.error("Can't send event.", e);
+			throw new IllegalStateException(e);
+		}
+	}
 
-    public void onBetEvent(BetEvent event) {
-	eventToCollector(event);
-    }
+	public void onAllInEvent(AllInEvent event) {
+		eventToCollector(event);
+	}
 
-    public void onBigBlindEvent(BigBlindEvent event) {
-	eventToCollector(event);
-    }
+	public void onBetEvent(BetEvent event) {
+		eventToCollector(event);
+	}
 
-    public void onCallEvent(CallEvent event) {
-	eventToCollector(event);
-    }
+	public void onBigBlindEvent(BigBlindEvent event) {
+		eventToCollector(event);
+	}
 
-    public void onCheckEvent(CheckEvent event) {
-	eventToCollector(event);
-    }
+	public void onCallEvent(CallEvent event) {
+		eventToCollector(event);
+	}
 
-    public void onFoldEvent(FoldEvent event) {
-	eventToCollector(event);
-    }
+	public void onCheckEvent(CheckEvent event) {
+		eventToCollector(event);
+	}
 
-    public void onRaiseEvent(RaiseEvent event) {
-	eventToCollector(event);
-    }
+	public void onFoldEvent(FoldEvent event) {
+		eventToCollector(event);
+	}
 
-    public void onSmallBlindEvent(SmallBlindEvent event) {
-	eventToCollector(event);
-    }
+	public void onRaiseEvent(RaiseEvent event) {
+		eventToCollector(event);
+	}
 
-    public void onNewPocketCardsEvent(NewPocketCardsEvent event) {
-	eventToCollector(event);
-    }
+	public void onSmallBlindEvent(SmallBlindEvent event) {
+		eventToCollector(event);
+	}
 
-    public void onNewCommunityCardsEvent(NewCommunityCardsEvent event) {
-	eventToCollector(event);
-    }
+	public void onNewPocketCardsEvent(NewPocketCardsEvent event) {
+		eventToCollector(event);
+	}
 
-    public void onNewDealEvent(NewDealEvent event) {
-	eventToCollector(event);
+	public void onNewCommunityCardsEvent(NewCommunityCardsEvent event) {
+		eventToCollector(event);
+	}
 
-    }
+	public void onNewDealEvent(NewDealEvent event) {
+		eventToCollector(event);
 
-    public void onNewRoundEvent(NewRoundEvent event) {
-	eventToCollector(event);
+	}
 
-    }
+	public void onNewRoundEvent(NewRoundEvent event) {
+		eventToCollector(event);
 
-    public void onNextPlayerEvent(NextPlayerEvent event) {
-	eventToCollector(event);
+	}
 
-    }
+	public void onNextPlayerEvent(NextPlayerEvent event) {
+		eventToCollector(event);
 
-    public void onPlayerJoinedGameEvent(PlayerJoinedGameEvent event) {
-	eventToCollector(event);
+	}
 
-    }
+	public void onPlayerJoinedGameEvent(PlayerJoinedGameEvent event) {
+		eventToCollector(event);
 
-    public void onPlayerLeftTableEvent(PlayerLeftTableEvent event) {
-	eventToCollector(event);
+	}
 
-    }
+	public void onPlayerLeftTableEvent(PlayerLeftTableEvent event) {
+		eventToCollector(event);
 
-    public void onShowHandEvent(ShowHandEvent event) {
-	eventToCollector(event);
+	}
 
-    }
+	public void onShowHandEvent(ShowHandEvent event) {
+		eventToCollector(event);
 
-    public void onWinnerEvent(WinnerEvent event) {
-	eventToCollector(event);
+	}
 
-    }
+	public void onWinnerEvent(WinnerEvent event) {
+		eventToCollector(event);
 
-    public void onGameMessageEvent(GameMessageEvent event) {
-	eventToCollector(event);
+	}
 
-    }
+	public void onGameMessageEvent(GameMessageEvent event) {
+		eventToCollector(event);
 
-    public void onPlayerJoinedEvent(PlayerJoinedEvent event) {
-	eventToCollector(event);
+	}
 
-    }
+	public void onPlayerJoinedEvent(PlayerJoinedEvent event) {
+		eventToCollector(event);
 
-    public void onPlayerLeftEvent(PlayerLeftEvent event) {
-	eventToCollector(event);
+	}
 
-    }
+	public void onPlayerLeftEvent(PlayerLeftEvent event) {
+		eventToCollector(event);
 
-    public void onTableCreatedEvent(TableCreatedEvent event) {
-	eventToCollector(event);
+	}
 
-    }
+	public void onTableCreatedEvent(TableCreatedEvent event) {
+		eventToCollector(event);
 
-    public void onServerMessageEvent(ServerMessageEvent event) {
-	eventToCollector(event);
+	}
 
-    }
+	public void onServerMessageEvent(ServerMessageEvent event) {
+		eventToCollector(event);
+
+	}
 
 }

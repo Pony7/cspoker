@@ -31,44 +31,48 @@ import org.cspoker.server.common.game.session.SessionManager;
 
 public class RMIServer implements RemoteLoginServer {
 
-    private final static Logger logger = Logger.getLogger(RMIServer.class);
-    
-    private final XmlFileAuthenticator authenticator;
+	private final static Logger logger = Logger.getLogger(RMIServer.class);
 
-    private int port;
+	private final XmlFileAuthenticator authenticator;
 
-    public RMIServer(XmlFileAuthenticator authenticator, int port) {
-	this.authenticator = authenticator;
-	this.port = port;
-    }
+	private int port;
 
-    public RemotePlayerCommunication login(String username, String password) throws RemoteException {
-	logger.trace("Login attempt from "+username);
-	if(authenticator.hasPassword(username, password)){
-	    try {
-		RemotePlayerCommunication p = SessionManager.global_session_manager.getSession(username).getPlayerCommunication();
-		try {
-		    UnicastRemoteObject.unexportObject(p, true);
-		} catch (NoSuchObjectException e) {
-		    // ignore
-		}
-		RemotePlayerCommunication stub=(RemotePlayerCommunication)UnicastRemoteObject.exportObject(p, 0);
-		return stub;
-	    } catch (PlayerKilledExcepion e) {
-		// bye bye bad client
-		return null;
-	    }
-	}else{
-	    logger.trace("Login attempt from "+username+" failed");
-	    throw new IllegalArgumentException("Login Failed");
+	public RMIServer(XmlFileAuthenticator authenticator, int port) {
+		this.authenticator = authenticator;
+		this.port = port;
 	}
-    }
-    
-    void start() throws AccessException, RemoteException {
-	System.setSecurityManager(null);
-	RemoteLoginServer stub=(RemoteLoginServer)UnicastRemoteObject.exportObject(this, 0);
-	Registry registry= LocateRegistry.getRegistry(port);
-	registry.rebind("CSPokerServer",stub);
-    }
+
+	public RemotePlayerCommunication login(String username, String password)
+			throws RemoteException {
+		logger.trace("Login attempt from " + username);
+		if (authenticator.hasPassword(username, password)) {
+			try {
+				RemotePlayerCommunication p = SessionManager.global_session_manager
+						.getSession(username).getPlayerCommunication();
+				try {
+					UnicastRemoteObject.unexportObject(p, true);
+				} catch (NoSuchObjectException e) {
+					// ignore
+				}
+				RemotePlayerCommunication stub = (RemotePlayerCommunication) UnicastRemoteObject
+						.exportObject(p, 0);
+				return stub;
+			} catch (PlayerKilledExcepion e) {
+				// bye bye bad client
+				return null;
+			}
+		} else {
+			logger.trace("Login attempt from " + username + " failed");
+			throw new IllegalArgumentException("Login Failed");
+		}
+	}
+
+	void start() throws AccessException, RemoteException {
+		System.setSecurityManager(null);
+		RemoteLoginServer stub = (RemoteLoginServer) UnicastRemoteObject
+				.exportObject(this, 0);
+		Registry registry = LocateRegistry.getRegistry(port);
+		registry.rebind("CSPokerServer", stub);
+	}
 
 }

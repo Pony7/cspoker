@@ -21,38 +21,38 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 public abstract class DelegatingHandler extends DefaultHandler {
-    private ContentHandler handler=null;
-    private int layers=0;
+	private ContentHandler handler = null;
+	private int layers = 0;
 
-    @Override
-    public void startElement(String uri, String localName, String qName,
-	    Attributes atts) throws SAXException {
-	if(handler==null){
-	    handler = getHandler(uri, localName, qName, atts);
-	}else{
-	    handler.startElement(uri, localName, qName, atts);
+	@Override
+	public void startElement(String uri, String localName, String qName,
+			Attributes atts) throws SAXException {
+		if (handler == null) {
+			handler = getHandler(uri, localName, qName, atts);
+		} else {
+			handler.startElement(uri, localName, qName, atts);
+		}
+		++layers;
 	}
-	++layers;
-    }
 
-    public abstract ContentHandler getHandler(String uri, String localName, String qName,
-	    Attributes atts) throws SAXException;
+	public abstract ContentHandler getHandler(String uri, String localName,
+			String qName, Attributes atts) throws SAXException;
 
-    @Override
-    public void endElement(String uri, String localName, String qName)
-    throws SAXException {
-	--layers;
-	if(layers==0){
-	    handler=null;
-	}else{
-	    handler.endElement(uri, localName, qName);
+	@Override
+	public void endElement(String uri, String localName, String qName)
+			throws SAXException {
+		--layers;
+		if (layers == 0) {
+			handler = null;
+		} else {
+			handler.endElement(uri, localName, qName);
+		}
 	}
-    }
 
-    @Override
-    public void characters(char[] ch, int start, int length)
-    throws SAXException {
-	if(handler!=null)
-	    characters(ch, start, length);
-    }
+	@Override
+	public void characters(char[] ch, int start, int length)
+			throws SAXException {
+		if (handler != null)
+			characters(ch, start, length);
+	}
 }

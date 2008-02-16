@@ -28,36 +28,37 @@ import org.xml.sax.helpers.AttributesImpl;
  */
 public class ShowHandEvent extends GameEvent {
 
-    private static final long serialVersionUID = -3412700183566852150L;
+	private static final long serialVersionUID = -3412700183566852150L;
 
-    private final ShowdownPlayer player;
+	private final ShowdownPlayer player;
 
-    public ShowHandEvent(ShowdownPlayer player) {
-	this.player = player;
-    }
+	public ShowHandEvent(ShowdownPlayer player) {
+		this.player = player;
+	}
 
-    @Override
-    public String toString() {
-	return player.toString();
-    }
-    
-    public ShowdownPlayer getShowdownPlayer(){
-	return player;
-    }
-    
-    @Override
-    public void toXml(ContentHandler handler) throws SAXException {
-	AttributesImpl attrs = new AttributesImpl();
-	attrs.addAttribute("", "type", "type", "CDATA", "showhand");
-	attrs.addAttribute("", "player", "player", "CDATA", getShowdownPlayer().getPlayer().getName());
-	handler.startElement("", "event", "event", attrs);
+	@Override
+	public String toString() {
+		return player.toString();
+	}
 
-	handler.startElement("", "description", "description", attrs);
-	String msg=getShowdownPlayer().getHandDescription();
-	handler.characters(msg.toCharArray(), 0, msg.length());
-	handler.endElement("", "description", "description");
-	
-	handler.endElement("", "event", "event");
-    }
+	public ShowdownPlayer getShowdownPlayer() {
+		return player;
+	}
+
+	@Override
+	public void toXml(ContentHandler handler) throws SAXException {
+		AttributesImpl attrs = new AttributesImpl();
+		attrs.addAttribute("", "type", "type", "CDATA", "showhand");
+		attrs.addAttribute("", "player", "player", "CDATA", getShowdownPlayer()
+				.getPlayer().getName());
+		handler.startElement("", "event", "event", attrs);
+
+		handler.startElement("", "description", "description", attrs);
+		String msg = getShowdownPlayer().getHandDescription();
+		handler.characters(msg.toCharArray(), 0, msg.length());
+		handler.endElement("", "description", "description");
+
+		handler.endElement("", "event", "event");
+	}
 
 }

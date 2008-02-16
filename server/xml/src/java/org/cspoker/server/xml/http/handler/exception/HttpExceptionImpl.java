@@ -15,25 +15,24 @@
  */
 package org.cspoker.server.xml.http.handler.exception;
 
-
 /**
  * A wrapper exception for exceptions with support for Http status codes.
  */
-public class HttpExceptionImpl extends Exception implements HttpException{
+public class HttpExceptionImpl extends Exception implements HttpException {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = -3469421889116184022L;
-    private final int status;
-    
-    public HttpExceptionImpl(Exception e, int status) {
-	super(e);
-	this.status=status;
-    }
-    
-    public int getStatus(){
-	return status;
-    }
-    
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3469421889116184022L;
+	private final int status;
+
+	public HttpExceptionImpl(Exception e, int status) {
+		super(e);
+		this.status = status;
+	}
+
+	public int getStatus() {
+		return status;
+	}
+
 }

@@ -24,41 +24,42 @@ import org.xml.sax.helpers.AttributesImpl;
 
 public class PlayerJoinedEvent extends ServerEvent {
 
-    private static final long serialVersionUID = -6470646766839190620L;
+	private static final long serialVersionUID = -6470646766839190620L;
 
-    private final Player player;
+	private final Player player;
 
-    private final TableId id;
+	private final TableId id;
 
-    public PlayerJoinedEvent(Player player, TableId id) {
-	this.player = player;
-	this.id = id;
-    }
+	public PlayerJoinedEvent(Player player, TableId id) {
+		this.player = player;
+		this.id = id;
+	}
 
-    @Override
-    public String toString() {
-	return player.getName() + " has joined a table [" + id + "].";
-    }
-    
-    public Player getPlayer(){
-	return player;
-    }
-    
-    public TableId getId() {
-	return id;
-    }
-    
-    @Override
-    public void toXml(ContentHandler handler) throws SAXException {
-	AttributesImpl attrs = new AttributesImpl();
-	attrs.addAttribute("", "type", "type", "CDATA", "playerjoined");
-	attrs.addAttribute("", "player", "player", "CDATA", getPlayer().getName());
-	handler.startElement("", "event", "event", attrs);
-	handler.startElement("", "id", "id", attrs);
-	String msg=String.valueOf(getId().getID());
-	handler.characters(msg.toCharArray(), 0, msg.length());
-	handler.endElement("", "id", "id");
-	handler.endElement("", "event", "event");
-    }
+	@Override
+	public String toString() {
+		return player.getName() + " has joined a table [" + id + "].";
+	}
+
+	public Player getPlayer() {
+		return player;
+	}
+
+	public TableId getId() {
+		return id;
+	}
+
+	@Override
+	public void toXml(ContentHandler handler) throws SAXException {
+		AttributesImpl attrs = new AttributesImpl();
+		attrs.addAttribute("", "type", "type", "CDATA", "playerjoined");
+		attrs.addAttribute("", "player", "player", "CDATA", getPlayer()
+				.getName());
+		handler.startElement("", "event", "event", attrs);
+		handler.startElement("", "id", "id", attrs);
+		String msg = String.valueOf(getId().getID());
+		handler.characters(msg.toCharArray(), 0, msg.length());
+		handler.endElement("", "id", "id");
+		handler.endElement("", "event", "event");
+	}
 
 }

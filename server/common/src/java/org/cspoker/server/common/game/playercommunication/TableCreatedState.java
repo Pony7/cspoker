@@ -43,74 +43,75 @@ import org.cspoker.server.common.game.session.SessionManager;
  * 
  */
 class TableCreatedState extends WaitingAtTableState {
-    private static Logger logger = Logger.getLogger(TableCreatedState.class);
-
-    /**
-     * Construct a new table created state with given player communication and
-     * table.
-     * 
-     * @param playerCommunication
-     *                The playerCommunication of the player.
-     * @param table
-     *                The created table.
-     */
-    public TableCreatedState(PlayerCommunicationImpl playerCommunication,
-	    Table table) {
-	super(playerCommunication, table);
-    }
-
-    @Override
-    public void startGame() throws IllegalActionException {
+	private static Logger logger = Logger.getLogger(TableCreatedState.class);
 
 	/**
-	 * The table should be locked so while constructing the new game no
-	 * player can exit or enter the table.
+	 * Construct a new table created state with given player communication and
+	 * table.
 	 * 
-	 * Important for not having a dead-lock: only one player can call
-	 * startGame(), as it is guaranteed.
+	 * @param playerCommunication
+	 *            The playerCommunication of the player.
+	 * @param table
+	 *            The created table.
 	 */
-	synchronized (table) {
-	    GameMediator gameMediator = new GameMediator();
-	    for (PlayerId id : table.getPlayerIds()) {
-		PlayerCommunicationImpl comm;
-		try {
-		    comm = SessionManager.global_session_manager
-		    	.getSession(id).getPlayerCommunication();
-		    comm.setPlayerCommunicationState(new PlayingState(comm,
-			    gameMediator));
-		} catch (PlayerKilledExcepion e) {
-		    // no op
-		    // killed players should have been removed from the table already
+	public TableCreatedState(PlayerCommunicationImpl playerCommunication,
+			Table table) {
+		super(playerCommunication, table);
+	}
+
+	@Override
+	public void startGame() throws IllegalActionException {
+
+		/**
+		 * The table should be locked so while constructing the new game no
+		 * player can exit or enter the table.
+		 * 
+		 * Important for not having a dead-lock: only one player can call
+		 * startGame(), as it is guaranteed.
+		 */
+		synchronized (table) {
+			GameMediator gameMediator = new GameMediator();
+			for (PlayerId id : table.getPlayerIds()) {
+				PlayerCommunicationImpl comm;
+				try {
+					comm = SessionManager.global_session_manager.getSession(id)
+							.getPlayerCommunication();
+					comm.setPlayerCommunicationState(new PlayingState(comm,
+							gameMediator));
+				} catch (PlayerKilledExcepion e) {
+					// no op
+					// killed players should have been removed from the table
+					// already
+				}
+			}
+			new GameControl(gameMediator, table);
+			GameManager.addGame(table.getId(), gameMediator);
 		}
-	    }
-	    new GameControl(gameMediator, table);
-	    GameManager.addGame(table.getId(), gameMediator);
+
+		TableCreatedState.logger.info("Game Started.");
 	}
 
-	TableCreatedState.logger.info("Game Started.");
-    }
-
-    @Override
-    public void leaveTable() throws IllegalActionException {
-	synchronized (table) {
-	    if (table.getNbPlayers() == 1) {
-		TableManager.removeTable(table);
-		table.removePlayer(playerCommunication.getPlayer());
-		playerCommunication
-		.setPlayerCommunicationState(new InitialState(
-			playerCommunication));
-		GameManager.getServerMediator().publishPlayerLeftEvent(
-			new PlayerLeftEvent(playerCommunication.getPlayer()
-				.getSavedPlayer(), table.getId()));
-	    } else
-		throw new IllegalActionException(
-			"The owner can only leave if he is the only player at the table.");
+	@Override
+	public void leaveTable() throws IllegalActionException {
+		synchronized (table) {
+			if (table.getNbPlayers() == 1) {
+				TableManager.removeTable(table);
+				table.removePlayer(playerCommunication.getPlayer());
+				playerCommunication
+						.setPlayerCommunicationState(new InitialState(
+								playerCommunication));
+				GameManager.getServerMediator().publishPlayerLeftEvent(
+						new PlayerLeftEvent(playerCommunication.getPlayer()
+								.getSavedPlayer(), table.getId()));
+			} else
+				throw new IllegalActionException(
+						"The owner can only leave if he is the only player at the table.");
+		}
 	}
-    }
 
-    @Override
-    protected String getStdErrorMessage() {
-	return "You have not yet started the game.";
-    }
+	@Override
+	protected String getStdErrorMessage() {
+		return "You have not yet started the game.";
+	}
 
 }

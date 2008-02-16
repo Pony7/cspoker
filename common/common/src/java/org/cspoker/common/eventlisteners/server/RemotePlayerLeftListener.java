@@ -23,6 +23,6 @@ import org.cspoker.common.events.serverEvents.PlayerLeftEvent;
 
 public interface RemotePlayerLeftListener extends Remote {
 
-    public void onPlayerLeftEvent(PlayerLeftEvent event) throws RemoteException;
+	public void onPlayerLeftEvent(PlayerLeftEvent event) throws RemoteException;
 
 }

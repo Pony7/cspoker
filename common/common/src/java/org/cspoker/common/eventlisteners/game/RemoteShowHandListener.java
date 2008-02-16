@@ -26,15 +26,15 @@ import org.cspoker.common.events.gameEvents.ShowHandEvent;
  * @author Kenzo
  * 
  */
-public interface RemoteShowHandListener extends Remote{
+public interface RemoteShowHandListener extends Remote {
 
-    /**
-     * This method is called when subscribed to inform a player shows his hand.
-     * 
-     * @param event
-     *                The event object containing all information of the
-     *                occurred event.
-     */
-    public void onShowHandEvent(ShowHandEvent event) throws RemoteException;
+	/**
+	 * This method is called when subscribed to inform a player shows his hand.
+	 * 
+	 * @param event
+	 *            The event object containing all information of the occurred
+	 *            event.
+	 */
+	public void onShowHandEvent(ShowHandEvent event) throws RemoteException;
 
 }

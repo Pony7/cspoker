@@ -24,36 +24,37 @@ import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * A class to represent check events.
- *
+ * 
  * @author Kenzo
- *
+ * 
  */
 public class CheckEvent extends GameEvent {
 
-    private static final long serialVersionUID = -1128439307716720778L;
+	private static final long serialVersionUID = -1128439307716720778L;
 
-    private final Player player;
+	private final Player player;
 
-    public CheckEvent(Player player) {
-    	this.player = player;
-    }
+	public CheckEvent(Player player) {
+		this.player = player;
+	}
 
-    @Override
-    public String toString() {
-	return getPlayer().getName() + " checks.";
-    }
+	@Override
+	public String toString() {
+		return getPlayer().getName() + " checks.";
+	}
 
-    public Player getPlayer() {
-	return player;
-    }
+	public Player getPlayer() {
+		return player;
+	}
 
-    @Override
-    public void toXml(ContentHandler handler) throws SAXException {
-	AttributesImpl attrs = new AttributesImpl();
-	attrs.addAttribute("", "type", "type", "CDATA", "check");
-	attrs.addAttribute("", "player", "player", "CDATA", getPlayer().getName());
-	handler.startElement("", "event", "event", attrs);
-	handler.endElement("", "event", "event");
-    }
+	@Override
+	public void toXml(ContentHandler handler) throws SAXException {
+		AttributesImpl attrs = new AttributesImpl();
+		attrs.addAttribute("", "type", "type", "CDATA", "check");
+		attrs.addAttribute("", "player", "player", "CDATA", getPlayer()
+				.getName());
+		handler.startElement("", "event", "event", attrs);
+		handler.endElement("", "event", "event");
+	}
 
 }

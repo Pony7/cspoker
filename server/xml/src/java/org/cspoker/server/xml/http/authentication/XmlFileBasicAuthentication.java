@@ -21,27 +21,28 @@ import org.cspoker.server.common.authentication.XmlFileAuthenticator;
 import com.sun.net.httpserver.BasicAuthenticator;
 
 public class XmlFileBasicAuthentication extends BasicAuthenticator {
-    
-    private static Logger logger = Logger.getLogger(XmlFileBasicAuthentication.class);
-    private XmlFileAuthenticator file;
 
-    public XmlFileBasicAuthentication(XmlFileAuthenticator file) {
-	super("cspoker");
-	this.file=file;
-    }
-    
+	private static Logger logger = Logger
+			.getLogger(XmlFileBasicAuthentication.class);
+	private XmlFileAuthenticator file;
 
-    @Override
-    public boolean checkCredentials(String user, String pass) {
-	boolean ok=false;
-	if(file.hasPassword(user, pass)){
-		XmlFileBasicAuthentication.logger.info("Authentication for " + user + " succeeded.");
-	    ok=true;
-	}else{
-		XmlFileBasicAuthentication.logger.info("Authentication for " + user + " failed.");		
+	public XmlFileBasicAuthentication(XmlFileAuthenticator file) {
+		super("cspoker");
+		this.file = file;
 	}
-	return ok;
-    }
 
+	@Override
+	public boolean checkCredentials(String user, String pass) {
+		boolean ok = false;
+		if (file.hasPassword(user, pass)) {
+			XmlFileBasicAuthentication.logger.info("Authentication for " + user
+					+ " succeeded.");
+			ok = true;
+		} else {
+			XmlFileBasicAuthentication.logger.info("Authentication for " + user
+					+ " failed.");
+		}
+		return ok;
+	}
 
 }

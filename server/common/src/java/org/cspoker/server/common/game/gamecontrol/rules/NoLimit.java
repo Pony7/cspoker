@@ -8,28 +8,28 @@ import org.cspoker.server.common.game.gamecontrol.rounds.Round;
  * @author Cedric
  */
 public class NoLimit extends BettingRules {
-    /***************************************************************************
-     * Constructors
-     **************************************************************************/
+	/***************************************************************************
+	 * Constructors
+	 **************************************************************************/
 
-    public NoLimit() {
-    }
-
-    /***************************************************************************
-     * Raise
-     **************************************************************************/
-    @Override
-    public boolean isValidRaise(int amount, Round round) {
-	if (amount < getLastBetAmount()) {
-	    setLastRaiseErrorMessage("ERROR : the bet amount must be at least the amount of the previous bet/raise"
-		    + " in the current round");
-	    return false;
+	public NoLimit() {
 	}
-	return super.isValidRaise(amount, round);
-    }
 
-    @Override
-    public String toString() {
-	return "Hold'em No Limit";
-    }
+	/***************************************************************************
+	 * Raise
+	 **************************************************************************/
+	@Override
+	public boolean isValidRaise(int amount, Round round) {
+		if (amount < getLastBetAmount()) {
+			setLastRaiseErrorMessage("ERROR : the bet amount must be at least the amount of the previous bet/raise"
+					+ " in the current round");
+			return false;
+		}
+		return super.isValidRaise(amount, round);
+	}
+
+	@Override
+	public String toString() {
+		return "Hold'em No Limit";
+	}
 }

@@ -26,13 +26,13 @@ import org.cspoker.common.events.gameEvents.playerActionEvents.FoldEvent;
  */
 public interface FoldListener extends RemoteFoldListener {
 
-    /**
-     * This method is called when subscribed to inform a fold occurred.
-     * 
-     * @param event
-     *                The event object containing all information of the
-     *                occurred event.
-     */
-    public void onFoldEvent(FoldEvent event);
+	/**
+	 * This method is called when subscribed to inform a fold occurred.
+	 * 
+	 * @param event
+	 *            The event object containing all information of the occurred
+	 *            event.
+	 */
+	public void onFoldEvent(FoldEvent event);
 
 }

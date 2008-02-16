@@ -43,199 +43,199 @@ import org.cspoker.server.common.game.player.GameWinner;
  * 
  */
 public class Showdown {
-    private static Logger logger = Logger.getLogger(Showdown.class);
+	private static Logger logger = Logger.getLogger(Showdown.class);
 
-    /**
-     * The game in which the showdown takes place.
-     */
-    private final Game game;
+	/**
+	 * The game in which the showdown takes place.
+	 */
+	private final Game game;
 
-    private final GameMediator gameMediator;
+	private final GameMediator gameMediator;
 
-    private final Map<PlayerId, GameWinner> winnersMap = new HashMap<PlayerId, GameWinner>();
+	private final Map<PlayerId, GameWinner> winnersMap = new HashMap<PlayerId, GameWinner>();
 
-    /**
-     * Construct a new showdown with given game and pots.
-     * 
-     * @param game
-     *                The game in which the showdown takes place.
-     * @param pots
-     *                The pots to divide.
-     * @pre The game must be effective. |game!=null
-     * @pre The pots must be closed. |game!=null && game.getPots().isClosed()
-     */
-    public Showdown(GameMediator gameMediator, Game game) {
-	this.gameMediator = gameMediator;
-	this.game = game;
-    }
-
-    /**
-     * Returns the game in which this showdown takes place.
-     * 
-     * @return The game in which this showdown takes place.
-     */
-    public Game getGame() {
-	return game;
-    }
-
-    /**
-     * Determine the winners of each pot. Each pot is splitted between all
-     * winners of that pot.
-     * 
-     */
-    public void determineWinners() {
-	Showdown.logger.info("*** SHOW DOWN ***");
-	Showdown.logger.info(game.getPots());
-
-	// TODO all-in players always, others can choose to show or fold.
-	List<GameShowdownPlayer> showdownPlayers = getShowdownPlayersFromPot(game
-		.getPots().getPots().get(0));
-
-	for (GameShowdownPlayer player : showdownPlayers) {
-	    gameMediator.publishShowHand(new ShowHandEvent(player
-		    .getSavedShowdownPlayer()));
+	/**
+	 * Construct a new showdown with given game and pots.
+	 * 
+	 * @param game
+	 *            The game in which the showdown takes place.
+	 * @param pots
+	 *            The pots to divide.
+	 * @pre The game must be effective. |game!=null
+	 * @pre The pots must be closed. |game!=null && game.getPots().isClosed()
+	 */
+	public Showdown(GameMediator gameMediator, Game game) {
+		this.gameMediator = gameMediator;
+		this.game = game;
 	}
 
-	for (GamePot pot : game.getPots().getPots()) {
-	    List<GamePlayer> winners = getWinners(pot);
-	    System.out.print("Winners: ");
-	    for (GamePlayer player : winners) {
-		System.out.print(player.getName() + " ");
-	    }
-	    splitPot(winners, pot);
+	/**
+	 * Returns the game in which this showdown takes place.
+	 * 
+	 * @return The game in which this showdown takes place.
+	 */
+	public Game getGame() {
+		return game;
 	}
 
-	List<Winner> savedWinners = new ArrayList<Winner>();
+	/**
+	 * Determine the winners of each pot. Each pot is splitted between all
+	 * winners of that pot.
+	 * 
+	 */
+	public void determineWinners() {
+		Showdown.logger.info("*** SHOW DOWN ***");
+		Showdown.logger.info(game.getPots());
 
-	for (GameWinner winner : winnersMap.values()) {
-	    if (winner.hasGainedChips()) {
-		savedWinners.add(winner.getSavedWinner());
-		Showdown.logger.info(winner);
-		winner.transferGainedChipsToPlayer();
-	    }
-	}
-	gameMediator.publishWinner(new WinnerEvent(savedWinners));
+		// TODO all-in players always, others can choose to show or fold.
+		List<GameShowdownPlayer> showdownPlayers = getShowdownPlayersFromPot(game
+				.getPots().getPots().get(0));
 
-    }
-
-    /**
-     * Split the pot between all winners.
-     * 
-     * If splitting a pot because of tied hands, award the odd chip to the hand
-     * that contains the highest-ranking single card, using suits to break ties
-     * if necessary (clubs ranking the lowest, followed by diamonds, hearts, and
-     * spades as in bridge).
-     * 
-     * http://en.wikipedia.org/wiki/Split_(poker)
-     * 
-     * @param winners
-     *                The list of winners of the pot.
-     * @param pot
-     *                The pot to divide between all winners.
-     */
-    private void splitPot(List<GamePlayer> winners, GamePot pot) {
-	for (GamePlayer winner : winners) {
-	    if (!winnersMap.containsKey(winner.getId())) {
-		winnersMap.put(winner.getId(), new GameWinner(winner));
-	    }
-	}
-
-	int nbChips_per_winner = pot.getChips().getValue() / winners.size();
-
-	for (GamePlayer player : winners) {
-	    try {
-		pot.getChips().transferAmountTo(nbChips_per_winner,
-			winnersMap.get(player.getId()).getGainedChipsPile());
-	    } catch (IllegalValueException e) {
-		assert false;
-	    }
-	}
-
-	// the player with the single highest card gets the odd chips that can't
-	// be divided over the winners
-	if (pot.getChips().getValue() != 0) {
-	    GamePlayer playerWithHighestSingleCard = winners.get(0);
-	    Card highestCard = new Hand(playerWithHighestSingleCard
-		    .getPocketCards()).getHighestRankCard();
-	    for (GamePlayer player : winners) {
-		Card otherHighestCard = new Hand(player.getPocketCards())
-			.getHighestRankCard();
-		int compareSingleBestCard = highestCard
-			.compareTo(otherHighestCard);
-		if ((compareSingleBestCard > 0)
-			|| ((compareSingleBestCard == 0) && (otherHighestCard
-				.getSuit().compareTo(highestCard.getSuit()) > 0))) {
-		    playerWithHighestSingleCard = player;
-		    highestCard = otherHighestCard;
+		for (GameShowdownPlayer player : showdownPlayers) {
+			gameMediator.publishShowHand(new ShowHandEvent(player
+					.getSavedShowdownPlayer()));
 		}
-	    }
-	    // playerWithHighestSingleCard gets the odd chip, that can't be
-	    // divided over all winners
-	    try {
-		Showdown.logger
-			.info("Odd chips to player with highest card in hand");
-		pot.getChips().transferAllChipsTo(
-			winnersMap.get(playerWithHighestSingleCard.getId())
-				.getGainedChipsPile());
-	    } catch (IllegalValueException e) {
-		throw new IllegalStateException("Overflow");
-	    }
-	}
-    }
 
-    /**
-     * Returns the list of winners of the given pot in the current game.
-     * 
-     * @param pot
-     *                The pot in which the winner(s) must be chosen.
-     * @return The list of winners of the pot in the current game.
-     */
-    private List<GamePlayer> getWinners(GamePot pot) {
-	List<GameShowdownPlayer> players = getShowdownPlayersFromPot(pot);
-	Collections.sort(players);
-	for (GameShowdownPlayer player : players) {
-	    Showdown.logger.info(player);
-	}
-	GameShowdownPlayer winner = players.get(0);
-	List<GamePlayer> winners = new ArrayList<GamePlayer>();
-	int i = 0;
-	while ((i < players.size()) && winner.equals(players.get(i))) {
-	    winners.add(players.get(i).getPlayer());
-	    i++;
-	}
-	return winners;
-    }
+		for (GamePot pot : game.getPots().getPots()) {
+			List<GamePlayer> winners = getWinners(pot);
+			System.out.print("Winners: ");
+			for (GamePlayer player : winners) {
+				System.out.print(player.getName() + " ");
+			}
+			splitPot(winners, pot);
+		}
 
-    /**
-     * Returns the list of showdown players in the current game.
-     * 
-     * @param pot
-     *                The pot from which the showdown players must be returned.
-     * @return The list of showdown players in the current game.
-     */
-    private List<GameShowdownPlayer> getShowdownPlayersFromPot(GamePot pot) {
-	List<GameShowdownPlayer> showDownPlayers = new ArrayList<GameShowdownPlayer>();
-	for (GamePlayer player : pot.getPlayers()) {
-	    showDownPlayers.add(new GameShowdownPlayer(player,
-		    getBestFiveCardHand(player)));
-	}
-	return showDownPlayers;
-    }
+		List<Winner> savedWinners = new ArrayList<Winner>();
 
-    /**
-     * Get the best hand for the given player in the current game.
-     * 
-     * @param player
-     *                The player to determine the best hand for.
-     * @return The best hand that can be made with both common and pocket cards.
-     * 
-     * @note By using this method, the recalculation of finding the best 5 card
-     *       hand is omitted.
-     */
-    private Hand getBestFiveCardHand(GamePlayer player) {
-	List<Card> cards = new ArrayList<Card>(7);
-	cards.addAll(getGame().getCommunityCards());
-	cards.addAll(player.getPocketCards());
-	return new Hand(cards).getBestFive();
-    }
+		for (GameWinner winner : winnersMap.values()) {
+			if (winner.hasGainedChips()) {
+				savedWinners.add(winner.getSavedWinner());
+				Showdown.logger.info(winner);
+				winner.transferGainedChipsToPlayer();
+			}
+		}
+		gameMediator.publishWinner(new WinnerEvent(savedWinners));
+
+	}
+
+	/**
+	 * Split the pot between all winners.
+	 * 
+	 * If splitting a pot because of tied hands, award the odd chip to the hand
+	 * that contains the highest-ranking single card, using suits to break ties
+	 * if necessary (clubs ranking the lowest, followed by diamonds, hearts, and
+	 * spades as in bridge).
+	 * 
+	 * http://en.wikipedia.org/wiki/Split_(poker)
+	 * 
+	 * @param winners
+	 *            The list of winners of the pot.
+	 * @param pot
+	 *            The pot to divide between all winners.
+	 */
+	private void splitPot(List<GamePlayer> winners, GamePot pot) {
+		for (GamePlayer winner : winners) {
+			if (!winnersMap.containsKey(winner.getId())) {
+				winnersMap.put(winner.getId(), new GameWinner(winner));
+			}
+		}
+
+		int nbChips_per_winner = pot.getChips().getValue() / winners.size();
+
+		for (GamePlayer player : winners) {
+			try {
+				pot.getChips().transferAmountTo(nbChips_per_winner,
+						winnersMap.get(player.getId()).getGainedChipsPile());
+			} catch (IllegalValueException e) {
+				assert false;
+			}
+		}
+
+		// the player with the single highest card gets the odd chips that can't
+		// be divided over the winners
+		if (pot.getChips().getValue() != 0) {
+			GamePlayer playerWithHighestSingleCard = winners.get(0);
+			Card highestCard = new Hand(playerWithHighestSingleCard
+					.getPocketCards()).getHighestRankCard();
+			for (GamePlayer player : winners) {
+				Card otherHighestCard = new Hand(player.getPocketCards())
+						.getHighestRankCard();
+				int compareSingleBestCard = highestCard
+						.compareTo(otherHighestCard);
+				if ((compareSingleBestCard > 0)
+						|| ((compareSingleBestCard == 0) && (otherHighestCard
+								.getSuit().compareTo(highestCard.getSuit()) > 0))) {
+					playerWithHighestSingleCard = player;
+					highestCard = otherHighestCard;
+				}
+			}
+			// playerWithHighestSingleCard gets the odd chip, that can't be
+			// divided over all winners
+			try {
+				Showdown.logger
+						.info("Odd chips to player with highest card in hand");
+				pot.getChips().transferAllChipsTo(
+						winnersMap.get(playerWithHighestSingleCard.getId())
+								.getGainedChipsPile());
+			} catch (IllegalValueException e) {
+				throw new IllegalStateException("Overflow");
+			}
+		}
+	}
+
+	/**
+	 * Returns the list of winners of the given pot in the current game.
+	 * 
+	 * @param pot
+	 *            The pot in which the winner(s) must be chosen.
+	 * @return The list of winners of the pot in the current game.
+	 */
+	private List<GamePlayer> getWinners(GamePot pot) {
+		List<GameShowdownPlayer> players = getShowdownPlayersFromPot(pot);
+		Collections.sort(players);
+		for (GameShowdownPlayer player : players) {
+			Showdown.logger.info(player);
+		}
+		GameShowdownPlayer winner = players.get(0);
+		List<GamePlayer> winners = new ArrayList<GamePlayer>();
+		int i = 0;
+		while ((i < players.size()) && winner.equals(players.get(i))) {
+			winners.add(players.get(i).getPlayer());
+			i++;
+		}
+		return winners;
+	}
+
+	/**
+	 * Returns the list of showdown players in the current game.
+	 * 
+	 * @param pot
+	 *            The pot from which the showdown players must be returned.
+	 * @return The list of showdown players in the current game.
+	 */
+	private List<GameShowdownPlayer> getShowdownPlayersFromPot(GamePot pot) {
+		List<GameShowdownPlayer> showDownPlayers = new ArrayList<GameShowdownPlayer>();
+		for (GamePlayer player : pot.getPlayers()) {
+			showDownPlayers.add(new GameShowdownPlayer(player,
+					getBestFiveCardHand(player)));
+		}
+		return showDownPlayers;
+	}
+
+	/**
+	 * Get the best hand for the given player in the current game.
+	 * 
+	 * @param player
+	 *            The player to determine the best hand for.
+	 * @return The best hand that can be made with both common and pocket cards.
+	 * 
+	 * @note By using this method, the recalculation of finding the best 5 card
+	 *       hand is omitted.
+	 */
+	private Hand getBestFiveCardHand(GamePlayer player) {
+		List<Card> cards = new ArrayList<Card>(7);
+		cards.addAll(getGame().getCommunityCards());
+		cards.addAll(player.getPocketCards());
+		return new Hand(cards).getBestFive();
+	}
 }

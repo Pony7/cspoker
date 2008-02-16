@@ -6,16 +6,16 @@ import org.xml.sax.SAXException;
 
 public class DelegatingToOneHandler extends DelegatingHandler {
 
-    private ContentHandler delegate;
+	private ContentHandler delegate;
 
-    public DelegatingToOneHandler(ContentHandler delegate) {
-	this.delegate = delegate;
-    }
+	public DelegatingToOneHandler(ContentHandler delegate) {
+		this.delegate = delegate;
+	}
 
-    @Override
-    public ContentHandler getHandler(String uri, String localName, String name,
-	    Attributes atts) throws SAXException {
-	return delegate;
-    }
+	@Override
+	public ContentHandler getHandler(String uri, String localName, String name,
+			Attributes atts) throws SAXException {
+		return delegate;
+	}
 
 }

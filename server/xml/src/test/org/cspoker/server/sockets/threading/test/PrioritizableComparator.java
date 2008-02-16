@@ -25,86 +25,82 @@ import org.cspoker.server.common.util.threading.SocketRunnableComparator;
 
 public class PrioritizableComparator extends TestCase {
 
-    public void testCompare() {
-	PriorityBlockingQueue<Runnable> queue = new PriorityBlockingQueue<Runnable>(50, new SocketRunnableComparator());
+	public void testCompare() {
+		PriorityBlockingQueue<Runnable> queue = new PriorityBlockingQueue<Runnable>(
+				50, new SocketRunnableComparator());
 
-	queue.add(new TestRunnable("runnable 1"));
-	queue.add(new TestPrioritizable(-1, "runnable 2"));
-	queue.add(new TestPrioritizable(-1, "runnable 3"));
-	queue.add(new TestPrioritizable(5, "runnable 4"));
-	queue.add(new TestRunnable("runnable 5"));
-	queue.add(new TestPrioritizable(0, "runnable 6"));
-	queue.add(new TestRunnable("runnable 7"));
-	queue.add(new TestPrioritizable(0, "runnable 8"));
-	queue.add(new TestRunnable("runnable 9"));
-	queue.add(new TestPrioritizable(6, "runnable 10"));
-	queue.add(new TestPrioritizable(5, "runnable 11"));
-	queue.add(new TestPrioritizable(-2, "runnable 12"));
-	queue.add(new TestRunnable("runnable 13"));
+		queue.add(new TestRunnable("runnable 1"));
+		queue.add(new TestPrioritizable(-1, "runnable 2"));
+		queue.add(new TestPrioritizable(-1, "runnable 3"));
+		queue.add(new TestPrioritizable(5, "runnable 4"));
+		queue.add(new TestRunnable("runnable 5"));
+		queue.add(new TestPrioritizable(0, "runnable 6"));
+		queue.add(new TestRunnable("runnable 7"));
+		queue.add(new TestPrioritizable(0, "runnable 8"));
+		queue.add(new TestRunnable("runnable 9"));
+		queue.add(new TestPrioritizable(6, "runnable 10"));
+		queue.add(new TestPrioritizable(5, "runnable 11"));
+		queue.add(new TestPrioritizable(-2, "runnable 12"));
+		queue.add(new TestRunnable("runnable 13"));
 
-	Runnable r; String names = "";
-	while((r = queue.poll()) !=null){
-	    names += r+", ";
-	}
-	assertEquals("runnable 10 with priority 6, " +
-			"runnable 4 with priority 5, " +
-			"runnable 11 with priority 5, " +
-			"runnable 1, " +
-			"runnable 8 with priority 0, " +
-			"runnable 9, " +
-			"runnable 5, " +
-			"runnable 7, " +
-			"runnable 13, " +
-			"runnable 6 with priority 0, " +
-			"runnable 3 with priority -1, " +
-			"runnable 2 with priority -1, " +
-			"runnable 12 with priority -2, "
-			, names);
-    }
-
-    class TestPrioritizable implements Runnable, Prioritizable{
-
-	private final int priority;
-	private final String name;
-
-	public TestPrioritizable(int priority, String name) {
-	    this.priority = priority;
-	    this.name = name;
+		Runnable r;
+		String names = "";
+		while ((r = queue.poll()) != null) {
+			names += r + ", ";
+		}
+		assertEquals("runnable 10 with priority 6, "
+				+ "runnable 4 with priority 5, "
+				+ "runnable 11 with priority 5, " + "runnable 1, "
+				+ "runnable 8 with priority 0, " + "runnable 9, "
+				+ "runnable 5, " + "runnable 7, " + "runnable 13, "
+				+ "runnable 6 with priority 0, "
+				+ "runnable 3 with priority -1, "
+				+ "runnable 2 with priority -1, "
+				+ "runnable 12 with priority -2, ", names);
 	}
 
-	public void run() {
-	    // no op
+	class TestPrioritizable implements Runnable, Prioritizable {
+
+		private final int priority;
+		private final String name;
+
+		public TestPrioritizable(int priority, String name) {
+			this.priority = priority;
+			this.name = name;
+		}
+
+		public void run() {
+			// no op
+		}
+
+		public int getPriority() {
+			return priority;
+		}
+
+		@Override
+		public String toString() {
+			return name + " with priority " + priority;
+		}
+
 	}
 
-	public int getPriority() {
-	    return priority;
+	class TestRunnable implements Runnable {
+
+		private final String name;
+
+		public TestRunnable(String name) {
+			this.name = name;
+		}
+
+		public void run() {
+			// no op
+		}
+
+		@Override
+		public String toString() {
+			return name;
+		}
+
 	}
-
-	@Override
-	public String toString(){
-	    return name+" with priority "+priority;
-	}
-
-    }
-
-    class TestRunnable implements Runnable{
-
-	private int priority;
-	private final String name;
-
-	public TestRunnable(String name) {
-	    this.name = name;
-	}
-
-	public void run() {
-	    // no op
-	}
-
-	@Override
-	public String toString(){
-	    return name;
-	}
-
-    }
 
 }

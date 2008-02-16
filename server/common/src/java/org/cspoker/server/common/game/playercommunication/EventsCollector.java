@@ -47,142 +47,139 @@ import org.cspoker.common.events.serverEvents.TableCreatedEvent;
 
 /**
  * A class to collect and to manage game events.
- *
+ * 
  * @author Kenzo
- *
+ * 
  */
 public class EventsCollector implements AllEventsListener {
 
-    private int ackedToNumber = 0;
+	private int ackedToNumber = 0;
 
-    private int latestEventNumber = 0;
+	private int latestEventNumber = 0;
 
-    /**
-     * This variable contains the game events.
-     */
-    private final List<Event> events = new ArrayList<Event>();
+	/**
+	 * This variable contains the game events.
+	 */
+	private final List<Event> events = new ArrayList<Event>();
 
-    /**
-     * This method is called when subscribed to inform a new game event
-     * occurred.
-     *
-     * @param event
-     *                The event object containing all information of the
-     *                occurred event.
-     */
-    private synchronized void onEvent(Event event) {
-	events.add(event);
-	latestEventNumber++;
-    }
+	/**
+	 * This method is called when subscribed to inform a new game event
+	 * occurred.
+	 * 
+	 * @param event
+	 *            The event object containing all information of the occurred
+	 *            event.
+	 */
+	private synchronized void onEvent(Event event) {
+		events.add(event);
+		latestEventNumber++;
+	}
 
-    /**
-     * Returns the latest game events.
-     *
-     * @return The latest game events.
-     */
-    public synchronized Events getLatestEvents() {
-	return new Events(Collections.unmodifiableList(new ArrayList<Event>(
-		events)), latestEventNumber);
-    }
+	/**
+	 * Returns the latest game events.
+	 * 
+	 * @return The latest game events.
+	 */
+	public synchronized Events getLatestEvents() {
+		return new Events(Collections.unmodifiableList(new ArrayList<Event>(
+				events)), latestEventNumber);
+	}
 
-    public synchronized Events getLatestEventsAndAck(int ack) {
-	if (ack <= ackedToNumber)
-	    return getLatestEvents();
-	if ((ack > latestEventNumber))
-	    ack = latestEventNumber;
-	events.subList(0, ack - ackedToNumber).clear();
-	ackedToNumber = ack;
-	return getLatestEvents();
-    }
+	public synchronized Events getLatestEventsAndAck(int ack) {
+		if (ack <= ackedToNumber)
+			return getLatestEvents();
+		if ((ack > latestEventNumber))
+			ack = latestEventNumber;
+		events.subList(0, ack - ackedToNumber).clear();
+		ackedToNumber = ack;
+		return getLatestEvents();
+	}
 
-    public void onAllInEvent(AllInEvent event) {
-	onEvent(event);
-    }
+	public void onAllInEvent(AllInEvent event) {
+		onEvent(event);
+	}
 
-    public void onBetEvent(BetEvent event) {
-	onEvent(event);
-    }
+	public void onBetEvent(BetEvent event) {
+		onEvent(event);
+	}
 
-    public void onBigBlindEvent(BigBlindEvent event) {
-	onEvent(event);
-    }
+	public void onBigBlindEvent(BigBlindEvent event) {
+		onEvent(event);
+	}
 
-    public void onCallEvent(CallEvent event) {
-	onEvent(event);
-    }
+	public void onCallEvent(CallEvent event) {
+		onEvent(event);
+	}
 
-    public void onCheckEvent(CheckEvent event) {
-	onEvent(event);
-    }
+	public void onCheckEvent(CheckEvent event) {
+		onEvent(event);
+	}
 
+	public void onFoldEvent(FoldEvent event) {
+		onEvent(event);
+	}
 
-    public void onFoldEvent(FoldEvent event) {
-	onEvent(event);
-    }
+	public void onRaiseEvent(RaiseEvent event) {
+		onEvent(event);
+	}
 
-    public void onRaiseEvent(RaiseEvent event) {
-	onEvent(event);
-    }
+	public void onSmallBlindEvent(SmallBlindEvent event) {
+		onEvent(event);
+	}
 
-    public void onSmallBlindEvent(SmallBlindEvent event) {
-	onEvent(event);
-    }
+	public void onNewPocketCardsEvent(NewPocketCardsEvent event) {
+		onEvent(event);
+	}
 
-    public void onNewPocketCardsEvent(NewPocketCardsEvent event) {
-	onEvent(event);
-    }
+	public void onNewCommunityCardsEvent(NewCommunityCardsEvent event) {
+		onEvent(event);
+	}
 
-    public void onNewCommunityCardsEvent(NewCommunityCardsEvent event) {
-	onEvent(event);
-    }
+	public void onNewDealEvent(NewDealEvent event) {
+		onEvent(event);
+	}
 
-    public void onNewDealEvent(NewDealEvent event) {
-	onEvent(event);
-    }
+	public void onNewRoundEvent(NewRoundEvent event) {
+		onEvent(event);
+	}
 
-    public void onNewRoundEvent(NewRoundEvent event) {
-	onEvent(event);
-    }
+	public void onNextPlayerEvent(NextPlayerEvent event) {
+		onEvent(event);
+	}
 
-    public void onNextPlayerEvent(NextPlayerEvent event) {
-	onEvent(event);
-    }
+	public void onPlayerJoinedGameEvent(PlayerJoinedGameEvent event) {
+		onEvent(event);
+	}
 
-    public void onPlayerJoinedGameEvent(PlayerJoinedGameEvent event) {
-	onEvent(event);
-    }
+	public void onPlayerLeftTableEvent(PlayerLeftTableEvent event) {
+		onEvent(event);
+	}
 
-    public void onPlayerLeftTableEvent(PlayerLeftTableEvent event) {
-	onEvent(event);
-    }
+	public void onShowHandEvent(ShowHandEvent event) {
+		onEvent(event);
+	}
 
+	public void onWinnerEvent(WinnerEvent event) {
+		onEvent(event);
+	}
 
-    public void onShowHandEvent(ShowHandEvent event) {
-	onEvent(event);
-    }
+	public void onGameMessageEvent(GameMessageEvent event) {
+		onEvent(event);
+	}
 
+	public void onPlayerJoinedEvent(PlayerJoinedEvent event) {
+		onEvent(event);
+	}
 
-    public void onWinnerEvent(WinnerEvent event) {
-	onEvent(event);
-    }
+	public void onPlayerLeftEvent(PlayerLeftEvent event) {
+		onEvent(event);
+	}
 
-    public void onGameMessageEvent(GameMessageEvent event) {
-	onEvent(event);
-    }
+	public void onTableCreatedEvent(TableCreatedEvent event) {
+		onEvent(event);
+	}
 
-    public void onPlayerJoinedEvent(PlayerJoinedEvent event) {
-	onEvent(event);
-    }
-
-    public void onPlayerLeftEvent(PlayerLeftEvent event) {
-	onEvent(event);
-    }
-
-    public void onTableCreatedEvent(TableCreatedEvent event) {
-	onEvent(event);
-    }
-
-    public void onServerMessageEvent(ServerMessageEvent event) {
-	onEvent(event);
-    }
+	public void onServerMessageEvent(ServerMessageEvent event) {
+		onEvent(event);
+	}
 }

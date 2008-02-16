@@ -22,30 +22,30 @@ import org.cspoker.common.events.Event;
 
 public class Events implements Iterable<Event> {
 
-    private final List<Event> events;
+	private final List<Event> events;
 
-    private final int latestEventNumber;
+	private final int latestEventNumber;
 
-    public Events(List<Event> events, int latestEventNumber) {
-	this.events = events;
-	this.latestEventNumber = latestEventNumber;
-    }
+	public Events(List<Event> events, int latestEventNumber) {
+		this.events = events;
+		this.latestEventNumber = latestEventNumber;
+	}
 
-    public List<Event> getGameEvents() {
-	return events;
-    }
+	public List<Event> getGameEvents() {
+		return events;
+	}
 
-    public int getLastEventNumber() {
-	return latestEventNumber;
-    }
+	public int getLastEventNumber() {
+		return latestEventNumber;
+	}
 
-    @Override
-    public String toString() {
-	return "events until " + latestEventNumber + ". " + events.toString();
-    }
+	@Override
+	public String toString() {
+		return "events until " + latestEventNumber + ". " + events.toString();
+	}
 
-    public Iterator<Event> iterator() {
-	return events.iterator();
-    }
+	public Iterator<Event> iterator() {
+		return events.iterator();
+	}
 
 }

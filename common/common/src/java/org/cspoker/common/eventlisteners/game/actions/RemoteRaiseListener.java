@@ -29,13 +29,13 @@ import org.cspoker.common.events.gameEvents.playerActionEvents.RaiseEvent;
  */
 public interface RemoteRaiseListener extends Remote {
 
-    /**
-     * This method is called when subscribed to inform a raise occurred.
-     * 
-     * @param event
-     *                The event object containing all information of the
-     *                occurred event.
-     */
-    public void onRaiseEvent(RaiseEvent event) throws RemoteException;
+	/**
+	 * This method is called when subscribed to inform a raise occurred.
+	 * 
+	 * @param event
+	 *            The event object containing all information of the occurred
+	 *            event.
+	 */
+	public void onRaiseEvent(RaiseEvent event) throws RemoteException;
 
 }

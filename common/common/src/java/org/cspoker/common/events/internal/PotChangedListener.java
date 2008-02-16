@@ -15,23 +15,21 @@
  */
 package org.cspoker.common.events.internal;
 
-
-
 /**
  * An interface for pot changed listeners.
- *
+ * 
  * @author Kenzo
- *
+ * 
  */
 interface PotChangedListener {
 
-    /**
-     * This method is called when subscribed to inform the pot has changed.
-     *
-     * @param event
-     *                The event object containing all information of the
-     *                occurred event.
-     */
-    public void onPotChangedEvent(PotChangedEvent event);
+	/**
+	 * This method is called when subscribed to inform the pot has changed.
+	 * 
+	 * @param event
+	 *            The event object containing all information of the occurred
+	 *            event.
+	 */
+	public void onPotChangedEvent(PotChangedEvent event);
 
 }
