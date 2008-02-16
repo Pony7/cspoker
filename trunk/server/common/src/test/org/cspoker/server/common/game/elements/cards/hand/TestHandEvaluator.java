@@ -23,7 +23,7 @@ import org.cspoker.common.elements.cards.Suit;
 import org.cspoker.server.common.game.elements.cards.deck.Deck;
 import org.cspoker.server.common.game.elements.cards.hand.Hand;
 import org.cspoker.server.common.game.elements.cards.hand.HandType;
-import org.cspoker.server.common.game.utilities.TestExactCard;
+import org.cspoker.server.common.util.TestExactCard;
 
 /**
  * A test class for all the methods in the HandEvaluator class

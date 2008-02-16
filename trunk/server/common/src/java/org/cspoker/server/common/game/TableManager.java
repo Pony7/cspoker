@@ -24,7 +24,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import org.cspoker.common.elements.table.TableId;
 import org.cspoker.common.player.PlayerId;
 import org.cspoker.server.common.game.elements.table.Table;
-import org.cspoker.server.common.game.gameControl.GameProperty;
+import org.cspoker.server.common.game.gamecontrol.GameProperty;
 
 /**
  * A class to manage tables.

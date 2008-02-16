@@ -20,8 +20,8 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.cspoker.common.xml.XmlEventListener;
-import org.cspoker.server.game.session.PlayerKilledExcepion;
-import org.cspoker.server.game.session.Session;
+import org.cspoker.server.common.session.PlayerKilledExcepion;
+import org.cspoker.server.common.session.Session;
 
 /**
  * Creates a unique player communication instance for every player name and provides

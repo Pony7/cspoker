@@ -24,7 +24,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.cspoker.common.elements.table.TableId;
 import org.cspoker.common.player.PlayerId;
-import org.cspoker.server.common.game.gameControl.GameProperty;
+import org.cspoker.server.common.game.gamecontrol.GameProperty;
 import org.cspoker.server.common.game.player.GamePlayer;
 
 /**
