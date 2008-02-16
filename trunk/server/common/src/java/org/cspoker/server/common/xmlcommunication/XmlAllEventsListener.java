@@ -49,7 +49,7 @@ import org.cspoker.common.game.events.serverEvents.PlayerJoinedEvent;
 import org.cspoker.common.game.events.serverEvents.PlayerLeftEvent;
 import org.cspoker.common.game.events.serverEvents.ServerMessageEvent;
 import org.cspoker.common.game.events.serverEvents.TableCreatedEvent;
-import org.cspoker.server.XmlEventListener;
+import org.cspoker.common.xml.XmlEventListener;
 import org.xml.sax.SAXException;
 
 public class XmlAllEventsListener implements AllEventsListener {

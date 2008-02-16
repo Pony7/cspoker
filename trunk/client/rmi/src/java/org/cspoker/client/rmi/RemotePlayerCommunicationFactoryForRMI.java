@@ -31,88 +31,88 @@ import org.cspoker.common.game.eventlisteners.RemoteAllEventsListener;
 
 public class RemotePlayerCommunicationFactoryForRMI {
 
-    private RemoteLoginServer server;
+	private RemoteLoginServer server;
 
-    public RemotePlayerCommunicationFactoryForRMI(String server) throws AccessException, RemoteException, NotBoundException{
-	System.setSecurityManager(null);
-	Registry registry= LocateRegistry.getRegistry(server);
-	this.server = (RemoteLoginServer)registry.lookup("CSPokerServer");
-    }
+	public RemotePlayerCommunicationFactoryForRMI(String server) throws AccessException, RemoteException, NotBoundException{
+		System.setSecurityManager(null);
+		Registry registry= LocateRegistry.getRegistry(server);
+		this.server = (RemoteLoginServer)registry.lookup("CSPokerServer");
+	}
 
-    public RemotePlayerCommunication login(String username, String password) throws RemoteException{
+	public RemotePlayerCommunication login(String username, String password) throws RemoteException{
 
-	final RemotePlayerCommunication p =  server.login(username, password);
+		final RemotePlayerCommunication p =  server.login(username, password);
 
-	return new RemotePlayerCommunication(){
+		return new RemotePlayerCommunication(){
 
-	    public void allIn() throws IllegalActionException, RemoteException {
-		p.allIn();
-	    }
+			public void allIn() throws IllegalActionException, RemoteException {
+				p.allIn();
+			}
 
-	    public void bet(int amount) throws IllegalActionException,
-	    RemoteException {
-		p.bet(amount);
+			public void bet(int amount) throws IllegalActionException,
+			RemoteException {
+				p.bet(amount);
 
-	    }
+			}
 
-	    public void call() throws IllegalActionException, RemoteException {
-		p.call();
-	    }
+			public void call() throws IllegalActionException, RemoteException {
+				p.call();
+			}
 
-	    public void check() throws IllegalActionException, RemoteException {
-		p.check();
-	    }
+			public void check() throws IllegalActionException, RemoteException {
+				p.check();
+			}
 
-	    public TableId createTable() throws IllegalActionException,RemoteException {
-		return p.createTable();
-	    }
+			public TableId createTable() throws IllegalActionException,RemoteException {
+				return p.createTable();
+			}
 
-	    public void deal() throws IllegalActionException, RemoteException {
-		p.deal();
+			public void deal() throws IllegalActionException, RemoteException {
+				p.deal();
 
-	    }
+			}
 
-	    public void fold() throws IllegalActionException, RemoteException {
-		p.fold();
-	    }
+			public void fold() throws IllegalActionException, RemoteException {
+				p.fold();
+			}
 
-	    public void joinTable(TableId id) throws IllegalActionException,
-	    RemoteException {
-		p.joinTable(id);
-	    }
+			public void joinTable(TableId id) throws IllegalActionException,
+			RemoteException {
+				p.joinTable(id);
+			}
 
-	    public void leaveTable() throws IllegalActionException,
-	    RemoteException {
-		p.leaveTable();
-	    }
+			public void leaveTable() throws IllegalActionException,
+			RemoteException {
+				p.leaveTable();
+			}
 
-	    public void raise(int amount) throws IllegalActionException,
-	    RemoteException {
-		p.raise(amount);
-	    }
+			public void raise(int amount) throws IllegalActionException,
+			RemoteException {
+				p.raise(amount);
+			}
 
-	    public void say(String message) throws RemoteException {
-		p.say(message);
-	    }
+			public void say(String message) throws RemoteException {
+				p.say(message);
+			}
 
-	    public void startGame() throws IllegalActionException,
-	    RemoteException {
-		p.startGame();
-	    }
+			public void startGame() throws IllegalActionException,
+			RemoteException {
+				p.startGame();
+			}
 
-	    public void subscribeAllEventsListener(
-		    RemoteAllEventsListener listener) throws RemoteException {
-		RemoteAllEventsListener listenerStub 
-		= (RemoteAllEventsListener)UnicastRemoteObject.exportObject(listener, 0);
-		p.subscribeAllEventsListener(listenerStub);
-	    }
+			public void subscribeAllEventsListener(
+					RemoteAllEventsListener listener) throws RemoteException {
+				RemoteAllEventsListener listenerStub 
+				= (RemoteAllEventsListener)UnicastRemoteObject.exportObject(listener, 0);
+				p.subscribeAllEventsListener(listenerStub);
+			}
 
-	    public void unsubscribeAllEventsListener(
-		    RemoteAllEventsListener listener) throws RemoteException {
-		p.unsubscribeAllEventsListener(listener);
-	    }
+			public void unsubscribeAllEventsListener(
+					RemoteAllEventsListener listener) throws RemoteException {
+				p.unsubscribeAllEventsListener(listener);
+			}
 
-	};
-    }
+		};
+	}
 
 }

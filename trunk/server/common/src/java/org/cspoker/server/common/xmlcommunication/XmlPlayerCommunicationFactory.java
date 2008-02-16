@@ -19,7 +19,7 @@ package org.cspoker.server.common.xmlcommunication;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.cspoker.server.XmlEventListener;
+import org.cspoker.common.xml.XmlEventListener;
 import org.cspoker.server.game.session.PlayerKilledExcepion;
 import org.cspoker.server.game.session.Session;
 
