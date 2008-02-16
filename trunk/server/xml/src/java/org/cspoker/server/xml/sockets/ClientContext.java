@@ -15,8 +15,6 @@
  */
 package org.cspoker.server.xml.sockets;
 
-import XmlEventListener;
-
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
@@ -31,11 +29,12 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.cspoker.server.common.common.xmlcommunication.XmlPlayerCommunication;
-import org.cspoker.server.common.common.xmlcommunication.XmlPlayerCommunicationFactory;
-import org.cspoker.server.common.player.GamePlayer;
-import org.cspoker.server.common.player.IllegalNameException;
-import org.cspoker.server.common.player.PlayerFactory;
+import org.cspoker.common.xml.XmlEventListener;
+import org.cspoker.server.common.game.player.GamePlayer;
+import org.cspoker.server.common.game.player.IllegalNameException;
+import org.cspoker.server.common.game.player.PlayerFactory;
+import org.cspoker.server.xml.common.XmlPlayerCommunication;
+import org.cspoker.server.xml.common.XmlPlayerCommunicationFactory;
 
 
 public class ClientContext implements XmlEventListener{

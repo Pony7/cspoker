@@ -13,7 +13,7 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.server.common.xmlcommunication.handler;
+package org.cspoker.server.xml.common.handler;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;

@@ -19,8 +19,8 @@ import java.io.IOException;
 import java.io.StringReader;
 
 import org.apache.log4j.Logger;
-import org.cspoker.server.common.common.authentication.XmlFileAuthenticator;
-import org.cspoker.server.common.player.IllegalNameException;
+import org.cspoker.server.common.authentication.XmlFileAuthenticator;
+import org.cspoker.server.common.game.player.IllegalNameException;
 import org.cspoker.server.xml.sockets.ClientContext;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;

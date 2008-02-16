@@ -15,11 +15,11 @@
  */
 package org.cspoker.server.xml.http.httphandler;
 
-import org.cspoker.server.common.common.xmlcommunication.XmlPlayerCommunication;
-import org.cspoker.server.common.common.xmlcommunication.XmlPlayerCommunicationFactory;
-import org.cspoker.server.common.session.PlayerKilledExcepion;
-import org.cspoker.server.common.session.Session;
-import org.cspoker.server.common.session.SessionManager;
+import org.cspoker.server.common.game.session.PlayerKilledExcepion;
+import org.cspoker.server.common.game.session.Session;
+import org.cspoker.server.common.game.session.SessionManager;
+import org.cspoker.server.xml.common.XmlPlayerCommunication;
+import org.cspoker.server.xml.common.XmlPlayerCommunicationFactory;
 import org.cspoker.server.xml.http.httphandler.abstracts.AbstractHttpHandlerImpl;
 import org.cspoker.server.xml.http.httphandler.exception.HttpExceptionImpl;
 import org.xml.sax.InputSource;
