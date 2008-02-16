@@ -17,13 +17,13 @@
 package org.cspoker.server.game.gameControl.rounds;
 
 import org.apache.log4j.Logger;
-import org.cspoker.common.game.IllegalActionException;
-import org.cspoker.common.game.elements.pots.Pots;
-import org.cspoker.common.game.events.gameEvents.NewRoundEvent;
-import org.cspoker.common.game.events.gameEvents.NextPlayerEvent;
-import org.cspoker.common.game.events.gameEvents.playerActionEvents.BigBlindEvent;
-import org.cspoker.common.game.events.gameEvents.playerActionEvents.SmallBlindEvent;
-import org.cspoker.common.game.events.gameEvents.privateEvents.NewPocketCardsEvent;
+import org.cspoker.common.elements.pots.Pots;
+import org.cspoker.common.events.gameEvents.NewRoundEvent;
+import org.cspoker.common.events.gameEvents.NextPlayerEvent;
+import org.cspoker.common.events.gameEvents.playerActionEvents.BigBlindEvent;
+import org.cspoker.common.events.gameEvents.playerActionEvents.SmallBlindEvent;
+import org.cspoker.common.events.gameEvents.privateEvents.NewPocketCardsEvent;
+import org.cspoker.common.exceptions.IllegalActionException;
 import org.cspoker.server.game.GameMediator;
 import org.cspoker.server.game.elements.chips.IllegalValueException;
 import org.cspoker.server.game.gameControl.Game;

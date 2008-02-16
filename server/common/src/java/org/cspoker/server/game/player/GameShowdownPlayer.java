@@ -16,7 +16,7 @@
 
 package org.cspoker.server.game.player;
 
-import org.cspoker.common.game.player.ShowdownPlayer;
+import org.cspoker.common.player.ShowdownPlayer;
 import org.cspoker.server.game.elements.cards.hand.Hand;
 
 /**

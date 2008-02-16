@@ -20,8 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.cspoker.common.game.IllegalActionException;
-import org.cspoker.common.game.elements.cards.Card;
+import org.cspoker.common.elements.cards.Card;
+import org.cspoker.common.exceptions.IllegalActionException;
 import org.cspoker.server.game.elements.cards.deck.Deck;
 import org.cspoker.server.game.elements.chips.pot.GamePots;
 import org.cspoker.server.game.elements.table.PlayerListFullException;

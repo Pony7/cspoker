@@ -7,9 +7,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.cspoker.common.game.elements.cards.Card;
-import org.cspoker.common.game.elements.cards.Rank;
-import org.cspoker.common.game.elements.cards.Suit;
+import org.cspoker.common.elements.cards.Card;
+import org.cspoker.common.elements.cards.Rank;
+import org.cspoker.common.elements.cards.Suit;
 import org.cspoker.server.game.elements.cards.deck.Deck;
 
 /**

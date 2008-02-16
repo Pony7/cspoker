@@ -19,8 +19,8 @@ package org.cspoker.server.game.gameControl;
 import junit.framework.TestCase;
 
 import org.apache.log4j.Logger;
-import org.cspoker.common.game.IllegalActionException;
-import org.cspoker.common.game.elements.table.TableId;
+import org.cspoker.common.elements.table.TableId;
+import org.cspoker.common.exceptions.IllegalActionException;
 import org.cspoker.server.game.GameMediator;
 import org.cspoker.server.game.elements.chips.IllegalValueException;
 import org.cspoker.server.game.elements.table.PlayerListFullException;

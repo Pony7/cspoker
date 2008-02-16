@@ -17,7 +17,7 @@ package org.cspoker.client.common;
 
 import java.rmi.ConnectException;
 
-import org.cspoker.common.game.RemotePlayerCommunication;
+import org.cspoker.common.RemotePlayerCommunication;
 
 public interface RemotePlayerCommunicationFactory {
 

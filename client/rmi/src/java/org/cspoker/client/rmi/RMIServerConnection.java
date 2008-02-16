@@ -25,10 +25,10 @@ import java.rmi.server.UnicastRemoteObject;
 
 import org.cspoker.client.common.RemotePlayerCommunicationFactory;
 import org.cspoker.common.RemoteLoginServer;
-import org.cspoker.common.game.IllegalActionException;
-import org.cspoker.common.game.RemotePlayerCommunication;
-import org.cspoker.common.game.elements.table.TableId;
-import org.cspoker.common.game.eventlisteners.RemoteAllEventsListener;
+import org.cspoker.common.RemotePlayerCommunication;
+import org.cspoker.common.elements.table.TableId;
+import org.cspoker.common.eventlisteners.RemoteAllEventsListener;
+import org.cspoker.common.exceptions.IllegalActionException;
 
 
 public class RMIServerConnection{
