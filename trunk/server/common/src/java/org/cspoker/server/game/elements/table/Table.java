@@ -22,8 +22,8 @@ import java.util.List;
 import java.util.Random;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import org.cspoker.common.game.elements.table.TableId;
-import org.cspoker.common.game.player.PlayerId;
+import org.cspoker.common.elements.table.TableId;
+import org.cspoker.common.player.PlayerId;
 import org.cspoker.server.game.gameControl.GameProperty;
 import org.cspoker.server.game.player.GamePlayer;
 

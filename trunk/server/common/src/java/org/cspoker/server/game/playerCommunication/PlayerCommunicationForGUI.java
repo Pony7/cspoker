@@ -15,31 +15,31 @@
  */
 package org.cspoker.server.game.playerCommunication;
 
-import org.cspoker.common.game.IllegalActionException;
-import org.cspoker.common.game.elements.table.TableId;
-import org.cspoker.common.game.eventlisteners.AllEventsListener;
-import org.cspoker.common.game.eventlisteners.game.GameMessageListener;
-import org.cspoker.common.game.eventlisteners.game.NewCommunityCardsListener;
-import org.cspoker.common.game.eventlisteners.game.NewDealListener;
-import org.cspoker.common.game.eventlisteners.game.NewRoundListener;
-import org.cspoker.common.game.eventlisteners.game.NextPlayerListener;
-import org.cspoker.common.game.eventlisteners.game.PlayerJoinedGameListener;
-import org.cspoker.common.game.eventlisteners.game.PlayerLeftTableListener;
-import org.cspoker.common.game.eventlisteners.game.ShowHandListener;
-import org.cspoker.common.game.eventlisteners.game.WinnerListener;
-import org.cspoker.common.game.eventlisteners.game.actions.AllInListener;
-import org.cspoker.common.game.eventlisteners.game.actions.BetListener;
-import org.cspoker.common.game.eventlisteners.game.actions.BigBlindListener;
-import org.cspoker.common.game.eventlisteners.game.actions.CallListener;
-import org.cspoker.common.game.eventlisteners.game.actions.CheckListener;
-import org.cspoker.common.game.eventlisteners.game.actions.FoldListener;
-import org.cspoker.common.game.eventlisteners.game.actions.RaiseListener;
-import org.cspoker.common.game.eventlisteners.game.actions.SmallBlindListener;
-import org.cspoker.common.game.eventlisteners.game.privatelistener.NewPocketCardsListener;
-import org.cspoker.common.game.eventlisteners.server.PlayerJoinedListener;
-import org.cspoker.common.game.eventlisteners.server.PlayerLeftListener;
-import org.cspoker.common.game.eventlisteners.server.ServerMessageListener;
-import org.cspoker.common.game.eventlisteners.server.TableCreatedListener;
+import org.cspoker.common.elements.table.TableId;
+import org.cspoker.common.eventlisteners.AllEventsListener;
+import org.cspoker.common.eventlisteners.game.GameMessageListener;
+import org.cspoker.common.eventlisteners.game.NewCommunityCardsListener;
+import org.cspoker.common.eventlisteners.game.NewDealListener;
+import org.cspoker.common.eventlisteners.game.NewRoundListener;
+import org.cspoker.common.eventlisteners.game.NextPlayerListener;
+import org.cspoker.common.eventlisteners.game.PlayerJoinedGameListener;
+import org.cspoker.common.eventlisteners.game.PlayerLeftTableListener;
+import org.cspoker.common.eventlisteners.game.ShowHandListener;
+import org.cspoker.common.eventlisteners.game.WinnerListener;
+import org.cspoker.common.eventlisteners.game.actions.AllInListener;
+import org.cspoker.common.eventlisteners.game.actions.BetListener;
+import org.cspoker.common.eventlisteners.game.actions.BigBlindListener;
+import org.cspoker.common.eventlisteners.game.actions.CallListener;
+import org.cspoker.common.eventlisteners.game.actions.CheckListener;
+import org.cspoker.common.eventlisteners.game.actions.FoldListener;
+import org.cspoker.common.eventlisteners.game.actions.RaiseListener;
+import org.cspoker.common.eventlisteners.game.actions.SmallBlindListener;
+import org.cspoker.common.eventlisteners.game.privatelistener.NewPocketCardsListener;
+import org.cspoker.common.eventlisteners.server.PlayerJoinedListener;
+import org.cspoker.common.eventlisteners.server.PlayerLeftListener;
+import org.cspoker.common.eventlisteners.server.ServerMessageListener;
+import org.cspoker.common.eventlisteners.server.TableCreatedListener;
+import org.cspoker.common.exceptions.IllegalActionException;
 
 /**
  * An interface to define all possible invocations a player can do.

@@ -18,7 +18,7 @@ package org.cspoker.server.game.player;
 
 import java.util.concurrent.atomic.AtomicLong;
 
-import org.cspoker.common.game.player.PlayerId;
+import org.cspoker.common.player.PlayerId;
 import org.cspoker.server.game.elements.chips.IllegalValueException;
 
 /**

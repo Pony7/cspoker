@@ -18,7 +18,7 @@ package org.cspoker.server.common.xmlcommunication;
 import java.io.IOException;
 
 import org.apache.log4j.Logger;
-import org.cspoker.common.game.PlayerCommunication;
+import org.cspoker.common.PlayerCommunication;
 import org.cspoker.common.xml.XmlEventListener;
 import org.cspoker.server.common.xmlcommunication.handler.CommandDelegatingHandler;
 import org.cspoker.server.common.xmlcommunication.handler.DelegatingToOneHandler;

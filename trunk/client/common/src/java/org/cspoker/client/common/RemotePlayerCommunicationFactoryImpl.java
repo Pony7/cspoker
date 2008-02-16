@@ -19,39 +19,39 @@ import java.rmi.ConnectException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.cspoker.common.game.RemotePlayerCommunication;
+import org.cspoker.common.RemotePlayerCommunication;
 
 public class RemotePlayerCommunicationFactoryImpl implements
-	RemotePlayerCommunicationFactory {
-    
-    public final static RemotePlayerCommunicationFactoryImpl global_factory = new RemotePlayerCommunicationFactoryImpl();
-    
-    private List<RemotePlayerCommunicationFactory> providers = new ArrayList<RemotePlayerCommunicationFactory>();
-    
-    public void addRemotePlayerCommunicationProvider(RemotePlayerCommunicationFactory provider){
-	this.providers.add(provider);
-    }
-    
-    public RemotePlayerCommunication getRemotePlayerCommunication(
-	    String server, int port, String username, String password) throws ConnectException, NoProviderException {
+RemotePlayerCommunicationFactory {
 
-	NoProviderException lastNoProviderException=null;
-	ConnectException lastConnectException=null;
-	
-	for(RemotePlayerCommunicationFactory p:providers){
-	    try {
-		return p.getRemotePlayerCommunication(server, port, username, password);
-	    } catch (NoProviderException e) {
-		lastNoProviderException = e;
-	    } catch (ConnectException e) {
-		lastConnectException = e;
-	    }
+	public final static RemotePlayerCommunicationFactoryImpl global_factory = new RemotePlayerCommunicationFactoryImpl();
+
+	private List<RemotePlayerCommunicationFactory> providers = new ArrayList<RemotePlayerCommunicationFactory>();
+
+	public void addRemotePlayerCommunicationProvider(RemotePlayerCommunicationFactory provider){
+		this.providers.add(provider);
 	}
-	if(lastConnectException!=null)
-	    throw lastConnectException;
-	if(lastNoProviderException!=null)
-	    throw lastNoProviderException;
-	throw new NoProviderException();
-    }
+
+	public RemotePlayerCommunication getRemotePlayerCommunication(
+			String server, int port, String username, String password) throws ConnectException, NoProviderException {
+
+		NoProviderException lastNoProviderException=null;
+		ConnectException lastConnectException=null;
+
+		for(RemotePlayerCommunicationFactory p:providers){
+			try {
+				return p.getRemotePlayerCommunication(server, port, username, password);
+			} catch (NoProviderException e) {
+				lastNoProviderException = e;
+			} catch (ConnectException e) {
+				lastConnectException = e;
+			}
+		}
+		if(lastConnectException!=null)
+			throw lastConnectException;
+		if(lastNoProviderException!=null)
+			throw lastNoProviderException;
+		throw new NoProviderException();
+	}
 
 }

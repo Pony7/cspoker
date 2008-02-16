@@ -16,7 +16,7 @@
 
 package org.cspoker.server.game.player;
 
-import org.cspoker.common.game.player.Winner;
+import org.cspoker.common.player.Winner;
 import org.cspoker.server.game.elements.chips.Chips;
 import org.cspoker.server.game.elements.chips.IllegalValueException;
 

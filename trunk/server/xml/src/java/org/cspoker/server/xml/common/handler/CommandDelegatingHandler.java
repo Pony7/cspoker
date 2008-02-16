@@ -25,9 +25,9 @@ import javax.xml.transform.sax.TransformerHandler;
 import javax.xml.transform.stream.StreamResult;
 
 import org.apache.log4j.Logger;
-import org.cspoker.common.game.IllegalActionException;
-import org.cspoker.common.game.PlayerCommunication;
-import org.cspoker.common.game.elements.table.TableId;
+import org.cspoker.common.PlayerCommunication;
+import org.cspoker.common.elements.table.TableId;
+import org.cspoker.common.exceptions.IllegalActionException;
 import org.cspoker.common.xml.XmlEventListener;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;

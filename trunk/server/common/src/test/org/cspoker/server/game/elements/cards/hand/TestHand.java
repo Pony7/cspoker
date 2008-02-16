@@ -20,9 +20,9 @@ import java.util.Iterator;
 import junit.framework.TestCase;
 
 import org.apache.log4j.Logger;
-import org.cspoker.common.game.elements.cards.Card;
-import org.cspoker.common.game.elements.cards.Rank;
-import org.cspoker.common.game.elements.cards.Suit;
+import org.cspoker.common.elements.cards.Card;
+import org.cspoker.common.elements.cards.Rank;
+import org.cspoker.common.elements.cards.Suit;
 import org.cspoker.server.game.utilities.TestExactCard;
 
 /**

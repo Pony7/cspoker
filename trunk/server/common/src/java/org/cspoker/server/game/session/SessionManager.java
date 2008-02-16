@@ -17,7 +17,7 @@ package org.cspoker.server.game.session;
 
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.cspoker.common.game.player.PlayerId;
+import org.cspoker.common.player.PlayerId;
 
 public class SessionManager {
 
