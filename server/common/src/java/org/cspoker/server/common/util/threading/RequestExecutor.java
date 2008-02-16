@@ -1,4 +1,4 @@
-package org.cspoker.server.common.threading;
+package org.cspoker.server.common.util.threading;
 
 import java.util.concurrent.Executor;
 import java.util.concurrent.PriorityBlockingQueue;
