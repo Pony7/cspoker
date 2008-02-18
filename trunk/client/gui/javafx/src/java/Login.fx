@@ -1,23 +1,35 @@
 import javafx.ui.*;
-import java.lang.System;
-import org.client.ClientCore;
-		
+import java.lang.*;
+import org.client.ClientCore; 
+
         class Login {
             attribute name: String;
             attribute passw: String;
             attribute url: String;
             attribute port: String;
+            attribute screen:Frame;
+            attribute client:ClientCore;
         }
-
-        var model = Login {
-            name: "Test"
-            passw: "test"
-            url: "localhost"
-            port: "8080" 
-        };
-       	var client= new ClientCore();
-
-        Frame {
+        operation Login.init(){
+        	name= "Test";
+            passw= "test";
+            url= "localhost";
+            port= "8080";
+        }
+        operation Login.registerClient(c:ClientCore){
+        	client=c;
+        }
+        trigger on new Login{
+              init();
+              screen.hide();
+        }
+        
+        operation Login.login():ClientCore{
+        	client.login(url,port,name,passw);
+        	return client;
+        }
+        attribute Login.screen=Frame{
+        	centerOnScreen:true
             title: "Login Screen"
             width: 300
             height: 400
@@ -27,6 +39,7 @@ import org.client.ClientCore;
                      text: "Options"
                      mnemonic: F
                      items:MenuItem {
+                     	sizeToFitRow: true
                          text: "Exit"
                          mnemonic: C
                          action: operation() {
@@ -53,46 +66,46 @@ import org.client.ClientCore;
             		row: usernameRow
             		column: labelsColumn
             		text: "User name:"
-            		horizontalAlignment: CENTER
+            		horizontalAlignment: LEADING
             	},
             	TextField{
             		row: usernameRow
             		column: fieldsColumn
             		horizontalAlignment: CENTER
             		columns: 25
-            		value: bind model.name
+            		value: bind name
             	},
             	SimpleLabel{
             		row: passwRow
             		column: labelsColumn
             		text: "Password:"
-            		horizontalAlignment: CENTER
+            		horizontalAlignment: LEADING
             	},
             	PasswordField{
             		row: passwRow
             		column: fieldsColumn
             		horizontalAlignment: CENTER
             		columns: 25
-            		value: bind model.passw
+            		value: bind passw
             	},
             	SimpleLabel{
             		row: urlRow
             		column: labelsColumn
             		text: "Server URL:"
-            		horizontalAlignment: CENTER
+            		horizontalAlignment: LEADING
             	},
             	TextField{
             		row: urlRow
             		column: fieldsColumn
             		horizontalAlignment: CENTER
             		columns: 25
-            		value: bind model.url
+            		value: bind url
             	},
             	SimpleLabel{
             		row: portRow
             		column: labelsColumn
             		text: "Server port:"
-            		horizontalAlignment: CENTER
+            		horizontalAlignment: LEADING
             	},
             	TextField{
             		row: portRow
@@ -100,7 +113,7 @@ import org.client.ClientCore;
             		horizontalAlignment: CENTER
             		
             		columns: 25
-            		value: bind model.port
+            		value: bind port
             	}
             	]
             }
@@ -117,9 +130,8 @@ import org.client.ClientCore;
                     horizontalTextPosition: LEADING
                     toolTipText: "Click this button to login"
                     action: operation() {
-                         System.out.println("login");
-                         client.login(model.url,model.port,model.name,model.passw);
-                    }
+                         login();
+                        }
                 }
             }
             }
