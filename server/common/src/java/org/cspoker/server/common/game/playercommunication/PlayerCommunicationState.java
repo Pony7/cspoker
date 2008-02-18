@@ -116,7 +116,7 @@ abstract class PlayerCommunicationState {
 	/***************************************************************************
 	 * Create/Start Game
 	 **************************************************************************/
-	public TableId createTable() throws IllegalActionException {
+	public void createTable() throws IllegalActionException {
 		throw new IllegalActionException(
 				"Creating a table is not a valid action. "
 						+ getStdErrorMessage());

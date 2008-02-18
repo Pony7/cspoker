@@ -30,9 +30,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.apache.log4j.Logger;
+import org.cspoker.client.xml.common.LoginFailedException;
 import org.cspoker.client.xml.common.XmlChannel;
-import org.cspoker.client.xml.sockets.exceptions.ConnectionLostException;
-import org.cspoker.client.xml.sockets.exceptions.LoginFailedException;
 import org.cspoker.common.xml.XmlEventListener;
 
 public class XmlSocketsChannel implements XmlChannel {

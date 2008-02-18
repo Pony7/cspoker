@@ -20,16 +20,17 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.net.Authenticator;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.PasswordAuthentication;
 import java.net.URL;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import org.cspoker.client.xml.common.LoginFailedException;
 import org.cspoker.client.xml.common.XmlChannel;
-import org.cspoker.client.xml.sockets.exceptions.LoginFailedException;
+import org.cspoker.common.exceptions.IllegalActionException;
 import org.cspoker.common.xml.XmlEventListener;
 
 public class XmlHttpChannel implements XmlChannel {
@@ -40,9 +41,7 @@ public class XmlHttpChannel implements XmlChannel {
 
 	private URL url;
 
-	public XmlHttpChannel(String server, int port, String path,
-			final String username, final String password)
-			throws MalformedURLException {
+	public XmlHttpChannel(URL url, final String username, final String password) {
 		Authenticator.setDefault(new Authenticator() {
 			@Override
 			protected PasswordAuthentication getPasswordAuthentication() {
@@ -50,11 +49,11 @@ public class XmlHttpChannel implements XmlChannel {
 						.toCharArray());
 			}
 		});
-		String address = "http://" + server + ":" + port;
-		url = new URL(address + path);
+		this.url = url;
 	}
 
-	public void open() throws IOException {
+	public void open() throws LoginFailedException {
+		//TODO check login success
 		executor = Executors.newSingleThreadExecutor();
 	}
 
@@ -62,24 +61,26 @@ public class XmlHttpChannel implements XmlChannel {
 		executor.shutdownNow();
 	}
 
-	public void send(String xml) throws IOException, LoginFailedException {
-		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-		connection.setConnectTimeout(20000);
-		connection.setAllowUserInteraction(true);
-		connection.setInstanceFollowRedirects(false);
-		connection.setDoOutput(true);
-		connection.setRequestMethod("POST");
+	public void send(String xml) throws IllegalActionException, RemoteException {
+		try {
+			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+			connection.setConnectTimeout(20000);
+			connection.setAllowUserInteraction(true);
+			connection.setInstanceFollowRedirects(false);
+			connection.setDoOutput(true);
+			connection.setRequestMethod("POST");
 
-		Writer w = new OutputStreamWriter(connection.getOutputStream());
-		w.write(xml);
-		connection.getOutputStream().close();
+			Writer w = new OutputStreamWriter(connection.getOutputStream());
+			w.write(xml);
+			connection.getOutputStream().close();
 
-		if (connection.getResponseCode() == 401) {
-			throw new LoginFailedException();
-		} else if (connection.getResponseCode() / 100 == 4
-				|| connection.getResponseCode() / 100 == 5) {
-			throw new IOException("Unknown error from the server.");
-		}
+			if (connection.getResponseCode() / 100 == 4
+					|| connection.getResponseCode() / 100 == 5) {
+				throw new RemoteException("Unknown error from the server.");
+			}
+		} catch (IOException e) {
+			throw new RemoteException("IOException in XML channel",e);
+		} 
 
 	}
 
