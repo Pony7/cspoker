@@ -97,7 +97,7 @@ public interface RemotePlayerCommunication extends Remote {
 	 */
 	void allIn() throws IllegalActionException, RemoteException;
 
-	void say(String message) throws RemoteException;
+	void say(String message) throws RemoteException, IllegalActionException;
 
 	/**
 	 * Join the table with given table id.
@@ -124,7 +124,7 @@ public interface RemotePlayerCommunication extends Remote {
 	 *             [must] This actions is not a valid action in the current
 	 *             state.
 	 */
-	TableId createTable() throws IllegalActionException, RemoteException;
+	void createTable() throws IllegalActionException, RemoteException;
 
 	/**
 	 * This player starts the game. Only the player who has created the table
@@ -135,7 +135,9 @@ public interface RemotePlayerCommunication extends Remote {
 	 *             state.
 	 */
 	void startGame() throws IllegalActionException, RemoteException;
-
+	
+	void kill() throws IllegalActionException, RemoteException;
+	
 	/**
 	 * Subscribe the given all events listener for all events a player can
 	 * receive.

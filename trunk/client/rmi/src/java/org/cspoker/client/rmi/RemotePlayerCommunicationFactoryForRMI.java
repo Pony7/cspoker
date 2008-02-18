@@ -33,14 +33,14 @@ public class RemotePlayerCommunicationFactoryForRMI {
 	private RemoteLoginServer server;
 
 	public RemotePlayerCommunicationFactoryForRMI(String server)
-			throws AccessException, RemoteException, NotBoundException {
+	throws AccessException, RemoteException, NotBoundException {
 		System.setSecurityManager(null);
 		Registry registry = LocateRegistry.getRegistry(server);
 		this.server = (RemoteLoginServer) registry.lookup("CSPokerServer");
 	}
 
 	public RemotePlayerCommunication login(String username, String password)
-			throws RemoteException {
+	throws RemoteException {
 
 		final RemotePlayerCommunication p = server.login(username, password);
 
@@ -51,7 +51,7 @@ public class RemotePlayerCommunicationFactoryForRMI {
 			}
 
 			public void bet(int amount) throws IllegalActionException,
-					RemoteException {
+			RemoteException {
 				p.bet(amount);
 
 			}
@@ -64,9 +64,9 @@ public class RemotePlayerCommunicationFactoryForRMI {
 				p.check();
 			}
 
-			public TableId createTable() throws IllegalActionException,
-					RemoteException {
-				return p.createTable();
+			public void createTable() throws IllegalActionException,
+			RemoteException {
+				p.createTable();
 			}
 
 			public void deal() throws IllegalActionException, RemoteException {
@@ -79,33 +79,38 @@ public class RemotePlayerCommunicationFactoryForRMI {
 			}
 
 			public void joinTable(TableId id) throws IllegalActionException,
-					RemoteException {
+			RemoteException {
 				p.joinTable(id);
 			}
 
 			public void leaveTable() throws IllegalActionException,
-					RemoteException {
+			RemoteException {
 				p.leaveTable();
 			}
 
 			public void raise(int amount) throws IllegalActionException,
-					RemoteException {
+			RemoteException {
 				p.raise(amount);
 			}
 
-			public void say(String message) throws RemoteException {
+			public void say(String message) throws RemoteException, IllegalActionException {
 				p.say(message);
 			}
 
 			public void startGame() throws IllegalActionException,
-					RemoteException {
+			RemoteException {
 				p.startGame();
+			}
+
+			public void kill() throws IllegalActionException,
+			RemoteException {
+				p.kill();
 			}
 
 			public void subscribeAllEventsListener(
 					RemoteAllEventsListener listener) throws RemoteException {
 				RemoteAllEventsListener listenerStub = (RemoteAllEventsListener) UnicastRemoteObject
-						.exportObject(listener, 0);
+				.exportObject(listener, 0);
 				p.subscribeAllEventsListener(listenerStub);
 			}
 

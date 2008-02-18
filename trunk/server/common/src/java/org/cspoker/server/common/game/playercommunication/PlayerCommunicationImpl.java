@@ -221,8 +221,8 @@ public class PlayerCommunicationImpl extends PlayerCommunication {
 	}
 
 	@Override
-	public TableId createTable() throws IllegalActionException {
-		return state.createTable();
+	public void createTable() throws IllegalActionException {
+		state.createTable();
 	}
 
 	@Override

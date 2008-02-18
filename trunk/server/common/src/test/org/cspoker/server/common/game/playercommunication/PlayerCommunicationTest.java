@@ -55,9 +55,7 @@ public class PlayerCommunicationTest extends TestCase {
 			kenzoComm.createTable();
 		} catch (IllegalActionException e) {
 			fail(e.getMessage());
-		} finally {
-			PlayerCommunicationManager.clear();
-		}
+		} 
 	}
 
 	public void testJoinTable() throws IllegalNameException {
@@ -66,13 +64,12 @@ public class PlayerCommunicationTest extends TestCase {
 		PlayerCommunicationImpl kenzoComm = new PlayerCommunicationImpl(kenzo);
 		PlayerCommunicationImpl guyComm = new PlayerCommunicationImpl(guy);
 		try {
-			TableId tableId = kenzoComm.createTable();
+			kenzoComm.createTable();
+			//TODO create an event listener filter to wait for the tableID
 			guyComm.joinTable(tableId);
 		} catch (IllegalActionException e) {
 			fail(e.getMessage());
-		} finally {
-			PlayerCommunicationManager.clear();
-		}
+		} 
 	}
 
 	public void testStartGame() throws IllegalNameException {
@@ -81,13 +78,12 @@ public class PlayerCommunicationTest extends TestCase {
 		PlayerCommunication kenzoComm = new PlayerCommunicationImpl(kenzo);
 		PlayerCommunication guyComm = new PlayerCommunicationImpl(guy);
 		try {
-			TableId tableId = kenzoComm.createTable();
+			kenzoComm.createTable();
+			//TODO create an event listener filter to wait for the tableID
 			guyComm.joinTable(tableId);
 			kenzoComm.startGame();
 		} catch (IllegalActionException e) {
 			fail(e.getMessage());
-		} finally {
-			PlayerCommunicationManager.clear();
 		}
 	}
 

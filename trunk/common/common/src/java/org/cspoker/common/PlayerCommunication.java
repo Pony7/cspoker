@@ -128,7 +128,7 @@ public abstract class PlayerCommunication implements RemotePlayerCommunication {
 	 *             [must] This actions is not a valid action in the current
 	 *             state.
 	 */
-	public abstract TableId createTable() throws IllegalActionException;
+	public abstract void createTable() throws IllegalActionException;
 
 	/**
 	 * This player starts the game. Only the player who has created the table

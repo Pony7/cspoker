@@ -155,7 +155,7 @@ public class CommandDelegatingHandler extends DelegatingHandler implements
 
 		public JointableHandler(Attributes attrs) throws IllegalActionException {
 			playerComm.joinTable(new TableId(Integer.parseInt(attrs
-					.getValue("amount"))));
+					.getValue("id"))));
 		}
 
 	}
