@@ -18,14 +18,16 @@ package org.cspoker.server.common.game.gamecontrol.rounds;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.cspoker.common.elements.cards.Card;
 import org.cspoker.common.elements.pots.Pots;
-import org.cspoker.common.events.gameEvents.NewCommunityCardsEvent;
-import org.cspoker.common.events.gameEvents.WinnerEvent;
-import org.cspoker.common.events.gameEvents.playerActionEvents.AllInEvent;
+import org.cspoker.common.events.gameevents.NewCommunityCardsEvent;
+import org.cspoker.common.events.gameevents.WinnerEvent;
+import org.cspoker.common.events.gameevents.playeractionevents.AllInEvent;
 import org.cspoker.common.exceptions.IllegalActionException;
 import org.cspoker.common.player.Winner;
 import org.cspoker.server.common.game.GameMediator;
@@ -399,7 +401,7 @@ public abstract class BettingRound extends Round {
 	protected void drawOpenCardAndPublishCommonCard() {
 		Card card = drawCard();
 		game.addOpenCard(card);
-		List<Card> cards = new ArrayList<Card>(1);
+		Set<Card> cards = new HashSet<Card>(1);
 		cards.add(card);
 		gameMediator.publishNewCommonCardsEvent(new NewCommunityCardsEvent(
 				cards));
@@ -499,7 +501,7 @@ public abstract class BettingRound extends Round {
 					+ pots.getTotalValue() + " chips");
 
 			int gainedChipsValue = pots.getPots().get(0).getChips().getValue();
-			List<Winner> savedWinner = new ArrayList<Winner>(1);
+			Set<Winner> savedWinner = new HashSet<Winner>(1);
 			savedWinner.add(new Winner(winner.getSavedPlayer(),
 					gainedChipsValue));
 			pots.getPots().get(0).getChips().transferAllChipsTo(

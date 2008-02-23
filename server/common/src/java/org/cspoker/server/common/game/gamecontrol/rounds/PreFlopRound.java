@@ -16,13 +16,16 @@
 
 package org.cspoker.server.common.game.gamecontrol.rounds;
 
+import java.util.HashSet;
+
 import org.apache.log4j.Logger;
+import org.cspoker.common.elements.cards.Card;
 import org.cspoker.common.elements.pots.Pots;
-import org.cspoker.common.events.gameEvents.NewRoundEvent;
-import org.cspoker.common.events.gameEvents.NextPlayerEvent;
-import org.cspoker.common.events.gameEvents.playerActionEvents.BigBlindEvent;
-import org.cspoker.common.events.gameEvents.playerActionEvents.SmallBlindEvent;
-import org.cspoker.common.events.gameEvents.privateEvents.NewPocketCardsEvent;
+import org.cspoker.common.events.gameevents.NewRoundEvent;
+import org.cspoker.common.events.gameevents.NextPlayerEvent;
+import org.cspoker.common.events.gameevents.playeractionevents.BigBlindEvent;
+import org.cspoker.common.events.gameevents.playeractionevents.SmallBlindEvent;
+import org.cspoker.common.events.gameevents.privateevents.NewPocketCardsEvent;
 import org.cspoker.common.exceptions.IllegalActionException;
 import org.cspoker.server.common.game.GameMediator;
 import org.cspoker.server.common.game.elements.chips.IllegalValueException;
@@ -96,8 +99,8 @@ public class PreFlopRound extends BettingRound {
 					+ player.getPocketCards());
 
 			gameMediator.publishNewPocketCardsEvent(player.getId(),
-					new NewPocketCardsEvent(player.getSavedPlayer(), player
-							.getPocketCards()));
+					new NewPocketCardsEvent(player.getSavedPlayer(), new HashSet<Card>(player
+							.getPocketCards())));
 		}
 
 		if (getGame().getNbCurrentDealPlayers() > 1) {

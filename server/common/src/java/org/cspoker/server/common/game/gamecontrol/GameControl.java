@@ -23,12 +23,12 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.cspoker.common.elements.pots.Pots;
-import org.cspoker.common.events.gameEvents.NextPlayerEvent;
-import org.cspoker.common.events.gameEvents.playerActionEvents.BetEvent;
-import org.cspoker.common.events.gameEvents.playerActionEvents.CallEvent;
-import org.cspoker.common.events.gameEvents.playerActionEvents.CheckEvent;
-import org.cspoker.common.events.gameEvents.playerActionEvents.FoldEvent;
-import org.cspoker.common.events.gameEvents.playerActionEvents.RaiseEvent;
+import org.cspoker.common.events.gameevents.NextPlayerEvent;
+import org.cspoker.common.events.gameevents.playeractionevents.BetEvent;
+import org.cspoker.common.events.gameevents.playeractionevents.CallEvent;
+import org.cspoker.common.events.gameevents.playeractionevents.CheckEvent;
+import org.cspoker.common.events.gameevents.playeractionevents.FoldEvent;
+import org.cspoker.common.events.gameevents.playeractionevents.RaiseEvent;
 import org.cspoker.common.exceptions.IllegalActionException;
 import org.cspoker.server.common.game.GameMediator;
 import org.cspoker.server.common.game.elements.table.PlayerListFullException;

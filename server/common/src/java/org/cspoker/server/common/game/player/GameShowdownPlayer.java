@@ -16,6 +16,9 @@
 
 package org.cspoker.server.common.game.player;
 
+import java.util.HashSet;
+
+import org.cspoker.common.elements.cards.Card;
 import org.cspoker.common.player.ShowdownPlayer;
 import org.cspoker.server.common.game.elements.cards.hand.Hand;
 
@@ -73,8 +76,8 @@ public class GameShowdownPlayer implements Comparable<GameShowdownPlayer> {
 	}
 
 	public ShowdownPlayer getSavedShowdownPlayer() {
-		return new ShowdownPlayer(player.getSavedPlayer(), getBestHand()
-				.getCards(), getBestHand().getDescription());
+		return new ShowdownPlayer(player.getSavedPlayer(), new HashSet<Card>(getBestHand()
+				.getCards()), getBestHand().getDescription());
 	}
 
 	/**
