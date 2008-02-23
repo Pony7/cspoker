@@ -26,6 +26,8 @@ import org.cspoker.common.exceptions.IllegalActionException;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class AllInAction extends PlayerCommunicationAction {
 
+	private static final long serialVersionUID = 7897218843022885169L;
+
 	public AllInAction(long id) {
 		super(id);
 	}

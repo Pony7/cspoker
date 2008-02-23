@@ -26,6 +26,8 @@ import org.cspoker.common.exceptions.IllegalActionException;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class FoldAction extends PlayerCommunicationAction {
 
+	private static final long serialVersionUID = -8222648524080616602L;
+
 	public FoldAction(long id) {
 		super(id);
 	}

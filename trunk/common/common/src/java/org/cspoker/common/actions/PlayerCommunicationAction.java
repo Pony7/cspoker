@@ -15,6 +15,8 @@
  */
 package org.cspoker.common.actions;
 
+import java.io.Serializable;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -25,7 +27,7 @@ import org.cspoker.common.exceptions.IllegalActionException;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-public abstract class PlayerCommunicationAction {
+public abstract class PlayerCommunicationAction implements Serializable{
 
 	@XmlAttribute
 	private long id;
