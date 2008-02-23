@@ -19,7 +19,7 @@ package org.cspoker.common.eventlisteners.game.actions;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
-import org.cspoker.common.events.gameEvents.playerActionEvents.CallEvent;
+import org.cspoker.common.events.gameevents.playeractionevents.CallEvent;
 
 /**
  * An interface for call listeners.

@@ -14,10 +14,14 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-package org.cspoker.common.events.gameEvents;
+package org.cspoker.common.events.gameevents;
 
 import java.util.Collections;
 import java.util.List;
+
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
 
 import org.cspoker.common.player.Player;
 import org.xml.sax.ContentHandler;
@@ -30,6 +34,8 @@ import org.xml.sax.helpers.AttributesImpl;
  * @author Kenzo
  * 
  */
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
 public class NewDealEvent extends GameEvent {
 
 	private static final long serialVersionUID = 8048593844056212117L;
@@ -59,28 +65,6 @@ public class NewDealEvent extends GameEvent {
 		return toReturn.substring(0, toReturn.length() - 2)
 				+ " as initial players of this table. " + dealer.getName()
 				+ " is dealer.";
-	}
-
-	@Override
-	public void toXml(ContentHandler handler) throws SAXException {
-		AttributesImpl attrs = new AttributesImpl();
-		attrs.addAttribute("", "type", "type", "CDATA", "newdeal");
-		handler.startElement("", "event", "event", attrs);
-
-		handler.startElement("", "players", "players", new AttributesImpl());
-		for (Player player : players) {
-			attrs = new AttributesImpl();
-			if (player.equals(getDealer())) {
-				attrs.addAttribute("", "dealer", "dealer", "CDATA", "true");
-			}
-			handler.startElement("", "player", "player", attrs);
-			String msg = String.valueOf(player.getName());
-			handler.characters(msg.toCharArray(), 0, msg.length());
-			handler.endElement("", "player", "player");
-		}
-		handler.endElement("", "players", "players");
-
-		handler.endElement("", "event", "event");
 	}
 
 }

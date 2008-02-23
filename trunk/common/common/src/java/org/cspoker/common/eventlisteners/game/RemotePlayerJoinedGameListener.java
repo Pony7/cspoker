@@ -18,7 +18,7 @@ package org.cspoker.common.eventlisteners.game;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
-import org.cspoker.common.events.gameEvents.PlayerJoinedGameEvent;
+import org.cspoker.common.events.gameevents.PlayerJoinedGameEvent;
 
 /**
  * An interface for player joining games listeners.

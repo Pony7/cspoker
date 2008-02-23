@@ -19,7 +19,7 @@ package org.cspoker.common.eventlisteners.game;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
-import org.cspoker.common.events.gameEvents.NewCommunityCardsEvent;
+import org.cspoker.common.events.gameevents.NewCommunityCardsEvent;
 
 /**
  * An interface for new community cards listeners.

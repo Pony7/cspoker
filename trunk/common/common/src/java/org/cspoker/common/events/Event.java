@@ -18,11 +18,8 @@ package org.cspoker.common.events;
 
 import java.io.Serializable;
 
-import org.xml.sax.ContentHandler;
-import org.xml.sax.SAXException;
+import javax.xml.bind.annotation.XmlRootElement;
 
 public abstract class Event implements Serializable {
-
-	public abstract void toXml(ContentHandler handler) throws SAXException;
-
+	
 }

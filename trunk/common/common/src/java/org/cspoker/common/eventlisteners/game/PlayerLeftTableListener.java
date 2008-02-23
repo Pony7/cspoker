@@ -15,7 +15,7 @@
  */
 package org.cspoker.common.eventlisteners.game;
 
-import org.cspoker.common.events.gameEvents.PlayerLeftTableEvent;
+import org.cspoker.common.events.gameevents.PlayerLeftTableEvent;
 
 /**
  * An interface for leaving player listeners.

@@ -18,19 +18,26 @@ package org.cspoker.common.player;
 
 import java.io.Serializable;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlValue;
+
+
 /**
  * A class to represent player id's.
  * 
  * @author Kenzo
  * 
  */
+@XmlAccessorType(XmlAccessType.FIELD)
 public class PlayerId implements Serializable {
 
 	private static final long serialVersionUID = -3259296410499422525L;
 	/**
 	 * The variable containing the id.
 	 */
-	private final long id;
+	@XmlValue
+	private long id;
 
 	/**
 	 * Construct a new player id with given long id.
@@ -40,6 +47,10 @@ public class PlayerId implements Serializable {
 	 */
 	public PlayerId(long id) {
 		this.id = id;
+	}
+	
+	public PlayerId() {
+		//no op
 	}
 
 	/**
@@ -73,6 +84,10 @@ public class PlayerId implements Serializable {
 	@Override
 	public String toString() {
 		return Long.valueOf(id).toString();
+	}
+
+	public long getId() {
+		return id;
 	}
 
 }

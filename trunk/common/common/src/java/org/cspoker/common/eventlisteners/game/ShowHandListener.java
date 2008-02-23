@@ -15,7 +15,7 @@
  */
 package org.cspoker.common.eventlisteners.game;
 
-import org.cspoker.common.events.gameEvents.ShowHandEvent;
+import org.cspoker.common.events.gameevents.ShowHandEvent;
 
 /**
  * An interface for showing hand listeners.

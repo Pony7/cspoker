@@ -18,7 +18,7 @@ package org.cspoker.common.eventlisteners.server;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
-import org.cspoker.common.events.serverEvents.PlayerJoinedEvent;
+import org.cspoker.common.events.serverevents.PlayerJoinedEvent;
 
 public interface RemotePlayerJoinedListener extends Remote {
 

@@ -15,7 +15,11 @@
  */
 package org.cspoker.common.events.internal;
 
-import org.cspoker.common.events.gameEvents.GameEvent;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
+
+import org.cspoker.common.events.gameevents.GameEvent;
 import org.cspoker.common.player.Player;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
@@ -27,6 +31,8 @@ import org.xml.sax.helpers.AttributesImpl;
  * @author Kenzo
  * 
  */
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
 class StackChangedEvent extends GameEvent {
 
 	private static final long serialVersionUID = 4587490473704241612L;
@@ -45,23 +51,6 @@ class StackChangedEvent extends GameEvent {
 	public String toString() {
 		return player.getName() + "'s stack has changed to "
 				+ player.getStackValue() + " chips.";
-	}
-
-	@Override
-	public void toXml(ContentHandler handler) throws SAXException {
-		AttributesImpl attrs = new AttributesImpl();
-		attrs.addAttribute("", "type", "type", "CDATA", "stackchanged");
-		attrs.addAttribute("", "player", "player", "CDATA", getPlayer()
-				.getName());
-		handler.startElement("", "event", "event", attrs);
-
-		handler.startElement("", "amount", "amount", new AttributesImpl());
-		String msg = String.valueOf(getPlayer().getStackValue());
-		handler.characters(msg.toCharArray(), 0, msg.length());
-		handler.endElement("", "amount", "amount");
-
-		handler.endElement("", "event", "event");
-
 	}
 
 }

@@ -19,14 +19,24 @@ package org.cspoker.common.elements.pots;
 import java.io.Serializable;
 import java.util.List;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlValue;
+
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Pots implements Serializable {
 
 	private static final long serialVersionUID = 2133563839323145402L;
 
-	private final int totalValue;
+	@XmlValue
+	private int totalValue;
 
 	public Pots(int totalValue) {
 		this.totalValue = totalValue;
+	}
+	
+	public Pots() {
+		// no op
 	}
 
 	public List<Pot> getActivePot() {
@@ -42,5 +52,5 @@ public class Pots implements Serializable {
 	public int getTotalValue() {
 		return totalValue;
 	}
-
+	
 }

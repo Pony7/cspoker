@@ -18,7 +18,7 @@ package org.cspoker.common.eventlisteners.server;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
-import org.cspoker.common.events.serverEvents.TableCreatedEvent;
+import org.cspoker.common.events.serverevents.TableCreatedEvent;
 
 public interface RemoteTableCreatedListener extends Remote {
 

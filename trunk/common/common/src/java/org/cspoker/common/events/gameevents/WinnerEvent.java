@@ -14,10 +14,14 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-package org.cspoker.common.events.gameEvents;
+package org.cspoker.common.events.gameevents;
 
 import java.util.Collections;
 import java.util.List;
+
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
 
 import org.cspoker.common.player.Winner;
 import org.xml.sax.ContentHandler;
@@ -30,6 +34,8 @@ import org.xml.sax.helpers.AttributesImpl;
  * @author Kenzo
  * 
  */
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
 public class WinnerEvent extends GameEvent {
 
 	private static final long serialVersionUID = -2384964708734525969L;
@@ -53,26 +59,5 @@ public class WinnerEvent extends GameEvent {
 			toReturn += ", ";
 		}
 		return toReturn.substring(0, toReturn.length() - 2) + ".";
-	}
-
-	@Override
-	public void toXml(ContentHandler handler) throws SAXException {
-		AttributesImpl attrs = new AttributesImpl();
-		attrs.addAttribute("", "type", "type", "CDATA", "winner");
-		handler.startElement("", "event", "event", attrs);
-
-		handler.startElement("", "winners", "winners", new AttributesImpl());
-		for (Winner winner : getWinners()) {
-			attrs = new AttributesImpl();
-			attrs.addAttribute("", "name", "name", "CDATA", winner.getPlayer()
-					.getName());
-			handler.startElement("", "winner", "winner", attrs);
-			String msg = String.valueOf(winner.getGainedAmount());
-			handler.characters(msg.toCharArray(), 0, msg.length());
-			handler.endElement("", "winner", "winner");
-		}
-		handler.endElement("", "winners", "winners");
-
-		handler.endElement("", "event", "event");
 	}
 }

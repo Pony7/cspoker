@@ -16,7 +16,7 @@
 
 package org.cspoker.common.eventlisteners.game;
 
-import org.cspoker.common.events.gameEvents.WinnerEvent;
+import org.cspoker.common.events.gameevents.WinnerEvent;
 
 /**
  * An interface for winner listeners.

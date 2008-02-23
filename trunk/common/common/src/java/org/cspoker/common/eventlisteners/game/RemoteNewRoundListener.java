@@ -19,7 +19,7 @@ package org.cspoker.common.eventlisteners.game;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
-import org.cspoker.common.events.gameEvents.NewRoundEvent;
+import org.cspoker.common.events.gameevents.NewRoundEvent;
 
 /**
  * An interface for new round listeners.

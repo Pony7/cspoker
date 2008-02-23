@@ -15,7 +15,7 @@
  */
 package org.cspoker.common.eventlisteners.server;
 
-import org.cspoker.common.events.serverEvents.ServerMessageEvent;
+import org.cspoker.common.events.serverevents.ServerMessageEvent;
 
 public interface ServerMessageListener extends RemoteServerMessageListener {
 

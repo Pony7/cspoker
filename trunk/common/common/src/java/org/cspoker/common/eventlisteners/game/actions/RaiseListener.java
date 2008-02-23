@@ -16,7 +16,7 @@
 
 package org.cspoker.common.eventlisteners.game.actions;
 
-import org.cspoker.common.events.gameEvents.playerActionEvents.RaiseEvent;
+import org.cspoker.common.events.gameevents.playeractionevents.RaiseEvent;
 
 /**
  * An interface for raise listeners.

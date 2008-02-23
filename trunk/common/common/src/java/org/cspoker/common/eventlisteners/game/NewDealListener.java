@@ -16,7 +16,7 @@
 
 package org.cspoker.common.eventlisteners.game;
 
-import org.cspoker.common.events.gameEvents.NewDealEvent;
+import org.cspoker.common.events.gameevents.NewDealEvent;
 
 /**
  * An interface for new deal listeners.

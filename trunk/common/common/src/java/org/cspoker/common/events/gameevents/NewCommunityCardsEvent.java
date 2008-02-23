@@ -13,47 +13,49 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
+package org.cspoker.common.events.gameevents;
 
-package org.cspoker.common.events.gameEvents;
+import java.util.Collections;
+import java.util.List;
 
-import org.cspoker.common.player.Player;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
+
+import org.cspoker.common.elements.cards.Card;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
 /**
- * A class to represent new player events.
+ * A class to represent new community cards events.
  * 
  * @author Kenzo
  * 
  */
-public class NextPlayerEvent extends GameEvent {
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
+public class NewCommunityCardsEvent extends GameEvent {
 
-	private static final long serialVersionUID = -2048233796443189725L;
+	private static final long serialVersionUID = -5063239366087788741L;
 
-	private final Player player;
+	private final List<Card> communityCards;
 
-	public NextPlayerEvent(Player player) {
-		this.player = player;
+	public NewCommunityCardsEvent(List<Card> commonCards) {
+		communityCards = Collections.unmodifiableList(commonCards);
 	}
 
-	public Player getPlayer() {
-		return player;
+	public List<Card> getCommonCards() {
+		return communityCards;
 	}
 
 	@Override
 	public String toString() {
-		return "It's " + player.getName() + "'s turn.";
-	}
-
-	@Override
-	public void toXml(ContentHandler handler) throws SAXException {
-		AttributesImpl attrs = new AttributesImpl();
-		attrs.addAttribute("", "type", "type", "CDATA", "nextplayer");
-		attrs.addAttribute("", "player", "player", "CDATA", getPlayer()
-				.getName());
-		handler.startElement("", "event", "event", attrs);
-
-		handler.endElement("", "event", "event");
+		String toReturn = "New Community Cards: ";
+		for (Card card : communityCards) {
+			toReturn += card;
+			toReturn += ", ";
+		}
+		return toReturn.substring(0, toReturn.length() - 2) + ".";
 	}
 }

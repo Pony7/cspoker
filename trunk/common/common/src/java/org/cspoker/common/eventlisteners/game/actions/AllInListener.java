@@ -16,7 +16,7 @@
 
 package org.cspoker.common.eventlisteners.game.actions;
 
-import org.cspoker.common.events.gameEvents.playerActionEvents.AllInEvent;
+import org.cspoker.common.events.gameevents.playeractionevents.AllInEvent;
 
 /**
  * An interface for all-in listeners.

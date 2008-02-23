@@ -14,47 +14,42 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-package org.cspoker.common.events.gameEvents.playerActionEvents;
+package org.cspoker.common.events.gameevents;
 
-import org.cspoker.common.events.gameEvents.GameEvent;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
+
 import org.cspoker.common.player.Player;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
 /**
- * A class to represent check events.
+ * A class to represent leaving player events.
  * 
  * @author Kenzo
  * 
  */
-public class CheckEvent extends GameEvent {
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
+public class PlayerLeftTableEvent extends GameEvent {
 
-	private static final long serialVersionUID = -1128439307716720778L;
+	private static final long serialVersionUID = -5339079807813674278L;
 
 	private final Player player;
 
-	public CheckEvent(Player player) {
+	public PlayerLeftTableEvent(Player player) {
 		this.player = player;
 	}
 
 	@Override
 	public String toString() {
-		return getPlayer().getName() + " checks.";
+		return player.getName() + " has left this table.";
 	}
 
 	public Player getPlayer() {
 		return player;
-	}
-
-	@Override
-	public void toXml(ContentHandler handler) throws SAXException {
-		AttributesImpl attrs = new AttributesImpl();
-		attrs.addAttribute("", "type", "type", "CDATA", "check");
-		attrs.addAttribute("", "player", "player", "CDATA", getPlayer()
-				.getName());
-		handler.startElement("", "event", "event", attrs);
-		handler.endElement("", "event", "event");
 	}
 
 }

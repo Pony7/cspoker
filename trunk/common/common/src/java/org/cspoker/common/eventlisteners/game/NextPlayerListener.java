@@ -16,7 +16,7 @@
 
 package org.cspoker.common.eventlisteners.game;
 
-import org.cspoker.common.events.gameEvents.NextPlayerEvent;
+import org.cspoker.common.events.gameevents.NextPlayerEvent;
 
 /**
  * An interface for next player listeners.

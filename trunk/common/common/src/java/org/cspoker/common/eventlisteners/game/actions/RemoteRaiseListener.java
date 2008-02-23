@@ -19,7 +19,7 @@ package org.cspoker.common.eventlisteners.game.actions;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
-import org.cspoker.common.events.gameEvents.playerActionEvents.RaiseEvent;
+import org.cspoker.common.events.gameevents.playeractionevents.RaiseEvent;
 
 /**
  * An interface for raise listeners.

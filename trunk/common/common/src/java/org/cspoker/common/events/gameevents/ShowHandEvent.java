@@ -13,7 +13,11 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.common.events.gameEvents;
+package org.cspoker.common.events.gameevents;
+
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
 
 import org.cspoker.common.player.ShowdownPlayer;
 import org.xml.sax.ContentHandler;
@@ -26,6 +30,8 @@ import org.xml.sax.helpers.AttributesImpl;
  * @author Kenzo
  * 
  */
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
 public class ShowHandEvent extends GameEvent {
 
 	private static final long serialVersionUID = -3412700183566852150L;
@@ -44,21 +50,4 @@ public class ShowHandEvent extends GameEvent {
 	public ShowdownPlayer getShowdownPlayer() {
 		return player;
 	}
-
-	@Override
-	public void toXml(ContentHandler handler) throws SAXException {
-		AttributesImpl attrs = new AttributesImpl();
-		attrs.addAttribute("", "type", "type", "CDATA", "showhand");
-		attrs.addAttribute("", "player", "player", "CDATA", getShowdownPlayer()
-				.getPlayer().getName());
-		handler.startElement("", "event", "event", attrs);
-
-		handler.startElement("", "description", "description", attrs);
-		String msg = getShowdownPlayer().getHandDescription();
-		handler.characters(msg.toCharArray(), 0, msg.length());
-		handler.endElement("", "description", "description");
-
-		handler.endElement("", "event", "event");
-	}
-
 }

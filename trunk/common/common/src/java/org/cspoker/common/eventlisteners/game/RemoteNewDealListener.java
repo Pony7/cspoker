@@ -19,7 +19,7 @@ package org.cspoker.common.eventlisteners.game;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
-import org.cspoker.common.events.gameEvents.NewDealEvent;
+import org.cspoker.common.events.gameevents.NewDealEvent;
 
 /**
  * An interface for new deal listeners.
