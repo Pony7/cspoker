@@ -17,30 +17,27 @@ package org.cspoker.client.xml.http;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.rmi.RemoteException;
+import java.rmi.ConnectException;
 
+import javax.security.auth.login.LoginException;
+
+import org.cspoker.client.common.RemotePlayerCommunicationFactory;
+import org.cspoker.client.xml.common.XmlChannelRemotePlayerCommunication;
 import org.cspoker.common.RemotePlayerCommunication;
-import org.cspoker.common.elements.table.TableId;
-import org.cspoker.common.eventlisteners.RemoteAllEventsListener;
-import org.cspoker.common.exceptions.IllegalActionException;
 
-public class RemotePlayerCommunicationFactoryForHttp {
 
-	
+public class RemotePlayerCommunicationFactoryForHttp implements RemotePlayerCommunicationFactory{
 
-	private URL url;
-	
-	public RemotePlayerCommunicationFactoryForHttp(String server) throws MalformedURLException {
-		this.url = new URL(server);
-	}
-
-	public RemotePlayerCommunication login(String username, String password)
-			throws RemoteException {
-
-		final XmlHttpChannel c= new XmlHttpChannel(url, username, password);
-		
-
-		return new XmlChannelRemotePlayerCommunication(c);
+	@Override
+	public RemotePlayerCommunication getRemotePlayerCommunication(
+			String server, int port, String username, String password) throws ConnectException, LoginException{
+		try {
+			XmlHttpChannel c = new XmlHttpChannel(new URL("http://"+server+":"+port),username, password);
+			c.open();
+			return new XmlChannelRemotePlayerCommunication(c);
+		} catch (MalformedURLException e) {
+			throw new ConnectException("Malformed URL",e);
+		}
 	}
 
 

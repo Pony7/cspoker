@@ -13,10 +13,11 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.server.xml.common.handler;
+package org.cspoker.client.xml.common;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.Set;
 
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerFactory;
@@ -27,6 +28,7 @@ import javax.xml.transform.stream.StreamResult;
 import org.apache.log4j.Logger;
 import org.cspoker.common.PlayerCommunication;
 import org.cspoker.common.elements.table.TableId;
+import org.cspoker.common.eventlisteners.RemoteAllEventsListener;
 import org.cspoker.common.exceptions.IllegalActionException;
 import org.cspoker.common.xml.XmlEventListener;
 import org.cspoker.common.xml.handler.DelegatingHandler;
@@ -36,18 +38,14 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 import org.xml.sax.helpers.DefaultHandler;
 
-public class CommandDelegatingHandler extends DelegatingHandler implements
+public class EventDelegatingHandler extends DelegatingHandler implements
 		ContentHandler {
 	private final static Logger logger = Logger
-			.getLogger(CommandDelegatingHandler.class);
+			.getLogger(EventDelegatingHandler.class);
+	private final Set<RemoteAllEventsListener> listeners;
 
-	private final PlayerCommunication playerComm;
-	private final XmlEventListener collector;
-
-	public CommandDelegatingHandler(PlayerCommunication playerComm,
-			XmlEventListener collector) {
-		this.playerComm = playerComm;
-		this.collector = collector;
+	public EventDelegatingHandler(Set<RemoteAllEventsListener> listeners) {
+		this.listeners = listeners;
 	}
 
 	@Override

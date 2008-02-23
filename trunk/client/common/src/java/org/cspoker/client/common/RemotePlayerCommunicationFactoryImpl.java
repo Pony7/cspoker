@@ -19,6 +19,8 @@ import java.rmi.ConnectException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.security.auth.login.LoginException;
+
 import org.cspoker.common.RemotePlayerCommunication;
 
 public class RemotePlayerCommunicationFactoryImpl implements
@@ -35,10 +37,11 @@ public class RemotePlayerCommunicationFactoryImpl implements
 
 	public RemotePlayerCommunication getRemotePlayerCommunication(
 			String server, int port, String username, String password)
-			throws ConnectException, NoProviderException {
+			throws ConnectException, NoProviderException, LoginException {
 
 		NoProviderException lastNoProviderException = null;
 		ConnectException lastConnectException = null;
+		LoginException lastLoginException = null;
 
 		for (RemotePlayerCommunicationFactory p : providers) {
 			try {
@@ -48,12 +51,17 @@ public class RemotePlayerCommunicationFactoryImpl implements
 				lastNoProviderException = e;
 			} catch (ConnectException e) {
 				lastConnectException = e;
+			} catch (LoginException e) {
+				lastLoginException = e;
+
 			}
 		}
 		if (lastConnectException != null)
 			throw lastConnectException;
 		if (lastNoProviderException != null)
 			throw lastNoProviderException;
+		if (lastLoginException != null)
+			throw lastLoginException;
 		throw new NoProviderException();
 	}
 

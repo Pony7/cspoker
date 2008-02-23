@@ -28,7 +28,8 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import org.cspoker.client.xml.common.LoginFailedException;
+import javax.security.auth.login.LoginException;
+
 import org.cspoker.client.xml.common.XmlChannel;
 import org.cspoker.common.exceptions.IllegalActionException;
 import org.cspoker.common.xml.XmlEventListener;
@@ -52,7 +53,7 @@ public class XmlHttpChannel implements XmlChannel {
 		this.url = url;
 	}
 
-	public void open() throws LoginFailedException {
+	public void open() throws LoginException {
 		//TODO check login success
 		executor = Executors.newSingleThreadExecutor();
 	}

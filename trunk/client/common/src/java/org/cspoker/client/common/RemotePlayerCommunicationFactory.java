@@ -17,13 +17,15 @@ package org.cspoker.client.common;
 
 import java.rmi.ConnectException;
 
+import javax.security.auth.login.LoginException;
+
 import org.cspoker.common.RemotePlayerCommunication;
 
 public interface RemotePlayerCommunicationFactory {
 
 	public RemotePlayerCommunication getRemotePlayerCommunication(
 			String server, int port, String username, String password)
-			throws ConnectException, NoProviderException;
+			throws ConnectException, NoProviderException, LoginException;
 
 	public class NoProviderException extends Exception {
 
