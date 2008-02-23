@@ -24,9 +24,6 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.cspoker.common.player.Player;
-import org.xml.sax.ContentHandler;
-import org.xml.sax.SAXException;
-import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * A class to represent new deal events.
@@ -40,13 +37,17 @@ public class NewDealEvent extends GameEvent {
 
 	private static final long serialVersionUID = 8048593844056212117L;
 
-	private final List<Player> players;
+	private List<Player> players;
 
-	private final Player dealer;
+	private Player dealer;
 
 	public NewDealEvent(List<Player> players, Player dealer) {
 		this.players = Collections.unmodifiableList(players);
 		this.dealer = dealer;
+	}
+	
+	protected NewDealEvent() {
+		// no op
 	}
 
 	public Player getDealer() {

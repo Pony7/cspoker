@@ -49,7 +49,7 @@ public class PlayerId implements Serializable {
 		this.id = id;
 	}
 	
-	public PlayerId() {
+	protected PlayerId() {
 		//no op
 	}
 

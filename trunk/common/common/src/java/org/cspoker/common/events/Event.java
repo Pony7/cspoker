@@ -18,8 +18,6 @@ package org.cspoker.common.events;
 
 import java.io.Serializable;
 
-import javax.xml.bind.annotation.XmlRootElement;
-
 public abstract class Event implements Serializable {
 	
 }

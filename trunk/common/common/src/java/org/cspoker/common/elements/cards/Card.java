@@ -22,7 +22,7 @@ public final class Card implements Comparable<Card>, Serializable {
 		this.suit = suit;
 	}
 	
-	public Card() {
+	protected Card() {
 		// no op
 	}
 

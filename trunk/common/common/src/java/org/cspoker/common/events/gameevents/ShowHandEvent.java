@@ -20,9 +20,6 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.cspoker.common.player.ShowdownPlayer;
-import org.xml.sax.ContentHandler;
-import org.xml.sax.SAXException;
-import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * A class to represent show hand events.
@@ -36,10 +33,14 @@ public class ShowHandEvent extends GameEvent {
 
 	private static final long serialVersionUID = -3412700183566852150L;
 
-	private final ShowdownPlayer player;
+	private ShowdownPlayer player;
 
 	public ShowHandEvent(ShowdownPlayer player) {
 		this.player = player;
+	}
+	
+	protected ShowHandEvent() {
+		// no op
 	}
 
 	@Override

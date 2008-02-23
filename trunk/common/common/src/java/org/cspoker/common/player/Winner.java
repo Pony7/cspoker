@@ -21,13 +21,17 @@ public class Winner implements Serializable {
 
 	private static final long serialVersionUID = 2432656140806034623L;
 
-	private final int gainedAmount;
+	private int gainedAmount;
 
-	private final Player player;
+	private Player player;
 
 	public Winner(Player player, int gainedAmount) {
 		this.player = player;
 		this.gainedAmount = gainedAmount;
+	}
+	
+	protected Winner() {
+		// no op
 	}
 
 	public int getGainedAmount() {

@@ -17,7 +17,10 @@ package org.cspoker.common.player;
 
 import java.io.Serializable;
 import java.util.Collections;
-import java.util.List;
+import java.util.Set;
+
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
 
 import org.cspoker.common.elements.cards.Card;
 
@@ -25,16 +28,22 @@ public class ShowdownPlayer implements Serializable {
 
 	private static final long serialVersionUID = -1618593137613219527L;
 
-	private final Player player;
+	private Player player;
+	
+	@XmlElementWrapper
+	@XmlElement(name="card")
+	private Set<Card> cards;
 
-	private final List<Card> cards;
+	private String description;
 
-	private final String description;
-
-	public ShowdownPlayer(Player player, List<Card> cards, String description) {
+	public ShowdownPlayer(Player player, Set<Card> cards, String description) {
 		this.player = player;
-		this.cards = Collections.unmodifiableList(cards);
+		this.cards = Collections.unmodifiableSet(cards);
 		this.description = description;
+	}
+	
+	protected ShowdownPlayer() {
+		// no op
 	}
 
 	/**
@@ -49,7 +58,7 @@ public class ShowdownPlayer implements Serializable {
 		return player;
 	}
 
-	public List<Card> getHandCards() {
+	public Set<Card> getHandCards() {
 		return cards;
 	}
 

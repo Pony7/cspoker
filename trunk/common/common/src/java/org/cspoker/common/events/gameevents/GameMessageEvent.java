@@ -20,9 +20,6 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.cspoker.common.player.Player;
-import org.xml.sax.ContentHandler;
-import org.xml.sax.SAXException;
-import org.xml.sax.helpers.AttributesImpl;
 
 
 @XmlRootElement
@@ -31,13 +28,17 @@ public class GameMessageEvent extends GameEvent {
 
 	private static final long serialVersionUID = -3097280563115901972L;
 
-	private final Player player;
+	private Player player;
 
-	private final String message;
+	private String message;
 
 	public GameMessageEvent(Player player, String message) {
 		this.player = player;
 		this.message = message;
+	}
+	
+	protected GameMessageEvent() {
+		// no op
 	}
 
 	@Override

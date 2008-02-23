@@ -21,9 +21,6 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.cspoker.common.player.Player;
-import org.xml.sax.ContentHandler;
-import org.xml.sax.SAXException;
-import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * A class to represent new round events.
@@ -37,13 +34,17 @@ public class NewRoundEvent extends GameEvent {
 
 	private static final long serialVersionUID = 5282936949568835084L;
 
-	private final String roundName;
+	private String roundName;
 
-	private final Player player;
+	private Player player;
 
 	public NewRoundEvent(String roundName, Player player) {
 		this.roundName = roundName;
 		this.player = player;
+	}
+	
+	protected NewRoundEvent() {
+		// no op
 	}
 
 	public Player getPlayer() {

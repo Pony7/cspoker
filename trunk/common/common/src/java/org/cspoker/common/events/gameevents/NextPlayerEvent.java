@@ -21,9 +21,6 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.cspoker.common.player.Player;
-import org.xml.sax.ContentHandler;
-import org.xml.sax.SAXException;
-import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * A class to represent new player events.
@@ -37,10 +34,14 @@ public class NextPlayerEvent extends GameEvent {
 
 	private static final long serialVersionUID = -2048233796443189725L;
 
-	private final Player player;
+	private Player player;
 
 	public NextPlayerEvent(Player player) {
 		this.player = player;
+	}
+	
+	protected NextPlayerEvent() {
+		// no op
 	}
 
 	public Player getPlayer() {

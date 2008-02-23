@@ -20,9 +20,6 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.cspoker.common.player.Player;
-import org.xml.sax.ContentHandler;
-import org.xml.sax.SAXException;
-import org.xml.sax.helpers.AttributesImpl;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -30,15 +27,19 @@ public class ServerMessageEvent extends ServerEvent {
 
 	private static final long serialVersionUID = -1396985826399601557L;
 
-	private final Player player;
+	private Player player;
 
-	private final String message;
+	private String message;
 
 	public ServerMessageEvent(Player player, String message) {
 		this.player = player;
 		this.message = message;
 	}
 
+	protected ServerMessageEvent() {
+		// no op
+	}
+	
 	@Override
 	public String toString() {
 		return player.getName() + " says: " + message;
