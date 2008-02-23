@@ -19,13 +19,15 @@ package org.cspoker.server.common.game.gamecontrol;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.cspoker.common.elements.cards.Card;
-import org.cspoker.common.events.gameEvents.ShowHandEvent;
-import org.cspoker.common.events.gameEvents.WinnerEvent;
+import org.cspoker.common.events.gameevents.ShowHandEvent;
+import org.cspoker.common.events.gameevents.WinnerEvent;
 import org.cspoker.common.player.PlayerId;
 import org.cspoker.common.player.Winner;
 import org.cspoker.server.common.game.GameMediator;
@@ -105,7 +107,7 @@ public class Showdown {
 			splitPot(winners, pot);
 		}
 
-		List<Winner> savedWinners = new ArrayList<Winner>();
+		Set<Winner> savedWinners = new HashSet<Winner>();
 
 		for (GameWinner winner : winnersMap.values()) {
 			if (winner.hasGainedChips()) {

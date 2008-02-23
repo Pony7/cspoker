@@ -26,10 +26,10 @@ import org.cspoker.common.eventlisteners.server.PlayerLeftListener;
 import org.cspoker.common.eventlisteners.server.ServerMessageListener;
 import org.cspoker.common.eventlisteners.server.TableCreatedListener;
 import org.cspoker.common.events.Event;
-import org.cspoker.common.events.serverEvents.PlayerJoinedEvent;
-import org.cspoker.common.events.serverEvents.PlayerLeftEvent;
-import org.cspoker.common.events.serverEvents.ServerMessageEvent;
-import org.cspoker.common.events.serverEvents.TableCreatedEvent;
+import org.cspoker.common.events.serverevents.PlayerJoinedEvent;
+import org.cspoker.common.events.serverevents.PlayerLeftEvent;
+import org.cspoker.common.events.serverevents.ServerMessageEvent;
+import org.cspoker.common.events.serverevents.TableCreatedEvent;
 import org.cspoker.common.player.PlayerId;
 
 public class ServerMediator {

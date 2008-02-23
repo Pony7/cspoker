@@ -16,9 +16,12 @@
 
 package org.cspoker.server.common.game.gamecontrol.rounds;
 
+import java.util.HashSet;
+
 import org.apache.log4j.Logger;
-import org.cspoker.common.events.gameEvents.NewCommunityCardsEvent;
-import org.cspoker.common.events.gameEvents.NewRoundEvent;
+import org.cspoker.common.elements.cards.Card;
+import org.cspoker.common.events.gameevents.NewCommunityCardsEvent;
+import org.cspoker.common.events.gameevents.NewRoundEvent;
 import org.cspoker.server.common.game.GameMediator;
 import org.cspoker.server.common.game.gamecontrol.Game;
 import org.cspoker.server.common.game.player.GamePlayer;
@@ -37,7 +40,7 @@ public class FlopRound extends BettingRound {
 		drawOpenCard();
 		drawOpenCard();
 		gameMediator.publishNewCommonCardsEvent(new NewCommunityCardsEvent(
-				getGame().getCommunityCards()));
+				new HashSet<Card>(getGame().getCommunityCards())));
 		FlopRound.logger.info("*** FLOP *** " + game.getCommunityCards());
 	}
 

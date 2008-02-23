@@ -17,8 +17,8 @@ package org.cspoker.server.common.game.playercommunication;
 
 import org.apache.log4j.Logger;
 import org.cspoker.common.elements.table.TableId;
-import org.cspoker.common.events.serverEvents.PlayerJoinedEvent;
-import org.cspoker.common.events.serverEvents.TableCreatedEvent;
+import org.cspoker.common.events.serverevents.PlayerJoinedEvent;
+import org.cspoker.common.events.serverevents.TableCreatedEvent;
 import org.cspoker.common.exceptions.IllegalActionException;
 import org.cspoker.server.common.game.GameManager;
 import org.cspoker.server.common.game.GameMediator;

@@ -17,7 +17,7 @@
 package org.cspoker.server.common.game.gamecontrol.rounds;
 
 import org.apache.log4j.Logger;
-import org.cspoker.common.events.gameEvents.NewRoundEvent;
+import org.cspoker.common.events.gameevents.NewRoundEvent;
 import org.cspoker.server.common.game.GameMediator;
 import org.cspoker.server.common.game.gamecontrol.Game;
 import org.cspoker.server.common.game.gamecontrol.Showdown;
