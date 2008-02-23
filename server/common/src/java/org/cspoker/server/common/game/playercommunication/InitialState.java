@@ -89,7 +89,7 @@ class InitialState extends PlayerCommunicationState {
 	}
 
 	@Override
-	public void createTable() throws IllegalActionException {
+	public TableId createTable() throws IllegalActionException {
 		Table table = TableManager.createTable(playerCommunication.getPlayer()
 				.getId());
 		try {
@@ -106,6 +106,7 @@ class InitialState extends PlayerCommunicationState {
 		GameManager.getServerMediator().publishTableCreatedEvent(
 				new TableCreatedEvent(playerCommunication.getPlayer()
 						.getSavedPlayer(), table.getId()));
+		return table.getId();
 	}
 
 	@Override

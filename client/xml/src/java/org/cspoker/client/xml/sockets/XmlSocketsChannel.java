@@ -29,8 +29,9 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import javax.security.auth.login.LoginException;
+
 import org.apache.log4j.Logger;
-import org.cspoker.client.xml.common.LoginFailedException;
 import org.cspoker.client.xml.common.XmlChannel;
 import org.cspoker.common.xml.XmlEventListener;
 
@@ -66,11 +67,11 @@ public class XmlSocketsChannel implements XmlChannel {
 		decoder = charset.newDecoder();
 	}
 
-	public void open() throws IOException, LoginFailedException {
+	public void open() throws IOException, LoginException {
 		s = new Socket(server, port);
 		w = new OutputStreamWriter(s.getOutputStream());
 		if (!login(username, password))
-			throw new LoginFailedException();
+			throw new LoginException();
 		executor = Executors.newSingleThreadExecutor();
 		executor.execute(new WaitForEvents());
 	}

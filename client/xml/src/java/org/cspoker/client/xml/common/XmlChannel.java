@@ -17,12 +17,14 @@ package org.cspoker.client.xml.common;
 
 import java.rmi.RemoteException;
 
+import javax.security.auth.login.LoginException;
+
 import org.cspoker.common.exceptions.IllegalActionException;
 import org.cspoker.common.xml.XmlEventListener;
 
 public interface XmlChannel {
 
-	public void open() throws RemoteException, LoginFailedException;
+	public void open() throws RemoteException, LoginException;
 
 	public void send(final String xml) throws RemoteException, IllegalActionException;
 
