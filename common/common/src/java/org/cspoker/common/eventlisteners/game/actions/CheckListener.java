@@ -16,7 +16,7 @@
 
 package org.cspoker.common.eventlisteners.game.actions;
 
-import org.cspoker.common.events.gameEvents.playerActionEvents.CheckEvent;
+import org.cspoker.common.events.gameevents.playeractionevents.CheckEvent;
 
 /**
  * An interface for check listeners.

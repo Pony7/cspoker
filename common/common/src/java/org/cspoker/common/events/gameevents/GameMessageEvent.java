@@ -13,52 +13,43 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.common.events.serverEvents;
+package org.cspoker.common.events.gameevents;
+
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
 
 import org.cspoker.common.player.Player;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
-public class ServerMessageEvent extends ServerEvent {
 
-	private static final long serialVersionUID = -1396985826399601557L;
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
+public class GameMessageEvent extends GameEvent {
+
+	private static final long serialVersionUID = -3097280563115901972L;
 
 	private final Player player;
 
 	private final String message;
 
-	public ServerMessageEvent(Player player, String message) {
+	public GameMessageEvent(Player player, String message) {
 		this.player = player;
 		this.message = message;
 	}
 
 	@Override
 	public String toString() {
-		return player.getName() + " says: " + message;
+		return getPlayer().getName() + " says: " + getMessage();
 	}
 
 	public String getMessage() {
 		return message;
 	}
 
-	public String getPlayerName() {
-		return player.getName();
+	public Player getPlayer() {
+		return player;
 	}
-
-	@Override
-	public void toXml(ContentHandler handler) throws SAXException {
-		AttributesImpl attrs = new AttributesImpl();
-		attrs.addAttribute("", "type", "type", "CDATA", "servermessage");
-		attrs.addAttribute("", "player", "player", "CDATA", getPlayerName());
-		handler.startElement("", "event", "event", attrs);
-
-		handler.startElement("", "message", "message", new AttributesImpl());
-		String msg = String.valueOf(getMessage());
-		handler.characters(msg.toCharArray(), 0, msg.length());
-		handler.endElement("", "message", "message");
-
-		handler.endElement("", "event", "event");
-	}
-
 }

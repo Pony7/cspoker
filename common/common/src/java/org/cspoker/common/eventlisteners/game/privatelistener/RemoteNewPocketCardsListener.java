@@ -18,7 +18,7 @@ package org.cspoker.common.eventlisteners.game.privatelistener;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
-import org.cspoker.common.events.gameEvents.privateEvents.NewPocketCardsEvent;
+import org.cspoker.common.events.gameevents.privateevents.NewPocketCardsEvent;
 
 public interface RemoteNewPocketCardsListener extends Remote {
 

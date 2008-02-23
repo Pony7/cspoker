@@ -15,7 +15,7 @@
  */
 package org.cspoker.common.eventlisteners.server;
 
-import org.cspoker.common.events.serverEvents.TableCreatedEvent;
+import org.cspoker.common.events.serverevents.TableCreatedEvent;
 
 public interface TableCreatedListener extends RemoteTableCreatedListener {
 

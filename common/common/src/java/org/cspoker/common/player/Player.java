@@ -18,6 +18,11 @@ package org.cspoker.common.player;
 
 import java.io.Serializable;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlValue;
+
 /**
  * A class of immutable saved players.
  * 
@@ -25,6 +30,7 @@ import java.io.Serializable;
  * @author Kenzo
  * 
  */
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Player implements Serializable {
 
 	private static final long serialVersionUID = -9200622390366978194L;
@@ -32,29 +38,34 @@ public class Player implements Serializable {
 	/**
 	 * The variable containing the id of the player.
 	 */
-	private final PlayerId id;
+	@XmlAttribute
+	private PlayerId id;
 
 	/**
 	 * The name of the player.
 	 */
-	private final String name;
+	private String name;
 
 	/**
 	 * The stack of this player.
 	 */
-	private final int stackValue;
+	private int stackValue;
 
 	/**
 	 * The chips the player has bet in this round.
 	 * 
 	 */
-	private final int betChipsValue;
+	private int betChipsValue;
 
 	public Player(PlayerId id, String name, int stackValue, int betChipsValue) {
 		this.id = id;
 		this.name = name;
 		this.stackValue = stackValue;
 		this.betChipsValue = betChipsValue;
+	}
+
+	public Player() {
+		//no op
 	}
 
 	/**

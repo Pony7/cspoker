@@ -16,7 +16,7 @@
 
 package org.cspoker.common.eventlisteners.game.actions;
 
-import org.cspoker.common.events.gameEvents.playerActionEvents.BigBlindEvent;
+import org.cspoker.common.events.gameevents.playeractionevents.BigBlindEvent;
 
 /**
  * An interface for big blind listeners.

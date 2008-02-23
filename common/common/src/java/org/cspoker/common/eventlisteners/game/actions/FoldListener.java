@@ -16,7 +16,7 @@
 
 package org.cspoker.common.eventlisteners.game.actions;
 
-import org.cspoker.common.events.gameEvents.playerActionEvents.FoldEvent;
+import org.cspoker.common.events.gameevents.playeractionevents.FoldEvent;
 
 /**
  * An interface for fold listeners.

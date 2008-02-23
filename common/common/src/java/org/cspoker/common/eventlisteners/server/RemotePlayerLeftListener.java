@@ -19,7 +19,7 @@ package org.cspoker.common.eventlisteners.server;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
-import org.cspoker.common.events.serverEvents.PlayerLeftEvent;
+import org.cspoker.common.events.serverevents.PlayerLeftEvent;
 
 public interface RemotePlayerLeftListener extends Remote {
 

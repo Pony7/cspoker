@@ -14,48 +14,44 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-package org.cspoker.common.events.gameEvents.playerActionEvents;
+package org.cspoker.common.events.serverevents;
 
-import org.cspoker.common.elements.pots.Pots;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
+
+import org.cspoker.common.elements.table.TableId;
 import org.cspoker.common.player.Player;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
-/**
- * A class to represent call events.
- * 
- * @author Kenzo
- * 
- */
-public class CallEvent extends ActionChangedPotEvent {
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
+public class PlayerJoinedEvent extends ServerEvent {
 
-	private static final long serialVersionUID = -78379299188217626L;
+	private static final long serialVersionUID = -6470646766839190620L;
 
 	private final Player player;
 
-	public CallEvent(Player player, Pots pots) {
-		super(pots);
+	private final TableId id;
+
+	public PlayerJoinedEvent(Player player, TableId id) {
 		this.player = player;
+		this.id = id;
 	}
 
 	@Override
 	public String toString() {
-		return getPlayer().getName() + " calls.";
+		return player.getName() + " has joined a table [" + id + "].";
 	}
 
 	public Player getPlayer() {
 		return player;
 	}
 
-	@Override
-	public void toXml(ContentHandler handler) throws SAXException {
-		AttributesImpl attrs = new AttributesImpl();
-		attrs.addAttribute("", "type", "type", "CDATA", "call");
-		attrs.addAttribute("", "player", "player", "CDATA", getPlayer()
-				.getName());
-		handler.startElement("", "event", "event", attrs);
-		handler.endElement("", "event", "event");
+	public TableId getId() {
+		return id;
 	}
 
 }

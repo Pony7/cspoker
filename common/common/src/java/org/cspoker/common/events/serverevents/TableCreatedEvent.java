@@ -14,7 +14,11 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-package org.cspoker.common.events.serverEvents;
+package org.cspoker.common.events.serverevents;
+
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
 
 import org.cspoker.common.elements.table.TableId;
 import org.cspoker.common.player.Player;
@@ -22,22 +26,24 @@ import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
-public class PlayerJoinedEvent extends ServerEvent {
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
+public class TableCreatedEvent extends ServerEvent {
 
-	private static final long serialVersionUID = -6470646766839190620L;
-
-	private final Player player;
+	private static final long serialVersionUID = -3408596246641282753L;
 
 	private final TableId id;
 
-	public PlayerJoinedEvent(Player player, TableId id) {
+	private final Player player;
+
+	public TableCreatedEvent(Player player, TableId id) {
 		this.player = player;
 		this.id = id;
 	}
 
 	@Override
 	public String toString() {
-		return player.getName() + " has joined a table [" + id + "].";
+		return player.getName() + " has created a new table [" + id + "].";
 	}
 
 	public Player getPlayer() {
@@ -47,19 +53,4 @@ public class PlayerJoinedEvent extends ServerEvent {
 	public TableId getId() {
 		return id;
 	}
-
-	@Override
-	public void toXml(ContentHandler handler) throws SAXException {
-		AttributesImpl attrs = new AttributesImpl();
-		attrs.addAttribute("", "type", "type", "CDATA", "playerjoined");
-		attrs.addAttribute("", "player", "player", "CDATA", getPlayer()
-				.getName());
-		handler.startElement("", "event", "event", attrs);
-		handler.startElement("", "id", "id", attrs);
-		String msg = String.valueOf(getId().getID());
-		handler.characters(msg.toCharArray(), 0, msg.length());
-		handler.endElement("", "id", "id");
-		handler.endElement("", "event", "event");
-	}
-
 }

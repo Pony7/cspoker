@@ -14,7 +14,11 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-package org.cspoker.common.events.gameEvents;
+package org.cspoker.common.events.gameevents;
+
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
 
 import org.cspoker.common.player.Player;
 import org.xml.sax.ContentHandler;
@@ -27,6 +31,8 @@ import org.xml.sax.helpers.AttributesImpl;
  * @author Kenzo
  * 
  */
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
 public class NewRoundEvent extends GameEvent {
 
 	private static final long serialVersionUID = 5282936949568835084L;
@@ -56,25 +62,4 @@ public class NewRoundEvent extends GameEvent {
 	public Player getInitialPlayer() {
 		return player;
 	}
-
-	@Override
-	public void toXml(ContentHandler handler) throws SAXException {
-		AttributesImpl attrs = new AttributesImpl();
-		attrs.addAttribute("", "type", "type", "CDATA", "newround");
-		handler.startElement("", "event", "event", attrs);
-
-		attrs = new AttributesImpl();
-		handler.startElement("", "name", "name", attrs);
-		String msg = getRoundName();
-		handler.characters(msg.toCharArray(), 0, msg.length());
-		handler.endElement("", "name", "name");
-
-		handler.startElement("", "initialplayer", "initialplayer", attrs);
-		msg = getInitialPlayer().getName();
-		handler.characters(msg.toCharArray(), 0, msg.length());
-		handler.endElement("", "initialplayer", "initialplayer");
-
-		handler.endElement("", "event", "event");
-	}
-
 }

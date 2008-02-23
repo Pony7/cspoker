@@ -14,7 +14,11 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-package org.cspoker.common.events.serverEvents;
+package org.cspoker.common.events.serverevents;
+
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
 
 import org.cspoker.common.elements.table.TableId;
 import org.cspoker.common.player.Player;
@@ -22,6 +26,8 @@ import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
 public class PlayerLeftEvent extends ServerEvent {
 
 	private static final long serialVersionUID = -7738200564330377186L;
@@ -46,20 +52,6 @@ public class PlayerLeftEvent extends ServerEvent {
 
 	public TableId getId() {
 		return id;
-	}
-
-	@Override
-	public void toXml(ContentHandler handler) throws SAXException {
-		AttributesImpl attrs = new AttributesImpl();
-		attrs.addAttribute("", "type", "type", "CDATA", "playerleft");
-		attrs.addAttribute("", "player", "player", "CDATA", getPlayer()
-				.getName());
-		handler.startElement("", "event", "event", attrs);
-		handler.startElement("", "id", "id", attrs);
-		String msg = String.valueOf(getId().getID());
-		handler.characters(msg.toCharArray(), 0, msg.length());
-		handler.endElement("", "id", "id");
-		handler.endElement("", "event", "event");
 	}
 
 }

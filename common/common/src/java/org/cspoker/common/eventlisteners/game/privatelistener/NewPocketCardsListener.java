@@ -15,7 +15,7 @@
  */
 package org.cspoker.common.eventlisteners.game.privatelistener;
 
-import org.cspoker.common.events.gameEvents.privateEvents.NewPocketCardsEvent;
+import org.cspoker.common.events.gameevents.privateevents.NewPocketCardsEvent;
 
 public interface NewPocketCardsListener extends RemoteNewPocketCardsListener {
 

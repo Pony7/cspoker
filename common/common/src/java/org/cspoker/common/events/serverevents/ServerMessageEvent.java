@@ -13,56 +13,42 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
+package org.cspoker.common.events.serverevents;
 
-package org.cspoker.common.events.gameEvents.playerActionEvents;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
 
-import org.cspoker.common.elements.pots.Pots;
 import org.cspoker.common.player.Player;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
-/**
- * A class to represent all-in events.
- * 
- * @author Kenzo
- * 
- */
-public class AllInEvent extends ActionChangedPotEvent {
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
+public class ServerMessageEvent extends ServerEvent {
 
-	private static final long serialVersionUID = 7331085187957524812L;
+	private static final long serialVersionUID = -1396985826399601557L;
 
-	/**
-	 * The variable containing the saved player.
-	 */
 	private final Player player;
 
-	/**
-	 * 
-	 * @param player
-	 */
-	public AllInEvent(Player player, Pots pots) {
-		super(pots);
+	private final String message;
+
+	public ServerMessageEvent(Player player, String message) {
 		this.player = player;
+		this.message = message;
 	}
 
 	@Override
 	public String toString() {
-		return getPlayer().getName() + " goes all-in.";
+		return player.getName() + " says: " + message;
 	}
 
-	public Player getPlayer() {
-		return player;
+	public String getMessage() {
+		return message;
 	}
 
-	@Override
-	public void toXml(ContentHandler handler) throws SAXException {
-		AttributesImpl attrs = new AttributesImpl();
-		attrs.addAttribute("", "type", "type", "CDATA", "allin");
-		attrs.addAttribute("", "player", "player", "CDATA", getPlayer()
-				.getName());
-		handler.startElement("", "event", "event", attrs);
-		handler.endElement("", "event", "event");
+	public String getPlayerName() {
+		return player.getName();
 	}
-
 }

@@ -13,19 +13,10 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-
-package org.cspoker.common.events.gameEvents;
+package org.cspoker.common.events.serverevents;
 
 import org.cspoker.common.events.Event;
 
-/**
- * A class of game events.
- * 
- * All game events should inherit from this abstract class.
- * 
- * @author Kenzo
- * 
- */
-public abstract class GameEvent extends Event {
+public abstract class ServerEvent extends Event {
 
 }

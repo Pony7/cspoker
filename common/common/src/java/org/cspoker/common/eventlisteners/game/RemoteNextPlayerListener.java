@@ -19,7 +19,7 @@ package org.cspoker.common.eventlisteners.game;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
-import org.cspoker.common.events.gameEvents.NextPlayerEvent;
+import org.cspoker.common.events.gameevents.NextPlayerEvent;
 
 /**
  * An interface for next player listeners.

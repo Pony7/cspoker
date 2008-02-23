@@ -16,7 +16,7 @@
 
 package org.cspoker.common.eventlisteners.game.actions;
 
-import org.cspoker.common.events.gameEvents.playerActionEvents.CallEvent;
+import org.cspoker.common.events.gameevents.playeractionevents.CallEvent;
 
 /**
  * An interface for call listeners.

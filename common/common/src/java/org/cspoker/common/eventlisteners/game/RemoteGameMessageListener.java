@@ -18,7 +18,7 @@ package org.cspoker.common.eventlisteners.game;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
-import org.cspoker.common.events.gameEvents.GameMessageEvent;
+import org.cspoker.common.events.gameevents.GameMessageEvent;
 
 public interface RemoteGameMessageListener extends Remote {
 

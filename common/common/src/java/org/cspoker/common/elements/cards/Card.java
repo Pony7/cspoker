@@ -2,16 +2,28 @@ package org.cspoker.common.elements.cards;
 
 import java.io.Serializable;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
+
+@XmlAccessorType(XmlAccessType.FIELD)
 public final class Card implements Comparable<Card>, Serializable {
 
 	private static final long serialVersionUID = 1370688591501465441L;
 
-	private final Rank rank;
-	private final Suit suit;
+	@XmlAttribute
+	private Rank rank;
+	
+	@XmlAttribute
+	private Suit suit;
 
 	public Card(final Rank rank, final Suit suit) {
 		this.rank = rank;
 		this.suit = suit;
+	}
+	
+	public Card() {
+		// no op
 	}
 
 	public String getLongDescription() {

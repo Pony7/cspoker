@@ -19,7 +19,7 @@ package org.cspoker.common.eventlisteners.game.actions;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
-import org.cspoker.common.events.gameEvents.playerActionEvents.BetEvent;
+import org.cspoker.common.events.gameevents.playeractionevents.BetEvent;
 
 /**
  * An interface for bet listeners.

@@ -16,7 +16,7 @@
 
 package org.cspoker.common.eventlisteners.game;
 
-import org.cspoker.common.events.gameEvents.GameEvent;
+import org.cspoker.common.events.gameevents.GameEvent;
 
 /**
  * A class to represent game events.
