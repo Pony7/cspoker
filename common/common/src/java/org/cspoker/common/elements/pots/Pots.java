@@ -34,8 +34,8 @@ public class Pots implements Serializable {
 	public Pots(int totalValue) {
 		this.totalValue = totalValue;
 	}
-	
-	public Pots() {
+
+	protected Pots() {
 		// no op
 	}
 

@@ -22,9 +22,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import org.cspoker.common.elements.table.TableId;
 import org.cspoker.common.player.Player;
-import org.xml.sax.ContentHandler;
-import org.xml.sax.SAXException;
-import org.xml.sax.helpers.AttributesImpl;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -32,13 +29,17 @@ public class TableCreatedEvent extends ServerEvent {
 
 	private static final long serialVersionUID = -3408596246641282753L;
 
-	private final TableId id;
+	private TableId id;
 
-	private final Player player;
+	private Player player;
 
 	public TableCreatedEvent(Player player, TableId id) {
 		this.player = player;
 		this.id = id;
+	}
+	
+	protected TableCreatedEvent() {
+		// no op
 	}
 
 	@Override

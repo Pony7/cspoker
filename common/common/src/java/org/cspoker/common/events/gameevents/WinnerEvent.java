@@ -17,16 +17,13 @@
 package org.cspoker.common.events.gameevents;
 
 import java.util.Collections;
-import java.util.List;
+import java.util.Set;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.cspoker.common.player.Winner;
-import org.xml.sax.ContentHandler;
-import org.xml.sax.SAXException;
-import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * A class to represent winner events.
@@ -40,13 +37,17 @@ public class WinnerEvent extends GameEvent {
 
 	private static final long serialVersionUID = -2384964708734525969L;
 
-	private final List<Winner> winners;
+	private Set<Winner> winners;
 
-	public WinnerEvent(List<Winner> winners) {
-		this.winners = Collections.unmodifiableList(winners);
+	public WinnerEvent(Set<Winner> winners) {
+		this.winners = Collections.unmodifiableSet(winners);
+	}
+	
+	protected WinnerEvent() {
+		// no op
 	}
 
-	public List<Winner> getWinners() {
+	public Set<Winner> getWinners() {
 		return winners;
 	}
 

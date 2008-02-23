@@ -16,16 +16,15 @@
 package org.cspoker.common.events.gameevents;
 
 import java.util.Collections;
-import java.util.List;
+import java.util.Set;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.cspoker.common.elements.cards.Card;
-import org.xml.sax.ContentHandler;
-import org.xml.sax.SAXException;
-import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * A class to represent new community cards events.
@@ -39,13 +38,19 @@ public class NewCommunityCardsEvent extends GameEvent {
 
 	private static final long serialVersionUID = -5063239366087788741L;
 
-	private final List<Card> communityCards;
+	@XmlElementWrapper
+	@XmlElement(name="card")
+	private Set<Card> communityCards;
 
-	public NewCommunityCardsEvent(List<Card> commonCards) {
-		communityCards = Collections.unmodifiableList(commonCards);
+	public NewCommunityCardsEvent(Set<Card> commonCards) {
+		communityCards = Collections.unmodifiableSet(commonCards);
+	}
+	
+	protected NewCommunityCardsEvent() {
+		// no op
 	}
 
-	public List<Card> getCommonCards() {
+	public Set<Card> getCommonCards() {
 		return communityCards;
 	}
 

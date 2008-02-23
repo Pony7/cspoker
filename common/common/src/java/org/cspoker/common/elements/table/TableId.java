@@ -18,6 +18,8 @@ package org.cspoker.common.elements.table;
 
 import java.io.Serializable;
 
+import javax.xml.bind.annotation.XmlValue;
+
 /**
  * A class to represent table id's.
  * 
@@ -31,7 +33,8 @@ public class TableId implements Serializable {
 	/**
 	 * The variable containing the long representation of the id.
 	 */
-	private final long id;
+	@XmlValue
+	private long id;
 
 	/**
 	 * Construct a new table id with given id.
@@ -41,6 +44,10 @@ public class TableId implements Serializable {
 	 */
 	public TableId(long id) {
 		this.id = id;
+	}
+	
+	protected TableId() {
+		// no op
 	}
 
 	/**

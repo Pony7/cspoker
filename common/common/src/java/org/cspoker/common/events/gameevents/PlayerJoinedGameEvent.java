@@ -21,9 +21,6 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.cspoker.common.player.Player;
-import org.xml.sax.ContentHandler;
-import org.xml.sax.SAXException;
-import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * A class to represent player joining games events.
@@ -37,10 +34,14 @@ public class PlayerJoinedGameEvent extends GameEvent {
 
 	private static final long serialVersionUID = 3276571712883586966L;
 
-	private final Player player;
+	private Player player;
 
 	public PlayerJoinedGameEvent(Player player) {
 		this.player = player;
+	}
+	
+	protected PlayerJoinedGameEvent() {
+		// no op
 	}
 
 	@Override

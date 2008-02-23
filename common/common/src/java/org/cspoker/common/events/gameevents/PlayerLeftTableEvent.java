@@ -21,9 +21,6 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.cspoker.common.player.Player;
-import org.xml.sax.ContentHandler;
-import org.xml.sax.SAXException;
-import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * A class to represent leaving player events.
@@ -37,10 +34,14 @@ public class PlayerLeftTableEvent extends GameEvent {
 
 	private static final long serialVersionUID = -5339079807813674278L;
 
-	private final Player player;
+	private Player player;
 
 	public PlayerLeftTableEvent(Player player) {
 		this.player = player;
+	}
+	
+	protected PlayerLeftTableEvent() {
+		// no op
 	}
 
 	@Override

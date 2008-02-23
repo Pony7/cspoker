@@ -22,9 +22,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import org.cspoker.common.elements.table.TableId;
 import org.cspoker.common.player.Player;
-import org.xml.sax.ContentHandler;
-import org.xml.sax.SAXException;
-import org.xml.sax.helpers.AttributesImpl;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -32,13 +29,17 @@ public class PlayerLeftEvent extends ServerEvent {
 
 	private static final long serialVersionUID = -7738200564330377186L;
 
-	private final Player player;
+	private Player player;
 
-	private final TableId id;
+	private TableId id;
 
 	public PlayerLeftEvent(Player player, TableId id) {
 		this.player = player;
 		this.id = id;
+	}
+	
+	protected PlayerLeftEvent() {
+		// no op
 	}
 
 	@Override
