@@ -124,7 +124,7 @@ public interface RemotePlayerCommunication extends Remote {
 	 *             [must] This actions is not a valid action in the current
 	 *             state.
 	 */
-	void createTable() throws IllegalActionException, RemoteException;
+	TableId createTable() throws IllegalActionException, RemoteException;
 
 	/**
 	 * This player starts the game. Only the player who has created the table
