@@ -15,28 +15,27 @@
  */
 package org.cspoker.common.actions;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
 
-import org.cspoker.common.PlayerCommunication;
-import org.cspoker.common.exceptions.IllegalActionException;
+import org.apache.log4j.Logger;
 
-@XmlRootElement
-@XmlAccessorType(XmlAccessType.FIELD)
-public class LeaveTableAction extends PlayerCommunicationAction {
+public class ActionJAXBContext {
 
-	public LeaveTableAction(long id) {
-		super(id);
-	}
+	private final static Logger logger = Logger.getLogger(ActionJAXBContext.class);
+
+	public final static JAXBContext context = initContext();
+
+    private static JAXBContext initContext() {
+        try {
+			return JAXBContext.newInstance(
+					AllInAction.class, BetAction.class, CallAction.class, CheckAction.class, CreateTableAction.class, 
+					DealAction.class, FoldAction.class, JoinTableAction.class, KillAction.class, LeaveTableAction.class,
+					RaiseAction.class, SayAction.class, StartGameAction.class);
+		} catch (JAXBException e) {
+			logger.fatal(e);
+			throw new IllegalStateException(e);
+		}
+    }
 	
-	protected LeaveTableAction() {
-		// no op
-	}
-	
-	@Override
-	public void perform(PlayerCommunication pc) throws IllegalActionException {
-		pc.leaveTable();
-	}
-
 }

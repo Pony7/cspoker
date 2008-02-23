@@ -15,11 +15,19 @@
  */
 package org.cspoker.common.actions;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlRootElement;
+
 import org.cspoker.common.PlayerCommunication;
 import org.cspoker.common.exceptions.IllegalActionException;
 
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
 public class BetAction extends PlayerCommunicationAction {
 
+	@XmlAttribute
 	private int amount;
 
 	public BetAction(long id,int amount) {
