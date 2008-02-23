@@ -27,6 +27,8 @@ import org.cspoker.common.exceptions.IllegalActionException;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class JoinTableAction extends PlayerCommunicationAction {
 
+	private static final long serialVersionUID = -6693307709200837257L;
+	
 	private TableId tableId;
 
 	public JoinTableAction(long id,TableId tableId) {

@@ -26,6 +26,8 @@ import org.cspoker.common.exceptions.IllegalActionException;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class SayAction extends PlayerCommunicationAction {
 
+	private static final long serialVersionUID = -8892178534623422101L;
+	
 	private String msg;
 
 	public SayAction(long id,String msg) {
