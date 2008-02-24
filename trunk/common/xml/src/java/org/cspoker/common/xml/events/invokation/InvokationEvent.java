@@ -13,9 +13,12 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.common.eventlisteners.invokation;
+package org.cspoker.common.xml.events.invokation;
 
-public interface RemoteAllInvokationEventsListener extends
-		RemoteIllegalActionListener, RemoteSuccessfulInvokationListener {
+import org.cspoker.common.events.Event;
+
+public class InvokationEvent extends Event {
+
+	private static final long serialVersionUID = -3647664952883269411L;
 
 }

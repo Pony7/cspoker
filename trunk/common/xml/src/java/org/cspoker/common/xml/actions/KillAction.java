@@ -13,40 +13,38 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.common.events.invokation;
+package org.cspoker.common.xml.actions;
+
+import java.rmi.RemoteException;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.cspoker.common.actions.PlayerCommunicationAction;
-
+import org.cspoker.common.PlayerCommunication;
+import org.cspoker.common.xml.eventlisteners.invokation.RemoteAllInvokationEventsListener;
+import org.cspoker.common.xml.events.invokation.SuccessfulInvokationEvent;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-public class SuccessfulInvokationEvent<T> extends InvokationEvent {
+public class KillAction extends PlayerCommunicationAction {
 
-	private static final long serialVersionUID = 8350435427841245148L;
+	private static final long serialVersionUID = -7677068438295920901L;
 
-	private PlayerCommunicationAction action;
-	
-	private T result;
-
-	public SuccessfulInvokationEvent(PlayerCommunicationAction a, T result) {
-		this.action = a;
-		this.result = result;
+	public KillAction(long id) {
+		super(id);
 	}
-	
-	protected SuccessfulInvokationEvent() {
+
+	protected KillAction() {
 		// no op
 	}
 
-	public PlayerCommunicationAction getAction() {
-		return action;
+	@Override
+	public void performRemote(PlayerCommunication pc,
+			RemoteAllInvokationEventsListener listener) throws RemoteException {
+		pc.kill();
+		listener.onSuccessfullInvokation(new SuccessfulInvokationEvent<Void>(
+				this, null));
 	}
-	
-	public T getResult(){
-		return result;
-	}
+
 }

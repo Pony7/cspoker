@@ -17,14 +17,19 @@ package org.cspoker.server.xml.common;
 
 import java.io.IOException;
 
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.bind.UnmarshallerHandler;
+
 import org.apache.log4j.Logger;
 import org.cspoker.common.PlayerCommunication;
+import org.cspoker.common.actions.ActionJAXBContext;
+import org.cspoker.common.actions.PlayerCommunicationAction;
 import org.cspoker.common.xml.XmlEventListener;
 import org.cspoker.common.xml.handler.DelegatingToOneHandler;
 import org.cspoker.server.common.game.player.GamePlayer;
 import org.cspoker.server.common.game.session.PlayerKilledExcepion;
 import org.cspoker.server.common.game.session.Session;
-import org.cspoker.server.xml.common.handler.CommandDelegatingHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
@@ -51,17 +56,14 @@ public class XmlPlayerCommunication implements XmlEventListener {
 				.subscribeAllEventsListener(new XmlAllEventsListener(listener));
 	}
 
-	public void handle(InputSource xml) throws SAXException {
+	public void handle(InputSource xml) throws SAXException, JAXBException, IOException {
+		Unmarshaller m = ActionJAXBContext.context.createUnmarshaller();
+		UnmarshallerHandler handler = m.getUnmarshallerHandler();
 		XMLReader xr = XMLReaderFactory.createXMLReader();
-		xr.setContentHandler(new DelegatingToOneHandler(
-				new CommandDelegatingHandler(playerComm, this)));
-		try {
-			xr.parse(xml);
-		} catch (IOException e) {
-			logger.error("IOException when parsing xml request.", e);
-			throw new IllegalStateException(
-					"IOException when parsing xml request.");
-		}
+		xr.setContentHandler(new DelegatingToOneHandler(handler));
+		xr.parse(xml);
+		PlayerCommunicationAction action = (PlayerCommunicationAction) handler.getResult();
+		action.perform(playerComm,);
 	}
 
 	public String getPlayerName() {

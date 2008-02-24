@@ -13,7 +13,7 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.common.actions;
+package org.cspoker.common.xml.actions;
 
 import java.rmi.RemoteException;
 
@@ -22,22 +22,22 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.cspoker.common.PlayerCommunication;
-import org.cspoker.common.eventlisteners.invokation.RemoteAllInvokationEventsListener;
-import org.cspoker.common.events.invokation.IllegalActionEvent;
-import org.cspoker.common.events.invokation.SuccessfulInvokationEvent;
 import org.cspoker.common.exceptions.IllegalActionException;
+import org.cspoker.common.xml.eventlisteners.invokation.RemoteAllInvokationEventsListener;
+import org.cspoker.common.xml.events.invokation.IllegalActionEvent;
+import org.cspoker.common.xml.events.invokation.SuccessfulInvokationEvent;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-public class FoldAction extends PlayerCommunicationAction {
+public class LeaveTableAction extends PlayerCommunicationAction {
 
-	private static final long serialVersionUID = -8222648524080616602L;
+	private static final long serialVersionUID = -2251924692529703613L;
 
-	public FoldAction(long id) {
+	public LeaveTableAction(long id) {
 		super(id);
 	}
 
-	protected FoldAction() {
+	protected LeaveTableAction() {
 		// no op
 	}
 
@@ -45,7 +45,7 @@ public class FoldAction extends PlayerCommunicationAction {
 	public void performRemote(PlayerCommunication pc,
 			RemoteAllInvokationEventsListener listener) throws RemoteException {
 		try {
-			pc.fold();
+			pc.leaveTable();
 			listener
 					.onSuccessfullInvokation(new SuccessfulInvokationEvent<Void>(
 							this, null));

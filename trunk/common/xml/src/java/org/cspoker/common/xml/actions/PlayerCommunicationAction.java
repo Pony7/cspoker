@@ -13,7 +13,7 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.common.actions;
+package org.cspoker.common.xml.actions;
 
 import java.io.Serializable;
 import java.rmi.RemoteException;
@@ -24,7 +24,7 @@ import javax.xml.bind.annotation.XmlAttribute;
 
 import org.apache.log4j.Logger;
 import org.cspoker.common.PlayerCommunication;
-import org.cspoker.common.eventlisteners.invokation.RemoteAllInvokationEventsListener;
+import org.cspoker.common.xml.eventlisteners.invokation.RemoteAllInvokationEventsListener;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 public abstract class PlayerCommunicationAction implements Serializable {

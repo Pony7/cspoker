@@ -13,36 +13,31 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.common.actions;
+package org.cspoker.common.xml.actions;
 
 import java.rmi.RemoteException;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.cspoker.common.PlayerCommunication;
-import org.cspoker.common.eventlisteners.invokation.RemoteAllInvokationEventsListener;
-import org.cspoker.common.events.invokation.IllegalActionEvent;
-import org.cspoker.common.events.invokation.SuccessfulInvokationEvent;
 import org.cspoker.common.exceptions.IllegalActionException;
+import org.cspoker.common.xml.eventlisteners.invokation.RemoteAllInvokationEventsListener;
+import org.cspoker.common.xml.events.invokation.IllegalActionEvent;
+import org.cspoker.common.xml.events.invokation.SuccessfulInvokationEvent;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-public class RaiseAction extends PlayerCommunicationAction {
+public class FoldAction extends PlayerCommunicationAction {
 
-	private static final long serialVersionUID = -2573069313463411772L;
+	private static final long serialVersionUID = -8222648524080616602L;
 
-	@XmlAttribute
-	private int amount;
-
-	public RaiseAction(long id, int amount) {
+	public FoldAction(long id) {
 		super(id);
-		this.amount = amount;
 	}
 
-	protected RaiseAction() {
+	protected FoldAction() {
 		// no op
 	}
 
@@ -50,7 +45,7 @@ public class RaiseAction extends PlayerCommunicationAction {
 	public void performRemote(PlayerCommunication pc,
 			RemoteAllInvokationEventsListener listener) throws RemoteException {
 		try {
-			pc.raise(amount);
+			pc.fold();
 			listener
 					.onSuccessfullInvokation(new SuccessfulInvokationEvent<Void>(
 							this, null));

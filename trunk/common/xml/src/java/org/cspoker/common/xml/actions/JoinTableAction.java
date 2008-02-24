@@ -13,7 +13,7 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.common.actions;
+package org.cspoker.common.xml.actions;
 
 import java.rmi.RemoteException;
 
@@ -22,22 +22,26 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.cspoker.common.PlayerCommunication;
-import org.cspoker.common.eventlisteners.invokation.RemoteAllInvokationEventsListener;
-import org.cspoker.common.events.invokation.IllegalActionEvent;
-import org.cspoker.common.events.invokation.SuccessfulInvokationEvent;
+import org.cspoker.common.elements.table.TableId;
 import org.cspoker.common.exceptions.IllegalActionException;
+import org.cspoker.common.xml.eventlisteners.invokation.RemoteAllInvokationEventsListener;
+import org.cspoker.common.xml.events.invokation.IllegalActionEvent;
+import org.cspoker.common.xml.events.invokation.SuccessfulInvokationEvent;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-public class AllInAction extends PlayerCommunicationAction {
+public class JoinTableAction extends PlayerCommunicationAction {
 
-	private static final long serialVersionUID = 7897218843022885169L;
+	private static final long serialVersionUID = -6693307709200837257L;
 
-	public AllInAction(long id) {
+	private TableId tableId;
+
+	public JoinTableAction(long id, TableId tableId) {
 		super(id);
+		this.tableId = tableId;
 	}
 
-	protected AllInAction() {
+	protected JoinTableAction() {
 		// no op
 	}
 
@@ -45,7 +49,7 @@ public class AllInAction extends PlayerCommunicationAction {
 	public void performRemote(PlayerCommunication pc,
 			RemoteAllInvokationEventsListener listener) throws RemoteException {
 		try {
-			pc.allIn();
+			pc.joinTable(tableId);
 			listener
 					.onSuccessfullInvokation(new SuccessfulInvokationEvent<Void>(
 							this, null));
