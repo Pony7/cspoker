@@ -15,34 +15,39 @@
  */
 package org.cspoker.common.actions;
 
+import java.rmi.RemoteException;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.cspoker.common.PlayerCommunication;
-import org.cspoker.common.exceptions.IllegalActionException;
+import org.cspoker.common.eventlisteners.invokation.RemoteAllInvokationEventsListener;
+import org.cspoker.common.events.invokation.SuccessfulInvokationEvent;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
 public class SayAction extends PlayerCommunicationAction {
 
 	private static final long serialVersionUID = -8892178534623422101L;
-	
+
 	private String msg;
 
-	public SayAction(long id,String msg) {
+	public SayAction(long id, String msg) {
 		super(id);
 		this.msg = msg;
 	}
-	
+
 	protected SayAction() {
 		// no op
 	}
-	
-	@Override
-	public void perform(PlayerCommunication pc) throws IllegalActionException {
-		pc.say(msg);
 
+	@Override
+	public void performRemote(PlayerCommunication pc,
+			RemoteAllInvokationEventsListener listener) throws RemoteException {
+		pc.say(msg);
+		listener.onSuccessfullInvokation(new SuccessfulInvokationEvent<Void>(
+				this, null));
 	}
 
 }

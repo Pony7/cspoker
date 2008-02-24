@@ -15,12 +15,17 @@
  */
 package org.cspoker.common.actions;
 
+import java.rmi.RemoteException;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.cspoker.common.PlayerCommunication;
+import org.cspoker.common.eventlisteners.invokation.RemoteAllInvokationEventsListener;
+import org.cspoker.common.events.invokation.IllegalActionEvent;
+import org.cspoker.common.events.invokation.SuccessfulInvokationEvent;
 import org.cspoker.common.exceptions.IllegalActionException;
 
 @XmlRootElement
@@ -28,23 +33,30 @@ import org.cspoker.common.exceptions.IllegalActionException;
 public class BetAction extends PlayerCommunicationAction {
 
 	private static final long serialVersionUID = 7370121685541484279L;
-	
+
 	@XmlAttribute
 	private int amount;
 
-	public BetAction(long id,int amount) {
+	public BetAction(long id, int amount) {
 		super(id);
 		this.amount = amount;
 	}
-	
+
 	protected BetAction() {
 		// no op
 	}
-	
-	@Override
-	public void perform(PlayerCommunication pc) throws IllegalActionException {
-		pc.bet(amount);
 
+	@Override
+	public void performRemote(PlayerCommunication pc,
+			RemoteAllInvokationEventsListener listener) throws RemoteException {
+		try {
+			pc.bet(amount);
+			listener
+					.onSuccessfullInvokation(new SuccessfulInvokationEvent<Void>(
+							this, null));
+		} catch (IllegalActionException e) {
+			listener.onIllegalAction(new IllegalActionEvent(e, this));
+		}
 	}
 
 }
