@@ -13,7 +13,7 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.common.actions;
+package org.cspoker.common.xml.actions;
 
 import java.rmi.RemoteException;
 
@@ -22,40 +22,32 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.cspoker.common.PlayerCommunication;
-import org.cspoker.common.elements.table.TableId;
-import org.cspoker.common.eventlisteners.invokation.RemoteAllInvokationEventsListener;
-import org.cspoker.common.events.invokation.IllegalActionEvent;
-import org.cspoker.common.events.invokation.SuccessfulInvokationEvent;
-import org.cspoker.common.exceptions.IllegalActionException;
+import org.cspoker.common.xml.eventlisteners.invokation.RemoteAllInvokationEventsListener;
+import org.cspoker.common.xml.events.invokation.SuccessfulInvokationEvent;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-public class JoinTableAction extends PlayerCommunicationAction {
+public class SayAction extends PlayerCommunicationAction {
 
-	private static final long serialVersionUID = -6693307709200837257L;
+	private static final long serialVersionUID = -8892178534623422101L;
 
-	private TableId tableId;
+	private String msg;
 
-	public JoinTableAction(long id, TableId tableId) {
+	public SayAction(long id, String msg) {
 		super(id);
-		this.tableId = tableId;
+		this.msg = msg;
 	}
 
-	protected JoinTableAction() {
+	protected SayAction() {
 		// no op
 	}
 
 	@Override
 	public void performRemote(PlayerCommunication pc,
 			RemoteAllInvokationEventsListener listener) throws RemoteException {
-		try {
-			pc.joinTable(tableId);
-			listener
-					.onSuccessfullInvokation(new SuccessfulInvokationEvent<Void>(
-							this, null));
-		} catch (IllegalActionException e) {
-			listener.onIllegalAction(new IllegalActionEvent(e, this));
-		}
+		pc.say(msg);
+		listener.onSuccessfullInvokation(new SuccessfulInvokationEvent<Void>(
+				this, null));
 	}
 
 }

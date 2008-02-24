@@ -13,7 +13,7 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.common.actions;
+package org.cspoker.common.xml.actions;
 
 import java.rmi.RemoteException;
 
@@ -22,23 +22,22 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.cspoker.common.PlayerCommunication;
-import org.cspoker.common.elements.table.TableId;
-import org.cspoker.common.eventlisteners.invokation.RemoteAllInvokationEventsListener;
-import org.cspoker.common.events.invokation.IllegalActionEvent;
-import org.cspoker.common.events.invokation.SuccessfulInvokationEvent;
 import org.cspoker.common.exceptions.IllegalActionException;
+import org.cspoker.common.xml.eventlisteners.invokation.RemoteAllInvokationEventsListener;
+import org.cspoker.common.xml.events.invokation.IllegalActionEvent;
+import org.cspoker.common.xml.events.invokation.SuccessfulInvokationEvent;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-public class CreateTableAction extends PlayerCommunicationAction {
+public class StartGameAction extends PlayerCommunicationAction {
 
-	private static final long serialVersionUID = 2423639524369017909L;
+	private static final long serialVersionUID = -9206076069585536504L;
 
-	public CreateTableAction(long id) {
+	public StartGameAction(long id) {
 		super(id);
 	}
 
-	protected CreateTableAction() {
+	protected StartGameAction() {
 		// no op
 	}
 
@@ -46,10 +45,10 @@ public class CreateTableAction extends PlayerCommunicationAction {
 	public void performRemote(PlayerCommunication pc,
 			RemoteAllInvokationEventsListener listener) throws RemoteException {
 		try {
-			TableId tid = pc.createTable();
+			pc.startGame();
 			listener
-					.onSuccessfullInvokation(new SuccessfulInvokationEvent<TableId>(
-							this, tid));
+					.onSuccessfullInvokation(new SuccessfulInvokationEvent<Void>(
+							this, null));
 		} catch (IllegalActionException e) {
 			listener.onIllegalAction(new IllegalActionEvent(e, this));
 		}

@@ -17,14 +17,12 @@ package org.cspoker.server.xml.common;
 
 import java.io.StringWriter;
 
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.TransformerFactoryConfigurationError;
-import javax.xml.transform.sax.SAXTransformerFactory;
-import javax.xml.transform.sax.TransformerHandler;
-import javax.xml.transform.stream.StreamResult;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.PropertyException;
 
 import org.apache.log4j.Logger;
+import org.cspoker.common.EventAndActionJAXBContext;
 import org.cspoker.common.eventlisteners.AllEventsListener;
 import org.cspoker.common.events.Event;
 import org.cspoker.common.events.gameevents.GameMessageEvent;
@@ -50,12 +48,10 @@ import org.cspoker.common.events.serverevents.PlayerLeftEvent;
 import org.cspoker.common.events.serverevents.ServerMessageEvent;
 import org.cspoker.common.events.serverevents.TableCreatedEvent;
 import org.cspoker.common.xml.XmlEventListener;
-import org.xml.sax.SAXException;
 
 public class XmlAllEventsListener implements AllEventsListener {
 
-	private final static Logger logger = Logger
-			.getLogger(XmlAllEventsListener.class);
+	private final static Logger logger = Logger.getLogger(XmlAllEventsListener.class);
 	private final XmlEventListener collector;
 
 	public XmlAllEventsListener(XmlEventListener collector) {
@@ -65,22 +61,16 @@ public class XmlAllEventsListener implements AllEventsListener {
 	public void eventToCollector(Event event) {
 		try {
 			StringWriter xml = new StringWriter();
-			SAXTransformerFactory tf = (SAXTransformerFactory) TransformerFactory
-					.newInstance();
-			TransformerHandler response = tf.newTransformerHandler();
-			response.setResult(new StreamResult(xml));
-			response.startDocument();
-			event.toXml(response);
-			response.endDocument();
+			Marshaller m = EventAndActionJAXBContext.context.createMarshaller();
+			m.setProperty(Marshaller.JAXB_FRAGMENT,true);
+			m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+			m.marshal( event, xml );
 			collector.collect(xml.toString());
-		} catch (TransformerConfigurationException e) {
-			logger.error("Can't send event.", e);
+		} catch (PropertyException e) {
+			logger.fatal(e);
 			throw new IllegalStateException(e);
-		} catch (TransformerFactoryConfigurationError e) {
-			logger.error("Can't send event.", e);
-			throw new IllegalStateException(e);
-		} catch (SAXException e) {
-			logger.error("Can't send event.", e);
+		} catch (JAXBException e) {
+			logger.fatal(e);
 			throw new IllegalStateException(e);
 		}
 	}

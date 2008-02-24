@@ -13,38 +13,50 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.common.actions;
+package org.cspoker.common.xml.actions;
 
 import java.rmi.RemoteException;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.cspoker.common.PlayerCommunication;
-import org.cspoker.common.eventlisteners.invokation.RemoteAllInvokationEventsListener;
-import org.cspoker.common.events.invokation.SuccessfulInvokationEvent;
+import org.cspoker.common.exceptions.IllegalActionException;
+import org.cspoker.common.xml.eventlisteners.invokation.RemoteAllInvokationEventsListener;
+import org.cspoker.common.xml.events.invokation.IllegalActionEvent;
+import org.cspoker.common.xml.events.invokation.SuccessfulInvokationEvent;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-public class KillAction extends PlayerCommunicationAction {
+public class BetAction extends PlayerCommunicationAction {
 
-	private static final long serialVersionUID = -7677068438295920901L;
+	private static final long serialVersionUID = 7370121685541484279L;
 
-	public KillAction(long id) {
+	@XmlAttribute
+	private int amount;
+
+	public BetAction(long id, int amount) {
 		super(id);
+		this.amount = amount;
 	}
 
-	protected KillAction() {
+	protected BetAction() {
 		// no op
 	}
 
 	@Override
 	public void performRemote(PlayerCommunication pc,
 			RemoteAllInvokationEventsListener listener) throws RemoteException {
-		pc.kill();
-		listener.onSuccessfullInvokation(new SuccessfulInvokationEvent<Void>(
-				this, null));
+		try {
+			pc.bet(amount);
+			listener
+					.onSuccessfullInvokation(new SuccessfulInvokationEvent<Void>(
+							this, null));
+		} catch (IllegalActionException e) {
+			listener.onIllegalAction(new IllegalActionEvent(e, this));
+		}
 	}
 
 }
