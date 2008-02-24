@@ -13,40 +13,56 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.common.xml.events.invokation;
+package org.cspoker.common.xml.events.invocation;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
+import org.cspoker.common.exceptions.IllegalActionException;
+import org.cspoker.common.player.Player;
 import org.cspoker.common.xml.actions.PlayerCommunicationAction;
-
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-public class SuccessfulInvokationEvent<T> extends InvokationEvent {
+public class IllegalActionEvent extends InvokationEvent {
 
 	private static final long serialVersionUID = 8350435427841245148L;
 
-	private PlayerCommunicationAction action;
+	@XmlTransient
+	private final IllegalActionException e;
 	
-	private T result;
+	private String msg;
+	
+	private Player player;
 
-	public SuccessfulInvokationEvent(PlayerCommunicationAction a, T result) {
+	private PlayerCommunicationAction action;
+
+	public IllegalActionEvent(IllegalActionException e, PlayerCommunicationAction a) {
+		this.e = e;
+		this.msg = e.getMessage();
+		this.player = e.getPlayer();
 		this.action = a;
-		this.result = result;
 	}
 	
-	protected SuccessfulInvokationEvent() {
-		// no op
+	protected IllegalActionEvent() {
+		e = null;
+	}
+
+	public IllegalActionException getException() {
+		return e;
+	}
+
+	public String getMsg() {
+		return msg;
+	}
+
+	public Player getPlayer() {
+		return player;
 	}
 
 	public PlayerCommunicationAction getAction() {
 		return action;
-	}
-	
-	public T getResult(){
-		return result;
 	}
 }

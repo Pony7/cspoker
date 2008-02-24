@@ -24,9 +24,9 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import org.cspoker.common.PlayerCommunication;
 import org.cspoker.common.exceptions.IllegalActionException;
-import org.cspoker.common.xml.eventlisteners.invokation.RemoteAllInvokationEventsListener;
-import org.cspoker.common.xml.events.invokation.IllegalActionEvent;
-import org.cspoker.common.xml.events.invokation.SuccessfulInvokationEvent;
+import org.cspoker.common.xml.eventlisteners.invocation.RemoteAllInvocationEventsListener;
+import org.cspoker.common.xml.events.invocation.IllegalActionEvent;
+import org.cspoker.common.xml.events.invocation.SuccessfulInvokationEvent;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -48,7 +48,7 @@ public class RaiseAction extends PlayerCommunicationAction {
 
 	@Override
 	public void performRemote(PlayerCommunication pc,
-			RemoteAllInvokationEventsListener listener) throws RemoteException {
+			RemoteAllInvocationEventsListener listener) throws RemoteException {
 		try {
 			pc.raise(amount);
 			listener

@@ -13,7 +13,7 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.common;
+package org.cspoker.common.xml;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,6 +23,7 @@ import javax.xml.bind.JAXBException;
 
 import org.apache.log4j.Logger;
 import org.cspoker.common.xml.actions.ActionJAXBContext;
+import org.cspoker.common.xml.events.EventJAXBContext;
 
 public class EventAndActionJAXBContext {
 
