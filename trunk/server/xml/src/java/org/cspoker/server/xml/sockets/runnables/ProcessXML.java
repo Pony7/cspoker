@@ -15,7 +15,10 @@
  */
 package org.cspoker.server.xml.sockets.runnables;
 
+import java.io.IOException;
 import java.io.StringReader;
+
+import javax.xml.bind.JAXBException;
 
 import org.apache.log4j.Logger;
 import org.cspoker.server.common.authentication.XmlFileAuthenticator;
@@ -61,6 +64,14 @@ public class ProcessXML implements Runnable, Prioritizable {
 				context.getXmlPlayerCommunication().handle(
 						new InputSource(new StringReader(xml)));
 			} catch (SAXException e) {
+				logger.error("Error parsing xml request. Closing connection.",
+						e.getCause());
+				context.closeConnection();
+			} catch (JAXBException e) {
+				logger.error("Error parsing xml request. Closing connection.",
+						e.getCause());
+				context.closeConnection();
+			} catch (IOException e) {
 				logger.error("Error parsing xml request. Closing connection.",
 						e.getCause());
 				context.closeConnection();

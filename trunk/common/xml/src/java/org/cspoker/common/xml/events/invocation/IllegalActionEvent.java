@@ -26,7 +26,7 @@ import org.cspoker.common.xml.actions.PlayerCommunicationAction;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-public class IllegalActionEvent extends InvokationEvent {
+public class IllegalActionEvent extends InvocationEvent {
 
 	private static final long serialVersionUID = 8350435427841245148L;
 

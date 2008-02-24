@@ -23,9 +23,9 @@ import javax.xml.bind.UnmarshallerHandler;
 
 import org.apache.log4j.Logger;
 import org.cspoker.common.PlayerCommunication;
-import org.cspoker.common.actions.ActionJAXBContext;
-import org.cspoker.common.actions.PlayerCommunicationAction;
 import org.cspoker.common.xml.XmlEventListener;
+import org.cspoker.common.xml.actions.ActionJAXBContext;
+import org.cspoker.common.xml.actions.PlayerCommunicationAction;
 import org.cspoker.common.xml.handler.DelegatingToOneHandler;
 import org.cspoker.server.common.game.player.GamePlayer;
 import org.cspoker.server.common.game.session.PlayerKilledExcepion;
@@ -38,10 +38,10 @@ import org.xml.sax.helpers.XMLReaderFactory;
 public class XmlPlayerCommunication implements XmlEventListener {
 
 	private final PlayerCommunication playerComm;
-	private XmlEventListener listener;
 	private final GamePlayer player;
-
 	private final StringBuilder cache;
+	private final ToXmlAllEventsListener toxmllistener;
+	private XmlEventListener xmllistener;
 
 	private final static Logger logger = Logger
 			.getLogger(XmlPlayerCommunication.class);
@@ -49,21 +49,17 @@ public class XmlPlayerCommunication implements XmlEventListener {
 	XmlPlayerCommunication(Session session, XmlEventListener listener)
 			throws PlayerKilledExcepion {
 		playerComm = session.getPlayerCommunication();
-		this.listener = listener;
 		player = session.getPlayer();
 		cache = new StringBuilder();
-		playerComm
-				.subscribeAllEventsListener(new XmlAllEventsListener(listener));
+		xmllistener = listener;
+		toxmllistener = new ToXmlAllEventsListener(xmllistener);
+		playerComm.subscribeAllEventsListener(toxmllistener);
 	}
 
 	public void handle(InputSource xml) throws SAXException, JAXBException, IOException {
-		Unmarshaller m = ActionJAXBContext.context.createUnmarshaller();
-		UnmarshallerHandler handler = m.getUnmarshallerHandler();
-		XMLReader xr = XMLReaderFactory.createXMLReader();
-		xr.setContentHandler(new DelegatingToOneHandler(handler));
-		xr.parse(xml);
-		PlayerCommunicationAction action = (PlayerCommunicationAction) handler.getResult();
-		action.perform(playerComm,);
+		Unmarshaller um = ActionJAXBContext.context.createUnmarshaller();
+		PlayerCommunicationAction action = (PlayerCommunicationAction) um.unmarshal(xml);
+		action.perform(playerComm,toxmllistener);
 	}
 
 	public String getPlayerName() {
@@ -71,7 +67,7 @@ public class XmlPlayerCommunication implements XmlEventListener {
 	}
 
 	public XmlEventListener getXmlEventListener() {
-		return listener;
+		return xmllistener;
 	}
 
 	public synchronized void cache(String xml) {
@@ -85,13 +81,13 @@ public class XmlPlayerCommunication implements XmlEventListener {
 	}
 
 	public synchronized void flushToListener() {
-		if (listener != null) {
-			listener.collect(getAndFlushCache());
+		if (xmllistener != null) {
+			xmllistener.collect(getAndFlushCache());
 		}
 	}
 
 	public synchronized void updateEventListener(XmlEventListener newlist) {
-		listener = newlist;
+		xmllistener = newlist;
 		flushToListener();
 	}
 

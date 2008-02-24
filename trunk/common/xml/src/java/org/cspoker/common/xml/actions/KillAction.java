@@ -15,15 +15,14 @@
  */
 package org.cspoker.common.xml.actions;
 
-import java.rmi.RemoteException;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.cspoker.common.PlayerCommunication;
-import org.cspoker.common.xml.eventlisteners.invocation.RemoteAllInvocationEventsListener;
-import org.cspoker.common.xml.events.invocation.SuccessfulInvokationEvent;
+import org.cspoker.common.xml.eventlisteners.invocation.AllInvocationEventsListener;
+import org.cspoker.common.xml.events.invocation.SuccessfulInvocationEvent;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -40,10 +39,10 @@ public class KillAction extends PlayerCommunicationAction {
 	}
 
 	@Override
-	public void performRemote(PlayerCommunication pc,
-			RemoteAllInvocationEventsListener listener) throws RemoteException {
+	public void perform(PlayerCommunication pc,
+			AllInvocationEventsListener listener) {
 		pc.kill();
-		listener.onSuccessfullInvokation(new SuccessfulInvokationEvent<Void>(
+		listener.onSuccessfullInvokation(new SuccessfulInvocationEvent<Void>(
 				this, null));
 	}
 

@@ -161,7 +161,7 @@ public class ClientContext implements XmlEventListener {
 					.getSession(username);
 			try {
 				playerComm = XmlPlayerCommunicationFactory.global_factory
-						.getRegisteredXmlPlayerCommunication(session, null);
+						.getRegisteredXmlPlayerCommunication(session, this);
 			} catch (PlayerKilledExcepion e) {
 				logger.error("player killed right after login", e);
 				// ignore

@@ -47,7 +47,7 @@ import org.cspoker.common.events.serverevents.ServerMessageEvent;
 import org.cspoker.common.events.serverevents.TableCreatedEvent;
 import org.cspoker.common.xml.actions.ActionJAXBContext;
 import org.cspoker.common.xml.events.invocation.IllegalActionEvent;
-import org.cspoker.common.xml.events.invocation.SuccessfulInvokationEvent;
+import org.cspoker.common.xml.events.invocation.SuccessfulInvocationEvent;
 
 public class EventJAXBContext {
 
@@ -76,7 +76,7 @@ public class EventJAXBContext {
 				NextPlayerEvent.class, PlayerJoinedGameEvent.class, PlayerLeftTableEvent.class, 
 				ShowHandEvent.class, WinnerEvent.class,
 				//invokation
-				SuccessfulInvokationEvent.class, IllegalActionEvent.class,
+				SuccessfulInvocationEvent.class, IllegalActionEvent.class,
 				//serverevents
 				PlayerJoinedEvent.class, PlayerLeftEvent.class, ServerMessageEvent.class, TableCreatedEvent.class
 				};
