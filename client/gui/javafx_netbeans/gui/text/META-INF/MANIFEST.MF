@@ -1,4 +1,0 @@
-Manifest-Version: 1.0
-Sealed: true
-Class-Path: ../lib/cspoker-common.jar
-Main-Class: org.cspoker.client.Console
