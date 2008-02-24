@@ -64,9 +64,9 @@ public class RemotePlayerCommunicationFactoryForRMI {
 				p.check();
 			}
 
-			public void createTable() throws IllegalActionException,
+			public TableId createTable() throws IllegalActionException,
 			RemoteException {
-				p.createTable();
+				return p.createTable();
 			}
 
 			public void deal() throws IllegalActionException, RemoteException {
