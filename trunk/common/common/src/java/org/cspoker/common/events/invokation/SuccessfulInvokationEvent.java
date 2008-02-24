@@ -15,17 +15,17 @@
  */
 package org.cspoker.common.events.invokation;
 
-import java.io.Serializable;
-
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.cspoker.common.actions.PlayerCommunicationAction;
 
+
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-public class SuccessfulInvokationEvent<T extends Serializable> extends InvokationEvent {
+public class SuccessfulInvokationEvent<T> extends InvokationEvent {
 
 	private static final long serialVersionUID = 8350435427841245148L;
 
@@ -36,6 +36,10 @@ public class SuccessfulInvokationEvent<T extends Serializable> extends Invokatio
 	public SuccessfulInvokationEvent(PlayerCommunicationAction a, T result) {
 		this.action = a;
 		this.result = result;
+	}
+	
+	protected SuccessfulInvokationEvent() {
+		// no op
 	}
 
 	public PlayerCommunicationAction getAction() {
