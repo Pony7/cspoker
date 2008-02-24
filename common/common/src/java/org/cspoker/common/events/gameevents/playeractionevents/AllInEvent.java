@@ -25,13 +25,14 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.cspoker.common.EventAndActionJAXBContext;
+import org.cspoker.common.actions.SayAction;
 import org.cspoker.common.elements.cards.Card;
 import org.cspoker.common.elements.cards.Rank;
 import org.cspoker.common.elements.cards.Suit;
 import org.cspoker.common.elements.pots.Pots;
-import org.cspoker.common.events.Event;
-import org.cspoker.common.events.EventJAXBContext;
-import org.cspoker.common.events.gameevents.privateevents.NewPocketCardsEvent;
+import org.cspoker.common.events.invokation.IllegalActionEvent;
+import org.cspoker.common.exceptions.IllegalActionException;
 import org.cspoker.common.player.Player;
 import org.cspoker.common.player.PlayerId;
 
@@ -82,11 +83,14 @@ public class AllInEvent extends ActionChangedPotEvent {
 		cards.add(new Card(Rank.EIGHT, Suit.DIAMONDS));
 		cards.add(new Card(Rank.KING, Suit.HEARTS));
 		
-		Event e = new NewPocketCardsEvent(p, cards);
-	
-		Marshaller m = EventJAXBContext.context.createMarshaller();
+		//Event e = new TableCreatedEvent(p, new TableId(5));
+		//Event e = new SuccessfulInvokationEvent<TableId>(new SayAction(84654L, "kaka"),new TableId(5));
+		Object e = new IllegalActionEvent(new IllegalActionException("not allowed"), new SayAction(4354L, "kaka"));
+		
+		Marshaller m = EventAndActionJAXBContext.context.createMarshaller();
 		m.setProperty(Marshaller.JAXB_FRAGMENT,true);
 		m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+		
 		m.marshal( e, System.out );
 	}
 

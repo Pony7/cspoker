@@ -13,16 +13,21 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.common.actions;
+package org.cspoker.common;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 
 import org.apache.log4j.Logger;
+import org.cspoker.common.actions.ActionJAXBContext;
+import org.cspoker.common.events.EventJAXBContext;
 
-public class ActionJAXBContext {
+public class EventAndActionJAXBContext {
 
-	private final static Logger logger = Logger.getLogger(ActionJAXBContext.class);
+	private final static Logger logger = Logger.getLogger(EventAndActionJAXBContext.class);
 
 	public final static JAXBContext context = initContext();
 
@@ -36,9 +41,10 @@ public class ActionJAXBContext {
     }
     
     public static Class[] getActions(){
-    	return new Class[]{AllInAction.class, BetAction.class, CallAction.class, CheckAction.class, CreateTableAction.class, 
-				DealAction.class, FoldAction.class, JoinTableAction.class, KillAction.class, LeaveTableAction.class,
-				RaiseAction.class, SayAction.class, StartGameAction.class};
+    	ArrayList<Class> l = new ArrayList<Class>();
+    	l.addAll(Arrays.asList(ActionJAXBContext.getActions()));
+    	l.addAll(Arrays.asList(EventJAXBContext.getActions()));
+    	return l.toArray(new Class[l.size()]);
     }
 	
 }

@@ -15,10 +15,15 @@
  */
 package org.cspoker.common.events;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 
 import org.apache.log4j.Logger;
+import org.cspoker.common.actions.ActionJAXBContext;
 import org.cspoker.common.events.gameevents.GameMessageEvent;
 import org.cspoker.common.events.gameevents.NewCommunityCardsEvent;
 import org.cspoker.common.events.gameevents.NewDealEvent;
@@ -37,6 +42,8 @@ import org.cspoker.common.events.gameevents.playeractionevents.FoldEvent;
 import org.cspoker.common.events.gameevents.playeractionevents.RaiseEvent;
 import org.cspoker.common.events.gameevents.playeractionevents.SmallBlindEvent;
 import org.cspoker.common.events.gameevents.privateevents.NewPocketCardsEvent;
+import org.cspoker.common.events.invokation.IllegalActionEvent;
+import org.cspoker.common.events.invokation.SuccessfulInvokationEvent;
 import org.cspoker.common.events.serverevents.PlayerJoinedEvent;
 import org.cspoker.common.events.serverevents.PlayerLeftEvent;
 import org.cspoker.common.events.serverevents.ServerMessageEvent;
@@ -50,23 +57,28 @@ public class EventJAXBContext {
 
     private static JAXBContext initContext() {
         try {
-			return JAXBContext.newInstance(
-					//playeractionevents
-					AllInEvent.class, BetEvent.class, BigBlindEvent.class,
-					CallEvent.class, CheckEvent.class, FoldEvent.class, RaiseEvent.class, SmallBlindEvent.class,
-					//privatevents
-					NewPocketCardsEvent.class,
-					//gameevents
-					GameMessageEvent.class, NewCommunityCardsEvent.class, NewDealEvent.class, NewRoundEvent.class, 
-					NextPlayerEvent.class, PlayerJoinedGameEvent.class, PlayerLeftTableEvent.class, 
-					ShowHandEvent.class, WinnerEvent.class,
-					//serverevents
-					PlayerJoinedEvent.class, PlayerLeftEvent.class, ServerMessageEvent.class, TableCreatedEvent.class
-					);
+			return JAXBContext.newInstance(getActions());
 		} catch (JAXBException e) {
 			logger.fatal(e);
 			throw new IllegalStateException(e);
 		}
     }
 	
+    public static Class[] getActions(){
+    	return new Class[]{
+    			//playeractionevents
+				AllInEvent.class, BetEvent.class, BigBlindEvent.class,
+				CallEvent.class, CheckEvent.class, FoldEvent.class, RaiseEvent.class, SmallBlindEvent.class,
+				//privatevents
+				NewPocketCardsEvent.class,
+				//gameevents
+				GameMessageEvent.class, NewCommunityCardsEvent.class, NewDealEvent.class, NewRoundEvent.class, 
+				NextPlayerEvent.class, PlayerJoinedGameEvent.class, PlayerLeftTableEvent.class, 
+				ShowHandEvent.class, WinnerEvent.class,
+				//invokation
+				SuccessfulInvokationEvent.class, IllegalActionEvent.class,
+				//serverevents
+				PlayerJoinedEvent.class, PlayerLeftEvent.class, ServerMessageEvent.class, TableCreatedEvent.class
+				};
+    }
 }
