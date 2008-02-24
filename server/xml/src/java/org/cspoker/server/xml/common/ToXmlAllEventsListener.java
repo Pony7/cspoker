@@ -22,7 +22,6 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.PropertyException;
 
 import org.apache.log4j.Logger;
-import org.cspoker.common.EventAndActionJAXBContext;
 import org.cspoker.common.eventlisteners.AllEventsListener;
 import org.cspoker.common.events.Event;
 import org.cspoker.common.events.gameevents.GameMessageEvent;
@@ -47,14 +46,18 @@ import org.cspoker.common.events.serverevents.PlayerJoinedEvent;
 import org.cspoker.common.events.serverevents.PlayerLeftEvent;
 import org.cspoker.common.events.serverevents.ServerMessageEvent;
 import org.cspoker.common.events.serverevents.TableCreatedEvent;
+import org.cspoker.common.xml.EventAndActionJAXBContext;
 import org.cspoker.common.xml.XmlEventListener;
+import org.cspoker.common.xml.eventlisteners.invocation.AllInvocationEventsListener;
+import org.cspoker.common.xml.events.invocation.IllegalActionEvent;
+import org.cspoker.common.xml.events.invocation.SuccessfulInvocationEvent;
 
-public class XmlAllEventsListener implements AllEventsListener {
+public class ToXmlAllEventsListener implements AllEventsListener, AllInvocationEventsListener {
 
-	private final static Logger logger = Logger.getLogger(XmlAllEventsListener.class);
+	private final static Logger logger = Logger.getLogger(ToXmlAllEventsListener.class);
 	private final XmlEventListener collector;
 
-	public XmlAllEventsListener(XmlEventListener collector) {
+	public ToXmlAllEventsListener(XmlEventListener collector) {
 		this.collector = collector;
 	}
 
@@ -64,7 +67,7 @@ public class XmlAllEventsListener implements AllEventsListener {
 			Marshaller m = EventAndActionJAXBContext.context.createMarshaller();
 			m.setProperty(Marshaller.JAXB_FRAGMENT,true);
 			m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-			m.marshal( event, xml );
+			m.marshal(event, xml);
 			collector.collect(xml.toString());
 		} catch (PropertyException e) {
 			logger.fatal(e);
@@ -117,62 +120,60 @@ public class XmlAllEventsListener implements AllEventsListener {
 
 	public void onNewDealEvent(NewDealEvent event) {
 		eventToCollector(event);
-
 	}
 
 	public void onNewRoundEvent(NewRoundEvent event) {
 		eventToCollector(event);
-
 	}
 
 	public void onNextPlayerEvent(NextPlayerEvent event) {
 		eventToCollector(event);
-
 	}
 
 	public void onPlayerJoinedGameEvent(PlayerJoinedGameEvent event) {
 		eventToCollector(event);
-
 	}
 
 	public void onPlayerLeftTableEvent(PlayerLeftTableEvent event) {
 		eventToCollector(event);
-
 	}
 
 	public void onShowHandEvent(ShowHandEvent event) {
 		eventToCollector(event);
-
 	}
 
 	public void onWinnerEvent(WinnerEvent event) {
 		eventToCollector(event);
-
 	}
 
 	public void onGameMessageEvent(GameMessageEvent event) {
 		eventToCollector(event);
-
 	}
 
 	public void onPlayerJoinedEvent(PlayerJoinedEvent event) {
 		eventToCollector(event);
-
 	}
 
 	public void onPlayerLeftEvent(PlayerLeftEvent event) {
 		eventToCollector(event);
-
 	}
 
 	public void onTableCreatedEvent(TableCreatedEvent event) {
 		eventToCollector(event);
-
 	}
 
 	public void onServerMessageEvent(ServerMessageEvent event) {
 		eventToCollector(event);
+	}
 
+	@Override
+	public void onIllegalAction(IllegalActionEvent event) {
+		eventToCollector(event);
+	}
+
+	@Override
+	public void onSuccessfullInvokation(SuccessfulInvocationEvent<?> event) {
+		eventToCollector(event);
 	}
 
 }

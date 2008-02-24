@@ -24,7 +24,7 @@ import javax.xml.bind.annotation.XmlAttribute;
 
 import org.apache.log4j.Logger;
 import org.cspoker.common.PlayerCommunication;
-import org.cspoker.common.xml.eventlisteners.invocation.RemoteAllInvocationEventsListener;
+import org.cspoker.common.xml.eventlisteners.invocation.AllInvocationEventsListener;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 public abstract class PlayerCommunicationAction implements Serializable {
@@ -43,19 +43,8 @@ public abstract class PlayerCommunicationAction implements Serializable {
 		// no op
 	}
 
-	public void perform(PlayerCommunication pc,
-			RemoteAllInvocationEventsListener listener) {
-		try {
-			performRemote(pc, listener);
-		} catch (RemoteException e) {
-			logger.error(e);
-			// TODO kill?
-			pc.kill();
-		}
-	}
-
-	protected abstract void performRemote(PlayerCommunication pc,
-			RemoteAllInvocationEventsListener listener) throws RemoteException;
+	public abstract void perform(PlayerCommunication pc,
+			AllInvocationEventsListener listener);
 
 	public long getID() {
 		return id;

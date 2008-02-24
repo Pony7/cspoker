@@ -25,7 +25,7 @@ import org.cspoker.common.xml.actions.PlayerCommunicationAction;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-public class SuccessfulInvokationEvent<T> extends InvokationEvent {
+public class SuccessfulInvocationEvent<T> extends InvocationEvent {
 
 	private static final long serialVersionUID = 8350435427841245148L;
 
@@ -33,12 +33,12 @@ public class SuccessfulInvokationEvent<T> extends InvokationEvent {
 	
 	private T result;
 
-	public SuccessfulInvokationEvent(PlayerCommunicationAction a, T result) {
+	public SuccessfulInvocationEvent(PlayerCommunicationAction a, T result) {
 		this.action = a;
 		this.result = result;
 	}
 	
-	protected SuccessfulInvokationEvent() {
+	protected SuccessfulInvocationEvent() {
 		// no op
 	}
 

@@ -15,6 +15,10 @@
  */
 package org.cspoker.server.xml.http.handler;
 
+import java.io.IOException;
+
+import javax.xml.bind.JAXBException;
+
 import org.cspoker.server.common.game.session.PlayerKilledExcepion;
 import org.cspoker.server.common.game.session.Session;
 import org.cspoker.server.common.game.session.SessionManager;
@@ -44,6 +48,10 @@ public class CSPokerHandler extends AbstractHttpHandlerImpl {
 			try {
 				playerComm.handle(new InputSource(http.getRequestBody()));
 			} catch (SAXException e) {
+				throw new HttpExceptionImpl(e, 400);
+			} catch (JAXBException e) {
+				throw new HttpExceptionImpl(e, 400);
+			} catch (IOException e) {
 				throw new HttpExceptionImpl(e, 400);
 			}
 			return playerComm.getAndFlushCache();

@@ -17,7 +17,7 @@ package org.cspoker.common.xml.events.invocation;
 
 import org.cspoker.common.events.Event;
 
-public class InvokationEvent extends Event {
+public class InvocationEvent extends Event {
 
 	private static final long serialVersionUID = -3647664952883269411L;
 
