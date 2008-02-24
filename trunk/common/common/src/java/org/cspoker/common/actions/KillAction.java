@@ -15,12 +15,15 @@
  */
 package org.cspoker.common.actions;
 
+import java.rmi.RemoteException;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.cspoker.common.PlayerCommunication;
-import org.cspoker.common.exceptions.IllegalActionException;
+import org.cspoker.common.eventlisteners.invokation.RemoteAllInvokationEventsListener;
+import org.cspoker.common.events.invokation.SuccessfulInvokationEvent;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -31,14 +34,17 @@ public class KillAction extends PlayerCommunicationAction {
 	public KillAction(long id) {
 		super(id);
 	}
-	
+
 	protected KillAction() {
 		// no op
 	}
-	
+
 	@Override
-	public void perform(PlayerCommunication pc) throws IllegalActionException {
+	public void performRemote(PlayerCommunication pc,
+			RemoteAllInvokationEventsListener listener) throws RemoteException {
 		pc.kill();
+		listener.onSuccessfullInvokation(new SuccessfulInvokationEvent<Void>(
+				this, null));
 	}
 
 }

@@ -16,25 +16,12 @@
 
 package org.cspoker.common.events.gameevents.playeractionevents;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
-
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.cspoker.common.EventAndActionJAXBContext;
-import org.cspoker.common.actions.SayAction;
-import org.cspoker.common.elements.cards.Card;
-import org.cspoker.common.elements.cards.Rank;
-import org.cspoker.common.elements.cards.Suit;
 import org.cspoker.common.elements.pots.Pots;
-import org.cspoker.common.events.invokation.IllegalActionEvent;
-import org.cspoker.common.exceptions.IllegalActionException;
 import org.cspoker.common.player.Player;
-import org.cspoker.common.player.PlayerId;
 
 /**
  * A class to represent all-in events.
@@ -73,25 +60,6 @@ public class AllInEvent extends ActionChangedPotEvent {
 
 	public Player getPlayer() {
 		return player;
-	}
-	
-	public static void main(String[] args) throws JAXBException {
-		Player p = new Player(new PlayerId(25L),"guy", 25,10);
-		Pots o = new Pots(58);
-		
-		Set<Card> cards = new LinkedHashSet<Card>();
-		cards.add(new Card(Rank.EIGHT, Suit.DIAMONDS));
-		cards.add(new Card(Rank.KING, Suit.HEARTS));
-		
-		//Event e = new TableCreatedEvent(p, new TableId(5));
-		//Event e = new SuccessfulInvokationEvent<TableId>(new SayAction(84654L, "kaka"),new TableId(5));
-		Object e = new IllegalActionEvent(new IllegalActionException("not allowed"), new SayAction(4354L, "kaka"));
-		
-		Marshaller m = EventAndActionJAXBContext.context.createMarshaller();
-		m.setProperty(Marshaller.JAXB_FRAGMENT,true);
-		m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-		
-		m.marshal( e, System.out );
 	}
 
 }

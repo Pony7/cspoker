@@ -16,16 +16,21 @@
 package org.cspoker.common.actions;
 
 import java.io.Serializable;
+import java.rmi.RemoteException;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 
+import org.apache.log4j.Logger;
 import org.cspoker.common.PlayerCommunication;
-import org.cspoker.common.exceptions.IllegalActionException;
+import org.cspoker.common.eventlisteners.invokation.RemoteAllInvokationEventsListener;
 
 @XmlAccessorType(XmlAccessType.FIELD)
-public abstract class PlayerCommunicationAction implements Serializable{
+public abstract class PlayerCommunicationAction implements Serializable {
+
+	private final static Logger logger = Logger
+			.getLogger(PlayerCommunicationAction.class);
 
 	@XmlAttribute
 	private long id;
@@ -33,14 +38,26 @@ public abstract class PlayerCommunicationAction implements Serializable{
 	public PlayerCommunicationAction(long id) {
 		this.id = id;
 	}
-	
-	protected PlayerCommunicationAction(){
+
+	protected PlayerCommunicationAction() {
 		// no op
 	}
-	
-	public abstract void perform(PlayerCommunication pc) throws IllegalActionException;
-	
-	public long getID(){
+
+	public void perform(PlayerCommunication pc,
+			RemoteAllInvokationEventsListener listener) {
+		try {
+			performRemote(pc, listener);
+		} catch (RemoteException e) {
+			logger.error(e);
+			// TODO kill?
+			pc.kill();
+		}
+	}
+
+	protected abstract void performRemote(PlayerCommunication pc,
+			RemoteAllInvokationEventsListener listener) throws RemoteException;
+
+	public long getID() {
 		return id;
 	}
 
@@ -65,5 +82,5 @@ public abstract class PlayerCommunicationAction implements Serializable{
 			return false;
 		return true;
 	}
-	
+
 }

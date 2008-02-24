@@ -22,23 +22,27 @@ import org.apache.log4j.Logger;
 
 public class ActionJAXBContext {
 
-	private final static Logger logger = Logger.getLogger(ActionJAXBContext.class);
+	private final static Logger logger = Logger
+			.getLogger(ActionJAXBContext.class);
 
 	public final static JAXBContext context = initContext();
 
-    private static JAXBContext initContext() {
-        try {
+	private static JAXBContext initContext() {
+		try {
 			return JAXBContext.newInstance(getActions());
 		} catch (JAXBException e) {
 			logger.fatal(e);
 			throw new IllegalStateException(e);
 		}
-    }
-    
-    public static Class[] getActions(){
-    	return new Class[]{AllInAction.class, BetAction.class, CallAction.class, CheckAction.class, CreateTableAction.class, 
-				DealAction.class, FoldAction.class, JoinTableAction.class, KillAction.class, LeaveTableAction.class,
-				RaiseAction.class, SayAction.class, StartGameAction.class};
-    }
-	
+	}
+
+	@SuppressWarnings("unchecked")
+	public static Class[] getActions() {
+		return new Class[] { AllInAction.class, BetAction.class,
+				CallAction.class, CheckAction.class, CreateTableAction.class,
+				DealAction.class, FoldAction.class, JoinTableAction.class,
+				KillAction.class, LeaveTableAction.class, RaiseAction.class,
+				SayAction.class, StartGameAction.class };
+	}
+
 }
