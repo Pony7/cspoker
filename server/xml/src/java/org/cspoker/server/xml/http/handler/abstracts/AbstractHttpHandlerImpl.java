@@ -26,6 +26,8 @@ import javax.xml.transform.sax.SAXTransformerFactory;
 import javax.xml.transform.sax.TransformerHandler;
 import javax.xml.transform.stream.StreamResult;
 
+import org.apache.log4j.Logger;
+import org.cspoker.server.xml.http.handler.CSPokerHandler;
 import org.cspoker.server.xml.http.handler.exception.HttpException;
 import org.cspoker.server.xml.http.handler.exception.HttpExceptionImpl;
 import org.cspoker.server.xml.http.handler.util.Base64;
@@ -40,6 +42,8 @@ import com.sun.net.httpserver.HttpHandler;
  * 
  */
 public abstract class AbstractHttpHandlerImpl implements HttpHandler {
+
+	private final static Logger logger = Logger.getLogger(AbstractHttpHandlerImpl.class);
 
 	public AbstractHttpHandlerImpl() {
 		super();
@@ -79,6 +83,7 @@ public abstract class AbstractHttpHandlerImpl implements HttpHandler {
 	protected void throwException(HttpExchange http, Throwable e, int status)
 			throws IOException {
 		try {
+			logger.error("Returning serialized exception",e);
 			if (e instanceof HttpException) {
 				// e has http status information
 				status = ((HttpException) e).getStatus();

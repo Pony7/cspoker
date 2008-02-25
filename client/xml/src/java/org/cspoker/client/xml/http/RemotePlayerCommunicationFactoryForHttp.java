@@ -30,13 +30,13 @@ import org.cspoker.common.RemotePlayerCommunication;
 
 public class RemotePlayerCommunicationFactoryForHttp implements RemotePlayerCommunicationFactory{
 
-	private final static Logger logger = Logger.getLogger(XmlHttpChannel.class);
+	private final static Logger logger = Logger.getLogger(RemotePlayerCommunicationFactoryForHttp.class);
 
 	@Override
 	public RemotePlayerCommunication getRemotePlayerCommunication(
 			String server, int port, String username, String password) throws ConnectException, LoginException{
 		try {
-			XmlHttpChannel c = new XmlHttpChannel(new URL("http://"+server+":"+port),username, password);
+			XmlHttpChannel c = new XmlHttpChannel(new URL("http://"+server+":"+port+"/cspoker/"),username, password);
 			c.open();
 			return new XmlChannelRemotePlayerCommunication(c);
 		} catch (MalformedURLException e) {

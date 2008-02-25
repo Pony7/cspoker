@@ -16,29 +16,29 @@
 package org.cspoker.client.eventlistener;
 
 import org.cspoker.client.Console;
-import org.cspoker.common.game.eventlisteners.RemoteAllEventsListener;
-import org.cspoker.common.game.events.gameEvents.GameMessageEvent;
-import org.cspoker.common.game.events.gameEvents.NewCommunityCardsEvent;
-import org.cspoker.common.game.events.gameEvents.NewDealEvent;
-import org.cspoker.common.game.events.gameEvents.NewRoundEvent;
-import org.cspoker.common.game.events.gameEvents.NextPlayerEvent;
-import org.cspoker.common.game.events.gameEvents.PlayerJoinedGameEvent;
-import org.cspoker.common.game.events.gameEvents.PlayerLeftTableEvent;
-import org.cspoker.common.game.events.gameEvents.ShowHandEvent;
-import org.cspoker.common.game.events.gameEvents.WinnerEvent;
-import org.cspoker.common.game.events.gameEvents.playerActionEvents.AllInEvent;
-import org.cspoker.common.game.events.gameEvents.playerActionEvents.BetEvent;
-import org.cspoker.common.game.events.gameEvents.playerActionEvents.BigBlindEvent;
-import org.cspoker.common.game.events.gameEvents.playerActionEvents.CallEvent;
-import org.cspoker.common.game.events.gameEvents.playerActionEvents.CheckEvent;
-import org.cspoker.common.game.events.gameEvents.playerActionEvents.FoldEvent;
-import org.cspoker.common.game.events.gameEvents.playerActionEvents.RaiseEvent;
-import org.cspoker.common.game.events.gameEvents.playerActionEvents.SmallBlindEvent;
-import org.cspoker.common.game.events.gameEvents.privateEvents.NewPocketCardsEvent;
-import org.cspoker.common.game.events.serverEvents.PlayerJoinedEvent;
-import org.cspoker.common.game.events.serverEvents.PlayerLeftEvent;
-import org.cspoker.common.game.events.serverEvents.ServerMessageEvent;
-import org.cspoker.common.game.events.serverEvents.TableCreatedEvent;
+import org.cspoker.common.eventlisteners.RemoteAllEventsListener;
+import org.cspoker.common.events.gameevents.GameMessageEvent;
+import org.cspoker.common.events.gameevents.NewCommunityCardsEvent;
+import org.cspoker.common.events.gameevents.NewDealEvent;
+import org.cspoker.common.events.gameevents.NewRoundEvent;
+import org.cspoker.common.events.gameevents.NextPlayerEvent;
+import org.cspoker.common.events.gameevents.PlayerJoinedGameEvent;
+import org.cspoker.common.events.gameevents.PlayerLeftTableEvent;
+import org.cspoker.common.events.gameevents.ShowHandEvent;
+import org.cspoker.common.events.gameevents.WinnerEvent;
+import org.cspoker.common.events.gameevents.playeractionevents.AllInEvent;
+import org.cspoker.common.events.gameevents.playeractionevents.BetEvent;
+import org.cspoker.common.events.gameevents.playeractionevents.BigBlindEvent;
+import org.cspoker.common.events.gameevents.playeractionevents.CallEvent;
+import org.cspoker.common.events.gameevents.playeractionevents.CheckEvent;
+import org.cspoker.common.events.gameevents.playeractionevents.FoldEvent;
+import org.cspoker.common.events.gameevents.playeractionevents.RaiseEvent;
+import org.cspoker.common.events.gameevents.playeractionevents.SmallBlindEvent;
+import org.cspoker.common.events.gameevents.privateevents.NewPocketCardsEvent;
+import org.cspoker.common.events.serverevents.PlayerJoinedEvent;
+import org.cspoker.common.events.serverevents.PlayerLeftEvent;
+import org.cspoker.common.events.serverevents.ServerMessageEvent;
+import org.cspoker.common.events.serverevents.TableCreatedEvent;
 
 public class ConsoleListener implements RemoteAllEventsListener{
 

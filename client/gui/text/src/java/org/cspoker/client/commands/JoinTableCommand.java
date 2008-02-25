@@ -16,8 +16,8 @@
 package org.cspoker.client.commands;
 
 import org.cspoker.client.Console;
-import org.cspoker.common.game.RemotePlayerCommunication;
-import org.cspoker.common.game.elements.table.TableId;
+import org.cspoker.common.RemotePlayerCommunication;
+import org.cspoker.common.elements.table.TableId;
 
 public class JoinTableCommand extends AbstractCommand {
 

@@ -15,36 +15,36 @@
  */
 package org.cspoker.client.savedstate;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
-import org.cspoker.common.game.elements.cards.cardElements.Card;
+import org.cspoker.common.elements.cards.Card;
 
 public class Cards {
 
-    private List<Card> privateCards;
+    private Set<Card> privateCards;
 
-    private List<Card> riverCards;
+    private Set<Card> riverCards;
     
     public Cards() {
 	resetCards();
     }
 
-    public synchronized List<Card> getPrivateCards() {
-        return Collections.unmodifiableList(privateCards);
+    public synchronized Set<Card> getPrivateCards() {
+        return Collections.unmodifiableSet(privateCards);
     }
 
-    public synchronized List<Card> getCommonCards() {
-        return Collections.unmodifiableList(riverCards);
+    public synchronized Set<Card> getCommonCards() {
+        return Collections.unmodifiableSet(riverCards);
     }
     
     public synchronized void resetCards(){
-	privateCards = new ArrayList<Card>(2);
-	riverCards = new ArrayList<Card>(5);
+	privateCards = new HashSet<Card>(2);
+	riverCards = new HashSet<Card>(5);
     }
     
-    public synchronized void setPrivateCards(List<Card> cards){
+    public synchronized void setPrivateCards(Set<Card> cards){
 	if(cards.size()!=2)
 	    throw new IllegalArgumentException("The number of private cards must be 2.");
 	if(privateCards.size()!=0)
@@ -52,7 +52,7 @@ public class Cards {
 	privateCards.addAll(cards);
     }
     
-    public synchronized void addCommonCards(List<Card> cards){
+    public synchronized void addCommonCards(Set<Card> cards){
 	if(riverCards.size()+cards.size()>5)
 	    throw new IllegalStateException("Can't have more than 5 cards in the river.");
 	riverCards.addAll(cards);

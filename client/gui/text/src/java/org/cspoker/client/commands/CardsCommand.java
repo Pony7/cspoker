@@ -15,11 +15,12 @@
  */
 package org.cspoker.client.commands;
 
-import java.util.List;
+import java.util.Iterator;
+import java.util.Set;
 
 import org.cspoker.client.Console;
 import org.cspoker.client.savedstate.Cards;
-import org.cspoker.common.game.elements.cards.cardElements.Card;
+import org.cspoker.common.elements.cards.Card;
 
 public class CardsCommand implements Command {
 
@@ -32,8 +33,8 @@ public class CardsCommand implements Command {
     }
 
     public void execute(String... args) throws Exception {
-	List<Card> privateCards;
-	List<Card> communityCards;
+	Set<Card> privateCards;
+	Set<Card> communityCards;
 	synchronized (cards) {
 	    privateCards = cards.getPrivateCards();
 	    communityCards = cards.getCommonCards();
@@ -42,9 +43,10 @@ public class CardsCommand implements Command {
 	if(privateCards.size()!=2){
 	    result+="nothing";
 	}else{
-	    result+=privateCards.get(0);
+		Iterator<Card> iter = privateCards.iterator();
+	    result+=iter.next();
 	    result+=", ";
-	    result+=privateCards.get(1);
+	    result+=iter.next();
 	}
 	result+="."+n;
 
@@ -52,10 +54,11 @@ public class CardsCommand implements Command {
 	if(communityCards.size()==0){
 	    result+="nothing";
 	}else{
-	    result+=communityCards.get(0);
-	    for(int i=1;i<communityCards.size();i++){
+		Iterator<Card> iter = communityCards.iterator();
+	    result+=iter.next();
+	    while(iter.hasNext()){
 		result+=", ";
-		result+=communityCards.get(i);
+		result+=iter.next();
 	    }
 	}
 	result+="."+n;

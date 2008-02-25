@@ -18,7 +18,7 @@ package org.cspoker.server.xml.http;
 import java.io.IOException;
 
 import org.apache.log4j.Logger;
-import org.cspoker.server.common.config.Log4JPropertiesLoader;
+import org.cspoker.common.util.Log4JPropertiesLoader;
 
 public class RunHttpServer {
 

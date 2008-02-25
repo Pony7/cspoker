@@ -3,15 +3,15 @@ package org.cspoker.client.eventlistener;
 import org.cspoker.client.Console;
 import org.cspoker.client.savedstate.Cards;
 import org.cspoker.client.savedstate.Pot;
-import org.cspoker.common.game.events.gameEvents.NewCommunityCardsEvent;
-import org.cspoker.common.game.events.gameEvents.NewRoundEvent;
-import org.cspoker.common.game.events.gameEvents.playerActionEvents.AllInEvent;
-import org.cspoker.common.game.events.gameEvents.playerActionEvents.BetEvent;
-import org.cspoker.common.game.events.gameEvents.playerActionEvents.BigBlindEvent;
-import org.cspoker.common.game.events.gameEvents.playerActionEvents.CallEvent;
-import org.cspoker.common.game.events.gameEvents.playerActionEvents.RaiseEvent;
-import org.cspoker.common.game.events.gameEvents.playerActionEvents.SmallBlindEvent;
-import org.cspoker.common.game.events.gameEvents.privateEvents.NewPocketCardsEvent;
+import org.cspoker.common.events.gameevents.NewCommunityCardsEvent;
+import org.cspoker.common.events.gameevents.NewRoundEvent;
+import org.cspoker.common.events.gameevents.playeractionevents.AllInEvent;
+import org.cspoker.common.events.gameevents.playeractionevents.BetEvent;
+import org.cspoker.common.events.gameevents.playeractionevents.BigBlindEvent;
+import org.cspoker.common.events.gameevents.playeractionevents.CallEvent;
+import org.cspoker.common.events.gameevents.playeractionevents.RaiseEvent;
+import org.cspoker.common.events.gameevents.playeractionevents.SmallBlindEvent;
+import org.cspoker.common.events.gameevents.privateevents.NewPocketCardsEvent;
 
 public class StatefulConsoleListener extends ConsoleListener {
 
