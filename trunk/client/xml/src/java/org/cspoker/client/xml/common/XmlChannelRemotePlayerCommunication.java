@@ -16,15 +16,16 @@
 package org.cspoker.client.xml.common;
 
 import java.rmi.RemoteException;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
-import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.cspoker.common.RemotePlayerCommunication;
 import org.cspoker.common.elements.table.TableId;
 import org.cspoker.common.eventlisteners.RemoteAllEventsListener;
-import org.cspoker.common.eventlisteners.SpreadingAllEventsListener;
 import org.cspoker.common.exceptions.IllegalActionException;
+import org.cspoker.common.util.SpreadingAllEventsListener;
 import org.cspoker.common.xml.actions.AllInAction;
 import org.cspoker.common.xml.actions.BetAction;
 import org.cspoker.common.xml.actions.CallAction;
@@ -42,12 +43,14 @@ import org.cspoker.common.xml.actions.StartGameAction;
 public class XmlChannelRemotePlayerCommunication implements
 RemotePlayerCommunication {
 	
-	private final Set<RemoteAllEventsListener> listeners = new ConcurrentSkipListSet<RemoteAllEventsListener>(); 
+	private final Set<RemoteAllEventsListener> listeners = Collections.synchronizedSet(new HashSet<RemoteAllEventsListener>()); 
 	private final XmlChannelMarshaller marshaller;
 	private AtomicLong id = new AtomicLong(1);
+	private final XmlChannel c;
 	
 	public XmlChannelRemotePlayerCommunication(XmlChannel c) {
 		this.marshaller = new XmlChannelMarshaller(c, new SpreadingAllEventsListener(listeners));
+		this.c = c;
 	}
 
 	public void subscribeAllEventsListener(
@@ -108,6 +111,7 @@ RemotePlayerCommunication {
 	@Override
 	public void kill() throws IllegalActionException, RemoteException {
 		marshaller.perform(new KillAction(getId()));
+		c.close();
 	}
 
 	@Override

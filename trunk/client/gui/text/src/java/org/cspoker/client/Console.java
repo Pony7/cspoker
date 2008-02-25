@@ -20,9 +20,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
-import org.cspoker.client.common.RemotePlayerCommunicationFactory;
 import org.cspoker.client.common.RemotePlayerCommunicationFactoryImpl;
-import org.cspoker.client.rmi.RemoteLoginServerForRMI;
 import org.cspoker.client.rmi.RemotePlayerCommunicationFactoryForRMI;
 
 /**

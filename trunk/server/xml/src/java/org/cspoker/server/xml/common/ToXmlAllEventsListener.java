@@ -54,26 +54,32 @@ import org.cspoker.common.xml.events.invocation.SuccessfulInvocationEvent;
 public class ToXmlAllEventsListener implements AllEventListenerWithInvocation {
 
 	private final static Logger logger = Logger.getLogger(ToXmlAllEventsListener.class);
-	private final XmlEventListener collector;
+	private XmlEventListener collector;
 
 	public ToXmlAllEventsListener(XmlEventListener collector) {
+		setCollector(collector);
+	}
+
+	public synchronized void setCollector(XmlEventListener collector) {
 		this.collector = collector;
 	}
 
-	public void eventToCollector(Event event) {
-		try {
-			StringWriter xml = new StringWriter();
-			Marshaller m = EventAndActionJAXBContext.context.createMarshaller();
-			m.setProperty(Marshaller.JAXB_FRAGMENT,true);
-			m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-			m.marshal(event, xml);
-			collector.collect(xml.toString());
-		} catch (PropertyException e) {
-			logger.fatal(e);
-			throw new IllegalStateException(e);
-		} catch (JAXBException e) {
-			logger.fatal(e);
-			throw new IllegalStateException(e);
+	public synchronized void eventToCollector(Event event) {
+		if(collector!=null){
+			try {
+				StringWriter xml = new StringWriter();
+				Marshaller m = EventAndActionJAXBContext.context.createMarshaller();
+				m.setProperty(Marshaller.JAXB_FRAGMENT,true);
+				m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+				m.marshal(event, xml);
+				collector.collect(xml.toString());
+			} catch (PropertyException e) {
+				logger.fatal(e);
+				throw new IllegalStateException(e);
+			} catch (JAXBException e) {
+				logger.fatal(e);
+				throw new IllegalStateException(e);
+			}
 		}
 	}
 

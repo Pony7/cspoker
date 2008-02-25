@@ -40,9 +40,9 @@ public class XmlChannelUnMarshaller implements XmlEventListener {
 
 	private final RemoteAllEventsListener listener;
 
-	private Map<PlayerCommunicationAction<?>, IllegalActionEvent> illegalactionevents = new HashMap<PlayerCommunicationAction<?>, IllegalActionEvent>();
+	private final Map<PlayerCommunicationAction<?>, IllegalActionEvent> illegalactionevents = new HashMap<PlayerCommunicationAction<?>, IllegalActionEvent>();
 
-	private Map<PlayerCommunicationAction<?>, SuccessfulInvocationEvent<?>> successfulinvocationevents = new ConcurrentHashMap<PlayerCommunicationAction<?>, SuccessfulInvocationEvent<?>>();
+	private final Map<PlayerCommunicationAction<?>, SuccessfulInvocationEvent<?>> successfulinvocationevents = new ConcurrentHashMap<PlayerCommunicationAction<?>, SuccessfulInvocationEvent<?>>();
 
 	public XmlChannelUnMarshaller(XmlChannel channel, RemoteAllEventsListener spreadingAllEventsListener) {
 		this.listener = spreadingAllEventsListener;
@@ -79,19 +79,26 @@ public class XmlChannelUnMarshaller implements XmlEventListener {
 
 	private void handle(IllegalActionEvent event) {
 		illegalactionevents.put(event.getAction(), event);
-		notifyAll();
+		synchronized (this) {
+			notifyAll();
+		}
 	}
 
 
 	private void handle(SuccessfulInvocationEvent<?> event) {
 		successfulinvocationevents.put(event.getAction(), event);
-		notifyAll();
+		synchronized (this) {
+			notifyAll();
+		}
 	}
 
 	@SuppressWarnings("unchecked")
 	public <T> T waitForExecutionEnd(PlayerCommunicationAction<T> action) throws InterruptedException, IllegalActionException{
-		while (!successfulinvocationevents.containsKey(action) && !illegalactionevents.containsKey(action))
-			wait();
+		synchronized (this) {
+			while (!successfulinvocationevents.containsKey(action)
+					&& !illegalactionevents.containsKey(action))
+				wait();
+		}
 		if(illegalactionevents.containsKey(action)){
 			throw illegalactionevents.remove(action).getException();
 		}else if(successfulinvocationevents.containsKey(action)){

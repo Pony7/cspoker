@@ -19,21 +19,17 @@ import java.io.IOException;
 
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
-import javax.xml.bind.UnmarshallerHandler;
 
 import org.apache.log4j.Logger;
 import org.cspoker.common.PlayerCommunication;
 import org.cspoker.common.xml.XmlEventListener;
 import org.cspoker.common.xml.actions.ActionJAXBContext;
 import org.cspoker.common.xml.actions.PlayerCommunicationAction;
-import org.cspoker.common.xml.handler.DelegatingToOneHandler;
 import org.cspoker.server.common.game.player.GamePlayer;
 import org.cspoker.server.common.game.session.PlayerKilledExcepion;
 import org.cspoker.server.common.game.session.Session;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-import org.xml.sax.XMLReader;
-import org.xml.sax.helpers.XMLReaderFactory;
 
 public class XmlPlayerCommunication implements XmlEventListener {
 
@@ -88,6 +84,7 @@ public class XmlPlayerCommunication implements XmlEventListener {
 
 	public synchronized void updateEventListener(XmlEventListener newlist) {
 		xmllistener = newlist;
+		toxmllistener.setCollector(newlist);
 		flushToListener();
 	}
 

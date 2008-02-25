@@ -19,6 +19,7 @@ import java.io.IOException;
 
 import javax.xml.bind.JAXBException;
 
+import org.apache.log4j.Logger;
 import org.cspoker.server.common.game.session.PlayerKilledExcepion;
 import org.cspoker.server.common.game.session.Session;
 import org.cspoker.server.common.game.session.SessionManager;
@@ -33,11 +34,15 @@ import com.sun.net.httpserver.HttpExchange;
 
 public class CSPokerHandler extends AbstractHttpHandlerImpl {
 
+	private final static Logger logger = Logger.getLogger(CSPokerHandler.class);
+
 	private final XmlPlayerCommunicationFactory f = XmlPlayerCommunicationFactory.global_factory;
 
 	@Override
 	protected String getResponse(HttpExchange http) throws HttpExceptionImpl {
 
+		logger.trace("Received /cspoker/ request");
+		
 		String username = AbstractHttpHandlerImpl.toPlayerName(http
 				.getRequestHeaders());
 		Session session = SessionManager.global_session_manager

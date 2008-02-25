@@ -15,6 +15,7 @@
  */
 package org.cspoker.client.xml.http;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -41,6 +42,7 @@ import org.apache.log4j.Logger;
 import org.cspoker.client.xml.common.XmlChannel;
 import org.cspoker.common.xml.XmlEventListener;
 import org.cspoker.common.xml.actions.ActionJAXBContext;
+import org.cspoker.common.xml.actions.NoOpAction;
 import org.cspoker.common.xml.actions.SayAction;
 
 public class XmlHttpChannel implements XmlChannel {
@@ -48,7 +50,7 @@ public class XmlHttpChannel implements XmlChannel {
 	private final static Logger logger = Logger.getLogger(XmlHttpChannel.class);
 
 	private ScheduledExecutorService scheduler;
-	
+
 	private List<XmlEventListener> xmlEventListeners = new ArrayList<XmlEventListener>();
 
 	private URL url;
@@ -71,7 +73,7 @@ public class XmlHttpChannel implements XmlChannel {
 	}
 
 	public synchronized void open() throws LoginException, RemoteException {
-	       scheduler = Executors.newScheduledThreadPool(1);
+		scheduler = Executors.newScheduledThreadPool(1);
 		try {
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 			connection.setConnectTimeout(20000);
@@ -82,6 +84,7 @@ public class XmlHttpChannel implements XmlChannel {
 
 			Writer w = new OutputStreamWriter(connection.getOutputStream());
 			w.write(noOpXml);
+			w.close();
 			connection.getOutputStream().close();
 			if(connection.getResponseCode()==401){
 				LoginException e = new LoginException("Login Failed, received 401.");
@@ -89,7 +92,15 @@ public class XmlHttpChannel implements XmlChannel {
 				throw e;
 			}else if (connection.getResponseCode() / 100 == 4
 					|| connection.getResponseCode() / 100 == 5) {
-				throw new RemoteException("Unknown error from the server.");
+				String line;
+				BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+				StringBuffer buffer = new StringBuffer();
+				while ((line = in.readLine()) != null) {
+					buffer.append(line);
+				}				
+				RemoteException e = new RemoteException("Unknown error from the server:"+connection.getResponseCode()+"\n"+buffer.toString());
+				logger.error(e);
+				throw e;
 			}
 		} catch (IOException e) {
 			throw new RemoteException("IOException in XML channel",e);
@@ -112,15 +123,22 @@ public class XmlHttpChannel implements XmlChannel {
 
 			Writer w = new OutputStreamWriter(connection.getOutputStream());
 			w.write(xml);
+			w.close();
 			connection.getOutputStream().close();
 
 			if (connection.getResponseCode() / 100 == 4
 					|| connection.getResponseCode() / 100 == 5) {
-				RemoteException e = new RemoteException("Unknown error from the server:"+connection.getResponseCode());
+				String line;
+				BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+				StringBuffer buffer = new StringBuffer();
+				while ((line = in.readLine()) != null) {
+					buffer.append(line);
+				}
+				RemoteException e = new RemoteException("Unknown error from the server:"+connection.getResponseCode()+"\n"+buffer.toString());
 				logger.error(e);
 				throw e;
 			}
-			
+
 			InputStreamReader r = new InputStreamReader(connection.getInputStream());
 			int read = r.read(buffer);
 			boolean intag = false, first = false, wasslash=false;
@@ -159,7 +177,7 @@ public class XmlHttpChannel implements XmlChannel {
 				buffer.rewind();
 				read = r.read(buffer);
 			}
-			
+
 		} catch (IOException e) {
 			throw new RemoteException("IOException in XML channel",e);
 		} 
@@ -186,7 +204,7 @@ public class XmlHttpChannel implements XmlChannel {
 			StringWriter s = new StringWriter();
 			Marshaller m = ActionJAXBContext.context.createMarshaller();
 			m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-			m.marshal(new SayAction(5,"sfdsqd/qsd<"),s);
+			m.marshal(new NoOpAction(),s);
 			return s.toString();
 		} catch (PropertyException e) {
 			logger.fatal(e);
@@ -196,7 +214,7 @@ public class XmlHttpChannel implements XmlChannel {
 			throw new IllegalStateException(e);
 		}
 	}
-	
+
 	public static void main(String[] args) {
 		System.out.println(noOpXml);
 	}

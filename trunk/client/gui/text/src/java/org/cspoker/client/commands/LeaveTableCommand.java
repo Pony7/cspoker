@@ -16,7 +16,7 @@
 package org.cspoker.client.commands;
 
 import org.cspoker.client.Console;
-import org.cspoker.common.game.RemotePlayerCommunication;
+import org.cspoker.common.RemotePlayerCommunication;
 
 public class LeaveTableCommand extends AbstractCommand{
 

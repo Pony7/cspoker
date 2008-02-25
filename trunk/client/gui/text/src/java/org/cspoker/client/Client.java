@@ -15,9 +15,10 @@
  */
 package org.cspoker.client;
 
-import java.rmi.ConnectException;
 import java.rmi.RemoteException;
 import java.util.HashMap;
+
+import javax.security.auth.login.LoginException;
 
 import org.cspoker.client.commands.AllInCommand;
 import org.cspoker.client.commands.BetCommand;
@@ -40,7 +41,7 @@ import org.cspoker.client.common.RemotePlayerCommunicationFactory.NoProviderExce
 import org.cspoker.client.eventlistener.StatefulConsoleListener;
 import org.cspoker.client.savedstate.Cards;
 import org.cspoker.client.savedstate.Pot;
-import org.cspoker.common.game.RemotePlayerCommunication;
+import org.cspoker.common.RemotePlayerCommunication;
 
 /**
  * Connect to the given server and passes on user commands.
@@ -52,7 +53,7 @@ public class Client {
     private final RemotePlayerCommunication rpc;
     
     public Client(String server, int port, final String username
-	    , final String password, Console console) throws NoProviderException, RemoteException {
+	    , final String password, Console console) throws NoProviderException, RemoteException, LoginException {
 	this.console = console;
 	rpc = RemotePlayerCommunicationFactoryImpl.global_factory
 		.getRemotePlayerCommunication(server, port, username, password);
