@@ -17,7 +17,15 @@
 package org.cspoker.common.events;
 
 import java.io.Serializable;
+import java.rmi.RemoteException;
+
+import org.cspoker.common.eventlisteners.RemoteAllEventsListener;
+import org.cspoker.common.exceptions.NoListenerException;
 
 public abstract class Event implements Serializable {
 	
+	public void dispatch(RemoteAllEventsListener listener) throws NoListenerException, RemoteException {
+		throw new NoListenerException("No handler for this event.");
+	}
+
 }

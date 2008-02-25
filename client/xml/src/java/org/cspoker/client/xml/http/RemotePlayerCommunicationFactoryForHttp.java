@@ -18,15 +18,19 @@ package org.cspoker.client.xml.http;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.rmi.ConnectException;
+import java.rmi.RemoteException;
 
 import javax.security.auth.login.LoginException;
 
+import org.apache.log4j.Logger;
 import org.cspoker.client.common.RemotePlayerCommunicationFactory;
 import org.cspoker.client.xml.common.XmlChannelRemotePlayerCommunication;
 import org.cspoker.common.RemotePlayerCommunication;
 
 
 public class RemotePlayerCommunicationFactoryForHttp implements RemotePlayerCommunicationFactory{
+
+	private final static Logger logger = Logger.getLogger(XmlHttpChannel.class);
 
 	@Override
 	public RemotePlayerCommunication getRemotePlayerCommunication(
@@ -36,6 +40,10 @@ public class RemotePlayerCommunicationFactoryForHttp implements RemotePlayerComm
 			c.open();
 			return new XmlChannelRemotePlayerCommunication(c);
 		} catch (MalformedURLException e) {
+			logger.error(e);
+			throw new ConnectException("Malformed URL",e);
+		} catch (RemoteException e) {
+			logger.error(e);
 			throw new ConnectException("Malformed URL",e);
 		}
 	}

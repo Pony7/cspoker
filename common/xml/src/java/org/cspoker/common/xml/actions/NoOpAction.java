@@ -13,47 +13,31 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.common.xml.actions;
 
+package org.cspoker.common.xml.actions;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.cspoker.common.PlayerCommunication;
-import org.cspoker.common.exceptions.IllegalActionException;
 import org.cspoker.common.xml.eventlisteners.invocation.AllInvocationEventsListener;
-import org.cspoker.common.xml.events.invocation.IllegalActionEvent;
 import org.cspoker.common.xml.events.invocation.SuccessfulInvocationEvent;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-public class BetAction extends PlayerCommunicationAction<Void> {
+public class NoOpAction extends PlayerCommunicationAction<Void> {
 
-	private static final long serialVersionUID = 7370121685541484279L;
+	private static final long serialVersionUID = 1932209252035105228L;
 
-	@XmlAttribute
-	private int amount;
-
-	public BetAction(long id, int amount) {
-		super(id);
-		this.amount = amount;
+	public NoOpAction() {
+		super(0);
 	}
-
-	protected BetAction() {
-		// no op
-	}
-
+	
 	@Override
 	public void perform(PlayerCommunication pc,
 			AllInvocationEventsListener listener) {
-		try {
-			pc.bet(amount);
-			dispatchResult(null, listener);
-		} catch (IllegalActionException e) {
-			listener.onIllegalAction(new IllegalActionEvent(e, this));
-		}
+		listener.onSuccessfullInvokation(new SuccessfulInvocationEvent<Void>(this,null));
 	}
-
+	
 }

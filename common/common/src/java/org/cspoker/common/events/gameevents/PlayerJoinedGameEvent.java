@@ -16,10 +16,13 @@
 
 package org.cspoker.common.events.gameevents;
 
+import java.rmi.RemoteException;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.cspoker.common.eventlisteners.RemoteAllEventsListener;
 import org.cspoker.common.player.Player;
 
 /**
@@ -51,5 +54,10 @@ public class PlayerJoinedGameEvent extends GameEvent {
 
 	public Player getPlayer() {
 		return player;
+	}	
+	
+	public void dispatch(RemoteAllEventsListener listener) throws RemoteException{
+		listener.onPlayerJoinedGameEvent(this);
 	}
+
 }

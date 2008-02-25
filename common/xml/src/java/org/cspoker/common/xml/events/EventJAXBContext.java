@@ -15,10 +15,6 @@
  */
 package org.cspoker.common.xml.events;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 
@@ -45,7 +41,6 @@ import org.cspoker.common.events.serverevents.PlayerJoinedEvent;
 import org.cspoker.common.events.serverevents.PlayerLeftEvent;
 import org.cspoker.common.events.serverevents.ServerMessageEvent;
 import org.cspoker.common.events.serverevents.TableCreatedEvent;
-import org.cspoker.common.xml.actions.ActionJAXBContext;
 import org.cspoker.common.xml.events.invocation.IllegalActionEvent;
 import org.cspoker.common.xml.events.invocation.SuccessfulInvocationEvent;
 
@@ -78,7 +73,9 @@ public class EventJAXBContext {
 				//invokation
 				SuccessfulInvocationEvent.class, IllegalActionEvent.class,
 				//serverevents
-				PlayerJoinedEvent.class, PlayerLeftEvent.class, ServerMessageEvent.class, TableCreatedEvent.class
-				};
+				PlayerJoinedEvent.class, PlayerLeftEvent.class, ServerMessageEvent.class, TableCreatedEvent.class,
+				//other
+				EventSequence.class
+    			};
     }
 }

@@ -23,6 +23,7 @@ import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -67,13 +68,18 @@ public class XmlSocketsChannel implements XmlChannel {
 		decoder = charset.newDecoder();
 	}
 
-	public void open() throws IOException, LoginException {
-		s = new Socket(server, port);
-		w = new OutputStreamWriter(s.getOutputStream());
-		if (!login(username, password))
-			throw new LoginException();
-		executor = Executors.newSingleThreadExecutor();
-		executor.execute(new WaitForEvents());
+	public void open() throws LoginException, RemoteException {
+		try {
+			s = new Socket(server, port);
+			w = new OutputStreamWriter(s.getOutputStream());
+			if (!login(username, password))
+				throw new LoginException();
+			executor = Executors.newSingleThreadExecutor();
+			executor.execute(new WaitForEvents());
+		} catch (IOException e) {
+			logger.error(e);
+			throw new RemoteException("IOException from socket.",e);
+		}
 	}
 
 	public void registerXmlEventListener(XmlEventListener listener) {
@@ -95,7 +101,7 @@ public class XmlSocketsChannel implements XmlChannel {
 				+ "' useragent='sockets client'/>");
 		try {
 			return readUntilDelimiter().contains("<login");
-		} catch (ConnectionLostException e) {
+		} catch (IOException e) {
 			logger.error("Connection lost during login.", e);
 		} catch (InterruptedException e) {
 			// no op
@@ -103,13 +109,17 @@ public class XmlSocketsChannel implements XmlChannel {
 		return false;
 	}
 
-	public void send(final String xml) throws IOException {
-		w.write(xml);
-		w.write(DELIMITER_ARRAY);
+	public void send(final String xml) throws RemoteException {
+		try {
+			w.write(xml);
+			w.write(DELIMITER_ARRAY);
+		} catch (IOException e) {
+			logger.error(e);
+			throw new RemoteException("IOException from socket",e);
+		}
 	}
 
-	private String readUntilDelimiter() throws IOException,
-			ConnectionLostException, InterruptedException {
+	private String readUntilDelimiter() throws IOException, InterruptedException {
 		StringBuilder sb = new StringBuilder();
 		ByteBuffer singleByteBuffer = ByteBuffer.allocateDirect(1);
 		while (true) {
@@ -117,7 +127,7 @@ public class XmlSocketsChannel implements XmlChannel {
 			if (Thread.interrupted())
 				throw new InterruptedException();
 			if (b < 0)
-				throw new ConnectionLostException();
+				throw new IOException("Connection lost");
 			if (b == DELIMITER)
 				return sb.toString();
 			else {
@@ -155,8 +165,6 @@ public class XmlSocketsChannel implements XmlChannel {
 				fireXmlEvent(s);
 				executor.execute(this);
 			} catch (IOException e) {
-				close();
-			} catch (ConnectionLostException e) {
 				close();
 			} catch (InterruptedException e) {
 				Thread.currentThread().interrupt();

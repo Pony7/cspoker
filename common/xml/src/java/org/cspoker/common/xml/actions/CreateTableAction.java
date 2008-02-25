@@ -29,7 +29,7 @@ import org.cspoker.common.xml.events.invocation.SuccessfulInvocationEvent;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-public class CreateTableAction extends PlayerCommunicationAction {
+public class CreateTableAction extends PlayerCommunicationAction<TableId> {
 
 	private static final long serialVersionUID = 2423639524369017909L;
 
@@ -45,10 +45,7 @@ public class CreateTableAction extends PlayerCommunicationAction {
 	public void perform(PlayerCommunication pc,
 			AllInvocationEventsListener listener) {
 		try {
-			TableId tid = pc.createTable();
-			listener
-					.onSuccessfullInvokation(new SuccessfulInvocationEvent<TableId>(
-							this, tid));
+			dispatchResult(pc.createTable(), listener);
 		} catch (IllegalActionException e) {
 			listener.onIllegalAction(new IllegalActionEvent(e, this));
 		}

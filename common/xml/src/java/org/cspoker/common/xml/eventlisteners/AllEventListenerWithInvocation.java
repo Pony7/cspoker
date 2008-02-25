@@ -13,39 +13,11 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.common.xml.actions;
+package org.cspoker.common.xml.eventlisteners;
 
-
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlRootElement;
-
-import org.cspoker.common.PlayerCommunication;
+import org.cspoker.common.eventlisteners.AllEventsListener;
 import org.cspoker.common.xml.eventlisteners.invocation.AllInvocationEventsListener;
-import org.cspoker.common.xml.events.invocation.SuccessfulInvocationEvent;
 
-@XmlRootElement
-@XmlAccessorType(XmlAccessType.FIELD)
-public class SayAction extends PlayerCommunicationAction<Void> {
-
-	private static final long serialVersionUID = -8892178534623422101L;
-
-	private String msg;
-
-	public SayAction(long id, String msg) {
-		super(id);
-		this.msg = msg;
-	}
-
-	protected SayAction() {
-		// no op
-	}
-
-	@Override
-	public void perform(PlayerCommunication pc,
-			AllInvocationEventsListener listener) {
-		pc.say(msg);
-		dispatchResult(null, listener);
-	}
-
+public interface AllEventListenerWithInvocation extends
+		AllInvocationEventsListener, AllEventsListener {
 }

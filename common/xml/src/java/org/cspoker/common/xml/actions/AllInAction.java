@@ -24,11 +24,10 @@ import org.cspoker.common.PlayerCommunication;
 import org.cspoker.common.exceptions.IllegalActionException;
 import org.cspoker.common.xml.eventlisteners.invocation.AllInvocationEventsListener;
 import org.cspoker.common.xml.events.invocation.IllegalActionEvent;
-import org.cspoker.common.xml.events.invocation.SuccessfulInvocationEvent;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-public class AllInAction extends PlayerCommunicationAction {
+public class AllInAction extends PlayerCommunicationAction<Void> {
 
 	private static final long serialVersionUID = 7897218843022885169L;
 
@@ -45,9 +44,7 @@ public class AllInAction extends PlayerCommunicationAction {
 			AllInvocationEventsListener listener) {
 		try {
 			pc.allIn();
-			listener
-					.onSuccessfullInvokation(new SuccessfulInvocationEvent<Void>(
-							this, null));
+			dispatchResult(null, listener);
 		} catch (IllegalActionException e) {
 			listener.onIllegalAction(new IllegalActionEvent(e, this));
 		}

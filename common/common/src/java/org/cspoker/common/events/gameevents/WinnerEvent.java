@@ -16,6 +16,7 @@
 
 package org.cspoker.common.events.gameevents;
 
+import java.rmi.RemoteException;
 import java.util.Collections;
 import java.util.Set;
 
@@ -23,6 +24,7 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.cspoker.common.eventlisteners.RemoteAllEventsListener;
 import org.cspoker.common.player.Winner;
 
 /**
@@ -60,5 +62,10 @@ public class WinnerEvent extends GameEvent {
 			toReturn += ", ";
 		}
 		return toReturn.substring(0, toReturn.length() - 2) + ".";
+	}	
+	
+	public void dispatch(RemoteAllEventsListener listener) throws RemoteException{
+		listener.onWinnerEvent(this);
 	}
+
 }

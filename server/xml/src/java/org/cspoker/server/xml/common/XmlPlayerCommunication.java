@@ -58,7 +58,7 @@ public class XmlPlayerCommunication implements XmlEventListener {
 
 	public void handle(InputSource xml) throws SAXException, JAXBException, IOException {
 		Unmarshaller um = ActionJAXBContext.context.createUnmarshaller();
-		PlayerCommunicationAction action = (PlayerCommunicationAction) um.unmarshal(xml);
+		PlayerCommunicationAction<?> action = (PlayerCommunicationAction<?>) um.unmarshal(xml);
 		action.perform(playerComm,toxmllistener);
 	}
 

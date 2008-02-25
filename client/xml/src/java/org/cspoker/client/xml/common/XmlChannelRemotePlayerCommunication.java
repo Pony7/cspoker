@@ -18,82 +18,36 @@ package org.cspoker.client.xml.common;
 import java.rmi.RemoteException;
 import java.util.Set;
 import java.util.concurrent.ConcurrentSkipListSet;
+import java.util.concurrent.atomic.AtomicLong;
 
 import org.cspoker.common.RemotePlayerCommunication;
 import org.cspoker.common.elements.table.TableId;
 import org.cspoker.common.eventlisteners.RemoteAllEventsListener;
+import org.cspoker.common.eventlisteners.SpreadingAllEventsListener;
 import org.cspoker.common.exceptions.IllegalActionException;
+import org.cspoker.common.xml.actions.AllInAction;
+import org.cspoker.common.xml.actions.BetAction;
+import org.cspoker.common.xml.actions.CallAction;
+import org.cspoker.common.xml.actions.CheckAction;
+import org.cspoker.common.xml.actions.CreateTableAction;
+import org.cspoker.common.xml.actions.DealAction;
+import org.cspoker.common.xml.actions.FoldAction;
+import org.cspoker.common.xml.actions.JoinTableAction;
+import org.cspoker.common.xml.actions.KillAction;
+import org.cspoker.common.xml.actions.LeaveTableAction;
+import org.cspoker.common.xml.actions.RaiseAction;
+import org.cspoker.common.xml.actions.SayAction;
+import org.cspoker.common.xml.actions.StartGameAction;
 
 public class XmlChannelRemotePlayerCommunication implements
 RemotePlayerCommunication {
 	
-	private final XmlChannel c;
-
 	private final Set<RemoteAllEventsListener> listeners = new ConcurrentSkipListSet<RemoteAllEventsListener>(); 
+	private final XmlChannelMarshaller marshaller;
+	private AtomicLong id = new AtomicLong(1);
 	
 	public XmlChannelRemotePlayerCommunication(XmlChannel c) {
-		this.c = c;
-		c.registerXmlEventListener(new XmlTranslatingEventListener(listeners));
-	}
-
-	public void allIn() throws IllegalActionException, RemoteException {
-		c.send(wrap("<allin/>"));
-	}
-
-	public void bet(int amount) throws IllegalActionException,
-	RemoteException {
-		c.send(wrap("<allIn amount=\""+amount+"\">"));
-	}
-
-	public void call() throws IllegalActionException, RemoteException {
-		c.send(wrap("<call/>"));
-	}
-
-	public void check() throws IllegalActionException, RemoteException {
-		c.send(wrap("<check/>"));
-	}
-
-	public void createTable() throws IllegalActionException,
-	RemoteException {
-		c.send(wrap("<createtable/>"));
-	}
-
-	public void deal() throws IllegalActionException, RemoteException {
-		c.send(wrap("<deal/>"));
-
-	}
-
-	public void fold() throws IllegalActionException, RemoteException {
-		c.send(wrap("<fold/>"));
-	}
-
-	public void joinTable(TableId id) throws IllegalActionException,
-	RemoteException {
-		c.send(wrap("<jointable id=\""+id.getID()+"/>"));
-	}
-
-	public void leaveTable() throws IllegalActionException,
-	RemoteException {
-		c.send(wrap("<leavetable/>"));
-	}
-
-	public void raise(int amount) throws IllegalActionException,
-	RemoteException {
-		c.send(wrap("<raise amount=\""+amount+"/>"));
-	}
-
-	public void say(String message) throws IllegalActionException,RemoteException {
-		c.send(wrap("<say>"+message+"</say>"));
-	}
-
-	public void startGame() throws IllegalActionException,
-	RemoteException {
-		c.send(wrap("<startgame/>"));
-	}
-
-	@Override
-	public void kill() throws IllegalActionException, RemoteException {
-		c.send(wrap("<kill/>"));				
+		this.marshaller = new XmlChannelMarshaller(c, new SpreadingAllEventsListener(listeners));
 	}
 
 	public void subscribeAllEventsListener(
@@ -105,8 +59,76 @@ RemotePlayerCommunication {
 			RemoteAllEventsListener listener) throws RemoteException {
 		listeners.remove(listener);
 	}
+	
+	private long getId() {
+		return id.getAndIncrement();
+	}
+	
+	@Override
+	public void allIn() throws IllegalActionException, RemoteException {
+		marshaller.perform(new AllInAction(getId()));
+	}
 
-	protected String wrap(String string) {
-		return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<command>"+string+"</command>";
+	@Override
+	public void bet(int amount) throws IllegalActionException, RemoteException {
+		marshaller.perform(new BetAction(getId(), amount));		
+	}
+
+	@Override
+	public void call() throws IllegalActionException, RemoteException {
+		marshaller.perform(new CallAction(getId()));
+	}
+
+	@Override
+	public void check() throws IllegalActionException, RemoteException {
+		marshaller.perform(new CheckAction(getId()));
+	}
+
+	@Override
+	public TableId createTable() throws IllegalActionException, RemoteException {
+		return marshaller.perform(new CreateTableAction(getId()));
+	}
+
+	@Override
+	public void deal() throws IllegalActionException, RemoteException {
+		marshaller.perform(new DealAction(getId()));
+	}
+
+	@Override
+	public void fold() throws IllegalActionException, RemoteException {
+		marshaller.perform(new FoldAction(getId()));
+	}
+
+	@Override
+	public void joinTable(TableId id) throws IllegalActionException,
+			RemoteException {
+		marshaller.perform(new JoinTableAction(getId(),id));
+	}
+
+	@Override
+	public void kill() throws IllegalActionException, RemoteException {
+		marshaller.perform(new KillAction(getId()));
+	}
+
+	@Override
+	public void leaveTable() throws IllegalActionException, RemoteException {
+		marshaller.perform(new LeaveTableAction(getId()));
+	}
+
+	@Override
+	public void raise(int amount) throws IllegalActionException,
+			RemoteException {
+		marshaller.perform(new RaiseAction(getId(),amount));
+	}
+
+	@Override
+	public void say(String message) throws RemoteException,
+			IllegalActionException {
+		marshaller.perform(new SayAction(getId(),message));
+	}
+
+	@Override
+	public void startGame() throws IllegalActionException, RemoteException {
+		marshaller.perform(new StartGameAction(getId()));
 	}
 }
