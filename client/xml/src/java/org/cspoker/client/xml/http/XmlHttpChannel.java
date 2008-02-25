@@ -39,7 +39,6 @@ import javax.xml.bind.PropertyException;
 
 import org.apache.log4j.Logger;
 import org.cspoker.client.xml.common.XmlChannel;
-import org.cspoker.common.exceptions.IllegalActionException;
 import org.cspoker.common.xml.XmlEventListener;
 import org.cspoker.common.xml.actions.ActionJAXBContext;
 import org.cspoker.common.xml.actions.SayAction;

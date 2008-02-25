@@ -24,7 +24,7 @@ public class RunHttpServer {
 
 	static {
 		Log4JPropertiesLoader
-				.load("org/cspoker/server/http/logging/log4j.properties");
+				.load("org/cspoker/server/xml/http/logging/log4j.properties");
 	}
 	private final static Logger logger = Logger.getLogger(RunHttpServer.class);
 
@@ -40,7 +40,7 @@ public class RunHttpServer {
 		} catch (NumberFormatException e) {
 			usage();
 		}
-
+		logger.info("Starting HTTP server");
 		HttpCSPokerServer server = new HttpCSPokerServer(port);
 		server.start();
 	}

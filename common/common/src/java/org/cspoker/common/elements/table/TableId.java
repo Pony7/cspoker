@@ -25,7 +25,6 @@ import javax.xml.bind.annotation.XmlValue;
 /**
  * A class to represent table id's.
  * 
- * @author Kenzo
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)

@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import org.client.User.User;
 import org.client.elements.TableInterface;
 import org.client.elements.TableImpl;
 import org.cspoker.common.exceptions.IllegalActionException;
@@ -107,7 +106,7 @@ public class JavaFxClient {
 	public void allIn() throws RemoteException, IllegalActionException{
 		communication.allIn();
 	}
-	public void say(String message) throws RemoteException{
+	public void say(String message) throws RemoteException, IllegalActionException{
 		communication.say(message);
 	}
 	public void joinTable(int n){

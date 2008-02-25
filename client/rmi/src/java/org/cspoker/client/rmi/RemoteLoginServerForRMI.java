@@ -22,25 +22,31 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 
+import javax.security.auth.login.LoginException;
+
 import org.cspoker.common.RemoteLoginServer;
 import org.cspoker.common.RemotePlayerCommunication;
 import org.cspoker.common.elements.table.TableId;
 import org.cspoker.common.eventlisteners.RemoteAllEventsListener;
 import org.cspoker.common.exceptions.IllegalActionException;
 
-public class RemotePlayerCommunicationFactoryForRMI {
+public class RemoteLoginServerForRMI implements RemoteLoginServer {
 
 	private RemoteLoginServer server;
 
-	public RemotePlayerCommunicationFactoryForRMI(String server)
+	public RemoteLoginServerForRMI(String server) throws AccessException, RemoteException, NotBoundException{
+		this(server, 1099);
+	}
+
+	public RemoteLoginServerForRMI(String server, int port)
 	throws AccessException, RemoteException, NotBoundException {
 		System.setSecurityManager(null);
-		Registry registry = LocateRegistry.getRegistry(server);
+		Registry registry = LocateRegistry.getRegistry(server, port);
 		this.server = (RemoteLoginServer) registry.lookup("CSPokerServer");
 	}
 
 	public RemotePlayerCommunication login(String username, String password)
-	throws RemoteException {
+	throws RemoteException, LoginException {
 
 		final RemotePlayerCommunication p = server.login(username, password);
 

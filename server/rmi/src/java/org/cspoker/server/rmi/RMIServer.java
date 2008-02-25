@@ -22,6 +22,8 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 
+import javax.security.auth.login.LoginException;
+
 import org.apache.log4j.Logger;
 import org.cspoker.common.RemoteLoginServer;
 import org.cspoker.common.RemotePlayerCommunication;
@@ -43,7 +45,7 @@ public class RMIServer implements RemoteLoginServer {
 	}
 
 	public RemotePlayerCommunication login(String username, String password)
-			throws RemoteException {
+			throws RemoteException, LoginException {
 		logger.trace("Login attempt from " + username);
 		if (authenticator.hasPassword(username, password)) {
 			try {
@@ -63,7 +65,7 @@ public class RMIServer implements RemoteLoginServer {
 			}
 		} else {
 			logger.trace("Login attempt from " + username + " failed");
-			throw new IllegalArgumentException("Login Failed");
+			throw new LoginException("Login Failed");
 		}
 	}
 

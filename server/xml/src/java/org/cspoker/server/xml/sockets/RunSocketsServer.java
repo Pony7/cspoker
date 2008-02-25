@@ -24,7 +24,7 @@ public class RunSocketsServer {
 
 	static {
 		Log4JPropertiesLoader
-				.load("org/cspoker/server/sockets/logging/log4j.properties");
+				.load("org/cspoker/server/xml/sockets/logging/log4j.properties");
 	}
 	private final static Logger logger = Logger
 			.getLogger(RunSocketsServer.class);
@@ -42,7 +42,7 @@ public class RunSocketsServer {
 		} catch (NumberFormatException e) {
 			usage();
 		}
-
+		logger.info("Starting SOCKETS server");
 		SocketServer server = new SocketServer(port);
 	}
 
