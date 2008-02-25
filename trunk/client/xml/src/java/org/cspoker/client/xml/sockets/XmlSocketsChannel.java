@@ -68,7 +68,7 @@ public class XmlSocketsChannel implements XmlChannel {
 		decoder = charset.newDecoder();
 	}
 
-	public void open() throws LoginException, RemoteException {
+	public synchronized void open() throws LoginException, RemoteException {
 		try {
 			s = new Socket(server, port);
 			w = new OutputStreamWriter(s.getOutputStream());
@@ -82,11 +82,11 @@ public class XmlSocketsChannel implements XmlChannel {
 		}
 	}
 
-	public void registerXmlEventListener(XmlEventListener listener) {
+	public synchronized void registerXmlEventListener(XmlEventListener listener) {
 		xmlEventListeners.add(listener);
 	}
 
-	public void unRegisterXmlEventListener(XmlEventListener listener) {
+	public synchronized void unRegisterXmlEventListener(XmlEventListener listener) {
 		xmlEventListeners.remove(listener);
 	}
 
@@ -109,7 +109,7 @@ public class XmlSocketsChannel implements XmlChannel {
 		return false;
 	}
 
-	public void send(final String xml) throws RemoteException {
+	public synchronized void send(final String xml) throws RemoteException {
 		try {
 			w.write(xml);
 			w.write(DELIMITER_ARRAY);

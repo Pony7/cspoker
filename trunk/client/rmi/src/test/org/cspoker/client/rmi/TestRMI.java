@@ -19,6 +19,8 @@ import java.rmi.AccessException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 
+import javax.security.auth.login.LoginException;
+
 import org.cspoker.common.RemotePlayerCommunication;
 import org.cspoker.common.elements.table.TableId;
 import org.cspoker.common.eventlisteners.RemoteAllEventsListener;
@@ -54,11 +56,11 @@ public class TestRMI {
 	 * @throws RemoteException
 	 * @throws AccessException
 	 * @throws IllegalActionException
+	 * @throws LoginException 
 	 */
 	public static void main(String[] args) throws AccessException,
-			RemoteException, NotBoundException, IllegalActionException {
-		RemotePlayerCommunicationFactoryForRMI f = new RemotePlayerCommunicationFactoryForRMI(
-				"localhost");
+			RemoteException, NotBoundException, IllegalActionException, LoginException {
+		RemoteLoginServerForRMI f = new RemoteLoginServerForRMI("localhost",1099);
 		RemotePlayerCommunication guy = f.login("guy", "test");
 		System.out.println("Guy Logged In and will print events to sout");
 

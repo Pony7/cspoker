@@ -20,8 +20,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
+import org.cspoker.client.common.RemotePlayerCommunicationFactory;
 import org.cspoker.client.common.RemotePlayerCommunicationFactoryImpl;
-import org.cspoker.client.rmi.RMIServerConnection;
+import org.cspoker.client.rmi.RemoteLoginServerForRMI;
+import org.cspoker.client.rmi.RemotePlayerCommunicationFactoryForRMI;
 
 /**
  * A console poker client.
@@ -30,8 +32,7 @@ public class Console {
 
 	public static void main(String[] args) throws Exception {
 	    	RemotePlayerCommunicationFactoryImpl.global_factory
-	    		.addRemotePlayerCommunicationProvider(RMIServerConnection
-	    			.getRemotePlayerCommunicationFactory());
+	    		.addRemotePlayerCommunicationProvider(new RemotePlayerCommunicationFactoryForRMI());
 		new Console(args);
 	}
 
