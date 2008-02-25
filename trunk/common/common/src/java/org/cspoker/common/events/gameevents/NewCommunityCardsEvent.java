@@ -15,6 +15,7 @@
  */
 package org.cspoker.common.events.gameevents;
 
+import java.rmi.RemoteException;
 import java.util.Collections;
 import java.util.Set;
 
@@ -25,6 +26,7 @@ import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.cspoker.common.elements.cards.Card;
+import org.cspoker.common.eventlisteners.RemoteAllEventsListener;
 
 /**
  * A class to represent new community cards events.
@@ -63,4 +65,9 @@ public class NewCommunityCardsEvent extends GameEvent {
 		}
 		return toReturn.substring(0, toReturn.length() - 2) + ".";
 	}
+	
+	public void dispatch(RemoteAllEventsListener listener) throws RemoteException{
+		listener.onNewCommunityCardsEvent(this);
+	}
+	
 }

@@ -16,11 +16,14 @@
 
 package org.cspoker.common.events.gameevents.playeractionevents;
 
+import java.rmi.RemoteException;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.cspoker.common.elements.pots.Pots;
+import org.cspoker.common.eventlisteners.RemoteAllEventsListener;
 import org.cspoker.common.player.Player;
 
 /**
@@ -63,4 +66,8 @@ public class SmallBlindEvent extends ActionChangedPotEvent {
 		return player;
 	}
 
+	public void dispatch(RemoteAllEventsListener listener)  throws RemoteException {
+		listener.onSmallBlindEvent(this);
+	}
+	
 }

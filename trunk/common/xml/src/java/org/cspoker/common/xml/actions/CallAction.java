@@ -28,7 +28,7 @@ import org.cspoker.common.xml.events.invocation.SuccessfulInvocationEvent;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-public class CallAction extends PlayerCommunicationAction {
+public class CallAction extends PlayerCommunicationAction<Void> {
 
 	private static final long serialVersionUID = -2495080322283388290L;
 
@@ -45,9 +45,7 @@ public class CallAction extends PlayerCommunicationAction {
 			AllInvocationEventsListener listener) {
 		try {
 			pc.call();
-			listener
-					.onSuccessfullInvokation(new SuccessfulInvocationEvent<Void>(
-							this, null));
+			dispatchResult(null, listener);
 		} catch (IllegalActionException e) {
 			listener.onIllegalAction(new IllegalActionEvent(e, this));
 		}

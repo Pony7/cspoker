@@ -16,6 +16,9 @@
 
 package org.cspoker.common.events.gameevents;
 
+import java.rmi.RemoteException;
+
+import org.cspoker.common.eventlisteners.RemoteAllEventsListener;
 import org.cspoker.common.events.Event;
 
 /**
@@ -28,4 +31,7 @@ import org.cspoker.common.events.Event;
  */
 public abstract class GameEvent extends Event {
 
+	@Override
+	public abstract void dispatch(RemoteAllEventsListener listener)throws RemoteException;
+	
 }

@@ -26,7 +26,7 @@ public interface XmlChannel {
 
 	public void open() throws RemoteException, LoginException;
 
-	public void send(final String xml) throws RemoteException, IllegalActionException;
+	public void send(final String xml) throws RemoteException;
 
 	public void registerXmlEventListener(XmlEventListener listener);
 

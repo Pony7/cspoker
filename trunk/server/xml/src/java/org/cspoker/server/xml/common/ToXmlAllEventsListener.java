@@ -22,7 +22,6 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.PropertyException;
 
 import org.apache.log4j.Logger;
-import org.cspoker.common.eventlisteners.AllEventsListener;
 import org.cspoker.common.events.Event;
 import org.cspoker.common.events.gameevents.GameMessageEvent;
 import org.cspoker.common.events.gameevents.NewCommunityCardsEvent;
@@ -48,11 +47,11 @@ import org.cspoker.common.events.serverevents.ServerMessageEvent;
 import org.cspoker.common.events.serverevents.TableCreatedEvent;
 import org.cspoker.common.xml.EventAndActionJAXBContext;
 import org.cspoker.common.xml.XmlEventListener;
-import org.cspoker.common.xml.eventlisteners.invocation.AllInvocationEventsListener;
+import org.cspoker.common.xml.eventlisteners.AllEventListenerWithInvocation;
 import org.cspoker.common.xml.events.invocation.IllegalActionEvent;
 import org.cspoker.common.xml.events.invocation.SuccessfulInvocationEvent;
 
-public class ToXmlAllEventsListener implements AllEventsListener, AllInvocationEventsListener {
+public class ToXmlAllEventsListener implements AllEventListenerWithInvocation {
 
 	private final static Logger logger = Logger.getLogger(ToXmlAllEventsListener.class);
 	private final XmlEventListener collector;

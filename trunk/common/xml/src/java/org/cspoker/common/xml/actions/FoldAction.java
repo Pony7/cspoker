@@ -28,7 +28,7 @@ import org.cspoker.common.xml.events.invocation.SuccessfulInvocationEvent;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-public class FoldAction extends PlayerCommunicationAction {
+public class FoldAction extends PlayerCommunicationAction<Void> {
 
 	private static final long serialVersionUID = -8222648524080616602L;
 
@@ -45,9 +45,7 @@ public class FoldAction extends PlayerCommunicationAction {
 			AllInvocationEventsListener listener) {
 		try {
 			pc.fold();
-			listener
-					.onSuccessfullInvokation(new SuccessfulInvocationEvent<Void>(
-							this, null));
+			dispatchResult(null, listener);
 		} catch (IllegalActionException e) {
 			listener.onIllegalAction(new IllegalActionEvent(e, this));
 		}

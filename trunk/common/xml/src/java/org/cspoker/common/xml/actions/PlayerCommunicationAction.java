@@ -16,7 +16,6 @@
 package org.cspoker.common.xml.actions;
 
 import java.io.Serializable;
-import java.rmi.RemoteException;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -25,12 +24,12 @@ import javax.xml.bind.annotation.XmlAttribute;
 import org.apache.log4j.Logger;
 import org.cspoker.common.PlayerCommunication;
 import org.cspoker.common.xml.eventlisteners.invocation.AllInvocationEventsListener;
+import org.cspoker.common.xml.events.invocation.SuccessfulInvocationEvent;
 
 @XmlAccessorType(XmlAccessType.FIELD)
-public abstract class PlayerCommunicationAction implements Serializable {
+public abstract class PlayerCommunicationAction<T> implements Serializable {
 
-	private final static Logger logger = Logger
-			.getLogger(PlayerCommunicationAction.class);
+	private final static Logger logger = Logger.getLogger(PlayerCommunicationAction.class);
 
 	@XmlAttribute
 	private long id;
@@ -45,6 +44,11 @@ public abstract class PlayerCommunicationAction implements Serializable {
 
 	public abstract void perform(PlayerCommunication pc,
 			AllInvocationEventsListener listener);
+
+	protected void dispatchResult(T result,	AllInvocationEventsListener listener) {
+		listener.onSuccessfullInvokation(new SuccessfulInvocationEvent<T>(
+				this, result));
+	}
 
 	public long getID() {
 		return id;
@@ -64,9 +68,9 @@ public abstract class PlayerCommunicationAction implements Serializable {
 			return true;
 		if (obj == null)
 			return false;
-		if (getClass() != obj.getClass())
+		if (!(obj instanceof PlayerCommunicationAction))
 			return false;
-		final PlayerCommunicationAction other = (PlayerCommunicationAction) obj;
+		final PlayerCommunicationAction<?> other = (PlayerCommunicationAction<?>) obj;
 		if (id != other.id)
 			return false;
 		return true;

@@ -13,42 +13,36 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.common.xml.actions;
+package org.cspoker.common.xml.events;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlValue;
 
-import org.cspoker.common.PlayerCommunication;
-import org.cspoker.common.exceptions.IllegalActionException;
-import org.cspoker.common.xml.eventlisteners.invocation.AllInvocationEventsListener;
-import org.cspoker.common.xml.events.invocation.IllegalActionEvent;
-import org.cspoker.common.xml.events.invocation.SuccessfulInvocationEvent;
+import org.cspoker.common.events.Event;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-public class CheckAction extends PlayerCommunicationAction<Void> {
+public class EventSequence implements Serializable{
 
-	private static final long serialVersionUID = -8261657497029143378L;
-
-	public CheckAction(long id) {
-		super(id);
+	private static final long serialVersionUID = -4796992675258367600L;
+	
+	@XmlElement(name="event")
+	private List<Event> events = new ArrayList<Event>();
+	
+	public Iterator<Event> iterator() {
+		return events.iterator();
 	}
-
-	protected CheckAction() {
-		// no op
+	
+	public void add(Event event){
+		events.add(event);
 	}
-
-	@Override
-	public void perform(PlayerCommunication pc,
-			AllInvocationEventsListener listener) {
-		try {
-			pc.check();
-			dispatchResult(null, listener);
-		} catch (IllegalActionException e) {
-			listener.onIllegalAction(new IllegalActionEvent(e, this));
-		}
-	}
-
+	
 }

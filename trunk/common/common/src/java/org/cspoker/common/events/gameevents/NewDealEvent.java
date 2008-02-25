@@ -16,6 +16,7 @@
 
 package org.cspoker.common.events.gameevents;
 
+import java.rmi.RemoteException;
 import java.util.Collections;
 import java.util.List;
 
@@ -23,6 +24,7 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.cspoker.common.eventlisteners.RemoteAllEventsListener;
 import org.cspoker.common.player.Player;
 
 /**
@@ -66,6 +68,10 @@ public class NewDealEvent extends GameEvent {
 		return toReturn.substring(0, toReturn.length() - 2)
 				+ " as initial players of this table. " + dealer.getName()
 				+ " is dealer.";
+	}
+	
+	public void dispatch(RemoteAllEventsListener listener) throws RemoteException{
+		listener.onNewDealEvent(this);
 	}
 
 }

@@ -16,10 +16,13 @@
 
 package org.cspoker.common.events.gameevents;
 
+import java.rmi.RemoteException;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.cspoker.common.eventlisteners.RemoteAllEventsListener;
 import org.cspoker.common.player.Player;
 
 /**
@@ -52,4 +55,9 @@ public class NextPlayerEvent extends GameEvent {
 	public String toString() {
 		return "It's " + player.getName() + "'s turn.";
 	}
+
+	public void dispatch(RemoteAllEventsListener listener) throws RemoteException{
+		listener.onNextPlayerEvent(this);
+	}
+
 }

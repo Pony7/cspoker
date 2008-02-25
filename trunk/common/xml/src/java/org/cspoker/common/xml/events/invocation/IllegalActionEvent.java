@@ -31,15 +31,15 @@ public class IllegalActionEvent extends InvocationEvent {
 	private static final long serialVersionUID = 8350435427841245148L;
 
 	@XmlTransient
-	private final IllegalActionException e;
+	private IllegalActionException e;
 	
 	private String msg;
 	
 	private Player player;
 
-	private PlayerCommunicationAction action;
+	private PlayerCommunicationAction<?> action;
 
-	public IllegalActionEvent(IllegalActionException e, PlayerCommunicationAction a) {
+	public IllegalActionEvent(IllegalActionException e, PlayerCommunicationAction<?> a) {
 		this.e = e;
 		this.msg = e.getMessage();
 		this.player = e.getPlayer();
@@ -51,6 +51,9 @@ public class IllegalActionEvent extends InvocationEvent {
 	}
 
 	public IllegalActionException getException() {
+		if(e == null){
+			e = new IllegalActionException(msg);
+		}
 		return e;
 	}
 

@@ -28,7 +28,7 @@ import org.cspoker.common.xml.events.invocation.SuccessfulInvocationEvent;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-public class LeaveTableAction extends PlayerCommunicationAction {
+public class LeaveTableAction extends PlayerCommunicationAction<Void> {
 
 	private static final long serialVersionUID = -2251924692529703613L;
 
@@ -45,9 +45,7 @@ public class LeaveTableAction extends PlayerCommunicationAction {
 			AllInvocationEventsListener listener) {
 		try {
 			pc.leaveTable();
-			listener
-					.onSuccessfullInvokation(new SuccessfulInvocationEvent<Void>(
-							this, null));
+			dispatchResult(null, listener);
 		} catch (IllegalActionException e) {
 			listener.onIllegalAction(new IllegalActionEvent(e, this));
 		}

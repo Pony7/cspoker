@@ -15,6 +15,7 @@
  */
 package org.cspoker.common.events.gameevents.privateevents;
 
+import java.rmi.RemoteException;
 import java.util.Collections;
 import java.util.Set;
 
@@ -25,6 +26,7 @@ import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.cspoker.common.elements.cards.Card;
+import org.cspoker.common.eventlisteners.RemoteAllEventsListener;
 import org.cspoker.common.events.gameevents.GameEvent;
 import org.cspoker.common.player.Player;
 
@@ -67,4 +69,9 @@ public class NewPocketCardsEvent extends GameEvent {
 	public Player getPlayer() {
 		return player;
 	}
+	
+	public void dispatch(RemoteAllEventsListener listener)  throws RemoteException{
+		listener.onNewPocketCardsEvent(this);
+	}
+	
 }
