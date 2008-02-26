@@ -67,6 +67,18 @@ RemotePlayerCommunication {
 		return id.getAndIncrement();
 	}
 	
+	public Set<RemoteAllEventsListener> getListeners() {
+		return listeners;
+	}
+
+	public XmlChannelMarshaller getMarshaller() {
+		return marshaller;
+	}
+
+	public XmlChannel getChannel() {
+		return c;
+	}
+
 	@Override
 	public void allIn() throws IllegalActionException, RemoteException {
 		marshaller.perform(new AllInAction(getId()));

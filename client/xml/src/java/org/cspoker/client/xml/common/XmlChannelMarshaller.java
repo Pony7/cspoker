@@ -62,6 +62,9 @@ public class XmlChannelMarshaller {
 		    // Restore the interrupted status
 	        Thread.currentThread().interrupt();
 	        return null;
+		} catch (ChannelStateException e) {
+			logger.error(e);
+			throw new RemoteException("Channel state is incorrect.",e);
 		} 
 		
 	}

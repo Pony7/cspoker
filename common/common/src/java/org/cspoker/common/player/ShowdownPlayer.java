@@ -19,11 +19,14 @@ import java.io.Serializable;
 import java.util.Collections;
 import java.util.Set;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 
 import org.cspoker.common.elements.cards.Card;
 
+@XmlAccessorType(XmlAccessType.FIELD)
 public class ShowdownPlayer implements Serializable {
 
 	private static final long serialVersionUID = -1618593137613219527L;

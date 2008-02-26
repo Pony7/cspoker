@@ -64,9 +64,11 @@ public class XmlChannelUnMarshaller implements XmlEventListener {
 		try {
 			event.dispatch(listener);
 		} catch (NoListenerException e) {
-			if(event instanceof SuccessfulInvocationEvent<?>)
-				handle((SuccessfulInvocationEvent<?>)event);
-			else if(event instanceof IllegalActionEvent)
+			if(event instanceof SuccessfulInvocationEvent<?>){
+				SuccessfulInvocationEvent<?> se = (SuccessfulInvocationEvent<?>)event;
+				if(se.getAction().getID()>0)
+					handle(se);
+			}else if(event instanceof IllegalActionEvent)
 				handle((IllegalActionEvent)event);
 			else{
 				logger.fatal(e);

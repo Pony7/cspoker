@@ -21,11 +21,10 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.net.Authenticator;
 import java.net.HttpURLConnection;
-import java.net.PasswordAuthentication;
 import java.net.URL;
 import java.nio.CharBuffer;
+import java.nio.charset.Charset;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,11 +38,13 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.PropertyException;
 
 import org.apache.log4j.Logger;
+import org.cspoker.client.xml.common.ChannelState;
+import org.cspoker.client.xml.common.ChannelStateException;
 import org.cspoker.client.xml.common.XmlChannel;
 import org.cspoker.common.xml.XmlEventListener;
 import org.cspoker.common.xml.actions.ActionJAXBContext;
 import org.cspoker.common.xml.actions.NoOpAction;
-import org.cspoker.common.xml.actions.SayAction;
+import org.cspoker.common.xml.util.Base64;
 
 public class XmlHttpChannel implements XmlChannel {
 
@@ -58,24 +59,24 @@ public class XmlHttpChannel implements XmlChannel {
 	private final CharBuffer buffer;
 
 	private final StringBuilder sb;
+	
+	private ChannelState state = ChannelState.INITIALIZED;
+
+	private String authorizationString;
 
 	public XmlHttpChannel(URL url, final String username, final String password) {
-		Authenticator.setDefault(new Authenticator() {
-			@Override
-			protected PasswordAuthentication getPasswordAuthentication() {
-				return new PasswordAuthentication(username, password
-						.toCharArray());
-			}
-		});
+		this.authorizationString = "Basic " + Base64.encode((username+":"+password).getBytes(),0);
 		this.url = url;
 		this.buffer = CharBuffer.allocate(2048);
 		this.sb = new StringBuilder();
 	}
 
-	public synchronized void open() throws LoginException, RemoteException {
-		scheduler = Executors.newScheduledThreadPool(1);
+	public synchronized void open() throws LoginException, RemoteException, ChannelStateException {
+		if(state != ChannelState.INITIALIZED)
+			throw new ChannelStateException("Channel is not in the initialized state", state);
 		try {
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+			connection.setRequestProperty ("Authorization", authorizationString);
 			connection.setConnectTimeout(20000);
 			connection.setAllowUserInteraction(true);
 			connection.setInstanceFollowRedirects(false);
@@ -105,16 +106,29 @@ public class XmlHttpChannel implements XmlChannel {
 		} catch (IOException e) {
 			throw new RemoteException("IOException in XML channel",e);
 		} 
+		scheduler = Executors.newScheduledThreadPool(1);
 		scheduler.scheduleWithFixedDelay(new NoOpSubmitter(this), 1500, 1500, TimeUnit.MILLISECONDS );
+		state = ChannelState.OPEN;
 	}
 
 	public synchronized void close() {
+		state = ChannelState.CLOSED;
+		scheduler.shutdown();
+		try {
+			scheduler.awaitTermination(1500, TimeUnit.MILLISECONDS);
+		} catch (InterruptedException e) {
+			logger.error(e);
+			Thread.currentThread().interrupt();
+		}
 		scheduler.shutdownNow();
 	}
 
-	public synchronized void send(String xml) throws RemoteException {
+	public synchronized void send(String xml) throws RemoteException, ChannelStateException {
+		if(state != ChannelState.OPEN)
+			throw new ChannelStateException("Channel is not open", state);
 		try {
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+			connection.setRequestProperty ("Authorization", authorizationString);
 			connection.setConnectTimeout(20000);
 			connection.setAllowUserInteraction(true);
 			connection.setInstanceFollowRedirects(false);
@@ -213,10 +227,6 @@ public class XmlHttpChannel implements XmlChannel {
 			logger.fatal(e);
 			throw new IllegalStateException(e);
 		}
-	}
-
-	public static void main(String[] args) {
-		System.out.println(noOpXml);
 	}
 
 }

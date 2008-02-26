@@ -13,35 +13,20 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.client.xml.http;
+package org.cspoker.client.xml.common;
 
-import java.rmi.RemoteException;
+public class ChannelStateException extends Exception {
 
-import org.apache.log4j.Logger;
-import org.cspoker.client.xml.common.ChannelStateException;
-import org.cspoker.common.exceptions.IllegalActionException;
+	private static final long serialVersionUID = 7777390638225418621L;
+	private ChannelState state;
 
-public class NoOpSubmitter implements Runnable {
-
-	private final static Logger logger = Logger.getLogger(XmlHttpChannel.class);
-	
-	private final XmlHttpChannel c;
-
-	public NoOpSubmitter(XmlHttpChannel c) {
-		this.c = c;
+	public ChannelStateException(String msg, ChannelState state) {
+		super(msg+"\nState is "+state);
+		this.state = state;
 	}
 	
-	@Override
-	public void run() {
-		try {
-			c.send(XmlHttpChannel.noOpXml);
-		} catch (RemoteException e) {
-			logger.error(e);
-			c.close();
-		} catch (ChannelStateException e) {
-			logger.error(e);
-			c.close();
-		} 
+	public ChannelState getState() {
+		return state;
 	}
 
 }

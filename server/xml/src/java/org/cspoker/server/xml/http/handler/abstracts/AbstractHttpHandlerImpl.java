@@ -27,10 +27,10 @@ import javax.xml.transform.sax.TransformerHandler;
 import javax.xml.transform.stream.StreamResult;
 
 import org.apache.log4j.Logger;
+import org.cspoker.common.xml.util.Base64;
 import org.cspoker.server.xml.http.handler.CSPokerHandler;
 import org.cspoker.server.xml.http.handler.exception.HttpException;
 import org.cspoker.server.xml.http.handler.exception.HttpExceptionImpl;
-import org.cspoker.server.xml.http.handler.util.Base64;
 import org.xml.sax.helpers.AttributesImpl;
 
 import com.sun.net.httpserver.Headers;
@@ -52,8 +52,10 @@ public abstract class AbstractHttpHandlerImpl implements HttpHandler {
 	public void handle(HttpExchange http) throws IOException {
 		try {
 			http.getResponseHeaders().add("Cache-Control", "no-cache");
-			byte[] response = getResponse(http).getBytes();
-
+			byte[] response = getResponse(http);
+			
+			logger.trace("Writing response of length "+response.length);
+			
 			// send the default status code (no exception occured)
 			http.sendResponseHeaders(getDefaultStatusCode(), response.length);
 			http.getResponseBody().write(response);
@@ -65,7 +67,7 @@ public abstract class AbstractHttpHandlerImpl implements HttpHandler {
 
 	}
 
-	protected abstract String getResponse(HttpExchange http)
+	protected abstract byte[] getResponse(HttpExchange http)
 			throws HttpExceptionImpl;
 
 	/**
@@ -130,7 +132,7 @@ public abstract class AbstractHttpHandlerImpl implements HttpHandler {
 			http.getResponseBody().close();
 			http.close();
 		} catch (Exception e1) {
-			e1.printStackTrace();
+			logger.error(e1);
 			throw new IOException(e1);
 		}
 	}

@@ -61,25 +61,25 @@ public class ToXmlAllEventsListener implements AllEventListenerWithInvocation {
 	}
 
 	public synchronized void setCollector(XmlEventListener collector) {
+		if(collector==null)
+			throw new IllegalArgumentException("The given collector msut be valid.");
 		this.collector = collector;
 	}
 
 	public synchronized void eventToCollector(Event event) {
-		if(collector!=null){
-			try {
-				StringWriter xml = new StringWriter();
-				Marshaller m = EventAndActionJAXBContext.context.createMarshaller();
-				m.setProperty(Marshaller.JAXB_FRAGMENT,true);
-				m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-				m.marshal(event, xml);
-				collector.collect(xml.toString());
-			} catch (PropertyException e) {
-				logger.fatal(e);
-				throw new IllegalStateException(e);
-			} catch (JAXBException e) {
-				logger.fatal(e);
-				throw new IllegalStateException(e);
-			}
+		try {
+			StringWriter xml = new StringWriter();
+			Marshaller m = EventAndActionJAXBContext.context.createMarshaller();
+			m.setProperty(Marshaller.JAXB_FRAGMENT,true);
+			m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+			m.marshal(event, xml);
+			collector.collect(xml.toString());
+		} catch (PropertyException e) {
+			logger.fatal(e);
+			throw new IllegalStateException(e);
+		} catch (JAXBException e) {
+			logger.fatal(e);
+			throw new IllegalStateException(e);
 		}
 	}
 

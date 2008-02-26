@@ -19,14 +19,13 @@ import java.rmi.RemoteException;
 
 import javax.security.auth.login.LoginException;
 
-import org.cspoker.common.exceptions.IllegalActionException;
 import org.cspoker.common.xml.XmlEventListener;
 
 public interface XmlChannel {
 
-	public void open() throws RemoteException, LoginException;
+	public void open() throws RemoteException, LoginException, ChannelStateException;
 
-	public void send(final String xml) throws RemoteException;
+	public void send(final String xml) throws RemoteException, ChannelStateException;
 
 	public void registerXmlEventListener(XmlEventListener listener);
 

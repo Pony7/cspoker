@@ -21,7 +21,7 @@ import java.rmi.RemoteException;
 
 import javax.security.auth.login.LoginException;
 
-import org.cspoker.common.RemotePlayerCommunication;
+import org.cspoker.client.xml.common.XmlChannelRemotePlayerCommunication;
 import org.cspoker.common.elements.table.TableId;
 import org.cspoker.common.eventlisteners.RemoteAllEventsListener;
 import org.cspoker.common.events.gameevents.GameMessageEvent;
@@ -59,9 +59,9 @@ public class TestHTTP {
 	public static void main(String[] args) throws AccessException,
 	RemoteException, NotBoundException, IllegalActionException, LoginException {
 		RemotePlayerCommunicationFactoryForHttp temp =  new RemotePlayerCommunicationFactoryForHttp();
-		RemotePlayerCommunication kenzo = null;
-		RemotePlayerCommunication guy = null;
-		RemotePlayerCommunication cedric = null;
+		XmlChannelRemotePlayerCommunication kenzo = null;
+		XmlChannelRemotePlayerCommunication guy = null;
+		XmlChannelRemotePlayerCommunication cedric = null;
 		try {
 			int port = 8080;
 			String server = "localhost";
@@ -185,10 +185,10 @@ public class TestHTTP {
 			kenzo = temp.getRemotePlayerCommunication(server, port, "kenzo", "test");
 			cedric = temp.getRemotePlayerCommunication(server, port, "cedric", "test");
 
-			guy.createTable();
+			TableId id = guy.createTable();
 
-			kenzo.joinTable(new TableId(0));
-			cedric.joinTable(new TableId(0));
+			kenzo.joinTable(id);
+			cedric.joinTable(id);
 
 			guy.startGame();
 
@@ -221,16 +221,13 @@ public class TestHTTP {
 					}
 				}
 			}
-		} catch (RuntimeException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}finally{
+		} finally{
 			if(guy!=null)
-				guy.kill();
+				guy.getChannel().close();
 			if(kenzo!=null)
-				kenzo.kill();
+				kenzo.getChannel().close();
 			if(cedric!=null)
-				cedric.kill();
+				cedric.getChannel().close();
 		}
 	}
 

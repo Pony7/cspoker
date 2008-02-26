@@ -39,7 +39,7 @@ public class CSPokerHandler extends AbstractHttpHandlerImpl {
 	private final XmlPlayerCommunicationFactory f = XmlPlayerCommunicationFactory.global_factory;
 
 	@Override
-	protected String getResponse(HttpExchange http) throws HttpExceptionImpl {
+	protected byte[] getResponse(HttpExchange http) throws HttpExceptionImpl {
 
 		logger.trace("Received /cspoker/ request");
 		
@@ -59,7 +59,9 @@ public class CSPokerHandler extends AbstractHttpHandlerImpl {
 			} catch (IOException e) {
 				throw new HttpExceptionImpl(e, 400);
 			}
-			return playerComm.getAndFlushCache();
+			String result = playerComm.getAndFlushCache();
+			logger.trace("Returning response of length "+result.length()+":\n"+result);
+			return result.getBytes();
 
 		} catch (PlayerKilledExcepion e) {
 			throw new HttpExceptionImpl(e, 400);

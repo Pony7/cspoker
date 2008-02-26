@@ -103,8 +103,8 @@ abstract class PlayerCommunicationState {
 	 *             state.
 	 */
 	public void join(TableId id) throws IllegalActionException {
-		throw new IllegalActionException("Joining " + id
-				+ "is not a valid action. " + getStdErrorMessage());
+		throw new IllegalActionException("Joining table " + id
+				+ " is not a valid action. " + getStdErrorMessage());
 	}
 
 	public void leaveTable() throws IllegalActionException {
