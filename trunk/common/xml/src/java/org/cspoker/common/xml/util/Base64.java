@@ -83,7 +83,7 @@ ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS
 SOFTWARE, EVEN IF IBM IS APPRISED OF THE POSSIBILITY OF SUCH
 DAMAGES.  */
 
-package org.cspoker.server.xml.http.handler.util;
+package org.cspoker.common.xml.util;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

@@ -24,19 +24,18 @@ import javax.security.auth.login.LoginException;
 
 import org.apache.log4j.Logger;
 import org.cspoker.client.common.RemotePlayerCommunicationFactory;
+import org.cspoker.client.xml.common.ChannelStateException;
 import org.cspoker.client.xml.common.XmlChannelRemotePlayerCommunication;
-import org.cspoker.common.RemotePlayerCommunication;
-
 
 public class RemotePlayerCommunicationFactoryForHttp implements RemotePlayerCommunicationFactory{
 
 	private final static Logger logger = Logger.getLogger(RemotePlayerCommunicationFactoryForHttp.class);
 
 	@Override
-	public RemotePlayerCommunication getRemotePlayerCommunication(
+	public XmlChannelRemotePlayerCommunication getRemotePlayerCommunication(
 			String server, int port, String username, String password) throws ConnectException, LoginException{
 		try {
-			XmlHttpChannel c = new XmlHttpChannel(new URL("http://"+server+":"+port+"/cspoker/"),username, password);
+			XmlHttpChannel c = new XmlHttpChannel(new URL("http://"+server+":"+port+"/cspoker/"), username, password);
 			c.open();
 			return new XmlChannelRemotePlayerCommunication(c);
 		} catch (MalformedURLException e) {
@@ -45,6 +44,9 @@ public class RemotePlayerCommunicationFactoryForHttp implements RemotePlayerComm
 		} catch (RemoteException e) {
 			logger.error(e);
 			throw new ConnectException("Malformed URL",e);
+		} catch (ChannelStateException e) {
+			logger.error(e);
+			throw new IllegalStateException(e);
 		}
 	}
 

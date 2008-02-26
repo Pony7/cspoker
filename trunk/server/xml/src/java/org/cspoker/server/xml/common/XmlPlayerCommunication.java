@@ -48,7 +48,8 @@ public class XmlPlayerCommunication implements XmlEventListener {
 		player = session.getPlayer();
 		cache = new StringBuilder();
 		xmllistener = listener;
-		toxmllistener = new ToXmlAllEventsListener(xmllistener);
+		//This will receive the XML before the listener does.
+		toxmllistener = new ToXmlAllEventsListener(this);
 		playerComm.subscribeAllEventsListener(toxmllistener);
 	}
 
@@ -84,11 +85,11 @@ public class XmlPlayerCommunication implements XmlEventListener {
 
 	public synchronized void updateEventListener(XmlEventListener newlist) {
 		xmllistener = newlist;
-		toxmllistener.setCollector(newlist);
 		flushToListener();
 	}
 
 	public void collect(String xmlEvent) {
+		logger.trace("Received XML event:\n"+xmlEvent);
 		cache(xmlEvent);
 		flushToListener();
 	}

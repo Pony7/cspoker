@@ -16,6 +16,7 @@
 package org.cspoker.server.common.game.playercommunication;
 
 import org.apache.log4j.Logger;
+import org.cspoker.common.elements.table.TableId;
 import org.cspoker.common.events.serverevents.PlayerLeftEvent;
 import org.cspoker.common.exceptions.IllegalActionException;
 import org.cspoker.common.player.PlayerId;
@@ -107,6 +108,12 @@ class TableCreatedState extends WaitingAtTableState {
 				throw new IllegalActionException(
 						"The owner can only leave if he is the only player at the table.");
 		}
+	}
+	
+	@Override
+	public void join(TableId id) throws IllegalActionException {
+		throw new IllegalActionException(
+			"You are already sitting at table "+table.getId()+".");
 	}
 
 	@Override
