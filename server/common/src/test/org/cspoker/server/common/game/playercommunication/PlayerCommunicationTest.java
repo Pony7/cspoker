@@ -15,22 +15,49 @@
  */
 package org.cspoker.server.common.game.playercommunication;
 
+import java.rmi.RemoteException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import junit.framework.TestCase;
 
 import org.apache.log4j.Logger;
 import org.cspoker.common.PlayerCommunication;
 import org.cspoker.common.elements.table.TableId;
-import org.cspoker.common.eventlisteners.game.NewRoundListener;
-import org.cspoker.common.eventlisteners.game.NextPlayerListener;
+import org.cspoker.common.eventlisteners.RemoteAllEventsListener;
 import org.cspoker.common.events.Event;
+import org.cspoker.common.events.gameevents.GameMessageEvent;
+import org.cspoker.common.events.gameevents.NewCommunityCardsEvent;
+import org.cspoker.common.events.gameevents.NewDealEvent;
 import org.cspoker.common.events.gameevents.NewRoundEvent;
 import org.cspoker.common.events.gameevents.NextPlayerEvent;
+import org.cspoker.common.events.gameevents.PlayerJoinedGameEvent;
+import org.cspoker.common.events.gameevents.PlayerLeftTableEvent;
+import org.cspoker.common.events.gameevents.ShowHandEvent;
+import org.cspoker.common.events.gameevents.WinnerEvent;
+import org.cspoker.common.events.gameevents.playeractionevents.AllInEvent;
+import org.cspoker.common.events.gameevents.playeractionevents.BetEvent;
+import org.cspoker.common.events.gameevents.playeractionevents.BigBlindEvent;
+import org.cspoker.common.events.gameevents.playeractionevents.CallEvent;
+import org.cspoker.common.events.gameevents.playeractionevents.CheckEvent;
+import org.cspoker.common.events.gameevents.playeractionevents.FoldEvent;
+import org.cspoker.common.events.gameevents.playeractionevents.RaiseEvent;
+import org.cspoker.common.events.gameevents.playeractionevents.SmallBlindEvent;
+import org.cspoker.common.events.gameevents.privateevents.NewPocketCardsEvent;
+import org.cspoker.common.events.serverevents.PlayerJoinedEvent;
+import org.cspoker.common.events.serverevents.PlayerLeftEvent;
+import org.cspoker.common.events.serverevents.ServerMessageEvent;
+import org.cspoker.common.events.serverevents.TableCreatedEvent;
 import org.cspoker.common.exceptions.IllegalActionException;
+import org.cspoker.common.player.PlayerId;
+import org.cspoker.server.common.game.gamecontrol.TestPlayerFactory;
 import org.cspoker.server.common.game.player.GamePlayer;
 import org.cspoker.server.common.game.player.IllegalNameException;
 import org.cspoker.server.common.game.player.PlayerFactory;
+import org.cspoker.server.common.game.session.PlayerKilledExcepion;
+import org.cspoker.server.common.game.session.Session;
+import org.cspoker.server.common.game.session.SessionManager;
 
 public class PlayerCommunicationTest extends TestCase {
 	private static Logger logger = Logger
@@ -64,7 +91,7 @@ public class PlayerCommunicationTest extends TestCase {
 		PlayerCommunicationImpl kenzoComm = new PlayerCommunicationImpl(kenzo);
 		PlayerCommunicationImpl guyComm = new PlayerCommunicationImpl(guy);
 		try {
-			kenzoComm.createTable();
+			TableId tableId = kenzoComm.createTable();
 			//TODO create an event listener filter to wait for the tableID
 			guyComm.joinTable(tableId);
 		} catch (IllegalActionException e) {
@@ -73,55 +100,44 @@ public class PlayerCommunicationTest extends TestCase {
 	}
 
 	public void testStartGame() throws IllegalNameException {
-		GamePlayer kenzo = playerFactory.createNewPlayer("Kenzo");
-		GamePlayer guy = playerFactory.createNewPlayer("Guy");
-		PlayerCommunication kenzoComm = new PlayerCommunicationImpl(kenzo);
-		PlayerCommunication guyComm = new PlayerCommunicationImpl(guy);
+		Session guySession = SessionManager.global_session_manager.getSession("Guy");
+		Session kenzoSession = SessionManager.global_session_manager.getSession("Kenzo");
+
 		try {
-			kenzoComm.createTable();
+			PlayerCommunication guyComm = guySession.getPlayerCommunication();
+			PlayerCommunication kenzoComm = kenzoSession.getPlayerCommunication();
+			TableId tableId = kenzoComm.createTable();
 			//TODO create an event listener filter to wait for the tableID
 			guyComm.joinTable(tableId);
 			kenzoComm.startGame();
 		} catch (IllegalActionException e) {
 			fail(e.getMessage());
+		} catch (PlayerKilledExcepion e) {
+			fail(e.getMessage());
+		}finally {
+			SessionManager.global_session_manager.killSession("Guy");
+			SessionManager.global_session_manager.killSession("Kenzo");
 		}
 	}
 
 	private PlayerCommunication currentComm;
 
 	public void testPlayingGame() throws IllegalNameException {
-		GamePlayer kenzo = playerFactory.createNewPlayer("Kenzo");
-		GamePlayer guy = playerFactory.createNewPlayer("Guy");
-		PlayerCommunicationImpl kenzoComm = new PlayerCommunicationImpl(kenzo);
-		PlayerCommunicationImpl guyComm = new PlayerCommunicationImpl(guy);
-
-		NewRoundListener newRoundListener = new NewRoundListener() {
-
-			public void onNewRoundEvent(NewRoundEvent event) {
-				currentComm = PlayerCommunicationManager
-						.getPlayerCommunication(event.getPlayer().getId());
-				PlayerCommunicationTest.logger
-						.info("Changed to " + currentComm);
-			}
-
-		};
-
-		NextPlayerListener nextPlayerListener = new NextPlayerListener() {
-
-			public void onNextPlayerEvent(NextPlayerEvent event) {
-				currentComm = PlayerCommunicationManager
-						.getPlayerCommunication(event.getPlayer().getId());
-				PlayerCommunicationTest.logger
-						.info("Changed to " + currentComm);
-			}
-
-		};
+		Session guySession = SessionManager.global_session_manager.getSession("Guy");
+		Session kenzoSession = SessionManager.global_session_manager.getSession("Kenzo");
+		
+		Map<PlayerId,PlayerCommunication> map = new HashMap<PlayerId, PlayerCommunication>();
+	
 
 		try {
+			PlayerCommunicationImpl kenzoComm = kenzoSession.getPlayerCommunication();
+			PlayerCommunicationImpl guyComm = guySession.getPlayerCommunication();
+			map.put(kenzoComm.getId(), kenzoComm);
+			map.put(guyComm.getId(), guyComm);
+			
 			TableId tableId = kenzoComm.createTable();
 			guyComm.joinTable(tableId);
-			guyComm.subscribeNewRoundListener(newRoundListener);
-			guyComm.subscribeNextPlayerListener(nextPlayerListener);
+			guyComm.subscribeAllEventsListener(new TestListener(map));
 			kenzoComm.startGame();
 			PlayerCommunicationTest.logger.info(kenzoComm.getLatestEvents());
 
@@ -151,43 +167,31 @@ public class PlayerCommunicationTest extends TestCase {
 
 		} catch (IllegalActionException e) {
 			fail(e.getMessage());
+		} catch (PlayerKilledExcepion e) {
+			fail(e.getMessage());
 		} finally {
-			PlayerCommunicationManager.clear();
+			SessionManager.global_session_manager.killSession("Guy");
+			SessionManager.global_session_manager.killSession("Kenzo");
 		}
 	}
 
 	public void testPlayingGame2() throws IllegalNameException {
-		GamePlayer kenzo = playerFactory.createNewPlayer("Kenzo");
-		GamePlayer guy = playerFactory.createNewPlayer("Guy");
-		PlayerCommunicationImpl kenzoComm = new PlayerCommunicationImpl(kenzo);
-		PlayerCommunicationImpl guyComm = new PlayerCommunicationImpl(guy);
-
-		NewRoundListener newRoundListener = new NewRoundListener() {
-
-			public void onNewRoundEvent(NewRoundEvent event) {
-				currentComm = PlayerCommunicationManager
-						.getPlayerCommunication(event.getPlayer().getId());
-				PlayerCommunicationTest.logger
-						.info("Changed to " + currentComm);
-			}
-
-		};
-
-		NextPlayerListener nextPlayerListener = new NextPlayerListener() {
-
-			public void onNextPlayerEvent(NextPlayerEvent event) {
-				currentComm = PlayerCommunicationManager
-						.getPlayerCommunication(event.getPlayer().getId());
-				PlayerCommunicationTest.logger
-						.info("Changed to " + currentComm);
-			}
-
-		};
-
+		Session guySession = SessionManager.global_session_manager.getSession("Guy");
+		Session kenzoSession = SessionManager.global_session_manager.getSession("Kenzo");
+		
+		Map<PlayerId,PlayerCommunication> map = new HashMap<PlayerId, PlayerCommunication>();
+		
 		try {
+			
+			PlayerCommunicationImpl kenzoComm = kenzoSession.getPlayerCommunication();
+			PlayerCommunicationImpl guyComm = guySession.getPlayerCommunication();
+
+			map.put(kenzoComm.getId(), kenzoComm);
+			map.put(guyComm.getId(), guyComm);
+			
 			TableId tableId = kenzoComm.createTable();
-			guyComm.subscribeNewRoundListener(newRoundListener);
-			guyComm.subscribeNextPlayerListener(nextPlayerListener);
+			
+			guyComm.subscribeAllEventsListener(new TestListener(map));
 			guyComm.joinTable(tableId);
 			kenzoComm.startGame();
 			PlayerCommunicationTest.logger.info(kenzoComm.getLatestEvents());
@@ -210,8 +214,11 @@ public class PlayerCommunicationTest extends TestCase {
 
 		} catch (IllegalActionException e) {
 			fail(e.getMessage());
+		} catch (PlayerKilledExcepion e) {
+			fail(e.getMessage());
 		} finally {
-			PlayerCommunicationManager.clear();
+			SessionManager.global_session_manager.killSession("Guy");
+			SessionManager.global_session_manager.killSession("Kenzo");
 		}
 	}
 
@@ -219,6 +226,162 @@ public class PlayerCommunicationTest extends TestCase {
 		for (Event event : events) {
 			PlayerCommunicationTest.logger.info("++ " + event);
 		}
+	}
+	
+	private class TestListener implements RemoteAllEventsListener{
+		
+		private Map<PlayerId, PlayerCommunication> map;
+		
+		public TestListener(Map<PlayerId, PlayerCommunication> map){
+			this.map = map;
+		}
+
+		@Override
+		public void onAllInEvent(AllInEvent event) throws RemoteException {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void onBetEvent(BetEvent event) throws RemoteException {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void onBigBlindEvent(BigBlindEvent event) throws RemoteException {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void onCallEvent(CallEvent event) throws RemoteException {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void onCheckEvent(CheckEvent event) throws RemoteException {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void onFoldEvent(FoldEvent event) throws RemoteException {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void onRaiseEvent(RaiseEvent event) throws RemoteException {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void onSmallBlindEvent(SmallBlindEvent event)
+				throws RemoteException {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void onNewPocketCardsEvent(NewPocketCardsEvent event)
+				throws RemoteException {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void onNewCommunityCardsEvent(NewCommunityCardsEvent event)
+				throws RemoteException {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void onNewDealEvent(NewDealEvent event) throws RemoteException {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void onNewRoundEvent(NewRoundEvent event) throws RemoteException {
+			currentComm = map.get(event.getPlayer().getId());
+			PlayerCommunicationTest.logger
+					.info("Changed to " + currentComm);
+		}
+
+		@Override
+		public void onNextPlayerEvent(NextPlayerEvent event)
+				throws RemoteException {
+			currentComm = map.get(event.getPlayer().getId());
+			PlayerCommunicationTest.logger
+					.info("Changed to " + currentComm);
+			
+		}
+
+		@Override
+		public void onPlayerJoinedGameEvent(PlayerJoinedGameEvent event)
+				throws RemoteException {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void onPlayerLeftTableEvent(PlayerLeftTableEvent event)
+				throws RemoteException {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void onShowHandEvent(ShowHandEvent event) throws RemoteException {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void onWinnerEvent(WinnerEvent event) throws RemoteException {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void onGameMessageEvent(GameMessageEvent event)
+				throws RemoteException {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void onPlayerJoinedEvent(PlayerJoinedEvent event)
+				throws RemoteException {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void onPlayerLeftEvent(PlayerLeftEvent event)
+				throws RemoteException {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void onTableCreatedEvent(TableCreatedEvent event)
+				throws RemoteException {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void onServerMessageEvent(ServerMessageEvent event)
+				throws RemoteException {
+			// TODO Auto-generated method stub
+			
+		}
+		
 	}
 
 }
