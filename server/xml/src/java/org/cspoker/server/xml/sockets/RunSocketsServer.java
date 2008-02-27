@@ -43,7 +43,7 @@ public class RunSocketsServer {
 			usage();
 		}
 		logger.info("Starting SOCKETS server");
-		SocketServer server = new SocketServer(port);
+		new SocketServer(port);
 	}
 
 	private static void usage() {

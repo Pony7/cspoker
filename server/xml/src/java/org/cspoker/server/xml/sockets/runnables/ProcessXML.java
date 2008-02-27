@@ -82,5 +82,10 @@ public class ProcessXML implements Runnable, Prioritizable {
 	public int getPriority() {
 		return 1;
 	}
+	
+	@Override
+	public String toString() {
+		return "ProcessXML";
+	}
 
 }

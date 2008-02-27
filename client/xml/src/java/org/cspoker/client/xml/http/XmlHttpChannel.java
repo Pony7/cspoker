@@ -24,10 +24,10 @@ import java.io.Writer;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.CharBuffer;
-import java.nio.charset.Charset;
 import java.rmi.RemoteException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -52,7 +52,7 @@ public class XmlHttpChannel implements XmlChannel {
 
 	private ScheduledExecutorService scheduler;
 
-	private List<XmlEventListener> xmlEventListeners = new ArrayList<XmlEventListener>();
+	private final Set<XmlEventListener> xmlEventListeners = Collections.synchronizedSet(new HashSet<XmlEventListener>());
 
 	private URL url;
 
@@ -203,11 +203,11 @@ public class XmlHttpChannel implements XmlChannel {
 			l.collect(xml);
 	}
 
-	public synchronized void registerXmlEventListener(XmlEventListener listener) {
+	public void registerXmlEventListener(XmlEventListener listener) {
 		xmlEventListeners.add(listener);
 	}
 
-	public synchronized void unRegisterXmlEventListener(XmlEventListener listener) {
+	public void unRegisterXmlEventListener(XmlEventListener listener) {
 		xmlEventListeners.remove(listener);
 	}
 
