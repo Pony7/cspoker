@@ -39,7 +39,7 @@ public class LoggingThreadPool extends ThreadPoolExecutor {
 	@Override
 	protected void beforeExecute(Thread t, Runnable r) {
 		super.beforeExecute(t, r);
-		logger.trace(String.format("Thread %s: start %s", t, r));
+		logger.trace(String.format("Thread %s: starting %s", t, r));
 		startTime.set(System.nanoTime());
 	}
 
@@ -50,7 +50,7 @@ public class LoggingThreadPool extends ThreadPoolExecutor {
 			long taskTime = endTime - startTime.get();
 			numTasks.incrementAndGet();
 			totalTime.addAndGet(taskTime);
-			logger.trace(String.format("Thread %s: end %s, time=%dns", t, r,
+			logger.trace(String.format("Thread %s: done with %s, time=%dns", t, r,
 					taskTime));
 		} finally {
 			super.afterExecute(r, t);

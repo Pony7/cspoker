@@ -35,7 +35,7 @@ public class XmlFileBasicAuthentication extends BasicAuthenticator {
 	public boolean checkCredentials(String user, String pass) {
 		boolean ok = false;
 		if (file.hasPassword(user, pass)) {
-			XmlFileBasicAuthentication.logger.info("Authentication for " + user
+			XmlFileBasicAuthentication.logger.trace("Authentication for " + user
 					+ " succeeded.");
 			ok = true;
 		} else {

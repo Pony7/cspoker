@@ -21,9 +21,8 @@ public class RunRMIServer {
 			usage();
 		}
 		int port = Integer.parseInt(args[0]);
-		logger.info("Starting RMI server");
-		RMIServer server = new RMIServer(new XmlFileAuthenticator(), port);
-		server.start();
+		logger.info("Starting RMI server at port "+port);
+		(new RMIServer(port)).start();
 	}
 
 	private static void usage() {

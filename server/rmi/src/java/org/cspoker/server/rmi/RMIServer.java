@@ -21,6 +21,9 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
 
 import javax.security.auth.login.LoginException;
 
@@ -30,6 +33,7 @@ import org.cspoker.common.RemotePlayerCommunication;
 import org.cspoker.server.common.authentication.XmlFileAuthenticator;
 import org.cspoker.server.common.game.session.PlayerKilledExcepion;
 import org.cspoker.server.common.game.session.SessionManager;
+import org.cspoker.server.common.util.threading.RequestExecutor;
 
 public class RMIServer implements RemoteLoginServer {
 
@@ -39,14 +43,18 @@ public class RMIServer implements RemoteLoginServer {
 
 	private int port;
 
-	public RMIServer(XmlFileAuthenticator authenticator, int port) {
+	public RMIServer(int port){
+		this(port, new XmlFileAuthenticator());
+	}
+	
+	public RMIServer(int port, XmlFileAuthenticator authenticator) {
 		this.authenticator = authenticator;
 		this.port = port;
 	}
 
 	public RemotePlayerCommunication login(String username, String password)
 			throws RemoteException, LoginException {
-		logger.trace("Login attempt from " + username);
+		logger.debug("Login attempt from " + username);
 		if (authenticator.hasPassword(username, password)) {
 			try {
 				RemotePlayerCommunication p = SessionManager.global_session_manager
@@ -64,17 +72,40 @@ public class RMIServer implements RemoteLoginServer {
 				return null;
 			}
 		} else {
-			logger.trace("Login attempt from " + username + " failed");
+			logger.debug("Login attempt from " + username + " failed");
 			throw new LoginException("Login Failed");
 		}
 	}
 
-	void start() throws AccessException, RemoteException {
+	public void start() throws AccessException, RemoteException {
 		System.setSecurityManager(null);
-		RemoteLoginServer stub = (RemoteLoginServer) UnicastRemoteObject
-				.exportObject(this, 0);
-		Registry registry = LocateRegistry.getRegistry(port);
-		registry.rebind("CSPokerServer", stub);
+		ExecutorService executor = RequestExecutor.getInstance();
+
+		try {
+			executor.submit(new Callable<Void>(){
+
+				@Override
+				public Void call() throws RemoteException{
+					Registry registry = LocateRegistry.createRegistry(port);
+					RemoteLoginServer stub = (RemoteLoginServer) UnicastRemoteObject.exportObject(RMIServer.this, 0);
+					registry.rebind("CSPokerServer", stub);
+					logger.info("Started RMI server at port "+port);
+					return null;
+				}
+				
+				@Override
+				public String toString() {
+					return "RMI Server startup at port "+port;
+				}
+				
+			}).get();
+		} catch (InterruptedException e) {
+			logger.error(e);
+			Thread.currentThread().interrupt();
+		} catch (ExecutionException e) {
+			logger.error(e);
+			throw (RemoteException)(e.getCause());
+		}
 	}
 
 }

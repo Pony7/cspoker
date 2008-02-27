@@ -41,7 +41,7 @@ public class CSPokerHandler extends AbstractHttpHandlerImpl {
 	@Override
 	protected byte[] getResponse(HttpExchange http) throws HttpExceptionImpl {
 
-		logger.trace("Received /cspoker/ request");
+		//logger.trace("Received /cspoker/ request");
 
 		String username = AbstractHttpHandlerImpl.toPlayerName(http
 				.getRequestHeaders());
@@ -60,8 +60,7 @@ public class CSPokerHandler extends AbstractHttpHandlerImpl {
 				throw new HttpExceptionImpl(e, 400);
 			}
 			String result = playerComm.getAndFlushCache();
-			logger.trace("Returning response of length " + result.length()
-					+ ":\n" + result);
+			logger.trace("Returning response of length " + result.length()+ ":\n" + result);
 			return result.getBytes();
 
 		} catch (PlayerKilledExcepion e) {

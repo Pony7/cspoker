@@ -148,7 +148,7 @@ public class XmlSocketsChannel implements XmlChannel {
 			if (b < 0) {
 				throw new IOException("Connection lost");
 			}
-			if (b == 0x00) {
+			if (b == 0) {
 				if (sb.length() > 0) {
 					return sb.toString();
 				} else {

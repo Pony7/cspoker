@@ -59,15 +59,15 @@ public class TestSockets {
 	public static void main(String[] args) throws AccessException,
 			RemoteException, NotBoundException, IllegalActionException,
 			LoginException {
-		RemotePlayerCommunicationFactoryForSockets temp = new RemotePlayerCommunicationFactoryForSockets();
+		int port = 8081;
+		String server = "localhost";
+		RemotePlayerCommunicationFactoryForSockets temp = new RemotePlayerCommunicationFactoryForSockets(server,port);
 		XmlChannelRemotePlayerCommunication kenzo = null;
 		XmlChannelRemotePlayerCommunication guy = null;
 		XmlChannelRemotePlayerCommunication cedric = null;
 		try {
-			int port = 8081;
-			String server = "localhost";
 			guy = temp
-					.getRemotePlayerCommunication(server, port, "guy", "test");
+					.getRemotePlayerCommunication("guy", "test");
 			System.out.println("Guy Logged In and will print events to sout");
 
 			guy.subscribeAllEventsListener(new RemoteAllEventsListener() {
@@ -185,9 +185,9 @@ public class TestSockets {
 
 			});
 
-			kenzo = temp.getRemotePlayerCommunication(server, port, "kenzo",
+			kenzo = temp.getRemotePlayerCommunication("kenzo",
 					"test");
-			cedric = temp.getRemotePlayerCommunication(server, port, "cedric",
+			cedric = temp.getRemotePlayerCommunication("cedric",
 					"test");
 
 			TableId id = guy.createTable();

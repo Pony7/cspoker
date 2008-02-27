@@ -37,12 +37,12 @@ public class ProcessXML implements Runnable, Prioritizable {
 	private final String xml;
 	private final ClientContext context;
 
-	private final static SocketsAuthenticator auth = new SocketsAuthenticator(
-			new XmlFileAuthenticator());
+	private final SocketsAuthenticator auth;
 
-	public ProcessXML(String xml, ClientContext context) {
+	public ProcessXML(String xml, ClientContext context, XmlFileAuthenticator xmlfileauth) {
 		this.xml = xml;
 		this.context = context;
+		this.auth = new SocketsAuthenticator(xmlfileauth);
 	}
 
 	public void run() {
