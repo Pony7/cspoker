@@ -40,7 +40,7 @@ public class PlayerLeftEvent extends ServerEvent {
 		this.player = player;
 		this.id = id;
 	}
-	
+
 	protected PlayerLeftEvent() {
 		// no op
 	}
@@ -56,10 +56,12 @@ public class PlayerLeftEvent extends ServerEvent {
 
 	public TableId getId() {
 		return id;
-	}	
-	public void dispatch(RemoteAllEventsListener listener)  throws RemoteException{
-		listener.onPlayerLeftEvent(this);
 	}
 
+	@Override
+	public void dispatch(RemoteAllEventsListener listener)
+			throws RemoteException {
+		listener.onPlayerLeftEvent(this);
+	}
 
 }

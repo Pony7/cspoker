@@ -21,8 +21,9 @@ import org.cspoker.common.eventlisteners.RemoteAllEventsListener;
 import org.cspoker.common.events.Event;
 
 public abstract class ServerEvent extends Event {
-	
+
 	@Override
-	public abstract void dispatch(RemoteAllEventsListener listener) throws RemoteException;
-	
+	public abstract void dispatch(RemoteAllEventsListener listener)
+			throws RemoteException;
+
 }

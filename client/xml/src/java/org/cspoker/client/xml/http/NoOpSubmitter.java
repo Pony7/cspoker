@@ -19,18 +19,17 @@ import java.rmi.RemoteException;
 
 import org.apache.log4j.Logger;
 import org.cspoker.client.xml.common.ChannelStateException;
-import org.cspoker.common.exceptions.IllegalActionException;
 
 public class NoOpSubmitter implements Runnable {
 
 	private final static Logger logger = Logger.getLogger(XmlHttpChannel.class);
-	
+
 	private final XmlHttpChannel c;
 
 	public NoOpSubmitter(XmlHttpChannel c) {
 		this.c = c;
 	}
-	
+
 	@Override
 	public void run() {
 		try {
@@ -41,7 +40,7 @@ public class NoOpSubmitter implements Runnable {
 		} catch (ChannelStateException e) {
 			logger.error(e);
 			c.close();
-		} 
+		}
 	}
 
 }

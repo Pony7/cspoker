@@ -118,8 +118,9 @@ public class Table {
 	 *         name!=null && name.length()>0
 	 */
 	public static boolean canHaveAsName(String name) {
-		if (name == null)
+		if (name == null) {
 			return false;
+		}
 		return name.length() > 0;
 	}
 
@@ -244,9 +245,10 @@ public class Table {
 	 *       !new.hasAsPlayer(player)
 	 */
 	public synchronized void removePlayer(GamePlayer player) {
-		if (!hasAsPlayer(player))
+		if (!hasAsPlayer(player)) {
 			throw new IllegalArgumentException(player
 					+ " is not a player of this table.");
+		}
 		players.remove(player);
 	}
 
@@ -269,15 +271,19 @@ public class Table {
 	 */
 	public synchronized void addPlayer(GamePlayer player)
 			throws PlayerListFullException {
-		if (player == null)
+		if (player == null) {
 			throw new IllegalArgumentException("player should be effective.");
-		if (fullOfPlayers())
+		}
+		if (fullOfPlayers()) {
 			throw new PlayerListFullException();
-		if (hasAsPlayer(player))
+		}
+		if (hasAsPlayer(player)) {
 			throw new IllegalArgumentException(player
 					+ " is already seated at this table.");
-		if (player.getStack().getValue() == 0)
+		}
+		if (player.getStack().getValue() == 0) {
 			throw new IllegalArgumentException(player + " has no chips to bet.");
+		}
 		players.add(player);
 	}
 

@@ -32,9 +32,9 @@ public class ShowdownPlayer implements Serializable {
 	private static final long serialVersionUID = -1618593137613219527L;
 
 	private Player player;
-	
+
 	@XmlElementWrapper
-	@XmlElement(name="card")
+	@XmlElement(name = "card")
 	private Set<Card> cards;
 
 	private String description;
@@ -44,7 +44,7 @@ public class ShowdownPlayer implements Serializable {
 		this.cards = Collections.unmodifiableSet(cards);
 		this.description = description;
 	}
-	
+
 	protected ShowdownPlayer() {
 		// no op
 	}

@@ -44,7 +44,7 @@ public class WinnerEvent extends GameEvent {
 	public WinnerEvent(Set<Winner> winners) {
 		this.winners = Collections.unmodifiableSet(winners);
 	}
-	
+
 	protected WinnerEvent() {
 		// no op
 	}
@@ -62,9 +62,11 @@ public class WinnerEvent extends GameEvent {
 			toReturn += ", ";
 		}
 		return toReturn.substring(0, toReturn.length() - 2) + ".";
-	}	
-	
-	public void dispatch(RemoteAllEventsListener listener) throws RemoteException{
+	}
+
+	@Override
+	public void dispatch(RemoteAllEventsListener listener)
+			throws RemoteException {
 		listener.onWinnerEvent(this);
 	}
 

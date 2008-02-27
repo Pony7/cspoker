@@ -46,36 +46,44 @@ import org.cspoker.common.xml.events.invocation.SuccessfulInvocationEvent;
 
 public class EventJAXBContext {
 
-	private final static Logger logger = Logger.getLogger(EventJAXBContext.class);
+	private final static Logger logger = Logger
+			.getLogger(EventJAXBContext.class);
 
 	public final static JAXBContext context = initContext();
 
-    private static JAXBContext initContext() {
-        try {
+	private static JAXBContext initContext() {
+		try {
 			return JAXBContext.newInstance(getActions());
 		} catch (JAXBException e) {
 			logger.fatal(e);
 			throw new IllegalStateException(e);
 		}
-    }
-	
-    public static Class[] getActions(){
-    	return new Class[]{
-    			//playeractionevents
-				AllInEvent.class, BetEvent.class, BigBlindEvent.class,
-				CallEvent.class, CheckEvent.class, FoldEvent.class, RaiseEvent.class, SmallBlindEvent.class,
-				//privatevents
+	}
+
+	public static Class[] getActions() {
+		return new Class[] {
+				// playeractionevents
+				AllInEvent.class,
+				BetEvent.class,
+				BigBlindEvent.class,
+				CallEvent.class,
+				CheckEvent.class,
+				FoldEvent.class,
+				RaiseEvent.class,
+				SmallBlindEvent.class,
+				// privatevents
 				NewPocketCardsEvent.class,
-				//gameevents
-				GameMessageEvent.class, NewCommunityCardsEvent.class, NewDealEvent.class, NewRoundEvent.class, 
-				NextPlayerEvent.class, PlayerJoinedGameEvent.class, PlayerLeftTableEvent.class, 
+				// gameevents
+				GameMessageEvent.class, NewCommunityCardsEvent.class,
+				NewDealEvent.class, NewRoundEvent.class, NextPlayerEvent.class,
+				PlayerJoinedGameEvent.class, PlayerLeftTableEvent.class,
 				ShowHandEvent.class, WinnerEvent.class,
-				//invokation
+				// invokation
 				SuccessfulInvocationEvent.class, IllegalActionEvent.class,
-				//serverevents
-				PlayerJoinedEvent.class, PlayerLeftEvent.class, ServerMessageEvent.class, TableCreatedEvent.class,
-				//other
-				EventSequence.class
-    			};
-    }
+				// serverevents
+				PlayerJoinedEvent.class, PlayerLeftEvent.class,
+				ServerMessageEvent.class, TableCreatedEvent.class,
+				// other
+				EventSequence.class };
+	}
 }

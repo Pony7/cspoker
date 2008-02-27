@@ -47,7 +47,7 @@ public class TableId implements Serializable {
 	public TableId(long id) {
 		this.id = id;
 	}
-	
+
 	protected TableId() {
 		// no op
 	}
@@ -68,15 +68,19 @@ public class TableId implements Serializable {
 	 */
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		final TableId other = (TableId) obj;
-		if (id != other.id)
+		if (id != other.id) {
 			return false;
+		}
 		return true;
 	}
 

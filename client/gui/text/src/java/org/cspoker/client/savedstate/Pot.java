@@ -15,26 +15,24 @@
  */
 package org.cspoker.client.savedstate;
 
-
-
 public class Pot {
 
-    private int pot; 
-    
-    public Pot() {
-	resetPot();
-    }
-    
-    public synchronized void resetPot(){
-	pot=0;
-    }
-    
-    public synchronized void setAmount(int amount){
-	pot=amount;
-    }
-    
-    public synchronized int getPot() {
-	return pot;
-    }
-    
+	private int pot;
+
+	public Pot() {
+		resetPot();
+	}
+
+	public synchronized void resetPot() {
+		pot = 0;
+	}
+
+	public synchronized void setAmount(int amount) {
+		pot = amount;
+	}
+
+	public synchronized int getPot() {
+		return pot;
+	}
+
 }

@@ -304,9 +304,9 @@ public abstract class Round implements PlayerAction {
 	}
 
 	protected Round getNewDealRound() {
-		if (game.getNbCurrentDealPlayers() <= 1)
+		if (game.getNbCurrentDealPlayers() <= 1) {
 			return new WaitingRound(gameMediator, game);
-		else {
+		} else {
 			newDealRound();
 			game.dealNewHand();
 			return new PreFlopRound(gameMediator, game);

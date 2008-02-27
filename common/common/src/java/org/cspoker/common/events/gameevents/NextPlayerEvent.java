@@ -42,7 +42,7 @@ public class NextPlayerEvent extends GameEvent {
 	public NextPlayerEvent(Player player) {
 		this.player = player;
 	}
-	
+
 	protected NextPlayerEvent() {
 		// no op
 	}
@@ -56,7 +56,9 @@ public class NextPlayerEvent extends GameEvent {
 		return "It's " + player.getName() + "'s turn.";
 	}
 
-	public void dispatch(RemoteAllEventsListener listener) throws RemoteException{
+	@Override
+	public void dispatch(RemoteAllEventsListener listener)
+			throws RemoteException {
 		listener.onNextPlayerEvent(this);
 	}
 

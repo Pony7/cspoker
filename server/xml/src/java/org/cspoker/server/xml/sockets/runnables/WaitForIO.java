@@ -85,12 +85,12 @@ public class WaitForIO implements Runnable, Prioritizable {
 
 				if ((kro & SelectionKey.OP_READ) == SelectionKey.OP_READ) {
 					readSocket(key);
-					//logger.trace("read from socket");
+					// logger.trace("read from socket");
 				}
 				if ((kro & SelectionKey.OP_WRITE) == SelectionKey.OP_WRITE) {
 					getContext(key, (SocketChannel) key.channel())
 							.writeBufferToClient();
-					//logger.trace("wrote data to socket");
+					// logger.trace("wrote data to socket");
 				}
 				if ((kro & SelectionKey.OP_ACCEPT) == SelectionKey.OP_ACCEPT) {
 					acceptConnection();
@@ -119,7 +119,7 @@ public class WaitForIO implements Runnable, Prioritizable {
 			logger.trace("No more bytes in channel, closing socket");
 			client.close();
 		} else {
-			logger.trace("Reading "+numBytesRead+" bytes from socket");
+			logger.trace("Reading " + numBytesRead + " bytes from socket");
 			// To read the bytes, flip the buffer
 			buffer.flip();
 			ClientContext context = getContext(key, client);
@@ -129,7 +129,7 @@ public class WaitForIO implements Runnable, Prioritizable {
 				boolean hasEnded = filterUntilEndNode();
 
 				CharBuffer decoded = decoder.decode(filteredBuffer);
-				logger.trace("Reading: \n"+decoded);
+				logger.trace("Reading: \n" + decoded);
 				stringBuilder.append(decoded);
 				if (hasEnded) {
 					endNode(stringBuilder, context);
@@ -176,12 +176,12 @@ public class WaitForIO implements Runnable, Prioritizable {
 
 	private void endNode(StringBuilder stringBuilder, ClientContext context) {
 		String xml = stringBuilder.toString();
-		logger.trace("Processing: \n"+xml);
+		logger.trace("Processing: \n" + xml);
 		executor.execute(new ProcessXML(xml, context));
 		stringBuilder.setLength(0);
 		logger.debug("ended an xml node");
 	}
-	
+
 	@Override
 	public String toString() {
 		return "WaitForIO";

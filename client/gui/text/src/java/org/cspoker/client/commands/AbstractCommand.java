@@ -20,12 +20,12 @@ import org.cspoker.common.RemotePlayerCommunication;
 
 public abstract class AbstractCommand implements Command {
 
-    protected RemotePlayerCommunication rpc;
-    protected Console console;
+	protected RemotePlayerCommunication rpc;
+	protected Console console;
 
-    public AbstractCommand(RemotePlayerCommunication rpc, Console console) {
-	this.rpc = rpc;
-	this.console = console;
-    }
+	public AbstractCommand(RemotePlayerCommunication rpc, Console console) {
+		this.rpc = rpc;
+		this.console = console;
+	}
 
 }

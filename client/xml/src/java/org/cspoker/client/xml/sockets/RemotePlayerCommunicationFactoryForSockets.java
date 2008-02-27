@@ -25,25 +25,28 @@ import org.cspoker.client.common.RemotePlayerCommunicationFactory;
 import org.cspoker.client.xml.common.ChannelStateException;
 import org.cspoker.client.xml.common.XmlChannelRemotePlayerCommunication;
 
-public class RemotePlayerCommunicationFactoryForSockets implements RemotePlayerCommunicationFactory{
+public class RemotePlayerCommunicationFactoryForSockets implements
+		RemotePlayerCommunicationFactory {
 
-	private final static Logger logger = Logger.getLogger(RemotePlayerCommunicationFactoryForSockets.class);
+	private final static Logger logger = Logger
+			.getLogger(RemotePlayerCommunicationFactoryForSockets.class);
 
 	@Override
 	public XmlChannelRemotePlayerCommunication getRemotePlayerCommunication(
-			String server, int port, String username, String password) throws ConnectException, LoginException{
+			String server, int port, String username, String password)
+			throws ConnectException, LoginException {
 		try {
-			XmlSocketsChannel c = new XmlSocketsChannel(server, port, username, password);
+			XmlSocketsChannel c = new XmlSocketsChannel(server, port, username,
+					password);
 			c.open();
 			return new XmlChannelRemotePlayerCommunication(c);
 		} catch (RemoteException e) {
 			logger.error(e);
-			throw new ConnectException("Malformed URL",e);
+			throw new ConnectException("Malformed URL", e);
 		} catch (ChannelStateException e) {
 			logger.error(e);
 			throw new IllegalStateException(e);
-		} 
+		}
 	}
-
 
 }

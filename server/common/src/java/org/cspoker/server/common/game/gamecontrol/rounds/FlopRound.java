@@ -32,9 +32,10 @@ public class FlopRound extends BettingRound {
 	public FlopRound(GameMediator gameMediator, Game game) {
 		super(gameMediator, game);
 		GamePlayer currentPlayer = getGame().getCurrentPlayer();
-		if (currentPlayer != null)
+		if (currentPlayer != null) {
 			gameMediator.publishNewRoundEvent(new NewRoundEvent(toString(),
 					currentPlayer.getSavedPlayer()));
+		}
 		drawMuckCard();
 		drawOpenCard();
 		drawOpenCard();
@@ -46,8 +47,9 @@ public class FlopRound extends BettingRound {
 
 	@Override
 	public Round getNextRound() {
-		if (potsDividedToWinner())
+		if (potsDividedToWinner()) {
 			return getNewDealRound();
+		}
 		return new TurnRound(gameMediator, getGame());
 	}
 

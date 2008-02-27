@@ -52,5 +52,5 @@ public class Pots implements Serializable {
 	public int getTotalValue() {
 		return totalValue;
 	}
-	
+
 }

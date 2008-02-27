@@ -56,12 +56,15 @@ public class RemotePlayerCommunicationFactoryImpl implements
 
 			}
 		}
-		if (lastConnectException != null)
+		if (lastConnectException != null) {
 			throw lastConnectException;
-		if (lastNoProviderException != null)
+		}
+		if (lastNoProviderException != null) {
 			throw lastNoProviderException;
-		if (lastLoginException != null)
+		}
+		if (lastLoginException != null) {
 			throw lastLoginException;
+		}
 		throw new NoProviderException();
 	}
 

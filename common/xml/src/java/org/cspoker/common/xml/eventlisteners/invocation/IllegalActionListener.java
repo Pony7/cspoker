@@ -16,7 +16,6 @@
 package org.cspoker.common.xml.eventlisteners.invocation;
 
 import java.rmi.Remote;
-import java.rmi.RemoteException;
 
 import org.cspoker.common.xml.events.invocation.IllegalActionEvent;
 

@@ -20,12 +20,12 @@ import org.cspoker.common.RemotePlayerCommunication;
 
 public class DealCommand extends AbstractCommand {
 
-    public DealCommand(RemotePlayerCommunication rpc, Console console) {
-	super(rpc, console);
-    }
+	public DealCommand(RemotePlayerCommunication rpc, Console console) {
+		super(rpc, console);
+	}
 
-    public void execute(String... args) throws Exception {
-	rpc.deal();
-    }
+	public void execute(String... args) throws Exception {
+		rpc.deal();
+	}
 
 }

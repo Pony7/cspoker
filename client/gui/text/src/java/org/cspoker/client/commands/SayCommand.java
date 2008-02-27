@@ -20,21 +20,21 @@ import org.cspoker.common.RemotePlayerCommunication;
 
 public class SayCommand extends AbstractCommand {
 
-    public SayCommand(RemotePlayerCommunication rpc, Console console) {
-	super(rpc, console);
-    }
-
-    public void execute(String... args) throws Exception {
-	rpc.say(toString(args));
-    }
-
-    private String toString(String[] args) {
-	StringBuilder sb = new StringBuilder();
-	for(String a:args){
-	    sb.append(a);
-	    sb.append(" ");
+	public SayCommand(RemotePlayerCommunication rpc, Console console) {
+		super(rpc, console);
 	}
-	return sb.toString();
-    }
+
+	public void execute(String... args) throws Exception {
+		rpc.say(toString(args));
+	}
+
+	private String toString(String[] args) {
+		StringBuilder sb = new StringBuilder();
+		for (String a : args) {
+			sb.append(a);
+			sb.append(" ");
+		}
+		return sb.toString();
+	}
 
 }

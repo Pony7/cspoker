@@ -29,8 +29,8 @@ import org.cspoker.client.rmi.RemotePlayerCommunicationFactoryForRMI;
 public class Console {
 
 	public static void main(String[] args) throws Exception {
-	    	RemotePlayerCommunicationFactoryImpl.global_factory
-	    		.addRemotePlayerCommunicationProvider(new RemotePlayerCommunicationFactoryForRMI());
+		RemotePlayerCommunicationFactoryImpl.global_factory
+				.addRemotePlayerCommunicationProvider(new RemotePlayerCommunicationFactoryForRMI());
 		new Console(args);
 	}
 
@@ -40,9 +40,10 @@ public class Console {
 
 	public Console(String[] args) throws Exception {
 		if (args.length != 2 && args.length != 3) {
-			 System.out.println("usage: java -jar cspoker-client-text.jar [server] [portnumber] -[options]");
-			 System.out.println("options:");
-			 System.out.println(" -v verbose");
+			System.out
+					.println("usage: java -jar cspoker-client-text.jar [server] [portnumber] -[options]");
+			System.out.println("options:");
+			System.out.println(" -v verbose");
 			System.exit(0);
 		}
 		if (args.length == 3) {
@@ -54,42 +55,45 @@ public class Console {
 		boolean running = true;
 
 		boolean logedin = false;
-		
+
 		Scanner in = new Scanner(System.in);
 		do {
 			if (client != null) {
 				client.close();
 			}
-			 System.out.println("Enter username:");
+			System.out.println("Enter username:");
 			System.out.print(">");
 			String username = in.nextLine();
-			 System.out.println("Enter password:");
+			System.out.println("Enter password:");
 			System.out.print(">");
 			String password = in.nextLine();
-			if (username.equalsIgnoreCase("QUIT") || username.equalsIgnoreCase("EXIT") || password.equalsIgnoreCase("QUIT")
+			if (username.equalsIgnoreCase("QUIT")
+					|| username.equalsIgnoreCase("EXIT")
+					|| password.equalsIgnoreCase("QUIT")
 					|| password.equalsIgnoreCase("EXIT")) {
-				 System.out.println("Shutting down...");
+				System.out.println("Shutting down...");
 				running = false;
 			} else {
-				client = new Client(args[0], Integer.parseInt(args[1]), username, password, this);
+				client = new Client(args[0], Integer.parseInt(args[1]),
+						username, password, this);
 				logedin = true;
 			}
 		} while (running && !logedin);
 
 		if (running) {
-			 System.out.println("     ____________________________");
-			 System.out.println("    /Welcome to CSPoker 0.1 alpha\\");
-			 System.out.println("   /______________________________\\");
-			 System.out.println("");
-			 System.out.println("Enter HELP for a list of supported commands.");
-			 System.out.println("");
+			System.out.println("     ____________________________");
+			System.out.println("    /Welcome to CSPoker 0.1 alpha\\");
+			System.out.println("   /______________________________\\");
+			System.out.println("");
+			System.out.println("Enter HELP for a list of supported commands.");
+			System.out.println("");
 		}
 
 		while (running) {
 			System.out.print(">");
 			String line = in.nextLine();
 			if (line.equalsIgnoreCase("QUIT") || line.equalsIgnoreCase("EXIT")) {
-				 System.out.println("Shutting down...");
+				System.out.println("Shutting down...");
 				running = false;
 			} else {
 				try {
@@ -107,10 +111,10 @@ public class Console {
 	private void handle(Exception e) {
 		if (verbose) {
 
-			 System.out.println("-----details-----");
+			System.out.println("-----details-----");
 			e.printStackTrace(System.out);
-			 System.out.println("-----------------");
-			 System.out.println("");
+			System.out.println("-----------------");
+			System.out.println("");
 		}
 	}
 
@@ -124,7 +128,7 @@ public class Console {
 	}
 
 	public void print(String result) {
-	    System.out.println(result);
+		System.out.println(result);
 	}
 
 }

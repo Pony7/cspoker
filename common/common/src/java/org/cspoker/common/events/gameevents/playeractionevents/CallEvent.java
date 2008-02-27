@@ -44,7 +44,7 @@ public class CallEvent extends ActionChangedPotEvent {
 		super(pots);
 		this.player = player;
 	}
-	
+
 	protected CallEvent() {
 		// no op
 	}
@@ -57,8 +57,10 @@ public class CallEvent extends ActionChangedPotEvent {
 	public Player getPlayer() {
 		return player;
 	}
-	
-	public void dispatch(RemoteAllEventsListener listener) throws RemoteException{
+
+	@Override
+	public void dispatch(RemoteAllEventsListener listener)
+			throws RemoteException {
 		listener.onCallEvent(this);
 	}
 }

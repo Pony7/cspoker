@@ -32,26 +32,27 @@ public class IllegalActionEvent extends InvocationEvent {
 
 	@XmlTransient
 	private IllegalActionException e;
-	
+
 	private String msg;
-	
+
 	private Player player;
 
 	private PlayerCommunicationAction<?> action;
 
-	public IllegalActionEvent(IllegalActionException e, PlayerCommunicationAction<?> a) {
+	public IllegalActionEvent(IllegalActionException e,
+			PlayerCommunicationAction<?> a) {
 		this.e = e;
-		this.msg = e.getMessage();
-		this.player = e.getPlayer();
-		this.action = a;
+		msg = e.getMessage();
+		player = e.getPlayer();
+		action = a;
 	}
-	
+
 	protected IllegalActionEvent() {
 		e = null;
 	}
 
 	public IllegalActionException getException() {
-		if(e == null){
+		if (e == null) {
 			e = new IllegalActionException(msg);
 		}
 		return e;

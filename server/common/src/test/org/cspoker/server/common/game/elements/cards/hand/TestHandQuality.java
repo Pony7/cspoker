@@ -264,8 +264,9 @@ public class TestHandQuality extends TestCase {
 				TestHandQuality.logger.info("quality 2 " + quality2);
 				fail("error");
 			}
-			if (j % (totalTests / 10) == 0)
+			if (j % (totalTests / 10) == 0) {
 				TestHandQuality.logger.info(Integer.valueOf(j));
+			}
 		}
 
 		Set<Entry<String, Integer>> entrySet = rankMap.entrySet();

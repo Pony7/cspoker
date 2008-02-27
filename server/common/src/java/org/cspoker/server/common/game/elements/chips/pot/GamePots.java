@@ -61,8 +61,9 @@ public class GamePots {
 	 */
 	public void collectAmountFromPlayersToSidePot(int amount,
 			List<GamePlayer> players) throws IllegalValueException {
-		if (isClosed())
+		if (isClosed()) {
 			return;
+		}
 		GamePots.logger.info("collect " + amount);
 		if ((amount > 0) || (pot.getChips().getValue() > 0)) {
 			GamePot sidePot = new GamePot();
@@ -80,26 +81,30 @@ public class GamePots {
 	}
 
 	public GamePot getMainPot() {
-		if (isClosed())
+		if (isClosed()) {
 			return null;
+		}
 		return pot;
 	}
 
 	public List<GamePot> getSidePots() {
-		if (isClosed)
+		if (isClosed) {
 			return null;
+		}
 		return Collections.unmodifiableList(pots);
 	}
 
 	public GamePot getNewestSidePot() {
-		if (isClosed || pots.isEmpty())
+		if (isClosed || pots.isEmpty()) {
 			return null;
+		}
 		return pots.get(pots.size() - 1);
 	}
 
 	public int getNbSidePots() {
-		if (isClosed())
+		if (isClosed()) {
 			return 0;
+		}
 		return pots.size();
 	}
 
@@ -111,8 +116,9 @@ public class GamePots {
 	 *            The list of players from who to collect the bet chips from.
 	 */
 	public void collectChipsToPot(List<GamePlayer> players) {
-		if (isClosed())
+		if (isClosed()) {
 			return;
+		}
 		for (GamePlayer player : players) {
 			try {
 				player.getBetChips().transferAllChipsTo(pot.getChips());
@@ -129,8 +135,9 @@ public class GamePots {
 	 *            The player who will have to show his cards at the end.
 	 */
 	public void addShowdownPlayer(GamePlayer player) {
-		if (isClosed())
+		if (isClosed()) {
 			return;
+		}
 		for (GamePot pot : pots) {
 			pot.addShowdownPlayer(player);
 		}
@@ -149,8 +156,9 @@ public class GamePots {
 	 * @param showdownPlayers
 	 */
 	public void close(List<GamePlayer> showdownPlayers) {
-		if (isClosed())
+		if (isClosed()) {
 			return;
+		}
 		if (pot.getValue() > 0) {
 			pots.add(pot);
 		}
@@ -171,8 +179,9 @@ public class GamePots {
 	 * @return
 	 */
 	public List<GamePot> getPots() {
-		if (!isClosed())
+		if (!isClosed()) {
 			return null;
+		}
 		return Collections.unmodifiableList(pots);
 	}
 

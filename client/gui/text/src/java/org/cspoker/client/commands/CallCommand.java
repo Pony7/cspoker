@@ -20,12 +20,12 @@ import org.cspoker.common.RemotePlayerCommunication;
 
 public class CallCommand extends AbstractCommand {
 
-    public CallCommand(RemotePlayerCommunication rpc, Console console) {
-	super(rpc, console);
-    }
+	public CallCommand(RemotePlayerCommunication rpc, Console console) {
+		super(rpc, console);
+	}
 
-    public void execute(String... args) throws Exception {
-	rpc.call();
-    }
+	public void execute(String... args) throws Exception {
+		rpc.call();
+	}
 
 }

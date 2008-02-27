@@ -24,7 +24,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 import org.cspoker.common.eventlisteners.RemoteAllEventsListener;
 import org.cspoker.common.player.Player;
 
-
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
 public class GameMessageEvent extends GameEvent {
@@ -39,7 +38,7 @@ public class GameMessageEvent extends GameEvent {
 		this.player = player;
 		this.message = message;
 	}
-	
+
 	protected GameMessageEvent() {
 		// no op
 	}
@@ -56,9 +55,11 @@ public class GameMessageEvent extends GameEvent {
 	public Player getPlayer() {
 		return player;
 	}
-	
-	public void dispatch(RemoteAllEventsListener listener) throws RemoteException{
+
+	@Override
+	public void dispatch(RemoteAllEventsListener listener)
+			throws RemoteException {
 		listener.onGameMessageEvent(this);
 	}
-	
+
 }

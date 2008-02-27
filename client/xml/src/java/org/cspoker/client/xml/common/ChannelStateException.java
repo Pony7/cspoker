@@ -21,10 +21,10 @@ public class ChannelStateException extends Exception {
 	private ChannelState state;
 
 	public ChannelStateException(String msg, ChannelState state) {
-		super(msg+"\nState is "+state);
+		super(msg + "\nState is " + state);
 		this.state = state;
 	}
-	
+
 	public ChannelState getState() {
 		return state;
 	}

@@ -18,7 +18,6 @@ package org.cspoker.client.xml.common;
 import java.io.StringWriter;
 import java.rmi.RemoteException;
 
-import javax.security.auth.login.LoginException;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
@@ -29,26 +28,29 @@ import org.cspoker.common.xml.actions.ActionJAXBContext;
 import org.cspoker.common.xml.actions.PlayerCommunicationAction;
 
 public class XmlChannelMarshaller {
-	
-	private final static Logger logger = Logger.getLogger(XmlChannelMarshaller.class);	
+
+	private final static Logger logger = Logger
+			.getLogger(XmlChannelMarshaller.class);
 
 	private final XmlChannel channel;
 	private final Marshaller marshaller;
 	private final XmlChannelUnMarshaller unmarshaller;
 
-	public XmlChannelMarshaller(XmlChannel channel, RemoteAllEventsListener listener) {
+	public XmlChannelMarshaller(XmlChannel channel,
+			RemoteAllEventsListener listener) {
 		this.channel = channel;
 		try {
-			this.marshaller = ActionJAXBContext.context.createMarshaller();
-			this.marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+			marshaller = ActionJAXBContext.context.createMarshaller();
+			marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 		} catch (JAXBException e) {
 			logger.fatal(e);
 			throw new IllegalStateException(e);
 		}
-		this.unmarshaller = new XmlChannelUnMarshaller(channel,listener);
+		unmarshaller = new XmlChannelUnMarshaller(channel, listener);
 	}
-	
-	public synchronized <T> T perform(PlayerCommunicationAction<T> action) throws RemoteException, IllegalActionException {
+
+	public synchronized <T> T perform(PlayerCommunicationAction<T> action)
+			throws RemoteException, IllegalActionException {
 		StringWriter w = new StringWriter();
 		try {
 			marshaller.marshal(action, w);
@@ -59,14 +61,14 @@ public class XmlChannelMarshaller {
 			throw new IllegalStateException(e);
 		} catch (InterruptedException e) {
 			logger.error(e);
-		    // Restore the interrupted status
-	        Thread.currentThread().interrupt();
-	        return null;
+			// Restore the interrupted status
+			Thread.currentThread().interrupt();
+			return null;
 		} catch (ChannelStateException e) {
 			logger.error(e);
-			throw new RemoteException("Channel state is incorrect.",e);
-		} 
-		
+			throw new RemoteException("Channel state is incorrect.", e);
+		}
+
 	}
-	
+
 }

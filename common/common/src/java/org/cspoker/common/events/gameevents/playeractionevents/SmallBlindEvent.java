@@ -51,7 +51,7 @@ public class SmallBlindEvent extends ActionChangedPotEvent {
 	protected SmallBlindEvent() {
 		// no op
 	}
-	
+
 	@Override
 	public String toString() {
 		return getPlayer().getName() + " bets the small blind of "
@@ -66,8 +66,10 @@ public class SmallBlindEvent extends ActionChangedPotEvent {
 		return player;
 	}
 
-	public void dispatch(RemoteAllEventsListener listener)  throws RemoteException {
+	@Override
+	public void dispatch(RemoteAllEventsListener listener)
+			throws RemoteException {
 		listener.onSmallBlindEvent(this);
 	}
-	
+
 }

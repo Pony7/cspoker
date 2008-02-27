@@ -85,8 +85,9 @@ public enum Rank {
 
 	public static Rank getRank(String value) {
 		for (Rank rank : Rank.values()) {
-			if (rank.toString().equalsIgnoreCase(value))
+			if (rank.toString().equalsIgnoreCase(value)) {
 				return rank;
+			}
 		}
 		return null;
 	}

@@ -76,8 +76,8 @@ public class GameShowdownPlayer implements Comparable<GameShowdownPlayer> {
 	}
 
 	public ShowdownPlayer getSavedShowdownPlayer() {
-		return new ShowdownPlayer(player.getSavedPlayer(), new HashSet<Card>(getBestHand()
-				.getCards()), getBestHand().getDescription());
+		return new ShowdownPlayer(player.getSavedPlayer(), new HashSet<Card>(
+				getBestHand().getCards()), getBestHand().getDescription());
 	}
 
 	/**
@@ -103,17 +103,21 @@ public class GameShowdownPlayer implements Comparable<GameShowdownPlayer> {
 	 */
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		final GameShowdownPlayer other = (GameShowdownPlayer) obj;
-		if (bestHand == null)
+		if (bestHand == null) {
 			return other.bestHand == null;
-		else
+		} else {
 			return getBestHand().equals(other.getBestHand());
+		}
 	}
 
 }

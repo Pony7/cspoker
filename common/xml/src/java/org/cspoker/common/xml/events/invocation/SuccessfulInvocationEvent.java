@@ -17,11 +17,9 @@ package org.cspoker.common.xml.events.invocation;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.cspoker.common.xml.actions.PlayerCommunicationAction;
-
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -30,14 +28,14 @@ public class SuccessfulInvocationEvent<T> extends InvocationEvent {
 	private static final long serialVersionUID = 8350435427841245148L;
 
 	private PlayerCommunicationAction action;
-	
+
 	private T result;
 
 	public SuccessfulInvocationEvent(PlayerCommunicationAction a, T result) {
 		this.action = a;
 		this.result = result;
 	}
-	
+
 	protected SuccessfulInvocationEvent() {
 		// no op
 	}
@@ -45,8 +43,8 @@ public class SuccessfulInvocationEvent<T> extends InvocationEvent {
 	public PlayerCommunicationAction getAction() {
 		return action;
 	}
-	
-	public T getResult(){
+
+	public T getResult() {
 		return result;
 	}
 }

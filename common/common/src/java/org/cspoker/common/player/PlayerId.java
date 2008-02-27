@@ -22,7 +22,6 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlValue;
 
-
 /**
  * A class to represent player id's.
  * 
@@ -48,9 +47,9 @@ public class PlayerId implements Serializable {
 	public PlayerId(long id) {
 		this.id = id;
 	}
-	
+
 	protected PlayerId() {
-		//no op
+		// no op
 	}
 
 	/**
@@ -69,15 +68,19 @@ public class PlayerId implements Serializable {
 	 */
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		final PlayerId other = (PlayerId) obj;
-		if (id != other.id)
+		if (id != other.id) {
 			return false;
+		}
 		return true;
 	}
 

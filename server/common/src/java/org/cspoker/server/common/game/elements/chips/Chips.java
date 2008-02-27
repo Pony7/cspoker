@@ -102,8 +102,9 @@ public class Chips {
 	 *             !canHaveAsValue(value)
 	 */
 	private void setValue(int value) throws IllegalValueException {
-		if (!canHaveAsValue(value))
+		if (!canHaveAsValue(value)) {
 			throw new IllegalValueException();
+		}
 		this.value = value;
 	}
 
@@ -124,8 +125,9 @@ public class Chips {
 	 *             !canHaveAsValue(new.getValue())
 	 */
 	private void increaseWith(int amount) throws IllegalValueException {
-		if (amount < 0)
+		if (amount < 0) {
 			throw new IllegalArgumentException();
+		}
 		setValue(getValue() + amount);
 	}
 
@@ -142,8 +144,9 @@ public class Chips {
 	 *             !canHaveAsValue(new.getValue())
 	 */
 	private void decreaseWith(int amount) throws IllegalValueException {
-		if (amount < 0)
+		if (amount < 0) {
 			throw new IllegalArgumentException();
+		}
 		setValue(getValue() - amount);
 	}
 
@@ -173,10 +176,11 @@ public class Chips {
 	 */
 	public synchronized void transferAmountTo(int amount, Chips receiver)
 			throws IllegalValueException {
-		if ((amount < 0) || (receiver == null))
+		if ((amount < 0) || (receiver == null)) {
 			throw new IllegalArgumentException("Can not transfer " + amount
 					+ " from this pile with " + toString() + " to "
 					+ receiver.toString());
+		}
 		decreaseWith(amount);
 		receiver.increaseWith(amount);
 	}

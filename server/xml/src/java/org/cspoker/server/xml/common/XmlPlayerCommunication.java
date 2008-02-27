@@ -48,15 +48,17 @@ public class XmlPlayerCommunication implements XmlEventListener {
 		player = session.getPlayer();
 		cache = new StringBuilder();
 		xmllistener = listener;
-		//This will receive the XML before the listener does.
+		// This will receive the XML before the listener does.
 		toxmllistener = new ToXmlAllEventsListener(this);
 		playerComm.subscribeAllEventsListener(toxmllistener);
 	}
 
-	public void handle(InputSource xml) throws SAXException, JAXBException, IOException {
+	public void handle(InputSource xml) throws SAXException, JAXBException,
+			IOException {
 		Unmarshaller um = ActionJAXBContext.context.createUnmarshaller();
-		PlayerCommunicationAction<?> action = (PlayerCommunicationAction<?>) um.unmarshal(xml);
-		action.perform(playerComm,toxmllistener);
+		PlayerCommunicationAction<?> action = (PlayerCommunicationAction<?>) um
+				.unmarshal(xml);
+		action.perform(playerComm, toxmllistener);
 	}
 
 	public String getPlayerName() {
@@ -89,7 +91,7 @@ public class XmlPlayerCommunication implements XmlEventListener {
 	}
 
 	public void collect(String xmlEvent) {
-		logger.trace("Received XML event:\n"+xmlEvent);
+		logger.trace("Received XML event:\n" + xmlEvent);
 		cache(xmlEvent);
 		flushToListener();
 	}

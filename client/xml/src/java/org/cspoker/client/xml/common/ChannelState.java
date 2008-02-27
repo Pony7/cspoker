@@ -16,5 +16,5 @@
 package org.cspoker.client.xml.common;
 
 public enum ChannelState {
-	INITIALIZED,OPEN,CLOSED
+	INITIALIZED, OPEN, CLOSED
 }

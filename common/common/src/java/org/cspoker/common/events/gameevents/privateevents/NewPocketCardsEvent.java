@@ -39,7 +39,7 @@ public class NewPocketCardsEvent extends GameEvent {
 	private Player player;
 
 	@XmlElementWrapper
-	@XmlElement(name="card")
+	@XmlElement(name = "card")
 	private Set<Card> pocketCards;
 
 	public NewPocketCardsEvent(Player player, Set<Card> pocketCards) {
@@ -58,7 +58,7 @@ public class NewPocketCardsEvent extends GameEvent {
 	@Override
 	public String toString() {
 		String toReturn = getPlayer().getName()
-		+ " has received new pocket cards: ";
+				+ " has received new pocket cards: ";
 		for (Card card : getPocketCards()) {
 			toReturn += card;
 			toReturn += ", ";
@@ -69,9 +69,11 @@ public class NewPocketCardsEvent extends GameEvent {
 	public Player getPlayer() {
 		return player;
 	}
-	
-	public void dispatch(RemoteAllEventsListener listener)  throws RemoteException{
+
+	@Override
+	public void dispatch(RemoteAllEventsListener listener)
+			throws RemoteException {
 		listener.onNewPocketCardsEvent(this);
 	}
-	
+
 }

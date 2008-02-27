@@ -20,12 +20,12 @@ import org.cspoker.common.RemotePlayerCommunication;
 
 public class CreateTableCommand extends AbstractCommand {
 
-    public CreateTableCommand(RemotePlayerCommunication rpc, Console console) {
-	super(rpc, console);
-    }
+	public CreateTableCommand(RemotePlayerCommunication rpc, Console console) {
+		super(rpc, console);
+	}
 
-    public void execute(String... args) throws Exception {
-	rpc.createTable();
-    }
+	public void execute(String... args) throws Exception {
+		rpc.createTable();
+	}
 
 }

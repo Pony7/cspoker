@@ -86,10 +86,12 @@ public class EventsCollector implements AllEventsListener {
 	}
 
 	public synchronized Events getLatestEventsAndAck(int ack) {
-		if (ack <= ackedToNumber)
+		if (ack <= ackedToNumber) {
 			return getLatestEvents();
-		if ((ack > latestEventNumber))
+		}
+		if ((ack > latestEventNumber)) {
 			ack = latestEventNumber;
+		}
 		events.subList(0, ack - ackedToNumber).clear();
 		ackedToNumber = ack;
 		return getLatestEvents();

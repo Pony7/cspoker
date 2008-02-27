@@ -20,16 +20,16 @@ import org.cspoker.client.savedstate.Pot;
 
 public class PotCommand implements Command {
 
-    private Pot pot;
-    private Console console;
+	private Pot pot;
+	private Console console;
 
-    public PotCommand(Console console, Pot pot) {
-	this.pot = pot;
-	this.console = console;
-    }
+	public PotCommand(Console console, Pot pot) {
+		this.pot = pot;
+		this.console = console;
+	}
 
-    public void execute(String... args) throws Exception {
-	console.print("The total pot is "+pot.getPot()+" chips.");
-    }
+	public void execute(String... args) throws Exception {
+		console.print("The total pot is " + pot.getPot() + " chips.");
+	}
 
 }

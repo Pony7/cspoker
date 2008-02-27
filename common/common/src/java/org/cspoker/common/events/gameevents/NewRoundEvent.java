@@ -45,7 +45,7 @@ public class NewRoundEvent extends GameEvent {
 		this.roundName = roundName;
 		this.player = player;
 	}
-	
+
 	protected NewRoundEvent() {
 		// no op
 	}
@@ -65,9 +65,11 @@ public class NewRoundEvent extends GameEvent {
 
 	public Player getInitialPlayer() {
 		return player;
-	}	
+	}
 
-	public void dispatch(RemoteAllEventsListener listener) throws RemoteException{
+	@Override
+	public void dispatch(RemoteAllEventsListener listener)
+			throws RemoteException {
 		listener.onNewRoundEvent(this);
 	}
 

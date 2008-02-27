@@ -25,11 +25,11 @@ import com.sun.net.httpserver.HttpHandler;
 public class CrossDomain implements HttpHandler {
 
 	private final static Logger logger = Logger.getLogger(CrossDomain.class);
-	
+
 	public void handle(HttpExchange http) throws IOException {
-		
+
 		logger.trace("Received root request");
-		
+
 		if (http.getRequestURI().getPath() != null
 				&& http.getRequestURI().getPath().endsWith("crossdomain.xml")) {
 			logger.trace("Received request for crossdomain.xml");

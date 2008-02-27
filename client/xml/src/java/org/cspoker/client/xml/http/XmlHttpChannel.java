@@ -52,31 +52,37 @@ public class XmlHttpChannel implements XmlChannel {
 
 	private ScheduledExecutorService scheduler;
 
-	private final Set<XmlEventListener> xmlEventListeners = Collections.synchronizedSet(new HashSet<XmlEventListener>());
+	private final Set<XmlEventListener> xmlEventListeners = Collections
+			.synchronizedSet(new HashSet<XmlEventListener>());
 
 	private URL url;
 
 	private final CharBuffer buffer;
 
 	private final StringBuilder sb;
-	
+
 	private ChannelState state = ChannelState.INITIALIZED;
 
 	private String authorizationString;
 
 	public XmlHttpChannel(URL url, final String username, final String password) {
-		this.authorizationString = "Basic " + Base64.encode((username+":"+password).getBytes(),0);
+		authorizationString = "Basic "
+				+ Base64.encode((username + ":" + password).getBytes(), 0);
 		this.url = url;
-		this.buffer = CharBuffer.allocate(2048);
-		this.sb = new StringBuilder();
+		buffer = CharBuffer.allocate(2048);
+		sb = new StringBuilder();
 	}
 
-	public synchronized void open() throws LoginException, RemoteException, ChannelStateException {
-		if(state != ChannelState.INITIALIZED)
-			throw new ChannelStateException("Channel is not in the initialized state", state);
+	public synchronized void open() throws LoginException, RemoteException,
+			ChannelStateException {
+		if (state != ChannelState.INITIALIZED) {
+			throw new ChannelStateException(
+					"Channel is not in the initialized state", state);
+		}
 		try {
-			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-			connection.setRequestProperty ("Authorization", authorizationString);
+			HttpURLConnection connection = (HttpURLConnection) url
+					.openConnection();
+			connection.setRequestProperty("Authorization", authorizationString);
 			connection.setConnectTimeout(20000);
 			connection.setAllowUserInteraction(true);
 			connection.setInstanceFollowRedirects(false);
@@ -87,27 +93,33 @@ public class XmlHttpChannel implements XmlChannel {
 			w.write(noOpXml);
 			w.close();
 			connection.getOutputStream().close();
-			if(connection.getResponseCode()==401){
-				LoginException e = new LoginException("Login Failed, received 401.");
+			if (connection.getResponseCode() == 401) {
+				LoginException e = new LoginException(
+						"Login Failed, received 401.");
 				logger.error(e);
 				throw e;
-			}else if (connection.getResponseCode() / 100 == 4
+			} else if (connection.getResponseCode() / 100 == 4
 					|| connection.getResponseCode() / 100 == 5) {
 				String line;
-				BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+				BufferedReader in = new BufferedReader(new InputStreamReader(
+						connection.getInputStream()));
 				StringBuffer buffer = new StringBuffer();
 				while ((line = in.readLine()) != null) {
 					buffer.append(line);
-				}				
-				RemoteException e = new RemoteException("Unknown error from the server:"+connection.getResponseCode()+"\n"+buffer.toString());
+				}
+				RemoteException e = new RemoteException(
+						"Unknown error from the server:"
+								+ connection.getResponseCode() + "\n"
+								+ buffer.toString());
 				logger.error(e);
 				throw e;
 			}
 		} catch (IOException e) {
-			throw new RemoteException("IOException in XML channel",e);
-		} 
+			throw new RemoteException("IOException in XML channel", e);
+		}
 		scheduler = Executors.newScheduledThreadPool(1);
-		scheduler.scheduleWithFixedDelay(new NoOpSubmitter(this), 1500, 1500, TimeUnit.MILLISECONDS );
+		scheduler.scheduleWithFixedDelay(new NoOpSubmitter(this), 1500, 1500,
+				TimeUnit.MILLISECONDS);
 		state = ChannelState.OPEN;
 	}
 
@@ -123,12 +135,15 @@ public class XmlHttpChannel implements XmlChannel {
 		scheduler.shutdownNow();
 	}
 
-	public synchronized void send(String xml) throws RemoteException, ChannelStateException {
-		if(state != ChannelState.OPEN)
+	public synchronized void send(String xml) throws RemoteException,
+			ChannelStateException {
+		if (state != ChannelState.OPEN) {
 			throw new ChannelStateException("Channel is not open", state);
+		}
 		try {
-			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-			connection.setRequestProperty ("Authorization", authorizationString);
+			HttpURLConnection connection = (HttpURLConnection) url
+					.openConnection();
+			connection.setRequestProperty("Authorization", authorizationString);
 			connection.setConnectTimeout(20000);
 			connection.setAllowUserInteraction(true);
 			connection.setInstanceFollowRedirects(false);
@@ -143,47 +158,54 @@ public class XmlHttpChannel implements XmlChannel {
 			if (connection.getResponseCode() / 100 == 4
 					|| connection.getResponseCode() / 100 == 5) {
 				String line;
-				BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+				BufferedReader in = new BufferedReader(new InputStreamReader(
+						connection.getInputStream()));
 				StringBuffer buffer = new StringBuffer();
 				while ((line = in.readLine()) != null) {
 					buffer.append(line);
 				}
-				RemoteException e = new RemoteException("Unknown error from the server:"+connection.getResponseCode()+"\n"+buffer.toString());
+				RemoteException e = new RemoteException(
+						"Unknown error from the server:"
+								+ connection.getResponseCode() + "\n"
+								+ buffer.toString());
 				logger.error(e);
 				throw e;
 			}
 
-			InputStreamReader r = new InputStreamReader(connection.getInputStream());
+			InputStreamReader r = new InputStreamReader(connection
+					.getInputStream());
 			int read = r.read(buffer);
-			boolean intag = false, first = false, wasslash=false;
+			boolean intag = false, first = false, wasslash = false;
 			int open = 0;
-			while(read!=-1){
+			while (read != -1) {
 				buffer.flip();
-				while(buffer.hasRemaining()){
+				while (buffer.hasRemaining()) {
 					char c = buffer.get();
 					sb.append(c);
-					if(c=='>'){
+					if (c == '>') {
 						intag = false;
-						if(wasslash)
+						if (wasslash) {
 							open--;
-						if(open==0){
+						}
+						if (open == 0) {
 							dispatch(sb.toString());
 							sb.setLength(0);
 						}
 					}
-					if(wasslash)
-						wasslash=false;
-					if(first){
-						first=false;
-						if(c=='/')
+					if (wasslash) {
+						wasslash = false;
+					}
+					if (first) {
+						first = false;
+						if (c == '/') {
 							--open;
-						else{
+						} else {
 							++open;
 						}
-					}else if(intag && c=='/'){
-						wasslash=true;
+					} else if (intag && c == '/') {
+						wasslash = true;
 					}
-					if(c=='<'){
+					if (c == '<') {
 						intag = true;
 						first = true;
 					}
@@ -193,14 +215,15 @@ public class XmlHttpChannel implements XmlChannel {
 			}
 
 		} catch (IOException e) {
-			throw new RemoteException("IOException in XML channel",e);
-		} 
+			throw new RemoteException("IOException in XML channel", e);
+		}
 
 	}
 
 	private void dispatch(String xml) {
-		for(XmlEventListener l:xmlEventListeners)
+		for (XmlEventListener l : xmlEventListeners) {
 			l.collect(xml);
+		}
 	}
 
 	public void registerXmlEventListener(XmlEventListener listener) {
@@ -218,7 +241,7 @@ public class XmlHttpChannel implements XmlChannel {
 			StringWriter s = new StringWriter();
 			Marshaller m = ActionJAXBContext.context.createMarshaller();
 			m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-			m.marshal(new NoOpAction(),s);
+			m.marshal(new NoOpAction(), s);
 			return s.toString();
 		} catch (PropertyException e) {
 			logger.fatal(e);

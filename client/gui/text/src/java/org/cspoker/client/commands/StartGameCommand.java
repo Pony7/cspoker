@@ -20,12 +20,12 @@ import org.cspoker.common.RemotePlayerCommunication;
 
 public class StartGameCommand extends AbstractCommand {
 
-    public StartGameCommand(RemotePlayerCommunication rpc, Console console) {
-	super(rpc, console);
-    }
+	public StartGameCommand(RemotePlayerCommunication rpc, Console console) {
+		super(rpc, console);
+	}
 
-    public void execute(String... args) throws Exception {
-	rpc.startGame();
-    }
+	public void execute(String... args) throws Exception {
+		rpc.startGame();
+	}
 
 }

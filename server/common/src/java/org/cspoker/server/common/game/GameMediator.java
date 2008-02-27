@@ -1009,8 +1009,9 @@ public class GameMediator implements PlayerAction {
 
 		do {
 			currentListeners = newPocketCardsListeners.get(id);
-			if (currentListeners == null)
+			if (currentListeners == null) {
 				return;
+			}
 			newListeners = new ArrayList<NewPocketCardsListener>(
 					currentListeners);
 			newListeners.remove(listener);
@@ -1145,8 +1146,9 @@ public class GameMediator implements PlayerAction {
 
 		do {
 			currentListeners = personalEventsListeners.get(id);
-			if (currentListeners == null)
+			if (currentListeners == null) {
 				return;
+			}
 			newListeners = new ArrayList<EventListener>(currentListeners);
 			newListeners.remove(listener);
 			if (newListeners.size() == 0) {

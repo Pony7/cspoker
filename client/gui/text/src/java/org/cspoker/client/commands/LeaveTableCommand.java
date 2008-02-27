@@ -18,14 +18,14 @@ package org.cspoker.client.commands;
 import org.cspoker.client.Console;
 import org.cspoker.common.RemotePlayerCommunication;
 
-public class LeaveTableCommand extends AbstractCommand{
+public class LeaveTableCommand extends AbstractCommand {
 
-    public LeaveTableCommand(RemotePlayerCommunication rpc, Console console) {
-	super(rpc, console);
-    }
+	public LeaveTableCommand(RemotePlayerCommunication rpc, Console console) {
+		super(rpc, console);
+	}
 
-    public void execute(String... args) throws Exception {
-	rpc.leaveTable();
-    }
+	public void execute(String... args) throws Exception {
+		rpc.leaveTable();
+	}
 
 }

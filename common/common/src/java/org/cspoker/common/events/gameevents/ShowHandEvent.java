@@ -41,7 +41,7 @@ public class ShowHandEvent extends GameEvent {
 	public ShowHandEvent(ShowdownPlayer player) {
 		this.player = player;
 	}
-	
+
 	protected ShowHandEvent() {
 		// no op
 	}
@@ -54,8 +54,10 @@ public class ShowHandEvent extends GameEvent {
 	public ShowdownPlayer getShowdownPlayer() {
 		return player;
 	}
-	
-	public void dispatch(RemoteAllEventsListener listener) throws RemoteException{
+
+	@Override
+	public void dispatch(RemoteAllEventsListener listener)
+			throws RemoteException {
 		listener.onShowHandEvent(this);
 	}
 

@@ -81,7 +81,8 @@ public class ClientContext implements XmlEventListener {
 			Iterator<ByteBuffer> i = writeBuffer.iterator();
 			while (i.hasNext()) {
 				ByteBuffer bytes = i.next();
-				//logger.trace("trying to write " + bytes.remaining()+ " bytes.");
+				// logger.trace("trying to write " + bytes.remaining()+ "
+				// bytes.");
 				client.write(bytes);
 				if (bytes.remaining() > 0) {
 					logger.trace("stopping write early because there are "
@@ -89,7 +90,7 @@ public class ClientContext implements XmlEventListener {
 					/* //registerWriteInterest(); //bug workaround? */
 					return;
 				}
-				//logger.trace("removing bytebuffer from the buffer list.");
+				// logger.trace("removing bytebuffer from the buffer list.");
 				i.remove();
 			}
 			unregisterWriteInterest();
@@ -119,9 +120,10 @@ public class ClientContext implements XmlEventListener {
 	}
 
 	public void closeConnection() {
-		if (playerComm != null)
+		if (playerComm != null) {
 			// TODO will this sequence of calls end?
 			XmlPlayerCommunicationFactory.global_factory.unRegister(session);
+		}
 		SessionManager.global_session_manager
 				.killSession(session.getUserName());
 		try {
@@ -135,7 +137,7 @@ public class ClientContext implements XmlEventListener {
 		try {
 			appendToWriteBuffer(encoder.encode(CharBuffer.wrap(xml
 					+ ((char) 0x00))));
-			logger.trace("wrote reply to write buffer list:\n"+xml);
+			logger.trace("wrote reply to write buffer list:\n" + xml);
 		} catch (CharacterCodingException e) {
 			logger.error(e.getMessage());
 			throw new IllegalStateException(e);
@@ -153,8 +155,9 @@ public class ClientContext implements XmlEventListener {
 	public void login(String username, String password, String useragent)
 			throws IllegalNameException {
 		synchronized (authenticateLock) {
-			if (isAuthenticated())
+			if (isAuthenticated()) {
 				throw new IllegalStateException("Can't login twice");
+			}
 			session = SessionManager.global_session_manager
 					.getSession(username);
 			try {

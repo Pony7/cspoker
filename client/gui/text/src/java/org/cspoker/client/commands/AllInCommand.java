@@ -20,12 +20,12 @@ import org.cspoker.common.RemotePlayerCommunication;
 
 public class AllInCommand extends AbstractCommand {
 
-    public AllInCommand(RemotePlayerCommunication rpc, Console console) {
-	super(rpc, console);
-    }
+	public AllInCommand(RemotePlayerCommunication rpc, Console console) {
+		super(rpc, console);
+	}
 
-    public void execute(String... args) throws Exception {
-	rpc.allIn();
-    }
+	public void execute(String... args) throws Exception {
+		rpc.allIn();
+	}
 
 }

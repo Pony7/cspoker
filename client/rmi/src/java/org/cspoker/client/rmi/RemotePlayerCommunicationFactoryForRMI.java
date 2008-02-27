@@ -29,24 +29,26 @@ import org.cspoker.common.RemotePlayerCommunication;
 public class RemotePlayerCommunicationFactoryForRMI implements
 		RemotePlayerCommunicationFactory {
 
-	private final static Logger logger = Logger.getLogger(RemotePlayerCommunicationFactoryForRMI.class);
+	private final static Logger logger = Logger
+			.getLogger(RemotePlayerCommunicationFactoryForRMI.class);
 
 	@Override
 	public RemotePlayerCommunication getRemotePlayerCommunication(
 			String server, int port, String username, String password)
 			throws ConnectException, LoginException {
-			try {
-				return new RemoteLoginServerForRMI(server+":"+port).login(username, password);
-			} catch (AccessException e) {
-				logger.error(e);
-				throw new ConnectException("Connect failed",e);
-			} catch (RemoteException e) {
-				logger.error(e);
-				throw new ConnectException("Connect failed",e);
-			} catch (NotBoundException e) {
-				logger.error(e);
-				throw new ConnectException("Connect failed",e);
-			}
+		try {
+			return new RemoteLoginServerForRMI(server + ":" + port).login(
+					username, password);
+		} catch (AccessException e) {
+			logger.error(e);
+			throw new ConnectException("Connect failed", e);
+		} catch (RemoteException e) {
+			logger.error(e);
+			throw new ConnectException("Connect failed", e);
+		} catch (NotBoundException e) {
+			logger.error(e);
+			throw new ConnectException("Connect failed", e);
+		}
 
 	}
 

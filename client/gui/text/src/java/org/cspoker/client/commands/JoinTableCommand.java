@@ -21,12 +21,12 @@ import org.cspoker.common.elements.table.TableId;
 
 public class JoinTableCommand extends AbstractCommand {
 
-    public JoinTableCommand(RemotePlayerCommunication rpc, Console console) {
-	super(rpc, console);
-    }
+	public JoinTableCommand(RemotePlayerCommunication rpc, Console console) {
+		super(rpc, console);
+	}
 
-    public void execute(String... args) throws Exception {
-	rpc.joinTable(new TableId(Integer.parseInt(args[0])));
-    }
+	public void execute(String... args) throws Exception {
+		rpc.joinTable(new TableId(Integer.parseInt(args[0])));
+	}
 
 }

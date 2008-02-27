@@ -325,8 +325,9 @@ public class Game {
 	 * @return The current player of this game.
 	 */
 	public GamePlayer getCurrentPlayer() {
-		if (currentHandPlayers.size() == 0)
+		if (currentHandPlayers.size() == 0) {
 			return null;
+		}
 		return currentHandPlayers.getCurrent();
 	}
 
@@ -493,12 +494,14 @@ public class Game {
 
 	public void leaveGame(GamePlayer player) throws IllegalActionException {
 		Game.logger.info("Kick out: " + player.getName());
-		if (!table.hasAsPlayer(player))
+		if (!table.hasAsPlayer(player)) {
 			throw new IllegalActionException(player.getName()
 					+ " is not seated at this table.");
-		if (hasAsActivePlayer(player))
+		}
+		if (hasAsActivePlayer(player)) {
 			throw new IllegalActionException(
 					"An active player can not be removed. He should fold first.");
+		}
 		if ((getNextDealer() == null) || getNextDealer().equals(player)) {
 			setNextDealer(initialCurrentHandPlayers.getNextTo(player));
 		}
@@ -519,12 +522,14 @@ public class Game {
 	 *      |dealer!=null && hasAsActivePlayer(dealer)
 	 */
 	public void changeDealer(GamePlayer dealer) {
-		if (dealer == null)
+		if (dealer == null) {
 			throw new IllegalArgumentException(
 					"The given dealer should be effective");
-		if (!hasAsActivePlayer(dealer))
+		}
+		if (!hasAsActivePlayer(dealer)) {
 			throw new IllegalArgumentException(
 					"The dealer should be an active player of the current deal");
+		}
 		setDealer(dealer);
 		setNextDealer(initialCurrentHandPlayers.getNextTo(dealer));
 		setFirstToActPlayer(initialCurrentHandPlayers.getNextTo(dealer));
