@@ -42,7 +42,7 @@ public class PlayerJoinedGameEvent extends GameEvent {
 	public PlayerJoinedGameEvent(Player player) {
 		this.player = player;
 	}
-	
+
 	protected PlayerJoinedGameEvent() {
 		// no op
 	}
@@ -54,9 +54,11 @@ public class PlayerJoinedGameEvent extends GameEvent {
 
 	public Player getPlayer() {
 		return player;
-	}	
-	
-	public void dispatch(RemoteAllEventsListener listener) throws RemoteException{
+	}
+
+	@Override
+	public void dispatch(RemoteAllEventsListener listener)
+			throws RemoteException {
 		listener.onPlayerJoinedGameEvent(this);
 	}
 

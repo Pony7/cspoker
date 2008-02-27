@@ -27,24 +27,25 @@ import org.cspoker.common.xml.events.EventJAXBContext;
 
 public class EventAndActionJAXBContext {
 
-	private final static Logger logger = Logger.getLogger(EventAndActionJAXBContext.class);
+	private final static Logger logger = Logger
+			.getLogger(EventAndActionJAXBContext.class);
 
 	public final static JAXBContext context = initContext();
 
-    private static JAXBContext initContext() {
-        try {
+	private static JAXBContext initContext() {
+		try {
 			return JAXBContext.newInstance(getActions());
 		} catch (JAXBException e) {
 			logger.fatal(e);
 			throw new IllegalStateException(e);
 		}
-    }
-    
-    public static Class[] getActions(){
-    	ArrayList<Class> l = new ArrayList<Class>();
-    	l.addAll(Arrays.asList(ActionJAXBContext.getActions()));
-    	l.addAll(Arrays.asList(EventJAXBContext.getActions()));
-    	return l.toArray(new Class[l.size()]);
-    }
-	
+	}
+
+	public static Class[] getActions() {
+		ArrayList<Class> l = new ArrayList<Class>();
+		l.addAll(Arrays.asList(ActionJAXBContext.getActions()));
+		l.addAll(Arrays.asList(EventJAXBContext.getActions()));
+		return l.toArray(new Class[l.size()]);
+	}
+
 }

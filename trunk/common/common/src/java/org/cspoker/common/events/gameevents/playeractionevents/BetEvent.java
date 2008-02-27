@@ -47,7 +47,7 @@ public class BetEvent extends ActionChangedPotEvent {
 		this.player = player;
 		this.amount = amount;
 	}
-	
+
 	protected BetEvent() {
 		// no op
 	}
@@ -64,8 +64,10 @@ public class BetEvent extends ActionChangedPotEvent {
 	public Player getPlayer() {
 		return player;
 	}
-	
-	public void dispatch(RemoteAllEventsListener listener) throws RemoteException{
+
+	@Override
+	public void dispatch(RemoteAllEventsListener listener)
+			throws RemoteException {
 		listener.onBetEvent(this);
 	}
 }

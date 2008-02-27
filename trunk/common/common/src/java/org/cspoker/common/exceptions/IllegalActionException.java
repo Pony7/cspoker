@@ -31,7 +31,7 @@ public class IllegalActionException extends Exception {
 	private static final long serialVersionUID = -5675804638273023229L;
 
 	private Player player;
-	
+
 	public IllegalActionException(String message) {
 		super(message);
 	}

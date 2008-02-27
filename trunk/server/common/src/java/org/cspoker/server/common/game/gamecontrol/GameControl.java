@@ -301,10 +301,12 @@ public class GameControl implements PlayerAction {
 		round = round.getNextRound();
 		if ((round instanceof BettingRound)
 				&& ((BettingRound) round)
-						.onlyOnePlayerLeftBesidesAllInPlayers())
+						.onlyOnePlayerLeftBesidesAllInPlayers()) {
 			changeToNextRound();
+		}
 		if ((round instanceof BettingRound)
-				&& ((BettingRound) round).onlyAllInPlayers())
+				&& ((BettingRound) round).onlyAllInPlayers()) {
 			changeToNextRound();
+		}
 	}
 }

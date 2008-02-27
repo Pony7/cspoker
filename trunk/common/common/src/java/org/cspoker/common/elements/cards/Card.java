@@ -13,7 +13,7 @@ public final class Card implements Comparable<Card>, Serializable {
 
 	@XmlAttribute
 	private Rank rank;
-	
+
 	@XmlAttribute
 	private Suit suit;
 
@@ -21,7 +21,7 @@ public final class Card implements Comparable<Card>, Serializable {
 		this.rank = rank;
 		this.suit = suit;
 	}
-	
+
 	protected Card() {
 		// no op
 	}

@@ -74,35 +74,41 @@ public abstract class BettingRound extends Round {
 
 	@Override
 	public void check(GamePlayer player) throws IllegalActionException {
-		if (!onTurn(player))
+		if (!onTurn(player)) {
 			throw new IllegalActionException(player.getName()
 					+ " can not check in this round. It should be your turn.");
-		if (someoneHasBet())
+		}
+		if (someoneHasBet()) {
 			throw new IllegalActionException(player.getName()
 					+ " can not check in this round. Someone has already bet.");
+		}
 		game.nextPlayer();
 	}
 
 	@Override
 	public void bet(GamePlayer player, int amount)
 			throws IllegalActionException {
-		if (!onTurn(player) || someoneHasBet() || onlyOnePlayerLeft())
+		if (!onTurn(player) || someoneHasBet() || onlyOnePlayerLeft()) {
 			throw new IllegalActionException(player.getName() + " can not bet "
 					+ amount + " chips in this round.");
+		}
 
 		// Check whether the bet is valid, according to the betting rules.
-		if (!getBettingRules().isValidBet(amount, this))
+		if (!getBettingRules().isValidBet(amount, this)) {
 			throw new IllegalActionException(player.getSavedPlayer(),
 					getBettingRules().getLastBetErrorMessage());
+		}
 
 		// Can not bet with zero, it is equal to check. Please use check.
-		if (amount == 0)
+		if (amount == 0) {
 			throw new IllegalActionException(player.getSavedPlayer(),
 					"Can not bet with 0 chips. Did you mean check?");
-		if (amount >= player.getStack().getValue())
+		}
+		if (amount >= player.getStack().getValue()) {
 			throw new IllegalActionException(player.getSavedPlayer(),
 					"Can not bet an amount higher than your current amount of chips;"
 							+ " did you mean all-in??");
+		}
 
 		try {
 			player.transferAmountToBetPile(amountToIncreaseBetPileWith(player)
@@ -120,20 +126,23 @@ public abstract class BettingRound extends Round {
 
 	@Override
 	public void call(GamePlayer player) throws IllegalActionException {
-		if (!onTurn(player) || !someoneHasBet())
+		if (!onTurn(player) || !someoneHasBet()) {
 			throw new IllegalActionException(player.getName()
 					+ " can not call in this round.");
+		}
 
-		if (getBet() == player.getBetChips().getValue())
+		if (getBet() == player.getBetChips().getValue()) {
 			throw new IllegalActionException(player.getName()
 					+ " can not call in this round.");
+		}
 
 		// Check whether the amount with which the bet chips pile
 		// is increased exceeds the player's stack.
-		if (amountToIncreaseBetPileWith(player) >= player.getStack().getValue())
+		if (amountToIncreaseBetPileWith(player) >= player.getStack().getValue()) {
 			throw new IllegalActionException(player.getSavedPlayer(),
 					"Can not call a bet higher than your current amount of chips;"
 							+ " did you mean all-in??");
+		}
 
 		// Try to transfer the amount to the bet pile.
 		try {
@@ -147,8 +156,9 @@ public abstract class BettingRound extends Round {
 		 * If the last event player is an all-in player, change the last event
 		 * player to the calling player.
 		 */
-		if (!game.hasAsActivePlayer(lastEventPlayer))
+		if (!game.hasAsActivePlayer(lastEventPlayer)) {
 			playerMadeEvent(player);
+		}
 
 		// Change to next player
 		game.nextPlayer();
@@ -157,28 +167,32 @@ public abstract class BettingRound extends Round {
 	@Override
 	public void raise(GamePlayer player, int amount)
 			throws IllegalActionException {
-		if (!onTurn(player) || !someoneHasBet() || onlyOnePlayerLeft())
+		if (!onTurn(player) || !someoneHasBet() || onlyOnePlayerLeft()) {
 			throw new IllegalActionException(player.getName()
 					+ " can not raise with " + amount + " chips in this round.");
+		}
 
 		// Check whether the raise is valid.
-		if (!getBettingRules().isValidRaise(amount, this))
+		if (!getBettingRules().isValidRaise(amount, this)) {
 			throw new IllegalActionException(player.getSavedPlayer(),
 					getBettingRules().getLastRaiseErrorMessage());
+		}
 
 		// Can not raise with zero, it is equal to call. Please use call.
-		if (amount == 0)
+		if (amount == 0) {
 			throw new IllegalActionException(player.getSavedPlayer(),
 					"Can not raise with 0 chips. Did you mean call?");
+		}
 
 		// If the total number of chips needed for this raise,
 		// exceeds or equals the stack of the player, the player should
 		// go all-in explicitly.
 		if ((amount + amountToIncreaseBetPileWith(player)) >= player.getStack()
-				.getValue())
+				.getValue()) {
 			throw new IllegalActionException(player.getSavedPlayer(),
 					"Can not raise with an amount higher than your current amount of chips;"
 							+ " did you mean all-in??");
+		}
 
 		// Try to transfer the amount to the bet pile.
 		try {
@@ -197,9 +211,10 @@ public abstract class BettingRound extends Round {
 
 	@Override
 	public void fold(GamePlayer player) throws IllegalActionException {
-		if (!onTurn(player))
+		if (!onTurn(player)) {
 			throw new IllegalActionException(player.getName()
 					+ " can not fold. It should be his turn to do an action.");
+		}
 
 		player.clearPocketCards();
 
@@ -223,9 +238,10 @@ public abstract class BettingRound extends Round {
 
 	@Override
 	public void allIn(GamePlayer player) throws IllegalActionException {
-		if (!onTurn(player))
+		if (!onTurn(player)) {
 			throw new IllegalActionException(player.getName()
 					+ " can not go all-in. It isn't his turn to do an action.");
+		}
 		goAllIn(player);
 	}
 
@@ -333,8 +349,9 @@ public abstract class BettingRound extends Round {
 	protected void collectSmallBlind(GamePlayer player)
 			throws IllegalValueException {
 		if (player.getStack().getValue() <= getGame().getGameProperty()
-				.getSmallBlind())
+				.getSmallBlind()) {
 			throw new IllegalValueException();
+		}
 		player.transferAmountToBetPile(getGame().getGameProperty()
 				.getSmallBlind());
 		setBet(getGame().getGameProperty().getSmallBlind());
@@ -354,8 +371,9 @@ public abstract class BettingRound extends Round {
 	protected void collectBigBlind(GamePlayer player)
 			throws IllegalValueException {
 		if (player.getStack().getValue() <= getGame().getGameProperty()
-				.getBigBlind())
+				.getBigBlind()) {
 			throw new IllegalValueException();
+		}
 		player.transferAmountToBetPile(getGame().getGameProperty()
 				.getBigBlind());
 		getBettingRules().setBetPlaced(true);

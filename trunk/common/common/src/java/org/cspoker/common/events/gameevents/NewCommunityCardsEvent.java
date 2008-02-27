@@ -41,13 +41,13 @@ public class NewCommunityCardsEvent extends GameEvent {
 	private static final long serialVersionUID = -5063239366087788741L;
 
 	@XmlElementWrapper
-	@XmlElement(name="card")
+	@XmlElement(name = "card")
 	private Set<Card> communityCards;
 
 	public NewCommunityCardsEvent(Set<Card> commonCards) {
 		communityCards = Collections.unmodifiableSet(commonCards);
 	}
-	
+
 	protected NewCommunityCardsEvent() {
 		// no op
 	}
@@ -65,9 +65,11 @@ public class NewCommunityCardsEvent extends GameEvent {
 		}
 		return toReturn.substring(0, toReturn.length() - 2) + ".";
 	}
-	
-	public void dispatch(RemoteAllEventsListener listener) throws RemoteException{
+
+	@Override
+	public void dispatch(RemoteAllEventsListener listener)
+			throws RemoteException {
 		listener.onNewCommunityCardsEvent(this);
 	}
-	
+
 }

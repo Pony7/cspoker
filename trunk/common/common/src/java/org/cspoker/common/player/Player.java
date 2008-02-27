@@ -64,7 +64,7 @@ public class Player implements Serializable {
 	}
 
 	protected Player() {
-		//no op
+		// no op
 	}
 
 	/**

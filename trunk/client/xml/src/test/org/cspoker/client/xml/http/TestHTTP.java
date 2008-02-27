@@ -53,19 +53,21 @@ public class TestHTTP {
 
 	static {
 		Log4JPropertiesLoader
-		.load("org/cspoker/client/xml/http/logging/log4j.properties");
+				.load("org/cspoker/client/xml/http/logging/log4j.properties");
 	}
 
 	public static void main(String[] args) throws AccessException,
-	RemoteException, NotBoundException, IllegalActionException, LoginException {
-		RemotePlayerCommunicationFactoryForHttp temp =  new RemotePlayerCommunicationFactoryForHttp();
+			RemoteException, NotBoundException, IllegalActionException,
+			LoginException {
+		RemotePlayerCommunicationFactoryForHttp temp = new RemotePlayerCommunicationFactoryForHttp();
 		XmlChannelRemotePlayerCommunication kenzo = null;
 		XmlChannelRemotePlayerCommunication guy = null;
 		XmlChannelRemotePlayerCommunication cedric = null;
 		try {
 			int port = 8080;
 			String server = "localhost";
-			guy = temp.getRemotePlayerCommunication(server, port, "guy", "test");
+			guy = temp
+					.getRemotePlayerCommunication(server, port, "guy", "test");
 			System.out.println("Guy Logged In and will print events to sout");
 
 			guy.subscribeAllEventsListener(new RemoteAllEventsListener() {
@@ -115,7 +117,8 @@ public class TestHTTP {
 
 				}
 
-				public void onNewCommunityCardsEvent(NewCommunityCardsEvent event) {
+				public void onNewCommunityCardsEvent(
+						NewCommunityCardsEvent event) {
 					System.out.println(event.toString());
 
 				}
@@ -182,8 +185,10 @@ public class TestHTTP {
 
 			});
 
-			kenzo = temp.getRemotePlayerCommunication(server, port, "kenzo", "test");
-			cedric = temp.getRemotePlayerCommunication(server, port, "cedric", "test");
+			kenzo = temp.getRemotePlayerCommunication(server, port, "kenzo",
+					"test");
+			cedric = temp.getRemotePlayerCommunication(server, port, "cedric",
+					"test");
 
 			TableId id = guy.createTable();
 
@@ -221,13 +226,16 @@ public class TestHTTP {
 					}
 				}
 			}
-		} finally{
-			if(guy!=null)
+		} finally {
+			if (guy != null) {
 				guy.getChannel().close();
-			if(kenzo!=null)
+			}
+			if (kenzo != null) {
 				kenzo.getChannel().close();
-			if(cedric!=null)
+			}
+			if (cedric != null) {
 				cedric.getChannel().close();
+			}
 		}
 	}
 

@@ -52,7 +52,8 @@ public abstract class DelegatingHandler extends DefaultHandler {
 	@Override
 	public void characters(char[] ch, int start, int length)
 			throws SAXException {
-		if (handler != null)
+		if (handler != null) {
 			characters(ch, start, length);
+		}
 	}
 }

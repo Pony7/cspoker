@@ -23,9 +23,11 @@ import org.cspoker.common.xml.XmlEventListener;
 
 public interface XmlChannel {
 
-	public void open() throws RemoteException, LoginException, ChannelStateException;
+	public void open() throws RemoteException, LoginException,
+			ChannelStateException;
 
-	public void send(final String xml) throws RemoteException, ChannelStateException;
+	public void send(final String xml) throws RemoteException,
+			ChannelStateException;
 
 	public void registerXmlEventListener(XmlEventListener listener);
 

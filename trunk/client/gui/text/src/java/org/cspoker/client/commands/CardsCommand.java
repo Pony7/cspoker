@@ -24,45 +24,45 @@ import org.cspoker.common.elements.cards.Card;
 
 public class CardsCommand implements Command {
 
-    private Cards cards;
-    private Console console;
+	private Cards cards;
+	private Console console;
 
-    public CardsCommand(Console console, Cards cards) {
-	this.cards = cards;
-	this.console = console;
-    }
+	public CardsCommand(Console console, Cards cards) {
+		this.cards = cards;
+		this.console = console;
+	}
 
-    public void execute(String... args) throws Exception {
-	Set<Card> privateCards;
-	Set<Card> communityCards;
-	synchronized (cards) {
-	    privateCards = cards.getPrivateCards();
-	    communityCards = cards.getCommonCards();
-	}
-	String result = "You hold: ";
-	if(privateCards.size()!=2){
-	    result+="nothing";
-	}else{
-		Iterator<Card> iter = privateCards.iterator();
-	    result+=iter.next();
-	    result+=", ";
-	    result+=iter.next();
-	}
-	result+="."+n;
+	public void execute(String... args) throws Exception {
+		Set<Card> privateCards;
+		Set<Card> communityCards;
+		synchronized (cards) {
+			privateCards = cards.getPrivateCards();
+			communityCards = cards.getCommonCards();
+		}
+		String result = "You hold: ";
+		if (privateCards.size() != 2) {
+			result += "nothing";
+		} else {
+			Iterator<Card> iter = privateCards.iterator();
+			result += iter.next();
+			result += ", ";
+			result += iter.next();
+		}
+		result += "." + n;
 
-	result += "The community cards: ";
-	if(communityCards.size()==0){
-	    result+="nothing";
-	}else{
-		Iterator<Card> iter = communityCards.iterator();
-	    result+=iter.next();
-	    while(iter.hasNext()){
-		result+=", ";
-		result+=iter.next();
-	    }
+		result += "The community cards: ";
+		if (communityCards.size() == 0) {
+			result += "nothing";
+		} else {
+			Iterator<Card> iter = communityCards.iterator();
+			result += iter.next();
+			while (iter.hasNext()) {
+				result += ", ";
+				result += iter.next();
+			}
+		}
+		result += "." + n;
+		console.print(result);
 	}
-	result+="."+n;
-	console.print(result);
-    }
 
 }

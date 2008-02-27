@@ -44,7 +44,7 @@ public class PlayerJoinedEvent extends ServerEvent {
 	protected PlayerJoinedEvent() {
 		// no op
 	}
-	
+
 	@Override
 	public String toString() {
 		return player.getName() + " has joined a table [" + id + "].";
@@ -56,9 +56,11 @@ public class PlayerJoinedEvent extends ServerEvent {
 
 	public TableId getId() {
 		return id;
-	}	
+	}
 
-	public void dispatch(RemoteAllEventsListener listener) throws RemoteException{
+	@Override
+	public void dispatch(RemoteAllEventsListener listener)
+			throws RemoteException {
 		listener.onPlayerJoinedEvent(this);
 	}
 

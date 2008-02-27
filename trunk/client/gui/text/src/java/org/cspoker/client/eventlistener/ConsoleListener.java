@@ -40,137 +40,122 @@ import org.cspoker.common.events.serverevents.PlayerLeftEvent;
 import org.cspoker.common.events.serverevents.ServerMessageEvent;
 import org.cspoker.common.events.serverevents.TableCreatedEvent;
 
-public class ConsoleListener implements RemoteAllEventsListener{
+public class ConsoleListener implements RemoteAllEventsListener {
 
-    private Console console;
-    
-    public ConsoleListener(Console console) {
-	this.console=console;
-    }
-    
-    public void onAllInEvent(AllInEvent event)  {
-	console.print(event.toString());
+	private Console console;
 
-    }
+	public ConsoleListener(Console console) {
+		this.console = console;
+	}
 
-    public void onBetEvent(BetEvent event)  {
-	console.print(event.toString());
+	public void onAllInEvent(AllInEvent event) {
+		console.print(event.toString());
 
-    }
+	}
 
-    public void onBigBlindEvent(BigBlindEvent event)
-    {
-	console.print(event.toString());
+	public void onBetEvent(BetEvent event) {
+		console.print(event.toString());
 
-    }
+	}
 
-    public void onCallEvent(CallEvent event)  {
-	console.print(event.toString());
+	public void onBigBlindEvent(BigBlindEvent event) {
+		console.print(event.toString());
 
-    }
+	}
 
-    public void onCheckEvent(CheckEvent event)  {
-	console.print(event.toString());
+	public void onCallEvent(CallEvent event) {
+		console.print(event.toString());
 
-    }
+	}
 
-    public void onFoldEvent(FoldEvent event)  {
-	console.print(event.toString());
+	public void onCheckEvent(CheckEvent event) {
+		console.print(event.toString());
 
-    }
+	}
 
-    public void onRaiseEvent(RaiseEvent event)  {
-	console.print(event.toString());
+	public void onFoldEvent(FoldEvent event) {
+		console.print(event.toString());
 
-    }
+	}
 
-    public void onSmallBlindEvent(SmallBlindEvent event)
-    {
-	console.print(event.toString());
+	public void onRaiseEvent(RaiseEvent event) {
+		console.print(event.toString());
 
-    }
+	}
 
-    public void onNewPocketCardsEvent(NewPocketCardsEvent event)
-    {
-	console.print(event.toString());
+	public void onSmallBlindEvent(SmallBlindEvent event) {
+		console.print(event.toString());
 
-    }
+	}
 
-    public void onNewCommunityCardsEvent(NewCommunityCardsEvent event)
-    {
-	console.print(event.toString());
+	public void onNewPocketCardsEvent(NewPocketCardsEvent event) {
+		console.print(event.toString());
 
-    }
+	}
 
-    public void onNewDealEvent(NewDealEvent event)
-    {
-	console.print(event.toString());
+	public void onNewCommunityCardsEvent(NewCommunityCardsEvent event) {
+		console.print(event.toString());
 
-    }
+	}
 
-    public void onNewRoundEvent(NewRoundEvent event)
-    {
-	console.print(event.toString());
+	public void onNewDealEvent(NewDealEvent event) {
+		console.print(event.toString());
 
-    }
+	}
 
-    public void onNextPlayerEvent(NextPlayerEvent event)
-    {
-	console.print(event.toString());
+	public void onNewRoundEvent(NewRoundEvent event) {
+		console.print(event.toString());
 
-    }
+	}
 
-    public void onPlayerJoinedGameEvent(PlayerJoinedGameEvent event)
-    {
-	console.print(event.toString());
+	public void onNextPlayerEvent(NextPlayerEvent event) {
+		console.print(event.toString());
 
-    }
+	}
 
-    public void onPlayerLeftTableEvent(PlayerLeftTableEvent event)
-    {
-	console.print(event.toString());
+	public void onPlayerJoinedGameEvent(PlayerJoinedGameEvent event) {
+		console.print(event.toString());
 
-    }
+	}
 
-    public void onShowHandEvent(ShowHandEvent event)
-    {
-	console.print(event.toString());
+	public void onPlayerLeftTableEvent(PlayerLeftTableEvent event) {
+		console.print(event.toString());
 
-    }
+	}
 
-    public void onWinnerEvent(WinnerEvent event)  {
-	console.print(event.toString());
+	public void onShowHandEvent(ShowHandEvent event) {
+		console.print(event.toString());
 
-    }
+	}
 
-    public void onGameMessageEvent(GameMessageEvent event)
-    {
-	console.print(event.toString());
+	public void onWinnerEvent(WinnerEvent event) {
+		console.print(event.toString());
 
-    }
+	}
 
-    public void onPlayerJoinedEvent(PlayerJoinedEvent event)
-    {
-	console.print(event.toString());
+	public void onGameMessageEvent(GameMessageEvent event) {
+		console.print(event.toString());
 
-    }
+	}
 
-    public void onPlayerLeftEvent(PlayerLeftEvent event)
-    {
-	console.print(event.toString());
+	public void onPlayerJoinedEvent(PlayerJoinedEvent event) {
+		console.print(event.toString());
 
-    }
+	}
 
-    public void onTableCreatedEvent(TableCreatedEvent event)
-    {
-	console.print(event.toString());
+	public void onPlayerLeftEvent(PlayerLeftEvent event) {
+		console.print(event.toString());
 
-    }
+	}
 
-    public void onServerMessageEvent(ServerMessageEvent event)
-    {
-	console.print(event.toString());
+	public void onTableCreatedEvent(TableCreatedEvent event) {
+		console.print(event.toString());
 
-    }
+	}
+
+	public void onServerMessageEvent(ServerMessageEvent event) {
+		console.print(event.toString());
+
+	}
 
 }

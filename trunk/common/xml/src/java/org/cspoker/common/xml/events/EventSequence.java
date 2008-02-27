@@ -24,25 +24,24 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlValue;
 
 import org.cspoker.common.events.Event;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-public class EventSequence implements Serializable{
+public class EventSequence implements Serializable {
 
 	private static final long serialVersionUID = -4796992675258367600L;
-	
-	@XmlElement(name="event")
+
+	@XmlElement(name = "event")
 	private List<Event> events = new ArrayList<Event>();
-	
+
 	public Iterator<Event> iterator() {
 		return events.iterator();
 	}
-	
-	public void add(Event event){
+
+	public void add(Event event) {
 		events.add(event);
 	}
-	
+
 }

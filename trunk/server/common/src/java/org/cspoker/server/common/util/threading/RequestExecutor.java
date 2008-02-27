@@ -26,12 +26,12 @@ public class RequestExecutor implements Executor {
 
 	private final static Logger logger = Logger
 			.getLogger(RequestExecutor.class);
-	
+
 	private LoggingThreadPool executor;
 
 	private RequestExecutor() {
 		executor = new LoggingThreadPool(1, Runtime.getRuntime()
-				.availableProcessors()*2, 1, TimeUnit.SECONDS,
+				.availableProcessors() * 2, 1, TimeUnit.SECONDS,
 				new PriorityBlockingQueue<Runnable>(1000,
 						new SocketRunnableComparator()), "TestServer");
 		executor
@@ -39,14 +39,14 @@ public class RequestExecutor implements Executor {
 	}
 
 	public void execute(Runnable command) {
-		logger.trace("Received task: "+command);
+		logger.trace("Received task: " + command);
 		executor.execute(command);
 	}
-	
+
 	private int getCorePoolSize() {
 		return executor.getCorePoolSize();
 	}
-	
+
 	private int getMaximumPoolSize() {
 		return executor.getMaximumPoolSize();
 	}
@@ -56,7 +56,9 @@ public class RequestExecutor implements Executor {
 	public synchronized static Executor getInstance() {
 		if (instance == null) {
 			instance = new RequestExecutor();
-			logger.trace("Created Request Executor with corePoolSize "+instance.getCorePoolSize()+" and maxPoolSize "+instance.getMaximumPoolSize());
+			logger.trace("Created Request Executor with corePoolSize "
+					+ instance.getCorePoolSize() + " and maxPoolSize "
+					+ instance.getMaximumPoolSize());
 		}
 		return instance;
 	}

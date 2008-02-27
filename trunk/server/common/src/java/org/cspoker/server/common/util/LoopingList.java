@@ -137,8 +137,9 @@ public class LoopingList<T> {
 	 */
 	public T getNextTo(T o) {
 		int index = list.indexOf(o);
-		if (index >= 0)
+		if (index >= 0) {
 			return list.get((index + 1) % size());
+		}
 		return null;
 	}
 
@@ -160,8 +161,9 @@ public class LoopingList<T> {
 	 *       to the next element in the looping list.
 	 */
 	public boolean remove(T o) {
-		if (!contains(o))
+		if (!contains(o)) {
 			return false;
+		}
 		if (currentPosition > list.indexOf(o)) {
 			currentPosition--;
 		}

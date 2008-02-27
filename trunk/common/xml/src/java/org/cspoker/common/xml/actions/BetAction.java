@@ -15,7 +15,6 @@
  */
 package org.cspoker.common.xml.actions;
 
-
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -25,7 +24,6 @@ import org.cspoker.common.PlayerCommunication;
 import org.cspoker.common.exceptions.IllegalActionException;
 import org.cspoker.common.xml.eventlisteners.invocation.AllInvocationEventsListener;
 import org.cspoker.common.xml.events.invocation.IllegalActionEvent;
-import org.cspoker.common.xml.events.invocation.SuccessfulInvocationEvent;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)

@@ -47,7 +47,7 @@ public class NewDealEvent extends GameEvent {
 		this.players = Collections.unmodifiableList(players);
 		this.dealer = dealer;
 	}
-	
+
 	protected NewDealEvent() {
 		// no op
 	}
@@ -69,8 +69,10 @@ public class NewDealEvent extends GameEvent {
 				+ " as initial players of this table. " + dealer.getName()
 				+ " is dealer.";
 	}
-	
-	public void dispatch(RemoteAllEventsListener listener) throws RemoteException{
+
+	@Override
+	public void dispatch(RemoteAllEventsListener listener)
+			throws RemoteException {
 		listener.onNewDealEvent(this);
 	}
 

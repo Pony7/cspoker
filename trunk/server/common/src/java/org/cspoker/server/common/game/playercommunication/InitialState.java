@@ -55,15 +55,17 @@ class InitialState extends PlayerCommunicationState {
 
 	@Override
 	public void join(TableId id) throws IllegalActionException {
-		if (id == null)
+		if (id == null) {
 			throw new IllegalArgumentException(
 					"The given table id should be effective.");
+		}
 
 		Table table = TableManager.getTable(id);
 
-		if (table == null)
+		if (table == null) {
 			throw new IllegalArgumentException(
 					"The given table id can not be found in the tables.");
+		}
 
 		if (table.isPlaying()) {
 			GameMediator mediator = GameManager.getGame(id);

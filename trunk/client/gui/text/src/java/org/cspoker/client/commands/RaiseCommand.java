@@ -20,12 +20,12 @@ import org.cspoker.common.RemotePlayerCommunication;
 
 public class RaiseCommand extends AbstractCommand {
 
-    public RaiseCommand(RemotePlayerCommunication rpc, Console console) {
-	super(rpc, console);
-    }
+	public RaiseCommand(RemotePlayerCommunication rpc, Console console) {
+		super(rpc, console);
+	}
 
-    public void execute(String... args) throws Exception {
-	rpc.raise(Integer.parseInt(args[0]));
-    }
+	public void execute(String... args) throws Exception {
+		rpc.raise(Integer.parseInt(args[0]));
+	}
 
 }

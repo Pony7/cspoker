@@ -45,22 +45,24 @@ import org.cspoker.common.events.serverevents.TableCreatedEvent;
 
 public class SpreadingAllEventsListener implements RemoteAllEventsListener {
 
-	private final static Logger logger = Logger.getLogger(SpreadingAllEventsListener.class);
+	private final static Logger logger = Logger
+			.getLogger(SpreadingAllEventsListener.class);
 
 	private final Set<RemoteAllEventsListener> listeners;
-	
+
 	public SpreadingAllEventsListener(Set<RemoteAllEventsListener> listeners) {
 		this.listeners = listeners;
 	}
-	
+
 	@Override
 	public void onAllInEvent(AllInEvent event) {
-		for(RemoteAllEventsListener listener:listeners)
+		for (RemoteAllEventsListener listener : listeners) {
 			try {
 				listener.onAllInEvent(event);
 			} catch (RemoteException e) {
-				handle(listener,e);
+				handle(listener, e);
 			}
+		}
 	}
 
 	private void handle(RemoteAllEventsListener listener, RemoteException e) {
@@ -70,211 +72,232 @@ public class SpreadingAllEventsListener implements RemoteAllEventsListener {
 
 	@Override
 	public void onBetEvent(BetEvent event) {
-		for(RemoteAllEventsListener listener:listeners)
+		for (RemoteAllEventsListener listener : listeners) {
 			try {
 				listener.onBetEvent(event);
 			} catch (RemoteException e) {
-				handle(listener,e);
+				handle(listener, e);
 			}
+		}
 	}
 
 	@Override
 	public void onBigBlindEvent(BigBlindEvent event) {
-		for(RemoteAllEventsListener listener:listeners)
+		for (RemoteAllEventsListener listener : listeners) {
 			try {
 				listener.onBigBlindEvent(event);
 			} catch (RemoteException e) {
-				handle(listener,e);
+				handle(listener, e);
 			}
+		}
 	}
 
 	@Override
-	public void onCallEvent(CallEvent event)  {
-		for(RemoteAllEventsListener listener:listeners)
+	public void onCallEvent(CallEvent event) {
+		for (RemoteAllEventsListener listener : listeners) {
 			try {
 				listener.onCallEvent(event);
 			} catch (RemoteException e) {
-				handle(listener,e);
+				handle(listener, e);
 			}
+		}
 	}
 
 	@Override
 	public void onCheckEvent(CheckEvent event) {
-		for(RemoteAllEventsListener listener:listeners)
+		for (RemoteAllEventsListener listener : listeners) {
 			try {
 				listener.onCheckEvent(event);
 			} catch (RemoteException e) {
-				handle(listener,e);
+				handle(listener, e);
 			}
+		}
 	}
 
 	@Override
 	public void onFoldEvent(FoldEvent event) {
-		for(RemoteAllEventsListener listener:listeners)
+		for (RemoteAllEventsListener listener : listeners) {
 			try {
 				listener.onFoldEvent(event);
 			} catch (RemoteException e) {
-				handle(listener,e);
+				handle(listener, e);
 			}
+		}
 	}
 
 	@Override
 	public void onRaiseEvent(RaiseEvent event) {
-		for(RemoteAllEventsListener listener:listeners)
+		for (RemoteAllEventsListener listener : listeners) {
 			try {
 				listener.onRaiseEvent(event);
 			} catch (RemoteException e) {
-				handle(listener,e);
+				handle(listener, e);
 			}
+		}
 	}
 
 	@Override
 	public void onSmallBlindEvent(SmallBlindEvent event) {
-		for(RemoteAllEventsListener listener:listeners)
+		for (RemoteAllEventsListener listener : listeners) {
 			try {
 				listener.onSmallBlindEvent(event);
 			} catch (RemoteException e) {
-				handle(listener,e);
+				handle(listener, e);
 			}
+		}
 	}
 
 	@Override
 	public void onNewPocketCardsEvent(NewPocketCardsEvent event) {
-		for(RemoteAllEventsListener listener:listeners)
+		for (RemoteAllEventsListener listener : listeners) {
 			try {
 				listener.onNewPocketCardsEvent(event);
 			} catch (RemoteException e) {
-				handle(listener,e);
+				handle(listener, e);
 			}
+		}
 	}
 
 	@Override
 	public void onNewCommunityCardsEvent(NewCommunityCardsEvent event) {
-		for(RemoteAllEventsListener listener:listeners)
+		for (RemoteAllEventsListener listener : listeners) {
 			try {
 				listener.onNewCommunityCardsEvent(event);
 			} catch (RemoteException e) {
-				handle(listener,e);
+				handle(listener, e);
 			}
+		}
 	}
 
 	@Override
 	public void onNewDealEvent(NewDealEvent event) {
-		for(RemoteAllEventsListener listener:listeners)
+		for (RemoteAllEventsListener listener : listeners) {
 			try {
 				listener.onNewDealEvent(event);
 			} catch (RemoteException e) {
-				handle(listener,e);
+				handle(listener, e);
 			}
+		}
 	}
 
 	@Override
-	public void onNewRoundEvent(NewRoundEvent event){
-		for(RemoteAllEventsListener listener:listeners)
+	public void onNewRoundEvent(NewRoundEvent event) {
+		for (RemoteAllEventsListener listener : listeners) {
 			try {
 				listener.onNewRoundEvent(event);
 			} catch (RemoteException e) {
-				handle(listener,e);
+				handle(listener, e);
 			}
+		}
 	}
 
 	@Override
 	public void onNextPlayerEvent(NextPlayerEvent event) {
-		for(RemoteAllEventsListener listener:listeners)
+		for (RemoteAllEventsListener listener : listeners) {
 			try {
 				listener.onNextPlayerEvent(event);
 			} catch (RemoteException e) {
-				handle(listener,e);
+				handle(listener, e);
 			}
+		}
 	}
 
 	@Override
 	public void onPlayerJoinedGameEvent(PlayerJoinedGameEvent event) {
-		for(RemoteAllEventsListener listener:listeners)
+		for (RemoteAllEventsListener listener : listeners) {
 			try {
 				listener.onPlayerJoinedGameEvent(event);
 			} catch (RemoteException e) {
-				handle(listener,e);
+				handle(listener, e);
 			}
+		}
 	}
 
 	@Override
-	public void onPlayerLeftTableEvent(PlayerLeftTableEvent event){
-		for(RemoteAllEventsListener listener:listeners)
+	public void onPlayerLeftTableEvent(PlayerLeftTableEvent event) {
+		for (RemoteAllEventsListener listener : listeners) {
 			try {
 				listener.onPlayerLeftTableEvent(event);
 			} catch (RemoteException e) {
-				handle(listener,e);
+				handle(listener, e);
 			}
+		}
 	}
 
 	@Override
 	public void onShowHandEvent(ShowHandEvent event) {
-		for(RemoteAllEventsListener listener:listeners)
+		for (RemoteAllEventsListener listener : listeners) {
 			try {
 				listener.onShowHandEvent(event);
 			} catch (RemoteException e) {
-				handle(listener,e);
+				handle(listener, e);
 			}
+		}
 	}
 
 	@Override
 	public void onWinnerEvent(WinnerEvent event) {
-		for(RemoteAllEventsListener listener:listeners)
+		for (RemoteAllEventsListener listener : listeners) {
 			try {
 				listener.onWinnerEvent(event);
 			} catch (RemoteException e) {
-				handle(listener,e);
+				handle(listener, e);
 			}
+		}
 	}
 
 	@Override
 	public void onGameMessageEvent(GameMessageEvent event) {
-		for(RemoteAllEventsListener listener:listeners)
+		for (RemoteAllEventsListener listener : listeners) {
 			try {
 				listener.onGameMessageEvent(event);
 			} catch (RemoteException e) {
-				handle(listener,e);
+				handle(listener, e);
 			}
+		}
 	}
 
 	@Override
 	public void onPlayerJoinedEvent(PlayerJoinedEvent event) {
-		for(RemoteAllEventsListener listener:listeners)
+		for (RemoteAllEventsListener listener : listeners) {
 			try {
 				listener.onPlayerJoinedEvent(event);
 			} catch (RemoteException e) {
-				handle(listener,e);
+				handle(listener, e);
 			}
+		}
 	}
 
 	@Override
 	public void onPlayerLeftEvent(PlayerLeftEvent event) {
-		for(RemoteAllEventsListener listener:listeners)
+		for (RemoteAllEventsListener listener : listeners) {
 			try {
 				listener.onPlayerLeftEvent(event);
 			} catch (RemoteException e) {
-				handle(listener,e);
+				handle(listener, e);
 			}
+		}
 	}
 
 	@Override
 	public void onTableCreatedEvent(TableCreatedEvent event) {
-		for(RemoteAllEventsListener listener:listeners)
+		for (RemoteAllEventsListener listener : listeners) {
 			try {
 				listener.onTableCreatedEvent(event);
 			} catch (RemoteException e) {
-				handle(listener,e);
+				handle(listener, e);
 			}
+		}
 	}
 
 	@Override
-	public void onServerMessageEvent(ServerMessageEvent event){
-		for(RemoteAllEventsListener listener:listeners)
+	public void onServerMessageEvent(ServerMessageEvent event) {
+		for (RemoteAllEventsListener listener : listeners) {
 			try {
 				listener.onServerMessageEvent(event);
 			} catch (RemoteException e) {
-				handle(listener,e);
+				handle(listener, e);
 			}
+		}
 	}
 }

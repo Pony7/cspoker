@@ -93,12 +93,15 @@ public class SocketsAuthenticator {
 		public void startElement(String uri, String localName, String name,
 				Attributes attributes) throws SAXException {
 			if (name.equals("login")) {
-				if (attributes.getValue("useragent") != null)
+				if (attributes.getValue("useragent") != null) {
 					useragent = attributes.getValue("useragent");
-				if (attributes.getValue("username") != null)
+				}
+				if (attributes.getValue("username") != null) {
 					username = attributes.getValue("username");
-				if (attributes.getValue("password") != null)
+				}
+				if (attributes.getValue("password") != null) {
 					password = attributes.getValue("password");
+				}
 			}
 		}
 

@@ -18,8 +18,9 @@ public class Limit extends BettingRules {
 
 	public Limit(int smallBet) {
 		super();
-		if (!canHaveAsSmallBet(smallBet))
+		if (!canHaveAsSmallBet(smallBet)) {
 			throw new IllegalArgumentException();
+		}
 		this.smallBet = smallBet;
 		bigBet = getSmallBet() * 2;
 	}
@@ -91,8 +92,9 @@ public class Limit extends BettingRules {
 	 */
 	@Override
 	public void incrementNBRaises() {
-		if (getNBRaises() >= maxNBRaises)
+		if (getNBRaises() >= maxNBRaises) {
 			throw new IllegalStateException();
+		}
 		super.incrementNBRaises();
 	}
 

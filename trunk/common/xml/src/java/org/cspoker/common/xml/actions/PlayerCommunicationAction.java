@@ -29,7 +29,8 @@ import org.cspoker.common.xml.events.invocation.SuccessfulInvocationEvent;
 @XmlAccessorType(XmlAccessType.FIELD)
 public abstract class PlayerCommunicationAction<T> implements Serializable {
 
-	private final static Logger logger = Logger.getLogger(PlayerCommunicationAction.class);
+	private final static Logger logger = Logger
+			.getLogger(PlayerCommunicationAction.class);
 
 	@XmlAttribute
 	private long id;
@@ -45,9 +46,9 @@ public abstract class PlayerCommunicationAction<T> implements Serializable {
 	public abstract void perform(PlayerCommunication pc,
 			AllInvocationEventsListener listener);
 
-	protected void dispatchResult(T result,	AllInvocationEventsListener listener) {
-		listener.onSuccessfullInvokation(new SuccessfulInvocationEvent<T>(
-				this, result));
+	protected void dispatchResult(T result, AllInvocationEventsListener listener) {
+		listener.onSuccessfullInvokation(new SuccessfulInvocationEvent<T>(this,
+				result));
 	}
 
 	public long getID() {
@@ -64,15 +65,19 @@ public abstract class PlayerCommunicationAction<T> implements Serializable {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (!(obj instanceof PlayerCommunicationAction))
+		}
+		if (!(obj instanceof PlayerCommunicationAction)) {
 			return false;
+		}
 		final PlayerCommunicationAction<?> other = (PlayerCommunicationAction<?>) obj;
-		if (id != other.id)
+		if (id != other.id) {
 			return false;
+		}
 		return true;
 	}
 

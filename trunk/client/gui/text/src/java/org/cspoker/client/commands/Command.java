@@ -19,9 +19,9 @@ package org.cspoker.client.commands;
  * Interface for handling console commands.
  */
 public interface Command {
-    
-    public static String n=System.getProperty("line.separator");
-    
-    public void execute(String... args) throws Exception;
-	
+
+	public static String n = System.getProperty("line.separator");
+
+	public void execute(String... args) throws Exception;
+
 }

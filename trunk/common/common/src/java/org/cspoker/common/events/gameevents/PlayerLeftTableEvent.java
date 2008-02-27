@@ -42,7 +42,7 @@ public class PlayerLeftTableEvent extends GameEvent {
 	public PlayerLeftTableEvent(Player player) {
 		this.player = player;
 	}
-	
+
 	protected PlayerLeftTableEvent() {
 		// no op
 	}
@@ -55,8 +55,10 @@ public class PlayerLeftTableEvent extends GameEvent {
 	public Player getPlayer() {
 		return player;
 	}
-	
-	public void dispatch(RemoteAllEventsListener listener) throws RemoteException{
+
+	@Override
+	public void dispatch(RemoteAllEventsListener listener)
+			throws RemoteException {
 		listener.onPlayerLeftTableEvent(this);
 	}
 

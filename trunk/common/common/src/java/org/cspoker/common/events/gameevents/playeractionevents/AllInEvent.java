@@ -64,8 +64,10 @@ public class AllInEvent extends ActionChangedPotEvent {
 	public Player getPlayer() {
 		return player;
 	}
-	
-	public void dispatch(RemoteAllEventsListener listener) throws RemoteException{
+
+	@Override
+	public void dispatch(RemoteAllEventsListener listener)
+			throws RemoteException {
 		listener.onAllInEvent(this);
 	}
 

@@ -135,9 +135,9 @@ public interface RemotePlayerCommunication extends Remote {
 	 *             state.
 	 */
 	void startGame() throws IllegalActionException, RemoteException;
-	
+
 	void kill() throws IllegalActionException, RemoteException;
-	
+
 	/**
 	 * Subscribe the given all events listener for all events a player can
 	 * receive.

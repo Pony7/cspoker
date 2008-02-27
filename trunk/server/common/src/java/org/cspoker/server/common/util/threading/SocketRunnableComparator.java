@@ -33,8 +33,9 @@ public class SocketRunnableComparator implements Comparator<Runnable> {
 	}
 
 	public int getPriority(Runnable o) {
-		if (o instanceof Prioritizable)
+		if (o instanceof Prioritizable) {
 			return ((Prioritizable) o).getPriority();
+		}
 		return 0;
 	}
 }

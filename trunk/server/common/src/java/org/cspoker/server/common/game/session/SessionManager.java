@@ -51,8 +51,9 @@ public class SessionManager {
 		}
 		s.kill();
 		sessions.remove(s.getUserName());
-		if (id != null)
+		if (id != null) {
 			sessionByID.remove(id);
+		}
 
 	}
 

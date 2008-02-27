@@ -48,60 +48,63 @@ import org.cspoker.common.RemotePlayerCommunication;
  */
 public class Client {
 
-    private HashMap<String, Command> commands = new HashMap<String,Command>();
-    private Console console;
-    private final RemotePlayerCommunication rpc;
-    
-    public Client(String server, int port, final String username
-	    , final String password, Console console) throws NoProviderException, RemoteException, LoginException {
-	this.console = console;
-	rpc = RemotePlayerCommunicationFactoryImpl.global_factory
-		.getRemotePlayerCommunication(server, port, username, password);
-	registerCommands();
-    }
+	private HashMap<String, Command> commands = new HashMap<String, Command>();
+	private Console console;
+	private final RemotePlayerCommunication rpc;
 
-    private void registerCommands() throws RemoteException {
-	commands.put("CREATETABLE", new CreateTableCommand(rpc, console));
-	commands.put("JOINTABLE", new JoinTableCommand(rpc, console));
-	commands.put("LEAVETABLE", new LeaveTableCommand(rpc, console));
-	
-	commands.put("STARTGAME", new StartGameCommand(rpc, console));
-	commands.put("DEAL", new DealCommand(rpc, console));
-	commands.put("CALL", new CallCommand(rpc, console));
-	commands.put("BET", new BetCommand(rpc, console));
-	commands.put("CHECK", new CheckCommand(rpc, console));
-	commands.put("FOLD", new FoldCommand(rpc, console));
-	commands.put("RAISE", new RaiseCommand(rpc, console));
-	commands.put("ALLIN", new AllInCommand(rpc, console));
-	
-	commands.put("SAY", new SayCommand(rpc, console));
-	
-	Cards cards = new Cards();
-	Pot pot = new Pot();
-	CardsCommand cardsCommand = new CardsCommand(console, cards);
-	commands.put("CARDS", cardsCommand);
-	PotCommand potCommand = new PotCommand(console, pot);
-	commands.put("POT", potCommand);
-	
-	HelpCommand help = new HelpCommand(console);
-	commands.put("HELP", help);
-	
-	rpc.subscribeAllEventsListener(new StatefulConsoleListener(console,cards,pot));
-    }
-    
-    private Command getCommand(String name){
-	return commands.get(name.toUpperCase());
-    }
-    
-    public void execute(String command, String... args) throws Exception{
-	Command c=getCommand(command);
-	if(c==null)
-	    throw new IllegalArgumentException("Not a valid command.");
-	c.execute(args);
-    }
+	public Client(String server, int port, final String username,
+			final String password, Console console) throws NoProviderException,
+			RemoteException, LoginException {
+		this.console = console;
+		rpc = RemotePlayerCommunicationFactoryImpl.global_factory
+				.getRemotePlayerCommunication(server, port, username, password);
+		registerCommands();
+	}
 
-    public void close() {
-	// no op
-    }
+	private void registerCommands() throws RemoteException {
+		commands.put("CREATETABLE", new CreateTableCommand(rpc, console));
+		commands.put("JOINTABLE", new JoinTableCommand(rpc, console));
+		commands.put("LEAVETABLE", new LeaveTableCommand(rpc, console));
+
+		commands.put("STARTGAME", new StartGameCommand(rpc, console));
+		commands.put("DEAL", new DealCommand(rpc, console));
+		commands.put("CALL", new CallCommand(rpc, console));
+		commands.put("BET", new BetCommand(rpc, console));
+		commands.put("CHECK", new CheckCommand(rpc, console));
+		commands.put("FOLD", new FoldCommand(rpc, console));
+		commands.put("RAISE", new RaiseCommand(rpc, console));
+		commands.put("ALLIN", new AllInCommand(rpc, console));
+
+		commands.put("SAY", new SayCommand(rpc, console));
+
+		Cards cards = new Cards();
+		Pot pot = new Pot();
+		CardsCommand cardsCommand = new CardsCommand(console, cards);
+		commands.put("CARDS", cardsCommand);
+		PotCommand potCommand = new PotCommand(console, pot);
+		commands.put("POT", potCommand);
+
+		HelpCommand help = new HelpCommand(console);
+		commands.put("HELP", help);
+
+		rpc.subscribeAllEventsListener(new StatefulConsoleListener(console,
+				cards, pot));
+	}
+
+	private Command getCommand(String name) {
+		return commands.get(name.toUpperCase());
+	}
+
+	public void execute(String command, String... args) throws Exception {
+		Command c = getCommand(command);
+		if (c == null) {
+			throw new IllegalArgumentException("Not a valid command.");
+		}
+		c.execute(args);
+	}
+
+	public void close() {
+		// no op
+	}
 
 }

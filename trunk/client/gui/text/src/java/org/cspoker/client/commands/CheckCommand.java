@@ -20,12 +20,12 @@ import org.cspoker.common.RemotePlayerCommunication;
 
 public class CheckCommand extends AbstractCommand {
 
-    public CheckCommand(RemotePlayerCommunication rpc, Console console) {
-	super(rpc, console);
-    }
+	public CheckCommand(RemotePlayerCommunication rpc, Console console) {
+		super(rpc, console);
+	}
 
-    public void execute(String... args) throws Exception {
-	rpc.check();
-    }
+	public void execute(String... args) throws Exception {
+		rpc.check();
+	}
 
 }

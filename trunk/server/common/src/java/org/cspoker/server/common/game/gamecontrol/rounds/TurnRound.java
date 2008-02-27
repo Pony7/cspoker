@@ -28,9 +28,10 @@ public class TurnRound extends BettingRound {
 	public TurnRound(GameMediator gameMediator, Game game) {
 		super(gameMediator, game);
 		GamePlayer currentPlayer = getGame().getCurrentPlayer();
-		if (currentPlayer != null)
+		if (currentPlayer != null) {
 			gameMediator.publishNewRoundEvent(new NewRoundEvent(toString(),
 					currentPlayer.getSavedPlayer()));
+		}
 		drawMuckCard();
 		drawOpenCardAndPublishCommonCard();
 		TurnRound.logger.info("*** TURN *** " + game.getCommunityCards());
@@ -38,8 +39,9 @@ public class TurnRound extends BettingRound {
 
 	@Override
 	public Round getNextRound() {
-		if (potsDividedToWinner())
+		if (potsDividedToWinner()) {
 			return getNewDealRound();
+		}
 		return new FinalRound(gameMediator, getGame());
 	}
 

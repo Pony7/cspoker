@@ -43,7 +43,7 @@ public class XmlSocketsChannel implements XmlChannel {
 
 	private final static Logger logger = Logger
 			.getLogger(XmlSocketsChannel.class);
-	
+
 	private Socket s;
 	private Writer w;
 
@@ -51,7 +51,8 @@ public class XmlSocketsChannel implements XmlChannel {
 
 	private CharsetDecoder decoder;
 
-	private final Set<XmlEventListener> xmlEventListeners = Collections.synchronizedSet(new HashSet<XmlEventListener>());
+	private final Set<XmlEventListener> xmlEventListeners = Collections
+			.synchronizedSet(new HashSet<XmlEventListener>());
 
 	private final String server;
 	private final int port;
@@ -70,19 +71,23 @@ public class XmlSocketsChannel implements XmlChannel {
 		decoder = charset.newDecoder();
 	}
 
-	public synchronized void open() throws LoginException, RemoteException, ChannelStateException {
-		if(state != ChannelState.INITIALIZED)
-			throw new ChannelStateException("Channel is not in the initialized state", state);
+	public synchronized void open() throws LoginException, RemoteException,
+			ChannelStateException {
+		if (state != ChannelState.INITIALIZED) {
+			throw new ChannelStateException(
+					"Channel is not in the initialized state", state);
+		}
 		try {
 			s = new Socket(server, port);
 			w = new OutputStreamWriter(s.getOutputStream());
-			if (!login(username, password))
+			if (!login(username, password)) {
 				throw new LoginException();
+			}
 			executor = Executors.newSingleThreadExecutor();
 			executor.execute(new WaitForEvents());
 		} catch (IOException e) {
 			logger.error(e);
-			throw new RemoteException("IOException from socket.",e);
+			throw new RemoteException("IOException from socket.", e);
 		}
 		state = ChannelState.OPEN;
 	}
@@ -103,7 +108,8 @@ public class XmlSocketsChannel implements XmlChannel {
 
 	private boolean login(String username, String password) throws IOException {
 		w.write("<login username='" + username + "' password='" + password
-				+ "' useragent='Sockets Client "+Strings.version+"'/>"+ ((char) 0x00));
+				+ "' useragent='Sockets Client " + Strings.version + "'/>"
+				+ ((char) 0x00));
 		w.flush();
 		try {
 			return readUntilDelimiter().contains("<login");
@@ -116,35 +122,40 @@ public class XmlSocketsChannel implements XmlChannel {
 		return false;
 	}
 
-	public synchronized void send(final String xml) throws RemoteException, ChannelStateException {
-		if(state != ChannelState.OPEN)
+	public synchronized void send(final String xml) throws RemoteException,
+			ChannelStateException {
+		if (state != ChannelState.OPEN) {
 			throw new ChannelStateException("Channel is not open", state);
+		}
 		try {
-			w.write(xml+ ((char) 0x00));
+			w.write(xml + ((char) 0x00));
 			w.flush();
 		} catch (IOException e) {
 			logger.error(e);
-			throw new RemoteException("IOException from socket",e);
+			throw new RemoteException("IOException from socket", e);
 		}
 	}
 
-	private String readUntilDelimiter() throws IOException, InterruptedException {
+	private String readUntilDelimiter() throws IOException,
+			InterruptedException {
 		StringBuilder sb = new StringBuilder();
 		ByteBuffer singleByteBuffer = ByteBuffer.allocateDirect(1);
 		while (true) {
 			int b = s.getInputStream().read();
-			if (Thread.interrupted())
+			if (Thread.interrupted()) {
 				throw new InterruptedException();
-			if (b < 0)
-				throw new IOException("Connection lost");
-			if (b == 0x00){
-				if(sb.length()>0){
-					return sb.toString();
-				}else{
-					logger.trace("Delimiter found but no xml: length "+sb.length());
-				}
 			}
-			else {
+			if (b < 0) {
+				throw new IOException("Connection lost");
+			}
+			if (b == 0x00) {
+				if (sb.length() > 0) {
+					return sb.toString();
+				} else {
+					logger.trace("Delimiter found but no xml: length "
+							+ sb.length());
+				}
+			} else {
 				singleByteBuffer.put((byte) b);
 				singleByteBuffer.flip();
 				CharBuffer decoded = decoder.decode(singleByteBuffer);
@@ -153,6 +164,7 @@ public class XmlSocketsChannel implements XmlChannel {
 			}
 		}
 	}
+
 	public synchronized void close() {
 		if (state != ChannelState.CLOSED) {
 			executor.shutdown();

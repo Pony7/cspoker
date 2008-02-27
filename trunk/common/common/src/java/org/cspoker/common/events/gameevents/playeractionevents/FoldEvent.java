@@ -43,9 +43,9 @@ public class FoldEvent extends GameEvent {
 	public FoldEvent(Player player) {
 		this.player = player;
 	}
-	
+
 	protected FoldEvent() {
-		//no op
+		// no op
 	}
 
 	@Override
@@ -56,8 +56,10 @@ public class FoldEvent extends GameEvent {
 	public Player getPlayer() {
 		return player;
 	}
-	
-	public void dispatch(RemoteAllEventsListener listener) throws RemoteException {
+
+	@Override
+	public void dispatch(RemoteAllEventsListener listener)
+			throws RemoteException {
 		listener.onFoldEvent(this);
 	}
 }

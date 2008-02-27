@@ -34,7 +34,7 @@ public abstract class ActionChangedPotEvent extends GameEvent {
 	}
 
 	protected ActionChangedPotEvent() {
-		//no op
+		// no op
 	}
 
 	/**

@@ -62,8 +62,9 @@ public enum Suit {
 
 	public static Suit getSuit(String value) {
 		for (Suit rank : Suit.values()) {
-			if (rank.toString().equalsIgnoreCase(value))
+			if (rank.toString().equalsIgnoreCase(value)) {
 				return rank;
+			}
 		}
 		return null;
 	}

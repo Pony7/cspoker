@@ -36,8 +36,9 @@ public class Session {
 	}
 
 	public synchronized GamePlayer getPlayer() throws PlayerKilledExcepion {
-		if (killed)
+		if (killed) {
 			throw new PlayerKilledExcepion(player);
+		}
 		if (player == null) {
 			player = PlayerFactory.global_Player_Factory
 					.createNewPlayer(username);
@@ -47,8 +48,9 @@ public class Session {
 
 	public synchronized PlayerCommunicationImpl getPlayerCommunication()
 			throws PlayerKilledExcepion {
-		if (killed)
+		if (killed) {
 			throw new PlayerKilledExcepion(player);
+		}
 		if (playerComm == null) {
 			playerComm = new PlayerCommunicationImpl(getPlayer());
 		}
@@ -71,18 +73,23 @@ public class Session {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		final Session other = (Session) obj;
 		if (username == null) {
-			if (other.username != null)
+			if (other.username != null) {
 				return false;
-		} else if (!username.equals(other.username))
+			}
+		} else if (!username.equals(other.username)) {
 			return false;
+		}
 		return true;
 	}
 

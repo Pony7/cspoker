@@ -29,9 +29,10 @@ public class FinalRound extends BettingRound {
 	public FinalRound(GameMediator gameMediator, Game game) {
 		super(gameMediator, game);
 		GamePlayer currentPlayer = game.getCurrentPlayer();
-		if (currentPlayer != null)
+		if (currentPlayer != null) {
 			gameMediator.publishNewRoundEvent(new NewRoundEvent(toString(),
 					currentPlayer.getSavedPlayer()));
+		}
 		drawMuckCard();
 		drawOpenCardAndPublishCommonCard();
 		FinalRound.logger.info("*** RIVER *** " + game.getCommunityCards());

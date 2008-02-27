@@ -104,16 +104,17 @@ class TableCreatedState extends WaitingAtTableState {
 				GameManager.getServerMediator().publishPlayerLeftEvent(
 						new PlayerLeftEvent(playerCommunication.getPlayer()
 								.getSavedPlayer(), table.getId()));
-			} else
+			} else {
 				throw new IllegalActionException(
 						"The owner can only leave if he is the only player at the table.");
+			}
 		}
 	}
-	
+
 	@Override
 	public void join(TableId id) throws IllegalActionException {
-		throw new IllegalActionException(
-			"You are already sitting at table "+table.getId()+".");
+		throw new IllegalActionException("You are already sitting at table "
+				+ table.getId() + ".");
 	}
 
 	@Override

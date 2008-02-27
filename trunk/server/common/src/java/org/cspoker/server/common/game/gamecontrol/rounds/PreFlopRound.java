@@ -51,12 +51,14 @@ public class PreFlopRound extends BettingRound {
 		super(gameMediator, game);
 
 		GamePlayer currentPlayer = getGame().getCurrentPlayer();
-		if (currentPlayer != null)
+		if (currentPlayer != null) {
 			gameMediator.publishNewRoundEvent(new NewRoundEvent(toString(),
 					currentPlayer.getSavedPlayer()));
+		}
 		try {
-			if (game.getNbCurrentDealPlayers() == 2)
+			if (game.getNbCurrentDealPlayers() == 2) {
 				game.nextPlayer();
+			}
 			GamePlayer player = getGame().getCurrentPlayer();
 			collectSmallBlind(player);
 			gameMediator.publishSmallBlindEvent(new SmallBlindEvent(player
@@ -99,8 +101,8 @@ public class PreFlopRound extends BettingRound {
 					+ player.getPocketCards());
 
 			gameMediator.publishNewPocketCardsEvent(player.getId(),
-					new NewPocketCardsEvent(player.getSavedPlayer(), new HashSet<Card>(player
-							.getPocketCards())));
+					new NewPocketCardsEvent(player.getSavedPlayer(),
+							new HashSet<Card>(player.getPocketCards())));
 		}
 
 		if (getGame().getNbCurrentDealPlayers() > 1) {
@@ -111,13 +113,14 @@ public class PreFlopRound extends BettingRound {
 
 	@Override
 	public void check(GamePlayer player) throws IllegalActionException {
-		if (!onTurn(player))
+		if (!onTurn(player)) {
 			throw new IllegalActionException(player.getName()
 					+ " can not check in this round.");
-		if (!bigBlindPlayer.equals(player) && someoneHasBet())
+		}
+		if (!bigBlindPlayer.equals(player) && someoneHasBet()) {
 			throw new IllegalActionException(player.getName()
 					+ " can not check in this round. Someone has already bet.");
-		else {
+		} else {
 			bigBlindChecked = true;
 		}
 		game.nextPlayer();
@@ -139,8 +142,9 @@ public class PreFlopRound extends BettingRound {
 
 	@Override
 	public Round getNextRound() {
-		if (potsDividedToWinner())
+		if (potsDividedToWinner()) {
 			return getNewDealRound();
+		}
 		return new FlopRound(gameMediator, getGame());
 	}
 

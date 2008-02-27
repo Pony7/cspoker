@@ -15,7 +15,7 @@
  */
 package org.cspoker.common.xml.eventlisteners.invocation;
 
-public interface AllInvocationEventsListener extends
-		IllegalActionListener, SuccessfulInvocationListener {
+public interface AllInvocationEventsListener extends IllegalActionListener,
+		SuccessfulInvocationListener {
 
 }

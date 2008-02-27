@@ -33,7 +33,7 @@ public class Winner implements Serializable {
 		this.player = player;
 		this.gainedAmount = gainedAmount;
 	}
-	
+
 	protected Winner() {
 		// no op
 	}

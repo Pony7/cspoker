@@ -100,8 +100,9 @@ public class GameProperty {
 	}
 
 	public GameProperty(int smallBet, BettingRules bettingRules) {
-		if (!canHaveAsSmallBet(smallBet) || (bettingRules == null))
+		if (!canHaveAsSmallBet(smallBet) || (bettingRules == null)) {
 			throw new IllegalArgumentException();
+		}
 		this.smallBet = smallBet;
 		this.bettingRules = bettingRules;
 		smallBlind = getSmallBet() / 2;

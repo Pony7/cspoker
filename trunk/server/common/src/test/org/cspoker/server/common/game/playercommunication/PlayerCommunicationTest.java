@@ -60,7 +60,7 @@ import org.cspoker.server.common.game.session.Session;
 import org.cspoker.server.common.game.session.SessionManager;
 
 public class PlayerCommunicationTest extends TestCase {
-	
+
 	private static Logger logger = Logger
 			.getLogger(PlayerCommunicationTest.class);
 
@@ -83,7 +83,7 @@ public class PlayerCommunicationTest extends TestCase {
 			kenzoComm.createTable();
 		} catch (IllegalActionException e) {
 			fail(e.getMessage());
-		} 
+		}
 	}
 
 	public void testJoinTable() throws IllegalNameException {
@@ -93,29 +93,32 @@ public class PlayerCommunicationTest extends TestCase {
 		PlayerCommunicationImpl guyComm = new PlayerCommunicationImpl(guy);
 		try {
 			TableId tableId = kenzoComm.createTable();
-			//TODO create an event listener filter to wait for the tableID
+			// TODO create an event listener filter to wait for the tableID
 			guyComm.joinTable(tableId);
 		} catch (IllegalActionException e) {
 			fail(e.getMessage());
-		} 
+		}
 	}
 
 	public void testStartGame() throws IllegalNameException {
-		Session guySession = SessionManager.global_session_manager.getSession("Guy");
-		Session kenzoSession = SessionManager.global_session_manager.getSession("Kenzo");
+		Session guySession = SessionManager.global_session_manager
+				.getSession("Guy");
+		Session kenzoSession = SessionManager.global_session_manager
+				.getSession("Kenzo");
 
 		try {
 			PlayerCommunication guyComm = guySession.getPlayerCommunication();
-			PlayerCommunication kenzoComm = kenzoSession.getPlayerCommunication();
+			PlayerCommunication kenzoComm = kenzoSession
+					.getPlayerCommunication();
 			TableId tableId = kenzoComm.createTable();
-			//TODO create an event listener filter to wait for the tableID
+			// TODO create an event listener filter to wait for the tableID
 			guyComm.joinTable(tableId);
 			kenzoComm.startGame();
 		} catch (IllegalActionException e) {
 			fail(e.getMessage());
 		} catch (PlayerKilledExcepion e) {
 			fail(e.getMessage());
-		}finally {
+		} finally {
 			SessionManager.global_session_manager.killSession("Guy");
 			SessionManager.global_session_manager.killSession("Kenzo");
 		}
@@ -124,18 +127,21 @@ public class PlayerCommunicationTest extends TestCase {
 	private PlayerCommunication currentComm;
 
 	public void testPlayingGame() throws IllegalNameException {
-		Session guySession = SessionManager.global_session_manager.getSession("Guy");
-		Session kenzoSession = SessionManager.global_session_manager.getSession("Kenzo");
-		
-		Map<PlayerId,PlayerCommunication> map = new HashMap<PlayerId, PlayerCommunication>();
-	
+		Session guySession = SessionManager.global_session_manager
+				.getSession("Guy");
+		Session kenzoSession = SessionManager.global_session_manager
+				.getSession("Kenzo");
+
+		Map<PlayerId, PlayerCommunication> map = new HashMap<PlayerId, PlayerCommunication>();
 
 		try {
-			PlayerCommunicationImpl kenzoComm = kenzoSession.getPlayerCommunication();
-			PlayerCommunicationImpl guyComm = guySession.getPlayerCommunication();
+			PlayerCommunicationImpl kenzoComm = kenzoSession
+					.getPlayerCommunication();
+			PlayerCommunicationImpl guyComm = guySession
+					.getPlayerCommunication();
 			map.put(kenzoComm.getId(), kenzoComm);
 			map.put(guyComm.getId(), guyComm);
-			
+
 			TableId tableId = kenzoComm.createTable();
 			guyComm.joinTable(tableId);
 			guyComm.subscribeAllEventsListener(new TestListener(map));
@@ -177,21 +183,25 @@ public class PlayerCommunicationTest extends TestCase {
 	}
 
 	public void testPlayingGame2() throws IllegalNameException {
-		Session guySession = SessionManager.global_session_manager.getSession("Guy");
-		Session kenzoSession = SessionManager.global_session_manager.getSession("Kenzo");
-		
-		Map<PlayerId,PlayerCommunication> map = new HashMap<PlayerId, PlayerCommunication>();
-		
+		Session guySession = SessionManager.global_session_manager
+				.getSession("Guy");
+		Session kenzoSession = SessionManager.global_session_manager
+				.getSession("Kenzo");
+
+		Map<PlayerId, PlayerCommunication> map = new HashMap<PlayerId, PlayerCommunication>();
+
 		try {
-			
-			PlayerCommunicationImpl kenzoComm = kenzoSession.getPlayerCommunication();
-			PlayerCommunicationImpl guyComm = guySession.getPlayerCommunication();
+
+			PlayerCommunicationImpl kenzoComm = kenzoSession
+					.getPlayerCommunication();
+			PlayerCommunicationImpl guyComm = guySession
+					.getPlayerCommunication();
 
 			map.put(kenzoComm.getId(), kenzoComm);
 			map.put(guyComm.getId(), guyComm);
-			
+
 			TableId tableId = kenzoComm.createTable();
-			
+
 			guyComm.subscribeAllEventsListener(new TestListener(map));
 			guyComm.joinTable(tableId);
 			kenzoComm.startGame();
@@ -228,161 +238,159 @@ public class PlayerCommunicationTest extends TestCase {
 			PlayerCommunicationTest.logger.info("++ " + event);
 		}
 	}
-	
-	private class TestListener implements RemoteAllEventsListener{
-		
+
+	private class TestListener implements RemoteAllEventsListener {
+
 		private Map<PlayerId, PlayerCommunication> map;
-		
-		public TestListener(Map<PlayerId, PlayerCommunication> map){
+
+		public TestListener(Map<PlayerId, PlayerCommunication> map) {
 			this.map = map;
 		}
 
 		@Override
 		public void onAllInEvent(AllInEvent event) throws RemoteException {
 			// TODO Auto-generated method stub
-			
+
 		}
 
 		@Override
 		public void onBetEvent(BetEvent event) throws RemoteException {
 			// TODO Auto-generated method stub
-			
+
 		}
 
 		@Override
 		public void onBigBlindEvent(BigBlindEvent event) throws RemoteException {
 			// TODO Auto-generated method stub
-			
+
 		}
 
 		@Override
 		public void onCallEvent(CallEvent event) throws RemoteException {
 			// TODO Auto-generated method stub
-			
+
 		}
 
 		@Override
 		public void onCheckEvent(CheckEvent event) throws RemoteException {
 			// TODO Auto-generated method stub
-			
+
 		}
 
 		@Override
 		public void onFoldEvent(FoldEvent event) throws RemoteException {
 			// TODO Auto-generated method stub
-			
+
 		}
 
 		@Override
 		public void onRaiseEvent(RaiseEvent event) throws RemoteException {
 			// TODO Auto-generated method stub
-			
+
 		}
 
 		@Override
 		public void onSmallBlindEvent(SmallBlindEvent event)
 				throws RemoteException {
 			// TODO Auto-generated method stub
-			
+
 		}
 
 		@Override
 		public void onNewPocketCardsEvent(NewPocketCardsEvent event)
 				throws RemoteException {
 			// TODO Auto-generated method stub
-			
+
 		}
 
 		@Override
 		public void onNewCommunityCardsEvent(NewCommunityCardsEvent event)
 				throws RemoteException {
 			// TODO Auto-generated method stub
-			
+
 		}
 
 		@Override
 		public void onNewDealEvent(NewDealEvent event) throws RemoteException {
 			// TODO Auto-generated method stub
-			
+
 		}
 
 		@Override
 		public void onNewRoundEvent(NewRoundEvent event) throws RemoteException {
 			currentComm = map.get(event.getPlayer().getId());
-			PlayerCommunicationTest.logger
-					.info("Changed to " + currentComm);
+			PlayerCommunicationTest.logger.info("Changed to " + currentComm);
 		}
 
 		@Override
 		public void onNextPlayerEvent(NextPlayerEvent event)
 				throws RemoteException {
 			currentComm = map.get(event.getPlayer().getId());
-			PlayerCommunicationTest.logger
-					.info("Changed to " + currentComm);
-			
+			PlayerCommunicationTest.logger.info("Changed to " + currentComm);
+
 		}
 
 		@Override
 		public void onPlayerJoinedGameEvent(PlayerJoinedGameEvent event)
 				throws RemoteException {
 			// TODO Auto-generated method stub
-			
+
 		}
 
 		@Override
 		public void onPlayerLeftTableEvent(PlayerLeftTableEvent event)
 				throws RemoteException {
 			// TODO Auto-generated method stub
-			
+
 		}
 
 		@Override
 		public void onShowHandEvent(ShowHandEvent event) throws RemoteException {
 			// TODO Auto-generated method stub
-			
+
 		}
 
 		@Override
 		public void onWinnerEvent(WinnerEvent event) throws RemoteException {
 			// TODO Auto-generated method stub
-			
+
 		}
 
 		@Override
 		public void onGameMessageEvent(GameMessageEvent event)
 				throws RemoteException {
 			// TODO Auto-generated method stub
-			
+
 		}
 
 		@Override
 		public void onPlayerJoinedEvent(PlayerJoinedEvent event)
 				throws RemoteException {
 			// TODO Auto-generated method stub
-			
+
 		}
 
 		@Override
 		public void onPlayerLeftEvent(PlayerLeftEvent event)
 				throws RemoteException {
 			// TODO Auto-generated method stub
-			
+
 		}
 
 		@Override
 		public void onTableCreatedEvent(TableCreatedEvent event)
 				throws RemoteException {
 			// TODO Auto-generated method stub
-			
+
 		}
 
 		@Override
 		public void onServerMessageEvent(ServerMessageEvent event)
 				throws RemoteException {
 			// TODO Auto-generated method stub
-			
+
 		}
-		
+
 	}
 
 }

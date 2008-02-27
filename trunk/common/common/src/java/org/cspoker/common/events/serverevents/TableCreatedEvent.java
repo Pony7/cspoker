@@ -40,7 +40,7 @@ public class TableCreatedEvent extends ServerEvent {
 		this.player = player;
 		this.id = id;
 	}
-	
+
 	protected TableCreatedEvent() {
 		// no op
 	}
@@ -56,8 +56,11 @@ public class TableCreatedEvent extends ServerEvent {
 
 	public TableId getId() {
 		return id;
-	}	
-	public void dispatch(RemoteAllEventsListener listener)  throws RemoteException{
+	}
+
+	@Override
+	public void dispatch(RemoteAllEventsListener listener)
+			throws RemoteException {
 		listener.onTableCreatedEvent(this);
 	}
 

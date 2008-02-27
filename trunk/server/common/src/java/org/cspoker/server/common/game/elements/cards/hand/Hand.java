@@ -404,12 +404,15 @@ public class Hand implements Iterable<Card>, Comparable<Hand> {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		final Hand other = (Hand) obj;
 		return getHandInfo().equals(other.getHandInfo());
 	}

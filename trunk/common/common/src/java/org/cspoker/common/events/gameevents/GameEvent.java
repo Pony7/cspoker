@@ -32,6 +32,7 @@ import org.cspoker.common.events.Event;
 public abstract class GameEvent extends Event {
 
 	@Override
-	public abstract void dispatch(RemoteAllEventsListener listener)throws RemoteException;
-	
+	public abstract void dispatch(RemoteAllEventsListener listener)
+			throws RemoteException;
+
 }

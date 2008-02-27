@@ -28,7 +28,6 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.apache.log4j.Logger;
 import org.cspoker.common.xml.util.Base64;
-import org.cspoker.server.xml.http.handler.CSPokerHandler;
 import org.cspoker.server.xml.http.handler.exception.HttpException;
 import org.cspoker.server.xml.http.handler.exception.HttpExceptionImpl;
 import org.xml.sax.helpers.AttributesImpl;
@@ -43,7 +42,8 @@ import com.sun.net.httpserver.HttpHandler;
  */
 public abstract class AbstractHttpHandlerImpl implements HttpHandler {
 
-	private final static Logger logger = Logger.getLogger(AbstractHttpHandlerImpl.class);
+	private final static Logger logger = Logger
+			.getLogger(AbstractHttpHandlerImpl.class);
 
 	public AbstractHttpHandlerImpl() {
 		super();
@@ -53,9 +53,9 @@ public abstract class AbstractHttpHandlerImpl implements HttpHandler {
 		try {
 			http.getResponseHeaders().add("Cache-Control", "no-cache");
 			byte[] response = getResponse(http);
-			
-			logger.trace("Writing response of length "+response.length);
-			
+
+			logger.trace("Writing response of length " + response.length);
+
 			// send the default status code (no exception occured)
 			http.sendResponseHeaders(getDefaultStatusCode(), response.length);
 			http.getResponseBody().write(response);
@@ -85,7 +85,7 @@ public abstract class AbstractHttpHandlerImpl implements HttpHandler {
 	protected void throwException(HttpExchange http, Throwable e, int status)
 			throws IOException {
 		try {
-			logger.error("Returning serialized exception",e);
+			logger.error("Returning serialized exception", e);
 			if (e instanceof HttpException) {
 				// e has http status information
 				status = ((HttpException) e).getStatus();
@@ -145,9 +145,10 @@ public abstract class AbstractHttpHandlerImpl implements HttpHandler {
 	public static String toPlayerName(Headers requestHeaders)
 			throws HttpExceptionImpl {
 		List<String> auth = requestHeaders.get("Authorization");
-		if (auth == null || auth.size() != 1)
+		if (auth == null || auth.size() != 1) {
 			throw new HttpExceptionImpl(new IllegalArgumentException(
 					"Incorrect Authorization"), 401);
+		}
 		String base64 = auth.get(0);
 		try {
 			String decoded = new String(Base64.decode(base64.split(" ")[1]));

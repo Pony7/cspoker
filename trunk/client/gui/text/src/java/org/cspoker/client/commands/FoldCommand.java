@@ -20,12 +20,12 @@ import org.cspoker.common.RemotePlayerCommunication;
 
 public class FoldCommand extends AbstractCommand {
 
-    public FoldCommand(RemotePlayerCommunication rpc, Console console) {
-	super(rpc, console);
-    }
+	public FoldCommand(RemotePlayerCommunication rpc, Console console) {
+		super(rpc, console);
+	}
 
-    public void execute(String... args) throws Exception {
-	rpc.fold();
-    }
+	public void execute(String... args) throws Exception {
+		rpc.fold();
+	}
 
 }

@@ -43,7 +43,7 @@ public class CheckEvent extends GameEvent {
 	public CheckEvent(Player player) {
 		this.player = player;
 	}
-	
+
 	protected CheckEvent() {
 		// no op
 	}
@@ -56,8 +56,10 @@ public class CheckEvent extends GameEvent {
 	public Player getPlayer() {
 		return player;
 	}
-	
-	public void dispatch(RemoteAllEventsListener listener) throws RemoteException{
+
+	@Override
+	public void dispatch(RemoteAllEventsListener listener)
+			throws RemoteException {
 		listener.onCheckEvent(this);
 	}
 }

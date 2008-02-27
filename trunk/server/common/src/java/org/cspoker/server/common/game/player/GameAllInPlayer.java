@@ -60,18 +60,23 @@ public class GameAllInPlayer implements Comparable<GameAllInPlayer> {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		final GameAllInPlayer other = (GameAllInPlayer) obj;
 		if (player == null) {
-			if (other.player != null)
+			if (other.player != null) {
 				return false;
-		} else if (getBetValue() != other.getBetValue())
+			}
+		} else if (getBetValue() != other.getBetValue()) {
 			return false;
+		}
 		return true;
 	}
 

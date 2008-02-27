@@ -41,32 +41,34 @@ import org.cspoker.common.xml.actions.SayAction;
 import org.cspoker.common.xml.actions.StartGameAction;
 
 public class XmlChannelRemotePlayerCommunication implements
-RemotePlayerCommunication {
-	
-	private final Set<RemoteAllEventsListener> listeners = Collections.synchronizedSet(new HashSet<RemoteAllEventsListener>()); 
+		RemotePlayerCommunication {
+
+	private final Set<RemoteAllEventsListener> listeners = Collections
+			.synchronizedSet(new HashSet<RemoteAllEventsListener>());
 	private final XmlChannelMarshaller marshaller;
 	private AtomicLong id = new AtomicLong(1);
 	private final XmlChannel c;
-	
+
 	public XmlChannelRemotePlayerCommunication(XmlChannel c) {
-		this.marshaller = new XmlChannelMarshaller(c, new SpreadingAllEventsListener(listeners));
+		marshaller = new XmlChannelMarshaller(c,
+				new SpreadingAllEventsListener(listeners));
 		this.c = c;
 	}
 
-	public void subscribeAllEventsListener(
-			RemoteAllEventsListener listener) throws RemoteException {
+	public void subscribeAllEventsListener(RemoteAllEventsListener listener)
+			throws RemoteException {
 		listeners.add(listener);
 	}
 
-	public void unsubscribeAllEventsListener(
-			RemoteAllEventsListener listener) throws RemoteException {
+	public void unsubscribeAllEventsListener(RemoteAllEventsListener listener)
+			throws RemoteException {
 		listeners.remove(listener);
 	}
-	
+
 	private long getId() {
 		return id.getAndIncrement();
 	}
-	
+
 	public Set<RemoteAllEventsListener> getListeners() {
 		return listeners;
 	}
@@ -86,7 +88,7 @@ RemotePlayerCommunication {
 
 	@Override
 	public void bet(int amount) throws IllegalActionException, RemoteException {
-		marshaller.perform(new BetAction(getId(), amount));		
+		marshaller.perform(new BetAction(getId(), amount));
 	}
 
 	@Override
@@ -117,7 +119,7 @@ RemotePlayerCommunication {
 	@Override
 	public void joinTable(TableId id) throws IllegalActionException,
 			RemoteException {
-		marshaller.perform(new JoinTableAction(getId(),id));
+		marshaller.perform(new JoinTableAction(getId(), id));
 	}
 
 	@Override
@@ -134,13 +136,13 @@ RemotePlayerCommunication {
 	@Override
 	public void raise(int amount) throws IllegalActionException,
 			RemoteException {
-		marshaller.perform(new RaiseAction(getId(),amount));
+		marshaller.perform(new RaiseAction(getId(), amount));
 	}
 
 	@Override
 	public void say(String message) throws RemoteException,
 			IllegalActionException {
-		marshaller.perform(new SayAction(getId(),message));
+		marshaller.perform(new SayAction(getId(), message));
 	}
 
 	@Override

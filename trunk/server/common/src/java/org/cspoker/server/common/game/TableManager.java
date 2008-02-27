@@ -56,8 +56,9 @@ public class TableManager {
 	 *             !hasATableWithId(id)
 	 */
 	public static Table getTable(TableId id) {
-		if (!hasATableWithId(id))
+		if (!hasATableWithId(id)) {
 			throw new IllegalArgumentException();
+		}
 		return hashMap.get(id);
 	}
 

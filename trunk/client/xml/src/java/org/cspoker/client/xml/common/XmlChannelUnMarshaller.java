@@ -36,7 +36,8 @@ import org.cspoker.common.xml.events.invocation.SuccessfulInvocationEvent;
 
 public class XmlChannelUnMarshaller implements XmlEventListener {
 
-	private final static Logger logger = Logger.getLogger(XmlChannelUnMarshaller.class);
+	private final static Logger logger = Logger
+			.getLogger(XmlChannelUnMarshaller.class);
 
 	private final RemoteAllEventsListener listener;
 
@@ -44,33 +45,35 @@ public class XmlChannelUnMarshaller implements XmlEventListener {
 
 	private final Map<PlayerCommunicationAction<?>, SuccessfulInvocationEvent<?>> successfulinvocationevents = new ConcurrentHashMap<PlayerCommunicationAction<?>, SuccessfulInvocationEvent<?>>();
 
-	public XmlChannelUnMarshaller(XmlChannel channel, RemoteAllEventsListener spreadingAllEventsListener) {
-		this.listener = spreadingAllEventsListener;
+	public XmlChannelUnMarshaller(XmlChannel channel,
+			RemoteAllEventsListener spreadingAllEventsListener) {
+		listener = spreadingAllEventsListener;
 		channel.registerXmlEventListener(this);
 	}
 
 	@Override
 	public void collect(String xmlEvent) {
 		try {
-			collect((Event)EventAndActionJAXBContext.context.createUnmarshaller()
-					.unmarshal(new StringReader(xmlEvent)));
+			collect((Event) EventAndActionJAXBContext.context
+					.createUnmarshaller().unmarshal(new StringReader(xmlEvent)));
 		} catch (JAXBException e) {
 			logger.fatal(e);
 			throw new IllegalStateException(e);
 		}
 	}
-	
+
 	public void collect(Event event) {
 		try {
 			event.dispatch(listener);
 		} catch (NoListenerException e) {
-			if(event instanceof SuccessfulInvocationEvent<?>){
-				SuccessfulInvocationEvent<?> se = (SuccessfulInvocationEvent<?>)event;
-				if(se.getAction().getID()>0)
+			if (event instanceof SuccessfulInvocationEvent<?>) {
+				SuccessfulInvocationEvent<?> se = (SuccessfulInvocationEvent<?>) event;
+				if (se.getAction().getID() > 0) {
 					handle(se);
-			}else if(event instanceof IllegalActionEvent)
-				handle((IllegalActionEvent)event);
-			else{
+				}
+			} else if (event instanceof IllegalActionEvent) {
+				handle((IllegalActionEvent) event);
+			} else {
 				logger.fatal(e);
 				throw new IllegalStateException("Unknown event from server.");
 			}
@@ -86,7 +89,6 @@ public class XmlChannelUnMarshaller implements XmlEventListener {
 		}
 	}
 
-
 	private void handle(SuccessfulInvocationEvent<?> event) {
 		successfulinvocationevents.put(event.getAction(), event);
 		synchronized (this) {
@@ -95,18 +97,20 @@ public class XmlChannelUnMarshaller implements XmlEventListener {
 	}
 
 	@SuppressWarnings("unchecked")
-	public <T> T waitForExecutionEnd(PlayerCommunicationAction<T> action) throws InterruptedException, IllegalActionException{
+	public <T> T waitForExecutionEnd(PlayerCommunicationAction<T> action)
+			throws InterruptedException, IllegalActionException {
 		synchronized (this) {
 			while (!successfulinvocationevents.containsKey(action)
-					&& !illegalactionevents.containsKey(action))
+					&& !illegalactionevents.containsKey(action)) {
 				wait();
+			}
 		}
-		if(illegalactionevents.containsKey(action)){
+		if (illegalactionevents.containsKey(action)) {
 			throw illegalactionevents.remove(action).getException();
-		}else if(successfulinvocationevents.containsKey(action)){
-			//Java type inference sucks. Give me Haskell!
+		} else if (successfulinvocationevents.containsKey(action)) {
+			// Java type inference sucks. Give me Haskell!
 			return (T) successfulinvocationevents.remove(action).getResult();
-		}else{
+		} else {
 			logger.fatal("Missing event.");
 			throw new IllegalStateException("Missing event.");
 		}

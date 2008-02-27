@@ -20,12 +20,12 @@ import org.cspoker.common.RemotePlayerCommunication;
 
 public class BetCommand extends AbstractCommand {
 
-    public BetCommand(RemotePlayerCommunication rpc, Console console) {
-	super(rpc, console);
-    }
+	public BetCommand(RemotePlayerCommunication rpc, Console console) {
+		super(rpc, console);
+	}
 
-    public void execute(String... args) throws Exception {
-	rpc.bet(Integer.parseInt(args[0]));
-    }
+	public void execute(String... args) throws Exception {
+		rpc.bet(Integer.parseInt(args[0]));
+	}
 
 }

@@ -42,7 +42,7 @@ public class ServerMessageEvent extends ServerEvent {
 	protected ServerMessageEvent() {
 		// no op
 	}
-	
+
 	@Override
 	public String toString() {
 		return player.getName() + " says: " + message;
@@ -54,8 +54,11 @@ public class ServerMessageEvent extends ServerEvent {
 
 	public String getPlayerName() {
 		return player.getName();
-	}	
-	public void dispatch(RemoteAllEventsListener listener) throws RemoteException {
+	}
+
+	@Override
+	public void dispatch(RemoteAllEventsListener listener)
+			throws RemoteException {
 		listener.onServerMessageEvent(this);
 	}
 
