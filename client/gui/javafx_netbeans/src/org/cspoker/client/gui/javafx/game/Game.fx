@@ -4,10 +4,10 @@
  * Created on 20-feb-2008, 22:15:48
  */
 
-package org.client.game;
+package org.cspoker.client.gui.javafx.game;
 import javafx.ui.*;
 import java.lang.*;
-import org.client.game.Player;
+import org.cspoker.client.gui.javafx.game.Player;
 
 /**
  * @author Cedric

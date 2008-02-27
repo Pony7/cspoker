@@ -1,4 +1,4 @@
-package org.client;
+package org.cspoker.client.gui.javafx;
 /**
  * A user of this game
  * @author Cedric
