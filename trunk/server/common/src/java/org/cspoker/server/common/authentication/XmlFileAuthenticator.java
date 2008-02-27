@@ -1,8 +1,24 @@
+/**
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *  
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ */
 package org.cspoker.server.common.authentication;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.log4j.Logger;
 import org.xml.sax.Attributes;
@@ -16,14 +32,14 @@ public class XmlFileAuthenticator {
 
 	private static Logger logger = Logger.getLogger(XmlFileAuthenticator.class);
 
-	private volatile HashMap<String, String> passwords;
+	private final Map<String, String> passwords;
 
 	public XmlFileAuthenticator() {
 		this("org/cspoker/server/common/authentication/authentication.xml");
 	}
 
 	public XmlFileAuthenticator(String file) {
-
+		passwords = new ConcurrentHashMap<String,String>();
 		XMLReader xr;
 		try {
 			xr = XMLReaderFactory.createXMLReader();
@@ -55,12 +71,7 @@ public class XmlFileAuthenticator {
 		return new DefaultHandler() {
 
 			private StringBuilder sb = new StringBuilder();
-
-			@Override
-			public void startDocument() throws SAXException {
-				passwords = new HashMap<String, String>();
-			}
-
+			
 			@Override
 			public void characters(char[] ch, int start, int length)
 					throws SAXException {
@@ -90,6 +101,6 @@ public class XmlFileAuthenticator {
 	}
 
 	public boolean hasPassword(String user, String pass) {
-		return pass.equals(passwords.get(user));
+		return (pass!=null)&&pass.equals(passwords.get(user));
 	}
 }

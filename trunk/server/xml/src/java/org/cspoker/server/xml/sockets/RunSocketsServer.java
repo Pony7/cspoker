@@ -42,8 +42,8 @@ public class RunSocketsServer {
 		} catch (NumberFormatException e) {
 			usage();
 		}
-		logger.info("Starting SOCKETS server");
-		new SocketServer(port);
+		logger.info("Starting Socket server at port "+port);
+		(new SocketServer(port)).start();
 	}
 
 	private static void usage() {

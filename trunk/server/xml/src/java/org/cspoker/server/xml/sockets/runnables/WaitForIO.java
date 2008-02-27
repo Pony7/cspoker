@@ -29,6 +29,7 @@ import java.util.Set;
 import java.util.concurrent.Executor;
 
 import org.apache.log4j.Logger;
+import org.cspoker.server.common.authentication.XmlFileAuthenticator;
 import org.cspoker.server.common.util.threading.Prioritizable;
 import org.cspoker.server.xml.sockets.ClientContext;
 
@@ -47,11 +48,14 @@ public class WaitForIO implements Runnable, Prioritizable {
 	private final Charset charset;
 	private final CharsetDecoder decoder;
 
+	private final XmlFileAuthenticator auth;
+
 	public WaitForIO(Executor executor, Selector selector,
-			ServerSocketChannel server) {
+			ServerSocketChannel server, XmlFileAuthenticator auth) {
 		this.executor = executor;
 		this.selector = selector;
 		this.server = server;
+		this.auth = auth;
 
 		buffer = ByteBuffer.allocateDirect(bufferSize);
 		filteredBuffer = ByteBuffer.allocateDirect(bufferSize);
@@ -77,7 +81,7 @@ public class WaitForIO implements Runnable, Prioritizable {
 			Set<SelectionKey> keys = selector.selectedKeys();
 			Iterator<SelectionKey> i = keys.iterator();
 
-			// For each keys...
+			// For each key...
 			while (i.hasNext()) {
 				SelectionKey key = i.next();
 
@@ -85,19 +89,19 @@ public class WaitForIO implements Runnable, Prioritizable {
 
 				if ((kro & SelectionKey.OP_READ) == SelectionKey.OP_READ) {
 					readSocket(key);
-					// logger.trace("read from socket");
+					logger.trace("read from socket");
 				}
 				if ((kro & SelectionKey.OP_WRITE) == SelectionKey.OP_WRITE) {
+					logger.trace("going to write data to socket");
 					getContext(key, (SocketChannel) key.channel())
 							.writeBufferToClient();
-					// logger.trace("wrote data to socket");
+					logger.trace("wrote data to socket");
 				}
 				if ((kro & SelectionKey.OP_ACCEPT) == SelectionKey.OP_ACCEPT) {
 					acceptConnection();
 					logger.trace("accepted new connection");
 				}
 				i.remove(); // remove the key
-
 			}
 		} catch (IOException e) {
 			// no op
@@ -176,10 +180,8 @@ public class WaitForIO implements Runnable, Prioritizable {
 
 	private void endNode(StringBuilder stringBuilder, ClientContext context) {
 		String xml = stringBuilder.toString();
-		logger.trace("Processing: \n" + xml);
-		executor.execute(new ProcessXML(xml, context));
+		executor.execute(new ProcessXML(xml, context, auth));
 		stringBuilder.setLength(0);
-		logger.debug("ended an xml node");
 	}
 
 	@Override

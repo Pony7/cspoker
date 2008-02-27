@@ -40,9 +40,8 @@ public class RunHttpServer {
 		} catch (NumberFormatException e) {
 			usage();
 		}
-		logger.info("Starting HTTP server");
-		HttpCSPokerServer server = new HttpCSPokerServer(port);
-		server.start();
+		logger.info("Starting HTTP server at port "+port);
+		(new HttpServer(port)).start();
 	}
 
 	private static void usage() {

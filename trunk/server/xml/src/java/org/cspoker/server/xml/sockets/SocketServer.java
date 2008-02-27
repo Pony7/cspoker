@@ -17,12 +17,15 @@
 package org.cspoker.server.xml.sockets;
 
 import java.io.IOException;
+import java.nio.channels.ClosedChannelException;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
+import java.rmi.RemoteException;
 import java.util.concurrent.Executor;
 
 import org.apache.log4j.Logger;
+import org.cspoker.server.common.authentication.XmlFileAuthenticator;
 import org.cspoker.server.common.util.threading.RequestExecutor;
 import org.cspoker.server.xml.sockets.runnables.WaitForIO;
 
@@ -34,27 +37,40 @@ public class SocketServer {
 
 	private final Selector selector;
 
-	private final Executor executor;
+	private Executor executor;
 
-	public SocketServer(int port) throws IOException {
+	private final int port;
 
-		// Create the server socket channel
-		server = ServerSocketChannel.open();
-		// nonblocking I/O
-		server.configureBlocking(false);
-		// host-port 8000
-		server.socket().bind(new java.net.InetSocketAddress(port));
-		logger.info("Server running on port " + port);
-		// Create the selector
-		selector = Selector.open();
-		// Recording server to selector (type OP_ACCEPT)
-		server.register(selector, SelectionKey.OP_ACCEPT);
+	private final XmlFileAuthenticator auth;
 
+	public SocketServer(int port) throws RemoteException {
+		this(port, new XmlFileAuthenticator());
+	}
+	
+	public SocketServer(int port, XmlFileAuthenticator auth) throws RemoteException {
+		try {
+			this.auth = auth;
+			this.port = port;
+			// Create the server socket channel
+			server = ServerSocketChannel.open();
+			// nonblocking I/O
+			server.configureBlocking(false);
+			// host-port 8000
+			server.socket().bind(new java.net.InetSocketAddress(port));
+			// Create the selector
+			selector = Selector.open();
+			// Recording server to selector (type OP_ACCEPT)
+			server.register(selector, SelectionKey.OP_ACCEPT);
+		}  catch (IOException e) {
+			throw new RemoteException("Creating Socket server failed",e);
+		}
+	}
+	 
+	public void start(){
 		executor = RequestExecutor.getInstance();
-
 		// Infinite server loop
-		executor.execute(new WaitForIO(executor, selector, server));
-
+		executor.execute(new WaitForIO(executor, selector, server, auth));
+		logger.info("Socket server running on port " + port);
 	}
 
 }

@@ -54,8 +54,6 @@ public abstract class AbstractHttpHandlerImpl implements HttpHandler {
 			http.getResponseHeaders().add("Cache-Control", "no-cache");
 			byte[] response = getResponse(http);
 
-			logger.trace("Writing response of length " + response.length);
-
 			// send the default status code (no exception occured)
 			http.sendResponseHeaders(getDefaultStatusCode(), response.length);
 			http.getResponseBody().write(response);
