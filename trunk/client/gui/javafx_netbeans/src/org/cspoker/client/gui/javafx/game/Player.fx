@@ -4,7 +4,7 @@
  * Created on 20-feb-2008, 22:17:36
  */
 
-package org.client.game;
+package org.cspoker.client.gui.javafx.game;
 
 /**
  * @author Cedric

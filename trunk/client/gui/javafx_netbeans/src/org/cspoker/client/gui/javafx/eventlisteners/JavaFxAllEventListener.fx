@@ -4,7 +4,7 @@
  * Created on 20-feb-2008, 21:19:05
  */
 
-package org.client.eventlisteners;
+package org.cspoker.client.gui.javafx.eventlisteners;
 
 import org.cspoker.common.eventlisteners.RemoteAllEventsListener;
 import org.cspoker.common.events.gameEvents.GameMessageEvent;

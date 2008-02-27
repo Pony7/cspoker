@@ -4,7 +4,7 @@
  * Created on 19-feb-2008, 18:32:57
  */
 
-package org.client;
+package org.cspoker.client.gui.javafx;
 
 /**
  * @author Cedric
@@ -13,7 +13,7 @@ package org.client;
 import javafx.ui.*;
 import java.lang.*;
 
-import org.client.JavaFxClient; 
+import org.cspoker.client.gui.javafx.JavaFxClient; 
 
         class Login {
             operation init(c:JavaFxClient,m:Main);
@@ -123,7 +123,7 @@ import org.client.JavaFxClient;
             }
             top:SimpleLabel {
             					horizontalAlignment: CENTER
-                                icon: Image {url:"./images/cspoker8.jpg"}
+                                icon: Image {url:"./org/cspoker/client/gui/javafx/images/cspoker8.jpg"}
             }
 
             bottom:FlowPanel{

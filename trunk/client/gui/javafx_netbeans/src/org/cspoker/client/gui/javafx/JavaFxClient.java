@@ -1,4 +1,4 @@
-package org.client;
+package org.cspoker.client.gui.javafx;
 
 
 import java.rmi.RemoteException;
@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import org.client.elements.TableInterface;
-import org.client.elements.TableImpl;
+import org.cspoker.client.gui.javafx.elements.TableInterface;
+import org.cspoker.client.gui.javafx.elements.TableImpl;
 import org.cspoker.common.exceptions.IllegalActionException;
 import org.cspoker.common.RemotePlayerCommunication;
 import org.cspoker.common.elements.table.TableId;

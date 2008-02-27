@@ -4,9 +4,9 @@
  * Created on 22-feb-2008, 0:09:29
  */
 
-package org.client.elements;
+package org.cspoker.client.gui.javafx.elements;
 
-import org.client.elements.TableInterface;
+import org.cspoker.client.gui.javafx.elements.TableInterface;
 
 /**
  * @author Cedric

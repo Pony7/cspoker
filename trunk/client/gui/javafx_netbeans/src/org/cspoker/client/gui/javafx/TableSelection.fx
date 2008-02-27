@@ -4,11 +4,11 @@
  * Created on 21-feb-2008, 23:34:58
  */
 
-package org.client;
+package org.cspoker.client.gui.javafx;
 import javafx.ui.*;
 import java.lang.*;
-import org.client.elements.TableInterface;
-import org.client.elements.TableItem;
+import org.cspoker.client.gui.javafx.elements.TableInterface;
+import org.cspoker.client.gui.javafx.elements.TableItem;
 
 /**
  * @author Cedric
