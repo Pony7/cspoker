@@ -60,6 +60,7 @@ import org.cspoker.server.common.game.session.Session;
 import org.cspoker.server.common.game.session.SessionManager;
 
 public class PlayerCommunicationTest extends TestCase {
+	
 	private static Logger logger = Logger
 			.getLogger(PlayerCommunicationTest.class);
 

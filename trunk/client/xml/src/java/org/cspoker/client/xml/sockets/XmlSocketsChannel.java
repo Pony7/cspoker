@@ -24,26 +24,26 @@ import java.nio.CharBuffer;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
 import java.rmi.RemoteException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.security.auth.login.LoginException;
 
 import org.apache.log4j.Logger;
+import org.cspoker.client.xml.common.ChannelState;
+import org.cspoker.client.xml.common.ChannelStateException;
 import org.cspoker.client.xml.common.XmlChannel;
+import org.cspoker.common.util.Strings;
 import org.cspoker.common.xml.XmlEventListener;
 
 public class XmlSocketsChannel implements XmlChannel {
 
 	private final static Logger logger = Logger
 			.getLogger(XmlSocketsChannel.class);
-
-	public final static byte DELIMITER = 0x00;
-	public final static char[] DELIMITER_ARRAY = new char[] { (char) DELIMITER };
-
+	
 	private Socket s;
 	private Writer w;
 
@@ -51,12 +51,14 @@ public class XmlSocketsChannel implements XmlChannel {
 
 	private CharsetDecoder decoder;
 
-	private List<XmlEventListener> xmlEventListeners = new ArrayList<XmlEventListener>();
+	private final Set<XmlEventListener> xmlEventListeners = Collections.synchronizedSet(new HashSet<XmlEventListener>());
 
 	private final String server;
 	private final int port;
 	private final String username;
 	private final String password;
+
+	private ChannelState state = ChannelState.INITIALIZED;
 
 	public XmlSocketsChannel(String server, int port, String username,
 			String password) {
@@ -68,7 +70,9 @@ public class XmlSocketsChannel implements XmlChannel {
 		decoder = charset.newDecoder();
 	}
 
-	public synchronized void open() throws LoginException, RemoteException {
+	public synchronized void open() throws LoginException, RemoteException, ChannelStateException {
+		if(state != ChannelState.INITIALIZED)
+			throw new ChannelStateException("Channel is not in the initialized state", state);
 		try {
 			s = new Socket(server, port);
 			w = new OutputStreamWriter(s.getOutputStream());
@@ -80,13 +84,14 @@ public class XmlSocketsChannel implements XmlChannel {
 			logger.error(e);
 			throw new RemoteException("IOException from socket.",e);
 		}
+		state = ChannelState.OPEN;
 	}
 
-	public synchronized void registerXmlEventListener(XmlEventListener listener) {
+	public void registerXmlEventListener(XmlEventListener listener) {
 		xmlEventListeners.add(listener);
 	}
 
-	public synchronized void unRegisterXmlEventListener(XmlEventListener listener) {
+	public void unRegisterXmlEventListener(XmlEventListener listener) {
 		xmlEventListeners.remove(listener);
 	}
 
@@ -98,21 +103,25 @@ public class XmlSocketsChannel implements XmlChannel {
 
 	private boolean login(String username, String password) throws IOException {
 		w.write("<login username='" + username + "' password='" + password
-				+ "' useragent='sockets client'/>");
+				+ "' useragent='Sockets Client "+Strings.version+"'/>"+ ((char) 0x00));
+		w.flush();
 		try {
 			return readUntilDelimiter().contains("<login");
 		} catch (IOException e) {
 			logger.error("Connection lost during login.", e);
 		} catch (InterruptedException e) {
-			// no op
+			logger.error(e);
+			Thread.currentThread().interrupt();
 		}
 		return false;
 	}
 
-	public synchronized void send(final String xml) throws RemoteException {
+	public synchronized void send(final String xml) throws RemoteException, ChannelStateException {
+		if(state != ChannelState.OPEN)
+			throw new ChannelStateException("Channel is not open", state);
 		try {
-			w.write(xml);
-			w.write(DELIMITER_ARRAY);
+			w.write(xml+ ((char) 0x00));
+			w.flush();
 		} catch (IOException e) {
 			logger.error(e);
 			throw new RemoteException("IOException from socket",e);
@@ -128,21 +137,25 @@ public class XmlSocketsChannel implements XmlChannel {
 				throw new InterruptedException();
 			if (b < 0)
 				throw new IOException("Connection lost");
-			if (b == DELIMITER)
-				return sb.toString();
+			if (b == 0x00){
+				if(sb.length()>0){
+					return sb.toString();
+				}else{
+					logger.trace("Delimiter found but no xml: length "+sb.length());
+				}
+			}
 			else {
 				singleByteBuffer.put((byte) b);
+				singleByteBuffer.flip();
 				CharBuffer decoded = decoder.decode(singleByteBuffer);
 				sb.append(decoded);
 				singleByteBuffer.clear();
 			}
 		}
 	}
-
-	private AtomicBoolean closed = new AtomicBoolean(false);
-
-	public void close() {
-		if (!closed.getAndSet(true)) {
+	public synchronized void close() {
+		if (state != ChannelState.CLOSED) {
+			executor.shutdown();
 			executor.shutdownNow();
 			try {
 				w.close();
@@ -155,6 +168,7 @@ public class XmlSocketsChannel implements XmlChannel {
 				logger.error(e);
 			}
 		}
+		state = ChannelState.CLOSED;
 	}
 
 	private class WaitForEvents implements Runnable {

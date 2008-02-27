@@ -39,7 +39,6 @@ public class LoggingThreadPool extends ThreadPoolExecutor {
 	@Override
 	protected void beforeExecute(Thread t, Runnable r) {
 		super.beforeExecute(t, r);
-
 		logger.trace(String.format("Thread %s: start %s", t, r));
 		startTime.set(System.nanoTime());
 	}
