@@ -34,7 +34,6 @@ import org.cspoker.common.events.serverEvents.TableCreatedEvent;
  */
 
 class JavaFxAllEventListener extends RemoteAllEventsListener {
-
    operation onAllInEvent(e:AllInEvent);
    operation onBetEvent(e:BetEvent);
    operation onBigBlindEvent(e:BigBlindEvent);

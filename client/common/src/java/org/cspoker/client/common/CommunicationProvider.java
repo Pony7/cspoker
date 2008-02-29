@@ -27,7 +27,7 @@ import org.cspoker.common.RemotePlayerCommunication;
 public class CommunicationProvider implements
 		RemotePlayerCommunicationFactory {
 
-	public final static CommunicationProvider global_factory = new CommunicationProvider();
+	public final static CommunicationProvider global_provider = new CommunicationProvider();
 
 	private List<RemotePlayerCommunicationFactory> providers = new ArrayList<RemotePlayerCommunicationFactory>();
 

@@ -62,7 +62,7 @@ public class RemotePlayerCommunicationFactoryForRMI implements
 
 	@Override
 	public String toString() {
-		return server+":"+port+" [RMI]";
+		return "rmi://"+server+":"+port;
 	}
 	
 }
