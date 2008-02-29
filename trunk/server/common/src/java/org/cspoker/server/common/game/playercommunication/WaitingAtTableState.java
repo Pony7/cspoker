@@ -18,7 +18,7 @@ package org.cspoker.server.common.game.playercommunication;
 import org.cspoker.common.events.serverevents.PlayerLeftEvent;
 import org.cspoker.common.exceptions.IllegalActionException;
 import org.cspoker.server.common.game.GameManager;
-import org.cspoker.server.common.game.elements.table.Table;
+import org.cspoker.server.common.game.elements.table.GameTable;
 
 /**
  * A class to represent the state where the player is waiting for the game to
@@ -33,10 +33,10 @@ import org.cspoker.server.common.game.elements.table.Table;
  */
 class WaitingAtTableState extends PlayerCommunicationState {
 
-	protected final Table table;
+	protected final GameTable table;
 
 	public WaitingAtTableState(PlayerCommunicationImpl playerCommunication,
-			Table table) {
+			GameTable table) {
 		super(playerCommunication);
 		this.table = table;
 	}

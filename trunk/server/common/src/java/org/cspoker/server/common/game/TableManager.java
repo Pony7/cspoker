@@ -21,10 +21,10 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
+import org.cspoker.common.elements.GameProperty;
 import org.cspoker.common.elements.table.TableId;
 import org.cspoker.common.player.PlayerId;
-import org.cspoker.server.common.game.elements.table.Table;
-import org.cspoker.server.common.game.gamecontrol.GameProperty;
+import org.cspoker.server.common.game.elements.table.GameTable;
 
 /**
  * A class to manage tables.
@@ -42,7 +42,7 @@ public class TableManager {
 	/**
 	 * The hash map containing all the tables of this server.
 	 */
-	private static ConcurrentHashMap<TableId, Table> hashMap = new ConcurrentHashMap<TableId, Table>();
+	private static ConcurrentHashMap<TableId, GameTable> hashMap = new ConcurrentHashMap<TableId, GameTable>();
 
 	/**
 	 * Get the table with the given id.
@@ -55,7 +55,7 @@ public class TableManager {
 	 *             [must] There does not exist a table with given table id. |
 	 *             !hasATableWithId(id)
 	 */
-	public static Table getTable(TableId id) {
+	public static GameTable getTable(TableId id) {
 		if (!hasATableWithId(id)) {
 			throw new IllegalArgumentException();
 		}
@@ -73,13 +73,13 @@ public class TableManager {
 		return hashMap.containsKey(id);
 	}
 
-	public static void removeTable(Table id) {
+	public static void removeTable(GameTable id) {
 		hashMap.remove(id);
 	}
 
-	public static Table createTable(PlayerId id) {
+	public static GameTable createTable(PlayerId id) {
 		TableId tableId = new TableId(counter.getAndIncrement());
-		Table table = new Table(tableId, new GameProperty());
+		GameTable table = new GameTable(tableId, new GameProperty());
 		hashMap.put(tableId, table);
 		return table;
 	}

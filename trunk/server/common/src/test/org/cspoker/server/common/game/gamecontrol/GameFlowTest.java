@@ -19,12 +19,13 @@ package org.cspoker.server.common.game.gamecontrol;
 import junit.framework.TestCase;
 
 import org.apache.log4j.Logger;
+import org.cspoker.common.elements.GameProperty;
 import org.cspoker.common.elements.table.TableId;
 import org.cspoker.common.exceptions.IllegalActionException;
 import org.cspoker.server.common.game.GameMediator;
 import org.cspoker.server.common.game.elements.chips.IllegalValueException;
 import org.cspoker.server.common.game.elements.table.PlayerListFullException;
-import org.cspoker.server.common.game.elements.table.Table;
+import org.cspoker.server.common.game.elements.table.GameTable;
 import org.cspoker.server.common.game.player.GamePlayer;
 import org.cspoker.server.common.game.player.PlayerFactory;
 
@@ -39,7 +40,7 @@ public class GameFlowTest extends TestCase {
 
 	private GamePlayer craig;
 
-	private Table table;
+	private GameTable table;
 
 	private GameMediator gameMediator;
 
@@ -61,7 +62,7 @@ public class GameFlowTest extends TestCase {
 
 			gameMediator = new GameMediator();
 
-			table = new Table(new TableId(0), new GameProperty());
+			table = new GameTable(new TableId(0), new GameProperty());
 			table.addPlayer(kenzo);
 			table.addPlayer(cedric);
 			table.addPlayer(guy);
@@ -81,7 +82,7 @@ public class GameFlowTest extends TestCase {
 		GameFlowTest.logger.info("Big Blind: "
 				+ table.getGameProperty().getBigBlind());
 		GameFlowTest.logger.info("Betting Rules: "
-				+ gameControl.getGame().getGameProperty().getBettingRules()
+				+ gameControl.getGame().getBettingRules()
 						.toString());
 		Game game = gameControl.getGame();
 
@@ -257,7 +258,7 @@ public class GameFlowTest extends TestCase {
 		GameFlowTest.logger.info("Big Blind: "
 				+ table.getGameProperty().getBigBlind());
 		GameFlowTest.logger.info("Betting Rules: "
-				+ gameControl.getGame().getGameProperty().getBettingRules()
+				+ gameControl.getGame().getBettingRules()
 						.toString());
 		Game game = gameControl.getGame();
 
@@ -320,7 +321,7 @@ public class GameFlowTest extends TestCase {
 			cedric = playerFactory.createNewPlayer("Cedric", 4);
 			guy = playerFactory.createNewPlayer("Guy", 100);
 
-			table = new Table(new TableId(0), new GameProperty());
+			table = new GameTable(new TableId(0), new GameProperty());
 			table.addPlayer(kenzo);
 			table.addPlayer(cedric);
 			table.addPlayer(guy);
@@ -400,7 +401,7 @@ public class GameFlowTest extends TestCase {
 			cedric = playerFactory.createNewPlayer("Cedric", 100);
 			guy = playerFactory.createNewPlayer("Guy", 9);
 
-			table = new Table(new TableId(0), new GameProperty());
+			table = new GameTable(new TableId(0), new GameProperty());
 			table.addPlayer(kenzo);
 			table.addPlayer(cedric);
 			table.addPlayer(guy);
@@ -473,7 +474,7 @@ public class GameFlowTest extends TestCase {
 			cedric = playerFactory.createNewPlayer("Cedric", 4);
 			guy = playerFactory.createNewPlayer("Guy", 9);
 
-			table = new Table(new TableId(0), new GameProperty());
+			table = new GameTable(new TableId(0), new GameProperty());
 			table.addPlayer(kenzo);
 			table.addPlayer(cedric);
 			table.addPlayer(guy);
@@ -511,7 +512,7 @@ public class GameFlowTest extends TestCase {
 			cedric = playerFactory.createNewPlayer("Cedric", 100);
 			guy = playerFactory.createNewPlayer("Guy", 200);
 
-			table = new Table(new TableId(0), new GameProperty());
+			table = new GameTable(new TableId(0), new GameProperty());
 			table.addPlayer(kenzo);
 			table.addPlayer(cedric);
 			table.addPlayer(guy);
@@ -552,7 +553,7 @@ public class GameFlowTest extends TestCase {
 			cedric = playerFactory.createNewPlayer("Cedric", 100);
 			guy = playerFactory.createNewPlayer("Guy", 150);
 
-			table = new Table(new TableId(0), new GameProperty());
+			table = new GameTable(new TableId(0), new GameProperty());
 			table.addPlayer(kenzo);
 			table.addPlayer(cedric);
 			table.addPlayer(guy);
@@ -570,7 +571,7 @@ public class GameFlowTest extends TestCase {
 		GameFlowTest.logger.info("Big Blind: "
 				+ table.getGameProperty().getBigBlind());
 		GameFlowTest.logger.info("Betting Rules: "
-				+ gameControl.getGame().getGameProperty().getBettingRules()
+				+ gameControl.getGame().getBettingRules()
 						.toString());
 		Game game = gameControl.getGame();
 
@@ -620,7 +621,7 @@ public class GameFlowTest extends TestCase {
 
 			gameMediator = new GameMediator();
 
-			table = new Table(new TableId(0), new GameProperty());
+			table = new GameTable(new TableId(0), new GameProperty());
 			table.addPlayer(kenzo);
 			table.addPlayer(cedric);
 			table.addPlayer(guy);
@@ -639,7 +640,7 @@ public class GameFlowTest extends TestCase {
 		GameControl gameControl = new GameControl(gameMediator, table, kenzo);
 
 		GameFlowTest.logger.info("Betting Rules: "
-				+ gameControl.getGame().getGameProperty().getBettingRules()
+				+ gameControl.getGame().getBettingRules()
 						.toString());
 		Game game = gameControl.getGame();
 
@@ -678,7 +679,7 @@ public class GameFlowTest extends TestCase {
 
 			gameMediator = new GameMediator();
 
-			table = new Table(new TableId(0), new GameProperty());
+			table = new GameTable(new TableId(0), new GameProperty());
 			table.addPlayer(kenzo);
 			table.addPlayer(cedric);
 			table.addPlayer(guy);
@@ -697,7 +698,7 @@ public class GameFlowTest extends TestCase {
 		GameControl gameControl = new GameControl(gameMediator, table, kenzo);
 
 		GameFlowTest.logger.info("Betting Rules: "
-				+ gameControl.getGame().getGameProperty().getBettingRules()
+				+ gameControl.getGame().getBettingRules()
 						.toString());
 		Game game = gameControl.getGame();
 
@@ -734,7 +735,7 @@ public class GameFlowTest extends TestCase {
 
 			gameMediator = new GameMediator();
 
-			table = new Table(new TableId(0), new GameProperty());
+			table = new GameTable(new TableId(0), new GameProperty());
 			table.addPlayer(guy);
 			table.addPlayer(craig);
 		} catch (IllegalValueException e) {
@@ -752,7 +753,7 @@ public class GameFlowTest extends TestCase {
 		GameControl gameControl = new GameControl(gameMediator, table);
 
 		GameFlowTest.logger.info("Betting Rules: "
-				+ gameControl.getGame().getGameProperty().getBettingRules()
+				+ gameControl.getGame().getBettingRules()
 						.toString());
 		Game game = gameControl.getGame();
 
@@ -831,7 +832,7 @@ public class GameFlowTest extends TestCase {
 			cedric = playerFactory.createNewPlayer("Cedric", 200);
 			guy = playerFactory.createNewPlayer("Guy", 200);
 
-			table = new Table(new TableId(0), new GameProperty());
+			table = new GameTable(new TableId(0), new GameProperty());
 			table.addPlayer(kenzo);
 			table.addPlayer(cedric);
 			table.addPlayer(guy);
@@ -875,7 +876,7 @@ public class GameFlowTest extends TestCase {
 			kenzo = playerFactory.createNewPlayer("Kenzo", 500);
 			cedric = playerFactory.createNewPlayer("Cedric", 500);
 
-			table = new Table(new TableId(0), new GameProperty());
+			table = new GameTable(new TableId(0), new GameProperty());
 			table.addPlayer(kenzo);
 			table.addPlayer(cedric);
 		} catch (IllegalValueException e) {

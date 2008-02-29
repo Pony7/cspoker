@@ -23,7 +23,7 @@ import org.cspoker.common.player.PlayerId;
 import org.cspoker.server.common.game.GameManager;
 import org.cspoker.server.common.game.GameMediator;
 import org.cspoker.server.common.game.TableManager;
-import org.cspoker.server.common.game.elements.table.Table;
+import org.cspoker.server.common.game.elements.table.GameTable;
 import org.cspoker.server.common.game.gamecontrol.GameControl;
 import org.cspoker.server.common.game.session.PlayerKilledExcepion;
 import org.cspoker.server.common.game.session.SessionManager;
@@ -56,7 +56,7 @@ class TableCreatedState extends WaitingAtTableState {
 	 *            The created table.
 	 */
 	public TableCreatedState(PlayerCommunicationImpl playerCommunication,
-			Table table) {
+			GameTable table) {
 		super(playerCommunication, table);
 	}
 

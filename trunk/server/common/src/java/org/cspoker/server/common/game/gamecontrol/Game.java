@@ -20,12 +20,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.cspoker.common.elements.GameProperty;
 import org.cspoker.common.elements.cards.Card;
 import org.cspoker.common.exceptions.IllegalActionException;
 import org.cspoker.server.common.game.elements.cards.deck.Deck;
 import org.cspoker.server.common.game.elements.chips.pot.GamePots;
 import org.cspoker.server.common.game.elements.table.PlayerListFullException;
-import org.cspoker.server.common.game.elements.table.Table;
+import org.cspoker.server.common.game.elements.table.GameTable;
+import org.cspoker.server.common.game.gamecontrol.rules.BettingRules;
+import org.cspoker.server.common.game.gamecontrol.rules.NoLimit;
 import org.cspoker.server.common.game.player.GamePlayer;
 import org.cspoker.server.common.util.LoopingList;
 
@@ -47,7 +50,7 @@ public class Game {
 	/**
 	 * This variable contains the table of this game.
 	 */
-	private final Table table;
+	private final GameTable table;
 
 	/**
 	 * This variable contains the game property of this game.
@@ -90,6 +93,8 @@ public class Game {
 	 * This variable contains the next dealer of this game.
 	 */
 	private GamePlayer nextDealer;
+	
+	private BettingRules bettingRules;
 
 	/***************************************************************************
 	 * Constructor
@@ -103,11 +108,17 @@ public class Game {
 	 *      |table!=null && table.getNbPlayer()>1
 	 * 
 	 */
-	public Game(Table table) {
+	public Game(GameTable table) {
 		this(table, table.getRandomPlayer());
 	}
 
-	public Game(Table table, GamePlayer dealer) {
+	public Game(GameTable table, GamePlayer dealer) {
+		this(table, dealer, new NoLimit());
+
+	}
+	
+	public Game(GameTable table, GamePlayer dealer, BettingRules bettingRules){
+		this.bettingRules = bettingRules;
 		this.table = table;
 		table.setPlaying(true);
 		gameProperty = table.getGameProperty();
@@ -280,6 +291,14 @@ public class Game {
 	public GameProperty getGameProperty() {
 		return gameProperty;
 	}
+	
+	/***************************************************************************
+	 * Game Property
+	 **************************************************************************/
+	
+	public BettingRules getBettingRules(){
+		return bettingRules;
+	}
 
 	/***************************************************************************
 	 * Pots
@@ -304,7 +323,7 @@ public class Game {
 	 * @return The table of this game.
 	 * 
 	 */
-	public Table getTable() {
+	public GameTable getTable() {
 		return table;
 	}
 

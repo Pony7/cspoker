@@ -319,7 +319,7 @@ public abstract class BettingRound extends Round {
 	}
 
 	public boolean someoneHasRaised() {
-		return game.getGameProperty().getBettingRules().getNBRaises() > 0;
+		return getBettingRules().getNBRaises() > 0;
 	}
 
 	/**
