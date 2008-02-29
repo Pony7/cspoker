@@ -60,7 +60,7 @@ public class RemotePlayerCommunicationFactoryForSockets implements
 
 	@Override
 	public String toString() {
-		return server+":"+port+" [Sockets]";
+		return "socket://"+server+":"+port;
 	}
 
 }

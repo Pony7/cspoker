@@ -23,11 +23,11 @@ operation Game.init(){
     
 }
 
-  attribute Game.screen=Frame{
-        	centerOnScreen:true
+attribute Game.screen=Frame{
             title: "Login Screen"
             width: 300
             height: 400
+            centerOnScreen:true
             visible: true
             menubar: MenuBar {
                  menus: Menu {

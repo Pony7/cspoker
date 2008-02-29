@@ -66,7 +66,7 @@ public class RemotePlayerCommunicationFactoryForHttp implements
 
 	@Override
 	public String toString() {
-		return server+":"+port+" [HTTP]";
+		return "http://"+server+":"+port;
 	}
 
 }

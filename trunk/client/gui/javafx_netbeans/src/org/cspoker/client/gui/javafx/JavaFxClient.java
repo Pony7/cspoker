@@ -48,10 +48,9 @@ public class JavaFxClient {
 	 * Creates a new communication with a server at the given url and port
 	 * for a user with the given user name and password
 	 */
-	public void createCommunication(String url, String port, String username, String password){
+	public void createCommunication(String connection, String username, String password){
 		System.out.println("LOGIN ATTEMPT");
-		System.out.println("url : "+url);
-		System.out.println("port : "+port);
+		System.out.println("connection : "+connection);
 		System.out.println("user name : "+username);
 		System.out.println("password : "+password);
 		//TODO: create communication module
@@ -76,9 +75,9 @@ public class JavaFxClient {
 	 * @param password
 	 * 			the given password
 	 */
-	public void login(String url, String port, String userName, String password){
+	public void login(String connection, String userName, String password){
 		this.client=new User(userName);
-		createCommunication(url,port,userName,password);
+		createCommunication(connection,userName,password);
 	}
 	/**********************************************************
 	 * Bet
