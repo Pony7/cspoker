@@ -37,7 +37,7 @@ operation Login.init(c:JavaFxClient,m:Main){
     client=c;
     prog=m;
     screen=Frame{
-        title: "Login Screen"
+        title: "Login"
         width: 300
         height: 350
         visible: true
@@ -83,8 +83,7 @@ operation Login.init(c:JavaFxClient,m:Main){
                 TextField{
                     row: usernameRow
                     column: fieldsColumn
-                    horizontalAlignment: CENTER
-                    columns: 25
+                    horizontalAlignment: LEFT
                     value: bind name
                 },
                 SimpleLabel{
@@ -96,8 +95,7 @@ operation Login.init(c:JavaFxClient,m:Main){
                 PasswordField{
                     row: passwRow
                     column: fieldsColumn
-                    horizontalAlignment: CENTER
-                    columns: 25
+                    horizontalAlignment: LEFT
                     value: bind passw
                 }
                 ]
