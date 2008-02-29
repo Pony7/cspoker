@@ -24,7 +24,7 @@ import org.cspoker.server.common.game.GameManager;
 import org.cspoker.server.common.game.GameMediator;
 import org.cspoker.server.common.game.TableManager;
 import org.cspoker.server.common.game.elements.table.PlayerListFullException;
-import org.cspoker.server.common.game.elements.table.Table;
+import org.cspoker.server.common.game.elements.table.GameTable;
 
 /**
  * A class to represent the initial state of the player.
@@ -60,7 +60,7 @@ class InitialState extends PlayerCommunicationState {
 					"The given table id should be effective.");
 		}
 
-		Table table = TableManager.getTable(id);
+		GameTable table = TableManager.getTable(id);
 
 		if (table == null) {
 			throw new IllegalArgumentException(
@@ -92,7 +92,7 @@ class InitialState extends PlayerCommunicationState {
 
 	@Override
 	public TableId createTable() throws IllegalActionException {
-		Table table = TableManager.createTable(playerCommunication.getPlayer()
+		GameTable table = TableManager.createTable(playerCommunication.getPlayer()
 				.getId());
 		try {
 			table.addPlayer(playerCommunication.getPlayer());

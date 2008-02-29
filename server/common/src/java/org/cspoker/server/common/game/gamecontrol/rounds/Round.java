@@ -98,7 +98,7 @@ public abstract class Round implements PlayerAction {
 	 * Returns the betting game.rounds.rules for this round
 	 */
 	public BettingRules getBettingRules() {
-		return getGame().getGameProperty().getBettingRules();
+		return getGame().getBettingRules();
 	}
 
 	/***************************************************************************

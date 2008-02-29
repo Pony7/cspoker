@@ -22,9 +22,11 @@ import java.util.List;
 import java.util.Random;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import org.cspoker.common.elements.GameProperty;
+import org.cspoker.common.elements.table.Table;
 import org.cspoker.common.elements.table.TableId;
+import org.cspoker.common.player.Player;
 import org.cspoker.common.player.PlayerId;
-import org.cspoker.server.common.game.gamecontrol.GameProperty;
 import org.cspoker.server.common.game.player.GamePlayer;
 
 /**
@@ -37,7 +39,7 @@ import org.cspoker.server.common.game.player.GamePlayer;
  * @invar Each player at the table is unique.
  * 
  */
-public class Table {
+public class GameTable {
 
 	/***************************************************************************
 	 * Variables
@@ -76,11 +78,11 @@ public class Table {
 	 *         |setGameProperty(gameProperty)
 	 * @effect Set the playing status to false. |setPlaying(false)
 	 */
-	public Table(TableId id, GameProperty gameProperty) {
+	public GameTable(TableId id, GameProperty gameProperty) {
 		this(id, null, gameProperty);
 	}
 
-	public Table(TableId id, String name, GameProperty gameProperty) {
+	public GameTable(TableId id, String name, GameProperty gameProperty) {
 		this.id = id;
 		setGameProperty(gameProperty);
 		setPlaying(false);
@@ -344,5 +346,13 @@ public class Table {
 	 */
 	public int getNbPlayers() {
 		return players.size();
+	}
+	
+	public synchronized Table getSavedTable(){
+		List<Player> playerList = new ArrayList<Player>();
+		for(GamePlayer player:players){
+			playerList.add(player.getSavedPlayer());
+		}
+		return new Table(id, name, playerList, playing, gameProperty);
 	}
 }

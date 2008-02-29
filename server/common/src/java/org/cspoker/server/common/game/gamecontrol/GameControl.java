@@ -31,11 +31,13 @@ import org.cspoker.common.events.gameevents.playeractionevents.FoldEvent;
 import org.cspoker.common.events.gameevents.playeractionevents.RaiseEvent;
 import org.cspoker.common.exceptions.IllegalActionException;
 import org.cspoker.server.common.game.GameMediator;
+import org.cspoker.server.common.game.elements.table.GameTable;
 import org.cspoker.server.common.game.elements.table.PlayerListFullException;
-import org.cspoker.server.common.game.elements.table.Table;
 import org.cspoker.server.common.game.gamecontrol.rounds.BettingRound;
 import org.cspoker.server.common.game.gamecontrol.rounds.Round;
 import org.cspoker.server.common.game.gamecontrol.rounds.WaitingRound;
+import org.cspoker.server.common.game.gamecontrol.rules.BettingRules;
+import org.cspoker.server.common.game.gamecontrol.rules.NoLimit;
 import org.cspoker.server.common.game.player.GamePlayer;
 
 /**
@@ -76,14 +78,22 @@ public class GameControl implements PlayerAction {
 	 * Construct a new game control with given table.
 	 * 
 	 */
-	public GameControl(GameMediator gameMediator, Table table) {
+	public GameControl(GameMediator gameMediator, GameTable table) {
 		this(gameMediator, table, table.getRandomPlayer());
 	}
+	
+	public GameControl(GameMediator gameMediator, GameTable table, BettingRules rules){
+		this(gameMediator, table, table.getRandomPlayer(), rules);
+	}
 
-	public GameControl(GameMediator gameMediator, Table table, GamePlayer dealer) {
+	public GameControl(GameMediator gameMediator, GameTable table, GamePlayer dealer) {
+		this(gameMediator, table, dealer, new NoLimit());
+	}
+	
+	public GameControl(GameMediator gameMediator, GameTable table, GamePlayer dealer, BettingRules rules){
 		this.gameMediator = gameMediator;
 		gameMediator.setGameControl(this);
-		game = new Game(table, dealer);
+		game = new Game(table, dealer, rules);
 		round = new WaitingRound(gameMediator, game);
 		try {
 			deal(game.getDealer());
@@ -92,7 +102,7 @@ public class GameControl implements PlayerAction {
 		}
 
 		Date date = new Date();
-		GameControl.logger.info(getGame().getGameProperty().getBettingRules()
+		GameControl.logger.info(getGame().getBettingRules()
 				.toString()
 				+ " "
 				+ "($"
