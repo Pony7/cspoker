@@ -124,9 +124,9 @@ public class ClientContext implements XmlEventListener {
 		if (playerComm != null) {
 			// TODO will this sequence of calls end?
 			XmlPlayerCommunicationFactory.global_factory.unRegister(session);
+			SessionManager.global_session_manager
+			.killSession(session.getUserName());
 		}
-		SessionManager.global_session_manager
-		.killSession(session.getUserName());
 		try {
 			client.close();
 		} catch (IOException e) {

@@ -61,7 +61,7 @@ public class TestSockets {
 			LoginException {
 		int port = 8081;
 		String server = "localhost";
-		RemotePlayerCommunicationFactoryForSockets temp = new RemotePlayerCommunicationFactoryForSockets(server,port);
+		RemotePlayerCommunicationFactoryForSocket temp = new RemotePlayerCommunicationFactoryForSocket(server,port);
 		XmlChannelRemotePlayerCommunication kenzo = null;
 		XmlChannelRemotePlayerCommunication guy = null;
 		XmlChannelRemotePlayerCommunication cedric = null;

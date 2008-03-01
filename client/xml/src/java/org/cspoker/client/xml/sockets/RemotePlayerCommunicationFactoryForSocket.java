@@ -25,16 +25,16 @@ import org.cspoker.client.common.RemotePlayerCommunicationFactory;
 import org.cspoker.client.xml.common.ChannelStateException;
 import org.cspoker.client.xml.common.XmlChannelRemotePlayerCommunication;
 
-public class RemotePlayerCommunicationFactoryForSockets implements
+public class RemotePlayerCommunicationFactoryForSocket implements
 		RemotePlayerCommunicationFactory {
 
 	private final static Logger logger = Logger
-			.getLogger(RemotePlayerCommunicationFactoryForSockets.class);
+			.getLogger(RemotePlayerCommunicationFactoryForSocket.class);
 	
 	private final String server;
 	private final int port;
 
-	public RemotePlayerCommunicationFactoryForSockets(String server, int port) {
+	public RemotePlayerCommunicationFactoryForSocket(String server, int port) {
 		this.server = server;
 		this.port = port;
 	}

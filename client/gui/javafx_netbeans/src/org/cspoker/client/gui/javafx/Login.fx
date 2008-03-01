@@ -15,6 +15,7 @@ import java.lang.*;
 import org.cspoker.client.common.CommunicationProvider;
 import org.cspoker.client.allcommunication.LoadProvidersFromXml;
 import org.cspoker.client.gui.javafx.JavaFxClient;
+import org.cspoker.common.exceptions.IllegalActionException;
 
 class Login {
     operation init(c:JavaFxClient,m:Main);
@@ -25,6 +26,7 @@ class Login {
     attribute screen:Frame;
     attribute client:JavaFxClient;
     attribute prog:Main;
+    attribute loginable:Boolean;
 }
 operation Login.init(c:JavaFxClient,m:Main){
     
@@ -36,13 +38,15 @@ operation Login.init(c:JavaFxClient,m:Main){
     passw= "";
     client=c;
     prog=m;
+    loginable = true;
     screen=Frame{
         title: "Login"
         width: 300
-        height: 350
+        height: 320
         visible: true
         centerOnScreen: true
         onClose: operation() {System.exit(0);}
+        background: new Color(50/255,153/255,0,1)
         content: BorderPanel{
             center:GroupPanel{
                 var dropdownRow= Row{alignment: BASELINE}
@@ -83,7 +87,6 @@ operation Login.init(c:JavaFxClient,m:Main){
                 TextField{
                     row: usernameRow
                     column: fieldsColumn
-                    horizontalAlignment: LEFT
                     value: bind name
                 },
                 SimpleLabel{
@@ -95,16 +98,16 @@ operation Login.init(c:JavaFxClient,m:Main){
                 PasswordField{
                     row: passwRow
                     column: fieldsColumn
-                    horizontalAlignment: LEFT
                     value: bind passw
                 }
                 ]
             }
             top:SimpleLabel {
                 horizontalAlignment: CENTER
-                icon: Image {url:"./org/cspoker/client/gui/javafx/images/cspoker8.jpg"}
+                icon: Image {url:"./org/cspoker/client/gui/javafx/images/cspoker10.jpg"
+                
+                }
             }
-            
             bottom:FlowPanel{
                 content:
                     Button {
@@ -112,8 +115,9 @@ operation Login.init(c:JavaFxClient,m:Main){
                     verticalTextPosition: CENTER
                     horizontalTextPosition: LEADING
                     toolTipText: "Click this button to login"
+                    defaultButton: true
+                    enabled: bind loginable
                     action: operation() {
-                        System.out.println("Log in");
                         login();
                     }
                 }
@@ -122,6 +126,32 @@ operation Login.init(c:JavaFxClient,m:Main){
     };
 }
 operation Login.login(){
-    client.login(connection,name,passw);
-    prog.logged_in();
+    try{ 
+        loginable = false;
+        client.login(connection,name,passw);
+        prog.logged_in();
+        loginable = true;
+    }catch(e:IllegalArgumentException){
+        System.out.println(e);
+        MessageDialog{
+            title: "Login failed"
+            visible: true
+            message: e.getMessage()
+            messageType: ERROR
+            onClose: operation(){
+                loginable = true;
+            }
+        }
+    }catch(e:RuntimeException){
+        e.printStackTrace();
+        MessageDialog{
+            title: "Login failed"
+            visible: true
+            message: e.getMessage()
+            messageType: ERROR
+            onClose: operation(){
+                loginable = true;
+            }
+        }
+    }
 }
