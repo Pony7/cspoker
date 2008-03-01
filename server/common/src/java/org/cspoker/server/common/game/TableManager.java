@@ -80,9 +80,9 @@ public class TableManager {
 		hashMap.remove(id);
 	}
 
-	public static GameTable createTable(PlayerId id) {
+	public static GameTable createTable(PlayerId id, String name) {
 		TableId tableId = new TableId(counter.getAndIncrement());
-		GameTable table = new GameTable(tableId, new GameProperty());
+		GameTable table = new GameTable(tableId, name, new GameProperty());
 		hashMap.put(tableId, table);
 		return table;
 	}

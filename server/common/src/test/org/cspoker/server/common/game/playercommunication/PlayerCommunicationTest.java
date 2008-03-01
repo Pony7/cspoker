@@ -80,7 +80,7 @@ public class PlayerCommunicationTest extends TestCase {
 		GamePlayer kenzo = playerFactory.createNewPlayer("Kenzo");
 		PlayerCommunicationImpl kenzoComm = new PlayerCommunicationImpl(kenzo);
 		try {
-			kenzoComm.createTable();
+			kenzoComm.createTable("test");
 		} catch (IllegalActionException e) {
 			fail(e.getMessage());
 		}
@@ -92,7 +92,7 @@ public class PlayerCommunicationTest extends TestCase {
 		PlayerCommunicationImpl kenzoComm = new PlayerCommunicationImpl(kenzo);
 		PlayerCommunicationImpl guyComm = new PlayerCommunicationImpl(guy);
 		try {
-			TableId tableId = kenzoComm.createTable();
+			TableId tableId = kenzoComm.createTable("test");
 			// TODO create an event listener filter to wait for the tableID
 			guyComm.joinTable(tableId);
 		} catch (IllegalActionException e) {
@@ -110,7 +110,7 @@ public class PlayerCommunicationTest extends TestCase {
 			PlayerCommunication guyComm = guySession.getPlayerCommunication();
 			PlayerCommunication kenzoComm = kenzoSession
 					.getPlayerCommunication();
-			TableId tableId = kenzoComm.createTable();
+			TableId tableId = kenzoComm.createTable("test");
 			// TODO create an event listener filter to wait for the tableID
 			guyComm.joinTable(tableId);
 			kenzoComm.startGame();
@@ -142,7 +142,7 @@ public class PlayerCommunicationTest extends TestCase {
 			map.put(kenzoComm.getId(), kenzoComm);
 			map.put(guyComm.getId(), guyComm);
 
-			TableId tableId = kenzoComm.createTable();
+			TableId tableId = kenzoComm.createTable("test");
 			guyComm.joinTable(tableId);
 			guyComm.subscribeAllEventsListener(new TestListener(map));
 			kenzoComm.startGame();
@@ -200,7 +200,7 @@ public class PlayerCommunicationTest extends TestCase {
 			map.put(kenzoComm.getId(), kenzoComm);
 			map.put(guyComm.getId(), guyComm);
 
-			TableId tableId = kenzoComm.createTable();
+			TableId tableId = kenzoComm.createTable("test");
 
 			guyComm.subscribeAllEventsListener(new TestListener(map));
 			guyComm.joinTable(tableId);

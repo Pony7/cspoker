@@ -22,6 +22,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.apache.log4j.Logger;
 import org.cspoker.common.PlayerCommunication;
+import org.cspoker.common.elements.GameProperty;
 import org.cspoker.common.elements.table.Table;
 import org.cspoker.common.elements.table.TableId;
 import org.cspoker.common.eventlisteners.AllEventsListener;
@@ -225,8 +226,15 @@ public class PlayerCommunicationImpl extends PlayerCommunication {
 	}
 
 	@Override
-	public TableId createTable() throws IllegalActionException {
-		return state.createTable();
+	public TableId createTable(String name) throws IllegalActionException {
+		return state.createTable(name);
+	}
+	
+
+	@Override
+	public TableId createTable(String name, GameProperty property)
+			throws IllegalActionException {
+		return state.createTable(name, property);
 	}
 	
 	@Override
@@ -568,4 +576,5 @@ public class PlayerCommunicationImpl extends PlayerCommunication {
 			}
 		}
 	}
+
 }
