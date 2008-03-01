@@ -91,9 +91,11 @@ class InitialState extends PlayerCommunicationState {
 	}
 
 	@Override
-	public TableId createTable() throws IllegalActionException {
+	public TableId createTable(String name) throws IllegalActionException {
 		GameTable table = TableManager.createTable(playerCommunication.getPlayer()
-				.getId());
+				.getId(), name);
+		if(name==null)
+			throw new IllegalArgumentException("The given name should be effective.");
 		try {
 			table.addPlayer(playerCommunication.getPlayer());
 		} catch (PlayerListFullException e) {
@@ -102,9 +104,8 @@ class InitialState extends PlayerCommunicationState {
 		}
 		playerCommunication.setPlayerCommunicationState(new TableCreatedState(
 				playerCommunication, table));
-		// TODO low priority Enhancement: Give a name to the table?
 		InitialState.logger.info(playerCommunication.getPlayer().getName()
-				+ " created " + table.getId() + ".");
+				+ " created " + table.getId() + ": "+name+".");
 		GameManager.getServerMediator().publishTableCreatedEvent(
 				new TableCreatedEvent(playerCommunication.getPlayer()
 						.getSavedPlayer(), table.getId()));
