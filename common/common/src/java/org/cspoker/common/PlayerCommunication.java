@@ -15,6 +15,10 @@
  */
 package org.cspoker.common;
 
+import java.rmi.RemoteException;
+import java.util.List;
+
+import org.cspoker.common.elements.table.Table;
 import org.cspoker.common.elements.table.TableId;
 import org.cspoker.common.eventlisteners.RemoteAllEventsListener;
 import org.cspoker.common.exceptions.IllegalActionException;
@@ -129,6 +133,22 @@ public abstract class PlayerCommunication implements RemotePlayerCommunication {
 	 *             state.
 	 */
 	public abstract TableId createTable() throws IllegalActionException;
+	
+	/**
+	 * Returns the table with the given table id.
+	 * 
+	 * @param 	id
+	 * 			The id of the table to return.
+	 * @return	The table with the given table id if it exists.
+	 */
+	public abstract Table getTable(TableId id) throws RemoteException;
+	
+	/**
+	 * Returns a list of tables that are currently hosted.
+	 * 
+	 * @return The list of tables that are currently hosted.
+	 */
+	public abstract List<Table> getTables() throws RemoteException;
 
 	/**
 	 * This player starts the game. Only the player who has created the table
