@@ -109,7 +109,7 @@ public interface RemotePlayerCommunication extends Remote {
 	 *             [must] This actions is not a valid action in the current
 	 *             state.
 	 */
-	void joinTable(TableId id) throws IllegalActionException, RemoteException;
+	Table joinTable(TableId id) throws IllegalActionException, RemoteException;
 
 	/**
 	 * Leave the table the player is sitting at.
