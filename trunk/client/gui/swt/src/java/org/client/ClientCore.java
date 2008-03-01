@@ -1,19 +1,13 @@
 package org.client;
 
-import java.rmi.AccessException;
-import java.rmi.NotBoundException;
-import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 import org.client.GUI.ClientGUI;
 import org.client.User.User;
-import org.client.rmi.RemotePlayerCommunicationFactory;
-import org.cspoker.common.game.IllegalActionException;
-import org.cspoker.common.game.PlayerCommunication;
-import org.cspoker.common.game.RemotePlayerCommunication;
-import org.cspoker.common.game.elements.table.TableId;
+import org.cspoker.common.RemotePlayerCommunication;
+import org.cspoker.common.elements.table.TableId;
 
 /**
  * The core of any client

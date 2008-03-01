@@ -4,8 +4,6 @@ import org.client.ClientCore;
 import org.client.GUI.ClientGUI;
 import org.client.GUI.Images.ImageFactory;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ShellAdapter;
-import org.eclipse.swt.events.ShellEvent;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
