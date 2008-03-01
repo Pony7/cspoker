@@ -21,11 +21,13 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.List;
 
 import javax.security.auth.login.LoginException;
 
 import org.cspoker.common.RemoteLoginServer;
 import org.cspoker.common.RemotePlayerCommunication;
+import org.cspoker.common.elements.table.Table;
 import org.cspoker.common.elements.table.TableId;
 import org.cspoker.common.eventlisteners.RemoteAllEventsListener;
 import org.cspoker.common.exceptions.IllegalActionException;
@@ -85,11 +87,6 @@ public class RemoteLoginServerForRMI implements RemoteLoginServer {
 				p.fold();
 			}
 
-			public void joinTable(TableId id) throws IllegalActionException,
-					RemoteException {
-				p.joinTable(id);
-			}
-
 			public void leaveTable() throws IllegalActionException,
 					RemoteException {
 				p.leaveTable();
@@ -125,6 +122,24 @@ public class RemoteLoginServerForRMI implements RemoteLoginServer {
 					RemoteAllEventsListener listener) throws RemoteException {
 				UnicastRemoteObject.unexportObject(listener, true);
 				p.unsubscribeAllEventsListener(listener);
+			}
+
+			@Override
+			public Table getTable(TableId id) throws IllegalActionException,
+					RemoteException {
+				return p.getTable(id);
+			}
+
+			@Override
+			public List<Table> getTables() throws IllegalActionException,
+					RemoteException {
+				return p.getTables();
+			}
+
+			@Override
+			public Table joinTable(TableId id) throws IllegalActionException,
+					RemoteException {
+				return p.getTable(id);
 			}
 
 		};

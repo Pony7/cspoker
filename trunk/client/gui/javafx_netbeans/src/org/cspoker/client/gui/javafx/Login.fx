@@ -116,7 +116,7 @@ trigger on new Login{
                     text: "Login"
                     verticalTextPosition: CENTER
                     horizontalTextPosition: LEADING
-                    toolTipText: "Click this button to login"
+                    toolTipText: "Log in to the server"
                     defaultButton: true
                     enabled: bind loginable
                     action: bind operation() {

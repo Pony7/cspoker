@@ -81,5 +81,4 @@ public class Table {
 	public GameProperty getGameProperty(){
 		return property;
 	}
-
 }

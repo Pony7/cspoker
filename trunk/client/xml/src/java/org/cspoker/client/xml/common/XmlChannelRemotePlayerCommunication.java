@@ -18,10 +18,12 @@ package org.cspoker.client.xml.common;
 import java.rmi.RemoteException;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.cspoker.common.RemotePlayerCommunication;
+import org.cspoker.common.elements.table.Table;
 import org.cspoker.common.elements.table.TableId;
 import org.cspoker.common.eventlisteners.RemoteAllEventsListener;
 import org.cspoker.common.exceptions.IllegalActionException;
@@ -33,6 +35,8 @@ import org.cspoker.common.xml.actions.CheckAction;
 import org.cspoker.common.xml.actions.CreateTableAction;
 import org.cspoker.common.xml.actions.DealAction;
 import org.cspoker.common.xml.actions.FoldAction;
+import org.cspoker.common.xml.actions.GetTableAction;
+import org.cspoker.common.xml.actions.GetTablesAction;
 import org.cspoker.common.xml.actions.JoinTableAction;
 import org.cspoker.common.xml.actions.KillAction;
 import org.cspoker.common.xml.actions.LeaveTableAction;
@@ -117,9 +121,9 @@ public class XmlChannelRemotePlayerCommunication implements
 	}
 
 	@Override
-	public void joinTable(TableId id) throws IllegalActionException,
+	public Table joinTable(TableId id) throws IllegalActionException,
 			RemoteException {
-		marshaller.perform(new JoinTableAction(getId(), id));
+		return marshaller.perform(new JoinTableAction(getId(), id));
 	}
 
 	@Override
@@ -148,5 +152,15 @@ public class XmlChannelRemotePlayerCommunication implements
 	@Override
 	public void startGame() throws IllegalActionException, RemoteException {
 		marshaller.perform(new StartGameAction(getId()));
+	}
+
+	@Override
+	public Table getTable(TableId id) throws IllegalActionException, RemoteException {
+		return marshaller.perform(new GetTableAction(getId(),id));
+	}
+
+	@Override
+	public List<Table> getTables() throws IllegalActionException, RemoteException {
+		return marshaller.perform(new GetTablesAction(getId()));
 	}
 }

@@ -90,14 +90,14 @@ trigger on new TableSelection{
                 content:
                     [Button {
                     text: "Join Table"
-                    toolTipText: "Click this button to join the selected table"
+                    toolTipText: "Join the selected table"
                     action: operation() {
                         join_table();
                     }
                     enabled: bind active
                 },Button {
                     text: "Create Table"
-                    toolTipText: "Click this button to create a new table"
+                    toolTipText: "Create a new table"
                     action: operation() {
                         create_table();
                     }
@@ -105,7 +105,7 @@ trigger on new TableSelection{
                 },
                 Button {
                     text: "Refresh Table List"
-                    toolTipText: "Click this button to refresh the table list from the server"
+                    toolTipText: "Refresh the table list from the server"
                     action: operation() {
                         refresh();
                     }
@@ -130,7 +130,7 @@ operation TableSelection.join_table(){
         relogin();
     }catch(e:IllegalActionException){
         MessageDialog{
-            title: "Join table failed"
+            title: "Failed to join table"
             visible: true
             message: e.getMessage()
             messageType: ERROR
@@ -148,7 +148,7 @@ operation TableSelection.create_table(){
         relogin();
     }catch(e:IllegalActionException){
         MessageDialog{
-            title: "Create table failed"
+            title: "Failed to create table"
             visible: true
             message: e.getMessage()
             messageType: ERROR

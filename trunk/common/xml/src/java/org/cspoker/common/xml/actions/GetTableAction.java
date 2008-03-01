@@ -17,6 +17,7 @@ package org.cspoker.common.xml.actions;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.cspoker.common.PlayerCommunication;
@@ -28,18 +29,19 @@ import org.cspoker.common.xml.events.invocation.IllegalActionEvent;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-public class JoinTableAction extends PlayerCommunicationAction<Table> {
+public class GetTableAction extends PlayerCommunicationAction<Table> {
 
-	private static final long serialVersionUID = -6693307709200837257L;
+	private static final long serialVersionUID = 7897218843022885169L;
+	
+	@XmlAttribute
+	private TableId tableid;
 
-	private TableId tableId;
-
-	public JoinTableAction(long id, TableId tableId) {
+	public GetTableAction(long id, TableId tableid) {
 		super(id);
-		this.tableId = tableId;
+		this.tableid = tableid;
 	}
 
-	protected JoinTableAction() {
+	protected GetTableAction() {
 		// no op
 	}
 
@@ -47,7 +49,7 @@ public class JoinTableAction extends PlayerCommunicationAction<Table> {
 	public void perform(PlayerCommunication pc,
 			AllInvocationEventsListener listener) {
 		try {
-			dispatchResult(pc.joinTable(tableId), listener);
+			dispatchResult(pc.getTable(tableid), listener);
 		} catch (IllegalActionException e) {
 			listener.onIllegalAction(new IllegalActionEvent(e, this));
 		}
