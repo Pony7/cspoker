@@ -210,12 +210,13 @@ public class PlayerCommunicationImpl extends PlayerCommunication {
 	 *             state.
 	 */
 	@Override
-	public void joinTable(TableId id) throws IllegalActionException {
+	public Table joinTable(TableId id) throws IllegalActionException {
 		if (id == null) {
 			throw new IllegalArgumentException(
 					"The given table id is not effective.");
 		}
 		state.join(id);
+		return TableManager.getTable(id).getSavedTable();
 	}
 
 	@Override
