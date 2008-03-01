@@ -1,7 +1,5 @@
 package org.client.GUI.Window;
 
-import java.awt.GraphicsEnvironment;
-
 import org.client.ClientCore;
 import org.client.GUI.ClientGUI;
 import org.eclipse.swt.SWT;
@@ -14,7 +12,6 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
-import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Text;
 /**
  * A class of game windows

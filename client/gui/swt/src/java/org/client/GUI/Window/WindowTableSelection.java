@@ -6,7 +6,7 @@ import java.util.List;
 
 import org.client.ClientCore;
 import org.client.GUI.ClientGUI;
-import org.cspoker.common.game.elements.table.TableId;
+import org.cspoker.common.elements.table.TableId;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -14,11 +14,7 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.MessageBox;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 /**
@@ -190,7 +186,7 @@ public class WindowTableSelection extends Window {
 		System.out.println("Attempt to refresh tables");
 		clearSelectionList();
 		tables=getClientCore().getTableList();
-		Iterator tableIterator=tables.iterator();
+		Iterator<TableId> tableIterator=tables.iterator();
 		while(tableIterator.hasNext()){
 			selectionList.add(((TableId) tableIterator.next()).toString());
 		}
