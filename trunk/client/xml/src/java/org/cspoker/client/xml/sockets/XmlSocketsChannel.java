@@ -81,7 +81,7 @@ public class XmlSocketsChannel implements XmlChannel {
 			s = new Socket(server, port);
 			w = new OutputStreamWriter(s.getOutputStream());
 			if (!login(username, password)) {
-				throw new LoginException();
+				throw new LoginException("Login failed for "+username);
 			}
 			executor = Executors.newSingleThreadExecutor();
 			executor.execute(new WaitForEvents());

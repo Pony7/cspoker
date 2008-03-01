@@ -22,7 +22,9 @@ public class RunRMIServer {
 		}
 		int port = Integer.parseInt(args[0]);
 		logger.info("Starting RMI server at port "+port);
-		(new RMIServer(port)).start();
+		//need to do this in two steps to prevent GC!!
+		RMIServer server = new RMIServer(port);
+		server.start();
 	}
 
 	private static void usage() {

@@ -23,6 +23,7 @@ import java.rmi.RemoteException;
 import org.apache.log4j.Logger;
 import org.cspoker.common.util.Log4JPropertiesLoader;
 import org.cspoker.server.common.authentication.XmlFileAuthenticator;
+import org.cspoker.server.rmi.RMIServer;
 import org.cspoker.server.xml.http.HttpServer;
 import org.cspoker.server.xml.sockets.SocketServer;
 import org.xml.sax.Attributes;
@@ -90,7 +91,9 @@ public class RunCSPoker {
 					String type = attributes.getValue("type");
 					if(type.equals("rmi")){
 						try {
-							(new org.cspoker.server.rmi.RMIServer(port,auth)).start();
+							//need to do this in two steps to prevent GC!!
+							RMIServer server = new RMIServer(port);
+							server.start();
 						} catch (AccessException e) {
 							logger.warn("Failed to start RMI server at port "+port,e);
 						} catch (RemoteException e) {

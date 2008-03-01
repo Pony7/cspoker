@@ -22,7 +22,7 @@ import org.apache.log4j.Logger;
 import org.cspoker.client.common.CommunicationProvider;
 import org.cspoker.client.rmi.RemotePlayerCommunicationFactoryForRMI;
 import org.cspoker.client.xml.http.RemotePlayerCommunicationFactoryForHttp;
-import org.cspoker.client.xml.sockets.RemotePlayerCommunicationFactoryForSockets;
+import org.cspoker.client.xml.sockets.RemotePlayerCommunicationFactoryForSocket;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -82,7 +82,7 @@ public class LoadProvidersFromXml {
 					}else if(type.equals("http")){
 						provider.addRemotePlayerCommunicationProvider(new RemotePlayerCommunicationFactoryForHttp(address, port));
 					}else if(type.equals("socket")){
-						provider.addRemotePlayerCommunicationProvider(new RemotePlayerCommunicationFactoryForSockets(address, port));
+						provider.addRemotePlayerCommunicationProvider(new RemotePlayerCommunicationFactoryForSocket(address, port));
 					}else{
 						throw new SAXException("Unknown provider type: "+type);
 					}
