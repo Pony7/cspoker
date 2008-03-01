@@ -1,43 +1,45 @@
-/*
- * Login.fx
- *
- * Created on 19-feb-2008, 18:32:57
- */
-
-package org.cspoker.client.gui.javafx;
-
 /**
- * @author Cedric
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
+package org.cspoker.client.gui.javafx;
 
 import javafx.ui.*;
 import java.lang.*;
 import org.cspoker.client.common.CommunicationProvider;
 import org.cspoker.client.allcommunication.LoadProvidersFromXml;
 import org.cspoker.client.gui.javafx.JavaFxClient;
-import org.cspoker.common.exceptions.IllegalActionException;
 
 class Login {
-    operation init(c:JavaFxClient,m:Main);
-    operation login();
+    attribute client:JavaFxClient;
+    attribute main:Main inverse Main.login;
+    
+    attribute screen:Frame;
+    
     attribute name: String;
     attribute passw: String;
     attribute connection: String;
-    attribute screen:Frame;
-    attribute client:JavaFxClient;
-    attribute prog:Main;
     attribute loginable:Boolean;
-}
-operation Login.init(c:JavaFxClient,m:Main){
     
+    operation login();
+}
+trigger on new Login{
     var provider = CommunicationProvider.global_provider;
     new LoadProvidersFromXml(provider);
     var providers:String* = foreach(prov in provider.getProviders().toArray()) prov.toString();
-    
-    name= "";
-    passw= "";
-    client=c;
-    prog=m;
+    name = "guy";
+    passw = "test";
     loginable = true;
     screen=Frame{
         title: "Login"
@@ -48,6 +50,12 @@ operation Login.init(c:JavaFxClient,m:Main){
         onClose: operation() {System.exit(0);}
         background: new Color(50/255,153/255,0,1)
         content: BorderPanel{
+            top:SimpleLabel {
+                horizontalAlignment: CENTER
+                icon: Image {url:"./org/cspoker/client/gui/javafx/images/cspoker10.jpg"
+                
+                }
+            }
             center:GroupPanel{
                 var dropdownRow= Row{alignment: BASELINE}
                 var usernameRow= Row{alignment: BASELINE}
@@ -102,12 +110,6 @@ operation Login.init(c:JavaFxClient,m:Main){
                 }
                 ]
             }
-            top:SimpleLabel {
-                horizontalAlignment: CENTER
-                icon: Image {url:"./org/cspoker/client/gui/javafx/images/cspoker10.jpg"
-                
-                }
-            }
             bottom:FlowPanel{
                 content:
                     Button {
@@ -117,7 +119,7 @@ operation Login.init(c:JavaFxClient,m:Main){
                     toolTipText: "Click this button to login"
                     defaultButton: true
                     enabled: bind loginable
-                    action: operation() {
+                    action: bind operation() {
                         login();
                     }
                 }
@@ -128,21 +130,10 @@ operation Login.init(c:JavaFxClient,m:Main){
 operation Login.login(){
     try{ 
         loginable = false;
-        client.login(connection,name,passw);
-        prog.logged_in();
+        this.client.login(connection,name,passw);
+        main.logged_in();
         loginable = true;
-    }catch(e:IllegalArgumentException){
-        System.out.println(e);
-        MessageDialog{
-            title: "Login failed"
-            visible: true
-            message: e.getMessage()
-            messageType: ERROR
-            onClose: operation(){
-                loginable = true;
-            }
-        }
-    }catch(e:RuntimeException){
+    }catch(e:Exception){
         e.printStackTrace();
         MessageDialog{
             title: "Login failed"

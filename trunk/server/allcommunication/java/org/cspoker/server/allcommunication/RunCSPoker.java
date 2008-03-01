@@ -45,6 +45,11 @@ public class RunCSPoker {
 	public static void main(String[] args) {
 		new RunCSPoker();
 	}
+
+	/**
+	 * Hack to prevent GC of Remote Object
+	 */
+	private static RMIServer rmiserver;
 	
 	public RunCSPoker() {
 		this("org/cspoker/server/allcommunication/servers.xml");
@@ -92,8 +97,8 @@ public class RunCSPoker {
 					if(type.equals("rmi")){
 						try {
 							//need to do this in two steps to prevent GC!!
-							RMIServer server = new RMIServer(port);
-							server.start();
+							rmiserver = new RMIServer(port);
+							rmiserver.start();
 						} catch (AccessException e) {
 							logger.warn("Failed to start RMI server at port "+port,e);
 						} catch (RemoteException e) {

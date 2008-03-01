@@ -1,10 +1,24 @@
+/**
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ */
 package org.cspoker.client.gui.javafx;
 
 import java.rmi.ConnectException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import javax.security.auth.login.LoginException;
 import org.cspoker.client.gui.javafx.elements.TableInterface;
@@ -15,13 +29,7 @@ import org.cspoker.client.xml.sockets.RemotePlayerCommunicationFactoryForSocket;
 import org.cspoker.common.exceptions.IllegalActionException;
 import org.cspoker.common.RemotePlayerCommunication;
 import org.cspoker.common.elements.table.TableId;
-import org.cspoker.common.eventlisteners.RemoteAllEventsListener;
 
-/**
- * The core of any client
- * @author Cedric
- *
- */
 public class JavaFxClient {
 
     /**
@@ -42,10 +50,13 @@ public class JavaFxClient {
     public JavaFxClient() {
     }
 
-    /**********************************************************
-     * Communication
-     **********************************************************/
-    public void subscribeAllEvents(RemoteAllEventsListener listener) throws RemoteException {
+    public void login(String connection, String userName, String password) {
+        System.out.println("Java Login by "+userName);
+        this.user = new User(userName);
+        createCommunication(connection, userName, password);
+    }
+    
+    public void subscribeAllEvents(org.cspoker.common.eventlisteners.RemoteAllEventsListener listener) throws java.rmi.RemoteException {
         //communication.subscribeAllEventsListener(listener);
         System.out.println("Listener subscribed to all events");
     }
@@ -100,30 +111,10 @@ public class JavaFxClient {
                 throw new IllegalArgumentException("Unknown protocol: " + protocol);
             }
         } catch (ConnectException ex) {
-           throw new IllegalArgumentException(ex.getMessage(),ex);
+            throw new IllegalArgumentException(ex.getMessage(), ex);
         } catch (LoginException ex) {
-           throw new IllegalArgumentException(ex.getMessage(),ex);
+            throw new IllegalArgumentException(ex.getMessage(), ex);
         }
-    }
-
-    /**********************************************************
-     * Login
-     **********************************************************/
-    /**
-     * Logs in a new user with the given username and password to the given
-     * server url and port.
-     * @param url
-     * 			the given server url
-     * @param port
-     * 			the given server port
-     * @param userName
-     * 			the given user name
-     * @param password
-     * 			the given password
-     */
-    public void login(String connection, String userName, String password) {
-        this.user = new User(userName);
-        createCommunication(connection, userName, password);
     }
 
     /**********************************************************
@@ -163,28 +154,16 @@ public class JavaFxClient {
         rpc.say(message);
     }
 
-    public void joinTable(int n) {
-    //TODO: change when communication is fully implemented and tested
-//		try {
-//			communication.joinTable(id);
-//		} catch (Exception e) {
-//			gui.displayErrorMessage(e.getMessage());
-//		}
+    public void joinTable(int n) throws IllegalActionException, RemoteException {
+        rpc.joinTable(new TableId(n));
     }
 
     public void leaveTable() throws RemoteException, IllegalActionException {
         rpc.leaveTable();
     }
 
-    public TableId createTable() {
-        //TODO: change when communication is fully implemented and tested
-//		try {
-//			return communication.createTable();
-//		} catch (Exception e) {
-//			gui.displayErrorMessage(e.getMessage());
-//			return null;
-//		}
-        return new TableId(0);
+    public TableId createTable() throws RemoteException, IllegalActionException {
+        return rpc.createTable();
     }
 
     public void startGame() throws RemoteException, IllegalActionException {
@@ -194,9 +173,7 @@ public class JavaFxClient {
     public TableInterface[] getTableList() {
         // TODO create method to ask the server for a list of table id's
         List<TableInterface> result = new ArrayList<TableInterface>();
-        Random generator = new Random();
-        int random = generator.nextInt(25);
-        for (int j = 0; j < random; j++) {
+         for (int j = 0; j < 10; j++) {
             result.add(new TableImpl(j, 5, 2, 4));
         }
         TableInterface[] r = new TableInterface[result.size()];
