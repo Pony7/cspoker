@@ -16,12 +16,15 @@
 
 package org.cspoker.server.common.game;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.cspoker.common.elements.GameProperty;
+import org.cspoker.common.elements.table.Table;
 import org.cspoker.common.elements.table.TableId;
 import org.cspoker.common.player.PlayerId;
 import org.cspoker.server.common.game.elements.table.GameTable;
@@ -86,6 +89,14 @@ public class TableManager {
 
 	public static Set<TableId> getAllTableIds() {
 		return Collections.unmodifiableSet(hashMap.keySet());
+	}
+	
+	public static List<Table> getAllTables(){
+		List<Table> tables = new ArrayList<Table>();
+		for(GameTable table:hashMap.values()){
+			tables.add(table.getSavedTable());
+		}
+		return tables;
 	}
 
 }

@@ -22,6 +22,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.apache.log4j.Logger;
 import org.cspoker.common.PlayerCommunication;
+import org.cspoker.common.elements.table.Table;
 import org.cspoker.common.elements.table.TableId;
 import org.cspoker.common.eventlisteners.AllEventsListener;
 import org.cspoker.common.eventlisteners.RemoteAllEventsListener;
@@ -72,6 +73,7 @@ import org.cspoker.common.events.serverevents.TableCreatedEvent;
 import org.cspoker.common.exceptions.IllegalActionException;
 import org.cspoker.common.player.PlayerId;
 import org.cspoker.server.common.game.GameManager;
+import org.cspoker.server.common.game.TableManager;
 import org.cspoker.server.common.game.player.GamePlayer;
 import org.cspoker.server.common.game.session.SessionManager;
 
@@ -224,6 +226,16 @@ public class PlayerCommunicationImpl extends PlayerCommunication {
 	@Override
 	public TableId createTable() throws IllegalActionException {
 		return state.createTable();
+	}
+	
+	@Override
+	public Table getTable(TableId id){
+		return TableManager.getTable(id).getSavedTable();
+	}
+
+	@Override
+	public List<Table> getTables(){
+		return TableManager.getAllTables();
 	}
 
 	@Override
@@ -555,5 +567,4 @@ public class PlayerCommunicationImpl extends PlayerCommunication {
 			}
 		}
 	}
-
 }
