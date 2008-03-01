@@ -29,7 +29,7 @@ import org.cspoker.client.common.RemotePlayerCommunicationFactory;
 import org.cspoker.client.common.RemotePlayerCommunicationFactory.NoProviderException;
 import org.cspoker.client.rmi.RemotePlayerCommunicationFactoryForRMI;
 import org.cspoker.client.xml.http.RemotePlayerCommunicationFactoryForHttp;
-import org.cspoker.client.xml.sockets.RemotePlayerCommunicationFactoryForSockets;
+import org.cspoker.client.xml.sockets.RemotePlayerCommunicationFactoryForSocket;
 import org.cspoker.common.util.Log4JPropertiesLoader;
 
 /**
@@ -43,7 +43,7 @@ public class Console {
 	}
 	
 	public static void main(String[] args)  {
-		new LoadProvidersFromXml(CommunicationProvider.global_factory);
+		new LoadProvidersFromXml(CommunicationProvider.global_provider);
 		new Console(args);
 	}
 
@@ -74,22 +74,22 @@ public class Console {
 				client.close();
 			}
 			System.out.println("Select a server connection:");
-			for(int i=0;i<CommunicationProvider.global_factory.getProviders().size();i++){
-				System.out.println(" ("+(i+1)+") - "+CommunicationProvider.global_factory.getProviders().get(i));
+			for(int i=0;i<CommunicationProvider.global_provider.getProviders().size();i++){
+				System.out.println(" ("+(i+1)+") - "+CommunicationProvider.global_provider.getProviders().get(i));
 			}
-			System.out.println(" ("+(CommunicationProvider.global_factory.getProviders().size()+1)+") - Create a new server connection");
+			System.out.println(" ("+(CommunicationProvider.global_provider.getProviders().size()+1)+") - Create a new server connection");
 			System.out.print(">");
 			int connection;
 			try {
 				connection = Integer.parseInt(in.nextLine());
-				if(connection<1||connection>CommunicationProvider.global_factory.getProviders().size()+1)
+				if(connection<1||connection>CommunicationProvider.global_provider.getProviders().size()+1)
 					throw new NumberFormatException();
 			} catch (NumberFormatException e) {
 				connection=1;
 			}
 			System.out.println();
 			
-			if(connection==CommunicationProvider.global_factory.getProviders().size()+1){
+			if(connection==CommunicationProvider.global_provider.getProviders().size()+1){
 				System.out.println("Select type:");
 				System.out.println(" (1) - HTTP");
 				System.out.println(" (2) - SOCKET");
@@ -122,11 +122,11 @@ public class Console {
 				if(ctype==1)
 					factory = new RemotePlayerCommunicationFactoryForHttp(address, port);
 				else if(ctype==2)
-					factory = new RemotePlayerCommunicationFactoryForSockets(address, port);
+					factory = new RemotePlayerCommunicationFactoryForSocket(address, port);
 				else if(ctype==3)
 					factory = new RemotePlayerCommunicationFactoryForRMI(address, port);
 			}else{
-				factory = CommunicationProvider.global_factory.getProviders().get(connection-1);
+				factory = CommunicationProvider.global_provider.getProviders().get(connection-1);
 			}
 			System.out.println("Enter username:");
 			System.out.print(">");
