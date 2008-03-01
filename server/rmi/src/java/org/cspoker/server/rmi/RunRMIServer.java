@@ -4,7 +4,6 @@ import java.io.IOException;
 
 import org.apache.log4j.Logger;
 import org.cspoker.common.util.Log4JPropertiesLoader;
-import org.cspoker.server.common.authentication.XmlFileAuthenticator;
 
 public class RunRMIServer {
 
