@@ -51,7 +51,6 @@ public class JavaFxClient {
     }
 
     public void login(String connection, String userName, String password) {
-        System.out.println("Java Login by "+userName);
         this.user = new User(userName);
         createCommunication(connection, userName, password);
     }
@@ -126,8 +125,11 @@ public class JavaFxClient {
         rpc.call();
     }
 
-    public void bet(int amount) throws RemoteException, IllegalActionException {
-        rpc.bet(amount);
+    public void bet(String amount) throws RemoteException, IllegalActionException {
+        try{rpc.bet(Integer.parseInt(amount));
+        }catch(NumberFormatException e){
+            throw new IllegalActionException("Not a valid number");
+        }
     }
 
     public void fold() throws RemoteException, IllegalActionException {
@@ -138,8 +140,11 @@ public class JavaFxClient {
         rpc.check();
     }
 
-    public void raise(int amount) throws RemoteException, IllegalActionException {
-        rpc.raise(amount);
+    public void raise(String amount) throws RemoteException, IllegalActionException {
+        try{rpc.raise(Integer.parseInt(amount));
+        }catch(NumberFormatException e){
+            throw new IllegalActionException("Not a valid number");
+        }
     }
 
     public void deal() throws RemoteException, IllegalActionException {

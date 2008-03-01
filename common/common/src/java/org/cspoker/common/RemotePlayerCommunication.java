@@ -135,14 +135,14 @@ public interface RemotePlayerCommunication extends Remote {
 	 * 			The id of the table to return.
 	 * @return	The table with the given table id if it exists.
 	 */
-	Table getTable(TableId id) throws RemoteException;
+	Table getTable(TableId id) throws IllegalActionException, RemoteException;
 	
 	/**
 	 * Returns a list of tables that are currently hosted.
 	 * 
 	 * @return The list of tables that are currently hosted.
 	 */
-	List<Table> getTables() throws RemoteException;
+	List<Table> getTables() throws IllegalActionException, RemoteException;
 
 	/**
 	 * This player starts the game. Only the player who has created the table

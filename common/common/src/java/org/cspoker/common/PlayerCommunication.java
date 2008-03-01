@@ -141,14 +141,14 @@ public abstract class PlayerCommunication implements RemotePlayerCommunication {
 	 * 			The id of the table to return.
 	 * @return	The table with the given table id if it exists.
 	 */
-	public abstract Table getTable(TableId id) throws RemoteException;
+	public abstract Table getTable(TableId id) throws IllegalActionException;
 	
 	/**
 	 * Returns a list of tables that are currently hosted.
 	 * 
 	 * @return The list of tables that are currently hosted.
 	 */
-	public abstract List<Table> getTables() throws RemoteException;
+	public abstract List<Table> getTables() throws IllegalActionException;
 
 	/**
 	 * This player starts the game. Only the player who has created the table
