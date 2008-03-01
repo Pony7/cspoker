@@ -115,7 +115,7 @@ public abstract class PlayerCommunication implements RemotePlayerCommunication {
 	 *             [must] This actions is not a valid action in the current
 	 *             state.
 	 */
-	public abstract void joinTable(TableId id) throws IllegalActionException;
+	public abstract Table joinTable(TableId id) throws IllegalActionException;
 
 	/**
 	 * Leave the table the player is sitting at.
