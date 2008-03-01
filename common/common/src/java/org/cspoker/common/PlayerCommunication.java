@@ -15,9 +15,9 @@
  */
 package org.cspoker.common;
 
-import java.rmi.RemoteException;
 import java.util.List;
 
+import org.cspoker.common.elements.GameProperty;
 import org.cspoker.common.elements.table.Table;
 import org.cspoker.common.elements.table.TableId;
 import org.cspoker.common.eventlisteners.RemoteAllEventsListener;
@@ -132,7 +132,16 @@ public abstract class PlayerCommunication implements RemotePlayerCommunication {
 	 *             [must] This actions is not a valid action in the current
 	 *             state.
 	 */
-	public abstract TableId createTable() throws IllegalActionException;
+	public abstract TableId createTable(String name) throws IllegalActionException;
+	
+	/**
+	 * This player creates a table with given name and game property.
+	 * 
+	 * @throws IllegalActionException
+	 *             [must] This actions is not a valid action in the current
+	 *             state.
+	 */
+	public abstract TableId createTable(String name, GameProperty property) throws IllegalActionException;
 	
 	/**
 	 * Returns the table with the given table id.
