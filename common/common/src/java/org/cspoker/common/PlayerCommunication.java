@@ -158,7 +158,7 @@ public abstract class PlayerCommunication implements RemotePlayerCommunication {
 	 * 
 	 * @return The list of tables that are currently hosted.
 	 */
-	public abstract TableList getTables() throws IllegalActionException;
+	public abstract TableList getTables();
 
 	/**
 	 * This player starts the game. Only the player who has created the table

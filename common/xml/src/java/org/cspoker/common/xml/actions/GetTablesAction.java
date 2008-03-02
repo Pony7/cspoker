@@ -45,11 +45,7 @@ public class GetTablesAction extends PlayerCommunicationAction<TableList> {
 	@Override
 	public void perform(PlayerCommunication pc,
 			AllInvocationEventsListener listener) {
-		try {
-			dispatchResult(pc.getTables(), listener);
-		} catch (IllegalActionException e) {
-			listener.onIllegalAction(new IllegalActionEvent(e, this));
-		}
+		dispatchResult(pc.getTables(), listener);
 	}
 
 }

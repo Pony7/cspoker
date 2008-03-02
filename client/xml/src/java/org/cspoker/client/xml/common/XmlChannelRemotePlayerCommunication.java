@@ -166,7 +166,11 @@ public class XmlChannelRemotePlayerCommunication implements
 	}
 
 	@Override
-	public TableList getTables() throws IllegalActionException, RemoteException {
-		return marshaller.perform(new GetTablesAction(getId()));
+	public TableList getTables() throws RemoteException {
+		try {
+			return marshaller.perform(new GetTablesAction(getId()));
+		} catch (IllegalActionException e) {
+			throw new IllegalStateException("Exception wasn't thrown at the server!",e);
+		}
 	}
 }

@@ -152,7 +152,7 @@ public interface RemotePlayerCommunication extends Remote {
 	 * 
 	 * @return The list of tables that are currently hosted.
 	 */
-	TableList getTables() throws IllegalActionException, RemoteException;
+	TableList getTables() throws RemoteException;
 
 	/**
 	 * This player starts the game. Only the player who has created the table
