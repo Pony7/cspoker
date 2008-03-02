@@ -33,6 +33,7 @@ class GameTable {
     attribute players:Player*;
     attribute state:Integer;
     attribute amount:String;
+    attribute textarea:String;
     
     operation relogin();
     
@@ -54,10 +55,12 @@ trigger on new GameTable{
     var tablex = 280;
     var tabley = 170;
     var logofontsize = (tablex+tabley)/10;
+    var textareawidth= 100;
     state = 0;
+    textarea="Welcome to CSPoker!\n";
     screen = Frame{
         title: "Game Table"
-        width: 2*padx+tablex*2
+        width: 2*padx+tablex*2+textareawidth
         height: 2*pady+tabley*2+100
         visible: true
         centerOnScreen: true
@@ -72,7 +75,7 @@ trigger on new GameTable{
                     text: "Logout"
                     mnemonic: L
                     action: operation() {
-                        //relogin();
+                        relogin();
                     }
                 }]
             }
@@ -127,12 +130,19 @@ trigger on new GameTable{
             bottom:FlowPanel{
                 content: bind stateactions()
             }
+            right:TextArea{
+                text: bind textarea
+                editable: false
+                width:textareawidth
+                height:2*pady+tabley*2
+            }
         }
     };
 }
 
 operation GameTable.relogin(){
-    System.out.println("Need to logout...");
+    //TODO fix
+    main.relogin();
 }
 
 operation GameTable.startgame(){

@@ -106,8 +106,6 @@ public class PlayerCommunicationImpl extends PlayerCommunication {
 	 */
 	private PlayerCommunicationState state;
 
-	private final EventsCollector eventsCollector = new EventsCollector();
-
 	/***************************************************************************
 	 * Constructor
 	 **************************************************************************/
@@ -123,7 +121,6 @@ public class PlayerCommunicationImpl extends PlayerCommunication {
 		state = new InitialState(this);
 		GameManager.getServerMediator().subscribeAllServerEventsListener(
 				player.getId(), getAllEventsListener());
-		subscribeAllEventsListener(getEventsCollector());
 	}
 
 	/**
@@ -255,18 +252,6 @@ public class PlayerCommunicationImpl extends PlayerCommunication {
 	@Override
 	public void startGame() throws IllegalActionException {
 		state.startGame();
-	}
-
-	public Events getLatestEvents() throws IllegalActionException {
-		return eventsCollector.getLatestEvents();
-	}
-
-	public Events getLatestEventsAndAck(int ack) throws IllegalActionException {
-		return eventsCollector.getLatestEventsAndAck(ack);
-	}
-
-	EventsCollector getEventsCollector() {
-		return eventsCollector;
 	}
 
 	void setPlayerCommunicationState(PlayerCommunicationState state) {
