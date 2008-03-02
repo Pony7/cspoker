@@ -59,8 +59,8 @@ public class Console {
 			System.out.println(" -v verbose");
 			System.exit(0);
 		}
-		if (args.length == 3) {
-			if (args[2].contains("v")) {
+		if (args.length == 1) {
+			if (args[0].contains("v")) {
 				verbose = true;
 			}
 		}

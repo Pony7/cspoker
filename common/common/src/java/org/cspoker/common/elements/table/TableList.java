@@ -17,7 +17,7 @@
 package org.cspoker.common.elements.table;
 
 import java.io.Serializable;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -37,18 +37,20 @@ public class TableList implements Serializable {
 	
 	@XmlElementWrapper
 	@XmlElement(name = "table")
-	private final List<Table> tables;
+	private List<Table> tables;
 	
 	public TableList(List<Table> tables) {
 		this.tables = tables;
 	}
 
 	protected TableList() {
-		tables = null;
+		// no op
 	}
 	
 	public List<Table> getTables() {
-		return Collections.unmodifiableList(tables);
+		if(tables==null)
+			tables = new ArrayList<Table>(0);
+		return tables;
 	}
 
 }

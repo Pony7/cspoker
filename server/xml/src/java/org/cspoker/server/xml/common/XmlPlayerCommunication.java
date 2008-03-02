@@ -40,10 +40,10 @@ public class XmlPlayerCommunication implements XmlEventListener {
 	private XmlEventListener xmllistener;
 
 	private final static Logger logger = Logger
-			.getLogger(XmlPlayerCommunication.class);
+	.getLogger(XmlPlayerCommunication.class);
 
 	XmlPlayerCommunication(Session session, XmlEventListener listener)
-			throws PlayerKilledExcepion {
+	throws PlayerKilledExcepion {
 		playerComm = session.getPlayerCommunication();
 		player = session.getPlayer();
 		cache = new StringBuilder();
@@ -54,10 +54,10 @@ public class XmlPlayerCommunication implements XmlEventListener {
 	}
 
 	public void handle(InputSource xml) throws SAXException, JAXBException,
-			IOException {
+	IOException {
 		Unmarshaller um = ActionJAXBContext.context.createUnmarshaller();
 		PlayerCommunicationAction<?> action = (PlayerCommunicationAction<?>) um
-				.unmarshal(xml);
+		.unmarshal(xml);
 		action.perform(playerComm, toxmllistener);
 	}
 
@@ -86,8 +86,10 @@ public class XmlPlayerCommunication implements XmlEventListener {
 	}
 
 	public synchronized void updateEventListener(XmlEventListener newlist) {
-		xmllistener = newlist;
-		flushToListener();
+		if(newlist!=xmllistener){
+			xmllistener = newlist;
+			flushToListener();
+		}
 	}
 
 	public void collect(String xmlEvent) {

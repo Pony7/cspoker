@@ -72,6 +72,7 @@ operation Main.table_selected(){
 
 operation Main.relogin(){
     table_selection.screen.visible = false;
+    gametable.screen.visible = false;
     login.screen.visible = true;
 }
 

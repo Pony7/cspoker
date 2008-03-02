@@ -15,7 +15,6 @@
  */
 package org.cspoker.server.xml.common;
 
-import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.cspoker.common.xml.XmlEventListener;
@@ -30,18 +29,21 @@ public class XmlPlayerCommunicationFactory {
 
 	public final static XmlPlayerCommunicationFactory global_factory = new XmlPlayerCommunicationFactory();
 
-	private final Map<Session, XmlPlayerCommunication> playerComs = new ConcurrentHashMap<Session, XmlPlayerCommunication>();
+	private final ConcurrentHashMap<Session, XmlPlayerCommunication> playerComs = new ConcurrentHashMap<Session, XmlPlayerCommunication>();
 
-	public synchronized XmlPlayerCommunication getRegisteredXmlPlayerCommunication(
+	public XmlPlayerCommunication getRegisteredXmlPlayerCommunication(
 			Session session, XmlEventListener listener)
 			throws PlayerKilledExcepion {
 		XmlPlayerCommunication result = playerComs.get(session);
 		if (result == null) {
-			result = new XmlPlayerCommunication(session, listener);
-			playerComs.put(session, result);
-		} else {
-			result.updateEventListener(listener);
+			XmlPlayerCommunication oldresult = playerComs.putIfAbsent(session, new XmlPlayerCommunication(session, listener));
+			if(oldresult==null){
+				result = playerComs.get(session);
+			}else{
+				result=oldresult;
+			}
 		}
+		result.updateEventListener(listener);
 		return result;
 	}
 
