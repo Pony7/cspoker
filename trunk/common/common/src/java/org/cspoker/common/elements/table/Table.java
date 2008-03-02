@@ -16,6 +16,7 @@
 
 package org.cspoker.common.elements.table;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -34,7 +35,7 @@ import org.cspoker.common.player.Player;
  *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-public class Table {
+public class Table implements Serializable  {
 	
 	@XmlAttribute
 	private TableId id;

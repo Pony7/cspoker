@@ -137,8 +137,7 @@ public class RemoteLoginServerForRMI implements RemoteLoginServer {
 			}
 
 			@Override
-			public TableList getTables() throws IllegalActionException,
-					RemoteException {
+			public TableList getTables() throws RemoteException {
 				return p.getTables();
 			}
 

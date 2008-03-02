@@ -39,9 +39,6 @@ import org.cspoker.common.events.serverevents.PlayerLeftEvent;
 import org.cspoker.common.events.serverevents.ServerMessageEvent;
 import org.cspoker.common.events.serverevents.TableCreatedEvent;
 import org.cspoker.client.gui.javafx.*;
-/**
- * @author Cedric
- */
 
 class EventListener{
    attribute listener:RemoteAllEventsListener;

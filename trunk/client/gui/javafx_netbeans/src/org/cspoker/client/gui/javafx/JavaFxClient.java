@@ -176,29 +176,12 @@ public class JavaFxClient {
         rpc.startGame();
     }
 
-    public TableInterface[] getTableList() throws IllegalActionException, RemoteException {
+    public TableInterface[] getTableList() throws RemoteException {
        final List<Table> tables = rpc.getTables().getTables();
        TableInterface[] r = new TableInterface[tables.size()];
-        int i;
-       for(int i=0;i<r.length TableInterface[];i++){
-           r[i] = new TableInterface() {
-
-                public int getId() {
-                    return tables.get(i).
-                }
-
-                public int getNbPlayers() {
-                    throw new UnsupportedOperationException("Not supported yet.");
-                }
-
-                public int getSmallBlind() {
-                    throw new UnsupportedOperationException("Not supported yet.");
-                }
-
-                public int getBigBlind() {
-                    throw new UnsupportedOperationException("Not supported yet.");
-                }
-            };
+       for(int i=0;i<r.length;i++){
+           Table t = tables.get(i);
+           r[i] = new TableImpl(t.getId().getID(), t.getName(), t.getNbPlayers(), t.getGameProperty().getSmallBlind(), t.getGameProperty().getBigBlind());
        }
        return r;
     }

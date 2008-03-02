@@ -16,6 +16,8 @@
 
 package org.cspoker.common.elements;
 
+import java.io.Serializable;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 
@@ -30,7 +32,10 @@ import javax.xml.bind.annotation.XmlAccessorType;
  * @invar This game property must have valid parameters | hasValidParameters()
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-public class GameProperty {
+public class GameProperty implements Serializable {
+
+	private static final long serialVersionUID = -7488999804059098465L;
+
 	/***************************************************************************
 	 * Variables
 	 **************************************************************************/

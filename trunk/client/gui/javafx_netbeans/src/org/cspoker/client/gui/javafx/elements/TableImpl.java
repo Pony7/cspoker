@@ -1,6 +1,17 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
 package org.cspoker.client.gui.javafx.elements;
@@ -10,20 +21,22 @@ package org.cspoker.client.gui.javafx.elements;
  * @author Cedric
  */
 public class TableImpl implements TableInterface{
-
-    public TableImpl(int a,int b,int c,int d){
-        Id=a;
-        nbPlayers=b;
-        smallBlind=c;
-        bigBlind=d;
-    }
-    public int Id;
+    private String name;
+    public long id;
     public int nbPlayers;
     public int smallBlind;
     public int bigBlind;
 
-    public int getId() {
-        return Id;
+    public TableImpl(long id,String name,int nbPlayers,int smallBlind,int bigBlind){
+        this.id=id;
+        this.nbPlayers=nbPlayers;
+        this.smallBlind=smallBlind;
+        this.bigBlind=bigBlind;
+        this.name = name;
+    }
+
+    public long getId() {
+        return id;
     }
 
     public int getNbPlayers() {
@@ -36,5 +49,9 @@ public class TableImpl implements TableInterface{
 
     public int getBigBlind() {
         return bigBlind;
+    }
+
+    public String getName() {
+        return name;
     }
 }

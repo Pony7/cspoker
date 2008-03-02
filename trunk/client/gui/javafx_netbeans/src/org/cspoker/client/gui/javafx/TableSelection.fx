@@ -17,7 +17,6 @@ package org.cspoker.client.gui.javafx;
 import javafx.ui.*;
 import java.lang.*;
 import org.cspoker.client.gui.javafx.elements.TableInterface;
-import org.cspoker.client.gui.javafx.elements.TableItem;
 import java.rmi.RemoteException;
 import org.cspoker.common.exceptions.IllegalActionException;
 
@@ -27,12 +26,12 @@ class TableSelection {
     
     attribute screen:Frame;
     
-    attribute tables: TableItem*;
+    attribute tables: TableInterface*;
     attribute selection: Integer;
     attribute active: Boolean;
     
     operation join_table();
-    operation create_table();
+    operation create_table(name:String);
     operation refresh();
     operation relogin();
 }
@@ -41,8 +40,8 @@ trigger on new TableSelection{
     active = false;
     screen=Frame{
         title: "Tables"
-        width: 400
-        height: 400
+        width: 450
+        height: 450
         visible: true
         centerOnScreen: true
         onClose: operation() {System.exit(0);}
@@ -58,6 +57,7 @@ trigger on new TableSelection{
                     action: operation() {
                         relogin();
                     }
+                    enabled: bind active
                 }]
             }
         }
@@ -66,24 +66,32 @@ trigger on new TableSelection{
                 selection:bind this.selection
                 columns:
                     [TableColumn {
-                    text: "TableId"
+                    text: "Id"
+                    width: 15
+                },
+                TableColumn {
+                    text: "Name"
                 },
                 TableColumn {
                     text: "# Players"
+                    width: 10
                 },
                 TableColumn {
-                    text: "Small/Big Blind"
-                    width: 100
+                    text: "Blinds"
+                    width: 15
                 }]
                 cells: bind foreach(t in tables)
                 [TableCell {
-                    text:bind t.Id.toString()
+                    text:bind t.getId().toString()
+                },
+                TableCell {
+                    text:bind t.getName()
                 },
                 TableCell{
-                    text:bind t.nb.toString()
+                    text:bind t.getNbPlayers().toString()
                 },
                 TableCell{
-                    text:bind "{t.sB}/{t.bB}"
+                    text:bind "{t.getSmallBlind().toString()}/{t.getBigBlind().toString()}"
                 }]
             }
             top:FlowPanel{
@@ -99,7 +107,10 @@ trigger on new TableSelection{
                     text: "Create Table"
                     toolTipText: "Create a new table"
                     action: operation() {
-                        create_table();
+                        active = false;
+                        CreateTable{
+                            ts: this
+                        }
                     }
                     enabled: bind active
                 },
@@ -139,10 +150,10 @@ operation TableSelection.join_table(){
     active = true;
 }
 
-operation TableSelection.create_table(){
+operation TableSelection.create_table(name:String){
     active = false;
     try{
-        client.createTable();
+        client.createTable(name);
         main.table_selected();
     }catch(e:RemoteException){
         relogin();
@@ -155,21 +166,11 @@ operation TableSelection.create_table(){
         }
     }
     active = true;
-   
+    
 }
 
 operation TableSelection.refresh(){
     active = false;
-    var t=client.getTableList();
-    delete this.tables;
-    for(table in t){
-        var ta=new TableItem{
-            Id:table.getId(),
-            nb:table.getNbPlayers(),
-            sB:table.getSmallBlind(),
-            bB:table.getBigBlind()
-        };
-        insert ta into tables;
-    }
+    tables=client.getTableList();
     active = true;
 }
