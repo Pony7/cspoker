@@ -87,25 +87,19 @@ trigger on new EventListener{
         }
         operation onNewPocketCardsEvent(e:NewPocketCardsEvent){
             System.out.println(e.toString());
-            txt = txt.concat(e.toString()).concat("<br/>");
         }
         operation onNewCommunityCardsEvent(e:NewCommunityCardsEvent){
             System.out.println(e.toString());
-            txt = txt.concat(e.toString()).concat("<br/>");
         }
         operation onNewDealEvent(e:NewDealEvent){
             System.out.println(e.toString());
-            txt = txt.concat(e.toString()).concat("<br/>");
-            state = 2;
         }
         operation onNewRoundEvent(e:NewRoundEvent){
             System.out.println(e.toString());
-            txt = txt.concat(e.toString()).concat("<br/>");
-            state = 1;
+            state = 2;
         }
         operation onNextPlayerEvent(e:NextPlayerEvent){
             System.out.println(e.toString());
-            txt = txt.concat(e.toString()).concat("<br/>");
         }
         operation onPlayerJoinedGameEvent(e:PlayerJoinedGameEvent){
             System.out.println(e.toString());
@@ -122,6 +116,7 @@ trigger on new EventListener{
         operation onWinnerEvent(e:WinnerEvent){
             System.out.println(e.toString());
             txt = txt.concat(e.toString()).concat("<br/>");
+            state = 1;
         }
         operation onGameMessageEvent(e:GameMessageEvent){
             System.out.println(e.toString());
@@ -129,15 +124,12 @@ trigger on new EventListener{
         }
         operation onPlayerJoinedEvent(e:PlayerJoinedEvent){
             System.out.println(e.toString());
-            txt = txt.concat(e.toString()).concat("<br/>");
         }
         operation onPlayerLeftEvent(e:PlayerLeftEvent){
             System.out.println(e.toString());
-            txt = txt.concat(e.toString()).concat("<br/>");
         }
         operation onTableCreatedEvent(e:TableCreatedEvent){
             System.out.println(e.toString());
-            txt = txt.concat(e.toString()).concat("<br/>");
         }
         operation onServerMessageEvent(e:ServerMessageEvent){
             System.out.println(e.toString());
