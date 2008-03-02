@@ -21,14 +21,15 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.List;
 
 import javax.security.auth.login.LoginException;
 
 import org.cspoker.common.RemoteLoginServer;
 import org.cspoker.common.RemotePlayerCommunication;
+import org.cspoker.common.elements.GameProperty;
 import org.cspoker.common.elements.table.Table;
 import org.cspoker.common.elements.table.TableId;
+import org.cspoker.common.elements.table.TableList;
 import org.cspoker.common.eventlisteners.RemoteAllEventsListener;
 import org.cspoker.common.exceptions.IllegalActionException;
 
@@ -73,9 +74,14 @@ public class RemoteLoginServerForRMI implements RemoteLoginServer {
 				p.check();
 			}
 
-			public TableId createTable() throws IllegalActionException,
+			public TableId createTable(String name) throws IllegalActionException,
 					RemoteException {
-				return p.createTable();
+				return p.createTable(name);
+			}
+			
+			public TableId createTable(String name, GameProperty settings) throws IllegalActionException,
+			RemoteException {
+				return p.createTable(name, settings);
 			}
 
 			public void deal() throws IllegalActionException, RemoteException {
@@ -131,7 +137,7 @@ public class RemoteLoginServerForRMI implements RemoteLoginServer {
 			}
 
 			@Override
-			public List<Table> getTables() throws IllegalActionException,
+			public TableList getTables() throws IllegalActionException,
 					RemoteException {
 				return p.getTables();
 			}

@@ -27,11 +27,11 @@ public class SuccessfulInvocationEvent<T> extends InvocationEvent {
 
 	private static final long serialVersionUID = 8350435427841245148L;
 
-	private PlayerCommunicationAction action;
+	private PlayerCommunicationAction<T> action;
 
 	private T result;
 
-	public SuccessfulInvocationEvent(PlayerCommunicationAction a, T result) {
+	public SuccessfulInvocationEvent(PlayerCommunicationAction<T> a, T result) {
 		this.action = a;
 		this.result = result;
 	}
@@ -40,7 +40,7 @@ public class SuccessfulInvocationEvent<T> extends InvocationEvent {
 		// no op
 	}
 
-	public PlayerCommunicationAction getAction() {
+	public PlayerCommunicationAction<T> getAction() {
 		return action;
 	}
 

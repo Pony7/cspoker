@@ -31,6 +31,8 @@ import org.cspoker.client.gui.text.commands.Command;
 import org.cspoker.client.gui.text.commands.CreateTableCommand;
 import org.cspoker.client.gui.text.commands.DealCommand;
 import org.cspoker.client.gui.text.commands.FoldCommand;
+import org.cspoker.client.gui.text.commands.GetTableCommand;
+import org.cspoker.client.gui.text.commands.GetTablesCommand;
 import org.cspoker.client.gui.text.commands.HelpCommand;
 import org.cspoker.client.gui.text.commands.JoinTableCommand;
 import org.cspoker.client.gui.text.commands.LeaveTableCommand;
@@ -64,6 +66,8 @@ public class Client {
 		commands.put("CREATETABLE", new CreateTableCommand(rpc, console));
 		commands.put("JOINTABLE", new JoinTableCommand(rpc, console));
 		commands.put("LEAVETABLE", new LeaveTableCommand(rpc, console));
+		commands.put("GETTABLE", new GetTableCommand(rpc, console));
+		commands.put("GETTABLES", new GetTablesCommand(rpc, console));
 
 		commands.put("STARTGAME", new StartGameCommand(rpc, console));
 		commands.put("DEAL", new DealCommand(rpc, console));

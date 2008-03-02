@@ -23,6 +23,7 @@ import java.util.List;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
 
 import org.cspoker.common.elements.GameProperty;
 import org.cspoker.common.player.Player;
@@ -35,8 +36,10 @@ import org.cspoker.common.player.Player;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Table {
 	
+	@XmlAttribute
 	private TableId id;
 	
+	@XmlAttribute
 	private String name;
 	
 	private List<Player> players;

@@ -20,6 +20,7 @@ import java.util.List;
 import org.cspoker.common.elements.GameProperty;
 import org.cspoker.common.elements.table.Table;
 import org.cspoker.common.elements.table.TableId;
+import org.cspoker.common.elements.table.TableList;
 import org.cspoker.common.eventlisteners.RemoteAllEventsListener;
 import org.cspoker.common.exceptions.IllegalActionException;
 
@@ -157,7 +158,7 @@ public abstract class PlayerCommunication implements RemotePlayerCommunication {
 	 * 
 	 * @return The list of tables that are currently hosted.
 	 */
-	public abstract List<Table> getTables() throws IllegalActionException;
+	public abstract TableList getTables() throws IllegalActionException;
 
 	/**
 	 * This player starts the game. Only the player who has created the table

@@ -25,6 +25,7 @@ import org.cspoker.common.PlayerCommunication;
 import org.cspoker.common.elements.GameProperty;
 import org.cspoker.common.elements.table.Table;
 import org.cspoker.common.elements.table.TableId;
+import org.cspoker.common.elements.table.TableList;
 import org.cspoker.common.eventlisteners.AllEventsListener;
 import org.cspoker.common.eventlisteners.RemoteAllEventsListener;
 import org.cspoker.common.eventlisteners.game.RemoteGameMessageListener;
@@ -238,13 +239,17 @@ public class PlayerCommunicationImpl extends PlayerCommunication {
 	}
 	
 	@Override
-	public Table getTable(TableId id){
-		return TableManager.getTable(id).getSavedTable();
+	public Table getTable(TableId id) throws IllegalActionException{
+		try {
+			return TableManager.getTable(id).getSavedTable();
+		} catch (IllegalArgumentException e) {
+			throw new IllegalActionException(e.getMessage());
+		}
 	}
 
 	@Override
-	public List<Table> getTables(){
-		return TableManager.getAllTables();
+	public TableList getTables(){
+		return new TableList(TableManager.getAllTables());
 	}
 
 	@Override

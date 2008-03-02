@@ -19,6 +19,7 @@ import org.cspoker.client.gui.text.Console;
 import org.cspoker.common.RemotePlayerCommunication;
 import org.cspoker.common.elements.table.Table;
 import org.cspoker.common.elements.table.TableId;
+import org.cspoker.common.player.Player;
 
 public class GetTableCommand extends AbstractCommand {
 
@@ -28,8 +29,12 @@ public class GetTableCommand extends AbstractCommand {
 
 	public void execute(String... args) throws Exception {
 		Table t = rpc.getTable(new TableId(Integer.parseInt(args[0])));
-		String s = 	"Table name: "+t.getName()+"(id "+t.getId()+")"+n+
-				  	" "+t.getNbPlayers()+" players:";
+		String s = 	"Table name: "+t.getName()+" ("+t.getId()+")"+n+
+				  	" "+t.getNbPlayers()+" players:"+n;
+		for(Player p:t.getPlayers()){
+			s+="  -"+p.getName()+n;
+		}
+		console.print(s);
 	}
 
 }

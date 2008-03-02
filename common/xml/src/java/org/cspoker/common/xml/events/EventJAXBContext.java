@@ -15,10 +15,13 @@
  */
 package org.cspoker.common.xml.events;
 
+import javax.swing.text.TabExpander;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 
 import org.apache.log4j.Logger;
+import org.cspoker.common.elements.table.Table;
+import org.cspoker.common.elements.table.TableList;
 import org.cspoker.common.events.gameevents.GameMessageEvent;
 import org.cspoker.common.events.gameevents.NewCommunityCardsEvent;
 import org.cspoker.common.events.gameevents.NewDealEvent;
@@ -84,6 +87,6 @@ public class EventJAXBContext {
 				PlayerJoinedEvent.class, PlayerLeftEvent.class,
 				ServerMessageEvent.class, TableCreatedEvent.class,
 				// other
-				EventSequence.class };
+				EventSequence.class, Table.class, TableList.class };
 	}
 }

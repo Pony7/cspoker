@@ -29,7 +29,8 @@ public class HelpCommand implements Command {
 		console.print("Supported commands:" + n + "" + n + "-General:" + n
 				+ "  HELP - what you're looking at now" + n
 				+ n + "  EXIT - close the client" + n + "" + n + "-Tables:" + n
-				+ "  CREATETABLE - create your table" + n
+				+ "  CREATETABLE [name] - create your table" + n
+				+ "  GETTABLE [id] - see info on a table" + n
 				+ "  JOINTABLE [id] - join the table with id [id]" + n
 				+ "  LEAVETABLE - leave the table you're at" + n + "" + n
 				+ "-Game:" + n + "  STARTGAME - start a new game at your table"

@@ -28,6 +28,7 @@ import org.cspoker.client.xml.http.RemotePlayerCommunicationFactoryForHttp;
 import org.cspoker.client.xml.sockets.RemotePlayerCommunicationFactoryForSocket;
 import org.cspoker.common.exceptions.IllegalActionException;
 import org.cspoker.common.RemotePlayerCommunication;
+import org.cspoker.common.elements.table.Table;
 import org.cspoker.common.elements.table.TableId;
 
 public class JavaFxClient {
@@ -167,22 +168,38 @@ public class JavaFxClient {
         rpc.leaveTable();
     }
 
-    public TableId createTable() throws RemoteException, IllegalActionException {
-        return rpc.createTable();
+    public TableId createTable(String name) throws RemoteException, IllegalActionException {
+        return rpc.createTable(name);
     }
 
     public void startGame() throws RemoteException, IllegalActionException {
         rpc.startGame();
     }
 
-    public TableInterface[] getTableList() {
-        // TODO create method to ask the server for a list of table id's
-        List<TableInterface> result = new ArrayList<TableInterface>();
-         for (int j = 0; j < 10; j++) {
-            result.add(new TableImpl(j, 5, 2, 4));
-        }
-        TableInterface[] r = new TableInterface[result.size()];
-        result.toArray(r);
-        return r;
+    public TableInterface[] getTableList() throws IllegalActionException, RemoteException {
+       final List<Table> tables = rpc.getTables().getTables();
+       TableInterface[] r = new TableInterface[tables.size()];
+        int i;
+       for(int i=0;i<r.length TableInterface[];i++){
+           r[i] = new TableInterface() {
+
+                public int getId() {
+                    return tables.get(i).
+                }
+
+                public int getNbPlayers() {
+                    throw new UnsupportedOperationException("Not supported yet.");
+                }
+
+                public int getSmallBlind() {
+                    throw new UnsupportedOperationException("Not supported yet.");
+                }
+
+                public int getBigBlind() {
+                    throw new UnsupportedOperationException("Not supported yet.");
+                }
+            };
+       }
+       return r;
     }
 }
