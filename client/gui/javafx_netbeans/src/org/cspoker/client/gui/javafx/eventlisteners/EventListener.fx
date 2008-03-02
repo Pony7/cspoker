@@ -39,79 +39,109 @@ import org.cspoker.common.events.serverevents.PlayerLeftEvent;
 import org.cspoker.common.events.serverevents.ServerMessageEvent;
 import org.cspoker.common.events.serverevents.TableCreatedEvent;
 import org.cspoker.client.gui.javafx.*;
+import java.lang.*;
 
 class EventListener{
    attribute listener:RemoteAllEventsListener;
-   attribute state:Integer;
+   attribute mainstate:Integer;
+   attribute events:String;
 }
 
 trigger on new EventListener{
+    var state = bind mainstate;
+    var txt = bind events;
+    
     listener = new RemoteAllEventsListener {
+        
         operation onAllInEvent(e:AllInEvent){
-            
+            System.out.println(e.toString());
+            txt = txt.concat(e.toString()).concat("<br/>");
         }
         operation onBetEvent(e:BetEvent){
-            
+            System.out.println(e.toString());
+            txt = txt.concat(e.toString()).concat("<br/>");
         }
         operation onBigBlindEvent(e:BigBlindEvent){
-            
+            System.out.println(e.toString());
+            txt = txt.concat(e.toString()).concat("<br/>");
         }
         operation onCallEvent(e:CallEvent){
-            
+            System.out.println(e.toString());
+            txt = txt.concat(e.toString()).concat("<br/>");
         }
         operation onCheckEvent(e:CheckEvent){
-            
+            System.out.println(e.toString());
+            txt = txt.concat(e.toString()).concat("<br/>");
         }
         operation onFoldEvent(e:FoldEvent){
-            
+            System.out.println(e.toString());
+            txt = txt.concat(e.toString()).concat("<br/>");
         }
         operation onRaiseEvent(e:RaiseEvent){
-            
+            System.out.println(e.toString());
+            txt = txt.concat(e.toString()).concat("<br/>");
         }
         operation onSmallBlindEvent(e:SmallBlindEvent){
-            
+            System.out.println(e.toString());
+            txt = txt.concat(e.toString()).concat("<br/>");
         }
         operation onNewPocketCardsEvent(e:NewPocketCardsEvent){
-            
+            System.out.println(e.toString());
+            txt = txt.concat(e.toString()).concat("<br/>");
         }
         operation onNewCommunityCardsEvent(e:NewCommunityCardsEvent){
-            
+            System.out.println(e.toString());
+            txt = txt.concat(e.toString()).concat("<br/>");
         }
         operation onNewDealEvent(e:NewDealEvent){
-            
+            System.out.println(e.toString());
+            txt = txt.concat(e.toString()).concat("<br/>");
+            state = 2;
         }
         operation onNewRoundEvent(e:NewRoundEvent){
-            
+            System.out.println(e.toString());
+            txt = txt.concat(e.toString()).concat("<br/>");
+            state = 1;
         }
         operation onNextPlayerEvent(e:NextPlayerEvent){
-            
+            System.out.println(e.toString());
+            txt = txt.concat(e.toString()).concat("<br/>");
         }
         operation onPlayerJoinedGameEvent(e:PlayerJoinedGameEvent){
-            
+            System.out.println(e.toString());
+            txt = txt.concat(e.toString()).concat("<br/>");
         }
         operation onPlayerLeftTableEvent(e:PlayerLeftTableEvent){
-            
+            System.out.println(e.toString());
+            txt = txt.concat(e.toString()).concat("<br/>");
         }
         operation onShowHandEvent(e:ShowHandEvent){
-            
+            System.out.println(e.toString());
+            txt = txt.concat(e.toString()).concat("<br/>");
         }
         operation onWinnerEvent(e:WinnerEvent){
-            
+            System.out.println(e.toString());
+            txt = txt.concat(e.toString()).concat("<br/>");
         }
         operation onGameMessageEvent(e:GameMessageEvent){
-            
+            System.out.println(e.toString());
+            txt = txt.concat(e.toString()).concat("<br/>");
         }
         operation onPlayerJoinedEvent(e:PlayerJoinedEvent){
-            
+            System.out.println(e.toString());
+            txt = txt.concat(e.toString()).concat("<br/>");
         }
         operation onPlayerLeftEvent(e:PlayerLeftEvent){
-            
+            System.out.println(e.toString());
+            txt = txt.concat(e.toString()).concat("<br/>");
         }
         operation onTableCreatedEvent(e:TableCreatedEvent){
-            
+            System.out.println(e.toString());
+            txt = txt.concat(e.toString()).concat("<br/>");
         }
         operation onServerMessageEvent(e:ServerMessageEvent){
-            
+            System.out.println(e.toString());
+            txt = txt.concat(e.toString()).concat("<br/>");
         }
     };
 }

@@ -33,7 +33,7 @@ class GameTable {
     attribute players:Player*;
     attribute state:Integer;
     attribute amount:String;
-    attribute textarea:String;
+    attribute events:String;
     
     operation relogin();
     
@@ -47,20 +47,20 @@ class GameTable {
     operation allin();
     
     function stateactions():Widget*;
+    function eventHtml():String;
 }
 
 trigger on new GameTable{
     var padx = 50;
     var pady = 50;
-    var tablex = 280;
-    var tabley = 170;
+    var tablex = 300;
+    var tabley = 200;
     var logofontsize = (tablex+tabley)/10;
-    var textareawidth= 100;
     state = 0;
-    textarea="Welcome to CSPoker!\n";
+    events="Welcome to CSPoker!<br/>";
     screen = Frame{
         title: "Game Table"
-        width: 2*padx+tablex*2+textareawidth
+        width: 2*padx+tablex*2
         height: 2*pady+tabley*2+100
         visible: true
         centerOnScreen: true
@@ -107,15 +107,31 @@ trigger on new GameTable{
                         stroke: darkgreen
                         strokeWidth: 1
                     },
-                    Text {
-                        x: padx+tablex-((logofontsize*4)/2)
-                        y: pady+tabley-(logofontsize/2)
-                        content: "CSPoker"
-                        font: new Font("Tahoma", "BOLD", logofontsize)
-                        stroke: darkorange
-                        fill: orange
-                        strokeWidth: 2
-                        opacity: 0.25
+                    Group{
+                        content: [Text {
+                            x: padx+tablex
+                            y: pady+tabley
+                            content: "CSPoker"
+                            font: new Font("Tahoma", "BOLD", logofontsize)
+                            stroke: darkorange
+                            fill: orange
+                            strokeWidth: 2
+                            opacity: 0.25
+                            valign: CENTER
+                            halign: CENTER
+                        }]
+                    },
+                    View {
+                        transform: translate(padx+tablex+(tablex/8),pady+tabley-(tabley*5)/16)
+                        content: EditorPane {
+                            opaque: true
+                            preferredSize: {height: (tabley*5)/8 width: (tablex*5)/8}
+                            contentType: HTML
+                            editable: false
+                            text: bind eventHtml()
+                            background: new Color(0,0,0,0)
+                            foreground: new Color(1,0,0,0.5)
+                        }
                     },
                     Group{
                         transform:[]
@@ -129,12 +145,6 @@ trigger on new GameTable{
             }
             bottom:FlowPanel{
                 content: bind stateactions()
-            }
-            right:TextArea{
-                text: bind textarea
-                editable: false
-                width:textareawidth
-                height:2*pady+tabley*2
             }
         }
     };
@@ -275,56 +285,63 @@ function GameTable.stateactions():Widget*{
         }
     }]
     else if (this.state==1) then
-        [
-        Button {
-            text: "Deal"
-            toolTipText: "Deal"
-            action: operation() {
-                deal();
-            }
-        },TextField{
-            value: bind amount
-            sizeToFitColumn: true
-        },Button {
-            text: "Bet"
-            toolTipText: "Bet the entered amount"
-            action: operation() {
-                bet();
-            }
-        },Button {
-            text: "Check"
-            toolTipText: "Check"
-            action: operation() {
-                check();
-            }
-        },Button {
-            text: "Call"
-            toolTipText: "Call"
-            action: operation() {
-                call();
-            }
-        },Button {
-            text: "Fold"
-            toolTipText: "Fold"
-            action: operation() {
-                fold();
-            }
-        },Button {
-            text: "Raise"
-            toolTipText: "Raise"
-            action: operation() {
-                raise();
-            }
-        },Button {
-            text: "All In"
-            toolTipText: "Go All In"
-            action: operation() {
-                allin();
-            }
+    [
+    Button {
+        text: "Deal"
+        toolTipText: "Deal"
+        action: operation() {
+            deal();
         }
-        ]
+    }
+    ]
+    else if (this.state==2) then
+    [
+    TextField{
+        value: bind amount
+        columns: 5
+    },Button {
+        text: "Bet"
+        toolTipText: "Bet the entered amount"
+        action: operation() {
+            bet();
+        }
+    },Button {
+        text: "Check"
+        toolTipText: "Check"
+        action: operation() {
+            check();
+        }
+    },Button {
+        text: "Call"
+        toolTipText: "Call"
+        action: operation() {
+            call();
+        }
+    },Button {
+        text: "Fold"
+        toolTipText: "Fold"
+        action: operation() {
+            fold();
+        }
+    },Button {
+        text: "Raise"
+        toolTipText: "Raise"
+        action: operation() {
+            raise();
+        }
+    },Button {
+        text: "All In"
+        toolTipText: "Go All In"
+        action: operation() {
+            allin();
+        }
+    }
+    ]
     else[SimpleLabel{
         text: "No action available"
     }];
-    
+}
+
+function GameTable.eventHtml():String{
+    return "<html><body>{events}</body></html>";
 }

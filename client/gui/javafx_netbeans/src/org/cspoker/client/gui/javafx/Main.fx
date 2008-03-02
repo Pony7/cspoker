@@ -56,6 +56,11 @@ class Main{
 }
 
 operation Main.logged_in(){
+    var temp = EventListener{
+        mainstate: bind gametable.state 
+        events: bind gametable.events
+    };
+    mainclient.subscribeAllEvents(temp.listener);
     login.screen.hide();
     table_selection = TableSelection{
         client: bind mainclient
@@ -83,8 +88,4 @@ Main{
         client: bind me.mainclient
         main: me
     }
-}
-
-trigger on new Main{
-    mainclient.subscribeAllEvents(EventListener.listener);
 }

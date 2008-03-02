@@ -26,6 +26,7 @@ import org.cspoker.client.gui.javafx.elements.TableImpl;
 import org.cspoker.client.rmi.RemotePlayerCommunicationFactoryForRMI;
 import org.cspoker.client.xml.http.RemotePlayerCommunicationFactoryForHttp;
 import org.cspoker.client.xml.sockets.RemotePlayerCommunicationFactoryForSocket;
+import org.cspoker.common.eventlisteners.RemoteAllEventsListener;
 import org.cspoker.common.exceptions.IllegalActionException;
 import org.cspoker.common.RemotePlayerCommunication;
 import org.cspoker.common.elements.table.Table;
@@ -41,6 +42,7 @@ public class JavaFxClient {
      * The communication used by this client
      */
     private RemotePlayerCommunication rpc;
+    private RemoteAllEventsListener listener;
 
     /**********************************************************
      * Constructor
@@ -57,8 +59,12 @@ public class JavaFxClient {
     }
     
     public void subscribeAllEvents(org.cspoker.common.eventlisteners.RemoteAllEventsListener listener) throws java.rmi.RemoteException {
-        //communication.subscribeAllEventsListener(listener);
+        if(this.listener!=null){
+            rpc.unsubscribeAllEventsListener(this.listener);
+        }
+        this.listener = listener;
         System.out.println("Listener subscribed to all events");
+        rpc.subscribeAllEventsListener(listener);
     }
 
     /**
@@ -161,6 +167,7 @@ public class JavaFxClient {
     }
 
     public void joinTable(int n) throws IllegalActionException, RemoteException {
+        System.out.println("joined table "+n);
         rpc.joinTable(new TableId(n));
     }
 
