@@ -18,13 +18,14 @@ package org.cspoker.client.xml.common;
 import java.rmi.RemoteException;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.cspoker.common.RemotePlayerCommunication;
+import org.cspoker.common.elements.GameProperty;
 import org.cspoker.common.elements.table.Table;
 import org.cspoker.common.elements.table.TableId;
+import org.cspoker.common.elements.table.TableList;
 import org.cspoker.common.eventlisteners.RemoteAllEventsListener;
 import org.cspoker.common.exceptions.IllegalActionException;
 import org.cspoker.common.util.SpreadingAllEventsListener;
@@ -106,8 +107,13 @@ public class XmlChannelRemotePlayerCommunication implements
 	}
 
 	@Override
-	public TableId createTable() throws IllegalActionException, RemoteException {
-		return marshaller.perform(new CreateTableAction(getId()));
+	public TableId createTable(String name) throws IllegalActionException, RemoteException {
+		return marshaller.perform(new CreateTableAction(getId(), name));
+	}
+	
+	@Override
+	public TableId createTable(String name, GameProperty settings) throws IllegalActionException, RemoteException {
+		return marshaller.perform(new CreateTableAction(getId(), name, settings));
 	}
 
 	@Override
@@ -160,7 +166,7 @@ public class XmlChannelRemotePlayerCommunication implements
 	}
 
 	@Override
-	public List<Table> getTables() throws IllegalActionException, RemoteException {
+	public TableList getTables() throws IllegalActionException, RemoteException {
 		return marshaller.perform(new GetTablesAction(getId()));
 	}
 }

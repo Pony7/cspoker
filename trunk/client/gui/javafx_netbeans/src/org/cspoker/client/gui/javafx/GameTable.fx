@@ -53,7 +53,7 @@ trigger on new GameTable{
     var pady = 50;
     var tablex = 280;
     var tabley = 170;
-    var logofontsize = bind(tablex+tabley)/9;
+    var logofontsize = (tablex+tabley)/10;
     state = 0;
     screen = Frame{
         title: "Game Table"
@@ -112,7 +112,7 @@ trigger on new GameTable{
                         stroke: darkorange
                         fill: orange
                         strokeWidth: 2
-                        opacity: 0.3
+                        opacity: 0.25
                     },
                     Group{
                         transform:[]

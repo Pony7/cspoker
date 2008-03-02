@@ -42,7 +42,8 @@ public class ActionJAXBContext {
 				CallAction.class, CheckAction.class, CreateTableAction.class,
 				DealAction.class, FoldAction.class, JoinTableAction.class,
 				KillAction.class, LeaveTableAction.class, RaiseAction.class,
-				SayAction.class, StartGameAction.class, NoOpAction.class };
+				SayAction.class, StartGameAction.class, NoOpAction.class,
+				GetTableAction.class, GetTablesAction.class};
 	}
 
 }

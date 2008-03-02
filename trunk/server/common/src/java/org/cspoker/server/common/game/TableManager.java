@@ -60,7 +60,7 @@ public class TableManager {
 	 */
 	public static GameTable getTable(TableId id) {
 		if (!hasATableWithId(id)) {
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("No such table.");
 		}
 		return hashMap.get(id);
 	}

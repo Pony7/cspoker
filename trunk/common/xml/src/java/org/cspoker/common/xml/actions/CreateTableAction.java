@@ -20,6 +20,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.cspoker.common.PlayerCommunication;
+import org.cspoker.common.elements.GameProperty;
 import org.cspoker.common.elements.table.TableId;
 import org.cspoker.common.exceptions.IllegalActionException;
 import org.cspoker.common.xml.eventlisteners.invocation.AllInvocationEventsListener;
@@ -30,9 +31,19 @@ import org.cspoker.common.xml.events.invocation.IllegalActionEvent;
 public class CreateTableAction extends PlayerCommunicationAction<TableId> {
 
 	private static final long serialVersionUID = 2423639524369017909L;
-
-	public CreateTableAction(long id) {
+	private String name;
+	private GameProperty settings;
+	
+	public CreateTableAction(long id, String name) {
 		super(id);
+		this.name = name;
+		this.settings = null;
+	}
+	
+	public CreateTableAction(long id, String name, GameProperty settings) {
+		super(id);
+		this.name = name;
+		this.settings = settings;
 	}
 
 	protected CreateTableAction() {
@@ -43,7 +54,10 @@ public class CreateTableAction extends PlayerCommunicationAction<TableId> {
 	public void perform(PlayerCommunication pc,
 			AllInvocationEventsListener listener) {
 		try {
-			dispatchResult(pc.createTable(), listener);
+			if(settings==null)
+				dispatchResult(pc.createTable(name), listener);
+			else 
+				dispatchResult(pc.createTable(name,settings), listener);
 		} catch (IllegalActionException e) {
 			listener.onIllegalAction(new IllegalActionEvent(e, this));
 		}

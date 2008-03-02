@@ -183,7 +183,7 @@ public class TestRMI {
 		RemotePlayerCommunication kenzo = f.login("kenzo", "test");
 		RemotePlayerCommunication cedric = f.login("cedric", "test");
 
-		guy.createTable();
+		guy.createTable("guy's table");
 
 		kenzo.joinTable(new TableId(0));
 		cedric.joinTable(new TableId(0));

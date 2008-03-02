@@ -190,7 +190,7 @@ public class TestSockets {
 			cedric = temp.getRemotePlayerCommunication("cedric",
 					"test");
 
-			TableId id = guy.createTable();
+			TableId id = guy.createTable("guy's table");
 
 			kenzo.joinTable(id);
 			cedric.joinTable(id);

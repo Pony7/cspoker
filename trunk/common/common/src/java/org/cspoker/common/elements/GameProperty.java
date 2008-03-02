@@ -59,7 +59,7 @@ public class GameProperty {
 	/**
 	 * The maximum number of players in a game
 	 */
-	private static final int maxNbPlayers = 10;
+	private static final int maxNbPlayers = 8;
 
 
 	/***************************************************************************

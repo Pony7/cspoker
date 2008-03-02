@@ -17,15 +17,20 @@ package org.cspoker.client.gui.text.commands;
 
 import org.cspoker.client.gui.text.Console;
 import org.cspoker.common.RemotePlayerCommunication;
+import org.cspoker.common.elements.table.Table;
 
-public class CreateTableCommand extends AbstractCommand {
+public class GetTablesCommand extends AbstractCommand {
 
-	public CreateTableCommand(RemotePlayerCommunication rpc, Console console) {
+	public GetTablesCommand(RemotePlayerCommunication rpc, Console console) {
 		super(rpc, console);
 	}
 
 	public void execute(String... args) throws Exception {
-		rpc.createTable(args[0]);
+		String s="Tables:"+n;
+		for(Table t:rpc.getTables().getTables()){
+			s+= " - ["+t.getId().getID()+"]"+t.getName()+" ("+t.getNbPlayers()+"/"+t.getGameProperty().getMaxNbPlayers()+" players) ("+t.getGameProperty().getSmallBlind()+"/"+t.getGameProperty().getBigBlind()+" blinds)"+n;
+		}
+		console.print(s);
 	}
 
 }
