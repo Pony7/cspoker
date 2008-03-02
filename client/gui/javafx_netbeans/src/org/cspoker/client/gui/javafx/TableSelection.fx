@@ -63,6 +63,11 @@ trigger on new TableSelection{
         }
         content: BorderPanel{
             center:Table{
+                onMousePressed: operation(e){
+                    if(e.clickCount>1){
+                        join_table();
+                    }
+                }
                 selection:bind this.selection
                 columns: [TableColumn {
                     text: "Id"

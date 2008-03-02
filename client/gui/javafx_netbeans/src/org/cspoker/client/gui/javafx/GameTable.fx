@@ -35,6 +35,8 @@ class GameTable {
     attribute amount:String;
     attribute events:String;
     
+    attribute stateactions:WidgetArray*;
+    
     operation relogin();
     
     operation startgame();
@@ -46,7 +48,6 @@ class GameTable {
     operation raise();
     operation allin();
     
-    function stateactions():Widget*;
     function eventHtml():String;
 }
 
@@ -54,7 +55,7 @@ trigger on new GameTable{
     var padx = 50;
     var pady = 50;
     var tablex = 300;
-    var tabley = 200;
+    var tabley = 180;
     var logofontsize = (tablex+tabley)/10;
     state = 0;
     events="Welcome to CSPoker!<br/>";
@@ -121,18 +122,6 @@ trigger on new GameTable{
                             halign: CENTER
                         }]
                     },
-                    View {
-                        transform: translate(padx+tablex+(tablex/8),pady+tabley-(tabley*5)/16)
-                        content: EditorPane {
-                            opaque: true
-                            preferredSize: {height: (tabley*5)/8 width: (tablex*5)/8}
-                            contentType: HTML
-                            editable: false
-                            text: bind eventHtml()
-                            background: new Color(0,0,0,0)
-                            foreground: new Color(1,0,0,0.5)
-                        }
-                    },
                     Group{
                         transform:[]
                         content:[
@@ -143,11 +132,93 @@ trigger on new GameTable{
                 }
                 background: black
             }
-            bottom:FlowPanel{
-                content: bind stateactions()
+            bottom: BorderPanel{
+                center:GroupPanel{
+                    var singleRow= Row{alignment: BASELINE}
+                    
+                    var buttonsColumn= Column{ alignment:TRAILING}
+                    var chatColumn= Column {alignment:LEADING resizable:true }
+                    
+                    rows: [singleRow]
+                    columns: [buttonsColumn,chatColumn]
+                    
+                    content:[
+                    FlowPanel{
+                        row: singleRow
+                        column: buttonsColumn
+                        content: bind stateactions[state].widgets
+                    },
+                    TextField{
+                        row: singleRow
+                        column: chatColumn
+                        value: "chat"
+                    }]
+                }
             }
         }
     };
+    stateactions = [
+    WidgetArray{
+        widgets: [Button {
+            text: "Start Game"
+            toolTipText: "Start the game at this table."
+            action: operation() {
+                startgame();
+            }
+        }]},
+        WidgetArray{
+        widgets: [
+        Button {
+            text: "Deal"
+            toolTipText: "Deal"
+            action: operation() {
+                deal();
+            }
+        }
+        ]},
+        WidgetArray{
+        widgets: [
+        TextField{
+            value: bind amount
+            columns: 5
+        },Button {
+            text: "Bet"
+            toolTipText: "Bet the entered amount"
+            action: operation() {
+                bet();
+            }
+        },Button {
+            text: "Check"
+            toolTipText: "Check"
+            action: operation() {
+                check();
+            }
+        },Button {
+            text: "Call"
+            toolTipText: "Call"
+            action: operation() {
+                call();
+            }
+        },Button {
+            text: "Fold"
+            toolTipText: "Fold"
+            action: operation() {
+                fold();
+            }
+        },Button {
+            text: "Raise"
+            toolTipText: "Raise"
+            action: operation() {
+                raise();
+            }
+        },Button {
+            text: "All In"
+            toolTipText: "Go All In"
+            action: operation() {
+                allin();
+            }
+        }
+        ]}];
 }
 
 operation GameTable.relogin(){
@@ -273,73 +344,6 @@ operation GameTable.allin(){
             messageType: ERROR
         }
     }
-}
-
-function GameTable.stateactions():Widget*{
-    return if(this.state==0) then
-    [Button {
-        text: "Start Game"
-        toolTipText: "Start the game at this table."
-        action: operation() {
-            startgame();
-        }
-    }]
-    else if (this.state==1) then
-    [
-    Button {
-        text: "Deal"
-        toolTipText: "Deal"
-        action: operation() {
-            deal();
-        }
-    }
-    ]
-    else if (this.state==2) then
-    [
-    TextField{
-        value: bind amount
-        columns: 5
-    },Button {
-        text: "Bet"
-        toolTipText: "Bet the entered amount"
-        action: operation() {
-            bet();
-        }
-    },Button {
-        text: "Check"
-        toolTipText: "Check"
-        action: operation() {
-            check();
-        }
-    },Button {
-        text: "Call"
-        toolTipText: "Call"
-        action: operation() {
-            call();
-        }
-    },Button {
-        text: "Fold"
-        toolTipText: "Fold"
-        action: operation() {
-            fold();
-        }
-    },Button {
-        text: "Raise"
-        toolTipText: "Raise"
-        action: operation() {
-            raise();
-        }
-    },Button {
-        text: "All In"
-        toolTipText: "Go All In"
-        action: operation() {
-            allin();
-        }
-    }
-    ]
-    else[SimpleLabel{
-        text: "No action available"
-    }];
 }
 
 function GameTable.eventHtml():String{
