@@ -126,8 +126,8 @@ public class RemoteLoginServerForRMI implements RemoteLoginServer {
 
 			public void unsubscribeAllEventsListener(
 					RemoteAllEventsListener listener) throws RemoteException {
-				UnicastRemoteObject.unexportObject(listener, true);
 				p.unsubscribeAllEventsListener(listener);
+				UnicastRemoteObject.unexportObject(listener, true);
 			}
 
 			@Override

@@ -86,7 +86,7 @@ public class TableId implements Serializable {
 
 	@Override
 	public String toString() {
-		return "table: " + String.valueOf(id);
+		return String.valueOf(id);
 	}
 
 	public long getID() {

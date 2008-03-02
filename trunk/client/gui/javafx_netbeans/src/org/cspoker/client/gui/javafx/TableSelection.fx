@@ -64,8 +64,7 @@ trigger on new TableSelection{
         content: BorderPanel{
             center:Table{
                 selection:bind this.selection
-                columns:
-                    [TableColumn {
+                columns: [TableColumn {
                     text: "Id"
                     width: 15
                 },
@@ -82,16 +81,17 @@ trigger on new TableSelection{
                 }]
                 cells: bind foreach(t in tables)
                 [TableCell {
-                    text:bind t.getId().toString()
+                    value: t.getId()
+                    text: t.getId().toString()
                 },
                 TableCell {
-                    text:bind t.getName()
+                    text: t.getName()
                 },
                 TableCell{
-                    text:bind t.getNbPlayers().toString()
+                    text: t.getNbPlayers().toString()
                 },
                 TableCell{
-                    text:bind "{t.getSmallBlind().toString()}/{t.getBigBlind().toString()}"
+                    text: "{t.getSmallBlind().toString()}/{t.getBigBlind().toString()}"
                 }]
             }
             top:FlowPanel{
