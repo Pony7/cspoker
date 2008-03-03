@@ -15,6 +15,7 @@
  */
 package org.cspoker.client.gui.javafx.elements;
 
+
 /**
  *
  * @author Cedric

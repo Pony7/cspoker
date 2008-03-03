@@ -13,6 +13,8 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
+ 
+  
 package org.cspoker.client.gui.javafx;
 
 import javafx.ui.*;
@@ -43,7 +45,6 @@ import org.cspoker.common.events.serverevents.PlayerLeftEvent;
 import org.cspoker.common.events.serverevents.ServerMessageEvent;
 import org.cspoker.common.events.serverevents.TableCreatedEvent;
 import org.cspoker.client.gui.javafx.eventlisteners.EventListener;
-
 class Main{
     attribute mainclient: JavaFxClient;
     attribute login: Login inverse Login.prog;
@@ -59,6 +60,7 @@ operation Main.logged_in(){
     var temp = EventListener{
         mainstate: bind gametable.state 
         events: bind gametable.events
+        busy: bind gametable.busy
     };
     mainclient.subscribeAllEvents(temp.listener);
     login.screen.hide();
