@@ -90,15 +90,6 @@ public abstract class PlayerCommunication implements RemotePlayerCommunication {
 	public abstract void raise(int amount) throws IllegalActionException;
 
 	/**
-	 * The player who the dealer-button has been dealt to can choose to start
-	 * the deal. From that moment, new players can not join the on-going deal.
-	 * 
-	 * @throws IllegalActionException
-	 *             [must] The player can not deal in the current state.
-	 */
-	public abstract void deal() throws IllegalActionException;
-
-	/**
 	 * The player goes all-in.
 	 * 
 	 * @throws IllegalActionException
