@@ -97,7 +97,7 @@ public class RunCSPoker {
 					if(type.equals("rmi")){
 						try {
 							//need to do this in two steps to prevent GC!!
-							rmiserver = new RMIServer(port);
+							rmiserver = new RMIServer(port,auth);
 							rmiserver.start();
 						} catch (AccessException e) {
 							logger.warn("Failed to start RMI server at port "+port,e);

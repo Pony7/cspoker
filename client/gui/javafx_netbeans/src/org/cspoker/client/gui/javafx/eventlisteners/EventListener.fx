@@ -40,19 +40,26 @@ import org.cspoker.common.events.serverevents.ServerMessageEvent;
 import org.cspoker.common.events.serverevents.TableCreatedEvent;
 import org.cspoker.client.gui.javafx.*;
 import java.lang.*;
+import org.cspoker.client.gui.javafx.game.*;
+import org.cspoker.common.elements.cards.Card as JavaCard;
+import org.cspoker.common.elements.cards.Rank;
+import org.cspoker.common.elements.cards.Suit;
 
 class EventListener{
-   attribute listener:RemoteAllEventsListener;
-   attribute mainstate:Integer;
-   attribute events:String;
-   attribute busy:Boolean;
+    attribute listener:RemoteAllEventsListener;
+    attribute mainstate:Integer;
+    attribute events:String;
+    attribute playingcards:PlayingCards;
+    attribute client:JavaFxClient;
+    attribute busy:Boolean;
 }
 
 trigger on new EventListener{
     var state = bind mainstate;
     var txt = bind events;
+    var pc = bind playingcards;
+    var cl = bind client;
     var bool = bind busy;
-    
     listener = new RemoteAllEventsListener {
         
         operation onAllInEvent(e:AllInEvent){
@@ -105,16 +112,82 @@ trigger on new EventListener{
         }
         operation onNewPocketCardsEvent(e:NewPocketCardsEvent){
             System.out.println(e.toString());
+            pc.state == 1;
+            var cards:JavaCard* = cl.toArray(e.getPocketCards());
+            pc.cp1 = Card{
+                visible: true
+                rank: cards[0].getRank().toString().toLowerCase()
+                suit: cards[0].getSuit().toString().toLowerCase()
+            };
+            pc.cp2 = Card{
+                visible: true
+                rank: cards[1].getRank().toString().toLowerCase()
+                suit: cards[1].getSuit().toString().toLowerCase()
+            };
         }
         operation onNewCommunityCardsEvent(e:NewCommunityCardsEvent){
             System.out.println(e.toString());
+            var cards:JavaCard* = cl.toArray(e.getCommonCards());
+            if(pc.state == 1){
+                pc.c1 = Card{
+                    visible: true
+                    rank: cards[0].getRank().toString().toLowerCase()
+                    suit: cards[0].getSuit().toString().toLowerCase()
+                };
+                pc.c2 = Card{
+                    visible: true
+                    rank: cards[1].getRank().toString().toLowerCase()
+                    suit: cards[1].getSuit().toString().toLowerCase()
+                };
+                pc.c3 = Card{
+                    visible: true
+                    rank: cards[2].getRank().toString().toLowerCase()
+                    suit: cards[2].getSuit().toString().toLowerCase()
+                };
+            }else if(pc.state == 2){
+                pc.c4 = Card{
+                    visible: true
+                    rank: cards[0].getRank().toString().toLowerCase()
+                    suit: cards[0].getSuit().toString().toLowerCase()
+                };
+            }else if(pc.state == 3){
+                pc.c5 = Card{
+                    visible: true
+                    rank: cards[0].getRank().toString().toLowerCase()
+                    suit: cards[0].getSuit().toString().toLowerCase()
+                };
+            }
+            pc.state = pc.state+1;
+            
         }
         operation onNewDealEvent(e:NewDealEvent){
             System.out.println(e.toString());
+            pc.state = 1;
+            pc.c1 = Card{
+                visible: false
+            };
+            pc.c2 = Card{
+                visible: false
+            };
+            pc.c3 = Card{
+                visible: false
+            };
+            pc.c4 = Card{
+                visible: false
+            };
+            pc.c5 = Card{
+                visible: false
+            };
+            pc.cp1 = Card{
+                visible: false
+            };
+            pc.cp2 = Card{
+                visible: false
+            };
+            state = 2;
         }
         operation onNewRoundEvent(e:NewRoundEvent){
-            System.out.println(e.toString());
-            bool=false;
+            System.out.println(e.toString()); bool=false;
             state = 2;
             bool=true;
         }
@@ -144,6 +217,8 @@ trigger on new EventListener{
             bool=false;
             txt = txt.concat(e.toString()).concat("<br/>");
             state = 1;
+            // kaarten blijven zichtbaar?
+            // pc.dealt = false;
             bool=true;
         }
         operation onGameMessageEvent(e:GameMessageEvent){

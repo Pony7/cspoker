@@ -20,6 +20,7 @@ import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
 
+import java.util.Set;
 import javax.security.auth.login.LoginException;
 import org.cspoker.client.gui.javafx.elements.TableInterface;
 import org.cspoker.client.gui.javafx.elements.TableImpl;
@@ -29,6 +30,7 @@ import org.cspoker.client.xml.sockets.RemotePlayerCommunicationFactoryForSocket;
 import org.cspoker.common.eventlisteners.RemoteAllEventsListener;
 import org.cspoker.common.exceptions.IllegalActionException;
 import org.cspoker.common.RemotePlayerCommunication;
+import org.cspoker.common.elements.cards.Card;
 import org.cspoker.common.elements.table.Table;
 import org.cspoker.common.elements.table.TableId;
 
@@ -191,5 +193,9 @@ public class JavaFxClient {
            r[i] = new TableImpl(t.getId().getID(), t.getName(), t.getNbPlayers(), t.getGameProperty().getSmallBlind(), t.getGameProperty().getBigBlind());
        }
        return r;
+    }
+    
+    public Card[] toArray(Set<Card> cards){
+        return cards.toArray(new Card[cards.size()]);
     }
 }

@@ -20,7 +20,7 @@ package org.cspoker.client.gui.javafx;
 import javafx.ui.*;
 import java.lang.*;
 import org.cspoker.client.gui.javafx.*;
-import org.cspoker.client.gui.javafx.game.Game;
+import org.cspoker.client.gui.javafx.game.*;
 import org.cspoker.common.eventlisteners.RemoteAllEventsListener;
 import org.cspoker.common.events.gameevents.GameMessageEvent;
 import org.cspoker.common.events.gameevents.NewCommunityCardsEvent;
@@ -60,6 +60,8 @@ operation Main.logged_in(){
     var temp = EventListener{
         mainstate: bind gametable.state 
         events: bind gametable.events
+        playingcards: bind gametable.playingcards
+        client: bind mainclient
         busy: bind gametable.busy
     };
     mainclient.subscribeAllEvents(temp.listener);
