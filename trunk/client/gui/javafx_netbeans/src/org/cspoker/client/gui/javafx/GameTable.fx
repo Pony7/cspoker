@@ -153,7 +153,7 @@ trigger on new GameTable{
                         }]
                     },
                     Group{
-                        transform: [rotate(180, 0, 0),translate(padx+tablex, pady+tabley)]
+                        transform: [translate(padx+tablex, pady+tabley),rotate(180, 0, 0)]
                         content: [Text {
                             content: "CSPoker"
                             font: new Font("Tahoma", "BOLD", logofontsize)
