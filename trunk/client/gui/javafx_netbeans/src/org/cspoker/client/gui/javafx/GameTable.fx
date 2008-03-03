@@ -18,6 +18,8 @@ import javafx.ui.*;
 import javafx.ui.canvas.*;
 import javafx.ui.filter.*;
 import java.lang.*;
+import org.cspoker.client.gui.javafx.elements.*;
+import org.cspoker.client.gui.javafx.game.*;
 import java.awt.Dimension;
 import org.cspoker.client.gui.javafx.elements.TableInterface;
 import org.cspoker.client.gui.javafx.elements.TableItem;
@@ -38,6 +40,7 @@ class GameTable {
     attribute busy:Boolean;
     
     attribute stateactions:WidgetArray*;
+    attribute playingcards:PlayingCards;
     
     operation relogin();
     
@@ -58,9 +61,33 @@ trigger on new GameTable{
     var pady = 50;
     var tablex = 300;
     var tabley = 180;
-    var logofontsize = (tablex+tabley)/10;
+    var logofontsize = (tablex+tabley)/6;
     state = 0;
     events="Welcome to CSPoker!<br/>";
+    playingcards=PlayingCards{
+        c1: Card{
+            visible: false
+        }
+        c2: Card{
+            visible: false
+        }
+        c3: Card{
+            visible: false
+        }
+        c4: Card{
+            visible: false
+        }
+        c5: Card{
+            visible: false
+        }
+        cp1: Card{
+            visible: false
+        }
+        cp2: Card{
+            visible: false
+        }
+        state: 0
+    };
     screen = Frame{
         title: "Game Table"
         width: 2*padx+tablex*2
@@ -114,18 +141,79 @@ trigger on new GameTable{
                         strokeWidth: 1
                     },
                     Group{
+                        transform: translate(padx+tablex, pady+tabley)
                         content: [Text {
-                            x: padx+tablex
-                            y: pady+tabley
                             content: "CSPoker"
                             font: new Font("Tahoma", "BOLD", logofontsize)
                             stroke: darkorange
                             fill: orange
                             strokeWidth: 2
                             opacity: 0.25
-                            valign: CENTER
                             halign: CENTER
                         }]
+                    },
+                    Group{
+                        transform: [rotate(180, 0, 0),translate(padx+tablex, pady+tabley)]
+                        content: [Text {
+                            content: "CSPoker"
+                            font: new Font("Tahoma", "BOLD", logofontsize)
+                            stroke: darkorange
+                            fill: orange
+                            strokeWidth: 2
+                            opacity: 0.25
+                            halign: CENTER
+                        }]
+                    },
+                    Group{
+                        transform: translate(padx+tablex, pady+tabley)
+                        content: [ImageView {
+                            transform:  translate(-45*2,0)
+                            image: Image { url: bind playingcards.getCard(playingcards.c1) }
+                            valign: CENTER
+                            halign: CENTER
+                            visible: true
+                        },ImageView {
+                            transform:  translate(-45,0)
+                            image: Image { url: bind playingcards.getCard(playingcards.c2) }
+                            valign: CENTER
+                            halign: CENTER
+                            visible: true
+                        },ImageView {
+                            transform:  translate(0,0)
+                            image: Image { url: bind playingcards.getCard(playingcards.c3) }
+                            valign: CENTER
+                            halign: CENTER
+                            visible: true
+                        },ImageView {
+                            transform:  translate(45,0)
+                            image: Image { url: bind playingcards.getCard(playingcards.c4) }
+                            valign: CENTER
+                            halign: CENTER
+                            visible: true
+                        },ImageView {
+                            transform:  translate(45*2,0)
+                            image: Image { url: bind playingcards.getCard(playingcards.c5) }
+                            valign: CENTER
+                            halign: CENTER
+                            visible: true
+                        }]
+                        visible: bind (playingcards.state > 0)
+                    },Group{
+                        transform: translate(padx+tablex, pady+2*tabley)
+                        content: [ImageView {
+                            transform:  translate(-25,0)
+                            image: Image { url: bind playingcards.getCard(playingcards.cp1) }
+                            valign: CENTER
+                            halign: CENTER
+                            visible: true
+                        },ImageView {
+                            transform:  translate(25,0)
+                            image: Image { url: bind playingcards.getCard(playingcards.cp2) }
+                            valign: CENTER
+                            halign: CENTER
+                            visible: true
+                        }]
+                        visible: bind (playingcards.state > 0)
                     },
                     Group{
                         transform:[]
