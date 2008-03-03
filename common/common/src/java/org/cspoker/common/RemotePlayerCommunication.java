@@ -84,15 +84,6 @@ public interface RemotePlayerCommunication extends Remote {
 	void raise(int amount) throws IllegalActionException, RemoteException;
 
 	/**
-	 * The player who the dealer-button has been dealt to can choose to start
-	 * the deal. From that moment, new players can not join the on-going deal.
-	 * 
-	 * @throws IllegalActionException
-	 *             [must] The player can not deal in the current state.
-	 */
-	void deal() throws IllegalActionException, RemoteException;
-
-	/**
 	 * The player goes all-in.
 	 * 
 	 * @throws IllegalActionException
