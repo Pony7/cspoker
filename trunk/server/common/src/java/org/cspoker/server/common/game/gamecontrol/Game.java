@@ -495,6 +495,10 @@ public class Game {
 	public void setToInitialHandPlayers() {
 		currentHandPlayers = initialCurrentHandPlayers;
 	}
+	
+	public int getNbSeatedPlayers(){
+		return table.getNbPlayers();
+	}
 
 	/***************************************************************************
 	 * Leave/Join Game
