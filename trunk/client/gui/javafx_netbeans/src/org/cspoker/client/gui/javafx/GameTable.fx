@@ -13,6 +13,7 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
+ 
 package org.cspoker.client.gui.javafx;
 import javafx.ui.*;
 import javafx.ui.canvas.*;
@@ -42,6 +43,8 @@ class GameTable {
     attribute stateactions:WidgetArray*;
     
     operation relogin();
+    
+    operation changeButtons(s:Integer);
     
     operation startgame();
     operation deal();
@@ -113,7 +116,7 @@ trigger on new GameTable{
         content: SplitPane{
             orientation: VERTICAL
             content:[SplitView{
-                weight: 0.85
+                weight: 0.785
                 content: Canvas {
                     content: Group {
                         transform: []
@@ -240,7 +243,7 @@ trigger on new GameTable{
                     background: black
                 }},
                 SplitView{
-                    weight:0.15
+                    weight:0.215
                     content:BorderPanel{
                         center:SplitPane{
                             orientation: HORIZONTAL
@@ -379,7 +382,9 @@ trigger on new GameTable{
         }
         ]}];
 }
-
+operation GameTable.changeButtons(s:Integer){
+	System.out.println("State changed to {s}");
+}
 operation GameTable.relogin(){
     //TODO fix
     main.relogin();
