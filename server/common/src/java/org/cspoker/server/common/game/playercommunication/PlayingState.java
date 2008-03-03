@@ -81,11 +81,6 @@ class PlayingState extends PlayerCommunicationState {
 		gameMediator.raise(playerCommunication.getPlayer(), amount);
 	}
 
-	@Override
-	public void deal() throws IllegalActionException {
-		gameMediator.deal(playerCommunication.getPlayer());
-		;
-	}
 
 	@Override
 	public void allIn() throws IllegalActionException {

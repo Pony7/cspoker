@@ -68,12 +68,6 @@ abstract class PlayerCommunicationState {
 				+ getStdErrorMessage());
 	}
 
-	public void deal() throws IllegalActionException {
-		throw new IllegalActionException("Deal is not a valid action. "
-				+ getStdErrorMessage());
-
-	}
-
 	public void fold() throws IllegalActionException {
 		throw new IllegalActionException("Fold is not a valid action. "
 				+ getStdErrorMessage());
