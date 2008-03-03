@@ -182,11 +182,6 @@ public class PlayerCommunicationImpl extends PlayerCommunication {
 	}
 
 	@Override
-	public void deal() throws IllegalActionException {
-		state.deal();
-	}
-
-	@Override
 	public void allIn() throws IllegalActionException {
 		state.allIn();
 	}
