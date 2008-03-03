@@ -45,45 +45,63 @@ class EventListener{
    attribute listener:RemoteAllEventsListener;
    attribute mainstate:Integer;
    attribute events:String;
+   attribute busy:Boolean;
 }
 
 trigger on new EventListener{
     var state = bind mainstate;
     var txt = bind events;
+    var bool = bind busy;
     
     listener = new RemoteAllEventsListener {
         
         operation onAllInEvent(e:AllInEvent){
             System.out.println(e.toString());
+            bool=false;
             txt = txt.concat(e.toString()).concat("<br/>");
+            bool=true;
         }
         operation onBetEvent(e:BetEvent){
             System.out.println(e.toString());
+            bool=false;
             txt = txt.concat(e.toString()).concat("<br/>");
+            bool=true;
         }
         operation onBigBlindEvent(e:BigBlindEvent){
             System.out.println(e.toString());
+            bool=false;
             txt = txt.concat(e.toString()).concat("<br/>");
+            bool=true;
         }
         operation onCallEvent(e:CallEvent){
             System.out.println(e.toString());
+            bool=false;
             txt = txt.concat(e.toString()).concat("<br/>");
+            bool=true;
         }
         operation onCheckEvent(e:CheckEvent){
             System.out.println(e.toString());
+            bool=false;
             txt = txt.concat(e.toString()).concat("<br/>");
+            bool=true;
         }
         operation onFoldEvent(e:FoldEvent){
             System.out.println(e.toString());
+            bool=false;
             txt = txt.concat(e.toString()).concat("<br/>");
+            bool=true;
         }
         operation onRaiseEvent(e:RaiseEvent){
             System.out.println(e.toString());
+            bool=false;
             txt = txt.concat(e.toString()).concat("<br/>");
+            bool=true;
         }
         operation onSmallBlindEvent(e:SmallBlindEvent){
             System.out.println(e.toString());
+            bool=false;
             txt = txt.concat(e.toString()).concat("<br/>");
+            bool=true;
         }
         operation onNewPocketCardsEvent(e:NewPocketCardsEvent){
             System.out.println(e.toString());
@@ -96,31 +114,43 @@ trigger on new EventListener{
         }
         operation onNewRoundEvent(e:NewRoundEvent){
             System.out.println(e.toString());
+            bool=false;
             state = 2;
+            bool=true;
         }
         operation onNextPlayerEvent(e:NextPlayerEvent){
             System.out.println(e.toString());
         }
         operation onPlayerJoinedGameEvent(e:PlayerJoinedGameEvent){
             System.out.println(e.toString());
+            bool=false;
             txt = txt.concat(e.toString()).concat("<br/>");
+            bool=true;
         }
         operation onPlayerLeftTableEvent(e:PlayerLeftTableEvent){
             System.out.println(e.toString());
+            bool=false;
             txt = txt.concat(e.toString()).concat("<br/>");
+            bool=true;
         }
         operation onShowHandEvent(e:ShowHandEvent){
             System.out.println(e.toString());
+            bool=false;
             txt = txt.concat(e.toString()).concat("<br/>");
+            bool=true;
         }
         operation onWinnerEvent(e:WinnerEvent){
             System.out.println(e.toString());
+            bool=false;
             txt = txt.concat(e.toString()).concat("<br/>");
             state = 1;
+            bool=true;
         }
         operation onGameMessageEvent(e:GameMessageEvent){
             System.out.println(e.toString());
+            bool=false;
             txt = txt.concat(e.toString()).concat("<br/>");
+            bool=true;
         }
         operation onPlayerJoinedEvent(e:PlayerJoinedEvent){
             System.out.println(e.toString());
@@ -133,7 +163,9 @@ trigger on new EventListener{
         }
         operation onServerMessageEvent(e:ServerMessageEvent){
             System.out.println(e.toString());
+            bool=false;
             txt = txt.concat(e.toString()).concat("<br/>");
+            bool=true;
         }
     };
 }

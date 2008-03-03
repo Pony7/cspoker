@@ -18,6 +18,7 @@ import javafx.ui.*;
 import javafx.ui.canvas.*;
 import javafx.ui.filter.*;
 import java.lang.*;
+import java.awt.Dimension;
 import org.cspoker.client.gui.javafx.elements.TableInterface;
 import org.cspoker.client.gui.javafx.elements.TableItem;
 import java.rmi.RemoteException;
@@ -34,6 +35,7 @@ class GameTable {
     attribute state:Integer;
     attribute amount:String;
     attribute events:String;
+    attribute busy:Boolean;
     
     attribute stateactions:WidgetArray*;
     
@@ -81,8 +83,11 @@ trigger on new GameTable{
                 }]
             }
         }
-        content: BorderPanel{
-            center:Canvas {
+        content: SplitPane{
+        	orientation: VERTICAL
+            content:[SplitView{
+            	weight: 0.85
+            	content: Canvas {
                 content: Group {
                     transform: []
                     content:
@@ -131,30 +136,48 @@ trigger on new GameTable{
                     ]
                 }
                 background: black
-            }
-            bottom: BorderPanel{
-                center:GroupPanel{
-                    var singleRow= Row{alignment: BASELINE}
-                    
-                    var buttonsColumn= Column{ alignment:TRAILING}
-                    var chatColumn= Column {alignment:LEADING resizable:true }
-                    
-                    rows: [singleRow]
-                    columns: [buttonsColumn,chatColumn]
-                    
+            }},
+            SplitView{
+            weight:0.15
+            content:BorderPanel{
+                center:SplitPane{
+                    orientation: HORIZONTAL
                     content:[
-                    FlowPanel{
-                        row: singleRow
-                        column: buttonsColumn
-                        content: bind stateactions[state].widgets
+                    SplitView{
+                    	weight: 0.60
+                    	content:GroupPanel{
+                    	var singleRow= Row{alignment: BASELINE}
+                    	var buttonsColumn= Column{ alignment:TRAILING}
+                    
+                    	rows: [singleRow]
+                    	columns: [buttonsColumn]
+                    
+                    	content:FlowPanel{
+                        			row: singleRow
+                        			column: buttonsColumn
+                       	 			content: bind stateactions[state].widgets
+                   				}
+                		}
                     },
-                    TextField{
-                        row: singleRow
-                        column: chatColumn
-                        value: "chat"
-                    }]
+                    SplitView{
+                    	weight: 0.40
+               			content: Box {
+               					orientation: HORIZONTAL
+               					content: EditorPane{
+               					inUpdate: bind busy
+                                contentType: HTML
+                                editable: false
+                                text: bind events
+                                verticalScrollBarPolicy: AS_NEEDED
+                                maximumSize: {height: bind 0.12*screen.height width: bind 0.4*screen.width}
+                                doubleBuffered: true
+                         			}
+                         		}
+                         		
+                    }
+                  	]
                 }
-            }
+            }}]
         }
     };
     stateactions = [
