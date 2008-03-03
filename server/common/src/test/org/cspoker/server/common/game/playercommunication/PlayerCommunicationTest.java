@@ -19,6 +19,7 @@ import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import junit.framework.TestCase;
 
@@ -141,22 +142,29 @@ public class PlayerCommunicationTest extends TestCase {
 					.getPlayerCommunication();
 			map.put(kenzoComm.getId(), kenzoComm);
 			map.put(guyComm.getId(), guyComm);
+			
+			EventCollector kenzoEvents = new EventCollector();
+			EventCollector guyEvents = new EventCollector();
+			
+			kenzoComm.subscribeAllEventsListener(kenzoEvents);
+			guyComm.subscribeAllEventsListener(guyEvents);
+			
 
 			TableId tableId = kenzoComm.createTable("test");
 			guyComm.joinTable(tableId);
 			guyComm.subscribeAllEventsListener(new TestListener(map));
 			kenzoComm.startGame();
-			PlayerCommunicationTest.logger.info(kenzoComm.getLatestEvents());
+			PlayerCommunicationTest.logger.info(kenzoEvents.getEvents());
 
 			PlayerCommunicationTest.logger.info("Kenzo's events:"
-					+ kenzoComm.getLatestEvents());
+					+ kenzoEvents.getEvents());
 			PlayerCommunicationTest.logger.info("Guy's events:"
-					+ guyComm.getLatestEvents());
+					+ guyEvents.getEvents());
 
 			currentComm.call();
 
 			PlayerCommunicationTest.logger.info("Guy's events:");
-			showEvents(guyComm.getLatestEvents().getGameEvents());
+			showEvents(guyEvents.getEvents());
 
 			currentComm.check();
 			currentComm.bet(10);
@@ -170,7 +178,7 @@ public class PlayerCommunicationTest extends TestCase {
 			currentComm.check();
 
 			PlayerCommunicationTest.logger.info("Guy's events:");
-			showEvents(guyComm.getLatestEvents().getGameEvents());
+			showEvents(guyEvents.getEvents());
 
 		} catch (IllegalActionException e) {
 			fail(e.getMessage());
@@ -199,29 +207,35 @@ public class PlayerCommunicationTest extends TestCase {
 
 			map.put(kenzoComm.getId(), kenzoComm);
 			map.put(guyComm.getId(), guyComm);
+			
+			EventCollector kenzoEvents = new EventCollector();
+			EventCollector guyEvents = new EventCollector();
+			
+			kenzoComm.subscribeAllEventsListener(kenzoEvents);
+			guyComm.subscribeAllEventsListener(guyEvents);
 
 			TableId tableId = kenzoComm.createTable("test");
 
 			guyComm.subscribeAllEventsListener(new TestListener(map));
 			guyComm.joinTable(tableId);
 			kenzoComm.startGame();
-			PlayerCommunicationTest.logger.info(kenzoComm.getLatestEvents());
+			PlayerCommunicationTest.logger.info(kenzoEvents.getEvents());
 
 			PlayerCommunicationTest.logger.info("Kenzo's events:"
-					+ kenzoComm.getLatestEvents());
+					+ kenzoEvents.getEvents());
 			PlayerCommunicationTest.logger.info("Guy's events:"
-					+ guyComm.getLatestEvents());
+					+ kenzoEvents.getEvents());
 
 			currentComm.call();
 
 			PlayerCommunicationTest.logger.info("Guy's events:");
-			showEvents(guyComm.getLatestEvents().getGameEvents());
+			showEvents(guyEvents.getEvents());
 
 			currentComm.allIn();
 			currentComm.allIn();
 
 			PlayerCommunicationTest.logger.info("Guy's events:");
-			showEvents(guyComm.getLatestEvents().getGameEvents());
+			showEvents(guyEvents.getEvents());
 
 		} catch (IllegalActionException e) {
 			fail(e.getMessage());
@@ -393,4 +407,135 @@ public class PlayerCommunicationTest extends TestCase {
 
 	}
 
+	private class EventCollector implements RemoteAllEventsListener{
+		
+		public List<Event> getEvents(){
+			return events;
+		}
+		
+		private List<Event> events = new CopyOnWriteArrayList<Event>();
+
+		@Override
+		public void onAllInEvent(AllInEvent event) throws RemoteException{
+			events.add(event);
+		}
+
+		@Override
+		public void onBetEvent(BetEvent event) throws RemoteException{
+			events.add(event);
+		}
+
+		@Override
+		public void onBigBlindEvent(BigBlindEvent event) throws RemoteException{
+			events.add(event);
+			
+		}
+
+		@Override
+		public void onCallEvent(CallEvent event) throws RemoteException {
+			events.add(event);
+		}
+
+		@Override
+		public void onCheckEvent(CheckEvent event) throws RemoteException {
+			events.add(event);
+		}
+
+		@Override
+		public void onFoldEvent(FoldEvent event) throws RemoteException {
+			events.add(event);
+		}
+
+		@Override
+		public void onRaiseEvent(RaiseEvent event) throws RemoteException {
+			events.add(event);
+		}
+
+		@Override
+		public void onSmallBlindEvent(SmallBlindEvent event)
+				throws RemoteException {
+			events.add(event);
+		}
+
+		@Override
+		public void onNewPocketCardsEvent(NewPocketCardsEvent event)
+				throws RemoteException {
+			events.add(event);
+		}
+
+		@Override
+		public void onNewCommunityCardsEvent(NewCommunityCardsEvent event)
+				throws RemoteException {
+			events.add(event);
+		}
+
+		@Override
+		public void onNewDealEvent(NewDealEvent event) throws RemoteException {
+			events.add(event);
+		}
+
+		@Override
+		public void onNewRoundEvent(NewRoundEvent event) throws RemoteException {
+			events.add(event);
+		}
+
+		@Override
+		public void onNextPlayerEvent(NextPlayerEvent event)
+				throws RemoteException {
+			events.add(event);
+		}
+
+		@Override
+		public void onPlayerJoinedGameEvent(PlayerJoinedGameEvent event)
+				throws RemoteException {
+			events.add(event);
+		}
+
+		@Override
+		public void onPlayerLeftTableEvent(PlayerLeftTableEvent event)
+				throws RemoteException {
+			events.add(event);
+		}
+
+		@Override
+		public void onShowHandEvent(ShowHandEvent event) throws RemoteException {
+			events.add(event);
+		}
+
+		@Override
+		public void onWinnerEvent(WinnerEvent event) throws RemoteException {
+			events.add(event);
+		}
+
+		@Override
+		public void onGameMessageEvent(GameMessageEvent event)
+				throws RemoteException {
+			events.add(event);
+		}
+
+		@Override
+		public void onPlayerJoinedEvent(PlayerJoinedEvent event)
+				throws RemoteException {
+			events.add(event);
+		}
+
+		@Override
+		public void onPlayerLeftEvent(PlayerLeftEvent event)
+				throws RemoteException {
+			events.add(event);
+		}
+
+		@Override
+		public void onTableCreatedEvent(TableCreatedEvent event)
+				throws RemoteException {
+			events.add(event);
+		}
+
+		@Override
+		public void onServerMessageEvent(ServerMessageEvent event)
+				throws RemoteException {
+			events.add(event);
+		}
+		
+	}
 }
