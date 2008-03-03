@@ -58,11 +58,8 @@ class Main{
 
 operation Main.logged_in(){
     var temp = EventListener{
-        mainstate: bind gametable.state 
-        events: bind gametable.events
-        playingcards: bind gametable.playingcards
+        tablestate: bind gametable.state
         client: bind mainclient
-        busy: bind gametable.busy
     };
     mainclient.subscribeAllEvents(temp.listener);
     login.screen.hide();

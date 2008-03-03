@@ -35,16 +35,11 @@ class GameTable {
     
     attribute sqrw:Integer;
     attribute sqrh:Integer;
-    attribute circr:Integer;
     
-    attribute players:Player*;
-    attribute state:Integer;
+    attribute state:TableState;
+    
     attribute amount:String;
-    attribute events:String;
-    attribute busy:Boolean;
-    
     attribute stateactions:WidgetArray*;
-    attribute playingcards:PlayingCards;
     
     operation relogin();
     
@@ -56,8 +51,6 @@ class GameTable {
     operation fold();
     operation raise();
     operation allin();
-    
-    function eventHtml():String;
 }
 
 trigger on new GameTable{
@@ -66,31 +59,34 @@ trigger on new GameTable{
     sqrw = 280;
     sqrh = 280;
     var logofontsize = sqrh/5;
-    state = 0;
-    events="Welcome to CSPoker!<br/>";
-    playingcards=PlayingCards{
-        c1: Card{
-            visible: false
-        }
-        c2: Card{
-            visible: false
-        }
-        c3: Card{
-            visible: false
-        }
-        c4: Card{
-            visible: false
-        }
-        c5: Card{
-            visible: false
-        }
-        cp1: Card{
-            visible: false
-        }
-        cp2: Card{
-            visible: false
-        }
+    
+    state = TableState{
         state: 0
+        events: "Welcome to CSPoker!<br/>"
+        playingcards: PlayingCards{
+            c1: Card{
+                visible: false
+            }
+            c2: Card{
+                visible: false
+            }
+            c3: Card{
+                visible: false
+            }
+            c4: Card{
+                visible: false
+            }
+            c5: Card{
+                visible: false
+            }
+            cp1: Card{
+                visible: false
+            }
+            cp2: Card{
+                visible: false
+            }
+            state: 0
+        }
     };
     screen = Frame{
         title: "Game Table"
@@ -186,52 +182,52 @@ trigger on new GameTable{
                             transform: translate(padx+sqrh/2+sqrw/2, pady+sqrh/2)
                             content: [ImageView {
                                 transform:  translate(-45*2,0)
-                                image: Image { url: bind playingcards.getCard(playingcards.c1) }
+                                image: Image { url: bind state.playingcards.getCard( state.playingcards.c1) }
                                 valign: CENTER
                                 halign: CENTER
                                 visible: true
                             },ImageView {
                                 transform:  translate(-45,0)
-                                image: Image { url: bind playingcards.getCard(playingcards.c2) }
+                                image: Image { url: bind state.playingcards.getCard( state.playingcards.c2) }
                                 valign: CENTER
                                 halign: CENTER
                                 visible: true
                             },ImageView {
                                 transform:  translate(0,0)
-                                image: Image { url: bind playingcards.getCard(playingcards.c3) }
+                                image: Image { url: bind state.playingcards.getCard( state.playingcards.c3) }
                                 valign: CENTER
                                 halign: CENTER
                                 visible: true
                             },ImageView {
                                 transform:  translate(45,0)
-                                image: Image { url: bind playingcards.getCard(playingcards.c4) }
+                                image: Image { url: bind state.playingcards.getCard( state.playingcards.c4) }
                                 valign: CENTER
                                 halign: CENTER
                                 visible: true
                             },ImageView {
                                 transform:  translate(45*2,0)
-                                image: Image { url: bind playingcards.getCard(playingcards.c5) }
+                                image: Image { url: bind state.playingcards.getCard( state.playingcards.c5) }
                                 valign: CENTER
                                 halign: CENTER
                                 visible: true
                             }]
-                            visible: bind(playingcards.state > 0)
+                            visible: bind(state.playingcards.state > 0)
                         },Group{
                             transform: translate(padx+sqrh/2+sqrw/2, pady+sqrh)
                             content: [ImageView {
                                 transform:  translate(-25,0)
-                                image: Image { url: bind playingcards.getCard(playingcards.cp1) }
+                                image: Image { url: bind state.playingcards.getCard( state.playingcards.cp1) }
                                 valign: CENTER
                                 halign: CENTER
                                 visible: true
                             },ImageView {
                                 transform:  translate(25,0)
-                                image: Image { url: bind playingcards.getCard(playingcards.cp2) }
+                                image: Image { url: bind state.playingcards.getCard( state.playingcards.cp2) }
                                 valign: CENTER
                                 halign: CENTER
                                 visible: true
                             }]
-                            visible: bind(playingcards.state > 0)
+                            visible: bind(state.playingcards.state > 0)
                         },
                         Group{
                             transform:[]
@@ -265,37 +261,37 @@ trigger on new GameTable{
                                     content:[FlowPanel{
                                         row: firstRow
                                         column: firstColumn
-                                        content: bind stateactions[state].widgets[0]
+                                        content: bind stateactions[state.state].widgets[0]
                                     },
                                     FlowPanel{
                                         row: firstRow
                                         column: secondColumn
-                                        content: bind stateactions[state].widgets[1]
+                                        content: bind stateactions[state.state].widgets[1]
                                     },
                                     FlowPanel{
                                         row: firstRow
                                         column: thirdColumn
-                                        content: bind stateactions[state].widgets[2]
+                                        content: bind stateactions[state.state].widgets[2]
                                     },
                                     FlowPanel{
                                         row: firstRow
                                         column: fourthColumn
-                                        content: bind stateactions[state].widgets[3]
+                                        content: bind stateactions[state.state].widgets[3]
                                     },
                                     FlowPanel{
                                         row: secondRow
                                         column: firstColumn
-                                        content: bind stateactions[state].widgets[4]
+                                        content: bind stateactions[state.state].widgets[4]
                                     },
                                     FlowPanel{
                                         row: secondRow
                                         column: secondColumn
-                                        content: bind stateactions[state].widgets[5]
+                                        content: bind stateactions[state.state].widgets[5]
                                     },
                                     FlowPanel{
                                         row: secondRow
                                         column: thirdColumn
-                                        content: bind stateactions[state].widgets[6]
+                                        content: bind stateactions[state.state].widgets[6]
                                     }]
                                 }
                             },
@@ -304,10 +300,10 @@ trigger on new GameTable{
                                 content: Box {
                                     orientation: HORIZONTAL
                                     content: EditorPane{
-                                        inUpdate: bind busy
+                                        inUpdate: bind state.busy
                                         contentType: HTML
                                         editable: false
-                                        text: bind events
+                                        text: bind state.events
                                         verticalScrollBarPolicy: AS_NEEDED
                                         maximumSize: {height: bind 0.12*screen.height width: bind 0.4*screen.width}
                                         doubleBuffered: true
@@ -507,8 +503,4 @@ operation GameTable.allin(){
             messageType: ERROR
         }
     }
-}
-
-function GameTable.eventHtml():String{
-    return "<html><body>{events}</body></html>";
 }

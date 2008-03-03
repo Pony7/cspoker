@@ -47,79 +47,73 @@ import org.cspoker.common.elements.cards.Suit;
 
 class EventListener{
     attribute listener:RemoteAllEventsListener;
-    attribute mainstate:Integer;
-    attribute events:String;
-    attribute playingcards:PlayingCards;
     attribute client:JavaFxClient;
-    attribute busy:Boolean;
+    attribute tablestate:TableState;
 }
 
 trigger on new EventListener{
-    var state = bind mainstate;
-    var txt = bind events;
-    var pc = bind playingcards;
+    var ts = bind tablestate;
     var cl = bind client;
-    var bool = bind busy;
     listener = new RemoteAllEventsListener {
         
         operation onAllInEvent(e:AllInEvent){
             System.out.println(e.toString());
-            bool=false;
-            txt = txt.concat(e.toString()).concat("<br/>");
-            bool=true;
+            ts.busy=false;
+            ts.events = ts.events.concat(e.toString()).concat("<br/>");
+            ts.busy=true;
         }
         operation onBetEvent(e:BetEvent){
             System.out.println(e.toString());
-            bool=false;
-            txt = txt.concat(e.toString()).concat("<br/>");
-            bool=true;
+            ts.busy=false;
+            ts.events = ts.events.concat(e.toString()).concat("<br/>");
+            ts.busy=true;
         }
         operation onBigBlindEvent(e:BigBlindEvent){
             System.out.println(e.toString());
-            bool=false;
-            txt = txt.concat(e.toString()).concat("<br/>");
-            bool=true;
+            ts.busy=false;
+            ts.events = ts.events.concat(e.toString()).concat("<br/>");
+            ts.busy=true;
         }
         operation onCallEvent(e:CallEvent){
             System.out.println(e.toString());
-            bool=false;
-            txt = txt.concat(e.toString()).concat("<br/>");
-            bool=true;
+            ts.busy=false;
+            ts.events = ts.events.concat(e.toString()).concat("<br/>");
+            ts.busy=true;
         }
         operation onCheckEvent(e:CheckEvent){
             System.out.println(e.toString());
-            bool=false;
-            txt = txt.concat(e.toString()).concat("<br/>");
-            bool=true;
+            ts.busy=false;
+            ts.events = ts.events.concat(e.toString()).concat("<br/>");
+            ts.busy=true;
         }
         operation onFoldEvent(e:FoldEvent){
             System.out.println(e.toString());
-            bool=false;
-            txt = txt.concat(e.toString()).concat("<br/>");
-            bool=true;
+            ts.busy=false;
+            ts.events = ts.events.concat(e.toString()).concat("<br/>");
+            ts.busy=true;
         }
         operation onRaiseEvent(e:RaiseEvent){
             System.out.println(e.toString());
-            bool=false;
-            txt = txt.concat(e.toString()).concat("<br/>");
-            bool=true;
+            ts.busy=false;
+            ts.events = ts.events.concat(e.toString()).concat("<br/>");
+            ts.busy=true;
         }
         operation onSmallBlindEvent(e:SmallBlindEvent){
             System.out.println(e.toString());
-            bool=false;
-            txt = txt.concat(e.toString()).concat("<br/>");
-            bool=true;
+            ts.busy=false;
+            ts.events = ts.events.concat(e.toString()).concat("<br/>");
+            ts.busy=true;
         }
         operation onNewPocketCardsEvent(e:NewPocketCardsEvent){
             System.out.println(e.toString());
-            pc.state == 1;
+            ts.playingcards.state == 1;
             var cards:JavaCard* = cl.toArray(e.getPocketCards());
-            pc.cp1 = Card{
+            ts.playingcards.cp1 = Card{
                 visible: true
                 rank: cards[0].getRank().toString().toLowerCase()
                 suit: cards[0].getSuit().toString().toLowerCase()
             };
-            pc.cp2 = Card{
+            ts.playingcards.cp2 = Card{
                 visible: true
                 rank: cards[1].getRank().toString().toLowerCase()
                 suit: cards[1].getSuit().toString().toLowerCase()
@@ -128,109 +122,109 @@ trigger on new EventListener{
         operation onNewCommunityCardsEvent(e:NewCommunityCardsEvent){
             System.out.println(e.toString());
             var cards:JavaCard* = cl.toArray(e.getCommonCards());
-            if(pc.state == 1){
-                pc.c1 = Card{
+            if(ts.playingcards.state == 1){
+                ts.playingcards.c1 = Card{
                     visible: true
                     rank: cards[0].getRank().toString().toLowerCase()
                     suit: cards[0].getSuit().toString().toLowerCase()
                 };
-                pc.c2 = Card{
+                ts.playingcards.c2 = Card{
                     visible: true
                     rank: cards[1].getRank().toString().toLowerCase()
                     suit: cards[1].getSuit().toString().toLowerCase()
                 };
-                pc.c3 = Card{
+                ts.playingcards.c3 = Card{
                     visible: true
                     rank: cards[2].getRank().toString().toLowerCase()
                     suit: cards[2].getSuit().toString().toLowerCase()
                 };
-            }else if(pc.state == 2){
-                pc.c4 = Card{
+            }else if(ts.playingcards.state == 2){
+                ts.playingcards.c4 = Card{
                     visible: true
                     rank: cards[0].getRank().toString().toLowerCase()
                     suit: cards[0].getSuit().toString().toLowerCase()
                 };
-            }else if(pc.state == 3){
-                pc.c5 = Card{
+            }else if(ts.playingcards.state == 3){
+                ts.playingcards.c5 = Card{
                     visible: true
                     rank: cards[0].getRank().toString().toLowerCase()
                     suit: cards[0].getSuit().toString().toLowerCase()
                 };
             }
-            pc.state = pc.state+1;
+            ts.playingcards.state = ts.playingcards.state+1;
             
         }
         operation onNewDealEvent(e:NewDealEvent){
             System.out.println(e.toString());
-            pc.state = 1;
-            pc.c1 = Card{
+            ts.playingcards.state = 1;
+            ts.playingcards.c1 = Card{
                 visible: false
             };
-            pc.c2 = Card{
+            ts.playingcards.c2 = Card{
                 visible: false
             };
-            pc.c3 = Card{
+            ts.playingcards.c3 = Card{
                 visible: false
             };
-            pc.c4 = Card{
+            ts.playingcards.c4 = Card{
                 visible: false
             };
-            pc.c5 = Card{
+            ts.playingcards.c5 = Card{
                 visible: false
             };
-            pc.cp1 = Card{
+            ts.playingcards.cp1 = Card{
                 visible: false
             };
-            pc.cp2 = Card{
+            ts.playingcards.cp2 = Card{
                 visible: false
             };
-            state = 2;
+            ts.state = 2;
         }
         operation onNewRoundEvent(e:NewRoundEvent){
-            System.out.println(e.toString()); bool=false;
-            state = 2;
-            bool=true;
+            System.out.println(e.toString()); ts.busy=false;
+            ts.busy=true;
         }
         operation onNextPlayerEvent(e:NextPlayerEvent){
             System.out.println(e.toString());
         }
         operation onPlayerJoinedGameEvent(e:PlayerJoinedGameEvent){
             System.out.println(e.toString());
-            bool=false;
-            txt = txt.concat(e.toString()).concat("<br/>");
-            bool=true;
+            ts.busy=false;
+            ts.events = ts.events.concat(e.toString()).concat("<br/>");
+            ts.busy=true;
         }
         operation onPlayerLeftTableEvent(e:PlayerLeftTableEvent){
             System.out.println(e.toString());
-            bool=false;
-            txt = txt.concat(e.toString()).concat("<br/>");
-            bool=true;
+            ts.busy=false;
+            ts.events = ts.events.concat(e.toString()).concat("<br/>");
+            ts.busy=true;
         }
         operation onShowHandEvent(e:ShowHandEvent){
             System.out.println(e.toString());
-            bool=false;
-            txt = txt.concat(e.toString()).concat("<br/>");
-            bool=true;
+            ts.busy=false;
+            ts.events = ts.events.concat(e.toString()).concat("<br/>");
+            ts.busy=true;
         }
         operation onWinnerEvent(e:WinnerEvent){
             System.out.println(e.toString());
-            bool=false;
-            txt = txt.concat(e.toString()).concat("<br/>");
-            state = 1;
+            ts.busy=false;
+            ts.events = ts.events.concat(e.toString()).concat("<br/>");
             // kaarten blijven zichtbaar?
-            // pc.dealt = false;
-            bool=true;
+            // ts.playingcards.dealt = false;
+            ts.busy=true;
         }
         operation onGameMessageEvent(e:GameMessageEvent){
             System.out.println(e.toString());
-            bool=false;
-            txt = txt.concat(e.toString()).concat("<br/>");
-            bool=true;
+            ts.busy=false;
+            ts.events = ts.events.concat(e.toString()).concat("<br/>");
+            ts.busy=true;
         }
         operation onPlayerJoinedEvent(e:PlayerJoinedEvent){
+            ts.events = ts.events.concat(e.toString()).concat("<br/>");
             System.out.println(e.toString());
         }
         operation onPlayerLeftEvent(e:PlayerLeftEvent){
+            ts.events = ts.events.concat(e.toString()).concat("<br/>");
             System.out.println(e.toString());
         }
         operation onTableCreatedEvent(e:TableCreatedEvent){
@@ -238,9 +232,9 @@ trigger on new EventListener{
         }
         operation onServerMessageEvent(e:ServerMessageEvent){
             System.out.println(e.toString());
-            bool=false;
-            txt = txt.concat(e.toString()).concat("<br/>");
-            bool=true;
+            ts.busy=false;
+            ts.events = ts.events.concat(e.toString()).concat("<br/>");
+            ts.busy=true;
         }
     };
 }
