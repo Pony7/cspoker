@@ -55,7 +55,7 @@ public class XmlChannelUnMarshaller implements XmlEventListener {
 	public void collect(String xmlEvent) {
 		try {
 			collect((Event) EventAndActionJAXBContext.context
-					.createUnmarshaller().unmarshal(new StringReader(xmlEvent)));
+					.createUnmarshaller().unmarshal(new StringReader(xmlEvent.trim())));
 		} catch (JAXBException e) {
 			logger.fatal(e);
 			throw new IllegalStateException(e);

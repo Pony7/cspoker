@@ -33,6 +33,10 @@ class GameTable {
     
     attribute screen:Frame;
     
+    attribute sqrw:Integer;
+    attribute sqrh:Integer;
+    attribute circr:Integer;
+    
     attribute players:Player*;
     attribute state:Integer;
     attribute amount:String;
@@ -57,11 +61,11 @@ class GameTable {
 }
 
 trigger on new GameTable{
-    var padx = 50;
-    var pady = 50;
-    var tablex = 300;
-    var tabley = 180;
-    var logofontsize = (tablex+tabley)/6;
+    var padx = 30;
+    var pady = 30;
+    sqrw = 280;
+    sqrh = 280;
+    var logofontsize = sqrh/5;
     state = 0;
     events="Welcome to CSPoker!<br/>";
     playingcards=PlayingCards{
@@ -90,8 +94,8 @@ trigger on new GameTable{
     };
     screen = Frame{
         title: "Game Table"
-        width: 2*padx+tablex*2
-        height: 2*pady+tabley*2+100
+        width: 2*padx+sqrw+sqrh
+        height: 2*pady+sqrh+150
         visible: true
         centerOnScreen: true
         onClose: operation() {System.exit(0);}
@@ -111,195 +115,209 @@ trigger on new GameTable{
             }
         }
         content: SplitPane{
-        	orientation: VERTICAL
+            orientation: VERTICAL
             content:[SplitView{
-            	weight: 0.85
-            	content: Canvas {
-                content: Group {
-                    transform: []
-                    content:
-                        [
-                        Ellipse {
-                        cx: tablex+padx
-                        cy: tabley+pady
-                        radiusX: tablex
-                        radiusY: tabley
-                        fill: LinearGradient {
-                            x1: 0.1, y1: 0, x2: 0.9, y2: 1
-                            stops:
-                                [Stop {
-                                offset: 0.0
-                                color: lightgreen
-                            },
-                            Stop {
-                                offset: 1.0
-                                color: green
+                weight: 0.85
+                content: Canvas {
+                    content: Group {
+                        transform: []
+                        content:
+                            [
+                            Add {
+                            shape1: Rect {
+                                x: padx+sqrh/2
+                                y: pady
+                                width: sqrw
+                                height: sqrh
+                            }
+                            shape2: Add {
+                                shape1: Circle {
+                                    cx: padx+sqrh/2+sqrw
+                                    cy: pady+sqrh/2
+                                    radius: sqrh/2
+                                }
+                                shape2: Circle {
+                                    cx: padx+sqrh/2
+                                    cy: pady+sqrh/2
+                                    radius: sqrh/2
+                                }
+                            }
+                            fill: LinearGradient {
+                                x1: 0.1, y1: 0, x2: 0.9, y2: 1
+                                stops:
+                                    [Stop {
+                                    offset: 0.0
+                                    color: lightgreen
+                                },
+                                Stop {
+                                    offset: 1.0
+                                    color: green
+                                }]
+                                spreadMethod: PAD
+                            }
+                            stroke: darkgreen
+                            strokeWidth: 1
+                        },
+                        Group{
+                            transform: translate(padx+sqrh/2+sqrw/2, pady+sqrh/2)
+                            content: [Text {
+                                content: "CSPoker"
+                                font: new Font("Tahoma", "BOLD", logofontsize)
+                                stroke: darkorange
+                                fill: orange
+                                strokeWidth: 2
+                                opacity: 0.25
+                                halign: CENTER
                             }]
-                            spreadMethod: PAD
+                        },
+                        Group{
+                            transform: [translate(padx+sqrh/2+sqrw/2, pady+sqrh/2),rotate(180, 0, 0)]
+                            content: [Text {
+                                content: "CSPoker"
+                                font: new Font("Tahoma", "BOLD", logofontsize)
+                                stroke: darkorange
+                                fill: orange
+                                strokeWidth: 2
+                                opacity: 0.25
+                                halign: CENTER
+                            }]
+                        },
+                        Group{
+                            transform: translate(padx+sqrh/2+sqrw/2, pady+sqrh/2)
+                            content: [ImageView {
+                                transform:  translate(-45*2,0)
+                                image: Image { url: bind playingcards.getCard(playingcards.c1) }
+                                valign: CENTER
+                                halign: CENTER
+                                visible: true
+                            },ImageView {
+                                transform:  translate(-45,0)
+                                image: Image { url: bind playingcards.getCard(playingcards.c2) }
+                                valign: CENTER
+                                halign: CENTER
+                                visible: true
+                            },ImageView {
+                                transform:  translate(0,0)
+                                image: Image { url: bind playingcards.getCard(playingcards.c3) }
+                                valign: CENTER
+                                halign: CENTER
+                                visible: true
+                            },ImageView {
+                                transform:  translate(45,0)
+                                image: Image { url: bind playingcards.getCard(playingcards.c4) }
+                                valign: CENTER
+                                halign: CENTER
+                                visible: true
+                            },ImageView {
+                                transform:  translate(45*2,0)
+                                image: Image { url: bind playingcards.getCard(playingcards.c5) }
+                                valign: CENTER
+                                halign: CENTER
+                                visible: true
+                            }]
+                            visible: bind(playingcards.state > 0)
+                        },Group{
+                            transform: translate(padx+sqrh/2+sqrw/2, pady+sqrh)
+                            content: [ImageView {
+                                transform:  translate(-25,0)
+                                image: Image { url: bind playingcards.getCard(playingcards.cp1) }
+                                valign: CENTER
+                                halign: CENTER
+                                visible: true
+                            },ImageView {
+                                transform:  translate(25,0)
+                                image: Image { url: bind playingcards.getCard(playingcards.cp2) }
+                                valign: CENTER
+                                halign: CENTER
+                                visible: true
+                            }]
+                            visible: bind(playingcards.state > 0)
+                        },
+                        Group{
+                            transform:[]
+                            content:[
+                            
+                            ]
                         }
-                        stroke: darkgreen
-                        strokeWidth: 1
-                    },
-                    Group{
-                        transform: translate(padx+tablex, pady+tabley)
-                        content: [Text {
-                            content: "CSPoker"
-                            font: new Font("Tahoma", "BOLD", logofontsize)
-                            stroke: darkorange
-                            fill: orange
-                            strokeWidth: 2
-                            opacity: 0.25
-                            halign: CENTER
-                        }]
-                    },
-                    Group{
-                        transform: [translate(padx+tablex, pady+tabley),rotate(180, 0, 0)]
-                        content: [Text {
-                            content: "CSPoker"
-                            font: new Font("Tahoma", "BOLD", logofontsize)
-                            stroke: darkorange
-                            fill: orange
-                            strokeWidth: 2
-                            opacity: 0.25
-                            halign: CENTER
-                        }]
-                    },
-                    Group{
-                        transform: translate(padx+tablex, pady+tabley)
-                        content: [ImageView {
-                            transform:  translate(-45*2,0)
-                            image: Image { url: bind playingcards.getCard(playingcards.c1) }
-                            valign: CENTER
-                            halign: CENTER
-                            visible: true
-                        },ImageView {
-                            transform:  translate(-45,0)
-                            image: Image { url: bind playingcards.getCard(playingcards.c2) }
-                            valign: CENTER
-                            halign: CENTER
-                            visible: true
-                        },ImageView {
-                            transform:  translate(0,0)
-                            image: Image { url: bind playingcards.getCard(playingcards.c3) }
-                            valign: CENTER
-                            halign: CENTER
-                            visible: true
-                        },ImageView {
-                            transform:  translate(45,0)
-                            image: Image { url: bind playingcards.getCard(playingcards.c4) }
-                            valign: CENTER
-                            halign: CENTER
-                            visible: true
-                        },ImageView {
-                            transform:  translate(45*2,0)
-                            image: Image { url: bind playingcards.getCard(playingcards.c5) }
-                            valign: CENTER
-                            halign: CENTER
-                            visible: true
-                        }]
-                        visible: bind (playingcards.state > 0)
-                    },Group{
-                        transform: translate(padx+tablex, pady+2*tabley)
-                        content: [ImageView {
-                            transform:  translate(-25,0)
-                            image: Image { url: bind playingcards.getCard(playingcards.cp1) }
-                            valign: CENTER
-                            halign: CENTER
-                            visible: true
-                        },ImageView {
-                            transform:  translate(25,0)
-                            image: Image { url: bind playingcards.getCard(playingcards.cp2) }
-                            valign: CENTER
-                            halign: CENTER
-                            visible: true
-                        }]
-                        visible: bind (playingcards.state > 0)
-                    },
-                    Group{
-                        transform:[]
-                        content:[
-                        
                         ]
                     }
-                    ]
-                }
-                background: black
-            }},
-            SplitView{
-            weight:0.15
-            content:BorderPanel{
-                center:SplitPane{
-                    orientation: HORIZONTAL
-                    content:[
-                    SplitView{
-                    	weight: 0.60
-                    	content:GroupPanel{
-                    	var firstRow= Row{alignment: BASELINE}
-                    	var secondRow= Row{alignment: BASELINE}
-                    	var firstColumn= Column{ alignment:TRAILING}
-                    	var secondColumn= Column{ alignment:TRAILING}
-                    	var thirdColumn= Column{ alignment:TRAILING}
-                    	var fourthColumn= Column{ alignment:TRAILING}
-                    
-                    	rows: [firstRow,secondRow]
-                    	columns: [firstColumn,secondColumn,thirdColumn,fourthColumn]
-                    
-                    	content:[FlowPanel{
-                        			row: firstRow
-                        			column: firstColumn
-                       	 			content: bind stateactions[state].widgets[0]
-                   				},
-                   				FlowPanel{
-                        			row: firstRow
-                        			column: secondColumn
-                       	 			content: bind stateactions[state].widgets[1]
-                   				},
-                   				FlowPanel{
-                        			row: firstRow
-                        			column: thirdColumn
-                       	 			content: bind stateactions[state].widgets[2]
-                   				},
-                   				FlowPanel{
-                        			row: firstRow
-                        			column: fourthColumn
-                       	 			content: bind stateactions[state].widgets[3]
-                   				},
-                   				FlowPanel{
-                        			row: secondRow
-                        			column: firstColumn
-                       	 			content: bind stateactions[state].widgets[4]
-                   				},
-                   				FlowPanel{
-                        			row: secondRow
-                        			column: secondColumn
-                       	 			content: bind stateactions[state].widgets[5]
-                   				},
-                   				FlowPanel{
-                        			row: secondRow
-                        			column: thirdColumn
-                       	 			content: bind stateactions[state].widgets[6]
-                   				}]
-                		}
-                    },
-                    SplitView{
-                    	weight: 0.40
-               			content: Box {
-               					orientation: HORIZONTAL
-               					content: EditorPane{
-               					inUpdate: bind busy
-                                contentType: HTML
-                                editable: false
-                                text: bind events
-                                verticalScrollBarPolicy: AS_NEEDED
-                                maximumSize: {height: bind 0.12*screen.height width: bind 0.4*screen.width}
-                                doubleBuffered: true
-                         			}
-                         		}
-                         		
-                    }
-                  	]
-                }
-            }}]
+                    background: black
+                }},
+                SplitView{
+                    weight:0.15
+                    content:BorderPanel{
+                        center:SplitPane{
+                            orientation: HORIZONTAL
+                            content:[
+                            SplitView{
+                                weight: 0.60
+                                content:GroupPanel{
+                                    var firstRow= Row{alignment: BASELINE}
+                                    var secondRow= Row{alignment: BASELINE}
+                                    var firstColumn= Column{ alignment:TRAILING}
+                                    var secondColumn= Column{ alignment:TRAILING}
+                                    var thirdColumn= Column{ alignment:TRAILING}
+                                    var fourthColumn= Column{ alignment:TRAILING}
+                                    
+                                    rows: [firstRow,secondRow]
+                                    columns: [firstColumn,secondColumn,thirdColumn,fourthColumn]
+                                    
+                                    content:[FlowPanel{
+                                        row: firstRow
+                                        column: firstColumn
+                                        content: bind stateactions[state].widgets[0]
+                                    },
+                                    FlowPanel{
+                                        row: firstRow
+                                        column: secondColumn
+                                        content: bind stateactions[state].widgets[1]
+                                    },
+                                    FlowPanel{
+                                        row: firstRow
+                                        column: thirdColumn
+                                        content: bind stateactions[state].widgets[2]
+                                    },
+                                    FlowPanel{
+                                        row: firstRow
+                                        column: fourthColumn
+                                        content: bind stateactions[state].widgets[3]
+                                    },
+                                    FlowPanel{
+                                        row: secondRow
+                                        column: firstColumn
+                                        content: bind stateactions[state].widgets[4]
+                                    },
+                                    FlowPanel{
+                                        row: secondRow
+                                        column: secondColumn
+                                        content: bind stateactions[state].widgets[5]
+                                    },
+                                    FlowPanel{
+                                        row: secondRow
+                                        column: thirdColumn
+                                        content: bind stateactions[state].widgets[6]
+                                    }]
+                                }
+                            },
+                            SplitView{
+                                weight: 0.40
+                                content: Box {
+                                    orientation: HORIZONTAL
+                                    content: EditorPane{
+                                        inUpdate: bind busy
+                                        contentType: HTML
+                                        editable: false
+                                        text: bind events
+                                        verticalScrollBarPolicy: AS_NEEDED
+                                        maximumSize: {height: bind 0.12*screen.height width: bind 0.4*screen.width}
+                                        doubleBuffered: true
+                                    }
+                                }
+                                
+                            }
+                            ]
+                        }
+                    }}]
         }
     };
     stateactions = [
