@@ -146,17 +146,51 @@ trigger on new GameTable{
                     SplitView{
                     	weight: 0.60
                     	content:GroupPanel{
-                    	var singleRow= Row{alignment: BASELINE}
-                    	var buttonsColumn= Column{ alignment:TRAILING}
+                    	var firstRow= Row{alignment: BASELINE}
+                    	var secondRow= Row{alignment: BASELINE}
+                    	var firstColumn= Column{ alignment:TRAILING}
+                    	var secondColumn= Column{ alignment:TRAILING}
+                    	var thirdColumn= Column{ alignment:TRAILING}
+                    	var fourthColumn= Column{ alignment:TRAILING}
                     
-                    	rows: [singleRow]
-                    	columns: [buttonsColumn]
+                    	rows: [firstRow,secondRow]
+                    	columns: [firstColumn,secondColumn,thirdColumn,fourthColumn]
                     
-                    	content:FlowPanel{
-                        			row: singleRow
-                        			column: buttonsColumn
-                       	 			content: bind stateactions[state].widgets
-                   				}
+                    	content:[FlowPanel{
+                        			row: firstRow
+                        			column: firstColumn
+                       	 			content: bind stateactions[state].widgets[0]
+                   				},
+                   				FlowPanel{
+                        			row: firstRow
+                        			column: secondColumn
+                       	 			content: bind stateactions[state].widgets[1]
+                   				},
+                   				FlowPanel{
+                        			row: firstRow
+                        			column: thirdColumn
+                       	 			content: bind stateactions[state].widgets[2]
+                   				},
+                   				FlowPanel{
+                        			row: firstRow
+                        			column: fourthColumn
+                       	 			content: bind stateactions[state].widgets[3]
+                   				},
+                   				FlowPanel{
+                        			row: secondRow
+                        			column: firstColumn
+                       	 			content: bind stateactions[state].widgets[4]
+                   				},
+                   				FlowPanel{
+                        			row: secondRow
+                        			column: secondColumn
+                       	 			content: bind stateactions[state].widgets[5]
+                   				},
+                   				FlowPanel{
+                        			row: secondRow
+                        			column: thirdColumn
+                       	 			content: bind stateactions[state].widgets[6]
+                   				}]
                 		}
                     },
                     SplitView{
