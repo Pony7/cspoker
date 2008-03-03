@@ -277,9 +277,15 @@ public class GameControl implements PlayerAction {
 	public void joinGame(GamePlayer player) throws IllegalActionException,
 			PlayerListFullException {
 		game.joinGame(player);
+		if(game.getNbSeatedPlayers()==2){
+			deal(game.getDealer());
+		}
 	}
 
 	public void leaveGame(GamePlayer player) throws IllegalActionException {
+		//more actions needed
+		
+		
 		game.leaveGame(player);
 	}
 
