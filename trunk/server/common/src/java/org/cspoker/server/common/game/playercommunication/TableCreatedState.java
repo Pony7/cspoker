@@ -71,6 +71,9 @@ class TableCreatedState extends WaitingAtTableState {
 		 * startGame(), as it is guaranteed.
 		 */
 		synchronized (table) {
+			if(table.getNbPlayers()<=1)
+				throw new IllegalActionException("At least two players must be seated to play a game.");
+			
 			GameMediator gameMediator = new GameMediator();
 			for (PlayerId id : table.getPlayerIds()) {
 				PlayerCommunicationImpl comm;
