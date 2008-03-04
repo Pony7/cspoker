@@ -84,11 +84,6 @@ public class RemoteLoginServerForRMI implements RemoteLoginServer {
 				return p.createTable(name, settings);
 			}
 
-			public void deal() throws IllegalActionException, RemoteException {
-				p.deal();
-
-			}
-
 			public void fold() throws IllegalActionException, RemoteException {
 				p.fold();
 			}
@@ -144,7 +139,7 @@ public class RemoteLoginServerForRMI implements RemoteLoginServer {
 			@Override
 			public Table joinTable(TableId id) throws IllegalActionException,
 					RemoteException {
-				return p.getTable(id);
+				return p.joinTable(id);
 			}
 
 		};

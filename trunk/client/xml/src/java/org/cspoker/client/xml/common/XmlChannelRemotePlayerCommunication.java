@@ -34,7 +34,6 @@ import org.cspoker.common.xml.actions.BetAction;
 import org.cspoker.common.xml.actions.CallAction;
 import org.cspoker.common.xml.actions.CheckAction;
 import org.cspoker.common.xml.actions.CreateTableAction;
-import org.cspoker.common.xml.actions.DealAction;
 import org.cspoker.common.xml.actions.FoldAction;
 import org.cspoker.common.xml.actions.GetTableAction;
 import org.cspoker.common.xml.actions.GetTablesAction;
@@ -114,11 +113,6 @@ public class XmlChannelRemotePlayerCommunication implements
 	@Override
 	public TableId createTable(String name, GameProperty settings) throws IllegalActionException, RemoteException {
 		return marshaller.perform(new CreateTableAction(getId(), name, settings));
-	}
-
-	@Override
-	public void deal() throws IllegalActionException, RemoteException {
-		marshaller.perform(new DealAction(getId()));
 	}
 
 	@Override

@@ -22,6 +22,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
 
 import org.apache.log4j.Logger;
 import org.cspoker.common.eventlisteners.RemoteAllEventsListener;
@@ -54,8 +55,10 @@ public class XmlChannelUnMarshaller implements XmlEventListener {
 	@Override
 	public void collect(String xmlEvent) {
 		try {
-			collect((Event) EventAndActionJAXBContext.context
-					.createUnmarshaller().unmarshal(new StringReader(xmlEvent.trim())));
+			Unmarshaller um = EventAndActionJAXBContext.context
+			.createUnmarshaller();
+			um.setSchema(null);
+			collect((Event) um.unmarshal(new StringReader(xmlEvent.trim())));
 		} catch (JAXBException e) {
 			logger.fatal(e);
 			throw new IllegalStateException(e);

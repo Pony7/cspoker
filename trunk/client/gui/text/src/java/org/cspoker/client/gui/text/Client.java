@@ -29,7 +29,6 @@ import org.cspoker.client.gui.text.commands.CardsCommand;
 import org.cspoker.client.gui.text.commands.CheckCommand;
 import org.cspoker.client.gui.text.commands.Command;
 import org.cspoker.client.gui.text.commands.CreateTableCommand;
-import org.cspoker.client.gui.text.commands.DealCommand;
 import org.cspoker.client.gui.text.commands.FoldCommand;
 import org.cspoker.client.gui.text.commands.GetTableCommand;
 import org.cspoker.client.gui.text.commands.GetTablesCommand;
@@ -70,7 +69,6 @@ public class Client {
 		commands.put("GETTABLES", new GetTablesCommand(rpc, console));
 
 		commands.put("STARTGAME", new StartGameCommand(rpc, console));
-		commands.put("DEAL", new DealCommand(rpc, console));
 		commands.put("CALL", new CallCommand(rpc, console));
 		commands.put("BET", new BetCommand(rpc, console));
 		commands.put("CHECK", new CheckCommand(rpc, console));

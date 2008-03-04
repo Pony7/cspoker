@@ -106,15 +106,17 @@ trigger on new EventListener{
         }
         operation onNewPocketCardsEvent(e:NewPocketCardsEvent){
             System.out.println(e.toString());
-            ts.playingcards.state == 1;
+            ts.playingcards.state = 1;
             var cards:JavaCard* = cl.toArray(e.getPocketCards());
             ts.playingcards.cp1 = Card{
                 visible: true
+                dealt: true
                 rank: cards[0].getRank().toString().toLowerCase()
                 suit: cards[0].getSuit().toString().toLowerCase()
             };
             ts.playingcards.cp2 = Card{
                 visible: true
+                dealt: true
                 rank: cards[1].getRank().toString().toLowerCase()
                 suit: cards[1].getSuit().toString().toLowerCase()
             };
@@ -125,28 +127,33 @@ trigger on new EventListener{
             if(ts.playingcards.state == 1){
                 ts.playingcards.c1 = Card{
                     visible: true
+                    dealt: true
                     rank: cards[0].getRank().toString().toLowerCase()
                     suit: cards[0].getSuit().toString().toLowerCase()
                 };
                 ts.playingcards.c2 = Card{
                     visible: true
+                    dealt: true
                     rank: cards[1].getRank().toString().toLowerCase()
                     suit: cards[1].getSuit().toString().toLowerCase()
                 };
                 ts.playingcards.c3 = Card{
                     visible: true
+                    dealt: true
                     rank: cards[2].getRank().toString().toLowerCase()
                     suit: cards[2].getSuit().toString().toLowerCase()
                 };
             }else if(ts.playingcards.state == 2){
                 ts.playingcards.c4 = Card{
                     visible: true
+                    dealt: true
                     rank: cards[0].getRank().toString().toLowerCase()
                     suit: cards[0].getSuit().toString().toLowerCase()
                 };
             }else if(ts.playingcards.state == 3){
                 ts.playingcards.c5 = Card{
                     visible: true
+                    dealt: true
                     rank: cards[0].getRank().toString().toLowerCase()
                     suit: cards[0].getSuit().toString().toLowerCase()
                 };
@@ -156,29 +163,36 @@ trigger on new EventListener{
         }
         operation onNewDealEvent(e:NewDealEvent){
             System.out.println(e.toString());
-            ts.playingcards.state = 1;
+            ts.playingcards.state = 0;
             ts.playingcards.c1 = Card{
                 visible: false
+                dealt: true
             };
             ts.playingcards.c2 = Card{
                 visible: false
+                dealt: true
             };
             ts.playingcards.c3 = Card{
                 visible: false
+                dealt: true
             };
             ts.playingcards.c4 = Card{
                 visible: false
+                dealt: true
             };
             ts.playingcards.c5 = Card{
                 visible: false
+                dealt: true
             };
             ts.playingcards.cp1 = Card{
                 visible: false
+                dealt: true
             };
             ts.playingcards.cp2 = Card{
                 visible: false
+                dealt: true
             };
-            ts.state = 2;
+            ts.state = 1;
         }
         operation onNewRoundEvent(e:NewRoundEvent){
             System.out.println(e.toString()); ts.busy=false;
@@ -209,8 +223,6 @@ trigger on new EventListener{
             System.out.println(e.toString());
             ts.busy=false;
             ts.events = ts.events.concat(e.toString()).concat("<br/>");
-            // kaarten blijven zichtbaar?
-            // ts.playingcards.dealt = false;
             ts.busy=true;
         }
         operation onGameMessageEvent(e:GameMessageEvent){

@@ -17,7 +17,6 @@ package org.cspoker.client.gui.javafx;
 
 import java.rmi.ConnectException;
 import java.rmi.RemoteException;
-import java.util.ArrayList;
 import java.util.List;
 
 import java.util.Set;
@@ -33,9 +32,13 @@ import org.cspoker.common.RemotePlayerCommunication;
 import org.cspoker.common.elements.cards.Card;
 import org.cspoker.common.elements.table.Table;
 import org.cspoker.common.elements.table.TableId;
+import org.cspoker.common.util.Log4JPropertiesLoader;
 
 public class JavaFxClient {
 
+    static {
+        Log4JPropertiesLoader.load("org/cspoker/client/gui/javafx/logging/log4j.properties");
+    }
     /**
      * The client of this client core
      */
@@ -59,9 +62,9 @@ public class JavaFxClient {
         this.user = new User(userName);
         createCommunication(connection, userName, password);
     }
-    
+
     public void subscribeAllEvents(org.cspoker.common.eventlisteners.RemoteAllEventsListener listener) throws java.rmi.RemoteException {
-        if(this.listener!=null){
+        if (this.listener != null) {
             rpc.unsubscribeAllEventsListener(this.listener);
         }
         this.listener = listener;
@@ -135,8 +138,9 @@ public class JavaFxClient {
     }
 
     public void bet(String amount) throws RemoteException, IllegalActionException {
-        try{rpc.bet(Integer.parseInt(amount));
-        }catch(NumberFormatException e){
+        try {
+            rpc.bet(Integer.parseInt(amount));
+        } catch (NumberFormatException e) {
             throw new IllegalActionException("Not a valid number");
         }
     }
@@ -150,14 +154,11 @@ public class JavaFxClient {
     }
 
     public void raise(String amount) throws RemoteException, IllegalActionException {
-        try{rpc.raise(Integer.parseInt(amount));
-        }catch(NumberFormatException e){
+        try {
+            rpc.raise(Integer.parseInt(amount));
+        } catch (NumberFormatException e) {
             throw new IllegalActionException("Not a valid number");
         }
-    }
-
-    public void deal() throws RemoteException, IllegalActionException {
-        rpc.deal();
     }
 
     public void allIn() throws RemoteException, IllegalActionException {
@@ -169,7 +170,7 @@ public class JavaFxClient {
     }
 
     public void joinTable(int n) throws IllegalActionException, RemoteException {
-        System.out.println("joined table "+n);
+        System.out.println("joined table " + n);
         rpc.joinTable(new TableId(n));
     }
 
@@ -186,16 +187,16 @@ public class JavaFxClient {
     }
 
     public TableInterface[] getTableList() throws RemoteException {
-       final List<Table> tables = rpc.getTables().getTables();
-       TableInterface[] r = new TableInterface[tables.size()];
-       for(int i=0;i<r.length;i++){
-           Table t = tables.get(i);
-           r[i] = new TableImpl(t.getId().getID(), t.getName(), t.getNbPlayers(), t.getGameProperty().getSmallBlind(), t.getGameProperty().getBigBlind());
-       }
-       return r;
+        final List<Table> tables = rpc.getTables().getTables();
+        TableInterface[] r = new TableInterface[tables.size()];
+        for (int i = 0; i < r.length; i++) {
+            Table t = tables.get(i);
+            r[i] = new TableImpl(t.getId().getID(), t.getName(), t.getNbPlayers(), t.getGameProperty().getSmallBlind(), t.getGameProperty().getBigBlind());
+        }
+        return r;
     }
-    
-    public Card[] toArray(Set<Card> cards){
+
+    public Card[] toArray(Set<Card> cards) {
         return cards.toArray(new Card[cards.size()]);
     }
 }

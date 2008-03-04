@@ -76,7 +76,7 @@ public class ToXmlAllEventsListener implements AllEventListenerWithInvocation {
 			m.setProperty(Marshaller.JAXB_FRAGMENT, true);
 			m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 			m.marshal(event, xml);
-			collector.collect(xml.toString());
+			collector.collect(xml.toString().trim());
 		} catch (PropertyException e) {
 			logger.fatal(e);
 			throw new IllegalStateException(e);

@@ -21,5 +21,6 @@ import javafx.ui.*;
 class Card {
     attribute rank:String;
     attribute suit:String;
+    attribute dealt:Boolean;
     attribute visible:Boolean;
 }

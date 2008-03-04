@@ -13,7 +13,7 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
- 
+
 package org.cspoker.client.gui.javafx;
 import javafx.ui.*;
 import javafx.ui.canvas.*;
@@ -40,9 +40,9 @@ class GameTable {
     attribute state:TableState;
     
     attribute amount:String;
-    attribute stateactions:WidgetArray*;
     
     operation relogin();
+    operation leavetable();
     
     operation changeButtons(s:Integer);
     
@@ -69,24 +69,31 @@ trigger on new GameTable{
         playingcards: PlayingCards{
             c1: Card{
                 visible: false
+                dealt: false
             }
             c2: Card{
                 visible: false
+                dealt: false
             }
             c3: Card{
                 visible: false
+                dealt: false
             }
             c4: Card{
                 visible: false
+                dealt: false
             }
             c5: Card{
                 visible: false
+                dealt: false
             }
             cp1: Card{
                 visible: false
+                dealt: false
             }
             cp2: Card{
                 visible: false
+                dealt: false
             }
             state: 0
         }
@@ -97,7 +104,10 @@ trigger on new GameTable{
         height: 2*pady+sqrh+150
         visible: true
         centerOnScreen: true
-        onClose: operation() {System.exit(0);}
+        onClose: operation() {
+            leavetable();
+            System.exit(0);
+        }
         menubar: MenuBar {
             menus: Menu {
                 text: "Options"
@@ -188,33 +198,32 @@ trigger on new GameTable{
                                 image: Image { url: bind state.playingcards.getCard( state.playingcards.c1) }
                                 valign: CENTER
                                 halign: CENTER
-                                visible: true
+                                visible: bind state.playingcards.c1.dealt
                             },ImageView {
                                 transform:  translate(-45,0)
                                 image: Image { url: bind state.playingcards.getCard( state.playingcards.c2) }
                                 valign: CENTER
                                 halign: CENTER
-                                visible: true
+                                visible: bind state.playingcards.c2.dealt
                             },ImageView {
                                 transform:  translate(0,0)
                                 image: Image { url: bind state.playingcards.getCard( state.playingcards.c3) }
                                 valign: CENTER
                                 halign: CENTER
-                                visible: true
+                                visible: bind state.playingcards.c3.dealt
                             },ImageView {
                                 transform:  translate(45,0)
                                 image: Image { url: bind state.playingcards.getCard( state.playingcards.c4) }
                                 valign: CENTER
                                 halign: CENTER
-                                visible: true
+                                visible: bind state.playingcards.c4.dealt
                             },ImageView {
                                 transform:  translate(45*2,0)
                                 image: Image { url: bind state.playingcards.getCard( state.playingcards.c5) }
                                 valign: CENTER
                                 halign: CENTER
-                                visible: true
+                                visible: bind state.playingcards.c5.dealt
                             }]
-                            visible: bind(state.playingcards.state > 0)
                         },Group{
                             transform: translate(padx+sqrh/2+sqrw/2, pady+sqrh)
                             content: [ImageView {
@@ -222,15 +231,14 @@ trigger on new GameTable{
                                 image: Image { url: bind state.playingcards.getCard( state.playingcards.cp1) }
                                 valign: CENTER
                                 halign: CENTER
-                                visible: true
+                                visible: bind state.playingcards.cp1.dealt
                             },ImageView {
                                 transform:  translate(25,0)
                                 image: Image { url: bind state.playingcards.getCard( state.playingcards.cp2) }
                                 valign: CENTER
                                 halign: CENTER
-                                visible: true
+                                visible: bind state.playingcards.cp2.dealt
                             }]
-                            visible: bind(state.playingcards.state > 0)
                         },
                         Group{
                             transform:[]
@@ -250,52 +258,92 @@ trigger on new GameTable{
                             content:[
                             SplitView{
                                 weight: 0.60
-                                content:GroupPanel{
-                                    var firstRow= Row{alignment: BASELINE}
-                                    var secondRow= Row{alignment: BASELINE}
-                                    var firstColumn= Column{ alignment:TRAILING}
-                                    var secondColumn= Column{ alignment:TRAILING}
-                                    var thirdColumn= Column{ alignment:TRAILING}
-                                    var fourthColumn= Column{ alignment:TRAILING}
-                                    
-                                    rows: [firstRow,secondRow]
-                                    columns: [firstColumn,secondColumn,thirdColumn,fourthColumn]
-                                    
-                                    content:[FlowPanel{
-                                        row: firstRow
-                                        column: firstColumn
-                                        content: bind stateactions[state.state].widgets[0]
+                                content: FlowPanel{
+                                    content: [ FlowPanel{
+                                        content: Button {
+                                            text: "Start Game"
+                                            toolTipText: "Start the game at this table."
+                                            action: operation() {
+                                                startgame();
+                                            }
+                                        }
+                                        visible: bind (state.state==0)
                                     },
-                                    FlowPanel{
-                                        row: firstRow
-                                        column: secondColumn
-                                        content: bind stateactions[state.state].widgets[1]
-                                    },
-                                    FlowPanel{
-                                        row: firstRow
-                                        column: thirdColumn
-                                        content: bind stateactions[state.state].widgets[2]
-                                    },
-                                    FlowPanel{
-                                        row: firstRow
-                                        column: fourthColumn
-                                        content: bind stateactions[state.state].widgets[3]
-                                    },
-                                    FlowPanel{
-                                        row: secondRow
-                                        column: firstColumn
-                                        content: bind stateactions[state.state].widgets[4]
-                                    },
-                                    FlowPanel{
-                                        row: secondRow
-                                        column: secondColumn
-                                        content: bind stateactions[state.state].widgets[5]
-                                    },
-                                    FlowPanel{
-                                        row: secondRow
-                                        column: thirdColumn
-                                        content: bind stateactions[state.state].widgets[6]
-                                    }]
+                                    GroupPanel{
+                                        var firstRow= Row{alignment: BASELINE}
+                                        var secondRow= Row{alignment: BASELINE}
+                                        var firstColumn= Column{ alignment:TRAILING}
+                                        var secondColumn= Column{ alignment:TRAILING}
+                                        var thirdColumn= Column{ alignment:TRAILING}
+                                        var fourthColumn= Column{ alignment:TRAILING}
+                                        
+                                        rows: [firstRow,secondRow]
+                                        columns: [firstColumn,secondColumn,thirdColumn,fourthColumn]
+                                        
+                                        visible: bind (state.state==1)
+                                        
+                                        content:[TextField{
+                                            row: firstRow
+                                            column: firstColumn
+                                            value: bind amount
+                                            columns: 5
+                                        },
+                                        Button{
+                                            row: firstRow
+                                            column: secondColumn
+                                            text: "Bet"
+                                            toolTipText: "Bet the entered amount"
+                                            action: operation() {
+                                                bet();
+                                            }
+                                        },
+                                        Button{
+                                            row: firstRow
+                                            column: thirdColumn
+                                            text: "Check"
+                                            toolTipText: "Check"
+                                            action: operation() {
+                                                check();
+                                            }
+                                        },
+                                        Button{
+                                            row: firstRow
+                                            column: fourthColumn
+                                            text: "Call"
+                                            toolTipText: "Call"
+                                            action: operation() {
+                                                call();
+                                            }
+                                        },
+                                        Button{
+                                            row: secondRow
+                                            column: firstColumn
+                                            text: "Fold"
+                                            toolTipText: "Fold"
+                                            action: operation() {
+                                                fold();
+                                            }
+                                        },
+                                        Button{
+                                            row: secondRow
+                                            column: secondColumn
+                                            text: "Raise"
+                                            toolTipText: "Raise"
+                                            action: operation() {
+                                                raise();
+                                            }
+                                        },
+                                        Button{
+                                            row: secondRow
+                                            column: thirdColumn
+                                            text: "All In"
+                                            toolTipText: "Go All In"
+                                            action: operation() {
+                                                allin();
+                                            }
+                                        }]
+                                    }
+                                    ]
                                 }
                             },
                             SplitView{
@@ -319,75 +367,9 @@ trigger on new GameTable{
                     }}]
         }
     };
-    stateactions = [
-    WidgetArray{
-        widgets: [Button {
-            text: "Start Game"
-            toolTipText: "Start the game at this table."
-            action: operation() {
-                startgame();
-            }
-        }]},
-        WidgetArray{
-        widgets: [
-        Button {
-            text: "Deal"
-            toolTipText: "Deal"
-            action: operation() {
-                deal();
-            }
-        }
-        ]},
-        WidgetArray{
-        widgets: [
-        TextField{
-            value: bind amount
-            columns: 5
-        },Button {
-            text: "Bet"
-            toolTipText: "Bet the entered amount"
-            action: operation() {
-                bet();
-            }
-        },Button {
-            text: "Check"
-            toolTipText: "Check"
-            action: operation() {
-                check();
-            }
-        },Button {
-            text: "Call"
-            toolTipText: "Call"
-            action: operation() {
-                call();
-            }
-        },Button {
-            text: "Fold"
-            toolTipText: "Fold"
-            action: operation() {
-                fold();
-            }
-        },Button {
-            text: "Raise"
-            toolTipText: "Raise"
-            action: operation() {
-                raise();
-            }
-        },Button {
-            text: "All In"
-            toolTipText: "Go All In"
-            action: operation() {
-                allin();
-            }
-        }
-        ]}];
 }
 operation GameTable.changeButtons(s:Integer){
-	System.out.println("State changed to {s}");
-}
-operation GameTable.relogin(){
-    //TODO fix
-    main.relogin();
+    System.out.println("State changed to {s}");
 }
 
 operation GameTable.startgame(){
@@ -480,21 +462,6 @@ operation GameTable.raise(){
     }
 }
 
-operation GameTable.deal(){
-    try{
-        client.deal();
-    }catch(e:RemoteException){
-        relogin();
-    }catch(e:IllegalActionException){
-        MessageDialog{
-            title: "Failed to deal"
-            visible: true
-            message: e.getMessage()
-            messageType: ERROR
-        }
-    }
-}
-
 operation GameTable.allin(){
     try{
         client.allIn();
@@ -503,6 +470,26 @@ operation GameTable.allin(){
     }catch(e:IllegalActionException){
         MessageDialog{
             title: "Failed to go all in"
+            visible: true
+            message: e.getMessage()
+            messageType: ERROR
+        }
+    }
+}
+
+operation GameTable.relogin(){
+    leavetable();
+    main.relogin();
+}
+
+operation GameTable.leavetable(){
+    try{
+        client.leaveTable();
+    }catch(e:RemoteException){
+        // no op
+    }catch(e:IllegalActionException){
+        MessageDialog{
+            title: "Failed to leave table"
             visible: true
             message: e.getMessage()
             messageType: ERROR
