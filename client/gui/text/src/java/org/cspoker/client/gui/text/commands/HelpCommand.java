@@ -34,7 +34,7 @@ public class HelpCommand implements Command {
 				+ "  JOINTABLE [id] - join the table with id [id]" + n
 				+ "  LEAVETABLE - leave the table you're at" + n + "" + n
 				+ "-Game:" + n + "  STARTGAME - start a new game at your table"
-				+ n + "  DEAL - deal" + n + "  CHECK - check" + n
+				+ n
 				+ "  BET [amount] - bet a certain amount" + n + "  CALL - call"
 				+ n + "  FOLD - fold" + n
 				+ "  RAISE [amount] - raise with a certain amount" + n

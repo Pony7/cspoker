@@ -26,6 +26,7 @@ class PlayingCards {
     attribute c4:Card;
     attribute c5:Card;
     
+    //needed to decided what card to update in the eventhandler
     attribute state:Integer;
     
     attribute cp1:Card;
@@ -36,7 +37,7 @@ class PlayingCards {
 
 function PlayingCards.getCard(card){
     return if(card.visible) then
-    "./org/cspoker/client/gui/javafx/images/cards/simple/simple_{card.suit}_{card.rank}.svg.png"
+        "./org/cspoker/client/gui/javafx/images/cards/simple/simple_{card.suit}_{card.rank}.svg.png"
     else
         "./org/cspoker/client/gui/javafx/images/cards/backs/back08.svg.png";
 }
