@@ -304,7 +304,7 @@ public abstract class Round implements PlayerAction {
 	}
 
 	protected Round getNewDealRound() {
-		if (game.getNbCurrentDealPlayers() <= 1) {
+		if (game.getNbSeatedPlayers() <= 1) {
 			return new WaitingRound(gameMediator, game);
 		} else {
 			newDealRound();
