@@ -496,6 +496,10 @@ public class Game {
 		currentHandPlayers = new LoopingList<GamePlayer>(table.getPlayers());
 	}
 	
+	public void seatInitalDealPlayers(){
+		currentHandPlayers = initialCurrentHandPlayers;
+	}
+	
 	public int getNbSeatedPlayers(){
 		return table.getNbPlayers();
 	}
