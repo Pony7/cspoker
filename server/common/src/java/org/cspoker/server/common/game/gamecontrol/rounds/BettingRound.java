@@ -28,6 +28,8 @@ import org.cspoker.common.elements.pots.Pots;
 import org.cspoker.common.events.gameevents.NewCommunityCardsEvent;
 import org.cspoker.common.events.gameevents.WinnerEvent;
 import org.cspoker.common.events.gameevents.playeractionevents.AllInEvent;
+import org.cspoker.common.events.gameevents.playeractionevents.BigBlindEvent;
+import org.cspoker.common.events.gameevents.playeractionevents.SmallBlindEvent;
 import org.cspoker.common.exceptions.IllegalActionException;
 import org.cspoker.common.player.Winner;
 import org.cspoker.server.common.game.GameMediator;
@@ -359,6 +361,12 @@ public abstract class BettingRound extends Round {
 		getBettingRules().setLastBetAmount(
 				getGame().getGameProperty().getSmallBlind());
 		playerMadeEvent(player);
+		gameMediator.publishSmallBlindEvent(new SmallBlindEvent(player
+				.getSavedPlayer(), getGame().getGameProperty()
+				.getSmallBlind(), new Pots(getCurrentPotValue())));
+		BettingRound.logger.info(player.getName() + ": posts small blind $"
+				+ getGame().getGameProperty().getSmallBlind());
+		
 	}
 
 	/**
@@ -381,6 +389,13 @@ public abstract class BettingRound extends Round {
 				getGame().getGameProperty().getBigBlind());
 		setBet(getGame().getGameProperty().getBigBlind());
 		playerMadeEvent(player);
+		gameMediator.publishBigBlindEvent(new BigBlindEvent(
+				player.getSavedPlayer(), getGame()
+						.getGameProperty().getBigBlind(), new Pots(
+						getCurrentPotValue())));
+		BettingRound.logger.info(getGame().getCurrentPlayer().getName()
+				+ ": posts big blind $"
+				+ getGame().getGameProperty().getBigBlind());
 	}
 
 	/**

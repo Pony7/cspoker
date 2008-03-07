@@ -22,14 +22,22 @@ import org.apache.log4j.Logger;
 import org.cspoker.common.elements.GameProperty;
 import org.cspoker.common.elements.table.TableId;
 import org.cspoker.common.exceptions.IllegalActionException;
+import org.cspoker.common.util.Log4JPropertiesLoader;
 import org.cspoker.server.common.game.GameMediator;
 import org.cspoker.server.common.game.elements.chips.IllegalValueException;
-import org.cspoker.server.common.game.elements.table.PlayerListFullException;
 import org.cspoker.server.common.game.elements.table.GameTable;
+import org.cspoker.server.common.game.elements.table.PlayerListFullException;
+import org.cspoker.server.common.game.gamecontrol.rounds.WaitingRound;
 import org.cspoker.server.common.game.player.GamePlayer;
 import org.cspoker.server.common.game.player.PlayerFactory;
 
 public class GameFlowTest extends TestCase {
+	
+	static {
+		Log4JPropertiesLoader
+		.load("org/cspoker/server/common/logging/log4j.properties");
+	}
+	
 	private static Logger logger = Logger.getLogger(GameFlowTest.class);
 
 	private GamePlayer kenzo;
@@ -48,6 +56,7 @@ public class GameFlowTest extends TestCase {
 
 	@Override
 	protected void setUp() {
+		
 		playerFactory = new TestPlayerFactory();
 		GameFlowTest.logger
 				.info("**********************************************************");
@@ -603,6 +612,24 @@ public class GameFlowTest extends TestCase {
 		GameFlowTest.logger.info("Common Cards: " + game.getCommunityCards());
 
 		// New game
+		System.out.println("");
+		System.out.println(game.getCurrentDealPlayers());
+		System.out.println("Nb seated players: "+ game.getNbSeatedPlayers());
+		GamePlayer testPlayer = PlayerFactory.global_Player_Factory.createNewPlayer("test");
+		
+		try {
+			gameControl.joinGame(testPlayer);
+			System.out.println(game.getCurrentDealPlayers());
+			System.out.println(game.getTable().getPlayers());
+			System.out.println("Nb seated players: "+ game.getNbSeatedPlayers());
+			System.out.println(game.getDealer());
+			assertFalse(gameControl.getRound() instanceof WaitingRound);
+		} catch (IllegalActionException e) {
+			fail(e.getMessage());
+		} catch (PlayerListFullException e) {
+			fail(e.getMessage());
+		}
+		
 
 		GameFlowTest.logger.info(game.getCurrentDealPlayers());
 
@@ -798,6 +825,10 @@ public class GameFlowTest extends TestCase {
 		} catch (IllegalActionException e) {
 			fail(e.getMessage());
 		}
+		
+		assertFalse(gameControl.getRound() instanceof WaitingRound);
+
+		
 	}
 
 	public void testOnlyOneAllInPlayer() {
