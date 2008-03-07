@@ -16,17 +16,21 @@
 
 package org.cspoker.server.common.game.gamecontrol.rounds;
 
+import org.apache.log4j.Logger;
 import org.cspoker.common.exceptions.IllegalActionException;
 import org.cspoker.server.common.game.GameMediator;
 import org.cspoker.server.common.game.gamecontrol.Game;
+import org.cspoker.server.common.game.gamecontrol.GameControl;
 import org.cspoker.server.common.game.gamecontrol.PlayerAction;
 import org.cspoker.server.common.game.player.GamePlayer;
 
 public class WaitingRound extends Round {
-
+	
+	private static Logger logger = Logger.getLogger(WaitingRound.class);
+	
 	public WaitingRound(GameMediator gameMediator, Game game) {
 		super(gameMediator, game);
-		newDealRound();
+		game.setCurrentPlayer(game.getDealer());
 	}
 
 	/**
@@ -44,17 +48,19 @@ public class WaitingRound extends Round {
 	@Override
 	public void deal(GamePlayer player) throws IllegalActionException {
 		// Check whether the given player can do this action.
-		if (!onTurn(player)) {
-			throw new IllegalActionException(player.getName()
-					+ " can not deal in this round.");
-		}
+//		if (!onTurn(player)) {
+//			throw new IllegalActionException(player.getName()
+//					+ " can not deal in this round.");
+//		}
 
 		if (!(game.getTable().getNbPlayers() > 1)) {
 			throw new IllegalActionException(
 					"There should at least be 2 players to begin a new deal.");
 		}
-
+		
+		newDealRound();
 		playerMadeEvent(player);
+		WaitingRound.logger.info("dealt");
 		// This will force the game control to end the waiting round
 		// and change to the preflop round.
 	}

@@ -48,6 +48,7 @@ public class FinalRound extends BettingRound {
 			Showdown showdown = new Showdown(gameMediator, getGame());
 			showdown.determineWinners();
 		}
+		removeBrokePlayers();
 		game.setDealer(game.getNextDealer());
 	}
 

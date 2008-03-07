@@ -20,11 +20,8 @@ import java.util.HashSet;
 
 import org.apache.log4j.Logger;
 import org.cspoker.common.elements.cards.Card;
-import org.cspoker.common.elements.pots.Pots;
 import org.cspoker.common.events.gameevents.NewRoundEvent;
 import org.cspoker.common.events.gameevents.NextPlayerEvent;
-import org.cspoker.common.events.gameevents.playeractionevents.BigBlindEvent;
-import org.cspoker.common.events.gameevents.playeractionevents.SmallBlindEvent;
 import org.cspoker.common.events.gameevents.privateevents.NewPocketCardsEvent;
 import org.cspoker.common.exceptions.IllegalActionException;
 import org.cspoker.server.common.game.GameMediator;
@@ -61,11 +58,6 @@ public class PreFlopRound extends BettingRound {
 			}
 			GamePlayer player = getGame().getCurrentPlayer();
 			collectSmallBlind(player);
-			gameMediator.publishSmallBlindEvent(new SmallBlindEvent(player
-					.getSavedPlayer(), getGame().getGameProperty()
-					.getSmallBlind(), new Pots(getCurrentPotValue())));
-			PreFlopRound.logger.info(player.getName() + ": posts small blind $"
-					+ getGame().getGameProperty().getSmallBlind());
 			getGame().nextPlayer();
 		} catch (IllegalValueException e) {
 			PreFlopRound.logger.error(e.getLocalizedMessage(), e);
@@ -77,13 +69,6 @@ public class PreFlopRound extends BettingRound {
 			try {
 				bigBlindPlayer = getGame().getCurrentPlayer();
 				collectBigBlind(bigBlindPlayer);
-				gameMediator.publishBigBlindEvent(new BigBlindEvent(
-						bigBlindPlayer.getSavedPlayer(), getGame()
-								.getGameProperty().getBigBlind(), new Pots(
-								getCurrentPotValue())));
-				PreFlopRound.logger.info(getGame().getCurrentPlayer().getName()
-						+ ": posts big blind $"
-						+ getGame().getGameProperty().getBigBlind());
 				getGame().nextPlayer();
 			} catch (IllegalValueException e) {
 				PreFlopRound.logger.error(e.getLocalizedMessage(), e);

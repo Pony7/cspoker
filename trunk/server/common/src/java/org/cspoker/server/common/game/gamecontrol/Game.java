@@ -492,8 +492,8 @@ public class Game {
 		return new ArrayList<Card>(communityCards);
 	}
 
-	public void setToInitialHandPlayers() {
-		currentHandPlayers = initialCurrentHandPlayers;
+	public void addTablePlayersToGame() {
+		currentHandPlayers = new LoopingList<GamePlayer>(table.getPlayers());
 	}
 	
 	public int getNbSeatedPlayers(){

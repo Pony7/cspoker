@@ -62,6 +62,7 @@ public abstract class Round implements PlayerAction {
 	 * The variable containing the game mediator.
 	 */
 	protected final GameMediator gameMediator;
+	
 
 	/***************************************************************************
 	 * Constructor
@@ -291,8 +292,8 @@ public abstract class Round implements PlayerAction {
 	}
 
 	protected void newDealRound() {
-		removeBrokePlayers();
-		game.setToInitialHandPlayers();
+		game.addTablePlayersToGame();
+		game.setCurrentPlayer(game.getDealer());
 		List<Player> players = new ArrayList<Player>(game
 				.getNbCurrentDealPlayers());
 		for (GamePlayer player : game.getCurrentDealPlayers()) {
@@ -300,7 +301,6 @@ public abstract class Round implements PlayerAction {
 		}
 		gameMediator.publishNewDealEvent(new NewDealEvent(players, game
 				.getDealer().getSavedPlayer()));
-		game.setCurrentPlayer(game.getDealer());
 	}
 
 	protected Round getNewDealRound() {
