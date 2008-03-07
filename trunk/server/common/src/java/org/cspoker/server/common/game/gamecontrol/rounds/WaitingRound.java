@@ -48,10 +48,10 @@ public class WaitingRound extends Round {
 	@Override
 	public void deal(GamePlayer player) throws IllegalActionException {
 		// Check whether the given player can do this action.
-//		if (!onTurn(player)) {
-//			throw new IllegalActionException(player.getName()
-//					+ " can not deal in this round.");
-//		}
+		if (!onTurn(player)) {
+			throw new IllegalActionException(player.getName()
+					+ " can not deal in this round.");
+		}
 
 		if (!(game.getTable().getNbPlayers() > 1)) {
 			throw new IllegalActionException(
