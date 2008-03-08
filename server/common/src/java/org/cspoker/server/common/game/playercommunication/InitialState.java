@@ -81,7 +81,7 @@ class InitialState extends PlayerCommunicationState {
 			}
 			playerCommunication
 					.setPlayerCommunicationState(new WaitingAtTableState(
-							playerCommunication, table));
+							playerCommunication, table, GameManager.getGame(table.getId())));
 		}
 		InitialState.logger.info(playerCommunication.getPlayer().getName()
 				+ " joined " + id + ".");

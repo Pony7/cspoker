@@ -57,7 +57,7 @@ class TableCreatedState extends WaitingAtTableState {
 	 */
 	public TableCreatedState(PlayerCommunicationImpl playerCommunication,
 			GameTable table) {
-		super(playerCommunication, table);
+		super(playerCommunication, table, GameManager.createNewGame(table.getId()));
 	}
 
 	@Override
@@ -71,10 +71,9 @@ class TableCreatedState extends WaitingAtTableState {
 		 * startGame(), as it is guaranteed.
 		 */
 		synchronized (table) {
+			GameMediator gameMediator = GameManager.getGame(table.getId());
 			if(table.getNbPlayers()<=1)
 				throw new IllegalActionException("At least two players must be seated to play a game.");
-			
-			GameMediator gameMediator = new GameMediator();
 			for (PlayerId id : table.getPlayerIds()) {
 				PlayerCommunicationImpl comm;
 				try {
@@ -89,7 +88,6 @@ class TableCreatedState extends WaitingAtTableState {
 				}
 			}
 			new GameControl(gameMediator, table);
-			GameManager.addGame(table.getId(), gameMediator);
 		}
 
 		TableCreatedState.logger.info("Game Started.");
@@ -100,13 +98,7 @@ class TableCreatedState extends WaitingAtTableState {
 		synchronized (table) {
 			if (table.getNbPlayers() == 1) {
 				TableManager.removeTable(table);
-				table.removePlayer(playerCommunication.getPlayer());
-				playerCommunication
-						.setPlayerCommunicationState(new InitialState(
-								playerCommunication));
-				GameManager.getServerMediator().publishPlayerLeftEvent(
-						new PlayerLeftEvent(playerCommunication.getPlayer()
-								.getSavedPlayer(), table.getId()));
+				super.leaveTable();
 			} else {
 				throw new IllegalActionException(
 						"The owner can only leave if he is the only player at the table.");
