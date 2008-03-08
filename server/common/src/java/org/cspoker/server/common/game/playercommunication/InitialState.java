@@ -17,6 +17,7 @@ package org.cspoker.server.common.game.playercommunication;
 
 import org.apache.log4j.Logger;
 import org.cspoker.common.elements.table.TableId;
+import org.cspoker.common.events.gameevents.PlayerJoinedGameEvent;
 import org.cspoker.common.events.serverevents.PlayerJoinedEvent;
 import org.cspoker.common.events.serverevents.TableCreatedEvent;
 import org.cspoker.common.exceptions.IllegalActionException;
@@ -88,6 +89,7 @@ class InitialState extends PlayerCommunicationState {
 		GameManager.getServerMediator().publishPlayerJoinedEvent(
 				new PlayerJoinedEvent(playerCommunication.getPlayer()
 						.getSavedPlayer(), id));
+		GameManager.getGame(table.getId()).publishPlayerJoinedGame(new PlayerJoinedGameEvent(playerCommunication.getPlayer().getSavedPlayer()));
 	}
 
 	@Override

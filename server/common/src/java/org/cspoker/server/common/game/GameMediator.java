@@ -23,6 +23,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import org.cspoker.common.elements.table.TableId;
 import org.cspoker.common.eventlisteners.EventListener;
 import org.cspoker.common.eventlisteners.game.AllGameEventsListener;
 import org.cspoker.common.eventlisteners.game.GameEventListener;
@@ -84,12 +85,18 @@ public class GameMediator implements PlayerAction {
 	 * This variable contains the game control to mediate to.
 	 */
 	private GameControl gameControl;
+	
+	private final TableId id;
 
 	/**
 	 * Construct a new game mediator.
 	 */
-	public GameMediator() {
-
+	public GameMediator(TableId id) {
+		this.id = id;
+	}
+	
+	public TableId getId(){
+		return id;
 	}
 
 	/***************************************************************************

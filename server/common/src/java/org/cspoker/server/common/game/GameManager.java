@@ -61,7 +61,7 @@ public class GameManager {
 	}
 	
 	public static GameMediator createNewGame(TableId id){
-		GameMediator mediator = new GameMediator();
+		GameMediator mediator = new GameMediator(id);
 		hashMap.put(id, mediator);
 		return mediator;
 	}

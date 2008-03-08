@@ -68,10 +68,10 @@ public class GameFlowTest extends TestCase {
 			kenzo = playerFactory.createNewPlayer("Kenzo", 100);
 			cedric = playerFactory.createNewPlayer("Cedric", 100);
 			guy = playerFactory.createNewPlayer("Guy", 100);
-
-			gameMediator = new GameMediator();
-
-			table = new GameTable(new TableId(0), new GameProperty());
+			
+			TableId id = new TableId(0);
+			gameMediator = new GameMediator(id);
+			table = new GameTable(id, new GameProperty());
 			table.addPlayer(kenzo);
 			table.addPlayer(cedric);
 			table.addPlayer(guy);
@@ -646,9 +646,9 @@ public class GameFlowTest extends TestCase {
 			cedric = playerFactory.createNewPlayer("Cedric", 220);
 			guy = playerFactory.createNewPlayer("Guy", 100);
 
-			gameMediator = new GameMediator();
-
-			table = new GameTable(new TableId(0), new GameProperty());
+			TableId id = new TableId(0);
+			gameMediator = new GameMediator(id);
+			table = new GameTable(id, new GameProperty());
 			table.addPlayer(kenzo);
 			table.addPlayer(cedric);
 			table.addPlayer(guy);
@@ -704,9 +704,10 @@ public class GameFlowTest extends TestCase {
 			cedric = playerFactory.createNewPlayer("Cedric", 220);
 			guy = playerFactory.createNewPlayer("Guy", 100);
 
-			gameMediator = new GameMediator();
+			TableId id = new TableId(0);
+			gameMediator = new GameMediator(id);
+			table = new GameTable(id, new GameProperty());
 
-			table = new GameTable(new TableId(0), new GameProperty());
 			table.addPlayer(kenzo);
 			table.addPlayer(cedric);
 			table.addPlayer(guy);
@@ -760,9 +761,9 @@ public class GameFlowTest extends TestCase {
 			guy = playerFactory.createNewPlayer("Guy", 100);
 			craig = playerFactory.createNewPlayer("Craig", 100);
 
-			gameMediator = new GameMediator();
-
-			table = new GameTable(new TableId(0), new GameProperty());
+			TableId id = new TableId(0);
+			gameMediator = new GameMediator(id);
+			table = new GameTable(id, new GameProperty());
 			table.addPlayer(guy);
 			table.addPlayer(craig);
 		} catch (IllegalValueException e) {
