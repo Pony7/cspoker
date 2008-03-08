@@ -40,14 +40,15 @@ public class BettingRulesTest extends TestCase {
 			kenzo = playerFactory.createNewPlayer("Kenzo", 100);
 			cedric = playerFactory.createNewPlayer("Cedric", 100);
 			guy = playerFactory.createNewPlayer("Guy", 100);
-			gameMediator = new GameMediator();
 		} catch (IllegalValueException e) {
 			fail(e.getMessage());
 		}
 	}
 
 	public void testNoLimitRules() {
-		table = new GameTable(new TableId(0), new GameProperty(10));
+		TableId id = new TableId(0);
+		table = new GameTable(id, new GameProperty(10));
+		gameMediator = new GameMediator(id);
 		try {
 			table.addPlayer(kenzo);
 			table.addPlayer(cedric);
@@ -68,7 +69,9 @@ public class BettingRulesTest extends TestCase {
 	}
 
 	public void testPotLimitRules() {
-		table = new GameTable(new TableId(0), new GameProperty(10));
+		TableId id = new TableId(0);
+		table = new GameTable(id, new GameProperty(10));
+		gameMediator = new GameMediator(id);
 		try {
 			table.addPlayer(kenzo);
 			table.addPlayer(cedric);
@@ -102,7 +105,9 @@ public class BettingRulesTest extends TestCase {
 	}
 
 	public void testLimitRules2() {
-		table = new GameTable(new TableId(0), new GameProperty(10));
+		TableId id = new TableId(0);
+		table = new GameTable(id, new GameProperty(10));
+		gameMediator = new GameMediator(id);
 		try {
 			table.addPlayer(kenzo);
 			table.addPlayer(cedric);
@@ -129,7 +134,9 @@ public class BettingRulesTest extends TestCase {
 	}
 
 	public void testLimitRules1() {
-		table = new GameTable(new TableId(0), new GameProperty(10));
+		TableId id = new TableId(0);
+		table = new GameTable(id, new GameProperty(10));
+		gameMediator = new GameMediator(id);
 		try {
 			table.addPlayer(kenzo);
 			table.addPlayer(cedric);
