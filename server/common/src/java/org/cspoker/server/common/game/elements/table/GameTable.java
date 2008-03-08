@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.cspoker.common.elements.GameProperty;
@@ -54,6 +55,7 @@ public class GameTable {
 	 * The list of players in the waiting room.
 	 */
 	private final List<GamePlayer> players = new CopyOnWriteArrayList<GamePlayer>();
+	
 
 	/**
 	 * The variable containing the game property of this table.
@@ -64,7 +66,7 @@ public class GameTable {
 	 * The variable containing the playing status of this table.
 	 */
 	private boolean playing;
-
+	
 	/***************************************************************************
 	 * Constructor
 	 **************************************************************************/
@@ -79,7 +81,7 @@ public class GameTable {
 	 * @effect Set the playing status to false. |setPlaying(false)
 	 */
 	public GameTable(TableId id, GameProperty gameProperty) {
-		this(id, null, gameProperty);
+		this(id, "", gameProperty);
 	}
 
 	public GameTable(TableId id, String name, GameProperty gameProperty) {

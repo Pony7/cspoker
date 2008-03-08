@@ -80,6 +80,7 @@ class InitialState extends PlayerCommunicationState {
 				throw new IllegalActionException(
 						"You can not join. The table is full.");
 			}
+			GameManager.getGame(table.getId()).publishPlayerJoinedGame(new PlayerJoinedGameEvent(playerCommunication.getPlayer().getSavedPlayer()));
 			playerCommunication
 					.setPlayerCommunicationState(new WaitingAtTableState(
 							playerCommunication, table, GameManager.getGame(table.getId())));
@@ -89,7 +90,6 @@ class InitialState extends PlayerCommunicationState {
 		GameManager.getServerMediator().publishPlayerJoinedEvent(
 				new PlayerJoinedEvent(playerCommunication.getPlayer()
 						.getSavedPlayer(), id));
-		GameManager.getGame(table.getId()).publishPlayerJoinedGame(new PlayerJoinedGameEvent(playerCommunication.getPlayer().getSavedPlayer()));
 	}
 
 	@Override
