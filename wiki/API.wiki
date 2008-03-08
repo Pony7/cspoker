@@ -4,9 +4,9 @@
 = Introduction =
 
 Communication with the poker server happens through a any of these connections:
-* HTTP connections with XML content (RESTful webservice)
-* Socket connection sending XML content
-* RMI
+ * HTTP connections with XML content (RESTful webservice)
+ * Socket connection sending XML content
+ * RMI
 
 = XML Serialization =
 Serialization is done by JAXB 2.0. The exact protocol can easily be derived from the source code. A more exhaustive description will be written at a later time.
