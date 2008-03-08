@@ -18,6 +18,7 @@ package org.cspoker.server.common.game.playercommunication;
 import org.cspoker.common.events.serverevents.PlayerLeftEvent;
 import org.cspoker.common.exceptions.IllegalActionException;
 import org.cspoker.server.common.game.GameManager;
+import org.cspoker.server.common.game.GameMediator;
 import org.cspoker.server.common.game.elements.table.GameTable;
 
 /**
@@ -36,9 +37,15 @@ class WaitingAtTableState extends PlayerCommunicationState {
 	protected final GameTable table;
 
 	public WaitingAtTableState(PlayerCommunicationImpl playerCommunication,
-			GameTable table) {
+			GameTable table, GameMediator gameMediator) {
 		super(playerCommunication);
 		this.table = table;
+		GameManager.getServerMediator().unsubscribeAllServerEventsListener(
+				playerCommunication.getId(),
+				playerCommunication.getAllEventsListener());
+		gameMediator.subscribeAllGameEventsListener(
+				playerCommunication.getId(), playerCommunication
+						.getAllEventsListener());
 	}
 
 	@Override
@@ -49,6 +56,12 @@ class WaitingAtTableState extends PlayerCommunicationState {
 		GameManager.getServerMediator().publishPlayerLeftEvent(
 				new PlayerLeftEvent(playerCommunication.getPlayer()
 						.getSavedPlayer(), table.getId()));
+		GameManager.getServerMediator().subscribeAllServerEventsListener(
+				playerCommunication.getId(),
+				playerCommunication.getAllEventsListener());
+		GameManager.getGame(table.getId()).unsubscribeAllGameEventsListener(
+				playerCommunication.getId(), playerCommunication
+						.getAllEventsListener());
 	}
 
 	@Override

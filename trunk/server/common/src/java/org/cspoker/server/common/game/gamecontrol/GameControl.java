@@ -24,6 +24,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.cspoker.common.elements.pots.Pots;
 import org.cspoker.common.events.gameevents.NextPlayerEvent;
+import org.cspoker.common.events.gameevents.PlayerJoinedGameEvent;
 import org.cspoker.common.events.gameevents.playeractionevents.BetEvent;
 import org.cspoker.common.events.gameevents.playeractionevents.CallEvent;
 import org.cspoker.common.events.gameevents.playeractionevents.CheckEvent;

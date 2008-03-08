@@ -59,5 +59,11 @@ public class GameManager {
 	public static void addGame(TableId id, GameMediator gameMediator) {
 		hashMap.put(id, gameMediator);
 	}
+	
+	public static GameMediator createNewGame(TableId id){
+		GameMediator mediator = new GameMediator();
+		hashMap.put(id, mediator);
+		return mediator;
+	}
 
 }

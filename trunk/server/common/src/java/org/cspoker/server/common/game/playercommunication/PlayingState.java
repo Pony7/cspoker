@@ -48,12 +48,6 @@ class PlayingState extends PlayerCommunicationState {
 			GameMediator gameMediator) {
 		super(playerCommunication);
 		this.gameMediator = gameMediator;
-		GameManager.getServerMediator().unsubscribeAllServerEventsListener(
-				playerCommunication.getId(),
-				playerCommunication.getAllEventsListener());
-		gameMediator.subscribeAllGameEventsListener(
-				playerCommunication.getId(), playerCommunication
-						.getAllEventsListener());
 	}
 
 	@Override
