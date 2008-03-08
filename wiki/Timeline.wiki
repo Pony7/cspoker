@@ -1,6 +1,8 @@
-#summary What does the future hold?
+#summary Tentative time line for the project releases
 #labels Featured
 
-= Timeline: =
-  * 07 August 31: The first Alpha release deadline
-  * 08 April ?: The first Beta release deadline
+= Past =
+  * 2007 August 31: The 0.1 Alpha release
+
+= Future =
+  * 2008 April: The 0.1 Beta release deadline
