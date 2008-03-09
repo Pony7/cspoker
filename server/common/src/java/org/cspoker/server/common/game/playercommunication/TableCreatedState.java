@@ -97,7 +97,7 @@ class TableCreatedState extends WaitingAtTableState {
 	public void leaveTable() throws IllegalActionException {
 		synchronized (table) {
 			if (table.getNbPlayers() == 1) {
-				TableManager.removeTable(table);
+				TableManager.global_table_manager.removeTable(table);
 				super.leaveTable();
 			} else {
 				throw new IllegalActionException(

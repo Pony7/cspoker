@@ -207,7 +207,7 @@ public class PlayerCommunicationImpl extends PlayerCommunication {
 	@Override
 	public Table joinTable(TableId tableId, SeatId seatId) throws IllegalActionException {
 		state.join(tableId, seatId);
-		return TableManager.getTable(tableId).getSavedTable();
+		return TableManager.global_table_manager.getTable(tableId).getSavedTable();
 	}
 	
 	/**
@@ -221,7 +221,7 @@ public class PlayerCommunicationImpl extends PlayerCommunication {
 	@Override
 	public Table joinTable(TableId tableId) throws IllegalActionException {
 		state.join(tableId, null);
-		return TableManager.getTable(tableId).getSavedTable();
+		return TableManager.global_table_manager.getTable(tableId).getSavedTable();
 	}
 
 	@Override
@@ -244,7 +244,7 @@ public class PlayerCommunicationImpl extends PlayerCommunication {
 	@Override
 	public Table getTable(TableId id) throws IllegalActionException{
 		try {
-			return TableManager.getTable(id).getSavedTable();
+			return TableManager.global_table_manager.getTable(id).getSavedTable();
 		} catch (IllegalArgumentException e) {
 			throw new IllegalActionException(e.getMessage());
 		}
@@ -252,7 +252,7 @@ public class PlayerCommunicationImpl extends PlayerCommunication {
 
 	@Override
 	public TableList getTables(){
-		return new TableList(TableManager.getAllTables());
+		return new TableList(TableManager.global_table_manager.getAllTables());
 	}
 
 	@Override

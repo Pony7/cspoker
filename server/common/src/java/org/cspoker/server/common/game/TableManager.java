@@ -36,16 +36,18 @@ import org.cspoker.server.common.game.elements.table.GameTable;
  * 
  */
 public class TableManager {
+	
+	public static TableManager global_table_manager = new TableManager();
 
 	/**
 	 * The atomic variable used as atomic counter.
 	 */
-	private static AtomicLong counter = new AtomicLong(0);
+	private AtomicLong counter = new AtomicLong(0);
 
 	/**
 	 * The hash map containing all the tables of this server.
 	 */
-	private static ConcurrentHashMap<TableId, GameTable> hashMap = new ConcurrentHashMap<TableId, GameTable>();
+	private ConcurrentHashMap<TableId, GameTable> hashMap = new ConcurrentHashMap<TableId, GameTable>();
 
 	/**
 	 * Get the table with the given id.
@@ -58,7 +60,7 @@ public class TableManager {
 	 *             [must] There does not exist a table with given table id. |
 	 *             !hasATableWithId(id)
 	 */
-	public static GameTable getTable(TableId id) {
+	public GameTable getTable(TableId id) {
 		if (!hasATableWithId(id)) {
 			throw new IllegalArgumentException("No such table.");
 		}
@@ -72,26 +74,26 @@ public class TableManager {
 	 *            The table id to check.
 	 * @return True if there exists a table with given id, False otherwise.
 	 */
-	public static boolean hasATableWithId(TableId id) {
+	public boolean hasATableWithId(TableId id) {
 		return hashMap.containsKey(id);
 	}
 
-	public static void removeTable(GameTable id) {
+	public void removeTable(GameTable id) {
 		hashMap.remove(id);
 	}
 
-	public static GameTable createTable(PlayerId id, String name) {
+	public GameTable createTable(PlayerId id, String name) {
 		TableId tableId = new TableId(counter.getAndIncrement());
 		GameTable table = new GameTable(tableId, name, new GameProperty());
 		hashMap.put(tableId, table);
 		return table;
 	}
 
-	public static Set<TableId> getAllTableIds() {
+	public Set<TableId> getAllTableIds() {
 		return Collections.unmodifiableSet(hashMap.keySet());
 	}
 	
-	public static List<Table> getAllTables(){
+	public List<Table> getAllTables(){
 		List<Table> tables = new ArrayList<Table>();
 		for(GameTable table:hashMap.values()){
 			tables.add(table.getSavedTable());

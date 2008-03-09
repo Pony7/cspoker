@@ -28,6 +28,7 @@ import org.cspoker.common.elements.table.Table;
 import org.cspoker.common.elements.table.TableId;
 import org.cspoker.common.player.Player;
 import org.cspoker.common.player.PlayerId;
+import org.cspoker.server.common.game.TableManager;
 import org.cspoker.server.common.game.player.GamePlayer;
 
 /**
