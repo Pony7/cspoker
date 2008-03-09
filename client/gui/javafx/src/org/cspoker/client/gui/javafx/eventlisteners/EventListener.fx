@@ -261,7 +261,7 @@ trigger on new EventListener{
             System.out.println(e.toString());
             do later {
                 try{
-                    var t = FXTable{}.toFXTable(cl.getTable(e.getId()));
+                    var t = FXTable{}.toFXTable(e.getTable());
                     insert t as last into ts.tables;
                 }catch(e:RemoteException){
                     MessageDialog{

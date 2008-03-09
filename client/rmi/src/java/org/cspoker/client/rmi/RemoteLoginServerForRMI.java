@@ -29,6 +29,7 @@ import javax.security.auth.login.LoginException;
 import org.cspoker.common.RemoteLoginServer;
 import org.cspoker.common.RemotePlayerCommunication;
 import org.cspoker.common.elements.GameProperty;
+import org.cspoker.common.elements.table.SeatId;
 import org.cspoker.common.elements.table.Table;
 import org.cspoker.common.elements.table.TableId;
 import org.cspoker.common.elements.table.TableList;
@@ -148,6 +149,12 @@ public class RemoteLoginServerForRMI implements RemoteLoginServer {
 			public Table joinTable(TableId id) throws IllegalActionException,
 					RemoteException {
 				return p.joinTable(id);
+			}
+
+			@Override
+			public Table joinTable(TableId tableId, SeatId seatId)
+					throws IllegalActionException, RemoteException {
+				return p.joinTable(tableId, seatId);
 			}
 
 		};

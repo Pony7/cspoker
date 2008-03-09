@@ -23,6 +23,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import org.cspoker.common.RemotePlayerCommunication;
 import org.cspoker.common.elements.GameProperty;
+import org.cspoker.common.elements.table.SeatId;
 import org.cspoker.common.elements.table.Table;
 import org.cspoker.common.elements.table.TableId;
 import org.cspoker.common.elements.table.TableList;
@@ -121,9 +122,15 @@ public class XmlChannelRemotePlayerCommunication implements
 	}
 
 	@Override
-	public Table joinTable(TableId id) throws IllegalActionException,
+	public Table joinTable(TableId seatId) throws IllegalActionException,
 			RemoteException {
-		return marshaller.perform(new JoinTableAction(getId(), id));
+		return marshaller.perform(new JoinTableAction(getId(), seatId,null));
+	}
+	
+	@Override
+	public Table joinTable(TableId tableId, SeatId seatId) throws IllegalActionException,
+			RemoteException {
+		return marshaller.perform(new JoinTableAction(getId(), tableId, seatId));
 	}
 
 	@Override
