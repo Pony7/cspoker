@@ -73,27 +73,63 @@ public class Table implements Serializable  {
 		// no op
 	}
 	
+	/**
+	 * The id of this table.
+	 * 
+	 * This id is unique.
+	 * 
+	 * @return The id of this table.
+	 */
 	public TableId getId(){
 		return id;
 	}
 	
+	/**
+	 * Returns the name of this table.
+	 * 
+	 * The name is not guaranteed unique.
+	 * 
+	 * @return The name of this table.
+	 */
 	public String getName(){
 		return name;
 	}
 	
-	
+	/**
+	 * Returns the list of players at this table.
+	 * The size of the returned list equals the maximum number of players at this table.
+	 * 
+	 * Be aware that this list contains null-elements if the table is not full.
+	 * 
+	 * @return The list of players at this table.
+	 */
 	public List<Player> getPlayers(){
 		return players;
 	}
 	
+	/**
+	 * The number of players seated at this table.
+	 * 
+	 * @return The number of players seated at this table.
+	 */
 	public int getNbPlayers(){
 		return nbPlayers;
 	}
 	
+	/**
+	 * The playing status of this table.
+	 * 
+	 * @return True if the players are playing, false otherwise.
+	 */
 	public boolean isPlaying(){
 		return playing;
 	}
 	
+	/**
+	 * Returns the game property of this table.
+	 * 
+	 * @return The game property of this table.
+	 */
 	public GameProperty getGameProperty(){
 		return property;
 	}
