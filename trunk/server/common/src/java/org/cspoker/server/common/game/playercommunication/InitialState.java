@@ -61,7 +61,7 @@ class InitialState extends PlayerCommunicationState {
 		if(tableId == null)
 			throw new IllegalArgumentException("The given table id is not effective.");
 
-		GameTable table = TableManager.getTable(tableId);
+		GameTable table = TableManager.global_table_manager.getTable(tableId);
 
 		if (table == null) {
 			throw new IllegalArgumentException(
@@ -100,7 +100,7 @@ class InitialState extends PlayerCommunicationState {
 
 	@Override
 	public TableId createTable(String name) throws IllegalActionException {
-		GameTable table = TableManager.createTable(playerCommunication.getPlayer()
+		GameTable table = TableManager.global_table_manager.createTable(playerCommunication.getPlayer()
 				.getId(), name);
 		if(name==null)
 			throw new IllegalArgumentException("The given name should be effective.");
