@@ -102,5 +102,9 @@ public class Player implements Serializable {
 	public int getBetChipsValue() {
 		return betChipsValue;
 	}
+	
+	public String toString(){
+		return getName();
+	}
 
 }

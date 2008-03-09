@@ -27,8 +27,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
  * This class should contain all parameters of a game, such as maximum number of
  * players, maximum bet/raise, the amount for small/big blinds,...
  * 
- * @author Kenzo & Cedric
- * 
+ *  
  * @invar This game property must have valid parameters | hasValidParameters()
  */
 
@@ -160,7 +159,27 @@ public class GameProperty implements Serializable {
 				&& (getBigBlind() == getSmallBet())
 				&& (getBigBet() == 2 * getSmallBet());
 	}
+	
+	/***************************************************************************
+	 * Max Nb Players
+	 **************************************************************************/
 
+	public int getMaxNbPlayers() {
+		return maxNbPlayers;
+	}
+	
+	/**
+	 * 
+	 * There should be at least 2 players to play a poker game.
+	 * 
+	 * @param 	nbPlayers
+	 * 			The number of players to check.
+	 * @return	True if the given number of players is at least 2, false otherwise.
+	 */
+	public static boolean canHaveAsMaxNbPlayers(int nbPlayers){
+		return nbPlayers>=2;
+	}
+	
 	/***************************************************************************
 	 * Other methods
 	 **************************************************************************/
@@ -178,7 +197,4 @@ public class GameProperty implements Serializable {
 		return false;
 	}
 
-	public int getMaxNbPlayers() {
-		return maxNbPlayers;
-	}
 }

@@ -15,9 +15,8 @@
  */
 package org.cspoker.common;
 
-import java.util.List;
-
 import org.cspoker.common.elements.GameProperty;
+import org.cspoker.common.elements.table.SeatId;
 import org.cspoker.common.elements.table.Table;
 import org.cspoker.common.elements.table.TableId;
 import org.cspoker.common.elements.table.TableList;
@@ -107,7 +106,17 @@ public abstract class PlayerCommunication implements RemotePlayerCommunication {
 	 *             [must] This actions is not a valid action in the current
 	 *             state.
 	 */
-	public abstract Table joinTable(TableId id) throws IllegalActionException;
+	public abstract Table joinTable(TableId tableId, SeatId seatId) throws IllegalActionException;
+	
+	/**
+	 * Join the table with given table id.
+	 * 
+	 * @pre The given id should be effective |id!=null
+	 * @throws IllegalActionException
+	 *             [must] This actions is not a valid action in the current
+	 *             state.
+	 */
+	public abstract Table joinTable(TableId tableId) throws IllegalActionException;
 
 	/**
 	 * Leave the table the player is sitting at.
