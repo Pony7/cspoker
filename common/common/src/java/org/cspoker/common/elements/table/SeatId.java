@@ -29,7 +29,7 @@ public class SeatId implements Serializable{
 	private static final long serialVersionUID = -3605432117019173699L;
 
 	/**
-	 * The variable containing the long representation of the id.
+	 * The variable containing the int representation of the id.
 	 */
 	@XmlValue
 	private int id;
