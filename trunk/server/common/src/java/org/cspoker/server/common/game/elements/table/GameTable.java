@@ -28,7 +28,6 @@ import org.cspoker.common.elements.table.Table;
 import org.cspoker.common.elements.table.TableId;
 import org.cspoker.common.player.Player;
 import org.cspoker.common.player.PlayerId;
-import org.cspoker.server.common.game.TableManager;
 import org.cspoker.server.common.game.player.GamePlayer;
 
 /**
@@ -307,7 +306,7 @@ public class GameTable {
 	 * @param player
 	 * @throws SeatTakenException
 	 */
-	public void addPlayer(SeatId seatId, GamePlayer player) throws SeatTakenException{
+	public synchronized void addPlayer(SeatId seatId, GamePlayer player) throws SeatTakenException{
 		if(!isValidSeatId(seatId))
 			throw new IllegalArgumentException("The given seat id should be valid.");
 		if(player==null)
