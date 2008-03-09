@@ -46,6 +46,9 @@ import org.cspoker.client.gui.javafx.game.PlayingCards;
 import org.cspoker.common.elements.cards.Card as JavaCard;
 import org.cspoker.common.elements.cards.Rank;
 import org.cspoker.common.elements.cards.Suit;
+import java.rmi.RemoteException;
+import org.cspoker.common.exceptions.IllegalActionException;
+import javafx.ui.*;
 
 class EventListener{
     attribute listener:RemoteAllEventsListener;
@@ -55,6 +58,7 @@ class EventListener{
 trigger on new EventListener{
     var ts = bind main.state;
     var cl = bind main.client;
+    var m = bind main;
     listener = new RemoteAllEventsListener {
         
         operation onAllInEvent(e:AllInEvent){
@@ -242,8 +246,25 @@ trigger on new EventListener{
         }
         operation onTableCreatedEvent(e:TableCreatedEvent){
             System.out.println(e.toString());
-            var t = cl.getTableInterface(e.getId());
-            insert t as last into cl.tableList;
+            try{
+                var t = cl.getTableInterface(e.getId());
+                insert t as last into ts.tables;
+            }catch(e:RemoteException){
+                MessageDialog{
+                    title: "Connection problem"
+                    visible: true
+                    message: e.getMessage()
+                    messageType: ERROR
+                }
+                m.relogin();
+            }catch(e:IllegalActionException){
+                MessageDialog{
+                    title: "Failed to get info on new table"
+                    visible: true
+                    message: e.getMessage()
+                    messageType: ERROR
+                }
+            }
         }
         operation onServerMessageEvent(e:ServerMessageEvent){
             System.out.println(e.toString());
