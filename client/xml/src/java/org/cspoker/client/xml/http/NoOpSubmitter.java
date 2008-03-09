@@ -15,10 +15,7 @@
  */
 package org.cspoker.client.xml.http;
 
-import java.rmi.RemoteException;
-
 import org.apache.log4j.Logger;
-import org.cspoker.client.xml.common.ChannelStateException;
 
 public class NoOpSubmitter implements Runnable {
 
@@ -34,13 +31,10 @@ public class NoOpSubmitter implements Runnable {
 	public void run() {
 		try {
 			c.send(XmlHttpChannel.noOpXml);
-		} catch (RemoteException e) {
-			logger.error(e);
+		} catch (Exception e) {
+			logger.fatal(e);
 			c.close();
-		} catch (ChannelStateException e) {
-			logger.error(e);
-			c.close();
-		}
+		} 
 	}
 
 }

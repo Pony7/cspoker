@@ -43,6 +43,7 @@ import org.cspoker.client.gui.javafx.elements.*;
 import java.lang.*;
 import org.cspoker.client.gui.javafx.game.Card;
 import org.cspoker.client.gui.javafx.game.PlayingCards;
+import org.cspoker.client.gui.javafx.game.FXTable;
 import org.cspoker.common.elements.cards.Card as JavaCard;
 import org.cspoker.common.elements.cards.Rank;
 import org.cspoker.common.elements.cards.Suit;
@@ -111,93 +112,99 @@ trigger on new EventListener{
         }
         operation onNewPocketCardsEvent(e:NewPocketCardsEvent){
             System.out.println(e.toString());
-            ts.playingcards.state = 1;
-            var cards:JavaCard* = cl.toArray(e.getPocketCards());
-            ts.playingcards.cp1 = Card{
-                visible: true
-                dealt: true
-                rank: cards[0].getRank().toString().toLowerCase()
-                suit: cards[0].getSuit().toString().toLowerCase()
-            };
-            ts.playingcards.cp2 = Card{
-                visible: true
-                dealt: true
-                rank: cards[1].getRank().toString().toLowerCase()
-                suit: cards[1].getSuit().toString().toLowerCase()
-            };
-        }
-        operation onNewCommunityCardsEvent(e:NewCommunityCardsEvent){
-            System.out.println(e.toString());
-            var cards:JavaCard* = cl.toArray(e.getCommonCards());
-            if(ts.playingcards.state == 1){
-                ts.playingcards.c1 = Card{
+            do later {
+                ts.playingcards.state = 1;
+                var cards:JavaCard* = cl.toArray(e.getPocketCards());
+                ts.playingcards.cp1 = Card{
                     visible: true
                     dealt: true
                     rank: cards[0].getRank().toString().toLowerCase()
                     suit: cards[0].getSuit().toString().toLowerCase()
                 };
-                ts.playingcards.c2 = Card{
+                ts.playingcards.cp2 = Card{
                     visible: true
                     dealt: true
                     rank: cards[1].getRank().toString().toLowerCase()
                     suit: cards[1].getSuit().toString().toLowerCase()
                 };
-                ts.playingcards.c3 = Card{
-                    visible: true
-                    dealt: true
-                    rank: cards[2].getRank().toString().toLowerCase()
-                    suit: cards[2].getSuit().toString().toLowerCase()
-                };
-            }else if(ts.playingcards.state == 2){
-                ts.playingcards.c4 = Card{
-                    visible: true
-                    dealt: true
-                    rank: cards[0].getRank().toString().toLowerCase()
-                    suit: cards[0].getSuit().toString().toLowerCase()
-                };
-            }else if(ts.playingcards.state == 3){
-                ts.playingcards.c5 = Card{
-                    visible: true
-                    dealt: true
-                    rank: cards[0].getRank().toString().toLowerCase()
-                    suit: cards[0].getSuit().toString().toLowerCase()
-                };
             }
-            ts.playingcards.state = ts.playingcards.state+1;
-            
+        }
+        operation onNewCommunityCardsEvent(e:NewCommunityCardsEvent){
+            System.out.println(e.toString());
+            do later {
+                var cards:JavaCard* = cl.toArray(e.getCommonCards());
+                if(ts.playingcards.state == 1){
+                    ts.playingcards.c1 = Card{
+                        visible: true
+                        dealt: true
+                        rank: cards[0].getRank().toString().toLowerCase()
+                        suit: cards[0].getSuit().toString().toLowerCase()
+                    };
+                    ts.playingcards.c2 = Card{
+                        visible: true
+                        dealt: true
+                        rank: cards[1].getRank().toString().toLowerCase()
+                        suit: cards[1].getSuit().toString().toLowerCase()
+                    };
+                    ts.playingcards.c3 = Card{
+                        visible: true
+                        dealt: true
+                        rank: cards[2].getRank().toString().toLowerCase()
+                        suit: cards[2].getSuit().toString().toLowerCase()
+                    };
+                }else if(ts.playingcards.state == 2){
+                    ts.playingcards.c4 = Card{
+                        visible: true
+                        dealt: true
+                        rank: cards[0].getRank().toString().toLowerCase()
+                        suit: cards[0].getSuit().toString().toLowerCase()
+                    };
+                }else if(ts.playingcards.state == 3){
+                    ts.playingcards.c5 = Card{
+                        visible: true
+                        dealt: true
+                        rank: cards[0].getRank().toString().toLowerCase()
+                        suit: cards[0].getSuit().toString().toLowerCase()
+                    };
+                }
+                ts.playingcards.state = ts.playingcards.state+1;
+            }
         }
         operation onNewDealEvent(e:NewDealEvent){
             System.out.println(e.toString());
-            ts.playingcards.state = 0;
-            ts.playingcards.c1 = Card{
-                visible: false
-                dealt: true
-            };
-            ts.playingcards.c2 = Card{
-                visible: false
-                dealt: true
-            };
-            ts.playingcards.c3 = Card{
-                visible: false
-                dealt: true
-            };
-            ts.playingcards.c4 = Card{
-                visible: false
-                dealt: true
-            };
-            ts.playingcards.c5 = Card{
-                visible: false
-                dealt: true
-            };
-            ts.playingcards.cp1 = Card{
-                visible: false
-                dealt: true
-            };
-            ts.playingcards.cp2 = Card{
-                visible: false
-                dealt: true
-            };
-            ts.state = 1;
+            do later {
+                ts.playingcards.state = 0;
+                
+                ts.playingcards.c1 = Card{
+                    visible: false
+                    dealt: true
+                };
+                ts.playingcards.c2 = Card{
+                    visible: false
+                    dealt: true
+                };
+                ts.playingcards.c3 = Card{
+                    visible: false
+                    dealt: true
+                };
+                ts.playingcards.c4 = Card{
+                    visible: false
+                    dealt: true
+                };
+                ts.playingcards.c5 = Card{
+                    visible: false
+                    dealt: true
+                };
+                ts.playingcards.cp1 = Card{
+                    visible: false
+                    dealt: true
+                };
+                ts.playingcards.cp2 = Card{
+                    visible: false
+                    dealt: true
+                };
+                ts.state = 1;
+            }
         }
         operation onNewRoundEvent(e:NewRoundEvent){
             System.out.println(e.toString());
@@ -240,29 +247,37 @@ trigger on new EventListener{
         }
         operation onPlayerJoinedEvent(e:PlayerJoinedEvent){
             System.out.println(e.toString());
+            var id = e.getId().getID();
+            ts.tables[id].nbPlayers = ts.tables[id].nbPlayers + 1;
         }
+        
         operation onPlayerLeftEvent(e:PlayerLeftEvent){
             System.out.println(e.toString());
+            var id = e.getId().getID();
+            ts.tables[id].nbPlayers = ts.tables[id].nbPlayers - 1;
         }
+        
         operation onTableCreatedEvent(e:TableCreatedEvent){
             System.out.println(e.toString());
-            try{
-                var t = cl.getTableInterface(e.getId());
-                insert t as last into ts.tables;
-            }catch(e:RemoteException){
-                MessageDialog{
-                    title: "Connection problem"
-                    visible: true
-                    message: e.getMessage()
-                    messageType: ERROR
-                }
-                m.relogin();
-            }catch(e:IllegalActionException){
-                MessageDialog{
-                    title: "Failed to get info on new table"
-                    visible: true
-                    message: e.getMessage()
-                    messageType: ERROR
+            do later {
+                try{
+                    var t = FXTable{}.toFXTable(cl.getTable(e.getId()));
+                    insert t as last into ts.tables;
+                }catch(e:RemoteException){
+                    MessageDialog{
+                        title: "Connection problem"
+                        visible: true
+                        message: e.getMessage()
+                        messageType: ERROR
+                    }
+                    m.relogin();
+                }catch(e:IllegalActionException){
+                    MessageDialog{
+                        title: "Failed to get info on new table"
+                        visible: true
+                        message: e.getMessage()
+                        messageType: ERROR
+                    }
                 }
             }
         }

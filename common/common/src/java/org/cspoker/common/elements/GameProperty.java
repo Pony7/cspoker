@@ -20,6 +20,7 @@ import java.io.Serializable;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
 
 
 /**
@@ -43,23 +44,27 @@ public class GameProperty implements Serializable {
 	 * The minimum value of chips the first player after the dealer button must
 	 * place in the pot
 	 */
-	private final int smallBlind;
+	@XmlAttribute
+	private int smallBlind;
 
 	/**
 	 * The minimum value of chips the second player after the dealer button must
 	 * place in the pot
 	 */
-	private final int bigBlind;
+	@XmlAttribute
+	private int bigBlind;
 
 	/**
 	 * The value of a small bet, used in the first three rounds
 	 */
-	private final int smallBet;
+	@XmlAttribute
+	private int smallBet;
 
 	/**
 	 * The value of a big bet, used in the fourth and final round
 	 */
-	private final int bigBet;
+	@XmlAttribute
+	private int bigBet;
 
 	/**
 	 * The maximum number of players in a game
