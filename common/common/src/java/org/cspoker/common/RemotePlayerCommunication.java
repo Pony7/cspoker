@@ -19,6 +19,7 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 import org.cspoker.common.elements.GameProperty;
+import org.cspoker.common.elements.table.SeatId;
 import org.cspoker.common.elements.table.Table;
 import org.cspoker.common.elements.table.TableId;
 import org.cspoker.common.elements.table.TableList;
@@ -101,7 +102,17 @@ public interface RemotePlayerCommunication extends Remote {
 	 *             [must] This actions is not a valid action in the current
 	 *             state.
 	 */
-	Table joinTable(TableId id) throws IllegalActionException, RemoteException;
+	Table joinTable(TableId tableId, SeatId seatId) throws IllegalActionException, RemoteException;
+	
+	/**
+	 * Join the table with given table id.
+	 * 
+	 * @pre The given id should be effective |id!=null
+	 * @throws IllegalActionException
+	 *             [must] This actions is not a valid action in the current
+	 *             state.
+	 */
+	Table joinTable(TableId tableId) throws IllegalActionException, RemoteException;
 
 	/**
 	 * Leave the table the player is sitting at.

@@ -52,16 +52,19 @@ public class Table implements Serializable  {
 	@XmlElement(name = "player")
 	private List<Player> players;
 	
+	private int nbPlayers;
+	
 	private boolean playing;
 	
 	private GameProperty property;
 	
-	public Table(TableId id, String name, Collection<Player> players, boolean playing, GameProperty property){
+	public Table(TableId id, String name, int nbPlayers, Collection<Player> players, boolean playing, GameProperty property){
 		this.id = id;
 		this.name = name;
 		if(players==null)
 			throw new IllegalArgumentException("The given list of players must be effective.");
 		this.players = Collections.unmodifiableList(new ArrayList<Player>(players));
+		this.nbPlayers = nbPlayers;
 		this.playing = playing;
 		this.property = property;
 	}
@@ -84,7 +87,7 @@ public class Table implements Serializable  {
 	}
 	
 	public int getNbPlayers(){
-		return players.size();
+		return nbPlayers;
 	}
 	
 	public boolean isPlaying(){

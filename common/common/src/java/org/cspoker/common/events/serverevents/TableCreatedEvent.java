@@ -22,7 +22,7 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.cspoker.common.elements.table.TableId;
+import org.cspoker.common.elements.table.Table;
 import org.cspoker.common.eventlisteners.RemoteAllEventsListener;
 import org.cspoker.common.player.Player;
 
@@ -32,13 +32,13 @@ public class TableCreatedEvent extends ServerEvent {
 
 	private static final long serialVersionUID = -3408596246641282753L;
 
-	private TableId id;
+	private Table table;
 
 	private Player player;
 
-	public TableCreatedEvent(Player player, TableId id) {
+	public TableCreatedEvent(Player player, Table table) {
 		this.player = player;
-		this.id = id;
+		this.table = table;
 	}
 
 	protected TableCreatedEvent() {
@@ -47,15 +47,15 @@ public class TableCreatedEvent extends ServerEvent {
 
 	@Override
 	public String toString() {
-		return player.getName() + " has created a new table [" + id + "].";
+		return player.getName() + " has created a new table: "+table.getName()+" [" + table.getId() + "].";
 	}
 
 	public Player getPlayer() {
 		return player;
 	}
 
-	public TableId getId() {
-		return id;
+	public Table getTable() {
+		return table;
 	}
 
 	@Override

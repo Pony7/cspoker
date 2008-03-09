@@ -41,8 +41,8 @@ public class TableId implements Serializable {
 	/**
 	 * Construct a new table id with given id.
 	 * 
-	 * @param id
-	 *            The long to use as id.
+	 * @param 	id
+	 *       	The long to use as id.
 	 */
 	public TableId(long id) {
 		this.id = id;
