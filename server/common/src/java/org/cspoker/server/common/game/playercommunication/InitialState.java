@@ -16,6 +16,7 @@
 package org.cspoker.server.common.game.playercommunication;
 
 import org.apache.log4j.Logger;
+import org.cspoker.common.elements.table.SeatId;
 import org.cspoker.common.elements.table.TableId;
 import org.cspoker.common.events.gameevents.PlayerJoinedGameEvent;
 import org.cspoker.common.events.serverevents.PlayerJoinedEvent;
@@ -24,8 +25,9 @@ import org.cspoker.common.exceptions.IllegalActionException;
 import org.cspoker.server.common.game.GameManager;
 import org.cspoker.server.common.game.GameMediator;
 import org.cspoker.server.common.game.TableManager;
-import org.cspoker.server.common.game.elements.table.PlayerListFullException;
 import org.cspoker.server.common.game.elements.table.GameTable;
+import org.cspoker.server.common.game.elements.table.PlayerListFullException;
+import org.cspoker.server.common.game.elements.table.SeatTakenException;
 
 /**
  * A class to represent the initial state of the player.
@@ -55,13 +57,11 @@ class InitialState extends PlayerCommunicationState {
 	}
 
 	@Override
-	public void join(TableId id) throws IllegalActionException {
-		if (id == null) {
-			throw new IllegalArgumentException(
-					"The given table id should be effective.");
-		}
+	public void join(TableId tableId, SeatId seatId) throws IllegalActionException {
+		if(tableId == null)
+			throw new IllegalArgumentException("The given table id is not effective.");
 
-		GameTable table = TableManager.getTable(id);
+		GameTable table = TableManager.getTable(tableId);
 
 		if (table == null) {
 			throw new IllegalArgumentException(
@@ -69,16 +69,22 @@ class InitialState extends PlayerCommunicationState {
 		}
 
 		if (table.isPlaying()) {
-			GameMediator mediator = GameManager.getGame(id);
-			mediator.joinGame(playerCommunication.getPlayer());
+			GameMediator mediator = GameManager.getGame(tableId);
+			mediator.joinGame(seatId, playerCommunication.getPlayer());
 			playerCommunication.setPlayerCommunicationState(new PlayingState(
 					playerCommunication, mediator));
 		} else {
 			try {
-				table.addPlayer(playerCommunication.getPlayer());
+				if(seatId==null){
+					table.addPlayer(playerCommunication.getPlayer());
+				}else{
+					table.addPlayer(seatId, playerCommunication.getPlayer());
+				}
+
+			} catch (SeatTakenException e) {
+				throw new IllegalActionException(e.getMessage());
 			} catch (PlayerListFullException e) {
-				throw new IllegalActionException(
-						"You can not join. The table is full.");
+				throw new IllegalActionException(e.getMessage());
 			}
 			GameManager.getGame(table.getId()).publishPlayerJoinedGame(new PlayerJoinedGameEvent(playerCommunication.getPlayer().getSavedPlayer()));
 			playerCommunication
@@ -86,10 +92,10 @@ class InitialState extends PlayerCommunicationState {
 							playerCommunication, table, GameManager.getGame(table.getId())));
 		}
 		InitialState.logger.info(playerCommunication.getPlayer().getName()
-				+ " joined " + id + ".");
+				+ " joined " + tableId + ".");
 		GameManager.getServerMediator().publishPlayerJoinedEvent(
 				new PlayerJoinedEvent(playerCommunication.getPlayer()
-						.getSavedPlayer(), id));
+						.getSavedPlayer(), tableId));
 	}
 
 	@Override
@@ -99,10 +105,10 @@ class InitialState extends PlayerCommunicationState {
 		if(name==null)
 			throw new IllegalArgumentException("The given name should be effective.");
 		try {
-			table.addPlayer(playerCommunication.getPlayer());
-		} catch (PlayerListFullException e) {
+			table.addPlayer(new SeatId(0), playerCommunication.getPlayer());
+		} catch (SeatTakenException e) {
 			throw new IllegalStateException(
-					"A newly created table should have at least a place for one player.");
+			"A newly created table should have at least a place for one player.");
 		}
 		playerCommunication.setPlayerCommunicationState(new TableCreatedState(
 				playerCommunication, table));
@@ -110,7 +116,7 @@ class InitialState extends PlayerCommunicationState {
 				+ " created " + table.getId() + ": "+name+".");
 		GameManager.getServerMediator().publishTableCreatedEvent(
 				new TableCreatedEvent(playerCommunication.getPlayer()
-						.getSavedPlayer(), table.getId()));
+						.getSavedPlayer(), table.getSavedTable()));
 		return table.getId();
 	}
 

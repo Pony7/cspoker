@@ -20,6 +20,7 @@ import junit.framework.TestCase;
 
 import org.apache.log4j.Logger;
 import org.cspoker.common.elements.GameProperty;
+import org.cspoker.common.elements.table.SeatId;
 import org.cspoker.common.elements.table.TableId;
 import org.cspoker.common.exceptions.IllegalActionException;
 import org.cspoker.common.util.Log4JPropertiesLoader;
@@ -27,6 +28,7 @@ import org.cspoker.server.common.game.GameMediator;
 import org.cspoker.server.common.game.elements.chips.IllegalValueException;
 import org.cspoker.server.common.game.elements.table.GameTable;
 import org.cspoker.server.common.game.elements.table.PlayerListFullException;
+import org.cspoker.server.common.game.elements.table.SeatTakenException;
 import org.cspoker.server.common.game.gamecontrol.rounds.WaitingRound;
 import org.cspoker.server.common.game.player.GamePlayer;
 import org.cspoker.server.common.game.player.PlayerFactory;
@@ -85,22 +87,8 @@ public class GameFlowTest extends TestCase {
 
 	public void testCase1() {
 		GameControl gameControl = new GameControl(gameMediator, table);
-		GameFlowTest.logger.info("Game Properties:");
-		GameFlowTest.logger.info("Small Blind: "
-				+ table.getGameProperty().getSmallBlind());
-		GameFlowTest.logger.info("Big Blind: "
-				+ table.getGameProperty().getBigBlind());
-		GameFlowTest.logger.info("Betting Rules: "
-				+ gameControl.getGame().getBettingRules()
-						.toString());
+		
 		Game game = gameControl.getGame();
-
-		GameFlowTest.logger.info("Dealer: " + game.getDealer().getName());
-
-		GameFlowTest.logger.info(game.getCurrentDealPlayers());
-		GameFlowTest.logger.info("Kenzo's Cards: " + kenzo.getPocketCards());
-		GameFlowTest.logger.info("Cedric's Cards: " + cedric.getPocketCards());
-		GameFlowTest.logger.info("Guy's Cards: " + guy.getPocketCards());
 
 		try {
 			gameControl.call(game.getCurrentPlayer());
@@ -618,15 +606,9 @@ public class GameFlowTest extends TestCase {
 		GamePlayer testPlayer = PlayerFactory.global_Player_Factory.createNewPlayer("test");
 		
 		try {
-			gameControl.joinGame(testPlayer);
-			System.out.println(game.getCurrentDealPlayers());
-			System.out.println(game.getTable().getPlayers());
-			System.out.println("Nb seated players: "+ game.getNbSeatedPlayers());
-			System.out.println(game.getDealer());
+			gameControl.joinGame(new SeatId(4), testPlayer);
 			assertFalse(gameControl.getRound() instanceof WaitingRound);
 		} catch (IllegalActionException e) {
-			fail(e.getMessage());
-		} catch (PlayerListFullException e) {
 			fail(e.getMessage());
 		}
 		

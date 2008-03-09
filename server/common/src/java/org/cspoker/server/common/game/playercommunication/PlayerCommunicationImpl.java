@@ -23,6 +23,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import org.apache.log4j.Logger;
 import org.cspoker.common.PlayerCommunication;
 import org.cspoker.common.elements.GameProperty;
+import org.cspoker.common.elements.table.SeatId;
 import org.cspoker.common.elements.table.Table;
 import org.cspoker.common.elements.table.TableId;
 import org.cspoker.common.elements.table.TableList;
@@ -204,13 +205,23 @@ public class PlayerCommunicationImpl extends PlayerCommunication {
 	 *             state.
 	 */
 	@Override
-	public Table joinTable(TableId id) throws IllegalActionException {
-		if (id == null) {
-			throw new IllegalArgumentException(
-					"The given table id is not effective.");
-		}
-		state.join(id);
-		return TableManager.getTable(id).getSavedTable();
+	public Table joinTable(TableId tableId, SeatId seatId) throws IllegalActionException {
+		state.join(tableId, seatId);
+		return TableManager.getTable(tableId).getSavedTable();
+	}
+	
+	/**
+	 * Join the table with given table id.
+	 * 
+	 * @pre The given id should be effective. |id!=null
+	 * @throws IllegalActionException
+	 *             [can] This actions is not a valid action in the current
+	 *             state.
+	 */
+	@Override
+	public Table joinTable(TableId tableId) throws IllegalActionException {
+		state.join(tableId, null);
+		return TableManager.getTable(tableId).getSavedTable();
 	}
 
 	@Override

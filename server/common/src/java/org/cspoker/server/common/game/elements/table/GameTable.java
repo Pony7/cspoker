@@ -21,9 +21,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.cspoker.common.elements.GameProperty;
+import org.cspoker.common.elements.table.SeatId;
 import org.cspoker.common.elements.table.Table;
 import org.cspoker.common.elements.table.TableId;
 import org.cspoker.common.player.Player;
@@ -49,12 +49,12 @@ public class GameTable {
 	/**
 	 * The variable containing the id of this table.
 	 */
-	private final TableId id;
+	private final TableId tableId;
 
 	/**
-	 * The list of players in the waiting room.
+	 * A map containing the mapping between a seat id and a player.
 	 */
-	private final List<GamePlayer> players = new CopyOnWriteArrayList<GamePlayer>();
+	private final ConcurrentHashMap<SeatId, GamePlayer> players;
 	
 
 	/**
@@ -85,10 +85,11 @@ public class GameTable {
 	}
 
 	public GameTable(TableId id, String name, GameProperty gameProperty) {
-		this.id = id;
+		this.tableId = id;
 		setGameProperty(gameProperty);
 		setPlaying(false);
 		setName(name);
+		players = new ConcurrentHashMap<SeatId, GamePlayer>(gameProperty.getMaxNbPlayers());
 	}
 
 	/**
@@ -97,7 +98,7 @@ public class GameTable {
 	 * @return The id of this table.
 	 */
 	public TableId getId() {
-		return id;
+		return tableId;
 	}
 
 	/***************************************************************************
@@ -162,7 +163,7 @@ public class GameTable {
 		}
 	}
 
-	private String getDefaultName() {
+	protected String getDefaultName() {
 		return "default table";
 	}
 
@@ -206,7 +207,7 @@ public class GameTable {
 	 * @post The game property of this table is set to the given game property. |
 	 *       new.getGameProperty() == gameProperty
 	 */
-	public void setGameProperty(GameProperty gameProperty) {
+	private void setGameProperty(GameProperty gameProperty) {
 		this.gameProperty = gameProperty;
 	}
 
@@ -253,8 +254,11 @@ public class GameTable {
 			throw new IllegalArgumentException(player
 					+ " is not a player of this table.");
 		}
-		players.remove(player);
+		SeatId id = reverseLookUp(player);
+		if(id!=null)
+			players.remove(id);
 	}
+	
 
 	/**
 	 * Adds the given player to this table.
@@ -278,9 +282,7 @@ public class GameTable {
 		if (player == null) {
 			throw new IllegalArgumentException("player should be effective.");
 		}
-		if (fullOfPlayers()) {
-			throw new PlayerListFullException();
-		}
+		
 		if (hasAsPlayer(player)) {
 			throw new IllegalArgumentException(player
 					+ " is already seated at this table.");
@@ -288,7 +290,34 @@ public class GameTable {
 		if (player.getStack().getValue() == 0) {
 			throw new IllegalArgumentException(player + " has no chips to bet.");
 		}
-		players.add(player);
+		
+		SeatId seatId = new SeatId(0);
+		
+		while(isValidSeatId(seatId) && players.putIfAbsent(seatId, player)!=null){
+			seatId = seatId.getNextSeatId();
+		}
+		if(!isValidSeatId(seatId))
+			throw new PlayerListFullException();
+	}
+	
+	/**
+	 * 
+	 * @param seatId
+	 * @param player
+	 * @throws SeatTakenException
+	 */
+	public void addPlayer(SeatId seatId, GamePlayer player) throws SeatTakenException{
+		if(!isValidSeatId(seatId))
+			throw new IllegalArgumentException("The given seat id should be valid.");
+		if(player==null)
+			throw new IllegalArgumentException("The given player should be valid.");
+		if(players.putIfAbsent(seatId, player)!=null){
+			throw new SeatTakenException(tableId, seatId);
+		}
+	}
+	
+	public boolean isValidSeatId(SeatId seatId){
+		return seatId!=null && seatId.getID()<gameProperty.getMaxNbPlayers();
 	}
 
 	/**
@@ -317,7 +346,14 @@ public class GameTable {
 	 * @return The list with all the players at this table.
 	 */
 	public List<GamePlayer> getPlayers() {
-		return Collections.unmodifiableList(players);
+		List<GamePlayer> playerList = new ArrayList<GamePlayer>();
+		
+		for(int i=0;i<gameProperty.getMaxNbPlayers();i++){
+			GamePlayer player = players.get(new SeatId(i));
+			if(player!=null)
+				playerList.add(player);
+		}
+		return Collections.unmodifiableList(playerList);
 	}
 
 	/**
@@ -331,14 +367,15 @@ public class GameTable {
 	 */
 	public List<PlayerId> getPlayerIds() {
 		List<PlayerId> toReturn = new ArrayList<PlayerId>();
-		for (GamePlayer player : players) {
+		for (GamePlayer player : players.values()) {
 			toReturn.add(player.getId());
 		}
 		return Collections.unmodifiableList(toReturn);
 	}
 
 	public synchronized GamePlayer getRandomPlayer() {
-		return players.get(new Random().nextInt(getNbPlayers()));
+		List<SeatId> ids = new ArrayList<SeatId>(players.keySet());
+		return players.get(ids.get(new Random().nextInt(ids.size())));
 	}
 
 	/**
@@ -351,10 +388,21 @@ public class GameTable {
 	}
 	
 	public synchronized Table getSavedTable(){
-		List<Player> playerList = new ArrayList<Player>();
-		for(GamePlayer player:players){
-			playerList.add(player.getSavedPlayer());
+		List<Player> playerList = new ArrayList<Player>(gameProperty.getMaxNbPlayers());
+		for(int i=0;i<gameProperty.getMaxNbPlayers();i++){
+			playerList.add(null);
 		}
-		return new Table(id, name, playerList, playing, gameProperty);
+		for(SeatId id:players.keySet()){
+			playerList.set(id.getID(), players.get(id).getSavedPlayer());
+		}
+		return new Table(tableId, name, getNbPlayers(), playerList, playing, gameProperty);
+	}
+	
+	protected SeatId reverseLookUp(GamePlayer player){
+		for(SeatId id:players.keySet()){
+			if(players.get(id).equals(player))
+				return id;
+		}
+		return null;
 	}
 }

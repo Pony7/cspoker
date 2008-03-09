@@ -23,6 +23,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import org.cspoker.common.elements.table.SeatId;
 import org.cspoker.common.elements.table.TableId;
 import org.cspoker.common.eventlisteners.EventListener;
 import org.cspoker.common.eventlisteners.game.AllGameEventsListener;
@@ -68,6 +69,7 @@ import org.cspoker.common.events.gameevents.privateevents.NewPocketCardsEvent;
 import org.cspoker.common.exceptions.IllegalActionException;
 import org.cspoker.common.player.PlayerId;
 import org.cspoker.server.common.game.elements.table.PlayerListFullException;
+import org.cspoker.server.common.game.elements.table.SeatTakenException;
 import org.cspoker.server.common.game.gamecontrol.GameControl;
 import org.cspoker.server.common.game.gamecontrol.PlayerAction;
 import org.cspoker.server.common.game.player.GamePlayer;
@@ -213,14 +215,10 @@ public class GameMediator implements PlayerAction {
 		gameControl.raise(player, amount);
 	}
 
-	public void joinGame(GamePlayer player) throws IllegalActionException {
-		try {
-			gameControl.joinGame(player);
+	public void joinGame(SeatId seatId, GamePlayer player) throws IllegalActionException {
+			gameControl.joinGame(seatId, player);
 			publishPlayerJoinedGame(new PlayerJoinedGameEvent(player
 					.getSavedPlayer()));
-		} catch (PlayerListFullException e) {
-			throw new IllegalActionException(e.getMessage());
-		}
 	}
 
 	public void leaveGame(GamePlayer player) throws IllegalActionException {
