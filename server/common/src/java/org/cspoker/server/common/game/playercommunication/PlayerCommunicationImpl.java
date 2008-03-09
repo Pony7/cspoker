@@ -16,7 +16,6 @@
 
 package org.cspoker.server.common.game.playercommunication;
 
-import java.rmi.RemoteException;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 

@@ -20,7 +20,6 @@ import org.apache.log4j.Logger;
 import org.cspoker.common.exceptions.IllegalActionException;
 import org.cspoker.server.common.game.GameMediator;
 import org.cspoker.server.common.game.gamecontrol.Game;
-import org.cspoker.server.common.game.gamecontrol.GameControl;
 import org.cspoker.server.common.game.gamecontrol.PlayerAction;
 import org.cspoker.server.common.game.player.GamePlayer;
 
