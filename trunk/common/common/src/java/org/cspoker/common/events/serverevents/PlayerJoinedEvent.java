@@ -47,7 +47,7 @@ public class PlayerJoinedEvent extends ServerEvent {
 
 	@Override
 	public String toString() {
-		return player.getName() + " has joined a table [" + id + "].";
+		return player.getName() + " has joined table " + id + ".";
 	}
 
 	public Player getPlayer() {

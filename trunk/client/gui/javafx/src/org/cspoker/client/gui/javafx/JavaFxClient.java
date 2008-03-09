@@ -169,17 +169,29 @@ public class JavaFxClient {
         rpc.say(message);
     }
 
-    public void joinTable(int n) throws IllegalActionException, RemoteException {
+    public Table joinTable(long n) throws IllegalActionException, RemoteException {
         System.out.println("joined table " + n);
-        rpc.joinTable(new TableId(n));
+        return rpc.joinTable(new TableId(n));
+    }
+    
+    public Table getTable(long n) throws IllegalActionException, RemoteException {
+        return rpc.getTable(new TableId(n));
     }
 
     public void leaveTable() throws RemoteException, IllegalActionException {
         rpc.leaveTable();
     }
 
-    public TableId createTable(String name) throws RemoteException, IllegalActionException {
-        return rpc.createTable(name);
+    public Table createTable(String name) throws RemoteException, IllegalActionException {
+        System.out.println("creating table "+name);
+        System.out.println("rpc is "+rpc);
+        try{TableId id = rpc.createTable(name);
+        System.out.println("created tableid "+id);
+        return rpc.getTable(id);
+        }catch(Exception e){
+            e.printStackTrace();
+            return null;
+        }
     }
 
     public void startGame() throws RemoteException, IllegalActionException {
@@ -198,5 +210,10 @@ public class JavaFxClient {
 
     public Card[] toArray(Set<Card> cards) {
         return cards.toArray(new Card[cards.size()]);
+    }
+    
+    public TableInterface getTableInterface(TableId id) throws IllegalActionException, RemoteException{
+        Table t = rpc.getTable(id);
+        return new TableImpl(t.getId().getID(), t.getName(), t.getNbPlayers(), t.getGameProperty().getSmallBlind(), t.getGameProperty().getBigBlind()); 
     }
 }

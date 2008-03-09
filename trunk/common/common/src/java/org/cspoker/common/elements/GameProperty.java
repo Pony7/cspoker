@@ -31,6 +31,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
  * 
  * @invar This game property must have valid parameters | hasValidParameters()
  */
+
 @XmlAccessorType(XmlAccessType.FIELD)
 public class GameProperty implements Serializable {
 

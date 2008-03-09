@@ -39,6 +39,7 @@ import org.cspoker.common.events.serverevents.PlayerLeftEvent;
 import org.cspoker.common.events.serverevents.ServerMessageEvent;
 import org.cspoker.common.events.serverevents.TableCreatedEvent;
 import org.cspoker.client.gui.javafx.*;
+import org.cspoker.client.gui.javafx.elements.*;
 import java.lang.*;
 import org.cspoker.client.gui.javafx.game.*;
 import org.cspoker.common.elements.cards.Card as JavaCard;
@@ -47,13 +48,12 @@ import org.cspoker.common.elements.cards.Suit;
 
 class EventListener{
     attribute listener:RemoteAllEventsListener;
-    attribute client:JavaFxClient;
-    attribute tablestate:TableState;
+    attribute main:Main inverse Main.listener;
 }
 
 trigger on new EventListener{
-    var ts = bind tablestate;
-    var cl = bind client;
+    var ts = bind main.state;
+    var cl = bind main.client;
     listener = new RemoteAllEventsListener {
         
         operation onAllInEvent(e:AllInEvent){
@@ -195,7 +195,9 @@ trigger on new EventListener{
             ts.state = 1;
         }
         operation onNewRoundEvent(e:NewRoundEvent){
-            System.out.println(e.toString()); ts.busy=false;
+            System.out.println(e.toString());
+            ts.busy=false;
+            ts.events = ts.events.concat(e.toString()).concat("<br/>");
             ts.busy=true;
         }
         operation onNextPlayerEvent(e:NextPlayerEvent){
@@ -232,21 +234,18 @@ trigger on new EventListener{
             ts.busy=true;
         }
         operation onPlayerJoinedEvent(e:PlayerJoinedEvent){
-            ts.events = ts.events.concat(e.toString()).concat("<br/>");
             System.out.println(e.toString());
         }
         operation onPlayerLeftEvent(e:PlayerLeftEvent){
-            ts.events = ts.events.concat(e.toString()).concat("<br/>");
             System.out.println(e.toString());
         }
         operation onTableCreatedEvent(e:TableCreatedEvent){
             System.out.println(e.toString());
+            var t = cl.getTableInterface(e.getId());
+            insert t as last into cl.tableList;
         }
         operation onServerMessageEvent(e:ServerMessageEvent){
             System.out.println(e.toString());
-            ts.busy=false;
-            ts.events = ts.events.concat(e.toString()).concat("<br/>");
-            ts.busy=true;
         }
     };
 }

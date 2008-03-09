@@ -18,10 +18,16 @@ package org.cspoker.client.gui.javafx.game;
 import org.cspoker.client.gui.javafx.*;
 import java.lang.*;
 import org.cspoker.client.gui.javafx.game.*;
+import org.cspoker.client.gui.javafx.elements.*;
 
 class TableState {
     attribute state:Integer;
     attribute events:String;
     attribute playingcards:PlayingCards;
     attribute busy:Boolean;
+    attribute players:Player*;
+    attribute tablename:String;
+    attribute myname:String;
+    
+    attribute tables: TableInterface*;
 }

@@ -294,7 +294,7 @@ public class PlayerCommunicationImpl extends PlayerCommunication {
 			for (RemoteAllInListener listener : eventListeners) {
 				try {
 					listener.onAllInEvent(event);
-				} catch (RemoteException e) {
+				} catch (Exception e) {
 					logger.error("RemoteException from event handler", e);
 					SessionManager.global_session_manager
 							.killSession(getPlayer().getName());
@@ -306,7 +306,7 @@ public class PlayerCommunicationImpl extends PlayerCommunication {
 			for (RemoteBetListener listener : eventListeners) {
 				try {
 					listener.onBetEvent(event);
-				} catch (RemoteException e) {
+				} catch (Exception e) {
 					logger.error("RemoteException from event handler", e);
 					SessionManager.global_session_manager
 							.killSession(getPlayer().getName());
@@ -319,7 +319,7 @@ public class PlayerCommunicationImpl extends PlayerCommunication {
 			for (RemoteBigBlindListener listener : eventListeners) {
 				try {
 					listener.onBigBlindEvent(event);
-				} catch (RemoteException e) {
+				} catch (Exception e) {
 					logger.error("RemoteException from event handler", e);
 					SessionManager.global_session_manager
 							.killSession(getPlayer().getName());
@@ -332,7 +332,7 @@ public class PlayerCommunicationImpl extends PlayerCommunication {
 			for (RemoteCallListener listener : eventListeners) {
 				try {
 					listener.onCallEvent(event);
-				} catch (RemoteException e) {
+				} catch (Exception e) {
 					logger.error("RemoteException from event handler", e);
 					SessionManager.global_session_manager
 							.killSession(getPlayer().getName());
@@ -344,7 +344,7 @@ public class PlayerCommunicationImpl extends PlayerCommunication {
 			for (RemoteCheckListener listener : eventListeners) {
 				try {
 					listener.onCheckEvent(event);
-				} catch (RemoteException e) {
+				} catch (Exception e) {
 					logger.error("RemoteException from event handler", e);
 					SessionManager.global_session_manager
 							.killSession(getPlayer().getName());
@@ -356,7 +356,7 @@ public class PlayerCommunicationImpl extends PlayerCommunication {
 			for (RemoteFoldListener listener : eventListeners) {
 				try {
 					listener.onFoldEvent(event);
-				} catch (RemoteException e) {
+				} catch (Exception e) {
 					logger.error("RemoteException from event handler", e);
 					SessionManager.global_session_manager
 							.killSession(getPlayer().getName());
@@ -369,7 +369,7 @@ public class PlayerCommunicationImpl extends PlayerCommunication {
 			for (RemoteRaiseListener listener : eventListeners) {
 				try {
 					listener.onRaiseEvent(event);
-				} catch (RemoteException e) {
+				} catch (Exception e) {
 					logger.error("RemoteException from event handler", e);
 					SessionManager.global_session_manager
 							.killSession(getPlayer().getName());
@@ -381,7 +381,7 @@ public class PlayerCommunicationImpl extends PlayerCommunication {
 			for (RemoteSmallBlindListener listener : eventListeners) {
 				try {
 					listener.onSmallBlindEvent(event);
-				} catch (RemoteException e) {
+				} catch (Exception e) {
 					logger.error("RemoteException from event handler", e);
 					SessionManager.global_session_manager
 							.killSession(getPlayer().getName());
@@ -393,7 +393,7 @@ public class PlayerCommunicationImpl extends PlayerCommunication {
 			for (RemoteNewPocketCardsListener listener : eventListeners) {
 				try {
 					listener.onNewPocketCardsEvent(event);
-				} catch (RemoteException e) {
+				} catch (Exception e) {
 					logger.error("RemoteException from event handler", e);
 					SessionManager.global_session_manager
 							.killSession(getPlayer().getName());
@@ -406,7 +406,7 @@ public class PlayerCommunicationImpl extends PlayerCommunication {
 			for (RemoteNewCommunityCardsListener listener : eventListeners) {
 				try {
 					listener.onNewCommunityCardsEvent(event);
-				} catch (RemoteException e) {
+				} catch (Exception e) {
 					logger.error("RemoteException from event handler", e);
 					SessionManager.global_session_manager
 							.killSession(getPlayer().getName());
@@ -418,7 +418,7 @@ public class PlayerCommunicationImpl extends PlayerCommunication {
 			for (RemoteNewDealListener listener : eventListeners) {
 				try {
 					listener.onNewDealEvent(event);
-				} catch (RemoteException e) {
+				} catch (Exception e) {
 					logger.error("RemoteException from event handler", e);
 					SessionManager.global_session_manager
 							.killSession(getPlayer().getName());
@@ -431,7 +431,7 @@ public class PlayerCommunicationImpl extends PlayerCommunication {
 			for (RemoteNewRoundListener listener : eventListeners) {
 				try {
 					listener.onNewRoundEvent(event);
-				} catch (RemoteException e) {
+				} catch (Exception e) {
 					logger.error("RemoteException from event handler", e);
 					SessionManager.global_session_manager
 							.killSession(getPlayer().getName());
@@ -444,7 +444,7 @@ public class PlayerCommunicationImpl extends PlayerCommunication {
 			for (RemoteNextPlayerListener listener : eventListeners) {
 				try {
 					listener.onNextPlayerEvent(event);
-				} catch (RemoteException e) {
+				} catch (Exception e) {
 					logger.error("RemoteException from event handler", e);
 					SessionManager.global_session_manager
 							.killSession(getPlayer().getName());
@@ -456,7 +456,7 @@ public class PlayerCommunicationImpl extends PlayerCommunication {
 			for (RemotePlayerJoinedGameListener listener : eventListeners) {
 				try {
 					listener.onPlayerJoinedGameEvent(event);
-				} catch (RemoteException e) {
+				} catch (Exception e) {
 					logger.error("RemoteException from event handler", e);
 					SessionManager.global_session_manager
 							.killSession(getPlayer().getName());
@@ -468,7 +468,7 @@ public class PlayerCommunicationImpl extends PlayerCommunication {
 			for (RemoteShowHandListener listener : eventListeners) {
 				try {
 					listener.onShowHandEvent(event);
-				} catch (RemoteException e) {
+				} catch (Exception e) {
 					logger.error("RemoteException from event handler", e);
 					SessionManager.global_session_manager
 							.killSession(getPlayer().getName());
@@ -480,7 +480,7 @@ public class PlayerCommunicationImpl extends PlayerCommunication {
 			for (RemoteWinnerListener listener : eventListeners) {
 				try {
 					listener.onWinnerEvent(event);
-				} catch (RemoteException e) {
+				} catch (Exception e) {
 					logger.error("RemoteException from event handler", e);
 					SessionManager.global_session_manager
 							.killSession(getPlayer().getName());
@@ -492,7 +492,7 @@ public class PlayerCommunicationImpl extends PlayerCommunication {
 			for (RemotePlayerLeftTableListener listener : eventListeners) {
 				try {
 					listener.onPlayerLeftTableEvent(event);
-				} catch (RemoteException e) {
+				} catch (Exception e) {
 					logger.error("RemoteException from event handler", e);
 					SessionManager.global_session_manager
 							.killSession(getPlayer().getName());
@@ -505,7 +505,7 @@ public class PlayerCommunicationImpl extends PlayerCommunication {
 			for (RemoteGameMessageListener listener : eventListeners) {
 				try {
 					listener.onGameMessageEvent(event);
-				} catch (RemoteException e) {
+				} catch (Exception e) {
 					logger.error(
 							"RemoteException from event handler, ignoring", e);
 				}
@@ -520,7 +520,7 @@ public class PlayerCommunicationImpl extends PlayerCommunication {
 			for (RemotePlayerJoinedListener listener : eventListeners) {
 				try {
 					listener.onPlayerJoinedEvent(event);
-				} catch (RemoteException e) {
+				} catch (Exception e) {
 					logger.error(
 							"RemoteException from event handler, ignoring", e);
 				}
@@ -532,7 +532,7 @@ public class PlayerCommunicationImpl extends PlayerCommunication {
 			for (RemoteTableCreatedListener listener : eventListeners) {
 				try {
 					listener.onTableCreatedEvent(event);
-				} catch (RemoteException e) {
+				} catch (Exception e) {
 					logger.error(
 							"RemoteException from event handler, ignoring", e);
 				}
@@ -543,7 +543,7 @@ public class PlayerCommunicationImpl extends PlayerCommunication {
 			for (RemotePlayerLeftListener listener : eventListeners) {
 				try {
 					listener.onPlayerLeftEvent(event);
-				} catch (RemoteException e) {
+				} catch (Exception e) {
 					logger.error(
 							"RemoteException from event handler, ignoring", e);
 				}
@@ -554,7 +554,7 @@ public class PlayerCommunicationImpl extends PlayerCommunication {
 			for (RemoteServerMessageListener listener : eventListeners) {
 				try {
 					listener.onServerMessageEvent(event);
-				} catch (RemoteException e) {
+				} catch (Exception e) {
 					logger.error(
 							"RemoteException from event handler, ignoring", e);
 				}

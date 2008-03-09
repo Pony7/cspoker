@@ -25,9 +25,12 @@ import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
 
 import org.cspoker.common.elements.GameProperty;
 import org.cspoker.common.player.Player;
+
 /**
  * An immutable class to represent a snapshot of the state of a table.
  * 
@@ -37,12 +40,16 @@ import org.cspoker.common.player.Player;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Table implements Serializable  {
 	
+	private static final long serialVersionUID = 1647960710321459407L;
+
 	@XmlAttribute
 	private TableId id;
 	
 	@XmlAttribute
 	private String name;
 	
+	@XmlElementWrapper
+	@XmlElement(name = "player")
 	private List<Player> players;
 	
 	private boolean playing;
@@ -52,6 +59,8 @@ public class Table implements Serializable  {
 	public Table(TableId id, String name, Collection<Player> players, boolean playing, GameProperty property){
 		this.id = id;
 		this.name = name;
+		if(players==null)
+			throw new IllegalArgumentException("The given list of players must be effective.");
 		this.players = Collections.unmodifiableList(new ArrayList<Player>(players));
 		this.playing = playing;
 		this.property = property;

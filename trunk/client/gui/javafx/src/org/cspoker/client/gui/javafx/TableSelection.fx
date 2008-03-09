@@ -21,12 +21,10 @@ import java.rmi.RemoteException;
 import org.cspoker.common.exceptions.IllegalActionException;
 
 class TableSelection {
-    attribute client:JavaFxClient;
-    attribute main:Main inverse Main.table_selection;
+    attribute main: Main inverse Main.table_selection;
     
-    attribute screen:Frame;
+    attribute screen: Frame;
     
-    attribute tables: TableInterface*;
     attribute selection: Integer;
     attribute active: Boolean;
     
@@ -62,7 +60,7 @@ trigger on new TableSelection{
             }
         }
         content: BorderPanel{
-            center:Table{
+            center: Table{
                 onMousePressed: operation(e){
                     if(e.clickCount>1){
                         join_table();
@@ -84,7 +82,7 @@ trigger on new TableSelection{
                     text: "Blinds"
                     width: 15
                 }]
-                cells: bind foreach(t in tables)
+                cells: bind foreach(t in main.state.tables)
                 [TableCell {
                     value: t.getId()
                     text: t.getId().toString()
@@ -118,14 +116,6 @@ trigger on new TableSelection{
                         }
                     }
                     enabled: bind active
-                },
-                Button {
-                    text: "Refresh Table List"
-                    toolTipText: "Refresh the table list from the server"
-                    action: operation() {
-                        refresh();
-                    }
-                    enabled: bind active
                 }
                 ]
             }
@@ -140,7 +130,8 @@ operation TableSelection.relogin(){
 operation TableSelection.join_table(){
     active = false;
     try{
-        client.joinTable(selection);
+        main.client.joinTable(selection);
+        main.state.tablename = main.state.tables[selection].getName();
         main.table_selected();
     }catch(e:RemoteException){
         relogin();
@@ -158,7 +149,8 @@ operation TableSelection.join_table(){
 operation TableSelection.create_table(name:String){
     active = false;
     try{
-        client.createTable(name);
+        main.client.createTable(name);
+        main.state.tablename = name;
         main.table_selected();
     }catch(e:RemoteException){
         relogin();
@@ -170,12 +162,5 @@ operation TableSelection.create_table(name:String){
             messageType: ERROR
         }
     }
-    active = true;
-    
-}
-
-operation TableSelection.refresh(){
-    active = false;
-    tables=client.getTableList();
     active = true;
 }
