@@ -66,13 +66,10 @@ public class RandomOrgSeededRandomGenerator implements RandomSource {
 			random = new SecureRandom(seed);
 			return;
 		} catch (final MalformedURLException e) {
-			e.printStackTrace();
-			RandomOrgSeededRandomGenerator.logger.error(e.getMessage(), e);
+			logger.error(e.getMessage(), e);
 		} catch (final IOException e) {
-			e.printStackTrace();
-			RandomOrgSeededRandomGenerator.logger.error(e.getMessage(), e);
+			logger.error(e.getMessage(), e);
 		}
-
 		random = new SecureRandom();
 	}
 
