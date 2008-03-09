@@ -61,7 +61,7 @@ public class XmlChannelUnMarshaller implements XmlEventListener {
 			collect((Event) um.unmarshal(new StringReader(xmlEvent.trim())));
 		} catch (JAXBException e) {
 			logger.fatal(e);
-			throw new IllegalStateException(e);
+			throw new IllegalStateException("Parsing failed:\n"+xmlEvent,e);
 		}
 	}
 

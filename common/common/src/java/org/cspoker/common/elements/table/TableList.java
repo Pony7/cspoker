@@ -40,6 +40,8 @@ public class TableList implements Serializable {
 	private List<Table> tables;
 	
 	public TableList(List<Table> tables) {
+		if(tables==null)
+			throw new IllegalArgumentException("The given list of tables is not effective.");
 		this.tables = tables;
 	}
 

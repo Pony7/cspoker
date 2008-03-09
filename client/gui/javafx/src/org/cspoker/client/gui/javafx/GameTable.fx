@@ -23,21 +23,17 @@ import org.cspoker.client.gui.javafx.elements.*;
 import org.cspoker.client.gui.javafx.game.*;
 import java.awt.Dimension;
 import org.cspoker.client.gui.javafx.elements.TableInterface;
-import org.cspoker.client.gui.javafx.elements.TableItem;
 import java.rmi.RemoteException;
 import org.cspoker.common.exceptions.IllegalActionException;
 import org.cspoker.common.player.Player;
 
 class GameTable {
-    attribute client:JavaFxClient;
     attribute main:Main inverse Main.gametable;
     
     attribute screen:Frame;
     
     attribute sqrw:Integer;
     attribute sqrh:Integer;
-    
-    attribute state:TableState;
     
     attribute amount:String;
     
@@ -62,44 +58,8 @@ trigger on new GameTable{
     sqrw = 280;
     sqrh = 280;
     var logofontsize = sqrh/5;
-    
-    state = TableState{
-        state: 0
-        events: "Welcome to CSPoker!<br/>"
-        playingcards: PlayingCards{
-            c1: Card{
-                visible: false
-                dealt: false
-            }
-            c2: Card{
-                visible: false
-                dealt: false
-            }
-            c3: Card{
-                visible: false
-                dealt: false
-            }
-            c4: Card{
-                visible: false
-                dealt: false
-            }
-            c5: Card{
-                visible: false
-                dealt: false
-            }
-            cp1: Card{
-                visible: false
-                dealt: false
-            }
-            cp2: Card{
-                visible: false
-                dealt: false
-            }
-            state: 0
-        }
-    };
     screen = Frame{
-        title: "Game Table"
+        title: bind main.state.tablename
         width: 2*padx+sqrw+sqrh
         height: 2*pady+sqrh+150
         visible: true
@@ -195,55 +155,55 @@ trigger on new GameTable{
                             transform: translate(padx+sqrh/2+sqrw/2, pady+sqrh/2)
                             content: [ImageView {
                                 transform:  translate(-45*2,0)
-                                image: Image { url: bind state.playingcards.getCard( state.playingcards.c1) }
+                                image: Image { url: bind main.state.playingcards.getCard( main.state.playingcards.c1) }
                                 valign: CENTER
                                 halign: CENTER
-                                visible: bind state.playingcards.c1.dealt
+                                visible: bind main.state.playingcards.c1.dealt
                             },ImageView {
                                 transform:  translate(-45,0)
-                                image: Image { url: bind state.playingcards.getCard( state.playingcards.c2) }
+                                image: Image { url: bind main.state.playingcards.getCard( main.state.playingcards.c2) }
                                 valign: CENTER
                                 halign: CENTER
-                                visible: bind state.playingcards.c2.dealt
+                                visible: bind main.state.playingcards.c2.dealt
                             },ImageView {
                                 transform:  translate(0,0)
-                                image: Image { url: bind state.playingcards.getCard( state.playingcards.c3) }
+                                image: Image { url: bind main.state.playingcards.getCard( main.state.playingcards.c3) }
                                 valign: CENTER
                                 halign: CENTER
-                                visible: bind state.playingcards.c3.dealt
+                                visible: bind main.state.playingcards.c3.dealt
                             },ImageView {
                                 transform:  translate(45,0)
-                                image: Image { url: bind state.playingcards.getCard( state.playingcards.c4) }
+                                image: Image { url: bind main.state.playingcards.getCard( main.state.playingcards.c4) }
                                 valign: CENTER
                                 halign: CENTER
-                                visible: bind state.playingcards.c4.dealt
+                                visible: bind main.state.playingcards.c4.dealt
                             },ImageView {
                                 transform:  translate(45*2,0)
-                                image: Image { url: bind state.playingcards.getCard( state.playingcards.c5) }
+                                image: Image { url: bind main.state.playingcards.getCard( main.state.playingcards.c5) }
                                 valign: CENTER
                                 halign: CENTER
-                                visible: bind state.playingcards.c5.dealt
+                                visible: bind main.state.playingcards.c5.dealt
                             }]
                         },Group{
                             transform: translate(padx+sqrh/2+sqrw/2, pady+sqrh)
                             content: [ImageView {
                                 transform:  translate(-25,0)
-                                image: Image { url: bind state.playingcards.getCard( state.playingcards.cp1) }
+                                image: Image { url: bind main.state.playingcards.getCard( main.state.playingcards.cp1) }
                                 valign: CENTER
                                 halign: CENTER
-                                visible: bind state.playingcards.cp1.dealt
+                                visible: bind main.state.playingcards.cp1.dealt
                             },ImageView {
                                 transform:  translate(25,0)
-                                image: Image { url: bind state.playingcards.getCard( state.playingcards.cp2) }
+                                image: Image { url: bind main.state.playingcards.getCard( main.state.playingcards.cp2) }
                                 valign: CENTER
                                 halign: CENTER
-                                visible: bind state.playingcards.cp2.dealt
+                                visible: bind main.state.playingcards.cp2.dealt
                             }]
                         },
                         Group{
                             transform:[]
                             content:[
-                            
+                                
                             ]
                         }
                         ]
@@ -267,7 +227,7 @@ trigger on new GameTable{
                                                 startgame();
                                             }
                                         }
-                                        visible: bind (state.state==0)
+                                        visible: bind (main.state.state==0)
                                     },
                                     GroupPanel{
                                         var firstRow= Row{alignment: BASELINE}
@@ -280,7 +240,7 @@ trigger on new GameTable{
                                         rows: [firstRow,secondRow]
                                         columns: [firstColumn,secondColumn,thirdColumn,fourthColumn]
                                         
-                                        visible: bind (state.state==1)
+                                        visible: bind (main.state.state==1)
                                         
                                         content:[TextField{
                                             row: firstRow
@@ -351,10 +311,10 @@ trigger on new GameTable{
                                 content: Box {
                                     orientation: HORIZONTAL
                                     content: EditorPane{
-                                        inUpdate: bind state.busy
+                                        inUpdate: bind main.state.busy
                                         contentType: HTML
                                         editable: false
-                                        text: bind state.events
+                                        text: bind "<html><body><div style='font-size:x-small;'>{main.state.events}<div></body></html>"
                                         verticalScrollBarPolicy: AS_NEEDED
                                         maximumSize: {height: bind 0.12*screen.height width: bind 0.4*screen.width}
                                         doubleBuffered: true
@@ -374,7 +334,7 @@ operation GameTable.changeButtons(s:Integer){
 
 operation GameTable.startgame(){
     try{
-        client.startGame();
+        main.client.startGame();
     }catch(e:RemoteException){
         relogin();
     }catch(e:IllegalActionException){
@@ -389,7 +349,7 @@ operation GameTable.startgame(){
 
 operation GameTable.bet(){
     try{
-        client.bet(amount);
+        main.client.bet(amount);
     }catch(e:RemoteException){
         relogin();
     }catch(e:IllegalActionException){
@@ -404,7 +364,7 @@ operation GameTable.bet(){
 
 operation GameTable.call(){
     try{
-        client.call();
+        main.client.call();
     }catch(e:RemoteException){
         relogin();
     }catch(e:IllegalActionException){
@@ -419,7 +379,7 @@ operation GameTable.call(){
 
 operation GameTable.fold(){
     try{
-        client.fold();
+        main.client.fold();
     }catch(e:RemoteException){
         relogin();
     }catch(e:IllegalActionException){
@@ -434,7 +394,7 @@ operation GameTable.fold(){
 
 operation GameTable.check(){
     try{
-        client.check();
+        main.client.check();
     }catch(e:RemoteException){
         relogin();
     }catch(e:IllegalActionException){
@@ -449,7 +409,7 @@ operation GameTable.check(){
 
 operation GameTable.raise(){
     try{
-        client.raise(amount);
+        main.client.raise(amount);
     }catch(e:RemoteException){
         relogin();
     }catch(e:IllegalActionException){
@@ -464,7 +424,7 @@ operation GameTable.raise(){
 
 operation GameTable.allin(){
     try{
-        client.allIn();
+        main.client.allIn();
     }catch(e:RemoteException){
         relogin();
     }catch(e:IllegalActionException){
@@ -484,7 +444,7 @@ operation GameTable.relogin(){
 
 operation GameTable.leavetable(){
     try{
-        client.leaveTable();
+        main.client.leaveTable();
     }catch(e:RemoteException){
         // no op
     }catch(e:IllegalActionException){

@@ -21,6 +21,8 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.security.auth.login.LoginException;
 
@@ -56,6 +58,8 @@ public class RemoteLoginServerForRMI implements RemoteLoginServer {
 
 		return new RemotePlayerCommunication() {
 
+			private Map<RemoteAllEventsListener,RemoteAllEventsListener> listeners = new ConcurrentHashMap<RemoteAllEventsListener, RemoteAllEventsListener>();
+			
 			public void allIn() throws IllegalActionException, RemoteException {
 				p.allIn();
 			}
@@ -114,15 +118,19 @@ public class RemoteLoginServerForRMI implements RemoteLoginServer {
 
 			public void subscribeAllEventsListener(
 					RemoteAllEventsListener listener) throws RemoteException {
+				RemoteAllEventsListener wrapped = new RemoteifyingListener(listener);
 				RemoteAllEventsListener listenerStub = (RemoteAllEventsListener) UnicastRemoteObject
-						.exportObject(listener, 0);
+						.exportObject(wrapped, 0);
+				listeners.put(listener, listenerStub);
 				p.subscribeAllEventsListener(listenerStub);
 			}
 
 			public void unsubscribeAllEventsListener(
 					RemoteAllEventsListener listener) throws RemoteException {
-				p.unsubscribeAllEventsListener(listener);
-				UnicastRemoteObject.unexportObject(listener, true);
+				RemoteAllEventsListener listenerStub = listeners.get(listener);
+				p.unsubscribeAllEventsListener(listenerStub);
+				UnicastRemoteObject.unexportObject(listenerStub, true);
+				listeners.remove(listener);
 			}
 
 			@Override

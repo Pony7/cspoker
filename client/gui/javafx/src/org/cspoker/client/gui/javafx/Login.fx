@@ -22,7 +22,6 @@ import org.cspoker.client.allcommunication.LoadProvidersFromXml;
 import org.cspoker.client.gui.javafx.JavaFxClient;
 
 class Login {
-    attribute client:JavaFxClient;
     attribute main:Main inverse Main.login;
     
     attribute screen:Frame;
@@ -130,7 +129,8 @@ trigger on new Login{
 operation Login.login(){
     try{ 
         loginable = false;
-        this.client.login(connection,name,passw);
+        main.client.login(connection,name,passw);
+        main.state.myname = name;
         main.logged_in();
         loginable = true;
     }catch(e:Exception){

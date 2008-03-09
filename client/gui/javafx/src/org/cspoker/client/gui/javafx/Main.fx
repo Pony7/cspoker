@@ -45,11 +45,15 @@ import org.cspoker.common.events.serverevents.PlayerLeftEvent;
 import org.cspoker.common.events.serverevents.ServerMessageEvent;
 import org.cspoker.common.events.serverevents.TableCreatedEvent;
 import org.cspoker.client.gui.javafx.eventlisteners.EventListener;
+
 class Main{
-    attribute mainclient: JavaFxClient;
+    attribute client: JavaFxClient;
     attribute login: Login inverse Login.prog;
     attribute table_selection: TableSelection inverse TableSelection.main;
     attribute gametable: GameTable inverse GameTable.main;
+    attribute listener: EventListener inverse EventListener.main;
+    attribute state: TableState;
+    
     operation init();
     operation logged_in();
     operation relogin();
@@ -57,23 +61,17 @@ class Main{
 }
 
 operation Main.logged_in(){
-    var temp = EventListener{
-        tablestate: bind gametable.state
-        client: bind mainclient
-    };
-    mainclient.subscribeAllEvents(temp.listener);
+    listener = EventListener{};
+    this.client.subscribeAllEvents(listener.listener);
     login.screen.hide();
-    table_selection = TableSelection{
-        client: bind mainclient
-    };
-    table_selection.refresh();
+    state.tables = client.getTableList();
+    table_selection = TableSelection{};
+    table_selection.active = true;
 }
 
 operation Main.table_selected(){
     table_selection.screen.hide();
-    gametable = GameTable{
-        client: bind mainclient
-    };
+    gametable = GameTable{};
 }
 
 operation Main.relogin(){
@@ -84,9 +82,44 @@ operation Main.relogin(){
 
 Main{
     var: me
-    mainclient: new JavaFxClient()
+    client: new JavaFxClient()
     login: Login{
-        client: bind me.mainclient
+        // inverse doesn't seem to work in this case ...
         main: me
+    }
+    state: TableState{
+        state: 0
+        events: "Welcome to CSPoker!<br/>"
+        playingcards: PlayingCards{
+            c1: Card{
+                visible: false
+                dealt: false
+            }
+            c2: Card{
+                visible: false
+                dealt: false
+            }
+            c3: Card{
+                visible: false
+                dealt: false
+            }
+            c4: Card{
+                visible: false
+                dealt: false
+            }
+            c5: Card{
+                visible: false
+                dealt: false
+            }
+            cp1: Card{
+                visible: false
+                dealt: false
+            }
+            cp2: Card{
+                visible: false
+                dealt: false
+            }
+            state: 0
+        }
     }
 }
