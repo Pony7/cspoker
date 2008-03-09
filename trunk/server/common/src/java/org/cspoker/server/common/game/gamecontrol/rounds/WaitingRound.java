@@ -60,7 +60,6 @@ public class WaitingRound extends Round {
 		
 		newDealRound();
 		playerMadeEvent(player);
-		WaitingRound.logger.info("dealt");
 		// This will force the game control to end the waiting round
 		// and change to the preflop round.
 	}

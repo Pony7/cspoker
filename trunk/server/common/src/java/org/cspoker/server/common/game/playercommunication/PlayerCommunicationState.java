@@ -16,6 +16,7 @@
 package org.cspoker.server.common.game.playercommunication;
 
 import org.cspoker.common.elements.GameProperty;
+import org.cspoker.common.elements.table.SeatId;
 import org.cspoker.common.elements.table.TableId;
 import org.cspoker.common.events.serverevents.ServerMessageEvent;
 import org.cspoker.common.exceptions.IllegalActionException;
@@ -97,10 +98,12 @@ abstract class PlayerCommunicationState {
 	 *             [must] This actions is not a valid action in the current
 	 *             state.
 	 */
-	public void join(TableId id) throws IllegalActionException {
-		throw new IllegalActionException("Joining table " + id
+	public void join(TableId tableId, SeatId seatId) throws IllegalActionException {
+		throw new IllegalActionException("Joining table " + tableId
 				+ " is not a valid action. " + getStdErrorMessage());
 	}
+	
+	
 
 	public void leaveTable() throws IllegalActionException {
 		throw new IllegalActionException(

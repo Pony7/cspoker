@@ -23,8 +23,8 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.cspoker.common.elements.pots.Pots;
+import org.cspoker.common.elements.table.SeatId;
 import org.cspoker.common.events.gameevents.NextPlayerEvent;
-import org.cspoker.common.events.gameevents.PlayerJoinedGameEvent;
 import org.cspoker.common.events.gameevents.playeractionevents.BetEvent;
 import org.cspoker.common.events.gameevents.playeractionevents.CallEvent;
 import org.cspoker.common.events.gameevents.playeractionevents.CheckEvent;
@@ -34,6 +34,7 @@ import org.cspoker.common.exceptions.IllegalActionException;
 import org.cspoker.server.common.game.GameMediator;
 import org.cspoker.server.common.game.elements.table.GameTable;
 import org.cspoker.server.common.game.elements.table.PlayerListFullException;
+import org.cspoker.server.common.game.elements.table.SeatTakenException;
 import org.cspoker.server.common.game.gamecontrol.rounds.BettingRound;
 import org.cspoker.server.common.game.gamecontrol.rounds.Round;
 import org.cspoker.server.common.game.gamecontrol.rounds.WaitingRound;
@@ -94,15 +95,10 @@ public class GameControl implements PlayerAction {
 	public GameControl(GameMediator gameMediator, GameTable table, GamePlayer dealer, BettingRules rules){
 		this.gameMediator = gameMediator;
 		gameMediator.setGameControl(this);
+		
+		
 		game = new Game(table, dealer, rules);
-		round = new WaitingRound(gameMediator, game);
-		try {
-			deal(game.getDealer());
-		} catch (IllegalActionException e) {
-			e.printStackTrace();
-		}
-
-		Date date = new Date();
+		
 		GameControl.logger.info(getGame().getBettingRules()
 				.toString()
 				+ " "
@@ -111,11 +107,19 @@ public class GameControl implements PlayerAction {
 				+ "/"
 				+ table.getGameProperty().getBigBlind()
 				+ ") - "
-				+ GameControl.dateFormat.format(date));
+				+ GameControl.dateFormat.format(new Date()));
 
 		List<GamePlayer> players = game.getCurrentDealPlayers();
 		for (GamePlayer player : players) {
 			GameControl.logger.info(player.toString());
+		}
+		
+		
+		round = new WaitingRound(gameMediator, game);
+		try {
+			deal(game.getDealer());
+		} catch (IllegalActionException e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -254,7 +258,6 @@ public class GameControl implements PlayerAction {
 	 * @see PlayerAction
 	 */
 	public void deal(GamePlayer player) throws IllegalActionException {
-		GameControl.logger.info("Dealer: " + player.getName());
 		round.deal(player);
 		checkIfEndedAndChangeRound();
 	}
@@ -275,9 +278,14 @@ public class GameControl implements PlayerAction {
 		checkIfEndedAndChangeRound();
 	}
 
-	public void joinGame(GamePlayer player) throws IllegalActionException,
-			PlayerListFullException {
-		game.joinGame(player);
+	public void joinGame(SeatId seatId, GamePlayer player) throws IllegalActionException{
+		try {
+			game.joinGame(seatId, player);
+		} catch (SeatTakenException e) {
+			throw new IllegalActionException(e.getMessage());
+		} catch (PlayerListFullException e) {
+			throw new IllegalActionException(e.getMessage());
+		}
 		if(game.getNbSeatedPlayers()==2){
 			deal(game.getDealer());
 		}

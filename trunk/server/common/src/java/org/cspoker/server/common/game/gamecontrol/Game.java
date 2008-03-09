@@ -22,11 +22,13 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.cspoker.common.elements.GameProperty;
 import org.cspoker.common.elements.cards.Card;
+import org.cspoker.common.elements.table.SeatId;
 import org.cspoker.common.exceptions.IllegalActionException;
 import org.cspoker.server.common.game.elements.cards.deck.Deck;
 import org.cspoker.server.common.game.elements.chips.pot.GamePots;
-import org.cspoker.server.common.game.elements.table.PlayerListFullException;
 import org.cspoker.server.common.game.elements.table.GameTable;
+import org.cspoker.server.common.game.elements.table.PlayerListFullException;
+import org.cspoker.server.common.game.elements.table.SeatTakenException;
 import org.cspoker.server.common.game.gamecontrol.rules.BettingRules;
 import org.cspoker.server.common.game.gamecontrol.rules.NoLimit;
 import org.cspoker.server.common.game.player.GamePlayer;
@@ -508,10 +510,16 @@ public class Game {
 	 * Leave/Join Game
 	 * 
 	 * @throws PlayerListFullException
+	 * @throws SeatTakenException 
+	 * @throws PlayerListFullException 
 	 **************************************************************************/
 
-	public void joinGame(GamePlayer player) throws PlayerListFullException {
-		table.addPlayer(player);
+	public void joinGame(SeatId seatId, GamePlayer player) throws SeatTakenException, PlayerListFullException {
+		if(seatId==null){
+			table.addPlayer(player);
+		}else{
+			table.addPlayer(seatId, player);
+		}
 		if (getDealer() == null) {
 			setDealer(player);
 		} else if (getNextDealer() == null) {
