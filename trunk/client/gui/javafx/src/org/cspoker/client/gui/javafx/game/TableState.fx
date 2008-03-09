@@ -29,5 +29,6 @@ class TableState {
     attribute tablename:String;
     attribute myname:String;
     
-    attribute tables: TableInterface*;
+    attribute tables: FXTable*;
+    
 }

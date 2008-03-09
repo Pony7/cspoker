@@ -64,7 +64,7 @@ operation Main.logged_in(){
     listener = EventListener{};
     this.client.subscribeAllEvents(listener.listener);
     login.screen.hide();
-    state.tables = client.getTableList();
+    state.tables = FXTable{}.toFXTable(client.getTableList());
     table_selection = TableSelection{};
     table_selection.active = true;
 }

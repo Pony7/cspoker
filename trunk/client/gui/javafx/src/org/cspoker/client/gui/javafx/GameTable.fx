@@ -75,7 +75,7 @@ trigger on new GameTable{
                 items:[
                 MenuItem{
                     sizeToFitRow: true
-                    text: "Logout"
+                    text: "Logout {main.state.myname}"
                     mnemonic: L
                     action: operation() {
                         relogin();
@@ -185,7 +185,7 @@ trigger on new GameTable{
                                 visible: bind main.state.playingcards.c5.dealt
                             }]
                         },Group{
-                            transform: translate(padx+sqrh/2+sqrw/2, pady+sqrh)
+                            transform: translate(padx+sqrh/2+sqrw/2, pady+sqrh-20)
                             content: [ImageView {
                                 transform:  translate(-25,0)
                                 image: Image { url: bind main.state.playingcards.getCard( main.state.playingcards.cp1) }
@@ -198,6 +198,15 @@ trigger on new GameTable{
                                 valign: CENTER
                                 halign: CENTER
                                 visible: bind main.state.playingcards.cp2.dealt
+                            }]
+                        },Group{
+                            transform: translate(padx+sqrh/2+sqrw/2, pady+sqrh+35)
+                            content: [Text {
+                                content: bind main.state.myname
+                                font: new Font("Tahoma", "PLAIN",11)
+                                fill: orange
+                                strokeWidth: 0
+                                halign: CENTER
                             }]
                         },
                         Group{

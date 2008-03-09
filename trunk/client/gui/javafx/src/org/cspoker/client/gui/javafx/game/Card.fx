@@ -16,7 +16,6 @@
 package org.cspoker.client.gui.javafx.game;
 
 import java.lang.*;
-import javafx.ui.*;
 
 class Card {
     attribute rank:String;

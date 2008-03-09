@@ -17,12 +17,9 @@ package org.cspoker.client.gui.javafx;
 
 import java.rmi.ConnectException;
 import java.rmi.RemoteException;
-import java.util.List;
 
 import java.util.Set;
 import javax.security.auth.login.LoginException;
-import org.cspoker.client.gui.javafx.elements.TableInterface;
-import org.cspoker.client.gui.javafx.elements.TableImpl;
 import org.cspoker.client.rmi.RemotePlayerCommunicationFactoryForRMI;
 import org.cspoker.client.xml.http.RemotePlayerCommunicationFactoryForHttp;
 import org.cspoker.client.xml.sockets.RemotePlayerCommunicationFactoryForSocket;
@@ -61,6 +58,7 @@ public class JavaFxClient {
     public void login(String connection, String userName, String password) {
         this.user = new User(userName);
         createCommunication(connection, userName, password);
+        System.out.println("Logged in as "+userName);
     }
 
     public void subscribeAllEvents(org.cspoker.common.eventlisteners.RemoteAllEventsListener listener) throws java.rmi.RemoteException {
@@ -169,13 +167,13 @@ public class JavaFxClient {
         rpc.say(message);
     }
 
-    public Table joinTable(long n) throws IllegalActionException, RemoteException {
-        System.out.println("joined table " + n);
-        return rpc.joinTable(new TableId(n));
+    public Table joinTable(TableId id) throws IllegalActionException, RemoteException {
+        System.out.println("joined table " + id);
+        return rpc.joinTable(id);
     }
     
-    public Table getTable(long n) throws IllegalActionException, RemoteException {
-        return rpc.getTable(new TableId(n));
+    public Table getTable(TableId id) throws IllegalActionException, RemoteException {
+        return rpc.getTable(id);
     }
 
     public void leaveTable() throws RemoteException, IllegalActionException {
@@ -184,36 +182,20 @@ public class JavaFxClient {
 
     public Table createTable(String name) throws RemoteException, IllegalActionException {
         System.out.println("creating table "+name);
-        System.out.println("rpc is "+rpc);
-        try{TableId id = rpc.createTable(name);
-        System.out.println("created tableid "+id);
+        TableId id = rpc.createTable(name);
         return rpc.getTable(id);
-        }catch(Exception e){
-            e.printStackTrace();
-            return null;
-        }
+
     }
 
     public void startGame() throws RemoteException, IllegalActionException {
         rpc.startGame();
     }
 
-    public TableInterface[] getTableList() throws RemoteException {
-        final List<Table> tables = rpc.getTables().getTables();
-        TableInterface[] r = new TableInterface[tables.size()];
-        for (int i = 0; i < r.length; i++) {
-            Table t = tables.get(i);
-            r[i] = new TableImpl(t.getId().getID(), t.getName(), t.getNbPlayers(), t.getGameProperty().getSmallBlind(), t.getGameProperty().getBigBlind());
-        }
-        return r;
+    public Table[] getTableList() throws RemoteException {
+        return rpc.getTables().getTables().toArray(new Table[rpc.getTables().getTables().size()]);
     }
 
     public Card[] toArray(Set<Card> cards) {
         return cards.toArray(new Card[cards.size()]);
-    }
-    
-    public TableInterface getTableInterface(TableId id) throws IllegalActionException, RemoteException{
-        Table t = rpc.getTable(id);
-        return new TableImpl(t.getId().getID(), t.getName(), t.getNbPlayers(), t.getGameProperty().getSmallBlind(), t.getGameProperty().getBigBlind()); 
     }
 }

@@ -16,7 +16,6 @@
 package org.cspoker.client.gui.javafx;
 import javafx.ui.*;
 import java.lang.*;
-import org.cspoker.client.gui.javafx.elements.TableInterface;
 import java.rmi.RemoteException;
 import org.cspoker.common.exceptions.IllegalActionException;
 
@@ -50,7 +49,7 @@ trigger on new TableSelection{
                 items:[
                 MenuItem{
                     sizeToFitRow: true
-                    text: "Logout"
+                    text: bind "Logout {main.state.myname}"
                     mnemonic: L
                     action: operation() {
                         relogin();
@@ -84,17 +83,17 @@ trigger on new TableSelection{
                 }]
                 cells: bind foreach(t in main.state.tables)
                 [TableCell {
-                    value: t.getId()
-                    text: t.getId().toString()
+                    value: bind t.id
+                    text: bind t.id.getID().toString()
                 },
                 TableCell {
-                    text: t.getName()
+                    text: bind t.name
                 },
                 TableCell{
-                    text: t.getNbPlayers().toString()
+                    text: bind t.nbPlayers.toString()
                 },
                 TableCell{
-                    text: "{t.getSmallBlind().toString()}/{t.getBigBlind().toString()}"
+                    text: bind "{t.smallBlind}/{t.bigBlind}"
                 }]
             }
             top:FlowPanel{
@@ -130,8 +129,8 @@ operation TableSelection.relogin(){
 operation TableSelection.join_table(){
     active = false;
     try{
-        main.client.joinTable(selection);
-        main.state.tablename = main.state.tables[selection].getName();
+        main.client.joinTable(main.state.tables[selection].id);
+        main.state.tablename = main.state.tables[selection].name;
         main.table_selected();
     }catch(e:RemoteException){
         relogin();
