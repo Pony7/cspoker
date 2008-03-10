@@ -26,33 +26,48 @@ class PlayerNode extends CompositeNode {
     attribute player: Player;
 }
 
-function PlayerNode.composeNode() =
-Group {
-    content:
-        [Group{
-        transform: translate(0, -5)
-        content: [ImageView {
-            transform:  translate(-25,0)
-            image: Image { url: bind player.cards[0].getImage() }
-            valign: BOTTOM
-            halign: CENTER
-            visible: bind player.cards[0].dealt
-        },ImageView {
-            transform:  translate(25,0)
-            image: Image { url: bind player.cards[1].getImage() }
-            valign: BOTTOM
-            halign: CENTER
-            visible: bind player.cards[1].dealt
+function PlayerNode.composeNode(){
+    return if(player.seated) then
+    Group {
+        content:
+            [Group{
+            transform: translate(0, -5)
+            content: [ImageView {
+                transform:  translate(-25,0)
+                image: Image { url: bind player.cards[0].getImage() }
+                valign: BOTTOM
+                halign: CENTER
+                visible: bind player.cards[0].dealt
+            },ImageView {
+                transform:  translate(25,0)
+                image: Image { url: bind player.cards[1].getImage() }
+                valign: BOTTOM
+                halign: CENTER
+                visible: bind player.cards[1].dealt
+            }]
+        },Group{
+            transform: translate(0, 5)
+            content: [Text {
+                content: bind player.name
+                font: new Font("Tahoma", "PLAIN",12)
+                fill: orange
+                halign: CENTER
+                valign: TOP
+            }]
         }]
-    },Group{
-        transform: translate(0, 5)
-        content: [Text {
-            content: bind player.name
-            font: new Font("Tahoma", "PLAIN",12)
-            fill: orange
-            halign: CENTER
-            valign: TOP
-        }]
-    }]
+    }
+    else
+        Group {
+            content:
+                [Group{
+                transform: translate(0, 5)
+                content: [Text {
+                    content: "?"
+                    font: new Font("Tahoma", "PLAIN",12)
+                    fill: orange
+                    halign: CENTER
+                    valign: TOP
+                }]
+            }]
+        };
 }
-;

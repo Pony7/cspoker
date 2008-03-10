@@ -13,11 +13,11 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.client.gui.javafx.game;
+package org.cspoker.client.gui.javafx.views;
 
 import java.lang.*;
 
-class Card {
+class CardView {
     attribute rank:String;
     attribute suit:String;
     attribute dealt:Boolean;
@@ -26,7 +26,7 @@ class Card {
     function getImage():String;
 }
 
-function Card.getImage(){
+function CardView.getImage(){
     return if(visible) then
         "./org/cspoker/client/gui/javafx/images/cards/simple/simple_{suit}_{rank}.svg.png"
     else

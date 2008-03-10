@@ -10,7 +10,7 @@ import org.cspoker.common.events.gameevents.NewCommunityCardsEvent;
 import org.cspoker.common.events.gameevents.NewDealEvent;
 import org.cspoker.common.events.gameevents.NewRoundEvent;
 import org.cspoker.common.events.gameevents.NextPlayerEvent;
-import org.cspoker.common.events.gameevents.PlayerJoinedGameEvent;
+import org.cspoker.common.events.gameevents.PlayerJoinedTableEvent;
 import org.cspoker.common.events.gameevents.PlayerLeftTableEvent;
 import org.cspoker.common.events.gameevents.ShowHandEvent;
 import org.cspoker.common.events.gameevents.WinnerEvent;
@@ -23,8 +23,6 @@ import org.cspoker.common.events.gameevents.playeractionevents.FoldEvent;
 import org.cspoker.common.events.gameevents.playeractionevents.RaiseEvent;
 import org.cspoker.common.events.gameevents.playeractionevents.SmallBlindEvent;
 import org.cspoker.common.events.gameevents.privateevents.NewPocketCardsEvent;
-import org.cspoker.common.events.serverevents.PlayerJoinedEvent;
-import org.cspoker.common.events.serverevents.PlayerLeftEvent;
 import org.cspoker.common.events.serverevents.ServerMessageEvent;
 import org.cspoker.common.events.serverevents.TableCreatedEvent;
 import org.cspoker.server.common.game.session.SessionManager;
@@ -242,21 +240,6 @@ public class AsynchronousListener implements RemoteAllEventsListener {
 		});
 	}
 
-	@Override
-	public void onPlayerJoinedGameEvent(final PlayerJoinedGameEvent event)
-			throws RemoteException {
-		executor.submit(new Runnable(){
-			@Override
-			public void run() {
-				try {
-					listener.onPlayerJoinedGameEvent(event);
-				} catch (RemoteException e) {
-					logger.error(e);
-					SessionManager.global_session_manager.killSession(name);
-				}
-			}
-		});
-	}
 
 	@Override
 	public void onPlayerLeftTableEvent(final PlayerLeftTableEvent event)
@@ -321,37 +304,6 @@ public class AsynchronousListener implements RemoteAllEventsListener {
 	}
 
 	@Override
-	public void onPlayerJoinedEvent(final PlayerJoinedEvent event)
-			throws RemoteException {
-		executor.submit(new Runnable(){
-			@Override
-			public void run() {
-				try {
-					listener.onPlayerJoinedEvent(event);
-				} catch (RemoteException e) {
-					logger.error(e);
-					SessionManager.global_session_manager.killSession(name);
-				}
-			}
-		});
-	}
-
-	@Override
-	public void onPlayerLeftEvent(final PlayerLeftEvent event) throws RemoteException {
-		executor.submit(new Runnable(){
-			@Override
-			public void run() {
-				try {
-					listener.onPlayerLeftEvent(event);
-				} catch (RemoteException e) {
-					logger.error(e);
-					SessionManager.global_session_manager.killSession(name);
-				}
-			}
-		});
-	}
-
-	@Override
 	public void onTableCreatedEvent(final TableCreatedEvent event)
 			throws RemoteException {
 		executor.submit(new Runnable(){
@@ -375,6 +327,22 @@ public class AsynchronousListener implements RemoteAllEventsListener {
 			public void run() {
 				try {
 					listener.onServerMessageEvent(event);
+				} catch (RemoteException e) {
+					logger.error(e);
+					SessionManager.global_session_manager.killSession(name);
+				}
+			}
+		});
+	}
+
+	@Override
+	public void onPlayerJoinedGameEvent(final PlayerJoinedTableEvent event)
+			throws RemoteException {
+		executor.submit(new Runnable(){
+			@Override
+			public void run() {
+				try {
+					listener.onPlayerJoinedGameEvent(event);
 				} catch (RemoteException e) {
 					logger.error(e);
 					SessionManager.global_session_manager.killSession(name);

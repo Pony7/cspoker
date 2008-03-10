@@ -43,7 +43,6 @@ trigger on new CreateTable{
         content: BorderPanel{
             center:GroupPanel{
                 var singleRow= Row{alignment: BASELINE}
-                
                 var labelsColumn= Column{ alignment:TRAILING}
                 var fieldsColumn= Column {alignment:LEADING resizable:true }
                 

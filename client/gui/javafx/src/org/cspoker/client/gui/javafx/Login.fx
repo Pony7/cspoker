@@ -91,7 +91,7 @@ trigger on new Login{
                 TextField{
                     row: usernameRow
                     column: fieldsColumn
-                    value: bind main.state.me.name
+                    value: bind main.state.myname
                 },
                 SimpleLabel{
                     row: passwRow

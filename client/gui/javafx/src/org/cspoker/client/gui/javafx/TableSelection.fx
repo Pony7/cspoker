@@ -18,6 +18,8 @@ import javafx.ui.*;
 import java.lang.*;
 import java.rmi.RemoteException;
 import org.cspoker.common.exceptions.IllegalActionException;
+import org.cspoker.common.elements.table.Table as JavaTable;
+import org.cspoker.common.elements.table.TableId;
 
 class TableSelection {
     attribute main: Main inverse Main.table_selection;
@@ -29,12 +31,11 @@ class TableSelection {
     
     operation join_table();
     operation create_table(name:String);
-    operation refresh();
     operation relogin();
 }
 
 trigger on new TableSelection{
-    active = false;
+    active = true;
     screen=Frame{
         title: "Tables"
         width: 450
@@ -49,7 +50,7 @@ trigger on new TableSelection{
                 items:[
                 MenuItem{
                     sizeToFitRow: true
-                    text: bind "Logout {main.state.me.name}"
+                    text: bind "Logout {main.state.myname}"
                     mnemonic: L
                     action: operation() {
                         relogin();
@@ -83,7 +84,6 @@ trigger on new TableSelection{
                 }]
                 cells: bind foreach(t in main.state.tables)
                 [TableCell {
-                    value: bind t.id
                     text: bind t.id.getID().toString()
                 },
                 TableCell {
@@ -129,8 +129,9 @@ operation TableSelection.relogin(){
 operation TableSelection.join_table(){
     active = false;
     try{
-        main.client.joinTable(main.state.tables[selection].id);
-        main.state.tablename = main.state.tables[selection].name;
+        var table = main.client.joinTable(main.state.tables[selection].id);
+        main.state.tables[selection] = TableView{}.toTableView(table);
+        main.state.mytable.state=1;
         main.table_selected();
     }catch(e:RemoteException){
         relogin();
@@ -148,8 +149,9 @@ operation TableSelection.join_table(){
 operation TableSelection.create_table(name:String){
     active = false;
     try{
-        main.client.createTable(name);
-        main.state.tablename = name;
+        var table = main.client.createTable(name);
+        insert TableView{}.toTableView(table) as last into main.state.tables;
+        main.state.mytable.state=0;
         main.table_selected();
     }catch(e:RemoteException){
         relogin();

@@ -13,23 +13,35 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.client.gui.javafx.game;
+package org.cspoker.client.gui.javafx.views;
 
 import org.cspoker.client.gui.javafx.*;
 import java.lang.*;
 import org.cspoker.client.gui.javafx.game.*;
-import org.cspoker.client.gui.javafx.elements.*;
+import org.cspoker.client.gui.javafx.views.*;
+import org.cspoker.common.elements.table.Table;
 
-class TableState {
-    attribute state:Integer;
+class GameView {
     attribute events:String;
-    attribute cards:Card*;
     attribute busy:Boolean;
-    attribute tablename:String;
     
+    attribute myname:String?;
+    attribute mytableid:TableId?;
+    
+    function mytable:FXTable;
+    function me:Player;
+        
     attribute tables: FXTable*;
-    
-    attribute me:Player;
-    
-    attribute players:Player*;
+}
+
+function GameView.me{
+    var playerindex = select indexof player from player in mytable.players 
+                                                        where player.name.equals(myname);
+    return mytable.players[playerindex];
+}
+
+function GameView.mytable{
+    var tableindex = select indexof t from t in tables
+                              where t.getId().equals(mytableid);
+    return tables[tableindex];
 }
