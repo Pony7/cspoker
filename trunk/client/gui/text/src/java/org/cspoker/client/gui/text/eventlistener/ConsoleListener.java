@@ -22,7 +22,7 @@ import org.cspoker.common.events.gameevents.NewCommunityCardsEvent;
 import org.cspoker.common.events.gameevents.NewDealEvent;
 import org.cspoker.common.events.gameevents.NewRoundEvent;
 import org.cspoker.common.events.gameevents.NextPlayerEvent;
-import org.cspoker.common.events.gameevents.PlayerJoinedGameEvent;
+import org.cspoker.common.events.gameevents.PlayerJoinedTableEvent;
 import org.cspoker.common.events.gameevents.PlayerLeftTableEvent;
 import org.cspoker.common.events.gameevents.ShowHandEvent;
 import org.cspoker.common.events.gameevents.WinnerEvent;
@@ -35,8 +35,6 @@ import org.cspoker.common.events.gameevents.playeractionevents.FoldEvent;
 import org.cspoker.common.events.gameevents.playeractionevents.RaiseEvent;
 import org.cspoker.common.events.gameevents.playeractionevents.SmallBlindEvent;
 import org.cspoker.common.events.gameevents.privateevents.NewPocketCardsEvent;
-import org.cspoker.common.events.serverevents.PlayerJoinedEvent;
-import org.cspoker.common.events.serverevents.PlayerLeftEvent;
 import org.cspoker.common.events.serverevents.ServerMessageEvent;
 import org.cspoker.common.events.serverevents.TableCreatedEvent;
 
@@ -113,7 +111,7 @@ public class ConsoleListener implements RemoteAllEventsListener {
 
 	}
 
-	public void onPlayerJoinedGameEvent(PlayerJoinedGameEvent event) {
+	public void onPlayerJoinedGameEvent(PlayerJoinedTableEvent event) {
 		console.print(event.toString());
 
 	}
@@ -134,16 +132,6 @@ public class ConsoleListener implements RemoteAllEventsListener {
 	}
 
 	public void onGameMessageEvent(GameMessageEvent event) {
-		console.print(event.toString());
-
-	}
-
-	public void onPlayerJoinedEvent(PlayerJoinedEvent event) {
-		console.print(event.toString());
-
-	}
-
-	public void onPlayerLeftEvent(PlayerLeftEvent event) {
 		console.print(event.toString());
 
 	}
