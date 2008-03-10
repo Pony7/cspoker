@@ -91,16 +91,16 @@ class PlayingState extends PlayerCommunicationState {
 
 	@Override
 	public void leaveTable() throws IllegalActionException {
-		// TODO if playing, fold?
-		gameMediator.leaveGame(playerCommunication.getPlayer());
-		GameManager.getServerMediator().publishPlayerLeftEvent(new PlayerLeftEvent(playerCommunication.getPlayer().getSavedPlayer(), gameMediator.getId()));
 		gameMediator.unsubscribeAllGameEventsListener(playerCommunication
 				.getId(), playerCommunication.getAllEventsListener());
+		gameMediator.leaveGame(playerCommunication.getPlayer());
+		GameManager.getServerMediator().publishPlayerLeftEvent(new PlayerLeftEvent(playerCommunication.getPlayer().getSavedPlayer(), gameMediator.getId()));
 		GameManager.getServerMediator().subscribeAllServerEventsListener(
 				playerCommunication.getId(),
 				playerCommunication.getAllEventsListener());
 		playerCommunication.setPlayerCommunicationState(new InitialState(
 				playerCommunication));
+
 	}
 
 	@Override

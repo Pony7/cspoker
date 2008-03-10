@@ -33,7 +33,9 @@ import org.cspoker.common.events.gameevents.playeractionevents.CheckEvent;
 import org.cspoker.common.events.gameevents.playeractionevents.FoldEvent;
 import org.cspoker.common.events.gameevents.playeractionevents.RaiseEvent;
 import org.cspoker.common.exceptions.IllegalActionException;
+import org.cspoker.server.common.game.GameManager;
 import org.cspoker.server.common.game.GameMediator;
+import org.cspoker.server.common.game.TableManager;
 import org.cspoker.server.common.game.elements.table.GameTable;
 import org.cspoker.server.common.game.elements.table.PlayerListFullException;
 import org.cspoker.server.common.game.elements.table.SeatTakenException;
@@ -301,8 +303,13 @@ public class GameControl implements PlayerAction {
 		round.foldAction(player);
 		game.leaveGame(player);
 		gameMediator.publishPlayerLeftTable(new PlayerLeftTableEvent(player.getSavedPlayer()));
-		if(checkForRoundEnded)
-			checkIfEndedAndChangeRound();
+		if(game.getNbSeatedPlayers()==0){
+			TableManager.global_table_manager.removeTable(game.getTable());
+			GameManager.removeGame(game.getTable().getId());
+		}else{
+			if(checkForRoundEnded)
+				checkIfEndedAndChangeRound();
+		}
 	}
 
 	/***************************************************************************
