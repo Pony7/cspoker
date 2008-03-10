@@ -29,7 +29,7 @@ import org.cspoker.common.events.gameevents.NewCommunityCardsEvent;
 import org.cspoker.common.events.gameevents.NewDealEvent;
 import org.cspoker.common.events.gameevents.NewRoundEvent;
 import org.cspoker.common.events.gameevents.NextPlayerEvent;
-import org.cspoker.common.events.gameevents.PlayerJoinedGameEvent;
+import org.cspoker.common.events.gameevents.PlayerJoinedTableEvent;
 import org.cspoker.common.events.gameevents.PlayerLeftTableEvent;
 import org.cspoker.common.events.gameevents.ShowHandEvent;
 import org.cspoker.common.events.gameevents.WinnerEvent;
@@ -42,8 +42,6 @@ import org.cspoker.common.events.gameevents.playeractionevents.FoldEvent;
 import org.cspoker.common.events.gameevents.playeractionevents.RaiseEvent;
 import org.cspoker.common.events.gameevents.playeractionevents.SmallBlindEvent;
 import org.cspoker.common.events.gameevents.privateevents.NewPocketCardsEvent;
-import org.cspoker.common.events.serverevents.PlayerJoinedEvent;
-import org.cspoker.common.events.serverevents.PlayerLeftEvent;
 import org.cspoker.common.events.serverevents.ServerMessageEvent;
 import org.cspoker.common.events.serverevents.TableCreatedEvent;
 import org.cspoker.common.exceptions.IllegalActionException;
@@ -138,7 +136,7 @@ public class TestSockets {
 
 				}
 
-				public void onPlayerJoinedGameEvent(PlayerJoinedGameEvent event) {
+				public void onPlayerJoinedGameEvent(PlayerJoinedTableEvent event) {
 					System.out.println(event.toString());
 
 				}
@@ -163,15 +161,6 @@ public class TestSockets {
 
 				}
 
-				public void onPlayerJoinedEvent(PlayerJoinedEvent event) {
-					System.out.println(event.toString());
-
-				}
-
-				public void onPlayerLeftEvent(PlayerLeftEvent event) {
-					System.out.println(event.toString());
-
-				}
 
 				public void onTableCreatedEvent(TableCreatedEvent event) {
 					System.out.println(event.toString());
