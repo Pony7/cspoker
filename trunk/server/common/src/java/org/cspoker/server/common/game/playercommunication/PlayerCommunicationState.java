@@ -132,21 +132,6 @@ abstract class PlayerCommunicationState {
 						+ getStdErrorMessage());
 	}
 
-	/***************************************************************************
-	 * Actions list
-	 **************************************************************************/
-	public Events getLatestEvents() throws IllegalActionException {
-		throw new IllegalActionException(
-				"Requesting the latest game events is not a valid action. "
-						+ getStdErrorMessage());
-	}
-
-	public Events getLatestEventsAndAck(int ack) throws IllegalActionException {
-		throw new IllegalActionException(
-				"Requesting the latest game events is not a valid action. "
-						+ getStdErrorMessage());
-	}
-
 	protected abstract String getStdErrorMessage();
 
 	public abstract void kill();
