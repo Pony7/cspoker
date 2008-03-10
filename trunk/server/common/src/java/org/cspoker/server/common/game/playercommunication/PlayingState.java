@@ -16,7 +16,6 @@
 package org.cspoker.server.common.game.playercommunication;
 
 import org.cspoker.common.events.gameevents.GameMessageEvent;
-import org.cspoker.common.events.serverevents.PlayerLeftEvent;
 import org.cspoker.common.exceptions.IllegalActionException;
 import org.cspoker.server.common.game.GameManager;
 import org.cspoker.server.common.game.GameMediator;
@@ -94,7 +93,6 @@ class PlayingState extends PlayerCommunicationState {
 		gameMediator.unsubscribeAllGameEventsListener(playerCommunication
 				.getId(), playerCommunication.getAllEventsListener());
 		gameMediator.leaveGame(playerCommunication.getPlayer());
-		GameManager.getServerMediator().publishPlayerLeftEvent(new PlayerLeftEvent(playerCommunication.getPlayer().getSavedPlayer(), gameMediator.getId()));
 		GameManager.getServerMediator().subscribeAllServerEventsListener(
 				playerCommunication.getId(),
 				playerCommunication.getAllEventsListener());

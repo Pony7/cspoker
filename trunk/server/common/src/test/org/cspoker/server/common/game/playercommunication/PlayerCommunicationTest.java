@@ -33,7 +33,7 @@ import org.cspoker.common.events.gameevents.NewCommunityCardsEvent;
 import org.cspoker.common.events.gameevents.NewDealEvent;
 import org.cspoker.common.events.gameevents.NewRoundEvent;
 import org.cspoker.common.events.gameevents.NextPlayerEvent;
-import org.cspoker.common.events.gameevents.PlayerJoinedGameEvent;
+import org.cspoker.common.events.gameevents.PlayerJoinedTableEvent;
 import org.cspoker.common.events.gameevents.PlayerLeftTableEvent;
 import org.cspoker.common.events.gameevents.ShowHandEvent;
 import org.cspoker.common.events.gameevents.WinnerEvent;
@@ -46,8 +46,6 @@ import org.cspoker.common.events.gameevents.playeractionevents.FoldEvent;
 import org.cspoker.common.events.gameevents.playeractionevents.RaiseEvent;
 import org.cspoker.common.events.gameevents.playeractionevents.SmallBlindEvent;
 import org.cspoker.common.events.gameevents.privateevents.NewPocketCardsEvent;
-import org.cspoker.common.events.serverevents.PlayerJoinedEvent;
-import org.cspoker.common.events.serverevents.PlayerLeftEvent;
 import org.cspoker.common.events.serverevents.ServerMessageEvent;
 import org.cspoker.common.events.serverevents.TableCreatedEvent;
 import org.cspoker.common.exceptions.IllegalActionException;
@@ -344,7 +342,7 @@ public class PlayerCommunicationTest extends TestCase {
 		}
 
 		@Override
-		public void onPlayerJoinedGameEvent(PlayerJoinedGameEvent event)
+		public void onPlayerJoinedGameEvent(PlayerJoinedTableEvent event)
 				throws RemoteException {
 			// TODO Auto-generated method stub
 
@@ -371,20 +369,6 @@ public class PlayerCommunicationTest extends TestCase {
 
 		@Override
 		public void onGameMessageEvent(GameMessageEvent event)
-				throws RemoteException {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void onPlayerJoinedEvent(PlayerJoinedEvent event)
-				throws RemoteException {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void onPlayerLeftEvent(PlayerLeftEvent event)
 				throws RemoteException {
 			// TODO Auto-generated method stub
 
@@ -485,7 +469,7 @@ public class PlayerCommunicationTest extends TestCase {
 		}
 
 		@Override
-		public void onPlayerJoinedGameEvent(PlayerJoinedGameEvent event)
+		public void onPlayerJoinedGameEvent(PlayerJoinedTableEvent event)
 				throws RemoteException {
 			events.add(event);
 		}
@@ -508,18 +492,6 @@ public class PlayerCommunicationTest extends TestCase {
 
 		@Override
 		public void onGameMessageEvent(GameMessageEvent event)
-				throws RemoteException {
-			events.add(event);
-		}
-
-		@Override
-		public void onPlayerJoinedEvent(PlayerJoinedEvent event)
-				throws RemoteException {
-			events.add(event);
-		}
-
-		@Override
-		public void onPlayerLeftEvent(PlayerLeftEvent event)
 				throws RemoteException {
 			events.add(event);
 		}
