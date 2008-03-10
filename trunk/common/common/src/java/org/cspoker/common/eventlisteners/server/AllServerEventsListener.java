@@ -16,7 +16,7 @@
 package org.cspoker.common.eventlisteners.server;
 
 public interface AllServerEventsListener extends RemoteAllServerEventsListener,
-		PlayerJoinedListener, PlayerLeftListener, TableCreatedListener,
+		TableCreatedListener,
 		ServerMessageListener {
 
 }

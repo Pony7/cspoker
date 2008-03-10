@@ -25,7 +25,7 @@ import org.cspoker.common.events.gameevents.NewCommunityCardsEvent;
 import org.cspoker.common.events.gameevents.NewDealEvent;
 import org.cspoker.common.events.gameevents.NewRoundEvent;
 import org.cspoker.common.events.gameevents.NextPlayerEvent;
-import org.cspoker.common.events.gameevents.PlayerJoinedGameEvent;
+import org.cspoker.common.events.gameevents.PlayerJoinedTableEvent;
 import org.cspoker.common.events.gameevents.PlayerLeftTableEvent;
 import org.cspoker.common.events.gameevents.ShowHandEvent;
 import org.cspoker.common.events.gameevents.WinnerEvent;
@@ -38,8 +38,6 @@ import org.cspoker.common.events.gameevents.playeractionevents.FoldEvent;
 import org.cspoker.common.events.gameevents.playeractionevents.RaiseEvent;
 import org.cspoker.common.events.gameevents.playeractionevents.SmallBlindEvent;
 import org.cspoker.common.events.gameevents.privateevents.NewPocketCardsEvent;
-import org.cspoker.common.events.serverevents.PlayerJoinedEvent;
-import org.cspoker.common.events.serverevents.PlayerLeftEvent;
 import org.cspoker.common.events.serverevents.ServerMessageEvent;
 import org.cspoker.common.events.serverevents.TableCreatedEvent;
 
@@ -203,7 +201,7 @@ public class SpreadingAllEventsListener implements RemoteAllEventsListener {
 	}
 
 	@Override
-	public void onPlayerJoinedGameEvent(PlayerJoinedGameEvent event) {
+	public void onPlayerJoinedGameEvent(PlayerJoinedTableEvent event) {
 		for (RemoteAllEventsListener listener : listeners) {
 			try {
 				listener.onPlayerJoinedGameEvent(event);
@@ -251,28 +249,6 @@ public class SpreadingAllEventsListener implements RemoteAllEventsListener {
 		for (RemoteAllEventsListener listener : listeners) {
 			try {
 				listener.onGameMessageEvent(event);
-			} catch (RemoteException e) {
-				handle(listener, e);
-			}
-		}
-	}
-
-	@Override
-	public void onPlayerJoinedEvent(PlayerJoinedEvent event) {
-		for (RemoteAllEventsListener listener : listeners) {
-			try {
-				listener.onPlayerJoinedEvent(event);
-			} catch (RemoteException e) {
-				handle(listener, e);
-			}
-		}
-	}
-
-	@Override
-	public void onPlayerLeftEvent(PlayerLeftEvent event) {
-		for (RemoteAllEventsListener listener : listeners) {
-			try {
-				listener.onPlayerLeftEvent(event);
 			} catch (RemoteException e) {
 				handle(listener, e);
 			}
