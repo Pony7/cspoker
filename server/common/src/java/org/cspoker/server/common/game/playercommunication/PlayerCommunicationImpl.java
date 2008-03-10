@@ -229,13 +229,13 @@ public class PlayerCommunicationImpl extends PlayerCommunication {
 	}
 
 	@Override
-	public TableId createTable(String name) throws IllegalActionException {
+	public Table createTable(String name) throws IllegalActionException {
 		return state.createTable(name);
 	}
 	
 
 	@Override
-	public TableId createTable(String name, GameProperty property)
+	public Table createTable(String name, GameProperty property)
 			throws IllegalActionException {
 		return state.createTable(name, property);
 	}
