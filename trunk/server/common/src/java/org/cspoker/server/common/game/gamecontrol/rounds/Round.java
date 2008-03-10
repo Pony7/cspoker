@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.cspoker.common.events.gameevents.NewDealEvent;
+import org.cspoker.common.events.gameevents.PlayerLeftTableEvent;
 import org.cspoker.common.exceptions.IllegalActionException;
 import org.cspoker.common.player.Player;
 import org.cspoker.server.common.game.GameMediator;
@@ -195,6 +196,9 @@ public abstract class Round implements PlayerAction {
 		throw new IllegalActionException(player.getName()
 				+ " can not fold in this round.");
 	}
+	
+	public void foldAction(GamePlayer player) throws IllegalActionException{
+	}
 
 	/**
 	 * The player who the dealer-button has been dealt to can choose to start
@@ -276,6 +280,7 @@ public abstract class Round implements PlayerAction {
 			if (player.getStack().getValue() == 0) {
 				try {
 					getGame().leaveGame(player);
+					gameMediator.publishPlayerLeftTable(new PlayerLeftTableEvent(player.getSavedPlayer()));
 				} catch (IllegalActionException e) {
 					throw new IllegalStateException();
 				}

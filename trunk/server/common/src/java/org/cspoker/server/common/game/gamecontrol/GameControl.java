@@ -25,6 +25,8 @@ import org.apache.log4j.Logger;
 import org.cspoker.common.elements.pots.Pots;
 import org.cspoker.common.elements.table.SeatId;
 import org.cspoker.common.events.gameevents.NextPlayerEvent;
+import org.cspoker.common.events.gameevents.PlayerJoinedGameEvent;
+import org.cspoker.common.events.gameevents.PlayerLeftTableEvent;
 import org.cspoker.common.events.gameevents.playeractionevents.BetEvent;
 import org.cspoker.common.events.gameevents.playeractionevents.CallEvent;
 import org.cspoker.common.events.gameevents.playeractionevents.CheckEvent;
@@ -281,21 +283,23 @@ public class GameControl implements PlayerAction {
 	public void joinGame(SeatId seatId, GamePlayer player) throws IllegalActionException{
 		try {
 			game.joinGame(seatId, player);
+			gameMediator.publishPlayerJoinedGame(new PlayerJoinedGameEvent(player
+					.getSavedPlayer()));
 		} catch (SeatTakenException e) {
 			throw new IllegalActionException(e.getMessage());
 		} catch (PlayerListFullException e) {
 			throw new IllegalActionException(e.getMessage());
 		}
+		
 		if(game.getNbSeatedPlayers()==2){
 			deal(game.getDealer());
 		}
 	}
 
 	public void leaveGame(GamePlayer player) throws IllegalActionException {
-		//more actions needed
-		
-		
+		round.foldAction(player);
 		game.leaveGame(player);
+		gameMediator.publishPlayerLeftTable(new PlayerLeftTableEvent(player.getSavedPlayer()));
 	}
 
 	/***************************************************************************
