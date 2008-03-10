@@ -15,7 +15,7 @@
  */
 package org.cspoker.common.eventlisteners.game;
 
-import org.cspoker.common.events.gameevents.PlayerJoinedGameEvent;
+import org.cspoker.common.events.gameevents.PlayerJoinedTableEvent;
 
 /**
  * An interface for player joining games listeners.
@@ -23,7 +23,7 @@ import org.cspoker.common.events.gameevents.PlayerJoinedGameEvent;
  * @author Kenzo
  * 
  */
-public interface PlayerJoinedGameListener extends
+public interface PlayerJoinedTableListener extends
 		RemotePlayerJoinedGameListener {
 
 	/**
@@ -33,6 +33,6 @@ public interface PlayerJoinedGameListener extends
 	 *            The event object containing all information of the occurred
 	 *            event.
 	 */
-	public void onPlayerJoinedGameEvent(PlayerJoinedGameEvent event);
+	public void onPlayerJoinedGameEvent(PlayerJoinedTableEvent event);
 
 }

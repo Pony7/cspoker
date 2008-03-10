@@ -34,7 +34,7 @@ import org.cspoker.common.player.Player;
  */
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-public class PlayerJoinedGameEvent extends GameEvent {
+public class PlayerJoinedTableEvent extends GameEvent {
 
 	private static final long serialVersionUID = 3276571712883586966L;
 
@@ -42,12 +42,12 @@ public class PlayerJoinedGameEvent extends GameEvent {
 	
 	private SeatId seatId;
 
-	public PlayerJoinedGameEvent(SeatId seatId, Player player) {
+	public PlayerJoinedTableEvent(SeatId seatId, Player player) {
 		this.seatId = seatId;
 		this.player = player;
 	}
 
-	protected PlayerJoinedGameEvent() {
+	protected PlayerJoinedTableEvent() {
 		// no op
 	}
 

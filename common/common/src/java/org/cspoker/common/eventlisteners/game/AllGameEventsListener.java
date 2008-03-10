@@ -30,7 +30,7 @@ public interface AllGameEventsListener extends RemoteAllGameEventsListener,
 		AllInListener, BetListener, BigBlindListener, CallListener,
 		CheckListener, FoldListener, RaiseListener, SmallBlindListener,
 		NewPocketCardsListener, NewCommunityCardsListener, NewDealListener,
-		NewRoundListener, NextPlayerListener, PlayerJoinedGameListener,
+		NewRoundListener, NextPlayerListener, PlayerJoinedTableListener,
 		PlayerLeftTableListener, ShowHandListener, WinnerListener,
 		GameMessageListener {
 
