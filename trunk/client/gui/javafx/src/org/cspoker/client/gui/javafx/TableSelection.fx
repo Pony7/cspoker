@@ -49,7 +49,7 @@ trigger on new TableSelection{
                 items:[
                 MenuItem{
                     sizeToFitRow: true
-                    text: bind "Logout {main.state.myname}"
+                    text: bind "Logout {main.state.me.name}"
                     mnemonic: L
                     action: operation() {
                         relogin();

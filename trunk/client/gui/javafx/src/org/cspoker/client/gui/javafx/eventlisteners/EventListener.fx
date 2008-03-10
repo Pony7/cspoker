@@ -42,7 +42,6 @@ import org.cspoker.client.gui.javafx.*;
 import org.cspoker.client.gui.javafx.elements.*;
 import java.lang.*;
 import org.cspoker.client.gui.javafx.game.Card;
-import org.cspoker.client.gui.javafx.game.PlayingCards;
 import org.cspoker.client.gui.javafx.game.FXTable;
 import org.cspoker.common.elements.cards.Card as JavaCard;
 import org.cspoker.common.elements.cards.Rank;
@@ -112,99 +111,91 @@ trigger on new EventListener{
         }
         operation onNewPocketCardsEvent(e:NewPocketCardsEvent){
             System.out.println(e.toString());
-            do later {
-                ts.playingcards.state = 1;
-                var cards:JavaCard* = cl.toArray(e.getPocketCards());
-                ts.playingcards.cp1 = Card{
+            System.out.println("00000");
+            var cards:JavaCard* = cl.toArray(e.getPocketCards());
+            ts.me.cards[0] = Card{
+                rank: cards[0].getRank().toString().toLowerCase()
+                suit: cards[0].getSuit().toString().toLowerCase()
+                visible: true
+                dealt: true
+            };
+            ts.me.cards[1] = Card{
+                rank: cards[1].getRank().toString().toLowerCase()
+                suit: cards[1].getSuit().toString().toLowerCase()
+                visible: true
+                dealt: true
+            };
+            
+        }
+        operation onNewCommunityCardsEvent(e:NewCommunityCardsEvent){
+            System.out.println(e.toString());
+            var cards:JavaCard* = cl.toArray(e.getCommonCards());
+            if(ts.cards[0].visible==false){
+                System.out.println("11111");
+                ts.cards[0] = Card{
                     visible: true
                     dealt: true
                     rank: cards[0].getRank().toString().toLowerCase()
                     suit: cards[0].getSuit().toString().toLowerCase()
                 };
-                ts.playingcards.cp2 = Card{
-                    visible: true
-                    dealt: true
+                ts.cards[1] = Card{
                     rank: cards[1].getRank().toString().toLowerCase()
                     suit: cards[1].getSuit().toString().toLowerCase()
+                    visible: true
+                    dealt: true
+                };
+                ts.cards[2] = Card{
+                    rank: cards[2].getRank().toString().toLowerCase()
+                    suit: cards[2].getSuit().toString().toLowerCase()
+                    visible: true
+                    dealt: true
+                };
+            }else if(ts.cards[3].visible==false){
+                System.out.println("22222");
+                ts.cards[3] = Card{
+                    rank: cards[0].getRank().toString().toLowerCase()
+                    suit: cards[0].getSuit().toString().toLowerCase()
+                    visible: true
+                    dealt: true
+                };
+            }else if(ts.cards[4].visible==false){
+                System.out.println("33333");
+                ts.cards[4] = Card{
+                    rank: cards[0].getRank().toString().toLowerCase()
+                    suit: cards[0].getSuit().toString().toLowerCase()
+                    visible: true
+                    dealt: true
                 };
             }
-        }
-        operation onNewCommunityCardsEvent(e:NewCommunityCardsEvent){
-            System.out.println(e.toString());
-            do later {
-                var cards:JavaCard* = cl.toArray(e.getCommonCards());
-                if(ts.playingcards.state == 1){
-                    ts.playingcards.c1 = Card{
-                        visible: true
-                        dealt: true
-                        rank: cards[0].getRank().toString().toLowerCase()
-                        suit: cards[0].getSuit().toString().toLowerCase()
-                    };
-                    ts.playingcards.c2 = Card{
-                        visible: true
-                        dealt: true
-                        rank: cards[1].getRank().toString().toLowerCase()
-                        suit: cards[1].getSuit().toString().toLowerCase()
-                    };
-                    ts.playingcards.c3 = Card{
-                        visible: true
-                        dealt: true
-                        rank: cards[2].getRank().toString().toLowerCase()
-                        suit: cards[2].getSuit().toString().toLowerCase()
-                    };
-                }else if(ts.playingcards.state == 2){
-                    ts.playingcards.c4 = Card{
-                        visible: true
-                        dealt: true
-                        rank: cards[0].getRank().toString().toLowerCase()
-                        suit: cards[0].getSuit().toString().toLowerCase()
-                    };
-                }else if(ts.playingcards.state == 3){
-                    ts.playingcards.c5 = Card{
-                        visible: true
-                        dealt: true
-                        rank: cards[0].getRank().toString().toLowerCase()
-                        suit: cards[0].getSuit().toString().toLowerCase()
-                    };
-                }
-                ts.playingcards.state = ts.playingcards.state+1;
-            }
+            
         }
         operation onNewDealEvent(e:NewDealEvent){
             System.out.println(e.toString());
-            do later {
-                ts.playingcards.state = 0;
-                
-                ts.playingcards.c1 = Card{
-                    visible: false
-                    dealt: true
-                };
-                ts.playingcards.c2 = Card{
-                    visible: false
-                    dealt: true
-                };
-                ts.playingcards.c3 = Card{
-                    visible: false
-                    dealt: true
-                };
-                ts.playingcards.c4 = Card{
-                    visible: false
-                    dealt: true
-                };
-                ts.playingcards.c5 = Card{
-                    visible: false
-                    dealt: true
-                };
-                ts.playingcards.cp1 = Card{
-                    visible: false
-                    dealt: true
-                };
-                ts.playingcards.cp2 = Card{
-                    visible: false
-                    dealt: true
-                };
-                ts.state = 1;
-            }
+            ts.state = 1;
+            ts.cards = [Card{
+                dealt: true
+                visible: false
+            }, Card{
+                dealt: true
+                visible: false
+            }, Card{
+                dealt: true
+                visible: false
+            }, Card{
+                dealt: true
+                visible: false
+            }, Card{
+                dealt: true
+                visible: false
+            }];
+            ts.me.cards = [Card{
+                dealt: true
+                visible: false
+            }, Card{
+                dealt: true
+                visible: false
+            }];
+            
         }
         operation onNewRoundEvent(e:NewRoundEvent){
             System.out.println(e.toString());
@@ -259,27 +250,26 @@ trigger on new EventListener{
         
         operation onTableCreatedEvent(e:TableCreatedEvent){
             System.out.println(e.toString());
-            do later {
-                try{
-                    var t = FXTable{}.toFXTable(e.getTable());
-                    insert t as last into ts.tables;
-                }catch(e:RemoteException){
-                    MessageDialog{
-                        title: "Connection problem"
-                        visible: true
-                        message: e.getMessage()
-                        messageType: ERROR
-                    }
-                    m.relogin();
-                }catch(e:IllegalActionException){
-                    MessageDialog{
-                        title: "Failed to get info on new table"
-                        visible: true
-                        message: e.getMessage()
-                        messageType: ERROR
-                    }
+            try{
+                var t = FXTable{}.toFXTable(e.getTable());
+                insert t as last into ts.tables;
+            }catch(e:RemoteException){
+                MessageDialog{
+                    title: "Connection problem"
+                    visible: true
+                    message: e.getMessage()
+                    messageType: ERROR
+                }
+                m.relogin();
+            }catch(e:IllegalActionException){
+                MessageDialog{
+                    title: "Failed to get info on new table"
+                    visible: true
+                    message: e.getMessage()
+                    messageType: ERROR
                 }
             }
+            
         }
         operation onServerMessageEvent(e:ServerMessageEvent){
             System.out.println(e.toString());

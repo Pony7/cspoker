@@ -41,8 +41,6 @@ public class CSPokerHandler extends AbstractHttpHandlerImpl {
 	@Override
 	protected byte[] getResponse(HttpExchange http) throws HttpExceptionImpl {
 
-		//logger.trace("Received /cspoker/ request");
-
 		String username = AbstractHttpHandlerImpl.toPlayerName(http
 				.getRequestHeaders());
 		Session session = SessionManager.global_session_manager

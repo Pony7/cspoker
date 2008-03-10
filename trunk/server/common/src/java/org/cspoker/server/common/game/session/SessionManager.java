@@ -42,17 +42,19 @@ public class SessionManager {
 
 	public void killSession(String username) {
 		Session s = getSession(username);
-		PlayerId id = null;
-		try {
-			id = s.getPlayer().getId();
-		} catch (PlayerKilledExcepion e) {
-			// no op
-			// ID will be removed elsewhere?
-		}
-		s.kill();
-		sessions.remove(s.getUserName());
-		if (id != null) {
-			sessionByID.remove(id);
+		if(s!=null){
+			PlayerId id = null;
+			try {
+				id = s.getPlayer().getId();
+			} catch (PlayerKilledExcepion e) {
+				// no op
+				// ID will be removed elsewhere?
+			}
+			s.kill();
+			sessions.remove(s.getUserName());
+			if (id != null) {
+				sessionByID.remove(id);
+			}
 		}
 
 	}

@@ -20,4 +20,6 @@ class Player {
     attribute chips:Integer;
     attribute lastaction:String;
     attribute amount:Integer;
+    
+    attribute cards:Card*;
 }

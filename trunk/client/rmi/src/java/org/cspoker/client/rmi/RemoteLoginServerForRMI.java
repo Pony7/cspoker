@@ -35,128 +35,52 @@ import org.cspoker.common.elements.table.TableId;
 import org.cspoker.common.elements.table.TableList;
 import org.cspoker.common.eventlisteners.RemoteAllEventsListener;
 import org.cspoker.common.exceptions.IllegalActionException;
+import org.cspoker.common.util.DefaultRemotePlayerCommunication;
 
 public class RemoteLoginServerForRMI implements RemoteLoginServer {
 
 	private RemoteLoginServer server;
 
 	public RemoteLoginServerForRMI(String server) throws AccessException,
-			RemoteException, NotBoundException {
+	RemoteException, NotBoundException {
 		this(server, 1099);
 	}
 
 	public RemoteLoginServerForRMI(String server, int port)
-			throws AccessException, RemoteException, NotBoundException {
+	throws AccessException, RemoteException, NotBoundException {
 		System.setSecurityManager(null);
 		Registry registry = LocateRegistry.getRegistry(server, port);
 		this.server = (RemoteLoginServer) registry.lookup("CSPokerServer");
 	}
 
 	public RemotePlayerCommunication login(String username, String password)
-			throws RemoteException, LoginException {
+	throws RemoteException, LoginException {
 
 		final RemotePlayerCommunication p = server.login(username, password);
 
-		return new RemotePlayerCommunication() {
+		return new DefaultRemotePlayerCommunication(p) {
 
 			private Map<RemoteAllEventsListener,RemoteAllEventsListener> listeners = new ConcurrentHashMap<RemoteAllEventsListener, RemoteAllEventsListener>();
-			
-			public void allIn() throws IllegalActionException, RemoteException {
-				p.allIn();
-			}
 
-			public void bet(int amount) throws IllegalActionException,
-					RemoteException {
-				p.bet(amount);
-
-			}
-
-			public void call() throws IllegalActionException, RemoteException {
-				p.call();
-			}
-
-			public void check() throws IllegalActionException, RemoteException {
-				p.check();
-			}
-
-			public TableId createTable(String name) throws IllegalActionException,
-					RemoteException {
-				return p.createTable(name);
-			}
-			
-			public TableId createTable(String name, GameProperty settings) throws IllegalActionException,
-			RemoteException {
-				return p.createTable(name, settings);
-			}
-
-			public void fold() throws IllegalActionException, RemoteException {
-				p.fold();
-			}
-
-			public void leaveTable() throws IllegalActionException,
-					RemoteException {
-				p.leaveTable();
-			}
-
-			public void raise(int amount) throws IllegalActionException,
-					RemoteException {
-				p.raise(amount);
-			}
-
-			public void say(String message) throws RemoteException,
-					IllegalActionException {
-				p.say(message);
-			}
-
-			public void startGame() throws IllegalActionException,
-					RemoteException {
-				p.startGame();
-			}
-
-			public void kill() throws IllegalActionException, RemoteException {
-				p.kill();
-			}
-
+			@Override
 			public void subscribeAllEventsListener(
 					RemoteAllEventsListener listener) throws RemoteException {
 				RemoteAllEventsListener wrapped = new RemoteifyingListener(listener);
 				RemoteAllEventsListener listenerStub = (RemoteAllEventsListener) UnicastRemoteObject
-						.exportObject(wrapped, 0);
+				.exportObject(wrapped, 0);
 				listeners.put(listener, listenerStub);
 				p.subscribeAllEventsListener(listenerStub);
 			}
 
+			@Override
 			public void unsubscribeAllEventsListener(
 					RemoteAllEventsListener listener) throws RemoteException {
-				RemoteAllEventsListener listenerStub = listeners.get(listener);
-				p.unsubscribeAllEventsListener(listenerStub);
-				UnicastRemoteObject.unexportObject(listenerStub, true);
-				listeners.remove(listener);
+				RemoteAllEventsListener old = listeners.remove(listener);
+				if(old!=null){
+					p.unsubscribeAllEventsListener(old);
+					UnicastRemoteObject.unexportObject(old, true);
+				}
 			}
-
-			@Override
-			public Table getTable(TableId id) throws IllegalActionException,
-					RemoteException {
-				return p.getTable(id);
-			}
-
-			@Override
-			public TableList getTables() throws RemoteException {
-				return p.getTables();
-			}
-
-			@Override
-			public Table joinTable(TableId id) throws IllegalActionException,
-					RemoteException {
-				return p.joinTable(id);
-			}
-
-			@Override
-			public Table joinTable(TableId tableId, SeatId seatId)
-					throws IllegalActionException, RemoteException {
-				return p.joinTable(tableId, seatId);
-			}
-
 		};
 	}
 

@@ -25,7 +25,6 @@ import java.awt.Dimension;
 import org.cspoker.client.gui.javafx.elements.TableInterface;
 import java.rmi.RemoteException;
 import org.cspoker.common.exceptions.IllegalActionException;
-import org.cspoker.common.player.Player;
 
 class GameTable {
     attribute main:Main inverse Main.gametable;
@@ -75,7 +74,7 @@ trigger on new GameTable{
                 items:[
                 MenuItem{
                     sizeToFitRow: true
-                    text: "Logout {main.state.myname}"
+                    text: "Logout {main.state.me.name}"
                     mnemonic: L
                     action: operation() {
                         relogin();
@@ -155,65 +154,41 @@ trigger on new GameTable{
                             transform: translate(padx+sqrh/2+sqrw/2, pady+sqrh/2)
                             content: [ImageView {
                                 transform:  translate(-45*2,0)
-                                image: Image { url: bind main.state.playingcards.getCard( main.state.playingcards.c1) }
+                                image: Image { url: bind main.state.cards[0].getImage() }
                                 valign: CENTER
                                 halign: CENTER
-                                visible: bind main.state.playingcards.c1.dealt
+                                visible: bind main.state.cards[0].dealt
                             },ImageView {
                                 transform:  translate(-45,0)
-                                image: Image { url: bind main.state.playingcards.getCard( main.state.playingcards.c2) }
+                                image: Image { url: bind main.state.cards[1].getImage() }
                                 valign: CENTER
                                 halign: CENTER
-                                visible: bind main.state.playingcards.c2.dealt
+                                visible: bind main.state.cards[1].dealt
                             },ImageView {
                                 transform:  translate(0,0)
-                                image: Image { url: bind main.state.playingcards.getCard( main.state.playingcards.c3) }
+                                image: Image { url: bind main.state.cards[2].getImage() }
                                 valign: CENTER
                                 halign: CENTER
-                                visible: bind main.state.playingcards.c3.dealt
+                                visible: bind main.state.cards[2].dealt
                             },ImageView {
                                 transform:  translate(45,0)
-                                image: Image { url: bind main.state.playingcards.getCard( main.state.playingcards.c4) }
+                                image: Image { url: bind main.state.cards[3].getImage() }
                                 valign: CENTER
                                 halign: CENTER
-                                visible: bind main.state.playingcards.c4.dealt
+                                visible: bind main.state.cards[3].dealt
                             },ImageView {
                                 transform:  translate(45*2,0)
-                                image: Image { url: bind main.state.playingcards.getCard( main.state.playingcards.c5) }
+                                image: Image { url: bind main.state.cards[4].getImage() }
                                 valign: CENTER
                                 halign: CENTER
-                                visible: bind main.state.playingcards.c5.dealt
-                            }]
-                        },Group{
-                            transform: translate(padx+sqrh/2+sqrw/2, pady+sqrh-20)
-                            content: [ImageView {
-                                transform:  translate(-25,0)
-                                image: Image { url: bind main.state.playingcards.getCard( main.state.playingcards.cp1) }
-                                valign: CENTER
-                                halign: CENTER
-                                visible: bind main.state.playingcards.cp1.dealt
-                            },ImageView {
-                                transform:  translate(25,0)
-                                image: Image { url: bind main.state.playingcards.getCard( main.state.playingcards.cp2) }
-                                valign: CENTER
-                                halign: CENTER
-                                visible: bind main.state.playingcards.cp2.dealt
-                            }]
-                        },Group{
-                            transform: translate(padx+sqrh/2+sqrw/2, pady+sqrh+35)
-                            content: [Text {
-                                content: bind main.state.myname
-                                font: new Font("Tahoma", "PLAIN",11)
-                                fill: orange
-                                strokeWidth: 0
-                                halign: CENTER
+                                visible: bind main.state.cards[4].dealt
                             }]
                         },
                         Group{
-                            transform:[]
-                            content:[
-                                
-                            ]
+                            transform: translate(padx+sqrw,pady+sqrh)
+                            content:[PlayerNode{
+                                player: bind main.state.me
+                            }]
                         }
                         ]
                     }

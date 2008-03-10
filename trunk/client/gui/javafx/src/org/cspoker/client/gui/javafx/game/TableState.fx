@@ -23,12 +23,13 @@ import org.cspoker.client.gui.javafx.elements.*;
 class TableState {
     attribute state:Integer;
     attribute events:String;
-    attribute playingcards:PlayingCards;
+    attribute cards:Card*;
     attribute busy:Boolean;
-    attribute players:Player*;
     attribute tablename:String;
-    attribute myname:String;
     
     attribute tables: FXTable*;
     
+    attribute me:Player;
+    
+    attribute players:Player*;
 }
