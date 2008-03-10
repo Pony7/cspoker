@@ -21,13 +21,9 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.cspoker.common.eventlisteners.EventListener;
 import org.cspoker.common.eventlisteners.server.AllServerEventsListener;
-import org.cspoker.common.eventlisteners.server.PlayerJoinedListener;
-import org.cspoker.common.eventlisteners.server.PlayerLeftListener;
 import org.cspoker.common.eventlisteners.server.ServerMessageListener;
 import org.cspoker.common.eventlisteners.server.TableCreatedListener;
 import org.cspoker.common.events.Event;
-import org.cspoker.common.events.serverevents.PlayerJoinedEvent;
-import org.cspoker.common.events.serverevents.PlayerLeftEvent;
 import org.cspoker.common.events.serverevents.ServerMessageEvent;
 import org.cspoker.common.events.serverevents.TableCreatedEvent;
 import org.cspoker.common.player.PlayerId;
@@ -38,46 +34,6 @@ public class ServerMediator {
 
 	}
 
-	/**
-	 * Inform all subscribed player left listeners a player left event has
-	 * occurred.
-	 * 
-	 * Each subscribed player left listener is updated by calling their
-	 * onPlayerLeftEvent() method.
-	 * 
-	 */
-	public synchronized void publishPlayerLeftEvent(PlayerLeftEvent event) {
-		for (PlayerLeftListener listener : playerLeftListeners) {
-			listener.onPlayerLeftEvent(event);
-		}
-		publishServerEvent(event);
-	}
-
-	/**
-	 * Subscribe the given player left listener for player left events.
-	 * 
-	 * @param listener
-	 *            The listener to subscribe.
-	 */
-	public void subscribePlayerLeftListener(PlayerLeftListener listener) {
-		playerLeftListeners.add(listener);
-	}
-
-	/**
-	 * Unsubscribe the given player left listener for player left events.
-	 * 
-	 * @param listener
-	 *            The listener to unsubscribe.
-	 */
-	public void unsubscribePlayerLeftListener(PlayerLeftListener listener) {
-		playerLeftListeners.remove(listener);
-	}
-
-	/**
-	 * This list contains all player left listeners that should be alerted on a
-	 * player left.
-	 */
-	private final List<PlayerLeftListener> playerLeftListeners = new CopyOnWriteArrayList<PlayerLeftListener>();
 
 	/**
 	 * Inform all subscribed table created listeners a table created event has
@@ -120,46 +76,6 @@ public class ServerMediator {
 	 */
 	private final List<TableCreatedListener> tableCreatedListeners = new CopyOnWriteArrayList<TableCreatedListener>();
 
-	/**
-	 * Inform all subscribed player joined listeners a player joined event has
-	 * occurred.
-	 * 
-	 * Each subscribed player joined listener is updated by calling their
-	 * onPlayerJoinedEvent() method.
-	 * 
-	 */
-	public synchronized void publishPlayerJoinedEvent(PlayerJoinedEvent event) {
-		for (PlayerJoinedListener listener : playerJoinedListeners) {
-			listener.onPlayerJoinedEvent(event);
-		}
-		publishServerEvent(event);
-	}
-
-	/**
-	 * Subscribe the given player joined listener for player joined events.
-	 * 
-	 * @param listener
-	 *            The listener to subscribe.
-	 */
-	public void subscribePlayerJoinedListener(PlayerJoinedListener listener) {
-		playerJoinedListeners.add(listener);
-	}
-
-	/**
-	 * Unsubscribe the given player joined listener for player joined events.
-	 * 
-	 * @param listener
-	 *            The listener to unsubscribe.
-	 */
-	public void unsubscribePlayerJoinedListener(PlayerJoinedListener listener) {
-		playerJoinedListeners.remove(listener);
-	}
-
-	/**
-	 * This list contains all player joined listeners that should be alerted on
-	 * a player joined event.
-	 */
-	private final List<PlayerJoinedListener> playerJoinedListeners = new CopyOnWriteArrayList<PlayerJoinedListener>();
 
 	/**
 	 * Inform all subscribed message listeners a message event has occurred.
@@ -246,16 +162,12 @@ public class ServerMediator {
 
 	public void subscribeAllServerEventsListener(PlayerId id,
 			AllServerEventsListener listener) {
-		subscribePlayerJoinedListener(listener);
-		subscribePlayerLeftListener(listener);
 		subscribeServerMessageListener(listener);
 		subscribeTableCreatedListener(listener);
 	}
 
 	public void unsubscribeAllServerEventsListener(PlayerId id,
 			AllServerEventsListener listener) {
-		unsubscribePlayerJoinedListener(listener);
-		unsubscribePlayerLeftListener(listener);
 		unsubscribeServerMessageListener(listener);
 		unsubscribeTableCreatedListener(listener);
 	}

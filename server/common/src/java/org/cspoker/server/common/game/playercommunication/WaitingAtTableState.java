@@ -16,7 +16,6 @@
 package org.cspoker.server.common.game.playercommunication;
 
 import org.cspoker.common.events.gameevents.PlayerLeftTableEvent;
-import org.cspoker.common.events.serverevents.PlayerLeftEvent;
 import org.cspoker.common.exceptions.IllegalActionException;
 import org.cspoker.server.common.game.GameManager;
 import org.cspoker.server.common.game.GameMediator;
@@ -54,9 +53,6 @@ class WaitingAtTableState extends PlayerCommunicationState {
 		table.removePlayer(playerCommunication.getPlayer());
 		playerCommunication.setPlayerCommunicationState(new InitialState(
 				playerCommunication));
-		GameManager.getServerMediator().publishPlayerLeftEvent(
-				new PlayerLeftEvent(playerCommunication.getPlayer()
-						.getSavedPlayer(), table.getId()));
 		GameManager.getGame(table.getId()).publishPlayerLeftTable(new PlayerLeftTableEvent(playerCommunication.getPlayer().getSavedPlayer()));
 		GameManager.getServerMediator().subscribeAllServerEventsListener(
 				playerCommunication.getId(),

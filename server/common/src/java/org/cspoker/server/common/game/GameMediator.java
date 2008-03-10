@@ -33,7 +33,7 @@ import org.cspoker.common.eventlisteners.game.NewCommunityCardsListener;
 import org.cspoker.common.eventlisteners.game.NewDealListener;
 import org.cspoker.common.eventlisteners.game.NewRoundListener;
 import org.cspoker.common.eventlisteners.game.NextPlayerListener;
-import org.cspoker.common.eventlisteners.game.PlayerJoinedGameListener;
+import org.cspoker.common.eventlisteners.game.PlayerJoinedTableListener;
 import org.cspoker.common.eventlisteners.game.PlayerLeftTableListener;
 import org.cspoker.common.eventlisteners.game.ShowHandListener;
 import org.cspoker.common.eventlisteners.game.WinnerListener;
@@ -53,7 +53,7 @@ import org.cspoker.common.events.gameevents.NewCommunityCardsEvent;
 import org.cspoker.common.events.gameevents.NewDealEvent;
 import org.cspoker.common.events.gameevents.NewRoundEvent;
 import org.cspoker.common.events.gameevents.NextPlayerEvent;
-import org.cspoker.common.events.gameevents.PlayerJoinedGameEvent;
+import org.cspoker.common.events.gameevents.PlayerJoinedTableEvent;
 import org.cspoker.common.events.gameevents.PlayerLeftTableEvent;
 import org.cspoker.common.events.gameevents.ShowHandEvent;
 import org.cspoker.common.events.gameevents.WinnerEvent;
@@ -808,8 +808,8 @@ public class GameMediator implements PlayerAction {
 	 * onPlayerJoinedGameEvent() method.
 	 * 
 	 */
-	public synchronized void publishPlayerJoinedGame(PlayerJoinedGameEvent event) {
-		for (PlayerJoinedGameListener listener : playerJoinedGameListeners) {
+	public synchronized void publishPlayerJoinedGame(PlayerJoinedTableEvent event) {
+		for (PlayerJoinedTableListener listener : playerJoinedGameListeners) {
 			listener.onPlayerJoinedGameEvent(event);
 		}
 		publishGameEvent(event);
@@ -823,7 +823,7 @@ public class GameMediator implements PlayerAction {
 	 *            The listener to subscribe.
 	 */
 	public void subscribePlayerJoinedGameListener(
-			PlayerJoinedGameListener listener) {
+			PlayerJoinedTableListener listener) {
 		playerJoinedGameListeners.add(listener);
 	}
 
@@ -835,7 +835,7 @@ public class GameMediator implements PlayerAction {
 	 *            The listener to unsubscribe.
 	 */
 	public void unsubscribePlayerJoinedGameListener(
-			PlayerJoinedGameListener listener) {
+			PlayerJoinedTableListener listener) {
 		playerJoinedGameListeners.remove(listener);
 	}
 
@@ -843,7 +843,7 @@ public class GameMediator implements PlayerAction {
 	 * This list contains all player joined game listeners that should be
 	 * alerted on a player joined game.
 	 */
-	private final List<PlayerJoinedGameListener> playerJoinedGameListeners = new CopyOnWriteArrayList<PlayerJoinedGameListener>();
+	private final List<PlayerJoinedTableListener> playerJoinedGameListeners = new CopyOnWriteArrayList<PlayerJoinedTableListener>();
 
 	/**
 	 * Inform all subscribed player left table listeners a player left table

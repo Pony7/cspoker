@@ -46,8 +46,6 @@ import org.cspoker.common.eventlisteners.game.actions.RemoteFoldListener;
 import org.cspoker.common.eventlisteners.game.actions.RemoteRaiseListener;
 import org.cspoker.common.eventlisteners.game.actions.RemoteSmallBlindListener;
 import org.cspoker.common.eventlisteners.game.privatelistener.RemoteNewPocketCardsListener;
-import org.cspoker.common.eventlisteners.server.RemotePlayerJoinedListener;
-import org.cspoker.common.eventlisteners.server.RemotePlayerLeftListener;
 import org.cspoker.common.eventlisteners.server.RemoteServerMessageListener;
 import org.cspoker.common.eventlisteners.server.RemoteTableCreatedListener;
 import org.cspoker.common.events.gameevents.GameMessageEvent;
@@ -55,7 +53,7 @@ import org.cspoker.common.events.gameevents.NewCommunityCardsEvent;
 import org.cspoker.common.events.gameevents.NewDealEvent;
 import org.cspoker.common.events.gameevents.NewRoundEvent;
 import org.cspoker.common.events.gameevents.NextPlayerEvent;
-import org.cspoker.common.events.gameevents.PlayerJoinedGameEvent;
+import org.cspoker.common.events.gameevents.PlayerJoinedTableEvent;
 import org.cspoker.common.events.gameevents.PlayerLeftTableEvent;
 import org.cspoker.common.events.gameevents.ShowHandEvent;
 import org.cspoker.common.events.gameevents.WinnerEvent;
@@ -68,8 +66,6 @@ import org.cspoker.common.events.gameevents.playeractionevents.FoldEvent;
 import org.cspoker.common.events.gameevents.playeractionevents.RaiseEvent;
 import org.cspoker.common.events.gameevents.playeractionevents.SmallBlindEvent;
 import org.cspoker.common.events.gameevents.privateevents.NewPocketCardsEvent;
-import org.cspoker.common.events.serverevents.PlayerJoinedEvent;
-import org.cspoker.common.events.serverevents.PlayerLeftEvent;
 import org.cspoker.common.events.serverevents.ServerMessageEvent;
 import org.cspoker.common.events.serverevents.TableCreatedEvent;
 import org.cspoker.common.exceptions.IllegalActionException;
@@ -466,7 +462,7 @@ public class PlayerCommunicationImpl extends PlayerCommunication {
 			}
 		}
 
-		public void onPlayerJoinedGameEvent(PlayerJoinedGameEvent event) {
+		public void onPlayerJoinedGameEvent(PlayerJoinedTableEvent event) {
 			for (RemotePlayerJoinedGameListener listener : eventListeners) {
 				try {
 					listener.onPlayerJoinedGameEvent(event);
@@ -530,33 +526,10 @@ public class PlayerCommunicationImpl extends PlayerCommunication {
 		 * Server Events
 		 **********************************************************************/
 
-		public void onPlayerJoinedEvent(PlayerJoinedEvent event) {
-			for (RemotePlayerJoinedListener listener : eventListeners) {
-				try {
-					listener.onPlayerJoinedEvent(event);
-				} catch (Exception e) {
-					logger.error(
-							"RemoteException from event handler, ignoring", e);
-				}
-			}
-
-		}
-
 		public void onTableCreatedEvent(TableCreatedEvent event) {
 			for (RemoteTableCreatedListener listener : eventListeners) {
 				try {
 					listener.onTableCreatedEvent(event);
-				} catch (Exception e) {
-					logger.error(
-							"RemoteException from event handler, ignoring", e);
-				}
-			}
-		}
-
-		public void onPlayerLeftEvent(PlayerLeftEvent event) {
-			for (RemotePlayerLeftListener listener : eventListeners) {
-				try {
-					listener.onPlayerLeftEvent(event);
 				} catch (Exception e) {
 					logger.error(
 							"RemoteException from event handler, ignoring", e);
