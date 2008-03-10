@@ -16,7 +16,9 @@
 package org.cspoker.server.common.game.playercommunication;
 
 import org.apache.log4j.Logger;
+import org.cspoker.common.elements.GameProperty;
 import org.cspoker.common.elements.table.SeatId;
+import org.cspoker.common.elements.table.Table;
 import org.cspoker.common.elements.table.TableId;
 import org.cspoker.common.events.gameevents.PlayerJoinedGameEvent;
 import org.cspoker.common.events.serverevents.PlayerJoinedEvent;
@@ -105,7 +107,12 @@ class InitialState extends PlayerCommunicationState {
 	}
 
 	@Override
-	public TableId createTable(String name) throws IllegalActionException {
+	public Table createTable(String name) throws IllegalActionException {
+		return createTable(name, new GameProperty());
+	}
+	
+	@Override
+	public Table createTable(String name, GameProperty property) throws IllegalActionException {
 		GameTable table = TableManager.global_table_manager.createTable(playerCommunication.getPlayer()
 				.getId(), name);
 		if(name==null)
@@ -123,7 +130,7 @@ class InitialState extends PlayerCommunicationState {
 		GameManager.getServerMediator().publishTableCreatedEvent(
 				new TableCreatedEvent(playerCommunication.getPlayer()
 						.getSavedPlayer(), table.getSavedTable()));
-		return table.getId();
+		return table.getSavedTable();
 	}
 
 	@Override
