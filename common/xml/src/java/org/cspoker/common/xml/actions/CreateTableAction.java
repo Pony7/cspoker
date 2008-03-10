@@ -21,14 +21,14 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import org.cspoker.common.PlayerCommunication;
 import org.cspoker.common.elements.GameProperty;
-import org.cspoker.common.elements.table.TableId;
+import org.cspoker.common.elements.table.Table;
 import org.cspoker.common.exceptions.IllegalActionException;
 import org.cspoker.common.xml.eventlisteners.invocation.AllInvocationEventsListener;
 import org.cspoker.common.xml.events.invocation.IllegalActionEvent;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-public class CreateTableAction extends PlayerCommunicationAction<TableId> {
+public class CreateTableAction extends PlayerCommunicationAction<Table> {
 
 	private static final long serialVersionUID = 2423639524369017909L;
 	private String name;
