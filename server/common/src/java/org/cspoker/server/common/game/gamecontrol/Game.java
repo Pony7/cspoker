@@ -509,33 +509,28 @@ public class Game {
 	/***************************************************************************
 	 * Leave/Join Game
 	 * 
-	 * @throws PlayerListFullException
-	 * @throws SeatTakenException 
-	 * @throws PlayerListFullException 
 	 **************************************************************************/
 
 	public void joinGame(SeatId seatId, GamePlayer player) throws SeatTakenException, PlayerListFullException {
 		if(seatId==null){
-			table.addPlayer(player);
+			seatId = table.addPlayer(player);
 		}else{
 			table.addPlayer(seatId, player);
 		}
+		
 		if (getDealer() == null) {
 			setDealer(player);
 		} else if (getNextDealer() == null) {
 			setNextDealer(player);
 		}
 	}
+	
 
 	public void leaveGame(GamePlayer player) throws IllegalActionException {
 		Game.logger.info("Kick out: " + player.getName());
 		if (!table.hasAsPlayer(player)) {
 			throw new IllegalActionException(player.getName()
 					+ " is not seated at this table.");
-		}
-		if (hasAsActivePlayer(player)) {
-			throw new IllegalActionException(
-					"An active player can not be removed. He should fold first.");
 		}
 		if ((getNextDealer() == null) || getNextDealer().equals(player)) {
 			setNextDealer(initialCurrentHandPlayers.getNextTo(player));

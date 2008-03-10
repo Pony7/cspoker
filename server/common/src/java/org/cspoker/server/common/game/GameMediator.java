@@ -215,8 +215,6 @@ public class GameMediator implements PlayerAction {
 
 	public void joinGame(SeatId seatId, GamePlayer player) throws IllegalActionException {
 			gameControl.joinGame(seatId, player);
-			publishPlayerJoinedGame(new PlayerJoinedGameEvent(player
-					.getSavedPlayer()));
 	}
 
 	public void leaveGame(GamePlayer player) throws IllegalActionException {

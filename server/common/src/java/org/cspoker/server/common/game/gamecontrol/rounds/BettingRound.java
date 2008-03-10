@@ -217,7 +217,11 @@ public abstract class BettingRound extends Round {
 			throw new IllegalActionException(player.getName()
 					+ " can not fold. It should be his turn to do an action.");
 		}
-
+		
+		foldAction(player);
+	}
+	
+	public void foldAction(GamePlayer player){
 		player.clearPocketCards();
 
 		/**

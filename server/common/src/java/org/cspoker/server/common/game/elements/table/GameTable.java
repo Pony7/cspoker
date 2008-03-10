@@ -277,7 +277,7 @@ public class GameTable {
 	 *             hasAsPlayer(player)
 	 * @post The given player is seated at this table. | new.hasAsPlayer(player)
 	 */
-	public synchronized void addPlayer(GamePlayer player)
+	public synchronized SeatId addPlayer(GamePlayer player)
 			throws PlayerListFullException {
 		if (player == null) {
 			throw new IllegalArgumentException("player should be effective.");
@@ -298,6 +298,7 @@ public class GameTable {
 		}
 		if(!isValidSeatId(seatId))
 			throw new PlayerListFullException();
+		return seatId;
 	}
 	
 	/**
