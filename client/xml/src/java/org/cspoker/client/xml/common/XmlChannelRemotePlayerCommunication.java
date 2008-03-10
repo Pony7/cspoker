@@ -107,12 +107,12 @@ public class XmlChannelRemotePlayerCommunication implements
 	}
 
 	@Override
-	public TableId createTable(String name) throws IllegalActionException, RemoteException {
+	public Table createTable(String name) throws IllegalActionException, RemoteException {
 		return marshaller.perform(new CreateTableAction(getId(), name));
 	}
 	
 	@Override
-	public TableId createTable(String name, GameProperty settings) throws IllegalActionException, RemoteException {
+	public Table createTable(String name, GameProperty settings) throws IllegalActionException, RemoteException {
 		return marshaller.perform(new CreateTableAction(getId(), name, settings));
 	}
 

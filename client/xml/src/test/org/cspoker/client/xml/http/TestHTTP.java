@@ -192,7 +192,7 @@ public class TestHTTP {
 			cedric = temp.getRemotePlayerCommunication("cedric",
 					"test");
 
-			TableId id = guy.createTable("guy's table");
+			TableId id = guy.createTable("guy's table").getId();
 
 			kenzo.joinTable(id);
 			cedric.joinTable(id);
