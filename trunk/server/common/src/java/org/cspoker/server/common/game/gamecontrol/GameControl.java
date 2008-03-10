@@ -297,9 +297,12 @@ public class GameControl implements PlayerAction {
 	}
 
 	public void leaveGame(GamePlayer player) throws IllegalActionException {
+		boolean checkForRoundEnded = round.getGame().getCurrentPlayer().equals(player);
 		round.foldAction(player);
 		game.leaveGame(player);
 		gameMediator.publishPlayerLeftTable(new PlayerLeftTableEvent(player.getSavedPlayer()));
+		if(checkForRoundEnded)
+			checkIfEndedAndChangeRound();
 	}
 
 	/***************************************************************************

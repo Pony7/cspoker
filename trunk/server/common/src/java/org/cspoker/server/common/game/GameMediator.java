@@ -219,7 +219,6 @@ public class GameMediator implements PlayerAction {
 
 	public void leaveGame(GamePlayer player) throws IllegalActionException {
 		gameControl.leaveGame(player);
-		publishPlayerLeftTable(new PlayerLeftTableEvent(player.getSavedPlayer()));
 	}
 
 	/***************************************************************************
