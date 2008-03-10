@@ -22,6 +22,7 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.cspoker.common.elements.table.SeatId;
 import org.cspoker.common.eventlisteners.RemoteAllEventsListener;
 import org.cspoker.common.player.Player;
 
@@ -38,8 +39,11 @@ public class PlayerJoinedGameEvent extends GameEvent {
 	private static final long serialVersionUID = 3276571712883586966L;
 
 	private Player player;
+	
+	private SeatId seatId;
 
-	public PlayerJoinedGameEvent(Player player) {
+	public PlayerJoinedGameEvent(SeatId seatId, Player player) {
+		this.seatId = seatId;
 		this.player = player;
 	}
 
@@ -50,6 +54,10 @@ public class PlayerJoinedGameEvent extends GameEvent {
 	@Override
 	public String toString() {
 		return player.getName() + " joined the table.";
+	}
+	
+	public SeatId getSeatId(){
+		return seatId;
 	}
 
 	public Player getPlayer() {
