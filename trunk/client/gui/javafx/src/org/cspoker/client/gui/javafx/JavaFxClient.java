@@ -36,10 +36,7 @@ public class JavaFxClient {
     static {
         Log4JPropertiesLoader.load("org/cspoker/client/gui/javafx/logging/log4j.properties");
     }
-    /**
-     * The client of this client core
-     */
-    private User user;
+    
     /**
      * The communication used by this client
      */
@@ -56,7 +53,6 @@ public class JavaFxClient {
     }
 
     public void login(String connection, String userName, String password) {
-        this.user = new User(userName);
         createCommunication(connection, userName, password);
         System.out.println("Logged in as "+userName);
     }
@@ -168,7 +164,6 @@ public class JavaFxClient {
     }
 
     public Table joinTable(TableId id) throws IllegalActionException, RemoteException {
-        System.out.println("joined table " + id);
         return rpc.joinTable(id);
     }
     
@@ -181,10 +176,7 @@ public class JavaFxClient {
     }
 
     public Table createTable(String name) throws RemoteException, IllegalActionException {
-        System.out.println("creating table "+name);
-        TableId id = rpc.createTable(name);
-        return rpc.getTable(id);
-
+        return rpc.createTable(name);
     }
 
     public void startGame() throws RemoteException, IllegalActionException {

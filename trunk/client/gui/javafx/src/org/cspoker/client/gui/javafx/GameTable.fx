@@ -19,10 +19,8 @@ import javafx.ui.*;
 import javafx.ui.canvas.*;
 import javafx.ui.filter.*;
 import java.lang.*;
-import org.cspoker.client.gui.javafx.elements.*;
+import org.cspoker.client.gui.javafx.views.*;
 import org.cspoker.client.gui.javafx.game.*;
-import java.awt.Dimension;
-import org.cspoker.client.gui.javafx.elements.TableInterface;
 import java.rmi.RemoteException;
 import org.cspoker.common.exceptions.IllegalActionException;
 
@@ -58,7 +56,7 @@ trigger on new GameTable{
     sqrh = 280;
     var logofontsize = sqrh/5;
     screen = Frame{
-        title: bind main.state.tablename
+        title: bind main.state.mytable.name
         width: 2*padx+sqrw+sqrh
         height: 2*pady+sqrh+150
         visible: true
@@ -74,7 +72,7 @@ trigger on new GameTable{
                 items:[
                 MenuItem{
                     sizeToFitRow: true
-                    text: "Logout {main.state.me.name}"
+                    text: "Logout {main.state.myname}"
                     mnemonic: L
                     action: operation() {
                         relogin();
@@ -154,34 +152,34 @@ trigger on new GameTable{
                             transform: translate(padx+sqrh/2+sqrw/2, pady+sqrh/2)
                             content: [ImageView {
                                 transform:  translate(-45*2,0)
-                                image: Image { url: bind main.state.cards[0].getImage() }
+                                image: Image { url: bind main.state.mytable.cards[0].getImage() }
                                 valign: CENTER
                                 halign: CENTER
-                                visible: bind main.state.cards[0].dealt
+                                visible: bind main.state.mytable.cards[0].dealt
                             },ImageView {
                                 transform:  translate(-45,0)
-                                image: Image { url: bind main.state.cards[1].getImage() }
+                                image: Image { url: bind main.mytable.state.cards[1].getImage() }
                                 valign: CENTER
                                 halign: CENTER
-                                visible: bind main.state.cards[1].dealt
+                                visible: bind main.state.mytable.cards[1].dealt
                             },ImageView {
                                 transform:  translate(0,0)
-                                image: Image { url: bind main.state.cards[2].getImage() }
+                                image: Image { url: bind main.state.mytable.cards[2].getImage() }
                                 valign: CENTER
                                 halign: CENTER
-                                visible: bind main.state.cards[2].dealt
+                                visible: bind main.state.mytable.cards[2].dealt
                             },ImageView {
                                 transform:  translate(45,0)
-                                image: Image { url: bind main.state.cards[3].getImage() }
+                                image: Image { url: bind main.state.mytable.cards[3].getImage() }
                                 valign: CENTER
                                 halign: CENTER
-                                visible: bind main.state.cards[3].dealt
+                                visible: bind main.state.mytable.cards[3].dealt
                             },ImageView {
                                 transform:  translate(45*2,0)
-                                image: Image { url: bind main.state.cards[4].getImage() }
+                                image: Image { url: bind main.state.mytable.cards[4].getImage() }
                                 valign: CENTER
                                 halign: CENTER
-                                visible: bind main.state.cards[4].dealt
+                                visible: bind main.state.mytable.cards[4].dealt
                             }]
                         },
                         Group{
@@ -203,7 +201,7 @@ trigger on new GameTable{
                             SplitView{
                                 weight: 0.60
                                 content: FlowPanel{
-                                    content: [ FlowPanel{
+                                    content: [FlowPanel{
                                         content: Button {
                                             text: "Start Game"
                                             toolTipText: "Start the game at this table."
@@ -211,8 +209,11 @@ trigger on new GameTable{
                                                 startgame();
                                             }
                                         }
-                                        visible: bind (main.state.state==0)
-                                    },
+                                        visible: bind (main.state.mytable.state == 0)
+                                    },TextField{
+                                        value: "Please wait for the next game to start."
+                                        visible: bind (main.state.mytable.state == 1)
+                                    }
                                     GroupPanel{
                                         var firstRow= Row{alignment: BASELINE}
                                         var secondRow= Row{alignment: BASELINE}
@@ -224,7 +225,7 @@ trigger on new GameTable{
                                         rows: [firstRow,secondRow]
                                         columns: [firstColumn,secondColumn,thirdColumn,fourthColumn]
                                         
-                                        visible: bind (main.state.state==1)
+                                        visible: bind(main.state.mytable.state==2)
                                         
                                         content:[TextField{
                                             row: firstRow

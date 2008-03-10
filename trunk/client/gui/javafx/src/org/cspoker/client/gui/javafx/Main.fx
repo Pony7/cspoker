@@ -13,8 +13,8 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
- 
-  
+
+
 package org.cspoker.client.gui.javafx;
 
 import javafx.ui.*;
@@ -48,11 +48,11 @@ import org.cspoker.client.gui.javafx.eventlisteners.EventListener;
 
 class Main{
     attribute client: JavaFxClient;
-    attribute login: Login inverse Login.prog;
+    attribute login: Login inverse Login.main;
     attribute table_selection: TableSelection inverse TableSelection.main;
     attribute gametable: GameTable inverse GameTable.main;
     attribute listener: EventListener inverse EventListener.main;
-    attribute state: TableState;
+    attribute state: GameView;
     
     operation init();
     operation logged_in();
@@ -65,9 +65,8 @@ operation Main.logged_in(){
     listener = EventListener{};
     this.client.subscribeAllEvents(listener.listener);
     login.screen.hide();
-    state.tables = FXTable{}.toFXTable(client.getTableList());
+    state.tables = TableViews{}.toTableViews(client.getTableList());
     table_selection = TableSelection{};
-    table_selection.active = true;
 }
 
 operation Main.table_selected(){
@@ -96,34 +95,10 @@ trigger on new Main{
 }
 
 operation Main.resetState(){
-     state = TableState{
-        state: 0
+    state = TableState{
         events: "Welcome to CSPoker!<br/>"
-        cards: [Card{
-                visible: false
-                dealt: false
-            },Card{
-                visible: false
-                dealt: false
-            },Card{
-                visible: false
-                dealt: false
-            },Card{
-                visible: false
-                dealt: false
-            },Card{
-                visible: false
-                dealt: false
-            }]
         me: Player{
             name: "guy"
-            cards: [Card{
-                visible: false
-                dealt: false
-            },Card{
-                visible: false
-                dealt: false
-            }]
         }
     };
 }
