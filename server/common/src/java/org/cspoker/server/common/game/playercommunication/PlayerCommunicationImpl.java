@@ -262,6 +262,10 @@ public class PlayerCommunicationImpl extends PlayerCommunication {
 	void setPlayerCommunicationState(PlayerCommunicationState state) {
 		this.state = state;
 	}
+	
+	public void changeToInitialState(){
+		this.state = new InitialState(this);
+	}
 
 	@Override
 	public String toString() {
