@@ -22,4 +22,13 @@ class Card {
     attribute suit:String;
     attribute dealt:Boolean;
     attribute visible:Boolean;
+    
+    function getImage():String;
+}
+
+function Card.getImage(){
+    return if(visible) then
+        "./org/cspoker/client/gui/javafx/images/cards/simple/simple_{suit}_{rank}.svg.png"
+    else
+        "./org/cspoker/client/gui/javafx/images/cards/backs/back08.svg.png";
 }

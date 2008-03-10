@@ -25,8 +25,6 @@ class Login {
     attribute main:Main inverse Main.login;
     
     attribute screen:Frame;
-    
-    attribute name: String;
     attribute passw: String;
     attribute connection: String;
     attribute loginable:Boolean;
@@ -37,7 +35,6 @@ trigger on new Login{
     var provider = CommunicationProvider.global_provider;
     new LoadProvidersFromXml(provider);
     var providers:String* = foreach(prov in provider.getProviders().toArray()) prov.toString();
-    name = "guy";
     passw = "test";
     loginable = true;
     screen=Frame{
@@ -94,7 +91,7 @@ trigger on new Login{
                 TextField{
                     row: usernameRow
                     column: fieldsColumn
-                    value: bind name
+                    value: bind main.state.me.name
                 },
                 SimpleLabel{
                     row: passwRow
@@ -129,8 +126,7 @@ trigger on new Login{
 operation Login.login(){
     try{ 
         loginable = false;
-        main.client.login(connection,name,passw);
-        main.state.myname = name;
+        main.client.login(connection,main.state.me.name,passw);
         main.logged_in();
         loginable = true;
     }catch(e:Exception){

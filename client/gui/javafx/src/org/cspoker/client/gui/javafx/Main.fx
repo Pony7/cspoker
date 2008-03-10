@@ -58,6 +58,7 @@ class Main{
     operation logged_in();
     operation relogin();
     operation table_selected();
+    operation resetState();
 }
 
 operation Main.logged_in(){
@@ -77,6 +78,7 @@ operation Main.table_selected(){
 operation Main.relogin(){
     table_selection.screen.visible = false;
     gametable.screen.visible = false;
+    resetState();
     login.screen.visible = true;
 }
 
@@ -87,39 +89,41 @@ Main{
         // inverse doesn't seem to work in this case ...
         main: me
     }
-    state: TableState{
+}
+
+trigger on new Main{
+    resetState();
+}
+
+operation Main.resetState(){
+     state = TableState{
         state: 0
         events: "Welcome to CSPoker!<br/>"
-        playingcards: PlayingCards{
-            c1: Card{
+        cards: [Card{
                 visible: false
                 dealt: false
-            }
-            c2: Card{
+            },Card{
                 visible: false
                 dealt: false
-            }
-            c3: Card{
+            },Card{
                 visible: false
                 dealt: false
-            }
-            c4: Card{
+            },Card{
                 visible: false
                 dealt: false
-            }
-            c5: Card{
+            },Card{
                 visible: false
                 dealt: false
-            }
-            cp1: Card{
+            }]
+        me: Player{
+            name: "guy"
+            cards: [Card{
                 visible: false
                 dealt: false
-            }
-            cp2: Card{
+            },Card{
                 visible: false
                 dealt: false
-            }
-            state: 0
+            }]
         }
-    }
+    };
 }
