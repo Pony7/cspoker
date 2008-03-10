@@ -129,7 +129,7 @@ public interface RemotePlayerCommunication extends Remote {
 	 *             [must] This actions is not a valid action in the current
 	 *             state.
 	 */
-	TableId createTable(String name) throws IllegalActionException, RemoteException;
+	Table createTable(String name) throws IllegalActionException, RemoteException;
 	
 	/**
 	 * This player creates a table with given name and game property.
@@ -138,7 +138,7 @@ public interface RemotePlayerCommunication extends Remote {
 	 *             [must] This actions is not a valid action in the current
 	 *             state.
 	 */
-	TableId createTable(String name, GameProperty property) throws IllegalActionException, RemoteException;
+	Table createTable(String name, GameProperty property) throws IllegalActionException, RemoteException;
 	
 	/**
 	 * Returns the table with the given table id.
