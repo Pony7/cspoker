@@ -52,12 +52,12 @@ public class DefaultRemotePlayerCommunication implements
 		p.check();
 	}
 
-	public TableId createTable(String name) throws IllegalActionException,
+	public Table createTable(String name) throws IllegalActionException,
 			RemoteException {
 		return p.createTable(name);
 	}
 	
-	public TableId createTable(String name, GameProperty settings) throws IllegalActionException,
+	public Table createTable(String name, GameProperty settings) throws IllegalActionException,
 	RemoteException {
 		return p.createTable(name, settings);
 	}
