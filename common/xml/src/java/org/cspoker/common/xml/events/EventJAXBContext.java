@@ -15,7 +15,6 @@
  */
 package org.cspoker.common.xml.events;
 
-import javax.swing.text.TabExpander;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 
@@ -27,7 +26,7 @@ import org.cspoker.common.events.gameevents.NewCommunityCardsEvent;
 import org.cspoker.common.events.gameevents.NewDealEvent;
 import org.cspoker.common.events.gameevents.NewRoundEvent;
 import org.cspoker.common.events.gameevents.NextPlayerEvent;
-import org.cspoker.common.events.gameevents.PlayerJoinedGameEvent;
+import org.cspoker.common.events.gameevents.PlayerJoinedTableEvent;
 import org.cspoker.common.events.gameevents.PlayerLeftTableEvent;
 import org.cspoker.common.events.gameevents.ShowHandEvent;
 import org.cspoker.common.events.gameevents.WinnerEvent;
@@ -40,8 +39,6 @@ import org.cspoker.common.events.gameevents.playeractionevents.FoldEvent;
 import org.cspoker.common.events.gameevents.playeractionevents.RaiseEvent;
 import org.cspoker.common.events.gameevents.playeractionevents.SmallBlindEvent;
 import org.cspoker.common.events.gameevents.privateevents.NewPocketCardsEvent;
-import org.cspoker.common.events.serverevents.PlayerJoinedEvent;
-import org.cspoker.common.events.serverevents.PlayerLeftEvent;
 import org.cspoker.common.events.serverevents.ServerMessageEvent;
 import org.cspoker.common.events.serverevents.TableCreatedEvent;
 import org.cspoker.common.xml.events.invocation.IllegalActionEvent;
@@ -79,12 +76,11 @@ public class EventJAXBContext {
 				// gameevents
 				GameMessageEvent.class, NewCommunityCardsEvent.class,
 				NewDealEvent.class, NewRoundEvent.class, NextPlayerEvent.class,
-				PlayerJoinedGameEvent.class, PlayerLeftTableEvent.class,
+				PlayerJoinedTableEvent.class, PlayerLeftTableEvent.class,
 				ShowHandEvent.class, WinnerEvent.class,
 				// invokation
 				SuccessfulInvocationEvent.class, IllegalActionEvent.class,
 				// serverevents
-				PlayerJoinedEvent.class, PlayerLeftEvent.class,
 				ServerMessageEvent.class, TableCreatedEvent.class,
 				// other
 				EventSequence.class, Table.class, TableList.class };
