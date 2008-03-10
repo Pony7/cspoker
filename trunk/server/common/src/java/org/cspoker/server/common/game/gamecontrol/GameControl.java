@@ -284,8 +284,8 @@ public class GameControl implements PlayerAction {
 
 	public void joinGame(SeatId seatId, GamePlayer player) throws IllegalActionException{
 		try {
-			game.joinGame(seatId, player);
-			gameMediator.publishPlayerJoinedGame(new PlayerJoinedGameEvent(player
+			seatId = game.joinGame(seatId, player);
+			gameMediator.publishPlayerJoinedGame(new PlayerJoinedGameEvent(seatId, player
 					.getSavedPlayer()));
 		} catch (SeatTakenException e) {
 			throw new IllegalActionException(e.getMessage());

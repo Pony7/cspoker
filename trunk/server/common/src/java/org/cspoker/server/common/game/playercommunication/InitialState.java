@@ -94,7 +94,7 @@ class InitialState extends PlayerCommunicationState {
 			} catch (PlayerListFullException e) {
 				throw new IllegalActionException(e.getMessage());
 			}
-			GameManager.getGame(table.getId()).publishPlayerJoinedGame(new PlayerJoinedGameEvent(playerCommunication.getPlayer().getSavedPlayer()));
+			GameManager.getGame(table.getId()).publishPlayerJoinedGame(new PlayerJoinedGameEvent(seatId, playerCommunication.getPlayer().getSavedPlayer()));
 			playerCommunication
 					.setPlayerCommunicationState(new WaitingAtTableState(
 							playerCommunication, table, GameManager.getGame(table.getId())));

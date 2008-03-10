@@ -511,7 +511,7 @@ public class Game {
 	 * 
 	 **************************************************************************/
 
-	public void joinGame(SeatId seatId, GamePlayer player) throws SeatTakenException, PlayerListFullException {
+	public SeatId joinGame(SeatId seatId, GamePlayer player) throws SeatTakenException, PlayerListFullException {
 		if(seatId==null){
 			seatId = table.addPlayer(player);
 		}else{
@@ -523,6 +523,7 @@ public class Game {
 		} else if (getNextDealer() == null) {
 			setNextDealer(player);
 		}
+		return seatId;
 	}
 	
 
