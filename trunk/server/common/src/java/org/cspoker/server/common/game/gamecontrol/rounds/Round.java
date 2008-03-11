@@ -19,6 +19,7 @@ package org.cspoker.server.common.game.gamecontrol.rounds;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.cspoker.common.events.gameevents.BrokePlayerKickedOutEvent;
 import org.cspoker.common.events.gameevents.NewDealEvent;
 import org.cspoker.common.events.gameevents.PlayerLeftTableEvent;
 import org.cspoker.common.exceptions.IllegalActionException;
@@ -280,7 +281,7 @@ public abstract class Round implements PlayerAction {
 			if (player.getStack().getValue() == 0) {
 				try {
 					getGame().leaveGame(player);
-					gameMediator.publishPlayerLeftTable(new PlayerLeftTableEvent(player.getSavedPlayer()));
+					gameMediator.publishBrokePlayerKickedOutEvent(new BrokePlayerKickedOutEvent(player.getSavedPlayer()));
 				} catch (IllegalActionException e) {
 					throw new IllegalStateException();
 				}
