@@ -46,6 +46,10 @@ public class TableRemovedEvent extends ServerEvent{
 		return id;
 	}
 	
+	public String toString(){
+		return "Table "+id.toString()+" has been removed.";
+	}
+	
 	@Override
 	public void dispatch(RemoteAllEventsListener listener)
 			throws RemoteException {
