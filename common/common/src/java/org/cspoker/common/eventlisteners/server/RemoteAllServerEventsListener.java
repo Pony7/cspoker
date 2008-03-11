@@ -18,6 +18,7 @@ package org.cspoker.common.eventlisteners.server;
 import java.rmi.Remote;
 
 public interface RemoteAllServerEventsListener extends Remote,
-		RemoteTableCreatedListener, RemoteServerMessageListener {
+		RemoteTableCreatedListener, RemoteTableChangedListener, RemoteTableRemovedListener, 
+		RemoteServerMessageListener {
 
 }

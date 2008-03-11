@@ -20,6 +20,7 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.cspoker.common.eventlisteners.RemoteAllEventsListener;
+import org.cspoker.common.events.gameevents.BrokePlayerKickedOutEvent;
 import org.cspoker.common.events.gameevents.GameMessageEvent;
 import org.cspoker.common.events.gameevents.NewCommunityCardsEvent;
 import org.cspoker.common.events.gameevents.NewDealEvent;
@@ -39,7 +40,9 @@ import org.cspoker.common.events.gameevents.playeractionevents.RaiseEvent;
 import org.cspoker.common.events.gameevents.playeractionevents.SmallBlindEvent;
 import org.cspoker.common.events.gameevents.privateevents.NewPocketCardsEvent;
 import org.cspoker.common.events.serverevents.ServerMessageEvent;
+import org.cspoker.common.events.serverevents.TableChangedEvent;
 import org.cspoker.common.events.serverevents.TableCreatedEvent;
+import org.cspoker.common.events.serverevents.TableRemovedEvent;
 
 public class SpreadingAllEventsListener implements RemoteAllEventsListener {
 
@@ -271,6 +274,41 @@ public class SpreadingAllEventsListener implements RemoteAllEventsListener {
 		for (RemoteAllEventsListener listener : listeners) {
 			try {
 				listener.onServerMessageEvent(event);
+			} catch (RemoteException e) {
+				handle(listener, e);
+			}
+		}
+	}
+
+	@Override
+	public void onBrokePlayerKickedOutEvent(BrokePlayerKickedOutEvent event){
+		for (RemoteAllEventsListener listener : listeners) {
+			try {
+				listener.onBrokePlayerKickedOutEvent(event);
+			} catch (RemoteException e) {
+				handle(listener, e);
+			}
+		}
+		
+	}
+
+	@Override
+	public void onTableChangedEvent(TableChangedEvent event){
+		for (RemoteAllEventsListener listener : listeners) {
+			try {
+				listener.onTableChangedEvent(event);
+			} catch (RemoteException e) {
+				handle(listener, e);
+			}
+		}
+		
+	}
+
+	@Override
+	public void onTableRemovedEvent(TableRemovedEvent event){
+		for (RemoteAllEventsListener listener : listeners) {
+			try {
+				listener.onTableRemovedEvent(event);
 			} catch (RemoteException e) {
 				handle(listener, e);
 			}

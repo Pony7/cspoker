@@ -28,6 +28,7 @@ import org.cspoker.common.elements.table.TableId;
 import org.cspoker.common.elements.table.TableList;
 import org.cspoker.common.eventlisteners.AllEventsListener;
 import org.cspoker.common.eventlisteners.RemoteAllEventsListener;
+import org.cspoker.common.eventlisteners.game.RemoteBrokePlayerKickedOutListener;
 import org.cspoker.common.eventlisteners.game.RemoteGameMessageListener;
 import org.cspoker.common.eventlisteners.game.RemoteNewCommunityCardsListener;
 import org.cspoker.common.eventlisteners.game.RemoteNewDealListener;
@@ -47,7 +48,10 @@ import org.cspoker.common.eventlisteners.game.actions.RemoteRaiseListener;
 import org.cspoker.common.eventlisteners.game.actions.RemoteSmallBlindListener;
 import org.cspoker.common.eventlisteners.game.privatelistener.RemoteNewPocketCardsListener;
 import org.cspoker.common.eventlisteners.server.RemoteServerMessageListener;
+import org.cspoker.common.eventlisteners.server.RemoteTableChangedListener;
 import org.cspoker.common.eventlisteners.server.RemoteTableCreatedListener;
+import org.cspoker.common.eventlisteners.server.RemoteTableRemovedListener;
+import org.cspoker.common.events.gameevents.BrokePlayerKickedOutEvent;
 import org.cspoker.common.events.gameevents.GameMessageEvent;
 import org.cspoker.common.events.gameevents.NewCommunityCardsEvent;
 import org.cspoker.common.events.gameevents.NewDealEvent;
@@ -67,7 +71,9 @@ import org.cspoker.common.events.gameevents.playeractionevents.RaiseEvent;
 import org.cspoker.common.events.gameevents.playeractionevents.SmallBlindEvent;
 import org.cspoker.common.events.gameevents.privateevents.NewPocketCardsEvent;
 import org.cspoker.common.events.serverevents.ServerMessageEvent;
+import org.cspoker.common.events.serverevents.TableChangedEvent;
 import org.cspoker.common.events.serverevents.TableCreatedEvent;
+import org.cspoker.common.events.serverevents.TableRemovedEvent;
 import org.cspoker.common.exceptions.IllegalActionException;
 import org.cspoker.common.player.PlayerId;
 import org.cspoker.server.common.game.GameManager;
@@ -546,6 +552,43 @@ public class PlayerCommunicationImpl extends PlayerCommunication {
 							"RemoteException from event handler, ignoring", e);
 				}
 			}
+		}
+
+		@Override
+		public void onBrokePlayerKickedOutEvent(BrokePlayerKickedOutEvent event){
+			for (RemoteBrokePlayerKickedOutListener listener : eventListeners) {
+				try {
+					listener.onBrokePlayerKickedOutEvent(event);
+				} catch (Exception e) {
+					logger.error(
+							"RemoteException from event handler, ignoring", e);
+				}
+			}
+			
+		}
+
+		@Override
+		public void onTableChangedEvent(TableChangedEvent event){
+			for (RemoteTableChangedListener listener : eventListeners) {
+				try {
+					listener.onTableChangedEvent(event);
+				} catch (Exception e) {
+					logger.error(
+							"RemoteException from event handler, ignoring", e);
+				}
+			}
+		}
+
+		@Override
+		public void onTableRemovedEvent(TableRemovedEvent event){
+			for (RemoteTableRemovedListener listener : eventListeners) {
+				try {
+					listener.onTableRemovedEvent(event);
+				} catch (Exception e) {
+					logger.error(
+							"RemoteException from event handler, ignoring", e);
+				}
+			}			
 		}
 	}
 

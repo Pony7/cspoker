@@ -23,6 +23,7 @@ import javax.xml.bind.PropertyException;
 
 import org.apache.log4j.Logger;
 import org.cspoker.common.events.Event;
+import org.cspoker.common.events.gameevents.BrokePlayerKickedOutEvent;
 import org.cspoker.common.events.gameevents.GameMessageEvent;
 import org.cspoker.common.events.gameevents.NewCommunityCardsEvent;
 import org.cspoker.common.events.gameevents.NewDealEvent;
@@ -42,7 +43,9 @@ import org.cspoker.common.events.gameevents.playeractionevents.RaiseEvent;
 import org.cspoker.common.events.gameevents.playeractionevents.SmallBlindEvent;
 import org.cspoker.common.events.gameevents.privateevents.NewPocketCardsEvent;
 import org.cspoker.common.events.serverevents.ServerMessageEvent;
+import org.cspoker.common.events.serverevents.TableChangedEvent;
 import org.cspoker.common.events.serverevents.TableCreatedEvent;
+import org.cspoker.common.events.serverevents.TableRemovedEvent;
 import org.cspoker.common.xml.EventAndActionJAXBContext;
 import org.cspoker.common.xml.XmlEventListener;
 import org.cspoker.common.xml.eventlisteners.AllEventListenerWithInvocation;
@@ -171,6 +174,21 @@ public class ToXmlAllEventsListener implements AllEventListenerWithInvocation {
 
 	@Override
 	public void onSuccessfullInvokation(SuccessfulInvocationEvent<?> event) {
+		eventToCollector(event);
+	}
+
+	@Override
+	public void onBrokePlayerKickedOutEvent(BrokePlayerKickedOutEvent event){
+		eventToCollector(event);
+	}
+
+	@Override
+	public void onTableChangedEvent(TableChangedEvent event){
+		eventToCollector(event);
+	}
+
+	@Override
+	public void onTableRemovedEvent(TableRemovedEvent event){
 		eventToCollector(event);
 	}
 
