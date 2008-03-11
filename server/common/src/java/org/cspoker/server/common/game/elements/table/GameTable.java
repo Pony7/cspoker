@@ -254,9 +254,11 @@ public class GameTable {
 			throw new IllegalArgumentException(player
 					+ " is not a player of this table.");
 		}
-		SeatId id = reverseLookUp(player);
-		if(id!=null)
-			players.remove(id);
+		SeatId seatId = player.getSeatId();
+		if(seatId!=null){
+			players.remove(seatId);
+			player.setSeatId(null);
+		}
 	}
 	
 
@@ -298,6 +300,7 @@ public class GameTable {
 		}
 		if(!isValidSeatId(seatId))
 			throw new PlayerListFullException();
+		player.setSeatId(seatId);
 		return seatId;
 	}
 	
@@ -315,6 +318,7 @@ public class GameTable {
 		if(players.putIfAbsent(seatId, player)!=null){
 			throw new SeatTakenException(tableId, seatId);
 		}
+		player.setSeatId(seatId);
 	}
 	
 	public boolean isValidSeatId(SeatId seatId){
@@ -389,14 +393,11 @@ public class GameTable {
 	}
 	
 	public synchronized Table getSavedTable(){
-		List<Player> playerList = new ArrayList<Player>(gameProperty.getMaxNbPlayers());
-		for(int i=0;i<gameProperty.getMaxNbPlayers();i++){
-			playerList.add(null);
+		List<Player> playerList = new ArrayList<Player>(getNbPlayers());
+		for(GamePlayer player:players.values()){
+			playerList.add(player.getSavedPlayer());
 		}
-		for(SeatId id:players.keySet()){
-			playerList.set(id.getID(), players.get(id).getSavedPlayer());
-		}
-		return new Table(tableId, name, getNbPlayers(), playerList, playing, gameProperty);
+		return new Table(tableId, name, playerList, playing, gameProperty);
 	}
 	
 	protected SeatId reverseLookUp(GamePlayer player){

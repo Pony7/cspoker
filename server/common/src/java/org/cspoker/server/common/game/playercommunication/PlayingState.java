@@ -114,6 +114,10 @@ class PlayingState extends PlayerCommunicationState {
 			// kill the hard way?
 			// TODO
 		}
+		GameManager.getServerMediator().unsubscribeAllServerEventsListener(
+				playerCommunication.getId(),
+				playerCommunication.getAllEventsListener());
+		
 	}
 
 }
