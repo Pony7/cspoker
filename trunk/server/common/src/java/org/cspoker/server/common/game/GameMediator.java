@@ -27,6 +27,7 @@ import org.cspoker.common.elements.table.SeatId;
 import org.cspoker.common.elements.table.TableId;
 import org.cspoker.common.eventlisteners.EventListener;
 import org.cspoker.common.eventlisteners.game.AllGameEventsListener;
+import org.cspoker.common.eventlisteners.game.BrokePlayerKickedOutListener;
 import org.cspoker.common.eventlisteners.game.GameEventListener;
 import org.cspoker.common.eventlisteners.game.GameMessageListener;
 import org.cspoker.common.eventlisteners.game.NewCommunityCardsListener;
@@ -47,6 +48,7 @@ import org.cspoker.common.eventlisteners.game.actions.RaiseListener;
 import org.cspoker.common.eventlisteners.game.actions.SmallBlindListener;
 import org.cspoker.common.eventlisteners.game.privatelistener.NewPocketCardsListener;
 import org.cspoker.common.events.Event;
+import org.cspoker.common.events.gameevents.BrokePlayerKickedOutEvent;
 import org.cspoker.common.events.gameevents.GameEvent;
 import org.cspoker.common.events.gameevents.GameMessageEvent;
 import org.cspoker.common.events.gameevents.NewCommunityCardsEvent;
@@ -929,6 +931,46 @@ public class GameMediator implements PlayerAction {
 	 * message.
 	 */
 	private final List<GameMessageListener> gameMessageListeners = new CopyOnWriteArrayList<GameMessageListener>();
+	
+	/**
+	 * Inform all subscribed broke player kicked out listeners a broke player kicked out event has occurred.
+	 * 
+	 * Each subscribed broke player kicked out listener is updated by calling their
+	 * onBrokePlayerKickedOut() method.
+	 * 
+	 */
+	public synchronized void publishBrokePlayerKickedOutEvent(BrokePlayerKickedOutEvent event) {
+		for (BrokePlayerKickedOutListener listener : brokePlayerKickedOutListeners) {
+			listener.onBrokePlayerKickedOutEvent(event);
+		}
+		publishGameEvent(event);
+	}
+
+	/**
+	 * Subscribe the given broke player kicked out listener for broke player kicked out events.
+	 * 
+	 * @param 	listener
+	 *      	The listener to subscribe.
+	 */
+	public void subscribeBrokePlayerKickedOutListener(BrokePlayerKickedOutListener listener) {
+		brokePlayerKickedOutListeners.add(listener);
+	}
+
+	/**
+	 * Unsubscribe the given broke player kicked out listener for broke player kicked out events.
+	 * 
+	 * @param 	listener
+	 *  		The listener to unsubscribe.
+	 */
+	public void unsubscribeBrokePlayerKickedOutListener(BrokePlayerKickedOutListener listener) {
+		brokePlayerKickedOutListeners.remove(listener);
+	}
+
+	/**
+	 * This list contains all broke player kicked out listeners that should be alerted on a
+	 * broke player kicked out.
+	 */
+	private final List<BrokePlayerKickedOutListener> brokePlayerKickedOutListeners = new CopyOnWriteArrayList<BrokePlayerKickedOutListener>();
 
 	/***************************************************************************
 	 * Personal Events
@@ -1232,6 +1274,7 @@ public class GameMediator implements PlayerAction {
 		subscribeShowHandListener(listener);
 		subscribeSmallBlindListener(listener);
 		subscribeWinnerListener(listener);
+		subscribeBrokePlayerKickedOutListener(listener);
 	}
 
 	public void unsubscribeAllGameEventsListener(PlayerId id,
@@ -1254,5 +1297,6 @@ public class GameMediator implements PlayerAction {
 		unsubscribeShowHandListener(listener);
 		unsubscribeSmallBlindListener(listener);
 		unsubscribeWinnerListener(listener);
+		unsubscribeBrokePlayerKickedOutListener(listener);
 	}
 }

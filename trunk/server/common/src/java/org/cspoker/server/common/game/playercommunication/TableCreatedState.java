@@ -18,6 +18,7 @@ package org.cspoker.server.common.game.playercommunication;
 import org.apache.log4j.Logger;
 import org.cspoker.common.elements.table.SeatId;
 import org.cspoker.common.elements.table.TableId;
+import org.cspoker.common.events.serverevents.TableRemovedEvent;
 import org.cspoker.common.exceptions.IllegalActionException;
 import org.cspoker.common.player.PlayerId;
 import org.cspoker.server.common.game.GameManager;
@@ -99,6 +100,7 @@ class TableCreatedState extends WaitingAtTableState {
 			if (table.getNbPlayers() == 1) {
 				TableManager.global_table_manager.removeTable(table);
 				super.leaveTable();
+				GameManager.getServerMediator().publishTableRemovedEvent(new TableRemovedEvent(table.getId()));
 			} else {
 				throw new IllegalActionException(
 						"The owner can only leave if he is the only player at the table.");

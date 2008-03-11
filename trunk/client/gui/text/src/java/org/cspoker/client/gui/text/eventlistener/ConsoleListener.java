@@ -15,8 +15,6 @@
  */
 package org.cspoker.client.gui.text.eventlistener;
 
-import java.rmi.RemoteException;
-
 import org.cspoker.client.gui.text.Console;
 import org.cspoker.common.eventlisteners.RemoteAllEventsListener;
 import org.cspoker.common.events.gameevents.BrokePlayerKickedOutEvent;

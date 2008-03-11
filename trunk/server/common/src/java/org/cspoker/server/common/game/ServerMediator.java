@@ -22,10 +22,14 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import org.cspoker.common.eventlisteners.EventListener;
 import org.cspoker.common.eventlisteners.server.AllServerEventsListener;
 import org.cspoker.common.eventlisteners.server.ServerMessageListener;
+import org.cspoker.common.eventlisteners.server.TableChangedListener;
 import org.cspoker.common.eventlisteners.server.TableCreatedListener;
+import org.cspoker.common.eventlisteners.server.TableRemovedListener;
 import org.cspoker.common.events.Event;
 import org.cspoker.common.events.serverevents.ServerMessageEvent;
+import org.cspoker.common.events.serverevents.TableChangedEvent;
 import org.cspoker.common.events.serverevents.TableCreatedEvent;
+import org.cspoker.common.events.serverevents.TableRemovedEvent;
 import org.cspoker.common.player.PlayerId;
 
 public class ServerMediator {
@@ -117,6 +121,87 @@ public class ServerMediator {
 	 */
 	private final List<ServerMessageListener> serverMessageListeners = new CopyOnWriteArrayList<ServerMessageListener>();
 
+	/**
+	 * Inform all subscribed table changed listeners a table changed event has occurred.
+	 * 
+	 * Each subscribed table changed listener is updated by calling their
+	 * onTableChanged() method.
+	 * 
+	 */
+	public synchronized void publishTableChangedEvent(TableChangedEvent event) {
+		for (TableChangedListener listener : tableChangedListeners) {
+			listener.onTableChangedEvent(event);
+		}
+		publishServerEvent(event);
+	}
+
+	/**
+	 * Subscribe the given table changed listener for table changed events.
+	 * 
+	 * @param 	listener
+	 *      	The listener to subscribe.
+	 */
+	public void subscribeTableChangedListener(TableChangedListener listener) {
+		tableChangedListeners.add(listener);
+	}
+
+	/**
+	 * Unsubscribe the given table changed listener for table changed events.
+	 * 
+	 * @param 	listener
+	 *  		The listener to unsubscribe.
+	 */
+	public void unsubscribeTableChangedListener(TableChangedListener listener) {
+		tableChangedListeners.remove(listener);
+	}
+
+	/**
+	 * This list contains all table changed listeners that should be alerted on a
+	 * table changed.
+	 */
+	private final List<TableChangedListener> tableChangedListeners = new CopyOnWriteArrayList<TableChangedListener>();
+	
+	/**
+	 * Inform all subscribed table removed listeners a table removed event has occurred.
+	 * 
+	 * Each subscribed table removed listener is updated by calling their
+	 * onTableRemoved() method.
+	 * 
+	 */
+	public synchronized void publishTableRemovedEvent(TableRemovedEvent event) {
+		for (TableRemovedListener listener : tableRemovedListeners) {
+			listener.onTableRemovedEvent(event);
+		}
+		publishServerEvent(event);
+	}
+
+	/**
+	 * Subscribe the given table removed listener for table removed events.
+	 * 
+	 * @param 	listener
+	 *      	The listener to subscribe.
+	 */
+	public void subscribeTableRemovedListener(TableRemovedListener listener) {
+		tableRemovedListeners.add(listener);
+	}
+
+	/**
+	 * Unsubscribe the given table removed listener for table removed events.
+	 * 
+	 * @param 	listener
+	 *  		The listener to unsubscribe.
+	 */
+	public void unsubscribeTableRemovedListener(TableRemovedListener listener) {
+		tableRemovedListeners.remove(listener);
+	}
+
+	/**
+	 * This list contains all table removed listeners that should be alerted on a
+	 * table removed.
+	 */
+	private final List<TableRemovedListener> tableRemovedListeners = new CopyOnWriteArrayList<TableRemovedListener>();
+	
+	
 	/***************************************************************************
 	 * Server Events
 	 **************************************************************************/
@@ -164,11 +249,15 @@ public class ServerMediator {
 			AllServerEventsListener listener) {
 		subscribeServerMessageListener(listener);
 		subscribeTableCreatedListener(listener);
+		subscribeTableChangedListener(listener);
+		subscribeTableRemovedListener(listener);
 	}
 
 	public void unsubscribeAllServerEventsListener(PlayerId id,
 			AllServerEventsListener listener) {
 		unsubscribeServerMessageListener(listener);
 		unsubscribeTableCreatedListener(listener);
+		unsubscribeTableChangedListener(listener);
+		unsubscribeTableRemovedListener(listener);
 	}
 }
