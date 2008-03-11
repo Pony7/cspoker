@@ -49,7 +49,7 @@ public class TableRemovedEvent extends ServerEvent{
 	@Override
 	public void dispatch(RemoteAllEventsListener listener)
 			throws RemoteException {
-		//TODO
+		listener.onTableRemovedEvent(this);
 	}
 
 }

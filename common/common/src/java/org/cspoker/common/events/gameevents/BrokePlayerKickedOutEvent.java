@@ -54,7 +54,7 @@ public class BrokePlayerKickedOutEvent extends GameEvent{
 	@Override
 	public void dispatch(RemoteAllEventsListener listener)
 			throws RemoteException {
-		//TODO
+		listener.onBrokePlayerKickedOutEvent(this);
 	}
 
 }
