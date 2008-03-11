@@ -384,7 +384,7 @@ public class GameTable {
 	 * 
 	 * @return The number of players at this table.
 	 */
-	public int getNbPlayers() {
+	public synchronized int getNbPlayers() {
 		return players.size();
 	}
 	

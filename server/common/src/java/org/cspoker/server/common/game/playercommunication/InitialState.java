@@ -21,6 +21,7 @@ import org.cspoker.common.elements.table.SeatId;
 import org.cspoker.common.elements.table.Table;
 import org.cspoker.common.elements.table.TableId;
 import org.cspoker.common.events.gameevents.PlayerJoinedTableEvent;
+import org.cspoker.common.events.serverevents.TableChangedEvent;
 import org.cspoker.common.events.serverevents.TableCreatedEvent;
 import org.cspoker.common.exceptions.IllegalActionException;
 import org.cspoker.server.common.game.GameManager;
@@ -98,6 +99,8 @@ class InitialState extends PlayerCommunicationState {
 					.setPlayerCommunicationState(new WaitingAtTableState(
 							playerCommunication, table, GameManager.getGame(table.getId())));
 		}
+		GameManager.getServerMediator().publishTableChangedEvent(new TableChangedEvent(table.getSavedTable()));
+		
 		InitialState.logger.info(playerCommunication.getPlayer().getName()
 				+ " joined " + tableId + ".");
 	}

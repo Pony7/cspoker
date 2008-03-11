@@ -24,6 +24,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.cspoker.common.elements.pots.Pots;
 import org.cspoker.common.elements.table.SeatId;
+import org.cspoker.common.elements.table.TableId;
 import org.cspoker.common.events.gameevents.NextPlayerEvent;
 import org.cspoker.common.events.gameevents.PlayerJoinedTableEvent;
 import org.cspoker.common.events.gameevents.PlayerLeftTableEvent;
@@ -32,6 +33,7 @@ import org.cspoker.common.events.gameevents.playeractionevents.CallEvent;
 import org.cspoker.common.events.gameevents.playeractionevents.CheckEvent;
 import org.cspoker.common.events.gameevents.playeractionevents.FoldEvent;
 import org.cspoker.common.events.gameevents.playeractionevents.RaiseEvent;
+import org.cspoker.common.events.serverevents.TableRemovedEvent;
 import org.cspoker.common.exceptions.IllegalActionException;
 import org.cspoker.server.common.game.GameManager;
 import org.cspoker.server.common.game.GameMediator;
@@ -305,7 +307,9 @@ public class GameControl implements PlayerAction {
 		gameMediator.publishPlayerLeftTable(new PlayerLeftTableEvent(player.getSavedPlayer()));
 		if(game.getNbSeatedPlayers()==0){
 			TableManager.global_table_manager.removeTable(game.getTable());
-			GameManager.removeGame(game.getTable().getId());
+			TableId id = game.getTable().getId();
+			GameManager.removeGame(id);
+			GameManager.getServerMediator().publishTableRemovedEvent(new TableRemovedEvent(id));
 		}else{
 			if(checkForRoundEnded)
 				checkIfEndedAndChangeRound();
