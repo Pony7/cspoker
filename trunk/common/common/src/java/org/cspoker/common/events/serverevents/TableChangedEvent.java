@@ -47,8 +47,7 @@ public class TableChangedEvent extends ServerEvent {
 	@Override
 	public void dispatch(RemoteAllEventsListener listener)
 			throws RemoteException {
-		// TODO Auto-generated method stub
-
+		listener.onTableChangedEvent(this);
 	}
 
 }
