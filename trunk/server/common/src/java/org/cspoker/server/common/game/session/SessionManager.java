@@ -16,6 +16,10 @@
 package org.cspoker.server.common.game.session;
 
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Executors;
+import java.util.concurrent.RejectedExecutionException;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import org.cspoker.common.player.PlayerId;
 
@@ -25,6 +29,8 @@ public class SessionManager {
 
 	private ConcurrentHashMap<String, Session> sessions = new ConcurrentHashMap<String, Session>();
 	private ConcurrentHashMap<PlayerId, Session> sessionByID = new ConcurrentHashMap<PlayerId, Session>();
+	
+	private static final ScheduledExecutorService sessionKiller = Executors.newScheduledThreadPool(1);
 
 	public Session getSession(String username) {
 		Session newSession = new Session(username);
@@ -35,6 +41,7 @@ public class SessionManager {
 			} catch (PlayerKilledExcepion e) {
 				// no op
 			}
+			submitTimeOutHandler(newSession);
 			return newSession;
 		}
 		return oldSession;
@@ -56,9 +63,39 @@ public class SessionManager {
 				sessionByID.remove(id);
 			}
 		}
-
 	}
+	
+	public void killSession(Session session) {
+		try {
+			PlayerId id = session.getPlayer().getId();
+			session.kill();
+			sessions.remove(session.getUserName());
+			sessionByID.remove(id);
+		} catch (PlayerKilledExcepion e) {
+		}
+	}
+	
+	private void submitTimeOutHandler(final Session session){
+		System.out.println("submit "+session.toString());
+		sessionKiller.scheduleWithFixedDelay(new Runnable(){
 
+			@Override
+			public void run(){
+				try {
+					System.out.println("called "+session.toString());
+					if(!session.getPlayerCommunication().isActive()){
+						System.out.println("kill session "+session.toString());
+						session.kill();
+						throw new RejectedExecutionException();
+					}
+				} catch (PlayerKilledExcepion e) {
+					throw new RejectedExecutionException();
+				}
+			}
+			
+		}, 1000000, 1000000, TimeUnit.SECONDS);
+		}
+	
 	public Session getSession(PlayerId id) {
 		return sessionByID.get(id);
 	}

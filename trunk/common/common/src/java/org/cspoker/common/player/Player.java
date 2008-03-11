@@ -22,8 +22,10 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 
+import org.cspoker.common.elements.table.SeatId;
+
 /**
- * A class of immutable saved players.
+ * A class of immutable players.
  * 
  * 
  * @author Kenzo
@@ -39,6 +41,8 @@ public class Player implements Serializable {
 	 */
 	@XmlAttribute
 	private PlayerId id;
+	
+	private SeatId seatId;
 
 	/**
 	 * The name of the player.
@@ -56,8 +60,9 @@ public class Player implements Serializable {
 	 */
 	private int betChipsValue;
 
-	public Player(PlayerId id, String name, int stackValue, int betChipsValue) {
+	public Player(PlayerId id, SeatId seatId, String name, int stackValue, int betChipsValue) {
 		this.id = id;
+		this.seatId = seatId;
 		this.name = name;
 		this.stackValue = stackValue;
 		this.betChipsValue = betChipsValue;
@@ -68,36 +73,45 @@ public class Player implements Serializable {
 	}
 
 	/**
-	 * Returns the id of this saved player.
+	 * Returns the id of this player.
 	 * 
-	 * @return The id of this saved player.
+	 * @return The id of this player.
 	 */
 	public PlayerId getId() {
 		return id;
 	}
+	
+	/**
+	 * Returns the seat id of this player.
+	 * 
+	 * @return The seat id of this player.
+	 */
+	public SeatId getSeatId(){
+		return seatId;
+	}
 
 	/**
-	 * Returns the name of this saved player.
+	 * Returns the name of this player.
 	 * 
-	 * @return The name of this saved player.
+	 * @return The name of this player.
 	 */
 	public String getName() {
 		return name;
 	}
 
 	/**
-	 * Returns the stack value of this saved player.
+	 * Returns the stack value of this player.
 	 * 
-	 * @return The stack value of this saved player.
+	 * @return The stack value of this player.
 	 */
 	public int getStackValue() {
 		return stackValue;
 	}
 
 	/**
-	 * Returns the bet chips value of this saved player.
+	 * Returns the bet chips value of this player.
 	 * 
-	 * @return The bet chips value of this saved player.
+	 * @return The bet chips value of this player.
 	 */
 	public int getBetChipsValue() {
 		return betChipsValue;

@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.cspoker.common.elements.cards.Card;
+import org.cspoker.common.elements.table.SeatId;
 import org.cspoker.common.player.Player;
 import org.cspoker.common.player.PlayerId;
 import org.cspoker.server.common.game.elements.chips.Chips;
@@ -63,6 +64,11 @@ public class GamePlayer {
 	 * The hidden cards.
 	 */
 	private final List<Card> pocketCards;
+	
+	/**
+	 * The variable containing the seat id.
+	 */
+	private SeatId seatId;
 
 	/***************************************************************************
 	 * Constructor
@@ -110,6 +116,23 @@ public class GamePlayer {
 	 */
 	public PlayerId getId() {
 		return id;
+	}
+	
+	/***************************************************************************
+	 * Seat Id
+	 **************************************************************************/
+
+	/**
+	 * Returns the id of this player.
+	 * 
+	 * @return The id of this player.
+	 */
+	public SeatId getSeatId() {
+		return seatId;
+	}
+	
+	public void setSeatId(SeatId seatId){
+		this.seatId = seatId;
 	}
 
 	/***************************************************************************
@@ -206,7 +229,7 @@ public class GamePlayer {
 	}
 
 	public synchronized Player getSavedPlayer() {
-		return new Player(getId(), getName(), getStack().getValue(),
+		return new Player(getId(), getSeatId(), getName(), getStack().getValue(),
 				getBetChips().getValue());
 	}
 }

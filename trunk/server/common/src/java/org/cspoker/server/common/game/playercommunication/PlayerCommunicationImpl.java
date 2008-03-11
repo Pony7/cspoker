@@ -18,6 +18,7 @@ package org.cspoker.server.common.game.playercommunication;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.apache.log4j.Logger;
 import org.cspoker.common.PlayerCommunication;
@@ -107,6 +108,8 @@ public class PlayerCommunicationImpl extends PlayerCommunication {
 	 * This variable contains the player communication state.
 	 */
 	private PlayerCommunicationState state;
+	
+	private AtomicBoolean isActive = new AtomicBoolean(true);
 
 	/***************************************************************************
 	 * Constructor
@@ -160,36 +163,43 @@ public class PlayerCommunicationImpl extends PlayerCommunication {
 
 	@Override
 	public void call() throws IllegalActionException {
+		stillAlive();
 		state.call();
 	}
 
 	@Override
 	public void bet(int amount) throws IllegalActionException {
+		stillAlive();
 		state.bet(amount);
 	}
 
 	@Override
 	public void fold() throws IllegalActionException {
+		stillAlive();
 		state.fold();
 	}
 
 	@Override
 	public void check() throws IllegalActionException {
+		stillAlive();
 		state.check();
 	}
 
 	@Override
 	public void raise(int amount) throws IllegalActionException {
+		stillAlive();
 		state.raise(amount);
 	}
 
 	@Override
 	public void allIn() throws IllegalActionException {
+		stillAlive();
 		state.allIn();
 	}
 
 	@Override
 	public void say(String message) {
+		stillAlive();
 		state.say(message);
 	}
 
@@ -207,6 +217,7 @@ public class PlayerCommunicationImpl extends PlayerCommunication {
 	 */
 	@Override
 	public Table joinTable(TableId tableId, SeatId seatId) throws IllegalActionException {
+		stillAlive();
 		state.join(tableId, seatId);
 		return TableManager.global_table_manager.getTable(tableId).getSavedTable();
 	}
@@ -221,17 +232,20 @@ public class PlayerCommunicationImpl extends PlayerCommunication {
 	 */
 	@Override
 	public Table joinTable(TableId tableId) throws IllegalActionException {
+		stillAlive();
 		state.join(tableId, null);
 		return TableManager.global_table_manager.getTable(tableId).getSavedTable();
 	}
 
 	@Override
 	public void leaveTable() throws IllegalActionException {
+		stillAlive();
 		state.leaveTable();
 	}
 
 	@Override
 	public Table createTable(String name) throws IllegalActionException {
+		stillAlive();
 		return state.createTable(name);
 	}
 	
@@ -244,6 +258,7 @@ public class PlayerCommunicationImpl extends PlayerCommunication {
 	
 	@Override
 	public Table getTable(TableId id) throws IllegalActionException{
+		stillAlive();
 		try {
 			return TableManager.global_table_manager.getTable(id).getSavedTable();
 		} catch (IllegalArgumentException e) {
@@ -253,11 +268,13 @@ public class PlayerCommunicationImpl extends PlayerCommunication {
 
 	@Override
 	public TableList getTables(){
+		stillAlive();
 		return new TableList(TableManager.global_table_manager.getAllTables());
 	}
 
 	@Override
 	public void startGame() throws IllegalActionException {
+		stillAlive();
 		state.startGame();
 	}
 
@@ -272,6 +289,14 @@ public class PlayerCommunicationImpl extends PlayerCommunication {
 	@Override
 	public String toString() {
 		return "player communication of " + player.getName();
+	}
+	
+	public boolean isActive(){
+		return isActive.getAndSet(false);
+	}
+	
+	private void stillAlive(){
+		isActive.set(true);
 	}
 
 	/***************************************************************************

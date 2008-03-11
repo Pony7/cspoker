@@ -41,11 +41,12 @@ public class TableTest extends TestCase {
 		assertTrue(table.isValidSeatId(new SeatId(0)));
 		assertEquals(0, table.getNbPlayers());
 		assertEquals(0, table.getSavedTable().getNbPlayers());
+		assertEquals(0, table.getSavedTable().getPlayers().size());
 		
 		GamePlayer kenzo = PlayerFactory.global_Player_Factory.createNewPlayer("kenzo");
 		
 		assertFalse(table.hasAsPlayer(kenzo));
-		assertEquals(table.getGameProperty().getMaxNbPlayers(), table.getSavedTable().getPlayers().size());
+		assertEquals(0, table.getSavedTable().getNbPlayers());
 		
 		try {
 			table.addPlayer(new SeatId(0), kenzo);
@@ -57,7 +58,7 @@ public class TableTest extends TestCase {
 		assertEquals(1, table.getNbPlayers());
 		assertEquals(1, table.getSavedTable().getNbPlayers());
 		assertEquals(kenzo.getId(), table.getSavedTable().getPlayers().get(0).getId());
-		assertEquals(table.getGameProperty().getMaxNbPlayers(), table.getSavedTable().getPlayers().size());
+		assertEquals(1, table.getSavedTable().getPlayers().size());
 		
 		/**
 		 * Add another player to the same seat.
@@ -87,7 +88,7 @@ public class TableTest extends TestCase {
 		GamePlayer kenzo = PlayerFactory.global_Player_Factory.createNewPlayer("kenzo");
 		
 		assertFalse(table.hasAsPlayer(kenzo));
-		assertEquals(table.getGameProperty().getMaxNbPlayers(), table.getSavedTable().getPlayers().size());
+		assertEquals(0, table.getSavedTable().getPlayers().size());
 		
 		try {
 			table.addPlayer(kenzo);
@@ -99,7 +100,7 @@ public class TableTest extends TestCase {
 		assertEquals(1, table.getNbPlayers());
 		assertEquals(1, table.getSavedTable().getNbPlayers());
 		assertEquals(kenzo.getId(), table.getSavedTable().getPlayers().get(0).getId());
-		assertEquals(table.getGameProperty().getMaxNbPlayers(), table.getSavedTable().getPlayers().size());
+		assertEquals(1, table.getSavedTable().getPlayers().size());
 		
 		/**
 		 * Add another player to the same seat.
@@ -140,7 +141,7 @@ public class TableTest extends TestCase {
 			assertTrue(table.hasAsPlayer(player));
 			assertEquals(i+1, table.getNbPlayers());
 			assertEquals(i+1, table.getSavedTable().getNbPlayers());
-			assertEquals(table.getGameProperty().getMaxNbPlayers(), table.getSavedTable().getPlayers().size());
+			assertEquals(i+1, table.getSavedTable().getPlayers().size());
 		}
 		
 		assertEquals(maxNbPlayers, table.getNbPlayers());
@@ -175,12 +176,11 @@ public class TableTest extends TestCase {
 		}
 		
 		assertTrue(table.hasAsPlayer(kenzo));
-		assertEquals(kenzo.getId(), table.getSavedTable().getPlayers().get(0).getId());
+		
 		
 		table.removePlayer(kenzo);
 		
 		assertFalse(table.hasAsPlayer(kenzo));
-		assertNull(table.getSavedTable().getPlayers().get(0));
 		
 		try {
 			table.addPlayer(new SeatId(0), kenzo);
@@ -189,7 +189,6 @@ public class TableTest extends TestCase {
 		}
 		
 		assertTrue(table.hasAsPlayer(kenzo));
-		assertEquals(kenzo.getId(), table.getSavedTable().getPlayers().get(0).getId());
 	}
 
 }

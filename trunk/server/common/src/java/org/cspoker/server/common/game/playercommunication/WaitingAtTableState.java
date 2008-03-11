@@ -79,7 +79,14 @@ class WaitingAtTableState extends PlayerCommunicationState {
 	@Override
 	public void kill() {
 		// remove to killed player from the table
-		table.removePlayer(playerCommunication.getPlayer());
+		try {
+			leaveTable();
+		} catch (IllegalActionException e) {
+		}
+
+		GameManager.getServerMediator().unsubscribeAllServerEventsListener(
+				playerCommunication.getId(),
+				playerCommunication.getAllEventsListener());
 	}
 
 }

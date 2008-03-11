@@ -17,8 +17,6 @@
 package org.cspoker.common.elements.table;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -52,19 +50,17 @@ public class Table implements Serializable  {
 	@XmlElement(name = "player")
 	private List<Player> players;
 	
-	private int nbPlayers;
 	
 	private boolean playing;
 	
 	private GameProperty property;
 	
-	public Table(TableId id, String name, int nbPlayers, Collection<Player> players, boolean playing, GameProperty property){
+	public Table(TableId id, String name, List<Player> players, boolean playing, GameProperty property){
 		this.id = id;
 		this.name = name;
 		if(players==null)
 			throw new IllegalArgumentException("The given list of players must be effective.");
-		this.players = Collections.unmodifiableList(new ArrayList<Player>(players));
-		this.nbPlayers = nbPlayers;
+		this.players = Collections.unmodifiableList(players);
 		this.playing = playing;
 		this.property = property;
 	}
@@ -97,9 +93,6 @@ public class Table implements Serializable  {
 	
 	/**
 	 * Returns the list of players at this table.
-	 * The size of the returned list equals the maximum number of players at this table.
-	 * 
-	 * Be aware that this list contains null-elements if the table is not full.
 	 * 
 	 * @return The list of players at this table.
 	 */
@@ -113,7 +106,7 @@ public class Table implements Serializable  {
 	 * @return The number of players seated at this table.
 	 */
 	public int getNbPlayers(){
-		return nbPlayers;
+		return players.size();
 	}
 	
 	/**

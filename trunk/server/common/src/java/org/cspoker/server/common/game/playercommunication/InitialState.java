@@ -139,6 +139,7 @@ class InitialState extends PlayerCommunicationState {
 
 	@Override
 	public void kill() {
-		// no op
+		GameManager.getServerMediator().unsubscribeAllServerEventsListener(
+				playerCommunication.getId(), playerCommunication.getAllEventsListener());
 	}
 }
