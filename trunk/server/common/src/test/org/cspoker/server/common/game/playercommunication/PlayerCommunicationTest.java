@@ -28,6 +28,7 @@ import org.cspoker.common.PlayerCommunication;
 import org.cspoker.common.elements.table.TableId;
 import org.cspoker.common.eventlisteners.RemoteAllEventsListener;
 import org.cspoker.common.events.Event;
+import org.cspoker.common.events.gameevents.BrokePlayerKickedOutEvent;
 import org.cspoker.common.events.gameevents.GameMessageEvent;
 import org.cspoker.common.events.gameevents.NewCommunityCardsEvent;
 import org.cspoker.common.events.gameevents.NewDealEvent;
@@ -47,7 +48,9 @@ import org.cspoker.common.events.gameevents.playeractionevents.RaiseEvent;
 import org.cspoker.common.events.gameevents.playeractionevents.SmallBlindEvent;
 import org.cspoker.common.events.gameevents.privateevents.NewPocketCardsEvent;
 import org.cspoker.common.events.serverevents.ServerMessageEvent;
+import org.cspoker.common.events.serverevents.TableChangedEvent;
 import org.cspoker.common.events.serverevents.TableCreatedEvent;
+import org.cspoker.common.events.serverevents.TableRemovedEvent;
 import org.cspoker.common.exceptions.IllegalActionException;
 import org.cspoker.common.player.PlayerId;
 import org.cspoker.server.common.game.gamecontrol.TestPlayerFactory;
@@ -260,71 +263,49 @@ public class PlayerCommunicationTest extends TestCase {
 
 		@Override
 		public void onAllInEvent(AllInEvent event) throws RemoteException {
-			// TODO Auto-generated method stub
-
 		}
 
 		@Override
 		public void onBetEvent(BetEvent event) throws RemoteException {
-			// TODO Auto-generated method stub
-
 		}
 
 		@Override
 		public void onBigBlindEvent(BigBlindEvent event) throws RemoteException {
-			// TODO Auto-generated method stub
-
 		}
 
 		@Override
 		public void onCallEvent(CallEvent event) throws RemoteException {
-			// TODO Auto-generated method stub
-
 		}
 
 		@Override
 		public void onCheckEvent(CheckEvent event) throws RemoteException {
-			// TODO Auto-generated method stub
-
 		}
 
 		@Override
 		public void onFoldEvent(FoldEvent event) throws RemoteException {
-			// TODO Auto-generated method stub
-
 		}
 
 		@Override
 		public void onRaiseEvent(RaiseEvent event) throws RemoteException {
-			// TODO Auto-generated method stub
-
 		}
 
 		@Override
 		public void onSmallBlindEvent(SmallBlindEvent event)
 				throws RemoteException {
-			// TODO Auto-generated method stub
-
 		}
 
 		@Override
 		public void onNewPocketCardsEvent(NewPocketCardsEvent event)
 				throws RemoteException {
-			// TODO Auto-generated method stub
-
 		}
 
 		@Override
 		public void onNewCommunityCardsEvent(NewCommunityCardsEvent event)
 				throws RemoteException {
-			// TODO Auto-generated method stub
-
 		}
 
 		@Override
 		public void onNewDealEvent(NewDealEvent event) throws RemoteException {
-			// TODO Auto-generated method stub
-
 		}
 
 		@Override
@@ -344,50 +325,50 @@ public class PlayerCommunicationTest extends TestCase {
 		@Override
 		public void onPlayerJoinedGameEvent(PlayerJoinedTableEvent event)
 				throws RemoteException {
-			// TODO Auto-generated method stub
-
 		}
 
 		@Override
 		public void onPlayerLeftTableEvent(PlayerLeftTableEvent event)
 				throws RemoteException {
-			// TODO Auto-generated method stub
-
 		}
 
 		@Override
 		public void onShowHandEvent(ShowHandEvent event) throws RemoteException {
-			// TODO Auto-generated method stub
-
 		}
 
 		@Override
 		public void onWinnerEvent(WinnerEvent event) throws RemoteException {
-			// TODO Auto-generated method stub
-
 		}
 
 		@Override
 		public void onGameMessageEvent(GameMessageEvent event)
 				throws RemoteException {
-			// TODO Auto-generated method stub
-
 		}
 
 		@Override
 		public void onTableCreatedEvent(TableCreatedEvent event)
 				throws RemoteException {
-			// TODO Auto-generated method stub
-
 		}
 
 		@Override
 		public void onServerMessageEvent(ServerMessageEvent event)
 				throws RemoteException {
-			// TODO Auto-generated method stub
-
 		}
 
+		@Override
+		public void onBrokePlayerKickedOutEvent(BrokePlayerKickedOutEvent event)
+				throws RemoteException {
+		}
+
+		@Override
+		public void onTableChangedEvent(TableChangedEvent event)
+				throws RemoteException {
+		}
+
+		@Override
+		public void onTableRemovedEvent(TableRemovedEvent event)
+				throws RemoteException {
+		}
 	}
 
 	private class EventCollector implements RemoteAllEventsListener{
@@ -504,6 +485,24 @@ public class PlayerCommunicationTest extends TestCase {
 
 		@Override
 		public void onServerMessageEvent(ServerMessageEvent event)
+				throws RemoteException {
+			events.add(event);
+		}
+
+		@Override
+		public void onBrokePlayerKickedOutEvent(BrokePlayerKickedOutEvent event)
+				throws RemoteException {
+			events.add(event);
+		}
+
+		@Override
+		public void onTableChangedEvent(TableChangedEvent event)
+				throws RemoteException {
+			events.add(event);
+		}
+
+		@Override
+		public void onTableRemovedEvent(TableRemovedEvent event)
 				throws RemoteException {
 			events.add(event);
 		}

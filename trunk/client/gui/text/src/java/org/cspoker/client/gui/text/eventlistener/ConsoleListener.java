@@ -15,8 +15,11 @@
  */
 package org.cspoker.client.gui.text.eventlistener;
 
+import java.rmi.RemoteException;
+
 import org.cspoker.client.gui.text.Console;
 import org.cspoker.common.eventlisteners.RemoteAllEventsListener;
+import org.cspoker.common.events.gameevents.BrokePlayerKickedOutEvent;
 import org.cspoker.common.events.gameevents.GameMessageEvent;
 import org.cspoker.common.events.gameevents.NewCommunityCardsEvent;
 import org.cspoker.common.events.gameevents.NewDealEvent;
@@ -36,7 +39,9 @@ import org.cspoker.common.events.gameevents.playeractionevents.RaiseEvent;
 import org.cspoker.common.events.gameevents.playeractionevents.SmallBlindEvent;
 import org.cspoker.common.events.gameevents.privateevents.NewPocketCardsEvent;
 import org.cspoker.common.events.serverevents.ServerMessageEvent;
+import org.cspoker.common.events.serverevents.TableChangedEvent;
 import org.cspoker.common.events.serverevents.TableCreatedEvent;
+import org.cspoker.common.events.serverevents.TableRemovedEvent;
 
 public class ConsoleListener implements RemoteAllEventsListener {
 
@@ -144,6 +149,24 @@ public class ConsoleListener implements RemoteAllEventsListener {
 	public void onServerMessageEvent(ServerMessageEvent event) {
 		console.print(event.toString());
 
+	}
+
+	@Override
+	public void onBrokePlayerKickedOutEvent(BrokePlayerKickedOutEvent event)
+	{
+		console.print(event.toString());		
+	}
+
+	@Override
+	public void onTableChangedEvent(TableChangedEvent event)
+	{
+		console.print(event.toString());		
+	}
+
+	@Override
+	public void onTableRemovedEvent(TableRemovedEvent event)
+	{
+		console.print(event.toString());		
 	}
 
 }

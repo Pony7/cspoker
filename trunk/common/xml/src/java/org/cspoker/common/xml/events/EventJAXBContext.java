@@ -21,6 +21,7 @@ import javax.xml.bind.JAXBException;
 import org.apache.log4j.Logger;
 import org.cspoker.common.elements.table.Table;
 import org.cspoker.common.elements.table.TableList;
+import org.cspoker.common.events.gameevents.BrokePlayerKickedOutEvent;
 import org.cspoker.common.events.gameevents.GameMessageEvent;
 import org.cspoker.common.events.gameevents.NewCommunityCardsEvent;
 import org.cspoker.common.events.gameevents.NewDealEvent;
@@ -40,7 +41,9 @@ import org.cspoker.common.events.gameevents.playeractionevents.RaiseEvent;
 import org.cspoker.common.events.gameevents.playeractionevents.SmallBlindEvent;
 import org.cspoker.common.events.gameevents.privateevents.NewPocketCardsEvent;
 import org.cspoker.common.events.serverevents.ServerMessageEvent;
+import org.cspoker.common.events.serverevents.TableChangedEvent;
 import org.cspoker.common.events.serverevents.TableCreatedEvent;
+import org.cspoker.common.events.serverevents.TableRemovedEvent;
 import org.cspoker.common.xml.events.invocation.IllegalActionEvent;
 import org.cspoker.common.xml.events.invocation.SuccessfulInvocationEvent;
 
@@ -71,6 +74,7 @@ public class EventJAXBContext {
 				FoldEvent.class,
 				RaiseEvent.class,
 				SmallBlindEvent.class,
+				BrokePlayerKickedOutEvent.class,
 				// privatevents
 				NewPocketCardsEvent.class,
 				// gameevents
@@ -82,6 +86,7 @@ public class EventJAXBContext {
 				SuccessfulInvocationEvent.class, IllegalActionEvent.class,
 				// serverevents
 				ServerMessageEvent.class, TableCreatedEvent.class,
+				TableChangedEvent.class, TableRemovedEvent.class,
 				// other
 				EventSequence.class, Table.class, TableList.class };
 	}

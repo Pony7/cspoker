@@ -24,6 +24,7 @@ import javax.security.auth.login.LoginException;
 import org.cspoker.client.xml.common.XmlChannelRemotePlayerCommunication;
 import org.cspoker.common.elements.table.TableId;
 import org.cspoker.common.eventlisteners.RemoteAllEventsListener;
+import org.cspoker.common.events.gameevents.BrokePlayerKickedOutEvent;
 import org.cspoker.common.events.gameevents.GameMessageEvent;
 import org.cspoker.common.events.gameevents.NewCommunityCardsEvent;
 import org.cspoker.common.events.gameevents.NewDealEvent;
@@ -43,7 +44,9 @@ import org.cspoker.common.events.gameevents.playeractionevents.RaiseEvent;
 import org.cspoker.common.events.gameevents.playeractionevents.SmallBlindEvent;
 import org.cspoker.common.events.gameevents.privateevents.NewPocketCardsEvent;
 import org.cspoker.common.events.serverevents.ServerMessageEvent;
+import org.cspoker.common.events.serverevents.TableChangedEvent;
 import org.cspoker.common.events.serverevents.TableCreatedEvent;
+import org.cspoker.common.events.serverevents.TableRemovedEvent;
 import org.cspoker.common.exceptions.IllegalActionException;
 import org.cspoker.common.util.Log4JPropertiesLoader;
 
@@ -172,6 +175,24 @@ public class TestHTTP {
 				public void onServerMessageEvent(ServerMessageEvent event) {
 					System.out.println(event.toString());
 
+				}
+
+				@Override
+				public void onBrokePlayerKickedOutEvent(
+						BrokePlayerKickedOutEvent event){
+					System.out.println(event.toString());					
+				}
+
+				@Override
+				public void onTableChangedEvent(TableChangedEvent event)
+				{
+					System.out.println(event.toString());					
+				}
+
+				@Override
+				public void onTableRemovedEvent(TableRemovedEvent event)
+				{
+					System.out.println(event.toString());					
 				}
 
 			});

@@ -4,6 +4,7 @@ import java.rmi.RemoteException;
 
 import org.apache.log4j.Logger;
 import org.cspoker.common.eventlisteners.RemoteAllEventsListener;
+import org.cspoker.common.events.gameevents.BrokePlayerKickedOutEvent;
 import org.cspoker.common.events.gameevents.GameMessageEvent;
 import org.cspoker.common.events.gameevents.NewCommunityCardsEvent;
 import org.cspoker.common.events.gameevents.NewDealEvent;
@@ -23,7 +24,9 @@ import org.cspoker.common.events.gameevents.playeractionevents.RaiseEvent;
 import org.cspoker.common.events.gameevents.playeractionevents.SmallBlindEvent;
 import org.cspoker.common.events.gameevents.privateevents.NewPocketCardsEvent;
 import org.cspoker.common.events.serverevents.ServerMessageEvent;
+import org.cspoker.common.events.serverevents.TableChangedEvent;
 import org.cspoker.common.events.serverevents.TableCreatedEvent;
+import org.cspoker.common.events.serverevents.TableRemovedEvent;
 
 public class RemoteifyingListener implements RemoteAllEventsListener {
 
@@ -304,6 +307,48 @@ public class RemoteifyingListener implements RemoteAllEventsListener {
 			logger.error(e);
 			throw new RemoteException("Unexpected exception",e);
 		}
+	}
+
+	@Override
+	public void onBrokePlayerKickedOutEvent(BrokePlayerKickedOutEvent event)
+			throws RemoteException {
+		try{
+			listener.onBrokePlayerKickedOutEvent(event);
+		}catch(RemoteException e){
+			logger.error(e);
+			throw e;
+		}catch(Exception e){
+			logger.error(e);
+			throw new RemoteException("Unexpected exception",e);
+		}
+	}
+
+	@Override
+	public void onTableChangedEvent(TableChangedEvent event)
+			throws RemoteException {
+		try{
+			listener.onTableChangedEvent(event);
+		}catch(RemoteException e){
+			logger.error(e);
+			throw e;
+		}catch(Exception e){
+			logger.error(e);
+			throw new RemoteException("Unexpected exception",e);
+		}		
+	}
+
+	@Override
+	public void onTableRemovedEvent(TableRemovedEvent event)
+			throws RemoteException {
+		try{
+			listener.onTableRemovedEvent(event);
+		}catch(RemoteException e){
+			logger.error(e);
+			throw e;
+		}catch(Exception e){
+			logger.error(e);
+			throw new RemoteException("Unexpected exception",e);
+		}		
 	}
 
 }
