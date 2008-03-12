@@ -59,7 +59,7 @@ public class PrioritizableComparator extends TestCase {
 				+ "runnable 12 with priority -2, ", names);
 	}
 
-	class TestPrioritizable implements Runnable, Prioritizable {
+	static class TestPrioritizable implements Runnable, Prioritizable {
 
 		private final int priority;
 		private final String name;
@@ -84,7 +84,7 @@ public class PrioritizableComparator extends TestCase {
 
 	}
 
-	class TestRunnable implements Runnable {
+	static class TestRunnable implements Runnable {
 
 		private final String name;
 

@@ -93,7 +93,7 @@ public class SessionManager {
 				}
 			}
 			
-		}, 10, 10, TimeUnit.SECONDS);
+		}, 10, 10, TimeUnit.MINUTES);
 		}
 	
 	public Session getSession(PlayerId id) {
