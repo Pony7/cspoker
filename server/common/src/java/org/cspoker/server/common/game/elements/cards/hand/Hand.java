@@ -71,8 +71,8 @@ public class Hand implements Iterable<Card>, Comparable<Hand> {
 	 *             cardList==null
 	 */
 	public Hand(final Collection<Card> cardCollection) {
-		if ((cardCollection.size() > Hand.MAX_CARDS)
-				|| (cardCollection == null)) {
+		if ((cardCollection == null) ||
+				(cardCollection.size() > Hand.MAX_CARDS)) {
 			throw new IllegalArgumentException();
 		}
 		cards = new ArrayList<Card>(cardCollection);

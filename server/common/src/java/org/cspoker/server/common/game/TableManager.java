@@ -37,7 +37,7 @@ import org.cspoker.server.common.game.elements.table.GameTable;
  */
 public class TableManager {
 	
-	public static TableManager global_table_manager = new TableManager();
+	public final static TableManager global_table_manager = new TableManager();
 
 	/**
 	 * The atomic variable used as atomic counter.
@@ -78,7 +78,7 @@ public class TableManager {
 		return hashMap.containsKey(id);
 	}
 
-	public void removeTable(GameTable id) {
+	public void removeTable(TableId id) {
 		hashMap.remove(id);
 	}
 
