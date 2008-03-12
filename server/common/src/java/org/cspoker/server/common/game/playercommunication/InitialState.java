@@ -30,6 +30,7 @@ import org.cspoker.server.common.game.TableManager;
 import org.cspoker.server.common.game.elements.table.GameTable;
 import org.cspoker.server.common.game.elements.table.PlayerListFullException;
 import org.cspoker.server.common.game.elements.table.SeatTakenException;
+import org.cspoker.server.common.game.exception.TableDoesNotExistException;
 
 /**
  * A class to represent the initial state of the player.
@@ -59,17 +60,17 @@ class InitialState extends PlayerCommunicationState {
 	}
 
 	@Override
-	public void join(TableId tableId, SeatId seatId) throws IllegalActionException {
+	public Table join(TableId tableId, SeatId seatId) throws IllegalActionException {
 		if(tableId == null)
 			throw new IllegalArgumentException("The given table id is not effective.");
 
-		GameTable table = TableManager.global_table_manager.getTable(tableId);
-
-		if (table == null) {
-			throw new IllegalArgumentException(
-					"The given table id can not be found in the tables.");
+		GameTable table;
+		try {
+			table = TableManager.global_table_manager.getTable(tableId);
+		} catch (TableDoesNotExistException e) {
+			throw new IllegalActionException("You can not join the given table. "+e.getMessage());
 		}
-
+		
 		if (table.isPlaying()) {
 			GameMediator mediator = GameManager.getGame(tableId);
 			GameManager.getServerMediator().unsubscribeAllServerEventsListener(
@@ -103,6 +104,7 @@ class InitialState extends PlayerCommunicationState {
 		
 		InitialState.logger.info(playerCommunication.getPlayer().getName()
 				+ " joined " + tableId + ".");
+		return table.getSavedTable();
 	}
 
 	@Override

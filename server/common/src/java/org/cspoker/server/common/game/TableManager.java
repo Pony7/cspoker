@@ -28,6 +28,7 @@ import org.cspoker.common.elements.table.Table;
 import org.cspoker.common.elements.table.TableId;
 import org.cspoker.common.player.PlayerId;
 import org.cspoker.server.common.game.elements.table.GameTable;
+import org.cspoker.server.common.game.exception.TableDoesNotExistException;
 
 /**
  * A class to manage tables.
@@ -60,9 +61,9 @@ public class TableManager {
 	 *             [must] There does not exist a table with given table id. |
 	 *             !hasATableWithId(id)
 	 */
-	public GameTable getTable(TableId id) {
+	public GameTable getTable(TableId id) throws TableDoesNotExistException{
 		if (!hasATableWithId(id)) {
-			throw new IllegalArgumentException("No such table.");
+			throw new TableDoesNotExistException(id);
 		}
 		return hashMap.get(id);
 	}

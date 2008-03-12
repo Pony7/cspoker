@@ -17,6 +17,7 @@ package org.cspoker.server.common.game.playercommunication;
 
 import org.apache.log4j.Logger;
 import org.cspoker.common.elements.table.SeatId;
+import org.cspoker.common.elements.table.Table;
 import org.cspoker.common.elements.table.TableId;
 import org.cspoker.common.events.serverevents.TableRemovedEvent;
 import org.cspoker.common.exceptions.IllegalActionException;
@@ -109,7 +110,7 @@ class TableCreatedState extends WaitingAtTableState {
 	}
 
 	@Override
-	public void join(TableId tableId, SeatId seatId) throws IllegalActionException {
+	public Table join(TableId tableId, SeatId seatId) throws IllegalActionException {
 		throw new IllegalActionException("You are already sitting at table "
 				+ table.getId() + ".");
 	}

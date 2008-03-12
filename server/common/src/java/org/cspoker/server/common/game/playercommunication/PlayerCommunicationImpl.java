@@ -79,6 +79,7 @@ import org.cspoker.common.exceptions.IllegalActionException;
 import org.cspoker.common.player.PlayerId;
 import org.cspoker.server.common.game.GameManager;
 import org.cspoker.server.common.game.TableManager;
+import org.cspoker.server.common.game.exception.TableDoesNotExistException;
 import org.cspoker.server.common.game.player.GamePlayer;
 import org.cspoker.server.common.game.session.SessionManager;
 
@@ -218,8 +219,7 @@ public class PlayerCommunicationImpl extends PlayerCommunication {
 	@Override
 	public Table joinTable(TableId tableId, SeatId seatId) throws IllegalActionException {
 		stillAlive();
-		state.join(tableId, seatId);
-		return TableManager.global_table_manager.getTable(tableId).getSavedTable();
+		return state.join(tableId, seatId);
 	}
 	
 	/**
@@ -232,9 +232,7 @@ public class PlayerCommunicationImpl extends PlayerCommunication {
 	 */
 	@Override
 	public Table joinTable(TableId tableId) throws IllegalActionException {
-		stillAlive();
-		state.join(tableId, null);
-		return TableManager.global_table_manager.getTable(tableId).getSavedTable();
+		return joinTable(tableId, null);
 	}
 
 	@Override
@@ -261,8 +259,8 @@ public class PlayerCommunicationImpl extends PlayerCommunication {
 		stillAlive();
 		try {
 			return TableManager.global_table_manager.getTable(id).getSavedTable();
-		} catch (IllegalArgumentException e) {
-			throw new IllegalActionException(e.getMessage());
+		} catch (TableDoesNotExistException e) {
+			throw new IllegalActionException("Can not enquire the state of the given table. "+e.getMessage());
 		}
 	}
 
