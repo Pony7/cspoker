@@ -31,6 +31,8 @@ class PlayerView {
     
     attribute cards:CardView*;
     
+    attribute next:Boolean;
+    
     operation toPlayerView(players:Player):PlayerView;
     
     operation toPlayerViews(players:Player*):PlayerView*;
@@ -45,6 +47,7 @@ operation PlayerView.toPlayerViews(players:Player*){
         },CardView{
             dealt: false
         }]
+        next:false
     };
     for(p in players){
         temp[p.getSeatId().getId()] = toPlayerView(p);
@@ -56,11 +59,14 @@ operation PlayerView.toPlayerView(p:Player){
     return PlayerView{
             name: p.getName()
             stack: p.getStackValue()
+            amount: p.getBetChipsValue()
+            lastaction: ""
             seated: true
             cards: [CardView{
                 dealt: false
             },CardView{
                 dealt: false
             }]
+            next:false
         };
 }

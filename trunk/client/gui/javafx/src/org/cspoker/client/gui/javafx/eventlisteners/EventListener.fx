@@ -50,6 +50,8 @@ import org.cspoker.common.elements.cards.Suit;
 import java.rmi.RemoteException;
 import org.cspoker.common.exceptions.IllegalActionException;
 import javafx.ui.*;
+import java.awt.EventQueue;
+
 
 class EventListener{
     attribute listener:RemoteAllEventsListener;
@@ -63,269 +65,372 @@ trigger on new EventListener{
     listener = new RemoteAllEventsListener {
         
         operation onAllInEvent(e:AllInEvent){
-            do later{
-                System.out.println(e.toString());
-                ts.busy=false;
-                ts.events = ts.events.concat(e.toString()).concat("<br/>");
-                ts.busy=true;
-            }
+            EventQueue.invokeLater(new Runnable(){
+                
+                operation run(){
+                    System.out.println(e.toString());
+                    ts.busy=false;
+                    ts.events = ts.events.concat(e.toString()).concat("<br/>");
+                    ts.busy=true;
+                    
+                    var p = ts.mytable.players[e.getPlayer().getSeatId().getId()];
+                    p.lastaction = "All In";
+                    p.amount = e.getPlayer().getBetChipsValue();
+                    p.stack = e.getPlayer().getStackValue();
+                }
+            });
+            
         }
         operation onBetEvent(e:BetEvent){
-            do later{
-                System.out.println(e.toString());
-                ts.busy=false;
-                ts.events = ts.events.concat(e.toString()).concat("<br/>");
-                ts.busy=true;
-            }
+            EventQueue.invokeLater(new Runnable(){
+                operation run(){
+                    System.out.println(e.toString());
+                    ts.busy=false;
+                    ts.events = ts.events.concat(e.toString()).concat("<br/>");
+                    ts.busy=true;            
+                    
+                    var p = ts.mytable.players[e.getPlayer().getSeatId().getId()];
+                    p.lastaction = "Bet";
+                    p.amount = e.getPlayer().getBetChipsValue();
+                    p.stack = e.getPlayer().getStackValue();
+                }
+            });
         }
         operation onBigBlindEvent(e:BigBlindEvent){
-            do later{
-                System.out.println(e.toString());
-                ts.busy=false;
-                ts.events = ts.events.concat(e.toString()).concat("<br/>");
-                ts.busy=true;
-            }
+            EventQueue.invokeLater(new Runnable(){
+                operation run(){
+                    System.out.println(e.toString());
+                    ts.busy=false;
+                    ts.events = ts.events.concat(e.toString()).concat("<br/>");
+                    ts.busy=true;
+                    
+                    var p = ts.mytable.players[e.getPlayer().getSeatId().getId()];
+                    p.lastaction = "Blind";
+                    p.amount = e.getPlayer().getBetChipsValue();
+                    p.stack = e.getPlayer().getStackValue();
+                }
+            });
         }
         operation onCallEvent(e:CallEvent){
-            do later{
-                System.out.println(e.toString());
-                ts.busy=false;
-                ts.events = ts.events.concat(e.toString()).concat("<br/>");
-                ts.busy=true;
-            }
+            EventQueue.invokeLater(new Runnable(){
+                operation run(){
+                    System.out.println(e.toString());
+                    ts.busy=false;
+                    ts.events = ts.events.concat(e.toString()).concat("<br/>");
+                    ts.busy=true;
+                    
+                    var p = ts.mytable.players[e.getPlayer().getSeatId().getId()];
+                    p.lastaction = "Call";
+                    p.amount = e.getPlayer().getBetChipsValue();
+                    p.stack = e.getPlayer().getStackValue();
+                }
+            });
         }
         operation onCheckEvent(e:CheckEvent){
-            do later{
-                System.out.println(e.toString());
-                ts.busy=false;
-                ts.events = ts.events.concat(e.toString()).concat("<br/>");
-                ts.busy=true;
-            }
+            EventQueue.invokeLater(new Runnable(){
+                operation run(){
+                    System.out.println(e.toString());
+                    ts.busy=false;
+                    ts.events = ts.events.concat(e.toString()).concat("<br/>");
+                    ts.busy=true;
+                    
+                    var p = ts.mytable.players[e.getPlayer().getSeatId().getId()];
+                    p.lastaction = "Check";
+                    p.amount = e.getPlayer().getBetChipsValue();
+                    p.stack = e.getPlayer().getStackValue();
+                }
+            });
         }
         operation onFoldEvent(e:FoldEvent){
-            do later{
-                System.out.println(e.toString());
-                ts.busy=false;
-                ts.events = ts.events.concat(e.toString()).concat("<br/>");
-                ts.busy=true;
-            }
+            EventQueue.invokeLater(new Runnable(){
+                operation run(){
+                    System.out.println(e.toString());
+                    ts.busy=false;
+                    ts.events = ts.events.concat(e.toString()).concat("<br/>");
+                    ts.busy=true;
+                    
+                    var p = ts.mytable.players[e.getPlayer().getSeatId().getId()];
+                    p.lastaction = "Fold";
+                    p.amount = e.getPlayer().getBetChipsValue();
+                    p.stack = e.getPlayer().getStackValue();
+                }
+            });
         }
         operation onRaiseEvent(e:RaiseEvent){
-            do later{
-                System.out.println(e.toString());
-                ts.busy=false;
-                ts.events = ts.events.concat(e.toString()).concat("<br/>");
-                ts.busy=true;
-            }
+            EventQueue.invokeLater(new Runnable(){
+                operation run(){
+                    System.out.println(e.toString());
+                    ts.busy=false;
+                    ts.events = ts.events.concat(e.toString()).concat("<br/>");
+                    ts.busy=true;
+                    
+                    var p = ts.mytable.players[e.getPlayer().getSeatId().getId()];
+                    p.lastaction = "Raise";
+                    p.amount = e.getPlayer().getBetChipsValue();
+                    p.stack = e.getPlayer().getStackValue();
+                }
+            });
         }
         operation onSmallBlindEvent(e:SmallBlindEvent){
-            do later{
-                System.out.println(e.toString());
-                ts.busy=false;
-                ts.events = ts.events.concat(e.toString()).concat("<br/>");
-                ts.busy=true;
-            }
+            EventQueue.invokeLater(new Runnable(){
+                operation run(){
+                    System.out.println(e.toString());
+                    ts.busy=false;
+                    ts.events = ts.events.concat(e.toString()).concat("<br/>");
+                    ts.busy=true;
+                    
+                    var p = ts.mytable.players[e.getPlayer().getSeatId().getId()];
+                    p.lastaction = "Blind";
+                    p.amount = e.getPlayer().getBetChipsValue();
+                    p.stack = e.getPlayer().getStackValue();
+                }
+            });
         }
         operation onNewPocketCardsEvent(e:NewPocketCardsEvent){
-            do later{
-                System.out.println(e.toString());
-                System.out.println("00000");
-                
-                var cards = JavaFxClient.toArray(e.getPocketCards());
-                
-                ts.me.cards[0].rank = cards[0].getRank().toString().toLowerCase();
-                ts.me.cards[0].suit = cards[0].getSuit().toString().toLowerCase();
-                ts.me.cards[0].visible = true;
-                
-                ts.me.cards[1].rank = cards[1].getRank().toString().toLowerCase();
-                ts.me.cards[1].suit = cards[1].getSuit().toString().toLowerCase();
-                ts.me.cards[1].visible = true;
-            }
+            EventQueue.invokeLater(new Runnable(){
+                operation run(){
+                    System.out.println(e.toString());
+                    System.out.println("00000");
+                    
+                    var cards = JavaFxClient.toArray(e.getPocketCards());
+                    
+                    ts.me.cards[0].rank = cards[0].getRank().toString().toLowerCase();
+                    ts.me.cards[0].suit = cards[0].getSuit().toString().toLowerCase();
+                    ts.me.cards[0].visible = true;
+                    
+                    ts.me.cards[1].rank = cards[1].getRank().toString().toLowerCase();
+                    ts.me.cards[1].suit = cards[1].getSuit().toString().toLowerCase();
+                    ts.me.cards[1].visible = true;
+                }
+            });
         }
         operation onNewCommunityCardsEvent(e:NewCommunityCardsEvent){
-            do later{
-                System.out.println(e.toString());
-                var cards = JavaFxClient.toArray(e.getCommonCards());
-                var mycards = ts.mytable.cards;
-                
-                if(mycards[0].visible==false){
-                    System.out.println("11111");
+            EventQueue.invokeLater(new Runnable(){
+                operation run(){
+                    System.out.println(e.toString());
+                    var cards = JavaFxClient.toArray(e.getCommonCards());
+                    var mycards = ts.mytable.cards;
                     
-                    mycards[0].rank = cards[0].getRank().toString().toLowerCase();
-                    mycards[0].suit = cards[0].getSuit().toString().toLowerCase();
-                    mycards[0].visible= true;
-                    mycards[0].dealt = true;
-                    
-                    mycards[1].rank = cards[1].getRank().toString().toLowerCase();
-                    mycards[1].suit = cards[1].getSuit().toString().toLowerCase();
-                    mycards[1].visible = true;
-                    mycards[1].dealt = true;
-                    
-                    mycards[2].rank = cards[2].getRank().toString().toLowerCase();
-                    mycards[2].suit = cards[2].getSuit().toString().toLowerCase();
-                    mycards[2].visible = true;
-                    mycards[2].dealt = true;
-                    
-                }else if(mycards[3].visible==false){
-                    System.out.println("22222");
-                    
-                    mycards[3].rank = cards[0].getRank().toString().toLowerCase();
-                    mycards[3].suit = cards[0].getSuit().toString().toLowerCase();
-                    mycards[3].visible = true;
-                    mycards[3].dealt = true;
-                    
-                }else if(mycards[4].visible==false){
-                    System.out.println("33333");
-                    
-                    mycards[4].rank = cards[0].getRank().toString().toLowerCase();
-                    mycards[4].suit = cards[0].getSuit().toString().toLowerCase();
-                    mycards[4].visible = true;
-                    mycards[4].dealt = true;
+                    if(mycards[0].visible==false){
+                        System.out.println("11111");
+                        
+                        mycards[0].rank = cards[0].getRank().toString().toLowerCase();
+                        mycards[0].suit = cards[0].getSuit().toString().toLowerCase();
+                        mycards[0].visible= true;
+                        mycards[0].dealt = true;
+                        
+                        mycards[1].rank = cards[1].getRank().toString().toLowerCase();
+                        mycards[1].suit = cards[1].getSuit().toString().toLowerCase();
+                        mycards[1].visible = true;
+                        mycards[1].dealt = true;
+                        
+                        mycards[2].rank = cards[2].getRank().toString().toLowerCase();
+                        mycards[2].suit = cards[2].getSuit().toString().toLowerCase();
+                        mycards[2].visible = true;
+                        mycards[2].dealt = true;
+                        
+                    }else if(mycards[3].visible==false){
+                        System.out.println("22222");
+                        
+                        mycards[3].rank = cards[0].getRank().toString().toLowerCase();
+                        mycards[3].suit = cards[0].getSuit().toString().toLowerCase();
+                        mycards[3].visible = true;
+                        mycards[3].dealt = true;
+                        
+                    }else if(mycards[4].visible==false){
+                        System.out.println("33333");
+                        
+                        mycards[4].rank = cards[0].getRank().toString().toLowerCase();
+                        mycards[4].suit = cards[0].getSuit().toString().toLowerCase();
+                        mycards[4].visible = true;
+                        mycards[4].dealt = true;
+                        
+                    }
                     
                 }
-                
-            }
+            });
         }
         operation onNewDealEvent(e:NewDealEvent){
-            do later{
-                System.out.println(e.toString());
-                
-                ts.mytable.state = 2;
-                
-                for(p in ts.mytable.players){
-                    if (p.seated) {
-                        for(c in p.cards){
-                            c.dealt = true;
-                            c.visible = false;
-                        }
-                    }else{
-                        for(c in p.cards){
-                            c.dealt = false;
-                            c.visible = false;
+            EventQueue.invokeLater(new Runnable(){
+                operation run(){
+                    System.out.println(e.toString());
+                    
+                    ts.mytable.state = 2;
+                    
+                    for(p in ts.mytable.players){
+                        if (p.seated) {
+                            for(c in p.cards){
+                                c.dealt = true;
+                                c.visible = false;
+                            }
+                        }else{
+                            for(c in p.cards){
+                                c.dealt = false;
+                                c.visible = false;
+                            }
                         }
                     }
+                    
+                    for(c in ts.mytable.cards){
+                        c.dealt = true;
+                        c.visible = false;
+                    }
+                    
                 }
-                
-                for(c in ts.mytable.cards){
-                    c.dealt = true;
-                    c.visible = false;
-                }
-                
-            }
+            });
         }
         operation onNewRoundEvent(e:NewRoundEvent){
-            do later{
-                System.out.println(e.toString());
-                ts.busy=false;
-                ts.events = ts.events.concat(e.toString()).concat("<br/>");
-                ts.busy=true;
-            }
+            EventQueue.invokeLater(new Runnable(){
+                operation run(){
+                    System.out.println(e.toString());
+                    ts.busy=false;
+                    ts.events = ts.events.concat(e.toString()).concat("<br/>");
+                    ts.busy=true;
+                    for(p in ts.mytable.players){
+                        p.next = false;
+                        p.lastaction="";
+                        p.amount=0;
+                    }
+                    ts.mytable.players[e.getInitialPlayer().getSeatId().getId()].next = true;
+                }
+            });
         }
         operation onNextPlayerEvent(e:NextPlayerEvent){
-            do later{
-                System.out.println(e.toString());
-            }
+            EventQueue.invokeLater(new Runnable(){
+                operation run(){
+                    System.out.println(e.toString());
+                    for(p in ts.mytable.players){
+                        p.next = false;
+                    }
+                    ts.mytable.players[e.getPlayer().getSeatId().getId()].next = true;
+                }
+            });
         }
         operation onPlayerJoinedTableEvent(e:PlayerJoinedTableEvent){
-            do later{
-                System.out.println(e.toString());
-                ts.busy=false;
-                ts.events = ts.events.concat(e.toString()).concat("<br/>");
-                ts.busy=true;
-                System.out.println("seatid={e.getPlayer().getSeatId().getId()}");
-                ts.mytable.players[e.getPlayer().getSeatId().getId()] = PlayerView{}.toPlayerView(e.getPlayer());
-            }
+            EventQueue.invokeLater(new Runnable(){
+                operation run(){
+                    System.out.println(e.toString());
+                    ts.busy=false;
+                    ts.events = ts.events.concat(e.toString()).concat("<br/>");
+                    ts.busy=true;
+                    System.out.println("seatid={e.getPlayer().getSeatId().getId()}");
+                    ts.mytable.players[e.getPlayer().getSeatId().getId()] = PlayerView{}.toPlayerView(e.getPlayer());
+                }
+            });
         }
         operation onPlayerLeftTableEvent(e:PlayerLeftTableEvent){
-            do later{
-                System.out.println(e.toString());
-                ts.busy=false;
-                ts.events = ts.events.concat(e.toString()).concat("<br/>");
-                ts.busy=true;
-                ts.mytable.players[e.getPlayer().getSeatId().getId()] = PlayerView{
-                    seated: false
-                    cards: [CardView{
-                        dealt: false
-                    },CardView{
-                        dealt: false
-                    }]
-                };
-            }
+            EventQueue.invokeLater(new Runnable(){
+                operation run(){
+                    System.out.println(e.toString());
+                    ts.busy=false;
+                    ts.events = ts.events.concat(e.toString()).concat("<br/>");
+                    ts.busy=true;
+                    ts.mytable.players[e.getPlayer().getSeatId().getId()] = PlayerView{
+                        seated: false
+                        cards: [CardView{
+                            dealt: false
+                        },CardView{
+                            dealt: false
+                        }]
+                    };
+                }
+            });
         }
         operation onShowHandEvent(e:ShowHandEvent){
-            do later{
-                System.out.println(e.toString());
-                ts.busy=false;
-                ts.events = ts.events.concat(e.toString()).concat("<br/>");
-                ts.busy=true;
-            }
+            EventQueue.invokeLater(new Runnable(){
+                operation run(){
+                    System.out.println(e.toString());
+                    ts.busy=false;
+                    ts.events = ts.events.concat(e.toString()).concat("<br/>");
+                    ts.busy=true;
+                    //e.getShowdownPlayer().getHandCards().
+                }
+            });
         }
         operation onWinnerEvent(e:WinnerEvent){
-            do later{
-                System.out.println(e.toString());
-                ts.busy=false;
-                ts.events = ts.events.concat(e.toString()).concat("<br/>");
-                ts.busy=true;
-            }
+            EventQueue.invokeLater(new Runnable(){
+                operation run(){
+                    System.out.println(e.toString());
+                    ts.busy=false;
+                    ts.events = ts.events.concat(e.toString()).concat("<br/>");
+                    ts.busy=true;
+                    for(p in ts.mytable.players){
+                        p.next = false;
+                    }
+                }
+            });
         }
         operation onGameMessageEvent(e:GameMessageEvent){
-            do later{
-                System.out.println(e.toString());
-                ts.busy=false;
-                ts.events = ts.events.concat(e.toString()).concat("<br/>");
-                ts.busy=true;
-            }
+            EventQueue.invokeLater(new Runnable(){
+                operation run(){
+                    System.out.println(e.toString());
+                    ts.busy=false;
+                    ts.events = ts.events.concat(e.toString()).concat("<br/>");
+                    ts.busy=true;
+                }
+            });
         }
         
         operation onTableChangedEvent(e:TableChangedEvent){
-            do later{
-                System.out.println(e.toString());
-                var table = TableView{}.toTableViews(e.getTable());
-                ts.tables[t | t.id.equals(table.id)] = table;
-            }
+            EventQueue.invokeLater(new Runnable(){
+                operation run(){
+                    System.out.println(e.toString());
+                    var table = TableView{}.toTableViews(e.getTable());
+                    ts.tables[t | t.id.equals(table.id)] = table;
+                }
+            });
         }
         
         operation onTableRemovedEvent(e:TableRemovedEvent){
-            do later{
-                System.out.println(e.toString());
-                delete ts.tables[t | t.id.equals(e.getTableId())];
-            }
+            EventQueue.invokeLater(new Runnable(){
+                operation run(){
+                    System.out.println(e.toString());
+                    delete ts.tables[t | t.id.equals(e.getTableId())];
+                }
+            });
         }
         
         operation onTableCreatedEvent(e:TableCreatedEvent){
-            do later{
-                System.out.println(e.toString());
-                var table = TableView{}.toTableViews(e.getTable());
-                insert table as last into ts.tables;
-            }
+            EventQueue.invokeLater(new Runnable(){
+                operation run(){
+                    System.out.println(e.toString());
+                    var table = TableView{}.toTableViews(e.getTable());
+                    insert table as last into ts.tables;
+                }
+            });
         }
         
         operation onServerMessageEvent(e:ServerMessageEvent){
-            do later{
-                System.out.println(e.toString());
-            }
+            EventQueue.invokeLater(new Runnable(){
+                operation run(){
+                    System.out.println(e.toString());
+                }
+            });
         }
         
         operation onBrokePlayerKickedOutEvent(e:BrokePlayerKickedOutEvent){
-            do later{
-                System.out.println(e.toString());
-                var player = ts.mytable.players[p | p.name.equals(e.getPlayer().getName())];
-                player.seated = false;
-                player.cards = [CardView{
-                    dealt: false
-                },CardView{
-                    dealt: false
-                }];
-                if(e.getPlayer().getName().equals(ts.me.name)){
-                    m.relogin();
-                    MessageDialog{
-                        title: "You are broke."
-                        visible: true
-                        message: "You are broke. "
-                        messageType: WARNING
+            EventQueue.invokeLater(new Runnable(){
+                operation run(){
+                    System.out.println(e.toString());
+                    var player = ts.mytable.players[p | p.name.equals(e.getPlayer().getName())];
+                    player.seated = false;
+                    player.cards = [CardView{
+                        dealt: false
+                    },CardView{
+                        dealt: false
+                    }];
+                    if(e.getPlayer().getName().equals(ts.me.name)){
+                        m.relogin();
+                        MessageDialog{
+                            title: "You are broke."
+                            visible: true
+                            message: "You are broke. "
+                            messageType: WARNING
+                        }
                     }
                 }
-            }
+            });
         }
+        
     };
 }
