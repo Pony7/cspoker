@@ -812,7 +812,7 @@ public class GameMediator implements PlayerAction {
 	 */
 	public synchronized void publishPlayerJoinedGame(PlayerJoinedTableEvent event) {
 		for (PlayerJoinedTableListener listener : playerJoinedGameListeners) {
-			listener.onPlayerJoinedGameEvent(event);
+			listener.onPlayerJoinedTableEvent(event);
 		}
 		publishGameEvent(event);
 	}

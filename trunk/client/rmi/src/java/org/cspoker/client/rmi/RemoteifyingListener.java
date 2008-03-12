@@ -213,10 +213,10 @@ public class RemoteifyingListener implements RemoteAllEventsListener {
 	}
 
 	@Override
-	public void onPlayerJoinedGameEvent(PlayerJoinedTableEvent event)
+	public void onPlayerJoinedTableEvent(PlayerJoinedTableEvent event)
 	throws RemoteException {
 		try{
-			listener.onPlayerJoinedGameEvent(event);
+			listener.onPlayerJoinedTableEvent(event);
 		}catch(RemoteException e){
 			logger.error(e);
 			throw e;

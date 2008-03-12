@@ -114,7 +114,7 @@ public class ConsoleListener implements RemoteAllEventsListener {
 
 	}
 
-	public void onPlayerJoinedGameEvent(PlayerJoinedTableEvent event) {
+	public void onPlayerJoinedTableEvent(PlayerJoinedTableEvent event) {
 		console.print(event.toString());
 
 	}

@@ -5,6 +5,7 @@ import java.util.concurrent.ExecutorService;
 
 import org.apache.log4j.Logger;
 import org.cspoker.common.eventlisteners.RemoteAllEventsListener;
+import org.cspoker.common.events.gameevents.BrokePlayerKickedOutEvent;
 import org.cspoker.common.events.gameevents.GameMessageEvent;
 import org.cspoker.common.events.gameevents.NewCommunityCardsEvent;
 import org.cspoker.common.events.gameevents.NewDealEvent;
@@ -24,7 +25,9 @@ import org.cspoker.common.events.gameevents.playeractionevents.RaiseEvent;
 import org.cspoker.common.events.gameevents.playeractionevents.SmallBlindEvent;
 import org.cspoker.common.events.gameevents.privateevents.NewPocketCardsEvent;
 import org.cspoker.common.events.serverevents.ServerMessageEvent;
+import org.cspoker.common.events.serverevents.TableChangedEvent;
 import org.cspoker.common.events.serverevents.TableCreatedEvent;
+import org.cspoker.common.events.serverevents.TableRemovedEvent;
 import org.cspoker.server.common.game.session.SessionManager;
 import org.cspoker.server.common.util.threading.RequestExecutor;
 
@@ -336,13 +339,61 @@ public class AsynchronousListener implements RemoteAllEventsListener {
 	}
 
 	@Override
-	public void onPlayerJoinedGameEvent(final PlayerJoinedTableEvent event)
+	public void onPlayerJoinedTableEvent(final PlayerJoinedTableEvent event)
 			throws RemoteException {
 		executor.submit(new Runnable(){
 			@Override
 			public void run() {
 				try {
-					listener.onPlayerJoinedGameEvent(event);
+					listener.onPlayerJoinedTableEvent(event);
+				} catch (RemoteException e) {
+					logger.error(e);
+					SessionManager.global_session_manager.killSession(name);
+				}
+			}
+		});
+	}
+
+	@Override
+	public void onBrokePlayerKickedOutEvent(final BrokePlayerKickedOutEvent event)
+			throws RemoteException {
+		executor.submit(new Runnable(){
+			@Override
+			public void run() {
+				try {
+					listener.onBrokePlayerKickedOutEvent(event);
+				} catch (RemoteException e) {
+					logger.error(e);
+					SessionManager.global_session_manager.killSession(name);
+				}
+			}
+		});
+	}
+
+	@Override
+	public void onTableChangedEvent(final TableChangedEvent event)
+			throws RemoteException {
+		executor.submit(new Runnable(){
+			@Override
+			public void run() {
+				try {
+					listener.onTableChangedEvent(event);
+				} catch (RemoteException e) {
+					logger.error(e);
+					SessionManager.global_session_manager.killSession(name);
+				}
+			}
+		});
+	}
+
+	@Override
+	public void onTableRemovedEvent(final TableRemovedEvent event)
+			throws RemoteException {
+		executor.submit(new Runnable(){
+			@Override
+			public void run() {
+				try {
+					listener.onTableRemovedEvent(event);
 				} catch (RemoteException e) {
 					logger.error(e);
 					SessionManager.global_session_manager.killSession(name);

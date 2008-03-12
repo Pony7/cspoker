@@ -39,11 +39,8 @@ public class PlayerJoinedTableEvent extends GameEvent {
 	private static final long serialVersionUID = 3276571712883586966L;
 
 	private Player player;
-	
-	private SeatId seatId;
 
-	public PlayerJoinedTableEvent(SeatId seatId, Player player) {
-		this.seatId = seatId;
+	public PlayerJoinedTableEvent(Player player) {
 		this.player = player;
 	}
 
@@ -57,7 +54,7 @@ public class PlayerJoinedTableEvent extends GameEvent {
 	}
 	
 	public SeatId getSeatId(){
-		return seatId;
+		return getPlayer().getSeatId();
 	}
 
 	public Player getPlayer() {
@@ -67,7 +64,7 @@ public class PlayerJoinedTableEvent extends GameEvent {
 	@Override
 	public void dispatch(RemoteAllEventsListener listener)
 			throws RemoteException {
-		listener.onPlayerJoinedGameEvent(this);
+		listener.onPlayerJoinedTableEvent(this);
 	}
 
 }

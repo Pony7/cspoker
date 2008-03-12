@@ -139,7 +139,7 @@ public class TestSockets {
 
 				}
 
-				public void onPlayerJoinedGameEvent(PlayerJoinedTableEvent event) {
+				public void onPlayerJoinedTableEvent(PlayerJoinedTableEvent event) {
 					System.out.println(event.toString());
 
 				}

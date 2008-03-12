@@ -323,7 +323,7 @@ public class PlayerCommunicationTest extends TestCase {
 		}
 
 		@Override
-		public void onPlayerJoinedGameEvent(PlayerJoinedTableEvent event)
+		public void onPlayerJoinedTableEvent(PlayerJoinedTableEvent event)
 				throws RemoteException {
 		}
 
@@ -450,7 +450,7 @@ public class PlayerCommunicationTest extends TestCase {
 		}
 
 		@Override
-		public void onPlayerJoinedGameEvent(PlayerJoinedTableEvent event)
+		public void onPlayerJoinedTableEvent(PlayerJoinedTableEvent event)
 				throws RemoteException {
 			events.add(event);
 		}
