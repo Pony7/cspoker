@@ -85,7 +85,7 @@ public class SessionManager {
 					System.out.println("called "+session.toString());
 					if(!session.getPlayerCommunication().isActive()){
 						System.out.println("kill session "+session.toString());
-						session.kill();
+						killSession(session);
 						throw new RejectedExecutionException();
 					}
 				} catch (PlayerKilledExcepion e) {
@@ -93,7 +93,7 @@ public class SessionManager {
 				}
 			}
 			
-		}, 1000000, 1000000, TimeUnit.SECONDS);
+		}, 10, 10, TimeUnit.SECONDS);
 		}
 	
 	public Session getSession(PlayerId id) {

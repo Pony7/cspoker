@@ -19,6 +19,7 @@ import org.cspoker.common.elements.table.TableId;
 import org.cspoker.common.events.gameevents.PlayerLeftTableEvent;
 import org.cspoker.common.events.serverevents.TableChangedEvent;
 import org.cspoker.common.exceptions.IllegalActionException;
+import org.cspoker.common.player.Player;
 import org.cspoker.common.player.PlayerId;
 import org.cspoker.server.common.game.GameManager;
 import org.cspoker.server.common.game.GameMediator;
@@ -53,6 +54,11 @@ class WaitingAtTableState extends PlayerCommunicationState {
 
 	@Override
 	public void leaveTable() throws IllegalActionException {
+		
+		Player immutablePlayer = playerCommunication.getPlayer().getSavedPlayer();
+		
+		
+		
 		table.removePlayer(playerCommunication.getPlayer());
 		
 		TableId tableId = table.getId();
@@ -64,7 +70,7 @@ class WaitingAtTableState extends PlayerCommunicationState {
 				playerCommunication.getAllEventsListener());
 		
 		GameManager.getGame(tableId).publishPlayerLeftTable(
-				new PlayerLeftTableEvent(playerCommunication.getPlayer().getSavedPlayer()));
+				new PlayerLeftTableEvent(immutablePlayer));
 		GameManager.getServerMediator().publishTableChangedEvent(new TableChangedEvent(table.getSavedTable()));
 		GameManager.getServerMediator().subscribeAllServerEventsListener(
 				playerId,
