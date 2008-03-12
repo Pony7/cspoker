@@ -25,7 +25,6 @@ import org.cspoker.common.exceptions.IllegalActionException;
 import org.cspoker.common.player.Player;
 import org.cspoker.server.common.game.GameMediator;
 import org.cspoker.server.common.game.gamecontrol.Game;
-import org.cspoker.server.common.game.gamecontrol.PlayerAction;
 import org.cspoker.server.common.game.gamecontrol.rules.BettingRules;
 import org.cspoker.server.common.game.player.GamePlayer;
 
@@ -36,7 +35,7 @@ import org.cspoker.server.common.game.player.GamePlayer;
  * @author Kenzo
  * 
  */
-public abstract class Round implements PlayerAction {
+public abstract class Round {
 
 	/***************************************************************************
 	 * Variables
@@ -117,7 +116,6 @@ public abstract class Round implements PlayerAction {
 	 *             [must] It's not the turn of the given player.
 	 * @throws IllegalActionException
 	 *             [must] The action performed is not a valid action.
-	 * @see PlayerAction
 	 */
 	public void check(GamePlayer player) throws IllegalActionException {
 		throw new IllegalActionException(player.getName()
@@ -135,7 +133,6 @@ public abstract class Round implements PlayerAction {
 	 *             [must] It's not the turn of the given player.
 	 * @throws IllegalActionException
 	 *             [must] The action performed is not a valid action.
-	 * @see PlayerAction
 	 */
 	public void bet(GamePlayer player, int amount)
 			throws IllegalActionException {
@@ -153,7 +150,6 @@ public abstract class Round implements PlayerAction {
 	 *             [must] It's not the turn of the given player.
 	 * @throws IllegalActionException
 	 *             [must] The action performed is not a valid action.
-	 * @see PlayerAction
 	 */
 	public void call(GamePlayer player) throws IllegalActionException {
 		throw new IllegalActionException(player.getName()
@@ -171,7 +167,6 @@ public abstract class Round implements PlayerAction {
 	 *             [must] It's not the turn of the given player.
 	 * @throws IllegalActionException
 	 *             [must] The action performed is not a valid action.
-	 * @see PlayerAction
 	 */
 	public void raise(GamePlayer player, int amount)
 			throws IllegalActionException {
@@ -210,7 +205,6 @@ public abstract class Round implements PlayerAction {
 	 *             [must] It's not the turn of the given player.
 	 * @throws IllegalActionException
 	 *             [must] The action performed is not a valid action.
-	 * @see PlayerAction
 	 */
 	public void deal(GamePlayer player) throws IllegalActionException {
 		throw new IllegalActionException(player.getName()
@@ -226,7 +220,6 @@ public abstract class Round implements PlayerAction {
 	 *             [must] It's not the turn of the given player.
 	 * @throws IllegalActionException
 	 *             [must] The action performed is not a valid action.
-	 * @see PlayerAction
 	 */
 	public void allIn(GamePlayer player) throws IllegalActionException {
 		throw new IllegalActionException(player.getName()

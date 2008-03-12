@@ -75,9 +75,7 @@ import org.cspoker.common.exceptions.IllegalActionException;
 import org.cspoker.common.player.Player;
 import org.cspoker.common.player.PlayerId;
 import org.cspoker.server.common.game.gamecontrol.GameControl;
-import org.cspoker.server.common.game.gamecontrol.PlayerAction;
 import org.cspoker.server.common.game.player.GamePlayer;
-import org.cspoker.server.common.game.playercommunication.PlayerCommunicationImpl;
 import org.cspoker.server.common.util.threading.ScheduledRequestExecutor;
 
 /**
@@ -87,10 +85,10 @@ import org.cspoker.server.common.util.threading.ScheduledRequestExecutor;
  * @author Kenzo
  * 
  */
-public class GameMediator implements PlayerAction {
+public class GameMediator {
 	
 	private static Logger logger = Logger
-	.getLogger(PlayerCommunicationImpl.class);
+	.getLogger(GameMediator.class);
 
 	/**
 	 * This variable contains the game control to mediate to.
@@ -126,6 +124,7 @@ public class GameMediator implements PlayerAction {
 	 */
 	public void allIn(GamePlayer player) throws IllegalActionException {
 		gameControl.allIn(player);
+		currentTimeOut.cancel();
 	}
 
 	/**
@@ -143,6 +142,7 @@ public class GameMediator implements PlayerAction {
 	public void bet(GamePlayer player, int amount)
 			throws IllegalActionException {
 		gameControl.bet(player, amount);
+		currentTimeOut.cancel();
 	}
 
 	/**
@@ -158,6 +158,7 @@ public class GameMediator implements PlayerAction {
 	 */
 	public void call(GamePlayer player) throws IllegalActionException {
 		gameControl.call(player);
+		currentTimeOut.cancel();
 	}
 
 	/**
@@ -173,21 +174,7 @@ public class GameMediator implements PlayerAction {
 	 */
 	public void check(GamePlayer player) throws IllegalActionException {
 		gameControl.check(player);
-	}
-
-	/**
-	 * The player who the dealer-button has been dealt to can choose to start
-	 * the deal. From that moment, new players can not join the on-going deal.
-	 * 
-	 * @param player
-	 *            The player who deals.
-	 * @throws IllegalActionException
-	 *             [must] It's not the turn of the given player.
-	 * @throws IllegalActionException
-	 *             [must] The action performed is not a valid action.
-	 */
-	public void deal(GamePlayer player) throws IllegalActionException {
-		gameControl.deal(player);
+		currentTimeOut.cancel();
 	}
 
 	/**
@@ -205,6 +192,7 @@ public class GameMediator implements PlayerAction {
 	 */
 	public void fold(GamePlayer player) throws IllegalActionException {
 		gameControl.fold(player);
+		currentTimeOut.cancel();
 	}
 
 	/**
@@ -222,6 +210,7 @@ public class GameMediator implements PlayerAction {
 	public void raise(GamePlayer player, int amount)
 			throws IllegalActionException {
 		gameControl.raise(player, amount);
+		currentTimeOut.cancel();
 	}
 
 	public void joinGame(SeatId seatId, GamePlayer player) throws IllegalActionException {
@@ -572,6 +561,7 @@ public class GameMediator implements PlayerAction {
 	 * 
 	 */
 	public synchronized void publishNewRoundEvent(NewRoundEvent event) {
+		submitTimeOutHandler(event.getPlayer());
 		for (NewRoundListener listener : newRoundListeners) {
 			listener.onNewRoundEvent(event);
 		}
@@ -1313,7 +1303,7 @@ public class GameMediator implements PlayerAction {
 	private void submitTimeOutHandler(Player player){
 		currentTimeOut = new PlayerActionTimeOut(player);
 		ScheduledRequestExecutor.getInstance().schedule(currentTimeOut, 30, TimeUnit.SECONDS);
-		System.out.println(player.getName()+" action time out submitted.");
+		GameMediator.logger.info(player.getName()+" action time out submitted.");
 	}
 	
 	private PlayerActionTimeOut currentTimeOut;
@@ -1322,17 +1312,23 @@ public class GameMediator implements PlayerAction {
 				
 		private Player player;
 		
+		private boolean cancelled = false;
+		
 		public PlayerActionTimeOut(Player player){
 			this.player = player;
+		}
+		
+		public void cancel(){
+			cancelled = true;
 		}
 
 		@Override
 		public void run() {
 			try {
-				if(GameMediator.this.currentTimeOut==this){
+				if(!cancelled && GameMediator.this.currentTimeOut==this){
 					GamePlayer gcPlayer = gameControl.getGame().getCurrentPlayer();
 					if(gcPlayer.getId().equals(player.getId())){
-						logger.info(player.getName()+" automatically folded.");
+						GameMediator.logger.info(player.getName()+" automatically folded.");
 						GameMediator.this.gameControl.fold(gcPlayer);
 					}
 				}
