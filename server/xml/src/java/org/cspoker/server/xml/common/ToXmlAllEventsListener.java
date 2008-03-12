@@ -139,10 +139,6 @@ public class ToXmlAllEventsListener implements AllEventListenerWithInvocation {
 		eventToCollector(event);
 	}
 
-	public void onPlayerJoinedGameEvent(PlayerJoinedTableEvent event) {
-		eventToCollector(event);
-	}
-
 	public void onPlayerLeftTableEvent(PlayerLeftTableEvent event) {
 		eventToCollector(event);
 	}
@@ -189,6 +185,11 @@ public class ToXmlAllEventsListener implements AllEventListenerWithInvocation {
 
 	@Override
 	public void onTableRemovedEvent(TableRemovedEvent event){
+		eventToCollector(event);
+	}
+
+	@Override
+	public void onPlayerJoinedTableEvent(PlayerJoinedTableEvent event){
 		eventToCollector(event);
 	}
 

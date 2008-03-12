@@ -206,7 +206,7 @@ trigger on new GameTable{
                                 Circle{
                                     cx: 0
                                     cy: 0
-                                    radius: 40
+                                    radius: 30
                                     fill: orange
                                     stroke: darkorange
                                     strokeWidth: 2
@@ -217,7 +217,7 @@ trigger on new GameTable{
                                     y: 0
                                     visible: bind main.state.mytable.players[i].seated
                                     content: bind main.state.mytable.players[i].name
-                                    font: new Font("Tahoma", "PLAIN",13)
+                                    font: new Font("Tahoma", "PLAIN",11)
                                     fill: black
                                     halign: CENTER
                                     valign: CENTER
@@ -228,7 +228,7 @@ trigger on new GameTable{
                                     y: 0
                                     visible: bind main.state.mytable.players[i].seated==false
                                     content: "?"
-                                    font: new Font("Tahoma", "PLAIN",33)
+                                    font: new Font("Tahoma", "PLAIN",30)
                                     fill: darkorange
                                     halign: CENTER
                                     valign: CENTER

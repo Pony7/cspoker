@@ -26,7 +26,7 @@ import org.cspoker.common.events.gameevents.PlayerJoinedTableEvent;
  * @author Kenzo
  * 
  */
-public interface RemotePlayerJoinedGameListener extends Remote {
+public interface RemotePlayerJoinedTableListener extends Remote {
 
 	/**
 	 * This method is called when subscribed to inform a player joined the game.
@@ -35,7 +35,7 @@ public interface RemotePlayerJoinedGameListener extends Remote {
 	 *            The event object containing all information of the occurred
 	 *            event.
 	 */
-	public void onPlayerJoinedGameEvent(PlayerJoinedTableEvent event)
+	public void onPlayerJoinedTableEvent(PlayerJoinedTableEvent event)
 			throws RemoteException;
 
 }

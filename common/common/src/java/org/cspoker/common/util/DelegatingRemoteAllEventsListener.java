@@ -204,10 +204,10 @@ public class DelegatingRemoteAllEventsListener implements RemoteAllEventsListene
 	}
 
 	@Override
-	public void onPlayerJoinedGameEvent(PlayerJoinedTableEvent event) {
+	public void onPlayerJoinedTableEvent(PlayerJoinedTableEvent event) {
 		for (RemoteAllEventsListener listener : listeners) {
 			try {
-				listener.onPlayerJoinedGameEvent(event);
+				listener.onPlayerJoinedTableEvent(event);
 			} catch (RemoteException e) {
 				handle(listener, e);
 			}

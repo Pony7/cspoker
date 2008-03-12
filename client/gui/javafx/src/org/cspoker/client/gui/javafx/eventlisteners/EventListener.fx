@@ -136,13 +136,10 @@ trigger on new EventListener{
                 ts.me.cards[0].rank = cards[0].getRank().toString().toLowerCase();
                 ts.me.cards[0].suit = cards[0].getSuit().toString().toLowerCase();
                 ts.me.cards[0].visible = true;
-                ts.me.cards[0].dealt = true;
                 
                 ts.me.cards[1].rank = cards[1].getRank().toString().toLowerCase();
                 ts.me.cards[1].suit = cards[1].getSuit().toString().toLowerCase();
                 ts.me.cards[1].visible = true;
-                ts.me.cards[1].dealt = true;
-                
             }
         }
         operation onNewCommunityCardsEvent(e:NewCommunityCardsEvent){
@@ -150,6 +147,7 @@ trigger on new EventListener{
                 System.out.println(e.toString());
                 var cards = JavaFxClient.toArray(e.getCommonCards());
                 var mycards = ts.mytable.cards;
+                
                 if(mycards[0].visible==false){
                     System.out.println("11111");
                     
@@ -191,23 +189,27 @@ trigger on new EventListener{
         operation onNewDealEvent(e:NewDealEvent){
             do later{
                 System.out.println(e.toString());
-                ts.mytable.state = 2;
-                ts.me.cards[0].dealt = true;
-                ts.me.cards[0].visible = false;
-                ts.me.cards[1].dealt = true;
-                ts.me.cards[1].visible = false;
                 
-                var mycards = ts.mytable.cards;
-                mycards[0].dealt = true;
-                mycards[0].visible = false;
-                mycards[1].dealt = true;
-                mycards[1].visible = false;
-                mycards[2].dealt = true;
-                mycards[2].visible = false;
-                mycards[3].dealt = true;
-                mycards[3].visible = false;
-                mycards[4].dealt = true;
-                mycards[4].visible = false;
+                ts.mytable.state = 2;
+                
+                foreach(p in ts.mytable.players){
+                    if(p.seated){
+                        foreach(c in p.cards){
+                            c.dealt = true;
+                            c.visible = false;
+                        }
+                    }else{
+                         foreach(c in p.cards){
+                            c.dealt = false;
+                            c.visible = false;
+                        }
+                    }
+                }
+                
+                foreach(c in ts.mytable.cards){
+                    c.dealt = true;
+                    c.visible = false;
+                }
                 
             }
         }
@@ -230,6 +232,7 @@ trigger on new EventListener{
                 ts.busy=false;
                 ts.events = ts.events.concat(e.toString()).concat("<br/>");
                 ts.busy=true;
+                ts.mytable.players[e.getPlayer().getSeatId().getId()]
             }
         }
         operation onPlayerLeftTableEvent(e:PlayerLeftTableEvent){

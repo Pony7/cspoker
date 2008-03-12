@@ -35,7 +35,7 @@ import org.cspoker.common.eventlisteners.game.RemoteNewCommunityCardsListener;
 import org.cspoker.common.eventlisteners.game.RemoteNewDealListener;
 import org.cspoker.common.eventlisteners.game.RemoteNewRoundListener;
 import org.cspoker.common.eventlisteners.game.RemoteNextPlayerListener;
-import org.cspoker.common.eventlisteners.game.RemotePlayerJoinedGameListener;
+import org.cspoker.common.eventlisteners.game.RemotePlayerJoinedTableListener;
 import org.cspoker.common.eventlisteners.game.RemotePlayerLeftTableListener;
 import org.cspoker.common.eventlisteners.game.RemoteShowHandListener;
 import org.cspoker.common.eventlisteners.game.RemoteWinnerListener;
@@ -493,10 +493,10 @@ public class PlayerCommunicationImpl extends PlayerCommunication {
 			}
 		}
 
-		public void onPlayerJoinedGameEvent(PlayerJoinedTableEvent event) {
-			for (RemotePlayerJoinedGameListener listener : eventListeners) {
+		public void onPlayerJoinedTableEvent(PlayerJoinedTableEvent event) {
+			for (RemotePlayerJoinedTableListener listener : eventListeners) {
 				try {
-					listener.onPlayerJoinedGameEvent(event);
+					listener.onPlayerJoinedTableEvent(event);
 				} catch (Exception e) {
 					logger.error("RemoteException from event handler", e);
 					SessionManager.global_session_manager
