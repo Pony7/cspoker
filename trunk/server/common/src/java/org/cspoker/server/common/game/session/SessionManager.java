@@ -16,12 +16,11 @@
 package org.cspoker.server.common.game.session;
 
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.Executors;
 import java.util.concurrent.RejectedExecutionException;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import org.cspoker.common.player.PlayerId;
+import org.cspoker.server.common.util.threading.ScheduledRequestExecutor;
 
 public class SessionManager {
 
@@ -29,8 +28,6 @@ public class SessionManager {
 
 	private ConcurrentHashMap<String, Session> sessions = new ConcurrentHashMap<String, Session>();
 	private ConcurrentHashMap<PlayerId, Session> sessionByID = new ConcurrentHashMap<PlayerId, Session>();
-	
-	private static final ScheduledExecutorService sessionKiller = Executors.newScheduledThreadPool(1);
 
 	public Session getSession(String username) {
 		Session newSession = new Session(username);
@@ -77,7 +74,7 @@ public class SessionManager {
 	
 	private void submitTimeOutHandler(final Session session){
 		System.out.println("submit "+session.toString());
-		sessionKiller.scheduleWithFixedDelay(new Runnable(){
+		ScheduledRequestExecutor.getInstance().scheduleWithFixedDelay(new Runnable(){
 
 			@Override
 			public void run(){
@@ -93,7 +90,7 @@ public class SessionManager {
 				}
 			}
 			
-		}, 10, 10, TimeUnit.MINUTES);
+		}, 20, 20, TimeUnit.MINUTES);
 		}
 	
 	public Session getSession(PlayerId id) {

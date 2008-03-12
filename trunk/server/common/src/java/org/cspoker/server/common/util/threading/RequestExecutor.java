@@ -140,5 +140,4 @@ public class RequestExecutor implements ExecutorService {
 		logger.trace("Received task: " + task);
 		return executor.submit(task, result);
 	}
-
 }

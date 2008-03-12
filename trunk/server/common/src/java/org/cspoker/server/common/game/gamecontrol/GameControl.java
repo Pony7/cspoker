@@ -20,6 +20,8 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.RejectedExecutionException;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
 import org.cspoker.common.elements.pots.Pots;
@@ -48,6 +50,7 @@ import org.cspoker.server.common.game.gamecontrol.rounds.WaitingRound;
 import org.cspoker.server.common.game.gamecontrol.rules.BettingRules;
 import org.cspoker.server.common.game.gamecontrol.rules.NoLimit;
 import org.cspoker.server.common.game.player.GamePlayer;
+import org.cspoker.server.common.util.threading.ScheduledRequestExecutor;
 
 /**
  * This class is responsible to control the flow of the game. This class changes
@@ -296,6 +299,7 @@ public class GameControl implements PlayerAction {
 			throw new IllegalActionException(e.getMessage());
 		}
 		
+		//auto-deal
 		if(game.getNbSeatedPlayers()==2){
 			deal(game.getDealer());
 		}
