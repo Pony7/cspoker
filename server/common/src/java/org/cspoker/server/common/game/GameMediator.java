@@ -1307,7 +1307,7 @@ public class GameMediator implements PlayerAction {
 	
 	private void submitTimeOutHandler(Player player){
 		currentTimeOut = new PlayerActionTimeOut(player);
-		ScheduledRequestExecutor.getInstance().schedule(currentTimeOut, 10, TimeUnit.SECONDS);
+		ScheduledRequestExecutor.getInstance().schedule(currentTimeOut, 20, TimeUnit.SECONDS);
 		System.out.println(player.getName()+" action time out submitted.");
 	}
 	
