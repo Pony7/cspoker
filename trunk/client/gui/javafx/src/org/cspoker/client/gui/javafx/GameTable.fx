@@ -63,7 +63,7 @@ trigger on new GameTable{
     var logofontsize = sqrh/4;
     //cardw stays the same to obtain a table that has borders equidistant of the real borders
     var cardw=sqrw;
-    var cardh=sqrh-40;
+    var cardh=sqrh-sqrh/3.8;
     
     screen = Frame{
         title: bind main.state.mytable.name
@@ -171,35 +171,35 @@ trigger on new GameTable{
                             transform: [translate(padx+sqrh/2.0+sqrw/2.0, pady+sqrh/2.0),scale(0.55, 0.55)]
                             content: [ImageView {
                                 antialias: true
-                                transform:  translate(-91*2,0)
+                                transform:  translate(-91*2-40,0)
                                 image: Image { url: bind main.state.mytable.cards[0].getImage() }
                                 valign: CENTER
                                 halign: CENTER
                                 visible: bind main.state.mytable.cards[0].dealt
                             },ImageView {
                                 antialias: true
-                                transform:  translate(-91,0)
+                                transform:  translate(-91-40,0)
                                 image: Image { url: bind main.state.mytable.cards[1].getImage() }
                                 valign: CENTER
                                 halign: CENTER
                                 visible: bind main.state.mytable.cards[1].dealt
                             },ImageView {
                                 antialias: true
-                                transform:  translate(0,0)
+                                transform:  translate(0-40,0)
                                 image: Image { url: bind main.state.mytable.cards[2].getImage() }
                                 valign: CENTER
                                 halign: CENTER
                                 visible: bind main.state.mytable.cards[2].dealt
                             },ImageView {
                                 antialias: true
-                                transform:  translate(91,0)
+                                transform:  translate(91-40,0)
                                 image: Image { url: bind main.state.mytable.cards[3].getImage() }
                                 valign: CENTER
                                 halign: CENTER
                                 visible: bind main.state.mytable.cards[3].dealt
                             },ImageView {
                                 antialias: true
-                                transform:  translate(91*2,0)
+                                transform:  translate(91*2-40,0)
                                 image: Image { url: bind main.state.mytable.cards[4].getImage() }
                                 valign: CENTER
                                 halign: CENTER
@@ -215,36 +215,47 @@ trigger on new GameTable{
                                 parametrizeY(i/8.0,cardw,cardh))]
                                 content: [
                                 Group {
-                                    transform: bind translate(40*Math.cos(parametrizeRadial(i/8.0,cardw,cardh)),
-                                        -40*Math.sin(parametrizeRadial(i/8.0,cardw,cardh)))
+                                    transform: bind translate(50*Math.cos(parametrizeRadial(i/8.0,cardw,cardh)),
+                                    -50*Math.sin(parametrizeRadial(i/8.0,cardw,cardh)))
                                     content: [
                                     Circle{
                                         cx: 0
                                         cy: 0
-                                        radius: 30
-                                        fill: bind if(main.state.myname.equals(main.state.mytable.players[i].name) == true) then green
+                                        radius: 33
+                                        fill: bind if(main.state.myname.equals(main.state.mytable.players[i].name) == true) then orange
                                         else orange
                                         stroke: bind if(main.state.mytable.players[i].next == false) then darkorange
-                                        else red
+                                        else darkred
                                         strokeWidth: 4
-                                        opacity: bind if(main.state.mytable.players[i].seated == false) then 0.2
+                                        opacity: bind if(main.state.mytable.players[i].seated == false) then 0.15
+                                        else if(main.state.myname.equals(main.state.mytable.players[i].name) == true) then 0.95
                                         else 0.8
                                     },Text {
                                         x: 0
-                                        y: -7
+                                        y: -12
                                         visible: bind main.state.mytable.players[i].seated
                                         content: bind main.state.mytable.players[i].name
-                                        font: new Font("Tahoma", "BOLD",11)
+                                        font: new Font("Tahoma", "BOLD",10)
                                         fill: black
                                         halign: CENTER
                                         valign: CENTER
                                         opacity: 0.9
                                     },Text {
                                         x: 0
-                                        y: 7
+                                        y: 1
                                         visible: bind main.state.mytable.players[i].seated
                                         content: bind main.state.mytable.players[i].lastaction
-                                        font: new Font("Tahoma", "PLAIN",10)
+                                        font: new Font("Tahoma", "PLAIN",9)
+                                        fill: black
+                                        halign: CENTER
+                                        valign: CENTER
+                                        opacity: 0.9
+                                    },Text {
+                                        x: 0
+                                        y: 12
+                                        visible: bind main.state.mytable.players[i].seated
+                                        content: bind main.state.mytable.players[i].stack.toString()
+                                        font: new Font("Tahoma", "ITALIC",9)
                                         fill: black
                                         halign: CENTER
                                         valign: CENTER
@@ -255,17 +266,17 @@ trigger on new GameTable{
                                         y: 0
                                         visible: bind main.state.mytable.players[i].seated==false
                                         content: "?"
-                                        font: new Font("Tahoma", "PLAIN",30)
+                                        font: new Font("Tahoma", "PLAIN",25)
                                         fill: darkorange
                                         halign: CENTER
                                         valign: CENTER
-                                        opacity: 0.5
+                                        opacity: 0.4
                                     }]
                                 },
                                 Group{
                                     visible: bind main.state.mytable.players[i].seated
-                                    transform: bind [translate(20*Math.cos(parametrizeRadial(i/8.0,cardw,cardh)),
-                                        -20*Math.sin(parametrizeRadial(i/8.0,cardw,cardh))),scale(0.55, 0.55),rotate((180*(Math.PI/2.0-parametrizeRadial(i/8.0,cardw,cardh))/Math.PI)%360,0,0)]
+                                    transform: bind [translate(32*Math.cos(parametrizeRadial(i/8.0,cardw,cardh)),
+                                    -32*Math.sin(parametrizeRadial(i/8.0,cardw,cardh))),scale(0.55, 0.55),rotate((180*(Math.PI/2.0-parametrizeRadial(i/8.0,cardw,cardh))/Math.PI)%360,0,0)]
                                     content: [ImageView {
                                         antialias: true
                                         transform: translate(-45,0)
@@ -279,7 +290,31 @@ trigger on new GameTable{
                                         visible: bind main.state.mytable.players[i].cards[1].dealt
                                         halign: CENTER
                                     }]
-                                }]
+                                },Group{
+                                    transform: bind translate(-46*Math.cos(parametrizeRadial(i/8.0,cardw,cardh)),
+                                    46*Math.sin(parametrizeRadial(i/8.0,cardw,cardh)))
+                                    visible: bind ((main.state.mytable.players[i].seated == true) and main.state.mytable.players[i].amount>0)
+                                    content: [Circle{
+                                        cx: 0
+                                        cy: 0
+                                        radius: bind Math.max(10,Math.log(main.state.mytable.players[i].amount)/Math.log(10)*8)
+                                        fill: black
+                                        stroke: grey
+                                        strokeWidth: 1
+                                        opacity: 0.95
+                                    },Text {
+                                        x: 0
+                                        y: 0
+                                        content: bind main.state.mytable.players[i].amount.toString()
+                                        font: new Font("Tahoma", "PLAIN",9)
+                                        fill: white
+                                        halign: CENTER
+                                        valign: CENTER
+                                        opacity: 0.95
+                                    }
+                                ]
+                                }
+                                ]
                             }
                         }
                         ]

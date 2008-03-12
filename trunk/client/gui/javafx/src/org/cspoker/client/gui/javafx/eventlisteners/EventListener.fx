@@ -153,6 +153,10 @@ trigger on new EventListener{
                     p.lastaction = "Fold";
                     p.amount = e.getPlayer().getBetChipsValue();
                     p.stack = e.getPlayer().getStackValue();
+                    
+                    //pretend cards are given back to dealer
+                    p.cards[0].dealt = false;
+                    p.cards[1].dealt = false;
                 }
             });
         }

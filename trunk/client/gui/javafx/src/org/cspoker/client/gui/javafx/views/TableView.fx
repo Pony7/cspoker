@@ -29,6 +29,8 @@ class TableView {
     attribute smallBlind:Integer;
     attribute bigBlind:Integer;
     
+    attribute pot:Integer;
+    
     attribute state:Integer;
     
     attribute cards:CardView*;
