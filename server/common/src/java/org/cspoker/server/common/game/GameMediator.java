@@ -22,6 +22,8 @@ import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.RejectedExecutionException;
+import java.util.concurrent.TimeUnit;
 
 import org.cspoker.common.elements.table.SeatId;
 import org.cspoker.common.elements.table.TableId;
@@ -69,10 +71,12 @@ import org.cspoker.common.events.gameevents.playeractionevents.RaiseEvent;
 import org.cspoker.common.events.gameevents.playeractionevents.SmallBlindEvent;
 import org.cspoker.common.events.gameevents.privateevents.NewPocketCardsEvent;
 import org.cspoker.common.exceptions.IllegalActionException;
+import org.cspoker.common.player.Player;
 import org.cspoker.common.player.PlayerId;
 import org.cspoker.server.common.game.gamecontrol.GameControl;
 import org.cspoker.server.common.game.gamecontrol.PlayerAction;
 import org.cspoker.server.common.game.player.GamePlayer;
+import org.cspoker.server.common.util.threading.ScheduledRequestExecutor;
 
 /**
  * A class of game mediators to decouple the game control from all users:
@@ -690,6 +694,7 @@ public class GameMediator implements PlayerAction {
 	 * 
 	 */
 	public synchronized void publishNextPlayerEvent(NextPlayerEvent event) {
+		submitTimeOutHandler(event.getPlayer());
 		for (NextPlayerListener listener : nextPlayerListeners) {
 			listener.onNextPlayerEvent(event);
 		}
@@ -1298,5 +1303,38 @@ public class GameMediator implements PlayerAction {
 		unsubscribeSmallBlindListener(listener);
 		unsubscribeWinnerListener(listener);
 		unsubscribeBrokePlayerKickedOutListener(listener);
+	}
+	
+	private void submitTimeOutHandler(Player player){
+		currentTimeOut = new PlayerActionTimeOut(player);
+		ScheduledRequestExecutor.getInstance().schedule(currentTimeOut, 10, TimeUnit.SECONDS);
+		System.out.println(player.getName()+" action time out submitted.");
+	}
+	
+	private PlayerActionTimeOut currentTimeOut;
+	
+	private class PlayerActionTimeOut implements Runnable{
+				
+		private Player player;
+		
+		public PlayerActionTimeOut(Player player){
+			this.player = player;
+		}
+
+		@Override
+		public void run() {
+			try {
+				System.out.println("run called for "+player.getName());
+				if(GameMediator.this.currentTimeOut==this){
+					GamePlayer player = gameControl.getGame().getCurrentPlayer();
+					if(player.getId().equals(player.getId())){
+						System.out.println(player.getName()+" automatically folded");
+						GameMediator.this.gameControl.fold(player);
+					}
+				}
+			} catch (IllegalActionException e) {
+				throw new RejectedExecutionException();
+			}
+		}
 	}
 }
