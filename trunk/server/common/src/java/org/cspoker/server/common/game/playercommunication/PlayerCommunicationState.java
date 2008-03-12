@@ -99,7 +99,7 @@ abstract class PlayerCommunicationState {
 	 *             [must] This actions is not a valid action in the current
 	 *             state.
 	 */
-	public void join(TableId tableId, SeatId seatId) throws IllegalActionException {
+	public Table join(TableId tableId, SeatId seatId) throws IllegalActionException {
 		throw new IllegalActionException("Joining table " + tableId
 				+ " is not a valid action. " + getStdErrorMessage());
 	}
