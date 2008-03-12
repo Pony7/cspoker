@@ -37,6 +37,8 @@ class Main{
     operation relogin();
     operation table_selected();
     operation resetState();
+    operation leftTable();
+    
 }
 
 operation Main.logged_in(){
@@ -47,11 +49,14 @@ operation Main.logged_in(){
     table_selection = TableSelection{};
 }
 
+operation Main.leftTable(){
+    state.tables = TableView{}.toTableViews(client.getTableList());
+    table_selection.screen.show();
+}
+
 operation Main.table_selected(){
     table_selection.screen.hide();
     gametable = GameTable{};
-    foreach(i in [0..7])
-        System.out.println(" for {i/8.0}: r={gametable.parametrizeRadial(i/8.0)}");
 }
 
 operation Main.relogin(){

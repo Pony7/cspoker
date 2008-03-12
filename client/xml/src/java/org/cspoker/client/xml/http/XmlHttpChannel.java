@@ -191,10 +191,17 @@ public class XmlHttpChannel implements XmlChannel {
 
     }
 
-    private void dispatch(String xml) {
-        for (XmlEventListener l : xmlEventListeners) {
-            l.collect(xml);
-        }
+    private void dispatch(final String xml) {
+    	// We might not want the same thread that invoked the action to be delivering the call backs!
+    	// see JavaFX Event Handler that dispatches to the AWT event thread!
+    	scheduler.execute(new Runnable(){
+			@Override
+			public void run() {
+		    	for (XmlEventListener l : xmlEventListeners) {
+		            l.collect(xml);
+		        }
+			}
+    	});
     }
 
     public void registerXmlEventListener(XmlEventListener listener) {
