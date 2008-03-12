@@ -3,9 +3,11 @@
 
 = Introduction =
 
-Some of these ideas are related and can be combined in a single project.
+Some of these ideas are related and can be combined in a single project. We ask you to contact the mailing list with your project proposals so we can discuss them. 
 
 = Server =
+
+The server is written in Java.
 
 === Improve security ===
 Communication in CSPoker is unsafe. The HTTP module can be altered to use HTTPS for communication. The sockets module could use some of the built-in Java security tools to encrypt data.
