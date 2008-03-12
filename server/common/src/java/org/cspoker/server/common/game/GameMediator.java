@@ -25,6 +25,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.log4j.Logger;
 import org.cspoker.common.elements.table.SeatId;
 import org.cspoker.common.elements.table.TableId;
 import org.cspoker.common.eventlisteners.EventListener;
@@ -76,6 +77,7 @@ import org.cspoker.common.player.PlayerId;
 import org.cspoker.server.common.game.gamecontrol.GameControl;
 import org.cspoker.server.common.game.gamecontrol.PlayerAction;
 import org.cspoker.server.common.game.player.GamePlayer;
+import org.cspoker.server.common.game.playercommunication.PlayerCommunicationImpl;
 import org.cspoker.server.common.util.threading.ScheduledRequestExecutor;
 
 /**
@@ -86,6 +88,9 @@ import org.cspoker.server.common.util.threading.ScheduledRequestExecutor;
  * 
  */
 public class GameMediator implements PlayerAction {
+	
+	private static Logger logger = Logger
+	.getLogger(PlayerCommunicationImpl.class);
 
 	/**
 	 * This variable contains the game control to mediate to.
@@ -1324,11 +1329,10 @@ public class GameMediator implements PlayerAction {
 		@Override
 		public void run() {
 			try {
-				System.out.println("run called for "+player.getName());
 				if(GameMediator.this.currentTimeOut==this){
 					GamePlayer player = gameControl.getGame().getCurrentPlayer();
 					if(player.getId().equals(player.getId())){
-						System.out.println(player.getName()+" automatically folded");
+						logger.info(player.getName()+" automatically folded.");
 						GameMediator.this.gameControl.fold(player);
 					}
 				}

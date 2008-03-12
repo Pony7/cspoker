@@ -60,7 +60,6 @@ public class PreFlopRound extends BettingRound {
 			collectSmallBlind(player);
 			getGame().nextPlayer();
 		} catch (IllegalValueException e) {
-			PreFlopRound.logger.error(e.getLocalizedMessage(), e);
 			goAllIn(getGame().getCurrentPlayer());
 			someoneBigAllIn = false;
 		}
@@ -71,7 +70,6 @@ public class PreFlopRound extends BettingRound {
 				collectBigBlind(bigBlindPlayer);
 				getGame().nextPlayer();
 			} catch (IllegalValueException e) {
-				PreFlopRound.logger.error(e.getLocalizedMessage(), e);
 				goAllIn(getGame().getCurrentPlayer());
 				bigBlindAllIn = true;
 			}
