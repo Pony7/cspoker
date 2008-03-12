@@ -28,14 +28,24 @@ class PlayerView {
     attribute lastaction:String;
     attribute amount:Integer;
     
-    attribute cards:Card*;
+    attribute cards:CardView*;
     
-    function toPlayerView(players:Player*):PlayerView*;
+    operation toPlayerView(players:Player*):PlayerView*;
 }
 
-function PlayerView.toPlayerView(players:Player*){
-    return foreach(p in players)
-    if(p==null) then
+operation PlayerView.toPlayerView(players:Player*){
+    var temp = foreach(p in players)
+    PlayerView{
+        name: p.getName()
+        stack: p.getStackValue()
+        seated: true
+        cards: [CardView{
+            dealt: false
+        },CardView{
+            dealt: false
+        }]
+    };
+    var temp2 = foreach(i in [1..8-sizeof players])
     PlayerView{
         seated: false
         cards: [CardView{
@@ -43,15 +53,7 @@ function PlayerView.toPlayerView(players:Player*){
         },CardView{
             dealt: false
         }]
-        else
-            PlayerView{
-                name: p.getName()
-                stack: p.getStackValue()
-                seated: true
-                cards: [CardView{
-                    dealt: false
-                },CardView{
-                    dealt: false
-                }]
-            };
-    }
+    };
+    insert temp2 as last into temp;
+    return temp;
+}

@@ -31,8 +31,14 @@ class GameTable {
     
     attribute sqrw:Integer;
     attribute sqrh:Integer;
+    attribute padx:Integer;
+    attribute pady:Integer;
     
     attribute amount:String;
+    
+    function parametrizeX(position:Number):Number;
+    function parametrizeY(position:Number):Number;
+    function parametrizeRadial(position:Number):Number;
     
     operation relogin();
     operation leavetable();
@@ -50,15 +56,17 @@ class GameTable {
 }
 
 trigger on new GameTable{
-    var padx = 30;
-    var pady = 30;
+    padx = 50;
+    pady = 50;
     sqrw = 280;
     sqrh = 280;
-    var logofontsize = sqrh/5;
+    var logofontsize = sqrh/4;
+    var circleup = 20;
+    var cardsup = -25;
     screen = Frame{
         title: bind main.state.mytable.name
         width: 2*padx+sqrw+sqrh
-        height: 2*pady+sqrh+150
+        height: 2*pady+sqrh+200
         visible: true
         centerOnScreen: true
         onClose: operation() {
@@ -72,7 +80,7 @@ trigger on new GameTable{
                 items:[
                 MenuItem{
                     sizeToFitRow: true
-                    text: "Logout {main.state.myname}"
+                    text: bind "Logout {main.state.myname}"
                     mnemonic: L
                     action: operation() {
                         relogin();
@@ -85,6 +93,7 @@ trigger on new GameTable{
             content:[SplitView{
                 weight: 0.785
                 content: Canvas {
+                    doubleBuffered: true
                     content: Group {
                         transform: []
                         content:
@@ -151,30 +160,35 @@ trigger on new GameTable{
                         Group{
                             transform: translate(padx+sqrh/2+sqrw/2, pady+sqrh/2)
                             content: [ImageView {
+                                antialias: true
                                 transform:  translate(-45*2,0)
                                 image: Image { url: bind main.state.mytable.cards[0].getImage() }
                                 valign: CENTER
                                 halign: CENTER
                                 visible: bind main.state.mytable.cards[0].dealt
                             },ImageView {
+                                antialias: true
                                 transform:  translate(-45,0)
-                                image: Image { url: bind main.mytable.state.cards[1].getImage() }
+                                image: Image { url: bind main.state.mytable.cards[1].getImage() }
                                 valign: CENTER
                                 halign: CENTER
                                 visible: bind main.state.mytable.cards[1].dealt
                             },ImageView {
+                                antialias: true
                                 transform:  translate(0,0)
                                 image: Image { url: bind main.state.mytable.cards[2].getImage() }
                                 valign: CENTER
                                 halign: CENTER
                                 visible: bind main.state.mytable.cards[2].dealt
                             },ImageView {
+                                antialias: true
                                 transform:  translate(45,0)
                                 image: Image { url: bind main.state.mytable.cards[3].getImage() }
                                 valign: CENTER
                                 halign: CENTER
                                 visible: bind main.state.mytable.cards[3].dealt
                             },ImageView {
+                                antialias: true
                                 transform:  translate(45*2,0)
                                 image: Image { url: bind main.state.mytable.cards[4].getImage() }
                                 valign: CENTER
@@ -183,10 +197,65 @@ trigger on new GameTable{
                             }]
                         },
                         Group{
-                            transform: translate(padx+sqrw,pady+sqrh)
-                            content:[PlayerNode{
-                                player: bind main.state.me
+                            transform: [translate(padx,pady)]
+                            content: bind foreach(i in [0..7])
+                            Group {content: [
+                            Group {
+                                transform: bind translate(circleup*Math.cos(parametrizeRadial(i/8.0)),-circleup*Math.sin(parametrizeRadial(i/8.0)))
+                                content: [
+                                Circle{
+                                    cx: 0
+                                    cy: 0
+                                    radius: 40
+                                    fill: orange
+                                    stroke: darkorange
+                                    strokeWidth: 2
+                                    opacity: bind if(main.state.mytable.players[i].seated==false) then 0.2
+                                    else 0.8
+                                },Text {
+                                    x: 0
+                                    y: 0
+                                    visible: bind main.state.mytable.players[i].seated
+                                    content: bind main.state.mytable.players[i].name
+                                    font: new Font("Tahoma", "PLAIN",13)
+                                    fill: black
+                                    halign: CENTER
+                                    valign: CENTER
+                                    opacity: 0.9
+                                },
+                                Text {
+                                    x: 0
+                                    y: 0
+                                    visible: bind main.state.mytable.players[i].seated==false
+                                    content: "?"
+                                    font: new Font("Tahoma", "PLAIN",33)
+                                    fill: darkorange
+                                    halign: CENTER
+                                    valign: CENTER
+                                    opacity: 0.5
+                                }]
+                            },
+                            Group{
+                                visible: bind main.state.mytable.players[i].seated
+                                transform: bind rotate(Math.round(180*(Math.PI/2.0-parametrizeRadial(i/8.0))/Math.PI)%360,0,0)
+                                content: [ImageView {
+                                    antialias: true
+                                    transform: translate(-22,-cardsup)
+                                    image: Image { url: bind main.state.mytable.players[i].cards[0].getImage() }
+                                    visible: bind main.state.mytable.players[i].cards[0].dealt
+                                    halign: CENTER
+                                },ImageView {
+                                    antialias: true
+                                    transform: translate(22,-cardsup)
+                                    image: Image { url: bind main.state.mytable.players[i].cards[1].getImage() }
+                                    visible: bind main.state.mytable.players[i].cards[1].dealt
+                                    halign: CENTER
+                                }]
                             }]
+                            transform: bind [translate(
+                            Math.round(parametrizeX(i/8.0)),
+                            Math.round(parametrizeY(i/8.0)))]
+                            }
                         }
                         ]
                     }
@@ -209,11 +278,11 @@ trigger on new GameTable{
                                                 startgame();
                                             }
                                         }
-                                        visible: bind (main.state.mytable.state == 0)
-                                    },TextField{
-                                        value: "Please wait for the next game to start."
-                                        visible: bind (main.state.mytable.state == 1)
-                                    }
+                                        visible: bind(main.state.mytable.state == 0)
+                                    },SimpleLabel{
+                                        text: "Please wait for the next game to start."
+                                        visible: bind(main.state.mytable.state == 1)
+                                    },
                                     GroupPanel{
                                         var firstRow= Row{alignment: BASELINE}
                                         var secondRow= Row{alignment: BASELINE}
@@ -440,4 +509,51 @@ operation GameTable.leavetable(){
             messageType: ERROR
         }
     }
+}
+
+function GameTable.parametrizeX(position:Number):Number{
+    var Ltot:Number = 2*sqrw+Math.PI*sqrh;
+    var plaats:Number = position*Ltot;
+    var arc1:Number = (plaats-sqrw/2.0)/(sqrh/2.0);
+    var arc2:Number = (Ltot-plaats-sqrw/2.0)/(sqrh/2.0);
+    return if(plaats < sqrw/2.0) then
+    sqrh/2.0+sqrw/2.0+plaats
+    else if (plaats > Ltot-sqrw/2.0) then
+    sqrh/2.0+sqrw/2.0-Ltot+plaats
+    else if(plaats < (Ltot+sqrw)/2.0 and plaats > (Ltot-sqrw)/2.0) then
+    sqrh/2.0+sqrw-(plaats-(Ltot-sqrw)/2.0)
+    else if(plaats < Ltot/2.0) then
+    sqrh/2.0+sqrw+Math.sin(arc1)*sqrh/2.0
+    else
+        sqrh/2.0-Math.sin(arc2)*sqrh/2.0;
+}
+
+function GameTable.parametrizeY(position:Number):Number{
+    var Ltot:Number = 2*sqrw+Math.PI*sqrh;
+    var plaats:Number = position*Ltot;
+    var arc1:Number = (plaats-sqrw/2.0)/(sqrh/2.0);
+    var arc2:Number = (Ltot-plaats-sqrw/2.0)/(sqrh/2.0);
+    return if(plaats < sqrw/2.0 or plaats > Ltot-sqrw/2.0) then
+    0
+    else if(plaats < (Ltot+sqrw)/2.0 and plaats > (Ltot-sqrw)/2.0) then
+    sqrh
+    else if(plaats < Ltot/2.0) then
+    sqrh/2.0*(1-Math.cos(arc1))
+    else
+        sqrh/2.0*(1-Math.cos(arc2));
+}
+
+function GameTable.parametrizeRadial(position:Number):Number{
+    var Ltot:Number = 2*sqrw+Math.PI*sqrh;
+    var plaats:Number = position*Ltot;
+    var arc1:Number = (plaats-sqrw/2.0)/(sqrh/2.0);
+    var arc2:Number = (Ltot-plaats-sqrw/2.0)/(sqrh/2.0);
+    return if(plaats < sqrw/2.0 or plaats > Ltot-sqrw/2.0) then
+    Math.PI*0.5
+    else if(plaats < (Ltot+sqrw)/2.0 and plaats > (Ltot-sqrw)/2.0) then
+    Math.PI*1.5
+    else if(plaats < Ltot/2.0) then
+    Math.PI*0.5-arc1
+    else
+        Math.PI*0.5+arc2;
 }

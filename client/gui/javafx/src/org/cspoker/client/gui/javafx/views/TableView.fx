@@ -20,12 +20,12 @@ import org.cspoker.common.elements.table.TableId;
 import org.cspoker.common.elements.GameProperty;
 import java.lang.*;
 import org.cspoker.common.player.Player;
+import org.cspoker.client.gui.javafx.JavaFxClient;
 
 class TableView {
     attribute name:String;
     
     attribute id:TableId;
-    attribute nbPlayers:Integer;
     attribute smallBlind:Integer;
     attribute bigBlind:Integer;
     
@@ -33,33 +33,33 @@ class TableView {
     
     attribute cards:CardView*;
     
-    attribute players:Player*;
+    attribute players:PlayerView*;
     
-    function toTableViews(tables:Table*):TableView*;
+    operation toTableViews(tables:Table*):TableView*;
 }
 
-function TableView.toTableViews(tables:Table*){
+operation TableView.toTableViews(tables:Table*){
     return foreach(t in tables)
     TableView{
         bigBlind: t.getGameProperty().getBigBlind()
         smallBlind: t.getGameProperty().getSmallBlind()
         id: t.getId()
         name: t.getName()
-        nbPlayers: t.getNbPlayers()
-        players: PlayerView{}.toPlayerView(t.getPlayers())
-        cards: [Card{
+        //Who invented this crazy JavaFX casting syntax??
+        players: PlayerView{}.toPlayerView(JavaFxClient.toArray(t.getPlayers()))
+        cards: [CardView{
             visible: false
             dealt: false
-        },Card{
+        },CardView{
             visible: false
             dealt: false
-        },Card{
+        },CardView{
             visible: false
             dealt: false
-        },Card{
+        },CardView{
             visible: false
             dealt: false
-        },Card{
+        },CardView{
             visible: false
             dealt: false
         }]

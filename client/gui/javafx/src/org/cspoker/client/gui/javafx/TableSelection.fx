@@ -20,6 +20,7 @@ import java.rmi.RemoteException;
 import org.cspoker.common.exceptions.IllegalActionException;
 import org.cspoker.common.elements.table.Table as JavaTable;
 import org.cspoker.common.elements.table.TableId;
+import org.cspoker.client.gui.javafx.views.*;
 
 class TableSelection {
     attribute main: Main inverse Main.table_selection;
@@ -66,7 +67,7 @@ trigger on new TableSelection{
                         join_table();
                     }
                 }
-                selection:bind this.selection
+                selection: bind this.selection
                 columns: [TableColumn {
                     text: "Id"
                     width: 15
@@ -90,7 +91,7 @@ trigger on new TableSelection{
                     text: bind t.name
                 },
                 TableCell{
-                    text: bind t.nbPlayers.toString()
+                    text: bind "{sizeof t.players[p | p.seated.booleanValue()]}"
                 },
                 TableCell{
                     text: bind "{t.smallBlind}/{t.bigBlind}"
@@ -129,8 +130,9 @@ operation TableSelection.relogin(){
 operation TableSelection.join_table(){
     active = false;
     try{
-        var table = main.client.joinTable(main.state.tables[selection].id);
-        main.state.tables[selection] = TableView{}.toTableView(table);
+        var table = TableView{}.toTableViews(main.client.joinTable(main.state.tables[selection].id));
+        main.state.tables[selection] = table;
+        main.state.mytableid = table.id;
         main.state.mytable.state=1;
         main.table_selected();
     }catch(e:RemoteException){
@@ -149,8 +151,9 @@ operation TableSelection.join_table(){
 operation TableSelection.create_table(name:String){
     active = false;
     try{
-        var table = main.client.createTable(name);
-        insert TableView{}.toTableView(table) as last into main.state.tables;
+        var table = TableView{}.toTableViews(main.client.createTable(name));
+        insert table as last into main.state.tables;
+        main.state.mytableid = table.id;
         main.state.mytable.state=0;
         main.table_selected();
     }catch(e:RemoteException){
