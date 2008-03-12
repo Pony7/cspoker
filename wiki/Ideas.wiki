@@ -35,13 +35,16 @@ Support for tournaments with increasing blind values is needed both for human pl
 === Extend the Java FX client ===
 When new functionality is added to the server, support for that functionality is needed in the client implementation. (see for instance other types of games)
 
-=== Write new clients ===
+=== Adobe Flex client ===
 A client in Flash/Adobe Flex would allow us to make CSPoker more popular with online game sites. The implementation is pretty straightforward using either the HTTP or XML over Sockets communication module.
 
 A client in .NET could also extend our user base. Technically even an AJAX client is possible when leveraging the HTTP communication module.
 
 === Facebook Application ===
 A Flash client could be turned in to a Facebook app.
+
+=== Google Android client ===
+Google Android provides a very easy to program environment for handheld devices. We believe it will grow to be very popular. Being the first poker software for Android would give a great boost to popularity and possibly extend our usebase by a large number. 
 
 = Artificial Intelligence =
 
