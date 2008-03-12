@@ -49,7 +49,7 @@ trigger on new Login{
             top:SimpleLabel {
                 horizontalAlignment: CENTER
                 icon: Image {url:"./org/cspoker/client/gui/javafx/images/cspoker10.jpg"
-                
+                    
                 }
             }
             center:GroupPanel{
@@ -126,7 +126,7 @@ trigger on new Login{
 operation Login.login(){
     try{ 
         loginable = false;
-        main.client.login(connection,main.state.me.name,passw);
+        main.client.login(connection,main.state.myname,passw);
         main.logged_in();
         loginable = true;
     }catch(e:Exception){

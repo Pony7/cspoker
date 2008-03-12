@@ -20,30 +20,8 @@ package org.cspoker.client.gui.javafx;
 import javafx.ui.*;
 import java.lang.*;
 import org.cspoker.client.gui.javafx.*;
-import org.cspoker.client.gui.javafx.game.*;
+import org.cspoker.client.gui.javafx.views.*;
 import org.cspoker.common.eventlisteners.RemoteAllEventsListener;
-import org.cspoker.common.events.gameevents.GameMessageEvent;
-import org.cspoker.common.events.gameevents.NewCommunityCardsEvent;
-import org.cspoker.common.events.gameevents.NewDealEvent;
-import org.cspoker.common.events.gameevents.NewRoundEvent;
-import org.cspoker.common.events.gameevents.NextPlayerEvent;
-import org.cspoker.common.events.gameevents.PlayerJoinedGameEvent;
-import org.cspoker.common.events.gameevents.PlayerLeftTableEvent;
-import org.cspoker.common.events.gameevents.ShowHandEvent;
-import org.cspoker.common.events.gameevents.WinnerEvent;
-import org.cspoker.common.events.gameevents.playeractionevents.AllInEvent;
-import org.cspoker.common.events.gameevents.playeractionevents.BetEvent;
-import org.cspoker.common.events.gameevents.playeractionevents.BigBlindEvent;
-import org.cspoker.common.events.gameevents.playeractionevents.CallEvent;
-import org.cspoker.common.events.gameevents.playeractionevents.CheckEvent;
-import org.cspoker.common.events.gameevents.playeractionevents.FoldEvent;
-import org.cspoker.common.events.gameevents.playeractionevents.RaiseEvent;
-import org.cspoker.common.events.gameevents.playeractionevents.SmallBlindEvent;
-import org.cspoker.common.events.gameevents.privateevents.NewPocketCardsEvent;
-import org.cspoker.common.events.serverevents.PlayerJoinedEvent;
-import org.cspoker.common.events.serverevents.PlayerLeftEvent;
-import org.cspoker.common.events.serverevents.ServerMessageEvent;
-import org.cspoker.common.events.serverevents.TableCreatedEvent;
 import org.cspoker.client.gui.javafx.eventlisteners.EventListener;
 
 class Main{
@@ -65,13 +43,15 @@ operation Main.logged_in(){
     listener = EventListener{};
     this.client.subscribeAllEvents(listener.listener);
     login.screen.hide();
-    state.tables = TableViews{}.toTableViews(client.getTableList());
+    state.tables = TableView{}.toTableViews(client.getTableList());
     table_selection = TableSelection{};
 }
 
 operation Main.table_selected(){
     table_selection.screen.hide();
     gametable = GameTable{};
+    foreach(i in [0..7])
+        System.out.println(" for {i/8.0}: r={gametable.parametrizeRadial(i/8.0)}");
 }
 
 operation Main.relogin(){
@@ -95,10 +75,11 @@ trigger on new Main{
 }
 
 operation Main.resetState(){
-    state = TableState{
+    state = GameView{
         events: "Welcome to CSPoker!<br/>"
-        me: Player{
-            name: "guy"
-        }
+        myname: "guy"
+        tables: []
+        mytable: bind state.tables[t | t.id.equals(state.mytableid)][0]
+        me: bind state.mytable.players[p | p.name.equals(state.myname)][0]
     };
 }

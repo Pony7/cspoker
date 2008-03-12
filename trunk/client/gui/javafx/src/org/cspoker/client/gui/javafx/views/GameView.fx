@@ -20,6 +20,7 @@ import java.lang.*;
 import org.cspoker.client.gui.javafx.game.*;
 import org.cspoker.client.gui.javafx.views.*;
 import org.cspoker.common.elements.table.Table;
+import org.cspoker.common.elements.table.TableId;
 
 class GameView {
     attribute events:String;
@@ -28,20 +29,8 @@ class GameView {
     attribute myname:String?;
     attribute mytableid:TableId?;
     
-    function mytable:FXTable;
-    function me:Player;
+    attribute mytable:TableView;
+    attribute me:PlayerView;
         
-    attribute tables: FXTable*;
-}
-
-function GameView.me{
-    var playerindex = select indexof player from player in mytable.players 
-                                                        where player.name.equals(myname);
-    return mytable.players[playerindex];
-}
-
-function GameView.mytable{
-    var tableindex = select indexof t from t in tables
-                              where t.getId().equals(mytableid);
-    return tables[tableindex];
+    attribute tables: TableView*;
 }

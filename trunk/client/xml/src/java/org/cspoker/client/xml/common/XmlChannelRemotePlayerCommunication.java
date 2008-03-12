@@ -29,7 +29,7 @@ import org.cspoker.common.elements.table.TableId;
 import org.cspoker.common.elements.table.TableList;
 import org.cspoker.common.eventlisteners.RemoteAllEventsListener;
 import org.cspoker.common.exceptions.IllegalActionException;
-import org.cspoker.common.util.SpreadingAllEventsListener;
+import org.cspoker.common.util.DelegatingRemoteAllEventsListener;
 import org.cspoker.common.xml.actions.AllInAction;
 import org.cspoker.common.xml.actions.BetAction;
 import org.cspoker.common.xml.actions.CallAction;
@@ -56,7 +56,7 @@ public class XmlChannelRemotePlayerCommunication implements
 
 	public XmlChannelRemotePlayerCommunication(XmlChannel c) {
 		marshaller = new XmlChannelMarshaller(c,
-				new SpreadingAllEventsListener(listeners));
+				new DelegatingRemoteAllEventsListener(listeners));
 		this.c = c;
 	}
 

@@ -44,14 +44,14 @@ import org.cspoker.common.events.serverevents.TableChangedEvent;
 import org.cspoker.common.events.serverevents.TableCreatedEvent;
 import org.cspoker.common.events.serverevents.TableRemovedEvent;
 
-public class SpreadingAllEventsListener implements RemoteAllEventsListener {
+public class DelegatingRemoteAllEventsListener implements RemoteAllEventsListener {
 
 	private final static Logger logger = Logger
-			.getLogger(SpreadingAllEventsListener.class);
+			.getLogger(DelegatingRemoteAllEventsListener.class);
 
 	private final Set<RemoteAllEventsListener> listeners;
 
-	public SpreadingAllEventsListener(Set<RemoteAllEventsListener> listeners) {
+	public DelegatingRemoteAllEventsListener(Set<RemoteAllEventsListener> listeners) {
 		this.listeners = listeners;
 	}
 

@@ -44,8 +44,6 @@ public class BrokePlayerKickedOutEvent extends GameEvent{
 		return player;
 	}
 	
-	
-	
 	@Override
 	public String toString() {
 		return player.getName() + " is broke and can no longer play at this table.";

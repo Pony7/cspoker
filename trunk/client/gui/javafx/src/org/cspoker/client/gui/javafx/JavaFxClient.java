@@ -18,6 +18,7 @@ package org.cspoker.client.gui.javafx;
 import java.rmi.ConnectException;
 import java.rmi.RemoteException;
 
+import java.util.List;
 import java.util.Set;
 import javax.security.auth.login.LoginException;
 import org.cspoker.client.rmi.RemotePlayerCommunicationFactoryForRMI;
@@ -29,6 +30,7 @@ import org.cspoker.common.RemotePlayerCommunication;
 import org.cspoker.common.elements.cards.Card;
 import org.cspoker.common.elements.table.Table;
 import org.cspoker.common.elements.table.TableId;
+import org.cspoker.common.player.Player;
 import org.cspoker.common.util.Log4JPropertiesLoader;
 
 public class JavaFxClient {
@@ -36,7 +38,6 @@ public class JavaFxClient {
     static {
         Log4JPropertiesLoader.load("org/cspoker/client/gui/javafx/logging/log4j.properties");
     }
-    
     /**
      * The communication used by this client
      */
@@ -54,7 +55,7 @@ public class JavaFxClient {
 
     public void login(String connection, String userName, String password) {
         createCommunication(connection, userName, password);
-        System.out.println("Logged in as "+userName);
+        System.out.println("Logged in as " + userName);
     }
 
     public void subscribeAllEvents(org.cspoker.common.eventlisteners.RemoteAllEventsListener listener) throws java.rmi.RemoteException {
@@ -166,7 +167,7 @@ public class JavaFxClient {
     public Table joinTable(TableId id) throws IllegalActionException, RemoteException {
         return rpc.joinTable(id);
     }
-    
+
     public Table getTable(TableId id) throws IllegalActionException, RemoteException {
         return rpc.getTable(id);
     }
@@ -187,7 +188,14 @@ public class JavaFxClient {
         return rpc.getTables().getTables().toArray(new Table[rpc.getTables().getTables().size()]);
     }
 
-    public Card[] toArray(Set<Card> cards) {
+    public static Card[] toArray(Set<Card> cards) {
         return cards.toArray(new Card[cards.size()]);
+    }
+
+    public static Player[] toArray(List<Player> players) {
+        if(players==null)
+            return new Player[]{};
+        System.out.println("nbplayers in java is"+players.size());
+        return players.toArray(new Player[players.size()]);
     }
 }
