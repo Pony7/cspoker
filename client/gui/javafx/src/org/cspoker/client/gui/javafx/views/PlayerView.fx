@@ -18,7 +18,7 @@ package org.cspoker.client.gui.javafx.views;
 
 import java.lang.*;
 import org.cspoker.common.player.Player;
-import org.cspoker.common.table.SeatId;
+import org.cspoker.common.elements.table.SeatId;
 
 class PlayerView {
     attribute name:String;
@@ -31,10 +31,10 @@ class PlayerView {
     
     attribute cards:CardView*;
     
-    operation toPlayerView(players:Player*):PlayerView*;
+    operation toPlayerViews(players:Player*):PlayerView*;
 }
 
-operation PlayerView.toPlayerView(players:Player*){
+operation PlayerView.toPlayerViews(players:Player*){
     var temp = foreach(i in [1..8])
     PlayerView{
         seated: false
@@ -44,16 +44,17 @@ operation PlayerView.toPlayerView(players:Player*){
             dealt: false
         }]
     };
-    foreach(p in players)
+    for(p in players){
         temp[p.getSeatId().getId()] = PlayerView{
-        name: p.getName()
-        stack: p.getStackValue()
-        seated: true
-        cards: [CardView{
-            dealt: false
-        },CardView{
-            dealt: false
-        }]
-    };
+            name: p.getName()
+            stack: p.getStackValue()
+            seated: true
+            cards: [CardView{
+                dealt: false
+            },CardView{
+                dealt: false
+            }]
+        };
+    }
     return temp;
 }
