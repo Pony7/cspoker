@@ -21,7 +21,6 @@ import java.util.List;
 
 import org.cspoker.common.events.gameevents.BrokePlayerKickedOutEvent;
 import org.cspoker.common.events.gameevents.NewDealEvent;
-import org.cspoker.common.events.gameevents.PlayerLeftTableEvent;
 import org.cspoker.common.exceptions.IllegalActionException;
 import org.cspoker.common.player.Player;
 import org.cspoker.server.common.game.GameMediator;
