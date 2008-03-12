@@ -371,7 +371,7 @@ public class PlayerCommunicationTest extends TestCase {
 		}
 	}
 
-	private class EventCollector implements RemoteAllEventsListener{
+	private static class EventCollector implements RemoteAllEventsListener{
 		
 		public List<Event> getEvents(){
 			return events;

@@ -626,7 +626,7 @@ public class TestHandEvaluator extends TestCase {
 	}
 
 	public void testOldEvaluatorPerformance() {
-		Deck deck = new Deck();
+		Deck deck;
 		long startTime = System.currentTimeMillis();
 
 		for (int i = 0; i < 1000; i++) {

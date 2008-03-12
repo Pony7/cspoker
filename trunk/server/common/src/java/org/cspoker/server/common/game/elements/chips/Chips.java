@@ -176,7 +176,9 @@ public class Chips {
 	 */
 	public synchronized void transferAmountTo(int amount, Chips receiver)
 			throws IllegalValueException {
-		if ((amount < 0) || (receiver == null)) {
+		if(receiver==null)
+			throw new IllegalArgumentException("The given receiver should be effective.");
+		if (amount < 0) {
 			throw new IllegalArgumentException("Can not transfer " + amount
 					+ " from this pile with " + toString() + " to "
 					+ receiver.toString());

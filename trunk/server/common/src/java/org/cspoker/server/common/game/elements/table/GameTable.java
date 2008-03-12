@@ -399,12 +399,4 @@ public class GameTable {
 		}
 		return new Table(tableId, name, playerList, playing, gameProperty);
 	}
-	
-	protected SeatId reverseLookUp(GamePlayer player){
-		for(SeatId id:players.keySet()){
-			if(players.get(id).equals(player))
-				return id;
-		}
-		return null;
-	}
 }

@@ -71,7 +71,7 @@ public class SocketsAuthenticator {
 		}
 	}
 
-	private class LoginHandler extends DefaultHandler {
+	private static class LoginHandler extends DefaultHandler {
 
 		private String useragent = "unknown";
 		private String username = "John Doe";
