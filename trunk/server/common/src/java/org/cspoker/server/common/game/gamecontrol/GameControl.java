@@ -20,8 +20,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.RejectedExecutionException;
-import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
 import org.cspoker.common.elements.pots.Pots;
@@ -50,7 +48,6 @@ import org.cspoker.server.common.game.gamecontrol.rounds.WaitingRound;
 import org.cspoker.server.common.game.gamecontrol.rules.BettingRules;
 import org.cspoker.server.common.game.gamecontrol.rules.NoLimit;
 import org.cspoker.server.common.game.player.GamePlayer;
-import org.cspoker.server.common.util.threading.ScheduledRequestExecutor;
 
 /**
  * This class is responsible to control the flow of the game. This class changes
@@ -59,7 +56,7 @@ import org.cspoker.server.common.util.threading.ScheduledRequestExecutor;
  * @author Kenzo
  * 
  */
-public class GameControl implements PlayerAction {
+public class GameControl {
 	private static Logger logger = Logger.getLogger(GameControl.class);
 
 	/***************************************************************************
@@ -161,7 +158,6 @@ public class GameControl implements PlayerAction {
 	 *             [must] It's not the turn of the given player.
 	 * @throws IllegalActionException
 	 *             [must] The action performed is not a valid action.
-	 * @see PlayerAction
 	 */
 	public void bet(GamePlayer player, int amount)
 			throws IllegalActionException {
@@ -182,7 +178,6 @@ public class GameControl implements PlayerAction {
 	 *             [must] It's not the turn of the given player.
 	 * @throws IllegalActionException
 	 *             [must] The action performed is not a valid action.
-	 * @see PlayerAction
 	 */
 	public void call(GamePlayer player) throws IllegalActionException {
 		round.call(player);
@@ -202,7 +197,6 @@ public class GameControl implements PlayerAction {
 	 *             [must] It's not the turn of the given player.
 	 * @throws IllegalActionException
 	 *             [must] The action performed is not a valid action.
-	 * @see PlayerAction
 	 */
 	public void check(GamePlayer player) throws IllegalActionException {
 		round.check(player);
@@ -222,7 +216,6 @@ public class GameControl implements PlayerAction {
 	 *             [must] It's not the turn of the given player.
 	 * @throws IllegalActionException
 	 *             [must] The action performed is not a valid action.
-	 * @see PlayerAction
 	 */
 	public void raise(GamePlayer player, int amount)
 			throws IllegalActionException {
@@ -246,7 +239,6 @@ public class GameControl implements PlayerAction {
 	 *             [must] It's not the turn of the given player.
 	 * @throws IllegalActionException
 	 *             [must] The action performed is not a valid action.
-	 * @see PlayerAction
 	 */
 	public void fold(GamePlayer player) throws IllegalActionException {
 		round.fold(player);
@@ -265,7 +257,6 @@ public class GameControl implements PlayerAction {
 	 *             [must] It's not the turn of the given player.
 	 * @throws IllegalActionException
 	 *             [must] The action performed is not a valid action.
-	 * @see PlayerAction
 	 */
 	public void deal(GamePlayer player) throws IllegalActionException {
 		round.deal(player);
@@ -281,7 +272,6 @@ public class GameControl implements PlayerAction {
 	 *             [must] It's not the turn of the given player.
 	 * @throws IllegalActionException
 	 *             [must] The action performed is not a valid action.
-	 * @see PlayerAction
 	 */
 	public void allIn(GamePlayer player) throws IllegalActionException {
 		round.allIn(player);
@@ -314,9 +304,10 @@ public class GameControl implements PlayerAction {
 		game.leaveGame(player);
 		gameMediator.publishPlayerLeftTable(new PlayerLeftTableEvent(immutablePlayer));
 		if(game.getNbSeatedPlayers()==0){
-			TableManager.global_table_manager.removeTable(game.getTable().getId());
 			TableId id = game.getTable().getId();
+			TableManager.global_table_manager.removeTable(id);
 			GameManager.removeGame(id);
+			logger.info("Table with id ["+id.toString()+" removed.");
 			GameManager.getServerMediator().publishTableRemovedEvent(new TableRemovedEvent(id));
 		}else{
 			if(checkForRoundEnded)

@@ -20,7 +20,6 @@ import org.apache.log4j.Logger;
 import org.cspoker.common.exceptions.IllegalActionException;
 import org.cspoker.server.common.game.GameMediator;
 import org.cspoker.server.common.game.gamecontrol.Game;
-import org.cspoker.server.common.game.gamecontrol.PlayerAction;
 import org.cspoker.server.common.game.player.GamePlayer;
 
 public class WaitingRound extends Round {
@@ -42,7 +41,6 @@ public class WaitingRound extends Round {
 	 *             [must] It's not the turn of the given player.
 	 * @throws IllegalActionException
 	 *             [must] The action performed is not a valid action.
-	 * @see PlayerAction
 	 */
 	@Override
 	public void deal(GamePlayer player) throws IllegalActionException {
