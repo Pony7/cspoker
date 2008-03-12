@@ -1330,10 +1330,10 @@ public class GameMediator implements PlayerAction {
 		public void run() {
 			try {
 				if(GameMediator.this.currentTimeOut==this){
-					GamePlayer player = gameControl.getGame().getCurrentPlayer();
-					if(player.getId().equals(player.getId())){
+					GamePlayer gcPlayer = gameControl.getGame().getCurrentPlayer();
+					if(gcPlayer.getId().equals(player.getId())){
 						logger.info(player.getName()+" automatically folded.");
-						GameMediator.this.gameControl.fold(player);
+						GameMediator.this.gameControl.fold(gcPlayer);
 					}
 				}
 			} catch (IllegalActionException e) {
