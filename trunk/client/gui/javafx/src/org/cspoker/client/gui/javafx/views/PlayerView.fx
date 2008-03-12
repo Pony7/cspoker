@@ -31,6 +31,8 @@ class PlayerView {
     
     attribute cards:CardView*;
     
+    operation toPlayerView(players:Player):PlayerView;
+    
     operation toPlayerViews(players:Player*):PlayerView*;
 }
 
@@ -45,7 +47,13 @@ operation PlayerView.toPlayerViews(players:Player*){
         }]
     };
     for(p in players){
-        temp[p.getSeatId().getId()] = PlayerView{
+        temp[p.getSeatId().getId()] = toPlayerView(p);
+    }
+    return temp;
+}
+
+operation PlayerView.toPlayerView(p:Player){
+    return PlayerView{
             name: p.getName()
             stack: p.getStackValue()
             seated: true
@@ -55,6 +63,4 @@ operation PlayerView.toPlayerViews(players:Player*){
                 dealt: false
             }]
         };
-    }
-    return temp;
 }

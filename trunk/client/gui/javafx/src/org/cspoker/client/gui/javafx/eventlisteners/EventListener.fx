@@ -232,7 +232,8 @@ trigger on new EventListener{
                 ts.busy=false;
                 ts.events = ts.events.concat(e.toString()).concat("<br/>");
                 ts.busy=true;
-                ts.mytable.players[e.getPlayer().getSeatId().getId()] = PlayerView{}.toPlayerViews(e.getPlayer());
+                System.out.println("seatid={e.getPlayer().getSeatId().getId()}");
+                ts.mytable.players[e.getPlayer().getSeatId().getId()] = PlayerView{}.toPlayerView(e.getPlayer());
             }
         }
         operation onPlayerLeftTableEvent(e:PlayerLeftTableEvent){
