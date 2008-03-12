@@ -50,6 +50,7 @@ operation Main.logged_in(){
 }
 
 operation Main.leftTable(){
+    gametable.screen.hide();
     state.tables = TableView{}.toTableViews(client.getTableList());
     table_selection.screen.show();
 }
@@ -60,10 +61,10 @@ operation Main.table_selected(){
 }
 
 operation Main.relogin(){
-    table_selection.screen.visible = false;
-    gametable.screen.visible = false;
+    table_selection.screen.hide();
+    gametable.screen.hide();
     resetState();
-    login.screen.visible = true;
+    login.screen.show();
 }
 
 Main{
