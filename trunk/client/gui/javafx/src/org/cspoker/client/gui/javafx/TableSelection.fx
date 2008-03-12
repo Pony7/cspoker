@@ -85,7 +85,7 @@ trigger on new TableSelection{
                 }]
                 cells: bind foreach(t in main.state.tables)
                 [TableCell {
-                    text: bind t.id.getID().toString()
+                    text: bind t.id.getId().toString()
                 },
                 TableCell {
                     text: bind t.name

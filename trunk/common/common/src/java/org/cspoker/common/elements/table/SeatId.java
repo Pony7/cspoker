@@ -55,7 +55,7 @@ public class SeatId implements Serializable{
 		return new SeatId(id+1);
 	}
 	
-	public int getID() {
+	public int getId() {
 		return id;
 	}
 	

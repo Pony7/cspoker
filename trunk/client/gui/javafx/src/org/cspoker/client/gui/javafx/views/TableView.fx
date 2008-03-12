@@ -46,7 +46,7 @@ operation TableView.toTableViews(tables:Table*){
         id: t.getId()
         name: t.getName()
         //Who invented this crazy JavaFX casting syntax??
-        players: PlayerView{}.toPlayerView(JavaFxClient.toArray(t.getPlayers()))
+        players: PlayerView{}.toPlayerViews(JavaFxClient.toArray(t.getPlayers()))
         cards: [CardView{
             visible: false
             dealt: false

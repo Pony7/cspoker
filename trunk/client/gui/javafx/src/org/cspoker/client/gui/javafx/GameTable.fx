@@ -62,7 +62,7 @@ trigger on new GameTable{
     sqrh = 280;
     var logofontsize = sqrh/4;
     var circleup = 20;
-    var cardsup = -25;
+    var cardsup = -20;
     screen = Frame{
         title: bind main.state.mytable.name
         width: 2*padx+sqrw+sqrh
@@ -198,7 +198,7 @@ trigger on new GameTable{
                         },
                         Group{
                             transform: [translate(padx,pady)]
-                            content: bind foreach(i in [0..7])
+                            content: foreach(i in [0..7])
                             Group {content: [
                             Group {
                                 transform: bind translate(circleup*Math.cos(parametrizeRadial(i/8.0)),-circleup*Math.sin(parametrizeRadial(i/8.0)))

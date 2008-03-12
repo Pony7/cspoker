@@ -89,7 +89,7 @@ public class TableId implements Serializable {
 		return String.valueOf(id);
 	}
 
-	public long getID() {
+	public long getId() {
 		return id;
 	}
 

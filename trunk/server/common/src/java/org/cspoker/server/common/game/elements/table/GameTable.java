@@ -322,7 +322,7 @@ public class GameTable {
 	}
 	
 	public boolean isValidSeatId(SeatId seatId){
-		return seatId!=null && seatId.getID()<gameProperty.getMaxNbPlayers();
+		return seatId!=null && seatId.getId()<gameProperty.getMaxNbPlayers();
 	}
 
 	/**

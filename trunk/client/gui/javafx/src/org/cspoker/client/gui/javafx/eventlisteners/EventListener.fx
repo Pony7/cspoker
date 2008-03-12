@@ -192,21 +192,21 @@ trigger on new EventListener{
                 
                 ts.mytable.state = 2;
                 
-                foreach(p in ts.mytable.players){
-                    if(p.seated){
-                        foreach(c in p.cards){
+                for(p in ts.mytable.players){
+                    if (p.seated) {
+                        for(c in p.cards){
                             c.dealt = true;
                             c.visible = false;
                         }
                     }else{
-                         foreach(c in p.cards){
+                        for(c in p.cards){
                             c.dealt = false;
                             c.visible = false;
                         }
                     }
                 }
                 
-                foreach(c in ts.mytable.cards){
+                for(c in ts.mytable.cards){
                     c.dealt = true;
                     c.visible = false;
                 }
@@ -232,7 +232,7 @@ trigger on new EventListener{
                 ts.busy=false;
                 ts.events = ts.events.concat(e.toString()).concat("<br/>");
                 ts.busy=true;
-                ts.mytable.players[e.getPlayer().getSeatId().getId()]
+                ts.mytable.players[e.getPlayer().getSeatId().getId()] = PlayerView{}.toPlayerViews(e.getPlayer());
             }
         }
         operation onPlayerLeftTableEvent(e:PlayerLeftTableEvent){
@@ -241,6 +241,14 @@ trigger on new EventListener{
                 ts.busy=false;
                 ts.events = ts.events.concat(e.toString()).concat("<br/>");
                 ts.busy=true;
+                ts.mytable.players[e.getPlayer().getSeatId().getId()] = PlayerView{
+                    seated: false
+                    cards: [CardView{
+                        dealt: false
+                    },CardView{
+                        dealt: false
+                    }]
+                };
             }
         }
         operation onShowHandEvent(e:ShowHandEvent){
