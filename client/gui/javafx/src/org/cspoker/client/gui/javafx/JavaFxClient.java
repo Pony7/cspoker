@@ -134,10 +134,13 @@ public class JavaFxClient {
 
     public void bet(String amount) throws RemoteException, IllegalActionException {
         try {
-            rpc.bet(Integer.parseInt(amount));
+            bet(Integer.parseInt(amount));
         } catch (NumberFormatException e) {
             throw new IllegalActionException("Not a valid number");
         }
+    }
+    public void bet(int amount) throws RemoteException, IllegalActionException {
+        rpc.bet(amount);
     }
 
     public void fold() throws RemoteException, IllegalActionException {
@@ -150,10 +153,13 @@ public class JavaFxClient {
 
     public void raise(String amount) throws RemoteException, IllegalActionException {
         try {
-            rpc.raise(Integer.parseInt(amount));
+            raise(Integer.parseInt(amount));
         } catch (NumberFormatException e) {
             throw new IllegalActionException("Not a valid number");
         }
+    }
+    public void raise(int amount) throws RemoteException, IllegalActionException {
+        rpc.raise(amount);
     }
 
     public void allIn() throws RemoteException, IllegalActionException {

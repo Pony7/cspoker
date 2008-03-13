@@ -64,7 +64,7 @@ trigger on new GameTable{
     //cardw stays the same to obtain a table that has borders equidistant of the real borders
     var cardw=sqrw;
     var cardh=sqrh-sqrh/3.8;
-    
+    amount=1.toString();
     screen = Frame{
         title: bind main.state.mytable.name
         width: 2*padx+sqrw+sqrh
@@ -398,6 +398,7 @@ trigger on new GameTable{
                                             action: operation() {
                                                 bet();
                                             }
+                                            enabled: bind main.state.me.next and main.state.me.stack>0 and main.state.mytable.temppot - main.state.mytable.pot == 0
                                         },
                                         Button{
                                             row: firstRow
@@ -407,6 +408,7 @@ trigger on new GameTable{
                                             action: operation() {
                                                 check();
                                             }
+                                            enabled: bind main.state.me.next and (main.state.mytable.temppot - main.state.mytable.pot == 0 or "Big Blind".equals(main.state.me.lastaction))
                                         },
                                         Button{
                                             row: firstRow
@@ -416,6 +418,7 @@ trigger on new GameTable{
                                             action: operation() {
                                                 call();
                                             }
+                                            enabled: bind main.state.me.next and main.state.mytable.temppot - main.state.mytable.pot > 0 and main.state.mytable.temppot - main.state.mytable.pot < main.state.me.stack 
                                         },
                                         Button{
                                             row: secondRow
@@ -425,6 +428,7 @@ trigger on new GameTable{
                                             action: operation() {
                                                 fold();
                                             }
+                                            enabled: bind main.state.me.next
                                         },
                                         Button{
                                             row: secondRow
@@ -434,6 +438,7 @@ trigger on new GameTable{
                                             action: operation() {
                                                 raise();
                                             }
+                                            enabled: bind main.state.me.next and main.state.mytable.temppot - main.state.mytable.pot > 0 and main.state.mytable.temppot - main.state.mytable.pot < main.state.me.stack 
                                         },
                                         Button{
                                             row: secondRow
@@ -443,6 +448,7 @@ trigger on new GameTable{
                                             action: operation() {
                                                 allin();
                                             }
+                                            enabled: bind main.state.me.next and main.state.me.stack>0
                                         }]
                                     }
                                     ]
@@ -492,6 +498,7 @@ operation GameTable.startgame(){
 operation GameTable.bet(){
     try{
         main.client.bet(amount);
+        amount = 1.toString();
     }catch(e:RemoteException){
         relogin();
     }catch(e:IllegalActionException){
@@ -552,6 +559,7 @@ operation GameTable.check(){
 operation GameTable.raise(){
     try{
         main.client.raise(amount);
+        amount = 1.toString();
     }catch(e:RemoteException){
         relogin();
     }catch(e:IllegalActionException){

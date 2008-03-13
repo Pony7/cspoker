@@ -100,23 +100,6 @@ trigger on new EventListener{
                 }
             });
         }
-        operation onBigBlindEvent(e:BigBlindEvent){
-            EventQueue.invokeLater(new Runnable(){
-                operation run(){
-                    System.out.println(e.toString());
-                    ts.busy=false;
-                    ts.events = ts.events.concat(e.toString()).concat("<br/>");
-                    ts.busy=true;
-                    
-                    var p = ts.mytable.players[e.getPlayer().getSeatId().getId()];
-                    p.lastaction = "Blind";
-                    p.amount = e.getPlayer().getBetChipsValue();
-                    p.stack = e.getPlayer().getStackValue();
-                    
-                    ts.mytable.temppot = e.getPots().getTotalValue();
-                }
-            });
-        }
         operation onCallEvent(e:CallEvent){
             EventQueue.invokeLater(new Runnable(){
                 operation run(){
@@ -194,7 +177,7 @@ trigger on new EventListener{
                     ts.busy=true;
                     
                     var p = ts.mytable.players[e.getPlayer().getSeatId().getId()];
-                    p.lastaction = "Blind";
+                    p.lastaction = "Small Blind";
                     p.amount = e.getPlayer().getBetChipsValue();
                     p.stack = e.getPlayer().getStackValue();
                     
@@ -202,6 +185,25 @@ trigger on new EventListener{
                 }
             });
         }
+        
+        operation onBigBlindEvent(e:BigBlindEvent){
+            EventQueue.invokeLater(new Runnable(){
+                operation run(){
+                    System.out.println(e.toString());
+                    ts.busy=false;
+                    ts.events = ts.events.concat(e.toString()).concat("<br/>");
+                    ts.busy=true;
+                    
+                    var p = ts.mytable.players[e.getPlayer().getSeatId().getId()];
+                    p.lastaction = "Big Blind";
+                    p.amount = e.getPlayer().getBetChipsValue();
+                    p.stack = e.getPlayer().getStackValue();
+                    
+                    ts.mytable.temppot = e.getPots().getTotalValue();
+                }
+            });
+        }
+        
         operation onNewPocketCardsEvent(e:NewPocketCardsEvent){
             EventQueue.invokeLater(new Runnable(){
                 operation run(){
