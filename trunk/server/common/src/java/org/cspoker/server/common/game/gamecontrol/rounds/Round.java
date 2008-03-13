@@ -291,6 +291,7 @@ public abstract class Round {
 
 	protected void newDealRound() {
 		game.addTablePlayersToGame();
+		game.seatInitalDealPlayers();
 		game.setCurrentPlayer(game.getDealer());
 		List<Player> players = new ArrayList<Player>(game
 				.getNbCurrentDealPlayers());
