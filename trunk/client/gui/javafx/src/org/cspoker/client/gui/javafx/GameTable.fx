@@ -22,6 +22,7 @@ import org.cspoker.client.gui.javafx.views.*;
 import org.cspoker.client.gui.javafx.game.*;
 import java.rmi.RemoteException;
 import org.cspoker.common.exceptions.IllegalActionException;
+import java.awt.Dimension;
 
 class GameTable {
     attribute main:Main inverse Main.gametable;
@@ -493,7 +494,7 @@ trigger on new GameTable{
                                         editable: false
                                         text: bind "<html><body><div style='font-size:x-small;'>{main.state.events}<div></body></html>"
                                         doubleBuffered: true
-                                        preferredSize:{height: bind buttonh width:bind (1-weight_buttons)*screen.width}
+                                        preferredSize: bind new Dimension(buttonh, (1-weight_buttons)*screen.width)
                                     }
                                 }
                                 
