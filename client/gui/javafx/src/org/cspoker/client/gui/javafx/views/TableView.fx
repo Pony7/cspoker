@@ -34,6 +34,8 @@ class TableView {
     
     attribute state:Integer;
     
+    attribute dealer:Integer;
+    
     attribute cards:CardView*;
     
     attribute players:PlayerView*;
@@ -50,6 +52,7 @@ operation TableView.toTableViews(tables:Table*){
         name: t.getName()
         temppot: 0
         pot: 0
+        dealer: -1
         //Who invented this crazy JavaFX casting syntax??
         players: PlayerView{}.toPlayerViews(JavaFxClient.toArray(t.getPlayers()))
         cards: [CardView{

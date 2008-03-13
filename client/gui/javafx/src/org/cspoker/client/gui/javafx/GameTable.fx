@@ -274,7 +274,7 @@ trigger on new GameTable{
                                         }]
                                     },
                                     Group{
-                                        visible: bind main.state.mytable.players[i].seated
+                                        visible: bind main.state.mytable.players[(main.state.myseatid+i)%8].seated
                                         transform: bind [translate(29*Math.cos(parametrizeRadial(i/8.0,cardw,cardh)),
                                         -29*Math.sin(parametrizeRadial(i/8.0,cardw,cardh))),scale(0.55, 0.55),rotate((180*(Math.PI/2.0-parametrizeRadial(i/8.0,cardw,cardh))/Math.PI)%360,0,0)]
                                         content: [ImageView {
@@ -290,7 +290,8 @@ trigger on new GameTable{
                                             visible: bind main.state.mytable.players[(main.state.myseatid+i)%8].cards[1].dealt
                                             halign: CENTER
                                         }]
-                                    },Group{
+                                    },
+                                    Group{
                                         transform: bind translate(-50*Math.cos(parametrizeRadial(i/8.0,cardw,cardh)),
                                         50*Math.sin(parametrizeRadial(i/8.0,cardw,cardh)))
                                         visible: bind((main.state.mytable.players[(main.state.myseatid+i)%8].seated == true) and main.state.mytable.players[(main.state.myseatid+i)%8].amount>0)
@@ -308,6 +309,30 @@ trigger on new GameTable{
                                             content: bind main.state.mytable.players[(main.state.myseatid+i)%8].amount.toString()
                                             font: new Font("Tahoma", "PLAIN",9)
                                             fill: white
+                                            halign: CENTER
+                                            valign: CENTER
+                                            opacity: 0.95
+                                        }
+                                        ]
+                                    },
+                                    Group{
+                                        transform: bind translate(-50*Math.cos(parametrizeRadial(i/8.0,cardw,cardh)),
+                                        50*Math.sin(parametrizeRadial(i/8.0,cardw,cardh)))
+                                        visible: bind (main.state.myseatid+i)%8 == main.state.mytable.dealer
+                                        content: [Circle{
+                                            cx: -45
+                                            cy: 0
+                                            radius: 10
+                                            fill: white
+                                            stroke: grey
+                                            strokeWidth: 2
+                                            opacity: 0.95
+                                        },Text {
+                                            x: -44
+                                            y: 0
+                                            content: "D"
+                                            font: new Font("Tahoma", "BOLD",13)
+                                            fill: black
                                             halign: CENTER
                                             valign: CENTER
                                             opacity: 0.95
@@ -418,7 +443,7 @@ trigger on new GameTable{
                                             action: operation() {
                                                 call();
                                             }
-                                            enabled: bind main.state.me.next and main.state.mytable.temppot - main.state.mytable.pot > 0 and main.state.mytable.temppot - main.state.mytable.pot < main.state.me.stack
+                                            enabled: bind main.state.me.next and (sizeof main.state.mytable.players[p | p.amount>main.state.me.amount])>0 and main.state.mytable.temppot - main.state.mytable.pot < main.state.me.stack
                                         },
                                         Button{
                                             row: secondRow
