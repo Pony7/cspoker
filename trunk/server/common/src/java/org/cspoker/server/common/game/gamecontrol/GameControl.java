@@ -305,21 +305,25 @@ public class GameControl {
 	public void leaveGame(GamePlayer player) throws IllegalActionException {
 		if(!game.getTable().hasAsPlayer(player))
 			return;
+		
 		boolean checkForRoundEnded = round.getGame().getCurrentPlayer().equals(player);
 		round.foldAction(player);
 		Player immutablePlayer = player.getSavedPlayer();
 		game.leaveGame(player);
 		gameMediator.publishPlayerLeftTable(new PlayerLeftTableEvent(immutablePlayer));
-		if(game.getNbSeatedPlayers()==0){
-			TableId id = game.getTable().getId();
-			TableManager.global_table_manager.removeTable(id);
-			GameManager.removeGame(id);
-			logger.info("Table with id ["+id.toString()+" removed.");
-			GameManager.getServerMediator().publishTableRemovedEvent(new TableRemovedEvent(id));
+		if(game.hasNoSeatedPlayers()){
+			removeTable();
 		}else{
-			if(checkForRoundEnded)
 				checkIfEndedAndChangeRound();
 		}
+	}
+	
+	private void removeTable(){
+		TableId id = game.getTable().getId();
+		TableManager.global_table_manager.removeTable(id);
+		GameManager.removeGame(id);
+		logger.info("Table with id ["+id.toString()+" removed.");
+		GameManager.getServerMediator().publishTableRemovedEvent(new TableRemovedEvent(id));
 	}
 
 	/***************************************************************************

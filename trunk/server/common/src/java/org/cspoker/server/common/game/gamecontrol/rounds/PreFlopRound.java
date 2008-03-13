@@ -27,6 +27,7 @@ import org.cspoker.common.exceptions.IllegalActionException;
 import org.cspoker.server.common.game.GameMediator;
 import org.cspoker.server.common.game.elements.chips.IllegalValueException;
 import org.cspoker.server.common.game.gamecontrol.Game;
+import org.cspoker.server.common.game.player.GameAllInPlayer;
 import org.cspoker.server.common.game.player.GamePlayer;
 
 /**
@@ -87,7 +88,20 @@ public class PreFlopRound extends BettingRound {
 					new NewPocketCardsEvent(player.getSavedPlayer(),
 							new HashSet<Card>(player.getPocketCards())));
 		}
+		
+		for (GameAllInPlayer allInPlayer : allInPlayers) {
+			GamePlayer player = allInPlayer.getPlayer();
+			player.dealPocketCard(drawCard());
+			player.dealPocketCard(drawCard());
 
+			PreFlopRound.logger.info("Dealt to " + player.getName() + " "
+					+ player.getPocketCards());
+
+			gameMediator.publishNewPocketCardsEvent(player.getId(),
+					new NewPocketCardsEvent(player.getSavedPlayer(),
+							new HashSet<Card>(player.getPocketCards())));
+		}
+ 
 		if (getGame().getNbCurrentDealPlayers() > 1) {
 			gameMediator.publishNextPlayerEvent(new NextPlayerEvent(game
 					.getCurrentPlayer().getSavedPlayer()));

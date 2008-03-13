@@ -505,6 +505,10 @@ public class Game {
 	public int getNbSeatedPlayers(){
 		return table.getNbPlayers();
 	}
+	
+	public boolean hasNoSeatedPlayers(){
+		return getNbSeatedPlayers()==0;
+	}
 
 	/***************************************************************************
 	 * Leave/Join Game
