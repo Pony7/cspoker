@@ -27,7 +27,9 @@ class GameView {
     attribute busy:Boolean;
     
     attribute myname:String?;
+    
     attribute mytableid:TableId?;
+    attribute myseatid:Integer?;
     
     attribute mytable:TableView;
     attribute me:PlayerView;

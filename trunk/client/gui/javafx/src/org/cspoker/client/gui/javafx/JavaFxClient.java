@@ -201,7 +201,6 @@ public class JavaFxClient {
     public static Player[] toArray(List<Player> players) {
         if(players==null)
             return new Player[]{};
-        System.out.println("nbplayers in java is"+players.size());
         return players.toArray(new Player[players.size()]);
     }
 }

@@ -33,13 +33,15 @@ class PlayerView {
     
     attribute next:Boolean;
     
+    attribute seatid:Integer;
+    
     operation toPlayerView(players:Player):PlayerView;
     
     operation toPlayerViews(players:Player*):PlayerView*;
 }
 
 operation PlayerView.toPlayerViews(players:Player*){
-    var temp = foreach(i in [1..8])
+    var temp = foreach(i in [0..7])
     PlayerView{
         seated: false
         cards: [CardView{
@@ -48,6 +50,7 @@ operation PlayerView.toPlayerViews(players:Player*){
             dealt: false
         }]
         next:false
+        seatid: i
     };
     for(p in players){
         temp[p.getSeatId().getId()] = toPlayerView(p);
@@ -68,5 +71,6 @@ operation PlayerView.toPlayerView(p:Player){
                 dealt: false
             }]
             next:false
+            seatid: p.getSeatId().getId()
         };
 }
