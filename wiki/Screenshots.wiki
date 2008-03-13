@@ -1,0 +1,15 @@
+#summary Screenshots of CSPoker in action!
+#labels Featured,Phase-Support
+
+= 0.1 beta =
+The 0.1 beta are still a work in progress. These screenshots were made with r629.
+
+=== Login ===
+[http://cspoker.googlecode.com/files/login-beta.png]
+
+=== Tables ===
+[http://cspoker.googlecode.com/files/tables-beta.png]
+
+=== Game ===
+[http://cspoker.googlecode.com/files/preflop-beta.png]
+[http://cspoker.googlecode.com/files/betting-beta.png]
