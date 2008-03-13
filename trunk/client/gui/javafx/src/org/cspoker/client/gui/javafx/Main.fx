@@ -14,9 +14,7 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-
-package org.cspoker.client.gui.javafx;
-
+//package org.cspoker.client.gui.javafx;
 import javafx.ui.*;
 import java.lang.*;
 import org.cspoker.client.gui.javafx.*;
@@ -38,9 +36,7 @@ class Main{
     operation table_selected();
     operation resetState();
     operation leftTable();
-    
 }
-
 operation Main.logged_in(){
     listener = EventListener{};
     this.client.subscribeAllEvents(listener.listener);
@@ -85,7 +81,7 @@ operation Main.resetState(){
         events: "Welcome to CSPoker!<br/>"
         myname: "guy"
         tables: []
-        mytable: bind state.tables[t | t.id.equals(state.mytableid)][0]
+        mytable: bind state.tables[t | t.id.equals(this.state.mytableid)][0]
         me: bind state.mytable.players[p | p.name.equals(state.myname)][0]
     };
 }
