@@ -275,6 +275,8 @@ trigger on new EventListener{
                     
                     ts.mytable.state = 2;
                     
+                    ts.mytable.dealer = e.getDealer().getSeatId().getId();
+                    
                     for(p in ts.mytable.players){
                         if (p.seated) {
                             for(c in p.cards){
