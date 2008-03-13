@@ -16,11 +16,8 @@
 package org.cspoker.server.common.game.session;
 
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.RejectedExecutionException;
-import java.util.concurrent.TimeUnit;
 
 import org.cspoker.common.player.PlayerId;
-import org.cspoker.server.common.util.threading.ScheduledRequestExecutor;
 
 public class SessionManager {
 

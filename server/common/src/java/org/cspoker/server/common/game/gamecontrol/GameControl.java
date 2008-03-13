@@ -281,17 +281,24 @@ public class GameControl {
 	public void joinGame(SeatId seatId, GamePlayer player) throws IllegalActionException{
 		try {
 			game.joinGame(seatId, player);
-			gameMediator.publishPlayerJoinedGame(new PlayerJoinedTableEvent(player
-					.getSavedPlayer()));
 		} catch (SeatTakenException e) {
 			throw new IllegalActionException(e.getMessage());
 		} catch (PlayerListFullException e) {
 			throw new IllegalActionException(e.getMessage());
 		}
 		
+		gameMediator.publishPlayerJoinedTable(new PlayerJoinedTableEvent(player
+				.getSavedPlayer()));
+		
 		//auto-deal
-		if(game.getNbSeatedPlayers()==2){
-			deal(game.getDealer());
+		try {
+			if(game.getNbSeatedPlayers()==2){
+				deal(game.getDealer());
+			}
+		} catch (IllegalActionException e) {
+			game.leaveGame(player);
+			gameMediator.publishPlayerLeftTable(new PlayerLeftTableEvent(player
+					.getSavedPlayer()));
 		}
 	}
 
