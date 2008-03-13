@@ -133,6 +133,7 @@ operation TableSelection.join_table(){
         var table = TableView{}.toTableViews(main.client.joinTable(main.state.tables[selection].id));
         main.state.tables[selection] = table;
         main.state.mytableid = table.id;
+        main.state.myseatid = main.state.me.seatid;
         main.state.mytable.state=1;
         main.table_selected();
     }catch(e:RemoteException){
@@ -154,6 +155,7 @@ operation TableSelection.create_table(name:String){
         var table = TableView{}.toTableViews(main.client.createTable(name));
         insert table as last into main.state.tables;
         main.state.mytableid = table.id;
+        main.state.myseatid = main.state.me.seatid;
         main.state.mytable.state=0;
         main.table_selected();
     }catch(e:RemoteException){
