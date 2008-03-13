@@ -630,6 +630,8 @@ public abstract class BettingRound extends Round {
 		if (onlyOnePlayerLeft()) {
 			game.getPots().close(game.getCurrentDealPlayers());
 			winner(game.getPots());
+			game.seatInitalDealPlayers();
+			game.setDealer(game.getNextDealer());
 		}
 	}
 

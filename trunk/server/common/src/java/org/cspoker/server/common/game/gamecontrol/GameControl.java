@@ -327,8 +327,9 @@ public class GameControl {
 		if (round.isRoundEnded()) {
 			changeToNextRound();
 		} else {
-			gameMediator.publishNextPlayerEvent(new NextPlayerEvent(game
-					.getCurrentPlayer().getSavedPlayer()));
+			GamePlayer player = game.getCurrentPlayer();
+			if(player!=null)
+				gameMediator.publishNextPlayerEvent(new NextPlayerEvent(player.getSavedPlayer()));
 		}
 	}
 

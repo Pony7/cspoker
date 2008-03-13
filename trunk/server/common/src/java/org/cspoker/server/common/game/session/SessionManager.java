@@ -73,24 +73,24 @@ public class SessionManager {
 	}
 	
 	private void submitTimeOutHandler(final Session session){
-		System.out.println("submit "+session.toString());
-		ScheduledRequestExecutor.getInstance().scheduleWithFixedDelay(new Runnable(){
-
-			@Override
-			public void run(){
-				try {
-					System.out.println("called "+session.toString());
-					if(!session.getPlayerCommunication().isActive()){
-						System.out.println("kill session "+session.toString());
-						killSession(session);
-						throw new RejectedExecutionException();
-					}
-				} catch (PlayerKilledExcepion e) {
-					throw new RejectedExecutionException();
-				}
-			}
-			
-		}, 20, 20, TimeUnit.MINUTES);
+//		System.out.println("submit "+session.toString());
+//		ScheduledRequestExecutor.getInstance().scheduleWithFixedDelay(new Runnable(){
+//
+//			@Override
+//			public void run(){
+//				try {
+//					System.out.println("called "+session.toString());
+//					if(!session.getPlayerCommunication().isActive()){
+//						System.out.println("kill session "+session.toString());
+//						killSession(session);
+//						throw new RejectedExecutionException();
+//					}
+//				} catch (PlayerKilledExcepion e) {
+//					throw new RejectedExecutionException();
+//				}
+//			}
+//			
+//		}, 20, 20, TimeUnit.MINUTES);
 		}
 	
 	public Session getSession(PlayerId id) {
