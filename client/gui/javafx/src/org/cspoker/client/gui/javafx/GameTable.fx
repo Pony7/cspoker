@@ -13,7 +13,6 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-
 package org.cspoker.client.gui.javafx;
 import javafx.ui.*;
 import javafx.ui.canvas.*;
@@ -60,15 +59,18 @@ trigger on new GameTable{
     pady = 50;
     sqrw = 270;
     sqrh = 280;
+    var bottom_area=200;
     var logofontsize = sqrh/4;
     //cardw stays the same to obtain a table that has borders equidistant of the real borders
     var cardw=sqrw;
     var cardh=sqrh-sqrh/3.8;
+    var buttonh=145;
+    var w=0.75;
     amount=1.toString();
     screen = Frame{
         title: bind main.state.mytable.name
         width: 2*padx+sqrw+sqrh
-        height: 2*pady+sqrh+200
+        height: 2*pady+sqrh+bottom_area
         visible: true
         centerOnScreen: true
         onClose: operation() {
@@ -101,9 +103,9 @@ trigger on new GameTable{
         content: SplitPane{
             orientation: VERTICAL
             content:[SplitView{
-                weight: 0.785
+                weight: bind w
                 content: Canvas {
-                    doubleBuffered: true
+                	doubleBuffered: true
                     content: Group {
                         transform: []
                         content:
@@ -375,13 +377,14 @@ trigger on new GameTable{
                     background: black
                 }},
                 SplitView{
-                    weight:0.215
+                	weight:1-w
                     content:BorderPanel{
+                    	var weight_buttons=0.6
                         center:SplitPane{
                             orientation: HORIZONTAL
                             content:[
                             SplitView{
-                                weight: 0.60
+                                weight: bind weight_buttons
                                 content: FlowPanel{
                                     content: [FlowPanel{
                                         content: Button {
@@ -480,17 +483,17 @@ trigger on new GameTable{
                                 }
                             },
                             SplitView{
-                                weight: 0.40
+                                weight: bind 1-weight_buttons
                                 content: Box {
+                                	var p= 2
                                     orientation: HORIZONTAL
                                     content: EditorPane{
-                                        inUpdate: bind main.state.busy
+                                        //inUpdate: bind main.state.busy
                                         contentType: HTML
                                         editable: false
                                         text: bind "<html><body><div style='font-size:x-small;'>{main.state.events}<div></body></html>"
-                                        verticalScrollBarPolicy: AS_NEEDED
-                                        maximumSize: {height: bind 0.12*screen.height width: bind 0.4*screen.width}
                                         doubleBuffered: true
+                                        preferredSize:{height: bind buttonh width:bind (1-weight_buttons)*screen.width}
                                     }
                                 }
                                 

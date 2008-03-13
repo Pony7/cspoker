@@ -15,6 +15,7 @@
  */
 package org.cspoker.client.gui.javafx;
 import javafx.ui.*;
+import javafx.ui.Table;
 import java.lang.*;
 import java.rmi.RemoteException;
 import org.cspoker.common.exceptions.IllegalActionException;
