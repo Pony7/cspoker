@@ -810,7 +810,7 @@ public class GameMediator {
 	 * onPlayerJoinedGameEvent() method.
 	 * 
 	 */
-	public synchronized void publishPlayerJoinedGame(PlayerJoinedTableEvent event) {
+	public synchronized void publishPlayerJoinedTable(PlayerJoinedTableEvent event) {
 		for (PlayerJoinedTableListener listener : playerJoinedGameListeners) {
 			listener.onPlayerJoinedTableEvent(event);
 		}
