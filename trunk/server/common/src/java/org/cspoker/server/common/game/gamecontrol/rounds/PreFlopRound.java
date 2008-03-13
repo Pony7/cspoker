@@ -50,8 +50,7 @@ public class PreFlopRound extends BettingRound {
 
 		GamePlayer currentPlayer = getGame().getCurrentPlayer();
 		if (currentPlayer != null) {
-			gameMediator.publishNewRoundEvent(new NewRoundEvent(toString(),
-					currentPlayer.getSavedPlayer()));
+			gameMediator.publishNewRoundEvent(new NewRoundEvent(toString()));
 		}
 		try {
 			if (game.getNbCurrentDealPlayers() == 2) {
