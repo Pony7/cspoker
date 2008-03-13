@@ -58,7 +58,7 @@ class GameTable {
 trigger on new GameTable{
     padx = 50;
     pady = 50;
-    sqrw = 280;
+    sqrw = 270;
     sqrh = 280;
     var logofontsize = sqrh/4;
     //cardw stays the same to obtain a table that has borders equidistant of the real borders
@@ -215,8 +215,8 @@ trigger on new GameTable{
                                 parametrizeY(i/8.0,cardw,cardh))]
                                 content: [
                                 Group {
-                                    transform: bind translate(50*Math.cos(parametrizeRadial(i/8.0,cardw,cardh)),
-                                    -50*Math.sin(parametrizeRadial(i/8.0,cardw,cardh)))
+                                    transform: bind translate(51*Math.cos(parametrizeRadial(i/8.0,cardw,cardh)),
+                                    -51*Math.sin(parametrizeRadial(i/8.0,cardw,cardh)))
                                     content: [
                                     Circle{
                                         cx: 0
@@ -275,8 +275,8 @@ trigger on new GameTable{
                                 },
                                 Group{
                                     visible: bind main.state.mytable.players[i].seated
-                                    transform: bind [translate(32*Math.cos(parametrizeRadial(i/8.0,cardw,cardh)),
-                                    -32*Math.sin(parametrizeRadial(i/8.0,cardw,cardh))),scale(0.55, 0.55),rotate((180*(Math.PI/2.0-parametrizeRadial(i/8.0,cardw,cardh))/Math.PI)%360,0,0)]
+                                    transform: bind [translate(29*Math.cos(parametrizeRadial(i/8.0,cardw,cardh)),
+                                    -29*Math.sin(parametrizeRadial(i/8.0,cardw,cardh))),scale(0.55, 0.55),rotate((180*(Math.PI/2.0-parametrizeRadial(i/8.0,cardw,cardh))/Math.PI)%360,0,0)]
                                     content: [ImageView {
                                         antialias: true
                                         transform: translate(-45,0)
@@ -291,9 +291,9 @@ trigger on new GameTable{
                                         halign: CENTER
                                     }]
                                 },Group{
-                                    transform: bind translate(-46*Math.cos(parametrizeRadial(i/8.0,cardw,cardh)),
-                                    46*Math.sin(parametrizeRadial(i/8.0,cardw,cardh)))
-                                    visible: bind ((main.state.mytable.players[i].seated == true) and main.state.mytable.players[i].amount>0)
+                                    transform: bind translate(-50*Math.cos(parametrizeRadial(i/8.0,cardw,cardh)),
+                                    50*Math.sin(parametrizeRadial(i/8.0,cardw,cardh)))
+                                    visible: bind((main.state.mytable.players[i].seated == true) and main.state.mytable.players[i].amount>0)
                                     content: [Circle{
                                         cx: 0
                                         cy: 0
@@ -312,10 +312,38 @@ trigger on new GameTable{
                                         valign: CENTER
                                         opacity: 0.95
                                     }
-                                ]
+                                    ]
                                 }
                                 ]
                             }
+                        },
+                        Group{
+                            transform: translate(padx+sqrh/2.0+sqrw/2.0+91*2-40, pady+sqrh/2.0)
+                            visible: bind main.state.mytable.pot>0
+                            content: [Rect {
+                                x: 0
+                                y: 0
+                                height: 5+22
+                                width: bind  Math.min(91,10+Math.max(15,Math.log(main.state.mytable.pot)/Math.log(10)*10))
+                                arcHeight: 4
+                                arcWidth: 4
+                                fill: green
+                                stroke: darkgreen
+                                strokeWidth: 3
+                                opacity: 0.8
+                                valign: CENTER
+                                halign: CENTER
+                            },Text {
+                                x: 0
+                                y: 0
+                                content: bind main.state.mytable.pot.toString()
+                                font: new Font("Tahoma", "BOLD",13)
+                                fill: black
+                                halign: CENTER
+                                valign: CENTER
+                                opacity: 0.95
+                            }
+                            ]
                         }
                         ]
                     }
