@@ -561,7 +561,8 @@ public class GameMediator {
 	 * 
 	 */
 	public synchronized void publishNewRoundEvent(NewRoundEvent event) {
-		submitTimeOutHandler(event.getPlayer());
+		if(event.getPlayer()!=null)
+			submitTimeOutHandler(event.getPlayer());
 		for (NewRoundListener listener : newRoundListeners) {
 			listener.onNewRoundEvent(event);
 		}
