@@ -45,6 +45,10 @@ public class NewRoundEvent extends GameEvent {
 		this.roundName = roundName;
 		this.player = player;
 	}
+	
+	public NewRoundEvent(String roundName){
+		this.roundName = roundName;
+	}
 
 	protected NewRoundEvent() {
 		// no op
@@ -56,6 +60,8 @@ public class NewRoundEvent extends GameEvent {
 
 	@Override
 	public String toString() {
+		if(player==null)
+			return roundName+":";
 		return roundName + ": " + player.getName() + " can begin to act.";
 	}
 
