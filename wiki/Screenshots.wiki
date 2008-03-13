@@ -2,7 +2,7 @@
 #labels Featured,Phase-Support
 
 = 0.1 beta =
-The 0.1 beta are still a work in progress. These screenshots were made with r629.
+The 0.1 beta is a work in progress. These screenshots were made with r629.
 
 === Login ===
 [http://cspoker.googlecode.com/files/login-beta.png]
