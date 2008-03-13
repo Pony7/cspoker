@@ -44,27 +44,27 @@ class Main{
 operation Main.logged_in(){
     listener = EventListener{};
     this.client.subscribeAllEvents(listener.listener);
-    login.screen.hide();
+    login.screen.visible = false;
     state.tables = TableView{}.toTableViews(client.getTableList());
     table_selection = TableSelection{};
 }
 
 operation Main.leftTable(){
-    gametable.screen.hide();
+    gametable.screen.visible = false;
     state.tables = TableView{}.toTableViews(client.getTableList());
-    table_selection.screen.show();
+    table_selection.screen.visible = true;
 }
 
 operation Main.table_selected(){
-    table_selection.screen.hide();
+    table_selection.screen.visible = false;
     gametable = GameTable{};
 }
 
 operation Main.relogin(){
-    table_selection.screen.hide();
-    gametable.screen.hide();
+    table_selection.screen.visible = false;
+    gametable.screen.visible = false;
     resetState();
-    login.screen.show();
+    login.screen.visible = true;
 }
 
 Main{

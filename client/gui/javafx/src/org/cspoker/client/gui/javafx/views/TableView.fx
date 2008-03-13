@@ -30,6 +30,7 @@ class TableView {
     attribute bigBlind:Integer;
     
     attribute pot:Integer;
+    attribute temppot:Integer;
     
     attribute state:Integer;
     
@@ -47,6 +48,8 @@ operation TableView.toTableViews(tables:Table*){
         smallBlind: t.getGameProperty().getSmallBlind()
         id: t.getId()
         name: t.getName()
+        temppot: 0
+        pot: 0
         //Who invented this crazy JavaFX casting syntax??
         players: PlayerView{}.toPlayerViews(JavaFxClient.toArray(t.getPlayers()))
         cards: [CardView{

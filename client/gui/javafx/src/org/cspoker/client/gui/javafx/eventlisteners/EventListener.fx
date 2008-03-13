@@ -51,7 +51,7 @@ import java.rmi.RemoteException;
 import org.cspoker.common.exceptions.IllegalActionException;
 import javafx.ui.*;
 import java.awt.EventQueue;
-
+import org.cspoker.common.elements.pots.Pots;
 
 class EventListener{
     attribute listener:RemoteAllEventsListener;
@@ -77,6 +77,8 @@ trigger on new EventListener{
                     p.lastaction = "All In";
                     p.amount = e.getPlayer().getBetChipsValue();
                     p.stack = e.getPlayer().getStackValue();
+                    
+                    ts.mytable.temppot = e.getPots().getTotalValue();
                 }
             });
             
@@ -93,6 +95,8 @@ trigger on new EventListener{
                     p.lastaction = "Bet";
                     p.amount = e.getPlayer().getBetChipsValue();
                     p.stack = e.getPlayer().getStackValue();
+                    
+                    ts.mytable.temppot = e.getPots().getTotalValue();
                 }
             });
         }
@@ -108,6 +112,8 @@ trigger on new EventListener{
                     p.lastaction = "Blind";
                     p.amount = e.getPlayer().getBetChipsValue();
                     p.stack = e.getPlayer().getStackValue();
+                    
+                    ts.mytable.temppot = e.getPots().getTotalValue();
                 }
             });
         }
@@ -123,6 +129,8 @@ trigger on new EventListener{
                     p.lastaction = "Call";
                     p.amount = e.getPlayer().getBetChipsValue();
                     p.stack = e.getPlayer().getStackValue();
+                    
+                    ts.mytable.temppot = e.getPots().getTotalValue();
                 }
             });
         }
@@ -172,6 +180,8 @@ trigger on new EventListener{
                     p.lastaction = "Raise";
                     p.amount = e.getPlayer().getBetChipsValue();
                     p.stack = e.getPlayer().getStackValue();
+                    
+                    ts.mytable.temppot = e.getPots().getTotalValue();
                 }
             });
         }
@@ -187,6 +197,8 @@ trigger on new EventListener{
                     p.lastaction = "Blind";
                     p.amount = e.getPlayer().getBetChipsValue();
                     p.stack = e.getPlayer().getStackValue();
+                    
+                    ts.mytable.temppot = e.getPots().getTotalValue();
                 }
             });
         }
@@ -296,6 +308,7 @@ trigger on new EventListener{
                         p.amount=0;
                     }
                     ts.mytable.players[e.getInitialPlayer().getSeatId().getId()].next = true;
+                    ts.mytable.pot = ts.mytable.temppot;
                 }
             });
         }
@@ -361,6 +374,9 @@ trigger on new EventListener{
                     for(p in ts.mytable.players){
                         p.next = false;
                     }
+                    
+                    ts.mytable.temppot = 0; 
+                    ts.mytable.pot = 0; 
                 }
             });
         }
