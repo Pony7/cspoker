@@ -293,6 +293,7 @@ public class GameControl {
 		//auto-deal
 		try {
 			if(game.getNbSeatedPlayers()==2){
+				
 				deal(game.getDealer());
 			}
 		} catch (IllegalActionException e) {
