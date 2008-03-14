@@ -123,7 +123,6 @@ public class GameControl {
 		
 		round = new WaitingRound(gameMediator, game);
 		try {
-			System.out.println("Try to deal");
 			deal(game.getDealer());
 		} catch (IllegalActionException e) {
 			logger.error(e);
