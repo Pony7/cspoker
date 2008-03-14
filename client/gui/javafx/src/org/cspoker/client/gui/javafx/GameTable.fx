@@ -16,7 +16,6 @@
 package org.cspoker.client.gui.javafx;
 import javafx.ui.*;
 import javafx.ui.canvas.*;
-import javafx.ui.filter.*;
 import java.lang.*;
 import org.cspoker.client.gui.javafx.views.*;
 import org.cspoker.client.gui.javafx.game.*;
@@ -67,6 +66,9 @@ trigger on new GameTable{
     var cardh=sqrh-sqrh/3.8;
     var buttonh=145;
     var w=0.75;
+    
+    var circleradius = 33;
+    
     amount=1.toString();
     screen = Frame{
         title: bind main.state.mytable.name
@@ -224,7 +226,7 @@ trigger on new GameTable{
                                         Circle{
                                             cx: 0
                                             cy: 0
-                                            radius: 33
+                                            radius: circleradius
                                             fill: bind if(main.state.myname.equals(main.state.mytable.players[i].name) == true) then orange
                                             else orange
                                             stroke: bind if(main.state.mytable.players[(main.state.myseatid+i)%8].next == false) then darkorange
@@ -233,7 +235,12 @@ trigger on new GameTable{
                                             opacity: bind if(main.state.mytable.players[(main.state.myseatid+i)%8].seated == false) then 0.15
                                             else if(main.state.myname.equals(main.state.mytable.players[(main.state.myseatid+i)%8].name) == true) then 0.95
                                             else 0.8
-                                        },Text {
+                                        },Timer{
+                                            length: circleradius-4
+                                            running: bind main.state.mytable.players[(main.state.myseatid+i)%8].next
+                                            visible: bind main.state.mytable.players[(main.state.myseatid+i)%8].next
+                                        },
+                                        Text {
                                             x: 0
                                             y: -12
                                             visible: bind main.state.mytable.players[(main.state.myseatid+i)%8].seated

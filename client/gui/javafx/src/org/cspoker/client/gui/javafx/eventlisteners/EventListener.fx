@@ -296,6 +296,12 @@ trigger on new EventListener{
                         c.visible = false;
                     }
                     
+                    for(p in ts.mytable.players){
+                        p.next = false;
+                        p.lastaction="";
+                        p.amount=0;
+                    }
+                    
                 }
             });
         }
@@ -308,7 +314,8 @@ trigger on new EventListener{
                     ts.busy=true;
                     for(p in ts.mytable.players){
                         p.next = false;
-                        p.lastaction="";
+                        //this is optional...
+                        //p.lastaction="";
                         p.amount=0;
                     }
                     ts.mytable.players[e.getInitialPlayer().getSeatId().getId()].next = true;
