@@ -142,6 +142,23 @@ public class LoopingList<T> {
 		}
 		return null;
 	}
+	
+	/**
+	 * Returns the element previous to the given element in this looping list.
+	 * 
+	 * @param o
+	 *        The element for which the previous element should be returned.
+	 * @return The element previous to the given element in this looping list.
+	 * @return Null, if the given element is not an element of this looping
+	 *         list.
+	 */
+	public T getPreviousTo(T o) {
+		int index = list.indexOf(o);
+		if (index >= 0) {
+			return list.get((index + size() - 1) % (size()));
+		}
+		return null;
+	}
 
 	/**
 	 * Remove the occurrence of the given element of the list.
