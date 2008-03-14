@@ -63,7 +63,10 @@ public class Game {
 	 * This looping list contains the active players of this game.
 	 */
 	private LoopingList<GamePlayer> currentHandPlayers;
-
+	
+	/**
+	 * This looping list contains the initial players of this game.
+	 */
 	private LoopingList<GamePlayer> initialCurrentHandPlayers;
 
 	/**
@@ -90,6 +93,18 @@ public class Game {
 	 * This variable contains the firstToActPlayer of this game.
 	 */
 	private GamePlayer firstToActPlayer;
+	
+	/**
+	 * The last event player is the last player that has done significant
+	 * change, such as a raise.
+	 * 
+	 * If the next player is the last event player, the round is over.
+	 * 
+	 * It is initialized in each game as the first better after the big blind,
+	 * in every next round, it is the player on to the left side of the player
+	 * with the dealer-button.
+	 */
+	private GamePlayer lastActionPlayer;
 
 	/**
 	 * This variable contains the next dealer of this game.
@@ -97,6 +112,14 @@ public class Game {
 	private GamePlayer nextDealer;
 	
 	private BettingRules bettingRules;
+	
+	public GamePlayer getLastActionPlayer(){
+		return lastActionPlayer;
+	}
+	
+	public void setLastActionPlayer(GamePlayer player){
+		this.lastActionPlayer = player;
+	}
 
 	/***************************************************************************
 	 * Constructor
@@ -138,7 +161,9 @@ public class Game {
 	 **************************************************************************/
 
 	/**
-	 * Deal a new hand.
+	 * This is the action the dealer does to start a new game.
+	 * 
+	 * @pre WaitingRound & Dealer calls deal();
 	 * 
 	 */
 	public void dealNewHand() {
@@ -146,8 +171,12 @@ public class Game {
 		deck = new Deck();
 		pots = new GamePots();
 		List<GamePlayer> players = table.getPlayers();
+		
+		//new looping lists
 		currentHandPlayers = new LoopingList<GamePlayer>(players);
 		initialCurrentHandPlayers = new LoopingList<GamePlayer>(players);
+		
+		//make sure no one has pocket cards (TODO move to game player + bet pile)
 		for (GamePlayer player : currentHandPlayers.getList()) {
 			player.clearPocketCards();
 		}
@@ -155,6 +184,11 @@ public class Game {
 		nextPlayer();
 		setFirstToActPlayer(getCurrentPlayer());
 		setNextDealer(getCurrentPlayer());
+	}
+	
+	public void initializeForNewHand(){
+		seatInitalDealPlayers();
+		setDealer(getNextDealer());
 	}
 
 	/***************************************************************************
@@ -383,6 +417,15 @@ public class Game {
 	public void setCurrentPlayer(GamePlayer player) {
 		currentHandPlayers.setCurrent(player);
 	}
+	
+	public void changeCurrentPlayerToDealer(){
+		setCurrentPlayer(getDealer());
+	}
+	
+	public void changeCurrentPlayerToInitial(){
+		setCurrentPlayer(getFirstToActPlayer());
+	}
+	
 
 	/**
 	 * Check whether this game can have the given player as its current player.
@@ -414,6 +457,9 @@ public class Game {
 	public void removePlayerFromCurrentDeal(GamePlayer player) {
 		if (getFirstToActPlayer().equals(player)) {
 			setFirstToActPlayer(currentHandPlayers.getNextTo(player));
+		}
+		if(getLastActionPlayer().equals(player)){
+			setLastActionPlayer(currentHandPlayers.getPreviousTo(player));
 		}
 		currentHandPlayers.remove(player);
 	}
@@ -527,12 +573,12 @@ public class Game {
 		} else if (getNextDealer() == null) {
 			setNextDealer(player);
 		}
+		Game.logger.info(player.getName()+" joined the game. ["+table.getId()+"]");
 		return seatId;
 	}
 	
 
 	public void leaveGame(GamePlayer player) throws IllegalActionException {
-		Game.logger.info("Kick out: " + player.getName());
 		if (!table.hasAsPlayer(player)) {
 			throw new IllegalActionException(player.getName()
 					+ " is not seated at this table.");
@@ -543,8 +589,10 @@ public class Game {
 		if ((getDealer() == null) || getDealer().equals(player)) {
 			setDealer(getNextDealer());
 		}
+		
 		initialCurrentHandPlayers.remove(player);
 		table.removePlayer(player);
+		Game.logger.info(player.getName()+" left the game. ["+table.getId()+"]");
 	}
 
 	/**

@@ -64,13 +64,15 @@ public class RandomOrgSeededRandomGenerator implements RandomSource {
 			final byte[] seed = stringBuilder.toString().getBytes();
 
 			random = new SecureRandom(seed);
-			return;
 		} catch (final MalformedURLException e) {
 			logger.error(e.getMessage(), e);
+			logger.info("Default secure random is used.");
+			random = new SecureRandom();
 		} catch (final IOException e) {
 			logger.error(e.getMessage(), e);
+			logger.info("Default secure random is used.");
+			random = new SecureRandom();
 		}
-		random = new SecureRandom();
 	}
 
 	public static RandomOrgSeededRandomGenerator getInstance() {

@@ -103,7 +103,6 @@ public class GameControl {
 		this.gameMediator = gameMediator;
 		gameMediator.setGameControl(this);
 		
-		
 		game = new Game(table, dealer, rules);
 		
 		GameControl.logger.info(getGame().getBettingRules()
@@ -124,9 +123,10 @@ public class GameControl {
 		
 		round = new WaitingRound(gameMediator, game);
 		try {
+			System.out.println("Try to deal");
 			deal(game.getDealer());
 		} catch (IllegalActionException e) {
-			e.printStackTrace();
+			logger.error(e);
 		}
 	}
 
@@ -307,7 +307,6 @@ public class GameControl {
 		if(!game.getTable().hasAsPlayer(player))
 			return;
 		
-		boolean checkForRoundEnded = round.getGame().getCurrentPlayer().equals(player);
 		round.foldAction(player);
 		Player immutablePlayer = player.getSavedPlayer();
 		game.leaveGame(player);
@@ -323,7 +322,7 @@ public class GameControl {
 		TableId id = game.getTable().getId();
 		TableManager.global_table_manager.removeTable(id);
 		GameManager.removeGame(id);
-		logger.info("Table with id ["+id.toString()+" removed.");
+		logger.info("Table with id ["+id.toString()+"] removed.");
 		GameManager.getServerMediator().publishTableRemovedEvent(new TableRemovedEvent(id));
 	}
 
@@ -348,12 +347,19 @@ public class GameControl {
 	/**
 	 * End this round and change the round to the next round.
 	 * 
-	 * If only one player is left, the next round should be a waiting round.
-	 * 
 	 */
 	private void changeToNextRound() {
 		round.endRound();
 		round = round.getNextRound();
+		
+		if(round instanceof WaitingRound && game.getNbSeatedPlayers()>1){
+			try {
+				deal(game.getCurrentPlayer());
+			} catch (IllegalActionException e) {
+				logger.error(e);
+			}
+		}
+		
 		if ((round instanceof BettingRound)
 				&& ((BettingRound) round)
 						.onlyOnePlayerLeftBesidesAllInPlayers()) {

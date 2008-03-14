@@ -158,7 +158,7 @@ public abstract class BettingRound extends Round {
 		 * If the last event player is an all-in player, change the last event
 		 * player to the calling player.
 		 */
-		if (!game.hasAsActivePlayer(lastEventPlayer)) {
+		if (!game.hasAsActivePlayer(game.getLastActionPlayer())) {
 			playerMadeEvent(player);
 		}
 
@@ -578,7 +578,10 @@ public abstract class BettingRound extends Round {
 						.size()
 						+ getGame().getPots().getNbShowdownPlayers() == 1));
 	}
-
+	
+	/**
+	 * If there are only all-in players
+	 */
 	public boolean onlyAllInPlayers() {
 		return (game.getNbCurrentDealPlayers() == 0)
 				&& (allInPlayers.size()
@@ -603,6 +606,7 @@ public abstract class BettingRound extends Round {
 				|| onlyOnePlayerLeftBesidesAllInPlayers()
 				|| onlyOneActivePlayer();
 	}
+	
 
 	@Override
 	public int getCurrentPotValue() {
@@ -630,8 +634,7 @@ public abstract class BettingRound extends Round {
 		if (onlyOnePlayerLeft()) {
 			game.getPots().close(game.getCurrentDealPlayers());
 			winner(game.getPots());
-			game.seatInitalDealPlayers();
-			game.setDealer(game.getNextDealer());
+			game.initializeForNewHand();
 		}
 	}
 

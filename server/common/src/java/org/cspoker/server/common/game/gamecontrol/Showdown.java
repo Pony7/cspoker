@@ -100,10 +100,6 @@ public class Showdown {
 
 		for (GamePot pot : game.getPots().getPots()) {
 			List<GamePlayer> winners = getWinners(pot);
-			System.out.print("Winners: ");
-			for (GamePlayer player : winners) {
-				System.out.print(player.getName() + " ");
-			}
 			splitPot(winners, pot);
 		}
 
