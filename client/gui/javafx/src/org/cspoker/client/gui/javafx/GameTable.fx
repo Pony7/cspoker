@@ -319,11 +319,17 @@ trigger on new GameTable{
                                         ]
                                     },
                                     Group{
-                                        transform: bind translate(-50*Math.cos(parametrizeRadial(i/8.0,cardw,cardh)),
-                                        50*Math.sin(parametrizeRadial(i/8.0,cardw,cardh)))
+                                        //translate without rotating
+                                        transform: bind translate(
+                                        -50*Math.cos(parametrizeRadial(i/8.0,cardw,cardh))
+                                        +(-45)*Math.sin(parametrizeRadial(i/8.0,cardw,cardh))
+                                        ,
+                                        -50*(-1)*Math.sin(parametrizeRadial(i/8.0,cardw,cardh))
+                                        +(-45)*Math.cos(parametrizeRadial(i/8.0,cardw,cardh))
+                                        )
                                         visible: bind (main.state.myseatid+i)%8 == main.state.mytable.dealer
                                         content: [Circle{
-                                            cx: -45
+                                            cx: 0
                                             cy: 0
                                             radius: 10
                                             fill: white
@@ -331,7 +337,7 @@ trigger on new GameTable{
                                             strokeWidth: 2
                                             opacity: 0.95
                                         },Text {
-                                            x: -44
+                                            x: 0
                                             y: 0
                                             content: "D"
                                             font: new Font("Tahoma", "BOLD",13)
@@ -380,7 +386,7 @@ trigger on new GameTable{
                 SplitView{
                 	weight:1-w
                     content:BorderPanel{
-                    	var weight_buttons=0.6
+                    	var weight_buttons=0.5
                         center:SplitPane{
                             orientation: HORIZONTAL
                             content:[
