@@ -19,10 +19,11 @@ package org.cspoker.server.common.game;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.RejectedExecutionException;
+import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
@@ -124,7 +125,7 @@ public class GameMediator {
 	 */
 	public void allIn(GamePlayer player) throws IllegalActionException {
 		gameControl.allIn(player);
-		currentTimeOut.cancel();
+		cancelOldTimeOut();
 	}
 
 	/**
@@ -142,7 +143,7 @@ public class GameMediator {
 	public void bet(GamePlayer player, int amount)
 			throws IllegalActionException {
 		gameControl.bet(player, amount);
-		currentTimeOut.cancel();
+		cancelOldTimeOut();
 	}
 
 	/**
@@ -158,7 +159,7 @@ public class GameMediator {
 	 */
 	public void call(GamePlayer player) throws IllegalActionException {
 		gameControl.call(player);
-		currentTimeOut.cancel();
+		cancelOldTimeOut();
 	}
 
 	/**
@@ -174,7 +175,7 @@ public class GameMediator {
 	 */
 	public void check(GamePlayer player) throws IllegalActionException {
 		gameControl.check(player);
-		currentTimeOut.cancel();
+		cancelOldTimeOut();
 	}
 
 	/**
@@ -192,7 +193,7 @@ public class GameMediator {
 	 */
 	public void fold(GamePlayer player) throws IllegalActionException {
 		gameControl.fold(player);
-		currentTimeOut.cancel();
+		cancelOldTimeOut();
 	}
 
 	/**
@@ -210,7 +211,7 @@ public class GameMediator {
 	public void raise(GamePlayer player, int amount)
 			throws IllegalActionException {
 		gameControl.raise(player, amount);
-		currentTimeOut.cancel();
+		cancelOldTimeOut();
 	}
 
 	public void joinGame(SeatId seatId, GamePlayer player) throws IllegalActionException {
@@ -1303,30 +1304,35 @@ public class GameMediator {
 	
 	private void submitTimeOutHandler(Player player){
 		currentTimeOut = new PlayerActionTimeOut(player);
-		ScheduledRequestExecutor.getInstance().schedule(currentTimeOut, 30, TimeUnit.SECONDS);
+		oldFuture = currentFuture;
+		currentFuture = ScheduledRequestExecutor.getInstance().schedule(currentTimeOut, 30, TimeUnit.SECONDS);
 		GameMediator.logger.info(player.getName()+" action time out submitted.");
 	}
 	
 	private PlayerActionTimeOut currentTimeOut;
 	
-	private class PlayerActionTimeOut implements Runnable{
+	private ScheduledFuture<Object> currentFuture;
+	
+	private ScheduledFuture<Object> oldFuture;
+	
+	private void cancelOldTimeOut(){
+		if(oldFuture!=null)
+			oldFuture.cancel(false);
+	}
+	
+	
+	private class PlayerActionTimeOut implements Callable<Object>{
 				
 		private Player player;
-		
-		private boolean cancelled = false;
-		
+				
 		public PlayerActionTimeOut(Player player){
 			this.player = player;
 		}
-		
-		public void cancel(){
-			cancelled = true;
-		}
 
 		@Override
-		public void run() {
+		public Object call() {
 			try {
-				if(!cancelled && GameMediator.this.currentTimeOut==this){
+				if(GameMediator.this.currentTimeOut==this){
 					GamePlayer gcPlayer = gameControl.getGame().getCurrentPlayer();
 					if(gcPlayer.getId().equals(player.getId())){
 						GameMediator.logger.info(player.getName()+" automatically folded.");
@@ -1335,6 +1341,7 @@ public class GameMediator {
 				}
 			} catch (IllegalActionException e) {
 			}
+			return null;
 		}
 	}
 }
