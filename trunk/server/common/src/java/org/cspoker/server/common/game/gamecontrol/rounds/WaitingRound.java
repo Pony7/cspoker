@@ -28,7 +28,7 @@ public class WaitingRound extends Round {
 	
 	public WaitingRound(GameMediator gameMediator, Game game) {
 		super(gameMediator, game);
-		game.setCurrentPlayer(game.getDealer());
+		game.changeCurrentPlayerToDealer();
 	}
 
 	/**
@@ -54,8 +54,6 @@ public class WaitingRound extends Round {
 			throw new IllegalActionException(
 					"There should at least be 2 players to begin a new deal.");
 		}
-		
-		newDealRound();
 		playerMadeEvent(player);
 		// This will force the game control to end the waiting round
 		// and change to the preflop round.
@@ -63,7 +61,7 @@ public class WaitingRound extends Round {
 
 	@Override
 	public void endRound() {
-		getGame().dealNewHand();
+		game.dealNewHand();
 	}
 
 	@Override

@@ -49,10 +49,12 @@ public class PreFlopRound extends BettingRound {
 		super(gameMediator, game);
 
 		GamePlayer currentPlayer = getGame().getCurrentPlayer();
+		
 		if (currentPlayer != null) {
 			gameMediator.publishNewRoundEvent(new NewRoundEvent(toString()));
 		}
 		try {
+			//If there are only 2 players, blinds are inverted.
 			if (game.getNbCurrentDealPlayers() == 2) {
 				game.nextPlayer();
 			}
@@ -125,7 +127,7 @@ public class PreFlopRound extends BettingRound {
 	@Override
 	public boolean isRoundEnded() {
 		return ((super.isRoundEnded() && (someoneHasRaised() || bigBlindAllIn()
-				|| someoneBigAllIn() || onlyOneActivePlayer())) || bigBlindChecked());
+				|| someoneBigAllIn() || onlyOneActivePlayer())) || bigBlindChecked() || onlyOnePlayerLeft());
 	}
 
 	private boolean bigBlindAllIn() {

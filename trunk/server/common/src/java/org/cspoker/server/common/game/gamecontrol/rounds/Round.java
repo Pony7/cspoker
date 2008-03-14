@@ -42,18 +42,6 @@ public abstract class Round {
 	 **************************************************************************/
 
 	/**
-	 * The last event player is the last player that has done significant
-	 * change, such as a raise.
-	 * 
-	 * If the next player is the last event player, the round is over.
-	 * 
-	 * It is initialized in each game as the first better after the big blind,
-	 * in every next round, it is the player on to the left side of the player
-	 * with the dealer-button.
-	 */
-	protected GamePlayer lastEventPlayer;
-
-	/**
 	 * The variable containing the game in which this round takes place.
 	 */
 	protected final Game game;
@@ -79,8 +67,9 @@ public abstract class Round {
 		this.game = game;
 		getBettingRules().setBetPlaced(false);
 		getBettingRules().clearNBRaises();
-		lastEventPlayer = game.getFirstToActPlayer();
-		game.setCurrentPlayer(getGame().getFirstToActPlayer());
+		
+		game.changeCurrentPlayerToInitial();
+		game.setLastActionPlayer(game.getFirstToActPlayer());
 	}
 
 	/**
@@ -239,8 +228,9 @@ public abstract class Round {
 	 * @return True if the round is ended, false otherwise.
 	 */
 	public boolean isRoundEnded() {
-		return lastEventPlayer.equals(game.getCurrentPlayer());
+		return game.getLastActionPlayer().equals(game.getCurrentPlayer());
 	}
+
 
 	/**
 	 * End the current round.
@@ -261,7 +251,7 @@ public abstract class Round {
 	 *            The player who did the last event.
 	 */
 	protected void playerMadeEvent(GamePlayer player) {
-		lastEventPlayer = player;
+		game.setLastActionPlayer(player);
 	}
 
 	public boolean onTurn(GamePlayer player) {
@@ -292,6 +282,7 @@ public abstract class Round {
 	protected void newDealRound() {
 		game.addTablePlayersToGame();
 		game.seatInitalDealPlayers();
+		game.setDealer(game.getNextDealer());
 		game.setCurrentPlayer(game.getDealer());
 		List<Player> players = new ArrayList<Player>(game
 				.getNbCurrentDealPlayers());
@@ -303,13 +294,7 @@ public abstract class Round {
 	}
 
 	protected Round getNewDealRound() {
-		if (game.getNbSeatedPlayers() <= 1) {
-			return new WaitingRound(gameMediator, game);
-		} else {
-			newDealRound();
-			game.dealNewHand();
-			return new PreFlopRound(gameMediator, game);
-		}
+		return new WaitingRound(gameMediator, game);
 	}
 
 	private boolean potsDividedToWinner;
