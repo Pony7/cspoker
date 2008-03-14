@@ -1334,7 +1334,6 @@ public class GameMediator {
 					}
 				}
 			} catch (IllegalActionException e) {
-				throw new RejectedExecutionException();
 			}
 		}
 	}
