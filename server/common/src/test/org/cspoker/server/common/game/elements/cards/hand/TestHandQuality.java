@@ -26,7 +26,6 @@ import org.apache.log4j.Logger;
 import org.cspoker.common.elements.cards.Rank;
 import org.cspoker.common.elements.cards.Suit;
 import org.cspoker.server.common.game.elements.cards.deck.Deck;
-import org.cspoker.server.common.util.TestExactCard;
 
 /**
  * A test class for the quality of a hand
