@@ -1225,7 +1225,6 @@ public class GameMediator {
 	 * 
 	 */
 	public synchronized void publishAllPersonalEvents(GameEvent event) {
-		logger.info(event);
 		for (GameEventListener listener : allPersonalEventsListeners) {
 			listener.onGameEvent(event);
 		}
