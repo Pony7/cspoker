@@ -27,10 +27,12 @@ import org.cspoker.client.xml.sockets.RemotePlayerCommunicationFactoryForSocket;
 import org.cspoker.common.eventlisteners.RemoteAllEventsListener;
 import org.cspoker.common.exceptions.IllegalActionException;
 import org.cspoker.common.RemotePlayerCommunication;
+import org.cspoker.common.elements.GameProperty;
 import org.cspoker.common.elements.cards.Card;
 import org.cspoker.common.elements.table.Table;
 import org.cspoker.common.elements.table.TableId;
 import org.cspoker.common.player.Player;
+import org.cspoker.common.player.Winner;
 import org.cspoker.common.util.Log4JPropertiesLoader;
 
 public class JavaFxClient {
@@ -183,7 +185,8 @@ public class JavaFxClient {
     }
 
     public Table createTable(String name) throws RemoteException, IllegalActionException {
-        return rpc.createTable(name);
+        GameProperty p = new GameProperty(2,7000);
+        return rpc.createTable(name,p);
     }
 
     public void startGame() throws RemoteException, IllegalActionException {
@@ -194,11 +197,15 @@ public class JavaFxClient {
         return rpc.getTables().getTables().toArray(new Table[rpc.getTables().getTables().size()]);
     }
 
-    public static Card[] toArray(Set<Card> cards) {
+    public static Card[] cardsToArray(Set<Card> cards) {
         return cards.toArray(new Card[cards.size()]);
     }
 
-    public static Player[] toArray(List<Player> players) {
+    public static Winner[] winnersToArray(Set<Winner> winners) {
+        return winners.toArray(new Winner[winners.size()]);
+    }
+
+    public static Player[] playersToArray(List<Player> players) {
         if(players==null)
             return new Player[]{};
         return players.toArray(new Player[players.size()]);
