@@ -402,10 +402,15 @@ trigger on new GameTable{
                                 content: FlowPanel{
                                     content: [FlowPanel{
                                         content: Button {
+                                            var: me
                                             text: "Start Game"
                                             toolTipText: "Start the game at this table."
                                             action: operation() {
-                                                startgame();
+                                                me.enabled = false;
+                                                do later{
+                                                   startgame();
+                                                   me.enabled = true;
+                                                }
                                             }
                                         }
                                         visible: bind(main.state.mytable.state == 0)
