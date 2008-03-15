@@ -63,7 +63,7 @@ public class EventJAXBContext {
 		}
 	}
 
-	public static Class[] getActions() {
+	public static Class<?>[] getActions() {
 		return new Class[] {
 				// playeractionevents
 				AllInEvent.class,

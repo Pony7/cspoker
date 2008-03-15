@@ -27,7 +27,7 @@ public class AsynchonousPlayerCommunication extends
 		DefaultRemotePlayerCommunication {
 
 	private String name;
-	private Map<RemoteAllEventsListener,RemoteAllEventsListener> listeners = new ConcurrentHashMap<RemoteAllEventsListener, RemoteAllEventsListener>();
+	private Map<RemoteAllEventsListener,AsynchronousListener> listeners = new ConcurrentHashMap<RemoteAllEventsListener, AsynchronousListener>();
 	
 
 	public AsynchonousPlayerCommunication(RemotePlayerCommunication pc, String name) {
@@ -38,7 +38,7 @@ public class AsynchonousPlayerCommunication extends
 	@Override
 	public void subscribeAllEventsListener(RemoteAllEventsListener listener)
 			throws RemoteException {
-		RemoteAllEventsListener wrapped = new AsynchronousListener(listener,name);
+		AsynchronousListener wrapped = new AsynchronousListener(listener,name);
 		listeners.put(listener, wrapped);
 		super.subscribeAllEventsListener(wrapped);
 	}
@@ -46,7 +46,7 @@ public class AsynchonousPlayerCommunication extends
 	@Override
 	public void unsubscribeAllEventsListener(RemoteAllEventsListener listener)
 			throws RemoteException {
-		RemoteAllEventsListener old = listeners.remove(listener);
+		AsynchronousListener old = listeners.remove(listener);
 		if(old!=null)
 			super.unsubscribeAllEventsListener(old);
 	}

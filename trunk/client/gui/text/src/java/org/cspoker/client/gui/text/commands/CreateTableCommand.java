@@ -17,6 +17,7 @@ package org.cspoker.client.gui.text.commands;
 
 import org.cspoker.client.gui.text.Console;
 import org.cspoker.common.RemotePlayerCommunication;
+import org.cspoker.common.elements.GameProperty;
 
 public class CreateTableCommand extends AbstractCommand {
 
@@ -25,7 +26,8 @@ public class CreateTableCommand extends AbstractCommand {
 	}
 
 	public void execute(String... args) throws Exception {
-		rpc.createTable(args[0]);
+		GameProperty prop = new GameProperty();
+		rpc.createTable(args[0],prop);
 	}
 
 }

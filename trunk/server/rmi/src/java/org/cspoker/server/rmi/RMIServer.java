@@ -43,8 +43,6 @@ public class RMIServer implements RemoteLoginServer {
 
 	private int port;
 
-	private String username;
-
 	public RMIServer(int port){
 		this(port, new XmlFileAuthenticator());
 	}
@@ -59,7 +57,6 @@ public class RMIServer implements RemoteLoginServer {
 		logger.debug("Login attempt from " + username);
 		if (authenticator.hasPassword(username, password)) {
 			try {
-				this.username = username;
 				RemotePlayerCommunication p = SessionManager.global_session_manager
 						.getSession(username).getPlayerCommunication();
 				try {

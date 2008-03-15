@@ -22,6 +22,7 @@ import java.rmi.RemoteException;
 import javax.security.auth.login.LoginException;
 
 import org.cspoker.client.xml.common.XmlChannelRemotePlayerCommunication;
+import org.cspoker.common.elements.GameProperty;
 import org.cspoker.common.elements.table.TableId;
 import org.cspoker.common.eventlisteners.RemoteAllEventsListener;
 import org.cspoker.common.events.gameevents.BrokePlayerKickedOutEvent;
@@ -202,7 +203,8 @@ public class TestHTTP {
 			cedric = temp.getRemotePlayerCommunication("cedric",
 					"test");
 
-			TableId id = guy.createTable("guy's table").getId();
+			GameProperty prop = new GameProperty();
+			TableId id = guy.createTable("guy's table", prop).getId();
 
 			kenzo.joinTable(id);
 			cedric.joinTable(id);

@@ -16,6 +16,7 @@
 package org.cspoker.client.rmi;
 
 import java.rmi.AccessException;
+import java.rmi.NoSuchObjectException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -60,6 +61,11 @@ public class RemoteLoginServerForRMI implements RemoteLoginServer {
 			public void subscribeAllEventsListener(
 					RemoteAllEventsListener listener) throws RemoteException {
 				RemoteAllEventsListener wrapped = new RemoteifyingListener(listener);
+				try {
+					UnicastRemoteObject.unexportObject(wrapped, true);
+				} catch (NoSuchObjectException e) {
+					// ignore
+				}
 				RemoteAllEventsListener listenerStub = (RemoteAllEventsListener) UnicastRemoteObject
 				.exportObject(wrapped, 0);
 				listeners.put(listener, listenerStub);

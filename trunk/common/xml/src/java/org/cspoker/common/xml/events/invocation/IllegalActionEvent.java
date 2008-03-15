@@ -66,7 +66,7 @@ public class IllegalActionEvent extends InvocationEvent {
 		return player;
 	}
 
-	public PlayerCommunicationAction getAction() {
+	public PlayerCommunicationAction<?> getAction() {
 		return action;
 	}
 }

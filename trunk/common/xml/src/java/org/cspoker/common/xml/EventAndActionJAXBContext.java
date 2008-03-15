@@ -41,8 +41,8 @@ public class EventAndActionJAXBContext {
 		}
 	}
 
-	public static Class[] getActions() {
-		ArrayList<Class> l = new ArrayList<Class>();
+	public static Class<?>[] getActions() {
+		ArrayList<Class<?>> l = new ArrayList<Class<?>>();
 		l.addAll(Arrays.asList(ActionJAXBContext.getActions()));
 		l.addAll(Arrays.asList(EventJAXBContext.getActions()));
 		return l.toArray(new Class[l.size()]);
