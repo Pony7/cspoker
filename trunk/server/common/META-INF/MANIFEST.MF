@@ -1,4 +1,4 @@
 Manifest-Version: 1.0
 Sealed: true
-Class-Path: ../lib/cspoker-common.jar ../lib/jakarta-oro-2.0.8.jar ../lib/log4j-1.2.14.jar
+Class-Path: ../lib/cspoker-common.jar ../lib/log4j-1.2.14.jar
 Main-Class: org.cspoker.server.api.Server
