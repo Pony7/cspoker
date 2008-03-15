@@ -77,6 +77,9 @@ trigger on new EventListener{
                     var p = ts.mytable.players[e.getPlayer().getSeatId().getId()];
                     p.lastaction = "All In";
                     p.amount = e.getPlayer().getBetChipsValue();
+                    if(ts.mytable.maxamount<p.amount){
+                        ts.mytable.maxamount = p.amount;
+                    }
                     p.stack = e.getPlayer().getStackValue();
                     
                     ts.mytable.temppot = e.getPots().getTotalValue();
@@ -95,6 +98,10 @@ trigger on new EventListener{
                     var p = ts.mytable.players[e.getPlayer().getSeatId().getId()];
                     p.lastaction = "Bet";
                     p.amount = e.getPlayer().getBetChipsValue();
+                    if(ts.mytable.maxamount<p.amount){
+                        ts.mytable.maxamount = p.amount;
+                    }
+                        
                     p.stack = e.getPlayer().getStackValue();
                     
                     ts.mytable.temppot = e.getPots().getTotalValue();
@@ -163,6 +170,9 @@ trigger on new EventListener{
                     var p = ts.mytable.players[e.getPlayer().getSeatId().getId()];
                     p.lastaction = "Raise";
                     p.amount = e.getPlayer().getBetChipsValue();
+                    if(ts.mytable.maxamount<p.amount){
+                        ts.mytable.maxamount = p.amount;
+                    }
                     p.stack = e.getPlayer().getStackValue();
                     
                     ts.mytable.temppot = e.getPots().getTotalValue();
@@ -180,6 +190,9 @@ trigger on new EventListener{
                     var p = ts.mytable.players[e.getPlayer().getSeatId().getId()];
                     p.lastaction = "Small Blind";
                     p.amount = e.getPlayer().getBetChipsValue();
+                    if(ts.mytable.maxamount<p.amount){
+                        ts.mytable.maxamount = p.amount;
+                    }
                     p.stack = e.getPlayer().getStackValue();
                     
                     ts.mytable.temppot = e.getPots().getTotalValue();
@@ -198,6 +211,9 @@ trigger on new EventListener{
                     var p = ts.mytable.players[e.getPlayer().getSeatId().getId()];
                     p.lastaction = "Big Blind";
                     p.amount = e.getPlayer().getBetChipsValue();
+                    if(ts.mytable.maxamount<p.amount){
+                        ts.mytable.maxamount = p.amount;
+                    }
                     p.stack = e.getPlayer().getStackValue();
                     
                     ts.mytable.temppot = e.getPots().getTotalValue();
@@ -271,7 +287,7 @@ trigger on new EventListener{
                     System.out.println(e.toString());
                     
                     ts.mytable.state = 2;
-                    
+                    ts.mytable.maxamount = 0;
                     ts.mytable.dealer = e.getDealer().getSeatId().getId();
                     
                     for(p in ts.mytable.players){
@@ -308,6 +324,7 @@ trigger on new EventListener{
                         p.next = false;
                         p.amount=0;
                     }
+                    ts.mytable.maxamount = 0;
                     ts.mytable.players[e.getInitialPlayer().getSeatId().getId()].next = true;
                     ts.mytable.pot = ts.mytable.temppot;
                 }
