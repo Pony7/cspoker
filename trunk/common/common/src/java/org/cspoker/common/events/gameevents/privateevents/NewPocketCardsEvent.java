@@ -55,7 +55,7 @@ public class NewPocketCardsEvent extends GameEvent {
 		return pocketCards;
 	}
 
-	@Override
+	
 	public String toString() {
 		String toReturn = getPlayer().getName()
 				+ " has received new pocket cards: ";
@@ -70,7 +70,7 @@ public class NewPocketCardsEvent extends GameEvent {
 		return player;
 	}
 
-	@Override
+	
 	public void dispatch(RemoteAllEventsListener listener)
 			throws RemoteException {
 		listener.onNewPocketCardsEvent(this);

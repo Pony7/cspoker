@@ -218,7 +218,7 @@ public class Chips {
 		}
 	}
 
-	@Override
+	
 	public String toString() {
 		return Integer.valueOf(getValue()).toString();
 	}

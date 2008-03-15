@@ -62,12 +62,12 @@ public class SeatId implements Serializable{
 	/**
 	 * Return a textual representation of the seat id.
 	 */
-	@Override
+	
 	public String toString() {
 		return String.valueOf(id);
 	}
 
-	@Override
+	
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
@@ -75,7 +75,7 @@ public class SeatId implements Serializable{
 		return result;
 	}
 
-	@Override
+	
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;

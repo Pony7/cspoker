@@ -58,7 +58,7 @@ public class NewRoundEvent extends GameEvent {
 		return player;
 	}
 
-	@Override
+	
 	public String toString() {
 		if(player==null)
 			return roundName+":";
@@ -73,7 +73,7 @@ public class NewRoundEvent extends GameEvent {
 		return player;
 	}
 
-	@Override
+	
 	public void dispatch(RemoteAllEventsListener listener)
 			throws RemoteException {
 		listener.onNewRoundEvent(this);

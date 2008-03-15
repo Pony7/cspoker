@@ -51,12 +51,12 @@ public class NextPlayerEvent extends GameEvent {
 		return player;
 	}
 
-	@Override
+	
 	public String toString() {
 		return "It's " + player.getName() + "'s turn.";
 	}
 
-	@Override
+	
 	public void dispatch(RemoteAllEventsListener listener)
 			throws RemoteException {
 		listener.onNextPlayerEvent(this);

@@ -27,7 +27,7 @@ public class NoOpSubmitter implements Runnable {
 		this.c = c;
 	}
 
-	@Override
+	
 	public void run() {
 		try {
 			c.send(XmlHttpChannel.noOpXml);

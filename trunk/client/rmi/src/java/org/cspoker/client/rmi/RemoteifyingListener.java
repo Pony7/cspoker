@@ -31,7 +31,7 @@ import org.cspoker.common.events.serverevents.TableRemovedEvent;
 public class RemoteifyingListener implements RemoteAllEventsListener {
 
 	private final static Logger logger = Logger
-	.getLogger(RemoteifyingListener.class);
+			.getLogger(RemoteifyingListener.class);
 
 	private final RemoteAllEventsListener listener;
 
@@ -39,316 +39,292 @@ public class RemoteifyingListener implements RemoteAllEventsListener {
 		this.listener = listener;
 	}
 
-	@Override
 	public void onAllInEvent(AllInEvent event) throws RemoteException {
-		try{
+		try {
 			listener.onAllInEvent(event);
-		}catch(RemoteException e){
+		} catch (RemoteException e) {
 			logger.error(e);
 			throw e;
-		}catch(Exception e){
+		} catch (Exception e) {
 			logger.error(e);
-			throw new RemoteException("Unexpected exception",e);
+			throw new RemoteException("Unexpected exception", e);
 		}
 	}
 
-	@Override
 	public void onBetEvent(BetEvent event) throws RemoteException {
-		try{
+		try {
 			listener.onBetEvent(event);
-		}catch(RemoteException e){
+		} catch (RemoteException e) {
 			logger.error(e);
 			throw e;
-		}catch(Exception e){
+		} catch (Exception e) {
 			logger.error(e);
-			throw new RemoteException("Unexpected exception",e);
+			throw new RemoteException("Unexpected exception", e);
 		}
 	}
 
-	@Override
 	public void onBigBlindEvent(BigBlindEvent event) throws RemoteException {
-		try{
+		try {
 			listener.onBigBlindEvent(event);
-		}catch(RemoteException e){
+		} catch (RemoteException e) {
 			logger.error(e);
 			throw e;
-		}catch(Exception e){
+		} catch (Exception e) {
 			logger.error(e);
-			throw new RemoteException("Unexpected exception",e);
+			throw new RemoteException("Unexpected exception", e);
 		}
 	}
 
-	@Override
 	public void onCallEvent(CallEvent event) throws RemoteException {
-		try{
+		try {
 			listener.onCallEvent(event);
-		}catch(RemoteException e){
+		} catch (RemoteException e) {
 			logger.error(e);
 			throw e;
-		}catch(Exception e){
+		} catch (Exception e) {
 			logger.error(e);
-			throw new RemoteException("Unexpected exception",e);
+			throw new RemoteException("Unexpected exception", e);
 		}
 	}
 
-	@Override
 	public void onCheckEvent(CheckEvent event) throws RemoteException {
-		try{
+		try {
 			listener.onCheckEvent(event);
-		}catch(RemoteException e){
+		} catch (RemoteException e) {
 			logger.error(e);
 			throw e;
-		}catch(Exception e){
+		} catch (Exception e) {
 			logger.error(e);
-			throw new RemoteException("Unexpected exception",e);
+			throw new RemoteException("Unexpected exception", e);
 		}
 	}
 
-	@Override
 	public void onFoldEvent(FoldEvent event) throws RemoteException {
-		try{
+		try {
 			listener.onFoldEvent(event);
-		}catch(RemoteException e){
+		} catch (RemoteException e) {
 			logger.error(e);
 			throw e;
-		}catch(Exception e){
+		} catch (Exception e) {
 			logger.error(e);
-			throw new RemoteException("Unexpected exception",e);
+			throw new RemoteException("Unexpected exception", e);
 		}
 	}
 
-	@Override
 	public void onRaiseEvent(RaiseEvent event) throws RemoteException {
-		try{
+		try {
 			listener.onRaiseEvent(event);
-		}catch(RemoteException e){
+		} catch (RemoteException e) {
 			logger.error(e);
 			throw e;
-		}catch(Exception e){
+		} catch (Exception e) {
 			logger.error(e);
-			throw new RemoteException("Unexpected exception",e);
+			throw new RemoteException("Unexpected exception", e);
 		}
 	}
 
-	@Override
 	public void onSmallBlindEvent(SmallBlindEvent event) throws RemoteException {
-		try{
+		try {
 			listener.onSmallBlindEvent(event);
-		}catch(RemoteException e){
+		} catch (RemoteException e) {
 			logger.error(e);
 			throw e;
-		}catch(Exception e){
+		} catch (Exception e) {
 			logger.error(e);
-			throw new RemoteException("Unexpected exception",e);
+			throw new RemoteException("Unexpected exception", e);
 		}
 
 	}
 
-	@Override
 	public void onNewPocketCardsEvent(NewPocketCardsEvent event)
-	throws RemoteException {
-		try{
+			throws RemoteException {
+		try {
 			listener.onNewPocketCardsEvent(event);
-		}catch(RemoteException e){
+		} catch (RemoteException e) {
 			logger.error(e);
 			throw e;
-		}catch(Exception e){
+		} catch (Exception e) {
 			logger.error(e);
-			throw new RemoteException("Unexpected exception",e);
+			throw new RemoteException("Unexpected exception", e);
 		}
 
 	}
 
-	@Override
 	public void onNewCommunityCardsEvent(NewCommunityCardsEvent event)
-	throws RemoteException {
-		try{
+			throws RemoteException {
+		try {
 			listener.onNewCommunityCardsEvent(event);
-		}catch(RemoteException e){
+		} catch (RemoteException e) {
 			logger.error(e);
 			throw e;
-		}catch(Exception e){
+		} catch (Exception e) {
 			logger.error(e);
-			throw new RemoteException("Unexpected exception",e);
+			throw new RemoteException("Unexpected exception", e);
 		}
 	}
 
-	@Override
 	public void onNewDealEvent(NewDealEvent event) throws RemoteException {
-		try{
+		try {
 			listener.onNewDealEvent(event);
-		}catch(RemoteException e){
+		} catch (RemoteException e) {
 			logger.error(e);
 			throw e;
-		}catch(Exception e){
+		} catch (Exception e) {
 			logger.error(e);
-			throw new RemoteException("Unexpected exception",e);
+			throw new RemoteException("Unexpected exception", e);
 		}
 	}
 
-	@Override
 	public void onNewRoundEvent(NewRoundEvent event) throws RemoteException {
-		try{
+		try {
 			listener.onNewRoundEvent(event);
-		}catch(RemoteException e){
+		} catch (RemoteException e) {
 			logger.error(e);
 			throw e;
-		}catch(Exception e){
+		} catch (Exception e) {
 			logger.error(e);
-			throw new RemoteException("Unexpected exception",e);
+			throw new RemoteException("Unexpected exception", e);
 		}
 	}
 
-	@Override
 	public void onNextPlayerEvent(NextPlayerEvent event) throws RemoteException {
-		try{
+		try {
 			listener.onNextPlayerEvent(event);
-		}catch(RemoteException e){
+		} catch (RemoteException e) {
 			logger.error(e);
 			throw e;
-		}catch(Exception e){
+		} catch (Exception e) {
 			logger.error(e);
-			throw new RemoteException("Unexpected exception",e);
+			throw new RemoteException("Unexpected exception", e);
 		}
 	}
 
-	@Override
 	public void onPlayerJoinedTableEvent(PlayerJoinedTableEvent event)
-	throws RemoteException {
-		try{
+			throws RemoteException {
+		try {
 			listener.onPlayerJoinedTableEvent(event);
-		}catch(RemoteException e){
+		} catch (RemoteException e) {
 			logger.error(e);
 			throw e;
-		}catch(Exception e){
+		} catch (Exception e) {
 			logger.error(e);
-			throw new RemoteException("Unexpected exception",e);
+			throw new RemoteException("Unexpected exception", e);
 		}
 	}
 
-	@Override
 	public void onPlayerLeftTableEvent(PlayerLeftTableEvent event)
-	throws RemoteException {
-		try{
+			throws RemoteException {
+		try {
 			listener.onPlayerLeftTableEvent(event);
-		}catch(RemoteException e){
+		} catch (RemoteException e) {
 			logger.error(e);
 			throw e;
-		}catch(Exception e){
+		} catch (Exception e) {
 			logger.error(e);
-			throw new RemoteException("Unexpected exception",e);
+			throw new RemoteException("Unexpected exception", e);
 		}
 	}
 
-	@Override
 	public void onShowHandEvent(ShowHandEvent event) throws RemoteException {
-		try{
+		try {
 			listener.onShowHandEvent(event);
-		}catch(RemoteException e){
+		} catch (RemoteException e) {
 			logger.error(e);
 			throw e;
-		}catch(Exception e){
+		} catch (Exception e) {
 			logger.error(e);
-			throw new RemoteException("Unexpected exception",e);
+			throw new RemoteException("Unexpected exception", e);
 		}
 	}
 
-	@Override
 	public void onWinnerEvent(WinnerEvent event) throws RemoteException {
-		try{
+		try {
 			listener.onWinnerEvent(event);
-		}catch(RemoteException e){
+		} catch (RemoteException e) {
 			logger.error(e);
 			throw e;
-		}catch(Exception e){
+		} catch (Exception e) {
 			logger.error(e);
-			throw new RemoteException("Unexpected exception",e);
+			throw new RemoteException("Unexpected exception", e);
 		}
 	}
 
-	@Override
 	public void onGameMessageEvent(GameMessageEvent event)
-	throws RemoteException {
-		try{
+			throws RemoteException {
+		try {
 			listener.onGameMessageEvent(event);
-		}catch(RemoteException e){
+		} catch (RemoteException e) {
 			logger.error(e);
 			throw e;
-		}catch(Exception e){
+		} catch (Exception e) {
 			logger.error(e);
-			throw new RemoteException("Unexpected exception",e);
+			throw new RemoteException("Unexpected exception", e);
 		}
 	}
 
-
-	@Override
 	public void onTableCreatedEvent(TableCreatedEvent event)
-	throws RemoteException {
-		try{
+			throws RemoteException {
+		try {
 			listener.onTableCreatedEvent(event);
-		}catch(RemoteException e){
+		} catch (RemoteException e) {
 			logger.error(e);
 			throw e;
-		}catch(Exception e){
+		} catch (Exception e) {
 			logger.error(e);
-			throw new RemoteException("Unexpected exception",e);
+			throw new RemoteException("Unexpected exception", e);
 		}
 	}
 
-	@Override
 	public void onServerMessageEvent(ServerMessageEvent event)
-	throws RemoteException {
-		try{
+			throws RemoteException {
+		try {
 			listener.onServerMessageEvent(event);
-		}catch(RemoteException e){
+		} catch (RemoteException e) {
 			logger.error(e);
 			throw e;
-		}catch(Exception e){
+		} catch (Exception e) {
 			logger.error(e);
-			throw new RemoteException("Unexpected exception",e);
+			throw new RemoteException("Unexpected exception", e);
 		}
 	}
 
-	@Override
 	public void onBrokePlayerKickedOutEvent(BrokePlayerKickedOutEvent event)
 			throws RemoteException {
-		try{
+		try {
 			listener.onBrokePlayerKickedOutEvent(event);
-		}catch(RemoteException e){
+		} catch (RemoteException e) {
 			logger.error(e);
 			throw e;
-		}catch(Exception e){
+		} catch (Exception e) {
 			logger.error(e);
-			throw new RemoteException("Unexpected exception",e);
+			throw new RemoteException("Unexpected exception", e);
 		}
 	}
 
-	@Override
 	public void onTableChangedEvent(TableChangedEvent event)
 			throws RemoteException {
-		try{
+		try {
 			listener.onTableChangedEvent(event);
-		}catch(RemoteException e){
+		} catch (RemoteException e) {
 			logger.error(e);
 			throw e;
-		}catch(Exception e){
+		} catch (Exception e) {
 			logger.error(e);
-			throw new RemoteException("Unexpected exception",e);
-		}		
+			throw new RemoteException("Unexpected exception", e);
+		}
 	}
 
-	@Override
 	public void onTableRemovedEvent(TableRemovedEvent event)
 			throws RemoteException {
-		try{
+		try {
 			listener.onTableRemovedEvent(event);
-		}catch(RemoteException e){
+		} catch (RemoteException e) {
 			logger.error(e);
 			throw e;
-		}catch(Exception e){
+		} catch (Exception e) {
 			logger.error(e);
-			throw new RemoteException("Unexpected exception",e);
-		}		
+			throw new RemoteException("Unexpected exception", e);
+		}
 	}
 
 }

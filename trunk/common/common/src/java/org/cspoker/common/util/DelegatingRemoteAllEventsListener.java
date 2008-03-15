@@ -55,7 +55,7 @@ public class DelegatingRemoteAllEventsListener implements RemoteAllEventsListene
 		this.listeners = listeners;
 	}
 
-	@Override
+	
 	public void onAllInEvent(AllInEvent event) {
 		for (RemoteAllEventsListener listener : listeners) {
 			try {
@@ -71,7 +71,7 @@ public class DelegatingRemoteAllEventsListener implements RemoteAllEventsListene
 		listeners.remove(listener);
 	}
 
-	@Override
+	
 	public void onBetEvent(BetEvent event) {
 		for (RemoteAllEventsListener listener : listeners) {
 			try {
@@ -82,7 +82,7 @@ public class DelegatingRemoteAllEventsListener implements RemoteAllEventsListene
 		}
 	}
 
-	@Override
+	
 	public void onBigBlindEvent(BigBlindEvent event) {
 		for (RemoteAllEventsListener listener : listeners) {
 			try {
@@ -93,7 +93,7 @@ public class DelegatingRemoteAllEventsListener implements RemoteAllEventsListene
 		}
 	}
 
-	@Override
+	
 	public void onCallEvent(CallEvent event) {
 		for (RemoteAllEventsListener listener : listeners) {
 			try {
@@ -104,7 +104,7 @@ public class DelegatingRemoteAllEventsListener implements RemoteAllEventsListene
 		}
 	}
 
-	@Override
+	
 	public void onCheckEvent(CheckEvent event) {
 		for (RemoteAllEventsListener listener : listeners) {
 			try {
@@ -115,7 +115,7 @@ public class DelegatingRemoteAllEventsListener implements RemoteAllEventsListene
 		}
 	}
 
-	@Override
+	
 	public void onFoldEvent(FoldEvent event) {
 		for (RemoteAllEventsListener listener : listeners) {
 			try {
@@ -126,7 +126,7 @@ public class DelegatingRemoteAllEventsListener implements RemoteAllEventsListene
 		}
 	}
 
-	@Override
+	
 	public void onRaiseEvent(RaiseEvent event) {
 		for (RemoteAllEventsListener listener : listeners) {
 			try {
@@ -137,7 +137,7 @@ public class DelegatingRemoteAllEventsListener implements RemoteAllEventsListene
 		}
 	}
 
-	@Override
+	
 	public void onSmallBlindEvent(SmallBlindEvent event) {
 		for (RemoteAllEventsListener listener : listeners) {
 			try {
@@ -148,7 +148,7 @@ public class DelegatingRemoteAllEventsListener implements RemoteAllEventsListene
 		}
 	}
 
-	@Override
+	
 	public void onNewPocketCardsEvent(NewPocketCardsEvent event) {
 		for (RemoteAllEventsListener listener : listeners) {
 			try {
@@ -159,7 +159,7 @@ public class DelegatingRemoteAllEventsListener implements RemoteAllEventsListene
 		}
 	}
 
-	@Override
+	
 	public void onNewCommunityCardsEvent(NewCommunityCardsEvent event) {
 		for (RemoteAllEventsListener listener : listeners) {
 			try {
@@ -170,7 +170,7 @@ public class DelegatingRemoteAllEventsListener implements RemoteAllEventsListene
 		}
 	}
 
-	@Override
+	
 	public void onNewDealEvent(NewDealEvent event) {
 		for (RemoteAllEventsListener listener : listeners) {
 			try {
@@ -181,7 +181,7 @@ public class DelegatingRemoteAllEventsListener implements RemoteAllEventsListene
 		}
 	}
 
-	@Override
+	
 	public void onNewRoundEvent(NewRoundEvent event) {
 		for (RemoteAllEventsListener listener : listeners) {
 			try {
@@ -192,7 +192,7 @@ public class DelegatingRemoteAllEventsListener implements RemoteAllEventsListene
 		}
 	}
 
-	@Override
+	
 	public void onNextPlayerEvent(NextPlayerEvent event) {
 		for (RemoteAllEventsListener listener : listeners) {
 			try {
@@ -203,7 +203,7 @@ public class DelegatingRemoteAllEventsListener implements RemoteAllEventsListene
 		}
 	}
 
-	@Override
+	
 	public void onPlayerJoinedTableEvent(PlayerJoinedTableEvent event) {
 		for (RemoteAllEventsListener listener : listeners) {
 			try {
@@ -214,7 +214,7 @@ public class DelegatingRemoteAllEventsListener implements RemoteAllEventsListene
 		}
 	}
 
-	@Override
+	
 	public void onPlayerLeftTableEvent(PlayerLeftTableEvent event) {
 		for (RemoteAllEventsListener listener : listeners) {
 			try {
@@ -225,7 +225,7 @@ public class DelegatingRemoteAllEventsListener implements RemoteAllEventsListene
 		}
 	}
 
-	@Override
+	
 	public void onShowHandEvent(ShowHandEvent event) {
 		for (RemoteAllEventsListener listener : listeners) {
 			try {
@@ -236,7 +236,7 @@ public class DelegatingRemoteAllEventsListener implements RemoteAllEventsListene
 		}
 	}
 
-	@Override
+	
 	public void onWinnerEvent(WinnerEvent event) {
 		for (RemoteAllEventsListener listener : listeners) {
 			try {
@@ -247,7 +247,7 @@ public class DelegatingRemoteAllEventsListener implements RemoteAllEventsListene
 		}
 	}
 
-	@Override
+	
 	public void onGameMessageEvent(GameMessageEvent event) {
 		for (RemoteAllEventsListener listener : listeners) {
 			try {
@@ -258,7 +258,7 @@ public class DelegatingRemoteAllEventsListener implements RemoteAllEventsListene
 		}
 	}
 
-	@Override
+	
 	public void onTableCreatedEvent(TableCreatedEvent event) {
 		for (RemoteAllEventsListener listener : listeners) {
 			try {
@@ -269,7 +269,7 @@ public class DelegatingRemoteAllEventsListener implements RemoteAllEventsListene
 		}
 	}
 
-	@Override
+	
 	public void onServerMessageEvent(ServerMessageEvent event) {
 		for (RemoteAllEventsListener listener : listeners) {
 			try {
@@ -280,7 +280,7 @@ public class DelegatingRemoteAllEventsListener implements RemoteAllEventsListene
 		}
 	}
 
-	@Override
+	
 	public void onBrokePlayerKickedOutEvent(BrokePlayerKickedOutEvent event){
 		for (RemoteAllEventsListener listener : listeners) {
 			try {
@@ -292,7 +292,7 @@ public class DelegatingRemoteAllEventsListener implements RemoteAllEventsListene
 		
 	}
 
-	@Override
+	
 	public void onTableChangedEvent(TableChangedEvent event){
 		for (RemoteAllEventsListener listener : listeners) {
 			try {
@@ -304,7 +304,7 @@ public class DelegatingRemoteAllEventsListener implements RemoteAllEventsListene
 		
 	}
 
-	@Override
+	
 	public void onTableRemovedEvent(TableRemovedEvent event){
 		for (RemoteAllEventsListener listener : listeners) {
 			try {

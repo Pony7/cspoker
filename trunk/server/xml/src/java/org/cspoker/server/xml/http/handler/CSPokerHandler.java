@@ -38,7 +38,7 @@ public class CSPokerHandler extends AbstractHttpHandlerImpl {
 
 	private final XmlPlayerCommunicationFactory f = XmlPlayerCommunicationFactory.global_factory;
 
-	@Override
+	
 	protected byte[] getResponse(HttpExchange http) throws HttpExceptionImpl {
 
 		String username = AbstractHttpHandlerImpl.toPlayerName(http

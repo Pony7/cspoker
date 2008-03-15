@@ -216,7 +216,7 @@ public class GamePots {
 		return value;
 	}
 
-	@Override
+	
 	public String toString() {
 		String toReturn = "Pot is ";
 		if (isClosed()) {

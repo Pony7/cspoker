@@ -48,7 +48,7 @@ public class TableChangedEvent extends ServerEvent {
 		return "Table "+table.getName()+" ["+table.getId()+"] has changed.";
 	}
 
-	@Override
+	
 	public void dispatch(RemoteAllEventsListener listener)
 			throws RemoteException {
 		listener.onTableChangedEvent(this);

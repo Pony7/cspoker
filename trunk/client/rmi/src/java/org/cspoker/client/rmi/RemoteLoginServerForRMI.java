@@ -37,46 +37,47 @@ public class RemoteLoginServerForRMI implements RemoteLoginServer {
 	private RemoteLoginServer server;
 
 	public RemoteLoginServerForRMI(String server) throws AccessException,
-	RemoteException, NotBoundException {
+			RemoteException, NotBoundException {
 		this(server, 1099);
 	}
 
 	public RemoteLoginServerForRMI(String server, int port)
-	throws AccessException, RemoteException, NotBoundException {
+			throws AccessException, RemoteException, NotBoundException {
 		System.setSecurityManager(null);
 		Registry registry = LocateRegistry.getRegistry(server, port);
 		this.server = (RemoteLoginServer) registry.lookup("CSPokerServer");
 	}
 
 	public RemotePlayerCommunication login(String username, String password)
-	throws RemoteException, LoginException {
+			throws RemoteException, LoginException {
 
 		final RemotePlayerCommunication p = server.login(username, password);
 
 		return new DefaultRemotePlayerCommunication(p) {
 
-			private Map<RemoteAllEventsListener,RemoteAllEventsListener> listeners = new ConcurrentHashMap<RemoteAllEventsListener, RemoteAllEventsListener>();
+			private Map<RemoteAllEventsListener, RemoteAllEventsListener> listeners = new ConcurrentHashMap<RemoteAllEventsListener, RemoteAllEventsListener>();
 
-			@Override
+			
 			public void subscribeAllEventsListener(
 					RemoteAllEventsListener listener) throws RemoteException {
-				RemoteAllEventsListener wrapped = new RemoteifyingListener(listener);
+				RemoteAllEventsListener wrapped = new RemoteifyingListener(
+						listener);
 				try {
 					UnicastRemoteObject.unexportObject(wrapped, true);
 				} catch (NoSuchObjectException e) {
 					// ignore
 				}
 				RemoteAllEventsListener listenerStub = (RemoteAllEventsListener) UnicastRemoteObject
-				.exportObject(wrapped, 0);
+						.exportObject(wrapped, 0);
 				listeners.put(listener, listenerStub);
 				p.subscribeAllEventsListener(listenerStub);
 			}
 
-			@Override
+			
 			public void unsubscribeAllEventsListener(
 					RemoteAllEventsListener listener) throws RemoteException {
 				RemoteAllEventsListener old = listeners.remove(listener);
-				if(old!=null){
+				if (old != null) {
 					p.unsubscribeAllEventsListener(old);
 					UnicastRemoteObject.unexportObject(old, true);
 				}

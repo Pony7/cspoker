@@ -209,7 +209,6 @@ trigger on new EventListener{
             EventQueue.invokeLater(new Runnable(){
                 operation run(){
                     System.out.println(e.toString());
-                    System.out.println("00000");
                     
                     var cards = JavaFxClient.cardsToArray(e.getPocketCards());
                     
@@ -231,7 +230,6 @@ trigger on new EventListener{
                     var mycards = ts.mytable.cards;
                     
                     if(mycards[0].visible==false){
-                        System.out.println("11111");
                         
                         mycards[0].rank = cards[0].getRank().toString().toLowerCase();
                         mycards[0].suit = cards[0].getSuit().toString().toLowerCase();
@@ -249,7 +247,6 @@ trigger on new EventListener{
                         mycards[2].dealt = true;
                         
                     }else if(mycards[3].visible==false){
-                        System.out.println("22222");
                         
                         mycards[3].rank = cards[0].getRank().toString().toLowerCase();
                         mycards[3].suit = cards[0].getSuit().toString().toLowerCase();
@@ -257,7 +254,6 @@ trigger on new EventListener{
                         mycards[3].dealt = true;
                         
                     }else if(mycards[4].visible==false){
-                        System.out.println("33333");
                         
                         mycards[4].rank = cards[0].getRank().toString().toLowerCase();
                         mycards[4].suit = cards[0].getSuit().toString().toLowerCase();

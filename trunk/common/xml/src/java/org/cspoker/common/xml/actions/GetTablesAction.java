@@ -37,7 +37,7 @@ public class GetTablesAction extends PlayerCommunicationAction<TableList> {
 		// no op
 	}
 
-	@Override
+	
 	public void perform(PlayerCommunication pc,
 			AllInvocationEventsListener listener) {
 		dispatchResult(pc.getTables(), listener);

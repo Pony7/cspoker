@@ -47,7 +47,7 @@ public enum Suit {
 	/**
 	 * Returns a textual representation of this suit
 	 */
-	@Override
+	
 	public String toString() {
 		return getShortDescription();
 	}

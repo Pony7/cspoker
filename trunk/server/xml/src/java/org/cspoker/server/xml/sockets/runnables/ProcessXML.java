@@ -83,7 +83,7 @@ public class ProcessXML implements Runnable, Prioritizable {
 		return 1;
 	}
 
-	@Override
+	
 	public String toString() {
 		return "ProcessXML";
 	}

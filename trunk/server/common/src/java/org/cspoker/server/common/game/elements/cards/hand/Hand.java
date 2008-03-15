@@ -325,7 +325,7 @@ public class Hand implements Iterable<Card>, Comparable<Hand> {
 	/**
 	 * Returns a textual representation of this hand
 	 */
-	@Override
+	
 	public String toString() {
 		String result = "";
 
@@ -360,7 +360,7 @@ public class Hand implements Iterable<Card>, Comparable<Hand> {
 			this.flush = flush;
 		}
 
-		@Override
+		
 		public boolean equals(final Object obj) {
 			if (this == obj) {
 				return true;
@@ -381,7 +381,7 @@ public class Hand implements Iterable<Card>, Comparable<Hand> {
 			return true;
 		}
 
-		@Override
+		
 		public int hashCode() {
 			if (hashCode == null) {
 				final int prime = 31;
@@ -394,7 +394,7 @@ public class Hand implements Iterable<Card>, Comparable<Hand> {
 		}
 	}
 
-	@Override
+	
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
@@ -402,7 +402,7 @@ public class Hand implements Iterable<Card>, Comparable<Hand> {
 		return result;
 	}
 
-	@Override
+	
 	public boolean equals(Object obj) {
 		if (this == obj) {
 			return true;

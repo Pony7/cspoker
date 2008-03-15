@@ -22,7 +22,7 @@ import org.cspoker.common.events.Event;
 
 public abstract class ServerEvent extends Event {
 
-	@Override
+	
 	public abstract void dispatch(RemoteAllEventsListener listener)
 			throws RemoteException;
 

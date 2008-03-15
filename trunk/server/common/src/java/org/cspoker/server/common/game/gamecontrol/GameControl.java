@@ -389,7 +389,7 @@ public class GameControl {
 		public AutoDealHandler(){
 		}
 
-		@Override
+		
 		public void run() {
 			try {
 				GameControl.logger.info(game.getDealer()+" auto-deal called.");

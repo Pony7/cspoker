@@ -58,7 +58,7 @@ public class GameAllInPlayer implements Comparable<GameAllInPlayer> {
 		return getBetValue() - o.getBetValue();
 	}
 
-	@Override
+	
 	public boolean equals(Object obj) {
 		if (this == obj) {
 			return true;
@@ -80,7 +80,7 @@ public class GameAllInPlayer implements Comparable<GameAllInPlayer> {
 		return true;
 	}
 
-	@Override
+	
 	public String toString() {
 		return String.valueOf(getBetValue());
 	}

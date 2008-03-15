@@ -41,6 +41,16 @@ class TableView {
     attribute players:PlayerView*;
     
     operation toTableViews(tables:Table*):TableView*;
+    
+    function maxAmount(max:Integer):Integer;
+}
+    
+// inefficient but JavaFX wont compile my tail statement :(
+function TableView.maxAmount(max:Integer):Integer{
+    var biggerplayers = players[p | p.amount>max];
+    return if(sizeof biggerplayers == 0) then
+        max
+    else maxAmount(biggerplayers[0].amount);
 }
 
 operation TableView.toTableViews(tables:Table*){

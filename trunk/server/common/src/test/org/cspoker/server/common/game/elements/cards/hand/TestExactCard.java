@@ -54,7 +54,7 @@ public class TestExactCard {
 		 * 
 		 * @see java.lang.Object#hashCode()
 		 */
-		@Override
+		
 		public int hashCode() {
 			final int prime = 31;
 			int result = 1;
@@ -68,7 +68,7 @@ public class TestExactCard {
 		 * 
 		 * @see java.lang.Object#equals(java.lang.Object)
 		 */
-		@Override
+		
 		public boolean equals(final Object obj) {
 			if (this == obj) {
 				return true;

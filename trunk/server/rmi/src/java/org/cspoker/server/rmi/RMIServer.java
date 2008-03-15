@@ -84,7 +84,7 @@ public class RMIServer implements RemoteLoginServer {
 		try {
 			executor.submit(new Callable<Void>(){
 
-				@Override
+				
 				public Void call() throws RemoteException{
 					Registry registry = LocateRegistry.createRegistry(port);
 					RemoteLoginServer stub = (RemoteLoginServer) UnicastRemoteObject.exportObject(RMIServer.this, 0);
@@ -93,7 +93,7 @@ public class RMIServer implements RemoteLoginServer {
 					return null;
 				}
 				
-				@Override
+				
 				public String toString() {
 					return "RMI Server startup at port "+port;
 				}

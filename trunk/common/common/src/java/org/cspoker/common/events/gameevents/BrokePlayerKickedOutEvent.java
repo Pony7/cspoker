@@ -44,12 +44,12 @@ public class BrokePlayerKickedOutEvent extends GameEvent{
 		return player;
 	}
 	
-	@Override
+	
 	public String toString() {
 		return player.getName() + " is broke and can no longer play at this table.";
 	}
 	
-	@Override
+	
 	public void dispatch(RemoteAllEventsListener listener)
 			throws RemoteException {
 		listener.onBrokePlayerKickedOutEvent(this);

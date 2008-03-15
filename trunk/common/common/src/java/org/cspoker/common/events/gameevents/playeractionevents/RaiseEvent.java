@@ -52,7 +52,7 @@ public class RaiseEvent extends ActionChangedPotEvent {
 		// no op
 	}
 
-	@Override
+	
 	public String toString() {
 		return getPlayer().getName() + " raises with " + getAmount()
 				+ " chips.";
@@ -66,7 +66,7 @@ public class RaiseEvent extends ActionChangedPotEvent {
 		return player;
 	}
 
-	@Override
+	
 	public void dispatch(RemoteAllEventsListener listener)
 			throws RemoteException {
 		listener.onRaiseEvent(this);

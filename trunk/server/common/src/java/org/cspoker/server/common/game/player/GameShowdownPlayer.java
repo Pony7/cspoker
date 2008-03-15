@@ -83,7 +83,7 @@ public class GameShowdownPlayer implements Comparable<GameShowdownPlayer> {
 	/**
 	 * Returns a textual representation of this showdown player.
 	 */
-	@Override
+	
 	public String toString() {
 		return player.getName() + " has a " + getBestHand();
 	}
@@ -101,7 +101,7 @@ public class GameShowdownPlayer implements Comparable<GameShowdownPlayer> {
 	 * 2 showdown players are equal if both their hands have the same value.
 	 * 
 	 */
-	@Override
+	
 	public boolean equals(Object obj) {
 		if (this == obj) {
 			return true;

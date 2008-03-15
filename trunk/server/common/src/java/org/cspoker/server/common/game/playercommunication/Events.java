@@ -39,7 +39,7 @@ public class Events implements Iterable<Event> {
 		return latestEventNumber;
 	}
 
-	@Override
+	
 	public String toString() {
 		return "events until " + latestEventNumber + ". " + events.toString();
 	}

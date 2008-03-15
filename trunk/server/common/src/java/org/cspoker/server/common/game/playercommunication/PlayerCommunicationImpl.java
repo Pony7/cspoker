@@ -153,7 +153,7 @@ public class PlayerCommunicationImpl extends PlayerCommunication {
 	 * Maintenance Actions
 	 **************************************************************************/
 
-	@Override
+	
 	public void kill() {
 		eventListeners.clear();
 		state.kill();
@@ -163,43 +163,43 @@ public class PlayerCommunicationImpl extends PlayerCommunication {
 	 * Player Actions
 	 **************************************************************************/
 
-	@Override
+	
 	public void call() throws IllegalActionException {
 		stillAlive();
 		state.call();
 	}
 
-	@Override
+	
 	public void bet(int amount) throws IllegalActionException {
 		stillAlive();
 		state.bet(amount);
 	}
 
-	@Override
+	
 	public void fold() throws IllegalActionException {
 		stillAlive();
 		state.fold();
 	}
 
-	@Override
+	
 	public void check() throws IllegalActionException {
 		stillAlive();
 		state.check();
 	}
 
-	@Override
+	
 	public void raise(int amount) throws IllegalActionException {
 		stillAlive();
 		state.raise(amount);
 	}
 
-	@Override
+	
 	public void allIn() throws IllegalActionException {
 		stillAlive();
 		state.allIn();
 	}
 
-	@Override
+	
 	public void say(String message) {
 		stillAlive();
 		state.say(message);
@@ -217,7 +217,7 @@ public class PlayerCommunicationImpl extends PlayerCommunication {
 	 *             [can] This actions is not a valid action in the current
 	 *             state.
 	 */
-	@Override
+	
 	public Table joinTable(TableId tableId, SeatId seatId) throws IllegalActionException {
 		stillAlive();
 		return state.join(tableId, seatId);
@@ -231,31 +231,31 @@ public class PlayerCommunicationImpl extends PlayerCommunication {
 	 *             [can] This actions is not a valid action in the current
 	 *             state.
 	 */
-	@Override
+	
 	public Table joinTable(TableId tableId) throws IllegalActionException {
 		return joinTable(tableId, null);
 	}
 
-	@Override
+	
 	public void leaveTable() throws IllegalActionException {
 		stillAlive();
 		state.leaveTable();
 	}
 
-	@Override
+	
 	public Table createTable(String name) throws IllegalActionException {
 		stillAlive();
 		return state.createTable(name);
 	}
 	
 
-	@Override
+	
 	public Table createTable(String name, GameProperty property)
 			throws IllegalActionException {
 		return state.createTable(name, property);
 	}
 	
-	@Override
+	
 	public Table getTable(TableId id) throws IllegalActionException{
 		stillAlive();
 		try {
@@ -265,13 +265,13 @@ public class PlayerCommunicationImpl extends PlayerCommunication {
 		}
 	}
 
-	@Override
+	
 	public TableList getTables(){
 		stillAlive();
 		return new TableList(TableManager.global_table_manager.getAllTables());
 	}
 
-	@Override
+	
 	public void startGame() throws IllegalActionException {
 		stillAlive();
 		state.startGame();
@@ -285,7 +285,7 @@ public class PlayerCommunicationImpl extends PlayerCommunication {
 		this.state = new InitialState(this);
 	}
 
-	@Override
+	
 	public String toString() {
 		return "player communication of " + player.getName();
 	}
@@ -302,12 +302,12 @@ public class PlayerCommunicationImpl extends PlayerCommunication {
 	 * Publisher
 	 **************************************************************************/
 
-	@Override
+	
 	public void subscribeAllEventsListener(RemoteAllEventsListener listener) {
 		eventListeners.add(listener);
 	}
 
-	@Override
+	
 	public void unsubscribeAllEventsListener(RemoteAllEventsListener listener) {
 		eventListeners.remove(listener);
 	}
@@ -578,7 +578,7 @@ public class PlayerCommunicationImpl extends PlayerCommunication {
 			}
 		}
 
-		@Override
+		
 		public void onBrokePlayerKickedOutEvent(BrokePlayerKickedOutEvent event){
 			for (RemoteBrokePlayerKickedOutListener listener : eventListeners) {
 				try {
@@ -591,7 +591,7 @@ public class PlayerCommunicationImpl extends PlayerCommunication {
 			
 		}
 
-		@Override
+		
 		public void onTableChangedEvent(TableChangedEvent event){
 			for (RemoteTableChangedListener listener : eventListeners) {
 				try {
@@ -603,7 +603,7 @@ public class PlayerCommunicationImpl extends PlayerCommunication {
 			}
 		}
 
-		@Override
+		
 		public void onTableRemovedEvent(TableRemovedEvent event){
 			for (RemoteTableRemovedListener listener : eventListeners) {
 				try {

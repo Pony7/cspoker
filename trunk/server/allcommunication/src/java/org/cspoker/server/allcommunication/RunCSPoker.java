@@ -88,7 +88,7 @@ public class RunCSPoker {
 			
 			private XmlFileAuthenticator auth = new XmlFileAuthenticator();
 			
-			@Override
+			
 			public void startElement(String uri, String localName, String name,
 					Attributes attributes) throws SAXException {
 				if(localName.equals("server")){

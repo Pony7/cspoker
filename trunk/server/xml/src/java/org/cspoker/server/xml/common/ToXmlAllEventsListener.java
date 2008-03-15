@@ -163,32 +163,32 @@ public class ToXmlAllEventsListener implements AllEventListenerWithInvocation {
 		eventToCollector(event);
 	}
 
-	@Override
+	
 	public void onIllegalAction(IllegalActionEvent event) {
 		eventToCollector(event);
 	}
 
-	@Override
+	
 	public void onSuccessfullInvokation(SuccessfulInvocationEvent<?> event) {
 		eventToCollector(event);
 	}
 
-	@Override
+	
 	public void onBrokePlayerKickedOutEvent(BrokePlayerKickedOutEvent event){
 		eventToCollector(event);
 	}
 
-	@Override
+	
 	public void onTableChangedEvent(TableChangedEvent event){
 		eventToCollector(event);
 	}
 
-	@Override
+	
 	public void onTableRemovedEvent(TableRemovedEvent event){
 		eventToCollector(event);
 	}
 
-	@Override
+	
 	public void onPlayerJoinedTableEvent(PlayerJoinedTableEvent event){
 		eventToCollector(event);
 	}

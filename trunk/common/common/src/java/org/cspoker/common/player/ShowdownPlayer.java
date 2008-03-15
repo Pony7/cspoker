@@ -57,7 +57,7 @@ public class ShowdownPlayer implements Serializable {
 	/**
 	 * Returns a textual representation of this showdown player.
 	 */
-	@Override
+	
 	public String toString() {
 		return player.getName() + " has a " + description;
 	}

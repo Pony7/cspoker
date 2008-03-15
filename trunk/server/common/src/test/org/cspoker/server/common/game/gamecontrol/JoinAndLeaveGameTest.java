@@ -49,7 +49,7 @@ public class JoinAndLeaveGameTest extends TestCase {
 
 	private PlayerFactory playerFactory;
 
-	@Override
+	
 	protected void setUp() {
 		
 		playerFactory = new TestPlayerFactory();

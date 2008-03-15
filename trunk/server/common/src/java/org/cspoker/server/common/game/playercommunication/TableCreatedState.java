@@ -62,7 +62,7 @@ class TableCreatedState extends WaitingAtTableState {
 		super(playerCommunication, table, GameManager.createNewGame(table.getId()));
 	}
 
-	@Override
+	
 	public void startGame() throws IllegalActionException {
 
 		/**
@@ -95,7 +95,7 @@ class TableCreatedState extends WaitingAtTableState {
 		TableCreatedState.logger.info("Game Started.");
 	}
 
-	@Override
+	
 	public void leaveTable() throws IllegalActionException {
 		synchronized (table) {
 			if (table.getNbPlayers() == 1) {
@@ -109,13 +109,13 @@ class TableCreatedState extends WaitingAtTableState {
 		}
 	}
 
-	@Override
+	
 	public Table join(TableId tableId, SeatId seatId) throws IllegalActionException {
 		throw new IllegalActionException("You are already sitting at table "
 				+ table.getId() + ".");
 	}
 
-	@Override
+	
 	protected String getStdErrorMessage() {
 		return "You have not yet started the game.";
 	}

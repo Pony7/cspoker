@@ -31,7 +31,7 @@ public class RemotePlayerCommunicationFactoryForRMI implements
 
 	private final static Logger logger = Logger
 			.getLogger(RemotePlayerCommunicationFactoryForRMI.class);
-	
+
 	private final String server;
 	private final int port;
 
@@ -39,14 +39,14 @@ public class RemotePlayerCommunicationFactoryForRMI implements
 		this.server = server;
 		this.port = port;
 	}
+
 	
-	@Override
 	public RemotePlayerCommunication getRemotePlayerCommunication(
-			String username, String password)
-			throws ConnectException, LoginException {
+			String username, String password) throws ConnectException,
+			LoginException {
 		try {
-			return new RemoteLoginServerForRMI(server,port).login(
-					username, password);
+			return new RemoteLoginServerForRMI(server, port).login(username,
+					password);
 		} catch (AccessException e) {
 			logger.error(e);
 			throw new ConnectException("Connect failed", e);
@@ -60,9 +60,9 @@ public class RemotePlayerCommunicationFactoryForRMI implements
 
 	}
 
-	@Override
-	public String toString() {
-		return "rmi://"+server+":"+port;
-	}
 	
+	public String toString() {
+		return "rmi://" + server + ":" + port;
+	}
+
 }
