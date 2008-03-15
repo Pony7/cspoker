@@ -154,6 +154,7 @@ public class Game {
 		communityCards = new ArrayList<Card>();
 		pots = new GamePots();
 		changeDealer(dealer);
+		nbShowdownPlayers = 0;
 	}
 
 	/***************************************************************************
@@ -167,6 +168,7 @@ public class Game {
 	 * 
 	 */
 	public void dealNewHand() {
+		nbShowdownPlayers = 0;
 		communityCards = new ArrayList<Card>();
 		deck = new Deck();
 		pots = new GamePots();
@@ -617,5 +619,15 @@ public class Game {
 		setNextDealer(initialCurrentHandPlayers.getNextTo(dealer));
 		setFirstToActPlayer(initialCurrentHandPlayers.getNextTo(dealer));
 		setCurrentPlayer(dealer);
+	}
+
+	private int nbShowdownPlayers;
+	
+	public int getNbLastShowdown() {
+		return nbShowdownPlayers;
+	}
+	
+	public void showdownOccured(int nbShowdownPlayers){
+		this.nbShowdownPlayers = nbShowdownPlayers;
 	}
 }

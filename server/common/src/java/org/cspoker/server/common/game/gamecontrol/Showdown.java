@@ -79,6 +79,10 @@ public class Showdown {
 	public Game getGame() {
 		return game;
 	}
+	
+	public int getNbShowdownPlayers(){
+		return game.getPots().getPots().get(0).getPlayers().size();
+	}
 
 	/**
 	 * Determine the winners of each pot. Each pot is splitted between all
