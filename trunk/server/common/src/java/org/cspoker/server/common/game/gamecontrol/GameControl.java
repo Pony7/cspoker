@@ -158,7 +158,7 @@ public class GameControl {
 	 * @throws IllegalActionException
 	 *             [must] The action performed is not a valid action.
 	 */
-	public void bet(GamePlayer player, int amount)
+	public synchronized void bet(GamePlayer player, int amount)
 			throws IllegalActionException {
 		round.bet(player, amount);
 		gameMediator.publishBetEvent(new BetEvent(player.getSavedPlayer(),
@@ -178,7 +178,7 @@ public class GameControl {
 	 * @throws IllegalActionException
 	 *             [must] The action performed is not a valid action.
 	 */
-	public void call(GamePlayer player) throws IllegalActionException {
+	public synchronized void call(GamePlayer player) throws IllegalActionException {
 		round.call(player);
 		gameMediator.publishCallEvent(new CallEvent(player.getSavedPlayer(),
 				new Pots(round.getCurrentPotValue())));
@@ -197,7 +197,7 @@ public class GameControl {
 	 * @throws IllegalActionException
 	 *             [must] The action performed is not a valid action.
 	 */
-	public void check(GamePlayer player) throws IllegalActionException {
+	public synchronized void check(GamePlayer player) throws IllegalActionException {
 		round.check(player);
 		gameMediator.publishCheckEvent(new CheckEvent(player.getSavedPlayer()));
 		GameControl.logger.info(player.getName() + " checks.");
@@ -216,7 +216,7 @@ public class GameControl {
 	 * @throws IllegalActionException
 	 *             [must] The action performed is not a valid action.
 	 */
-	public void raise(GamePlayer player, int amount)
+	public synchronized void raise(GamePlayer player, int amount)
 			throws IllegalActionException {
 		round.raise(player, amount);
 		gameMediator.publishRaiseEvent(new RaiseEvent(player.getSavedPlayer(),
@@ -239,7 +239,7 @@ public class GameControl {
 	 * @throws IllegalActionException
 	 *             [must] The action performed is not a valid action.
 	 */
-	public void fold(GamePlayer player) throws IllegalActionException {
+	public synchronized void fold(GamePlayer player) throws IllegalActionException {
 		round.fold(player);
 		gameMediator.publishFoldEvent(new FoldEvent(player.getSavedPlayer()));
 		GameControl.logger.info(player.getName() + ": folds");
@@ -257,7 +257,7 @@ public class GameControl {
 	 * @throws IllegalActionException
 	 *             [must] The action performed is not a valid action.
 	 */
-	public void deal(GamePlayer player) throws IllegalActionException {
+	public synchronized void deal(GamePlayer player) throws IllegalActionException {
 		round.deal(player);
 		checkIfEndedAndChangeRound();
 	}
@@ -272,12 +272,12 @@ public class GameControl {
 	 * @throws IllegalActionException
 	 *             [must] The action performed is not a valid action.
 	 */
-	public void allIn(GamePlayer player) throws IllegalActionException {
+	public synchronized void allIn(GamePlayer player) throws IllegalActionException {
 		round.allIn(player);
 		checkIfEndedAndChangeRound();
 	}
 
-	public void joinGame(SeatId seatId, GamePlayer player) throws IllegalActionException{
+	public synchronized void joinGame(SeatId seatId, GamePlayer player) throws IllegalActionException{
 		try {
 			game.joinGame(seatId, player);
 		} catch (SeatTakenException e) {
@@ -302,7 +302,7 @@ public class GameControl {
 		}
 	}
 
-	public void leaveGame(GamePlayer player) throws IllegalActionException {
+	public synchronized void leaveGame(GamePlayer player) throws IllegalActionException {
 		if(!game.getTable().hasAsPlayer(player))
 			return;
 		

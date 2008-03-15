@@ -35,11 +35,7 @@ public class GameWinner {
 	}
 
 	public void transferGainedChipsToPlayer() {
-		try {
-			chips.transferAllChipsTo(winner.getStack());
-		} catch (IllegalValueException e) {
-			throw new IllegalStateException("Overflow Exception");
-		}
+		chips.transferAllChipsTo(winner.getStack());
 	}
 
 	public boolean hasGainedChips() {

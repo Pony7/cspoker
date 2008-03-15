@@ -33,6 +33,7 @@ import org.cspoker.common.events.gameevents.playeractionevents.SmallBlindEvent;
 import org.cspoker.common.exceptions.IllegalActionException;
 import org.cspoker.common.player.Winner;
 import org.cspoker.server.common.game.GameMediator;
+import org.cspoker.server.common.game.elements.chips.Chips;
 import org.cspoker.server.common.game.elements.chips.IllegalValueException;
 import org.cspoker.server.common.game.elements.chips.pot.GamePots;
 import org.cspoker.server.common.game.gamecontrol.Game;
@@ -58,19 +59,15 @@ public abstract class BettingRound extends Round {
 	 * This list contains all players who go all-in in this round.
 	 */
 	protected final List<GameAllInPlayer> allInPlayers;
-
-	/**
-	 * This list contains all players who folded, but who have placed chips on
-	 * their bet chips pile.
-	 */
-	protected final List<GamePlayer> foldedPlayersWithBet;
+	
+	protected final List<Chips> betsFromFoldedPlayers;
 
 	protected boolean someoneBigAllIn = false;
 
 	public BettingRound(GameMediator gameMediator, Game game) {
 		super(gameMediator, game);
 		allInPlayers = new ArrayList<GameAllInPlayer>();
-		foldedPlayersWithBet = new ArrayList<GamePlayer>();
+		betsFromFoldedPlayers = new ArrayList<Chips>();
 		setBet(0);
 	}
 
@@ -234,7 +231,9 @@ public abstract class BettingRound extends Round {
 		 * to write.
 		 */
 		if (player.getBetChips().getValue() > 0) {
-			foldedPlayersWithBet.add(player);
+			Chips chips = new Chips();
+			player.getBetChips().transferAllChipsTo(chips);
+			betsFromFoldedPlayers.add(chips);
 		}
 		game.removePlayerFromCurrentDeal(player);
 
@@ -491,16 +490,16 @@ public abstract class BettingRound extends Round {
 								.getPots().getNewestSidePot());
 					}
 				}
-				for (GamePlayer foldedPlayer : foldedPlayersWithBet) {
-					if (foldedPlayer.getBetChips().getValue() > allInPlayer
+				for (Chips c : betsFromFoldedPlayers) {
+					if (c.getValue() > allInPlayer
 							.getBetValue()) {
-						foldedPlayer.getBetChips().transferAmountTo(
+						c.transferAmountTo(
 								allInPlayer.getBetValue(),
 								game.getPots().getNewestSidePot().getChips());
 					} else {
-						foldedPlayer.getBetChips().transferAllChipsTo(
+						c.transferAllChipsTo(
 								game.getPots().getNewestSidePot().getChips());
-						foldedPlayersWithBet.remove(foldedPlayer);
+						betsFromFoldedPlayers.remove(c);
 					}
 				}
 
@@ -521,8 +520,8 @@ public abstract class BettingRound extends Round {
 	 */
 	private void collectBets() {
 		game.getPots().collectChipsToPot(game.getCurrentDealPlayers());
-		game.getPots().collectChipsToPot(foldedPlayersWithBet);
-		foldedPlayersWithBet.clear();
+		game.getPots().collectChipsToPotFromChips(betsFromFoldedPlayers);
+		betsFromFoldedPlayers.clear();
 	}
 
 	/***************************************************************************
@@ -530,24 +529,20 @@ public abstract class BettingRound extends Round {
 	 **************************************************************************/
 
 	protected void winner(GamePots pots) {
-		try {
-			BettingRound.logger.info("** Only One Player Left **");
-			setPotsDividedToWinner(true);
-			GamePlayer winner = pots.getPots().get(0).getPlayers().get(0);
-			BettingRound.logger.info("Winner: " + winner.getName() + " wins "
-					+ pots.getTotalValue() + " chips");
+		BettingRound.logger.info("** Only One Player Left **");
+		setPotsDividedToWinner(true);
+		GamePlayer winner = pots.getPots().get(0).getPlayers().get(0);
+		BettingRound.logger.info("Winner: " + winner.getName() + " wins "
+				+ pots.getTotalValue() + " chips");
 
-			int gainedChipsValue = pots.getPots().get(0).getChips().getValue();
-			Set<Winner> savedWinner = new HashSet<Winner>(1);
-			savedWinner.add(new Winner(winner.getSavedPlayer(),
-					gainedChipsValue));
-			pots.getPots().get(0).getChips().transferAllChipsTo(
-					winner.getStack());
+		int gainedChipsValue = pots.getPots().get(0).getChips().getValue();
+		Set<Winner> savedWinner = new HashSet<Winner>(1);
+		savedWinner.add(new Winner(winner.getSavedPlayer(),
+				gainedChipsValue));
+		pots.getPots().get(0).getChips().transferAllChipsTo(
+				winner.getStack());
 
-			gameMediator.publishWinner(new WinnerEvent(savedWinner));
-		} catch (IllegalValueException e) {
-			assert false;
-		}
+		gameMediator.publishWinner(new WinnerEvent(savedWinner));
 	}
 
 	/**
@@ -615,8 +610,8 @@ public abstract class BettingRound extends Round {
 			currentPlayerBets += player.getBetChips().getValue();
 		}
 		int foldedPlayerBets = 0;
-		for (GamePlayer player : foldedPlayersWithBet) {
-			foldedPlayerBets += player.getBetChips().getValue();
+		for (Chips c : betsFromFoldedPlayers) {
+			foldedPlayerBets += c.getValue();
 		}
 
 		int allInPlayerBets = 0;
