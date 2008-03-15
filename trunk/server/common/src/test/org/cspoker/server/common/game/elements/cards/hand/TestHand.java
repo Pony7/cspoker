@@ -23,7 +23,6 @@ import org.apache.log4j.Logger;
 import org.cspoker.common.elements.cards.Card;
 import org.cspoker.common.elements.cards.Rank;
 import org.cspoker.common.elements.cards.Suit;
-import org.cspoker.server.common.util.TestExactCard;
 
 /**
  * A test class for the general testing of hands

@@ -19,7 +19,6 @@ package org.cspoker.server.common.game;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -1323,6 +1322,9 @@ public class GameMediator {
 			oldFuture.cancel(false);
 	}
 	
+	private synchronized PlayerActionTimeOut getCurrentTimeOut(){
+		return currentTimeOut;
+	}
 	
 	private class PlayerActionTimeOut implements Runnable{
 				
@@ -1336,7 +1338,8 @@ public class GameMediator {
 		public void run() {
 			try {
 				GameMediator.logger.info(player.getName()+" auto-fold called.");
-				if(GameMediator.this.currentTimeOut==this){
+				
+				if(GameMediator.this.getCurrentTimeOut()==this){
 					GamePlayer gcPlayer = gameControl.getGame().getCurrentPlayer();
 					if(gcPlayer.getId().equals(player.getId())){
 						GameMediator.logger.info(player.getName()+" automatically folded.");

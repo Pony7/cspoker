@@ -29,8 +29,6 @@ import org.cspoker.server.common.game.elements.cards.deck.randomGenerator.random
 /**
  * A class to represent a deck of cards.
  * 
- * @author Kenzo & Cedric
- * 
  */
 public class Deck {
 
@@ -89,8 +87,6 @@ public class Deck {
 	 * 
 	 * @post The second card in the deck becomes the new top card
 	 * @result The top card from the deck is returned
-	 * @throws IllegalStateException
-	 *             There must be at least one card in the deck | getDeckSize()<=0
 	 */
 	public synchronized Card drawCard() {
 		return deal(1).get(0);

@@ -20,7 +20,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
@@ -370,7 +369,16 @@ public class GameControl {
 	}
 	
 	private void submitAutoDealHandler(){
-		ScheduledRequestExecutor.getInstance().schedule(new AutoDealHandler(), game.getGameProperty().getDelay(), TimeUnit.SECONDS);
+		long delay = game.getGameProperty().getDelay();
+		if(delay>0){
+			ScheduledRequestExecutor.getInstance().schedule(new AutoDealHandler(), game.getGameProperty().getDelay(), TimeUnit.SECONDS);
+		}else{
+			try {
+				deal(game.getDealer());
+			} catch (IllegalActionException e) {
+			}
+		}
+			
 	}
 	
 	private class AutoDealHandler implements Runnable{

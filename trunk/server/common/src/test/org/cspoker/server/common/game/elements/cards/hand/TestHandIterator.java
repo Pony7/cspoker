@@ -9,7 +9,6 @@ import org.apache.log4j.Logger;
 import org.cspoker.common.elements.cards.Card;
 import org.cspoker.common.elements.cards.Rank;
 import org.cspoker.common.elements.cards.Suit;
-import org.cspoker.server.common.util.TestExactCard;
 
 public class TestHandIterator extends TestCase {
 	private static Logger logger = Logger.getLogger(TestHandIterator.class);

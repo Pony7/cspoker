@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.cspoker.server.common.util;
+package org.cspoker.server.common.game.elements.cards.hand;
 
 import java.util.HashMap;
 import java.util.List;

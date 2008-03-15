@@ -28,11 +28,12 @@ public class AllHandTests {
 
 	public static Test suite() {
 		TestSuite suite = new TestSuite("Test for game.cards.hand.test");
-		// $JUnit-BEGIN$
-		suite.addTestSuite(TestHand.class);
+		//$JUnit-BEGIN$
 		suite.addTestSuite(TestHandEvaluator.class);
+		suite.addTestSuite(TestHandIterator.class);
 		suite.addTestSuite(TestHandQuality.class);
-		// $JUnit-END$
+		suite.addTestSuite(TestHand.class);
+		//$JUnit-END$
 		return suite;
 	}
 
