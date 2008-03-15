@@ -1314,9 +1314,9 @@ public class GameMediator {
 	
 	private PlayerActionTimeOut currentTimeOut;
 	
-	private ScheduledFuture<Object> currentFuture;
+	private ScheduledFuture<?> currentFuture;
 	
-	private ScheduledFuture<Object> oldFuture;
+	private ScheduledFuture<?> oldFuture;
 	
 	private synchronized void cancelOldTimeOut(){
 		if(oldFuture!=null)
@@ -1324,7 +1324,7 @@ public class GameMediator {
 	}
 	
 	
-	private class PlayerActionTimeOut implements Callable<Object>{
+	private class PlayerActionTimeOut implements Runnable{
 				
 		private Player player;
 				
@@ -1333,7 +1333,7 @@ public class GameMediator {
 		}
 
 		@Override
-		public Object call() {
+		public void run() {
 			try {
 				GameMediator.logger.info(player.getName()+" auto-fold called.");
 				if(GameMediator.this.currentTimeOut==this){
@@ -1345,7 +1345,6 @@ public class GameMediator {
 				}
 			} catch (IllegalActionException e) {
 			}
-			return null;
 		}
 	}
 }

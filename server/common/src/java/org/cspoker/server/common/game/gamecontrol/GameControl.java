@@ -20,6 +20,8 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
 import org.cspoker.common.elements.pots.Pots;
@@ -48,6 +50,7 @@ import org.cspoker.server.common.game.gamecontrol.rounds.WaitingRound;
 import org.cspoker.server.common.game.gamecontrol.rules.BettingRules;
 import org.cspoker.server.common.game.gamecontrol.rules.NoLimit;
 import org.cspoker.server.common.game.player.GamePlayer;
+import org.cspoker.server.common.util.threading.ScheduledRequestExecutor;
 
 /**
  * This class is responsible to control the flow of the game. This class changes
@@ -352,11 +355,7 @@ public class GameControl {
 		round = round.getNextRound();
 		
 		if(round instanceof WaitingRound && game.getNbSeatedPlayers()>1){
-			try {
-				deal(game.getCurrentPlayer());
-			} catch (IllegalActionException e) {
-				logger.error(e);
-			}
+			submitAutoDealHandler();
 		}
 		
 		if ((round instanceof BettingRound)
@@ -367,6 +366,27 @@ public class GameControl {
 		if ((round instanceof BettingRound)
 				&& ((BettingRound) round).onlyAllInPlayers()) {
 			changeToNextRound();
+		}
+	}
+	
+	private void submitAutoDealHandler(){
+		ScheduledRequestExecutor.getInstance().schedule(new AutoDealHandler(), game.getGameProperty().getDelay(), TimeUnit.SECONDS);
+	}
+	
+	private class AutoDealHandler implements Runnable{
+		
+				
+		public AutoDealHandler(){
+		}
+
+		@Override
+		public void run() {
+			try {
+				GameControl.logger.info(game.getDealer()+" auto-deal called.");
+				deal(game.getDealer());
+			} catch (IllegalActionException e) {
+				GameControl.logger.error(e);
+			}
 		}
 	}
 }
