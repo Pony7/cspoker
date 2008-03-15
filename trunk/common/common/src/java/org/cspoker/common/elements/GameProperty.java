@@ -70,6 +70,12 @@ public class GameProperty implements Serializable {
 	 * The maximum number of players in a game
 	 */
 	private static final int maxNbPlayers = 8;
+	
+	/**
+	 * The delay between two deals.
+	 */
+	@XmlAttribute
+	private long delay;
 
 
 	/***************************************************************************
@@ -104,6 +110,18 @@ public class GameProperty implements Serializable {
 	 * 
 	 */
 	public GameProperty(int smallBet) {
+		this(smallBet, 3);
+	}
+	
+	/**
+	 * Construct a new game property with given small bet and deal delay.
+	 * 
+	 * @param 	smallBet
+	 * 			The small bet.
+	 * @param 	delay
+	 * 			The delay between two deals, expressed in seconds.
+	 */
+	public GameProperty(int smallBet, long delay){
 		if (!canHaveAsSmallBet(smallBet)) {
 			throw new IllegalArgumentException();
 		}
@@ -111,6 +129,7 @@ public class GameProperty implements Serializable {
 		smallBlind = getSmallBet() / 2;
 		bigBlind = getSmallBet();
 		bigBet = getSmallBet() * 2;
+		this.delay = delay;
 	}
 
 	/***************************************************************************
@@ -183,6 +202,19 @@ public class GameProperty implements Serializable {
 	 */
 	public static boolean canHaveAsMaxNbPlayers(int nbPlayers){
 		return nbPlayers>=2;
+	}
+	
+	/***************************************************************************
+	 * Delay
+	 **************************************************************************/
+	
+	/**
+	 * The delay between two deals, expressed in seconds.
+	 * 
+	 * @return The delay between two deals in seconds.
+	 */
+	public long getDelay(){
+		return delay;
 	}
 	
 	/***************************************************************************
