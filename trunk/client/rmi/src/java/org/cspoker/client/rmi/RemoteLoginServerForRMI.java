@@ -28,13 +28,7 @@ import javax.security.auth.login.LoginException;
 
 import org.cspoker.common.RemoteLoginServer;
 import org.cspoker.common.RemotePlayerCommunication;
-import org.cspoker.common.elements.GameProperty;
-import org.cspoker.common.elements.table.SeatId;
-import org.cspoker.common.elements.table.Table;
-import org.cspoker.common.elements.table.TableId;
-import org.cspoker.common.elements.table.TableList;
 import org.cspoker.common.eventlisteners.RemoteAllEventsListener;
-import org.cspoker.common.exceptions.IllegalActionException;
 import org.cspoker.common.util.DefaultRemotePlayerCommunication;
 
 public class RemoteLoginServerForRMI implements RemoteLoginServer {

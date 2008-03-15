@@ -17,7 +17,6 @@ package org.cspoker.client.xml.common;
 
 import java.io.StringReader;
 import java.rmi.RemoteException;
-import java.rmi.UnmarshalException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -35,7 +34,6 @@ import org.cspoker.common.xml.XmlEventListener;
 import org.cspoker.common.xml.actions.PlayerCommunicationAction;
 import org.cspoker.common.xml.events.invocation.IllegalActionEvent;
 import org.cspoker.common.xml.events.invocation.SuccessfulInvocationEvent;
-import org.xml.sax.SAXException;
 
 public class XmlChannelUnMarshaller implements XmlEventListener {
 

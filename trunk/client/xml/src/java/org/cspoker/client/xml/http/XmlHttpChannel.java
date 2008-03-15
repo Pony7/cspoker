@@ -211,7 +211,7 @@ public class XmlHttpChannel implements XmlChannel {
     public void unRegisterXmlEventListener(XmlEventListener listener) {
         xmlEventListeners.remove(listener);
     }
-    public static String noOpXml = initNoOp();
+    public final static String noOpXml = initNoOp();
 
     private static String initNoOp() {
         try {
