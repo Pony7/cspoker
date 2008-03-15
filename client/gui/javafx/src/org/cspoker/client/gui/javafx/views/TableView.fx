@@ -54,7 +54,7 @@ operation TableView.toTableViews(tables:Table*){
         pot: 0
         dealer: -1
         //Who invented this crazy JavaFX casting syntax??
-        players: PlayerView{}.toPlayerViews(JavaFxClient.toArray(t.getPlayers()))
+        players: PlayerView{}.toPlayerViews(JavaFxClient.playersToArray(t.getPlayers()))
         cards: [CardView{
             visible: false
             dealt: false

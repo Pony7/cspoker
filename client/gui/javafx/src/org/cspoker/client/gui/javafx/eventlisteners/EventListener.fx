@@ -52,6 +52,7 @@ import org.cspoker.common.exceptions.IllegalActionException;
 import javafx.ui.*;
 import java.awt.EventQueue;
 import org.cspoker.common.elements.pots.Pots;
+import org.cspoker.common.player.Winner;
 
 class EventListener{
     attribute listener:RemoteAllEventsListener;
@@ -210,7 +211,7 @@ trigger on new EventListener{
                     System.out.println(e.toString());
                     System.out.println("00000");
                     
-                    var cards = JavaFxClient.toArray(e.getPocketCards());
+                    var cards = JavaFxClient.cardsToArray(e.getPocketCards());
                     
                     ts.me.cards[0].rank = cards[0].getRank().toString().toLowerCase();
                     ts.me.cards[0].suit = cards[0].getSuit().toString().toLowerCase();
@@ -226,7 +227,7 @@ trigger on new EventListener{
             EventQueue.invokeLater(new Runnable(){
                 operation run(){
                     System.out.println(e.toString());
-                    var cards = JavaFxClient.toArray(e.getCommonCards());
+                    var cards = JavaFxClient.cardsToArray(e.getCommonCards());
                     var mycards = ts.mytable.cards;
                     
                     if(mycards[0].visible==false){
@@ -289,19 +290,15 @@ trigger on new EventListener{
                                 c.visible = false;
                             }
                         }
+                        p.next = false;
+                        p.lastaction="";
+                        p.amount=0;
                     }
                     
                     for(c in ts.mytable.cards){
                         c.dealt = true;
                         c.visible = false;
                     }
-                    
-                    for(p in ts.mytable.players){
-                        p.next = false;
-                        p.lastaction="";
-                        p.amount=0;
-                    }
-                    
                 }
             });
         }
@@ -370,7 +367,14 @@ trigger on new EventListener{
                     ts.busy=false;
                     ts.events = ts.events.concat(e.toString()).concat("<br/>");
                     ts.busy=true;
-                    //e.getShowdownPlayer().getHandCards().
+                    var player = ts.mytable.players[e.getShowdownPlayer().getPlayer().getSeatId().getId()];
+                    var cards = JavaFxClient.cardsToArray(e.getShowdownPlayer().getHandCards());
+                    player.cards[0].rank = cards[0].getRank().toString().toLowerCase();
+                    player.cards[0].suit = cards[0].getSuit().toString().toLowerCase();
+                    player.cards[0].visible = true;
+                    player.cards[1].rank = cards[1].getRank().toString().toLowerCase();
+                    player.cards[1].suit = cards[1].getSuit().toString().toLowerCase();
+                    player.cards[1].visible = true;
                 }
             });
         }
@@ -384,9 +388,14 @@ trigger on new EventListener{
                     for(p in ts.mytable.players){
                         p.next = false;
                     }
-                    
                     ts.mytable.temppot = 0; 
-                    ts.mytable.pot = 0; 
+                    ts.mytable.pot = 0;
+                    var winners = JavaFxClient.winnersToArray(e.getWinners());
+                    for(winner in winners){
+                        var player = ts.mytable.players[winner.getPlayer().getSeatId().getId()];
+                        player.lastaction = "WINNER";
+                        player.amount = winner.getGainedAmount();
+                    }
                 }
             });
         }
