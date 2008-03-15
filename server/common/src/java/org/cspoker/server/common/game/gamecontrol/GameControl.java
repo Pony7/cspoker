@@ -370,9 +370,10 @@ public class GameControl {
 	
 	private void submitAutoDealHandler(){
 		long delay = game.getGameProperty().getDelay();
-		logger.info("auto-deal handler submitted with a delay of "+delay+" ms.");
 		if(delay>0){
-			ScheduledRequestExecutor.getInstance().schedule(new AutoDealHandler(), delay*(Math.min(game.getNbLastShowdown()+1, 5)), TimeUnit.MILLISECONDS);
+			delay = delay*(Math.min(game.getNbLastShowdown()+1, 5));
+			ScheduledRequestExecutor.getInstance().schedule(new AutoDealHandler(), delay, TimeUnit.MILLISECONDS);
+			logger.info("auto-deal handler submitted with a delay of "+delay+" ms.");
 		}else{
 			try {
 				deal(game.getDealer());
