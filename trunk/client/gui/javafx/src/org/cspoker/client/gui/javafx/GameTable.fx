@@ -55,8 +55,8 @@ class GameTable {
 }
 
 trigger on new GameTable{
-    padx = 50;
-    pady = 50;
+    padx = 47;
+    pady = 47;
     sqrw = 270;
     sqrh = 280;
     var bottom_area=200;
@@ -72,7 +72,7 @@ trigger on new GameTable{
     amount=1.toString();
     screen = Frame{
         title: bind main.state.mytable.name
-        width: 2*padx+sqrw+sqrh
+        width: 2*padx+sqrw+sqrh+6 //seems to need a constant...
         height: 2*pady+sqrh+bottom_area
         visible: true
         centerOnScreen: true
@@ -108,292 +108,292 @@ trigger on new GameTable{
             content:[SplitView{
                 weight: bind w
                 content: Canvas {
-                	doubleBuffered: true
+                    doubleBuffered: true
                     content: Group {
                         transform: []
                         content:
                             [
                             Add {
-                                shape1: Rect {
-                                    x: padx+sqrh/2
-                                    y: pady
-                                    width: sqrw
-                                    height: sqrh
+                            shape1: Rect {
+                                x: padx+sqrh/2
+                                y: pady
+                                width: sqrw
+                                height: sqrh
+                            }
+                            shape2: Add {
+                                shape1: Circle {
+                                    cx: padx+sqrh/2+sqrw
+                                    cy: pady+sqrh/2
+                                    radius: sqrh/2
                                 }
-                                shape2: Add {
-                                    shape1: Circle {
-                                        cx: padx+sqrh/2+sqrw
-                                        cy: pady+sqrh/2
-                                        radius: sqrh/2
-                                    }
-                                    shape2: Circle {
-                                        cx: padx+sqrh/2
-                                        cy: pady+sqrh/2
-                                        radius: sqrh/2
-                                    }
+                                shape2: Circle {
+                                    cx: padx+sqrh/2
+                                    cy: pady+sqrh/2
+                                    radius: sqrh/2
                                 }
-                                fill: LinearGradient {
-                                    x1: 0.1, y1: 0, x2: 0.9, y2: 1
-                                    stops:
-                                        [Stop {
-                                            offset: 0.0
-                                            color: lightgreen
-                                        },
-                                        Stop {
-                                            offset: 1.0
-                                            color: green
-                                        }]
-                                        spreadMethod: PAD
-                                }
-                                stroke: darkgreen
-                                strokeWidth: 1
-                            },
-                            Group{
-                                transform: translate(padx+sqrh/2+sqrw/2, pady+sqrh/2)
-                                content: [Text {
-                                    content: "CSPoker"
-                                    font: new Font("Tahoma", "BOLD", logofontsize)
-                                    stroke: darkorange
-                                    fill: orange
-                                    strokeWidth: 2
-                                    opacity: 0.25
-                                    halign: CENTER
+                            }
+                            fill: LinearGradient {
+                                x1: 0.1, y1: 0, x2: 0.9, y2: 1
+                                stops:
+                                    [Stop {
+                                    offset: 0.0
+                                    color: lightgreen
+                                },
+                                Stop {
+                                    offset: 1.0
+                                    color: green
                                 }]
-                            },
-                            Group{
-                                transform: [translate(padx+sqrh/2+sqrw/2, pady+sqrh/2),rotate(180, 0, 0)]
-                                content: [Text {
-                                    content: "CSPoker"
-                                    font: new Font("Tahoma", "BOLD", logofontsize)
-                                    stroke: darkorange
-                                    fill: orange
-                                    strokeWidth: 2
-                                    opacity: 0.25
-                                    halign: CENTER
-                                }]
-                            },
-                            Group{
-                                transform: [translate(padx+sqrh/2.0+sqrw/2.0, pady+sqrh/2.0),scale(0.55, 0.55)]
-                                content: [ImageView {
-                                    antialias: true
-                                    transform:  translate(-91*2-40,0)
-                                    image: Image { url: bind main.state.mytable.cards[0].getImage() }
-                                    valign: CENTER
-                                    halign: CENTER
-                                    visible: bind main.state.mytable.cards[0].dealt
-                                },ImageView {
-                                    antialias: true
-                                    transform:  translate(-91-40,0)
-                                    image: Image { url: bind main.state.mytable.cards[1].getImage() }
-                                    valign: CENTER
-                                    halign: CENTER
-                                    visible: bind main.state.mytable.cards[1].dealt
-                                },ImageView {
-                                    antialias: true
-                                    transform:  translate(0-40,0)
-                                    image: Image { url: bind main.state.mytable.cards[2].getImage() }
-                                    valign: CENTER
-                                    halign: CENTER
-                                    visible: bind main.state.mytable.cards[2].dealt
-                                },ImageView {
-                                    antialias: true
-                                    transform:  translate(91-40,0)
-                                    image: Image { url: bind main.state.mytable.cards[3].getImage() }
-                                    valign: CENTER
-                                    halign: CENTER
-                                    visible: bind main.state.mytable.cards[3].dealt
-                                },ImageView {
-                                    antialias: true
-                                    transform:  translate(91*2-40,0)
-                                    image: Image { url: bind main.state.mytable.cards[4].getImage() }
-                                    valign: CENTER
-                                    halign: CENTER
-                                    visible: bind main.state.mytable.cards[4].dealt
-                                }]
-                            },
-                            Group{
-                                transform: [translate(padx+sqrh/2.0+sqrw/2.0,pady+sqrh/2.0)]
-                                content: foreach(i in [0..7])
+                                spreadMethod: PAD
+                            }
+                            stroke: darkgreen
+                            strokeWidth: 1
+                        },
+                        Group{
+                            transform: translate(padx+sqrh/2+sqrw/2, pady+sqrh/2)
+                            content: [Text {
+                                content: "CSPoker"
+                                font: new Font("Tahoma", "BOLD", logofontsize)
+                                stroke: darkorange
+                                fill: orange
+                                strokeWidth: 2
+                                opacity: 0.25
+                                halign: CENTER
+                            }]
+                        },
+                        Group{
+                            transform: [translate(padx+sqrh/2+sqrw/2, pady+sqrh/2),rotate(180, 0, 0)]
+                            content: [Text {
+                                content: "CSPoker"
+                                font: new Font("Tahoma", "BOLD", logofontsize)
+                                stroke: darkorange
+                                fill: orange
+                                strokeWidth: 2
+                                opacity: 0.25
+                                halign: CENTER
+                            }]
+                        },
+                        Group{
+                            transform: [translate(padx+sqrh/2.0+sqrw/2.0, pady+sqrh/2.0),scale(0.55, 0.55)]
+                            content: [ImageView {
+                                antialias: true
+                                transform:  translate(-91*2-40,0)
+                                image: Image { url: bind main.state.mytable.cards[0].getImage() }
+                                valign: CENTER
+                                halign: CENTER
+                                visible: bind main.state.mytable.cards[0].dealt
+                            },ImageView {
+                                antialias: true
+                                transform:  translate(-91-40,0)
+                                image: Image { url: bind main.state.mytable.cards[1].getImage() }
+                                valign: CENTER
+                                halign: CENTER
+                                visible: bind main.state.mytable.cards[1].dealt
+                            },ImageView {
+                                antialias: true
+                                transform:  translate(0-40,0)
+                                image: Image { url: bind main.state.mytable.cards[2].getImage() }
+                                valign: CENTER
+                                halign: CENTER
+                                visible: bind main.state.mytable.cards[2].dealt
+                            },ImageView {
+                                antialias: true
+                                transform:  translate(91-40,0)
+                                image: Image { url: bind main.state.mytable.cards[3].getImage() }
+                                valign: CENTER
+                                halign: CENTER
+                                visible: bind main.state.mytable.cards[3].dealt
+                            },ImageView {
+                                antialias: true
+                                transform:  translate(91*2-40,0)
+                                image: Image { url: bind main.state.mytable.cards[4].getImage() }
+                                valign: CENTER
+                                halign: CENTER
+                                visible: bind main.state.mytable.cards[4].dealt
+                            }]
+                        },
+                        Group{
+                            transform: [translate(padx+sqrh/2.0+sqrw/2.0,pady+sqrh/2.0)]
+                            content: foreach(i in [0..7])
+                            Group {
+                                transform: bind [translate(
+                                parametrizeX(i/8.0,cardw,cardh),
+                                parametrizeY(i/8.0,cardw,cardh))]
+                                content: [
                                 Group {
-                                    transform: bind [translate(
-                                    parametrizeX(i/8.0,cardw,cardh),
-                                    parametrizeY(i/8.0,cardw,cardh))]
+                                    transform: bind translate(51*Math.cos(parametrizeRadial(i/8.0,cardw,cardh)),
+                                    -51*Math.sin(parametrizeRadial(i/8.0,cardw,cardh)))
                                     content: [
-                                    Group {
-                                        transform: bind translate(51*Math.cos(parametrizeRadial(i/8.0,cardw,cardh)),
-                                        -51*Math.sin(parametrizeRadial(i/8.0,cardw,cardh)))
-                                        content: [
-                                        Circle{
-                                            cx: 0
-                                            cy: 0
-                                            radius: circleradius
-                                            fill: bind if(main.state.myname.equals(main.state.mytable.players[i].name) == true) then orange
-                                            else orange
-                                            stroke: bind if(main.state.mytable.players[(main.state.myseatid+i)%8].next == false) then darkorange
-                                            else darkred
-                                            strokeWidth: 4
-                                            opacity: bind if(main.state.mytable.players[(main.state.myseatid+i)%8].seated == false) then 0.15
-                                            else if(main.state.myname.equals(main.state.mytable.players[(main.state.myseatid+i)%8].name) == true) then 0.95
-                                            else 0.8
-                                        },Timer{
-                                            length: circleradius-4
-                                            running: bind main.state.mytable.players[(main.state.myseatid+i)%8].next
-                                            visible: bind main.state.mytable.players[(main.state.myseatid+i)%8].next
-                                        },
-                                        Text {
-                                            x: 0
-                                            y: -12
-                                            visible: bind main.state.mytable.players[(main.state.myseatid+i)%8].seated
-                                            content: bind main.state.mytable.players[(main.state.myseatid+i)%8].name
-                                            font: new Font("Tahoma", "BOLD",10)
-                                            fill: black
-                                            halign: CENTER
-                                            valign: CENTER
-                                            opacity: 0.9
-                                        },Text {
-                                            x: 0
-                                            y: 1
-                                            visible: bind main.state.mytable.players[(main.state.myseatid+i)%8].seated
-                                            content: bind main.state.mytable.players[(main.state.myseatid+i)%8].lastaction
-                                            font: new Font("Tahoma", "PLAIN",9)
-                                            fill: black
-                                            halign: CENTER
-                                            valign: CENTER
-                                            opacity: 0.9
-                                        },Text {
-                                            x: 0
-                                            y: 12
-                                            visible: bind main.state.mytable.players[(main.state.myseatid+i)%8].seated
-                                            content: bind main.state.mytable.players[(main.state.myseatid+i)%8].stack.toString()
-                                            font: new Font("Tahoma", "ITALIC",9)
-                                            fill: black
-                                            halign: CENTER
-                                            valign: CENTER
-                                            opacity: 0.9
-                                        },
-                                        Text {
-                                            x: 0
-                                            y: 0
-                                            visible: bind main.state.mytable.players[(main.state.myseatid+i)%8].seated==false
-                                            content: "?"
-                                            font: new Font("Tahoma", "PLAIN",25)
-                                            fill: darkorange
-                                            halign: CENTER
-                                            valign: CENTER
-                                            opacity: 0.4
-                                        }]
+                                    Circle{
+                                        cx: 0
+                                        cy: 0
+                                        radius: circleradius
+                                        fill: bind if(main.state.myname.equals(main.state.mytable.players[i].name) == true) then orange
+                                        else orange
+                                        stroke: bind if(main.state.mytable.players[(main.state.myseatid+i)%8].next == false) then darkorange
+                                        else darkred
+                                        strokeWidth: 4
+                                        opacity: bind if(main.state.mytable.players[(main.state.myseatid+i)%8].seated == false) then 0.15
+                                        else if(main.state.myname.equals(main.state.mytable.players[(main.state.myseatid+i)%8].name) == true) then 0.95
+                                        else 0.8
+                                    },Timer{
+                                        length: circleradius-4
+                                        running: bind main.state.mytable.players[(main.state.myseatid+i)%8].next
+                                        visible: bind main.state.mytable.players[(main.state.myseatid+i)%8].next
                                     },
-                                    Group{
+                                    Text {
+                                        x: 0
+                                        y: -12
                                         visible: bind main.state.mytable.players[(main.state.myseatid+i)%8].seated
-                                        transform: bind [translate(29*Math.cos(parametrizeRadial(i/8.0,cardw,cardh)),
-                                        -29*Math.sin(parametrizeRadial(i/8.0,cardw,cardh))),scale(0.55, 0.55),rotate((180*(Math.PI/2.0-parametrizeRadial(i/8.0,cardw,cardh))/Math.PI)%360,0,0)]
-                                        content: [ImageView {
-                                            antialias: true
-                                            transform: translate(-45,0)
-                                            image: Image { url: bind main.state.mytable.players[(main.state.myseatid+i)%8].cards[0].getImage() }
-                                            visible: bind main.state.mytable.players[(main.state.myseatid+i)%8].cards[0].dealt
-                                            halign: CENTER
-                                        },ImageView {
-                                            antialias: true
-                                            transform: translate(45,0)
-                                            image: Image { url: bind main.state.mytable.players[(main.state.myseatid+i)%8].cards[1].getImage() }
-                                            visible: bind main.state.mytable.players[(main.state.myseatid+i)%8].cards[1].dealt
-                                            halign: CENTER
-                                        }]
+                                        content: bind main.state.mytable.players[(main.state.myseatid+i)%8].name
+                                        font: new Font("Tahoma", "BOLD",10)
+                                        fill: black
+                                        halign: CENTER
+                                        valign: CENTER
+                                        opacity: 0.9
+                                    },Text {
+                                        x: 0
+                                        y: 1
+                                        visible: bind main.state.mytable.players[(main.state.myseatid+i)%8].seated
+                                        content: bind main.state.mytable.players[(main.state.myseatid+i)%8].lastaction
+                                        font: new Font("Tahoma", "PLAIN",9)
+                                        fill: black
+                                        halign: CENTER
+                                        valign: CENTER
+                                        opacity: 0.9
+                                    },Text {
+                                        x: 0
+                                        y: 12
+                                        visible: bind main.state.mytable.players[(main.state.myseatid+i)%8].seated
+                                        content: bind main.state.mytable.players[(main.state.myseatid+i)%8].stack.toString()
+                                        font: new Font("Tahoma", "ITALIC",9)
+                                        fill: black
+                                        halign: CENTER
+                                        valign: CENTER
+                                        opacity: 0.9
                                     },
-                                    Group{
-                                        transform: bind translate(-50*Math.cos(parametrizeRadial(i/8.0,cardw,cardh)),
-                                        50*Math.sin(parametrizeRadial(i/8.0,cardw,cardh)))
-                                        visible: bind((main.state.mytable.players[(main.state.myseatid+i)%8].seated == true) and main.state.mytable.players[(main.state.myseatid+i)%8].amount>0)
-                                        content: [Circle{
-                                            cx: 0
-                                            cy: 0
-                                            radius: bind Math.max(10,Math.log(main.state.mytable.players[(main.state.myseatid+i)%8].amount)/Math.log(10)*8)
-                                            fill: black
-                                            stroke: grey
-                                            strokeWidth: 1
-                                            opacity: 0.95
-                                        },Text {
-                                            x: 0
-                                            y: 0
-                                            content: bind main.state.mytable.players[(main.state.myseatid+i)%8].amount.toString()
-                                            font: new Font("Tahoma", "PLAIN",9)
-                                            fill: white
-                                            halign: CENTER
-                                            valign: CENTER
-                                            opacity: 0.95
-                                        }
-                                        ]
-                                    },
-                                    Group{
-                                        //translate without rotating
-                                        transform: bind translate(
-                                        -50*Math.cos(parametrizeRadial(i/8.0,cardw,cardh))
-                                        +(-45)*Math.sin(parametrizeRadial(i/8.0,cardw,cardh))
-                                        ,
-                                        -50*(-1)*Math.sin(parametrizeRadial(i/8.0,cardw,cardh))
-                                        +(-45)*Math.cos(parametrizeRadial(i/8.0,cardw,cardh))
-                                        )
-                                        visible: bind (main.state.myseatid+i)%8 == main.state.mytable.dealer
-                                        content: [Circle{
-                                            cx: 0
-                                            cy: 0
-                                            radius: 10
-                                            fill: white
-                                            stroke: grey
-                                            strokeWidth: 2
-                                            opacity: 0.95
-                                        },Text {
-                                            x: 0
-                                            y: 0
-                                            content: "D"
-                                            font: new Font("Tahoma", "BOLD",13)
-                                            fill: black
-                                            halign: CENTER
-                                            valign: CENTER
-                                            opacity: 0.95
-                                        }
-                                        ]
+                                    Text {
+                                        x: 0
+                                        y: 0
+                                        visible: bind main.state.mytable.players[(main.state.myseatid+i)%8].seated==false
+                                        content: "?"
+                                        font: new Font("Tahoma", "PLAIN",25)
+                                        fill: darkorange
+                                        halign: CENTER
+                                        valign: CENTER
+                                        opacity: 0.4
+                                    }]
+                                },
+                                Group{
+                                    visible: bind main.state.mytable.players[(main.state.myseatid+i)%8].seated
+                                    transform: bind [translate(29*Math.cos(parametrizeRadial(i/8.0,cardw,cardh)),
+                                    -29*Math.sin(parametrizeRadial(i/8.0,cardw,cardh))),scale(0.55, 0.55),rotate((180*(Math.PI/2.0-parametrizeRadial(i/8.0,cardw,cardh))/Math.PI)%360,0,0)]
+                                    content: [ImageView {
+                                        antialias: true
+                                        transform: translate(-45,0)
+                                        image: Image { url: bind main.state.mytable.players[(main.state.myseatid+i)%8].cards[0].getImage() }
+                                        visible: bind main.state.mytable.players[(main.state.myseatid+i)%8].cards[0].dealt
+                                        halign: CENTER
+                                    },ImageView {
+                                        antialias: true
+                                        transform: translate(45,0)
+                                        image: Image { url: bind main.state.mytable.players[(main.state.myseatid+i)%8].cards[1].getImage() }
+                                        visible: bind main.state.mytable.players[(main.state.myseatid+i)%8].cards[1].dealt
+                                        halign: CENTER
+                                    }]
+                                },
+                                Group{
+                                    transform: bind translate(-50*Math.cos(parametrizeRadial(i/8.0,cardw,cardh)),
+                                    50*Math.sin(parametrizeRadial(i/8.0,cardw,cardh)))
+                                    visible: bind((main.state.mytable.players[(main.state.myseatid+i)%8].seated == true) and main.state.mytable.players[(main.state.myseatid+i)%8].amount>0)
+                                    content: [Circle{
+                                        cx: 0
+                                        cy: 0
+                                        radius: bind Math.max(10,Math.log(main.state.mytable.players[(main.state.myseatid+i)%8].amount)/Math.log(10)*8)
+                                        fill: black
+                                        stroke: grey
+                                        strokeWidth: 1
+                                        opacity: 0.95
+                                    },Text {
+                                        x: 0
+                                        y: 0
+                                        content: bind main.state.mytable.players[(main.state.myseatid+i)%8].amount.toString()
+                                        font: new Font("Tahoma", "PLAIN",9)
+                                        fill: white
+                                        halign: CENTER
+                                        valign: CENTER
+                                        opacity: 0.95
+                                    }
+                                    ]
+                                },
+                                Group{
+                                    //translate without rotating
+                                    transform: bind translate(
+                                    -50*Math.cos(parametrizeRadial(i/8.0,cardw,cardh))
+                                    +(-45)*Math.sin(parametrizeRadial(i/8.0,cardw,cardh))
+                                    ,
+                                    -50*(-1)*Math.sin(parametrizeRadial(i/8.0,cardw,cardh))
+                                    +(-45)*Math.cos(parametrizeRadial(i/8.0,cardw,cardh))
+                                    )
+                                    visible: bind(main.state.myseatid+i)%8 == main.state.mytable.dealer
+                                    content: [Circle{
+                                        cx: 0
+                                        cy: 0
+                                        radius: 10
+                                        fill: white
+                                        stroke: grey
+                                        strokeWidth: 2
+                                        opacity: 0.95
+                                    },Text {
+                                        x: 0
+                                        y: 0
+                                        content: "D"
+                                        font: new Font("Tahoma", "BOLD",13)
+                                        fill: black
+                                        halign: CENTER
+                                        valign: CENTER
+                                        opacity: 0.95
                                     }
                                     ]
                                 }
-                            },
-                            Group{
-                                transform: translate(padx+sqrh/2.0+sqrw/2.0+91*2-40, pady+sqrh/2.0)
-                                visible: bind main.state.mytable.pot>0
-                                content: [Rect {
-                                    x: 0
-                                    y: 0
-                                    height: 5+22
-                                    width: bind  Math.min(91,10+Math.max(15,Math.log(main.state.mytable.pot)/Math.log(10)*10))
-                                    arcHeight: 4
-                                    arcWidth: 4
-                                    fill: green
-                                    stroke: darkgreen
-                                    strokeWidth: 3
-                                    opacity: 0.8
-                                    valign: CENTER
-                                    halign: CENTER
-                                },Text {
-                                    x: 0
-                                    y: 0
-                                    content: bind main.state.mytable.pot.toString()
-                                    font: new Font("Tahoma", "BOLD",13)
-                                    fill: black
-                                    halign: CENTER
-                                    valign: CENTER
-                                    opacity: 0.95
-                                }
                                 ]
                             }
+                        },
+                        Group{
+                            transform: translate(padx+sqrh/2.0+sqrw/2.0+91*2-40, pady+sqrh/2.0)
+                            visible: bind main.state.mytable.pot>0
+                            content: [Rect {
+                                x: 0
+                                y: 0
+                                height: 5+22
+                                width: bind  Math.min(91,10+Math.max(15,Math.log(main.state.mytable.pot)/Math.log(10)*10))
+                                arcHeight: 4
+                                arcWidth: 4
+                                fill: green
+                                stroke: darkgreen
+                                strokeWidth: 3
+                                opacity: 0.8
+                                valign: CENTER
+                                halign: CENTER
+                            },Text {
+                                x: 0
+                                y: 0
+                                content: bind main.state.mytable.pot.toString()
+                                font: new Font("Tahoma", "BOLD",13)
+                                fill: black
+                                halign: CENTER
+                                valign: CENTER
+                                opacity: 0.95
+                            }
                             ]
+                        }
+                        ]
                     }
                     background: black
                 }},
                 SplitView{
-                	weight:1-w
+                    weight:1-w
                     content:BorderPanel{
-                    	var weight_buttons=0.5
+                        var weight_buttons=0.5
                         center:SplitPane{
                             orientation: HORIZONTAL
                             content:[
@@ -460,7 +460,7 @@ trigger on new GameTable{
                                             action: operation() {
                                                 call();
                                             }
-                                            enabled: bind main.state.me.next and (sizeof main.state.mytable.players[p | p.amount>main.state.me.amount])>0 and main.state.mytable.temppot - main.state.mytable.pot < main.state.me.stack
+                                            enabled: bind main.state.me.next and(sizeof main.state.mytable.players[p | p.amount>main.state.me.amount])>0 and main.state.mytable.temppot - main.state.mytable.pot < main.state.me.stack
                                         },
                                         Button{
                                             row: secondRow
@@ -499,7 +499,7 @@ trigger on new GameTable{
                             SplitView{
                                 weight: bind 1-weight_buttons
                                 content: Box {
-                                	var p= 2
+                                    var p= 2
                                     orientation: HORIZONTAL
                                     content: EditorPane{
                                         //inUpdate: bind main.state.busy
