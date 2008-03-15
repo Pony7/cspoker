@@ -19,6 +19,7 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 
 public class AllGameControlTests {
+	
 
 	public static Test suite() {
 		TestSuite suite = new TestSuite(

@@ -106,8 +106,6 @@ public class TestHand extends TestCase {
 
 		assertTrue(testExactCard.getExactCard(Rank.ACE, Suit.CLUBS).compareTo(
 				testExactCard.getExactCard(Rank.KING, Suit.DIAMONDS)) == 1);
-		System.out.println(testExactCard.getExactCard(Rank.DEUCE, Suit.HEARTS)
-				.compareTo(testExactCard.getExactCard(Rank.KING, Suit.SPADES)));
 		assertTrue(testExactCard.getExactCard(Rank.DEUCE, Suit.HEARTS)
 				.compareTo(testExactCard.getExactCard(Rank.KING, Suit.SPADES)) == -1);
 		assertTrue(testExactCard.getExactCard(Rank.DEUCE, Suit.DIAMONDS)

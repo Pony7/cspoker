@@ -149,6 +149,7 @@ public class Showdown {
 				pot.getChips().transferAmountTo(nbChips_per_winner,
 						winnersMap.get(player.getId()).getGainedChipsPile());
 			} catch (IllegalValueException e) {
+				Showdown.logger.error(e);
 				assert false;
 			}
 		}
