@@ -89,6 +89,13 @@ public class TableManager {
 		hashMap.put(tableId, table);
 		return table;
 	}
+	
+	public GameTable createTable(PlayerId id, String name, GameProperty gameProperty) {
+		TableId tableId = new TableId(counter.getAndIncrement());
+		GameTable table = new GameTable(tableId, name, gameProperty);
+		hashMap.put(tableId, table);
+		return table;
+	}
 
 	public Set<TableId> getAllTableIds() {
 		return Collections.unmodifiableSet(hashMap.keySet());

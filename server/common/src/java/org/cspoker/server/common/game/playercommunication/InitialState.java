@@ -115,7 +115,7 @@ class InitialState extends PlayerCommunicationState {
 	@Override
 	public Table createTable(String name, GameProperty property) throws IllegalActionException {
 		GameTable table = TableManager.global_table_manager.createTable(playerCommunication.getPlayer()
-				.getId(), name);
+				.getId(), name, property);
 		if(name==null)
 			throw new IllegalArgumentException("The given name should be effective.");
 		try {
