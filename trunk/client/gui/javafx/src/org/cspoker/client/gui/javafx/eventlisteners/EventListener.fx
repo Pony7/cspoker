@@ -310,8 +310,6 @@ trigger on new EventListener{
                     ts.busy=true;
                     for(p in ts.mytable.players){
                         p.next = false;
-                        //this is optional...
-                        //p.lastaction="";
                         p.amount=0;
                     }
                     ts.mytable.players[e.getInitialPlayer().getSeatId().getId()].next = true;
@@ -386,7 +384,6 @@ trigger on new EventListener{
                     ts.busy=true;
                     for(p in ts.mytable.players){
                         p.next = false;
-                        p.lastaction="";
                         p.amount=0;
                     }
                     ts.mytable.temppot = 0; 

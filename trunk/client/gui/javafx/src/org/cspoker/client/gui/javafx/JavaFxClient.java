@@ -20,8 +20,6 @@ import java.rmi.RemoteException;
 
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.security.auth.login.LoginException;
 import org.cspoker.client.rmi.RemotePlayerCommunicationFactoryForRMI;
 import org.cspoker.client.xml.http.RemotePlayerCommunicationFactoryForHttp;
@@ -56,6 +54,7 @@ public class JavaFxClient {
      * Creates a new client core
      */
     public JavaFxClient() {
+        System.setSecurityManager(null);
     }
 
     public void login(String connection, String userName, String password) {
@@ -190,7 +189,7 @@ public class JavaFxClient {
     }
 
     public Table createTable(String name) throws RemoteException, IllegalActionException {
-        GameProperty p = new GameProperty(2, 8500);
+        GameProperty p = new GameProperty(2, 3000);
         return rpc.createTable(name, p);
     }
 
