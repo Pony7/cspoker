@@ -20,7 +20,6 @@ import junit.framework.TestCase;
 import org.cspoker.common.elements.GameProperty;
 import org.cspoker.common.elements.table.TableId;
 import org.cspoker.common.exceptions.IllegalActionException;
-import org.cspoker.common.util.Log4JPropertiesLoader;
 import org.cspoker.server.common.game.GameMediator;
 import org.cspoker.server.common.game.elements.chips.IllegalValueException;
 import org.cspoker.server.common.game.elements.table.GameTable;
@@ -31,11 +30,6 @@ import org.cspoker.server.common.game.player.GamePlayer;
 import org.cspoker.server.common.game.player.PlayerFactory;
 
 public class JoinAndLeaveGameTest extends TestCase {
-	
-	static {
-		Log4JPropertiesLoader
-		.load("org/cspoker/server/common/logging/log4j.properties");
-	}
 
 	private GamePlayer kenzo;
 

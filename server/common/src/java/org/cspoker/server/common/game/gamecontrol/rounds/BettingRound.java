@@ -271,7 +271,11 @@ public abstract class BettingRound extends Round {
 						+ player.getSavedPlayer().getBetChipsValue()
 						+ " and is all-in");
 	}
-
+	
+	/**
+	 * Someone has gone all-in, while raising.
+	 * @return
+	 */
 	protected boolean someoneBigAllIn() {
 		return someoneBigAllIn;
 	}

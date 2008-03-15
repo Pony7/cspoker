@@ -68,11 +68,9 @@ public class RandomOrgSeededRandomGenerator implements RandomSource {
 
 			random = new SecureRandom(seed);
 		} catch (final MalformedURLException e) {
-			logger.error(e.getMessage(), e);
 			logger.info("Default secure random is used.");
 			random = new SecureRandom();
 		} catch (final IOException e) {
-			logger.error(e.getMessage(), e);
 			logger.info("Default secure random is used.");
 			random = new SecureRandom();
 		}
