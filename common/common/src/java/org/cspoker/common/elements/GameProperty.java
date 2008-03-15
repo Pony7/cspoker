@@ -110,7 +110,7 @@ public class GameProperty implements Serializable {
 	 * 
 	 */
 	public GameProperty(int smallBet) {
-		this(smallBet, 3);
+		this(smallBet, 0);
 	}
 	
 	/**
