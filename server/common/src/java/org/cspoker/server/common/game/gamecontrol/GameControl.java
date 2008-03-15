@@ -371,7 +371,7 @@ public class GameControl {
 	private void submitAutoDealHandler(){
 		long delay = game.getGameProperty().getDelay();
 		if(delay>0){
-			ScheduledRequestExecutor.getInstance().schedule(new AutoDealHandler(), game.getGameProperty().getDelay(), TimeUnit.SECONDS);
+			ScheduledRequestExecutor.getInstance().schedule(new AutoDealHandler(), game.getGameProperty().getDelay(), TimeUnit.MILLISECONDS);
 		}else{
 			try {
 				deal(game.getDealer());
