@@ -116,7 +116,7 @@ public class PreFlopRound extends BettingRound {
 			throw new IllegalActionException(player.getName()
 					+ " can not check in this round.");
 		}
-		if (bigBlindPlayer.equals(player) && someoneHasBet()) {
+		if (bigBlindPlayer.equals(player) && someoneHasRaised()) {
 			throw new IllegalActionException(player.getName()
 					+ " can not check in this round. Someone has already bet.");
 		} else {
