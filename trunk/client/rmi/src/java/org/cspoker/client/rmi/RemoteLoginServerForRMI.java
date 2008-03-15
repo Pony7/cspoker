@@ -57,7 +57,6 @@ public class RemoteLoginServerForRMI implements RemoteLoginServer {
 
 			private Map<RemoteAllEventsListener, RemoteAllEventsListener> listeners = new ConcurrentHashMap<RemoteAllEventsListener, RemoteAllEventsListener>();
 
-			
 			public void subscribeAllEventsListener(
 					RemoteAllEventsListener listener) throws RemoteException {
 				RemoteAllEventsListener wrapped = new RemoteifyingListener(
@@ -73,7 +72,6 @@ public class RemoteLoginServerForRMI implements RemoteLoginServer {
 				p.subscribeAllEventsListener(listenerStub);
 			}
 
-			
 			public void unsubscribeAllEventsListener(
 					RemoteAllEventsListener listener) throws RemoteException {
 				RemoteAllEventsListener old = listeners.remove(listener);

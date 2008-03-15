@@ -22,5 +22,6 @@ import org.cspoker.common.events.serverevents.TableChangedEvent;
 
 public interface RemoteTableChangedListener extends Remote {
 
-	public void onTableChangedEvent(TableChangedEvent event) throws RemoteException;
+	public void onTableChangedEvent(TableChangedEvent event)
+			throws RemoteException;
 }

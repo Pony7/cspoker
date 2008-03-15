@@ -49,7 +49,6 @@ public class CallEvent extends ActionChangedPotEvent {
 		// no op
 	}
 
-	
 	public String toString() {
 		return getPlayer().getName() + " calls.";
 	}
@@ -58,7 +57,6 @@ public class CallEvent extends ActionChangedPotEvent {
 		return player;
 	}
 
-	
 	public void dispatch(RemoteAllEventsListener listener)
 			throws RemoteException {
 		listener.onCallEvent(this);

@@ -170,18 +170,15 @@ public class TestRMI {
 
 			}
 
-			
 			public void onBrokePlayerKickedOutEvent(
 					BrokePlayerKickedOutEvent event) {
 				System.out.println(event.toString());
 			}
 
-			
 			public void onTableChangedEvent(TableChangedEvent event) {
 				System.out.println(event.toString());
 			}
 
-			
 			public void onTableRemovedEvent(TableRemovedEvent event) {
 				System.out.println(event.toString());
 			}

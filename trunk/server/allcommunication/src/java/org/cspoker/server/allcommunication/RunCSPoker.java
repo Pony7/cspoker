@@ -37,7 +37,7 @@ public class RunCSPoker {
 
 	static {
 		Log4JPropertiesLoader
-		.load("org/cspoker/server/allcommunication/logging/log4j.properties");
+				.load("org/cspoker/server/allcommunication/logging/log4j.properties");
 	}
 
 	private static Logger logger = Logger.getLogger(RunCSPoker.class);
@@ -50,7 +50,7 @@ public class RunCSPoker {
 	 * Hack to prevent GC of Remote Object
 	 */
 	private static RMIServer rmiserver;
-	
+
 	public RunCSPoker() {
 		this("org/cspoker/server/allcommunication/servers.xml");
 	}
@@ -85,39 +85,42 @@ public class RunCSPoker {
 
 	private DefaultHandler getHandler() {
 		return new DefaultHandler() {
-			
+
 			private XmlFileAuthenticator auth = new XmlFileAuthenticator();
-			
-			
+
 			public void startElement(String uri, String localName, String name,
 					Attributes attributes) throws SAXException {
-				if(localName.equals("server")){
+				if (localName.equals("server")) {
 					int port = Integer.parseInt(attributes.getValue("port"));
 					String type = attributes.getValue("type");
-					if(type.equals("rmi")){
+					if (type.equals("rmi")) {
 						try {
-							//need to do this in two steps to prevent GC!!
-							rmiserver = new RMIServer(port,auth);
+							// need to do this in two steps to prevent GC!!
+							rmiserver = new RMIServer(port, auth);
 							rmiserver.start();
 						} catch (AccessException e) {
-							logger.warn("Failed to start RMI server at port "+port,e);
+							logger.warn("Failed to start RMI server at port "
+									+ port, e);
 						} catch (RemoteException e) {
-							logger.warn("Failed to start RMI server at port "+port,e);
+							logger.warn("Failed to start RMI server at port "
+									+ port, e);
 						}
-					}else if(type.equals("http")){
+					} else if (type.equals("http")) {
 						try {
-							(new HttpServer(port,auth)).start();
+							(new HttpServer(port, auth)).start();
 						} catch (RemoteException e) {
-							logger.warn("Failed to start RMI server at port "+port,e);
+							logger.warn("Failed to start RMI server at port "
+									+ port, e);
 						}
-					}else if(type.equals("socket")){
+					} else if (type.equals("socket")) {
 						try {
-							(new SocketServer(port,auth)).start();
+							(new SocketServer(port, auth)).start();
 						} catch (RemoteException e) {
-							logger.warn("Failed to start RMI server at port "+port,e);
+							logger.warn("Failed to start RMI server at port "
+									+ port, e);
 						}
-					}else{
-						throw new SAXException("Unknown provider type: "+type);
+					} else {
+						throw new SAXException("Unknown provider type: " + type);
 					}
 				}
 			}

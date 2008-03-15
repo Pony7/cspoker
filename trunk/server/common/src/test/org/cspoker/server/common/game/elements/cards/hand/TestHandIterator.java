@@ -17,7 +17,6 @@ public class TestHandIterator extends TestCase {
 
 	protected Hand hand1;
 
-	
 	protected void setUp() throws Exception {
 		hand1 = new Hand();
 

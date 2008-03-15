@@ -31,7 +31,6 @@ import org.cspoker.common.events.Event;
  */
 public abstract class GameEvent extends Event {
 
-	
 	public abstract void dispatch(RemoteAllEventsListener listener)
 			throws RemoteException;
 

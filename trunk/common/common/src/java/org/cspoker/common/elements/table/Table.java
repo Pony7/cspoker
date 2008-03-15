@@ -33,42 +33,44 @@ import org.cspoker.common.player.Player;
  * An immutable class to represent a snapshot of the state of a table.
  * 
  * @author kenzo
- *
+ * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-public class Table implements Serializable  {
-	
+public class Table implements Serializable {
+
 	private static final long serialVersionUID = 1647960710321459407L;
 
 	@XmlAttribute
 	private TableId id;
-	
+
 	@XmlAttribute
 	private String name;
-	
+
 	@XmlElementWrapper
 	@XmlElement(name = "player")
 	private List<Player> players;
-	
-	
+
 	private boolean playing;
-	
+
 	private GameProperty property;
-	
-	public Table(TableId id, String name, List<Player> players, boolean playing, GameProperty property){
+
+	public Table(TableId id, String name, List<Player> players,
+			boolean playing, GameProperty property) {
 		this.id = id;
 		this.name = name;
-		if(players==null)
-			throw new IllegalArgumentException("The given list of players must be effective.");
+		if (players == null) {
+			throw new IllegalArgumentException(
+					"The given list of players must be effective.");
+		}
 		this.players = Collections.unmodifiableList(players);
 		this.playing = playing;
 		this.property = property;
 	}
-	
-	protected Table(){
+
+	protected Table() {
 		// no op
 	}
-	
+
 	/**
 	 * The id of this table.
 	 * 
@@ -76,10 +78,10 @@ public class Table implements Serializable  {
 	 * 
 	 * @return The id of this table.
 	 */
-	public TableId getId(){
+	public TableId getId() {
 		return id;
 	}
-	
+
 	/**
 	 * Returns the name of this table.
 	 * 
@@ -87,47 +89,46 @@ public class Table implements Serializable  {
 	 * 
 	 * @return The name of this table.
 	 */
-	public String getName(){
+	public String getName() {
 		return name;
 	}
-	
+
 	/**
 	 * Returns the list of players at this table.
 	 * 
 	 * @return The list of players at this table.
 	 */
-	public List<Player> getPlayers(){
+	public List<Player> getPlayers() {
 		return players;
 	}
-	
+
 	/**
 	 * The number of players seated at this table.
 	 * 
 	 * @return The number of players seated at this table.
 	 */
-	public int getNbPlayers(){
+	public int getNbPlayers() {
 		return players.size();
 	}
-	
+
 	/**
 	 * The playing status of this table.
 	 * 
 	 * @return True if the players are playing, false otherwise.
 	 */
-	public boolean isPlaying(){
+	public boolean isPlaying() {
 		return playing;
 	}
-	
+
 	/**
 	 * Returns the game property of this table.
 	 * 
 	 * @return The game property of this table.
 	 */
-	public GameProperty getGameProperty(){
+	public GameProperty getGameProperty() {
 		return property;
 	}
 
-	
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
@@ -135,22 +136,25 @@ public class Table implements Serializable  {
 		return result;
 	}
 
-	
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (!(obj instanceof Table))
+		}
+		if (!(obj instanceof Table)) {
 			return false;
+		}
 		final Table other = (Table) obj;
 		if (id == null) {
-			if (other.id != null)
+			if (other.id != null) {
 				return false;
-		} else if (!id.equals(other.id))
+			}
+		} else if (!id.equals(other.id)) {
 			return false;
+		}
 		return true;
 	}
-	
-	
+
 }

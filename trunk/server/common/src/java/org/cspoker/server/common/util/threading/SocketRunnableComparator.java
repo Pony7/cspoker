@@ -19,7 +19,8 @@ package org.cspoker.server.common.util.threading;
 import java.io.Serializable;
 import java.util.Comparator;
 
-public class SocketRunnableComparator implements Comparator<Runnable>, Serializable {
+public class SocketRunnableComparator implements Comparator<Runnable>,
+		Serializable {
 
 	private static final long serialVersionUID = -7519917180114220646L;
 

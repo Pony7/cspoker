@@ -38,7 +38,6 @@ public class CSPokerHandler extends AbstractHttpHandlerImpl {
 
 	private final XmlPlayerCommunicationFactory f = XmlPlayerCommunicationFactory.global_factory;
 
-	
 	protected byte[] getResponse(HttpExchange http) throws HttpExceptionImpl {
 
 		String username = AbstractHttpHandlerImpl.toPlayerName(http
@@ -58,7 +57,8 @@ public class CSPokerHandler extends AbstractHttpHandlerImpl {
 				throw new HttpExceptionImpl(e, 400);
 			}
 			String result = playerComm.getAndFlushCache();
-			logger.trace("Returning response of length " + result.length()+ ":\n" + result);
+			logger.trace("Returning response of length " + result.length()
+					+ ":\n" + result);
 			return result.getBytes();
 
 		} catch (PlayerKilledExcepion e) {

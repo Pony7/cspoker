@@ -28,9 +28,9 @@ import org.cspoker.server.common.game.gamecontrol.Game;
 import org.cspoker.server.common.game.player.GamePlayer;
 
 public class WaitingRound extends Round {
-	
+
 	private static Logger logger = Logger.getLogger(WaitingRound.class);
-	
+
 	public WaitingRound(GameMediator gameMediator, Game game) {
 		super(gameMediator, game);
 		game.changeCurrentPlayerToDealer();
@@ -47,7 +47,7 @@ public class WaitingRound extends Round {
 	 * @throws IllegalActionException
 	 *             [must] The action performed is not a valid action.
 	 */
-	
+
 	public void deal(GamePlayer player) throws IllegalActionException {
 		// Check whether the given player can do this action.
 		if (!onTurn(player)) {
@@ -64,7 +64,6 @@ public class WaitingRound extends Round {
 		// and change to the preflop round.
 	}
 
-	
 	public void endRound() {
 		game.dealNewHand();
 		List<Player> players = new ArrayList<Player>(game
@@ -76,22 +75,18 @@ public class WaitingRound extends Round {
 				.getDealer().getSavedPlayer()));
 	}
 
-	
 	public Round getNextRound() {
 		return new PreFlopRound(gameMediator, getGame());
 	}
 
-	
 	public boolean isLowBettingRound() {
 		return false;
 	}
 
-	
 	public boolean isHighBettingRound() {
 		return false;
 	}
 
-	
 	public String toString() {
 		return "waiting round";
 	}

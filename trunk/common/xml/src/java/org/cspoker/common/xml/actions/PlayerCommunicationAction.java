@@ -51,7 +51,6 @@ public abstract class PlayerCommunicationAction<T> implements Serializable {
 		return id;
 	}
 
-	
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
@@ -59,7 +58,6 @@ public abstract class PlayerCommunicationAction<T> implements Serializable {
 		return result;
 	}
 
-	
 	public boolean equals(Object obj) {
 		if (this == obj) {
 			return true;

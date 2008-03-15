@@ -56,7 +56,6 @@ public class NewDealEvent extends GameEvent {
 		return dealer;
 	}
 
-	
 	public String toString() {
 		String toReturn = "A new deal with ";
 		for (Player player : players) {
@@ -70,7 +69,6 @@ public class NewDealEvent extends GameEvent {
 				+ " is dealer.";
 	}
 
-	
 	public void dispatch(RemoteAllEventsListener listener)
 			throws RemoteException {
 		listener.onNewDealEvent(this);

@@ -24,8 +24,8 @@ import org.cspoker.common.RemotePlayerCommunication;
 public interface RemotePlayerCommunicationFactory {
 
 	public RemotePlayerCommunication getRemotePlayerCommunication(
-			String username, String password)
-			throws ConnectException, NoProviderException, LoginException;
+			String username, String password) throws ConnectException,
+			NoProviderException, LoginException;
 
 	public class NoProviderException extends Exception {
 

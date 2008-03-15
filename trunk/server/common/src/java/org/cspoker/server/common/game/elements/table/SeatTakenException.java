@@ -27,20 +27,21 @@ public class SeatTakenException extends Exception {
 	private static final long serialVersionUID = -6106738788749975623L;
 
 	private final TableId tableId;
-	
+
 	private final SeatId seatId;
-	
-	public SeatTakenException(TableId tableId, SeatId seatId){
-		super("The seat nr "+seatId.toString()+" on table "+tableId.toString()+" is already taken.");
+
+	public SeatTakenException(TableId tableId, SeatId seatId) {
+		super("The seat nr " + seatId.toString() + " on table "
+				+ tableId.toString() + " is already taken.");
 		this.tableId = tableId;
 		this.seatId = seatId;
 	}
-	
-	public TableId getTableId(){
+
+	public TableId getTableId() {
 		return tableId;
 	}
-	
-	public SeatId getSeatId(){
+
+	public SeatId getSeatId() {
 		return seatId;
 	}
 }

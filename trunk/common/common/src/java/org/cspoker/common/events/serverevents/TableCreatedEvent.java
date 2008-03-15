@@ -45,9 +45,9 @@ public class TableCreatedEvent extends ServerEvent {
 		// no op
 	}
 
-	
 	public String toString() {
-		return player.getName() + " has created a new table: "+table.getName()+" [" + table.getId() + "].";
+		return player.getName() + " has created a new table: "
+				+ table.getName() + " [" + table.getId() + "].";
 	}
 
 	public Player getPlayer() {
@@ -58,7 +58,6 @@ public class TableCreatedEvent extends ServerEvent {
 		return table;
 	}
 
-	
 	public void dispatch(RemoteAllEventsListener listener)
 			throws RemoteException {
 		listener.onTableCreatedEvent(this);

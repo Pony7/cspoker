@@ -63,13 +63,13 @@ public class TestSockets {
 			LoginException {
 		int port = 8081;
 		String server = "localhost";
-		RemotePlayerCommunicationFactoryForSocket temp = new RemotePlayerCommunicationFactoryForSocket(server,port);
+		RemotePlayerCommunicationFactoryForSocket temp = new RemotePlayerCommunicationFactoryForSocket(
+				server, port);
 		XmlChannelRemotePlayerCommunication kenzo = null;
 		XmlChannelRemotePlayerCommunication guy = null;
 		XmlChannelRemotePlayerCommunication cedric = null;
 		try {
-			guy = temp
-					.getRemotePlayerCommunication("guy", "test");
+			guy = temp.getRemotePlayerCommunication("guy", "test");
 			System.out.println("Guy Logged In and will print events to sout");
 
 			guy.subscribeAllEventsListener(new RemoteAllEventsListener() {
@@ -140,7 +140,8 @@ public class TestSockets {
 
 				}
 
-				public void onPlayerJoinedTableEvent(PlayerJoinedTableEvent event) {
+				public void onPlayerJoinedTableEvent(
+						PlayerJoinedTableEvent event) {
 					System.out.println(event.toString());
 
 				}
@@ -165,7 +166,6 @@ public class TestSockets {
 
 				}
 
-
 				public void onTableCreatedEvent(TableCreatedEvent event) {
 					System.out.println(event.toString());
 
@@ -176,33 +176,26 @@ public class TestSockets {
 
 				}
 
-				
 				public void onBrokePlayerKickedOutEvent(
 						BrokePlayerKickedOutEvent event) throws RemoteException {
-					System.out.println(event.toString());					
+					System.out.println(event.toString());
 				}
 
-				
-				public void onTableChangedEvent(TableChangedEvent event)
-				{
-					System.out.println(event.toString());					
+				public void onTableChangedEvent(TableChangedEvent event) {
+					System.out.println(event.toString());
 				}
 
-				
-				public void onTableRemovedEvent(TableRemovedEvent event)
-				{
-					System.out.println(event.toString());					
+				public void onTableRemovedEvent(TableRemovedEvent event) {
+					System.out.println(event.toString());
 				}
 
 			});
 
-			kenzo = temp.getRemotePlayerCommunication("kenzo",
-					"test");
-			cedric = temp.getRemotePlayerCommunication("cedric",
-					"test");
+			kenzo = temp.getRemotePlayerCommunication("kenzo", "test");
+			cedric = temp.getRemotePlayerCommunication("cedric", "test");
 
 			GameProperty prop = new GameProperty();
-			TableId id = guy.createTable("guy's table",prop).getId();
+			TableId id = guy.createTable("guy's table", prop).getId();
 
 			kenzo.joinTable(id);
 			cedric.joinTable(id);

@@ -30,7 +30,7 @@ public class RemotePlayerCommunicationFactoryForSocket implements
 
 	private final static Logger logger = Logger
 			.getLogger(RemotePlayerCommunicationFactoryForSocket.class);
-	
+
 	private final String server;
 	private final int port;
 
@@ -38,11 +38,10 @@ public class RemotePlayerCommunicationFactoryForSocket implements
 		this.server = server;
 		this.port = port;
 	}
-	
-	
+
 	public XmlChannelRemotePlayerCommunication getRemotePlayerCommunication(
-			String username, String password)
-			throws ConnectException, LoginException {
+			String username, String password) throws ConnectException,
+			LoginException {
 		try {
 			XmlSocketsChannel c = new XmlSocketsChannel(server, port, username,
 					password);
@@ -56,11 +55,9 @@ public class RemotePlayerCommunicationFactoryForSocket implements
 			throw new IllegalStateException(e);
 		}
 	}
-	
 
-	
 	public String toString() {
-		return "socket://"+server+":"+port;
+		return "socket://" + server + ":" + port;
 	}
 
 }

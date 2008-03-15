@@ -31,12 +31,11 @@ public class XmlFileBasicAuthentication extends BasicAuthenticator {
 		this.file = file;
 	}
 
-	
 	public boolean checkCredentials(String user, String pass) {
 		boolean ok = false;
 		if (file.hasPassword(user, pass)) {
-			XmlFileBasicAuthentication.logger.trace("Authentication for " + user
-					+ " succeeded.");
+			XmlFileBasicAuthentication.logger.trace("Authentication for "
+					+ user + " succeeded.");
 			ok = true;
 		} else {
 			XmlFileBasicAuthentication.logger.info("Authentication for " + user

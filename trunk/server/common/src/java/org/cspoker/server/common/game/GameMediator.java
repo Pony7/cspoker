@@ -86,15 +86,14 @@ import org.cspoker.server.common.util.threading.ScheduledRequestExecutor;
  * 
  */
 public class GameMediator {
-	
-	private static Logger logger = Logger
-	.getLogger(GameMediator.class);
+
+	private static Logger logger = Logger.getLogger(GameMediator.class);
 
 	/**
 	 * This variable contains the game control to mediate to.
 	 */
 	private GameControl gameControl;
-	
+
 	private final TableId id;
 
 	/**
@@ -103,8 +102,8 @@ public class GameMediator {
 	public GameMediator(TableId id) {
 		this.id = id;
 	}
-	
-	public TableId getId(){
+
+	public TableId getId() {
 		return id;
 	}
 
@@ -213,8 +212,9 @@ public class GameMediator {
 		cancelOldTimeOut();
 	}
 
-	public void joinGame(SeatId seatId, GamePlayer player) throws IllegalActionException {
-			gameControl.joinGame(seatId, player);
+	public void joinGame(SeatId seatId, GamePlayer player)
+			throws IllegalActionException {
+		gameControl.joinGame(seatId, player);
 	}
 
 	public void leaveGame(GamePlayer player) throws IllegalActionException {
@@ -561,8 +561,9 @@ public class GameMediator {
 	 * 
 	 */
 	public synchronized void publishNewRoundEvent(NewRoundEvent event) {
-		if(event.getPlayer()!=null)
+		if (event.getPlayer() != null) {
 			submitTimeOutHandler(event.getPlayer());
+		}
 		for (NewRoundListener listener : newRoundListeners) {
 			listener.onNewRoundEvent(event);
 		}
@@ -812,7 +813,8 @@ public class GameMediator {
 	 * onPlayerJoinedGameEvent() method.
 	 * 
 	 */
-	public synchronized void publishPlayerJoinedTable(PlayerJoinedTableEvent event) {
+	public synchronized void publishPlayerJoinedTable(
+			PlayerJoinedTableEvent event) {
 		for (PlayerJoinedTableListener listener : playerJoinedGameListeners) {
 			listener.onPlayerJoinedTableEvent(event);
 		}
@@ -933,15 +935,17 @@ public class GameMediator {
 	 * message.
 	 */
 	private final List<GameMessageListener> gameMessageListeners = new CopyOnWriteArrayList<GameMessageListener>();
-	
+
 	/**
-	 * Inform all subscribed broke player kicked out listeners a broke player kicked out event has occurred.
+	 * Inform all subscribed broke player kicked out listeners a broke player
+	 * kicked out event has occurred.
 	 * 
-	 * Each subscribed broke player kicked out listener is updated by calling their
-	 * onBrokePlayerKickedOut() method.
+	 * Each subscribed broke player kicked out listener is updated by calling
+	 * their onBrokePlayerKickedOut() method.
 	 * 
 	 */
-	public synchronized void publishBrokePlayerKickedOutEvent(BrokePlayerKickedOutEvent event) {
+	public synchronized void publishBrokePlayerKickedOutEvent(
+			BrokePlayerKickedOutEvent event) {
 		for (BrokePlayerKickedOutListener listener : brokePlayerKickedOutListeners) {
 			listener.onBrokePlayerKickedOutEvent(event);
 		}
@@ -949,28 +953,32 @@ public class GameMediator {
 	}
 
 	/**
-	 * Subscribe the given broke player kicked out listener for broke player kicked out events.
+	 * Subscribe the given broke player kicked out listener for broke player
+	 * kicked out events.
 	 * 
-	 * @param 	listener
-	 *      	The listener to subscribe.
+	 * @param listener
+	 *            The listener to subscribe.
 	 */
-	public void subscribeBrokePlayerKickedOutListener(BrokePlayerKickedOutListener listener) {
+	public void subscribeBrokePlayerKickedOutListener(
+			BrokePlayerKickedOutListener listener) {
 		brokePlayerKickedOutListeners.add(listener);
 	}
 
 	/**
-	 * Unsubscribe the given broke player kicked out listener for broke player kicked out events.
+	 * Unsubscribe the given broke player kicked out listener for broke player
+	 * kicked out events.
 	 * 
-	 * @param 	listener
-	 *  		The listener to unsubscribe.
+	 * @param listener
+	 *            The listener to unsubscribe.
 	 */
-	public void unsubscribeBrokePlayerKickedOutListener(BrokePlayerKickedOutListener listener) {
+	public void unsubscribeBrokePlayerKickedOutListener(
+			BrokePlayerKickedOutListener listener) {
 		brokePlayerKickedOutListeners.remove(listener);
 	}
 
 	/**
-	 * This list contains all broke player kicked out listeners that should be alerted on a
-	 * broke player kicked out.
+	 * This list contains all broke player kicked out listeners that should be
+	 * alerted on a broke player kicked out.
 	 */
 	private final List<BrokePlayerKickedOutListener> brokePlayerKickedOutListeners = new CopyOnWriteArrayList<BrokePlayerKickedOutListener>();
 
@@ -1301,48 +1309,53 @@ public class GameMediator {
 		unsubscribeWinnerListener(listener);
 		unsubscribeBrokePlayerKickedOutListener(listener);
 	}
-	
-	private synchronized void submitTimeOutHandler(Player player){
+
+	private synchronized void submitTimeOutHandler(Player player) {
 		currentTimeOut = new PlayerActionTimeOut(player);
 		oldFuture = currentFuture;
 		cancelOldTimeOut();
-		currentFuture = ScheduledRequestExecutor.getInstance().schedule(currentTimeOut, 30, TimeUnit.SECONDS);
-		GameMediator.logger.info(player.getName()+" action time out submitted.");
+		currentFuture = ScheduledRequestExecutor.getInstance().schedule(
+				currentTimeOut, 30, TimeUnit.SECONDS);
+		GameMediator.logger.info(player.getName()
+				+ " action time out submitted.");
 	}
-	
+
 	private PlayerActionTimeOut currentTimeOut;
-	
+
 	private ScheduledFuture<?> currentFuture;
-	
+
 	private ScheduledFuture<?> oldFuture;
-	
-	private synchronized void cancelOldTimeOut(){
-		if(oldFuture!=null)
+
+	private synchronized void cancelOldTimeOut() {
+		if (oldFuture != null) {
 			oldFuture.cancel(false);
+		}
 	}
-	
-	private synchronized PlayerActionTimeOut getCurrentTimeOut(){
+
+	private synchronized PlayerActionTimeOut getCurrentTimeOut() {
 		return currentTimeOut;
 	}
-	
-	private class PlayerActionTimeOut implements Runnable{
-				
+
+	private class PlayerActionTimeOut implements Runnable {
+
 		private Player player;
-				
-		public PlayerActionTimeOut(Player player){
+
+		public PlayerActionTimeOut(Player player) {
 			this.player = player;
 		}
 
-		
 		public void run() {
 			try {
-				GameMediator.logger.info(player.getName()+" auto-fold called.");
-				
-				if(GameMediator.this.getCurrentTimeOut()==this){
-					GamePlayer gcPlayer = gameControl.getGame().getCurrentPlayer();
-					if(gcPlayer.getId().equals(player.getId())){
-						GameMediator.logger.info(player.getName()+" automatically folded.");
-						GameMediator.this.gameControl.fold(gcPlayer);
+				GameMediator.logger.info(player.getName()
+						+ " auto-fold called.");
+
+				if (getCurrentTimeOut() == this) {
+					GamePlayer gcPlayer = gameControl.getGame()
+							.getCurrentPlayer();
+					if (gcPlayer.getId().equals(player.getId())) {
+						GameMediator.logger.info(player.getName()
+								+ " automatically folded.");
+						gameControl.fold(gcPlayer);
 					}
 				}
 			} catch (IllegalActionException e) {

@@ -55,7 +55,6 @@ public class GameTable {
 	 * A map containing the mapping between a seat id and a player.
 	 */
 	private final ConcurrentHashMap<SeatId, GamePlayer> players;
-	
 
 	/**
 	 * The variable containing the game property of this table.
@@ -66,7 +65,7 @@ public class GameTable {
 	 * The variable containing the playing status of this table.
 	 */
 	private boolean playing;
-	
+
 	/***************************************************************************
 	 * Constructor
 	 **************************************************************************/
@@ -85,11 +84,12 @@ public class GameTable {
 	}
 
 	public GameTable(TableId id, String name, GameProperty gameProperty) {
-		this.tableId = id;
+		tableId = id;
 		setGameProperty(gameProperty);
 		setPlaying(false);
 		setName(name);
-		players = new ConcurrentHashMap<SeatId, GamePlayer>(gameProperty.getMaxNbPlayers());
+		players = new ConcurrentHashMap<SeatId, GamePlayer>(gameProperty
+				.getMaxNbPlayers());
 	}
 
 	/**
@@ -255,12 +255,11 @@ public class GameTable {
 					+ " is not a player of this table.");
 		}
 		SeatId seatId = player.getSeatId();
-		if(seatId!=null){
+		if (seatId != null) {
 			players.remove(seatId);
 			player.setSeatId(null);
 		}
 	}
-	
 
 	/**
 	 * Adds the given player to this table.
@@ -284,7 +283,7 @@ public class GameTable {
 		if (player == null) {
 			throw new IllegalArgumentException("player should be effective.");
 		}
-		
+
 		if (hasAsPlayer(player)) {
 			throw new IllegalArgumentException(player
 					+ " is already seated at this table.");
@@ -292,37 +291,45 @@ public class GameTable {
 		if (player.getStack().getValue() == 0) {
 			throw new IllegalArgumentException(player + " has no chips to bet.");
 		}
-		
+
 		SeatId seatId = new SeatId(0);
-		
-		while(isValidSeatId(seatId) && players.putIfAbsent(seatId, player)!=null){
+
+		while (isValidSeatId(seatId)
+				&& players.putIfAbsent(seatId, player) != null) {
 			seatId = seatId.getNextSeatId();
 		}
-		if(!isValidSeatId(seatId))
+		if (!isValidSeatId(seatId)) {
 			throw new PlayerListFullException();
+		}
 		player.setSeatId(seatId);
 		return seatId;
 	}
-	
+
 	/**
 	 * 
 	 * @param seatId
 	 * @param player
 	 * @throws SeatTakenException
 	 */
-	public synchronized void addPlayer(SeatId seatId, GamePlayer player) throws SeatTakenException{
-		if(!isValidSeatId(seatId))
-			throw new IllegalArgumentException("The given seat id should be valid.");
-		if(player==null)
-			throw new IllegalArgumentException("The given player should be valid.");
-		if(players.putIfAbsent(seatId, player)!=null){
+	public synchronized void addPlayer(SeatId seatId, GamePlayer player)
+			throws SeatTakenException {
+		if (!isValidSeatId(seatId)) {
+			throw new IllegalArgumentException(
+					"The given seat id should be valid.");
+		}
+		if (player == null) {
+			throw new IllegalArgumentException(
+					"The given player should be valid.");
+		}
+		if (players.putIfAbsent(seatId, player) != null) {
 			throw new SeatTakenException(tableId, seatId);
 		}
 		player.setSeatId(seatId);
 	}
-	
-	public boolean isValidSeatId(SeatId seatId){
-		return seatId!=null && seatId.getId()<gameProperty.getMaxNbPlayers();
+
+	public boolean isValidSeatId(SeatId seatId) {
+		return seatId != null
+				&& seatId.getId() < gameProperty.getMaxNbPlayers();
 	}
 
 	/**
@@ -352,11 +359,12 @@ public class GameTable {
 	 */
 	public List<GamePlayer> getPlayers() {
 		List<GamePlayer> playerList = new ArrayList<GamePlayer>();
-		
-		for(int i=0;i<gameProperty.getMaxNbPlayers();i++){
+
+		for (int i = 0; i < gameProperty.getMaxNbPlayers(); i++) {
 			GamePlayer player = players.get(new SeatId(i));
-			if(player!=null)
+			if (player != null) {
 				playerList.add(player);
+			}
 		}
 		return Collections.unmodifiableList(playerList);
 	}
@@ -391,10 +399,10 @@ public class GameTable {
 	public synchronized int getNbPlayers() {
 		return players.size();
 	}
-	
-	public synchronized Table getSavedTable(){
+
+	public synchronized Table getSavedTable() {
 		List<Player> playerList = new ArrayList<Player>(getNbPlayers());
-		for(GamePlayer player:players.values()){
+		for (GamePlayer player : players.values()) {
 			playerList.add(player.getSavedPlayer());
 		}
 		return new Table(tableId, name, playerList, playing, gameProperty);

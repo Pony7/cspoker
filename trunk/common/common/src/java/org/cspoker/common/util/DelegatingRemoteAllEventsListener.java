@@ -44,18 +44,19 @@ import org.cspoker.common.events.serverevents.TableChangedEvent;
 import org.cspoker.common.events.serverevents.TableCreatedEvent;
 import org.cspoker.common.events.serverevents.TableRemovedEvent;
 
-public class DelegatingRemoteAllEventsListener implements RemoteAllEventsListener {
+public class DelegatingRemoteAllEventsListener implements
+		RemoteAllEventsListener {
 
 	private final static Logger logger = Logger
 			.getLogger(DelegatingRemoteAllEventsListener.class);
 
 	private final Set<RemoteAllEventsListener> listeners;
 
-	public DelegatingRemoteAllEventsListener(Set<RemoteAllEventsListener> listeners) {
+	public DelegatingRemoteAllEventsListener(
+			Set<RemoteAllEventsListener> listeners) {
 		this.listeners = listeners;
 	}
 
-	
 	public void onAllInEvent(AllInEvent event) {
 		for (RemoteAllEventsListener listener : listeners) {
 			try {
@@ -71,7 +72,6 @@ public class DelegatingRemoteAllEventsListener implements RemoteAllEventsListene
 		listeners.remove(listener);
 	}
 
-	
 	public void onBetEvent(BetEvent event) {
 		for (RemoteAllEventsListener listener : listeners) {
 			try {
@@ -82,7 +82,6 @@ public class DelegatingRemoteAllEventsListener implements RemoteAllEventsListene
 		}
 	}
 
-	
 	public void onBigBlindEvent(BigBlindEvent event) {
 		for (RemoteAllEventsListener listener : listeners) {
 			try {
@@ -93,7 +92,6 @@ public class DelegatingRemoteAllEventsListener implements RemoteAllEventsListene
 		}
 	}
 
-	
 	public void onCallEvent(CallEvent event) {
 		for (RemoteAllEventsListener listener : listeners) {
 			try {
@@ -104,7 +102,6 @@ public class DelegatingRemoteAllEventsListener implements RemoteAllEventsListene
 		}
 	}
 
-	
 	public void onCheckEvent(CheckEvent event) {
 		for (RemoteAllEventsListener listener : listeners) {
 			try {
@@ -115,7 +112,6 @@ public class DelegatingRemoteAllEventsListener implements RemoteAllEventsListene
 		}
 	}
 
-	
 	public void onFoldEvent(FoldEvent event) {
 		for (RemoteAllEventsListener listener : listeners) {
 			try {
@@ -126,7 +122,6 @@ public class DelegatingRemoteAllEventsListener implements RemoteAllEventsListene
 		}
 	}
 
-	
 	public void onRaiseEvent(RaiseEvent event) {
 		for (RemoteAllEventsListener listener : listeners) {
 			try {
@@ -137,7 +132,6 @@ public class DelegatingRemoteAllEventsListener implements RemoteAllEventsListene
 		}
 	}
 
-	
 	public void onSmallBlindEvent(SmallBlindEvent event) {
 		for (RemoteAllEventsListener listener : listeners) {
 			try {
@@ -148,7 +142,6 @@ public class DelegatingRemoteAllEventsListener implements RemoteAllEventsListene
 		}
 	}
 
-	
 	public void onNewPocketCardsEvent(NewPocketCardsEvent event) {
 		for (RemoteAllEventsListener listener : listeners) {
 			try {
@@ -159,7 +152,6 @@ public class DelegatingRemoteAllEventsListener implements RemoteAllEventsListene
 		}
 	}
 
-	
 	public void onNewCommunityCardsEvent(NewCommunityCardsEvent event) {
 		for (RemoteAllEventsListener listener : listeners) {
 			try {
@@ -170,7 +162,6 @@ public class DelegatingRemoteAllEventsListener implements RemoteAllEventsListene
 		}
 	}
 
-	
 	public void onNewDealEvent(NewDealEvent event) {
 		for (RemoteAllEventsListener listener : listeners) {
 			try {
@@ -181,7 +172,6 @@ public class DelegatingRemoteAllEventsListener implements RemoteAllEventsListene
 		}
 	}
 
-	
 	public void onNewRoundEvent(NewRoundEvent event) {
 		for (RemoteAllEventsListener listener : listeners) {
 			try {
@@ -192,7 +182,6 @@ public class DelegatingRemoteAllEventsListener implements RemoteAllEventsListene
 		}
 	}
 
-	
 	public void onNextPlayerEvent(NextPlayerEvent event) {
 		for (RemoteAllEventsListener listener : listeners) {
 			try {
@@ -203,7 +192,6 @@ public class DelegatingRemoteAllEventsListener implements RemoteAllEventsListene
 		}
 	}
 
-	
 	public void onPlayerJoinedTableEvent(PlayerJoinedTableEvent event) {
 		for (RemoteAllEventsListener listener : listeners) {
 			try {
@@ -214,7 +202,6 @@ public class DelegatingRemoteAllEventsListener implements RemoteAllEventsListene
 		}
 	}
 
-	
 	public void onPlayerLeftTableEvent(PlayerLeftTableEvent event) {
 		for (RemoteAllEventsListener listener : listeners) {
 			try {
@@ -225,7 +212,6 @@ public class DelegatingRemoteAllEventsListener implements RemoteAllEventsListene
 		}
 	}
 
-	
 	public void onShowHandEvent(ShowHandEvent event) {
 		for (RemoteAllEventsListener listener : listeners) {
 			try {
@@ -236,7 +222,6 @@ public class DelegatingRemoteAllEventsListener implements RemoteAllEventsListene
 		}
 	}
 
-	
 	public void onWinnerEvent(WinnerEvent event) {
 		for (RemoteAllEventsListener listener : listeners) {
 			try {
@@ -247,7 +232,6 @@ public class DelegatingRemoteAllEventsListener implements RemoteAllEventsListene
 		}
 	}
 
-	
 	public void onGameMessageEvent(GameMessageEvent event) {
 		for (RemoteAllEventsListener listener : listeners) {
 			try {
@@ -258,7 +242,6 @@ public class DelegatingRemoteAllEventsListener implements RemoteAllEventsListene
 		}
 	}
 
-	
 	public void onTableCreatedEvent(TableCreatedEvent event) {
 		for (RemoteAllEventsListener listener : listeners) {
 			try {
@@ -269,7 +252,6 @@ public class DelegatingRemoteAllEventsListener implements RemoteAllEventsListene
 		}
 	}
 
-	
 	public void onServerMessageEvent(ServerMessageEvent event) {
 		for (RemoteAllEventsListener listener : listeners) {
 			try {
@@ -280,8 +262,7 @@ public class DelegatingRemoteAllEventsListener implements RemoteAllEventsListene
 		}
 	}
 
-	
-	public void onBrokePlayerKickedOutEvent(BrokePlayerKickedOutEvent event){
+	public void onBrokePlayerKickedOutEvent(BrokePlayerKickedOutEvent event) {
 		for (RemoteAllEventsListener listener : listeners) {
 			try {
 				listener.onBrokePlayerKickedOutEvent(event);
@@ -289,11 +270,10 @@ public class DelegatingRemoteAllEventsListener implements RemoteAllEventsListene
 				handle(listener, e);
 			}
 		}
-		
+
 	}
 
-	
-	public void onTableChangedEvent(TableChangedEvent event){
+	public void onTableChangedEvent(TableChangedEvent event) {
 		for (RemoteAllEventsListener listener : listeners) {
 			try {
 				listener.onTableChangedEvent(event);
@@ -301,11 +281,10 @@ public class DelegatingRemoteAllEventsListener implements RemoteAllEventsListene
 				handle(listener, e);
 			}
 		}
-		
+
 	}
 
-	
-	public void onTableRemovedEvent(TableRemovedEvent event){
+	public void onTableRemovedEvent(TableRemovedEvent event) {
 		for (RemoteAllEventsListener listener : listeners) {
 			try {
 				listener.onTableRemovedEvent(event);

@@ -22,8 +22,8 @@ package org.cspoker.server.common.game.elements.table;
 public class PlayerListFullException extends Exception {
 
 	private static final long serialVersionUID = 916632130086756048L;
-	
-	public PlayerListFullException(){
+
+	public PlayerListFullException() {
 		super("The table is full.");
 	}
 }

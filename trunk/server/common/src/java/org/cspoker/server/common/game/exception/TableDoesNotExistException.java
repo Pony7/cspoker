@@ -18,19 +18,18 @@ package org.cspoker.server.common.game.exception;
 import org.cspoker.common.elements.table.TableId;
 
 public class TableDoesNotExistException extends Exception {
-	
+
 	private static final long serialVersionUID = -1970659252469932812L;
-	
+
 	private final TableId tableId;
-	
-	public TableDoesNotExistException(TableId tableId){
-		super("The table with id ["+tableId.toString()+"] des not exist.");
+
+	public TableDoesNotExistException(TableId tableId) {
+		super("The table with id [" + tableId.toString() + "] des not exist.");
 		this.tableId = tableId;
 	}
-	
-	public TableId getTableId(){
+
+	public TableId getTableId() {
 		return tableId;
 	}
-	
 
 }

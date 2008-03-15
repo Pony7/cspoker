@@ -29,19 +29,18 @@ public class AllTests {
 
 	static {
 		Log4JPropertiesLoader
-		.load("org/cspoker/server/common/logging/log4j.properties");
+				.load("org/cspoker/server/common/logging/log4j.properties");
 	}
-	
+
 	public static Test suite() {
-		TestSuite suite = new TestSuite(
-				"Test for org.cspoker.server.common");
-		//$JUnit-BEGIN$
+		TestSuite suite = new TestSuite("Test for org.cspoker.server.common");
+		// $JUnit-BEGIN$
 		suite.addTest(AllHandTests.suite());
 		suite.addTestSuite(TableTest.class);
 		suite.addTest(AllGameControlTests.suite());
 		suite.addTest(AllPlayerCommunicationTests.suite());
 		suite.addTestSuite(LoopingListTest.class);
-		//$JUnit-END$
+		// $JUnit-END$
 		return suite;
 	}
 

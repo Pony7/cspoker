@@ -79,8 +79,8 @@ public class Showdown {
 	public Game getGame() {
 		return game;
 	}
-	
-	public int getNbShowdownPlayers(){
+
+	public int getNbShowdownPlayers() {
 		return game.getPots().getPots().get(0).getPlayers().size();
 	}
 

@@ -27,29 +27,27 @@ public class AsynchonousPlayerCommunication extends
 		DefaultRemotePlayerCommunication {
 
 	private String name;
-	private Map<RemoteAllEventsListener,AsynchronousListener> listeners = new ConcurrentHashMap<RemoteAllEventsListener, AsynchronousListener>();
-	
+	private Map<RemoteAllEventsListener, AsynchronousListener> listeners = new ConcurrentHashMap<RemoteAllEventsListener, AsynchronousListener>();
 
-	public AsynchonousPlayerCommunication(RemotePlayerCommunication pc, String name) {
+	public AsynchonousPlayerCommunication(RemotePlayerCommunication pc,
+			String name) {
 		super(pc);
 		this.name = name;
 	}
-	
-	
+
 	public void subscribeAllEventsListener(RemoteAllEventsListener listener)
 			throws RemoteException {
-		AsynchronousListener wrapped = new AsynchronousListener(listener,name);
+		AsynchronousListener wrapped = new AsynchronousListener(listener, name);
 		listeners.put(listener, wrapped);
 		super.subscribeAllEventsListener(wrapped);
 	}
-	
-	
+
 	public void unsubscribeAllEventsListener(RemoteAllEventsListener listener)
 			throws RemoteException {
 		AsynchronousListener old = listeners.remove(listener);
-		if(old!=null)
+		if (old != null) {
 			super.unsubscribeAllEventsListener(old);
+		}
 	}
-	
 
 }

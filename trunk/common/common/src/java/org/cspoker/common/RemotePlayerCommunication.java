@@ -102,8 +102,9 @@ public interface RemotePlayerCommunication extends Remote {
 	 *             [must] This actions is not a valid action in the current
 	 *             state.
 	 */
-	Table joinTable(TableId tableId, SeatId seatId) throws IllegalActionException, RemoteException;
-	
+	Table joinTable(TableId tableId, SeatId seatId)
+			throws IllegalActionException, RemoteException;
+
 	/**
 	 * Join the table with given table id.
 	 * 
@@ -112,7 +113,8 @@ public interface RemotePlayerCommunication extends Remote {
 	 *             [must] This actions is not a valid action in the current
 	 *             state.
 	 */
-	Table joinTable(TableId tableId) throws IllegalActionException, RemoteException;
+	Table joinTable(TableId tableId) throws IllegalActionException,
+			RemoteException;
 
 	/**
 	 * Leave the table the player is sitting at.
@@ -121,7 +123,7 @@ public interface RemotePlayerCommunication extends Remote {
 	 *             [must] | The player is not seated at a table.
 	 */
 	void leaveTable() throws IllegalActionException, RemoteException;
-	
+
 	/**
 	 * This player creates a table with given name and game property.
 	 * 
@@ -129,17 +131,18 @@ public interface RemotePlayerCommunication extends Remote {
 	 *             [must] This actions is not a valid action in the current
 	 *             state.
 	 */
-	Table createTable(String name, GameProperty property) throws IllegalActionException, RemoteException;
-	
+	Table createTable(String name, GameProperty property)
+			throws IllegalActionException, RemoteException;
+
 	/**
 	 * Returns the table with the given table id.
 	 * 
-	 * @param 	id
-	 * 			The id of the table to return.
-	 * @return	The table with the given table id if it exists.
+	 * @param id
+	 *            The id of the table to return.
+	 * @return The table with the given table id if it exists.
 	 */
 	Table getTable(TableId id) throws IllegalActionException, RemoteException;
-	
+
 	/**
 	 * Returns a list of tables that are currently hosted.
 	 * 

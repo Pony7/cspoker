@@ -45,8 +45,8 @@ public class NewRoundEvent extends GameEvent {
 		this.roundName = roundName;
 		this.player = player;
 	}
-	
-	public NewRoundEvent(String roundName){
+
+	public NewRoundEvent(String roundName) {
 		this.roundName = roundName;
 	}
 
@@ -58,10 +58,10 @@ public class NewRoundEvent extends GameEvent {
 		return player;
 	}
 
-	
 	public String toString() {
-		if(player==null)
-			return roundName+":";
+		if (player == null) {
+			return roundName + ":";
+		}
 		return roundName + ": " + player.getName() + " can begin to act.";
 	}
 
@@ -73,7 +73,6 @@ public class NewRoundEvent extends GameEvent {
 		return player;
 	}
 
-	
 	public void dispatch(RemoteAllEventsListener listener)
 			throws RemoteException {
 		listener.onNewRoundEvent(this);

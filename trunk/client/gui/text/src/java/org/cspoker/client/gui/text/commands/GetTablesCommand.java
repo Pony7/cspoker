@@ -26,9 +26,13 @@ public class GetTablesCommand extends AbstractCommand {
 	}
 
 	public void execute(String... args) throws Exception {
-		String s="Tables:"+n;
-		for(Table t:rpc.getTables().getTables()){
-			s+= " - ["+t.getId().getId()+"]"+t.getName()+" ("+t.getNbPlayers()+"/"+t.getGameProperty().getMaxNbPlayers()+" players) ("+t.getGameProperty().getSmallBlind()+"/"+t.getGameProperty().getBigBlind()+" blinds)"+n;
+		String s = "Tables:" + n;
+		for (Table t : rpc.getTables().getTables()) {
+			s += " - [" + t.getId().getId() + "]" + t.getName() + " ("
+					+ t.getNbPlayers() + "/"
+					+ t.getGameProperty().getMaxNbPlayers() + " players) ("
+					+ t.getGameProperty().getSmallBlind() + "/"
+					+ t.getGameProperty().getBigBlind() + " blinds)" + n;
 		}
 		console.print(s);
 	}

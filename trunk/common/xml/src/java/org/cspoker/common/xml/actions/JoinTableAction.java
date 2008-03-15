@@ -47,14 +47,14 @@ public class JoinTableAction extends PlayerCommunicationAction<Table> {
 		// no op
 	}
 
-	
 	public void perform(PlayerCommunication pc,
 			AllInvocationEventsListener listener) {
 		try {
-			if(seatId==null)
+			if (seatId == null) {
 				dispatchResult(pc.joinTable(tableId), listener);
-			else
-				dispatchResult(pc.joinTable(tableId,seatId), listener);
+			} else {
+				dispatchResult(pc.joinTable(tableId, seatId), listener);
+			}
 		} catch (IllegalActionException e) {
 			listener.onIllegalAction(new IllegalActionEvent(e, this));
 		}

@@ -23,9 +23,9 @@ public class AllPlayerCommunicationTests {
 	public static Test suite() {
 		TestSuite suite = new TestSuite(
 				"Test for org.cspoker.server.common.game.playercommunication");
-		//$JUnit-BEGIN$
+		// $JUnit-BEGIN$
 		suite.addTestSuite(PlayerCommunicationTest.class);
-		//$JUnit-END$
+		// $JUnit-END$
 		return suite;
 	}
 

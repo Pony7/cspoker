@@ -22,13 +22,12 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 
-
 /**
  * 
  * This class should contain all parameters of a game, such as maximum number of
  * players, maximum bet/raise, the amount for small/big blinds,...
  * 
- *  
+ * 
  * @invar This game property must have valid parameters | hasValidParameters()
  */
 
@@ -70,13 +69,12 @@ public class GameProperty implements Serializable {
 	 * The maximum number of players in a game
 	 */
 	private static final int maxNbPlayers = 8;
-	
+
 	/**
 	 * The delay between two deals.
 	 */
 	@XmlAttribute
 	private long delay;
-
 
 	/***************************************************************************
 	 * Constructors
@@ -112,16 +110,16 @@ public class GameProperty implements Serializable {
 	public GameProperty(int smallBet) {
 		this(smallBet, 0);
 	}
-	
+
 	/**
 	 * Construct a new game property with given small bet and deal delay.
 	 * 
-	 * @param 	smallBet
-	 * 			The small bet.
-	 * @param 	delay
-	 * 			The delay between two deals, expressed in milliseconds.
+	 * @param smallBet
+	 *            The small bet.
+	 * @param delay
+	 *            The delay between two deals, expressed in milliseconds.
 	 */
-	public GameProperty(int smallBet, long delay){
+	public GameProperty(int smallBet, long delay) {
 		if (!canHaveAsSmallBet(smallBet)) {
 			throw new IllegalArgumentException();
 		}
@@ -155,7 +153,6 @@ public class GameProperty implements Serializable {
 		return (smallBet > 0) && (smallBet % 2 == 0);
 	}
 
-
 	/***************************************************************************
 	 * Blinds
 	 **************************************************************************/
@@ -183,7 +180,7 @@ public class GameProperty implements Serializable {
 				&& (getBigBlind() == getSmallBet())
 				&& (getBigBet() == 2 * getSmallBet());
 	}
-	
+
 	/***************************************************************************
 	 * Max Nb Players
 	 **************************************************************************/
@@ -191,32 +188,33 @@ public class GameProperty implements Serializable {
 	public int getMaxNbPlayers() {
 		return maxNbPlayers;
 	}
-	
+
 	/**
 	 * 
 	 * There should be at least 2 players to play a poker game.
 	 * 
-	 * @param 	nbPlayers
-	 * 			The number of players to check.
-	 * @return	True if the given number of players is at least 2, false otherwise.
+	 * @param nbPlayers
+	 *            The number of players to check.
+	 * @return True if the given number of players is at least 2, false
+	 *         otherwise.
 	 */
-	public static boolean canHaveAsMaxNbPlayers(int nbPlayers){
-		return nbPlayers>=2;
+	public static boolean canHaveAsMaxNbPlayers(int nbPlayers) {
+		return nbPlayers >= 2;
 	}
-	
+
 	/***************************************************************************
 	 * Delay
 	 **************************************************************************/
-	
+
 	/**
 	 * The delay between two deals, expressed in milliseconds.
 	 * 
 	 * @return The delay between two deals in milliseconds.
 	 */
-	public long getDelay(){
+	public long getDelay() {
 		return delay;
 	}
-	
+
 	/***************************************************************************
 	 * Other methods
 	 **************************************************************************/

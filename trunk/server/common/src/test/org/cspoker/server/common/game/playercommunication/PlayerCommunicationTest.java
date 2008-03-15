@@ -63,10 +63,10 @@ import org.cspoker.server.common.game.session.Session;
 import org.cspoker.server.common.game.session.SessionManager;
 
 public class PlayerCommunicationTest extends TestCase {
-	
+
 	static {
 		Log4JPropertiesLoader
-		.load("org/cspoker/server/common/logging/log4j.properties");
+				.load("org/cspoker/server/common/logging/log4j.properties");
 	}
 
 	private static Logger logger = Logger
@@ -74,7 +74,6 @@ public class PlayerCommunicationTest extends TestCase {
 
 	private PlayerFactory playerFactory;
 
-	
 	public void setUp() {
 		playerFactory = new TestPlayerFactory();
 	}
@@ -148,13 +147,12 @@ public class PlayerCommunicationTest extends TestCase {
 					.getPlayerCommunication();
 			map.put(kenzoComm.getId(), kenzoComm);
 			map.put(guyComm.getId(), guyComm);
-			
+
 			EventCollector kenzoEvents = new EventCollector();
 			EventCollector guyEvents = new EventCollector();
-			
+
 			kenzoComm.subscribeAllEventsListener(kenzoEvents);
 			guyComm.subscribeAllEventsListener(guyEvents);
-			
 
 			TableId tableId = kenzoComm.createTable("test").getId();
 			guyComm.joinTable(tableId);
@@ -213,10 +211,10 @@ public class PlayerCommunicationTest extends TestCase {
 
 			map.put(kenzoComm.getId(), kenzoComm);
 			map.put(guyComm.getId(), guyComm);
-			
+
 			EventCollector kenzoEvents = new EventCollector();
 			EventCollector guyEvents = new EventCollector();
-			
+
 			kenzoComm.subscribeAllEventsListener(kenzoEvents);
 			guyComm.subscribeAllEventsListener(guyEvents);
 
@@ -267,60 +265,47 @@ public class PlayerCommunicationTest extends TestCase {
 			this.map = map;
 		}
 
-		
 		public void onAllInEvent(AllInEvent event) throws RemoteException {
 		}
 
-		
 		public void onBetEvent(BetEvent event) throws RemoteException {
 		}
 
-		
 		public void onBigBlindEvent(BigBlindEvent event) throws RemoteException {
 		}
 
-		
 		public void onCallEvent(CallEvent event) throws RemoteException {
 		}
 
-		
 		public void onCheckEvent(CheckEvent event) throws RemoteException {
 		}
 
-		
 		public void onFoldEvent(FoldEvent event) throws RemoteException {
 		}
 
-		
 		public void onRaiseEvent(RaiseEvent event) throws RemoteException {
 		}
 
-		
 		public void onSmallBlindEvent(SmallBlindEvent event)
 				throws RemoteException {
 		}
 
-		
 		public void onNewPocketCardsEvent(NewPocketCardsEvent event)
 				throws RemoteException {
 		}
 
-		
 		public void onNewCommunityCardsEvent(NewCommunityCardsEvent event)
 				throws RemoteException {
 		}
 
-		
 		public void onNewDealEvent(NewDealEvent event) throws RemoteException {
 		}
 
-		
 		public void onNewRoundEvent(NewRoundEvent event) throws RemoteException {
 			currentComm = map.get(event.getPlayer().getId());
 			PlayerCommunicationTest.logger.info("Changed to " + currentComm);
 		}
 
-		
 		public void onNextPlayerEvent(NextPlayerEvent event)
 				throws RemoteException {
 			currentComm = map.get(event.getPlayer().getId());
@@ -328,190 +313,157 @@ public class PlayerCommunicationTest extends TestCase {
 
 		}
 
-		
 		public void onPlayerJoinedTableEvent(PlayerJoinedTableEvent event)
 				throws RemoteException {
 		}
 
-		
 		public void onPlayerLeftTableEvent(PlayerLeftTableEvent event)
 				throws RemoteException {
 		}
 
-		
 		public void onShowHandEvent(ShowHandEvent event) throws RemoteException {
 		}
 
-		
 		public void onWinnerEvent(WinnerEvent event) throws RemoteException {
 		}
 
-		
 		public void onGameMessageEvent(GameMessageEvent event)
 				throws RemoteException {
 		}
 
-		
 		public void onTableCreatedEvent(TableCreatedEvent event)
 				throws RemoteException {
 		}
 
-		
 		public void onServerMessageEvent(ServerMessageEvent event)
 				throws RemoteException {
 		}
 
-		
 		public void onBrokePlayerKickedOutEvent(BrokePlayerKickedOutEvent event)
 				throws RemoteException {
 		}
 
-		
 		public void onTableChangedEvent(TableChangedEvent event)
 				throws RemoteException {
 		}
 
-		
 		public void onTableRemovedEvent(TableRemovedEvent event)
 				throws RemoteException {
 		}
 	}
 
-	private static class EventCollector implements RemoteAllEventsListener{
-		
-		public List<Event> getEvents(){
+	private static class EventCollector implements RemoteAllEventsListener {
+
+		public List<Event> getEvents() {
 			return events;
 		}
-		
+
 		private List<Event> events = new CopyOnWriteArrayList<Event>();
 
-		
-		public void onAllInEvent(AllInEvent event) throws RemoteException{
+		public void onAllInEvent(AllInEvent event) throws RemoteException {
 			events.add(event);
 		}
 
-		
-		public void onBetEvent(BetEvent event) throws RemoteException{
+		public void onBetEvent(BetEvent event) throws RemoteException {
 			events.add(event);
 		}
 
-		
-		public void onBigBlindEvent(BigBlindEvent event) throws RemoteException{
+		public void onBigBlindEvent(BigBlindEvent event) throws RemoteException {
 			events.add(event);
-			
+
 		}
 
-		
 		public void onCallEvent(CallEvent event) throws RemoteException {
 			events.add(event);
 		}
 
-		
 		public void onCheckEvent(CheckEvent event) throws RemoteException {
 			events.add(event);
 		}
 
-		
 		public void onFoldEvent(FoldEvent event) throws RemoteException {
 			events.add(event);
 		}
 
-		
 		public void onRaiseEvent(RaiseEvent event) throws RemoteException {
 			events.add(event);
 		}
 
-		
 		public void onSmallBlindEvent(SmallBlindEvent event)
 				throws RemoteException {
 			events.add(event);
 		}
 
-		
 		public void onNewPocketCardsEvent(NewPocketCardsEvent event)
 				throws RemoteException {
 			events.add(event);
 		}
 
-		
 		public void onNewCommunityCardsEvent(NewCommunityCardsEvent event)
 				throws RemoteException {
 			events.add(event);
 		}
 
-		
 		public void onNewDealEvent(NewDealEvent event) throws RemoteException {
 			events.add(event);
 		}
 
-		
 		public void onNewRoundEvent(NewRoundEvent event) throws RemoteException {
 			events.add(event);
 		}
 
-		
 		public void onNextPlayerEvent(NextPlayerEvent event)
 				throws RemoteException {
 			events.add(event);
 		}
 
-		
 		public void onPlayerJoinedTableEvent(PlayerJoinedTableEvent event)
 				throws RemoteException {
 			events.add(event);
 		}
 
-		
 		public void onPlayerLeftTableEvent(PlayerLeftTableEvent event)
 				throws RemoteException {
 			events.add(event);
 		}
 
-		
 		public void onShowHandEvent(ShowHandEvent event) throws RemoteException {
 			events.add(event);
 		}
 
-		
 		public void onWinnerEvent(WinnerEvent event) throws RemoteException {
 			events.add(event);
 		}
 
-		
 		public void onGameMessageEvent(GameMessageEvent event)
 				throws RemoteException {
 			events.add(event);
 		}
 
-		
 		public void onTableCreatedEvent(TableCreatedEvent event)
 				throws RemoteException {
 			events.add(event);
 		}
 
-		
 		public void onServerMessageEvent(ServerMessageEvent event)
 				throws RemoteException {
 			events.add(event);
 		}
 
-		
 		public void onBrokePlayerKickedOutEvent(BrokePlayerKickedOutEvent event)
 				throws RemoteException {
 			events.add(event);
 		}
 
-		
 		public void onTableChangedEvent(TableChangedEvent event)
 				throws RemoteException {
 			events.add(event);
 		}
 
-		
 		public void onTableRemovedEvent(TableRemovedEvent event)
 				throws RemoteException {
 			events.add(event);
 		}
-		
+
 	}
 }

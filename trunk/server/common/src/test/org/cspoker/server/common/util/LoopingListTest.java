@@ -27,7 +27,6 @@ public class LoopingListTest extends TestCase {
 
 	private List<Object> initialList;
 
-	
 	protected void setUp() {
 		initialList = new ArrayList<Object>();
 		initialList.add(new Object());
@@ -59,11 +58,13 @@ public class LoopingListTest extends TestCase {
 			}
 		}
 	}
-	
+
 	public void testGetBefore() {
-		assertEquals(initialList.get(initialList.size()-1), list.getPreviousTo(initialList.get(0)));
+		assertEquals(initialList.get(initialList.size() - 1), list
+				.getPreviousTo(initialList.get(0)));
 		for (int i = 1; i < initialList.size(); i++) {
-			assertEquals(initialList.get(i-1), list.getPreviousTo(initialList.get(i)));
+			assertEquals(initialList.get(i - 1), list.getPreviousTo(initialList
+					.get(i)));
 		}
 	}
 

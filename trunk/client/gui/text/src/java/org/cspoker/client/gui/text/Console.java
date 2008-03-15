@@ -36,13 +36,13 @@ import org.cspoker.common.util.Log4JPropertiesLoader;
  * A console poker client.
  */
 public class Console {
-	
+
 	static {
 		Log4JPropertiesLoader
 				.load("org/cspoker/client/gui/text/logging/log4j.properties");
 	}
-	
-	public static void main(String[] args)  {
+
+	public static void main(String[] args) {
 		new LoadProvidersFromXml(CommunicationProvider.global_provider);
 		new Console(args);
 	}
@@ -74,22 +74,35 @@ public class Console {
 				client.close();
 			}
 			System.out.println("Select a server connection:");
-			for(int i=0;i<CommunicationProvider.global_provider.getProviders().size();i++){
-				System.out.println(" ("+(i+1)+") - "+CommunicationProvider.global_provider.getProviders().get(i));
+			for (int i = 0; i < CommunicationProvider.global_provider
+					.getProviders().size(); i++) {
+				System.out.println(" ("
+						+ (i + 1)
+						+ ") - "
+						+ CommunicationProvider.global_provider.getProviders()
+								.get(i));
 			}
-			System.out.println(" ("+(CommunicationProvider.global_provider.getProviders().size()+1)+") - Create a new server connection");
+			System.out
+					.println(" ("
+							+ (CommunicationProvider.global_provider
+									.getProviders().size() + 1)
+							+ ") - Create a new server connection");
 			System.out.print(">");
 			int connection;
 			try {
 				connection = Integer.parseInt(in.nextLine());
-				if(connection<1||connection>CommunicationProvider.global_provider.getProviders().size()+1)
+				if (connection < 1
+						|| connection > CommunicationProvider.global_provider
+								.getProviders().size() + 1) {
 					throw new NumberFormatException();
+				}
 			} catch (NumberFormatException e) {
-				connection=1;
+				connection = 1;
 			}
 			System.out.println();
-			
-			if(connection==CommunicationProvider.global_provider.getProviders().size()+1){
+
+			if (connection == CommunicationProvider.global_provider
+					.getProviders().size() + 1) {
 				System.out.println("Select type:");
 				System.out.println(" (1) - HTTP");
 				System.out.println(" (2) - SOCKET");
@@ -98,35 +111,41 @@ public class Console {
 				int ctype;
 				try {
 					ctype = Integer.parseInt(in.nextLine());
-					if(ctype<1||ctype>3)
+					if (ctype < 1 || ctype > 3) {
 						throw new NumberFormatException();
+					}
 				} catch (NumberFormatException e) {
-					ctype=1;
+					ctype = 1;
 				}
 				System.out.println();
-				
+
 				System.out.println("Enter address:");
 				System.out.print(">");
 				String address = in.nextLine();
 				System.out.println();
 
 				System.out.println("Enter port:");
-				System.out.print(">");	
+				System.out.print(">");
 				int port;
 				try {
 					port = Integer.parseInt(in.nextLine());
 				} catch (NumberFormatException e) {
-					port=8080;
+					port = 8080;
 				}
 				System.out.println();
-				if(ctype==1)
-					factory = new RemotePlayerCommunicationFactoryForHttp(address, port);
-				else if(ctype==2)
-					factory = new RemotePlayerCommunicationFactoryForSocket(address, port);
-				else if(ctype==3)
-					factory = new RemotePlayerCommunicationFactoryForRMI(address, port);
-			}else{
-				factory = CommunicationProvider.global_provider.getProviders().get(connection-1);
+				if (ctype == 1) {
+					factory = new RemotePlayerCommunicationFactoryForHttp(
+							address, port);
+				} else if (ctype == 2) {
+					factory = new RemotePlayerCommunicationFactoryForSocket(
+							address, port);
+				} else if (ctype == 3) {
+					factory = new RemotePlayerCommunicationFactoryForRMI(
+							address, port);
+				}
+			} else {
+				factory = CommunicationProvider.global_provider.getProviders()
+						.get(connection - 1);
 			}
 			System.out.println("Enter username:");
 			System.out.print(">");
@@ -143,24 +162,24 @@ public class Console {
 				System.out.println("Shutting down...");
 				running = false;
 			} else {
-				
-					try {
-						client = new Client(username, password,this,factory);
-						logedin = true;
-					} catch (RemoteException e) {
-						System.out.println("Could not connect to "+factory);
-						System.out.println();
-						handle(e);
-					} catch (LoginException e) {
-						System.out.println("Login failed for "+username);
-						System.out.println();
-						handle(e);
-					} catch (NoProviderException e) {
-						System.out.println("Could not connect to "+factory);
-						System.out.println();
-						handle(e);
-					}
-				
+
+				try {
+					client = new Client(username, password, this, factory);
+					logedin = true;
+				} catch (RemoteException e) {
+					System.out.println("Could not connect to " + factory);
+					System.out.println();
+					handle(e);
+				} catch (LoginException e) {
+					System.out.println("Login failed for " + username);
+					System.out.println();
+					handle(e);
+				} catch (NoProviderException e) {
+					System.out.println("Could not connect to " + factory);
+					System.out.println();
+					handle(e);
+				}
+
 			}
 		} while (running && !logedin);
 
@@ -193,7 +212,7 @@ public class Console {
 	}
 
 	private void handle(Exception e) {
-		System.out.println("ERROR: "+e.getMessage());
+		System.out.println("ERROR: " + e.getMessage());
 		if (verbose) {
 			System.out.println();
 			System.out.println("-----details-----");

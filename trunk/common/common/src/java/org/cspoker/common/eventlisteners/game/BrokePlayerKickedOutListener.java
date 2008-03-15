@@ -19,7 +19,7 @@ import org.cspoker.common.events.gameevents.BrokePlayerKickedOutEvent;
 
 public interface BrokePlayerKickedOutListener extends
 		RemoteBrokePlayerKickedOutListener {
-	
+
 	public void onBrokePlayerKickedOutEvent(BrokePlayerKickedOutEvent event);
 
 }

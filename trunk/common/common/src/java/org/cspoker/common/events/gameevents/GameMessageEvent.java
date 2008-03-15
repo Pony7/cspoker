@@ -43,7 +43,6 @@ public class GameMessageEvent extends GameEvent {
 		// no op
 	}
 
-	
 	public String toString() {
 		return getPlayer().getName() + " says: " + getMessage();
 	}
@@ -56,7 +55,6 @@ public class GameMessageEvent extends GameEvent {
 		return player;
 	}
 
-	
 	public void dispatch(RemoteAllEventsListener listener)
 			throws RemoteException {
 		listener.onGameMessageEvent(this);

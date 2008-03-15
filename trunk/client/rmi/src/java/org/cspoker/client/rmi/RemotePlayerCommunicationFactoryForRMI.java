@@ -40,7 +40,6 @@ public class RemotePlayerCommunicationFactoryForRMI implements
 		this.port = port;
 	}
 
-	
 	public RemotePlayerCommunication getRemotePlayerCommunication(
 			String username, String password) throws ConnectException,
 			LoginException {
@@ -60,7 +59,6 @@ public class RemotePlayerCommunicationFactoryForRMI implements
 
 	}
 
-	
 	public String toString() {
 		return "rmi://" + server + ":" + port;
 	}

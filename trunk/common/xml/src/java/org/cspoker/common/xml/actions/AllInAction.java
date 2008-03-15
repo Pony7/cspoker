@@ -38,7 +38,6 @@ public class AllInAction extends PlayerCommunicationAction<Void> {
 		// no op
 	}
 
-	
 	public void perform(PlayerCommunication pc,
 			AllInvocationEventsListener listener) {
 		try {

@@ -28,21 +28,23 @@ import org.cspoker.common.exceptions.IllegalActionException;
 
 public class DefaultRemotePlayerCommunication implements
 		RemotePlayerCommunication {
-	
+
 	private final RemotePlayerCommunication p;
 
-	public DefaultRemotePlayerCommunication(RemotePlayerCommunication playerCommunication) {
-		this.p = playerCommunication;
+	public DefaultRemotePlayerCommunication(
+			RemotePlayerCommunication playerCommunication) {
+		p = playerCommunication;
 	}
+
 	public void allIn() throws IllegalActionException, RemoteException {
 		p.allIn();
 	}
 
-	public void bet(int amount) throws IllegalActionException,
-			RemoteException {
+	public void bet(int amount) throws IllegalActionException, RemoteException {
 		p.bet(amount);
 
 	}
+
 	public void call() throws IllegalActionException, RemoteException {
 		p.call();
 	}
@@ -50,9 +52,9 @@ public class DefaultRemotePlayerCommunication implements
 	public void check() throws IllegalActionException, RemoteException {
 		p.check();
 	}
-	
-	public Table createTable(String name, GameProperty settings) throws IllegalActionException,
-	RemoteException {
+
+	public Table createTable(String name, GameProperty settings)
+			throws IllegalActionException, RemoteException {
 		return p.createTable(name, settings);
 	}
 
@@ -60,8 +62,7 @@ public class DefaultRemotePlayerCommunication implements
 		p.fold();
 	}
 
-	public void leaveTable() throws IllegalActionException,
-			RemoteException {
+	public void leaveTable() throws IllegalActionException, RemoteException {
 		p.leaveTable();
 	}
 
@@ -75,8 +76,7 @@ public class DefaultRemotePlayerCommunication implements
 		p.say(message);
 	}
 
-	public void startGame() throws IllegalActionException,
-			RemoteException {
+	public void startGame() throws IllegalActionException, RemoteException {
 		p.startGame();
 	}
 
@@ -84,61 +84,60 @@ public class DefaultRemotePlayerCommunication implements
 		p.kill();
 	}
 
-	public void subscribeAllEventsListener(
-			RemoteAllEventsListener listener) throws RemoteException {
+	public void subscribeAllEventsListener(RemoteAllEventsListener listener)
+			throws RemoteException {
 		p.subscribeAllEventsListener(listener);
 	}
 
-	public void unsubscribeAllEventsListener(
-			RemoteAllEventsListener listener) throws RemoteException {
+	public void unsubscribeAllEventsListener(RemoteAllEventsListener listener)
+			throws RemoteException {
 		p.unsubscribeAllEventsListener(listener);
 	}
 
-	
 	public Table getTable(TableId id) throws IllegalActionException,
 			RemoteException {
 		return p.getTable(id);
 	}
 
-	
 	public TableList getTables() throws RemoteException {
 		return p.getTables();
 	}
 
-	
 	public Table joinTable(TableId id) throws IllegalActionException,
 			RemoteException {
 		return p.joinTable(id);
 	}
 
-	
 	public Table joinTable(TableId tableId, SeatId seatId)
 			throws IllegalActionException, RemoteException {
 		return p.joinTable(tableId, seatId);
 	}
 
-	
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((p == null) ? 0 : p.hashCode());
 		return result;
 	}
-	
-	
+
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (!(obj instanceof DefaultRemotePlayerCommunication))
+		}
+		if (!(obj instanceof DefaultRemotePlayerCommunication)) {
 			return false;
+		}
 		final DefaultRemotePlayerCommunication other = (DefaultRemotePlayerCommunication) obj;
 		if (p == null) {
-			if (other.p != null)
+			if (other.p != null) {
 				return false;
-		} else if (!p.equals(other.p))
+			}
+		} else if (!p.equals(other.p)) {
 			return false;
+		}
 		return true;
 	}
 

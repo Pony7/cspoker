@@ -58,7 +58,6 @@ public class GameAllInPlayer implements Comparable<GameAllInPlayer> {
 		return getBetValue() - o.getBetValue();
 	}
 
-	
 	public boolean equals(Object obj) {
 		if (this == obj) {
 			return true;
@@ -80,7 +79,6 @@ public class GameAllInPlayer implements Comparable<GameAllInPlayer> {
 		return true;
 	}
 
-	
 	public String toString() {
 		return String.valueOf(getBetValue());
 	}

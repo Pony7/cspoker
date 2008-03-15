@@ -47,7 +47,6 @@ public class PlayerLeftTableEvent extends GameEvent {
 		// no op
 	}
 
-	
 	public String toString() {
 		return player.getName() + " has left this table.";
 	}
@@ -56,7 +55,6 @@ public class PlayerLeftTableEvent extends GameEvent {
 		return player;
 	}
 
-	
 	public void dispatch(RemoteAllEventsListener listener)
 			throws RemoteException {
 		listener.onPlayerLeftTableEvent(this);

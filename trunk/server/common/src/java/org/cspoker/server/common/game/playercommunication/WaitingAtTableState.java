@@ -52,37 +52,33 @@ class WaitingAtTableState extends PlayerCommunicationState {
 						.getAllEventsListener());
 	}
 
-	
 	public void leaveTable() throws IllegalActionException {
-		
-		Player immutablePlayer = playerCommunication.getPlayer().getSavedPlayer();
-		
-		
-		
+
+		Player immutablePlayer = playerCommunication.getPlayer()
+				.getSavedPlayer();
+
 		table.removePlayer(playerCommunication.getPlayer());
-		
+
 		TableId tableId = table.getId();
 		PlayerId playerId = playerCommunication.getId();
-		
+
 		playerCommunication.changeToInitialState();
-		
-		GameManager.getGame(tableId).unsubscribeAllGameEventsListener(playerId, 
+
+		GameManager.getGame(tableId).unsubscribeAllGameEventsListener(playerId,
 				playerCommunication.getAllEventsListener());
-		
+
 		GameManager.getGame(tableId).publishPlayerLeftTable(
 				new PlayerLeftTableEvent(immutablePlayer));
-		GameManager.getServerMediator().publishTableChangedEvent(new TableChangedEvent(table.getSavedTable()));
+		GameManager.getServerMediator().publishTableChangedEvent(
+				new TableChangedEvent(table.getSavedTable()));
 		GameManager.getServerMediator().subscribeAllServerEventsListener(
-				playerId,
-				playerCommunication.getAllEventsListener());
+				playerId, playerCommunication.getAllEventsListener());
 	}
 
-	
 	protected String getStdErrorMessage() {
 		return "You are waiting at a table for a game to begin.";
 	}
 
-	
 	public void kill() {
 		// remove to killed player from the table
 		try {

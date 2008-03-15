@@ -37,7 +37,7 @@ import org.cspoker.server.common.game.player.GamePlayer;
  * 
  */
 public class PreFlopRound extends BettingRound {
-		
+
 	private static Logger logger = Logger.getLogger(PreFlopRound.class);
 
 	private boolean bigBlindChecked = false;
@@ -50,12 +50,13 @@ public class PreFlopRound extends BettingRound {
 		super(gameMediator, game);
 
 		GamePlayer currentPlayer = getGame().getCurrentPlayer();
-		
+
 		if (currentPlayer != null) {
-			gameMediator.publishNewRoundEvent(new NewRoundEvent(toString(), currentPlayer.getSavedPlayer()));
+			gameMediator.publishNewRoundEvent(new NewRoundEvent(toString(),
+					currentPlayer.getSavedPlayer()));
 		}
 		try {
-			//If there are only 2 players, blinds are inverted.
+			// If there are only 2 players, blinds are inverted.
 			if (game.getNbCurrentDealPlayers() == 2) {
 				game.nextPlayer();
 			}
@@ -90,7 +91,7 @@ public class PreFlopRound extends BettingRound {
 					new NewPocketCardsEvent(player.getSavedPlayer(),
 							new HashSet<Card>(player.getPocketCards())));
 		}
-		
+
 		for (GameAllInPlayer allInPlayer : allInPlayers) {
 			GamePlayer player = allInPlayer.getPlayer();
 			player.dealPocketCard(drawCard());
@@ -103,14 +104,13 @@ public class PreFlopRound extends BettingRound {
 					new NewPocketCardsEvent(player.getSavedPlayer(),
 							new HashSet<Card>(player.getPocketCards())));
 		}
- 
+
 		if (getGame().getNbCurrentDealPlayers() > 1) {
 			gameMediator.publishNextPlayerEvent(new NextPlayerEvent(game
 					.getCurrentPlayer().getSavedPlayer()));
 		}
 	}
 
-	
 	public void check(GamePlayer player) throws IllegalActionException {
 		if (!onTurn(player)) {
 			throw new IllegalActionException(player.getName()
@@ -125,10 +125,10 @@ public class PreFlopRound extends BettingRound {
 		game.nextPlayer();
 	}
 
-	
 	public boolean isRoundEnded() {
 		return ((super.isRoundEnded() && (someoneHasRaised() || bigBlindAllIn()
-				|| someoneBigAllIn() || onlyOneActivePlayer())) || bigBlindChecked() || onlyOnePlayerLeft());
+				|| someoneBigAllIn() || onlyOneActivePlayer()))
+				|| bigBlindChecked() || onlyOnePlayerLeft());
 	}
 
 	private boolean bigBlindAllIn() {
@@ -139,7 +139,6 @@ public class PreFlopRound extends BettingRound {
 		return bigBlindChecked;
 	}
 
-	
 	public Round getNextRound() {
 		if (potsDividedToWinner()) {
 			return getNewDealRound();
@@ -147,17 +146,14 @@ public class PreFlopRound extends BettingRound {
 		return new FlopRound(gameMediator, getGame());
 	}
 
-	
 	public boolean isLowBettingRound() {
 		return true;
 	}
 
-	
 	public boolean isHighBettingRound() {
 		return !isLowBettingRound();
 	}
 
-	
 	public String toString() {
 		return "pre-flop round";
 	}

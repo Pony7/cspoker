@@ -27,28 +27,28 @@ import org.cspoker.common.eventlisteners.RemoteAllEventsListener;
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
 public class TableChangedEvent extends ServerEvent {
-	
+
 	private static final long serialVersionUID = 790908459908366180L;
-	
+
 	private Table table;
-	
-	public TableChangedEvent(Table table){
+
+	public TableChangedEvent(Table table) {
 		this.table = table;
 	}
-	
-	protected TableChangedEvent(){
+
+	protected TableChangedEvent() {
 		// no op
 	}
-	
-	public Table getTable(){
+
+	public Table getTable() {
 		return table;
 	}
-	
-	public String toString(){
-		return "Table "+table.getName()+" ["+table.getId()+"] has changed.";
+
+	public String toString() {
+		return "Table " + table.getName() + " [" + table.getId()
+				+ "] has changed.";
 	}
 
-	
 	public void dispatch(RemoteAllEventsListener listener)
 			throws RemoteException {
 		listener.onTableChangedEvent(this);

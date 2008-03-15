@@ -26,30 +26,29 @@ import org.cspoker.common.player.Player;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-public class BrokePlayerKickedOutEvent extends GameEvent{
+public class BrokePlayerKickedOutEvent extends GameEvent {
 
 	private static final long serialVersionUID = 2063945262151933385L;
-	
+
 	private Player player;
-	
-	public BrokePlayerKickedOutEvent(Player player){
+
+	public BrokePlayerKickedOutEvent(Player player) {
 		this.player = player;
 	}
-	
-	protected BrokePlayerKickedOutEvent(){
-		//no op
+
+	protected BrokePlayerKickedOutEvent() {
+		// no op
 	}
-	
-	public Player getPlayer(){
+
+	public Player getPlayer() {
 		return player;
 	}
-	
-	
+
 	public String toString() {
-		return player.getName() + " is broke and can no longer play at this table.";
+		return player.getName()
+				+ " is broke and can no longer play at this table.";
 	}
-	
-	
+
 	public void dispatch(RemoteAllEventsListener listener)
 			throws RemoteException {
 		listener.onBrokePlayerKickedOutEvent(this);

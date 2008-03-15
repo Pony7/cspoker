@@ -39,7 +39,6 @@ public class LoggingThread extends Thread {
 		});
 	}
 
-	
 	public void run() {
 		logger.debug("Created " + getName());
 		try {

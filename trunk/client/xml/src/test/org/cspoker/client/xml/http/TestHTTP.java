@@ -61,17 +61,17 @@ public class TestHTTP {
 	public static void main(String[] args) throws AccessException,
 			RemoteException, NotBoundException, IllegalActionException,
 			LoginException {
-		
+
 		int port = 8080;
 		String server = "localhost";
-		
-		RemotePlayerCommunicationFactoryForHttp temp = new RemotePlayerCommunicationFactoryForHttp(server, port);
+
+		RemotePlayerCommunicationFactoryForHttp temp = new RemotePlayerCommunicationFactoryForHttp(
+				server, port);
 		XmlChannelRemotePlayerCommunication kenzo = null;
 		XmlChannelRemotePlayerCommunication guy = null;
 		XmlChannelRemotePlayerCommunication cedric = null;
 		try {
-			guy = temp
-					.getRemotePlayerCommunication("guy", "test");
+			guy = temp.getRemotePlayerCommunication("guy", "test");
 			System.out.println("Guy Logged In and will print events to sout");
 
 			guy.subscribeAllEventsListener(new RemoteAllEventsListener() {
@@ -142,7 +142,8 @@ public class TestHTTP {
 
 				}
 
-				public void onPlayerJoinedTableEvent(PlayerJoinedTableEvent event) {
+				public void onPlayerJoinedTableEvent(
+						PlayerJoinedTableEvent event) {
 					System.out.println(event.toString());
 
 				}
@@ -167,7 +168,6 @@ public class TestHTTP {
 
 				}
 
-
 				public void onTableCreatedEvent(TableCreatedEvent event) {
 					System.out.println(event.toString());
 
@@ -178,30 +178,23 @@ public class TestHTTP {
 
 				}
 
-				
 				public void onBrokePlayerKickedOutEvent(
-						BrokePlayerKickedOutEvent event){
-					System.out.println(event.toString());					
+						BrokePlayerKickedOutEvent event) {
+					System.out.println(event.toString());
 				}
 
-				
-				public void onTableChangedEvent(TableChangedEvent event)
-				{
-					System.out.println(event.toString());					
+				public void onTableChangedEvent(TableChangedEvent event) {
+					System.out.println(event.toString());
 				}
 
-				
-				public void onTableRemovedEvent(TableRemovedEvent event)
-				{
-					System.out.println(event.toString());					
+				public void onTableRemovedEvent(TableRemovedEvent event) {
+					System.out.println(event.toString());
 				}
 
 			});
 
-			kenzo = temp.getRemotePlayerCommunication("kenzo",
-					"test");
-			cedric = temp.getRemotePlayerCommunication("cedric",
-					"test");
+			kenzo = temp.getRemotePlayerCommunication("kenzo", "test");
+			cedric = temp.getRemotePlayerCommunication("cedric", "test");
 
 			GameProperty prop = new GameProperty();
 			TableId id = guy.createTable("guy's table", prop).getId();

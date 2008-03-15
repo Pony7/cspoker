@@ -77,13 +77,14 @@ public class GameShowdownPlayer implements Comparable<GameShowdownPlayer> {
 
 	public ShowdownPlayer getSavedShowdownPlayer() {
 		return new ShowdownPlayer(player.getSavedPlayer(), new HashSet<Card>(
-				getBestHand().getCards()), new HashSet<Card>(player.getPocketCards()), getBestHand().getDescription());
+				getBestHand().getCards()), new HashSet<Card>(player
+				.getPocketCards()), getBestHand().getDescription());
 	}
 
 	/**
 	 * Returns a textual representation of this showdown player.
 	 */
-	
+
 	public String toString() {
 		return player.getName() + " has a " + getBestHand();
 	}
@@ -101,7 +102,7 @@ public class GameShowdownPlayer implements Comparable<GameShowdownPlayer> {
 	 * 2 showdown players are equal if both their hands have the same value.
 	 * 
 	 */
-	
+
 	public boolean equals(Object obj) {
 		if (this == obj) {
 			return true;

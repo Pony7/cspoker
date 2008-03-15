@@ -149,19 +149,16 @@ public class ConsoleListener implements RemoteAllEventsListener {
 
 	}
 
-	public void onBrokePlayerKickedOutEvent(BrokePlayerKickedOutEvent event)
-	{
-		console.print(event.toString());		
+	public void onBrokePlayerKickedOutEvent(BrokePlayerKickedOutEvent event) {
+		console.print(event.toString());
 	}
 
-	public void onTableChangedEvent(TableChangedEvent event)
-	{
-		console.print(event.toString());		
+	public void onTableChangedEvent(TableChangedEvent event) {
+		console.print(event.toString());
 	}
 
-	public void onTableRemovedEvent(TableRemovedEvent event)
-	{
-		console.print(event.toString());		
+	public void onTableRemovedEvent(TableRemovedEvent event) {
+		console.print(event.toString());
 	}
 
 }

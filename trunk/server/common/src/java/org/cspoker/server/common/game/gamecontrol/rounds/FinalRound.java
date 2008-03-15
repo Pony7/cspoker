@@ -38,7 +38,6 @@ public class FinalRound extends BettingRound {
 		FinalRound.logger.info("*** RIVER *** " + game.getCommunityCards());
 	}
 
-	
 	public void endRound() {
 		if (onlyOnePlayerLeft()) {
 			super.endRound();
@@ -53,22 +52,18 @@ public class FinalRound extends BettingRound {
 		game.initializeForNewHand();
 	}
 
-	
 	public Round getNextRound() {
 		return getNewDealRound();
 	}
 
-	
 	public boolean isLowBettingRound() {
 		return false;
 	}
 
-	
 	public boolean isHighBettingRound() {
 		return !isLowBettingRound();
 	}
 
-	
 	public String toString() {
 		return "final round";
 	}

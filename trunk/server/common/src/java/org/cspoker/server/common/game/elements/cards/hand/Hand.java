@@ -71,8 +71,8 @@ public class Hand implements Iterable<Card>, Comparable<Hand> {
 	 *             cardList==null
 	 */
 	public Hand(final Collection<Card> cardCollection) {
-		if ((cardCollection == null) ||
-				(cardCollection.size() > Hand.MAX_CARDS)) {
+		if ((cardCollection == null)
+				|| (cardCollection.size() > Hand.MAX_CARDS)) {
 			throw new IllegalArgumentException();
 		}
 		cards = new ArrayList<Card>(cardCollection);
@@ -325,7 +325,7 @@ public class Hand implements Iterable<Card>, Comparable<Hand> {
 	/**
 	 * Returns a textual representation of this hand
 	 */
-	
+
 	public String toString() {
 		String result = "";
 
@@ -360,7 +360,6 @@ public class Hand implements Iterable<Card>, Comparable<Hand> {
 			this.flush = flush;
 		}
 
-		
 		public boolean equals(final Object obj) {
 			if (this == obj) {
 				return true;
@@ -381,7 +380,6 @@ public class Hand implements Iterable<Card>, Comparable<Hand> {
 			return true;
 		}
 
-		
 		public int hashCode() {
 			if (hashCode == null) {
 				final int prime = 31;
@@ -394,7 +392,6 @@ public class Hand implements Iterable<Card>, Comparable<Hand> {
 		}
 	}
 
-	
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
@@ -402,7 +399,6 @@ public class Hand implements Iterable<Card>, Comparable<Hand> {
 		return result;
 	}
 
-	
 	public boolean equals(Object obj) {
 		if (this == obj) {
 			return true;

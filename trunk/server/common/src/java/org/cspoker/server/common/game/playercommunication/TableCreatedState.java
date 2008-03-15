@@ -59,10 +59,10 @@ class TableCreatedState extends WaitingAtTableState {
 	 */
 	public TableCreatedState(PlayerCommunicationImpl playerCommunication,
 			GameTable table) {
-		super(playerCommunication, table, GameManager.createNewGame(table.getId()));
+		super(playerCommunication, table, GameManager.createNewGame(table
+				.getId()));
 	}
 
-	
 	public void startGame() throws IllegalActionException {
 
 		/**
@@ -74,8 +74,10 @@ class TableCreatedState extends WaitingAtTableState {
 		 */
 		synchronized (table) {
 			GameMediator gameMediator = GameManager.getGame(table.getId());
-			if(table.getNbPlayers()<=1)
-				throw new IllegalActionException("At least two players must be seated to play a game.");
+			if (table.getNbPlayers() <= 1) {
+				throw new IllegalActionException(
+						"At least two players must be seated to play a game.");
+			}
 			for (PlayerId id : table.getPlayerIds()) {
 				PlayerCommunicationImpl comm;
 				try {
@@ -95,13 +97,13 @@ class TableCreatedState extends WaitingAtTableState {
 		TableCreatedState.logger.info("Game Started.");
 	}
 
-	
 	public void leaveTable() throws IllegalActionException {
 		synchronized (table) {
 			if (table.getNbPlayers() == 1) {
 				TableManager.global_table_manager.removeTable(table.getId());
 				super.leaveTable();
-				GameManager.getServerMediator().publishTableRemovedEvent(new TableRemovedEvent(table.getId()));
+				GameManager.getServerMediator().publishTableRemovedEvent(
+						new TableRemovedEvent(table.getId()));
 			} else {
 				throw new IllegalActionException(
 						"The owner can only leave if he is the only player at the table.");
@@ -109,13 +111,12 @@ class TableCreatedState extends WaitingAtTableState {
 		}
 	}
 
-	
-	public Table join(TableId tableId, SeatId seatId) throws IllegalActionException {
+	public Table join(TableId tableId, SeatId seatId)
+			throws IllegalActionException {
 		throw new IllegalActionException("You are already sitting at table "
 				+ table.getId() + ".");
 	}
 
-	
 	protected String getStdErrorMessage() {
 		return "You have not yet started the game.";
 	}

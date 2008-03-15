@@ -92,37 +92,34 @@ public class GameControl {
 	public GameControl(GameMediator gameMediator, GameTable table) {
 		this(gameMediator, table, table.getRandomPlayer());
 	}
-	
-	public GameControl(GameMediator gameMediator, GameTable table, BettingRules rules){
+
+	public GameControl(GameMediator gameMediator, GameTable table,
+			BettingRules rules) {
 		this(gameMediator, table, table.getRandomPlayer(), rules);
 	}
 
-	public GameControl(GameMediator gameMediator, GameTable table, GamePlayer dealer) {
+	public GameControl(GameMediator gameMediator, GameTable table,
+			GamePlayer dealer) {
 		this(gameMediator, table, dealer, new NoLimit());
 	}
-	
-	public GameControl(GameMediator gameMediator, GameTable table, GamePlayer dealer, BettingRules rules){
+
+	public GameControl(GameMediator gameMediator, GameTable table,
+			GamePlayer dealer, BettingRules rules) {
 		this.gameMediator = gameMediator;
 		gameMediator.setGameControl(this);
-		
+
 		game = new Game(table, dealer, rules);
-		
-		GameControl.logger.info(getGame().getBettingRules()
-				.toString()
-				+ " "
-				+ "($"
-				+ table.getGameProperty().getSmallBlind()
-				+ "/"
-				+ table.getGameProperty().getBigBlind()
-				+ ") - "
+
+		GameControl.logger.info(getGame().getBettingRules().toString() + " "
+				+ "($" + table.getGameProperty().getSmallBlind() + "/"
+				+ table.getGameProperty().getBigBlind() + ") - "
 				+ GameControl.dateFormat.format(new Date()));
 
 		List<GamePlayer> players = game.getCurrentDealPlayers();
 		for (GamePlayer player : players) {
 			GameControl.logger.info(player.toString());
 		}
-		
-		
+
 		round = new WaitingRound(gameMediator, game);
 		try {
 			deal(game.getDealer());
@@ -180,7 +177,8 @@ public class GameControl {
 	 * @throws IllegalActionException
 	 *             [must] The action performed is not a valid action.
 	 */
-	public synchronized void call(GamePlayer player) throws IllegalActionException {
+	public synchronized void call(GamePlayer player)
+			throws IllegalActionException {
 		round.call(player);
 		gameMediator.publishCallEvent(new CallEvent(player.getSavedPlayer(),
 				new Pots(round.getCurrentPotValue())));
@@ -199,7 +197,8 @@ public class GameControl {
 	 * @throws IllegalActionException
 	 *             [must] The action performed is not a valid action.
 	 */
-	public synchronized void check(GamePlayer player) throws IllegalActionException {
+	public synchronized void check(GamePlayer player)
+			throws IllegalActionException {
 		round.check(player);
 		gameMediator.publishCheckEvent(new CheckEvent(player.getSavedPlayer()));
 		GameControl.logger.info(player.getName() + " checks.");
@@ -241,7 +240,8 @@ public class GameControl {
 	 * @throws IllegalActionException
 	 *             [must] The action performed is not a valid action.
 	 */
-	public synchronized void fold(GamePlayer player) throws IllegalActionException {
+	public synchronized void fold(GamePlayer player)
+			throws IllegalActionException {
 		round.fold(player);
 		gameMediator.publishFoldEvent(new FoldEvent(player.getSavedPlayer()));
 		GameControl.logger.info(player.getName() + ": folds");
@@ -259,7 +259,8 @@ public class GameControl {
 	 * @throws IllegalActionException
 	 *             [must] The action performed is not a valid action.
 	 */
-	public synchronized void deal(GamePlayer player) throws IllegalActionException {
+	public synchronized void deal(GamePlayer player)
+			throws IllegalActionException {
 		round.deal(player);
 		checkIfEndedAndChangeRound();
 	}
@@ -274,12 +275,14 @@ public class GameControl {
 	 * @throws IllegalActionException
 	 *             [must] The action performed is not a valid action.
 	 */
-	public synchronized void allIn(GamePlayer player) throws IllegalActionException {
+	public synchronized void allIn(GamePlayer player)
+			throws IllegalActionException {
 		round.allIn(player);
 		checkIfEndedAndChangeRound();
 	}
 
-	public synchronized void joinGame(SeatId seatId, GamePlayer player) throws IllegalActionException{
+	public synchronized void joinGame(SeatId seatId, GamePlayer player)
+			throws IllegalActionException {
 		try {
 			game.joinGame(seatId, player);
 		} catch (SeatTakenException e) {
@@ -287,14 +290,14 @@ public class GameControl {
 		} catch (PlayerListFullException e) {
 			throw new IllegalActionException(e.getMessage());
 		}
-		
+
 		gameMediator.publishPlayerJoinedTable(new PlayerJoinedTableEvent(player
 				.getSavedPlayer()));
-		
-		//auto-deal
+
+		// auto-deal
 		try {
-			if(game.getNbSeatedPlayers()==2){
-				
+			if (game.getNbSeatedPlayers() == 2) {
+
 				deal(game.getDealer());
 			}
 		} catch (IllegalActionException e) {
@@ -304,27 +307,31 @@ public class GameControl {
 		}
 	}
 
-	public synchronized void leaveGame(GamePlayer player) throws IllegalActionException {
-		if(!game.getTable().hasAsPlayer(player))
+	public synchronized void leaveGame(GamePlayer player)
+			throws IllegalActionException {
+		if (!game.getTable().hasAsPlayer(player)) {
 			return;
-		
+		}
+
 		round.foldAction(player);
 		Player immutablePlayer = player.getSavedPlayer();
 		game.leaveGame(player);
-		gameMediator.publishPlayerLeftTable(new PlayerLeftTableEvent(immutablePlayer));
-		if(game.hasNoSeatedPlayers()){
+		gameMediator.publishPlayerLeftTable(new PlayerLeftTableEvent(
+				immutablePlayer));
+		if (game.hasNoSeatedPlayers()) {
 			removeTable();
-		}else{
-				checkIfEndedAndChangeRound();
+		} else {
+			checkIfEndedAndChangeRound();
 		}
 	}
-	
-	private void removeTable(){
+
+	private void removeTable() {
 		TableId id = game.getTable().getId();
 		TableManager.global_table_manager.removeTable(id);
 		GameManager.removeGame(id);
-		logger.info("Table with id ["+id.toString()+"] removed.");
-		GameManager.getServerMediator().publishTableRemovedEvent(new TableRemovedEvent(id));
+		logger.info("Table with id [" + id.toString() + "] removed.");
+		GameManager.getServerMediator().publishTableRemovedEvent(
+				new TableRemovedEvent(id));
 	}
 
 	/***************************************************************************
@@ -340,8 +347,10 @@ public class GameControl {
 			changeToNextRound();
 		} else {
 			GamePlayer player = game.getCurrentPlayer();
-			if(player!=null)
-				gameMediator.publishNextPlayerEvent(new NextPlayerEvent(player.getSavedPlayer()));
+			if (player != null) {
+				gameMediator.publishNextPlayerEvent(new NextPlayerEvent(player
+						.getSavedPlayer()));
+			}
 		}
 	}
 
@@ -352,11 +361,11 @@ public class GameControl {
 	private void changeToNextRound() {
 		round.endRound();
 		round = round.getNextRound();
-		
-		if(round instanceof WaitingRound && game.getNbSeatedPlayers()>1){
+
+		if (round instanceof WaitingRound && game.getNbSeatedPlayers() > 1) {
 			submitAutoDealHandler();
 		}
-		
+
 		if ((round instanceof BettingRound)
 				&& ((BettingRound) round)
 						.onlyOnePlayerLeftBesidesAllInPlayers()) {
@@ -367,32 +376,36 @@ public class GameControl {
 			changeToNextRound();
 		}
 	}
-	
-	private void submitAutoDealHandler(){
+
+	private void submitAutoDealHandler() {
 		long delay = game.getGameProperty().getDelay();
-		if(delay>0){
-			delay = delay*(Math.min(game.getNbLastShowdown()+1, 5));
-			ScheduledRequestExecutor.getInstance().schedule(new AutoDealHandler(), delay, TimeUnit.MILLISECONDS);
-			logger.info("There were " +game.getNbLastShowdown()+" showdown players. Auto-deal handler submitted with a delay of "+delay+" ms.");
-		}else{
+		if (delay > 0) {
+			delay = delay * (Math.min(game.getNbLastShowdown() + 1, 5));
+			ScheduledRequestExecutor.getInstance().schedule(
+					new AutoDealHandler(), delay, TimeUnit.MILLISECONDS);
+			logger
+					.info("There were "
+							+ game.getNbLastShowdown()
+							+ " showdown players. Auto-deal handler submitted with a delay of "
+							+ delay + " ms.");
+		} else {
 			try {
 				deal(game.getDealer());
 			} catch (IllegalActionException e) {
 			}
 		}
-			
+
 	}
 
-	private class AutoDealHandler implements Runnable{
-		
-				
-		public AutoDealHandler(){
+	private class AutoDealHandler implements Runnable {
+
+		public AutoDealHandler() {
 		}
 
-		
 		public void run() {
 			try {
-				GameControl.logger.info(game.getDealer()+" auto-deal called.");
+				GameControl.logger
+						.info(game.getDealer() + " auto-deal called.");
 				deal(game.getDealer());
 			} catch (IllegalActionException e) {
 				GameControl.logger.error(e);

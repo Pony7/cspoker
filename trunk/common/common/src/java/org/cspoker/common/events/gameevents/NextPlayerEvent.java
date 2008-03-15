@@ -51,12 +51,10 @@ public class NextPlayerEvent extends GameEvent {
 		return player;
 	}
 
-	
 	public String toString() {
 		return "It's " + player.getName() + "'s turn.";
 	}
 
-	
 	public void dispatch(RemoteAllEventsListener listener)
 			throws RemoteException {
 		listener.onNextPlayerEvent(this);

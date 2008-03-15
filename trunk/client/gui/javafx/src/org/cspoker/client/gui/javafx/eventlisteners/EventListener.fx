@@ -470,7 +470,6 @@ trigger on new EventListener{
                         dealt: false
                     }];
                     if(e.getPlayer().getName().equals(ts.me.name)){
-                        m.relogin();
                         MessageDialog{
                             title: "You are broke."
                             visible: true

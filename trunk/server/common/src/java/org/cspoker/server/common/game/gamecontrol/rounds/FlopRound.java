@@ -45,7 +45,6 @@ public class FlopRound extends BettingRound {
 		FlopRound.logger.info("*** FLOP *** " + game.getCommunityCards());
 	}
 
-	
 	public Round getNextRound() {
 		if (potsDividedToWinner()) {
 			return getNewDealRound();
@@ -53,17 +52,14 @@ public class FlopRound extends BettingRound {
 		return new TurnRound(gameMediator, getGame());
 	}
 
-	
 	public boolean isLowBettingRound() {
 		return true;
 	}
 
-	
 	public boolean isHighBettingRound() {
 		return !isLowBettingRound();
 	}
 
-	
 	public String toString() {
 		return "flop round";
 	}

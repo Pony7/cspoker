@@ -52,7 +52,6 @@ public class SmallBlindEvent extends ActionChangedPotEvent {
 		// no op
 	}
 
-	
 	public String toString() {
 		return getPlayer().getName() + " bets the small blind of "
 				+ getAmount() + " chips.";
@@ -66,7 +65,6 @@ public class SmallBlindEvent extends ActionChangedPotEvent {
 		return player;
 	}
 
-	
 	public void dispatch(RemoteAllEventsListener listener)
 			throws RemoteException {
 		listener.onSmallBlindEvent(this);

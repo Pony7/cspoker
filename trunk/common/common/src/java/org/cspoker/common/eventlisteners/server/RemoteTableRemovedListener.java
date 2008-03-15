@@ -20,8 +20,9 @@ import java.rmi.RemoteException;
 
 import org.cspoker.common.events.serverevents.TableRemovedEvent;
 
-public interface RemoteTableRemovedListener extends Remote{
-	
-	public void onTableRemovedEvent(TableRemovedEvent event) throws RemoteException;
+public interface RemoteTableRemovedListener extends Remote {
+
+	public void onTableRemovedEvent(TableRemovedEvent event)
+			throws RemoteException;
 
 }

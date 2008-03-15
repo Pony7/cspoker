@@ -36,11 +36,12 @@ public class XmlPlayerCommunicationFactory {
 			throws PlayerKilledExcepion {
 		XmlPlayerCommunication result = playerComs.get(session);
 		if (result == null) {
-			XmlPlayerCommunication oldresult = playerComs.putIfAbsent(session, new XmlPlayerCommunication(session, listener));
-			if(oldresult==null){
+			XmlPlayerCommunication oldresult = playerComs.putIfAbsent(session,
+					new XmlPlayerCommunication(session, listener));
+			if (oldresult == null) {
 				result = playerComs.get(session);
-			}else{
-				result=oldresult;
+			} else {
+				result = oldresult;
 			}
 		}
 		result.updateEventListener(listener);

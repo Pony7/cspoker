@@ -62,7 +62,6 @@ public class Session {
 		playerComm.kill();
 	}
 
-	
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
@@ -71,7 +70,6 @@ public class Session {
 		return result;
 	}
 
-	
 	public boolean equals(Object obj) {
 		if (this == obj) {
 			return true;

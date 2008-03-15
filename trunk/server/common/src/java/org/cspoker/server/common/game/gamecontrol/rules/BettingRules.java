@@ -149,6 +149,5 @@ public abstract class BettingRules {
 		lastBetAmount = amount;
 	}
 
-	
 	public abstract String toString();
 }

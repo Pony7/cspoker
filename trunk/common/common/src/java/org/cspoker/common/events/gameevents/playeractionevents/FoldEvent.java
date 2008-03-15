@@ -48,7 +48,6 @@ public class FoldEvent extends GameEvent {
 		// no op
 	}
 
-	
 	public String toString() {
 		return getPlayer().getName() + " folds.";
 	}
@@ -57,7 +56,6 @@ public class FoldEvent extends GameEvent {
 		return player;
 	}
 
-	
 	public void dispatch(RemoteAllEventsListener listener)
 			throws RemoteException {
 		listener.onFoldEvent(this);

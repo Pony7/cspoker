@@ -36,8 +36,8 @@ public class RequestExecutor implements ExecutorService {
 	private LoggingThreadPool executor;
 
 	private RequestExecutor() {
-		executor = new LoggingThreadPool(Math.max(2,Runtime.getRuntime()
-				.availableProcessors() * 2), Math.max(2,Runtime.getRuntime()
+		executor = new LoggingThreadPool(Math.max(2, Runtime.getRuntime()
+				.availableProcessors() * 2), Math.max(2, Runtime.getRuntime()
 				.availableProcessors() * 3), 2, TimeUnit.SECONDS,
 				new PriorityBlockingQueue<Runnable>(20,
 						new SocketRunnableComparator()), "CSPoker-Main");
@@ -71,71 +71,59 @@ public class RequestExecutor implements ExecutorService {
 		return instance;
 	}
 
-	
 	public boolean awaitTermination(long timeout, TimeUnit unit)
 			throws InterruptedException {
 		return executor.awaitTermination(timeout, unit);
 	}
 
-	
 	public <T> List<Future<T>> invokeAll(Collection<? extends Callable<T>> tasks)
 			throws InterruptedException {
 		return executor.invokeAll(tasks);
 	}
 
-	
 	public <T> List<Future<T>> invokeAll(
 			Collection<? extends Callable<T>> tasks, long timeout, TimeUnit unit)
 			throws InterruptedException {
 		return executor.invokeAll(tasks, timeout, unit);
 	}
 
-	
 	public <T> T invokeAny(Collection<? extends Callable<T>> tasks)
 			throws InterruptedException, ExecutionException {
 		return executor.invokeAny(tasks);
 	}
 
-	
 	public <T> T invokeAny(Collection<? extends Callable<T>> tasks,
 			long timeout, TimeUnit unit) throws InterruptedException,
 			ExecutionException, TimeoutException {
 		return executor.invokeAny(tasks, timeout, unit);
 	}
 
-	
 	public boolean isShutdown() {
 		return executor.isShutdown();
 	}
 
-	
 	public boolean isTerminated() {
 		return executor.isTerminated();
 	}
 
-	
 	public void shutdown() {
 		executor.shutdown();
 	}
 
-	
 	public List<Runnable> shutdownNow() {
 		return executor.shutdownNow();
 	}
 
-	
 	public <T> Future<T> submit(Callable<T> task) {
 		logger.trace("Received task: " + task);
 		return executor.submit(task);
 	}
 
-	
 	public Future<?> submit(Runnable task) {
 		logger.trace("Received task: " + task);
 		return executor.submit(task);
 	}
 
-	
 	public <T> Future<T> submit(Runnable task, T result) {
 		logger.trace("Received task: " + task);
 		return executor.submit(task, result);

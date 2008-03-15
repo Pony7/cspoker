@@ -29,7 +29,7 @@ import org.apache.log4j.Logger;
  * 
  */
 public class Chips {
-	
+
 	private static Logger logger = Logger.getLogger(Chips.class);
 
 	/***************************************************************************
@@ -180,8 +180,10 @@ public class Chips {
 	 */
 	public synchronized void transferAmountTo(int amount, Chips receiver)
 			throws IllegalValueException {
-		if(receiver==null)
-			throw new IllegalArgumentException("The given receiver should be effective.");
+		if (receiver == null) {
+			throw new IllegalArgumentException(
+					"The given receiver should be effective.");
+		}
 		if (amount < 0) {
 			throw new IllegalArgumentException("Can not transfer " + amount
 					+ " from this pile with " + toString() + " to "
@@ -199,8 +201,7 @@ public class Chips {
 	 * @effect All the chips of this pile are transfered to the given pile of
 	 *         chips. |transferAmountTo(getValue(), receiver)
 	 */
-	public synchronized void transferAllChipsTo(Chips receiver)
-			{
+	public synchronized void transferAllChipsTo(Chips receiver) {
 		try {
 			transferAmountTo(getValue(), receiver);
 		} catch (IllegalValueException e) {
@@ -218,7 +219,6 @@ public class Chips {
 		}
 	}
 
-	
 	public String toString() {
 		return Integer.valueOf(getValue()).toString();
 	}

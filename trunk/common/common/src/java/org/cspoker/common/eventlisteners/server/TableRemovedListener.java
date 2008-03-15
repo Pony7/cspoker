@@ -18,7 +18,7 @@ package org.cspoker.common.eventlisteners.server;
 import org.cspoker.common.events.serverevents.TableRemovedEvent;
 
 public interface TableRemovedListener extends RemoteTableRemovedListener {
-	
+
 	public void onTableRemovedEvent(TableRemovedEvent event);
 
 }

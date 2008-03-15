@@ -33,13 +33,13 @@ public class CreateTableAction extends PlayerCommunicationAction<Table> {
 	private static final long serialVersionUID = 2423639524369017909L;
 	private String name;
 	private GameProperty settings;
-	
+
 	public CreateTableAction(long id, String name) {
 		super(id);
 		this.name = name;
-		this.settings = null;
+		settings = null;
 	}
-	
+
 	public CreateTableAction(long id, String name, GameProperty settings) {
 		super(id);
 		this.name = name;
@@ -50,11 +50,10 @@ public class CreateTableAction extends PlayerCommunicationAction<Table> {
 		// no op
 	}
 
-	
 	public void perform(PlayerCommunication pc,
 			AllInvocationEventsListener listener) {
 		try {
-			dispatchResult(pc.createTable(name,settings), listener);
+			dispatchResult(pc.createTable(name, settings), listener);
 		} catch (IllegalActionException e) {
 			listener.onIllegalAction(new IllegalActionEvent(e, this));
 		}

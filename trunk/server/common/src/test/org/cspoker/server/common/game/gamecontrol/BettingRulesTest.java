@@ -33,7 +33,6 @@ public class BettingRulesTest extends TestCase {
 
 	private PlayerFactory playerFactory;
 
-	
 	protected void setUp() {
 		playerFactory = new TestPlayerFactory();
 		try {
@@ -151,8 +150,7 @@ public class BettingRulesTest extends TestCase {
 		BettingRulesTest.logger.info("Big Blind: "
 				+ table.getGameProperty().getBigBlind());
 		BettingRulesTest.logger.info("Betting Rules: "
-				+ gameControl.getGame().getBettingRules()
-						.toString());
+				+ gameControl.getGame().getBettingRules().toString());
 		Game game = gameControl.getGame();
 
 		BettingRulesTest.logger.info("Dealer: " + game.getDealer().getName());

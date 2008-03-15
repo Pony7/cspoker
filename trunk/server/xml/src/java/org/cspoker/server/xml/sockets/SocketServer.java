@@ -45,8 +45,9 @@ public class SocketServer {
 	public SocketServer(int port) throws RemoteException {
 		this(port, new XmlFileAuthenticator());
 	}
-	
-	public SocketServer(int port, XmlFileAuthenticator auth) throws RemoteException {
+
+	public SocketServer(int port, XmlFileAuthenticator auth)
+			throws RemoteException {
 		try {
 			this.auth = auth;
 			this.port = port;
@@ -60,12 +61,12 @@ public class SocketServer {
 			selector = Selector.open();
 			// Recording server to selector (type OP_ACCEPT)
 			server.register(selector, SelectionKey.OP_ACCEPT);
-		}  catch (IOException e) {
-			throw new RemoteException("Creating Socket server failed",e);
+		} catch (IOException e) {
+			throw new RemoteException("Creating Socket server failed", e);
 		}
 	}
-	 
-	public void start(){
+
+	public void start() {
 		executor = RequestExecutor.getInstance();
 		// Infinite server loop
 		executor.execute(new WaitForIO(executor, selector, server, auth));

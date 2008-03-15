@@ -24,11 +24,11 @@ import javax.xml.bind.annotation.XmlValue;
 
 /**
  * A class to represent seat id's.
- *
+ * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-public class SeatId implements Serializable{
-	
+public class SeatId implements Serializable {
+
 	private static final long serialVersionUID = -3605432117019173699L;
 
 	/**
@@ -40,8 +40,8 @@ public class SeatId implements Serializable{
 	/**
 	 * Construct a new seat id with given id.
 	 * 
-	 * @param 	id
-	 *      	The int to use as id.
+	 * @param id
+	 *            The int to use as id.
 	 */
 	public SeatId(int id) {
 		this.id = id;
@@ -50,24 +50,23 @@ public class SeatId implements Serializable{
 	protected SeatId() {
 		// no op
 	}
-	
-	public SeatId getNextSeatId(){
-		return new SeatId(id+1);
+
+	public SeatId getNextSeatId() {
+		return new SeatId(id + 1);
 	}
-	
+
 	public int getId() {
 		return id;
 	}
-	
+
 	/**
 	 * Return a textual representation of the seat id.
 	 */
-	
+
 	public String toString() {
 		return String.valueOf(id);
 	}
 
-	
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
@@ -75,17 +74,20 @@ public class SeatId implements Serializable{
 		return result;
 	}
 
-	
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		final SeatId other = (SeatId) obj;
-		if (id != other.id)
+		if (id != other.id) {
 			return false;
+		}
 		return true;
 	}
 

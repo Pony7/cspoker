@@ -42,7 +42,7 @@ public class RunSocketsServer {
 		} catch (NumberFormatException e) {
 			usage();
 		}
-		logger.info("Starting Socket server at port "+port);
+		logger.info("Starting Socket server at port " + port);
 		(new SocketServer(port)).start();
 	}
 

@@ -34,24 +34,27 @@ import javax.xml.bind.annotation.XmlElementWrapper;
 public class TableList implements Serializable {
 
 	private static final long serialVersionUID = -3605432117019173699L;
-	
+
 	@XmlElementWrapper
 	@XmlElement(name = "table")
 	private List<Table> tables;
-	
+
 	public TableList(List<Table> tables) {
-		if(tables==null)
-			throw new IllegalArgumentException("The given list of tables is not effective.");
+		if (tables == null) {
+			throw new IllegalArgumentException(
+					"The given list of tables is not effective.");
+		}
 		this.tables = tables;
 	}
 
 	protected TableList() {
 		// no op
 	}
-	
+
 	public List<Table> getTables() {
-		if(tables==null)
+		if (tables == null) {
 			tables = new ArrayList<Table>(0);
+		}
 		return tables;
 	}
 

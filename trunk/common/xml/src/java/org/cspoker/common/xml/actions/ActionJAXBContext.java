@@ -40,10 +40,10 @@ public class ActionJAXBContext {
 	public static Class<?>[] getActions() {
 		return new Class<?>[] { AllInAction.class, BetAction.class,
 				CallAction.class, CheckAction.class, CreateTableAction.class,
-				FoldAction.class, JoinTableAction.class,
-				KillAction.class, LeaveTableAction.class, RaiseAction.class,
-				SayAction.class, StartGameAction.class, NoOpAction.class,
-				GetTableAction.class, GetTablesAction.class};
+				FoldAction.class, JoinTableAction.class, KillAction.class,
+				LeaveTableAction.class, RaiseAction.class, SayAction.class,
+				StartGameAction.class, NoOpAction.class, GetTableAction.class,
+				GetTablesAction.class };
 	}
 
 }
