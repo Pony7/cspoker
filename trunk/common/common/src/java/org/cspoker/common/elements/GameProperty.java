@@ -119,7 +119,7 @@ public class GameProperty implements Serializable {
 	 * @param 	smallBet
 	 * 			The small bet.
 	 * @param 	delay
-	 * 			The delay between two deals, expressed in seconds.
+	 * 			The delay between two deals, expressed in milliseconds.
 	 */
 	public GameProperty(int smallBet, long delay){
 		if (!canHaveAsSmallBet(smallBet)) {
@@ -209,9 +209,9 @@ public class GameProperty implements Serializable {
 	 **************************************************************************/
 	
 	/**
-	 * The delay between two deals, expressed in seconds.
+	 * The delay between two deals, expressed in milliseconds.
 	 * 
-	 * @return The delay between two deals in seconds.
+	 * @return The delay between two deals in milliseconds.
 	 */
 	public long getDelay(){
 		return delay;
