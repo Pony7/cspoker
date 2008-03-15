@@ -15,6 +15,8 @@
  */
 package org.cspoker.server.common.game.gamecontrol;
 
+import junit.framework.TestCase;
+
 import org.apache.log4j.Logger;
 import org.cspoker.common.elements.GameProperty;
 import org.cspoker.common.elements.table.TableId;
@@ -28,8 +30,6 @@ import org.cspoker.server.common.game.gamecontrol.rounds.PreFlopRound;
 import org.cspoker.server.common.game.gamecontrol.rounds.WaitingRound;
 import org.cspoker.server.common.game.player.GamePlayer;
 import org.cspoker.server.common.game.player.PlayerFactory;
-
-import junit.framework.TestCase;
 
 public class JoinAndLeaveGameTest extends TestCase {
 	

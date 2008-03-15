@@ -15,18 +15,13 @@
  */
 package org.cspoker.common.xml.actions;
 
-import java.util.List;
-
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.cspoker.common.PlayerCommunication;
-import org.cspoker.common.elements.table.Table;
 import org.cspoker.common.elements.table.TableList;
-import org.cspoker.common.exceptions.IllegalActionException;
 import org.cspoker.common.xml.eventlisteners.invocation.AllInvocationEventsListener;
-import org.cspoker.common.xml.events.invocation.IllegalActionEvent;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)

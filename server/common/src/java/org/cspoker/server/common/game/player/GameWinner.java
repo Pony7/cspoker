@@ -18,7 +18,6 @@ package org.cspoker.server.common.game.player;
 
 import org.cspoker.common.player.Winner;
 import org.cspoker.server.common.game.elements.chips.Chips;
-import org.cspoker.server.common.game.elements.chips.IllegalValueException;
 
 public class GameWinner {
 
