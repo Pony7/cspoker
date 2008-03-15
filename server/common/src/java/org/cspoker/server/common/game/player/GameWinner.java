@@ -45,7 +45,6 @@ public class GameWinner {
 		return new Winner(winner.getSavedPlayer(), chips.getValue());
 	}
 
-	
 	public String toString() {
 		return winner.getName() + " has gained " + chips + ".";
 	}

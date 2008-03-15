@@ -24,8 +24,7 @@ import javax.security.auth.login.LoginException;
 
 import org.cspoker.common.RemotePlayerCommunication;
 
-public class CommunicationProvider implements
-		RemotePlayerCommunicationFactory {
+public class CommunicationProvider implements RemotePlayerCommunicationFactory {
 
 	public final static CommunicationProvider global_provider = new CommunicationProvider();
 
@@ -35,14 +34,14 @@ public class CommunicationProvider implements
 			RemotePlayerCommunicationFactory provider) {
 		providers.add(provider);
 	}
-	
+
 	public List<RemotePlayerCommunicationFactory> getProviders() {
 		return Collections.unmodifiableList(providers);
 	}
 
 	public RemotePlayerCommunication getRemotePlayerCommunication(
-			String username, String password)
-			throws ConnectException, NoProviderException, LoginException {
+			String username, String password) throws ConnectException,
+			NoProviderException, LoginException {
 
 		NoProviderException lastNoProviderException = null;
 		ConnectException lastConnectException = null;
@@ -50,8 +49,7 @@ public class CommunicationProvider implements
 
 		for (RemotePlayerCommunicationFactory p : providers) {
 			try {
-				return p.getRemotePlayerCommunication(username,
-						password);
+				return p.getRemotePlayerCommunication(username, password);
 			} catch (NoProviderException e) {
 				lastNoProviderException = e;
 			} catch (ConnectException e) {

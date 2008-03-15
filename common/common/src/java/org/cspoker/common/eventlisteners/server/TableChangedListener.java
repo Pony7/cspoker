@@ -18,7 +18,7 @@ package org.cspoker.common.eventlisteners.server;
 import org.cspoker.common.events.serverevents.TableChangedEvent;
 
 public interface TableChangedListener extends RemoteTableChangedListener {
-	
+
 	public void onTableChangedEvent(TableChangedEvent event);
 
 }

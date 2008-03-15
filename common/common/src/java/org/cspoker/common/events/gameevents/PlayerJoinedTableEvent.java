@@ -48,12 +48,11 @@ public class PlayerJoinedTableEvent extends GameEvent {
 		// no op
 	}
 
-	
 	public String toString() {
 		return player.getName() + " joined the table.";
 	}
-	
-	public SeatId getSeatId(){
+
+	public SeatId getSeatId() {
 		return getPlayer().getSeatId();
 	}
 
@@ -61,7 +60,6 @@ public class PlayerJoinedTableEvent extends GameEvent {
 		return player;
 	}
 
-	
 	public void dispatch(RemoteAllEventsListener listener)
 			throws RemoteException {
 		listener.onPlayerJoinedTableEvent(this);

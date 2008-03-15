@@ -20,8 +20,9 @@ import java.rmi.RemoteException;
 
 import org.cspoker.common.events.gameevents.BrokePlayerKickedOutEvent;
 
-public interface RemoteBrokePlayerKickedOutListener extends Remote{
-	
-	public void onBrokePlayerKickedOutEvent(BrokePlayerKickedOutEvent event) throws RemoteException;
+public interface RemoteBrokePlayerKickedOutListener extends Remote {
+
+	public void onBrokePlayerKickedOutEvent(BrokePlayerKickedOutEvent event)
+			throws RemoteException;
 
 }

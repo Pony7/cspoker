@@ -41,7 +41,7 @@ public class Player implements Serializable {
 	 */
 	@XmlAttribute
 	private PlayerId id;
-	
+
 	private SeatId seatId;
 
 	/**
@@ -60,7 +60,8 @@ public class Player implements Serializable {
 	 */
 	private int betChipsValue;
 
-	public Player(PlayerId id, SeatId seatId, String name, int stackValue, int betChipsValue) {
+	public Player(PlayerId id, SeatId seatId, String name, int stackValue,
+			int betChipsValue) {
 		this.id = id;
 		this.seatId = seatId;
 		this.name = name;
@@ -80,13 +81,13 @@ public class Player implements Serializable {
 	public PlayerId getId() {
 		return id;
 	}
-	
+
 	/**
 	 * Returns the seat id of this player.
 	 * 
 	 * @return The seat id of this player.
 	 */
-	public SeatId getSeatId(){
+	public SeatId getSeatId() {
 		return seatId;
 	}
 
@@ -116,8 +117,8 @@ public class Player implements Serializable {
 	public int getBetChipsValue() {
 		return betChipsValue;
 	}
-	
-	public String toString(){
+
+	public String toString() {
 		return getName();
 	}
 

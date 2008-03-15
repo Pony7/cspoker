@@ -56,7 +56,6 @@ public class AllInEvent extends ActionChangedPotEvent {
 		super();
 	}
 
-	
 	public String toString() {
 		return getPlayer().getName() + " goes all-in.";
 	}
@@ -65,7 +64,6 @@ public class AllInEvent extends ActionChangedPotEvent {
 		return player;
 	}
 
-	
 	public void dispatch(RemoteAllEventsListener listener)
 			throws RemoteException {
 		listener.onAllInEvent(this);

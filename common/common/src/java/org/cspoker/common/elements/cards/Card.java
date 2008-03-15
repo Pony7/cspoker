@@ -38,7 +38,6 @@ public final class Card implements Comparable<Card>, Serializable {
 		return suit;
 	}
 
-	
 	public String toString() {
 		return rank.getShortDescription() + suit.getShortDescription();
 	}
@@ -53,7 +52,6 @@ public final class Card implements Comparable<Card>, Serializable {
 		return (thisVal < anotherVal ? -1 : (thisVal == anotherVal ? 0 : 1));
 	}
 
-	
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
@@ -62,25 +60,31 @@ public final class Card implements Comparable<Card>, Serializable {
 		return result;
 	}
 
-	
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		final Card other = (Card) obj;
 		if (rank == null) {
-			if (other.rank != null)
+			if (other.rank != null) {
 				return false;
-		} else if (!rank.equals(other.rank))
+			}
+		} else if (!rank.equals(other.rank)) {
 			return false;
+		}
 		if (suit == null) {
-			if (other.suit != null)
+			if (other.suit != null) {
 				return false;
-		} else if (!suit.equals(other.suit))
+			}
+		} else if (!suit.equals(other.suit)) {
 			return false;
+		}
 		return true;
 	}
 }

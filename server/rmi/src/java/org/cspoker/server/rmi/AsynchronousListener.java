@@ -34,7 +34,7 @@ import org.cspoker.server.common.util.threading.RequestExecutor;
 public class AsynchronousListener implements RemoteAllEventsListener {
 
 	private static Logger logger = Logger.getLogger(AsynchronousListener.class);
-	
+
 	private final RemoteAllEventsListener listener;
 	private ExecutorService executor;
 
@@ -43,13 +43,12 @@ public class AsynchronousListener implements RemoteAllEventsListener {
 	public AsynchronousListener(RemoteAllEventsListener listener, String name) {
 		this.listener = listener;
 		this.name = name;
-		this.executor = RequestExecutor.getInstance();
+		executor = RequestExecutor.getInstance();
 	}
-	
-	
+
 	public void onAllInEvent(final AllInEvent event) throws RemoteException {
-		executor.submit(new Runnable(){
-			
+		executor.submit(new Runnable() {
+
 			public void run() {
 				try {
 					listener.onAllInEvent(event);
@@ -61,10 +60,9 @@ public class AsynchronousListener implements RemoteAllEventsListener {
 		});
 	}
 
-	
 	public void onBetEvent(final BetEvent event) throws RemoteException {
-		executor.submit(new Runnable(){
-			
+		executor.submit(new Runnable() {
+
 			public void run() {
 				try {
 					listener.onBetEvent(event);
@@ -76,10 +74,10 @@ public class AsynchronousListener implements RemoteAllEventsListener {
 		});
 	}
 
-	
-	public void onBigBlindEvent(final BigBlindEvent event) throws RemoteException {
-		executor.submit(new Runnable(){
-			
+	public void onBigBlindEvent(final BigBlindEvent event)
+			throws RemoteException {
+		executor.submit(new Runnable() {
+
 			public void run() {
 				try {
 					listener.onBigBlindEvent(event);
@@ -91,10 +89,9 @@ public class AsynchronousListener implements RemoteAllEventsListener {
 		});
 	}
 
-	
 	public void onCallEvent(final CallEvent event) throws RemoteException {
-		executor.submit(new Runnable(){
-			
+		executor.submit(new Runnable() {
+
 			public void run() {
 				try {
 					listener.onCallEvent(event);
@@ -106,10 +103,9 @@ public class AsynchronousListener implements RemoteAllEventsListener {
 		});
 	}
 
-	
 	public void onCheckEvent(final CheckEvent event) throws RemoteException {
-		executor.submit(new Runnable(){
-			
+		executor.submit(new Runnable() {
+
 			public void run() {
 				try {
 					listener.onCheckEvent(event);
@@ -121,10 +117,9 @@ public class AsynchronousListener implements RemoteAllEventsListener {
 		});
 	}
 
-	
 	public void onFoldEvent(final FoldEvent event) throws RemoteException {
-		executor.submit(new Runnable(){
-			
+		executor.submit(new Runnable() {
+
 			public void run() {
 				try {
 					listener.onFoldEvent(event);
@@ -136,10 +131,9 @@ public class AsynchronousListener implements RemoteAllEventsListener {
 		});
 	}
 
-	
 	public void onRaiseEvent(final RaiseEvent event) throws RemoteException {
-		executor.submit(new Runnable(){
-			
+		executor.submit(new Runnable() {
+
 			public void run() {
 				try {
 					listener.onRaiseEvent(event);
@@ -151,10 +145,10 @@ public class AsynchronousListener implements RemoteAllEventsListener {
 		});
 	}
 
-	
-	public void onSmallBlindEvent(final SmallBlindEvent event) throws RemoteException {
-		executor.submit(new Runnable(){
-			
+	public void onSmallBlindEvent(final SmallBlindEvent event)
+			throws RemoteException {
+		executor.submit(new Runnable() {
+
 			public void run() {
 				try {
 					listener.onSmallBlindEvent(event);
@@ -166,11 +160,10 @@ public class AsynchronousListener implements RemoteAllEventsListener {
 		});
 	}
 
-	
 	public void onNewPocketCardsEvent(final NewPocketCardsEvent event)
 			throws RemoteException {
-		executor.submit(new Runnable(){
-			
+		executor.submit(new Runnable() {
+
 			public void run() {
 				try {
 					listener.onNewPocketCardsEvent(event);
@@ -182,11 +175,10 @@ public class AsynchronousListener implements RemoteAllEventsListener {
 		});
 	}
 
-	
 	public void onNewCommunityCardsEvent(final NewCommunityCardsEvent event)
 			throws RemoteException {
-		executor.submit(new Runnable(){
-			
+		executor.submit(new Runnable() {
+
 			public void run() {
 				try {
 					listener.onNewCommunityCardsEvent(event);
@@ -198,10 +190,9 @@ public class AsynchronousListener implements RemoteAllEventsListener {
 		});
 	}
 
-	
 	public void onNewDealEvent(final NewDealEvent event) throws RemoteException {
-		executor.submit(new Runnable(){
-			
+		executor.submit(new Runnable() {
+
 			public void run() {
 				try {
 					listener.onNewDealEvent(event);
@@ -213,10 +204,10 @@ public class AsynchronousListener implements RemoteAllEventsListener {
 		});
 	}
 
-	
-	public void onNewRoundEvent(final NewRoundEvent event) throws RemoteException {
-		executor.submit(new Runnable(){
-			
+	public void onNewRoundEvent(final NewRoundEvent event)
+			throws RemoteException {
+		executor.submit(new Runnable() {
+
 			public void run() {
 				try {
 					listener.onNewRoundEvent(event);
@@ -228,10 +219,10 @@ public class AsynchronousListener implements RemoteAllEventsListener {
 		});
 	}
 
-	
-	public void onNextPlayerEvent(final NextPlayerEvent event) throws RemoteException {
-		executor.submit(new Runnable(){
-			
+	public void onNextPlayerEvent(final NextPlayerEvent event)
+			throws RemoteException {
+		executor.submit(new Runnable() {
+
 			public void run() {
 				try {
 					listener.onNextPlayerEvent(event);
@@ -243,12 +234,10 @@ public class AsynchronousListener implements RemoteAllEventsListener {
 		});
 	}
 
-
-	
 	public void onPlayerLeftTableEvent(final PlayerLeftTableEvent event)
 			throws RemoteException {
-		executor.submit(new Runnable(){
-			
+		executor.submit(new Runnable() {
+
 			public void run() {
 				try {
 					listener.onPlayerLeftTableEvent(event);
@@ -260,10 +249,10 @@ public class AsynchronousListener implements RemoteAllEventsListener {
 		});
 	}
 
-	
-	public void onShowHandEvent(final ShowHandEvent event) throws RemoteException {
-		executor.submit(new Runnable(){
-			
+	public void onShowHandEvent(final ShowHandEvent event)
+			throws RemoteException {
+		executor.submit(new Runnable() {
+
 			public void run() {
 				try {
 					listener.onShowHandEvent(event);
@@ -275,10 +264,9 @@ public class AsynchronousListener implements RemoteAllEventsListener {
 		});
 	}
 
-	
 	public void onWinnerEvent(final WinnerEvent event) throws RemoteException {
-		executor.submit(new Runnable(){
-			
+		executor.submit(new Runnable() {
+
 			public void run() {
 				try {
 					listener.onWinnerEvent(event);
@@ -290,11 +278,10 @@ public class AsynchronousListener implements RemoteAllEventsListener {
 		});
 	}
 
-	
 	public void onGameMessageEvent(final GameMessageEvent event)
 			throws RemoteException {
-		executor.submit(new Runnable(){
-			
+		executor.submit(new Runnable() {
+
 			public void run() {
 				try {
 					listener.onGameMessageEvent(event);
@@ -306,11 +293,10 @@ public class AsynchronousListener implements RemoteAllEventsListener {
 		});
 	}
 
-	
 	public void onTableCreatedEvent(final TableCreatedEvent event)
 			throws RemoteException {
-		executor.submit(new Runnable(){
-			
+		executor.submit(new Runnable() {
+
 			public void run() {
 				try {
 					listener.onTableCreatedEvent(event);
@@ -322,11 +308,10 @@ public class AsynchronousListener implements RemoteAllEventsListener {
 		});
 	}
 
-	
 	public void onServerMessageEvent(final ServerMessageEvent event)
 			throws RemoteException {
-		executor.submit(new Runnable(){
-			
+		executor.submit(new Runnable() {
+
 			public void run() {
 				try {
 					listener.onServerMessageEvent(event);
@@ -338,11 +323,10 @@ public class AsynchronousListener implements RemoteAllEventsListener {
 		});
 	}
 
-	
 	public void onPlayerJoinedTableEvent(final PlayerJoinedTableEvent event)
 			throws RemoteException {
-		executor.submit(new Runnable(){
-			
+		executor.submit(new Runnable() {
+
 			public void run() {
 				try {
 					listener.onPlayerJoinedTableEvent(event);
@@ -354,11 +338,10 @@ public class AsynchronousListener implements RemoteAllEventsListener {
 		});
 	}
 
-	
-	public void onBrokePlayerKickedOutEvent(final BrokePlayerKickedOutEvent event)
-			throws RemoteException {
-		executor.submit(new Runnable(){
-			
+	public void onBrokePlayerKickedOutEvent(
+			final BrokePlayerKickedOutEvent event) throws RemoteException {
+		executor.submit(new Runnable() {
+
 			public void run() {
 				try {
 					listener.onBrokePlayerKickedOutEvent(event);
@@ -370,11 +353,10 @@ public class AsynchronousListener implements RemoteAllEventsListener {
 		});
 	}
 
-	
 	public void onTableChangedEvent(final TableChangedEvent event)
 			throws RemoteException {
-		executor.submit(new Runnable(){
-			
+		executor.submit(new Runnable() {
+
 			public void run() {
 				try {
 					listener.onTableChangedEvent(event);
@@ -386,11 +368,10 @@ public class AsynchronousListener implements RemoteAllEventsListener {
 		});
 	}
 
-	
 	public void onTableRemovedEvent(final TableRemovedEvent event)
 			throws RemoteException {
-		executor.submit(new Runnable(){
-			
+		executor.submit(new Runnable() {
+
 			public void run() {
 				try {
 					listener.onTableRemovedEvent(event);

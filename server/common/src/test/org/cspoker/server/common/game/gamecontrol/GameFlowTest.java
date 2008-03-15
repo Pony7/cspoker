@@ -40,7 +40,7 @@ public class GameFlowTest extends TestCase {
 
 	static {
 		Log4JPropertiesLoader
-		.load("org/cspoker/server/common/logging/log4j.properties");
+				.load("org/cspoker/server/common/logging/log4j.properties");
 	}
 
 	private static Logger logger = Logger.getLogger(GameFlowTest.class);
@@ -58,7 +58,6 @@ public class GameFlowTest extends TestCase {
 	private GameMediator gameMediator;
 
 	private PlayerFactory playerFactory;
-
 
 	protected void setUp() {
 
@@ -87,7 +86,7 @@ public class GameFlowTest extends TestCase {
 
 		Game game = gameControl.getGame();
 
-		//Pre-flop Round
+		// Pre-flop Round
 		assertEquals(PreFlopRound.class, gameControl.getRound().getClass());
 		assertTrue(game.getCurrentPlayer().equals(kenzo));
 
@@ -140,7 +139,6 @@ public class GameFlowTest extends TestCase {
 			fail(e.getMessage());
 		}
 
-
 		// New Deal
 		assertEquals(cedric, game.getDealer());
 		assertEquals(PreFlopRound.class, gameControl.getRound().getClass());
@@ -190,7 +188,7 @@ public class GameFlowTest extends TestCase {
 			fail(e.getMessage());
 		}
 
-		//New Deal
+		// New Deal
 		assertEquals(guy, game.getDealer());
 		assertEquals(PreFlopRound.class, gameControl.getRound().getClass());
 	}
@@ -199,7 +197,7 @@ public class GameFlowTest extends TestCase {
 		GameControl gameControl = new GameControl(gameMediator, table, guy);
 		Game game = gameControl.getGame();
 
-		//New Deal
+		// New Deal
 		assertEquals(guy, game.getDealer());
 		assertEquals(PreFlopRound.class, gameControl.getRound().getClass());
 
@@ -249,20 +247,18 @@ public class GameFlowTest extends TestCase {
 			fail(e.getMessage());
 		}
 
-		//New Deal
+		// New Deal
 		assertEquals(PreFlopRound.class, gameControl.getRound().getClass());
 	}
 
 	/**
-	 * Test Settings:
-	 * > 3 players
-	 * > Big blind raises.
+	 * Test Settings: > 3 players > Big blind raises.
 	 */
 	public void testBigBlindRaisesCase() {
 		GameControl gameControl = new GameControl(gameMediator, table);
 		Game game = gameControl.getGame();
 
-		//Pre-flop Round
+		// Pre-flop Round
 		assertEquals(PreFlopRound.class, gameControl.getRound().getClass());
 		try {
 			gameControl.call(game.getCurrentPlayer());
@@ -327,7 +323,6 @@ public class GameFlowTest extends TestCase {
 		GameControl gameControl = new GameControl(gameMediator, table, kenzo);
 
 		Game game = gameControl.getGame();
-
 
 		try {
 			gameControl.call(game.getCurrentPlayer());
@@ -437,7 +432,6 @@ public class GameFlowTest extends TestCase {
 		GameControl gameControl = new GameControl(gameMediator, table, kenzo);
 		Game game = gameControl.getGame();
 
-
 		try {
 			gameControl.call(game.getCurrentPlayer());
 		} catch (IllegalActionException e) {
@@ -512,7 +506,8 @@ public class GameFlowTest extends TestCase {
 		GameFlowTest.logger.info("Common Cards: " + game.getCommunityCards());
 
 		// New game
-		GamePlayer testPlayer = PlayerFactory.global_Player_Factory.createNewPlayer("test");
+		GamePlayer testPlayer = PlayerFactory.global_Player_Factory
+				.createNewPlayer("test");
 
 		try {
 			gameControl.joinGame(new SeatId(4), testPlayer);
@@ -544,7 +539,6 @@ public class GameFlowTest extends TestCase {
 		} catch (PlayerListFullException e) {
 			fail(e.getMessage());
 		}
-
 
 		GameControl gameControl = new GameControl(gameMediator, table, kenzo);
 
@@ -596,8 +590,7 @@ public class GameFlowTest extends TestCase {
 		GameControl gameControl = new GameControl(gameMediator, table, kenzo);
 
 		GameFlowTest.logger.info("Betting Rules: "
-				+ gameControl.getGame().getBettingRules()
-				.toString());
+				+ gameControl.getGame().getBettingRules().toString());
 		Game game = gameControl.getGame();
 
 		GameFlowTest.logger.info("Dealer: " + game.getDealer());
@@ -642,11 +635,9 @@ public class GameFlowTest extends TestCase {
 			fail(e.getMessage());
 		}
 
-
 		GameControl gameControl = new GameControl(gameMediator, table);
 
 		Game game = gameControl.getGame();
-
 
 		try {
 			gameControl.call(game.getDealer());
@@ -673,7 +664,6 @@ public class GameFlowTest extends TestCase {
 		}
 
 		assertFalse(gameControl.getRound() instanceof WaitingRound);
-
 
 	}
 
@@ -708,11 +698,9 @@ public class GameFlowTest extends TestCase {
 			fail(e.getMessage());
 		}
 
-
 		GameControl gameControl = new GameControl(gameMediator, table, kenzo);
 
 		Game game = gameControl.getGame();
-
 
 		try {
 			gameControl.allIn(game.getCurrentPlayer());
@@ -761,7 +749,7 @@ public class GameFlowTest extends TestCase {
 		}
 	}
 
-	public void test2PlayersSmallBlindRaises(){
+	public void test2PlayersSmallBlindRaises() {
 		try {
 			kenzo = playerFactory.createNewPlayer("Kenzo", 500);
 			cedric = playerFactory.createNewPlayer("Cedric", 500);
@@ -786,14 +774,14 @@ public class GameFlowTest extends TestCase {
 			fail("Exception expected: can not check after raise");
 		} catch (IllegalActionException e) {
 		}
-		
+
 		try {
 			gameControl.call(cedric);
-			
+
 			assertEquals(FlopRound.class, gameControl.getRound().getClass());
 			gameControl.check(cedric);
 			gameControl.check(kenzo);
-			
+
 			assertEquals(TurnRound.class, gameControl.getRound().getClass());
 			gameControl.check(cedric);
 			gameControl.check(kenzo);
@@ -804,5 +792,5 @@ public class GameFlowTest extends TestCase {
 			fail(e.getMessage());
 		}
 		assertEquals(PreFlopRound.class, gameControl.getRound().getClass());
-}
+	}
 }

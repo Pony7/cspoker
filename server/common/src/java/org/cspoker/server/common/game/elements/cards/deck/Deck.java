@@ -95,7 +95,7 @@ public class Deck {
 	/**
 	 * Returns the textual representation of this deck.
 	 */
-	
+
 	public String toString() {
 		return cards.toString();
 	}

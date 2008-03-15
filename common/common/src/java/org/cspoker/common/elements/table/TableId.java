@@ -41,8 +41,8 @@ public class TableId implements Serializable {
 	/**
 	 * Construct a new table id with given id.
 	 * 
-	 * @param 	id
-	 *       	The long to use as id.
+	 * @param id
+	 *            The long to use as id.
 	 */
 	public TableId(long id) {
 		this.id = id;
@@ -55,7 +55,7 @@ public class TableId implements Serializable {
 	/**
 	 * Returns a hash code value for this table id.
 	 */
-	
+
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
@@ -66,7 +66,7 @@ public class TableId implements Serializable {
 	/**
 	 * Indicates whether some other object is "equal to" this one.
 	 */
-	
+
 	public boolean equals(Object obj) {
 		if (this == obj) {
 			return true;
@@ -84,7 +84,6 @@ public class TableId implements Serializable {
 		return true;
 	}
 
-	
 	public String toString() {
 		return String.valueOf(id);
 	}

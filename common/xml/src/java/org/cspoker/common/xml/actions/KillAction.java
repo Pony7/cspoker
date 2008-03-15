@@ -36,7 +36,6 @@ public class KillAction extends PlayerCommunicationAction<Void> {
 		// no op
 	}
 
-	
 	public void perform(PlayerCommunication pc,
 			AllInvocationEventsListener listener) {
 		pc.kill();

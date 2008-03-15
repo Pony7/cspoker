@@ -31,7 +31,7 @@ import org.xml.sax.helpers.DefaultHandler;
 import org.xml.sax.helpers.XMLReaderFactory;
 
 public class LoadProvidersFromXml {
-	
+
 	private static Logger logger = Logger.getLogger(LoadProvidersFromXml.class);
 	private final CommunicationProvider provider;
 
@@ -70,25 +70,31 @@ public class LoadProvidersFromXml {
 
 	private DefaultHandler getHandler() {
 		return new DefaultHandler() {
-			
+
 			public void startElement(String uri, String localName, String name,
 					Attributes attributes) throws SAXException {
-				if(localName.equals("provider")){
+				if (localName.equals("provider")) {
 					String address = attributes.getValue("address");
 					int port = Integer.parseInt(attributes.getValue("port"));
 					String type = attributes.getValue("type");
-					if(type.equals("rmi")){
-						provider.addRemotePlayerCommunicationProvider(new RemotePlayerCommunicationFactoryForRMI(address, port));
-					}else if(type.equals("http")){
-						provider.addRemotePlayerCommunicationProvider(new RemotePlayerCommunicationFactoryForHttp(address, port));
-					}else if(type.equals("socket")){
-						provider.addRemotePlayerCommunicationProvider(new RemotePlayerCommunicationFactoryForSocket(address, port));
-					}else{
-						throw new SAXException("Unknown provider type: "+type);
+					if (type.equals("rmi")) {
+						provider
+								.addRemotePlayerCommunicationProvider(new RemotePlayerCommunicationFactoryForRMI(
+										address, port));
+					} else if (type.equals("http")) {
+						provider
+								.addRemotePlayerCommunicationProvider(new RemotePlayerCommunicationFactoryForHttp(
+										address, port));
+					} else if (type.equals("socket")) {
+						provider
+								.addRemotePlayerCommunicationProvider(new RemotePlayerCommunicationFactoryForSocket(
+										address, port));
+					} else {
+						throw new SAXException("Unknown provider type: " + type);
 					}
 				}
 			}
 		};
 	}
-	
+
 }

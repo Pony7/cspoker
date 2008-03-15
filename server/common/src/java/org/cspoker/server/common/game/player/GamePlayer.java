@@ -64,7 +64,7 @@ public class GamePlayer {
 	 * The hidden cards.
 	 */
 	private final List<Card> pocketCards;
-	
+
 	/**
 	 * The variable containing the seat id.
 	 */
@@ -117,7 +117,7 @@ public class GamePlayer {
 	public PlayerId getId() {
 		return id;
 	}
-	
+
 	/***************************************************************************
 	 * Seat Id
 	 **************************************************************************/
@@ -130,8 +130,8 @@ public class GamePlayer {
 	public SeatId getSeatId() {
 		return seatId;
 	}
-	
-	public void setSeatId(SeatId seatId){
+
+	public void setSeatId(SeatId seatId) {
 		this.seatId = seatId;
 	}
 
@@ -187,7 +187,6 @@ public class GamePlayer {
 		pocketCards.clear();
 	}
 
-	
 	public String toString() {
 		return getId() + ": " + getName() + " ($" + getStack() + " in chips)";
 	}
@@ -195,7 +194,7 @@ public class GamePlayer {
 	/**
 	 * Returns a hash code value for this player.
 	 */
-	
+
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
@@ -206,7 +205,7 @@ public class GamePlayer {
 	/**
 	 * Indicates whether some other object is "equal to" this one.
 	 */
-	
+
 	public boolean equals(Object obj) {
 		if (this == obj) {
 			return true;
@@ -229,7 +228,7 @@ public class GamePlayer {
 	}
 
 	public synchronized Player getSavedPlayer() {
-		return new Player(getId(), getSeatId(), getName(), getStack().getValue(),
-				getBetChips().getValue());
+		return new Player(getId(), getSeatId(), getName(), getStack()
+				.getValue(), getBetChips().getValue());
 	}
 }

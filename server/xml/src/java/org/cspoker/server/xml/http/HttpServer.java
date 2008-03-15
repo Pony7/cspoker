@@ -62,9 +62,10 @@ public class HttpServer {
 			throws RemoteException {
 		this.port = port;
 		try {
-			server = com.sun.net.httpserver.HttpServer.create(new InetSocketAddress(port), 0);
+			server = com.sun.net.httpserver.HttpServer.create(
+					new InetSocketAddress(port), 0);
 		} catch (IOException e) {
-			throw new RemoteException("Creating HTTP server failed",e);
+			throw new RemoteException("Creating HTTP server failed", e);
 		}
 
 		authenticator = new XmlFileBasicAuthentication(auth);
@@ -85,9 +86,9 @@ public class HttpServer {
 	/**
 	 * Starts this server.
 	 */
-	public void start(){
+	public void start() {
 		server.start();
-		logger.info("Started HTTP server at port "+port);
+		logger.info("Started HTTP server at port " + port);
 	}
 
 }

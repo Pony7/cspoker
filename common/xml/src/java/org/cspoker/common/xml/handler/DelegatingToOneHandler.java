@@ -12,7 +12,6 @@ public class DelegatingToOneHandler extends DelegatingHandler {
 		this.delegate = delegate;
 	}
 
-	
 	public ContentHandler getHandler(String uri, String localName, String name,
 			Attributes atts) throws SAXException {
 		return delegate;

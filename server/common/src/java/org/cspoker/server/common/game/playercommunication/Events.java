@@ -39,7 +39,6 @@ public class Events implements Iterable<Event> {
 		return latestEventNumber;
 	}
 
-	
 	public String toString() {
 		return "events until " + latestEventNumber + ". " + events.toString();
 	}

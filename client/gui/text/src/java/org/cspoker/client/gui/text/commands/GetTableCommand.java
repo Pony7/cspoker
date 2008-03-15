@@ -29,10 +29,10 @@ public class GetTableCommand extends AbstractCommand {
 
 	public void execute(String... args) throws Exception {
 		Table t = rpc.getTable(new TableId(Integer.parseInt(args[0])));
-		String s = 	"Table name: "+t.getName()+" ("+t.getId()+")"+n+
-				  	" "+t.getNbPlayers()+" players:"+n;
-		for(Player p:t.getPlayers()){
-			s+="  -"+p.getName()+n;
+		String s = "Table name: " + t.getName() + " (" + t.getId() + ")" + n
+				+ " " + t.getNbPlayers() + " players:" + n;
+		for (Player p : t.getPlayers()) {
+			s += "  -" + p.getName() + n;
 		}
 		console.print(s);
 	}

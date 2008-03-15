@@ -32,7 +32,7 @@ import org.cspoker.common.xml.events.invocation.IllegalActionEvent;
 public class GetTableAction extends PlayerCommunicationAction<Table> {
 
 	private static final long serialVersionUID = 7897218843022885169L;
-	
+
 	@XmlAttribute
 	private TableId tableid;
 
@@ -45,7 +45,6 @@ public class GetTableAction extends PlayerCommunicationAction<Table> {
 		// no op
 	}
 
-	
 	public void perform(PlayerCommunication pc,
 			AllInvocationEventsListener listener) {
 		try {

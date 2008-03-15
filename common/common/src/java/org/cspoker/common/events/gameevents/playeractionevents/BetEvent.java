@@ -52,7 +52,6 @@ public class BetEvent extends ActionChangedPotEvent {
 		// no op
 	}
 
-	
 	public String toString() {
 		return getPlayer().getName() + " bets " + getAmount() + " chips.";
 	}
@@ -65,7 +64,6 @@ public class BetEvent extends ActionChangedPotEvent {
 		return player;
 	}
 
-	
 	public void dispatch(RemoteAllEventsListener listener)
 			throws RemoteException {
 		listener.onBetEvent(this);

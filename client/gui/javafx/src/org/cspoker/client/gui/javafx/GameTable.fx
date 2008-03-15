@@ -465,7 +465,7 @@ trigger on new GameTable{
                                             action: operation() {
                                                 call();
                                             }
-                                            enabled: bind main.state.me.next and(sizeof main.state.mytable.players[p | p.amount>main.state.me.amount])>0 and main.state.mytable.maxamount < main.state.me.stack+main.state.me.amount
+                                            enabled: bind main.state.me.next and main.state.mytable.maxamount>main.state.me.amount and main.state.mytable.maxamount < main.state.me.stack+main.state.me.amount
                                         },
                                         Button{
                                             row: secondRow
@@ -485,7 +485,7 @@ trigger on new GameTable{
                                             action: operation() {
                                                 raise();
                                             }
-                                            enabled: bind main.state.me.next and main.state.mytable.temppot - main.state.mytable.pot > 0 and main.state.mytable.temppot - main.state.mytable.pot < main.state.me.stack
+                                            enabled: bind main.state.me.next and main.state.mytable.maxamount > 0 and main.state.mytable.maxamount < main.state.me.stack+main.state.me.amount
                                         },
                                         Button{
                                             row: secondRow

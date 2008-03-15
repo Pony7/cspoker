@@ -43,10 +43,10 @@ public class RMIServer implements RemoteLoginServer {
 
 	private int port;
 
-	public RMIServer(int port){
+	public RMIServer(int port) {
 		this(port, new XmlFileAuthenticator());
 	}
-	
+
 	public RMIServer(int port, XmlFileAuthenticator authenticator) {
 		this.authenticator = authenticator;
 		this.port = port;
@@ -82,29 +82,28 @@ public class RMIServer implements RemoteLoginServer {
 		ExecutorService executor = RequestExecutor.getInstance();
 
 		try {
-			executor.submit(new Callable<Void>(){
+			executor.submit(new Callable<Void>() {
 
-				
-				public Void call() throws RemoteException{
+				public Void call() throws RemoteException {
 					Registry registry = LocateRegistry.createRegistry(port);
-					RemoteLoginServer stub = (RemoteLoginServer) UnicastRemoteObject.exportObject(RMIServer.this, 0);
+					RemoteLoginServer stub = (RemoteLoginServer) UnicastRemoteObject
+							.exportObject(RMIServer.this, 0);
 					registry.rebind("CSPokerServer", stub);
-					logger.info("Started RMI server at port "+port);
+					logger.info("Started RMI server at port " + port);
 					return null;
 				}
-				
-				
+
 				public String toString() {
-					return "RMI Server startup at port "+port;
+					return "RMI Server startup at port " + port;
 				}
-				
+
 			}).get();
 		} catch (InterruptedException e) {
 			logger.error(e);
 			Thread.currentThread().interrupt();
 		} catch (ExecutionException e) {
 			logger.error(e);
-			throw (RemoteException)(e.getCause());
+			throw (RemoteException) (e.getCause());
 		}
 	}
 

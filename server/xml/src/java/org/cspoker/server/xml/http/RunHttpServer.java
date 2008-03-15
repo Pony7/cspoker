@@ -40,7 +40,7 @@ public class RunHttpServer {
 		} catch (NumberFormatException e) {
 			usage();
 		}
-		logger.info("Starting HTTP server at port "+port);
+		logger.info("Starting HTTP server at port " + port);
 		(new HttpServer(port)).start();
 	}
 

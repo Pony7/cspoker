@@ -59,18 +59,21 @@ class InitialState extends PlayerCommunicationState {
 		super(playerCommunication);
 	}
 
-	
-	public Table join(TableId tableId, SeatId seatId) throws IllegalActionException {
-		if(tableId == null)
-			throw new IllegalArgumentException("The given table id is not effective.");
+	public Table join(TableId tableId, SeatId seatId)
+			throws IllegalActionException {
+		if (tableId == null) {
+			throw new IllegalArgumentException(
+					"The given table id is not effective.");
+		}
 
 		GameTable table;
 		try {
 			table = TableManager.global_table_manager.getTable(tableId);
 		} catch (TableDoesNotExistException e) {
-			throw new IllegalActionException("You can not join the given table. "+e.getMessage());
+			throw new IllegalActionException(
+					"You can not join the given table. " + e.getMessage());
 		}
-		
+
 		if (table.isPlaying()) {
 			GameMediator mediator = GameManager.getGame(tableId);
 			GameManager.getServerMediator().unsubscribeAllServerEventsListener(
@@ -84,9 +87,9 @@ class InitialState extends PlayerCommunicationState {
 					playerCommunication, mediator));
 		} else {
 			try {
-				if(seatId==null){
+				if (seatId == null) {
 					table.addPlayer(playerCommunication.getPlayer());
-				}else{
+				} else {
 					table.addPlayer(seatId, playerCommunication.getPlayer());
 				}
 
@@ -95,53 +98,57 @@ class InitialState extends PlayerCommunicationState {
 			} catch (PlayerListFullException e) {
 				throw new IllegalActionException(e.getMessage());
 			}
-			GameManager.getGame(table.getId()).publishPlayerJoinedTable(new PlayerJoinedTableEvent(playerCommunication.getPlayer().getSavedPlayer()));
+			GameManager.getGame(table.getId()).publishPlayerJoinedTable(
+					new PlayerJoinedTableEvent(playerCommunication.getPlayer()
+							.getSavedPlayer()));
 			playerCommunication
 					.setPlayerCommunicationState(new WaitingAtTableState(
-							playerCommunication, table, GameManager.getGame(table.getId())));
+							playerCommunication, table, GameManager
+									.getGame(table.getId())));
 		}
-		GameManager.getServerMediator().publishTableChangedEvent(new TableChangedEvent(table.getSavedTable()));
-		
+		GameManager.getServerMediator().publishTableChangedEvent(
+				new TableChangedEvent(table.getSavedTable()));
+
 		InitialState.logger.info(playerCommunication.getPlayer().getName()
 				+ " joined " + tableId + ".");
 		return table.getSavedTable();
 	}
 
-	
 	public Table createTable(String name) throws IllegalActionException {
 		return createTable(name, new GameProperty());
 	}
-	
-	
-	public Table createTable(String name, GameProperty property) throws IllegalActionException {
-		GameTable table = TableManager.global_table_manager.createTable(playerCommunication.getPlayer()
-				.getId(), name, property);
-		if(name==null)
-			throw new IllegalArgumentException("The given name should be effective.");
+
+	public Table createTable(String name, GameProperty property)
+			throws IllegalActionException {
+		GameTable table = TableManager.global_table_manager.createTable(
+				playerCommunication.getPlayer().getId(), name, property);
+		if (name == null) {
+			throw new IllegalArgumentException(
+					"The given name should be effective.");
+		}
 		try {
 			table.addPlayer(new SeatId(0), playerCommunication.getPlayer());
 		} catch (SeatTakenException e) {
 			throw new IllegalStateException(
-			"A newly created table should have at least a place for one player.");
+					"A newly created table should have at least a place for one player.");
 		}
 		playerCommunication.setPlayerCommunicationState(new TableCreatedState(
 				playerCommunication, table));
 		InitialState.logger.info(playerCommunication.getPlayer().getName()
-				+ " created " + table.getId() + ": "+name+".");
+				+ " created " + table.getId() + ": " + name + ".");
 		GameManager.getServerMediator().publishTableCreatedEvent(
 				new TableCreatedEvent(playerCommunication.getPlayer()
 						.getSavedPlayer(), table.getSavedTable()));
 		return table.getSavedTable();
 	}
 
-	
 	protected String getStdErrorMessage() {
 		return "You have to be in a game to perform this action.";
 	}
 
-	
 	public void kill() {
 		GameManager.getServerMediator().unsubscribeAllServerEventsListener(
-				playerCommunication.getId(), playerCommunication.getAllEventsListener());
+				playerCommunication.getId(),
+				playerCommunication.getAllEventsListener());
 	}
 }

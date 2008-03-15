@@ -50,45 +50,36 @@ class PlayingState extends PlayerCommunicationState {
 		this.gameMediator = gameMediator;
 	}
 
-	
 	public void call() throws IllegalActionException {
 		gameMediator.call(playerCommunication.getPlayer());
 	}
 
-	
 	public void bet(int amount) throws IllegalActionException {
 		gameMediator.bet(playerCommunication.getPlayer(), amount);
 	}
 
-	
 	public void fold() throws IllegalActionException {
 		gameMediator.fold(playerCommunication.getPlayer());
 	}
 
-	
 	public void check() throws IllegalActionException {
 		gameMediator.check(playerCommunication.getPlayer());
 	}
 
-	
 	public void raise(int amount) throws IllegalActionException {
 		gameMediator.raise(playerCommunication.getPlayer(), amount);
 	}
 
-
-	
 	public void allIn() throws IllegalActionException {
 		gameMediator.allIn(playerCommunication.getPlayer());
 		;
 	}
 
-	
 	public void say(String message) {
 		gameMediator.publishGameMessageEvent(new GameMessageEvent(
 				playerCommunication.getPlayer().getSavedPlayer(), message));
 	}
 
-	
 	public void leaveTable() throws IllegalActionException {
 		gameMediator.unsubscribeAllGameEventsListener(playerCommunication
 				.getId(), playerCommunication.getAllEventsListener());
@@ -101,12 +92,10 @@ class PlayingState extends PlayerCommunicationState {
 
 	}
 
-	
 	protected String getStdErrorMessage() {
 		return "You can not perform this action while playing.";
 	}
 
-	
 	public void kill() {
 		try {
 			leaveTable();
@@ -117,7 +106,7 @@ class PlayingState extends PlayerCommunicationState {
 		GameManager.getServerMediator().unsubscribeAllServerEventsListener(
 				playerCommunication.getId(),
 				playerCommunication.getAllEventsListener());
-		
+
 	}
 
 }

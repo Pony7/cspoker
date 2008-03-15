@@ -27,14 +27,13 @@ public class NoOpSubmitter implements Runnable {
 		this.c = c;
 	}
 
-	
 	public void run() {
 		try {
 			c.send(XmlHttpChannel.noOpXml);
 		} catch (Exception e) {
 			logger.fatal(e);
 			c.close();
-		} 
+		}
 	}
 
 }

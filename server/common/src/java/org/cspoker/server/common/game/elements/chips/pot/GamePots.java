@@ -124,7 +124,7 @@ public class GamePots {
 			player.getBetChips().transferAllChipsTo(pot.getChips());
 		}
 	}
-	
+
 	/**
 	 * Collect all chips from the bet chips pile of all players in the given
 	 * list to the main pot.
@@ -216,7 +216,6 @@ public class GamePots {
 		return value;
 	}
 
-	
 	public String toString() {
 		String toReturn = "Pot is ";
 		if (isClosed()) {

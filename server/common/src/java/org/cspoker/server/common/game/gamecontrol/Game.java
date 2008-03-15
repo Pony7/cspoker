@@ -63,7 +63,7 @@ public class Game {
 	 * This looping list contains the active players of this game.
 	 */
 	private LoopingList<GamePlayer> currentHandPlayers;
-	
+
 	/**
 	 * This looping list contains the initial players of this game.
 	 */
@@ -93,7 +93,7 @@ public class Game {
 	 * This variable contains the firstToActPlayer of this game.
 	 */
 	private GamePlayer firstToActPlayer;
-	
+
 	/**
 	 * The last event player is the last player that has done significant
 	 * change, such as a raise.
@@ -110,15 +110,15 @@ public class Game {
 	 * This variable contains the next dealer of this game.
 	 */
 	private GamePlayer nextDealer;
-	
+
 	private BettingRules bettingRules;
-	
-	public GamePlayer getLastActionPlayer(){
+
+	public GamePlayer getLastActionPlayer() {
 		return lastActionPlayer;
 	}
-	
-	public void setLastActionPlayer(GamePlayer player){
-		this.lastActionPlayer = player;
+
+	public void setLastActionPlayer(GamePlayer player) {
+		lastActionPlayer = player;
 	}
 
 	/***************************************************************************
@@ -141,8 +141,8 @@ public class Game {
 		this(table, dealer, new NoLimit());
 
 	}
-	
-	public Game(GameTable table, GamePlayer dealer, BettingRules bettingRules){
+
+	public Game(GameTable table, GamePlayer dealer, BettingRules bettingRules) {
 		this.bettingRules = bettingRules;
 		this.table = table;
 		table.setPlaying(true);
@@ -173,12 +173,13 @@ public class Game {
 		deck = new Deck();
 		pots = new GamePots();
 		List<GamePlayer> players = table.getPlayers();
-		
-		//new looping lists
+
+		// new looping lists
 		currentHandPlayers = new LoopingList<GamePlayer>(players);
 		initialCurrentHandPlayers = new LoopingList<GamePlayer>(players);
-		
-		//make sure no one has pocket cards (TODO move to game player + bet pile)
+
+		// make sure no one has pocket cards (TODO move to game player + bet
+		// pile)
 		for (GamePlayer player : currentHandPlayers.getList()) {
 			player.clearPocketCards();
 		}
@@ -187,8 +188,8 @@ public class Game {
 		setFirstToActPlayer(getCurrentPlayer());
 		setNextDealer(getCurrentPlayer());
 	}
-	
-	public void initializeForNewHand(){
+
+	public void initializeForNewHand() {
 		seatInitalDealPlayers();
 		setDealer(getNextDealer());
 	}
@@ -329,12 +330,12 @@ public class Game {
 	public GameProperty getGameProperty() {
 		return gameProperty;
 	}
-	
+
 	/***************************************************************************
 	 * Game Property
 	 **************************************************************************/
-	
-	public BettingRules getBettingRules(){
+
+	public BettingRules getBettingRules() {
 		return bettingRules;
 	}
 
@@ -419,15 +420,14 @@ public class Game {
 	public void setCurrentPlayer(GamePlayer player) {
 		currentHandPlayers.setCurrent(player);
 	}
-	
-	public void changeCurrentPlayerToDealer(){
+
+	public void changeCurrentPlayerToDealer() {
 		setCurrentPlayer(getDealer());
 	}
-	
-	public void changeCurrentPlayerToInitial(){
+
+	public void changeCurrentPlayerToInitial() {
 		setCurrentPlayer(getFirstToActPlayer());
 	}
-	
 
 	/**
 	 * Check whether this game can have the given player as its current player.
@@ -460,7 +460,7 @@ public class Game {
 		if (getFirstToActPlayer().equals(player)) {
 			setFirstToActPlayer(currentHandPlayers.getNextTo(player));
 		}
-		if(getLastActionPlayer().equals(player)){
+		if (getLastActionPlayer().equals(player)) {
 			setLastActionPlayer(currentHandPlayers.getPreviousTo(player));
 		}
 		currentHandPlayers.remove(player);
@@ -545,17 +545,17 @@ public class Game {
 	public void addTablePlayersToGame() {
 		currentHandPlayers = new LoopingList<GamePlayer>(table.getPlayers());
 	}
-	
-	public void seatInitalDealPlayers(){
+
+	public void seatInitalDealPlayers() {
 		currentHandPlayers = initialCurrentHandPlayers;
 	}
-	
-	public int getNbSeatedPlayers(){
+
+	public int getNbSeatedPlayers() {
 		return table.getNbPlayers();
 	}
-	
-	public boolean hasNoSeatedPlayers(){
-		return getNbSeatedPlayers()==0;
+
+	public boolean hasNoSeatedPlayers() {
+		return getNbSeatedPlayers() == 0;
 	}
 
 	/***************************************************************************
@@ -563,22 +563,23 @@ public class Game {
 	 * 
 	 **************************************************************************/
 
-	public SeatId joinGame(SeatId seatId, GamePlayer player) throws SeatTakenException, PlayerListFullException {
-		if(seatId==null){
+	public SeatId joinGame(SeatId seatId, GamePlayer player)
+			throws SeatTakenException, PlayerListFullException {
+		if (seatId == null) {
 			seatId = table.addPlayer(player);
-		}else{
+		} else {
 			table.addPlayer(seatId, player);
 		}
-		
+
 		if (getDealer() == null) {
 			setDealer(player);
 		} else if (getNextDealer() == null) {
 			setNextDealer(player);
 		}
-		Game.logger.info(player.getName()+" joined the game. ["+table.getId()+"]");
+		Game.logger.info(player.getName() + " joined the game. ["
+				+ table.getId() + "]");
 		return seatId;
 	}
-	
 
 	public void leaveGame(GamePlayer player) throws IllegalActionException {
 		if (!table.hasAsPlayer(player)) {
@@ -591,10 +592,11 @@ public class Game {
 		if ((getDealer() == null) || getDealer().equals(player)) {
 			setDealer(getNextDealer());
 		}
-		
+
 		initialCurrentHandPlayers.remove(player);
 		table.removePlayer(player);
-		Game.logger.info(player.getName()+" left the game. ["+table.getId()+"]");
+		Game.logger.info(player.getName() + " left the game. [" + table.getId()
+				+ "]");
 	}
 
 	/**
@@ -622,12 +624,12 @@ public class Game {
 	}
 
 	private int nbShowdownPlayers;
-	
+
 	public int getNbLastShowdown() {
 		return nbShowdownPlayers;
 	}
-	
-	public void showdownOccured(int nbShowdownPlayers){
+
+	public void showdownOccured(int nbShowdownPlayers) {
 		this.nbShowdownPlayers = nbShowdownPlayers;
 	}
 }

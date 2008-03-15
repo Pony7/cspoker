@@ -48,7 +48,6 @@ public class CheckEvent extends GameEvent {
 		// no op
 	}
 
-	
 	public String toString() {
 		return getPlayer().getName() + " checks.";
 	}
@@ -57,7 +56,6 @@ public class CheckEvent extends GameEvent {
 		return player;
 	}
 
-	
 	public void dispatch(RemoteAllEventsListener listener)
 			throws RemoteException {
 		listener.onCheckEvent(this);

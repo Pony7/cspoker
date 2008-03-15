@@ -184,7 +184,6 @@ public class WaitForIO implements Runnable, Prioritizable {
 		stringBuilder.setLength(0);
 	}
 
-	
 	public String toString() {
 		return "WaitForIO";
 	}

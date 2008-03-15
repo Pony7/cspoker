@@ -38,7 +38,6 @@ public class ServerMediator {
 
 	}
 
-
 	/**
 	 * Inform all subscribed table created listeners a table created event has
 	 * occurred.
@@ -79,7 +78,6 @@ public class ServerMediator {
 	 * a table created.
 	 */
 	private final List<TableCreatedListener> tableCreatedListeners = new CopyOnWriteArrayList<TableCreatedListener>();
-
 
 	/**
 	 * Inform all subscribed message listeners a message event has occurred.
@@ -122,7 +120,8 @@ public class ServerMediator {
 	private final List<ServerMessageListener> serverMessageListeners = new CopyOnWriteArrayList<ServerMessageListener>();
 
 	/**
-	 * Inform all subscribed table changed listeners a table changed event has occurred.
+	 * Inform all subscribed table changed listeners a table changed event has
+	 * occurred.
 	 * 
 	 * Each subscribed table changed listener is updated by calling their
 	 * onTableChanged() method.
@@ -138,8 +137,8 @@ public class ServerMediator {
 	/**
 	 * Subscribe the given table changed listener for table changed events.
 	 * 
-	 * @param 	listener
-	 *      	The listener to subscribe.
+	 * @param listener
+	 *            The listener to subscribe.
 	 */
 	public void subscribeTableChangedListener(TableChangedListener listener) {
 		tableChangedListeners.add(listener);
@@ -148,21 +147,22 @@ public class ServerMediator {
 	/**
 	 * Unsubscribe the given table changed listener for table changed events.
 	 * 
-	 * @param 	listener
-	 *  		The listener to unsubscribe.
+	 * @param listener
+	 *            The listener to unsubscribe.
 	 */
 	public void unsubscribeTableChangedListener(TableChangedListener listener) {
 		tableChangedListeners.remove(listener);
 	}
 
 	/**
-	 * This list contains all table changed listeners that should be alerted on a
-	 * table changed.
+	 * This list contains all table changed listeners that should be alerted on
+	 * a table changed.
 	 */
 	private final List<TableChangedListener> tableChangedListeners = new CopyOnWriteArrayList<TableChangedListener>();
-	
+
 	/**
-	 * Inform all subscribed table removed listeners a table removed event has occurred.
+	 * Inform all subscribed table removed listeners a table removed event has
+	 * occurred.
 	 * 
 	 * Each subscribed table removed listener is updated by calling their
 	 * onTableRemoved() method.
@@ -178,8 +178,8 @@ public class ServerMediator {
 	/**
 	 * Subscribe the given table removed listener for table removed events.
 	 * 
-	 * @param 	listener
-	 *      	The listener to subscribe.
+	 * @param listener
+	 *            The listener to subscribe.
 	 */
 	public void subscribeTableRemovedListener(TableRemovedListener listener) {
 		tableRemovedListeners.add(listener);
@@ -188,20 +188,19 @@ public class ServerMediator {
 	/**
 	 * Unsubscribe the given table removed listener for table removed events.
 	 * 
-	 * @param 	listener
-	 *  		The listener to unsubscribe.
+	 * @param listener
+	 *            The listener to unsubscribe.
 	 */
 	public void unsubscribeTableRemovedListener(TableRemovedListener listener) {
 		tableRemovedListeners.remove(listener);
 	}
 
 	/**
-	 * This list contains all table removed listeners that should be alerted on a
-	 * table removed.
+	 * This list contains all table removed listeners that should be alerted on
+	 * a table removed.
 	 */
 	private final List<TableRemovedListener> tableRemovedListeners = new CopyOnWriteArrayList<TableRemovedListener>();
-	
-	
+
 	/***************************************************************************
 	 * Server Events
 	 **************************************************************************/

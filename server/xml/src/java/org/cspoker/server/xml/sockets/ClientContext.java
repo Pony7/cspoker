@@ -99,23 +99,24 @@ public class ClientContext implements XmlEventListener {
 	}
 
 	private void unregisterWriteInterest() {
-			client.keyFor(selector).interestOps(SelectionKey.OP_READ);
-			selector.wakeup();
-			logger.trace("removed write interest");
+		client.keyFor(selector).interestOps(SelectionKey.OP_READ);
+		selector.wakeup();
+		logger.trace("removed write interest");
 
 	}
 
 	private void registerWriteInterest() {
-			client.keyFor(selector).interestOps(SelectionKey.OP_READ);
-			client.keyFor(selector).interestOps(
-					SelectionKey.OP_READ | SelectionKey.OP_WRITE);
-			selector.wakeup();
+		client.keyFor(selector).interestOps(SelectionKey.OP_READ);
+		client.keyFor(selector).interestOps(
+				SelectionKey.OP_READ | SelectionKey.OP_WRITE);
+		selector.wakeup();
 	}
 
 	public void appendToWriteBuffer(ByteBuffer bytes) {
 		synchronized (writeBufferLock) {
 			writeBuffer.add(bytes);
-			logger.trace("adding write interest, added " + bytes.remaining()+ " bytes to the buffer.");
+			logger.trace("adding write interest, added " + bytes.remaining()
+					+ " bytes to the buffer.");
 			registerWriteInterest();
 		}
 	}
@@ -124,8 +125,8 @@ public class ClientContext implements XmlEventListener {
 		if (playerComm != null) {
 			// TODO will this sequence of calls end?
 			XmlPlayerCommunicationFactory.global_factory.unRegister(session);
-			SessionManager.global_session_manager
-			.killSession(session.getUserName());
+			SessionManager.global_session_manager.killSession(session
+					.getUserName());
 		}
 		try {
 			client.close();
@@ -154,16 +155,16 @@ public class ClientContext implements XmlEventListener {
 	}
 
 	public void login(String username, String password, String useragent)
-	throws IllegalNameException {
+			throws IllegalNameException {
 		synchronized (authenticateLock) {
 			if (isAuthenticated()) {
 				throw new IllegalStateException("Can't login twice");
 			}
 			session = SessionManager.global_session_manager
-			.getSession(username);
+					.getSession(username);
 			try {
 				playerComm = XmlPlayerCommunicationFactory.global_factory
-				.getRegisteredXmlPlayerCommunication(session, this);
+						.getRegisteredXmlPlayerCommunication(session, this);
 			} catch (PlayerKilledExcepion e) {
 				logger.error("player killed right after login", e);
 				// ignore

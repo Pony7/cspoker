@@ -43,15 +43,14 @@ public class JoinAndLeaveGameTest extends TestCase {
 
 	private PlayerFactory playerFactory;
 
-	
 	protected void setUp() {
-		
+
 		playerFactory = new TestPlayerFactory();
 		try {
 			kenzo = playerFactory.createNewPlayer("Kenzo", 500);
 			cedric = playerFactory.createNewPlayer("Cedric", 500);
 			guy = playerFactory.createNewPlayer("Guy", 500);
-			
+
 			TableId id = new TableId(0);
 			gameMediator = new GameMediator(id);
 			table = new GameTable(id, new GameProperty(10));
@@ -59,26 +58,24 @@ public class JoinAndLeaveGameTest extends TestCase {
 			fail(e.getMessage());
 		}
 	}
-	
+
 	/**
-	 * Test Settings:
-	 * > 2 players
-	 * > on-turn player leaves the table.
+	 * Test Settings: > 2 players > on-turn player leaves the table.
 	 */
-	public void testLeaveTable1(){
+	public void testLeaveTable1() {
 		try {
 			table.addPlayer(kenzo);
 			table.addPlayer(cedric);
-		}catch (PlayerListFullException e) {
+		} catch (PlayerListFullException e) {
 			fail(e.getMessage());
 		}
-		
+
 		GameControl gameControl = new GameControl(gameMediator, table, kenzo);
-		
+
 		try {
 			assertEquals(PreFlopRound.class, gameControl.getRound().getClass());
 			gameControl.leaveGame(kenzo);
-			assertEquals(0,kenzo.getBetChips().getValue());
+			assertEquals(0, kenzo.getBetChips().getValue());
 			assertEquals(WaitingRound.class, gameControl.getRound().getClass());
 			gameControl.joinGame(null, kenzo);
 			assertEquals(PreFlopRound.class, gameControl.getRound().getClass());
@@ -86,13 +83,12 @@ public class JoinAndLeaveGameTest extends TestCase {
 			fail(e.getMessage());
 		}
 	}
-	
+
 	/**
-	 * Test Settings:
-	 * > 2 players
-	 * > other player (big blind player) leaves the table.
+	 * Test Settings: > 2 players > other player (big blind player) leaves the
+	 * table.
 	 */
-	public void testLeaveTable2(){
+	public void testLeaveTable2() {
 		try {
 			kenzo = playerFactory.createNewPlayer("Kenzo", 500);
 			cedric = playerFactory.createNewPlayer("Cedric", 500);
@@ -105,13 +101,13 @@ public class JoinAndLeaveGameTest extends TestCase {
 		} catch (PlayerListFullException e) {
 			fail(e.getMessage());
 		}
-		
+
 		GameControl gameControl = new GameControl(gameMediator, table, kenzo);
-		
+
 		try {
 			assertEquals(PreFlopRound.class, gameControl.getRound().getClass());
 			gameControl.leaveGame(cedric);
-			assertEquals(0,cedric.getBetChips().getValue());
+			assertEquals(0, cedric.getBetChips().getValue());
 			assertEquals(WaitingRound.class, gameControl.getRound().getClass());
 			gameControl.joinGame(null, cedric);
 			assertEquals(PreFlopRound.class, gameControl.getRound().getClass());
@@ -119,13 +115,11 @@ public class JoinAndLeaveGameTest extends TestCase {
 			fail(e.getMessage());
 		}
 	}
-	
+
 	/**
-	 * Test Settings:
-	 * > 3 players
-	 * > kenzo leaves the table.
+	 * Test Settings: > 3 players > kenzo leaves the table.
 	 */
-	public void testLeaveTable3(){
+	public void testLeaveTable3() {
 		try {
 			table.addPlayer(kenzo);
 			table.addPlayer(cedric);
@@ -133,9 +127,9 @@ public class JoinAndLeaveGameTest extends TestCase {
 		} catch (PlayerListFullException e) {
 			fail(e.getMessage());
 		}
-		
+
 		GameControl gameControl = new GameControl(gameMediator, table, kenzo);
-		
+
 		try {
 			assertEquals(PreFlopRound.class, gameControl.getRound().getClass());
 			assertEquals(kenzo, gameControl.getGame().getDealer());
@@ -145,7 +139,7 @@ public class JoinAndLeaveGameTest extends TestCase {
 			assertEquals(cedric, gameControl.getGame().getNextDealer());
 			assertFalse(gameControl.getGame().hasAsActivePlayer(kenzo));
 			assertFalse(gameControl.getGame().getTable().hasAsPlayer(kenzo));
-			assertEquals(0,kenzo.getBetChips().getValue());
+			assertEquals(0, kenzo.getBetChips().getValue());
 			gameControl.fold(cedric);
 			assertEquals(cedric, gameControl.getGame().getDealer());
 			assertEquals(guy, gameControl.getGame().getNextDealer());
@@ -161,13 +155,11 @@ public class JoinAndLeaveGameTest extends TestCase {
 			fail(e.getMessage());
 		}
 	}
-	
+
 	/**
-	 * Test Settings:
-	 * > 3 players
-	 * > guy leaves the table.
+	 * Test Settings: > 3 players > guy leaves the table.
 	 */
-	public void testLeaveTable4(){
+	public void testLeaveTable4() {
 		try {
 			table.addPlayer(kenzo);
 			table.addPlayer(cedric);
@@ -175,9 +167,9 @@ public class JoinAndLeaveGameTest extends TestCase {
 		} catch (PlayerListFullException e) {
 			fail(e.getMessage());
 		}
-		
+
 		GameControl gameControl = new GameControl(gameMediator, table, kenzo);
-		
+
 		try {
 			assertEquals(kenzo, gameControl.getGame().getDealer());
 			assertEquals(cedric, gameControl.getGame().getNextDealer());
@@ -187,7 +179,7 @@ public class JoinAndLeaveGameTest extends TestCase {
 			assertEquals(cedric, gameControl.getGame().getNextDealer());
 			assertFalse(gameControl.getGame().hasAsActivePlayer(guy));
 			assertFalse(gameControl.getGame().getTable().hasAsPlayer(guy));
-			assertEquals(0,guy.getBetChips().getValue());
+			assertEquals(0, guy.getBetChips().getValue());
 			gameControl.fold(kenzo);
 			assertEquals(cedric, gameControl.getGame().getDealer());
 			assertEquals(kenzo, gameControl.getGame().getNextDealer());
@@ -203,13 +195,11 @@ public class JoinAndLeaveGameTest extends TestCase {
 			fail(e.getMessage());
 		}
 	}
-	
+
 	/**
-	 * Test Settings:
-	 * > 3 players
-	 * > cedric leaves the table.
+	 * Test Settings: > 3 players > cedric leaves the table.
 	 */
-	public void testLeaveTable5(){
+	public void testLeaveTable5() {
 		try {
 			table.addPlayer(kenzo);
 			table.addPlayer(cedric);
@@ -217,9 +207,9 @@ public class JoinAndLeaveGameTest extends TestCase {
 		} catch (PlayerListFullException e) {
 			fail(e.getMessage());
 		}
-		
+
 		GameControl gameControl = new GameControl(gameMediator, table, kenzo);
-		
+
 		try {
 			assertEquals(kenzo, gameControl.getGame().getDealer());
 			assertEquals(cedric, gameControl.getGame().getNextDealer());
@@ -229,7 +219,7 @@ public class JoinAndLeaveGameTest extends TestCase {
 			assertEquals(guy, gameControl.getGame().getNextDealer());
 			assertFalse(gameControl.getGame().hasAsActivePlayer(cedric));
 			assertFalse(gameControl.getGame().getTable().hasAsPlayer(cedric));
-			assertEquals(0,cedric.getBetChips().getValue());
+			assertEquals(0, cedric.getBetChips().getValue());
 			gameControl.fold(kenzo);
 			assertEquals(guy, gameControl.getGame().getDealer());
 			assertEquals(kenzo, gameControl.getGame().getNextDealer());

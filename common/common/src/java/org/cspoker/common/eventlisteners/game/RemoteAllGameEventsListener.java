@@ -36,6 +36,7 @@ public interface RemoteAllGameEventsListener extends Remote,
 		RemoteNewDealListener, RemoteNewRoundListener,
 		RemoteNextPlayerListener, RemotePlayerJoinedTableListener,
 		RemotePlayerLeftTableListener, RemoteShowHandListener,
-		RemoteWinnerListener, RemoteGameMessageListener, RemoteBrokePlayerKickedOutListener {
+		RemoteWinnerListener, RemoteGameMessageListener,
+		RemoteBrokePlayerKickedOutListener {
 
 }

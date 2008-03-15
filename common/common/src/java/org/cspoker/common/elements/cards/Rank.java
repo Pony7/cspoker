@@ -55,7 +55,7 @@ public enum Rank {
 	/**
 	 * Returns a textual representation of this rank
 	 */
-	
+
 	public String toString() {
 		return getShortDescription();
 	}

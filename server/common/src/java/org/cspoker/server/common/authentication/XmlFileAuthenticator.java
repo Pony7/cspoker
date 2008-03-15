@@ -39,7 +39,7 @@ public class XmlFileAuthenticator {
 	}
 
 	public XmlFileAuthenticator(String file) {
-		passwords = new ConcurrentHashMap<String,String>();
+		passwords = new ConcurrentHashMap<String, String>();
 		XMLReader xr;
 		try {
 			xr = XMLReaderFactory.createXMLReader();
@@ -71,14 +71,12 @@ public class XmlFileAuthenticator {
 		return new DefaultHandler() {
 
 			private StringBuilder sb = new StringBuilder();
-			
-			
+
 			public void characters(char[] ch, int start, int length)
 					throws SAXException {
 				sb.append(ch, start, length);
 			}
 
-			
 			public void startElement(String uri, String localName, String name,
 					Attributes attributes) throws SAXException {
 				sb.setLength(0);
@@ -86,7 +84,6 @@ public class XmlFileAuthenticator {
 
 			private String lastname;
 
-			
 			public void endElement(String uri, String localName, String name)
 					throws SAXException {
 				if (name.equalsIgnoreCase("name")) {
@@ -101,6 +98,6 @@ public class XmlFileAuthenticator {
 	}
 
 	public boolean hasPassword(String user, String pass) {
-		return (pass!=null)&&pass.equals(passwords.get(user));
+		return (pass != null) && pass.equals(passwords.get(user));
 	}
 }

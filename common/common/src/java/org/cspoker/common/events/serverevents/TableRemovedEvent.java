@@ -27,30 +27,29 @@ import org.cspoker.common.eventlisteners.RemoteAllEventsListener;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-public class TableRemovedEvent extends ServerEvent{
-	
+public class TableRemovedEvent extends ServerEvent {
+
 	private static final long serialVersionUID = 3201252758310449164L;
-	
+
 	@XmlAttribute
 	private TableId id;
-	
-	public TableRemovedEvent(TableId id){
+
+	public TableRemovedEvent(TableId id) {
 		this.id = id;
 	}
-	
-	protected TableRemovedEvent(){
+
+	protected TableRemovedEvent() {
 		// no op
 	}
-	
-	public TableId getTableId(){
+
+	public TableId getTableId() {
 		return id;
 	}
-	
-	public String toString(){
-		return "Table "+id.toString()+" has been removed.";
+
+	public String toString() {
+		return "Table " + id.toString() + " has been removed.";
 	}
-	
-	
+
 	public void dispatch(RemoteAllEventsListener listener)
 			throws RemoteException {
 		listener.onTableRemovedEvent(this);

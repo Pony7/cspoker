@@ -55,13 +55,13 @@ public class XmlChannelUnMarshaller implements XmlEventListener {
 	public void collect(String xmlEvent) {
 		try {
 			Unmarshaller um = EventAndActionJAXBContext.context
-			.createUnmarshaller();
+					.createUnmarshaller();
 			um.setSchema(null);
 			collect((Event) um.unmarshal(new StringReader(xmlEvent.trim())));
 		} catch (JAXBException e) {
-			logger.fatal("Parsing failed:\n"+xmlEvent,e);
-			throw new IllegalStateException("Parsing failed:\n"+xmlEvent,e);
-		} 
+			logger.fatal("Parsing failed:\n" + xmlEvent, e);
+			throw new IllegalStateException("Parsing failed:\n" + xmlEvent, e);
+		}
 	}
 
 	public void collect(Event event) {

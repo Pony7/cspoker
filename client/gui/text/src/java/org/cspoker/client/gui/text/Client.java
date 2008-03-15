@@ -53,11 +53,11 @@ public class Client {
 	private Console console;
 	private final RemotePlayerCommunication rpc;
 
-	public Client(final String username,
-			final String password, Console console,RemotePlayerCommunicationFactory factory) throws NoProviderException,
-			RemoteException, LoginException {
+	public Client(final String username, final String password,
+			Console console, RemotePlayerCommunicationFactory factory)
+			throws NoProviderException, RemoteException, LoginException {
 		this.console = console;
-		this.rpc = factory.getRemotePlayerCommunication(username, password);
+		rpc = factory.getRemotePlayerCommunication(username, password);
 		registerCommands();
 	}
 

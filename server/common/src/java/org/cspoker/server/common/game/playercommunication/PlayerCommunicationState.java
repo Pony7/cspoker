@@ -99,12 +99,11 @@ abstract class PlayerCommunicationState {
 	 *             [must] This actions is not a valid action in the current
 	 *             state.
 	 */
-	public Table join(TableId tableId, SeatId seatId) throws IllegalActionException {
+	public Table join(TableId tableId, SeatId seatId)
+			throws IllegalActionException {
 		throw new IllegalActionException("Joining table " + tableId
 				+ " is not a valid action. " + getStdErrorMessage());
 	}
-	
-	
 
 	public void leaveTable() throws IllegalActionException {
 		throw new IllegalActionException(
@@ -120,8 +119,9 @@ abstract class PlayerCommunicationState {
 				"Creating a table is not a valid action. "
 						+ getStdErrorMessage());
 	}
-	
-	public Table createTable(String name, GameProperty property) throws IllegalActionException {
+
+	public Table createTable(String name, GameProperty property)
+			throws IllegalActionException {
 		throw new IllegalActionException(
 				"Creating a table is not a valid action. "
 						+ getStdErrorMessage());

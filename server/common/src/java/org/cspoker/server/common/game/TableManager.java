@@ -37,7 +37,7 @@ import org.cspoker.server.common.game.exception.TableDoesNotExistException;
  * 
  */
 public class TableManager {
-	
+
 	public final static TableManager global_table_manager = new TableManager();
 
 	/**
@@ -61,7 +61,7 @@ public class TableManager {
 	 *             [must] There does not exist a table with given table id. |
 	 *             !hasATableWithId(id)
 	 */
-	public GameTable getTable(TableId id) throws TableDoesNotExistException{
+	public GameTable getTable(TableId id) throws TableDoesNotExistException {
 		if (!hasATableWithId(id)) {
 			throw new TableDoesNotExistException(id);
 		}
@@ -89,8 +89,9 @@ public class TableManager {
 		hashMap.put(tableId, table);
 		return table;
 	}
-	
-	public GameTable createTable(PlayerId id, String name, GameProperty gameProperty) {
+
+	public GameTable createTable(PlayerId id, String name,
+			GameProperty gameProperty) {
 		TableId tableId = new TableId(counter.getAndIncrement());
 		GameTable table = new GameTable(tableId, name, gameProperty);
 		hashMap.put(tableId, table);
@@ -100,10 +101,10 @@ public class TableManager {
 	public Set<TableId> getAllTableIds() {
 		return Collections.unmodifiableSet(hashMap.keySet());
 	}
-	
-	public List<Table> getAllTables(){
+
+	public List<Table> getAllTables() {
 		List<Table> tables = new ArrayList<Table>();
-		for(GameTable table:hashMap.values()){
+		for (GameTable table : hashMap.values()) {
 			tables.add(table.getSavedTable());
 		}
 		return tables;

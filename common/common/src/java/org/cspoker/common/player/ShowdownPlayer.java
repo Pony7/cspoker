@@ -38,12 +38,13 @@ public class ShowdownPlayer implements Serializable {
 	private Set<Card> cards;
 
 	private String description;
-	
+
 	@XmlElementWrapper
 	@XmlElement(name = "card")
 	private Set<Card> handCards;
 
-	public ShowdownPlayer(Player player, Set<Card> cards, Set<Card> handCards, String description) {
+	public ShowdownPlayer(Player player, Set<Card> cards, Set<Card> handCards,
+			String description) {
 		this.player = player;
 		this.handCards = Collections.unmodifiableSet(handCards);
 		this.cards = Collections.unmodifiableSet(cards);
@@ -57,7 +58,7 @@ public class ShowdownPlayer implements Serializable {
 	/**
 	 * Returns a textual representation of this showdown player.
 	 */
-	
+
 	public String toString() {
 		return player.getName() + " has a " + description;
 	}
@@ -69,8 +70,8 @@ public class ShowdownPlayer implements Serializable {
 	public Set<Card> getAllCards() {
 		return cards;
 	}
-	
-	public Set<Card> getHandCards(){
+
+	public Set<Card> getHandCards() {
 		return handCards;
 	}
 

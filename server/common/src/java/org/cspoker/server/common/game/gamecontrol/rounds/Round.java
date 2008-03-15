@@ -50,7 +50,6 @@ public abstract class Round {
 	 * The variable containing the game mediator.
 	 */
 	protected final GameMediator gameMediator;
-	
 
 	/***************************************************************************
 	 * Constructor
@@ -67,7 +66,7 @@ public abstract class Round {
 		this.game = game;
 		getBettingRules().setBetPlaced(false);
 		getBettingRules().clearNBRaises();
-		
+
 		game.changeCurrentPlayerToInitial();
 		game.setLastActionPlayer(game.getFirstToActPlayer());
 	}
@@ -180,8 +179,8 @@ public abstract class Round {
 		throw new IllegalActionException(player.getName()
 				+ " can not fold in this round.");
 	}
-	
-	public void foldAction(GamePlayer player) throws IllegalActionException{
+
+	public void foldAction(GamePlayer player) throws IllegalActionException {
 	}
 
 	/**
@@ -231,7 +230,6 @@ public abstract class Round {
 		return game.getLastActionPlayer().equals(game.getCurrentPlayer());
 	}
 
-
 	/**
 	 * End the current round.
 	 * 
@@ -263,7 +261,9 @@ public abstract class Round {
 			if (player.getStack().getValue() == 0) {
 				try {
 					getGame().leaveGame(player);
-					gameMediator.publishBrokePlayerKickedOutEvent(new BrokePlayerKickedOutEvent(player.getSavedPlayer()));
+					gameMediator
+							.publishBrokePlayerKickedOutEvent(new BrokePlayerKickedOutEvent(
+									player.getSavedPlayer()));
 				} catch (IllegalActionException e) {
 					throw new IllegalStateException();
 				}
