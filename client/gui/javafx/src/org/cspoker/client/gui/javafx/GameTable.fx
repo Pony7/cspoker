@@ -455,7 +455,7 @@ trigger on new GameTable{
                                             action: operation() {
                                                 check();
                                             }
-                                            enabled: bind main.state.me.next and(main.state.mytable.temppot - main.state.mytable.pot == 0 or "Big Blind".equals(main.state.me.lastaction))
+                                            enabled: bind main.state.me.next and main.state.mytable.maxamount == main.state.me.amount
                                         },
                                         Button{
                                             row: firstRow
