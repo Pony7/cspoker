@@ -86,87 +86,77 @@ public class XmlChannelRemotePlayerCommunication implements
 		return c;
 	}
 
-	@Override
 	public void allIn() throws IllegalActionException, RemoteException {
 		marshaller.perform(new AllInAction(getId()));
 	}
 
-	@Override
 	public void bet(int amount) throws IllegalActionException, RemoteException {
 		marshaller.perform(new BetAction(getId(), amount));
 	}
 
-	@Override
 	public void call() throws IllegalActionException, RemoteException {
 		marshaller.perform(new CallAction(getId()));
 	}
 
-	@Override
 	public void check() throws IllegalActionException, RemoteException {
 		marshaller.perform(new CheckAction(getId()));
 	}
-	
-	@Override
-	public Table createTable(String name, GameProperty settings) throws IllegalActionException, RemoteException {
-		return marshaller.perform(new CreateTableAction(getId(), name, settings));
+
+	public Table createTable(String name, GameProperty settings)
+			throws IllegalActionException, RemoteException {
+		return marshaller
+				.perform(new CreateTableAction(getId(), name, settings));
 	}
 
-	@Override
 	public void fold() throws IllegalActionException, RemoteException {
 		marshaller.perform(new FoldAction(getId()));
 	}
 
-	@Override
 	public Table joinTable(TableId seatId) throws IllegalActionException,
 			RemoteException {
-		return marshaller.perform(new JoinTableAction(getId(), seatId,null));
-	}
-	
-	@Override
-	public Table joinTable(TableId tableId, SeatId seatId) throws IllegalActionException,
-			RemoteException {
-		return marshaller.perform(new JoinTableAction(getId(), tableId, seatId));
+		return marshaller.perform(new JoinTableAction(getId(), seatId, null));
 	}
 
-	@Override
+	public Table joinTable(TableId tableId, SeatId seatId)
+			throws IllegalActionException, RemoteException {
+		return marshaller
+				.perform(new JoinTableAction(getId(), tableId, seatId));
+	}
+
 	public void kill() throws IllegalActionException, RemoteException {
 		marshaller.perform(new KillAction(getId()));
 		c.close();
 	}
 
-	@Override
 	public void leaveTable() throws IllegalActionException, RemoteException {
 		marshaller.perform(new LeaveTableAction(getId()));
 	}
 
-	@Override
 	public void raise(int amount) throws IllegalActionException,
 			RemoteException {
 		marshaller.perform(new RaiseAction(getId(), amount));
 	}
 
-	@Override
 	public void say(String message) throws RemoteException,
 			IllegalActionException {
 		marshaller.perform(new SayAction(getId(), message));
 	}
 
-	@Override
 	public void startGame() throws IllegalActionException, RemoteException {
 		marshaller.perform(new StartGameAction(getId()));
 	}
 
-	@Override
-	public Table getTable(TableId id) throws IllegalActionException, RemoteException {
-		return marshaller.perform(new GetTableAction(getId(),id));
+	public Table getTable(TableId id) throws IllegalActionException,
+			RemoteException {
+		return marshaller.perform(new GetTableAction(getId(), id));
 	}
 
-	@Override
 	public TableList getTables() throws RemoteException {
 		try {
 			return marshaller.perform(new GetTablesAction(getId()));
 		} catch (IllegalActionException e) {
-			throw new IllegalStateException("Exception wasn't thrown at the server!",e);
+			throw new IllegalStateException(
+					"Exception wasn't thrown at the server!", e);
 		}
 	}
 }

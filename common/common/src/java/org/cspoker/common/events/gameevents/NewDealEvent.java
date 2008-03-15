@@ -56,7 +56,7 @@ public class NewDealEvent extends GameEvent {
 		return dealer;
 	}
 
-	@Override
+	
 	public String toString() {
 		String toReturn = "A new deal with ";
 		for (Player player : players) {
@@ -70,7 +70,7 @@ public class NewDealEvent extends GameEvent {
 				+ " is dealer.";
 	}
 
-	@Override
+	
 	public void dispatch(RemoteAllEventsListener listener)
 			throws RemoteException {
 		listener.onNewDealEvent(this);

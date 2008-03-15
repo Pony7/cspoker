@@ -48,7 +48,7 @@ public class PlayerJoinedTableEvent extends GameEvent {
 		// no op
 	}
 
-	@Override
+	
 	public String toString() {
 		return player.getName() + " joined the table.";
 	}
@@ -61,7 +61,7 @@ public class PlayerJoinedTableEvent extends GameEvent {
 		return player;
 	}
 
-	@Override
+	
 	public void dispatch(RemoteAllEventsListener listener)
 			throws RemoteException {
 		listener.onPlayerJoinedTableEvent(this);

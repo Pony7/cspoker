@@ -53,7 +53,7 @@ public class WinnerEvent extends GameEvent {
 		return winners;
 	}
 
-	@Override
+	
 	public String toString() {
 		String toReturn = "Winners: ";
 		for (Winner winner : winners) {
@@ -64,7 +64,7 @@ public class WinnerEvent extends GameEvent {
 		return toReturn.substring(0, toReturn.length() - 2) + ".";
 	}
 
-	@Override
+	
 	public void dispatch(RemoteAllEventsListener listener)
 			throws RemoteException {
 		listener.onWinnerEvent(this);

@@ -50,45 +50,45 @@ class PlayingState extends PlayerCommunicationState {
 		this.gameMediator = gameMediator;
 	}
 
-	@Override
+	
 	public void call() throws IllegalActionException {
 		gameMediator.call(playerCommunication.getPlayer());
 	}
 
-	@Override
+	
 	public void bet(int amount) throws IllegalActionException {
 		gameMediator.bet(playerCommunication.getPlayer(), amount);
 	}
 
-	@Override
+	
 	public void fold() throws IllegalActionException {
 		gameMediator.fold(playerCommunication.getPlayer());
 	}
 
-	@Override
+	
 	public void check() throws IllegalActionException {
 		gameMediator.check(playerCommunication.getPlayer());
 	}
 
-	@Override
+	
 	public void raise(int amount) throws IllegalActionException {
 		gameMediator.raise(playerCommunication.getPlayer(), amount);
 	}
 
 
-	@Override
+	
 	public void allIn() throws IllegalActionException {
 		gameMediator.allIn(playerCommunication.getPlayer());
 		;
 	}
 
-	@Override
+	
 	public void say(String message) {
 		gameMediator.publishGameMessageEvent(new GameMessageEvent(
 				playerCommunication.getPlayer().getSavedPlayer(), message));
 	}
 
-	@Override
+	
 	public void leaveTable() throws IllegalActionException {
 		gameMediator.unsubscribeAllGameEventsListener(playerCommunication
 				.getId(), playerCommunication.getAllEventsListener());
@@ -101,12 +101,12 @@ class PlayingState extends PlayerCommunicationState {
 
 	}
 
-	@Override
+	
 	protected String getStdErrorMessage() {
 		return "You can not perform this action while playing.";
 	}
 
-	@Override
+	
 	public void kill() {
 		try {
 			leaveTable();

@@ -176,19 +176,19 @@ public class TestSockets {
 
 				}
 
-				@Override
+				
 				public void onBrokePlayerKickedOutEvent(
 						BrokePlayerKickedOutEvent event) throws RemoteException {
 					System.out.println(event.toString());					
 				}
 
-				@Override
+				
 				public void onTableChangedEvent(TableChangedEvent event)
 				{
 					System.out.println(event.toString());					
 				}
 
-				@Override
+				
 				public void onTableRemovedEvent(TableRemovedEvent event)
 				{
 					System.out.println(event.toString());					

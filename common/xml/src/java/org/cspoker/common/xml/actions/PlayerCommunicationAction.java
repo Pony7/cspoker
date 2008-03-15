@@ -21,16 +21,12 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 
-import org.apache.log4j.Logger;
 import org.cspoker.common.PlayerCommunication;
 import org.cspoker.common.xml.eventlisteners.invocation.AllInvocationEventsListener;
 import org.cspoker.common.xml.events.invocation.SuccessfulInvocationEvent;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 public abstract class PlayerCommunicationAction<T> implements Serializable {
-
-	private final static Logger logger = Logger
-			.getLogger(PlayerCommunicationAction.class);
 
 	@XmlAttribute
 	private long id;
@@ -55,7 +51,7 @@ public abstract class PlayerCommunicationAction<T> implements Serializable {
 		return id;
 	}
 
-	@Override
+	
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
@@ -63,7 +59,7 @@ public abstract class PlayerCommunicationAction<T> implements Serializable {
 		return result;
 	}
 
-	@Override
+	
 	public boolean equals(Object obj) {
 		if (this == obj) {
 			return true;

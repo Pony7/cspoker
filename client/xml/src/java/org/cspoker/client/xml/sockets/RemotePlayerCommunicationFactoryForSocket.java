@@ -39,7 +39,7 @@ public class RemotePlayerCommunicationFactoryForSocket implements
 		this.port = port;
 	}
 	
-	@Override
+	
 	public XmlChannelRemotePlayerCommunication getRemotePlayerCommunication(
 			String username, String password)
 			throws ConnectException, LoginException {
@@ -58,7 +58,7 @@ public class RemotePlayerCommunicationFactoryForSocket implements
 	}
 	
 
-	@Override
+	
 	public String toString() {
 		return "socket://"+server+":"+port;
 	}

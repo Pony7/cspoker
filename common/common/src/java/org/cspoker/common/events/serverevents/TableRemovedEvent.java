@@ -50,7 +50,7 @@ public class TableRemovedEvent extends ServerEvent{
 		return "Table "+id.toString()+" has been removed.";
 	}
 	
-	@Override
+	
 	public void dispatch(RemoteAllEventsListener listener)
 			throws RemoteException {
 		listener.onTableRemovedEvent(this);

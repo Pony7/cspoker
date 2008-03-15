@@ -55,7 +55,7 @@ public class TableId implements Serializable {
 	/**
 	 * Returns a hash code value for this table id.
 	 */
-	@Override
+	
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
@@ -66,7 +66,7 @@ public class TableId implements Serializable {
 	/**
 	 * Indicates whether some other object is "equal to" this one.
 	 */
-	@Override
+	
 	public boolean equals(Object obj) {
 		if (this == obj) {
 			return true;
@@ -84,7 +84,7 @@ public class TableId implements Serializable {
 		return true;
 	}
 
-	@Override
+	
 	public String toString() {
 		return String.valueOf(id);
 	}

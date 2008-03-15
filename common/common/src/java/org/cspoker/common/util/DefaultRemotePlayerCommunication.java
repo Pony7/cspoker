@@ -94,30 +94,30 @@ public class DefaultRemotePlayerCommunication implements
 		p.unsubscribeAllEventsListener(listener);
 	}
 
-	@Override
+	
 	public Table getTable(TableId id) throws IllegalActionException,
 			RemoteException {
 		return p.getTable(id);
 	}
 
-	@Override
+	
 	public TableList getTables() throws RemoteException {
 		return p.getTables();
 	}
 
-	@Override
+	
 	public Table joinTable(TableId id) throws IllegalActionException,
 			RemoteException {
 		return p.joinTable(id);
 	}
 
-	@Override
+	
 	public Table joinTable(TableId tableId, SeatId seatId)
 			throws IllegalActionException, RemoteException {
 		return p.joinTable(tableId, seatId);
 	}
 
-	@Override
+	
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
@@ -125,7 +125,7 @@ public class DefaultRemotePlayerCommunication implements
 		return result;
 	}
 	
-	@Override
+	
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;

@@ -52,7 +52,7 @@ public class BigBlindEvent extends ActionChangedPotEvent {
 		// no op
 	}
 
-	@Override
+	
 	public String toString() {
 		return getPlayer().getName() + " bets the big blind of " + getAmount()
 				+ " chips.";
@@ -66,7 +66,7 @@ public class BigBlindEvent extends ActionChangedPotEvent {
 		return player;
 	}
 
-	@Override
+	
 	public void dispatch(RemoteAllEventsListener listener)
 			throws RemoteException {
 		listener.onBigBlindEvent(this);

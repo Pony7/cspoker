@@ -149,6 +149,6 @@ public abstract class BettingRules {
 		lastBetAmount = amount;
 	}
 
-	@Override
+	
 	public abstract String toString();
 }

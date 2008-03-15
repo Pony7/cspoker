@@ -97,7 +97,7 @@ public class GamePot {
 		return getChips().getValue();
 	}
 
-	@Override
+	
 	public String toString() {
 		String toReturn = getValue() + " chips in this pot. Showdown players: ";
 		for (GamePlayer player : players) {

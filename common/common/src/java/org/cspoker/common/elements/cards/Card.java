@@ -38,7 +38,7 @@ public final class Card implements Comparable<Card>, Serializable {
 		return suit;
 	}
 
-	@Override
+	
 	public String toString() {
 		return rank.getShortDescription() + suit.getShortDescription();
 	}
@@ -53,7 +53,7 @@ public final class Card implements Comparable<Card>, Serializable {
 		return (thisVal < anotherVal ? -1 : (thisVal == anotherVal ? 0 : 1));
 	}
 
-	@Override
+	
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
@@ -62,7 +62,7 @@ public final class Card implements Comparable<Card>, Serializable {
 		return result;
 	}
 
-	@Override
+	
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;

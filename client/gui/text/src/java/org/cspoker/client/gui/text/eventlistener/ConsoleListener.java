@@ -149,19 +149,16 @@ public class ConsoleListener implements RemoteAllEventsListener {
 
 	}
 
-	@Override
 	public void onBrokePlayerKickedOutEvent(BrokePlayerKickedOutEvent event)
 	{
 		console.print(event.toString());		
 	}
 
-	@Override
 	public void onTableChangedEvent(TableChangedEvent event)
 	{
 		console.print(event.toString());		
 	}
 
-	@Override
 	public void onTableRemovedEvent(TableRemovedEvent event)
 	{
 		console.print(event.toString());		

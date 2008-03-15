@@ -56,7 +56,7 @@ public class NewCommunityCardsEvent extends GameEvent {
 		return communityCards;
 	}
 
-	@Override
+	
 	public String toString() {
 		String toReturn = "New Community Cards: ";
 		for (Card card : communityCards) {
@@ -66,7 +66,7 @@ public class NewCommunityCardsEvent extends GameEvent {
 		return toReturn.substring(0, toReturn.length() - 2) + ".";
 	}
 
-	@Override
+	
 	public void dispatch(RemoteAllEventsListener listener)
 			throws RemoteException {
 		listener.onNewCommunityCardsEvent(this);

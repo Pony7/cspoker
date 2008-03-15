@@ -59,7 +59,7 @@ class InitialState extends PlayerCommunicationState {
 		super(playerCommunication);
 	}
 
-	@Override
+	
 	public Table join(TableId tableId, SeatId seatId) throws IllegalActionException {
 		if(tableId == null)
 			throw new IllegalArgumentException("The given table id is not effective.");
@@ -107,12 +107,12 @@ class InitialState extends PlayerCommunicationState {
 		return table.getSavedTable();
 	}
 
-	@Override
+	
 	public Table createTable(String name) throws IllegalActionException {
 		return createTable(name, new GameProperty());
 	}
 	
-	@Override
+	
 	public Table createTable(String name, GameProperty property) throws IllegalActionException {
 		GameTable table = TableManager.global_table_manager.createTable(playerCommunication.getPlayer()
 				.getId(), name, property);
@@ -134,12 +134,12 @@ class InitialState extends PlayerCommunicationState {
 		return table.getSavedTable();
 	}
 
-	@Override
+	
 	protected String getStdErrorMessage() {
 		return "You have to be in a game to perform this action.";
 	}
 
-	@Override
+	
 	public void kill() {
 		GameManager.getServerMediator().unsubscribeAllServerEventsListener(
 				playerCommunication.getId(), playerCommunication.getAllEventsListener());

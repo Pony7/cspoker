@@ -1333,7 +1333,7 @@ public class GameMediator {
 			this.player = player;
 		}
 
-		@Override
+		
 		public void run() {
 			try {
 				GameMediator.logger.info(player.getName()+" auto-fold called.");

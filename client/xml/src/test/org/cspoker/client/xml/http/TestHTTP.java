@@ -178,19 +178,19 @@ public class TestHTTP {
 
 				}
 
-				@Override
+				
 				public void onBrokePlayerKickedOutEvent(
 						BrokePlayerKickedOutEvent event){
 					System.out.println(event.toString());					
 				}
 
-				@Override
+				
 				public void onTableChangedEvent(TableChangedEvent event)
 				{
 					System.out.println(event.toString());					
 				}
 
-				@Override
+				
 				public void onTableRemovedEvent(TableRemovedEvent event)
 				{
 					System.out.println(event.toString());					

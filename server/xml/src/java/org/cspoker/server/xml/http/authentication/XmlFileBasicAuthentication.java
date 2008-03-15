@@ -31,7 +31,7 @@ public class XmlFileBasicAuthentication extends BasicAuthenticator {
 		this.file = file;
 	}
 
-	@Override
+	
 	public boolean checkCredentials(String user, String pass) {
 		boolean ok = false;
 		if (file.hasPassword(user, pass)) {

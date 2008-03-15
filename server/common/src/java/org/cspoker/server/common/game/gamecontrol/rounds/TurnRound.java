@@ -37,7 +37,7 @@ public class TurnRound extends BettingRound {
 		TurnRound.logger.info("*** TURN *** " + game.getCommunityCards());
 	}
 
-	@Override
+	
 	public Round getNextRound() {
 		if (potsDividedToWinner()) {
 			return getNewDealRound();
@@ -45,17 +45,17 @@ public class TurnRound extends BettingRound {
 		return new FinalRound(gameMediator, getGame());
 	}
 
-	@Override
+	
 	public boolean isLowBettingRound() {
 		return true;
 	}
 
-	@Override
+	
 	public boolean isHighBettingRound() {
 		return !isLowBettingRound();
 	}
 
-	@Override
+	
 	public String toString() {
 		return "turn round";
 	}

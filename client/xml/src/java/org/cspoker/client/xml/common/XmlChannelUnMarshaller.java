@@ -52,7 +52,6 @@ public class XmlChannelUnMarshaller implements XmlEventListener {
 		channel.registerXmlEventListener(this);
 	}
 
-	@Override
 	public void collect(String xmlEvent) {
 		try {
 			Unmarshaller um = EventAndActionJAXBContext.context

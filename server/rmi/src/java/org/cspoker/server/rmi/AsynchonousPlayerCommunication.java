@@ -35,7 +35,7 @@ public class AsynchonousPlayerCommunication extends
 		this.name = name;
 	}
 	
-	@Override
+	
 	public void subscribeAllEventsListener(RemoteAllEventsListener listener)
 			throws RemoteException {
 		AsynchronousListener wrapped = new AsynchronousListener(listener,name);
@@ -43,7 +43,7 @@ public class AsynchonousPlayerCommunication extends
 		super.subscribeAllEventsListener(wrapped);
 	}
 	
-	@Override
+	
 	public void unsubscribeAllEventsListener(RemoteAllEventsListener listener)
 			throws RemoteException {
 		AsynchronousListener old = listeners.remove(listener);

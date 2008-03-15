@@ -46,7 +46,7 @@ public class ShowHandEvent extends GameEvent {
 		// no op
 	}
 
-	@Override
+	
 	public String toString() {
 		return player.toString();
 	}
@@ -55,7 +55,7 @@ public class ShowHandEvent extends GameEvent {
 		return player;
 	}
 
-	@Override
+	
 	public void dispatch(RemoteAllEventsListener listener)
 			throws RemoteException {
 		listener.onShowHandEvent(this);

@@ -74,7 +74,7 @@ public class PlayerCommunicationTest extends TestCase {
 
 	private PlayerFactory playerFactory;
 
-	@Override
+	
 	public void setUp() {
 		playerFactory = new TestPlayerFactory();
 	}
@@ -267,60 +267,60 @@ public class PlayerCommunicationTest extends TestCase {
 			this.map = map;
 		}
 
-		@Override
+		
 		public void onAllInEvent(AllInEvent event) throws RemoteException {
 		}
 
-		@Override
+		
 		public void onBetEvent(BetEvent event) throws RemoteException {
 		}
 
-		@Override
+		
 		public void onBigBlindEvent(BigBlindEvent event) throws RemoteException {
 		}
 
-		@Override
+		
 		public void onCallEvent(CallEvent event) throws RemoteException {
 		}
 
-		@Override
+		
 		public void onCheckEvent(CheckEvent event) throws RemoteException {
 		}
 
-		@Override
+		
 		public void onFoldEvent(FoldEvent event) throws RemoteException {
 		}
 
-		@Override
+		
 		public void onRaiseEvent(RaiseEvent event) throws RemoteException {
 		}
 
-		@Override
+		
 		public void onSmallBlindEvent(SmallBlindEvent event)
 				throws RemoteException {
 		}
 
-		@Override
+		
 		public void onNewPocketCardsEvent(NewPocketCardsEvent event)
 				throws RemoteException {
 		}
 
-		@Override
+		
 		public void onNewCommunityCardsEvent(NewCommunityCardsEvent event)
 				throws RemoteException {
 		}
 
-		@Override
+		
 		public void onNewDealEvent(NewDealEvent event) throws RemoteException {
 		}
 
-		@Override
+		
 		public void onNewRoundEvent(NewRoundEvent event) throws RemoteException {
 			currentComm = map.get(event.getPlayer().getId());
 			PlayerCommunicationTest.logger.info("Changed to " + currentComm);
 		}
 
-		@Override
+		
 		public void onNextPlayerEvent(NextPlayerEvent event)
 				throws RemoteException {
 			currentComm = map.get(event.getPlayer().getId());
@@ -328,50 +328,50 @@ public class PlayerCommunicationTest extends TestCase {
 
 		}
 
-		@Override
+		
 		public void onPlayerJoinedTableEvent(PlayerJoinedTableEvent event)
 				throws RemoteException {
 		}
 
-		@Override
+		
 		public void onPlayerLeftTableEvent(PlayerLeftTableEvent event)
 				throws RemoteException {
 		}
 
-		@Override
+		
 		public void onShowHandEvent(ShowHandEvent event) throws RemoteException {
 		}
 
-		@Override
+		
 		public void onWinnerEvent(WinnerEvent event) throws RemoteException {
 		}
 
-		@Override
+		
 		public void onGameMessageEvent(GameMessageEvent event)
 				throws RemoteException {
 		}
 
-		@Override
+		
 		public void onTableCreatedEvent(TableCreatedEvent event)
 				throws RemoteException {
 		}
 
-		@Override
+		
 		public void onServerMessageEvent(ServerMessageEvent event)
 				throws RemoteException {
 		}
 
-		@Override
+		
 		public void onBrokePlayerKickedOutEvent(BrokePlayerKickedOutEvent event)
 				throws RemoteException {
 		}
 
-		@Override
+		
 		public void onTableChangedEvent(TableChangedEvent event)
 				throws RemoteException {
 		}
 
-		@Override
+		
 		public void onTableRemovedEvent(TableRemovedEvent event)
 				throws RemoteException {
 		}
@@ -385,129 +385,129 @@ public class PlayerCommunicationTest extends TestCase {
 		
 		private List<Event> events = new CopyOnWriteArrayList<Event>();
 
-		@Override
+		
 		public void onAllInEvent(AllInEvent event) throws RemoteException{
 			events.add(event);
 		}
 
-		@Override
+		
 		public void onBetEvent(BetEvent event) throws RemoteException{
 			events.add(event);
 		}
 
-		@Override
+		
 		public void onBigBlindEvent(BigBlindEvent event) throws RemoteException{
 			events.add(event);
 			
 		}
 
-		@Override
+		
 		public void onCallEvent(CallEvent event) throws RemoteException {
 			events.add(event);
 		}
 
-		@Override
+		
 		public void onCheckEvent(CheckEvent event) throws RemoteException {
 			events.add(event);
 		}
 
-		@Override
+		
 		public void onFoldEvent(FoldEvent event) throws RemoteException {
 			events.add(event);
 		}
 
-		@Override
+		
 		public void onRaiseEvent(RaiseEvent event) throws RemoteException {
 			events.add(event);
 		}
 
-		@Override
+		
 		public void onSmallBlindEvent(SmallBlindEvent event)
 				throws RemoteException {
 			events.add(event);
 		}
 
-		@Override
+		
 		public void onNewPocketCardsEvent(NewPocketCardsEvent event)
 				throws RemoteException {
 			events.add(event);
 		}
 
-		@Override
+		
 		public void onNewCommunityCardsEvent(NewCommunityCardsEvent event)
 				throws RemoteException {
 			events.add(event);
 		}
 
-		@Override
+		
 		public void onNewDealEvent(NewDealEvent event) throws RemoteException {
 			events.add(event);
 		}
 
-		@Override
+		
 		public void onNewRoundEvent(NewRoundEvent event) throws RemoteException {
 			events.add(event);
 		}
 
-		@Override
+		
 		public void onNextPlayerEvent(NextPlayerEvent event)
 				throws RemoteException {
 			events.add(event);
 		}
 
-		@Override
+		
 		public void onPlayerJoinedTableEvent(PlayerJoinedTableEvent event)
 				throws RemoteException {
 			events.add(event);
 		}
 
-		@Override
+		
 		public void onPlayerLeftTableEvent(PlayerLeftTableEvent event)
 				throws RemoteException {
 			events.add(event);
 		}
 
-		@Override
+		
 		public void onShowHandEvent(ShowHandEvent event) throws RemoteException {
 			events.add(event);
 		}
 
-		@Override
+		
 		public void onWinnerEvent(WinnerEvent event) throws RemoteException {
 			events.add(event);
 		}
 
-		@Override
+		
 		public void onGameMessageEvent(GameMessageEvent event)
 				throws RemoteException {
 			events.add(event);
 		}
 
-		@Override
+		
 		public void onTableCreatedEvent(TableCreatedEvent event)
 				throws RemoteException {
 			events.add(event);
 		}
 
-		@Override
+		
 		public void onServerMessageEvent(ServerMessageEvent event)
 				throws RemoteException {
 			events.add(event);
 		}
 
-		@Override
+		
 		public void onBrokePlayerKickedOutEvent(BrokePlayerKickedOutEvent event)
 				throws RemoteException {
 			events.add(event);
 		}
 
-		@Override
+		
 		public void onTableChangedEvent(TableChangedEvent event)
 				throws RemoteException {
 			events.add(event);
 		}
 
-		@Override
+		
 		public void onTableRemovedEvent(TableRemovedEvent event)
 				throws RemoteException {
 			events.add(event);

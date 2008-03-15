@@ -170,22 +170,20 @@ public class TestRMI {
 
 			}
 
-			@Override
+			
 			public void onBrokePlayerKickedOutEvent(
-					BrokePlayerKickedOutEvent event){
+					BrokePlayerKickedOutEvent event) {
 				System.out.println(event.toString());
 			}
 
-			@Override
-			public void onTableChangedEvent(TableChangedEvent event)
-			{
-				System.out.println(event.toString());				
+			
+			public void onTableChangedEvent(TableChangedEvent event) {
+				System.out.println(event.toString());
 			}
 
-			@Override
-			public void onTableRemovedEvent(TableRemovedEvent event)
-			{
-				System.out.println(event.toString());				
+			
+			public void onTableRemovedEvent(TableRemovedEvent event) {
+				System.out.println(event.toString());
 			}
 
 		});
@@ -194,7 +192,7 @@ public class TestRMI {
 		RemotePlayerCommunication cedric = f.login("cedric", "test");
 
 		GameProperty prop = new GameProperty();
-		guy.createTable("guy's table",prop);
+		guy.createTable("guy's table", prop);
 
 		kenzo.joinTable(new TableId(0));
 		cedric.joinTable(new TableId(0));

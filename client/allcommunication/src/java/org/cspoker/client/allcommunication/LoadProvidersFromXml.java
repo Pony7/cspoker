@@ -70,7 +70,7 @@ public class LoadProvidersFromXml {
 
 	private DefaultHandler getHandler() {
 		return new DefaultHandler() {
-			@Override
+			
 			public void startElement(String uri, String localName, String name,
 					Attributes attributes) throws SAXException {
 				if(localName.equals("provider")){

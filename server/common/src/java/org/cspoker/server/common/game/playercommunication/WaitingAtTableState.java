@@ -52,7 +52,7 @@ class WaitingAtTableState extends PlayerCommunicationState {
 						.getAllEventsListener());
 	}
 
-	@Override
+	
 	public void leaveTable() throws IllegalActionException {
 		
 		Player immutablePlayer = playerCommunication.getPlayer().getSavedPlayer();
@@ -77,12 +77,12 @@ class WaitingAtTableState extends PlayerCommunicationState {
 				playerCommunication.getAllEventsListener());
 	}
 
-	@Override
+	
 	protected String getStdErrorMessage() {
 		return "You are waiting at a table for a game to begin.";
 	}
 
-	@Override
+	
 	public void kill() {
 		// remove to killed player from the table
 		try {

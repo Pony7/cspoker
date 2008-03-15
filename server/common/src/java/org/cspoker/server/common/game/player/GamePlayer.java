@@ -187,7 +187,7 @@ public class GamePlayer {
 		pocketCards.clear();
 	}
 
-	@Override
+	
 	public String toString() {
 		return getId() + ": " + getName() + " ($" + getStack() + " in chips)";
 	}
@@ -195,7 +195,7 @@ public class GamePlayer {
 	/**
 	 * Returns a hash code value for this player.
 	 */
-	@Override
+	
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
@@ -206,7 +206,7 @@ public class GamePlayer {
 	/**
 	 * Indicates whether some other object is "equal to" this one.
 	 */
-	@Override
+	
 	public boolean equals(Object obj) {
 		if (this == obj) {
 			return true;

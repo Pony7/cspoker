@@ -45,7 +45,7 @@ public class GetTableAction extends PlayerCommunicationAction<Table> {
 		// no op
 	}
 
-	@Override
+	
 	public void perform(PlayerCommunication pc,
 			AllInvocationEventsListener listener) {
 		try {
