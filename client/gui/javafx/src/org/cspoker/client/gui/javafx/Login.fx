@@ -40,10 +40,11 @@ trigger on new Login{
     screen=Frame{
         title: "Login"
         width: 300
-        height: 320
+        height: 340
         visible: true
         centerOnScreen: true
         onClose: operation() {System.exit(0);}
+        resizable: false
         background: new Color(50/255,153/255,0,1)
         content: BorderPanel{
             top:SimpleLabel {
