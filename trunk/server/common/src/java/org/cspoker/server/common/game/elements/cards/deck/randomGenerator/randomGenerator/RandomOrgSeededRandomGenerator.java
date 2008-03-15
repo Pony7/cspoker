@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.security.SecureRandom;
 import java.util.Random;
 
@@ -49,8 +50,10 @@ public class RandomOrgSeededRandomGenerator implements RandomSource {
 		try {
 			final URL url = new URL(
 					"http://www.random.org/strings/?num=10&len=10&digits=on&unique=on&format=plain&rnd=new");
+			URLConnection connection = url.openConnection();
+			connection.setConnectTimeout(5000);
 			final BufferedReader in = new BufferedReader(new InputStreamReader(
-					url.openStream()));
+					connection.getInputStream()));
 
 			final StringBuilder stringBuilder = new StringBuilder();
 

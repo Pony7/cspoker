@@ -17,7 +17,6 @@ package org.cspoker.server.common.game.gamecontrol;
 
 import junit.framework.TestCase;
 
-import org.apache.log4j.Logger;
 import org.cspoker.common.elements.GameProperty;
 import org.cspoker.common.elements.table.TableId;
 import org.cspoker.common.exceptions.IllegalActionException;
@@ -37,8 +36,6 @@ public class JoinAndLeaveGameTest extends TestCase {
 		Log4JPropertiesLoader
 		.load("org/cspoker/server/common/logging/log4j.properties");
 	}
-	
-	private static Logger logger = Logger.getLogger(GameFlowTest.class);
 
 	private GamePlayer kenzo;
 
@@ -132,7 +129,7 @@ public class JoinAndLeaveGameTest extends TestCase {
 	/**
 	 * Test Settings:
 	 * > 3 players
-	 * > other player (big blind player) leaves the table.
+	 * > kenzo leaves the table.
 	 */
 	public void testLeaveTable3(){
 		try {
@@ -147,16 +144,108 @@ public class JoinAndLeaveGameTest extends TestCase {
 		
 		try {
 			assertEquals(PreFlopRound.class, gameControl.getRound().getClass());
+			assertEquals(kenzo, gameControl.getGame().getDealer());
+			assertEquals(cedric, gameControl.getGame().getNextDealer());
 			gameControl.leaveGame(kenzo);
+			assertEquals(cedric, gameControl.getGame().getDealer());
+			assertEquals(cedric, gameControl.getGame().getNextDealer());
 			assertFalse(gameControl.getGame().hasAsActivePlayer(kenzo));
 			assertFalse(gameControl.getGame().getTable().hasAsPlayer(kenzo));
 			assertEquals(0,kenzo.getBetChips().getValue());
 			gameControl.fold(cedric);
+			assertEquals(cedric, gameControl.getGame().getDealer());
+			assertEquals(guy, gameControl.getGame().getNextDealer());
 			gameControl.joinGame(null, kenzo);
 			assertTrue(gameControl.getGame().getTable().hasAsPlayer(kenzo));
 			assertFalse(gameControl.getGame().hasAsActivePlayer(kenzo));
 			gameControl.fold(cedric);
+			assertEquals(guy, gameControl.getGame().getDealer());
+			assertEquals(kenzo, gameControl.getGame().getNextDealer());
 			assertTrue(gameControl.getGame().hasAsActivePlayer(kenzo));
+			assertEquals(PreFlopRound.class, gameControl.getRound().getClass());
+		} catch (IllegalActionException e) {
+			fail(e.getMessage());
+		}
+	}
+	
+	/**
+	 * Test Settings:
+	 * > 3 players
+	 * > guy leaves the table.
+	 */
+	public void testLeaveTable4(){
+		try {
+			table.addPlayer(kenzo);
+			table.addPlayer(cedric);
+			table.addPlayer(guy);
+		} catch (PlayerListFullException e) {
+			fail(e.getMessage());
+		}
+		
+		GameControl gameControl = new GameControl(gameMediator, table, kenzo);
+		
+		try {
+			assertEquals(kenzo, gameControl.getGame().getDealer());
+			assertEquals(cedric, gameControl.getGame().getNextDealer());
+			assertEquals(PreFlopRound.class, gameControl.getRound().getClass());
+			gameControl.leaveGame(guy);
+			assertEquals(kenzo, gameControl.getGame().getDealer());
+			assertEquals(cedric, gameControl.getGame().getNextDealer());
+			assertFalse(gameControl.getGame().hasAsActivePlayer(guy));
+			assertFalse(gameControl.getGame().getTable().hasAsPlayer(guy));
+			assertEquals(0,guy.getBetChips().getValue());
+			gameControl.fold(kenzo);
+			assertEquals(cedric, gameControl.getGame().getDealer());
+			assertEquals(kenzo, gameControl.getGame().getNextDealer());
+			gameControl.joinGame(null, guy);
+			assertTrue(gameControl.getGame().getTable().hasAsPlayer(guy));
+			assertFalse(gameControl.getGame().hasAsActivePlayer(guy));
+			gameControl.fold(cedric);
+			assertEquals(kenzo, gameControl.getGame().getDealer());
+			assertEquals(cedric, gameControl.getGame().getNextDealer());
+			assertTrue(gameControl.getGame().hasAsActivePlayer(guy));
+			assertEquals(PreFlopRound.class, gameControl.getRound().getClass());
+		} catch (IllegalActionException e) {
+			fail(e.getMessage());
+		}
+	}
+	
+	/**
+	 * Test Settings:
+	 * > 3 players
+	 * > cedric leaves the table.
+	 */
+	public void testLeaveTable5(){
+		try {
+			table.addPlayer(kenzo);
+			table.addPlayer(cedric);
+			table.addPlayer(guy);
+		} catch (PlayerListFullException e) {
+			fail(e.getMessage());
+		}
+		
+		GameControl gameControl = new GameControl(gameMediator, table, kenzo);
+		
+		try {
+			assertEquals(kenzo, gameControl.getGame().getDealer());
+			assertEquals(cedric, gameControl.getGame().getNextDealer());
+			assertEquals(PreFlopRound.class, gameControl.getRound().getClass());
+			gameControl.leaveGame(cedric);
+			assertEquals(kenzo, gameControl.getGame().getDealer());
+			assertEquals(guy, gameControl.getGame().getNextDealer());
+			assertFalse(gameControl.getGame().hasAsActivePlayer(cedric));
+			assertFalse(gameControl.getGame().getTable().hasAsPlayer(cedric));
+			assertEquals(0,cedric.getBetChips().getValue());
+			gameControl.fold(kenzo);
+			assertEquals(guy, gameControl.getGame().getDealer());
+			assertEquals(kenzo, gameControl.getGame().getNextDealer());
+			gameControl.joinGame(null, cedric);
+			assertTrue(gameControl.getGame().getTable().hasAsPlayer(cedric));
+			assertFalse(gameControl.getGame().hasAsActivePlayer(cedric));
+			gameControl.fold(guy);
+			assertEquals(kenzo, gameControl.getGame().getDealer());
+			assertEquals(cedric, gameControl.getGame().getNextDealer());
+			assertTrue(gameControl.getGame().hasAsActivePlayer(cedric));
 			assertEquals(PreFlopRound.class, gameControl.getRound().getClass());
 		} catch (IllegalActionException e) {
 			fail(e.getMessage());
