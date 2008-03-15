@@ -106,10 +106,6 @@ public class ClientContext implements XmlEventListener {
 	}
 
 	private void registerWriteInterest() {
-			System.out.println(this.isAuthenticated());
-			System.out.println(this.session);
-			System.out.println(client);
-			System.out.println(client.keyFor(selector));
 			client.keyFor(selector).interestOps(SelectionKey.OP_READ);
 			client.keyFor(selector).interestOps(
 					SelectionKey.OP_READ | SelectionKey.OP_WRITE);

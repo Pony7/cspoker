@@ -121,15 +121,6 @@ public interface RemotePlayerCommunication extends Remote {
 	 *             [must] | The player is not seated at a table.
 	 */
 	void leaveTable() throws IllegalActionException, RemoteException;
-
-	/**
-	 * This player creates a table with given name.
-	 * 
-	 * @throws IllegalActionException
-	 *             [must] This actions is not a valid action in the current
-	 *             state.
-	 */
-	Table createTable(String name) throws IllegalActionException, RemoteException;
 	
 	/**
 	 * This player creates a table with given name and game property.

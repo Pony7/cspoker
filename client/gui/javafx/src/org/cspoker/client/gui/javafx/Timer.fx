@@ -60,5 +60,5 @@ class TimerState{
 attribute TimerState.angle = 0;
 
 trigger on new TimerState{
-    angle = [0..360] dur 24000 linear;
+    angle = [0..360] dur 27000 linear;
 }

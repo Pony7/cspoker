@@ -54,10 +54,7 @@ public class CreateTableAction extends PlayerCommunicationAction<Table> {
 	public void perform(PlayerCommunication pc,
 			AllInvocationEventsListener listener) {
 		try {
-			if(settings==null)
-				dispatchResult(pc.createTable(name), listener);
-			else 
-				dispatchResult(pc.createTable(name,settings), listener);
+			dispatchResult(pc.createTable(name,settings), listener);
 		} catch (IllegalActionException e) {
 			listener.onIllegalAction(new IllegalActionEvent(e, this));
 		}

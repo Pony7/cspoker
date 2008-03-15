@@ -20,6 +20,8 @@ import java.rmi.RemoteException;
 
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.security.auth.login.LoginException;
 import org.cspoker.client.rmi.RemotePlayerCommunicationFactoryForRMI;
 import org.cspoker.client.xml.http.RemotePlayerCommunicationFactoryForHttp;
@@ -43,8 +45,9 @@ public class JavaFxClient {
     /**
      * The communication used by this client
      */
-    private RemotePlayerCommunication rpc;
-    private RemoteAllEventsListener listener;
+    //hack to prevent GC
+    public static RemotePlayerCommunication rpc;
+    public static RemoteAllEventsListener listener;
 
     /**********************************************************
      * Constructor
@@ -60,13 +63,13 @@ public class JavaFxClient {
         System.out.println("Logged in as " + userName);
     }
 
-    public void subscribeAllEvents(org.cspoker.common.eventlisteners.RemoteAllEventsListener listener) throws java.rmi.RemoteException {
-        if (this.listener != null) {
-            rpc.unsubscribeAllEventsListener(this.listener);
+    public void subscribeAllEvents(org.cspoker.common.eventlisteners.RemoteAllEventsListener newlistener) throws java.rmi.RemoteException {
+        if (listener != null) {
+            rpc.unsubscribeAllEventsListener(listener);
         }
-        this.listener = listener;
-        System.out.println("Listener subscribed to all events");
+        listener = newlistener;
         rpc.subscribeAllEventsListener(listener);
+        System.out.println("Listener subscribed to all events");
     }
 
     /**
@@ -141,6 +144,7 @@ public class JavaFxClient {
             throw new IllegalActionException("Not a valid number");
         }
     }
+
     public void bet(int amount) throws RemoteException, IllegalActionException {
         rpc.bet(amount);
     }
@@ -160,6 +164,7 @@ public class JavaFxClient {
             throw new IllegalActionException("Not a valid number");
         }
     }
+
     public void raise(int amount) throws RemoteException, IllegalActionException {
         rpc.raise(amount);
     }
@@ -185,8 +190,8 @@ public class JavaFxClient {
     }
 
     public Table createTable(String name) throws RemoteException, IllegalActionException {
-        GameProperty p = new GameProperty(2,7000);
-        return rpc.createTable(name,p);
+        GameProperty p = new GameProperty(2, 8500);
+        return rpc.createTable(name, p);
     }
 
     public void startGame() throws RemoteException, IllegalActionException {
@@ -201,13 +206,17 @@ public class JavaFxClient {
         return cards.toArray(new Card[cards.size()]);
     }
 
-    public static Winner[] winnersToArray(Set<Winner> winners) {
+    public static Winner[] winnersToArray(Set<Winner> winners) {        
+        if (winners == null) {
+            return new Winner[]{};
+        }
         return winners.toArray(new Winner[winners.size()]);
     }
 
     public static Player[] playersToArray(List<Player> players) {
-        if(players==null)
+        if (players == null) {
             return new Player[]{};
+        }
         return players.toArray(new Player[players.size()]);
     }
 }

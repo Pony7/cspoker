@@ -22,6 +22,7 @@ import java.rmi.RemoteException;
 import javax.security.auth.login.LoginException;
 
 import org.cspoker.common.RemotePlayerCommunication;
+import org.cspoker.common.elements.GameProperty;
 import org.cspoker.common.elements.table.TableId;
 import org.cspoker.common.eventlisteners.RemoteAllEventsListener;
 import org.cspoker.common.events.gameevents.BrokePlayerKickedOutEvent;
@@ -192,7 +193,8 @@ public class TestRMI {
 		RemotePlayerCommunication kenzo = f.login("kenzo", "test");
 		RemotePlayerCommunication cedric = f.login("cedric", "test");
 
-		guy.createTable("guy's table");
+		GameProperty prop = new GameProperty();
+		guy.createTable("guy's table",prop);
 
 		kenzo.joinTable(new TableId(0));
 		cedric.joinTable(new TableId(0));

@@ -290,7 +290,6 @@ trigger on new EventListener{
                                 c.visible = false;
                             }
                         }
-                        p.next = false;
                         p.lastaction="";
                         p.amount=0;
                     }
@@ -387,6 +386,8 @@ trigger on new EventListener{
                     ts.busy=true;
                     for(p in ts.mytable.players){
                         p.next = false;
+                        p.lastaction="";
+                        p.amount=0;
                     }
                     ts.mytable.temppot = 0; 
                     ts.mytable.pot = 0;

@@ -155,6 +155,7 @@ public class PlayerCommunicationImpl extends PlayerCommunication {
 
 	@Override
 	public void kill() {
+		eventListeners.clear();
 		state.kill();
 	}
 
