@@ -16,6 +16,8 @@
 
 package org.cspoker.server.common.game.elements.chips;
 
+import org.apache.log4j.Logger;
+
 /**
  * A class to represent chips.
  * 
@@ -27,6 +29,8 @@ package org.cspoker.server.common.game.elements.chips;
  * 
  */
 public class Chips {
+	
+	private static Logger logger = Logger.getLogger(Chips.class);
 
 	/***************************************************************************
 	 * Constructor
@@ -194,13 +198,15 @@ public class Chips {
 	 *            The pile of chips to transfer all the chips to.
 	 * @effect All the chips of this pile are transfered to the given pile of
 	 *         chips. |transferAmountTo(getValue(), receiver)
-	 * @throws IllegalValueException
-	 *             [must] This given pile of chips can not have the new value as
-	 *             its value. | !canHaveAsValue(new.receiver.getValue())
 	 */
 	public synchronized void transferAllChipsTo(Chips receiver)
-			throws IllegalValueException {
-		transferAmountTo(getValue(), receiver);
+			{
+		try {
+			transferAmountTo(getValue(), receiver);
+		} catch (IllegalValueException e) {
+			logger.error(e);
+			assert false;
+		}
 	}
 
 	public Chips getCopy() {

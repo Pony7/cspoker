@@ -53,6 +53,7 @@ import org.cspoker.common.events.serverevents.TableCreatedEvent;
 import org.cspoker.common.events.serverevents.TableRemovedEvent;
 import org.cspoker.common.exceptions.IllegalActionException;
 import org.cspoker.common.player.PlayerId;
+import org.cspoker.common.util.Log4JPropertiesLoader;
 import org.cspoker.server.common.game.gamecontrol.TestPlayerFactory;
 import org.cspoker.server.common.game.player.GamePlayer;
 import org.cspoker.server.common.game.player.IllegalNameException;
@@ -62,6 +63,11 @@ import org.cspoker.server.common.game.session.Session;
 import org.cspoker.server.common.game.session.SessionManager;
 
 public class PlayerCommunicationTest extends TestCase {
+	
+	static {
+		Log4JPropertiesLoader
+		.load("org/cspoker/server/common/logging/log4j.properties");
+	}
 
 	private static Logger logger = Logger
 			.getLogger(PlayerCommunicationTest.class);

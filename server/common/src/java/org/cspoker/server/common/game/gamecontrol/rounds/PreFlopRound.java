@@ -37,6 +37,7 @@ import org.cspoker.server.common.game.player.GamePlayer;
  * 
  */
 public class PreFlopRound extends BettingRound {
+		
 	private static Logger logger = Logger.getLogger(PreFlopRound.class);
 
 	private boolean bigBlindChecked = false;
@@ -51,7 +52,7 @@ public class PreFlopRound extends BettingRound {
 		GamePlayer currentPlayer = getGame().getCurrentPlayer();
 		
 		if (currentPlayer != null) {
-			gameMediator.publishNewRoundEvent(new NewRoundEvent(toString()));
+			gameMediator.publishNewRoundEvent(new NewRoundEvent(toString(), currentPlayer.getSavedPlayer()));
 		}
 		try {
 			//If there are only 2 players, blinds are inverted.

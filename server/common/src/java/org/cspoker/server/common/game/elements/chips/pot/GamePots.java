@@ -21,6 +21,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.cspoker.server.common.game.elements.chips.Chips;
 import org.cspoker.server.common.game.elements.chips.IllegalValueException;
 import org.cspoker.server.common.game.player.GamePlayer;
 
@@ -120,11 +121,23 @@ public class GamePots {
 			return;
 		}
 		for (GamePlayer player : players) {
-			try {
-				player.getBetChips().transferAllChipsTo(pot.getChips());
-			} catch (IllegalValueException e) {
-				assert false;
-			}
+			player.getBetChips().transferAllChipsTo(pot.getChips());
+		}
+	}
+	
+	/**
+	 * Collect all chips from the bet chips pile of all players in the given
+	 * list to the main pot.
+	 * 
+	 * @param players
+	 *            The list of players from who to collect the bet chips from.
+	 */
+	public void collectChipsToPotFromChips(List<Chips> chips) {
+		if (isClosed()) {
+			return;
+		}
+		for (Chips c : chips) {
+			c.transferAllChipsTo(pot.getChips());
 		}
 	}
 

@@ -167,17 +167,11 @@ public class Showdown {
 					highestCard = otherHighestCard;
 				}
 			}
-			// playerWithHighestSingleCard gets the odd chip, that can't be
-			// divided over all winners
-			try {
-				Showdown.logger
-						.info("Odd chips to player with highest card in hand");
-				pot.getChips().transferAllChipsTo(
-						winnersMap.get(playerWithHighestSingleCard.getId())
-								.getGainedChipsPile());
-			} catch (IllegalValueException e) {
-				throw new IllegalStateException("Overflow");
-			}
+			Showdown.logger
+					.info("Odd chips to player with highest card in hand");
+			pot.getChips().transferAllChipsTo(
+					winnersMap.get(playerWithHighestSingleCard.getId())
+							.getGainedChipsPile());
 		}
 	}
 

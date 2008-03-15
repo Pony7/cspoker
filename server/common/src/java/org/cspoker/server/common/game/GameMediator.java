@@ -691,6 +691,7 @@ public class GameMediator {
 	 * 
 	 */
 	public synchronized void publishNextPlayerEvent(NextPlayerEvent event) {
+		cancelOldTimeOut();
 		submitTimeOutHandler(event.getPlayer());
 		for (NextPlayerListener listener : nextPlayerListeners) {
 			listener.onNextPlayerEvent(event);
@@ -1225,6 +1226,7 @@ public class GameMediator {
 	 * 
 	 */
 	public synchronized void publishAllPersonalEvents(GameEvent event) {
+		logger.info(event);
 		for (GameEventListener listener : allPersonalEventsListeners) {
 			listener.onGameEvent(event);
 		}
@@ -1302,9 +1304,10 @@ public class GameMediator {
 		unsubscribeBrokePlayerKickedOutListener(listener);
 	}
 	
-	private void submitTimeOutHandler(Player player){
+	private synchronized void submitTimeOutHandler(Player player){
 		currentTimeOut = new PlayerActionTimeOut(player);
 		oldFuture = currentFuture;
+		cancelOldTimeOut();
 		currentFuture = ScheduledRequestExecutor.getInstance().schedule(currentTimeOut, 30, TimeUnit.SECONDS);
 		GameMediator.logger.info(player.getName()+" action time out submitted.");
 	}
@@ -1315,7 +1318,7 @@ public class GameMediator {
 	
 	private ScheduledFuture<Object> oldFuture;
 	
-	private void cancelOldTimeOut(){
+	private synchronized void cancelOldTimeOut(){
 		if(oldFuture!=null)
 			oldFuture.cancel(false);
 	}
@@ -1332,6 +1335,7 @@ public class GameMediator {
 		@Override
 		public Object call() {
 			try {
+				GameMediator.logger.info(player.getName()+" auto-fold called.");
 				if(GameMediator.this.currentTimeOut==this){
 					GamePlayer gcPlayer = gameControl.getGame().getCurrentPlayer();
 					if(gcPlayer.getId().equals(player.getId())){
