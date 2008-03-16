@@ -35,7 +35,7 @@ trigger on new Login{
     var provider = CommunicationProvider.global_provider;
     new LoadProvidersFromXml(provider);
     var providers:String* = foreach(prov in provider.getProviders().toArray()) prov.toString();
-    passw = "test";
+    passw = "";
     loginable = true;
     screen=Frame{
         title: "Login"
@@ -49,7 +49,7 @@ trigger on new Login{
         content: BorderPanel{
             top:SimpleLabel {
                 horizontalAlignment: CENTER
-                icon: Image {url:"./org/cspoker/client/gui/javafx/images/cspoker10.jpg"
+                icon: Image {url:"org/cspoker/client/gui/javafx/images/cspoker10.jpg"
                     
                 }
             }

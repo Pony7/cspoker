@@ -1,4 +1,4 @@
 Manifest-Version: 1.0
 Sealed: true
-Class-Path: ../lib/cspoker-common.jar
-Main-Class: org.cspoker.client.Console
+Class-Path: ../cfg/ cspoker-client-allcommunication.jar cspoker-client-common.jar  cspoker-client-rmi.jar  cspoker-client-xml.jar cspoker-common-common.jar cspoker-common-xml.jar log4j-1.2.14.jar
+Main-Class: org.cspoker.client.gui.text.Console

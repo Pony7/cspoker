@@ -28,7 +28,7 @@ class CardView {
 
 function CardView.getImage(){
     return if(visible) then
-        "./org/cspoker/client/gui/javafx/images/cards/png/simple_{suit}_{rank}.svg.png"
+        "org/cspoker/client/gui/javafx/images/cards/png/simple_{suit}_{rank}.svg.png"
     else
-        "./org/cspoker/client/gui/javafx/images/cards/png/back08.svg.png";
+        "org/cspoker/client/gui/javafx/images/cards/png/back08.svg.png";
 }

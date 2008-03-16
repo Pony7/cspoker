@@ -79,7 +79,7 @@ trigger on new Main{
 operation Main.resetState(){
     state = GameView{
         events: "Welcome to CSPoker!<br/>"
-        myname: "guy"
+        myname: ""
         tables: []
         mytable: bind state.tables[t | t.id.equals(this.state.mytableid)][0]
         me: bind state.mytable.players[p | p.name.equals(state.myname)][0]
