@@ -2,7 +2,8 @@
 #labels Featured
 
 = Future =
-  * 2008 April 15: The 0.1 Beta release deadline
+  The deadline for the next release is not set yet.
 
 = Past =
   * 2007 August 31: The 0.1 Alpha release
+  * 2008 April 16: The 0.1 Beta release
