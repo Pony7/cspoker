@@ -1,5 +1,5 @@
 #summary Description of the server API.
-#labels Phase-Design,Featured
+#labels Phase-Design
 
 = Introduction =
 
