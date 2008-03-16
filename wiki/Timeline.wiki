@@ -1,5 +1,4 @@
 #summary Tentative time line for the project releases
-#labels Featured
 
 = Future =
   The deadline for the next release is not set yet.
