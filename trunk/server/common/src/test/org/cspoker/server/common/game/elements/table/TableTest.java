@@ -20,7 +20,7 @@ import junit.framework.TestCase;
 import org.cspoker.common.elements.GameProperty;
 import org.cspoker.common.elements.table.SeatId;
 import org.cspoker.common.elements.table.TableId;
-import org.cspoker.server.common.game.player.GamePlayer;
+import org.cspoker.server.common.game.player.GameSeatedPlayer;
 import org.cspoker.server.common.game.player.PlayerFactory;
 
 public class TableTest extends TestCase {
@@ -42,7 +42,7 @@ public class TableTest extends TestCase {
 		assertEquals(0, table.getSavedTable().getNbPlayers());
 		assertEquals(0, table.getSavedTable().getPlayers().size());
 
-		GamePlayer kenzo = PlayerFactory.global_Player_Factory
+		GameSeatedPlayer kenzo = PlayerFactory.global_Player_Factory
 				.createNewPlayer("kenzo");
 
 		assertFalse(table.hasAsPlayer(kenzo));
@@ -65,7 +65,7 @@ public class TableTest extends TestCase {
 		 * Add another player to the same seat.
 		 */
 
-		GamePlayer guy = PlayerFactory.global_Player_Factory
+		GameSeatedPlayer guy = PlayerFactory.global_Player_Factory
 				.createNewPlayer("guy");
 		assertFalse(table.hasAsPlayer(guy));
 		try {
@@ -87,7 +87,7 @@ public class TableTest extends TestCase {
 		assertEquals(0, table.getNbPlayers());
 		assertEquals(0, table.getSavedTable().getNbPlayers());
 
-		GamePlayer kenzo = PlayerFactory.global_Player_Factory
+		GameSeatedPlayer kenzo = PlayerFactory.global_Player_Factory
 				.createNewPlayer("kenzo");
 
 		assertFalse(table.hasAsPlayer(kenzo));
@@ -110,7 +110,7 @@ public class TableTest extends TestCase {
 		 * Add another player to the same seat.
 		 */
 
-		GamePlayer guy = PlayerFactory.global_Player_Factory
+		GameSeatedPlayer guy = PlayerFactory.global_Player_Factory
 				.createNewPlayer("guy");
 		assertFalse(table.hasAsPlayer(guy));
 		try {
@@ -133,7 +133,7 @@ public class TableTest extends TestCase {
 
 		assertTrue(maxNbPlayers > 2);
 
-		GamePlayer player;
+		GameSeatedPlayer player;
 
 		for (int i = 0; i < maxNbPlayers; i++) {
 			player = PlayerFactory.global_Player_Factory
@@ -176,7 +176,7 @@ public class TableTest extends TestCase {
 
 		assertTrue(table.isValidSeatId(new SeatId(0)));
 
-		GamePlayer kenzo = PlayerFactory.global_Player_Factory
+		GameSeatedPlayer kenzo = PlayerFactory.global_Player_Factory
 				.createNewPlayer("kenzo");
 
 		try {

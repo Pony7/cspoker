@@ -34,7 +34,7 @@ import org.cspoker.server.common.game.GameMediator;
 import org.cspoker.server.common.game.elements.cards.hand.Hand;
 import org.cspoker.server.common.game.elements.chips.IllegalValueException;
 import org.cspoker.server.common.game.elements.chips.pot.GamePot;
-import org.cspoker.server.common.game.player.GamePlayer;
+import org.cspoker.server.common.game.player.GameSeatedPlayer;
 import org.cspoker.server.common.game.player.GameShowdownPlayer;
 import org.cspoker.server.common.game.player.GameWinner;
 
@@ -103,7 +103,7 @@ public class Showdown {
 		}
 
 		for (GamePot pot : game.getPots().getPots()) {
-			List<GamePlayer> winners = getWinners(pot);
+			List<GameSeatedPlayer> winners = getWinners(pot);
 			splitPot(winners, pot);
 		}
 
@@ -135,8 +135,8 @@ public class Showdown {
 	 * @param pot
 	 *            The pot to divide between all winners.
 	 */
-	private void splitPot(List<GamePlayer> winners, GamePot pot) {
-		for (GamePlayer winner : winners) {
+	private void splitPot(List<GameSeatedPlayer> winners, GamePot pot) {
+		for (GameSeatedPlayer winner : winners) {
 			if (!winnersMap.containsKey(winner.getId())) {
 				winnersMap.put(winner.getId(), new GameWinner(winner));
 			}
@@ -144,7 +144,7 @@ public class Showdown {
 
 		int nbChips_per_winner = pot.getChips().getValue() / winners.size();
 
-		for (GamePlayer player : winners) {
+		for (GameSeatedPlayer player : winners) {
 			try {
 				pot.getChips().transferAmountTo(nbChips_per_winner,
 						winnersMap.get(player.getId()).getGainedChipsPile());
@@ -157,10 +157,10 @@ public class Showdown {
 		// the player with the single highest card gets the odd chips that can't
 		// be divided over the winners
 		if (pot.getChips().getValue() != 0) {
-			GamePlayer playerWithHighestSingleCard = winners.get(0);
+			GameSeatedPlayer playerWithHighestSingleCard = winners.get(0);
 			Card highestCard = new Hand(playerWithHighestSingleCard
 					.getPocketCards()).getHighestRankCard();
-			for (GamePlayer player : winners) {
+			for (GameSeatedPlayer player : winners) {
 				Card otherHighestCard = new Hand(player.getPocketCards())
 						.getHighestRankCard();
 				int compareSingleBestCard = highestCard
@@ -187,14 +187,14 @@ public class Showdown {
 	 *            The pot in which the winner(s) must be chosen.
 	 * @return The list of winners of the pot in the current game.
 	 */
-	private List<GamePlayer> getWinners(GamePot pot) {
+	private List<GameSeatedPlayer> getWinners(GamePot pot) {
 		List<GameShowdownPlayer> players = getShowdownPlayersFromPot(pot);
 		Collections.sort(players);
 		for (GameShowdownPlayer player : players) {
 			Showdown.logger.info(player);
 		}
 		GameShowdownPlayer winner = players.get(0);
-		List<GamePlayer> winners = new ArrayList<GamePlayer>();
+		List<GameSeatedPlayer> winners = new ArrayList<GameSeatedPlayer>();
 		int i = 0;
 		while ((i < players.size()) && winner.equals(players.get(i))) {
 			winners.add(players.get(i).getPlayer());
@@ -212,7 +212,7 @@ public class Showdown {
 	 */
 	private List<GameShowdownPlayer> getShowdownPlayersFromPot(GamePot pot) {
 		List<GameShowdownPlayer> showDownPlayers = new ArrayList<GameShowdownPlayer>();
-		for (GamePlayer player : pot.getPlayers()) {
+		for (GameSeatedPlayer player : pot.getPlayers()) {
 			showDownPlayers.add(new GameShowdownPlayer(player,
 					getBestFiveCardHand(player)));
 		}
@@ -229,7 +229,7 @@ public class Showdown {
 	 * @note By using this method, the recalculation of finding the best 5 card
 	 *       hand is omitted.
 	 */
-	private Hand getBestFiveCardHand(GamePlayer player) {
+	private Hand getBestFiveCardHand(GameSeatedPlayer player) {
 		List<Card> cards = new ArrayList<Card>(7);
 		cards.addAll(getGame().getCommunityCards());
 		cards.addAll(player.getPocketCards());

@@ -33,7 +33,7 @@ import org.cspoker.server.common.game.gamecontrol.rounds.FlopRound;
 import org.cspoker.server.common.game.gamecontrol.rounds.PreFlopRound;
 import org.cspoker.server.common.game.gamecontrol.rounds.TurnRound;
 import org.cspoker.server.common.game.gamecontrol.rounds.WaitingRound;
-import org.cspoker.server.common.game.player.GamePlayer;
+import org.cspoker.server.common.game.player.GameSeatedPlayer;
 import org.cspoker.server.common.game.player.PlayerFactory;
 
 public class GameFlowTest extends TestCase {
@@ -45,13 +45,13 @@ public class GameFlowTest extends TestCase {
 
 	private static Logger logger = Logger.getLogger(GameFlowTest.class);
 
-	private GamePlayer kenzo;
+	private GameSeatedPlayer kenzo;
 
-	private GamePlayer cedric;
+	private GameSeatedPlayer cedric;
 
-	private GamePlayer guy;
+	private GameSeatedPlayer guy;
 
-	private GamePlayer craig;
+	private GameSeatedPlayer craig;
 
 	private GameTable table;
 
@@ -506,7 +506,7 @@ public class GameFlowTest extends TestCase {
 		GameFlowTest.logger.info("Common Cards: " + game.getCommunityCards());
 
 		// New game
-		GamePlayer testPlayer = PlayerFactory.global_Player_Factory
+		GameSeatedPlayer testPlayer = PlayerFactory.global_Player_Factory
 				.createNewPlayer("test");
 
 		try {

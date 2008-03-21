@@ -26,16 +26,16 @@ import org.cspoker.server.common.game.elements.table.GameTable;
 import org.cspoker.server.common.game.elements.table.PlayerListFullException;
 import org.cspoker.server.common.game.gamecontrol.rounds.PreFlopRound;
 import org.cspoker.server.common.game.gamecontrol.rounds.WaitingRound;
-import org.cspoker.server.common.game.player.GamePlayer;
+import org.cspoker.server.common.game.player.GameSeatedPlayer;
 import org.cspoker.server.common.game.player.PlayerFactory;
 
 public class JoinAndLeaveGameTest extends TestCase {
 
-	private GamePlayer kenzo;
+	private GameSeatedPlayer kenzo;
 
-	private GamePlayer cedric;
+	private GameSeatedPlayer cedric;
 
-	private GamePlayer guy;
+	private GameSeatedPlayer guy;
 
 	private GameTable table;
 

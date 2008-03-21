@@ -15,19 +15,19 @@
  */
 package org.cspoker.server.common.game.session;
 
-import org.cspoker.server.common.game.player.GamePlayer;
+import org.cspoker.server.common.game.player.GameSeatedPlayer;
 
 public class PlayerKilledExcepion extends Exception {
 
 	private static final long serialVersionUID = -6931653111428546063L;
 
-	private GamePlayer player;
+	private GameSeatedPlayer player;
 
-	public PlayerKilledExcepion(GamePlayer player) {
+	public PlayerKilledExcepion(GameSeatedPlayer player) {
 		this.player = player;
 	}
 
-	public GamePlayer getPlayer() {
+	public GameSeatedPlayer getPlayer() {
 		return player;
 	}
 

@@ -21,11 +21,11 @@ import org.cspoker.server.common.game.elements.chips.Chips;
 
 public class GameWinner {
 
-	private final GamePlayer winner;
+	private final GameSeatedPlayer winner;
 
 	private final Chips chips = new Chips();
 
-	public GameWinner(GamePlayer winner) {
+	public GameWinner(GameSeatedPlayer winner) {
 		this.winner = winner;
 	}
 

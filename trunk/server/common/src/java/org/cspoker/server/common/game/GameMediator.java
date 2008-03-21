@@ -75,7 +75,7 @@ import org.cspoker.common.exceptions.IllegalActionException;
 import org.cspoker.common.player.Player;
 import org.cspoker.common.player.PlayerId;
 import org.cspoker.server.common.game.gamecontrol.GameControl;
-import org.cspoker.server.common.game.player.GamePlayer;
+import org.cspoker.server.common.game.player.GameSeatedPlayer;
 import org.cspoker.server.common.util.threading.ScheduledRequestExecutor;
 
 /**
@@ -121,7 +121,7 @@ public class GameMediator {
 	 * @throws IllegalActionException
 	 *             [must] The action performed is not a valid action.
 	 */
-	public void allIn(GamePlayer player) throws IllegalActionException {
+	public void allIn(GameSeatedPlayer player) throws IllegalActionException {
 		gameControl.allIn(player);
 		cancelOldTimeOut();
 	}
@@ -138,7 +138,7 @@ public class GameMediator {
 	 * @throws IllegalActionException
 	 *             [must] The action performed is not a valid action.
 	 */
-	public void bet(GamePlayer player, int amount)
+	public void bet(GameSeatedPlayer player, int amount)
 			throws IllegalActionException {
 		gameControl.bet(player, amount);
 		cancelOldTimeOut();
@@ -155,7 +155,7 @@ public class GameMediator {
 	 * @throws IllegalActionException
 	 *             [must] The action performed is not a valid action.
 	 */
-	public void call(GamePlayer player) throws IllegalActionException {
+	public void call(GameSeatedPlayer player) throws IllegalActionException {
 		gameControl.call(player);
 		cancelOldTimeOut();
 	}
@@ -171,7 +171,7 @@ public class GameMediator {
 	 * @throws IllegalActionException
 	 *             [must] The action performed is not a valid action.
 	 */
-	public void check(GamePlayer player) throws IllegalActionException {
+	public void check(GameSeatedPlayer player) throws IllegalActionException {
 		gameControl.check(player);
 		cancelOldTimeOut();
 	}
@@ -189,7 +189,7 @@ public class GameMediator {
 	 * @throws IllegalActionException
 	 *             [must] The action performed is not a valid action.
 	 */
-	public void fold(GamePlayer player) throws IllegalActionException {
+	public void fold(GameSeatedPlayer player) throws IllegalActionException {
 		gameControl.fold(player);
 		cancelOldTimeOut();
 	}
@@ -206,18 +206,18 @@ public class GameMediator {
 	 * @throws IllegalActionException
 	 *             [must] The action performed is not a valid action.
 	 */
-	public void raise(GamePlayer player, int amount)
+	public void raise(GameSeatedPlayer player, int amount)
 			throws IllegalActionException {
 		gameControl.raise(player, amount);
 		cancelOldTimeOut();
 	}
 
-	public void joinGame(SeatId seatId, GamePlayer player)
+	public void joinGame(SeatId seatId, GameSeatedPlayer player)
 			throws IllegalActionException {
 		gameControl.joinGame(seatId, player);
 	}
 
-	public void leaveGame(GamePlayer player) throws IllegalActionException {
+	public void leaveGame(GameSeatedPlayer player) throws IllegalActionException {
 		gameControl.leaveGame(player);
 	}
 
@@ -1350,7 +1350,7 @@ public class GameMediator {
 						+ " auto-fold called.");
 
 				if (getCurrentTimeOut() == this) {
-					GamePlayer gcPlayer = gameControl.getGame()
+					GameSeatedPlayer gcPlayer = gameControl.getGame()
 							.getCurrentPlayer();
 					if (gcPlayer.getId().equals(player.getId())) {
 						GameMediator.logger.info(player.getName()
