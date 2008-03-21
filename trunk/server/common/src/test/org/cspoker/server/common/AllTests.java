@@ -18,7 +18,6 @@ package org.cspoker.server.common;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import org.cspoker.common.util.Log4JPropertiesLoader;
 import org.cspoker.server.common.game.elements.cards.hand.AllHandTests;
 import org.cspoker.server.common.game.elements.table.TableTest;
 import org.cspoker.server.common.game.gamecontrol.AllGameControlTests;
@@ -26,11 +25,6 @@ import org.cspoker.server.common.game.playercommunication.AllPlayerCommunication
 import org.cspoker.server.common.util.LoopingListTest;
 
 public class AllTests {
-
-	static {
-		Log4JPropertiesLoader
-				.load("org/cspoker/server/common/logging/log4j.properties");
-	}
 
 	public static Test suite() {
 		TestSuite suite = new TestSuite("Test for org.cspoker.server.common");

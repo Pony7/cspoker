@@ -45,6 +45,7 @@ import org.cspoker.server.common.game.exception.TableDoesNotExistException;
  * 
  */
 class InitialState extends PlayerCommunicationState {
+	
 	private static Logger logger = Logger.getLogger(InitialState.class);
 
 	/**

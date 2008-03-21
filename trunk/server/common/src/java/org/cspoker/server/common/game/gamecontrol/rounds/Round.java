@@ -16,13 +16,8 @@
 
 package org.cspoker.server.common.game.gamecontrol.rounds;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.cspoker.common.events.gameevents.BrokePlayerKickedOutEvent;
-import org.cspoker.common.events.gameevents.NewDealEvent;
 import org.cspoker.common.exceptions.IllegalActionException;
-import org.cspoker.common.player.Player;
 import org.cspoker.server.common.game.GameMediator;
 import org.cspoker.server.common.game.gamecontrol.Game;
 import org.cspoker.server.common.game.gamecontrol.rules.BettingRules;
@@ -277,20 +272,6 @@ public abstract class Round {
 
 	public int getCurrentPotValue() {
 		return 0;
-	}
-
-	protected void newDealRound() {
-		game.addTablePlayersToGame();
-		game.seatInitalDealPlayers();
-		game.setDealer(game.getNextDealer());
-		game.setCurrentPlayer(game.getDealer());
-		List<Player> players = new ArrayList<Player>(game
-				.getNbCurrentDealPlayers());
-		for (GamePlayer player : game.getCurrentDealPlayers()) {
-			players.add(player.getSavedPlayer());
-		}
-		gameMediator.publishNewDealEvent(new NewDealEvent(players, game
-				.getDealer().getSavedPlayer()));
 	}
 
 	protected Round getNewDealRound() {
