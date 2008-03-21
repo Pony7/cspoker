@@ -23,12 +23,12 @@ public class AllGameControlTests {
 	public static Test suite() {
 		TestSuite suite = new TestSuite(
 				"Test for org.cspoker.server.common.game.gamecontrol");
-		// $JUnit-BEGIN$
+		//$JUnit-BEGIN$
 		suite.addTestSuite(JoinAndLeaveGameTest.class);
 		suite.addTestSuite(BettingRulesTest.class);
 		suite.addTestSuite(GameFlowTest.class);
 		suite.addTest(AllGameControlTests.suite());
-		// $JUnit-END$
+		//$JUnit-END$
 		return suite;
 	}
 

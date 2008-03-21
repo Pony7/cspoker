@@ -48,6 +48,7 @@ import org.cspoker.server.common.game.player.GamePlayer;
  * 
  */
 public abstract class BettingRound extends Round {
+	
 	private static Logger logger = Logger.getLogger(BettingRound.class);
 
 	/**

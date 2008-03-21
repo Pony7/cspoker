@@ -109,7 +109,12 @@ public class PlayerCommunicationImpl extends PlayerCommunication {
 	 * This variable contains the player communication state.
 	 */
 	private PlayerCommunicationState state;
-
+	
+	/**
+	 * A boolean value to see whether the player is active or not.
+	 * 
+	 * This will be used to see whether a player communication should be killed.
+	 */
 	private AtomicBoolean isActive = new AtomicBoolean(true);
 
 	/***************************************************************************

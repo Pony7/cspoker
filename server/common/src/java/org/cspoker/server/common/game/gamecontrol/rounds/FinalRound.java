@@ -28,6 +28,7 @@ public class FinalRound extends BettingRound {
 
 	public FinalRound(GameMediator gameMediator, Game game) {
 		super(gameMediator, game);
+		
 		GamePlayer currentPlayer = game.getCurrentPlayer();
 		if (currentPlayer != null) {
 			gameMediator.publishNewRoundEvent(new NewRoundEvent(toString(),
