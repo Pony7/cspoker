@@ -18,12 +18,7 @@ package org.cspoker.server.xml.http;
 import java.io.IOException;
 
 import org.apache.log4j.Logger;
-import org.cspoker.common.elements.table.Table;
-import org.cspoker.common.exceptions.IllegalActionException;
 import org.cspoker.common.util.Log4JPropertiesLoader;
-import org.cspoker.server.common.game.session.PlayerKilledExcepion;
-import org.cspoker.server.common.game.session.Session;
-import org.cspoker.server.common.game.session.SessionManager;
 
 public class RunHttpServer {
 
@@ -47,28 +42,6 @@ public class RunHttpServer {
 		}
 		logger.info("Starting HTTP server at port " + port);
 		(new HttpServer(port)).start();
-		
-		try{
-		
-		for(int i = 0; i < 7; i++) {
-            Session session =
-            	SessionManager.global_session_manager.getSession("robot-master" + i);
-            
-            Table table = session.getPlayerCommunication().createTable("J1 Robots " + i);
-            for(int j = 1; j < 7; j++) {
-                 Session botSession = SessionManager.global_session_manager.getSession("robot " + i + j);
-                 botSession.getPlayerCommunication().joinTable(table.getId());
-            }
-            session.getPlayerCommunication().startGame();
-		}
-		
-		} catch (IllegalActionException e) {
-			e.printStackTrace();
-		} catch (PlayerKilledExcepion e) {
-			e.printStackTrace();
-		}
-		
-         System.out.println("Demo started");
 	}
 
 	private static void usage() {
