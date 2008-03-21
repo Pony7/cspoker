@@ -36,7 +36,7 @@ public class GameShowdownPlayer implements Comparable<GameShowdownPlayer> {
 	/**
 	 * This variable contains the showdown player.
 	 */
-	private final GamePlayer player;
+	private final GameSeatedPlayer player;
 
 	/**
 	 * This variable contains the showdown player's best hand.
@@ -51,7 +51,7 @@ public class GameShowdownPlayer implements Comparable<GameShowdownPlayer> {
 	 * @param bestHand
 	 *            The player's best hand.
 	 */
-	public GameShowdownPlayer(GamePlayer player, Hand bestHand) {
+	public GameShowdownPlayer(GameSeatedPlayer player, Hand bestHand) {
 		this.player = player;
 		this.bestHand = bestHand;
 
@@ -62,7 +62,7 @@ public class GameShowdownPlayer implements Comparable<GameShowdownPlayer> {
 	 * 
 	 * @return The effective showdown player, as a player.
 	 */
-	public GamePlayer getPlayer() {
+	public GameSeatedPlayer getPlayer() {
 		return player;
 	}
 

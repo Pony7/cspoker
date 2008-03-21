@@ -80,7 +80,7 @@ import org.cspoker.common.player.PlayerId;
 import org.cspoker.server.common.game.GameManager;
 import org.cspoker.server.common.game.TableManager;
 import org.cspoker.server.common.game.exception.TableDoesNotExistException;
-import org.cspoker.server.common.game.player.GamePlayer;
+import org.cspoker.server.common.game.player.GameSeatedPlayer;
 import org.cspoker.server.common.game.session.SessionManager;
 
 /**
@@ -103,7 +103,7 @@ public class PlayerCommunicationImpl extends PlayerCommunication {
 	/**
 	 * The variable containing the player.
 	 */
-	private final GamePlayer player;
+	private final GameSeatedPlayer player;
 
 	/**
 	 * This variable contains the player communication state.
@@ -127,7 +127,7 @@ public class PlayerCommunicationImpl extends PlayerCommunication {
 	 * @param player
 	 *            The given player
 	 */
-	public PlayerCommunicationImpl(GamePlayer player) {
+	public PlayerCommunicationImpl(GameSeatedPlayer player) {
 		this.player = player;
 		state = new InitialState(this);
 		GameManager.getServerMediator().subscribeAllServerEventsListener(
@@ -139,7 +139,7 @@ public class PlayerCommunicationImpl extends PlayerCommunication {
 	 * 
 	 * @return The player contained in this player communication.
 	 */
-	public GamePlayer getPlayer() {
+	public GameSeatedPlayer getPlayer() {
 		return player;
 	}
 

@@ -13,17 +13,17 @@ import org.cspoker.server.common.game.elements.table.PlayerListFullException;
 import org.cspoker.server.common.game.gamecontrol.rules.Limit;
 import org.cspoker.server.common.game.gamecontrol.rules.NoLimit;
 import org.cspoker.server.common.game.gamecontrol.rules.PotLimit;
-import org.cspoker.server.common.game.player.GamePlayer;
+import org.cspoker.server.common.game.player.GameSeatedPlayer;
 import org.cspoker.server.common.game.player.PlayerFactory;
 
 public class BettingRulesTest extends TestCase {
 	private static Logger logger = Logger.getLogger(BettingRulesTest.class);
 
-	private GamePlayer kenzo;
+	private GameSeatedPlayer kenzo;
 
-	private GamePlayer cedric;
+	private GameSeatedPlayer cedric;
 
-	private GamePlayer guy;
+	private GameSeatedPlayer guy;
 
 	private GameTable table;
 

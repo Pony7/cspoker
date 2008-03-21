@@ -15,7 +15,7 @@
  */
 package org.cspoker.server.common.game.session;
 
-import org.cspoker.server.common.game.player.GamePlayer;
+import org.cspoker.server.common.game.player.GameSeatedPlayer;
 import org.cspoker.server.common.game.player.PlayerFactory;
 import org.cspoker.server.common.game.playercommunication.PlayerCommunicationImpl;
 
@@ -23,7 +23,7 @@ public class Session {
 
 	private final String username;
 
-	private GamePlayer player = null;
+	private GameSeatedPlayer player = null;
 	private PlayerCommunicationImpl playerComm = null;
 	private boolean killed = false;
 
@@ -35,7 +35,7 @@ public class Session {
 		return username;
 	}
 
-	public synchronized GamePlayer getPlayer() throws PlayerKilledExcepion {
+	public synchronized GameSeatedPlayer getPlayer() throws PlayerKilledExcepion {
 		if (killed) {
 			throw new PlayerKilledExcepion(player);
 		}

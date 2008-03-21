@@ -33,7 +33,7 @@ import org.cspoker.server.common.game.elements.chips.IllegalValueException;
  * @author Kenzo
  * 
  */
-public class GamePlayer {
+public class GameSeatedPlayer {
 
 	/***************************************************************************
 	 * Variables
@@ -87,7 +87,7 @@ public class GamePlayer {
 	 * @post The bet chips pile is effective and There are no chips on this
 	 *       pile. |new.getBetChips()!=null && new.getBetChips().getValue()==0
 	 */
-	GamePlayer(PlayerId id, String name, int initialNbChips)
+	GameSeatedPlayer(PlayerId id, String name, int initialNbChips)
 			throws IllegalValueException {
 		this.id = id;
 		this.name = name;
@@ -216,7 +216,7 @@ public class GamePlayer {
 		if (getClass() != obj.getClass()) {
 			return false;
 		}
-		final GamePlayer other = (GamePlayer) obj;
+		final GameSeatedPlayer other = (GameSeatedPlayer) obj;
 		if (id == null) {
 			if (other.id != null) {
 				return false;

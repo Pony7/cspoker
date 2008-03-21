@@ -27,13 +27,13 @@ import org.cspoker.server.common.game.elements.chips.pot.GamePot;
  */
 public class GameAllInPlayer implements Comparable<GameAllInPlayer> {
 
-	private final GamePlayer player;
+	private final GameSeatedPlayer player;
 
-	public GameAllInPlayer(GamePlayer player) {
+	public GameAllInPlayer(GameSeatedPlayer player) {
 		this.player = player;
 	}
 
-	public GamePlayer getPlayer() {
+	public GameSeatedPlayer getPlayer() {
 		return player;
 	}
 

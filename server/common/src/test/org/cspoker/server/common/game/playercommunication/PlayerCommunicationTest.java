@@ -55,7 +55,7 @@ import org.cspoker.common.exceptions.IllegalActionException;
 import org.cspoker.common.player.PlayerId;
 import org.cspoker.common.util.Log4JPropertiesLoader;
 import org.cspoker.server.common.game.gamecontrol.TestPlayerFactory;
-import org.cspoker.server.common.game.player.GamePlayer;
+import org.cspoker.server.common.game.player.GameSeatedPlayer;
 import org.cspoker.server.common.game.player.IllegalNameException;
 import org.cspoker.server.common.game.player.PlayerFactory;
 import org.cspoker.server.common.game.session.PlayerKilledExcepion;
@@ -79,12 +79,12 @@ public class PlayerCommunicationTest extends TestCase {
 	}
 
 	public void testConstructor() throws IllegalNameException {
-		GamePlayer kenzo = playerFactory.createNewPlayer("Kenzo");
+		GameSeatedPlayer kenzo = playerFactory.createNewPlayer("Kenzo");
 		new PlayerCommunicationImpl(kenzo);
 	}
 
 	public void testCreateTable() throws IllegalNameException {
-		GamePlayer kenzo = playerFactory.createNewPlayer("Kenzo");
+		GameSeatedPlayer kenzo = playerFactory.createNewPlayer("Kenzo");
 		PlayerCommunicationImpl kenzoComm = new PlayerCommunicationImpl(kenzo);
 		try {
 			kenzoComm.createTable("test");
@@ -94,8 +94,8 @@ public class PlayerCommunicationTest extends TestCase {
 	}
 
 	public void testJoinTable() throws IllegalNameException {
-		GamePlayer kenzo = playerFactory.createNewPlayer("Kenzo");
-		GamePlayer guy = playerFactory.createNewPlayer("Guy");
+		GameSeatedPlayer kenzo = playerFactory.createNewPlayer("Kenzo");
+		GameSeatedPlayer guy = playerFactory.createNewPlayer("Guy");
 		PlayerCommunicationImpl kenzoComm = new PlayerCommunicationImpl(kenzo);
 		PlayerCommunicationImpl guyComm = new PlayerCommunicationImpl(guy);
 		try {

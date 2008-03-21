@@ -28,7 +28,7 @@ import org.cspoker.common.elements.table.Table;
 import org.cspoker.common.elements.table.TableId;
 import org.cspoker.common.player.Player;
 import org.cspoker.common.player.PlayerId;
-import org.cspoker.server.common.game.player.GamePlayer;
+import org.cspoker.server.common.game.player.GameSeatedPlayer;
 
 /**
  * A class to represent players at the table.
@@ -54,7 +54,7 @@ public class GameTable {
 	/**
 	 * A map containing the mapping between a seat id and a player.
 	 */
-	private final ConcurrentHashMap<SeatId, GamePlayer> players;
+	private final ConcurrentHashMap<SeatId, GameSeatedPlayer> players;
 
 	/**
 	 * The variable containing the game property of this table.
@@ -88,7 +88,7 @@ public class GameTable {
 		setGameProperty(gameProperty);
 		setPlaying(false);
 		setName(name);
-		players = new ConcurrentHashMap<SeatId, GamePlayer>(gameProperty
+		players = new ConcurrentHashMap<SeatId, GameSeatedPlayer>(gameProperty
 				.getMaxNbPlayers());
 	}
 
@@ -249,7 +249,7 @@ public class GameTable {
 	 * @post The given player isn't seated at this table anymore. |
 	 *       !new.hasAsPlayer(player)
 	 */
-	public synchronized void removePlayer(GamePlayer player) {
+	public synchronized void removePlayer(GameSeatedPlayer player) {
 		if (!hasAsPlayer(player)) {
 			throw new IllegalArgumentException(player
 					+ " is not a player of this table.");
@@ -278,7 +278,7 @@ public class GameTable {
 	 *             hasAsPlayer(player)
 	 * @post The given player is seated at this table. | new.hasAsPlayer(player)
 	 */
-	public synchronized SeatId addPlayer(GamePlayer player)
+	public synchronized SeatId addPlayer(GameSeatedPlayer player)
 			throws PlayerListFullException {
 		if (player == null) {
 			throw new IllegalArgumentException("player should be effective.");
@@ -311,7 +311,7 @@ public class GameTable {
 	 * @param player
 	 * @throws SeatTakenException
 	 */
-	public synchronized void addPlayer(SeatId seatId, GamePlayer player)
+	public synchronized void addPlayer(SeatId seatId, GameSeatedPlayer player)
 			throws SeatTakenException {
 		if (!isValidSeatId(seatId)) {
 			throw new IllegalArgumentException(
@@ -346,7 +346,7 @@ public class GameTable {
 	 * @param player
 	 *            The given player
 	 */
-	public boolean hasAsPlayer(GamePlayer player) {
+	public boolean hasAsPlayer(GameSeatedPlayer player) {
 		return players.contains(player);
 	}
 
@@ -357,11 +357,11 @@ public class GameTable {
 	 * 
 	 * @return The list with all the players at this table.
 	 */
-	public List<GamePlayer> getPlayers() {
-		List<GamePlayer> playerList = new ArrayList<GamePlayer>();
+	public List<GameSeatedPlayer> getPlayers() {
+		List<GameSeatedPlayer> playerList = new ArrayList<GameSeatedPlayer>();
 
 		for (int i = 0; i < gameProperty.getMaxNbPlayers(); i++) {
-			GamePlayer player = players.get(new SeatId(i));
+			GameSeatedPlayer player = players.get(new SeatId(i));
 			if (player != null) {
 				playerList.add(player);
 			}
@@ -380,13 +380,13 @@ public class GameTable {
 	 */
 	public List<PlayerId> getPlayerIds() {
 		List<PlayerId> toReturn = new ArrayList<PlayerId>();
-		for (GamePlayer player : players.values()) {
+		for (GameSeatedPlayer player : players.values()) {
 			toReturn.add(player.getId());
 		}
 		return Collections.unmodifiableList(toReturn);
 	}
 
-	public synchronized GamePlayer getRandomPlayer() {
+	public synchronized GameSeatedPlayer getRandomPlayer() {
 		List<SeatId> ids = new ArrayList<SeatId>(players.keySet());
 		return players.get(ids.get(new Random().nextInt(ids.size())));
 	}
@@ -402,7 +402,7 @@ public class GameTable {
 
 	public synchronized Table getSavedTable() {
 		List<Player> playerList = new ArrayList<Player>(getNbPlayers());
-		for (GamePlayer player : players.values()) {
+		for (GameSeatedPlayer player : players.values()) {
 			playerList.add(player.getSavedPlayer());
 		}
 		return new Table(tableId, name, playerList, playing, gameProperty);

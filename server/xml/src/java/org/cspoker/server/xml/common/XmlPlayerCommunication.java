@@ -25,7 +25,7 @@ import org.cspoker.common.PlayerCommunication;
 import org.cspoker.common.xml.XmlEventListener;
 import org.cspoker.common.xml.actions.ActionJAXBContext;
 import org.cspoker.common.xml.actions.PlayerCommunicationAction;
-import org.cspoker.server.common.game.player.GamePlayer;
+import org.cspoker.server.common.game.player.GameSeatedPlayer;
 import org.cspoker.server.common.game.session.PlayerKilledExcepion;
 import org.cspoker.server.common.game.session.Session;
 import org.xml.sax.InputSource;
@@ -34,7 +34,7 @@ import org.xml.sax.SAXException;
 public class XmlPlayerCommunication implements XmlEventListener {
 
 	private final PlayerCommunication playerComm;
-	private final GamePlayer player;
+	private final GameSeatedPlayer player;
 	private final StringBuilder cache;
 	private final ToXmlAllEventsListener toxmllistener;
 	private XmlEventListener xmllistener;

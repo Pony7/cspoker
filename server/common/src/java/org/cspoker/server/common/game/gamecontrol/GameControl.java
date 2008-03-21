@@ -48,7 +48,7 @@ import org.cspoker.server.common.game.gamecontrol.rounds.Round;
 import org.cspoker.server.common.game.gamecontrol.rounds.WaitingRound;
 import org.cspoker.server.common.game.gamecontrol.rules.BettingRules;
 import org.cspoker.server.common.game.gamecontrol.rules.NoLimit;
-import org.cspoker.server.common.game.player.GamePlayer;
+import org.cspoker.server.common.game.player.GameSeatedPlayer;
 import org.cspoker.server.common.util.threading.ScheduledRequestExecutor;
 
 /**
@@ -99,12 +99,12 @@ public class GameControl {
 	}
 
 	public GameControl(GameMediator gameMediator, GameTable table,
-			GamePlayer dealer) {
+			GameSeatedPlayer dealer) {
 		this(gameMediator, table, dealer, new NoLimit());
 	}
 
 	public GameControl(GameMediator gameMediator, GameTable table,
-			GamePlayer dealer, BettingRules rules) {
+			GameSeatedPlayer dealer, BettingRules rules) {
 		this.gameMediator = gameMediator;
 		gameMediator.setGameControl(this);
 
@@ -115,8 +115,8 @@ public class GameControl {
 				+ table.getGameProperty().getBigBlind() + ") - "
 				+ GameControl.dateFormat.format(new Date()));
 
-		List<GamePlayer> players = game.getCurrentDealPlayers();
-		for (GamePlayer player : players) {
+		List<GameSeatedPlayer> players = game.getCurrentDealPlayers();
+		for (GameSeatedPlayer player : players) {
 			GameControl.logger.info(player.toString());
 		}
 
@@ -157,7 +157,7 @@ public class GameControl {
 	 * @throws IllegalActionException
 	 *             [must] The action performed is not a valid action.
 	 */
-	public synchronized void bet(GamePlayer player, int amount)
+	public synchronized void bet(GameSeatedPlayer player, int amount)
 			throws IllegalActionException {
 		round.bet(player, amount);
 		gameMediator.publishBetEvent(new BetEvent(player.getSavedPlayer(),
@@ -177,7 +177,7 @@ public class GameControl {
 	 * @throws IllegalActionException
 	 *             [must] The action performed is not a valid action.
 	 */
-	public synchronized void call(GamePlayer player)
+	public synchronized void call(GameSeatedPlayer player)
 			throws IllegalActionException {
 		round.call(player);
 		gameMediator.publishCallEvent(new CallEvent(player.getSavedPlayer(),
@@ -197,7 +197,7 @@ public class GameControl {
 	 * @throws IllegalActionException
 	 *             [must] The action performed is not a valid action.
 	 */
-	public synchronized void check(GamePlayer player)
+	public synchronized void check(GameSeatedPlayer player)
 			throws IllegalActionException {
 		round.check(player);
 		gameMediator.publishCheckEvent(new CheckEvent(player.getSavedPlayer()));
@@ -217,7 +217,7 @@ public class GameControl {
 	 * @throws IllegalActionException
 	 *             [must] The action performed is not a valid action.
 	 */
-	public synchronized void raise(GamePlayer player, int amount)
+	public synchronized void raise(GameSeatedPlayer player, int amount)
 			throws IllegalActionException {
 		round.raise(player, amount);
 		gameMediator.publishRaiseEvent(new RaiseEvent(player.getSavedPlayer(),
@@ -240,7 +240,7 @@ public class GameControl {
 	 * @throws IllegalActionException
 	 *             [must] The action performed is not a valid action.
 	 */
-	public synchronized void fold(GamePlayer player)
+	public synchronized void fold(GameSeatedPlayer player)
 			throws IllegalActionException {
 		round.fold(player);
 		gameMediator.publishFoldEvent(new FoldEvent(player.getSavedPlayer()));
@@ -259,7 +259,7 @@ public class GameControl {
 	 * @throws IllegalActionException
 	 *             [must] The action performed is not a valid action.
 	 */
-	public synchronized void deal(GamePlayer player)
+	public synchronized void deal(GameSeatedPlayer player)
 			throws IllegalActionException {
 		round.deal(player);
 		checkIfEndedAndChangeRound();
@@ -275,13 +275,13 @@ public class GameControl {
 	 * @throws IllegalActionException
 	 *             [must] The action performed is not a valid action.
 	 */
-	public synchronized void allIn(GamePlayer player)
+	public synchronized void allIn(GameSeatedPlayer player)
 			throws IllegalActionException {
 		round.allIn(player);
 		checkIfEndedAndChangeRound();
 	}
 
-	public synchronized void joinGame(SeatId seatId, GamePlayer player)
+	public synchronized void joinGame(SeatId seatId, GameSeatedPlayer player)
 			throws IllegalActionException {
 		try {
 			game.joinGame(seatId, player);
@@ -307,7 +307,7 @@ public class GameControl {
 		}
 	}
 
-	public synchronized void leaveGame(GamePlayer player)
+	public synchronized void leaveGame(GameSeatedPlayer player)
 			throws IllegalActionException {
 		if (!game.getTable().hasAsPlayer(player)) {
 			return;
@@ -346,7 +346,7 @@ public class GameControl {
 		if (round.isRoundEnded()) {
 			changeToNextRound();
 		} else {
-			GamePlayer player = game.getCurrentPlayer();
+			GameSeatedPlayer player = game.getCurrentPlayer();
 			if (player != null) {
 				gameMediator.publishNextPlayerEvent(new NextPlayerEvent(player
 						.getSavedPlayer()));

@@ -28,7 +28,7 @@ import org.cspoker.server.common.game.GameMediator;
 import org.cspoker.server.common.game.elements.chips.IllegalValueException;
 import org.cspoker.server.common.game.gamecontrol.Game;
 import org.cspoker.server.common.game.player.GameAllInPlayer;
-import org.cspoker.server.common.game.player.GamePlayer;
+import org.cspoker.server.common.game.player.GameSeatedPlayer;
 
 /**
  * The round after the initial 2 cards are dealt.
@@ -42,14 +42,14 @@ public class PreFlopRound extends BettingRound {
 
 	private boolean bigBlindChecked = false;
 
-	private GamePlayer bigBlindPlayer;
+	private GameSeatedPlayer bigBlindPlayer;
 
 	private boolean bigBlindAllIn = false;
 
 	public PreFlopRound(GameMediator gameMediator, Game game) {
 		super(gameMediator, game);
 
-		GamePlayer currentPlayer = getGame().getCurrentPlayer();
+		GameSeatedPlayer currentPlayer = getGame().getCurrentPlayer();
 
 		if (currentPlayer != null) {
 			gameMediator.publishNewRoundEvent(new NewRoundEvent(toString(),
@@ -60,7 +60,7 @@ public class PreFlopRound extends BettingRound {
 			if (game.getNbCurrentDealPlayers() == 2) {
 				game.nextPlayer();
 			}
-			GamePlayer player = getGame().getCurrentPlayer();
+			GameSeatedPlayer player = getGame().getCurrentPlayer();
 			collectSmallBlind(player);
 			getGame().nextPlayer();
 		} catch (IllegalValueException e) {
@@ -80,7 +80,7 @@ public class PreFlopRound extends BettingRound {
 		}
 
 		PreFlopRound.logger.info("*** HOLE CARDS ***");
-		for (GamePlayer player : getGame().getCurrentDealPlayers()) {
+		for (GameSeatedPlayer player : getGame().getCurrentDealPlayers()) {
 			player.dealPocketCard(drawCard());
 			player.dealPocketCard(drawCard());
 
@@ -93,7 +93,7 @@ public class PreFlopRound extends BettingRound {
 		}
 
 		for (GameAllInPlayer allInPlayer : allInPlayers) {
-			GamePlayer player = allInPlayer.getPlayer();
+			GameSeatedPlayer player = allInPlayer.getPlayer();
 			player.dealPocketCard(drawCard());
 			player.dealPocketCard(drawCard());
 
@@ -111,7 +111,7 @@ public class PreFlopRound extends BettingRound {
 		}
 	}
 
-	public void check(GamePlayer player) throws IllegalActionException {
+	public void check(GameSeatedPlayer player) throws IllegalActionException {
 		if (!onTurn(player)) {
 			throw new IllegalActionException(player.getName()
 					+ " can not check in this round.");

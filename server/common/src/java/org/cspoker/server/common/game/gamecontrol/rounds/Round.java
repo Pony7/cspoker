@@ -21,7 +21,7 @@ import org.cspoker.common.exceptions.IllegalActionException;
 import org.cspoker.server.common.game.GameMediator;
 import org.cspoker.server.common.game.gamecontrol.Game;
 import org.cspoker.server.common.game.gamecontrol.rules.BettingRules;
-import org.cspoker.server.common.game.player.GamePlayer;
+import org.cspoker.server.common.game.player.GameSeatedPlayer;
 
 /**
  * An abstract class to represent rounds. A player can do actions in a round,
@@ -100,7 +100,7 @@ public abstract class Round {
 	 * @throws IllegalActionException
 	 *             [must] The action performed is not a valid action.
 	 */
-	public void check(GamePlayer player) throws IllegalActionException {
+	public void check(GameSeatedPlayer player) throws IllegalActionException {
 		throw new IllegalActionException(player.getName()
 				+ " can not check in this round.");
 	}
@@ -117,7 +117,7 @@ public abstract class Round {
 	 * @throws IllegalActionException
 	 *             [must] The action performed is not a valid action.
 	 */
-	public void bet(GamePlayer player, int amount)
+	public void bet(GameSeatedPlayer player, int amount)
 			throws IllegalActionException {
 		throw new IllegalActionException(player.getName() + " can not bet "
 				+ amount + " chips in this round.");
@@ -134,7 +134,7 @@ public abstract class Round {
 	 * @throws IllegalActionException
 	 *             [must] The action performed is not a valid action.
 	 */
-	public void call(GamePlayer player) throws IllegalActionException {
+	public void call(GameSeatedPlayer player) throws IllegalActionException {
 		throw new IllegalActionException(player.getName()
 				+ " can not call in this round.");
 	}
@@ -151,7 +151,7 @@ public abstract class Round {
 	 * @throws IllegalActionException
 	 *             [must] The action performed is not a valid action.
 	 */
-	public void raise(GamePlayer player, int amount)
+	public void raise(GameSeatedPlayer player, int amount)
 			throws IllegalActionException {
 		throw new IllegalActionException(player.getName()
 				+ " can not raise with " + amount + " chips in this round.");
@@ -170,12 +170,12 @@ public abstract class Round {
 	 * @throws IllegalActionException
 	 *             [must] The action performed is not a valid action.
 	 */
-	public void fold(GamePlayer player) throws IllegalActionException {
+	public void fold(GameSeatedPlayer player) throws IllegalActionException {
 		throw new IllegalActionException(player.getName()
 				+ " can not fold in this round.");
 	}
 
-	public void foldAction(GamePlayer player) throws IllegalActionException {
+	public void foldAction(GameSeatedPlayer player) throws IllegalActionException {
 	}
 
 	/**
@@ -189,7 +189,7 @@ public abstract class Round {
 	 * @throws IllegalActionException
 	 *             [must] The action performed is not a valid action.
 	 */
-	public void deal(GamePlayer player) throws IllegalActionException {
+	public void deal(GameSeatedPlayer player) throws IllegalActionException {
 		throw new IllegalActionException(player.getName()
 				+ " can not deal in this round.");
 	}
@@ -204,7 +204,7 @@ public abstract class Round {
 	 * @throws IllegalActionException
 	 *             [must] The action performed is not a valid action.
 	 */
-	public void allIn(GamePlayer player) throws IllegalActionException {
+	public void allIn(GameSeatedPlayer player) throws IllegalActionException {
 		throw new IllegalActionException(player.getName()
 				+ " can not go all-in in this round.");
 	}
@@ -243,16 +243,16 @@ public abstract class Round {
 	 * @param player
 	 *            The player who did the last event.
 	 */
-	protected void playerMadeEvent(GamePlayer player) {
+	protected void playerMadeEvent(GameSeatedPlayer player) {
 		game.setLastActionPlayer(player);
 	}
 
-	public boolean onTurn(GamePlayer player) {
+	public boolean onTurn(GameSeatedPlayer player) {
 		return game.getCurrentPlayer().equals(player);
 	}
 
 	protected void removeBrokePlayers() {
-		for (GamePlayer player : getGame().getTable().getPlayers()) {
+		for (GameSeatedPlayer player : getGame().getTable().getPlayers()) {
 			if (player.getStack().getValue() == 0) {
 				try {
 					getGame().leaveGame(player);
