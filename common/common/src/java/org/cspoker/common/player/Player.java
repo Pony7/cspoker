@@ -33,7 +33,7 @@ public class Player implements Serializable{
 
 	private int stackValue;
 	
-	Player(PlayerId id, String name, int stackValue){
+	public Player(PlayerId id, String name, int stackValue){
 		this.id = id;
 		this.name = name;
 		this.stackValue = stackValue;
