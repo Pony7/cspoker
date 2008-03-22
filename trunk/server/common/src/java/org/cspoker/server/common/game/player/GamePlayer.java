@@ -15,6 +15,7 @@
  */
 package org.cspoker.server.common.game.player;
 
+import org.cspoker.common.player.Player;
 import org.cspoker.common.player.PlayerId;
 import org.cspoker.server.common.game.elements.chips.Chips;
 import org.cspoker.server.common.game.elements.chips.IllegalValueException;
@@ -57,5 +58,12 @@ public class GamePlayer {
 		
 	public Chips getStack(){
 		return stack;
-	}	
+	}
+	
+	/**
+	 * Returns a snapshot of this game player.
+	 */
+	public Player getMemento(){
+		return new Player(id, name, stack.getValue());
+	}
 }
