@@ -53,7 +53,7 @@ public class PreFlopRound extends BettingRound {
 
 		if (currentPlayer != null) {
 			gameMediator.publishNewRoundEvent(new NewRoundEvent(toString(),
-					currentPlayer.getSavedPlayer()));
+					currentPlayer.getMemento()));
 		}
 		try {
 			// If there are only 2 players, blinds are inverted.
@@ -88,7 +88,7 @@ public class PreFlopRound extends BettingRound {
 					+ player.getPocketCards());
 
 			gameMediator.publishNewPocketCardsEvent(player.getId(),
-					new NewPocketCardsEvent(player.getSavedPlayer(),
+					new NewPocketCardsEvent(player.getMemento(),
 							new HashSet<Card>(player.getPocketCards())));
 		}
 
@@ -101,13 +101,13 @@ public class PreFlopRound extends BettingRound {
 					+ player.getPocketCards());
 
 			gameMediator.publishNewPocketCardsEvent(player.getId(),
-					new NewPocketCardsEvent(player.getSavedPlayer(),
+					new NewPocketCardsEvent(player.getMemento(),
 							new HashSet<Card>(player.getPocketCards())));
 		}
 
 		if (getGame().getNbCurrentDealPlayers() > 1) {
 			gameMediator.publishNextPlayerEvent(new NextPlayerEvent(game
-					.getCurrentPlayer().getSavedPlayer()));
+					.getCurrentPlayer().getMemento()));
 		}
 	}
 

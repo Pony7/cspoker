@@ -42,7 +42,7 @@ public class GameWinner {
 	}
 
 	public Winner getSavedWinner() {
-		return new Winner(winner.getSavedPlayer(), chips.getValue());
+		return new Winner(winner.getMemento(), chips.getValue());
 	}
 
 	public String toString() {

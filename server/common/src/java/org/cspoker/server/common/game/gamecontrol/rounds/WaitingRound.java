@@ -69,10 +69,10 @@ public class WaitingRound extends Round {
 		List<SeatedPlayer> players = new ArrayList<SeatedPlayer>(game
 				.getNbCurrentDealPlayers());
 		for (GameSeatedPlayer player : game.getCurrentDealPlayers()) {
-			players.add(player.getSavedPlayer());
+			players.add(player.getMemento());
 		}
 		gameMediator.publishNewDealEvent(new NewDealEvent(players, game
-				.getDealer().getSavedPlayer()));
+				.getDealer().getMemento()));
 	}
 
 	public Round getNextRound() {

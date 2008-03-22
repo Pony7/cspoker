@@ -84,7 +84,7 @@ abstract class PlayerCommunicationState {
 	public void say(String message) {
 		GameManager.getServerMediator().publishServerMessageEvent(
 				new ServerMessageEvent(playerCommunication.getPlayer()
-						.getSavedPlayer(), message));
+						.getMemento(), message));
 	}
 
 	/***************************************************************************

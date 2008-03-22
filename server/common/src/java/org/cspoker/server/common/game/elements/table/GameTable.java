@@ -403,7 +403,7 @@ public class GameTable {
 	public synchronized Table getSavedTable() {
 		List<SeatedPlayer> playerList = new ArrayList<SeatedPlayer>(getNbPlayers());
 		for (GameSeatedPlayer player : players.values()) {
-			playerList.add(player.getSavedPlayer());
+			playerList.add(player.getMemento());
 		}
 		return new Table(tableId, name, playerList, playing, gameProperty);
 	}

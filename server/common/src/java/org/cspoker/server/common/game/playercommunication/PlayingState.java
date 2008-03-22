@@ -77,7 +77,7 @@ class PlayingState extends PlayerCommunicationState {
 
 	public void say(String message) {
 		gameMediator.publishGameMessageEvent(new GameMessageEvent(
-				playerCommunication.getPlayer().getSavedPlayer(), message));
+				playerCommunication.getPlayer().getMemento(), message));
 	}
 
 	public void leaveTable() throws IllegalActionException {
