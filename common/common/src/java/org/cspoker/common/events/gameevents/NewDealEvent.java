@@ -25,7 +25,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.cspoker.common.eventlisteners.RemoteAllEventsListener;
-import org.cspoker.common.player.Player;
+import org.cspoker.common.player.SeatedPlayer;
 
 /**
  * A class to represent new deal events.
@@ -39,11 +39,11 @@ public class NewDealEvent extends GameEvent {
 
 	private static final long serialVersionUID = 8048593844056212117L;
 
-	private List<Player> players;
+	private List<SeatedPlayer> players;
 
-	private Player dealer;
+	private SeatedPlayer dealer;
 
-	public NewDealEvent(List<Player> players, Player dealer) {
+	public NewDealEvent(List<SeatedPlayer> players, SeatedPlayer dealer) {
 		this.players = Collections.unmodifiableList(players);
 		this.dealer = dealer;
 	}
@@ -52,13 +52,13 @@ public class NewDealEvent extends GameEvent {
 		// no op
 	}
 
-	public Player getDealer() {
+	public SeatedPlayer getDealer() {
 		return dealer;
 	}
 
 	public String toString() {
 		String toReturn = "A new deal with ";
-		for (Player player : players) {
+		for (SeatedPlayer player : players) {
 			toReturn += player.getName();
 			toReturn += " (";
 			toReturn += player.getStackValue();

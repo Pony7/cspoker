@@ -22,7 +22,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.cspoker.common.eventlisteners.RemoteAllEventsListener;
-import org.cspoker.common.player.Player;
+import org.cspoker.common.player.SeatedPlayer;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -30,11 +30,11 @@ public class ServerMessageEvent extends ServerEvent {
 
 	private static final long serialVersionUID = -1396985826399601557L;
 
-	private Player player;
+	private SeatedPlayer player;
 
 	private String message;
 
-	public ServerMessageEvent(Player player, String message) {
+	public ServerMessageEvent(SeatedPlayer player, String message) {
 		this.player = player;
 		this.message = message;
 	}

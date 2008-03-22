@@ -24,7 +24,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import org.cspoker.common.elements.table.Table;
 import org.cspoker.common.eventlisteners.RemoteAllEventsListener;
-import org.cspoker.common.player.Player;
+import org.cspoker.common.player.SeatedPlayer;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -34,9 +34,9 @@ public class TableCreatedEvent extends ServerEvent {
 
 	private Table table;
 
-	private Player player;
+	private SeatedPlayer player;
 
-	public TableCreatedEvent(Player player, Table table) {
+	public TableCreatedEvent(SeatedPlayer player, Table table) {
 		this.player = player;
 		this.table = table;
 	}
@@ -50,7 +50,7 @@ public class TableCreatedEvent extends ServerEvent {
 				+ table.getName() + " [" + table.getId() + "].";
 	}
 
-	public Player getPlayer() {
+	public SeatedPlayer getPlayer() {
 		return player;
 	}
 

@@ -23,7 +23,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.cspoker.common.eventlisteners.RemoteAllEventsListener;
-import org.cspoker.common.player.Player;
+import org.cspoker.common.player.SeatedPlayer;
 
 /**
  * A class to represent new round events.
@@ -39,9 +39,9 @@ public class NewRoundEvent extends GameEvent {
 
 	private String roundName;
 
-	private Player player;
+	private SeatedPlayer player;
 
-	public NewRoundEvent(String roundName, Player player) {
+	public NewRoundEvent(String roundName, SeatedPlayer player) {
 		this.roundName = roundName;
 		this.player = player;
 	}
@@ -54,7 +54,7 @@ public class NewRoundEvent extends GameEvent {
 		// no op
 	}
 
-	public Player getPlayer() {
+	public SeatedPlayer getPlayer() {
 		return player;
 	}
 
@@ -69,7 +69,7 @@ public class NewRoundEvent extends GameEvent {
 		return roundName;
 	}
 
-	public Player getInitialPlayer() {
+	public SeatedPlayer getInitialPlayer() {
 		return player;
 	}
 

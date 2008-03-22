@@ -31,7 +31,7 @@ public class ShowdownPlayer implements Serializable {
 
 	private static final long serialVersionUID = -1618593137613219527L;
 
-	private Player player;
+	private SeatedPlayer player;
 
 	@XmlElementWrapper
 	@XmlElement(name = "card")
@@ -43,7 +43,7 @@ public class ShowdownPlayer implements Serializable {
 	@XmlElement(name = "card")
 	private Set<Card> handCards;
 
-	public ShowdownPlayer(Player player, Set<Card> cards, Set<Card> handCards,
+	public ShowdownPlayer(SeatedPlayer player, Set<Card> cards, Set<Card> handCards,
 			String description) {
 		this.player = player;
 		this.handCards = Collections.unmodifiableSet(handCards);
@@ -63,7 +63,7 @@ public class ShowdownPlayer implements Serializable {
 		return player.getName() + " has a " + description;
 	}
 
-	public Player getPlayer() {
+	public SeatedPlayer getPlayer() {
 		return player;
 	}
 

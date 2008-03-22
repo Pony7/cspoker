@@ -72,8 +72,8 @@ import org.cspoker.common.events.gameevents.playeractionevents.RaiseEvent;
 import org.cspoker.common.events.gameevents.playeractionevents.SmallBlindEvent;
 import org.cspoker.common.events.gameevents.privateevents.NewPocketCardsEvent;
 import org.cspoker.common.exceptions.IllegalActionException;
-import org.cspoker.common.player.Player;
 import org.cspoker.common.player.PlayerId;
+import org.cspoker.common.player.SeatedPlayer;
 import org.cspoker.server.common.game.gamecontrol.GameControl;
 import org.cspoker.server.common.game.player.GameSeatedPlayer;
 import org.cspoker.server.common.util.threading.ScheduledRequestExecutor;
@@ -1310,7 +1310,7 @@ public class GameMediator {
 		unsubscribeBrokePlayerKickedOutListener(listener);
 	}
 
-	private synchronized void submitTimeOutHandler(Player player) {
+	private synchronized void submitTimeOutHandler(SeatedPlayer player) {
 		currentTimeOut = new PlayerActionTimeOut(player);
 		oldFuture = currentFuture;
 		cancelOldTimeOut();
@@ -1338,9 +1338,9 @@ public class GameMediator {
 
 	private class PlayerActionTimeOut implements Runnable {
 
-		private Player player;
+		private SeatedPlayer player;
 
-		public PlayerActionTimeOut(Player player) {
+		public PlayerActionTimeOut(SeatedPlayer player) {
 			this.player = player;
 		}
 

@@ -24,7 +24,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import org.cspoker.common.eventlisteners.RemoteAllEventsListener;
 import org.cspoker.common.events.gameevents.GameEvent;
-import org.cspoker.common.player.Player;
+import org.cspoker.common.player.SeatedPlayer;
 
 /**
  * A class to represent fold events.
@@ -38,9 +38,9 @@ public class FoldEvent extends GameEvent {
 
 	private static final long serialVersionUID = -7805526864154493974L;
 
-	private Player player;
+	private SeatedPlayer player;
 
-	public FoldEvent(Player player) {
+	public FoldEvent(SeatedPlayer player) {
 		this.player = player;
 	}
 
@@ -52,7 +52,7 @@ public class FoldEvent extends GameEvent {
 		return getPlayer().getName() + " folds.";
 	}
 
-	public Player getPlayer() {
+	public SeatedPlayer getPlayer() {
 		return player;
 	}
 

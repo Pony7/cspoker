@@ -36,7 +36,7 @@ import org.cspoker.common.events.gameevents.playeractionevents.FoldEvent;
 import org.cspoker.common.events.gameevents.playeractionevents.RaiseEvent;
 import org.cspoker.common.events.serverevents.TableRemovedEvent;
 import org.cspoker.common.exceptions.IllegalActionException;
-import org.cspoker.common.player.Player;
+import org.cspoker.common.player.SeatedPlayer;
 import org.cspoker.server.common.game.GameManager;
 import org.cspoker.server.common.game.GameMediator;
 import org.cspoker.server.common.game.TableManager;
@@ -314,7 +314,7 @@ public class GameControl {
 		}
 
 		round.foldAction(player);
-		Player immutablePlayer = player.getSavedPlayer();
+		SeatedPlayer immutablePlayer = player.getSavedPlayer();
 		game.leaveGame(player);
 		gameMediator.publishPlayerLeftTable(new PlayerLeftTableEvent(
 				immutablePlayer));

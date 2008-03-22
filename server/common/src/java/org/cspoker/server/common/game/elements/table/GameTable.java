@@ -26,8 +26,8 @@ import org.cspoker.common.elements.GameProperty;
 import org.cspoker.common.elements.table.SeatId;
 import org.cspoker.common.elements.table.Table;
 import org.cspoker.common.elements.table.TableId;
-import org.cspoker.common.player.Player;
 import org.cspoker.common.player.PlayerId;
+import org.cspoker.common.player.SeatedPlayer;
 import org.cspoker.server.common.game.player.GameSeatedPlayer;
 
 /**
@@ -401,7 +401,7 @@ public class GameTable {
 	}
 
 	public synchronized Table getSavedTable() {
-		List<Player> playerList = new ArrayList<Player>(getNbPlayers());
+		List<SeatedPlayer> playerList = new ArrayList<SeatedPlayer>(getNbPlayers());
 		for (GameSeatedPlayer player : players.values()) {
 			playerList.add(player.getSavedPlayer());
 		}

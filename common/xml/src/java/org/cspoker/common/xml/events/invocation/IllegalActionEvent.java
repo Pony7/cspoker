@@ -21,7 +21,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 import org.cspoker.common.exceptions.IllegalActionException;
-import org.cspoker.common.player.Player;
+import org.cspoker.common.player.SeatedPlayer;
 import org.cspoker.common.xml.actions.PlayerCommunicationAction;
 
 @XmlRootElement
@@ -35,7 +35,7 @@ public class IllegalActionEvent extends InvocationEvent {
 
 	private String msg;
 
-	private Player player;
+	private SeatedPlayer player;
 
 	private PlayerCommunicationAction<?> action;
 
@@ -62,7 +62,7 @@ public class IllegalActionEvent extends InvocationEvent {
 		return msg;
 	}
 
-	public Player getPlayer() {
+	public SeatedPlayer getPlayer() {
 		return player;
 	}
 

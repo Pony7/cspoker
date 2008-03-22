@@ -24,7 +24,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import org.cspoker.common.elements.pots.Pots;
 import org.cspoker.common.eventlisteners.RemoteAllEventsListener;
-import org.cspoker.common.player.Player;
+import org.cspoker.common.player.SeatedPlayer;
 
 /**
  * A class to represent call events.
@@ -38,9 +38,9 @@ public class CallEvent extends ActionChangedPotEvent {
 
 	private static final long serialVersionUID = -78379299188217626L;
 
-	private Player player;
+	private SeatedPlayer player;
 
-	public CallEvent(Player player, Pots pots) {
+	public CallEvent(SeatedPlayer player, Pots pots) {
 		super(pots);
 		this.player = player;
 	}
@@ -53,7 +53,7 @@ public class CallEvent extends ActionChangedPotEvent {
 		return getPlayer().getName() + " calls.";
 	}
 
-	public Player getPlayer() {
+	public SeatedPlayer getPlayer() {
 		return player;
 	}
 
