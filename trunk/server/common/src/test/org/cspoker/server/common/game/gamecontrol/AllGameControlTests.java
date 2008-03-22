@@ -15,10 +15,17 @@
  */
 package org.cspoker.server.common.game.gamecontrol;
 
+import org.cspoker.common.util.Log4JPropertiesLoader;
+
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
 public class AllGameControlTests {
+
+	static {
+		Log4JPropertiesLoader
+				.load("org/cspoker/server/common/logging/log4j.properties");
+	}
 
 	public static Test suite() {
 		TestSuite suite = new TestSuite(
@@ -27,7 +34,6 @@ public class AllGameControlTests {
 		suite.addTestSuite(JoinAndLeaveGameTest.class);
 		suite.addTestSuite(BettingRulesTest.class);
 		suite.addTestSuite(GameFlowTest.class);
-		suite.addTest(AllGameControlTests.suite());
 		//$JUnit-END$
 		return suite;
 	}

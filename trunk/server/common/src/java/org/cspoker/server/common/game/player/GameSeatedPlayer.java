@@ -38,21 +38,10 @@ public class GameSeatedPlayer {
 	/***************************************************************************
 	 * Variables
 	 **************************************************************************/
-
-	/**
-	 * The variable containing the id of the player.
-	 */
-	private final PlayerId id;
-
-	/**
-	 * The name of the player.
-	 */
-	private final String name;
-
-	/**
-	 * The stack of this player.
-	 */
-	private final Chips chips;
+	
+	private final GamePlayer player;
+	
+	private final Chips stack;
 
 	/**
 	 * The chips the player has bet in this round.
@@ -89,9 +78,8 @@ public class GameSeatedPlayer {
 	 */
 	GameSeatedPlayer(PlayerId id, String name, int initialNbChips)
 			throws IllegalValueException {
-		this.id = id;
-		this.name = name;
-		chips = new Chips(initialNbChips);
+		this.player = new GamePlayer(id,name,initialNbChips);
+		this.stack = new Chips(initialNbChips);
 		betChips = new Chips();
 		pocketCards = new CopyOnWriteArrayList<Card>();
 	}
@@ -102,7 +90,7 @@ public class GameSeatedPlayer {
 	 * @return The name of this player.
 	 */
 	public String getName() {
-		return name;
+		return player.getName();
 	}
 
 	/***************************************************************************
@@ -115,7 +103,7 @@ public class GameSeatedPlayer {
 	 * @return The id of this player.
 	 */
 	public PlayerId getId() {
-		return id;
+		return player.getId();
 	}
 
 	/***************************************************************************
@@ -140,7 +128,7 @@ public class GameSeatedPlayer {
 	 **************************************************************************/
 
 	public Chips getStack() {
-		return chips;
+		return stack;
 	}
 
 	public Chips getBetChips() {
@@ -187,6 +175,11 @@ public class GameSeatedPlayer {
 		pocketCards.clear();
 	}
 
+	public synchronized SeatedPlayer getMemento() {
+		return new SeatedPlayer(getId(), getSeatId(), getName(), getStack()
+				.getValue(), getBetChips().getValue());
+	}
+	
 	public String toString() {
 		return getId() + ": " + getName() + " ($" + getStack() + " in chips)";
 	}
@@ -194,41 +187,31 @@ public class GameSeatedPlayer {
 	/**
 	 * Returns a hash code value for this player.
 	 */
-
+	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((player == null) ? 0 : player.hashCode());
 		return result;
 	}
 
 	/**
 	 * Indicates whether some other object is "equal to" this one.
 	 */
-
+	@Override
 	public boolean equals(Object obj) {
-		if (this == obj) {
+		if (this == obj)
 			return true;
-		}
-		if (obj == null) {
+		if (obj == null)
 			return false;
-		}
-		if (getClass() != obj.getClass()) {
+		if (getClass() != obj.getClass())
 			return false;
-		}
 		final GameSeatedPlayer other = (GameSeatedPlayer) obj;
-		if (id == null) {
-			if (other.id != null) {
+		if (player == null) {
+			if (other.player != null)
 				return false;
-			}
-		} else if (!id.equals(other.id)) {
+		} else if (!player.equals(other.player))
 			return false;
-		}
 		return true;
-	}
-
-	public synchronized SeatedPlayer getSavedPlayer() {
-		return new SeatedPlayer(getId(), getSeatId(), getName(), getStack()
-				.getValue(), getBetChips().getValue());
 	}
 }

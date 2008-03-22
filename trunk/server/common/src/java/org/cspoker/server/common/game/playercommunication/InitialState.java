@@ -101,7 +101,7 @@ class InitialState extends PlayerCommunicationState {
 			}
 			GameManager.getGame(table.getId()).publishPlayerJoinedTable(
 					new PlayerJoinedTableEvent(playerCommunication.getPlayer()
-							.getSavedPlayer()));
+							.getMemento()));
 			playerCommunication
 					.setPlayerCommunicationState(new WaitingAtTableState(
 							playerCommunication, table, GameManager
@@ -139,7 +139,7 @@ class InitialState extends PlayerCommunicationState {
 				+ " created " + table.getId() + ": " + name + ".");
 		GameManager.getServerMediator().publishTableCreatedEvent(
 				new TableCreatedEvent(playerCommunication.getPlayer()
-						.getSavedPlayer(), table.getSavedTable()));
+						.getMemento(), table.getSavedTable()));
 		return table.getSavedTable();
 	}
 

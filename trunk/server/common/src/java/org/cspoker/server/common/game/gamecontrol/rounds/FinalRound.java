@@ -32,7 +32,7 @@ public class FinalRound extends BettingRound {
 		GameSeatedPlayer currentPlayer = game.getCurrentPlayer();
 		if (currentPlayer != null) {
 			gameMediator.publishNewRoundEvent(new NewRoundEvent(toString(),
-					currentPlayer.getSavedPlayer()));
+					currentPlayer.getMemento()));
 		}
 		drawMuckCard();
 		drawOpenCardAndPublishCommonCard();

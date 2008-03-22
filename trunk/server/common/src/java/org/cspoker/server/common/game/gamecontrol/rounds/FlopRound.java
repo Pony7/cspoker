@@ -34,7 +34,7 @@ public class FlopRound extends BettingRound {
 		GameSeatedPlayer currentPlayer = getGame().getCurrentPlayer();
 		if (currentPlayer != null) {
 			gameMediator.publishNewRoundEvent(new NewRoundEvent(toString(),
-					currentPlayer.getSavedPlayer()));
+					currentPlayer.getMemento()));
 		}
 		drawMuckCard();
 		drawOpenCard();

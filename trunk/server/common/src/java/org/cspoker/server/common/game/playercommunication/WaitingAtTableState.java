@@ -55,7 +55,7 @@ class WaitingAtTableState extends PlayerCommunicationState {
 	public void leaveTable() throws IllegalActionException {
 
 		SeatedPlayer immutablePlayer = playerCommunication.getPlayer()
-				.getSavedPlayer();
+				.getMemento();
 
 		table.removePlayer(playerCommunication.getPlayer());
 

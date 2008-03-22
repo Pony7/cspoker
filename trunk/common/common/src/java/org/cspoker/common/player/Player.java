@@ -56,6 +56,6 @@ public class Player implements Serializable{
 	}
 	
 	public String toString(){
-		return getName()+" [id="+id+", stack="+getStackValue()+"]";
+		return getId() + ": " + getName() + " ($" + getStackValue() + " in chips)";
 	}
 }

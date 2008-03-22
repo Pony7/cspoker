@@ -76,7 +76,7 @@ public class GameShowdownPlayer implements Comparable<GameShowdownPlayer> {
 	}
 
 	public ShowdownPlayer getSavedShowdownPlayer() {
-		return new ShowdownPlayer(player.getSavedPlayer(), new HashSet<Card>(
+		return new ShowdownPlayer(player.getMemento(), new HashSet<Card>(
 				getBestHand().getCards()), new HashSet<Card>(player
 				.getPocketCards()), getBestHand().getDescription());
 	}

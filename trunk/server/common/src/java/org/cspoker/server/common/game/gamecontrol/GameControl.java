@@ -160,7 +160,7 @@ public class GameControl {
 	public synchronized void bet(GameSeatedPlayer player, int amount)
 			throws IllegalActionException {
 		round.bet(player, amount);
-		gameMediator.publishBetEvent(new BetEvent(player.getSavedPlayer(),
+		gameMediator.publishBetEvent(new BetEvent(player.getMemento(),
 				amount, new Pots(round.getCurrentPotValue())));
 		GameControl.logger.info(player.getName() + " bets " + amount + ".");
 		checkIfEndedAndChangeRound();
@@ -180,7 +180,7 @@ public class GameControl {
 	public synchronized void call(GameSeatedPlayer player)
 			throws IllegalActionException {
 		round.call(player);
-		gameMediator.publishCallEvent(new CallEvent(player.getSavedPlayer(),
+		gameMediator.publishCallEvent(new CallEvent(player.getMemento(),
 				new Pots(round.getCurrentPotValue())));
 		GameControl.logger.info(player.getName() + " calls.");
 		checkIfEndedAndChangeRound();
@@ -200,7 +200,7 @@ public class GameControl {
 	public synchronized void check(GameSeatedPlayer player)
 			throws IllegalActionException {
 		round.check(player);
-		gameMediator.publishCheckEvent(new CheckEvent(player.getSavedPlayer()));
+		gameMediator.publishCheckEvent(new CheckEvent(player.getMemento()));
 		GameControl.logger.info(player.getName() + " checks.");
 		checkIfEndedAndChangeRound();
 	}
@@ -220,10 +220,10 @@ public class GameControl {
 	public synchronized void raise(GameSeatedPlayer player, int amount)
 			throws IllegalActionException {
 		round.raise(player, amount);
-		gameMediator.publishRaiseEvent(new RaiseEvent(player.getSavedPlayer(),
+		gameMediator.publishRaiseEvent(new RaiseEvent(player.getMemento(),
 				amount, new Pots(round.getCurrentPotValue())));
 		GameControl.logger.info(player.getName() + ": raises $" + amount
-				+ " to $" + player.getSavedPlayer().getBetChipsValue());
+				+ " to $" + player.getMemento().getBetChipsValue());
 		checkIfEndedAndChangeRound();
 	}
 
@@ -243,7 +243,7 @@ public class GameControl {
 	public synchronized void fold(GameSeatedPlayer player)
 			throws IllegalActionException {
 		round.fold(player);
-		gameMediator.publishFoldEvent(new FoldEvent(player.getSavedPlayer()));
+		gameMediator.publishFoldEvent(new FoldEvent(player.getMemento()));
 		GameControl.logger.info(player.getName() + ": folds");
 		checkIfEndedAndChangeRound();
 	}
@@ -292,7 +292,7 @@ public class GameControl {
 		}
 
 		gameMediator.publishPlayerJoinedTable(new PlayerJoinedTableEvent(player
-				.getSavedPlayer()));
+				.getMemento()));
 
 		// auto-deal
 		try {
@@ -303,7 +303,7 @@ public class GameControl {
 		} catch (IllegalActionException e) {
 			game.leaveGame(player);
 			gameMediator.publishPlayerLeftTable(new PlayerLeftTableEvent(player
-					.getSavedPlayer()));
+					.getMemento()));
 		}
 	}
 
@@ -314,7 +314,7 @@ public class GameControl {
 		}
 
 		round.foldAction(player);
-		SeatedPlayer immutablePlayer = player.getSavedPlayer();
+		SeatedPlayer immutablePlayer = player.getMemento();
 		game.leaveGame(player);
 		gameMediator.publishPlayerLeftTable(new PlayerLeftTableEvent(
 				immutablePlayer));
@@ -349,7 +349,7 @@ public class GameControl {
 			GameSeatedPlayer player = game.getCurrentPlayer();
 			if (player != null) {
 				gameMediator.publishNextPlayerEvent(new NextPlayerEvent(player
-						.getSavedPlayer()));
+						.getMemento()));
 			}
 		}
 	}

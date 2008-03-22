@@ -258,7 +258,7 @@ public abstract class Round {
 					getGame().leaveGame(player);
 					gameMediator
 							.publishBrokePlayerKickedOutEvent(new BrokePlayerKickedOutEvent(
-									player.getSavedPlayer()));
+									player.getMemento()));
 				} catch (IllegalActionException e) {
 					throw new IllegalStateException();
 				}
