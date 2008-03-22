@@ -50,7 +50,7 @@ public class GameSeatedPlayer {
 	private final Chips betChips;
 
 	/**
-	 * The hidden cards.
+	 * The hand cards.
 	 */
 	private final List<Card> pocketCards;
 
@@ -78,8 +78,13 @@ public class GameSeatedPlayer {
 	 */
 	GameSeatedPlayer(PlayerId id, String name, int initialNbChips)
 			throws IllegalValueException {
-		this.player = new GamePlayer(id,name,initialNbChips);
-		this.stack = new Chips(initialNbChips);
+		this(new GamePlayer(id,name,2*initialNbChips), initialNbChips);
+	}
+	
+	public GameSeatedPlayer(GamePlayer player, int buyIn) throws IllegalValueException {
+		this.player = player;
+		this.stack = new Chips();
+		player.getStack().transferAmountTo(buyIn, stack);
 		betChips = new Chips();
 		pocketCards = new CopyOnWriteArrayList<Card>();
 	}
