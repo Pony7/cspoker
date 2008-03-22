@@ -17,7 +17,7 @@ package org.cspoker.client.gui.javafx.views;
 
 
 import java.lang.*;
-import org.cspoker.common.player.Player;
+import org.cspoker.common.player.SeatedPlayer;
 import org.cspoker.common.elements.table.SeatId;
 
 class PlayerView {
@@ -35,12 +35,12 @@ class PlayerView {
     
     attribute seatid:Integer;
     
-    operation toPlayerView(players:Player):PlayerView;
+    operation toPlayerView(players:SeatedPlayer):PlayerView;
     
-    operation toPlayerViews(players:Player*):PlayerView*;
+    operation toPlayerViews(players:SeatedPlayer*):PlayerView*;
 }
 
-operation PlayerView.toPlayerViews(players:Player*){
+operation PlayerView.toPlayerViews(players:SeatedPlayer*){
     var temp = foreach(i in [0..7])
     PlayerView{
         seated: false
@@ -58,7 +58,7 @@ operation PlayerView.toPlayerViews(players:Player*){
     return temp;
 }
 
-operation PlayerView.toPlayerView(p:Player){
+operation PlayerView.toPlayerView(p:SeatedPlayer){
     return PlayerView{
             name: p.getName()
             stack: p.getStackValue()

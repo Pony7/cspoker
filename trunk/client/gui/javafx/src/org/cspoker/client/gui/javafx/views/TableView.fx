@@ -19,7 +19,7 @@ import org.cspoker.common.elements.table.Table;
 import org.cspoker.common.elements.table.TableId;
 import org.cspoker.common.elements.GameProperty;
 import java.lang.*;
-import org.cspoker.common.player.Player;
+import org.cspoker.common.player.SeatedPlayer;
 import org.cspoker.client.gui.javafx.JavaFxClient;
 
 class TableView {
