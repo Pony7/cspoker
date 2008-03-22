@@ -24,7 +24,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import org.cspoker.common.elements.table.SeatId;
 import org.cspoker.common.eventlisteners.RemoteAllEventsListener;
-import org.cspoker.common.player.Player;
+import org.cspoker.common.player.SeatedPlayer;
 
 /**
  * A class to represent player joining games events.
@@ -38,9 +38,9 @@ public class PlayerJoinedTableEvent extends GameEvent {
 
 	private static final long serialVersionUID = 3276571712883586966L;
 
-	private Player player;
+	private SeatedPlayer player;
 
-	public PlayerJoinedTableEvent(Player player) {
+	public PlayerJoinedTableEvent(SeatedPlayer player) {
 		this.player = player;
 	}
 
@@ -56,7 +56,7 @@ public class PlayerJoinedTableEvent extends GameEvent {
 		return getPlayer().getSeatId();
 	}
 
-	public Player getPlayer() {
+	public SeatedPlayer getPlayer() {
 		return player;
 	}
 

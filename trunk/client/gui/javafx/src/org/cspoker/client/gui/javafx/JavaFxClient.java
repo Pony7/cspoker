@@ -32,7 +32,7 @@ import org.cspoker.common.elements.table.Table;
 import org.cspoker.common.elements.table.TableId;
 import org.cspoker.common.eventlisteners.RemoteAllEventsListener;
 import org.cspoker.common.exceptions.IllegalActionException;
-import org.cspoker.common.player.Player;
+import org.cspoker.common.player.SeatedPlayer;
 import org.cspoker.common.player.Winner;
 import org.cspoker.common.util.Log4JPropertiesLoader;
 
@@ -217,10 +217,10 @@ public class JavaFxClient {
         return winners.toArray(new Winner[winners.size()]);
     }
 
-    public static Player[] playersToArray(List<Player> players) {
+    public static SeatedPlayer[] playersToArray(List<SeatedPlayer> players) {
         if (players == null) {
-            return new Player[]{};
+            return new SeatedPlayer[]{};
         }
-        return players.toArray(new Player[players.size()]);
+        return players.toArray(new SeatedPlayer[players.size()]);
     }
 }

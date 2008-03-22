@@ -32,7 +32,7 @@ import org.cspoker.common.elements.table.SeatId;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-public class Player implements Serializable {
+public class SeatedPlayer implements Serializable {
 
 	private static final long serialVersionUID = -9200622390366978194L;
 
@@ -60,7 +60,7 @@ public class Player implements Serializable {
 	 */
 	private int betChipsValue;
 
-	public Player(PlayerId id, SeatId seatId, String name, int stackValue,
+	public SeatedPlayer(PlayerId id, SeatId seatId, String name, int stackValue,
 			int betChipsValue) {
 		this.id = id;
 		this.seatId = seatId;
@@ -69,7 +69,7 @@ public class Player implements Serializable {
 		this.betChipsValue = betChipsValue;
 	}
 
-	protected Player() {
+	protected SeatedPlayer() {
 		// no op
 	}
 

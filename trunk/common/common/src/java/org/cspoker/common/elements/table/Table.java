@@ -27,7 +27,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 
 import org.cspoker.common.elements.GameProperty;
-import org.cspoker.common.player.Player;
+import org.cspoker.common.player.SeatedPlayer;
 
 /**
  * An immutable class to represent a snapshot of the state of a table.
@@ -48,13 +48,13 @@ public class Table implements Serializable {
 
 	@XmlElementWrapper
 	@XmlElement(name = "player")
-	private List<Player> players;
+	private List<SeatedPlayer> players;
 
 	private boolean playing;
 
 	private GameProperty property;
 
-	public Table(TableId id, String name, List<Player> players,
+	public Table(TableId id, String name, List<SeatedPlayer> players,
 			boolean playing, GameProperty property) {
 		this.id = id;
 		this.name = name;
@@ -98,7 +98,7 @@ public class Table implements Serializable {
 	 * 
 	 * @return The list of players at this table.
 	 */
-	public List<Player> getPlayers() {
+	public List<SeatedPlayer> getPlayers() {
 		return players;
 	}
 

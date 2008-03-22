@@ -16,7 +16,7 @@
 
 package org.cspoker.common.exceptions;
 
-import org.cspoker.common.player.Player;
+import org.cspoker.common.player.SeatedPlayer;
 
 /**
  * Thrown to indicate that the trying action is not a valid action.
@@ -30,18 +30,18 @@ public class IllegalActionException extends Exception {
 
 	private static final long serialVersionUID = -5675804638273023229L;
 
-	private Player player;
+	private SeatedPlayer player;
 
 	public IllegalActionException(String message) {
 		super(message);
 	}
 
-	public IllegalActionException(Player player, String message) {
+	public IllegalActionException(SeatedPlayer player, String message) {
 		super(player.getName() + " performed an illegal action. " + message);
 		this.player = player;
 	}
 
-	public Player getPlayer() {
+	public SeatedPlayer getPlayer() {
 		return player;
 	}
 }

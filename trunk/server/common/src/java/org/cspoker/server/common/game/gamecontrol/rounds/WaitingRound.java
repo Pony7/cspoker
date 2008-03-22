@@ -22,7 +22,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.cspoker.common.events.gameevents.NewDealEvent;
 import org.cspoker.common.exceptions.IllegalActionException;
-import org.cspoker.common.player.Player;
+import org.cspoker.common.player.SeatedPlayer;
 import org.cspoker.server.common.game.GameMediator;
 import org.cspoker.server.common.game.gamecontrol.Game;
 import org.cspoker.server.common.game.player.GameSeatedPlayer;
@@ -66,7 +66,7 @@ public class WaitingRound extends Round {
 
 	public void endRound() {
 		game.dealNewHand();
-		List<Player> players = new ArrayList<Player>(game
+		List<SeatedPlayer> players = new ArrayList<SeatedPlayer>(game
 				.getNbCurrentDealPlayers());
 		for (GameSeatedPlayer player : game.getCurrentDealPlayers()) {
 			players.add(player.getSavedPlayer());

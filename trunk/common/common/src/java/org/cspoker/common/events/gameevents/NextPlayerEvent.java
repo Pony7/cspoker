@@ -23,7 +23,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.cspoker.common.eventlisteners.RemoteAllEventsListener;
-import org.cspoker.common.player.Player;
+import org.cspoker.common.player.SeatedPlayer;
 
 /**
  * A class to represent new player events.
@@ -37,9 +37,9 @@ public class NextPlayerEvent extends GameEvent {
 
 	private static final long serialVersionUID = -2048233796443189725L;
 
-	private Player player;
+	private SeatedPlayer player;
 
-	public NextPlayerEvent(Player player) {
+	public NextPlayerEvent(SeatedPlayer player) {
 		this.player = player;
 	}
 
@@ -47,7 +47,7 @@ public class NextPlayerEvent extends GameEvent {
 		// no op
 	}
 
-	public Player getPlayer() {
+	public SeatedPlayer getPlayer() {
 		return player;
 	}
 

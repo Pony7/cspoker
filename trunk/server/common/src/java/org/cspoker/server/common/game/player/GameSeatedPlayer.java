@@ -22,8 +22,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.cspoker.common.elements.cards.Card;
 import org.cspoker.common.elements.table.SeatId;
-import org.cspoker.common.player.Player;
 import org.cspoker.common.player.PlayerId;
+import org.cspoker.common.player.SeatedPlayer;
 import org.cspoker.server.common.game.elements.chips.Chips;
 import org.cspoker.server.common.game.elements.chips.IllegalValueException;
 
@@ -227,8 +227,8 @@ public class GameSeatedPlayer {
 		return true;
 	}
 
-	public synchronized Player getSavedPlayer() {
-		return new Player(getId(), getSeatId(), getName(), getStack()
+	public synchronized SeatedPlayer getSavedPlayer() {
+		return new SeatedPlayer(getId(), getSeatId(), getName(), getStack()
 				.getValue(), getBetChips().getValue());
 	}
 }

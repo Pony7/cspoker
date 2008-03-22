@@ -24,7 +24,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import org.cspoker.common.eventlisteners.RemoteAllEventsListener;
 import org.cspoker.common.events.gameevents.GameEvent;
-import org.cspoker.common.player.Player;
+import org.cspoker.common.player.SeatedPlayer;
 
 /**
  * A class to represent check events.
@@ -38,9 +38,9 @@ public class CheckEvent extends GameEvent {
 
 	private static final long serialVersionUID = -1128439307716720778L;
 
-	private Player player;
+	private SeatedPlayer player;
 
-	public CheckEvent(Player player) {
+	public CheckEvent(SeatedPlayer player) {
 		this.player = player;
 	}
 
@@ -52,7 +52,7 @@ public class CheckEvent extends GameEvent {
 		return getPlayer().getName() + " checks.";
 	}
 
-	public Player getPlayer() {
+	public SeatedPlayer getPlayer() {
 		return player;
 	}
 

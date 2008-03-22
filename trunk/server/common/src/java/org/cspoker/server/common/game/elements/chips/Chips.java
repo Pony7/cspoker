@@ -189,6 +189,7 @@ public class Chips {
 					+ " from this pile with " + toString() + " to "
 					+ receiver.toString());
 		}
+		
 		decreaseWith(amount);
 		receiver.increaseWith(amount);
 	}
@@ -210,10 +211,11 @@ public class Chips {
 		}
 	}
 
-	public Chips getCopy() {
+	public synchronized Chips getCopy() {
 		try {
 			return new Chips(value);
 		} catch (IllegalValueException e) {
+			logger.error(e);
 			throw new IllegalStateException(
 					"Class-invariant is not respected. Chips must have valid values.");
 		}

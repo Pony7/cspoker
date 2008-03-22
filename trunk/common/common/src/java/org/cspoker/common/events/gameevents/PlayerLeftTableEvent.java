@@ -23,7 +23,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.cspoker.common.eventlisteners.RemoteAllEventsListener;
-import org.cspoker.common.player.Player;
+import org.cspoker.common.player.SeatedPlayer;
 
 /**
  * A class to represent leaving player events.
@@ -37,9 +37,9 @@ public class PlayerLeftTableEvent extends GameEvent {
 
 	private static final long serialVersionUID = -5339079807813674278L;
 
-	private Player player;
+	private SeatedPlayer player;
 
-	public PlayerLeftTableEvent(Player player) {
+	public PlayerLeftTableEvent(SeatedPlayer player) {
 		this.player = player;
 	}
 
@@ -51,7 +51,7 @@ public class PlayerLeftTableEvent extends GameEvent {
 		return player.getName() + " has left this table.";
 	}
 
-	public Player getPlayer() {
+	public SeatedPlayer getPlayer() {
 		return player;
 	}
 

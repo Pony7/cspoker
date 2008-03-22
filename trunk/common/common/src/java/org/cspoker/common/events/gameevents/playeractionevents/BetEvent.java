@@ -24,7 +24,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import org.cspoker.common.elements.pots.Pots;
 import org.cspoker.common.eventlisteners.RemoteAllEventsListener;
-import org.cspoker.common.player.Player;
+import org.cspoker.common.player.SeatedPlayer;
 
 /**
  * A class to represent bet events.
@@ -38,11 +38,11 @@ public class BetEvent extends ActionChangedPotEvent {
 
 	private static final long serialVersionUID = -1968724398831151650L;
 
-	private Player player;
+	private SeatedPlayer player;
 
 	private int amount;
 
-	public BetEvent(Player player, int amount, Pots pots) {
+	public BetEvent(SeatedPlayer player, int amount, Pots pots) {
 		super(pots);
 		this.player = player;
 		this.amount = amount;
@@ -60,7 +60,7 @@ public class BetEvent extends ActionChangedPotEvent {
 		return amount;
 	}
 
-	public Player getPlayer() {
+	public SeatedPlayer getPlayer() {
 		return player;
 	}
 

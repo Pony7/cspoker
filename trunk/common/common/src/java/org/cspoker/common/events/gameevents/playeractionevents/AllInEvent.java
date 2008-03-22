@@ -24,7 +24,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import org.cspoker.common.elements.pots.Pots;
 import org.cspoker.common.eventlisteners.RemoteAllEventsListener;
-import org.cspoker.common.player.Player;
+import org.cspoker.common.player.SeatedPlayer;
 
 /**
  * A class to represent all-in events.
@@ -41,13 +41,13 @@ public class AllInEvent extends ActionChangedPotEvent {
 	/**
 	 * The variable containing the saved player.
 	 */
-	private Player player;
+	private SeatedPlayer player;
 
 	/**
 	 * 
 	 * @param player
 	 */
-	public AllInEvent(Player player, Pots pots) {
+	public AllInEvent(SeatedPlayer player, Pots pots) {
 		super(pots);
 		this.player = player;
 	}
@@ -60,7 +60,7 @@ public class AllInEvent extends ActionChangedPotEvent {
 		return getPlayer().getName() + " goes all-in.";
 	}
 
-	public Player getPlayer() {
+	public SeatedPlayer getPlayer() {
 		return player;
 	}
 

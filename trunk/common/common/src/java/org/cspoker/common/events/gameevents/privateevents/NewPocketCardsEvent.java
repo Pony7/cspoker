@@ -28,7 +28,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import org.cspoker.common.elements.cards.Card;
 import org.cspoker.common.eventlisteners.RemoteAllEventsListener;
 import org.cspoker.common.events.gameevents.GameEvent;
-import org.cspoker.common.player.Player;
+import org.cspoker.common.player.SeatedPlayer;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -36,13 +36,13 @@ public class NewPocketCardsEvent extends GameEvent {
 
 	private static final long serialVersionUID = -3328895783353781276L;
 
-	private Player player;
+	private SeatedPlayer player;
 
 	@XmlElementWrapper
 	@XmlElement(name = "card")
 	private Set<Card> pocketCards;
 
-	public NewPocketCardsEvent(Player player, Set<Card> pocketCards) {
+	public NewPocketCardsEvent(SeatedPlayer player, Set<Card> pocketCards) {
 		this.player = player;
 		this.pocketCards = Collections.unmodifiableSet(pocketCards);
 	}
@@ -65,7 +65,7 @@ public class NewPocketCardsEvent extends GameEvent {
 		return toReturn.substring(0, toReturn.length() - 2) + ".";
 	}
 
-	public Player getPlayer() {
+	public SeatedPlayer getPlayer() {
 		return player;
 	}
 

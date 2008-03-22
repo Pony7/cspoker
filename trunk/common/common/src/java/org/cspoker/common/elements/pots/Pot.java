@@ -19,7 +19,7 @@ package org.cspoker.common.elements.pots;
 import java.io.Serializable;
 import java.util.List;
 
-import org.cspoker.common.player.Player;
+import org.cspoker.common.player.SeatedPlayer;
 
 public class Pot implements Serializable {
 
@@ -30,7 +30,7 @@ public class Pot implements Serializable {
 		return 0;
 	}
 
-	public List<Player> getPlayers() {
+	public List<SeatedPlayer> getPlayers() {
 		// TODO
 		return null;
 	}
