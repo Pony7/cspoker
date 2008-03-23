@@ -83,13 +83,6 @@ public class TableManager {
 		hashMap.remove(id);
 	}
 
-	public GameTable createTable(PlayerId id, String name) {
-		TableId tableId = new TableId(counter.getAndIncrement());
-		GameTable table = new GameTable(tableId, name, new GameProperty());
-		hashMap.put(tableId, table);
-		return table;
-	}
-
 	public GameTable createTable(PlayerId id, String name,
 			GameProperty gameProperty) {
 		TableId tableId = new TableId(counter.getAndIncrement());
@@ -109,5 +102,4 @@ public class TableManager {
 		}
 		return tables;
 	}
-
 }
