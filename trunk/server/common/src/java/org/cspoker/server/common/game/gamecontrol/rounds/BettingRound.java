@@ -43,9 +43,6 @@ import org.cspoker.server.common.game.player.GameSeatedPlayer;
 /**
  * A class to represent betting rounds.
  * 
- * 
- * @author Kenzo
- * 
  */
 public abstract class BettingRound extends Round {
 	

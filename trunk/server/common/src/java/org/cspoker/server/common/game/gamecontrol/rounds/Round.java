@@ -27,8 +27,6 @@ import org.cspoker.server.common.game.player.GameSeatedPlayer;
  * An abstract class to represent rounds. A player can do actions in a round,
  * such as checking, betting, ...
  * 
- * @author Kenzo
- * 
  */
 public abstract class Round {
 
