@@ -30,12 +30,6 @@ import org.cspoker.server.common.game.gamecontrol.Game;
 import org.cspoker.server.common.game.player.GameAllInPlayer;
 import org.cspoker.server.common.game.player.GameSeatedPlayer;
 
-/**
- * The round after the initial 2 cards are dealt.
- * 
- * @author Kenzo
- * 
- */
 public class PreFlopRound extends BettingRound {
 
 	private static Logger logger = Logger.getLogger(PreFlopRound.class);
