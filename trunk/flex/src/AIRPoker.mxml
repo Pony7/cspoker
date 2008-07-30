@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:WindowedApplication xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" applicationComplete="Initialize()" width="530" height="350" viewSourceURL="srcview/index.html">
+<mx:Script source="main.as"  />
+	  <mx:Panel x="10" y="10" width="505" height="299"
+    layout="absolute" title="ViewStack Basic ">
+    <mx:ViewStack x="5.5" y="20" id="vsMain"
+      width="472" height="225">
+      <mx:Canvas id="cnvLogin" label="Login"
+        width="100%" height="100%">
+        <mx:Label x="10" y="10" text="Login Page"
+          fontWeight="bold"/>
+        <mx:Label x="10" y="66" text="Username:"/>
+        <mx:TextInput x="85" y="64" id="txtLoginUser" text="kenzo"/>
+        <mx:Label x="10" y="92" text="Password:"/>
+        <mx:TextInput x="85" y="90" id="txtLoginPass" text="test"/>
+        <mx:Button x="123" y="187" label="Login" id="btnLogin" click="DoLogin()" width="100" height="20"/>
+        <mx:LinkButton x="256" y="186" label="Need to Register?"
+          enabled="false"
+          click="{vsMain.selectedChild=cnvRegister}"/>
+        <mx:TextInput x="85" y="37" id="txtServer" text="127.0.0.1:8081"/>
+        <mx:Label x="13" y="39" text="Server:" width="61"/>
+        <mx:Button x="15" y="187" label="Connect" id="btnConnect" click="DoConnect()" width="100" height="20"/>
+      </mx:Canvas>
+      <mx:Panel label="conTables" width="100%" height="100%" id="panelTables">
+        <mx:Grid width="345" height="140" id="gridTables">
+          <mx:GridRow width="100%" height="100%">
+            <mx:GridItem width="100%" height="100%">
+            </mx:GridItem>
+            <mx:GridItem width="100%" height="100%">
+            </mx:GridItem>
+            <mx:GridItem width="100%" height="100%">
+            </mx:GridItem>
+          </mx:GridRow>
+          <mx:GridRow width="100%" height="100%">
+            <mx:GridItem width="100%" height="100%">
+            </mx:GridItem>
+            <mx:GridItem width="100%" height="100%">
+            </mx:GridItem>
+            <mx:GridItem width="100%" height="100%">
+            </mx:GridItem>
+          </mx:GridRow>
+          <mx:GridRow width="100%" height="100%">
+            <mx:GridItem width="100%" height="100%">
+            </mx:GridItem>
+            <mx:GridItem width="100%" height="100%">
+            </mx:GridItem>
+            <mx:GridItem width="100%" height="100%">
+            </mx:GridItem>
+          </mx:GridRow>
+        </mx:Grid>
+      </mx:Panel>
+      <mx:Canvas id="cnvRegister" label="Register"
+        width="100%" height="100%">
+        <mx:Label x="10" y="10" text="Register Page"
+          fontWeight="bold"/>
+        <mx:Label x="10" y="36" text="Username:"/>
+        <mx:TextInput x="107" y="34" id="txtRegUser"
+          width="138"/>
+        <mx:Label x="10" y="62" text="Password:"/>
+        <mx:TextInput x="107" y="60" id="txtRegPass"
+          width="138"/>
+        <mx:Label x="10" y="90" text="Password Again:"/>
+        <mx:TextInput x="107" y="88" id="txtRegPassAgain"
+          width="138"/>
+        <mx:Button x="10" y="141" label="Register"
+          id="butRegister"/>
+        <mx:LinkButton x="107" y="141"
+          label="Already Registered?"
+          enabled="true"
+          click="{vsMain.selectedChild=cnvLogin}"/>
+      </mx:Canvas>
+      <mx:Canvas id="cnvMain"  label="cnvMain" width="100%" height="100%">
+        <mx:Button id="SendButton" x="394" y="195" label="Send" height="20" click="OnSendClick();"  cornerRadius="4" borderColor="#000000" width="70"/>
+        <mx:TextArea id="txtMessage" x="21" y="195" width="365" height="20" wordWrap="false" editable="true" enabled="true" borderColor="#000000" cornerRadius="0" borderThickness="1" maxChars="200" />
+        <mx:TextArea id="OutputTextArea" x="21" y="10" width="441" height="177" backgroundColor="#DFDFDF" borderStyle="solid" borderThickness="1" borderColor="#000000" editable="false" wordWrap="true"/>
+      </mx:Canvas>
+    </mx:ViewStack>
+  </mx:Panel>
+	
+
+    
+</mx:WindowedApplication>
