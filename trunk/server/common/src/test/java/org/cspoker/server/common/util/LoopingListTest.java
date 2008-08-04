@@ -48,6 +48,21 @@ public class LoopingListTest extends TestCase {
 			}
 		}
 	}
+	
+	public void testGetNext() {
+		for (int i = 0; i < initialList.size()-1; i++) {
+			assertEquals(initialList.get(i+1), list.getNext());
+			list.next();
+		}
+		assertEquals(initialList.get(0), list.getNext());
+	}
+	
+	public void testGetPrevious() {
+		for (int i = 0; i < initialList.size()-1; i++) {
+			assertEquals(initialList.get(initialList.size()-1-i), list.getPrevious());
+			list.goBack();
+		}
+	}
 
 	public void testGoBack() {
 		list.goBack();
@@ -141,6 +156,26 @@ public class LoopingListTest extends TestCase {
 		assertTrue(list.contains(initialList.get(1)));
 		assertTrue(list.size() == 2);
 		assertEquals(initialList.get(0), list.getCurrent());
+	}
+	
+	public void testRemove5(){
+		assertFalse(list.remove(new Object()));
+	}
+	
+	public void testGetNextTo(){
+		for (int i = 0; i < list.size()-2; i++) {
+			assertEquals(list.getNextTo(initialList.get(i)), initialList.get(i+1));
+		}
+		assertEquals(list.getNextTo(initialList.get(list.size()-1)), initialList.get(0));
+		assertNull(list.getNextTo(new Object()));
+	}
+	
+	public void testPreviousTo(){
+		for (int i = 1; i < list.size()-1; i++) {
+			assertEquals(list.getPreviousTo(initialList.get(i)), initialList.get(i-1));
+		}
+		assertEquals(list.getPreviousTo(initialList.get(0)), initialList.get(list.size()-1));
+		assertNull(list.getPreviousTo(new Object()));
 	}
 
 }
