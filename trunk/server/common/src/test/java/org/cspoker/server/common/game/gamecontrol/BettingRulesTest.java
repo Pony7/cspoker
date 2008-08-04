@@ -63,7 +63,7 @@ public class BettingRulesTest extends TestCase {
 			gameControl.raise(game.getCurrentPlayer(), 5);
 			fail("Exception Expected.");
 		} catch (IllegalActionException e) {
-			BettingRulesTest.logger.error(e.getLocalizedMessage());
+			BettingRulesTest.logger.info(e.getLocalizedMessage());
 		}
 	}
 
@@ -82,24 +82,30 @@ public class BettingRulesTest extends TestCase {
 		Game game = gameControl.getGame();
 
 		try {
-			gameControl.raise(game.getCurrentPlayer(), 10);
-			assert (false);
+			gameControl.raise(game.getCurrentPlayer(), 20);
+			fail("Exception Expected.");
 		} catch (IllegalActionException e) {
-			BettingRulesTest.logger.error(e.getLocalizedMessage());
+			BettingRulesTest.logger.info(e.getLocalizedMessage());
 		}
 		try {
 			gameControl.raise(game.getCurrentPlayer(), 5);
-			assert (false);
+			fail("Exception Expected.");
 		} catch (IllegalActionException e) {
-			BettingRulesTest.logger.error(e.getLocalizedMessage());
+			BettingRulesTest.logger.info(e.getLocalizedMessage());
 		}
 
 		try {
 			gameControl.raise(game.getCurrentPlayer(), gameControl.getRound()
 					.getCurrentPotValue() + 10);
-			assert (false);
+			fail("Exception Expected.");
 		} catch (IllegalActionException e) {
-			BettingRulesTest.logger.error(e.getLocalizedMessage());
+			BettingRulesTest.logger.info(e.getLocalizedMessage());
+		}
+		
+		try {
+			gameControl.raise(game.getCurrentPlayer(), 10);
+		} catch (IllegalActionException e) {
+			fail(e.getLocalizedMessage());
 		}
 	}
 
@@ -126,9 +132,9 @@ public class BettingRulesTest extends TestCase {
 		}
 		try {
 			gameControl.raise(game.getCurrentPlayer(), 10);
-			assert (false);
+			fail("Exception Expected.");
 		} catch (IllegalActionException e) {
-			BettingRulesTest.logger.error(e.getLocalizedMessage());
+			BettingRulesTest.logger.info(e.getLocalizedMessage());
 		}
 	}
 
@@ -164,27 +170,27 @@ public class BettingRulesTest extends TestCase {
 
 		try {
 			gameControl.raise(game.getCurrentPlayer(), 1);
-			assert (false);
+			fail("Exception Expected.");
 		} catch (IllegalActionException e) {
 			BettingRulesTest.logger.error(e.getLocalizedMessage());
 		}
 		try {
 			gameControl.raise(game.getCurrentPlayer(), -1);
-			assert (false);
+			fail("Exception Expected.");
 		} catch (IllegalActionException e) {
 			BettingRulesTest.logger.error(e.getLocalizedMessage());
 		}
 		try {
 			gameControl.raise(game.getCurrentPlayer(), 0);
-			assert (false);
+			fail("Exception Expected.");
 		} catch (IllegalActionException e) {
-			BettingRulesTest.logger.error(e.getLocalizedMessage());
+			BettingRulesTest.logger.info(e.getLocalizedMessage());
 		}
 		try {
 			gameControl.raise(game.getCurrentPlayer(), 200);
-			assert (false);
+			fail("Exception Expected.");
 		} catch (IllegalActionException e) {
-			BettingRulesTest.logger.error(e.getLocalizedMessage());
+			BettingRulesTest.logger.info(e.getLocalizedMessage());
 		}
 		try {
 			gameControl.raise(game.getCurrentPlayer(), 80);

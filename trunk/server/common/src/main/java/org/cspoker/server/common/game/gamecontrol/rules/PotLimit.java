@@ -1,6 +1,6 @@
 package org.cspoker.server.common.game.gamecontrol.rules;
 
-import org.cspoker.server.common.game.gamecontrol.rounds.Round;
+import org.cspoker.server.common.game.gamecontrol.rounds.BettingRound;
 
 /**
  * Class for the PotLimit betting game.rounds.rules used in Texas Hold'em.
@@ -18,13 +18,16 @@ public class PotLimit extends BettingRules {
 	/***************************************************************************
 	 * Raise
 	 **************************************************************************/
+	
+	//TODO The pot limit is the value after a call!
 
-	public boolean isValidRaise(int amount, Round round) {
+	public boolean isValidRaise(int amount, BettingRound round) {
 		if (amount < getLastBetAmount()) {
-			setLastRaiseErrorMessage("ERROR : the bet amount must be atleast the amount of the previous bet/raise "
+			setLastRaiseErrorMessage("ERROR : the bet amount must be at least the amount of the previous bet/raise "
 					+ "in the current round.");
 			return false;
 		}
+		
 		if (amount > round.getCurrentPotValue()) {
 			setLastRaiseErrorMessage("ERROR : the bet amount mustn't be greater than the total amount of chips in the "
 					+ "current pot, being " + round.getCurrentPotValue() + " !");
@@ -37,7 +40,7 @@ public class PotLimit extends BettingRules {
 	 * Betting
 	 **************************************************************************/
 
-	public boolean isValidBet(int amount, Round round) {
+	public boolean isValidBet(int amount, BettingRound round) {
 		int potValue = round.getCurrentPotValue();
 		if (amount > potValue) {
 			setLastRaiseErrorMessage("ERROR : the bet amount mustn't be greater than the total amount of chips in the"

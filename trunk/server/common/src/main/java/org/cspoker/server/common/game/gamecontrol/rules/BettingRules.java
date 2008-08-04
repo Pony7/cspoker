@@ -1,6 +1,6 @@
 package org.cspoker.server.common.game.gamecontrol.rules;
 
-import org.cspoker.server.common.game.gamecontrol.rounds.Round;
+import org.cspoker.server.common.game.gamecontrol.rounds.BettingRound;
 
 /**
  * Superclass for all the possible betting game.rounds.rules used in Texas
@@ -54,7 +54,7 @@ public abstract class BettingRules {
 	 * @param amount
 	 *            the given amount
 	 */
-	public boolean isValidRaise(int amount, Round round) {
+	public boolean isValidRaise(int amount, BettingRound round) {
 		if (!betPlaced()) {
 			setLastRaiseErrorMessage("ERROR : cannot raise if a bet hasn't been placed yet in this round; "
 					+ "did you mean bet??");
@@ -102,7 +102,7 @@ public abstract class BettingRules {
 	 * @param amount
 	 *            the given amount
 	 */
-	public boolean isValidBet(int amount, Round round) {
+	public boolean isValidBet(int amount, BettingRound round) {
 		if (getNBRaises() != 0) {
 			setLastBetErrorMessage("ERROR : you can't bet if someone already raised during this round!!"
 					+ "; did you mean raise??");

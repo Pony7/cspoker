@@ -1,6 +1,6 @@
 package org.cspoker.server.common.game.gamecontrol.rules;
 
-import org.cspoker.server.common.game.gamecontrol.rounds.Round;
+import org.cspoker.server.common.game.gamecontrol.rounds.BettingRound;
 
 /**
  * Class for the Limit betting game.rounds.rules used in Texas Hold'em.
@@ -69,7 +69,7 @@ public class Limit extends BettingRules {
 	 * Raise
 	 **************************************************************************/
 
-	public boolean isValidRaise(int amount, Round round) {
+	public boolean isValidRaise(int amount, BettingRound round) {
 		if (getNBRaises() >= maxNBRaises) {
 			setLastRaiseErrorMessage("ERROR : the maximum number of raises in this round has been reached");
 			return false;
@@ -102,7 +102,7 @@ public class Limit extends BettingRules {
 	 * Betting
 	 **************************************************************************/
 
-	public boolean isValidBet(int amount, Round round) {
+	public boolean isValidBet(int amount, BettingRound round) {
 		if (round.isLowBettingRound() && (amount % getSmallBet() != 0)) {
 			setLastRaiseErrorMessage("ERROR : the bet amount must be n times the small bet of this round being "
 					+ getSmallBet());

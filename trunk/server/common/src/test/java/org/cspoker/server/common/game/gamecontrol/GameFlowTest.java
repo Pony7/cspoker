@@ -512,45 +512,45 @@ public class GameFlowTest extends TestCase {
 
 	}
 
-	/*
-	 * An all-in raise that is smaller than half the previous raise does not
-	 * open up the round for more betting. Only calls are allowed.
-	 */
-	public void testAllInCallCase() {
-		try {
-			kenzo = playerFactory.createNewPlayer("Kenzo", 200);
-			cedric = playerFactory.createNewPlayer("Cedric", 220);
-			guy = playerFactory.createNewPlayer("Guy", 100);
-
-			TableId id = new TableId(0);
-			gameMediator = new GameMediator(id);
-			table = new GameTable(id, new GameProperty());
-			table.addPlayer(kenzo);
-			table.addPlayer(cedric);
-			table.addPlayer(guy);
-		} catch (IllegalValueException e) {
-			fail(e.getMessage());
-		} catch (PlayerListFullException e) {
-			fail(e.getMessage());
-		}
-
-		GameControl gameControl = new GameControl(gameMediator, table, kenzo);
-
-		try {
-			gameControl.raise(kenzo, 75);
-			gameControl.call(cedric);
-			gameControl.allIn(guy);
-		} catch (IllegalActionException e) {
-			fail(e.getMessage());
-		}
-
-		try {
-			gameControl.raise(kenzo, 75);
-			fail("Previous all in was not big enough to open up betting!");
-		} catch (IllegalActionException e1) {
-			// Should not reach here
-		}
-	}
+//	/*
+//	 * An all-in raise that is smaller than half the previous raise does not
+//	 * open up the round for more betting. Only calls are allowed.
+//	 */
+//	public void testAllInCallCase() {
+//		try {
+//			kenzo = playerFactory.createNewPlayer("Kenzo", 200);
+//			cedric = playerFactory.createNewPlayer("Cedric", 220);
+//			guy = playerFactory.createNewPlayer("Guy", 100);
+//
+//			TableId id = new TableId(0);
+//			gameMediator = new GameMediator(id);
+//			table = new GameTable(id, new GameProperty());
+//			table.addPlayer(kenzo);
+//			table.addPlayer(cedric);
+//			table.addPlayer(guy);
+//		} catch (IllegalValueException e) {
+//			fail(e.getMessage());
+//		} catch (PlayerListFullException e) {
+//			fail(e.getMessage());
+//		}
+//
+//		GameControl gameControl = new GameControl(gameMediator, table, kenzo);
+//
+//		try {
+//			gameControl.raise(kenzo, 75);
+//			gameControl.call(cedric);
+//			gameControl.allIn(guy);
+//		} catch (IllegalActionException e) {
+//			fail(e.getMessage());
+//		}
+//
+//		try {
+//			gameControl.raise(kenzo, 75);
+//			fail("Previous all in was not big enough to open up betting!");
+//		} catch (IllegalActionException e1) {
+//			// Should not reach here
+//		}
+//	}
 
 	/*
 	 * An all-in raise that is greater than half the previous raise opens up the
