@@ -25,17 +25,24 @@
     <pluginManagement>
       <plugins>
         <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-compiler-plugin</artifactId>
           <configuration>
-            <archive>
-              <manifest>
-                <addClasspath>true</addClasspath>
-              </manifest>
-            </archive>
-            <source>1.6</source>
+            <source>1.6</source>	
             <target>1.6</target>
           </configuration>
+        </plugin>
+        <plugin>
+            <groupId>com.google.code.maven-license-plugin</groupId>
+            <artifactId>maven-license-plugin</artifactId>
+            <version>1.3.1</version>
+            <configuration>
+                <header>header.txt</header>
+                <excludes>
+                  <exclude>LICENSE.txt</exclude>
+                  <exclude>README.txt</exclude>
+                  <exclude>src/main/java/org/cspoker/common/xml/util/Base64.java</exclude>
+                </excludes>
+            </configuration>
         </plugin>
       </plugins>
     </pluginManagement>
