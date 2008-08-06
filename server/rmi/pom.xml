@@ -11,6 +11,26 @@
   <packaging>jar</packaging>  
   <name>CSPoker Server-RMI</name>
   
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <configuration>
+          <descriptorRefs>
+            <descriptorRef>jar-with-dependencies</descriptorRef>
+          </descriptorRefs> 
+          <archive>
+            <manifest>
+              <mainClass>org.cspoker.server.rmi.RunRMIServer</mainClass>
+            </manifest>
+          </archive>
+          <source>1.6</source>
+          <target>1.6</target>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+  
   <dependencies>
     <dependency>
       <groupId>org.cspoker</groupId>
