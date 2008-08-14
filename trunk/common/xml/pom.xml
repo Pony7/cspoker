@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org.cspoker</groupId>
-    <artifactId>cspoker</artifactId>
+    <artifactId>common</artifactId>
     <version>0.1-SNAPSHOT</version>
   </parent>
   
@@ -15,7 +15,7 @@
     <dependency>
       <groupId>org.cspoker</groupId>
       <artifactId>common-common</artifactId>
-	  <version>[0.1-SNAPSHOT,)</version>
+	  <version>0.1-SNAPSHOT</version>
     </dependency>
   </dependencies>
   

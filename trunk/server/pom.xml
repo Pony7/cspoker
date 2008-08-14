@@ -22,7 +22,7 @@
     <dependency>
       <groupId>org.cspoker</groupId>
       <artifactId>common-common</artifactId>
-	  <version>[0.1-SNAPSHOT,)</version>
+	  <version>0.1-SNAPSHOT</version>
     </dependency>
   </dependencies>
 
