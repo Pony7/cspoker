@@ -19,7 +19,7 @@
     <dependency>
       <groupId>org.cspoker</groupId>
       <artifactId>client-allcommunication</artifactId>
-	  <version>[0.1-SNAPSHOT,)</version>
+	  <version>0.1-SNAPSHOT</version>
     </dependency>
   </dependencies>
 
