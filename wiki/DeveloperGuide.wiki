@@ -1,0 +1,10 @@
+#summary How to develop for CSPoker
+#labels Featured,Phase-Implementation
+
+= Introduction =
+So you want to contribute? These guides might make it easier if you're willing to use the the supported tool set.
+
+= Guides =
+ * The [SubversionGuide Subversion guide] explains how to download the source code and send it back to us.
+ * The [MavenGuide Maven guide] explains how to compile the source code from the command line, run tests and package a release.
+ * The [EclipseGuide Eclipse guide] explains how you can automatically import all the CSPoker (sub-)projects in Eclipse and configure the dependencies correctly.
