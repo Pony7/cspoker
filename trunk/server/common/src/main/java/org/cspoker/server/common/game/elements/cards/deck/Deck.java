@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.cspoker.common.elements.cards.Card;
 import org.cspoker.common.elements.cards.Rank;
 import org.cspoker.common.elements.cards.Suit;
@@ -31,8 +30,6 @@ import org.cspoker.server.common.game.elements.cards.deck.randomGenerator.random
  * 
  */
 public class Deck {
-
-	private static Logger logger = Logger.getLogger(Deck.class);
 
 	/*
 	 * Sorted prototype deck for copying

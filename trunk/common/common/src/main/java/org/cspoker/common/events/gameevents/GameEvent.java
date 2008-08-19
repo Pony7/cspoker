@@ -31,6 +31,8 @@ import org.cspoker.common.events.Event;
  */
 public abstract class GameEvent extends Event {
 
+	private static final long serialVersionUID = 3585256155687704729L;
+
 	public abstract void dispatch(RemoteAllEventsListener listener)
 			throws RemoteException;
 

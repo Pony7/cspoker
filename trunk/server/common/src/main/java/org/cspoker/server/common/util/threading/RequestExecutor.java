@@ -43,7 +43,6 @@ public class RequestExecutor implements ExecutorService {
 						new SocketRunnableComparator()), "CSPoker-Main");
 		executor
 				.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
-		executor.allowsCoreThreadTimeOut();
 	}
 
 	public void execute(Runnable command) {
@@ -76,23 +75,23 @@ public class RequestExecutor implements ExecutorService {
 		return executor.awaitTermination(timeout, unit);
 	}
 
-	public <T> List<Future<T>> invokeAll(Collection<? extends Callable<T>> tasks)
+	public <T> List<Future<T>> invokeAll(Collection<Callable<T>> tasks)
 			throws InterruptedException {
 		return executor.invokeAll(tasks);
 	}
 
 	public <T> List<Future<T>> invokeAll(
-			Collection<? extends Callable<T>> tasks, long timeout, TimeUnit unit)
+			Collection<Callable<T>> tasks, long timeout, TimeUnit unit)
 			throws InterruptedException {
 		return executor.invokeAll(tasks, timeout, unit);
 	}
 
-	public <T> T invokeAny(Collection<? extends Callable<T>> tasks)
+	public <T> T invokeAny(Collection<Callable<T>> tasks)
 			throws InterruptedException, ExecutionException {
 		return executor.invokeAny(tasks);
 	}
 
-	public <T> T invokeAny(Collection<? extends Callable<T>> tasks,
+	public <T> T invokeAny(Collection<Callable<T>> tasks,
 			long timeout, TimeUnit unit) throws InterruptedException,
 			ExecutionException, TimeoutException {
 		return executor.invokeAny(tasks, timeout, unit);
