@@ -36,7 +36,6 @@ public class ActionJAXBContext {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	public static Class<?>[] getActions() {
 		return new Class<?>[] { AllInAction.class, BetAction.class,
 				CallAction.class, CheckAction.class, CreateTableAction.class,

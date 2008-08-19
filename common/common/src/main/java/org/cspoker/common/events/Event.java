@@ -24,6 +24,8 @@ import org.cspoker.common.exceptions.NoListenerException;
 
 public abstract class Event implements Serializable {
 
+	private static final long serialVersionUID = 2943674922300571587L;
+
 	public void dispatch(RemoteAllEventsListener listener)
 			throws NoListenerException, RemoteException {
 		throw new NoListenerException("No handler for this event.");

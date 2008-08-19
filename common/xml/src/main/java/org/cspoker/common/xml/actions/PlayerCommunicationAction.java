@@ -28,6 +28,8 @@ import org.cspoker.common.xml.events.invocation.SuccessfulInvocationEvent;
 @XmlAccessorType(XmlAccessType.FIELD)
 public abstract class PlayerCommunicationAction<T> implements Serializable {
 
+	private static final long serialVersionUID = -7188969396903443467L;
+	
 	@XmlAttribute
 	private long id;
 

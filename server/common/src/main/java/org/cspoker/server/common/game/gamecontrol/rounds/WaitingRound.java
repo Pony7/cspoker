@@ -19,7 +19,6 @@ package org.cspoker.server.common.game.gamecontrol.rounds;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.cspoker.common.events.gameevents.NewDealEvent;
 import org.cspoker.common.exceptions.IllegalActionException;
 import org.cspoker.common.player.SeatedPlayer;
@@ -28,9 +27,7 @@ import org.cspoker.server.common.game.gamecontrol.Game;
 import org.cspoker.server.common.game.player.GameSeatedPlayer;
 
 public class WaitingRound extends Round {
-
-	private static Logger logger = Logger.getLogger(WaitingRound.class);
-
+	
 	public WaitingRound(GameMediator gameMediator, Game game) {
 		super(gameMediator, game);
 		game.changeCurrentPlayerToDealer();

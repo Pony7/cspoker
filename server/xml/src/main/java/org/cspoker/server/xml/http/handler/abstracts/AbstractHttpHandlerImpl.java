@@ -131,7 +131,7 @@ public abstract class AbstractHttpHandlerImpl implements HttpHandler {
 			http.close();
 		} catch (Exception e1) {
 			logger.error(e1);
-			throw new IOException(e1);
+			throw new IOException(e1.getMessage());
 		}
 	}
 
