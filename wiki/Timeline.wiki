@@ -1,8 +1,0 @@
-#summary Tentative time line for the project releases
-
-= Future =
-  The deadline for the next release is not set yet.
-
-= Past =
-  * 2007 August 31: The 0.1 Alpha release
-  * 2008 April 16: The 0.1 Beta release
