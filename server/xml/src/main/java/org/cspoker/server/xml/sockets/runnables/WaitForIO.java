@@ -113,32 +113,36 @@ public class WaitForIO implements Runnable, Prioritizable {
 
 	private void readSocket(SelectionKey key) throws IOException {
 		SocketChannel client = (SocketChannel) key.channel();
+		try {
+			// Clear the buffer and read bytes from socket
+			buffer.clear();
+			int numBytesRead = client.read(buffer);
 
-		// Clear the buffer and read bytes from socket
-		buffer.clear();
-		int numBytesRead = client.read(buffer);
+			if (numBytesRead == -1) {
+				// No more bytes can be read from the channel
+				logger.trace("No more bytes in channel, closing socket");
+				client.close();
+			} else {
+				logger.trace("Reading " + numBytesRead + " bytes from socket");
+				// To read the bytes, flip the buffer
+				buffer.flip();
+				ClientContext context = getContext(key, client);
+				StringBuilder stringBuilder = context.getBuffer();
 
-		if (numBytesRead == -1) {
-			// No more bytes can be read from the channel
-			logger.trace("No more bytes in channel, closing socket");
-			client.close();
-		} else {
-			logger.trace("Reading " + numBytesRead + " bytes from socket");
-			// To read the bytes, flip the buffer
-			buffer.flip();
-			ClientContext context = getContext(key, client);
-			StringBuilder stringBuilder = context.getBuffer();
+				while (buffer.hasRemaining()) {
+					boolean hasEnded = filterUntilEndNode();
 
-			while (buffer.hasRemaining()) {
-				boolean hasEnded = filterUntilEndNode();
-
-				CharBuffer decoded = decoder.decode(filteredBuffer);
-				logger.trace("Reading: \n" + decoded);
-				stringBuilder.append(decoded);
-				if (hasEnded) {
-					endNode(stringBuilder, context);
+					CharBuffer decoded = decoder.decode(filteredBuffer);
+					logger.trace("Reading: \n" + decoded);
+					stringBuilder.append(decoded);
+					if (hasEnded) {
+						endNode(stringBuilder, context);
+					}
 				}
 			}
+		} catch (IOException e) {
+			logger.trace("Exception reading from socket, closing socket",e);
+			client.close();
 		}
 
 	}
