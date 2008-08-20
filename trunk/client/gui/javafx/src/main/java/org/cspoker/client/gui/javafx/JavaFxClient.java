@@ -92,7 +92,7 @@ public class JavaFxClient {
             afterProt = connection;
         } else {
             String[] split = connection.split("://");
-            if (split.length != 2 || split[0].isEmpty() || split[1].isEmpty()) {
+            if (split.length != 2 || split[0].length()==0 || split[1].length()==0) {
                 throw new IllegalArgumentException("The given connection is not well formatted.");
             }
             afterProt = split[1];
@@ -102,7 +102,7 @@ public class JavaFxClient {
             server = afterProt;
         } else {
             String[] split = afterProt.split(":");
-            if (split.length != 2 || split[0].isEmpty() || split[1].isEmpty()) {
+            if (split.length != 2 || split[0].length()==0 || split[1].length()==0) {
                 throw new IllegalArgumentException("The given connection is not well formatted.");
             }
             server = split[0];

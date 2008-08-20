@@ -12,6 +12,7 @@
 	<name>CSPoker Client-GUI</name>
 	<modules>
 		<module>text</module>
+		<module>javafx</module>
 	</modules>
 	<dependencies>
 		<dependency>
