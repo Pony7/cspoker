@@ -1,0 +1,26 @@
+#summary How to guide for Eclipse
+#labels Phase-Requirements
+
+= Maven Plugin =
+There are too many projects in CSPoker to import them all manually in to your IDE. Most IDE's have a Maven plugin that will make life easier for you. For Eclipse this is [http://m2eclipse.codehaus.org/ m2eclipse]. Install it with the Eclipse update manager from the update url:
+{{{
+ http://m2eclipse.sonatype.org/update/
+}}}
+
+= Setting Up Projects =
+== Importing ==
+m2eclipse can automatically import and configure the projects defined in the "pom.xml" files. Go to *_File->Import_* and then choose *_General->Maven Projects_*.
+Point the root directory towards the directory where you checked out the code with Subversion.
+
+Now you should see all sub-projects in the package explorer. Give m2eclipse some time to download all dependencies and you're good to go.
+If you have compile errors you've still got some work to do.
+
+== Fixing Dependency Issues ==
+We recommend installing a JRE version 5 to run CSPoker against. A JRE version 6 will cause Eclipse to get confused because some dependencies will be available more than once.
+===JRE5===
+Make sure you have a JRE version 5 installed (It's okay to also have a version 6).
+Go to *_Window->Preferences_*, then choose *_Java->Installed JREs_* and make sure a version 5 or 1.5 JRE is available.
+Go to *_Installed JREs->Execution Environments_* and make sure the version 5 JRE is selected as the default JRE for the "J2SE-1.5" environment.
+m2eclipse configures your project to use this environment. 
+===JRE6===
+If you insist on only using JRE6 and have compile errors saying _Access restriction: The type ... is not accessible due to restriction on required library ..._, you have to fix the order of the classpath entries. Some libraries we use are Java 6 only but we include them as external dependencies. Because m2eclipse blocks access to non standard API's in the JRE, and these external dependencies are exported after the JRE on the classpath, Eclipse will complain that the API is blocked. The solution is to go to open the Project context menu and go to *_Properties_*. Then choose *_Java Build Path->Order And Export_* and move the *_Maven Dependencies_* entry up above the *_JRE System Library_* entry. Doing this for every project with these errors will fix them.
