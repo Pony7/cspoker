@@ -120,8 +120,7 @@ public class WaitForIO implements Runnable, Prioritizable {
 
 			if (numBytesRead == -1) {
 				// No more bytes can be read from the channel
-				logger.trace("No more bytes in channel, closing socket");
-				client.close();
+				throw new IOException("No more bytes in channel, closing socket");
 			} else {
 				logger.trace("Reading " + numBytesRead + " bytes from socket");
 				// To read the bytes, flip the buffer
@@ -142,7 +141,8 @@ public class WaitForIO implements Runnable, Prioritizable {
 			}
 		} catch (IOException e) {
 			logger.trace("Exception reading from socket, closing socket",e);
-			client.close();
+			ClientContext context = getContext(key, client);
+			context.closeConnection();
 		}
 
 	}
