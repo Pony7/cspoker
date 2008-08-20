@@ -1,5 +1,0 @@
-Manifest-Version: 1.0
-Sealed: true
-Class-Path: ../cfg/ cspoker-client-allcommunication.jar cspoker-client-common.jar  cspoker-client-rmi.jar  cspoker-client-xml.jar cspoker-common-common.jar cspoker-common-xml.jar log4j-1.2.14.jar Filters.jar javafx-netbeans-fxuserlib.jar javafxrt.jar swing-layout-1.0.3.jar
-Main-Class: org.cspoker.client.gui.javafx.JavaFxClient
-SplashScreen-Image: org/cspoker/client/gui/javafx/images/splash.jpg
