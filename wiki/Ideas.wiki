@@ -1,5 +1,5 @@
 #summary Ideas for work on CSPoker.
-#labels Featured,Phase-Requirements,Phase-Design
+#labels Phase-Requirements,Phase-Design
 
 = Introduction =
 
