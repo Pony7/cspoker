@@ -13,6 +13,7 @@ Currently there are 3 executable modules:
   * server-rmi (server/rmi)
   * server-allcommunication (server/allcommunication)
   * client-gui-text (client/gui/text)
+ 
 
 To make 1 executable jar with all dependencies, go to the respective directory and execute:
 	mvn assembly:assembly
