@@ -12,6 +12,8 @@ There are too many projects in CSPoker to import them all manually in to your ID
 m2eclipse can automatically import and configure the projects defined in the "pom.xml" files. Go to *_File->Import_* and then choose *_General->Maven Projects_*.
 Point the root directory towards the directory where you checked out the code with Subversion.
 
+alternatively, if you have subclipse installed you can choose *Check out as Maven Project...* to check out the trunk.
+
 Now you should see all sub-projects in the package explorer. Give m2eclipse some time to download all dependencies and you're good to go.
 If you have compile errors you've still got some work to do.
 
