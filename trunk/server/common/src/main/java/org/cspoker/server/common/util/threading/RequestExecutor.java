@@ -15,20 +15,18 @@
  */
 package org.cspoker.server.common.util.threading;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.concurrent.PriorityBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
+import java.util.concurrent.AbstractExecutorService;
 
 import org.apache.log4j.Logger;
 
-public class RequestExecutor implements ExecutorService {
+public class RequestExecutor extends AbstractExecutorService {
 
 	private final static Logger logger = Logger
 			.getLogger(RequestExecutor.class);
@@ -73,28 +71,6 @@ public class RequestExecutor implements ExecutorService {
 	public boolean awaitTermination(long timeout, TimeUnit unit)
 			throws InterruptedException {
 		return executor.awaitTermination(timeout, unit);
-	}
-
-	public <T> List<Future<T>> invokeAll(Collection<Callable<T>> tasks)
-			throws InterruptedException {
-		return executor.invokeAll(tasks);
-	}
-
-	public <T> List<Future<T>> invokeAll(
-			Collection<Callable<T>> tasks, long timeout, TimeUnit unit)
-			throws InterruptedException {
-		return executor.invokeAll(tasks, timeout, unit);
-	}
-
-	public <T> T invokeAny(Collection<Callable<T>> tasks)
-			throws InterruptedException, ExecutionException {
-		return executor.invokeAny(tasks);
-	}
-
-	public <T> T invokeAny(Collection<Callable<T>> tasks,
-			long timeout, TimeUnit unit) throws InterruptedException,
-			ExecutionException, TimeoutException {
-		return executor.invokeAny(tasks, timeout, unit);
 	}
 
 	public boolean isShutdown() {
