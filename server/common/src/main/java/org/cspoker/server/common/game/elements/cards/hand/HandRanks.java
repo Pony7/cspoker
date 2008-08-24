@@ -72,10 +72,7 @@ public final class HandRanks {
 		longDescriptionMap.put(handInfo, longDescription);
 	}
 
-	private void loadHandRanks() {
-		System.out.println("loading handranks");
-		
-		
+	private void loadHandRanks() {		
 		final InputStream in = this
 				.getClass()
 				.getClassLoader()

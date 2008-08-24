@@ -75,7 +75,7 @@ public class TestHand extends TestCase {
 
 		try {
 			hand1.add(testExactCard.getExactCard(Rank.QUEEN, Suit.CLUBS));
-			assert (false);
+			fail("Exception Expected.");
 		} catch (IllegalArgumentException e) {
 			assertTrue(hand1.size() == 7);
 		}
@@ -96,7 +96,7 @@ public class TestHand extends TestCase {
 			hand1
 					.removeCard(testExactCard.getExactCard(Rank.QUEEN,
 							Suit.CLUBS));
-			assert (false);
+			fail("Exception Expected.");
 		} catch (IllegalArgumentException e) {
 			assertFalse(hand1.contains(testExactCard.getExactCard(Rank.QUEEN,
 					Suit.CLUBS)));
