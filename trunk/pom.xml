@@ -54,6 +54,7 @@
 							<exclude>flex/LICENSE.txt</exclude>
 							<exclude>javafx/LICENSE.txt</exclude>
 							<exclude>swt/LICENSE.txt</exclude>
+							<exclude>src/main/resources/org/cspoker/server/common/game/elements/cards/hand/handRanks.txt</exclude>
 						</excludes>
 					</configuration>
 				</plugin>
