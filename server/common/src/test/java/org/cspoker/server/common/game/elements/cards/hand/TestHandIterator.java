@@ -53,7 +53,7 @@ public class TestHandIterator extends TestCase {
 		}
 		try {
 			iterator.next();
-			assert (false);
+			fail("Exception Expected.");
 		} catch (NoSuchElementException e) {
 		}
 	}
@@ -65,7 +65,7 @@ public class TestHandIterator extends TestCase {
 		}
 		try {
 			iterator.next();
-			assert (false);
+			fail("Exception Expected.");
 		} catch (NoSuchElementException e) {
 		}
 	}

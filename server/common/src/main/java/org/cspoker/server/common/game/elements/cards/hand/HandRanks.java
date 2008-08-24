@@ -73,6 +73,9 @@ public final class HandRanks {
 	}
 
 	private void loadHandRanks() {
+		System.out.println("loading handranks");
+		
+		
 		final InputStream in = this
 				.getClass()
 				.getClassLoader()
