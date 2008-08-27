@@ -5,7 +5,7 @@
 [http://maven.apache.org/ Maven] is a build automation system that allows us to easily compile the source code, run tests and package jars. Maven is also responsible for downloading all dependencies from their repositories.
 CSPoker consists of several Maven projects depending on each other. Every project as a "pom.xml" file with the configuration.
 
-For the JavaFX client 2 third-party artifacts have to be added to the local Maven repository. 
+For the JavaFX client 2 third-party artifacts have to be added to the local Maven repository.
 Go to the directory with the artifacts (client/gui/javafx/lib) and execute:
 {{{
 mvn install:install-file -DgroupId=net.java.javafx -DartifactId=javafxrt -Dversion=1.0 -Dpackaging=jar -DgeneratePom=true -Dfile=javafxrt-1.0.jar 
