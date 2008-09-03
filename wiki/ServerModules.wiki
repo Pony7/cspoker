@@ -1,0 +1,54 @@
+#summary The modules of the server
+#labels Phase-Design
+
+= Introduction =
+
+In the current version of CSPoker there is some scattering of responsibilities to different modules. The lines between some modules are also vague. Therefor a partial redesign of the server into more distinct modules is proposed. We believe these changes will enhance the scalability and extendibility of CSPoker.
+These modules are just general outlines and any comments are welcome.
+
+= Modules =
+
+== Lobby ==
+The lobby is the access point to all the tables. An admin API could be provided for creating and managing these tables.
+=== API ===
+  * getTables()
+  * createTable()
+
+== Chat ==
+The chat functionality will be modularized. The chat module will support different groups (e.g. my friends) between whom communication is possible. At the creation of a table a group for this table will be added automatically to the groups. 
+=== API ===
+  * register()
+  * unregister()
+  * sendMessage()
+
+== Cashier ==
+The cashier is responsible to provide money to the players. This could be done by exchanging real dollars or through the use of a revenue generating function.
+=== API ===
+  * requestMoney()
+
+== HoldemTable ==
+A specialization of the table for only Holdem games. This is done to make it easier to add other kinds of tables. The table also has an event buffer. This buffer is used when a player tries to watch later on to display all events that have happened in the ongoing game. A table has a configuration object that contains all config info:
+  * auto deal
+  * explicit blinds
+  * nb players
+  * small blind
+  * big blind
+  * game type
+  * limit
+
+== Player ==
+The player has all the info for playing at a table. A player can choose to join or watch a table. When he joins a table he can choose how much chips he wants to transfer to this table.
+
+== Account ==
+This module should provide the following actions:
+  * create new accounts
+  * change password
+  * statistics
+  * authentication
+  * (avatar)
+
+== Tournament ==
+Joining tables and increasing blinds should be supported.
+
+== Authentication ==
+For the authentication md5-hash of the name:password will be used in the header.
