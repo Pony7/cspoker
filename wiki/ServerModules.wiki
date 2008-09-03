@@ -11,8 +11,9 @@ These modules are just general outlines and any comments are welcome.
 == Lobby ==
 The lobby is the access point to all the tables. An admin API could be provided for creating and managing these tables.
 === API ===
-  * getTables()
+  * getAllTables()
   * createTable()
+  * getTableInfo()
 
 == Chat ==
 The chat functionality will be modularized. The chat module will support different groups (e.g. my friends) between whom communication is possible. At the creation of a table a group for this table will be added automatically to the groups. 
@@ -36,8 +37,19 @@ A specialization of the table for only Holdem games. This is done to make it eas
   * game type
   * limit
 
-== Player ==
-The player has all the info for playing at a table. A player can choose to join or watch a table. When he joins a table he can choose how much chips he wants to transfer to this table.
+A player can choose to join a table. When he joins a table he can choose how much chips he wants to transfer to this table.
+=== API ===
+  * sitin(amount)
+  * ...
+
+== HoldemPlayer ==
+Once a player joins the game, the game API becomes available.
+=== API ===
+  * call()
+  * bet()
+  * check()
+  * raise()
+  * ...
 
 == Account ==
 This module should provide the following actions:
@@ -51,4 +63,4 @@ This module should provide the following actions:
 Joining tables and increasing blinds should be supported.
 
 == Authentication ==
-For the authentication md5-hash of the name:password will be used in the header.
+For the authentication md5-hash of the password will be used in the header.
