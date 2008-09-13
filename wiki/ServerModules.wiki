@@ -14,7 +14,6 @@ There are a couple of XSD files shared between the other files:
 <xs:schema version="1.0"
 	targetNamespace="http://www.cspoker.org/api/2008-8/actions/actions"
 	xmlns:tns="http://www.cspoker.org/api/2008-8/actions/actions" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-	<xs:element name="noOpAction" type="tns:noOpAction" />
 	<xs:complexType name="tableSpecificAction" abstract="true">
 		<xs:complexContent>
 			<xs:extension base="tns:action">
@@ -27,13 +26,6 @@ There are a couple of XSD files shared between the other files:
 	<xs:complexType name="action" abstract="true">
 		<xs:sequence />
 		<xs:attribute name="id" type="xs:long" use="required" />
-	</xs:complexType>
-	<xs:complexType name="noOpAction">
-		<xs:complexContent>
-			<xs:extension base="tns:action">
-				<xs:sequence />
-			</xs:extension>
-		</xs:complexContent>
 	</xs:complexType>
 </xs:schema>
 }}}
@@ -269,21 +261,11 @@ Once a player joins the game, the game API becomes available.
 	xmlns:xs="http://www.w3.org/2001/XMLSchema">
 	<xs:import namespace="http://www.cspoker.org/api/2008-8/actions/actions"
 		schemaLocation="actions.xsd" />
-	<xs:element name="allInAction" type="tns:allInAction" />
-	<xs:element name="betAction" type="tns:betAction" />
-	<xs:element name="callAction" type="tns:callAction" />
-	<xs:element name="checkAction" type="tns:checkAction" />
+	<xs:element name="betOrRaiseAction" type="tns:betOrRaiseAction" />
+	<xs:element name="checkOrCallAction" type="tns:checkOrCallAction" />
 	<xs:element name="foldAction" type="tns:foldAction" />
 	<xs:element name="leaveGameAction" type="tns:leaveGameAction" />
-	<xs:element name="raiseAction" type="tns:raiseAction" />
-	<xs:complexType name="allInAction">
-		<xs:complexContent>
-			<xs:extension base="actions:tableSpecificAction">
-				<xs:sequence />
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	<xs:complexType name="betAction">
+	<xs:complexType name="betOrRaiseAction">
 		<xs:complexContent>
 			<xs:extension base="actions:tableSpecificAction">
 				<xs:sequence />
@@ -291,14 +273,7 @@ Once a player joins the game, the game API becomes available.
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:complexType name="callAction">
-		<xs:complexContent>
-			<xs:extension base="actions:tableSpecificAction">
-				<xs:sequence />
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	<xs:complexType name="checkAction">
+	<xs:complexType name="checkOrCallAction">
 		<xs:complexContent>
 			<xs:extension base="actions:tableSpecificAction">
 				<xs:sequence />
@@ -309,14 +284,6 @@ Once a player joins the game, the game API becomes available.
 		<xs:complexContent>
 			<xs:extension base="actions:tableSpecificAction">
 				<xs:sequence />
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	<xs:complexType name="raiseAction">
-		<xs:complexContent>
-			<xs:extension base="actions:tableSpecificAction">
-				<xs:sequence />
-				<xs:attribute name="amount" type="xs:int" use="required" />
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
