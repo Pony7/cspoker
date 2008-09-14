@@ -22,9 +22,9 @@ import javax.xml.bind.Unmarshaller;
 
 import org.apache.log4j.Logger;
 import org.cspoker.common.PlayerCommunication;
-import org.cspoker.common.xml.XmlEventListener;
-import org.cspoker.common.xml.actions.ActionJAXBContext;
-import org.cspoker.common.xml.actions.PlayerCommunicationAction;
+import org.cspoker.common.XmlEventListener;
+import org.cspoker.common.jaxbcontext.ActionJAXBContext;
+import org.cspoker.common.xml.actions.Action;
 import org.cspoker.server.common.game.player.GameSeatedPlayer;
 import org.cspoker.server.common.game.session.PlayerKilledExcepion;
 import org.cspoker.server.common.game.session.Session;
@@ -56,7 +56,7 @@ public class XmlPlayerCommunication implements XmlEventListener {
 	public void handle(InputSource xml) throws SAXException, JAXBException,
 			IOException {
 		Unmarshaller um = ActionJAXBContext.context.createUnmarshaller();
-		PlayerCommunicationAction<?> action = (PlayerCommunicationAction<?>) um
+		Action<?> action = (Action<?>) um
 				.unmarshal(xml);
 		action.perform(playerComm, toxmllistener);
 	}

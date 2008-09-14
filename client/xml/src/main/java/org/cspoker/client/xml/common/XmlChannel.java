@@ -19,7 +19,7 @@ import java.rmi.RemoteException;
 
 import javax.security.auth.login.LoginException;
 
-import org.cspoker.common.xml.XmlEventListener;
+import org.cspoker.common.XmlEventListener;
 
 public interface XmlChannel {
 

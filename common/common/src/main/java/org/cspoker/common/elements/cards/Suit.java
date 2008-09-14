@@ -16,6 +16,7 @@
 
 package org.cspoker.common.elements.cards;
 
+
 /**
  * An enumeration to represent the different suits a card can have.
  * 

@@ -19,7 +19,7 @@ package org.cspoker.common.elements.pots;
 import java.io.Serializable;
 import java.util.List;
 
-import org.cspoker.common.player.SeatedPlayer;
+import org.cspoker.common.elements.player.SeatedPlayer;
 
 public class Pot implements Serializable {
 

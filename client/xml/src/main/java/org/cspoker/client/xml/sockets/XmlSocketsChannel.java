@@ -36,8 +36,8 @@ import org.apache.log4j.Logger;
 import org.cspoker.client.xml.common.ChannelState;
 import org.cspoker.client.xml.common.ChannelStateException;
 import org.cspoker.client.xml.common.XmlChannel;
+import org.cspoker.common.XmlEventListener;
 import org.cspoker.common.util.Strings;
-import org.cspoker.common.xml.XmlEventListener;
 
 public class XmlSocketsChannel implements XmlChannel {
 

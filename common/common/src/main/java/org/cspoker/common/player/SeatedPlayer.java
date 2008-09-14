@@ -22,8 +22,6 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 
-import org.cspoker.common.elements.table.SeatId;
-
 /**
  * A class of immutable players.
  * 

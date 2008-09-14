@@ -26,8 +26,7 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 
-import org.cspoker.common.elements.GameProperty;
-import org.cspoker.common.player.SeatedPlayer;
+import org.cspoker.common.elements.player.SeatedPlayer;
 
 /**
  * An immutable class to represent a snapshot of the state of a table.
@@ -41,7 +40,7 @@ public class Table implements Serializable {
 	private static final long serialVersionUID = 1647960710321459407L;
 
 	@XmlAttribute
-	private TableId id;
+	private long id;
 
 	@XmlAttribute
 	private String name;
@@ -52,10 +51,10 @@ public class Table implements Serializable {
 
 	private boolean playing;
 
-	private GameProperty property;
+	private TableConfiguration property;
 
-	public Table(TableId id, String name, List<SeatedPlayer> players,
-			boolean playing, GameProperty property) {
+	public Table(long id, String name, List<SeatedPlayer> players,
+			boolean playing, TableConfiguration property) {
 		this.id = id;
 		this.name = name;
 		if (players == null) {
@@ -78,7 +77,7 @@ public class Table implements Serializable {
 	 * 
 	 * @return The id of this table.
 	 */
-	public TableId getId() {
+	public long getId() {
 		return id;
 	}
 
@@ -125,35 +124,29 @@ public class Table implements Serializable {
 	 * 
 	 * @return The game property of this table.
 	 */
-	public GameProperty getGameProperty() {
+	public TableConfiguration getGameProperty() {
 		return property;
 	}
 
+	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + (int) (id ^ (id >>> 32));
 		return result;
 	}
 
+	@Override
 	public boolean equals(Object obj) {
-		if (this == obj) {
+		if (this == obj)
 			return true;
-		}
-		if (obj == null) {
+		if (obj == null)
 			return false;
-		}
-		if (!(obj instanceof Table)) {
+		if (getClass() != obj.getClass())
 			return false;
-		}
-		final Table other = (Table) obj;
-		if (id == null) {
-			if (other.id != null) {
-				return false;
-			}
-		} else if (!id.equals(other.id)) {
+		Table other = (Table) obj;
+		if (id != other.id)
 			return false;
-		}
 		return true;
 	}
 

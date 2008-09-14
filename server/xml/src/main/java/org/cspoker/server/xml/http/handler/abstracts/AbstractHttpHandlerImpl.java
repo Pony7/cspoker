@@ -27,7 +27,7 @@ import javax.xml.transform.sax.TransformerHandler;
 import javax.xml.transform.stream.StreamResult;
 
 import org.apache.log4j.Logger;
-import org.cspoker.common.xml.util.Base64;
+import org.cspoker.common.util.Base64;
 import org.cspoker.server.xml.http.handler.exception.HttpException;
 import org.cspoker.server.xml.http.handler.exception.HttpExceptionImpl;
 import org.xml.sax.helpers.AttributesImpl;

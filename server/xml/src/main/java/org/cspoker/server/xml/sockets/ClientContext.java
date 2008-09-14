@@ -29,7 +29,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.cspoker.common.xml.XmlEventListener;
+import org.cspoker.common.XmlEventListener;
 import org.cspoker.server.common.game.player.IllegalNameException;
 import org.cspoker.server.common.game.session.PlayerKilledExcepion;
 import org.cspoker.server.common.game.session.Session;

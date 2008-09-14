@@ -24,8 +24,8 @@ import javax.xml.bind.Marshaller;
 import org.apache.log4j.Logger;
 import org.cspoker.common.eventlisteners.RemoteAllEventsListener;
 import org.cspoker.common.exceptions.IllegalActionException;
-import org.cspoker.common.xml.actions.ActionJAXBContext;
-import org.cspoker.common.xml.actions.PlayerCommunicationAction;
+import org.cspoker.common.jaxbcontext.ActionJAXBContext;
+import org.cspoker.common.xml.actions.Action;
 
 public class XmlChannelMarshaller {
 
@@ -49,7 +49,7 @@ public class XmlChannelMarshaller {
 		unmarshaller = new XmlChannelUnMarshaller(channel, listener);
 	}
 
-	public synchronized <T> T perform(PlayerCommunicationAction<T> action)
+	public synchronized <T> T perform(Action<T> action)
 			throws RemoteException, IllegalActionException {
 		StringWriter w = new StringWriter();
 		try {

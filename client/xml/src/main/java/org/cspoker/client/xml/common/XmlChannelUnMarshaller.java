@@ -25,13 +25,13 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
 import org.apache.log4j.Logger;
+import org.cspoker.common.XmlEventListener;
 import org.cspoker.common.eventlisteners.RemoteAllEventsListener;
 import org.cspoker.common.events.Event;
 import org.cspoker.common.exceptions.IllegalActionException;
 import org.cspoker.common.exceptions.NoListenerException;
-import org.cspoker.common.xml.EventAndActionJAXBContext;
-import org.cspoker.common.xml.XmlEventListener;
-import org.cspoker.common.xml.actions.PlayerCommunicationAction;
+import org.cspoker.common.jaxbcontext.EventAndActionJAXBContext;
+import org.cspoker.common.xml.actions.Action;
 import org.cspoker.common.xml.events.invocation.IllegalActionEvent;
 import org.cspoker.common.xml.events.invocation.SuccessfulInvocationEvent;
 
@@ -42,9 +42,9 @@ public class XmlChannelUnMarshaller implements XmlEventListener {
 
 	private final RemoteAllEventsListener listener;
 
-	private final Map<PlayerCommunicationAction<?>, IllegalActionEvent> illegalactionevents = new HashMap<PlayerCommunicationAction<?>, IllegalActionEvent>();
+	private final Map<Action<?>, IllegalActionEvent> illegalactionevents = new HashMap<Action<?>, IllegalActionEvent>();
 
-	private final Map<PlayerCommunicationAction<?>, SuccessfulInvocationEvent<?>> successfulinvocationevents = new ConcurrentHashMap<PlayerCommunicationAction<?>, SuccessfulInvocationEvent<?>>();
+	private final Map<Action<?>, SuccessfulInvocationEvent<?>> successfulinvocationevents = new ConcurrentHashMap<Action<?>, SuccessfulInvocationEvent<?>>();
 
 	public XmlChannelUnMarshaller(XmlChannel channel,
 			RemoteAllEventsListener spreadingAllEventsListener) {
@@ -99,7 +99,7 @@ public class XmlChannelUnMarshaller implements XmlEventListener {
 	}
 
 	@SuppressWarnings("unchecked")
-	public <T> T waitForExecutionEnd(PlayerCommunicationAction<T> action)
+	public <T> T waitForExecutionEnd(Action<T> action)
 			throws InterruptedException, IllegalActionException {
 		synchronized (this) {
 			while (!successfulinvocationevents.containsKey(action)
