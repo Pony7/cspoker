@@ -22,6 +22,7 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.PropertyException;
 
 import org.apache.log4j.Logger;
+import org.cspoker.common.XmlEventListener;
 import org.cspoker.common.events.Event;
 import org.cspoker.common.events.gameevents.BrokePlayerKickedOutEvent;
 import org.cspoker.common.events.gameevents.GameMessageEvent;
@@ -46,8 +47,7 @@ import org.cspoker.common.events.serverevents.ServerMessageEvent;
 import org.cspoker.common.events.serverevents.TableChangedEvent;
 import org.cspoker.common.events.serverevents.TableCreatedEvent;
 import org.cspoker.common.events.serverevents.TableRemovedEvent;
-import org.cspoker.common.xml.EventAndActionJAXBContext;
-import org.cspoker.common.xml.XmlEventListener;
+import org.cspoker.common.jaxbcontext.EventAndActionJAXBContext;
 import org.cspoker.common.xml.eventlisteners.AllEventListenerWithInvocation;
 import org.cspoker.common.xml.events.invocation.IllegalActionEvent;
 import org.cspoker.common.xml.events.invocation.SuccessfulInvocationEvent;

@@ -30,20 +30,20 @@ import org.cspoker.common.elements.table.TableList;
 import org.cspoker.common.eventlisteners.RemoteAllEventsListener;
 import org.cspoker.common.exceptions.IllegalActionException;
 import org.cspoker.common.util.DelegatingRemoteAllEventsListener;
-import org.cspoker.common.xml.actions.AllInAction;
-import org.cspoker.common.xml.actions.BetAction;
-import org.cspoker.common.xml.actions.CallAction;
-import org.cspoker.common.xml.actions.CheckAction;
-import org.cspoker.common.xml.actions.CreateTableAction;
-import org.cspoker.common.xml.actions.FoldAction;
-import org.cspoker.common.xml.actions.GetTableAction;
-import org.cspoker.common.xml.actions.GetTablesAction;
-import org.cspoker.common.xml.actions.JoinTableAction;
 import org.cspoker.common.xml.actions.KillAction;
-import org.cspoker.common.xml.actions.LeaveTableAction;
-import org.cspoker.common.xml.actions.RaiseAction;
-import org.cspoker.common.xml.actions.SayAction;
-import org.cspoker.common.xml.actions.StartGameAction;
+import org.cspoker.common.xml.actions.chat.SendServerMessageAction;
+import org.cspoker.common.xml.actions.holdemplayer.AllInAction;
+import org.cspoker.common.xml.actions.holdemplayer.BetOrRaiseAction;
+import org.cspoker.common.xml.actions.holdemplayer.CallAction;
+import org.cspoker.common.xml.actions.holdemplayer.CheckOrCallAction;
+import org.cspoker.common.xml.actions.holdemplayer.FoldAction;
+import org.cspoker.common.xml.actions.holdemplayer.RaiseAction;
+import org.cspoker.common.xml.actions.holdemtable.LeaveTableAction;
+import org.cspoker.common.xml.actions.holdemtable.StartGameAction;
+import org.cspoker.common.xml.actions.lobby.CreateTableAction;
+import org.cspoker.common.xml.actions.lobby.JoinTableAction;
+import org.cspoker.common.xml.actions.lobby.TableInformationAction;
+import org.cspoker.common.xml.actions.lobby.TableListAction;
 
 public class XmlChannelRemotePlayerCommunication implements
 		RemotePlayerCommunication {
@@ -91,7 +91,7 @@ public class XmlChannelRemotePlayerCommunication implements
 	}
 
 	public void bet(int amount) throws IllegalActionException, RemoteException {
-		marshaller.perform(new BetAction(getId(), amount));
+		marshaller.perform(new BetOrRaiseAction(getId(), amount));
 	}
 
 	public void call() throws IllegalActionException, RemoteException {
@@ -99,7 +99,7 @@ public class XmlChannelRemotePlayerCommunication implements
 	}
 
 	public void check() throws IllegalActionException, RemoteException {
-		marshaller.perform(new CheckAction(getId()));
+		marshaller.perform(new CheckOrCallAction(getId()));
 	}
 
 	public Table createTable(String name, GameProperty settings)
@@ -139,7 +139,7 @@ public class XmlChannelRemotePlayerCommunication implements
 
 	public void say(String message) throws RemoteException,
 			IllegalActionException {
-		marshaller.perform(new SayAction(getId(), message));
+		marshaller.perform(new SendServerMessageAction(getId(), message));
 	}
 
 	public void startGame() throws IllegalActionException, RemoteException {
@@ -148,12 +148,12 @@ public class XmlChannelRemotePlayerCommunication implements
 
 	public Table getTable(TableId id) throws IllegalActionException,
 			RemoteException {
-		return marshaller.perform(new GetTableAction(getId(), id));
+		return marshaller.perform(new TableInformationAction(getId(), id));
 	}
 
 	public TableList getTables() throws RemoteException {
 		try {
-			return marshaller.perform(new GetTablesAction(getId()));
+			return marshaller.perform(new TableListAction(getId()));
 		} catch (IllegalActionException e) {
 			throw new IllegalStateException(
 					"Exception wasn't thrown at the server!", e);

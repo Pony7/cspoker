@@ -18,7 +18,7 @@
 		<module>common</module>
 		<module>server</module>
 	</modules>
-		<repositories>
+	<repositories>
 		<repository>
 			<id>maven2-repository.dev.java.net</id>
 			<name>Java.net Repository for Maven</name>
@@ -32,6 +32,7 @@
 		</repository>
 	</repositories>
 	<build>
+		<defaultGoal>install</defaultGoal>
 		<pluginManagement>
 			<plugins>
 				<plugin>
@@ -63,6 +64,10 @@
 	</build>
 	<reporting>
 		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+			</plugin>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>cobertura-maven-plugin</artifactId>

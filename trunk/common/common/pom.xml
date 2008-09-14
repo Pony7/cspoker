@@ -9,6 +9,19 @@
 	<artifactId>common-common</artifactId>
 	<packaging>jar</packaging>
 	<name>CSPoker Common-Common</name>
+	<repositories>
+		<repository>
+			<id>maven2-repository.dev.java.net</id>
+			<name>Java.net Repository for Maven</name>
+			<url>http://download.java.net/maven/2/</url>
+			<layout>default</layout>
+		</repository>
+		<repository>
+			<id>maven1-repository.dev.java.net</id>
+			<url>http://download.java.net/maven/1</url>
+			<layout>legacy</layout>
+		</repository>
+	</repositories>
 	<dependencies>
 		<dependency>
 			<groupId>javax.xml.bind</groupId>
@@ -16,9 +29,9 @@
 			<version>2.1</version>
 		</dependency>
 		<dependency>
-			<groupId>javax.xml</groupId>
+			<groupId>com.sun.xml.bind</groupId>
 			<artifactId>jaxb-impl</artifactId>
-			<version>2.1</version>
+			<version>2.1.3</version>
 		</dependency>
 	</dependencies>
 </project>

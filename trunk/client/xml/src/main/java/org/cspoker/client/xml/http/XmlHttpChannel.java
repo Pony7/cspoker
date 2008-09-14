@@ -41,10 +41,10 @@ import org.apache.log4j.Logger;
 import org.cspoker.client.xml.common.ChannelState;
 import org.cspoker.client.xml.common.ChannelStateException;
 import org.cspoker.client.xml.common.XmlChannel;
-import org.cspoker.common.xml.XmlEventListener;
-import org.cspoker.common.xml.actions.ActionJAXBContext;
+import org.cspoker.common.XmlEventListener;
+import org.cspoker.common.jaxbcontext.ActionJAXBContext;
+import org.cspoker.common.util.Base64;
 import org.cspoker.common.xml.actions.NoOpAction;
-import org.cspoker.common.xml.util.Base64;
 
 public class XmlHttpChannel implements XmlChannel {
 

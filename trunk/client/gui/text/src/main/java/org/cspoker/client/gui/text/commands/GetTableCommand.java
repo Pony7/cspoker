@@ -17,9 +17,9 @@ package org.cspoker.client.gui.text.commands;
 
 import org.cspoker.client.gui.text.Console;
 import org.cspoker.common.RemotePlayerCommunication;
+import org.cspoker.common.elements.player.SeatedPlayer;
 import org.cspoker.common.elements.table.Table;
 import org.cspoker.common.elements.table.TableId;
-import org.cspoker.common.player.SeatedPlayer;
 
 public class GetTableCommand extends AbstractCommand {
 
