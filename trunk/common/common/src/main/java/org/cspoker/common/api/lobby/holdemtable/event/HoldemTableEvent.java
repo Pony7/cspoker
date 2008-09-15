@@ -13,12 +13,12 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
+package org.cspoker.common.api.lobby.holdemtable.event;
 
-package org.cspoker.common.api.shared.event;
+import org.cspoker.common.api.shared.event.Event;
 
-import java.io.Serializable;
-
-public interface Event extends Serializable {
-
+public interface HoldemTableEvent extends Event {
+	
+	public abstract void dispatch(HoldemTableListener holdemTableListener);
 
 }

@@ -13,42 +13,49 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.common.elements.player;
 
-import java.io.Serializable;
+package org.cspoker.common.api.lobby.holdemtable.event;
+
+import java.rmi.RemoteException;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlAccessorType(XmlAccessType.FIELD)
-public class Player implements Serializable{
-	
-	private static final long serialVersionUID = -452248757827187248L;
-	
-	@XmlAttribute
-	private long id;
+import org.cspoker.common.events.gameevents.GameEvent;
+import org.cspoker.common.player.SeatedPlayer;
 
-	private String name;
-	
-	public Player(long id, String name){
-		this.id = id;
-		this.name = name;
+/**
+ * A class to represent fold events.
+ * 
+ * @author Kenzo
+ * 
+ */
+@XmlRootElement
+public class FoldEvent extends HoldemTableEvent {
+
+	private static final long serialVersionUID = -7805526864154493974L;
+
+	private SeatedPlayer player;
+
+	public FoldEvent(SeatedPlayer player) {
+		this.player = player;
 	}
-	
-	protected Player(){
-		//NO OP
+
+	protected FoldEvent() {
+		// no op
 	}
-	
-	public long getId() {
-		return id;
+
+	public String toString() {
+		return getPlayer().getName() + " folds.";
 	}
-	
-	public String getName(){
-		return name;
+
+	public SeatedPlayer getPlayer() {
+		return player;
 	}
-	
-	public String toString(){
-		return getName()+" (#"+getId()+")";
+
+	public void dispatch(RemoteAllEventsListener listener)
+			throws RemoteException {
+		listener.onFoldEvent(this);
 	}
 }

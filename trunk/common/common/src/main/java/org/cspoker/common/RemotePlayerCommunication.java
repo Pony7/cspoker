@@ -18,7 +18,7 @@ package org.cspoker.common;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
-import org.cspoker.common.elements.table.Table;
+import org.cspoker.common.elements.table.DetailedTable;
 import org.cspoker.common.elements.table.TableList;
 import org.cspoker.common.exceptions.IllegalActionException;
 
@@ -98,7 +98,7 @@ public interface RemotePlayerCommunication extends Remote {
 	 *             [must] This actions is not a valid action in the current
 	 *             state.
 	 */
-	Table joinTable(TableId tableId, SeatId seatId)
+	DetailedTable joinTable(TableId tableId, SeatId seatId)
 			throws IllegalActionException, RemoteException;
 
 	/**
@@ -109,7 +109,7 @@ public interface RemotePlayerCommunication extends Remote {
 	 *             [must] This actions is not a valid action in the current
 	 *             state.
 	 */
-	Table joinTable(TableId tableId) throws IllegalActionException,
+	DetailedTable joinTable(TableId tableId) throws IllegalActionException,
 			RemoteException;
 
 	/**
@@ -127,7 +127,7 @@ public interface RemotePlayerCommunication extends Remote {
 	 *             [must] This actions is not a valid action in the current
 	 *             state.
 	 */
-	Table createTable(String name, GameProperty property)
+	DetailedTable createTable(String name, GameProperty property)
 			throws IllegalActionException, RemoteException;
 
 	/**
@@ -137,7 +137,7 @@ public interface RemotePlayerCommunication extends Remote {
 	 *            The id of the table to return.
 	 * @return The table with the given table id if it exists.
 	 */
-	Table getTable(TableId id) throws IllegalActionException, RemoteException;
+	DetailedTable getTable(TableId id) throws IllegalActionException, RemoteException;
 
 	/**
 	 * Returns a list of tables that are currently hosted.

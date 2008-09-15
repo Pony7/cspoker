@@ -13,8 +13,9 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.common.elements.player;
+package org.cspoker.common.api.lobby.holdemtable.event;
 
+import java.rmi.RemoteException;
 import java.util.Collections;
 import java.util.Set;
 
@@ -22,60 +23,49 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlRootElement;
 
 import org.cspoker.common.elements.cards.Card;
 
-@XmlAccessorType(XmlAccessType.FIELD)
-public class ShowdownPlayer extends SeatedPlayer {
+/**
+ * A class to represent new community cards events.
+ * 
+ * @author Kenzo
+ * 
+ */
+@XmlRootElement
+public class NewCommunityCardsEvent extends HoldemTableEvent {
 
-	private static final long serialVersionUID = -1618593137613219527L;
-
-	private SeatedPlayer player;
-
-	@XmlElementWrapper
-	@XmlElement(name = "card")
-	private Set<Card> cards;
-
-	private String description;
+	private static final long serialVersionUID = -5063239366087788741L;
 
 	@XmlElementWrapper
 	@XmlElement(name = "card")
-	private Set<Card> handCards;
+	private Set<Card> communityCards;
 
-	public ShowdownPlayer(SeatedPlayer player, Set<Card> cards, Set<Card> handCards,
-			String description) {
-		this.player = player;
-		this.handCards = Collections.unmodifiableSet(handCards);
-		this.cards = Collections.unmodifiableSet(cards);
-		this.description = description;
+	public NewCommunityCardsEvent(Set<Card> commonCards) {
+		communityCards = Collections.unmodifiableSet(commonCards);
 	}
 
-	protected ShowdownPlayer() {
+	protected NewCommunityCardsEvent() {
 		// no op
 	}
 
-	/**
-	 * Returns a textual representation of this showdown player.
-	 */
+	public Set<Card> getCommonCards() {
+		return communityCards;
+	}
 
 	public String toString() {
-		return player.getName() + " has a " + description;
+		String toReturn = "New Community Cards: ";
+		for (Card card : communityCards) {
+			toReturn += card;
+			toReturn += ", ";
+		}
+		return toReturn.substring(0, toReturn.length() - 2) + ".";
 	}
 
-	public SeatedPlayer getPlayer() {
-		return player;
-	}
-
-	public Set<Card> getAllCards() {
-		return cards;
-	}
-
-	public Set<Card> getHandCards() {
-		return handCards;
-	}
-
-	public String getHandDescription() {
-		return description;
+	public void dispatch(RemoteAllEventsListener listener)
+			throws RemoteException {
+		listener.onNewCommunityCardsEvent(this);
 	}
 
 }

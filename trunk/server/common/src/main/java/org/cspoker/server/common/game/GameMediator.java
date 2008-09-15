@@ -26,7 +26,7 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
-import org.cspoker.common.api.shared.event.Event;
+import org.cspoker.common.api.shared.event.ServerEvent;
 import org.cspoker.common.elements.table.SeatId;
 import org.cspoker.common.elements.table.TableId;
 import org.cspoker.common.eventlisteners.EventListener;
@@ -1093,7 +1093,7 @@ public class GameMediator {
 	 * onGameEvent() method.
 	 * 
 	 */
-	private synchronized void publishGameEvent(Event event) {
+	private synchronized void publishGameEvent(ServerEvent event) {
 		for (EventListener listener : gameEventListeners) {
 			listener.onEvent(event);
 		}

@@ -18,10 +18,10 @@ package org.cspoker.common.api.lobby.action;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.cspoker.common.api.lobby.LobbyContext;
-import org.cspoker.common.elements.table.Table;
+import org.cspoker.common.elements.table.DetailedTable;
 
 @XmlRootElement
-public class JoinTableAction extends LobbyAction<Table> {
+public class JoinTableAction extends LobbyAction<DetailedTable> {
 
 	private static final long serialVersionUID = -6693307709200837257L;
 
@@ -37,7 +37,7 @@ public class JoinTableAction extends LobbyAction<Table> {
 	}
 	
 	@Override
-	public Table perform(LobbyContext lobbyContext) {
+	public DetailedTable perform(LobbyContext lobbyContext) {
 		return lobbyContext.joinTable(tableId);
 	}
 

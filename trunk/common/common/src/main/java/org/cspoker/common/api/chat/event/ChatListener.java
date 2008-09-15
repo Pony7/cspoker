@@ -18,6 +18,10 @@ package org.cspoker.common.api.chat.event;
 
 public interface ChatListener{
 
+	void onTableMessage(TableMessageEvent tableMessageEvent);
+
+	void onServerMessage(ServerMessageEvent serverMessageEvent);
+
 	
 	
 }

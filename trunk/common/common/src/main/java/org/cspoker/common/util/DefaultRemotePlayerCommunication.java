@@ -18,7 +18,7 @@ package org.cspoker.common.util;
 import java.rmi.RemoteException;
 
 import org.cspoker.common.RemotePlayerCommunication;
-import org.cspoker.common.elements.table.Table;
+import org.cspoker.common.elements.table.DetailedTable;
 import org.cspoker.common.elements.table.TableList;
 import org.cspoker.common.exceptions.IllegalActionException;
 
@@ -49,7 +49,7 @@ public class DefaultRemotePlayerCommunication implements
 		p.check();
 	}
 
-	public Table createTable(String name, GameProperty settings)
+	public DetailedTable createTable(String name, GameProperty settings)
 			throws IllegalActionException, RemoteException {
 		return p.createTable(name, settings);
 	}
@@ -90,7 +90,7 @@ public class DefaultRemotePlayerCommunication implements
 		p.unsubscribeAllEventsListener(listener);
 	}
 
-	public Table getTable(TableId id) throws IllegalActionException,
+	public DetailedTable getTable(TableId id) throws IllegalActionException,
 			RemoteException {
 		return p.getTable(id);
 	}
@@ -99,12 +99,12 @@ public class DefaultRemotePlayerCommunication implements
 		return p.getTables();
 	}
 
-	public Table joinTable(TableId id) throws IllegalActionException,
+	public DetailedTable joinTable(TableId id) throws IllegalActionException,
 			RemoteException {
 		return p.joinTable(id);
 	}
 
-	public Table joinTable(TableId tableId, SeatId seatId)
+	public DetailedTable joinTable(TableId tableId, SeatId seatId)
 			throws IllegalActionException, RemoteException {
 		return p.joinTable(tableId, seatId);
 	}

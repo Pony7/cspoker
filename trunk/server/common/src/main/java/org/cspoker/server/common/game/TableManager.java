@@ -24,8 +24,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.cspoker.common.elements.GameProperty;
-import org.cspoker.common.elements.table.Table;
-import org.cspoker.common.elements.table.TableId;
+import org.cspoker.common.elements.table.DetailedTable;
+import org.cspoker.common.elements.table.DetailedTable;
 import org.cspoker.common.player.PlayerId;
 import org.cspoker.server.common.game.elements.table.GameTable;
 import org.cspoker.server.common.game.exception.TableDoesNotExistException;
@@ -95,8 +95,8 @@ public class TableManager {
 		return Collections.unmodifiableSet(hashMap.keySet());
 	}
 
-	public List<Table> getAllTables() {
-		List<Table> tables = new ArrayList<Table>();
+	public List<DetailedTable> getAllTables() {
+		List<DetailedTable> tables = new ArrayList<DetailedTable>();
 		for (GameTable table : hashMap.values()) {
 			tables.add(table.getSavedTable());
 		}

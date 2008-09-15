@@ -25,7 +25,7 @@ import junit.framework.TestCase;
 
 import org.apache.log4j.Logger;
 import org.cspoker.common.PlayerCommunication;
-import org.cspoker.common.api.shared.event.Event;
+import org.cspoker.common.api.shared.event.ServerEvent;
 import org.cspoker.common.elements.table.TableId;
 import org.cspoker.common.eventlisteners.RemoteAllEventsListener;
 import org.cspoker.common.events.gameevents.BrokePlayerKickedOutEvent;
@@ -251,8 +251,8 @@ public class PlayerCommunicationTest extends TestCase {
 		}
 	}
 
-	public void showEvents(List<Event> events) {
-		for (Event event : events) {
+	public void showEvents(List<ServerEvent> events) {
+		for (ServerEvent event : events) {
 			PlayerCommunicationTest.logger.info("++ " + event);
 		}
 	}
@@ -354,11 +354,11 @@ public class PlayerCommunicationTest extends TestCase {
 
 	private static class EventCollector implements RemoteAllEventsListener {
 
-		public List<Event> getEvents() {
+		public List<ServerEvent> getEvents() {
 			return events;
 		}
 
-		private List<Event> events = new CopyOnWriteArrayList<Event>();
+		private List<ServerEvent> events = new CopyOnWriteArrayList<ServerEvent>();
 
 		public void onAllInEvent(AllInEvent event) throws RemoteException {
 			events.add(event);

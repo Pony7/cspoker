@@ -13,12 +13,32 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
+package org.cspoker.common.api.lobby.action;
 
-package org.cspoker.common.api.shared.event;
+import javax.xml.bind.annotation.XmlRootElement;
 
-import java.io.Serializable;
+import org.cspoker.common.api.lobby.LobbyContext;
 
-public interface Event extends Serializable {
+@XmlRootElement
+public class RemoveTableAction extends LobbyAction<Void> {
 
+	private static final long serialVersionUID = -6693307709200837257L;
+
+	private long tableId;
+
+	public RemoveTableAction(long id, long tableId) {
+		super(id);
+		this.tableId = tableId;
+	}
+
+	protected RemoveTableAction() {
+		// no op
+	}
+	
+	@Override
+	public Void perform(LobbyContext lobbyContext) {
+		lobbyContext.removeTable(tableId);
+		return null;
+	}
 
 }

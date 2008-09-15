@@ -18,8 +18,8 @@ package org.cspoker.server.common.game.playercommunication;
 import org.apache.log4j.Logger;
 import org.cspoker.common.elements.GameProperty;
 import org.cspoker.common.elements.table.SeatId;
-import org.cspoker.common.elements.table.Table;
-import org.cspoker.common.elements.table.TableId;
+import org.cspoker.common.elements.table.DetailedTable;
+import org.cspoker.common.elements.table.DetailedTable;
 import org.cspoker.common.events.gameevents.PlayerJoinedTableEvent;
 import org.cspoker.common.events.serverevents.TableChangedEvent;
 import org.cspoker.common.events.serverevents.TableCreatedEvent;
@@ -60,7 +60,7 @@ class InitialState extends PlayerCommunicationState {
 		super(playerCommunication);
 	}
 
-	public Table join(TableId tableId, SeatId seatId)
+	public DetailedTable join(TableId tableId, SeatId seatId)
 			throws IllegalActionException {
 		if (tableId == null) {
 			throw new IllegalArgumentException(
@@ -115,11 +115,11 @@ class InitialState extends PlayerCommunicationState {
 		return table.getSavedTable();
 	}
 
-	public Table createTable(String name) throws IllegalActionException {
+	public DetailedTable createTable(String name) throws IllegalActionException {
 		return createTable(name, new GameProperty());
 	}
 
-	public Table createTable(String name, GameProperty property)
+	public DetailedTable createTable(String name, GameProperty property)
 			throws IllegalActionException {
 		GameTable table = TableManager.global_table_manager.createTable(
 				playerCommunication.getPlayer().getId(), name, property);

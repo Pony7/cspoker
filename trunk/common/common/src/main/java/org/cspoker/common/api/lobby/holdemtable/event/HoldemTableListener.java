@@ -21,6 +21,6 @@ public interface HoldemTableListener {
 
 	HoldemPlayerListener getHoldemPlayerListener();
 
-	
+	void onBet(BetEvent betEvent);	
 	
 }

@@ -13,8 +13,9 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.common.elements.player;
+package org.cspoker.common.api.lobby.holdemtable.holdemplayer.event;
 
+import java.rmi.RemoteException;
 import java.util.Collections;
 import java.util.Set;
 
@@ -22,60 +23,53 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlRootElement;
 
 import org.cspoker.common.elements.cards.Card;
+import org.cspoker.common.events.gameevents.GameEvent;
+import org.cspoker.common.player.SeatedPlayer;
 
-@XmlAccessorType(XmlAccessType.FIELD)
-public class ShowdownPlayer extends SeatedPlayer {
+@XmlRootElement
+public class NewPocketCardsEvent extends GameEvent {
 
-	private static final long serialVersionUID = -1618593137613219527L;
+	private static final long serialVersionUID = -3328895783353781276L;
 
 	private SeatedPlayer player;
 
 	@XmlElementWrapper
 	@XmlElement(name = "card")
-	private Set<Card> cards;
+	private Set<Card> pocketCards;
 
-	private String description;
-
-	@XmlElementWrapper
-	@XmlElement(name = "card")
-	private Set<Card> handCards;
-
-	public ShowdownPlayer(SeatedPlayer player, Set<Card> cards, Set<Card> handCards,
-			String description) {
+	public NewPocketCardsEvent(SeatedPlayer player, Set<Card> pocketCards) {
 		this.player = player;
-		this.handCards = Collections.unmodifiableSet(handCards);
-		this.cards = Collections.unmodifiableSet(cards);
-		this.description = description;
+		this.pocketCards = Collections.unmodifiableSet(pocketCards);
 	}
 
-	protected ShowdownPlayer() {
+	protected NewPocketCardsEvent() {
 		// no op
 	}
 
-	/**
-	 * Returns a textual representation of this showdown player.
-	 */
+	public Set<Card> getPocketCards() {
+		return pocketCards;
+	}
 
 	public String toString() {
-		return player.getName() + " has a " + description;
+		String toReturn = getPlayer().getName()
+				+ " has received new pocket cards: ";
+		for (Card card : getPocketCards()) {
+			toReturn += card;
+			toReturn += ", ";
+		}
+		return toReturn.substring(0, toReturn.length() - 2) + ".";
 	}
 
 	public SeatedPlayer getPlayer() {
 		return player;
 	}
 
-	public Set<Card> getAllCards() {
-		return cards;
-	}
-
-	public Set<Card> getHandCards() {
-		return handCards;
-	}
-
-	public String getHandDescription() {
-		return description;
+	public void dispatch(RemoteAllEventsListener listener)
+			throws RemoteException {
+		listener.onNewPocketCardsEvent(this);
 	}
 
 }

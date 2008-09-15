@@ -17,8 +17,8 @@ package org.cspoker.server.common.game.playercommunication;
 
 import org.cspoker.common.elements.GameProperty;
 import org.cspoker.common.elements.table.SeatId;
-import org.cspoker.common.elements.table.Table;
-import org.cspoker.common.elements.table.TableId;
+import org.cspoker.common.elements.table.DetailedTable;
+import org.cspoker.common.elements.table.DetailedTable;
 import org.cspoker.common.events.serverevents.ServerMessageEvent;
 import org.cspoker.common.exceptions.IllegalActionException;
 import org.cspoker.server.common.game.GameManager;
@@ -99,7 +99,7 @@ abstract class PlayerCommunicationState {
 	 *             [must] This actions is not a valid action in the current
 	 *             state.
 	 */
-	public Table join(TableId tableId, SeatId seatId)
+	public DetailedTable join(TableId tableId, SeatId seatId)
 			throws IllegalActionException {
 		throw new IllegalActionException("Joining table " + tableId
 				+ " is not a valid action. " + getStdErrorMessage());
@@ -114,13 +114,13 @@ abstract class PlayerCommunicationState {
 	/***************************************************************************
 	 * Create/Start Game
 	 **************************************************************************/
-	public Table createTable(String name) throws IllegalActionException {
+	public DetailedTable createTable(String name) throws IllegalActionException {
 		throw new IllegalActionException(
 				"Creating a table is not a valid action. "
 						+ getStdErrorMessage());
 	}
 
-	public Table createTable(String name, GameProperty property)
+	public DetailedTable createTable(String name, GameProperty property)
 			throws IllegalActionException {
 		throw new IllegalActionException(
 				"Creating a table is not a valid action. "

@@ -13,12 +13,40 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
+package org.cspoker.common.api.lobby.event;
 
-package org.cspoker.common.api.shared.event;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlRootElement;
 
-import java.io.Serializable;
+import org.cspoker.common.elements.table.Table;
 
-public interface Event extends Serializable {
+@XmlRootElement
+public class TableRemovedEvent extends LobbyEvent {
 
+	private static final long serialVersionUID = 3201252758310449164L;
+
+	@XmlAttribute
+	private Table table;
+
+	public TableRemovedEvent(Table table) {
+		this.table = table;
+	}
+
+	protected TableRemovedEvent() {
+		// no op
+	}
+
+	public Table getTableId() {
+		return table;
+	}
+
+	public String toString() {
+		return "Table " + table.toString() + " has been removed.";
+	}
+	
+	@Override
+	public void dispatch(LobbyListener lobbyListener) {
+		lobbyListener.onTableRemoved(this);
+	}
 
 }

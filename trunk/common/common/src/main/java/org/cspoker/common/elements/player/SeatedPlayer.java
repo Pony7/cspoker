@@ -16,8 +16,6 @@
 
 package org.cspoker.common.elements.player;
 
-import java.io.Serializable;
-
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -30,7 +28,7 @@ import javax.xml.bind.annotation.XmlAttribute;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-public class SeatedPlayer implements Serializable {
+public class SeatedPlayer extends Player {
 
 	private static final long serialVersionUID = -9200622390366978194L;
 
