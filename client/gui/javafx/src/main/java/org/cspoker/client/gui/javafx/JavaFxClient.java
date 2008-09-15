@@ -30,8 +30,8 @@ import org.cspoker.common.elements.GameProperty;
 import org.cspoker.common.elements.cards.Card;
 import org.cspoker.common.elements.player.SeatedPlayer;
 import org.cspoker.common.elements.player.Winner;
-import org.cspoker.common.elements.table.Table;
-import org.cspoker.common.elements.table.TableId;
+import org.cspoker.common.elements.table.DetailedTable;
+import org.cspoker.common.elements.table.DetailedTable;
 import org.cspoker.common.eventlisteners.RemoteAllEventsListener;
 import org.cspoker.common.exceptions.IllegalActionException;
 import org.cspoker.common.util.Log4JPropertiesLoader;
@@ -181,11 +181,11 @@ public class JavaFxClient {
         rpc.say(message);
     }
 
-    public Table joinTable(TableId id) throws IllegalActionException, RemoteException {
+    public DetailedTable joinTable(TableId id) throws IllegalActionException, RemoteException {
         return rpc.joinTable(id);
     }
 
-    public Table getTable(TableId id) throws IllegalActionException, RemoteException {
+    public DetailedTable getTable(TableId id) throws IllegalActionException, RemoteException {
         return rpc.getTable(id);
     }
 
@@ -193,7 +193,7 @@ public class JavaFxClient {
         rpc.leaveTable();
     }
 
-    public Table createTable(String name) throws RemoteException, IllegalActionException {
+    public DetailedTable createTable(String name) throws RemoteException, IllegalActionException {
         GameProperty p = new GameProperty(2, 3000);
         return rpc.createTable(name, p);
     }
@@ -202,8 +202,8 @@ public class JavaFxClient {
         rpc.startGame();
     }
 
-    public Table[] getTableList() throws RemoteException {
-        return rpc.getTables().getTables().toArray(new Table[rpc.getTables().getTables().size()]);
+    public DetailedTable[] getTableList() throws RemoteException {
+        return rpc.getTables().getTables().toArray(new DetailedTable[rpc.getTables().getTables().size()]);
     }
 
     public static Card[] cardsToArray(Set<Card> cards) {

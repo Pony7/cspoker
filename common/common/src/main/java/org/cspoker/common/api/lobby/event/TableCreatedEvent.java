@@ -13,41 +13,48 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.common.api.lobby.action;
+
+package org.cspoker.common.api.lobby.event;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.cspoker.common.api.lobby.LobbyContext;
-import org.cspoker.common.elements.table.DetailedTable;
-import org.cspoker.common.elements.table.TableConfiguration;
+import org.cspoker.common.elements.player.Player;
+import org.cspoker.common.elements.table.Table;
 
 @XmlRootElement
-public class CreateTableAction extends LobbyAction<DetailedTable> {
+public class TableCreatedEvent extends LobbyEvent {
 
-	private static final long serialVersionUID = 2423639524369017909L;
-	
-	private String name;
-	private TableConfiguration configuration;
+	private static final long serialVersionUID = -3408596246641282753L;
 
-	public CreateTableAction(long id, String name) {
-		super(id);
-		this.name = name;
-		configuration = null;
+	private Table table;
+
+	private Player player;
+
+	public TableCreatedEvent(Player player, Table table) {
+		this.player = player;
+		this.table = table;
 	}
 
-	public CreateTableAction(long id, String name, TableConfiguration settings) {
-		super(id);
-		this.name = name;
-		this.configuration = settings;
-	}
-
-	protected CreateTableAction() {
+	protected TableCreatedEvent() {
 		// no op
 	}
 
+	public String toString() {
+		return player.getName() + " has created a new table: "
+				+ table.getName() + " (#" + table.getId() + ").";
+	}
+
+	public Player getPlayer() {
+		return player;
+	}
+
+	public Table getTable() {
+		return table;
+	}
+
 	@Override
-	public DetailedTable perform(LobbyContext lobbyContext) {
-		return lobbyContext.createTable(name, configuration);
+	public void dispatch(LobbyListener lobbyListener) {
+		lobbyListener.onTableCreated(this);
 	}
 
 }

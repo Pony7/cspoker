@@ -23,7 +23,6 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlValue;
 
-@XmlAccessorType(XmlAccessType.FIELD)
 public class Pots implements Serializable {
 
 	private static final long serialVersionUID = 2133563839323145402L;

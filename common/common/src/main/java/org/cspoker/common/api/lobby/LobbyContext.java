@@ -16,20 +16,22 @@
 package org.cspoker.common.api.lobby;
 
 import org.cspoker.common.api.lobby.holdemtable.HoldemTableContext;
-import org.cspoker.common.elements.table.Table;
+import org.cspoker.common.elements.table.DetailedTable;
 import org.cspoker.common.elements.table.TableConfiguration;
 import org.cspoker.common.elements.table.TableList;
 
 public interface LobbyContext {
 
-	Table joinTable(long tableId);
+	DetailedTable joinTable(long tableId);
 
-	Table createTable(String name, TableConfiguration configuration);
+	DetailedTable createTable(String name, TableConfiguration configuration);
 
-	Table getTableInformation(long tableId);
+	DetailedTable getTableInformation(long tableId);
 
 	TableList getTableList();
 
 	HoldemTableContext getHoldemTableContext(long tableId);
+
+	void removeTable(long tableId);
 	
 }

@@ -14,11 +14,31 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-package org.cspoker.common.api.shared.event;
+package org.cspoker.common.api.lobby.holdemtable.event;
 
-import java.io.Serializable;
+import org.cspoker.common.elements.pots.Pots;
 
-public interface Event extends Serializable {
+public abstract class ActionChangedPotEvent implements HoldemTableEvent {
 
+	private static final long serialVersionUID = -4260315075072948801L;
+
+	private Pots pots;
+
+	public ActionChangedPotEvent(Pots pots) {
+		this.pots = pots;
+	}
+
+	protected ActionChangedPotEvent() {
+		// no op
+	}
+
+	/**
+	 * Returns the pots.
+	 * 
+	 * @return
+	 */
+	public Pots getPots() {
+		return pots;
+	}
 
 }

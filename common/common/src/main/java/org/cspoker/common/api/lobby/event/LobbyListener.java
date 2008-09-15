@@ -20,5 +20,9 @@ import org.cspoker.common.api.lobby.holdemtable.event.HoldemTableListener;
 public interface LobbyListener{
 
 	HoldemTableListener getHoldemTableListener(long tableId);
+
+	void onTableCreated(TableCreatedEvent tableCreatedEvent);
+
+	void onTableRemoved(TableRemovedEvent tableRemovedEvent);
 	
 }

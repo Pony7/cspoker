@@ -13,60 +13,28 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-
 package org.cspoker.common.elements.table;
 
 import java.io.Serializable;
-import java.util.Collections;
-import java.util.List;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementWrapper;
 
-import org.cspoker.common.elements.player.SeatedPlayer;
-
-/**
- * An immutable class to represent a snapshot of the state of a table.
- * 
- * @author kenzo
- * 
- */
-@XmlAccessorType(XmlAccessType.FIELD)
 public class Table implements Serializable {
 
-	private static final long serialVersionUID = 1647960710321459407L;
+	private static final long serialVersionUID = 527893735230918726L;
 
 	@XmlAttribute
 	private long id;
 
 	@XmlAttribute
 	private String name;
-
-	@XmlElementWrapper
-	@XmlElement(name = "player")
-	private List<SeatedPlayer> players;
-
-	private boolean playing;
-
-	private TableConfiguration property;
-
-	public Table(long id, String name, List<SeatedPlayer> players,
-			boolean playing, TableConfiguration property) {
+	
+	public Table(long id, String name){
 		this.id = id;
 		this.name = name;
-		if (players == null) {
-			throw new IllegalArgumentException(
-					"The given list of players must be effective.");
-		}
-		this.players = Collections.unmodifiableList(players);
-		this.playing = playing;
-		this.property = property;
 	}
-
-	protected Table() {
+	
+	public Table() {
 		// no op
 	}
 
@@ -91,63 +59,5 @@ public class Table implements Serializable {
 	public String getName() {
 		return name;
 	}
-
-	/**
-	 * Returns the list of players at this table.
-	 * 
-	 * @return The list of players at this table.
-	 */
-	public List<SeatedPlayer> getPlayers() {
-		return players;
-	}
-
-	/**
-	 * The number of players seated at this table.
-	 * 
-	 * @return The number of players seated at this table.
-	 */
-	public int getNbPlayers() {
-		return players.size();
-	}
-
-	/**
-	 * The playing status of this table.
-	 * 
-	 * @return True if the players are playing, false otherwise.
-	 */
-	public boolean isPlaying() {
-		return playing;
-	}
-
-	/**
-	 * Returns the game property of this table.
-	 * 
-	 * @return The game property of this table.
-	 */
-	public TableConfiguration getGameProperty() {
-		return property;
-	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + (int) (id ^ (id >>> 32));
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Table other = (Table) obj;
-		if (id != other.id)
-			return false;
-		return true;
-	}
-
+	
 }

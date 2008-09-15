@@ -24,8 +24,8 @@ import java.util.concurrent.atomic.AtomicLong;
 import org.cspoker.common.RemotePlayerCommunication;
 import org.cspoker.common.elements.GameProperty;
 import org.cspoker.common.elements.table.SeatId;
-import org.cspoker.common.elements.table.Table;
-import org.cspoker.common.elements.table.TableId;
+import org.cspoker.common.elements.table.DetailedTable;
+import org.cspoker.common.elements.table.DetailedTable;
 import org.cspoker.common.elements.table.TableList;
 import org.cspoker.common.eventlisteners.RemoteAllEventsListener;
 import org.cspoker.common.exceptions.IllegalActionException;
@@ -102,7 +102,7 @@ public class XmlChannelRemotePlayerCommunication implements
 		marshaller.perform(new CheckOrCallAction(getId()));
 	}
 
-	public Table createTable(String name, GameProperty settings)
+	public DetailedTable createTable(String name, GameProperty settings)
 			throws IllegalActionException, RemoteException {
 		return marshaller
 				.perform(new CreateTableAction(getId(), name, settings));
@@ -112,12 +112,12 @@ public class XmlChannelRemotePlayerCommunication implements
 		marshaller.perform(new FoldAction(getId()));
 	}
 
-	public Table joinTable(TableId seatId) throws IllegalActionException,
+	public DetailedTable joinTable(TableId seatId) throws IllegalActionException,
 			RemoteException {
 		return marshaller.perform(new JoinTableAction(getId(), seatId, null));
 	}
 
-	public Table joinTable(TableId tableId, SeatId seatId)
+	public DetailedTable joinTable(TableId tableId, SeatId seatId)
 			throws IllegalActionException, RemoteException {
 		return marshaller
 				.perform(new JoinTableAction(getId(), tableId, seatId));
@@ -146,7 +146,7 @@ public class XmlChannelRemotePlayerCommunication implements
 		marshaller.perform(new StartGameAction(getId()));
 	}
 
-	public Table getTable(TableId id) throws IllegalActionException,
+	public DetailedTable getTable(TableId id) throws IllegalActionException,
 			RemoteException {
 		return marshaller.perform(new TableInformationAction(getId(), id));
 	}

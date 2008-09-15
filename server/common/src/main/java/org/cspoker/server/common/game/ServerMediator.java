@@ -19,7 +19,7 @@ package org.cspoker.server.common.game;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import org.cspoker.common.api.shared.event.Event;
+import org.cspoker.common.api.shared.event.ServerEvent;
 import org.cspoker.common.eventlisteners.EventListener;
 import org.cspoker.common.eventlisteners.server.AllServerEventsListener;
 import org.cspoker.common.eventlisteners.server.ServerMessageListener;
@@ -212,7 +212,7 @@ public class ServerMediator {
 	 * onEvent() method.
 	 * 
 	 */
-	private synchronized void publishServerEvent(Event event) {
+	private synchronized void publishServerEvent(ServerEvent event) {
 		for (EventListener listener : serverEventListeners) {
 			listener.onEvent(event);
 		}

@@ -15,7 +15,7 @@
  */
 package org.cspoker.common;
 
-import org.cspoker.common.elements.table.Table;
+import org.cspoker.common.elements.table.DetailedTable;
 import org.cspoker.common.elements.table.TableList;
 import org.cspoker.common.exceptions.IllegalActionException;
 
@@ -102,7 +102,7 @@ public abstract class PlayerCommunication implements RemotePlayerCommunication {
 	 *             [must] This actions is not a valid action in the current
 	 *             state.
 	 */
-	public abstract Table joinTable(TableId tableId, SeatId seatId)
+	public abstract DetailedTable joinTable(TableId tableId, SeatId seatId)
 			throws IllegalActionException;
 
 	/**
@@ -113,7 +113,7 @@ public abstract class PlayerCommunication implements RemotePlayerCommunication {
 	 *             [must] This actions is not a valid action in the current
 	 *             state.
 	 */
-	public abstract Table joinTable(TableId tableId)
+	public abstract DetailedTable joinTable(TableId tableId)
 			throws IllegalActionException;
 
 	/**
@@ -131,7 +131,7 @@ public abstract class PlayerCommunication implements RemotePlayerCommunication {
 	 *             [must] This actions is not a valid action in the current
 	 *             state.
 	 */
-	public abstract Table createTable(String name)
+	public abstract DetailedTable createTable(String name)
 			throws IllegalActionException;
 
 	/**
@@ -141,7 +141,7 @@ public abstract class PlayerCommunication implements RemotePlayerCommunication {
 	 *             [must] This actions is not a valid action in the current
 	 *             state.
 	 */
-	public abstract Table createTable(String name, GameProperty property)
+	public abstract DetailedTable createTable(String name, GameProperty property)
 			throws IllegalActionException;
 
 	/**
@@ -151,7 +151,7 @@ public abstract class PlayerCommunication implements RemotePlayerCommunication {
 	 *            The id of the table to return.
 	 * @return The table with the given table id if it exists.
 	 */
-	public abstract Table getTable(TableId id) throws IllegalActionException;
+	public abstract DetailedTable getTable(TableId id) throws IllegalActionException;
 
 	/**
 	 * Returns a list of tables that are currently hosted.

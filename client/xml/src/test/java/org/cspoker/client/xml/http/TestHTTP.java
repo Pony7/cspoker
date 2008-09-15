@@ -143,12 +143,12 @@ public class TestHTTP {
 				}
 
 				public void onPlayerJoinedTableEvent(
-						PlayerJoinedTableEvent event) {
+						SitInEvent event) {
 					System.out.println(event.toString());
 
 				}
 
-				public void onPlayerLeftTableEvent(PlayerLeftTableEvent event) {
+				public void onPlayerLeftTableEvent(LeaveGameEvent event) {
 					System.out.println(event.toString());
 
 				}
@@ -163,7 +163,7 @@ public class TestHTTP {
 
 				}
 
-				public void onGameMessageEvent(GameMessageEvent event) {
+				public void onGameMessageEvent(TableMessageEvent event) {
 					System.out.println(event.toString());
 
 				}

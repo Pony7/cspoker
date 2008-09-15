@@ -23,7 +23,7 @@ import javax.xml.bind.PropertyException;
 
 import org.apache.log4j.Logger;
 import org.cspoker.common.XmlEventListener;
-import org.cspoker.common.api.shared.event.Event;
+import org.cspoker.common.api.shared.event.ServerEvent;
 import org.cspoker.common.events.gameevents.BrokePlayerKickedOutEvent;
 import org.cspoker.common.events.gameevents.GameMessageEvent;
 import org.cspoker.common.events.gameevents.NewCommunityCardsEvent;
@@ -70,7 +70,7 @@ public class ToXmlAllEventsListener implements AllEventListenerWithInvocation {
 		this.collector = collector;
 	}
 
-	public synchronized void eventToCollector(Event event) {
+	public synchronized void eventToCollector(ServerEvent event) {
 		try {
 			StringWriter xml = new StringWriter();
 			Marshaller m = EventAndActionJAXBContext.context.createMarshaller();

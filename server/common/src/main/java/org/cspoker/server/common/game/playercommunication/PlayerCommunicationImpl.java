@@ -24,8 +24,8 @@ import org.apache.log4j.Logger;
 import org.cspoker.common.PlayerCommunication;
 import org.cspoker.common.elements.GameProperty;
 import org.cspoker.common.elements.table.SeatId;
-import org.cspoker.common.elements.table.Table;
-import org.cspoker.common.elements.table.TableId;
+import org.cspoker.common.elements.table.DetailedTable;
+import org.cspoker.common.elements.table.DetailedTable;
 import org.cspoker.common.elements.table.TableList;
 import org.cspoker.common.eventlisteners.AllEventsListener;
 import org.cspoker.common.eventlisteners.RemoteAllEventsListener;
@@ -215,7 +215,7 @@ public class PlayerCommunicationImpl extends PlayerCommunication {
 	 *             state.
 	 */
 
-	public Table joinTable(TableId tableId, SeatId seatId)
+	public DetailedTable joinTable(TableId tableId, SeatId seatId)
 			throws IllegalActionException {
 		stillAlive();
 		return state.join(tableId, seatId);
@@ -230,7 +230,7 @@ public class PlayerCommunicationImpl extends PlayerCommunication {
 	 *             state.
 	 */
 
-	public Table joinTable(TableId tableId) throws IllegalActionException {
+	public DetailedTable joinTable(TableId tableId) throws IllegalActionException {
 		return joinTable(tableId, null);
 	}
 
@@ -239,17 +239,17 @@ public class PlayerCommunicationImpl extends PlayerCommunication {
 		state.leaveTable();
 	}
 
-	public Table createTable(String name) throws IllegalActionException {
+	public DetailedTable createTable(String name) throws IllegalActionException {
 		stillAlive();
 		return state.createTable(name);
 	}
 
-	public Table createTable(String name, GameProperty property)
+	public DetailedTable createTable(String name, GameProperty property)
 			throws IllegalActionException {
 		return state.createTable(name, property);
 	}
 
-	public Table getTable(TableId id) throws IllegalActionException {
+	public DetailedTable getTable(TableId id) throws IllegalActionException {
 		stillAlive();
 		try {
 			return TableManager.global_table_manager.getTable(id)

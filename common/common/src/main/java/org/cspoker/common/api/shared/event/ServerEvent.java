@@ -16,9 +16,8 @@
 
 package org.cspoker.common.api.shared.event;
 
-import java.io.Serializable;
+public interface ServerEvent extends Event {
 
-public interface Event extends Serializable {
-
+	void dispatch(ServerListener listener);
 
 }

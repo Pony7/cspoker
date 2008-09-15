@@ -13,12 +13,19 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
+package org.cspoker.common.api.lobby.event;
 
-package org.cspoker.common.api.shared.event;
+import org.cspoker.common.api.shared.event.ServerEvent;
+import org.cspoker.common.api.shared.event.ServerListener;
 
-import java.io.Serializable;
+public abstract class LobbyEvent implements ServerEvent {
 
-public interface Event extends Serializable {
+	private static final long serialVersionUID = 557148706756328395L;
 
+	public void dispatch(ServerListener listener) {
+		dispatch(listener.getLobbyListener());
+	}
+
+	public abstract void dispatch(LobbyListener lobbyListener);
 
 }

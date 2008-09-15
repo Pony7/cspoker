@@ -13,41 +13,47 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.common.api.lobby.action;
+package org.cspoker.common.api.chat.event;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.cspoker.common.api.lobby.LobbyContext;
-import org.cspoker.common.elements.table.DetailedTable;
-import org.cspoker.common.elements.table.TableConfiguration;
+import org.cspoker.common.elements.player.Player;
 
 @XmlRootElement
-public class CreateTableAction extends LobbyAction<DetailedTable> {
+public class TableMessageEvent extends ChatEvent {
 
-	private static final long serialVersionUID = 2423639524369017909L;
-	
-	private String name;
-	private TableConfiguration configuration;
+	private static final long serialVersionUID = -3097280563115901972L;
 
-	public CreateTableAction(long id, String name) {
-		super(id);
-		this.name = name;
-		configuration = null;
+	private Player player;
+
+	private String message;
+
+	public TableMessageEvent(Player player, String message) {
+		this.player = player;
+		this.message = message;
 	}
 
-	public CreateTableAction(long id, String name, TableConfiguration settings) {
-		super(id);
-		this.name = name;
-		this.configuration = settings;
-	}
-
-	protected CreateTableAction() {
+	protected TableMessageEvent() {
 		// no op
 	}
 
-	@Override
-	public DetailedTable perform(LobbyContext lobbyContext) {
-		return lobbyContext.createTable(name, configuration);
+	public String toString() {
+		return getPlayer().getName() + " says: " + getMessage();
 	}
+
+	public String getMessage() {
+		return message;
+	}
+
+	public Player getPlayer() {
+		return player;
+	}
+
+	@Override
+	public void dispatch(ChatListener chatListener) {
+		chatListener.onTableMessage(this);
+	}
+	
+	
 
 }
