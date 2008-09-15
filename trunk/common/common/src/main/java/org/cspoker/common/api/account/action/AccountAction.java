@@ -16,10 +16,8 @@
 package org.cspoker.common.api.account.action;
 
 import org.cspoker.common.api.account.AccountContext;
-import org.cspoker.common.api.account.event.AccountListener;
 import org.cspoker.common.api.shared.ServerContext;
 import org.cspoker.common.api.shared.action.Action;
-import org.cspoker.common.api.shared.event.ServerListener;
 
 public abstract class AccountAction<T> extends Action<T> {
 
@@ -34,11 +32,10 @@ public abstract class AccountAction<T> extends Action<T> {
 	}
 
 	@Override
-	public void perform(ServerContext serverContext, ServerListener listener) {
-		perform(serverContext.getAccountContext(), listener.getAccountListener());
+	public T perform(ServerContext serverContext) {
+		return perform(serverContext.getAccountContext());
 	}
 
-	public abstract void perform(AccountContext accountContext,
-			AccountListener accountListener);
-
+	public abstract T perform(AccountContext accountContext);
+		
 }

@@ -15,10 +15,7 @@
  */
 package org.cspoker.common.api.cashier.event;
 
-import org.cspoker.common.api.shared.event.ResultListener;
 
-public interface CashierListener extends ResultListener{
-
-	
+public interface CashierListener{
 	
 }

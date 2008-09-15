@@ -13,16 +13,11 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.common.eventlisteners.game;
+package org.cspoker.common.api.shared.event;
 
-import java.rmi.Remote;
-import java.rmi.RemoteException;
 
-import org.cspoker.common.events.gameevents.BrokePlayerKickedOutEvent;
+public interface ActionListener {
 
-public interface RemoteBrokePlayerKickedOutListener extends Remote {
-
-	public void onBrokePlayerKickedOutEvent(BrokePlayerKickedOutEvent event)
-			throws RemoteException;
-
+	void actionPerformed(ActionPerformedEvent<?> actionPerformedEvent);
+	
 }

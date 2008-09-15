@@ -19,7 +19,6 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.cspoker.common.api.account.AccountContext;
-import org.cspoker.common.api.account.event.AccountListener;
 
 @XmlRootElement
 public class ChangePasswordAction extends AccountAction<Void> {
@@ -43,10 +42,9 @@ public class ChangePasswordAction extends AccountAction<Void> {
 	}
 
 	@Override
-	public void perform(AccountContext accountContext,
-			AccountListener accountListener) {
+	public Void perform(AccountContext accountContext) {
 		accountContext.changePassword(passwordHash);
-		dispatchResult(null, accountListener);
+		return null;
 	}
 
 }

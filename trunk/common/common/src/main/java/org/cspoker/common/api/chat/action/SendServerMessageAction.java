@@ -18,7 +18,6 @@ package org.cspoker.common.api.chat.action;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.cspoker.common.api.chat.ChatContext;
-import org.cspoker.common.api.chat.event.ChatListener;
 
 @XmlRootElement
 public class SendServerMessageAction extends SendMessageAction {
@@ -34,9 +33,9 @@ public class SendServerMessageAction extends SendMessageAction {
 	}
 
 	@Override
-	public void perform(ChatContext chatContext, ChatListener chatListener) {
+	public Void perform(ChatContext chatContext) {
 		chatContext.sendServerMessage(getMessage());
-		dispatchResult(null, chatListener);
+		return null;
 	}
 
 }

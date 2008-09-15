@@ -23,7 +23,6 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.cspoker.common.elements.pots.Pots;
-import org.cspoker.common.eventlisteners.RemoteAllEventsListener;
 import org.cspoker.common.player.SeatedPlayer;
 
 /**

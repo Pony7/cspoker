@@ -20,7 +20,6 @@ import java.rmi.RemoteException;
 import org.cspoker.common.RemotePlayerCommunication;
 import org.cspoker.common.elements.table.Table;
 import org.cspoker.common.elements.table.TableList;
-import org.cspoker.common.eventlisteners.RemoteAllEventsListener;
 import org.cspoker.common.exceptions.IllegalActionException;
 
 public class DefaultRemotePlayerCommunication implements

@@ -20,9 +20,6 @@ import java.io.Serializable;
 import javax.xml.bind.annotation.XmlAttribute;
 
 import org.cspoker.common.api.shared.ServerContext;
-import org.cspoker.common.api.shared.event.ActionPerformedEvent;
-import org.cspoker.common.api.shared.event.ResultListener;
-import org.cspoker.common.api.shared.event.ServerListener;
 
 public abstract class Action<T> implements Serializable {
 
@@ -39,8 +36,7 @@ public abstract class Action<T> implements Serializable {
 		// no op
 	}
 
-	public abstract void perform(ServerContext serverContext,
-			ServerListener serverListener);
+	public abstract T perform(ServerContext serverContext);
 
 	public long getID() {
 		return id;
@@ -52,10 +48,5 @@ public abstract class Action<T> implements Serializable {
 		result = prime * result + (int) (id ^ (id >>> 32));
 		return result;
 	}
-	
-	protected void dispatchResult(T result, ResultListener resultListener) {
-		resultListener.actionPerformed(new ActionPerformedEvent<T>(this,
-				result));
-	};
 
 }

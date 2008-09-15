@@ -22,7 +22,6 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.cspoker.common.elements.table.Table;
-import org.cspoker.common.eventlisteners.RemoteAllEventsListener;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)

@@ -18,8 +18,7 @@ package org.cspoker.common.events.gameevents;
 
 import java.rmi.RemoteException;
 
-import org.cspoker.common.eventlisteners.RemoteAllEventsListener;
-import org.cspoker.common.events.Event;
+import org.cspoker.common.api.shared.event.Event;
 
 /**
  * A class of game events.

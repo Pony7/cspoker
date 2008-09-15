@@ -20,7 +20,6 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.HoldemPlayerContext;
-import org.cspoker.common.api.lobby.holdemtable.holdemplayer.event.HoldemPlayerListener;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -37,10 +36,9 @@ public class CheckOrCallAction extends HoldemPlayerAction<Void> {
 	}
 	
 	@Override
-	public void perform(HoldemPlayerContext holdemPlayerContext,
-			HoldemPlayerListener holdemPlayerListener) {
+	public Void perform(HoldemPlayerContext holdemPlayerContext) {
 		holdemPlayerContext.checkOrCall();
-		dispatchResult(null, holdemPlayerListener);
+		return null;
 	}
 
 }

@@ -58,7 +58,7 @@ public class XmlPlayerCommunication implements XmlEventListener {
 		Unmarshaller um = ActionJAXBContext.context.createUnmarshaller();
 		Action<?> action = (Action<?>) um
 				.unmarshal(xml);
-		action.perform(playerComm, toxmllistener);
+		action.perform(playerComm);
 	}
 
 	public String getPlayerName() {

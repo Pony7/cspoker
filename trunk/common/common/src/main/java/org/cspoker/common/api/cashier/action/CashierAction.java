@@ -16,10 +16,8 @@
 package org.cspoker.common.api.cashier.action;
 
 import org.cspoker.common.api.cashier.CashierContext;
-import org.cspoker.common.api.cashier.event.CashierListener;
 import org.cspoker.common.api.shared.ServerContext;
 import org.cspoker.common.api.shared.action.Action;
-import org.cspoker.common.api.shared.event.ServerListener;
 
 public abstract class CashierAction<T> extends Action<T> {
 
@@ -34,11 +32,10 @@ public abstract class CashierAction<T> extends Action<T> {
 	}
 
 	@Override
-	public void perform(ServerContext serverContext, ServerListener listener) {
-		perform(serverContext.getCashierContext(), listener.getCashierListener());
+	public T perform(ServerContext serverContext) {
+		return perform(serverContext.getCashierContext());
 	}
 
-	public abstract void perform(CashierContext cashierContext,
-			CashierListener cashierListener);
+	public abstract T perform(CashierContext cashierContextr);
 	
 }

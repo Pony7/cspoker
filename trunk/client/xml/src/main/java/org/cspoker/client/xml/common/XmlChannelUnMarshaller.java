@@ -26,8 +26,8 @@ import javax.xml.bind.Unmarshaller;
 
 import org.apache.log4j.Logger;
 import org.cspoker.common.XmlEventListener;
+import org.cspoker.common.api.shared.event.Event;
 import org.cspoker.common.eventlisteners.RemoteAllEventsListener;
-import org.cspoker.common.events.Event;
 import org.cspoker.common.exceptions.IllegalActionException;
 import org.cspoker.common.exceptions.NoListenerException;
 import org.cspoker.common.jaxbcontext.EventAndActionJAXBContext;

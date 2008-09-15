@@ -19,7 +19,6 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.cspoker.common.api.account.AccountContext;
-import org.cspoker.common.api.account.event.AccountListener;
 
 @XmlRootElement
 public class GetAvatarAction extends AccountAction<byte[]> {
@@ -43,10 +42,8 @@ public class GetAvatarAction extends AccountAction<byte[]> {
 	}
 
 	@Override
-	public void perform(AccountContext accountContext,
-			AccountListener accountListener) {
-		byte[] avatar = accountContext.getAvatar(playerId);
-		dispatchResult(avatar, accountListener);
+	public byte[] perform(AccountContext accountContext) {
+		return accountContext.getAvatar(playerId);
 	}
 
 }

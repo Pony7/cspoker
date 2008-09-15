@@ -18,7 +18,6 @@ package org.cspoker.common.api.lobby.holdemtable.holdemplayer.action;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.HoldemPlayerContext;
-import org.cspoker.common.api.lobby.holdemtable.holdemplayer.event.HoldemPlayerListener;
 
 @XmlRootElement
 public class LeaveGameAction extends HoldemPlayerAction<Void> {
@@ -34,10 +33,9 @@ public class LeaveGameAction extends HoldemPlayerAction<Void> {
 	}
 	
 	@Override
-	public void perform(HoldemPlayerContext holdemPlayerContext,
-			HoldemPlayerListener holdemPlayerListener) {
+	public Void perform(HoldemPlayerContext holdemPlayerContext) {
 		holdemPlayerContext.leaveGame();
-		dispatchResult(null, holdemPlayerListener);
+		return null;
 	}
 
 }
