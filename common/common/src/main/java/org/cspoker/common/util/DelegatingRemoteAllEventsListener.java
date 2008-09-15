@@ -19,7 +19,6 @@ import java.rmi.RemoteException;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
-import org.cspoker.common.eventlisteners.RemoteAllEventsListener;
 import org.cspoker.common.events.gameevents.BrokePlayerKickedOutEvent;
 import org.cspoker.common.events.gameevents.GameMessageEvent;
 import org.cspoker.common.events.gameevents.NewCommunityCardsEvent;

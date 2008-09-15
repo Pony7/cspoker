@@ -17,8 +17,7 @@ package org.cspoker.common.events.serverevents;
 
 import java.rmi.RemoteException;
 
-import org.cspoker.common.eventlisteners.RemoteAllEventsListener;
-import org.cspoker.common.events.Event;
+import org.cspoker.common.api.shared.event.Event;
 
 public abstract class ServerEvent extends Event {
 

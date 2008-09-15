@@ -13,12 +13,15 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.common.eventlisteners.server;
 
-import org.cspoker.common.events.serverevents.TableChangedEvent;
+package org.cspoker.common.api.shared.event;
 
-public interface TableChangedListener extends RemoteTableChangedListener {
+import java.io.Serializable;
 
-	public void onTableChangedEvent(TableChangedEvent event);
+public abstract class Event implements Serializable {
+
+	private static final long serialVersionUID = 2943674922300571587L;
+
+	public abstract void dispatch(ServerListener listener);
 
 }

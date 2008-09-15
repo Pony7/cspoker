@@ -18,7 +18,6 @@ package org.cspoker.common.api.lobby.holdemtable.action;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.cspoker.common.api.lobby.holdemtable.HoldemTableContext;
-import org.cspoker.common.api.lobby.holdemtable.event.HoldemTableListener;
 
 
 @XmlRootElement
@@ -38,10 +37,9 @@ public class SitInAction extends HoldemTableAction<Void> {
 	}
 
 	@Override
-	public void perform(HoldemTableContext holdemTableContext,
-			HoldemTableListener holdemTableListener) {
+	public Void perform(HoldemTableContext holdemTableContext) {
 		holdemTableContext.sitIn(seatId);
-		dispatchResult(null, holdemTableListener);
+		return null;
 	}
 
 }

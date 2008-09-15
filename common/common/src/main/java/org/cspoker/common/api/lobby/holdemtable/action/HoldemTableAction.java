@@ -20,9 +20,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 
 import org.cspoker.common.api.lobby.LobbyContext;
 import org.cspoker.common.api.lobby.action.LobbyAction;
-import org.cspoker.common.api.lobby.event.LobbyListener;
 import org.cspoker.common.api.lobby.holdemtable.HoldemTableContext;
-import org.cspoker.common.api.lobby.holdemtable.event.HoldemTableListener;
 
 
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -42,12 +40,11 @@ public abstract class HoldemTableAction<T> extends LobbyAction<T> {
 	}
 
 	@Override
-	public void perform(LobbyContext lobbyContext, LobbyListener lobbyListener) {
-		perform(lobbyContext.getHoldemTableContext(tableId), lobbyListener.getHoldemTableListener(tableId));
+	public T perform(LobbyContext lobbyContext) {
+		return perform(lobbyContext.getHoldemTableContext(tableId));
 	}
 
-	public abstract void perform(HoldemTableContext holdemTableContext,
-			HoldemTableListener holdemTableListener);
+	public abstract T perform(HoldemTableContext holdemTableContext);
 	
 	public long getTableId() {
 		return tableId;

@@ -26,7 +26,6 @@ import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.cspoker.common.elements.cards.Card;
-import org.cspoker.common.eventlisteners.RemoteAllEventsListener;
 import org.cspoker.common.events.gameevents.GameEvent;
 import org.cspoker.common.player.SeatedPlayer;
 

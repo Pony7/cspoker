@@ -18,7 +18,6 @@ package org.cspoker.common.api.cashier.action;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.cspoker.common.api.cashier.CashierContext;
-import org.cspoker.common.api.cashier.event.CashierListener;
 
 @XmlRootElement
 public class MoneyAmountAction extends CashierAction<Integer> {
@@ -34,10 +33,8 @@ public class MoneyAmountAction extends CashierAction<Integer> {
 	}
 
 	@Override
-	public void perform(CashierContext cashierContext,
-			CashierListener cashierListener) {
-		int amount = cashierContext.getMoneyAmount();
-		dispatchResult(amount, cashierListener);
+	public Integer perform(CashierContext cashierContext) {
+		return cashierContext.getMoneyAmount();
 	}
 	
 }

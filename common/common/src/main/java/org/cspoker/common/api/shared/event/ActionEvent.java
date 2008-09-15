@@ -16,9 +16,8 @@
 package org.cspoker.common.api.shared.event;
 
 import org.cspoker.common.api.shared.action.Action;
-import org.cspoker.common.events.Event;
 
-public abstract class ActionEvent<T> extends Event {
+public abstract class ActionEvent<T> {
 
         private static final long serialVersionUID = -3647664952883269411L;
 

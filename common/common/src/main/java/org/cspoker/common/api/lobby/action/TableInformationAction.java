@@ -19,7 +19,6 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.cspoker.common.api.lobby.LobbyContext;
-import org.cspoker.common.api.lobby.event.LobbyListener;
 import org.cspoker.common.elements.table.Table;
 
 @XmlRootElement
@@ -40,9 +39,8 @@ public class TableInformationAction extends LobbyAction<Table> {
 	}
 
 	@Override
-	public void perform(LobbyContext lobbyContext, LobbyListener lobbyListener) {
-		Table table = lobbyContext.getTableInformation(tableId);
-		dispatchResult(table, lobbyListener);
+	public Table perform(LobbyContext lobbyContext) {
+		return lobbyContext.getTableInformation(tableId);
 	}
 
 }

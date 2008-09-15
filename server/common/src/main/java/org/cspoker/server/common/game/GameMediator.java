@@ -26,6 +26,7 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
+import org.cspoker.common.api.shared.event.Event;
 import org.cspoker.common.elements.table.SeatId;
 import org.cspoker.common.elements.table.TableId;
 import org.cspoker.common.eventlisteners.EventListener;
@@ -50,7 +51,6 @@ import org.cspoker.common.eventlisteners.game.actions.FoldListener;
 import org.cspoker.common.eventlisteners.game.actions.RaiseListener;
 import org.cspoker.common.eventlisteners.game.actions.SmallBlindListener;
 import org.cspoker.common.eventlisteners.game.privatelistener.NewPocketCardsListener;
-import org.cspoker.common.events.Event;
 import org.cspoker.common.events.gameevents.BrokePlayerKickedOutEvent;
 import org.cspoker.common.events.gameevents.GameEvent;
 import org.cspoker.common.events.gameevents.GameMessageEvent;

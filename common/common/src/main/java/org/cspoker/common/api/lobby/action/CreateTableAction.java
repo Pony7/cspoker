@@ -18,7 +18,6 @@ package org.cspoker.common.api.lobby.action;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.cspoker.common.api.lobby.LobbyContext;
-import org.cspoker.common.api.lobby.event.LobbyListener;
 import org.cspoker.common.elements.table.Table;
 import org.cspoker.common.elements.table.TableConfiguration;
 
@@ -47,10 +46,8 @@ public class CreateTableAction extends LobbyAction<Table> {
 	}
 
 	@Override
-	public void perform(LobbyContext lobbyContext, LobbyListener lobbyListener) {
-		// TODO Auto-generated method stub
-		Table table = lobbyContext.createTable(name, configuration);
-		dispatchResult(table, lobbyListener);
+	public Table perform(LobbyContext lobbyContext) {
+		return lobbyContext.createTable(name, configuration);
 	}
 
 }

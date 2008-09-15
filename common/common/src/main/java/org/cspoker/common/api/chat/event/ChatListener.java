@@ -15,9 +15,8 @@
  */
 package org.cspoker.common.api.chat.event;
 
-import org.cspoker.common.api.shared.event.ResultListener;
 
-public interface ChatListener extends ResultListener{
+public interface ChatListener{
 
 	
 	

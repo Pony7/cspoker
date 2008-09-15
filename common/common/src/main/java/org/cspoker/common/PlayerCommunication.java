@@ -17,7 +17,6 @@ package org.cspoker.common;
 
 import org.cspoker.common.elements.table.Table;
 import org.cspoker.common.elements.table.TableList;
-import org.cspoker.common.eventlisteners.RemoteAllEventsListener;
 import org.cspoker.common.exceptions.IllegalActionException;
 
 /**

@@ -18,7 +18,6 @@ package org.cspoker.common.api.lobby.action;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.cspoker.common.api.lobby.LobbyContext;
-import org.cspoker.common.api.lobby.event.LobbyListener;
 import org.cspoker.common.elements.table.Table;
 
 @XmlRootElement
@@ -38,9 +37,8 @@ public class JoinTableAction extends LobbyAction<Table> {
 	}
 	
 	@Override
-	public void perform(LobbyContext lobbyContext, LobbyListener lobbyListener) {
-		Table table = lobbyContext.joinTable(tableId);
-		dispatchResult(table, lobbyListener);
+	public Table perform(LobbyContext lobbyContext) {
+		return lobbyContext.joinTable(tableId);
 	}
 
 }

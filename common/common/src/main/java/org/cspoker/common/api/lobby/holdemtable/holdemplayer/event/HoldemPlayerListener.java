@@ -15,9 +15,8 @@
  */
 package org.cspoker.common.api.lobby.holdemtable.holdemplayer.event;
 
-import org.cspoker.common.api.shared.event.ResultListener;
 
-public interface HoldemPlayerListener extends ResultListener{
+public interface HoldemPlayerListener{
 
 	
 	

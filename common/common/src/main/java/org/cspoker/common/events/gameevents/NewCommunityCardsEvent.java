@@ -26,7 +26,6 @@ import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.cspoker.common.elements.cards.Card;
-import org.cspoker.common.eventlisteners.RemoteAllEventsListener;
 
 /**
  * A class to represent new community cards events.

@@ -15,10 +15,6 @@
  */
 package org.cspoker.common.api.account.event;
 
-import org.cspoker.common.api.shared.event.ResultListener;
-
-public interface AccountListener extends ResultListener{
-
-	
+public interface AccountListener{
 	
 }

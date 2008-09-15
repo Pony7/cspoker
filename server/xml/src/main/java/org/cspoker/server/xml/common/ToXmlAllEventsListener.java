@@ -23,7 +23,7 @@ import javax.xml.bind.PropertyException;
 
 import org.apache.log4j.Logger;
 import org.cspoker.common.XmlEventListener;
-import org.cspoker.common.events.Event;
+import org.cspoker.common.api.shared.event.Event;
 import org.cspoker.common.events.gameevents.BrokePlayerKickedOutEvent;
 import org.cspoker.common.events.gameevents.GameMessageEvent;
 import org.cspoker.common.events.gameevents.NewCommunityCardsEvent;

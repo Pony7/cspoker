@@ -16,10 +16,8 @@
 package org.cspoker.common.api.chat.action;
 
 import org.cspoker.common.api.chat.ChatContext;
-import org.cspoker.common.api.chat.event.ChatListener;
 import org.cspoker.common.api.shared.ServerContext;
 import org.cspoker.common.api.shared.action.Action;
-import org.cspoker.common.api.shared.event.ServerListener;
 
 public abstract class ChatAction<T> extends Action<T> {
 
@@ -34,11 +32,10 @@ public abstract class ChatAction<T> extends Action<T> {
 	}
 
 	@Override
-	public void perform(ServerContext serverContext, ServerListener listener) {
-		perform(serverContext.getChatContext(), listener.getChatListener());
+	public T perform(ServerContext serverContext) {
+		return perform(serverContext.getChatContext());
 	}
 
-	public abstract void perform(ChatContext chatContext,
-			ChatListener chatListener);
+	public abstract T perform(ChatContext chatContext);
 	
 }

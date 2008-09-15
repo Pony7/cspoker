@@ -19,13 +19,13 @@ package org.cspoker.server.common.game;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import org.cspoker.common.api.shared.event.Event;
 import org.cspoker.common.eventlisteners.EventListener;
 import org.cspoker.common.eventlisteners.server.AllServerEventsListener;
 import org.cspoker.common.eventlisteners.server.ServerMessageListener;
 import org.cspoker.common.eventlisteners.server.TableChangedListener;
 import org.cspoker.common.eventlisteners.server.TableCreatedListener;
 import org.cspoker.common.eventlisteners.server.TableRemovedListener;
-import org.cspoker.common.events.Event;
 import org.cspoker.common.events.serverevents.ServerMessageEvent;
 import org.cspoker.common.events.serverevents.TableChangedEvent;
 import org.cspoker.common.events.serverevents.TableCreatedEvent;
