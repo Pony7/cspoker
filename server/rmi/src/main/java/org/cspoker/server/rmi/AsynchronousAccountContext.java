@@ -13,9 +13,26 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.common.api.account.event;
+package org.cspoker.server.rmi;
 
+import org.cspoker.common.api.account.AccountContext;
+import org.cspoker.common.api.account.DelegatingAccountContext;
+import org.cspoker.common.api.account.event.AccountListener;
 
-public interface AccountListener{
+public class AsynchronousAccountContext extends DelegatingAccountContext {
+
+	public AsynchronousAccountContext(AccountContext accountContext) {
+		super(accountContext);
+	}
+	
+	@Override
+	public void subscribe(AccountListener accountListener) {
+		//TODO
+	}
+	
+	@Override
+	public void unSubscribe(AccountListener accountListener) {
+		//TODO
+	}
 	
 }

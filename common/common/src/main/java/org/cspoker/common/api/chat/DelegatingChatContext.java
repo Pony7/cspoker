@@ -13,9 +13,32 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.common.api.account.event;
+package org.cspoker.common.api.chat;
 
+import org.cspoker.common.api.chat.event.ChatListener;
 
-public interface AccountListener{
+public class DelegatingChatContext implements ChatContext{
+
+	private final ChatContext chatContext;
+
+	public DelegatingChatContext(ChatContext chatContext) {
+		this.chatContext  = chatContext;
+	}
+
+	public void sendServerMessage(String message) {
+		chatContext.sendServerMessage(message);
+	}
+
+	public void sendTableMessage(long tableId, String message) {
+		chatContext.sendTableMessage(tableId, message);
+	}
+
+	public void subscribe(ChatListener chatListener) {
+		chatContext.subscribe(chatListener);
+	}
+
+	public void unSubscribe(ChatListener chatListener) {
+		chatContext.unSubscribe(chatListener);
+	}
 	
 }

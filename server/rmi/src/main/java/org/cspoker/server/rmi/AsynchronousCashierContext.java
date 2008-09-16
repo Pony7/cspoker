@@ -13,14 +13,26 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.common.exceptions;
+package org.cspoker.server.rmi;
 
-public class NoListenerException extends Exception {
+import org.cspoker.common.api.cashier.CashierContext;
+import org.cspoker.common.api.cashier.DelegatingCashierContext;
+import org.cspoker.common.api.cashier.event.CashierListener;
 
-	public NoListenerException(String msg) {
-		super(msg);
+public class AsynchronousCashierContext extends DelegatingCashierContext {
+
+	public AsynchronousCashierContext(CashierContext cashierContext) {
+		super(cashierContext);
 	}
-
-	private static final long serialVersionUID = 4134270741952650269L;
-
+	
+	@Override
+	public void subscribe(CashierListener cashierListener) {
+		//TODO
+	}
+	
+	@Override
+	public void unSubscribe(CashierListener cashierListener) {
+		//TODO
+	}
+	
 }

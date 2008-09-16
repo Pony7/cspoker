@@ -13,9 +13,33 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.common.api.account.event;
+package org.cspoker.server.rmi;
 
+import org.cspoker.common.api.lobby.DelegatingLobbyContext;
+import org.cspoker.common.api.lobby.LobbyContext;
+import org.cspoker.common.api.lobby.event.LobbyListener;
+import org.cspoker.common.api.lobby.holdemtable.HoldemTableContext;
 
-public interface AccountListener{
+public class AsynchronousLobbyContext extends DelegatingLobbyContext {
+
+	public AsynchronousLobbyContext(LobbyContext lobbyContext) {
+		super(lobbyContext);
+	}
+	
+	@Override
+	public HoldemTableContext getHoldemTableContext(long tableId) {
+		return null;
+		//TODO
+	}
+	
+	@Override
+	public void subscribe(LobbyListener lobbyListener) {
+		//TODO
+	}
+	
+	@Override
+	public void unSubscribe(LobbyListener lobbyListener) {
+		//TODO
+	}
 	
 }

@@ -18,24 +18,36 @@ package org.cspoker.common.api.lobby.holdemtable;
 import org.cspoker.common.api.lobby.holdemtable.event.HoldemTableListener;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.HoldemPlayerContext;
 
-public interface HoldemTableContext {
+public class DelegatingHoldemTableContext implements HoldemTableContext{
 
-	//Actions
-	
-	void leaveTable();
+	private final HoldemTableContext holdemTableContext;
 
-	void sitIn(long seatId);
+	public DelegatingHoldemTableContext(HoldemTableContext holdemTableContext) {
+		this.holdemTableContext  = holdemTableContext;
+	}
 
-	void startGame();
+	public HoldemPlayerContext getHoldemPlayerContext() {
+		return holdemTableContext.getHoldemPlayerContext();
+	}
 
-	//Sub-Contexts
-	
-	HoldemPlayerContext getHoldemPlayerContext();
-	
-	//Event handlers
-	
-	void subscribe(HoldemTableListener holdemTableListener);
-	
-	void unSubscribe(HoldemTableListener holdemTableListener);
+	public void leaveTable() {
+		holdemTableContext.leaveTable();
+	}
+
+	public void sitIn(long seatId) {
+		holdemTableContext.sitIn(seatId);
+	}
+
+	public void startGame() {
+		holdemTableContext.startGame();
+	}
+
+	public void subscribe(HoldemTableListener holdemTableListener) {
+		holdemTableContext.subscribe(holdemTableListener);
+	}
+
+	public void unSubscribe(HoldemTableListener holdemTableListener) {
+		holdemTableContext.unSubscribe(holdemTableListener);
+	}
 	
 }
