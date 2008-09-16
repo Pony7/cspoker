@@ -15,13 +15,9 @@
  */
 package org.cspoker.common.api.lobby.holdemtable.event;
 
-import java.rmi.RemoteException;
-
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.cspoker.common.player.ShowdownPlayer;
+import org.cspoker.common.elements.player.ShowdownPlayer;
 
 /**
  * A class to represent show hand events.
@@ -30,7 +26,7 @@ import org.cspoker.common.player.ShowdownPlayer;
  * 
  */
 @XmlRootElement
-public class ShowHandEvent extends HoldemTableEvent {
+public class ShowHandEvent implements HoldemTableEvent {
 
 	private static final long serialVersionUID = -3412700183566852150L;
 
@@ -51,10 +47,9 @@ public class ShowHandEvent extends HoldemTableEvent {
 	public ShowdownPlayer getShowdownPlayer() {
 		return player;
 	}
-
-	public void dispatch(RemoteAllEventsListener listener)
-			throws RemoteException {
-		listener.onShowHandEvent(this);
+	
+	public void dispatch(HoldemTableListener holdemTableListener) {
+		holdemTableListener.onShowHand(this);
 	}
 
 }

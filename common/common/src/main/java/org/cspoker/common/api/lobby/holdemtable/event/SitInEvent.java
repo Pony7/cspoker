@@ -16,13 +16,9 @@
 
 package org.cspoker.common.api.lobby.holdemtable.event;
 
-import java.rmi.RemoteException;
-
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.cspoker.common.player.SeatedPlayer;
+import org.cspoker.common.elements.player.SeatedPlayer;
 
 /**
  * A class to represent player joining games events.
@@ -31,7 +27,7 @@ import org.cspoker.common.player.SeatedPlayer;
  * 
  */
 @XmlRootElement
-public class SitInEvent extends HoldemTableEvent {
+public class SitInEvent implements HoldemTableEvent {
 
 	private static final long serialVersionUID = 3276571712883586966L;
 
@@ -49,17 +45,16 @@ public class SitInEvent extends HoldemTableEvent {
 		return player.getName() + " joined the table.";
 	}
 
-	public SeatId getSeatId() {
+	public long getSeatId() {
 		return getPlayer().getSeatId();
 	}
 
 	public SeatedPlayer getPlayer() {
 		return player;
 	}
-
-	public void dispatch(RemoteAllEventsListener listener)
-			throws RemoteException {
-		listener.onPlayerJoinedTableEvent(this);
+	
+	public void dispatch(HoldemTableListener holdemTableListener) {
+		holdemTableListener.onSitIn(this);
 	}
 
 }

@@ -16,11 +16,42 @@
 package org.cspoker.common.api.lobby.holdemtable.event;
 
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.event.HoldemPlayerListener;
+import org.cspoker.common.api.lobby.holdemtable.holdemplayer.event.NewPocketCardsEvent;
 
 public interface HoldemTableListener {
 
 	HoldemPlayerListener getHoldemPlayerListener();
 
-	void onBet(BetEvent betEvent);	
+	void onBet(BetEvent betEvent);
+
+	void onBigBlind(BigBlindEvent bigBlindEvent);
+
+	void onCall(CallEvent callEvent);
+
+	void onCheck(CheckEvent checkEvent);
+
+	void onFold(FoldEvent foldEvent);
+
+	void onLeaveGame(LeaveGameEvent leaveGameEvent);
+
+	void onNewCommunityCards(NewCommunityCardsEvent newCommunityCardsEvent);
+
+	void onNewDeal(NewDealEvent newDealEvent);
+
+	void onNextPlayer(NextPlayerEvent nextPlayerEvent);
+
+	void onNewRound(NewRoundEvent newRoundEvent);
+
+	void onRaise(RaiseEvent raiseEvent);
+
+	void onShowHand(ShowHandEvent showHandEvent);
+
+	void onSitIn(SitInEvent sitInEvent);
+
+	void onSmallBlind(SmallBlindEvent smallBlindEvent);
+
+	void onWinner(WinnerEvent winnerEvent);
+
+	void onNewPocketCards(NewPocketCardsEvent newPocketCardsEvent);
 	
 }

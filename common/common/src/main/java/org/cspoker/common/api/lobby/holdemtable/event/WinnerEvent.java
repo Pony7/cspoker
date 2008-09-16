@@ -16,15 +16,12 @@
 
 package org.cspoker.common.api.lobby.holdemtable.event;
 
-import java.rmi.RemoteException;
 import java.util.Collections;
 import java.util.Set;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.cspoker.common.player.Winner;
+import org.cspoker.common.elements.player.Winner;
 
 /**
  * A class to represent winner events.
@@ -33,7 +30,7 @@ import org.cspoker.common.player.Winner;
  * 
  */
 @XmlRootElement
-public class WinnerEvent extends HoldemTableEvent {
+public class WinnerEvent implements HoldemTableEvent {
 
 	private static final long serialVersionUID = -2384964708734525969L;
 
@@ -61,9 +58,8 @@ public class WinnerEvent extends HoldemTableEvent {
 		return toReturn.substring(0, toReturn.length() - 2) + ".";
 	}
 
-	public void dispatch(RemoteAllEventsListener listener)
-			throws RemoteException {
-		listener.onWinnerEvent(this);
+	public void dispatch(HoldemTableListener holdemTableListener) {
+		holdemTableListener.onWinner(this);
 	}
 
 }

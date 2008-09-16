@@ -16,13 +16,9 @@
 
 package org.cspoker.common.api.lobby.holdemtable.event;
 
-import java.rmi.RemoteException;
-
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.cspoker.common.player.SeatedPlayer;
+import org.cspoker.common.elements.player.Player;
 
 /**
  * A class to represent new player events.
@@ -31,13 +27,13 @@ import org.cspoker.common.player.SeatedPlayer;
  * 
  */
 @XmlRootElement
-public class NextPlayerEvent extends HoldemTableEvent {
+public class NextPlayerEvent implements HoldemTableEvent {
 
 	private static final long serialVersionUID = -2048233796443189725L;
 
-	private SeatedPlayer player;
+	private Player player;
 
-	public NextPlayerEvent(SeatedPlayer player) {
+	public NextPlayerEvent(Player player) {
 		this.player = player;
 	}
 
@@ -45,17 +41,16 @@ public class NextPlayerEvent extends HoldemTableEvent {
 		// no op
 	}
 
-	public SeatedPlayer getPlayer() {
+	public Player getPlayer() {
 		return player;
 	}
 
 	public String toString() {
 		return "It's " + player.getName() + "'s turn.";
 	}
-
-	public void dispatch(RemoteAllEventsListener listener)
-			throws RemoteException {
-		listener.onNextPlayerEvent(this);
+	
+	public void dispatch(HoldemTableListener holdemTableListener) {
+		holdemTableListener.onNextPlayer(this);
 	}
 
 }

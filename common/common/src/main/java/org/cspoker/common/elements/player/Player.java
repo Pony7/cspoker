@@ -36,10 +36,14 @@ public class Player implements Serializable{
 		this.name = name;
 	}
 	
+	public Player(Player player) {
+		this(player.getId(), player.getName());
+	}
+	
 	protected Player(){
 		//NO OP
 	}
-	
+
 	public long getId() {
 		return id;
 	}

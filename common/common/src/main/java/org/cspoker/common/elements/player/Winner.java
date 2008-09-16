@@ -27,9 +27,9 @@ public class Winner implements Serializable {
 
 	private int gainedAmount;
 
-	private SeatedPlayer player;
+	private Player player;
 
-	public Winner(SeatedPlayer player, int gainedAmount) {
+	public Winner(Player player, int gainedAmount) {
 		this.player = player;
 		this.gainedAmount = gainedAmount;
 	}
@@ -42,7 +42,7 @@ public class Winner implements Serializable {
 		return gainedAmount;
 	}
 
-	public SeatedPlayer getPlayer() {
+	public Player getPlayer() {
 		return player;
 	}
 

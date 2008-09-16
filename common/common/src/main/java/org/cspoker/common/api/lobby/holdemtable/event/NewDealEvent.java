@@ -16,15 +16,12 @@
 
 package org.cspoker.common.api.lobby.holdemtable.event;
 
-import java.rmi.RemoteException;
 import java.util.Collections;
 import java.util.List;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.cspoker.common.player.SeatedPlayer;
+import org.cspoker.common.elements.player.SeatedPlayer;
 
 /**
  * A class to represent new deal events.
@@ -33,7 +30,7 @@ import org.cspoker.common.player.SeatedPlayer;
  * 
  */
 @XmlRootElement
-public class NewDealEvent extends HoldemTableEvent {
+public class NewDealEvent implements HoldemTableEvent {
 
 	private static final long serialVersionUID = 8048593844056212117L;
 
@@ -66,10 +63,9 @@ public class NewDealEvent extends HoldemTableEvent {
 				+ " as initial players of this table. " + dealer.getName()
 				+ " is dealer.";
 	}
-
-	public void dispatch(RemoteAllEventsListener listener)
-			throws RemoteException {
-		listener.onNewDealEvent(this);
+	
+	public void dispatch(HoldemTableListener holdemTableListener) {
+		holdemTableListener.onNewDeal(this);
 	}
 
 }
