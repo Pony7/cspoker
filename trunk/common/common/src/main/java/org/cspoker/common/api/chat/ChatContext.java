@@ -15,14 +15,15 @@
  */
 package org.cspoker.common.api.chat;
 
-public interface ChatContext {
+import org.cspoker.common.api.chat.event.ChatListener;
 
-	int getMoneyAmount();
-	
-	void requestMoney();
+public interface ChatContext {
 
 	void sendServerMessage(String message);
 	
 	void sendTableMessage(long tableId, String message);
+
+	void subscribe(ChatListener chatListener);
 	
+	void unSubscribe(ChatListener chatListener);
 }

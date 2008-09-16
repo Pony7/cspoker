@@ -13,9 +13,26 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.common.api.account.event;
+package org.cspoker.server.rmi;
 
+import org.cspoker.common.api.chat.ChatContext;
+import org.cspoker.common.api.chat.DelegatingChatContext;
+import org.cspoker.common.api.chat.event.ChatListener;
 
-public interface AccountListener{
+public class AsynchronousChatContext extends DelegatingChatContext {
+
+	public AsynchronousChatContext(ChatContext chatContext) {
+		super(chatContext);
+	}
+	
+	@Override
+	public void subscribe(ChatListener chatListener) {
+		//TODO
+	}
+	
+	@Override
+	public void unSubscribe(ChatListener chatListener) {
+		//TODO
+	}
 	
 }

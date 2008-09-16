@@ -15,6 +15,8 @@
  */
 package org.cspoker.common.api.account;
 
+import org.cspoker.common.api.account.event.AccountListener;
+
 public interface AccountContext {
 
 	void changePassword(String passwordHash);
@@ -25,4 +27,7 @@ public interface AccountContext {
 	
 	void setAvatar(byte[] avatar);
 	
+	void subscribe(AccountListener accountListener);
+	
+	void unSubscribe(AccountListener accountListener);
 }

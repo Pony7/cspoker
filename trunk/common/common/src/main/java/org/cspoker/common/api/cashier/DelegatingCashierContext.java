@@ -13,9 +13,32 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.common.api.account.event;
+package org.cspoker.common.api.cashier;
 
+import org.cspoker.common.api.cashier.event.CashierListener;
 
-public interface AccountListener{
+public class DelegatingCashierContext implements CashierContext{
+
+	private final CashierContext cashierContext;
+
+	public DelegatingCashierContext(CashierContext cashierContext) {
+		this.cashierContext  = cashierContext;
+	}
+
+	public int getMoneyAmount() {
+		return cashierContext.getMoneyAmount();
+	}
+
+	public void requestMoney() {
+		cashierContext.requestMoney();
+	}
+
+	public void subscribe(CashierListener cashierListener) {
+		cashierContext.subscribe(cashierListener);
+	}
+
+	public void unSubscribe(CashierListener cashierListener) {
+		cashierContext.unSubscribe(cashierListener);
+	}
 	
 }

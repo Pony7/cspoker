@@ -19,19 +19,39 @@ import org.cspoker.common.api.account.AccountContext;
 import org.cspoker.common.api.cashier.CashierContext;
 import org.cspoker.common.api.chat.ChatContext;
 import org.cspoker.common.api.lobby.LobbyContext;
+import org.cspoker.common.api.shared.ServerContext;
 import org.cspoker.common.api.shared.event.ServerListener;
 
-public interface ServerContext {
+public class DelegatingServerContext implements ServerContext {
 
-	AccountContext getAccountContext();
-	
-	CashierContext getCashierContext();
-	
-	ChatContext getChatContext();
+	private final ServerContext serverContext;
 
-	LobbyContext getLobbyContext();
+	public DelegatingServerContext(ServerContext serverContext) {
+		this.serverContext = serverContext;
+	}
 	
-	void subscribe(ServerListener serverListener);
-	
-	void unSubscribe(ServerListener serverListener);
+	public AccountContext getAccountContext() {
+		return serverContext.getAccountContext();
+	}
+
+	public CashierContext getCashierContext() {
+		return serverContext.getCashierContext();
+	}
+
+	public ChatContext getChatContext() {
+		return serverContext.getChatContext();
+	}
+
+	public LobbyContext getLobbyContext() {
+		return serverContext.getLobbyContext();
+	}
+
+	public void subscribe(ServerListener serverListener) {
+		serverContext.subscribe(serverListener);
+	}
+
+	public void unSubscribe(ServerListener serverListener) {
+		serverContext.unSubscribe(serverListener);
+	}
+
 }

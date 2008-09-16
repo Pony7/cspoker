@@ -21,27 +21,48 @@ import org.cspoker.common.elements.table.DetailedTable;
 import org.cspoker.common.elements.table.TableConfiguration;
 import org.cspoker.common.elements.table.TableList;
 
-public interface LobbyContext {
 
-	//Actions
+public class DelegatingLobbyContext implements LobbyContext{
+
+	private final LobbyContext lobbyContext;
+
+	public DelegatingLobbyContext(LobbyContext accountContext) {
+		this.lobbyContext  = accountContext;
+	}
+
+	public DetailedTable createTable(String name,
+			TableConfiguration configuration) {
+		return lobbyContext.createTable(name, configuration);
+	}
+
+	public HoldemTableContext getHoldemTableContext(long tableId) {
+		return lobbyContext.getHoldemTableContext(tableId);
+	}
+
+	public DetailedTable getTableInformation(long tableId) {
+		return lobbyContext.getTableInformation(tableId);
+	}
+
+	public TableList getTableList() {
+		return lobbyContext.getTableList();
+	}
+
+	public DetailedTable joinTable(long tableId) {
+		return lobbyContext.joinTable(tableId);
+	}
+
+	public void removeTable(long tableId) {
+		lobbyContext.removeTable(tableId);
+	}
+
+	public void subscribe(LobbyListener lobbyListener) {
+		lobbyContext.subscribe(lobbyListener);
+	}
+
+	public void unSubscribe(LobbyListener lobbyListener) {
+		lobbyContext.unSubscribe(lobbyListener);
+	}
 	
-	DetailedTable joinTable(long tableId);
-
-	DetailedTable createTable(String name, TableConfiguration configuration);
-
-	DetailedTable getTableInformation(long tableId);
-
-	TableList getTableList();
-
-	void removeTable(long tableId);
 	
-	//Sub-Contexts
-
-	HoldemTableContext getHoldemTableContext(long tableId);
 	
-	//Event handlers
-	
-	void subscribe(LobbyListener lobbyListener);
-	
-	void unSubscribe(LobbyListener lobbyListener);
 }

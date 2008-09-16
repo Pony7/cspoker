@@ -17,22 +17,36 @@ package org.cspoker.common.api.lobby.holdemtable.holdemplayer;
 
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.event.HoldemPlayerListener;
 
-public interface HoldemPlayerContext {
-	
-	//Actions
-	
-	void betOrRaise(int amount);
-	
-	void checkOrCall();
-	
-	void fold();
-	
-	void leaveGame();
+public class DelegatingHoldemPlayerContext implements HoldemPlayerContext{
 
-	//Event handlers
-	
-	void subscribe(HoldemPlayerListener holdemPlayerListener);
-	
-	void unSubscribe(HoldemPlayerListener holdemPlayerListener);
+	private final HoldemPlayerContext holdemPlayerContext;
 
+	public DelegatingHoldemPlayerContext(HoldemPlayerContext holdemPlayerContext) {
+		this.holdemPlayerContext  = holdemPlayerContext;
+	}
+
+	public void betOrRaise(int amount) {
+		holdemPlayerContext.betOrRaise(amount);
+	}
+
+	public void checkOrCall() {
+		holdemPlayerContext.checkOrCall();
+	}
+
+	public void fold() {
+		holdemPlayerContext.fold();
+	}
+
+	public void leaveGame() {
+		holdemPlayerContext.leaveGame();
+	}
+
+	public void subscribe(HoldemPlayerListener holdemPlayerListener) {
+		holdemPlayerContext.subscribe(holdemPlayerListener);
+	}
+
+	public void unSubscribe(HoldemPlayerListener holdemPlayerListener) {
+		holdemPlayerContext.unSubscribe(holdemPlayerListener);
+	}
+	
 }
