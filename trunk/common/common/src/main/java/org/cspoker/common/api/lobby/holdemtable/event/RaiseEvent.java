@@ -16,14 +16,10 @@
 
 package org.cspoker.common.api.lobby.holdemtable.event;
 
-import java.rmi.RemoteException;
-
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.cspoker.common.elements.player.Player;
 import org.cspoker.common.elements.pots.Pots;
-import org.cspoker.common.player.SeatedPlayer;
 
 /**
  * A class to represent raise events.
@@ -32,16 +28,18 @@ import org.cspoker.common.player.SeatedPlayer;
  * 
  */
 @XmlRootElement
-public class RaiseEvent extends ActionChangedPotEvent {
+public class RaiseEvent implements HoldemTableEvent {
 
 	private static final long serialVersionUID = -5634645028675762487L;
 
-	private SeatedPlayer player;
+	private Player player;
 
 	private int amount;
 
-	public RaiseEvent(SeatedPlayer player, int amount, Pots pots) {
-		super(pots);
+	private Pots pots;
+
+	public RaiseEvent(Player player, int amount, Pots pots) {
+		this.pots = pots;
 		this.player = player;
 		this.amount = amount;
 	}
@@ -59,13 +57,16 @@ public class RaiseEvent extends ActionChangedPotEvent {
 		return amount;
 	}
 
-	public SeatedPlayer getPlayer() {
+	public Player getPlayer() {
 		return player;
 	}
+	
+	public Pots getPots() {
+		return pots;
+	}
 
-	public void dispatch(RemoteAllEventsListener listener)
-			throws RemoteException {
-		listener.onRaiseEvent(this);
+	public void dispatch(HoldemTableListener holdemTableListener) {
+		holdemTableListener.onRaise(this);
 	}
 
 }

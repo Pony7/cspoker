@@ -18,13 +18,9 @@ package org.cspoker.common.elements.player;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAttribute;
 
 /**
  * A class of immutable players.
- * 
- * 
- * @author Kenzo
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -32,18 +28,7 @@ public class SeatedPlayer extends Player {
 
 	private static final long serialVersionUID = -9200622390366978194L;
 
-	/**
-	 * The variable containing the id of the player.
-	 */
-	@XmlAttribute
-	private long id;
-
 	private long seatId;
-
-	/**
-	 * The name of the player.
-	 */
-	private String name;
 
 	/**
 	 * The stack of this player.
@@ -58,9 +43,8 @@ public class SeatedPlayer extends Player {
 
 	public SeatedPlayer(long id, long seatId, String name, int stackValue,
 			int betChipsValue) {
-		this.id = id;
+		super(id, name);
 		this.seatId = seatId;
-		this.name = name;
 		this.stackValue = stackValue;
 		this.betChipsValue = betChipsValue;
 	}
@@ -70,30 +54,12 @@ public class SeatedPlayer extends Player {
 	}
 
 	/**
-	 * Returns the id of this player.
-	 * 
-	 * @return The id of this player.
-	 */
-	public long getId() {
-		return id;
-	}
-
-	/**
 	 * Returns the seat id of this player.
 	 * 
 	 * @return The seat id of this player.
 	 */
 	public long getSeatId() {
 		return seatId;
-	}
-
-	/**
-	 * Returns the name of this player.
-	 * 
-	 * @return The name of this player.
-	 */
-	public String getName() {
-		return name;
 	}
 
 	/**

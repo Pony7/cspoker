@@ -20,9 +20,11 @@ import java.rmi.RemoteException;
 
 import javax.security.auth.login.LoginException;
 
+import org.cspoker.common.api.shared.ServerContext;
+
 public interface RemoteLoginServer extends Remote {
 
-	public RemotePlayerCommunication login(String username, String password)
+	public ServerContext login(String username, String password)
 			throws RemoteException, LoginException;
 
 }

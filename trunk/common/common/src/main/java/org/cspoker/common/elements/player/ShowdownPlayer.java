@@ -16,21 +16,19 @@
 package org.cspoker.common.elements.player;
 
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 
 import org.cspoker.common.elements.cards.Card;
 
-@XmlAccessorType(XmlAccessType.FIELD)
-public class ShowdownPlayer extends SeatedPlayer {
+public class ShowdownPlayer extends Player {
 
 	private static final long serialVersionUID = -1618593137613219527L;
 
-	private SeatedPlayer player;
+	private Player player;
 
 	@XmlElementWrapper
 	@XmlElement(name = "card")
@@ -42,11 +40,11 @@ public class ShowdownPlayer extends SeatedPlayer {
 	@XmlElement(name = "card")
 	private Set<Card> handCards;
 
-	public ShowdownPlayer(SeatedPlayer player, Set<Card> cards, Set<Card> handCards,
+	public ShowdownPlayer(Player player, Set<Card> cards, Set<Card> handCards,
 			String description) {
-		this.player = player;
-		this.handCards = Collections.unmodifiableSet(handCards);
-		this.cards = Collections.unmodifiableSet(cards);
+		super(player);
+		this.handCards = new HashSet<Card>(handCards);
+		this.cards = new HashSet<Card>(cards);
 		this.description = description;
 	}
 
@@ -54,24 +52,20 @@ public class ShowdownPlayer extends SeatedPlayer {
 		// no op
 	}
 
-	/**
-	 * Returns a textual representation of this showdown player.
-	 */
-
 	public String toString() {
 		return player.getName() + " has a " + description;
 	}
 
-	public SeatedPlayer getPlayer() {
+	public Player getPlayer() {
 		return player;
 	}
 
 	public Set<Card> getAllCards() {
-		return cards;
+		return Collections.unmodifiableSet(cards);
 	}
 
 	public Set<Card> getHandCards() {
-		return handCards;
+		return Collections.unmodifiableSet(handCards);
 	}
 
 	public String getHandDescription() {

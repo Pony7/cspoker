@@ -28,7 +28,7 @@ import org.cspoker.common.elements.pots.Pots;
  * 
  */
 @XmlRootElement
-public class BetEvent extends ActionChangedPotEvent {
+public class BetEvent implements HoldemTableEvent {
 
 	private static final long serialVersionUID = -1968724398831151650L;
 
@@ -36,8 +36,10 @@ public class BetEvent extends ActionChangedPotEvent {
 
 	private int amount;
 
+	private Pots pots;
+
 	public BetEvent(Player player, int amount, Pots pots) {
-		super(pots);
+		this.pots = pots;
 		this.player = player;
 		this.amount = amount;
 	}
@@ -58,6 +60,10 @@ public class BetEvent extends ActionChangedPotEvent {
 		return player;
 	}
 
+	public Pots getPots() {
+		return pots;
+	}
+	
 	public void dispatch(HoldemTableListener holdemTableListener) {
 		holdemTableListener.onBet(this);
 	}

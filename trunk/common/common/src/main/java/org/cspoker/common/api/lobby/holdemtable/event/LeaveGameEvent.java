@@ -16,13 +16,9 @@
 
 package org.cspoker.common.api.lobby.holdemtable.event;
 
-import java.rmi.RemoteException;
-
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.cspoker.common.player.SeatedPlayer;
+import org.cspoker.common.elements.player.Player;
 
 /**
  * A class to represent leaving player events.
@@ -31,16 +27,17 @@ import org.cspoker.common.player.SeatedPlayer;
  * 
  */
 @XmlRootElement
-public class LeaveGameEvent extends HoldemTableEvent {
+public class LeaveGameEvent implements HoldemTableEvent {
 
 	private static final long serialVersionUID = -5339079807813674278L;
 
-	private SeatedPlayer player;
+	private Player player;
 	
 	private boolean forced;
 
-	public LeaveGameEvent(SeatedPlayer player) {
+	public LeaveGameEvent(Player player, boolean forced) {
 		this.player = player;
+		this.forced = forced;
 	}
 
 	protected LeaveGameEvent() {
@@ -51,13 +48,16 @@ public class LeaveGameEvent extends HoldemTableEvent {
 		return player.getName() + " has left this table.";
 	}
 
-	public SeatedPlayer getPlayer() {
+	public Player getPlayer() {
 		return player;
 	}
+	
+	public boolean isForced() {
+		return forced;
+	}
 
-	public void dispatch(RemoteAllEventsListener listener)
-			throws RemoteException {
-		listener.onPlayerLeftTableEvent(this);
+	public void dispatch(HoldemTableListener holdemTableListener) {
+		holdemTableListener.onLeaveGame(this);
 	}
 
 }

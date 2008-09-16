@@ -15,33 +15,27 @@
  */
 package org.cspoker.common.api.lobby.holdemtable.holdemplayer.event;
 
-import java.rmi.RemoteException;
 import java.util.Collections;
 import java.util.Set;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.cspoker.common.api.lobby.holdemtable.event.HoldemTableEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.HoldemTableListener;
 import org.cspoker.common.elements.cards.Card;
-import org.cspoker.common.events.gameevents.GameEvent;
-import org.cspoker.common.player.SeatedPlayer;
 
 @XmlRootElement
-public class NewPocketCardsEvent extends GameEvent {
+public class NewPocketCardsEvent implements HoldemTableEvent {
 
 	private static final long serialVersionUID = -3328895783353781276L;
-
-	private SeatedPlayer player;
 
 	@XmlElementWrapper
 	@XmlElement(name = "card")
 	private Set<Card> pocketCards;
 
-	public NewPocketCardsEvent(SeatedPlayer player, Set<Card> pocketCards) {
-		this.player = player;
+	public NewPocketCardsEvent(Set<Card> pocketCards) {
 		this.pocketCards = Collections.unmodifiableSet(pocketCards);
 	}
 
@@ -54,22 +48,16 @@ public class NewPocketCardsEvent extends GameEvent {
 	}
 
 	public String toString() {
-		String toReturn = getPlayer().getName()
-				+ " has received new pocket cards: ";
+		String toReturn = "You have received new pocket cards: ";
 		for (Card card : getPocketCards()) {
 			toReturn += card;
 			toReturn += ", ";
 		}
 		return toReturn.substring(0, toReturn.length() - 2) + ".";
 	}
-
-	public SeatedPlayer getPlayer() {
-		return player;
+	
+	public void dispatch(HoldemTableListener holdemTableListener) {
+		holdemTableListener.onNewPocketCards(this);
 	}
-
-	public void dispatch(RemoteAllEventsListener listener)
-			throws RemoteException {
-		listener.onNewPocketCardsEvent(this);
-	}
-
+	
 }

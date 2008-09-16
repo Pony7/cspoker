@@ -16,14 +16,10 @@
 
 package org.cspoker.common.api.lobby.holdemtable.event;
 
-import java.rmi.RemoteException;
-
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.cspoker.common.elements.player.Player;
 import org.cspoker.common.elements.pots.Pots;
-import org.cspoker.common.player.SeatedPlayer;
 
 /**
  * A class to represent big blind events.
@@ -32,7 +28,7 @@ import org.cspoker.common.player.SeatedPlayer;
  * 
  */
 @XmlRootElement
-public class BigBlindEvent extends ActionChangedPotEvent {
+public class BigBlindEvent implements HoldemTableEvent {
 
 	private static final long serialVersionUID = -7908022421547219241L;
 
@@ -40,8 +36,10 @@ public class BigBlindEvent extends ActionChangedPotEvent {
 
 	private int amount;
 
+	private Pots pots;
+
 	public BigBlindEvent(Player player, int amount, Pots pots) {
-		super(pots);
+		this.pots = pots;
 		this.player = player;
 		this.amount = amount;
 	}
@@ -59,12 +57,15 @@ public class BigBlindEvent extends ActionChangedPotEvent {
 		return amount;
 	}
 
-	public SeatedPlayer getPlayer() {
+	public Player getPlayer() {
 		return player;
 	}
+	
+	public Pots getPots() {
+		return pots;
+	}
 
-	public void dispatch(RemoteAllEventsListener listener)
-			throws RemoteException {
-		listener.onBigBlindEvent(this);
+	public void dispatch(HoldemTableListener holdemTableListener) {
+		holdemTableListener.onBigBlind(this);
 	}
 }

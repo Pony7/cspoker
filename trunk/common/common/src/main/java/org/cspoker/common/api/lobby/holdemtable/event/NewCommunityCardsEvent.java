@@ -15,12 +15,9 @@
  */
 package org.cspoker.common.api.lobby.holdemtable.event;
 
-import java.rmi.RemoteException;
 import java.util.Collections;
 import java.util.Set;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -34,7 +31,7 @@ import org.cspoker.common.elements.cards.Card;
  * 
  */
 @XmlRootElement
-public class NewCommunityCardsEvent extends HoldemTableEvent {
+public class NewCommunityCardsEvent implements HoldemTableEvent {
 
 	private static final long serialVersionUID = -5063239366087788741L;
 
@@ -62,10 +59,9 @@ public class NewCommunityCardsEvent extends HoldemTableEvent {
 		}
 		return toReturn.substring(0, toReturn.length() - 2) + ".";
 	}
-
-	public void dispatch(RemoteAllEventsListener listener)
-			throws RemoteException {
-		listener.onNewCommunityCardsEvent(this);
+	
+	public void dispatch(HoldemTableListener holdemTableListener) {
+		holdemTableListener.onNewCommunityCards(this);
 	}
 
 }
