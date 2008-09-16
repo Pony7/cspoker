@@ -25,14 +25,12 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
 /**
- * This code was edited or generated using CloudGarden's Jigloo SWT/Swing GUI
- * Builder, which is free for non-commercial use. If Jigloo is being used
- * commercially (ie, by a corporation, company or business for any purpose
- * whatever) then you should purchase a license for each developer using Jigloo.
- * Please visit www.cloudgarden.com for details. Use of Jigloo implies
- * acceptance of these licensing terms. A COMMERCIAL LICENSE HAS NOT BEEN
- * PURCHASED FOR THIS MACHINE, SO JIGLOO OR THIS CODE CANNOT BE USED LEGALLY FOR
- * ANY CORPORATE OR COMMERCIAL PURPOSE.
+ * A Game window for a particular table the user is sitting at. Events from the
+ * server for the corresponding table are delivered here and handled/dispatched
+ * go children controls such as {@link TableComposite} or
+ * {@link PlayerSeatComposite}s
+ * 
+ * @author stephans
  */
 public class GameWindow
 		extends ClientComposite
@@ -199,6 +197,7 @@ public class GameWindow
 		for (SeatedPlayer dealPlayer : event.getPlayers()) {
 			event.dispatch(getPlayerSeatComposite(dealPlayer));
 		}
+		tableComposite.redraw();
 	}
 	
 	@Override

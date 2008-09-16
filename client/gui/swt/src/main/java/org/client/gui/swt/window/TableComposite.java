@@ -21,12 +21,20 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 
+/**
+ * The main composite in the game window. Contains the
+ * {@link PlayerSeatComposite}s and draws the chips on the table etc.
+ * 
+ * @author stephans
+ */
 public class TableComposite
 		extends ClientComposite {
 	
 	private Composite communityCardsComposite;
 	Rectangle potChipsDisplayArea;
 	private List<Card> communityCards = new ArrayList<Card>();
+	// TODO The chipPaintListener is implemented in a not very object-oriented
+	// fashion, could be done better
 	private ChipPaintListener chipPaintListener;
 	public boolean updateChipLocations = true;
 	
@@ -249,10 +257,12 @@ public class TableComposite
 			e.printStackTrace();
 		}
 		clearCommunityCards();
-		for (PlayerSeatComposite psc : getPlayerSeatComposites()) {
-			psc.clearHoleCards();
-			
-		}
+		// TODO New hidden hole cards may already have been set by a
+		// NewDealEvent
+		// for (PlayerSeatComposite psc : getPlayerSeatComposites()) {
+		// psc.clearHoleCards();
+		//			
+		// }
 		gameState.setMoneyInMiddle(0);
 		redraw();
 	}

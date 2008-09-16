@@ -9,6 +9,7 @@ import org.cspoker.client.gui.swt.control.ClientGUI;
 import org.cspoker.common.elements.cards.Card;
 import org.cspoker.common.elements.table.SeatId;
 import org.cspoker.common.eventlisteners.game.AllGameEventsListener;
+import org.cspoker.common.eventlisteners.game.RemoteAllGameEventsListener;
 import org.cspoker.common.events.gameevents.*;
 import org.cspoker.common.events.gameevents.playeractionevents.*;
 import org.cspoker.common.events.gameevents.privateevents.NewPocketCardsEvent;
@@ -25,14 +26,10 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.ProgressBar;
 
 /**
- * This code was edited or generated using CloudGarden's Jigloo SWT/Swing GUI
- * Builder, which is free for non-commercial use. If Jigloo is being used
- * commercially (ie, by a corporation, company or business for any purpose
- * whatever) then you should purchase a license for each developer using Jigloo.
- * Please visit www.cloudgarden.com for details. Use of Jigloo implies
- * acceptance of these licensing terms. A COMMERCIAL LICENSE HAS NOT BEEN
- * PURCHASED FOR THIS MACHINE, SO JIGLOO OR THIS CODE CANNOT BE USED LEGALLY FOR
- * ANY CORPORATE OR COMMERCIAL PURPOSE.
+ * Represents a composite in the TableComposite where the player is visualized
+ * with his user name, optional avatar, stack and status information TODO Maybe
+ * use an adapter for the {@link RemoteAllGameEventsListener} so we dont have to
+ * implement all the methods which are handled by a generic case ...
  */
 public class PlayerSeatComposite
 		extends ClientComposite
@@ -281,25 +278,25 @@ public class PlayerSeatComposite
 	
 	@Override
 	public void onAllInEvent(ActionChangedPotEvent event) {
-	// TODO Auto-generated method stub
+	// Nothing to do
 	
 	}
 	
 	@Override
 	public void onBetEvent(BetEvent event) {
-	// TODO Auto-generated method stub
+	// Nothing to do
 	
 	}
 	
 	@Override
 	public void onBigBlindEvent(BigBlindEvent event) {
-	// TODO Auto-generated method stub
+	// Nothing to do
 	
 	}
 	
 	@Override
 	public void onCallEvent(CallEvent event) {
-	// TODO Auto-generated method stub
+	// Nothing to do
 	
 	}
 	
@@ -320,13 +317,13 @@ public class PlayerSeatComposite
 	
 	@Override
 	public void onRaiseEvent(RaiseEvent event) {
-	// TODO Auto-generated method stub
+	// Nothing to do
 	
 	}
 	
 	@Override
 	public void onSmallBlindEvent(SmallBlindEvent event) {
-	// TODO Auto-generated method stub
+	// Nothing to do
 	
 	}
 	
@@ -351,12 +348,13 @@ public class PlayerSeatComposite
 	
 	@Override
 	public void onNewRoundEvent(NewRoundEvent event) {
-	// TODO Auto-generated method stub
+	// Nothing to do
 	
 	}
 	
 	@Override
 	public void onNextPlayerEvent(NextPlayerEvent event) {
+		player = event.getPlayer();
 		startTimer();
 	}
 	
@@ -375,6 +373,7 @@ public class PlayerSeatComposite
 	
 	@Override
 	public void onShowHandEvent(ShowHandEvent event) {
+		player = event.getShowdownPlayer().getPlayer();
 		setHoleCards(event.getShowdownPlayer().getHandCards());
 	}
 	
@@ -392,6 +391,7 @@ public class PlayerSeatComposite
 	
 	@Override
 	public void onBrokePlayerKickedOutEvent(BrokePlayerKickedOutEvent event) {
+		player = SeatedPlayer.NULL_PLAYER;
 		onPlayerLeftTableEvent(null);
 		
 	}
@@ -405,14 +405,17 @@ public class PlayerSeatComposite
 	@Override
 	public void onPlayerSatInEvent(PlayerSatInEvent event)
 			throws RemoteException {
-		playerName.setText(event.getPlayer().getName());
+		player = event.getPlayer();
+		playerName.setText(player.getName());
 		
 	}
 	
 	@Override
 	public void onPlayerReboughtEvent(PlayerReboughtEvent event)
 			throws RemoteException {
-		setStack(event.getPlayer().getStackValue());
+		player = event.getPlayer();
+		setStack(player.getStackValue());
+		
 	}
 	
 	/**
