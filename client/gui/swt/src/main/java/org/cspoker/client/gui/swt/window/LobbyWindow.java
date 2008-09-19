@@ -1,19 +1,21 @@
 package org.cspoker.client.gui.swt.window;
 
-import java.rmi.RemoteException;
-
 import org.cspoker.client.gui.swt.control.ClientCore;
 import org.cspoker.client.gui.swt.control.ClientGUI;
 import org.cspoker.client.gui.swt.control.SWTResourceManager;
-import org.cspoker.common.elements.GameProperty;
-import org.cspoker.common.elements.table.TableId;
+import org.cspoker.common.api.chat.event.ChatListener;
+import org.cspoker.common.api.chat.event.ServerMessageEvent;
+import org.cspoker.common.api.chat.event.TableMessageEvent;
+import org.cspoker.common.api.lobby.LobbyContext;
+import org.cspoker.common.api.lobby.event.LobbyListener;
+import org.cspoker.common.api.lobby.event.TableCreatedEvent;
+import org.cspoker.common.api.lobby.event.TableRemovedEvent;
+import org.cspoker.common.api.lobby.holdemtable.HoldemTableContext;
+import org.cspoker.common.api.lobby.holdemtable.event.HoldemTableListener;
+import org.cspoker.common.elements.table.DetailedTable;
+import org.cspoker.common.elements.table.Table;
+import org.cspoker.common.elements.table.TableConfiguration;
 import org.cspoker.common.elements.table.TableList;
-import org.cspoker.common.eventlisteners.server.AllServerEventsListener;
-import org.cspoker.common.events.serverevents.ServerMessageEvent;
-import org.cspoker.common.events.serverevents.TableChangedEvent;
-import org.cspoker.common.events.serverevents.TableCreatedEvent;
-import org.cspoker.common.events.serverevents.TableRemovedEvent;
-import org.cspoker.common.exceptions.IllegalActionException;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
@@ -25,18 +27,11 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
 
 /**
- * This code was edited or generated using CloudGarden's Jigloo SWT/Swing GUI
- * Builder, which is free for non-commercial use. If Jigloo is being used
- * commercially (ie, by a corporation, company or business for any purpose
- * whatever) then you should purchase a license for each developer using Jigloo.
- * Please visit www.cloudgarden.com for details. Use of Jigloo implies
- * acceptance of these licensing terms. A COMMERCIAL LICENSE HAS NOT BEEN
- * PURCHASED FOR THIS MACHINE, SO JIGLOO OR THIS CODE CANNOT BE USED LEGALLY FOR
- * ANY CORPORATE OR COMMERCIAL PURPOSE.
+ * The main lobby window
  */
 public class LobbyWindow
 		extends ClientComposite
-		implements AllServerEventsListener {
+		implements LobbyListener, LobbyContext, ChatListener {
 	
 	private Menu menu1;
 	private Button createTableButton;
@@ -51,7 +46,7 @@ public class LobbyWindow
 	private Menu helpMenu;
 	private MenuItem helpMenuItem;
 	private TableColumn nameColumn;
-	private Table table1;
+	private org.eclipse.swt.widgets.Table availableGameTables;
 	private CTabItem cTabItem1;
 	private CTabFolder tableFolder;
 	private MenuItem exitMenuItem;
@@ -107,24 +102,24 @@ public class LobbyWindow
 							GridData table1LData = new GridData();
 							table1LData.widthHint = 343;
 							table1LData.heightHint = 164;
-							table1 = new Table(composite1, SWT.SINGLE | SWT.BORDER);
-							table1.setLayoutData(table1LData);
-							table1.setHeaderVisible(true);
-							table1.setLinesVisible(true);
-							table1.addMouseListener(new MouseAdapter() {
+							availableGameTables = new org.eclipse.swt.widgets.Table(composite1, SWT.SINGLE | SWT.BORDER);
+							availableGameTables.setLayoutData(table1LData);
+							availableGameTables.setHeaderVisible(true);
+							availableGameTables.setLinesVisible(true);
+							availableGameTables.addMouseListener(new MouseAdapter() {
 								
 								@Override
 								public void mouseDoubleClick(MouseEvent evt) {
 									System.out.println("table1.mouseDoubleClick, event=" + evt);
-									TableItem[] selectedItems = table1.getSelection();
+									TableItem[] selectedItems = availableGameTables.getSelection();
 									if (selectedItems.length == 1) {
 										// Open selected table
-										TableId tid = new TableId(Long.parseLong(selectedItems[0].getText(1)));
+										long tid = (Long.parseLong(selectedItems[0].getText(1)));
 										gui.getGameWindow(tid).show();
 									}
 								}
 							});
-							table1.addSelectionListener(new SelectionAdapter() {
+							availableGameTables.addSelectionListener(new SelectionAdapter() {
 								
 								@Override
 								public void widgetSelected(SelectionEvent evt) {
@@ -134,32 +129,32 @@ public class LobbyWindow
 								}
 							});
 							{
-								nameColumn = new TableColumn(table1, SWT.NONE);
+								nameColumn = new TableColumn(availableGameTables, SWT.NONE);
 								nameColumn.setText("Name");
 								nameColumn.setWidth(82);
 							}
 							{
-								idColumn = new TableColumn(table1, SWT.NONE);
+								idColumn = new TableColumn(availableGameTables, SWT.NONE);
 								idColumn.setText("Id");
 								idColumn.setWidth(15);
 							}
 							{
-								stakesColumn = new TableColumn(table1, SWT.NONE);
+								stakesColumn = new TableColumn(availableGameTables, SWT.NONE);
 								stakesColumn.setText("Stakes");
 								stakesColumn.setWidth(60);
 							}
 							{
-								typeColumn = new TableColumn(table1, SWT.NONE);
+								typeColumn = new TableColumn(availableGameTables, SWT.NONE);
 								typeColumn.setText("Type");
 								typeColumn.setWidth(60);
 							}
 							{
-								playersColumn = new TableColumn(table1, SWT.NONE);
+								playersColumn = new TableColumn(availableGameTables, SWT.NONE);
 								playersColumn.setText("Players");
 								playersColumn.setWidth(60);
 							}
 							{
-								tableItem1 = new TableItem(table1, SWT.NONE);
+								tableItem1 = new TableItem(availableGameTables, SWT.NONE);
 								tableItem1.setText("No tables available ...");
 							}
 						}
@@ -214,22 +209,8 @@ public class LobbyWindow
 								public void widgetSelected(SelectionEvent evt) {
 									System.out.println("exitMenuItem.widgetSelected, event=" + evt);
 									getShell().getDisplay().close();
-									try {
-										for (GameWindow gw : gui.gameWindows) {
-											clientCore.getCommunication().leaveTable(gw.getTableId());
-										}
-									} catch (RemoteException e) {
-										e.printStackTrace();
-									} catch (IllegalActionException e) {
-										e.printStackTrace();
-									}
-									try {
-										clientCore.getCommunication().kill();
-									} catch (RemoteException e) {
-										e.printStackTrace();
-									} catch (IllegalActionException e) {
-										e.printStackTrace();
-									}
+									// TODO Leave all open tables
+									// TODO Log out (via AccountListener??)
 								}
 							});
 						}
@@ -340,13 +321,7 @@ public class LobbyWindow
 				
 				@Override
 				public void shellClosed(ShellEvent evt) {
-					try {
-						clientCore.getCommunication().kill();
-					} catch (RemoteException e) {
-						e.printStackTrace();
-					} catch (IllegalActionException e) {
-						e.printStackTrace();
-					}
+				// TODO Log out (via AccountListener??)
 				}
 			});
 			this.layout();
@@ -370,41 +345,115 @@ public class LobbyWindow
 	}
 	
 	public void refreshTables() {
-		TableList tl = clientCore.getTables();
-		table1.clearAll();
-		table1.setItemCount(0);
-		for (org.cspoker.common.elements.table.Table t : tl.getTables()) {
-			GameProperty gp = t.getGameProperty();
-			TableItem item = new TableItem(table1, SWT.NONE);
-			item.setText(new String[] { t.getName(), Long.toString(t.getId().getId()),
-					ClientGUI.formatBet(gp.getSmallBlind()) + "/" + ClientGUI.formatBet(gp.getBigBlind()),
-					"Holdem No Limit", Integer.toString(t.getNbPlayers()) + "/" + gp.getMaxNbPlayers() });
+		TableList tl = getTableList();
+		availableGameTables.clearAll();
+		availableGameTables.setItemCount(0);
+		for (Table t : tl.getTables()) {
+			insertInformation(getTableInformation(t.getId()));
 		}
-	}
-	
-	@Override
-	public void onTableCreatedEvent(TableCreatedEvent event) {
-		refreshTables();
-	}
-	
-	@Override
-	public void onTableChangedEvent(TableChangedEvent event) {
-		refreshTables();
-	}
-	
-	@Override
-	public void onTableRemovedEvent(TableRemovedEvent event) {
-		refreshTables();
-	}
-	
-	@Override
-	public void onServerMessageEvent(ServerMessageEvent event) {
-		refreshTables();
 	}
 	
 	private void createTableButtonMouseDown(MouseEvent evt) {
 		System.out.println("Table creation requested ...");
 		// clientCore.createTable();
 		new TableCreationDialog(gui, clientCore).open();
+	}
+	
+	public HoldemTableListener getHoldemTableListener(long tableId) {
+		// TODO Auto-generated method stub
+		return gui.getGameWindow(tableId);
+	}
+	
+	/**
+	 * Very simply just refreshs all tables for now TODO Slim down
+	 * 
+	 * @see org.cspoker.common.api.lobby.event.LobbyListener#onTableCreated(org.cspoker.common.api.lobby.event.TableCreatedEvent)
+	 */
+	public void onTableCreated(TableCreatedEvent tableCreatedEvent) {
+		Table t = tableCreatedEvent.getTable();
+		// TODO Get detail information to display in the list from the server
+		DetailedTable detailedTable = clientCore.getTable(t);
+		
+		insertInformation(detailedTable);
+		
+	}
+	
+	private void insertInformation(DetailedTable t) {
+		TableConfiguration tInfo = t.getGameProperty();
+		TableItem item = new TableItem(availableGameTables, SWT.NONE);
+		item.setText(new String[] { t.getName(), Long.toString(t.getId()),
+				ClientGUI.formatBet(tInfo.getSmallBlind()) + "/" + ClientGUI.formatBet(tInfo.getBigBlind()),
+				"Holdem No Limit", Integer.toString(t.getNbPlayers()) + "/" + tInfo.getMaxNbPlayers() });
+		item.setData(t);
+	}
+	
+	/**
+	 * Very simply just refreshs all tables for now TODO Slim down
+	 * 
+	 * @see org.cspoker.common.api.lobby.event.LobbyListener#onTableRemoved(org.cspoker.common.api.lobby.event.TableRemovedEvent)
+	 */
+	public void onTableRemoved(TableRemovedEvent tableRemovedEvent) {
+		// Search for the table and dispose of the widget
+		for (TableItem ti : availableGameTables.getItems()) {
+			if (((Table) ti.getData()).getId() == tableRemovedEvent.getTableId().getId()) {
+				ti.dispose();
+				redraw();
+				return;
+			}
+		}
+	}
+	
+	public DetailedTable createTable(String name, TableConfiguration configuration) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	public HoldemTableContext getHoldemTableContext(long tableId) {
+		return gui.getGameWindow(tableId).getUserInputComposite();
+	}
+	
+	public DetailedTable getTableInformation(long tableId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	public TableList getTableList() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	public DetailedTable joinTable(long tableId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	public void removeTable(long tableId) {
+	// TODO Auto-generated method stub
+	
+	}
+	
+	public void subscribe(LobbyListener lobbyListener) {
+	// TODO Auto-generated method stub
+	
+	}
+	
+	public void unSubscribe(LobbyListener lobbyListener) {
+	// TODO Auto-generated method stub
+	
+	}
+	
+	public void onServerMessage(ServerMessageEvent serverMessageEvent) {
+		// TODO Show the server event maybe in the lobby as well
+		for (GameWindow openWindow : gui.gameWindows) {
+			serverMessageEvent.dispatch(openWindow.getUserInputComposite());
+		}
+		
+	}
+	
+	public void onTableMessage(TableMessageEvent tableMessageEvent) {
+		for (GameWindow openWindow : gui.gameWindows) {
+			tableMessageEvent.dispatch(openWindow.getUserInputComposite());
+		}
+		
 	}
 }

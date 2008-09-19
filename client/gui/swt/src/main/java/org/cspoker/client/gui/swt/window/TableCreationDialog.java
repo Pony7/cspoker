@@ -2,7 +2,7 @@ package org.cspoker.client.gui.swt.window;
 
 import org.cspoker.client.gui.swt.control.ClientCore;
 import org.cspoker.client.gui.swt.control.ClientGUI;
-import org.cspoker.common.elements.GameProperty;
+import org.cspoker.common.elements.table.TableConfiguration;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -132,8 +132,9 @@ public class TableCreationDialog
 					try {
 						int smallBlind = (int) ((Double.parseDouble(stakeCombo.getText().substring(0,
 								stakeCombo.getText().indexOf("/")))) * 100);
-						GameProperty gp = new GameProperty(smallBlind * 2, 2000);
-						clientCore.getCommunication().createTable(nameInput.getText(), gp);
+						TableConfiguration tConfig = new TableConfiguration(smallBlind * 2, 2000);
+						
+						clientCore.getCommunication().createTable(nameInput.getText(), tConfig);
 						getParent().close();
 					} catch (Exception e) {
 						e.printStackTrace();

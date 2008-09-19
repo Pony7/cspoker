@@ -9,10 +9,8 @@ import org.cspoker.client.gui.swt.control.CardPaintListener;
 import org.cspoker.client.gui.swt.control.ChipPaintListener;
 import org.cspoker.client.gui.swt.control.ClientGUI;
 import org.cspoker.common.elements.cards.Card;
-import org.cspoker.common.elements.table.SeatId;
-import org.cspoker.common.events.gameevents.WinnerEvent;
-import org.cspoker.common.player.SeatedPlayer;
-import org.cspoker.common.player.Winner;
+import org.cspoker.common.elements.player.Player;
+import org.cspoker.common.elements.player.Winner;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
@@ -53,12 +51,12 @@ public class TableComposite
 		setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		// Add first row, placeholder labels and player composites
 		new Label(this, SWT.NONE | ClientGUI.COMPOSITE_BORDER_STYLE).setVisible(false);
-		new PlayerSeatComposite(this, SWT.NONE | ClientGUI.COMPOSITE_BORDER_STYLE, new SeatId(0));
+		new PlayerSeatComposite(this, SWT.NONE | ClientGUI.COMPOSITE_BORDER_STYLE);
 		new Label(this, SWT.NONE | ClientGUI.COMPOSITE_BORDER_STYLE).setVisible(false);
-		new PlayerSeatComposite(this, SWT.NONE | ClientGUI.COMPOSITE_BORDER_STYLE, new SeatId(1));
+		new PlayerSeatComposite(this, SWT.NONE | ClientGUI.COMPOSITE_BORDER_STYLE);
 		new Label(this, SWT.NONE | ClientGUI.COMPOSITE_BORDER_STYLE).setVisible(false);
 		// End first row
-		new PlayerSeatComposite(this, SWT.NONE | ClientGUI.COMPOSITE_BORDER_STYLE, new SeatId(2));
+		new PlayerSeatComposite(this, SWT.NONE | ClientGUI.COMPOSITE_BORDER_STYLE);
 		new Label(this, SWT.NONE | ClientGUI.COMPOSITE_BORDER_STYLE).setVisible(false);
 		communityCardsComposite = new Composite(this, SWT.NONE | ClientGUI.COMPOSITE_BORDER_STYLE);
 		communityCardsComposite.setLayout(new GridLayout(1, true));
@@ -69,12 +67,12 @@ public class TableComposite
 		communityCardsComposite.addPaintListener(new CardPaintListener(communityCards, 5, SWT.LEFT, 10));
 		
 		new Label(this, SWT.NONE | ClientGUI.COMPOSITE_BORDER_STYLE).setVisible(false);
-		new PlayerSeatComposite(this, SWT.NONE | ClientGUI.COMPOSITE_BORDER_STYLE, new SeatId(3));
+		new PlayerSeatComposite(this, SWT.NONE | ClientGUI.COMPOSITE_BORDER_STYLE);
 		// End second row
 		new Label(this, SWT.NONE | ClientGUI.COMPOSITE_BORDER_STYLE).setVisible(false);
-		new PlayerSeatComposite(this, SWT.NONE | ClientGUI.COMPOSITE_BORDER_STYLE, new SeatId(4));
+		new PlayerSeatComposite(this, SWT.NONE | ClientGUI.COMPOSITE_BORDER_STYLE);
 		new Label(this, SWT.NONE | ClientGUI.COMPOSITE_BORDER_STYLE).setVisible(false);
-		new PlayerSeatComposite(this, SWT.NONE | ClientGUI.COMPOSITE_BORDER_STYLE, new SeatId(5));
+		new PlayerSeatComposite(this, SWT.NONE | ClientGUI.COMPOSITE_BORDER_STYLE);
 		new Label(this, SWT.NONE | ClientGUI.COMPOSITE_BORDER_STYLE).setVisible(false);
 		chipPaintListener = new ChipPaintListener(this);
 		this.addPaintListener(chipPaintListener);
@@ -88,20 +86,20 @@ public class TableComposite
 	 * @return The associated {@link PlayerSeatComposite}, or <code>null</code>,
 	 *         if the player is not at the table
 	 */
-	public PlayerSeatComposite getPlayerSeatComposite(SeatId seatId) {
+	public PlayerSeatComposite getPlayerSeatComposite(long playerId) {
 		for (PlayerSeatComposite pc : getPlayerSeatComposites()) {
-			if (pc.getSeatId().getId() == seatId.getId()) {
+			if (pc.getPlayer().getId() == playerId) {
 				return pc;
 			}
 		}
 		return null;
 	}
 	
-	void updateProgressBars(SeatedPlayer seatedPlayer) {
+	void updateProgressBars(Player seatedPlayer) {
 		for (PlayerSeatComposite pc : getPlayerSeatComposites()) {
 			pc.stopTimer();
 		}
-		getPlayerSeatComposite(seatedPlayer.getSeatId()).startTimer();
+		getPlayerSeatComposite(seatedPlayer.getId()).startTimer();
 	}
 	
 	public void moveBetsToPot() {
@@ -109,8 +107,8 @@ public class TableComposite
 		// Put it in the pot
 		// Set all player chips to 0 and redraw table
 		for (PlayerSeatComposite pc : getPlayerSeatComposites()) {
-			SeatedPlayer oldPlayer = pc.getPlayer();
-			if (oldPlayer.getBetChipsValue() > 0) {
+			
+			if (pc.getCurrentBetPile().size() != 0) {
 				chipLocList.add(pc.getBetChipsDisplayArea());
 			}
 		}
@@ -118,10 +116,6 @@ public class TableComposite
 		// TODO Make this stuff more robusto
 		animateChips(chipLocList, getPotOffset());
 		for (PlayerSeatComposite pc : getPlayerSeatComposites()) {
-			SeatedPlayer oldPlayer = pc.getPlayer();
-			if (oldPlayer == SeatedPlayer.NULL_PLAYER) {
-				continue;
-			}
 			pc.getCurrentBetPile().clear();
 			pc.betChipsArea = null;
 			potChipsDisplayArea = null;
@@ -240,13 +234,13 @@ public class TableComposite
 	
 	/**
 	 * @param gameWindow TODO
-	 * @param event
+	 * @param winners
 	 */
-	void movePotsToWinners(final WinnerEvent event) {
+	void movePotsToWinners(final Set<Winner> winners) {
 		// Ship it
-		for (Winner winner : event.getWinners()) {
-			PlayerSeatComposite winnerPC = getPlayerSeatComposite(winner.getPlayer().getSeatId());
-			winnerPC.setStack(winner.getPlayer().getStackValue() + winner.getGainedAmount());
+		for (Winner winner : winners) {
+			PlayerSeatComposite winnerPC = getPlayerSeatComposite(winner.getPlayer().getId());
+			winnerPC.setStack(winnerPC.getCurrentStack() + winner.getGainedAmount());
 			shipPot(winnerPC);
 			ClientGUI.playAudio("snd3.wav");
 		}
