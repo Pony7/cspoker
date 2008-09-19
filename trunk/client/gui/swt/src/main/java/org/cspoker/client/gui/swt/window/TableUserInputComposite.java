@@ -5,8 +5,13 @@ import java.text.ParseException;
 
 import org.cspoker.client.gui.swt.control.ClientGUI;
 import org.cspoker.client.gui.swt.control.GameState;
-import org.cspoker.common.elements.table.TableId;
-import org.cspoker.common.events.gameevents.GameEvent;
+import org.cspoker.common.api.chat.event.ChatListener;
+import org.cspoker.common.api.chat.event.ServerMessageEvent;
+import org.cspoker.common.api.chat.event.TableMessageEvent;
+import org.cspoker.common.api.lobby.holdemtable.HoldemTableContext;
+import org.cspoker.common.api.lobby.holdemtable.event.HoldemTableListener;
+import org.cspoker.common.api.lobby.holdemtable.holdemplayer.HoldemPlayerContext;
+import org.cspoker.common.api.lobby.holdemtable.holdemplayer.event.HoldemPlayerListener;
 import org.cspoker.common.exceptions.IllegalActionException;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
@@ -15,7 +20,8 @@ import org.eclipse.swt.layout.*;
 import org.eclipse.swt.widgets.*;
 
 public class TableUserInputComposite
-		extends ClientComposite {
+		extends ClientComposite
+		implements ChatListener, HoldemTableContext, HoldemPlayerContext {
 	
 	int betRaiseAmount;
 	Text betAmountTextField;
@@ -75,7 +81,7 @@ public class TableUserInputComposite
 		return gameInfoText;
 	}
 	
-	TableId getTableId() {
+	long getTableId() {
 		return gameState.getTableMemento().getId();
 	}
 	
@@ -273,11 +279,6 @@ public class TableUserInputComposite
 				+ GameState.getValue(gameState.getCurrentBetPile())));
 	}
 	
-	public void showGameEventMessage(final GameEvent event) {
-		gameInfoText.append(System.getProperty("line.separator") + event.toString());
-		gameInfoText.setTopIndex(gameInfoText.getLineCount() - 5);
-	}
-	
 	void sitInOutButtonMouseDown(MouseEvent evt) {
 		System.out.println("sitInOutButton.widgetSelected, event=" + evt);
 		try {
@@ -366,5 +367,86 @@ public class TableUserInputComposite
 				- GameState.getValue(gameState.getCurrentBetPile());
 		
 		return desiredAmount;
+	}
+	
+	public void onServerMessage(ServerMessageEvent serverMessageEvent) {
+		// Display server messages in red
+		gameInfoText.setForeground(Display.getDefault().getSystemColor(SWT.COLOR_RED));
+		gameInfoText.append(System.getProperty("line.separator") + serverMessageEvent.getPlayer() + ": "
+				+ serverMessageEvent.getMessage());
+		gameInfoText.setTopIndex(gameInfoText.getLineCount() - 5);
+		
+	}
+	
+	public void onTableMessage(TableMessageEvent tableMessageEvent) {
+		// Display standard messages in black
+		gameInfoText.setForeground(Display.getDefault().getSystemColor(SWT.COLOR_BLACK));
+		gameInfoText.append(System.getProperty("line.separator") + tableMessageEvent.getPlayer() + ": "
+				+ tableMessageEvent.getMessage());
+		gameInfoText.setTopIndex(gameInfoText.getLineCount() - 5);
+		
+	}
+	
+	/**
+	 * @return itself, this composite is the {@link HoldemPlayerContext} as well
+	 * @see org.cspoker.common.api.lobby.holdemtable.HoldemTableContext#getHoldemPlayerContext()
+	 */
+	public HoldemPlayerContext getHoldemPlayerContext() {
+		return this;
+	}
+	
+	public void leaveTable() {
+	// TODO Auto-generated method stub
+	
+	}
+	
+	public void sitIn(long seatId) {
+	// TODO Auto-generated method stub
+	
+	}
+	
+	public void startGame() {
+	// TODO Auto-generated method stub
+	
+	}
+	
+	public void subscribe(HoldemTableListener holdemTableListener) {
+	// TODO Auto-generated method stub
+	
+	}
+	
+	public void unSubscribe(HoldemTableListener holdemTableListener) {
+	// TODO Auto-generated method stub
+	
+	}
+	
+	public void betOrRaise(int amount) {
+	// TODO Auto-generated method stub
+	
+	}
+	
+	public void checkOrCall() {
+	// TODO Auto-generated method stub
+	
+	}
+	
+	public void fold() {
+	// TODO Auto-generated method stub
+	
+	}
+	
+	public void leaveGame() {
+	// TODO Auto-generated method stub
+	
+	}
+	
+	public void subscribe(HoldemPlayerListener holdemPlayerListener) {
+	// TODO Auto-generated method stub
+	
+	}
+	
+	public void unSubscribe(HoldemPlayerListener holdemPlayerListener) {
+	// TODO Auto-generated method stub
+	
 	}
 }

@@ -14,7 +14,6 @@ import org.cspoker.client.gui.swt.window.ClientComposite;
 import org.cspoker.client.gui.swt.window.GameWindow;
 import org.cspoker.client.gui.swt.window.LobbyWindow;
 import org.cspoker.client.gui.swt.window.LoginDialog;
-import org.cspoker.common.elements.table.TableId;
 import org.cspoker.common.exceptions.IllegalActionException;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
@@ -44,8 +43,10 @@ public class ClientGUI {
 	public LobbyWindow lobby;
 	public List<GameWindow> gameWindows;
 	
-	// Some of these images are copyrighted so the standard settings use free images
-	// Changes may cause errors because the respective files have not been uploaded to the repository
+	// Some of these images are copyrighted so the standard settings use free
+	// images
+	// Changes may cause errors because the respective files have not been
+	// uploaded to the repository
 	public static final String CS_POKER_ICON = "images/cspoker10.jpg";
 	public final static String SOUND_DIR = "Snd/";
 	public final static String STARS_CHIP_IMG_DIR = "images/chips/stars/";
@@ -148,9 +149,9 @@ public class ClientGUI {
 	 * @return The {@link GameWindow} for the given id, or <code>null</code> if
 	 *         it doesn't exist
 	 */
-	public GameWindow getGameWindow(TableId tableId) {
+	public GameWindow getGameWindow(long id) {
 		for (GameWindow gw : gameWindows) {
-			if (gw.getTableId().equals(tableId)) {
+			if (gw.getTableId() == id) {
 				return gw;
 			}
 		}

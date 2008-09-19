@@ -65,6 +65,10 @@ public class Chip
 		}
 	}
 	
+	/**
+	 * @param size The desired size of the image (1-6)
+	 * @return A dealer chip image
+	 */
 	public static Image getDealerChip(int size) {
 		String chipFile;
 		Image img;
@@ -88,11 +92,20 @@ public class Chip
 		return ClientGUI.formatBet(value) + " Chip ";
 	}
 	
-	@Override
+	/**
+	 * @see java.lang.Comparable#compareTo(java.lang.Object)
+	 */
 	public int compareTo(Chip o) {
 		return Integer.valueOf(getValue()).compareTo(Integer.valueOf(o.getValue()));
 	}
 	
+	/**
+	 * Example: getDistribution(32) returns {25=1, 5=1, 1=2}
+	 * 
+	 * @param amount The value of the chips
+	 * @return A "chip stack" representing the value of the given amount in
+	 *         chips
+	 */
 	public static NavigableMap<Chip, Integer> getDistribution(int amount) {
 		NavigableMap<Chip, Integer> result = new TreeMap<Chip, Integer>();
 		if (amount == 0) {

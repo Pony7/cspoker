@@ -6,11 +6,10 @@ import java.util.Map;
 import java.util.NavigableMap;
 import java.util.Map.Entry;
 
+import org.cspoker.common.elements.player.Player;
 import org.cspoker.common.elements.pots.Pots;
+import org.cspoker.common.elements.table.DetailedTable;
 import org.cspoker.common.elements.table.Table;
-import org.cspoker.common.events.gameevents.playeractionevents.ActionChangedPotEvent;
-import org.cspoker.common.events.gameevents.playeractionevents.BigBlindEvent;
-import org.cspoker.common.player.SeatedPlayer;
 
 /**
  * The game state at a table
@@ -23,7 +22,7 @@ public class GameState {
 	 * Table snapshot retrieved from the server upon initialization (for
 	 * GameProperty Info etc.)
 	 */
-	private Table tableMemento;
+	private DetailedTable tableMemento;
 	private Pots pots;
 	private List<NavigableMap<Chip, Integer>> currentBetPile = new ArrayList<NavigableMap<Chip, Integer>>();
 	
@@ -37,7 +36,7 @@ public class GameState {
 		this.moneyInMiddle = moneyInMiddle;
 	}
 	
-	private SeatedPlayer user;
+	private Player user;
 	
 	public GameState(Table table) {
 		setTableMemento(table);
@@ -48,14 +47,14 @@ public class GameState {
 	/**
 	 * @return the tableMemento
 	 */
-	public Table getTableMemento() {
+	public DetailedTable getTableMemento() {
 		return tableMemento;
 	}
 	
 	/**
 	 * @param tableMemento the tableMemento to set
 	 */
-	public void setTableMemento(Table tableMemento) {
+	public void setTableMemento(DetailedTable tableMemento) {
 		this.tableMemento = tableMemento;
 	}
 	
@@ -123,27 +122,21 @@ public class GameState {
 		return 2;
 	}
 	
-	public List<NavigableMap<Chip, Integer>> addToCurrentBetPile(ActionChangedPotEvent e) {
+	public List<NavigableMap<Chip, Integer>> addToCurrentBetPile(int amount) {
 		
-		int lastBetRaiseAmount = Math.max(0, e.getPlayer().getBetChipsValue() - getValue(currentBetPile));
-		// Draw big blind on top of small blind value
-		if (e instanceof BigBlindEvent) {
-			currentBetPile.clear();
-			currentBetPile.add(Chip.getDistribution(lastBetRaiseAmount * 2));
-		} else {
-			currentBetPile.add(Chip.getDistribution(lastBetRaiseAmount));
-		}
+		int lastBetRaiseAmount = Math.max(0, amount - getValue(currentBetPile));
+		currentBetPile.add(Chip.getDistribution(lastBetRaiseAmount));
 		
 		return currentBetPile;
 		
 	}
 	
-	public void setUser(SeatedPlayer playerToAct) {
+	public void setUser(Player playerToAct) {
 		user = playerToAct;
 		
 	}
 	
-	public SeatedPlayer getUser() {
+	public Player getUser() {
 		return user;
 	}
 }

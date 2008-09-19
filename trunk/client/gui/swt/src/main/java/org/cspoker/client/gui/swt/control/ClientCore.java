@@ -1,24 +1,23 @@
 package org.cspoker.client.gui.swt.control;
 
 import java.rmi.RemoteException;
-import java.util.ArrayList;
 
 import javax.security.auth.login.LoginException;
 
+import org.cspoker.client.User;
 import org.cspoker.client.gui.swt.window.GameWindow;
 import org.cspoker.client.gui.swt.window.LobbyWindow;
-import org.cspoker.client.user.User;
+import org.cspoker.client.gui.swt.window.LoginDialog;
 import org.cspoker.client.xml.sockets.RemotePlayerCommunicationFactoryForSocket;
-import org.cspoker.common.RemotePlayerCommunication;
-import org.cspoker.common.elements.GameProperty;
-import org.cspoker.common.elements.table.SeatId;
+import org.cspoker.common.api.account.event.AccountListener;
+import org.cspoker.common.api.cashier.event.CashierListener;
+import org.cspoker.common.api.chat.event.ChatListener;
+import org.cspoker.common.api.lobby.LobbyContext;
+import org.cspoker.common.api.lobby.event.LobbyListener;
+import org.cspoker.common.api.shared.event.ServerListener;
+import org.cspoker.common.elements.table.DetailedTable;
 import org.cspoker.common.elements.table.Table;
-import org.cspoker.common.elements.table.TableId;
-import org.cspoker.common.elements.table.TableList;
-import org.cspoker.common.eventlisteners.RemoteAllEventsListener;
-import org.cspoker.common.events.gameevents.GameEvent;
-import org.cspoker.common.events.serverevents.ServerEvent;
-import org.cspoker.common.exceptions.IllegalActionException;
+import org.cspoker.common.elements.table.TableConfiguration;
 import org.cspoker.common.util.Log4JPropertiesLoader;
 import org.eclipse.swt.widgets.Display;
 
@@ -28,7 +27,7 @@ import org.eclipse.swt.widgets.Display;
  * @author Cedric
  */
 public class ClientCore
-		implements RemoteAllEventsListener, Runnable {
+		implements ServerListener, Runnable {
 	
 	private static final User DEFAULT_TEST_USER = new User("test", "test");
 	/**
@@ -61,7 +60,7 @@ public class ClientCore
 	/**
 	 * The communication used by this client
 	 */
-	private RemotePlayerCommunication communication;
+	private LobbyContext communication;
 	
 	/***************************************************************************
 	 * Constructor
@@ -79,54 +78,6 @@ public class ClientCore
 	public ClientCore(User user) {
 		this.gui = new ClientGUI(this);
 		this.user = user;
-	}
-	
-	public void allIn(TableId tableId) {
-		try {
-			communication.allIn(tableId);
-		} catch (Exception e) {
-			gui.displayErrorMessage(e);
-		}
-	}
-	
-	public void bet(TableId tableId, int amount) {
-		try {
-			communication.bet(tableId, amount);
-		} catch (Exception e) {
-			gui.displayErrorMessage(e);
-		}
-	}
-	
-	public void raise(TableId tableId, int amount) {
-		try {
-			communication.raise(tableId, amount);
-		} catch (Exception e) {
-			gui.displayErrorMessage(e);
-		}
-	}
-	
-	/***************************************************************************
-	 * Bet
-	 **************************************************************************/
-	public void call(TableId tableId) {
-		try {
-			communication.call(tableId);
-		} catch (Exception e) {
-			try {
-				communication.check(tableId);
-			} catch (Exception e1) {
-				gui.displayErrorMessage(e);
-				e1.printStackTrace();
-			}
-		}
-	}
-	
-	public void check(TableId tableId) {
-		try {
-			communication.check(tableId);
-		} catch (Exception e) {
-			gui.displayErrorMessage(e);
-		}
 	}
 	
 	/***************************************************************************
@@ -155,11 +106,11 @@ public class ClientCore
 		return comm;
 	}
 	
-	public TableId createTable() {
+	public DetailedTable createDefaultTable() {
 		try {
 			// Generate a test table with a small blind of 5 and 2 second deal
 			// delays
-			return communication.createTable(user.getUserName() + "'s table", new GameProperty(200, 2000)).getId();
+			return communication.createTable(user.getUserName() + "'s table", new TableConfiguration(200, 2000));
 		} catch (Exception e) {
 			e.printStackTrace();
 			gui.displayErrorMessage(e);
@@ -167,75 +118,12 @@ public class ClientCore
 		}
 	}
 	
-	public void fold(TableId tableId) {
-		try {
-			communication.fold(tableId);
-		} catch (Exception e) {
-			gui.displayErrorMessage(e);
-		}
-	}
-	
-	public RemotePlayerCommunication getCommunication() {
+	public LobbyContext getCommunication() {
 		return communication;
-	}
-	
-	public TableList getTables() {
-		try {
-			return communication.getTables();
-		} catch (RemoteException e) {
-			e.printStackTrace();
-		}
-		return new TableList(new ArrayList<Table>());
 	}
 	
 	public User getUser() {
 		return user;
-	}
-	
-	public Table joinTable(TableId id, int buyin) {
-		Table t = null;
-		// Leave current table (if necessary)
-		try {
-			communication.leaveTable(id);
-		} catch (RemoteException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalActionException e2) {
-			// Ignore, does not matter
-		}
-		try {
-			t = communication.joinTable(id, null, buyin);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return t;
-	}
-	
-	public Table joinTable(TableId id, SeatId seatId, int buyin) {
-		Table t = null;
-		// Leave current table (if necessary)
-		try {
-			communication.leaveTable(id);
-		} catch (RemoteException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalActionException e2) {
-			// Ignore, does not matter
-		}
-		try {
-			t = communication.joinTable(id, seatId, buyin);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return t;
-	}
-	
-	public void leaveTable(TableId tableId) {
-		try {
-			communication.leaveTable(tableId);
-		} catch (Exception e) {
-			gui.displayErrorMessage(e);
-		}
 	}
 	
 	public void login(String serverUrl)
@@ -262,33 +150,13 @@ public class ClientCore
 		});
 	}
 	
-	@Override
-	public void onServerEvent(final ServerEvent event)
-			throws RemoteException {
-		Display.getDefault().asyncExec(new Runnable() {
-			
-			public void run() {
-				try {
-					event.dispatch(gui.lobby);
-				} catch (RemoteException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-	
-	@Override
+	/**
+	 * Starts the CSPoker SWT Client by opening a new {@link LoginDialog}
+	 * 
+	 * @see java.lang.Runnable#run()
+	 */
 	public void run() {
 		gui.createNewLoginDialog().open();
-	}
-	
-	public void say(TableId tableId, String message) {
-		try {
-			communication.say(tableId, message);
-		} catch (Exception e) {
-			gui.displayErrorMessage(e);
-		}
 	}
 	
 	/**
@@ -296,14 +164,6 @@ public class ClientCore
 	 */
 	public void setUser(User user) {
 		this.user = user;
-	}
-	
-	public void startGame(TableId tableId) {
-		try {
-			communication.startGame(tableId);
-		} catch (Exception e) {
-			gui.displayErrorMessage(e);
-		}
 	}
 	
 	/***************************************************************************
@@ -328,5 +188,28 @@ public class ClientCore
 	
 	public ClientGUI getGui() {
 		return gui;
+	}
+	
+	public AccountListener getAccountListener() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	public CashierListener getCashierListener() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	public ChatListener getChatListener() {
+		return gui.lobby;
+	}
+	
+	public LobbyListener getLobbyListener() {
+		return gui.lobby;
+	}
+	
+	public DetailedTable getTable(Table t) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
