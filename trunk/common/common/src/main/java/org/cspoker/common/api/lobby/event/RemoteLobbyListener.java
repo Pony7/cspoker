@@ -13,32 +13,18 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.common.api.cashier;
+package org.cspoker.common.api.lobby.event;
 
-import org.cspoker.common.api.cashier.event.RemoteCashierListener;
+import java.rmi.RemoteException;
 
-public class DelegatingCashierContext implements CashierContext{
+import org.cspoker.common.api.lobby.holdemtable.event.HoldemTableListener;
 
-	private final CashierContext cashierContext;
+public interface RemoteLobbyListener{
 
-	public DelegatingCashierContext(CashierContext cashierContext) {
-		this.cashierContext  = cashierContext;
-	}
+	HoldemTableListener getHoldemTableListener(long tableId) throws RemoteException;
 
-	public int getMoneyAmount() {
-		return cashierContext.getMoneyAmount();
-	}
+	void onTableCreated(TableCreatedEvent tableCreatedEvent) throws RemoteException;
 
-	public void requestMoney() {
-		cashierContext.requestMoney();
-	}
-
-	public void subscribe(RemoteCashierListener cashierListener) {
-		cashierContext.subscribe(cashierListener);
-	}
-
-	public void unSubscribe(RemoteCashierListener cashierListener) {
-		cashierContext.unSubscribe(cashierListener);
-	}
+	void onTableRemoved(TableRemovedEvent tableRemovedEvent) throws RemoteException;
 	
 }

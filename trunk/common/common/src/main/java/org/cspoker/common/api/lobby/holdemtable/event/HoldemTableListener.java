@@ -16,9 +16,8 @@
 package org.cspoker.common.api.lobby.holdemtable.event;
 
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.event.HoldemPlayerListener;
-import org.cspoker.common.api.lobby.holdemtable.holdemplayer.event.NewPocketCardsEvent;
 
-public interface HoldemTableListener {
+public interface HoldemTableListener extends RemoteHoldemTableListener {
 
 	HoldemPlayerListener getHoldemPlayerListener();
 
@@ -51,7 +50,5 @@ public interface HoldemTableListener {
 	void onSmallBlind(SmallBlindEvent smallBlindEvent);
 
 	void onWinner(WinnerEvent winnerEvent);
-
-	void onNewPocketCards(NewPocketCardsEvent newPocketCardsEvent);
 	
 }

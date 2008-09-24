@@ -22,12 +22,10 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.cspoker.common.api.lobby.holdemtable.event.HoldemTableEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.HoldemTableListener;
 import org.cspoker.common.elements.cards.Card;
 
 @XmlRootElement
-public class NewPocketCardsEvent implements HoldemTableEvent {
+public class NewPocketCardsEvent extends HoldemPlayerEvent {
 
 	private static final long serialVersionUID = -3328895783353781276L;
 
@@ -56,8 +54,8 @@ public class NewPocketCardsEvent implements HoldemTableEvent {
 		return toReturn.substring(0, toReturn.length() - 2) + ".";
 	}
 	
-	public void dispatch(HoldemTableListener holdemTableListener) {
-		holdemTableListener.onNewPocketCards(this);
+	public void dispatch(HoldemPlayerListener holdemPlayerListener) {
+		holdemPlayerListener.onNewPocketCards(this);
 	}
 	
 }

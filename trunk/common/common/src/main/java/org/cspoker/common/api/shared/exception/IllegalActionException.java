@@ -13,32 +13,19 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.common.api.cashier;
 
-import org.cspoker.common.api.cashier.event.RemoteCashierListener;
+package org.cspoker.common.api.shared.exception;
 
-public class DelegatingCashierContext implements CashierContext{
 
-	private final CashierContext cashierContext;
+/**
+ * Thrown to indicate that the tried action is not a valid action.
+ * 
+ */
+public class IllegalActionException extends Exception {
 
-	public DelegatingCashierContext(CashierContext cashierContext) {
-		this.cashierContext  = cashierContext;
+	private static final long serialVersionUID = -5675804638273023229L;
+
+	public IllegalActionException(String message) {
+		super(message);
 	}
-
-	public int getMoneyAmount() {
-		return cashierContext.getMoneyAmount();
-	}
-
-	public void requestMoney() {
-		cashierContext.requestMoney();
-	}
-
-	public void subscribe(RemoteCashierListener cashierListener) {
-		cashierContext.subscribe(cashierListener);
-	}
-
-	public void unSubscribe(RemoteCashierListener cashierListener) {
-		cashierContext.unSubscribe(cashierListener);
-	}
-	
 }

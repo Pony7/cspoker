@@ -15,9 +15,9 @@
  */
 package org.cspoker.common.api.lobby.holdemtable.holdemplayer;
 
-import org.cspoker.common.api.lobby.holdemtable.holdemplayer.event.HoldemPlayerListener;
+import org.cspoker.common.api.lobby.holdemtable.holdemplayer.event.RemoteHoldemPlayerListener;
 
-public interface HoldemPlayerContext {
+public interface HoldemPlayerContext extends RemoteHoldemPlayerContext{
 	
 	//Actions
 	
@@ -31,8 +31,8 @@ public interface HoldemPlayerContext {
 
 	//Event handlers
 	
-	void subscribe(HoldemPlayerListener holdemPlayerListener);
+	void subscribe(RemoteHoldemPlayerListener holdemPlayerListener);
 	
-	void unSubscribe(HoldemPlayerListener holdemPlayerListener);
+	void unSubscribe(RemoteHoldemPlayerListener holdemPlayerListener);
 
 }

@@ -13,32 +13,31 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.common.api.cashier;
+package org.cspoker.common.api.lobby.holdemtable;
 
-import org.cspoker.common.api.cashier.event.RemoteCashierListener;
+import java.rmi.RemoteException;
 
-public class DelegatingCashierContext implements CashierContext{
+import org.cspoker.common.api.lobby.holdemtable.event.RemoteHoldemTableListener;
+import org.cspoker.common.api.lobby.holdemtable.holdemplayer.RemoteHoldemPlayerContext;
 
-	private final CashierContext cashierContext;
+public interface RemoteHoldemTableContext {
 
-	public DelegatingCashierContext(CashierContext cashierContext) {
-		this.cashierContext  = cashierContext;
-	}
+	//Actions
+	
+	void leaveTable() throws RemoteException;
 
-	public int getMoneyAmount() {
-		return cashierContext.getMoneyAmount();
-	}
+	void sitIn(long seatId) throws RemoteException;
 
-	public void requestMoney() {
-		cashierContext.requestMoney();
-	}
+	void startGame() throws RemoteException;
 
-	public void subscribe(RemoteCashierListener cashierListener) {
-		cashierContext.subscribe(cashierListener);
-	}
-
-	public void unSubscribe(RemoteCashierListener cashierListener) {
-		cashierContext.unSubscribe(cashierListener);
-	}
+	//Sub-Contexts
+	
+	RemoteHoldemPlayerContext getHoldemPlayerContext() throws RemoteException;
+	
+	//Event handlers
+	
+	void subscribe(RemoteHoldemTableListener holdemTableListener) throws RemoteException;
+	
+	void unSubscribe(RemoteHoldemTableListener holdemTableListener) throws RemoteException;
 	
 }

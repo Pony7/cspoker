@@ -19,8 +19,7 @@ import org.cspoker.common.api.account.AccountContext;
 import org.cspoker.common.api.cashier.CashierContext;
 import org.cspoker.common.api.chat.ChatContext;
 import org.cspoker.common.api.lobby.LobbyContext;
-import org.cspoker.common.api.shared.ServerContext;
-import org.cspoker.common.api.shared.event.ServerListener;
+import org.cspoker.common.api.shared.event.RemoteServerListener;
 
 public class DelegatingServerContext implements ServerContext {
 
@@ -46,11 +45,11 @@ public class DelegatingServerContext implements ServerContext {
 		return serverContext.getLobbyContext();
 	}
 
-	public void subscribe(ServerListener serverListener) {
+	public void subscribe(RemoteServerListener serverListener) {
 		serverContext.subscribe(serverListener);
 	}
 
-	public void unSubscribe(ServerListener serverListener) {
+	public void unSubscribe(RemoteServerListener serverListener) {
 		serverContext.unSubscribe(serverListener);
 	}
 

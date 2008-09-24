@@ -16,6 +16,6 @@
 package org.cspoker.common.api.cashier.event;
 
 
-public interface CashierListener{
+public interface CashierListener extends RemoteCashierListener {
 	
 }

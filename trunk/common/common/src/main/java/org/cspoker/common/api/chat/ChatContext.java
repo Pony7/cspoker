@@ -15,15 +15,15 @@
  */
 package org.cspoker.common.api.chat;
 
-import org.cspoker.common.api.chat.event.ChatListener;
+import org.cspoker.common.api.chat.event.RemoteChatListener;
 
-public interface ChatContext {
+public interface ChatContext extends RemoteChatContext {
 
 	void sendServerMessage(String message);
 	
 	void sendTableMessage(long tableId, String message);
 
-	void subscribe(ChatListener chatListener);
+	void subscribe(RemoteChatListener chatListener);
 	
-	void unSubscribe(ChatListener chatListener);
+	void unSubscribe(RemoteChatListener chatListener);
 }

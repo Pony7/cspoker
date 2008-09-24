@@ -15,10 +15,10 @@
  */
 package org.cspoker.common.api.lobby.holdemtable;
 
-import org.cspoker.common.api.lobby.holdemtable.event.HoldemTableListener;
+import org.cspoker.common.api.lobby.holdemtable.event.RemoteHoldemTableListener;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.HoldemPlayerContext;
 
-public interface HoldemTableContext {
+public interface HoldemTableContext extends RemoteHoldemTableContext{
 
 	//Actions
 	
@@ -34,8 +34,8 @@ public interface HoldemTableContext {
 	
 	//Event handlers
 	
-	void subscribe(HoldemTableListener holdemTableListener);
+	void subscribe(RemoteHoldemTableListener holdemTableListener);
 	
-	void unSubscribe(HoldemTableListener holdemTableListener);
+	void unSubscribe(RemoteHoldemTableListener holdemTableListener);
 	
 }

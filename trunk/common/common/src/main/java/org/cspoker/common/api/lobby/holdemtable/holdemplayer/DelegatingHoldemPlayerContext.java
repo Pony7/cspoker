@@ -15,7 +15,7 @@
  */
 package org.cspoker.common.api.lobby.holdemtable.holdemplayer;
 
-import org.cspoker.common.api.lobby.holdemtable.holdemplayer.event.HoldemPlayerListener;
+import org.cspoker.common.api.lobby.holdemtable.holdemplayer.event.RemoteHoldemPlayerListener;
 
 public class DelegatingHoldemPlayerContext implements HoldemPlayerContext{
 
@@ -41,11 +41,11 @@ public class DelegatingHoldemPlayerContext implements HoldemPlayerContext{
 		holdemPlayerContext.leaveGame();
 	}
 
-	public void subscribe(HoldemPlayerListener holdemPlayerListener) {
+	public void subscribe(RemoteHoldemPlayerListener holdemPlayerListener) {
 		holdemPlayerContext.subscribe(holdemPlayerListener);
 	}
 
-	public void unSubscribe(HoldemPlayerListener holdemPlayerListener) {
+	public void unSubscribe(RemoteHoldemPlayerListener holdemPlayerListener) {
 		holdemPlayerContext.unSubscribe(holdemPlayerListener);
 	}
 	
