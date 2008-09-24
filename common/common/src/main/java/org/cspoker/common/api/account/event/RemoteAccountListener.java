@@ -13,32 +13,9 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.common.api.cashier;
+package org.cspoker.common.api.account.event;
 
-import org.cspoker.common.api.cashier.event.RemoteCashierListener;
 
-public class DelegatingCashierContext implements CashierContext{
-
-	private final CashierContext cashierContext;
-
-	public DelegatingCashierContext(CashierContext cashierContext) {
-		this.cashierContext  = cashierContext;
-	}
-
-	public int getMoneyAmount() {
-		return cashierContext.getMoneyAmount();
-	}
-
-	public void requestMoney() {
-		cashierContext.requestMoney();
-	}
-
-	public void subscribe(RemoteCashierListener cashierListener) {
-		cashierContext.subscribe(cashierListener);
-	}
-
-	public void unSubscribe(RemoteCashierListener cashierListener) {
-		cashierContext.unSubscribe(cashierListener);
-	}
+public interface RemoteAccountListener{
 	
 }

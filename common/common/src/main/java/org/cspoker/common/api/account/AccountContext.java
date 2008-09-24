@@ -15,9 +15,9 @@
  */
 package org.cspoker.common.api.account;
 
-import org.cspoker.common.api.account.event.AccountListener;
+import org.cspoker.common.api.account.event.RemoteAccountListener;
 
-public interface AccountContext {
+public interface AccountContext extends RemoteAccountContext{
 
 	void changePassword(String passwordHash);
 	
@@ -27,7 +27,7 @@ public interface AccountContext {
 	
 	void setAvatar(byte[] avatar);
 	
-	void subscribe(AccountListener accountListener);
+	void subscribe(RemoteAccountListener accountListener);
 	
-	void unSubscribe(AccountListener accountListener);
+	void unSubscribe(RemoteAccountListener accountListener);
 }

@@ -20,7 +20,7 @@ import org.cspoker.common.api.cashier.event.CashierListener;
 import org.cspoker.common.api.chat.event.ChatListener;
 import org.cspoker.common.api.lobby.event.LobbyListener;
 
-public interface ServerListener {
+public interface ServerListener extends RemoteServerListener {
 
 	AccountListener getAccountListener();
 	CashierListener getCashierListener();

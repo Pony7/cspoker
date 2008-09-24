@@ -15,33 +15,35 @@
  */
 package org.cspoker.common.api.lobby;
 
+import java.rmi.RemoteException;
+
 import org.cspoker.common.api.lobby.event.RemoteLobbyListener;
-import org.cspoker.common.api.lobby.holdemtable.HoldemTableContext;
+import org.cspoker.common.api.lobby.holdemtable.RemoteHoldemTableContext;
 import org.cspoker.common.elements.table.DetailedTable;
 import org.cspoker.common.elements.table.TableConfiguration;
 import org.cspoker.common.elements.table.TableList;
 
-public interface LobbyContext extends RemoteLobbyContext{
+public interface RemoteLobbyContext {
 
 	//Actions
 	
-	DetailedTable joinTable(long tableId);
+	DetailedTable joinTable(long tableId) throws RemoteException;
 
-	DetailedTable createTable(String name, TableConfiguration configuration);
+	DetailedTable createTable(String name, TableConfiguration configuration) throws RemoteException;
 
-	DetailedTable getTableInformation(long tableId);
+	DetailedTable getTableInformation(long tableId) throws RemoteException;
 
-	TableList getTableList();
+	TableList getTableList() throws RemoteException;
 
-	void removeTable(long tableId);
+	void removeTable(long tableId) throws RemoteException;
 	
 	//Sub-Contexts
 
-	HoldemTableContext getHoldemTableContext(long tableId);
+	RemoteHoldemTableContext getHoldemTableContext(long tableId) throws RemoteException;
 	
 	//Event handlers
 	
-	void subscribe(RemoteLobbyListener lobbyListener);
+	void subscribe(RemoteLobbyListener lobbyListener) throws RemoteException;
 	
-	void unSubscribe(RemoteLobbyListener lobbyListener);
+	void unSubscribe(RemoteLobbyListener lobbyListener) throws RemoteException;
 }

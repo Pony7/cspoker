@@ -16,12 +16,10 @@
 package org.cspoker.common.api.chat.event;
 
 
-public interface ChatListener{
+public interface ChatListener extends RemoteChatListener{
 
 	void onTableMessage(TableMessageEvent tableMessageEvent);
 
 	void onServerMessage(ServerMessageEvent serverMessageEvent);
 
-	
-	
 }

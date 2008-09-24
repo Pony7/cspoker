@@ -15,30 +15,17 @@
  */
 package org.cspoker.common.api.cashier;
 
+import java.rmi.RemoteException;
+
 import org.cspoker.common.api.cashier.event.RemoteCashierListener;
 
-public class DelegatingCashierContext implements CashierContext{
+public interface RemoteCashierContext {
 
-	private final CashierContext cashierContext;
-
-	public DelegatingCashierContext(CashierContext cashierContext) {
-		this.cashierContext  = cashierContext;
-	}
-
-	public int getMoneyAmount() {
-		return cashierContext.getMoneyAmount();
-	}
-
-	public void requestMoney() {
-		cashierContext.requestMoney();
-	}
-
-	public void subscribe(RemoteCashierListener cashierListener) {
-		cashierContext.subscribe(cashierListener);
-	}
-
-	public void unSubscribe(RemoteCashierListener cashierListener) {
-		cashierContext.unSubscribe(cashierListener);
-	}
+	int getMoneyAmount() throws RemoteException;
 	
+	void requestMoney() throws RemoteException;
+
+	void subscribe(RemoteCashierListener cashierListener) throws RemoteException;
+	
+	void unSubscribe(RemoteCashierListener cashierListener) throws RemoteException;
 }

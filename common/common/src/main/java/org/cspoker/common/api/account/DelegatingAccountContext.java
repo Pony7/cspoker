@@ -15,7 +15,7 @@
  */
 package org.cspoker.common.api.account;
 
-import org.cspoker.common.api.account.event.AccountListener;
+import org.cspoker.common.api.account.event.RemoteAccountListener;
 
 public class DelegatingAccountContext implements AccountContext{
 
@@ -41,13 +41,12 @@ public class DelegatingAccountContext implements AccountContext{
 		accountContext.setAvatar(avatar);
 	}
 
-	public void subscribe(AccountListener accountListener) {
+	public void subscribe(RemoteAccountListener accountListener) {
 		accountContext.subscribe(accountListener);
 	}
 
-	public void unSubscribe(AccountListener accountListener) {
+	public void unSubscribe(RemoteAccountListener accountListener) {
 		accountContext.unSubscribe(accountListener);
 	}
-	
 	
 }

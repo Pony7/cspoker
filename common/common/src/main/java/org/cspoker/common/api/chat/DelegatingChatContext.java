@@ -15,7 +15,7 @@
  */
 package org.cspoker.common.api.chat;
 
-import org.cspoker.common.api.chat.event.ChatListener;
+import org.cspoker.common.api.chat.event.RemoteChatListener;
 
 public class DelegatingChatContext implements ChatContext{
 
@@ -33,11 +33,11 @@ public class DelegatingChatContext implements ChatContext{
 		chatContext.sendTableMessage(tableId, message);
 	}
 
-	public void subscribe(ChatListener chatListener) {
+	public void subscribe(RemoteChatListener chatListener) {
 		chatContext.subscribe(chatListener);
 	}
 
-	public void unSubscribe(ChatListener chatListener) {
+	public void unSubscribe(RemoteChatListener chatListener) {
 		chatContext.unSubscribe(chatListener);
 	}
 	

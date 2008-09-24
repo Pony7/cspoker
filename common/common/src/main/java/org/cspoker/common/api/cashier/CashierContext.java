@@ -15,15 +15,15 @@
  */
 package org.cspoker.common.api.cashier;
 
-import org.cspoker.common.api.cashier.event.CashierListener;
+import org.cspoker.common.api.cashier.event.RemoteCashierListener;
 
-public interface CashierContext {
+public interface CashierContext extends RemoteCashierContext{
 
 	int getMoneyAmount();
 	
 	void requestMoney();
 
-	void subscribe(CashierListener cashierListener);
+	void subscribe(RemoteCashierListener cashierListener);
 	
-	void unSubscribe(CashierListener cashierListener);
+	void unSubscribe(RemoteCashierListener cashierListener);
 }

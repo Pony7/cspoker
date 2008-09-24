@@ -13,32 +13,23 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.common.api.cashier;
+package org.cspoker.common.api.account;
 
-import org.cspoker.common.api.cashier.event.RemoteCashierListener;
+import java.rmi.RemoteException;
 
-public class DelegatingCashierContext implements CashierContext{
+import org.cspoker.common.api.account.event.RemoteAccountListener;
 
-	private final CashierContext cashierContext;
+public interface RemoteAccountContext {
 
-	public DelegatingCashierContext(CashierContext cashierContext) {
-		this.cashierContext  = cashierContext;
-	}
-
-	public int getMoneyAmount() {
-		return cashierContext.getMoneyAmount();
-	}
-
-	public void requestMoney() {
-		cashierContext.requestMoney();
-	}
-
-	public void subscribe(RemoteCashierListener cashierListener) {
-		cashierContext.subscribe(cashierListener);
-	}
-
-	public void unSubscribe(RemoteCashierListener cashierListener) {
-		cashierContext.unSubscribe(cashierListener);
-	}
+	void changePassword(String passwordHash) throws RemoteException;
 	
+	void createAccount(String username, String passwordHash) throws RemoteException;
+	
+	byte[] getAvatar(long playerId) throws RemoteException;
+	
+	void setAvatar(byte[] avatar) throws RemoteException;
+	
+	void subscribe(RemoteAccountListener accountListener) throws RemoteException;
+	
+	void unSubscribe(RemoteAccountListener accountListener) throws RemoteException;
 }

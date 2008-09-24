@@ -21,7 +21,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 import org.cspoker.common.api.shared.action.Action;
-import org.cspoker.common.exceptions.IllegalActionException;
+import org.cspoker.common.api.shared.exception.IllegalActionException;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)

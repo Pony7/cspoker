@@ -15,23 +15,25 @@
  */
 package org.cspoker.common.api.shared;
 
-import org.cspoker.common.api.account.AccountContext;
-import org.cspoker.common.api.cashier.CashierContext;
-import org.cspoker.common.api.chat.ChatContext;
-import org.cspoker.common.api.lobby.LobbyContext;
+import java.rmi.RemoteException;
+
+import org.cspoker.common.api.account.RemoteAccountContext;
+import org.cspoker.common.api.cashier.RemoteCashierContext;
+import org.cspoker.common.api.chat.RemoteChatContext;
+import org.cspoker.common.api.lobby.RemoteLobbyContext;
 import org.cspoker.common.api.shared.event.RemoteServerListener;
 
-public interface ServerContext extends RemoteServerContext{
+public interface RemoteServerContext {
 
-	AccountContext getAccountContext();
+	RemoteAccountContext getAccountContext() throws RemoteException;
 	
-	CashierContext getCashierContext();
+	RemoteCashierContext getCashierContext() throws RemoteException;
 	
-	ChatContext getChatContext();
+	RemoteChatContext getChatContext() throws RemoteException;
 
-	LobbyContext getLobbyContext();
+	RemoteLobbyContext getLobbyContext() throws RemoteException;
 	
-	void subscribe(RemoteServerListener serverListener);
+	void subscribe(RemoteServerListener serverListener) throws RemoteException;
 	
-	void unSubscribe(RemoteServerListener serverListener);
+	void unSubscribe(RemoteServerListener serverListener) throws RemoteException;
 }

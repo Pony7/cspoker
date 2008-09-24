@@ -18,6 +18,7 @@ package org.cspoker.common.util;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
@@ -25,27 +26,32 @@ import org.apache.log4j.PropertyConfigurator;
 public final class Log4JPropertiesLoader {
 
 	private static Logger logger = Logger
-			.getLogger(Log4JPropertiesLoader.class);
+	.getLogger(Log4JPropertiesLoader.class);
+
+	private static AtomicBoolean loaded = new AtomicBoolean(false);
 
 	public static void load(String path) {
-		Properties properties = new Properties();
-		try {
-			InputStream is = ClassLoader.getSystemClassLoader()
-					.getResourceAsStream(path);
-			properties.load(is);
-		} catch (final IOException e) {
-			// logger will log to the default logger and write a warning to the
-			// error stream?
-			logger.error("Could not load log4j properties. " + e.getMessage(),
-					e);
-			e.printStackTrace();
-		} catch (final NullPointerException e) {
-			// logger will log to the default logger and write a warning to the
-			// error stream?
-			logger.error("Could not load log4j properties. " + e.getMessage(),
-					e);
-			e.printStackTrace();
+		if(loaded.compareAndSet(false, true)){
+			System.out.println("Yes");
+			Properties properties = new Properties();
+			try {
+				InputStream is = ClassLoader.getSystemClassLoader()
+				.getResourceAsStream(path);
+				properties.load(is);
+			} catch (final IOException e) {
+				// logger will log to the default logger and write a warning to the
+				// error stream?
+				logger.error("Could not load log4j properties. " + e.getMessage(),
+						e);
+				e.printStackTrace();
+			} catch (final NullPointerException e) {
+				// logger will log to the default logger and write a warning to the
+				// error stream?
+				logger.error("Could not load log4j properties. " + e.getMessage(),
+						e);
+				e.printStackTrace();
+			}
+			PropertyConfigurator.configure(properties);
 		}
-		PropertyConfigurator.configure(properties);
 	}
 }

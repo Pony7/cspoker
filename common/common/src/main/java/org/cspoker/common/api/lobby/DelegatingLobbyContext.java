@@ -15,7 +15,7 @@
  */
 package org.cspoker.common.api.lobby;
 
-import org.cspoker.common.api.lobby.event.LobbyListener;
+import org.cspoker.common.api.lobby.event.RemoteLobbyListener;
 import org.cspoker.common.api.lobby.holdemtable.HoldemTableContext;
 import org.cspoker.common.elements.table.DetailedTable;
 import org.cspoker.common.elements.table.TableConfiguration;
@@ -55,14 +55,12 @@ public class DelegatingLobbyContext implements LobbyContext{
 		lobbyContext.removeTable(tableId);
 	}
 
-	public void subscribe(LobbyListener lobbyListener) {
+	public void subscribe(RemoteLobbyListener lobbyListener) {
 		lobbyContext.subscribe(lobbyListener);
 	}
 
-	public void unSubscribe(LobbyListener lobbyListener) {
+	public void unSubscribe(RemoteLobbyListener lobbyListener) {
 		lobbyContext.unSubscribe(lobbyListener);
 	}
-	
-	
 	
 }
