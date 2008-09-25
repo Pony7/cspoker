@@ -15,8 +15,8 @@
  */
 package org.cspoker.server.common.game.playercommunication;
 
+import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.events.gameevents.GameMessageEvent;
-import org.cspoker.common.exceptions.IllegalActionException;
 import org.cspoker.server.common.game.GameManager;
 import org.cspoker.server.common.game.GameMediator;
 

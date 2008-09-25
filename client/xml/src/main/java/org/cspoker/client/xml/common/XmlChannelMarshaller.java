@@ -22,8 +22,8 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
 import org.apache.log4j.Logger;
+import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.eventlisteners.RemoteAllEventsListener;
-import org.cspoker.common.exceptions.IllegalActionException;
 import org.cspoker.common.jaxbcontext.ActionJAXBContext;
 import org.cspoker.common.xml.actions.Action;
 

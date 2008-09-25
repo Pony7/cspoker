@@ -26,6 +26,7 @@ import org.cspoker.client.rmi.RemotePlayerCommunicationFactoryForRMI;
 import org.cspoker.client.xml.http.RemotePlayerCommunicationFactoryForHttp;
 import org.cspoker.client.xml.sockets.RemotePlayerCommunicationFactoryForSocket;
 import org.cspoker.common.RemotePlayerCommunication;
+import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.GameProperty;
 import org.cspoker.common.elements.cards.Card;
 import org.cspoker.common.elements.player.SeatedPlayer;
@@ -33,7 +34,6 @@ import org.cspoker.common.elements.player.Winner;
 import org.cspoker.common.elements.table.DetailedTable;
 import org.cspoker.common.elements.table.DetailedTable;
 import org.cspoker.common.eventlisteners.RemoteAllEventsListener;
-import org.cspoker.common.exceptions.IllegalActionException;
 import org.cspoker.common.util.Log4JPropertiesLoader;
 
 public class JavaFxClient {

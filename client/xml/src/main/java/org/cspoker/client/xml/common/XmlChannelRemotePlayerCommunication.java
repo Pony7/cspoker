@@ -22,13 +22,13 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.cspoker.common.RemotePlayerCommunication;
+import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.GameProperty;
 import org.cspoker.common.elements.table.SeatId;
 import org.cspoker.common.elements.table.DetailedTable;
 import org.cspoker.common.elements.table.DetailedTable;
 import org.cspoker.common.elements.table.TableList;
 import org.cspoker.common.eventlisteners.RemoteAllEventsListener;
-import org.cspoker.common.exceptions.IllegalActionException;
 import org.cspoker.common.util.DelegatingRemoteAllEventsListener;
 import org.cspoker.common.xml.actions.KillAction;
 import org.cspoker.common.xml.actions.chat.SendServerMessageAction;

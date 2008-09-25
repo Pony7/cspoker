@@ -13,33 +13,24 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.server.rmi;
+package org.cspoker.server.rmi.listener;
 
-import org.cspoker.common.api.lobby.DelegatingLobbyContext;
-import org.cspoker.common.api.lobby.LobbyContext;
-import org.cspoker.common.api.lobby.event.LobbyListener;
-import org.cspoker.common.api.lobby.holdemtable.HoldemTableContext;
+import java.util.concurrent.Executor;
 
-public class AsynchronousLobbyContext extends DelegatingLobbyContext {
+import org.cspoker.common.api.account.event.RemoteAccountListener;
+import org.cspoker.common.api.shared.ServerContext;
 
-	public AsynchronousLobbyContext(LobbyContext lobbyContext) {
-		super(lobbyContext);
+public class AsynchronousAccountListener extends AsynchronousListener implements RemoteAccountListener{
+
+	private final RemoteAccountListener accountListener;
+
+	public AsynchronousAccountListener(ServerContext serverContext, Executor executor, RemoteAccountListener accountListener) {
+		super(serverContext, executor);
+		this.accountListener = accountListener;
 	}
-	
-	@Override
-	public HoldemTableContext getHoldemTableContext(long tableId) {
-		return null;
-		//TODO
-	}
-	
-	@Override
-	public void subscribe(LobbyListener lobbyListener) {
-		//TODO
-	}
-	
-	@Override
-	public void unSubscribe(LobbyListener lobbyListener) {
-		//TODO
+
+	public RemoteAccountListener getAccountListener() {
+		return accountListener;
 	}
 	
 }

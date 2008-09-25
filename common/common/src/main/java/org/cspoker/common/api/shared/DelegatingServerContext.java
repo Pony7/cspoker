@@ -53,4 +53,8 @@ public class DelegatingServerContext implements ServerContext {
 		serverContext.unSubscribe(serverListener);
 	}
 
+	public void die() {
+		serverContext.die();
+	}
+
 }

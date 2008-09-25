@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
+import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.pots.Pots;
 import org.cspoker.common.elements.table.SeatId;
 import org.cspoker.common.elements.table.TableId;
@@ -35,7 +36,6 @@ import org.cspoker.common.events.gameevents.playeractionevents.CheckEvent;
 import org.cspoker.common.events.gameevents.playeractionevents.FoldEvent;
 import org.cspoker.common.events.gameevents.playeractionevents.RaiseEvent;
 import org.cspoker.common.events.serverevents.TableRemovedEvent;
-import org.cspoker.common.exceptions.IllegalActionException;
 import org.cspoker.common.player.SeatedPlayer;
 import org.cspoker.server.common.game.GameManager;
 import org.cspoker.server.common.game.GameMediator;

@@ -15,10 +15,10 @@
  */
 package org.cspoker.server.common.game.playercommunication;
 
+import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.table.TableId;
 import org.cspoker.common.events.gameevents.PlayerLeftTableEvent;
 import org.cspoker.common.events.serverevents.TableChangedEvent;
-import org.cspoker.common.exceptions.IllegalActionException;
 import org.cspoker.common.player.PlayerId;
 import org.cspoker.common.player.SeatedPlayer;
 import org.cspoker.server.common.game.GameManager;
