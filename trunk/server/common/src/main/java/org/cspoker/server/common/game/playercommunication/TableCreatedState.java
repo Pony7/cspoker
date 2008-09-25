@@ -16,11 +16,11 @@
 package org.cspoker.server.common.game.playercommunication;
 
 import org.apache.log4j.Logger;
+import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.table.SeatId;
 import org.cspoker.common.elements.table.DetailedTable;
 import org.cspoker.common.elements.table.DetailedTable;
 import org.cspoker.common.events.serverevents.TableRemovedEvent;
-import org.cspoker.common.exceptions.IllegalActionException;
 import org.cspoker.common.player.PlayerId;
 import org.cspoker.server.common.game.GameManager;
 import org.cspoker.server.common.game.GameMediator;

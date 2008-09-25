@@ -13,26 +13,25 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.server.rmi;
+package org.cspoker.server.rmi.listener;
 
-import org.cspoker.common.api.cashier.CashierContext;
-import org.cspoker.common.api.cashier.DelegatingCashierContext;
+import java.util.concurrent.Executor;
+
 import org.cspoker.common.api.cashier.event.CashierListener;
+import org.cspoker.common.api.cashier.event.RemoteCashierListener;
+import org.cspoker.common.api.shared.ServerContext;
 
-public class AsynchronousCashierContext extends DelegatingCashierContext {
+public class AsynchronousCashierListener extends AsynchronousListener implements CashierListener{
 
-	public AsynchronousCashierContext(CashierContext cashierContext) {
-		super(cashierContext);
+	private final RemoteCashierListener cashierListener;
+
+	public AsynchronousCashierListener(ServerContext serverContext, Executor executor, RemoteCashierListener cashierListener) {
+		super(serverContext, executor);
+		this.cashierListener = cashierListener;
 	}
-	
-	@Override
-	public void subscribe(CashierListener cashierListener) {
-		//TODO
-	}
-	
-	@Override
-	public void unSubscribe(CashierListener cashierListener) {
-		//TODO
+
+	public RemoteCashierListener getCashierListener() {
+		return cashierListener;
 	}
 	
 }

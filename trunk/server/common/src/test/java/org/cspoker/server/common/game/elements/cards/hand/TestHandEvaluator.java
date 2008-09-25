@@ -20,6 +20,7 @@ import junit.framework.TestCase;
 import org.apache.log4j.Logger;
 import org.cspoker.common.elements.cards.Rank;
 import org.cspoker.common.elements.cards.Suit;
+import org.cspoker.common.util.Log4JPropertiesLoader;
 import org.cspoker.server.common.game.elements.cards.deck.Deck;
 
 /**
@@ -29,6 +30,12 @@ import org.cspoker.server.common.game.elements.cards.deck.Deck;
  * 
  */
 public class TestHandEvaluator extends TestCase {
+
+	static {
+		Log4JPropertiesLoader
+				.load("org/cspoker/server/common/logging/log4j.properties");
+	}
+	
 	private static Logger logger = Logger.getLogger(TestHandEvaluator.class);
 
 	private static TestExactCard testExactCard = new TestExactCard();
@@ -628,7 +635,7 @@ public class TestHandEvaluator extends TestCase {
 		Deck deck;
 		long startTime = System.currentTimeMillis();
 
-		for (int i = 0; i < 1000; i++) {
+		for (int i = 0; i < 10000; i++) {
 			deck = new Deck();
 			Hand hand1 = new Hand();
 			Hand hand2 = new Hand();

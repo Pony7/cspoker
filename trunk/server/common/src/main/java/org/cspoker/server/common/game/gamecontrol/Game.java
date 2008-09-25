@@ -20,10 +20,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.GameProperty;
 import org.cspoker.common.elements.cards.Card;
 import org.cspoker.common.elements.table.SeatId;
-import org.cspoker.common.exceptions.IllegalActionException;
 import org.cspoker.server.common.game.elements.cards.deck.Deck;
 import org.cspoker.server.common.game.elements.chips.pot.GamePots;
 import org.cspoker.server.common.game.elements.table.GameTable;

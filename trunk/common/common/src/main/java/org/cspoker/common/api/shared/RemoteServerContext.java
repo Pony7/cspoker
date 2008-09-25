@@ -36,4 +36,6 @@ public interface RemoteServerContext {
 	void subscribe(RemoteServerListener serverListener) throws RemoteException;
 	
 	void unSubscribe(RemoteServerListener serverListener) throws RemoteException;
+	
+	void die();
 }

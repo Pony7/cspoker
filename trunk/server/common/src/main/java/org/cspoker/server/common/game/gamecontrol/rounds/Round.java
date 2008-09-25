@@ -16,8 +16,8 @@
 
 package org.cspoker.server.common.game.gamecontrol.rounds;
 
+import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.events.gameevents.BrokePlayerKickedOutEvent;
-import org.cspoker.common.exceptions.IllegalActionException;
 import org.cspoker.server.common.game.GameMediator;
 import org.cspoker.server.common.game.gamecontrol.Game;
 import org.cspoker.server.common.game.gamecontrol.rules.BettingRules;

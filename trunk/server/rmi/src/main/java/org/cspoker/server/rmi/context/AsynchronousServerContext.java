@@ -13,7 +13,9 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.server.rmi;
+package org.cspoker.server.rmi.context;
+
+import java.util.concurrent.Executor;
 
 import org.cspoker.common.api.account.AccountContext;
 import org.cspoker.common.api.cashier.CashierContext;
@@ -22,19 +24,19 @@ import org.cspoker.common.api.lobby.LobbyContext;
 import org.cspoker.common.api.shared.DelegatingServerContext;
 import org.cspoker.common.api.shared.ServerContext;
 
-public class AsynchonousServerContext extends DelegatingServerContext {
+public class AsynchronousServerContext extends DelegatingServerContext {
 
 	private final AccountContext accountContext;
 	private final CashierContext cashierContext;
 	private final ChatContext chatContext;
 	private final LobbyContext lobbyContext;
 	
-	public AsynchonousServerContext(ServerContext serverContext) {
+	public AsynchronousServerContext(Executor executor, ServerContext serverContext) {
 		super(serverContext);
-		accountContext = new AsynchronousAccountContext(super.getAccountContext());
-		cashierContext = new AsynchronousCashierContext(super.getCashierContext());
-		chatContext = new AsynchronousChatContext(super.getChatContext());
-		lobbyContext = new AsynchronousLobbyContext(super.getLobbyContext());
+		accountContext = new AsynchronousAccountContext(this, executor,super.getAccountContext());
+		cashierContext = new AsynchronousCashierContext(this, executor,super.getCashierContext());
+		chatContext = new AsynchronousChatContext(this, executor,super.getChatContext());
+		lobbyContext = new AsynchronousLobbyContext(this, executor,super.getLobbyContext());
 	}
 	
 	@Override

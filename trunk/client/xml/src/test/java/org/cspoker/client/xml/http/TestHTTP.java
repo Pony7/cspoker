@@ -22,6 +22,7 @@ import java.rmi.RemoteException;
 import javax.security.auth.login.LoginException;
 
 import org.cspoker.client.xml.common.XmlChannelRemotePlayerCommunication;
+import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.GameProperty;
 import org.cspoker.common.elements.table.TableId;
 import org.cspoker.common.eventlisteners.RemoteAllEventsListener;
@@ -48,7 +49,6 @@ import org.cspoker.common.events.serverevents.ServerMessageEvent;
 import org.cspoker.common.events.serverevents.TableChangedEvent;
 import org.cspoker.common.events.serverevents.TableCreatedEvent;
 import org.cspoker.common.events.serverevents.TableRemovedEvent;
-import org.cspoker.common.exceptions.IllegalActionException;
 import org.cspoker.common.util.Log4JPropertiesLoader;
 
 public class TestHTTP {
