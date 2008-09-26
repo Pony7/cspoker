@@ -27,14 +27,14 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import javax.security.auth.login.LoginException;
 
-import org.cspoker.common.RemoteLoginServer;
+import org.cspoker.common.CSPokerServer;
 import org.cspoker.common.RemotePlayerCommunication;
 import org.cspoker.common.eventlisteners.RemoteAllEventsListener;
 import org.cspoker.common.util.DefaultRemotePlayerCommunication;
 
-public class RemoteLoginServerForRMI implements RemoteLoginServer {
+public class RemoteLoginServerForRMI implements CSPokerServer {
 
-	private RemoteLoginServer server;
+	private CSPokerServer server;
 
 	public RemoteLoginServerForRMI(String server) throws AccessException,
 			RemoteException, NotBoundException {
@@ -45,7 +45,7 @@ public class RemoteLoginServerForRMI implements RemoteLoginServer {
 			throws AccessException, RemoteException, NotBoundException {
 		System.setSecurityManager(null);
 		Registry registry = LocateRegistry.getRegistry(server, port);
-		this.server = (RemoteLoginServer) registry.lookup("CSPokerServer");
+		this.server = (CSPokerServer) registry.lookup("CSPokerServer");
 	}
 
 	public RemotePlayerCommunication login(String username, String password)

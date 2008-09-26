@@ -28,55 +28,39 @@ import java.util.concurrent.ExecutorService;
 import javax.security.auth.login.LoginException;
 
 import org.apache.log4j.Logger;
-import org.cspoker.common.RemoteLoginServer;
-import org.cspoker.common.RemotePlayerCommunication;
-import org.cspoker.server.common.authentication.XmlFileAuthenticator;
-import org.cspoker.server.common.game.session.PlayerKilledExcepion;
-import org.cspoker.server.common.game.session.SessionManager;
+import org.cspoker.common.CSPokerServer;
+import org.cspoker.common.RemoteCSPokerServer;
+import org.cspoker.common.api.shared.ServerContext;
 import org.cspoker.server.common.util.threading.RequestExecutor;
+import org.cspoker.server.rmi.context.AsynchronousServerContext;
 
-public class RMIServer implements RemoteLoginServer {
+public class RMIServer implements RemoteCSPokerServer {
 
 	private final static Logger logger = Logger.getLogger(RMIServer.class);
 
-	private final XmlFileAuthenticator authenticator;
+	private final int port;
 
-	private int port;
+	private final CSPokerServer cspokerServer;
 
-	public RMIServer(int port) {
-		this(port, new XmlFileAuthenticator());
-	}
-
-	public RMIServer(int port, XmlFileAuthenticator authenticator) {
-		this.authenticator = authenticator;
+	public RMIServer(int port, CSPokerServer cspokerServer) {
 		this.port = port;
+		this.cspokerServer =cspokerServer;
 	}
 
-	public RemotePlayerCommunication login(String username, String password)
-			throws RemoteException, LoginException {
-		logger.debug("Login attempt from " + username);
-		if (authenticator.hasPassword(username, password)) {
-			try {
-				RemotePlayerCommunication p = SessionManager.global_session_manager
-						.getSession(username).getPlayerCommunication();
-				try {
-					UnicastRemoteObject.unexportObject(p, true);
-				} catch (NoSuchObjectException e) {
-					// ignore
-				}
-				RemotePlayerCommunication stub = (RemotePlayerCommunication) UnicastRemoteObject
-						.exportObject(p, 0);
-				return stub;
-			} catch (PlayerKilledExcepion e) {
-				// bye bye bad client
-				return null;
-			}
-		} else {
-			logger.debug("Login attempt from " + username + " failed");
-			throw new LoginException("Login Failed");
+	public ServerContext login(String username, String password)
+			throws LoginException, RemoteException {
+		ServerContext context = new AsynchronousServerContext(
+				new SequencePreservingExecutor(RequestExecutor.getInstance()),
+				cspokerServer.login(username, password));
+		try {
+			UnicastRemoteObject.unexportObject(context, true);
+		} catch (NoSuchObjectException e) {
+			// ignore
 		}
+		ServerContext stub = (ServerContext) UnicastRemoteObject.exportObject(context, 0);
+		return stub;
 	}
-
+	
 	public void start() throws AccessException, RemoteException {
 		System.setSecurityManager(null);
 		ExecutorService executor = RequestExecutor.getInstance();
@@ -86,7 +70,7 @@ public class RMIServer implements RemoteLoginServer {
 
 				public Void call() throws RemoteException {
 					Registry registry = LocateRegistry.createRegistry(port);
-					RemoteLoginServer stub = (RemoteLoginServer) UnicastRemoteObject
+					CSPokerServer stub = (CSPokerServer) UnicastRemoteObject
 							.exportObject(RMIServer.this, 0);
 					registry.rebind("CSPokerServer", stub);
 					logger.info("Started RMI server at port " + port);
