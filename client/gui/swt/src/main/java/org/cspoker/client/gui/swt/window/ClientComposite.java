@@ -28,11 +28,8 @@ public abstract class ClientComposite
 	 * Constructor
 	 **************************************************************************/
 	/**
-	 * Creates a new window with the given display and gui
-	 * 
-	 * @param core
-	 * @param display the given display
-	 * @param gui the given gui
+	 * Creates a new window with the given parent, style, and a ClientCore for
+	 * reference/callback
 	 */
 	public ClientComposite(Composite parent, int style, ClientCore core) {
 		super(parent, style);

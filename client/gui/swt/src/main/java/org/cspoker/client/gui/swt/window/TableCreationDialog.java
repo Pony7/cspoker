@@ -14,8 +14,8 @@ public class TableCreationDialog
 	
 	private LobbyWindow lobby;
 	
-	public TableCreationDialog(ClientGUI gui, LobbyWindow lobby) {
-		super(new Shell(Display.getDefault(), SWT.SHELL_TRIM | SWT.APPLICATION_MODAL), SWT.NONE, gui);
+	public TableCreationDialog(LobbyWindow lobby) {
+		super(new Shell(Display.getDefault(), SWT.SHELL_TRIM | SWT.APPLICATION_MODAL), SWT.NONE, lobby.getClientCore());
 		this.lobby = lobby;
 		init();
 	}
@@ -131,12 +131,12 @@ public class TableCreationDialog
 								stakeCombo.getText().indexOf("/")))) * 100);
 						TableConfiguration tConfig = new TableConfiguration(smallBlind * 2, 2000);
 						
-						lobby.createTable(nameInput.getText(), tConfig);
+						lobby.getContext().createTable(nameInput.getText(), tConfig);
 						getParent().close();
 					} catch (Exception e) {
 						e.printStackTrace();
 						
-						switch (gui.displayErrorMessage(e)) {
+						switch (ClientGUI.displayErrorMessage(e)) {
 							case SWT.RETRY:
 								return;
 							default:

@@ -13,7 +13,6 @@ import org.cspoker.client.gui.swt.window.GameWindow;
 import org.cspoker.client.gui.swt.window.LobbyWindow;
 import org.cspoker.client.gui.swt.window.LoginDialog;
 import org.cspoker.common.api.lobby.LobbyContext;
-import org.cspoker.common.api.lobby.holdemtable.HoldemTableContext;
 import org.cspoker.common.elements.table.DetailedTable;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
@@ -33,7 +32,12 @@ public class ClientGUI {
 	/**
 	 * The display of this clientGui
 	 */
-	public final Display display;
+	private final Display display;
+	
+	public Display getDisplay() {
+		return display;
+	}
+	
 	/**
 	 * The clientCore of this clientGui
 	 */
@@ -42,6 +46,8 @@ public class ClientGUI {
 	 * The current window of this client gui
 	 */
 	private LobbyWindow lobby;
+	
+	// TODO Better way of storing/retrieving the open GameWindows?
 	private Hashtable<Long, GameWindow> gameWindows;
 	
 	public Collection<GameWindow> getGameWindows() {
@@ -52,6 +58,9 @@ public class ClientGUI {
 	// images
 	// Changes may cause errors because the respective files have not been
 	// uploaded to the repository
+	
+	// TODO Modularize Resource management, not all as static final Strings and
+	// later building paths from it by concatenation
 	public static final String CS_POKER_ICON = "images/cspoker10.jpg";
 	public final static String SOUND_DIR = "Snd/";
 	public final static String STARS_CHIP_IMG_DIR = "images/chips/stars/";
@@ -197,8 +206,7 @@ public class ClientGUI {
 		}
 		// No Game Window for this table yet
 		DetailedTable table = context.joinTable(tableId);
-		HoldemTableContext tableContext = context.getHoldemTableContext(tableId);
-		GameWindow newGameWindow = new GameWindow(display, clientCore, tableContext, table);
+		GameWindow newGameWindow = new GameWindow(getLobby(), table);
 		gameWindows.put(tableId, newGameWindow);
 		return newGameWindow;
 	}

@@ -151,54 +151,34 @@ public class LoginDialog
 					
 				}
 				
-				/**
-				 * @param evt
-				 * @throws RemoteException
-				 * @throws LoginException
-				 */
-				private void doLogin(SelectionEvent evt) {
-					System.out.println("loginButton.mouseDown, event=" + evt);
-					User newUser = new User(userNameText.getText(), passwordText.getText());
-					clientCore.setUser(newUser);
-					try {
-						
-						loginServer = new RemoteLoginServerForRMI(serverCombo.getText(), ClientCore.DEFAULT_PORT_RMI);
-						
-						result = loginServer.login(newUser.getUserName(), newUser.getPassword());
-						getParent().close();
-					} catch (NotBoundException e) {
-						e.printStackTrace();
-						ClientGUI.displayErrorMessage(e);
-					} catch (RemoteException e) {
-						e.printStackTrace();
-						ClientGUI.displayErrorMessage(e);
-					} catch (LoginException e) {
-						e.printStackTrace();
-						ClientGUI.displayErrorMessage(e);
-					}
-					
-				}
 			});
 		}
 	}
 	
-	/***************************************************************************
-	 * Login
-	 **************************************************************************/
 	/**
-	 * Logs in a new user with the given username and password to the given
-	 * server url and port.
-	 * 
-	 * @param url the given server url
-	 * @param port the given server port
-	 * @param userName the given user name
-	 * @param password the given password
+	 * @param evt
 	 * @throws RemoteException
 	 * @throws LoginException
 	 */
-	private ServerContext login(String url, int port, String userName, String password)
-			throws LoginException, RemoteException {
-		return loginServer.login(userName, password);
+	private void doLogin(SelectionEvent evt) {
+		System.out.println("loginButton.mouseDown, event=" + evt);
+		User newUser = new User(userNameText.getText(), passwordText.getText());
+		clientCore.setUser(newUser);
+		try {
+			
+			loginServer = new RemoteLoginServerForRMI(serverCombo.getText(), ClientCore.DEFAULT_PORT_RMI);
+			result = loginServer.login(newUser.getUserName(), newUser.getPassword());
+			getParent().close();
+		} catch (NotBoundException e) {
+			e.printStackTrace();
+			ClientGUI.displayErrorMessage(e);
+		} catch (RemoteException e) {
+			e.printStackTrace();
+			ClientGUI.displayErrorMessage(e);
+		} catch (LoginException e) {
+			e.printStackTrace();
+			ClientGUI.displayErrorMessage(e);
+		}
 		
 	}
 }

@@ -35,6 +35,10 @@ public class LobbyWindow
 	
 	private LobbyContext context;
 	
+	public LobbyContext getContext() {
+		return context;
+	}
+	
 	private ClientGUI gui;
 	private ClientCore clientCore;
 	
@@ -79,10 +83,10 @@ public class LobbyWindow
 		SWTResourceManager.registerResourceUser(this);
 	}
 	
-	public LobbyWindow(Display display, ClientGUI gui, ClientCore core) {
-		super(new Shell(display), SWT.NONE);
-		this.gui = gui;
+	public LobbyWindow(ClientCore core) {
+		super(new Shell(core.getGui().getDisplay()), SWT.NONE, core);
 		this.clientCore = core;
+		this.gui = clientCore.getGui();
 		this.context = core.getCommunication().getLobbyContext();
 		init();
 	}
@@ -363,7 +367,7 @@ public class LobbyWindow
 	private void createTableButtonMouseDown(MouseEvent evt) {
 		System.out.println("Table creation requested ...");
 		// clientCore.createTable();
-		new TableCreationDialog(gui, this).open();
+		new TableCreationDialog(this).open();
 	}
 	
 	public GameWindow getHoldemTableListener(long tableId) {

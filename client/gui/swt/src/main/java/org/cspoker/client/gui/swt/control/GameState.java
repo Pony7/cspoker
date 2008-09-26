@@ -6,12 +6,11 @@ import java.util.Map;
 import java.util.NavigableMap;
 import java.util.Map.Entry;
 
-import org.cspoker.common.elements.player.Player;
 import org.cspoker.common.elements.pots.Pots;
 import org.cspoker.common.elements.table.DetailedTable;
 
 /**
- * The game state at a table
+ * TODO Bad design, should be specific for the user The game state at a table
  * 
  * @author Stephan Schmidt
  */
@@ -25,6 +24,26 @@ public class GameState {
 	private Pots pots;
 	private List<NavigableMap<Chip, Integer>> currentBetPile = new ArrayList<NavigableMap<Chip, Integer>>();
 	
+	private int betChipsThisRound;
+	
+	public int getBetChipsThisRound() {
+		return betChipsThisRound;
+	}
+	
+	public void setBetChipsThisRound(int betChipsThisRound) {
+		this.betChipsThisRound = betChipsThisRound;
+	}
+	
+	private int remainingStack;
+	
+	public int getRemainingStack() {
+		return remainingStack;
+	}
+	
+	public void setRemainingStack(int remainingStack) {
+		this.remainingStack = remainingStack;
+	}
+	
 	public List<NavigableMap<Chip, Integer>> getCurrentBetPile() {
 		return currentBetPile;
 	}
@@ -34,8 +53,6 @@ public class GameState {
 	public void setMoneyInMiddle(int moneyInMiddle) {
 		this.moneyInMiddle = moneyInMiddle;
 	}
-	
-	private Player user;
 	
 	public GameState(DetailedTable table) {
 		setTableMemento(table);
@@ -72,21 +89,21 @@ public class GameState {
 	}
 	
 	public int getToCallAmount() {
-		return getValue(currentBetPile) - user.getBetChipsValue();
+		return getValue(currentBetPile) - getBetChipsThisRound();
 	}
 	
 	public int getMinRaiseAmount() {
-		return Math.max(0, Math.min(user.getStackValue() - getToCallAmount(), Math.max(getMinBetAmount(),
+		return Math.max(0, Math.min(getRemainingStack() - getToCallAmount(), Math.max(getMinBetAmount(),
 				getToCallAmount())));
 	}
 	
 	public int getMinBetAmount() {
-		return Math.max(0, Math.min(user.getStackValue() - getToCallAmount(), tableMemento.getGameProperty()
+		return Math.max(0, Math.min(getRemainingStack() - getToCallAmount(), tableMemento.getGameProperty()
 				.getBigBlind()));
 	}
 	
 	public int getPotRaiseAmount() {
-		return Math.max(0, Math.min(user.getStackValue() - getToCallAmount(), getToCallAmount()
+		return Math.max(0, Math.min(getRemainingStack() - getToCallAmount(), getToCallAmount()
 				+ getPots().getTotalValue()));
 	}
 	
@@ -96,6 +113,7 @@ public class GameState {
 		}
 		currentBetPile.clear();
 		moneyInMiddle = getPots().getTotalValue();
+		setBetChipsThisRound(0);
 	}
 	
 	public int getMoneyInMiddle() {
@@ -130,12 +148,9 @@ public class GameState {
 		
 	}
 	
-	public void setUser(Player playerToAct) {
-		user = playerToAct;
-		
+	public void updateStackAndBetChips(int betRaiseAmount) {
+		setRemainingStack(getRemainingStack() - getToCallAmount() - betRaiseAmount);
+		setBetChipsThisRound(getBetChipsThisRound() + getToCallAmount() + betRaiseAmount);
 	}
 	
-	public Player getUser() {
-		return user;
-	}
 }
