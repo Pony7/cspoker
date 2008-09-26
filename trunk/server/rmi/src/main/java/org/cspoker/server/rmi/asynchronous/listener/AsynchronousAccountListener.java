@@ -13,19 +13,19 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.server.rmi.listener;
+package org.cspoker.server.rmi.asynchronous.listener;
 
 import java.util.concurrent.Executor;
 
 import org.cspoker.common.api.account.event.RemoteAccountListener;
-import org.cspoker.common.api.shared.ServerContext;
+import org.cspoker.common.api.shared.Killable;
 
 public class AsynchronousAccountListener extends AsynchronousListener implements RemoteAccountListener{
 
 	private final RemoteAccountListener accountListener;
 
-	public AsynchronousAccountListener(ServerContext serverContext, Executor executor, RemoteAccountListener accountListener) {
-		super(serverContext, executor);
+	public AsynchronousAccountListener(Killable connection, Executor executor, RemoteAccountListener accountListener) {
+		super(connection, executor);
 		this.accountListener = accountListener;
 	}
 

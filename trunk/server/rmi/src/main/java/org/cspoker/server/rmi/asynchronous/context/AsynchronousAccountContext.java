@@ -13,7 +13,7 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.server.rmi.context;
+package org.cspoker.server.rmi.asynchronous.context;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executor;
@@ -21,24 +21,25 @@ import java.util.concurrent.Executor;
 import org.cspoker.common.api.account.AccountContext;
 import org.cspoker.common.api.account.DelegatingAccountContext;
 import org.cspoker.common.api.account.event.RemoteAccountListener;
-import org.cspoker.server.rmi.listener.AsynchronousAccountListener;
+import org.cspoker.common.api.shared.Killable;
+import org.cspoker.server.rmi.asynchronous.listener.AsynchronousAccountListener;
 
 public class AsynchronousAccountContext extends DelegatingAccountContext {
 
 	protected ConcurrentHashMap<RemoteAccountListener, AsynchronousAccountListener> wrappers = 
 		new ConcurrentHashMap<RemoteAccountListener, AsynchronousAccountListener>();
 	protected Executor executor;
-	private AsynchronousServerContext asynchronousServerContext;
+	private Killable connection;
 	
-	public AsynchronousAccountContext(AsynchronousServerContext asynchronousServerContext, Executor executor, AccountContext accountContext) {
+	public AsynchronousAccountContext(Killable connection, Executor executor, AccountContext accountContext) {
 		super(accountContext);
-		this.asynchronousServerContext = asynchronousServerContext;
+		this.connection = connection;
 		this.executor = executor;
 	}
 	
 	@Override
 	public void subscribe(RemoteAccountListener accountListener) {
-		AsynchronousAccountListener wrapper = new AsynchronousAccountListener(asynchronousServerContext, executor, accountListener);
+		AsynchronousAccountListener wrapper = new AsynchronousAccountListener(connection, executor, accountListener);
 		if(wrappers.putIfAbsent(accountListener, wrapper)==null){
 			super.subscribe(wrapper);
 		}

@@ -13,25 +13,10 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.server.rmi.listener;
+package org.cspoker.common.api.shared;
 
-import java.util.concurrent.Executor;
+public interface Killable {
 
-import org.cspoker.common.api.cashier.event.CashierListener;
-import org.cspoker.common.api.cashier.event.RemoteCashierListener;
-import org.cspoker.common.api.shared.ServerContext;
-
-public class AsynchronousCashierListener extends AsynchronousListener implements CashierListener{
-
-	private final RemoteCashierListener cashierListener;
-
-	public AsynchronousCashierListener(ServerContext serverContext, Executor executor, RemoteCashierListener cashierListener) {
-		super(serverContext, executor);
-		this.cashierListener = cashierListener;
-	}
-
-	public RemoteCashierListener getCashierListener() {
-		return cashierListener;
-	}
+	void die();
 	
 }

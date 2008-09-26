@@ -15,12 +15,13 @@
  */
 package org.cspoker.common.api.lobby.holdemtable;
 
+import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 import org.cspoker.common.api.lobby.holdemtable.event.RemoteHoldemTableListener;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.RemoteHoldemPlayerContext;
 
-public interface RemoteHoldemTableContext {
+public interface RemoteHoldemTableContext extends Remote {
 
 	//Actions
 	

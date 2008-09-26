@@ -13,7 +13,7 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.server.rmi.context;
+package org.cspoker.server.rmi.asynchronous.context;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executor;
@@ -21,24 +21,25 @@ import java.util.concurrent.Executor;
 import org.cspoker.common.api.cashier.CashierContext;
 import org.cspoker.common.api.cashier.DelegatingCashierContext;
 import org.cspoker.common.api.cashier.event.RemoteCashierListener;
-import org.cspoker.server.rmi.listener.AsynchronousCashierListener;
+import org.cspoker.common.api.shared.Killable;
+import org.cspoker.server.rmi.asynchronous.listener.AsynchronousCashierListener;
 
 public class AsynchronousCashierContext extends DelegatingCashierContext {
 
 	protected ConcurrentHashMap<RemoteCashierListener, AsynchronousCashierListener> wrappers = 
 		new ConcurrentHashMap<RemoteCashierListener, AsynchronousCashierListener>();
 	protected Executor executor;
-	private AsynchronousServerContext asynchronousServerContext;
+	private Killable connection;
 	
-	public AsynchronousCashierContext(AsynchronousServerContext asynchronousServerContext, Executor executor, CashierContext cashierContext) {
+	public AsynchronousCashierContext(Killable connection, Executor executor, CashierContext cashierContext) {
 		super(cashierContext);
-		this.asynchronousServerContext = asynchronousServerContext;
+		this.connection = connection;
 		this.executor = executor;
 	}
 	
 	@Override
 	public void subscribe(RemoteCashierListener cashierListener) {
-		AsynchronousCashierListener wrapper = new AsynchronousCashierListener(asynchronousServerContext, executor, cashierListener);
+		AsynchronousCashierListener wrapper = new AsynchronousCashierListener(connection, executor, cashierListener);
 		if(wrappers.putIfAbsent(cashierListener, wrapper)==null){
 			super.subscribe(wrapper);
 		}

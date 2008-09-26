@@ -13,7 +13,7 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.server.rmi.listener;
+package org.cspoker.server.rmi.asynchronous.listener;
 
 import java.rmi.RemoteException;
 import java.util.concurrent.Executor;
@@ -37,7 +37,7 @@ import org.cspoker.common.api.lobby.holdemtable.event.SitInEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.SmallBlindEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.WinnerEvent;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.event.HoldemPlayerListener;
-import org.cspoker.common.api.shared.ServerContext;
+import org.cspoker.common.api.shared.Killable;
 
 public class AsynchronousHoldemTableListener extends AsynchronousListener implements HoldemTableListener{
 
@@ -45,15 +45,15 @@ public class AsynchronousHoldemTableListener extends AsynchronousListener implem
 	private Executor executor;
 	private AtomicReference<AsynchronousHoldemPlayerListener> holdemPlayerListener = new AtomicReference<AsynchronousHoldemPlayerListener>();
 
-	public AsynchronousHoldemTableListener(ServerContext serverContext, Executor executor, RemoteHoldemTableListener holdemTableListener) {
-		super(serverContext, executor);
+	public AsynchronousHoldemTableListener(Killable connection, Executor executor, RemoteHoldemTableListener holdemTableListener) {
+		super(connection, executor);
 		this.holdemTableListener = holdemTableListener;
 	}
 
 	public HoldemPlayerListener getHoldemPlayerListener() {
 		if(holdemPlayerListener.get()==null){
 			try {
-				holdemPlayerListener.compareAndSet(null, new AsynchronousHoldemPlayerListener(serverContext, executor, holdemTableListener.getHoldemPlayerListener()));
+				holdemPlayerListener.compareAndSet(null, new AsynchronousHoldemPlayerListener(connection, executor, holdemTableListener.getHoldemPlayerListener()));
 			} catch (RemoteException exception) {
 				die();
 			}

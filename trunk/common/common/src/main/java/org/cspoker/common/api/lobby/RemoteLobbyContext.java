@@ -15,6 +15,7 @@
  */
 package org.cspoker.common.api.lobby;
 
+import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 import org.cspoker.common.api.lobby.event.RemoteLobbyListener;
@@ -23,7 +24,7 @@ import org.cspoker.common.elements.table.DetailedTable;
 import org.cspoker.common.elements.table.TableConfiguration;
 import org.cspoker.common.elements.table.TableList;
 
-public interface RemoteLobbyContext {
+public interface RemoteLobbyContext extends Remote {
 
 	//Actions
 	
