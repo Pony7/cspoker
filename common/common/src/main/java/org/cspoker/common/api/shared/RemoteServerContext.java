@@ -15,6 +15,7 @@
  */
 package org.cspoker.common.api.shared;
 
+import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 import org.cspoker.common.api.account.RemoteAccountContext;
@@ -23,7 +24,7 @@ import org.cspoker.common.api.chat.RemoteChatContext;
 import org.cspoker.common.api.lobby.RemoteLobbyContext;
 import org.cspoker.common.api.shared.event.RemoteServerListener;
 
-public interface RemoteServerContext {
+public interface RemoteServerContext extends Remote{
 
 	RemoteAccountContext getAccountContext() throws RemoteException;
 	
