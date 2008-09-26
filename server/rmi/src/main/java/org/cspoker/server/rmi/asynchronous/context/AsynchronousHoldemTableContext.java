@@ -13,7 +13,7 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.server.rmi.context;
+package org.cspoker.server.rmi.asynchronous.context;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executor;
@@ -22,7 +22,8 @@ import org.cspoker.common.api.lobby.holdemtable.DelegatingHoldemTableContext;
 import org.cspoker.common.api.lobby.holdemtable.HoldemTableContext;
 import org.cspoker.common.api.lobby.holdemtable.event.RemoteHoldemTableListener;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.HoldemPlayerContext;
-import org.cspoker.server.rmi.listener.AsynchronousHoldemTableListener;
+import org.cspoker.common.api.shared.Killable;
+import org.cspoker.server.rmi.asynchronous.listener.AsynchronousHoldemTableListener;
 
 public class AsynchronousHoldemTableContext extends DelegatingHoldemTableContext {
 
@@ -30,12 +31,12 @@ public class AsynchronousHoldemTableContext extends DelegatingHoldemTableContext
 		new ConcurrentHashMap<RemoteHoldemTableListener, AsynchronousHoldemTableListener>();
 	protected Executor executor;
 	protected AsynchronousHoldemPlayerContext holdemPlayerContext;
-	private AsynchronousServerContext asynchronousServerContext;
+	private Killable connection;
 	
-	public AsynchronousHoldemTableContext(AsynchronousServerContext asynchronousServerContext, Executor executor, HoldemTableContext holdemTableContext) {
+	public AsynchronousHoldemTableContext(Killable connection, Executor executor, HoldemTableContext holdemTableContext) {
 		super(holdemTableContext);
-		this.asynchronousServerContext = asynchronousServerContext;
-		this.holdemPlayerContext = new AsynchronousHoldemPlayerContext(asynchronousServerContext, executor,super.getHoldemPlayerContext());
+		this.connection = connection;
+		this.holdemPlayerContext = new AsynchronousHoldemPlayerContext(connection, executor,super.getHoldemPlayerContext());
 		this.executor = executor;
 	}
 	
@@ -46,7 +47,7 @@ public class AsynchronousHoldemTableContext extends DelegatingHoldemTableContext
 	
 	@Override
 	public void subscribe(RemoteHoldemTableListener holdemTableListener) {
-		AsynchronousHoldemTableListener wrapper = new AsynchronousHoldemTableListener(asynchronousServerContext, executor, holdemTableListener);
+		AsynchronousHoldemTableListener wrapper = new AsynchronousHoldemTableListener(connection, executor, holdemTableListener);
 		if(wrappers.putIfAbsent(holdemTableListener, wrapper)==null){
 			super.subscribe(wrapper);
 		}

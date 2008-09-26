@@ -13,7 +13,7 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.server.rmi.listener;
+package org.cspoker.server.rmi.asynchronous.listener;
 
 import java.rmi.RemoteException;
 import java.util.concurrent.Executor;
@@ -22,15 +22,15 @@ import org.cspoker.common.api.chat.event.ChatListener;
 import org.cspoker.common.api.chat.event.RemoteChatListener;
 import org.cspoker.common.api.chat.event.ServerMessageEvent;
 import org.cspoker.common.api.chat.event.TableMessageEvent;
-import org.cspoker.common.api.shared.ServerContext;
+import org.cspoker.common.api.shared.Killable;
 
 public class AsynchronousChatListener extends AsynchronousListener implements ChatListener{
 
 	private final RemoteChatListener chatListener;
 	private Executor executor;
 
-	public AsynchronousChatListener(ServerContext serverContext, Executor executor, RemoteChatListener chatListener) {
-		super(serverContext, executor);
+	public AsynchronousChatListener(Killable connection, Executor executor, RemoteChatListener chatListener) {
+		super(connection, executor);
 		this.chatListener = chatListener;
 	}
 

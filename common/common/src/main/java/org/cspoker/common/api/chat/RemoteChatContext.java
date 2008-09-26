@@ -15,11 +15,12 @@
  */
 package org.cspoker.common.api.chat;
 
+import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 import org.cspoker.common.api.chat.event.RemoteChatListener;
 
-public interface RemoteChatContext {
+public interface RemoteChatContext extends Remote {
 
 	void sendServerMessage(String message) throws RemoteException;
 	

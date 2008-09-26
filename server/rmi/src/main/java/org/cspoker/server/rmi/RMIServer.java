@@ -32,7 +32,8 @@ import org.cspoker.common.CSPokerServer;
 import org.cspoker.common.RemoteCSPokerServer;
 import org.cspoker.common.api.shared.ServerContext;
 import org.cspoker.server.common.util.threading.RequestExecutor;
-import org.cspoker.server.rmi.context.AsynchronousServerContext;
+import org.cspoker.server.rmi.asynchronous.context.AsynchronousServerContext;
+import org.cspoker.server.rmi.export.ExportingServerContext;
 
 public class RMIServer implements RemoteCSPokerServer {
 
@@ -48,10 +49,14 @@ public class RMIServer implements RemoteCSPokerServer {
 	}
 
 	public ServerContext login(String username, String password)
-			throws LoginException, RemoteException {
-		ServerContext context = new AsynchronousServerContext(
-				new SequencePreservingExecutor(RequestExecutor.getInstance()),
-				cspokerServer.login(username, password));
+	throws LoginException, RemoteException {
+		ServerContext context = 
+			new ExportingServerContext(
+					new AsynchronousServerContext(
+							new SequencePreservingExecutor(RequestExecutor.getInstance()),
+							cspokerServer.login(username, password)
+					)
+			);
 		try {
 			UnicastRemoteObject.unexportObject(context, true);
 		} catch (NoSuchObjectException e) {
@@ -60,7 +65,7 @@ public class RMIServer implements RemoteCSPokerServer {
 		ServerContext stub = (ServerContext) UnicastRemoteObject.exportObject(context, 0);
 		return stub;
 	}
-	
+
 	public void start() throws AccessException, RemoteException {
 		System.setSecurityManager(null);
 		ExecutorService executor = RequestExecutor.getInstance();
@@ -71,7 +76,7 @@ public class RMIServer implements RemoteCSPokerServer {
 				public Void call() throws RemoteException {
 					Registry registry = LocateRegistry.createRegistry(port);
 					CSPokerServer stub = (CSPokerServer) UnicastRemoteObject
-							.exportObject(RMIServer.this, 0);
+					.exportObject(RMIServer.this, 0);
 					registry.rebind("CSPokerServer", stub);
 					logger.info("Started RMI server at port " + port);
 					return null;

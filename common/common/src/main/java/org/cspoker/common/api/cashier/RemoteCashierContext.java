@@ -15,11 +15,12 @@
  */
 package org.cspoker.common.api.cashier;
 
+import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 import org.cspoker.common.api.cashier.event.RemoteCashierListener;
 
-public interface RemoteCashierContext {
+public interface RemoteCashierContext extends Remote{
 
 	int getMoneyAmount() throws RemoteException;
 	

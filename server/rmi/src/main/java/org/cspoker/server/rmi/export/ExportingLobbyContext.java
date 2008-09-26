@@ -13,69 +13,50 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.server.rmi.context;
+package org.cspoker.server.rmi.export;
 
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.Executor;
 
 import org.cspoker.common.api.lobby.DelegatingLobbyContext;
 import org.cspoker.common.api.lobby.LobbyContext;
 import org.cspoker.common.api.lobby.event.RemoteLobbyListener;
 import org.cspoker.common.api.lobby.holdemtable.HoldemTableContext;
-import org.cspoker.server.rmi.listener.AsynchronousLobbyListener;
+import org.cspoker.common.api.shared.Killable;
+import org.cspoker.server.rmi.asynchronous.listener.AsynchronousLobbyListener;
 
-public class AsynchronousLobbyContext extends DelegatingLobbyContext {
+public class ExportingLobbyContext extends DelegatingLobbyContext {
 
 	protected ConcurrentHashMap<RemoteLobbyListener, AsynchronousLobbyListener> wrappedListeners = new ConcurrentHashMap<RemoteLobbyListener, AsynchronousLobbyListener>();
-	protected Executor executor;
-	private AsynchronousServerContext asynchronousServerContext;
-	
+	private Killable connection;
+
 	protected ConcurrentHashMap<Long, HoldemTableContext> wrappedContexts = new ConcurrentHashMap<Long, HoldemTableContext>();
-	
-	
-	public AsynchronousLobbyContext(AsynchronousServerContext asynchronousServerContext, Executor executor, LobbyContext lobbyContext) {
+
+
+	public ExportingLobbyContext(Killable connection, LobbyContext lobbyContext) {
 		super(lobbyContext);
-		this.asynchronousServerContext = asynchronousServerContext;
-		this.executor = executor;
+		this.connection = connection;
 	}
 	
-	/**
-	 * Returns a wrapped HoldemTableContext that makes event listeners asynchronous.
-	 * 
-	 * This method MUST return the same Context each times, as they are stateful and maintain
-	 * a list of event listeners!
-	 * 
-	 */
 	@Override
 	public HoldemTableContext getHoldemTableContext(long tableId) {
 		HoldemTableContext context;
 		if((context = wrappedContexts.get(tableId))==null){
-			context = new AsynchronousHoldemTableContext(asynchronousServerContext, executor, super.getHoldemTableContext(tableId));
-			if(wrappedContexts.putIfAbsent(tableId, context)==null){
-				return context;
-			}else{
-				return wrappedContexts.get(tableId);
+			try {
+				context = (HoldemTableContext)UnicastRemoteObject.exportObject(new ExportingHoldemTableContext(connection, super.getHoldemTableContext(tableId)),0);
+				if(wrappedContexts.putIfAbsent(tableId, context)==null){
+					return context;
+				}else{
+					return wrappedContexts.get(tableId);
+				}			
+			} catch (RemoteException exception) {
+				connection.die();
+				return null;
 			}
 		}else{
 			return context;
 		}
 	}
-	
-	@Override
-	public void subscribe(RemoteLobbyListener lobbyListener) {
-		AsynchronousLobbyListener wrapper = new AsynchronousLobbyListener(asynchronousServerContext, executor, lobbyListener);
-		if(wrappedListeners.putIfAbsent(lobbyListener, wrapper)==null){
-			super.subscribe(wrapper);
-		}
-		
-	}
-	
-	@Override
-	public void unSubscribe(RemoteLobbyListener lobbyListener) {
-		AsynchronousLobbyListener wrapper = wrappedListeners.remove(lobbyListener);
-		if(wrapper!=null){
-			super.unSubscribe(wrapper);
-		}
-	}
-	
+
 }

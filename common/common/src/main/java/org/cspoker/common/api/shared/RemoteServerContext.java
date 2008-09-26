@@ -24,7 +24,7 @@ import org.cspoker.common.api.chat.RemoteChatContext;
 import org.cspoker.common.api.lobby.RemoteLobbyContext;
 import org.cspoker.common.api.shared.event.RemoteServerListener;
 
-public interface RemoteServerContext extends Remote{
+public interface RemoteServerContext extends Remote, Killable{
 
 	RemoteAccountContext getAccountContext() throws RemoteException;
 	

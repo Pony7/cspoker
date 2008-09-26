@@ -13,7 +13,7 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.server.rmi.context;
+package org.cspoker.server.rmi.asynchronous.context;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executor;
@@ -21,24 +21,25 @@ import java.util.concurrent.Executor;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.DelegatingHoldemPlayerContext;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.HoldemPlayerContext;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.event.RemoteHoldemPlayerListener;
-import org.cspoker.server.rmi.listener.AsynchronousHoldemPlayerListener;
+import org.cspoker.common.api.shared.Killable;
+import org.cspoker.server.rmi.asynchronous.listener.AsynchronousHoldemPlayerListener;
 
 public class AsynchronousHoldemPlayerContext extends DelegatingHoldemPlayerContext {
 
 	protected ConcurrentHashMap<RemoteHoldemPlayerListener, AsynchronousHoldemPlayerListener> wrappers = 
 		new ConcurrentHashMap<RemoteHoldemPlayerListener, AsynchronousHoldemPlayerListener>();
 	protected Executor executor;
-	private AsynchronousServerContext asynchronousServerContext;
+	private Killable connection;
 	
-	public AsynchronousHoldemPlayerContext(AsynchronousServerContext asynchronousServerContext, Executor executor, HoldemPlayerContext holdemPlayerContext) {
+	public AsynchronousHoldemPlayerContext(Killable connection, Executor executor, HoldemPlayerContext holdemPlayerContext) {
 		super(holdemPlayerContext);
-		this.asynchronousServerContext = asynchronousServerContext;
+		this.connection = connection;
 		this.executor = executor;
 	}
 	
 	@Override
 	public void subscribe(RemoteHoldemPlayerListener holdemPlayerListener) {
-		AsynchronousHoldemPlayerListener wrapper = new AsynchronousHoldemPlayerListener(asynchronousServerContext, executor, holdemPlayerListener);
+		AsynchronousHoldemPlayerListener wrapper = new AsynchronousHoldemPlayerListener(connection, executor, holdemPlayerListener);
 		if(wrappers.putIfAbsent(holdemPlayerListener, wrapper)==null){
 			super.subscribe(wrapper);
 		}

@@ -13,7 +13,7 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.server.rmi.context;
+package org.cspoker.server.rmi.asynchronous.context;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executor;
@@ -21,24 +21,25 @@ import java.util.concurrent.Executor;
 import org.cspoker.common.api.chat.ChatContext;
 import org.cspoker.common.api.chat.DelegatingChatContext;
 import org.cspoker.common.api.chat.event.RemoteChatListener;
-import org.cspoker.server.rmi.listener.AsynchronousChatListener;
+import org.cspoker.common.api.shared.Killable;
+import org.cspoker.server.rmi.asynchronous.listener.AsynchronousChatListener;
 
 public class AsynchronousChatContext extends DelegatingChatContext {
 	
 	protected ConcurrentHashMap<RemoteChatListener, AsynchronousChatListener> wrappers = 
 		new ConcurrentHashMap<RemoteChatListener, AsynchronousChatListener>();
 	protected Executor executor;
-	private AsynchronousServerContext asynchronousServerContext;
+	private Killable connection;
 	
-	public AsynchronousChatContext(AsynchronousServerContext asynchronousServerContext, Executor executor, ChatContext chatContext) {
+	public AsynchronousChatContext(Killable connection, Executor executor, ChatContext chatContext) {
 		super(chatContext);
-		this.asynchronousServerContext = asynchronousServerContext;
+		this.connection = connection;
 		this.executor = executor;
 	}
 	
 	@Override
 	public void subscribe(RemoteChatListener chatListener) {
-		AsynchronousChatListener wrapper = new AsynchronousChatListener(asynchronousServerContext, executor, chatListener);
+		AsynchronousChatListener wrapper = new AsynchronousChatListener(connection, executor, chatListener);
 		if(wrappers.putIfAbsent(chatListener, wrapper)==null){
 			super.subscribe(wrapper);
 		}

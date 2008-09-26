@@ -13,7 +13,7 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.server.rmi.listener;
+package org.cspoker.server.rmi.asynchronous.listener;
 
 import java.rmi.RemoteException;
 import java.util.concurrent.Executor;
@@ -23,15 +23,15 @@ import org.cspoker.common.api.lobby.event.RemoteLobbyListener;
 import org.cspoker.common.api.lobby.event.TableCreatedEvent;
 import org.cspoker.common.api.lobby.event.TableRemovedEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.HoldemTableListener;
-import org.cspoker.common.api.shared.ServerContext;
+import org.cspoker.common.api.shared.Killable;
 
 public class AsynchronousLobbyListener extends AsynchronousListener implements LobbyListener{
 
 	private final RemoteLobbyListener lobbyListener;
 	private Executor executor;
 
-	public AsynchronousLobbyListener(ServerContext serverContext, Executor executor, RemoteLobbyListener lobbyListener) {
-		super(serverContext, executor);
+	public AsynchronousLobbyListener(Killable connection, Executor executor, RemoteLobbyListener lobbyListener) {
+		super(connection, executor);
 		this.lobbyListener = lobbyListener;
 	}
 
@@ -43,7 +43,7 @@ public class AsynchronousLobbyListener extends AsynchronousListener implements L
 		HoldemTableListener holdemTableListener;
 		try {
 			holdemTableListener = lobbyListener.getHoldemTableListener(tableId);
-			return new AsynchronousHoldemTableListener(serverContext, executor, holdemTableListener);
+			return new AsynchronousHoldemTableListener(connection, executor, holdemTableListener);
 		} catch (RemoteException exception) {
 			die();
 			return null;

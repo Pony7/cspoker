@@ -13,7 +13,7 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.server.rmi.listener;
+package org.cspoker.server.rmi.asynchronous.listener;
 
 import java.rmi.RemoteException;
 import java.util.concurrent.Executor;
@@ -21,15 +21,15 @@ import java.util.concurrent.Executor;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.event.HoldemPlayerListener;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.event.NewPocketCardsEvent;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.event.RemoteHoldemPlayerListener;
-import org.cspoker.common.api.shared.ServerContext;
+import org.cspoker.common.api.shared.Killable;
 
 public class AsynchronousHoldemPlayerListener extends AsynchronousListener  implements HoldemPlayerListener{
 
 	private final RemoteHoldemPlayerListener holdemPlayerListener;
 	private Executor executor;
 
-	public AsynchronousHoldemPlayerListener(ServerContext serverContext, Executor executor, RemoteHoldemPlayerListener holdemPlayerListener) {
-		super(serverContext, executor);
+	public AsynchronousHoldemPlayerListener(Killable connection, Executor executor, RemoteHoldemPlayerListener holdemPlayerListener) {
+		super(connection, executor);
 		this.holdemPlayerListener = holdemPlayerListener;
 	}
 

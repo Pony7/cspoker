@@ -13,24 +13,25 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.common.api.account;
+package org.cspoker.server.rmi.asynchronous.listener;
 
-import java.rmi.Remote;
-import java.rmi.RemoteException;
+import java.util.concurrent.Executor;
 
-import org.cspoker.common.api.account.event.RemoteAccountListener;
+import org.cspoker.common.api.cashier.event.CashierListener;
+import org.cspoker.common.api.cashier.event.RemoteCashierListener;
+import org.cspoker.common.api.shared.Killable;
 
-public interface RemoteAccountContext extends Remote{
+public class AsynchronousCashierListener extends AsynchronousListener implements CashierListener{
 
-	void changePassword(String passwordHash) throws RemoteException;
+	private final RemoteCashierListener cashierListener;
+
+	public AsynchronousCashierListener(Killable connection, Executor executor, RemoteCashierListener cashierListener) {
+		super(connection, executor);
+		this.cashierListener = cashierListener;
+	}
+
+	public RemoteCashierListener getCashierListener() {
+		return cashierListener;
+	}
 	
-	void createAccount(String username, String passwordHash) throws RemoteException;
-	
-	byte[] getAvatar(long playerId) throws RemoteException;
-	
-	void setAvatar(byte[] avatar) throws RemoteException;
-	
-	void subscribe(RemoteAccountListener accountListener) throws RemoteException;
-	
-	void unSubscribe(RemoteAccountListener accountListener) throws RemoteException;
 }
