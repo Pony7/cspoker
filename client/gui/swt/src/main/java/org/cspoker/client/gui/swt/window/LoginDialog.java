@@ -1,9 +1,17 @@
 package org.cspoker.client.gui.swt.window;
 
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
+
+import javax.security.auth.login.LoginException;
+
 import org.cspoker.client.User;
 import org.cspoker.client.gui.swt.control.ClientCore;
 import org.cspoker.client.gui.swt.control.ClientGUI;
 import org.cspoker.client.gui.swt.control.SWTResourceManager;
+import org.cspoker.client.rmi.RemoteLoginServerForRMI;
+import org.cspoker.common.CSPokerServer;
+import org.cspoker.common.api.shared.ServerContext;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -25,8 +33,11 @@ import org.eclipse.swt.widgets.*;
 public class LoginDialog
 		extends ClientDialog {
 	
+	private CSPokerServer loginServer;
+	private ServerContext result;
+	
 	public LoginDialog(Shell parent, int style, ClientGUI gui, ClientCore clientCore) {
-		super(parent, style, gui, clientCore);
+		super(parent, style, clientCore);
 		init();
 	}
 	
@@ -42,7 +53,7 @@ public class LoginDialog
 	static private Composite composite1;
 	static private Button loginButton;
 	
-	public void open() {
+	public ServerContext open() {
 		getParent().layout();
 		getParent().pack();
 		getParent().open();
@@ -51,6 +62,7 @@ public class LoginDialog
 			if (!display.readAndDispatch())
 				display.sleep();
 		}
+		return result;
 	}
 	
 	private void init() {
@@ -135,25 +147,58 @@ public class LoginDialog
 				
 				@Override
 				public void widgetSelected(SelectionEvent evt) {
+					doLogin(evt);
+					
+				}
+				
+				/**
+				 * @param evt
+				 * @throws RemoteException
+				 * @throws LoginException
+				 */
+				private void doLogin(SelectionEvent evt) {
 					System.out.println("loginButton.mouseDown, event=" + evt);
+					User newUser = new User(userNameText.getText(), passwordText.getText());
+					clientCore.setUser(newUser);
 					try {
-						clientCore.setUser(new User(userNameText.getText(), passwordText.getText()));
-						clientCore.login(serverCombo.getText());
+						
+						loginServer = new RemoteLoginServerForRMI(serverCombo.getText(), ClientCore.DEFAULT_PORT_RMI);
+						
+						result = loginServer.login(newUser.getUserName(), newUser.getPassword());
 						getParent().close();
-						gui.lobby.show();
-					} catch (Exception e) {
+					} catch (NotBoundException e) {
 						e.printStackTrace();
-						switch (gui.displayErrorMessage(e)) {
-							case SWT.RETRY:
-								return;
-							default:
-								if (!getParent().isDisposed())
-									getParent().close();
-								System.exit(0);
-						}
+						ClientGUI.displayErrorMessage(e);
+					} catch (RemoteException e) {
+						e.printStackTrace();
+						ClientGUI.displayErrorMessage(e);
+					} catch (LoginException e) {
+						e.printStackTrace();
+						ClientGUI.displayErrorMessage(e);
 					}
+					
 				}
 			});
 		}
+	}
+	
+	/***************************************************************************
+	 * Login
+	 **************************************************************************/
+	/**
+	 * Logs in a new user with the given username and password to the given
+	 * server url and port.
+	 * 
+	 * @param url the given server url
+	 * @param port the given server port
+	 * @param userName the given user name
+	 * @param password the given password
+	 * @throws RemoteException
+	 * @throws LoginException
+	 */
+	private ServerContext login(String url, int port, String userName, String password)
+			throws LoginException, RemoteException {
+		return loginServer.login(userName, password);
+		
 	}
 }

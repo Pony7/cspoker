@@ -1,5 +1,6 @@
 package org.cspoker.client.gui.swt.control;
 
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Vector;
 
@@ -9,7 +10,6 @@ import org.cspoker.common.elements.cards.Suit;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.graphics.*;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Widget;
 
@@ -112,8 +112,10 @@ public class SWTResourceManager {
 		try {
 			if (resources.containsKey(fileAsString))
 				return (Image) resources.get(fileAsString);
-			Image img = new Image(Display.getDefault(), instance.getClass().getClassLoader().getResourceAsStream(
-					fileAsString));
+			InputStream ips = instance.getClass().getClassLoader().getResourceAsStream(fileAsString);
+			if (ips == null)
+				return null;
+			Image img = new Image(Display.getDefault(), ips);
 			resources.put(fileAsString, img);
 			return img;
 		} catch (Exception e) {
@@ -123,107 +125,93 @@ public class SWTResourceManager {
 	}
 	
 	public static Image getCardImage(Card card) {
-		try {
-			if (resources.containsKey(card.toString()))
-				return (Image) resources.get(card.toString());
-			Image img = getCardFromDeck(ClientGUI.CARDS_IMG_DIR + ClientGUI.ACTIVE_DECK_IMG_FILE, card);
-			resources.put(card.toString(), img);
-			return img;
-		} catch (Exception e) {
-			System.err.println("SWTResourceManager.getImage: Error getting image " + card + ", " + e);
+		
+		if (resources.containsKey(card.toString()))
+			return (Image) resources.get(card.toString());
+		Image deck = getImage(ClientGUI.CARDS_IMG_DIR + ClientGUI.ACTIVE_DECK_IMG_FILE);
+		if (deck == null) {
+			System.err.println("Deck img not found");
 			return null;
 		}
+		Image img = getCardFromDeck(deck, card);
+		resources.put(card.toString(), img);
+		return img;
 		
 	}
 	
-	public static Image getScaledCardImage(Card card, Control control) {
-		Image cardImg = getCardImage(card);
-		final Image scaled = new Image(control.getDisplay(), cardImg.getImageData().scaledTo(control.getSize().x,
-				control.getSize().y));
-		return scaled;
-	}
-	
-	public static Image getScaledCardImage(Card card, Point size) {
-		Image cardImg = getCardImage(card);
-		final Image scaled = new Image(Display.getCurrent(), cardImg.getImageData().scaledTo(size.x, size.y));
-		return scaled;
-	}
-	
-	public static Image getCardFromDeck(String deckImgFile, Card card) {
-		Image deck = getImage(deckImgFile);
-		ImageData data = deck.getImageData();
+	public static Image getCardFromDeck(Image deck, Card card) {
 		// Calculate drawing values
 		int xLookUp, yLookUp;
 		if (card.getRank() == null || card.getSuit() == null) {
-			xLookUp = -1;
-			yLookUp = 0;
+			xLookUp = 14;
+			yLookUp = 1;
 		} else {
 			System.out.println("Card: " + card + "x: " + card.getRank().ordinal() + ", y: " + card.getSuit().ordinal());
-			xLookUp = card.getRank().ordinal();
-			yLookUp = card.getSuit().ordinal();
+			xLookUp = Rank.values().length - card.getRank().ordinal();
+			yLookUp = Suit.values().length - card.getSuit().ordinal();
 		}
-		int srcX = data.width / 14 * (Rank.values().length - xLookUp - 1);
-		int srcY = data.height / 6 * (Suit.values().length - yLookUp - 1);
-		int srcWidth = data.width / 14;
-		int srcHeight = data.height / 6;
-		Image deckImg = new Image(Display.getDefault(), data);
-		Image cardImg = new Image(Display.getDefault(), srcWidth, srcHeight);
-		GC cardGC = new GC(cardImg);
-		// Draw the image
-		cardGC.drawImage(deckImg, srcX, srcY, srcWidth, srcHeight, 0, 0, cardImg.getImageData().width, cardImg
-				.getImageData().height);
-		Image cardMask = new Image(Display.getDefault(), cardImg.getBounds());
-		cardImg = new Image(Display.getDefault(), cardImg.getImageData(), cardMask.getImageData());
-		cardGC.dispose();
+		Image cardImg = getImageFromCollection(deck, new Point(14, 6), new Point(xLookUp, yLookUp));
+		
 		return cardImg;
 	}
 	
-	public static Image getChipFromPNG(String chipPngFile, Chip chip) {
-		if (resources.containsKey(chip.toString()))
-			return (Image) resources.get(chip.toString());
-		Image chipPngImg = getImage(chipPngFile);
-		ImageData data = chipPngImg.getImageData();
+	public static Image getChipFromPNG(Chip chip, int size) {
+		if (resources.containsKey(chip.toString() + size))
+			return (Image) resources.get(chip.toString() + size);
+		Image chipPngImg = getImage(ClientGUI.ACTIVE_CHIP_DIR);
+		if (chipPngImg == null)
+			return null;
 		// Calculate drawing values
 		int xLookUp, yLookUp;
 		int indexInSet = Chip.AVAILABLE_CHIPS.headSet(chip, false).size();
 		
 		xLookUp = indexInSet % 5;
 		yLookUp = indexInSet / 5;
+		Image chipImg = getImageFromCollection(chipPngImg, new Point(5, 3), new Point(xLookUp, yLookUp));
 		
-		int srcX = data.width / 5 * xLookUp;
-		int srcY = data.height / 3 * yLookUp;
-		int srcWidth = data.width / 5;
-		int srcHeight = data.height / 3;
-		Image deckImg = new Image(Display.getDefault(), data);
-		Image cardImg = new Image(Display.getDefault(), srcWidth, srcHeight);
-		GC cardGC = new GC(cardImg);
-		// Draw the image
-		cardGC.drawImage(deckImg, srcX, srcY, srcWidth, srcHeight, 0, 0, cardImg.getImageData().width, cardImg
-				.getImageData().height);
-		Image cardMask = new Image(Display.getDefault(), cardImg.getBounds());
-		cardImg = new Image(Display.getDefault(), cardImg.getImageData(), cardMask.getImageData());
-		cardGC.dispose();
-		resources.put(chip.toString(), cardImg);
-		return cardImg;
+		resources.put(chip.toString() + size, chipImg);
+		return chipImg;
 	}
 	
-	public static Image getChipImage(String fileAsString) {
-		if (resources.containsKey(fileAsString))
-			return (Image) resources.get(fileAsString);
-		Image icon = null;
+	public static Image getChipImage(Chip chip, int size) {
+		Image chipImg = null;
+		if (ClientGUI.ACTIVE_CHIP_DIR == ClientGUI.FREE_CHIP_IMAGE_FILE) {
+			chipImg = SWTResourceManager.getChipFromPNG(chip, size);
+		}
+		if (chipImg != null)
+			return chipImg;
+		if (resources.containsKey(chip.toString() + size))
+			return (Image) resources.get(chip.toString() + size);
 		
+		String fileAsString = ClientGUI.ACTIVE_CHIP_DIR + size + "/" + chip.getFileId();
 		fileAsString = fileAsString + ".";
 		String imgUrl = fileAsString + "bmp";
 		String maskUrl = fileAsString + "a.bmp";
 		Image img = new Image(Display.getDefault(), ClientGUI.class.getClassLoader().getResourceAsStream(imgUrl));
 		Image mask = new Image(Display.getDefault(), ClientGUI.class.getClassLoader().getResourceAsStream(maskUrl));
-		icon = new Image(Display.getDefault(), img.getImageData(), mask.getImageData());
-		
-		resources.put(fileAsString, icon);
+		Image icon = new Image(Display.getDefault(), img.getImageData(), mask.getImageData());
+		img.dispose();
+		mask.dispose();
+		resources.put(chip.toString() + size, icon);
 		return icon;
 	}
 	
-	public static void clearImageCache() {
-		resources.clear();
+	private static Image getImageFromCollection(Image collectionImg, Point collectionDimensions, Point imageLocation) {
+		ImageData data = collectionImg.getImageData();
+		int srcX = data.width / collectionDimensions.x * (imageLocation.x - 1);
+		int srcY = data.height / collectionDimensions.y * (imageLocation.y - 1);
+		int srcWidth = data.width / collectionDimensions.x;
+		int srcHeight = data.height / collectionDimensions.y;
+		Image img = new Image(Display.getDefault(), srcWidth, srcHeight);
+		GC gc = new GC(img);
+		// Draw the image
+		gc.drawImage(collectionImg, srcX, srcY, srcWidth, srcHeight, 0, 0, img.getImageData().width,
+				img.getImageData().height);
+		Image mask = new Image(Display.getDefault(), img.getBounds());
+		img = new Image(Display.getDefault(), img.getImageData(), mask.getImageData());
+		
+		gc.dispose();
+		mask.dispose();
+		return img;
 	}
 }

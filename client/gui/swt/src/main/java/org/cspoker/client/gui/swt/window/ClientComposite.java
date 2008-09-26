@@ -1,7 +1,6 @@
 package org.cspoker.client.gui.swt.window;
 
 import org.cspoker.client.gui.swt.control.ClientCore;
-import org.cspoker.client.gui.swt.control.ClientGUI;
 import org.cspoker.client.gui.swt.control.GameState;
 import org.cspoker.client.gui.swt.control.SWTResourceManager;
 import org.eclipse.swt.SWT;
@@ -22,17 +21,8 @@ public abstract class ClientComposite
 	 * Variables
 	 **************************************************************************/
 	
-	/**
-	 * The gui that uses this window
-	 */
-	protected final ClientGUI gui;
-	
-	/**
-	 * The client core of this window
-	 */
-	protected final ClientCore clientCore;
-	
 	protected GameState gameState;
+	private ClientCore core;
 	
 	/***************************************************************************
 	 * Constructor
@@ -40,13 +30,13 @@ public abstract class ClientComposite
 	/**
 	 * Creates a new window with the given display and gui
 	 * 
+	 * @param core
 	 * @param display the given display
 	 * @param gui the given gui
 	 */
-	public ClientComposite(Composite parent, final ClientGUI gui, final ClientCore clientCore, int style) {
+	public ClientComposite(Composite parent, int style, ClientCore core) {
 		super(parent, style);
-		this.gui = gui;
-		this.clientCore = clientCore;
+		this.core = core;
 		if (parent instanceof ClientComposite) {
 			gameState = ((ClientComposite) parent).getGameState();
 		}
@@ -59,19 +49,6 @@ public abstract class ClientComposite
 	/***************************************************************************
 	 * Methods
 	 **************************************************************************/
-	/**
-	 * Returns the gui used in this window
-	 */
-	public ClientGUI getGui() {
-		return gui;
-	}
-	
-	/**
-	 * Returns the client core of this window
-	 */
-	public ClientCore getClientCore() {
-		return clientCore;
-	}
 	
 	protected void createCloseListener() {
 		getShell().addListener(SWT.Close, new Listener() {
@@ -88,5 +65,9 @@ public abstract class ClientComposite
 	
 	public GameState getGameState() {
 		return gameState;
+	}
+	
+	public ClientCore getClientCore() {
+		return core;
 	}
 }

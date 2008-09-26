@@ -22,15 +22,17 @@ public class ChipPaintListener
 		tableComposite = tc;
 	}
 	
-	@Override
+	/**
+	 * @see org.eclipse.swt.events.PaintListener#paintControl(org.eclipse.swt.events.PaintEvent)
+	 */
 	public void paintControl(PaintEvent e) {
 		int size = Math.min(Chip.MAX_IMG_SIZE, tableComposite.getSize().x / 200);
 		for (PlayerSeatComposite pc : tableComposite.getPlayerSeatComposites()) {
-			if (pc.getPlayer().getBetChipsValue() > 0)
+			if (pc.getCurrentBetPile().size() > 0)
 				drawChipImage(e.gc, pc, size);
 			// Draw dealer chip
 			if (pc.isDealer()) {
-				e.gc.drawImage(Chip.getDealerChip(size), pc.getInitialChipDrawOffset().x - 8 * size, pc
+				e.gc.drawImage(Chip.DEALER.getImage(size), pc.getInitialChipDrawOffset().x - 8 * size, pc
 						.getInitialChipDrawOffset().y
 						- 6 * size);
 			}

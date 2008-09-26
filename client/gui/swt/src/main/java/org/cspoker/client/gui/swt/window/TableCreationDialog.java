@@ -1,6 +1,5 @@
 package org.cspoker.client.gui.swt.window;
 
-import org.cspoker.client.gui.swt.control.ClientCore;
 import org.cspoker.client.gui.swt.control.ClientGUI;
 import org.cspoker.common.elements.table.TableConfiguration;
 import org.eclipse.swt.SWT;
@@ -13,13 +12,11 @@ import org.eclipse.swt.widgets.*;
 public class TableCreationDialog
 		extends ClientDialog {
 	
-	public TableCreationDialog(ClientGUI gui, ClientCore core) {
-		this(new Shell(Display.getDefault(), SWT.SHELL_TRIM | SWT.APPLICATION_MODAL), SWT.NONE, gui, core);
-		
-	}
+	private LobbyWindow lobby;
 	
-	public TableCreationDialog(Shell parent, int style, ClientGUI gui, ClientCore clientCore) {
-		super(parent, style, gui, clientCore);
+	public TableCreationDialog(ClientGUI gui, LobbyWindow lobby) {
+		super(new Shell(Display.getDefault(), SWT.SHELL_TRIM | SWT.APPLICATION_MODAL), SWT.NONE, gui);
+		this.lobby = lobby;
 		init();
 	}
 	
@@ -69,7 +66,7 @@ public class TableCreationDialog
 				nameLabel.setText("Table name:");
 				
 				nameInput = new Text(composite1, SWT.CENTER | SWT.BORDER);
-				nameInput.setText(getClientCore().getUser().getUserName() + "'s table");
+				nameInput.setText(lobby.getUser().getUserName() + "'s table");
 				
 				stakeLabel = new Label(composite1, SWT.CENTER);
 				stakeLabel.setText("Amount:");
@@ -134,7 +131,7 @@ public class TableCreationDialog
 								stakeCombo.getText().indexOf("/")))) * 100);
 						TableConfiguration tConfig = new TableConfiguration(smallBlind * 2, 2000);
 						
-						clientCore.getCommunication().createTable(nameInput.getText(), tConfig);
+						lobby.createTable(nameInput.getText(), tConfig);
 						getParent().close();
 					} catch (Exception e) {
 						e.printStackTrace();

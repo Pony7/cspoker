@@ -3,9 +3,9 @@ package org.cspoker.client;
 import org.cspoker.common.elements.player.Player;
 
 /**
- * A user of this game
+ * A user of this game. Immutable.
  * 
- * @author Cedric
+ * @author Cedric, Stephan
  */
 public class User {
 	
@@ -38,6 +38,9 @@ public class User {
 	public User(String name, String password) {
 		this.userName = name;
 		this.password = password;
+		// TODO This is not good, do we get our player id from somewhere else??
+		// It's nice to have this in the GameWindow
+		this.player = new Player(0, name);
 	}
 	
 	/***************************************************************************

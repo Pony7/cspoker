@@ -9,7 +9,6 @@ import java.util.Map.Entry;
 import org.cspoker.common.elements.player.Player;
 import org.cspoker.common.elements.pots.Pots;
 import org.cspoker.common.elements.table.DetailedTable;
-import org.cspoker.common.elements.table.Table;
 
 /**
  * The game state at a table
@@ -38,7 +37,7 @@ public class GameState {
 	
 	private Player user;
 	
-	public GameState(Table table) {
+	public GameState(DetailedTable table) {
 		setTableMemento(table);
 		pots = new Pots(0);
 		currentBetPile = new ArrayList<NavigableMap<Chip, Integer>>();
