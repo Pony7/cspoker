@@ -26,9 +26,12 @@ import org.cspoker.server.rmi.listener.AsynchronousLobbyListener;
 
 public class AsynchronousLobbyContext extends DelegatingLobbyContext {
 
-	protected ConcurrentHashMap<RemoteLobbyListener, AsynchronousLobbyListener> wrappers = new ConcurrentHashMap<RemoteLobbyListener, AsynchronousLobbyListener>();
+	protected ConcurrentHashMap<RemoteLobbyListener, AsynchronousLobbyListener> wrappedListeners = new ConcurrentHashMap<RemoteLobbyListener, AsynchronousLobbyListener>();
 	protected Executor executor;
 	private AsynchronousServerContext asynchronousServerContext;
+	
+	protected ConcurrentHashMap<Long, HoldemTableContext> wrappedContexts = new ConcurrentHashMap<Long, HoldemTableContext>();
+	
 	
 	public AsynchronousLobbyContext(AsynchronousServerContext asynchronousServerContext, Executor executor, LobbyContext lobbyContext) {
 		super(lobbyContext);
@@ -36,15 +39,32 @@ public class AsynchronousLobbyContext extends DelegatingLobbyContext {
 		this.executor = executor;
 	}
 	
+	/**
+	 * Returns a wrapped HoldemTableContext that makes event listeners asynchronous.
+	 * 
+	 * This method MUST return the same Context each times, as they are stateful and maintain
+	 * a list of event listeners!
+	 * 
+	 */
 	@Override
 	public HoldemTableContext getHoldemTableContext(long tableId) {
-		return new AsynchronousHoldemTableContext(asynchronousServerContext, executor, super.getHoldemTableContext(tableId));
+		HoldemTableContext context;
+		if((context = wrappedContexts.get(tableId))==null){
+			context = new AsynchronousHoldemTableContext(asynchronousServerContext, executor, super.getHoldemTableContext(tableId));
+			if(wrappedContexts.putIfAbsent(tableId, context)==null){
+				return context;
+			}else{
+				return wrappedContexts.get(tableId);
+			}
+		}else{
+			return context;
+		}
 	}
 	
 	@Override
 	public void subscribe(RemoteLobbyListener lobbyListener) {
 		AsynchronousLobbyListener wrapper = new AsynchronousLobbyListener(asynchronousServerContext, executor, lobbyListener);
-		if(wrappers.putIfAbsent(lobbyListener, wrapper)==null){
+		if(wrappedListeners.putIfAbsent(lobbyListener, wrapper)==null){
 			super.subscribe(wrapper);
 		}
 		
@@ -52,7 +72,7 @@ public class AsynchronousLobbyContext extends DelegatingLobbyContext {
 	
 	@Override
 	public void unSubscribe(RemoteLobbyListener lobbyListener) {
-		AsynchronousLobbyListener wrapper = wrappers.remove(lobbyListener);
+		AsynchronousLobbyListener wrapper = wrappedListeners.remove(lobbyListener);
 		if(wrapper!=null){
 			super.unSubscribe(wrapper);
 		}
