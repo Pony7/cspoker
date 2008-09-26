@@ -22,11 +22,7 @@ public abstract class ClientDialog
 	 * The gui that uses this window
 	 */
 	protected final ClientGUI gui;
-	
-	/**
-	 * The client core of this window
-	 */
-	protected final ClientCore clientCore;
+	ClientCore clientCore;
 	
 	/***************************************************************************
 	 * Constructor
@@ -37,10 +33,10 @@ public abstract class ClientDialog
 	 * @param display the given display
 	 * @param gui the given gui
 	 */
-	public ClientDialog(Shell parent, int style, final ClientGUI gui, final ClientCore clientCore) {
+	public ClientDialog(Shell parent, int style, final ClientCore core) {
 		super(parent, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL | style);
-		this.gui = gui;
-		this.clientCore = clientCore;
+		this.clientCore = core;
+		this.gui = clientCore.getGui();
 		getParent().setImage(SWTResourceManager.getImage(ClientGUI.CS_POKER_ICON));
 	}
 	
@@ -52,12 +48,5 @@ public abstract class ClientDialog
 	 */
 	public ClientGUI getGui() {
 		return gui;
-	}
-	
-	/**
-	 * Returns the client core of this window
-	 */
-	public ClientCore getClientCore() {
-		return clientCore;
 	}
 }

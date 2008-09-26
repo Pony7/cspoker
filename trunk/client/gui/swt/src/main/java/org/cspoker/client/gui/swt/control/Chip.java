@@ -7,6 +7,8 @@ import org.eclipse.swt.graphics.Image;
 public class Chip
 		implements Comparable<Chip> {
 	
+	public static final Chip DEALER = new Chip(0, "chip-d");
+	
 	public static final Chip ONE_CENT_CHIP = new Chip(1, "chip000001");
 	public static final Chip FIVE_CENT_CHIP = new Chip(5, "chip000005");
 	public static final Chip TWENTY_FIVE_CENT_CHIP = new Chip(25, "chip000025");
@@ -28,7 +30,6 @@ public class Chip
 	
 	public static final int MAX_IMG_SIZE = 6;
 	private final String fileId;
-	private Hashtable<Integer, Image> imagesForDiffSizes = new Hashtable<Integer, Image>();
 	public static final NavigableSet<Chip> AVAILABLE_CHIPS = new TreeSet<Chip>(Arrays.asList(Chip.ONE_CENT_CHIP,
 			Chip.FIVE_CENT_CHIP, Chip.TWENTY_FIVE_CENT_CHIP, Chip.ONE_DOLLAR_CHIP, Chip.FIVE_DOLLAR_CHIP,
 			Chip.TWENTY_FIVE_DOLLAR_CHIP, Chip.HUNDRED_DOLLAR_CHIP, Chip.FIVE_HUNDRED_DOLLAR_CHIP,
@@ -47,46 +48,17 @@ public class Chip
 	
 	public Image getImage(int size) {
 		
-		if (imagesForDiffSizes.get(size) != null) {
-			return imagesForDiffSizes.get(size);
-		} else {
-			Image chipImg = null;
-			try {
-				chipImg = SWTResourceManager.getChipFromPNG(ClientGUI.ACTIVE_CHIP_DIR, this);
-			} catch (Exception e) {
-				e.printStackTrace();
-				String chipFile = ClientGUI.ACTIVE_CHIP_DIR + size + "/" + fileId;
-				chipImg = SWTResourceManager.getChipImage(chipFile);
-			}
-			
-			imagesForDiffSizes.put(size, chipImg);
-			
-			return chipImg;
-		}
-	}
-	
-	/**
-	 * @param size The desired size of the image (1-6)
-	 * @return A dealer chip image
-	 */
-	public static Image getDealerChip(int size) {
-		String chipFile;
-		Image img;
-		try {
-			chipFile = ClientGUI.ACTIVE_CHIP_DIR + size + "/" + "chip-d";
-			img = SWTResourceManager.getChipImage(chipFile);
-		} catch (Exception e) {
-			chipFile = ClientGUI.STARS_CHIP_IMG_DIR + size + "/" + "chip-d";
-			img = SWTResourceManager.getChipImage(chipFile);
-		}
-		img = SWTResourceManager.getChipImage(chipFile);
-		return img;
+		return SWTResourceManager.getChipImage(this, size);
+		
 	}
 	
 	public int getValue() {
 		return value;
 	}
 	
+	/**
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString() {
 		return ClientGUI.formatBet(value) + " Chip ";
@@ -99,13 +71,6 @@ public class Chip
 		return Integer.valueOf(getValue()).compareTo(Integer.valueOf(o.getValue()));
 	}
 	
-	/**
-	 * Example: getDistribution(32) returns {25=1, 5=1, 1=2}
-	 * 
-	 * @param amount The value of the chips
-	 * @return A "chip stack" representing the value of the given amount in
-	 *         chips
-	 */
 	public static NavigableMap<Chip, Integer> getDistribution(int amount) {
 		NavigableMap<Chip, Integer> result = new TreeMap<Chip, Integer>();
 		if (amount == 0) {
@@ -123,5 +88,9 @@ public class Chip
 			result.put(c, numberOfChips);
 		}
 		return result.descendingMap();
+	}
+	
+	public String getFileId() {
+		return fileId;
 	}
 }

@@ -41,8 +41,7 @@ public class TableComposite
 	}
 	
 	public TableComposite(GameWindow parent, int style) {
-		super(parent, parent.getGui(), parent.getClientCore(), style);
-		this.gameState = parent.getGameState();
+		super(parent, style, parent.getClientCore());
 		initGUI();
 	}
 	
@@ -51,12 +50,12 @@ public class TableComposite
 		setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		// Add first row, placeholder labels and player composites
 		new Label(this, SWT.NONE | ClientGUI.COMPOSITE_BORDER_STYLE).setVisible(false);
-		new PlayerSeatComposite(this, SWT.NONE | ClientGUI.COMPOSITE_BORDER_STYLE);
+		new PlayerSeatComposite(this, SWT.NONE | ClientGUI.COMPOSITE_BORDER_STYLE, 0);
 		new Label(this, SWT.NONE | ClientGUI.COMPOSITE_BORDER_STYLE).setVisible(false);
-		new PlayerSeatComposite(this, SWT.NONE | ClientGUI.COMPOSITE_BORDER_STYLE);
+		new PlayerSeatComposite(this, SWT.NONE | ClientGUI.COMPOSITE_BORDER_STYLE, 1);
 		new Label(this, SWT.NONE | ClientGUI.COMPOSITE_BORDER_STYLE).setVisible(false);
 		// End first row
-		new PlayerSeatComposite(this, SWT.NONE | ClientGUI.COMPOSITE_BORDER_STYLE);
+		new PlayerSeatComposite(this, SWT.NONE | ClientGUI.COMPOSITE_BORDER_STYLE, 2);
 		new Label(this, SWT.NONE | ClientGUI.COMPOSITE_BORDER_STYLE).setVisible(false);
 		communityCardsComposite = new Composite(this, SWT.NONE | ClientGUI.COMPOSITE_BORDER_STYLE);
 		communityCardsComposite.setLayout(new GridLayout(1, true));
@@ -67,12 +66,12 @@ public class TableComposite
 		communityCardsComposite.addPaintListener(new CardPaintListener(communityCards, 5, SWT.LEFT, 10));
 		
 		new Label(this, SWT.NONE | ClientGUI.COMPOSITE_BORDER_STYLE).setVisible(false);
-		new PlayerSeatComposite(this, SWT.NONE | ClientGUI.COMPOSITE_BORDER_STYLE);
+		new PlayerSeatComposite(this, SWT.NONE | ClientGUI.COMPOSITE_BORDER_STYLE, 3);
 		// End second row
 		new Label(this, SWT.NONE | ClientGUI.COMPOSITE_BORDER_STYLE).setVisible(false);
-		new PlayerSeatComposite(this, SWT.NONE | ClientGUI.COMPOSITE_BORDER_STYLE);
+		new PlayerSeatComposite(this, SWT.NONE | ClientGUI.COMPOSITE_BORDER_STYLE, 4);
 		new Label(this, SWT.NONE | ClientGUI.COMPOSITE_BORDER_STYLE).setVisible(false);
-		new PlayerSeatComposite(this, SWT.NONE | ClientGUI.COMPOSITE_BORDER_STYLE);
+		new PlayerSeatComposite(this, SWT.NONE | ClientGUI.COMPOSITE_BORDER_STYLE, 5);
 		new Label(this, SWT.NONE | ClientGUI.COMPOSITE_BORDER_STYLE).setVisible(false);
 		chipPaintListener = new ChipPaintListener(this);
 		this.addPaintListener(chipPaintListener);
@@ -95,36 +94,45 @@ public class TableComposite
 		return null;
 	}
 	
-	void updateProgressBars(Player seatedPlayer) {
+	/**
+	 * Updates the Progress bars to indicate who's turn it is to act
+	 * 
+	 * @param playerToAct The player who's turn it is
+	 */
+	void updateProgressBars(Player playerToAct) {
 		for (PlayerSeatComposite pc : getPlayerSeatComposites()) {
 			pc.stopTimer();
 		}
-		getPlayerSeatComposite(seatedPlayer.getId()).startTimer();
+		getPlayerSeatComposite(playerToAct.getId()).startTimer();
 	}
 	
+	/**
+	 * Move the current bets of each player into the pot via an animation
+	 */
 	public void moveBetsToPot() {
+		// Determine locations of the chip piles on the table
 		List<Rectangle> chipLocList = new ArrayList<Rectangle>();
-		// Put it in the pot
-		// Set all player chips to 0 and redraw table
 		for (PlayerSeatComposite pc : getPlayerSeatComposites()) {
 			
 			if (pc.getCurrentBetPile().size() != 0) {
 				chipLocList.add(pc.getBetChipsDisplayArea());
 			}
 		}
-		// Animate chips before resetting value
+		// Use locations as parameter for the animation to the pot
 		// TODO Make this stuff more robusto
 		animateChips(chipLocList, getPotOffset());
+		// Reset all the bet piles and the display areas
 		for (PlayerSeatComposite pc : getPlayerSeatComposites()) {
 			pc.getCurrentBetPile().clear();
 			pc.betChipsArea = null;
 			potChipsDisplayArea = null;
 		}
+		// lol redraw
 		redraw();
 	}
 	
 	/**
-	 * @return A list of player seat composites where the index is the seat id
+	 * @return A list of all children player seat composites
 	 */
 	public List<PlayerSeatComposite> getPlayerSeatComposites() {
 		List<PlayerSeatComposite> result = new ArrayList<PlayerSeatComposite>();
@@ -148,7 +156,7 @@ public class TableComposite
 		communityCardsComposite.redraw();
 	}
 	
-	public void shipPot(PlayerSeatComposite winner) {
+	private void shipPot(PlayerSeatComposite winner) {
 		communityCardsComposite.setVisible(false);
 		final Rectangle potLocation = getPotOffset();
 		winner.updateBetChipsDisplayArea();
@@ -233,8 +241,10 @@ public class TableComposite
 	}
 	
 	/**
-	 * @param gameWindow TODO
-	 * @param winners
+	 * Reverse method to {@link #moveBetsToPot()} TODO What if there are more
+	 * than one winner, the bet pile needs to be split accordingly first ...
+	 * 
+	 * @param winners The winners in the hand
 	 */
 	void movePotsToWinners(final Set<Winner> winners) {
 		// Ship it

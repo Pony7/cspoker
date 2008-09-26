@@ -1,11 +1,10 @@
 package org.cspoker.client.gui.swt.window;
 
-import java.rmi.RemoteException;
-
 import org.cspoker.client.gui.swt.control.ClientCore;
 import org.cspoker.client.gui.swt.control.ClientGUI;
 import org.cspoker.client.gui.swt.control.GameState;
 import org.cspoker.client.gui.swt.control.SWTResourceManager;
+import org.cspoker.common.api.lobby.holdemtable.HoldemTableContext;
 import org.cspoker.common.api.lobby.holdemtable.event.*;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.event.HoldemPlayerListener;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.event.NewPocketCardsEvent;
@@ -13,7 +12,6 @@ import org.cspoker.common.elements.player.Player;
 import org.cspoker.common.elements.player.SeatedPlayer;
 import org.cspoker.common.elements.player.Winner;
 import org.cspoker.common.elements.table.DetailedTable;
-import org.cspoker.common.elements.table.Table;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
@@ -34,9 +32,11 @@ import org.eclipse.swt.widgets.Shell;
  */
 public class GameWindow
 		extends ClientComposite
-		implements HoldemTableListener {
+		implements HoldemTableListener, HoldemPlayerListener {
 	
-	private final ClientCore clientCore;
+	private final HoldemTableContext holdemTableContext;
+	private final long tableId;
+	
 	private TableUserInputComposite userInputComposite;
 	private TableComposite tableComposite;
 	
@@ -46,17 +46,27 @@ public class GameWindow
 		SWTResourceManager.registerResourceUser(this);
 	}
 	
-	public GameWindow(Display display, ClientGUI clientGUI, ClientCore clientCore, Table table) {
-		super(new Shell(display, SWT.CLOSE | SWT.RESIZE), clientGUI, clientCore, SWT.NONE);
-		this.clientCore = clientCore;
-		this.gameState = new GameState(table);
+	public GameWindow(Display display, ClientCore core, HoldemTableContext tableContext, DetailedTable table) {
+		
+		super(new Shell(display, SWT.CLOSE | SWT.RESIZE), SWT.NONE, core);
+		gameState = new GameState(table);
+		this.tableId = table.getId();
+		holdemTableContext = tableContext;
 		initGUI();
+		for (SeatedPlayer player : table.getPlayers()) {
+			getPlayerSeatComposite(player).update(player);
+		}
 	}
 	
+	/**
+	 * Does initial shell configuration
+	 * 
+	 * @param shell The GameWindow's shell to configure
+	 */
 	private void configureShell(final Shell shell) {
 		// Get table info for display purposes
 		
-		shell.setText("Logged in as " + clientCore.getUser().getUserName() + ", Table "
+		shell.setText("Logged in as " + getClientCore().getUser().getUserName() + ", Table "
 				+ gameState.getTableMemento().getName() + "(Id: " + getTableId() + ")");
 		shell.setImage(SWTResourceManager.getImage(ClientGUI.CS_POKER_ICON));
 		shell.setLayout(new GridLayout());
@@ -78,8 +88,8 @@ public class GameWindow
 			 * @see org.eclipse.swt.events.PaintListener#paintControl(org.eclipse.swt.events.PaintEvent)
 			 */
 			public void paintControl(PaintEvent e) {
-				setBackgroundImage(getGui().generateSkin(getShell().getSize()));
-				
+				getBackgroundImage().dispose();
+				setBackgroundImage(ClientGUI.generateSkin(getShell().getSize()));
 			}
 		});
 		
@@ -91,11 +101,6 @@ public class GameWindow
 	@Override
 	public GameState getGameState() {
 		return gameState;
-	}
-	
-	public HoldemPlayerListener getHoldemPlayerListener() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 	
 	/**
@@ -129,7 +134,8 @@ public class GameWindow
 			setLayout(new GridLayout(1, true));
 			setBackgroundMode(SWT.INHERIT_DEFAULT);
 			tableComposite = new TableComposite(this, SWT.NONE | ClientGUI.COMPOSITE_BORDER_STYLE);
-			userInputComposite = new TableUserInputComposite(this, SWT.NONE | ClientGUI.COMPOSITE_BORDER_STYLE);
+			userInputComposite = new TableUserInputComposite(this, SWT.NONE | ClientGUI.COMPOSITE_BORDER_STYLE,
+					holdemTableContext);
 			configureShell(getShell());
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -137,63 +143,96 @@ public class GameWindow
 	}
 	
 	/**
-	 * @param event
-	 * @return
+	 * Determines whether the player (from the event usually) is the user of the
+	 * client. Does string comparison on the name (TODO: use id?)
+	 * 
+	 * @param player The player to check
+	 * @return whether the given player is equal to the user
 	 */
 	private boolean isUser(final Player player) {
-		return player.getId() == clientCore.getUser().getPlayer().getId();
+		return getClientCore().getUser().getUserName().equalsIgnoreCase(player.getName());
 	}
 	
+	/**
+	 * @see org.cspoker.common.api.lobby.holdemtable.event.HoldemTableListener#onBet(org.cspoker.common.api.lobby.holdemtable.event.BetEvent)
+	 */
 	public void onBet(BetEvent betEvent) {
 		betEvent.dispatch(getPlayerSeatComposite(betEvent.getPlayer()));
 		updateTableGraphics();
 		
 	}
 	
+	/**
+	 * @see org.cspoker.common.api.lobby.holdemtable.event.HoldemTableListener#onBigBlind(org.cspoker.common.api.lobby.holdemtable.event.BigBlindEvent)
+	 */
 	public void onBigBlind(final BigBlindEvent event) {
 		event.dispatch(getPlayerSeatComposite(event.getPlayer()));
 		updateTableGraphics();
 	}
 	
+	/**
+	 * @see org.cspoker.common.api.lobby.holdemtable.event.HoldemTableListener#onCall(org.cspoker.common.api.lobby.holdemtable.event.CallEvent)
+	 */
 	public void onCall(CallEvent callEvent) {
 		callEvent.dispatch(getPlayerSeatComposite(callEvent.getPlayer()));
 		updateTableGraphics();
 		
 	}
 	
+	/**
+	 * @see org.cspoker.common.api.lobby.holdemtable.event.HoldemTableListener#onCheck(org.cspoker.common.api.lobby.holdemtable.event.CheckEvent)
+	 */
 	public void onCheck(CheckEvent checkEvent) {
 		checkEvent.dispatch(getPlayerSeatComposite(checkEvent.getPlayer()));
 		updateTableGraphics();
 		
 	}
 	
+	/**
+	 * @see org.cspoker.common.api.lobby.holdemtable.event.HoldemTableListener#onFold(org.cspoker.common.api.lobby.holdemtable.event.FoldEvent)
+	 */
 	public void onFold(FoldEvent foldEvent) {
 		foldEvent.dispatch(getPlayerSeatComposite(foldEvent.getPlayer()));
 		updateTableGraphics();
 	}
 	
+	/**
+	 * @see org.cspoker.common.api.lobby.holdemtable.event.HoldemTableListener#onLeaveGame(org.cspoker.common.api.lobby.holdemtable.event.LeaveGameEvent)
+	 */
 	public void onLeaveGame(LeaveGameEvent leaveGameEvent) {
 		leaveGameEvent.dispatch(getPlayerSeatComposite(leaveGameEvent.getPlayer()));
 		updateTableGraphics();
 		
 	}
 	
+	/**
+	 * @see org.cspoker.common.api.lobby.holdemtable.event.HoldemTableListener#onNewCommunityCards(org.cspoker.common.api.lobby.holdemtable.event.NewCommunityCardsEvent)
+	 */
 	public void onNewCommunityCards(NewCommunityCardsEvent newCommunityCardsEvent) {
 		tableComposite.addCommunityCards(newCommunityCardsEvent.getCommonCards());
 		
 	}
 	
+	/**
+	 * @see org.cspoker.common.api.lobby.holdemtable.event.HoldemTableListener#onNewDeal(org.cspoker.common.api.lobby.holdemtable.event.NewDealEvent)
+	 */
 	public void onNewDeal(NewDealEvent newDealEvent) {
 		newDealEvent.dispatch(getPlayerSeatComposite(newDealEvent.getDealer()));
 		tableComposite.redraw();
 		
 	}
 	
+	/**
+	 * @see org.cspoker.common.api.lobby.holdemtable.holdemplayer.event.HoldemPlayerListener#onNewPocketCards(org.cspoker.common.api.lobby.holdemtable.holdemplayer.event.NewPocketCardsEvent)
+	 */
 	public void onNewPocketCards(NewPocketCardsEvent newPocketCardsEvent) {
-		newPocketCardsEvent.dispatch(getPlayerSeatComposite(clientCore.getUser().getPlayer()));
+		newPocketCardsEvent.dispatch(getPlayerSeatComposite(getClientCore().getUser().getPlayer()));
 		
 	}
 	
+	/**
+	 * @see org.cspoker.common.api.lobby.holdemtable.event.HoldemTableListener#onNewRound(org.cspoker.common.api.lobby.holdemtable.event.NewRoundEvent)
+	 */
 	public void onNewRound(NewRoundEvent newRoundEvent) {
 		gameState.newRound(newRoundEvent.getRoundName());
 		tableComposite.moveBetsToPot();
@@ -204,6 +243,9 @@ public class GameWindow
 		
 	}
 	
+	/**
+	 * @see org.cspoker.common.api.lobby.holdemtable.event.HoldemTableListener#onNextPlayer(org.cspoker.common.api.lobby.holdemtable.event.NextPlayerEvent)
+	 */
 	public void onNextPlayer(NextPlayerEvent nextPlayerEvent) {
 		Player playerToAct = nextPlayerEvent.getPlayer();
 		tableComposite.updateProgressBars(playerToAct);
@@ -218,62 +260,73 @@ public class GameWindow
 		
 	}
 	
-	/**
-	 * @deprecated Old API, replaced onSitIn ?
-	 * @param event
-	 * @throws RemoteException
-	 */
-	@Deprecated
-	public void onPlayerJoinedTableEvent(final SitInEvent event)
-			throws RemoteException {
-		event.dispatch(getPlayerSeatComposite(event.getPlayer()));
-	}
+	// FIXME Old API methods
+	// /**
+	// * @deprecated Old API, replaced onSitIn ?
+	// * @param event
+	// * @throws RemoteException
+	// */
+	// @Deprecated
+	// public void onPlayerJoinedTableEvent(final SitInEvent event)
+	// throws RemoteException {
+	// event.dispatch(getPlayerSeatComposite(event.getPlayer()));
+	// }
+	
+	// /**
+	// * @deprecated Old API ? Maybe with CashierListener?
+	// * @param event
+	// * @throws RemoteException
+	// */
+	// @Deprecated
+	// public void onPlayerReboughtEvent(PlayerReboughtEvent event)
+	// throws RemoteException {
+	// event.dispatch(getPlayerSeatComposite(event.getPlayer()));
+	//		
+	// }
+	
+	// /**
+	// * @deprecated Old API ? But we need this to know the player has sat out
+	// and
+	// * may sit in again but has not left
+	// * @param event
+	// * @throws RemoteException
+	// */
+	// @Deprecated
+	// public void onPlayerSatOutEvent(PlayerSatOutEvent event)
+	// throws RemoteException {
+	//		
+	// // User might automatically sit out if busto, set the button selection
+	// // accordingly
+	// if (isUser(event.getPlayer())) {
+	// userInputComposite.sitInOutButton.setText("Sit In");
+	// if (!userInputComposite.sitInOutButton.isFocusControl()) {
+	// userInputComposite.sitInOutButton.setSelection(false);
+	// }
+	// }
+	// event.dispatch(getPlayerSeatComposite(event.getPlayer()));
+	// }
 	
 	/**
-	 * @deprecated Old API ? Maybe with CashierListener?
-	 * @param event
-	 * @throws RemoteException
+	 * @see org.cspoker.common.api.lobby.holdemtable.event.HoldemTableListener#onRaise(org.cspoker.common.api.lobby.holdemtable.event.RaiseEvent)
 	 */
-	@Deprecated
-	public void onPlayerReboughtEvent(PlayerReboughtEvent event)
-			throws RemoteException {
-		event.dispatch(getPlayerSeatComposite(event.getPlayer()));
-		
-	}
-	
-	/**
-	 * @deprecated Old API ? But we need this to know the player has sat out and
-	 *             may sit in again but has not left
-	 * @param event
-	 * @throws RemoteException
-	 */
-	@Deprecated
-	public void onPlayerSatOutEvent(PlayerSatOutEvent event)
-			throws RemoteException {
-		
-		// User might automatically sit out if busto, set the button selection
-		// accordingly
-		if (isUser(event.getPlayer())) {
-			userInputComposite.sitInOutButton.setText("Sit In");
-			if (!userInputComposite.sitInOutButton.isFocusControl()) {
-				userInputComposite.sitInOutButton.setSelection(false);
-			}
-		}
-		event.dispatch(getPlayerSeatComposite(event.getPlayer()));
-	}
-	
 	public void onRaise(RaiseEvent raiseEvent) {
 		raiseEvent.dispatch(getPlayerSeatComposite(raiseEvent.getPlayer()));
 		updateTableGraphics();
 		
 	}
 	
+	/**
+	 * @see org.cspoker.common.api.lobby.holdemtable.event.HoldemTableListener#onShowHand(org.cspoker.common.api.lobby.holdemtable.event.ShowHandEvent)
+	 */
 	public void onShowHand(ShowHandEvent showHandEvent) {
 		showHandEvent.dispatch(getPlayerSeatComposite(showHandEvent.getShowdownPlayer()));
 		updateTableGraphics();
 		
 	}
 	
+	/**
+	 * @see org.cspoker.common.api.lobby.holdemtable.event.HoldemTableListener#onSitIn(org.cspoker.common.api.lobby.holdemtable.event.SitInEvent)
+	 */
 	public void onSitIn(SitInEvent sitInEvent) {
 		if (isUser(sitInEvent.getPlayer())) {
 			userInputComposite.sitInOutButton.setText("Sit Out");
@@ -282,17 +335,25 @@ public class GameWindow
 		
 	}
 	
+	/**
+	 * @see org.cspoker.common.api.lobby.holdemtable.event.HoldemTableListener#onSmallBlind(org.cspoker.common.api.lobby.holdemtable.event.SmallBlindEvent)
+	 */
 	public void onSmallBlind(SmallBlindEvent smallBlindEvent) {
 		smallBlindEvent.dispatch(getPlayerSeatComposite(smallBlindEvent.getPlayer()));
 		updateTableGraphics();
 		
 	}
 	
+	/**
+	 * @see org.cspoker.common.api.lobby.holdemtable.event.HoldemTableListener#onWinner(org.cspoker.common.api.lobby.holdemtable.event.WinnerEvent)
+	 */
 	public void onWinner(final WinnerEvent winnerEvent) {
 		gameState.newRound("Showdown round");
 		for (Winner winner : winnerEvent.getWinners())
 			winnerEvent.dispatch(getPlayerSeatComposite(winner.getPlayer()));
 		tableComposite.moveBetsToPot();
+		// FIXME XXX Make sure that this is better synchronized, i.e. new round
+		// doesnt start until animation stuff is complete
 		getDisplay().timerExec(2000, new Runnable() {
 			
 			/**
@@ -306,29 +367,24 @@ public class GameWindow
 	}
 	
 	/**
-	 * Auto-generated method to display this org.eclipse.swt.widgets.Composite
-	 * inside a new Shell.
+	 * PRE: Window is initialized Open the window in a new shell Open the
+	 * GameWindow inside a new shell
 	 */
 	public void show() {
-		if (isDisposed()) {
-			return;
-		}
-		// TODO Get Bankroll
-		// TODO move joinTable to other place (do not join automatically when
-		// double-clicking in lobby)
-		int bigBlind = gameState.getTableMemento().getGameProperty().getBigBlind();
-		DetailedTable thisTable = clientCore.joinTable(getTableId(), 100 * bigBlind);
-		gameState.setTableMemento(thisTable);
 		Shell containingShell = getShell();
-		
 		containingShell.open();
-		for (SeatedPlayer player : gameState.getTableMemento().getPlayers()) {
-			getPlayerSeatComposite(player).update(player);
-		}
 		// Listen to events
 		while (!containingShell.isDisposed()) {
 			if (!containingShell.getDisplay().readAndDispatch())
 				containingShell.getDisplay().sleep();
 		}
+	}
+	
+	/**
+	 * @return this, the GameWindow listens to the Player events also (so far)
+	 * @see org.cspoker.common.api.lobby.holdemtable.event.HoldemTableListener#getHoldemPlayerListener()
+	 */
+	public HoldemPlayerListener getHoldemPlayerListener() {
+		return this;
 	}
 }

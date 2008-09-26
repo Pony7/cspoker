@@ -1,6 +1,5 @@
 package org.cspoker.client.gui.swt.window;
 
-import java.rmi.RemoteException;
 import java.text.ParseException;
 
 import org.cspoker.client.gui.swt.control.ClientGUI;
@@ -9,19 +8,16 @@ import org.cspoker.common.api.chat.event.ChatListener;
 import org.cspoker.common.api.chat.event.ServerMessageEvent;
 import org.cspoker.common.api.chat.event.TableMessageEvent;
 import org.cspoker.common.api.lobby.holdemtable.HoldemTableContext;
-import org.cspoker.common.api.lobby.holdemtable.event.HoldemTableListener;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.HoldemPlayerContext;
-import org.cspoker.common.api.lobby.holdemtable.holdemplayer.event.HoldemPlayerListener;
-import org.cspoker.common.exceptions.IllegalActionException;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.*;
 import org.eclipse.swt.layout.*;
 import org.eclipse.swt.widgets.*;
 
-public class TableUserInputComposite
+class TableUserInputComposite
 		extends ClientComposite
-		implements ChatListener, HoldemTableContext, HoldemPlayerContext {
+		implements ChatListener {
 	
 	int betRaiseAmount;
 	Text betAmountTextField;
@@ -39,38 +35,30 @@ public class TableUserInputComposite
 	Button rebuyButton;
 	Composite composite2;
 	
-	public TableUserInputComposite(ClientComposite parent, int style) {
-		super(parent, parent.getGui(), parent.getClientCore(), style);
+	HoldemTableContext tableContext;
+	
+	public TableUserInputComposite(ClientComposite parent, int style, HoldemTableContext holdemTableContext) {
+		super(parent, style, parent.getClientCore());
 		gameState = parent.getGameState();
+		tableContext = holdemTableContext;
 		initGUI();
 		gameActionGroup.setVisible(false);
 	}
 	
 	void betRaiseButtonMouseDown(MouseEvent evt) {
-		if (betRaiseAmount + gameState.getToCallAmount() >= gameState.getUser().getStackValue()) {
-			clientCore.allIn(getTableId());
-		} else if (GameState.getValue(gameState.getCurrentBetPile()) == 0) {
-			clientCore.bet(getTableId(), betRaiseAmount);
-		} else {
-			clientCore.raise(getTableId(), betRaiseAmount);
-		}
-		
+		tableContext.getHoldemPlayerContext().betOrRaise(betRaiseAmount);
 		gameActionGroup.setVisible(false);
 	}
 	
 	void checkCallButtonMouseDown(MouseEvent evt) {
 		System.out.println("callButton.mouseDown, event=" + evt);
-		if (gameState.getToCallAmount() >= gameState.getUser().getStackValue()) {
-			clientCore.allIn(getTableId());
-		} else {
-			clientCore.call(getTableId());
-		}
+		tableContext.getHoldemPlayerContext().checkOrCall();
 		gameActionGroup.setVisible(false);
 	}
 	
 	void foldButtonMouseDown(MouseEvent evt) {
 		System.out.println("foldButton.mouseDown, event=" + evt);
-		clientCore.fold(getTableId());
+		tableContext.getHoldemPlayerContext().fold();
 		gameActionGroup.setVisible(false);
 	}
 	
@@ -245,17 +233,11 @@ public class TableUserInputComposite
 	
 	void leaveButtonWidgetSelected(SelectionEvent evt) {
 		System.out.println("leaveButton.widgetSelected, event=" + evt);
-		try {
-			clientCore.getCommunication().leaveTable(getTableId());
-			gui.gameWindows.remove(getParent());
-			getShell().close();
-		} catch (RemoteException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalActionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
+		tableContext.getHoldemPlayerContext().leaveGame();
+		tableContext.leaveTable();
+		getClientCore().getGui().getGameWindows().remove(getParent());
+		getShell().close();
 	}
 	
 	void prepareForUserInput() {
@@ -268,31 +250,28 @@ public class TableUserInputComposite
 	}
 	
 	void rebuyButtonWidgetSelected(SelectionEvent evt) {
-		new BuyinDialog(this).open();
+		new BuyinDialog(getClientCore(), null, getGameState().getTableMemento().getGameProperty().getBigBlind()).open();
 	}
 	
 	private void setNewBetRaiseAmount(int amount) {
 		betRaiseAmount = amount;
 		updateBetSlider();
 		updateButtons();
-		betAmountTextField.setText(ClientGUI.formatBet(betRaiseAmount
-				+ GameState.getValue(gameState.getCurrentBetPile())));
+		if (!betAmountTextField.isFocusControl()) {
+			betAmountTextField.setText(ClientGUI.formatBet(betRaiseAmount
+					+ GameState.getValue(gameState.getCurrentBetPile())));
+		}
 	}
 	
 	void sitInOutButtonMouseDown(MouseEvent evt) {
 		System.out.println("sitInOutButton.widgetSelected, event=" + evt);
-		try {
-			if (!sitInOutButton.getSelection()) {
-				clientCore.getCommunication().sitIn(getTableId(), false);
-			} else {
-				clientCore.getCommunication().sitOut(getTableId());
-			}
-		} catch (RemoteException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalActionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		
+		if (!sitInOutButton.getSelection()) {
+			// FIXME Get free seat id ...
+			tableContext.sitIn(0);
+		} else {
+			// TODO new sit out concept
+			// clientCore.getCommunication().sitOut(getTableId());
 		}
 	}
 	
@@ -341,6 +320,8 @@ public class TableUserInputComposite
 	}
 	
 	/**
+	 * FIXME Horrible, this should be done by the {@link ClientGUI#betFormatter}
+	 * 
 	 * @return
 	 * @throws ParseException
 	 */
@@ -387,66 +368,8 @@ public class TableUserInputComposite
 		
 	}
 	
-	/**
-	 * @return itself, this composite is the {@link HoldemPlayerContext} as well
-	 * @see org.cspoker.common.api.lobby.holdemtable.HoldemTableContext#getHoldemPlayerContext()
-	 */
-	public HoldemPlayerContext getHoldemPlayerContext() {
-		return this;
-	}
-	
-	public void leaveTable() {
-	// TODO Auto-generated method stub
-	
-	}
-	
-	public void sitIn(long seatId) {
-	// TODO Auto-generated method stub
-	
-	}
-	
-	public void startGame() {
-	// TODO Auto-generated method stub
-	
-	}
-	
-	public void subscribe(HoldemTableListener holdemTableListener) {
-	// TODO Auto-generated method stub
-	
-	}
-	
-	public void unSubscribe(HoldemTableListener holdemTableListener) {
-	// TODO Auto-generated method stub
-	
-	}
-	
-	public void betOrRaise(int amount) {
-	// TODO Auto-generated method stub
-	
-	}
-	
-	public void checkOrCall() {
-	// TODO Auto-generated method stub
-	
-	}
-	
-	public void fold() {
-	// TODO Auto-generated method stub
-	
-	}
-	
-	public void leaveGame() {
-	// TODO Auto-generated method stub
-	
-	}
-	
-	public void subscribe(HoldemPlayerListener holdemPlayerListener) {
-	// TODO Auto-generated method stub
-	
-	}
-	
-	public void unSubscribe(HoldemPlayerListener holdemPlayerListener) {
-	// TODO Auto-generated method stub
-	
+	public HoldemPlayerContext getPlayerContext() {
+		// TODO Auto-generated method stub
+		return tableContext.getHoldemPlayerContext();
 	}
 }

@@ -145,14 +145,6 @@ public class PlayerSeatComposite
 		return player;
 	}
 	
-	public Label getPlayerName() {
-		return playerName;
-	}
-	
-	public long getSeatId() {
-		return seatId;
-	}
-	
 	/**
 	 * @param e
 	 * @param gameWindow TODO
@@ -251,6 +243,7 @@ public class PlayerSeatComposite
 	}
 	
 	public void onNewDeal(NewDealEvent newDealEvent) {
+		clearHoleCards();
 		setHiddenHoleCards();
 		// Draw dealer button
 		setDealer(player.getName().equalsIgnoreCase(newDealEvent.getDealer().getName()));
@@ -349,7 +342,7 @@ public class PlayerSeatComposite
 	}
 	
 	public void showAction(final String action) {
-		final String name = playerName.getText();
+		final String name = player.getName();
 		playerName.setText(action);
 		playerName.setForeground(Display.getDefault().getSystemColor(SWT.COLOR_BLUE));
 		getDisplay().timerExec(2000, new Runnable() {
@@ -361,7 +354,7 @@ public class PlayerSeatComposite
 				playerName.setForeground(Display.getDefault().getSystemColor(SWT.DEFAULT));
 				// Check because this may have been outdated in the meantime
 				// (sit out etc.)
-				if (!playerName.isDisposed() && playerName.getText().equalsIgnoreCase(action)) {
+				if (!playerName.isDisposed()) {
 					playerName.setText(name);
 				}
 			}
@@ -400,6 +393,7 @@ public class PlayerSeatComposite
 	 */
 	public void update(SeatedPlayer detailedPlayer) {
 		player = detailedPlayer;
+		playerName.setForeground(Display.getDefault().getSystemColor(SWT.DEFAULT));
 		playerName.setText(detailedPlayer.getName());
 		setStack(detailedPlayer.getStackValue());
 		// TODO Cast correct? (Should seat ids really be longs??)

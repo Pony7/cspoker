@@ -1,20 +1,20 @@
 package org.cspoker.client.gui.swt.control;
 
-import java.rmi.RemoteException;
 import java.text.NumberFormat;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
+import java.util.Hashtable;
 
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.DataLine;
 
-import org.cspoker.client.gui.swt.window.ClientComposite;
 import org.cspoker.client.gui.swt.window.GameWindow;
 import org.cspoker.client.gui.swt.window.LobbyWindow;
 import org.cspoker.client.gui.swt.window.LoginDialog;
-import org.cspoker.common.exceptions.IllegalActionException;
+import org.cspoker.common.api.lobby.LobbyContext;
+import org.cspoker.common.api.lobby.holdemtable.HoldemTableContext;
+import org.cspoker.common.elements.table.DetailedTable;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
@@ -23,7 +23,8 @@ import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 
 /**
- * A class for a gui of a client
+ * SWT Client GUI Provides access to all <code>GameWindow</code>s, manages
+ * Display preference constants
  * 
  * @author Cedric, Stephan
  */
@@ -40,8 +41,12 @@ public class ClientGUI {
 	/**
 	 * The current window of this client gui
 	 */
-	public LobbyWindow lobby;
-	public List<GameWindow> gameWindows;
+	private LobbyWindow lobby;
+	private Hashtable<Long, GameWindow> gameWindows;
+	
+	public Collection<GameWindow> getGameWindows() {
+		return gameWindows.values();
+	}
 	
 	// Some of these images are copyrighted so the standard settings use free
 	// images
@@ -85,21 +90,13 @@ public class ClientGUI {
 	public ClientGUI(ClientCore clientCore) {
 		display = Display.getDefault();
 		this.clientCore = clientCore;
-		gameWindows = new ArrayList<GameWindow>();
+		gameWindows = new Hashtable<Long, GameWindow>();
 		betFormatter.setMinimumFractionDigits(0);
 	}
 	
 	/***************************************************************************
 	 * Window & shell
 	 **************************************************************************/
-	/**
-	 * Sets the given window as the current window
-	 * 
-	 * @param window the given window
-	 */
-	public void setAsCurrentWindow(ClientComposite window) {
-	// this.currentWindow = window;
-	}
 	
 	/**
 	 * Disposes the current shell
@@ -118,9 +115,7 @@ public class ClientGUI {
 	 */
 	public LoginDialog createNewLoginDialog() {
 		disposeCurrentShell();
-		LoginDialog loginDialog = new LoginDialog(new Shell(display, SWT.SHELL_TRIM | SWT.APPLICATION_MODAL), SWT.NONE,
-				this, clientCore);
-		return loginDialog;
+		return new LoginDialog(new Shell(display, SWT.SHELL_TRIM | SWT.APPLICATION_MODAL), SWT.NONE, this, clientCore);
 	}
 	
 	/***************************************************************************
@@ -131,10 +126,11 @@ public class ClientGUI {
 	 * 
 	 * @param e the given error message
 	 */
-	public int displayErrorMessage(Exception e) {
+	public static int displayErrorMessage(Exception e) {
 		e.printStackTrace();
 		System.err.println(e);
-		MessageBox errorMsgBox = new MessageBox(new Shell(display), SWT.ICON_ERROR | SWT.RETRY | SWT.ABORT | SWT.IGNORE);
+		MessageBox errorMsgBox = new MessageBox(new Shell(Display.getDefault()), SWT.ICON_ERROR | SWT.RETRY | SWT.ABORT
+				| SWT.IGNORE);
 		StringBuffer sb = new StringBuffer(e.getMessage() + "\n");
 		
 		for (StackTraceElement ste : e.getStackTrace()) {
@@ -144,44 +140,19 @@ public class ClientGUI {
 		return errorMsgBox.open();
 	}
 	
-	/**
-	 * @param tableId
-	 * @return The {@link GameWindow} for the given id, or <code>null</code> if
-	 *         it doesn't exist
-	 */
-	public GameWindow getGameWindow(long id) {
-		for (GameWindow gw : gameWindows) {
-			if (gw.getTableId() == id) {
-				return gw;
-			}
-		}
-		// No Game Window for this table yet
-		GameWindow newGameWindow;
-		try {
-			newGameWindow = new GameWindow(display, this, clientCore, clientCore.getCommunication().getTable(tableId));
-		} catch (RemoteException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return null;
-		} catch (IllegalActionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return null;
-		}
-		gameWindows.add(newGameWindow);
-		return newGameWindow;
-	}
-	
 	public static String formatBet(int amount) {
 		return betFormatter.format(new Double(amount) / 100);
 	}
 	
-	public Image generateSkin(Point size) {
+	public static Image generateSkin(Point size) {
 		// Image result = SWTResourceManager.findImage(tableFile,
 		// SWTResourceManager.getImage(new File(
 		// ClientGUI.THEMES_IMG_DIR + BG_IMAGE_PATH)));
-		Image result = SWTResourceManager.getImage(THEMES_IMG_DIR + TABLE_IMAGE_PATH + ".bmp");
-		return new Image(Display.getDefault(), result.getImageData().scaledTo(size.x, size.y));
+		
+		Image skin = SWTResourceManager.getImage(THEMES_IMG_DIR + TABLE_IMAGE_PATH + ".bmp");
+		Image scaled = new Image(Display.getDefault(), skin.getImageData().scaledTo(size.x, size.y));
+		skin.dispose();
+		return scaled;
 		
 	}
 	
@@ -203,14 +174,46 @@ public class ClientGUI {
 	}
 	
 	public static void setActiveCardDeck(String deckImgFile) {
-		SWTResourceManager.clearImageCache();
+		SWTResourceManager.dispose();
 		ACTIVE_DECK_IMG_FILE = deckImgFile;
 		
 	}
 	
 	public static void setActiveChipsStyle(String chipType) {
-		SWTResourceManager.clearImageCache();
+		SWTResourceManager.dispose();
 		ACTIVE_CHIP_DIR = chipType;
 		
+	}
+	
+	/**
+	 * @param tableId
+	 * @return The {@link GameWindow} for the given id, or <code>null</code> if
+	 *         it doesn't exist
+	 */
+	public GameWindow getGameWindow(LobbyContext context, long tableId) {
+		GameWindow gw = gameWindows.get(tableId);
+		if (gw != null) {
+			return gw;
+		}
+		// No Game Window for this table yet
+		DetailedTable table = context.joinTable(tableId);
+		HoldemTableContext tableContext = context.getHoldemTableContext(tableId);
+		GameWindow newGameWindow = new GameWindow(display, clientCore, tableContext, table);
+		gameWindows.put(tableId, newGameWindow);
+		return newGameWindow;
+	}
+	
+	/**
+	 * @param lobby the lobby to set
+	 */
+	public void setLobby(LobbyWindow lobby) {
+		this.lobby = lobby;
+	}
+	
+	/**
+	 * @return the lobby
+	 */
+	public LobbyWindow getLobby() {
+		return lobby;
 	}
 }

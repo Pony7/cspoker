@@ -2,6 +2,7 @@ package org.cspoker.client.gui.swt.window;
 
 import org.cspoker.client.gui.swt.control.ClientCore;
 import org.cspoker.client.gui.swt.control.ClientGUI;
+import org.cspoker.common.api.cashier.CashierContext;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -15,17 +16,18 @@ import org.eclipse.swt.widgets.*;
 public class BuyinDialog
 		extends ClientDialog {
 	
-	public BuyinDialog(TableUserInputComposite tableUserInputComposite) {
-		this(new Shell(Display.getDefault(), SWT.SHELL_TRIM | SWT.APPLICATION_MODAL), SWT.NONE, tableUserInputComposite
-				.getGui(), tableUserInputComposite.getClientCore(), tableUserInputComposite);
-		
+	private int bigBlind;
+	private CashierContext cashierContext;
+	
+	public BuyinDialog(ClientCore core, CashierContext cashier, int bigBlind) {
+		this(new Shell(Display.getDefault(), SWT.SHELL_TRIM | SWT.APPLICATION_MODAL), SWT.NONE, core);
+		this.bigBlind = bigBlind;
+		cashierContext = cashier;
 	}
 	
-	public BuyinDialog(Shell parent, int style, ClientGUI gui, ClientCore clientCore,
-			TableUserInputComposite tableUserInputComposite) {
-		super(parent, style, gui, clientCore);
-		this.tableUserInputComposite = tableUserInputComposite;
-		init();
+	private BuyinDialog(Shell parent, int style, ClientCore clientCore) {
+		super(parent, style, clientCore);
+		initGUI();
 	}
 	
 	static private Label rebuyAmountLabel;
@@ -34,8 +36,6 @@ public class BuyinDialog
 	static private Button rebuyButton;
 	static private Text maxRebuyText;
 	static private Label maxRebuyLabel;
-	
-	private final TableUserInputComposite tableUserInputComposite;
 	
 	public void open() {
 		try {
@@ -53,7 +53,7 @@ public class BuyinDialog
 		}
 	}
 	
-	private void init() {
+	private void initGUI() {
 		getParent().setText("Table Cashier");
 		getParent().setMinimumSize(250, 100);
 		GridLayout dialogShellLayout = new GridLayout();
@@ -76,8 +76,7 @@ public class BuyinDialog
 				rebuyAmountText.setBounds(38, 20, 60, 30);
 				// TODO Add logic which checks for valid amount when issuing
 				// rebuy request
-				rebuyAmountText.setText(ClientGUI.formatBet(tableUserInputComposite.getGameState().getTableMemento()
-						.getGameProperty().getBigBlind() * 100));
+				rebuyAmountText.setText(ClientGUI.formatBet(bigBlind * 100));
 			}
 		}
 		{
@@ -89,8 +88,7 @@ public class BuyinDialog
 			{
 				maxRebuyText = new Text(composite1, SWT.CENTER | SWT.BORDER);
 				// TODO maybe different rebuy allowed from 100 BB?
-				maxRebuyText.setText(ClientGUI.formatBet(tableUserInputComposite.getGameState().getTableMemento()
-						.getGameProperty().getBigBlind() * 100));
+				maxRebuyText.setText(ClientGUI.formatBet(bigBlind * 100));
 				maxRebuyText.setEditable(false);
 			}
 		}
@@ -105,20 +103,14 @@ public class BuyinDialog
 				@Override
 				public void widgetSelected(SelectionEvent evt) {
 					System.out.println("rebuyButton.mouseDown, event=" + evt);
-					try {
-						clientCore.getCommunication().rebuy(tableUserInputComposite.getTableId(),
-								ClientGUI.betFormatter.parse(rebuyAmountText.getText()).intValue() * 100);
-						getParent().close();
-					} catch (Exception e) {
-						e.printStackTrace();
-						switch (gui.displayErrorMessage(e)) {
-							case SWT.RETRY:
-								return;
-							default:
-								if (!getParent().isDisposed())
-									getParent().close();
-						}
-					}
+					
+					// TODO Still null, needs to be implemented. Why cant I
+					// request a specific amount??
+					cashierContext.requestMoney();
+					// cashierContext.getMoneyAmount(ClientGUI.betFormatter.
+					// parse(rebuyAmountText.getText())
+					// .intValue() * 100);
+					getParent().close();
 				}
 			});
 		}

@@ -1,5 +1,6 @@
 package org.cspoker.client.gui.swt.window;
 
+import org.cspoker.client.User;
 import org.cspoker.client.gui.swt.control.ClientCore;
 import org.cspoker.client.gui.swt.control.ClientGUI;
 import org.cspoker.client.gui.swt.control.SWTResourceManager;
@@ -8,10 +9,9 @@ import org.cspoker.common.api.chat.event.ServerMessageEvent;
 import org.cspoker.common.api.chat.event.TableMessageEvent;
 import org.cspoker.common.api.lobby.LobbyContext;
 import org.cspoker.common.api.lobby.event.LobbyListener;
+import org.cspoker.common.api.lobby.event.RemoteLobbyListener;
 import org.cspoker.common.api.lobby.event.TableCreatedEvent;
 import org.cspoker.common.api.lobby.event.TableRemovedEvent;
-import org.cspoker.common.api.lobby.holdemtable.HoldemTableContext;
-import org.cspoker.common.api.lobby.holdemtable.event.HoldemTableListener;
 import org.cspoker.common.elements.table.DetailedTable;
 import org.cspoker.common.elements.table.Table;
 import org.cspoker.common.elements.table.TableConfiguration;
@@ -31,7 +31,12 @@ import org.eclipse.swt.widgets.*;
  */
 public class LobbyWindow
 		extends ClientComposite
-		implements LobbyListener, LobbyContext, ChatListener {
+		implements LobbyListener, ChatListener {
+	
+	private LobbyContext context;
+	
+	private ClientGUI gui;
+	private ClientCore clientCore;
 	
 	private Menu menu1;
 	private Button createTableButton;
@@ -67,15 +72,18 @@ public class LobbyWindow
 	private MenuItem starsChipsMenuItem;
 	private MenuItem eptChipsMenuItem;
 	private MenuItem pokerWikiaChipsMenuItem;
+	
 	{
 		// Register as a resource user - SWTResourceManager will
 		// handle the obtaining and disposing of resources
 		SWTResourceManager.registerResourceUser(this);
 	}
 	
-	public LobbyWindow(Display display, final ClientGUI gui, final ClientCore clientCore) {
-		super(new Shell(display), gui, clientCore, SWT.NONE);
-		gui.lobby = this;
+	public LobbyWindow(Display display, ClientGUI gui, ClientCore core) {
+		super(new Shell(display), SWT.NONE);
+		this.gui = gui;
+		this.clientCore = core;
+		this.context = core.getCommunication().getLobbyContext();
 		init();
 	}
 	
@@ -115,7 +123,9 @@ public class LobbyWindow
 									if (selectedItems.length == 1) {
 										// Open selected table
 										long tid = (Long.parseLong(selectedItems[0].getText(1)));
-										gui.getGameWindow(tid).show();
+										
+										GameWindow w = gui.getGameWindow(context, tid);
+										w.show();
 									}
 								}
 							});
@@ -332,12 +342,9 @@ public class LobbyWindow
 	
 	public void show() {
 		Shell shell = getShell();
-		shell.setText("CSPoker - Logged in as " + clientCore.getUser().getUserName());
+		shell.setText("CSPoker - Logged in as " + getUser().getUserName());
 		shell.setLayout(new FillLayout());
-		shell.setSize(getSize());
-		
 		shell.open();
-		refreshTables();
 		while (!shell.isDisposed()) {
 			if (!shell.getDisplay().readAndDispatch())
 				shell.getDisplay().sleep();
@@ -345,23 +352,22 @@ public class LobbyWindow
 	}
 	
 	public void refreshTables() {
-		TableList tl = getTableList();
+		TableList tl = context.getTableList();
 		availableGameTables.clearAll();
 		availableGameTables.setItemCount(0);
 		for (Table t : tl.getTables()) {
-			insertInformation(getTableInformation(t.getId()));
+			insertInformation(context.getTableInformation(t.getId()));
 		}
 	}
 	
 	private void createTableButtonMouseDown(MouseEvent evt) {
 		System.out.println("Table creation requested ...");
 		// clientCore.createTable();
-		new TableCreationDialog(gui, clientCore).open();
+		new TableCreationDialog(gui, this).open();
 	}
 	
-	public HoldemTableListener getHoldemTableListener(long tableId) {
-		// TODO Auto-generated method stub
-		return gui.getGameWindow(tableId);
+	public GameWindow getHoldemTableListener(long tableId) {
+		return gui.getGameWindow(context, tableId);
 	}
 	
 	/**
@@ -372,7 +378,7 @@ public class LobbyWindow
 	public void onTableCreated(TableCreatedEvent tableCreatedEvent) {
 		Table t = tableCreatedEvent.getTable();
 		// TODO Get detail information to display in the list from the server
-		DetailedTable detailedTable = clientCore.getTable(t);
+		DetailedTable detailedTable = context.getTableInformation(t.getId());
 		
 		insertInformation(detailedTable);
 		
@@ -403,57 +409,33 @@ public class LobbyWindow
 		}
 	}
 	
-	public DetailedTable createTable(String name, TableConfiguration configuration) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
-	public HoldemTableContext getHoldemTableContext(long tableId) {
-		return gui.getGameWindow(tableId).getUserInputComposite();
-	}
-	
-	public DetailedTable getTableInformation(long tableId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
-	public TableList getTableList() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
-	public DetailedTable joinTable(long tableId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
-	public void removeTable(long tableId) {
-	// TODO Auto-generated method stub
-	
-	}
-	
-	public void subscribe(LobbyListener lobbyListener) {
-	// TODO Auto-generated method stub
-	
-	}
-	
-	public void unSubscribe(LobbyListener lobbyListener) {
-	// TODO Auto-generated method stub
-	
-	}
-	
 	public void onServerMessage(ServerMessageEvent serverMessageEvent) {
 		// TODO Show the server event maybe in the lobby as well
-		for (GameWindow openWindow : gui.gameWindows) {
+		for (GameWindow openWindow : gui.getGameWindows()) {
 			serverMessageEvent.dispatch(openWindow.getUserInputComposite());
 		}
 		
 	}
 	
 	public void onTableMessage(TableMessageEvent tableMessageEvent) {
-		for (GameWindow openWindow : gui.gameWindows) {
+		for (GameWindow openWindow : gui.getGameWindows()) {
 			tableMessageEvent.dispatch(openWindow.getUserInputComposite());
 		}
 		
 	}
+	
+	public User getUser() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	public void subscribe(RemoteLobbyListener lobbyListener) {
+
+	}
+	
+	public void unSubscribe(RemoteLobbyListener lobbyListener) {
+	// TODO Auto-generated method stub
+	
+	}
+	
 }
