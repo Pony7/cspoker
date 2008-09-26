@@ -1,6 +1,5 @@
 package org.cspoker.client.gui.swt.window;
 
-import org.cspoker.client.gui.swt.control.ClientCore;
 import org.cspoker.client.gui.swt.control.ClientGUI;
 import org.cspoker.client.gui.swt.control.GameState;
 import org.cspoker.client.gui.swt.control.SWTResourceManager;
@@ -19,7 +18,6 @@ import org.eclipse.swt.events.ShellAdapter;
 import org.eclipse.swt.events.ShellEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
 /**
@@ -35,7 +33,6 @@ public class GameWindow
 		implements HoldemTableListener, HoldemPlayerListener {
 	
 	private final HoldemTableContext holdemTableContext;
-	private final long tableId;
 	
 	private TableUserInputComposite userInputComposite;
 	private TableComposite tableComposite;
@@ -46,12 +43,12 @@ public class GameWindow
 		SWTResourceManager.registerResourceUser(this);
 	}
 	
-	public GameWindow(Display display, ClientCore core, HoldemTableContext tableContext, DetailedTable table) {
+	public GameWindow(LobbyWindow lobbyWindow, DetailedTable table) {
 		
-		super(new Shell(display, SWT.CLOSE | SWT.RESIZE), SWT.NONE, core);
+		super(new Shell(lobbyWindow.getClientCore().getGui().display, SWT.CLOSE | SWT.RESIZE), SWT.NONE, lobbyWindow
+				.getClientCore());
 		gameState = new GameState(table);
-		this.tableId = table.getId();
-		holdemTableContext = tableContext;
+		holdemTableContext = lobbyWindow.getContext().getHoldemTableContext(table.getId());
 		initGUI();
 		for (SeatedPlayer player : table.getPlayers()) {
 			getPlayerSeatComposite(player).update(player);
@@ -237,7 +234,6 @@ public class GameWindow
 		gameState.newRound(newRoundEvent.getRoundName());
 		tableComposite.moveBetsToPot();
 		if (isUser(newRoundEvent.getInitialPlayer())) {
-			gameState.setUser(newRoundEvent.getInitialPlayer());
 			userInputComposite.prepareForUserInput();
 		}
 		
@@ -252,7 +248,6 @@ public class GameWindow
 		nextPlayerEvent.dispatch(getPlayerSeatComposite(nextPlayerEvent.getPlayer()));
 		
 		if (isUser(playerToAct)) {
-			gameState.setUser(playerToAct);
 			userInputComposite.prepareForUserInput();
 		} else {
 			userInputComposite.gameActionGroup.setVisible(false);

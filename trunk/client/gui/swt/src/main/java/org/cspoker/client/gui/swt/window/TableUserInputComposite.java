@@ -46,12 +46,14 @@ class TableUserInputComposite
 	}
 	
 	void betRaiseButtonMouseDown(MouseEvent evt) {
+		gameState.updateStackAndBetChips(betRaiseAmount);
 		tableContext.getHoldemPlayerContext().betOrRaise(betRaiseAmount);
 		gameActionGroup.setVisible(false);
 	}
 	
 	void checkCallButtonMouseDown(MouseEvent evt) {
 		System.out.println("callButton.mouseDown, event=" + evt);
+		gameState.updateStackAndBetChips(0);
 		tableContext.getHoldemPlayerContext().checkOrCall();
 		gameActionGroup.setVisible(false);
 	}
@@ -84,7 +86,8 @@ class TableUserInputComposite
 		{
 			gameActionGroup = new Composite(this, SWT.NONE);
 			RowLayout group2Layout = new RowLayout(SWT.VERTICAL);
-			group2Layout.center = true;
+			// Available in SWT version 3.4
+			// group2Layout.center = true;
 			gameActionGroup.setLayout(group2Layout);
 			GridData group2LData = new GridData();
 			group2LData.grabExcessHorizontalSpace = true;
@@ -93,7 +96,8 @@ class TableUserInputComposite
 			{
 				manualEnterBetGroup = new Composite(gameActionGroup, SWT.NONE);
 				RowLayout manualEnterBetGroupLayout = new RowLayout(SWT.HORIZONTAL);
-				manualEnterBetGroupLayout.center = true;
+				// Available in SWT version 3.4
+				// manualEnterBetGroupLayout.center = true;
 				manualEnterBetGroupLayout.justify = true;
 				manualEnterBetGroup.setLayout(manualEnterBetGroupLayout);
 				manualEnterBetGroup.setLayoutData(new RowData(300, 40));
@@ -277,8 +281,8 @@ class TableUserInputComposite
 	
 	void updateBetSlider() {
 		// +10 is some weirdo behavior/bug??
-		betSlider.setMaximum(gameState.getUser().getStackValue() + gameState.getUser().getBetChipsValue());
-		betSlider.setSelection(gameState.getUser().getStackValue() + gameState.getUser().getBetChipsValue());
+		betSlider.setMaximum(gameState.getRemainingStack() + gameState.getBetChipsThisRound());
+		betSlider.setSelection(gameState.getRemainingStack() + gameState.getBetChipsThisRound());
 		// native windows bug fix;
 		int extras = betSlider.getMaximum() - betSlider.getSelection();
 		if (extras != 0) {
@@ -289,8 +293,8 @@ class TableUserInputComposite
 	}
 	
 	void updateButtons() {
-		int stackLeft = gameState.getUser().getStackValue();
-		int betChips = gameState.getUser().getBetChipsValue();
+		int stackLeft = gameState.getRemainingStack();
+		int betChips = gameState.getBetChipsThisRound();
 		int toCall = gameState.getToCallAmount();
 		
 		if (toCall == 0) {

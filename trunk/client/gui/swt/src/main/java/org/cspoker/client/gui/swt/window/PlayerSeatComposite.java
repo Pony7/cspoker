@@ -78,7 +78,7 @@ public class PlayerSeatComposite
 	private int currentStack;
 	
 	public PlayerSeatComposite(TableComposite parent, int style, int seatId) {
-		super(parent, parent.getGui(), parent.getClientCore(), style);
+		super(parent, style, parent.getClientCore());
 		initGUI();
 	}
 	

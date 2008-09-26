@@ -12,7 +12,6 @@ import org.cspoker.common.api.shared.event.ServerListener;
 import org.cspoker.common.elements.table.DetailedTable;
 import org.cspoker.common.elements.table.TableConfiguration;
 import org.cspoker.common.util.Log4JPropertiesLoader;
-import org.eclipse.swt.widgets.Display;
 
 /**
  * The core of any client
@@ -89,7 +88,7 @@ public class ClientCore
 					new TableConfiguration(200, 2000));
 		} catch (Exception e) {
 			e.printStackTrace();
-			gui.displayErrorMessage(e);
+			ClientGUI.displayErrorMessage(e);
 			return null;
 		}
 	}
@@ -113,7 +112,7 @@ public class ClientCore
 			gui = new ClientGUI(this);
 			communication = getGui().createNewLoginDialog().open();
 			communication.subscribe(this);
-			LobbyWindow lobby = new LobbyWindow(Display.getDefault(), gui, this);
+			LobbyWindow lobby = new LobbyWindow(this);
 			getGui().setLobby(lobby);
 			
 			lobby.show();
