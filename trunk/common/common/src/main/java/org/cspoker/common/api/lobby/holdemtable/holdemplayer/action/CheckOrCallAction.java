@@ -19,7 +19,7 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.cspoker.common.api.lobby.holdemtable.holdemplayer.HoldemPlayerContext;
+import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.HoldemPlayerContext;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)

@@ -18,13 +18,13 @@ package org.cspoker.server.rmi.asynchronous.context;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executor;
 
-import org.cspoker.common.api.lobby.holdemtable.holdemplayer.DelegatingHoldemPlayerContext;
-import org.cspoker.common.api.lobby.holdemtable.holdemplayer.HoldemPlayerContext;
-import org.cspoker.common.api.lobby.holdemtable.holdemplayer.event.RemoteHoldemPlayerListener;
+import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.ForwardingHoldemPlayerContext;
+import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.HoldemPlayerContext;
+import org.cspoker.common.api.lobby.holdemtable.holdemplayer.listener.RemoteHoldemPlayerListener;
 import org.cspoker.common.api.shared.Killable;
 import org.cspoker.server.rmi.asynchronous.listener.AsynchronousHoldemPlayerListener;
 
-public class AsynchronousHoldemPlayerContext extends DelegatingHoldemPlayerContext {
+public class AsynchronousHoldemPlayerContext extends ForwardingHoldemPlayerContext {
 
 	protected ConcurrentHashMap<RemoteHoldemPlayerListener, AsynchronousHoldemPlayerListener> wrappers = 
 		new ConcurrentHashMap<RemoteHoldemPlayerListener, AsynchronousHoldemPlayerListener>();

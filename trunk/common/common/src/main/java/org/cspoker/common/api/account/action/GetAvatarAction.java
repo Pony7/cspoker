@@ -18,7 +18,7 @@ package org.cspoker.common.api.account.action;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.cspoker.common.api.account.AccountContext;
+import org.cspoker.common.api.account.context.AccountContext;
 
 @XmlRootElement
 public class GetAvatarAction extends AccountAction<byte[]> {

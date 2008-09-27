@@ -18,14 +18,14 @@ package org.cspoker.server.rmi.asynchronous.context;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executor;
 
-import org.cspoker.common.api.lobby.DelegatingLobbyContext;
-import org.cspoker.common.api.lobby.LobbyContext;
-import org.cspoker.common.api.lobby.event.RemoteLobbyListener;
-import org.cspoker.common.api.lobby.holdemtable.HoldemTableContext;
+import org.cspoker.common.api.lobby.context.ForwardingLobbyContext;
+import org.cspoker.common.api.lobby.context.LobbyContext;
+import org.cspoker.common.api.lobby.holdemtable.context.HoldemTableContext;
+import org.cspoker.common.api.lobby.listener.RemoteLobbyListener;
 import org.cspoker.common.api.shared.Killable;
 import org.cspoker.server.rmi.asynchronous.listener.AsynchronousLobbyListener;
 
-public class AsynchronousLobbyContext extends DelegatingLobbyContext {
+public class AsynchronousLobbyContext extends ForwardingLobbyContext {
 
 	protected ConcurrentHashMap<RemoteLobbyListener, AsynchronousLobbyListener> wrappedListeners = new ConcurrentHashMap<RemoteLobbyListener, AsynchronousLobbyListener>();
 	protected Executor executor;

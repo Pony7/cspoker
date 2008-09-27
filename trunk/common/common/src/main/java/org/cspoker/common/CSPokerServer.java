@@ -17,7 +17,7 @@ package org.cspoker.common;
 
 import javax.security.auth.login.LoginException;
 
-import org.cspoker.common.api.shared.ServerContext;
+import org.cspoker.common.api.shared.context.ServerContext;
 
 public interface CSPokerServer extends RemoteCSPokerServer {
 

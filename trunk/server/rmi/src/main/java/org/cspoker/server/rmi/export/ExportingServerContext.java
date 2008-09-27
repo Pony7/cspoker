@@ -18,14 +18,14 @@ package org.cspoker.server.rmi.export;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
-import org.cspoker.common.api.account.AccountContext;
-import org.cspoker.common.api.cashier.CashierContext;
-import org.cspoker.common.api.chat.ChatContext;
-import org.cspoker.common.api.lobby.LobbyContext;
-import org.cspoker.common.api.shared.DelegatingServerContext;
-import org.cspoker.common.api.shared.ServerContext;
+import org.cspoker.common.api.account.context.AccountContext;
+import org.cspoker.common.api.cashier.context.CashierContext;
+import org.cspoker.common.api.chat.context.ChatContext;
+import org.cspoker.common.api.lobby.context.LobbyContext;
+import org.cspoker.common.api.shared.context.ForwardingServerContext;
+import org.cspoker.common.api.shared.context.ServerContext;
 
-public class ExportingServerContext extends DelegatingServerContext {
+public class ExportingServerContext extends ForwardingServerContext {
 
 	private AccountContext accountContext;
 	private CashierContext cashierContext;

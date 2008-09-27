@@ -18,6 +18,7 @@ package org.cspoker.common.api.lobby.holdemtable.event;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
 import org.cspoker.common.elements.player.Player;
 
 /**
@@ -27,7 +28,7 @@ import org.cspoker.common.elements.player.Player;
  * 
  */
 @XmlRootElement
-public class LeaveGameEvent implements HoldemTableEvent {
+public class LeaveGameEvent extends HoldemTableEvent {
 
 	private static final long serialVersionUID = -5339079807813674278L;
 

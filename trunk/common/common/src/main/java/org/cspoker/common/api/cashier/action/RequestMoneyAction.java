@@ -17,7 +17,7 @@ package org.cspoker.common.api.cashier.action;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.cspoker.common.api.cashier.CashierContext;
+import org.cspoker.common.api.cashier.context.CashierContext;
 
 @XmlRootElement
 public class RequestMoneyAction extends CashierAction<Void> {

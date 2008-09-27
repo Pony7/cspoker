@@ -4,11 +4,11 @@ import java.text.ParseException;
 
 import org.cspoker.client.gui.swt.control.ClientGUI;
 import org.cspoker.client.gui.swt.control.GameState;
-import org.cspoker.common.api.chat.event.ChatListener;
 import org.cspoker.common.api.chat.event.ServerMessageEvent;
 import org.cspoker.common.api.chat.event.TableMessageEvent;
-import org.cspoker.common.api.lobby.holdemtable.HoldemTableContext;
-import org.cspoker.common.api.lobby.holdemtable.holdemplayer.HoldemPlayerContext;
+import org.cspoker.common.api.chat.listener.ChatListener;
+import org.cspoker.common.api.lobby.holdemtable.context.HoldemTableContext;
+import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.HoldemPlayerContext;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.*;
@@ -333,7 +333,7 @@ class TableUserInputComposite
 			throws ParseException {
 		int desiredAmount = 0;
 		
-		input = input.replaceAll("€", "");
+		input = input.replaceAll("ï¿½", "");
 		input = input.replaceAll(" ", "");
 		if (input.indexOf(",") != -1) {
 			input = input.replaceAll(",", ".");
@@ -345,8 +345,8 @@ class TableUserInputComposite
 			input = input.concat("0");
 		}
 		
-		if (input.indexOf("€") == -1) {
-			input = input.concat(" €");
+		if (input.indexOf("ï¿½") == -1) {
+			input = input.concat(" ï¿½");
 		}
 		desiredAmount = ClientGUI.betFormatter.parse(input).intValue()
 				- GameState.getValue(gameState.getCurrentBetPile());

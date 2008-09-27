@@ -17,7 +17,7 @@ package org.cspoker.common.api.chat.action;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.cspoker.common.api.chat.ChatContext;
+import org.cspoker.common.api.chat.context.ChatContext;
 
 @XmlRootElement
 public class SendTableMessageAction extends SendMessageAction {

@@ -19,7 +19,7 @@ import java.io.Serializable;
 
 import javax.xml.bind.annotation.XmlAttribute;
 
-import org.cspoker.common.api.shared.ServerContext;
+import org.cspoker.common.api.shared.context.ServerContext;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 
 public abstract class Action<T> implements Serializable {

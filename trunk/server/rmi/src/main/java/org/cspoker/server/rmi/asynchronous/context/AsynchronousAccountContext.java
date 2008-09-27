@@ -18,13 +18,13 @@ package org.cspoker.server.rmi.asynchronous.context;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executor;
 
-import org.cspoker.common.api.account.AccountContext;
-import org.cspoker.common.api.account.DelegatingAccountContext;
+import org.cspoker.common.api.account.context.AccountContext;
+import org.cspoker.common.api.account.context.ForwardingAccountContext;
 import org.cspoker.common.api.account.event.RemoteAccountListener;
 import org.cspoker.common.api.shared.Killable;
 import org.cspoker.server.rmi.asynchronous.listener.AsynchronousAccountListener;
 
-public class AsynchronousAccountContext extends DelegatingAccountContext {
+public class AsynchronousAccountContext extends ForwardingAccountContext {
 
 	protected ConcurrentHashMap<RemoteAccountListener, AsynchronousAccountListener> wrappers = 
 		new ConcurrentHashMap<RemoteAccountListener, AsynchronousAccountListener>();

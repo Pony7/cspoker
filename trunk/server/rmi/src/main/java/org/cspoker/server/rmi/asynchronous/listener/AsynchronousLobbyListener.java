@@ -18,11 +18,11 @@ package org.cspoker.server.rmi.asynchronous.listener;
 import java.rmi.RemoteException;
 import java.util.concurrent.Executor;
 
-import org.cspoker.common.api.lobby.event.LobbyListener;
-import org.cspoker.common.api.lobby.event.RemoteLobbyListener;
 import org.cspoker.common.api.lobby.event.TableCreatedEvent;
 import org.cspoker.common.api.lobby.event.TableRemovedEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.HoldemTableListener;
+import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
+import org.cspoker.common.api.lobby.listener.LobbyListener;
+import org.cspoker.common.api.lobby.listener.RemoteLobbyListener;
 import org.cspoker.common.api.shared.Killable;
 
 public class AsynchronousLobbyListener extends AsynchronousListener implements LobbyListener{

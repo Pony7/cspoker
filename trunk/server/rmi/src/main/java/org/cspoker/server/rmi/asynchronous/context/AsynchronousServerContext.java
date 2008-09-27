@@ -17,14 +17,14 @@ package org.cspoker.server.rmi.asynchronous.context;
 
 import java.util.concurrent.Executor;
 
-import org.cspoker.common.api.account.AccountContext;
-import org.cspoker.common.api.cashier.CashierContext;
-import org.cspoker.common.api.chat.ChatContext;
-import org.cspoker.common.api.lobby.LobbyContext;
-import org.cspoker.common.api.shared.DelegatingServerContext;
-import org.cspoker.common.api.shared.ServerContext;
+import org.cspoker.common.api.account.context.AccountContext;
+import org.cspoker.common.api.cashier.context.CashierContext;
+import org.cspoker.common.api.chat.context.ChatContext;
+import org.cspoker.common.api.lobby.context.LobbyContext;
+import org.cspoker.common.api.shared.context.ForwardingServerContext;
+import org.cspoker.common.api.shared.context.ServerContext;
 
-public class AsynchronousServerContext extends DelegatingServerContext {
+public class AsynchronousServerContext extends ForwardingServerContext {
 
 	private final AccountContext accountContext;
 	private final CashierContext cashierContext;

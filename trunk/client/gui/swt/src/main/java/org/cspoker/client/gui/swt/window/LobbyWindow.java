@@ -4,14 +4,14 @@ import org.cspoker.client.User;
 import org.cspoker.client.gui.swt.control.ClientCore;
 import org.cspoker.client.gui.swt.control.ClientGUI;
 import org.cspoker.client.gui.swt.control.SWTResourceManager;
-import org.cspoker.common.api.chat.event.ChatListener;
 import org.cspoker.common.api.chat.event.ServerMessageEvent;
 import org.cspoker.common.api.chat.event.TableMessageEvent;
-import org.cspoker.common.api.lobby.LobbyContext;
-import org.cspoker.common.api.lobby.event.LobbyListener;
-import org.cspoker.common.api.lobby.event.RemoteLobbyListener;
+import org.cspoker.common.api.chat.listener.ChatListener;
+import org.cspoker.common.api.lobby.context.LobbyContext;
 import org.cspoker.common.api.lobby.event.TableCreatedEvent;
 import org.cspoker.common.api.lobby.event.TableRemovedEvent;
+import org.cspoker.common.api.lobby.listener.LobbyListener;
+import org.cspoker.common.api.lobby.listener.RemoteLobbyListener;
 import org.cspoker.common.elements.table.DetailedTable;
 import org.cspoker.common.elements.table.Table;
 import org.cspoker.common.elements.table.TableConfiguration;
@@ -377,7 +377,7 @@ public class LobbyWindow
 	/**
 	 * Very simply just refreshs all tables for now TODO Slim down
 	 * 
-	 * @see org.cspoker.common.api.lobby.event.LobbyListener#onTableCreated(org.cspoker.common.api.lobby.event.TableCreatedEvent)
+	 * @see org.cspoker.common.api.lobby.listener.LobbyListener#onTableCreated(org.cspoker.common.api.lobby.event.TableCreatedEvent)
 	 */
 	public void onTableCreated(TableCreatedEvent tableCreatedEvent) {
 		Table t = tableCreatedEvent.getTable();
@@ -400,7 +400,7 @@ public class LobbyWindow
 	/**
 	 * Very simply just refreshs all tables for now TODO Slim down
 	 * 
-	 * @see org.cspoker.common.api.lobby.event.LobbyListener#onTableRemoved(org.cspoker.common.api.lobby.event.TableRemovedEvent)
+	 * @see org.cspoker.common.api.lobby.listener.LobbyListener#onTableRemoved(org.cspoker.common.api.lobby.event.TableRemovedEvent)
 	 */
 	public void onTableRemoved(TableRemovedEvent tableRemovedEvent) {
 		// Search for the table and dispose of the widget

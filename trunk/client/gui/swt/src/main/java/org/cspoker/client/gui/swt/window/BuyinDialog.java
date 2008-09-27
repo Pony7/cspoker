@@ -2,7 +2,7 @@ package org.cspoker.client.gui.swt.window;
 
 import org.cspoker.client.gui.swt.control.ClientCore;
 import org.cspoker.client.gui.swt.control.ClientGUI;
-import org.cspoker.common.api.cashier.CashierContext;
+import org.cspoker.common.api.cashier.context.CashierContext;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;

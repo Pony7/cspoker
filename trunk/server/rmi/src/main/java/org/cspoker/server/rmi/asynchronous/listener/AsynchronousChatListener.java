@@ -18,10 +18,10 @@ package org.cspoker.server.rmi.asynchronous.listener;
 import java.rmi.RemoteException;
 import java.util.concurrent.Executor;
 
-import org.cspoker.common.api.chat.event.ChatListener;
-import org.cspoker.common.api.chat.event.RemoteChatListener;
 import org.cspoker.common.api.chat.event.ServerMessageEvent;
 import org.cspoker.common.api.chat.event.TableMessageEvent;
+import org.cspoker.common.api.chat.listener.ChatListener;
+import org.cspoker.common.api.chat.listener.RemoteChatListener;
 import org.cspoker.common.api.shared.Killable;
 
 public class AsynchronousChatListener extends AsynchronousListener implements ChatListener{

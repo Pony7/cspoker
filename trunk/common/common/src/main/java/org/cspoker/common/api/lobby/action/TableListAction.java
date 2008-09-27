@@ -17,7 +17,7 @@ package org.cspoker.common.api.lobby.action;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.cspoker.common.api.lobby.LobbyContext;
+import org.cspoker.common.api.lobby.context.LobbyContext;
 import org.cspoker.common.elements.table.TableList;
 
 @XmlRootElement

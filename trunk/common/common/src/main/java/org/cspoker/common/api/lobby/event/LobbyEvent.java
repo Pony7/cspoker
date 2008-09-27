@@ -15,15 +15,15 @@
  */
 package org.cspoker.common.api.lobby.event;
 
-import org.cspoker.common.api.shared.event.ServerEvent;
-import org.cspoker.common.api.shared.event.ServerListener;
+import org.cspoker.common.api.lobby.listener.LobbyListener;
+import org.cspoker.common.api.lobby.listener.LobbyListenerTree;
 
-public abstract class LobbyEvent implements ServerEvent {
+public abstract class LobbyEvent extends LobbyTreeEvent {
 
-	private static final long serialVersionUID = 557148706756328395L;
+	private static final long serialVersionUID = -2965573491645342800L;
 
-	public void dispatch(ServerListener listener) {
-		dispatch(listener.getLobbyListener());
+	public void dispatch(LobbyListenerTree lobbyListenerTree){
+		dispatch(lobbyListenerTree.getLobbyListener());
 	}
 
 	public abstract void dispatch(LobbyListener lobbyListener);

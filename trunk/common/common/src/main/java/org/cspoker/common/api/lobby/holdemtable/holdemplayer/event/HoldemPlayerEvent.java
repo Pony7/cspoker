@@ -15,15 +15,16 @@
  */
 package org.cspoker.common.api.lobby.holdemtable.holdemplayer.event;
 
-import org.cspoker.common.api.lobby.holdemtable.event.HoldemTableEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.HoldemTableListener;
+import org.cspoker.common.api.lobby.holdemtable.event.HoldemTableTreeEvent;
+import org.cspoker.common.api.lobby.holdemtable.holdemplayer.listener.HoldemPlayerListener;
+import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListenerTree;
 
-public abstract class HoldemPlayerEvent implements HoldemTableEvent {
+public abstract class HoldemPlayerEvent implements HoldemTableTreeEvent {
 	
 	private static final long serialVersionUID = 7840723687804921623L;
 
-	public void dispatch(HoldemTableListener holdemTableListener){
-		dispatch(holdemTableListener.getHoldemPlayerListener());
+	public void dispatch(HoldemTableListenerTree holdemTableListenerTree){
+		dispatch(holdemTableListenerTree.getHoldemPlayerListener());
 	}
 	
 	public abstract void dispatch(HoldemPlayerListener holdemPlayerListener);

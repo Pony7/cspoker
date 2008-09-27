@@ -3,10 +3,11 @@ package org.cspoker.client.gui.swt.window;
 import org.cspoker.client.gui.swt.control.ClientGUI;
 import org.cspoker.client.gui.swt.control.GameState;
 import org.cspoker.client.gui.swt.control.SWTResourceManager;
-import org.cspoker.common.api.lobby.holdemtable.HoldemTableContext;
+import org.cspoker.common.api.lobby.holdemtable.context.HoldemTableContext;
 import org.cspoker.common.api.lobby.holdemtable.event.*;
-import org.cspoker.common.api.lobby.holdemtable.holdemplayer.event.HoldemPlayerListener;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.event.NewPocketCardsEvent;
+import org.cspoker.common.api.lobby.holdemtable.holdemplayer.listener.HoldemPlayerListener;
+import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
 import org.cspoker.common.elements.player.Player;
 import org.cspoker.common.elements.player.SeatedPlayer;
 import org.cspoker.common.elements.player.Winner;
@@ -151,7 +152,7 @@ public class GameWindow
 	}
 	
 	/**
-	 * @see org.cspoker.common.api.lobby.holdemtable.event.HoldemTableListener#onBet(org.cspoker.common.api.lobby.holdemtable.event.BetEvent)
+	 * @see org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener#onBet(org.cspoker.common.api.lobby.holdemtable.event.BetEvent)
 	 */
 	public void onBet(BetEvent betEvent) {
 		betEvent.dispatch(getPlayerSeatComposite(betEvent.getPlayer()));
@@ -160,7 +161,7 @@ public class GameWindow
 	}
 	
 	/**
-	 * @see org.cspoker.common.api.lobby.holdemtable.event.HoldemTableListener#onBigBlind(org.cspoker.common.api.lobby.holdemtable.event.BigBlindEvent)
+	 * @see org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener#onBigBlind(org.cspoker.common.api.lobby.holdemtable.event.BigBlindEvent)
 	 */
 	public void onBigBlind(final BigBlindEvent event) {
 		event.dispatch(getPlayerSeatComposite(event.getPlayer()));
@@ -168,7 +169,7 @@ public class GameWindow
 	}
 	
 	/**
-	 * @see org.cspoker.common.api.lobby.holdemtable.event.HoldemTableListener#onCall(org.cspoker.common.api.lobby.holdemtable.event.CallEvent)
+	 * @see org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener#onCall(org.cspoker.common.api.lobby.holdemtable.event.CallEvent)
 	 */
 	public void onCall(CallEvent callEvent) {
 		callEvent.dispatch(getPlayerSeatComposite(callEvent.getPlayer()));
@@ -177,7 +178,7 @@ public class GameWindow
 	}
 	
 	/**
-	 * @see org.cspoker.common.api.lobby.holdemtable.event.HoldemTableListener#onCheck(org.cspoker.common.api.lobby.holdemtable.event.CheckEvent)
+	 * @see org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener#onCheck(org.cspoker.common.api.lobby.holdemtable.event.CheckEvent)
 	 */
 	public void onCheck(CheckEvent checkEvent) {
 		checkEvent.dispatch(getPlayerSeatComposite(checkEvent.getPlayer()));
@@ -186,7 +187,7 @@ public class GameWindow
 	}
 	
 	/**
-	 * @see org.cspoker.common.api.lobby.holdemtable.event.HoldemTableListener#onFold(org.cspoker.common.api.lobby.holdemtable.event.FoldEvent)
+	 * @see org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener#onFold(org.cspoker.common.api.lobby.holdemtable.event.FoldEvent)
 	 */
 	public void onFold(FoldEvent foldEvent) {
 		foldEvent.dispatch(getPlayerSeatComposite(foldEvent.getPlayer()));
@@ -194,7 +195,7 @@ public class GameWindow
 	}
 	
 	/**
-	 * @see org.cspoker.common.api.lobby.holdemtable.event.HoldemTableListener#onLeaveGame(org.cspoker.common.api.lobby.holdemtable.event.LeaveGameEvent)
+	 * @see org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener#onLeaveGame(org.cspoker.common.api.lobby.holdemtable.event.LeaveGameEvent)
 	 */
 	public void onLeaveGame(LeaveGameEvent leaveGameEvent) {
 		leaveGameEvent.dispatch(getPlayerSeatComposite(leaveGameEvent.getPlayer()));
@@ -203,7 +204,7 @@ public class GameWindow
 	}
 	
 	/**
-	 * @see org.cspoker.common.api.lobby.holdemtable.event.HoldemTableListener#onNewCommunityCards(org.cspoker.common.api.lobby.holdemtable.event.NewCommunityCardsEvent)
+	 * @see org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener#onNewCommunityCards(org.cspoker.common.api.lobby.holdemtable.event.NewCommunityCardsEvent)
 	 */
 	public void onNewCommunityCards(NewCommunityCardsEvent newCommunityCardsEvent) {
 		tableComposite.addCommunityCards(newCommunityCardsEvent.getCommonCards());
@@ -211,7 +212,7 @@ public class GameWindow
 	}
 	
 	/**
-	 * @see org.cspoker.common.api.lobby.holdemtable.event.HoldemTableListener#onNewDeal(org.cspoker.common.api.lobby.holdemtable.event.NewDealEvent)
+	 * @see org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener#onNewDeal(org.cspoker.common.api.lobby.holdemtable.event.NewDealEvent)
 	 */
 	public void onNewDeal(NewDealEvent newDealEvent) {
 		newDealEvent.dispatch(getPlayerSeatComposite(newDealEvent.getDealer()));
@@ -220,7 +221,7 @@ public class GameWindow
 	}
 	
 	/**
-	 * @see org.cspoker.common.api.lobby.holdemtable.holdemplayer.event.HoldemPlayerListener#onNewPocketCards(org.cspoker.common.api.lobby.holdemtable.holdemplayer.event.NewPocketCardsEvent)
+	 * @see org.cspoker.common.api.lobby.holdemtable.holdemplayer.listener.HoldemPlayerListener#onNewPocketCards(org.cspoker.common.api.lobby.holdemtable.holdemplayer.event.NewPocketCardsEvent)
 	 */
 	public void onNewPocketCards(NewPocketCardsEvent newPocketCardsEvent) {
 		newPocketCardsEvent.dispatch(getPlayerSeatComposite(getClientCore().getUser().getPlayer()));
@@ -228,7 +229,7 @@ public class GameWindow
 	}
 	
 	/**
-	 * @see org.cspoker.common.api.lobby.holdemtable.event.HoldemTableListener#onNewRound(org.cspoker.common.api.lobby.holdemtable.event.NewRoundEvent)
+	 * @see org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener#onNewRound(org.cspoker.common.api.lobby.holdemtable.event.NewRoundEvent)
 	 */
 	public void onNewRound(NewRoundEvent newRoundEvent) {
 		gameState.newRound(newRoundEvent.getRoundName());
@@ -240,7 +241,7 @@ public class GameWindow
 	}
 	
 	/**
-	 * @see org.cspoker.common.api.lobby.holdemtable.event.HoldemTableListener#onNextPlayer(org.cspoker.common.api.lobby.holdemtable.event.NextPlayerEvent)
+	 * @see org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener#onNextPlayer(org.cspoker.common.api.lobby.holdemtable.event.NextPlayerEvent)
 	 */
 	public void onNextPlayer(NextPlayerEvent nextPlayerEvent) {
 		Player playerToAct = nextPlayerEvent.getPlayer();
@@ -302,7 +303,7 @@ public class GameWindow
 	// }
 	
 	/**
-	 * @see org.cspoker.common.api.lobby.holdemtable.event.HoldemTableListener#onRaise(org.cspoker.common.api.lobby.holdemtable.event.RaiseEvent)
+	 * @see org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener#onRaise(org.cspoker.common.api.lobby.holdemtable.event.RaiseEvent)
 	 */
 	public void onRaise(RaiseEvent raiseEvent) {
 		raiseEvent.dispatch(getPlayerSeatComposite(raiseEvent.getPlayer()));
@@ -311,7 +312,7 @@ public class GameWindow
 	}
 	
 	/**
-	 * @see org.cspoker.common.api.lobby.holdemtable.event.HoldemTableListener#onShowHand(org.cspoker.common.api.lobby.holdemtable.event.ShowHandEvent)
+	 * @see org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener#onShowHand(org.cspoker.common.api.lobby.holdemtable.event.ShowHandEvent)
 	 */
 	public void onShowHand(ShowHandEvent showHandEvent) {
 		showHandEvent.dispatch(getPlayerSeatComposite(showHandEvent.getShowdownPlayer()));
@@ -320,7 +321,7 @@ public class GameWindow
 	}
 	
 	/**
-	 * @see org.cspoker.common.api.lobby.holdemtable.event.HoldemTableListener#onSitIn(org.cspoker.common.api.lobby.holdemtable.event.SitInEvent)
+	 * @see org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener#onSitIn(org.cspoker.common.api.lobby.holdemtable.event.SitInEvent)
 	 */
 	public void onSitIn(SitInEvent sitInEvent) {
 		if (isUser(sitInEvent.getPlayer())) {
@@ -331,7 +332,7 @@ public class GameWindow
 	}
 	
 	/**
-	 * @see org.cspoker.common.api.lobby.holdemtable.event.HoldemTableListener#onSmallBlind(org.cspoker.common.api.lobby.holdemtable.event.SmallBlindEvent)
+	 * @see org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener#onSmallBlind(org.cspoker.common.api.lobby.holdemtable.event.SmallBlindEvent)
 	 */
 	public void onSmallBlind(SmallBlindEvent smallBlindEvent) {
 		smallBlindEvent.dispatch(getPlayerSeatComposite(smallBlindEvent.getPlayer()));
@@ -340,7 +341,7 @@ public class GameWindow
 	}
 	
 	/**
-	 * @see org.cspoker.common.api.lobby.holdemtable.event.HoldemTableListener#onWinner(org.cspoker.common.api.lobby.holdemtable.event.WinnerEvent)
+	 * @see org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener#onWinner(org.cspoker.common.api.lobby.holdemtable.event.WinnerEvent)
 	 */
 	public void onWinner(final WinnerEvent winnerEvent) {
 		gameState.newRound("Showdown round");
@@ -377,7 +378,7 @@ public class GameWindow
 	
 	/**
 	 * @return this, the GameWindow listens to the Player events also (so far)
-	 * @see org.cspoker.common.api.lobby.holdemtable.event.HoldemTableListener#getHoldemPlayerListener()
+	 * @see org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener#getHoldemPlayerListener()
 	 */
 	public HoldemPlayerListener getHoldemPlayerListener() {
 		return this;

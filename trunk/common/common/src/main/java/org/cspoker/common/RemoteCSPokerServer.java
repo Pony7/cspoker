@@ -20,7 +20,7 @@ import java.rmi.RemoteException;
 
 import javax.security.auth.login.LoginException;
 
-import org.cspoker.common.api.shared.ServerContext;
+import org.cspoker.common.api.shared.context.ServerContext;
 
 public interface RemoteCSPokerServer extends Remote {
 

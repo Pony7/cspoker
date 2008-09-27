@@ -18,6 +18,7 @@ package org.cspoker.common.api.lobby.holdemtable.event;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
 import org.cspoker.common.elements.player.Player;
 import org.cspoker.common.elements.pots.Pots;
 
@@ -28,7 +29,7 @@ import org.cspoker.common.elements.pots.Pots;
  * 
  */
 @XmlRootElement
-public class BigBlindEvent implements HoldemTableEvent {
+public class BigBlindEvent extends HoldemTableEvent {
 
 	private static final long serialVersionUID = -7908022421547219241L;
 
