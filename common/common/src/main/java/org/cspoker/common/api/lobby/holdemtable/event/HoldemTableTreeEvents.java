@@ -20,9 +20,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.cspoker.common.api.lobby.event.LobbyTreeEvent;
-import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
 import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListenerTree;
-import org.cspoker.common.api.lobby.listener.LobbyListener;
 import org.cspoker.common.api.lobby.listener.LobbyListenerTree;
 
 public abstract class HoldemTableTreeEvents extends LobbyTreeEvent {

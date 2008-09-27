@@ -27,7 +27,11 @@ public class ForwardingChatContext implements ChatContext{
 	public ForwardingChatContext(ChatContext chatContext) {
 		this.chatContext  = chatContext;
 		this.forwardingChatListener = new ForwardingChatListener();
-		chatContext.subscribe(forwardingChatListener);
+		chatContext.subscribe(wrapListener(forwardingChatListener));
+	}
+	
+	public ChatListener wrapListener(ChatListener listener){
+		return listener;
 	}
 
 	public void sendServerMessage(String message) {

@@ -17,8 +17,6 @@ package org.cspoker.server.rmi.asynchronous.context;
 
 import java.util.concurrent.Executor;
 
-import org.cspoker.common.api.account.context.AccountContext;
-import org.cspoker.common.api.cashier.context.CashierContext;
 import org.cspoker.common.api.chat.context.ChatContext;
 import org.cspoker.common.api.lobby.context.LobbyContext;
 import org.cspoker.common.api.shared.context.ForwardingServerContext;
@@ -26,27 +24,13 @@ import org.cspoker.common.api.shared.context.ServerContext;
 
 public class AsynchronousServerContext extends ForwardingServerContext {
 
-	private final AccountContext accountContext;
-	private final CashierContext cashierContext;
-	private final ChatContext chatContext;
-	private final LobbyContext lobbyContext;
+	private ChatContext chatContext;
+	private LobbyContext lobbyContext;
 	
 	public AsynchronousServerContext(Executor executor, ServerContext serverContext) {
 		super(serverContext);
-		accountContext = new AsynchronousAccountContext(this, executor,super.getAccountContext());
-		cashierContext = new AsynchronousCashierContext(this, executor,super.getCashierContext());
-		chatContext = new AsynchronousChatContext(this, executor,super.getChatContext());
-		lobbyContext = new AsynchronousLobbyContext(this, executor,super.getLobbyContext());
-	}
-	
-	@Override
-	public AccountContext getAccountContext() {
-		return accountContext;
-	}
-	
-	@Override
-	public CashierContext getCashierContext() {
-		return cashierContext;
+		chatContext = new AsynchronousChatContext(executor,super.getChatContext());
+		lobbyContext = new AsynchronousLobbyContext(executor,super.getLobbyContext());
 	}
 	
 	@Override

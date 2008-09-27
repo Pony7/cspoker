@@ -15,23 +15,20 @@
  */
 package org.cspoker.server.rmi.asynchronous.listener;
 
-import java.rmi.RemoteException;
 import java.util.concurrent.Executor;
 
 import org.cspoker.common.api.lobby.event.TableCreatedEvent;
 import org.cspoker.common.api.lobby.event.TableRemovedEvent;
-import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
 import org.cspoker.common.api.lobby.listener.LobbyListener;
 import org.cspoker.common.api.lobby.listener.RemoteLobbyListener;
-import org.cspoker.common.api.shared.Killable;
 
-public class AsynchronousLobbyListener extends AsynchronousListener implements LobbyListener{
+public class AsynchronousLobbyListener implements LobbyListener{
 
-	private final RemoteLobbyListener lobbyListener;
+	private final LobbyListener lobbyListener;
 	private Executor executor;
 
-	public AsynchronousLobbyListener(Killable connection, Executor executor, RemoteLobbyListener lobbyListener) {
-		super(connection, executor);
+	public AsynchronousLobbyListener(Executor executor, LobbyListener lobbyListener) {
+		this.executor = executor;
 		this.lobbyListener = lobbyListener;
 	}
 
@@ -39,25 +36,10 @@ public class AsynchronousLobbyListener extends AsynchronousListener implements L
 		return lobbyListener;
 	}
 
-	public HoldemTableListener getHoldemTableListener(long tableId) {
-		HoldemTableListener holdemTableListener;
-		try {
-			holdemTableListener = lobbyListener.getHoldemTableListener(tableId);
-			return new AsynchronousHoldemTableListener(connection, executor, holdemTableListener);
-		} catch (RemoteException exception) {
-			die();
-			return null;
-		}
-	}
-
 	public void onTableCreated(final TableCreatedEvent tableCreatedEvent) {
 		executor.execute(new Runnable() {
 			public void run() {
-				try {
-					lobbyListener.onTableCreated(tableCreatedEvent);
-				} catch (RemoteException exception) {
-					die();
-				}
+				lobbyListener.onTableCreated(tableCreatedEvent);
 			}
 		});
 	}
@@ -65,11 +47,7 @@ public class AsynchronousLobbyListener extends AsynchronousListener implements L
 	public void onTableRemoved(final TableRemovedEvent tableRemovedEvent) {
 		executor.execute(new Runnable() {
 			public void run() {
-				try {
-					lobbyListener.onTableRemoved(tableRemovedEvent);
-				} catch (RemoteException exception) {
-					die();
-				}
+				lobbyListener.onTableRemoved(tableRemovedEvent);
 			}
 		});
 	}

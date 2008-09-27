@@ -21,62 +21,47 @@ import java.util.concurrent.Executor;
 import org.cspoker.common.api.lobby.context.ForwardingLobbyContext;
 import org.cspoker.common.api.lobby.context.LobbyContext;
 import org.cspoker.common.api.lobby.holdemtable.context.HoldemTableContext;
-import org.cspoker.common.api.lobby.listener.RemoteLobbyListener;
-import org.cspoker.common.api.shared.Killable;
+import org.cspoker.common.api.lobby.listener.LobbyListener;
 import org.cspoker.server.rmi.asynchronous.listener.AsynchronousLobbyListener;
 
 public class AsynchronousLobbyContext extends ForwardingLobbyContext {
 
-	protected ConcurrentHashMap<RemoteLobbyListener, AsynchronousLobbyListener> wrappedListeners = new ConcurrentHashMap<RemoteLobbyListener, AsynchronousLobbyListener>();
-	protected Executor executor;
-	private Killable connection;
+	protected final Executor executor;
 	
-	protected ConcurrentHashMap<Long, HoldemTableContext> wrappedContexts = new ConcurrentHashMap<Long, HoldemTableContext>();
+	protected ConcurrentHashMap<Long, Wrapper> wrappedContexts = new ConcurrentHashMap<Long, Wrapper>();
 	
 	
-	public AsynchronousLobbyContext(Killable connection, Executor executor, LobbyContext lobbyContext) {
+	public AsynchronousLobbyContext(Executor executor, LobbyContext lobbyContext) {
 		super(lobbyContext);
-		this.connection = connection;
 		this.executor = executor;
 	}
 	
-	/**
-	 * Returns a wrapped HoldemTableContext that makes event listeners asynchronous.
-	 * 
-	 * This method MUST return the same Context each times, as they are stateful and maintain
-	 * a list of event listeners!
-	 * 
-	 */
 	@Override
-	public HoldemTableContext getHoldemTableContext(long tableId) {
-		HoldemTableContext context;
-		if((context = wrappedContexts.get(tableId))==null){
-			context = new AsynchronousHoldemTableContext(connection, executor, super.getHoldemTableContext(tableId));
-			if(wrappedContexts.putIfAbsent(tableId, context)==null){
-				return context;
-			}else{
-				return wrappedContexts.get(tableId);
+	public LobbyListener wrapListener(LobbyListener listener) {
+		return new AsynchronousLobbyListener(executor, listener);
+	}
+	
+	@Override
+	public HoldemTableContext getHoldemTableContext(final long tableId) {
+		wrappedContexts.putIfAbsent(tableId, new Wrapper(){
+
+			private HoldemTableContext content = null;
+			
+			public synchronized HoldemTableContext getContent() {
+				if(content == null){
+					content = new AsynchronousHoldemTableContext(executor, lobbyContext.getHoldemTableContext(tableId));
+				}
+				return content;
 			}
-		}else{
-			return context;
-		}
+			
+		});
+		return wrappedContexts.get(tableId).getContent();
 	}
 	
-	@Override
-	public void subscribe(RemoteLobbyListener lobbyListener) {
-		AsynchronousLobbyListener wrapper = new AsynchronousLobbyListener(connection, executor, lobbyListener);
-		if(wrappedListeners.putIfAbsent(lobbyListener, wrapper)==null){
-			super.subscribe(wrapper);
-		}
+	private static interface Wrapper{
 		
-	}
+		public HoldemTableContext getContent();
 	
-	@Override
-	public void unSubscribe(RemoteLobbyListener lobbyListener) {
-		AsynchronousLobbyListener wrapper = wrappedListeners.remove(lobbyListener);
-		if(wrapper!=null){
-			super.unSubscribe(wrapper);
-		}
 	}
 	
 }

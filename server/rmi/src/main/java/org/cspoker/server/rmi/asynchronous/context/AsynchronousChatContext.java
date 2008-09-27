@@ -20,8 +20,8 @@ import java.util.concurrent.Executor;
 
 import org.cspoker.common.api.chat.context.ChatContext;
 import org.cspoker.common.api.chat.context.ForwardingChatContext;
+import org.cspoker.common.api.chat.listener.ChatListener;
 import org.cspoker.common.api.chat.listener.RemoteChatListener;
-import org.cspoker.common.api.shared.Killable;
 import org.cspoker.server.rmi.asynchronous.listener.AsynchronousChatListener;
 
 public class AsynchronousChatContext extends ForwardingChatContext {
@@ -29,29 +29,15 @@ public class AsynchronousChatContext extends ForwardingChatContext {
 	protected ConcurrentHashMap<RemoteChatListener, AsynchronousChatListener> wrappers = 
 		new ConcurrentHashMap<RemoteChatListener, AsynchronousChatListener>();
 	protected Executor executor;
-	private Killable connection;
 	
-	public AsynchronousChatContext(Killable connection, Executor executor, ChatContext chatContext) {
+	public AsynchronousChatContext(Executor executor, ChatContext chatContext) {
 		super(chatContext);
-		this.connection = connection;
 		this.executor = executor;
 	}
 	
 	@Override
-	public void subscribe(RemoteChatListener chatListener) {
-		AsynchronousChatListener wrapper = new AsynchronousChatListener(connection, executor, chatListener);
-		if(wrappers.putIfAbsent(chatListener, wrapper)==null){
-			super.subscribe(wrapper);
-		}
-		
-	}
-	
-	@Override
-	public void unSubscribe(RemoteChatListener chatListener) {
-		AsynchronousChatListener wrapper = wrappers.remove(chatListener);
-		if(wrapper!=null){
-			super.unSubscribe(wrapper);
-		}
+	public ChatListener wrapListener(ChatListener listener) {
+		return new AsynchronousChatListener(executor,listener);
 	}
 	
 }

@@ -15,51 +15,32 @@
  */
 package org.cspoker.server.rmi.asynchronous.context;
 
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executor;
 
 import org.cspoker.common.api.lobby.holdemtable.context.ForwardingHoldemTableContext;
 import org.cspoker.common.api.lobby.holdemtable.context.HoldemTableContext;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.HoldemPlayerContext;
-import org.cspoker.common.api.lobby.holdemtable.listener.RemoteHoldemTableListener;
-import org.cspoker.common.api.shared.Killable;
+import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
 import org.cspoker.server.rmi.asynchronous.listener.AsynchronousHoldemTableListener;
 
 public class AsynchronousHoldemTableContext extends ForwardingHoldemTableContext {
 
-	protected ConcurrentHashMap<RemoteHoldemTableListener, AsynchronousHoldemTableListener> wrappers = 
-		new ConcurrentHashMap<RemoteHoldemTableListener, AsynchronousHoldemTableListener>();
 	protected Executor executor;
-	protected AsynchronousHoldemPlayerContext holdemPlayerContext;
-	private Killable connection;
+	protected final AsynchronousHoldemPlayerContext holdemPlayerContext;
 	
-	public AsynchronousHoldemTableContext(Killable connection, Executor executor, HoldemTableContext holdemTableContext) {
+	public AsynchronousHoldemTableContext(Executor executor, HoldemTableContext holdemTableContext) {
 		super(holdemTableContext);
-		this.connection = connection;
-		this.holdemPlayerContext = new AsynchronousHoldemPlayerContext(connection, executor,super.getHoldemPlayerContext());
 		this.executor = executor;
+		this.holdemPlayerContext = new AsynchronousHoldemPlayerContext(executor, holdemTableContext.getHoldemPlayerContext());
+	}
+	
+	@Override
+	public HoldemTableListener wrapListener(HoldemTableListener listener) {
+		return new AsynchronousHoldemTableListener(executor, listener);
 	}
 	
 	@Override
 	public HoldemPlayerContext getHoldemPlayerContext() {
 		return holdemPlayerContext;
 	}
-	
-	@Override
-	public void subscribe(RemoteHoldemTableListener holdemTableListener) {
-		AsynchronousHoldemTableListener wrapper = new AsynchronousHoldemTableListener(connection, executor, holdemTableListener);
-		if(wrappers.putIfAbsent(holdemTableListener, wrapper)==null){
-			super.subscribe(wrapper);
-		}
-		
-	}
-	
-	@Override
-	public void unSubscribe(RemoteHoldemTableListener holdemTableListener) {
-		AsynchronousHoldemTableListener wrapper = wrappers.remove(holdemTableListener);
-		if(wrapper!=null){
-			super.unSubscribe(wrapper);
-		}
-	}
-	
 }

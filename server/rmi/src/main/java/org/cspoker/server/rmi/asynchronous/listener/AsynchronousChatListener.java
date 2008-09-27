@@ -15,37 +15,26 @@
  */
 package org.cspoker.server.rmi.asynchronous.listener;
 
-import java.rmi.RemoteException;
 import java.util.concurrent.Executor;
 
 import org.cspoker.common.api.chat.event.ServerMessageEvent;
 import org.cspoker.common.api.chat.event.TableMessageEvent;
 import org.cspoker.common.api.chat.listener.ChatListener;
-import org.cspoker.common.api.chat.listener.RemoteChatListener;
-import org.cspoker.common.api.shared.Killable;
 
-public class AsynchronousChatListener extends AsynchronousListener implements ChatListener{
+public class AsynchronousChatListener implements ChatListener{
 
-	private final RemoteChatListener chatListener;
+	private final ChatListener chatListener;
 	private Executor executor;
 
-	public AsynchronousChatListener(Killable connection, Executor executor, RemoteChatListener chatListener) {
-		super(connection, executor);
+	public AsynchronousChatListener(Executor executor, ChatListener chatListener) {
+		this.executor = executor;
 		this.chatListener = chatListener;
-	}
-
-	public RemoteChatListener getChatListener() {
-		return chatListener;
 	}
 
 	public void onServerMessage(final ServerMessageEvent serverMessageEvent) {
 		executor.execute(new Runnable() {
 			public void run() {
-				try {
-					chatListener.onServerMessage(serverMessageEvent);
-				} catch (RemoteException exception) {
-					
-				}
+				chatListener.onServerMessage(serverMessageEvent);
 			}
 		});
 	}
@@ -53,11 +42,7 @@ public class AsynchronousChatListener extends AsynchronousListener implements Ch
 	public void onTableMessage(final TableMessageEvent tableMessageEvent) {
 		executor.execute(new Runnable() {
 			public void run() {
-				try {
-					chatListener.onTableMessage(tableMessageEvent);
-				} catch (RemoteException exception) {
-					die();
-				}
+				chatListener.onTableMessage(tableMessageEvent);
 			}
 		});
 	}

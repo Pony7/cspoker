@@ -15,32 +15,25 @@
  */
 package org.cspoker.server.rmi.asynchronous.listener;
 
-import java.rmi.RemoteException;
 import java.util.concurrent.Executor;
 
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.event.NewPocketCardsEvent;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.listener.HoldemPlayerListener;
-import org.cspoker.common.api.lobby.holdemtable.holdemplayer.listener.RemoteHoldemPlayerListener;
-import org.cspoker.common.api.shared.Killable;
 
-public class AsynchronousHoldemPlayerListener extends AsynchronousListener  implements HoldemPlayerListener{
+public class AsynchronousHoldemPlayerListener implements HoldemPlayerListener{
 
-	private final RemoteHoldemPlayerListener holdemPlayerListener;
+	private final HoldemPlayerListener holdemPlayerListener;
 	private Executor executor;
 
-	public AsynchronousHoldemPlayerListener(Killable connection, Executor executor, RemoteHoldemPlayerListener holdemPlayerListener) {
-		super(connection, executor);
+	public AsynchronousHoldemPlayerListener(Executor executor, HoldemPlayerListener holdemPlayerListener) {
+		this.executor = executor;
 		this.holdemPlayerListener = holdemPlayerListener;
 	}
 
 	public void onNewPocketCards(final NewPocketCardsEvent newPocketCardsEvent) {
 		executor.execute(new Runnable() {
 			public void run() {
-				try {
-					holdemPlayerListener.onNewPocketCards(newPocketCardsEvent);
-				} catch (RemoteException exception) {
-					die();
-				}
+				holdemPlayerListener.onNewPocketCards(newPocketCardsEvent);
 			}
 		});
 	}
