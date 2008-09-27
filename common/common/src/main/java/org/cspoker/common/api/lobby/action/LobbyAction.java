@@ -15,9 +15,9 @@
  */
 package org.cspoker.common.api.lobby.action;
 
-import org.cspoker.common.api.lobby.LobbyContext;
-import org.cspoker.common.api.shared.ServerContext;
+import org.cspoker.common.api.lobby.context.LobbyContext;
 import org.cspoker.common.api.shared.action.Action;
+import org.cspoker.common.api.shared.context.ServerContext;
 
 public abstract class LobbyAction<T> extends Action<T> {
 

@@ -18,13 +18,13 @@ package org.cspoker.server.rmi.asynchronous.context;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executor;
 
-import org.cspoker.common.api.cashier.CashierContext;
-import org.cspoker.common.api.cashier.DelegatingCashierContext;
+import org.cspoker.common.api.cashier.context.CashierContext;
+import org.cspoker.common.api.cashier.context.ForwardingCashierContext;
 import org.cspoker.common.api.cashier.event.RemoteCashierListener;
 import org.cspoker.common.api.shared.Killable;
 import org.cspoker.server.rmi.asynchronous.listener.AsynchronousCashierListener;
 
-public class AsynchronousCashierContext extends DelegatingCashierContext {
+public class AsynchronousCashierContext extends ForwardingCashierContext {
 
 	protected ConcurrentHashMap<RemoteCashierListener, AsynchronousCashierListener> wrappers = 
 		new ConcurrentHashMap<RemoteCashierListener, AsynchronousCashierListener>();

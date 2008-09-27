@@ -16,8 +16,10 @@
 
 package org.cspoker.common.api.shared.event;
 
+import org.cspoker.common.api.shared.listener.ServerListenerTree;
+
 public interface ServerEvent extends Event {
 
-	void dispatch(ServerListener listener);
+	void dispatch(ServerListenerTree listenerTree);
 
 }

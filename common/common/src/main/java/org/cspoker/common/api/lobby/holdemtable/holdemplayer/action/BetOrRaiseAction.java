@@ -18,7 +18,7 @@ package org.cspoker.common.api.lobby.holdemtable.holdemplayer.action;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.cspoker.common.api.lobby.holdemtable.holdemplayer.HoldemPlayerContext;
+import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.HoldemPlayerContext;
 
 @XmlRootElement
 public class BetOrRaiseAction extends HoldemPlayerAction<Void> {

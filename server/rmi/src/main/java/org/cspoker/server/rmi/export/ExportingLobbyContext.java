@@ -19,14 +19,14 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.cspoker.common.api.lobby.DelegatingLobbyContext;
-import org.cspoker.common.api.lobby.LobbyContext;
-import org.cspoker.common.api.lobby.event.RemoteLobbyListener;
-import org.cspoker.common.api.lobby.holdemtable.HoldemTableContext;
+import org.cspoker.common.api.lobby.context.ForwardingLobbyContext;
+import org.cspoker.common.api.lobby.context.LobbyContext;
+import org.cspoker.common.api.lobby.holdemtable.context.HoldemTableContext;
+import org.cspoker.common.api.lobby.listener.RemoteLobbyListener;
 import org.cspoker.common.api.shared.Killable;
 import org.cspoker.server.rmi.asynchronous.listener.AsynchronousLobbyListener;
 
-public class ExportingLobbyContext extends DelegatingLobbyContext {
+public class ExportingLobbyContext extends ForwardingLobbyContext {
 
 	protected ConcurrentHashMap<RemoteLobbyListener, AsynchronousLobbyListener> wrappedListeners = new ConcurrentHashMap<RemoteLobbyListener, AsynchronousLobbyListener>();
 	private Killable connection;

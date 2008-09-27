@@ -11,7 +11,7 @@ import org.cspoker.client.gui.swt.control.ClientGUI;
 import org.cspoker.client.gui.swt.control.SWTResourceManager;
 import org.cspoker.client.rmi.RemoteLoginServerForRMI;
 import org.cspoker.common.CSPokerServer;
-import org.cspoker.common.api.shared.ServerContext;
+import org.cspoker.common.api.shared.context.ServerContext;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;

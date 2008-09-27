@@ -15,15 +15,16 @@
  */
 package org.cspoker.common.api.chat.event;
 
+import org.cspoker.common.api.chat.listener.ChatListener;
 import org.cspoker.common.api.shared.event.ServerEvent;
-import org.cspoker.common.api.shared.event.ServerListener;
+import org.cspoker.common.api.shared.listener.ServerListenerTree;
 
 public abstract class ChatEvent implements ServerEvent {
 
 	private static final long serialVersionUID = 557148706756328395L;
 
-	public void dispatch(ServerListener listener) {
-		dispatch(listener.getChatListener());
+	public void dispatch(ServerListenerTree listenerTree) {
+		dispatch(listenerTree.getChatListener());
 	}
 
 	public abstract void dispatch(ChatListener chatListener);

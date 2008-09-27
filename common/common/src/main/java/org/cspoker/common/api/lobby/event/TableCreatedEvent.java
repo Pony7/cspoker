@@ -18,6 +18,7 @@ package org.cspoker.common.api.lobby.event;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.cspoker.common.api.lobby.listener.LobbyListener;
 import org.cspoker.common.elements.player.Player;
 import org.cspoker.common.elements.table.Table;
 

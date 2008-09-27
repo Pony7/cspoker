@@ -17,6 +17,7 @@ package org.cspoker.common.api.chat.event;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.cspoker.common.api.chat.listener.ChatListener;
 import org.cspoker.common.elements.player.Player;
 
 @XmlRootElement

@@ -21,6 +21,7 @@ import java.util.Set;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
 import org.cspoker.common.elements.player.Winner;
 
 /**
@@ -30,7 +31,7 @@ import org.cspoker.common.elements.player.Winner;
  * 
  */
 @XmlRootElement
-public class WinnerEvent implements HoldemTableEvent {
+public class WinnerEvent extends HoldemTableEvent {
 
 	private static final long serialVersionUID = -2384964708734525969L;
 

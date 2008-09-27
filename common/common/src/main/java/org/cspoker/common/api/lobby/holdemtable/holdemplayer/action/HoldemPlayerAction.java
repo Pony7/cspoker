@@ -18,9 +18,9 @@ package org.cspoker.common.api.lobby.holdemtable.holdemplayer.action;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 
-import org.cspoker.common.api.lobby.holdemtable.HoldemTableContext;
 import org.cspoker.common.api.lobby.holdemtable.action.HoldemTableAction;
-import org.cspoker.common.api.lobby.holdemtable.holdemplayer.HoldemPlayerContext;
+import org.cspoker.common.api.lobby.holdemtable.context.HoldemTableContext;
+import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.HoldemPlayerContext;
 
 
 @XmlAccessorType(XmlAccessType.FIELD)

@@ -12,7 +12,7 @@ import javax.sound.sampled.DataLine;
 import org.cspoker.client.gui.swt.window.GameWindow;
 import org.cspoker.client.gui.swt.window.LobbyWindow;
 import org.cspoker.client.gui.swt.window.LoginDialog;
-import org.cspoker.common.api.lobby.LobbyContext;
+import org.cspoker.common.api.lobby.context.LobbyContext;
 import org.cspoker.common.elements.table.DetailedTable;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;

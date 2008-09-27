@@ -18,13 +18,13 @@ package org.cspoker.server.rmi.asynchronous.context;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executor;
 
-import org.cspoker.common.api.chat.ChatContext;
-import org.cspoker.common.api.chat.DelegatingChatContext;
-import org.cspoker.common.api.chat.event.RemoteChatListener;
+import org.cspoker.common.api.chat.context.ChatContext;
+import org.cspoker.common.api.chat.context.ForwardingChatContext;
+import org.cspoker.common.api.chat.listener.RemoteChatListener;
 import org.cspoker.common.api.shared.Killable;
 import org.cspoker.server.rmi.asynchronous.listener.AsynchronousChatListener;
 
-public class AsynchronousChatContext extends DelegatingChatContext {
+public class AsynchronousChatContext extends ForwardingChatContext {
 	
 	protected ConcurrentHashMap<RemoteChatListener, AsynchronousChatListener> wrappers = 
 		new ConcurrentHashMap<RemoteChatListener, AsynchronousChatListener>();

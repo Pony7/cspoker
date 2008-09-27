@@ -19,14 +19,14 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.cspoker.common.api.lobby.holdemtable.DelegatingHoldemTableContext;
-import org.cspoker.common.api.lobby.holdemtable.HoldemTableContext;
-import org.cspoker.common.api.lobby.holdemtable.event.RemoteHoldemTableListener;
-import org.cspoker.common.api.lobby.holdemtable.holdemplayer.HoldemPlayerContext;
+import org.cspoker.common.api.lobby.holdemtable.context.ForwardingHoldemTableContext;
+import org.cspoker.common.api.lobby.holdemtable.context.HoldemTableContext;
+import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.HoldemPlayerContext;
+import org.cspoker.common.api.lobby.holdemtable.listener.RemoteHoldemTableListener;
 import org.cspoker.common.api.shared.Killable;
 import org.cspoker.server.rmi.asynchronous.listener.AsynchronousHoldemTableListener;
 
-public class ExportingHoldemTableContext extends DelegatingHoldemTableContext {
+public class ExportingHoldemTableContext extends ForwardingHoldemTableContext {
 
 	protected ConcurrentHashMap<RemoteHoldemTableListener, AsynchronousHoldemTableListener> wrappers = 
 		new ConcurrentHashMap<RemoteHoldemTableListener, AsynchronousHoldemTableListener>();
