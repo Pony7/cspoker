@@ -15,43 +15,25 @@
  */
 package org.cspoker.server.rmi.asynchronous.context;
 
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executor;
 
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.ForwardingHoldemPlayerContext;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.HoldemPlayerContext;
-import org.cspoker.common.api.lobby.holdemtable.holdemplayer.listener.RemoteHoldemPlayerListener;
-import org.cspoker.common.api.shared.Killable;
+import org.cspoker.common.api.lobby.holdemtable.holdemplayer.listener.HoldemPlayerListener;
 import org.cspoker.server.rmi.asynchronous.listener.AsynchronousHoldemPlayerListener;
 
 public class AsynchronousHoldemPlayerContext extends ForwardingHoldemPlayerContext {
 
-	protected ConcurrentHashMap<RemoteHoldemPlayerListener, AsynchronousHoldemPlayerListener> wrappers = 
-		new ConcurrentHashMap<RemoteHoldemPlayerListener, AsynchronousHoldemPlayerListener>();
 	protected Executor executor;
-	private Killable connection;
 	
-	public AsynchronousHoldemPlayerContext(Killable connection, Executor executor, HoldemPlayerContext holdemPlayerContext) {
+	public AsynchronousHoldemPlayerContext(Executor executor, HoldemPlayerContext holdemPlayerContext) {
 		super(holdemPlayerContext);
-		this.connection = connection;
 		this.executor = executor;
 	}
 	
 	@Override
-	public void subscribe(RemoteHoldemPlayerListener holdemPlayerListener) {
-		AsynchronousHoldemPlayerListener wrapper = new AsynchronousHoldemPlayerListener(connection, executor, holdemPlayerListener);
-		if(wrappers.putIfAbsent(holdemPlayerListener, wrapper)==null){
-			super.subscribe(wrapper);
-		}
-		
-	}
-	
-	@Override
-	public void unSubscribe(RemoteHoldemPlayerListener holdemPlayerListener) {
-		AsynchronousHoldemPlayerListener wrapper = wrappers.remove(holdemPlayerListener);
-		if(wrapper!=null){
-			super.unSubscribe(wrapper);
-		}
+	public HoldemPlayerListener wrapListener(HoldemPlayerListener listener) {
+		return new AsynchronousHoldemPlayerListener(executor, listener);
 	}
 	
 }

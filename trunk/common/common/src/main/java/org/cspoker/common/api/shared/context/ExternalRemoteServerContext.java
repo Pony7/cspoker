@@ -13,25 +13,26 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.server.rmi.asynchronous.listener;
+package org.cspoker.common.api.shared.context;
 
-import java.util.concurrent.Executor;
+import java.rmi.Remote;
+import java.rmi.RemoteException;
 
-import org.cspoker.common.api.cashier.event.CashierListener;
-import org.cspoker.common.api.cashier.event.RemoteCashierListener;
+import org.cspoker.common.api.account.context.RemoteAccountContext;
+import org.cspoker.common.api.cashier.context.RemoteCashierContext;
+import org.cspoker.common.api.chat.context.ExternalRemoteChatContext;
+import org.cspoker.common.api.lobby.context.ExternalRemoteLobbyContext;
 import org.cspoker.common.api.shared.Killable;
 
-public class AsynchronousCashierListener extends AsynchronousListener implements CashierListener{
+public interface ExternalRemoteServerContext extends Remote, Killable{
 
-	private final RemoteCashierListener cashierListener;
-
-	public AsynchronousCashierListener(Killable connection, Executor executor, RemoteCashierListener cashierListener) {
-		super(connection, executor);
-		this.cashierListener = cashierListener;
-	}
-
-	public RemoteCashierListener getCashierListener() {
-		return cashierListener;
-	}
+	RemoteAccountContext getAccountContext() throws RemoteException;
 	
+	RemoteCashierContext getCashierContext() throws RemoteException;
+	
+	ExternalRemoteChatContext getChatContext() throws RemoteException;
+
+	ExternalRemoteLobbyContext getLobbyContext() throws RemoteException;
+	
+	void die();
 }

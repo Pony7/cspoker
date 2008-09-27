@@ -15,9 +15,7 @@
  */
 package org.cspoker.server.rmi.asynchronous.listener;
 
-import java.rmi.RemoteException;
 import java.util.concurrent.Executor;
-import java.util.concurrent.atomic.AtomicReference;
 
 import org.cspoker.common.api.lobby.holdemtable.event.BetEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.BigBlindEvent;
@@ -34,41 +32,21 @@ import org.cspoker.common.api.lobby.holdemtable.event.ShowHandEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.SitInEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.SmallBlindEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.WinnerEvent;
-import org.cspoker.common.api.lobby.holdemtable.holdemplayer.listener.HoldemPlayerListener;
 import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
-import org.cspoker.common.api.lobby.holdemtable.listener.RemoteHoldemTableListener;
-import org.cspoker.common.api.shared.Killable;
 
-public class AsynchronousHoldemTableListener extends AsynchronousListener implements HoldemTableListener{
+public class AsynchronousHoldemTableListener implements HoldemTableListener{
 
-	private final RemoteHoldemTableListener holdemTableListener;
+	private final HoldemTableListener holdemTableListener;
 	private Executor executor;
-	private AtomicReference<AsynchronousHoldemPlayerListener> holdemPlayerListener = new AtomicReference<AsynchronousHoldemPlayerListener>();
-
-	public AsynchronousHoldemTableListener(Killable connection, Executor executor, RemoteHoldemTableListener holdemTableListener) {
-		super(connection, executor);
+	public AsynchronousHoldemTableListener(Executor executor, HoldemTableListener holdemTableListener) {
+		this.executor = executor;
 		this.holdemTableListener = holdemTableListener;
-	}
-
-	public HoldemPlayerListener getHoldemPlayerListener() {
-		if(holdemPlayerListener.get()==null){
-			try {
-				holdemPlayerListener.compareAndSet(null, new AsynchronousHoldemPlayerListener(connection, executor, holdemTableListener.getHoldemPlayerListener()));
-			} catch (RemoteException exception) {
-				die();
-			}
-		}
-		return holdemPlayerListener.get();
 	}
 
 	public void onBet(final BetEvent betEvent) {
 		executor.execute(new Runnable() {
 			public void run() {
-				try {
-					holdemTableListener.onBet(betEvent);
-				} catch (RemoteException exception) {
-					die();
-				}
+				holdemTableListener.onBet(betEvent);
 			}
 		});
 	}
@@ -76,11 +54,7 @@ public class AsynchronousHoldemTableListener extends AsynchronousListener implem
 	public void onBigBlind(final BigBlindEvent bigBlindEvent) {
 		executor.execute(new Runnable() {
 			public void run() {
-				try {
-					holdemTableListener.onBigBlind(bigBlindEvent);
-				} catch (RemoteException exception) {
-					die();
-				}
+				holdemTableListener.onBigBlind(bigBlindEvent);
 			}
 		});
 	}
@@ -88,11 +62,7 @@ public class AsynchronousHoldemTableListener extends AsynchronousListener implem
 	public void onCall(final CallEvent callEvent) {
 		executor.execute(new Runnable() {
 			public void run() {
-				try {
-					holdemTableListener.onCall(callEvent);
-				} catch (RemoteException exception) {
-					die();
-				}
+				holdemTableListener.onCall(callEvent);
 			}
 		});
 	}
@@ -100,11 +70,7 @@ public class AsynchronousHoldemTableListener extends AsynchronousListener implem
 	public void onCheck(final CheckEvent checkEvent) {
 		executor.execute(new Runnable() {
 			public void run() {
-				try {
-					holdemTableListener.onCheck(checkEvent);
-				} catch (RemoteException exception) {
-					die();
-				}
+				holdemTableListener.onCheck(checkEvent);
 			}
 		});
 	}
@@ -112,11 +78,7 @@ public class AsynchronousHoldemTableListener extends AsynchronousListener implem
 	public void onFold(final FoldEvent foldEvent) {
 		executor.execute(new Runnable() {
 			public void run() {
-				try {
-					holdemTableListener.onFold(foldEvent);
-				} catch (RemoteException exception) {
-					die();
-				}
+				holdemTableListener.onFold(foldEvent);
 			}
 		});
 	}
@@ -124,11 +86,7 @@ public class AsynchronousHoldemTableListener extends AsynchronousListener implem
 	public void onLeaveGame(final LeaveGameEvent leaveGameEvent) {
 		executor.execute(new Runnable() {
 			public void run() {
-				try {
-					holdemTableListener.onLeaveGame(leaveGameEvent);
-				} catch (RemoteException exception) {
-					die();
-				}
+				holdemTableListener.onLeaveGame(leaveGameEvent);
 			}
 		});
 	}
@@ -137,11 +95,7 @@ public class AsynchronousHoldemTableListener extends AsynchronousListener implem
 			final NewCommunityCardsEvent newCommunityCardsEvent) {
 		executor.execute(new Runnable() {
 			public void run() {
-				try {
-					holdemTableListener.onNewCommunityCards(newCommunityCardsEvent);
-				} catch (RemoteException exception) {
-					die();
-				}
+				holdemTableListener.onNewCommunityCards(newCommunityCardsEvent);
 			}
 		});
 	}
@@ -149,11 +103,7 @@ public class AsynchronousHoldemTableListener extends AsynchronousListener implem
 	public void onNewDeal(final NewDealEvent newDealEvent) {
 		executor.execute(new Runnable() {
 			public void run() {
-				try {
-					holdemTableListener.onNewDeal(newDealEvent);
-				} catch (RemoteException exception) {
-					die();
-				}
+				holdemTableListener.onNewDeal(newDealEvent);
 			}
 		});
 	}
@@ -161,11 +111,7 @@ public class AsynchronousHoldemTableListener extends AsynchronousListener implem
 	public void onNewRound(final NewRoundEvent newRoundEvent) {
 		executor.execute(new Runnable() {
 			public void run() {
-				try {
-					holdemTableListener.onNewRound(newRoundEvent);
-				} catch (RemoteException exception) {
-					die();
-				}
+				holdemTableListener.onNewRound(newRoundEvent);
 			}
 		});
 	}
@@ -173,11 +119,7 @@ public class AsynchronousHoldemTableListener extends AsynchronousListener implem
 	public void onNextPlayer(final NextPlayerEvent nextPlayerEvent) {
 		executor.execute(new Runnable() {
 			public void run() {
-				try {
-					holdemTableListener.onNextPlayer(nextPlayerEvent);
-				} catch (RemoteException exception) {
-					die();
-				}
+				holdemTableListener.onNextPlayer(nextPlayerEvent);
 			}
 		});
 	}
@@ -185,11 +127,7 @@ public class AsynchronousHoldemTableListener extends AsynchronousListener implem
 	public void onRaise(final RaiseEvent raiseEvent) {
 		executor.execute(new Runnable() {
 			public void run() {
-				try {
-					holdemTableListener.onRaise(raiseEvent);
-				} catch (RemoteException exception) {
-					die();
-				}
+				holdemTableListener.onRaise(raiseEvent);
 			}
 		});
 	}
@@ -197,11 +135,7 @@ public class AsynchronousHoldemTableListener extends AsynchronousListener implem
 	public void onShowHand(final ShowHandEvent showHandEvent) {
 		executor.execute(new Runnable() {
 			public void run() {
-				try {
-					holdemTableListener.onShowHand(showHandEvent);
-				} catch (RemoteException exception) {
-					die();
-				}
+				holdemTableListener.onShowHand(showHandEvent);
 			}
 		});
 	}
@@ -209,11 +143,7 @@ public class AsynchronousHoldemTableListener extends AsynchronousListener implem
 	public void onSitIn(final SitInEvent sitInEvent) {
 		executor.execute(new Runnable() {
 			public void run() {
-				try {
-					holdemTableListener.onSitIn(sitInEvent);
-				} catch (RemoteException exception) {
-					die();
-				}
+				holdemTableListener.onSitIn(sitInEvent);
 			}
 		});
 	}
@@ -221,11 +151,7 @@ public class AsynchronousHoldemTableListener extends AsynchronousListener implem
 	public void onSmallBlind(final SmallBlindEvent smallBlindEvent) {
 		executor.execute(new Runnable() {
 			public void run() {
-				try {
-					holdemTableListener.onSmallBlind(smallBlindEvent);
-				} catch (RemoteException exception) {
-					die();
-				}
+				holdemTableListener.onSmallBlind(smallBlindEvent);
 			}
 		});
 	}
@@ -233,11 +159,7 @@ public class AsynchronousHoldemTableListener extends AsynchronousListener implem
 	public void onWinner(final WinnerEvent winnerEvent) {
 		executor.execute(new Runnable() {
 			public void run() {
-				try {
-					holdemTableListener.onWinner(winnerEvent);
-				} catch (RemoteException exception) {
-					die();
-				}
+				holdemTableListener.onWinner(winnerEvent);
 			}
 		});
 	}

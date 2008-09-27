@@ -13,24 +13,16 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.server.rmi.asynchronous.listener;
+package org.cspoker.common.api.chat.context;
 
-import java.util.concurrent.Executor;
+import java.rmi.RemoteException;
 
-import org.cspoker.common.api.account.event.RemoteAccountListener;
-import org.cspoker.common.api.shared.Killable;
+import org.cspoker.common.api.chat.listener.RemoteChatListener;
 
-public class AsynchronousAccountListener extends AsynchronousListener implements RemoteAccountListener{
+public interface ExternalRemoteChatContext extends RemoteChatContext {
 
-	private final RemoteAccountListener accountListener;
-
-	public AsynchronousAccountListener(Killable connection, Executor executor, RemoteAccountListener accountListener) {
-		super(connection, executor);
-		this.accountListener = accountListener;
-	}
-
-	public RemoteAccountListener getAccountListener() {
-		return accountListener;
-	}
+	void subscribe(RemoteChatListener chatListener) throws RemoteException;
+	
+	void unSubscribe(RemoteChatListener chatListener) throws RemoteException;
 	
 }
