@@ -13,19 +13,25 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.common.api.chat.listener;
+package org.cspoker.client.rmi;
 
-import java.rmi.Remote;
 import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 
-import org.cspoker.common.api.chat.event.ServerMessageEvent;
-import org.cspoker.common.api.chat.event.TableMessageEvent;
-import org.cspoker.common.api.shared.listener.EventListener;
+import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.ForwardingRemoteHoldemPlayerContext;
+import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.RemoteHoldemPlayerContext;
+import org.cspoker.common.api.lobby.holdemtable.holdemplayer.listener.HoldemPlayerListener;
 
-public interface RemoteChatListener extends EventListener, Remote{
+public class HoldemPlayerContextStub extends ForwardingRemoteHoldemPlayerContext{
 
-	void onTableMessage(TableMessageEvent tableMessageEvent) throws RemoteException;
-
-	void onServerMessage(ServerMessageEvent serverMessageEvent) throws RemoteException;
+	public HoldemPlayerContextStub(RemoteHoldemPlayerContext context)
+			throws RemoteException {
+		super(context);
+	}
+	
+	@Override
+	public HoldemPlayerListener wrapListener(HoldemPlayerListener listener) throws RemoteException {
+		return (HoldemPlayerListener) UnicastRemoteObject.exportObject(listener, 0);
+	}
 
 }

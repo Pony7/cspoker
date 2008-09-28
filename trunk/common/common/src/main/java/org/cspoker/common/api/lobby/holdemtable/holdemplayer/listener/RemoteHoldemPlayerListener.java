@@ -15,13 +15,14 @@
  */
 package org.cspoker.common.api.lobby.holdemtable.holdemplayer.listener;
 
+import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.event.NewPocketCardsEvent;
 import org.cspoker.common.api.shared.listener.EventListener;
 
 
-public interface RemoteHoldemPlayerListener extends EventListener{
+public interface RemoteHoldemPlayerListener extends EventListener, Remote{
 
 	void onNewPocketCards(NewPocketCardsEvent newPocketCardsEvent) throws RemoteException;
 		

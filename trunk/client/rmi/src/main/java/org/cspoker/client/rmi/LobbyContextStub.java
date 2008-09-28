@@ -13,7 +13,7 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.server.rmi.export;
+package org.cspoker.client.rmi;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -21,31 +21,37 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.cspoker.common.api.lobby.context.ForwardingRemoteLobbyContext;
 import org.cspoker.common.api.lobby.context.RemoteLobbyContext;
-import org.cspoker.common.api.lobby.holdemtable.context.HoldemTableContext;
+import org.cspoker.common.api.lobby.holdemtable.context.RemoteHoldemTableContext;
+import org.cspoker.common.api.lobby.listener.LobbyListener;
 import org.cspoker.common.util.Wrapper;
 
-public class ExportingLobbyContext extends ForwardingRemoteLobbyContext {
+public class LobbyContextStub extends ForwardingRemoteLobbyContext{
 
-	protected ConcurrentHashMap<Long, Wrapper<HoldemTableContext,RemoteException>> wrappedContexts = new ConcurrentHashMap<Long, Wrapper<HoldemTableContext,RemoteException>>();
+	protected ConcurrentHashMap<Long, Wrapper<RemoteHoldemTableContext,RemoteException>> wrappedContexts = new ConcurrentHashMap<Long, Wrapper<RemoteHoldemTableContext,RemoteException>>();
 
-	public ExportingLobbyContext(RemoteLobbyContext lobbyContext) throws RemoteException {
-		super(lobbyContext);
+	public LobbyContextStub(RemoteLobbyContext context)
+			throws RemoteException {
+		super(context);
 	}
 	
 	@Override
-	public HoldemTableContext getHoldemTableContext(final long tableId) throws RemoteException {
-		wrappedContexts.putIfAbsent(tableId, new Wrapper<HoldemTableContext,RemoteException>(){
+	public LobbyListener wrapListener(LobbyListener listener) throws RemoteException {
+		return (LobbyListener) UnicastRemoteObject.exportObject(listener, 0);
+	}
 
-			private HoldemTableContext content = null;
+	@Override
+	public RemoteHoldemTableContext getHoldemTableContext(final long tableId) throws RemoteException {
+		wrappedContexts.putIfAbsent(tableId, new Wrapper<RemoteHoldemTableContext,RemoteException>(){
+
+			private RemoteHoldemTableContext content = null;
 			
-			public synchronized HoldemTableContext getContent() throws RemoteException {
+			public synchronized RemoteHoldemTableContext getContent() throws RemoteException {
 				if(content == null){
-					content = (HoldemTableContext)UnicastRemoteObject.exportObject(new ExportingHoldemTableContext(lobbyContext.getHoldemTableContext(tableId)),0);
+					content = new HoldemTableContextStub(lobbyContext.getHoldemTableContext(tableId));
 				}
 				return content;
 			}
 		});
 		return wrappedContexts.get(tableId).getContent();
 	}
-
 }

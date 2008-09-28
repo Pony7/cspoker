@@ -59,7 +59,7 @@ ExternalHoldemPlayerContext {
 				for (RemoteHoldemPlayerListener listener : listeners) {
 					listener.onNewPocketCards(newPocketCardsEvent);
 				}
-			} catch (RemoteException exception) {
+			} catch (Exception exception) {
 				connection.die();
 			}
 		}

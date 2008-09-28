@@ -15,13 +15,14 @@
  */
 package org.cspoker.common.api.lobby.listener;
 
+import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 import org.cspoker.common.api.lobby.event.TableCreatedEvent;
 import org.cspoker.common.api.lobby.event.TableRemovedEvent;
 import org.cspoker.common.api.shared.listener.EventListener;
 
-public interface RemoteLobbyListener extends EventListener{
+public interface RemoteLobbyListener extends EventListener, Remote{
 
 	void onTableCreated(TableCreatedEvent tableCreatedEvent) throws RemoteException;
 

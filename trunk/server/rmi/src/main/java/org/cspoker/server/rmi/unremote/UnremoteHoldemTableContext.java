@@ -81,7 +81,7 @@ ExternalHoldemTableContext {
 				for (RemoteHoldemTableListener listener : listeners) {
 					listener.onBet(betEvent);
 				}
-			} catch (RemoteException exception) {
+			} catch (Exception exception) {
 				connection.die();
 			}
 		}
@@ -91,7 +91,7 @@ ExternalHoldemTableContext {
 				for (RemoteHoldemTableListener listener : listeners) {
 					listener.onBigBlind(bigBlindEvent);
 				}
-			} catch (RemoteException exception) {
+			} catch (Exception exception) {
 				connection.die();
 			}
 		}
@@ -101,7 +101,7 @@ ExternalHoldemTableContext {
 				for (RemoteHoldemTableListener listener : listeners) {
 					listener.onCall(callEvent);
 				}
-			} catch (RemoteException exception) {
+			} catch (Exception exception) {
 				connection.die();
 			}
 		}
@@ -111,7 +111,7 @@ ExternalHoldemTableContext {
 				for (RemoteHoldemTableListener listener : listeners) {
 					listener.onCheck(checkEvent);
 				}
-			} catch (RemoteException exception) {
+			} catch (Exception exception) {
 				connection.die();
 			}
 		}
@@ -121,7 +121,7 @@ ExternalHoldemTableContext {
 				for (RemoteHoldemTableListener listener : listeners) {
 					listener.onFold(foldEvent);
 				}
-			} catch (RemoteException exception) {
+			} catch (Exception exception) {
 				connection.die();
 			}
 		}
@@ -131,7 +131,7 @@ ExternalHoldemTableContext {
 				for (RemoteHoldemTableListener listener : listeners) {
 					listener.onLeaveGame(leaveGameEvent);
 				}
-			} catch (RemoteException exception) {
+			} catch (Exception exception) {
 				connection.die();
 			}
 		}
@@ -142,7 +142,7 @@ ExternalHoldemTableContext {
 				for (RemoteHoldemTableListener listener : listeners) {
 					listener.onNewCommunityCards(newCommunityCardsEvent);
 				}
-			} catch (RemoteException exception) {
+			} catch (Exception exception) {
 				connection.die();
 			}
 		}
@@ -152,7 +152,7 @@ ExternalHoldemTableContext {
 				for (RemoteHoldemTableListener listener : listeners) {
 					listener.onNewDeal(newDealEvent);
 				}
-			} catch (RemoteException exception) {
+			} catch (Exception exception) {
 				connection.die();
 			}
 		}
@@ -162,7 +162,7 @@ ExternalHoldemTableContext {
 				for (RemoteHoldemTableListener listener : listeners) {
 					listener.onNewRound(newRoundEvent);
 				}
-			} catch (RemoteException exception) {
+			} catch (Exception exception) {
 				connection.die();
 			}
 		}
@@ -172,7 +172,7 @@ ExternalHoldemTableContext {
 				for (RemoteHoldemTableListener listener : listeners) {
 					listener.onNextPlayer(nextPlayerEvent);
 				}
-			} catch (RemoteException exception) {
+			} catch (Exception exception) {
 				connection.die();
 			}
 		}
@@ -182,7 +182,7 @@ ExternalHoldemTableContext {
 				for (RemoteHoldemTableListener listener : listeners) {
 					listener.onRaise(raiseEvent);
 				}
-			} catch (RemoteException exception) {
+			} catch (Exception exception) {
 				connection.die();
 			}
 		}
@@ -192,7 +192,7 @@ ExternalHoldemTableContext {
 				for (RemoteHoldemTableListener listener : listeners) {
 					listener.onShowHand(showHandEvent);
 				}
-			} catch (RemoteException exception) {
+			} catch (Exception exception) {
 				connection.die();
 			}
 		}
@@ -202,7 +202,7 @@ ExternalHoldemTableContext {
 				for (RemoteHoldemTableListener listener : listeners) {
 					listener.onSitIn(sitInEvent);
 				}
-			} catch (RemoteException exception) {
+			} catch (Exception exception) {
 				connection.die();
 			}
 		}
@@ -212,7 +212,7 @@ ExternalHoldemTableContext {
 				for (RemoteHoldemTableListener listener : listeners) {
 					listener.onSmallBlind(smallBlindEvent);
 				}
-			} catch (RemoteException exception) {
+			} catch (Exception exception) {
 				connection.die();
 			}
 		}
@@ -222,7 +222,7 @@ ExternalHoldemTableContext {
 				for (RemoteHoldemTableListener listener : listeners) {
 					listener.onWinner(winnerEvent);
 				}
-			} catch (RemoteException exception) {
+			} catch (Exception exception) {
 				connection.die();
 			}
 		}

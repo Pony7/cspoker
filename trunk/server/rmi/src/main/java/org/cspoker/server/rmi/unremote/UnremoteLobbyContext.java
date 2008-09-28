@@ -81,7 +81,7 @@ LobbyContext {
 				for (RemoteLobbyListener listener : listeners) {
 					listener.onTableCreated(tableCreatedEvent);
 				}
-			} catch (RemoteException exception) {
+			} catch (Exception exception) {
 				connection.die();
 			}
 		}
@@ -91,7 +91,7 @@ LobbyContext {
 				for (RemoteLobbyListener listener : listeners) {
 					listener.onTableRemoved(tableRemovedEvent);
 				}
-			} catch (RemoteException exception) {
+			} catch (Exception exception) {
 				connection.die();
 			}
 		}
