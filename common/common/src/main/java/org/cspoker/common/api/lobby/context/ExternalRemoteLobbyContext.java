@@ -13,11 +13,22 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.common.api.shared.event;
+package org.cspoker.common.api.lobby.context;
 
+import java.rmi.RemoteException;
 
-public interface ActionListener {
+import org.cspoker.common.api.lobby.holdemtable.context.ExternalRemoteHoldemTableContext;
+import org.cspoker.common.api.lobby.listener.RemoteLobbyListener;
 
-	void actionPerformed(ActionPerformedEvent<?> actionPerformedEvent);
+public interface ExternalRemoteLobbyContext extends RemoteLobbyContext {
+
+	//Sub-Contexts
+
+	ExternalRemoteHoldemTableContext getHoldemTableContext(long tableId) throws RemoteException;
 	
+	//Event handlers
+	
+	void subscribe(RemoteLobbyListener lobbyListener) throws RemoteException;
+	
+	void unSubscribe(RemoteLobbyListener lobbyListener) throws RemoteException;
 }
