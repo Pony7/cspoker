@@ -19,44 +19,34 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.cspoker.common.api.lobby.context.ForwardingLobbyContext;
-import org.cspoker.common.api.lobby.context.LobbyContext;
+import org.cspoker.common.api.lobby.context.ForwardingRemoteLobbyContext;
+import org.cspoker.common.api.lobby.context.RemoteLobbyContext;
 import org.cspoker.common.api.lobby.holdemtable.context.HoldemTableContext;
-import org.cspoker.common.api.lobby.listener.RemoteLobbyListener;
-import org.cspoker.common.api.shared.Killable;
-import org.cspoker.server.rmi.asynchronous.listener.AsynchronousLobbyListener;
+import org.cspoker.common.util.Wrapper;
 
-public class ExportingLobbyContext extends ForwardingLobbyContext {
+public class ExportingLobbyContext extends ForwardingRemoteLobbyContext {
 
-	protected ConcurrentHashMap<RemoteLobbyListener, AsynchronousLobbyListener> wrappedListeners = new ConcurrentHashMap<RemoteLobbyListener, AsynchronousLobbyListener>();
-	private Killable connection;
-
-	protected ConcurrentHashMap<Long, HoldemTableContext> wrappedContexts = new ConcurrentHashMap<Long, HoldemTableContext>();
+	protected ConcurrentHashMap<Long, Wrapper<HoldemTableContext,RemoteException>> wrappedContexts = new ConcurrentHashMap<Long, Wrapper<HoldemTableContext,RemoteException>>();
 
 
-	public ExportingLobbyContext(Killable connection, LobbyContext lobbyContext) {
+	public ExportingLobbyContext(RemoteLobbyContext lobbyContext) throws RemoteException {
 		super(lobbyContext);
-		this.connection = connection;
 	}
 	
 	@Override
-	public HoldemTableContext getHoldemTableContext(long tableId) {
-		HoldemTableContext context;
-		if((context = wrappedContexts.get(tableId))==null){
-			try {
-				context = (HoldemTableContext)UnicastRemoteObject.exportObject(new ExportingHoldemTableContext(connection, super.getHoldemTableContext(tableId)),0);
-				if(wrappedContexts.putIfAbsent(tableId, context)==null){
-					return context;
-				}else{
-					return wrappedContexts.get(tableId);
-				}			
-			} catch (RemoteException exception) {
-				connection.die();
-				return null;
+	public HoldemTableContext getHoldemTableContext(final long tableId) throws RemoteException {
+		wrappedContexts.putIfAbsent(tableId, new Wrapper<HoldemTableContext,RemoteException>(){
+
+			private HoldemTableContext content = null;
+			
+			public synchronized HoldemTableContext getContent() throws RemoteException {
+				if(content == null){
+					content = (HoldemTableContext)UnicastRemoteObject.exportObject(new ExportingHoldemTableContext(lobbyContext.getHoldemTableContext(tableId)),0);
+				}
+				return content;
 			}
-		}else{
-			return context;
-		}
+		});
+		return wrappedContexts.get(tableId).getContent();
 	}
 
 }

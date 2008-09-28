@@ -17,30 +17,18 @@ package org.cspoker.server.rmi.export;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.concurrent.ConcurrentHashMap;
 
-import org.cspoker.common.api.lobby.holdemtable.context.ForwardingHoldemTableContext;
-import org.cspoker.common.api.lobby.holdemtable.context.HoldemTableContext;
+import org.cspoker.common.api.lobby.holdemtable.context.ForwardingRemoteHoldemTableContext;
+import org.cspoker.common.api.lobby.holdemtable.context.RemoteHoldemTableContext;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.HoldemPlayerContext;
-import org.cspoker.common.api.lobby.holdemtable.listener.RemoteHoldemTableListener;
-import org.cspoker.common.api.shared.Killable;
-import org.cspoker.server.rmi.asynchronous.listener.AsynchronousHoldemTableListener;
 
-public class ExportingHoldemTableContext extends ForwardingHoldemTableContext {
+public class ExportingHoldemTableContext extends ForwardingRemoteHoldemTableContext {
 
-	protected ConcurrentHashMap<RemoteHoldemTableListener, AsynchronousHoldemTableListener> wrappers = 
-		new ConcurrentHashMap<RemoteHoldemTableListener, AsynchronousHoldemTableListener>();
-	protected Killable connection;
 	protected HoldemPlayerContext holdemPlayerContext;
 	
-	public ExportingHoldemTableContext(Killable connection, HoldemTableContext holdemTableContext) {
+	public ExportingHoldemTableContext(RemoteHoldemTableContext holdemTableContext) throws RemoteException {
 		super(holdemTableContext);
-		this.connection = connection;
-		try {
-			this.holdemPlayerContext = (HoldemPlayerContext)UnicastRemoteObject.exportObject(super.getHoldemPlayerContext(),0);
-		} catch (RemoteException exception) {
-			connection.die();
-		}
+		this.holdemPlayerContext = (HoldemPlayerContext)UnicastRemoteObject.exportObject(super.getHoldemPlayerContext(),0);
 	}
 	
 	@Override

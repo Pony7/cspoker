@@ -22,26 +22,22 @@ import org.cspoker.common.api.account.context.AccountContext;
 import org.cspoker.common.api.cashier.context.CashierContext;
 import org.cspoker.common.api.chat.context.ChatContext;
 import org.cspoker.common.api.lobby.context.LobbyContext;
-import org.cspoker.common.api.shared.context.ForwardingServerContext;
+import org.cspoker.common.api.shared.context.ForwardingRemoteServerContext;
 import org.cspoker.common.api.shared.context.ServerContext;
 
-public class ExportingServerContext extends ForwardingServerContext {
+public class ExportingServerContext extends ForwardingRemoteServerContext {
 
 	private AccountContext accountContext;
 	private CashierContext cashierContext;
 	private ChatContext chatContext;
 	private LobbyContext lobbyContext;
 
-	public ExportingServerContext(ServerContext serverContext) {
+	public ExportingServerContext(ServerContext serverContext) throws RemoteException {
 		super(serverContext);
-		try {
-			accountContext = (AccountContext) UnicastRemoteObject.exportObject(super.getAccountContext(), 0);
-			cashierContext = (CashierContext) UnicastRemoteObject.exportObject(super.getCashierContext(), 0);
-			chatContext = (ChatContext) UnicastRemoteObject.exportObject(super.getChatContext(), 0);	
-			lobbyContext = (LobbyContext) UnicastRemoteObject.exportObject(new ExportingLobbyContext(this, super.getLobbyContext()), 0);
-		} catch (RemoteException exception) {
-			die();
-		}
+		accountContext = (AccountContext) UnicastRemoteObject.exportObject(super.getAccountContext(), 0);
+		cashierContext = (CashierContext) UnicastRemoteObject.exportObject(super.getCashierContext(), 0);
+		chatContext = (ChatContext) UnicastRemoteObject.exportObject(super.getChatContext(), 0);	
+		lobbyContext = (LobbyContext) UnicastRemoteObject.exportObject(new ExportingLobbyContext(super.getLobbyContext()), 0);
 	}
 
 	@Override

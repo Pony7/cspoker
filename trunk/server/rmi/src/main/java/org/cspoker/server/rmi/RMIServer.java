@@ -30,10 +30,13 @@ import javax.security.auth.login.LoginException;
 import org.apache.log4j.Logger;
 import org.cspoker.common.CSPokerServer;
 import org.cspoker.common.RemoteCSPokerServer;
+import org.cspoker.common.api.shared.Killable;
+import org.cspoker.common.api.shared.context.RemoteServerContext;
 import org.cspoker.common.api.shared.context.ServerContext;
 import org.cspoker.server.common.util.threading.RequestExecutor;
 import org.cspoker.server.rmi.asynchronous.context.AsynchronousServerContext;
 import org.cspoker.server.rmi.export.ExportingServerContext;
+import org.cspoker.server.rmi.unremote.UnremoteServerContext;
 
 public class RMIServer implements RemoteCSPokerServer {
 
@@ -50,11 +53,16 @@ public class RMIServer implements RemoteCSPokerServer {
 
 	public ServerContext login(String username, String password)
 	throws LoginException, RemoteException {
-		ServerContext context = 
+		ServerContext rootServer = cspokerServer.login(username, password);
+		Killable connection = rootServer;
+		RemoteServerContext context = 
 			new ExportingServerContext(
-					new AsynchronousServerContext(
-							new SequencePreservingExecutor(RequestExecutor.getInstance()),
-							cspokerServer.login(username, password)
+					new UnremoteServerContext(
+							connection,
+							new AsynchronousServerContext(
+									new SequencePreservingExecutor(RequestExecutor.getInstance()),
+									rootServer
+							)
 					)
 			);
 		try {
