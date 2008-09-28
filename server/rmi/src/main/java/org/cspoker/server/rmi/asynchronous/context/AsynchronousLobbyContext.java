@@ -22,14 +22,14 @@ import org.cspoker.common.api.lobby.context.ForwardingLobbyContext;
 import org.cspoker.common.api.lobby.context.LobbyContext;
 import org.cspoker.common.api.lobby.holdemtable.context.HoldemTableContext;
 import org.cspoker.common.api.lobby.listener.LobbyListener;
+import org.cspoker.common.util.SimpleWrapper;
 import org.cspoker.server.rmi.asynchronous.listener.AsynchronousLobbyListener;
 
 public class AsynchronousLobbyContext extends ForwardingLobbyContext {
 
 	protected final Executor executor;
 	
-	protected ConcurrentHashMap<Long, Wrapper> wrappedContexts = new ConcurrentHashMap<Long, Wrapper>();
-	
+	protected ConcurrentHashMap<Long, SimpleWrapper<HoldemTableContext>> wrappedContexts = new ConcurrentHashMap<Long, SimpleWrapper<HoldemTableContext>>();
 	
 	public AsynchronousLobbyContext(Executor executor, LobbyContext lobbyContext) {
 		super(lobbyContext);
@@ -43,7 +43,7 @@ public class AsynchronousLobbyContext extends ForwardingLobbyContext {
 	
 	@Override
 	public HoldemTableContext getHoldemTableContext(final long tableId) {
-		wrappedContexts.putIfAbsent(tableId, new Wrapper(){
+		wrappedContexts.putIfAbsent(tableId, new SimpleWrapper<HoldemTableContext>(){
 
 			private HoldemTableContext content = null;
 			
@@ -56,12 +56,6 @@ public class AsynchronousLobbyContext extends ForwardingLobbyContext {
 			
 		});
 		return wrappedContexts.get(tableId).getContent();
-	}
-	
-	private static interface Wrapper{
-		
-		public HoldemTableContext getContent();
-	
 	}
 	
 }
