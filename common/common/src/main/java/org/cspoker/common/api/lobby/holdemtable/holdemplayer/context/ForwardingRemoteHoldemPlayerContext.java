@@ -31,7 +31,7 @@ public class ForwardingRemoteHoldemPlayerContext implements RemoteHoldemPlayerCo
 		holdemPlayerContext.subscribe(wrapListener(forwardingListener));
 	}
 	
-	public HoldemPlayerListener wrapListener(HoldemPlayerListener listener){
+	public HoldemPlayerListener wrapListener(HoldemPlayerListener listener) throws RemoteException{
 		return listener;
 	}
 

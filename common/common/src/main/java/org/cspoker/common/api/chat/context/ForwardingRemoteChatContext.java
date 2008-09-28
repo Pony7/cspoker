@@ -32,7 +32,7 @@ public class ForwardingRemoteChatContext implements RemoteChatContext{
 		chatContext.subscribe(wrapListener(forwardingChatListener));
 	}
 	
-	public ChatListener wrapListener(ChatListener listener){
+	public ChatListener wrapListener(ChatListener listener) throws RemoteException{
 		return listener;
 	}
 
@@ -44,11 +44,11 @@ public class ForwardingRemoteChatContext implements RemoteChatContext{
 		chatContext.sendTableMessage(tableId, message);
 	}
 
-	public void subscribe(ChatListener chatListener) {
+	public void subscribe(ChatListener chatListener)  throws RemoteException {
 		forwardingChatListener.subscribe(chatListener);
 	}
 
-	public void unSubscribe(ChatListener chatListener) {
+	public void unSubscribe(ChatListener chatListener)  throws RemoteException {
 		forwardingChatListener.unSubscribe(chatListener);
 	}
 	

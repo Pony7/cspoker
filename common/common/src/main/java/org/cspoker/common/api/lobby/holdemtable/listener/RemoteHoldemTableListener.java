@@ -15,6 +15,7 @@
  */
 package org.cspoker.common.api.lobby.holdemtable.listener;
 
+import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 import org.cspoker.common.api.lobby.holdemtable.event.BetEvent;
@@ -34,7 +35,7 @@ import org.cspoker.common.api.lobby.holdemtable.event.SmallBlindEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.WinnerEvent;
 import org.cspoker.common.api.shared.listener.EventListener;
 
-public interface RemoteHoldemTableListener extends EventListener{
+public interface RemoteHoldemTableListener extends EventListener, Remote{
 
 	void onBet(BetEvent betEvent) throws RemoteException;
 

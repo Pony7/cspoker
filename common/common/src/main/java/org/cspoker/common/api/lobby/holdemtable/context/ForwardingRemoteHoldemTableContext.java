@@ -32,7 +32,7 @@ public class ForwardingRemoteHoldemTableContext implements RemoteHoldemTableCont
 		holdemTableContext.subscribe(wrapListener(forwardingListener));
 	}
 	
-	public HoldemTableListener wrapListener(HoldemTableListener listener){
+	public HoldemTableListener wrapListener(HoldemTableListener listener) throws RemoteException{
 		return listener;
 	}
 

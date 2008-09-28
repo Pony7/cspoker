@@ -15,8 +15,6 @@
  */
 package org.cspoker.server.rmi.unremote;
 
-import java.rmi.RemoteException;
-
 import org.cspoker.common.api.chat.context.ChatContext;
 import org.cspoker.common.api.chat.context.ForwardingChatContext;
 import org.cspoker.common.api.chat.event.ServerMessageEvent;
@@ -59,7 +57,7 @@ ChatContext {
 				for (RemoteChatListener listener : listeners) {
 					listener.onServerMessage(serverMessageEvent);
 				}
-			} catch (RemoteException exception) {
+			} catch (Exception exception) {
 				connection.die();
 			}
 		}
@@ -69,7 +67,7 @@ ChatContext {
 				for (RemoteChatListener listener : listeners) {
 					listener.onTableMessage(tableMessageEvent);
 				}
-			} catch (RemoteException exception) {
+			} catch (Exception exception) {
 				connection.die();
 			}
 		}

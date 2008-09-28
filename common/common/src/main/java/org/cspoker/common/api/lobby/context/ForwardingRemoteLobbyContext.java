@@ -35,7 +35,7 @@ public class ForwardingRemoteLobbyContext implements RemoteLobbyContext{
 		lobbyContext.subscribe(wrapListener(forwardingLobbyListener));
 	}
 	
-	public LobbyListener wrapListener(LobbyListener listener){
+	public LobbyListener wrapListener(LobbyListener listener) throws RemoteException{
 		return listener;
 	}
 

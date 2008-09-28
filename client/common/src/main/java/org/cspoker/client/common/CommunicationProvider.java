@@ -15,60 +15,52 @@
  */
 package org.cspoker.client.common;
 
-import java.rmi.ConnectException;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import javax.security.auth.login.LoginException;
 
-import org.cspoker.common.RemotePlayerCommunication;
+import org.cspoker.common.RemoteCSPokerServer;
+import org.cspoker.common.api.shared.context.RemoteServerContext;
 
-public class CommunicationProvider implements RemotePlayerCommunicationFactory {
+public class CommunicationProvider implements RemoteCSPokerServer {
 
 	public final static CommunicationProvider global_provider = new CommunicationProvider();
 
-	private List<RemotePlayerCommunicationFactory> providers = new ArrayList<RemotePlayerCommunicationFactory>();
+	private List<RemoteCSPokerServer> providers = new ArrayList<RemoteCSPokerServer>();
 
-	public void addRemotePlayerCommunicationProvider(
-			RemotePlayerCommunicationFactory provider) {
+	public void addRemoteCSPokerServerProvider(
+			RemoteCSPokerServer provider) {
 		providers.add(provider);
 	}
 
-	public List<RemotePlayerCommunicationFactory> getProviders() {
+	public List<RemoteCSPokerServer> getProviders() {
 		return Collections.unmodifiableList(providers);
 	}
 
-	public RemotePlayerCommunication getRemotePlayerCommunication(
-			String username, String password) throws ConnectException,
-			NoProviderException, LoginException {
+	public RemoteServerContext login(String username, String password) throws LoginException, RemoteException  {
 
-		NoProviderException lastNoProviderException = null;
-		ConnectException lastConnectException = null;
+		RemoteException lastRemoteException = null;
 		LoginException lastLoginException = null;
-
-		for (RemotePlayerCommunicationFactory p : providers) {
+		
+		for (RemoteCSPokerServer p : providers) {
 			try {
-				return p.getRemotePlayerCommunication(username, password);
-			} catch (NoProviderException e) {
-				lastNoProviderException = e;
-			} catch (ConnectException e) {
-				lastConnectException = e;
-			} catch (LoginException e) {
+				return p.login(username, password);
+			} catch (RemoteException e) {
+				lastRemoteException = e;
+			} catch(LoginException e){
 				lastLoginException = e;
-
 			}
-		}
-		if (lastConnectException != null) {
-			throw lastConnectException;
-		}
-		if (lastNoProviderException != null) {
-			throw lastNoProviderException;
 		}
 		if (lastLoginException != null) {
 			throw lastLoginException;
+		}else if(lastRemoteException != null){
+			throw lastRemoteException;
+		}else{
+			throw new IllegalStateException("No probiders are registered");
 		}
-		throw new NoProviderException();
 	}
 
 }
