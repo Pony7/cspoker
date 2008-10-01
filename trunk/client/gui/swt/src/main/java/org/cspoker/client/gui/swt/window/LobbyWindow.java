@@ -1,13 +1,26 @@
+/**
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version. This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details. You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software Foundation, Inc.,
+ * 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ */
 package org.cspoker.client.gui.swt.window;
 
-import org.cspoker.client.User;
+import org.apache.log4j.Logger;
 import org.cspoker.client.gui.swt.control.ClientCore;
 import org.cspoker.client.gui.swt.control.ClientGUI;
 import org.cspoker.client.gui.swt.control.SWTResourceManager;
+import org.cspoker.common.api.chat.event.ChatEvent;
 import org.cspoker.common.api.chat.event.ServerMessageEvent;
 import org.cspoker.common.api.chat.event.TableMessageEvent;
 import org.cspoker.common.api.chat.listener.ChatListener;
 import org.cspoker.common.api.lobby.context.LobbyContext;
+import org.cspoker.common.api.lobby.event.LobbyEvent;
 import org.cspoker.common.api.lobby.event.TableCreatedEvent;
 import org.cspoker.common.api.lobby.event.TableRemovedEvent;
 import org.cspoker.common.api.lobby.listener.LobbyListener;
@@ -27,20 +40,27 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
 
 /**
- * The main lobby window
+ * The main lobby window. Listens to {@link LobbyEvent}s and {@link ChatEvent}s
+ * from the Server.
  */
 public class LobbyWindow
 		extends ClientComposite
 		implements LobbyListener, ChatListener {
 	
+	private final static Logger logger = Logger.getLogger(LobbyWindow.class);
+	/** {@link LobbyContext} for callbacks to server. */
 	private LobbyContext context;
 	
+	/**
+	 * @return The {@link LobbyContext} provided by the server at login.
+	 */
 	public LobbyContext getContext() {
 		return context;
 	}
 	
-	private ClientGUI gui;
-	private ClientCore clientCore;
+	// ************************************************************
+	// SWT Member Variables
+	// ************************************************************
 	
 	private Menu menu1;
 	private Button createTableButton;
@@ -77,24 +97,25 @@ public class LobbyWindow
 	private MenuItem eptChipsMenuItem;
 	private MenuItem pokerWikiaChipsMenuItem;
 	
-	{
+	/**
+	 * Creates and initializes the SWT components of the Lobby.
+	 * 
+	 * @param core
+	 */
+	public LobbyWindow(ClientCore core) {
+		super(new Shell(core.getGui().getDisplay()), SWT.NONE, core);
+		this.context = core.getCommunication().getLobbyContext();
+		initGUI();
+		createCloseListener();
 		// Register as a resource user - SWTResourceManager will
 		// handle the obtaining and disposing of resources
 		SWTResourceManager.registerResourceUser(this);
 	}
 	
-	public LobbyWindow(ClientCore core) {
-		super(new Shell(core.getGui().getDisplay()), SWT.NONE, core);
-		this.clientCore = core;
-		this.gui = clientCore.getGui();
-		this.context = core.getCommunication().getLobbyContext();
-		init();
-	}
-	
 	/**
-	 * Initializes the GUI.
+	 * Initializes the GUI. SWT stuff.
 	 */
-	private void init() {
+	private void initGUI() {
 		try {
 			setSize(new Point(400, 300));
 			setLayout(new FillLayout(SWT.HORIZONTAL));
@@ -128,7 +149,7 @@ public class LobbyWindow
 										// Open selected table
 										long tid = (Long.parseLong(selectedItems[0].getText(1)));
 										
-										GameWindow w = gui.getGameWindow(context, tid);
+										GameWindow w = getClientCore().getGui().getGameWindow(tid, true);
 										w.show();
 									}
 								}
@@ -184,7 +205,8 @@ public class LobbyWindow
 								
 								@Override
 								public void mouseDown(MouseEvent evt) {
-									createTableButtonMouseDown(evt);
+									logger.info("Table creation requested ...");
+									new TableCreationDialog(LobbyWindow.this).open();
 								}
 							});
 						}
@@ -344,9 +366,13 @@ public class LobbyWindow
 		}
 	}
 	
+	/**
+	 * Opens this {@link LobbyWindow} in a new shell and listens to the OS event
+	 * queue until this window's shell is disposed.
+	 */
 	public void show() {
 		Shell shell = getShell();
-		shell.setText("CSPoker - Logged in as " + getUser().getUserName());
+		shell.setText("CSPoker - Logged in as " + getClientCore().getUser().getUserName());
 		shell.setLayout(new FillLayout());
 		shell.open();
 		while (!shell.isDisposed()) {
@@ -355,6 +381,10 @@ public class LobbyWindow
 		}
 	}
 	
+	/**
+	 * Asks the server for an updated snapshot of all available tables, and
+	 * updates its display status according to the received {@link TableList}.
+	 */
 	public void refreshTables() {
 		TableList tl = context.getTableList();
 		availableGameTables.clearAll();
@@ -364,14 +394,8 @@ public class LobbyWindow
 		}
 	}
 	
-	private void createTableButtonMouseDown(MouseEvent evt) {
-		System.out.println("Table creation requested ...");
-		// clientCore.createTable();
-		new TableCreationDialog(this).open();
-	}
-	
 	public GameWindow getHoldemTableListener(long tableId) {
-		return gui.getGameWindow(context, tableId);
+		return getClientCore().getGui().getGameWindow(tableId, false);
 	}
 	
 	/**
@@ -388,7 +412,15 @@ public class LobbyWindow
 		
 	}
 	
+	/**
+	 * Helper method to insert the information for a given table into the
+	 * {@link #availableGameTables}
+	 * 
+	 * @param t A {@link DetailedTable} object containing all the relevant
+	 *            information
+	 */
 	private void insertInformation(DetailedTable t) {
+		assert (t != null) : "Cannot insert information, passed null parameter";
 		TableConfiguration tInfo = t.getGameProperty();
 		TableItem item = new TableItem(availableGameTables, SWT.NONE);
 		item.setText(new String[] { t.getName(), Long.toString(t.getId()),
@@ -398,7 +430,8 @@ public class LobbyWindow
 	}
 	
 	/**
-	 * Very simply just refreshs all tables for now TODO Slim down
+	 * Looks for the given table and removes them from the list displayed in the
+	 * UI
 	 * 
 	 * @see org.cspoker.common.api.lobby.listener.LobbyListener#onTableRemoved(org.cspoker.common.api.lobby.event.TableRemovedEvent)
 	 */
@@ -415,22 +448,17 @@ public class LobbyWindow
 	
 	public void onServerMessage(ServerMessageEvent serverMessageEvent) {
 		// TODO Show the server event maybe in the lobby as well
-		for (GameWindow openWindow : gui.getGameWindows()) {
+		for (GameWindow openWindow : getClientCore().getGui().getGameWindows()) {
 			serverMessageEvent.dispatch(openWindow.getUserInputComposite());
 		}
 		
 	}
 	
 	public void onTableMessage(TableMessageEvent tableMessageEvent) {
-		for (GameWindow openWindow : gui.getGameWindows()) {
+		for (GameWindow openWindow : getClientCore().getGui().getGameWindows()) {
 			tableMessageEvent.dispatch(openWindow.getUserInputComposite());
 		}
 		
-	}
-	
-	public User getUser() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 	
 	public void subscribe(RemoteLobbyListener lobbyListener) {

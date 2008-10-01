@@ -1,9 +1,25 @@
+/**
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version. This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details. You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software Foundation, Inc.,
+ * 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ */
 package org.cspoker.client.gui.swt.control;
 
 import java.util.*;
 
 import org.eclipse.swt.graphics.Image;
 
+/**
+ * Represents a playing chip, associated with a value and an image.
+ * 
+ * @author stephans
+ */
 public class Chip
 		implements Comparable<Chip> {
 	
@@ -28,8 +44,13 @@ public class Chip
 	
 	private final int value;
 	
+	/**
+	 * The maximum image size. Possible image sizes are {@code 1 -
+	 * #MAX_IMG_SIZE}
+	 */
 	public static final int MAX_IMG_SIZE = 6;
 	private final String fileId;
+	/** The chips that are available at the table as a NavigableSet */
 	public static final NavigableSet<Chip> AVAILABLE_CHIPS = new TreeSet<Chip>(Arrays.asList(Chip.ONE_CENT_CHIP,
 			Chip.FIVE_CENT_CHIP, Chip.TWENTY_FIVE_CENT_CHIP, Chip.ONE_DOLLAR_CHIP, Chip.FIVE_DOLLAR_CHIP,
 			Chip.TWENTY_FIVE_DOLLAR_CHIP, Chip.HUNDRED_DOLLAR_CHIP, Chip.FIVE_HUNDRED_DOLLAR_CHIP,
@@ -38,6 +59,8 @@ public class Chip
 			Chip.ONE_MILLION_DOLLAR_CHIP, Chip.FIVE_MILLION_DOLLAR_CHIP));
 	
 	/**
+	 * Private chip creation constructor.
+	 * 
 	 * @param value The value of the chip (in cents)
 	 * @param fileId The fileName (without mask end string ".a.bmp")
 	 */
@@ -46,32 +69,56 @@ public class Chip
 		this.value = value;
 	}
 	
+	/**
+	 * @param size Parameter indicating the desired size of the returned image.
+	 * @return The corresponding chip image.
+	 */
 	public Image getImage(int size) {
 		
 		return SWTResourceManager.getChipImage(this, size);
 		
 	}
 	
+	/**
+	 * @return The value of this chip in cents.
+	 */
 	public int getValue() {
 		return value;
 	}
 	
 	/**
+	 * Returns a human-readable version of the chip. A typical example would be
+	 * {@code $25.00 Chip}
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString() {
-		return ClientGUI.formatBet(value) + " Chip ";
+		return ClientGUI.formatBet(value) + " Chip";
 	}
 	
 	/**
+	 * Performs a comparison on the value of this chip.
+	 * 
 	 * @see java.lang.Comparable#compareTo(java.lang.Object)
 	 */
 	public int compareTo(Chip o) {
 		return Integer.valueOf(getValue()).compareTo(Integer.valueOf(o.getValue()));
 	}
 	
+	/**
+	 * Given an amount returns a <i>Chip stack</i> in the form of a {@code
+	 * NavigableMap}, where the keys are the Chips and the Values are the number
+	 * of the given key chip. <br>
+	 * <br>
+	 * For example, a possible return value for {@code Chip#getDistribution(17)}
+	 * would be {@code ($5.00 Chip=3),($1.00 Chip=2)}
+	 * 
+	 * @param amount The value of the chips
+	 * @return A chip stack representing the given value
+	 */
 	public static NavigableMap<Chip, Integer> getDistribution(int amount) {
+		assert (amount >= 0) : "Amount should be non-negative";
 		NavigableMap<Chip, Integer> result = new TreeMap<Chip, Integer>();
 		if (amount == 0) {
 			return result;

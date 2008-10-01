@@ -1,3 +1,14 @@
+/**
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version. This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details. You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software Foundation, Inc.,
+ * 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ */
 package org.cspoker.client.gui.swt.window;
 
 import java.util.ArrayList;
@@ -250,9 +261,9 @@ public class TableComposite
 		// Ship it
 		for (Winner winner : winners) {
 			PlayerSeatComposite winnerPC = getPlayerSeatComposite(winner.getPlayer().getId());
-			winnerPC.setStack(winnerPC.getCurrentStack() + winner.getGainedAmount());
+			winnerPC.updateStack(winner.getGainedAmount());
 			shipPot(winnerPC);
-			ClientGUI.playAudio("snd3.wav");
+			ClientGUI.playAudio(ClientGUI.Resources.SOUND_FILE_SLIDE_CHIPS);
 		}
 		try {
 			Thread.sleep(1000);
@@ -261,13 +272,5 @@ public class TableComposite
 			e.printStackTrace();
 		}
 		clearCommunityCards();
-		// TODO New hidden hole cards may already have been set by a
-		// NewDealEvent
-		// for (PlayerSeatComposite psc : getPlayerSeatComposites()) {
-		// psc.clearHoleCards();
-		//			
-		// }
-		gameState.setMoneyInMiddle(0);
-		redraw();
 	}
 }

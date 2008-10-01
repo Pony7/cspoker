@@ -1,7 +1,19 @@
+/**
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version. This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details. You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software Foundation, Inc.,
+ * 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ */
 package org.cspoker.client.gui.swt.window;
 
 import java.text.ParseException;
 
+import org.apache.log4j.Logger;
 import org.cspoker.client.gui.swt.control.ClientGUI;
 import org.cspoker.client.gui.swt.control.GameState;
 import org.cspoker.common.api.chat.event.ServerMessageEvent;
@@ -9,15 +21,26 @@ import org.cspoker.common.api.chat.event.TableMessageEvent;
 import org.cspoker.common.api.chat.listener.ChatListener;
 import org.cspoker.common.api.lobby.holdemtable.context.HoldemTableContext;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.HoldemPlayerContext;
+import org.cspoker.common.elements.player.SeatedPlayer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.*;
 import org.eclipse.swt.layout.*;
 import org.eclipse.swt.widgets.*;
 
+/**
+ * The bottom composite of the {@link GameWindow}.
+ * <p>
+ * In this composite reside all the components where the user can execute
+ * actions, i.e. Call/Fold/Raise/Sit In/Sit Out/Leave buttons and the Chat Box
+ * 
+ * @author stephans
+ */
 class TableUserInputComposite
 		extends ClientComposite
 		implements ChatListener {
+	
+	private final Logger logger = Logger.getLogger(TableUserInputComposite.class);
 	
 	int betRaiseAmount;
 	Text betAmountTextField;
@@ -36,8 +59,10 @@ class TableUserInputComposite
 	Composite composite2;
 	
 	HoldemTableContext tableContext;
+	private SeatedPlayer userSnapshot;
+	private GameState gameState;
 	
-	public TableUserInputComposite(ClientComposite parent, int style, HoldemTableContext holdemTableContext) {
+	public TableUserInputComposite(GameWindow parent, int style, HoldemTableContext holdemTableContext) {
 		super(parent, style, parent.getClientCore());
 		gameState = parent.getGameState();
 		tableContext = holdemTableContext;
@@ -46,14 +71,12 @@ class TableUserInputComposite
 	}
 	
 	void betRaiseButtonMouseDown(MouseEvent evt) {
-		gameState.updateStackAndBetChips(betRaiseAmount);
 		tableContext.getHoldemPlayerContext().betOrRaise(betRaiseAmount);
 		gameActionGroup.setVisible(false);
 	}
 	
 	void checkCallButtonMouseDown(MouseEvent evt) {
 		System.out.println("callButton.mouseDown, event=" + evt);
-		gameState.updateStackAndBetChips(0);
 		tableContext.getHoldemPlayerContext().checkOrCall();
 		gameActionGroup.setVisible(false);
 	}
@@ -69,10 +92,6 @@ class TableUserInputComposite
 	 */
 	public StyledText getGameInfoText() {
 		return gameInfoText;
-	}
-	
-	long getTableId() {
-		return gameState.getTableMemento().getId();
 	}
 	
 	private void initGUI() {
@@ -103,7 +122,7 @@ class TableUserInputComposite
 				manualEnterBetGroup.setLayoutData(new RowData(300, 40));
 				{
 					betSlider = new Slider(manualEnterBetGroup, SWT.NONE);
-					betSlider.setIncrement(getGameState().getTableMemento().getGameProperty().getSmallBlind());
+					betSlider.setIncrement(gameState.getTableMemento().getGameProperty().getSmallBlind());
 					betSlider.setPageIncrement(betSlider.getIncrement() * 5);
 					betSlider.setLayoutData(new RowData(150, 25));
 					betSlider.addSelectionListener(new SelectionAdapter() {
@@ -137,16 +156,16 @@ class TableUserInputComposite
 						@Override
 						public void keyReleased(KeyEvent e) {
 							betAmountTextField.setToolTipText("Minimum is "
-									+ ClientGUI.formatBet(gameState.getMinRaiseAmount()
+									+ ClientGUI.formatBet(gameState.getMinBetRaiseAmount()
 											+ GameState.getValue(gameState.getCurrentBetPile())));
 							try {
-								int desiredAmount = parseAmount(betAmountTextField.getText());
-								if (desiredAmount >= gameState.getMinRaiseAmount()) {
-									setNewBetRaiseAmount(desiredAmount);
+								int desiredAmount = ClientGUI.betFormatter.parse(betAmountTextField.getText())
+										.intValue();
+								if (desiredAmount - gameState.getToCallAmount() >= gameState.getMinBetRaiseAmount()) {
+									setNewBetRaiseAmount(desiredAmount - gameState.getToCallAmount());
 								}
-							} catch (ParseException e1) {
-								// TODO Auto-generated catch block
-								e1.printStackTrace();
+							} catch (ParseException ex) {
+								logger.error("Could not parse manual bet input", ex);
 								return;
 							}
 							
@@ -245,22 +264,45 @@ class TableUserInputComposite
 	}
 	
 	void prepareForUserInput() {
-		System.err.println("Users turn");
-		setNewBetRaiseAmount(gameState.getMinRaiseAmount());
+		logger.info("Users turn");
+		boolean toCallAllIn = gameState.getRemainingStack() <= gameState.getToCallAmount();
+		updateCheckCallButton(toCallAllIn);
+		if (!toCallAllIn) {
+			setNewBetRaiseAmount(gameState.getMinBetRaiseAmount());
+			betAmountTextField.selectAll();
+			betAmountTextField.setFocus();
+		}
 		gameActionGroup.setVisible(true);
 		foldCallRaiseButtonGroup.setVisible(true);
-		betAmountTextField.selectAll();
-		betAmountTextField.setFocus();
+		betRaiseButton.setVisible(!toCallAllIn);
+		manualEnterBetGroup.setVisible(!toCallAllIn);
+	}
+	
+	private void updateCheckCallButton(boolean allIn) {
+		String text = (gameState.getToCallAmount() == 0) ? "Check" : "Call "
+				+ ClientGUI.betFormatter.format(Math.min(gameState.getRemainingStack(), gameState.getToCallAmount()));
+		
+		checkCallButton.setText(text);
+		if (allIn) {
+			markAllIn(checkCallButton);
+		}
+		
+	}
+	
+	private void markAllIn(Button button) {
+		button.setText(button.getText() + " (All In)");
+		button.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_RED));
+		
 	}
 	
 	void rebuyButtonWidgetSelected(SelectionEvent evt) {
-		new BuyinDialog(getClientCore(), null, getGameState().getTableMemento().getGameProperty().getBigBlind()).open();
+		new BuyinDialog(getClientCore(), null, gameState.getTableMemento().getGameProperty().getBigBlind()).open();
 	}
 	
 	private void setNewBetRaiseAmount(int amount) {
 		betRaiseAmount = amount;
 		updateBetSlider();
-		updateButtons();
+		updateBetRaiseButton();
 		if (!betAmountTextField.isFocusControl()) {
 			betAmountTextField.setText(ClientGUI.formatBet(betRaiseAmount
 					+ GameState.getValue(gameState.getCurrentBetPile())));
@@ -281,79 +323,32 @@ class TableUserInputComposite
 	
 	void updateBetSlider() {
 		// +10 is some weirdo behavior/bug??
-		betSlider.setMaximum(gameState.getRemainingStack() + gameState.getBetChipsThisRound());
-		betSlider.setSelection(gameState.getRemainingStack() + gameState.getBetChipsThisRound());
+		betSlider.setMaximum(userSnapshot.getStackValue() + userSnapshot.getBetChipsValue());
 		// native windows bug fix;
+		betSlider.setSelection(userSnapshot.getStackValue() + userSnapshot.getBetChipsValue());
 		int extras = betSlider.getMaximum() - betSlider.getSelection();
 		if (extras != 0) {
 			betSlider.setMaximum(betSlider.getMaximum() + extras);
 		}
-		betSlider.setMinimum(gameState.getMinRaiseAmount() + GameState.getValue(gameState.getCurrentBetPile()));
+		betSlider.setMinimum(gameState.getMinBetRaiseAmount() + GameState.getValue(gameState.getCurrentBetPile()));
 		betSlider.setSelection(betRaiseAmount + GameState.getValue(gameState.getCurrentBetPile()));
 	}
 	
-	void updateButtons() {
-		int stackLeft = gameState.getRemainingStack();
-		int betChips = gameState.getBetChipsThisRound();
-		int toCall = gameState.getToCallAmount();
-		
-		if (toCall == 0) {
-			if (betChips > 0) {
-				// Preflop is special ...
-				betRaiseButton.setText("Raise to "
-						+ ClientGUI.formatBet(betRaiseAmount
-								+ gameState.getTableMemento().getGameProperty().getBigBlind()));
-			} else {
-				betRaiseButton.setText("Bet " + ClientGUI.formatBet(betRaiseAmount));
-				if (toCall + betRaiseAmount >= stackLeft) {
-					betRaiseButton.setText(betRaiseButton.getText() + " (ALL IN)");
-					betRaiseButton.setForeground(Display.getDefault().getSystemColor(SWT.COLOR_RED));
-				}
-			}
-			checkCallButton.setText("Check");
-		} else {
-			betRaiseButton.setText("Raise to "
-					+ ClientGUI.formatBet(betRaiseAmount + GameState.getValue(gameState.getCurrentBetPile())));
-			checkCallButton.setText("Call " + ClientGUI.formatBet(Math.min(stackLeft, toCall)));
-		}
-		betRaiseButton.setVisible(true);
-		if (toCall >= stackLeft) {
-			betRaiseButton.setVisible(false);
-			checkCallButton.setText(checkCallButton.getText() + " (ALL IN)");
+	void updateBetRaiseButton() {
+		int totalBetRaiseAmount = betRaiseAmount + GameState.getValue(gameState.getCurrentBetPile());
+		boolean isAllIn = (gameState.getToCallAmount() + betRaiseAmount == gameState.getRemainingStack());
+		String text = (gameState.getBetChipsThisRound() > 0) ? "Raise to " : "Bet";
+		betRaiseButton.setText(text + ClientGUI.betFormatter.format(totalBetRaiseAmount));
+		if (isAllIn) {
+			markAllIn(betRaiseButton);
 		}
 	}
 	
 	/**
-	 * FIXME Horrible, this should be done by the {@link ClientGUI#betFormatter}
+	 * Adds the message to the Chat Box (in red)
 	 * 
-	 * @return
-	 * @throws ParseException
+	 * @see org.cspoker.common.api.chat.listener.ChatListener#onServerMessage(org.cspoker.common.api.chat.event.ServerMessageEvent)
 	 */
-	private int parseAmount(String input)
-			throws ParseException {
-		int desiredAmount = 0;
-		
-		input = input.replaceAll("�", "");
-		input = input.replaceAll(" ", "");
-		if (input.indexOf(",") != -1) {
-			input = input.replaceAll(",", ".");
-		}
-		if (input.indexOf(".") == -1) {
-			input = input.concat(".00");
-		}
-		if (input.indexOf(".") == input.length() - 2) {
-			input = input.concat("0");
-		}
-		
-		if (input.indexOf("�") == -1) {
-			input = input.concat(" �");
-		}
-		desiredAmount = ClientGUI.betFormatter.parse(input).intValue()
-				- GameState.getValue(gameState.getCurrentBetPile());
-		
-		return desiredAmount;
-	}
-	
 	public void onServerMessage(ServerMessageEvent serverMessageEvent) {
 		// Display server messages in red
 		gameInfoText.setForeground(Display.getDefault().getSystemColor(SWT.COLOR_RED));
@@ -363,6 +358,11 @@ class TableUserInputComposite
 		
 	}
 	
+	/**
+	 * Adds the message to the Chat Box (in black)
+	 * 
+	 * @see org.cspoker.common.api.chat.listener.ChatListener#onTableMessage(org.cspoker.common.api.chat.event.TableMessageEvent)
+	 */
 	public void onTableMessage(TableMessageEvent tableMessageEvent) {
 		// Display standard messages in black
 		gameInfoText.setForeground(Display.getDefault().getSystemColor(SWT.COLOR_BLACK));
@@ -373,7 +373,7 @@ class TableUserInputComposite
 	}
 	
 	public HoldemPlayerContext getPlayerContext() {
-		// TODO Auto-generated method stub
 		return tableContext.getHoldemPlayerContext();
 	}
+	
 }

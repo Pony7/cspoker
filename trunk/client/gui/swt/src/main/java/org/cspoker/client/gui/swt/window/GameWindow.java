@@ -1,3 +1,14 @@
+/**
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version. This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details. You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software Foundation, Inc.,
+ * 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ */
 package org.cspoker.client.gui.swt.window;
 
 import org.cspoker.client.gui.swt.control.ClientGUI;
@@ -10,15 +21,17 @@ import org.cspoker.common.api.lobby.holdemtable.holdemplayer.listener.HoldemPlay
 import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
 import org.cspoker.common.elements.player.Player;
 import org.cspoker.common.elements.player.SeatedPlayer;
-import org.cspoker.common.elements.player.Winner;
+import org.cspoker.common.elements.pots.Pots;
 import org.cspoker.common.elements.table.DetailedTable;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.events.ShellAdapter;
 import org.eclipse.swt.events.ShellEvent;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
 /**
@@ -38,16 +51,25 @@ public class GameWindow
 	private TableUserInputComposite userInputComposite;
 	private TableComposite tableComposite;
 	
+	private GameState gameState;
+	
 	{
 		// Register as a resource user - SWTResourceManager will
 		// handle the obtaining and disposing of resources
 		SWTResourceManager.registerResourceUser(this);
 	}
 	
+	/**
+	 * Creates a new <code>GameWindow</code>.
+	 * <p>
+	 * Initializes the window and updates all the composites with the
+	 * information passed in the {@link DetailedTable} information.
+	 * 
+	 * @param lobbyWindow The lobby reference
+	 * @param table The table to display in the game window
+	 */
 	public GameWindow(LobbyWindow lobbyWindow, DetailedTable table) {
-		
-		super(new Shell(lobbyWindow.getClientCore().getGui().display, SWT.CLOSE | SWT.RESIZE), SWT.NONE, lobbyWindow
-				.getClientCore());
+		super(new Shell(lobbyWindow.getDisplay(), SWT.CLOSE | SWT.RESIZE), SWT.NONE, lobbyWindow.getClientCore());
 		gameState = new GameState(table);
 		holdemTableContext = lobbyWindow.getContext().getHoldemTableContext(table.getId());
 		initGUI();
@@ -66,7 +88,7 @@ public class GameWindow
 		
 		shell.setText("Logged in as " + getClientCore().getUser().getUserName() + ", Table "
 				+ gameState.getTableMemento().getName() + "(Id: " + getTableId() + ")");
-		shell.setImage(SWTResourceManager.getImage(ClientGUI.CS_POKER_ICON));
+		shell.setImage(SWTResourceManager.getImage(ClientGUI.Resources.CS_POKER_ICON));
 		shell.setLayout(new GridLayout());
 		System.out.println("gw size: " + getSize());
 		shell.setMinimumSize(700, 600);
@@ -87,16 +109,19 @@ public class GameWindow
 			 */
 			public void paintControl(PaintEvent e) {
 				getBackgroundImage().dispose();
-				setBackgroundImage(ClientGUI.generateSkin(getShell().getSize()));
+				Image skin = SWTResourceManager.getImage(ClientGUI.Resources.TABLE_IMAGE);
+				Image scaled = new Image(Display.getDefault(), skin.getImageData().scaledTo(getShell().getSize().x,
+						getShell().getSize().y));
+				skin.dispose();
+				setBackgroundImage(scaled);
 			}
 		});
 		
 	}
 	
 	/**
-	 * @return the gameState
+	 * @return the Game State
 	 */
-	@Override
 	public GameState getGameState() {
 		return gameState;
 	}
@@ -155,25 +180,31 @@ public class GameWindow
 	 * @see org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener#onBet(org.cspoker.common.api.lobby.holdemtable.event.BetEvent)
 	 */
 	public void onBet(BetEvent betEvent) {
-		betEvent.dispatch(getPlayerSeatComposite(betEvent.getPlayer()));
-		updateTableGraphics();
+		handleActionChangedPot(betEvent.getPots(), betEvent.getAmount(), betEvent.getPlayer(), "Bet");
+	}
+	
+	private void handleActionChangedPot(Pots pots, int amount, Player bettor, String action) {
+		gameState.setPots(pots);
+		gameState.addToCurrentBetPile(amount);
+		getPlayerSeatComposite(bettor).updateStack(-amount);
+		getPlayerSeatComposite(bettor).showAction(action);
 		
+		ClientGUI.playAudio(ClientGUI.Resources.SOUND_FILE_BETRAISE);
+		updateTableGraphics();
 	}
 	
 	/**
 	 * @see org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener#onBigBlind(org.cspoker.common.api.lobby.holdemtable.event.BigBlindEvent)
 	 */
 	public void onBigBlind(final BigBlindEvent event) {
-		event.dispatch(getPlayerSeatComposite(event.getPlayer()));
-		updateTableGraphics();
+		handleActionChangedPot(event.getPots(), event.getAmount(), event.getPlayer(), "Big Blind");
 	}
 	
 	/**
 	 * @see org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener#onCall(org.cspoker.common.api.lobby.holdemtable.event.CallEvent)
 	 */
 	public void onCall(CallEvent callEvent) {
-		callEvent.dispatch(getPlayerSeatComposite(callEvent.getPlayer()));
-		updateTableGraphics();
+		handleActionChangedPot(callEvent.getPots(), 0, callEvent.getPlayer(), "Call");
 		
 	}
 	
@@ -181,8 +212,7 @@ public class GameWindow
 	 * @see org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener#onCheck(org.cspoker.common.api.lobby.holdemtable.event.CheckEvent)
 	 */
 	public void onCheck(CheckEvent checkEvent) {
-		checkEvent.dispatch(getPlayerSeatComposite(checkEvent.getPlayer()));
-		updateTableGraphics();
+		getPlayerSeatComposite(checkEvent.getPlayer()).showAction("Check");
 		
 	}
 	
@@ -190,15 +220,14 @@ public class GameWindow
 	 * @see org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener#onFold(org.cspoker.common.api.lobby.holdemtable.event.FoldEvent)
 	 */
 	public void onFold(FoldEvent foldEvent) {
-		foldEvent.dispatch(getPlayerSeatComposite(foldEvent.getPlayer()));
-		updateTableGraphics();
+		getPlayerSeatComposite(foldEvent.getPlayer()).showAction("Check");
 	}
 	
 	/**
 	 * @see org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener#onLeaveGame(org.cspoker.common.api.lobby.holdemtable.event.LeaveGameEvent)
 	 */
 	public void onLeaveGame(LeaveGameEvent leaveGameEvent) {
-		leaveGameEvent.dispatch(getPlayerSeatComposite(leaveGameEvent.getPlayer()));
+		getPlayerSeatComposite(leaveGameEvent.getPlayer()).setVisible(false);
 		updateTableGraphics();
 		
 	}
@@ -215,7 +244,13 @@ public class GameWindow
 	 * @see org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener#onNewDeal(org.cspoker.common.api.lobby.holdemtable.event.NewDealEvent)
 	 */
 	public void onNewDeal(NewDealEvent newDealEvent) {
-		newDealEvent.dispatch(getPlayerSeatComposite(newDealEvent.getDealer()));
+		for (PlayerSeatComposite psc : tableComposite.getPlayerSeatComposites()) {
+			psc.clearHoleCards();
+			psc.setHiddenHoleCards();
+			// Draw dealer button
+			psc.setDealer(psc.getPlayer().getName().equalsIgnoreCase(newDealEvent.getDealer().getName()));
+		}
+		
 		tableComposite.redraw();
 		
 	}
@@ -224,7 +259,8 @@ public class GameWindow
 	 * @see org.cspoker.common.api.lobby.holdemtable.holdemplayer.listener.HoldemPlayerListener#onNewPocketCards(org.cspoker.common.api.lobby.holdemtable.holdemplayer.event.NewPocketCardsEvent)
 	 */
 	public void onNewPocketCards(NewPocketCardsEvent newPocketCardsEvent) {
-		newPocketCardsEvent.dispatch(getPlayerSeatComposite(getClientCore().getUser().getPlayer()));
+		getPlayerSeatComposite(getClientCore().getUser().getPlayer())
+				.setHoleCards(newPocketCardsEvent.getPocketCards());
 		
 	}
 	
@@ -246,12 +282,10 @@ public class GameWindow
 	public void onNextPlayer(NextPlayerEvent nextPlayerEvent) {
 		Player playerToAct = nextPlayerEvent.getPlayer();
 		tableComposite.updateProgressBars(playerToAct);
-		nextPlayerEvent.dispatch(getPlayerSeatComposite(nextPlayerEvent.getPlayer()));
+		getPlayerSeatComposite(nextPlayerEvent.getPlayer()).startTimer();
 		
 		if (isUser(playerToAct)) {
 			userInputComposite.prepareForUserInput();
-		} else {
-			userInputComposite.gameActionGroup.setVisible(false);
 		}
 		
 	}
@@ -306,8 +340,7 @@ public class GameWindow
 	 * @see org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener#onRaise(org.cspoker.common.api.lobby.holdemtable.event.RaiseEvent)
 	 */
 	public void onRaise(RaiseEvent raiseEvent) {
-		raiseEvent.dispatch(getPlayerSeatComposite(raiseEvent.getPlayer()));
-		updateTableGraphics();
+		handleActionChangedPot(raiseEvent.getPots(), raiseEvent.getAmount(), raiseEvent.getPlayer(), "Raise");
 		
 	}
 	
@@ -315,9 +348,9 @@ public class GameWindow
 	 * @see org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener#onShowHand(org.cspoker.common.api.lobby.holdemtable.event.ShowHandEvent)
 	 */
 	public void onShowHand(ShowHandEvent showHandEvent) {
-		showHandEvent.dispatch(getPlayerSeatComposite(showHandEvent.getShowdownPlayer()));
+		getPlayerSeatComposite(showHandEvent.getShowdownPlayer()).setHoleCards(
+				showHandEvent.getShowdownPlayer().getHandCards());
 		updateTableGraphics();
-		
 	}
 	
 	/**
@@ -327,7 +360,7 @@ public class GameWindow
 		if (isUser(sitInEvent.getPlayer())) {
 			userInputComposite.sitInOutButton.setText("Sit Out");
 		}
-		sitInEvent.dispatch(getPlayerSeatComposite(sitInEvent.getPlayer()));
+		getPlayerSeatComposite(sitInEvent.getPlayer()).update(sitInEvent.getPlayer());
 		
 	}
 	
@@ -335,8 +368,8 @@ public class GameWindow
 	 * @see org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener#onSmallBlind(org.cspoker.common.api.lobby.holdemtable.event.SmallBlindEvent)
 	 */
 	public void onSmallBlind(SmallBlindEvent smallBlindEvent) {
-		smallBlindEvent.dispatch(getPlayerSeatComposite(smallBlindEvent.getPlayer()));
-		updateTableGraphics();
+		handleActionChangedPot(smallBlindEvent.getPots(), smallBlindEvent.getAmount(), smallBlindEvent.getPlayer(),
+				"Small Blind");
 		
 	}
 	
@@ -345,8 +378,6 @@ public class GameWindow
 	 */
 	public void onWinner(final WinnerEvent winnerEvent) {
 		gameState.newRound("Showdown round");
-		for (Winner winner : winnerEvent.getWinners())
-			winnerEvent.dispatch(getPlayerSeatComposite(winner.getPlayer()));
 		tableComposite.moveBetsToPot();
 		// FIXME XXX Make sure that this is better synchronized, i.e. new round
 		// doesnt start until animation stuff is complete
@@ -357,6 +388,8 @@ public class GameWindow
 			 */
 			public void run() {
 				tableComposite.movePotsToWinners(winnerEvent.getWinners());
+				gameState.setMoneyInMiddle(0);
+				tableComposite.redraw();
 				
 			}
 		});
@@ -383,4 +416,5 @@ public class GameWindow
 	public HoldemPlayerListener getHoldemPlayerListener() {
 		return this;
 	}
+	
 }
