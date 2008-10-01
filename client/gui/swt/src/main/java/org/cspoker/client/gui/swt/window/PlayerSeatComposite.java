@@ -1,3 +1,14 @@
+/**
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version. This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details. You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software Foundation, Inc.,
+ * 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ */
 package org.cspoker.client.gui.swt.window;
 
 import java.util.*;
@@ -5,10 +16,7 @@ import java.util.*;
 import org.cspoker.client.gui.swt.control.CardPaintListener;
 import org.cspoker.client.gui.swt.control.Chip;
 import org.cspoker.client.gui.swt.control.ClientGUI;
-import org.cspoker.common.api.lobby.holdemtable.event.*;
-import org.cspoker.common.api.lobby.holdemtable.holdemplayer.event.NewPocketCardsEvent;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.listener.HoldemPlayerListener;
-import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
 import org.cspoker.common.elements.cards.Card;
 import org.cspoker.common.elements.player.Player;
 import org.cspoker.common.elements.player.SeatedPlayer;
@@ -30,8 +38,7 @@ import org.eclipse.swt.widgets.ProgressBar;
  * implement all the methods which are handled by a generic case ...
  */
 public class PlayerSeatComposite
-		extends ClientComposite
-		implements HoldemTableListener {
+		extends ClientComposite {
 	
 	private int seatId;
 	private Player player;
@@ -77,9 +84,11 @@ public class PlayerSeatComposite
 	private boolean dealer;
 	
 	private int currentStack;
+	private int numberOfHoleCards = 2;
 	
 	public PlayerSeatComposite(TableComposite parent, int style, int seatId) {
 		super(parent, style, parent.getClientCore());
+		numberOfHoleCards = ((GameWindow) parent.getParent()).getGameState().getNumberOfHoleCards();
 		initGUI();
 	}
 	
@@ -98,10 +107,6 @@ public class PlayerSeatComposite
 	
 	public List<NavigableMap<Chip, Integer>> getCurrentBetPile() {
 		return currentBetPile;
-	}
-	
-	public int getCurrentStack() {
-		return currentStack;
 	}
 	
 	public HoldemPlayerListener getHoldemPlayerListener() {
@@ -146,17 +151,6 @@ public class PlayerSeatComposite
 		return player;
 	}
 	
-	/**
-	 * @param e
-	 * @param gameWindow TODO
-	 */
-	void handleActionChangedPot(int amount) {
-		updateStack(-amount);
-		currentBetPile = new ArrayList<NavigableMap<Chip, Integer>>();
-		currentBetPile.addAll(getGameState().addToCurrentBetPile(amount));
-		ClientGUI.playAudio("snd5.wav");
-	}
-	
 	private void initGUI() {
 		setLayout(new GridLayout(1, true));
 		setLayoutData(new GridData(SWT.CENTER, SWT.FILL, true, true));
@@ -189,9 +183,9 @@ public class PlayerSeatComposite
 			holeCardsComposite.setLayout(new FillLayout(SWT.HORIZONTAL));
 			GridData holeCardsLData = new GridData(SWT.FILL, SWT.FILL, true, true);
 			holeCardsComposite.setLayoutData(holeCardsLData);
-			holeCardsComposite.setSize(gameState.getNumberOfHoleCards() * ClientGUI.PREFERRED_CARD_WIDTH,
+			holeCardsComposite.setSize(numberOfHoleCards * ClientGUI.PREFERRED_CARD_WIDTH,
 					ClientGUI.PREFERRED_CARD_HEIGHT);
-			holeCardsLData.minimumWidth = gameState.getNumberOfHoleCards() * ClientGUI.PREFERRED_CARD_WIDTH;
+			holeCardsLData.minimumWidth = numberOfHoleCards * ClientGUI.PREFERRED_CARD_WIDTH;
 			holeCardsLData.minimumHeight = ClientGUI.PREFERRED_CARD_HEIGHT;
 			holeCardsComposite.addPaintListener(new CardPaintListener(holeCards, 2, SWT.CENTER, -10));
 			
@@ -201,70 +195,6 @@ public class PlayerSeatComposite
 	
 	public boolean isDealer() {
 		return dealer;
-	}
-	
-	public void onBet(BetEvent betEvent) {
-		gameState.setPots(betEvent.getPots());
-		handleActionChangedPot(betEvent.getAmount());
-		showAction("Bet");
-	}
-	
-	public void onBigBlind(BigBlindEvent bigBlindEvent) {
-		gameState.getCurrentBetPile().clear();
-		handleActionChangedPot(bigBlindEvent.getAmount());
-		showAction("Big Blind");
-	}
-	
-	public void onCall(CallEvent callEvent) {
-		gameState.setPots(callEvent.getPots());
-		showAction("Call");
-	}
-	
-	public void onCheck(CheckEvent checkEvent) {
-		showAction("Check");
-		ClientGUI.playAudio("snd4.wav");
-		
-	}
-	
-	public void onFold(FoldEvent foldEvent) {
-		Set<Card> noCards = Collections.emptySet();
-		setHoleCards(noCards);
-		ClientGUI.playAudio("snd6.wav");
-		
-	}
-	
-	public void onLeaveGame(LeaveGameEvent leaveGameEvent) {
-		player = null;
-		setVisible(false);
-		
-	}
-	
-	public void onNewCommunityCards(NewCommunityCardsEvent newCommunityCardsEvent) {
-
-	}
-	
-	public void onNewDeal(NewDealEvent newDealEvent) {
-		clearHoleCards();
-		setHiddenHoleCards();
-		// Draw dealer button
-		setDealer(player.getName().equalsIgnoreCase(newDealEvent.getDealer().getName()));
-		
-	}
-	
-	public void onNewPocketCards(NewPocketCardsEvent newPocketCardsEvent) {
-		setHoleCards(newPocketCardsEvent.getPocketCards());
-		
-	}
-	
-	public void onNewRound(NewRoundEvent newRoundEvent) {
-	// TODO Auto-generated method stub
-	
-	}
-	
-	public void onNextPlayer(NextPlayerEvent nextPlayerEvent) {
-		player = nextPlayerEvent.getPlayer();
-		startTimer();
-		
 	}
 	
 	// @Override
@@ -279,31 +209,6 @@ public class PlayerSeatComposite
 	// throws RemoteException {
 	// playerName.setText(event.getPlayer().getName() + " \n (Sitting Out)");
 	// }
-	
-	public void onRaise(RaiseEvent raiseEvent) {
-		getGameState().setPots(raiseEvent.getPots());
-		handleActionChangedPot(raiseEvent.getAmount());
-		
-	}
-	
-	public void onShowHand(ShowHandEvent showHandEvent) {
-		player = showHandEvent.getShowdownPlayer().getPlayer();
-		setHoleCards(showHandEvent.getShowdownPlayer().getHandCards());
-	}
-	
-	public void onSitIn(SitInEvent sitInEvent) {
-		update(sitInEvent.getPlayer());
-	}
-	
-	public void onSmallBlind(SmallBlindEvent smallBlindEvent) {
-	// TODO Auto-generated method stub
-	
-	}
-	
-	public void onWinner(WinnerEvent winnerEvent) {
-	// TODO Auto-generated method stub
-	
-	}
 	
 	public void setDealer(boolean b) {
 		dealer = b;
@@ -333,13 +238,6 @@ public class PlayerSeatComposite
 	
 	public void setPlayerName(Label playerName) {
 		this.playerName = playerName;
-	}
-	
-	void setStack(int amount) {
-		if (amount == 0) {
-			playerStack.setText("Busto");
-		}
-		playerStack.setText(ClientGUI.formatBet(amount));
 	}
 	
 	public void showAction(final String action) {
@@ -383,8 +281,9 @@ public class PlayerSeatComposite
 		betChipsArea = new Rectangle(getInitialChipDrawOffset().x, getInitialChipDrawOffset().y, 100, 80);
 	}
 	
-	private void updateStack(int amount) {
-
+	void updateStack(int amount) {
+		currentStack += amount;
+		playerStack.setText(ClientGUI.formatBet(amount));
 	}
 	
 	/**
@@ -393,10 +292,11 @@ public class PlayerSeatComposite
 	 * @param player
 	 */
 	public void update(SeatedPlayer detailedPlayer) {
+		currentStack = 0;
 		player = detailedPlayer;
 		playerName.setForeground(Display.getDefault().getSystemColor(SWT.DEFAULT));
 		playerName.setText(detailedPlayer.getName());
-		setStack(detailedPlayer.getStackValue());
+		updateStack(detailedPlayer.getStackValue());
 		// TODO Cast correct? (Should seat ids really be longs??)
 		seatId = (int) detailedPlayer.getSeatId();
 		

@@ -1,3 +1,14 @@
+/**
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version. This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details. You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software Foundation, Inc.,
+ * 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ */
 package org.cspoker.client.gui.swt.window;
 
 import org.cspoker.client.gui.swt.control.ClientCore;
@@ -11,7 +22,9 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
 
 /**
- * @author stephans
+ * A dialog where the user can rebuy for a selected amount.
+ * 
+ * @author Stephan Schmidt
  */
 public class BuyinDialog
 		extends ClientDialog {
@@ -37,6 +50,9 @@ public class BuyinDialog
 	static private Text maxRebuyText;
 	static private Label maxRebuyLabel;
 	
+	/**
+	 * Opens the Rebuy dialog. The dialog is closed when the button is pressed.
+	 */
 	public void open() {
 		try {
 			getParent().layout();

@@ -1,3 +1,14 @@
+/**
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version. This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details. You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software Foundation, Inc.,
+ * 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ */
 package org.cspoker.client.gui.swt.window;
 
 import java.rmi.NotBoundException;
@@ -9,7 +20,6 @@ import org.cspoker.client.User;
 import org.cspoker.client.gui.swt.control.ClientCore;
 import org.cspoker.client.gui.swt.control.ClientGUI;
 import org.cspoker.client.gui.swt.control.SWTResourceManager;
-import org.cspoker.client.rmi.RemoteLoginServerForRMI;
 import org.cspoker.common.CSPokerServer;
 import org.cspoker.common.api.shared.context.ServerContext;
 import org.eclipse.swt.SWT;
@@ -21,24 +31,19 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
 
 /**
- * This code was edited or generated using CloudGarden's Jigloo SWT/Swing GUI
- * Builder, which is free for non-commercial use. If Jigloo is being used
- * commercially (ie, by a corporation, company or business for any purpose
- * whatever) then you should purchase a license for each developer using Jigloo.
- * Please visit www.cloudgarden.com for details. Use of Jigloo implies
- * acceptance of these licensing terms. A COMMERCIAL LICENSE HAS NOT BEEN
- * PURCHASED FOR THIS MACHINE, SO JIGLOO OR THIS CODE CANNOT BE USED LEGALLY FOR
- * ANY CORPORATE OR COMMERCIAL PURPOSE.
+ * A Simple Dialog which asks the user to provide a user name and corresponding
+ * credentials as well as a server he wants to log into.
  */
 public class LoginDialog
 		extends ClientDialog {
 	
+	/** FIXME We need to initialize this correctly after the new API is complete */
 	private CSPokerServer loginServer;
 	private ServerContext result;
 	
 	public LoginDialog(Shell parent, int style, ClientGUI gui, ClientCore clientCore) {
 		super(parent, style, clientCore);
-		init();
+		initGUI();
 	}
 	
 	static private Label userNameLabel;
@@ -53,6 +58,17 @@ public class LoginDialog
 	static private Composite composite1;
 	static private Button loginButton;
 	
+	/**
+	 * Open this Dialog in a new shell.
+	 * <p>
+	 * This method blocks until the user has either
+	 * <li>disposed of this dialog
+	 * <li>pressed the <code>Login</code> button
+	 * 
+	 * @return <code>null</code>, if the dialog was disposed or the login was
+	 *         unsuccessful, or the {@link ServerContext} retrieved from the
+	 *         server.
+	 */
 	public ServerContext open() {
 		getParent().layout();
 		getParent().pack();
@@ -65,9 +81,12 @@ public class LoginDialog
 		return result;
 	}
 	
-	private void init() {
+	/**
+	 * SWT initialization
+	 */
+	private void initGUI() {
 		getParent().setText("Login to the CSPoker Server");
-		getParent().setImage(SWTResourceManager.getImage(ClientGUI.CS_POKER_ICON));
+		getParent().setImage(SWTResourceManager.getImage(ClientGUI.Resources.CS_POKER_ICON));
 		
 		getParent().setMinimumSize(250, 100);
 		GridLayout dialogShellLayout = new GridLayout();
@@ -161,7 +180,6 @@ public class LoginDialog
 	 * @throws LoginException
 	 */
 	private void doLogin(SelectionEvent evt) {
-		System.out.println("loginButton.mouseDown, event=" + evt);
 		User newUser = new User(userNameText.getText(), passwordText.getText());
 		clientCore.setUser(newUser);
 		try {

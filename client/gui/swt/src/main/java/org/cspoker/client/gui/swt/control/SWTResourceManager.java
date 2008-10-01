@@ -1,5 +1,6 @@
 package org.cspoker.client.gui.swt.control;
 
+import java.io.File;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Vector;
@@ -124,11 +125,24 @@ public class SWTResourceManager {
 		}
 	}
 	
+	/**
+	 * Delegates to {@link SWTResourceManager#getImage(String)}.
+	 * <p>
+	 * TODO Check whether this works with the path separator char needed by the
+	 * classloader in the getImage(String) method
+	 * 
+	 * @param file The file representing an image file
+	 * @return The image contained in the file
+	 */
+	public static Image getImage(File file) {
+		return getImage(file.toString());
+	}
+	
 	public static Image getCardImage(Card card) {
 		
 		if (resources.containsKey(card.toString()))
 			return (Image) resources.get(card.toString());
-		Image deck = getImage(ClientGUI.CARDS_IMG_DIR + ClientGUI.ACTIVE_DECK_IMG_FILE);
+		Image deck = getImage(ClientGUI.Resources.ACTIVE_DECK_IMG_FILE);
 		if (deck == null) {
 			System.err.println("Deck img not found");
 			return null;
@@ -158,7 +172,7 @@ public class SWTResourceManager {
 	public static Image getChipFromPNG(Chip chip, int size) {
 		if (resources.containsKey(chip.toString() + size))
 			return (Image) resources.get(chip.toString() + size);
-		Image chipPngImg = getImage(ClientGUI.ACTIVE_CHIP_DIR);
+		Image chipPngImg = getImage(ClientGUI.Resources.FREE_CHIP_IMAGE_FILE);
 		if (chipPngImg == null)
 			return null;
 		// Calculate drawing values
@@ -175,7 +189,7 @@ public class SWTResourceManager {
 	
 	public static Image getChipImage(Chip chip, int size) {
 		Image chipImg = null;
-		if (ClientGUI.ACTIVE_CHIP_DIR == ClientGUI.FREE_CHIP_IMAGE_FILE) {
+		if (ClientGUI.Resources.ACTIVE_CHIP_DIR == ClientGUI.Resources.FREE_CHIP_IMAGE_FILE) {
 			chipImg = SWTResourceManager.getChipFromPNG(chip, size);
 		}
 		if (chipImg != null)
@@ -183,7 +197,7 @@ public class SWTResourceManager {
 		if (resources.containsKey(chip.toString() + size))
 			return (Image) resources.get(chip.toString() + size);
 		
-		String fileAsString = ClientGUI.ACTIVE_CHIP_DIR + size + "/" + chip.getFileId();
+		String fileAsString = (ClientGUI.Resources.ACTIVE_CHIP_DIR).toString() + size + "/" + chip.getFileId();
 		fileAsString = fileAsString + ".";
 		String imgUrl = fileAsString + "bmp";
 		String maskUrl = fileAsString + "a.bmp";
