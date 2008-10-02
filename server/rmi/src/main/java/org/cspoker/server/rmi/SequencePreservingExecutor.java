@@ -23,6 +23,8 @@ import org.apache.log4j.Logger;
 
 public class SequencePreservingExecutor implements Executor {
 
+	//TODO port to Queue
+	
 	private final static Logger logger = Logger.getLogger(SequencePreservingExecutor.class);
 	
 	private final Executor executor;

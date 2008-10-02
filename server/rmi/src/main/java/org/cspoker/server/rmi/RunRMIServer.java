@@ -19,6 +19,7 @@ import java.io.IOException;
 
 import org.apache.log4j.Logger;
 import org.cspoker.common.util.Log4JPropertiesLoader;
+import org.cspoker.server.common.CSPokerServerImpl;
 
 public class RunRMIServer {
 
@@ -37,7 +38,7 @@ public class RunRMIServer {
 		int port = Integer.parseInt(args[0]);
 		logger.info("Starting RMI server at port " + port);
 		// need to do this in two steps to prevent GC!!
-		RMIServer server = new RMIServer(port);
+		RMIServer server = new RMIServer(port, new CSPokerServerImpl());
 		server.start();
 	}
 
