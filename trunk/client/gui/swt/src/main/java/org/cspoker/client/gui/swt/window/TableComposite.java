@@ -16,9 +16,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
 import org.cspoker.client.gui.swt.control.CardPaintListener;
 import org.cspoker.client.gui.swt.control.ChipPaintListener;
 import org.cspoker.client.gui.swt.control.ClientGUI;
+import org.cspoker.client.gui.swt.control.GameState;
 import org.cspoker.common.elements.cards.Card;
 import org.cspoker.common.elements.player.Player;
 import org.cspoker.common.elements.player.Winner;
@@ -39,23 +41,34 @@ import org.eclipse.swt.widgets.Label;
 public class TableComposite
 		extends ClientComposite {
 	
+	private final static Logger logger = Logger.getLogger(TableComposite.class);
+	
 	private Composite communityCardsComposite;
 	Rectangle potChipsDisplayArea;
 	private List<Card> communityCards = new ArrayList<Card>();
 	// TODO The chipPaintListener is implemented in a not very object-oriented
 	// fashion, could be done better
 	private ChipPaintListener chipPaintListener;
-	public boolean updateChipLocations = true;
 	
-	public Composite getCommunityCardsComposite() {
-		return communityCardsComposite;
-	}
+	private int moneyInPot;
 	
+	/**
+	 * Creates and initializes a new Table composite. The table composite
+	 * contains all {@link PlayerSeatComposite}s.
+	 * <p>
+	 * It is in particular responsible for drawing chips on the table surface.
+	 * 
+	 * @param parent The containing {@link GameWindow}
+	 * @param style Relevant style bits
+	 */
 	public TableComposite(GameWindow parent, int style) {
 		super(parent, style, parent.getClientCore());
 		initGUI();
 	}
 	
+	/**
+	 * Initialization of SWT components.
+	 */
 	private void initGUI() {
 		setLayout(new GridLayout(5, false));
 		setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
@@ -84,6 +97,7 @@ public class TableComposite
 		new Label(this, SWT.NONE | ClientGUI.COMPOSITE_BORDER_STYLE).setVisible(false);
 		new PlayerSeatComposite(this, SWT.NONE | ClientGUI.COMPOSITE_BORDER_STYLE, 5);
 		new Label(this, SWT.NONE | ClientGUI.COMPOSITE_BORDER_STYLE).setVisible(false);
+		resetPotChipsArea();
 		chipPaintListener = new ChipPaintListener(this);
 		this.addPaintListener(chipPaintListener);
 	}
@@ -92,17 +106,20 @@ public class TableComposite
 	 * Returns the PlayerSeatComposite if a player with the same id is sitting
 	 * at the table
 	 * 
-	 * @param seatId The seat id
+	 * @param playerId The id of the player (must be seated at the table)
 	 * @return The associated {@link PlayerSeatComposite}, or <code>null</code>,
 	 *         if the player is not at the table
+	 * @throws IllegalArgumentException If no player with the given id is
+	 *             sitting at the table
 	 */
-	public PlayerSeatComposite getPlayerSeatComposite(long playerId) {
+	public PlayerSeatComposite getPlayerSeatComposite(long playerId)
+			throws IllegalArgumentException {
 		for (PlayerSeatComposite pc : getPlayerSeatComposites()) {
 			if (pc.getPlayer().getId() == playerId) {
 				return pc;
 			}
 		}
-		return null;
+		throw new IllegalArgumentException("Player with id " + playerId + " not found at table");
 	}
 	
 	/**
@@ -124,20 +141,20 @@ public class TableComposite
 		// Determine locations of the chip piles on the table
 		List<Rectangle> chipLocList = new ArrayList<Rectangle>();
 		for (PlayerSeatComposite pc : getPlayerSeatComposites()) {
-			
 			if (pc.getCurrentBetPile().size() != 0) {
+				
 				chipLocList.add(pc.getBetChipsDisplayArea());
 			}
 		}
 		// Use locations as parameter for the animation to the pot
 		// TODO Make this stuff more robusto
-		animateChips(chipLocList, getPotOffset());
+		animateChips(chipLocList, getPotDisplayArea());
 		// Reset all the bet piles and the display areas
 		for (PlayerSeatComposite pc : getPlayerSeatComposites()) {
+			moneyInPot += GameState.getValue(pc.getCurrentBetPile());
 			pc.getCurrentBetPile().clear();
-			pc.betChipsArea = null;
-			potChipsDisplayArea = null;
 		}
+		
 		// lol redraw
 		redraw();
 	}
@@ -169,10 +186,7 @@ public class TableComposite
 	
 	private void shipPot(PlayerSeatComposite winner) {
 		communityCardsComposite.setVisible(false);
-		final Rectangle potLocation = getPotOffset();
-		winner.updateBetChipsDisplayArea();
-		final Rectangle winnerLocation = winner.getBetChipsDisplayArea();
-		animateChips(potLocation, winnerLocation);
+		animateChips(getPotDisplayArea(), winner.getBetChipsDisplayArea());
 	}
 	
 	private void animateChips(final List<Rectangle> list, final Rectangle toLocation) {
@@ -181,7 +195,6 @@ public class TableComposite
 		}
 		System.out.println("Ship from" + list + " to " + toLocation);
 		final int timerInterval = 10;
-		updateChipLocations = false;
 		
 		getDisplay().syncExec(new Runnable() {
 			
@@ -212,8 +225,7 @@ public class TableComposite
 					try {
 						Thread.sleep(timerInterval);
 					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+						logger.warn("Animation Thread interrupted");
 					}
 					getDisplay().syncExec(this);
 				} catch (Exception e) {
@@ -223,12 +235,10 @@ public class TableComposite
 			}
 			
 		});
-		
-		updateChipLocations = true;
 		// Reset locations after animation
-		updateGetPotChipsArea();
+		resetPotChipsArea();
 		for (PlayerSeatComposite psc : getPlayerSeatComposites()) {
-			psc.updateBetChipsDisplayArea();
+			psc.resetBetChipsDisplayArea();
 		}
 	}
 	
@@ -236,14 +246,24 @@ public class TableComposite
 		animateChips(Arrays.asList(offset), offset2);
 	}
 	
-	public Rectangle getPotOffset() {
-		if (potChipsDisplayArea == null) {
-			updateGetPotChipsArea();
-		}
+	/**
+	 * @return The {@link Rectangle} where the Chips in the Pot should be
+	 *         displayed.
+	 *         <p>
+	 *         May be modified during animation threads. Reset to initial
+	 *         location via {@link #resetPotChipsArea()}
+	 */
+	public Rectangle getPotDisplayArea() {
 		return potChipsDisplayArea;
 	}
 	
-	public void updateGetPotChipsArea() {
+	/**
+	 * Resets the area where the chips in the pot are displayed to its default
+	 * value.
+	 * <p>
+	 * By default, the chips in the pot are displayed below the community cards.
+	 */
+	public void resetPotChipsArea() {
 		int x = communityCardsComposite.getLocation().x;
 		int y = communityCardsComposite.getLocation().y + communityCardsComposite.getClientArea().height + 50;
 		potChipsDisplayArea = new Rectangle(x, y, communityCardsComposite.getSize().x, communityCardsComposite
@@ -268,9 +288,14 @@ public class TableComposite
 		try {
 			Thread.sleep(1000);
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.warn("Chip animation interrupted", e);
 		}
+		moneyInPot = 0;
 		clearCommunityCards();
+		redraw();
+	}
+	
+	public int getMoneyInPot() {
+		return moneyInPot;
 	}
 }

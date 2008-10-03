@@ -11,17 +11,18 @@
  */
 package org.cspoker.client.gui.swt.window;
 
-import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 
 import javax.security.auth.login.LoginException;
 
+import org.apache.log4j.Logger;
 import org.cspoker.client.User;
 import org.cspoker.client.gui.swt.control.ClientCore;
 import org.cspoker.client.gui.swt.control.ClientGUI;
 import org.cspoker.client.gui.swt.control.SWTResourceManager;
-import org.cspoker.common.CSPokerServer;
-import org.cspoker.common.api.shared.context.ServerContext;
+import org.cspoker.client.rmi.RemoteRMIServer;
+import org.cspoker.common.RemoteCSPokerServer;
+import org.cspoker.common.api.shared.context.RemoteServerContext;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -37,26 +38,34 @@ import org.eclipse.swt.widgets.*;
 public class LoginDialog
 		extends ClientDialog {
 	
+	private final static Logger logger = Logger.getLogger(LoginDialog.class);
 	/** FIXME We need to initialize this correctly after the new API is complete */
-	private CSPokerServer loginServer;
-	private ServerContext result;
+	private RemoteCSPokerServer loginServer;
+	private RemoteServerContext result;
 	
-	public LoginDialog(Shell parent, int style, ClientGUI gui, ClientCore clientCore) {
+	/**
+	 * Create and initialize new login dialog
+	 * 
+	 * @param parent The containing shell
+	 * @param style The relevant style bits
+	 * @param clientCore The {@link ClientCore}
+	 */
+	public LoginDialog(Shell parent, int style, ClientCore clientCore) {
 		super(parent, style, clientCore);
 		initGUI();
 	}
 	
-	static private Label userNameLabel;
-	static private Text userNameText;
-	static private Text passwordText;
-	static private Label passwordLabel;
-	static private Combo serverCombo;
-	static private Label serverLabel;
-	static private Composite composite4;
-	static private Composite composite3;
-	static private Composite composite2;
-	static private Composite composite1;
-	static private Button loginButton;
+	private Label userNameLabel;
+	private Text userNameText;
+	private Text passwordText;
+	private Label passwordLabel;
+	private Combo serverCombo;
+	private Label serverLabel;
+	private Composite composite4;
+	private Composite composite3;
+	private Composite composite2;
+	private Composite composite1;
+	private Button loginButton;
 	
 	/**
 	 * Open this Dialog in a new shell.
@@ -66,10 +75,10 @@ public class LoginDialog
 	 * <li>pressed the <code>Login</code> button
 	 * 
 	 * @return <code>null</code>, if the dialog was disposed or the login was
-	 *         unsuccessful, or the {@link ServerContext} retrieved from the
-	 *         server.
+	 *         unsuccessful, or the {@link RemoteServerContext} retrieved from
+	 *         the server.
 	 */
-	public ServerContext open() {
+	public RemoteServerContext open() {
 		getParent().layout();
 		getParent().pack();
 		getParent().open();
@@ -184,17 +193,13 @@ public class LoginDialog
 		clientCore.setUser(newUser);
 		try {
 			
-			loginServer = new RemoteLoginServerForRMI(serverCombo.getText(), ClientCore.DEFAULT_PORT_RMI);
+			loginServer = new RemoteRMIServer(serverCombo.getText());
+			// TODO How do I get a non-remote ServerContext?
 			result = loginServer.login(newUser.getUserName(), newUser.getPassword());
 			getParent().close();
-		} catch (NotBoundException e) {
-			e.printStackTrace();
-			ClientGUI.displayErrorMessage(e);
-		} catch (RemoteException e) {
-			e.printStackTrace();
-			ClientGUI.displayErrorMessage(e);
-		} catch (LoginException e) {
-			e.printStackTrace();
+		} catch (Exception e) {
+			// Catch all the remote exceptions at once
+			logger.error("Login failed", e);
 			ClientGUI.displayErrorMessage(e);
 		}
 		

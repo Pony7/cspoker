@@ -29,12 +29,20 @@ import org.eclipse.swt.widgets.*;
 public class BuyinDialog
 		extends ClientDialog {
 	
-	private int bigBlind;
+	private int maximum;
 	private CashierContext cashierContext;
 	
-	public BuyinDialog(ClientCore core, CashierContext cashier, int bigBlind) {
+	/**
+	 * Creates a new BuyinDialog
+	 * 
+	 * @param core The {@link ClientCore}
+	 * @param cashier The {@link CashierContext} which will be asked to carry
+	 *            out the RebuyAction
+	 * @param maximum The maximum rebuy amount
+	 */
+	public BuyinDialog(ClientCore core, CashierContext cashier, int maximum) {
 		this(new Shell(Display.getDefault(), SWT.SHELL_TRIM | SWT.APPLICATION_MODAL), SWT.NONE, core);
-		this.bigBlind = bigBlind;
+		this.maximum = maximum;
 		cashierContext = cashier;
 	}
 	
@@ -90,9 +98,7 @@ public class BuyinDialog
 			{
 				rebuyAmountText = new Text(composite1, SWT.SINGLE | SWT.CENTER | SWT.BORDER);
 				rebuyAmountText.setBounds(38, 20, 60, 30);
-				// TODO Add logic which checks for valid amount when issuing
-				// rebuy request
-				rebuyAmountText.setText(ClientGUI.formatBet(bigBlind * 100));
+				rebuyAmountText.setText(ClientGUI.betFormatter.format(maximum));
 			}
 		}
 		{
@@ -103,8 +109,7 @@ public class BuyinDialog
 			}
 			{
 				maxRebuyText = new Text(composite1, SWT.CENTER | SWT.BORDER);
-				// TODO maybe different rebuy allowed from 100 BB?
-				maxRebuyText.setText(ClientGUI.formatBet(bigBlind * 100));
+				maxRebuyText.setText(ClientGUI.betFormatter.format(maximum));
 				maxRebuyText.setEditable(false);
 			}
 		}

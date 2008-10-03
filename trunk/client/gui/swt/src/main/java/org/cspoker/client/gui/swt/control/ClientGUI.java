@@ -13,6 +13,8 @@ package org.cspoker.client.gui.swt.control;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.rmi.RemoteException;
 import java.text.NumberFormat;
 import java.util.Collection;
 import java.util.Hashtable;
@@ -50,27 +52,56 @@ public class ClientGUI {
 		
 		private static final File IMAGE_DIR = new File("images");
 		
+		/** Icon to be used for Shell images */
 		public static final File CS_POKER_ICON = new File(Resources.IMAGE_DIR, "csicon.png");
 		
 		private static final File CHIP_DIR = new File(IMAGE_DIR, "chips");
+		/**
+		 * Contains PokerStars chip images. May not be available in open-source
+		 * version
+		 */
 		public final static File STARS_CHIP_IMG_DIR = new File(Resources.CHIP_DIR, "stars");
+		/**
+		 * Contains EPT chip images. May not be available in open-source version
+		 */
 		public final static File EPT_CHIP_IMG_DIR = new File(Resources.CHIP_DIR, "ept");
+		/** Contains Chip images from PokerWikia (free!) */
 		public static final File FREE_CHIP_IMAGE_FILE = new File(Resources.CHIP_DIR, "Chips3.png");
+		/**
+		 * Chip resource currently in use (that's where the images are retrieved
+		 * from during play)
+		 */
 		public static File ACTIVE_CHIP_DIR = STARS_CHIP_IMG_DIR;
 		
-		public final static File THEMES_IMG_DIR = new File(Resources.IMAGE_DIR, "themes");
-		public final static File CARDS_IMG_DIR = new File(Resources.IMAGE_DIR, "cards");
+		private final static File THEMES_IMG_DIR = new File(Resources.IMAGE_DIR, "themes");
+		private final static File CARDS_IMG_DIR = new File(Resources.IMAGE_DIR, "cards");
+		/**
+		 * Contains FTP card images. May not be available in open-source version
+		 */
 		public static final File FTP_DECK_IMG_FILE = new File(CARDS_IMG_DIR, "Deck_FTP.png");
+		/**
+		 * Contains PokerStars card images. May not be available in open-source
+		 * version
+		 */
 		public static final File STARS_DECK_IMG_FILE = new File(CARDS_IMG_DIR, "cards6ug3.png");
+		/**
+		 * Card image resource currently in use (that's where the images are
+		 * retrieved from during play). Initialized to use free PokerStars-style
+		 * cards
+		 */
 		public static File ACTIVE_DECK_IMG_FILE = STARS_DECK_IMG_FILE;
 		
-		public static final File BACKGROUND_IMAGE = new File(THEMES_IMG_DIR, "bg.jpg");
+		/** Default table background image */
 		public static File TABLE_IMAGE = new File(THEMES_IMG_DIR, "Free_Simple_Table_Background.jpg");
 		
-		public static final File SOUND_DIR = new File("Snd");
+		private static final File SOUND_DIR = new File("Snd");
+		/** Plays a <i>Check</i> sound */
 		public static final File SOUND_FILE_CHECK = new File(SOUND_DIR, "snd4.wav");
+		/** Plays a <i>Fold</i> sound */
 		public static final File SOUND_FILE_FOLD = new File(SOUND_DIR, "snd6.wav");
+		/** Plays a <i>Chip clink</i> sound */
 		public static final File SOUND_FILE_BETRAISE = new File(SOUND_DIR, "snd5.wav");
+		/** Plays a <i>Chip sliding</i> sound */
 		public static final File SOUND_FILE_SLIDE_CHIPS = new File(SOUND_DIR, "snd3.wav");
 		
 	}
@@ -98,12 +129,12 @@ public class ClientGUI {
 		return gameWindows.values();
 	}
 	
-	// Some of these images are copyrighted so the standard settings use free
-	// images
-	// Changes may cause errors because the respective files have not been
-	// uploaded to the repository
-	
+	/** Preferred width at which a card is best displayed */
 	public final static int PREFERRED_CARD_WIDTH = 60;
+	/**
+	 * Preferred height at which a card is best displayed. Set to
+	 * <code>1.5 * PREFERRED_CARD_WIDTH</code>
+	 */
 	public final static int PREFERRED_CARD_HEIGHT = (int) Math.round(PREFERRED_CARD_WIDTH * 1.5);
 	
 	/**
@@ -112,6 +143,11 @@ public class ClientGUI {
 	 */
 	public static final int COMPOSITE_BORDER_STYLE = SWT.NONE;
 	
+	/**
+	 * A {@link NumberFormat} to use when converting from a bare
+	 * <code>int</code> chip value to a human-readable representation and
+	 * vice-versa
+	 */
 	public final static NumberFormat betFormatter = NumberFormat.getCurrencyInstance();
 	
 	/***************************************************************************
@@ -147,19 +183,22 @@ public class ClientGUI {
 	 **************************************************************************/
 	/**
 	 * Starts the new gui by creating and opening new login screen
+	 * 
+	 * @return A new {@link LoginDialog}
 	 */
 	public LoginDialog createNewLoginDialog() {
 		disposeCurrentShell();
-		return new LoginDialog(new Shell(display, SWT.SHELL_TRIM | SWT.APPLICATION_MODAL), SWT.NONE, this, clientCore);
+		return new LoginDialog(new Shell(display, SWT.SHELL_TRIM | SWT.APPLICATION_MODAL), SWT.NONE, clientCore);
 	}
 	
 	/**
-	 * Displays a fresh window with the given error message
+	 * Displays a fresh {@link MessageBox} with the given error message
 	 * 
 	 * @param e the given error message
+	 * @return {@link MessageBox#open()}
 	 */
 	public static int displayErrorMessage(Exception e) {
-		e.printStackTrace();
+		logger.error("Unexpected error during client execution", e);
 		System.err.println(e);
 		MessageBox errorMsgBox = new MessageBox(new Shell(Display.getDefault()), SWT.ICON_ERROR | SWT.RETRY | SWT.ABORT
 				| SWT.IGNORE);
@@ -170,10 +209,6 @@ public class ClientGUI {
 		}
 		errorMsgBox.setMessage(sb.toString());
 		return errorMsgBox.open();
-	}
-	
-	public static String formatBet(int amount) {
-		return betFormatter.format(new Double(amount) / 100);
 	}
 	
 	/**
@@ -192,15 +227,45 @@ public class ClientGUI {
 		
 	}
 	
-	public static void setActiveCardDeck(String deckImgFile) {
+	/**
+	 * Sets the visual cards to be used in all {@link GameWindow}s.
+	 * <p>
+	 * This method disposes of all image resources so that no images cached by
+	 * the {@link SWTResourceManager} can be reused.
+	 * 
+	 * @param cardFileResource The file system resource where the cards can be
+	 *            found. May either be a directory containing single images or a
+	 *            single image file containing all images.
+	 * @throws FileNotFoundException If the file resource does not exist
+	 */
+	public static void setActiveCardDeck(File cardFileResource)
+			throws FileNotFoundException {
+		if (!cardFileResource.exists()) {
+			throw new FileNotFoundException(cardFileResource.toString());
+		}
 		SWTResourceManager.dispose();
-		Resources.ACTIVE_DECK_IMG_FILE = new File(Resources.CARDS_IMG_DIR, deckImgFile);
+		Resources.ACTIVE_DECK_IMG_FILE = cardFileResource;
 		
 	}
 	
-	public static void setActiveChipsStyle(String chipType) {
+	/**
+	 * Sets the visual type of chips used in all {@link GameWindow}s.
+	 * <p>
+	 * This method disposes of all image resources so that no images cached by
+	 * the {@link SWTResourceManager} can be reused.
+	 * 
+	 * @param chipFileResource The file system resource where the cards can be
+	 *            found. May either be a directory containing single images or a
+	 *            single image file containing all images.
+	 * @throws FileNotFoundException If the file resource does not exist
+	 */
+	public static void setActiveChipsStyle(File chipFileResource)
+			throws FileNotFoundException {
+		if (!chipFileResource.exists()) {
+			throw new FileNotFoundException(chipFileResource.toString());
+		}
 		SWTResourceManager.dispose();
-		Resources.ACTIVE_CHIP_DIR = new File(Resources.CHIP_DIR, chipType);
+		Resources.ACTIVE_CHIP_DIR = chipFileResource;
 		
 	}
 	
@@ -241,8 +306,14 @@ public class ClientGUI {
 		GameWindow w = gameWindows.get(tableId);
 		if (w == null && createNew) {
 			// No Game Window for this table yet
-			DetailedHoldemTable table = getLobby().getContext().joinTable(tableId);
-			w = new GameWindow(getLobby(), table);
+			
+			DetailedHoldemTable table;
+			try {
+				w = new GameWindow(getLobby(), table);
+				DetailedHoldemTable table = getLobby().getContext().joinHoldemTable(tableId, w);
+			} catch (RemoteException e) {
+				throw new IllegalStateException(e);
+			}
 			gameWindows.put(tableId, w);
 		}
 		return w;

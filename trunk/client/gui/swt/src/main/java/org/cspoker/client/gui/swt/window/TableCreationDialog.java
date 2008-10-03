@@ -11,7 +11,8 @@
  */
 package org.cspoker.client.gui.swt.window;
 
-import org.cspoker.client.gui.swt.control.ClientGUI;
+import java.rmi.RemoteException;
+
 import org.cspoker.common.elements.table.TableConfiguration;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -25,6 +26,12 @@ public class TableCreationDialog
 	
 	private LobbyWindow lobby;
 	
+	/**
+	 * Creates and initializes a new table creation dialog, allowing the user to
+	 * specify the desired table name, game type and stakes.
+	 * 
+	 * @param lobby The {@link LobbyWindow} where the dialog was invoked from.
+	 */
 	public TableCreationDialog(LobbyWindow lobby) {
 		super(new Shell(Display.getDefault(), SWT.SHELL_TRIM | SWT.APPLICATION_MODAL), SWT.NONE, lobby.getClientCore());
 		this.lobby = lobby;
@@ -36,7 +43,7 @@ public class TableCreationDialog
 	private Label gameTypeLabel;
 	private Label nbPlayersLabel;
 	
-	private Composite composite1;
+	private Composite holderComposite;
 	
 	private Text nameInput;
 	private Combo stakeCombo;
@@ -45,6 +52,10 @@ public class TableCreationDialog
 	
 	static private Button createTableButton;
 	
+	/**
+	 * Open the dialog and wait for user input. This dialog is closed when the
+	 * {@link #createTableButton} is pressed.
+	 */
 	public void open() {
 		try {
 			getParent().layout();
@@ -61,29 +72,32 @@ public class TableCreationDialog
 		}
 	}
 	
+	/**
+	 * Dialog initialization of SWT components.
+	 */
 	private void init() {
 		getParent().setText("Create your own table");
 		getParent().setMinimumSize(250, 100);
 		GridLayout dialogShellLayout = new GridLayout(1, true);
 		getParent().setLayout(dialogShellLayout);
-		composite1 = new Composite(getParent(), SWT.NONE);
+		holderComposite = new Composite(getParent(), SWT.NONE);
 		GridLayout composite1Layout = new GridLayout(2, false);
-		composite1.setLayout(composite1Layout);
+		holderComposite.setLayout(composite1Layout);
 		GridData composite1LData = new GridData(SWT.CENTER, SWT.CENTER, true, false);
-		composite1.setLayoutData(composite1LData);
+		holderComposite.setLayoutData(composite1LData);
 		{
 			{
-				nameLabel = new Label(composite1, SWT.CENTER);
+				nameLabel = new Label(holderComposite, SWT.CENTER);
 				nameLabel.setText("Table name:");
 				
-				nameInput = new Text(composite1, SWT.CENTER | SWT.BORDER);
+				nameInput = new Text(holderComposite, SWT.CENTER | SWT.BORDER);
 				nameInput.setText(clientCore.getUser().getUserName() + "'s table");
 				
-				stakeLabel = new Label(composite1, SWT.CENTER);
+				stakeLabel = new Label(holderComposite, SWT.CENTER);
 				stakeLabel.setText("Amount:");
 				stakeLabel.setBounds(5, 20, 60, 30);
 				
-				stakeCombo = new Combo(composite1, SWT.READ_ONLY);
+				stakeCombo = new Combo(holderComposite, SWT.READ_ONLY);
 				stakeCombo.add("0.01/0.02");
 				stakeCombo.add("0.05/0.10");
 				stakeCombo.add("0.25/0.50");
@@ -97,11 +111,11 @@ public class TableCreationDialog
 				stakeCombo.add("100/200");
 				stakeCombo.select(stakeCombo.getItemCount() - 1);
 				
-				nbPlayersLabel = new Label(composite1, SWT.CENTER);
+				nbPlayersLabel = new Label(holderComposite, SWT.CENTER);
 				nbPlayersLabel.setText("Max # of players:");
 				nbPlayersLabel.setBounds(5, 20, 60, 30);
 				
-				nbPlayersCombo = new Combo(composite1, SWT.READ_ONLY);
+				nbPlayersCombo = new Combo(holderComposite, SWT.READ_ONLY);
 				nbPlayersCombo.add("2");
 				nbPlayersCombo.add("6");
 				nbPlayersCombo.add("9");
@@ -113,12 +127,13 @@ public class TableCreationDialog
 		}
 		{
 			{
-				gameTypeLabel = new Label(composite1, SWT.CENTER);
+				gameTypeLabel = new Label(holderComposite, SWT.CENTER);
 				gameTypeLabel.setText("Game Type:");
 				gameTypeLabel.setBounds(5, 50, 60, 30);
 				
-				gameTypeCombo = new Combo(composite1, SWT.READ_ONLY);
+				gameTypeCombo = new Combo(holderComposite, SWT.READ_ONLY);
 				gameTypeCombo.add("No Limit Holdem");
+				// TODO Add more game types as they become available
 				// gameTypeCombo.add("Pot Limit Holdem");
 				// gameTypeCombo.add("Limit Holdem");
 				// gameTypeCombo.add("Pot Limit Omaha Hi");
@@ -127,13 +142,21 @@ public class TableCreationDialog
 			
 		}
 		{
-			createTableButton = new Button(composite1, SWT.PUSH | SWT.CENTER);
+			createTableButton = new Button(holderComposite, SWT.PUSH | SWT.CENTER);
 			GridData loginButtonLData = new GridData();
 			loginButtonLData.horizontalAlignment = GridData.CENTER;
 			createTableButton.setLayoutData(loginButtonLData);
 			createTableButton.setText("Create");
 			createTableButton.addSelectionListener(new SelectionAdapter() {
 				
+				/**
+				 * Performs a request to create the table according to the
+				 * user-selected parameters.
+				 * <p>
+				 * Upon success, closes this dialog's shell.
+				 * 
+				 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+				 */
 				@Override
 				public void widgetSelected(SelectionEvent evt) {
 					System.out.println("tableCreationButton.mouseDown, event=" + evt);
@@ -144,17 +167,8 @@ public class TableCreationDialog
 						
 						lobby.getContext().createHoldemTable(nameInput.getText(), tConfig);
 						getParent().close();
-					} catch (Exception e) {
-						e.printStackTrace();
-						
-						switch (ClientGUI.displayErrorMessage(e)) {
-							case SWT.RETRY:
-								return;
-							default:
-								if (!getParent().isDisposed())
-									getParent().close();
-						}
-						getParent().close();
+					} catch (RemoteException e) {
+						clientCore.handleRemoteException(e);
 					}
 				}
 			});
