@@ -22,8 +22,9 @@ import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.player.SeatedPlayer;
-import org.cspoker.server.common.elements.SeatId;
+import org.cspoker.server.common.elements.id.SeatId;
 import org.cspoker.server.common.player.GameSeatedPlayer;
 
 /**
@@ -145,15 +146,22 @@ public class ServerTable {
 	 * @throws SeatTakenException
 	 */
 	public synchronized void addPlayer(SeatId seatId, GameSeatedPlayer player)
-			throws SeatTakenException {
+			throws IllegalActionException, SeatTakenException {
 		if (!isValidSeatId(seatId)) {
 			throw new IllegalArgumentException(
 					"The given seat id should be valid.");
 		}
+		
 		if (player == null) {
 			throw new IllegalArgumentException(
 					"The given player should be valid.");
 		}
+		
+		if (hasAsPlayer(player)) {
+			throw new IllegalActionException(player
+					+ " is already seated at this table.");
+		}
+		
 		if (players.putIfAbsent(seatId, player) != null) {
 			throw new SeatTakenException(seatId);
 		}

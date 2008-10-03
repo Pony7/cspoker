@@ -33,8 +33,11 @@ import org.cspoker.common.api.lobby.holdemtable.event.RaiseEvent;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.player.SeatedPlayer;
 import org.cspoker.common.elements.pots.Pots;
-import org.cspoker.server.common.PokerTable;
 import org.cspoker.server.common.TableManager;
+import org.cspoker.server.common.elements.id.SeatId;
+import org.cspoker.server.common.elements.id.TableId;
+import org.cspoker.server.common.elements.table.PlayerListFullException;
+import org.cspoker.server.common.elements.table.SeatTakenException;
 import org.cspoker.server.common.gamecontrol.rounds.BettingRound;
 import org.cspoker.server.common.gamecontrol.rounds.Round;
 import org.cspoker.server.common.gamecontrol.rounds.WaitingRound;
@@ -50,7 +53,7 @@ import org.cspoker.server.common.util.threading.ScheduledRequestExecutor;
  * @author Kenzo
  * 
  */
-public class PlayingTableState {
+public class PlayingTableState extends TableState{
 	private static Logger logger = Logger.getLogger(PlayingTableState.class);
 
 	/***************************************************************************

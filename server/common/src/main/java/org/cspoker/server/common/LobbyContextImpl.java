@@ -2,6 +2,7 @@ package org.cspoker.server.common;
 
 import org.cspoker.common.api.lobby.context.LobbyContext;
 import org.cspoker.common.api.lobby.holdemtable.context.HoldemTableContext;
+import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
 import org.cspoker.common.api.lobby.listener.LobbyListener;
 import org.cspoker.common.elements.table.DetailedHoldemTable;
 import org.cspoker.common.elements.table.TableConfiguration;
@@ -23,10 +24,6 @@ public class LobbyContextImpl implements LobbyContext {
 		return lobby.createTable(accountContext, name, configuration);
 	}
 
-	public HoldemTableContext getHoldemTableContext(long tableId) {
-		return null; //TODO
-	}
-
 	public DetailedHoldemTable getHoldemTableInformation(long tableId) {
 		return lobby.getTableInformation(tableId);
 	}
@@ -35,13 +32,12 @@ public class LobbyContextImpl implements LobbyContext {
 		return lobby.getTableList();
 	}
 
-	public DetailedHoldemTable joinTable(long tableId) {
-		return null; //TODO
+	public HoldemTableContext joinHoldemTable(long tableId,
+			HoldemTableListener holdemTableListener) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
-	public void removeTable(long tableId) {
-		lobby.removeTable(tableId);
-	}
 
 	public void subscribe(LobbyListener lobbyListener) {
 		lobby.subscribe(lobbyListener);
@@ -50,5 +46,6 @@ public class LobbyContextImpl implements LobbyContext {
 	public void unSubscribe(LobbyListener lobbyListener) {
 		lobby.unSubscribe(lobbyListener);
 	}
+
 
 }

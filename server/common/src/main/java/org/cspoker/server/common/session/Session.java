@@ -13,7 +13,7 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.server.common.game.session;
+package org.cspoker.server.common.session;
 
 import org.cspoker.server.common.player.GameSeatedPlayer;
 import org.cspoker.server.common.player.PlayerFactory;
@@ -39,10 +39,10 @@ public class Session {
 		if (killed) {
 			throw new PlayerKilledExcepion(player);
 		}
-		if (player == null) {
-			player = PlayerFactory.global_Player_Factory
-					.createNewPlayer(username);
-		}
+//		if (player == null) {
+//			player = PlayerFactory.global_Player_Factory
+//					.createNewPlayer(username);
+//		}
 		return player;
 	}
 

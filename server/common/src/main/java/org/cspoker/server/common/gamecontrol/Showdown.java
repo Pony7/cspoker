@@ -29,7 +29,6 @@ import org.cspoker.common.api.lobby.holdemtable.event.ShowHandEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.WinnerEvent;
 import org.cspoker.common.elements.cards.Card;
 import org.cspoker.common.elements.player.Winner;
-import org.cspoker.server.common.PokerTable;
 import org.cspoker.server.common.elements.cards.hand.Hand;
 import org.cspoker.server.common.elements.chips.IllegalValueException;
 import org.cspoker.server.common.elements.chips.pot.GamePot;

@@ -13,12 +13,14 @@ import org.cspoker.common.api.lobby.event.TableCreatedEvent;
 import org.cspoker.common.api.lobby.event.TableRemovedEvent;
 import org.cspoker.common.api.lobby.holdemtable.context.HoldemTableContext;
 import org.cspoker.common.api.lobby.listener.LobbyListener;
+import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.table.DetailedHoldemTable;
 import org.cspoker.common.elements.table.Table;
 import org.cspoker.common.elements.table.TableConfiguration;
 import org.cspoker.common.elements.table.TableList;
 import org.cspoker.server.common.ExtendedAccountContext;
 import org.cspoker.server.common.PokerTable;
+import org.cspoker.server.common.elements.id.TableId;
 
 public class Lobby{
 	
@@ -37,7 +39,7 @@ public class Lobby{
 	/**
 	 * The hash map containing all the tables of this lobby.
 	 */
-	private ConcurrentHashMap<Long, PokerTable> tables = new ConcurrentHashMap<Long, PokerTable>();
+	private ConcurrentHashMap<TableId, PokerTable> tables = new ConcurrentHashMap<TableId, PokerTable>();
 	
 	protected Lobby(){
 		
@@ -45,12 +47,12 @@ public class Lobby{
 
 	public DetailedHoldemTable createTable(ExtendedAccountContext accountContext, String name,
 			TableConfiguration configuration) {
-		long tableId = counter.getAndIncrement();
+		TableId tableId = new TableId(counter.getAndIncrement());
 		PokerTable table = new PokerTable(tableId, name, configuration);		
 		tables.put(tableId, table);
 		
 		for(LobbyListener listener:lobbyListeners){
-			listener.onTableCreated(new TableCreatedEvent(accountContext.getPlayer(), new Table(tableId, name)));
+			listener.onTableCreated(new TableCreatedEvent(accountContext.getPlayer(), new Table(tableId.getId(), name)));
 		}
 		
 		return table.getTableInformation();
@@ -75,7 +77,13 @@ public class Lobby{
 		return new TableList(new ArrayList<Table>(tableList));
 	}
 
-	public HoldemTableContext joinTable(long tableId) {
+	public HoldemTableContext joinTable(TableId tableId,
+			HoldemTableContext holdemTableContext,ExtendedAccountContext accountContext) throws IllegalActionException{
+		if(!tables.containsKey(tableId)){
+			throw new IllegalActionException("The provided table #"+tableId+" to join does not exist.");
+		}
+		
+		
 		PokerTable table = tables.get(tableId);
 		return null;//TODO
 	}

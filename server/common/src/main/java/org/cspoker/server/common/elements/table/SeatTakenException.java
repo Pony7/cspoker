@@ -15,7 +15,8 @@
  */
 package org.cspoker.server.common.elements.table;
 
-import org.cspoker.server.common.elements.SeatId;
+import org.cspoker.server.common.elements.id.SeatId;
+
 
 
 /**
@@ -29,7 +30,7 @@ public class SeatTakenException extends Exception {
 	private final SeatId seatId;
 
 	public SeatTakenException(SeatId seatId) {
-		super("The seat #" + seatId.toString() + " on this table is already taken.");
+		super("The seat " + seatId.toString() + " on this table is already taken.");
 		this.seatId = seatId;
 	}
 
