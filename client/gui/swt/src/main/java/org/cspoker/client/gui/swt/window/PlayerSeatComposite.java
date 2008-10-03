@@ -98,11 +98,25 @@ public class PlayerSeatComposite
 		
 	}
 	
+	/**
+	 * @return The {@link Rectangle} where the chips the player has bet in this
+	 *         round are displayed.
+	 *         <p>
+	 *         May be modified during animation threads. Reset to initial
+	 *         location via {@link #resetBetChipsDisplayArea()}
+	 */
 	public Rectangle getBetChipsDisplayArea() {
-		if (betChipsArea == null) {
-			updateBetChipsDisplayArea();
-		}
 		return betChipsArea;
+	}
+	
+	/**
+	 * Resets the area where the chips the player has bet are displayed to its
+	 * default value.
+	 * <p>
+	 * By default, the chips in the pot are displayed below the community cards.
+	 */
+	public void resetBetChipsDisplayArea() {
+		betChipsArea = getInitialChipDrawOffset();
 	}
 	
 	public List<NavigableMap<Chip, Integer>> getCurrentBetPile() {
@@ -122,7 +136,7 @@ public class PlayerSeatComposite
 	 * @return A {@link Point} describing the preferred location to draw the
 	 *         chips at
 	 */
-	public Point getInitialChipDrawOffset() {
+	public Rectangle getInitialChipDrawOffset() {
 		int x = getLocation().x;
 		int y = getLocation().y;
 		switch (seatId) {
@@ -143,7 +157,7 @@ public class PlayerSeatComposite
 			case 5:
 				y -= 30;
 		}
-		return new Point(x, y);
+		return new Rectangle(x, y, 100, 80);
 		
 	}
 	
@@ -190,6 +204,7 @@ public class PlayerSeatComposite
 			holeCardsComposite.addPaintListener(new CardPaintListener(holeCards, 2, SWT.CENTER, -10));
 			
 		}
+		resetBetChipsDisplayArea();
 		setVisible(player != null);
 	}
 	
@@ -236,10 +251,6 @@ public class PlayerSeatComposite
 		holeCardsComposite.redraw();
 	}
 	
-	public void setPlayerName(Label playerName) {
-		this.playerName = playerName;
-	}
-	
 	public void showAction(final String action) {
 		final String name = player.getName();
 		playerName.setText(action);
@@ -277,13 +288,9 @@ public class PlayerSeatComposite
 		timeLeftBar.setVisible(false);
 	}
 	
-	public void updateBetChipsDisplayArea() {
-		betChipsArea = new Rectangle(getInitialChipDrawOffset().x, getInitialChipDrawOffset().y, 100, 80);
-	}
-	
 	void updateStack(int amount) {
 		currentStack += amount;
-		playerStack.setText(ClientGUI.formatBet(amount));
+		playerStack.setText(ClientGUI.betFormatter.format(currentStack));
 	}
 	
 	/**

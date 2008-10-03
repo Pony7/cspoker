@@ -11,6 +11,10 @@
  */
 package org.cspoker.client.gui.swt.window;
 
+import java.io.FileNotFoundException;
+import java.rmi.RemoteException;
+import java.util.ArrayList;
+
 import org.apache.log4j.Logger;
 import org.cspoker.client.gui.swt.control.ClientCore;
 import org.cspoker.client.gui.swt.control.ClientGUI;
@@ -20,11 +24,11 @@ import org.cspoker.common.api.chat.event.ServerMessageEvent;
 import org.cspoker.common.api.chat.event.TableMessageEvent;
 import org.cspoker.common.api.chat.listener.ChatListener;
 import org.cspoker.common.api.lobby.context.LobbyContext;
+import org.cspoker.common.api.lobby.context.RemoteLobbyContext;
 import org.cspoker.common.api.lobby.event.LobbyEvent;
 import org.cspoker.common.api.lobby.event.TableCreatedEvent;
 import org.cspoker.common.api.lobby.event.TableRemovedEvent;
 import org.cspoker.common.api.lobby.listener.LobbyListener;
-import org.cspoker.common.api.lobby.listener.RemoteLobbyListener;
 import org.cspoker.common.elements.table.DetailedHoldemTable;
 import org.cspoker.common.elements.table.Table;
 import org.cspoker.common.elements.table.TableConfiguration;
@@ -49,12 +53,12 @@ public class LobbyWindow
 	
 	private final static Logger logger = Logger.getLogger(LobbyWindow.class);
 	/** {@link LobbyContext} for callbacks to server. */
-	private LobbyContext context;
+	private RemoteLobbyContext context;
 	
 	/**
 	 * @return The {@link LobbyContext} provided by the server at login.
 	 */
-	public LobbyContext getContext() {
+	public RemoteLobbyContext getContext() {
 		return context;
 	}
 	
@@ -100,11 +104,18 @@ public class LobbyWindow
 	/**
 	 * Creates and initializes the SWT components of the Lobby.
 	 * 
-	 * @param core
+	 * @param core The {@link ClientCore}
+	 * @throws IllegalArgumentException If the retrieval of the
+	 *             {@link RemoteLobbyContext} for callbacks failed
 	 */
-	public LobbyWindow(ClientCore core) {
+	public LobbyWindow(ClientCore core)
+			throws IllegalArgumentException {
 		super(new Shell(core.getGui().getDisplay()), SWT.NONE, core);
-		this.context = core.getCommunication().getLobbyContext();
+		try {
+			this.context = core.getCommunication().getLobbyContext(this);
+		} catch (RemoteException e) {
+			throw new IllegalArgumentException(e);
+		}
 		initGUI();
 		createCloseListener();
 		// Register as a resource user - SWTResourceManager will
@@ -274,7 +285,11 @@ public class LobbyWindow
 							
 							@Override
 							public void widgetSelected(SelectionEvent evt) {
-								ClientGUI.setActiveCardDeck(ClientGUI.STARS_DECK_IMG_FILE);
+								try {
+									ClientGUI.setActiveCardDeck(ClientGUI.Resources.STARS_DECK_IMG_FILE);
+								} catch (FileNotFoundException e) {
+									logger.error("Could not change card deck style", e);
+								}
 							}
 						});
 						ftpCardsMenuItem = new MenuItem(cardsMenu, SWT.RADIO);
@@ -283,7 +298,11 @@ public class LobbyWindow
 							
 							@Override
 							public void widgetSelected(SelectionEvent evt) {
-								ClientGUI.setActiveCardDeck(ClientGUI.FTP_DECK_IMG_FILE);
+								try {
+									ClientGUI.setActiveCardDeck(ClientGUI.Resources.FTP_DECK_IMG_FILE);
+								} catch (FileNotFoundException e) {
+									logger.error("Could not change card deck style", e);
+								}
 							}
 						});
 						{
@@ -299,7 +318,11 @@ public class LobbyWindow
 								
 								@Override
 								public void widgetSelected(SelectionEvent evt) {
-									ClientGUI.setActiveChipsStyle(ClientGUI.STARS_CHIP_IMG_DIR);
+									try {
+										ClientGUI.setActiveChipsStyle(ClientGUI.Resources.STARS_CHIP_IMG_DIR);
+									} catch (FileNotFoundException e) {
+										logger.error("Could not change chip style", e);
+									}
 								}
 							});
 							eptChipsMenuItem = new MenuItem(chipsMenu, SWT.RADIO);
@@ -308,7 +331,11 @@ public class LobbyWindow
 								
 								@Override
 								public void widgetSelected(SelectionEvent evt) {
-									ClientGUI.setActiveChipsStyle(ClientGUI.EPT_CHIP_IMG_DIR);
+									try {
+										ClientGUI.setActiveChipsStyle(ClientGUI.Resources.EPT_CHIP_IMG_DIR);
+									} catch (FileNotFoundException e) {
+										logger.error("Could not change chip style", e);
+									}
 								}
 							});
 							
@@ -318,7 +345,11 @@ public class LobbyWindow
 								
 								@Override
 								public void widgetSelected(SelectionEvent evt) {
-									ClientGUI.setActiveChipsStyle(ClientGUI.FREE_CHIP_IMAGE_FILE);
+									try {
+										ClientGUI.setActiveChipsStyle(ClientGUI.Resources.FREE_CHIP_IMAGE_FILE);
+									} catch (FileNotFoundException e) {
+										logger.error("Could not change chip style", e);
+									}
 								}
 							});
 						}
@@ -342,7 +373,7 @@ public class LobbyWindow
 								@Override
 								public void widgetSelected(SelectionEvent evt) {
 									MessageBox aboutInfo = new MessageBox(getShell());
-									aboutInfo.setMessage("CSPoker Client 0.1");
+									aboutInfo.setMessage("CSPoker SWT Client 0.1");
 									aboutInfo.setText("About");
 									aboutInfo.open();
 								}
@@ -352,7 +383,7 @@ public class LobbyWindow
 					}
 				}
 			}
-			getShell().setImage(SWTResourceManager.getImage(ClientGUI.CS_POKER_ICON));
+			getShell().setImage(SWTResourceManager.getImage(ClientGUI.Resources.CS_POKER_ICON));
 			getShell().addShellListener(new ShellAdapter() {
 				
 				@Override
@@ -386,30 +417,37 @@ public class LobbyWindow
 	 * updates its display status according to the received {@link TableList}.
 	 */
 	public void refreshTables() {
-		TableList tl = context.getTableList();
-		availableGameTables.clearAll();
-		availableGameTables.setItemCount(0);
-		for (Table t : tl.getTables()) {
-			insertInformation(context.getHoldemTableInformation(t.getId()));
+		TableList tl;
+		java.util.List<DetailedHoldemTable> tables = new ArrayList<DetailedHoldemTable>();
+		try {
+			tl = context.getTableList();
+			for (Table t : tl.getTables()) {
+				tables.add(context.getHoldemTableInformation(t.getId()));
+			}
+		} catch (RemoteException e) {
+			getClientCore().handleRemoteException(e);
 		}
-	}
-	
-	public GameWindow getHoldemTableListener(long tableId) {
-		return getClientCore().getGui().getGameWindow(tableId, false);
+		
+		for (DetailedHoldemTable t : tables) {
+			insertInformation(t);
+		}
 	}
 	
 	/**
 	 * Very simply just refreshs all tables for now TODO Slim down
 	 * 
+	 * @throws RemoteException
 	 * @see org.cspoker.common.api.lobby.listener.LobbyListener#onTableCreated(org.cspoker.common.api.lobby.event.TableCreatedEvent)
 	 */
 	public void onTableCreated(TableCreatedEvent tableCreatedEvent) {
 		Table t = tableCreatedEvent.getTable();
 		// TODO Get detail information to display in the list from the server
-		DetailedHoldemTable detailedTable = context.getHoldemTableInformation(t.getId());
-		
-		insertInformation(detailedTable);
-		
+		try {
+			DetailedHoldemTable detailedTable = context.getHoldemTableInformation(t.getId());
+			insertInformation(detailedTable);
+		} catch (RemoteException e) {
+			getClientCore().handleRemoteException(e);
+		}
 	}
 	
 	/**
@@ -423,9 +461,12 @@ public class LobbyWindow
 		assert (t != null) : "Cannot insert information, passed null parameter";
 		TableConfiguration tInfo = t.getGameProperty();
 		TableItem item = new TableItem(availableGameTables, SWT.NONE);
-		item.setText(new String[] { t.getName(), Long.toString(t.getId()),
-				ClientGUI.formatBet(tInfo.getSmallBlind()) + "/" + ClientGUI.formatBet(tInfo.getBigBlind()),
-				"Holdem No Limit", Integer.toString(t.getNbPlayers()) + "/" + tInfo.getMaxNbPlayers() });
+		item.setText(new String[] {
+				t.getName(),
+				Long.toString(t.getId()),
+				ClientGUI.betFormatter.format(tInfo.getSmallBlind()) + "/"
+						+ ClientGUI.betFormatter.format(tInfo.getBigBlind()), "Holdem No Limit",
+				Integer.toString(t.getNbPlayers()) + "/" + tInfo.getMaxNbPlayers() });
 		item.setData(t);
 	}
 	
@@ -446,6 +487,10 @@ public class LobbyWindow
 		}
 	}
 	
+	/**
+	 * @param serverMessageEvent The server message event
+	 * @see org.cspoker.common.api.chat.listener.ChatListener#onServerMessage(org.cspoker.common.api.chat.event.ServerMessageEvent)
+	 */
 	public void onServerMessage(ServerMessageEvent serverMessageEvent) {
 		// TODO Show the server event maybe in the lobby as well
 		for (GameWindow openWindow : getClientCore().getGui().getGameWindows()) {
@@ -454,20 +499,15 @@ public class LobbyWindow
 		
 	}
 	
+	/**
+	 * @param tableMessageEvent The table message event
+	 * @see org.cspoker.common.api.chat.listener.ChatListener#onTableMessage(org.cspoker.common.api.chat.event.TableMessageEvent)
+	 */
 	public void onTableMessage(TableMessageEvent tableMessageEvent) {
-		for (GameWindow openWindow : getClientCore().getGui().getGameWindows()) {
-			tableMessageEvent.dispatch(openWindow.getUserInputComposite());
-		}
-		
+		// TODO Don't we need a table id here?
+		long tableId = 0;
+		GameWindow relevantWindow = getClientCore().getGui().getGameWindow(tableId, false);
+		assert (relevantWindow != null) : "Window for table " + tableId + " not found";
+		tableMessageEvent.dispatch(relevantWindow.getUserInputComposite());
 	}
-	
-	public void subscribe(RemoteLobbyListener lobbyListener) {
-
-	}
-	
-	public void unSubscribe(RemoteLobbyListener lobbyListener) {
-	// TODO Auto-generated method stub
-	
-	}
-	
 }

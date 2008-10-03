@@ -11,16 +11,22 @@
  */
 package org.cspoker.client.gui.swt.control;
 
+import java.rmi.RemoteException;
+
 import org.apache.log4j.Logger;
 import org.cspoker.client.User;
 import org.cspoker.client.gui.swt.window.GameWindow;
 import org.cspoker.client.gui.swt.window.LobbyWindow;
 import org.cspoker.client.gui.swt.window.LoginDialog;
 import org.cspoker.common.api.chat.listener.ChatListener;
-import org.cspoker.common.api.account.event.*;*;
+import org.cspoker.common.api.lobby.holdemtable.holdemplayer.listener.HoldemPlayerListener;
+import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
+import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListenerTree;
 import org.cspoker.common.api.lobby.listener.LobbyListener;
+import org.cspoker.common.api.lobby.listener.LobbyListenerTree;
+import org.cspoker.common.api.shared.context.RemoteServerContext;
 import org.cspoker.common.api.shared.context.ServerContext;
-import org.cspoker.common.jaxbcontext.ActionJAXBContext;
+import org.cspoker.common.api.shared.listener.ServerListenerTree;
 import org.cspoker.common.util.Log4JPropertiesLoader;
 
 /**
@@ -37,14 +43,14 @@ import org.cspoker.common.util.Log4JPropertiesLoader;
  * @author Cedric, Stephan
  */
 public class ClientCore
-		implements ServerListener, Runnable {
+		implements ServerListenerTree, Runnable {
 	
 	private static final User DEFAULT_TEST_USER = new User("test", "test");
 	private static final String LOG4J_PROPERTY_FILE = "org/cspoker/client/gui/text/logging/log4j.properties";
 	/**
-	 * Default port for RMI (<code>8080</code>)
+	 * Default port for RMI (<code>1099</code>)
 	 */
-	public static final int DEFAULT_PORT_RMI = 8080;
+	public static final int DEFAULT_PORT_RMI = 1099;
 	/**
 	 * Default port for sockets (<code>8081</code>)
 	 */
@@ -54,8 +60,7 @@ public class ClientCore
 	 */
 	public static final String DEFAULT_URL = "localhost";
 	
-	private final static Logger logger = Logger
-	.getLogger(ClientCore.class);
+	private final static Logger logger = Logger.getLogger(ClientCore.class);
 	static {
 		Log4JPropertiesLoader.load(LOG4J_PROPERTY_FILE);
 	}
@@ -78,7 +83,7 @@ public class ClientCore
 	/**
 	 * The communication used by this client
 	 */
-	private ServerContext communication;
+	private RemoteServerContext communication;
 	
 	/***************************************************************************
 	 * Constructor
@@ -106,7 +111,7 @@ public class ClientCore
 	 * @return The currently used {@link ServerContext} if the client is logged
 	 *         in, <code>null</code> otherwise
 	 */
-	public ServerContext getCommunication() {
+	public RemoteServerContext getCommunication() {
 		return communication;
 	}
 	
@@ -132,11 +137,12 @@ public class ClientCore
 		// unexpected failures
 		try {
 			gui = new ClientGUI(this);
-			while (communication != null) {
-			communication = getGui().createNewLoginDialog().open();
+			while (communication == null) {
+				communication = getGui().createNewLoginDialog().open();
 			}
 			getUser().setLoggedIn(true);
-			communication.subscribe(this);
+			// TODO Make sure we register to receive events from the server
+			// communication.subscribe(this);
 			LobbyWindow lobby = new LobbyWindow(this);
 			getGui().setLobby(lobby);
 			lobby.show();
@@ -151,9 +157,10 @@ public class ClientCore
 			run();
 		}
 	}
-
+	
 	/**
-	 * Helper method to reset everything. Disposes of all created windows and kills the server communication.
+	 * Helper method to reset everything. Disposes of all created windows and
+	 * kills the server communication.
 	 */
 	public void resetAll() {
 		for (GameWindow w : getGui().getGameWindows()) {
@@ -168,7 +175,6 @@ public class ClientCore
 	
 	/**
 	 * @pre The user is not currently logged in
-	 * 
 	 * @param user the user to set
 	 */
 	public void setUser(User user) {
@@ -185,21 +191,51 @@ public class ClientCore
 		return gui;
 	}
 	
-	public AccountListener getAccountListener() {
-		// TODO Implement account listener
-		return null;
-	}
-	
-	public CashierListener getCashierListener() {
-		// TODO Implement cashier listener
-		return null;
-	}
-	
+	/**
+	 * TODO Wouldn't it be nice to have ChatListeners in the tree as well so we
+	 * have chat listeners for a given table?
+	 * 
+	 * @see org.cspoker.common.api.shared.listener.ServerListenerTree#getChatListener()
+	 */
 	public ChatListener getChatListener() {
 		return getGui().getLobby();
 	}
 	
-	public LobbyListener getLobbyListener() {
-		return getGui().getLobby();
+	/**
+	 * @return The {@link LobbyListenerTree} implemented by this SWT client
+	 * @see org.cspoker.common.api.shared.listener.ServerListenerTree#getLobbyListenerTree()
+	 */
+	public LobbyListenerTree getLobbyListenerTree() {
+		return new LobbyListenerTree() {
+			
+			public LobbyListener getLobbyListener() {
+				return getGui().getLobby();
+			}
+			
+			public HoldemTableListenerTree getHoldemTableListenerTree(final long tableId) {
+				return new HoldemTableListenerTree() {
+					
+					public HoldemTableListener getHoldemTableListener() {
+						return getGui().getGameWindow(tableId, false);
+					}
+					
+					public HoldemPlayerListener getHoldemPlayerListener() {
+						return getGui().getGameWindow(tableId, false);
+					}
+				};
+			}
+		};
+	}
+	
+	/**
+	 * @param e The exception returned from the server
+	 * @return If checking connection status was successful
+	 */
+	public boolean handleRemoteException(RemoteException e) {
+		logger.error("RemoteException occurred", e);
+		logger.error("Cause: ", e.getCause());
+		// Try to reconnect a couple of times
+		// TODO Implement reconnect status display and attempts
+		return false;
 	}
 }

@@ -59,12 +59,6 @@ public class GameState {
 		return currentBetPile;
 	}
 	
-	private int moneyInMiddle;
-	
-	public void setMoneyInMiddle(int moneyInMiddle) {
-		this.moneyInMiddle = moneyInMiddle;
-	}
-	
 	public GameState(DetailedHoldemTable table) {
 		setTableMemento(table);
 		pots = new Pots(0);
@@ -113,19 +107,6 @@ public class GameState {
 				+ getPots().getTotalValue()));
 	}
 	
-	public void newRound(String roundName) {
-		if (roundName.equalsIgnoreCase("pre-flop round")) {
-			setPots(new Pots(0));
-		}
-		currentBetPile.clear();
-		moneyInMiddle = getPots().getTotalValue();
-		setBetChipsThisRound(0);
-	}
-	
-	public int getMoneyInMiddle() {
-		return moneyInMiddle;
-	}
-	
 	public static int getValue(List<NavigableMap<Chip, Integer>> chipPiles) {
 		int amount = 0;
 		for (Map<Chip, Integer> chips : chipPiles) {
@@ -146,10 +127,13 @@ public class GameState {
 	}
 	
 	public List<NavigableMap<Chip, Integer>> addToCurrentBetPile(int amount) {
-		
-		int lastBetRaiseAmount = Math.max(0, amount - getValue(currentBetPile));
-		currentBetPile.add(Chip.getDistribution(lastBetRaiseAmount));
-		
+		if (amount < 0) {
+			throw new IllegalArgumentException("Cannot add negative amount to bet pile");
+		} else if (amount == 0) {
+			return currentBetPile;
+		} else {
+			currentBetPile.add(Chip.getDistribution(amount));
+		}
 		return currentBetPile;
 		
 	}
