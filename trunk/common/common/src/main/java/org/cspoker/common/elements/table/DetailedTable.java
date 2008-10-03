@@ -26,8 +26,6 @@ import org.cspoker.common.elements.player.SeatedPlayer;
 /**
  * An immutable class to represent a snapshot of the state of a table.
  * 
- * @author kenzo
- * 
  */
 public class DetailedTable extends Table {
 

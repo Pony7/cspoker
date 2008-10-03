@@ -36,9 +36,9 @@ public class JoinAndLeaveGameTest extends TestCase {
 
 	private GameSeatedPlayer guy;
 
-	private GameTable table;
+	private WaitingTableState table;
 
-	private GameMediator gameMediator;
+	private PokerTable gameMediator;
 
 	private PlayerFactory playerFactory;
 
@@ -51,8 +51,8 @@ public class JoinAndLeaveGameTest extends TestCase {
 			guy = playerFactory.createNewPlayer("Guy", 500);
 
 			TableId id = new TableId(0);
-			gameMediator = new GameMediator(id);
-			table = new GameTable(id, new GameProperty(10));
+			gameMediator = new PokerTable(id);
+			table = new WaitingTableState(id, new GameProperty(10));
 		} catch (IllegalValueException e) {
 			fail(e.getMessage());
 		}
@@ -69,7 +69,7 @@ public class JoinAndLeaveGameTest extends TestCase {
 			fail(e.getMessage());
 		}
 
-		GameControl gameControl = new GameControl(gameMediator, table, kenzo);
+		PlayingTableState gameControl = new PlayingTableState(gameMediator, table, kenzo);
 
 		try {
 			assertEquals(PreFlopRound.class, gameControl.getRound().getClass());
@@ -92,7 +92,7 @@ public class JoinAndLeaveGameTest extends TestCase {
 			kenzo = playerFactory.createNewPlayer("Kenzo", 500);
 			cedric = playerFactory.createNewPlayer("Cedric", 500);
 
-			table = new GameTable(new TableId(0), new GameProperty());
+			table = new WaitingTableState(new TableId(0), new GameProperty());
 			table.addPlayer(kenzo);
 			table.addPlayer(cedric);
 		} catch (IllegalValueException e) {
@@ -101,7 +101,7 @@ public class JoinAndLeaveGameTest extends TestCase {
 			fail(e.getMessage());
 		}
 
-		GameControl gameControl = new GameControl(gameMediator, table, kenzo);
+		PlayingTableState gameControl = new PlayingTableState(gameMediator, table, kenzo);
 
 		try {
 			assertEquals(PreFlopRound.class, gameControl.getRound().getClass());
@@ -127,7 +127,7 @@ public class JoinAndLeaveGameTest extends TestCase {
 			fail(e.getMessage());
 		}
 
-		GameControl gameControl = new GameControl(gameMediator, table, kenzo);
+		PlayingTableState gameControl = new PlayingTableState(gameMediator, table, kenzo);
 
 		try {
 			assertEquals(PreFlopRound.class, gameControl.getRound().getClass());
@@ -167,7 +167,7 @@ public class JoinAndLeaveGameTest extends TestCase {
 			fail(e.getMessage());
 		}
 
-		GameControl gameControl = new GameControl(gameMediator, table, kenzo);
+		PlayingTableState gameControl = new PlayingTableState(gameMediator, table, kenzo);
 
 		try {
 			assertEquals(kenzo, gameControl.getGame().getDealer());
@@ -207,7 +207,7 @@ public class JoinAndLeaveGameTest extends TestCase {
 			fail(e.getMessage());
 		}
 
-		GameControl gameControl = new GameControl(gameMediator, table, kenzo);
+		PlayingTableState gameControl = new PlayingTableState(gameMediator, table, kenzo);
 
 		try {
 			assertEquals(kenzo, gameControl.getGame().getDealer());

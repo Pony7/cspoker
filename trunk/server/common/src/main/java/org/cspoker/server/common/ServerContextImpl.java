@@ -22,6 +22,7 @@ import org.cspoker.common.api.cashier.context.CashierContext;
 import org.cspoker.common.api.chat.context.ChatContext;
 import org.cspoker.common.api.lobby.context.LobbyContext;
 import org.cspoker.common.api.shared.context.ServerContext;
+import org.cspoker.server.common.lobby.Lobby;
 
 public class ServerContextImpl implements ServerContext {
 
@@ -34,7 +35,8 @@ public class ServerContextImpl implements ServerContext {
 		this.accountContext = new AccountContextImpl(username,password);
 		this.cashierContext = new CashierContextImpl(accountContext);
 		this.chatContext = new ChatContextImpl(accountContext);
-		this.lobbyContext = new LobbyContextImpl(accountContext);
+		//singleton lobby is passed as an arguement for flexibility.
+		this.lobbyContext = new LobbyContextImpl(accountContext, Lobby.getInstance());
 	}
 
 	public AccountContext getAccountContext() {

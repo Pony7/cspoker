@@ -14,7 +14,7 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-package org.cspoker.server.common.game;
+package org.cspoker.server.common;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -26,6 +26,7 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
+import org.cspoker.common.api.lobby.holdemtable.context.HoldemTableContext;
 import org.cspoker.common.api.lobby.holdemtable.event.BetEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.BigBlindEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.CallEvent;
@@ -42,8 +43,13 @@ import org.cspoker.common.api.lobby.holdemtable.event.WinnerEvent;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.event.NewPocketCardsEvent;
 import org.cspoker.common.api.shared.event.ServerEvent;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
+import org.cspoker.common.api.shared.listener.EventListener;
 import org.cspoker.common.elements.player.SeatedPlayer;
-import org.cspoker.server.common.gamecontrol.GameControl;
+import org.cspoker.common.elements.table.DetailedTable;
+import org.cspoker.common.elements.table.Table;
+import org.cspoker.common.elements.table.TableConfiguration;
+import org.cspoker.server.common.gamecontrol.PlayingTableState;
+import org.cspoker.server.common.gamecontrol.WaitingTableState;
 import org.cspoker.server.common.player.GameSeatedPlayer;
 import org.cspoker.server.common.util.threading.ScheduledRequestExecutor;
 
@@ -54,26 +60,48 @@ import org.cspoker.server.common.util.threading.ScheduledRequestExecutor;
  * @author Kenzo
  * 
  */
-public class GameMediator {
+public class PokerTable {
 
-	private static Logger logger = Logger.getLogger(GameMediator.class);
+	private static Logger logger = Logger.getLogger(PokerTable.class);
 
 	/**
 	 * This variable contains the game control to mediate to.
 	 */
-	private GameControl gameControl;
-
-	private final TableId id;
-
-	/**
-	 * Construct a new game mediator.
-	 */
-	public GameMediator(TableId id) {
-		this.id = id;
+	private PlayingTableState gameControl;
+	
+	private WaitingTableState table;
+	
+	public PokerTable(long id, String name, TableConfiguration configuration){
+		table = new WaitingTableState(id, name, configuration);
 	}
 
-	public TableId getId() {
-		return id;
+	public long getId() {
+		return table.getId();
+	}
+	
+	public DetailedTable getTableInformation(){
+		return null;//TODO
+	}
+	
+	public Table getTableId(){
+		return new Table(table.getId(), table.getName());
+	}
+	
+	public HoldemTableContext getHolemTableContext(ExtendedAccountContext accountContext){
+		return null; //TODO
+	}
+	
+	public boolean isEmpty(){
+		return false; //TODO
+	}
+	
+	public synchronized boolean terminate(){
+		//TODO unsubscribe all if can terminate (check if isEmpty())
+		return true;
+	}
+	
+	public synchronized void startGame(ExtendedAccountContext accountContext){
+		//TODO
 	}
 
 	/***************************************************************************
@@ -181,7 +209,7 @@ public class GameMediator {
 		cancelOldTimeOut();
 	}
 
-	public void joinGame(SeatId seatId, GameSeatedPlayer player)
+	public void joinGame(long seatId, GameSeatedPlayer player)
 			throws IllegalActionException {
 		gameControl.joinGame(seatId, player);
 	}
@@ -198,7 +226,7 @@ public class GameMediator {
 	 * Set the game control of this game mediator to the given game control.
 	 * 
 	 */
-	public void setGameControl(GameControl gameControl) {
+	public void setGameControl(PlayingTableState gameControl) {
 		this.gameControl = gameControl;
 	}
 
@@ -1285,7 +1313,7 @@ public class GameMediator {
 		cancelOldTimeOut();
 		currentFuture = ScheduledRequestExecutor.getInstance().schedule(
 				currentTimeOut, 30, TimeUnit.SECONDS);
-		GameMediator.logger.info(player.getName()
+		PokerTable.logger.info(player.getName()
 				+ " action time out submitted.");
 	}
 
@@ -1315,14 +1343,14 @@ public class GameMediator {
 
 		public void run() {
 			try {
-				GameMediator.logger.info(player.getName()
+				PokerTable.logger.info(player.getName()
 						+ " auto-fold called.");
 
 				if (getCurrentTimeOut() == this) {
 					GameSeatedPlayer gcPlayer = gameControl.getGame()
 							.getCurrentPlayer();
 					if (gcPlayer.getId().equals(player.getId())) {
-						GameMediator.logger.info(player.getName()
+						PokerTable.logger.info(player.getName()
 								+ " automatically folded.");
 						gameControl.fold(gcPlayer);
 					}

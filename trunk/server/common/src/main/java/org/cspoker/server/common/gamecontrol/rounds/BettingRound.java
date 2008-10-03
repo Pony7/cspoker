@@ -14,7 +14,7 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-package org.cspoker.server.common.game.gamecontrol.rounds;
+package org.cspoker.server.common.gamecontrol.rounds;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -31,7 +31,7 @@ import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.cards.Card;
 import org.cspoker.common.elements.player.Winner;
 import org.cspoker.common.elements.pots.Pots;
-import org.cspoker.server.common.GameMediator;
+import org.cspoker.server.common.PokerTable;
 import org.cspoker.server.common.elements.chips.Chips;
 import org.cspoker.server.common.elements.chips.IllegalValueException;
 import org.cspoker.server.common.elements.chips.pot.GamePots;
@@ -61,7 +61,7 @@ public abstract class BettingRound extends Round {
 
 	protected boolean someoneBigAllIn = false;
 
-	public BettingRound(GameMediator gameMediator, Game game) {
+	public BettingRound(PokerTable gameMediator, Game game) {
 		super(gameMediator, game);
 		allInPlayers = new ArrayList<GameAllInPlayer>();
 		betsFromFoldedPlayers = new ArrayList<Chips>();
@@ -349,22 +349,22 @@ public abstract class BettingRound extends Round {
 	 */
 	protected void collectSmallBlind(GameSeatedPlayer player)
 			throws IllegalValueException {
-		if (player.getStack().getValue() <= getGame().getGameProperty()
+		if (player.getStack().getValue() <= getGame().getTableConfiguration()
 				.getSmallBlind()) {
 			throw new IllegalValueException();
 		}
-		player.transferAmountToBetPile(getGame().getGameProperty()
+		player.transferAmountToBetPile(getGame().getTableConfiguration()
 				.getSmallBlind());
-		setBet(getGame().getGameProperty().getSmallBlind());
+		setBet(getGame().getTableConfiguration().getSmallBlind());
 		getBettingRules().setBetPlaced(true);
 		getBettingRules().setLastBetAmount(
-				getGame().getGameProperty().getSmallBlind());
+				getGame().getTableConfiguration().getSmallBlind());
 		playerMadeEvent(player);
 		gameMediator.publishSmallBlindEvent(new SmallBlindEvent(player
-				.getMemento(), getGame().getGameProperty().getSmallBlind(),
+				.getMemento(), getGame().getTableConfiguration().getSmallBlind(),
 				new Pots(getCurrentPotValue())));
 		BettingRound.logger.info(player.getName() + ": posts small blind $"
-				+ getGame().getGameProperty().getSmallBlind());
+				+ getGame().getTableConfiguration().getSmallBlind());
 
 	}
 
@@ -377,23 +377,23 @@ public abstract class BettingRound extends Round {
 	 */
 	protected void collectBigBlind(GameSeatedPlayer player)
 			throws IllegalValueException {
-		if (player.getStack().getValue() <= getGame().getGameProperty()
+		if (player.getStack().getValue() <= getGame().getTableConfiguration()
 				.getBigBlind()) {
 			throw new IllegalValueException();
 		}
-		player.transferAmountToBetPile(getGame().getGameProperty()
+		player.transferAmountToBetPile(getGame().getTableConfiguration()
 				.getBigBlind());
 		getBettingRules().setBetPlaced(true);
 		getBettingRules().setLastBetAmount(
-				getGame().getGameProperty().getBigBlind());
-		setBet(getGame().getGameProperty().getBigBlind());
+				getGame().getTableConfiguration().getBigBlind());
+		setBet(getGame().getTableConfiguration().getBigBlind());
 		playerMadeEvent(player);
 		gameMediator.publishBigBlindEvent(new BigBlindEvent(player
-				.getMemento(), getGame().getGameProperty().getBigBlind(),
+				.getMemento(), getGame().getTableConfiguration().getBigBlind(),
 				new Pots(getCurrentPotValue())));
 		BettingRound.logger.info(getGame().getCurrentPlayer().getName()
 				+ ": posts big blind $"
-				+ getGame().getGameProperty().getBigBlind());
+				+ getGame().getTableConfiguration().getBigBlind());
 	}
 
 	/**

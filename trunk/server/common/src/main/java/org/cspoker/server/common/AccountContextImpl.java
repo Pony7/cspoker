@@ -17,6 +17,7 @@
 
 import javax.security.auth.login.LoginException;
 
+import org.cspoker.common.elements.player.Player;
 import org.cspoker.server.common.authentication.XmlFileAuthenticator;
 
 public class AccountContextImpl implements ExtendedAccountContext{
@@ -47,8 +48,8 @@ public class AccountContextImpl implements ExtendedAccountContext{
 		throw new UnsupportedOperationException();
 	}
 
-	public String getName() {
-		return name;
+	public Player getPlayer(){
+		return new Player(0,name); //TODO
 	}
 
 }

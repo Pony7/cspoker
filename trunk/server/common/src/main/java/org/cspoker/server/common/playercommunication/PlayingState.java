@@ -13,11 +13,11 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.server.common.game.playercommunication;
+package org.cspoker.server.common.playercommunication;
 
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.server.common.GameManager;
-import org.cspoker.server.common.GameMediator;
+import org.cspoker.server.common.PokerTable;
 
 /**
  * A class to represent the playing state of the player.
@@ -32,7 +32,7 @@ class PlayingState extends PlayerCommunicationState {
 	/**
 	 * The mediator the player is in.
 	 */
-	private final GameMediator gameMediator;
+	private final PokerTable gameMediator;
 
 	/**
 	 * Create a new playing state with given player communication and game
@@ -44,7 +44,7 @@ class PlayingState extends PlayerCommunicationState {
 	 *            The game mediator for this playing state.
 	 */
 	public PlayingState(PlayerCommunicationImpl playerCommunication,
-			GameMediator gameMediator) {
+			PokerTable gameMediator) {
 		super(playerCommunication);
 		this.gameMediator = gameMediator;
 	}

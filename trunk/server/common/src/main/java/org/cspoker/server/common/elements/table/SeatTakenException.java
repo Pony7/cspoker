@@ -13,7 +13,9 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.server.common.game.elements.table;
+package org.cspoker.server.common.elements.table;
+
+import org.cspoker.server.common.elements.SeatId;
 
 
 /**
@@ -24,19 +26,11 @@ public class SeatTakenException extends Exception {
 
 	private static final long serialVersionUID = -6106738788749975623L;
 
-	private final TableId tableId;
-
 	private final SeatId seatId;
 
-	public SeatTakenException(TableId tableId, SeatId seatId) {
-		super("The seat nr " + seatId.toString() + " on table "
-				+ tableId.toString() + " is already taken.");
-		this.tableId = tableId;
+	public SeatTakenException(SeatId seatId) {
+		super("The seat #" + seatId.toString() + " on this table is already taken.");
 		this.seatId = seatId;
-	}
-
-	public TableId getTableId() {
-		return tableId;
 	}
 
 	public SeatId getSeatId() {

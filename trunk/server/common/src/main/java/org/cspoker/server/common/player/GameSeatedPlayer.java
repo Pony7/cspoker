@@ -14,7 +14,7 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-package org.cspoker.server.common.game.player;
+package org.cspoker.server.common.player;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +22,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.cspoker.common.elements.cards.Card;
 import org.cspoker.common.elements.player.SeatedPlayer;
+import org.cspoker.server.common.elements.SeatId;
 import org.cspoker.server.common.elements.chips.Chips;
 import org.cspoker.server.common.elements.chips.IllegalValueException;
 
@@ -74,7 +75,7 @@ public class GameSeatedPlayer {
 	 * @post The bet chips pile is effective and There are no chips on this
 	 *       pile. |new.getBetChips()!=null && new.getBetChips().getValue()==0
 	 */
-	GameSeatedPlayer(PlayerId id, String name, int initialNbChips)
+	GameSeatedPlayer(long id, String name, int initialNbChips)
 			throws IllegalValueException {
 		this(new GamePlayer(id,name,2*initialNbChips), initialNbChips);
 	}
@@ -105,7 +106,7 @@ public class GameSeatedPlayer {
 	 * 
 	 * @return The id of this player.
 	 */
-	public PlayerId getId() {
+	public long getId() {
 		return player.getId();
 	}
 

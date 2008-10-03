@@ -46,9 +46,9 @@ public class GameFlowTest extends TestCase {
 
 	private GameSeatedPlayer craig;
 
-	private GameTable table;
+	private WaitingTableState table;
 
-	private GameMediator gameMediator;
+	private PokerTable gameMediator;
 
 	private PlayerFactory playerFactory;
 
@@ -61,8 +61,8 @@ public class GameFlowTest extends TestCase {
 			guy = playerFactory.createNewPlayer("Guy", 100);
 
 			TableId id = new TableId(0);
-			gameMediator = new GameMediator(id);
-			table = new GameTable(id, new GameProperty(10));
+			gameMediator = new PokerTable(id);
+			table = new WaitingTableState(id, new GameProperty(10));
 			table.addPlayer(kenzo);
 			table.addPlayer(cedric);
 			table.addPlayer(guy);
@@ -75,7 +75,7 @@ public class GameFlowTest extends TestCase {
 	}
 
 	public void testCase1() {
-		GameControl gameControl = new GameControl(gameMediator, table, kenzo);
+		PlayingTableState gameControl = new PlayingTableState(gameMediator, table, kenzo);
 
 		Game game = gameControl.getGame();
 
@@ -187,7 +187,7 @@ public class GameFlowTest extends TestCase {
 	}
 
 	public void testCase2() {
-		GameControl gameControl = new GameControl(gameMediator, table, guy);
+		PlayingTableState gameControl = new PlayingTableState(gameMediator, table, guy);
 		Game game = gameControl.getGame();
 
 		// New Deal
@@ -248,7 +248,7 @@ public class GameFlowTest extends TestCase {
 	 * Test Settings: > 3 players > Big blind raises.
 	 */
 	public void testBigBlindRaisesCase() {
-		GameControl gameControl = new GameControl(gameMediator, table);
+		PlayingTableState gameControl = new PlayingTableState(gameMediator, table);
 		Game game = gameControl.getGame();
 
 		// Pre-flop Round
@@ -303,7 +303,7 @@ public class GameFlowTest extends TestCase {
 			cedric = playerFactory.createNewPlayer("Cedric", 4);
 			guy = playerFactory.createNewPlayer("Guy", 100);
 
-			table = new GameTable(new TableId(0), new GameProperty());
+			table = new WaitingTableState(new TableId(0), new GameProperty());
 			table.addPlayer(kenzo);
 			table.addPlayer(cedric);
 			table.addPlayer(guy);
@@ -313,7 +313,7 @@ public class GameFlowTest extends TestCase {
 			fail(e.getMessage());
 		}
 
-		GameControl gameControl = new GameControl(gameMediator, table, kenzo);
+		PlayingTableState gameControl = new PlayingTableState(gameMediator, table, kenzo);
 
 		Game game = gameControl.getGame();
 
@@ -363,7 +363,7 @@ public class GameFlowTest extends TestCase {
 			cedric = playerFactory.createNewPlayer("Cedric", 100);
 			guy = playerFactory.createNewPlayer("Guy", 9);
 
-			table = new GameTable(new TableId(0), new GameProperty());
+			table = new WaitingTableState(new TableId(0), new GameProperty());
 			table.addPlayer(kenzo);
 			table.addPlayer(cedric);
 			table.addPlayer(guy);
@@ -373,7 +373,7 @@ public class GameFlowTest extends TestCase {
 			fail(e.getMessage());
 		}
 
-		GameControl gameControl = new GameControl(gameMediator, table, kenzo);
+		PlayingTableState gameControl = new PlayingTableState(gameMediator, table, kenzo);
 		Game game = gameControl.getGame();
 
 		try {
@@ -413,7 +413,7 @@ public class GameFlowTest extends TestCase {
 			cedric = playerFactory.createNewPlayer("Cedric", 4);
 			guy = playerFactory.createNewPlayer("Guy", 9);
 
-			table = new GameTable(new TableId(0), new GameProperty());
+			table = new WaitingTableState(new TableId(0), new GameProperty());
 			table.addPlayer(kenzo);
 			table.addPlayer(cedric);
 			table.addPlayer(guy);
@@ -422,7 +422,7 @@ public class GameFlowTest extends TestCase {
 		} catch (PlayerListFullException e) {
 			fail(e.getMessage());
 		}
-		GameControl gameControl = new GameControl(gameMediator, table, kenzo);
+		PlayingTableState gameControl = new PlayingTableState(gameMediator, table, kenzo);
 		Game game = gameControl.getGame();
 
 		try {
@@ -438,7 +438,7 @@ public class GameFlowTest extends TestCase {
 			cedric = playerFactory.createNewPlayer("Cedric", 100);
 			guy = playerFactory.createNewPlayer("Guy", 200);
 
-			table = new GameTable(new TableId(0), new GameProperty());
+			table = new WaitingTableState(new TableId(0), new GameProperty());
 			table.addPlayer(kenzo);
 			table.addPlayer(cedric);
 			table.addPlayer(guy);
@@ -447,7 +447,7 @@ public class GameFlowTest extends TestCase {
 		} catch (PlayerListFullException e) {
 			fail(e.getMessage());
 		}
-		GameControl gameControl = new GameControl(gameMediator, table, kenzo);
+		PlayingTableState gameControl = new PlayingTableState(gameMediator, table, kenzo);
 		Game game = gameControl.getGame();
 
 		try {
@@ -466,7 +466,7 @@ public class GameFlowTest extends TestCase {
 			cedric = playerFactory.createNewPlayer("Cedric", 100);
 			guy = playerFactory.createNewPlayer("Guy", 150);
 
-			table = new GameTable(new TableId(0), new GameProperty());
+			table = new WaitingTableState(new TableId(0), new GameProperty());
 			table.addPlayer(kenzo);
 			table.addPlayer(cedric);
 			table.addPlayer(guy);
@@ -476,7 +476,7 @@ public class GameFlowTest extends TestCase {
 			fail(e.getMessage());
 		}
 
-		GameControl gameControl = new GameControl(gameMediator, table);
+		PlayingTableState gameControl = new PlayingTableState(gameMediator, table);
 
 		Game game = gameControl.getGame();
 
@@ -562,8 +562,8 @@ public class GameFlowTest extends TestCase {
 			guy = playerFactory.createNewPlayer("Guy", 100);
 
 			TableId id = new TableId(0);
-			gameMediator = new GameMediator(id);
-			table = new GameTable(id, new GameProperty());
+			gameMediator = new PokerTable(id);
+			table = new WaitingTableState(id, new GameProperty());
 
 			table.addPlayer(kenzo);
 			table.addPlayer(cedric);
@@ -576,11 +576,11 @@ public class GameFlowTest extends TestCase {
 
 		GameFlowTest.logger.info("Game Properties:");
 		GameFlowTest.logger.info("Small Blind: "
-				+ table.getGameProperty().getSmallBlind());
+				+ table.getTableConfiguration().getSmallBlind());
 		GameFlowTest.logger.info("Big Blind: "
-				+ table.getGameProperty().getBigBlind());
+				+ table.getTableConfiguration().getBigBlind());
 
-		GameControl gameControl = new GameControl(gameMediator, table, kenzo);
+		PlayingTableState gameControl = new PlayingTableState(gameMediator, table, kenzo);
 
 		GameFlowTest.logger.info("Betting Rules: "
 				+ gameControl.getGame().getBettingRules().toString());
@@ -618,8 +618,8 @@ public class GameFlowTest extends TestCase {
 			craig = playerFactory.createNewPlayer("Craig", 100);
 
 			TableId id = new TableId(0);
-			gameMediator = new GameMediator(id);
-			table = new GameTable(id, new GameProperty());
+			gameMediator = new PokerTable(id);
+			table = new WaitingTableState(id, new GameProperty());
 			table.addPlayer(guy);
 			table.addPlayer(craig);
 		} catch (IllegalValueException e) {
@@ -628,7 +628,7 @@ public class GameFlowTest extends TestCase {
 			fail(e.getMessage());
 		}
 
-		GameControl gameControl = new GameControl(gameMediator, table);
+		PlayingTableState gameControl = new PlayingTableState(gameMediator, table);
 
 		Game game = gameControl.getGame();
 
@@ -645,7 +645,7 @@ public class GameFlowTest extends TestCase {
 
 	public void testOnlyOneActivePlayer() {
 
-		GameControl gameControl = new GameControl(gameMediator, table);
+		PlayingTableState gameControl = new PlayingTableState(gameMediator, table);
 
 		Game game = gameControl.getGame();
 
@@ -662,7 +662,7 @@ public class GameFlowTest extends TestCase {
 
 	public void testOnlyOneAllInPlayer() {
 
-		GameControl gameControl = new GameControl(gameMediator, table);
+		PlayingTableState gameControl = new PlayingTableState(gameMediator, table);
 
 		Game game = gameControl.getGame();
 
@@ -681,7 +681,7 @@ public class GameFlowTest extends TestCase {
 			cedric = playerFactory.createNewPlayer("Cedric", 200);
 			guy = playerFactory.createNewPlayer("Guy", 200);
 
-			table = new GameTable(new TableId(0), new GameProperty());
+			table = new WaitingTableState(new TableId(0), new GameProperty());
 			table.addPlayer(kenzo);
 			table.addPlayer(cedric);
 			table.addPlayer(guy);
@@ -691,7 +691,7 @@ public class GameFlowTest extends TestCase {
 			fail(e.getMessage());
 		}
 
-		GameControl gameControl = new GameControl(gameMediator, table, kenzo);
+		PlayingTableState gameControl = new PlayingTableState(gameMediator, table, kenzo);
 
 		Game game = gameControl.getGame();
 
@@ -712,7 +712,7 @@ public class GameFlowTest extends TestCase {
 			kenzo = playerFactory.createNewPlayer("Kenzo", 500);
 			cedric = playerFactory.createNewPlayer("Cedric", 500);
 
-			table = new GameTable(new TableId(0), new GameProperty());
+			table = new WaitingTableState(new TableId(0), new GameProperty());
 			table.addPlayer(kenzo);
 			table.addPlayer(cedric);
 		} catch (IllegalValueException e) {
@@ -720,7 +720,7 @@ public class GameFlowTest extends TestCase {
 		} catch (PlayerListFullException e) {
 			fail(e.getMessage());
 		}
-		GameControl gameControl = new GameControl(gameMediator, table, kenzo);
+		PlayingTableState gameControl = new PlayingTableState(gameMediator, table, kenzo);
 
 		try {
 			gameControl.call(kenzo);
@@ -747,7 +747,7 @@ public class GameFlowTest extends TestCase {
 			kenzo = playerFactory.createNewPlayer("Kenzo", 500);
 			cedric = playerFactory.createNewPlayer("Cedric", 500);
 
-			table = new GameTable(new TableId(0), new GameProperty());
+			table = new WaitingTableState(new TableId(0), new GameProperty());
 			table.addPlayer(kenzo);
 			table.addPlayer(cedric);
 		} catch (IllegalValueException e) {
@@ -755,7 +755,7 @@ public class GameFlowTest extends TestCase {
 		} catch (PlayerListFullException e) {
 			fail(e.getMessage());
 		}
-		GameControl gameControl = new GameControl(gameMediator, table, kenzo);
+		PlayingTableState gameControl = new PlayingTableState(gameMediator, table, kenzo);
 
 		try {
 			gameControl.raise(kenzo, 20);

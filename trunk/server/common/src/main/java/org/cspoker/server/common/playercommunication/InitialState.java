@@ -13,12 +13,19 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.server.common.game.playercommunication;
+package org.cspoker.server.common.playercommunication;
 
 import org.apache.log4j.Logger;
 import org.cspoker.common.api.lobby.event.TableCreatedEvent;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.table.DetailedTable;
+import org.cspoker.server.common.GameManager;
+import org.cspoker.server.common.PokerTable;
+import org.cspoker.server.common.TableManager;
+import org.cspoker.server.common.exception.TableDoesNotExistException;
+import org.cspoker.server.common.gamecontrol.WaitingTableState;
+import org.cspoker.server.common.table.PlayerListFullException;
+import org.cspoker.server.common.table.SeatTakenException;
 import org.cspoker.server.common.GameManager;
 import org.cspoker.server.common.GameMediator;
 import org.cspoker.server.common.TableManager;
@@ -62,7 +69,7 @@ class InitialState extends PlayerCommunicationState {
 					"The given table id is not effective.");
 		}
 
-		GameTable table;
+		WaitingTableState table;
 		try {
 			table = TableManager.global_table_manager.getTable(tableId);
 		} catch (TableDoesNotExistException e) {
@@ -71,7 +78,7 @@ class InitialState extends PlayerCommunicationState {
 		}
 
 		if (table.isPlaying()) {
-			GameMediator mediator = GameManager.getGame(tableId);
+			PokerTable mediator = GameManager.getGame(tableId);
 			GameManager.getServerMediator().unsubscribeAllServerEventsListener(
 					playerCommunication.getId(),
 					playerCommunication.getAllEventsListener());
@@ -116,7 +123,7 @@ class InitialState extends PlayerCommunicationState {
 
 	public DetailedTable createTable(String name, GameProperty property)
 			throws IllegalActionException {
-		GameTable table = TableManager.global_table_manager.createTable(
+		WaitingTableState table = TableManager.global_table_manager.createTable(
 				playerCommunication.getPlayer().getId(), name, property);
 		if (name == null) {
 			throw new IllegalArgumentException(

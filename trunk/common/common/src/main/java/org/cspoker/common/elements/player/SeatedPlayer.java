@@ -81,7 +81,7 @@ public class SeatedPlayer extends Player {
 	}
 
 	public String toString() {
-		return getName();
+		return getName()+" (#"+getId()+")";
 	}
 
 }

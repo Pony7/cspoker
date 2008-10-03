@@ -14,18 +14,18 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-package org.cspoker.server.common.game.gamecontrol.rounds;
+package org.cspoker.server.common.gamecontrol.rounds;
 
 import org.apache.log4j.Logger;
 import org.cspoker.common.api.lobby.holdemtable.event.NewRoundEvent;
-import org.cspoker.server.common.GameMediator;
+import org.cspoker.server.common.PokerTable;
 import org.cspoker.server.common.gamecontrol.Game;
 import org.cspoker.server.common.player.GameSeatedPlayer;
 
 public class TurnRound extends BettingRound {
 	private static Logger logger = Logger.getLogger(TurnRound.class);
 
-	public TurnRound(GameMediator gameMediator, Game game) {
+	public TurnRound(PokerTable gameMediator, Game game) {
 		super(gameMediator, game);
 		GameSeatedPlayer currentPlayer = getGame().getCurrentPlayer();
 		if (currentPlayer != null) {

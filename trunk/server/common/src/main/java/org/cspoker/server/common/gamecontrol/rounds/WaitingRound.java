@@ -14,7 +14,7 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-package org.cspoker.server.common.game.gamecontrol.rounds;
+package org.cspoker.server.common.gamecontrol.rounds;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,13 +22,13 @@ import java.util.List;
 import org.cspoker.common.api.lobby.holdemtable.event.NewDealEvent;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.player.SeatedPlayer;
-import org.cspoker.server.common.GameMediator;
+import org.cspoker.server.common.PokerTable;
 import org.cspoker.server.common.gamecontrol.Game;
 import org.cspoker.server.common.player.GameSeatedPlayer;
 
 public class WaitingRound extends Round {
 	
-	public WaitingRound(GameMediator gameMediator, Game game) {
+	public WaitingRound(PokerTable gameMediator, Game game) {
 		super(gameMediator, game);
 		game.changeCurrentPlayerToDealer();
 	}

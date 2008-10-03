@@ -14,7 +14,7 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-package org.cspoker.server.common.game.gamecontrol.rounds;
+package org.cspoker.server.common.gamecontrol.rounds;
 
 import java.util.HashSet;
 
@@ -24,7 +24,7 @@ import org.cspoker.common.api.lobby.holdemtable.event.NextPlayerEvent;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.event.NewPocketCardsEvent;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.cards.Card;
-import org.cspoker.server.common.GameMediator;
+import org.cspoker.server.common.PokerTable;
 import org.cspoker.server.common.elements.chips.IllegalValueException;
 import org.cspoker.server.common.gamecontrol.Game;
 import org.cspoker.server.common.player.GameAllInPlayer;
@@ -40,7 +40,7 @@ public class PreFlopRound extends BettingRound {
 
 	private boolean bigBlindAllIn = false;
 
-	public PreFlopRound(GameMediator gameMediator, Game game) {
+	public PreFlopRound(PokerTable gameMediator, Game game) {
 		super(gameMediator, game);
 
 		GameSeatedPlayer currentPlayer = getGame().getCurrentPlayer();

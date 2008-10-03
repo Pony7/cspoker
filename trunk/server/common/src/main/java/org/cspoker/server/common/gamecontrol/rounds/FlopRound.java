@@ -14,7 +14,7 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-package org.cspoker.server.common.game.gamecontrol.rounds;
+package org.cspoker.server.common.gamecontrol.rounds;
 
 import java.util.HashSet;
 
@@ -22,14 +22,14 @@ import org.apache.log4j.Logger;
 import org.cspoker.common.api.lobby.holdemtable.event.NewCommunityCardsEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.NewRoundEvent;
 import org.cspoker.common.elements.cards.Card;
-import org.cspoker.server.common.GameMediator;
+import org.cspoker.server.common.PokerTable;
 import org.cspoker.server.common.gamecontrol.Game;
 import org.cspoker.server.common.player.GameSeatedPlayer;
 
 public class FlopRound extends BettingRound {
 	private static Logger logger = Logger.getLogger(FlopRound.class);
 
-	public FlopRound(GameMediator gameMediator, Game game) {
+	public FlopRound(PokerTable gameMediator, Game game) {
 		super(gameMediator, game);
 		GameSeatedPlayer currentPlayer = getGame().getCurrentPlayer();
 		if (currentPlayer != null) {
