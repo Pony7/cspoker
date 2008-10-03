@@ -18,8 +18,8 @@ package org.cspoker.server.common.gamecontrol.rounds;
 
 import org.apache.log4j.Logger;
 import org.cspoker.common.api.lobby.holdemtable.event.NewRoundEvent;
-import org.cspoker.server.common.PokerTable;
 import org.cspoker.server.common.gamecontrol.Game;
+import org.cspoker.server.common.gamecontrol.PokerTable;
 import org.cspoker.server.common.gamecontrol.Showdown;
 import org.cspoker.server.common.player.GameSeatedPlayer;
 

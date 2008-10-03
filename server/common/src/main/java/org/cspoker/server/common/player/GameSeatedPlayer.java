@@ -180,7 +180,7 @@ public class GameSeatedPlayer {
 	}
 
 	public synchronized SeatedPlayer getMemento() {
-		return new SeatedPlayer(getId(), getSeatId(), getName(), getStack()
+		return new SeatedPlayer(getId(), getSeatId().getId(), getName(), getStack()
 				.getValue(), getBetChips().getValue());
 	}
 	
