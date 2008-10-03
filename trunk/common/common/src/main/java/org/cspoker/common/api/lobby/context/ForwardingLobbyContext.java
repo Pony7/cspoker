@@ -33,7 +33,7 @@ public class ForwardingLobbyContext implements LobbyContext{
 		lobbyContext.subscribe(wrapListener(forwardingLobbyListener));
 	}
 	
-	public LobbyListener wrapListener(LobbyListener listener){
+	protected LobbyListener wrapListener(LobbyListener listener){
 		return listener;
 	}
 

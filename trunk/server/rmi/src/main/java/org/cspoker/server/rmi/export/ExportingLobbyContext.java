@@ -17,35 +17,28 @@ package org.cspoker.server.rmi.export;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.concurrent.ConcurrentHashMap;
 
 import org.cspoker.common.api.lobby.context.ForwardingRemoteLobbyContext;
 import org.cspoker.common.api.lobby.context.RemoteLobbyContext;
 import org.cspoker.common.api.lobby.holdemtable.context.HoldemTableContext;
-import org.cspoker.common.util.Wrapper;
+import org.cspoker.common.util.lazymap.Factory;
+import org.cspoker.common.util.lazymap.LazyMap;
 
 public class ExportingLobbyContext extends ForwardingRemoteLobbyContext {
 
-	protected ConcurrentHashMap<Long, Wrapper<HoldemTableContext,RemoteException>> wrappedContexts = new ConcurrentHashMap<Long, Wrapper<HoldemTableContext,RemoteException>>();
-
+	private LazyMap<Long, HoldemTableContext, RemoteException> wrappers = new LazyMap<Long, HoldemTableContext, RemoteException>();
+	
 	public ExportingLobbyContext(RemoteLobbyContext lobbyContext) throws RemoteException {
 		super(lobbyContext);
 	}
 	
 	@Override
 	public HoldemTableContext getHoldemTableContext(final long tableId) throws RemoteException {
-		wrappedContexts.putIfAbsent(tableId, new Wrapper<HoldemTableContext,RemoteException>(){
-
-			private HoldemTableContext content = null;
-			
-			public synchronized HoldemTableContext getContent() throws RemoteException {
-				if(content == null){
-					content = (HoldemTableContext)UnicastRemoteObject.exportObject(new ExportingHoldemTableContext(lobbyContext.getHoldemTableContext(tableId)),0);
-				}
-				return content;
+		return wrappers.getOrCreate(tableId, new Factory<HoldemTableContext, RemoteException>(){
+			public HoldemTableContext create() throws RemoteException {
+				return (HoldemTableContext)UnicastRemoteObject.exportObject(new ExportingHoldemTableContext(lobbyContext.getHoldemTableContext(tableId)),0);
 			}
 		});
-		return wrappedContexts.get(tableId).getContent();
 	}
 
 }

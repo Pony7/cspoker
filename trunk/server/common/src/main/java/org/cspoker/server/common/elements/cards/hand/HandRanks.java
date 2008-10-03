@@ -29,7 +29,7 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 import org.apache.oro.text.perl.Perl5Util;
 import org.cspoker.common.elements.cards.Rank;
-import org.cspoker.server.common.game.elements.cards.hand.Hand.HandInfo;
+import org.cspoker.server.common.elements.cards.hand.Hand.HandInfo;
 
 /**
  * @author Craig Motlin

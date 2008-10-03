@@ -19,8 +19,8 @@ package org.cspoker.server.common.game.player;
 import java.util.HashSet;
 
 import org.cspoker.common.elements.cards.Card;
-import org.cspoker.common.player.ShowdownPlayer;
-import org.cspoker.server.common.game.elements.cards.hand.Hand;
+import org.cspoker.common.elements.player.ShowdownPlayer;
+import org.cspoker.server.common.elements.cards.hand.Hand;
 
 /**
  * A class to represent a showdown player.

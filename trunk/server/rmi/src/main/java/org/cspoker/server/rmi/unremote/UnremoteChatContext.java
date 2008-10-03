@@ -36,7 +36,7 @@ ChatContext {
 	}
 
 	@Override
-	public ChatListener wrapListener(ChatListener listener) {
+	protected ChatListener wrapListener(ChatListener listener) {
 		remoteListener = new UnremoteChatListener();
 		remoteListener.subscribe(listener);
 		return remoteListener;

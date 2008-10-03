@@ -15,7 +15,7 @@
  */
 package org.cspoker.server.common.game.gamecontrol.rules;
 
-import org.cspoker.server.common.game.gamecontrol.rounds.BettingRound;
+import org.cspoker.server.common.gamecontrol.rounds.BettingRound;
 
 /**
  * Class for the NoLimit betting game.rounds.rules used in Texas Hold'em.

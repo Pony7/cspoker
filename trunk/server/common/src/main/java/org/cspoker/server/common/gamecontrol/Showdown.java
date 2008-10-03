@@ -25,18 +25,17 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
+import org.cspoker.common.api.lobby.holdemtable.event.ShowHandEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.WinnerEvent;
 import org.cspoker.common.elements.cards.Card;
-import org.cspoker.common.events.gameevents.ShowHandEvent;
-import org.cspoker.common.events.gameevents.WinnerEvent;
-import org.cspoker.common.player.PlayerId;
-import org.cspoker.common.player.Winner;
-import org.cspoker.server.common.game.GameMediator;
-import org.cspoker.server.common.game.elements.cards.hand.Hand;
-import org.cspoker.server.common.game.elements.chips.IllegalValueException;
-import org.cspoker.server.common.game.elements.chips.pot.GamePot;
-import org.cspoker.server.common.game.player.GameSeatedPlayer;
-import org.cspoker.server.common.game.player.GameShowdownPlayer;
-import org.cspoker.server.common.game.player.GameWinner;
+import org.cspoker.common.elements.player.Winner;
+import org.cspoker.server.common.GameMediator;
+import org.cspoker.server.common.elements.cards.hand.Hand;
+import org.cspoker.server.common.elements.chips.IllegalValueException;
+import org.cspoker.server.common.elements.chips.pot.GamePot;
+import org.cspoker.server.common.player.GameSeatedPlayer;
+import org.cspoker.server.common.player.GameShowdownPlayer;
+import org.cspoker.server.common.player.GameWinner;
 
 /**
  * A class to determine who has won each pot.

@@ -15,10 +15,10 @@
  */
 package org.cspoker.server.common.game.gamecontrol;
 
-import org.cspoker.common.util.Log4JPropertiesLoader;
-
 import junit.framework.Test;
 import junit.framework.TestSuite;
+
+import org.cspoker.common.util.Log4JPropertiesLoader;
 
 public class AllGameControlTests {
 

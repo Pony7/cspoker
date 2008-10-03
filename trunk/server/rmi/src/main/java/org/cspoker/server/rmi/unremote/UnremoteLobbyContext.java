@@ -15,9 +15,6 @@
  */
 package org.cspoker.server.rmi.unremote;
 
-import java.rmi.RemoteException;
-import java.util.concurrent.ConcurrentHashMap;
-
 import org.cspoker.common.api.lobby.context.ForwardingLobbyContext;
 import org.cspoker.common.api.lobby.context.LobbyContext;
 import org.cspoker.common.api.lobby.event.TableCreatedEvent;
@@ -27,14 +24,15 @@ import org.cspoker.common.api.lobby.listener.LobbyListener;
 import org.cspoker.common.api.lobby.listener.RemoteLobbyListener;
 import org.cspoker.common.api.shared.Killable;
 import org.cspoker.common.api.shared.listener.ForwardingListener;
-import org.cspoker.common.util.SimpleWrapper;
+import org.cspoker.common.util.lazymap.LazySimpleMap;
+import org.cspoker.common.util.lazymap.SimpleFactory;
 
 public class UnremoteLobbyContext extends ForwardingLobbyContext implements
 LobbyContext {
 
 	private final Killable connection;
 	private UnremoteLobbyListener remoteListener;
-	protected ConcurrentHashMap<Long, SimpleWrapper<HoldemTableContext>> wrappedContexts = new ConcurrentHashMap<Long, SimpleWrapper<HoldemTableContext>>();
+	protected LazySimpleMap<Long, HoldemTableContext> wrappedContexts = new LazySimpleMap<Long, HoldemTableContext>();
 	
 
 	public UnremoteLobbyContext(Killable connection, LobbyContext chatContext) {
@@ -43,7 +41,7 @@ LobbyContext {
 	}
 
 	@Override
-	public LobbyListener wrapListener(LobbyListener listener) {
+	protected LobbyListener wrapListener(LobbyListener listener) {
 		remoteListener = new UnremoteLobbyListener();
 		remoteListener.subscribe(listener);
 		return remoteListener;
@@ -51,19 +49,11 @@ LobbyContext {
 	
 	@Override
 	public HoldemTableContext getHoldemTableContext(final long tableId) {
-		wrappedContexts.putIfAbsent(tableId, new SimpleWrapper<HoldemTableContext>(){
-
-			private HoldemTableContext content = null;
-			
-			public synchronized HoldemTableContext getContent() {
-				if(content == null){
-					content = new UnremoteHoldemTableContext(connection, lobbyContext.getHoldemTableContext(tableId));
-				}
-				return content;
+		return wrappedContexts.getOrCreate(tableId, new SimpleFactory<HoldemTableContext>(){
+			public HoldemTableContext create() {
+				return new UnremoteHoldemTableContext(connection, lobbyContext.getHoldemTableContext(tableId));
 			}
-			
 		});
-		return wrappedContexts.get(tableId).getContent();
 	}
 
 	public void subscribe(RemoteLobbyListener chatListener) {

@@ -23,7 +23,7 @@ import java.util.List;
 import org.cspoker.common.elements.cards.Card;
 import org.cspoker.common.elements.cards.Rank;
 import org.cspoker.common.elements.cards.Suit;
-import org.cspoker.server.common.game.elements.cards.deck.randomGenerator.randomGenerator.RandomOrgSeededRandomGenerator;
+import org.cspoker.server.common.elements.cards.deck.randomGenerator.randomGenerator.RandomOrgSeededRandomGenerator;
 
 /**
  * A class to represent a deck of cards.

@@ -15,7 +15,7 @@
  */
 package org.cspoker.server.common.game.gamecontrol;
 
-import org.cspoker.server.common.game.player.PlayerFactory;
+import org.cspoker.server.common.player.PlayerFactory;
 
 public class TestPlayerFactory extends PlayerFactory {
 

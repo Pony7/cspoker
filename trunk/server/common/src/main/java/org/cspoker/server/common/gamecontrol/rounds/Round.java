@@ -17,11 +17,10 @@
 package org.cspoker.server.common.game.gamecontrol.rounds;
 
 import org.cspoker.common.api.shared.exception.IllegalActionException;
-import org.cspoker.common.events.gameevents.BrokePlayerKickedOutEvent;
-import org.cspoker.server.common.game.GameMediator;
-import org.cspoker.server.common.game.gamecontrol.Game;
-import org.cspoker.server.common.game.gamecontrol.rules.BettingRules;
-import org.cspoker.server.common.game.player.GameSeatedPlayer;
+import org.cspoker.server.common.GameMediator;
+import org.cspoker.server.common.gamecontrol.Game;
+import org.cspoker.server.common.gamecontrol.rules.BettingRules;
+import org.cspoker.server.common.player.GameSeatedPlayer;
 
 /**
  * An abstract class to represent rounds. A player can do actions in a round,

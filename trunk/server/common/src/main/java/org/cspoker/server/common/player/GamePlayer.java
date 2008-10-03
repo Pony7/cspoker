@@ -15,10 +15,9 @@
  */
 package org.cspoker.server.common.game.player;
 
-import org.cspoker.common.player.Player;
-import org.cspoker.common.player.PlayerId;
-import org.cspoker.server.common.game.elements.chips.Chips;
-import org.cspoker.server.common.game.elements.chips.IllegalValueException;
+import org.cspoker.common.elements.player.Player;
+import org.cspoker.server.common.elements.chips.Chips;
+import org.cspoker.server.common.elements.chips.IllegalValueException;
 
 public class GamePlayer {
 

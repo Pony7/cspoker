@@ -15,8 +15,6 @@
  */
 package org.cspoker.server.common.game.elements.table;
 
-import org.cspoker.common.elements.table.SeatId;
-import org.cspoker.common.elements.table.TableId;
 
 /**
  * A class to represent seat taken exceptions.
