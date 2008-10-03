@@ -18,8 +18,7 @@ package org.cspoker.common.api.lobby.holdemtable.context;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
-import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.RemoteHoldemPlayerContext;
-import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
+import org.cspoker.common.api.lobby.holdemtable.holdemplayer.listener.HoldemPlayerListener;
 
 public interface RemoteHoldemTableContext extends Remote {
 
@@ -27,18 +26,8 @@ public interface RemoteHoldemTableContext extends Remote {
 	
 	void leaveTable() throws RemoteException;
 
-	void sitIn(long seatId) throws RemoteException;
+	void sitIn(long seatId, HoldemPlayerListener holdemPlayerListener) throws RemoteException;
 
 	void startGame() throws RemoteException;
-
-	//Sub-Contexts
-	
-	RemoteHoldemPlayerContext getHoldemPlayerContext() throws RemoteException;
-	
-	//Event handlers
-	
-	void subscribe(HoldemTableListener holdemTableListener) throws RemoteException;
-	
-	void unSubscribe(HoldemTableListener holdemTableListener) throws RemoteException;
 	
 }
