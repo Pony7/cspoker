@@ -19,8 +19,8 @@ import org.cspoker.common.elements.table.Table;
 import org.cspoker.common.elements.table.TableConfiguration;
 import org.cspoker.common.elements.table.TableList;
 import org.cspoker.server.common.ExtendedAccountContext;
-import org.cspoker.server.common.PokerTable;
 import org.cspoker.server.common.elements.id.TableId;
+import org.cspoker.server.common.gamecontrol.PokerTable;
 
 public class Lobby{
 	
@@ -48,7 +48,7 @@ public class Lobby{
 	public DetailedHoldemTable createTable(ExtendedAccountContext accountContext, String name,
 			TableConfiguration configuration) {
 		TableId tableId = new TableId(counter.getAndIncrement());
-		PokerTable table = new PokerTable(tableId, name, configuration);		
+		PokerTable table = new PokerTable(tableId, name, configuration, accountContext);		
 		tables.put(tableId, table);
 		
 		for(LobbyListener listener:lobbyListeners){
@@ -72,7 +72,7 @@ public class Lobby{
 		Collection<PokerTable> currentTables = tables.values();
 		Set<Table> tableList = new TreeSet<Table>();
 		for(PokerTable table:currentTables){
-			tableList.add(table.getTableId());
+			tableList.add(table.getShortTableInformation());
 		}
 		return new TableList(new ArrayList<Table>(tableList));
 	}
@@ -94,7 +94,7 @@ public class Lobby{
 		if(table!=null && table.isEmpty()){
 			tables.remove(tableId);
 		}
-		Table tableInfo = table.getTableId();
+		Table tableInfo = table.getShortTableInformation();
 		table.terminate();
 		for(LobbyListener listener:lobbyListeners){
 			listener.onTableRemoved(new TableRemovedEvent(tableInfo));

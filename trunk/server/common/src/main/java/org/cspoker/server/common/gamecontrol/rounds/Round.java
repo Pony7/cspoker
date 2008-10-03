@@ -17,8 +17,8 @@
 package org.cspoker.server.common.gamecontrol.rounds;
 
 import org.cspoker.common.api.shared.exception.IllegalActionException;
-import org.cspoker.server.common.PokerTable;
 import org.cspoker.server.common.gamecontrol.Game;
+import org.cspoker.server.common.gamecontrol.PokerTable;
 import org.cspoker.server.common.gamecontrol.rules.BettingRules;
 import org.cspoker.server.common.player.GameSeatedPlayer;
 

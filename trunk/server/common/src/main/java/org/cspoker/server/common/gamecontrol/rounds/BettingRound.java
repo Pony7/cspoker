@@ -31,11 +31,11 @@ import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.cards.Card;
 import org.cspoker.common.elements.player.Winner;
 import org.cspoker.common.elements.pots.Pots;
-import org.cspoker.server.common.PokerTable;
 import org.cspoker.server.common.elements.chips.Chips;
 import org.cspoker.server.common.elements.chips.IllegalValueException;
 import org.cspoker.server.common.elements.chips.pot.GamePots;
 import org.cspoker.server.common.gamecontrol.Game;
+import org.cspoker.server.common.gamecontrol.PokerTable;
 import org.cspoker.server.common.player.GameAllInPlayer;
 import org.cspoker.server.common.player.GameSeatedPlayer;
 

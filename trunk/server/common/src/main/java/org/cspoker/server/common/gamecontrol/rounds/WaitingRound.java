@@ -22,8 +22,8 @@ import java.util.List;
 import org.cspoker.common.api.lobby.holdemtable.event.NewDealEvent;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.player.SeatedPlayer;
-import org.cspoker.server.common.PokerTable;
 import org.cspoker.server.common.gamecontrol.Game;
+import org.cspoker.server.common.gamecontrol.PokerTable;
 import org.cspoker.server.common.player.GameSeatedPlayer;
 
 public class WaitingRound extends Round {

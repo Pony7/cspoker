@@ -161,16 +161,16 @@ public class PokerTable {
 	}
 
 
-	public TableId getId() {
+	public TableId getTableId() {
 		return tableId;
 	}
 	
 	public DetailedHoldemTable getTableInformation(){
-		return new DetailedHoldemTable(getId().getId(), getName(), tableState.getPlayers(), tableState.isPlaying(), configuration);
+		return new DetailedHoldemTable(getTableId().getId(), getName(), tableState.getSeatedPlayers(), tableState.isPlaying(), configuration);
 	}
 	
 	public Table getShortTableInformation(){
-		return new Table(getId().getId(), getName());
+		return new Table(getTableId().getId(), getName());
 	}
 	
 	public HoldemTableContext getHolemTableContext(ExtendedAccountContext accountContext){
@@ -298,6 +298,8 @@ public class PokerTable {
 	public void joinGame(long seatId, GameSeatedPlayer player)
 			throws IllegalActionException {
 		gameControl.joinGame(seatId, player);
+		
+		//TODO publish
 	}
 
 	public void leaveGame(GameSeatedPlayer player) throws IllegalActionException {
