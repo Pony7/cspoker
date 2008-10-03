@@ -32,7 +32,7 @@ public class AsynchronousHoldemPlayerContext extends ForwardingHoldemPlayerConte
 	}
 	
 	@Override
-	public HoldemPlayerListener wrapListener(HoldemPlayerListener listener) {
+	protected HoldemPlayerListener wrapListener(HoldemPlayerListener listener) {
 		return new AsynchronousHoldemPlayerListener(executor, listener);
 	}
 	

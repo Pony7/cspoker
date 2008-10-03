@@ -17,8 +17,6 @@ package org.cspoker.server.common.game.session;
 
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.cspoker.common.player.PlayerId;
-
 public class SessionManager {
 
 	public final static SessionManager global_session_manager = new SessionManager();

@@ -16,19 +16,16 @@
 package org.cspoker.server.common.game.playercommunication;
 
 import org.apache.log4j.Logger;
+import org.cspoker.common.api.lobby.event.TableRemovedEvent;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
-import org.cspoker.common.elements.table.SeatId;
 import org.cspoker.common.elements.table.DetailedTable;
-import org.cspoker.common.elements.table.DetailedTable;
-import org.cspoker.common.events.serverevents.TableRemovedEvent;
-import org.cspoker.common.player.PlayerId;
-import org.cspoker.server.common.game.GameManager;
-import org.cspoker.server.common.game.GameMediator;
-import org.cspoker.server.common.game.TableManager;
-import org.cspoker.server.common.game.elements.table.GameTable;
-import org.cspoker.server.common.game.gamecontrol.GameControl;
-import org.cspoker.server.common.game.session.PlayerKilledExcepion;
-import org.cspoker.server.common.game.session.SessionManager;
+import org.cspoker.server.common.GameManager;
+import org.cspoker.server.common.GameMediator;
+import org.cspoker.server.common.TableManager;
+import org.cspoker.server.common.elements.table.GameTable;
+import org.cspoker.server.common.gamecontrol.GameControl;
+import org.cspoker.server.common.session.PlayerKilledExcepion;
+import org.cspoker.server.common.session.SessionManager;
 
 /**
  * A player who has created the table goes to the table created state.

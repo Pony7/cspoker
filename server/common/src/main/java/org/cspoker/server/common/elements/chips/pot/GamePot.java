@@ -20,9 +20,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.cspoker.server.common.game.elements.chips.Chips;
-import org.cspoker.server.common.game.elements.chips.IllegalValueException;
-import org.cspoker.server.common.game.player.GameSeatedPlayer;
+import org.cspoker.server.common.elements.chips.Chips;
+import org.cspoker.server.common.elements.chips.IllegalValueException;
+import org.cspoker.server.common.player.GameSeatedPlayer;
 
 /**
  * The pot contains both a list of players and the chips that should be divided

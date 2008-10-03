@@ -30,7 +30,7 @@ public class ForwardingHoldemTableContext implements HoldemTableContext{
 		holdemTableContext.subscribe(wrapListener(forwardingListener));
 	}
 	
-	public HoldemTableListener wrapListener(HoldemTableListener listener){
+	protected HoldemTableListener wrapListener(HoldemTableListener listener){
 		return listener;
 	}
 

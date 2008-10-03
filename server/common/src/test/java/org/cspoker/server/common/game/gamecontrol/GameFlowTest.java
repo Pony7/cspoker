@@ -20,20 +20,19 @@ import junit.framework.TestCase;
 
 import org.apache.log4j.Logger;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
-import org.cspoker.common.elements.GameProperty;
-import org.cspoker.common.elements.table.SeatId;
-import org.cspoker.common.elements.table.TableId;
-import org.cspoker.server.common.game.GameMediator;
-import org.cspoker.server.common.game.elements.chips.IllegalValueException;
-import org.cspoker.server.common.game.elements.table.GameTable;
-import org.cspoker.server.common.game.elements.table.PlayerListFullException;
-import org.cspoker.server.common.game.gamecontrol.rounds.FinalRound;
-import org.cspoker.server.common.game.gamecontrol.rounds.FlopRound;
-import org.cspoker.server.common.game.gamecontrol.rounds.PreFlopRound;
-import org.cspoker.server.common.game.gamecontrol.rounds.TurnRound;
-import org.cspoker.server.common.game.gamecontrol.rounds.WaitingRound;
-import org.cspoker.server.common.game.player.GameSeatedPlayer;
-import org.cspoker.server.common.game.player.PlayerFactory;
+import org.cspoker.server.common.GameMediator;
+import org.cspoker.server.common.elements.chips.IllegalValueException;
+import org.cspoker.server.common.elements.table.GameTable;
+import org.cspoker.server.common.elements.table.PlayerListFullException;
+import org.cspoker.server.common.gamecontrol.Game;
+import org.cspoker.server.common.gamecontrol.GameControl;
+import org.cspoker.server.common.gamecontrol.rounds.FinalRound;
+import org.cspoker.server.common.gamecontrol.rounds.FlopRound;
+import org.cspoker.server.common.gamecontrol.rounds.PreFlopRound;
+import org.cspoker.server.common.gamecontrol.rounds.TurnRound;
+import org.cspoker.server.common.gamecontrol.rounds.WaitingRound;
+import org.cspoker.server.common.player.GameSeatedPlayer;
+import org.cspoker.server.common.player.PlayerFactory;
 
 public class GameFlowTest extends TestCase {
 

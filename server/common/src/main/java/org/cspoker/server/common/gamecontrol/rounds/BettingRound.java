@@ -23,22 +23,21 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
+import org.cspoker.common.api.lobby.holdemtable.event.BigBlindEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.NewCommunityCardsEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.SmallBlindEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.WinnerEvent;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.cards.Card;
+import org.cspoker.common.elements.player.Winner;
 import org.cspoker.common.elements.pots.Pots;
-import org.cspoker.common.events.gameevents.NewCommunityCardsEvent;
-import org.cspoker.common.events.gameevents.WinnerEvent;
-import org.cspoker.common.events.gameevents.playeractionevents.AllInEvent;
-import org.cspoker.common.events.gameevents.playeractionevents.BigBlindEvent;
-import org.cspoker.common.events.gameevents.playeractionevents.SmallBlindEvent;
-import org.cspoker.common.player.Winner;
-import org.cspoker.server.common.game.GameMediator;
-import org.cspoker.server.common.game.elements.chips.Chips;
-import org.cspoker.server.common.game.elements.chips.IllegalValueException;
-import org.cspoker.server.common.game.elements.chips.pot.GamePots;
-import org.cspoker.server.common.game.gamecontrol.Game;
-import org.cspoker.server.common.game.player.GameAllInPlayer;
-import org.cspoker.server.common.game.player.GameSeatedPlayer;
+import org.cspoker.server.common.GameMediator;
+import org.cspoker.server.common.elements.chips.Chips;
+import org.cspoker.server.common.elements.chips.IllegalValueException;
+import org.cspoker.server.common.elements.chips.pot.GamePots;
+import org.cspoker.server.common.gamecontrol.Game;
+import org.cspoker.server.common.player.GameAllInPlayer;
+import org.cspoker.server.common.player.GameSeatedPlayer;
 
 /**
  * A class to represent betting rounds.

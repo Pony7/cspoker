@@ -17,11 +17,11 @@
 package org.cspoker.server.common.game.gamecontrol.rounds;
 
 import org.apache.log4j.Logger;
-import org.cspoker.common.events.gameevents.NewRoundEvent;
-import org.cspoker.server.common.game.GameMediator;
-import org.cspoker.server.common.game.gamecontrol.Game;
-import org.cspoker.server.common.game.gamecontrol.Showdown;
-import org.cspoker.server.common.game.player.GameSeatedPlayer;
+import org.cspoker.common.api.lobby.holdemtable.event.NewRoundEvent;
+import org.cspoker.server.common.GameMediator;
+import org.cspoker.server.common.gamecontrol.Game;
+import org.cspoker.server.common.gamecontrol.Showdown;
+import org.cspoker.server.common.player.GameSeatedPlayer;
 
 public class FinalRound extends BettingRound {
 	private static Logger logger = Logger.getLogger(FinalRound.class);

@@ -30,7 +30,7 @@ public class ForwardingChatContext implements ChatContext{
 		chatContext.subscribe(wrapListener(forwardingChatListener));
 	}
 	
-	public ChatListener wrapListener(ChatListener listener){
+	protected ChatListener wrapListener(ChatListener listener){
 		return listener;
 	}
 

@@ -13,22 +13,10 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.server.common.game.exception;
+package org.cspoker.common.util.lazymap;
 
+public interface Factory<T, E extends Throwable> {
 
-public class TableDoesNotExistException extends Exception {
-
-	private static final long serialVersionUID = -1970659252469932812L;
-
-	private final TableId tableId;
-
-	public TableDoesNotExistException(TableId tableId) {
-		super("The table with id [" + tableId.toString() + "] des not exist.");
-		this.tableId = tableId;
-	}
-
-	public TableId getTableId() {
-		return tableId;
-	}
-
+	T create() throws E;
+	
 }

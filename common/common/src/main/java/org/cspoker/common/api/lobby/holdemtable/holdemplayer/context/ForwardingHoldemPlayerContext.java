@@ -29,7 +29,7 @@ public class ForwardingHoldemPlayerContext implements HoldemPlayerContext{
 		holdemPlayerContext.subscribe(wrapListener(forwardingListener));
 	}
 	
-	public HoldemPlayerListener wrapListener(HoldemPlayerListener listener){
+	protected HoldemPlayerListener wrapListener(HoldemPlayerListener listener){
 		return listener;
 	}
 

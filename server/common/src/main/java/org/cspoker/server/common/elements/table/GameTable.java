@@ -22,13 +22,9 @@ import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.cspoker.common.elements.GameProperty;
-import org.cspoker.common.elements.table.SeatId;
+import org.cspoker.common.elements.player.SeatedPlayer;
 import org.cspoker.common.elements.table.DetailedTable;
-import org.cspoker.common.elements.table.DetailedTable;
-import org.cspoker.common.player.PlayerId;
-import org.cspoker.common.player.SeatedPlayer;
-import org.cspoker.server.common.game.player.GameSeatedPlayer;
+import org.cspoker.server.common.player.GameSeatedPlayer;
 
 /**
  * A class to represent players at the table.

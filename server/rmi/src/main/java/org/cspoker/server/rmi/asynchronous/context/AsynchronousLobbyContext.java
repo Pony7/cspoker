@@ -15,21 +15,21 @@
  */
 package org.cspoker.server.rmi.asynchronous.context;
 
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executor;
 
 import org.cspoker.common.api.lobby.context.ForwardingLobbyContext;
 import org.cspoker.common.api.lobby.context.LobbyContext;
 import org.cspoker.common.api.lobby.holdemtable.context.HoldemTableContext;
 import org.cspoker.common.api.lobby.listener.LobbyListener;
-import org.cspoker.common.util.SimpleWrapper;
+import org.cspoker.common.util.lazymap.LazySimpleMap;
+import org.cspoker.common.util.lazymap.SimpleFactory;
 import org.cspoker.server.rmi.asynchronous.listener.AsynchronousLobbyListener;
 
 public class AsynchronousLobbyContext extends ForwardingLobbyContext {
 
 	protected final Executor executor;
 	
-	protected ConcurrentHashMap<Long, SimpleWrapper<HoldemTableContext>> wrappedContexts = new ConcurrentHashMap<Long, SimpleWrapper<HoldemTableContext>>();
+	LazySimpleMap<Long, HoldemTableContext> wrappers = new LazySimpleMap<Long, HoldemTableContext>();
 	
 	public AsynchronousLobbyContext(Executor executor, LobbyContext lobbyContext) {
 		super(lobbyContext);
@@ -37,25 +37,17 @@ public class AsynchronousLobbyContext extends ForwardingLobbyContext {
 	}
 	
 	@Override
-	public LobbyListener wrapListener(LobbyListener listener) {
+	protected LobbyListener wrapListener(LobbyListener listener) {
 		return new AsynchronousLobbyListener(executor, listener);
 	}
 	
 	@Override
 	public HoldemTableContext getHoldemTableContext(final long tableId) {
-		wrappedContexts.putIfAbsent(tableId, new SimpleWrapper<HoldemTableContext>(){
-
-			private HoldemTableContext content = null;
-			
-			public synchronized HoldemTableContext getContent() {
-				if(content == null){
-					content = new AsynchronousHoldemTableContext(executor, lobbyContext.getHoldemTableContext(tableId));
-				}
-				return content;
+		return wrappers.getOrCreate(tableId, new SimpleFactory<HoldemTableContext>(){
+			public HoldemTableContext create() {
+				return new AsynchronousHoldemTableContext(executor, lobbyContext.getHoldemTableContext(tableId));
 			}
-			
 		});
-		return wrappedContexts.get(tableId).getContent();
 	}
 	
 }

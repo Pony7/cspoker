@@ -23,12 +23,9 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
-import org.cspoker.common.elements.GameProperty;
 import org.cspoker.common.elements.table.DetailedTable;
-import org.cspoker.common.elements.table.DetailedTable;
-import org.cspoker.common.player.PlayerId;
-import org.cspoker.server.common.game.elements.table.GameTable;
-import org.cspoker.server.common.game.exception.TableDoesNotExistException;
+import org.cspoker.server.common.elements.table.GameTable;
+import org.cspoker.server.common.exception.TableDoesNotExistException;
 
 /**
  * A class to manage tables.

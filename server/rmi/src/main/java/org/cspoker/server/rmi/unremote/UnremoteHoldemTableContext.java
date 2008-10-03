@@ -15,8 +15,6 @@
  */
 package org.cspoker.server.rmi.unremote;
 
-import java.rmi.RemoteException;
-
 import org.cspoker.common.api.lobby.holdemtable.context.ExternalHoldemTableContext;
 import org.cspoker.common.api.lobby.holdemtable.context.ForwardingHoldemTableContext;
 import org.cspoker.common.api.lobby.holdemtable.context.HoldemTableContext;
@@ -55,7 +53,7 @@ ExternalHoldemTableContext {
 	}
 
 	@Override
-	public HoldemTableListener wrapListener(HoldemTableListener listener) {
+	protected HoldemTableListener wrapListener(HoldemTableListener listener) {
 		remoteListener = new UnremoteHoldemTableListener();
 		remoteListener.subscribe(listener);
 		return remoteListener;

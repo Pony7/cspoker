@@ -15,19 +15,15 @@
  */
 package org.cspoker.server.rmi.asynchronous.context;
 
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executor;
 
 import org.cspoker.common.api.chat.context.ChatContext;
 import org.cspoker.common.api.chat.context.ForwardingChatContext;
 import org.cspoker.common.api.chat.listener.ChatListener;
-import org.cspoker.common.api.chat.listener.RemoteChatListener;
 import org.cspoker.server.rmi.asynchronous.listener.AsynchronousChatListener;
 
 public class AsynchronousChatContext extends ForwardingChatContext {
 	
-	protected ConcurrentHashMap<RemoteChatListener, AsynchronousChatListener> wrappers = 
-		new ConcurrentHashMap<RemoteChatListener, AsynchronousChatListener>();
 	protected Executor executor;
 	
 	public AsynchronousChatContext(Executor executor, ChatContext chatContext) {

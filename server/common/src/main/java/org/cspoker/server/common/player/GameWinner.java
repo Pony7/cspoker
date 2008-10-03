@@ -16,8 +16,8 @@
 
 package org.cspoker.server.common.game.player;
 
-import org.cspoker.common.player.Winner;
-import org.cspoker.server.common.game.elements.chips.Chips;
+import org.cspoker.common.elements.player.Winner;
+import org.cspoker.server.common.elements.chips.Chips;
 
 public class GameWinner {
 

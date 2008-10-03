@@ -16,8 +16,8 @@
 
 package org.cspoker.server.common.game.player;
 
-import org.cspoker.server.common.game.elements.chips.IllegalValueException;
-import org.cspoker.server.common.game.elements.chips.pot.GamePot;
+import org.cspoker.server.common.elements.chips.IllegalValueException;
+import org.cspoker.server.common.elements.chips.pot.GamePot;
 
 /**
  * A class to represent all-in players.

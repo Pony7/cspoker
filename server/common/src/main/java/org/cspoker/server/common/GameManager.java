@@ -17,8 +17,6 @@ package org.cspoker.server.common.game;
 
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.cspoker.common.elements.table.TableId;
-
 /**
  * A class for game managers.
  * 

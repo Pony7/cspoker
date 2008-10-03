@@ -19,12 +19,12 @@ package org.cspoker.server.common.game.gamecontrol.rounds;
 import java.util.HashSet;
 
 import org.apache.log4j.Logger;
+import org.cspoker.common.api.lobby.holdemtable.event.NewCommunityCardsEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.NewRoundEvent;
 import org.cspoker.common.elements.cards.Card;
-import org.cspoker.common.events.gameevents.NewCommunityCardsEvent;
-import org.cspoker.common.events.gameevents.NewRoundEvent;
-import org.cspoker.server.common.game.GameMediator;
-import org.cspoker.server.common.game.gamecontrol.Game;
-import org.cspoker.server.common.game.player.GameSeatedPlayer;
+import org.cspoker.server.common.GameMediator;
+import org.cspoker.server.common.gamecontrol.Game;
+import org.cspoker.server.common.player.GameSeatedPlayer;
 
 public class FlopRound extends BettingRound {
 	private static Logger logger = Logger.getLogger(FlopRound.class);

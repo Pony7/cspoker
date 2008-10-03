@@ -21,11 +21,9 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.cspoker.common.elements.cards.Card;
-import org.cspoker.common.elements.table.SeatId;
-import org.cspoker.common.player.PlayerId;
-import org.cspoker.common.player.SeatedPlayer;
-import org.cspoker.server.common.game.elements.chips.Chips;
-import org.cspoker.server.common.game.elements.chips.IllegalValueException;
+import org.cspoker.common.elements.player.SeatedPlayer;
+import org.cspoker.server.common.elements.chips.Chips;
+import org.cspoker.server.common.elements.chips.IllegalValueException;
 
 /**
  * A class to represent players: bots or humans.

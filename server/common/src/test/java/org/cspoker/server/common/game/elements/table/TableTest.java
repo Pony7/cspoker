@@ -17,11 +17,11 @@ package org.cspoker.server.common.game.elements.table;
 
 import junit.framework.TestCase;
 
-import org.cspoker.common.elements.GameProperty;
-import org.cspoker.common.elements.table.SeatId;
-import org.cspoker.common.elements.table.TableId;
-import org.cspoker.server.common.game.player.GameSeatedPlayer;
-import org.cspoker.server.common.game.player.PlayerFactory;
+import org.cspoker.server.common.elements.table.GameTable;
+import org.cspoker.server.common.elements.table.PlayerListFullException;
+import org.cspoker.server.common.elements.table.SeatTakenException;
+import org.cspoker.server.common.player.GameSeatedPlayer;
+import org.cspoker.server.common.player.PlayerFactory;
 
 public class TableTest extends TestCase {
 

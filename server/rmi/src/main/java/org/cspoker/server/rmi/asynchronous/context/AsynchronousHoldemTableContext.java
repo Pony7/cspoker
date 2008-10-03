@@ -35,7 +35,7 @@ public class AsynchronousHoldemTableContext extends ForwardingHoldemTableContext
 	}
 	
 	@Override
-	public HoldemTableListener wrapListener(HoldemTableListener listener) {
+	protected HoldemTableListener wrapListener(HoldemTableListener listener) {
 		return new AsynchronousHoldemTableListener(executor, listener);
 	}
 	

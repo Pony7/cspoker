@@ -16,21 +16,16 @@
 package org.cspoker.server.common.game.playercommunication;
 
 import org.apache.log4j.Logger;
+import org.cspoker.common.api.lobby.event.TableCreatedEvent;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
-import org.cspoker.common.elements.GameProperty;
-import org.cspoker.common.elements.table.SeatId;
 import org.cspoker.common.elements.table.DetailedTable;
-import org.cspoker.common.elements.table.DetailedTable;
-import org.cspoker.common.events.gameevents.PlayerJoinedTableEvent;
-import org.cspoker.common.events.serverevents.TableChangedEvent;
-import org.cspoker.common.events.serverevents.TableCreatedEvent;
-import org.cspoker.server.common.game.GameManager;
-import org.cspoker.server.common.game.GameMediator;
-import org.cspoker.server.common.game.TableManager;
-import org.cspoker.server.common.game.elements.table.GameTable;
-import org.cspoker.server.common.game.elements.table.PlayerListFullException;
-import org.cspoker.server.common.game.elements.table.SeatTakenException;
-import org.cspoker.server.common.game.exception.TableDoesNotExistException;
+import org.cspoker.server.common.GameManager;
+import org.cspoker.server.common.GameMediator;
+import org.cspoker.server.common.TableManager;
+import org.cspoker.server.common.elements.table.GameTable;
+import org.cspoker.server.common.elements.table.PlayerListFullException;
+import org.cspoker.server.common.elements.table.SeatTakenException;
+import org.cspoker.server.common.exception.TableDoesNotExistException;
 
 /**
  * A class to represent the initial state of the player.
