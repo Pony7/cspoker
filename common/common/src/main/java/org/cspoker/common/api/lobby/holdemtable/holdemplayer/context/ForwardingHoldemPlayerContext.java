@@ -16,21 +16,13 @@
 package org.cspoker.common.api.lobby.holdemtable.holdemplayer.context;
 
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.listener.ForwardingHoldemPlayerListener;
-import org.cspoker.common.api.lobby.holdemtable.holdemplayer.listener.HoldemPlayerListener;
 
 public class ForwardingHoldemPlayerContext implements HoldemPlayerContext{
 
 	private final HoldemPlayerContext holdemPlayerContext;
-	private ForwardingHoldemPlayerListener forwardingListener;
 
 	public ForwardingHoldemPlayerContext(HoldemPlayerContext holdemPlayerContext) {
 		this.holdemPlayerContext  = holdemPlayerContext;
-		this.forwardingListener = new ForwardingHoldemPlayerListener();
-		holdemPlayerContext.subscribe(wrapListener(forwardingListener));
-	}
-	
-	protected HoldemPlayerListener wrapListener(HoldemPlayerListener listener){
-		return listener;
 	}
 
 	public void betOrRaise(int amount) {
@@ -47,14 +39,6 @@ public class ForwardingHoldemPlayerContext implements HoldemPlayerContext{
 
 	public void leaveGame() {
 		holdemPlayerContext.leaveGame();
-	}
-
-	public void subscribe(HoldemPlayerListener holdemPlayerListener) {
-		forwardingListener.subscribe(holdemPlayerListener);
-	}
-
-	public void unSubscribe(HoldemPlayerListener holdemPlayerListener) {
-		forwardingListener.unSubscribe(holdemPlayerListener);
 	}
 	
 }

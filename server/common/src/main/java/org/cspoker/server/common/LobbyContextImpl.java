@@ -3,7 +3,7 @@ package org.cspoker.server.common;
 import org.cspoker.common.api.lobby.context.LobbyContext;
 import org.cspoker.common.api.lobby.holdemtable.context.HoldemTableContext;
 import org.cspoker.common.api.lobby.listener.LobbyListener;
-import org.cspoker.common.elements.table.DetailedTable;
+import org.cspoker.common.elements.table.DetailedHoldemTable;
 import org.cspoker.common.elements.table.TableConfiguration;
 import org.cspoker.common.elements.table.TableList;
 import org.cspoker.server.common.lobby.Lobby;
@@ -18,7 +18,7 @@ public class LobbyContextImpl implements LobbyContext {
 		this.lobby = lobby;
 	}
 
-	public DetailedTable createTable(String name,
+	public DetailedHoldemTable createHoldemTable(String name,
 			TableConfiguration configuration) {
 		return lobby.createTable(accountContext, name, configuration);
 	}
@@ -27,7 +27,7 @@ public class LobbyContextImpl implements LobbyContext {
 		return null; //TODO
 	}
 
-	public DetailedTable getTableInformation(long tableId) {
+	public DetailedHoldemTable getHoldemTableInformation(long tableId) {
 		return lobby.getTableInformation(tableId);
 	}
 
@@ -35,7 +35,7 @@ public class LobbyContextImpl implements LobbyContext {
 		return lobby.getTableList();
 	}
 
-	public DetailedTable joinTable(long tableId) {
+	public DetailedHoldemTable joinTable(long tableId) {
 		return null; //TODO
 	}
 

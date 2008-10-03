@@ -17,59 +17,40 @@ package org.cspoker.common.api.lobby.context;
 
 import java.rmi.RemoteException;
 
+import org.cspoker.common.api.lobby.holdemtable.context.HoldemTableContext;
 import org.cspoker.common.api.lobby.holdemtable.context.RemoteHoldemTableContext;
+import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
 import org.cspoker.common.api.lobby.listener.ForwardingLobbyListener;
 import org.cspoker.common.api.lobby.listener.LobbyListener;
-import org.cspoker.common.elements.table.DetailedTable;
+import org.cspoker.common.elements.table.DetailedHoldemTable;
 import org.cspoker.common.elements.table.TableConfiguration;
 import org.cspoker.common.elements.table.TableList;
 
 public class ForwardingRemoteLobbyContext implements RemoteLobbyContext{
 
 	protected final RemoteLobbyContext lobbyContext;
-	private ForwardingLobbyListener forwardingLobbyListener;
 
 	public ForwardingRemoteLobbyContext(RemoteLobbyContext lobbyContext) throws RemoteException {
 		this.lobbyContext  = lobbyContext;
-		this.forwardingLobbyListener = new ForwardingLobbyListener();
-		lobbyContext.subscribe(wrapListener(forwardingLobbyListener));
-	}
-	
-	public LobbyListener wrapListener(LobbyListener listener) throws RemoteException{
-		return listener;
 	}
 
-	public DetailedTable createTable(String name,
+	public DetailedHoldemTable createHoldemTable(String name,
 			TableConfiguration configuration) throws RemoteException {
-		return lobbyContext.createTable(name, configuration);
+		return lobbyContext.createHoldemTable(name, configuration);
 	}
 
-	public RemoteHoldemTableContext getHoldemTableContext(long tableId) throws RemoteException {
-		return lobbyContext.getHoldemTableContext(tableId);
-	}
-
-	public DetailedTable getTableInformation(long tableId) throws RemoteException {
-		return lobbyContext.getTableInformation(tableId);
+	public DetailedHoldemTable getHoldemTableInformation(long tableId)
+			throws RemoteException {
+		return lobbyContext.getHoldemTableInformation(tableId);
 	}
 
 	public TableList getTableList() throws RemoteException {
 		return lobbyContext.getTableList();
 	}
 
-	public DetailedTable joinTable(long tableId) throws RemoteException {
-		return lobbyContext.joinTable(tableId);
+	public HoldemTableContext joinHoldemTable(long tableId,
+			HoldemTableListener holdemTableListener) throws RemoteException {
+		return lobbyContext.joinHoldemTable(tableId, holdemTableListener);
 	}
 
-	public void removeTable(long tableId) throws RemoteException {
-		lobbyContext.removeTable(tableId);
-	}
-
-	public void subscribe(LobbyListener lobbyListener) {
-		forwardingLobbyListener.subscribe(lobbyListener);
-	}
-
-	public void unSubscribe(LobbyListener lobbyListener) {
-		forwardingLobbyListener.unSubscribe(lobbyListener);
-	}
-	
 }

@@ -19,10 +19,10 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.cspoker.common.api.lobby.context.LobbyContext;
-import org.cspoker.common.elements.table.DetailedTable;
+import org.cspoker.common.elements.table.DetailedHoldemTable;
 
 @XmlRootElement
-public class TableInformationAction extends LobbyAction<DetailedTable> {
+public class TableInformationAction extends LobbyAction<DetailedHoldemTable> {
 
 	private static final long serialVersionUID = 7897218843022885169L;
 
@@ -39,8 +39,8 @@ public class TableInformationAction extends LobbyAction<DetailedTable> {
 	}
 
 	@Override
-	public DetailedTable perform(LobbyContext lobbyContext) {
-		return lobbyContext.getTableInformation(tableId);
+	public DetailedHoldemTable perform(LobbyContext lobbyContext) {
+		return lobbyContext.getHoldemTableInformation(tableId);
 	}
 
 }

@@ -18,7 +18,9 @@ package org.cspoker.common.api.shared.context;
 import org.cspoker.common.api.account.context.AccountContext;
 import org.cspoker.common.api.cashier.context.CashierContext;
 import org.cspoker.common.api.chat.context.ChatContext;
+import org.cspoker.common.api.chat.listener.ChatListener;
 import org.cspoker.common.api.lobby.context.LobbyContext;
+import org.cspoker.common.api.lobby.listener.LobbyListener;
 
 public class ForwardingServerContext implements ServerContext {
 
@@ -36,12 +38,12 @@ public class ForwardingServerContext implements ServerContext {
 		return serverContext.getCashierContext();
 	}
 
-	public ChatContext getChatContext() {
-		return serverContext.getChatContext();
+	public ChatContext getChatContext(ChatListener chatListener) {
+		return serverContext.getChatContext(chatListener);
 	}
 
-	public LobbyContext getLobbyContext() {
-		return serverContext.getLobbyContext();
+	public LobbyContext getLobbyContext(LobbyListener lobbyListener) {
+		return serverContext.getLobbyContext(lobbyListener);
 	}
 
 	public void die() {

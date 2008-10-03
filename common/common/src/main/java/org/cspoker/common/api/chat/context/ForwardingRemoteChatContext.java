@@ -24,16 +24,9 @@ import org.cspoker.common.api.chat.listener.ForwardingChatListener;
 public class ForwardingRemoteChatContext implements RemoteChatContext{
 
 	private RemoteChatContext chatContext;
-	private ForwardingChatListener forwardingChatListener;
 
 	public ForwardingRemoteChatContext(RemoteChatContext chatContext) throws RemoteException {
 		this.chatContext  = chatContext;
-		this.forwardingChatListener = new ForwardingChatListener();
-		chatContext.subscribe(wrapListener(forwardingChatListener));
-	}
-	
-	public ChatListener wrapListener(ChatListener listener) throws RemoteException{
-		return listener;
 	}
 
 	public void sendServerMessage(String message) throws RemoteException {
@@ -42,14 +35,6 @@ public class ForwardingRemoteChatContext implements RemoteChatContext{
 
 	public void sendTableMessage(long tableId, String message) throws RemoteException {
 		chatContext.sendTableMessage(tableId, message);
-	}
-
-	public void subscribe(ChatListener chatListener)  throws RemoteException {
-		forwardingChatListener.subscribe(chatListener);
-	}
-
-	public void unSubscribe(ChatListener chatListener)  throws RemoteException {
-		forwardingChatListener.unSubscribe(chatListener);
 	}
 	
 }

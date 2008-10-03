@@ -142,7 +142,7 @@ public class TableCreationDialog
 								stakeCombo.getText().indexOf("/")))) * 100);
 						TableConfiguration tConfig = new TableConfiguration(smallBlind * 2, 2000);
 						
-						lobby.getContext().createTable(nameInput.getText(), tConfig);
+						lobby.getContext().createHoldemTable(nameInput.getText(), tConfig);
 						getParent().close();
 					} catch (Exception e) {
 						e.printStackTrace();

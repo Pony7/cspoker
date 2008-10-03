@@ -18,7 +18,7 @@ package org.cspoker.server.common.playercommunication;
 import org.apache.log4j.Logger;
 import org.cspoker.common.api.lobby.event.TableCreatedEvent;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
-import org.cspoker.common.elements.table.DetailedTable;
+import org.cspoker.common.elements.table.DetailedHoldemTable;
 import org.cspoker.server.common.GameManager;
 import org.cspoker.server.common.PokerTable;
 import org.cspoker.server.common.TableManager;
@@ -62,7 +62,7 @@ class InitialState extends PlayerCommunicationState {
 		super(playerCommunication);
 	}
 
-	public DetailedTable join(TableId tableId, SeatId seatId)
+	public DetailedHoldemTable join(TableId tableId, SeatId seatId)
 			throws IllegalActionException {
 		if (tableId == null) {
 			throw new IllegalArgumentException(
@@ -117,11 +117,11 @@ class InitialState extends PlayerCommunicationState {
 		return table.getSavedTable();
 	}
 
-	public DetailedTable createTable(String name) throws IllegalActionException {
-		return createTable(name, new GameProperty());
+	public DetailedHoldemTable createTable(String name) throws IllegalActionException {
+		return createHoldemTable(name, new GameProperty());
 	}
 
-	public DetailedTable createTable(String name, GameProperty property)
+	public DetailedHoldemTable createTable(String name, GameProperty property)
 			throws IllegalActionException {
 		WaitingTableState table = TableManager.global_table_manager.createTable(
 				playerCommunication.getPlayer().getId(), name, property);

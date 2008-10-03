@@ -45,7 +45,7 @@ import org.cspoker.common.api.shared.event.ServerEvent;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.api.shared.listener.EventListener;
 import org.cspoker.common.elements.player.SeatedPlayer;
-import org.cspoker.common.elements.table.DetailedTable;
+import org.cspoker.common.elements.table.DetailedHoldemTable;
 import org.cspoker.common.elements.table.Table;
 import org.cspoker.common.elements.table.TableConfiguration;
 import org.cspoker.server.common.gamecontrol.PlayingTableState;
@@ -79,7 +79,7 @@ public class PokerTable {
 		return table.getId();
 	}
 	
-	public DetailedTable getTableInformation(){
+	public DetailedHoldemTable getTableInformation(){
 		return null;//TODO
 	}
 	

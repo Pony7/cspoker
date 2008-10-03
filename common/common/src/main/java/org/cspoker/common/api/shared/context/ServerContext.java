@@ -18,7 +18,9 @@ package org.cspoker.common.api.shared.context;
 import org.cspoker.common.api.account.context.AccountContext;
 import org.cspoker.common.api.cashier.context.CashierContext;
 import org.cspoker.common.api.chat.context.ChatContext;
+import org.cspoker.common.api.chat.listener.ChatListener;
 import org.cspoker.common.api.lobby.context.LobbyContext;
+import org.cspoker.common.api.lobby.listener.LobbyListener;
 
 public interface ServerContext extends RemoteServerContext{
 
@@ -26,8 +28,8 @@ public interface ServerContext extends RemoteServerContext{
 	
 	CashierContext getCashierContext();
 	
-	ChatContext getChatContext();
+	ChatContext getChatContext(ChatListener chatListener);
 
-	LobbyContext getLobbyContext();
+	LobbyContext getLobbyContext(LobbyListener lobbyListener);
 	
 }

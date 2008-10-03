@@ -27,7 +27,7 @@ import org.cspoker.common.elements.player.SeatedPlayer;
  * An immutable class to represent a snapshot of the state of a table.
  * 
  */
-public class DetailedTable extends Table {
+public class DetailedHoldemTable extends Table {
 
 	private static final long serialVersionUID = 1647960710321459407L;
 
@@ -39,7 +39,7 @@ public class DetailedTable extends Table {
 
 	private TableConfiguration property;
 
-	public DetailedTable(long id, String name, List<SeatedPlayer> players,
+	public DetailedHoldemTable(long id, String name, List<SeatedPlayer> players,
 			boolean playing, TableConfiguration property) {
 		super(id,name);
 		if (players == null) {
@@ -51,7 +51,7 @@ public class DetailedTable extends Table {
 		this.property = property;
 	}
 
-	protected DetailedTable() {
+	protected DetailedHoldemTable() {
 		// no op
 	}
 

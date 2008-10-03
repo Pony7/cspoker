@@ -16,7 +16,8 @@
 package org.cspoker.common.api.lobby.context;
 
 import org.cspoker.common.api.lobby.holdemtable.context.HoldemTableContext;
-import org.cspoker.common.elements.table.DetailedTable;
+import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
+import org.cspoker.common.elements.table.DetailedHoldemTable;
 import org.cspoker.common.elements.table.TableConfiguration;
 import org.cspoker.common.elements.table.TableList;
 
@@ -24,11 +25,11 @@ public interface LobbyContext extends RemoteLobbyContext{
 
 	//Actions
 	
-	HoldemTableContext joinTable(long tableId, HoldemTableContext holdemTableContext);
+	HoldemTableContext joinHoldemTable(long tableId, HoldemTableListener holdemTableListener);
 
-	DetailedTable createTable(String name, TableConfiguration configuration);
+	DetailedHoldemTable createHoldemTable(String name, TableConfiguration configuration);
 
-	DetailedTable getTableInformation(long tableId);
+	DetailedHoldemTable getHoldemTableInformation(long tableId);
 
 	TableList getTableList();	
 }

@@ -195,7 +195,7 @@ public class TestSockets {
 			cedric = temp.getRemotePlayerCommunication("cedric", "test");
 
 			GameProperty prop = new GameProperty();
-			TableId id = guy.createTable("guy's table", prop).getId();
+			TableId id = guy.createHoldemTable("guy's table", prop).getId();
 
 			kenzo.joinTable(id);
 			cedric.joinTable(id);

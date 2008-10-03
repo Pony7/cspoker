@@ -31,8 +31,8 @@ import org.cspoker.common.elements.GameProperty;
 import org.cspoker.common.elements.cards.Card;
 import org.cspoker.common.elements.player.SeatedPlayer;
 import org.cspoker.common.elements.player.Winner;
-import org.cspoker.common.elements.table.DetailedTable;
-import org.cspoker.common.elements.table.DetailedTable;
+import org.cspoker.common.elements.table.DetailedHoldemTable;
+import org.cspoker.common.elements.table.DetailedHoldemTable;
 import org.cspoker.common.eventlisteners.RemoteAllEventsListener;
 import org.cspoker.common.util.Log4JPropertiesLoader;
 
@@ -181,11 +181,11 @@ public class JavaFxClient {
         rpc.say(message);
     }
 
-    public DetailedTable joinTable(TableId id) throws IllegalActionException, RemoteException {
+    public DetailedHoldemTable joinTable(TableId id) throws IllegalActionException, RemoteException {
         return rpc.joinTable(id);
     }
 
-    public DetailedTable getTable(TableId id) throws IllegalActionException, RemoteException {
+    public DetailedHoldemTable getTable(TableId id) throws IllegalActionException, RemoteException {
         return rpc.getTable(id);
     }
 
@@ -193,17 +193,17 @@ public class JavaFxClient {
         rpc.leaveTable();
     }
 
-    public DetailedTable createTable(String name) throws RemoteException, IllegalActionException {
+    public DetailedHoldemTable createTable(String name) throws RemoteException, IllegalActionException {
         GameProperty p = new GameProperty(2, 3000);
-        return rpc.createTable(name, p);
+        return rpc.createHoldemTable(name, p);
     }
 
     public void startGame() throws RemoteException, IllegalActionException {
         rpc.startGame();
     }
 
-    public DetailedTable[] getTableList() throws RemoteException {
-        return rpc.getTables().getTables().toArray(new DetailedTable[rpc.getTables().getTables().size()]);
+    public DetailedHoldemTable[] getTableList() throws RemoteException {
+        return rpc.getTables().getTables().toArray(new DetailedHoldemTable[rpc.getTables().getTables().size()]);
     }
 
     public static Card[] cardsToArray(Set<Card> cards) {

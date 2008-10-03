@@ -18,7 +18,7 @@ package org.cspoker.server.common.playercommunication;
 import org.apache.log4j.Logger;
 import org.cspoker.common.api.lobby.event.TableRemovedEvent;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
-import org.cspoker.common.elements.table.DetailedTable;
+import org.cspoker.common.elements.table.DetailedHoldemTable;
 import org.cspoker.server.common.GameManager;
 import org.cspoker.server.common.PokerTable;
 import org.cspoker.server.common.TableManager;
@@ -115,7 +115,7 @@ class TableCreatedState extends WaitingAtTableState {
 		}
 	}
 
-	public DetailedTable join(TableId tableId, SeatId seatId)
+	public DetailedHoldemTable join(TableId tableId, SeatId seatId)
 			throws IllegalActionException {
 		throw new IllegalActionException("You are already sitting at table "
 				+ table.getId() + ".");

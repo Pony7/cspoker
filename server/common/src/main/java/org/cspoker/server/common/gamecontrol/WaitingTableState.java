@@ -23,7 +23,7 @@ import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.cspoker.common.elements.player.SeatedPlayer;
-import org.cspoker.common.elements.table.DetailedTable;
+import org.cspoker.common.elements.table.DetailedHoldemTable;
 import org.cspoker.common.elements.table.TableConfiguration;
 import org.cspoker.server.common.player.GameSeatedPlayer;
 
@@ -384,11 +384,11 @@ public class WaitingTableState {
 		return players.size();
 	}
 
-	public synchronized DetailedTable getDetailedTable() {
+	public synchronized DetailedHoldemTable getDetailedTable() {
 		List<SeatedPlayer> playerList = new ArrayList<SeatedPlayer>(getNbPlayers());
 		for (GameSeatedPlayer player : players.values()) {
 			playerList.add(player.getMemento());
 		}
-		return new DetailedTable(tableId, name, playerList, playing, configuration);
+		return new DetailedHoldemTable(tableId, name, playerList, playing, configuration);
 	}
 }

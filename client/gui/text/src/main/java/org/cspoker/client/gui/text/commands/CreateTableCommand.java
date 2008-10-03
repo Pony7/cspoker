@@ -27,7 +27,7 @@ public class CreateTableCommand extends AbstractCommand {
 
 	public void execute(String... args) throws Exception {
 		GameProperty prop = new GameProperty();
-		rpc.createTable(args[0], prop);
+		rpc.createHoldemTable(args[0], prop);
 	}
 
 }

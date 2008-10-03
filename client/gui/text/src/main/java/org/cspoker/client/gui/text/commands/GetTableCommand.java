@@ -18,8 +18,8 @@ package org.cspoker.client.gui.text.commands;
 import org.cspoker.client.gui.text.Console;
 import org.cspoker.common.RemotePlayerCommunication;
 import org.cspoker.common.elements.player.SeatedPlayer;
-import org.cspoker.common.elements.table.DetailedTable;
-import org.cspoker.common.elements.table.DetailedTable;
+import org.cspoker.common.elements.table.DetailedHoldemTable;
+import org.cspoker.common.elements.table.DetailedHoldemTable;
 
 public class GetTableCommand extends AbstractCommand {
 
@@ -28,7 +28,7 @@ public class GetTableCommand extends AbstractCommand {
 	}
 
 	public void execute(String... args) throws Exception {
-		DetailedTable t = rpc.getTable(new TableId(Integer.parseInt(args[0])));
+		DetailedHoldemTable t = rpc.getTable(new TableId(Integer.parseInt(args[0])));
 		String s = "Table name: " + t.getName() + " (" + t.getId() + ")" + n
 				+ " " + t.getNbPlayers() + " players:" + n;
 		for (SeatedPlayer p : t.getPlayers()) {
