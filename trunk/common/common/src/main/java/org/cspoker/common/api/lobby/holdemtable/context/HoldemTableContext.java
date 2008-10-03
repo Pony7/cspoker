@@ -15,8 +15,7 @@
  */
 package org.cspoker.common.api.lobby.holdemtable.context;
 
-import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.HoldemPlayerContext;
-import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
+import org.cspoker.common.api.lobby.holdemtable.holdemplayer.listener.HoldemPlayerListener;
 
 public interface HoldemTableContext extends RemoteHoldemTableContext{
 
@@ -24,18 +23,8 @@ public interface HoldemTableContext extends RemoteHoldemTableContext{
 	
 	void leaveTable();
 
-	void sitIn(long seatId);
+	void sitIn(long seatId, HoldemPlayerListener holdemPlayerListener);
 
 	void startGame();
-
-	//Sub-Contexts
-	
-	HoldemPlayerContext getHoldemPlayerContext();
-	
-	//Event handlers
-	
-	void subscribe(HoldemTableListener holdemTableListener);
-	
-	void unSubscribe(HoldemTableListener holdemTableListener);
 	
 }

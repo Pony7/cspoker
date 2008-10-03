@@ -32,10 +32,4 @@ public interface RemoteHoldemPlayerContext extends Remote {
 	
 	void leaveGame() throws RemoteException;
 
-	//Event handlers
-	
-	void subscribe(HoldemPlayerListener holdemPlayerListener) throws RemoteException;
-	
-	void unSubscribe(HoldemPlayerListener holdemPlayerListener) throws RemoteException;
-
 }
