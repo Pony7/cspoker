@@ -18,7 +18,8 @@ package org.cspoker.server.common.playercommunication;
 import org.cspoker.common.api.chat.event.ServerMessageEvent;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.table.DetailedHoldemTable;
-import org.cspoker.server.common.GameManager;
+import org.cspoker.server.common.elements.id.SeatId;
+import org.cspoker.server.common.elements.id.TableId;
 
 /**
  * An abstract class to represent player communication states.

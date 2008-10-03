@@ -20,7 +20,9 @@ import javax.security.auth.login.LoginException;
 import org.cspoker.common.api.account.context.AccountContext;
 import org.cspoker.common.api.cashier.context.CashierContext;
 import org.cspoker.common.api.chat.context.ChatContext;
+import org.cspoker.common.api.chat.listener.ChatListener;
 import org.cspoker.common.api.lobby.context.LobbyContext;
+import org.cspoker.common.api.lobby.listener.LobbyListener;
 import org.cspoker.common.api.shared.context.ServerContext;
 import org.cspoker.server.common.lobby.Lobby;
 
@@ -57,6 +59,16 @@ public class ServerContextImpl implements ServerContext {
 
 	public void die() {
 		//TODO implement
+	}
+
+	public ChatContext getChatContext(ChatListener chatListener) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public LobbyContext getLobbyContext(LobbyListener lobbyListener) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

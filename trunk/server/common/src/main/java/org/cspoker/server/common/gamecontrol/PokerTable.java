@@ -14,7 +14,7 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-package org.cspoker.server.common;
+package org.cspoker.server.common.gamecontrol;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -48,8 +48,8 @@ import org.cspoker.common.elements.player.SeatedPlayer;
 import org.cspoker.common.elements.table.DetailedHoldemTable;
 import org.cspoker.common.elements.table.Table;
 import org.cspoker.common.elements.table.TableConfiguration;
-import org.cspoker.server.common.gamecontrol.PlayingTableState;
-import org.cspoker.server.common.gamecontrol.WaitingTableState;
+import org.cspoker.server.common.ExtendedAccountContext;
+import org.cspoker.server.common.elements.id.TableId;
 import org.cspoker.server.common.player.GameSeatedPlayer;
 import org.cspoker.server.common.util.threading.ScheduledRequestExecutor;
 
@@ -57,7 +57,6 @@ import org.cspoker.server.common.util.threading.ScheduledRequestExecutor;
  * A class of game mediators to decouple the game control from all users:
  * server, gui, logger, ...
  * 
- * @author Kenzo
  * 
  */
 public class PokerTable {
@@ -69,22 +68,109 @@ public class PokerTable {
 	 */
 	private PlayingTableState gameControl;
 	
-	private WaitingTableState table;
+	private final TableId tableId;
 	
-	public PokerTable(long id, String name, TableConfiguration configuration){
-		table = new WaitingTableState(id, name, configuration);
+	private final String name;
+	
+	private TableState tableState;
+	
+	private final ExtendedAccountContext creator;
+	
+	private TableConfiguration configuration;
+	
+	public PokerTable(TableId id, String name, TableConfiguration configuration, ExtendedAccountContext creator){
+		
+		if(id==null)
+			throw new IllegalArgumentException("The given table id is not effective.");
+		if(creator==null)
+			throw new IllegalArgumentException("The given creator is not effective.");
+		if(configuration==null)
+			throw new IllegalArgumentException("The given configuration is not effective.");
+		
+		tableId = id;
+		setName(name);
+		this.configuration = configuration;
+		tableState = new WaitingTableState(this, configuration);
+		this.creator = creator;
+	}
+	
+	/***************************************************************************
+	 * Name
+	 **************************************************************************/
+
+	/**
+	 * Return the name of this table.
+	 * 
+	 */
+	public String getName() {
+		return name;
 	}
 
-	public long getId() {
-		return table.getId();
+	/**
+	 * Check whether tables can have the given name as their name.
+	 * 
+	 * @param name
+	 *            The name to check.
+	 * @return The given name should be effective | name!=null
+	 * @return The given name should be at least one character long. |
+	 *         name!=null && name.length()>0
+	 */
+	public static boolean canHaveAsName(String name) {
+		if (name == null) {
+			return false;
+		}
+		return name.length() > 0;
+	}
+
+	/**
+	 * Set the name of this table to the given name.
+	 * 
+	 * @param name
+	 *            The new name for this table.
+	 * @post If the given name is a valid name for this table the name of this
+	 *       table is set to the given name, else the default name is used. |
+	 *       if(canHaveAsName(name)) | then new.getName().equals(name) | else
+	 *       new.getName().equals(getDefaultName())
+	 */
+	private void setName(String name) {
+		if (!canHaveAsName(name)) {
+			this.name = getDefaultName();
+		} else {
+			this.name = name;
+		}
+	}
+
+	/**
+	 * Change the name of this table to the given name.
+	 * 
+	 * @param name
+	 *            The new name for this table.
+	 * @post If the given name is a valid name for this table the name of this
+	 *       table is set to the given name, else the previous name is kept. |
+	 *       if(canHaveAsName(name)) | then new.getName().equals(name) | else
+	 *       new.getName().equals(getName())
+	 */
+	public void changeName(String name) {
+		if (!canHaveAsName(name)) {
+			setName(name);
+		}
+	}
+
+	protected String getDefaultName() {
+		return "default table";
+	}
+
+
+	public TableId getId() {
+		return tableId;
 	}
 	
 	public DetailedHoldemTable getTableInformation(){
-		return null;//TODO
+		return new DetailedHoldemTable(getId().getId(), getName(), tableState.getPlayers(), tableState.isPlaying(), configuration);
 	}
 	
-	public Table getTableId(){
-		return new Table(table.getId(), table.getName());
+	public Table getShortTableInformation(){
+		return new Table(getId().getId(), getName());
 	}
 	
 	public HoldemTableContext getHolemTableContext(ExtendedAccountContext accountContext){
