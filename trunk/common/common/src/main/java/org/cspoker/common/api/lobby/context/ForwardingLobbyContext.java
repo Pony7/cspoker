@@ -16,58 +16,36 @@
 package org.cspoker.common.api.lobby.context;
 
 import org.cspoker.common.api.lobby.holdemtable.context.HoldemTableContext;
+import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
 import org.cspoker.common.api.lobby.listener.ForwardingLobbyListener;
 import org.cspoker.common.api.lobby.listener.LobbyListener;
-import org.cspoker.common.elements.table.DetailedTable;
+import org.cspoker.common.elements.table.DetailedHoldemTable;
 import org.cspoker.common.elements.table.TableConfiguration;
 import org.cspoker.common.elements.table.TableList;
 
 public class ForwardingLobbyContext implements LobbyContext{
 
 	protected final LobbyContext lobbyContext;
-	private ForwardingLobbyListener forwardingLobbyListener;
 
 	public ForwardingLobbyContext(LobbyContext lobbyContext) {
 		this.lobbyContext  = lobbyContext;
-		this.forwardingLobbyListener = new ForwardingLobbyListener();
-		lobbyContext.subscribe(wrapListener(forwardingLobbyListener));
-	}
-	
-	protected LobbyListener wrapListener(LobbyListener listener){
-		return listener;
 	}
 
-	public DetailedTable createTable(String name,
+	public DetailedHoldemTable createHoldemTable(String name,
 			TableConfiguration configuration) {
-		return lobbyContext.createTable(name, configuration);
+		return lobbyContext.createHoldemTable(name, configuration);
 	}
 
-	public HoldemTableContext getHoldemTableContext(long tableId) {
-		return lobbyContext.getHoldemTableContext(tableId);
-	}
-
-	public DetailedTable getTableInformation(long tableId) {
-		return lobbyContext.getTableInformation(tableId);
+	public DetailedHoldemTable getHoldemTableInformation(long tableId) {
+		return lobbyContext.getHoldemTableInformation(tableId);
 	}
 
 	public TableList getTableList() {
 		return lobbyContext.getTableList();
 	}
 
-	public DetailedTable joinTable(long tableId) {
-		return lobbyContext.joinTable(tableId);
+	public HoldemTableContext joinHoldemTable(long tableId,
+			HoldemTableListener holdemTableListener) {
+		return lobbyContext.joinHoldemTable(tableId, holdemTableListener);
 	}
-
-	public void removeTable(long tableId) {
-		lobbyContext.removeTable(tableId);
-	}
-
-	public void subscribe(LobbyListener lobbyListener) {
-		forwardingLobbyListener.subscribe(lobbyListener);
-	}
-
-	public void unSubscribe(LobbyListener lobbyListener) {
-		forwardingLobbyListener.unSubscribe(lobbyListener);
-	}
-	
 }

@@ -17,47 +17,33 @@ package org.cspoker.common.api.lobby.holdemtable.context;
 
 import java.rmi.RemoteException;
 
-import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.RemoteHoldemPlayerContext;
-import org.cspoker.common.api.lobby.holdemtable.listener.ForwardingHoldemTableListener;
+import org.cspoker.common.api.lobby.holdemtable.holdemplayer.listener.HoldemPlayerListener;
 import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
 
 public class ForwardingRemoteHoldemTableContext implements RemoteHoldemTableContext{
 
 	private RemoteHoldemTableContext holdemTableContext;
-	private ForwardingHoldemTableListener forwardingListener;
 
 	public ForwardingRemoteHoldemTableContext(RemoteHoldemTableContext holdemTableContext) throws RemoteException {
 		this.holdemTableContext  = holdemTableContext;
-		this.forwardingListener = new ForwardingHoldemTableListener();
-		holdemTableContext.subscribe(wrapListener(forwardingListener));
 	}
 	
 	public HoldemTableListener wrapListener(HoldemTableListener listener) throws RemoteException{
 		return listener;
 	}
 
-	public RemoteHoldemPlayerContext getHoldemPlayerContext() throws RemoteException {
-		return holdemTableContext.getHoldemPlayerContext();
-	}
-
 	public void leaveTable() throws RemoteException {
 		holdemTableContext.leaveTable();
 	}
 
-	public void sitIn(long seatId) throws RemoteException {
-		holdemTableContext.sitIn(seatId);
+	public void sitIn(long seatId, HoldemPlayerListener holdemPlayerListener)
+			throws RemoteException {
+		holdemTableContext.sitIn(seatId, holdemPlayerListener);
 	}
 
 	public void startGame() throws RemoteException {
 		holdemTableContext.startGame();
 	}
 
-	public void subscribe(HoldemTableListener holdemTableListener) {
-		forwardingListener.subscribe(holdemTableListener);
-	}
-
-	public void unSubscribe(HoldemTableListener holdemTableListener) {
-		forwardingListener.unSubscribe(holdemTableListener);
-	}
 	
 }

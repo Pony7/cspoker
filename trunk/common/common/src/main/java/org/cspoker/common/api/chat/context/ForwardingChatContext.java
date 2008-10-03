@@ -15,23 +15,12 @@
  */
 package org.cspoker.common.api.chat.context;
 
-import org.cspoker.common.api.chat.listener.ChatListener;
-import org.cspoker.common.api.chat.listener.ForwardingChatListener;
-
-
 public class ForwardingChatContext implements ChatContext{
 
 	private ChatContext chatContext;
-	private ForwardingChatListener forwardingChatListener;
 
 	public ForwardingChatContext(ChatContext chatContext) {
 		this.chatContext  = chatContext;
-		this.forwardingChatListener = new ForwardingChatListener();
-		chatContext.subscribe(wrapListener(forwardingChatListener));
-	}
-	
-	protected ChatListener wrapListener(ChatListener listener){
-		return listener;
 	}
 
 	public void sendServerMessage(String message) {
@@ -40,14 +29,6 @@ public class ForwardingChatContext implements ChatContext{
 
 	public void sendTableMessage(long tableId, String message) {
 		chatContext.sendTableMessage(tableId, message);
-	}
-
-	public void subscribe(ChatListener chatListener) {
-		forwardingChatListener.subscribe(chatListener);
-	}
-
-	public void unSubscribe(ChatListener chatListener) {
-		forwardingChatListener.unSubscribe(chatListener);
 	}
 	
 }

@@ -22,7 +22,7 @@ import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
 import org.cspoker.common.elements.player.Player;
 import org.cspoker.common.elements.player.SeatedPlayer;
 import org.cspoker.common.elements.pots.Pots;
-import org.cspoker.common.elements.table.DetailedTable;
+import org.cspoker.common.elements.table.DetailedHoldemTable;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
@@ -63,12 +63,12 @@ public class GameWindow
 	 * Creates a new <code>GameWindow</code>.
 	 * <p>
 	 * Initializes the window and updates all the composites with the
-	 * information passed in the {@link DetailedTable} information.
+	 * information passed in the {@link DetailedHoldemTable} information.
 	 * 
 	 * @param lobbyWindow The lobby reference
 	 * @param table The table to display in the game window
 	 */
-	public GameWindow(LobbyWindow lobbyWindow, DetailedTable table) {
+	public GameWindow(LobbyWindow lobbyWindow, DetailedHoldemTable table) {
 		super(new Shell(lobbyWindow.getDisplay(), SWT.CLOSE | SWT.RESIZE), SWT.NONE, lobbyWindow.getClientCore());
 		gameState = new GameState(table);
 		holdemTableContext = lobbyWindow.getContext().getHoldemTableContext(table.getId());

@@ -18,11 +18,11 @@ package org.cspoker.common.api.lobby.action;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.cspoker.common.api.lobby.context.LobbyContext;
-import org.cspoker.common.elements.table.DetailedTable;
+import org.cspoker.common.elements.table.DetailedHoldemTable;
 import org.cspoker.common.elements.table.TableConfiguration;
 
 @XmlRootElement
-public class CreateTableAction extends LobbyAction<DetailedTable> {
+public class CreateTableAction extends LobbyAction<DetailedHoldemTable> {
 
 	private static final long serialVersionUID = 2423639524369017909L;
 	
@@ -46,8 +46,8 @@ public class CreateTableAction extends LobbyAction<DetailedTable> {
 	}
 
 	@Override
-	public DetailedTable perform(LobbyContext lobbyContext) {
-		return lobbyContext.createTable(name, configuration);
+	public DetailedHoldemTable perform(LobbyContext lobbyContext) {
+		return lobbyContext.createHoldemTable(name, configuration);
 	}
 
 }

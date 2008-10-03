@@ -25,7 +25,7 @@ import org.cspoker.common.api.lobby.event.TableCreatedEvent;
 import org.cspoker.common.api.lobby.event.TableRemovedEvent;
 import org.cspoker.common.api.lobby.listener.LobbyListener;
 import org.cspoker.common.api.lobby.listener.RemoteLobbyListener;
-import org.cspoker.common.elements.table.DetailedTable;
+import org.cspoker.common.elements.table.DetailedHoldemTable;
 import org.cspoker.common.elements.table.Table;
 import org.cspoker.common.elements.table.TableConfiguration;
 import org.cspoker.common.elements.table.TableList;
@@ -390,7 +390,7 @@ public class LobbyWindow
 		availableGameTables.clearAll();
 		availableGameTables.setItemCount(0);
 		for (Table t : tl.getTables()) {
-			insertInformation(context.getTableInformation(t.getId()));
+			insertInformation(context.getHoldemTableInformation(t.getId()));
 		}
 	}
 	
@@ -406,7 +406,7 @@ public class LobbyWindow
 	public void onTableCreated(TableCreatedEvent tableCreatedEvent) {
 		Table t = tableCreatedEvent.getTable();
 		// TODO Get detail information to display in the list from the server
-		DetailedTable detailedTable = context.getTableInformation(t.getId());
+		DetailedHoldemTable detailedTable = context.getHoldemTableInformation(t.getId());
 		
 		insertInformation(detailedTable);
 		
@@ -416,10 +416,10 @@ public class LobbyWindow
 	 * Helper method to insert the information for a given table into the
 	 * {@link #availableGameTables}
 	 * 
-	 * @param t A {@link DetailedTable} object containing all the relevant
+	 * @param t A {@link DetailedHoldemTable} object containing all the relevant
 	 *            information
 	 */
-	private void insertInformation(DetailedTable t) {
+	private void insertInformation(DetailedHoldemTable t) {
 		assert (t != null) : "Cannot insert information, passed null parameter";
 		TableConfiguration tInfo = t.getGameProperty();
 		TableItem item = new TableItem(availableGameTables, SWT.NONE);

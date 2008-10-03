@@ -21,7 +21,9 @@ import java.rmi.RemoteException;
 import org.cspoker.common.api.account.context.RemoteAccountContext;
 import org.cspoker.common.api.cashier.context.RemoteCashierContext;
 import org.cspoker.common.api.chat.context.RemoteChatContext;
+import org.cspoker.common.api.chat.listener.ChatListener;
 import org.cspoker.common.api.lobby.context.RemoteLobbyContext;
+import org.cspoker.common.api.lobby.listener.LobbyListener;
 import org.cspoker.common.api.shared.Killable;
 
 public interface RemoteServerContext extends Remote, Killable{
@@ -30,9 +32,9 @@ public interface RemoteServerContext extends Remote, Killable{
 	
 	RemoteCashierContext getCashierContext() throws RemoteException;
 	
-	RemoteChatContext getChatContext() throws RemoteException;
+	RemoteChatContext getChatContext(ChatListener chatListener) throws RemoteException;
 
-	RemoteLobbyContext getLobbyContext() throws RemoteException;
+	RemoteLobbyContext getLobbyContext(LobbyListener lobbyListener) throws RemoteException;
 	
 	void die();
 }

@@ -18,7 +18,7 @@ import java.util.NavigableMap;
 import java.util.Map.Entry;
 
 import org.cspoker.common.elements.pots.Pots;
-import org.cspoker.common.elements.table.DetailedTable;
+import org.cspoker.common.elements.table.DetailedHoldemTable;
 
 /**
  * TODO Bad design, should be specific for the user The game state at a table
@@ -31,7 +31,7 @@ public class GameState {
 	 * Table snapshot retrieved from the server upon initialization (for
 	 * GameProperty Info etc.)
 	 */
-	private DetailedTable tableMemento;
+	private DetailedHoldemTable tableMemento;
 	private Pots pots;
 	private List<NavigableMap<Chip, Integer>> currentBetPile = new ArrayList<NavigableMap<Chip, Integer>>();
 	
@@ -65,7 +65,7 @@ public class GameState {
 		this.moneyInMiddle = moneyInMiddle;
 	}
 	
-	public GameState(DetailedTable table) {
+	public GameState(DetailedHoldemTable table) {
 		setTableMemento(table);
 		pots = new Pots(0);
 		currentBetPile = new ArrayList<NavigableMap<Chip, Integer>>();
@@ -74,14 +74,14 @@ public class GameState {
 	/**
 	 * @return the tableMemento
 	 */
-	public DetailedTable getTableMemento() {
+	public DetailedHoldemTable getTableMemento() {
 		return tableMemento;
 	}
 	
 	/**
 	 * @param tableMemento the tableMemento to set
 	 */
-	public void setTableMemento(DetailedTable tableMemento) {
+	public void setTableMemento(DetailedHoldemTable tableMemento) {
 		this.tableMemento = tableMemento;
 	}
 	

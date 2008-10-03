@@ -39,7 +39,7 @@ import org.cspoker.common.api.lobby.holdemtable.event.SmallBlindEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.WinnerEvent;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.event.NewPocketCardsEvent;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
-import org.cspoker.common.elements.table.DetailedTable;
+import org.cspoker.common.elements.table.DetailedHoldemTable;
 import org.cspoker.common.elements.table.TableList;
 import org.cspoker.server.common.GameManager;
 import org.cspoker.server.common.TableManager;
@@ -179,7 +179,7 @@ public class PlayerCommunicationImpl extends PlayerCommunication {
 	 *             state.
 	 */
 
-	public DetailedTable joinTable(TableId tableId, SeatId seatId)
+	public DetailedHoldemTable joinTable(TableId tableId, SeatId seatId)
 			throws IllegalActionException {
 		stillAlive();
 		return state.join(tableId, seatId);
@@ -194,8 +194,8 @@ public class PlayerCommunicationImpl extends PlayerCommunication {
 	 *             state.
 	 */
 
-	public DetailedTable joinTable(TableId tableId) throws IllegalActionException {
-		return joinTable(tableId, null);
+	public DetailedHoldemTable joinTable(TableId tableId) throws IllegalActionException {
+		return joinHoldemTable(tableId, null);
 	}
 
 	public void leaveTable() throws IllegalActionException {
@@ -203,17 +203,17 @@ public class PlayerCommunicationImpl extends PlayerCommunication {
 		state.leaveTable();
 	}
 
-	public DetailedTable createTable(String name) throws IllegalActionException {
+	public DetailedHoldemTable createTable(String name) throws IllegalActionException {
 		stillAlive();
 		return state.createTable(name);
 	}
 
-	public DetailedTable createTable(String name, GameProperty property)
+	public DetailedHoldemTable createTable(String name, GameProperty property)
 			throws IllegalActionException {
-		return state.createTable(name, property);
+		return state.createHoldemTable(name, property);
 	}
 
-	public DetailedTable getTable(TableId id) throws IllegalActionException {
+	public DetailedHoldemTable getTable(TableId id) throws IllegalActionException {
 		stillAlive();
 		try {
 			return TableManager.global_table_manager.getTable(id)

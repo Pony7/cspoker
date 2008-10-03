@@ -20,7 +20,9 @@ import java.rmi.RemoteException;
 import org.cspoker.common.api.account.context.RemoteAccountContext;
 import org.cspoker.common.api.cashier.context.RemoteCashierContext;
 import org.cspoker.common.api.chat.context.RemoteChatContext;
+import org.cspoker.common.api.chat.listener.ChatListener;
 import org.cspoker.common.api.lobby.context.RemoteLobbyContext;
+import org.cspoker.common.api.lobby.listener.LobbyListener;
 
 public class ForwardingRemoteServerContext implements RemoteServerContext {
 
@@ -38,12 +40,14 @@ public class ForwardingRemoteServerContext implements RemoteServerContext {
 		return serverContext.getCashierContext();
 	}
 
-	public RemoteChatContext getChatContext() throws RemoteException {
-		return serverContext.getChatContext();
+	public RemoteChatContext getChatContext(ChatListener chatListener)
+			throws RemoteException {
+		return serverContext.getChatContext(chatListener);
 	}
 
-	public RemoteLobbyContext getLobbyContext() throws RemoteException {
-		return serverContext.getLobbyContext();
+	public RemoteLobbyContext getLobbyContext(LobbyListener lobbyListener)
+			throws RemoteException {
+		return serverContext.getLobbyContext(lobbyListener);
 	}
 
 	public void die() {

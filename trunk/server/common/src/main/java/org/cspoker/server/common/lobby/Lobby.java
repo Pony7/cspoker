@@ -13,7 +13,7 @@ import org.cspoker.common.api.lobby.event.TableCreatedEvent;
 import org.cspoker.common.api.lobby.event.TableRemovedEvent;
 import org.cspoker.common.api.lobby.holdemtable.context.HoldemTableContext;
 import org.cspoker.common.api.lobby.listener.LobbyListener;
-import org.cspoker.common.elements.table.DetailedTable;
+import org.cspoker.common.elements.table.DetailedHoldemTable;
 import org.cspoker.common.elements.table.Table;
 import org.cspoker.common.elements.table.TableConfiguration;
 import org.cspoker.common.elements.table.TableList;
@@ -43,7 +43,7 @@ public class Lobby{
 		
 	}
 
-	public DetailedTable createTable(ExtendedAccountContext accountContext, String name,
+	public DetailedHoldemTable createTable(ExtendedAccountContext accountContext, String name,
 			TableConfiguration configuration) {
 		long tableId = counter.getAndIncrement();
 		PokerTable table = new PokerTable(tableId, name, configuration);		
@@ -61,7 +61,7 @@ public class Lobby{
 		return mediator!=null? mediator.getHolemTableContext(accountContext): null;
 	}
 
-	public DetailedTable getTableInformation(long tableId) {
+	public DetailedHoldemTable getTableInformation(long tableId) {
 		PokerTable mediator = tables.get(tableId);
 		return mediator!=null? mediator.getTableInformation(): null;
 	}

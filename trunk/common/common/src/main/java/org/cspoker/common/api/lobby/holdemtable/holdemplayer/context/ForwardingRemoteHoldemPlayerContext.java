@@ -17,22 +17,12 @@ package org.cspoker.common.api.lobby.holdemtable.holdemplayer.context;
 
 import java.rmi.RemoteException;
 
-import org.cspoker.common.api.lobby.holdemtable.holdemplayer.listener.ForwardingHoldemPlayerListener;
-import org.cspoker.common.api.lobby.holdemtable.holdemplayer.listener.HoldemPlayerListener;
-
 public class ForwardingRemoteHoldemPlayerContext implements RemoteHoldemPlayerContext{
 
 	private final RemoteHoldemPlayerContext holdemPlayerContext;
-	private ForwardingHoldemPlayerListener forwardingListener;
 
 	public ForwardingRemoteHoldemPlayerContext(RemoteHoldemPlayerContext holdemPlayerContext) throws RemoteException {
 		this.holdemPlayerContext  = holdemPlayerContext;
-		this.forwardingListener = new ForwardingHoldemPlayerListener();
-		holdemPlayerContext.subscribe(wrapListener(forwardingListener));
-	}
-	
-	public HoldemPlayerListener wrapListener(HoldemPlayerListener listener) throws RemoteException{
-		return listener;
 	}
 
 	public void betOrRaise(int amount) throws RemoteException {
@@ -49,14 +39,6 @@ public class ForwardingRemoteHoldemPlayerContext implements RemoteHoldemPlayerCo
 
 	public void leaveGame() throws RemoteException {
 		holdemPlayerContext.leaveGame();
-	}
-
-	public void subscribe(HoldemPlayerListener holdemPlayerListener) {
-		forwardingListener.subscribe(holdemPlayerListener);
-	}
-
-	public void unSubscribe(HoldemPlayerListener holdemPlayerListener) {
-		forwardingListener.unSubscribe(holdemPlayerListener);
 	}
 	
 }

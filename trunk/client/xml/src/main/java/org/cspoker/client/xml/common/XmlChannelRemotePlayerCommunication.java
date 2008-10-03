@@ -25,8 +25,8 @@ import org.cspoker.common.RemotePlayerCommunication;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.GameProperty;
 import org.cspoker.common.elements.table.SeatId;
-import org.cspoker.common.elements.table.DetailedTable;
-import org.cspoker.common.elements.table.DetailedTable;
+import org.cspoker.common.elements.table.DetailedHoldemTable;
+import org.cspoker.common.elements.table.DetailedHoldemTable;
 import org.cspoker.common.elements.table.TableList;
 import org.cspoker.common.eventlisteners.RemoteAllEventsListener;
 import org.cspoker.common.util.DelegatingRemoteAllEventsListener;
@@ -102,7 +102,7 @@ public class XmlChannelRemotePlayerCommunication implements
 		marshaller.perform(new CheckOrCallAction(getId()));
 	}
 
-	public DetailedTable createTable(String name, GameProperty settings)
+	public DetailedHoldemTable createTable(String name, GameProperty settings)
 			throws IllegalActionException, RemoteException {
 		return marshaller
 				.perform(new CreateTableAction(getId(), name, settings));
@@ -112,12 +112,12 @@ public class XmlChannelRemotePlayerCommunication implements
 		marshaller.perform(new FoldAction(getId()));
 	}
 
-	public DetailedTable joinTable(TableId seatId) throws IllegalActionException,
+	public DetailedHoldemTable joinTable(TableId seatId) throws IllegalActionException,
 			RemoteException {
 		return marshaller.perform(new JoinTableAction(getId(), seatId, null));
 	}
 
-	public DetailedTable joinTable(TableId tableId, SeatId seatId)
+	public DetailedHoldemTable joinTable(TableId tableId, SeatId seatId)
 			throws IllegalActionException, RemoteException {
 		return marshaller
 				.perform(new JoinTableAction(getId(), tableId, seatId));
@@ -146,7 +146,7 @@ public class XmlChannelRemotePlayerCommunication implements
 		marshaller.perform(new StartGameAction(getId()));
 	}
 
-	public DetailedTable getTable(TableId id) throws IllegalActionException,
+	public DetailedHoldemTable getTable(TableId id) throws IllegalActionException,
 			RemoteException {
 		return marshaller.perform(new TableInformationAction(getId(), id));
 	}

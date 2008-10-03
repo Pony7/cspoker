@@ -26,7 +26,7 @@ import org.apache.log4j.Logger;
 import org.cspoker.client.gui.swt.window.GameWindow;
 import org.cspoker.client.gui.swt.window.LobbyWindow;
 import org.cspoker.client.gui.swt.window.LoginDialog;
-import org.cspoker.common.elements.table.DetailedTable;
+import org.cspoker.common.elements.table.DetailedHoldemTable;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.MessageBox;
@@ -241,7 +241,7 @@ public class ClientGUI {
 		GameWindow w = gameWindows.get(tableId);
 		if (w == null && createNew) {
 			// No Game Window for this table yet
-			DetailedTable table = getLobby().getContext().joinTable(tableId);
+			DetailedHoldemTable table = getLobby().getContext().joinTable(tableId);
 			w = new GameWindow(getLobby(), table);
 			gameWindows.put(tableId, w);
 		}

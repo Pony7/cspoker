@@ -15,7 +15,6 @@
  */
 package org.cspoker.common.api.chat.context;
 
-import org.cspoker.common.api.chat.listener.ChatListener;
 
 
 public interface ChatContext extends RemoteChatContext {
@@ -23,8 +22,4 @@ public interface ChatContext extends RemoteChatContext {
 	void sendServerMessage(String message);
 	
 	void sendTableMessage(long tableId, String message);
-
-	void subscribe(ChatListener chatListener);
-	
-	void unSubscribe(ChatListener chatListener);
 }
