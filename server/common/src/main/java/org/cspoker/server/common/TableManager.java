@@ -14,7 +14,7 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-package org.cspoker.server.common.game;
+package org.cspoker.server.common;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -24,6 +24,10 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.cspoker.common.elements.table.DetailedTable;
+<<<<<<< .mine
+import org.cspoker.server.common.exception.TableDoesNotExistException;
+import org.cspoker.server.common.gamecontrol.WaitingTableState;
+=======
 import org.cspoker.server.common.elements.table.GameTable;
 import org.cspoker.server.common.exception.TableDoesNotExistException;
 
@@ -33,6 +37,7 @@ import org.cspoker.server.common.exception.TableDoesNotExistException;
  * @author Kenzo
  * 
  */
+@Deprecated
 public class TableManager {
 
 	public final static TableManager global_table_manager = new TableManager();
@@ -45,7 +50,7 @@ public class TableManager {
 	/**
 	 * The hash map containing all the tables of this server.
 	 */
-	private ConcurrentHashMap<TableId, GameTable> hashMap = new ConcurrentHashMap<TableId, GameTable>();
+	private ConcurrentHashMap<TableId, WaitingTableState> hashMap = new ConcurrentHashMap<TableId, WaitingTableState>();
 
 	/**
 	 * Get the table with the given id.
@@ -58,7 +63,7 @@ public class TableManager {
 	 *             [must] There does not exist a table with given table id. |
 	 *             !hasATableWithId(id)
 	 */
-	public GameTable getTable(TableId id) throws TableDoesNotExistException {
+	public WaitingTableState getTable(TableId id) throws TableDoesNotExistException {
 		if (!hasATableWithId(id)) {
 			throw new TableDoesNotExistException(id);
 		}
@@ -80,10 +85,10 @@ public class TableManager {
 		hashMap.remove(id);
 	}
 
-	public GameTable createTable(PlayerId id, String name,
+	public WaitingTableState createTable(PlayerId id, String name,
 			GameProperty gameProperty) {
 		TableId tableId = new TableId(counter.getAndIncrement());
-		GameTable table = new GameTable(tableId, name, gameProperty);
+		WaitingTableState table = new WaitingTableState(tableId, name, gameProperty);
 		hashMap.put(tableId, table);
 		return table;
 	}
@@ -94,7 +99,7 @@ public class TableManager {
 
 	public List<DetailedTable> getAllTables() {
 		List<DetailedTable> tables = new ArrayList<DetailedTable>();
-		for (GameTable table : hashMap.values()) {
+		for (WaitingTableState table : hashMap.values()) {
 			tables.add(table.getSavedTable());
 		}
 		return tables;

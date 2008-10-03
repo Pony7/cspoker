@@ -22,8 +22,6 @@ import org.apache.log4j.Logger;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.server.common.GameMediator;
 import org.cspoker.server.common.elements.chips.IllegalValueException;
-import org.cspoker.server.common.elements.table.GameTable;
-import org.cspoker.server.common.elements.table.PlayerListFullException;
 import org.cspoker.server.common.gamecontrol.Game;
 import org.cspoker.server.common.gamecontrol.GameControl;
 import org.cspoker.server.common.gamecontrol.rules.Limit;
@@ -31,6 +29,8 @@ import org.cspoker.server.common.gamecontrol.rules.NoLimit;
 import org.cspoker.server.common.gamecontrol.rules.PotLimit;
 import org.cspoker.server.common.player.GameSeatedPlayer;
 import org.cspoker.server.common.player.PlayerFactory;
+import org.cspoker.server.common.gamecontrol.WaitingTableState;
+import org.cspoker.server.common.table.PlayerListFullException;
 
 public class BettingRulesTest extends TestCase {
 	private static Logger logger = Logger.getLogger(BettingRulesTest.class);
@@ -41,11 +41,11 @@ public class BettingRulesTest extends TestCase {
 
 	private GameSeatedPlayer guy;
 
-	private GameTable table;
+	private WaitingTableState table;
 
-	private GameControl gameControl;
+	private PlayingTableState gameControl;
 
-	private GameMediator gameMediator;
+	private PokerTable gameMediator;
 
 	private PlayerFactory playerFactory;
 
@@ -62,8 +62,8 @@ public class BettingRulesTest extends TestCase {
 
 	public void testNoLimitRules() {
 		TableId id = new TableId(0);
-		table = new GameTable(id, new GameProperty(10));
-		gameMediator = new GameMediator(id);
+		table = new WaitingTableState(id, new GameProperty(10));
+		gameMediator = new PokerTable(id);
 		try {
 			table.addPlayer(kenzo);
 			table.addPlayer(cedric);
@@ -71,7 +71,7 @@ public class BettingRulesTest extends TestCase {
 		} catch (PlayerListFullException e) {
 			fail(e.getMessage());
 		}
-		gameControl = new GameControl(gameMediator, table, new NoLimit());
+		gameControl = new PlayingTableState(gameMediator, table, new NoLimit());
 		Game game = gameControl.getGame();
 
 		try {
@@ -85,8 +85,8 @@ public class BettingRulesTest extends TestCase {
 
 	public void testPotLimitRules() {
 		TableId id = new TableId(0);
-		table = new GameTable(id, new GameProperty(10));
-		gameMediator = new GameMediator(id);
+		table = new WaitingTableState(id, new GameProperty(10));
+		gameMediator = new PokerTable(id);
 		try {
 			table.addPlayer(kenzo);
 			table.addPlayer(cedric);
@@ -94,7 +94,7 @@ public class BettingRulesTest extends TestCase {
 		} catch (PlayerListFullException e) {
 			fail(e.getMessage());
 		}
-		gameControl = new GameControl(gameMediator, table, new PotLimit());
+		gameControl = new PlayingTableState(gameMediator, table, new PotLimit());
 		Game game = gameControl.getGame();
 
 		try {
@@ -127,8 +127,8 @@ public class BettingRulesTest extends TestCase {
 
 	public void testLimitRules2() {
 		TableId id = new TableId(0);
-		table = new GameTable(id, new GameProperty(10));
-		gameMediator = new GameMediator(id);
+		table = new WaitingTableState(id, new GameProperty(10));
+		gameMediator = new PokerTable(id);
 		try {
 			table.addPlayer(kenzo);
 			table.addPlayer(cedric);
@@ -136,7 +136,7 @@ public class BettingRulesTest extends TestCase {
 		} catch (PlayerListFullException e) {
 			fail(e.getMessage());
 		}
-		gameControl = new GameControl(gameMediator, table, new Limit(10));
+		gameControl = new PlayingTableState(gameMediator, table, new Limit(10));
 		Game game = gameControl.getGame();
 
 		try {
@@ -156,8 +156,8 @@ public class BettingRulesTest extends TestCase {
 
 	public void testLimitRules1() {
 		TableId id = new TableId(0);
-		table = new GameTable(id, new GameProperty(10));
-		gameMediator = new GameMediator(id);
+		table = new WaitingTableState(id, new GameProperty(10));
+		gameMediator = new PokerTable(id);
 		try {
 			table.addPlayer(kenzo);
 			table.addPlayer(cedric);
@@ -165,12 +165,12 @@ public class BettingRulesTest extends TestCase {
 		} catch (PlayerListFullException e) {
 			fail(e.getMessage());
 		}
-		gameControl = new GameControl(gameMediator, table, new Limit(10));
+		gameControl = new PlayingTableState(gameMediator, table, new Limit(10));
 		BettingRulesTest.logger.info("Game Properties:");
 		BettingRulesTest.logger.info("Small Blind: "
-				+ table.getGameProperty().getSmallBlind());
+				+ table.getTableConfiguration().getSmallBlind());
 		BettingRulesTest.logger.info("Big Blind: "
-				+ table.getGameProperty().getBigBlind());
+				+ table.getTableConfiguration().getBigBlind());
 		BettingRulesTest.logger.info("Betting Rules: "
 				+ gameControl.getGame().getBettingRules().toString());
 		Game game = gameControl.getGame();

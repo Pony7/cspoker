@@ -13,9 +13,12 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.server.common.game.playercommunication;
+package org.cspoker.server.common.playercommunication;
 
 import org.cspoker.common.api.shared.exception.IllegalActionException;
+import org.cspoker.common.elements.player.SeatedPlayer;
+import org.cspoker.server.common.PokerTable;
+import org.cspoker.server.common.gamecontrol.WaitingTableState;
 import org.cspoker.common.elements.player.SeatedPlayer;
 import org.cspoker.server.common.GameManager;
 import org.cspoker.server.common.GameMediator;
@@ -34,10 +37,10 @@ import org.cspoker.server.common.elements.table.GameTable;
  */
 class WaitingAtTableState extends PlayerCommunicationState {
 
-	protected final GameTable table;
+	protected final WaitingTableState table;
 
 	public WaitingAtTableState(PlayerCommunicationImpl playerCommunication,
-			GameTable table, GameMediator gameMediator) {
+			WaitingTableState table, PokerTable gameMediator) {
 		super(playerCommunication);
 		this.table = table;
 		GameManager.getServerMediator().unsubscribeAllServerEventsListener(

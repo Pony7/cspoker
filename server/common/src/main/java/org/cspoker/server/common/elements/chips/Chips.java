@@ -14,14 +14,13 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-package org.cspoker.server.common.game.elements.chips;
+package org.cspoker.server.common.elements.chips;
 
 import org.apache.log4j.Logger;
 
 /**
  * A class to represent chips.
  * 
- * @author Kenzo
  * 
  * @invar The value of these chips should be valid. |canHaveAsValue(getValue())
  * 

@@ -13,7 +13,7 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.server.common.game.player;
+package org.cspoker.server.common.player;
 
 import org.cspoker.common.elements.player.Player;
 import org.cspoker.server.common.elements.chips.Chips;
@@ -21,7 +21,7 @@ import org.cspoker.server.common.elements.chips.IllegalValueException;
 
 public class GamePlayer {
 
-	private final PlayerId id;
+	private final long id;
 
 	private final String name;
 
@@ -40,14 +40,14 @@ public class GamePlayer {
 	 * @throws IllegalValueException
 	 *         The given initial value is not valid.
 	 */
-	GamePlayer(PlayerId id, String name, int initialNbChips)
+	GamePlayer(long id, String name, int initialNbChips)
 			throws IllegalValueException {
 		this.id = id;
 		this.name = name;
 		stack = new Chips(initialNbChips);
 	}
 	
-	public PlayerId getId() {
+	public long getId() {
 		return id;
 	}
 	
@@ -63,6 +63,6 @@ public class GamePlayer {
 	 * Returns a snapshot of this game player.
 	 */
 	public Player getMemento(){
-		return new Player(id, name, stack.getValue());
+		return new Player(id, name);
 	}
 }

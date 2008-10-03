@@ -13,21 +13,39 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.server.common.exception;
+package org.cspoker.server.common.elements;
 
-public class TableDoesNotExistException extends Exception {
-
-	private static final long serialVersionUID = -1970659252469932812L;
-
-	private final long tableId;
-
-	public TableDoesNotExistException(long tableId) {
-		super("The table with id [" + Long.toString(tableId) + "] des not exist.");
-		this.tableId = tableId;
+public class SeatId {
+	
+	private final long seatId;
+	
+	public SeatId(long seatId){
+		this.seatId = seatId;
 	}
 
-	public long getTableId() {
-		return tableId;
+	public long getId() {
+		return seatId;
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + (int) (seatId ^ (seatId >>> 32));
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		final SeatId other = (SeatId) obj;
+		if (seatId != other.seatId)
+			return false;
+		return true;
+	}
 }

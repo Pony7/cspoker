@@ -14,7 +14,7 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-package org.cspoker.server.common.game.elements.table;
+package org.cspoker.server.common.gamecontrol;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -24,19 +24,19 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.cspoker.common.elements.player.SeatedPlayer;
 import org.cspoker.common.elements.table.DetailedTable;
+import org.cspoker.common.elements.table.TableConfiguration;
 import org.cspoker.server.common.player.GameSeatedPlayer;
 
 /**
  * A class to represent players at the table.
  * 
- * @author Kenzo & Cedric
  * 
  * @invar A table must have a valid game property. |
  *        canHaveAsGameProperty(getGameProperty())
  * @invar Each player at the table is unique.
  * 
  */
-public class GameTable {
+public class WaitingTableState {
 
 	/***************************************************************************
 	 * Variables
@@ -45,17 +45,17 @@ public class GameTable {
 	/**
 	 * The variable containing the id of this table.
 	 */
-	private final TableId tableId;
+	private final long tableId;
 
 	/**
 	 * A map containing the mapping between a seat id and a player.
 	 */
-	private final ConcurrentHashMap<SeatId, GameSeatedPlayer> players;
+	private final ConcurrentHashMap<Long, GameSeatedPlayer> players;
 
 	/**
 	 * The variable containing the game property of this table.
 	 */
-	private GameProperty gameProperty;
+	private TableConfiguration configuration;
 
 	/**
 	 * The variable containing the playing status of this table.
@@ -75,16 +75,16 @@ public class GameTable {
 	 *         |setGameProperty(gameProperty)
 	 * @effect Set the playing status to false. |setPlaying(false)
 	 */
-	public GameTable(TableId id, GameProperty gameProperty) {
+	public WaitingTableState(long id, TableConfiguration gameProperty) {
 		this(id, "", gameProperty);
 	}
 
-	public GameTable(TableId id, String name, GameProperty gameProperty) {
+	public WaitingTableState(long id, String name, TableConfiguration configuration) {
 		tableId = id;
-		setGameProperty(gameProperty);
+		setTableConfiguration(configuration);
 		setPlaying(false);
 		setName(name);
-		players = new ConcurrentHashMap<SeatId, GameSeatedPlayer>(gameProperty
+		players = new ConcurrentHashMap<SeatId, GameSeatedPlayer>(configuration
 				.getMaxNbPlayers());
 	}
 
@@ -93,7 +93,7 @@ public class GameTable {
 	 * 
 	 * @return The id of this table.
 	 */
-	public TableId getId() {
+	public long getId() {
 		return tableId;
 	}
 
@@ -176,22 +176,10 @@ public class GameTable {
 	 * Return the game property of this table.
 	 * 
 	 */
-	public GameProperty getGameProperty() {
-		return gameProperty;
+	public TableConfiguration getTableConfiguration() {
+		return configuration;
 	}
 
-	/**
-	 * Check whether tables can have the given game property as their game
-	 * property.
-	 * 
-	 * @param gameProperty
-	 *            The game property to check.
-	 * @return The game property should be effective. | result ==
-	 *         (gameProperty!=null)
-	 */
-	public static boolean canHaveAsGameProperty(GameProperty gameProperty) {
-		return gameProperty != null;
-	}
 
 	/**
 	 * Set the game property of this table to the given game property.
@@ -203,8 +191,8 @@ public class GameTable {
 	 * @post The game property of this table is set to the given game property. |
 	 *       new.getGameProperty() == gameProperty
 	 */
-	private void setGameProperty(GameProperty gameProperty) {
-		this.gameProperty = gameProperty;
+	private void setTableConfiguration(TableConfiguration configuration) {
+		this.configuration = configuration;
 	}
 
 	/***************************************************************************
@@ -333,7 +321,7 @@ public class GameTable {
 	 * 
 	 */
 	public boolean fullOfPlayers() {
-		return players.size() >= getGameProperty().getMaxNbPlayers();
+		return players.size() >= getTableConfiguration().getMaxNbPlayers();
 	}
 
 	/**
@@ -396,11 +384,11 @@ public class GameTable {
 		return players.size();
 	}
 
-	public synchronized DetailedTable getSavedTable() {
+	public synchronized DetailedTable getDetailedTable() {
 		List<SeatedPlayer> playerList = new ArrayList<SeatedPlayer>(getNbPlayers());
 		for (GameSeatedPlayer player : players.values()) {
 			playerList.add(player.getMemento());
 		}
-		return new DetailedTable(tableId, name, playerList, playing, gameProperty);
+		return new DetailedTable(tableId, name, playerList, playing, configuration);
 	}
 }

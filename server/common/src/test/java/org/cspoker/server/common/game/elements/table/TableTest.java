@@ -35,7 +35,7 @@ public class TableTest extends TestCase {
 	 * Add 2 players to the same seat.
 	 */
 	public void testAddPlayer() {
-		GameTable table = new GameTable(new TableId(0), property);
+		WaitingTableState table = new WaitingTableState(new TableId(0), property);
 
 		assertTrue(table.isValidSeatId(new SeatId(0)));
 		assertEquals(0, table.getNbPlayers());
@@ -81,7 +81,7 @@ public class TableTest extends TestCase {
 	 * Add 2 players to the same seat.
 	 */
 	public void testAddPlayerWithoutSeat() {
-		GameTable table = new GameTable(new TableId(0), property);
+		WaitingTableState table = new WaitingTableState(new TableId(0), property);
 
 		assertTrue(table.isValidSeatId(new SeatId(0)));
 		assertEquals(0, table.getNbPlayers());
@@ -127,7 +127,7 @@ public class TableTest extends TestCase {
 	 */
 	public void testAddPlayerWithAToHighSeatId() {
 
-		GameTable table = new GameTable(new TableId(0), property);
+		WaitingTableState table = new WaitingTableState(new TableId(0), property);
 
 		int maxNbPlayers = property.getMaxNbPlayers();
 
@@ -152,7 +152,7 @@ public class TableTest extends TestCase {
 
 		assertEquals(maxNbPlayers, table.getNbPlayers());
 		assertTrue(table.fullOfPlayers());
-		assertEquals(table.getGameProperty().getMaxNbPlayers(), table
+		assertEquals(table.getTableConfiguration().getMaxNbPlayers(), table
 				.getSavedTable().getPlayers().size());
 
 		try {
@@ -172,7 +172,7 @@ public class TableTest extends TestCase {
 	 * Test the removal of a player.
 	 */
 	public void testRemovePlayer() {
-		GameTable table = new GameTable(new TableId(0), property);
+		WaitingTableState table = new WaitingTableState(new TableId(0), property);
 
 		assertTrue(table.isValidSeatId(new SeatId(0)));
 

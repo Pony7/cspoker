@@ -14,10 +14,10 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-package org.cspoker.server.common.game.gamecontrol.rounds;
+package org.cspoker.server.common.gamecontrol.rounds;
 
 import org.cspoker.common.api.shared.exception.IllegalActionException;
-import org.cspoker.server.common.GameMediator;
+import org.cspoker.server.common.PokerTable;
 import org.cspoker.server.common.gamecontrol.Game;
 import org.cspoker.server.common.gamecontrol.rules.BettingRules;
 import org.cspoker.server.common.player.GameSeatedPlayer;
@@ -41,7 +41,7 @@ public abstract class Round {
 	/**
 	 * The variable containing the game mediator.
 	 */
-	protected final GameMediator gameMediator;
+	protected final PokerTable gameMediator;
 
 	/***************************************************************************
 	 * Constructor
@@ -53,7 +53,7 @@ public abstract class Round {
 	 * @param game
 	 *            The game to create a new round for.
 	 */
-	public Round(GameMediator gameMediator, Game game) {
+	public Round(PokerTable gameMediator, Game game) {
 		this.gameMediator = gameMediator;
 		this.game = game;
 		getBettingRules().setBetPlaced(false);

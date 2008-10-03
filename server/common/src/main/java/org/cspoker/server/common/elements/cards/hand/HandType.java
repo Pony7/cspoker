@@ -13,7 +13,7 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.server.common.game.elements.cards.hand;
+package org.cspoker.server.common.elements.cards.hand;
 
 public enum HandType {
 	HIGH_CARD("HC"), PAIR("1P"), TWO_PAIR("2P"), THREE_OF_A_KIND("3K"), FOUR_OF_A_KIND(

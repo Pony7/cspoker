@@ -16,10 +16,12 @@
 package org.cspoker.common.elements.table;
 
 import java.io.Serializable;
+import java.util.Set;
+import java.util.TreeSet;
 
 import javax.xml.bind.annotation.XmlAttribute;
 
-public class Table implements Serializable {
+public class Table implements Serializable, Comparable<Table> {
 
 	private static final long serialVersionUID = 527893735230918726L;
 
@@ -60,4 +62,44 @@ public class Table implements Serializable {
 		return name;
 	}
 	
+	public String toString(){
+		return getName()+" (#"+getId()+")";
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + (int) (id ^ (id >>> 32));
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		final Table other = (Table) obj;
+		if (id != other.id)
+			return false;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
+		return true;
+	}
+
+	public int compareTo(Table o) {
+		long diff = id - o.id;
+		if(diff>0)
+			return 1;
+		if(diff<0)
+			return -1;
+		return 0;
+	}
 }

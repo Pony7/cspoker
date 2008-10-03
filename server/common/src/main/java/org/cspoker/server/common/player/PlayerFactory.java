@@ -14,7 +14,7 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-package org.cspoker.server.common.game.player;
+package org.cspoker.server.common.player;
 
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -51,7 +51,7 @@ public class PlayerFactory {
 	 *            The name for this new player.
 	 * @return A new player with given name and standard stack value.
 	 */
-	public GameSeatedPlayer createNewPlayer(String name) {
+	public GamePlayer createNewPlayer(String name) {
 		try {
 			return createNewPlayer(name, getStdStackValue());
 		} catch (IllegalValueException e) {
@@ -71,9 +71,9 @@ public class PlayerFactory {
 	 * @throws IllegalValueException
 	 *             [must] The given initial value is not valid.
 	 */
-	public GameSeatedPlayer createNewPlayer(String name, int initialValue)
+	public GamePlayer createNewPlayer(String name, int initialValue)
 			throws IllegalValueException {
-		return new GameSeatedPlayer(getUniquePlayerId(), name, initialValue);
+		return new GamePlayer(getUniquePlayerId(), name, initialValue);
 	}
 
 	/**
@@ -92,8 +92,8 @@ public class PlayerFactory {
 	 * 
 	 * @return A unique player id.
 	 */
-	private PlayerId getUniquePlayerId() {
-		return new PlayerId(counter.getAndIncrement());
+	private long getUniquePlayerId() {
+		return counter.getAndIncrement();
 	}
 
 }

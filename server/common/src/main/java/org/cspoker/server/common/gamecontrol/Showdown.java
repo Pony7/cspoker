@@ -14,7 +14,7 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-package org.cspoker.server.common.game.gamecontrol;
+package org.cspoker.server.common.gamecontrol;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -29,7 +29,7 @@ import org.cspoker.common.api.lobby.holdemtable.event.ShowHandEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.WinnerEvent;
 import org.cspoker.common.elements.cards.Card;
 import org.cspoker.common.elements.player.Winner;
-import org.cspoker.server.common.GameMediator;
+import org.cspoker.server.common.PokerTable;
 import org.cspoker.server.common.elements.cards.hand.Hand;
 import org.cspoker.server.common.elements.chips.IllegalValueException;
 import org.cspoker.server.common.elements.chips.pot.GamePot;
@@ -40,7 +40,6 @@ import org.cspoker.server.common.player.GameWinner;
 /**
  * A class to determine who has won each pot.
  * 
- * @author Kenzo
  * 
  */
 public class Showdown {
@@ -51,7 +50,7 @@ public class Showdown {
 	 */
 	private final Game game;
 
-	private final GameMediator gameMediator;
+	private final PokerTable gameMediator;
 
 	private final Map<PlayerId, GameWinner> winnersMap = new HashMap<PlayerId, GameWinner>();
 
@@ -65,7 +64,7 @@ public class Showdown {
 	 * @pre The game must be effective. |game!=null
 	 * @pre The pots must be closed. |game!=null && game.getPots().isClosed()
 	 */
-	public Showdown(GameMediator gameMediator, Game game) {
+	public Showdown(PokerTable gameMediator, Game game) {
 		this.gameMediator = gameMediator;
 		this.game = game;
 	}

@@ -14,7 +14,7 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-package org.cspoker.server.common.game.gamecontrol;
+package org.cspoker.server.common.gamecontrol;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,9 +22,10 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.cards.Card;
+import org.cspoker.common.elements.table.TableConfiguration;
+import org.cspoker.server.common.elements.SeatId;
 import org.cspoker.server.common.elements.cards.deck.Deck;
 import org.cspoker.server.common.elements.chips.pot.GamePots;
-import org.cspoker.server.common.elements.table.GameTable;
 import org.cspoker.server.common.elements.table.PlayerListFullException;
 import org.cspoker.server.common.elements.table.SeatTakenException;
 import org.cspoker.server.common.gamecontrol.rules.BettingRules;
@@ -50,12 +51,12 @@ public class Game {
 	/**
 	 * This variable contains the table of this game.
 	 */
-	private final GameTable table;
+	private final WaitingTableState table;
 
 	/**
 	 * This variable contains the game property of this game.
 	 */
-	private final GameProperty gameProperty;
+	private final TableConfiguration gameProperty;
 
 	/**
 	 * This looping list contains the active players of this game.
@@ -131,20 +132,20 @@ public class Game {
 	 *      |table!=null && table.getNbPlayer()>1
 	 * 
 	 */
-	public Game(GameTable table) {
+	public Game(WaitingTableState table) {
 		this(table, table.getRandomPlayer());
 	}
 
-	public Game(GameTable table, GameSeatedPlayer dealer) {
+	public Game(WaitingTableState table, GameSeatedPlayer dealer) {
 		this(table, dealer, new NoLimit());
 
 	}
 
-	public Game(GameTable table, GameSeatedPlayer dealer, BettingRules bettingRules) {
+	public Game(WaitingTableState table, GameSeatedPlayer dealer, BettingRules bettingRules) {
 		this.bettingRules = bettingRules;
 		this.table = table;
 		table.setPlaying(true);
-		gameProperty = table.getGameProperty();
+		gameProperty = table.getTableConfiguration();
 		List<GameSeatedPlayer> players = table.getPlayers();
 		currentHandPlayers = new LoopingList<GameSeatedPlayer>(players);
 		initialCurrentHandPlayers = new LoopingList<GameSeatedPlayer>(players);
@@ -325,7 +326,7 @@ public class Game {
 	 * 
 	 * @return The game property of this game.
 	 */
-	public GameProperty getGameProperty() {
+	public TableConfiguration getTableConfiguration() {
 		return gameProperty;
 	}
 
@@ -360,7 +361,7 @@ public class Game {
 	 * @return The table of this game.
 	 * 
 	 */
-	public GameTable getTable() {
+	public WaitingTableState getTable() {
 		return table;
 	}
 

@@ -13,12 +13,19 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.server.common.game.playercommunication;
+package org.cspoker.server.common.playercommunication;
 
 import org.apache.log4j.Logger;
 import org.cspoker.common.api.lobby.event.TableRemovedEvent;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.table.DetailedTable;
+import org.cspoker.server.common.GameManager;
+import org.cspoker.server.common.PokerTable;
+import org.cspoker.server.common.TableManager;
+import org.cspoker.server.common.gamecontrol.PlayingTableState;
+import org.cspoker.server.common.gamecontrol.WaitingTableState;
+import org.cspoker.server.common.session.PlayerKilledExcepion;
+import org.cspoker.server.common.session.SessionManager;
 import org.cspoker.server.common.GameManager;
 import org.cspoker.server.common.GameMediator;
 import org.cspoker.server.common.TableManager;
@@ -55,7 +62,7 @@ class TableCreatedState extends WaitingAtTableState {
 	 *            The created table.
 	 */
 	public TableCreatedState(PlayerCommunicationImpl playerCommunication,
-			GameTable table) {
+			WaitingTableState table) {
 		super(playerCommunication, table, GameManager.createNewGame(table
 				.getId()));
 	}
@@ -70,7 +77,7 @@ class TableCreatedState extends WaitingAtTableState {
 		 * startGame(), as it is guaranteed.
 		 */
 		synchronized (table) {
-			GameMediator gameMediator = GameManager.getGame(table.getId());
+			PokerTable gameMediator = GameManager.getGame(table.getId());
 			if (table.getNbPlayers() <= 1) {
 				throw new IllegalActionException(
 						"At least two players must be seated to play a game.");
@@ -88,7 +95,7 @@ class TableCreatedState extends WaitingAtTableState {
 					// already
 				}
 			}
-			new GameControl(gameMediator, table);
+			new PlayingTableState(gameMediator, table);
 		}
 
 		TableCreatedState.logger.info("Game Started.");
