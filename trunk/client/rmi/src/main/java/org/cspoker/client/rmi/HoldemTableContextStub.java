@@ -21,25 +21,19 @@ import java.rmi.server.UnicastRemoteObject;
 import org.cspoker.common.api.lobby.holdemtable.context.ForwardingRemoteHoldemTableContext;
 import org.cspoker.common.api.lobby.holdemtable.context.RemoteHoldemTableContext;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.RemoteHoldemPlayerContext;
-import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
+import org.cspoker.common.api.lobby.holdemtable.holdemplayer.listener.HoldemPlayerListener;
 
 public class HoldemTableContextStub extends ForwardingRemoteHoldemTableContext{
-
-	private HoldemPlayerContextStub playerContext;
 
 	public HoldemTableContextStub(RemoteHoldemTableContext context)
 			throws RemoteException {
 		super(context);
-		this.playerContext = new HoldemPlayerContextStub(super.getHoldemPlayerContext());
 	}
 	
 	@Override
-	public HoldemTableListener wrapListener(HoldemTableListener listener) throws RemoteException {
-		return (HoldemTableListener) UnicastRemoteObject.exportObject(listener, 0);
-	}
-
-	@Override
-	public RemoteHoldemPlayerContext getHoldemPlayerContext() {
-		return playerContext;
+	public RemoteHoldemPlayerContext sitIn(long seatId,
+			HoldemPlayerListener holdemPlayerListener) throws RemoteException {
+		return super.sitIn(seatId,(HoldemPlayerListener) UnicastRemoteObject.exportObject(holdemPlayerListener, 0));
+		
 	}
 }

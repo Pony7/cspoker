@@ -16,31 +16,31 @@
 package org.cspoker.client.rmi;
 
 import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 
 import org.cspoker.common.api.chat.context.RemoteChatContext;
+import org.cspoker.common.api.chat.listener.ChatListener;
 import org.cspoker.common.api.lobby.context.RemoteLobbyContext;
+import org.cspoker.common.api.lobby.listener.LobbyListener;
 import org.cspoker.common.api.shared.context.ForwardingRemoteServerContext;
 import org.cspoker.common.api.shared.context.RemoteServerContext;
 
 public class ServerContextStub extends ForwardingRemoteServerContext{
 
-	private ChatContextStub chatContext;
-	private LobbyContextStub lobbyContext;
-
 	public ServerContextStub(RemoteServerContext serverContext) throws RemoteException {
 		super(serverContext);
-		this.chatContext = new ChatContextStub(super.getChatContext());
-		this.lobbyContext = new LobbyContextStub(super.getLobbyContext());
 	}
 	
 	@Override
-	public RemoteChatContext getChatContext() throws RemoteException {
-		return chatContext;
+	public RemoteChatContext getChatContext(ChatListener chatListener)
+			throws RemoteException {
+		return super.getChatContext((ChatListener) UnicastRemoteObject.exportObject(chatListener, 0));
 	}
 	
 	@Override
-	public RemoteLobbyContext getLobbyContext() throws RemoteException {
-		return lobbyContext;
+	public RemoteLobbyContext getLobbyContext(LobbyListener lobbyListener)
+			throws RemoteException {
+		return new LobbyContextStub(super.getLobbyContext((LobbyListener) UnicastRemoteObject.exportObject(lobbyListener, 0)));
 	}
 
 }
