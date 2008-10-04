@@ -19,7 +19,7 @@ import java.io.Serializable;
 
 import javax.xml.bind.annotation.XmlAttribute;
 
-import org.cspoker.common.api.shared.context.ServerContext;
+import org.cspoker.common.api.shared.context.StaticServerContext;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 
 public abstract class Action<T> implements Serializable {
@@ -37,7 +37,7 @@ public abstract class Action<T> implements Serializable {
 		// no op
 	}
 
-	public abstract T perform(ServerContext serverContext) throws IllegalActionException;
+	public abstract T perform(StaticServerContext serverContext) throws IllegalActionException;
 
 	public long getID() {
 		return id;

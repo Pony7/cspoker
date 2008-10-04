@@ -13,29 +13,14 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.common.api.cashier.action;
+package org.cspoker.common.api.lobby.context;
 
-import org.cspoker.common.api.cashier.context.CashierContext;
-import org.cspoker.common.api.shared.action.Action;
-import org.cspoker.common.api.shared.context.StaticServerContext;
+import org.cspoker.common.api.lobby.holdemtable.context.StaticHoldemTableContext;
 
-public abstract class CashierAction<T> extends Action<T> {
+public interface StaticLobbyContext extends LobbyContext {
 
-	private static final long serialVersionUID = 6542312781797096164L;
-
-	public CashierAction(long id) {
-		super(id);
-	}
-
-	protected CashierAction() {
-		// no op
-	}
-
-	@Override
-	public T perform(StaticServerContext serverContext) {
-		return perform(serverContext.getCashierContext());
-	}
-
-	public abstract T perform(CashierContext cashierContextr);
+	public void joinHoldemTable(long tableId);
+	
+	public StaticHoldemTableContext getHoldemTableContext(long tableId);
 	
 }

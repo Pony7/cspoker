@@ -17,7 +17,7 @@ package org.cspoker.common.api.chat.action;
 
 import org.cspoker.common.api.chat.context.ChatContext;
 import org.cspoker.common.api.shared.action.Action;
-import org.cspoker.common.api.shared.context.ServerContext;
+import org.cspoker.common.api.shared.context.StaticServerContext;
 
 public abstract class ChatAction<T> extends Action<T> {
 
@@ -32,7 +32,7 @@ public abstract class ChatAction<T> extends Action<T> {
 	}
 
 	@Override
-	public T perform(ServerContext serverContext) {
+	public T perform(StaticServerContext serverContext) {
 		return perform(serverContext.getChatContext());
 	}
 

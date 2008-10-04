@@ -17,7 +17,7 @@ package org.cspoker.common.api.lobby.action;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.cspoker.common.api.lobby.context.LobbyContext;
+import org.cspoker.common.api.lobby.context.StaticLobbyContext;
 import org.cspoker.common.elements.table.TableList;
 
 @XmlRootElement
@@ -34,7 +34,7 @@ public class TableListAction extends LobbyAction<TableList> {
 	}
 
 	@Override
-	public TableList perform(LobbyContext lobbyContext) {
+	public TableList perform(StaticLobbyContext lobbyContext) {
 		return  lobbyContext.getTableList();
 	}
 

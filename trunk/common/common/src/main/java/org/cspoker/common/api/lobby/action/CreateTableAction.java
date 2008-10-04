@@ -17,7 +17,7 @@ package org.cspoker.common.api.lobby.action;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.cspoker.common.api.lobby.context.LobbyContext;
+import org.cspoker.common.api.lobby.context.StaticLobbyContext;
 import org.cspoker.common.elements.table.DetailedHoldemTable;
 import org.cspoker.common.elements.table.TableConfiguration;
 
@@ -46,7 +46,7 @@ public class CreateTableAction extends LobbyAction<DetailedHoldemTable> {
 	}
 
 	@Override
-	public DetailedHoldemTable perform(LobbyContext lobbyContext) {
+	public DetailedHoldemTable perform(StaticLobbyContext lobbyContext) {
 		return lobbyContext.createHoldemTable(name, configuration);
 	}
 
