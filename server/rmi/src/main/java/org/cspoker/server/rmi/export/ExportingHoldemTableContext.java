@@ -20,20 +20,37 @@ import java.rmi.server.UnicastRemoteObject;
 
 import org.cspoker.common.api.lobby.holdemtable.context.ForwardingRemoteHoldemTableContext;
 import org.cspoker.common.api.lobby.holdemtable.context.RemoteHoldemTableContext;
-import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.HoldemPlayerContext;
+import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.RemoteHoldemPlayerContext;
+import org.cspoker.common.api.lobby.holdemtable.holdemplayer.listener.HoldemPlayerListener;
+import org.cspoker.common.api.shared.Killable;
+import org.cspoker.common.util.lazy.IFactory;
+import org.cspoker.common.util.lazy.LazyReference;
 
 public class ExportingHoldemTableContext extends ForwardingRemoteHoldemTableContext {
-
-	protected HoldemPlayerContext holdemPlayerContext;
 	
-	public ExportingHoldemTableContext(RemoteHoldemTableContext holdemTableContext) throws RemoteException {
+	private LazyReference<RemoteHoldemPlayerContext,RemoteException> playerContext = new LazyReference<RemoteHoldemPlayerContext,RemoteException>();
+	private Killable tableContextCacheEntry;
+
+	
+	public ExportingHoldemTableContext(RemoteHoldemTableContext holdemTableContext, Killable tableContextCacheEntry) throws RemoteException {
 		super(holdemTableContext);
-		this.holdemPlayerContext = (HoldemPlayerContext)UnicastRemoteObject.exportObject(super.getHoldemPlayerContext(),0);
+		this.tableContextCacheEntry = tableContextCacheEntry;
 	}
 	
 	@Override
-	public HoldemPlayerContext getHoldemPlayerContext() {
-		return holdemPlayerContext;
+	public RemoteHoldemPlayerContext sitIn(final long seatId, final HoldemPlayerListener holdemPlayerListener)
+			throws RemoteException {
+		return playerContext.getContent(new IFactory<RemoteHoldemPlayerContext, RemoteException>(){
+			public RemoteHoldemPlayerContext create() throws RemoteException {
+				return (RemoteHoldemPlayerContext) UnicastRemoteObject.exportObject(ExportingHoldemTableContext.super.sitIn(seatId, holdemPlayerListener), 0);
+			}
+		});
+	}
+	
+	@Override
+	public void leaveTable() throws RemoteException {
+		tableContextCacheEntry.kill();
+		super.leaveTable();
 	}
 	
 }

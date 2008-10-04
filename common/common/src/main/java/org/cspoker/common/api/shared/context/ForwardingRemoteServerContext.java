@@ -50,8 +50,8 @@ public class ForwardingRemoteServerContext implements RemoteServerContext {
 		return serverContext.getLobbyContext(lobbyListener);
 	}
 
-	public void die() {
-		serverContext.die();
+	public void kill() {
+		serverContext.kill();
 	}
 
 }

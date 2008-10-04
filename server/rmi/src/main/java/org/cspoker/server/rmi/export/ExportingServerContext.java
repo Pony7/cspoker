@@ -18,46 +18,67 @@ package org.cspoker.server.rmi.export;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
-import org.cspoker.common.api.account.context.AccountContext;
-import org.cspoker.common.api.cashier.context.CashierContext;
-import org.cspoker.common.api.chat.context.ChatContext;
+import org.cspoker.common.api.account.context.RemoteAccountContext;
+import org.cspoker.common.api.cashier.context.RemoteCashierContext;
+import org.cspoker.common.api.chat.context.RemoteChatContext;
+import org.cspoker.common.api.chat.listener.ChatListener;
 import org.cspoker.common.api.lobby.context.LobbyContext;
+import org.cspoker.common.api.lobby.context.RemoteLobbyContext;
+import org.cspoker.common.api.lobby.listener.LobbyListener;
 import org.cspoker.common.api.shared.context.ForwardingRemoteServerContext;
 import org.cspoker.common.api.shared.context.ServerContext;
+import org.cspoker.common.util.lazy.IFactory;
+import org.cspoker.common.util.lazy.LazyReference;
 
 public class ExportingServerContext extends ForwardingRemoteServerContext {
 
-	private AccountContext accountContext;
-	private CashierContext cashierContext;
-	private ChatContext chatContext;
-	private LobbyContext lobbyContext;
+	private LazyReference<RemoteAccountContext,RemoteException> accountContext = new LazyReference<RemoteAccountContext,RemoteException>();
+	private LazyReference<RemoteCashierContext,RemoteException> cashierContext = new LazyReference<RemoteCashierContext,RemoteException>();
+	private LazyReference<RemoteChatContext,RemoteException> chatContext = new LazyReference<RemoteChatContext,RemoteException>();
+	private LazyReference<RemoteLobbyContext,RemoteException> lobbyContext = new LazyReference<RemoteLobbyContext,RemoteException>();
 
 	public ExportingServerContext(ServerContext serverContext) throws RemoteException {
 		super(serverContext);
-		accountContext = (AccountContext) UnicastRemoteObject.exportObject(super.getAccountContext(), 0);
-		cashierContext = (CashierContext) UnicastRemoteObject.exportObject(super.getCashierContext(), 0);
-		chatContext = (ChatContext) UnicastRemoteObject.exportObject(super.getChatContext(), 0);	
-		lobbyContext = (LobbyContext) UnicastRemoteObject.exportObject(new ExportingLobbyContext(super.getLobbyContext()), 0);
 	}
 
 	@Override
-	public AccountContext getAccountContext() {
-		return accountContext;
+	public RemoteAccountContext getAccountContext() throws RemoteException {
+		return accountContext.getContent(new IFactory<RemoteAccountContext, RemoteException>(){
+			public RemoteAccountContext create() throws RemoteException {
+				return (RemoteAccountContext) UnicastRemoteObject.exportObject(ExportingServerContext.super.getAccountContext(), 0);
+			}
+		});
 	}
-
+	
 	@Override
-	public CashierContext getCashierContext() {
-		return cashierContext;
+	public RemoteCashierContext getCashierContext() throws RemoteException {
+		return cashierContext.getContent(new IFactory<RemoteCashierContext, RemoteException>(){
+			public RemoteCashierContext create() throws RemoteException {
+				return (RemoteCashierContext) UnicastRemoteObject.exportObject(ExportingServerContext.super.getCashierContext(), 0);
+			}
+		});
 	}
-
+	
 	@Override
-	public ChatContext getChatContext() {
-		return chatContext;
+	public RemoteChatContext getChatContext(final ChatListener chatListener)
+			throws RemoteException {
+		return chatContext.getContent(new IFactory<RemoteChatContext, RemoteException>(){
+			public RemoteChatContext create() throws RemoteException {
+				return (RemoteChatContext) UnicastRemoteObject.exportObject(ExportingServerContext.super.getChatContext(chatListener), 0);
+			}
+		});
 	}
-
+	
 	@Override
-	public LobbyContext getLobbyContext() {
-		return lobbyContext;
+	public RemoteLobbyContext getLobbyContext(final LobbyListener lobbyListener)
+			throws RemoteException {
+		return lobbyContext.getContent(new IFactory<RemoteLobbyContext, RemoteException>(){
+			public RemoteLobbyContext create() throws RemoteException {
+				ExportingLobbyContext remoteObject = new ExportingLobbyContext(ExportingServerContext.super.getLobbyContext(lobbyListener));
+				return (LobbyContext) UnicastRemoteObject.exportObject(remoteObject, 0);
+			}
+		});
 	}
-
+	
+	
 }

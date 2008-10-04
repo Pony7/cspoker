@@ -80,7 +80,7 @@ ExternalHoldemTableContext {
 					listener.onBet(betEvent);
 				}
 			} catch (Exception exception) {
-				connection.die();
+				connection.kill();
 			}
 		}
 
@@ -90,7 +90,7 @@ ExternalHoldemTableContext {
 					listener.onBigBlind(bigBlindEvent);
 				}
 			} catch (Exception exception) {
-				connection.die();
+				connection.kill();
 			}
 		}
 
@@ -100,7 +100,7 @@ ExternalHoldemTableContext {
 					listener.onCall(callEvent);
 				}
 			} catch (Exception exception) {
-				connection.die();
+				connection.kill();
 			}
 		}
 
@@ -110,7 +110,7 @@ ExternalHoldemTableContext {
 					listener.onCheck(checkEvent);
 				}
 			} catch (Exception exception) {
-				connection.die();
+				connection.kill();
 			}
 		}
 
@@ -120,7 +120,7 @@ ExternalHoldemTableContext {
 					listener.onFold(foldEvent);
 				}
 			} catch (Exception exception) {
-				connection.die();
+				connection.kill();
 			}
 		}
 
@@ -130,7 +130,7 @@ ExternalHoldemTableContext {
 					listener.onLeaveGame(leaveGameEvent);
 				}
 			} catch (Exception exception) {
-				connection.die();
+				connection.kill();
 			}
 		}
 
@@ -141,7 +141,7 @@ ExternalHoldemTableContext {
 					listener.onNewCommunityCards(newCommunityCardsEvent);
 				}
 			} catch (Exception exception) {
-				connection.die();
+				connection.kill();
 			}
 		}
 
@@ -151,7 +151,7 @@ ExternalHoldemTableContext {
 					listener.onNewDeal(newDealEvent);
 				}
 			} catch (Exception exception) {
-				connection.die();
+				connection.kill();
 			}
 		}
 
@@ -161,7 +161,7 @@ ExternalHoldemTableContext {
 					listener.onNewRound(newRoundEvent);
 				}
 			} catch (Exception exception) {
-				connection.die();
+				connection.kill();
 			}
 		}
 
@@ -171,7 +171,7 @@ ExternalHoldemTableContext {
 					listener.onNextPlayer(nextPlayerEvent);
 				}
 			} catch (Exception exception) {
-				connection.die();
+				connection.kill();
 			}
 		}
 
@@ -181,7 +181,7 @@ ExternalHoldemTableContext {
 					listener.onRaise(raiseEvent);
 				}
 			} catch (Exception exception) {
-				connection.die();
+				connection.kill();
 			}
 		}
 
@@ -191,7 +191,7 @@ ExternalHoldemTableContext {
 					listener.onShowHand(showHandEvent);
 				}
 			} catch (Exception exception) {
-				connection.die();
+				connection.kill();
 			}
 		}
 
@@ -201,7 +201,7 @@ ExternalHoldemTableContext {
 					listener.onSitIn(sitInEvent);
 				}
 			} catch (Exception exception) {
-				connection.die();
+				connection.kill();
 			}
 		}
 
@@ -211,7 +211,7 @@ ExternalHoldemTableContext {
 					listener.onSmallBlind(smallBlindEvent);
 				}
 			} catch (Exception exception) {
-				connection.die();
+				connection.kill();
 			}
 		}
 
@@ -221,7 +221,7 @@ ExternalHoldemTableContext {
 					listener.onWinner(winnerEvent);
 				}
 			} catch (Exception exception) {
-				connection.die();
+				connection.kill();
 			}
 		}
 

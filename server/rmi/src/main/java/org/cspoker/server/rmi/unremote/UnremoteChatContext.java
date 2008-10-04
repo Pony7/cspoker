@@ -58,7 +58,7 @@ ChatContext {
 					listener.onServerMessage(serverMessageEvent);
 				}
 			} catch (Exception exception) {
-				connection.die();
+				connection.kill();
 			}
 		}
 
@@ -68,7 +68,7 @@ ChatContext {
 					listener.onTableMessage(tableMessageEvent);
 				}
 			} catch (Exception exception) {
-				connection.die();
+				connection.kill();
 			}
 		}
 

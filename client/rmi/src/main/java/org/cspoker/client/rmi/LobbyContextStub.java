@@ -23,11 +23,11 @@ import org.cspoker.common.api.lobby.context.ForwardingRemoteLobbyContext;
 import org.cspoker.common.api.lobby.context.RemoteLobbyContext;
 import org.cspoker.common.api.lobby.holdemtable.context.RemoteHoldemTableContext;
 import org.cspoker.common.api.lobby.listener.LobbyListener;
-import org.cspoker.common.util.Wrapper;
+import org.cspoker.common.util.lazy.IWrapper;
 
 public class LobbyContextStub extends ForwardingRemoteLobbyContext{
 
-	protected ConcurrentHashMap<Long, Wrapper<RemoteHoldemTableContext,RemoteException>> wrappedContexts = new ConcurrentHashMap<Long, Wrapper<RemoteHoldemTableContext,RemoteException>>();
+	protected ConcurrentHashMap<Long, IWrapper<RemoteHoldemTableContext,RemoteException>> wrappedContexts = new ConcurrentHashMap<Long, IWrapper<RemoteHoldemTableContext,RemoteException>>();
 
 	public LobbyContextStub(RemoteLobbyContext context)
 			throws RemoteException {
@@ -41,7 +41,7 @@ public class LobbyContextStub extends ForwardingRemoteLobbyContext{
 
 	@Override
 	public RemoteHoldemTableContext getHoldemTableContext(final long tableId) throws RemoteException {
-		wrappedContexts.putIfAbsent(tableId, new Wrapper<RemoteHoldemTableContext,RemoteException>(){
+		wrappedContexts.putIfAbsent(tableId, new IWrapper<RemoteHoldemTableContext,RemoteException>(){
 
 			private RemoteHoldemTableContext content = null;
 			

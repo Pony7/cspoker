@@ -13,27 +13,10 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.server.rmi.asynchronous.context;
+package org.cspoker.common.util.lazy;
 
-import java.util.concurrent.Executor;
+public interface IFactory<T, E extends Throwable> {
 
-import org.cspoker.common.api.chat.context.ChatContext;
-import org.cspoker.common.api.chat.context.ForwardingChatContext;
-import org.cspoker.common.api.chat.listener.ChatListener;
-import org.cspoker.server.rmi.asynchronous.listener.AsynchronousChatListener;
-
-public class AsynchronousChatContext extends ForwardingChatContext {
-	
-	protected Executor executor;
-	
-	public AsynchronousChatContext(Executor executor, ChatContext chatContext) {
-		super(chatContext);
-		this.executor = executor;
-	}
-	
-	@Override
-	public ChatListener wrapListener(ChatListener listener) {
-		return new AsynchronousChatListener(executor,listener);
-	}
+	T create() throws E;
 	
 }

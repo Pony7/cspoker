@@ -57,7 +57,7 @@ public class ServerContextImpl implements ServerContext {
 		return lobbyContext;
 	}
 
-	public void die() {
+	public void kill() {
 		//TODO implement
 	}
 

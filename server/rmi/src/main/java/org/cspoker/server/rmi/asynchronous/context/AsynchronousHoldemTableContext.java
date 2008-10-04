@@ -20,27 +20,20 @@ import java.util.concurrent.Executor;
 import org.cspoker.common.api.lobby.holdemtable.context.ForwardingHoldemTableContext;
 import org.cspoker.common.api.lobby.holdemtable.context.HoldemTableContext;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.HoldemPlayerContext;
-import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
-import org.cspoker.server.rmi.asynchronous.listener.AsynchronousHoldemTableListener;
+import org.cspoker.common.api.lobby.holdemtable.holdemplayer.listener.HoldemPlayerListener;
+import org.cspoker.server.rmi.asynchronous.listener.AsynchronousHoldemPlayerListener;
 
 public class AsynchronousHoldemTableContext extends ForwardingHoldemTableContext {
 
 	protected Executor executor;
-	protected final AsynchronousHoldemPlayerContext holdemPlayerContext;
 	
 	public AsynchronousHoldemTableContext(Executor executor, HoldemTableContext holdemTableContext) {
 		super(holdemTableContext);
 		this.executor = executor;
-		this.holdemPlayerContext = new AsynchronousHoldemPlayerContext(executor, holdemTableContext.getHoldemPlayerContext());
 	}
 	
 	@Override
-	protected HoldemTableListener wrapListener(HoldemTableListener listener) {
-		return new AsynchronousHoldemTableListener(executor, listener);
-	}
-	
-	@Override
-	public HoldemPlayerContext getHoldemPlayerContext() {
-		return holdemPlayerContext;
+	public HoldemPlayerContext sitIn(long seatId, HoldemPlayerListener holdemPlayerListener) {
+		return super.sitIn(seatId, new AsynchronousHoldemPlayerListener(executor,holdemPlayerListener));
 	}
 }

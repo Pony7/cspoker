@@ -20,16 +20,12 @@ import java.util.concurrent.Executor;
 import org.cspoker.common.api.lobby.context.ForwardingLobbyContext;
 import org.cspoker.common.api.lobby.context.LobbyContext;
 import org.cspoker.common.api.lobby.holdemtable.context.HoldemTableContext;
-import org.cspoker.common.api.lobby.listener.LobbyListener;
-import org.cspoker.common.util.lazymap.LazySimpleMap;
-import org.cspoker.common.util.lazymap.SimpleFactory;
-import org.cspoker.server.rmi.asynchronous.listener.AsynchronousLobbyListener;
+import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
+import org.cspoker.server.rmi.asynchronous.listener.AsynchronousHoldemTableListener;
 
 public class AsynchronousLobbyContext extends ForwardingLobbyContext {
 
 	protected final Executor executor;
-	
-	LazySimpleMap<Long, HoldemTableContext> wrappers = new LazySimpleMap<Long, HoldemTableContext>();
 	
 	public AsynchronousLobbyContext(Executor executor, LobbyContext lobbyContext) {
 		super(lobbyContext);
@@ -37,17 +33,9 @@ public class AsynchronousLobbyContext extends ForwardingLobbyContext {
 	}
 	
 	@Override
-	protected LobbyListener wrapListener(LobbyListener listener) {
-		return new AsynchronousLobbyListener(executor, listener);
-	}
-	
-	@Override
-	public HoldemTableContext getHoldemTableContext(final long tableId) {
-		return wrappers.getOrCreate(tableId, new SimpleFactory<HoldemTableContext>(){
-			public HoldemTableContext create() {
-				return new AsynchronousHoldemTableContext(executor, lobbyContext.getHoldemTableContext(tableId));
-			}
-		});
+	public HoldemTableContext joinHoldemTable(long tableId,
+			HoldemTableListener holdemTableListener) {
+		return super.joinHoldemTable(tableId, new AsynchronousHoldemTableListener(executor, holdemTableListener));
 	}
 	
 }

@@ -6,15 +6,15 @@ import javax.security.auth.login.LoginException;
 
 import org.cspoker.common.CSPokerServer;
 import org.cspoker.common.api.shared.context.ServerContext;
-import org.cspoker.common.util.Wrapper;
+import org.cspoker.common.util.lazy.IWrapper;
 
 public class CSPokerServerImpl implements CSPokerServer {
 
-	private final ConcurrentHashMap<String, Wrapper<ServerContext,LoginException>> contexts = new ConcurrentHashMap<String, Wrapper<ServerContext,LoginException>>();
+	private final ConcurrentHashMap<String, IWrapper<ServerContext,LoginException>> contexts = new ConcurrentHashMap<String, IWrapper<ServerContext,LoginException>>();
 
 	public ServerContext login(final String username, final String password)
 			throws LoginException {
-		contexts.putIfAbsent(username, new Wrapper<ServerContext,LoginException>(){
+		contexts.putIfAbsent(username, new IWrapper<ServerContext,LoginException>(){
 			
 			private ServerContext context=null;
 			

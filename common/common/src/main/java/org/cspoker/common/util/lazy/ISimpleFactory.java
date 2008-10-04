@@ -13,25 +13,10 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.common.api.lobby.holdemtable.context;
+package org.cspoker.common.util.lazy;
 
-import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.HoldemPlayerContext;
-import org.cspoker.common.api.lobby.holdemtable.holdemplayer.listener.HoldemPlayerListener;
+public interface ISimpleFactory<T> extends IFactory<T, Throwable>{
 
-public class ForwardingHoldemTableContext implements HoldemTableContext{
-
-	private HoldemTableContext holdemTableContext;
-
-	public ForwardingHoldemTableContext(HoldemTableContext holdemTableContext) {
-		this.holdemTableContext  = holdemTableContext;
-	}
-
-	public void leaveTable() {
-		holdemTableContext.leaveTable();
-	}
-
-	public HoldemPlayerContext sitIn(long seatId, HoldemPlayerListener holdemPlayerListener) {
-		return holdemTableContext.sitIn(seatId, holdemPlayerListener);
-	}
+	T create();
 	
 }

@@ -21,22 +21,31 @@ import java.rmi.server.UnicastRemoteObject;
 import org.cspoker.common.api.lobby.context.ForwardingRemoteLobbyContext;
 import org.cspoker.common.api.lobby.context.RemoteLobbyContext;
 import org.cspoker.common.api.lobby.holdemtable.context.HoldemTableContext;
-import org.cspoker.common.util.lazymap.Factory;
-import org.cspoker.common.util.lazymap.LazyMap;
+import org.cspoker.common.api.lobby.holdemtable.context.RemoteHoldemTableContext;
+import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
+import org.cspoker.common.api.shared.Killable;
+import org.cspoker.common.util.lazy.IFactory;
+import org.cspoker.common.util.lazy.LazyMap;
 
 public class ExportingLobbyContext extends ForwardingRemoteLobbyContext {
 
-	private LazyMap<Long, HoldemTableContext, RemoteException> wrappers = new LazyMap<Long, HoldemTableContext, RemoteException>();
+	private final LazyMap<Long, RemoteHoldemTableContext, RemoteException> wrappers = new LazyMap<Long, RemoteHoldemTableContext, RemoteException>();
 	
 	public ExportingLobbyContext(RemoteLobbyContext lobbyContext) throws RemoteException {
 		super(lobbyContext);
 	}
 	
 	@Override
-	public HoldemTableContext getHoldemTableContext(final long tableId) throws RemoteException {
-		return wrappers.getOrCreate(tableId, new Factory<HoldemTableContext, RemoteException>(){
-			public HoldemTableContext create() throws RemoteException {
-				return (HoldemTableContext)UnicastRemoteObject.exportObject(new ExportingHoldemTableContext(lobbyContext.getHoldemTableContext(tableId)),0);
+	public RemoteHoldemTableContext joinHoldemTable(final long tableId,
+			final HoldemTableListener holdemTableListener) throws RemoteException {
+		return wrappers.getOrCreate(tableId, new IFactory<RemoteHoldemTableContext, RemoteException>(){
+			public RemoteHoldemTableContext create() throws RemoteException {
+				ExportingHoldemTableContext remoteObject = new ExportingHoldemTableContext(ExportingLobbyContext.super.joinHoldemTable(tableId, holdemTableListener),new Killable(){
+					public void kill() {
+						wrappers.remove(tableId);
+					}
+				});
+				return (HoldemTableContext)UnicastRemoteObject.exportObject(remoteObject,0);
 			}
 		});
 	}

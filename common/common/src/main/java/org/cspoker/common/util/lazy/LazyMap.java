@@ -13,28 +13,27 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.common.util.lazymap;
+package org.cspoker.common.util.lazy;
 
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.cspoker.common.util.SimpleWrapper;
 
-public class LazySimpleMap<K,V> {
+public class LazyMap<K,V,E extends Throwable> {
 
 	private static final long serialVersionUID = -7366678021380297939L;
 
-	private final ConcurrentHashMap<K, SimpleWrapper<V>> wrappedMap = new ConcurrentHashMap<K, SimpleWrapper<V>>();
+	private final ConcurrentHashMap<K, IWrapper<V,E>> wrappedMap = new ConcurrentHashMap<K, IWrapper<V,E>>();
 	
-	public V getOrCreate(K key, final SimpleFactory<V> factory){
-		SimpleWrapper<V> wrapper = wrappedMap.get(key);
+	public V getOrCreate(K key, final IFactory<? extends V,? extends E> factory) throws E {
+		IWrapper<V, E> wrapper = wrappedMap.get(key);
 		if(wrapper!=null){
 			return wrapper.getContent();
 		}
-		wrappedMap.putIfAbsent(key, new SimpleWrapper<V>(){
+		wrappedMap.putIfAbsent(key, new IWrapper<V,E>(){
 
 			private V content = null;
 			
-			public synchronized V getContent() {
+			public synchronized V getContent() throws E {
 				if(content == null){
 					content = factory.create();
 				}
@@ -44,4 +43,9 @@ public class LazySimpleMap<K,V> {
 		});
 		return wrappedMap.get(key).getContent();
 	}
+
+	public void remove(Object key) {
+		wrappedMap.remove(key);
+	}
+
 }

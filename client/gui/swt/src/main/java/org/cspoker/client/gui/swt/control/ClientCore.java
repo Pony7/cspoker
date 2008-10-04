@@ -170,7 +170,7 @@ public class ClientCore
 		if (lobby != null) {
 			lobby.dispose();
 		}
-		communication.die();
+		communication.kill();
 	}
 	
 	/**

@@ -72,7 +72,7 @@ LobbyContext {
 					listener.onTableCreated(tableCreatedEvent);
 				}
 			} catch (Exception exception) {
-				connection.die();
+				connection.kill();
 			}
 		}
 
@@ -82,7 +82,7 @@ LobbyContext {
 					listener.onTableRemoved(tableRemovedEvent);
 				}
 			} catch (Exception exception) {
-				connection.die();
+				connection.kill();
 			}
 		}
 
