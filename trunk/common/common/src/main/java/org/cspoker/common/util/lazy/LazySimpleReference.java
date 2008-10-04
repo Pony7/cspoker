@@ -13,10 +13,17 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.common.util.lazymap;
+package org.cspoker.common.util.lazy;
 
-public interface SimpleFactory<T> extends Factory<T, Throwable>{
-
-	T create();
+public class LazySimpleReference<T> implements ILazySimpleReference<T>{
 	
+	private T object = null;
+
+	public synchronized T getContent(ISimpleFactory<? extends T> factory) {
+		if(object == null){
+			object = factory.create();
+		}
+		return object;
+	}
+
 }

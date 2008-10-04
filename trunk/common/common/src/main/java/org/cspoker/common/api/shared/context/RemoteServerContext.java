@@ -36,5 +36,5 @@ public interface RemoteServerContext extends Remote, Killable{
 
 	RemoteLobbyContext getLobbyContext(LobbyListener lobbyListener) throws RemoteException;
 	
-	void die();
+	void kill();
 }

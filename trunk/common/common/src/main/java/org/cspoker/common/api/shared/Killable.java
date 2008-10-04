@@ -17,6 +17,6 @@ package org.cspoker.common.api.shared;
 
 public interface Killable {
 
-	void die();
+	void kill();
 	
 }

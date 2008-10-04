@@ -17,11 +17,8 @@ package org.cspoker.common.api.lobby.context;
 
 import java.rmi.RemoteException;
 
-import org.cspoker.common.api.lobby.holdemtable.context.HoldemTableContext;
 import org.cspoker.common.api.lobby.holdemtable.context.RemoteHoldemTableContext;
 import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
-import org.cspoker.common.api.lobby.listener.ForwardingLobbyListener;
-import org.cspoker.common.api.lobby.listener.LobbyListener;
 import org.cspoker.common.elements.table.DetailedHoldemTable;
 import org.cspoker.common.elements.table.TableConfiguration;
 import org.cspoker.common.elements.table.TableList;
@@ -48,7 +45,7 @@ public class ForwardingRemoteLobbyContext implements RemoteLobbyContext{
 		return lobbyContext.getTableList();
 	}
 
-	public HoldemTableContext joinHoldemTable(long tableId,
+	public RemoteHoldemTableContext joinHoldemTable(long tableId,
 			HoldemTableListener holdemTableListener) throws RemoteException {
 		return lobbyContext.joinHoldemTable(tableId, holdemTableListener);
 	}

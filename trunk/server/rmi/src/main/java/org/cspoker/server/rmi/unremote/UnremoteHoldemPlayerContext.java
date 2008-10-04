@@ -58,7 +58,7 @@ ExternalHoldemPlayerContext {
 					listener.onNewPocketCards(newPocketCardsEvent);
 				}
 			} catch (Exception exception) {
-				connection.die();
+				connection.kill();
 			}
 		}
 

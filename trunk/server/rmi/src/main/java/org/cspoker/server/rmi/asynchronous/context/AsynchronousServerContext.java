@@ -18,29 +18,31 @@ package org.cspoker.server.rmi.asynchronous.context;
 import java.util.concurrent.Executor;
 
 import org.cspoker.common.api.chat.context.ChatContext;
+import org.cspoker.common.api.chat.listener.ChatListener;
 import org.cspoker.common.api.lobby.context.LobbyContext;
+import org.cspoker.common.api.lobby.listener.LobbyListener;
 import org.cspoker.common.api.shared.context.ForwardingServerContext;
 import org.cspoker.common.api.shared.context.ServerContext;
+import org.cspoker.server.rmi.asynchronous.listener.AsynchronousChatListener;
+import org.cspoker.server.rmi.asynchronous.listener.AsynchronousLobbyListener;
 
 public class AsynchronousServerContext extends ForwardingServerContext {
 
-	private ChatContext chatContext;
-	private LobbyContext lobbyContext;
-	
+	private Executor executor;
+
 	public AsynchronousServerContext(Executor executor, ServerContext serverContext) {
 		super(serverContext);
-		chatContext = new AsynchronousChatContext(executor,super.getChatContext());
-		lobbyContext = new AsynchronousLobbyContext(executor,super.getLobbyContext());
+		this.executor = executor;
 	}
 	
 	@Override
-	public ChatContext getChatContext() {
-		return chatContext;
+	public ChatContext getChatContext(ChatListener chatListener) {
+		return super.getChatContext(new AsynchronousChatListener(executor,chatListener));
 	}
 	
 	@Override
-	public LobbyContext getLobbyContext() {
-		return lobbyContext;
+	public LobbyContext getLobbyContext(LobbyListener lobbyListener) {
+		return super.getLobbyContext(new AsynchronousLobbyListener(executor, lobbyListener));
 	}
 
 }
