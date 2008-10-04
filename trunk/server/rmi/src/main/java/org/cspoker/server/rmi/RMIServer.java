@@ -36,7 +36,7 @@ import org.cspoker.common.api.shared.context.ServerContext;
 import org.cspoker.server.common.util.threading.RequestExecutor;
 import org.cspoker.server.rmi.asynchronous.context.AsynchronousServerContext;
 import org.cspoker.server.rmi.export.ExportingServerContext;
-import org.cspoker.server.rmi.unremote.UnremoteServerContext;
+import org.cspoker.server.rmi.unremote.context.UnremoteServerContext;
 
 public class RMIServer implements RemoteCSPokerServer {
 
