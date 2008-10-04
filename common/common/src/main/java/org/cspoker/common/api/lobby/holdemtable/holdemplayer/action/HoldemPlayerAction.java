@@ -19,7 +19,7 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 
 import org.cspoker.common.api.lobby.holdemtable.action.HoldemTableAction;
-import org.cspoker.common.api.lobby.holdemtable.context.HoldemTableContext;
+import org.cspoker.common.api.lobby.holdemtable.context.StaticHoldemTableContext;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.HoldemPlayerContext;
 
 
@@ -36,7 +36,7 @@ public abstract class HoldemPlayerAction<T> extends HoldemTableAction<T> {
 		// no op
 	}
 
-	public T perform(HoldemTableContext holdemTableContext){
+	public T perform(StaticHoldemTableContext holdemTableContext){
 		return perform(holdemTableContext.getHoldemPlayerContext());
 	}
 

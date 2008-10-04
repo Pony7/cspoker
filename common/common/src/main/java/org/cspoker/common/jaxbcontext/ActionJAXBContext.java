@@ -33,7 +33,6 @@ import org.cspoker.common.api.lobby.action.TableInformationAction;
 import org.cspoker.common.api.lobby.action.TableListAction;
 import org.cspoker.common.api.lobby.holdemtable.action.LeaveTableAction;
 import org.cspoker.common.api.lobby.holdemtable.action.SitInAction;
-import org.cspoker.common.api.lobby.holdemtable.action.StartGameAction;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.action.BetOrRaiseAction;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.action.CheckOrCallAction;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.action.FoldAction;
@@ -56,15 +55,20 @@ public class ActionJAXBContext {
 	}
 
 	public static Class<?>[] getActions() {
-		return new Class<?>[] { BetOrRaiseAction.class,
-				CheckOrCallAction.class, CreateTableAction.class,
-				FoldAction.class, JoinTableAction.class,
-				LeaveTableAction.class, SendServerMessageAction.class,
-				StartGameAction.class, TableInformationAction.class,
-				TableListAction.class, MoneyAmountAction.class, RequestMoneyAction.class, 
-				SendTableMessageAction.class, SitInAction.class, LeaveGameAction.class,
-				ChangePasswordAction.class, CreateAccountAction.class, GetAvatarAction.class,
-				SetAvatarAction.class};
+		return new Class<?>[] { 
+				//account
+				ChangePasswordAction.class, CreateAccountAction.class, GetAvatarAction.class, SetAvatarAction.class,
+				//cashier
+				MoneyAmountAction.class, RequestMoneyAction.class,
+				//chat
+				SendServerMessageAction.class,SendTableMessageAction.class,
+				//lobby
+				CreateTableAction.class,JoinTableAction.class,TableInformationAction.class, TableListAction.class,
+				//table
+				LeaveTableAction.class,SitInAction.class,
+				//player
+				BetOrRaiseAction.class, CheckOrCallAction.class, FoldAction.class, LeaveGameAction.class
+				};
 	}
 
 }

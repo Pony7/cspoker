@@ -15,9 +15,9 @@
  */
 package org.cspoker.common.api.lobby.action;
 
-import org.cspoker.common.api.lobby.context.LobbyContext;
+import org.cspoker.common.api.lobby.context.StaticLobbyContext;
 import org.cspoker.common.api.shared.action.Action;
-import org.cspoker.common.api.shared.context.ServerContext;
+import org.cspoker.common.api.shared.context.StaticServerContext;
 
 public abstract class LobbyAction<T> extends Action<T> {
 
@@ -32,10 +32,10 @@ public abstract class LobbyAction<T> extends Action<T> {
 	}
 
 	@Override
-	public T perform(ServerContext serverContext) {
+	public T perform(StaticServerContext serverContext) {
 		return perform(serverContext.getLobbyContext());
 	}
 
-	public abstract T perform(LobbyContext lobbyContext);
+	public abstract T perform(StaticLobbyContext lobbyContext);
 	
 }

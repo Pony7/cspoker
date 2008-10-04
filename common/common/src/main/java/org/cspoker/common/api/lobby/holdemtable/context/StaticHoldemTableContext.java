@@ -13,29 +13,14 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.common.api.lobby.holdemtable.action;
+package org.cspoker.common.api.lobby.holdemtable.context;
 
-import javax.xml.bind.annotation.XmlRootElement;
+import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.HoldemPlayerContext;
 
-import org.cspoker.common.api.lobby.holdemtable.context.HoldemTableContext;
+public interface StaticHoldemTableContext extends HoldemTableContext {
 
-
-@XmlRootElement
-public class StartGameAction extends HoldemTableAction<Void> {
-
-	private static final long serialVersionUID = -9206076069585536504L;
-
-	public StartGameAction(long id, long tableId) {
-		super(id, tableId);
-	}
-
-	protected StartGameAction() {
-		// no op
-	}
-
-	@Override
-	public Void perform(HoldemTableContext holdemTableContext) {
-		holdemTableContext.startGame();
-		return null;
-	}
+	public void sitIn(long seatId);
+	
+	public HoldemPlayerContext getHoldemPlayerContext();
+	
 }

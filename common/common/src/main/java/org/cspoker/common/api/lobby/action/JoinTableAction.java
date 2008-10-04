@@ -17,11 +17,10 @@ package org.cspoker.common.api.lobby.action;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.cspoker.common.api.lobby.context.LobbyContext;
-import org.cspoker.common.elements.table.DetailedHoldemTable;
+import org.cspoker.common.api.lobby.context.StaticLobbyContext;
 
 @XmlRootElement
-public class JoinTableAction extends LobbyAction<DetailedHoldemTable> {
+public class JoinTableAction extends LobbyAction<Void> {
 
 	private static final long serialVersionUID = -6693307709200837257L;
 
@@ -37,8 +36,9 @@ public class JoinTableAction extends LobbyAction<DetailedHoldemTable> {
 	}
 	
 	@Override
-	public DetailedHoldemTable perform(LobbyContext lobbyContext) {
-		return lobbyContext.joinTable(tableId);
+	public Void perform(StaticLobbyContext lobbyContext) {
+		lobbyContext.joinHoldemTable(tableId);
+		return null;
 	}
 
 }

@@ -13,32 +13,15 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.common.api.lobby.action;
+package org.cspoker.common.api.shared.context;
 
-import javax.xml.bind.annotation.XmlRootElement;
+import org.cspoker.common.api.chat.context.ChatContext;
+import org.cspoker.common.api.lobby.context.StaticLobbyContext;
 
-import org.cspoker.common.api.lobby.context.LobbyContext;
+public interface StaticServerContext extends ServerContext{
 
-@XmlRootElement
-public class RemoveTableAction extends LobbyAction<Void> {
-
-	private static final long serialVersionUID = -6693307709200837257L;
-
-	private long tableId;
-
-	public RemoveTableAction(long id, long tableId) {
-		super(id);
-		this.tableId = tableId;
-	}
-
-	protected RemoveTableAction() {
-		// no op
-	}
+	public ChatContext getChatContext();
 	
-	@Override
-	public Void perform(LobbyContext lobbyContext) {
-		lobbyContext.removeTable(tableId);
-		return null;
-	}
-
+	public StaticLobbyContext getLobbyContext();
+	
 }
