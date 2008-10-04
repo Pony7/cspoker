@@ -22,7 +22,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.cspoker.common.api.lobby.context.ForwardingRemoteLobbyContext;
 import org.cspoker.common.api.lobby.context.RemoteLobbyContext;
 import org.cspoker.common.api.lobby.holdemtable.context.RemoteHoldemTableContext;
-import org.cspoker.common.api.lobby.listener.LobbyListener;
+import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
 import org.cspoker.common.util.lazy.IWrapper;
 
 public class LobbyContextStub extends ForwardingRemoteLobbyContext{
@@ -35,23 +35,9 @@ public class LobbyContextStub extends ForwardingRemoteLobbyContext{
 	}
 	
 	@Override
-	public LobbyListener wrapListener(LobbyListener listener) throws RemoteException {
-		return (LobbyListener) UnicastRemoteObject.exportObject(listener, 0);
-	}
-
-	@Override
-	public RemoteHoldemTableContext getHoldemTableContext(final long tableId) throws RemoteException {
-		wrappedContexts.putIfAbsent(tableId, new IWrapper<RemoteHoldemTableContext,RemoteException>(){
-
-			private RemoteHoldemTableContext content = null;
-			
-			public synchronized RemoteHoldemTableContext getContent() throws RemoteException {
-				if(content == null){
-					content = new HoldemTableContextStub(lobbyContext.getHoldemTableContext(tableId));
-				}
-				return content;
-			}
-		});
-		return wrappedContexts.get(tableId).getContent();
+	public RemoteHoldemTableContext joinHoldemTable(long tableId,
+			HoldemTableListener holdemTableListener) throws RemoteException {
+		RemoteHoldemTableContext tableContext = super.joinHoldemTable(tableId,(HoldemTableListener) UnicastRemoteObject.exportObject(holdemTableListener, 0));
+		return new HoldemTableContextStub(tableContext);
 	}
 }
