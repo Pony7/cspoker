@@ -13,35 +13,14 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.common.api.shared.listener;
+package org.cspoker.common.api.lobby.holdemtable.context;
 
-import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
+import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.HoldemPlayerContext;
+import org.cspoker.common.api.lobby.holdemtable.holdemplayer.listener.RemoteHoldemPlayerListener;
 
-public class ForwardingListener<T extends EventListener> {
+public interface ExternalHoldemTableContext extends HoldemTableContext {
 
-	protected final List<T> listeners;
-
-	public ForwardingListener() {
-		this(new CopyOnWriteArrayList<T>());
-	}
-	
-	public ForwardingListener(T listener) {
-		this();
-		subscribe(listener);
-	}
-	
-	public ForwardingListener(List<T> listeners) {
-		this.listeners = listeners;
-	}
-	
-	
-	public void subscribe(T listener){
-		listeners.add(listener);
-	}
-	
-	public void unSubscribe(T listener){
-		listeners.remove(listener);
-	}
+	public HoldemPlayerContext sitIn(long seatId,
+			RemoteHoldemPlayerListener holdemPlayerListener);
 	
 }
