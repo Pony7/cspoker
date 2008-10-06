@@ -19,6 +19,7 @@ import java.rmi.RemoteException;
 
 import org.cspoker.common.api.lobby.holdemtable.context.RemoteHoldemTableContext;
 import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
+import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.table.DetailedHoldemTable;
 import org.cspoker.common.elements.table.TableConfiguration;
 import org.cspoker.common.elements.table.TableList;
@@ -46,7 +47,7 @@ public class ForwardingRemoteLobbyContext implements RemoteLobbyContext{
 	}
 
 	public RemoteHoldemTableContext joinHoldemTable(long tableId,
-			HoldemTableListener holdemTableListener) throws RemoteException {
+			HoldemTableListener holdemTableListener) throws RemoteException, IllegalActionException {
 		return lobbyContext.joinHoldemTable(tableId, holdemTableListener);
 	}
 

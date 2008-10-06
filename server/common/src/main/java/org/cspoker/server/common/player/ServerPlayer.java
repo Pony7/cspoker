@@ -19,7 +19,7 @@ import org.cspoker.common.elements.player.Player;
 import org.cspoker.server.common.elements.chips.Chips;
 import org.cspoker.server.common.elements.chips.IllegalValueException;
 
-public class GamePlayer {
+public class ServerPlayer {
 
 	private final long id;
 
@@ -40,7 +40,7 @@ public class GamePlayer {
 	 * @throws IllegalValueException
 	 *         The given initial value is not valid.
 	 */
-	GamePlayer(long id, String name, int initialNbChips)
+	ServerPlayer(long id, String name, int initialNbChips)
 			throws IllegalValueException {
 		this.id = id;
 		this.name = name;

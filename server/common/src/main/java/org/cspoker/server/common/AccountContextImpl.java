@@ -17,19 +17,23 @@
 
 import javax.security.auth.login.LoginException;
 
-import org.cspoker.common.elements.player.Player;
 import org.cspoker.server.common.authentication.XmlFileAuthenticator;
+import org.cspoker.server.common.player.PlayerFactory;
+import org.cspoker.server.common.player.ServerPlayer;
 
 public class AccountContextImpl implements ExtendedAccountContext{
 
 	private static XmlFileAuthenticator authenticator = new XmlFileAuthenticator();
-	private final String name;
+		
+	private ServerPlayer player;
+	
 
 	public AccountContextImpl(String username, String password) throws LoginException {
 		if(!authenticator.hasPassword(username, password)){
 			throw new LoginException();
 		}
-		this.name = username;
+		player = PlayerFactory.global_Player_Factory.createNewPlayer(username);
+		
 	}
 
 	public void changePassword(String passwordHash) throws UnsupportedOperationException{
@@ -48,8 +52,8 @@ public class AccountContextImpl implements ExtendedAccountContext{
 		throw new UnsupportedOperationException();
 	}
 
-	public Player getPlayer(){
-		return new Player(0,name); //TODO
+	public ServerPlayer getPlayer(){
+		return player;
 	}
 
 }
