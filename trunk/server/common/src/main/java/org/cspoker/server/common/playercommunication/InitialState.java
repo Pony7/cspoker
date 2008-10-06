@@ -85,7 +85,7 @@ class InitialState extends PlayerCommunicationState {
 			mediator.subscribeAllGameEventsListener(
 					playerCommunication.getId(), playerCommunication
 							.getAllEventsListener());
-			mediator.joinGame(seatId, playerCommunication.getPlayer());
+			mediator.joinTable(seatId, playerCommunication.getPlayer());
 			playerCommunication.setPlayerCommunicationState(new PlayingState(
 					playerCommunication, mediator));
 		} else {

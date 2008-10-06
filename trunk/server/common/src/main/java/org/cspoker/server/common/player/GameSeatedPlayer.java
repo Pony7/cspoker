@@ -38,7 +38,7 @@ public class GameSeatedPlayer {
 	 * Variables
 	 **************************************************************************/
 	
-	private final GamePlayer player;
+	private final ServerPlayer player;
 	
 	private final Chips stack;
 
@@ -77,10 +77,10 @@ public class GameSeatedPlayer {
 	 */
 	GameSeatedPlayer(long id, String name, int initialNbChips)
 			throws IllegalValueException {
-		this(new GamePlayer(id,name,2*initialNbChips), initialNbChips);
+		this(new ServerPlayer(id,name,2*initialNbChips), initialNbChips);
 	}
 	
-	public GameSeatedPlayer(GamePlayer player, int buyIn) throws IllegalValueException {
+	public GameSeatedPlayer(ServerPlayer player, int buyIn) throws IllegalValueException {
 		this.player = player;
 		this.stack = new Chips();
 		player.getStack().transferAmountTo(buyIn, stack);

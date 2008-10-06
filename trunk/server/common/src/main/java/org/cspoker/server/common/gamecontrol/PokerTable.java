@@ -41,6 +41,7 @@ import org.cspoker.common.api.lobby.holdemtable.event.ShowHandEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.SmallBlindEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.WinnerEvent;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.event.NewPocketCardsEvent;
+import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
 import org.cspoker.common.api.shared.event.ServerEvent;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.api.shared.listener.EventListener;
@@ -49,8 +50,11 @@ import org.cspoker.common.elements.table.DetailedHoldemTable;
 import org.cspoker.common.elements.table.Table;
 import org.cspoker.common.elements.table.TableConfiguration;
 import org.cspoker.server.common.ExtendedAccountContext;
+import org.cspoker.server.common.elements.id.PlayerId;
+import org.cspoker.server.common.elements.id.SeatId;
 import org.cspoker.server.common.elements.id.TableId;
 import org.cspoker.server.common.player.GameSeatedPlayer;
+import org.cspoker.server.common.player.ServerPlayer;
 import org.cspoker.server.common.util.threading.ScheduledRequestExecutor;
 
 /**
@@ -77,6 +81,11 @@ public class PokerTable {
 	private final ExtendedAccountContext creator;
 	
 	private TableConfiguration configuration;
+	
+	
+	/***************************************************************************
+	 * Constructor
+	 **************************************************************************/
 	
 	public PokerTable(TableId id, String name, TableConfiguration configuration, ExtendedAccountContext creator){
 		
@@ -173,9 +182,6 @@ public class PokerTable {
 		return new Table(getTableId().getId(), getName());
 	}
 	
-	public HoldemTableContext getHolemTableContext(ExtendedAccountContext accountContext){
-		return null; //TODO
-	}
 	
 	public boolean isEmpty(){
 		return false; //TODO
@@ -295,14 +301,21 @@ public class PokerTable {
 		cancelOldTimeOut();
 	}
 
-	public void joinGame(long seatId, GameSeatedPlayer player)
-			throws IllegalActionException {
-		gameControl.joinGame(seatId, player);
+	public HoldemTableContext joinTable(ServerPlayer player, HoldemTableListener holdemTableListener) throws IllegalActionException {
+
 		
 		//TODO publish
 	}
+	
+	public void sitIn(SeatId seatId, GameSeatedPlayer player){
+		gameControl.joinTable(seatId, player);
+		//TODO (only if joined)
+	}
 
 	public void leaveGame(GameSeatedPlayer player) throws IllegalActionException {
+		
+		//unsubscribe hodem listener
+		
 		gameControl.leaveGame(player);
 	}
 

@@ -76,7 +76,7 @@ public class JoinAndLeaveGameTest extends TestCase {
 			gameControl.leaveGame(kenzo);
 			assertEquals(0, kenzo.getBetChips().getValue());
 			assertEquals(WaitingRound.class, gameControl.getRound().getClass());
-			gameControl.joinGame(null, kenzo);
+			gameControl.joinTable(null, kenzo);
 			assertEquals(PreFlopRound.class, gameControl.getRound().getClass());
 		} catch (IllegalActionException e) {
 			fail(e.getMessage());
@@ -108,7 +108,7 @@ public class JoinAndLeaveGameTest extends TestCase {
 			gameControl.leaveGame(cedric);
 			assertEquals(0, cedric.getBetChips().getValue());
 			assertEquals(WaitingRound.class, gameControl.getRound().getClass());
-			gameControl.joinGame(null, cedric);
+			gameControl.joinTable(null, cedric);
 			assertEquals(PreFlopRound.class, gameControl.getRound().getClass());
 		} catch (IllegalActionException e) {
 			fail(e.getMessage());
@@ -142,7 +142,7 @@ public class JoinAndLeaveGameTest extends TestCase {
 			gameControl.fold(cedric);
 			assertEquals(cedric, gameControl.getGame().getDealer());
 			assertEquals(guy, gameControl.getGame().getNextDealer());
-			gameControl.joinGame(null, kenzo);
+			gameControl.joinTable(null, kenzo);
 			assertTrue(gameControl.getGame().getTable().hasAsPlayer(kenzo));
 			assertFalse(gameControl.getGame().hasAsActivePlayer(kenzo));
 			gameControl.fold(cedric);
@@ -182,7 +182,7 @@ public class JoinAndLeaveGameTest extends TestCase {
 			gameControl.fold(kenzo);
 			assertEquals(cedric, gameControl.getGame().getDealer());
 			assertEquals(kenzo, gameControl.getGame().getNextDealer());
-			gameControl.joinGame(null, guy);
+			gameControl.joinTable(null, guy);
 			assertTrue(gameControl.getGame().getTable().hasAsPlayer(guy));
 			assertFalse(gameControl.getGame().hasAsActivePlayer(guy));
 			gameControl.fold(cedric);
@@ -222,7 +222,7 @@ public class JoinAndLeaveGameTest extends TestCase {
 			gameControl.fold(kenzo);
 			assertEquals(guy, gameControl.getGame().getDealer());
 			assertEquals(kenzo, gameControl.getGame().getNextDealer());
-			gameControl.joinGame(null, cedric);
+			gameControl.joinTable(null, cedric);
 			assertTrue(gameControl.getGame().getTable().hasAsPlayer(cedric));
 			assertFalse(gameControl.getGame().hasAsActivePlayer(cedric));
 			gameControl.fold(guy);

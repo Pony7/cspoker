@@ -503,7 +503,7 @@ public class GameFlowTest extends TestCase {
 				.createNewPlayer("test");
 
 		try {
-			gameControl.joinGame(new SeatId(4), testPlayer);
+			gameControl.joinTable(new SeatId(4), testPlayer);
 			assertFalse(gameControl.getRound() instanceof WaitingRound);
 		} catch (IllegalActionException e) {
 			fail(e.getMessage());

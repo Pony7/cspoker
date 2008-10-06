@@ -12,6 +12,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import org.cspoker.common.api.lobby.event.TableCreatedEvent;
 import org.cspoker.common.api.lobby.event.TableRemovedEvent;
 import org.cspoker.common.api.lobby.holdemtable.context.HoldemTableContext;
+import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
 import org.cspoker.common.api.lobby.listener.LobbyListener;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.table.DetailedHoldemTable;
@@ -52,20 +53,15 @@ public class Lobby{
 		tables.put(tableId, table);
 		
 		for(LobbyListener listener:lobbyListeners){
-			listener.onTableCreated(new TableCreatedEvent(accountContext.getPlayer(), new Table(tableId.getId(), name)));
+			listener.onTableCreated(new TableCreatedEvent(accountContext.getPlayer().getMemento(), new Table(tableId.getId(), name)));
 		}
 		
 		return table.getTableInformation();
 	}
 
-	public HoldemTableContext getHoldemTableContext(ExtendedAccountContext accountContext, long tableId) {
-		PokerTable mediator = tables.get(tableId);
-		return mediator!=null? mediator.getHolemTableContext(accountContext): null;
-	}
-
 	public DetailedHoldemTable getTableInformation(long tableId) {
-		PokerTable mediator = tables.get(tableId);
-		return mediator!=null? mediator.getTableInformation(): null;
+		PokerTable table = tables.get(tableId);
+		return table!=null? table.getTableInformation(): null;
 	}
 
 	public TableList getTableList() {
@@ -77,15 +73,17 @@ public class Lobby{
 		return new TableList(new ArrayList<Table>(tableList));
 	}
 
-	public HoldemTableContext joinTable(TableId tableId,
-			HoldemTableContext holdemTableContext,ExtendedAccountContext accountContext) throws IllegalActionException{
+	public HoldemTableContext joinTable(TableId tableId, HoldemTableListener holdemTableListener, ExtendedAccountContext accountContext) throws IllegalActionException{
 		if(!tables.containsKey(tableId)){
 			throw new IllegalActionException("The provided table #"+tableId+" to join does not exist.");
 		}
+		if(holdemTableListener==null)
+			throw new IllegalArgumentException("The given holdem table listener is not effective.");
 		
 		
 		PokerTable table = tables.get(tableId);
-		return null;//TODO
+		
+		return table.joinTable(accountContext.getPlayer(), holdemTableListener);
 	}
 
 	public void removeTable(long tableId) {
