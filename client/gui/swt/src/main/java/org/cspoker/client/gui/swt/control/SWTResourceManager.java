@@ -1,10 +1,12 @@
 package org.cspoker.client.gui.swt.control;
 
 import java.io.File;
-import java.io.InputStream;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.Vector;
 
+import org.apache.log4j.Logger;
 import org.cspoker.common.elements.cards.Card;
 import org.cspoker.common.elements.cards.Rank;
 import org.cspoker.common.elements.cards.Suit;
@@ -22,6 +24,8 @@ import org.eclipse.swt.widgets.Widget;
  * #SWTResourceManager:version4.0.0#
  */
 public class SWTResourceManager {
+	
+	private final static Logger logger = Logger.getLogger(SWTResourceManager.class);
 	
 	private static HashMap<String, Resource> resources = new HashMap<String, Resource>();
 	private static Vector<Widget> users = new Vector<Widget>();
@@ -52,6 +56,9 @@ public class SWTResourceManager {
 		widget.addDisposeListener(disposeListener);
 	}
 	
+	/**
+	 * Disposes of all cached resources.
+	 */
 	public static void dispose() {
 		for (Resource r : resources.values()) {
 			r.dispose();
@@ -109,21 +116,6 @@ public class SWTResourceManager {
 	/***************************************************************************
 	 * Image methods
 	 **************************************************************************/
-	public static Image getImage(String fileAsString) {
-		try {
-			if (resources.containsKey(fileAsString))
-				return (Image) resources.get(fileAsString);
-			InputStream ips = instance.getClass().getClassLoader().getResourceAsStream(fileAsString);
-			if (ips == null)
-				return null;
-			Image img = new Image(Display.getDefault(), ips);
-			resources.put(fileAsString, img);
-			return img;
-		} catch (Exception e) {
-			System.err.println("SWTResourceManager.getImage: Error getting image " + fileAsString + ", " + e);
-			return null;
-		}
-	}
 	
 	/**
 	 * Delegates to {@link SWTResourceManager#getImage(String)}.
@@ -135,19 +127,35 @@ public class SWTResourceManager {
 	 * @return The image contained in the file
 	 */
 	public static Image getImage(File file) {
-		return getImage(file.toString());
-	}
-	
-	public static Image getCardImage(Card card) {
-		
-		if (resources.containsKey(card.toString()))
-			return (Image) resources.get(card.toString());
-		Image deck = getImage(ClientGUI.Resources.ACTIVE_DECK_IMG_FILE);
-		if (deck == null) {
-			System.err.println("Deck img not found");
+		try {
+			if (resources.containsKey(file.toString()))
+				return (Image) resources.get(file.toString());
+			
+			Image img = new Image(Display.getDefault(), new FileInputStream(file));
+			resources.put(file.toString(), img);
+			return img;
+		} catch (Exception e) {
+			logger.error("SWTResourceManager.getImage: Error getting image " + file + ", " + e);
 			return null;
 		}
-		Image img = getCardFromDeck(deck, card);
+		
+	}
+	
+	/**
+	 * @param card The playing card
+	 * @return The image for the card
+	 */
+	public static Image getCardImage(Card card) {
+		Image img = null;
+		if (resources.containsKey(card.toString()))
+			return (Image) resources.get(card.toString());
+		if (ClientGUI.Resources.ACTIVE_DECK_IMG_FILE.isFile()) {
+			Image deck = getImage(ClientGUI.Resources.ACTIVE_DECK_IMG_FILE);
+			img = getCardFromDeck(deck, card);
+		} else {
+			img = getImage(new File(ClientGUI.Resources.ACTIVE_DECK_IMG_FILE, card.toString() + ".png"));
+		}
+		
 		resources.put(card.toString(), img);
 		return img;
 		
@@ -160,7 +168,7 @@ public class SWTResourceManager {
 			xLookUp = 14;
 			yLookUp = 1;
 		} else {
-			System.out.println("Card: " + card + "x: " + card.getRank().ordinal() + ", y: " + card.getSuit().ordinal());
+			logger.debug("Card: " + card + "x: " + card.getRank().ordinal() + ", y: " + card.getSuit().ordinal());
 			xLookUp = Rank.values().length - card.getRank().ordinal();
 			yLookUp = Suit.values().length - card.getSuit().ordinal();
 		}
@@ -179,34 +187,37 @@ public class SWTResourceManager {
 		int xLookUp, yLookUp;
 		int indexInSet = Chip.AVAILABLE_CHIPS.headSet(chip, false).size();
 		
-		xLookUp = indexInSet % 5;
-		yLookUp = indexInSet / 5;
+		xLookUp = indexInSet % 5 + 1;
+		yLookUp = indexInSet / 5 + 1;
 		Image chipImg = getImageFromCollection(chipPngImg, new Point(5, 3), new Point(xLookUp, yLookUp));
 		
 		resources.put(chip.toString() + size, chipImg);
 		return chipImg;
 	}
 	
-	public static Image getChipImage(Chip chip, int size) {
+	/**
+	 * @param chip
+	 * @param size
+	 * @return
+	 * @throws FileNotFoundException
+	 */
+	public static Image getChipImage(Chip chip, int size)
+			throws FileNotFoundException {
 		Image chipImg = null;
-		if (ClientGUI.Resources.ACTIVE_CHIP_DIR == ClientGUI.Resources.FREE_CHIP_IMAGE_FILE) {
+		if (ClientGUI.Resources.ACTIVE_CHIP_DIR.equals(ClientGUI.Resources.FREE_CHIP_IMAGE_FILE)) {
 			chipImg = SWTResourceManager.getChipFromPNG(chip, size);
 		}
 		if (chipImg != null)
 			return chipImg;
-		if (resources.containsKey(chip.toString() + size))
-			return (Image) resources.get(chip.toString() + size);
+		if (resources.containsKey(chip.getImageFile(size).toString()))
+			return (Image) resources.get(chip.getImageFile(size).toString());
+		Image img = new Image(Display.getDefault(), new FileInputStream(chip.getImageFile(size)));
+		Image mask = new Image(Display.getDefault(), new FileInputStream(chip.getMaskImageFile(size)));
 		
-		String fileAsString = (ClientGUI.Resources.ACTIVE_CHIP_DIR).toString() + size + "/" + chip.getFileId();
-		fileAsString = fileAsString + ".";
-		String imgUrl = fileAsString + "bmp";
-		String maskUrl = fileAsString + "a.bmp";
-		Image img = new Image(Display.getDefault(), ClientGUI.class.getClassLoader().getResourceAsStream(imgUrl));
-		Image mask = new Image(Display.getDefault(), ClientGUI.class.getClassLoader().getResourceAsStream(maskUrl));
 		Image icon = new Image(Display.getDefault(), img.getImageData(), mask.getImageData());
 		img.dispose();
 		mask.dispose();
-		resources.put(chip.toString() + size, icon);
+		resources.put(chip.getImageFile(size).toString(), icon);
 		return icon;
 	}
 	

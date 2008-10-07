@@ -13,11 +13,15 @@ package org.cspoker.client.gui.swt.control;
 
 import java.rmi.RemoteException;
 
+import javax.security.auth.login.LoginException;
+
 import org.apache.log4j.Logger;
 import org.cspoker.client.User;
 import org.cspoker.client.gui.swt.window.GameWindow;
 import org.cspoker.client.gui.swt.window.LobbyWindow;
 import org.cspoker.client.gui.swt.window.LoginDialog;
+import org.cspoker.common.CSPokerServer;
+import org.cspoker.common.RemoteCSPokerServer;
 import org.cspoker.common.api.chat.listener.ChatListener;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.listener.HoldemPlayerListener;
 import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
@@ -46,7 +50,7 @@ public class ClientCore
 		implements ServerListenerTree, Runnable {
 	
 	private static final User DEFAULT_TEST_USER = new User("test", "test");
-	private static final String LOG4J_PROPERTY_FILE = "org/cspoker/client/gui/text/logging/log4j.properties";
+	private static final String LOG4J_PROPERTY_FILE = "org/cspoker/client/gui/swt/logging/log4j.properties";
 	/**
 	 * Default port for RMI (<code>1099</code>)
 	 */
@@ -67,8 +71,10 @@ public class ClientCore
 	
 	/**
 	 * Starts a new client
+	 * 
+	 * @param args No parameters needed
 	 */
-	public static void main(String[] args) {
+	public static void main(String... args) {
 		new ClientCore().run();
 	}
 	
@@ -105,6 +111,7 @@ public class ClientCore
 	 */
 	public ClientCore(User user) {
 		this.user = user;
+		gui = new ClientGUI(this);
 	}
 	
 	/**
@@ -136,10 +143,7 @@ public class ClientCore
 		// Run the whole GUI inside a try-catch for now so we can catch
 		// unexpected failures
 		try {
-			gui = new ClientGUI(this);
-			while (communication == null) {
-				communication = getGui().createNewLoginDialog().open();
-			}
+			gui.createNewLoginDialog().open();
 			getUser().setLoggedIn(true);
 			// TODO Make sure we register to receive events from the server
 			// communication.subscribe(this);
@@ -152,7 +156,7 @@ public class ClientCore
 			logger.info("Attempting reset");
 			// TODO Kill communication, reset everything
 			resetAll();
-			ClientGUI.displayErrorMessage(e);
+			ClientGUI.displayException(e);
 			// and then start anew
 			run();
 		}
@@ -228,6 +232,9 @@ public class ClientCore
 	}
 	
 	/**
+	 * The ClientCore should be a central entity for trying to recover from
+	 * remote exceptions encountered throughout the client's various GameWindows
+	 * 
 	 * @param e The exception returned from the server
 	 * @return If checking connection status was successful
 	 */
@@ -237,5 +244,25 @@ public class ClientCore
 		// Try to reconnect a couple of times
 		// TODO Implement reconnect status display and attempts
 		return false;
+	}
+	
+	/**
+	 * Log in the current user to the {@link CSPokerServer}.
+	 * 
+	 * @param loginServer The remote login server to connect to
+	 * @return <code>null</code>, if the dialog was disposed or the login was
+	 *         unsuccessful, or the {@link RemoteServerContext} retrieved from
+	 *         the server.
+	 * @throws LoginException When the user provided an illegal password
+	 */
+	public RemoteServerContext login(RemoteCSPokerServer loginServer)
+			throws LoginException {
+		try {
+			communication = loginServer.login(user.getUserName(), user.getPassword());
+		} catch (RemoteException e) {
+			handleRemoteException(e);
+		}
+		
+		return communication;
 	}
 }

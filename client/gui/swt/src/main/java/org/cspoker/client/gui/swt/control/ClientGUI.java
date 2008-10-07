@@ -28,6 +28,7 @@ import org.apache.log4j.Logger;
 import org.cspoker.client.gui.swt.window.GameWindow;
 import org.cspoker.client.gui.swt.window.LobbyWindow;
 import org.cspoker.client.gui.swt.window.LoginDialog;
+import org.cspoker.common.elements.cards.Card;
 import org.cspoker.common.elements.table.DetailedHoldemTable;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
@@ -66,12 +67,12 @@ public class ClientGUI {
 		 */
 		public final static File EPT_CHIP_IMG_DIR = new File(Resources.CHIP_DIR, "ept");
 		/** Contains Chip images from PokerWikia (free!) */
-		public static final File FREE_CHIP_IMAGE_FILE = new File(Resources.CHIP_DIR, "Chips3.png");
+		public static final File FREE_CHIP_IMAGE_FILE = new File(Resources.CHIP_DIR, "Chips_Free.png");
 		/**
 		 * Chip resource currently in use (that's where the images are retrieved
 		 * from during play)
 		 */
-		public static File ACTIVE_CHIP_DIR = STARS_CHIP_IMG_DIR;
+		public static File ACTIVE_CHIP_DIR = FREE_CHIP_IMAGE_FILE;
 		
 		private final static File THEMES_IMG_DIR = new File(Resources.IMAGE_DIR, "themes");
 		private final static File CARDS_IMG_DIR = new File(Resources.IMAGE_DIR, "cards");
@@ -83,7 +84,7 @@ public class ClientGUI {
 		 * Contains PokerStars card images. May not be available in open-source
 		 * version
 		 */
-		public static final File STARS_DECK_IMG_FILE = new File(CARDS_IMG_DIR, "cards6ug3.png");
+		public static final File STARS_DECK_IMG_FILE = new File(CARDS_IMG_DIR, "Deck_Free_2.png");
 		/**
 		 * Card image resource currently in use (that's where the images are
 		 * retrieved from during play). Initialized to use free PokerStars-style
@@ -131,11 +132,20 @@ public class ClientGUI {
 	
 	/** Preferred width at which a card is best displayed */
 	public final static int PREFERRED_CARD_WIDTH = 60;
+	
+	public final static int MINIMUM_CARD_WIDTH = 30;
+	public final static int MINIMUM_CARD_HEIGHT = (int) Math.round(MINIMUM_CARD_WIDTH * 1.5);
+	
 	/**
 	 * Preferred height at which a card is best displayed. Set to
 	 * <code>1.5 * PREFERRED_CARD_WIDTH</code>
 	 */
 	public final static int PREFERRED_CARD_HEIGHT = (int) Math.round(PREFERRED_CARD_WIDTH * 1.5);
+	/**
+	 * Final reference for an unknown card (i.e. the image is the back of the
+	 * card)
+	 */
+	public final static Card UNKNOWN_CARD = new Card(null, null);
 	
 	/**
 	 * During development, set this to SWT.BORDER so we better see where the
@@ -197,18 +207,30 @@ public class ClientGUI {
 	 * @param e the given error message
 	 * @return {@link MessageBox#open()}
 	 */
-	public static int displayErrorMessage(Exception e) {
+	public static int displayException(Exception e) {
 		logger.error("Unexpected error during client execution", e);
-		System.err.println(e);
-		MessageBox errorMsgBox = new MessageBox(new Shell(Display.getDefault()), SWT.ICON_ERROR | SWT.RETRY | SWT.ABORT
-				| SWT.IGNORE);
-		StringBuffer sb = new StringBuffer(e.getMessage() + "\n");
+		
+		StringBuffer sb = new StringBuffer(e.getMessage() + "\n\n");
 		
 		for (StackTraceElement ste : e.getStackTrace()) {
 			sb.append(ste.toString() + "\n");
 		}
-		errorMsgBox.setMessage(sb.toString());
-		return errorMsgBox.open();
+		return displayMessage(sb.toString(), SWT.ICON_ERROR);
+	}
+	
+	/**
+	 * Displays a fresh {@link MessageBox} with the given message
+	 * 
+	 * @param message The message to display
+	 * @param style The desired style bits (see {@link MessageBox} style bit
+	 *            info)
+	 * @return {@link MessageBox#open()}
+	 */
+	public static int displayMessage(String message, int style) {
+		logger.info(message);
+		MessageBox infoBox = new MessageBox(new Shell(Display.getCurrent()), style | SWT.OK);
+		infoBox.setMessage(message);
+		return infoBox.open();
 	}
 	
 	/**
@@ -309,13 +331,14 @@ public class ClientGUI {
 			
 			DetailedHoldemTable table;
 			try {
-				w = new GameWindow(getLobby(), table);
-				DetailedHoldemTable table = getLobby().getContext().joinHoldemTable(tableId, w);
+				table = getLobby().getContext().getHoldemTableInformation(tableId);
 			} catch (RemoteException e) {
-				throw new IllegalStateException(e);
+				throw new IllegalStateException("Could not retrieve remote table information", e);
 			}
-			gameWindows.put(tableId, w);
+			w = new GameWindow(getLobby(), table);
 		}
+		gameWindows.put(tableId, w);
+		
 		return w;
 	}
 }

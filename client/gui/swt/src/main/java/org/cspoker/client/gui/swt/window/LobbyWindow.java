@@ -111,16 +111,19 @@ public class LobbyWindow
 	public LobbyWindow(ClientCore core)
 			throws IllegalArgumentException {
 		super(new Shell(core.getGui().getDisplay()), SWT.NONE, core);
-		try {
-			this.context = core.getCommunication().getLobbyContext(this);
-		} catch (RemoteException e) {
-			throw new IllegalArgumentException(e);
-		}
 		initGUI();
 		createCloseListener();
 		// Register as a resource user - SWTResourceManager will
 		// handle the obtaining and disposing of resources
 		SWTResourceManager.registerResourceUser(this);
+	}
+	
+	public void setLobbyContext() {
+		try {
+			this.context = getClientCore().getCommunication().getLobbyContext(this);
+		} catch (RemoteException e) {
+			throw new IllegalArgumentException(e);
+		}
 	}
 	
 	/**
@@ -154,7 +157,7 @@ public class LobbyWindow
 								
 								@Override
 								public void mouseDoubleClick(MouseEvent evt) {
-									System.out.println("table1.mouseDoubleClick, event=" + evt);
+									logger.info("Opening table");
 									TableItem[] selectedItems = availableGameTables.getSelection();
 									if (selectedItems.length == 1) {
 										// Open selected table
@@ -169,7 +172,7 @@ public class LobbyWindow
 								
 								@Override
 								public void widgetSelected(SelectionEvent evt) {
-									System.out.println("table1.widgetSelected, event=" + evt);
+									logger.debug("table1.widgetSelected, event=" + evt);
 									// TODO add your code for
 									// table1.widgetSelected
 								}
@@ -241,7 +244,7 @@ public class LobbyWindow
 								
 								@Override
 								public void widgetSelected(SelectionEvent evt) {
-									System.out.println("newFileMenuItem.widgetSelected, event=" + evt);
+									logger.debug("newFileMenuItem.widgetSelected, event=" + evt);
 									// clientCore.login(clientCore., port,
 									// userName, password)
 								}
@@ -254,7 +257,7 @@ public class LobbyWindow
 								
 								@Override
 								public void widgetSelected(SelectionEvent evt) {
-									System.out.println("exitMenuItem.widgetSelected, event=" + evt);
+									logger.debug("exitMenuItem.widgetSelected, event=" + evt);
 									getShell().getDisplay().close();
 									// TODO Leave all open tables
 									// TODO Log out (via AccountListener??)
@@ -436,7 +439,6 @@ public class LobbyWindow
 	/**
 	 * Very simply just refreshs all tables for now TODO Slim down
 	 * 
-	 * @throws RemoteException
 	 * @see org.cspoker.common.api.lobby.listener.LobbyListener#onTableCreated(org.cspoker.common.api.lobby.event.TableCreatedEvent)
 	 */
 	public void onTableCreated(TableCreatedEvent tableCreatedEvent) {
@@ -492,11 +494,7 @@ public class LobbyWindow
 	 * @see org.cspoker.common.api.chat.listener.ChatListener#onServerMessage(org.cspoker.common.api.chat.event.ServerMessageEvent)
 	 */
 	public void onServerMessage(ServerMessageEvent serverMessageEvent) {
-		// TODO Show the server event maybe in the lobby as well
-		for (GameWindow openWindow : getClientCore().getGui().getGameWindows()) {
-			serverMessageEvent.dispatch(openWindow.getUserInputComposite());
-		}
-		
+	// TODO Show the server event maybe in the lobby as well
 	}
 	
 	/**
@@ -504,10 +502,8 @@ public class LobbyWindow
 	 * @see org.cspoker.common.api.chat.listener.ChatListener#onTableMessage(org.cspoker.common.api.chat.event.TableMessageEvent)
 	 */
 	public void onTableMessage(TableMessageEvent tableMessageEvent) {
-		// TODO Don't we need a table id here?
-		long tableId = 0;
-		GameWindow relevantWindow = getClientCore().getGui().getGameWindow(tableId, false);
-		assert (relevantWindow != null) : "Window for table " + tableId + " not found";
-		tableMessageEvent.dispatch(relevantWindow.getUserInputComposite());
+	// Nothing to do, the relevant TableUserInputComposite should have
+	// registered itself as a ChatListener
+	
 	}
 }
