@@ -12,15 +12,18 @@
 package org.cspoker.client.gui.swt.window;
 
 import java.rmi.RemoteException;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Set;
 
-import org.cspoker.client.gui.swt.control.ClientGUI;
-import org.cspoker.client.gui.swt.control.GameState;
-import org.cspoker.client.gui.swt.control.SWTResourceManager;
-import org.cspoker.common.api.lobby.holdemtable.context.RemoteHoldemTableContext;
+import org.apache.log4j.Logger;
+import org.cspoker.client.gui.swt.control.*;
 import org.cspoker.common.api.lobby.holdemtable.event.*;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.event.NewPocketCardsEvent;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.listener.HoldemPlayerListener;
 import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
+import org.cspoker.common.api.shared.exception.IllegalActionException;
+import org.cspoker.common.elements.cards.Card;
 import org.cspoker.common.elements.player.Player;
 import org.cspoker.common.elements.player.SeatedPlayer;
 import org.cspoker.common.elements.pots.Pots;
@@ -40,14 +43,16 @@ import org.eclipse.swt.widgets.Shell;
  * go children controls such as {@link TableComposite} or
  * {@link PlayerSeatComposite}s
  * 
- * @author stephans
+ * @author Stephan Schmidt
  */
 public class GameWindow
 		extends ClientComposite
 		implements HoldemTableListener, HoldemPlayerListener {
 	
-	private final RemoteHoldemTableContext holdemTableContext;
-	private GameState gameState;
+	public static final int MINIMUM_WIDTH = 550;
+	public static final int MINIMUM_HEIGHT = 600;
+	
+	private final static Logger logger = Logger.getLogger(GameWindow.class);
 	
 	private TableUserInputComposite userInputComposite;
 	private TableComposite tableComposite;
@@ -64,14 +69,23 @@ public class GameWindow
 	public GameWindow(LobbyWindow lobbyWindow, DetailedHoldemTable table) {
 		super(new Shell(lobbyWindow.getDisplay(), SWT.CLOSE | SWT.RESIZE), SWT.NONE, lobbyWindow.getClientCore());
 		gameState = new GameState(table);
-		try {
-			holdemTableContext = lobbyWindow.getContext().getHoldemTableContext(table.getId());
-		} catch (RemoteException e) {
-			throw new IllegalStateException(e);
-		}
+		user = new UserSeatedPlayer(null, getClientCore().getUser(), gameState);
+		// Join table to receive events for this table
+		
 		initGUI();
 		for (SeatedPlayer player : table.getPlayers()) {
-			getPlayerSeatComposite(player).update(player);
+			tableComposite.findPlayerSeatCompositeBySeatId(player.getSeatId()).occupy(player);
+		}
+	}
+	
+	public void setTableContext() {
+		try {
+			user.setTableContext(getParent().getContext().joinHoldemTable(gameState.getTableMemento().getId(), this));
+		} catch (RemoteException e) {
+			throw new IllegalStateException(e);
+		} catch (IllegalActionException e) {
+			// TODO Auto-generated catch block
+			logger.warn("You cannot join the desired table", e);
 		}
 	}
 	
@@ -82,37 +96,39 @@ public class GameWindow
 	 */
 	private void configureShell(final Shell shell) {
 		// Get table info for display purposes
-		
 		shell.setText("Logged in as " + getClientCore().getUser().getUserName() + ", Table "
 				+ gameState.getTableMemento().getName() + "(Id: " + gameState.getTableMemento().getId() + ")");
 		shell.setImage(SWTResourceManager.getImage(ClientGUI.Resources.CS_POKER_ICON));
 		shell.setLayout(new GridLayout());
-		System.out.println("gw size: " + getSize());
-		shell.setMinimumSize(700, 600);
+		logger.debug("gw size: " + getSize());
+		shell.setMinimumSize(MINIMUM_WIDTH, MINIMUM_HEIGHT);
 		// TODO Somehow lock fixed x:y relation
-		System.out.println("Shell size: " + shell.getSize());
+		logger.debug("Shell size: " + shell.getSize());
 		createCloseListener();
 		shell.addPaintListener(new PaintListener() {
 			
 			/**
+			 * Make sure we handle the case when the shell is resized.
+			 * <p>
+			 * In this case, rescale the background image and recompute the
+			 * areas where the chips are displayed on the table.
+			 * 
 			 * @see org.eclipse.swt.events.PaintListener#paintControl(org.eclipse.swt.events.PaintEvent)
 			 */
 			public void paintControl(PaintEvent e) {
-				getBackgroundImage().dispose();
+				if (getBackgroundImage() != null) {
+					getBackgroundImage().dispose();
+				}
 				Image skin = SWTResourceManager.getImage(ClientGUI.Resources.TABLE_IMAGE);
 				Image scaled = new Image(Display.getDefault(), skin.getImageData().scaledTo(getShell().getSize().x,
 						getShell().getSize().y));
-				skin.dispose();
 				setBackgroundImage(scaled);
+				tableComposite.resetPotChipsArea();
+				for (PlayerSeatComposite psc : tableComposite.getPlayerSeatComposites(false)) {
+					psc.resetBetChipsDisplayArea();
+				}
 			}
 		});
-	}
-	
-	/**
-	 * @return the Game State
-	 */
-	public GameState getGameState() {
-		return gameState;
 	}
 	
 	/**
@@ -120,11 +136,7 @@ public class GameWindow
 	 * @return
 	 */
 	private PlayerSeatComposite getPlayerSeatComposite(final Player player) {
-		return tableComposite.getPlayerSeatComposite(player.getId());
-	}
-	
-	public TableUserInputComposite getUserInputComposite() {
-		return userInputComposite;
+		return tableComposite.findPlayerSeatCompositeByPlayerId(player.getId());
 	}
 	
 	/**
@@ -136,12 +148,15 @@ public class GameWindow
 	}
 	
 	private void initGUI() {
-		setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		
+		GridData data = new GridData(SWT.FILL, SWT.FILL, true, true);
+		data.minimumWidth = 500;
+		data.minimumHeight = 450;
 		setLayout(new GridLayout(1, true));
+		setLayoutData(data);
 		setBackgroundMode(SWT.INHERIT_DEFAULT);
 		tableComposite = new TableComposite(this, SWT.NONE | ClientGUI.COMPOSITE_BORDER_STYLE);
-		userInputComposite = new TableUserInputComposite(this, SWT.NONE | ClientGUI.COMPOSITE_BORDER_STYLE,
-				holdemTableContext);
+		userInputComposite = new TableUserInputComposite(this, SWT.NONE | ClientGUI.COMPOSITE_BORDER_STYLE);
 		configureShell(getShell());
 	}
 	
@@ -165,18 +180,15 @@ public class GameWindow
 	
 	private void handleActionChangedPot(Pots pots, int amount, Player bettor, String action) {
 		// Game State update
-		gameState.setPots(pots);
 		// Set new reference bet pile in GameState
-		gameState.addToCurrentBetPile(amount);
-		if (isUser(bettor)) {
-			gameState.updateStackAndBetChips(amount);
-		}
-		// Visual updating
+		gameState.betRaise(amount, pots);
+		MutableSeatedPlayer player = getPlayerSeatComposite(bettor).getPlayer();
+		
 		// Update the chip stack of the player who changed the pot by
 		// betting/raising/calling
-		getPlayerSeatComposite(bettor).getCurrentBetPile().clear();
-		getPlayerSeatComposite(bettor).getCurrentBetPile().addAll(gameState.getCurrentBetPile());
-		getPlayerSeatComposite(bettor).updateStack(-amount);
+		player.updateStackAndBetChips(amount);
+		player.getCurrentBetPile().clear();
+		player.getCurrentBetPile().addAll(gameState.getCurrentBetPile());
 		getPlayerSeatComposite(bettor).showAction(action);
 		
 		ClientGUI.playAudio(ClientGUI.Resources.SOUND_FILE_BETRAISE);
@@ -217,7 +229,7 @@ public class GameWindow
 	 * @see org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener#onLeaveGame(org.cspoker.common.api.lobby.holdemtable.event.LeaveGameEvent)
 	 */
 	public void onLeaveGame(LeaveGameEvent leaveGameEvent) {
-		getPlayerSeatComposite(leaveGameEvent.getPlayer()).setVisible(false);
+		getPlayerSeatComposite(leaveGameEvent.getPlayer()).reset();
 		updateTableGraphics();
 		
 	}
@@ -227,19 +239,17 @@ public class GameWindow
 	 */
 	public void onNewCommunityCards(NewCommunityCardsEvent newCommunityCardsEvent) {
 		tableComposite.addCommunityCards(newCommunityCardsEvent.getCommonCards());
-		
 	}
 	
 	/**
 	 * @see org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener#onNewDeal(org.cspoker.common.api.lobby.holdemtable.event.NewDealEvent)
 	 */
 	public void onNewDeal(NewDealEvent newDealEvent) {
-		gameState.setPots(new Pots(0));
-		for (PlayerSeatComposite psc : tableComposite.getPlayerSeatComposites()) {
-			psc.clearHoleCards();
-			psc.setHiddenHoleCards();
+		for (PlayerSeatComposite psc : tableComposite.getPlayerSeatComposites(true)) {
+			psc.setHoleCards(Arrays.asList(ClientGUI.UNKNOWN_CARD, ClientGUI.UNKNOWN_CARD));
 			// Draw dealer button
-			psc.setDealer(psc.getPlayer().getName().equalsIgnoreCase(newDealEvent.getDealer().getName()));
+			psc.getPlayer().setDealer(newDealEvent.getDealer().getId() == psc.getPlayer().getId());
+			psc.resetBetChipsDisplayArea();
 		}
 		
 		tableComposite.redraw();
@@ -260,8 +270,10 @@ public class GameWindow
 	 */
 	public void onNewRound(NewRoundEvent newRoundEvent) {
 		tableComposite.moveBetsToPot();
-		gameState.getCurrentBetPile().clear();
-		gameState.setBetChipsThisRound(0);
+		gameState.newRound();
+		for (PlayerSeatComposite psc : tableComposite.getPlayerSeatComposites(true)) {
+			psc.getPlayer().setBetChipsValue(0);
+		}
 		if (isUser(newRoundEvent.getInitialPlayer())) {
 			userInputComposite.prepareForUserInput();
 		}
@@ -351,7 +363,8 @@ public class GameWindow
 		if (isUser(sitInEvent.getPlayer())) {
 			userInputComposite.sitInOutButton.setText("Sit Out");
 		}
-		getPlayerSeatComposite(sitInEvent.getPlayer()).update(sitInEvent.getPlayer());
+		tableComposite.findPlayerSeatCompositeBySeatId(sitInEvent.getPlayer().getSeatId()).occupy(
+				sitInEvent.getPlayer());
 	}
 	
 	/**
@@ -379,6 +392,13 @@ public class GameWindow
 				
 			}
 		});
+		
+		tableComposite.clearCommunityCards();
+		for (PlayerSeatComposite psc : tableComposite.getPlayerSeatComposites(true)) {
+			Set<Card> noCards = Collections.emptySet();
+			psc.setHoleCards(noCards);
+		}
+		redraw();
 	}
 	
 	/**
@@ -396,11 +416,25 @@ public class GameWindow
 	}
 	
 	/**
-	 * @return this, the GameWindow listens to the Player events also (so far)
-	 * @see org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener#getHoldemPlayerListener()
+	 * @return The {@link LobbyWindow} (Parent of all GameWindows)
+	 * @see org.eclipse.swt.widgets.Control#getParent()
 	 */
-	public HoldemPlayerListener getHoldemPlayerListener() {
-		return this;
+	@Override
+	public LobbyWindow getParent() {
+		return (LobbyWindow) super.getParent();
 	}
 	
+	/**
+	 * @return The contained {@link TableUserInputComposite}
+	 */
+	public TableUserInputComposite getUserInputComposite() {
+		return userInputComposite;
+	}
+	
+	/**
+	 * @return The contained {@link TableComposite}
+	 */
+	public TableComposite getTableComposite() {
+		return tableComposite;
+	}
 }

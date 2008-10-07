@@ -13,6 +13,7 @@ package org.cspoker.client.gui.swt.window;
 
 import java.rmi.RemoteException;
 
+import org.apache.log4j.Logger;
 import org.cspoker.common.elements.table.TableConfiguration;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -21,8 +22,18 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
 
+/**
+ * Dialog for guiding the user through the process of creating a table.
+ * <p>
+ * Does not yet contain any checks whether the user has the necessary
+ * credentials to create tables
+ * 
+ * @author Stephan Schmidt
+ */
 public class TableCreationDialog
 		extends ClientDialog {
+	
+	private final static Logger logger = Logger.getLogger(TableCreationDialog.class);
 	
 	private LobbyWindow lobby;
 	
@@ -54,21 +65,17 @@ public class TableCreationDialog
 	
 	/**
 	 * Open the dialog and wait for user input. This dialog is closed when the
-	 * {@link #createTableButton} is pressed.
+	 * <code>createTableButton</code> is pressed.
 	 */
 	public void open() {
-		try {
-			getParent().layout();
-			getParent().pack();
-			getParent().setLocation(getParent().toDisplay(100, 100));
-			getParent().open();
-			Display display = Display.getCurrent();
-			while (!getParent().isDisposed()) {
-				if (!display.readAndDispatch())
-					display.sleep();
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
+		getParent().layout();
+		getParent().pack();
+		getParent().setLocation(getParent().toDisplay(100, 100));
+		getParent().open();
+		Display display = Display.getCurrent();
+		while (!getParent().isDisposed()) {
+			if (!display.readAndDispatch())
+				display.sleep();
 		}
 	}
 	
@@ -159,7 +166,7 @@ public class TableCreationDialog
 				 */
 				@Override
 				public void widgetSelected(SelectionEvent evt) {
-					System.out.println("tableCreationButton.mouseDown, event=" + evt);
+					logger.debug("tableCreationButton.mouseDown, event=" + evt);
 					try {
 						int smallBlind = (int) ((Double.parseDouble(stakeCombo.getText().substring(0,
 								stakeCombo.getText().indexOf("/")))) * 100);

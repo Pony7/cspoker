@@ -39,10 +39,11 @@ public abstract class ClientDialog
 	 * Constructor
 	 **************************************************************************/
 	/**
-	 * Creates a new window with the given display and gui
+	 * Creates a new dialog
 	 * 
-	 * @param display the given display
-	 * @param gui the given gui
+	 * @param parent The containing shell
+	 * @param style Style bits
+	 * @param core The {@link ClientCore}
 	 */
 	public ClientDialog(Shell parent, int style, final ClientCore core) {
 		super(parent, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL | style);

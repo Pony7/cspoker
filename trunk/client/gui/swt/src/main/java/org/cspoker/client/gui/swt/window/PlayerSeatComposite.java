@@ -11,19 +11,25 @@
  */
 package org.cspoker.client.gui.swt.window;
 
-import java.util.*;
+import java.rmi.RemoteException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.concurrent.Future;
+import java.util.concurrent.FutureTask;
 
+import org.apache.log4j.Logger;
 import org.cspoker.client.gui.swt.control.CardPaintListener;
-import org.cspoker.client.gui.swt.control.Chip;
 import org.cspoker.client.gui.swt.control.ClientGUI;
-import org.cspoker.common.api.lobby.holdemtable.holdemplayer.listener.HoldemPlayerListener;
+import org.cspoker.client.gui.swt.control.MutableSeatedPlayer;
+import org.cspoker.client.gui.swt.control.UserSeatedPlayer;
 import org.cspoker.common.elements.cards.Card;
-import org.cspoker.common.elements.player.Player;
 import org.cspoker.common.elements.player.SeatedPlayer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -33,18 +39,23 @@ import org.eclipse.swt.widgets.ProgressBar;
 
 /**
  * Represents a composite in the TableComposite where the player is visualized
- * with his user name, optional avatar, stack and status information TODO Maybe
- * use an adapter for the {@link RemoteAllGameEventsListener} so we dont have to
- * implement all the methods which are handled by a generic case ...
+ * with his user name, optional avatar, stack and status information
  */
 public class PlayerSeatComposite
 		extends ClientComposite {
 	
-	private int seatId;
-	private Player player;
-	private Label playerName;
+	private final static Logger logger = Logger.getLogger(PlayerSeatComposite.class);
 	
-	private final ProgressBar timeLeftBar = new ProgressBar(this, SWT.NONE);
+	// Game-relevant fields
+	private MutableSeatedPlayer player;
+	
+	private int numberOfHoleCards = 2;
+	private final long seatId;
+	
+	// SWT fields
+	private Label playerName;
+	Rectangle betChipsArea;
+	private final ProgressBar timeLeftBar = new ProgressBar(this, SWT.SMOOTH);
 	
 	private final Runnable progressUpdater = new Runnable() {
 		
@@ -75,23 +86,29 @@ public class PlayerSeatComposite
 		}
 	};
 	
-	private Thread currentProgressUpdaterThread = new Thread(progressUpdater);
 	private Composite holeCardsComposite;
 	private Label playerStack;
+	
+	private Future<?> timerAction = new FutureTask<Object>(progressUpdater, null);
 	private List<Card> holeCards = new ArrayList<Card>();
-	private List<NavigableMap<Chip, Integer>> currentBetPile = new ArrayList<NavigableMap<Chip, Integer>>();
-	Rectangle betChipsArea;
-	private boolean dealer;
 	
-	private int currentStack;
-	private int numberOfHoleCards = 2;
-	
+	/**
+	 * @param parent
+	 * @param style
+	 * @param seatId
+	 */
 	public PlayerSeatComposite(TableComposite parent, int style, int seatId) {
-		super(parent, style, parent.getClientCore());
-		numberOfHoleCards = ((GameWindow) parent.getParent()).getGameState().getNumberOfHoleCards();
+		super(parent, style);
 		initGUI();
+		numberOfHoleCards = gameState.getNumberOfHoleCards();
+		this.seatId = seatId;
+		reset();
+		
 	}
 	
+	/**
+	 * Clears all hole cards
+	 */
 	public void clearHoleCards() {
 		holeCards.clear();
 		holeCardsComposite.redraw();
@@ -106,6 +123,9 @@ public class PlayerSeatComposite
 	 *         location via {@link #resetBetChipsDisplayArea()}
 	 */
 	public Rectangle getBetChipsDisplayArea() {
+		if (betChipsArea == null) {
+			resetBetChipsDisplayArea();
+		}
 		return betChipsArea;
 	}
 	
@@ -119,19 +139,12 @@ public class PlayerSeatComposite
 		betChipsArea = getInitialChipDrawOffset();
 	}
 	
-	public List<NavigableMap<Chip, Integer>> getCurrentBetPile() {
-		return currentBetPile;
-	}
-	
-	public HoldemPlayerListener getHoldemPlayerListener() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
 	/**
 	 * A utility method to determine where to draw the bet chips on the table
-	 * depending on the location of the composite in the grid TODO Make this
-	 * generic for other than six-handed tables
+	 * depending on the location of the composite in the grid
+	 * <p>
+	 * TODO Holy meatballs what a hack :-), Make this generic for other than
+	 * six-handed tables
 	 * 
 	 * @return A {@link Point} describing the preferred location to draw the
 	 *         chips at
@@ -139,77 +152,114 @@ public class PlayerSeatComposite
 	public Rectangle getInitialChipDrawOffset() {
 		int x = getLocation().x;
 		int y = getLocation().y;
-		switch (seatId) {
+		Rectangle communityCardsLocation = getParent().getCommunityCardsComposite().getBounds();
+		switch ((int) seatId) {
 			case 0:
 			case 1:
-
-				y += getClientArea().height + 50;
-				break;
-			case 2:
-				x += getClientArea().width + 50;
-				y += getClientArea().height;
-				break;
+				return new Rectangle(x, y + getBounds().height, getBounds().width, communityCardsLocation.y - y
+						- getBounds().height);
+				// Attention: Seat id 3 is on the left, 2 on the right (clock
+				// wise seat ids)
 			case 3:
-				x += getClientArea().width - 50;
-				y += getClientArea().height;
-				break;
+				return new Rectangle(x + getBounds().width, communityCardsLocation.y, communityCardsLocation.x - x
+						+ getBounds().width, communityCardsLocation.height);
+				
+			case 2:
+				return new Rectangle(communityCardsLocation.x + communityCardsLocation.width, communityCardsLocation.y,
+						x - communityCardsLocation.x - communityCardsLocation.width, communityCardsLocation.height);
 			case 4:
 			case 5:
-				y -= 30;
+				return new Rectangle(x, communityCardsLocation.y + communityCardsLocation.height, getBounds().width, y
+						- communityCardsLocation.y - communityCardsLocation.height);
+			default:
+				throw new IllegalArgumentException("Unsupported seat id for computing bet chips area: " + seatId);
 		}
-		return new Rectangle(x, y, 100, 80);
 		
 	}
 	
-	public Player getPlayer() {
+	/**
+	 * @return The player currently occupying this seat, or <code>null</code> if
+	 *         the seat is currently available
+	 */
+	public MutableSeatedPlayer getPlayer() {
 		return player;
 	}
 	
 	private void initGUI() {
-		setLayout(new GridLayout(1, true));
-		setLayoutData(new GridData(SWT.CENTER, SWT.FILL, true, true));
-		// setSize(200, 200);
+		GridLayout layout = new GridLayout(1, false);
+		layout.horizontalSpacing = 20;
+		layout.verticalSpacing = 20;
+		setLayout(new GridLayout(1, false));
+		GridData data = new GridData(SWT.CENTER, SWT.CENTER, true, true);
+		data.widthHint = 150;
+		data.heightHint = 250;
+		data.minimumWidth = 100;
+		data.minimumHeight = 60;
+		
+		setLayoutData(data);
 		{
 			playerName = new Label(this, SWT.SHADOW_NONE | SWT.CENTER | SWT.BORDER);
-			GridData player1NameLData = new GridData(80, 25);
+			GridData player1NameLData = new GridData(SWT.DEFAULT, SWT.DEFAULT);
 			player1NameLData.horizontalAlignment = GridData.CENTER;
+			player1NameLData.widthHint = 100;
+			player1NameLData.minimumWidth = 80;
+			player1NameLData.grabExcessHorizontalSpace = true;
 			playerName.setLayoutData(player1NameLData);
-			playerName.setText("Empty");
 			playerName.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_INFO_BACKGROUND));
 		}
 		{
 			playerStack = new Label(this, SWT.CENTER);
-			GridData player1StackLData = new GridData(60, 15);
+			GridData player1StackLData = new GridData(SWT.DEFAULT, SWT.DEFAULT);
 			player1StackLData.horizontalAlignment = GridData.CENTER;
 			player1StackLData.grabExcessHorizontalSpace = true;
 			playerStack.setLayoutData(player1StackLData);
-			playerStack.setText("No monies");
 			playerStack.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_INFO_BACKGROUND));
 		}
 		{
-			GridData timeLeftBarLData = new GridData(60, 10);
+			GridData timeLeftBarLData = new GridData(SWT.DEFAULT, SWT.DEFAULT);
 			timeLeftBarLData.horizontalAlignment = GridData.CENTER;
+			timeLeftBarLData.widthHint = 80;
 			timeLeftBar.setLayoutData(timeLeftBarLData);
 		}
 		{
 			
 			holeCardsComposite = new Composite(this, SWT.NONE | ClientGUI.COMPOSITE_BORDER_STYLE);
-			holeCardsComposite.setLayout(new FillLayout(SWT.HORIZONTAL));
-			GridData holeCardsLData = new GridData(SWT.FILL, SWT.FILL, true, true);
-			holeCardsComposite.setLayoutData(holeCardsLData);
-			holeCardsComposite.setSize(numberOfHoleCards * ClientGUI.PREFERRED_CARD_WIDTH,
-					ClientGUI.PREFERRED_CARD_HEIGHT);
-			holeCardsLData.minimumWidth = numberOfHoleCards * ClientGUI.PREFERRED_CARD_WIDTH;
-			holeCardsLData.minimumHeight = ClientGUI.PREFERRED_CARD_HEIGHT;
+			holeCardsComposite.setLayout(new GridLayout(numberOfHoleCards, true));
+			
+			GridData holeCardsCompositeLayoutData = new GridData(SWT.CENTER, SWT.CENTER, true, true);
+			holeCardsCompositeLayoutData.minimumWidth = numberOfHoleCards * ClientGUI.MINIMUM_CARD_WIDTH;
+			holeCardsCompositeLayoutData.minimumHeight = ClientGUI.MINIMUM_CARD_HEIGHT;
+			holeCardsCompositeLayoutData.widthHint = numberOfHoleCards * ClientGUI.PREFERRED_CARD_WIDTH;
+			holeCardsCompositeLayoutData.heightHint = ClientGUI.PREFERRED_CARD_HEIGHT;
+			holeCardsComposite.setLayoutData(holeCardsCompositeLayoutData);
 			holeCardsComposite.addPaintListener(new CardPaintListener(holeCards, 2, SWT.CENTER, -10));
 			
 		}
-		resetBetChipsDisplayArea();
-		setVisible(player != null);
-	}
-	
-	public boolean isDealer() {
-		return dealer;
+		
+		this.addMouseListener(new MouseAdapter() {
+			
+			/**
+			 * Upon clicking on the PlayerSeatComposite, the user sits in.
+			 * 
+			 * @param evt MouseEvent (ignored)
+			 * @see org.eclipse.swt.events.MouseAdapter#mouseDown(org.eclipse.swt.events.MouseEvent)
+			 */
+			@Override
+			public void mouseDown(MouseEvent evt) {
+				// Check if seat is occupied
+				if (getPlayer() != null) {
+					// If not, we can probably sit in
+					// TODO Buyin, reserve seat in the meantime
+					logger.debug("Clicked on PlayerSeatComposite, sit in if empty ...");
+					try {
+						user.sitIn(seatId, (GameWindow) getParent().getParent());
+						player = user;
+					} catch (RemoteException e) {
+						getClientCore().handleRemoteException(e);
+					}
+				}
+			}
+		});
 	}
 	
 	// @Override
@@ -224,34 +274,24 @@ public class PlayerSeatComposite
 	// throws RemoteException {
 	// playerName.setText(event.getPlayer().getName() + " \n (Sitting Out)");
 	// }
-	
-	public void setDealer(boolean b) {
-		dealer = b;
-		
-	}
-	
-	public void setHiddenHoleCards() {
-		
-		final Card unknownCard = new Card(null, null);
-		final Card unknownCard2 = new Card(null, null);
-		Set<Card> unknownCards = new TreeSet<Card>();
-		// TODO Sit out?
-		unknownCards.add(unknownCard);
-		unknownCards.add(unknownCard2);
-		setHoleCards(unknownCards);
-	}
-	
 	/**
 	 * @param cards The cards to display. If <code>null</code> is passed,
 	 *            display the back of the cards
 	 */
-	public void setHoleCards(Set<Card> cards) {
+	public void setHoleCards(Collection<Card> cards) {
 		holeCards.clear();
 		holeCards.addAll(cards);
 		holeCardsComposite.redraw();
 	}
 	
+	/**
+	 * Briefly displays the action the player has taken in place of his user
+	 * name.
+	 * 
+	 * @param action The action to display, i.e. <i>"Check"</i> or <i>"Fold"</i>
+	 */
 	public void showAction(final String action) {
+		playerStack.setText(ClientGUI.betFormatter.format(player.getStackValue()));
 		final String name = player.getName();
 		playerName.setText(action);
 		playerName.setForeground(Display.getDefault().getSystemColor(SWT.COLOR_BLUE));
@@ -271,42 +311,74 @@ public class PlayerSeatComposite
 		});
 	}
 	
+	/**
+	 * Resets and starts the progress bar above the player's name, indicating
+	 * that it is this player's turn to act.
+	 */
 	public void startTimer() {
 		timeLeftBar.setEnabled(true);
 		timeLeftBar.setVisible(true);
 		timeLeftBar.setSelection(0);
 		// Update Progress Bar
-		currentProgressUpdaterThread.interrupt();
-		currentProgressUpdaterThread = new Thread(progressUpdater);
-		currentProgressUpdaterThread.start();
+		timerAction.cancel(true);
+		timerAction = executor.submit(progressUpdater);
 	}
 	
+	/**
+	 * Stops the Progress Bar timer (if it is running)
+	 */
 	public void stopTimer() {
-		if (currentProgressUpdaterThread != null)
-			currentProgressUpdaterThread.interrupt();
+		timerAction.cancel(true);
 		timeLeftBar.setEnabled(false);
 		timeLeftBar.setVisible(false);
 	}
 	
-	void updateStack(int amount) {
-		currentStack += amount;
-		playerStack.setText(ClientGUI.betFormatter.format(currentStack));
+	/**
+	 * Update with detailed information after a player sits in.
+	 * 
+	 * @param detailedPlayer The player to use as an update.
+	 */
+	public void occupy(SeatedPlayer detailedPlayer) {
+		// Check is necessary because the variable might already be set to a
+		// UserSeatedPlayer
+		if (player == null) {
+			if (detailedPlayer.getId() == getClientCore().getUser().getPlayer().getId()) {
+				user = new UserSeatedPlayer(this, detailedPlayer, gameState);
+				player = user;
+			} else {
+				player = new MutableSeatedPlayer(this, detailedPlayer, gameState);
+			}
+		}
+		playerName.setForeground(Display.getDefault().getSystemColor(SWT.DEFAULT));
+		playerName.setText(detailedPlayer.getName());
+		playerName.setVisible(true);
+		playerStack.setText(ClientGUI.betFormatter.format(player.getStackValue()));
+		playerStack.setVisible(true);
 	}
 	
 	/**
-	 * Update with detailed information (for example after opening the table)
-	 * 
-	 * @param player
+	 * Reset this {@link PlayerSeatComposite}, indicating an empty seat which
+	 * may be occupied by clicking on it
 	 */
-	public void update(SeatedPlayer detailedPlayer) {
-		currentStack = 0;
-		player = detailedPlayer;
-		playerName.setForeground(Display.getDefault().getSystemColor(SWT.DEFAULT));
-		playerName.setText(detailedPlayer.getName());
-		updateStack(detailedPlayer.getStackValue());
-		// TODO Cast correct? (Should seat ids really be longs??)
-		seatId = (int) detailedPlayer.getSeatId();
+	public void reset() {
 		
+		player = null;
+		playerName.setText("Empty Seat");
+		playerStack.setText("");
+		playerStack.setVisible(false);
+		holeCardsComposite.redraw();
+		timerAction.cancel(true);
 	}
 	
+	/**
+	 * @return The immutable seat id associated with this PlayerSeatComposite
+	 */
+	public long getSeatId() {
+		return seatId;
+	}
+	
+	@Override
+	public TableComposite getParent() {
+		return (TableComposite) super.getParent();
+	}
 }

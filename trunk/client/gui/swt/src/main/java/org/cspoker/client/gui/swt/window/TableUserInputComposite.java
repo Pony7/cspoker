@@ -15,17 +15,18 @@ import java.rmi.RemoteException;
 import java.text.ParseException;
 
 import org.apache.log4j.Logger;
+import org.cspoker.client.gui.swt.control.Chip;
 import org.cspoker.client.gui.swt.control.ClientGUI;
-import org.cspoker.client.gui.swt.control.GameState;
-import org.cspoker.common.api.chat.context.ChatContext;
 import org.cspoker.common.api.chat.event.ServerMessageEvent;
 import org.cspoker.common.api.chat.event.TableMessageEvent;
 import org.cspoker.common.api.chat.listener.ChatListener;
-import org.cspoker.common.api.lobby.holdemtable.context.RemoteHoldemTableContext;
+import org.cspoker.common.api.lobby.holdemtable.holdemplayer.listener.HoldemPlayerListener;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.*;
-import org.eclipse.swt.layout.*;
+import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
 
 /**
@@ -36,7 +37,7 @@ import org.eclipse.swt.widgets.*;
  * 
  * @author stephans
  */
-class TableUserInputComposite
+public class TableUserInputComposite
 		extends ClientComposite
 		implements ChatListener {
 	
@@ -62,24 +63,26 @@ class TableUserInputComposite
 	
 	Button rebuyButton;
 	
-	RemoteHoldemTableContext tableContext;
-	ChatContext chatContext;
-	private GameState gameState;
 	int betRaiseAmount;
 	
-	public TableUserInputComposite(GameWindow parent, int style, RemoteHoldemTableContext holdemTableContext) {
-		super(parent, style, parent.getClientCore());
-		gameState = parent.getGameState();
-		tableContext = holdemTableContext;
-		chatContext = getClientCore().getCommunication().getChatContext();
+	public TableUserInputComposite(GameWindow parent, int style) {
+		super(parent, style);
 		initGUI();
-		gameActionGroup.setVisible(false);
+		// gameActionGroup.setVisible(false);
+	}
+	
+	public void setChatContext() {
+		try {
+			user.setChatContext(getClientCore().getCommunication().getChatContext(this));
+		} catch (RemoteException e) {
+			getClientCore().handleRemoteException(e);
+		}
 	}
 	
 	void betRaiseButtonMouseDown(MouseEvent evt) {
 		logger.debug("Bet/Raise button pressed");
 		try {
-			tableContext.getHoldemPlayerContext().betOrRaise(betRaiseAmount);
+			user.getPlayerContext().betOrRaise(betRaiseAmount);
 		} catch (RemoteException e) {
 			logger.error(e.getMessage(), e);
 			return;
@@ -90,7 +93,7 @@ class TableUserInputComposite
 	void checkCallButtonMouseDown(MouseEvent evt) {
 		logger.debug("Check/Call button pressed");
 		try {
-			tableContext.getHoldemPlayerContext().checkOrCall();
+			user.getPlayerContext().checkOrCall();
 		} catch (RemoteException e) {
 			logger.error(e.getMessage(), e);
 			return;
@@ -101,7 +104,7 @@ class TableUserInputComposite
 	void foldButtonMouseDown(MouseEvent evt) {
 		logger.debug("Fold button pressed");
 		try {
-			tableContext.getHoldemPlayerContext().fold();
+			user.getPlayerContext().fold();
 		} catch (RemoteException e) {
 			logger.error(e.getMessage(), e);
 		}
@@ -118,12 +121,27 @@ class TableUserInputComposite
 	private void initGUI() {
 		
 		setLayout(new GridLayout(3, false));
-		setLayoutData(new GridData(SWT.FILL, SWT.END, true, false));
+		GridData tableUserInputCompositeLData = new GridData(SWT.FILL, SWT.FILL, true, true);
+		tableUserInputCompositeLData.heightHint = 250;
+		tableUserInputCompositeLData.minimumHeight = 100;
+		
+		setLayoutData(tableUserInputCompositeLData);
 		{
 			Composite chatBoxHolder = new Composite(this, SWT.NONE);
-			chatBoxHolder.setLayout(new RowLayout(SWT.VERTICAL));
+			chatBoxHolder.setLayout(new GridLayout(1, true));
+			GridData chatBoxHolderData = new GridData(SWT.FILL, SWT.FILL, true, true);
+			chatBoxHolderData.minimumWidth = 100;
+			chatBoxHolderData.minimumHeight = 50;
+			chatBoxHolderData.widthHint = 200;
+			chatBoxHolderData.heightHint = 100;
+			chatBoxHolder.setLayoutData(chatBoxHolderData);
 			userInputBox = new Text(chatBoxHolder, SWT.NONE);
-			userInputBox.setLayoutData(new RowData(242, 15));
+			GridData userInputBoxLData = new GridData(SWT.FILL, SWT.FILL, true, true);
+			userInputBoxLData.widthHint = 150;
+			userInputBoxLData.heightHint = 30;
+			userInputBoxLData.minimumHeight = 15;
+			userInputBoxLData.minimumWidth = 50;
+			userInputBox.setLayoutData(userInputBoxLData);
 			userInputBox.addSelectionListener(new SelectionAdapter() {
 				
 				@Override
@@ -131,74 +149,79 @@ class TableUserInputComposite
 					// User pressed enter key
 					String message = userInputBox.getText();
 					if (message.length() > 0) {
-						chatContext.sendTableMessage(gameState.getTableMemento().getId(), message);
+						try {
+							user.getChatContext().sendTableMessage(gameState.getTableMemento().getId(), message);
+						} catch (RemoteException ex) {
+							getClientCore().handleRemoteException(ex);
+						}
 					}
 				}
 			});
 			gameInfoText = new StyledText(chatBoxHolder, SWT.WRAP | SWT.V_SCROLL | SWT.BORDER);
-			gameInfoText.setLayoutData(new RowData(242, 100));
+			GridData gameInfoTextData = new GridData(SWT.FILL, SWT.FILL, true, true);
+			gameInfoTextData.widthHint = 200;
+			gameInfoTextData.heightHint = 150;
+			gameInfoTextData.minimumHeight = 20;
+			gameInfoTextData.minimumWidth = 100;
+			gameInfoText.setLayoutData(gameInfoTextData);
 		}
 		{
-			gameActionGroup = new Composite(this, SWT.NONE);
-			RowLayout group2Layout = new RowLayout(SWT.VERTICAL);
-			// Available in SWT version 3.4
-			// group2Layout.center = true;
+			gameActionGroup = new Composite(this, SWT.NONE | ClientGUI.COMPOSITE_BORDER_STYLE);
+			GridLayout group2Layout = new GridLayout(1, true);
 			gameActionGroup.setLayout(group2Layout);
-			GridData group2LData = new GridData();
-			group2LData.grabExcessHorizontalSpace = true;
-			group2LData.horizontalAlignment = SWT.CENTER;
-			gameActionGroup.setLayoutData(group2LData);
+			GridData gameActionGroupLData = new GridData(SWT.CENTER, SWT.CENTER, true, true);
+			gameActionGroupLData.heightHint = 150;
+			gameActionGroupLData.minimumHeight = 80;
+			gameActionGroupLData.minimumWidth = 200;
+			gameActionGroup.setLayoutData(gameActionGroupLData);
 			{
-				manualEnterBetGroup = new Composite(gameActionGroup, SWT.NONE);
-				RowLayout manualEnterBetGroupLayout = new RowLayout(SWT.HORIZONTAL);
-				// Available in SWT version 3.4
-				// manualEnterBetGroupLayout.center = true;
-				manualEnterBetGroupLayout.justify = true;
+				manualEnterBetGroup = new Composite(gameActionGroup, SWT.NONE | ClientGUI.COMPOSITE_BORDER_STYLE);
+				GridLayout manualEnterBetGroupLayout = new GridLayout(3, false);
 				manualEnterBetGroup.setLayout(manualEnterBetGroupLayout);
-				manualEnterBetGroup.setLayoutData(new RowData(300, 40));
+				manualEnterBetGroup.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true));
 				{
 					betSlider = new Slider(manualEnterBetGroup, SWT.NONE);
 					betSlider.setIncrement(gameState.getTableMemento().getGameProperty().getSmallBlind());
 					betSlider.setPageIncrement(betSlider.getIncrement() * 5);
-					betSlider.setLayoutData(new RowData(150, 25));
+					betSlider.setLayoutData(new GridData(150, 20));
 					betSlider.addSelectionListener(new SelectionAdapter() {
 						
 						@Override
 						public void widgetSelected(SelectionEvent e) {
 							setNewBetRaiseAmount(betSlider.getSelection()
-									- GameState.getValue(gameState.getCurrentBetPile()));
+									- Chip.getValue(gameState.getCurrentBetPile()));
 						}
 					});
 				}
 				{
 					potButton = new Button(manualEnterBetGroup, SWT.PUSH | SWT.CENTER);
 					potButton.setText("Pot");
-					potButton.setSize(30, 30);
+					potButton.setLayoutData(new GridData(30, 30));
 					potButton.addMouseListener(new MouseAdapter() {
 						
 						@Override
 						public void mouseDown(MouseEvent evt) {
-							System.err.println("Got pot raise: " + gameState.getPotRaiseAmount());
-							setNewBetRaiseAmount(gameState.getPotRaiseAmount());
+							System.err.println("Got pot raise: " + user.getPotRaiseAmount());
+							setNewBetRaiseAmount(user.getPotRaiseAmount());
 						}
 					});
 				}
 				{
 					betAmountTextField = new Text(manualEnterBetGroup, SWT.CENTER | SWT.BORDER);
-					betAmountTextField.setLayoutData(new RowData(52, 20));
+					betAmountTextField.setLayoutData(new GridData(30, 20));
 					betAmountTextField.setText(ClientGUI.betFormatter.format(0));
 					betAmountTextField.addKeyListener(new KeyAdapter() {
 						
 						@Override
 						public void keyReleased(KeyEvent e) {
 							betAmountTextField.setToolTipText("Minimum is "
-									+ ClientGUI.betFormatter.format(gameState.getMinBetRaiseAmount()
-											+ GameState.getValue(gameState.getCurrentBetPile())));
+									+ ClientGUI.betFormatter.format(user.getMinBetRaiseAmount()
+											+ Chip.getValue(gameState.getCurrentBetPile())));
 							try {
 								int desiredAmount = ClientGUI.betFormatter.parse(betAmountTextField.getText())
 										.intValue();
-								if (desiredAmount - gameState.getToCallAmount() >= gameState.getMinBetRaiseAmount()) {
-									setNewBetRaiseAmount(desiredAmount - gameState.getToCallAmount());
+								if (desiredAmount - user.getToCallAmount() >= user.getMinBetRaiseAmount()) {
+									setNewBetRaiseAmount(desiredAmount - user.getToCallAmount());
 								}
 							} catch (ParseException ex) {
 								logger.error("Could not parse manual bet input", ex);
@@ -211,8 +234,14 @@ class TableUserInputComposite
 			}
 			{
 				foldCallRaiseButtonGroup = new Composite(gameActionGroup, SWT.NONE);
-				foldCallRaiseButtonGroup.setLayout(new FillLayout(SWT.HORIZONTAL));
-				foldCallRaiseButtonGroup.setLayoutData(new RowData(350, 40));
+				FillLayout foldCallRaiseLayout = new FillLayout(SWT.HORIZONTAL);
+				foldCallRaiseLayout.spacing = 5;
+				foldCallRaiseButtonGroup.setLayout(foldCallRaiseLayout);
+				GridData foldCallRaiseLData = new GridData(SWT.FILL, SWT.CENTER, true, true);
+				foldCallRaiseLData.minimumHeight = 20;
+				foldCallRaiseLData.heightHint = 40;
+				foldCallRaiseLData.widthHint = 200;
+				foldCallRaiseButtonGroup.setLayoutData(foldCallRaiseLData);
 				{
 					foldButton = new Button(foldCallRaiseButtonGroup, SWT.PUSH | SWT.CENTER);
 					foldButton.setText("Fold");
@@ -248,11 +277,14 @@ class TableUserInputComposite
 				}
 			}
 			{
-				GridData composite2LData = new GridData(80, 100);
-				composite2LData.verticalAlignment = SWT.CENTER;
-				Composite generalActionHolder = new Composite(this, SWT.NONE);
-				generalActionHolder.setLayout(new FillLayout(SWT.VERTICAL));
-				generalActionHolder.setLayoutData(composite2LData);
+				GridData generalActionHolderLData = new GridData(SWT.CENTER, SWT.CENTER, true, true);
+				generalActionHolderLData.heightHint = 120;
+				generalActionHolderLData.widthHint = 80;
+				Composite generalActionHolder = new Composite(this, SWT.NONE | ClientGUI.COMPOSITE_BORDER_STYLE);
+				FillLayout generalActionHolderLayout = new FillLayout(SWT.VERTICAL);
+				generalActionHolderLayout.spacing = 5;
+				generalActionHolder.setLayout(generalActionHolderLayout);
+				generalActionHolder.setLayoutData(generalActionHolderLData);
 				{
 					sitInOutButton = new Button(generalActionHolder, SWT.TOGGLE | SWT.CENTER);
 					sitInOutButton.setText("Sit In");
@@ -293,8 +325,8 @@ class TableUserInputComposite
 	void leaveButtonWidgetSelected(SelectionEvent evt) {
 		logger.debug("Leave button pressed");
 		try {
-			tableContext.getHoldemPlayerContext().leaveGame();
-			tableContext.leaveTable();
+			user.getPlayerContext().leaveGame();
+			user.getTableContext().leaveTable();
 		} catch (RemoteException e) {
 			logger.error("Error when leaving table", e);
 		}
@@ -304,10 +336,10 @@ class TableUserInputComposite
 	
 	void prepareForUserInput() {
 		logger.info("Users turn");
-		boolean toCallAllIn = gameState.getRemainingStack() <= gameState.getToCallAmount();
+		boolean toCallAllIn = user.getStackValue() <= user.getToCallAmount();
 		updateCheckCallButton(toCallAllIn);
 		if (!toCallAllIn) {
-			setNewBetRaiseAmount(gameState.getMinBetRaiseAmount());
+			setNewBetRaiseAmount(user.getMinBetRaiseAmount());
 			betAmountTextField.selectAll();
 			betAmountTextField.setFocus();
 		}
@@ -318,8 +350,8 @@ class TableUserInputComposite
 	}
 	
 	private void updateCheckCallButton(boolean allIn) {
-		String text = (gameState.getToCallAmount() == 0) ? "Check" : "Call "
-				+ ClientGUI.betFormatter.format(Math.min(gameState.getRemainingStack(), gameState.getToCallAmount()));
+		String text = (user.getToCallAmount() == 0) ? "Check" : "Call "
+				+ ClientGUI.betFormatter.format(Math.min(user.getStackValue(), user.getToCallAmount()));
 		checkCallButton.setText(text);
 		if (allIn) {
 			markAllIn(checkCallButton);
@@ -336,8 +368,12 @@ class TableUserInputComposite
 	 * Create new BuyinDialog with a maximum rebuy of 100 big blinds
 	 */
 	void rebuyButtonWidgetSelected(SelectionEvent evt) {
-		new BuyinDialog(getClientCore(), null, 100 * gameState.getTableMemento().getGameProperty().getBigBlind())
-				.open();
+		try {
+			new BuyinDialog(getClientCore(), getClientCore().getCommunication().getCashierContext(), 100 * gameState
+					.getTableMemento().getGameProperty().getBigBlind()).open();
+		} catch (RemoteException e) {
+			getClientCore().handleRemoteException(e);
+		}
 	}
 	
 	private void setNewBetRaiseAmount(int amount) {
@@ -346,19 +382,19 @@ class TableUserInputComposite
 		updateBetRaiseButton();
 		if (!betAmountTextField.isFocusControl()) {
 			betAmountTextField.setText(ClientGUI.betFormatter.format(betRaiseAmount
-					+ GameState.getValue(gameState.getCurrentBetPile())));
+					+ Chip.getValue(gameState.getCurrentBetPile())));
 		}
 	}
 	
 	void sitInOutButtonMouseDown(MouseEvent evt) {
-		System.out.println("sitInOutButton.widgetSelected, event=" + evt);
+		logger.debug("sitInOutButton.widgetSelected, event=" + evt);
 		
 		if (!sitInOutButton.getSelection()) {
-			// FIXME Get free seat id ...
 			try {
-				tableContext.sitIn(0);
+				
+				user.sitIn(user.getSeatId(), (HoldemPlayerListener) getParent());
 			} catch (RemoteException e) {
-				logger.error(e.getMessage(), e);
+				getClientCore().handleRemoteException(e);
 				return;
 			}
 		} else {
@@ -368,22 +404,22 @@ class TableUserInputComposite
 	}
 	
 	void updateBetSlider() {
-		betSlider.setMaximum(gameState.getRemainingStack() + gameState.getBetChipsThisRound());
+		betSlider.setMaximum(user.getStackValue() + user.getBetChipsValue());
 		// +10 is some weirdo behavior/bug??
 		// native windows bug fix;
-		betSlider.setSelection(gameState.getRemainingStack() + gameState.getBetChipsThisRound());
+		betSlider.setSelection(user.getStackValue() + user.getBetChipsValue());
 		int extras = betSlider.getMaximum() - betSlider.getSelection();
 		if (extras != 0) {
 			betSlider.setMaximum(betSlider.getMaximum() + extras);
 		}
-		betSlider.setMinimum(gameState.getMinBetRaiseAmount() + GameState.getValue(gameState.getCurrentBetPile()));
-		betSlider.setSelection(betRaiseAmount + GameState.getValue(gameState.getCurrentBetPile()));
+		betSlider.setMinimum(user.getMinBetRaiseAmount() + Chip.getValue(gameState.getCurrentBetPile()));
+		betSlider.setSelection(betRaiseAmount + Chip.getValue(gameState.getCurrentBetPile()));
 	}
 	
 	void updateBetRaiseButton() {
-		int totalBetRaiseAmount = betRaiseAmount + GameState.getValue(gameState.getCurrentBetPile());
-		boolean isAllIn = (gameState.getToCallAmount() + betRaiseAmount == gameState.getRemainingStack());
-		String text = (gameState.getBetChipsThisRound() > 0) ? "Raise to " : "Bet";
+		int totalBetRaiseAmount = betRaiseAmount + Chip.getValue(gameState.getCurrentBetPile());
+		boolean isAllIn = (user.getToCallAmount() + betRaiseAmount == user.getStackValue());
+		String text = (user.getBetChipsValue() > 0) ? "Raise to " : "Bet ";
 		betRaiseButton.setText(text + ClientGUI.betFormatter.format(totalBetRaiseAmount));
 		if (isAllIn) {
 			markAllIn(betRaiseButton);

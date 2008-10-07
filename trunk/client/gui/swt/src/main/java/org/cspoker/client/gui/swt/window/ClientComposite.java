@@ -11,8 +11,13 @@
  */
 package org.cspoker.client.gui.swt.window;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 import org.cspoker.client.gui.swt.control.ClientCore;
+import org.cspoker.client.gui.swt.control.GameState;
 import org.cspoker.client.gui.swt.control.SWTResourceManager;
+import org.cspoker.client.gui.swt.control.UserSeatedPlayer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
@@ -33,6 +38,13 @@ public abstract class ClientComposite
 	
 	private ClientCore core;
 	
+	protected UserSeatedPlayer user;
+	
+	/** ExecutorService for the GameWindow and its children. */
+	ExecutorService executor = Executors.newCachedThreadPool();
+	
+	GameState gameState;
+	
 	/***************************************************************************
 	 * Constructor
 	 **************************************************************************/
@@ -47,15 +59,41 @@ public abstract class ClientComposite
 	public ClientComposite(Composite parent, int style, ClientCore core) {
 		super(parent, style);
 		this.core = core;
-		
 		// Register as a resource user - SWTResourceManager will
 		// handle the obtaining and disposing of resources
 		SWTResourceManager.registerResourceUser(this);
 	}
 	
 	/***************************************************************************
+	 * Constructor
+	 **************************************************************************/
+	/**
+	 * Creates a new ClientComposite where the parent is also a ClientComposite.
+	 * Relevant field references are set.
+	 * 
+	 * @param parent The parent window
+	 * @param style The desired style bits
+	 */
+	public ClientComposite(ClientComposite parent, int style) {
+		this(parent, style, parent.getClientCore());
+		this.user = parent.getUser();
+		this.gameState = parent.getGameState();
+		// Register as a resource user - SWTResourceManager will
+		// handle the obtaining and disposing of resources
+		SWTResourceManager.registerResourceUser(this);
+	}
+	
+	public UserSeatedPlayer getUser() {
+		return user;
+	}
+	
+	/***************************************************************************
 	 * Methods
 	 **************************************************************************/
+	
+	private GameState getGameState() {
+		return gameState;
+	}
 	
 	/**
 	 * Creates and adds a Listener to the shell which pops up a confirmation

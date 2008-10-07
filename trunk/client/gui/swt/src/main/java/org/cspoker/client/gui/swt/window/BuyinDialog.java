@@ -11,9 +11,13 @@
  */
 package org.cspoker.client.gui.swt.window;
 
+import java.rmi.RemoteException;
+
+import org.apache.log4j.Logger;
 import org.cspoker.client.gui.swt.control.ClientCore;
 import org.cspoker.client.gui.swt.control.ClientGUI;
 import org.cspoker.common.api.cashier.context.CashierContext;
+import org.cspoker.common.api.cashier.context.RemoteCashierContext;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -29,8 +33,11 @@ import org.eclipse.swt.widgets.*;
 public class BuyinDialog
 		extends ClientDialog {
 	
+	private final static Logger logger = Logger.getLogger(BuyinDialog.class);
+	
 	private int maximum;
-	private CashierContext cashierContext;
+	
+	private RemoteCashierContext cashierContext;
 	
 	/**
 	 * Creates a new BuyinDialog
@@ -40,7 +47,7 @@ public class BuyinDialog
 	 *            out the RebuyAction
 	 * @param maximum The maximum rebuy amount
 	 */
-	public BuyinDialog(ClientCore core, CashierContext cashier, int maximum) {
+	public BuyinDialog(ClientCore core, RemoteCashierContext cashier, int maximum) {
 		this(new Shell(Display.getDefault(), SWT.SHELL_TRIM | SWT.APPLICATION_MODAL), SWT.NONE, core);
 		this.maximum = maximum;
 		cashierContext = cashier;
@@ -123,11 +130,16 @@ public class BuyinDialog
 				
 				@Override
 				public void widgetSelected(SelectionEvent evt) {
-					System.out.println("rebuyButton.mouseDown, event=" + evt);
+					logger.debug("rebuyButton.mouseDown, event=" + evt);
 					
 					// TODO Still null, needs to be implemented. Why cant I
 					// request a specific amount??
-					cashierContext.requestMoney();
+					try {
+						cashierContext.requestMoney();
+					} catch (RemoteException e) {
+						// TODO Auto-generated catch block
+						clientCore.handleRemoteException(e);
+					}
 					// cashierContext.getMoneyAmount(ClientGUI.betFormatter.
 					// parse(rebuyAmountText.getText())
 					// .intValue() * 100);

@@ -11,34 +11,63 @@
  */
 package org.cspoker.client.gui.swt.control;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.*;
+import java.util.Map.Entry;
 
 import org.eclipse.swt.graphics.Image;
 
 /**
  * Represents a playing chip, associated with a value and an image.
+ * <p>
+ * Since <i>Chips</i> have attached image information, they will contain path
+ * information and file information which is non-generic. Could be changed in
+ * later versions.
  * 
- * @author stephans
+ * @author Stephan Schmidt
  */
 public class Chip
 		implements Comparable<Chip> {
 	
+	/**
+	 * Delaer Chip indicating visually the dealer of the current hand. Has a
+	 * value of 0.
+	 */
 	public static final Chip DEALER = new Chip(0, "chip-d");
 	
+	/** 1c chip */
 	public static final Chip ONE_CENT_CHIP = new Chip(1, "chip000001");
+	/** 5c chip */
 	public static final Chip FIVE_CENT_CHIP = new Chip(5, "chip000005");
+	/** 25c chip */
 	public static final Chip TWENTY_FIVE_CENT_CHIP = new Chip(25, "chip000025");
+	/** 1$ chip */
 	public static final Chip ONE_DOLLAR_CHIP = new Chip(100, "chip0001");
+	/** 5$ chip */
 	public static final Chip FIVE_DOLLAR_CHIP = new Chip(500, "chip0005");
+	/** 25$ chip */
 	public static final Chip TWENTY_FIVE_DOLLAR_CHIP = new Chip(2500, "chip0025");
+	/** 100$ chip */
 	public static final Chip HUNDRED_DOLLAR_CHIP = new Chip(10000, "chip0100");
+	/** 500$ chip */
 	public static final Chip FIVE_HUNDRED_DOLLAR_CHIP = new Chip(50000, "chip0500");
+	/** 1,000$ chip */
 	public static final Chip THOUSAND_DOLLAR_CHIP = new Chip(100000, "chip1000");
+	/** 5,000$ chip */
 	public static final Chip FIVE_THOUSAND_DOLLAR_CHIP = new Chip(500000, "chip5000");
+	
+	// Only for tournaments usually :D
+	
+	/** 25,000$ chip */
 	public static final Chip TWENTY_FIVE_THOUSAND_DOLLAR_CHIP = new Chip(2500000, "chip25000");
+	/** 100,000$ chip */
 	public static final Chip ONE_HUNDRED_THOUSAND_DOLLAR_CHIP = new Chip(10000000, "chip100000");
+	/** 500,000$ chip */
 	public static final Chip FIVE_HUNDRED_THOUSAND_DOLLAR_CHIP = new Chip(50000000, "chip500000");
+	/** 1,000,000$ chip */
 	public static final Chip ONE_MILLION_DOLLAR_CHIP = new Chip(100000000, "chip1000000");
+	/** 5,000,000$ chip */
 	public static final Chip FIVE_MILLION_DOLLAR_CHIP = new Chip(500000000, "chip5000000");
 	// Add more as necessary
 	
@@ -72,8 +101,10 @@ public class Chip
 	/**
 	 * @param size Parameter indicating the desired size of the returned image.
 	 * @return The corresponding chip image.
+	 * @throws FileNotFoundException
 	 */
-	public Image getImage(int size) {
+	public Image getImage(int size)
+			throws FileNotFoundException {
 		
 		return SWTResourceManager.getChipImage(this, size);
 		
@@ -137,7 +168,39 @@ public class Chip
 		return result.descendingMap();
 	}
 	
-	public String getFileId() {
-		return fileId;
+	/**
+	 * Helper method
+	 * 
+	 * @param chipPiles A List of chip piles to evaluate
+	 * @return The monetary value of the given chip piles
+	 */
+	public static int getValue(List<NavigableMap<Chip, Integer>> chipPiles) {
+		int amount = 0;
+		for (Map<Chip, Integer> chips : chipPiles) {
+			for (Entry<Chip, Integer> chipEntry : chips.entrySet()) {
+				amount += chipEntry.getKey().getValue() * chipEntry.getValue();
+			}
+		}
+		return amount;
+	}
+	
+	/**
+	 * @param size The desired size
+	 * @return The file location of the image, depending on the
+	 *         {@link ClientGUI.Resources#ACTIVE_CHIP_DIR}
+	 */
+	public File getImageFile(int size) {
+		return new File(ClientGUI.Resources.ACTIVE_CHIP_DIR, size + "/" + fileId + ".bmp");
+		
+	}
+	
+	/**
+	 * @param size The desired size
+	 * @return The file location of the mask image, depending on the
+	 *         {@link ClientGUI.Resources#ACTIVE_CHIP_DIR}
+	 */
+	public File getMaskImageFile(int size) {
+		return new File(ClientGUI.Resources.ACTIVE_CHIP_DIR, size + "/" + fileId + ".a.bmp");
+		
 	}
 }

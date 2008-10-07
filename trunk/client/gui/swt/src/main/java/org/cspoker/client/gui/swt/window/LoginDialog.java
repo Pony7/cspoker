@@ -11,6 +11,7 @@
  */
 package org.cspoker.client.gui.swt.window;
 
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 
 import javax.security.auth.login.LoginException;
@@ -21,7 +22,6 @@ import org.cspoker.client.gui.swt.control.ClientCore;
 import org.cspoker.client.gui.swt.control.ClientGUI;
 import org.cspoker.client.gui.swt.control.SWTResourceManager;
 import org.cspoker.client.rmi.RemoteRMIServer;
-import org.cspoker.common.RemoteCSPokerServer;
 import org.cspoker.common.api.shared.context.RemoteServerContext;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -39,9 +39,6 @@ public class LoginDialog
 		extends ClientDialog {
 	
 	private final static Logger logger = Logger.getLogger(LoginDialog.class);
-	/** FIXME We need to initialize this correctly after the new API is complete */
-	private RemoteCSPokerServer loginServer;
-	private RemoteServerContext result;
 	
 	/**
 	 * Create and initialize new login dialog
@@ -73,12 +70,8 @@ public class LoginDialog
 	 * This method blocks until the user has either
 	 * <li>disposed of this dialog
 	 * <li>pressed the <code>Login</code> button
-	 * 
-	 * @return <code>null</code>, if the dialog was disposed or the login was
-	 *         unsuccessful, or the {@link RemoteServerContext} retrieved from
-	 *         the server.
 	 */
-	public RemoteServerContext open() {
+	public void open() {
 		getParent().layout();
 		getParent().pack();
 		getParent().open();
@@ -87,7 +80,6 @@ public class LoginDialog
 			if (!display.readAndDispatch())
 				display.sleep();
 		}
-		return result;
 	}
 	
 	/**
@@ -173,35 +165,33 @@ public class LoginDialog
 			loginButton.setText("Login");
 			loginButton.addSelectionListener(new SelectionAdapter() {
 				
+				private RemoteServerContext result;
+				
+				/**
+				 * Parse the user and password fields, set the ClientCore's user
+				 * to the relevant new user, and try to login.
+				 * 
+				 * @param evt Ignored
+				 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+				 */
 				@Override
 				public void widgetSelected(SelectionEvent evt) {
-					doLogin(evt);
-					
+					try {
+						clientCore.setUser(new User(userNameText.getText(), passwordText.getText()));
+						result = clientCore.login(new RemoteRMIServer(serverCombo.getText()));
+					} catch (RemoteException e) {
+						clientCore.handleRemoteException(e);
+					} catch (NotBoundException e) {
+						logger.error("Could not find Remote server object in RMI registry", e);
+					} catch (LoginException e) {
+						ClientGUI.displayException(e);
+					}
+					// Make sure we do have a RemoteServerContext before exiting
+					// the LoginDialog
+					assert (result != null) : "No exception thrown but still no Server Context?!";
+					getParent().close();
 				}
-				
 			});
 		}
-	}
-	
-	/**
-	 * @param evt
-	 * @throws RemoteException
-	 * @throws LoginException
-	 */
-	private void doLogin(SelectionEvent evt) {
-		User newUser = new User(userNameText.getText(), passwordText.getText());
-		clientCore.setUser(newUser);
-		try {
-			
-			loginServer = new RemoteRMIServer(serverCombo.getText());
-			// TODO How do I get a non-remote ServerContext?
-			result = loginServer.login(newUser.getUserName(), newUser.getPassword());
-			getParent().close();
-		} catch (Exception e) {
-			// Catch all the remote exceptions at once
-			logger.error("Login failed", e);
-			ClientGUI.displayErrorMessage(e);
-		}
-		
 	}
 }
