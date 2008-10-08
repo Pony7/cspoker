@@ -1,17 +1,13 @@
 /**
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- * 
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *  
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version. This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details. You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software Foundation, Inc.,
+ * 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 package org.cspoker.server.rmi;
 
@@ -38,33 +34,27 @@ import org.cspoker.server.rmi.asynchronous.context.AsynchronousServerContext;
 import org.cspoker.server.rmi.export.ExportingServerContext;
 import org.cspoker.server.rmi.unremote.context.UnremoteServerContext;
 
-public class RMIServer implements RemoteCSPokerServer {
-
+public class RMIServer
+		implements RemoteCSPokerServer {
+	
 	private final static Logger logger = Logger.getLogger(RMIServer.class);
-
+	
 	private final int port;
-
+	
 	private final CSPokerServer cspokerServer;
-
+	
 	public RMIServer(int port, CSPokerServer cspokerServer) {
 		this.port = port;
-		this.cspokerServer =cspokerServer;
+		this.cspokerServer = cspokerServer;
 	}
-
+	
 	public ServerContext login(String username, String password)
-	throws LoginException, RemoteException {
+			throws LoginException, RemoteException {
 		ServerContext rootServer = cspokerServer.login(username, password);
 		Killable connection = rootServer;
-		RemoteServerContext context = 
-			new ExportingServerContext(
-					new UnremoteServerContext(
-							connection,
-							new AsynchronousServerContext(
-									new SequencePreservingExecutor(RequestExecutor.getInstance()),
-									rootServer
-							)
-					)
-			);
+		RemoteServerContext context = new ExportingServerContext(
+				new UnremoteServerContext(connection, new AsynchronousServerContext(new SequencePreservingExecutor(
+						RequestExecutor.getInstance()), rootServer)));
 		try {
 			UnicastRemoteObject.unexportObject(context, true);
 		} catch (NoSuchObjectException e) {
@@ -73,35 +63,37 @@ public class RMIServer implements RemoteCSPokerServer {
 		ServerContext stub = (ServerContext) UnicastRemoteObject.exportObject(context, 0);
 		return stub;
 	}
-
-	public void start() throws AccessException, RemoteException {
+	
+	public void start()
+			throws AccessException, RemoteException {
 		System.setSecurityManager(null);
 		ExecutorService executor = RequestExecutor.getInstance();
-
+		
 		try {
 			executor.submit(new Callable<Void>() {
-
-				public Void call() throws RemoteException {
+				
+				public Void call()
+						throws RemoteException {
 					Registry registry = LocateRegistry.createRegistry(port);
-					CSPokerServer stub = (CSPokerServer) UnicastRemoteObject
-					.exportObject(RMIServer.this, 0);
+					CSPokerServer stub = (CSPokerServer) UnicastRemoteObject.exportObject(RMIServer.this, 0);
 					registry.rebind("CSPokerServer", stub);
 					logger.info("Started RMI server at port " + port);
 					return null;
 				}
-
+				
+				@Override
 				public String toString() {
 					return "RMI Server startup at port " + port;
 				}
-
+				
 			}).get();
 		} catch (InterruptedException e) {
 			logger.error(e);
 			Thread.currentThread().interrupt();
 		} catch (ExecutionException e) {
 			logger.error(e);
-			throw (RemoteException) (e.getCause());
+			throw new RemoteException(e.getMessage(), e);
 		}
 	}
-
+	
 }
