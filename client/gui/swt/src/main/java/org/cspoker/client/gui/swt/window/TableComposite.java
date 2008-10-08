@@ -64,6 +64,14 @@ public class TableComposite
 	}
 	
 	/**
+	 * @see org.eclipse.swt.widgets.Control#getParent()
+	 */
+	@Override
+	public GameWindow getParent() {
+		return (GameWindow) super.getParent();
+	}
+	
+	/**
 	 * Initialization of SWT components.
 	 */
 	private void initGUI() {
@@ -325,6 +333,9 @@ public class TableComposite
 		communityCardsComposite.redraw();
 	}
 	
+	/**
+	 * @return the Composite holding the Community Card Images
+	 */
 	public Composite getCommunityCardsComposite() {
 		return communityCardsComposite;
 	}

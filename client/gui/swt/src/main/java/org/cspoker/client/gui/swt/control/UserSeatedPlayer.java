@@ -2,24 +2,34 @@ package org.cspoker.client.gui.swt.control;
 
 import java.rmi.RemoteException;
 
+import org.apache.log4j.Logger;
 import org.cspoker.client.User;
-import org.cspoker.client.gui.swt.window.PlayerSeatComposite;
+import org.cspoker.client.gui.swt.window.GameWindow;
 import org.cspoker.common.api.chat.context.RemoteChatContext;
+import org.cspoker.common.api.chat.listener.ChatListener;
+import org.cspoker.common.api.lobby.context.LobbyContext;
+import org.cspoker.common.api.lobby.context.RemoteLobbyContext;
 import org.cspoker.common.api.lobby.holdemtable.context.RemoteHoldemTableContext;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.RemoteHoldemPlayerContext;
-import org.cspoker.common.api.lobby.holdemtable.holdemplayer.listener.HoldemPlayerListener;
+import org.cspoker.common.api.shared.context.RemoteServerContext;
+import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.player.SeatedPlayer;
 
+/**
+ * Represents a user who is sitting at/observing a certain table
+ * 
+ * @author Stephan Schmidt
+ */
 public class UserSeatedPlayer
 		extends MutableSeatedPlayer {
 	
-	public UserSeatedPlayer(PlayerSeatComposite playerSeatComposite, User user, GameState gameState) {
-		this(playerSeatComposite, new SeatedPlayer(user.getPlayer().getId(), Long.MAX_VALUE,
-				user.getPlayer().getName(), 0, 0), gameState);
-	}
+	private final static Logger logger = Logger.getLogger(UserSeatedPlayer.class);
+	private final GameWindow gameWindow;
 	
-	public UserSeatedPlayer(PlayerSeatComposite playerSeatComposite, SeatedPlayer player, GameState gameState) {
-		super(playerSeatComposite, player, gameState);
+	public UserSeatedPlayer(GameWindow gameWindow, User user, GameState gameState) {
+		super(new SeatedPlayer(user.getPlayer().getId(), Long.MAX_VALUE, user.getPlayer().getName(), 0, 0), gameState);
+		assert (gameWindow != null) : "We need the GameWindow as the listener!";
+		this.gameWindow = gameWindow;
 	}
 	
 	RemoteHoldemTableContext tableContext;
@@ -35,10 +45,6 @@ public class UserSeatedPlayer
 		return tableContext;
 	}
 	
-	public void setTableContext(RemoteHoldemTableContext tableContext) {
-		this.tableContext = tableContext;
-	}
-	
 	public RemoteChatContext getChatContext() {
 		return chatContext;
 	}
@@ -47,16 +53,40 @@ public class UserSeatedPlayer
 		return playerContext;
 	}
 	
-	public void setPlayerContext(RemoteHoldemPlayerContext playerContext) {
-		this.playerContext = playerContext;
-	}
-	
-	public void sitIn(long seatId, HoldemPlayerListener listener)
+	public void sitIn(long seatId)
 			throws RemoteException {
 		if (tableContext == null)
 			throw new IllegalStateException("No table context available, you can not sit in");
 		assert (seatId >= 0 && seatId != Long.MAX_VALUE) : "Illegal seat id provided: " + seatId;
-		playerContext = tableContext.sitIn(seatId, listener);
+		playerContext = tableContext.sitIn(seatId, gameWindow);
+		
+	}
+	
+	/**
+	 * Join table to receive events for this table
+	 * 
+	 * @param lobbyContext {@link LobbyContext} needed to retrieve
+	 *            {@link RemoteHoldemTableContext}
+	 */
+	public void joinTable(RemoteLobbyContext lobbyContext) {
+		if (lobbyContext == null)
+			throw new IllegalArgumentException("Please provide correct lobby context");
+		try {
+			tableContext = lobbyContext.joinHoldemTable(gameState.getTableMemento().getId(), gameWindow);
+		} catch (RemoteException e) {
+			throw new IllegalStateException(e);
+		} catch (IllegalActionException e) {
+			// TODO Auto-generated catch block
+			logger.warn("You cannot join the desired table", e);
+		}
+	}
+	
+	public void setChatContext(RemoteServerContext communication, ChatListener chatListener) {
+		try {
+			chatContext = communication.getChatContext(chatListener);
+		} catch (RemoteException e) {
+			throw new IllegalStateException(e);
+		}
 		
 	}
 }

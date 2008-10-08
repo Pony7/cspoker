@@ -29,6 +29,7 @@ import org.cspoker.common.api.lobby.event.LobbyEvent;
 import org.cspoker.common.api.lobby.event.TableCreatedEvent;
 import org.cspoker.common.api.lobby.event.TableRemovedEvent;
 import org.cspoker.common.api.lobby.listener.LobbyListener;
+import org.cspoker.common.api.shared.context.RemoteServerContext;
 import org.cspoker.common.elements.table.DetailedHoldemTable;
 import org.cspoker.common.elements.table.Table;
 import org.cspoker.common.elements.table.TableConfiguration;
@@ -118,9 +119,15 @@ public class LobbyWindow
 		SWTResourceManager.registerResourceUser(this);
 	}
 	
-	public void setLobbyContext() {
+	/**
+	 * @param serverContext The {@link RemoteServerContext} needed to retrieve
+	 *            the corresponding {@link RemoteLobbyContext}
+	 */
+	public void setLobbyContext(RemoteServerContext serverContext) {
+		if (serverContext == null)
+			throw new IllegalArgumentException("Please provide correct server context");
 		try {
-			this.context = getClientCore().getCommunication().getLobbyContext(this);
+			this.context = serverContext.getLobbyContext(this);
 		} catch (RemoteException e) {
 			throw new IllegalArgumentException(e);
 		}
@@ -463,12 +470,9 @@ public class LobbyWindow
 		assert (t != null) : "Cannot insert information, passed null parameter";
 		TableConfiguration tInfo = t.getGameProperty();
 		TableItem item = new TableItem(availableGameTables, SWT.NONE);
-		item.setText(new String[] {
-				t.getName(),
-				Long.toString(t.getId()),
-				ClientGUI.betFormatter.format(tInfo.getSmallBlind()) + "/"
-						+ ClientGUI.betFormatter.format(tInfo.getBigBlind()), "Holdem No Limit",
-				Integer.toString(t.getNbPlayers()) + "/" + tInfo.getMaxNbPlayers() });
+		item.setText(new String[] { t.getName(), Long.toString(t.getId()),
+				ClientGUI.formatBet(tInfo.getSmallBlind()) + "/" + ClientGUI.formatBet(tInfo.getBigBlind()),
+				"Holdem No Limit", Integer.toString(t.getNbPlayers()) + "/" + tInfo.getMaxNbPlayers() });
 		item.setData(t);
 	}
 	

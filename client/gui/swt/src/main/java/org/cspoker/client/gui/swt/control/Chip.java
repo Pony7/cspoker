@@ -125,7 +125,7 @@ public class Chip
 	 */
 	@Override
 	public String toString() {
-		return ClientGUI.betFormatter.format(value) + " Chip";
+		return ClientGUI.formatBet(value) + " Chip";
 	}
 	
 	/**

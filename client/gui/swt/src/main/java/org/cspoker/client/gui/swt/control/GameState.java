@@ -102,4 +102,8 @@ public class GameState {
 		currentBetPile.clear();
 	}
 	
+	public void setPots(Pots pots) {
+		this.pots = pots;
+	}
+	
 }
