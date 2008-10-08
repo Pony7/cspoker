@@ -17,10 +17,11 @@ package org.cspoker.common.api.lobby.context;
 
 import org.cspoker.common.api.lobby.holdemtable.context.HoldemTableContext;
 import org.cspoker.common.api.lobby.holdemtable.listener.RemoteHoldemTableListener;
+import org.cspoker.common.api.shared.exception.IllegalActionException;
 
 public interface ExternalLobbyContext extends LobbyContext{
 
 	public HoldemTableContext joinHoldemTable(long tableId,
-			RemoteHoldemTableListener holdemTableListener);
+			RemoteHoldemTableListener holdemTableListener) throws IllegalActionException;
 	
 }

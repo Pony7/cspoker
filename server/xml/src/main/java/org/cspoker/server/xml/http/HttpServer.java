@@ -20,7 +20,7 @@ import java.net.InetSocketAddress;
 import java.rmi.RemoteException;
 
 import org.apache.log4j.Logger;
-import org.cspoker.server.common.authentication.XmlFileAuthenticator;
+import org.cspoker.common.CSPokerServer;
 import org.cspoker.server.common.util.threading.RequestExecutor;
 import org.cspoker.server.xml.http.authentication.XmlFileBasicAuthentication;
 import org.cspoker.server.xml.http.handler.CSPokerHandler;
@@ -44,21 +44,7 @@ public class HttpServer {
 
 	private int port;
 
-	/**
-	 * Creates a new server at the given port.
-	 * 
-	 * @param port
-	 *            The port to listen at.
-	 * @param authenticationFile
-	 * @throws IOException
-	 * @throws IOException
-	 */
-
-	public HttpServer(int port) throws RemoteException {
-		this(port, new XmlFileAuthenticator());
-	}
-
-	public HttpServer(int port, XmlFileAuthenticator auth)
+	public HttpServer(int port, CSPokerServer cspokerServer)
 			throws RemoteException {
 		this.port = port;
 		try {
@@ -68,14 +54,12 @@ public class HttpServer {
 			throw new RemoteException("Creating HTTP server failed", e);
 		}
 
-		authenticator = new XmlFileBasicAuthentication(auth);
-
-		loadContext();
+		loadContext(cspokerServer);
 	}
 
-	protected void loadContext() {
+	protected void loadContext(CSPokerServer cspokerServer) {
 		HttpContext mainContext = server.createContext("/cspoker/",
-				new CSPokerHandler());
+				new CSPokerHandler(cspokerServer));
 		mainContext.setAuthenticator(authenticator);
 
 		server.setExecutor(RequestExecutor.getInstance());

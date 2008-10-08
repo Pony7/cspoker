@@ -19,6 +19,8 @@ public interface AccountContext extends RemoteAccountContext{
 
 	void changePassword(String passwordHash);
 	
+	boolean hasPassword(String passwordHash);
+	
 	void createAccount(String username, String passwordHash);
 	
 	byte[] getAvatar(long playerId);

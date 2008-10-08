@@ -23,11 +23,12 @@ import org.cspoker.common.api.lobby.context.ForwardingRemoteLobbyContext;
 import org.cspoker.common.api.lobby.context.RemoteLobbyContext;
 import org.cspoker.common.api.lobby.holdemtable.context.RemoteHoldemTableContext;
 import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
-import org.cspoker.common.util.lazy.IWrapper;
+import org.cspoker.common.api.shared.exception.IllegalActionException;
+import org.cspoker.common.util.lazy.IWrapper1;
 
 public class LobbyContextStub extends ForwardingRemoteLobbyContext{
 
-	protected ConcurrentHashMap<Long, IWrapper<RemoteHoldemTableContext,RemoteException>> wrappedContexts = new ConcurrentHashMap<Long, IWrapper<RemoteHoldemTableContext,RemoteException>>();
+	protected ConcurrentHashMap<Long, IWrapper1<RemoteHoldemTableContext,RemoteException>> wrappedContexts = new ConcurrentHashMap<Long, IWrapper1<RemoteHoldemTableContext,RemoteException>>();
 
 	public LobbyContextStub(RemoteLobbyContext context)
 			throws RemoteException {
@@ -36,7 +37,7 @@ public class LobbyContextStub extends ForwardingRemoteLobbyContext{
 	
 	@Override
 	public RemoteHoldemTableContext joinHoldemTable(long tableId,
-			HoldemTableListener holdemTableListener) throws RemoteException {
+			HoldemTableListener holdemTableListener) throws RemoteException, IllegalActionException {
 		RemoteHoldemTableContext tableContext = super.joinHoldemTable(tableId,(HoldemTableListener) UnicastRemoteObject.exportObject(holdemTableListener, 0));
 		return new HoldemTableContextStub(tableContext);
 	}

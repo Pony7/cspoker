@@ -28,6 +28,7 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.apache.log4j.Logger;
 import org.cspoker.common.util.Base64;
+import org.cspoker.common.util.Pair;
 import org.cspoker.server.xml.http.handler.exception.HttpException;
 import org.cspoker.server.xml.http.handler.exception.HttpExceptionImpl;
 import org.xml.sax.helpers.AttributesImpl;
@@ -40,12 +41,12 @@ import com.sun.net.httpserver.HttpHandler;
  * A HttpHandler that supports Exceptions over Http.
  * 
  */
-public abstract class AbstractHttpHandlerImpl implements HttpHandler {
+public abstract class AbstractHttpHandler implements HttpHandler {
 
 	private final static Logger logger = Logger
-			.getLogger(AbstractHttpHandlerImpl.class);
+			.getLogger(AbstractHttpHandler.class);
 
-	public AbstractHttpHandlerImpl() {
+	public AbstractHttpHandler() {
 		super();
 	}
 
@@ -140,7 +141,7 @@ public abstract class AbstractHttpHandlerImpl implements HttpHandler {
 		throwException(http, e, 500);
 	}
 
-	public static String toPlayerName(Headers requestHeaders)
+	public static Pair<String,String> getCredentials(Headers requestHeaders)
 			throws HttpExceptionImpl {
 		List<String> auth = requestHeaders.get("Authorization");
 		if (auth == null || auth.size() != 1) {
@@ -150,7 +151,8 @@ public abstract class AbstractHttpHandlerImpl implements HttpHandler {
 		String base64 = auth.get(0);
 		try {
 			String decoded = new String(Base64.decode(base64.split(" ")[1]));
-			return decoded.split(":")[0];
+			String[] parts = decoded.split(":");
+			return new Pair<String, String>(parts[0],parts[1]);
 		} catch (IOException e) {
 			throw new HttpExceptionImpl(e, 401);
 		}

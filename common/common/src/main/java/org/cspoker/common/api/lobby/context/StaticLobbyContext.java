@@ -16,10 +16,11 @@
 package org.cspoker.common.api.lobby.context;
 
 import org.cspoker.common.api.lobby.holdemtable.context.StaticHoldemTableContext;
+import org.cspoker.common.api.shared.exception.IllegalActionException;
 
 public interface StaticLobbyContext extends LobbyContext {
 
-	public void joinHoldemTable(long tableId);
+	public void joinHoldemTable(long tableId) throws IllegalActionException;
 	
 	public StaticHoldemTableContext getHoldemTableContext(long tableId);
 	

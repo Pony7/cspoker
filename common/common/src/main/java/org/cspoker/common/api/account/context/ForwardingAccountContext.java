@@ -27,6 +27,10 @@ public class ForwardingAccountContext implements AccountContext{
 	public void changePassword(String passwordHash) {
 		accountContext.changePassword(passwordHash);
 	}
+	
+	public boolean hasPassword(String passwordHash) {
+		return accountContext.hasPassword(passwordHash);
+	}
 
 	public void createAccount(String username, String passwordHash) {
 		accountContext.createAccount(username, passwordHash);

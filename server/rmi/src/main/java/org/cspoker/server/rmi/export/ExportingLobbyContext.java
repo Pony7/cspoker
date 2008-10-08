@@ -24,12 +24,13 @@ import org.cspoker.common.api.lobby.holdemtable.context.HoldemTableContext;
 import org.cspoker.common.api.lobby.holdemtable.context.RemoteHoldemTableContext;
 import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
 import org.cspoker.common.api.shared.Killable;
-import org.cspoker.common.util.lazy.IFactory;
-import org.cspoker.common.util.lazy.LazyMap;
+import org.cspoker.common.api.shared.exception.IllegalActionException;
+import org.cspoker.common.util.lazy.IFactory2;
+import org.cspoker.common.util.lazy.LazyMap2;
 
 public class ExportingLobbyContext extends ForwardingRemoteLobbyContext {
 
-	private final LazyMap<Long, RemoteHoldemTableContext, RemoteException> wrappers = new LazyMap<Long, RemoteHoldemTableContext, RemoteException>();
+	private final LazyMap2<Long, RemoteHoldemTableContext, RemoteException, IllegalActionException> wrappers = new LazyMap2<Long, RemoteHoldemTableContext, RemoteException, IllegalActionException>();
 	
 	public ExportingLobbyContext(RemoteLobbyContext lobbyContext) throws RemoteException {
 		super(lobbyContext);
@@ -37,9 +38,9 @@ public class ExportingLobbyContext extends ForwardingRemoteLobbyContext {
 	
 	@Override
 	public RemoteHoldemTableContext joinHoldemTable(final long tableId,
-			final HoldemTableListener holdemTableListener) throws RemoteException {
-		return wrappers.getOrCreate(tableId, new IFactory<RemoteHoldemTableContext, RemoteException>(){
-			public RemoteHoldemTableContext create() throws RemoteException {
+			final HoldemTableListener holdemTableListener) throws RemoteException, IllegalActionException {
+		return wrappers.getOrCreate(tableId, new IFactory2<RemoteHoldemTableContext, RemoteException,IllegalActionException>(){
+			public RemoteHoldemTableContext create() throws RemoteException, IllegalActionException {
 				ExportingHoldemTableContext remoteObject = new ExportingHoldemTableContext(ExportingLobbyContext.super.joinHoldemTable(tableId, holdemTableListener),new Killable(){
 					public void kill() {
 						wrappers.remove(tableId);

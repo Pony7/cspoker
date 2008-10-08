@@ -18,6 +18,9 @@ package org.cspoker.common.api.shared.event;
 
 import java.io.Serializable;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement
 public interface Event extends Serializable {
 
 

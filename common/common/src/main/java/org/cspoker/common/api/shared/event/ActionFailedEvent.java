@@ -13,21 +13,30 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.common.api.account.context;
+package org.cspoker.common.api.shared.event;
 
-import java.rmi.Remote;
-import java.rmi.RemoteException;
+import javax.xml.bind.annotation.XmlRootElement;
 
-public interface RemoteAccountContext extends Remote{
+import org.cspoker.common.api.shared.action.Action;
 
-	void changePassword(String passwordHash) throws RemoteException;
+@XmlRootElement
+public class ActionFailedEvent<T> extends ActionEvent<T> {
 
-	boolean hasPassword(String passwordHash) throws RemoteException;
-	
-	void createAccount(String username, String passwordHash) throws RemoteException;
-	
-	byte[] getAvatar(long playerId) throws RemoteException;
-	
-	void setAvatar(byte[] avatar) throws RemoteException;
-	
+        private static final long serialVersionUID = 8350435427841245148L;
+
+        private Throwable exception;
+
+        public ActionFailedEvent(Action<T> action, Throwable exception) {
+                super(action);
+                this.exception = exception;
+        }
+
+        protected ActionFailedEvent() {
+                // no op
+        }
+        
+        public Throwable getException() {
+			return this.exception;
+		}
+        
 }

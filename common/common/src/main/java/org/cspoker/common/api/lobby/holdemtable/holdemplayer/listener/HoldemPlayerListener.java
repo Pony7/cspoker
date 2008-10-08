@@ -21,5 +21,5 @@ import org.cspoker.common.api.lobby.holdemtable.holdemplayer.event.NewPocketCard
 public interface HoldemPlayerListener extends RemoteHoldemPlayerListener{
 
 	void onNewPocketCards(NewPocketCardsEvent newPocketCardsEvent);
-		
+	
 }

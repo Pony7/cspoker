@@ -15,8 +15,8 @@
  */
 package org.cspoker.common.util.lazy;
 
-public interface IFactory<T, E extends Throwable> {
+public interface IFactory<T> extends IFactory1<T, Throwable>{
 
-	T create() throws E;
+	T create();
 	
 }

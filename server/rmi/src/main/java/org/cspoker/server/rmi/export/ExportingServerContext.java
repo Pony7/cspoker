@@ -27,15 +27,15 @@ import org.cspoker.common.api.lobby.context.RemoteLobbyContext;
 import org.cspoker.common.api.lobby.listener.LobbyListener;
 import org.cspoker.common.api.shared.context.ForwardingRemoteServerContext;
 import org.cspoker.common.api.shared.context.ServerContext;
-import org.cspoker.common.util.lazy.IFactory;
-import org.cspoker.common.util.lazy.LazyReference;
+import org.cspoker.common.util.lazy.IFactory1;
+import org.cspoker.common.util.lazy.LazyReference1;
 
 public class ExportingServerContext extends ForwardingRemoteServerContext {
 
-	private LazyReference<RemoteAccountContext,RemoteException> accountContext = new LazyReference<RemoteAccountContext,RemoteException>();
-	private LazyReference<RemoteCashierContext,RemoteException> cashierContext = new LazyReference<RemoteCashierContext,RemoteException>();
-	private LazyReference<RemoteChatContext,RemoteException> chatContext = new LazyReference<RemoteChatContext,RemoteException>();
-	private LazyReference<RemoteLobbyContext,RemoteException> lobbyContext = new LazyReference<RemoteLobbyContext,RemoteException>();
+	private LazyReference1<RemoteAccountContext,RemoteException> accountContext = new LazyReference1<RemoteAccountContext,RemoteException>();
+	private LazyReference1<RemoteCashierContext,RemoteException> cashierContext = new LazyReference1<RemoteCashierContext,RemoteException>();
+	private LazyReference1<RemoteChatContext,RemoteException> chatContext = new LazyReference1<RemoteChatContext,RemoteException>();
+	private LazyReference1<RemoteLobbyContext,RemoteException> lobbyContext = new LazyReference1<RemoteLobbyContext,RemoteException>();
 
 	public ExportingServerContext(ServerContext serverContext) throws RemoteException {
 		super(serverContext);
@@ -43,7 +43,7 @@ public class ExportingServerContext extends ForwardingRemoteServerContext {
 
 	@Override
 	public RemoteAccountContext getAccountContext() throws RemoteException {
-		return accountContext.getContent(new IFactory<RemoteAccountContext, RemoteException>(){
+		return accountContext.getContent(new IFactory1<RemoteAccountContext, RemoteException>(){
 			public RemoteAccountContext create() throws RemoteException {
 				return (RemoteAccountContext) UnicastRemoteObject.exportObject(ExportingServerContext.super.getAccountContext(), 0);
 			}
@@ -52,7 +52,7 @@ public class ExportingServerContext extends ForwardingRemoteServerContext {
 	
 	@Override
 	public RemoteCashierContext getCashierContext() throws RemoteException {
-		return cashierContext.getContent(new IFactory<RemoteCashierContext, RemoteException>(){
+		return cashierContext.getContent(new IFactory1<RemoteCashierContext, RemoteException>(){
 			public RemoteCashierContext create() throws RemoteException {
 				return (RemoteCashierContext) UnicastRemoteObject.exportObject(ExportingServerContext.super.getCashierContext(), 0);
 			}
@@ -62,7 +62,7 @@ public class ExportingServerContext extends ForwardingRemoteServerContext {
 	@Override
 	public RemoteChatContext getChatContext(final ChatListener chatListener)
 			throws RemoteException {
-		return chatContext.getContent(new IFactory<RemoteChatContext, RemoteException>(){
+		return chatContext.getContent(new IFactory1<RemoteChatContext, RemoteException>(){
 			public RemoteChatContext create() throws RemoteException {
 				return (RemoteChatContext) UnicastRemoteObject.exportObject(ExportingServerContext.super.getChatContext(chatListener), 0);
 			}
@@ -72,7 +72,7 @@ public class ExportingServerContext extends ForwardingRemoteServerContext {
 	@Override
 	public RemoteLobbyContext getLobbyContext(final LobbyListener lobbyListener)
 			throws RemoteException {
-		return lobbyContext.getContent(new IFactory<RemoteLobbyContext, RemoteException>(){
+		return lobbyContext.getContent(new IFactory1<RemoteLobbyContext, RemoteException>(){
 			public RemoteLobbyContext create() throws RemoteException {
 				ExportingLobbyContext remoteObject = new ExportingLobbyContext(ExportingServerContext.super.getLobbyContext(lobbyListener));
 				return (LobbyContext) UnicastRemoteObject.exportObject(remoteObject, 0);

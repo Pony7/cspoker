@@ -15,32 +15,15 @@
  */
 package org.cspoker.common.util.lazy;
 
-import java.util.concurrent.ConcurrentHashMap;
-
-
-public class LazySimpleMap<K,V> {
-
-	private static final long serialVersionUID = -7366678021380297939L;
-
-	private final ConcurrentHashMap<K, ISimpleWrapper<V>> wrappedMap = new ConcurrentHashMap<K, ISimpleWrapper<V>>();
+public class LazyReference2<T, E extends Throwable, F extends Throwable> implements ILazyReference2<T, E, F>{
 	
-	public V getOrCreate(K key, final ISimpleFactory<? extends V> factory){
-		ISimpleWrapper<V> wrapper = wrappedMap.get(key);
-		if(wrapper!=null){
-			return wrapper.getContent();
-		}
-		wrappedMap.putIfAbsent(key, new ISimpleWrapper<V>(){
+	private T object = null;
 
-			private V content = null;
-			
-			public synchronized V getContent() {
-				if(content == null){
-					content = factory.create();
-				}
-				return content;
-			}
-			
-		});
-		return wrappedMap.get(key).getContent();
+	public synchronized T getContent(IFactory2<? extends T,? extends E, ? extends F> factory) throws E,F {
+		if(object == null){
+			object = factory.create();
+		}
+		return object;
 	}
+
 }
