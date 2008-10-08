@@ -29,6 +29,10 @@ public class ForwardingRemoteAccountContext implements RemoteAccountContext{
 	public void changePassword(String passwordHash) throws RemoteException{
 		accountContext.changePassword(passwordHash);
 	}
+	
+	public boolean hasPassword(String passwordHash) throws RemoteException {
+		return accountContext.hasPassword(passwordHash);
+	}
 
 	public void createAccount(String username, String passwordHash) throws RemoteException {
 		accountContext.createAccount(username, passwordHash);

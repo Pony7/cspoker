@@ -15,8 +15,8 @@
  */
 package org.cspoker.common.util.lazy;
 
-public interface ILazyReference<T, E extends Throwable> {
+public interface ILazyReference<T>{
 
-	public abstract T getContent(IFactory<? extends T, ? extends E> factory) throws E;
-
+	public abstract T getContent(IFactory<? extends T> factory);
+	
 }

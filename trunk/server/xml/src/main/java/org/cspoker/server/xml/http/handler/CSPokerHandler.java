@@ -15,54 +15,92 @@
  */
 package org.cspoker.server.xml.http.handler;
 
-import java.io.IOException;
+import java.io.StringWriter;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
+import javax.security.auth.login.LoginException;
 import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
 
 import org.apache.log4j.Logger;
-import org.cspoker.server.common.game.session.PlayerKilledExcepion;
-import org.cspoker.server.common.game.session.Session;
-import org.cspoker.server.common.game.session.SessionManager;
-import org.cspoker.server.xml.common.XmlPlayerCommunication;
-import org.cspoker.server.xml.common.XmlPlayerCommunicationFactory;
-import org.cspoker.server.xml.http.handler.abstracts.AbstractHttpHandlerImpl;
+import org.cspoker.common.CSPokerServer;
+import org.cspoker.common.api.shared.context.ServerContext;
+import org.cspoker.common.api.shared.context.StaticServerContext;
+import org.cspoker.common.api.shared.event.ServerEvent;
+import org.cspoker.common.api.shared.http.HTTPRequest;
+import org.cspoker.common.api.shared.http.HTTPResponse;
+import org.cspoker.common.api.shared.listener.ServerEventListener;
+import org.cspoker.common.api.shared.listener.UniversalServerListener;
+import org.cspoker.common.jaxbcontext.AllJAXBContexts;
+import org.cspoker.common.util.Pair;
+import org.cspoker.common.util.lazy.IFactory1;
+import org.cspoker.common.util.lazy.LazyMap1;
+import org.cspoker.server.xml.common.XmlServerContext;
+import org.cspoker.server.xml.http.handler.abstracts.AbstractHttpHandler;
 import org.cspoker.server.xml.http.handler.exception.HttpExceptionImpl;
 import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
 
 import com.sun.net.httpserver.HttpExchange;
 
-public class CSPokerHandler extends AbstractHttpHandlerImpl {
+public class CSPokerHandler extends AbstractHttpHandler {
 
 	private final static Logger logger = Logger.getLogger(CSPokerHandler.class);
 
-	private final XmlPlayerCommunicationFactory f = XmlPlayerCommunicationFactory.global_factory;
+	private CSPokerServer cspokerServer;
+
+	private LazyMap1<String, Pair<StaticServerContext, Queue<ServerEvent>>, LoginException> contexts 
+	= new LazyMap1<String, Pair<StaticServerContext, Queue<ServerEvent>>, LoginException>();
+
+	public CSPokerHandler(CSPokerServer cspokerServer) {
+		this.cspokerServer = cspokerServer;
+	}
 
 	protected byte[] getResponse(HttpExchange http) throws HttpExceptionImpl {
+		final Pair<String,String> credentials = AbstractHttpHandler.getCredentials(http.getRequestHeaders());
 
-		String username = AbstractHttpHandlerImpl.toPlayerName(http
-				.getRequestHeaders());
-		Session session = SessionManager.global_session_manager
-				.getSession(username);
+		Pair<StaticServerContext, Queue<ServerEvent>> state;
 		try {
-			XmlPlayerCommunication playerComm = f
-					.getRegisteredXmlPlayerCommunication(session, null);
-			try {
-				playerComm.handle(new InputSource(http.getRequestBody()));
-			} catch (SAXException e) {
-				throw new HttpExceptionImpl(e, 400);
-			} catch (JAXBException e) {
-				throw new HttpExceptionImpl(e, 400);
-			} catch (IOException e) {
-				throw new HttpExceptionImpl(e, 400);
-			}
-			String result = playerComm.getAndFlushCache();
-			logger.trace("Returning response of length " + result.length()
-					+ ":\n" + result);
-			return result.getBytes();
+			state = contexts.getOrCreate(credentials.getLeft(), new IFactory1<Pair<StaticServerContext, Queue<ServerEvent>>, LoginException>(){
 
-		} catch (PlayerKilledExcepion e) {
+				public Pair<StaticServerContext, Queue<ServerEvent>> create() throws LoginException {
+					ServerContext serverContext = cspokerServer.login(credentials.getLeft(), credentials.getRight());
+					final ConcurrentLinkedQueue<ServerEvent> eventQueue = new ConcurrentLinkedQueue<ServerEvent>();
+					StaticServerContext staticServerContext = new XmlServerContext(serverContext,
+							new UniversalServerListener(
+									new ServerEventListener(){
+
+										public void onEvent(ServerEvent event) {
+											eventQueue.offer(event);
+										}
+
+									}
+							)
+					);
+					return new Pair<StaticServerContext, Queue<ServerEvent>>(staticServerContext,eventQueue);
+				}
+
+			});
+
+			Unmarshaller um = AllJAXBContexts.context.createUnmarshaller();
+			HTTPRequest request = (HTTPRequest) um.unmarshal(new InputSource(http.getRequestBody()));
+
+			HTTPResponse response = request.performRequest(state.getLeft(), state.getRight());
+
+			StringWriter xml = new StringWriter();
+			Marshaller m = AllJAXBContexts.context.createMarshaller();
+			m.setProperty(Marshaller.JAXB_FRAGMENT, true);
+			m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+			m.marshal(response, xml);
+			xml.flush();
+			logger.trace("Returning response of length " + xml.toString().length()
+					+ ":\n" + xml);
+			return xml.toString().getBytes();
+		} catch (JAXBException e) {
 			throw new HttpExceptionImpl(e, 400);
+		} catch (LoginException exception) {
+			throw new HttpExceptionImpl(exception, 401);
 		}
 	}
 

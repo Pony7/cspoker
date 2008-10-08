@@ -23,10 +23,10 @@ import javax.xml.bind.JAXBException;
 
 import org.apache.log4j.Logger;
 
-public class EventAndActionJAXBContext {
+public class AllJAXBContexts {
 
 	private final static Logger logger = Logger
-			.getLogger(EventAndActionJAXBContext.class);
+			.getLogger(AllJAXBContexts.class);
 
 	public final static JAXBContext context = initContext();
 
@@ -43,6 +43,7 @@ public class EventAndActionJAXBContext {
 		ArrayList<Class<?>> l = new ArrayList<Class<?>>();
 		l.addAll(Arrays.asList(ActionJAXBContext.getActions()));
 		l.addAll(Arrays.asList(EventJAXBContext.getActions()));
+		l.addAll(Arrays.asList(HTTPJAXBContext.getActions()));
 		return l.toArray(new Class[l.size()]);
 	}
 

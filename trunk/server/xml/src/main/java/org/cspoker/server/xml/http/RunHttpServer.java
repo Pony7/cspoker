@@ -19,6 +19,7 @@ import java.io.IOException;
 
 import org.apache.log4j.Logger;
 import org.cspoker.common.util.Log4JPropertiesLoader;
+import org.cspoker.server.common.CSPokerServerImpl;
 
 public class RunHttpServer {
 
@@ -41,7 +42,7 @@ public class RunHttpServer {
 			usage();
 		}
 		logger.info("Starting HTTP server at port " + port);
-		(new HttpServer(port)).start();
+		(new HttpServer(port, new CSPokerServerImpl())).start();
 	}
 
 	private static void usage() {

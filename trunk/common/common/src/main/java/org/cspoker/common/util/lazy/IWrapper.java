@@ -1,7 +1,7 @@
 package org.cspoker.common.util.lazy;
 
-public interface IWrapper<T, E extends Throwable> {
+public interface IWrapper<T> extends IWrapper1<T,Throwable>{
 
-	T getContent() throws E;
+	public T getContent();
 	
 }

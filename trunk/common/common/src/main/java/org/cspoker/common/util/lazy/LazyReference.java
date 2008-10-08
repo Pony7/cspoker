@@ -15,11 +15,11 @@
  */
 package org.cspoker.common.util.lazy;
 
-public class LazyReference<T,E extends Throwable> implements ILazyReference<T, E>{
+public class LazyReference<T> implements ILazyReference<T>{
 	
 	private T object = null;
 
-	public synchronized T getContent(IFactory<? extends T,? extends E> factory) throws E {
+	public synchronized T getContent(IFactory<? extends T> factory) {
 		if(object == null){
 			object = factory.create();
 		}

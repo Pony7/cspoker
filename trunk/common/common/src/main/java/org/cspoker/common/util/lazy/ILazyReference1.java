@@ -13,21 +13,10 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.common.api.account.context;
+package org.cspoker.common.util.lazy;
 
-import java.rmi.Remote;
-import java.rmi.RemoteException;
+public interface ILazyReference1<T, E extends Throwable>{
 
-public interface RemoteAccountContext extends Remote{
+	public abstract T getContent(IFactory1<? extends T, ? extends E> factory) throws E;
 
-	void changePassword(String passwordHash) throws RemoteException;
-
-	boolean hasPassword(String passwordHash) throws RemoteException;
-	
-	void createAccount(String username, String passwordHash) throws RemoteException;
-	
-	byte[] getAvatar(long playerId) throws RemoteException;
-	
-	void setAvatar(byte[] avatar) throws RemoteException;
-	
 }

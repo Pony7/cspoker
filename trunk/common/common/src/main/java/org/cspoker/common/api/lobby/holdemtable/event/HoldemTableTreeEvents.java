@@ -23,7 +23,7 @@ import org.cspoker.common.api.lobby.event.LobbyTreeEvent;
 import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListenerTree;
 import org.cspoker.common.api.lobby.listener.LobbyListenerTree;
 
-public abstract class HoldemTableTreeEvents extends LobbyTreeEvent {
+public class HoldemTableTreeEvents extends LobbyTreeEvent {
 
 	private static final long serialVersionUID = 557148706756328395L;
 

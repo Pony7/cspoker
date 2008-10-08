@@ -18,22 +18,22 @@ package org.cspoker.common.util.lazy;
 import java.util.concurrent.ConcurrentHashMap;
 
 
-public class LazyMap<K,V> {
+public class LazyMap1<K,V,E extends Throwable> {
 
 	private static final long serialVersionUID = -7366678021380297939L;
 
-	private final ConcurrentHashMap<K, IWrapper<V>> wrappedMap = new ConcurrentHashMap<K, IWrapper<V>>();
+	private final ConcurrentHashMap<K, IWrapper1<V,E>> wrappedMap = new ConcurrentHashMap<K, IWrapper1<V,E>>();
 	
-	public V getOrCreate(K key, final IFactory<? extends V> factory){
-		IWrapper<V> wrapper = wrappedMap.get(key);
+	public V getOrCreate(K key, final IFactory1<? extends V,? extends E> factory) throws E {
+		IWrapper1<V, E> wrapper = wrappedMap.get(key);
 		if(wrapper!=null){
 			return wrapper.getContent();
 		}
-		wrappedMap.putIfAbsent(key, new IWrapper<V>(){
+		wrappedMap.putIfAbsent(key, new IWrapper1<V,E>(){
 
 			private V content = null;
 			
-			public synchronized V getContent() {
+			public synchronized V getContent() throws E {
 				if(content == null){
 					content = factory.create();
 				}
@@ -43,4 +43,9 @@ public class LazyMap<K,V> {
 		});
 		return wrappedMap.get(key).getContent();
 	}
+
+	public void remove(Object key) {
+		wrappedMap.remove(key);
+	}
+
 }
