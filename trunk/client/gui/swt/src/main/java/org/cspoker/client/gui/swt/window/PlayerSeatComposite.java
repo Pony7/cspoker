@@ -353,10 +353,11 @@ public class PlayerSeatComposite
 			}
 		}
 		playerName.setForeground(Display.getDefault().getSystemColor(SWT.DEFAULT));
-		playerName.setText(detailedPlayer.getName());
 		playerName.setVisible(true);
-		playerStack.setText(ClientGUI.formatBet(player.getStackValue()));
+		playerName.setText(detailedPlayer.getName());
 		playerStack.setVisible(true);
+		playerStack.setText(ClientGUI.formatBet(player.getStackValue()));
+		update();
 	}
 	
 	/**

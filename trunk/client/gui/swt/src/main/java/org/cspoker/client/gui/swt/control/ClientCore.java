@@ -50,7 +50,7 @@ public class ClientCore
 		implements ServerListenerTree, Runnable {
 	
 	private static final User DEFAULT_TEST_USER = new User("test", "test");
-	private static final String LOG4J_PROPERTY_FILE = "org/cspoker/client/gui/swt/logging/log4j.properties";
+	private static final String LOG4J_PROPERTY_FILE = "logging/log4j.properties";
 	/**
 	 * Default port for RMI (<code>1099</code>)
 	 */

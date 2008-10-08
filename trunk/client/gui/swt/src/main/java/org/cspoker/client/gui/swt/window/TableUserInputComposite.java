@@ -20,7 +20,9 @@ import org.cspoker.client.gui.swt.control.UserSeatedPlayer;
 import org.cspoker.common.api.chat.event.ServerMessageEvent;
 import org.cspoker.common.api.chat.event.TableMessageEvent;
 import org.cspoker.common.api.chat.listener.ChatListener;
+import org.cspoker.common.api.lobby.holdemtable.event.HoldemTableEvent;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.*;
 import org.eclipse.swt.layout.FillLayout;
@@ -432,6 +434,19 @@ public class TableUserInputComposite
 	/**
 	 * Adds the message to the Chat Box (in red)
 	 * 
+	 * @param event The event to display
+	 */
+	public void showDealerMessage(HoldemTableEvent event) {
+		// Display standard messages in black
+		gameInfoText.setForeground(Display.getDefault().getSystemColor(SWT.COLOR_BLACK));
+		gameInfoText.append(System.getProperty("line.separator") + "Dealer: " + event.toString());
+		gameInfoText.setTopIndex(gameInfoText.getLineCount() - 5);
+		
+	}
+	
+	/**
+	 * Adds the message to the Chat Box (in red)
+	 * 
 	 * @see org.cspoker.common.api.chat.listener.ChatListener#onServerMessage(org.cspoker.common.api.chat.event.ServerMessageEvent)
 	 */
 	public void onServerMessage(ServerMessageEvent serverMessageEvent) {
@@ -449,11 +464,20 @@ public class TableUserInputComposite
 	 * @see org.cspoker.common.api.chat.listener.ChatListener#onTableMessage(org.cspoker.common.api.chat.event.TableMessageEvent)
 	 */
 	public void onTableMessage(TableMessageEvent tableMessageEvent) {
-		// Display standard messages in black
-		gameInfoText.setForeground(Display.getDefault().getSystemColor(SWT.COLOR_BLACK));
+		// Display player messages in blue
+		int start = gameInfoText.getCharCount();
+		
 		gameInfoText.append(System.getProperty("line.separator") + tableMessageEvent.getPlayer() + ": "
 				+ tableMessageEvent.getMessage());
+		int end = gameInfoText.getCharCount();
+		logger.info("Start " + start);
+		logger.info("End " + end);
+		logger.info("Offset " + gameInfoText.getOffsetAtLine(gameInfoText.getLineCount() - 1));
+		
 		gameInfoText.setTopIndex(gameInfoText.getLineCount() - 5);
+		gameInfoText.update();
+		gameInfoText.setStyleRange(new StyleRange(start, end - start, Display.getDefault().getSystemColor(
+				SWT.COLOR_BLUE), Display.getDefault().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND)));
 		
 	}
 	
