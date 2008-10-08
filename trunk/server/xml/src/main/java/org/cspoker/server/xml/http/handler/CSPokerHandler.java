@@ -82,7 +82,11 @@ public class CSPokerHandler extends AbstractHttpHandler {
 				}
 
 			});
-
+			
+			if(!state.getLeft().getAccountContext().hasPassword(credentials.getRight())){
+				throw new LoginException("Bad Password");
+			}
+			
 			Unmarshaller um = AllJAXBContexts.context.createUnmarshaller();
 			HTTPRequest request = (HTTPRequest) um.unmarshal(new InputSource(http.getRequestBody()));
 
