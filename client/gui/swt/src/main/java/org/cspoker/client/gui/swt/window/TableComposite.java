@@ -183,6 +183,7 @@ public class TableComposite
 		// Reset all the bet piles and the display areas
 		for (PlayerSeatComposite pc : getPlayerSeatComposites(true)) {
 			pc.getPlayer().getCurrentBetPile().clear();
+			pc.resetBetChipsDisplayArea();
 		}
 		
 		// lol redraw

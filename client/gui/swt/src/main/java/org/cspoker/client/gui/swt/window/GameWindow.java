@@ -164,8 +164,9 @@ public class GameWindow
 	/**
 	 * @see org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener#onBet(org.cspoker.common.api.lobby.holdemtable.event.BetEvent)
 	 */
-	public void onBet(BetEvent betEvent) {
+	public synchronized void onBet(BetEvent betEvent) {
 		handleActionChangedPot(betEvent.getPots(), betEvent.getAmount(), betEvent.getPlayer(), "Bet");
+		userInputComposite.showDealerMessage(betEvent);
 	}
 	
 	private void handleActionChangedPot(Pots pots, int amount, Player bettor, String action) {
@@ -188,38 +189,43 @@ public class GameWindow
 	/**
 	 * @see org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener#onBigBlind(org.cspoker.common.api.lobby.holdemtable.event.BigBlindEvent)
 	 */
-	public void onBigBlind(final BigBlindEvent event) {
+	public synchronized void onBigBlind(final BigBlindEvent event) {
 		handleActionChangedPot(event.getPots(), event.getAmount(), event.getPlayer(), "Big Blind");
+		userInputComposite.showDealerMessage(event);
 	}
 	
 	/**
 	 * @see org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener#onCall(org.cspoker.common.api.lobby.holdemtable.event.CallEvent)
 	 */
-	public void onCall(CallEvent callEvent) {
+	public synchronized void onCall(CallEvent callEvent) {
 		handleActionChangedPot(callEvent.getPots(), 0, callEvent.getPlayer(), "Call");
+		userInputComposite.showDealerMessage(callEvent);
 		
 	}
 	
 	/**
 	 * @see org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener#onCheck(org.cspoker.common.api.lobby.holdemtable.event.CheckEvent)
 	 */
-	public void onCheck(CheckEvent checkEvent) {
+	public synchronized void onCheck(CheckEvent checkEvent) {
 		getPlayerSeatComposite(checkEvent.getPlayer()).showAction("Check");
+		userInputComposite.showDealerMessage(checkEvent);
 		
 	}
 	
 	/**
 	 * @see org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener#onFold(org.cspoker.common.api.lobby.holdemtable.event.FoldEvent)
 	 */
-	public void onFold(FoldEvent foldEvent) {
-		getPlayerSeatComposite(foldEvent.getPlayer()).showAction("Check");
+	public synchronized void onFold(FoldEvent foldEvent) {
+		getPlayerSeatComposite(foldEvent.getPlayer()).showAction("Fold");
+		userInputComposite.showDealerMessage(foldEvent);
 	}
 	
 	/**
 	 * @see org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener#onLeaveGame(org.cspoker.common.api.lobby.holdemtable.event.LeaveGameEvent)
 	 */
-	public void onLeaveGame(LeaveGameEvent leaveGameEvent) {
+	public synchronized void onLeaveGame(LeaveGameEvent leaveGameEvent) {
 		getPlayerSeatComposite(leaveGameEvent.getPlayer()).reset();
+		userInputComposite.showDealerMessage(leaveGameEvent);
 		updateTableGraphics();
 		
 	}
@@ -227,14 +233,15 @@ public class GameWindow
 	/**
 	 * @see org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener#onNewCommunityCards(org.cspoker.common.api.lobby.holdemtable.event.NewCommunityCardsEvent)
 	 */
-	public void onNewCommunityCards(NewCommunityCardsEvent newCommunityCardsEvent) {
+	public synchronized void onNewCommunityCards(NewCommunityCardsEvent newCommunityCardsEvent) {
 		tableComposite.addCommunityCards(newCommunityCardsEvent.getCommonCards());
+		userInputComposite.showDealerMessage(newCommunityCardsEvent);
 	}
 	
 	/**
 	 * @see org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener#onNewDeal(org.cspoker.common.api.lobby.holdemtable.event.NewDealEvent)
 	 */
-	public void onNewDeal(NewDealEvent newDealEvent) {
+	public synchronized void onNewDeal(NewDealEvent newDealEvent) {
 		gameState.newRound();
 		gameState.setPots(new Pots(0));
 		
@@ -245,7 +252,7 @@ public class GameWindow
 			psc.resetBetChipsDisplayArea();
 			psc.getPlayer().setBetChipsValue(0);
 		}
-		
+		userInputComposite.showDealerMessage(newDealEvent);
 		tableComposite.redraw();
 		
 	}
@@ -253,16 +260,15 @@ public class GameWindow
 	/**
 	 * @see org.cspoker.common.api.lobby.holdemtable.holdemplayer.listener.HoldemPlayerListener#onNewPocketCards(org.cspoker.common.api.lobby.holdemtable.holdemplayer.event.NewPocketCardsEvent)
 	 */
-	public void onNewPocketCards(NewPocketCardsEvent newPocketCardsEvent) {
+	public synchronized void onNewPocketCards(NewPocketCardsEvent newPocketCardsEvent) {
 		getPlayerSeatComposite(getClientCore().getUser().getPlayer())
 				.setHoleCards(newPocketCardsEvent.getPocketCards());
-		
 	}
 	
 	/**
 	 * @see org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener#onNewRound(org.cspoker.common.api.lobby.holdemtable.event.NewRoundEvent)
 	 */
-	public void onNewRound(NewRoundEvent newRoundEvent) {
+	public synchronized void onNewRound(NewRoundEvent newRoundEvent) {
 		tableComposite.moveBetsToPot();
 		gameState.newRound();
 		for (PlayerSeatComposite psc : tableComposite.getPlayerSeatComposites(true)) {
@@ -271,13 +277,13 @@ public class GameWindow
 		if (isUser(newRoundEvent.getInitialPlayer())) {
 			userInputComposite.prepareForUserInput();
 		}
-		
+		userInputComposite.showDealerMessage(newRoundEvent);
 	}
 	
 	/**
 	 * @see org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener#onNextPlayer(org.cspoker.common.api.lobby.holdemtable.event.NextPlayerEvent)
 	 */
-	public void onNextPlayer(NextPlayerEvent nextPlayerEvent) {
+	public synchronized void onNextPlayer(NextPlayerEvent nextPlayerEvent) {
 		Player playerToAct = nextPlayerEvent.getPlayer();
 		tableComposite.updateProgressBars(playerToAct);
 		getPlayerSeatComposite(nextPlayerEvent.getPlayer()).startTimer();
@@ -338,42 +344,45 @@ public class GameWindow
 	/**
 	 * @see org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener#onRaise(org.cspoker.common.api.lobby.holdemtable.event.RaiseEvent)
 	 */
-	public void onRaise(RaiseEvent raiseEvent) {
+	public synchronized void onRaise(RaiseEvent raiseEvent) {
 		handleActionChangedPot(raiseEvent.getPots(), raiseEvent.getAmount(), raiseEvent.getPlayer(), "Raise");
+		userInputComposite.showDealerMessage(raiseEvent);
 	}
 	
 	/**
 	 * @see org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener#onShowHand(org.cspoker.common.api.lobby.holdemtable.event.ShowHandEvent)
 	 */
-	public void onShowHand(ShowHandEvent showHandEvent) {
+	public synchronized void onShowHand(ShowHandEvent showHandEvent) {
 		getPlayerSeatComposite(showHandEvent.getShowdownPlayer()).setHoleCards(
 				showHandEvent.getShowdownPlayer().getHandCards());
-		updateTableGraphics();
+		// userInputComposite.showDealerMessage(showHandEvent);
 	}
 	
 	/**
 	 * @see org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener#onSitIn(org.cspoker.common.api.lobby.holdemtable.event.SitInEvent)
 	 */
-	public void onSitIn(SitInEvent sitInEvent) {
+	public synchronized void onSitIn(SitInEvent sitInEvent) {
 		if (isUser(sitInEvent.getPlayer())) {
 			userInputComposite.sitInOutButton.setText("Sit Out");
 		}
 		tableComposite.findPlayerSeatCompositeBySeatId(sitInEvent.getPlayer().getSeatId()).occupy(
 				sitInEvent.getPlayer());
+		userInputComposite.showDealerMessage(sitInEvent);
 	}
 	
 	/**
 	 * @see org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener#onSmallBlind(org.cspoker.common.api.lobby.holdemtable.event.SmallBlindEvent)
 	 */
-	public void onSmallBlind(SmallBlindEvent smallBlindEvent) {
+	public synchronized void onSmallBlind(SmallBlindEvent smallBlindEvent) {
 		handleActionChangedPot(smallBlindEvent.getPots(), smallBlindEvent.getAmount(), smallBlindEvent.getPlayer(),
 				"Small Blind");
+		userInputComposite.showDealerMessage(smallBlindEvent);
 	}
 	
 	/**
 	 * @see org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener#onWinner(org.cspoker.common.api.lobby.holdemtable.event.WinnerEvent)
 	 */
-	public void onWinner(final WinnerEvent winnerEvent) {
+	public synchronized void onWinner(final WinnerEvent winnerEvent) {
 		tableComposite.moveBetsToPot();
 		// FIXME XXX Make sure that this is better synchronized, i.e. new round
 		// doesnt start until animation stuff is complete
@@ -394,6 +403,7 @@ public class GameWindow
 			Set<Card> noCards = Collections.emptySet();
 			psc.setHoleCards(noCards);
 		}
+		userInputComposite.showDealerMessage(winnerEvent);
 		redraw();
 	}
 	

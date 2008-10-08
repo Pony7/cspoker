@@ -72,7 +72,8 @@ public class UserSeatedPlayer
 		if (lobbyContext == null)
 			throw new IllegalArgumentException("Please provide correct lobby context");
 		try {
-			tableContext = lobbyContext.joinHoldemTable(gameState.getTableMemento().getId(), gameWindow);
+			tableContext = lobbyContext.joinHoldemTable(gameState.getTableMemento().getId(),
+					new ForwardingSWTHoldemTableListener(gameWindow));
 		} catch (RemoteException e) {
 			throw new IllegalStateException(e);
 		} catch (IllegalActionException e) {
