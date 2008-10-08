@@ -148,6 +148,7 @@ public class ClientCore
 			// TODO Make sure we register to receive events from the server
 			// communication.subscribe(this);
 			LobbyWindow lobby = new LobbyWindow(this);
+			lobby.setLobbyContext(this.getCommunication());
 			getGui().setLobby(lobby);
 			lobby.show();
 			lobby.refreshTables();

@@ -11,7 +11,6 @@
  */
 package org.cspoker.client.gui.swt.window;
 
-import java.rmi.RemoteException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Set;
@@ -22,7 +21,6 @@ import org.cspoker.common.api.lobby.holdemtable.event.*;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.event.NewPocketCardsEvent;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.listener.HoldemPlayerListener;
 import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
-import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.cards.Card;
 import org.cspoker.common.elements.player.Player;
 import org.cspoker.common.elements.player.SeatedPlayer;
@@ -49,11 +47,14 @@ public class GameWindow
 		extends ClientComposite
 		implements HoldemTableListener, HoldemPlayerListener {
 	
+	/** Minimum width so everything will still reasonably displayed */
 	public static final int MINIMUM_WIDTH = 550;
+	/** Minimum height so everything will still reasonably displayed */
 	public static final int MINIMUM_HEIGHT = 600;
 	
 	private final static Logger logger = Logger.getLogger(GameWindow.class);
 	
+	private final UserSeatedPlayer user;
 	private TableUserInputComposite userInputComposite;
 	private TableComposite tableComposite;
 	
@@ -69,24 +70,13 @@ public class GameWindow
 	public GameWindow(LobbyWindow lobbyWindow, DetailedHoldemTable table) {
 		super(new Shell(lobbyWindow.getDisplay(), SWT.CLOSE | SWT.RESIZE), SWT.NONE, lobbyWindow.getClientCore());
 		gameState = new GameState(table);
-		user = new UserSeatedPlayer(null, getClientCore().getUser(), gameState);
-		// Join table to receive events for this table
+		user = new UserSeatedPlayer(this, getClientCore().getUser(), gameState);
 		
 		initGUI();
 		for (SeatedPlayer player : table.getPlayers()) {
 			tableComposite.findPlayerSeatCompositeBySeatId(player.getSeatId()).occupy(player);
 		}
-	}
-	
-	public void setTableContext() {
-		try {
-			user.setTableContext(getParent().getContext().joinHoldemTable(gameState.getTableMemento().getId(), this));
-		} catch (RemoteException e) {
-			throw new IllegalStateException(e);
-		} catch (IllegalActionException e) {
-			// TODO Auto-generated catch block
-			logger.warn("You cannot join the desired table", e);
-		}
+		
 	}
 	
 	/**
@@ -245,11 +235,15 @@ public class GameWindow
 	 * @see org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener#onNewDeal(org.cspoker.common.api.lobby.holdemtable.event.NewDealEvent)
 	 */
 	public void onNewDeal(NewDealEvent newDealEvent) {
+		gameState.newRound();
+		gameState.setPots(new Pots(0));
+		
 		for (PlayerSeatComposite psc : tableComposite.getPlayerSeatComposites(true)) {
 			psc.setHoleCards(Arrays.asList(ClientGUI.UNKNOWN_CARD, ClientGUI.UNKNOWN_CARD));
 			// Draw dealer button
 			psc.getPlayer().setDealer(newDealEvent.getDealer().getId() == psc.getPlayer().getId());
 			psc.resetBetChipsDisplayArea();
+			psc.getPlayer().setBetChipsValue(0);
 		}
 		
 		tableComposite.redraw();
@@ -287,10 +281,11 @@ public class GameWindow
 		Player playerToAct = nextPlayerEvent.getPlayer();
 		tableComposite.updateProgressBars(playerToAct);
 		getPlayerSeatComposite(nextPlayerEvent.getPlayer()).startTimer();
-		
+		userInputComposite.getGameActionGroup().setVisible(isUser(playerToAct));
 		if (isUser(playerToAct)) {
 			userInputComposite.prepareForUserInput();
 		}
+		userInputComposite.update();
 		
 	}
 	
@@ -394,6 +389,7 @@ public class GameWindow
 		});
 		
 		tableComposite.clearCommunityCards();
+		tableComposite.getCommunityCardsComposite().setVisible(false);
 		for (PlayerSeatComposite psc : tableComposite.getPlayerSeatComposites(true)) {
 			Set<Card> noCards = Collections.emptySet();
 			psc.setHoleCards(noCards);
@@ -436,5 +432,13 @@ public class GameWindow
 	 */
 	public TableComposite getTableComposite() {
 		return tableComposite;
+	}
+	
+	/**
+	 * @return This GameWindow's user. The user is the access point for all
+	 *         callbacks to the Server!
+	 */
+	public UserSeatedPlayer getUser() {
+		return user;
 	}
 }

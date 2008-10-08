@@ -133,7 +133,9 @@ public class ClientGUI {
 	/** Preferred width at which a card is best displayed */
 	public final static int PREFERRED_CARD_WIDTH = 60;
 	
+	/** What do you think this is? */
 	public final static int MINIMUM_CARD_WIDTH = 30;
+	/** What do you think this is? */
 	public final static int MINIMUM_CARD_HEIGHT = (int) Math.round(MINIMUM_CARD_WIDTH * 1.5);
 	
 	/**
@@ -158,7 +160,7 @@ public class ClientGUI {
 	 * <code>int</code> chip value to a human-readable representation and
 	 * vice-versa
 	 */
-	public final static NumberFormat betFormatter = NumberFormat.getCurrencyInstance();
+	private final static NumberFormat betFormatter = NumberFormat.getNumberInstance();
 	
 	/***************************************************************************
 	 * Constructor
@@ -173,6 +175,46 @@ public class ClientGUI {
 		this.clientCore = clientCore;
 		gameWindows = new Hashtable<Long, GameWindow>();
 		betFormatter.setMinimumFractionDigits(0);
+		betFormatter.setMaximumFractionDigits(2);
+	}
+	
+	/**
+	 * Formatting bets by hand since {@link NumberFormat#getCurrencyInstance()}s
+	 * from Java sucks
+	 * 
+	 * @param bet The bet in the lowest denominator currency unit (cents)
+	 * @return A String representing the bet amount
+	 * @see #parseBet(String)
+	 */
+	public static String formatBet(int bet) {
+		int dollar = bet / 100;
+		int cent = bet % 100;
+		String result = "$ " + Integer.toString(dollar);
+		
+		if (cent != 0) {
+			result = result + ".";
+			if (cent / 10 == 0) {
+				result = result + "0";
+			}
+			result = result + Integer.toString(cent);
+		}
+		return result;
+	}
+	
+	/**
+	 * Formatting bets by hand since {@link NumberFormat#getCurrencyInstance()}s
+	 * from Java sucks
+	 * 
+	 * @param bet The bet as a string
+	 * @return The bet in cents
+	 * @throws NumberFormatException if the bet does not contain a parsable
+	 *             double
+	 * @see #formatBet(int)
+	 */
+	public static int parseBet(String bet) {
+		bet = bet.replaceAll("$", "");
+		double result = Double.parseDouble(bet);
+		return (int) Math.round(result * 100);
 	}
 	
 	/***************************************************************************
@@ -336,6 +378,8 @@ public class ClientGUI {
 				throw new IllegalStateException("Could not retrieve remote table information", e);
 			}
 			w = new GameWindow(getLobby(), table);
+			w.getUser().joinTable(getLobby().getContext());
+			w.getUser().setChatContext(clientCore.getCommunication(), w.getUserInputComposite());
 		}
 		gameWindows.put(tableId, w);
 		

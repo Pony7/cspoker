@@ -4,12 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.NavigableMap;
 
-import org.cspoker.client.gui.swt.window.PlayerSeatComposite;
 import org.cspoker.common.elements.player.SeatedPlayer;
 
 public class MutableSeatedPlayer {
 	
-	PlayerSeatComposite seatComposite;
 	private SeatedPlayer wrappedPlayer;
 	
 	private int stackValue;
@@ -17,19 +15,18 @@ public class MutableSeatedPlayer {
 	private boolean dealer;
 	private List<NavigableMap<Chip, Integer>> currentBetPile = new ArrayList<NavigableMap<Chip, Integer>>();
 	
-	private GameState gameState;
+	protected GameState gameState;
 	
-	public MutableSeatedPlayer(PlayerSeatComposite psc, SeatedPlayer player, GameState gameState) {
-		seatComposite = psc;
-		wrappedPlayer = player;
-		setBetChipsValue(player.getBetChipsValue());
-		setStackValue(player.getStackValue());
+	public MutableSeatedPlayer(SeatedPlayer player, GameState gameState) {
+		setPlayer(player);
 		this.gameState = gameState;
 		
 	}
 	
 	public void setPlayer(SeatedPlayer player) {
 		wrappedPlayer = player;
+		setBetChipsValue(player.getBetChipsValue());
+		setStackValue(player.getStackValue());
 	}
 	
 	public int getStackValue() {
@@ -54,7 +51,6 @@ public class MutableSeatedPlayer {
 	
 	public void setDealer(boolean b) {
 		dealer = b;
-		seatComposite.getParent().redraw();
 	}
 	
 	public long getId() {

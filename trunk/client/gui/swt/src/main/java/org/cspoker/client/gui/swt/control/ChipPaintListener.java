@@ -143,7 +143,7 @@ public class ChipPaintListener
 		}
 		// Annotate the chip pile image with a textual display of the bet amount
 		gc.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_YELLOW));
-		gc.drawText(ClientGUI.betFormatter.format(amount), xCoord, standardYLocation);
+		gc.drawText(ClientGUI.formatBet(amount), xCoord, standardYLocation);
 		return;
 	}
 }

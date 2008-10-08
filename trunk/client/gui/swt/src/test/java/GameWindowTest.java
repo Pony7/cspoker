@@ -2,6 +2,7 @@ import java.util.*;
 
 import junit.framework.TestCase;
 
+import org.cspoker.client.User;
 import org.cspoker.client.gui.swt.control.ClientCore;
 import org.cspoker.client.gui.swt.window.GameWindow;
 import org.cspoker.client.gui.swt.window.LobbyWindow;
@@ -24,14 +25,14 @@ public class GameWindowTest
 		extends TestCase {
 	
 	/** Standard delay between actions */
-	public final static int MS_ACTION_DELAY = 500;
+	public final static int MS_ACTION_DELAY = 1500;
 	
 	/**
 	 * A visual test for checking layout, drawing etc in the {@link GameWindow}
 	 */
 	public void testGameWindow() {
-		
-		ClientCore core = new ClientCore();
+		User user = new User("TestPlayer 0", "");
+		ClientCore core = new ClientCore(user);
 		List<SeatedPlayer> players = new ArrayList<SeatedPlayer>();
 		TableConfiguration tconfig = new TableConfiguration(20, 2000);
 		final SeatedPlayer player1 = new SeatedPlayer(0, 0, "TestPlayer 0", 10000, 0);
@@ -45,7 +46,7 @@ public class GameWindowTest
 		final GameWindow w = new GameWindow(new LobbyWindow(core), new DetailedHoldemTable(0, "wurst", players, false,
 				tconfig));
 		// Fire some events for w with a delay
-		w.getDisplay().timerExec(4000, new Runnable() {
+		w.getDisplay().timerExec(1000, new Runnable() {
 			
 			public void run() {
 				try {
@@ -63,27 +64,34 @@ public class GameWindowTest
 					w.onNewCommunityCards(new NewCommunityCardsEvent(new TreeSet<Card>(Arrays.asList(new Card(
 							Rank.QUEEN, Suit.DIAMONDS), new Card(Rank.ACE, Suit.HEARTS),
 							new Card(Rank.SIX, Suit.HEARTS)))));
+					w.onNextPlayer(new NextPlayerEvent(player1));
 					Thread.sleep(MS_ACTION_DELAY);
 					w.onBet(new BetEvent(player1, 50, new Pots(15)));
+					w.onNextPlayer(new NextPlayerEvent(player2));
 					Thread.sleep(MS_ACTION_DELAY);
 					w.onRaise(new RaiseEvent(player2, 100, new Pots(45)));
+					w.onNextPlayer(new NextPlayerEvent(player3));
 					Thread.sleep(MS_ACTION_DELAY);
 					w.onRaise(new RaiseEvent(player3, 320, new Pots(499)));
+					w.onNextPlayer(new NextPlayerEvent(player4));
 					Thread.sleep(MS_ACTION_DELAY);
 					w.onCall(new CallEvent(player4, new Pots(499)));
+					w.onNextPlayer(new NextPlayerEvent(player1));
 					Thread.sleep(MS_ACTION_DELAY);
 					w.onFold(new FoldEvent(player1));
+					w.onNextPlayer(new NextPlayerEvent(player2));
 					Thread.sleep(MS_ACTION_DELAY);
 					w.onRaise(new RaiseEvent(player2, 1200, new Pots(2323)));
+					w.onNextPlayer(new NextPlayerEvent(player3));
 					Thread.sleep(MS_ACTION_DELAY);
 					w.onFold(new FoldEvent(player3));
+					w.onNextPlayer(new NextPlayerEvent(player4));
 					Thread.sleep(MS_ACTION_DELAY);
 					w.onCall(new CallEvent(player4, new Pots(3323)));
 					Thread.sleep(MS_ACTION_DELAY);
-					w.getTableComposite().moveBetsToPot();
-					Thread.sleep(MS_ACTION_DELAY);
-					w.getTableComposite().movePotsToWinners(
-							new TreeSet<Winner>(Arrays.asList(new Winner(player1, 3323))));
+					w.onWinner(new WinnerEvent(new TreeSet<Winner>(Arrays.asList(new Winner(player1, 3323)))));
+					w.onNewDeal(new NewDealEvent(seatedPlayers, player2));
+					w.onNextPlayer(new NextPlayerEvent(player1));
 				} catch (IllegalArgumentException e) {
 					fail();
 				} catch (InterruptedException e) {

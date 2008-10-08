@@ -17,7 +17,6 @@ import java.util.concurrent.Executors;
 import org.cspoker.client.gui.swt.control.ClientCore;
 import org.cspoker.client.gui.swt.control.GameState;
 import org.cspoker.client.gui.swt.control.SWTResourceManager;
-import org.cspoker.client.gui.swt.control.UserSeatedPlayer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
@@ -37,8 +36,6 @@ public abstract class ClientComposite
 	 **************************************************************************/
 	
 	private ClientCore core;
-	
-	protected UserSeatedPlayer user;
 	
 	/** ExecutorService for the GameWindow and its children. */
 	ExecutorService executor = Executors.newCachedThreadPool();
@@ -76,15 +73,10 @@ public abstract class ClientComposite
 	 */
 	public ClientComposite(ClientComposite parent, int style) {
 		this(parent, style, parent.getClientCore());
-		this.user = parent.getUser();
 		this.gameState = parent.getGameState();
 		// Register as a resource user - SWTResourceManager will
 		// handle the obtaining and disposing of resources
 		SWTResourceManager.registerResourceUser(this);
-	}
-	
-	public UserSeatedPlayer getUser() {
-		return user;
 	}
 	
 	/***************************************************************************

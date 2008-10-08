@@ -37,6 +37,18 @@ public class CardPaintListener
 	private int alignment;
 	private int spacing;
 	
+	/**
+	 * All-purpose {@link PaintListener} for cards.
+	 * <p>
+	 * Intended use is to modify the cards collection passed in the constructor,
+	 * and then calling <code>redraw()</code> on the <code>Composite</code> they
+	 * should be painted in
+	 * 
+	 * @param cards The cards.
+	 * @param numberOfTotalCards Duh
+	 * @param alignment Should they be centered or drawn from left to right?
+	 * @param spacing Should they overlap or have some space in between or what
+	 */
 	public CardPaintListener(Collection<Card> cards, int numberOfTotalCards, int alignment, int spacing) {
 		this.cards = cards;
 		this.numberOfTotalCards = numberOfTotalCards;

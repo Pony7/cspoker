@@ -212,6 +212,7 @@ public class PlayerSeatComposite
 			GridData player1StackLData = new GridData(SWT.DEFAULT, SWT.DEFAULT);
 			player1StackLData.horizontalAlignment = GridData.CENTER;
 			player1StackLData.grabExcessHorizontalSpace = true;
+			player1StackLData.minimumWidth = 70;
 			playerStack.setLayoutData(player1StackLData);
 			playerStack.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_INFO_BACKGROUND));
 		}
@@ -252,8 +253,9 @@ public class PlayerSeatComposite
 					// TODO Buyin, reserve seat in the meantime
 					logger.debug("Clicked on PlayerSeatComposite, sit in if empty ...");
 					try {
-						user.sitIn(seatId, (GameWindow) getParent().getParent());
-						player = user;
+						GameWindow containingGameWindow = getParent().getParent();
+						containingGameWindow.getUser().sitIn(seatId);
+						player = containingGameWindow.getUser();
 					} catch (RemoteException e) {
 						getClientCore().handleRemoteException(e);
 					}
@@ -291,7 +293,7 @@ public class PlayerSeatComposite
 	 * @param action The action to display, i.e. <i>"Check"</i> or <i>"Fold"</i>
 	 */
 	public void showAction(final String action) {
-		playerStack.setText(ClientGUI.betFormatter.format(player.getStackValue()));
+		playerStack.setText(ClientGUI.formatBet(player.getStackValue()));
 		final String name = player.getName();
 		playerName.setText(action);
 		playerName.setForeground(Display.getDefault().getSystemColor(SWT.COLOR_BLUE));
@@ -343,16 +345,17 @@ public class PlayerSeatComposite
 		// UserSeatedPlayer
 		if (player == null) {
 			if (detailedPlayer.getId() == getClientCore().getUser().getPlayer().getId()) {
-				user = new UserSeatedPlayer(this, detailedPlayer, gameState);
+				UserSeatedPlayer user = getParent().getParent().getUser();
+				user.setPlayer(detailedPlayer);
 				player = user;
 			} else {
-				player = new MutableSeatedPlayer(this, detailedPlayer, gameState);
+				player = new MutableSeatedPlayer(detailedPlayer, gameState);
 			}
 		}
 		playerName.setForeground(Display.getDefault().getSystemColor(SWT.DEFAULT));
 		playerName.setText(detailedPlayer.getName());
 		playerName.setVisible(true);
-		playerStack.setText(ClientGUI.betFormatter.format(player.getStackValue()));
+		playerStack.setText(ClientGUI.formatBet(player.getStackValue()));
 		playerStack.setVisible(true);
 	}
 	
