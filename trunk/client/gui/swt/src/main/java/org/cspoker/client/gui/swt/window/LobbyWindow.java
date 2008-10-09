@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import org.apache.log4j.Logger;
 import org.cspoker.client.gui.swt.control.ClientCore;
 import org.cspoker.client.gui.swt.control.ClientGUI;
+import org.cspoker.client.gui.swt.control.DisplayExecutor;
 import org.cspoker.client.gui.swt.control.SWTResourceManager;
 import org.cspoker.common.api.chat.event.ChatEvent;
 import org.cspoker.common.api.chat.event.ServerMessageEvent;
@@ -28,6 +29,7 @@ import org.cspoker.common.api.lobby.context.RemoteLobbyContext;
 import org.cspoker.common.api.lobby.event.LobbyEvent;
 import org.cspoker.common.api.lobby.event.TableCreatedEvent;
 import org.cspoker.common.api.lobby.event.TableRemovedEvent;
+import org.cspoker.common.api.lobby.listener.AsynchronousLobbyListener;
 import org.cspoker.common.api.lobby.listener.LobbyListener;
 import org.cspoker.common.api.shared.context.RemoteServerContext;
 import org.cspoker.common.elements.table.DetailedHoldemTable;
@@ -127,7 +129,8 @@ public class LobbyWindow
 		if (serverContext == null)
 			throw new IllegalArgumentException("Please provide correct server context");
 		try {
-			this.context = serverContext.getLobbyContext(this);
+			this.context = serverContext.getLobbyContext(new AsynchronousLobbyListener(
+					new DisplayExecutor(getDisplay()), this));
 		} catch (RemoteException e) {
 			throw new IllegalArgumentException(e);
 		}

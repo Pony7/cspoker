@@ -6,12 +6,14 @@ import org.cspoker.client.User;
 import org.cspoker.client.gui.swt.control.ClientCore;
 import org.cspoker.client.gui.swt.window.GameWindow;
 import org.cspoker.client.gui.swt.window.LobbyWindow;
+import org.cspoker.common.api.chat.event.TableMessageEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.*;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.event.NewPocketCardsEvent;
 import org.cspoker.common.elements.cards.Card;
 import org.cspoker.common.elements.cards.Rank;
 import org.cspoker.common.elements.cards.Suit;
 import org.cspoker.common.elements.player.SeatedPlayer;
+import org.cspoker.common.elements.player.ShowdownPlayer;
 import org.cspoker.common.elements.player.Winner;
 import org.cspoker.common.elements.pots.Pots;
 import org.cspoker.common.elements.table.DetailedHoldemTable;
@@ -25,7 +27,7 @@ public class GameWindowTest
 		extends TestCase {
 	
 	/** Standard delay between actions */
-	public final static int MS_ACTION_DELAY = 1500;
+	public final static int MS_ACTION_DELAY = 0;
 	
 	/**
 	 * A visual test for checking layout, drawing etc in the {@link GameWindow}
@@ -43,27 +45,29 @@ public class GameWindowTest
 		final SeatedPlayer player6 = new SeatedPlayer(5, 5, "TestPlayer 5", 70003, 0);
 		players.addAll(Arrays.asList(player1, player2, player3, player4, player5, player6));
 		final List<SeatedPlayer> seatedPlayers = Collections.unmodifiableList(players);
-		final GameWindow w = new GameWindow(new LobbyWindow(core), new DetailedHoldemTable(0, "wurst", players, false,
-				tconfig));
+		final GameWindow w = new GameWindow(new LobbyWindow(core), new DetailedHoldemTable(0, "wurst", Arrays.asList(
+				player1, player3, player5), false, tconfig));
 		// Fire some events for w with a delay
 		w.getDisplay().timerExec(1000, new Runnable() {
 			
 			public void run() {
 				try {
-					w.getTableComposite().findPlayerSeatCompositeBySeatId(0).setHoleCards(
-							new TreeSet<Card>(Arrays.asList(new Card(Rank.DEUCE, Suit.HEARTS), new Card(Rank.KING,
-									Suit.CLUBS))));
 					w.getUserInputComposite().getGameInfoText().append(
-							"Buttons are not enabled in this demo due to missing contexts");
+							"Button actions are not enabled in this demo due to missing contexts");
+					w.onSitIn(new SitInEvent(player2));
+					Thread.sleep(MS_ACTION_DELAY);
+					w.onSitIn(new SitInEvent(player4));
+					// w.onSitIn(new SitInEvent(player6));
 					Thread.sleep(MS_ACTION_DELAY);
 					w.onNewDeal(new NewDealEvent(seatedPlayers, player1));
 					Thread.sleep(MS_ACTION_DELAY);
-					w.onNewPocketCards(new NewPocketCardsEvent(new TreeSet<Card>(Arrays.asList(new Card(Rank.QUEEN,
+					w.onNewPocketCards(new NewPocketCardsEvent(new HashSet<Card>(Arrays.asList(new Card(Rank.QUEEN,
 							Suit.HEARTS), new Card(Rank.ACE, Suit.CLUBS)))));
 					Thread.sleep(MS_ACTION_DELAY);
-					w.onNewCommunityCards(new NewCommunityCardsEvent(new TreeSet<Card>(Arrays.asList(new Card(
+					w.onNewCommunityCards(new NewCommunityCardsEvent(new HashSet<Card>(Arrays.asList(new Card(
 							Rank.QUEEN, Suit.DIAMONDS), new Card(Rank.ACE, Suit.HEARTS),
 							new Card(Rank.SIX, Suit.HEARTS)))));
+					Thread.sleep(MS_ACTION_DELAY);
 					w.onNextPlayer(new NextPlayerEvent(player1));
 					Thread.sleep(MS_ACTION_DELAY);
 					w.onBet(new BetEvent(player1, 50, new Pots(15)));
@@ -89,10 +93,22 @@ public class GameWindowTest
 					Thread.sleep(MS_ACTION_DELAY);
 					w.onCall(new CallEvent(player4, new Pots(3323)));
 					Thread.sleep(MS_ACTION_DELAY);
-					w.onWinner(new WinnerEvent(new TreeSet<Winner>(Arrays.asList(new Winner(player1, 3323)))));
+					w.onShowHand(new ShowHandEvent(new ShowdownPlayer(player4,
+							new HashSet<Card>(Arrays.asList(new Card(Rank.SIX, Suit.CLUBS), new Card(Rank.SIX,
+									Suit.SPADES), new Card(Rank.SIX, Suit.HEARTS), new Card(Rank.QUEEN, Suit.DIAMONDS),
+									new Card(Rank.ACE, Suit.HEARTS))), new HashSet<Card>(Arrays.asList(new Card(
+									Rank.SIX, Suit.CLUBS), new Card(Rank.SIX, Suit.SPADES))), " good hand")));
+					Thread.sleep(MS_ACTION_DELAY);
+					w.onWinner(new WinnerEvent(new TreeSet<Winner>(Arrays.asList(new Winner(player4, 3323)))));
+					Thread.sleep(MS_ACTION_DELAY);
+					w.getUserInputComposite().onTableMessage(new TableMessageEvent(player2, "Doh"));
+					Thread.sleep(MS_ACTION_DELAY);
 					w.onNewDeal(new NewDealEvent(seatedPlayers, player2));
-					w.onNextPlayer(new NextPlayerEvent(player1));
+					Thread.sleep(MS_ACTION_DELAY);
+					w.onNextPlayer(new NextPlayerEvent(player3));
 				} catch (IllegalArgumentException e) {
+					System.err.println(e);
+					e.printStackTrace();
 					fail();
 				} catch (InterruptedException e) {
 					fail();
