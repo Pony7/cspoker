@@ -16,10 +16,10 @@
 package org.cspoker.common.api.account.action;
 
 import org.cspoker.common.api.account.context.AccountContext;
-import org.cspoker.common.api.shared.action.Action;
+import org.cspoker.common.api.shared.action.DispatchableAction;
 import org.cspoker.common.api.shared.context.StaticServerContext;
 
-public abstract class AccountAction<T> extends Action<T> {
+public abstract class AccountAction<T> extends DispatchableAction<T> {
 
 	private static final long serialVersionUID = 1672149720723666483L;
 

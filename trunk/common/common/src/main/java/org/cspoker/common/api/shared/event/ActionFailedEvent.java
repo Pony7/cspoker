@@ -17,7 +17,7 @@ package org.cspoker.common.api.shared.event;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.cspoker.common.api.shared.action.Action;
+import org.cspoker.common.api.shared.action.DispatchableAction;
 
 @XmlRootElement
 public class ActionFailedEvent<T> extends ActionEvent<T> {
@@ -26,7 +26,7 @@ public class ActionFailedEvent<T> extends ActionEvent<T> {
 
         private Throwable exception;
 
-        public ActionFailedEvent(Action<T> action, Throwable exception) {
+        public ActionFailedEvent(DispatchableAction<T> action, Throwable exception) {
                 super(action);
                 this.exception = exception;
         }

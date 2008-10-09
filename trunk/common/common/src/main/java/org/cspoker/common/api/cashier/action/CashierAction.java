@@ -16,10 +16,10 @@
 package org.cspoker.common.api.cashier.action;
 
 import org.cspoker.common.api.cashier.context.CashierContext;
-import org.cspoker.common.api.shared.action.Action;
+import org.cspoker.common.api.shared.action.DispatchableAction;
 import org.cspoker.common.api.shared.context.StaticServerContext;
 
-public abstract class CashierAction<T> extends Action<T> {
+public abstract class CashierAction<T> extends DispatchableAction<T> {
 
 	private static final long serialVersionUID = 6542312781797096164L;
 

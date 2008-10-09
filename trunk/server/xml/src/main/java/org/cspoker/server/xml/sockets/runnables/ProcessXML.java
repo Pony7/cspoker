@@ -15,19 +15,21 @@
  */
 package org.cspoker.server.xml.sockets.runnables;
 
-import java.io.IOException;
 import java.io.StringReader;
 
+import javax.security.auth.login.LoginException;
 import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
 
 import org.apache.log4j.Logger;
-import org.cspoker.server.common.authentication.XmlFileAuthenticator;
+import org.cspoker.common.CSPokerServer;
+import org.cspoker.common.api.shared.action.DispatchableAction;
+import org.cspoker.common.api.shared.socket.LoginAction;
+import org.cspoker.common.jaxbcontext.ActionJAXBContext;
+import org.cspoker.common.jaxbcontext.AllSocketJAXBContexts;
 import org.cspoker.server.common.util.threading.Prioritizable;
 import org.cspoker.server.xml.sockets.ClientContext;
 import org.cspoker.server.xml.sockets.security.PolicyFile;
-import org.cspoker.server.xml.sockets.security.SocketsAuthenticator;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
 
 public class ProcessXML implements Runnable, Prioritizable {
 
@@ -37,46 +39,37 @@ public class ProcessXML implements Runnable, Prioritizable {
 	private final String xml;
 	private final ClientContext context;
 
-	private final SocketsAuthenticator auth;
-
 	public ProcessXML(String xml, ClientContext context,
-			XmlFileAuthenticator xmlfileauth) {
+			CSPokerServer cspokerServer) {
 		this.xml = xml;
 		this.context = context;
-		auth = new SocketsAuthenticator(xmlfileauth);
 	}
 
 	public void run() {
-		logger.trace("recieved xml:\n" + xml);
-
-		if (!context.isAuthenticated()) {
-			// Flash client request for authorization to connect from a
-			// different host
-			if (xml.startsWith(PolicyFile.request)) {
-				logger.info("handling flash security manager request.");
-				context.send(PolicyFile.POLICY + DELIM);
+		try {
+			logger.trace("recieved xml:\n" + xml);
+			if (!context.isAuthenticated()) {
+				// Flash client request for authorization to connect from a
+				// different host
+				if (xml.startsWith(PolicyFile.request)) {
+					logger.info("handling flash security manager request.");
+					context.send(PolicyFile.POLICY + DELIM);
+				} else {
+					// Check the credentials
+					Unmarshaller um = AllSocketJAXBContexts.context.createUnmarshaller();
+					LoginAction loginAction = (LoginAction) um.unmarshal(new StringReader(xml));
+					context.login(loginAction.getUsername(), loginAction.getUsername());
+				}
 			} else {
-				// Check the credentials
-				auth.authenticate(context, xml);
+				// Perform the other requests
+				Unmarshaller um = ActionJAXBContext.context.createUnmarshaller();
+				DispatchableAction<?> action = (DispatchableAction<?>) um.unmarshal(new StringReader(xml));
+				context.perform(action);
 			}
-		} else {
-			// Perform the other requests
-			try {
-				context.getXmlPlayerCommunication().handle(
-						new InputSource(new StringReader(xml)));
-			} catch (SAXException e) {
-				logger.error("Error parsing xml request. Closing connection.",
-						e.getCause());
-				context.closeConnection();
-			} catch (JAXBException e) {
-				logger.error("Error parsing xml request. Closing connection.",
-						e.getCause());
-				context.closeConnection();
-			} catch (IOException e) {
-				logger.error("Error parsing xml request. Closing connection.",
-						e.getCause());
-				context.closeConnection();
-			}
+		} catch (LoginException exception) {
+			logger.info("Login failed.");
+		} catch (JAXBException exception) {
+			throw new IllegalStateException(exception);
 		}
 	}
 

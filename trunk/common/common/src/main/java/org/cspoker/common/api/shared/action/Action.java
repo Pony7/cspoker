@@ -17,48 +17,6 @@ package org.cspoker.common.api.shared.action;
 
 import java.io.Serializable;
 
-import javax.xml.bind.annotation.XmlAttribute;
-
-import org.cspoker.common.api.shared.context.StaticServerContext;
-import org.cspoker.common.api.shared.event.ActionEvent;
-import org.cspoker.common.api.shared.event.ActionFailedEvent;
-import org.cspoker.common.api.shared.event.ActionPerformedEvent;
-import org.cspoker.common.api.shared.exception.IllegalActionException;
-
-public abstract class Action<T> implements Serializable {
-
-	private static final long serialVersionUID = -7188969396903443467L;
-	
-	@XmlAttribute
-	private long id;
-
-	public Action(long id) {
-		this.id = id;
-	}
-
-	protected Action() {
-		// no op
-	}
-	
-	public ActionEvent<T> wrappedPerform(StaticServerContext serverContext){
-		try {
-			return new ActionPerformedEvent<T>(this, perform(serverContext));
-		} catch (IllegalActionException exception) {
-			return new ActionFailedEvent<T>(this,exception);
-		}
-	}
-
-	public abstract T perform(StaticServerContext serverContext) throws IllegalActionException;
-
-	public long getID() {
-		return id;
-	}
-
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + (int) (id ^ (id >>> 32));
-		return result;
-	}
+public interface Action extends Serializable{
 
 }

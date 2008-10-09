@@ -21,7 +21,9 @@ import java.rmi.AccessException;
 import java.rmi.RemoteException;
 
 import org.apache.log4j.Logger;
+import org.cspoker.common.CSPokerServer;
 import org.cspoker.common.util.Log4JPropertiesLoader;
+import org.cspoker.server.common.CSPokerServerImpl;
 import org.cspoker.server.common.authentication.XmlFileAuthenticator;
 import org.cspoker.server.rmi.RMIServer;
 import org.cspoker.server.xml.http.HttpServer;
@@ -50,6 +52,8 @@ public class RunCSPoker {
 	 * Hack to prevent GC of Remote Object
 	 */
 	private static RMIServer rmiserver;
+	
+	private final CSPokerServer cspokerServer;
 
 	public RunCSPoker() {
 		this("org/cspoker/server/allcommunication/servers.xml");
@@ -63,6 +67,9 @@ public class RunCSPoker {
 			logger.error(e.getMessage(), e);
 			throw new IllegalArgumentException("Error creating XML parser.", e);
 		}
+		
+		cspokerServer = new CSPokerServerImpl();
+		
 		DefaultHandler handler = getHandler();
 		xr.setContentHandler(handler);
 		xr.setErrorHandler(handler);
@@ -96,7 +103,7 @@ public class RunCSPoker {
 					if (type.equals("rmi")) {
 						try {
 							// need to do this in two steps to prevent GC!!
-							rmiserver = new RMIServer(port, auth);
+							rmiserver = new RMIServer(port, cspokerServer);
 							rmiserver.start();
 						} catch (AccessException e) {
 							logger.warn("Failed to start RMI server at port "
@@ -107,14 +114,14 @@ public class RunCSPoker {
 						}
 					} else if (type.equals("http")) {
 						try {
-							(new HttpServer(port, auth)).start();
+							(new HttpServer(port, cspokerServer)).start();
 						} catch (RemoteException e) {
 							logger.warn("Failed to start RMI server at port "
 									+ port, e);
 						}
 					} else if (type.equals("socket")) {
 						try {
-							(new SocketServer(port, auth)).start();
+							(new SocketServer(port, cspokerServer)).start();
 						} catch (RemoteException e) {
 							logger.warn("Failed to start RMI server at port "
 									+ port, e);

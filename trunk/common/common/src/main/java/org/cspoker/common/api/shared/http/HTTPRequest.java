@@ -22,30 +22,30 @@ import java.util.Queue;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.cspoker.common.api.shared.action.Action;
+import org.cspoker.common.api.shared.action.DispatchableAction;
 import org.cspoker.common.api.shared.context.StaticServerContext;
 import org.cspoker.common.api.shared.event.ServerEvent;
 
 @XmlRootElement
 public class HTTPRequest {
 
-	private List<Action<?>> actions = Collections.synchronizedList(new ArrayList<Action<?>>());
+	private List<DispatchableAction<?>> actions = Collections.synchronizedList(new ArrayList<DispatchableAction<?>>());
 	
 	public HTTPRequest() {
 		// no op
 	}
 	
-	public void addAction(Action<?> action){
+	public void addAction(DispatchableAction<?> action){
 		actions.add(action);
 	}
 	
-	public List<Action<?>> getAction() {
+	public List<DispatchableAction<?>> getAction() {
 		return Collections.unmodifiableList(this.actions);
 	}
 	
 	public HTTPResponse performRequest(StaticServerContext serverContext, Queue<ServerEvent> events){
 		HTTPResponse response = new HTTPResponse();
-		for (Action<?> action : actions) {
+		for (DispatchableAction<?> action : actions) {
 			response.addActionResult(action.wrappedPerform(serverContext));
 		}
 		response.addEvents(events);

@@ -33,10 +33,12 @@ import org.cspoker.common.api.shared.http.HTTPRequest;
 import org.cspoker.common.api.shared.http.HTTPResponse;
 import org.cspoker.common.api.shared.listener.ServerEventListener;
 import org.cspoker.common.api.shared.listener.UniversalServerListener;
-import org.cspoker.common.jaxbcontext.AllJAXBContexts;
+import org.cspoker.common.jaxbcontext.AllHTTPJAXBContexts;
+import org.cspoker.common.jaxbcontext.EventJAXBContext;
 import org.cspoker.common.util.Pair;
 import org.cspoker.common.util.lazy.IFactory1;
 import org.cspoker.common.util.lazy.LazyMap1;
+import org.cspoker.common.xml.EventAndActionJAXBContext;
 import org.cspoker.server.xml.common.XmlServerContext;
 import org.cspoker.server.xml.http.handler.abstracts.AbstractHttpHandler;
 import org.cspoker.server.xml.http.handler.exception.HttpExceptionImpl;
@@ -87,13 +89,13 @@ public class CSPokerHandler extends AbstractHttpHandler {
 				throw new LoginException("Bad Password");
 			}
 			
-			Unmarshaller um = AllJAXBContexts.context.createUnmarshaller();
+			Unmarshaller um = AllHTTPJAXBContexts.context.createUnmarshaller();
 			HTTPRequest request = (HTTPRequest) um.unmarshal(new InputSource(http.getRequestBody()));
 
 			HTTPResponse response = request.performRequest(state.getLeft(), state.getRight());
 
 			StringWriter xml = new StringWriter();
-			Marshaller m = AllJAXBContexts.context.createMarshaller();
+			Marshaller m = EventJAXBContext.context.createMarshaller();
 			m.setProperty(Marshaller.JAXB_FRAGMENT, true);
 			m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 			m.marshal(response, xml);

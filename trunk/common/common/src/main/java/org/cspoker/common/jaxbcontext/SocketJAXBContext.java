@@ -3,30 +3,44 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
+ *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
- *  
+ *
  *  You should have received a copy of the GNU General Public License
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.common;
+package org.cspoker.common.jaxbcontext;
 
-/**
- * Interface for collecting XML messages encoded as a String.
- */
-public interface XmlEventListener {
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
 
-	/**
-	 * This method should queue up the XML for handling rather than block during
-	 * handling.
-	 * 
-	 * @param xml
-	 *            The XML message to collect.
-	 */
-	public void collect(String xmlEvent);
+import org.apache.log4j.Logger;
+import org.cspoker.common.api.shared.socket.LoginAction;
+
+public class SocketJAXBContext {
+
+	private final static Logger logger = Logger
+			.getLogger(SocketJAXBContext.class);
+
+	public final static JAXBContext context = initContext();
+
+	private static JAXBContext initContext() {
+		try {
+			return JAXBContext.newInstance(getActions());
+		} catch (JAXBException e) {
+			logger.fatal(e);
+			throw new IllegalStateException(e);
+		}
+	}
+
+	public static Class<?>[] getActions() {
+		return new Class<?>[] { 
+				LoginAction.class
+		};
+	}
 
 }
