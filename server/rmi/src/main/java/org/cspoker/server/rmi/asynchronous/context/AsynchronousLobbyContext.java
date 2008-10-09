@@ -20,9 +20,9 @@ import java.util.concurrent.Executor;
 import org.cspoker.common.api.lobby.context.ForwardingLobbyContext;
 import org.cspoker.common.api.lobby.context.LobbyContext;
 import org.cspoker.common.api.lobby.holdemtable.context.HoldemTableContext;
+import org.cspoker.common.api.lobby.holdemtable.listener.AsynchronousHoldemTableListener;
 import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
-import org.cspoker.server.rmi.asynchronous.listener.AsynchronousHoldemTableListener;
 
 public class AsynchronousLobbyContext extends ForwardingLobbyContext {
 

@@ -20,8 +20,8 @@ import java.util.concurrent.Executor;
 import org.cspoker.common.api.lobby.holdemtable.context.ForwardingHoldemTableContext;
 import org.cspoker.common.api.lobby.holdemtable.context.HoldemTableContext;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.HoldemPlayerContext;
+import org.cspoker.common.api.lobby.holdemtable.holdemplayer.listener.AsynchronousHoldemPlayerListener;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.listener.HoldemPlayerListener;
-import org.cspoker.server.rmi.asynchronous.listener.AsynchronousHoldemPlayerListener;
 
 public class AsynchronousHoldemTableContext extends ForwardingHoldemTableContext {
 

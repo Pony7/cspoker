@@ -18,13 +18,13 @@ package org.cspoker.server.rmi.asynchronous.context;
 import java.util.concurrent.Executor;
 
 import org.cspoker.common.api.chat.context.ChatContext;
+import org.cspoker.common.api.chat.listener.AsynchronousChatListener;
 import org.cspoker.common.api.chat.listener.ChatListener;
 import org.cspoker.common.api.lobby.context.LobbyContext;
+import org.cspoker.common.api.lobby.listener.AsynchronousLobbyListener;
 import org.cspoker.common.api.lobby.listener.LobbyListener;
 import org.cspoker.common.api.shared.context.ForwardingServerContext;
 import org.cspoker.common.api.shared.context.ServerContext;
-import org.cspoker.server.rmi.asynchronous.listener.AsynchronousChatListener;
-import org.cspoker.server.rmi.asynchronous.listener.AsynchronousLobbyListener;
 
 public class AsynchronousServerContext extends ForwardingServerContext {
 
