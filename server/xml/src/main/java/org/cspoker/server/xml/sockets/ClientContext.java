@@ -16,6 +16,7 @@
 package org.cspoker.server.xml.sockets;
 
 import java.io.IOException;
+import java.io.StringWriter;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.channels.SelectionKey;
@@ -28,27 +29,32 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.log4j.Logger;
-import org.cspoker.common.XmlEventListener;
-import org.cspoker.server.common.game.player.IllegalNameException;
-import org.cspoker.server.common.game.session.PlayerKilledExcepion;
-import org.cspoker.server.common.game.session.Session;
-import org.cspoker.server.common.game.session.SessionManager;
-import org.cspoker.server.xml.common.XmlPlayerCommunication;
-import org.cspoker.server.xml.common.XmlPlayerCommunicationFactory;
+import javax.security.auth.login.LoginException;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.PropertyException;
 
-public class ClientContext implements XmlEventListener {
+import org.apache.log4j.Logger;
+import org.cspoker.common.CSPokerServer;
+import org.cspoker.common.api.shared.action.DispatchableAction;
+import org.cspoker.common.api.shared.context.StaticServerContext;
+import org.cspoker.common.api.shared.event.ActionEvent;
+import org.cspoker.common.api.shared.event.Event;
+import org.cspoker.common.api.shared.event.ServerEvent;
+import org.cspoker.common.api.shared.listener.ServerEventListener;
+import org.cspoker.common.api.shared.listener.UniversalServerListener;
+import org.cspoker.common.jaxbcontext.EventJAXBContext;
+import org.cspoker.server.xml.common.XmlServerContext;
+
+public class ClientContext {
 
 	private final static Logger logger = Logger.getLogger(ClientContext.class);
 
 	private final StringBuilder buffer;
-	private XmlPlayerCommunication playerComm;
-	private Session session;
 
 	private final List<ByteBuffer> writeBuffer = new ArrayList<ByteBuffer>();
 
 	private final Object writeBufferLock = new Object();
-	private final Object authenticateLock = new Object();
 
 	private final SocketChannel client;
 	private final Selector selector;
@@ -57,13 +63,18 @@ public class ClientContext implements XmlEventListener {
 	// CharsetEncoder is not thread safe!
 	private final CharsetEncoder encoder;
 
-	public ClientContext(SocketChannel client, Selector selector) {
+	private final CSPokerServer cspokerServer;
+
+	private volatile StaticServerContext serverContext = null;
+
+	public ClientContext(SocketChannel client, Selector selector, CSPokerServer cspokerServer) {
 		this.client = client;
 		this.selector = selector;
-		buffer = new StringBuilder();
+		this.buffer = new StringBuilder();
 
-		charset = Charset.forName("UTF-8");
-		encoder = charset.newEncoder();
+		this.charset = Charset.forName("UTF-8");
+		this.encoder = charset.newEncoder();
+		this.cspokerServer = cspokerServer;
 	}
 
 	public StringBuilder getBuffer() {
@@ -122,16 +133,12 @@ public class ClientContext implements XmlEventListener {
 	}
 
 	public void closeConnection() {
-		if (playerComm != null) {
-			// TODO will this sequence of calls end?
-			XmlPlayerCommunicationFactory.global_factory.unRegister(session);
-			SessionManager.global_session_manager.killSession(session
-					.getUserName());
-		}
 		try {
 			client.close();
-		} catch (IOException e) {
-			logger.error("Can't close connection.", e);
+		} catch (IOException exception) {
+		}
+		if(serverContext!=null){
+			serverContext.kill();
 		}
 	}
 
@@ -145,37 +152,41 @@ public class ClientContext implements XmlEventListener {
 			throw new IllegalStateException(e);
 		}
 	}
-
-	public XmlPlayerCommunication getXmlPlayerCommunication() {
-		return playerComm;
-	}
-
-	public void collect(String xmlEvent) {
-		send(xmlEvent);
-	}
-
-	public void login(String username, String password, String useragent)
-			throws IllegalNameException {
-		synchronized (authenticateLock) {
-			if (isAuthenticated()) {
-				throw new IllegalStateException("Can't login twice");
-			}
-			session = SessionManager.global_session_manager
-					.getSession(username);
-			try {
-				playerComm = XmlPlayerCommunicationFactory.global_factory
-						.getRegisteredXmlPlayerCommunication(session, this);
-			} catch (PlayerKilledExcepion e) {
-				logger.error("player killed right after login", e);
-				// ignore
-			}
+	
+	public void send(Event event){
+		StringWriter output = new StringWriter();
+		try {
+			Marshaller m = EventJAXBContext.context.createMarshaller();
+			m.setProperty(Marshaller.JAXB_FRAGMENT, true);
+			m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+			m.marshal(event, output);
+		} catch (PropertyException exception) {
+			throw new IllegalStateException(exception);
+		} catch (JAXBException exception) {
+			throw new IllegalStateException(exception);
 		}
+		output.flush();
+		send(output.toString());
+	}
+
+	public void login(String username, String passwordHash) throws LoginException{
+		serverContext = new XmlServerContext(cspokerServer.login(username, passwordHash),
+				new UniversalServerListener(
+						new ServerEventListener(){
+							public void onEvent(ServerEvent event) {
+								send(event);
+							}
+						}		
+				));
+	}
+	
+	public void perform(DispatchableAction<?> action){
+		ActionEvent<?> result = action.wrappedPerform(serverContext);
+		send(result);
 	}
 
 	public boolean isAuthenticated() {
-		synchronized (authenticateLock) {
-			return playerComm != null;
-		}
+		return serverContext==null;
 	}
 
 }

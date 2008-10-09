@@ -17,18 +17,18 @@ package org.cspoker.common.api.shared.event;
 
 import javax.xml.bind.annotation.XmlTransient;
 
-import org.cspoker.common.api.shared.action.Action;
+import org.cspoker.common.api.shared.action.DispatchableAction;
 
 public abstract class ActionEvent<T> implements Event{
 
         private static final long serialVersionUID = -3647664952883269411L;
 
         @XmlTransient
-        private Action<T> action;
+        private DispatchableAction<T> action;
         
         private long id;
 
-        public ActionEvent(Action<T> action) {
+        public ActionEvent(DispatchableAction<T> action) {
                 this.action = action;
                 this.id = action.getID();
         }
@@ -37,7 +37,7 @@ public abstract class ActionEvent<T> implements Event{
 			// no op
 		}
 
-        public Action<T> getAction() {
+        public DispatchableAction<T> getAction() {
                 return action;
         }
         

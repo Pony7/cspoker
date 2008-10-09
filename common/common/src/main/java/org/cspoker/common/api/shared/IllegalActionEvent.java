@@ -20,7 +20,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
-import org.cspoker.common.api.shared.action.Action;
+import org.cspoker.common.api.shared.action.DispatchableAction;
 import org.cspoker.common.api.shared.event.ActionEvent;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 
@@ -36,7 +36,7 @@ public class IllegalActionEvent extends ActionEvent {
 	private String msg;
 
 	public IllegalActionEvent(IllegalActionException exception,
-			Action<?> action) {
+			DispatchableAction<?> action) {
 		super(action);
 		this.exception = exception;
 		this.msg = exception.getMessage();

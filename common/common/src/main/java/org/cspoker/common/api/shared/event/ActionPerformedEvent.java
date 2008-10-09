@@ -17,7 +17,7 @@ package org.cspoker.common.api.shared.event;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.cspoker.common.api.shared.action.Action;
+import org.cspoker.common.api.shared.action.DispatchableAction;
 
 @XmlRootElement
 public class ActionPerformedEvent<T> extends ActionEvent<T> {
@@ -26,7 +26,7 @@ public class ActionPerformedEvent<T> extends ActionEvent<T> {
 
         private T result;
 
-        public ActionPerformedEvent(Action<T> action, T result) {
+        public ActionPerformedEvent(DispatchableAction<T> action, T result) {
                 super(action);
                 this.result = result;
         }

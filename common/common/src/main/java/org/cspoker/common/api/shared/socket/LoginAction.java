@@ -13,29 +13,35 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.common.api.chat.action;
+package org.cspoker.common.api.shared.socket;
 
-import org.cspoker.common.api.chat.context.ChatContext;
-import org.cspoker.common.api.shared.action.DispatchableAction;
-import org.cspoker.common.api.shared.context.StaticServerContext;
+import javax.xml.bind.annotation.XmlRootElement;
 
-public abstract class ChatAction<T> extends DispatchableAction<T> {
+import org.cspoker.common.api.shared.action.Action;
 
-	private static final long serialVersionUID = 6542312781797096164L;
+@XmlRootElement
+public class LoginAction implements Action {
 
-	public ChatAction(long id) {
-		super(id);
-	}
-
-	protected ChatAction() {
-		// no op
-	}
-
-	@Override
-	public T perform(StaticServerContext serverContext) {
-		return perform(serverContext.getChatContext());
-	}
-
-	public abstract T perform(ChatContext chatContext);
+	private static final long serialVersionUID = -2677247916335298486L;
 	
+	private String username;
+	private String passwordHash;
+
+	public LoginAction(String username, String passwordHash){
+		this.username = username;
+		this.passwordHash = passwordHash;
+	}
+	
+	protected LoginAction() {
+	
+	}
+	
+	public String getUsername() {
+		return this.username;
+	}
+	
+	public String getPasswordHash() {
+		return this.passwordHash;
+	}
+
 }

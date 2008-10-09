@@ -16,10 +16,11 @@
 package org.cspoker.common.api.lobby.action;
 
 import org.cspoker.common.api.lobby.context.StaticLobbyContext;
-import org.cspoker.common.api.shared.action.Action;
+import org.cspoker.common.api.shared.action.DispatchableAction;
 import org.cspoker.common.api.shared.context.StaticServerContext;
+import org.cspoker.common.api.shared.exception.IllegalActionException;
 
-public abstract class LobbyAction<T> extends Action<T> {
+public abstract class LobbyAction<T> extends DispatchableAction<T> {
 
 	private static final long serialVersionUID = -6219914092644893577L;
 
@@ -32,10 +33,10 @@ public abstract class LobbyAction<T> extends Action<T> {
 	}
 
 	@Override
-	public T perform(StaticServerContext serverContext) {
+	public T perform(StaticServerContext serverContext) throws IllegalActionException {
 		return perform(serverContext.getLobbyContext());
 	}
 
-	public abstract T perform(StaticLobbyContext lobbyContext);
+	public abstract T perform(StaticLobbyContext lobbyContext) throws IllegalActionException;
 	
 }

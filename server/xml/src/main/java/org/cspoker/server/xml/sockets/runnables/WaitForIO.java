@@ -29,7 +29,7 @@ import java.util.Set;
 import java.util.concurrent.Executor;
 
 import org.apache.log4j.Logger;
-import org.cspoker.server.common.authentication.XmlFileAuthenticator;
+import org.cspoker.common.CSPokerServer;
 import org.cspoker.server.common.util.threading.Prioritizable;
 import org.cspoker.server.xml.sockets.ClientContext;
 
@@ -48,14 +48,14 @@ public class WaitForIO implements Runnable, Prioritizable {
 	private final Charset charset;
 	private final CharsetDecoder decoder;
 
-	private final XmlFileAuthenticator auth;
+	private CSPokerServer cspokerServer;
 
 	public WaitForIO(Executor executor, Selector selector,
-			ServerSocketChannel server, XmlFileAuthenticator auth) {
+			ServerSocketChannel server, CSPokerServer cspokerServer) {
 		this.executor = executor;
 		this.selector = selector;
 		this.server = server;
-		this.auth = auth;
+		this.cspokerServer = cspokerServer;
 
 		buffer = ByteBuffer.allocateDirect(bufferSize);
 		filteredBuffer = ByteBuffer.allocateDirect(bufferSize);
@@ -150,7 +150,7 @@ public class WaitForIO implements Runnable, Prioritizable {
 	private ClientContext getContext(SelectionKey key, SocketChannel client) {
 		ClientContext context = (ClientContext) (key.attachment());
 		if (context == null) {
-			context = new ClientContext(client, selector);
+			context = new ClientContext(client, selector, cspokerServer);
 			key.attach(context);
 		}
 		return context;
@@ -184,7 +184,7 @@ public class WaitForIO implements Runnable, Prioritizable {
 
 	private void endNode(StringBuilder stringBuilder, ClientContext context) {
 		String xml = stringBuilder.toString();
-		executor.execute(new ProcessXML(xml, context, auth));
+		executor.execute(new ProcessXML(xml, context, cspokerServer));
 		stringBuilder.setLength(0);
 	}
 

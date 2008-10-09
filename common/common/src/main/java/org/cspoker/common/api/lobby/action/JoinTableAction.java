@@ -18,6 +18,7 @@ package org.cspoker.common.api.lobby.action;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.cspoker.common.api.lobby.context.StaticLobbyContext;
+import org.cspoker.common.api.shared.exception.IllegalActionException;
 
 @XmlRootElement
 public class JoinTableAction extends LobbyAction<Void> {
@@ -36,7 +37,7 @@ public class JoinTableAction extends LobbyAction<Void> {
 	}
 	
 	@Override
-	public Void perform(StaticLobbyContext lobbyContext) {
+	public Void perform(StaticLobbyContext lobbyContext) throws IllegalActionException {
 		lobbyContext.joinHoldemTable(tableId);
 		return null;
 	}

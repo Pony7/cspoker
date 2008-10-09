@@ -24,7 +24,7 @@ import java.rmi.RemoteException;
 import java.util.concurrent.Executor;
 
 import org.apache.log4j.Logger;
-import org.cspoker.server.common.authentication.XmlFileAuthenticator;
+import org.cspoker.common.CSPokerServer;
 import org.cspoker.server.common.util.threading.RequestExecutor;
 import org.cspoker.server.xml.sockets.runnables.WaitForIO;
 
@@ -40,16 +40,10 @@ public class SocketServer {
 
 	private final int port;
 
-	private final XmlFileAuthenticator auth;
+	private CSPokerServer cspokerServer;
 
-	public SocketServer(int port) throws RemoteException {
-		this(port, new XmlFileAuthenticator());
-	}
-
-	public SocketServer(int port, XmlFileAuthenticator auth)
-			throws RemoteException {
+	public SocketServer(int port, CSPokerServer cspokerServer) throws RemoteException {
 		try {
-			this.auth = auth;
 			this.port = port;
 			// Create the server socket channel
 			server = ServerSocketChannel.open();
@@ -61,6 +55,7 @@ public class SocketServer {
 			selector = Selector.open();
 			// Recording server to selector (type OP_ACCEPT)
 			server.register(selector, SelectionKey.OP_ACCEPT);
+			this.cspokerServer = cspokerServer;
 		} catch (IOException e) {
 			throw new RemoteException("Creating Socket server failed", e);
 		}
@@ -69,7 +64,7 @@ public class SocketServer {
 	public void start() {
 		executor = RequestExecutor.getInstance();
 		// Infinite server loop
-		executor.execute(new WaitForIO(executor, selector, server, auth));
+		executor.execute(new WaitForIO(executor, selector, server, this.cspokerServer));
 		logger.info("Socket server running on port " + port);
 	}
 
