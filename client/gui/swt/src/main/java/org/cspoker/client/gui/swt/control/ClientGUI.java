@@ -379,7 +379,7 @@ public class ClientGUI {
 			}
 			w = new GameWindow(getLobby(), table);
 			w.getUser().joinTable(getLobby().getContext());
-			w.getUser().setChatContext(clientCore.getCommunication(), w.getUserInputComposite());
+			w.getUser().setChatContext(clientCore.getCommunication());
 		}
 		gameWindows.put(tableId, w);
 		

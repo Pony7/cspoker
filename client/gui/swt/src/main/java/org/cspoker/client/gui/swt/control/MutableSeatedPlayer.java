@@ -6,6 +6,16 @@ import java.util.NavigableMap;
 
 import org.cspoker.common.elements.player.SeatedPlayer;
 
+/**
+ * Will comment later due to maybe pending changes in Server design
+ * <p>
+ * Basically intended to keep track of a player sitting at a table and his
+ * current status. The {@link GameState} is needed so the player can be asked
+ * questions such as <b>What is the amount I have to call at this given
+ * moment</b> etc.
+ * 
+ * @author Stephan Schmidt
+ */
 public class MutableSeatedPlayer {
 	
 	private SeatedPlayer wrappedPlayer;
