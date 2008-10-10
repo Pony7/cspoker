@@ -8,6 +8,7 @@ import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.table.DetailedHoldemTable;
 import org.cspoker.common.elements.table.TableConfiguration;
 import org.cspoker.common.elements.table.TableList;
+import org.cspoker.server.common.account.ExtendedAccountContext;
 import org.cspoker.server.common.elements.id.TableId;
 import org.cspoker.server.common.lobby.Lobby;
 

@@ -20,7 +20,8 @@ import org.cspoker.common.api.lobby.holdemtable.event.BigBlindEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.CallEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.CheckEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.FoldEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.LeaveGameEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.JoinTableEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.LeaveTableEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.NewCommunityCardsEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.NewDealEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.NewRoundEvent;
@@ -28,6 +29,7 @@ import org.cspoker.common.api.lobby.holdemtable.event.NextPlayerEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.RaiseEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.ShowHandEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.SitInEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.SitOutEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.SmallBlindEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.WinnerEvent;
 
@@ -43,8 +45,10 @@ public interface HoldemTableListener extends RemoteHoldemTableListener {
 	void onCheck(CheckEvent checkEvent);
 
 	void onFold(FoldEvent foldEvent);
+	
+	void onJoinTable(JoinTableEvent joinTableEvent);
 
-	void onLeaveGame(LeaveGameEvent leaveGameEvent);
+	void onLeaveTable(LeaveTableEvent leaveGameEvent);
 
 	void onNewCommunityCards(NewCommunityCardsEvent newCommunityCardsEvent);
 
@@ -59,6 +63,8 @@ public interface HoldemTableListener extends RemoteHoldemTableListener {
 	void onShowHand(ShowHandEvent showHandEvent);
 
 	void onSitIn(SitInEvent sitInEvent);
+	
+	void onSitOut(SitOutEvent sitOut);
 
 	void onSmallBlind(SmallBlindEvent smallBlindEvent);
 

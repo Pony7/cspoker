@@ -1,6 +1,7 @@
 package org.cspoker.server.common;
 
 import org.cspoker.common.api.cashier.context.CashierContext;
+import org.cspoker.server.common.account.ExtendedAccountContext;
 
 public class CashierContextImpl implements CashierContext {
 

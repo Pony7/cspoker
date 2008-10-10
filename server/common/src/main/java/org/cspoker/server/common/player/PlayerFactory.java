@@ -19,6 +19,7 @@ package org.cspoker.server.common.player;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.cspoker.server.common.elements.chips.IllegalValueException;
+import org.cspoker.server.common.elements.id.PlayerId;
 
 /**
  * 
@@ -92,8 +93,8 @@ public class PlayerFactory {
 	 * 
 	 * @return A unique player id.
 	 */
-	private long getUniquePlayerId() {
-		return counter.getAndIncrement();
+	private PlayerId getUniquePlayerId() {
+		return new PlayerId(counter.getAndIncrement());
 	}
 
 }

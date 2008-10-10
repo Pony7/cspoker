@@ -18,9 +18,10 @@ package org.cspoker.server.common.gamecontrol;
 
 import java.util.List;
 
+import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.HoldemPlayerContext;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.player.SeatedPlayer;
-import org.cspoker.common.elements.table.TableConfiguration;
+import org.cspoker.server.common.HoldemPlayerContextImpl;
 import org.cspoker.server.common.elements.id.SeatId;
 import org.cspoker.server.common.elements.table.SeatTakenException;
 import org.cspoker.server.common.elements.table.ServerTable;
@@ -39,9 +40,9 @@ public class WaitingTableState extends TableState{
 	
 	private ServerTable serverTable;
 
-	public WaitingTableState(PokerTable table, TableConfiguration configuration) {
+	public WaitingTableState(PokerTable table) {
 		super(table);
-		serverTable = new ServerTable(configuration.getMaxNbPlayers());
+		serverTable = new ServerTable(table.getTableConfiguration().getMaxNbPlayers());
 	}
 
 	/**
@@ -108,20 +109,20 @@ public class WaitingTableState extends TableState{
 	}
 
 	@Override
-	public void joinTable(SeatId seatId, GameSeatedPlayer player)
+	public HoldemPlayerContext sitIn(SeatId seatId, GameSeatedPlayer player)
 			throws IllegalActionException {
 		try {
 			serverTable.addPlayer(seatId, player);
 		} catch (SeatTakenException e) {
-			throw new IllegalActionException("Joining table "+table.getId().toString()+" is not a valid action."+e.getMessage());
+			throw new IllegalActionException("Joining table "+mediatingTable.getTableId().toString()+" is not a valid action."+e.getMessage());
 		} catch (IllegalActionException e){
-			throw new IllegalActionException("Joining table "+table.getId().toString()+" is not a valid action."+e.getMessage());
+			throw new IllegalActionException("Joining table "+mediatingTable.getTableId().toString()+" is not a valid action."+e.getMessage());
 		}
-		
+		return new HoldemPlayerContextImpl(player, mediatingTable);
 	}
 
 	@Override
-	public void leaveTable(GameSeatedPlayer player)
+	public void sitOut(GameSeatedPlayer player)
 			throws IllegalActionException {
 		serverTable.removePlayer(player);
 		

@@ -28,6 +28,7 @@ import org.cspoker.server.common.elements.chips.pot.GamePots;
 import org.cspoker.server.common.elements.id.SeatId;
 import org.cspoker.server.common.elements.table.PlayerListFullException;
 import org.cspoker.server.common.elements.table.SeatTakenException;
+import org.cspoker.server.common.elements.table.ServerTable;
 import org.cspoker.server.common.gamecontrol.rules.BettingRules;
 import org.cspoker.server.common.gamecontrol.rules.NoLimit;
 import org.cspoker.server.common.player.GameSeatedPlayer;
@@ -51,12 +52,12 @@ public class Game {
 	/**
 	 * This variable contains the table of this game.
 	 */
-	private final WaitingTableState table;
+	private final ServerTable table;
 
 	/**
 	 * This variable contains the game property of this game.
 	 */
-	private final TableConfiguration gameProperty;
+	private final TableConfiguration configuration;
 
 	/**
 	 * This looping list contains the active players of this game.
@@ -132,21 +133,20 @@ public class Game {
 	 *      |table!=null && table.getNbPlayer()>1
 	 * 
 	 */
-	public Game(WaitingTableState table) {
-		this(table, table.getRandomPlayer());
+	public Game(ServerTable table, TableConfiguration configuration) {
+		this(table, configuration, table.getRandomPlayer());
 	}
 
-	public Game(WaitingTableState table, GameSeatedPlayer dealer) {
-		this(table, dealer, new NoLimit());
+	public Game(ServerTable table, TableConfiguration configuration, GameSeatedPlayer dealer) {
+		this(table, configuration, dealer, new NoLimit());
 
 	}
 
-	public Game(WaitingTableState table, GameSeatedPlayer dealer, BettingRules bettingRules) {
+	public Game(ServerTable table, TableConfiguration configuration, GameSeatedPlayer dealer, BettingRules bettingRules) {
 		this.bettingRules = bettingRules;
 		this.table = table;
-		table.setPlaying(true);
-		gameProperty = table.getTableConfiguration();
-		List<GameSeatedPlayer> players = table.getPlayers();
+		this.configuration = configuration;
+		List<GameSeatedPlayer> players = table.getSeatedServerPlayers();
 		currentHandPlayers = new LoopingList<GameSeatedPlayer>(players);
 		initialCurrentHandPlayers = new LoopingList<GameSeatedPlayer>(players);
 		deck = new Deck();
@@ -171,7 +171,7 @@ public class Game {
 		communityCards = new ArrayList<Card>();
 		deck = new Deck();
 		pots = new GamePots();
-		List<GameSeatedPlayer> players = table.getPlayers();
+		List<GameSeatedPlayer> players = table.getSeatedServerPlayers();
 
 		// new looping lists
 		currentHandPlayers = new LoopingList<GameSeatedPlayer>(players);
@@ -327,7 +327,7 @@ public class Game {
 	 * @return The game property of this game.
 	 */
 	public TableConfiguration getTableConfiguration() {
-		return gameProperty;
+		return configuration;
 	}
 
 	/***************************************************************************
@@ -361,7 +361,7 @@ public class Game {
 	 * @return The table of this game.
 	 * 
 	 */
-	public WaitingTableState getTable() {
+	public ServerTable getTable() {
 		return table;
 	}
 
@@ -542,7 +542,7 @@ public class Game {
 	}
 
 	public void addTablePlayersToGame() {
-		currentHandPlayers = new LoopingList<GameSeatedPlayer>(table.getPlayers());
+		currentHandPlayers = new LoopingList<GameSeatedPlayer>(table.getSeatedServerPlayers());
 	}
 
 	public void seatInitalDealPlayers() {
@@ -562,8 +562,8 @@ public class Game {
 	 * 
 	 **************************************************************************/
 
-	public SeatId joinGame(SeatId seatId, GameSeatedPlayer player)
-			throws SeatTakenException, PlayerListFullException {
+	public SeatId sitIn(SeatId seatId, GameSeatedPlayer player)
+			throws SeatTakenException, PlayerListFullException, IllegalActionException{
 		if (seatId == null) {
 			seatId = table.addPlayer(player);
 		} else {
@@ -576,11 +576,11 @@ public class Game {
 			setNextDealer(player);
 		}
 		Game.logger.info(player.getName() + " joined the game. ["
-				+ table.getId() + "]");
+				+ "]");
 		return seatId;
 	}
 
-	public void leaveGame(GameSeatedPlayer player) throws IllegalActionException {
+	public void sitOut(GameSeatedPlayer player) throws IllegalActionException {
 		if (!table.hasAsPlayer(player)) {
 			throw new IllegalActionException(player.getName()
 					+ " is not seated at this table.");
@@ -594,8 +594,7 @@ public class Game {
 
 		initialCurrentHandPlayers.remove(player);
 		table.removePlayer(player);
-		Game.logger.info(player.getName() + " left the game. [" + table.getId()
-				+ "]");
+		Game.logger.info(player.getName() + " left the game.");
 	}
 
 	/**

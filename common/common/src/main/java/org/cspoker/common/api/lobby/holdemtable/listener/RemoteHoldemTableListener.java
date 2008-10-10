@@ -23,7 +23,7 @@ import org.cspoker.common.api.lobby.holdemtable.event.BigBlindEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.CallEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.CheckEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.FoldEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.LeaveGameEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.LeaveTableEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.NewCommunityCardsEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.NewDealEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.NewRoundEvent;
@@ -31,6 +31,7 @@ import org.cspoker.common.api.lobby.holdemtable.event.NextPlayerEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.RaiseEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.ShowHandEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.SitInEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.SitOutEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.SmallBlindEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.WinnerEvent;
 import org.cspoker.common.api.shared.listener.EventListener;
@@ -47,7 +48,7 @@ public interface RemoteHoldemTableListener extends EventListener, Remote{
 
 	void onFold(FoldEvent foldEvent) throws RemoteException;
 
-	void onLeaveGame(LeaveGameEvent leaveGameEvent) throws RemoteException;
+	void onLeaveTable(LeaveTableEvent leaveGameEvent) throws RemoteException;
 
 	void onNewCommunityCards(NewCommunityCardsEvent newCommunityCardsEvent) throws RemoteException;
 
@@ -62,6 +63,8 @@ public interface RemoteHoldemTableListener extends EventListener, Remote{
 	void onShowHand(ShowHandEvent showHandEvent) throws RemoteException;
 
 	void onSitIn(SitInEvent sitInEvent) throws RemoteException;
+	
+	void onSitOut(SitOutEvent sitOutEvent) throws RemoteException;
 
 	void onSmallBlind(SmallBlindEvent smallBlindEvent) throws RemoteException;
 

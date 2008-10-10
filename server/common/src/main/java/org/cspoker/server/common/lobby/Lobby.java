@@ -19,7 +19,7 @@ import org.cspoker.common.elements.table.DetailedHoldemTable;
 import org.cspoker.common.elements.table.Table;
 import org.cspoker.common.elements.table.TableConfiguration;
 import org.cspoker.common.elements.table.TableList;
-import org.cspoker.server.common.ExtendedAccountContext;
+import org.cspoker.server.common.account.ExtendedAccountContext;
 import org.cspoker.server.common.elements.id.TableId;
 import org.cspoker.server.common.gamecontrol.PokerTable;
 
@@ -74,13 +74,11 @@ public class Lobby{
 	}
 
 	public HoldemTableContext joinTable(TableId tableId, HoldemTableListener holdemTableListener, ExtendedAccountContext accountContext) throws IllegalActionException{
+		if(holdemTableListener==null)
+			throw new IllegalArgumentException("The given holdem table listener is not effective.");
 		if(!tables.containsKey(tableId)){
 			throw new IllegalActionException("The provided table #"+tableId+" to join does not exist.");
 		}
-		if(holdemTableListener==null)
-			throw new IllegalArgumentException("The given holdem table listener is not effective.");
-		
-		
 		PokerTable table = tables.get(tableId);
 		
 		return table.joinTable(accountContext.getPlayer(), holdemTableListener);

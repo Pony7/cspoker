@@ -82,7 +82,7 @@ public class PreFlopRound extends BettingRound {
 					+ player.getPocketCards());
 
 			gameMediator.publishNewPocketCardsEvent(player.getId(),
-					new NewPocketCardsEvent(player.getMemento(),
+					new NewPocketCardsEvent(
 							new HashSet<Card>(player.getPocketCards())));
 		}
 
@@ -95,8 +95,7 @@ public class PreFlopRound extends BettingRound {
 					+ player.getPocketCards());
 
 			gameMediator.publishNewPocketCardsEvent(player.getId(),
-					new NewPocketCardsEvent(player.getMemento(),
-							new HashSet<Card>(player.getPocketCards())));
+							new NewPocketCardsEvent(new HashSet<Card>(player.getPocketCards())));
 		}
 
 		if (getGame().getNbCurrentDealPlayers() > 1) {

@@ -13,23 +13,39 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.common.api.lobby.holdemtable.holdemplayer.context;
+package org.cspoker.common.api.lobby.holdemtable.event;
 
-import java.rmi.Remote;
-import java.rmi.RemoteException;
+import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
+import org.cspoker.common.elements.player.Player;
 
-import org.cspoker.common.api.shared.exception.IllegalActionException;
+public class SitOutEvent extends HoldemTableEvent {
+	
+	private static final long serialVersionUID = 5233575816991835637L;
 
-public interface RemoteHoldemPlayerContext extends Remote {
+	private Player player;
 	
-	//Actions
+	private boolean forced;
 	
-	void betOrRaise(int amount) throws RemoteException, IllegalActionException;
+	public SitOutEvent(Player player, boolean forced){
+		this.player = player;
+		this.forced = forced;
+	}
 	
-	void checkOrCall() throws RemoteException, IllegalActionException;
+	protected SitOutEvent(){
+		// no op
+	}
 	
-	void fold() throws RemoteException, IllegalActionException;
+	public Player getPlayer(){
+		return player;
+	}
 	
-	void leaveGame() throws RemoteException;
+	public boolean isForced(){
+		 return forced;
+	}
+
+	@Override
+	public void dispatch(HoldemTableListener holdemTableListener) {
+		holdemTableListener.onSitOut(this);
+	}
 
 }

@@ -15,16 +15,18 @@
  */
 package org.cspoker.common.api.lobby.holdemtable.holdemplayer.context;
 
+import org.cspoker.common.api.shared.exception.IllegalActionException;
+
 
 public interface HoldemPlayerContext extends RemoteHoldemPlayerContext{
 	
 	//Actions
 	
-	void betOrRaise(int amount);
+	void betOrRaise(int amount) throws IllegalActionException;
 	
-	void checkOrCall();
+	void checkOrCall() throws IllegalActionException;
 	
-	void fold();
+	void fold() throws IllegalActionException;
 	
 	void leaveGame();
 

@@ -89,17 +89,19 @@ public abstract class BettingRound extends Round {
 
 		// Check whether the bet is valid, according to the betting rules.
 		if (!getBettingRules().isValidBet(amount, this)) {
-			throw new IllegalActionException(player.getMemento(),
+			throw new IllegalActionException(player.toString()+"can not bet. "+
 					getBettingRules().getLastBetErrorMessage());
 		}
 
 		// Can not bet with zero, it is equal to check. Please use check.
 		if (amount == 0) {
-			throw new IllegalActionException(player.getMemento(),
+			throw new IllegalActionException(player.toString()+" can not bet. "+
 					"Can not bet with 0 chips. Did you mean check?");
 		}
+		
+		
 		if (amount >= player.getStack().getValue()) {
-			throw new IllegalActionException(player.getMemento(),
+			throw new IllegalActionException(player.toString()+" can not bet. "+
 					"Can not bet an amount higher than your current amount of chips;"
 							+ " did you mean all-in??");
 		}
@@ -108,7 +110,7 @@ public abstract class BettingRound extends Round {
 			player.transferAmountToBetPile(amountToIncreaseBetPileWith(player)
 					+ amount);
 		} catch (IllegalValueException e) {
-			throw new IllegalActionException(player.getMemento(), e
+			throw new IllegalActionException(player.toString()+" can not  bet. "+ e
 					.getMessage());
 		}
 		raiseBetWith(amount);
@@ -132,7 +134,7 @@ public abstract class BettingRound extends Round {
 		// Check whether the amount with which the bet chips pile
 		// is increased exceeds the player's stack.
 		if (amountToIncreaseBetPileWith(player) >= player.getStack().getValue()) {
-			throw new IllegalActionException(player.getMemento(),
+			throw new IllegalActionException(player.toString()+" can not call. "+
 					"Can not call a bet higher than your current amount of chips;"
 							+ " did you mean all-in??");
 		}
@@ -141,7 +143,7 @@ public abstract class BettingRound extends Round {
 		try {
 			player.transferAmountToBetPile(amountToIncreaseBetPileWith(player));
 		} catch (IllegalValueException e) {
-			throw new IllegalActionException(player.getMemento(), e
+			throw new IllegalActionException(player.getMemento().toString()+" can not call."+ e
 					.getMessage());
 		}
 
@@ -166,13 +168,13 @@ public abstract class BettingRound extends Round {
 
 		// Check whether the raise is valid.
 		if (!getBettingRules().isValidRaise(amount, this)) {
-			throw new IllegalActionException(player.getMemento(),
+			throw new IllegalActionException(player.toString()+" can not raise. "+
 					getBettingRules().getLastRaiseErrorMessage());
 		}
 
 		// Can not raise with zero, it is equal to call. Please use call.
 		if (amount == 0) {
-			throw new IllegalActionException(player.getMemento(),
+			throw new IllegalActionException(player.toString()+" can not raise. "+
 					"Can not raise with 0 chips. Did you mean call?");
 		}
 
@@ -181,7 +183,7 @@ public abstract class BettingRound extends Round {
 		// go all-in explicitly.
 		if ((amount + amountToIncreaseBetPileWith(player)) >= player.getStack()
 				.getValue()) {
-			throw new IllegalActionException(player.getMemento(),
+			throw new IllegalActionException(player.toString()+ "can not raise. "+
 					"Can not raise with an amount higher than your current amount of chips;"
 							+ " did you mean all-in??");
 		}
@@ -191,7 +193,7 @@ public abstract class BettingRound extends Round {
 			player.transferAmountToBetPile(amountToIncreaseBetPileWith(player)
 					+ amount);
 		} catch (IllegalValueException e) {
-			throw new IllegalActionException(player.getMemento(), e
+			throw new IllegalActionException(player.toString()+" can not raise."+ e
 					.getMessage());
 		}
 		raiseBetWith(amount);
@@ -253,9 +255,10 @@ public abstract class BettingRound extends Round {
 			setBet(player.getBetChips().getValue());
 			playerMadeEvent(player);
 			someoneBigAllIn = true;
-		}
+		}		
 		gameMediator.publishAllInEvent(new AllInEvent(player.getMemento(),
 				new Pots(getCurrentPotValue())));
+		
 		// TODO put amount of raise
 		BettingRound.logger
 				.info(player.getName() + ": raises to $"
@@ -533,7 +536,7 @@ public abstract class BettingRound extends Round {
 		savedWinner.add(new Winner(winner.getMemento(), gainedChipsValue));
 		pots.getPots().get(0).getChips().transferAllChipsTo(winner.getStack());
 
-		gameMediator.publishWinner(new WinnerEvent(savedWinner));
+		gameMediator.publishWinnerEvent(new WinnerEvent(savedWinner));
 	}
 
 	/**
