@@ -304,17 +304,23 @@ public class PlayingTableState extends TableState{
 		return new HoldemPlayerContextImpl(player, mediatingTable);
 	}
 
-	public synchronized void sitOut(GameSeatedPlayer player)
-			throws IllegalActionException {
+	public synchronized void sitOut(GameSeatedPlayer player){
 		if (!game.getTable().hasAsPlayer(player)) {
 			return;
 		}
 
-		round.foldAction(player);
+		try {
+			round.foldAction(player);
+		} catch (IllegalActionException e) {
+		}
 		SeatedPlayer immutablePlayer = player.getMemento();
-		game.sitOut(player);
-		mediatingTable.publishSitOutEvent(new SitOutEvent(
-				immutablePlayer, false));
+		try {
+			game.sitOut(player);
+			mediatingTable.publishSitOutEvent(new SitOutEvent(
+					immutablePlayer, false));
+		} catch (IllegalActionException e) {
+		}
+
 		if (game.hasNoSeatedPlayers()) {
 			// lobby.removeTable(table);
 		} else {
@@ -336,7 +342,7 @@ public class PlayingTableState extends TableState{
 	public boolean isPlaying() {
 		return true;
 	}
-
+	
 	/***************************************************************************
 	 * Round change logic
 	 **************************************************************************/
@@ -414,6 +420,11 @@ public class PlayingTableState extends TableState{
 				PlayingTableState.logger.error(e);
 			}
 		}
+	}
+
+	@Override
+	public TableState getNextState() {
+		return this;
 	}
 
 

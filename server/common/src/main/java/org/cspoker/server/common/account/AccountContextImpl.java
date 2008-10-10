@@ -56,4 +56,9 @@ public class AccountContextImpl implements ExtendedAccountContext{
 		return player;
 	}
 
+	public boolean hasPassword(String passwordHash) {
+		//TODO
+		return false;
+	}
+
 }

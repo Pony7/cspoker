@@ -27,6 +27,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
 import org.cspoker.common.api.lobby.holdemtable.context.HoldemTableContext;
+import org.cspoker.common.api.lobby.holdemtable.event.AllInEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.BetEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.BigBlindEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.CallEvent;
@@ -218,6 +219,7 @@ public class PokerTable {
 			throw new IllegalActionException("Only the creator of the table can start a game.");
 		if(tableState.isPlaying())
 			throw new IllegalActionException("The game has already started.");
+		tableState = tableState.getNextState();
 	}
 
 	/***************************************************************************
@@ -361,7 +363,7 @@ public class PokerTable {
 	}
 	
 	public void sitOut(GameSeatedPlayer player){
-		
+		tableState.sitOut(player);
 	}
 	
 	public boolean isPlaying(){
@@ -464,6 +466,19 @@ public class PokerTable {
 			listener.onBet(event);
 		}
 	}
+	
+	/**
+	 * Inform all subscribed winner listeners a winner event has occurred.
+	 * 
+	 * Each subscribed winner listener is updated by calling their
+	 * onWinnerEvent() method.
+	 * 
+	 */
+	public void publishAllInEvent(AllInEvent event) {
+		for (HoldemTableListener listener : holdemTableListeners) {
+			listener.onAllIn(event);
+		}
+	}
 
 
 	/**
@@ -547,7 +562,7 @@ public class PokerTable {
 	 * onNextPlayerEvent() method.
 	 * 
 	 */
-	public synchronized void publishNextPlayerEvent(NextPlayerEvent event) {
+	public void publishNextPlayerEvent(NextPlayerEvent event) {
 		cancelOldTimeOut();
 		submitTimeOutHandler(event.getPlayer());
 		for (HoldemTableListener listener : holdemTableListeners) {
@@ -563,7 +578,7 @@ public class PokerTable {
 	 * onWinnerEvent() method.
 	 * 
 	 */
-	public synchronized void publishWinnerEvent(WinnerEvent event) {
+	public void publishWinnerEvent(WinnerEvent event) {
 		for (HoldemTableListener listener : holdemTableListeners) {
 			listener.onWinner(event);
 		}
@@ -577,7 +592,7 @@ public class PokerTable {
 	 * onShowHandEvent() method.
 	 * 
 	 */
-	public synchronized void publishShowHandEvent(ShowHandEvent event) {
+	public void publishShowHandEvent(ShowHandEvent event) {
 		for (HoldemTableListener listener : holdemTableListeners) {
 			listener.onShowHand(event);
 		}
@@ -592,7 +607,7 @@ public class PokerTable {
 	 * onJoinTable() method.
 	 * 
 	 */
-	public synchronized void publishJoinTableEvent(JoinTableEvent event) {
+	public void publishJoinTableEvent(JoinTableEvent event) {
 		for (HoldemTableListener listener : holdemTableListeners) {
 			listener.onJoinTable(event);
 		}

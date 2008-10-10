@@ -18,11 +18,13 @@ package org.cspoker.common.api.lobby.holdemtable.listener;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
+import org.cspoker.common.api.lobby.holdemtable.event.AllInEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.BetEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.BigBlindEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.CallEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.CheckEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.FoldEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.JoinTableEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.LeaveTableEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.NewCommunityCardsEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.NewDealEvent;
@@ -37,6 +39,8 @@ import org.cspoker.common.api.lobby.holdemtable.event.WinnerEvent;
 import org.cspoker.common.api.shared.listener.EventListener;
 
 public interface RemoteHoldemTableListener extends EventListener, Remote{
+	
+	void onAllIn(AllInEvent allInEvent) throws RemoteException;
 
 	void onBet(BetEvent betEvent) throws RemoteException;
 
@@ -47,6 +51,8 @@ public interface RemoteHoldemTableListener extends EventListener, Remote{
 	void onCheck(CheckEvent checkEvent) throws RemoteException;
 
 	void onFold(FoldEvent foldEvent) throws RemoteException;
+	
+	void onJoinTable(JoinTableEvent joinTableEvent) throws RemoteException;
 
 	void onLeaveTable(LeaveTableEvent leaveGameEvent) throws RemoteException;
 
