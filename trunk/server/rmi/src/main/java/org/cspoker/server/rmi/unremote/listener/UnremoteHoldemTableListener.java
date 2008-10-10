@@ -4,7 +4,7 @@ import org.cspoker.common.api.lobby.holdemtable.event.BigBlindEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.CallEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.CheckEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.FoldEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.LeaveGameEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.LeaveTableEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.NewCommunityCardsEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.NewDealEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.NewRoundEvent;
@@ -78,7 +78,7 @@ public class UnremoteHoldemTableListener extends ForwardingListener<RemoteHoldem
 		}
 	}
 
-	public void onLeaveGame(LeaveGameEvent leaveGameEvent) {
+	public void onLeaveGame(LeaveTableEvent leaveGameEvent) {
 		try {
 			for (RemoteHoldemTableListener listener : listeners) {
 				listener.onLeaveGame(leaveGameEvent);

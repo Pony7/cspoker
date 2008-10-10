@@ -148,7 +148,7 @@ public class TestHTTP {
 
 				}
 
-				public void onPlayerLeftTableEvent(LeaveGameEvent event) {
+				public void onPlayerLeftTableEvent(LeaveTableEvent event) {
 					System.out.println(event.toString());
 
 				}

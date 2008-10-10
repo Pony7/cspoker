@@ -16,6 +16,7 @@
 
 package org.cspoker.server.common.gamecontrol.rounds;
 
+import org.cspoker.common.api.lobby.holdemtable.event.SitOutEvent;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.server.common.gamecontrol.Game;
 import org.cspoker.server.common.gamecontrol.PokerTable;
@@ -249,13 +250,12 @@ public abstract class Round {
 	}
 
 	protected void removeBrokePlayers() {
-		for (GameSeatedPlayer player : getGame().getTable().getPlayers()) {
+		for (GameSeatedPlayer player : getGame().getTable().getSeatedServerPlayers()) {
 			if (player.getStack().getValue() == 0) {
 				try {
-					getGame().leaveGame(player);
+					getGame().sitOut(player);
 					gameMediator
-							.publishBrokePlayerKickedOutEvent(new BrokePlayerKickedOutEvent(
-									player.getMemento()));
+							.publishSitOutEvent(new SitOutEvent(player.getMemento(), true));
 				} catch (IllegalActionException e) {
 					throw new IllegalStateException();
 				}

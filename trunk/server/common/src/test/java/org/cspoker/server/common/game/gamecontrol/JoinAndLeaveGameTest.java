@@ -18,11 +18,12 @@ package org.cspoker.server.common.game.gamecontrol;
 import junit.framework.TestCase;
 
 import org.cspoker.common.api.shared.exception.IllegalActionException;
-import org.cspoker.server.common.GameMediator;
 import org.cspoker.server.common.elements.chips.IllegalValueException;
-import org.cspoker.server.common.elements.table.GameTable;
+import org.cspoker.server.common.elements.id.TableId;
 import org.cspoker.server.common.elements.table.PlayerListFullException;
-import org.cspoker.server.common.gamecontrol.GameControl;
+import org.cspoker.server.common.gamecontrol.PlayingTableState;
+import org.cspoker.server.common.gamecontrol.PokerTable;
+import org.cspoker.server.common.gamecontrol.WaitingTableState;
 import org.cspoker.server.common.gamecontrol.rounds.PreFlopRound;
 import org.cspoker.server.common.gamecontrol.rounds.WaitingRound;
 import org.cspoker.server.common.player.GameSeatedPlayer;
@@ -73,10 +74,10 @@ public class JoinAndLeaveGameTest extends TestCase {
 
 		try {
 			assertEquals(PreFlopRound.class, gameControl.getRound().getClass());
-			gameControl.leaveGame(kenzo);
+			gameControl.sitOut(kenzo);
 			assertEquals(0, kenzo.getBetChips().getValue());
 			assertEquals(WaitingRound.class, gameControl.getRound().getClass());
-			gameControl.joinTable(null, kenzo);
+			gameControl.sitIn(null, kenzo);
 			assertEquals(PreFlopRound.class, gameControl.getRound().getClass());
 		} catch (IllegalActionException e) {
 			fail(e.getMessage());
@@ -105,10 +106,10 @@ public class JoinAndLeaveGameTest extends TestCase {
 
 		try {
 			assertEquals(PreFlopRound.class, gameControl.getRound().getClass());
-			gameControl.leaveGame(cedric);
+			gameControl.sitOut(cedric);
 			assertEquals(0, cedric.getBetChips().getValue());
 			assertEquals(WaitingRound.class, gameControl.getRound().getClass());
-			gameControl.joinTable(null, cedric);
+			gameControl.sitIn(null, cedric);
 			assertEquals(PreFlopRound.class, gameControl.getRound().getClass());
 		} catch (IllegalActionException e) {
 			fail(e.getMessage());
@@ -133,7 +134,7 @@ public class JoinAndLeaveGameTest extends TestCase {
 			assertEquals(PreFlopRound.class, gameControl.getRound().getClass());
 			assertEquals(kenzo, gameControl.getGame().getDealer());
 			assertEquals(cedric, gameControl.getGame().getNextDealer());
-			gameControl.leaveGame(kenzo);
+			gameControl.sitOut(kenzo);
 			assertEquals(cedric, gameControl.getGame().getDealer());
 			assertEquals(cedric, gameControl.getGame().getNextDealer());
 			assertFalse(gameControl.getGame().hasAsActivePlayer(kenzo));
@@ -142,7 +143,7 @@ public class JoinAndLeaveGameTest extends TestCase {
 			gameControl.fold(cedric);
 			assertEquals(cedric, gameControl.getGame().getDealer());
 			assertEquals(guy, gameControl.getGame().getNextDealer());
-			gameControl.joinTable(null, kenzo);
+			gameControl.sitIn(null, kenzo);
 			assertTrue(gameControl.getGame().getTable().hasAsPlayer(kenzo));
 			assertFalse(gameControl.getGame().hasAsActivePlayer(kenzo));
 			gameControl.fold(cedric);
@@ -173,7 +174,7 @@ public class JoinAndLeaveGameTest extends TestCase {
 			assertEquals(kenzo, gameControl.getGame().getDealer());
 			assertEquals(cedric, gameControl.getGame().getNextDealer());
 			assertEquals(PreFlopRound.class, gameControl.getRound().getClass());
-			gameControl.leaveGame(guy);
+			gameControl.sitOut(guy);
 			assertEquals(kenzo, gameControl.getGame().getDealer());
 			assertEquals(cedric, gameControl.getGame().getNextDealer());
 			assertFalse(gameControl.getGame().hasAsActivePlayer(guy));
@@ -182,7 +183,7 @@ public class JoinAndLeaveGameTest extends TestCase {
 			gameControl.fold(kenzo);
 			assertEquals(cedric, gameControl.getGame().getDealer());
 			assertEquals(kenzo, gameControl.getGame().getNextDealer());
-			gameControl.joinTable(null, guy);
+			gameControl.sitIn(null, guy);
 			assertTrue(gameControl.getGame().getTable().hasAsPlayer(guy));
 			assertFalse(gameControl.getGame().hasAsActivePlayer(guy));
 			gameControl.fold(cedric);
@@ -213,7 +214,7 @@ public class JoinAndLeaveGameTest extends TestCase {
 			assertEquals(kenzo, gameControl.getGame().getDealer());
 			assertEquals(cedric, gameControl.getGame().getNextDealer());
 			assertEquals(PreFlopRound.class, gameControl.getRound().getClass());
-			gameControl.leaveGame(cedric);
+			gameControl.sitOut(cedric);
 			assertEquals(kenzo, gameControl.getGame().getDealer());
 			assertEquals(guy, gameControl.getGame().getNextDealer());
 			assertFalse(gameControl.getGame().hasAsActivePlayer(cedric));
@@ -222,7 +223,7 @@ public class JoinAndLeaveGameTest extends TestCase {
 			gameControl.fold(kenzo);
 			assertEquals(guy, gameControl.getGame().getDealer());
 			assertEquals(kenzo, gameControl.getGame().getNextDealer());
-			gameControl.joinTable(null, cedric);
+			gameControl.sitIn(null, cedric);
 			assertTrue(gameControl.getGame().getTable().hasAsPlayer(cedric));
 			assertFalse(gameControl.getGame().hasAsActivePlayer(cedric));
 			gameControl.fold(guy);

@@ -20,17 +20,18 @@ import junit.framework.TestCase;
 
 import org.apache.log4j.Logger;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
-import org.cspoker.server.common.GameMediator;
 import org.cspoker.server.common.elements.chips.IllegalValueException;
+import org.cspoker.server.common.elements.id.TableId;
+import org.cspoker.server.common.elements.table.PlayerListFullException;
 import org.cspoker.server.common.gamecontrol.Game;
-import org.cspoker.server.common.gamecontrol.GameControl;
+import org.cspoker.server.common.gamecontrol.PlayingTableState;
+import org.cspoker.server.common.gamecontrol.PokerTable;
+import org.cspoker.server.common.gamecontrol.WaitingTableState;
 import org.cspoker.server.common.gamecontrol.rules.Limit;
 import org.cspoker.server.common.gamecontrol.rules.NoLimit;
 import org.cspoker.server.common.gamecontrol.rules.PotLimit;
 import org.cspoker.server.common.player.GameSeatedPlayer;
 import org.cspoker.server.common.player.PlayerFactory;
-import org.cspoker.server.common.gamecontrol.WaitingTableState;
-import org.cspoker.server.common.table.PlayerListFullException;
 
 public class BettingRulesTest extends TestCase {
 	private static Logger logger = Logger.getLogger(BettingRulesTest.class);

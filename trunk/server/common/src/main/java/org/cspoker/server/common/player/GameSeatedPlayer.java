@@ -24,6 +24,7 @@ import org.cspoker.common.elements.cards.Card;
 import org.cspoker.common.elements.player.SeatedPlayer;
 import org.cspoker.server.common.elements.chips.Chips;
 import org.cspoker.server.common.elements.chips.IllegalValueException;
+import org.cspoker.server.common.elements.id.PlayerId;
 import org.cspoker.server.common.elements.id.SeatId;
 
 /**
@@ -62,23 +63,6 @@ public class GameSeatedPlayer {
 	 * Constructor
 	 **************************************************************************/
 
-	/**
-	 * Construct a new player with given id, name and initial number of chips.
-	 * 
-	 * @throws IllegalValueException
-	 *             [must] The given initial value is not valid. |
-	 *             !isValidName(name)
-	 * 
-	 * @post The chips pile is effective and the value of chips is the same as
-	 *       the given initial value. |new.getBetChips()!=null &&
-	 *       new.getChips.getValue()==initialNbChips
-	 * @post The bet chips pile is effective and There are no chips on this
-	 *       pile. |new.getBetChips()!=null && new.getBetChips().getValue()==0
-	 */
-	GameSeatedPlayer(long id, String name, int initialNbChips)
-			throws IllegalValueException {
-		this(new ServerPlayer(id,name,2*initialNbChips), initialNbChips);
-	}
 	
 	public GameSeatedPlayer(ServerPlayer player, int buyIn) throws IllegalValueException {
 		this.player = player;
@@ -106,7 +90,7 @@ public class GameSeatedPlayer {
 	 * 
 	 * @return The id of this player.
 	 */
-	public long getId() {
+	public PlayerId getId() {
 		return player.getId();
 	}
 
@@ -180,7 +164,7 @@ public class GameSeatedPlayer {
 	}
 
 	public synchronized SeatedPlayer getMemento() {
-		return new SeatedPlayer(getId(), getSeatId().getId(), getName(), getStack()
+		return new SeatedPlayer(getId().getId(), getSeatId().getId(), getName(), getStack()
 				.getValue(), getBetChips().getValue());
 	}
 	

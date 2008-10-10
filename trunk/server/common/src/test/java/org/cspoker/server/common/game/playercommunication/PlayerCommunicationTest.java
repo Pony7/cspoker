@@ -44,6 +44,8 @@ import org.cspoker.common.api.lobby.holdemtable.holdemplayer.event.NewPocketCard
 import org.cspoker.common.api.shared.event.ServerEvent;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.util.Log4JPropertiesLoader;
+import org.cspoker.server.common.elements.id.PlayerId;
+import org.cspoker.server.common.elements.id.TableId;
 import org.cspoker.server.common.game.gamecontrol.TestPlayerFactory;
 import org.cspoker.server.common.player.GameSeatedPlayer;
 import org.cspoker.server.common.player.IllegalNameException;

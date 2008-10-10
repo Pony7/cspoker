@@ -17,9 +17,11 @@ package org.cspoker.server.common.game.elements.table;
 
 import junit.framework.TestCase;
 
-import org.cspoker.server.common.elements.table.GameTable;
+import org.cspoker.server.common.elements.id.SeatId;
+import org.cspoker.server.common.elements.id.TableId;
 import org.cspoker.server.common.elements.table.PlayerListFullException;
 import org.cspoker.server.common.elements.table.SeatTakenException;
+import org.cspoker.server.common.gamecontrol.WaitingTableState;
 import org.cspoker.server.common.player.GameSeatedPlayer;
 import org.cspoker.server.common.player.PlayerFactory;
 

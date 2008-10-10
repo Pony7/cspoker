@@ -22,7 +22,7 @@ import org.cspoker.common.api.lobby.holdemtable.event.BigBlindEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.CallEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.CheckEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.FoldEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.LeaveGameEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.LeaveTableEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.NewCommunityCardsEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.NewDealEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.NewRoundEvent;
@@ -82,7 +82,7 @@ public class AsynchronousHoldemTableListener implements HoldemTableListener{
 		});
 	}
 
-	public void onLeaveGame(final LeaveGameEvent leaveGameEvent) {
+	public void onLeaveGame(final LeaveTableEvent leaveGameEvent) {
 		executor.execute(new Runnable() {
 			public void run() {
 				holdemTableListener.onLeaveGame(leaveGameEvent);

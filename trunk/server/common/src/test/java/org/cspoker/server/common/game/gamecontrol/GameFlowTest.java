@@ -20,12 +20,14 @@ import junit.framework.TestCase;
 
 import org.apache.log4j.Logger;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
-import org.cspoker.server.common.GameMediator;
 import org.cspoker.server.common.elements.chips.IllegalValueException;
-import org.cspoker.server.common.elements.table.GameTable;
+import org.cspoker.server.common.elements.id.SeatId;
+import org.cspoker.server.common.elements.id.TableId;
 import org.cspoker.server.common.elements.table.PlayerListFullException;
 import org.cspoker.server.common.gamecontrol.Game;
-import org.cspoker.server.common.gamecontrol.GameControl;
+import org.cspoker.server.common.gamecontrol.PlayingTableState;
+import org.cspoker.server.common.gamecontrol.PokerTable;
+import org.cspoker.server.common.gamecontrol.WaitingTableState;
 import org.cspoker.server.common.gamecontrol.rounds.FinalRound;
 import org.cspoker.server.common.gamecontrol.rounds.FlopRound;
 import org.cspoker.server.common.gamecontrol.rounds.PreFlopRound;
@@ -503,7 +505,7 @@ public class GameFlowTest extends TestCase {
 				.createNewPlayer("test");
 
 		try {
-			gameControl.joinTable(new SeatId(4), testPlayer);
+			gameControl.sitIn(new SeatId(4), testPlayer);
 			assertFalse(gameControl.getRound() instanceof WaitingRound);
 		} catch (IllegalActionException e) {
 			fail(e.getMessage());

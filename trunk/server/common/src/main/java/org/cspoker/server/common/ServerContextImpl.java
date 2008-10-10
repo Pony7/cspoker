@@ -24,6 +24,8 @@ import org.cspoker.common.api.chat.listener.ChatListener;
 import org.cspoker.common.api.lobby.context.LobbyContext;
 import org.cspoker.common.api.lobby.listener.LobbyListener;
 import org.cspoker.common.api.shared.context.ServerContext;
+import org.cspoker.server.common.account.AccountContextImpl;
+import org.cspoker.server.common.account.ExtendedAccountContext;
 import org.cspoker.server.common.lobby.Lobby;
 
 public class ServerContextImpl implements ServerContext {

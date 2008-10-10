@@ -32,6 +32,7 @@ import org.cspoker.common.elements.player.Winner;
 import org.cspoker.server.common.elements.cards.hand.Hand;
 import org.cspoker.server.common.elements.chips.IllegalValueException;
 import org.cspoker.server.common.elements.chips.pot.GamePot;
+import org.cspoker.server.common.elements.id.PlayerId;
 import org.cspoker.server.common.player.GameSeatedPlayer;
 import org.cspoker.server.common.player.GameShowdownPlayer;
 import org.cspoker.server.common.player.GameWinner;
@@ -49,7 +50,7 @@ public class Showdown {
 	 */
 	private final Game game;
 
-	private final PokerTable gameMediator;
+	private final PokerTable table;
 
 	private final Map<PlayerId, GameWinner> winnersMap = new HashMap<PlayerId, GameWinner>();
 
@@ -64,7 +65,7 @@ public class Showdown {
 	 * @pre The pots must be closed. |game!=null && game.getPots().isClosed()
 	 */
 	public Showdown(PokerTable gameMediator, Game game) {
-		this.gameMediator = gameMediator;
+		this.table = gameMediator;
 		this.game = game;
 	}
 
@@ -95,7 +96,7 @@ public class Showdown {
 				.getPots().getPots().get(0));
 
 		for (GameShowdownPlayer player : showdownPlayers) {
-			gameMediator.publishShowHand(new ShowHandEvent(player
+			table.publishShowHandEvent(new ShowHandEvent(player
 					.getSavedShowdownPlayer()));
 		}
 
@@ -113,7 +114,7 @@ public class Showdown {
 				winner.transferGainedChipsToPlayer();
 			}
 		}
-		gameMediator.publishWinner(new WinnerEvent(savedWinners));
+		table.publishWinnerEvent(new WinnerEvent(savedWinners));
 
 	}
 

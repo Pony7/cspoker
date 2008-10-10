@@ -23,20 +23,23 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
-import org.cspoker.common.api.lobby.event.TableRemovedEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.BetEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.CallEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.CheckEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.FoldEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.NextPlayerEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.RaiseEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.SitInEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.SitOutEvent;
+import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.HoldemPlayerContext;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.player.SeatedPlayer;
 import org.cspoker.common.elements.pots.Pots;
+import org.cspoker.server.common.HoldemPlayerContextImpl;
 import org.cspoker.server.common.elements.id.SeatId;
-import org.cspoker.server.common.elements.id.TableId;
 import org.cspoker.server.common.elements.table.PlayerListFullException;
 import org.cspoker.server.common.elements.table.SeatTakenException;
+import org.cspoker.server.common.elements.table.ServerTable;
 import org.cspoker.server.common.gamecontrol.rounds.BettingRound;
 import org.cspoker.server.common.gamecontrol.rounds.Round;
 import org.cspoker.server.common.gamecontrol.rounds.WaitingRound;
@@ -53,6 +56,7 @@ import org.cspoker.server.common.util.threading.ScheduledRequestExecutor;
  * 
  */
 public class PlayingTableState extends TableState{
+	
 	private static Logger logger = Logger.getLogger(PlayingTableState.class);
 
 	/***************************************************************************
@@ -70,8 +74,6 @@ public class PlayingTableState extends TableState{
 	 */
 	private Round round;
 
-	private final PokerTable gameMediator;
-
 	private static final DateFormat dateFormat = new SimpleDateFormat(
 			"yyyy/MM/dd - HH:mm:ss (z)");
 
@@ -83,30 +85,29 @@ public class PlayingTableState extends TableState{
 	 * Construct a new game control with given table.
 	 * 
 	 */
-	public PlayingTableState(PokerTable gameMediator, WaitingTableState table) {
+	public PlayingTableState(PokerTable gameMediator, ServerTable table) {
 		this(gameMediator, table, table.getRandomPlayer());
 	}
 
-	public PlayingTableState(PokerTable gameMediator, WaitingTableState table,
+	public PlayingTableState(PokerTable gameMediator, ServerTable table,
 			BettingRules rules) {
 		this(gameMediator, table, table.getRandomPlayer(), rules);
 	}
 
-	public PlayingTableState(PokerTable gameMediator, WaitingTableState table,
+	public PlayingTableState(PokerTable gameMediator, ServerTable table,
 			GameSeatedPlayer dealer) {
 		this(gameMediator, table, dealer, new NoLimit());
 	}
 
-	public PlayingTableState(PokerTable gameMediator, WaitingTableState table,
+	public PlayingTableState(PokerTable gameMediator, ServerTable table,
 			GameSeatedPlayer dealer, BettingRules rules) {
-		this.gameMediator = gameMediator;
-		gameMediator.setGameControl(this);
+		super(gameMediator);
 
-		game = new Game(table, dealer, rules);
+		game = new Game(table, gameMediator.getTableConfiguration(), dealer, rules);
 
 		PlayingTableState.logger.info(getGame().getBettingRules().toString() + " "
-				+ "($" + table.getTableConfiguration().getSmallBlind() + "/"
-				+ table.getTableConfiguration().getBigBlind() + ") - "
+				+ "($" + gameMediator.getTableConfiguration().getSmallBlind() + "/"
+				+ gameMediator.getTableConfiguration().getBigBlind() + ") - "
 				+ PlayingTableState.dateFormat.format(new Date()));
 
 		List<GameSeatedPlayer> players = game.getCurrentDealPlayers();
@@ -154,7 +155,7 @@ public class PlayingTableState extends TableState{
 	public synchronized void bet(GameSeatedPlayer player, int amount)
 			throws IllegalActionException {
 		round.bet(player, amount);
-		gameMediator.publishBetEvent(new BetEvent(player.getMemento(),
+		mediatingTable.publishBetEvent(new BetEvent(player.getMemento(),
 				amount, new Pots(round.getCurrentPotValue())));
 		PlayingTableState.logger.info(player.getName() + " bets " + amount + ".");
 		checkIfEndedAndChangeRound();
@@ -174,7 +175,7 @@ public class PlayingTableState extends TableState{
 	public synchronized void call(GameSeatedPlayer player)
 			throws IllegalActionException {
 		round.call(player);
-		gameMediator.publishCallEvent(new CallEvent(player.getMemento(),
+		mediatingTable.publishCallEvent(new CallEvent(player.getMemento(),
 				new Pots(round.getCurrentPotValue())));
 		PlayingTableState.logger.info(player.getName() + " calls.");
 		checkIfEndedAndChangeRound();
@@ -194,7 +195,7 @@ public class PlayingTableState extends TableState{
 	public synchronized void check(GameSeatedPlayer player)
 			throws IllegalActionException {
 		round.check(player);
-		gameMediator.publishCheckEvent(new CheckEvent(player.getMemento()));
+		mediatingTable.publishCheckEvent(new CheckEvent(player.getMemento()));
 		PlayingTableState.logger.info(player.getName() + " checks.");
 		checkIfEndedAndChangeRound();
 	}
@@ -214,7 +215,7 @@ public class PlayingTableState extends TableState{
 	public synchronized void raise(GameSeatedPlayer player, int amount)
 			throws IllegalActionException {
 		round.raise(player, amount);
-		gameMediator.publishRaiseEvent(new RaiseEvent(player.getMemento(),
+		mediatingTable.publishRaiseEvent(new RaiseEvent(player.getMemento(),
 				amount, new Pots(round.getCurrentPotValue())));
 		PlayingTableState.logger.info(player.getName() + ": raises $" + amount
 				+ " to $" + player.getMemento().getBetChipsValue());
@@ -237,7 +238,7 @@ public class PlayingTableState extends TableState{
 	public synchronized void fold(GameSeatedPlayer player)
 			throws IllegalActionException {
 		round.fold(player);
-		gameMediator.publishFoldEvent(new FoldEvent(player.getMemento()));
+		mediatingTable.publishFoldEvent(new FoldEvent(player.getMemento()));
 		PlayingTableState.logger.info(player.getName() + ": folds");
 		checkIfEndedAndChangeRound();
 	}
@@ -275,17 +276,17 @@ public class PlayingTableState extends TableState{
 		checkIfEndedAndChangeRound();
 	}
 
-	public synchronized void joinGame(SeatId seatId, GameSeatedPlayer player)
+	public synchronized HoldemPlayerContext sitIn(SeatId seatId, GameSeatedPlayer player)
 			throws IllegalActionException {
 		try {
-			game.joinGame(seatId, player);
+			game.sitIn(seatId, player);
 		} catch (SeatTakenException e) {
 			throw new IllegalActionException(e.getMessage());
 		} catch (PlayerListFullException e) {
 			throw new IllegalActionException(e.getMessage());
 		}
 
-		gameMediator.publishPlayerJoinedTable(new PlayerJoinedTableEvent(player
+		mediatingTable.publishSitInEvent(new SitInEvent(player
 				.getMemento()));
 
 		// auto-deal
@@ -295,13 +296,15 @@ public class PlayingTableState extends TableState{
 				deal(game.getDealer());
 			}
 		} catch (IllegalActionException e) {
-			game.leaveGame(player);
-			gameMediator.publishPlayerLeftTable(new PlayerLeftTableEvent(player
-					.getMemento()));
+			game.sitOut(player);
+			mediatingTable.publishSitOutEvent(new SitOutEvent(player.
+					getMemento(), false));
 		}
+		
+		return new HoldemPlayerContextImpl(player, mediatingTable);
 	}
 
-	public synchronized void leaveGame(GameSeatedPlayer player)
+	public synchronized void sitOut(GameSeatedPlayer player)
 			throws IllegalActionException {
 		if (!game.getTable().hasAsPlayer(player)) {
 			return;
@@ -309,23 +312,29 @@ public class PlayingTableState extends TableState{
 
 		round.foldAction(player);
 		SeatedPlayer immutablePlayer = player.getMemento();
-		game.leaveGame(player);
-		gameMediator.publishPlayerLeftTable(new PlayerLeftTableEvent(
-				immutablePlayer));
+		game.sitOut(player);
+		mediatingTable.publishSitOutEvent(new SitOutEvent(
+				immutablePlayer, false));
 		if (game.hasNoSeatedPlayers()) {
-			removeTable();
+			// lobby.removeTable(table);
 		} else {
 			checkIfEndedAndChangeRound();
 		}
 	}
+	
+	@Override
+	public List<SeatedPlayer> getSeatedPlayers() {
+		return game.getTable().getSeatedPlayers();
+	}
 
-	private void removeTable() {
-		TableId id = game.getTable().getId();
-		TableManager.global_table_manager.removeTable(id);
-		GameManager.removeGame(id);
-		logger.info("Table with id [" + id.toString() + "] removed.");
-		GameManager.getServerMediator().publishTableRemovedEvent(
-				new TableRemovedEvent(id));
+	@Override
+	public List<GameSeatedPlayer> getSeatedServerPlayers() {
+		return game.getTable().getSeatedServerPlayers();
+	}
+
+	@Override
+	public boolean isPlaying() {
+		return true;
 	}
 
 	/***************************************************************************
@@ -342,7 +351,7 @@ public class PlayingTableState extends TableState{
 		} else {
 			GameSeatedPlayer player = game.getCurrentPlayer();
 			if (player != null) {
-				gameMediator.publishNextPlayerEvent(new NextPlayerEvent(player
+				mediatingTable.publishNextPlayerEvent(new NextPlayerEvent(player
 						.getMemento()));
 			}
 		}
@@ -406,4 +415,6 @@ public class PlayingTableState extends TableState{
 			}
 		}
 	}
+
+
 }
