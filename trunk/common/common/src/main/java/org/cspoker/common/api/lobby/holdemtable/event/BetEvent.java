@@ -24,9 +24,6 @@ import org.cspoker.common.elements.pots.Pots;
 
 /**
  * A class to represent bet events.
- * 
- * @author Kenzo
- * 
  */
 @XmlRootElement
 public class BetEvent extends HoldemTableEvent {

@@ -15,6 +15,7 @@
  */
 package org.cspoker.common.api.lobby.holdemtable.listener;
 
+import org.cspoker.common.api.lobby.holdemtable.event.AllInEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.BetEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.BigBlindEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.CallEvent;
@@ -35,6 +36,8 @@ import org.cspoker.common.api.lobby.holdemtable.event.WinnerEvent;
 
 
 public interface HoldemTableListener extends RemoteHoldemTableListener {
+	
+	void onAllIn(AllInEvent allInEvent);
 
 	void onBet(BetEvent betEvent);
 

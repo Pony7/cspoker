@@ -122,9 +122,12 @@ public class WaitingTableState extends TableState{
 	}
 
 	@Override
-	public void sitOut(GameSeatedPlayer player)
-			throws IllegalActionException {
+	public void sitOut(GameSeatedPlayer player) {
 		serverTable.removePlayer(player);
-		
+	}
+
+	@Override
+	public TableState getNextState() {
+		return new PlayingTableState(mediatingTable, serverTable);
 	}
 }

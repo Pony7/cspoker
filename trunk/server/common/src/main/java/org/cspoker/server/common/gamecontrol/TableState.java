@@ -54,9 +54,7 @@ public abstract class TableState {
 	public abstract HoldemPlayerContext sitIn(SeatId seatId, GameSeatedPlayer player)
 			throws IllegalActionException;
 
-	public abstract void sitOut(GameSeatedPlayer player)
-			throws IllegalActionException;
-
+	public abstract void sitOut(GameSeatedPlayer player);
 	
 	public abstract List<SeatedPlayer> getSeatedPlayers();
 	
@@ -70,7 +68,8 @@ public abstract class TableState {
 	public abstract boolean isPlaying();
 
 	public Game getGame() {
-		// TODO Auto-generated method stub
 		return null;
 	}
+
+	public abstract TableState getNextState();
 }

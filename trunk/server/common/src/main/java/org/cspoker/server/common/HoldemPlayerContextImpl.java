@@ -21,7 +21,6 @@ public class HoldemPlayerContextImpl implements HoldemPlayerContext {
 			table.bet(player, amount);
 		} catch (IllegalActionException e) {
 			table.raise(player, amount);
-			//TODO semantic change of amount.
 		}
 
 	}
