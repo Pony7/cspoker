@@ -18,6 +18,7 @@ package org.cspoker.common.api.lobby.holdemtable.holdemplayer.action;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.HoldemPlayerContext;
+import org.cspoker.common.api.shared.exception.IllegalActionException;
 
 @XmlRootElement
 public class FoldAction extends HoldemPlayerAction<Void> {
@@ -33,7 +34,7 @@ public class FoldAction extends HoldemPlayerAction<Void> {
 	}
 	
 	@Override
-	public Void perform(HoldemPlayerContext holdemPlayerContext) {
+	public Void perform(HoldemPlayerContext holdemPlayerContext) throws IllegalActionException {
 		holdemPlayerContext.fold();
 		return null;
 	}

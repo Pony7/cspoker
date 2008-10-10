@@ -21,6 +21,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import org.cspoker.common.api.lobby.holdemtable.action.HoldemTableAction;
 import org.cspoker.common.api.lobby.holdemtable.context.StaticHoldemTableContext;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.HoldemPlayerContext;
+import org.cspoker.common.api.shared.exception.IllegalActionException;
 
 
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -36,9 +37,9 @@ public abstract class HoldemPlayerAction<T> extends HoldemTableAction<T> {
 		// no op
 	}
 
-	public T perform(StaticHoldemTableContext holdemTableContext){
+	public T perform(StaticHoldemTableContext holdemTableContext) throws IllegalActionException{
 		return perform(holdemTableContext.getHoldemPlayerContext());
 	}
 
-	public abstract T perform(HoldemPlayerContext holdemPlayerContext);
+	public abstract T perform(HoldemPlayerContext holdemPlayerContext) throws IllegalActionException;
 }

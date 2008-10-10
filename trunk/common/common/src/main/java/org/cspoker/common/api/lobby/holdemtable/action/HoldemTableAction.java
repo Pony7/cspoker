@@ -21,6 +21,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import org.cspoker.common.api.lobby.action.LobbyAction;
 import org.cspoker.common.api.lobby.context.StaticLobbyContext;
 import org.cspoker.common.api.lobby.holdemtable.context.StaticHoldemTableContext;
+import org.cspoker.common.api.shared.exception.IllegalActionException;
 
 
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -40,11 +41,11 @@ public abstract class HoldemTableAction<T> extends LobbyAction<T> {
 	}
 
 	@Override
-	public T perform(StaticLobbyContext lobbyContext) {
+	public T perform(StaticLobbyContext lobbyContext) throws IllegalActionException {
 		return perform(lobbyContext.getHoldemTableContext(tableId));
 	}
 
-	public abstract T perform(StaticHoldemTableContext holdemTableContext);
+	public abstract T perform(StaticHoldemTableContext holdemTableContext) throws IllegalActionException;
 	
 	public long getTableId() {
 		return tableId;

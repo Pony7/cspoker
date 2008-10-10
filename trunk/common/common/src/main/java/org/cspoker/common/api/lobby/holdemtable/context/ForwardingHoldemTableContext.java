@@ -17,6 +17,7 @@ package org.cspoker.common.api.lobby.holdemtable.context;
 
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.HoldemPlayerContext;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.listener.HoldemPlayerListener;
+import org.cspoker.common.api.shared.exception.IllegalActionException;
 
 public class ForwardingHoldemTableContext implements HoldemTableContext{
 
@@ -30,8 +31,10 @@ public class ForwardingHoldemTableContext implements HoldemTableContext{
 		holdemTableContext.leaveTable();
 	}
 
-	public HoldemPlayerContext sitIn(long seatId, HoldemPlayerListener holdemPlayerListener) {
-		return holdemTableContext.sitIn(seatId, holdemPlayerListener);
+	public HoldemPlayerContext sitIn(long seatId, int buyIn,
+			HoldemPlayerListener holdemPlayerListener)
+			throws IllegalActionException {
+		return holdemTableContext.sitIn(seatId, buyIn, holdemPlayerListener);
 	}
 	
 }

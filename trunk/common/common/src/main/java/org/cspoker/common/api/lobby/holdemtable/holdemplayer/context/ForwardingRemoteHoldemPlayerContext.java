@@ -17,6 +17,8 @@ package org.cspoker.common.api.lobby.holdemtable.holdemplayer.context;
 
 import java.rmi.RemoteException;
 
+import org.cspoker.common.api.shared.exception.IllegalActionException;
+
 public class ForwardingRemoteHoldemPlayerContext implements RemoteHoldemPlayerContext{
 
 	private final RemoteHoldemPlayerContext holdemPlayerContext;
@@ -25,15 +27,15 @@ public class ForwardingRemoteHoldemPlayerContext implements RemoteHoldemPlayerCo
 		this.holdemPlayerContext  = holdemPlayerContext;
 	}
 
-	public void betOrRaise(int amount) throws RemoteException {
+	public void betOrRaise(int amount) throws RemoteException, IllegalActionException {
 		holdemPlayerContext.betOrRaise(amount);
 	}
 
-	public void checkOrCall() throws RemoteException {
+	public void checkOrCall() throws RemoteException, IllegalActionException {
 		holdemPlayerContext.checkOrCall();
 	}
 
-	public void fold() throws RemoteException {
+	public void fold() throws RemoteException, IllegalActionException {
 		holdemPlayerContext.fold();
 	}
 

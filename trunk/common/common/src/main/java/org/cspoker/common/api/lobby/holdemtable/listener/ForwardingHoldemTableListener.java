@@ -17,11 +17,13 @@ package org.cspoker.common.api.lobby.holdemtable.listener;
 
 import java.util.List;
 
+import org.cspoker.common.api.lobby.holdemtable.event.AllInEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.BetEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.BigBlindEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.CallEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.CheckEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.FoldEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.JoinTableEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.LeaveTableEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.NewCommunityCardsEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.NewDealEvent;
@@ -30,6 +32,7 @@ import org.cspoker.common.api.lobby.holdemtable.event.NextPlayerEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.RaiseEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.ShowHandEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.SitInEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.SitOutEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.SmallBlindEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.WinnerEvent;
 import org.cspoker.common.api.shared.listener.ForwardingListener;
@@ -71,12 +74,6 @@ public class ForwardingHoldemTableListener extends ForwardingListener<HoldemTabl
 	public void onFold(FoldEvent foldEvent) {
 		for(HoldemTableListener listener:listeners){
 			listener.onFold(foldEvent);
-		}
-	}
-
-	public void onLeaveGame(LeaveTableEvent leaveGameEvent) {
-		for(HoldemTableListener listener:listeners){
-			listener.onLeaveGame(leaveGameEvent);
 		}
 	}
 
@@ -132,6 +129,30 @@ public class ForwardingHoldemTableListener extends ForwardingListener<HoldemTabl
 	public void onWinner(WinnerEvent winnerEvent) {
 		for(HoldemTableListener listener:listeners){
 			listener.onWinner(winnerEvent);
+		}
+	}
+
+	public void onAllIn(AllInEvent allInEvent) {
+		for(HoldemTableListener listener:listeners){
+			listener.onAllIn(allInEvent);
+		}
+	}
+
+	public void onJoinTable(JoinTableEvent joinTableEvent) {
+		for(HoldemTableListener listener:listeners){
+			listener.onJoinTable(joinTableEvent);
+		}
+	}
+
+	public void onLeaveTable(LeaveTableEvent leaveGameEvent) {
+		for(HoldemTableListener listener:listeners){
+			listener.onLeaveTable(leaveGameEvent);
+		}
+	}
+
+	public void onSitOut(SitOutEvent sitOut) {
+		for(HoldemTableListener listener:listeners){
+			listener.onSitOut(sitOut);
 		}
 	}
 	

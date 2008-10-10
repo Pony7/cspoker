@@ -15,7 +15,7 @@
  */
 package org.cspoker.common.api.lobby.holdemtable.holdemplayer.context;
 
-import org.cspoker.common.api.lobby.holdemtable.holdemplayer.listener.ForwardingHoldemPlayerListener;
+import org.cspoker.common.api.shared.exception.IllegalActionException;
 
 public class ForwardingHoldemPlayerContext implements HoldemPlayerContext{
 
@@ -25,15 +25,15 @@ public class ForwardingHoldemPlayerContext implements HoldemPlayerContext{
 		this.holdemPlayerContext  = holdemPlayerContext;
 	}
 
-	public void betOrRaise(int amount) {
+	public void betOrRaise(int amount) throws IllegalActionException {
 		holdemPlayerContext.betOrRaise(amount);
 	}
 
-	public void checkOrCall() {
+	public void checkOrCall() throws IllegalActionException {
 		holdemPlayerContext.checkOrCall();
 	}
 
-	public void fold() {
+	public void fold() throws IllegalActionException {
 		holdemPlayerContext.fold();
 	}
 

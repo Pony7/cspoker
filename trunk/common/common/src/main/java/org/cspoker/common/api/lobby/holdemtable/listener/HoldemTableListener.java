@@ -67,7 +67,7 @@ public interface HoldemTableListener extends RemoteHoldemTableListener {
 
 	void onSitIn(SitInEvent sitInEvent);
 	
-	void onSitOut(SitOutEvent sitOut);
+	void onSitOut(SitOutEvent sitOutEvent);
 
 	void onSmallBlind(SmallBlindEvent smallBlindEvent);
 

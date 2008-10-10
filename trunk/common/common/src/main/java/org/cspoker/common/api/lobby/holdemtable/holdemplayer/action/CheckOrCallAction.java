@@ -20,6 +20,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.HoldemPlayerContext;
+import org.cspoker.common.api.shared.exception.IllegalActionException;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -36,7 +37,7 @@ public class CheckOrCallAction extends HoldemPlayerAction<Void> {
 	}
 	
 	@Override
-	public Void perform(HoldemPlayerContext holdemPlayerContext) {
+	public Void perform(HoldemPlayerContext holdemPlayerContext) throws IllegalActionException {
 		holdemPlayerContext.checkOrCall();
 		return null;
 	}

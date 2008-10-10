@@ -17,11 +17,13 @@ package org.cspoker.common.api.lobby.holdemtable.listener;
 
 import java.util.concurrent.Executor;
 
+import org.cspoker.common.api.lobby.holdemtable.event.AllInEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.BetEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.BigBlindEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.CallEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.CheckEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.FoldEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.JoinTableEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.LeaveTableEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.NewCommunityCardsEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.NewDealEvent;
@@ -30,6 +32,7 @@ import org.cspoker.common.api.lobby.holdemtable.event.NextPlayerEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.RaiseEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.ShowHandEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.SitInEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.SitOutEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.SmallBlindEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.WinnerEvent;
 
@@ -78,14 +81,6 @@ public class AsynchronousHoldemTableListener implements HoldemTableListener{
 		executor.execute(new Runnable() {
 			public void run() {
 				holdemTableListener.onFold(foldEvent);
-			}
-		});
-	}
-
-	public void onLeaveGame(final LeaveTableEvent leaveGameEvent) {
-		executor.execute(new Runnable() {
-			public void run() {
-				holdemTableListener.onLeaveGame(leaveGameEvent);
 			}
 		});
 	}
@@ -159,6 +154,38 @@ public class AsynchronousHoldemTableListener implements HoldemTableListener{
 		executor.execute(new Runnable() {
 			public void run() {
 				holdemTableListener.onWinner(winnerEvent);
+			}
+		});
+	}
+
+	public void onAllIn(final AllInEvent allInEvent) {
+		executor.execute(new Runnable() {
+			public void run() {
+				holdemTableListener.onAllIn(allInEvent);
+			}
+		});
+	}
+
+	public void onJoinTable(final JoinTableEvent joinTableEvent) {
+		executor.execute(new Runnable() {
+			public void run() {
+				holdemTableListener.onJoinTable(joinTableEvent);
+			}
+		});
+	}
+
+	public void onLeaveTable(final LeaveTableEvent leaveGameEvent) {
+		executor.execute(new Runnable() {
+			public void run() {
+				holdemTableListener.onLeaveTable(leaveGameEvent);
+			}
+		});
+	}
+
+	public void onSitOut(final SitOutEvent sitOut) {
+		executor.execute(new Runnable() {
+			public void run() {
+				holdemTableListener.onSitOut(sitOut);
 			}
 		});
 	}
