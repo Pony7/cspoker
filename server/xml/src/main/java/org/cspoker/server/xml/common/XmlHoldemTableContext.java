@@ -20,6 +20,7 @@ import org.cspoker.common.api.lobby.holdemtable.context.HoldemTableContext;
 import org.cspoker.common.api.lobby.holdemtable.context.StaticHoldemTableContext;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.HoldemPlayerContext;
 import org.cspoker.common.api.lobby.holdemtable.listener.UniversalTableListener;
+import org.cspoker.common.api.shared.exception.IllegalActionException;
 
 public class XmlHoldemTableContext extends ForwardingHoldemTableContext
 implements StaticHoldemTableContext {
@@ -36,8 +37,8 @@ implements StaticHoldemTableContext {
 		return context;
 	}
 
-	public synchronized void sitIn(long seatId) {
-		this.context = super.sitIn(seatId, tableListener);
+	public synchronized void sitIn(long seatId, int buyIn) throws IllegalActionException {
+		this.context = super.sitIn(seatId, buyIn, tableListener);
 	}
 
 }

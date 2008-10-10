@@ -1,9 +1,11 @@
 package org.cspoker.server.rmi.unremote.listener;
+import org.cspoker.common.api.lobby.holdemtable.event.AllInEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.BetEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.BigBlindEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.CallEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.CheckEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.FoldEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.JoinTableEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.LeaveTableEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.NewCommunityCardsEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.NewDealEvent;
@@ -12,6 +14,7 @@ import org.cspoker.common.api.lobby.holdemtable.event.NextPlayerEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.RaiseEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.ShowHandEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.SitInEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.SitOutEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.SmallBlindEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.WinnerEvent;
 import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
@@ -72,16 +75,6 @@ public class UnremoteHoldemTableListener extends ForwardingListener<RemoteHoldem
 		try {
 			for (RemoteHoldemTableListener listener : listeners) {
 				listener.onFold(foldEvent);
-			}
-		} catch (Exception exception) {
-			connection.kill();
-		}
-	}
-
-	public void onLeaveGame(LeaveTableEvent leaveGameEvent) {
-		try {
-			for (RemoteHoldemTableListener listener : listeners) {
-				listener.onLeaveGame(leaveGameEvent);
 			}
 		} catch (Exception exception) {
 			connection.kill();
@@ -173,6 +166,46 @@ public class UnremoteHoldemTableListener extends ForwardingListener<RemoteHoldem
 		try {
 			for (RemoteHoldemTableListener listener : listeners) {
 				listener.onWinner(winnerEvent);
+			}
+		} catch (Exception exception) {
+			connection.kill();
+		}
+	}
+
+	public void onAllIn(AllInEvent allInEvent) {
+		try {
+			for (RemoteHoldemTableListener listener : listeners) {
+				listener.onAllIn(allInEvent);
+			}
+		} catch (Exception exception) {
+			connection.kill();
+		}
+	}
+
+	public void onJoinTable(JoinTableEvent joinTableEvent) {
+		try {
+			for (RemoteHoldemTableListener listener : listeners) {
+				listener.onJoinTable(joinTableEvent);
+			}
+		} catch (Exception exception) {
+			connection.kill();
+		}
+	}
+
+	public void onLeaveTable(LeaveTableEvent leaveGameEvent) {
+		try {
+			for (RemoteHoldemTableListener listener : listeners) {
+				listener.onLeaveTable(leaveGameEvent);
+			}
+		} catch (Exception exception) {
+			connection.kill();
+		}
+	}
+
+	public void onSitOut(SitOutEvent sitOutEvent) {
+		try {
+			for (RemoteHoldemTableListener listener : listeners) {
+				listener.onSitOut(sitOutEvent);
 			}
 		} catch (Exception exception) {
 			connection.kill();

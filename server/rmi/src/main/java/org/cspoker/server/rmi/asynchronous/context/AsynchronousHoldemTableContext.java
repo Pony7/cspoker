@@ -22,6 +22,7 @@ import org.cspoker.common.api.lobby.holdemtable.context.HoldemTableContext;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.HoldemPlayerContext;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.listener.AsynchronousHoldemPlayerListener;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.listener.HoldemPlayerListener;
+import org.cspoker.common.api.shared.exception.IllegalActionException;
 
 public class AsynchronousHoldemTableContext extends ForwardingHoldemTableContext {
 
@@ -33,7 +34,7 @@ public class AsynchronousHoldemTableContext extends ForwardingHoldemTableContext
 	}
 	
 	@Override
-	public HoldemPlayerContext sitIn(long seatId, HoldemPlayerListener holdemPlayerListener) {
-		return super.sitIn(seatId, new AsynchronousHoldemPlayerListener(executor,holdemPlayerListener));
+	public HoldemPlayerContext sitIn(long seatId, int amount, HoldemPlayerListener holdemPlayerListener) throws IllegalActionException {
+		return super.sitIn(seatId, amount, new AsynchronousHoldemPlayerListener(executor,holdemPlayerListener));
 	}
 }

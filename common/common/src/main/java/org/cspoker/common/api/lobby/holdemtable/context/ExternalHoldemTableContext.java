@@ -17,10 +17,11 @@ package org.cspoker.common.api.lobby.holdemtable.context;
 
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.HoldemPlayerContext;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.listener.RemoteHoldemPlayerListener;
+import org.cspoker.common.api.shared.exception.IllegalActionException;
 
 public interface ExternalHoldemTableContext extends HoldemTableContext {
 
-	public HoldemPlayerContext sitIn(long seatId,
-			RemoteHoldemPlayerListener holdemPlayerListener);
+	public HoldemPlayerContext sitIn(long seatId, int buyIn,
+			RemoteHoldemPlayerListener holdemPlayerListener) throws IllegalActionException;
 	
 }
