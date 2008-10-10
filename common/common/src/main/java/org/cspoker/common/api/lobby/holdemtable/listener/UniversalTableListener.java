@@ -15,12 +15,14 @@
  */
 package org.cspoker.common.api.lobby.holdemtable.listener;
 
+import org.cspoker.common.api.lobby.holdemtable.event.AllInEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.BetEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.BigBlindEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.CallEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.CheckEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.FoldEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.HoldemTableTreeEvents;
+import org.cspoker.common.api.lobby.holdemtable.event.JoinTableEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.LeaveTableEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.NewCommunityCardsEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.NewDealEvent;
@@ -29,6 +31,7 @@ import org.cspoker.common.api.lobby.holdemtable.event.NextPlayerEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.RaiseEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.ShowHandEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.SitInEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.SitOutEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.SmallBlindEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.WinnerEvent;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.event.NewPocketCardsEvent;
@@ -113,6 +116,22 @@ public class UniversalTableListener implements ServerEventListener, HoldemPlayer
 
 	public void onWinner(WinnerEvent winnerEvent) {
 		onEvent(new HoldemTableTreeEvents(tableId, winnerEvent));
+	}
+
+	public void onAllIn(AllInEvent allInEvent) {
+		onEvent(new HoldemTableTreeEvents(tableId, allInEvent));
+	}
+
+	public void onJoinTable(JoinTableEvent joinTableEvent) {
+		onEvent(new HoldemTableTreeEvents(tableId, joinTableEvent));
+	}
+
+	public void onLeaveTable(LeaveTableEvent leaveGameEvent) {
+		onEvent(new HoldemTableTreeEvents(tableId, leaveGameEvent));
+	}
+
+	public void onSitOut(SitOutEvent sitOutEvent) {
+		onEvent(new HoldemTableTreeEvents(tableId, sitOutEvent));
 	}
 	
 }
