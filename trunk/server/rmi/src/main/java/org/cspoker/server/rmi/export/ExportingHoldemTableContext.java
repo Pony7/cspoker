@@ -23,12 +23,13 @@ import org.cspoker.common.api.lobby.holdemtable.context.RemoteHoldemTableContext
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.RemoteHoldemPlayerContext;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.listener.HoldemPlayerListener;
 import org.cspoker.common.api.shared.Killable;
-import org.cspoker.common.util.lazy.IFactory1;
-import org.cspoker.common.util.lazy.LazyReference1;
+import org.cspoker.common.api.shared.exception.IllegalActionException;
+import org.cspoker.common.util.lazy.IFactory2;
+import org.cspoker.common.util.lazy.LazyReference2;
 
 public class ExportingHoldemTableContext extends ForwardingRemoteHoldemTableContext {
 	
-	private LazyReference1<RemoteHoldemPlayerContext,RemoteException> playerContext = new LazyReference1<RemoteHoldemPlayerContext,RemoteException>();
+	private LazyReference2<RemoteHoldemPlayerContext, IllegalActionException,RemoteException> playerContext = new LazyReference2<RemoteHoldemPlayerContext, IllegalActionException,RemoteException>();
 	private Killable tableContextCacheEntry;
 
 	
@@ -38,11 +39,11 @@ public class ExportingHoldemTableContext extends ForwardingRemoteHoldemTableCont
 	}
 	
 	@Override
-	public RemoteHoldemPlayerContext sitIn(final long seatId, final HoldemPlayerListener holdemPlayerListener)
-			throws RemoteException {
-		return playerContext.getContent(new IFactory1<RemoteHoldemPlayerContext, RemoteException>(){
-			public RemoteHoldemPlayerContext create() throws RemoteException {
-				return (RemoteHoldemPlayerContext) UnicastRemoteObject.exportObject(ExportingHoldemTableContext.super.sitIn(seatId, holdemPlayerListener), 0);
+	public RemoteHoldemPlayerContext sitIn(final long seatId, final int amount, final HoldemPlayerListener holdemPlayerListener)
+			throws RemoteException, IllegalActionException {
+		return playerContext.getContent(new IFactory2<RemoteHoldemPlayerContext, IllegalActionException ,RemoteException>(){
+			public RemoteHoldemPlayerContext create() throws RemoteException, IllegalActionException {
+				return (RemoteHoldemPlayerContext) UnicastRemoteObject.exportObject(ExportingHoldemTableContext.super.sitIn(seatId, amount, holdemPlayerListener), 0);
 			}
 		});
 	}

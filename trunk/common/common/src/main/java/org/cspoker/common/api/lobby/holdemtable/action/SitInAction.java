@@ -18,6 +18,7 @@ package org.cspoker.common.api.lobby.holdemtable.action;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.cspoker.common.api.lobby.holdemtable.context.StaticHoldemTableContext;
+import org.cspoker.common.api.shared.exception.IllegalActionException;
 
 
 @XmlRootElement
@@ -27,9 +28,12 @@ public class SitInAction extends HoldemTableAction<Void> {
 
 	private long seatId;
 
-	public SitInAction(long id, long tableId, long seatId) {
+	private int buyIn;
+
+	public SitInAction(long id, long tableId, long seatId, int buyIn) {
 		super(id, tableId);
 		this.seatId = seatId;
+		this.buyIn = buyIn;
 	}
 
 	protected SitInAction() {
@@ -37,8 +41,8 @@ public class SitInAction extends HoldemTableAction<Void> {
 	}
 
 	@Override
-	public Void perform(StaticHoldemTableContext holdemTableContext) {
-		holdemTableContext.sitIn(seatId);
+	public Void perform(StaticHoldemTableContext holdemTableContext) throws IllegalActionException {
+		holdemTableContext.sitIn(seatId,buyIn);
 		return null;
 	}
 

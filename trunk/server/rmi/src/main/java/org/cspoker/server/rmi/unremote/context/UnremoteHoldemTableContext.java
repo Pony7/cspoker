@@ -21,6 +21,7 @@ import org.cspoker.common.api.lobby.holdemtable.context.HoldemTableContext;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.HoldemPlayerContext;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.listener.RemoteHoldemPlayerListener;
 import org.cspoker.common.api.shared.Killable;
+import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.server.rmi.unremote.listener.UnremoteHoldemPlayerListener;
 
 public class UnremoteHoldemTableContext extends ForwardingHoldemTableContext implements
@@ -33,9 +34,9 @@ ExternalHoldemTableContext {
 		this.connection = connection;
 	}
 
-	public HoldemPlayerContext sitIn(long seatId,
-			RemoteHoldemPlayerListener holdemPlayerListener) {
-		return super.sitIn(seatId, new UnremoteHoldemPlayerListener(connection, holdemPlayerListener));
+	public HoldemPlayerContext sitIn(long seatId, int amount,
+			RemoteHoldemPlayerListener holdemPlayerListener) throws IllegalActionException {
+		return super.sitIn(seatId, amount, new UnremoteHoldemPlayerListener(connection, holdemPlayerListener));
 	}
 	
 
