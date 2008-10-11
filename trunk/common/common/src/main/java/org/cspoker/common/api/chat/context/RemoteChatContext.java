@@ -18,10 +18,12 @@ package org.cspoker.common.api.chat.context;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
+import org.cspoker.common.api.shared.exception.IllegalActionException;
+
 public interface RemoteChatContext extends Remote {
 
-	void sendServerMessage(String message) throws RemoteException;
+	void sendServerMessage(String message) throws RemoteException, IllegalActionException;
 	
-	void sendTableMessage(long tableId, String message) throws RemoteException;
+	void sendTableMessage(long tableId, String message) throws RemoteException, IllegalActionException;
 	
 }

@@ -17,8 +17,8 @@ package org.cspoker.common.api.shared.listener;
 
 import org.cspoker.common.api.shared.event.ServerEvent;
 
-public interface ServerEventListener {
+public interface ServerEventListener extends EventListener{
 
-	void onEvent(ServerEvent event);
+	void onServerEvent(ServerEvent event);
 	
 }

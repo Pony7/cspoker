@@ -35,7 +35,7 @@ public class SequencePreservingExecutor implements Executor {
 	}
 
 	public void execute(final Runnable command) {
-		final Semaphore newSemaphore = new Semaphore(1);
+		final Semaphore newSemaphore = new Semaphore(0);
 		final Semaphore oldSemaphore = lastSemaphore.getAndSet(newSemaphore);
 		executor.execute(new Runnable(){
 			public void run() {

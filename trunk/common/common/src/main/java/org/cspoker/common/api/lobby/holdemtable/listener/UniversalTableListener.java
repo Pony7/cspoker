@@ -49,89 +49,89 @@ public class UniversalTableListener implements ServerEventListener, HoldemPlayer
 		this.tableId = tableId;
 	}
 	
-	public void onEvent(ServerEvent event) {
-		serverEventListener.onEvent(event);
+	public void onServerEvent(ServerEvent event) {
+		serverEventListener.onServerEvent(event);
 	}
 
 	public void onNewPocketCards(NewPocketCardsEvent newPocketCardsEvent) {
-		onEvent(new HoldemTableTreeEvents(tableId, newPocketCardsEvent));
+		onServerEvent(new HoldemTableTreeEvents(tableId, newPocketCardsEvent));
 	}
 
 	public void onBet(BetEvent betEvent) {
-		onEvent(new HoldemTableTreeEvents(tableId, betEvent));
+		onServerEvent(new HoldemTableTreeEvents(tableId, betEvent));
 	}
 
 	public void onBigBlind(BigBlindEvent bigBlindEvent) {
-		onEvent(new HoldemTableTreeEvents(tableId, bigBlindEvent));
+		onServerEvent(new HoldemTableTreeEvents(tableId, bigBlindEvent));
 	}
 
 	public void onCall(CallEvent callEvent) {
-		onEvent(new HoldemTableTreeEvents(tableId, callEvent));
+		onServerEvent(new HoldemTableTreeEvents(tableId, callEvent));
 	}
 
 	public void onCheck(CheckEvent checkEvent) {
-		onEvent(new HoldemTableTreeEvents(tableId, checkEvent));
+		onServerEvent(new HoldemTableTreeEvents(tableId, checkEvent));
 	}
 
 	public void onFold(FoldEvent foldEvent) {
-		onEvent(new HoldemTableTreeEvents(tableId, foldEvent));
+		onServerEvent(new HoldemTableTreeEvents(tableId, foldEvent));
 	}
 
 	public void onLeaveGame(LeaveTableEvent leaveGameEvent) {
-		onEvent(new HoldemTableTreeEvents(tableId, leaveGameEvent));
+		onServerEvent(new HoldemTableTreeEvents(tableId, leaveGameEvent));
 	}
 
 	public void onNewCommunityCards(
 			NewCommunityCardsEvent newCommunityCardsEvent) {
-		onEvent(new HoldemTableTreeEvents(tableId, newCommunityCardsEvent));
+		onServerEvent(new HoldemTableTreeEvents(tableId, newCommunityCardsEvent));
 	}
 
 	public void onNewDeal(NewDealEvent newDealEvent) {
-		onEvent(new HoldemTableTreeEvents(tableId, newDealEvent));
+		onServerEvent(new HoldemTableTreeEvents(tableId, newDealEvent));
 	}
 
 	public void onNewRound(NewRoundEvent newRoundEvent) {
-		onEvent(new HoldemTableTreeEvents(tableId, newRoundEvent));
+		onServerEvent(new HoldemTableTreeEvents(tableId, newRoundEvent));
 	}
 
 	public void onNextPlayer(NextPlayerEvent nextPlayerEvent) {
-		onEvent(new HoldemTableTreeEvents(tableId, nextPlayerEvent));
+		onServerEvent(new HoldemTableTreeEvents(tableId, nextPlayerEvent));
 	}
 
 	public void onRaise(RaiseEvent raiseEvent) {
-		onEvent(new HoldemTableTreeEvents(tableId, raiseEvent));
+		onServerEvent(new HoldemTableTreeEvents(tableId, raiseEvent));
 	}
 
 	public void onShowHand(ShowHandEvent showHandEvent) {
-		onEvent(new HoldemTableTreeEvents(tableId, showHandEvent));
+		onServerEvent(new HoldemTableTreeEvents(tableId, showHandEvent));
 	}
 
 	public void onSitIn(SitInEvent sitInEvent) {
-		onEvent(new HoldemTableTreeEvents(tableId, sitInEvent));
+		onServerEvent(new HoldemTableTreeEvents(tableId, sitInEvent));
 	}
 
 	public void onSmallBlind(SmallBlindEvent smallBlindEvent) {
-		onEvent(new HoldemTableTreeEvents(tableId, smallBlindEvent));
+		onServerEvent(new HoldemTableTreeEvents(tableId, smallBlindEvent));
 	}
 
 	public void onWinner(WinnerEvent winnerEvent) {
-		onEvent(new HoldemTableTreeEvents(tableId, winnerEvent));
+		onServerEvent(new HoldemTableTreeEvents(tableId, winnerEvent));
 	}
 
 	public void onAllIn(AllInEvent allInEvent) {
-		onEvent(new HoldemTableTreeEvents(tableId, allInEvent));
+		onServerEvent(new HoldemTableTreeEvents(tableId, allInEvent));
 	}
 
 	public void onJoinTable(JoinTableEvent joinTableEvent) {
-		onEvent(new HoldemTableTreeEvents(tableId, joinTableEvent));
+		onServerEvent(new HoldemTableTreeEvents(tableId, joinTableEvent));
 	}
 
 	public void onLeaveTable(LeaveTableEvent leaveGameEvent) {
-		onEvent(new HoldemTableTreeEvents(tableId, leaveGameEvent));
+		onServerEvent(new HoldemTableTreeEvents(tableId, leaveGameEvent));
 	}
 
 	public void onSitOut(SitOutEvent sitOutEvent) {
-		onEvent(new HoldemTableTreeEvents(tableId, sitOutEvent));
+		onServerEvent(new HoldemTableTreeEvents(tableId, sitOutEvent));
 	}
 	
 }

@@ -13,47 +13,48 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.common.api.shared;
+package org.cspoker.common.api.shared.event;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 import org.cspoker.common.api.shared.action.DispatchableAction;
-import org.cspoker.common.api.shared.event.ActionEvent;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 
 @XmlRootElement
-@XmlAccessorType(XmlAccessType.FIELD)
-public class IllegalActionEvent extends ActionEvent {
+public class IllegalActionEvent<T> extends ActionEvent<T> {
 
-	private static final long serialVersionUID = 8350435427841245148L;
+        private static final long serialVersionUID = 8350435427841245148L;
 
-	@XmlTransient
-	private IllegalActionException exception;
+    	@XmlTransient
+        private IllegalActionException exception;
 
-	private String msg;
+		private String message;
 
-	public IllegalActionEvent(IllegalActionException exception,
-			DispatchableAction<?> action) {
-		super(action);
-		this.exception = exception;
-		this.msg = exception.getMessage();
-	}
+        public IllegalActionEvent(DispatchableAction<T> action, IllegalActionException exception) {
+                super(action);
+                this.exception = exception;
+        		this.message = exception.getMessage();
+        }
 
-	protected IllegalActionEvent() {
-		exception = null;
-	}
+        protected IllegalActionEvent() {
+                // no op
+        }
 
-	public IllegalActionException getException() {
-		if (exception == null) {
-			exception = new IllegalActionException(msg);
-		}
-		return exception;
-	}
+    	public IllegalActionException getException() {
+    		if (exception == null) {
+    			exception = new IllegalActionException(message);
+    		}
+    		return exception;
+    	}
 
-	public String getMsg() {
-		return msg;
-	}
+    	public String getMsg() {
+    		return message;
+    	}
+        
+        @Override
+        public T getResult() throws IllegalActionException {
+        	throw getException();
+        }
+        
 }

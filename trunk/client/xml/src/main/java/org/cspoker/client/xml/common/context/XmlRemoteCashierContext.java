@@ -13,27 +13,33 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.common.api.cashier.context;
+package org.cspoker.client.xml.common.context;
 
 import java.rmi.RemoteException;
 
+import org.cspoker.client.xml.common.IDGenerator;
+import org.cspoker.common.api.cashier.action.GetMoneyAmountAction;
+import org.cspoker.common.api.cashier.action.RequestMoneyAction;
+import org.cspoker.common.api.cashier.context.RemoteCashierContext;
+import org.cspoker.common.api.shared.action.ActionPerformer;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 
+public class XmlRemoteCashierContext implements RemoteCashierContext {
 
-public class ForwardingRemoteCashierContext implements RemoteCashierContext{
+	private ActionPerformer performer;
+	private IDGenerator generator;
 
-	private final RemoteCashierContext cashierContext;
-
-	public ForwardingRemoteCashierContext(RemoteCashierContext cashierContext) {
-		this.cashierContext  = cashierContext;
+	public XmlRemoteCashierContext(ActionPerformer performer, IDGenerator generator) {
+		this.performer = performer;
+		this.generator = generator;
 	}
-
+	
 	public int getMoneyAmount() throws RemoteException, IllegalActionException {
-		return cashierContext.getMoneyAmount();
+		return performer.perform(new GetMoneyAmountAction(generator.getNextID()));
 	}
 
 	public void requestMoney() throws RemoteException, IllegalActionException {
-		cashierContext.requestMoney();
+		performer.perform(new RequestMoneyAction(generator.getNextID()));
 	}
-	
+
 }

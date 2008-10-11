@@ -38,7 +38,7 @@ public class XmlServerContext extends ForwardingServerContext implements StaticS
 
 	public synchronized StaticLobbyContext getLobbyContext() {
 		if(this.lobbyContext ==null){
-			this.lobbyContext = new XmlLobbyContext(super.getLobbyContext(listener),listener);
+			this.lobbyContext = new XmlLobbyContext(super.getLobbyContext(listener),this, listener);
 		}
 		return this.lobbyContext;
 	}

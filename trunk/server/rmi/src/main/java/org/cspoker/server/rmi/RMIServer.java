@@ -75,7 +75,7 @@ public class RMIServer
 				public Void call()
 						throws RemoteException {
 					Registry registry = LocateRegistry.createRegistry(port);
-					CSPokerServer stub = (CSPokerServer) UnicastRemoteObject.exportObject(RMIServer.this, 0);
+					RemoteCSPokerServer stub = (RemoteCSPokerServer) UnicastRemoteObject.exportObject(RMIServer.this, 0);
 					registry.rebind("CSPokerServer", stub);
 					logger.info("Started RMI server at port " + port);
 					return null;

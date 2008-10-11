@@ -13,30 +13,34 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.common.api.shared.event;
+package org.cspoker.common.api.lobby.action;
 
+import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.cspoker.common.api.shared.action.DispatchableAction;
+import org.cspoker.common.api.lobby.context.StaticLobbyContext;
+import org.cspoker.common.elements.table.DetailedHoldemTable;
 
 @XmlRootElement
-public class ActionPerformedEvent<T> extends ActionEvent<T> {
+public class GetHoldemTableInformationAction extends LobbyAction<DetailedHoldemTable> {
 
-        private static final long serialVersionUID = 8350435427841245148L;
+	private static final long serialVersionUID = 7897218843022885169L;
 
-        private T result;
+	@XmlAttribute
+	private long tableId;
 
-        public ActionPerformedEvent(DispatchableAction<T> action, T result) {
-                super(action);
-                this.result = result;
-        }
+	public GetHoldemTableInformationAction(long id, long tableid) {
+		super(id);
+		this.tableId = tableid;
+	}
 
-        protected ActionPerformedEvent() {
-                // no op
-        }
+	protected GetHoldemTableInformationAction() {
+		// no op
+	}
 
-        public T getResult() {
-                return result;
-        }
-        
+	@Override
+	public DetailedHoldemTable perform(StaticLobbyContext lobbyContext) {
+		return lobbyContext.getHoldemTableInformation(tableId);
+	}
+
 }

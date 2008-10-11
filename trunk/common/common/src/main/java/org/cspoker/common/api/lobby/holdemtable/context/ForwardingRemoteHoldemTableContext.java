@@ -29,12 +29,8 @@ public class ForwardingRemoteHoldemTableContext implements RemoteHoldemTableCont
 	public ForwardingRemoteHoldemTableContext(RemoteHoldemTableContext holdemTableContext) throws RemoteException {
 		this.holdemTableContext  = holdemTableContext;
 	}
-	
-	public HoldemTableListener wrapListener(HoldemTableListener listener) throws RemoteException{
-		return listener;
-	}
 
-	public void leaveTable() throws RemoteException {
+	public void leaveTable() throws RemoteException, IllegalActionException {
 		holdemTableContext.leaveTable();
 	}
 

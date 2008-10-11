@@ -13,29 +13,34 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.common.api.chat.context;
+package org.cspoker.client.xml.common.context;
 
 import java.rmi.RemoteException;
 
-import org.cspoker.common.api.chat.listener.ChatListener;
-import org.cspoker.common.api.chat.listener.ForwardingChatListener;
+import org.cspoker.client.xml.common.IDGenerator;
+import org.cspoker.common.api.chat.action.SendServerMessageAction;
+import org.cspoker.common.api.chat.action.SendTableMessageAction;
+import org.cspoker.common.api.chat.context.RemoteChatContext;
+import org.cspoker.common.api.shared.action.ActionPerformer;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 
+public class XmlRemoteChatContext implements RemoteChatContext {
 
-public class ForwardingRemoteChatContext implements RemoteChatContext{
+	private ActionPerformer performer;
+	private IDGenerator generator;
 
-	private RemoteChatContext chatContext;
-
-	public ForwardingRemoteChatContext(RemoteChatContext chatContext) throws RemoteException {
-		this.chatContext  = chatContext;
-	}
-
-	public void sendServerMessage(String message) throws RemoteException, IllegalActionException {
-		chatContext.sendServerMessage(message);
-	}
-
-	public void sendTableMessage(long tableId, String message) throws RemoteException, IllegalActionException {
-		chatContext.sendTableMessage(tableId, message);
+	public XmlRemoteChatContext(ActionPerformer performer, IDGenerator generator) {
+		this.performer = performer;
+		this.generator = generator;
 	}
 	
+	public void sendServerMessage(String message) throws RemoteException, IllegalActionException {
+		performer.perform(new SendServerMessageAction(generator.getNextID(),message));
+	}
+
+	public void sendTableMessage(long tableId, String message)
+			throws RemoteException, IllegalActionException {
+		performer.perform(new SendTableMessageAction(generator.getNextID(),tableId,message));
+	}
+
 }

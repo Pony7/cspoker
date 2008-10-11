@@ -28,10 +28,12 @@ public class XmlLobbyContext extends ForwardingLobbyContext implements StaticLob
 
 	private UniversalServerListener listener;
 	private ConcurrentHashMap<Long, XmlHoldemTableContext> contexts = new ConcurrentHashMap<Long, XmlHoldemTableContext>();
+	private XmlServerContext serverContext;
 	
-	public XmlLobbyContext(LobbyContext lobbyContext, UniversalServerListener listener) {
+	public XmlLobbyContext(LobbyContext lobbyContext,XmlServerContext serverContext, UniversalServerListener listener) {
 		super(lobbyContext);
 		this.listener = listener;
+		this.serverContext = serverContext;
 	}
 
 	public XmlHoldemTableContext getHoldemTableContext(long tableId) {
@@ -39,6 +41,8 @@ public class XmlLobbyContext extends ForwardingLobbyContext implements StaticLob
 	}
 
 	public void joinHoldemTable(long tableId) throws IllegalActionException {
+		//Also register the global listener for the chat room associated with this table.
+		serverContext.getChatContext();
 		UniversalTableListener tableListener = new UniversalTableListener(listener, tableId);
 		contexts.put(tableId, new XmlHoldemTableContext(super.joinHoldemTable(tableId, tableListener),tableListener));
 	}

@@ -13,29 +13,12 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.common.api.lobby.action;
+package org.cspoker.common.api.shared.listener;
 
-import javax.xml.bind.annotation.XmlRootElement;
+import org.cspoker.common.api.shared.event.ActionEvent;
 
-import org.cspoker.common.api.lobby.context.StaticLobbyContext;
-import org.cspoker.common.elements.table.TableList;
+public interface ActionEventListener extends EventListener{
 
-@XmlRootElement
-public class TableListAction extends LobbyAction<TableList> {
-
-	private static final long serialVersionUID = 7897218843022885169L;
-
-	public TableListAction(long id) {
-		super(id);
-	}
-
-	protected TableListAction() {
-		// no op
-	}
-
-	@Override
-	public TableList perform(StaticLobbyContext lobbyContext) {
-		return  lobbyContext.getTableList();
-	}
-
+	void onActionPerformed(ActionEvent<?> actionPerformedEvent);
+	
 }

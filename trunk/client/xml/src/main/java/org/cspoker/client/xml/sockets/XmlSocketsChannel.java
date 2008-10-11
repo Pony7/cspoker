@@ -37,9 +37,10 @@ import org.cspoker.client.xml.common.ChannelState;
 import org.cspoker.client.xml.common.ChannelStateException;
 import org.cspoker.client.xml.common.XmlChannel;
 import org.cspoker.common.XmlEventListener;
+import org.cspoker.common.api.shared.socket.LoginAction;
 import org.cspoker.common.util.Strings;
 
-public class XmlSocketsChannel implements XmlChannel {
+public class XmlSocketsChannel {
 
 	private final static Logger logger = Logger
 			.getLogger(XmlSocketsChannel.class);
@@ -51,13 +52,8 @@ public class XmlSocketsChannel implements XmlChannel {
 
 	private CharsetDecoder decoder;
 
-	private final Set<XmlEventListener> xmlEventListeners = Collections
-			.synchronizedSet(new HashSet<XmlEventListener>());
-
 	private final String server;
 	private final int port;
-	private final String username;
-	private final String password;
 
 	private ChannelState state = ChannelState.INITIALIZED;
 
@@ -107,6 +103,7 @@ public class XmlSocketsChannel implements XmlChannel {
 	}
 
 	private boolean login(String username, String password) throws IOException {
+		LoginAction loginAction = new LoginAction(username, password);
 		w.write("<login username='" + username + "' password='" + password
 				+ "' useragent='Sockets Client " + Strings.version + "'/>"
 				+ ((char) 0x00));

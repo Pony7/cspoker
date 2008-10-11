@@ -73,7 +73,7 @@ public class CSPokerHandler extends AbstractHttpHandler {
 							new UniversalServerListener(
 									new ServerEventListener(){
 
-										public void onEvent(ServerEvent event) {
+										public void onServerEvent(ServerEvent event) {
 											eventQueue.offer(event);
 										}
 

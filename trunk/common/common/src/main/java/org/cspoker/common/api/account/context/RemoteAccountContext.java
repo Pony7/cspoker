@@ -18,16 +18,18 @@ package org.cspoker.common.api.account.context;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
+import org.cspoker.common.api.shared.exception.IllegalActionException;
+
 public interface RemoteAccountContext extends Remote{
 
-	void changePassword(String passwordHash) throws RemoteException;
+	void changePassword(String passwordHash) throws RemoteException, IllegalActionException;
 
-	boolean hasPassword(String passwordHash) throws RemoteException;
+	boolean hasPassword(String passwordHash) throws RemoteException, IllegalActionException;
 	
-	void createAccount(String username, String passwordHash) throws RemoteException;
+	void createAccount(String username, String passwordHash) throws RemoteException, IllegalActionException;
 	
-	byte[] getAvatar(long playerId) throws RemoteException;
+	byte[] getAvatar(long playerId) throws RemoteException, IllegalActionException;
 	
-	void setAvatar(byte[] avatar) throws RemoteException;
+	void setAvatar(byte[] avatar) throws RemoteException, IllegalActionException;
 	
 }

@@ -23,14 +23,14 @@ import org.cspoker.common.api.account.action.ChangePasswordAction;
 import org.cspoker.common.api.account.action.CreateAccountAction;
 import org.cspoker.common.api.account.action.GetAvatarAction;
 import org.cspoker.common.api.account.action.SetAvatarAction;
-import org.cspoker.common.api.cashier.action.MoneyAmountAction;
+import org.cspoker.common.api.cashier.action.GetMoneyAmountAction;
 import org.cspoker.common.api.cashier.action.RequestMoneyAction;
 import org.cspoker.common.api.chat.action.SendServerMessageAction;
 import org.cspoker.common.api.chat.action.SendTableMessageAction;
-import org.cspoker.common.api.lobby.action.CreateTableAction;
-import org.cspoker.common.api.lobby.action.JoinTableAction;
-import org.cspoker.common.api.lobby.action.TableInformationAction;
-import org.cspoker.common.api.lobby.action.TableListAction;
+import org.cspoker.common.api.lobby.action.CreateHoldemTableAction;
+import org.cspoker.common.api.lobby.action.JoinHoldemTableAction;
+import org.cspoker.common.api.lobby.action.GetHoldemTableInformationAction;
+import org.cspoker.common.api.lobby.action.GetTableListAction;
 import org.cspoker.common.api.lobby.holdemtable.action.LeaveTableAction;
 import org.cspoker.common.api.lobby.holdemtable.action.SitInAction;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.action.BetOrRaiseAction;
@@ -59,11 +59,11 @@ public class ActionJAXBContext {
 				//account
 				ChangePasswordAction.class, CreateAccountAction.class, GetAvatarAction.class, SetAvatarAction.class,
 				//cashier
-				MoneyAmountAction.class, RequestMoneyAction.class,
+				GetMoneyAmountAction.class, RequestMoneyAction.class,
 				//chat
 				SendServerMessageAction.class,SendTableMessageAction.class,
 				//lobby
-				CreateTableAction.class,JoinTableAction.class,TableInformationAction.class, TableListAction.class,
+				CreateHoldemTableAction.class,JoinHoldemTableAction.class,GetHoldemTableInformationAction.class, GetTableListAction.class,
 				//table
 				LeaveTableAction.class,SitInAction.class,
 				//player

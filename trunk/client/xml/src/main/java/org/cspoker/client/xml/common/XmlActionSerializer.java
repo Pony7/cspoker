@@ -13,33 +13,13 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.common.api.lobby.action;
+package org.cspoker.client.xml.common;
 
-import javax.xml.bind.annotation.XmlRootElement;
+import org.cspoker.common.api.shared.action.ActionPerformer;
+import org.cspoker.common.api.shared.listener.ActionAndServerEventListener;
 
-import org.cspoker.common.api.lobby.context.StaticLobbyContext;
-import org.cspoker.common.api.shared.exception.IllegalActionException;
+public interface XmlActionSerializer extends ActionPerformer{
 
-@XmlRootElement
-public class JoinTableAction extends LobbyAction<Void> {
-
-	private static final long serialVersionUID = -6693307709200837257L;
-
-	private long tableId;
-
-	public JoinTableAction(long id, long tableId) {
-		super(id);
-		this.tableId = tableId;
-	}
-
-	protected JoinTableAction() {
-		// no op
-	}
-	
-	@Override
-	public Void perform(StaticLobbyContext lobbyContext) throws IllegalActionException {
-		lobbyContext.joinHoldemTable(tableId);
-		return null;
-	}
+	void setEventHandler(ActionAndServerEventListener listener);
 
 }
