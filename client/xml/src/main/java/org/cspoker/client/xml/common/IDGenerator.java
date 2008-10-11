@@ -13,13 +13,16 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.common.api.shared.listener;
+package org.cspoker.client.xml.common;
 
-import org.cspoker.common.api.shared.event.ActionPerformedEvent;
+import java.util.concurrent.atomic.AtomicLong;
 
+public class IDGenerator {
 
-public interface ActionListener {
-
-	void actionPerformed(ActionPerformedEvent<?> actionPerformedEvent);
+	AtomicLong id = new AtomicLong(0);
+	
+	public long getNextID(){
+		return id.incrementAndGet();
+	}
 	
 }

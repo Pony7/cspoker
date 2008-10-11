@@ -49,7 +49,7 @@ public class ExportingHoldemTableContext extends ForwardingRemoteHoldemTableCont
 	}
 	
 	@Override
-	public void leaveTable() throws RemoteException {
+	public void leaveTable() throws RemoteException, IllegalActionException {
 		tableContextCacheEntry.kill();
 		super.leaveTable();
 	}

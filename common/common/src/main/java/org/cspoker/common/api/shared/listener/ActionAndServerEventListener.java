@@ -13,20 +13,8 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.client.xml.common;
+package org.cspoker.common.api.shared.listener;
 
-public class ChannelStateException extends Exception {
-
-	private static final long serialVersionUID = 7777390638225418621L;
-	private ChannelState state;
-
-	public ChannelStateException(String msg, ChannelState state) {
-		super(msg + "\nState is " + state);
-		this.state = state;
-	}
-
-	public ChannelState getState() {
-		return state;
-	}
-
+public interface ActionAndServerEventListener extends ActionEventListener, ServerEventListener{
+	
 }

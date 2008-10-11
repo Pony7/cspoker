@@ -13,28 +13,33 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.common.api.cashier.action;
+package org.cspoker.common.api.lobby.action;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.cspoker.common.api.cashier.context.CashierContext;
+import org.cspoker.common.api.lobby.context.StaticLobbyContext;
+import org.cspoker.common.api.shared.exception.IllegalActionException;
 
 @XmlRootElement
-public class MoneyAmountAction extends CashierAction<Integer> {
+public class JoinHoldemTableAction extends LobbyAction<Void> {
 
-	private static final long serialVersionUID = 567436868321801958L;
+	private static final long serialVersionUID = -6693307709200837257L;
 
-	public MoneyAmountAction(long id) {
+	private long tableId;
+
+	public JoinHoldemTableAction(long id, long tableId) {
 		super(id);
+		this.tableId = tableId;
 	}
 
-	protected MoneyAmountAction() {
+	protected JoinHoldemTableAction() {
 		// no op
 	}
-
-	@Override
-	public Integer perform(CashierContext cashierContext) {
-		return cashierContext.getMoneyAmount();
-	}
 	
+	@Override
+	public Void perform(StaticLobbyContext lobbyContext) throws IllegalActionException {
+		lobbyContext.joinHoldemTable(tableId);
+		return null;
+	}
+
 }

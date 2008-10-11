@@ -15,14 +15,12 @@
  */
 package org.cspoker.common.api.shared.action;
 
-import java.io.Serializable;
-
 import javax.xml.bind.annotation.XmlAttribute;
 
 import org.cspoker.common.api.shared.context.StaticServerContext;
 import org.cspoker.common.api.shared.event.ActionEvent;
-import org.cspoker.common.api.shared.event.ActionFailedEvent;
 import org.cspoker.common.api.shared.event.ActionPerformedEvent;
+import org.cspoker.common.api.shared.event.IllegalActionEvent;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 
 public abstract class DispatchableAction<T> implements Action {
@@ -44,7 +42,7 @@ public abstract class DispatchableAction<T> implements Action {
 		try {
 			return new ActionPerformedEvent<T>(this, perform(serverContext));
 		} catch (IllegalActionException exception) {
-			return new ActionFailedEvent<T>(this,exception);
+			return new IllegalActionEvent<T>(this,exception);
 		}
 	}
 

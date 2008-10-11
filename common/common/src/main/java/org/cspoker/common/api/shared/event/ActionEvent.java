@@ -18,6 +18,7 @@ package org.cspoker.common.api.shared.event;
 import javax.xml.bind.annotation.XmlTransient;
 
 import org.cspoker.common.api.shared.action.DispatchableAction;
+import org.cspoker.common.api.shared.exception.IllegalActionException;
 
 public abstract class ActionEvent<T> implements Event{
 
@@ -44,5 +45,7 @@ public abstract class ActionEvent<T> implements Event{
         public long getID(){
         	return id;
         }
+        
+        public abstract T getResult() throws IllegalActionException;
 }
 

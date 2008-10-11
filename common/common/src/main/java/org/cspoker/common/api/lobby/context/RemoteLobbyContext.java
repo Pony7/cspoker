@@ -31,9 +31,9 @@ public interface RemoteLobbyContext extends Remote {
 	
 	RemoteHoldemTableContext joinHoldemTable(long tableId, HoldemTableListener holdemTableListener) throws RemoteException, IllegalActionException;
 
-	DetailedHoldemTable createHoldemTable(String name, TableConfiguration configuration) throws RemoteException;
+	DetailedHoldemTable createHoldemTable(String name, TableConfiguration configuration) throws RemoteException, IllegalActionException;
 
-	DetailedHoldemTable getHoldemTableInformation(long tableId) throws RemoteException;
+	DetailedHoldemTable getHoldemTableInformation(long tableId) throws RemoteException, IllegalActionException;
 
-	TableList getTableList() throws RemoteException;	
+	TableList getTableList() throws RemoteException, IllegalActionException;	
 }

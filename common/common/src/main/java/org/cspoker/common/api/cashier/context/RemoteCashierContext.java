@@ -18,9 +18,11 @@ package org.cspoker.common.api.cashier.context;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
+import org.cspoker.common.api.shared.exception.IllegalActionException;
+
 public interface RemoteCashierContext extends Remote{
 
-	int getMoneyAmount() throws RemoteException;
+	int getMoneyAmount() throws RemoteException, IllegalActionException;
 	
-	void requestMoney() throws RemoteException;
+	void requestMoney() throws RemoteException, IllegalActionException;
 }

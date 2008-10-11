@@ -173,7 +173,7 @@ public class ClientContext {
 		serverContext = new XmlServerContext(cspokerServer.login(username, passwordHash),
 				new UniversalServerListener(
 						new ServerEventListener(){
-							public void onEvent(ServerEvent event) {
+							public void onServerEvent(ServerEvent event) {
 								send(event);
 							}
 						}		

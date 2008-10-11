@@ -13,42 +13,53 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.common.api.lobby.context;
+package org.cspoker.client.xml.common.context;
 
 import java.rmi.RemoteException;
 
+import org.cspoker.client.xml.common.IDGenerator;
+import org.cspoker.common.api.cashier.action.GetMoneyAmountAction;
+import org.cspoker.common.api.lobby.action.CreateHoldemTableAction;
+import org.cspoker.common.api.lobby.action.GetHoldemTableInformationAction;
+import org.cspoker.common.api.lobby.action.GetTableListAction;
+import org.cspoker.common.api.lobby.action.JoinHoldemTableAction;
+import org.cspoker.common.api.lobby.context.RemoteLobbyContext;
 import org.cspoker.common.api.lobby.holdemtable.context.RemoteHoldemTableContext;
 import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
+import org.cspoker.common.api.shared.action.ActionPerformer;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.table.DetailedHoldemTable;
 import org.cspoker.common.elements.table.TableConfiguration;
 import org.cspoker.common.elements.table.TableList;
 
-public class ForwardingRemoteLobbyContext implements RemoteLobbyContext{
+public class XmlRemoteLobbyContext implements RemoteLobbyContext{
 
-	protected final RemoteLobbyContext lobbyContext;
+	private ActionPerformer performer;
+	private IDGenerator generator;
 
-	public ForwardingRemoteLobbyContext(RemoteLobbyContext lobbyContext) throws RemoteException {
-		this.lobbyContext  = lobbyContext;
+	public XmlRemoteLobbyContext(ActionPerformer performer, IDGenerator generator) {
+		this.performer = performer;
+		this.generator = generator;
 	}
-
+	
 	public DetailedHoldemTable createHoldemTable(String name,
 			TableConfiguration configuration) throws RemoteException, IllegalActionException {
-		return lobbyContext.createHoldemTable(name, configuration);
+		return performer.perform(new CreateHoldemTableAction(generator.getNextID(),name,configuration));;
 	}
 
 	public DetailedHoldemTable getHoldemTableInformation(long tableId)
 			throws RemoteException, IllegalActionException {
-		return lobbyContext.getHoldemTableInformation(tableId);
+		return performer.perform(new GetHoldemTableInformationAction(generator.getNextID(), tableId));;
 	}
 
 	public TableList getTableList() throws RemoteException, IllegalActionException {
-		return lobbyContext.getTableList();
+		return performer.perform(new GetTableListAction(generator.getNextID()));;
 	}
 
 	public RemoteHoldemTableContext joinHoldemTable(long tableId,
-			HoldemTableListener holdemTableListener) throws RemoteException, IllegalActionException {
-		return lobbyContext.joinHoldemTable(tableId, holdemTableListener);
+			HoldemTableListener holdemTableListener) throws RemoteException,
+			IllegalActionException {
+		return performer.perform(new JoinHoldemTableAction(generator.getNextID(),tableId));;
 	}
 
 }

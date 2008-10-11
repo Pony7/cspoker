@@ -13,30 +13,28 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.common.api.shared.event;
+package org.cspoker.common.api.cashier.action;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.cspoker.common.api.shared.action.DispatchableAction;
+import org.cspoker.common.api.cashier.context.CashierContext;
 
 @XmlRootElement
-public class ActionFailedEvent<T> extends ActionEvent<T> {
+public class GetMoneyAmountAction extends CashierAction<Integer> {
 
-        private static final long serialVersionUID = 8350435427841245148L;
+	private static final long serialVersionUID = 567436868321801958L;
 
-        private Throwable exception;
+	public GetMoneyAmountAction(long id) {
+		super(id);
+	}
 
-        public ActionFailedEvent(DispatchableAction<T> action, Throwable exception) {
-                super(action);
-                this.exception = exception;
-        }
+	protected GetMoneyAmountAction() {
+		// no op
+	}
 
-        protected ActionFailedEvent() {
-                // no op
-        }
-        
-        public Throwable getException() {
-			return this.exception;
-		}
-        
+	@Override
+	public Integer perform(CashierContext cashierContext) {
+		return cashierContext.getMoneyAmount();
+	}
+	
 }

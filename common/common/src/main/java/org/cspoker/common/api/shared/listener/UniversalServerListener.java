@@ -31,24 +31,24 @@ public class UniversalServerListener implements ServerEventListener, ChatListene
 		this.serverEventListener = serverEventListener;
 	}
 	
-	public void onEvent(ServerEvent event) {
-		serverEventListener.onEvent(event);
+	public void onServerEvent(ServerEvent event) {
+		serverEventListener.onServerEvent(event);
 	}
 	
 	public void onServerMessage(ServerMessageEvent serverMessageEvent) {
-		onEvent(serverMessageEvent);
+		onServerEvent(serverMessageEvent);
 	}
 
 	public void onTableMessage(TableMessageEvent tableMessageEvent) {
-		onEvent(tableMessageEvent);
+		onServerEvent(tableMessageEvent);
 	}
 
 	public void onTableCreated(TableCreatedEvent tableCreatedEvent) {
-		onEvent(tableCreatedEvent);
+		onServerEvent(tableCreatedEvent);
 	}
 
 	public void onTableRemoved(TableRemovedEvent tableRemovedEvent) {
-		onEvent(tableRemovedEvent);
+		onServerEvent(tableRemovedEvent);
 	}
 
 }
