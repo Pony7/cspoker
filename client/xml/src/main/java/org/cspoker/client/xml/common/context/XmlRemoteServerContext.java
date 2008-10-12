@@ -16,7 +16,10 @@
 package org.cspoker.client.xml.common.context;
 
 import java.rmi.RemoteException;
+import java.util.concurrent.atomic.AtomicReference;
 
+import org.cspoker.client.xml.common.IDGenerator;
+import org.cspoker.client.xml.common.listener.XmlServerListenerTree;
 import org.cspoker.common.api.account.context.RemoteAccountContext;
 import org.cspoker.common.api.cashier.context.RemoteCashierContext;
 import org.cspoker.common.api.chat.context.RemoteChatContext;
@@ -25,37 +28,58 @@ import org.cspoker.common.api.lobby.context.RemoteLobbyContext;
 import org.cspoker.common.api.lobby.listener.LobbyListener;
 import org.cspoker.common.api.shared.action.ActionPerformer;
 import org.cspoker.common.api.shared.context.RemoteServerContext;
+import org.cspoker.common.api.shared.exception.IllegalActionException;
 
 public class XmlRemoteServerContext implements RemoteServerContext {
 
-	private ActionPerformer performer;
-	private IDGenerator generator;
+	private final ActionPerformer performer;
+	private final IDGenerator generator;
+	private final XmlRemoteAccountContext accountContext;
+	private final XmlRemoteCashierContext cashierContext;
+	private final AtomicReference<RemoteChatContext> chatContext = new AtomicReference<RemoteChatContext>();
+	private final AtomicReference<RemoteLobbyContext> lobbyContext = new AtomicReference<RemoteLobbyContext>();
+	private final XmlServerListenerTree serverListenerTree;
 
-	public XmlRemoteServerContext(ActionPerformer performer, IDGenerator generator) {
+	public XmlRemoteServerContext(ActionPerformer performer) {
+		this(performer, new IDGenerator(), new XmlServerListenerTree());
+	}
+	
+	public XmlRemoteServerContext(ActionPerformer performer, IDGenerator generator, XmlServerListenerTree serverListenerTree) {
 		this.performer = performer;
 		this.generator = generator;
+		this.serverListenerTree = serverListenerTree;
+		this.accountContext = new XmlRemoteAccountContext(performer, generator);
+		this.cashierContext = new XmlRemoteCashierContext(performer, generator);
 	}
 	
 	public RemoteAccountContext getAccountContext() throws RemoteException {
-		return null;
+		return accountContext;
 	}
 
 	public RemoteCashierContext getCashierContext() throws RemoteException {
-		return null;
+		return cashierContext;
 	}
 
 	public RemoteChatContext getChatContext(ChatListener chatListener)
-			throws RemoteException {
-		return null;
+			throws RemoteException, IllegalActionException {
+		XmlRemoteChatContext context = new XmlRemoteChatContext(performer,generator);
+		if(chatContext.compareAndSet(null, context)){
+			serverListenerTree.setChatListener(chatListener);
+			return context;
+		}else{
+			throw new IllegalActionException("Already registered a chat listener");
+		}
 	}
 
 	public RemoteLobbyContext getLobbyContext(LobbyListener lobbyListener)
-			throws RemoteException {
-		return null;
-	}
-
-	public void kill() {
-		
+			throws RemoteException, IllegalActionException {
+		XmlRemoteLobbyContext context = new XmlRemoteLobbyContext(performer,generator, serverListenerTree);
+		if(lobbyContext.compareAndSet(null, context)){
+			serverListenerTree.getLobbyListenerTree().setLobbyListener(lobbyListener);
+			return context;
+		}else{
+			throw new IllegalActionException("Already registered a lobby listener");
+		}
 	}
 
 }

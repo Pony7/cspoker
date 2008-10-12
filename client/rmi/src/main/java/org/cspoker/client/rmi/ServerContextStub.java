@@ -24,6 +24,7 @@ import org.cspoker.common.api.lobby.context.RemoteLobbyContext;
 import org.cspoker.common.api.lobby.listener.LobbyListener;
 import org.cspoker.common.api.shared.context.ForwardingRemoteServerContext;
 import org.cspoker.common.api.shared.context.RemoteServerContext;
+import org.cspoker.common.api.shared.exception.IllegalActionException;
 
 public class ServerContextStub extends ForwardingRemoteServerContext{
 
@@ -33,13 +34,13 @@ public class ServerContextStub extends ForwardingRemoteServerContext{
 	
 	@Override
 	public RemoteChatContext getChatContext(ChatListener chatListener)
-			throws RemoteException {
+			throws RemoteException, IllegalActionException {
 		return super.getChatContext((ChatListener) UnicastRemoteObject.exportObject(chatListener, 0));
 	}
 	
 	@Override
 	public RemoteLobbyContext getLobbyContext(LobbyListener lobbyListener)
-			throws RemoteException {
+			throws RemoteException, IllegalActionException {
 		return new LobbyContextStub(super.getLobbyContext((LobbyListener) UnicastRemoteObject.exportObject(lobbyListener, 0)));
 	}
 

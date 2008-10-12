@@ -24,23 +24,21 @@ import java.nio.CharBuffer;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
 import java.rmi.RemoteException;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import javax.security.auth.login.LoginException;
 
 import org.apache.log4j.Logger;
-import org.cspoker.client.xml.common.ChannelState;
-import org.cspoker.client.xml.common.ChannelStateException;
-import org.cspoker.client.xml.common.XmlChannel;
-import org.cspoker.common.XmlEventListener;
+import org.cspoker.client.xml.common.XmlActionSerializer;
+import org.cspoker.common.api.shared.action.DispatchableAction;
+import org.cspoker.common.api.shared.exception.IllegalActionException;
+import org.cspoker.common.api.shared.listener.ActionAndServerEventListener;
 import org.cspoker.common.api.shared.socket.LoginAction;
 import org.cspoker.common.util.Strings;
+import org.cspoker.common.xml.XmlEventListener;
 
-public class XmlSocketsChannel {
+public class XmlSocketsChannel implements XmlActionSerializer {
 
 	private final static Logger logger = Logger
 			.getLogger(XmlSocketsChannel.class);
@@ -54,8 +52,6 @@ public class XmlSocketsChannel {
 
 	private final String server;
 	private final int port;
-
-	private ChannelState state = ChannelState.INITIALIZED;
 
 	public XmlSocketsChannel(String server, int port, String username,
 			String password) {
@@ -194,6 +190,14 @@ public class XmlSocketsChannel {
 			}
 		}
 
+	}
+
+	public void setEventHandler(ActionAndServerEventListener listener) {
+	}
+
+	public <T> T perform(DispatchableAction<T> action)
+			throws IllegalActionException {
+		return null;
 	}
 
 }

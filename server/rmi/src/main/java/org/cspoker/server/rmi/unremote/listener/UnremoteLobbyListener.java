@@ -4,14 +4,14 @@ import org.cspoker.common.api.lobby.event.TableCreatedEvent;
 import org.cspoker.common.api.lobby.event.TableRemovedEvent;
 import org.cspoker.common.api.lobby.listener.LobbyListener;
 import org.cspoker.common.api.lobby.listener.RemoteLobbyListener;
-import org.cspoker.common.api.shared.Killable;
+import org.cspoker.common.api.shared.Trigger;
 import org.cspoker.common.api.shared.listener.ForwardingListener;
 
 public class UnremoteLobbyListener extends ForwardingListener<RemoteLobbyListener> implements LobbyListener{
 
-	private final Killable connection;
+	private final Trigger connection;
 
-	public UnremoteLobbyListener(Killable connection,
+	public UnremoteLobbyListener(Trigger connection,
 			RemoteLobbyListener lobbyListener) {
 		super(lobbyListener);
 		this.connection = connection;
@@ -23,7 +23,7 @@ public class UnremoteLobbyListener extends ForwardingListener<RemoteLobbyListene
 				listener.onTableCreated(tableCreatedEvent);
 			}
 		} catch (Exception exception) {
-			connection.kill();
+			connection.trigger();
 		}
 	}
 
@@ -33,7 +33,7 @@ public class UnremoteLobbyListener extends ForwardingListener<RemoteLobbyListene
 				listener.onTableRemoved(tableRemovedEvent);
 			}
 		} catch (Exception exception) {
-			connection.kill();
+			connection.trigger();
 		}
 	}
 

@@ -23,20 +23,17 @@ import java.rmi.RemoteException;
 import javax.security.auth.login.LoginException;
 
 import org.apache.log4j.Logger;
-import org.cspoker.client.common.RemotePlayerCommunicationFactory;
-import org.cspoker.client.xml.common.ChannelStateException;
-import org.cspoker.client.xml.common.XmlChannelRemotePlayerCommunication;
+import org.cspoker.common.RemoteCSPokerServer;
 
-public class RemotePlayerCommunicationFactoryForHttp implements
-		RemotePlayerCommunicationFactory {
+public class RemoteHTTPServer implements RemoteCSPokerServer {
 
 	private final static Logger logger = Logger
-			.getLogger(RemotePlayerCommunicationFactoryForHttp.class);
+			.getLogger(RemoteHTTPServer.class);
 
 	private final String server;
 	private final int port;
 
-	public RemotePlayerCommunicationFactoryForHttp(String server, int port) {
+	public RemoteHTTPServer(String server, int port) {
 		this.server = server;
 		this.port = port;
 	}

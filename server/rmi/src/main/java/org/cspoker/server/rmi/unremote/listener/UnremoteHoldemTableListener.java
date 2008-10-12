@@ -19,14 +19,14 @@ import org.cspoker.common.api.lobby.holdemtable.event.SmallBlindEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.WinnerEvent;
 import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
 import org.cspoker.common.api.lobby.holdemtable.listener.RemoteHoldemTableListener;
-import org.cspoker.common.api.shared.Killable;
+import org.cspoker.common.api.shared.Trigger;
 import org.cspoker.common.api.shared.listener.ForwardingListener;
 
 public class UnremoteHoldemTableListener extends ForwardingListener<RemoteHoldemTableListener> implements HoldemTableListener{
 
-	private final Killable connection;
+	private final Trigger connection;
 
-	public UnremoteHoldemTableListener(Killable connection, RemoteHoldemTableListener tableListener) {
+	public UnremoteHoldemTableListener(Trigger connection, RemoteHoldemTableListener tableListener) {
 		super(tableListener);
 		this.connection = connection;
 	}
@@ -37,7 +37,7 @@ public class UnremoteHoldemTableListener extends ForwardingListener<RemoteHoldem
 				listener.onBet(betEvent);
 			}
 		} catch (Exception exception) {
-			connection.kill();
+			connection.trigger();
 		}
 	}
 
@@ -47,7 +47,7 @@ public class UnremoteHoldemTableListener extends ForwardingListener<RemoteHoldem
 				listener.onBigBlind(bigBlindEvent);
 			}
 		} catch (Exception exception) {
-			connection.kill();
+			connection.trigger();
 		}
 	}
 
@@ -57,7 +57,7 @@ public class UnremoteHoldemTableListener extends ForwardingListener<RemoteHoldem
 				listener.onCall(callEvent);
 			}
 		} catch (Exception exception) {
-			connection.kill();
+			connection.trigger();
 		}
 	}
 
@@ -67,7 +67,7 @@ public class UnremoteHoldemTableListener extends ForwardingListener<RemoteHoldem
 				listener.onCheck(checkEvent);
 			}
 		} catch (Exception exception) {
-			connection.kill();
+			connection.trigger();
 		}
 	}
 
@@ -77,7 +77,7 @@ public class UnremoteHoldemTableListener extends ForwardingListener<RemoteHoldem
 				listener.onFold(foldEvent);
 			}
 		} catch (Exception exception) {
-			connection.kill();
+			connection.trigger();
 		}
 	}
 
@@ -88,7 +88,7 @@ public class UnremoteHoldemTableListener extends ForwardingListener<RemoteHoldem
 				listener.onNewCommunityCards(newCommunityCardsEvent);
 			}
 		} catch (Exception exception) {
-			connection.kill();
+			connection.trigger();
 		}
 	}
 
@@ -98,7 +98,7 @@ public class UnremoteHoldemTableListener extends ForwardingListener<RemoteHoldem
 				listener.onNewDeal(newDealEvent);
 			}
 		} catch (Exception exception) {
-			connection.kill();
+			connection.trigger();
 		}
 	}
 
@@ -108,7 +108,7 @@ public class UnremoteHoldemTableListener extends ForwardingListener<RemoteHoldem
 				listener.onNewRound(newRoundEvent);
 			}
 		} catch (Exception exception) {
-			connection.kill();
+			connection.trigger();
 		}
 	}
 
@@ -118,7 +118,7 @@ public class UnremoteHoldemTableListener extends ForwardingListener<RemoteHoldem
 				listener.onNextPlayer(nextPlayerEvent);
 			}
 		} catch (Exception exception) {
-			connection.kill();
+			connection.trigger();
 		}
 	}
 
@@ -128,7 +128,7 @@ public class UnremoteHoldemTableListener extends ForwardingListener<RemoteHoldem
 				listener.onRaise(raiseEvent);
 			}
 		} catch (Exception exception) {
-			connection.kill();
+			connection.trigger();
 		}
 	}
 
@@ -138,7 +138,7 @@ public class UnremoteHoldemTableListener extends ForwardingListener<RemoteHoldem
 				listener.onShowHand(showHandEvent);
 			}
 		} catch (Exception exception) {
-			connection.kill();
+			connection.trigger();
 		}
 	}
 
@@ -148,7 +148,7 @@ public class UnremoteHoldemTableListener extends ForwardingListener<RemoteHoldem
 				listener.onSitIn(sitInEvent);
 			}
 		} catch (Exception exception) {
-			connection.kill();
+			connection.trigger();
 		}
 	}
 
@@ -158,7 +158,7 @@ public class UnremoteHoldemTableListener extends ForwardingListener<RemoteHoldem
 				listener.onSmallBlind(smallBlindEvent);
 			}
 		} catch (Exception exception) {
-			connection.kill();
+			connection.trigger();
 		}
 	}
 
@@ -168,7 +168,7 @@ public class UnremoteHoldemTableListener extends ForwardingListener<RemoteHoldem
 				listener.onWinner(winnerEvent);
 			}
 		} catch (Exception exception) {
-			connection.kill();
+			connection.trigger();
 		}
 	}
 
@@ -178,7 +178,7 @@ public class UnremoteHoldemTableListener extends ForwardingListener<RemoteHoldem
 				listener.onAllIn(allInEvent);
 			}
 		} catch (Exception exception) {
-			connection.kill();
+			connection.trigger();
 		}
 	}
 
@@ -188,7 +188,7 @@ public class UnremoteHoldemTableListener extends ForwardingListener<RemoteHoldem
 				listener.onJoinTable(joinTableEvent);
 			}
 		} catch (Exception exception) {
-			connection.kill();
+			connection.trigger();
 		}
 	}
 
@@ -198,7 +198,7 @@ public class UnremoteHoldemTableListener extends ForwardingListener<RemoteHoldem
 				listener.onLeaveTable(leaveGameEvent);
 			}
 		} catch (Exception exception) {
-			connection.kill();
+			connection.trigger();
 		}
 	}
 
@@ -208,7 +208,7 @@ public class UnremoteHoldemTableListener extends ForwardingListener<RemoteHoldem
 				listener.onSitOut(sitOutEvent);
 			}
 		} catch (Exception exception) {
-			connection.kill();
+			connection.trigger();
 		}
 	}
 

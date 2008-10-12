@@ -20,16 +20,16 @@ import org.cspoker.common.api.lobby.holdemtable.context.ForwardingHoldemTableCon
 import org.cspoker.common.api.lobby.holdemtable.context.HoldemTableContext;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.HoldemPlayerContext;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.listener.RemoteHoldemPlayerListener;
-import org.cspoker.common.api.shared.Killable;
+import org.cspoker.common.api.shared.Trigger;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.server.rmi.unremote.listener.UnremoteHoldemPlayerListener;
 
 public class UnremoteHoldemTableContext extends ForwardingHoldemTableContext implements
 ExternalHoldemTableContext {
 
-	private final Killable connection;
+	private final Trigger connection;
 
-	public UnremoteHoldemTableContext(Killable connection, HoldemTableContext chatContext) {
+	public UnremoteHoldemTableContext(Trigger connection, HoldemTableContext chatContext) {
 		super(chatContext);
 		this.connection = connection;
 	}

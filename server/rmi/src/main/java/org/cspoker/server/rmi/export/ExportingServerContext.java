@@ -27,15 +27,18 @@ import org.cspoker.common.api.lobby.context.RemoteLobbyContext;
 import org.cspoker.common.api.lobby.listener.LobbyListener;
 import org.cspoker.common.api.shared.context.ForwardingRemoteServerContext;
 import org.cspoker.common.api.shared.context.ServerContext;
+import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.util.lazy.IFactory1;
+import org.cspoker.common.util.lazy.IFactory2;
 import org.cspoker.common.util.lazy.LazyReference1;
+import org.cspoker.common.util.lazy.LazyReference2;
 
 public class ExportingServerContext extends ForwardingRemoteServerContext {
 
 	private LazyReference1<RemoteAccountContext,RemoteException> accountContext = new LazyReference1<RemoteAccountContext,RemoteException>();
 	private LazyReference1<RemoteCashierContext,RemoteException> cashierContext = new LazyReference1<RemoteCashierContext,RemoteException>();
-	private LazyReference1<RemoteChatContext,RemoteException> chatContext = new LazyReference1<RemoteChatContext,RemoteException>();
-	private LazyReference1<RemoteLobbyContext,RemoteException> lobbyContext = new LazyReference1<RemoteLobbyContext,RemoteException>();
+	private LazyReference2<RemoteChatContext,RemoteException, IllegalActionException> chatContext = new LazyReference2<RemoteChatContext,RemoteException, IllegalActionException>();
+	private LazyReference2<RemoteLobbyContext,RemoteException, IllegalActionException> lobbyContext = new LazyReference2<RemoteLobbyContext,RemoteException, IllegalActionException>();
 
 	public ExportingServerContext(ServerContext serverContext) throws RemoteException {
 		super(serverContext);
@@ -61,9 +64,9 @@ public class ExportingServerContext extends ForwardingRemoteServerContext {
 	
 	@Override
 	public RemoteChatContext getChatContext(final ChatListener chatListener)
-			throws RemoteException {
-		return chatContext.getContent(new IFactory1<RemoteChatContext, RemoteException>(){
-			public RemoteChatContext create() throws RemoteException {
+			throws RemoteException, IllegalActionException {
+		return chatContext.getContent(new IFactory2<RemoteChatContext, RemoteException, IllegalActionException>(){
+			public RemoteChatContext create() throws RemoteException, IllegalActionException {
 				return (RemoteChatContext) UnicastRemoteObject.exportObject(ExportingServerContext.super.getChatContext(chatListener), 0);
 			}
 		});
@@ -71,9 +74,9 @@ public class ExportingServerContext extends ForwardingRemoteServerContext {
 	
 	@Override
 	public RemoteLobbyContext getLobbyContext(final LobbyListener lobbyListener)
-			throws RemoteException {
-		return lobbyContext.getContent(new IFactory1<RemoteLobbyContext, RemoteException>(){
-			public RemoteLobbyContext create() throws RemoteException {
+			throws RemoteException, IllegalActionException {
+		return lobbyContext.getContent(new IFactory2<RemoteLobbyContext, RemoteException, IllegalActionException>(){
+			public RemoteLobbyContext create() throws RemoteException, IllegalActionException {
 				ExportingLobbyContext remoteObject = new ExportingLobbyContext(ExportingServerContext.super.getLobbyContext(lobbyListener));
 				return (LobbyContext) UnicastRemoteObject.exportObject(remoteObject, 0);
 			}

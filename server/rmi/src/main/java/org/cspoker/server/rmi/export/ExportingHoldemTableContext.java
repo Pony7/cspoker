@@ -22,7 +22,7 @@ import org.cspoker.common.api.lobby.holdemtable.context.ForwardingRemoteHoldemTa
 import org.cspoker.common.api.lobby.holdemtable.context.RemoteHoldemTableContext;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.RemoteHoldemPlayerContext;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.listener.HoldemPlayerListener;
-import org.cspoker.common.api.shared.Killable;
+import org.cspoker.common.api.shared.Trigger;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.util.lazy.IFactory2;
 import org.cspoker.common.util.lazy.LazyReference2;
@@ -30,10 +30,10 @@ import org.cspoker.common.util.lazy.LazyReference2;
 public class ExportingHoldemTableContext extends ForwardingRemoteHoldemTableContext {
 	
 	private LazyReference2<RemoteHoldemPlayerContext, IllegalActionException,RemoteException> playerContext = new LazyReference2<RemoteHoldemPlayerContext, IllegalActionException,RemoteException>();
-	private Killable tableContextCacheEntry;
+	private Trigger tableContextCacheEntry;
 
 	
-	public ExportingHoldemTableContext(RemoteHoldemTableContext holdemTableContext, Killable tableContextCacheEntry) throws RemoteException {
+	public ExportingHoldemTableContext(RemoteHoldemTableContext holdemTableContext, Trigger tableContextCacheEntry) throws RemoteException {
 		super(holdemTableContext);
 		this.tableContextCacheEntry = tableContextCacheEntry;
 	}
@@ -50,7 +50,7 @@ public class ExportingHoldemTableContext extends ForwardingRemoteHoldemTableCont
 	
 	@Override
 	public void leaveTable() throws RemoteException, IllegalActionException {
-		tableContextCacheEntry.kill();
+		tableContextCacheEntry.trigger();
 		super.leaveTable();
 	}
 	

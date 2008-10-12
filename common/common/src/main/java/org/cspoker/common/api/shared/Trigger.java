@@ -15,8 +15,8 @@
  */
 package org.cspoker.common.api.shared;
 
-public interface Killable {
+public interface Trigger {
 
-	void kill();
+	void trigger();
 	
 }

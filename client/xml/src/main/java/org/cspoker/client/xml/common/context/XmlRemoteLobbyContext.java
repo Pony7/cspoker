@@ -16,9 +16,10 @@
 package org.cspoker.client.xml.common.context;
 
 import java.rmi.RemoteException;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.cspoker.client.xml.common.IDGenerator;
-import org.cspoker.common.api.cashier.action.GetMoneyAmountAction;
+import org.cspoker.client.xml.common.listener.XmlServerListenerTree;
 import org.cspoker.common.api.lobby.action.CreateHoldemTableAction;
 import org.cspoker.common.api.lobby.action.GetHoldemTableInformationAction;
 import org.cspoker.common.api.lobby.action.GetTableListAction;
@@ -36,30 +37,41 @@ public class XmlRemoteLobbyContext implements RemoteLobbyContext{
 
 	private ActionPerformer performer;
 	private IDGenerator generator;
+	private ConcurrentHashMap<Long, RemoteHoldemTableContext> contexts = new ConcurrentHashMap<Long, RemoteHoldemTableContext>();
+	private XmlServerListenerTree serverListenerTree;
 
-	public XmlRemoteLobbyContext(ActionPerformer performer, IDGenerator generator) {
+	public XmlRemoteLobbyContext(ActionPerformer performer, IDGenerator generator, XmlServerListenerTree serverListenerTree) {
 		this.performer = performer;
 		this.generator = generator;
+		this.serverListenerTree = serverListenerTree;
 	}
 	
 	public DetailedHoldemTable createHoldemTable(String name,
 			TableConfiguration configuration) throws RemoteException, IllegalActionException {
-		return performer.perform(new CreateHoldemTableAction(generator.getNextID(),name,configuration));;
+		return performer.perform(new CreateHoldemTableAction(generator.getNextID(),name,configuration));
 	}
 
 	public DetailedHoldemTable getHoldemTableInformation(long tableId)
 			throws RemoteException, IllegalActionException {
-		return performer.perform(new GetHoldemTableInformationAction(generator.getNextID(), tableId));;
+		return performer.perform(new GetHoldemTableInformationAction(generator.getNextID(), tableId));
 	}
 
 	public TableList getTableList() throws RemoteException, IllegalActionException {
-		return performer.perform(new GetTableListAction(generator.getNextID()));;
+		return performer.perform(new GetTableListAction(generator.getNextID()));
 	}
 
-	public RemoteHoldemTableContext joinHoldemTable(long tableId,
+	public RemoteHoldemTableContext joinHoldemTable(long tableID,
 			HoldemTableListener holdemTableListener) throws RemoteException,
 			IllegalActionException {
-		return performer.perform(new JoinHoldemTableAction(generator.getNextID(),tableId));;
+		RemoteHoldemTableContext context;
+		if((context = contexts.putIfAbsent(tableID, 
+				new XmlRemoteHoldemTableContext(performer,generator,tableID, serverListenerTree)))!=null){
+			serverListenerTree.getLobbyListenerTree().getHoldemTableListenerTree(tableID).setHoldemTableListener(holdemTableListener);
+			performer.perform(new JoinHoldemTableAction(generator.getNextID(),tableID));
+			return context;
+		}else{
+			throw new IllegalActionException("Already joined table #"+tableID+".");
+		}
 	}
 
 }

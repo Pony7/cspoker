@@ -24,17 +24,16 @@ import org.cspoker.common.api.chat.context.RemoteChatContext;
 import org.cspoker.common.api.chat.listener.ChatListener;
 import org.cspoker.common.api.lobby.context.RemoteLobbyContext;
 import org.cspoker.common.api.lobby.listener.LobbyListener;
-import org.cspoker.common.api.shared.Killable;
+import org.cspoker.common.api.shared.exception.IllegalActionException;
 
-public interface RemoteServerContext extends Remote, Killable{
+public interface RemoteServerContext extends Remote{
 
 	RemoteAccountContext getAccountContext() throws RemoteException;
 	
 	RemoteCashierContext getCashierContext() throws RemoteException;
 	
-	RemoteChatContext getChatContext(ChatListener chatListener) throws RemoteException;
+	RemoteChatContext getChatContext(ChatListener chatListener) throws RemoteException, IllegalActionException;
 
-	RemoteLobbyContext getLobbyContext(LobbyListener lobbyListener) throws RemoteException;
+	RemoteLobbyContext getLobbyContext(LobbyListener lobbyListener) throws RemoteException, IllegalActionException;
 	
-	void kill();
 }
