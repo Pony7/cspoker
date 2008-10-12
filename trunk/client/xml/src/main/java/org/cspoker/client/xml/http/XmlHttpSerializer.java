@@ -38,36 +38,31 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.PropertyException;
 
 import org.apache.log4j.Logger;
-import org.cspoker.client.xml.common.ChannelState;
-import org.cspoker.client.xml.common.ChannelStateException;
-import org.cspoker.client.xml.common.XmlChannel;
-import org.cspoker.common.XmlEventListener;
+import org.cspoker.client.xml.common.XmlActionSerializer;
+import org.cspoker.common.api.shared.action.DispatchableAction;
+import org.cspoker.common.api.shared.exception.IllegalActionException;
+import org.cspoker.common.api.shared.listener.ActionAndServerEventListener;
 import org.cspoker.common.jaxbcontext.ActionJAXBContext;
 import org.cspoker.common.util.Base64;
+import org.cspoker.common.xml.XmlEventListener;
 import org.cspoker.common.xml.actions.NoOpAction;
 
-public class XmlHttpChannel implements XmlChannel {
+public class XmlHttpSerializer implements XmlActionSerializer {
 
-	private final static Logger logger = Logger.getLogger(XmlHttpChannel.class);
+	private final static Logger logger = Logger.getLogger(XmlHttpSerializer.class);
 	private ScheduledExecutorService scheduler;
 	private final Set<XmlEventListener> xmlEventListeners = Collections
 			.synchronizedSet(new HashSet<XmlEventListener>());
 	private URL url;
-	private ChannelState state = ChannelState.INITIALIZED;
 	private String authorizationString;
 
-	public XmlHttpChannel(URL url, final String username, final String password) {
+	public XmlHttpSerializer(URL url, final String username, final String password) {
 		authorizationString = "Basic "
 				+ Base64.encode((username + ":" + password).getBytes(), 0);
 		this.url = url;
 	}
 
-	public synchronized void open() throws LoginException, RemoteException,
-			ChannelStateException {
-		if (state != ChannelState.INITIALIZED) {
-			throw new ChannelStateException(
-					"Channel is not in the initialized state", state);
-		}
+	public synchronized void open() throws LoginException, RemoteException {
 		try {
 			HttpURLConnection connection = (HttpURLConnection) url
 					.openConnection();
@@ -109,7 +104,6 @@ public class XmlHttpChannel implements XmlChannel {
 		scheduler = Executors.newScheduledThreadPool(1);
 		scheduler.scheduleWithFixedDelay(new NoOpSubmitter(this), 1500, 1500,
 				TimeUnit.MILLISECONDS);
-		state = ChannelState.OPEN;
 	}
 
 	public synchronized void close() {
@@ -241,5 +235,14 @@ public class XmlHttpChannel implements XmlChannel {
 			logger.fatal(e);
 			throw new IllegalStateException(e);
 		}
+	}
+
+	public void setEventHandler(ActionAndServerEventListener listener) {
+		
+	}
+
+	public <T> T perform(DispatchableAction<T> action)
+			throws IllegalActionException {
+		return null;
 	}
 }

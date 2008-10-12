@@ -46,8 +46,4 @@ public class ForwardingServerContext implements ServerContext {
 		return serverContext.getLobbyContext(lobbyListener);
 	}
 
-	public void kill() {
-		serverContext.kill();
-	}
-
 }

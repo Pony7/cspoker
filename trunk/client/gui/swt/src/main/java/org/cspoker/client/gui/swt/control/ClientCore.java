@@ -175,7 +175,7 @@ public class ClientCore
 		if (lobby != null) {
 			lobby.dispose();
 		}
-		communication.kill();
+		communication.trigger();
 	}
 	
 	/**

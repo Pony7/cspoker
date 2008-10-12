@@ -137,9 +137,7 @@ public class ClientContext {
 			client.close();
 		} catch (IOException exception) {
 		}
-		if(serverContext!=null){
-			serverContext.kill();
-		}
+		//TODO trigger something
 	}
 
 	public void send(String xml) {

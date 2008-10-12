@@ -18,14 +18,14 @@ package org.cspoker.server.rmi.unremote.listener;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.event.NewPocketCardsEvent;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.listener.HoldemPlayerListener;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.listener.RemoteHoldemPlayerListener;
-import org.cspoker.common.api.shared.Killable;
+import org.cspoker.common.api.shared.Trigger;
 import org.cspoker.common.api.shared.listener.ForwardingListener;
 
 public class UnremoteHoldemPlayerListener extends ForwardingListener<RemoteHoldemPlayerListener> implements HoldemPlayerListener{
 
-	private final Killable connection;
+	private final Trigger connection;
 
-	public UnremoteHoldemPlayerListener(Killable connection, RemoteHoldemPlayerListener playerListener) {
+	public UnremoteHoldemPlayerListener(Trigger connection, RemoteHoldemPlayerListener playerListener) {
 		super(playerListener);
 		this.connection = connection;
 	}
@@ -36,7 +36,7 @@ public class UnremoteHoldemPlayerListener extends ForwardingListener<RemoteHolde
 				listener.onNewPocketCards(newPocketCardsEvent);
 			}
 		} catch (Exception exception) {
-			connection.kill();
+			connection.trigger();
 		}
 	}
 

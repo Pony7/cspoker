@@ -40,6 +40,8 @@ public class ServerContextImpl implements ServerContext {
 		this.cashierContext = new CashierContextImpl(accountContext);
 		this.chatContext = new ChatContextImpl(accountContext);
 		//singleton lobby is passed as an arguement for flexibility.
+		//TODO fix - I think we should limit the use of singletons. 
+		//We should for instance be able to run 2 independent servers in the same JVM. - guy
 		this.lobbyContext = new LobbyContextImpl(accountContext, Lobby.getInstance());
 	}
 
@@ -57,10 +59,6 @@ public class ServerContextImpl implements ServerContext {
 
 	public LobbyContext getLobbyContext() {
 		return lobbyContext;
-	}
-
-	public void kill() {
-		//TODO implement
 	}
 
 	public ChatContext getChatContext(ChatListener chatListener) {

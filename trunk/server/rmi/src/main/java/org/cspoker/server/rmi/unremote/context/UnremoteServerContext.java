@@ -19,7 +19,7 @@ import org.cspoker.common.api.chat.context.ChatContext;
 import org.cspoker.common.api.chat.listener.RemoteChatListener;
 import org.cspoker.common.api.lobby.context.LobbyContext;
 import org.cspoker.common.api.lobby.listener.RemoteLobbyListener;
-import org.cspoker.common.api.shared.Killable;
+import org.cspoker.common.api.shared.Trigger;
 import org.cspoker.common.api.shared.context.ExternalServerContext;
 import org.cspoker.common.api.shared.context.ForwardingServerContext;
 import org.cspoker.common.api.shared.context.ServerContext;
@@ -28,9 +28,9 @@ import org.cspoker.server.rmi.unremote.listener.UnremoteLobbyListener;
 
 public class UnremoteServerContext extends ForwardingServerContext implements ExternalServerContext {
 
-	private Killable connection;
+	private Trigger connection;
 
-	public UnremoteServerContext(Killable connection, ServerContext serverContext) {
+	public UnremoteServerContext(Trigger connection, ServerContext serverContext) {
 		super(serverContext);
 		this.connection = connection;
 	}

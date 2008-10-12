@@ -19,14 +19,14 @@ import org.cspoker.common.api.chat.event.ServerMessageEvent;
 import org.cspoker.common.api.chat.event.TableMessageEvent;
 import org.cspoker.common.api.chat.listener.ChatListener;
 import org.cspoker.common.api.chat.listener.RemoteChatListener;
-import org.cspoker.common.api.shared.Killable;
+import org.cspoker.common.api.shared.Trigger;
 import org.cspoker.common.api.shared.listener.ForwardingListener;
 
 public class UnremoteChatListener extends ForwardingListener<RemoteChatListener> implements ChatListener{
 
-	private final Killable connection;
+	private final Trigger connection;
 
-	public UnremoteChatListener(Killable connection, RemoteChatListener chatListener) {
+	public UnremoteChatListener(Trigger connection, RemoteChatListener chatListener) {
 		super(chatListener);
 		this.connection = connection;
 	}
@@ -37,7 +37,7 @@ public class UnremoteChatListener extends ForwardingListener<RemoteChatListener>
 				listener.onServerMessage(serverMessageEvent);
 			}
 		} catch (Exception exception) {
-			connection.kill();
+			connection.trigger();
 		}
 	}
 
@@ -47,7 +47,7 @@ public class UnremoteChatListener extends ForwardingListener<RemoteChatListener>
 				listener.onTableMessage(tableMessageEvent);
 			}
 		} catch (Exception exception) {
-			connection.kill();
+			connection.trigger();
 		}
 	}
 

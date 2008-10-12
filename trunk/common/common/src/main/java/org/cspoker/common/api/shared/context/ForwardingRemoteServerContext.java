@@ -23,6 +23,7 @@ import org.cspoker.common.api.chat.context.RemoteChatContext;
 import org.cspoker.common.api.chat.listener.ChatListener;
 import org.cspoker.common.api.lobby.context.RemoteLobbyContext;
 import org.cspoker.common.api.lobby.listener.LobbyListener;
+import org.cspoker.common.api.shared.exception.IllegalActionException;
 
 public class ForwardingRemoteServerContext implements RemoteServerContext {
 
@@ -41,17 +42,13 @@ public class ForwardingRemoteServerContext implements RemoteServerContext {
 	}
 
 	public RemoteChatContext getChatContext(ChatListener chatListener)
-			throws RemoteException {
+			throws RemoteException, IllegalActionException {
 		return serverContext.getChatContext(chatListener);
 	}
 
 	public RemoteLobbyContext getLobbyContext(LobbyListener lobbyListener)
-			throws RemoteException {
+			throws RemoteException, IllegalActionException {
 		return serverContext.getLobbyContext(lobbyListener);
-	}
-
-	public void kill() {
-		serverContext.kill();
 	}
 
 }

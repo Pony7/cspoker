@@ -22,20 +22,14 @@ import java.rmi.RemoteException;
 import org.apache.log4j.Logger;
 import org.cspoker.common.CSPokerServer;
 import org.cspoker.server.common.util.threading.RequestExecutor;
-import org.cspoker.server.xml.http.authentication.XmlFileBasicAuthentication;
 import org.cspoker.server.xml.http.handler.CSPokerHandler;
 import org.cspoker.server.xml.http.handler.CrossDomain;
-
-import com.sun.net.httpserver.Authenticator;
-import com.sun.net.httpserver.HttpContext;
 
 /**
  * Creates a new web server and starts it.
  */
 public class HttpServer {
 	private static Logger logger = Logger.getLogger(HttpServer.class);
-
-	private Authenticator authenticator;
 
 	/**
 	 * Variable holding the server object.
@@ -58,10 +52,8 @@ public class HttpServer {
 	}
 
 	protected void loadContext(CSPokerServer cspokerServer) {
-		HttpContext mainContext = server.createContext("/cspoker/",
-				new CSPokerHandler(cspokerServer));
-		mainContext.setAuthenticator(authenticator);
-
+		final CSPokerHandler handler = new CSPokerHandler(cspokerServer);
+		server.createContext("/cspoker/",handler);
 		server.setExecutor(RequestExecutor.getInstance());
 		server.createContext("/", new CrossDomain());
 
