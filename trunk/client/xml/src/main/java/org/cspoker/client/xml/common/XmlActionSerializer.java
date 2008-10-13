@@ -15,11 +15,15 @@
  */
 package org.cspoker.client.xml.common;
 
-import org.cspoker.common.api.shared.action.ActionPerformer;
+import java.rmi.RemoteException;
+
+import org.cspoker.common.api.shared.action.DispatchableAction;
 import org.cspoker.common.api.shared.listener.ActionAndServerEventListener;
 
-public interface XmlActionSerializer extends ActionPerformer{
+public interface XmlActionSerializer{
 
 	void setEventHandler(ActionAndServerEventListener listener);
+
+	void perform(DispatchableAction<?> action) throws RemoteException;
 
 }

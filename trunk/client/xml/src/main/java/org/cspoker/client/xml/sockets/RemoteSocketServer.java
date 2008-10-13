@@ -17,29 +17,23 @@ package org.cspoker.client.xml.sockets;
 
 import java.rmi.RemoteException;
 
-import javax.security.auth.login.LoginException;
+import org.cspoker.client.xml.common.RemoteXmlServer;
+import org.cspoker.client.xml.common.XmlActionSerializer;
 
-import org.cspoker.client.xml.common.context.XmlRemoteServerContext;
-import org.cspoker.common.RemoteCSPokerServer;
-import org.cspoker.common.api.shared.context.RemoteServerContext;
-
-public class RemoteSocketServer implements RemoteCSPokerServer {
-
-	private final String server;
-	private final int port;
+public class RemoteSocketServer extends RemoteXmlServer {
 
 	public RemoteSocketServer(String server, int port) {
-		this.server = server;
-		this.port = port;
+		super(server,port);
 	}
 
 	public String toString() {
 		return "socket://" + server + ":" + port;
 	}
 
-	public RemoteServerContext login(String username, String password)
-			throws RemoteException, LoginException {
-		return new XmlRemoteServerContext(new XmlSocketsChannel(server, port, username,password));
+	@Override
+	protected XmlActionSerializer createXmlActionSerializer(String username,
+			String password) throws RemoteException {
+		return new XmlSocketsChannel(server, port, username,password);
 	}
 
 }

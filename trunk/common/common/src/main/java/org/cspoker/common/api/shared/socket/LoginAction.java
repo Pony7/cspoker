@@ -17,10 +17,12 @@ package org.cspoker.common.api.shared.socket;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.cspoker.common.api.shared.action.Action;
+import org.cspoker.common.api.shared.action.DispatchableAction;
+import org.cspoker.common.api.shared.context.StaticServerContext;
+import org.cspoker.common.api.shared.exception.IllegalActionException;
 
 @XmlRootElement
-public class LoginAction implements Action {
+public class LoginAction extends DispatchableAction<Void> {
 
 	private static final long serialVersionUID = -2677247916335298486L;
 	
@@ -42,6 +44,12 @@ public class LoginAction implements Action {
 	
 	public String getPasswordHash() {
 		return this.passwordHash;
+	}
+
+	@Override
+	public Void perform(StaticServerContext serverContext)
+			throws IllegalActionException {
+		return null;
 	}
 
 }
