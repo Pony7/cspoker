@@ -15,6 +15,7 @@
  */
 package org.cspoker.client.xml.common;
 
+import java.rmi.RemoteException;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Semaphore;
 
@@ -40,7 +41,7 @@ public class CallSynchronizer implements ActionPerformer, ActionAndServerEventLi
 		this.serializer.setEventHandler(this);
 	}
 	
-	public <T> T perform(DispatchableAction<T> action) throws IllegalActionException{
+	public <T> T perform(DispatchableAction<T> action) throws IllegalActionException, RemoteException{
 		semaphores.putIfAbsent(action.getID(), new Semaphore(0));
 		Semaphore semaphore = semaphores.get(action.getID());
 		serializer.perform(action);

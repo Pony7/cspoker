@@ -17,8 +17,10 @@ package org.cspoker.client.xml.sockets;
 
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.io.StringReader;
 import java.io.Writer;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.Charset;
@@ -27,114 +29,53 @@ import java.rmi.RemoteException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import javax.security.auth.login.LoginException;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
 
 import org.apache.log4j.Logger;
 import org.cspoker.client.xml.common.XmlActionSerializer;
 import org.cspoker.common.api.shared.action.DispatchableAction;
-import org.cspoker.common.api.shared.exception.IllegalActionException;
+import org.cspoker.common.api.shared.event.ActionEvent;
+import org.cspoker.common.api.shared.event.ServerEvent;
 import org.cspoker.common.api.shared.listener.ActionAndServerEventListener;
-import org.cspoker.common.api.shared.socket.LoginAction;
-import org.cspoker.common.util.Strings;
-import org.cspoker.common.xml.XmlEventListener;
+import org.cspoker.common.jaxbcontext.AllSocketJAXBContexts;
 
 public class XmlSocketsChannel implements XmlActionSerializer {
 
-	private final static Logger logger = Logger
-			.getLogger(XmlSocketsChannel.class);
+	private final static Logger logger = Logger.getLogger(XmlSocketsChannel.class);
 
-	private Socket s;
-	private Writer w;
+	private final Socket socket;
+	private final Writer socketWriter;
 
-	private ExecutorService executor;
+	private final ExecutorService executor;
 
-	private CharsetDecoder decoder;
+	private final CharsetDecoder decoder;
 
-	private final String server;
-	private final int port;
+	private volatile ActionAndServerEventListener eventHandler;
 
 	public XmlSocketsChannel(String server, int port, String username,
-			String password) {
-		this.server = server;
-		this.port = port;
-		this.username = username;
-		this.password = password;
+			String password) throws RemoteException {
 		Charset charset = Charset.forName("UTF-8");
 		decoder = charset.newDecoder();
-	}
-
-	public synchronized void open() throws LoginException, RemoteException,
-			ChannelStateException {
-		if (state != ChannelState.INITIALIZED) {
-			throw new ChannelStateException(
-					"Channel is not in the initialized state", state);
-		}
 		try {
-			s = new Socket(server, port);
-			w = new OutputStreamWriter(s.getOutputStream());
-			if (!login(username, password)) {
-				throw new LoginException("Login failed for " + username);
-			}
-			executor = Executors.newSingleThreadExecutor();
-			executor.execute(new WaitForEvents());
-		} catch (IOException e) {
-			logger.error(e);
-			throw new RemoteException("IOException from socket.", e);
+			socket = new Socket(server, port);
+			socketWriter = new OutputStreamWriter(socket.getOutputStream());
+		} catch (UnknownHostException exception) {
+			throw new RemoteException("Exception opening socket.", exception);
+		} catch (IOException exception) {
+			throw new RemoteException("Exception opening socket.", exception);
 		}
-		state = ChannelState.OPEN;
-	}
-
-	public void registerXmlEventListener(XmlEventListener listener) {
-		xmlEventListeners.add(listener);
-	}
-
-	public void unRegisterXmlEventListener(XmlEventListener listener) {
-		xmlEventListeners.remove(listener);
-	}
-
-	private void fireXmlEvent(String xmlEvent) {
-		for (XmlEventListener listener : xmlEventListeners) {
-			listener.collect(xmlEvent);
-		}
-	}
-
-	private boolean login(String username, String password) throws IOException {
-		LoginAction loginAction = new LoginAction(username, password);
-		w.write("<login username='" + username + "' password='" + password
-				+ "' useragent='Sockets Client " + Strings.version + "'/>"
-				+ ((char) 0x00));
-		w.flush();
-		try {
-			return readUntilDelimiter().contains("<login");
-		} catch (IOException e) {
-			logger.error("Connection lost during login.", e);
-		} catch (InterruptedException e) {
-			logger.error(e);
-			Thread.currentThread().interrupt();
-		}
-		return false;
-	}
-
-	public synchronized void send(final String xml) throws RemoteException,
-			ChannelStateException {
-		if (state != ChannelState.OPEN) {
-			throw new ChannelStateException("Channel is not open", state);
-		}
-		try {
-			w.write(xml + ((char) 0x00));
-			w.flush();
-		} catch (IOException e) {
-			logger.error(e);
-			throw new RemoteException("IOException from socket", e);
-		}
+		executor = Executors.newSingleThreadExecutor();
+		executor.execute(new WaitForEvents());
 	}
 
 	private String readUntilDelimiter() throws IOException,
-			InterruptedException {
+	InterruptedException {
 		StringBuilder sb = new StringBuilder();
 		ByteBuffer singleByteBuffer = ByteBuffer.allocateDirect(1);
 		while (true) {
-			int b = s.getInputStream().read();
+			int b = socket.getInputStream().read();
 			if (Thread.interrupted()) {
 				throw new InterruptedException();
 			}
@@ -159,45 +100,67 @@ public class XmlSocketsChannel implements XmlActionSerializer {
 	}
 
 	public synchronized void close() {
-		if (state != ChannelState.CLOSED) {
-			executor.shutdown();
-			executor.shutdownNow();
-			try {
-				w.close();
-			} catch (IOException e) {
-				logger.error(e);
-			}
-			try {
-				s.close();
-			} catch (IOException e) {
-				logger.error(e);
-			}
+		executor.shutdown();
+		executor.shutdownNow();
+		try {
+			socketWriter.close();
+		} catch (IOException e) {
+			logger.error(e);
 		}
-		state = ChannelState.CLOSED;
+		try {
+			socket.close();
+		} catch (IOException e) {
+			logger.error(e);
+		}
 	}
 
 	private class WaitForEvents implements Runnable {
 
 		public void run() {
 			try {
-				String s = readUntilDelimiter();
-				fireXmlEvent(s);
-				executor.execute(this);
+				while (true) {
+					String s = readUntilDelimiter();
+					if (eventHandler!=null) {
+						Unmarshaller unmarshaller = AllSocketJAXBContexts.context
+						.createUnmarshaller();
+						Object event = unmarshaller.unmarshal(new StringReader(
+								s));
+						if (event instanceof ActionEvent<?>) {
+							eventHandler
+									.onActionPerformed((ActionEvent<?>) event);
+						} else if (event instanceof ServerEvent) {
+							eventHandler.onServerEvent((ServerEvent) event);
+						} else {
+							throw new ClassCastException("Unknown event type.");
+						}
+					}
+				}
 			} catch (IOException e) {
 				close();
 			} catch (InterruptedException e) {
 				Thread.currentThread().interrupt();
+			} catch (JAXBException exception) {
+				close();
 			}
 		}
 
 	}
 
-	public void setEventHandler(ActionAndServerEventListener listener) {
+	public void setEventHandler(ActionAndServerEventListener handler) {
+		this.eventHandler = handler;
 	}
 
-	public <T> T perform(DispatchableAction<T> action)
-			throws IllegalActionException {
-		return null;
+	public synchronized void perform(DispatchableAction<?> action) throws RemoteException {
+		try {
+			Marshaller marshaller = AllSocketJAXBContexts.context.createMarshaller();
+			marshaller.marshal(action, socketWriter);
+			socketWriter.write(((char) 0x00));
+			socketWriter.flush();
+		} catch (JAXBException exception) {
+			throw new RemoteException("Exception sending action.", exception);
+		} catch (IOException exception) {
+			throw new RemoteException("Exception sending action.", exception);
+		}
 	}
 
 }

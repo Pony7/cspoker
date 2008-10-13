@@ -40,8 +40,8 @@ public class XmlRemoteServerContext implements RemoteServerContext {
 	private final AtomicReference<RemoteLobbyContext> lobbyContext = new AtomicReference<RemoteLobbyContext>();
 	private final XmlServerListenerTree serverListenerTree;
 
-	public XmlRemoteServerContext(ActionPerformer performer) {
-		this(performer, new IDGenerator(), new XmlServerListenerTree());
+	public XmlRemoteServerContext(ActionPerformer performer, XmlServerListenerTree serverListenerTree) {
+		this(performer, new IDGenerator(),serverListenerTree);
 	}
 	
 	public XmlRemoteServerContext(ActionPerformer performer, IDGenerator generator, XmlServerListenerTree serverListenerTree) {

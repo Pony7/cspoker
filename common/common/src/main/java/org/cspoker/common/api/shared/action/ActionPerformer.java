@@ -15,10 +15,12 @@
  */
 package org.cspoker.common.api.shared.action;
 
+import java.rmi.RemoteException;
+
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 
 public interface ActionPerformer {
 
-	<T> T perform(DispatchableAction<T> action) throws IllegalActionException;
+	<T> T perform(DispatchableAction<T> action) throws IllegalActionException, RemoteException;
 
 }
