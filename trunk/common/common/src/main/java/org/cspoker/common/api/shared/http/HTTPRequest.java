@@ -30,7 +30,13 @@ import org.cspoker.common.api.shared.event.ServerEvent;
 public class HTTPRequest {
 
 	private List<DispatchableAction<?>> actions = Collections.synchronizedList(new ArrayList<DispatchableAction<?>>());
-	
+
+	public HTTPRequest(Queue<DispatchableAction<?>> queue) {
+		DispatchableAction<?> action;
+		while((action = queue.poll())!=null){
+			actions.add(action);
+		}
+	}
 	public HTTPRequest() {
 		// no op
 	}
@@ -39,7 +45,7 @@ public class HTTPRequest {
 		actions.add(action);
 	}
 	
-	public List<DispatchableAction<?>> getAction() {
+	public List<DispatchableAction<?>> getActions() {
 		return Collections.unmodifiableList(this.actions);
 	}
 	

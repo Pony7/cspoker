@@ -15,12 +15,15 @@
  */
 package org.cspoker.common.api.shared.action;
 
+import java.rmi.RemoteException;
+
 import javax.xml.bind.annotation.XmlAttribute;
 
 import org.cspoker.common.api.shared.context.StaticServerContext;
 import org.cspoker.common.api.shared.event.ActionEvent;
 import org.cspoker.common.api.shared.event.ActionPerformedEvent;
 import org.cspoker.common.api.shared.event.IllegalActionEvent;
+import org.cspoker.common.api.shared.event.RemoteExceptionEvent;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 
 public abstract class DispatchableAction<T> implements Action {
@@ -42,7 +45,7 @@ public abstract class DispatchableAction<T> implements Action {
 		try {
 			return new ActionPerformedEvent<T>(this, perform(serverContext));
 		} catch (IllegalActionException exception) {
-			return new IllegalActionEvent<T>(this,exception);
+			return getIllegalActionEvent(exception);
 		}
 	}
 
@@ -57,6 +60,14 @@ public abstract class DispatchableAction<T> implements Action {
 		int result = 1;
 		result = prime * result + (int) (id ^ (id >>> 32));
 		return result;
+	}
+
+	public IllegalActionEvent<T> getIllegalActionEvent(IllegalActionException exception){
+		return new IllegalActionEvent<T>(this,exception);
+	}
+
+	public RemoteExceptionEvent<T> getRemoteExceptionEvent(RemoteException exception){
+		return new RemoteExceptionEvent<T>(this,exception);
 	}
 
 }

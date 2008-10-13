@@ -38,7 +38,7 @@ public class CallSynchronizer implements ActionPerformer, ActionAndServerEventLi
 	public CallSynchronizer(ServerListenerTree listenerTree, XmlActionSerializer serializer) {
 		this.serializer = serializer;
 		this.listenerTree = listenerTree;
-		this.serializer.setEventHandler(this);
+		this.serializer.setEventListener(this);
 	}
 	
 	public <T> T perform(DispatchableAction<T> action) throws IllegalActionException, RemoteException{

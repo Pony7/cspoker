@@ -15,40 +15,41 @@
  */
 package org.cspoker.common.api.shared.event;
 
+import java.rmi.RemoteException;
+
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 import org.cspoker.common.api.shared.action.DispatchableAction;
-import org.cspoker.common.api.shared.exception.IllegalActionException;
 
 @XmlRootElement
-public class IllegalActionEvent<T> extends ActionEvent<T> {
+public class RemoteExceptionEvent<T> extends ActionEvent<T> {
 
         private static final long serialVersionUID = 8350435427841245148L;
 
     	@XmlTransient
-        private IllegalActionException exception;
+        private RemoteException exception;
 
 		private String message = null;
 
-        public IllegalActionEvent(DispatchableAction<T> action, IllegalActionException exception) {
+        public RemoteExceptionEvent(DispatchableAction<T> action,RemoteException exception) {
                 super(action);
                 this.exception = exception;
         		this.message = exception.getMessage();
         }
         
-        public IllegalActionEvent(DispatchableAction<T> action, String message) {
+        public RemoteExceptionEvent(DispatchableAction<T> action, String message) {
             super(action);
     		this.message = message;
         }
 
-        protected IllegalActionEvent() {
+        protected RemoteExceptionEvent() {
                 // no op
         }
 
-    	public IllegalActionException getException() {
+    	public RemoteException getException() {
     		if (exception == null) {
-    			exception = new IllegalActionException(message);
+    			exception = new RemoteException(message);
     		}
     		return exception;
     	}
@@ -58,7 +59,7 @@ public class IllegalActionEvent<T> extends ActionEvent<T> {
     	}
         
         @Override
-        public T getResult() throws IllegalActionException {
+        public T getResult() throws RemoteException {
         	throw getException();
         }
         

@@ -22,7 +22,7 @@ import org.cspoker.common.api.shared.listener.ActionAndServerEventListener;
 
 public interface XmlActionSerializer{
 
-	void setEventHandler(ActionAndServerEventListener listener);
+	void setEventListener(ActionAndServerEventListener listener);
 
 	void perform(DispatchableAction<?> action) throws RemoteException;
 

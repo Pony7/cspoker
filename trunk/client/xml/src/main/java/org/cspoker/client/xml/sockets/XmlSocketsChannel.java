@@ -146,7 +146,7 @@ public class XmlSocketsChannel implements XmlActionSerializer {
 
 	}
 
-	public void setEventHandler(ActionAndServerEventListener handler) {
+	public void setEventListener(ActionAndServerEventListener handler) {
 		this.eventHandler = handler;
 	}
 
