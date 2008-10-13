@@ -39,10 +39,14 @@ import org.cspoker.common.CSPokerServer;
 import org.cspoker.common.api.shared.action.DispatchableAction;
 import org.cspoker.common.api.shared.context.StaticServerContext;
 import org.cspoker.common.api.shared.event.ActionEvent;
+import org.cspoker.common.api.shared.event.ActionPerformedEvent;
 import org.cspoker.common.api.shared.event.Event;
+import org.cspoker.common.api.shared.event.IllegalActionEvent;
 import org.cspoker.common.api.shared.event.ServerEvent;
+import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.api.shared.listener.ServerEventListener;
 import org.cspoker.common.api.shared.listener.UniversalServerListener;
+import org.cspoker.common.api.shared.socket.LoginAction;
 import org.cspoker.common.jaxbcontext.EventJAXBContext;
 import org.cspoker.server.xml.common.XmlServerContext;
 
@@ -166,17 +170,6 @@ public class ClientContext {
 		output.flush();
 		send(output.toString());
 	}
-
-	public void login(String username, String passwordHash) throws LoginException{
-		serverContext = new XmlServerContext(cspokerServer.login(username, passwordHash),
-				new UniversalServerListener(
-						new ServerEventListener(){
-							public void onServerEvent(ServerEvent event) {
-								send(event);
-							}
-						}		
-				));
-	}
 	
 	public void perform(DispatchableAction<?> action){
 		ActionEvent<?> result = action.wrappedPerform(serverContext);
@@ -185,6 +178,22 @@ public class ClientContext {
 
 	public boolean isAuthenticated() {
 		return serverContext==null;
+	}
+
+	public void login(LoginAction action) {
+		try {
+			serverContext = new XmlServerContext(cspokerServer.login(action.getUsername(), action.getPasswordHash()),
+					new UniversalServerListener(
+							new ServerEventListener(){
+								public void onServerEvent(ServerEvent event) {
+									send(event);
+								}
+							}		
+					));
+			send(new ActionPerformedEvent<Void>(action, null));
+		} catch (LoginException exception) {
+			send(new IllegalActionEvent<Void>(action, new IllegalActionException("Bad Login.")));
+		}
 	}
 
 }

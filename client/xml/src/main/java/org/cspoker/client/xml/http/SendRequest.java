@@ -15,25 +15,16 @@
  */
 package org.cspoker.client.xml.http;
 
-import org.apache.log4j.Logger;
+public class SendRequest implements Runnable {
 
-public class NoOpSubmitter implements Runnable {
+	private final XmlHttpSerializer serializer;
 
-	private final static Logger logger = Logger.getLogger(XmlHttpChannel.class);
-
-	private final XmlHttpChannel c;
-
-	public NoOpSubmitter(XmlHttpChannel c) {
-		this.c = c;
+	public SendRequest(XmlHttpSerializer c) {
+		this.serializer = c;
 	}
 
 	public void run() {
-		try {
-			c.send(XmlHttpChannel.noOpXml);
-		} catch (Exception e) {
-			logger.fatal(e);
-			c.close();
-		}
+		serializer.sendRequest();
 	}
 
 }

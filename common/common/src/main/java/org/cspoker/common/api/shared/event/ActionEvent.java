@@ -15,6 +15,8 @@
  */
 package org.cspoker.common.api.shared.event;
 
+import java.rmi.RemoteException;
+
 import javax.xml.bind.annotation.XmlTransient;
 
 import org.cspoker.common.api.shared.action.DispatchableAction;
@@ -46,6 +48,6 @@ public abstract class ActionEvent<T> implements Event{
         	return id;
         }
         
-        public abstract T getResult() throws IllegalActionException;
+        public abstract T getResult() throws IllegalActionException, RemoteException;
 }
 

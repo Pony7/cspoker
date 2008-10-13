@@ -38,7 +38,6 @@ import org.cspoker.common.jaxbcontext.EventJAXBContext;
 import org.cspoker.common.util.Pair;
 import org.cspoker.common.util.lazy.IFactory1;
 import org.cspoker.common.util.lazy.LazyMap1;
-import org.cspoker.common.xml.EventAndActionJAXBContext;
 import org.cspoker.server.xml.common.XmlServerContext;
 import org.cspoker.server.xml.http.handler.abstracts.AbstractHttpHandler;
 import org.cspoker.server.xml.http.handler.exception.HttpExceptionImpl;

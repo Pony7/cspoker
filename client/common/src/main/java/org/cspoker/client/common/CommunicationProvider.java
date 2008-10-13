@@ -29,15 +29,15 @@ public class CommunicationProvider implements RemoteCSPokerServer {
 
 	public final static CommunicationProvider global_provider = new CommunicationProvider();
 
-	private List<RemoteCSPokerServer> providers = new ArrayList<RemoteCSPokerServer>();
+	private List<RemoteCSPokerServer> servers = new ArrayList<RemoteCSPokerServer>();
 
-	public void addRemoteCSPokerServerProvider(
-			RemoteCSPokerServer provider) {
-		providers.add(provider);
+	public void addRemoteCSPokerServer(
+			RemoteCSPokerServer server) {
+		servers.add(server);
 	}
 
 	public List<RemoteCSPokerServer> getProviders() {
-		return Collections.unmodifiableList(providers);
+		return Collections.unmodifiableList(servers);
 	}
 
 	public RemoteServerContext login(String username, String password) throws LoginException, RemoteException  {
@@ -45,7 +45,7 @@ public class CommunicationProvider implements RemoteCSPokerServer {
 		RemoteException lastRemoteException = null;
 		LoginException lastLoginException = null;
 		
-		for (RemoteCSPokerServer p : providers) {
+		for (RemoteCSPokerServer p : servers) {
 			try {
 				return p.login(username, password);
 			} catch (RemoteException e) {
@@ -59,7 +59,7 @@ public class CommunicationProvider implements RemoteCSPokerServer {
 		}else if(lastRemoteException != null){
 			throw lastRemoteException;
 		}else{
-			throw new IllegalStateException("No probiders are registered");
+			throw new IllegalStateException("No servers are registered");
 		}
 	}
 

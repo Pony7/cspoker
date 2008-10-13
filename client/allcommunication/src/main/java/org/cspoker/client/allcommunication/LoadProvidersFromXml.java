@@ -20,9 +20,9 @@ import java.io.InputStream;
 
 import org.apache.log4j.Logger;
 import org.cspoker.client.common.CommunicationProvider;
-import org.cspoker.client.rmi.RemotePlayerCommunicationFactoryForRMI;
-import org.cspoker.client.xml.http.RemotePlayerCommunicationFactoryForHttp;
-import org.cspoker.client.xml.sockets.RemotePlayerCommunicationFactoryForSocket;
+import org.cspoker.client.rmi.RemoteRMIServer;
+import org.cspoker.client.xml.http.RemoteHTTPServer;
+import org.cspoker.client.xml.sockets.RemoteSocketServer;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -78,17 +78,11 @@ public class LoadProvidersFromXml {
 					int port = Integer.parseInt(attributes.getValue("port"));
 					String type = attributes.getValue("type");
 					if (type.equals("rmi")) {
-						provider
-								.addRemotePlayerCommunicationProvider(new RemotePlayerCommunicationFactoryForRMI(
-										address, port));
+						provider.addRemoteCSPokerServer(new RemoteRMIServer(address,port));
 					} else if (type.equals("http")) {
-						provider
-								.addRemotePlayerCommunicationProvider(new RemotePlayerCommunicationFactoryForHttp(
-										address, port));
+						provider.addRemoteCSPokerServer(new RemoteHTTPServer(address,port));
 					} else if (type.equals("socket")) {
-						provider
-								.addRemotePlayerCommunicationProvider(new RemotePlayerCommunicationFactoryForSocket(
-										address, port));
+						provider.addRemoteCSPokerServer(new RemoteSocketServer(address,port));
 					} else {
 						throw new SAXException("Unknown provider type: " + type);
 					}

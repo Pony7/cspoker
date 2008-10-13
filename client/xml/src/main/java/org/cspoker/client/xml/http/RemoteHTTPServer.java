@@ -17,47 +17,28 @@ package org.cspoker.client.xml.http;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.rmi.ConnectException;
 import java.rmi.RemoteException;
 
-import javax.security.auth.login.LoginException;
+import org.cspoker.client.xml.common.RemoteXmlServer;
+import org.cspoker.client.xml.common.XmlActionSerializer;
 
-import org.apache.log4j.Logger;
-import org.cspoker.common.RemoteCSPokerServer;
-
-public class RemoteHTTPServer implements RemoteCSPokerServer {
-
-	private final static Logger logger = Logger
-			.getLogger(RemoteHTTPServer.class);
-
-	private final String server;
-	private final int port;
+public class RemoteHTTPServer extends RemoteXmlServer {
 
 	public RemoteHTTPServer(String server, int port) {
-		this.server = server;
-		this.port = port;
+		super(server,port);
 	}
-
-	public XmlChannelRemotePlayerCommunication getRemotePlayerCommunication(
-			String username, String password) throws ConnectException,
-			LoginException {
+	
+	@Override
+	protected XmlActionSerializer createXmlActionSerializer(String username,
+			String password) throws RemoteException {
 		try {
-			XmlHttpChannel c = new XmlHttpChannel(new URL("http://" + server
+			return new XmlHttpSerializer(new URL("http://" + server
 					+ ":" + port + "/cspoker/"), username, password);
-			c.open();
-			return new XmlChannelRemotePlayerCommunication(c);
-		} catch (MalformedURLException e) {
-			logger.error(e);
-			throw new ConnectException("Malformed URL", e);
-		} catch (RemoteException e) {
-			logger.error(e);
-			throw new ConnectException("Malformed URL", e);
-		} catch (ChannelStateException e) {
-			logger.error(e);
-			throw new IllegalStateException(e);
+		} catch (MalformedURLException exception) {
+			throw new RemoteException("Bad URL", exception);
 		}
 	}
-
+	
 	public String toString() {
 		return "http://" + server + ":" + port;
 	}

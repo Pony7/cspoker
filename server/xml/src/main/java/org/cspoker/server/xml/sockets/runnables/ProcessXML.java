@@ -57,8 +57,7 @@ public class ProcessXML implements Runnable, Prioritizable {
 				} else {
 					// Check the credentials
 					Unmarshaller um = AllSocketJAXBContexts.context.createUnmarshaller();
-					LoginAction loginAction = (LoginAction) um.unmarshal(new StringReader(xml));
-					context.login(loginAction.getUsername(), loginAction.getUsername());
+					context.login((LoginAction) um.unmarshal(new StringReader(xml)));
 				}
 			} else {
 				// Perform the other requests
@@ -66,10 +65,8 @@ public class ProcessXML implements Runnable, Prioritizable {
 				DispatchableAction<?> action = (DispatchableAction<?>) um.unmarshal(new StringReader(xml));
 				context.perform(action);
 			}
-		} catch (LoginException exception) {
-			logger.info("Login failed.");
 		} catch (JAXBException exception) {
-			throw new IllegalStateException(exception);
+			logger.error("JAXB Exception when handling XML chunk", exception);
 		}
 	}
 
