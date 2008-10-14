@@ -32,6 +32,7 @@ import org.cspoker.common.api.lobby.event.TableRemovedEvent;
 import org.cspoker.common.api.lobby.listener.AsynchronousLobbyListener;
 import org.cspoker.common.api.lobby.listener.LobbyListener;
 import org.cspoker.common.api.shared.context.RemoteServerContext;
+import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.table.DetailedHoldemTable;
 import org.cspoker.common.elements.table.Table;
 import org.cspoker.common.elements.table.TableConfiguration;
@@ -133,6 +134,9 @@ public class LobbyWindow
 					new DisplayExecutor(getDisplay()), this));
 		} catch (RemoteException e) {
 			throw new IllegalArgumentException(e);
+		} catch (IllegalActionException exception) {
+			// TODO handle
+			exception.printStackTrace();
 		}
 	}
 	
@@ -439,6 +443,9 @@ public class LobbyWindow
 			}
 		} catch (RemoteException e) {
 			getClientCore().handleRemoteException(e);
+		} catch (IllegalActionException exception) {
+			// TODO handle
+			exception.printStackTrace();
 		}
 		
 		for (DetailedHoldemTable t : tables) {
@@ -459,6 +466,9 @@ public class LobbyWindow
 			insertInformation(detailedTable);
 		} catch (RemoteException e) {
 			getClientCore().handleRemoteException(e);
+		} catch (IllegalActionException exception) {
+			// TODO handle
+			exception.printStackTrace();
 		}
 	}
 	

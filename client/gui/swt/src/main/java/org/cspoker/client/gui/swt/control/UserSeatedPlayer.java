@@ -1,3 +1,18 @@
+/**
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ */
 package org.cspoker.client.gui.swt.control;
 
 import java.rmi.RemoteException;
@@ -95,14 +110,14 @@ public class UserSeatedPlayer
 	 * 
 	 * @param seatId The seat id where to sit in
 	 * @throws RemoteException When the sit in request was unsuccessful
+	 * @throws IllegalActionException 
 	 */
-	public void sitIn(long seatId)
-			throws RemoteException {
+	public void sitIn(long seatId, int amount)
+			throws RemoteException, IllegalActionException {
 		if (tableContext == null)
 			throw new IllegalStateException("No table context available, you can not sit in");
 		assert (seatId >= 0 && seatId != Long.MAX_VALUE) : "Illegal seat id provided: " + seatId;
-		playerContext = tableContext.sitIn(seatId, new AsynchronousHoldemPlayerListener(displayExecutor, gameWindow));
-		
+		playerContext = tableContext.sitIn(seatId, amount, new AsynchronousHoldemPlayerListener(displayExecutor, gameWindow));	
 	}
 	
 	/**
@@ -129,8 +144,9 @@ public class UserSeatedPlayer
 	 * 
 	 * @param communication The {@link RemoteServerContext} to as k for the chat
 	 *            context
+	 * @throws IllegalActionException 
 	 */
-	public void setChatContext(RemoteServerContext communication) {
+	public void setChatContext(RemoteServerContext communication) throws IllegalActionException {
 		assert (communication != null);
 		try {
 			chatContext = communication.getChatContext(new AsynchronousChatListener(displayExecutor, gameWindow

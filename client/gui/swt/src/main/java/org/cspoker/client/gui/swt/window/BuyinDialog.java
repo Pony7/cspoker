@@ -18,6 +18,7 @@ import org.cspoker.client.gui.swt.control.ClientCore;
 import org.cspoker.client.gui.swt.control.ClientGUI;
 import org.cspoker.common.api.cashier.context.CashierContext;
 import org.cspoker.common.api.cashier.context.RemoteCashierContext;
+import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -139,6 +140,9 @@ public class BuyinDialog
 					} catch (RemoteException e) {
 						// TODO Auto-generated catch block
 						clientCore.handleRemoteException(e);
+					} catch (IllegalActionException exception) {
+						// TODO handle
+						exception.printStackTrace();
 					}
 					// cashierContext.getMoneyAmount(ClientGUI.betFormatter.
 					// parse(rebuyAmountText.getText())

@@ -28,6 +28,7 @@ import org.apache.log4j.Logger;
 import org.cspoker.client.gui.swt.window.GameWindow;
 import org.cspoker.client.gui.swt.window.LobbyWindow;
 import org.cspoker.client.gui.swt.window.LoginDialog;
+import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.cards.Card;
 import org.cspoker.common.elements.table.DetailedHoldemTable;
 import org.eclipse.swt.SWT;
@@ -160,7 +161,7 @@ public class ClientGUI {
 	 * <code>int</code> chip value to a human-readable representation and
 	 * vice-versa
 	 */
-	private final static NumberFormat betFormatter = NumberFormat.getNumberInstance();
+	public final static NumberFormat betFormatter = NumberFormat.getNumberInstance();
 	
 	/***************************************************************************
 	 * Constructor
@@ -374,12 +375,15 @@ public class ClientGUI {
 			DetailedHoldemTable table;
 			try {
 				table = getLobby().getContext().getHoldemTableInformation(tableId);
+				w = new GameWindow(getLobby(), table);
+				w.getUser().joinTable(getLobby().getContext());
+				w.getUser().setChatContext(clientCore.getCommunication());
 			} catch (RemoteException e) {
 				throw new IllegalStateException("Could not retrieve remote table information", e);
+			} catch (IllegalActionException exception) {
+				//TODO show error box?
+				exception.printStackTrace();
 			}
-			w = new GameWindow(getLobby(), table);
-			w.getUser().joinTable(getLobby().getContext());
-			w.getUser().setChatContext(clientCore.getCommunication());
 		}
 		gameWindows.put(tableId, w);
 		
