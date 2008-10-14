@@ -223,7 +223,7 @@ public class GameWindow
 	/**
 	 * @see org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener#onLeaveGame(org.cspoker.common.api.lobby.holdemtable.event.LeaveGameEvent)
 	 */
-	public void onLeaveGame(LeaveGameEvent leaveGameEvent) {
+	public void onSitOut(SitOutEvent leaveGameEvent) {
 		getPlayerSeatComposite(leaveGameEvent.getPlayer()).reset();
 		userInputComposite.showDealerMessage(leaveGameEvent);
 		updateTableGraphics();
@@ -405,6 +405,21 @@ public class GameWindow
 		}
 		userInputComposite.showDealerMessage(winnerEvent);
 		redraw();
+	}
+
+	@Override
+	public void onAllIn(AllInEvent allInEvent) {
+		//TODO implement
+	}
+
+	@Override
+	public void onJoinTable(JoinTableEvent joinTableEvent) {
+		//TODO implement
+	}
+
+	@Override
+	public void onLeaveTable(LeaveTableEvent leaveGameEvent) {
+		//TODO implement
 	}
 	
 	/**

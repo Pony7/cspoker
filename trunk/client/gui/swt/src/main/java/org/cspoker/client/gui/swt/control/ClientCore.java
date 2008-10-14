@@ -175,7 +175,8 @@ public class ClientCore
 		if (lobby != null) {
 			lobby.dispose();
 		}
-		communication.trigger();
+		//TODO replace or ignore?
+		//communication.trigger();
 	}
 	
 	/**
