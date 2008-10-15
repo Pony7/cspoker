@@ -6,7 +6,7 @@ Each stakeholder participates in CSPoker for different reasons and therefore inf
 = Developers =
 
 == Kenzo == 
-Uses CSPoker as a case study for his thesis about Aspect-oriented programming
+Uses CSPoker as a case study for his thesis about annotation-driven security services
  * Non-functional requirements
   * Modularity in the design
 
