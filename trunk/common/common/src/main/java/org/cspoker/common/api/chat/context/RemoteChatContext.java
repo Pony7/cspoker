@@ -22,8 +22,5 @@ import org.cspoker.common.api.shared.exception.IllegalActionException;
 
 public interface RemoteChatContext extends Remote {
 
-	void sendServerMessage(String message) throws RemoteException, IllegalActionException;
-	
-	void sendTableMessage(long tableId, String message) throws RemoteException, IllegalActionException;
-	
+	void sendMessage(String message) throws RemoteException, IllegalActionException;
 }

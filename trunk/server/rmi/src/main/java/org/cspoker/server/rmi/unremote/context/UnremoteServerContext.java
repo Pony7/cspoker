@@ -35,12 +35,15 @@ public class UnremoteServerContext extends ForwardingServerContext implements Ex
 		this.connection = connection;
 	}
 	
-	public ChatContext getChatContext(RemoteChatListener chatListener) {
-		return super.getChatContext(new UnremoteChatListener(connection,chatListener));
+	public ChatContext getServerChatContext(RemoteChatListener chatListener) {
+		return super.getServerChatContext(new UnremoteChatListener(connection,chatListener));
+	}
+	
+	public ChatContext getTableChatContext(RemoteChatListener chatListener,long tableId) {
+		return super.getTableChatContext(new UnremoteChatListener(connection,chatListener),tableId);
 	}
 	
 	public LobbyContext getLobbyContext(RemoteLobbyListener lobbyListener) {
 		return new UnremoteLobbyContext(connection, super.getLobbyContext(new UnremoteLobbyListener(connection, lobbyListener)));
 	}
-
 }

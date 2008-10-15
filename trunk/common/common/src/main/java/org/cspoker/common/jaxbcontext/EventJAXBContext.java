@@ -19,8 +19,7 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 
 import org.apache.log4j.Logger;
-import org.cspoker.common.api.chat.event.ServerMessageEvent;
-import org.cspoker.common.api.chat.event.TableMessageEvent;
+import org.cspoker.common.api.chat.event.ChatEvent;
 import org.cspoker.common.api.lobby.event.TableCreatedEvent;
 import org.cspoker.common.api.lobby.event.TableRemovedEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.BetEvent;
@@ -59,7 +58,7 @@ public class EventJAXBContext {
 	public static Class<?>[] getActions() {
 		return new Class<?>[] { 
 				//chat
-				ServerMessageEvent.class, TableMessageEvent.class,
+				ChatEvent.class,
 				//lobby
 				TableCreatedEvent.class, TableRemovedEvent.class,
 				//table

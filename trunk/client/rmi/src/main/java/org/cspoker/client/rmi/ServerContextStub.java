@@ -33,9 +33,15 @@ public class ServerContextStub extends ForwardingRemoteServerContext{
 	}
 	
 	@Override
-	public RemoteChatContext getChatContext(ChatListener chatListener)
+	public RemoteChatContext getServerChatContext(ChatListener chatListener)
 			throws RemoteException, IllegalActionException {
-		return super.getChatContext((ChatListener) UnicastRemoteObject.exportObject(chatListener, 0));
+		return super.getServerChatContext((ChatListener) UnicastRemoteObject.exportObject(chatListener, 0));
+	}
+	
+	@Override
+	public RemoteChatContext getTableChatContext(ChatListener chatListener,long tableId)
+			throws RemoteException, IllegalActionException {
+		return super.getTableChatContext((ChatListener) UnicastRemoteObject.exportObject(chatListener, 0),tableId);
 	}
 	
 	@Override

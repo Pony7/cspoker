@@ -22,7 +22,9 @@ import org.cspoker.common.api.lobby.listener.RemoteLobbyListener;
 
 public interface ExternalServerContext extends ServerContext{
 
-	public ChatContext getChatContext(RemoteChatListener chatListener);
+	public ChatContext getServerChatContext(RemoteChatListener chatListener);
+	
+	public ChatContext getTableChatContext(RemoteChatListener chatListener,long tableId);
 	
 	public LobbyContext getLobbyContext(RemoteLobbyListener lobbyListener);
 	

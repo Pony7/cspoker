@@ -25,12 +25,11 @@ import org.cspoker.common.api.account.action.GetAvatarAction;
 import org.cspoker.common.api.account.action.SetAvatarAction;
 import org.cspoker.common.api.cashier.action.GetMoneyAmountAction;
 import org.cspoker.common.api.cashier.action.RequestMoneyAction;
-import org.cspoker.common.api.chat.action.SendServerMessageAction;
-import org.cspoker.common.api.chat.action.SendTableMessageAction;
+import org.cspoker.common.api.chat.action.SendMessageAction;
 import org.cspoker.common.api.lobby.action.CreateHoldemTableAction;
-import org.cspoker.common.api.lobby.action.JoinHoldemTableAction;
 import org.cspoker.common.api.lobby.action.GetHoldemTableInformationAction;
 import org.cspoker.common.api.lobby.action.GetTableListAction;
+import org.cspoker.common.api.lobby.action.JoinHoldemTableAction;
 import org.cspoker.common.api.lobby.holdemtable.action.LeaveTableAction;
 import org.cspoker.common.api.lobby.holdemtable.action.SitInAction;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.action.BetOrRaiseAction;
@@ -61,7 +60,7 @@ public class ActionJAXBContext {
 				//cashier
 				GetMoneyAmountAction.class, RequestMoneyAction.class,
 				//chat
-				SendServerMessageAction.class,SendTableMessageAction.class,
+				SendMessageAction.class,
 				//lobby
 				CreateHoldemTableAction.class,JoinHoldemTableAction.class,GetHoldemTableInformationAction.class, GetTableListAction.class,
 				//table

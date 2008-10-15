@@ -15,8 +15,7 @@
  */
 package org.cspoker.server.rmi.unremote.listener;
 
-import org.cspoker.common.api.chat.event.ServerMessageEvent;
-import org.cspoker.common.api.chat.event.TableMessageEvent;
+import org.cspoker.common.api.chat.event.ChatEvent;
 import org.cspoker.common.api.chat.listener.ChatListener;
 import org.cspoker.common.api.chat.listener.RemoteChatListener;
 import org.cspoker.common.api.shared.Trigger;
@@ -31,24 +30,13 @@ public class UnremoteChatListener extends ForwardingListener<RemoteChatListener>
 		this.connection = connection;
 	}
 	
-	public void onServerMessage(ServerMessageEvent serverMessageEvent){
+	public void onMessage(ChatEvent messageEvent){
 		try {
 			for (RemoteChatListener listener : listeners) {
-				listener.onServerMessage(serverMessageEvent);
+				listener.onMessage(messageEvent);
 			}
 		} catch (Exception exception) {
 			connection.trigger();
 		}
 	}
-
-	public void onTableMessage(TableMessageEvent tableMessageEvent) {			
-		try {
-			for (RemoteChatListener listener : listeners) {
-				listener.onTableMessage(tableMessageEvent);
-			}
-		} catch (Exception exception) {
-			connection.trigger();
-		}
-	}
-
 }

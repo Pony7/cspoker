@@ -16,8 +16,6 @@
 package org.cspoker.common.elements.table;
 
 import java.io.Serializable;
-import java.util.Set;
-import java.util.TreeSet;
 
 import javax.xml.bind.annotation.XmlAttribute;
 

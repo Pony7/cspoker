@@ -28,8 +28,10 @@ public interface ServerContext extends RemoteServerContext{
 	
 	CashierContext getCashierContext();
 	
-	ChatContext getChatContext(ChatListener chatListener);
+	ChatContext getServerChatContext(ChatListener chatListener);
 
+	ChatContext getTableChatContext(ChatListener chatListener,long tableId);
+	
 	LobbyContext getLobbyContext(LobbyListener lobbyListener);
 	
 }

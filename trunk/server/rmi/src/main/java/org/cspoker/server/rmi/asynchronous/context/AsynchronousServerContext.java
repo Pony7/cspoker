@@ -36,8 +36,13 @@ public class AsynchronousServerContext extends ForwardingServerContext {
 	}
 	
 	@Override
-	public ChatContext getChatContext(ChatListener chatListener) {
-		return super.getChatContext(new AsynchronousChatListener(executor,chatListener));
+	public ChatContext getServerChatContext(ChatListener chatListener) {
+		return super.getServerChatContext(new AsynchronousChatListener(executor,chatListener));
+	}
+	
+	@Override
+	public ChatContext getTableChatContext(ChatListener chatListener,long tableId) {
+		return super.getTableChatContext(new AsynchronousChatListener(executor,chatListener),tableId);
 	}
 	
 	@Override

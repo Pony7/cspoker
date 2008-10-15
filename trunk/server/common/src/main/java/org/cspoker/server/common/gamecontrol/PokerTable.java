@@ -56,6 +56,8 @@ import org.cspoker.common.elements.table.Table;
 import org.cspoker.common.elements.table.TableConfiguration;
 import org.cspoker.server.common.HoldemTableContextImpl;
 import org.cspoker.server.common.account.ExtendedAccountContext;
+import org.cspoker.server.common.chat.ChatServer;
+import org.cspoker.server.common.chat.room.TableChatRoom;
 import org.cspoker.server.common.elements.chips.IllegalValueException;
 import org.cspoker.server.common.elements.id.PlayerId;
 import org.cspoker.server.common.elements.id.SeatId;
@@ -72,6 +74,9 @@ import org.cspoker.server.common.util.threading.ScheduledRequestExecutor;
  */
 public class PokerTable {
 
+	private final static ChatServer chatServer=ChatServer.getInstance();
+	private TableChatRoom chatRoom;
+	
 	private static Logger logger = Logger.getLogger(PokerTable.class);
 	
 	private final TableId tableId;
@@ -105,6 +110,8 @@ public class PokerTable {
 		this.configuration = configuration;
 		tableState = new WaitingTableState(this);
 		this.creator = creator;
+		
+		this.chatRoom=chatServer.addTableChatRoom(this);
 	}
 	
 	/***************************************************************************
@@ -341,7 +348,10 @@ public class PokerTable {
 	}
 	
 	public boolean hasAsJoinedPlayer(ServerPlayer player){
-		return player==null?false:joinedPlayers.containsKey(player.getId());
+		return player==null?false:hasAsJoinedPlayer(player.getId());
+	}
+	public boolean hasAsJoinedPlayer(PlayerId id){
+		return id==null?false:joinedPlayers.containsKey(id);
 	}
 	
 	public void leaveTable(ServerPlayer player) {
