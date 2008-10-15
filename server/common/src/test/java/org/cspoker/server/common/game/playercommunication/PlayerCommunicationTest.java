@@ -24,9 +24,9 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import junit.framework.TestCase;
 
 import org.apache.log4j.Logger;
-import org.cspoker.common.api.chat.event.ServerMessageEvent;
 import org.cspoker.common.api.lobby.event.TableCreatedEvent;
 import org.cspoker.common.api.lobby.event.TableRemovedEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.AllInEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.BetEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.BigBlindEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.CallEvent;
@@ -51,7 +51,6 @@ import org.cspoker.server.common.player.GameSeatedPlayer;
 import org.cspoker.server.common.player.IllegalNameException;
 import org.cspoker.server.common.player.PlayerFactory;
 import org.cspoker.server.common.playercommunication.PlayerCommunicationImpl;
-import org.cspoker.server.common.session.PlayerKilledExcepion;
 import org.cspoker.server.common.session.Session;
 import org.cspoker.server.common.session.SessionManager;
 

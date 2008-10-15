@@ -63,11 +63,11 @@ public class ExportingServerContext extends ForwardingRemoteServerContext {
 	}
 	
 	@Override
-	public RemoteChatContext getChatContext(final ChatListener chatListener)
+	public RemoteChatContext getServerChatContext(final ChatListener chatListener)
 			throws RemoteException, IllegalActionException {
 		return chatContext.getContent(new IFactory2<RemoteChatContext, RemoteException, IllegalActionException>(){
 			public RemoteChatContext create() throws RemoteException, IllegalActionException {
-				return (RemoteChatContext) UnicastRemoteObject.exportObject(ExportingServerContext.super.getChatContext(chatListener), 0);
+				return (RemoteChatContext) UnicastRemoteObject.exportObject(ExportingServerContext.super.getServerChatContext(chatListener), 0);
 			}
 		});
 	}

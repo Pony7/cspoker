@@ -17,8 +17,7 @@ package org.cspoker.common.api.chat.listener;
 
 import java.util.List;
 
-import org.cspoker.common.api.chat.event.ServerMessageEvent;
-import org.cspoker.common.api.chat.event.TableMessageEvent;
+import org.cspoker.common.api.chat.event.ChatEvent;
 import org.cspoker.common.api.shared.listener.ForwardingListener;
 
 public class ForwardingChatListener extends ForwardingListener<ChatListener> implements ChatListener {
@@ -31,16 +30,9 @@ public class ForwardingChatListener extends ForwardingListener<ChatListener> imp
 		super(listeners);
 	}
 	
-	public void onServerMessage(ServerMessageEvent serverMessageEvent) {
+	public void onMessage(ChatEvent messageEvent) {
 		for(ChatListener listener:listeners){
-			listener.onServerMessage(serverMessageEvent);
+			listener.onMessage(messageEvent);
 		}
 	}
-
-	public void onTableMessage(TableMessageEvent tableMessageEvent) {
-		for(ChatListener listener:listeners){
-			listener.onTableMessage(tableMessageEvent);
-		}
-	}
-
 }

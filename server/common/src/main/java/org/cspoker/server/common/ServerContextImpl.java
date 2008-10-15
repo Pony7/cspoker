@@ -26,6 +26,8 @@ import org.cspoker.common.api.lobby.listener.LobbyListener;
 import org.cspoker.common.api.shared.context.ServerContext;
 import org.cspoker.server.common.account.AccountContextImpl;
 import org.cspoker.server.common.account.ExtendedAccountContext;
+import org.cspoker.server.common.chat.ChatServer;
+import org.cspoker.server.common.chat.room.ChatRoom;
 import org.cspoker.server.common.lobby.Lobby;
 
 public class ServerContextImpl implements ServerContext {
@@ -38,8 +40,8 @@ public class ServerContextImpl implements ServerContext {
 	public ServerContextImpl(String username, String password) throws LoginException {
 		this.accountContext = new AccountContextImpl(username,password);
 		this.cashierContext = new CashierContextImpl(accountContext);
-		this.chatContext = new ChatContextImpl(accountContext);
-		//singleton lobby is passed as an arguement for flexibility.
+		this.chatContext=new ChatContextImpl(accountContext,ChatServer.getInstance().getServerChatRoom());
+		//singleton lobby is passed as an argument for flexibility.
 		//TODO fix - I think we should limit the use of singletons. 
 		//We should for instance be able to run 2 independent servers in the same JVM. - guy
 		this.lobbyContext = new LobbyContextImpl(accountContext, Lobby.getInstance());
@@ -60,15 +62,24 @@ public class ServerContextImpl implements ServerContext {
 	public LobbyContext getLobbyContext() {
 		return lobbyContext;
 	}
-
-	public ChatContext getChatContext(ChatListener chatListener) {
+	
+	public LobbyContext getLobbyContext(LobbyListener lobbyListener) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	public LobbyContext getLobbyContext(LobbyListener lobbyListener) {
-		// TODO Auto-generated method stub
-		return null;
+	public ChatContext getServerChatContext(ChatListener chatListener) {
+		((ChatContextImpl)chatContext).changeChatRoom(ChatServer.getInstance().getServerChatRoom());
+		((ChatContextImpl)chatContext).setListener(chatListener);
+		return getChatContext();
+	}
+	public ChatContext getTableChatContext(ChatListener chatListener,long tableId) {
+		ChatRoom table=ChatServer.getInstance().getTableChatRoom(tableId);
+		if(table==null)
+			throw new IllegalArgumentException("No such table id!");
+		((ChatContextImpl)chatContext).changeChatRoom(table);
+		((ChatContextImpl)chatContext).setListener(chatListener);
+		return getChatContext();
 	}
 
 }

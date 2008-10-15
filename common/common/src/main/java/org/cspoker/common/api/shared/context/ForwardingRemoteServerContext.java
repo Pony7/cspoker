@@ -41,14 +41,17 @@ public class ForwardingRemoteServerContext implements RemoteServerContext {
 		return serverContext.getCashierContext();
 	}
 
-	public RemoteChatContext getChatContext(ChatListener chatListener)
+	public RemoteChatContext getServerChatContext(ChatListener chatListener)
 			throws RemoteException, IllegalActionException {
-		return serverContext.getChatContext(chatListener);
+		return serverContext.getServerChatContext(chatListener);
+	}
+	public RemoteChatContext getTableChatContext(ChatListener chatListener,
+			long tableId) throws RemoteException, IllegalActionException {
+		return serverContext.getTableChatContext(chatListener,tableId);
 	}
 
 	public RemoteLobbyContext getLobbyContext(LobbyListener lobbyListener)
 			throws RemoteException, IllegalActionException {
 		return serverContext.getLobbyContext(lobbyListener);
 	}
-
 }

@@ -19,7 +19,6 @@ import java.rmi.RemoteException;
 
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.RemoteHoldemPlayerContext;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.listener.HoldemPlayerListener;
-import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 
 public class ForwardingRemoteHoldemTableContext implements RemoteHoldemTableContext{

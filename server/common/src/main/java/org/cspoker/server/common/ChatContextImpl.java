@@ -3,22 +3,31 @@ package org.cspoker.server.common;
 import org.cspoker.common.api.chat.context.ChatContext;
 import org.cspoker.common.api.chat.listener.ChatListener;
 import org.cspoker.server.common.account.ExtendedAccountContext;
+import org.cspoker.server.common.chat.room.ChatRoom;
 
 public class ChatContextImpl implements ChatContext {
 
-	public ChatContextImpl(ExtendedAccountContext accountContext) {
+	private ExtendedAccountContext accountContext;
+	private ChatRoom room;
+	private ChatListener listener;
+	
+	public ChatContextImpl(ExtendedAccountContext accountContext,ChatRoom room) {
+		this.accountContext=accountContext;
+		this.room=room;
 	}
-
-	public void sendServerMessage(String message) {
+	public void sendMessage(String message){
+		room.sendMessage(accountContext.getPlayer().getMemento(), message);
 	}
-
-	public void sendTableMessage(long tableId, String message) {
+	public void changeChatRoom(ChatRoom newRoom){
+		this.room=newRoom;
 	}
-
-	public void subscribe(ChatListener chatListener) {
+	public void setListener(ChatListener newListener){
+		if(!room.canSubscribeListener(accountContext.getPlayer()))
+			throw new IllegalArgumentException("invalid listener");
+		if(listener!=null){
+			room.unSubscribe(listener);
+		}
+		this.listener=newListener;
+		room.subscribe(listener);
 	}
-
-	public void unSubscribe(ChatListener chatListener) {
-	}
-
 }

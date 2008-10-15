@@ -19,24 +19,6 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 
 import org.apache.log4j.Logger;
-import org.cspoker.common.api.account.action.ChangePasswordAction;
-import org.cspoker.common.api.account.action.CreateAccountAction;
-import org.cspoker.common.api.account.action.GetAvatarAction;
-import org.cspoker.common.api.account.action.SetAvatarAction;
-import org.cspoker.common.api.cashier.action.GetMoneyAmountAction;
-import org.cspoker.common.api.cashier.action.RequestMoneyAction;
-import org.cspoker.common.api.chat.action.SendServerMessageAction;
-import org.cspoker.common.api.chat.action.SendTableMessageAction;
-import org.cspoker.common.api.lobby.action.CreateHoldemTableAction;
-import org.cspoker.common.api.lobby.action.JoinHoldemTableAction;
-import org.cspoker.common.api.lobby.action.GetHoldemTableInformationAction;
-import org.cspoker.common.api.lobby.action.GetTableListAction;
-import org.cspoker.common.api.lobby.holdemtable.action.LeaveTableAction;
-import org.cspoker.common.api.lobby.holdemtable.action.SitInAction;
-import org.cspoker.common.api.lobby.holdemtable.holdemplayer.action.BetOrRaiseAction;
-import org.cspoker.common.api.lobby.holdemtable.holdemplayer.action.CheckOrCallAction;
-import org.cspoker.common.api.lobby.holdemtable.holdemplayer.action.FoldAction;
-import org.cspoker.common.api.lobby.holdemtable.holdemplayer.action.LeaveGameAction;
 import org.cspoker.common.api.shared.http.HTTPRequest;
 import org.cspoker.common.api.shared.http.HTTPResponse;
 

@@ -15,8 +15,10 @@
  */
 package org.cspoker.common.api.chat.action;
 
+import org.cspoker.common.api.chat.context.ChatContext;
 
-public abstract class SendMessageAction extends ChatAction<Void> {
+
+public class SendMessageAction extends ChatAction<Void> {
 
 	private static final long serialVersionUID = -4885167132627383948L;
 
@@ -33,6 +35,12 @@ public abstract class SendMessageAction extends ChatAction<Void> {
 	
 	public String getMessage() {
 		return message;
+	}
+	
+	@Override
+	public Void perform(ChatContext chatContext) {
+		chatContext.sendMessage(getMessage());
+		return null;
 	}
 
 }

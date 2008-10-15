@@ -17,8 +17,6 @@ package org.cspoker.common.api.chat.context;
 
 import java.rmi.RemoteException;
 
-import org.cspoker.common.api.chat.listener.ChatListener;
-import org.cspoker.common.api.chat.listener.ForwardingChatListener;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 
 
@@ -30,12 +28,7 @@ public class ForwardingRemoteChatContext implements RemoteChatContext{
 		this.chatContext  = chatContext;
 	}
 
-	public void sendServerMessage(String message) throws RemoteException, IllegalActionException {
-		chatContext.sendServerMessage(message);
+	public void sendMessage(String message) throws RemoteException, IllegalActionException {
+		chatContext.sendMessage(message);
 	}
-
-	public void sendTableMessage(long tableId, String message) throws RemoteException, IllegalActionException {
-		chatContext.sendTableMessage(tableId, message);
-	}
-	
 }

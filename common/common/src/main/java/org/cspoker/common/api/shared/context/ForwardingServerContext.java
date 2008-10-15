@@ -38,12 +38,16 @@ public class ForwardingServerContext implements ServerContext {
 		return serverContext.getCashierContext();
 	}
 
-	public ChatContext getChatContext(ChatListener chatListener) {
-		return serverContext.getChatContext(chatListener);
+	public ChatContext getServerChatContext(ChatListener chatListener) {
+		return serverContext.getServerChatContext(chatListener);
 	}
 
+	public ChatContext getTableChatContext(ChatListener chatListener,
+			long tableId) {
+		return serverContext.getTableChatContext(chatListener,tableId);
+	}
+	
 	public LobbyContext getLobbyContext(LobbyListener lobbyListener) {
 		return serverContext.getLobbyContext(lobbyListener);
 	}
-
 }

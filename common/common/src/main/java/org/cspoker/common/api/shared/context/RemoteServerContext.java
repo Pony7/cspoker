@@ -32,7 +32,9 @@ public interface RemoteServerContext extends Remote{
 	
 	RemoteCashierContext getCashierContext() throws RemoteException;
 	
-	RemoteChatContext getChatContext(ChatListener chatListener) throws RemoteException, IllegalActionException;
+	RemoteChatContext getServerChatContext(ChatListener chatListener) throws RemoteException, IllegalActionException;
+
+	RemoteChatContext getTableChatContext(ChatListener chatListener,long tableId) throws RemoteException, IllegalActionException;
 
 	RemoteLobbyContext getLobbyContext(LobbyListener lobbyListener) throws RemoteException, IllegalActionException;
 	

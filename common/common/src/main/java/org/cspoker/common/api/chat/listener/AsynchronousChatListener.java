@@ -17,8 +17,7 @@ package org.cspoker.common.api.chat.listener;
 
 import java.util.concurrent.Executor;
 
-import org.cspoker.common.api.chat.event.ServerMessageEvent;
-import org.cspoker.common.api.chat.event.TableMessageEvent;
+import org.cspoker.common.api.chat.event.ChatEvent;
 
 public class AsynchronousChatListener implements ChatListener{
 
@@ -30,20 +29,11 @@ public class AsynchronousChatListener implements ChatListener{
 		this.chatListener = chatListener;
 	}
 
-	public void onServerMessage(final ServerMessageEvent serverMessageEvent) {
+	public void onMessage(final ChatEvent messageEvent) {
 		executor.execute(new Runnable() {
 			public void run() {
-				chatListener.onServerMessage(serverMessageEvent);
+				chatListener.onMessage(messageEvent);
 			}
 		});
 	}
-
-	public void onTableMessage(final TableMessageEvent tableMessageEvent) {
-		executor.execute(new Runnable() {
-			public void run() {
-				chatListener.onTableMessage(tableMessageEvent);
-			}
-		});
-	}
-
 }

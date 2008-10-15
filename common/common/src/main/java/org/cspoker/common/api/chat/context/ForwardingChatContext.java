@@ -23,12 +23,7 @@ public class ForwardingChatContext implements ChatContext{
 		this.chatContext  = chatContext;
 	}
 
-	public void sendServerMessage(String message) {
-		chatContext.sendServerMessage(message);
+	public void sendMessage(String message) {
+		chatContext.sendMessage(message);
 	}
-
-	public void sendTableMessage(long tableId, String message) {
-		chatContext.sendTableMessage(tableId, message);
-	}
-	
 }
