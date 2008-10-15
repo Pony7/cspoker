@@ -20,7 +20,7 @@ Uses CSPoker as a test server for poker A.I.
   * Good performance
 
 == Cedric ==
-Might use CSPoker as a case study for his thesis on security in concurrent Java applications.
+Might use CSPoker as a case study for his thesis on the automatic verification of multi-threaded java programs.
  * Non-functional requirements
   * Concurrent game logic and network server
   * Limit uses of the Java concurrency API's to a small subset of the available features
