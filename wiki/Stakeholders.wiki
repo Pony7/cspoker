@@ -28,7 +28,12 @@ Might use CSPoker as a case study for his thesis on the automatic verification o
 == Craig ==
 Unknown interests.
 == Stephan ==
-Unknown interests.
+Uses CSPoker to learn about SWT and GUI design. Interest in using it for testing poker A.I.
+ * Non-functional requirements
+  * Separate research API (A.I. players etc.) from pure game functionality (that a poker room company would be limited to)
+  * Interoperability with other standard protocols (U of A bot server protocol, standard-conforming hand histories for exporting to other applications)
+  * Support for other poker forms and betting structures (omaha, limit etc.)
+  * Security (no ability to see hole cards of others even when having server access)
 
 = Deployment = 
 
