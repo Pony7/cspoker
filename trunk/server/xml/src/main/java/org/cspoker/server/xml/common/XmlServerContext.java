@@ -15,8 +15,11 @@
  */
 package org.cspoker.server.xml.common;
 
+import java.util.HashMap;
+
+import org.cspoker.common.api.chat.context.ChatContext;
+import org.cspoker.common.api.chat.listener.UniversalTableChatListener;
 import org.cspoker.common.api.lobby.context.StaticLobbyContext;
-import org.cspoker.common.api.serverchat.context.ChatContext;
 import org.cspoker.common.api.shared.context.ForwardingServerContext;
 import org.cspoker.common.api.shared.context.ServerContext;
 import org.cspoker.common.api.shared.context.StaticServerContext;
@@ -25,22 +28,53 @@ import org.cspoker.common.api.shared.listener.UniversalServerListener;
 public class XmlServerContext extends ForwardingServerContext implements StaticServerContext {
 
 	private UniversalServerListener listener;
+	
 	private StaticLobbyContext lobbyContext;
+	private Object lobbyLock = new Object();
+	
+	private ChatContext serverChatContext;
+	private Object serverChatLock = new Object();
+	
+	private final HashMap<Long, ChatContext> tableChatContexts = new HashMap<Long, ChatContext>();
+	private Object tableChatLock = new Object();
 
 	public XmlServerContext(ServerContext context, UniversalServerListener listener) {
 		super(context);
 		this.listener = listener;
 	}
+
+	public StaticLobbyContext getLobbyContext() {
+		synchronized (lobbyLock) {
+			if (this.lobbyContext == null) {
+				this.lobbyContext = new XmlLobbyContext(super
+						.getLobbyContext(listener), listener);
+			}
+			return this.lobbyContext;
+		}
+	}
 	
-	public ChatContext getChatContext() {
-		return super.getChatContext(listener);
+	public ChatContext getServerChatContext() {
+		synchronized (serverChatLock) {
+			if (this.serverChatContext == null) {
+				this.serverChatContext = super.getServerChatContext(listener);
+			}
+			return this.serverChatContext;
+		}
 	}
 
-	public synchronized StaticLobbyContext getLobbyContext() {
-		if(this.lobbyContext ==null){
-			this.lobbyContext = new XmlLobbyContext(super.getLobbyContext(listener),this, listener);
+	public ChatContext getTableChatContext(long tableID) {
+		synchronized (tableChatLock) {
+			ChatContext chatContext;
+			if (tableChatContexts.containsKey(tableID)) {
+				chatContext = super.getTableChatContext(
+						new UniversalTableChatListener(listener, tableID),
+						tableID);
+				tableChatContexts.put(tableID, chatContext);
+			} else {
+				chatContext = tableChatContexts.get(tableID);
+			}
+			return chatContext;
 		}
-		return this.lobbyContext;
 	}
 
 }

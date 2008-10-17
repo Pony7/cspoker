@@ -18,9 +18,9 @@ package org.cspoker.client.xml.common.context;
 import java.rmi.RemoteException;
 
 import org.cspoker.client.xml.common.IDGenerator;
-import org.cspoker.common.api.chat.action.SendServerMessageAction;
-import org.cspoker.common.api.chat.action.SendTableMessageAction;
-import org.cspoker.common.api.chat.context.RemoteChatContext;
+import org.cspoker.common.api.serverchat.action.SendServerMessageAction;
+import org.cspoker.common.api.serverchat.action.SendTableMessageAction;
+import org.cspoker.common.api.serverchat.context.RemoteChatContext;
 import org.cspoker.common.api.shared.action.ActionPerformer;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 

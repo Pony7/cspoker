@@ -26,19 +26,20 @@ public class XmlHoldemTableContext extends ForwardingHoldemTableContext
 implements StaticHoldemTableContext {
 
 	private UniversalTableListener tableListener;
-	private HoldemPlayerContext context;
+	private HoldemPlayerContext context = null;
 
 	public XmlHoldemTableContext(HoldemTableContext context, UniversalTableListener tableListener) {
 		super(context);
 		this.tableListener = tableListener;
 	}
 
-	public synchronized HoldemPlayerContext getHoldemPlayerContext() {
+	//convention is to return null when the right action as not yet been performed.
+	public HoldemPlayerContext getHoldemPlayerContext() {
 		return context;
 	}
 
-	public synchronized void sitIn(long seatId, int buyIn) throws IllegalActionException {
-		this.context = super.sitIn(seatId, buyIn, tableListener);
+	public void sitIn(long seatId, int buyIn) throws IllegalActionException {
+		context = super.sitIn(seatId, buyIn, tableListener);
 	}
 
 }

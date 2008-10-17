@@ -13,30 +13,28 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.client.xml.common.listener;
+package org.cspoker.client.common;
 
+import org.cspoker.common.api.serverchat.context.ForwardingRemoteChatContext;
+import org.cspoker.common.api.serverchat.context.RemoteChatContext;
 import org.cspoker.common.api.serverchat.listener.ChatListener;
+import org.cspoker.common.api.serverchat.listener.ForwardingChatListener;
 
-public class XmlServerListenerTree implements
-		org.cspoker.common.api.shared.listener.ServerListenerTree {
+public class SmartChatContext extends ForwardingRemoteChatContext {
 
-	private volatile ChatListener chatListener;
-	private final XmlLobbyListenerTree lobbyListenerTree;
+	private ForwardingChatListener chatListener;
 
-	public XmlServerListenerTree() {
-		lobbyListenerTree = new XmlLobbyListenerTree();
-	}
-
-	public ChatListener getChatListener() {
-		return chatListener;
-	}
-	
-	public void setChatListener(ChatListener chatListener) {
+	public SmartChatContext(RemoteChatContext remoteChatContext, ForwardingChatListener chatListener) {
+		super(remoteChatContext);
 		this.chatListener = chatListener;
 	}
-
-	public XmlLobbyListenerTree getLobbyListenerTree() {
-		return lobbyListenerTree;
+	
+	public void subscribe(ChatListener listener){
+		chatListener.subscribe(listener);
+	}
+	
+	public void unSubscribe(ChatListener listener){
+		chatListener.unSubscribe(listener);
 	}
 
 }

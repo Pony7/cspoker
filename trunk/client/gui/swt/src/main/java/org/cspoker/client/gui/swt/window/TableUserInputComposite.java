@@ -17,10 +17,10 @@ import org.apache.log4j.Logger;
 import org.cspoker.client.gui.swt.control.Chip;
 import org.cspoker.client.gui.swt.control.ClientGUI;
 import org.cspoker.client.gui.swt.control.UserSeatedPlayer;
-import org.cspoker.common.api.chat.event.ServerMessageEvent;
-import org.cspoker.common.api.chat.event.TableMessageEvent;
-import org.cspoker.common.api.chat.listener.ChatListener;
 import org.cspoker.common.api.lobby.holdemtable.event.HoldemTableEvent;
+import org.cspoker.common.api.serverchat.event.ServerMessageEvent;
+import org.cspoker.common.api.serverchat.event.TableMessageEvent;
+import org.cspoker.common.api.serverchat.listener.ChatListener;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.custom.StyledText;
@@ -447,9 +447,9 @@ public class TableUserInputComposite
 	/**
 	 * Adds the message to the Chat Box (in red)
 	 * 
-	 * @see org.cspoker.common.api.chat.listener.ChatListener#onServerMessage(org.cspoker.common.api.chat.event.ServerMessageEvent)
+	 * @see org.cspoker.common.api.serverchat.listener.ChatListener#onServerMessage(org.cspoker.common.api.serverchat.event.MessageEvent)
 	 */
-	public void onServerMessage(ServerMessageEvent serverMessageEvent) {
+	public void onServerMessage(MessageEvent serverMessageEvent) {
 		// Display server messages in red
 		gameInfoText.setForeground(Display.getDefault().getSystemColor(SWT.COLOR_RED));
 		gameInfoText.append(System.getProperty("line.separator") + serverMessageEvent.getPlayer() + ": "
@@ -461,7 +461,7 @@ public class TableUserInputComposite
 	/**
 	 * Adds the message to the Chat Box (in black)
 	 * 
-	 * @see org.cspoker.common.api.chat.listener.ChatListener#onTableMessage(org.cspoker.common.api.chat.event.TableMessageEvent)
+	 * @see org.cspoker.common.api.serverchat.listener.ChatListener#onTableMessage(org.cspoker.common.api.serverchat.event.TableMessageEvent)
 	 */
 	public void onTableMessage(TableMessageEvent tableMessageEvent) {
 		// Display player messages in blue
