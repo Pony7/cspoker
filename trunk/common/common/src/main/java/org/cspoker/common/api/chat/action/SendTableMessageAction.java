@@ -17,28 +17,27 @@ package org.cspoker.common.api.chat.action;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.cspoker.common.api.chat.context.ChatContext;
+import org.cspoker.common.api.shared.context.StaticServerContext;
 
 @XmlRootElement
 public class SendTableMessageAction extends SendMessageAction {
-
-	private static final long serialVersionUID = 8667981588617319515L;
 	
-	private long tableId;
+	private static final long serialVersionUID = -1855545270029265281L;
+	
+	private long tableID;
 
-	public SendTableMessageAction(long id, long tableId, String msg) {
-		super(id,msg);
-		this.tableId = tableId;
+	public SendTableMessageAction(long id, String message, long tableID) {
+		super(id,message);
+		this.tableID = tableID;
 	}
 
 	protected SendTableMessageAction() {
 		// no op
 	}
-
+	
 	@Override
-	public Void perform(ChatContext chatContext) {
-		chatContext.sendTableMessage(tableId, getMessage());
-		return null;
+	public Void perform(StaticServerContext serverContext){
+		return perform(serverContext.getTableChatContext(tableID));
 	}
 
 }

@@ -19,8 +19,10 @@ import org.cspoker.common.api.chat.listener.ChatListener;
 import org.cspoker.common.api.lobby.listener.LobbyListenerTree;
 
 public interface ServerListenerTree extends ListenerTree{
+
+	ChatListener getServerChatListener();
 	
-	ChatListener getChatListener();
+	ChatListener getTableChatListener(long tableID);
 	
 	LobbyListenerTree getLobbyListenerTree();
 	

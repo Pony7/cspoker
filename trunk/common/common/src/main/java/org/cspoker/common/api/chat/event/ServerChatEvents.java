@@ -15,44 +15,37 @@
  */
 package org.cspoker.common.api.chat.event;
 
-import javax.xml.bind.annotation.XmlRootElement;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import org.cspoker.common.api.chat.listener.ChatListener;
-import org.cspoker.common.elements.player.Player;
+import org.cspoker.common.api.shared.event.ServerEvent;
+import org.cspoker.common.api.shared.listener.ServerListenerTree;
 
-@XmlRootElement
-public class ServerMessageEvent extends ChatEvent {
+public class ServerChatEvents implements ServerEvent {
 
-	private static final long serialVersionUID = -4087660917339765224L;
-
-	private Player player;
-
-	private String message;
-
-	public ServerMessageEvent(Player player, String message) {
-		this.player = player;
-		this.message = message;
-	}
-
-	protected ServerMessageEvent() {
+private static final long serialVersionUID = 6449937716379015861L;
+	
+	private List<ChatEvent> events;
+	
+	public ServerChatEvents() {
 		// no op
 	}
 
-	public String toString() {
-		return getPlayer().getName() + " says: " + getMessage();
+	public ServerChatEvents(List<ChatEvent> events){
+		this.events = new ArrayList<ChatEvent>(events);
 	}
-
-	public String getMessage() {
-		return message;
+	
+	public ServerChatEvents(ChatEvent event){
+		this.events = Collections.singletonList(event);
 	}
-
-	public Player getPlayer() {
-		return player;
-	}
-
-	@Override
-	public void dispatch(ChatListener chatListener) {
-		chatListener.onServerMessage(this);
+	
+	public void dispatch(ServerListenerTree serverListenerTree) {
+		ChatListener listenerTree = serverListenerTree.getServerChatListener();
+		for(ChatEvent event : events){
+			event.dispatch(listenerTree);
+		}
 	}
 
 }
