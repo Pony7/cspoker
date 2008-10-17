@@ -15,10 +15,10 @@
  */
 package org.cspoker.server.rmi.unremote.context;
 
-import org.cspoker.common.api.chat.context.ChatContext;
-import org.cspoker.common.api.chat.listener.RemoteChatListener;
 import org.cspoker.common.api.lobby.context.LobbyContext;
 import org.cspoker.common.api.lobby.listener.RemoteLobbyListener;
+import org.cspoker.common.api.serverchat.context.ChatContext;
+import org.cspoker.common.api.serverchat.listener.RemoteChatListener;
 import org.cspoker.common.api.shared.Trigger;
 import org.cspoker.common.api.shared.context.ExternalServerContext;
 import org.cspoker.common.api.shared.context.ForwardingServerContext;

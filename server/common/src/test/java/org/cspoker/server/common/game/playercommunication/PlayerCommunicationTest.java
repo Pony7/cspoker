@@ -24,6 +24,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import junit.framework.TestCase;
 
 import org.apache.log4j.Logger;
+import org.cspoker.common.api.chat.event.MessageEvent;
 import org.cspoker.common.api.lobby.event.TableCreatedEvent;
 import org.cspoker.common.api.lobby.event.TableRemovedEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.AllInEvent;
@@ -50,9 +51,6 @@ import org.cspoker.server.common.game.gamecontrol.TestPlayerFactory;
 import org.cspoker.server.common.player.GameSeatedPlayer;
 import org.cspoker.server.common.player.IllegalNameException;
 import org.cspoker.server.common.player.PlayerFactory;
-import org.cspoker.server.common.playercommunication.PlayerCommunicationImpl;
-import org.cspoker.server.common.session.Session;
-import org.cspoker.server.common.session.SessionManager;
 
 public class PlayerCommunicationTest extends TestCase {
 
@@ -327,7 +325,7 @@ public class PlayerCommunicationTest extends TestCase {
 				throws RemoteException {
 		}
 
-		public void onServerMessageEvent(ServerMessageEvent event)
+		public void onServerMessageEvent(MessageEvent event)
 				throws RemoteException {
 		}
 
@@ -437,7 +435,7 @@ public class PlayerCommunicationTest extends TestCase {
 			events.add(event);
 		}
 
-		public void onServerMessageEvent(ServerMessageEvent event)
+		public void onServerMessageEvent(MessageEvent event)
 				throws RemoteException {
 			events.add(event);
 		}

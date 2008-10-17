@@ -20,11 +20,11 @@ import java.rmi.server.UnicastRemoteObject;
 
 import org.cspoker.common.api.account.context.RemoteAccountContext;
 import org.cspoker.common.api.cashier.context.RemoteCashierContext;
-import org.cspoker.common.api.chat.context.RemoteChatContext;
-import org.cspoker.common.api.chat.listener.ChatListener;
 import org.cspoker.common.api.lobby.context.LobbyContext;
 import org.cspoker.common.api.lobby.context.RemoteLobbyContext;
 import org.cspoker.common.api.lobby.listener.LobbyListener;
+import org.cspoker.common.api.serverchat.context.RemoteChatContext;
+import org.cspoker.common.api.serverchat.listener.ChatListener;
 import org.cspoker.common.api.shared.context.ForwardingRemoteServerContext;
 import org.cspoker.common.api.shared.context.ServerContext;
 import org.cspoker.common.api.shared.exception.IllegalActionException;

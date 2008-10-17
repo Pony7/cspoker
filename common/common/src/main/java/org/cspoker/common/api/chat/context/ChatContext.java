@@ -15,8 +15,6 @@
  */
 package org.cspoker.common.api.chat.context;
 
-
-
 public interface ChatContext extends RemoteChatContext {
 
 	void sendMessage(String message);

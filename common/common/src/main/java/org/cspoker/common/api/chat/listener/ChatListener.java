@@ -15,10 +15,10 @@
  */
 package org.cspoker.common.api.chat.listener;
 
-import org.cspoker.common.api.chat.event.ChatEvent;
+import org.cspoker.common.api.chat.event.MessageEvent;
 
 public interface ChatListener extends RemoteChatListener{
 
-	void onMessage(ChatEvent messageEvent);
+	void onMessage(MessageEvent messageEvent);
 
 }
