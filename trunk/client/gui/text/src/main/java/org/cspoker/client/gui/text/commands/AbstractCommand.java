@@ -16,15 +16,12 @@
 package org.cspoker.client.gui.text.commands;
 
 import org.cspoker.client.gui.text.Console;
-import org.cspoker.common.RemotePlayerCommunication;
 
 public abstract class AbstractCommand implements Command {
 
-	protected RemotePlayerCommunication rpc;
 	protected Console console;
 
-	public AbstractCommand(RemotePlayerCommunication rpc, Console console) {
-		this.rpc = rpc;
+	public AbstractCommand(Console console) {
 		this.console = console;
 	}
 

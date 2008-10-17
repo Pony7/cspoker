@@ -16,32 +16,35 @@
 package org.cspoker.client.gui.text.eventlistener;
 
 import org.cspoker.client.gui.text.Console;
-import org.cspoker.common.eventlisteners.RemoteAllEventsListener;
-import org.cspoker.common.events.gameevents.BrokePlayerKickedOutEvent;
-import org.cspoker.common.events.gameevents.GameMessageEvent;
-import org.cspoker.common.events.gameevents.NewCommunityCardsEvent;
-import org.cspoker.common.events.gameevents.NewDealEvent;
-import org.cspoker.common.events.gameevents.NewRoundEvent;
-import org.cspoker.common.events.gameevents.NextPlayerEvent;
-import org.cspoker.common.events.gameevents.PlayerJoinedTableEvent;
-import org.cspoker.common.events.gameevents.PlayerLeftTableEvent;
-import org.cspoker.common.events.gameevents.ShowHandEvent;
-import org.cspoker.common.events.gameevents.WinnerEvent;
-import org.cspoker.common.events.gameevents.playeractionevents.AllInEvent;
-import org.cspoker.common.events.gameevents.playeractionevents.BetEvent;
-import org.cspoker.common.events.gameevents.playeractionevents.BigBlindEvent;
-import org.cspoker.common.events.gameevents.playeractionevents.CallEvent;
-import org.cspoker.common.events.gameevents.playeractionevents.CheckEvent;
-import org.cspoker.common.events.gameevents.playeractionevents.FoldEvent;
-import org.cspoker.common.events.gameevents.playeractionevents.RaiseEvent;
-import org.cspoker.common.events.gameevents.playeractionevents.SmallBlindEvent;
-import org.cspoker.common.events.gameevents.privateevents.NewPocketCardsEvent;
-import org.cspoker.common.events.serverevents.ServerMessageEvent;
-import org.cspoker.common.events.serverevents.TableChangedEvent;
-import org.cspoker.common.events.serverevents.TableCreatedEvent;
-import org.cspoker.common.events.serverevents.TableRemovedEvent;
+import org.cspoker.common.api.chat.listener.ChatListener;
+import org.cspoker.common.api.lobby.event.TableCreatedEvent;
+import org.cspoker.common.api.lobby.event.TableRemovedEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.AllInEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.BetEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.BigBlindEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.CallEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.CheckEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.FoldEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.JoinTableEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.LeaveTableEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.NewCommunityCardsEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.NewDealEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.NewRoundEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.NextPlayerEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.RaiseEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.ShowHandEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.SitInEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.SitOutEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.SmallBlindEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.WinnerEvent;
+import org.cspoker.common.api.lobby.holdemtable.holdemplayer.event.NewPocketCardsEvent;
+import org.cspoker.common.api.lobby.holdemtable.holdemplayer.listener.HoldemPlayerListener;
+import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
+import org.cspoker.common.api.lobby.listener.LobbyListener;
+import org.cspoker.common.api.shared.event.Event;
 
-public class ConsoleListener implements RemoteAllEventsListener {
+public class ConsoleListener implements ChatListener,LobbyListener
+	,HoldemPlayerListener,HoldemTableListener {
 
 	private Console console;
 
@@ -49,116 +52,91 @@ public class ConsoleListener implements RemoteAllEventsListener {
 		this.console = console;
 	}
 
-	public void onAllInEvent(AllInEvent event) {
-		console.print(event.toString());
-
-	}
-
-	public void onBetEvent(BetEvent event) {
-		console.print(event.toString());
-
-	}
-
-	public void onBigBlindEvent(BigBlindEvent event) {
-		console.print(event.toString());
-
-	}
-
-	public void onCallEvent(CallEvent event) {
-		console.print(event.toString());
-
-	}
-
-	public void onCheckEvent(CheckEvent event) {
-		console.print(event.toString());
-
-	}
-
-	public void onFoldEvent(FoldEvent event) {
-		console.print(event.toString());
-
-	}
-
-	public void onRaiseEvent(RaiseEvent event) {
-		console.print(event.toString());
-
-	}
-
-	public void onSmallBlindEvent(SmallBlindEvent event) {
-		console.print(event.toString());
-
-	}
-
-	public void onNewPocketCardsEvent(NewPocketCardsEvent event) {
-		console.print(event.toString());
-
-	}
-
-	public void onNewCommunityCardsEvent(NewCommunityCardsEvent event) {
-		console.print(event.toString());
-
-	}
-
-	public void onNewDealEvent(NewDealEvent event) {
-		console.print(event.toString());
-
-	}
-
-	public void onNewRoundEvent(NewRoundEvent event) {
-		console.print(event.toString());
-
-	}
-
-	public void onNextPlayerEvent(NextPlayerEvent event) {
-		console.print(event.toString());
-
-	}
-
-	public void onPlayerJoinedTableEvent(PlayerJoinedTableEvent event) {
-		console.print(event.toString());
-
-	}
-
-	public void onPlayerLeftTableEvent(PlayerLeftTableEvent event) {
-		console.print(event.toString());
-
-	}
-
-	public void onShowHandEvent(ShowHandEvent event) {
-		console.print(event.toString());
-
-	}
-
-	public void onWinnerEvent(WinnerEvent event) {
-		console.print(event.toString());
-
-	}
-
-	public void onGameMessageEvent(GameMessageEvent event) {
-		console.print(event.toString());
-
-	}
-
-	public void onTableCreatedEvent(TableCreatedEvent event) {
-		console.print(event.toString());
-
-	}
-
-	public void onServerMessageEvent(ServerMessageEvent event) {
-		console.print(event.toString());
-
-	}
-
-	public void onBrokePlayerKickedOutEvent(BrokePlayerKickedOutEvent event) {
+	public void onEvent(Event event){
 		console.print(event.toString());
 	}
 
-	public void onTableChangedEvent(TableChangedEvent event) {
-		console.print(event.toString());
+	public void onTableCreated(TableCreatedEvent event) {
+		onEvent(event);
 	}
 
-	public void onTableRemovedEvent(TableRemovedEvent event) {
-		console.print(event.toString());
+	public void onTableRemoved(TableRemovedEvent event) {
+		onEvent(event);
 	}
 
+	public void onNewPocketCards(NewPocketCardsEvent event) {
+		onEvent(event);	}
+
+	public void onAllIn(AllInEvent event) {
+		onEvent(event);
+	}
+
+	public void onBet(BetEvent event) {
+		onEvent(event);
+	}
+
+	public void onBigBlind(BigBlindEvent event) {
+		onEvent(event);
+	}
+
+	public void onCall(CallEvent event) {
+		onEvent(event);
+	}
+
+	public void onCheck(CheckEvent event) {
+		onEvent(event);
+	}
+
+	public void onFold(FoldEvent event) {
+		onEvent(event);
+	}
+
+	public void onJoinTable(JoinTableEvent event) {
+		onEvent(event);
+	}
+
+	public void onLeaveTable(LeaveTableEvent event) {
+		onEvent(event);
+	}
+
+	public void onNewCommunityCards(
+			NewCommunityCardsEvent event) {
+		onEvent(event);
+	}
+
+	public void onNewDeal(NewDealEvent event) {
+		onEvent(event);
+	}
+
+	public void onNewRound(NewRoundEvent event) {
+		onEvent(event);
+	}
+
+	public void onNextPlayer(NextPlayerEvent event) {
+		onEvent(event);
+	}
+
+	public void onRaise(RaiseEvent event) {
+		onEvent(event);
+	}
+
+	public void onShowHand(ShowHandEvent event) {
+		onEvent(event);
+	}
+
+	public void onSitIn(SitInEvent event) {
+		onEvent(event);
+	}
+
+	public void onSitOut(SitOutEvent event) {
+		onEvent(event);
+	}
+
+	public void onSmallBlind(SmallBlindEvent event) {
+		onEvent(event);
+	}
+
+	public void onWinner(WinnerEvent event) {
+		onEvent(event);
+	}
 }

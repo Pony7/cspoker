@@ -16,18 +16,21 @@
 package org.cspoker.client.gui.text.commands;
 
 import org.cspoker.client.gui.text.Console;
-import org.cspoker.common.RemotePlayerCommunication;
-import org.cspoker.common.elements.GameProperty;
+import org.cspoker.common.api.lobby.context.RemoteLobbyContext;
+import org.cspoker.common.elements.table.TableConfiguration;
 
 public class CreateTableCommand extends AbstractCommand {
 
-	public CreateTableCommand(RemotePlayerCommunication rpc, Console console) {
-		super(rpc, console);
+	private final RemoteLobbyContext context;
+	public CreateTableCommand(RemoteLobbyContext lobbyContext, Console console) {
+		super(console);
+		this.context=lobbyContext;
 	}
 
 	public void execute(String... args) throws Exception {
-		GameProperty prop = new GameProperty();
-		rpc.createHoldemTable(args[0], prop);
+		context.createHoldemTable(args[0],
+				new TableConfiguration(Integer.parseInt(args[1])
+						,Integer.parseInt(args[2])));
 	}
 
 }
