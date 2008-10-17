@@ -21,40 +21,36 @@ import org.cspoker.common.api.chat.listener.ChatListener;
 import org.cspoker.common.elements.player.Player;
 
 @XmlRootElement
-public class TableMessageEvent extends ChatEvent {
+public class MessageEvent implements ChatEvent {
 
-	private static final long serialVersionUID = -3097280563115901972L;
-
+	private static final long serialVersionUID = -4087660917339765224L;
+	
 	private Player player;
-
 	private String message;
-
-	public TableMessageEvent(Player player, String message) {
+	
+	public MessageEvent(Player player, String message) {
 		this.player = player;
 		this.message = message;
 	}
 
-	protected TableMessageEvent() {
+	protected MessageEvent() {
 		// no op
 	}
 
 	public String toString() {
 		return getPlayer().getName() + " says: " + getMessage();
 	}
-
-	public String getMessage() {
-		return message;
-	}
-
+	
 	public Player getPlayer() {
-		return player;
+		return this.player;
 	}
-
-	@Override
+	
+	public String getMessage() {
+		return this.message;
+	}
+	
 	public void dispatch(ChatListener chatListener) {
-		chatListener.onTableMessage(this);
+		chatListener.onMessage(this);
 	}
-	
-	
 
 }

@@ -15,32 +15,33 @@
  */
 package org.cspoker.common.api.chat.action;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
 import org.cspoker.common.api.chat.context.ChatContext;
+import org.cspoker.common.api.shared.context.StaticServerContext;
 
+@XmlRootElement
+public abstract class SendMessageAction extends ChatAction<Void> {
 
-public class SendMessageAction extends ChatAction<Void> {
-
-	private static final long serialVersionUID = -4885167132627383948L;
-
+	private static final long serialVersionUID = -7513936752700505929L;
+	
 	private String message;
 
-	public SendMessageAction(long id, String msg) {
+	public SendMessageAction(long id, String message) {
 		super(id);
-		this.message = msg;
+		this.message = message;
 	}
 
 	protected SendMessageAction() {
 		// no op
 	}
 	
-	public String getMessage() {
-		return message;
-	}
-	
+	@Override
+	public abstract Void perform(StaticServerContext serverContext);
+
 	@Override
 	public Void perform(ChatContext chatContext) {
-		chatContext.sendMessage(getMessage());
+		chatContext.sendMessage(message);
 		return null;
 	}
-
 }

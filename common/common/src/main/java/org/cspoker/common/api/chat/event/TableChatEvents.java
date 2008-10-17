@@ -13,42 +13,41 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.common.api.lobby.holdemtable.event;
+package org.cspoker.common.api.chat.event;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.cspoker.common.api.lobby.event.LobbyTreeEvent;
-import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListenerTree;
-import org.cspoker.common.api.lobby.listener.LobbyListenerTree;
+import org.cspoker.common.api.chat.listener.ChatListener;
+import org.cspoker.common.api.shared.event.ServerEvent;
+import org.cspoker.common.api.shared.listener.ServerListenerTree;
 
-public class HoldemTableTreeEvents extends LobbyTreeEvent {
+public class TableChatEvents implements ServerEvent {
 
 	private static final long serialVersionUID = 557148706756328395L;
 
-	private long tableId;
+	private long tableID;
 
-	private List<HoldemTableTreeEvent> events;
+	private List<ChatEvent> events;
 	
-	public HoldemTableTreeEvents() {
+	public TableChatEvents() {
 		// no op
 	}
 
-	public HoldemTableTreeEvents(long tableId, List<HoldemTableTreeEvent> events){
-		this.tableId = tableId;
-		this.events = new ArrayList<HoldemTableTreeEvent>(events);
+	public TableChatEvents(long tableID, List<ChatEvent> events){
+		this.tableID = tableID;
+		this.events = new ArrayList<ChatEvent>(events);
 	}
 	
-	public HoldemTableTreeEvents(long tableId, HoldemTableTreeEvent event){
-		this.tableId = tableId;
+	public TableChatEvents(long tableID, ChatEvent event){
+		this.tableID = tableID;
 		this.events = Collections.singletonList(event);
 	}
 	
-	@Override
-	public void dispatch(LobbyListenerTree lobbyListenerTree) {
-		HoldemTableListenerTree listenerTree = lobbyListenerTree.getHoldemTableListenerTree(tableId);
-		for(HoldemTableTreeEvent event : events){
+	public void dispatch(ServerListenerTree serverListenerTree) {
+		ChatListener listenerTree = serverListenerTree.getTableChatListener(tableID);
+		for(ChatEvent event : events){
 			event.dispatch(listenerTree);
 		}
 	}

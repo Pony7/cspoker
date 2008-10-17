@@ -13,38 +13,29 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.common.api.shared.listener;
+package org.cspoker.common.api.chat.listener;
 
 import org.cspoker.common.api.chat.event.ChatEvent;
-import org.cspoker.common.api.chat.event.ServerChatEvents;
-import org.cspoker.common.api.chat.listener.ChatListener;
-import org.cspoker.common.api.lobby.event.TableCreatedEvent;
-import org.cspoker.common.api.lobby.event.TableRemovedEvent;
-import org.cspoker.common.api.lobby.listener.LobbyListener;
+import org.cspoker.common.api.chat.event.TableChatEvents;
 import org.cspoker.common.api.shared.event.ServerEvent;
+import org.cspoker.common.api.shared.listener.ServerEventListener;
 
-public class UniversalServerListener implements ServerEventListener, ChatListener, LobbyListener{
+public class UniversalTableChatListener implements ChatListener{
 
 	private final ServerEventListener serverEventListener;
+	private final long tableId;
 
-	public UniversalServerListener(ServerEventListener serverEventListener) {
+	public UniversalTableChatListener(ServerEventListener serverEventListener, long tableId) {
 		this.serverEventListener = serverEventListener;
+		this.tableId = tableId;
 	}
 	
 	public void onServerEvent(ServerEvent event) {
 		serverEventListener.onServerEvent(event);
 	}
-	
-	public void onTableCreated(TableCreatedEvent tableCreatedEvent) {
-		onServerEvent(tableCreatedEvent);
-	}
-
-	public void onTableRemoved(TableRemovedEvent tableRemovedEvent) {
-		onServerEvent(tableRemovedEvent);
-	}
 
 	public void onMessage(ChatEvent messageEvent) {
-		onServerEvent(new ServerChatEvents(messageEvent));
+		onServerEvent(new TableChatEvents(tableId,messageEvent));
 	}
-
+	
 }

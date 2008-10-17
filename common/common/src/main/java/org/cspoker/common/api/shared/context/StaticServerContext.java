@@ -20,7 +20,9 @@ import org.cspoker.common.api.lobby.context.StaticLobbyContext;
 
 public interface StaticServerContext extends ServerContext{
 
-	public ChatContext getChatContext();
+	public ChatContext getServerChatContext();
+	
+	public ChatContext getTableChatContext(long tableID);
 	
 	public StaticLobbyContext getLobbyContext();
 	

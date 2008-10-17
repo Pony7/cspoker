@@ -16,42 +16,9 @@
 package org.cspoker.common.api.chat.event;
 
 import org.cspoker.common.api.chat.listener.ChatListener;
-import org.cspoker.common.api.shared.event.ServerEvent;
-import org.cspoker.common.api.shared.listener.ServerListenerTree;
-import org.cspoker.common.elements.player.Player;
 
-public class ChatEvent implements ServerEvent {
+public interface ChatEvent {
 
-	private static final long serialVersionUID = 557148706756328395L;
-
-	public void dispatch(ServerListenerTree listenerTree) {
-		dispatch(listenerTree.getChatListener());
-	}
-	public void dispatch(ChatListener chatListener) {
-		chatListener.onMessage(this);
-	}
-	private Player player;
-
-	private String message;
-
-	public ChatEvent(Player player, String message) {
-		this.player = player;
-		this.message = message;
-	}
-
-	protected ChatEvent() {
-		// no op
-	}
-
-	public String toString() {
-		return getPlayer().getName() + " says: " + getMessage();
-	}
-
-	public String getMessage() {
-		return message;
-	}
-
-	public Player getPlayer() {
-		return player;
-	}
+	public abstract void dispatch(ChatListener chatListener);
+	
 }

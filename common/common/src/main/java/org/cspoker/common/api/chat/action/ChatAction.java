@@ -32,9 +32,7 @@ public abstract class ChatAction<T> extends DispatchableAction<T> {
 	}
 
 	@Override
-	public T perform(StaticServerContext serverContext) {
-		return perform(serverContext.getChatContext());
-	}
+	public abstract T perform(StaticServerContext serverContext);
 
 	public abstract T perform(ChatContext chatContext);
 	
