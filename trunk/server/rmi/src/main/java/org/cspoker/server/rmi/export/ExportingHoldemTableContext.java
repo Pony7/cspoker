@@ -22,36 +22,18 @@ import org.cspoker.common.api.lobby.holdemtable.context.ForwardingRemoteHoldemTa
 import org.cspoker.common.api.lobby.holdemtable.context.RemoteHoldemTableContext;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.RemoteHoldemPlayerContext;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.listener.HoldemPlayerListener;
-import org.cspoker.common.api.shared.Trigger;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
-import org.cspoker.common.util.lazy.IFactory2;
-import org.cspoker.common.util.lazy.LazyReference2;
 
 public class ExportingHoldemTableContext extends ForwardingRemoteHoldemTableContext {
-	
-	private LazyReference2<RemoteHoldemPlayerContext, IllegalActionException,RemoteException> playerContext = new LazyReference2<RemoteHoldemPlayerContext, IllegalActionException,RemoteException>();
-	private Trigger tableContextCacheEntry;
 
-	
-	public ExportingHoldemTableContext(RemoteHoldemTableContext holdemTableContext, Trigger tableContextCacheEntry) throws RemoteException {
+	public ExportingHoldemTableContext(RemoteHoldemTableContext holdemTableContext) throws RemoteException {
 		super(holdemTableContext);
-		this.tableContextCacheEntry = tableContextCacheEntry;
 	}
 	
 	@Override
 	public RemoteHoldemPlayerContext sitIn(final long seatId, final int amount, final HoldemPlayerListener holdemPlayerListener)
 			throws RemoteException, IllegalActionException {
-		return playerContext.getContent(new IFactory2<RemoteHoldemPlayerContext, IllegalActionException ,RemoteException>(){
-			public RemoteHoldemPlayerContext create() throws RemoteException, IllegalActionException {
-				return (RemoteHoldemPlayerContext) UnicastRemoteObject.exportObject(ExportingHoldemTableContext.super.sitIn(seatId, amount, holdemPlayerListener), 0);
-			}
-		});
-	}
-	
-	@Override
-	public void leaveTable() throws RemoteException, IllegalActionException {
-		tableContextCacheEntry.trigger();
-		super.leaveTable();
+		return (RemoteHoldemPlayerContext) UnicastRemoteObject.exportObject(ExportingHoldemTableContext.super.sitIn(seatId, amount, holdemPlayerListener), 0);
 	}
 	
 }
