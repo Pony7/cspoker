@@ -18,7 +18,7 @@ package org.cspoker.server.common.chat.room;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import org.cspoker.common.api.chat.event.ChatEvent;
+import org.cspoker.common.api.chat.event.MessageEvent;
 import org.cspoker.common.api.chat.listener.ChatListener;
 import org.cspoker.common.elements.player.Player;
 import org.cspoker.server.common.player.ServerPlayer;
@@ -39,9 +39,11 @@ public abstract class ChatRoom {
     
 	public void sendMessage(Player sender,String message){
 		for(ChatListener listener: players){
-			listener.onMessage(new ChatEvent(sender,message));
+			listener.onMessage(new MessageEvent(sender,message));
 		}
 	}
-	
+
 	public abstract boolean canSubscribeListener(ServerPlayer player);
+	
 }
+

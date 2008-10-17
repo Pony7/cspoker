@@ -15,8 +15,8 @@
  */
 package org.cspoker.server.xml.common;
 
-import org.cspoker.common.api.chat.context.ChatContext;
 import org.cspoker.common.api.lobby.context.StaticLobbyContext;
+import org.cspoker.common.api.serverchat.context.ChatContext;
 import org.cspoker.common.api.shared.context.ForwardingServerContext;
 import org.cspoker.common.api.shared.context.ServerContext;
 import org.cspoker.common.api.shared.context.StaticServerContext;

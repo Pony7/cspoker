@@ -15,9 +15,9 @@
  */
 package org.cspoker.server.rmi.unremote.listener;
 
-import org.cspoker.common.api.chat.event.ChatEvent;
-import org.cspoker.common.api.chat.listener.ChatListener;
-import org.cspoker.common.api.chat.listener.RemoteChatListener;
+import org.cspoker.common.api.serverchat.event.ChatEvent;
+import org.cspoker.common.api.serverchat.listener.ChatListener;
+import org.cspoker.common.api.serverchat.listener.RemoteChatListener;
 import org.cspoker.common.api.shared.Trigger;
 import org.cspoker.common.api.shared.listener.ForwardingListener;
 

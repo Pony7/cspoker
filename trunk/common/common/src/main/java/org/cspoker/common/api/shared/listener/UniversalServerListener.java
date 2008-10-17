@@ -15,7 +15,7 @@
  */
 package org.cspoker.common.api.shared.listener;
 
-import org.cspoker.common.api.chat.event.ChatEvent;
+import org.cspoker.common.api.chat.event.MessageEvent;
 import org.cspoker.common.api.chat.event.ServerChatEvents;
 import org.cspoker.common.api.chat.listener.ChatListener;
 import org.cspoker.common.api.lobby.event.TableCreatedEvent;
@@ -43,7 +43,7 @@ public class UniversalServerListener implements ServerEventListener, ChatListene
 		onServerEvent(tableRemovedEvent);
 	}
 
-	public void onMessage(ChatEvent messageEvent) {
+	public void onMessage(MessageEvent messageEvent) {
 		onServerEvent(new ServerChatEvents(messageEvent));
 	}
 
