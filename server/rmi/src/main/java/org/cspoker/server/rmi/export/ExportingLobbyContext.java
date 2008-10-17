@@ -23,15 +23,10 @@ import org.cspoker.common.api.lobby.context.RemoteLobbyContext;
 import org.cspoker.common.api.lobby.holdemtable.context.HoldemTableContext;
 import org.cspoker.common.api.lobby.holdemtable.context.RemoteHoldemTableContext;
 import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
-import org.cspoker.common.api.shared.Trigger;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
-import org.cspoker.common.util.lazy.IFactory2;
-import org.cspoker.common.util.lazy.LazyMap2;
 
 public class ExportingLobbyContext extends ForwardingRemoteLobbyContext {
 
-	private final LazyMap2<Long, RemoteHoldemTableContext, RemoteException, IllegalActionException> wrappers = new LazyMap2<Long, RemoteHoldemTableContext, RemoteException, IllegalActionException>();
-	
 	public ExportingLobbyContext(RemoteLobbyContext lobbyContext) throws RemoteException {
 		super(lobbyContext);
 	}
@@ -39,16 +34,8 @@ public class ExportingLobbyContext extends ForwardingRemoteLobbyContext {
 	@Override
 	public RemoteHoldemTableContext joinHoldemTable(final long tableId,
 			final HoldemTableListener holdemTableListener) throws RemoteException, IllegalActionException {
-		return wrappers.getOrCreate(tableId, new IFactory2<RemoteHoldemTableContext, RemoteException,IllegalActionException>(){
-			public RemoteHoldemTableContext create() throws RemoteException, IllegalActionException {
-				ExportingHoldemTableContext remoteObject = new ExportingHoldemTableContext(ExportingLobbyContext.super.joinHoldemTable(tableId, holdemTableListener),new Trigger(){
-					public void trigger() {
-						wrappers.remove(tableId);
-					}
-				});
-				return (HoldemTableContext)UnicastRemoteObject.exportObject(remoteObject,0);
-			}
-		});
+		ExportingHoldemTableContext remoteObject = new ExportingHoldemTableContext(ExportingLobbyContext.super.joinHoldemTable(tableId, holdemTableListener));
+		return (HoldemTableContext)UnicastRemoteObject.exportObject(remoteObject,0);
 	}
 
 }
