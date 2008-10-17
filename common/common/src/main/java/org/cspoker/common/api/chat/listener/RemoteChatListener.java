@@ -18,7 +18,6 @@ package org.cspoker.common.api.chat.listener;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
-import org.cspoker.common.api.chat.event.MessageEvent;
 import org.cspoker.common.api.shared.listener.EventListener;
 
 public interface RemoteChatListener extends EventListener, Remote{
