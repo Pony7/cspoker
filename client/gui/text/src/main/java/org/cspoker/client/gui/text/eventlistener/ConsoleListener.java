@@ -16,6 +16,7 @@
 package org.cspoker.client.gui.text.eventlistener;
 
 import org.cspoker.client.gui.text.Console;
+import org.cspoker.common.api.chat.event.MessageEvent;
 import org.cspoker.common.api.chat.listener.ChatListener;
 import org.cspoker.common.api.lobby.event.TableCreatedEvent;
 import org.cspoker.common.api.lobby.event.TableRemovedEvent;

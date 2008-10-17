@@ -27,24 +27,22 @@ import org.cspoker.common.api.shared.listener.UniversalServerListener;
 public class XmlLobbyContext extends ForwardingLobbyContext implements StaticLobbyContext {
 
 	private UniversalServerListener listener;
-	private ConcurrentHashMap<Long, XmlHoldemTableContext> contexts = new ConcurrentHashMap<Long, XmlHoldemTableContext>();
-	private XmlServerContext serverContext;
+	private final ConcurrentHashMap<Long, XmlHoldemTableContext> contexts = new ConcurrentHashMap<Long, XmlHoldemTableContext>();
 	
-	public XmlLobbyContext(LobbyContext lobbyContext,XmlServerContext serverContext, UniversalServerListener listener) {
+	public XmlLobbyContext(LobbyContext lobbyContext, UniversalServerListener listener) {
 		super(lobbyContext);
 		this.listener = listener;
-		this.serverContext = serverContext;
 	}
 
 	public XmlHoldemTableContext getHoldemTableContext(long tableId) {
 		return contexts.get(tableId);
 	}
 
+	//The context that we delegating to is responsible for synchronizing concurrent join actions.
 	public void joinHoldemTable(long tableId) throws IllegalActionException {
-		//Also register the global listener for the chat room associated with this table.
-		serverContext.getChatContext();
 		UniversalTableListener tableListener = new UniversalTableListener(listener, tableId);
-		contexts.put(tableId, new XmlHoldemTableContext(super.joinHoldemTable(tableId, tableListener),tableListener));
+		XmlHoldemTableContext newContext = new XmlHoldemTableContext(super.joinHoldemTable(tableId, tableListener),tableListener);
+		contexts.put(tableId, newContext);
 	}
 
 

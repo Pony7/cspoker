@@ -27,12 +27,15 @@ public class AccountContextImpl implements ExtendedAccountContext{
 	private static XmlFileAuthenticator authenticator = new XmlFileAuthenticator();
 		
 	private ServerPlayer player;
+
+	private String username;
 	
 
 	public AccountContextImpl(String username, String password) throws LoginException {
 		if(!authenticator.hasPassword(username, password)){
 			throw new LoginException();
 		}
+		this.username = username;
 		player = PlayerFactory.global_Player_Factory.createNewPlayer(username);
 		
 	}
@@ -55,5 +58,9 @@ public class AccountContextImpl implements ExtendedAccountContext{
 
 	public ServerPlayer getPlayer(){
 		return player;
+	}
+
+	public boolean hasPassword(String passwordHash){
+		return authenticator.hasPassword(username, passwordHash);
 	}
 }
