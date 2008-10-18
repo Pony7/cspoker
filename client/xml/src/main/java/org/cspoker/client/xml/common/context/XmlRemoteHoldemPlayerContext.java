@@ -17,6 +17,8 @@ package org.cspoker.client.xml.common.context;
 
 import java.rmi.RemoteException;
 
+import net.jcip.annotations.ThreadSafe;
+
 import org.cspoker.client.xml.common.IDGenerator;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.action.BetOrRaiseAction;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.action.CheckOrCallAction;
@@ -26,6 +28,7 @@ import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.RemoteHolde
 import org.cspoker.common.api.shared.action.ActionPerformer;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 
+@ThreadSafe
 public class XmlRemoteHoldemPlayerContext implements RemoteHoldemPlayerContext {
 
 	private ActionPerformer performer;
