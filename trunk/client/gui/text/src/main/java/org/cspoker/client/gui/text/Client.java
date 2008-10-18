@@ -32,6 +32,7 @@ import org.cspoker.client.gui.text.commands.HelpCommand;
 import org.cspoker.client.gui.text.commands.JoinTableCommand;
 import org.cspoker.client.gui.text.commands.LeaveTableCommand;
 import org.cspoker.client.gui.text.commands.PotCommand;
+import org.cspoker.client.gui.text.commands.ServerChatCommand;
 import org.cspoker.client.gui.text.commands.SitInCommand;
 import org.cspoker.client.gui.text.commands.TableChatCommand;
 import org.cspoker.client.gui.text.eventlistener.PrintListener;
@@ -100,7 +101,7 @@ public class Client {
 		commands.put("FOLD", new FoldCommand(this, console));
 
 		//Chat
-		commands.put("SERVERCHAT", new TableChatCommand(this, console));
+		commands.put("SERVERCHAT", new ServerChatCommand(this, console));
 		commands.put("TABLECHAT", new TableChatCommand(this, console));
 
 		//Local

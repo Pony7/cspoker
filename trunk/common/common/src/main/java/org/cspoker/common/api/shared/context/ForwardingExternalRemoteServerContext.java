@@ -21,15 +21,17 @@ import org.cspoker.common.api.account.context.RemoteAccountContext;
 import org.cspoker.common.api.cashier.context.RemoteCashierContext;
 import org.cspoker.common.api.chat.context.RemoteChatContext;
 import org.cspoker.common.api.chat.listener.ChatListener;
-import org.cspoker.common.api.lobby.context.RemoteLobbyContext;
+import org.cspoker.common.api.chat.listener.RemoteChatListener;
+import org.cspoker.common.api.lobby.context.ExternalRemoteLobbyContext;
 import org.cspoker.common.api.lobby.listener.LobbyListener;
+import org.cspoker.common.api.lobby.listener.RemoteLobbyListener;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 
-public class ForwardingRemoteServerContext implements RemoteServerContext {
+public class ForwardingExternalRemoteServerContext implements ExternalRemoteServerContext {
 
-	private final RemoteServerContext serverContext;
+	private final ExternalRemoteServerContext serverContext;
 
-	public ForwardingRemoteServerContext(RemoteServerContext serverContext) {
+	public ForwardingExternalRemoteServerContext(ExternalRemoteServerContext serverContext) {
 		this.serverContext = serverContext;
 	}
 	
@@ -45,13 +47,29 @@ public class ForwardingRemoteServerContext implements RemoteServerContext {
 			throws RemoteException, IllegalActionException {
 		return serverContext.getServerChatContext(chatListener);
 	}
+
+	public ExternalRemoteLobbyContext getLobbyContext(LobbyListener lobbyListener)
+			throws RemoteException, IllegalActionException {
+		return serverContext.getLobbyContext(lobbyListener);
+	}
+
+	public ExternalRemoteLobbyContext getLobbyContext(RemoteLobbyListener lobbyListener)
+			throws RemoteException, IllegalActionException {
+		return serverContext.getLobbyContext(lobbyListener);
+	}
+
+	public RemoteChatContext getServerChatContext(RemoteChatListener chatListener)
+			throws RemoteException, IllegalActionException {
+		return serverContext.getServerChatContext(chatListener);
+	}
+
+	public RemoteChatContext getTableChatContext(RemoteChatListener chatListener,
+			long tableId) throws RemoteException {
+		return serverContext.getTableChatContext(chatListener, tableId);
+	}
+	
 	public RemoteChatContext getTableChatContext(ChatListener chatListener,
 			long tableId) throws RemoteException, IllegalActionException {
 		return serverContext.getTableChatContext(chatListener,tableId);
-	}
-
-	public RemoteLobbyContext getLobbyContext(LobbyListener lobbyListener)
-			throws RemoteException, IllegalActionException {
-		return serverContext.getLobbyContext(lobbyListener);
 	}
 }

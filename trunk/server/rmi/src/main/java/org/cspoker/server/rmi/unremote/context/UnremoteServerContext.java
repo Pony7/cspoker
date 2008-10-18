@@ -17,7 +17,8 @@ package org.cspoker.server.rmi.unremote.context;
 
 import org.cspoker.common.api.chat.context.ChatContext;
 import org.cspoker.common.api.chat.listener.RemoteChatListener;
-import org.cspoker.common.api.lobby.context.LobbyContext;
+import org.cspoker.common.api.lobby.context.ExternalLobbyContext;
+import org.cspoker.common.api.lobby.listener.LobbyListener;
 import org.cspoker.common.api.lobby.listener.RemoteLobbyListener;
 import org.cspoker.common.api.shared.Trigger;
 import org.cspoker.common.api.shared.context.ExternalServerContext;
@@ -43,7 +44,13 @@ public class UnremoteServerContext extends ForwardingServerContext implements Ex
 		return super.getTableChatContext(new UnremoteChatListener(connection,chatListener),tableId);
 	}
 	
-	public LobbyContext getLobbyContext(RemoteLobbyListener lobbyListener) {
+	public ExternalLobbyContext getLobbyContext(RemoteLobbyListener lobbyListener) {
 		return new UnremoteLobbyContext(connection, super.getLobbyContext(new UnremoteLobbyListener(connection, lobbyListener)));
 	}
+	
+	@Override
+	public ExternalLobbyContext getLobbyContext(LobbyListener lobbyListener) {
+		return new UnremoteLobbyContext(connection, super.getLobbyContext(lobbyListener));
+	}
+	
 }

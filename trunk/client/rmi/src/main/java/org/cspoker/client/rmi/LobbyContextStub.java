@@ -19,26 +19,41 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.cspoker.common.api.lobby.context.ForwardingRemoteLobbyContext;
-import org.cspoker.common.api.lobby.context.RemoteLobbyContext;
+import org.cspoker.common.api.lobby.context.ExternalRemoteLobbyContext;
+import org.cspoker.common.api.lobby.context.ForwardingExternalRemoteLobbyContext;
+import org.cspoker.common.api.lobby.holdemtable.context.ExternalRemoteHoldemTableContext;
 import org.cspoker.common.api.lobby.holdemtable.context.RemoteHoldemTableContext;
+import org.cspoker.common.api.lobby.holdemtable.listener.ForwardingRemoteHoldemTableListener;
 import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
+import org.cspoker.common.api.lobby.holdemtable.listener.RemoteHoldemTableListener;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.util.lazy.IWrapper1;
 
-public class LobbyContextStub extends ForwardingRemoteLobbyContext{
+public class LobbyContextStub extends ForwardingExternalRemoteLobbyContext{
 
 	protected ConcurrentHashMap<Long, IWrapper1<RemoteHoldemTableContext,RemoteException>> wrappedContexts = new ConcurrentHashMap<Long, IWrapper1<RemoteHoldemTableContext,RemoteException>>();
 
-	public LobbyContextStub(RemoteLobbyContext context)
-			throws RemoteException {
+	public LobbyContextStub(ExternalRemoteLobbyContext context)
+	throws RemoteException {
 		super(context);
 	}
-	
+
 	@Override
-	public RemoteHoldemTableContext joinHoldemTable(long tableId,
+	public ExternalRemoteHoldemTableContext joinHoldemTable(long tableId,
 			HoldemTableListener holdemTableListener) throws RemoteException, IllegalActionException {
-		RemoteHoldemTableContext tableContext = super.joinHoldemTable(tableId,(HoldemTableListener) UnicastRemoteObject.exportObject(holdemTableListener, 0));
+		RemoteHoldemTableListener stub = (RemoteHoldemTableListener) UnicastRemoteObject.exportObject(
+				new ForwardingRemoteHoldemTableListener(holdemTableListener), 0);
+		ExternalRemoteHoldemTableContext tableContext = super.joinHoldemTable(tableId,stub);
+		return new HoldemTableContextStub(tableContext);
+	}
+
+	@Override
+	public ExternalRemoteHoldemTableContext joinHoldemTable(long tableId,
+			RemoteHoldemTableListener holdemTableListener)
+	throws IllegalActionException, RemoteException {
+		RemoteHoldemTableListener stub = (RemoteHoldemTableListener) UnicastRemoteObject.exportObject(
+				new ForwardingRemoteHoldemTableListener(holdemTableListener), 0);
+		ExternalRemoteHoldemTableContext tableContext = super.joinHoldemTable(tableId,stub);
 		return new HoldemTableContextStub(tableContext);
 	}
 }

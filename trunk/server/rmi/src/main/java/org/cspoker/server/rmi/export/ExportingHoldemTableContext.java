@@ -19,25 +19,41 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
 import org.apache.log4j.Logger;
-import org.cspoker.common.api.lobby.holdemtable.context.ForwardingRemoteHoldemTableContext;
-import org.cspoker.common.api.lobby.holdemtable.context.RemoteHoldemTableContext;
+import org.cspoker.common.api.lobby.holdemtable.context.ExternalRemoteHoldemTableContext;
+import org.cspoker.common.api.lobby.holdemtable.context.ForwardingExternalRemoteHoldemTableContext;
+import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.ForwardingRemoteHoldemPlayerContext;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.RemoteHoldemPlayerContext;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.listener.HoldemPlayerListener;
+import org.cspoker.common.api.lobby.holdemtable.holdemplayer.listener.RemoteHoldemPlayerListener;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 
-public class ExportingHoldemTableContext extends ForwardingRemoteHoldemTableContext {
+public class ExportingHoldemTableContext extends ForwardingExternalRemoteHoldemTableContext {
 
 	private final static Logger logger = Logger.getLogger(ExportingHoldemTableContext.class);
 
-	public ExportingHoldemTableContext(RemoteHoldemTableContext holdemTableContext) throws RemoteException {
+	public ExportingHoldemTableContext(ExternalRemoteHoldemTableContext holdemTableContext) throws RemoteException {
 		super(holdemTableContext);
 	}
 
 	@Override
-	public RemoteHoldemPlayerContext sitIn(final long seatId, final int amount, final HoldemPlayerListener holdemPlayerListener)
+	public RemoteHoldemPlayerContext sitIn(long seatId, int buyIn, HoldemPlayerListener holdemPlayerListener)
 	throws RemoteException, IllegalActionException {
 		try {
-			return (RemoteHoldemPlayerContext) UnicastRemoteObject.exportObject(ExportingHoldemTableContext.super.sitIn(seatId, amount, holdemPlayerListener), 0);
+			RemoteHoldemPlayerContext wrappedObject = new ForwardingRemoteHoldemPlayerContext(super.sitIn(seatId, buyIn, holdemPlayerListener));
+			return (RemoteHoldemPlayerContext) UnicastRemoteObject.exportObject(wrappedObject, 0);
+		} catch (RemoteException exception) {
+			logger.error(exception.getMessage(), exception);
+			throw exception;
+		}
+	}
+	
+	@Override
+	public RemoteHoldemPlayerContext sitIn(long seatId, int buyIn,
+			RemoteHoldemPlayerListener holdemPlayerListener)
+			throws IllegalActionException, RemoteException {
+		try {
+			RemoteHoldemPlayerContext wrappedObject = new ForwardingRemoteHoldemPlayerContext(super.sitIn(seatId, buyIn, holdemPlayerListener));
+			return (RemoteHoldemPlayerContext) UnicastRemoteObject.exportObject(wrappedObject, 0);
 		} catch (RemoteException exception) {
 			logger.error(exception.getMessage(), exception);
 			throw exception;
