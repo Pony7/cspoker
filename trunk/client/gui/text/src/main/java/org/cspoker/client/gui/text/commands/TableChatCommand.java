@@ -15,17 +15,26 @@
  */
 package org.cspoker.client.gui.text.commands;
 
+import org.cspoker.client.gui.text.Client;
 import org.cspoker.client.gui.text.Console;
-import org.cspoker.common.RemotePlayerCommunication;
 
-public class CallCommand extends AbstractCommand {
-
-	public CallCommand(RemotePlayerCommunication rpc, Console console) {
-		super(rpc, console);
+public class TableChatCommand extends RemoteCommand {
+	
+	public TableChatCommand(Client client, Console console) {
+		super(client, console);
 	}
 
 	public void execute(String... args) throws Exception {
-		rpc.call();
+		client.getCurrentTableChatContext().sendMessage(toString(args));
+	}
+
+	private String toString(String[] args) {
+		StringBuilder sb = new StringBuilder();
+		for (String a : args) {
+			sb.append(a);
+			sb.append(" ");
+		}
+		return sb.toString();
 	}
 
 }

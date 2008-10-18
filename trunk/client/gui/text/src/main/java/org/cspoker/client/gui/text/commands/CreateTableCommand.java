@@ -15,22 +15,19 @@
  */
 package org.cspoker.client.gui.text.commands;
 
+import org.cspoker.client.gui.text.Client;
 import org.cspoker.client.gui.text.Console;
-import org.cspoker.common.api.lobby.context.RemoteLobbyContext;
 import org.cspoker.common.elements.table.TableConfiguration;
 
-public class CreateTableCommand extends AbstractCommand {
+public class CreateTableCommand extends RemoteCommand {
+	
 
-	private final RemoteLobbyContext context;
-	public CreateTableCommand(RemoteLobbyContext lobbyContext, Console console) {
-		super(console);
-		this.context=lobbyContext;
+	public CreateTableCommand(Client client, Console console) {
+		super(client, console);
 	}
 
 	public void execute(String... args) throws Exception {
-		context.createHoldemTable(args[0],
-				new TableConfiguration(Integer.parseInt(args[1])
-						,Integer.parseInt(args[2])));
+		client.getLobbyContext().createHoldemTable(args[0], new TableConfiguration());
 	}
 
 }

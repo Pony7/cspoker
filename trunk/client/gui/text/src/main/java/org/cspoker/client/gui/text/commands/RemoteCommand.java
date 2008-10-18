@@ -15,17 +15,17 @@
  */
 package org.cspoker.client.gui.text.commands;
 
+import org.cspoker.client.gui.text.Client;
 import org.cspoker.client.gui.text.Console;
-import org.cspoker.common.RemotePlayerCommunication;
 
-public class BetCommand extends AbstractCommand {
+public abstract class RemoteCommand implements Command {
 
-	public BetCommand(RemotePlayerCommunication rpc, Console console) {
-		super(rpc, console);
-	}
+	protected Console console;
+	protected Client client;
 
-	public void execute(String... args) throws Exception {
-		rpc.bet(Integer.parseInt(args[0]));
+	public RemoteCommand(Client client, Console console) {
+		this.client = client;
+		this.console = console;
 	}
 
 }

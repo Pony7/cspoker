@@ -17,7 +17,6 @@ package org.cspoker.server.xml.sockets.runnables;
 
 import java.io.StringReader;
 
-import javax.security.auth.login.LoginException;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 

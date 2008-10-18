@@ -25,11 +25,11 @@ import javax.security.auth.login.LoginException;
 
 import org.cspoker.client.allcommunication.LoadProvidersFromXml;
 import org.cspoker.client.common.CommunicationProvider;
-import org.cspoker.client.common.RemotePlayerCommunicationFactory;
-import org.cspoker.client.common.RemotePlayerCommunicationFactory.NoProviderException;
-import org.cspoker.client.rmi.RemotePlayerCommunicationFactoryForRMI;
-import org.cspoker.client.xml.http.RemotePlayerCommunicationFactoryForHttp;
-import org.cspoker.client.xml.sockets.RemotePlayerCommunicationFactoryForSocket;
+import org.cspoker.client.rmi.RemoteRMIServer;
+import org.cspoker.client.xml.http.RemoteHTTPServer;
+import org.cspoker.client.xml.sockets.RemoteSocketServer;
+import org.cspoker.common.RemoteCSPokerServer;
+import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.util.Log4JPropertiesLoader;
 
 /**
@@ -64,7 +64,7 @@ public class Console {
 				verbose = true;
 			}
 		}
-		RemotePlayerCommunicationFactory factory = null;
+		RemoteCSPokerServer factory = null;
 		boolean running = true;
 		boolean logedin = false;
 
@@ -134,14 +134,11 @@ public class Console {
 				}
 				System.out.println();
 				if (ctype == 1) {
-					factory = new RemotePlayerCommunicationFactoryForHttp(
-							address, port);
+					factory = new RemoteHTTPServer(address, port);
 				} else if (ctype == 2) {
-					factory = new RemotePlayerCommunicationFactoryForSocket(
-							address, port);
+					factory = new RemoteSocketServer(address, port);
 				} else if (ctype == 3) {
-					factory = new RemotePlayerCommunicationFactoryForRMI(
-							address, port);
+					factory = new RemoteRMIServer(address, port);
 				}
 			} else {
 				factory = CommunicationProvider.global_provider.getProviders()
@@ -166,18 +163,18 @@ public class Console {
 				try {
 					client = new Client(username, password, this, factory);
 					logedin = true;
-				} catch (RemoteException e) {
+				} catch (RemoteException exception) {
 					System.out.println("Could not connect to " + factory);
 					System.out.println();
-					handle(e);
-				} catch (LoginException e) {
+					handle(exception);
+				} catch (LoginException exception) {
 					System.out.println("Login failed for " + username);
 					System.out.println();
-					handle(e);
-				} catch (NoProviderException e) {
-					System.out.println("Could not connect to " + factory);
+					handle(exception);
+				} catch (IllegalActionException exception) {
+					System.out.println("Registering listener failed");
 					System.out.println();
-					handle(e);
+					handle(exception);
 				}
 
 			}
@@ -185,7 +182,7 @@ public class Console {
 
 		if (running) {
 			System.out.println("     ____________________________");
-			System.out.println("    /Welcome to CSPoker 0.1 beta \\");
+			System.out.println("    /Welcome to CSPoker 1.0 beta \\");
 			System.out.println("   /______________________________\\");
 			System.out.println("");
 			System.out.println("Enter HELP for a list of supported commands.");

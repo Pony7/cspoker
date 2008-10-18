@@ -15,17 +15,17 @@
  */
 package org.cspoker.client.gui.text.commands;
 
+import org.cspoker.client.gui.text.Client;
 import org.cspoker.client.gui.text.Console;
-import org.cspoker.common.RemotePlayerCommunication;
 
-public class FoldCommand extends AbstractCommand {
-
-	public FoldCommand(RemotePlayerCommunication rpc, Console console) {
-		super(rpc, console);
+public class FoldCommand extends RemoteCommand {
+	
+	public FoldCommand(Client client, Console console) {
+		super(client, console);
 	}
 
 	public void execute(String... args) throws Exception {
-		rpc.fold();
+		client.getCurrentPlayerContext().fold();
 	}
 
 }

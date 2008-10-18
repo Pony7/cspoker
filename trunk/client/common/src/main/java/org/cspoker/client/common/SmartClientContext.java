@@ -17,12 +17,12 @@ package org.cspoker.client.common;
 
 import java.rmi.RemoteException;
 
+import org.cspoker.common.api.chat.context.RemoteChatContext;
+import org.cspoker.common.api.chat.listener.ChatListener;
+import org.cspoker.common.api.chat.listener.ForwardingChatListener;
 import org.cspoker.common.api.lobby.context.RemoteLobbyContext;
 import org.cspoker.common.api.lobby.listener.ForwardingLobbyListener;
 import org.cspoker.common.api.lobby.listener.LobbyListener;
-import org.cspoker.common.api.serverchat.context.RemoteChatContext;
-import org.cspoker.common.api.serverchat.listener.ChatListener;
-import org.cspoker.common.api.serverchat.listener.ForwardingChatListener;
 import org.cspoker.common.api.shared.context.ForwardingRemoteServerContext;
 import org.cspoker.common.api.shared.context.RemoteServerContext;
 import org.cspoker.common.api.shared.exception.IllegalActionException;

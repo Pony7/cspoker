@@ -15,8 +15,6 @@
  */
 package org.cspoker.server.common.chat.room;
 
-import org.cspoker.common.api.chat.event.MessageEvent;
-import org.cspoker.common.elements.player.Player;
 import org.cspoker.server.common.player.ServerPlayer;
 
 public class ServerChatRoom extends ChatRoom {
