@@ -13,31 +13,17 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.client.rmi;
+package org.cspoker.common.api.lobby.holdemtable.context;
 
 import java.rmi.RemoteException;
-import java.rmi.server.UnicastRemoteObject;
 
-import org.cspoker.common.api.lobby.holdemtable.context.ExternalRemoteHoldemTableContext;
-import org.cspoker.common.api.lobby.holdemtable.context.ForwardingExternalRemoteHoldemTableContext;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.RemoteHoldemPlayerContext;
-import org.cspoker.common.api.lobby.holdemtable.holdemplayer.listener.ForwardingRemoteHoldemPlayerListener;
-import org.cspoker.common.api.lobby.holdemtable.holdemplayer.listener.HoldemPlayerListener;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.listener.RemoteHoldemPlayerListener;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 
-public class HoldemTableContextStub extends ForwardingExternalRemoteHoldemTableContext{
-
-	public HoldemTableContextStub(ExternalRemoteHoldemTableContext context)
-			throws RemoteException {
-		super(context);
-	}
+public interface ExternalRemoteHoldemTableContext extends RemoteHoldemTableContext {
 	
-	@Override
 	public RemoteHoldemPlayerContext sitIn(long seatId, int buyIn,
-			HoldemPlayerListener holdemPlayerListener) throws RemoteException, IllegalActionException {
-		return super.sitIn(seatId, buyIn,(RemoteHoldemPlayerListener) UnicastRemoteObject.exportObject(
-				new ForwardingRemoteHoldemPlayerListener(holdemPlayerListener), 0));
-		
-	}
+			RemoteHoldemPlayerListener holdemPlayerListener) throws IllegalActionException, RemoteException;
+	
 }

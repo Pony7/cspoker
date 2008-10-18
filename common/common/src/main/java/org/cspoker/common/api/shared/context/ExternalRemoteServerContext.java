@@ -15,20 +15,24 @@
  */
 package org.cspoker.common.api.shared.context;
 
-import org.cspoker.common.api.chat.context.ChatContext;
+import java.rmi.RemoteException;
+
+import org.cspoker.common.api.chat.context.RemoteChatContext;
 import org.cspoker.common.api.chat.listener.RemoteChatListener;
-import org.cspoker.common.api.lobby.context.ExternalLobbyContext;
+import org.cspoker.common.api.lobby.context.ExternalRemoteLobbyContext;
 import org.cspoker.common.api.lobby.listener.LobbyListener;
 import org.cspoker.common.api.lobby.listener.RemoteLobbyListener;
+import org.cspoker.common.api.shared.exception.IllegalActionException;
 
-public interface ExternalServerContext extends ServerContext, ExternalRemoteServerContext{
+public interface ExternalRemoteServerContext extends RemoteServerContext{
 
-	public ChatContext getServerChatContext(RemoteChatListener chatListener);
+	public RemoteChatContext getServerChatContext(RemoteChatListener chatListener) throws RemoteException, IllegalActionException;
 	
-	public ChatContext getTableChatContext(RemoteChatListener chatListener,long tableId);
+	public RemoteChatContext getTableChatContext(RemoteChatListener chatListener,long tableId) throws RemoteException;
 	
-	public ExternalLobbyContext getLobbyContext(LobbyListener lobbyListener);
+	public ExternalRemoteLobbyContext getLobbyContext(LobbyListener lobbyListener)
+			throws RemoteException, IllegalActionException;
 	
-	public ExternalLobbyContext getLobbyContext(RemoteLobbyListener lobbyListener);
+	public ExternalRemoteLobbyContext getLobbyContext(RemoteLobbyListener lobbyListener) throws RemoteException, IllegalActionException;
 	
 }

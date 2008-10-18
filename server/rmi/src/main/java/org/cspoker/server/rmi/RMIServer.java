@@ -25,8 +25,10 @@ import javax.security.auth.login.LoginException;
 
 import org.apache.log4j.Logger;
 import org.cspoker.common.CSPokerServer;
+import org.cspoker.common.ExternalRemoteCSPokerServer;
 import org.cspoker.common.RemoteCSPokerServer;
 import org.cspoker.common.api.shared.Trigger;
+import org.cspoker.common.api.shared.context.ExternalRemoteServerContext;
 import org.cspoker.common.api.shared.context.RemoteServerContext;
 import org.cspoker.common.api.shared.context.ServerContext;
 import org.cspoker.server.common.util.threading.RequestExecutor;
@@ -35,7 +37,7 @@ import org.cspoker.server.rmi.export.ExportingServerContext;
 import org.cspoker.server.rmi.unremote.context.UnremoteServerContext;
 
 public class RMIServer
-		implements RemoteCSPokerServer {
+		implements ExternalRemoteCSPokerServer {
 	
 	private final static Logger logger = Logger.getLogger(RMIServer.class);
 	
@@ -48,7 +50,7 @@ public class RMIServer
 		this.cspokerServer = cspokerServer;
 	}
 	
-	public RemoteServerContext login(String username, String password)
+	public ExternalRemoteServerContext login(String username, String password)
 			throws LoginException, RemoteException {
 		ServerContext rootServer = cspokerServer.login(username, password);
 		Trigger connection = new Trigger(){
@@ -64,7 +66,7 @@ public class RMIServer
 		} catch (NoSuchObjectException e) {
 			// ignore
 		}
-		return (RemoteServerContext) UnicastRemoteObject.exportObject(context, 0);
+		return (ExternalRemoteServerContext) UnicastRemoteObject.exportObject(context, 0);
 	}
 	
 	public void start()

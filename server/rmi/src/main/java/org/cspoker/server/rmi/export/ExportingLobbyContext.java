@@ -19,27 +19,41 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
 import org.apache.log4j.Logger;
-import org.cspoker.common.api.lobby.context.ForwardingRemoteLobbyContext;
-import org.cspoker.common.api.lobby.context.RemoteLobbyContext;
-import org.cspoker.common.api.lobby.holdemtable.context.HoldemTableContext;
-import org.cspoker.common.api.lobby.holdemtable.context.RemoteHoldemTableContext;
+import org.cspoker.common.api.lobby.context.ExternalRemoteLobbyContext;
+import org.cspoker.common.api.lobby.context.ForwardingExternalRemoteLobbyContext;
+import org.cspoker.common.api.lobby.holdemtable.context.ExternalHoldemTableContext;
+import org.cspoker.common.api.lobby.holdemtable.context.ExternalRemoteHoldemTableContext;
 import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
+import org.cspoker.common.api.lobby.holdemtable.listener.RemoteHoldemTableListener;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 
-public class ExportingLobbyContext extends ForwardingRemoteLobbyContext {
+public class ExportingLobbyContext extends ForwardingExternalRemoteLobbyContext {
 
 	private final static Logger logger = Logger.getLogger(ExportingLobbyContext.class);
 
-	public ExportingLobbyContext(RemoteLobbyContext lobbyContext) throws RemoteException {
+	public ExportingLobbyContext(ExternalRemoteLobbyContext lobbyContext) throws RemoteException {
 		super(lobbyContext);
 	}
 
 	@Override
-	public RemoteHoldemTableContext joinHoldemTable(final long tableId,
-			final HoldemTableListener holdemTableListener) throws RemoteException, IllegalActionException {
+	public ExternalRemoteHoldemTableContext joinHoldemTable(long tableId,
+			HoldemTableListener holdemTableListener) throws RemoteException, IllegalActionException {
 		try {
-			ExportingHoldemTableContext remoteObject = new ExportingHoldemTableContext(ExportingLobbyContext.super.joinHoldemTable(tableId, holdemTableListener));
-			return (HoldemTableContext)UnicastRemoteObject.exportObject(remoteObject,0);
+			ExportingHoldemTableContext remoteObject = new ExportingHoldemTableContext(super.joinHoldemTable(tableId, holdemTableListener));
+			return (ExternalHoldemTableContext)UnicastRemoteObject.exportObject(remoteObject,0);
+		} catch (RemoteException exception) {
+			logger.error(exception.getMessage(), exception);
+			throw exception;
+		}
+	}
+
+	@Override
+	public ExternalRemoteHoldemTableContext joinHoldemTable(long tableId,
+			RemoteHoldemTableListener holdemTableListener)
+	throws IllegalActionException, RemoteException {		
+		try {
+			ExportingHoldemTableContext remoteObject = new ExportingHoldemTableContext(super.joinHoldemTable(tableId, holdemTableListener));
+			return (ExternalRemoteHoldemTableContext)UnicastRemoteObject.exportObject(remoteObject,0);
 		} catch (RemoteException exception) {
 			logger.error(exception.getMessage(), exception);
 			throw exception;

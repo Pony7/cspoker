@@ -15,18 +15,20 @@
  */
 package org.cspoker.common.api.lobby.context;
 
-import org.cspoker.common.api.lobby.holdemtable.context.ExternalHoldemTableContext;
+import java.rmi.RemoteException;
+
+import org.cspoker.common.api.lobby.holdemtable.context.ExternalRemoteHoldemTableContext;
 import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
 import org.cspoker.common.api.lobby.holdemtable.listener.RemoteHoldemTableListener;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 
-public interface ExternalLobbyContext extends LobbyContext, ExternalRemoteLobbyContext{
+public interface ExternalRemoteLobbyContext extends RemoteLobbyContext{
 
-	public ExternalHoldemTableContext joinHoldemTable(long tableId,
-			HoldemTableListener holdemTableListener)
-			throws IllegalActionException;
+	public ExternalRemoteHoldemTableContext joinHoldemTable(long tableId,
+			HoldemTableListener holdemTableListener) throws RemoteException,
+			IllegalActionException;
 	
-	public ExternalHoldemTableContext joinHoldemTable(long tableId,
-			RemoteHoldemTableListener holdemTableListener) throws IllegalActionException;
+	public ExternalRemoteHoldemTableContext joinHoldemTable(long tableId,
+			RemoteHoldemTableListener holdemTableListener) throws IllegalActionException, RemoteException;
 	
 }

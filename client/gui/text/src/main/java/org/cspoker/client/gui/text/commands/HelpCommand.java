@@ -30,19 +30,26 @@ public class HelpCommand implements Command {
 				"Supported commands:" + n 
 				+ n 
 				+ "-General:" + n
-				+ "  HELP - what you're looking at now" + n + n
-				+ "  EXIT - close the client" + n + "" + n 
+				+ "  HELP - what you're looking at now" + n
+				+ "  EXIT - close the client" + n 
+				+ "" + n 
 				+ "-Tables:" + n
 				+ "  CREATETABLE [name] - create your table" + n
 				+ "  GETTABLE [id] - see info on a table" + n
 				+ "  JOINTABLE [id] - join the table with id [id]" + n
-				+ "  LEAVETABLE - leave the table you're at" + n + "" + n
+				+ "  LEAVETABLE - leave the table you're at" + n 
+				+ "" + n
 				+ "-Game:" + n 
 				+ "  STARTGAME - start a new game at your table"+ n 
 				+ "  BET [amount] - bet a certain amount" + n
 				+ "  CALL - call" + n + "  FOLD - fold" + n
 				+ "  RAISE [amount] - raise with a certain amount" + n
 				+ "  CARDS - see all card" + n
-				+ "  POT - see what's in the pot" + n + "");
+				+ "  POT - see what's in the pot" + n
+				+ "" + n 
+				+ "-Chat:" + n 
+				+ "  SERVERCHAT [message] - send a chat message to the entire server"+ n 
+				+ "  TABLECHAT [message] - send a chat message to the current table"+ n 
+				);
 	}
 }

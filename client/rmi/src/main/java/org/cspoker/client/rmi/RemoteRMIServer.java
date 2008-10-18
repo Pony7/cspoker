@@ -22,10 +22,10 @@ import java.rmi.registry.Registry;
 
 import javax.security.auth.login.LoginException;
 
-import org.cspoker.common.RemoteCSPokerServer;
-import org.cspoker.common.api.shared.context.RemoteServerContext;
+import org.cspoker.common.ExternalRemoteCSPokerServer;
+import org.cspoker.common.api.shared.context.ExternalRemoteServerContext;
 
-public class RemoteRMIServer implements RemoteCSPokerServer {
+public class RemoteRMIServer implements ExternalRemoteCSPokerServer {
 
 	private String server;
 	private int port;
@@ -39,17 +39,17 @@ public class RemoteRMIServer implements RemoteCSPokerServer {
 		this.port = port;
 	}
 
-	public RemoteServerContext login(String username, String password)
+	public ExternalRemoteServerContext login(String username, String password)
 			throws RemoteException, LoginException {
 		System.setSecurityManager(null);
 		Registry registry = LocateRegistry.getRegistry(server, port);
-		RemoteCSPokerServer cspokerServer;
+		ExternalRemoteCSPokerServer cspokerServer;
 		try {
-			cspokerServer = (RemoteCSPokerServer) registry.lookup("CSPokerServer");
+			cspokerServer = (ExternalRemoteCSPokerServer) registry.lookup("CSPokerServer");
 		} catch (NotBoundException exception) {
 			throw new RemoteException("CSPokerServer not found in registry.",exception);
 		}
-		RemoteServerContext context = cspokerServer.login(username, password);
+		ExternalRemoteServerContext context = cspokerServer.login(username, password);
 		return new ServerContextStub(context);
 	}
 	
