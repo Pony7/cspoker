@@ -15,14 +15,17 @@
  */
 package org.cspoker.client.xml.common.listener;
 
+import net.jcip.annotations.ThreadSafe;
+
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.listener.HoldemPlayerListener;
 import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
 import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListenerTree;
 
+@ThreadSafe
 public class XmlHoldemTableListenerTree implements HoldemTableListenerTree {
 
-	private HoldemPlayerListener holdemPlayerListener;
-	private HoldemTableListener holdemTableListener;
+	private volatile HoldemPlayerListener holdemPlayerListener;
+	private volatile HoldemTableListener holdemTableListener;
 
 	public HoldemPlayerListener getHoldemPlayerListener() {
 		return holdemPlayerListener;

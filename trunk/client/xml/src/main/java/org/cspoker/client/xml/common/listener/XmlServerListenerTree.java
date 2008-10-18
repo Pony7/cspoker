@@ -15,28 +15,42 @@
  */
 package org.cspoker.client.xml.common.listener;
 
-import org.cspoker.common.api.serverchat.listener.ChatListener;
+import java.util.concurrent.ConcurrentHashMap;
 
+import net.jcip.annotations.ThreadSafe;
+
+import org.cspoker.common.api.chat.listener.ChatListener;
+
+@ThreadSafe
 public class XmlServerListenerTree implements
 		org.cspoker.common.api.shared.listener.ServerListenerTree {
 
-	private volatile ChatListener chatListener;
+	private volatile ChatListener serverChatListener;
 	private final XmlLobbyListenerTree lobbyListenerTree;
+	private final ConcurrentHashMap<Long, ChatListener> tableChatListener = new ConcurrentHashMap<Long, ChatListener>();
 
 	public XmlServerListenerTree() {
 		lobbyListenerTree = new XmlLobbyListenerTree();
-	}
-
-	public ChatListener getChatListener() {
-		return chatListener;
-	}
-	
-	public void setChatListener(ChatListener chatListener) {
-		this.chatListener = chatListener;
 	}
 
 	public XmlLobbyListenerTree getLobbyListenerTree() {
 		return lobbyListenerTree;
 	}
 
+	public ChatListener getServerChatListener() {
+		return serverChatListener;
+	}
+	
+	public void setServerChatListener(ChatListener serverChatListener) {
+		this.serverChatListener = serverChatListener;
+	}
+
+	public ChatListener getTableChatListener(long tableID) {
+		return tableChatListener.get(tableID);
+	}
+
+	public void setTableChatListener(long tableID, ChatListener listener) {
+		tableChatListener.put(tableID, listener);
+	}
+	
 }

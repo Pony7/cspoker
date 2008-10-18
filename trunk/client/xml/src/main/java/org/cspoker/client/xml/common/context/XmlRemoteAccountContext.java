@@ -17,6 +17,8 @@ package org.cspoker.client.xml.common.context;
 
 import java.rmi.RemoteException;
 
+import net.jcip.annotations.ThreadSafe;
+
 import org.cspoker.client.xml.common.IDGenerator;
 import org.cspoker.common.api.account.action.ChangePasswordAction;
 import org.cspoker.common.api.account.action.CreateAccountAction;
@@ -27,6 +29,7 @@ import org.cspoker.common.api.account.context.RemoteAccountContext;
 import org.cspoker.common.api.shared.action.ActionPerformer;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 
+@ThreadSafe
 public class XmlRemoteAccountContext implements RemoteAccountContext {
 
 	private ActionPerformer performer;

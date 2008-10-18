@@ -20,29 +20,25 @@ import java.rmi.RemoteException;
 import net.jcip.annotations.ThreadSafe;
 
 import org.cspoker.client.xml.common.IDGenerator;
-import org.cspoker.common.api.cashier.action.GetMoneyAmountAction;
-import org.cspoker.common.api.cashier.action.RequestMoneyAction;
-import org.cspoker.common.api.cashier.context.RemoteCashierContext;
+import org.cspoker.common.api.chat.action.SendServerMessageAction;
+import org.cspoker.common.api.chat.context.RemoteChatContext;
 import org.cspoker.common.api.shared.action.ActionPerformer;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 
 @ThreadSafe
-public class XmlRemoteCashierContext implements RemoteCashierContext {
+public class XmlRemoteServerChatContext implements RemoteChatContext {
 
-	private ActionPerformer performer;
-	private IDGenerator generator;
+	protected ActionPerformer performer;
+	protected IDGenerator generator;
 
-	public XmlRemoteCashierContext(ActionPerformer performer, IDGenerator generator) {
+	public XmlRemoteServerChatContext(ActionPerformer performer, IDGenerator generator) {
 		this.performer = performer;
 		this.generator = generator;
 	}
 	
-	public int getMoneyAmount() throws RemoteException, IllegalActionException {
-		return performer.perform(new GetMoneyAmountAction(generator.getNextID()));
-	}
-
-	public void requestMoney() throws RemoteException, IllegalActionException {
-		performer.perform(new RequestMoneyAction(generator.getNextID()));
+	public void sendMessage(String message) throws RemoteException,
+			IllegalActionException {
+		performer.perform(new SendServerMessageAction(generator.getNextID(),message));
 	}
 
 }

@@ -17,6 +17,8 @@ package org.cspoker.server.rmi.asynchronous.context;
 
 import java.util.concurrent.Executor;
 
+import net.jcip.annotations.Immutable;
+
 import org.cspoker.common.api.lobby.holdemtable.context.ForwardingHoldemTableContext;
 import org.cspoker.common.api.lobby.holdemtable.context.HoldemTableContext;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.HoldemPlayerContext;
@@ -24,6 +26,7 @@ import org.cspoker.common.api.lobby.holdemtable.holdemplayer.listener.Asynchrono
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.listener.HoldemPlayerListener;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 
+@Immutable
 public class AsynchronousHoldemTableContext extends ForwardingHoldemTableContext {
 
 	protected Executor executor;

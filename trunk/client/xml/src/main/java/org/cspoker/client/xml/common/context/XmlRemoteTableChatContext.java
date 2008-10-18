@@ -17,30 +17,30 @@ package org.cspoker.client.xml.common.context;
 
 import java.rmi.RemoteException;
 
+import net.jcip.annotations.ThreadSafe;
+
 import org.cspoker.client.xml.common.IDGenerator;
-import org.cspoker.common.api.serverchat.action.SendServerMessageAction;
-import org.cspoker.common.api.serverchat.action.SendTableMessageAction;
-import org.cspoker.common.api.serverchat.context.RemoteChatContext;
+import org.cspoker.common.api.chat.action.SendTableMessageAction;
+import org.cspoker.common.api.chat.context.RemoteChatContext;
 import org.cspoker.common.api.shared.action.ActionPerformer;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 
-public class XmlRemoteChatContext implements RemoteChatContext {
+@ThreadSafe
+public class XmlRemoteTableChatContext implements RemoteChatContext {
 
-	private ActionPerformer performer;
-	private IDGenerator generator;
+	protected ActionPerformer performer;
+	protected IDGenerator generator;
+	private long tableID;
 
-	public XmlRemoteChatContext(ActionPerformer performer, IDGenerator generator) {
+	public XmlRemoteTableChatContext(ActionPerformer performer, IDGenerator generator, long tableID) {
 		this.performer = performer;
 		this.generator = generator;
+		this.tableID = tableID;
 	}
 	
-	public void sendServerMessage(String message) throws RemoteException, IllegalActionException {
-		performer.perform(new SendServerMessageAction(generator.getNextID(),message));
-	}
-
-	public void sendTableMessage(long tableId, String message)
-			throws RemoteException, IllegalActionException {
-		performer.perform(new SendTableMessageAction(generator.getNextID(),tableId,message));
+	public void sendMessage(String message) throws RemoteException,
+			IllegalActionException {
+		performer.perform(new SendTableMessageAction(generator.getNextID(),message,tableID));
 	}
 
 }

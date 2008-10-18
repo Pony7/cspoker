@@ -18,6 +18,8 @@ package org.cspoker.client.xml.common.context;
 import java.rmi.RemoteException;
 import java.util.concurrent.ConcurrentHashMap;
 
+import net.jcip.annotations.ThreadSafe;
+
 import org.cspoker.client.xml.common.IDGenerator;
 import org.cspoker.client.xml.common.listener.XmlServerListenerTree;
 import org.cspoker.common.api.lobby.action.CreateHoldemTableAction;
@@ -33,6 +35,7 @@ import org.cspoker.common.elements.table.DetailedHoldemTable;
 import org.cspoker.common.elements.table.TableConfiguration;
 import org.cspoker.common.elements.table.TableList;
 
+@ThreadSafe
 public class XmlRemoteLobbyContext implements RemoteLobbyContext{
 
 	private ActionPerformer performer;

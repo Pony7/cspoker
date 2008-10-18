@@ -17,6 +17,8 @@ package org.cspoker.server.rmi.asynchronous.context;
 
 import java.util.concurrent.Executor;
 
+import net.jcip.annotations.Immutable;
+
 import org.cspoker.common.api.chat.context.ChatContext;
 import org.cspoker.common.api.chat.listener.AsynchronousChatListener;
 import org.cspoker.common.api.chat.listener.ChatListener;
@@ -26,6 +28,7 @@ import org.cspoker.common.api.lobby.listener.LobbyListener;
 import org.cspoker.common.api.shared.context.ForwardingServerContext;
 import org.cspoker.common.api.shared.context.ServerContext;
 
+@Immutable
 public class AsynchronousServerContext extends ForwardingServerContext {
 
 	private Executor executor;

@@ -18,6 +18,8 @@ package org.cspoker.client.xml.common.context;
 import java.rmi.RemoteException;
 import java.util.concurrent.atomic.AtomicReference;
 
+import net.jcip.annotations.ThreadSafe;
+
 import org.cspoker.client.xml.common.IDGenerator;
 import org.cspoker.client.xml.common.listener.XmlServerListenerTree;
 import org.cspoker.common.api.lobby.holdemtable.action.LeaveTableAction;
@@ -28,6 +30,7 @@ import org.cspoker.common.api.lobby.holdemtable.holdemplayer.listener.HoldemPlay
 import org.cspoker.common.api.shared.action.ActionPerformer;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 
+@ThreadSafe
 public class XmlRemoteHoldemTableContext implements RemoteHoldemTableContext {
 
 	private ActionPerformer performer;

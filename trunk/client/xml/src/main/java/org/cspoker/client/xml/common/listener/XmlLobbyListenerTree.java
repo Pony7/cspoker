@@ -17,13 +17,16 @@ package org.cspoker.client.xml.common.listener;
 
 import java.util.concurrent.ConcurrentHashMap;
 
+import net.jcip.annotations.ThreadSafe;
+
 import org.cspoker.common.api.lobby.listener.LobbyListener;
 import org.cspoker.common.api.lobby.listener.LobbyListenerTree;
 
+@ThreadSafe
 public class XmlLobbyListenerTree implements LobbyListenerTree {
 
-	private ConcurrentHashMap<Long, XmlHoldemTableListenerTree> listenerTrees = new ConcurrentHashMap<Long, XmlHoldemTableListenerTree>();
-	private LobbyListener lobbyListener;
+	private final ConcurrentHashMap<Long, XmlHoldemTableListenerTree> listenerTrees = new ConcurrentHashMap<Long, XmlHoldemTableListenerTree>();
+	private volatile LobbyListener lobbyListener;
 
 	public XmlHoldemTableListenerTree getHoldemTableListenerTree(long tableId) {
 		listenerTrees.putIfAbsent(tableId, new XmlHoldemTableListenerTree());
