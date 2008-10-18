@@ -45,6 +45,8 @@ public class RMIServer
 	
 	private final CSPokerServer cspokerServer;
 	
+	//public static Registry registry;
+	
 	public RMIServer(int port, CSPokerServer cspokerServer) {
 		this.port = port;
 		this.cspokerServer = cspokerServer;

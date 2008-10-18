@@ -16,8 +16,9 @@
 package org.cspoker.common.api.chat.event;
 
 import org.cspoker.common.api.chat.listener.ChatListener;
+import org.cspoker.common.api.shared.event.Event;
 
-public interface ChatEvent {
+public interface ChatEvent extends Event{
 
 	public abstract void dispatch(ChatListener chatListener);
 	

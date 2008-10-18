@@ -15,14 +15,18 @@
  */
 package org.cspoker.server.rmi.unremote.listener;
 
+import org.apache.log4j.Logger;
 import org.cspoker.common.api.chat.event.MessageEvent;
 import org.cspoker.common.api.chat.listener.ChatListener;
 import org.cspoker.common.api.chat.listener.RemoteChatListener;
 import org.cspoker.common.api.shared.Trigger;
 import org.cspoker.common.api.shared.listener.ForwardingListener;
+import org.cspoker.server.rmi.RunRMIServer;
 
 public class UnremoteChatListener extends ForwardingListener<RemoteChatListener> implements ChatListener{
 
+	private final static Logger logger = Logger.getLogger(UnremoteChatListener.class);
+	
 	private final Trigger connection;
 
 	public UnremoteChatListener(Trigger connection, RemoteChatListener chatListener) {
@@ -36,6 +40,7 @@ public class UnremoteChatListener extends ForwardingListener<RemoteChatListener>
 				listener.onMessage(messageEvent);
 			}
 		} catch (Exception exception) {
+			logger.debug("Caught exception from Remote listener", exception);
 			connection.trigger();
 		}
 	}

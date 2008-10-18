@@ -64,8 +64,7 @@ public class ServerContextImpl implements ServerContext {
 	}
 	
 	public LobbyContext getLobbyContext(LobbyListener lobbyListener) {
-		// TODO Auto-generated method stub
-		return null;
+		return lobbyContext;
 	}
 
 	public ChatContext getServerChatContext(ChatListener chatListener) {

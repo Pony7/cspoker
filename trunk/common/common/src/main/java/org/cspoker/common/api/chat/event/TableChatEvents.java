@@ -15,10 +15,6 @@
  */
 package org.cspoker.common.api.chat.event;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import org.cspoker.common.api.chat.listener.ChatListener;
 import org.cspoker.common.api.shared.event.ServerEvent;
 import org.cspoker.common.api.shared.listener.ServerListenerTree;
@@ -29,27 +25,25 @@ public class TableChatEvents implements ServerEvent {
 
 	private long tableID;
 
-	private List<ChatEvent> events;
+	private ChatEvent chatEvent;
 	
 	public TableChatEvents() {
 		// no op
 	}
-
-	public TableChatEvents(long tableID, List<ChatEvent> events){
-		this.tableID = tableID;
-		this.events = new ArrayList<ChatEvent>(events);
-	}
 	
-	public TableChatEvents(long tableID, ChatEvent event){
+	public TableChatEvents(long tableID, ChatEvent chatEvent){
 		this.tableID = tableID;
-		this.events = Collections.singletonList(event);
+		this.chatEvent = chatEvent;
 	}
 	
 	public void dispatch(ServerListenerTree serverListenerTree) {
 		ChatListener listenerTree = serverListenerTree.getTableChatListener(tableID);
-		for(ChatEvent event : events){
-			event.dispatch(listenerTree);
-		}
+		chatEvent.dispatch(listenerTree);
+	}
+	
+	@Override
+	public String toString() {
+		return "Table #"+tableID+" | "+chatEvent.toString();
 	}
 
 }
