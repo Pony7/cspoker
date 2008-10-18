@@ -15,6 +15,7 @@
  */
 package org.cspoker.server.rmi.unremote.listener;
 
+import org.apache.log4j.Logger;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.event.NewPocketCardsEvent;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.listener.HoldemPlayerListener;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.listener.RemoteHoldemPlayerListener;
@@ -23,6 +24,8 @@ import org.cspoker.common.api.shared.listener.ForwardingListener;
 
 public class UnremoteHoldemPlayerListener extends ForwardingListener<RemoteHoldemPlayerListener> implements HoldemPlayerListener{
 
+	private final static Logger logger = Logger.getLogger(UnremoteHoldemPlayerListener.class);
+	
 	private final Trigger connection;
 
 	public UnremoteHoldemPlayerListener(Trigger connection, RemoteHoldemPlayerListener playerListener) {
@@ -36,6 +39,7 @@ public class UnremoteHoldemPlayerListener extends ForwardingListener<RemoteHolde
 				listener.onNewPocketCards(newPocketCardsEvent);
 			}
 		} catch (Exception exception) {
+			logger.debug("Caught exception from Remote listener", exception);
 			connection.trigger();
 		}
 	}

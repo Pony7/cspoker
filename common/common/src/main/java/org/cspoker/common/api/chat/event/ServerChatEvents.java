@@ -15,37 +15,32 @@
  */
 package org.cspoker.common.api.chat.event;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import org.cspoker.common.api.chat.listener.ChatListener;
 import org.cspoker.common.api.shared.event.ServerEvent;
 import org.cspoker.common.api.shared.listener.ServerListenerTree;
 
 public class ServerChatEvents implements ServerEvent {
 
-private static final long serialVersionUID = 6449937716379015861L;
-	
-	private List<ChatEvent> events;
+	private static final long serialVersionUID = 6449937716379015861L;
+
+	private ChatEvent chatEvent;
 	
 	public ServerChatEvents() {
 		// no op
 	}
-
-	public ServerChatEvents(List<ChatEvent> events){
-		this.events = new ArrayList<ChatEvent>(events);
-	}
 	
-	public ServerChatEvents(ChatEvent event){
-		this.events = Collections.singletonList(event);
+	public ServerChatEvents(ChatEvent chatEvent){
+		this.chatEvent = chatEvent;
 	}
 	
 	public void dispatch(ServerListenerTree serverListenerTree) {
 		ChatListener listenerTree = serverListenerTree.getServerChatListener();
-		for(ChatEvent event : events){
-			event.dispatch(listenerTree);
-		}
+		chatEvent.dispatch(listenerTree);
+	}
+	
+	@Override
+	public String toString() {
+		return "Server | " + chatEvent.toString();
 	}
 
 }
