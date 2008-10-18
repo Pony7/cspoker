@@ -18,6 +18,7 @@ package org.cspoker.server.rmi.export;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
+import org.apache.log4j.Logger;
 import org.cspoker.common.api.lobby.holdemtable.context.ForwardingRemoteHoldemTableContext;
 import org.cspoker.common.api.lobby.holdemtable.context.RemoteHoldemTableContext;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.RemoteHoldemPlayerContext;
@@ -26,14 +27,21 @@ import org.cspoker.common.api.shared.exception.IllegalActionException;
 
 public class ExportingHoldemTableContext extends ForwardingRemoteHoldemTableContext {
 
+	private final static Logger logger = Logger.getLogger(ExportingHoldemTableContext.class);
+
 	public ExportingHoldemTableContext(RemoteHoldemTableContext holdemTableContext) throws RemoteException {
 		super(holdemTableContext);
 	}
-	
+
 	@Override
 	public RemoteHoldemPlayerContext sitIn(final long seatId, final int amount, final HoldemPlayerListener holdemPlayerListener)
-			throws RemoteException, IllegalActionException {
-		return (RemoteHoldemPlayerContext) UnicastRemoteObject.exportObject(ExportingHoldemTableContext.super.sitIn(seatId, amount, holdemPlayerListener), 0);
+	throws RemoteException, IllegalActionException {
+		try {
+			return (RemoteHoldemPlayerContext) UnicastRemoteObject.exportObject(ExportingHoldemTableContext.super.sitIn(seatId, amount, holdemPlayerListener), 0);
+		} catch (RemoteException exception) {
+			logger.error(exception.getMessage(), exception);
+			throw exception;
+		}
 	}
-	
+
 }

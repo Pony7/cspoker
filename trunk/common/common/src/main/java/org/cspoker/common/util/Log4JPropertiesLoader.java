@@ -32,7 +32,6 @@ public final class Log4JPropertiesLoader {
 
 	public static void load(String path) {
 		if(loaded.compareAndSet(false, true)){
-			System.out.println("Yes");
 			Properties properties = new Properties();
 			try {
 				InputStream is = ClassLoader.getSystemClassLoader()

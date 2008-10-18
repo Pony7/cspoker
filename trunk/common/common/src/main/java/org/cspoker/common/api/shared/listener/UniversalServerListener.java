@@ -18,12 +18,14 @@ package org.cspoker.common.api.shared.listener;
 import org.cspoker.common.api.chat.event.MessageEvent;
 import org.cspoker.common.api.chat.event.ServerChatEvents;
 import org.cspoker.common.api.chat.listener.ChatListener;
+import org.cspoker.common.api.chat.listener.RemoteChatListener;
 import org.cspoker.common.api.lobby.event.TableCreatedEvent;
 import org.cspoker.common.api.lobby.event.TableRemovedEvent;
 import org.cspoker.common.api.lobby.listener.LobbyListener;
+import org.cspoker.common.api.lobby.listener.RemoteLobbyListener;
 import org.cspoker.common.api.shared.event.ServerEvent;
 
-public class UniversalServerListener implements ServerEventListener, ChatListener, LobbyListener{
+public class UniversalServerListener implements ServerEventListener, ChatListener, LobbyListener, RemoteChatListener, RemoteLobbyListener{
 
 	private final ServerEventListener serverEventListener;
 

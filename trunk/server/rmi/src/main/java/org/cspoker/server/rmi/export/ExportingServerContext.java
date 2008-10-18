@@ -18,6 +18,7 @@ package org.cspoker.server.rmi.export;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
+import org.apache.log4j.Logger;
 import org.cspoker.common.api.account.context.RemoteAccountContext;
 import org.cspoker.common.api.cashier.context.RemoteCashierContext;
 import org.cspoker.common.api.chat.context.RemoteChatContext;
@@ -28,8 +29,11 @@ import org.cspoker.common.api.lobby.listener.LobbyListener;
 import org.cspoker.common.api.shared.context.ForwardingRemoteServerContext;
 import org.cspoker.common.api.shared.context.ServerContext;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
+import org.cspoker.server.rmi.RMIServer;
 
 public class ExportingServerContext extends ForwardingRemoteServerContext {
+
+	private final static Logger logger = Logger.getLogger(ExportingServerContext.class);
 
 	public ExportingServerContext(ServerContext serverContext){
 		super(serverContext);
@@ -37,26 +41,46 @@ public class ExportingServerContext extends ForwardingRemoteServerContext {
 
 	@Override
 	public RemoteAccountContext getAccountContext() throws RemoteException {
-		return (RemoteAccountContext) UnicastRemoteObject.exportObject(ExportingServerContext.super.getAccountContext(), 0);
+		try {
+			return (RemoteAccountContext) UnicastRemoteObject.exportObject(ExportingServerContext.super.getAccountContext(), 0);
+		} catch (RemoteException exception) {
+			logger.error(exception.getMessage(), exception);
+			throw exception;
+		}
 	}
-	
+
 	@Override
 	public RemoteCashierContext getCashierContext() throws RemoteException {
-		return (RemoteCashierContext) UnicastRemoteObject.exportObject(ExportingServerContext.super.getCashierContext(), 0);
+		try {
+			return (RemoteCashierContext) UnicastRemoteObject.exportObject(ExportingServerContext.super.getCashierContext(), 0);
+		} catch (RemoteException exception) {
+			logger.error(exception.getMessage(), exception);
+			throw exception;
+		}
 	}
-	
+
 	@Override
 	public RemoteChatContext getServerChatContext(final ChatListener chatListener)
-			throws RemoteException, IllegalActionException {
-		return (RemoteChatContext) UnicastRemoteObject.exportObject(ExportingServerContext.super.getServerChatContext(chatListener), 0);
+	throws RemoteException, IllegalActionException {
+		try {
+			return (RemoteChatContext) UnicastRemoteObject.exportObject(ExportingServerContext.super.getServerChatContext(chatListener), 0);
+		} catch (RemoteException exception) {
+			logger.error(exception.getMessage(), exception);
+			throw exception;
+		}
 	}
-	
+
 	@Override
 	public RemoteLobbyContext getLobbyContext(final LobbyListener lobbyListener)
-			throws RemoteException, IllegalActionException {
-		ExportingLobbyContext remoteObject = new ExportingLobbyContext(ExportingServerContext.super.getLobbyContext(lobbyListener));
-		return (LobbyContext) UnicastRemoteObject.exportObject(remoteObject, 0);
+	throws RemoteException, IllegalActionException {
+		try {
+			ExportingLobbyContext remoteObject = new ExportingLobbyContext(ExportingServerContext.super.getLobbyContext(lobbyListener));
+			return (LobbyContext) UnicastRemoteObject.exportObject(remoteObject, 0);
+		} catch (RemoteException exception) {
+			logger.error(exception.getMessage(), exception);
+			throw exception;
+		}
 	}
-	
-	
+
+
 }

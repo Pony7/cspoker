@@ -20,6 +20,7 @@ import java.rmi.server.UnicastRemoteObject;
 
 import org.cspoker.common.api.chat.context.RemoteChatContext;
 import org.cspoker.common.api.chat.listener.ChatListener;
+import org.cspoker.common.api.chat.listener.ForwardingRemoteChatListener;
 import org.cspoker.common.api.lobby.context.RemoteLobbyContext;
 import org.cspoker.common.api.lobby.listener.LobbyListener;
 import org.cspoker.common.api.shared.context.ForwardingRemoteServerContext;
@@ -35,7 +36,7 @@ public class ServerContextStub extends ForwardingRemoteServerContext{
 	@Override
 	public RemoteChatContext getServerChatContext(ChatListener chatListener)
 			throws RemoteException, IllegalActionException {
-		return super.getServerChatContext((ChatListener) UnicastRemoteObject.exportObject(chatListener, 0));
+		return super.getServerChatContext((ChatListener) UnicastRemoteObject.exportObject(new ForwardingRemoteChatListener(chatListener), 0));
 	}
 	
 	@Override
