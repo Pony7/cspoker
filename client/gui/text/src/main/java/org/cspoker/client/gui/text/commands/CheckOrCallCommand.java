@@ -15,17 +15,17 @@
  */
 package org.cspoker.client.gui.text.commands;
 
+import org.cspoker.client.gui.text.Client;
 import org.cspoker.client.gui.text.Console;
-import org.cspoker.common.RemotePlayerCommunication;
 
-public class RaiseCommand extends AbstractCommand {
+public class CheckOrCallCommand extends RemoteCommand {
 
-	public RaiseCommand(RemotePlayerCommunication rpc, Console console) {
-		super(rpc, console);
+	public CheckOrCallCommand(Client client, Console console) {
+		super(client, console);
 	}
 
 	public void execute(String... args) throws Exception {
-		rpc.raise(Integer.parseInt(args[0]));
+		client.getCurrentPlayerContext().checkOrCall();
 	}
 
 }

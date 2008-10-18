@@ -15,10 +15,10 @@
  */
 package org.cspoker.client.common;
 
-import org.cspoker.common.api.serverchat.context.ForwardingRemoteChatContext;
-import org.cspoker.common.api.serverchat.context.RemoteChatContext;
-import org.cspoker.common.api.serverchat.listener.ChatListener;
-import org.cspoker.common.api.serverchat.listener.ForwardingChatListener;
+import org.cspoker.common.api.chat.context.ForwardingRemoteChatContext;
+import org.cspoker.common.api.chat.context.RemoteChatContext;
+import org.cspoker.common.api.chat.listener.ChatListener;
+import org.cspoker.common.api.chat.listener.ForwardingChatListener;
 
 public class SmartChatContext extends ForwardingRemoteChatContext {
 

@@ -15,24 +15,26 @@
  */
 package org.cspoker.client.gui.text.commands;
 
+import org.cspoker.client.gui.text.Client;
 import org.cspoker.client.gui.text.Console;
-import org.cspoker.common.RemotePlayerCommunication;
-import org.cspoker.common.elements.table.DetailedHoldemTable;
+import org.cspoker.common.elements.table.Table;
 
-public class GetTablesCommand extends AbstractCommand {
+public class GetTablesCommand extends RemoteCommand {
+	
 
-	public GetTablesCommand(RemotePlayerCommunication rpc, Console console) {
-		super(rpc, console);
+	public GetTablesCommand(Client client, Console console) {
+		super(client, console);
 	}
 
 	public void execute(String... args) throws Exception {
 		String s = "Tables:" + n;
-		for (DetailedHoldemTable t : rpc.getTables().getTables()) {
-			s += " - [" + t.getId().getId() + "]" + t.getName() + " ("
-					+ t.getNbPlayers() + "/"
-					+ t.getGameProperty().getMaxNbPlayers() + " players) ("
-					+ t.getGameProperty().getSmallBlind() + "/"
-					+ t.getGameProperty().getBigBlind() + " blinds)" + n;
+		for (Table t : client.getLobbyContext().getTableList().getTables()) {
+			s+= " - [" + t.getId() + "]" + t.getName()+n;
+//			s += " - [" + t.getId().getId() + "]" + t.getName() + " ("
+//					+ t.getNbPlayers() + "/"
+//					+ t.getGameProperty().getMaxNbPlayers() + " players) ("
+//					+ t.getGameProperty().getSmallBlind() + "/"
+//					+ t.getGameProperty().getBigBlind() + " blinds)" + n;
 		}
 		console.print(s);
 	}

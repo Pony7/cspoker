@@ -28,7 +28,6 @@ import javax.xml.bind.annotation.XmlElementWrapper;
 /**
  * A class to represent a list of tables.
  * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 public class TableList implements Serializable {

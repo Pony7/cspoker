@@ -15,9 +15,6 @@
  */
 package org.cspoker.common.api.lobby.holdemtable.listener;
 
-import org.cspoker.common.api.chat.event.MessageEvent;
-import org.cspoker.common.api.chat.event.TableChatEvents;
-import org.cspoker.common.api.chat.listener.ChatListener;
 import org.cspoker.common.api.lobby.holdemtable.event.AllInEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.BetEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.BigBlindEvent;

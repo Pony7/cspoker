@@ -15,18 +15,30 @@
  */
 package org.cspoker.client.gui.text.commands;
 
+import org.cspoker.client.gui.text.Client;
 import org.cspoker.client.gui.text.Console;
-import org.cspoker.common.RemotePlayerCommunication;
-import org.cspoker.common.elements.table.TableId;
+import org.cspoker.client.gui.text.eventlistener.PrintListener;
+import org.cspoker.common.api.chat.listener.UniversalTableChatListener;
+import org.cspoker.common.api.lobby.holdemtable.listener.UniversalTableListener;
+import org.cspoker.common.api.shared.exception.IllegalActionException;
 
-public class JoinTableCommand extends AbstractCommand {
+public class JoinTableCommand extends RemoteCommand {
+	
 
-	public JoinTableCommand(RemotePlayerCommunication rpc, Console console) {
-		super(rpc, console);
+	public JoinTableCommand(Client client, Console console) {
+		super(client, console);
 	}
 
 	public void execute(String... args) throws Exception {
-		rpc.joinTable(new TableId(Integer.parseInt(args[0])));
+		if(client.getCurrentTableContext()!= null){
+			throw new IllegalActionException("Joining multiple tables isn't supported by this client.");
+		}
+		long tableID = Long.parseLong(args[0]);
+		client.setCurrentTableContext(client.getLobbyContext().joinHoldemTable(tableID, 
+				new UniversalTableListener(new PrintListener(console),tableID)
+		));
+		client.setCurrentTableID(tableID);
+		client.setCurrentTableChatContext(client.getServerContext().getTableChatContext(new UniversalTableChatListener(new PrintListener(console), client.getCurrentTableID()), client.getCurrentTableID()));
 	}
 
 }
