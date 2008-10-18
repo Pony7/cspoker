@@ -15,27 +15,28 @@
  */
 package org.cspoker.common.api.chat.listener;
 
+import java.rmi.RemoteException;
 import java.util.List;
 
 import org.cspoker.common.api.chat.event.MessageEvent;
 import org.cspoker.common.api.shared.listener.ForwardingListener;
 
-public class ForwardingChatListener extends ForwardingListener<ChatListener> implements ChatListener {
+public class ForwardingRemoteChatListener extends ForwardingListener<RemoteChatListener> implements RemoteChatListener {
 
-	public ForwardingChatListener() {
+	public ForwardingRemoteChatListener() {
 		super();
 	}
 	
-	public ForwardingChatListener(List<ChatListener> listeners) {
+	public ForwardingRemoteChatListener(List<RemoteChatListener> listeners) {
 		super(listeners);
 	}
 	
-	public ForwardingChatListener(ChatListener listener) {
+	public ForwardingRemoteChatListener(RemoteChatListener listener) {
 		super(listener);
 	}
 	
-	public void onMessage(MessageEvent messageEvent) {
-		for(ChatListener listener:listeners){
+	public void onMessage(MessageEvent messageEvent) throws RemoteException {
+		for(RemoteChatListener listener:listeners){
 			listener.onMessage(messageEvent);
 		}
 	}

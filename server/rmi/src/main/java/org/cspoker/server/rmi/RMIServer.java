@@ -48,7 +48,7 @@ public class RMIServer
 		this.cspokerServer = cspokerServer;
 	}
 	
-	public ServerContext login(String username, String password)
+	public RemoteServerContext login(String username, String password)
 			throws LoginException, RemoteException {
 		ServerContext rootServer = cspokerServer.login(username, password);
 		Trigger connection = new Trigger(){
@@ -64,8 +64,7 @@ public class RMIServer
 		} catch (NoSuchObjectException e) {
 			// ignore
 		}
-		ServerContext stub = (ServerContext) UnicastRemoteObject.exportObject(context, 0);
-		return stub;
+		return (RemoteServerContext) UnicastRemoteObject.exportObject(context, 0);
 	}
 	
 	public void start()

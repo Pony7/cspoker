@@ -18,6 +18,7 @@ package org.cspoker.server.rmi.export;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
+import org.apache.log4j.Logger;
 import org.cspoker.common.api.lobby.context.ForwardingRemoteLobbyContext;
 import org.cspoker.common.api.lobby.context.RemoteLobbyContext;
 import org.cspoker.common.api.lobby.holdemtable.context.HoldemTableContext;
@@ -27,15 +28,22 @@ import org.cspoker.common.api.shared.exception.IllegalActionException;
 
 public class ExportingLobbyContext extends ForwardingRemoteLobbyContext {
 
+	private final static Logger logger = Logger.getLogger(ExportingLobbyContext.class);
+
 	public ExportingLobbyContext(RemoteLobbyContext lobbyContext) throws RemoteException {
 		super(lobbyContext);
 	}
-	
+
 	@Override
 	public RemoteHoldemTableContext joinHoldemTable(final long tableId,
 			final HoldemTableListener holdemTableListener) throws RemoteException, IllegalActionException {
-		ExportingHoldemTableContext remoteObject = new ExportingHoldemTableContext(ExportingLobbyContext.super.joinHoldemTable(tableId, holdemTableListener));
-		return (HoldemTableContext)UnicastRemoteObject.exportObject(remoteObject,0);
+		try {
+			ExportingHoldemTableContext remoteObject = new ExportingHoldemTableContext(ExportingLobbyContext.super.joinHoldemTable(tableId, holdemTableListener));
+			return (HoldemTableContext)UnicastRemoteObject.exportObject(remoteObject,0);
+		} catch (RemoteException exception) {
+			logger.error(exception.getMessage(), exception);
+			throw exception;
+		}
 	}
 
 }
