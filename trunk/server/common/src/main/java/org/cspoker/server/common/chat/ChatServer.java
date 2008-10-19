@@ -43,14 +43,14 @@ public class ChatServer {
 	}
 
 	public void sendTableMessage(long tableId,Player player, String message) {
-		TableChatRoom chatroom = tables.get(new Long(tableId));
+		TableChatRoom chatroom = tables.get(new TableId(tableId));
 		chatroom.sendMessage(player, message);
 	}
 	public TableChatRoom addTableChatRoom(PokerTable table){
 		return tables.put(table.getTableId(),new TableChatRoom(table));
 	}
 	public TableChatRoom getTableChatRoom(long tableId){
-		return tables.get(tableId);
+		return tables.get(new TableId(tableId));
 	}
 	public ServerChatRoom getServerChatRoom(){
 		return serverChatRoom;
