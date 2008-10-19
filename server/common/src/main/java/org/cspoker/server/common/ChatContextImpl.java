@@ -11,10 +11,9 @@ public class ChatContextImpl implements ChatContext {
 	private ChatRoom room;
 	private ChatListener listener;
 	
-	public ChatContextImpl(ExtendedAccountContext accountContext,ChatRoom room,ChatListener listener) {
+	public ChatContextImpl(ExtendedAccountContext accountContext,ChatRoom room) {
 		this.accountContext=accountContext;
-		changeChatRoom(room);
-		setListener(listener);
+		this.room=room;
 	}
 	public void sendMessage(String message){
 		room.sendMessage(accountContext.getPlayer().getMemento(), message);
@@ -25,6 +24,9 @@ public class ChatContextImpl implements ChatContext {
 	public void setListener(ChatListener newListener){
 		if(!room.canSubscribeListener(accountContext.getPlayer()))
 			throw new IllegalArgumentException("invalid listener");
+		if(listener!=null){
+			room.unSubscribe(listener);
+		}
 		this.listener=newListener;
 		room.subscribe(listener);
 	}
