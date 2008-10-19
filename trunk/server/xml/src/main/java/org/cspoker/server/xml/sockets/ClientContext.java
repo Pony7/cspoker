@@ -177,7 +177,7 @@ public class ClientContext {
 	}
 
 	public boolean isAuthenticated() {
-		return serverContext==null;
+		return serverContext!=null;
 	}
 
 	public void login(LoginAction action) {

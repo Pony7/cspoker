@@ -35,7 +35,7 @@ public class LoginAction extends DispatchableAction<Void> {
 	}
 	
 	protected LoginAction() {
-	
+		// no op
 	}
 	
 	public String getUsername() {

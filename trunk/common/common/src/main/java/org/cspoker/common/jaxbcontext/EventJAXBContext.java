@@ -38,6 +38,9 @@ import org.cspoker.common.api.lobby.holdemtable.event.SitInEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.SmallBlindEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.WinnerEvent;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.event.NewPocketCardsEvent;
+import org.cspoker.common.api.shared.event.ActionPerformedEvent;
+import org.cspoker.common.api.shared.event.IllegalActionEvent;
+import org.cspoker.common.api.shared.event.RemoteExceptionEvent;
 
 public class EventJAXBContext {
 
@@ -68,6 +71,8 @@ public class EventJAXBContext {
 				WinnerEvent.class,
 				//player
 				NewPocketCardsEvent.class,
+				//action
+				ActionPerformedEvent.class, IllegalActionEvent.class, RemoteExceptionEvent.class,
 		};
 	}
 

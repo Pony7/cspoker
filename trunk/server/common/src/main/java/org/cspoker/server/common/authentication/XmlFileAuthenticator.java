@@ -90,7 +90,7 @@ public class XmlFileAuthenticator {
 					lastname = sb.toString();
 				} else if (name.equalsIgnoreCase("password")) {
 					passwords.put(lastname, sb.toString());
-					logger.info("Added credentials for " + lastname);
+					logger.debug("Added credentials for " + lastname);
 				}
 				sb.setLength(0);
 			}

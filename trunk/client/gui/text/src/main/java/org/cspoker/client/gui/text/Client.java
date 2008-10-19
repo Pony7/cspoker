@@ -60,9 +60,9 @@ public class Client {
 
 	private UniversalServerListener serverlistener;
 
-	private RemoteChatContext serverChatContext;
+	private final RemoteChatContext serverChatContext;
 
-	private RemoteLobbyContext lobbyContext;
+	private final RemoteLobbyContext lobbyContext;
 
 	private RemoteHoldemPlayerContext currentPlayerContext;
 

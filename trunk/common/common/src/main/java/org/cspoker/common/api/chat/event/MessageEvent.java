@@ -21,7 +21,7 @@ import org.cspoker.common.api.chat.listener.ChatListener;
 import org.cspoker.common.elements.player.Player;
 
 @XmlRootElement
-public class MessageEvent implements ChatEvent {
+public class MessageEvent extends ChatEvent {
 	
 	private static final long serialVersionUID = -4744953146472211045L;
 	
