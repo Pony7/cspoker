@@ -21,7 +21,6 @@ import org.cspoker.common.api.chat.listener.ChatListener;
 import org.cspoker.common.api.chat.listener.RemoteChatListener;
 import org.cspoker.common.api.shared.Trigger;
 import org.cspoker.common.api.shared.listener.ForwardingListener;
-import org.cspoker.server.rmi.RunRMIServer;
 
 public class UnremoteChatListener extends ForwardingListener<RemoteChatListener> implements ChatListener{
 
