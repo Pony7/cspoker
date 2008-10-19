@@ -40,10 +40,5 @@
 			<artifactId>server-common</artifactId>
 			<version>0.1-SNAPSHOT</version>
 		</dependency>
-		<dependency>
-			<groupId>org.cspoker</groupId>
-			<artifactId>common-xml</artifactId>
-			<version>0.1-SNAPSHOT</version>
-		</dependency>
 	</dependencies>
 </project>

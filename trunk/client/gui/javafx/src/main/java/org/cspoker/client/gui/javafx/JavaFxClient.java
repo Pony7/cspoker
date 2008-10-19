@@ -67,7 +67,7 @@ public class JavaFxClient {
         System.out.println("Logged in as " + userName);
     }
 
-    public void subscribeAllEvents(org.cspoker.common.eventlisteners.RemoteAllEventsListener newlistener) throws java.rmi.RemoteException {
+    public void subscribeAllEvents(RemoteAllEventsListener newlistener) throws java.rmi.RemoteException {
         if (listener != null) {
             rpc.unsubscribeAllEventsListener(listener);
         }

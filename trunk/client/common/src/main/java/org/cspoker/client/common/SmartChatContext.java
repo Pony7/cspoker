@@ -15,6 +15,8 @@
  */
 package org.cspoker.client.common;
 
+import java.rmi.RemoteException;
+
 import org.cspoker.common.api.chat.context.ForwardingRemoteChatContext;
 import org.cspoker.common.api.chat.context.RemoteChatContext;
 import org.cspoker.common.api.chat.listener.ChatListener;
@@ -24,7 +26,7 @@ public class SmartChatContext extends ForwardingRemoteChatContext {
 
 	private ForwardingChatListener chatListener;
 
-	public SmartChatContext(RemoteChatContext remoteChatContext, ForwardingChatListener chatListener) {
+	public SmartChatContext(RemoteChatContext remoteChatContext, ForwardingChatListener chatListener) throws RemoteException {
 		super(remoteChatContext);
 		this.chatListener = chatListener;
 	}
