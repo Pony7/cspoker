@@ -15,7 +15,6 @@
  */
 package org.cspoker.common.api.lobby.event;
 
-import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.cspoker.common.api.lobby.listener.LobbyListener;
@@ -26,7 +25,6 @@ public class TableRemovedEvent extends LobbyEvent {
 
 	private static final long serialVersionUID = 3201252758310449164L;
 
-	@XmlAttribute
 	private Table table;
 
 	public TableRemovedEvent(Table table) {

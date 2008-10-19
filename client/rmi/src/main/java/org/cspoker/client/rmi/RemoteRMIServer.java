@@ -29,6 +29,9 @@ public class RemoteRMIServer implements ExternalRemoteCSPokerServer {
 
 	private String server;
 	private int port;
+	
+	//keeping this reference prevents some DGC problem to arise?
+	private ExternalRemoteCSPokerServer cspokerServer;
 
 	public RemoteRMIServer(String server) throws RemoteException, NotBoundException {
 		this(server, 1099);
@@ -43,7 +46,6 @@ public class RemoteRMIServer implements ExternalRemoteCSPokerServer {
 			throws RemoteException, LoginException {
 		System.setSecurityManager(null);
 		Registry registry = LocateRegistry.getRegistry(server, port);
-		ExternalRemoteCSPokerServer cspokerServer;
 		try {
 			cspokerServer = (ExternalRemoteCSPokerServer) registry.lookup("CSPokerServer");
 		} catch (NotBoundException exception) {

@@ -15,10 +15,13 @@
  */
 package org.cspoker.common.api.chat.event;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
 import org.cspoker.common.api.chat.listener.ChatListener;
 import org.cspoker.common.api.shared.event.ServerEvent;
 import org.cspoker.common.api.shared.listener.ServerListenerTree;
 
+@XmlRootElement
 public class ServerChatEvents implements ServerEvent {
 
 	private static final long serialVersionUID = 6449937716379015861L;

@@ -18,8 +18,15 @@ package org.cspoker.common.api.chat.event;
 import org.cspoker.common.api.chat.listener.ChatListener;
 import org.cspoker.common.api.shared.event.Event;
 
-public interface ChatEvent extends Event{
+public abstract class ChatEvent implements Event{
+
+	private static final long serialVersionUID = 6945189419298925852L;
 
 	public abstract void dispatch(ChatListener chatListener);
+	
+	
+	public ChatEvent() {
+		// no op
+	}
 	
 }
