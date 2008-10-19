@@ -27,18 +27,20 @@ import org.cspoker.common.api.shared.context.ServerContext;
 import org.cspoker.server.common.account.AccountContextImpl;
 import org.cspoker.server.common.account.ExtendedAccountContext;
 import org.cspoker.server.common.chat.ChatServer;
+import org.cspoker.server.common.chat.room.ChatRoom;
 import org.cspoker.server.common.lobby.Lobby;
 
 public class ServerContextImpl implements ServerContext {
 
 	private final ExtendedAccountContext accountContext;
 	private final CashierContext cashierContext;
-	private ChatContext chatContext;
+	private final ChatContext chatContext;
 	private final LobbyContextImpl lobbyContext;
 
 	public ServerContextImpl(String username, String password) throws LoginException {
 		this.accountContext = new AccountContextImpl(username,password);
 		this.cashierContext = new CashierContextImpl(accountContext);
+		this.chatContext=new ChatContextImpl(accountContext,ChatServer.getInstance().getServerChatRoom());
 		//singleton lobby is passed as an argument for flexibility.
 		//TODO fix - I think we should limit the use of singletons. 
 		//We should for instance be able to run 2 independent servers in the same JVM. - guy
@@ -66,13 +68,16 @@ public class ServerContextImpl implements ServerContext {
 	}
 
 	public ChatContext getServerChatContext(ChatListener chatListener) {
-		this.chatContext=new ChatContextImpl(accountContext,ChatServer.getInstance().getServerChatRoom(),
-					chatListener);
+		((ChatContextImpl)chatContext).changeChatRoom(ChatServer.getInstance().getServerChatRoom());
+		((ChatContextImpl)chatContext).setListener(chatListener);
 		return getChatContext();
 	}
 	public ChatContext getTableChatContext(ChatListener chatListener,long tableId) {
-		this.chatContext=new ChatContextImpl(accountContext,ChatServer.getInstance().getTableChatRoom(tableId),
-				chatListener);
+		ChatRoom table=ChatServer.getInstance().getTableChatRoom(tableId);
+		if(table==null)
+			throw new IllegalArgumentException("No such table id!");
+		((ChatContextImpl)chatContext).changeChatRoom(table);
+		((ChatContextImpl)chatContext).setListener(chatListener);
 		return getChatContext();
 	}
 
