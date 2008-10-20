@@ -1,23 +1,23 @@
 /**
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
+ * 
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+ * Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 package org.cspoker.client.gui.swt.control;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Vector;
 
@@ -146,14 +146,20 @@ public class SWTResourceManager {
 			if (resources.containsKey(file.toString()))
 				return (Image) resources.get(file.toString());
 			
-			Image img = new Image(Display.getDefault(), new FileInputStream(file));
-			resources.put(file.toString(), img);
-			return img;
+			return new Image(Display.getDefault(), getAsResourceStream(file));
 		} catch (Exception e) {
 			logger.error("SWTResourceManager.getImage: Error getting image " + file + ", " + e);
 			return null;
 		}
 		
+	}
+	
+	/**
+	 * Helper method using Context classloader since FileInputStream(file) is
+	 * not reliable ...
+	 */
+	private static InputStream getAsResourceStream(File file) {
+		return Thread.currentThread().getContextClassLoader().getResourceAsStream(file.toString());
 	}
 	
 	/**
@@ -226,8 +232,8 @@ public class SWTResourceManager {
 			return chipImg;
 		if (resources.containsKey(chip.getImageFile(size).toString()))
 			return (Image) resources.get(chip.getImageFile(size).toString());
-		Image img = new Image(Display.getDefault(), new FileInputStream(chip.getImageFile(size)));
-		Image mask = new Image(Display.getDefault(), new FileInputStream(chip.getMaskImageFile(size)));
+		Image img = new Image(Display.getDefault(), getAsResourceStream(chip.getImageFile(size)));
+		Image mask = new Image(Display.getDefault(), getAsResourceStream(chip.getMaskImageFile(size)));
 		
 		Image icon = new Image(Display.getDefault(), img.getImageData(), mask.getImageData());
 		img.dispose();

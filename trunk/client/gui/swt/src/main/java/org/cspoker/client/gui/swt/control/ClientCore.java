@@ -17,6 +17,8 @@ import javax.security.auth.login.LoginException;
 
 import org.apache.log4j.Logger;
 import org.cspoker.client.User;
+import org.cspoker.client.allcommunication.LoadProvidersFromXml;
+import org.cspoker.client.common.CommunicationProvider;
 import org.cspoker.client.gui.swt.window.GameWindow;
 import org.cspoker.client.gui.swt.window.LobbyWindow;
 import org.cspoker.client.gui.swt.window.LoginDialog;
@@ -140,6 +142,7 @@ public class ClientCore
 	 * @see java.lang.Runnable#run()
 	 */
 	public void run() {
+		new LoadProvidersFromXml(CommunicationProvider.global_provider);
 		// Run the whole GUI inside a try-catch for now so we can catch
 		// unexpected failures
 		try {
@@ -175,8 +178,8 @@ public class ClientCore
 		if (lobby != null) {
 			lobby.dispose();
 		}
-		//TODO replace or ignore?
-		//communication.trigger();
+		// TODO replace or ignore?
+		// communication.trigger();
 	}
 	
 	/**
@@ -266,5 +269,15 @@ public class ClientCore
 		}
 		
 		return communication;
+	}
+	
+	@Override
+	public ChatListener getServerChatListener() {
+		return gui.getLobby();
+	}
+	
+	@Override
+	public ChatListener getTableChatListener(long tableID) {
+		return gui.getGameWindow(tableID, false).getUserInputComposite();
 	}
 }

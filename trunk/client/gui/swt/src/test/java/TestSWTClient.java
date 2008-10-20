@@ -10,6 +10,7 @@
  * 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -20,7 +21,8 @@ import junit.framework.TestCase;
 
 import org.cspoker.client.User;
 import org.cspoker.client.gui.swt.control.ClientCore;
-import org.cspoker.common.CSPokerServer;
+import org.cspoker.client.rmi.RemoteRMIServer;
+import org.cspoker.common.RemoteCSPokerServer;
 import org.eclipse.swt.widgets.Display;
 
 public class TestSWTClient
@@ -51,7 +53,15 @@ public class TestSWTClient
 	}
 	
 	public void testLogin() {
-		new Thread(new CSPokerServer()).start();
+		RemoteCSPokerServer s = null;
+		try {
+			s = new RemoteRMIServer(ClientCore.DEFAULT_URL);
+		} catch (RemoteException e1) {
+			e1.printStackTrace();
+		} catch (NotBoundException e1) {
+			e1.printStackTrace();
+		}
+		final RemoteCSPokerServer server = s;
 		client1 = new ClientCore(new User("stephan", "test"));
 		client2 = new ClientCore();
 		Display.getDefault().syncExec(new Runnable() {
@@ -61,27 +71,20 @@ public class TestSWTClient
 					
 					public void run() {
 						try {
-							client1.login(ClientCore.DEFAULT_URL);
+							client1.login(server);
 						} catch (LoginException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
-						} catch (RemoteException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
 						}
-						client1.getGui().lobby.show();
+						client1.getGui().getLobby().show();
 					}
 				});
 				try {
-					client2.login(ClientCore.DEFAULT_URL);
+					client2.login(server);
 				} catch (LoginException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (RemoteException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				client2.getGui().lobby.show();
+				client2.getGui().getLobby().show();
 			}
 		});
 		synchronized (this) {

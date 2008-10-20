@@ -17,14 +17,16 @@ import org.apache.log4j.Logger;
 import org.cspoker.client.gui.swt.control.Chip;
 import org.cspoker.client.gui.swt.control.ClientGUI;
 import org.cspoker.client.gui.swt.control.UserSeatedPlayer;
+import org.cspoker.common.api.chat.event.MessageEvent;
+import org.cspoker.common.api.chat.listener.ChatListener;
 import org.cspoker.common.api.lobby.holdemtable.event.HoldemTableEvent;
-import org.cspoker.common.api.serverchat.event.ServerMessageEvent;
-import org.cspoker.common.api.serverchat.event.TableMessageEvent;
-import org.cspoker.common.api.serverchat.listener.ChatListener;
+import org.cspoker.common.api.shared.exception.IllegalActionException;
+import org.cspoker.common.elements.player.Player;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.*;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -90,6 +92,8 @@ public class TableUserInputComposite
 		} catch (RemoteException e) {
 			logger.error(e.getMessage(), e);
 			return;
+		} catch (IllegalActionException e) {
+			logger.error("This should not happen ", e);
 		}
 		gameActionGroup.setVisible(false);
 	}
@@ -101,6 +105,8 @@ public class TableUserInputComposite
 		} catch (RemoteException e) {
 			logger.error(e.getMessage(), e);
 			return;
+		} catch (IllegalActionException e) {
+			logger.error("This should not happen ", e);
 		}
 		gameActionGroup.setVisible(false);
 	}
@@ -111,6 +117,8 @@ public class TableUserInputComposite
 			user.getPlayerContext().fold();
 		} catch (RemoteException e) {
 			logger.error(e.getMessage(), e);
+		} catch (IllegalActionException e) {
+			logger.error("This should not happen ", e);
 		}
 		gameActionGroup.setVisible(false);
 	}
@@ -154,9 +162,11 @@ public class TableUserInputComposite
 					String message = userInputBox.getText();
 					if (message.length() > 0) {
 						try {
-							user.getChatContext().sendTableMessage(gameState.getTableMemento().getId(), message);
+							user.getChatContext().sendMessage(message);
 						} catch (RemoteException ex) {
 							getClientCore().handleRemoteException(ex);
+						} catch (IllegalActionException ex) {
+							logger.error("This should not happen", ex);
 						}
 					}
 				}
@@ -333,7 +343,9 @@ public class TableUserInputComposite
 			user.getPlayerContext().leaveGame();
 			user.getTableContext().leaveTable();
 		} catch (RemoteException e) {
-			logger.error("Error when leaving table", e);
+			getClientCore().handleRemoteException(e);
+		} catch (IllegalActionException e) {
+			logger.error("This should not happen ", e);
 		}
 		getClientCore().getGui().getGameWindows().remove(getParent());
 		getShell().close();
@@ -397,10 +409,12 @@ public class TableUserInputComposite
 		if (!sitInOutButton.getSelection()) {
 			try {
 				
-				user.sitIn(user.getSeatId());
+				user.sitIn(user.getSeatId(), user.getStackValue());
 			} catch (RemoteException e) {
 				getClientCore().handleRemoteException(e);
 				return;
+			} catch (IllegalActionException e) {
+				logger.error("This should not happen", e);
 			}
 		} else {
 			// TODO new sit out concept
@@ -432,60 +446,50 @@ public class TableUserInputComposite
 	}
 	
 	/**
-	 * Adds the message to the Chat Box (in red)
-	 * 
-	 * @param event The event to display
-	 */
-	public void showDealerMessage(HoldemTableEvent event) {
-		// Display standard messages in black
-		gameInfoText.setForeground(Display.getDefault().getSystemColor(SWT.COLOR_BLACK));
-		gameInfoText.append(System.getProperty("line.separator") + "Dealer: " + event.toString());
-		gameInfoText.setTopIndex(gameInfoText.getLineCount() - 5);
-		
-	}
-	
-	/**
-	 * Adds the message to the Chat Box (in red)
-	 * 
-	 * @see org.cspoker.common.api.serverchat.listener.ChatListener#onServerMessage(org.cspoker.common.api.serverchat.event.MessageEvent)
-	 */
-	public void onServerMessage(MessageEvent serverMessageEvent) {
-		// Display server messages in red
-		gameInfoText.setForeground(Display.getDefault().getSystemColor(SWT.COLOR_RED));
-		gameInfoText.append(System.getProperty("line.separator") + serverMessageEvent.getPlayer() + ": "
-				+ serverMessageEvent.getMessage());
-		gameInfoText.setTopIndex(gameInfoText.getLineCount() - 5);
-		
-	}
-	
-	/**
-	 * Adds the message to the Chat Box (in black)
-	 * 
-	 * @see org.cspoker.common.api.serverchat.listener.ChatListener#onTableMessage(org.cspoker.common.api.serverchat.event.TableMessageEvent)
-	 */
-	public void onTableMessage(TableMessageEvent tableMessageEvent) {
-		// Display player messages in blue
-		int start = gameInfoText.getCharCount();
-		
-		gameInfoText.append(System.getProperty("line.separator") + tableMessageEvent.getPlayer() + ": "
-				+ tableMessageEvent.getMessage());
-		int end = gameInfoText.getCharCount();
-		logger.info("Start " + start);
-		logger.info("End " + end);
-		logger.info("Offset " + gameInfoText.getOffsetAtLine(gameInfoText.getLineCount() - 1));
-		
-		gameInfoText.setTopIndex(gameInfoText.getLineCount() - 5);
-		gameInfoText.update();
-		gameInfoText.setStyleRange(new StyleRange(start, end - start, Display.getDefault().getSystemColor(
-				SWT.COLOR_BLUE), Display.getDefault().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND)));
-		
-	}
-	
-	/**
 	 * @return The Composite holding the Controls which are to be displayed only
 	 *         when it is the user's turn to act.
 	 */
 	public Composite getGameActionGroup() {
 		return gameActionGroup;
+	}
+	
+	/**
+	 * Adds the message to the Chat Box, color-coded according to type
+	 * <p>
+	 * Standard dealer msg: black
+	 * <p>
+	 * Player msg: blue
+	 * <p>
+	 * Server msg: red
+	 * 
+	 * @see org.cspoker.common.api.chat.listener.ChatListener#onMessage(org.cspoker.common.api.chat.event.MessageEvent)
+	 */
+	@Override
+	public void onMessage(MessageEvent messageEvent) {
+		
+		// TODO Display server messages in red, Player in blue
+		Color color = getDisplay().getSystemColor(SWT.COLOR_BLACK);
+		
+		// Display player messages in blue
+		int start = gameInfoText.getCharCount();
+		gameInfoText.append(System.getProperty("line.separator") + messageEvent.getPlayer() + ": "
+				+ messageEvent.getMessage());
+		int end = gameInfoText.getCharCount();
+		
+		gameInfoText.setTopIndex(gameInfoText.getLineCount() - 5);
+		gameInfoText.update();
+		gameInfoText.setStyleRange(new StyleRange(start, end - start, color, Display.getDefault().getSystemColor(
+				SWT.COLOR_WIDGET_BACKGROUND)));
+		
+	}
+	
+	/**
+	 * Helper method to display "Dealer" messages
+	 * 
+	 * @param event The {@link HoldemTableEvent} to generate and display a
+	 *            dealer message for
+	 */
+	public void showDealerMessage(HoldemTableEvent event) {
+		onMessage(new MessageEvent(new Player(Long.MAX_VALUE, "Dealer"), event.toString()));
 	}
 }

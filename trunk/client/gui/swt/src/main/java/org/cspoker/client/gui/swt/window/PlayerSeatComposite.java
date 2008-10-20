@@ -11,7 +11,6 @@
  */
 package org.cspoker.client.gui.swt.window;
 
-import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -252,13 +251,12 @@ public class PlayerSeatComposite
 					// If not, we can probably sit in
 					// TODO Buyin, reserve seat in the meantime
 					logger.debug("Clicked on PlayerSeatComposite, sit in if empty ...");
-					try {
-						GameWindow containingGameWindow = getParent().getParent();
-						containingGameWindow.getUser().sitIn(seatId);
-						player = containingGameWindow.getUser();
-					} catch (RemoteException e) {
-						getClientCore().handleRemoteException(e);
-					}
+					GameWindow containingGameWindow = getParent().getParent();
+					
+					player = containingGameWindow.getUser();
+					new BuyinDialog(getClientCore(), containingGameWindow.getUser().getCashierContext(), gameState
+							.getTableMemento().getGameProperty().getBigBlind() * 100);
+					
 				}
 			}
 		});

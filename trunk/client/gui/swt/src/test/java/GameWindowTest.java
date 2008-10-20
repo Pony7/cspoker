@@ -6,7 +6,7 @@ import org.cspoker.client.User;
 import org.cspoker.client.gui.swt.control.ClientCore;
 import org.cspoker.client.gui.swt.window.GameWindow;
 import org.cspoker.client.gui.swt.window.LobbyWindow;
-import org.cspoker.common.api.chat.event.TableMessageEvent;
+import org.cspoker.common.api.chat.event.MessageEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.*;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.event.NewPocketCardsEvent;
 import org.cspoker.common.elements.cards.Card;
@@ -101,7 +101,7 @@ public class GameWindowTest
 					Thread.sleep(MS_ACTION_DELAY);
 					w.onWinner(new WinnerEvent(new TreeSet<Winner>(Arrays.asList(new Winner(player4, 3323)))));
 					Thread.sleep(MS_ACTION_DELAY);
-					w.getUserInputComposite().onTableMessage(new TableMessageEvent(player2, "Doh"));
+					w.getUserInputComposite().onMessage(new MessageEvent(player2, "Doh"));
 					Thread.sleep(MS_ACTION_DELAY);
 					w.onNewDeal(new NewDealEvent(seatedPlayers, player2));
 					Thread.sleep(MS_ACTION_DELAY);

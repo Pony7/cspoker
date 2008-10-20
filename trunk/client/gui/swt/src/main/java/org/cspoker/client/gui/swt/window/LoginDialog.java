@@ -11,9 +11,6 @@
  */
 package org.cspoker.client.gui.swt.window;
 
-import java.rmi.NotBoundException;
-import java.rmi.RemoteException;
-
 import javax.security.auth.login.LoginException;
 
 import org.apache.log4j.Logger;
@@ -22,6 +19,7 @@ import org.cspoker.client.gui.swt.control.ClientCore;
 import org.cspoker.client.gui.swt.control.ClientGUI;
 import org.cspoker.client.gui.swt.control.SWTResourceManager;
 import org.cspoker.client.rmi.RemoteRMIServer;
+import org.cspoker.common.RemoteCSPokerServer;
 import org.cspoker.common.api.shared.context.RemoteServerContext;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -177,12 +175,17 @@ public class LoginDialog
 				@Override
 				public void widgetSelected(SelectionEvent evt) {
 					try {
+						// RemoteCSPokerServer server =
+						// CommunicationProvider.global_provider.getProviders().get(0);
 						clientCore.setUser(new User(userNameText.getText(), passwordText.getText()));
-						result = clientCore.login(new RemoteRMIServer(serverCombo.getText()));
-					} catch (RemoteException e) {
-						clientCore.handleRemoteException(e);
-					} catch (NotBoundException e) {
-						logger.error("Could not find Remote server object in RMI registry", e);
+						RemoteCSPokerServer server = new RemoteRMIServer(ClientCore.DEFAULT_URL,
+								ClientCore.DEFAULT_PORT_RMI);
+						result = clientCore.login(server);
+						// } catch (RemoteException e) {
+						// clientCore.handleRemoteException(e);
+						// } catch (NotBoundException e) {
+						// logger.error("Could not find Remote server object in RMI registry",
+						// e);
 					} catch (LoginException e) {
 						ClientGUI.displayException(e);
 					}
