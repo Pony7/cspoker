@@ -43,4 +43,12 @@
 		<name>craig</name>
 		<password>test</password>
 	</user>
+	<user>
+		<name>Stephan</name>
+		<password>test</password>
+	</user>
+	<user>
+		<name>dummy</name>
+		<password>test</password>
+	</user>
 </users>
