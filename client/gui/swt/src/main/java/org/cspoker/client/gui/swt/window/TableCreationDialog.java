@@ -14,6 +14,7 @@ package org.cspoker.client.gui.swt.window;
 import java.rmi.RemoteException;
 
 import org.apache.log4j.Logger;
+import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.table.TableConfiguration;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -172,7 +173,11 @@ public class TableCreationDialog
 								stakeCombo.getText().indexOf("/")))) * 100);
 						TableConfiguration tConfig = new TableConfiguration(smallBlind * 2, 2000);
 						
-						lobby.getContext().createHoldemTable(nameInput.getText(), tConfig);
+						try {
+							lobby.getContext().createHoldemTable(nameInput.getText(), tConfig);
+						} catch (IllegalActionException e) {
+							logger.error("This should not happen", e);
+						}
 						getParent().close();
 					} catch (RemoteException e) {
 						clientCore.handleRemoteException(e);

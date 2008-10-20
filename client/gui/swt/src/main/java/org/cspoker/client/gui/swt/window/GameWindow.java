@@ -70,7 +70,7 @@ public class GameWindow
 	public GameWindow(LobbyWindow lobbyWindow, DetailedHoldemTable table) {
 		super(new Shell(lobbyWindow.getDisplay(), SWT.CLOSE | SWT.RESIZE), SWT.NONE, lobbyWindow.getClientCore());
 		gameState = new GameState(table);
-		user = new UserSeatedPlayer(this, getClientCore().getUser(), gameState);
+		user = new UserSeatedPlayer(this, getClientCore(), gameState);
 		
 		initGUI();
 		for (SeatedPlayer player : table.getPlayers()) {
@@ -406,20 +406,20 @@ public class GameWindow
 		userInputComposite.showDealerMessage(winnerEvent);
 		redraw();
 	}
-
+	
 	@Override
 	public void onAllIn(AllInEvent allInEvent) {
-		//TODO implement
+	// TODO implement
 	}
-
+	
 	@Override
 	public void onJoinTable(JoinTableEvent joinTableEvent) {
-		//TODO implement
+	// TODO implement
 	}
-
+	
 	@Override
 	public void onLeaveTable(LeaveTableEvent leaveGameEvent) {
-		//TODO implement
+	// TODO implement
 	}
 	
 	/**

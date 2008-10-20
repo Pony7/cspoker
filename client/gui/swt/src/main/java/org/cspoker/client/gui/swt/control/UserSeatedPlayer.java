@@ -1,17 +1,17 @@
 /**
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
+ * 
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+ * Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 package org.cspoker.client.gui.swt.control;
 
@@ -21,14 +21,15 @@ import java.util.concurrent.Executor;
 import org.apache.log4j.Logger;
 import org.cspoker.client.User;
 import org.cspoker.client.gui.swt.window.GameWindow;
+import org.cspoker.common.api.cashier.context.RemoteCashierContext;
+import org.cspoker.common.api.chat.context.RemoteChatContext;
+import org.cspoker.common.api.chat.listener.AsynchronousChatListener;
 import org.cspoker.common.api.lobby.context.LobbyContext;
 import org.cspoker.common.api.lobby.context.RemoteLobbyContext;
 import org.cspoker.common.api.lobby.holdemtable.context.RemoteHoldemTableContext;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.RemoteHoldemPlayerContext;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.listener.AsynchronousHoldemPlayerListener;
 import org.cspoker.common.api.lobby.holdemtable.listener.AsynchronousHoldemTableListener;
-import org.cspoker.common.api.serverchat.context.RemoteChatContext;
-import org.cspoker.common.api.serverchat.listener.AsynchronousChatListener;
 import org.cspoker.common.api.shared.context.RemoteServerContext;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.player.SeatedPlayer;
@@ -47,10 +48,12 @@ public class UserSeatedPlayer
 	private final static Logger logger = Logger.getLogger(UserSeatedPlayer.class);
 	private final GameWindow gameWindow;
 	private final Executor displayExecutor;
+	private final long tableId;
 	
 	RemoteHoldemTableContext tableContext;
 	RemoteHoldemPlayerContext playerContext;
 	RemoteChatContext chatContext;
+	private RemoteCashierContext cashierContext;
 	
 	/**
 	 * Create a new UserSeatedPlayer representing the player for a given
@@ -60,11 +63,15 @@ public class UserSeatedPlayer
 	 * @param user The {@link User}
 	 * @param gameState The {@link GameState} for this table
 	 */
-	public UserSeatedPlayer(GameWindow gameWindow, User user, GameState gameState) {
-		super(new SeatedPlayer(user.getPlayer().getId(), Long.MAX_VALUE, user.getPlayer().getName(), 0, 0), gameState);
+	public UserSeatedPlayer(GameWindow gameWindow, ClientCore core, GameState gameState) {
+		super(new SeatedPlayer(core.getUser().getPlayer().getId(), Long.MAX_VALUE,
+				core.getUser().getPlayer().getName(), 0, 0), gameState);
 		assert (gameWindow != null) : "We need the GameWindow as the listener!";
 		this.gameWindow = gameWindow;
 		this.displayExecutor = new DisplayExecutor(gameWindow.getDisplay());
+		tableId = gameState.getTableMemento().getId();
+		initializeChatContext(core.getCommunication());
+		initializeCashierContext(core.getCommunication());
 	}
 	
 	/**
@@ -77,6 +84,18 @@ public class UserSeatedPlayer
 		if (tableContext == null)
 			throw new IllegalStateException("No table context initialized");
 		return tableContext;
+	}
+	
+	/**
+	 * @return The {@link RemoteCashierContext} for the GameWindow this player
+	 *         is seated at
+	 * @throws IllegalStateException when the table context has not been created
+	 *             yet
+	 */
+	public RemoteCashierContext getCashierContext() {
+		if (cashierContext == null)
+			throw new IllegalStateException("No cashier context initialized");
+		return cashierContext;
 	}
 	
 	/**
@@ -110,14 +129,15 @@ public class UserSeatedPlayer
 	 * 
 	 * @param seatId The seat id where to sit in
 	 * @throws RemoteException When the sit in request was unsuccessful
-	 * @throws IllegalActionException 
+	 * @throws IllegalActionException
 	 */
 	public void sitIn(long seatId, int amount)
 			throws RemoteException, IllegalActionException {
 		if (tableContext == null)
 			throw new IllegalStateException("No table context available, you can not sit in");
 		assert (seatId >= 0 && seatId != Long.MAX_VALUE) : "Illegal seat id provided: " + seatId;
-		playerContext = tableContext.sitIn(seatId, amount, new AsynchronousHoldemPlayerListener(displayExecutor, gameWindow));	
+		playerContext = tableContext.sitIn(seatId, amount, new AsynchronousHoldemPlayerListener(displayExecutor,
+				gameWindow));
 	}
 	
 	/**
@@ -144,13 +164,23 @@ public class UserSeatedPlayer
 	 * 
 	 * @param communication The {@link RemoteServerContext} to as k for the chat
 	 *            context
-	 * @throws IllegalActionException 
 	 */
-	public void setChatContext(RemoteServerContext communication) throws IllegalActionException {
+	private void initializeChatContext(RemoteServerContext communication) {
 		assert (communication != null);
 		try {
-			chatContext = communication.getChatContext(new AsynchronousChatListener(displayExecutor, gameWindow
-					.getUserInputComposite()));
+			chatContext = communication.getTableChatContext(new AsynchronousChatListener(displayExecutor, gameWindow
+					.getUserInputComposite()), tableId);
+		} catch (RemoteException e) {
+			throw new IllegalStateException(e);
+		} catch (IllegalActionException e) {
+			logger.error("This should not happen", e);
+		}
+	}
+	
+	private void initializeCashierContext(RemoteServerContext communication) {
+		assert (communication != null);
+		try {
+			cashierContext = communication.getCashierContext();
 		} catch (RemoteException e) {
 			throw new IllegalStateException(e);
 		}

@@ -21,8 +21,8 @@ import org.cspoker.client.gui.swt.control.ClientGUI;
 import org.cspoker.client.gui.swt.control.DisplayExecutor;
 import org.cspoker.client.gui.swt.control.SWTResourceManager;
 import org.cspoker.common.api.chat.event.ChatEvent;
-import org.cspoker.common.api.chat.event.ServerMessageEvent;
-import org.cspoker.common.api.chat.event.TableMessageEvent;
+import org.cspoker.common.api.chat.event.MessageEvent;
+import org.cspoker.common.api.chat.listener.ChatListener;
 import org.cspoker.common.api.lobby.context.LobbyContext;
 import org.cspoker.common.api.lobby.context.RemoteLobbyContext;
 import org.cspoker.common.api.lobby.event.LobbyEvent;
@@ -30,7 +30,6 @@ import org.cspoker.common.api.lobby.event.TableCreatedEvent;
 import org.cspoker.common.api.lobby.event.TableRemovedEvent;
 import org.cspoker.common.api.lobby.listener.AsynchronousLobbyListener;
 import org.cspoker.common.api.lobby.listener.LobbyListener;
-import org.cspoker.common.api.serverchat.listener.ChatListener;
 import org.cspoker.common.api.shared.context.RemoteServerContext;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.table.DetailedHoldemTable;
@@ -506,21 +505,9 @@ public class LobbyWindow
 		}
 	}
 	
-	/**
-	 * @param serverMessageEvent The server message event
-	 * @see org.cspoker.common.api.serverchat.listener.ChatListener#onServerMessage(org.cspoker.common.api.serverchat.event.ServerMessageEvent)
-	 */
-	public void onServerMessage(ServerMessageEvent serverMessageEvent) {
-	// TODO Show the server event maybe in the lobby as well
-	}
-	
-	/**
-	 * @param tableMessageEvent The table message event
-	 * @see org.cspoker.common.api.serverchat.listener.ChatListener#onTableMessage(org.cspoker.common.api.serverchat.event.TableMessageEvent)
-	 */
-	public void onTableMessage(TableMessageEvent tableMessageEvent) {
-	// Nothing to do, the relevant TableUserInputComposite should have
-	// registered itself as a ChatListener
+	@Override
+	public void onMessage(MessageEvent messageEvent) {
+	// Nothing to do yet
 	
 	}
 }

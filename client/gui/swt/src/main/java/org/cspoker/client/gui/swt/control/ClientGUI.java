@@ -377,11 +377,10 @@ public class ClientGUI {
 				table = getLobby().getContext().getHoldemTableInformation(tableId);
 				w = new GameWindow(getLobby(), table);
 				w.getUser().joinTable(getLobby().getContext());
-				w.getUser().setChatContext(clientCore.getCommunication());
 			} catch (RemoteException e) {
 				throw new IllegalStateException("Could not retrieve remote table information", e);
 			} catch (IllegalActionException exception) {
-				//TODO show error box?
+				// TODO show error box?
 				exception.printStackTrace();
 			}
 		}
