@@ -98,7 +98,7 @@ public class LobbyWindow
 	private Menu cardsMenu;
 	private Menu chipsMenu;
 	
-	private MenuItem starsCardsMenuItem;
+	private MenuItem fourColorDeckMenuItem;
 	private MenuItem ftpCardsMenuItem;
 	private MenuItem starsChipsMenuItem;
 	private MenuItem eptChipsMenuItem;
@@ -294,15 +294,15 @@ public class LobbyWindow
 						
 						cardsMenu = new Menu(cardsMenuItem);
 						cardsMenuItem.setMenu(cardsMenu);
-						starsCardsMenuItem = new MenuItem(cardsMenu, SWT.RADIO);
-						starsCardsMenuItem.setText("Poker Stars");
-						starsCardsMenuItem.setSelection(true);
-						starsCardsMenuItem.addSelectionListener(new SelectionAdapter() {
+						fourColorDeckMenuItem = new MenuItem(cardsMenu, SWT.RADIO);
+						fourColorDeckMenuItem.setText("Four Color Deck");
+						fourColorDeckMenuItem.setSelection(true);
+						fourColorDeckMenuItem.addSelectionListener(new SelectionAdapter() {
 							
 							@Override
 							public void widgetSelected(SelectionEvent evt) {
 								try {
-									ClientGUI.setActiveCardDeck(ClientGUI.Resources.STARS_DECK_IMG_FILE);
+									ClientGUI.setActiveCardDeck(ClientGUI.Resources.FOUR_COLOR_DECK_IMG_FILE);
 								} catch (FileNotFoundException e) {
 									logger.error("Could not change card deck style", e);
 								}
@@ -310,6 +310,7 @@ public class LobbyWindow
 						});
 						ftpCardsMenuItem = new MenuItem(cardsMenu, SWT.RADIO);
 						ftpCardsMenuItem.setText("Full Tilt Poker");
+						ftpCardsMenuItem.setEnabled(ClientGUI.Resources.ADDITIONAL_RESOURCES);
 						ftpCardsMenuItem.addSelectionListener(new SelectionAdapter() {
 							
 							@Override
@@ -329,7 +330,7 @@ public class LobbyWindow
 							chipsMenuItem.setMenu(chipsMenu);
 							starsChipsMenuItem = new MenuItem(chipsMenu, SWT.RADIO);
 							starsChipsMenuItem.setText("Poker Stars");
-							starsChipsMenuItem.setSelection(true);
+							starsChipsMenuItem.setEnabled(ClientGUI.Resources.ADDITIONAL_RESOURCES);
 							starsChipsMenuItem.addSelectionListener(new SelectionAdapter() {
 								
 								@Override
@@ -343,6 +344,7 @@ public class LobbyWindow
 							});
 							eptChipsMenuItem = new MenuItem(chipsMenu, SWT.RADIO);
 							eptChipsMenuItem.setText("European Poker Tour");
+							eptChipsMenuItem.setEnabled(ClientGUI.Resources.ADDITIONAL_RESOURCES);
 							eptChipsMenuItem.addSelectionListener(new SelectionAdapter() {
 								
 								@Override
@@ -357,6 +359,7 @@ public class LobbyWindow
 							
 							pokerWikiaChipsMenuItem = new MenuItem(chipsMenu, SWT.RADIO);
 							pokerWikiaChipsMenuItem.setText("Poker Wikia (Free) Chips");
+							pokerWikiaChipsMenuItem.setSelection(true);
 							pokerWikiaChipsMenuItem.addSelectionListener(new SelectionAdapter() {
 								
 								@Override
@@ -421,7 +424,9 @@ public class LobbyWindow
 		Shell shell = getShell();
 		shell.setText("CSPoker - Logged in as " + getClientCore().getUser().getUserName());
 		shell.setLayout(new FillLayout());
+		shell.setSize(getSize());
 		shell.open();
+		refreshTables();
 		while (!shell.isDisposed()) {
 			if (!shell.getDisplay().readAndDispatch())
 				shell.getDisplay().sleep();
@@ -458,6 +463,7 @@ public class LobbyWindow
 	 * @see org.cspoker.common.api.lobby.listener.LobbyListener#onTableCreated(org.cspoker.common.api.lobby.event.TableCreatedEvent)
 	 */
 	public void onTableCreated(TableCreatedEvent tableCreatedEvent) {
+		refreshTables();
 		Table t = tableCreatedEvent.getTable();
 		// TODO Get detail information to display in the list from the server
 		try {

@@ -52,6 +52,8 @@ public class ClientGUI {
 	 */
 	public static class Resources {
 		
+		public static final boolean ADDITIONAL_RESOURCES = false;
+		
 		private static final File IMAGE_DIR = new File("images");
 		
 		/** Icon to be used for Shell images */
@@ -85,13 +87,13 @@ public class ClientGUI {
 		 * Contains PokerStars card images. May not be available in open-source
 		 * version
 		 */
-		public static final File STARS_DECK_IMG_FILE = new File(CARDS_IMG_DIR, "Deck_Free_2.png");
+		public static final File FOUR_COLOR_DECK_IMG_FILE = new File(CARDS_IMG_DIR, "Deck_Free_2.png");
 		/**
 		 * Card image resource currently in use (that's where the images are
 		 * retrieved from during play). Initialized to use free PokerStars-style
 		 * cards
 		 */
-		public static File ACTIVE_DECK_IMG_FILE = STARS_DECK_IMG_FILE;
+		public static File ACTIVE_DECK_IMG_FILE = FOUR_COLOR_DECK_IMG_FILE;
 		
 		/** Default table background image */
 		public static File TABLE_IMAGE = new File(THEMES_IMG_DIR, "Free_Simple_Table_Background.jpg");
