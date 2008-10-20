@@ -63,7 +63,7 @@ public class TestSWTClient
 		}
 		final RemoteCSPokerServer server = s;
 		client1 = new ClientCore(new User("stephan", "test"));
-		client2 = new ClientCore();
+		client2 = new ClientCore(new User("dummy", "test"));
 		Display.getDefault().syncExec(new Runnable() {
 			
 			public void run() {
