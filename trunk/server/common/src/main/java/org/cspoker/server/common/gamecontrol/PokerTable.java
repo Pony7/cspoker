@@ -75,6 +75,7 @@ import org.cspoker.server.common.util.threading.ScheduledRequestExecutor;
 public class PokerTable {
 
 	private final static ChatServer chatServer=ChatServer.getInstance();
+	
 	private TableChatRoom chatRoom;
 	
 	private static Logger logger = Logger.getLogger(PokerTable.class);
@@ -91,6 +92,7 @@ public class PokerTable {
 	
 	private ConcurrentHashMap<PlayerId, HoldemTableListener> joinedPlayers = new ConcurrentHashMap<PlayerId, HoldemTableListener>();
 	
+	private ConcurrentHashMap<PlayerId, HoldemPlayerListener> sitInPlayers = new ConcurrentHashMap<PlayerId, HoldemPlayerListener>();
 	
 	/***************************************************************************
 	 * Constructor
@@ -362,9 +364,12 @@ public class PokerTable {
 			unsubscribeHoldemTableListener(listener);
 	}
 	
-	public HoldemPlayerContext sitIn(SeatId seatId, int buyIn, ServerPlayer player) throws IllegalActionException{
+	public HoldemPlayerContext sitIn(SeatId seatId, int buyIn, ServerPlayer player, HoldemPlayerListener holdemPlayerListener) throws IllegalActionException{
 		try {
-			return tableState.sitIn(seatId, new GameSeatedPlayer(player, buyIn));
+			HoldemPlayerContext toReturn = tableState.sitIn(seatId, new GameSeatedPlayer(player, buyIn));
+			sitInPlayers.put(player.getId(), holdemPlayerListener);
+			subscribeHoldemPlayerListener(player.getId(), holdemPlayerListener);
+			return toReturn;
 		} catch (IllegalValueException e) {
 			throw new IllegalActionException("You can not sit in to this table with the given buy-in of "+buyIn+"chips.");
 		}
@@ -374,6 +379,8 @@ public class PokerTable {
 	
 	public void sitOut(GameSeatedPlayer player){
 		tableState.sitOut(player);
+		unsubscribeHoldemPlayerListener(player.getId(), sitInPlayers.get(player.getId()));
+		sitInPlayers.remove(player.getId());
 	}
 	
 	public boolean isPlaying(){
@@ -719,7 +726,7 @@ public class PokerTable {
 	 * @param listener
 	 *            The listener to unsubscribe.
 	 */
-	public void unsubscribeNewPocketCardsListener(PlayerId id,
+	public void unsubscribeHoldemPlayerListener(PlayerId id,
 			HoldemPlayerListener listener) {
 		List<HoldemPlayerListener> currentListeners;
 		List<HoldemPlayerListener> newListeners;

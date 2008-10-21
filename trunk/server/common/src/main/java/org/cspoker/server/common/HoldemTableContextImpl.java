@@ -23,11 +23,10 @@ public class HoldemTableContextImpl
 	public void leaveTable() {
 		table.leaveTable(player);
 	}
-	
-	public HoldemPlayerContext sitIn(long seatId, int buyIn, HoldemPlayerListener holdemPlayerListener)
-			throws IllegalActionException {
-		table.subscribeHoldemPlayerListener(player.getId(), holdemPlayerListener);
-		return table.sitIn(new SeatId(seatId), buyIn, player);
+
+	public HoldemPlayerContext sitIn(long seatId, int buyIn, 
+			HoldemPlayerListener holdemPlayerListener) throws IllegalActionException {
+			return table.sitIn(new SeatId(seatId), buyIn, player, holdemPlayerListener);
+
 	}
-	
 }
