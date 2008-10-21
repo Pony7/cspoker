@@ -8,24 +8,26 @@ import org.cspoker.server.common.elements.id.SeatId;
 import org.cspoker.server.common.gamecontrol.PokerTable;
 import org.cspoker.server.common.player.ServerPlayer;
 
-public class HoldemTableContextImpl implements HoldemTableContext {
+public class HoldemTableContextImpl
+		implements HoldemTableContext {
 	
 	private ServerPlayer player;
 	
 	private PokerTable table;
 	
-	public HoldemTableContextImpl(ServerPlayer player, PokerTable table){
+	public HoldemTableContextImpl(ServerPlayer player, PokerTable table) {
 		this.player = player;
 		this.table = table;
 	}
-
+	
 	public void leaveTable() {
 		table.leaveTable(player);
 	}
-
-	public HoldemPlayerContext sitIn(long seatId, int buyIn, 
-			HoldemPlayerListener holdemPlayerListener) throws IllegalActionException {
-			return table.sitIn(new SeatId(seatId), buyIn, player);
+	
+	public HoldemPlayerContext sitIn(long seatId, int buyIn, HoldemPlayerListener holdemPlayerListener)
+			throws IllegalActionException {
+		table.subscribeHoldemPlayerListener(player.getId(), holdemPlayerListener);
+		return table.sitIn(new SeatId(seatId), buyIn, player);
 	}
-
+	
 }

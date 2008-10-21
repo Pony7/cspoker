@@ -79,7 +79,6 @@ public class Lobby {
 			throw new IllegalActionException("The provided table #" + tableId + " to join does not exist.");
 		}
 		PokerTable table = tables.get(tableId);
-		
 		return table.joinTable(accountContext.getPlayer(), holdemTableListener);
 	}
 	

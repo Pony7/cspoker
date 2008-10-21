@@ -79,4 +79,5 @@ public class User {
 		loggedIn = b;
 		
 	}
+	
 }

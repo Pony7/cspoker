@@ -438,6 +438,8 @@ public class LobbyWindow
 	 * updates its display status according to the received {@link TableList}.
 	 */
 	public void refreshTables() {
+		availableGameTables.clearAll();
+		availableGameTables.setItemCount(0);
 		TableList tl;
 		java.util.List<DetailedHoldemTable> tables = new ArrayList<DetailedHoldemTable>();
 		try {
@@ -464,17 +466,6 @@ public class LobbyWindow
 	 */
 	public void onTableCreated(TableCreatedEvent tableCreatedEvent) {
 		refreshTables();
-		Table t = tableCreatedEvent.getTable();
-		// TODO Get detail information to display in the list from the server
-		try {
-			DetailedHoldemTable detailedTable = context.getHoldemTableInformation(t.getId());
-			insertInformation(detailedTable);
-		} catch (RemoteException e) {
-			getClientCore().handleRemoteException(e);
-		} catch (IllegalActionException exception) {
-			// TODO handle
-			exception.printStackTrace();
-		}
 	}
 	
 	/**
@@ -486,6 +477,14 @@ public class LobbyWindow
 	 */
 	private void insertInformation(DetailedHoldemTable t) {
 		assert (t != null) : "Cannot insert information, passed null parameter";
+		// If this table is already present, delete it (possibly stale data ...)
+		for (TableItem ti : availableGameTables.getItems()) {
+			if (((Table) ti.getData()).getId() == t.getId()) {
+				ti.dispose();
+				redraw();
+				return;
+			}
+		}
 		TableConfiguration tInfo = t.getGameProperty();
 		TableItem item = new TableItem(availableGameTables, SWT.NONE);
 		item.setText(new String[] { t.getName(), Long.toString(t.getId()),
@@ -501,14 +500,7 @@ public class LobbyWindow
 	 * @see org.cspoker.common.api.lobby.listener.LobbyListener#onTableRemoved(org.cspoker.common.api.lobby.event.TableRemovedEvent)
 	 */
 	public void onTableRemoved(TableRemovedEvent tableRemovedEvent) {
-		// Search for the table and dispose of the widget
-		for (TableItem ti : availableGameTables.getItems()) {
-			if (((Table) ti.getData()).getId() == tableRemovedEvent.getTableId().getId()) {
-				ti.dispose();
-				redraw();
-				return;
-			}
-		}
+		refreshTables();
 	}
 	
 	@Override

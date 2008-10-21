@@ -163,7 +163,7 @@ public class ClientGUI {
 	 * <code>int</code> chip value to a human-readable representation and
 	 * vice-versa
 	 */
-	public final static NumberFormat betFormatter = NumberFormat.getNumberInstance();
+	private final static NumberFormat betFormatter = NumberFormat.getNumberInstance();
 	
 	/***************************************************************************
 	 * Constructor
@@ -179,6 +179,7 @@ public class ClientGUI {
 		gameWindows = new Hashtable<Long, GameWindow>();
 		betFormatter.setMinimumFractionDigits(0);
 		betFormatter.setMaximumFractionDigits(2);
+		betFormatter.setGroupingUsed(false);
 	}
 	
 	/**
@@ -215,7 +216,7 @@ public class ClientGUI {
 	 * @see #formatBet(int)
 	 */
 	public static int parseBet(String bet) {
-		bet = bet.replaceAll("$", "");
+		bet = bet.replaceAll("[^0-9.,]", "");
 		double result = Double.parseDouble(bet);
 		return (int) Math.round(result * 100);
 	}
@@ -260,7 +261,7 @@ public class ClientGUI {
 		for (StackTraceElement ste : e.getStackTrace()) {
 			sb.append(ste.toString() + "\n");
 		}
-		return displayMessage(sb.toString(), SWT.ICON_ERROR);
+		return displayMessage("Unexpected exception, everything was reset", sb.toString(), SWT.ICON_ERROR);
 	}
 	
 	/**
@@ -271,9 +272,10 @@ public class ClientGUI {
 	 *            info)
 	 * @return {@link MessageBox#open()}
 	 */
-	public static int displayMessage(String message, int style) {
+	public static int displayMessage(String title, String message, int style) {
 		logger.info(message);
 		MessageBox infoBox = new MessageBox(new Shell(Display.getCurrent()), style | SWT.OK);
+		infoBox.setText(title);
 		infoBox.setMessage(message);
 		return infoBox.open();
 	}
@@ -378,12 +380,10 @@ public class ClientGUI {
 			try {
 				table = getLobby().getContext().getHoldemTableInformation(tableId);
 				w = new GameWindow(getLobby(), table);
-				w.getUser().joinTable(getLobby().getContext());
 			} catch (RemoteException e) {
 				throw new IllegalStateException("Could not retrieve remote table information", e);
 			} catch (IllegalActionException exception) {
-				// TODO show error box?
-				exception.printStackTrace();
+				logger.error("This should not happen", exception);
 			}
 		}
 		gameWindows.put(tableId, w);
