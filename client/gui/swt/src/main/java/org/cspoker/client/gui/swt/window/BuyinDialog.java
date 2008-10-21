@@ -40,23 +40,33 @@ public class BuyinDialog
 	
 	private RemoteCashierContext cashierContext;
 	
+	private boolean initialBuyin;
+	private int selectedAmount = -1;
+	
 	/**
-	 * Creates a new BuyinDialog
+	 * Creates a new BuyinDialog.
+	 * <p>
+	 * Use this dialog for initial sit in (the player selects the amount he
+	 * wants to sit down with) or for rebuying
 	 * 
 	 * @param core The {@link ClientCore}
 	 * @param cashier The {@link CashierContext} which will be asked to carry
 	 *            out the RebuyAction
 	 * @param maximum The maximum rebuy amount
+	 * @param initial Whether this is the initial buyin action and not a
+	 *            rebuying (affects only window title and related display
+	 *            elements)
 	 */
-	public BuyinDialog(ClientCore core, RemoteCashierContext cashier, int maximum) {
+	public BuyinDialog(ClientCore core, RemoteCashierContext cashier, int maximum, boolean initial) {
 		this(new Shell(Display.getDefault(), SWT.SHELL_TRIM | SWT.APPLICATION_MODAL), SWT.NONE, core);
 		this.maximum = maximum;
 		cashierContext = cashier;
+		this.initialBuyin = initial;
+		initGUI();
 	}
 	
 	private BuyinDialog(Shell parent, int style, ClientCore clientCore) {
 		super(parent, style, clientCore);
-		initGUI();
 	}
 	
 	static private Label rebuyAmountLabel;
@@ -68,8 +78,11 @@ public class BuyinDialog
 	
 	/**
 	 * Opens the Rebuy dialog. The dialog is closed when the button is pressed.
+	 * 
+	 * @return The amount chosen, or <code>-1</code> if no amount has been
+	 *         selected (Dialog cancelled)
 	 */
-	public void open() {
+	public int open() {
 		try {
 			getParent().layout();
 			getParent().pack();
@@ -83,10 +96,12 @@ public class BuyinDialog
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
+		return selectedAmount;
 	}
 	
 	private void initGUI() {
-		getParent().setText("Table Cashier");
+		getParent().setText(initialBuyin ? "Select buyin amount" : "Rebuy");
 		getParent().setMinimumSize(250, 100);
 		GridLayout dialogShellLayout = new GridLayout();
 		dialogShellLayout.makeColumnsEqualWidth = true;
@@ -106,7 +121,7 @@ public class BuyinDialog
 			{
 				rebuyAmountText = new Text(composite1, SWT.SINGLE | SWT.CENTER | SWT.BORDER);
 				rebuyAmountText.setBounds(38, 20, 60, 30);
-				rebuyAmountText.setText(ClientGUI.betFormatter.format(maximum));
+				rebuyAmountText.setText(ClientGUI.formatBet(maximum));
 			}
 		}
 		{
@@ -117,7 +132,7 @@ public class BuyinDialog
 			}
 			{
 				maxRebuyText = new Text(composite1, SWT.CENTER | SWT.BORDER);
-				maxRebuyText.setText(ClientGUI.betFormatter.format(maximum));
+				maxRebuyText.setText(ClientGUI.formatBet(maximum));
 				maxRebuyText.setEditable(false);
 			}
 		}
@@ -126,7 +141,7 @@ public class BuyinDialog
 			GridData loginButtonLData = new GridData();
 			loginButtonLData.horizontalAlignment = GridData.CENTER;
 			rebuyButton.setLayoutData(loginButtonLData);
-			rebuyButton.setText("Rebuy");
+			rebuyButton.setText(initialBuyin ? "Sit In" : "Rebuy");
 			rebuyButton.addSelectionListener(new SelectionAdapter() {
 				
 				@Override
@@ -136,6 +151,7 @@ public class BuyinDialog
 					// TODO Still null, needs to be implemented. Why cant I
 					// request a specific amount??
 					try {
+						selectedAmount = ClientGUI.parseBet(rebuyAmountText.getText());
 						cashierContext.requestMoney();
 					} catch (RemoteException e) {
 						// TODO Auto-generated catch block
@@ -143,10 +159,13 @@ public class BuyinDialog
 					} catch (IllegalActionException exception) {
 						// TODO handle
 						exception.printStackTrace();
+					} catch (NumberFormatException e) {
+						logger.warn("Could not parse desired amount", e);
 					}
 					// cashierContext.getMoneyAmount(ClientGUI.betFormatter.
 					// parse(rebuyAmountText.getText())
 					// .intValue() * 100);
+					
 					getParent().close();
 				}
 			});

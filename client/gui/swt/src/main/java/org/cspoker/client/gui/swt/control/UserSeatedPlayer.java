@@ -70,8 +70,6 @@ public class UserSeatedPlayer
 		this.gameWindow = gameWindow;
 		this.displayExecutor = new DisplayExecutor(gameWindow.getDisplay());
 		tableId = gameState.getTableMemento().getId();
-		initializeChatContext(core.getCommunication());
-		initializeCashierContext(core.getCommunication());
 	}
 	
 	/**
@@ -94,7 +92,7 @@ public class UserSeatedPlayer
 	 */
 	public RemoteCashierContext getCashierContext() {
 		if (cashierContext == null)
-			throw new IllegalStateException("No cashier context initialized");
+			initializeCashierContext(gameWindow.getClientCore().getCommunication());
 		return cashierContext;
 	}
 	
@@ -105,7 +103,7 @@ public class UserSeatedPlayer
 	 */
 	public RemoteChatContext getChatContext() {
 		if (chatContext == null)
-			throw new IllegalStateException("No chat context initialized");
+			initializeChatContext(gameWindow.getClientCore().getCommunication());
 		return chatContext;
 	}
 	
@@ -129,7 +127,7 @@ public class UserSeatedPlayer
 	 * 
 	 * @param seatId The seat id where to sit in
 	 * @throws RemoteException When the sit in request was unsuccessful
-	 * @throws IllegalActionException
+	 * @throws IllegalStateException
 	 */
 	public void sitIn(long seatId, int amount)
 			throws RemoteException, IllegalActionException {
@@ -145,6 +143,8 @@ public class UserSeatedPlayer
 	 * 
 	 * @param lobbyContext {@link LobbyContext} needed to retrieve
 	 *            {@link RemoteHoldemTableContext}
+	 * @throws IllegalStateException When the table can not be joined for some
+	 *             reason
 	 */
 	public void joinTable(RemoteLobbyContext lobbyContext) {
 		assert (lobbyContext != null);
@@ -154,8 +154,8 @@ public class UserSeatedPlayer
 		} catch (RemoteException e) {
 			throw new IllegalStateException(e);
 		} catch (IllegalActionException e) {
-			// TODO Auto-generated catch block
 			logger.warn("You cannot join the desired table", e);
+			throw new IllegalStateException(e);
 		}
 	}
 	

@@ -52,6 +52,7 @@ public class TableUserInputComposite
 	Composite gameActionGroup;
 	
 	Composite manualEnterBetGroup;
+	Composite generalActionHolder;
 	Slider betSlider;
 	Text betAmountTextField;
 	
@@ -295,11 +296,12 @@ public class TableUserInputComposite
 				GridData generalActionHolderLData = new GridData(SWT.CENTER, SWT.CENTER, true, true);
 				generalActionHolderLData.heightHint = 120;
 				generalActionHolderLData.widthHint = 80;
-				Composite generalActionHolder = new Composite(this, SWT.NONE | ClientGUI.COMPOSITE_BORDER_STYLE);
+				generalActionHolder = new Composite(this, SWT.NONE | ClientGUI.COMPOSITE_BORDER_STYLE);
 				FillLayout generalActionHolderLayout = new FillLayout(SWT.VERTICAL);
 				generalActionHolderLayout.spacing = 5;
 				generalActionHolder.setLayout(generalActionHolderLayout);
 				generalActionHolder.setLayoutData(generalActionHolderLData);
+				generalActionHolder.setVisible(false);
 				{
 					sitInOutButton = new Button(generalActionHolder, SWT.TOGGLE | SWT.CENTER);
 					sitInOutButton.setText("Sit In");
@@ -387,7 +389,7 @@ public class TableUserInputComposite
 	void rebuyButtonWidgetSelected(SelectionEvent evt) {
 		try {
 			new BuyinDialog(getClientCore(), getClientCore().getCommunication().getCashierContext(), 100 * gameState
-					.getTableMemento().getGameProperty().getBigBlind()).open();
+					.getTableMemento().getGameProperty().getBigBlind(), false).open();
 		} catch (RemoteException e) {
 			getClientCore().handleRemoteException(e);
 		}
@@ -417,8 +419,10 @@ public class TableUserInputComposite
 				logger.error("This should not happen", e);
 			}
 		} else {
-			// TODO new sit out concept
-			// clientCore.getCommunication().sitOut(getTableId());
+			// TODO This is still to implement, sitOut() should not be equal to
+			// leaveGame()
+			// leaveGame()
+			// user.getPlayerContext().sitOut();
 		}
 	}
 	
@@ -466,10 +470,17 @@ public class TableUserInputComposite
 	 */
 	@Override
 	public void onMessage(MessageEvent messageEvent) {
-		
-		// TODO Display server messages in red, Player in blue
-		Color color = getDisplay().getSystemColor(SWT.COLOR_BLACK);
-		
+		// Adjust color based on who sent the message
+		Color color = getDisplay().getSystemColor(SWT.COLOR_BLUE);
+		String playerName = messageEvent.getPlayer().getName();
+		if (playerName.equals("Dealer")) {
+			color = getDisplay().getSystemColor(SWT.COLOR_BLACK);
+		} else if (playerName.equals("Server")) {
+			color = getDisplay().getSystemColor(SWT.COLOR_RED);
+		}
+		if (!messageEvent.getPlayer().getName().equals("Dealer")) {
+			color = getDisplay().getSystemColor(SWT.COLOR_BLUE);
+		}
 		// Display player messages in blue
 		int start = gameInfoText.getCharCount();
 		gameInfoText.append(System.getProperty("line.separator") + messageEvent.getPlayer() + ": "
@@ -490,6 +501,6 @@ public class TableUserInputComposite
 	 *            dealer message for
 	 */
 	public void showDealerMessage(HoldemTableEvent event) {
-		onMessage(new MessageEvent(new Player(Long.MAX_VALUE, "Dealer"), event.toString()));
+		onMessage(new MessageEvent(new Player(-1, "Dealer"), event.toString()));
 	}
 }

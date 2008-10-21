@@ -71,11 +71,14 @@ public class GameWindow
 		super(new Shell(lobbyWindow.getDisplay(), SWT.CLOSE | SWT.RESIZE), SWT.NONE, lobbyWindow.getClientCore());
 		gameState = new GameState(table);
 		user = new UserSeatedPlayer(this, getClientCore(), gameState);
+		user.joinTable(lobbyWindow.getContext());
 		
 		initGUI();
 		for (SeatedPlayer player : table.getPlayers()) {
 			tableComposite.findPlayerSeatCompositeBySeatId(player.getSeatId()).occupy(player);
 		}
+		
+		userInputComposite.getGameInfoText().insert("Click on an open seat to join the game");
 		
 	}
 	
@@ -148,17 +151,6 @@ public class GameWindow
 		tableComposite = new TableComposite(this, SWT.NONE | ClientGUI.COMPOSITE_BORDER_STYLE);
 		userInputComposite = new TableUserInputComposite(this, SWT.NONE | ClientGUI.COMPOSITE_BORDER_STYLE);
 		configureShell(getShell());
-	}
-	
-	/**
-	 * Determines whether the player (from the event usually) is the user of the
-	 * client. Does string comparison on the name (TODO: use id?)
-	 * 
-	 * @param player The player to check
-	 * @return whether the given player is equal to the user
-	 */
-	private boolean isUser(final Player player) {
-		return getClientCore().getUser().getUserName().equalsIgnoreCase(player.getName());
 	}
 	
 	/**
@@ -274,7 +266,7 @@ public class GameWindow
 		for (PlayerSeatComposite psc : tableComposite.getPlayerSeatComposites(true)) {
 			psc.getPlayer().setBetChipsValue(0);
 		}
-		if (isUser(newRoundEvent.getInitialPlayer())) {
+		if (user.equals(newRoundEvent.getInitialPlayer())) {
 			userInputComposite.prepareForUserInput();
 		}
 		userInputComposite.showDealerMessage(newRoundEvent);
@@ -287,8 +279,8 @@ public class GameWindow
 		Player playerToAct = nextPlayerEvent.getPlayer();
 		tableComposite.updateProgressBars(playerToAct);
 		getPlayerSeatComposite(nextPlayerEvent.getPlayer()).startTimer();
-		userInputComposite.getGameActionGroup().setVisible(isUser(playerToAct));
-		if (isUser(playerToAct)) {
+		userInputComposite.getGameActionGroup().setVisible(user.equals(playerToAct));
+		if (user.equals(playerToAct)) {
 			userInputComposite.prepareForUserInput();
 		}
 		userInputComposite.update();
@@ -362,8 +354,10 @@ public class GameWindow
 	 * @see org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener#onSitIn(org.cspoker.common.api.lobby.holdemtable.event.SitInEvent)
 	 */
 	public void onSitIn(SitInEvent sitInEvent) {
-		if (isUser(sitInEvent.getPlayer())) {
-			userInputComposite.sitInOutButton.setText("Sit Out");
+		// Use name comparison at this point because user does not have a valid
+		// id yet
+		if (user.getName().equalsIgnoreCase(sitInEvent.getPlayer().getName())) {
+			user.setPlayer(sitInEvent.getPlayer());
 		}
 		tableComposite.findPlayerSeatCompositeBySeatId(sitInEvent.getPlayer().getSeatId()).occupy(
 				sitInEvent.getPlayer());

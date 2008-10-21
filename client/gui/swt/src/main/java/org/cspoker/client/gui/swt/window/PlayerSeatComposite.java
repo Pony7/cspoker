@@ -11,6 +11,7 @@
  */
 package org.cspoker.client.gui.swt.window;
 
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -22,6 +23,7 @@ import org.cspoker.client.gui.swt.control.CardPaintListener;
 import org.cspoker.client.gui.swt.control.ClientGUI;
 import org.cspoker.client.gui.swt.control.MutableSeatedPlayer;
 import org.cspoker.client.gui.swt.control.UserSeatedPlayer;
+import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.cards.Card;
 import org.cspoker.common.elements.player.SeatedPlayer;
 import org.eclipse.swt.SWT;
@@ -31,10 +33,7 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.ProgressBar;
+import org.eclipse.swt.widgets.*;
 
 /**
  * Represents a composite in the TableComposite where the player is visualized
@@ -42,6 +41,47 @@ import org.eclipse.swt.widgets.ProgressBar;
  */
 public class PlayerSeatComposite
 		extends ClientComposite {
+	
+	MouseAdapter sitInMouseAdapter = new SitInMouseAdapter();
+	
+	private final class SitInMouseAdapter
+			extends MouseAdapter {
+		
+		/**
+		 * Upon clicking on the PlayerSeatComposite, the user sits in.
+		 * 
+		 * @param evt MouseEvent (ignored)
+		 * @see org.eclipse.swt.events.MouseAdapter#mouseDown(org.eclipse.swt.events.MouseEvent)
+		 */
+		@Override
+		public void mouseDown(MouseEvent evt) {
+			// Check if seat is occupied
+			if (getPlayer() == null) {
+				// If not, we can probably sit in
+				// TODO Buyin, reserve seat in the meantime
+				logger.debug("Clicked on PlayerSeatComposite, sit in if empty ...");
+				GameWindow containingGameWindow = getParent().getParent();
+				UserSeatedPlayer user = containingGameWindow.getUser();
+				player = user;
+				int amount = new BuyinDialog(getClientCore(), user.getCashierContext(), gameState.getTableMemento()
+						.getGameProperty().getBigBlind() * 100, true).open();
+				try {
+					user.sitIn(seatId, amount);
+					// Update the button accordingly with which the user can sit
+					// in and out
+					getParent().getParent().getUserInputComposite().generalActionHolder.setVisible(true);
+					Button sitInOutButton = getParent().getParent().getUserInputComposite().sitInOutButton;
+					sitInOutButton.setText("Sit Out");
+					sitInOutButton.setSelection(true);
+					sitInOutButton.setVisible(true);
+				} catch (RemoteException e) {
+					getClientCore().handleRemoteException(e);
+				} catch (IllegalActionException e) {
+					logger.error("This should not happen", e);
+				}
+			}
+		}
+	}
 	
 	private final static Logger logger = Logger.getLogger(PlayerSeatComposite.class);
 	
@@ -236,30 +276,10 @@ public class PlayerSeatComposite
 			
 		}
 		
-		this.addMouseListener(new MouseAdapter() {
-			
-			/**
-			 * Upon clicking on the PlayerSeatComposite, the user sits in.
-			 * 
-			 * @param evt MouseEvent (ignored)
-			 * @see org.eclipse.swt.events.MouseAdapter#mouseDown(org.eclipse.swt.events.MouseEvent)
-			 */
-			@Override
-			public void mouseDown(MouseEvent evt) {
-				// Check if seat is occupied
-				if (getPlayer() != null) {
-					// If not, we can probably sit in
-					// TODO Buyin, reserve seat in the meantime
-					logger.debug("Clicked on PlayerSeatComposite, sit in if empty ...");
-					GameWindow containingGameWindow = getParent().getParent();
-					
-					player = containingGameWindow.getUser();
-					new BuyinDialog(getClientCore(), containingGameWindow.getUser().getCashierContext(), gameState
-							.getTableMemento().getGameProperty().getBigBlind() * 100);
-					
-				}
-			}
-		});
+		this.addMouseListener(sitInMouseAdapter);
+		for (Control c : getChildren()) {
+			c.addMouseListener(sitInMouseAdapter);
+		}
 	}
 	
 	// @Override
@@ -342,19 +362,14 @@ public class PlayerSeatComposite
 		// Check is necessary because the variable might already be set to a
 		// UserSeatedPlayer
 		if (player == null) {
-			if (detailedPlayer.getId() == getClientCore().getUser().getPlayer().getId()) {
-				UserSeatedPlayer user = getParent().getParent().getUser();
-				user.setPlayer(detailedPlayer);
-				player = user;
-			} else {
-				player = new MutableSeatedPlayer(detailedPlayer, gameState);
-			}
+			UserSeatedPlayer user = getParent().getParent().getUser();
+			player = detailedPlayer.equals(user) ? user : new MutableSeatedPlayer(detailedPlayer, gameState);
 		}
 		playerName.setForeground(Display.getDefault().getSystemColor(SWT.DEFAULT));
 		playerName.setVisible(true);
 		playerName.setText(detailedPlayer.getName());
 		playerStack.setVisible(true);
-		playerStack.setText(ClientGUI.formatBet(player.getStackValue()));
+		playerStack.setText(ClientGUI.formatBet(detailedPlayer.getStackValue()));
 		update();
 	}
 	

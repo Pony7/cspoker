@@ -34,6 +34,7 @@ import org.cspoker.common.api.shared.context.RemoteServerContext;
 import org.cspoker.common.api.shared.context.ServerContext;
 import org.cspoker.common.api.shared.listener.ServerListenerTree;
 import org.cspoker.common.util.Log4JPropertiesLoader;
+import org.eclipse.swt.widgets.Display;
 
 /**
  * The core of the SWT client which manages the windows, the remote
@@ -154,13 +155,18 @@ public class ClientCore
 			lobby.setLobbyContext(this.getCommunication());
 			getGui().setLobby(lobby);
 			lobby.show();
-			lobby.refreshTables();
-		} catch (Exception e) {
-			logger.error(e.toString());
+		} catch (final Exception e) {
+			logger.error("Unexpected error", e);
 			logger.info("Attempting reset");
-			// TODO Kill communication, reset everything
 			resetAll();
-			ClientGUI.displayException(e);
+			// TODO Kill communication, reset everything
+			
+			Display.getDefault().asyncExec(new Runnable() {
+				
+				public void run() {
+					ClientGUI.displayException(e);
+				}
+			});
 			// and then start anew
 			run();
 		}
@@ -172,12 +178,13 @@ public class ClientCore
 	 */
 	public void resetAll() {
 		for (GameWindow w : getGui().getGameWindows()) {
-			w.dispose();
+			if (!w.isDisposed())
+				w.dispose();
 		}
-		LobbyWindow lobby = getGui().getLobby();
-		if (lobby != null) {
-			lobby.dispose();
-		}
+		getGui().getGameWindows().clear();
+		if (!gui.getLobby().getShell().isDisposed())
+			gui.getLobby().getShell().dispose();
+		getUser().setLoggedIn(false);
 		// TODO replace or ignore?
 		// communication.trigger();
 	}

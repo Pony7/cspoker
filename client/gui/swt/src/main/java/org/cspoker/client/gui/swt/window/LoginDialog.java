@@ -73,7 +73,7 @@ public class LoginDialog
 		getParent().layout();
 		getParent().pack();
 		getParent().open();
-		Display display = Display.getCurrent();
+		Display display = clientCore.getGui().getDisplay();
 		while (!getParent().isDisposed()) {
 			if (!display.readAndDispatch())
 				display.sleep();
@@ -181,18 +181,14 @@ public class LoginDialog
 						RemoteCSPokerServer server = new RemoteRMIServer(ClientCore.DEFAULT_URL,
 								ClientCore.DEFAULT_PORT_RMI);
 						result = clientCore.login(server);
-						// } catch (RemoteException e) {
-						// clientCore.handleRemoteException(e);
-						// } catch (NotBoundException e) {
-						// logger.error("Could not find Remote server object in RMI registry",
-						// e);
+						assert (result != null) : "No exception thrown but still no Server Context?!";
+						getParent().close();
 					} catch (LoginException e) {
 						ClientGUI.displayException(e);
 					}
 					// Make sure we do have a RemoteServerContext before exiting
 					// the LoginDialog
-					assert (result != null) : "No exception thrown but still no Server Context?!";
-					getParent().close();
+					
 				}
 			});
 		}
