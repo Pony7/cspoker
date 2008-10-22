@@ -16,8 +16,8 @@
 package org.cspoker.client.gui.swt.control;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Vector;
 
@@ -44,7 +44,6 @@ public class SWTResourceManager {
 	
 	private static HashMap<String, Resource> resources = new HashMap<String, Resource>();
 	private static Vector<Widget> users = new Vector<Widget>();
-	private static SWTResourceManager instance = new SWTResourceManager();
 	private static DisposeListener disposeListener = new DisposeListener() {
 		
 		public void widgetDisposed(DisposeEvent e) {
@@ -76,7 +75,8 @@ public class SWTResourceManager {
 	 */
 	public static void dispose() {
 		for (Resource r : resources.values()) {
-			r.dispose();
+			if (r != null && !r.isDisposed())
+				r.dispose();
 		}
 		resources.clear();
 	}
@@ -96,9 +96,9 @@ public class SWTResourceManager {
 				Object lf = FontData.class.getField("data").get(fd);
 				if (lf != null && lfCls != null) {
 					if (strikeout)
-						lfCls.getField("lfStrikeOut").set(lf, new Byte((byte) 1));
+						lfCls.getField("lfStrikeOut").set(lf, Byte.valueOf((byte) 1));
 					if (underline)
-						lfCls.getField("lfUnderline").set(lf, new Byte((byte) 1));
+						lfCls.getField("lfUnderline").set(lf, Byte.valueOf((byte) 1));
 				}
 			} catch (Throwable e) {
 				System.err.println("Unable to set underline or strikeout" + " (probably on a non-Windows platform). "
@@ -145,21 +145,16 @@ public class SWTResourceManager {
 		try {
 			if (resources.containsKey(file.toString()))
 				return (Image) resources.get(file.toString());
-			
-			return new Image(Display.getDefault(), getAsResourceStream(file));
+			Image img = new Image(Display.getDefault(), new FileInputStream(file.getAbsoluteFile()));
+			if (!file.isDirectory()) {
+				resources.put(file.toString(), img);
+			}
+			return img;
 		} catch (Exception e) {
-			logger.error("SWTResourceManager.getImage: Error getting image " + file + ", " + e);
+			logger.error("SWTResourceManager.getImage: Error getting image", e);
 			return null;
 		}
 		
-	}
-	
-	/**
-	 * Helper method using Context classloader since FileInputStream(file) is
-	 * not reliable ...
-	 */
-	private static InputStream getAsResourceStream(File file) {
-		return Thread.currentThread().getContextClassLoader().getResourceAsStream(file.toString());
 	}
 	
 	/**
@@ -232,8 +227,8 @@ public class SWTResourceManager {
 			return chipImg;
 		if (resources.containsKey(chip.getImageFile(size).toString()))
 			return (Image) resources.get(chip.getImageFile(size).toString());
-		Image img = new Image(Display.getDefault(), getAsResourceStream(chip.getImageFile(size)));
-		Image mask = new Image(Display.getDefault(), getAsResourceStream(chip.getMaskImageFile(size)));
+		Image img = new Image(Display.getDefault(), new FileInputStream(chip.getImageFile(size).getAbsoluteFile()));
+		Image mask = new Image(Display.getDefault(), new FileInputStream(chip.getMaskImageFile(size).getAbsoluteFile()));
 		
 		Image icon = new Image(Display.getDefault(), img.getImageData(), mask.getImageData());
 		img.dispose();

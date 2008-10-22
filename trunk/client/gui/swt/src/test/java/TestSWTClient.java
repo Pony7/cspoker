@@ -10,8 +10,6 @@
  * 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-import java.rmi.NotBoundException;
-import java.rmi.RemoteException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -21,6 +19,7 @@ import junit.framework.TestCase;
 
 import org.cspoker.client.User;
 import org.cspoker.client.gui.swt.control.ClientCore;
+import org.cspoker.client.gui.swt.window.LobbyWindow;
 import org.cspoker.client.rmi.RemoteRMIServer;
 import org.cspoker.common.RemoteCSPokerServer;
 import org.eclipse.swt.widgets.Display;
@@ -34,6 +33,7 @@ public class TestSWTClient
 	
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see junit.framework.TestCase#setUp()
 	 */
 	@Override
@@ -44,6 +44,7 @@ public class TestSWTClient
 	
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see junit.framework.TestCase#tearDown()
 	 */
 	@Override
@@ -53,16 +54,8 @@ public class TestSWTClient
 	}
 	
 	public void testLogin() {
-		RemoteCSPokerServer s = null;
-		try {
-			s = new RemoteRMIServer(ClientCore.DEFAULT_URL);
-		} catch (RemoteException e1) {
-			e1.printStackTrace();
-		} catch (NotBoundException e1) {
-			e1.printStackTrace();
-		}
-		final RemoteCSPokerServer server = s;
-		client1 = new ClientCore(new User("stephan", "test"));
+		final RemoteCSPokerServer server = new RemoteRMIServer(ClientCore.DEFAULT_URL, ClientCore.DEFAULT_PORT_RMI);
+		client1 = new ClientCore(new User("Stephan", "test"));
 		client2 = new ClientCore(new User("dummy", "test"));
 		Display.getDefault().syncExec(new Runnable() {
 			
@@ -76,7 +69,10 @@ public class TestSWTClient
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
-						client1.getGui().getLobby().show();
+						LobbyWindow lobby = new LobbyWindow(client1);
+						lobby.setLobbyContext(client1.getCommunication());
+						client1.getGui().setLobby(lobby);
+						lobby.show();
 					}
 				});
 				try {
@@ -84,7 +80,10 @@ public class TestSWTClient
 				} catch (LoginException e) {
 					e.printStackTrace();
 				}
-				client2.getGui().getLobby().show();
+				LobbyWindow lobby = new LobbyWindow(client2);
+				lobby.setLobbyContext(client2.getCommunication());
+				client2.getGui().setLobby(lobby);
+				lobby.show();
 			}
 		});
 		synchronized (this) {

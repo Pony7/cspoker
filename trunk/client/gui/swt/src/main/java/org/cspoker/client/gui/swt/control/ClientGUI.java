@@ -14,15 +14,13 @@ package org.cspoker.client.gui.swt.control;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.rmi.RemoteException;
 import java.text.NumberFormat;
 import java.util.Collection;
 import java.util.Hashtable;
 
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-import javax.sound.sampled.DataLine;
+import javax.sound.sampled.*;
 
 import org.apache.log4j.Logger;
 import org.cspoker.client.gui.swt.window.GameWindow;
@@ -54,7 +52,7 @@ public class ClientGUI {
 		
 		public static final boolean ADDITIONAL_RESOURCES = false;
 		
-		private static final File IMAGE_DIR = new File("images");
+		private static final File IMAGE_DIR = new File("target/classes/images");
 		
 		/** Icon to be used for Shell images */
 		public static final File CS_POKER_ICON = new File(Resources.IMAGE_DIR, "csicon.png");
@@ -75,7 +73,7 @@ public class ClientGUI {
 		 * Chip resource currently in use (that's where the images are retrieved
 		 * from during play)
 		 */
-		public static File ACTIVE_CHIP_DIR = FREE_CHIP_IMAGE_FILE;
+		static File ACTIVE_CHIP_DIR = FREE_CHIP_IMAGE_FILE;
 		
 		private final static File THEMES_IMG_DIR = new File(Resources.IMAGE_DIR, "themes");
 		private final static File CARDS_IMG_DIR = new File(Resources.IMAGE_DIR, "cards");
@@ -90,15 +88,15 @@ public class ClientGUI {
 		public static final File FOUR_COLOR_DECK_IMG_FILE = new File(CARDS_IMG_DIR, "Deck_Free_2.png");
 		/**
 		 * Card image resource currently in use (that's where the images are
-		 * retrieved from during play). Initialized to use free PokerStars-style
-		 * cards
+		 * retrieved from during play). Initialized to use free Four color
+		 * deck-style cards
 		 */
-		public static File ACTIVE_DECK_IMG_FILE = FOUR_COLOR_DECK_IMG_FILE;
+		static File ACTIVE_DECK_IMG_FILE = FOUR_COLOR_DECK_IMG_FILE;
 		
 		/** Default table background image */
-		public static File TABLE_IMAGE = new File(THEMES_IMG_DIR, "Free_Simple_Table_Background.jpg");
+		public static final File TABLE_IMAGE = new File(THEMES_IMG_DIR, "Free_Simple_Table_Background.jpg");
 		
-		private static final File SOUND_DIR = new File("Snd");
+		private static final File SOUND_DIR = new File("target/classes/Snd");
 		/** Plays a <i>Check</i> sound */
 		public static final File SOUND_FILE_CHECK = new File(SOUND_DIR, "snd4.wav");
 		/** Plays a <i>Fold</i> sound */
@@ -284,14 +282,32 @@ public class ClientGUI {
 	 * @param file Plays the given audio file
 	 */
 	public static void playAudio(File file) {
+		AudioInputStream stream = null;
+		Clip clip = null;
 		try {
-			AudioInputStream stream = AudioSystem.getAudioInputStream((new FileInputStream(file)));
+			stream = AudioSystem.getAudioInputStream((new FileInputStream(file)));
 			DataLine.Info info = new DataLine.Info(Clip.class, stream.getFormat());
-			Clip clip = (Clip) AudioSystem.getLine(info);
+			clip = (Clip) AudioSystem.getLine(info);
 			clip.open(stream);
 			clip.start();
+			clip.addLineListener(new LineListener() {
+				
+				@Override
+				public void update(LineEvent event) {
+					if (event.getType() == LineEvent.Type.STOP)
+						event.getLine().close();
+				}
+			});
 		} catch (Exception e) {
 			logger.warn("Could not play sound", e);
+		} finally {
+			if (stream != null) {
+				try {
+					stream.close();
+				} catch (IOException ignored) {
+					// Do nothing
+				}
+			}
 		}
 		
 	}

@@ -56,29 +56,34 @@ public class PlayerSeatComposite
 		@Override
 		public void mouseDown(MouseEvent evt) {
 			// Check if seat is occupied
-			if (getPlayer() == null) {
-				// If not, we can probably sit in
-				// TODO Buyin, reserve seat in the meantime
-				logger.debug("Clicked on PlayerSeatComposite, sit in if empty ...");
-				GameWindow containingGameWindow = getParent().getParent();
-				UserSeatedPlayer user = containingGameWindow.getUser();
-				player = user;
-				int amount = new BuyinDialog(getClientCore(), user.getCashierContext(), gameState.getTableMemento()
-						.getGameProperty().getBigBlind() * 100, true).open();
-				try {
-					user.sitIn(seatId, amount);
-					// Update the button accordingly with which the user can sit
-					// in and out
-					getParent().getParent().getUserInputComposite().generalActionHolder.setVisible(true);
-					Button sitInOutButton = getParent().getParent().getUserInputComposite().sitInOutButton;
-					sitInOutButton.setText("Sit Out");
-					sitInOutButton.setSelection(true);
-					sitInOutButton.setVisible(true);
-				} catch (RemoteException e) {
-					getClientCore().handleRemoteException(e);
-				} catch (IllegalActionException e) {
-					logger.error("This should not happen", e);
-				}
+			if (getPlayer() != null) {
+				return;
+			}
+			// If not, we can probably sit in
+			// TODO Buyin, reserve seat in the meantime
+			logger.debug("Clicked on PlayerSeatComposite, sit in if empty ...");
+			GameWindow containingGameWindow = getParent().getParent();
+			UserSeatedPlayer user = containingGameWindow.getUser();
+			if (user.isSittingIn()) {
+				// Dont do anything if the user is already sitting in
+				return;
+			}
+			player = user;
+			int amount = new BuyinDialog(getClientCore(), user.getCashierContext(), gameState.getTableMemento()
+					.getGameProperty().getBigBlind() * 100, true).open();
+			try {
+				user.sitIn(seatId, amount);
+				// Update the button accordingly with which the user can sit
+				// in and out
+				getParent().getParent().getUserInputComposite().generalActionHolder.setVisible(true);
+				Button sitInOutButton = getParent().getParent().getUserInputComposite().sitInOutButton;
+				sitInOutButton.setText("Sit Out");
+				sitInOutButton.setSelection(true);
+				sitInOutButton.setVisible(true);
+			} catch (RemoteException e) {
+				getClientCore().handleRemoteException(e);
+			} catch (IllegalActionException e) {
+				logger.error("This should not happen", e);
 			}
 		}
 	}
@@ -197,9 +202,9 @@ public class PlayerSeatComposite
 			case 1:
 				return new Rectangle(x, y + getBounds().height, getBounds().width, communityCardsLocation.y - y
 						- getBounds().height);
-				// Attention: Seat id 3 is on the left, 2 on the right (clock
+				// Attention: Seat id 5 is on the left, 2 on the right (clock
 				// wise seat ids)
-			case 3:
+			case 5:
 				return new Rectangle(x + getBounds().width, communityCardsLocation.y, communityCardsLocation.x - x
 						+ getBounds().width, communityCardsLocation.height);
 				
@@ -207,7 +212,7 @@ public class PlayerSeatComposite
 				return new Rectangle(communityCardsLocation.x + communityCardsLocation.width, communityCardsLocation.y,
 						x - communityCardsLocation.x - communityCardsLocation.width, communityCardsLocation.height);
 			case 4:
-			case 5:
+			case 3:
 				return new Rectangle(x, communityCardsLocation.y + communityCardsLocation.height, getBounds().width, y
 						- communityCardsLocation.y - communityCardsLocation.height);
 			default:
@@ -363,7 +368,8 @@ public class PlayerSeatComposite
 		// UserSeatedPlayer
 		if (player == null) {
 			UserSeatedPlayer user = getParent().getParent().getUser();
-			player = detailedPlayer.equals(user) ? user : new MutableSeatedPlayer(detailedPlayer, gameState);
+			player = detailedPlayer.equals(user.getMemento()) ? user : new MutableSeatedPlayer(detailedPlayer,
+					gameState);
 		}
 		playerName.setForeground(Display.getDefault().getSystemColor(SWT.DEFAULT));
 		playerName.setVisible(true);

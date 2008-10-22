@@ -63,7 +63,8 @@ public class Player
 	}
 	
 	/**
-	 * Compares on the id
+	 * Compares on the name (not on the id!) The name should be unique across
+	 * the server
 	 * 
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
@@ -71,7 +72,7 @@ public class Player
 	public boolean equals(Object obj) {
 		if (!(obj instanceof Player))
 			return false;
-		return ((Player) obj).getId() == getId();
+		return ((Player) obj).getName().equalsIgnoreCase(getName());
 	}
 	
 	/**

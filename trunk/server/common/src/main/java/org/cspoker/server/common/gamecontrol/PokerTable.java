@@ -1,17 +1,17 @@
 /**
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
+ * 
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+ * Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
 package org.cspoker.server.common.gamecontrol;
@@ -19,32 +19,11 @@ package org.cspoker.server.common.gamecontrol;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 import org.apache.log4j.Logger;
 import org.cspoker.common.api.lobby.holdemtable.context.HoldemTableContext;
-import org.cspoker.common.api.lobby.holdemtable.event.AllInEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.BetEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.BigBlindEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.CallEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.CheckEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.FoldEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.JoinTableEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.LeaveTableEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.NewCommunityCardsEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.NewDealEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.NewRoundEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.NextPlayerEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.RaiseEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.ShowHandEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.SitInEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.SitOutEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.SmallBlindEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.WinnerEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.*;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.HoldemPlayerContext;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.event.NewPocketCardsEvent;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.listener.HoldemPlayerListener;
@@ -73,8 +52,8 @@ import org.cspoker.server.common.util.threading.ScheduledRequestExecutor;
  * 
  */
 public class PokerTable {
-
-	private final static ChatServer chatServer=ChatServer.getInstance();
+	
+	private final static ChatServer chatServer = ChatServer.getInstance();
 	
 	private TableChatRoom chatRoom;
 	
@@ -98,13 +77,13 @@ public class PokerTable {
 	 * Constructor
 	 **************************************************************************/
 	
-	public PokerTable(TableId id, String name, TableConfiguration configuration, ExtendedAccountContext creator){
+	public PokerTable(TableId id, String name, TableConfiguration configuration, ExtendedAccountContext creator) {
 		
-		if(id==null)
+		if (id == null)
 			throw new IllegalArgumentException("The given table id is not effective.");
-		if(creator==null)
+		if (creator == null)
 			throw new IllegalArgumentException("The given creator is not effective.");
-		if(configuration==null)
+		if (configuration == null)
 			throw new IllegalArgumentException("The given configuration is not effective.");
 		
 		tableId = id;
@@ -113,13 +92,13 @@ public class PokerTable {
 		tableState = new WaitingTableState(this);
 		this.creator = creator;
 		
-		this.chatRoom=chatServer.addTableChatRoom(this);
+		this.chatRoom = chatServer.addTableChatRoom(this);
 	}
 	
 	/***************************************************************************
 	 * Name
 	 **************************************************************************/
-
+	
 	/**
 	 * Return the name of this table.
 	 * 
@@ -127,12 +106,11 @@ public class PokerTable {
 	public String getName() {
 		return name;
 	}
-
+	
 	/**
 	 * Check whether tables can have the given name as their name.
 	 * 
-	 * @param name
-	 *            The name to check.
+	 * @param name The name to check.
 	 * @return The given name should be effective | name!=null
 	 * @return The given name should be at least one character long. |
 	 *         name!=null && name.length()>0
@@ -143,12 +121,11 @@ public class PokerTable {
 		}
 		return name.length() > 0;
 	}
-
+	
 	/**
 	 * Set the name of this table to the given name.
 	 * 
-	 * @param name
-	 *            The new name for this table.
+	 * @param name The new name for this table.
 	 * @post If the given name is a valid name for this table the name of this
 	 *       table is set to the given name, else the default name is used. |
 	 *       if(canHaveAsName(name)) | then new.getName().equals(name) | else
@@ -161,12 +138,11 @@ public class PokerTable {
 			this.name = name;
 		}
 	}
-
+	
 	/**
 	 * Change the name of this table to the given name.
 	 * 
-	 * @param name
-	 *            The new name for this table.
+	 * @param name The new name for this table.
 	 * @post If the given name is a valid name for this table the name of this
 	 *       table is set to the given name, else the previous name is kept. |
 	 *       if(canHaveAsName(name)) | then new.getName().equals(name) | else
@@ -177,11 +153,11 @@ public class PokerTable {
 			setName(name);
 		}
 	}
-
+	
 	protected String getDefaultName() {
 		return "default table";
 	}
-
+	
 	/**
 	 * Returns the table id of this table.
 	 * 
@@ -196,12 +172,13 @@ public class PokerTable {
 	 * 
 	 * @return A short description for this table: #id and name.
 	 */
-	public Table getShortTableInformation(){
+	public Table getShortTableInformation() {
 		return new Table(getTableId().getId(), getName());
 	}
 	
-	public DetailedHoldemTable getTableInformation(){
-		return new DetailedHoldemTable(getTableId().getId(), getName(), tableState.getSeatedPlayers(), tableState.isPlaying(), configuration);
+	public DetailedHoldemTable getTableInformation() {
+		return new DetailedHoldemTable(getTableId().getId(), getName(), tableState.getSeatedPlayers(), tableState
+				.isPlaying(), configuration);
 	}
 	
 	/**
@@ -209,221 +186,228 @@ public class PokerTable {
 	 * 
 	 * @return The table configuration of this table.
 	 */
-	public TableConfiguration getTableConfiguration(){
+	public TableConfiguration getTableConfiguration() {
 		return configuration;
 	}
 	
-	
-	public boolean isEmpty(){
-		return false; //TODO
+	public boolean isEmpty() {
+		return false; // TODO
 	}
 	
-	public synchronized boolean terminate(){
-		//TODO unsubscribe all if can terminate (check if isEmpty())
+	public synchronized boolean terminate() {
+		// TODO unsubscribe all if can terminate (check if isEmpty())
 		return true;
 	}
 	
-	public synchronized void startGame(ExtendedAccountContext accountContext) throws IllegalActionException{
-		if(!creator.equals(accountContext))
+	public synchronized void startGame(ExtendedAccountContext accountContext)
+			throws IllegalActionException {
+		if (!creator.equals(accountContext))
 			throw new IllegalActionException("Only the creator of the table can start a game.");
-		if(tableState.isPlaying())
+		if (tableState.isPlaying())
 			throw new IllegalActionException("The game has already started.");
 		tableState = tableState.getNextState();
 	}
-
+	
 	/***************************************************************************
 	 * Player Actions
 	 **************************************************************************/
-
+	
 	/**
 	 * The given player goes all-in.
 	 * 
-	 * @param player
-	 *            The player who goes all-in.
-	 * @throws IllegalActionException
-	 *             [must] It's not the turn of the given player.
-	 * @throws IllegalActionException
-	 *             [must] The action performed is not a valid action.
+	 * @param player The player who goes all-in.
+	 * @throws IllegalActionException [must] It's not the turn of the given
+	 *             player.
+	 * @throws IllegalActionException [must] The action performed is not a valid
+	 *             action.
 	 */
-	public void allIn(GameSeatedPlayer player) throws IllegalActionException {
+	public void allIn(GameSeatedPlayer player)
+			throws IllegalActionException {
 		tableState.allIn(player);
 		cancelOldTimeOut();
 	}
-
+	
 	/**
 	 * The player puts money in the pot.
 	 * 
-	 * @param player
-	 *            The player who puts a bet.
-	 * @param amount
-	 *            The amount of the bet.
-	 * @throws IllegalActionException
-	 *             [must] It's not the turn of the given player.
-	 * @throws IllegalActionException
-	 *             [must] The action performed is not a valid action.
+	 * @param player The player who puts a bet.
+	 * @param amount The amount of the bet.
+	 * @throws IllegalActionException [must] It's not the turn of the given
+	 *             player.
+	 * @throws IllegalActionException [must] The action performed is not a valid
+	 *             action.
 	 */
-	public void bet(GameSeatedPlayer player, int amount) throws IllegalActionException {
+	public void bet(GameSeatedPlayer player, int amount)
+			throws IllegalActionException {
 		tableState.bet(player, amount);
 		cancelOldTimeOut();
 	}
-
+	
 	/**
 	 * To put into the pot an amount of money equal to the most recent bet or
 	 * raise.
 	 * 
-	 * @param player
-	 *            The player who calls.
-	 * @throws IllegalActionException
-	 *             [must] It's not the turn of the given player.
-	 * @throws IllegalActionException
-	 *             [must] The action performed is not a valid action.
+	 * @param player The player who calls.
+	 * @throws IllegalActionException [must] It's not the turn of the given
+	 *             player.
+	 * @throws IllegalActionException [must] The action performed is not a valid
+	 *             action.
 	 */
-	public void call(GameSeatedPlayer player) throws IllegalActionException {
+	public void call(GameSeatedPlayer player)
+			throws IllegalActionException {
 		tableState.call(player);
 		cancelOldTimeOut();
 	}
-
+	
 	/**
 	 * If there is no bet on the table and you do not wish to place a bet. You
 	 * may only check when there are no prior bets.
 	 * 
-	 * @param player
-	 *            The player who checks.
-	 * @throws IllegalActionException
-	 *             [must] It's not the turn of the given player.
-	 * @throws IllegalActionException
-	 *             [must] The action performed is not a valid action.
+	 * @param player The player who checks.
+	 * @throws IllegalActionException [must] It's not the turn of the given
+	 *             player.
+	 * @throws IllegalActionException [must] The action performed is not a valid
+	 *             action.
 	 */
-	public void check(GameSeatedPlayer player) throws IllegalActionException {
+	public void check(GameSeatedPlayer player)
+			throws IllegalActionException {
 		tableState.check(player);
 		cancelOldTimeOut();
 	}
-
+	
 	/**
 	 * The given player folds the cards.
 	 * 
 	 * The player will not be able to take any actions in the coming rounds of
 	 * the current deal.
 	 * 
-	 * @param player
-	 *            The player who folds.
-	 * @throws IllegalActionException
-	 *             [must] It's not the turn of the given player.
-	 * @throws IllegalActionException
-	 *             [must] The action performed is not a valid action.
+	 * @param player The player who folds.
+	 * @throws IllegalActionException [must] It's not the turn of the given
+	 *             player.
+	 * @throws IllegalActionException [must] The action performed is not a valid
+	 *             action.
 	 */
-	public void fold(GameSeatedPlayer player) throws IllegalActionException {
+	public void fold(GameSeatedPlayer player)
+			throws IllegalActionException {
 		tableState.fold(player);
 		cancelOldTimeOut();
 	}
-
+	
 	/**
 	 * Raise the bet with given amount.
 	 * 
-	 * @param player
-	 *            The player who raises the current bet.
-	 * @param amount
-	 *            The amount with which to raise the bet.
-	 * @throws IllegalActionException
-	 *             [must] It's not the turn of the given player.
-	 * @throws IllegalActionException
-	 *             [must] The action performed is not a valid action.
+	 * @param player The player who raises the current bet.
+	 * @param amount The amount with which to raise the bet.
+	 * @throws IllegalActionException [must] It's not the turn of the given
+	 *             player.
+	 * @throws IllegalActionException [must] The action performed is not a valid
+	 *             action.
 	 */
 	public void raise(GameSeatedPlayer player, int amount)
 			throws IllegalActionException {
 		tableState.raise(player, amount);
 		cancelOldTimeOut();
 	}
-
-	public HoldemTableContext joinTable(ServerPlayer player, HoldemTableListener holdemTableListener) throws IllegalActionException {
-		if(player==null)
+	
+	public HoldemTableContext joinTable(ServerPlayer player, HoldemTableListener holdemTableListener)
+			throws IllegalActionException {
+		if (player == null)
 			throw new IllegalArgumentException("The given player should be effective.");
-		if(holdemTableListener==null)
+		if (holdemTableListener == null)
 			throw new IllegalArgumentException("The given holdem table listener should be effective.");
 		
-		if(joinedPlayers.putIfAbsent(player.getId(), holdemTableListener)!=null)
-			throw new IllegalActionException(player.toString()+" is already joined at this table.");
+		if (joinedPlayers.putIfAbsent(player.getId(), holdemTableListener) != null)
+			throw new IllegalActionException(player.toString() + " is already joined at this table.");
 		
 		publishJoinTableEvent(new JoinTableEvent(player.getMemento()));
 		subscribeHoldemTableListener(holdemTableListener);
 		return new HoldemTableContextImpl(player, this);
 	}
 	
-	public boolean hasAsJoinedPlayer(ServerPlayer player){
-		return player==null?false:hasAsJoinedPlayer(player.getId());
+	public boolean hasAsJoinedPlayer(ServerPlayer player) {
+		return player == null ? false : hasAsJoinedPlayer(player.getId());
 	}
-	public boolean hasAsJoinedPlayer(PlayerId id){
-		return id==null?false:joinedPlayers.containsKey(id);
+	
+	public boolean hasAsJoinedPlayer(PlayerId id) {
+		return id == null ? false : joinedPlayers.containsKey(id);
 	}
 	
 	public void leaveTable(ServerPlayer player) {
-		if(player==null)
+		if (player == null)
 			throw new IllegalArgumentException("The given player should be effective.");
 		HoldemTableListener listener = joinedPlayers.remove(player.getId());
-		if(listener!=null)
+		if (listener != null)
 			unsubscribeHoldemTableListener(listener);
 	}
 	
-	public HoldemPlayerContext sitIn(SeatId seatId, int buyIn, ServerPlayer player, HoldemPlayerListener holdemPlayerListener) throws IllegalActionException{
+	public HoldemPlayerContext sitIn(SeatId seatId, int buyIn, ServerPlayer player,
+			HoldemPlayerListener holdemPlayerListener)
+			throws IllegalActionException {
 		try {
-			HoldemPlayerContext toReturn = tableState.sitIn(seatId, new GameSeatedPlayer(player, buyIn));
-			sitInPlayers.put(player.getId(), holdemPlayerListener);
-			subscribeHoldemPlayerListener(player.getId(), holdemPlayerListener);
-			return toReturn;
+			if (sitInPlayers.size() > 0) {
+				tableState = tableState.getNextState();
+				HoldemPlayerContext toReturn = tableState.sitIn(seatId, new GameSeatedPlayer(player, buyIn));
+				subscribeHoldemPlayerListener(player.getId(), holdemPlayerListener);
+				tableState.deal(tableState.getGame().getDealer());
+				return toReturn;
+			} else {
+				sitInPlayers.put(player.getId(), holdemPlayerListener);
+				HoldemPlayerContext toReturn = tableState.sitIn(seatId, new GameSeatedPlayer(player, buyIn));
+				subscribeHoldemPlayerListener(player.getId(), holdemPlayerListener);
+				return toReturn;
+			}
+			
 		} catch (IllegalValueException e) {
-			throw new IllegalActionException("You can not sit in to this table with the given buy-in of "+buyIn+"chips.");
+			throw new IllegalActionException("You can not sit in to this table with the given buy-in of " + buyIn
+					+ "chips.");
 		}
-
-		//TODO (only if joined)
+		
+		// TODO (only if joined)
 	}
 	
-	public void sitOut(GameSeatedPlayer player){
+	public void sitOut(GameSeatedPlayer player) {
 		tableState.sitOut(player);
 		unsubscribeHoldemPlayerListener(player.getId(), sitInPlayers.get(player.getId()));
 		sitInPlayers.remove(player.getId());
 	}
 	
-	public boolean isPlaying(){
+	public boolean isPlaying() {
 		return tableState.isPlaying();
 	}
-	
-	
 	
 	/***************************************************************************
 	 * Holdem Table Events
 	 **************************************************************************/
-
+	
 	/**
-	 * This list contains all holdem table listeners that should be alerted on a new event.
+	 * This list contains all holdem table listeners that should be alerted on a
+	 * new event.
 	 */
 	private List<HoldemTableListener> holdemTableListeners = new CopyOnWriteArrayList<HoldemTableListener>();
 	
 	/**
 	 * Subscribe the given holdem table listener for holdem table events.
 	 * 
-	 * @param listener
-	 *        The listener to subscribe.
+	 * @param listener The listener to subscribe.
 	 */
-	public void subscribeHoldemTableListener(HoldemTableListener listener){
+	public void subscribeHoldemTableListener(HoldemTableListener listener) {
 		holdemTableListeners.add(listener);
 	}
 	
 	/**
 	 * Unsubscribe the given holdem table listener for holdem table events.
 	 * 
-	 * @param listener
-	 *        The listener to unsubscribe.
+	 * @param listener The listener to unsubscribe.
 	 */
-	public void unsubscribeHoldemTableListener(HoldemTableListener listener){
+	public void unsubscribeHoldemTableListener(HoldemTableListener listener) {
 		holdemTableListeners.remove(listener);
 	}
-
-
+	
 	/**
 	 * Inform all subscribed holdem table listeners a fold event has occurred.
 	 * 
-	 * Each subscribed holdem table listener is updated by calling their onFold()
-	 * method.
+	 * Each subscribed holdem table listener is updated by calling their
+	 * onFold() method.
 	 * 
 	 */
 	public synchronized void publishFoldEvent(FoldEvent event) {
@@ -431,12 +415,12 @@ public class PokerTable {
 			listener.onFold(event);
 		}
 	}
-
+	
 	/**
 	 * Inform all subscribed holdem table listeners a raise event has occurred.
 	 * 
-	 * Each subscribed holdem table listener is updated by calling their onRaise()
-	 * method.
+	 * Each subscribed holdem table listener is updated by calling their
+	 * onRaise() method.
 	 * 
 	 */
 	public synchronized void publishRaiseEvent(RaiseEvent event) {
@@ -444,12 +428,12 @@ public class PokerTable {
 			listener.onRaise(event);
 		}
 	}
-
+	
 	/**
 	 * Inform all subscribed holdem table listeners a check event has occurred.
 	 * 
-	 * Each subscribed holdem table listener is updated by calling their onCheck()
-	 * method.
+	 * Each subscribed holdem table listener is updated by calling their
+	 * onCheck() method.
 	 * 
 	 */
 	public synchronized void publishCheckEvent(CheckEvent event) {
@@ -457,12 +441,12 @@ public class PokerTable {
 			listener.onCheck(event);
 		}
 	}
-
+	
 	/**
 	 * Inform all subscribed holdem table listeners a call event has occurred.
 	 * 
-	 * Each subscribed holdem table listener is updated by calling their onCall()
-	 * method.
+	 * Each subscribed holdem table listener is updated by calling their
+	 * onCall() method.
 	 * 
 	 */
 	public synchronized void publishCallEvent(CallEvent event) {
@@ -470,7 +454,7 @@ public class PokerTable {
 			listener.onCall(event);
 		}
 	}
-
+	
 	/**
 	 * Inform all subscribed holdem table listeners a bet event has occurred.
 	 * 
@@ -496,8 +480,7 @@ public class PokerTable {
 			listener.onAllIn(event);
 		}
 	}
-
-
+	
 	/**
 	 * Inform all subscribed small blind listeners a small blind event has
 	 * occurred.
@@ -511,7 +494,7 @@ public class PokerTable {
 			listener.onSmallBlind(event);
 		}
 	}
-
+	
 	/**
 	 * Inform all subscribed big blind listeners a big blind event has occurred.
 	 * 
@@ -524,7 +507,7 @@ public class PokerTable {
 			listener.onBigBlind(event);
 		}
 	}
-
+	
 	/**
 	 * Inform all subscribed new round listeners a new round event has occurred.
 	 * 
@@ -540,8 +523,7 @@ public class PokerTable {
 			listener.onNewRound(event);
 		}
 	}
-
-
+	
 	/**
 	 * Inform all subscribed new common cards listeners a new common cards event
 	 * has occurred.
@@ -550,8 +532,7 @@ public class PokerTable {
 	 * onNewCommonCardsEvent() method.
 	 * 
 	 */
-	public synchronized void publishNewCommonCardsEvent(
-			NewCommunityCardsEvent event) {
+	public synchronized void publishNewCommonCardsEvent(NewCommunityCardsEvent event) {
 		for (HoldemTableListener listener : holdemTableListeners) {
 			listener.onNewCommunityCards(event);
 		}
@@ -569,8 +550,7 @@ public class PokerTable {
 			listener.onNewDeal(event);
 		}
 	}
-
-
+	
 	/**
 	 * Inform all subscribed next player listeners a next player event has
 	 * occurred.
@@ -586,8 +566,7 @@ public class PokerTable {
 			listener.onNextPlayer(event);
 		}
 	}
-
-
+	
 	/**
 	 * Inform all subscribed winner listeners a winner event has occurred.
 	 * 
@@ -600,8 +579,7 @@ public class PokerTable {
 			listener.onWinner(event);
 		}
 	}
-
-
+	
 	/**
 	 * Inform all subscribed show hand listeners a show hand event has occurred.
 	 * 
@@ -614,8 +592,7 @@ public class PokerTable {
 			listener.onShowHand(event);
 		}
 	}
-
-
+	
 	/**
 	 * Inform all subscribed player joined game listeners a player joined game
 	 * event has occurred.
@@ -629,8 +606,7 @@ public class PokerTable {
 			listener.onJoinTable(event);
 		}
 	}
-
-
+	
 	/**
 	 * Inform all subscribed player left table listeners a player left table
 	 * event has occurred.
@@ -645,24 +621,22 @@ public class PokerTable {
 		}
 	}
 	
-	public void publishSitInEvent(SitInEvent event){
+	public void publishSitInEvent(SitInEvent event) {
 		for (HoldemTableListener listener : holdemTableListeners) {
 			listener.onSitIn(event);
 		}
 	}
 	
-	public void publishSitOutEvent(SitOutEvent event){
+	public void publishSitOutEvent(SitOutEvent event) {
 		for (HoldemTableListener listener : holdemTableListeners) {
 			listener.onSitOut(event);
 		}
 	}
-
 	
 	/***************************************************************************
 	 * Holdem Player Events
 	 **************************************************************************/
 	
-
 	/**
 	 * Inform all subscribed new private cards listeners a new private cards
 	 * event event has occurred.
@@ -671,8 +645,7 @@ public class PokerTable {
 	 * onNewPrivateCards() method.
 	 * 
 	 */
-	public synchronized void publishNewPocketCardsEvent(PlayerId id,
-			NewPocketCardsEvent event) {
+	public synchronized void publishNewPocketCardsEvent(PlayerId id, NewPocketCardsEvent event) {
 		List<HoldemPlayerListener> listeners = holdemPlayerListeners.get(id);
 		if (listeners != null) {
 			for (HoldemPlayerListener listener : listeners) {
@@ -680,15 +653,13 @@ public class PokerTable {
 			}
 		}
 	}
-
+	
 	/**
 	 * Subscribe the given new private cards listener for new private cards
 	 * events.
 	 * 
-	 * @param id
-	 *            The id of the player to get the new private cards events from.
-	 * @param listener
-	 *            The listener to subscribe.
+	 * @param id The id of the player to get the new private cards events from.
+	 * @param listener The listener to subscribe.
 	 * 
 	 * @note This method is both non-blocking and thread-safe.
 	 */
@@ -696,116 +667,105 @@ public class PokerTable {
 		
 		List<HoldemPlayerListener> currentListeners;
 		List<HoldemPlayerListener> newListeners;
-
+		
 		boolean notAdded = false;
-
+		
 		do {
 			currentListeners = holdemPlayerListeners.get(id);
 			if (currentListeners == null) {
 				newListeners = new ArrayList<HoldemPlayerListener>();
 			} else {
-				newListeners = new ArrayList<HoldemPlayerListener>(
-						currentListeners);
+				newListeners = new ArrayList<HoldemPlayerListener>(currentListeners);
 			}
 			newListeners.add(listener);
 			if (currentListeners == null) {
-				notAdded = (holdemPlayerListeners.putIfAbsent(id, Collections
-						.unmodifiableList(newListeners)) != null);
+				notAdded = (holdemPlayerListeners.putIfAbsent(id, Collections.unmodifiableList(newListeners)) != null);
 			} else {
-				notAdded = !holdemPlayerListeners.replace(id,
-						currentListeners, Collections
-								.unmodifiableList(newListeners));
+				notAdded = !holdemPlayerListeners.replace(id, currentListeners, Collections
+						.unmodifiableList(newListeners));
 			}
 		} while (notAdded);
 	}
-
+	
 	/**
 	 * Unsubscribe the given new private cards listener for new private cards
 	 * events.
 	 * 
-	 * @param listener
-	 *            The listener to unsubscribe.
+	 * @param listener The listener to unsubscribe.
 	 */
-	public void unsubscribeHoldemPlayerListener(PlayerId id,
-			HoldemPlayerListener listener) {
+	public void unsubscribeHoldemPlayerListener(PlayerId id, HoldemPlayerListener listener) {
 		List<HoldemPlayerListener> currentListeners;
 		List<HoldemPlayerListener> newListeners;
-
+		
 		boolean removed;
-
+		
 		do {
 			currentListeners = holdemPlayerListeners.get(id);
 			if (currentListeners == null) {
 				return;
 			}
-			newListeners = new ArrayList<HoldemPlayerListener>(
-					currentListeners);
+			newListeners = new ArrayList<HoldemPlayerListener>(currentListeners);
 			newListeners.remove(listener);
 			if (newListeners.size() == 0) {
 				removed = holdemPlayerListeners.remove(id, currentListeners);
 			} else {
-				removed = holdemPlayerListeners.replace(id, currentListeners,
-						Collections.unmodifiableList(newListeners));
+				removed = holdemPlayerListeners.replace(id, currentListeners, Collections
+						.unmodifiableList(newListeners));
 			}
 		} while (!removed);
 	}
-
+	
 	/**
 	 * This list contains all new private cards listeners that should be alerted
 	 * on a new private cards.
 	 */
 	private final ConcurrentMap<PlayerId, List<HoldemPlayerListener>> holdemPlayerListeners = new ConcurrentHashMap<PlayerId, List<HoldemPlayerListener>>();
-
-
+	
 	private synchronized void submitTimeOutHandler(Player player) {
 		currentTimeOut = new PlayerActionTimeOut(player);
 		oldFuture = currentFuture;
 		cancelOldTimeOut();
-		currentFuture = ScheduledRequestExecutor.getInstance().schedule(
-				currentTimeOut, 30, TimeUnit.SECONDS);
-		PokerTable.logger.info(player.getName()
-				+ " action time out submitted.");
+		currentFuture = ScheduledRequestExecutor.getInstance().schedule(currentTimeOut, 30, TimeUnit.SECONDS);
+		PokerTable.logger.info(player.getName() + " action time out submitted.");
 	}
-
+	
 	private PlayerActionTimeOut currentTimeOut;
-
+	
 	private ScheduledFuture<?> currentFuture;
-
+	
 	private ScheduledFuture<?> oldFuture;
-
+	
 	private synchronized void cancelOldTimeOut() {
 		if (oldFuture != null) {
 			oldFuture.cancel(false);
 		}
 	}
-
+	
 	private synchronized PlayerActionTimeOut getCurrentTimeOut() {
 		return currentTimeOut;
 	}
-
-	private class PlayerActionTimeOut implements Runnable {
-
+	
+	private class PlayerActionTimeOut
+			implements Runnable {
+		
 		private Player player;
-
+		
 		public PlayerActionTimeOut(Player player) {
 			this.player = player;
 		}
-
+		
 		public void run() {
 			try {
-				PokerTable.logger.info(player.getName()
-						+ " auto-fold called.");
-
-				if (getCurrentTimeOut() == this && tableState.getGame()!=null) {
+				PokerTable.logger.info(player.getName() + " auto-fold called.");
+				
+				if (getCurrentTimeOut() == this && tableState.getGame() != null) {
 					GameSeatedPlayer gcPlayer = tableState.getGame().getCurrentPlayer();
 					if (gcPlayer.getId().equals(player.getId())) {
-						PokerTable.logger.info(player.getName()
-								+ " automatically folded.");
+						PokerTable.logger.info(player.getName() + " automatically folded.");
 						tableState.fold(gcPlayer);
 					}
 				}
-			} catch (IllegalActionException e) {
-			}
+			} catch (IllegalActionException e) {}
 		}
 	}
 }

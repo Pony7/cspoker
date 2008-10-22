@@ -53,7 +53,7 @@ public final class Card
 	@Override
 	public String toString() {
 		if (rank == null || suit == null)
-			return "Unknown Card";
+			return "back"; // We just see the back of the card ...
 		return rank.getShortDescription() + suit.getShortDescription();
 	}
 	
