@@ -121,6 +121,7 @@ public class WaitingTableState
 	@Override
 	public HoldemPlayerContext sitIn(SeatId seatId, GameSeatedPlayer player)
 			throws IllegalActionException {
+		
 		try {
 			serverTable.addPlayer(seatId, player);
 		} catch (SeatTakenException e) {
@@ -130,8 +131,10 @@ public class WaitingTableState
 			throw new IllegalActionException("Joining table " + mediatingTable.getTableId().toString()
 					+ " is not a valid action." + e.getMessage());
 		}
+		
 		mediatingTable.publishSitInEvent(new SitInEvent(player.getMemento()));
 		return new HoldemPlayerContextImpl(player, mediatingTable);
+		
 	}
 	
 	@Override
@@ -141,7 +144,7 @@ public class WaitingTableState
 	}
 	
 	@Override
-	public TableState getNextState() {
+	public PlayingTableState getNextState() {
 		return new PlayingTableState(mediatingTable, serverTable);
 	}
 }

@@ -90,7 +90,7 @@ public class TableComposite
 		new PlayerSeatComposite(this, SWT.NONE | ClientGUI.COMPOSITE_BORDER_STYLE, 1);
 		new Label(this, SWT.NONE | ClientGUI.COMPOSITE_BORDER_STYLE).setVisible(false);
 		// End first row
-		new PlayerSeatComposite(this, SWT.NONE | ClientGUI.COMPOSITE_BORDER_STYLE, 3);
+		new PlayerSeatComposite(this, SWT.NONE | ClientGUI.COMPOSITE_BORDER_STYLE, 5);
 		communityCardsComposite = new Composite(this, SWT.NONE | ClientGUI.COMPOSITE_BORDER_STYLE);
 		communityCardsComposite.setLayout(new GridLayout(5, true));
 		GridData communityCardsLayoutData = new GridData(SWT.CENTER, SWT.CENTER, true, true);
@@ -105,8 +105,8 @@ public class TableComposite
 		new PlayerSeatComposite(this, SWT.NONE | ClientGUI.COMPOSITE_BORDER_STYLE, 2);
 		// End second row
 		new Label(this, SWT.NONE | ClientGUI.COMPOSITE_BORDER_STYLE).setVisible(false);
-		new PlayerSeatComposite(this, SWT.NONE | ClientGUI.COMPOSITE_BORDER_STYLE, 5);
 		new PlayerSeatComposite(this, SWT.NONE | ClientGUI.COMPOSITE_BORDER_STYLE, 4);
+		new PlayerSeatComposite(this, SWT.NONE | ClientGUI.COMPOSITE_BORDER_STYLE, 3);
 		new Label(this, SWT.NONE | ClientGUI.COMPOSITE_BORDER_STYLE).setVisible(false);
 		chipPaintListener = new ChipPaintListener(this);
 		this.addPaintListener(chipPaintListener);
@@ -283,7 +283,7 @@ public class TableComposite
 		int x = communityCardsComposite.getLocation().x;
 		int y = communityCardsComposite.getLocation().y + communityCardsComposite.getClientArea().height;
 		potChipsDisplayArea = new Rectangle(x, y, communityCardsComposite.getSize().x, findPlayerSeatCompositeBySeatId(
-				5).getBounds().y
+				4).getBounds().y
 				- y);
 		
 	}

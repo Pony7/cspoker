@@ -54,6 +54,7 @@ public class UserSeatedPlayer
 	RemoteHoldemPlayerContext playerContext;
 	RemoteChatContext chatContext;
 	private RemoteCashierContext cashierContext;
+	private boolean sittingIn;
 	
 	/**
 	 * Create a new UserSeatedPlayer representing the player for a given
@@ -136,6 +137,7 @@ public class UserSeatedPlayer
 		assert (seatId >= 0 && seatId != Long.MAX_VALUE) : "Illegal seat id provided: " + seatId;
 		playerContext = tableContext.sitIn(seatId, amount, new AsynchronousHoldemPlayerListener(displayExecutor,
 				gameWindow));
+		sittingIn = true;
 	}
 	
 	/**
@@ -184,5 +186,12 @@ public class UserSeatedPlayer
 		} catch (RemoteException e) {
 			throw new IllegalStateException(e);
 		}
+	}
+	
+	/**
+	 * @return Whether the user is sitting at the given table
+	 */
+	public boolean isSittingIn() {
+		return sittingIn;
 	}
 }

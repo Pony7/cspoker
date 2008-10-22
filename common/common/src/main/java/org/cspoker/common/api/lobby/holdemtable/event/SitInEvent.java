@@ -43,7 +43,7 @@ public class SitInEvent extends HoldemTableEvent {
 	}
 
 	public String toString() {
-		return player.getName() + " joined the table.";
+		return player.getName() + " sits in.";
 	}
 
 	public long getSeatId() {

@@ -162,14 +162,14 @@ public class GameWindow
 	}
 	
 	private void handleActionChangedPot(Pots pots, int amount, Player bettor, String action) {
+		// Update the chip stack of the player who changed the pot by
+		// betting/raising/calling
+		MutableSeatedPlayer player = getPlayerSeatComposite(bettor).getPlayer();
+		player.updateStackAndBetChips(amount);
 		// Game State update
 		// Set new reference bet pile in GameState
 		gameState.betRaise(amount, pots);
-		MutableSeatedPlayer player = getPlayerSeatComposite(bettor).getPlayer();
 		
-		// Update the chip stack of the player who changed the pot by
-		// betting/raising/calling
-		player.updateStackAndBetChips(amount);
 		player.getCurrentBetPile().clear();
 		player.getCurrentBetPile().addAll(gameState.getCurrentBetPile());
 		getPlayerSeatComposite(bettor).showAction(action);
@@ -182,6 +182,8 @@ public class GameWindow
 	 * @see org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener#onBigBlind(org.cspoker.common.api.lobby.holdemtable.event.BigBlindEvent)
 	 */
 	public void onBigBlind(final BigBlindEvent event) {
+		// Special case: clear bet pile so we draw big blind in one stack
+		gameState.getCurrentBetPile().clear();
 		handleActionChangedPot(event.getPots(), event.getAmount(), event.getPlayer(), "Big Blind");
 		userInputComposite.showDealerMessage(event);
 	}
@@ -253,8 +255,7 @@ public class GameWindow
 	 * @see org.cspoker.common.api.lobby.holdemtable.holdemplayer.listener.HoldemPlayerListener#onNewPocketCards(org.cspoker.common.api.lobby.holdemtable.holdemplayer.event.NewPocketCardsEvent)
 	 */
 	public void onNewPocketCards(NewPocketCardsEvent newPocketCardsEvent) {
-		getPlayerSeatComposite(getClientCore().getUser().getPlayer())
-				.setHoleCards(newPocketCardsEvent.getPocketCards());
+		getPlayerSeatComposite(user.getMemento()).setHoleCards(newPocketCardsEvent.getPocketCards());
 	}
 	
 	/**
@@ -266,7 +267,7 @@ public class GameWindow
 		for (PlayerSeatComposite psc : tableComposite.getPlayerSeatComposites(true)) {
 			psc.getPlayer().setBetChipsValue(0);
 		}
-		if (user.equals(newRoundEvent.getInitialPlayer())) {
+		if (user.getMemento().equals(newRoundEvent.getInitialPlayer())) {
 			userInputComposite.prepareForUserInput();
 		}
 		userInputComposite.showDealerMessage(newRoundEvent);
@@ -279,8 +280,8 @@ public class GameWindow
 		Player playerToAct = nextPlayerEvent.getPlayer();
 		tableComposite.updateProgressBars(playerToAct);
 		getPlayerSeatComposite(nextPlayerEvent.getPlayer()).startTimer();
-		userInputComposite.getGameActionGroup().setVisible(user.equals(playerToAct));
-		if (user.equals(playerToAct)) {
+		userInputComposite.getGameActionGroup().setVisible(user.getMemento().equals(playerToAct));
+		if (user.getMemento().equals(playerToAct)) {
 			userInputComposite.prepareForUserInput();
 		}
 		userInputComposite.update();
@@ -354,8 +355,6 @@ public class GameWindow
 	 * @see org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener#onSitIn(org.cspoker.common.api.lobby.holdemtable.event.SitInEvent)
 	 */
 	public void onSitIn(SitInEvent sitInEvent) {
-		// Use name comparison at this point because user does not have a valid
-		// id yet
 		if (user.getName().equalsIgnoreCase(sitInEvent.getPlayer().getName())) {
 			user.setPlayer(sitInEvent.getPlayer());
 		}

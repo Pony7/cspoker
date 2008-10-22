@@ -83,7 +83,7 @@ public class MutableSeatedPlayer {
 	}
 	
 	public int getToCallAmount() {
-		return Chip.getValue(currentBetPile) - getBetChipsValue();
+		return Chip.getValue(gameState.getCurrentBetPile()) - getBetChipsValue();
 	}
 	
 	public int getMinBetRaiseAmount() {
@@ -97,8 +97,9 @@ public class MutableSeatedPlayer {
 	}
 	
 	public void updateStackAndBetChips(int betRaiseAmount) {
-		stackValue = (getStackValue() - getToCallAmount() - betRaiseAmount);
-		betChipsValue = getBetChipsValue() + getToCallAmount() + betRaiseAmount;
+		int totalAmount = getToCallAmount() + betRaiseAmount;
+		stackValue = getStackValue() - totalAmount;
+		betChipsValue = getBetChipsValue() + totalAmount;
 	}
 	
 	public void setBetChipsValue(int newBetChipsValue) {
@@ -113,5 +114,9 @@ public class MutableSeatedPlayer {
 	
 	public boolean isDealer() {
 		return dealer;
+	}
+	
+	public SeatedPlayer getMemento() {
+		return wrappedPlayer;
 	}
 }

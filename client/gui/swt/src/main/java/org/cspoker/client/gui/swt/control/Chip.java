@@ -203,4 +203,28 @@ public class Chip
 		return new File(ClientGUI.Resources.ACTIVE_CHIP_DIR, size + "/" + fileId + ".a.bmp");
 		
 	}
+	
+	/**
+	 * Returns <code>true</code> if the Chip values are the same
+	 * 
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof Chip)) {
+			return false;
+		}
+		return getValue() == ((Chip) obj).getValue();
+		
+	}
+	
+	/**
+	 * Uses {@link #value} as the hash code
+	 * 
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		return value;
+	}
 }
