@@ -23,6 +23,8 @@ import org.cspoker.server.common.CSPokerServerImpl;
 
 public class RunRMIServer {
 
+	public static RMIServer server;
+
 	static {
 		Log4JPropertiesLoader
 				.load("org/cspoker/server/rmi/logging/log4j.properties");
@@ -38,7 +40,7 @@ public class RunRMIServer {
 		int port = Integer.parseInt(args[0]);
 		logger.info("Starting RMI server at port " + port);
 		// need to do this in two steps to prevent GC!!
-		RMIServer server = new RMIServer(port, new CSPokerServerImpl());
+		server = new RMIServer(port, new CSPokerServerImpl());
 		server.start();
 	}
 

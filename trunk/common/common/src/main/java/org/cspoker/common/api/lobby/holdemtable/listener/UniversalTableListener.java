@@ -21,7 +21,7 @@ import org.cspoker.common.api.lobby.holdemtable.event.BigBlindEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.CallEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.CheckEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.FoldEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.HoldemTableTreeEvents;
+import org.cspoker.common.api.lobby.holdemtable.event.HoldemTableTreeEventWrapper;
 import org.cspoker.common.api.lobby.holdemtable.event.JoinTableEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.LeaveTableEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.NewCommunityCardsEvent;
@@ -54,84 +54,84 @@ public class UniversalTableListener implements ServerEventListener, HoldemPlayer
 	}
 
 	public void onNewPocketCards(NewPocketCardsEvent newPocketCardsEvent) {
-		onServerEvent(new HoldemTableTreeEvents(tableId, newPocketCardsEvent));
+		onServerEvent(new HoldemTableTreeEventWrapper(tableId, newPocketCardsEvent));
 	}
 
 	public void onBet(BetEvent betEvent) {
-		onServerEvent(new HoldemTableTreeEvents(tableId, betEvent));
+		onServerEvent(new HoldemTableTreeEventWrapper(tableId, betEvent));
 	}
 
 	public void onBigBlind(BigBlindEvent bigBlindEvent) {
-		onServerEvent(new HoldemTableTreeEvents(tableId, bigBlindEvent));
+		onServerEvent(new HoldemTableTreeEventWrapper(tableId, bigBlindEvent));
 	}
 
 	public void onCall(CallEvent callEvent) {
-		onServerEvent(new HoldemTableTreeEvents(tableId, callEvent));
+		onServerEvent(new HoldemTableTreeEventWrapper(tableId, callEvent));
 	}
 
 	public void onCheck(CheckEvent checkEvent) {
-		onServerEvent(new HoldemTableTreeEvents(tableId, checkEvent));
+		onServerEvent(new HoldemTableTreeEventWrapper(tableId, checkEvent));
 	}
 
 	public void onFold(FoldEvent foldEvent) {
-		onServerEvent(new HoldemTableTreeEvents(tableId, foldEvent));
+		onServerEvent(new HoldemTableTreeEventWrapper(tableId, foldEvent));
 	}
 
 	public void onLeaveGame(LeaveTableEvent leaveGameEvent) {
-		onServerEvent(new HoldemTableTreeEvents(tableId, leaveGameEvent));
+		onServerEvent(new HoldemTableTreeEventWrapper(tableId, leaveGameEvent));
 	}
 
 	public void onNewCommunityCards(
 			NewCommunityCardsEvent newCommunityCardsEvent) {
-		onServerEvent(new HoldemTableTreeEvents(tableId, newCommunityCardsEvent));
+		onServerEvent(new HoldemTableTreeEventWrapper(tableId, newCommunityCardsEvent));
 	}
 
 	public void onNewDeal(NewDealEvent newDealEvent) {
-		onServerEvent(new HoldemTableTreeEvents(tableId, newDealEvent));
+		onServerEvent(new HoldemTableTreeEventWrapper(tableId, newDealEvent));
 	}
 
 	public void onNewRound(NewRoundEvent newRoundEvent) {
-		onServerEvent(new HoldemTableTreeEvents(tableId, newRoundEvent));
+		onServerEvent(new HoldemTableTreeEventWrapper(tableId, newRoundEvent));
 	}
 
 	public void onNextPlayer(NextPlayerEvent nextPlayerEvent) {
-		onServerEvent(new HoldemTableTreeEvents(tableId, nextPlayerEvent));
+		onServerEvent(new HoldemTableTreeEventWrapper(tableId, nextPlayerEvent));
 	}
 
 	public void onRaise(RaiseEvent raiseEvent) {
-		onServerEvent(new HoldemTableTreeEvents(tableId, raiseEvent));
+		onServerEvent(new HoldemTableTreeEventWrapper(tableId, raiseEvent));
 	}
 
 	public void onShowHand(ShowHandEvent showHandEvent) {
-		onServerEvent(new HoldemTableTreeEvents(tableId, showHandEvent));
+		onServerEvent(new HoldemTableTreeEventWrapper(tableId, showHandEvent));
 	}
 
 	public void onSitIn(SitInEvent sitInEvent) {
-		onServerEvent(new HoldemTableTreeEvents(tableId, sitInEvent));
+		onServerEvent(new HoldemTableTreeEventWrapper(tableId, sitInEvent));
 	}
 
 	public void onSmallBlind(SmallBlindEvent smallBlindEvent) {
-		onServerEvent(new HoldemTableTreeEvents(tableId, smallBlindEvent));
+		onServerEvent(new HoldemTableTreeEventWrapper(tableId, smallBlindEvent));
 	}
 
 	public void onWinner(WinnerEvent winnerEvent) {
-		onServerEvent(new HoldemTableTreeEvents(tableId, winnerEvent));
+		onServerEvent(new HoldemTableTreeEventWrapper(tableId, winnerEvent));
 	}
 
 	public void onAllIn(AllInEvent allInEvent) {
-		onServerEvent(new HoldemTableTreeEvents(tableId, allInEvent));
+		onServerEvent(new HoldemTableTreeEventWrapper(tableId, allInEvent));
 	}
 
 	public void onJoinTable(JoinTableEvent joinTableEvent) {
-		onServerEvent(new HoldemTableTreeEvents(tableId, joinTableEvent));
+		onServerEvent(new HoldemTableTreeEventWrapper(tableId, joinTableEvent));
 	}
 
 	public void onLeaveTable(LeaveTableEvent leaveGameEvent) {
-		onServerEvent(new HoldemTableTreeEvents(tableId, leaveGameEvent));
+		onServerEvent(new HoldemTableTreeEventWrapper(tableId, leaveGameEvent));
 	}
 
 	public void onSitOut(SitOutEvent sitOutEvent) {
-		onServerEvent(new HoldemTableTreeEvents(tableId, sitOutEvent));
+		onServerEvent(new HoldemTableTreeEventWrapper(tableId, sitOutEvent));
 	}
 	
 }

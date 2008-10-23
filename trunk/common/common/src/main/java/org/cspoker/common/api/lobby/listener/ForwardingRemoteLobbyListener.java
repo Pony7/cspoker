@@ -16,13 +16,17 @@
 package org.cspoker.common.api.lobby.listener;
 
 import java.rmi.RemoteException;
+import java.rmi.server.Unreferenced;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.cspoker.common.api.lobby.event.TableCreatedEvent;
 import org.cspoker.common.api.lobby.event.TableRemovedEvent;
 import org.cspoker.common.api.shared.listener.ForwardingListener;
 
-public class ForwardingRemoteLobbyListener extends ForwardingListener<RemoteLobbyListener> implements RemoteLobbyListener {
+public class ForwardingRemoteLobbyListener extends ForwardingListener<RemoteLobbyListener> implements RemoteLobbyListener, Unreferenced {
+
+	private final static Logger logger = Logger.getLogger(ForwardingRemoteLobbyListener.class);
 	
 	public ForwardingRemoteLobbyListener() {
 		super();
@@ -46,6 +50,19 @@ public class ForwardingRemoteLobbyListener extends ForwardingListener<RemoteLobb
 		for(RemoteLobbyListener listener:listeners){
 			listener.onTableRemoved(tableRemovedEvent);
 		}
+	}
+	
+	@Override
+	protected void finalize() throws Throwable {
+		try {
+			logger.debug("Garbage collecting old listener: "+this);
+		} finally{
+			super.finalize();
+		}
+	}
+
+	public void unreferenced() {
+		logger.debug("No more server referencing: "+this);
 	}
 
 }

@@ -15,42 +15,36 @@
  */
 package org.cspoker.common.api.lobby.holdemtable.event;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import org.cspoker.common.api.lobby.event.LobbyTreeEvent;
 import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListenerTree;
 import org.cspoker.common.api.lobby.listener.LobbyListenerTree;
 
-public class HoldemTableTreeEvents extends LobbyTreeEvent {
+public class HoldemTableTreeEventWrapper extends LobbyTreeEvent {
 
 	private static final long serialVersionUID = 557148706756328395L;
 
-	private long tableId;
+	private long tableID;
 
-	private List<HoldemTableTreeEvent> events;
+	private HoldemTableTreeEvent event;
 	
-	public HoldemTableTreeEvents() {
+	public HoldemTableTreeEventWrapper() {
 		// no op
 	}
-
-	public HoldemTableTreeEvents(long tableId, List<HoldemTableTreeEvent> events){
-		this.tableId = tableId;
-		this.events = new ArrayList<HoldemTableTreeEvent>(events);
-	}
 	
-	public HoldemTableTreeEvents(long tableId, HoldemTableTreeEvent event){
-		this.tableId = tableId;
-		this.events = Collections.singletonList(event);
+	public HoldemTableTreeEventWrapper(long tableID, HoldemTableTreeEvent event){
+		this.tableID = tableID;
+		this.event = event;
 	}
 	
 	@Override
 	public void dispatch(LobbyListenerTree lobbyListenerTree) {
-		HoldemTableListenerTree listenerTree = lobbyListenerTree.getHoldemTableListenerTree(tableId);
-		for(HoldemTableTreeEvent event : events){
-			event.dispatch(listenerTree);
-		}
+		HoldemTableListenerTree listenerTree = lobbyListenerTree.getHoldemTableListenerTree(tableID);
+		event.dispatch(listenerTree);
+	}
+	
+	@Override
+	public String toString() {
+		return "|Table #"+tableID+"| "+event.toString();
 	}
 
 }

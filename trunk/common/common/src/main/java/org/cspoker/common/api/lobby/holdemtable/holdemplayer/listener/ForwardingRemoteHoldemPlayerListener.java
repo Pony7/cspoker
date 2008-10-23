@@ -16,13 +16,17 @@
 package org.cspoker.common.api.lobby.holdemtable.holdemplayer.listener;
 
 import java.rmi.RemoteException;
+import java.rmi.server.Unreferenced;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.event.NewPocketCardsEvent;
 import org.cspoker.common.api.shared.listener.ForwardingListener;
 
-public class ForwardingRemoteHoldemPlayerListener extends ForwardingListener<RemoteHoldemPlayerListener> implements RemoteHoldemPlayerListener {
+public class ForwardingRemoteHoldemPlayerListener extends ForwardingListener<RemoteHoldemPlayerListener> implements RemoteHoldemPlayerListener , Unreferenced{
 
+	private final static Logger logger = Logger.getLogger(ForwardingRemoteHoldemPlayerListener.class);
+	
 	public ForwardingRemoteHoldemPlayerListener() {
 		super();
 	}
@@ -39,6 +43,19 @@ public class ForwardingRemoteHoldemPlayerListener extends ForwardingListener<Rem
 		for(RemoteHoldemPlayerListener listener:listeners){
 			listener.onNewPocketCards(newPocketCardsEvent);
 		}
+	}
+	
+	@Override
+	protected void finalize() throws Throwable {
+		try {
+			logger.debug("Garbage collecting old listener: "+this);
+		} finally{
+			super.finalize();
+		}
+	}
+
+	public void unreferenced() {
+		logger.debug("No more server referencing: "+this);
 	}
 
 }

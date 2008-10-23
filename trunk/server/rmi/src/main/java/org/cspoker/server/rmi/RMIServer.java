@@ -12,6 +12,7 @@
 package org.cspoker.server.rmi;
 
 import java.rmi.AccessException;
+import java.rmi.AlreadyBoundException;
 import java.rmi.NoSuchObjectException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -44,8 +45,6 @@ public class RMIServer
 	private final int port;
 	
 	private final CSPokerServer cspokerServer;
-	
-	//public static Registry registry;
 	
 	public RMIServer(int port, CSPokerServer cspokerServer) {
 		this.port = port;
@@ -83,7 +82,11 @@ public class RMIServer
 						throws RemoteException {
 					Registry registry = LocateRegistry.createRegistry(port);
 					RemoteCSPokerServer stub = (RemoteCSPokerServer) UnicastRemoteObject.exportObject(RMIServer.this, 0);
-					registry.rebind("CSPokerServer", stub);
+					try {
+						registry.bind("CSPokerServer", stub);
+					} catch (AlreadyBoundException exception) {
+						throw new IllegalStateException(exception);
+					}
 					logger.info("Started RMI server at port " + port);
 					return null;
 				}

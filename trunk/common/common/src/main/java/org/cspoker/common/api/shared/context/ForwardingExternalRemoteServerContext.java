@@ -17,35 +17,20 @@ package org.cspoker.common.api.shared.context;
 
 import java.rmi.RemoteException;
 
-import org.cspoker.common.api.account.context.RemoteAccountContext;
-import org.cspoker.common.api.cashier.context.RemoteCashierContext;
 import org.cspoker.common.api.chat.context.RemoteChatContext;
-import org.cspoker.common.api.chat.listener.ChatListener;
 import org.cspoker.common.api.chat.listener.RemoteChatListener;
 import org.cspoker.common.api.lobby.context.ExternalRemoteLobbyContext;
 import org.cspoker.common.api.lobby.listener.LobbyListener;
 import org.cspoker.common.api.lobby.listener.RemoteLobbyListener;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 
-public class ForwardingExternalRemoteServerContext implements ExternalRemoteServerContext {
+public class ForwardingExternalRemoteServerContext extends ForwardingRemoteServerContext implements ExternalRemoteServerContext {
 
 	private final ExternalRemoteServerContext serverContext;
 
 	public ForwardingExternalRemoteServerContext(ExternalRemoteServerContext serverContext) {
+		super(serverContext);
 		this.serverContext = serverContext;
-	}
-	
-	public RemoteAccountContext getAccountContext() throws RemoteException {
-		return serverContext.getAccountContext();
-	}
-
-	public RemoteCashierContext getCashierContext() throws RemoteException {
-		return serverContext.getCashierContext();
-	}
-
-	public RemoteChatContext getServerChatContext(ChatListener chatListener)
-			throws RemoteException, IllegalActionException {
-		return serverContext.getServerChatContext(chatListener);
 	}
 
 	public ExternalRemoteLobbyContext getLobbyContext(LobbyListener lobbyListener)
@@ -66,10 +51,5 @@ public class ForwardingExternalRemoteServerContext implements ExternalRemoteServ
 	public RemoteChatContext getTableChatContext(RemoteChatListener chatListener,
 			long tableId) throws RemoteException {
 		return serverContext.getTableChatContext(chatListener, tableId);
-	}
-	
-	public RemoteChatContext getTableChatContext(ChatListener chatListener,
-			long tableId) throws RemoteException, IllegalActionException {
-		return serverContext.getTableChatContext(chatListener,tableId);
 	}
 }
