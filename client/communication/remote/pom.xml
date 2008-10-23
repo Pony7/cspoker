@@ -4,17 +4,15 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.cspoker</groupId>
-		<artifactId>client</artifactId>
+		<artifactId>client-communication</artifactId>
 		<version>0.1-SNAPSHOT</version>
 	</parent>
-	<artifactId>client-xml</artifactId>
-	<packaging>jar</packaging>
-	<name>CSPoker Client-XML</name>
-	<dependencies>
-		<dependency>
-			<groupId>org.cspoker</groupId>
-			<artifactId>client-common</artifactId>
-			<version>0.1-SNAPSHOT</version>
-		</dependency>
-	</dependencies>
+	<artifactId>client-communication-remote</artifactId>
+	<packaging>pom</packaging>
+	<name>CSPoker Client-Communication-Remote</name>
+	<modules>
+		<module>xml</module>
+		<module>rmi</module>
+		<module>all</module>
+	</modules>
 </project>

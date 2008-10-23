@@ -12,6 +12,5 @@
 	<name>CSPoker Common</name>
 	<modules>
 		<module>common</module>
-		<module>api</module>
 	</modules>
 </project>

@@ -12,10 +12,9 @@
 	<name>CSPoker Client</name>
 	<modules>
 		<module>common</module>
-		<module>rmi</module>
-		<module>xml</module>
-		<module>allcommunication</module>
 		<module>gui</module>
+		<module>bots</module>
+		<module>communication</module>
 	</modules>
 	<dependencies>
 		<dependency>

@@ -1,4 +1,9 @@
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.TreeSet;
 
 import junit.framework.TestCase;
 
@@ -7,7 +12,16 @@ import org.cspoker.client.gui.swt.control.ClientCore;
 import org.cspoker.client.gui.swt.window.GameWindow;
 import org.cspoker.client.gui.swt.window.LobbyWindow;
 import org.cspoker.common.api.chat.event.MessageEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.*;
+import org.cspoker.common.api.lobby.holdemtable.event.BetEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.CallEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.FoldEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.NewCommunityCardsEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.NewDealEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.NextPlayerEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.RaiseEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.ShowHandEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.SitInEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.WinnerEvent;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.event.NewPocketCardsEvent;
 import org.cspoker.common.elements.cards.Card;
 import org.cspoker.common.elements.cards.Rank;
