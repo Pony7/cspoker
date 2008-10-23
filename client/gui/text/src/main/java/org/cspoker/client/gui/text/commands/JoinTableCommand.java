@@ -23,7 +23,7 @@ import org.cspoker.common.api.lobby.holdemtable.listener.UniversalTableListener;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 
 public class JoinTableCommand extends RemoteCommand {
-	
+
 
 	public JoinTableCommand(Client client, Console console) {
 		super(client, console);
@@ -38,7 +38,10 @@ public class JoinTableCommand extends RemoteCommand {
 				new UniversalTableListener(new PrintListener(console),tableID)
 		));
 		client.setCurrentTableID(tableID);
-		client.setCurrentTableChatContext(client.getServerContext().getTableChatContext(new UniversalTableChatListener(new PrintListener(console), client.getCurrentTableID()), client.getCurrentTableID()));
+		client.setCurrentTableChatContext(client.getServerContext().getTableChatContext(
+				new UniversalTableChatListener(
+						new PrintListener(console), client.getCurrentTableID()), client.getCurrentTableID())
+		);
 	}
 
 }

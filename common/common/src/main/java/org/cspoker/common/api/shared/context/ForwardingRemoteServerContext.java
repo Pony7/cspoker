@@ -17,6 +17,7 @@ package org.cspoker.common.api.shared.context;
 
 import java.rmi.RemoteException;
 
+import org.apache.log4j.Logger;
 import org.cspoker.common.api.account.context.RemoteAccountContext;
 import org.cspoker.common.api.cashier.context.RemoteCashierContext;
 import org.cspoker.common.api.chat.context.RemoteChatContext;
@@ -27,6 +28,8 @@ import org.cspoker.common.api.shared.exception.IllegalActionException;
 
 public class ForwardingRemoteServerContext implements RemoteServerContext {
 
+	private final static Logger logger = Logger.getLogger(ForwardingRemoteServerContext.class);
+	
 	private final RemoteServerContext serverContext;
 
 	public ForwardingRemoteServerContext(RemoteServerContext serverContext) {
@@ -54,4 +57,18 @@ public class ForwardingRemoteServerContext implements RemoteServerContext {
 			throws RemoteException, IllegalActionException {
 		return serverContext.getLobbyContext(lobbyListener);
 	}
+	
+	@Override
+	protected void finalize() throws Throwable {
+		try {
+			logger.debug("Garbage collecting old context: "+this);
+		} finally{
+			super.finalize();
+		}
+	}
+
+	public void unreferenced() {
+		logger.debug("No more clients referencing: "+this);
+	}
+	
 }

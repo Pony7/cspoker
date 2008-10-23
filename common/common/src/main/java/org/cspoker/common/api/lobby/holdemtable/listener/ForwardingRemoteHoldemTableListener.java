@@ -16,8 +16,10 @@
 package org.cspoker.common.api.lobby.holdemtable.listener;
 
 import java.rmi.RemoteException;
+import java.rmi.server.Unreferenced;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.cspoker.common.api.lobby.holdemtable.event.AllInEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.BetEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.BigBlindEvent;
@@ -38,8 +40,10 @@ import org.cspoker.common.api.lobby.holdemtable.event.SmallBlindEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.WinnerEvent;
 import org.cspoker.common.api.shared.listener.ForwardingListener;
 
-public class ForwardingRemoteHoldemTableListener extends ForwardingListener<RemoteHoldemTableListener> implements RemoteHoldemTableListener {
+public class ForwardingRemoteHoldemTableListener extends ForwardingListener<RemoteHoldemTableListener> implements RemoteHoldemTableListener, Unreferenced {
 
+	private final static Logger logger = Logger.getLogger(ForwardingRemoteHoldemTableListener.class);
+	
 	public ForwardingRemoteHoldemTableListener() {
 		super();
 	}
@@ -159,6 +163,19 @@ public class ForwardingRemoteHoldemTableListener extends ForwardingListener<Remo
 		for(RemoteHoldemTableListener listener:listeners){
 			listener.onSitOut(sitOut);
 		}
+	}
+	
+	@Override
+	protected void finalize() throws Throwable {
+		try {
+			logger.debug("Garbage collecting old listener: "+this);
+		} finally{
+			super.finalize();
+		}
+	}
+
+	public void unreferenced() {
+		logger.debug("No more server referencing: "+this);
 	}
 	
 }

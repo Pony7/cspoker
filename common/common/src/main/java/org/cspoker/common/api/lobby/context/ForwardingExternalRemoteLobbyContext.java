@@ -21,30 +21,14 @@ import org.cspoker.common.api.lobby.holdemtable.context.ExternalRemoteHoldemTabl
 import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
 import org.cspoker.common.api.lobby.holdemtable.listener.RemoteHoldemTableListener;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
-import org.cspoker.common.elements.table.DetailedHoldemTable;
-import org.cspoker.common.elements.table.TableConfiguration;
-import org.cspoker.common.elements.table.TableList;
 
-public class ForwardingExternalRemoteLobbyContext implements ExternalRemoteLobbyContext{
+public class ForwardingExternalRemoteLobbyContext extends ForwardingRemoteLobbyContext implements ExternalRemoteLobbyContext{
 
 	protected final ExternalRemoteLobbyContext lobbyContext;
 
 	public ForwardingExternalRemoteLobbyContext(ExternalRemoteLobbyContext lobbyContext) throws RemoteException {
+		super(lobbyContext);
 		this.lobbyContext  = lobbyContext;
-	}
-
-	public DetailedHoldemTable createHoldemTable(String name,
-			TableConfiguration configuration) throws RemoteException, IllegalActionException {
-		return lobbyContext.createHoldemTable(name, configuration);
-	}
-
-	public DetailedHoldemTable getHoldemTableInformation(long tableId)
-			throws RemoteException, IllegalActionException {
-		return lobbyContext.getHoldemTableInformation(tableId);
-	}
-
-	public TableList getTableList() throws RemoteException, IllegalActionException {
-		return lobbyContext.getTableList();
 	}
 
 	public ExternalRemoteHoldemTableContext joinHoldemTable(long tableId,

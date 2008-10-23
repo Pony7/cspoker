@@ -16,11 +16,15 @@
 package org.cspoker.common.api.cashier.context;
 
 import java.rmi.RemoteException;
+import java.rmi.server.Unreferenced;
 
+import org.apache.log4j.Logger;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 
 
-public class ForwardingRemoteCashierContext implements RemoteCashierContext{
+public class ForwardingRemoteCashierContext implements RemoteCashierContext, Unreferenced{
+
+	private final static Logger logger = Logger.getLogger(ForwardingRemoteCashierContext.class);
 
 	private final RemoteCashierContext cashierContext;
 
@@ -34,6 +38,19 @@ public class ForwardingRemoteCashierContext implements RemoteCashierContext{
 
 	public void requestMoney() throws RemoteException, IllegalActionException {
 		cashierContext.requestMoney();
+	}
+	
+	@Override
+	protected void finalize() throws Throwable {
+		try {
+			logger.debug("Garbage collecting old context: "+this);
+		} finally{
+			super.finalize();
+		}
+	}
+
+	public void unreferenced() {
+		logger.debug("No more clients referencing: "+this);
 	}
 	
 }

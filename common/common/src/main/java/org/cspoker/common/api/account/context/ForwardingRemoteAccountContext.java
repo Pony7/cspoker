@@ -16,12 +16,17 @@
 package org.cspoker.common.api.account.context;
 
 import java.rmi.RemoteException;
+import java.rmi.server.Unreferenced;
 
+import org.apache.log4j.Logger;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 
 
-public class ForwardingRemoteAccountContext implements RemoteAccountContext{
+public class ForwardingRemoteAccountContext implements RemoteAccountContext, Unreferenced{
 
+
+	private final static Logger logger = Logger.getLogger(ForwardingRemoteAccountContext.class);
+	
 	private RemoteAccountContext accountContext;
 
 	public ForwardingRemoteAccountContext(RemoteAccountContext accountContext) {
@@ -46,6 +51,19 @@ public class ForwardingRemoteAccountContext implements RemoteAccountContext{
 
 	public void setAvatar(byte[] avatar) throws RemoteException, IllegalActionException {
 		accountContext.setAvatar(avatar);
+	}
+	
+	@Override
+	protected void finalize() throws Throwable {
+		try {
+			logger.debug("Garbage collecting old context: "+this);
+		} finally{
+			super.finalize();
+		}
+	}
+
+	public void unreferenced() {
+		logger.debug("No more clients referencing: "+this);
 	}
 	
 }

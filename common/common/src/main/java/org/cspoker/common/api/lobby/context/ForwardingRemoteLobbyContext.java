@@ -16,7 +16,9 @@
 package org.cspoker.common.api.lobby.context;
 
 import java.rmi.RemoteException;
+import java.rmi.server.Unreferenced;
 
+import org.apache.log4j.Logger;
 import org.cspoker.common.api.lobby.holdemtable.context.RemoteHoldemTableContext;
 import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
@@ -24,8 +26,11 @@ import org.cspoker.common.elements.table.DetailedHoldemTable;
 import org.cspoker.common.elements.table.TableConfiguration;
 import org.cspoker.common.elements.table.TableList;
 
-public class ForwardingRemoteLobbyContext implements RemoteLobbyContext{
+public class ForwardingRemoteLobbyContext implements RemoteLobbyContext, Unreferenced{
 
+
+	private final static Logger logger = Logger.getLogger(ForwardingRemoteLobbyContext.class);
+	
 	protected final RemoteLobbyContext lobbyContext;
 
 	public ForwardingRemoteLobbyContext(RemoteLobbyContext lobbyContext) throws RemoteException {
@@ -49,6 +54,19 @@ public class ForwardingRemoteLobbyContext implements RemoteLobbyContext{
 	public RemoteHoldemTableContext joinHoldemTable(long tableId,
 			HoldemTableListener holdemTableListener) throws RemoteException, IllegalActionException {
 		return lobbyContext.joinHoldemTable(tableId, holdemTableListener);
+	}
+	
+	@Override
+	protected void finalize() throws Throwable {
+		try {
+			logger.debug("Garbage collecting old context: "+this);
+		} finally{
+			super.finalize();
+		}
+	}
+
+	public void unreferenced() {
+		logger.debug("No more clients referencing: "+this);
 	}
 
 }

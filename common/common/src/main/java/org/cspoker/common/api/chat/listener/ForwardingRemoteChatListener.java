@@ -16,13 +16,17 @@
 package org.cspoker.common.api.chat.listener;
 
 import java.rmi.RemoteException;
+import java.rmi.server.Unreferenced;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.cspoker.common.api.chat.event.MessageEvent;
 import org.cspoker.common.api.shared.listener.ForwardingListener;
 
-public class ForwardingRemoteChatListener extends ForwardingListener<RemoteChatListener> implements RemoteChatListener {
+public class ForwardingRemoteChatListener extends ForwardingListener<RemoteChatListener> implements RemoteChatListener, Unreferenced {
 
+	private final static Logger logger = Logger.getLogger(ForwardingRemoteChatListener.class);
+	
 	public ForwardingRemoteChatListener() {
 		super();
 	}
@@ -40,4 +44,18 @@ public class ForwardingRemoteChatListener extends ForwardingListener<RemoteChatL
 			listener.onMessage(messageEvent);
 		}
 	}
+	
+	@Override
+	protected void finalize() throws Throwable {
+		try {
+			logger.debug("Garbage collecting old listener: "+this);
+		} finally{
+			super.finalize();
+		}
+	}
+
+	public void unreferenced() {
+		logger.debug("No more server referencing: "+this);
+	}
+	
 }

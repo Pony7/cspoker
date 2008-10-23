@@ -16,11 +16,15 @@
 package org.cspoker.common.api.lobby.holdemtable.holdemplayer.context;
 
 import java.rmi.RemoteException;
+import java.rmi.server.Unreferenced;
 
+import org.apache.log4j.Logger;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 
-public class ForwardingRemoteHoldemPlayerContext implements RemoteHoldemPlayerContext{
+public class ForwardingRemoteHoldemPlayerContext implements RemoteHoldemPlayerContext, Unreferenced{
 
+	private final static Logger logger = Logger.getLogger(ForwardingRemoteHoldemPlayerContext.class);
+	
 	private final RemoteHoldemPlayerContext holdemPlayerContext;
 
 	public ForwardingRemoteHoldemPlayerContext(RemoteHoldemPlayerContext holdemPlayerContext) throws RemoteException {
@@ -41,6 +45,19 @@ public class ForwardingRemoteHoldemPlayerContext implements RemoteHoldemPlayerCo
 
 	public void leaveGame() throws RemoteException, IllegalActionException {
 		holdemPlayerContext.leaveGame();
+	}
+	
+	@Override
+	protected void finalize() throws Throwable {
+		try {
+			logger.debug("Garbage collecting old context: "+this);
+		} finally{
+			super.finalize();
+		}
+	}
+
+	public void unreferenced() {
+		logger.debug("No more clients referencing: "+this);
 	}
 	
 }

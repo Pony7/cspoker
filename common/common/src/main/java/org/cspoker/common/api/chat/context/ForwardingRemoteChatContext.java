@@ -16,11 +16,15 @@
 package org.cspoker.common.api.chat.context;
 
 import java.rmi.RemoteException;
+import java.rmi.server.Unreferenced;
 
+import org.apache.log4j.Logger;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 
 
-public class ForwardingRemoteChatContext implements RemoteChatContext{
+public class ForwardingRemoteChatContext implements RemoteChatContext, Unreferenced{
+
+	private final static Logger logger = Logger.getLogger(ForwardingRemoteChatContext.class);
 
 	private RemoteChatContext chatContext;
 
@@ -30,5 +34,18 @@ public class ForwardingRemoteChatContext implements RemoteChatContext{
 
 	public void sendMessage(String message) throws RemoteException, IllegalActionException {
 		chatContext.sendMessage(message);
+	}
+	
+	@Override
+	protected void finalize() throws Throwable {
+		try {
+			logger.debug("Garbage collecting old context: "+this);
+		} finally{
+			super.finalize();
+		}
+	}
+
+	public void unreferenced() {
+		logger.debug("No more clients referencing: "+this);
 	}
 }
