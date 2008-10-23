@@ -12,13 +12,17 @@
 	<name>CSPoker Client-GUI</name>
 	<modules>
 		<module>text</module>
-		<module>javafx</module>
 		<module>swt</module>
 	</modules>
 	<dependencies>
 		<dependency>
 			<groupId>org.cspoker</groupId>
-			<artifactId>client-allcommunication</artifactId>
+			<artifactId>client-communication-remote-all</artifactId>
+			<version>0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.cspoker</groupId>
+			<artifactId>client-communication-embedded</artifactId>
 			<version>0.1-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
