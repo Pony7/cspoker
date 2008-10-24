@@ -27,8 +27,6 @@ import org.cspoker.common.api.shared.context.RemoteServerContext;
 
 public class CommunicationProvider implements RemoteCSPokerServer {
 
-	public final static CommunicationProvider global_provider = new CommunicationProvider();
-
 	private List<RemoteCSPokerServer> servers = new ArrayList<RemoteCSPokerServer>();
 
 	public void addRemoteCSPokerServer(

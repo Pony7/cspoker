@@ -19,6 +19,7 @@ import org.apache.log4j.Logger;
 import org.cspoker.client.User;
 import org.cspoker.client.allcommunication.LoadProvidersFromXml;
 import org.cspoker.client.common.CommunicationProvider;
+import org.cspoker.client.communication.embedded.LoadEmbeddedProvider;
 import org.cspoker.client.gui.swt.window.GameWindow;
 import org.cspoker.client.gui.swt.window.LobbyWindow;
 import org.cspoker.client.gui.swt.window.LoginDialog;
@@ -143,7 +144,9 @@ public class ClientCore
 	 * @see java.lang.Runnable#run()
 	 */
 	public void run() {
-		new LoadProvidersFromXml(CommunicationProvider.global_provider);
+		CommunicationProvider communicationProvider = new CommunicationProvider();
+		new LoadProvidersFromXml(communicationProvider);
+		new LoadEmbeddedProvider(communicationProvider);
 		// Run the whole GUI inside a try-catch for now so we can catch
 		// unexpected failures
 		try {

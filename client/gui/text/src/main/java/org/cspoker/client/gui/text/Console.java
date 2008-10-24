@@ -25,6 +25,7 @@ import javax.security.auth.login.LoginException;
 
 import org.cspoker.client.allcommunication.LoadProvidersFromXml;
 import org.cspoker.client.common.CommunicationProvider;
+import org.cspoker.client.communication.embedded.LoadEmbeddedProvider;
 import org.cspoker.client.rmi.RemoteRMIServer;
 import org.cspoker.client.xml.http.RemoteHTTPServer;
 import org.cspoker.client.xml.sockets.RemoteSocketServer;
@@ -43,15 +44,18 @@ public class Console {
 	}
 
 	public static void main(String[] args) {
-		new LoadProvidersFromXml(CommunicationProvider.global_provider);
-		new Console(args);
+		CommunicationProvider communicationProvider=new CommunicationProvider();
+		
+		new LoadProvidersFromXml(communicationProvider);
+		new LoadEmbeddedProvider(communicationProvider);
+		new Console(args,communicationProvider);
 	}
 
 	private boolean verbose = false;
 
 	private Client client = null;
 
-	public Console(String[] args) {
+	public Console(String[] args, CommunicationProvider communicationProvider) {
 		if (args.length != 0 && args.length != 1) {
 			System.out
 					.println("usage: java -jar cspoker-client-text.jar -[options]");
@@ -74,26 +78,23 @@ public class Console {
 				client.close();
 			}
 			System.out.println("Select a server connection:");
-			for (int i = 0; i < CommunicationProvider.global_provider
-					.getProviders().size(); i++) {
+			for (int i = 0; i < communicationProvider.getProviders().size(); i++) {
 				System.out.println(" ("
 						+ (i + 1)
 						+ ") - "
-						+ CommunicationProvider.global_provider.getProviders()
+						+ communicationProvider.getProviders()
 								.get(i));
 			}
 			System.out
 					.println(" ("
-							+ (CommunicationProvider.global_provider
-									.getProviders().size() + 1)
+							+ (communicationProvider.getProviders().size() + 1)
 							+ ") - Create a new server connection");
 			System.out.print(">");
 			int connection;
 			try {
 				connection = Integer.parseInt(in.nextLine());
 				if (connection < 1
-						|| connection > CommunicationProvider.global_provider
-								.getProviders().size() + 1) {
+						|| connection > communicationProvider.getProviders().size() + 1) {
 					throw new NumberFormatException();
 				}
 			} catch (NumberFormatException e) {
@@ -101,8 +102,7 @@ public class Console {
 			}
 			System.out.println();
 
-			if (connection == CommunicationProvider.global_provider
-					.getProviders().size() + 1) {
+			if (connection == communicationProvider.getProviders().size() + 1) {
 				System.out.println("Select type:");
 				System.out.println(" (1) - HTTP");
 				System.out.println(" (2) - SOCKET");
@@ -141,7 +141,7 @@ public class Console {
 					factory = new RemoteRMIServer(address, port);
 				}
 			} else {
-				factory = CommunicationProvider.global_provider.getProviders()
+				factory = communicationProvider.getProviders()
 						.get(connection - 1);
 			}
 			System.out.println("Enter username:");
