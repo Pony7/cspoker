@@ -54,7 +54,7 @@ public class XmlRemoteHoldemPlayerContext implements RemoteHoldemPlayerContext {
 		performer.perform(new FoldAction(generator.getNextID(),tableID));
 	}
 
-	public void leaveGame() throws RemoteException, IllegalActionException {
+	public void sitOut() throws RemoteException, IllegalActionException {
 		performer.perform(new LeaveGameAction(generator.getNextID(),tableID));
 	}
 
