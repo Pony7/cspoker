@@ -351,7 +351,7 @@ public class TableUserInputComposite
 	void leaveButtonWidgetSelected(SelectionEvent evt) {
 		logger.debug("Leave button pressed");
 		try {
-			user.getPlayerContext().leaveGame();
+			user.getPlayerContext().sitOut();
 			user.getTableContext().leaveTable();
 		} catch (RemoteException e) {
 			getClientCore().handleRemoteException(e);

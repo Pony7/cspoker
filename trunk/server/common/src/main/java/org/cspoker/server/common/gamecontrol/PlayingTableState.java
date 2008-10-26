@@ -294,6 +294,32 @@ public class PlayingTableState
 	}
 	
 	@Override
+	public synchronized HoldemPlayerContext sitIn(GameSeatedPlayer player)
+			throws IllegalActionException {
+		try {
+			game.sitIn(player);
+		} catch (PlayerListFullException e) {
+			throw new IllegalActionException(e.getMessage());
+		}
+		
+		mediatingTable.publishSitInEvent(new SitInEvent(player.getMemento()));
+		
+		// auto-deal
+		// try {
+		// if (game.getNbSeatedPlayers() == 2) {
+		//				
+		// deal(game.getDealer());
+		// }
+		// } catch (IllegalActionException e) {
+		// game.sitOut(player);
+		// mediatingTable.publishSitOutEvent(new
+		// SitOutEvent(player.getMemento(), true));
+		// }
+		
+		return new HoldemPlayerContextImpl(player, mediatingTable);
+	}
+	
+	@Override
 	public synchronized void sitOut(GameSeatedPlayer player) {
 		if (!game.getTable().hasAsPlayer(player)) {
 			return;

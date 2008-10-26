@@ -29,10 +29,16 @@ public class ForwardingExternalRemoteHoldemTableContext extends ForwardingRemote
 		super(holdemTableContext);
 		this.holdemTableContext  = holdemTableContext;
 	}
-	
+
 	public RemoteHoldemPlayerContext sitIn(long seatId, int buyIn,
 			RemoteHoldemPlayerListener holdemPlayerListener)
 			throws IllegalActionException, RemoteException {
 		return holdemTableContext.sitIn(seatId, buyIn, holdemPlayerListener);
+	}
+	
+	public RemoteHoldemPlayerContext sitIn(int buyIn,
+			RemoteHoldemPlayerListener holdemPlayerListener)
+			throws IllegalActionException, RemoteException {
+		return holdemTableContext.sitIn(buyIn, holdemPlayerListener);
 	}
 }

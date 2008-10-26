@@ -19,7 +19,7 @@ import org.cspoker.client.common.CommunicationProvider;
 import org.cspoker.server.common.CSPokerServerImpl;
 
 public class LoadEmbeddedProvider {
-
+	
 	public LoadEmbeddedProvider(CommunicationProvider communicationProvider) {
 		communicationProvider.addRemoteCSPokerServer(new CSPokerServerImpl());
 	}

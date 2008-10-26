@@ -13,14 +13,12 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.server.rmi.asynchronous.context;
+package org.cspoker.common.api.lobby.context;
 
 import java.util.concurrent.Executor;
 
 import net.jcip.annotations.Immutable;
 
-import org.cspoker.common.api.lobby.context.ForwardingLobbyContext;
-import org.cspoker.common.api.lobby.context.LobbyContext;
 import org.cspoker.common.api.lobby.holdemtable.context.HoldemTableContext;
 import org.cspoker.common.api.lobby.holdemtable.listener.AsynchronousHoldemTableListener;
 import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;

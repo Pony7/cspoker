@@ -36,5 +36,11 @@ public class ForwardingHoldemTableContext implements HoldemTableContext{
 			throws IllegalActionException {
 		return holdemTableContext.sitIn(seatId, buyIn, holdemPlayerListener);
 	}
+
+	public HoldemPlayerContext sitIn(int buyIn,
+			HoldemPlayerListener holdemPlayerListener)
+			throws IllegalActionException {
+		return holdemTableContext.sitIn(buyIn, holdemPlayerListener);
+	}
 	
 }

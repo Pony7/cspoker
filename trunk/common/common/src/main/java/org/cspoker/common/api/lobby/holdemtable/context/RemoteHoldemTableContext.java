@@ -42,4 +42,14 @@ public interface RemoteHoldemTableContext extends Remote {
 	 */
 	RemoteHoldemPlayerContext sitIn(long seatId, int amount, HoldemPlayerListener holdemPlayerListener) throws RemoteException, IllegalActionException;
 	
+	/**
+	 * Sit in at the current table at any free seat with a given buy in amount.
+	 * 
+	 * @param buyIn
+	 * @param holdemPlayerListener
+	 * @return 
+	 * @throws IllegalActionException
+	 */
+	RemoteHoldemPlayerContext sitIn(int amount, HoldemPlayerListener holdemPlayerListener) throws RemoteException, IllegalActionException;
+	
 }

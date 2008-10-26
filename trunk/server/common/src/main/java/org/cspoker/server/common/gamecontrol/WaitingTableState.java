@@ -25,6 +25,7 @@ import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.player.SeatedPlayer;
 import org.cspoker.server.common.HoldemPlayerContextImpl;
 import org.cspoker.server.common.elements.id.SeatId;
+import org.cspoker.server.common.elements.table.PlayerListFullException;
 import org.cspoker.server.common.elements.table.SeatTakenException;
 import org.cspoker.server.common.elements.table.ServerTable;
 import org.cspoker.server.common.player.GameSeatedPlayer;
@@ -135,6 +136,20 @@ public class WaitingTableState
 		mediatingTable.publishSitInEvent(new SitInEvent(player.getMemento()));
 		return new HoldemPlayerContextImpl(player, mediatingTable);
 		
+	}
+
+	@Override
+	public HoldemPlayerContext sitIn(GameSeatedPlayer player)
+			throws IllegalActionException {
+		try {
+			serverTable.addPlayer(player);
+		} catch (PlayerListFullException e) {
+			throw new IllegalActionException("Joining table " + mediatingTable.getTableId().toString()
+					+ " failed: " + e.getMessage());
+		}
+		
+		mediatingTable.publishSitInEvent(new SitInEvent(player.getMemento()));
+		return new HoldemPlayerContextImpl(player, mediatingTable);
 	}
 	
 	@Override

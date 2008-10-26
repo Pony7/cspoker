@@ -42,4 +42,8 @@ implements StaticHoldemTableContext {
 		context = super.sitIn(seatId, buyIn, tableListener);
 	}
 
+	public void sitIn(int buyIn) throws IllegalActionException {
+		context = super.sitIn(buyIn, tableListener);
+	}
+
 }
