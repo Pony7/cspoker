@@ -383,7 +383,6 @@ public class PokerTable {
 					+ "chips.");
 		}
 		
-		// TODO (only if joined)
 	}
 	
 	public void sitOut(GameSeatedPlayer player) {

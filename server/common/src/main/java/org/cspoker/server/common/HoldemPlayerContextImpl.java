@@ -42,12 +42,7 @@ public class HoldemPlayerContextImpl
 		table.fold(player);
 	}
 	
-	/**
-	 * FIXME Leaving the Game and Sitting Out should NOT be the same!
-	 * 
-	 * @see org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.HoldemPlayerContext#leaveGame()
-	 */
-	public void leaveGame() {
+	public void sitOut() {
 		table.sitOut(player);
 	}
 	
