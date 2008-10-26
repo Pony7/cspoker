@@ -30,6 +30,6 @@ public interface RemoteHoldemPlayerContext extends Remote {
 	
 	void fold() throws RemoteException, IllegalActionException;
 	
-	void leaveGame() throws RemoteException, IllegalActionException;
+	void sitOut() throws RemoteException, IllegalActionException;
 
 }

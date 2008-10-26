@@ -43,8 +43,8 @@ public class ForwardingRemoteHoldemPlayerContext implements RemoteHoldemPlayerCo
 		holdemPlayerContext.fold();
 	}
 
-	public void leaveGame() throws RemoteException, IllegalActionException {
-		holdemPlayerContext.leaveGame();
+	public void sitOut() throws RemoteException, IllegalActionException {
+		holdemPlayerContext.sitOut();
 	}
 	
 	@Override

@@ -23,8 +23,16 @@ public interface HoldemTableContext extends RemoteHoldemTableContext{
 
 	//Actions
 	
+	/**
+	 * The player leaves the table.
+	 * The player will no longer receive table events.
+	 */
 	void leaveTable();
-
+	
+	/**
+	 * The player chooses to sit-in at the table. 
+	 * A player who is sit-in can act at the table. He will also receive pocket cards.
+	 */
 	HoldemPlayerContext sitIn(long seatId, int buyIn, HoldemPlayerListener holdemPlayerListener) throws IllegalActionException;
 	
 }

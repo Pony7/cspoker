@@ -37,8 +37,8 @@ public class ForwardingHoldemPlayerContext implements HoldemPlayerContext{
 		holdemPlayerContext.fold();
 	}
 
-	public void leaveGame() {
-		holdemPlayerContext.leaveGame();
+	public void sitOut() {
+		holdemPlayerContext.sitOut();
 	}
 	
 }
