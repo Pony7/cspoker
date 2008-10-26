@@ -60,4 +60,18 @@ public class ExportingHoldemTableContext extends ForwardingExternalRemoteHoldemT
 		}
 	}
 
+	
+	@Override
+	public RemoteHoldemPlayerContext sitIn(int buyIn,
+			RemoteHoldemPlayerListener holdemPlayerListener)
+			throws IllegalActionException, RemoteException {
+		try {
+			RemoteHoldemPlayerContext wrappedObject = new ForwardingRemoteHoldemPlayerContext(super.sitIn(buyIn, holdemPlayerListener));
+			return (RemoteHoldemPlayerContext) UnicastRemoteObject.exportObject(wrappedObject, 0);
+		} catch (RemoteException exception) {
+			logger.error(exception.getMessage(), exception);
+			throw exception;
+		}
+	}
+
 }

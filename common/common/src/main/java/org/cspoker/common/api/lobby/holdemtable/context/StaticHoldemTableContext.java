@@ -22,6 +22,8 @@ public interface StaticHoldemTableContext extends HoldemTableContext {
 
 	public void sitIn(long seatId, int buyIn) throws IllegalActionException;
 	
+	public void sitIn(int buyIn) throws IllegalActionException;
+	
 	public HoldemPlayerContext getHoldemPlayerContext();
 	
 }

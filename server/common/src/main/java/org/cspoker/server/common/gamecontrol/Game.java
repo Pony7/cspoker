@@ -564,12 +564,21 @@ public class Game {
 
 	public SeatId sitIn(SeatId seatId, GameSeatedPlayer player)
 			throws SeatTakenException, PlayerListFullException, IllegalActionException{
-		if (seatId == null) {
-			seatId = table.addPlayer(player);
-		} else {
-			table.addPlayer(seatId, player);
+		table.addPlayer(seatId, player);
+		
+		if (getDealer() == null) {
+			setDealer(player);
+		} else if (getNextDealer() == null) {
+			setNextDealer(player);
 		}
+		Game.logger.info(player.getName() + " joined the game. ["
+				+ "]");
+		return seatId;
+	}
 
+	public SeatId sitIn(GameSeatedPlayer player) throws PlayerListFullException {
+		SeatId seatId = table.addPlayer(player);
+		
 		if (getDealer() == null) {
 			setDealer(player);
 		} else if (getNextDealer() == null) {

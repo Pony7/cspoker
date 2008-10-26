@@ -384,6 +384,31 @@ public class PokerTable {
 		}
 		
 	}
+
+
+	public HoldemPlayerContext sitIn(int buyIn, ServerPlayer player,
+			HoldemPlayerListener holdemPlayerListener) throws IllegalActionException {
+		try {
+				if (sitInPlayers.size() > 0) {
+					tableState = tableState.getNextState();
+					HoldemPlayerContext toReturn = tableState.sitIn(new GameSeatedPlayer(player, buyIn));
+					subscribeHoldemPlayerListener(player.getId(), holdemPlayerListener);
+					tableState.deal(tableState.getGame().getDealer());
+					return toReturn;
+				} else {
+					sitInPlayers.put(player.getId(), holdemPlayerListener);
+					HoldemPlayerContext toReturn = tableState.sitIn(new GameSeatedPlayer(player, buyIn));
+					subscribeHoldemPlayerListener(player.getId(), holdemPlayerListener);
+					return toReturn;
+				}
+				
+			} catch (IllegalValueException e) {
+				throw new IllegalActionException("You can not sit in to this table with the given buy-in of " + buyIn
+						+ "chips.");
+			}
+			
+			// TODO (only if joined)
+	}
 	
 	public void sitOut(GameSeatedPlayer player) {
 		tableState.sitOut(player);

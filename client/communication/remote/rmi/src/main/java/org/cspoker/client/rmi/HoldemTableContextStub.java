@@ -38,6 +38,12 @@ public class HoldemTableContextStub extends ForwardingExternalRemoteHoldemTableC
 			HoldemPlayerListener holdemPlayerListener) throws RemoteException, IllegalActionException {
 		return super.sitIn(seatId, buyIn,(RemoteHoldemPlayerListener) UnicastRemoteObject.exportObject(
 				new ForwardingRemoteHoldemPlayerListener(holdemPlayerListener), 0));
-		
+	}
+	
+	@Override
+	public RemoteHoldemPlayerContext sitIn(int buyIn,
+			HoldemPlayerListener holdemPlayerListener) throws RemoteException, IllegalActionException {
+		return super.sitIn(buyIn,(RemoteHoldemPlayerListener) UnicastRemoteObject.exportObject(
+				new ForwardingRemoteHoldemPlayerListener(holdemPlayerListener), 0));
 	}
 }

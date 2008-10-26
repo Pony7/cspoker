@@ -13,20 +13,33 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.common.api.lobby.holdemtable.context;
+package org.cspoker.common.api.lobby.holdemtable.action;
 
-import java.rmi.RemoteException;
+import javax.xml.bind.annotation.XmlRootElement;
 
-import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.RemoteHoldemPlayerContext;
-import org.cspoker.common.api.lobby.holdemtable.holdemplayer.listener.RemoteHoldemPlayerListener;
+import org.cspoker.common.api.lobby.holdemtable.context.StaticHoldemTableContext;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 
-public interface ExternalRemoteHoldemTableContext extends RemoteHoldemTableContext {
+@XmlRootElement
+public class SitInAnywhereAction extends HoldemTableAction<Void> {
+
+	private static final long serialVersionUID = 7302000503865264469L;
 	
-	public RemoteHoldemPlayerContext sitIn(long seatId, int buyIn,
-			RemoteHoldemPlayerListener holdemPlayerListener) throws IllegalActionException, RemoteException;
-	
-	public RemoteHoldemPlayerContext sitIn(int buyIn,
-			RemoteHoldemPlayerListener holdemPlayerListener) throws IllegalActionException, RemoteException;
-	
+	private int buyIn;
+
+	public SitInAnywhereAction(long id, long tableId, int buyIn) {
+		super(id, tableId);
+		this.buyIn = buyIn;
+	}
+
+	protected SitInAnywhereAction() {
+		// no op
+	}
+
+	@Override
+	public Void perform(StaticHoldemTableContext holdemTableContext) throws IllegalActionException {
+		holdemTableContext.sitIn(buyIn);
+		return null;
+	}
+
 }

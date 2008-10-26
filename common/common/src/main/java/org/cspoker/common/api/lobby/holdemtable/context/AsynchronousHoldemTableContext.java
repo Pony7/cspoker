@@ -13,14 +13,12 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.server.rmi.asynchronous.context;
+package org.cspoker.common.api.lobby.holdemtable.context;
 
 import java.util.concurrent.Executor;
 
 import net.jcip.annotations.Immutable;
 
-import org.cspoker.common.api.lobby.holdemtable.context.ForwardingHoldemTableContext;
-import org.cspoker.common.api.lobby.holdemtable.context.HoldemTableContext;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.HoldemPlayerContext;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.listener.AsynchronousHoldemPlayerListener;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.listener.HoldemPlayerListener;
@@ -35,9 +33,14 @@ public class AsynchronousHoldemTableContext extends ForwardingHoldemTableContext
 		super(holdemTableContext);
 		this.executor = executor;
 	}
-	
+
 	@Override
 	public HoldemPlayerContext sitIn(long seatId, int amount, HoldemPlayerListener holdemPlayerListener) throws IllegalActionException {
 		return super.sitIn(seatId, amount, new AsynchronousHoldemPlayerListener(executor,holdemPlayerListener));
+	}
+	
+	@Override
+	public HoldemPlayerContext sitIn(int amount, HoldemPlayerListener holdemPlayerListener) throws IllegalActionException {
+		return super.sitIn(amount, new AsynchronousHoldemPlayerListener(executor,holdemPlayerListener));
 	}
 }

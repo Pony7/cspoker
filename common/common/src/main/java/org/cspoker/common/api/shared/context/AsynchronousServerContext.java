@@ -13,7 +13,7 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.server.rmi.asynchronous.context;
+package org.cspoker.common.api.shared.context;
 
 import java.util.concurrent.Executor;
 
@@ -25,8 +25,6 @@ import org.cspoker.common.api.chat.listener.ChatListener;
 import org.cspoker.common.api.lobby.context.LobbyContext;
 import org.cspoker.common.api.lobby.listener.AsynchronousLobbyListener;
 import org.cspoker.common.api.lobby.listener.LobbyListener;
-import org.cspoker.common.api.shared.context.ForwardingServerContext;
-import org.cspoker.common.api.shared.context.ServerContext;
 
 @Immutable
 public class AsynchronousServerContext extends ForwardingServerContext {

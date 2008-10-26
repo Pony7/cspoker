@@ -24,7 +24,7 @@ import org.cspoker.common.api.lobby.holdemtable.holdemplayer.listener.HoldemPlay
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 
 public class ForwardingRemoteHoldemTableContext implements RemoteHoldemTableContext, Unreferenced{
-	
+
 	private final static Logger logger = Logger.getLogger(ForwardingRemoteHoldemTableContext.class);
 
 	private RemoteHoldemTableContext holdemTableContext;
@@ -38,11 +38,16 @@ public class ForwardingRemoteHoldemTableContext implements RemoteHoldemTableCont
 	}
 
 	public RemoteHoldemPlayerContext sitIn(long seatId, int amount, HoldemPlayerListener holdemPlayerListener)
-			throws RemoteException, IllegalActionException {
+	throws RemoteException, IllegalActionException {
 		return holdemTableContext.sitIn(seatId, amount, holdemPlayerListener);
 	}
 
-	
+	public RemoteHoldemPlayerContext sitIn(int amount, HoldemPlayerListener holdemPlayerListener)
+	throws RemoteException, IllegalActionException {
+		return holdemTableContext.sitIn(amount, holdemPlayerListener);
+	}
+
+
 	@Override
 	protected void finalize() throws Throwable {
 		try {
@@ -55,5 +60,5 @@ public class ForwardingRemoteHoldemTableContext implements RemoteHoldemTableCont
 	public void unreferenced() {
 		logger.debug("No more clients referencing: "+this);
 	}
-	
+
 }

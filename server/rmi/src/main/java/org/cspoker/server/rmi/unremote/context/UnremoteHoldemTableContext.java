@@ -39,5 +39,10 @@ ExternalHoldemTableContext {
 		return super.sitIn(seatId, amount, new UnremoteHoldemPlayerListener(connection, holdemPlayerListener));
 	}
 	
+	public HoldemPlayerContext sitIn(int amount,
+			RemoteHoldemPlayerListener holdemPlayerListener) throws IllegalActionException {
+		return super.sitIn(amount, new UnremoteHoldemPlayerListener(connection, holdemPlayerListener));
+	}
+	
 
 }

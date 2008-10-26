@@ -24,40 +24,43 @@ import org.cspoker.server.common.elements.id.SeatId;
 import org.cspoker.server.common.player.GameSeatedPlayer;
 
 public abstract class TableState {
-	
+
 	protected final PokerTable mediatingTable;
 
 	public TableState(PokerTable table){
 		this.mediatingTable = table;
 	}
-	
+
 	public abstract void bet(GameSeatedPlayer player, int amount) throws IllegalActionException;
 
 	public abstract void call(GameSeatedPlayer player)
-			throws IllegalActionException;
+	throws IllegalActionException;
 
 	public abstract void check(GameSeatedPlayer player)
-			throws IllegalActionException;
+	throws IllegalActionException;
 
 	public abstract void raise(GameSeatedPlayer player, int amount)
-			throws IllegalActionException;
+	throws IllegalActionException;
 
 	public abstract void fold(GameSeatedPlayer player)
-			throws IllegalActionException;
+	throws IllegalActionException;
 
 	public abstract void deal(GameSeatedPlayer player)
-			throws IllegalActionException;
+	throws IllegalActionException;
 
 	public abstract void allIn(GameSeatedPlayer player)
-			throws IllegalActionException;
+	throws IllegalActionException;
 
 	public abstract HoldemPlayerContext sitIn(SeatId seatId, GameSeatedPlayer player)
-			throws IllegalActionException;
+	throws IllegalActionException;
+
+	public abstract HoldemPlayerContext sitIn(GameSeatedPlayer player)
+	throws IllegalActionException;
 
 	public abstract void sitOut(GameSeatedPlayer player);
-	
+
 	public abstract List<SeatedPlayer> getSeatedPlayers();
-	
+
 	public abstract List<GameSeatedPlayer> getSeatedServerPlayers();
 
 	/**

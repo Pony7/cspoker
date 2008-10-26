@@ -24,6 +24,7 @@ import org.cspoker.client.xml.common.IDGenerator;
 import org.cspoker.client.xml.common.listener.XmlServerListenerTree;
 import org.cspoker.common.api.lobby.holdemtable.action.LeaveTableAction;
 import org.cspoker.common.api.lobby.holdemtable.action.SitInAction;
+import org.cspoker.common.api.lobby.holdemtable.action.SitInAnywhereAction;
 import org.cspoker.common.api.lobby.holdemtable.context.RemoteHoldemTableContext;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.RemoteHoldemPlayerContext;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.listener.HoldemPlayerListener;
@@ -57,6 +58,18 @@ public class XmlRemoteHoldemTableContext implements RemoteHoldemTableContext {
 		if(playerContext.compareAndSet(null, new XmlRemoteHoldemPlayerContext(performer,generator,tableID))){
 			serverListenerTree.getLobbyListenerTree().getHoldemTableListenerTree(tableID).setHoldemPlayerListener(holdemPlayerListener);
 			performer.perform(new SitInAction(generator.getNextID(),tableID,seatId,amount));
+			return playerContext.get();
+		}else{
+			throw new IllegalActionException("Already seated at table #"+tableID+".");
+		}
+	}
+
+	public RemoteHoldemPlayerContext sitIn(int amount,
+			HoldemPlayerListener holdemPlayerListener) throws RemoteException,
+			IllegalActionException {
+		if(playerContext.compareAndSet(null, new XmlRemoteHoldemPlayerContext(performer,generator,tableID))){
+			serverListenerTree.getLobbyListenerTree().getHoldemTableListenerTree(tableID).setHoldemPlayerListener(holdemPlayerListener);
+			performer.perform(new SitInAnywhereAction(generator.getNextID(),tableID,amount));
 			return playerContext.get();
 		}else{
 			throw new IllegalActionException("Already seated at table #"+tableID+".");

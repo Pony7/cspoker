@@ -24,4 +24,7 @@ public interface ExternalHoldemTableContext extends HoldemTableContext, External
 	public HoldemPlayerContext sitIn(long seatId, int buyIn,
 			RemoteHoldemPlayerListener holdemPlayerListener) throws IllegalActionException;
 	
+	public HoldemPlayerContext sitIn(int buyIn,
+			RemoteHoldemPlayerListener holdemPlayerListener) throws IllegalActionException;
+	
 }
