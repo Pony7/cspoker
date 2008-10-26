@@ -43,7 +43,7 @@ public class PlayerFactory {
 
 	}
 
-	private final static AtomicLong counter = new AtomicLong(0);
+	private final AtomicLong counter = new AtomicLong(0);
 
 	/**
 	 * Create a new player with given name and standard stack value.

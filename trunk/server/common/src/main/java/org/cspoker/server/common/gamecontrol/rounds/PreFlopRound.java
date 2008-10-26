@@ -21,6 +21,7 @@ import java.util.HashSet;
 import org.apache.log4j.Logger;
 import org.cspoker.common.api.lobby.holdemtable.event.NewRoundEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.NextPlayerEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.SmallBlindEvent;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.event.NewPocketCardsEvent;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.cards.Card;
@@ -108,6 +109,11 @@ public class PreFlopRound extends BettingRound {
 		if (!onTurn(player)) {
 			throw new IllegalActionException(player.getName()
 					+ " can not check in this round.");
+		}
+		if(game.getNbSeatedPlayers()==2 && game.getDealer().equals(player)){
+			game.getDealer().equals(player);
+			throw new IllegalActionException(player.getName()
+					+ " can not check in this round. Someone has already bet.");
 		}
 		if (bigBlindPlayer.equals(player) && someoneHasRaised()) {
 			throw new IllegalActionException(player.getName()
