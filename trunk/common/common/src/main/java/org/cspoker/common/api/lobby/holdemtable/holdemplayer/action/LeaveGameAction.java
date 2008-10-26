@@ -34,7 +34,7 @@ public class LeaveGameAction extends HoldemPlayerAction<Void> {
 	
 	@Override
 	public Void perform(HoldemPlayerContext holdemPlayerContext) {
-		holdemPlayerContext.leaveGame();
+		holdemPlayerContext.sitOut();
 		return null;
 	}
 
