@@ -19,6 +19,7 @@ import java.util.concurrent.Executor;
 
 import net.jcip.annotations.Immutable;
 
+import org.cspoker.common.api.lobby.holdemtable.context.AsynchronousHoldemTableContext;
 import org.cspoker.common.api.lobby.holdemtable.context.HoldemTableContext;
 import org.cspoker.common.api.lobby.holdemtable.listener.AsynchronousHoldemTableListener;
 import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
@@ -37,7 +38,8 @@ public class AsynchronousLobbyContext extends ForwardingLobbyContext {
 	@Override
 	public HoldemTableContext joinHoldemTable(long tableId,
 			HoldemTableListener holdemTableListener) throws IllegalActionException {
-		return super.joinHoldemTable(tableId, new AsynchronousHoldemTableListener(executor, holdemTableListener));
+		return new AsynchronousHoldemTableContext(executor, 
+				super.joinHoldemTable(tableId, new AsynchronousHoldemTableListener(executor, holdemTableListener)));
 	}
 	
 }
