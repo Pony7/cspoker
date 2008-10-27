@@ -18,9 +18,8 @@ package org.cspoker.client.bots;
 import org.apache.log4j.Logger;
 import org.cspoker.common.api.lobby.context.LobbyContext;
 import org.cspoker.common.api.lobby.holdemtable.context.HoldemTableContext;
+import org.cspoker.common.api.lobby.holdemtable.event.NewDealEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.NextPlayerEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.ShowHandEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.WinnerEvent;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.HoldemPlayerContext;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 
@@ -29,8 +28,9 @@ public class CallBot extends DefaultBot {
 	private final static Logger logger = Logger.getLogger(BotRunner.class);
 	
 	private final String name;
-	private HoldemTableContext tableContext;
-	private HoldemPlayerContext playerContext;
+	private final HoldemTableContext tableContext;
+	private final HoldemPlayerContext playerContext;
+	private long deals = 1;
 
 	public CallBot(LobbyContext lobbyContext, String name, long tableID) {
 		this.name=name;
@@ -38,6 +38,7 @@ public class CallBot extends DefaultBot {
 			tableContext = lobbyContext.joinHoldemTable(tableID, this);
 			playerContext = tableContext.sitIn(1000, this);
 		} catch (IllegalActionException e) {
+			logger.error(e);
 			throw new IllegalArgumentException("Failed to join table.",e);
 		}
 	}
@@ -47,22 +48,18 @@ public class CallBot extends DefaultBot {
 		logger.info("Next player is: "+nextPlayerEvent.getPlayer().getName());
 		if(nextPlayerEvent.getPlayer().getName().equalsIgnoreCase(name)){
 			try {
+				logger.info(name+" calls");
 				playerContext.checkOrCall();
 			} catch (IllegalActionException e) {
+				logger.error(e);
 				throw new IllegalStateException("Call was not allowed.",e);
 			}
 		}
 	}
 	
 	@Override
-	public void onWinner(WinnerEvent winnerEvent) {
-		
-	}
-	
-	@Override
-	public void onShowHand(ShowHandEvent showHandEvent) {
-		// TODO Auto-generated method stub
-		super.onShowHand(showHandEvent);
+	public void onNewDeal(NewDealEvent newDealEvent) {
+		System.out.println((deals++)+": "+newDealEvent);
 	}
 	
 }

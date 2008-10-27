@@ -22,6 +22,7 @@ import net.jcip.annotations.Immutable;
 import org.cspoker.common.api.chat.context.ChatContext;
 import org.cspoker.common.api.chat.listener.AsynchronousChatListener;
 import org.cspoker.common.api.chat.listener.ChatListener;
+import org.cspoker.common.api.lobby.context.AsynchronousLobbyContext;
 import org.cspoker.common.api.lobby.context.LobbyContext;
 import org.cspoker.common.api.lobby.listener.AsynchronousLobbyListener;
 import org.cspoker.common.api.lobby.listener.LobbyListener;
@@ -48,7 +49,8 @@ public class AsynchronousServerContext extends ForwardingServerContext {
 	
 	@Override
 	public LobbyContext getLobbyContext(LobbyListener lobbyListener) {
-		return super.getLobbyContext(new AsynchronousLobbyListener(executor, lobbyListener));
+		return new AsynchronousLobbyContext(executor,
+				super.getLobbyContext(new AsynchronousLobbyListener(executor, lobbyListener)));
 	}
 
 }
