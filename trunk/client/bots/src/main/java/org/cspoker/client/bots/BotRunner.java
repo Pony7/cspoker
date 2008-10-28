@@ -56,11 +56,11 @@ public class BotRunner implements LobbyListener {
 					ServerContext serverguy = new AsynchronousServerContext(executor, server.login("guy", "test"));
 					LobbyContext lobbyguy = serverguy.getLobbyContext(BotRunner.this);
 					DetailedHoldemTable table = lobbyguy.createHoldemTable("BotTable", new TableConfiguration());
-					CallBot guy = new CallBot(lobbyguy,"guy",table.getId());
+					CallBot guy = new CallBot(lobbyguy,"guy",table.getId(), true);
 					
 					ServerContext serverkenzo = new AsynchronousServerContext(executor, server.login("kenzo", "test"));
 					LobbyContext lobbykenzo = serverkenzo.getLobbyContext(BotRunner.this);
-					CallBot kenzo = new CallBot(lobbykenzo,"kenzo",table.getId());
+					CallBot kenzo = new CallBot(lobbykenzo,"kenzo",table.getId(), false);
 				} catch (LoginException e) {
 					throw new IllegalStateException("Login Failed");
 				}

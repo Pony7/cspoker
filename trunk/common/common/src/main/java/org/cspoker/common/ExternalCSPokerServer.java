@@ -19,7 +19,9 @@ import javax.security.auth.login.LoginException;
 
 import org.cspoker.common.api.shared.context.ExternalServerContext;
 
-public interface ExternalCSPokerServer extends RemoteCSPokerServer, ExternalRemoteCSPokerServer {
+//Can't extend ExternalRemoteCSPokerServer because of a bug in the Sun JDK 6 compiler.
+//see http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6294779
+public interface ExternalCSPokerServer extends RemoteCSPokerServer/*, ExternalRemoteCSPokerServer*/ {
 
 	public ExternalServerContext login(String username, String password)
 			throws LoginException;

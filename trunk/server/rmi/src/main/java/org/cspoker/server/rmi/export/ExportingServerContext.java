@@ -32,6 +32,7 @@ import org.cspoker.common.api.lobby.listener.LobbyListener;
 import org.cspoker.common.api.lobby.listener.RemoteLobbyListener;
 import org.cspoker.common.api.shared.context.ExternalServerContext;
 import org.cspoker.common.api.shared.context.ForwardingExternalRemoteServerContext;
+import org.cspoker.common.api.shared.context.ServerContextConverter;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 
 public class ExportingServerContext extends ForwardingExternalRemoteServerContext {
@@ -39,7 +40,7 @@ public class ExportingServerContext extends ForwardingExternalRemoteServerContex
 	private final static Logger logger = Logger.getLogger(ExportingServerContext.class);
 
 	public ExportingServerContext(ExternalServerContext serverContext){
-		super(serverContext);
+		super(new ServerContextConverter(serverContext));
 	}
 
 	@Override

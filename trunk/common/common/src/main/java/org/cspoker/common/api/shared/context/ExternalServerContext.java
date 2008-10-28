@@ -21,7 +21,9 @@ import org.cspoker.common.api.lobby.context.ExternalLobbyContext;
 import org.cspoker.common.api.lobby.listener.LobbyListener;
 import org.cspoker.common.api.lobby.listener.RemoteLobbyListener;
 
-public interface ExternalServerContext extends ServerContext, ExternalRemoteServerContext{
+//Can't extend ExternalRemoteServerContext because of a bug in the Sun JDK 6 compiler.
+//see http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6294779
+public interface ExternalServerContext extends ServerContext/*, ExternalRemoteServerContext*/{
 
 	public ChatContext getServerChatContext(RemoteChatListener chatListener);
 	

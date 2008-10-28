@@ -19,7 +19,6 @@ import org.apache.log4j.Logger;
 import org.cspoker.common.api.lobby.context.LobbyContext;
 import org.cspoker.common.api.lobby.holdemtable.context.HoldemTableContext;
 import org.cspoker.common.api.lobby.holdemtable.event.NewDealEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.NewRoundEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.NextPlayerEvent;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.HoldemPlayerContext;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
@@ -27,23 +26,29 @@ import org.cspoker.common.api.shared.exception.IllegalActionException;
 public class CallBot extends DefaultBot {
 
 	private final static Logger logger = Logger.getLogger(BotRunner.class);
-	
+
 	private final String name;
 	private final HoldemTableContext tableContext;
 	private final HoldemPlayerContext playerContext;
 	private long deals = 1;
 
-	public CallBot(LobbyContext lobbyContext, String name, long tableID) {
+	private final boolean doOutput;
+
+	private final long startTime;
+
+	public CallBot(LobbyContext lobbyContext, String name, long tableID, boolean doOutput) {
 		this.name=name;
+		this.doOutput = doOutput;
+		this.startTime = System.currentTimeMillis();
 		try {
 			tableContext = lobbyContext.joinHoldemTable(tableID, this);
-			playerContext = tableContext.sitIn(1000, this);
+			playerContext = tableContext.sitIn(10000, this);
 		} catch (IllegalActionException e) {
 			logger.error(e);
 			throw new IllegalArgumentException("Failed to join table.",e);
 		}
 	}
-	
+
 	@Override
 	public void onNextPlayer(NextPlayerEvent nextPlayerEvent) {
 		logger.info("Next player is: "+nextPlayerEvent.getPlayer().getName());
@@ -57,12 +62,18 @@ public class CallBot extends DefaultBot {
 			}
 		}
 	}
-	
+
 	@Override
 	public void onNewDeal(NewDealEvent newDealEvent) {
-		System.out.println((deals++)+": "+newDealEvent);
+		if(doOutput){
+			++deals;
+			if(deals%128==0){
+				System.out.println("deals "+(deals)+": "+newDealEvent);
+				System.out.println(deals*1000/(1+System.currentTimeMillis()-startTime)+" deals per second");
+			}
+		}
 	}
-	
-	
-	
+
+
+
 }
