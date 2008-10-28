@@ -15,41 +15,68 @@
  */
 package org.cspoker.server.rmi;
 
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Executor;
-import java.util.concurrent.Semaphore;
-import java.util.concurrent.atomic.AtomicReference;
+import java.util.concurrent.atomic.AtomicBoolean;
+
+import net.jcip.annotations.GuardedBy;
+import net.jcip.annotations.ThreadSafe;
 
 import org.apache.log4j.Logger;
 
+@ThreadSafe
 public class SequencePreservingExecutor implements Executor {
 
-	//TODO port to Queue
-	//USE AT OWN RISK
-	
 	private final static Logger logger = Logger.getLogger(SequencePreservingExecutor.class);
-	
+
 	private final Executor executor;
-	private AtomicReference<Semaphore> lastSemaphore = new AtomicReference<Semaphore>(new Semaphore(1));
+
+	@GuardedBy("queueReaderLock")
+	private final Queue<Runnable> queue = new ConcurrentLinkedQueue<Runnable>();
+
+	private final AtomicBoolean taskPending = new AtomicBoolean(false);
+
+	private final Object queueReaderLock = new Object();
 
 	public SequencePreservingExecutor(Executor executor) {
 		this.executor = executor;
 	}
 
 	public void execute(final Runnable command) {
-		final Semaphore newSemaphore = new Semaphore(0);
-		final Semaphore oldSemaphore = lastSemaphore.getAndSet(newSemaphore);
-		executor.execute(new Runnable(){
-			public void run() {
-				try {
-					oldSemaphore.acquire();
-					command.run();
-					newSemaphore.release();
-				} catch (InterruptedException exception) {
-					logger.error("Interrupted", exception);
-					Thread.currentThread().interrupt();
+		queue.add(command);
+		if(taskPending.compareAndSet(false, true)){
+			executor.execute(new Runnable(){
+				public void run() {
+					//empty the queue before leaving a window for new runnables to be submitted
+					readQueue();
+					//take a lock to prevent 2 runnables of this kind to poll the queue simultaneously and
+					//switch the order of events.
+					synchronized (queueReaderLock) {
+						// allow new runnables of this kind to be submitted
+						taskPending.set(false);
+						// empty the queue
+						readQueue();
+					}
 				}
-			}
-		});
+				
+				public void readQueue(){
+					Runnable task;
+					while ((task = queue.poll()) != null) {
+						try {
+							task.run();
+						} catch (Exception e) {
+							logger.error(e);
+							throw new IllegalStateException(
+									"Performed task that threw an exception.",
+									e);
+						}
+					}
+				}
+				
+			});
+		}
+
 	}
 
 }
