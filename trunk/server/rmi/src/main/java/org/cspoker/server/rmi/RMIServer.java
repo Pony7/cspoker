@@ -60,8 +60,7 @@ public class RMIServer
 			}
 		};
 		RemoteServerContext context = new ExportingServerContext(
-				new UnremoteServerContext(connection, new AsynchronousServerContext(new SequencePreservingExecutor(
-						RequestExecutor.getInstance()), rootServer)));
+				new UnremoteServerContext(connection, new AsynchronousServerContext(RequestExecutor.getInstance(), rootServer)));
 		try {
 			UnicastRemoteObject.unexportObject(context, true);
 		} catch (NoSuchObjectException e) {

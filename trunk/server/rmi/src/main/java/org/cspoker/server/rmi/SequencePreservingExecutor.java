@@ -24,6 +24,7 @@ import org.apache.log4j.Logger;
 public class SequencePreservingExecutor implements Executor {
 
 	//TODO port to Queue
+	//USE AT OWN RISK
 	
 	private final static Logger logger = Logger.getLogger(SequencePreservingExecutor.class);
 	
