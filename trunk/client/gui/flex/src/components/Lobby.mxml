@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="750" height="580">
+	<mx:DataGrid x="29" y="36" width="621" height="277" id="gamesDG">
+		<mx:columns>
+			<mx:DataGridColumn headerText="Column 1" dataField="col1"/>
+			<mx:DataGridColumn headerText="Column 2" dataField="col2"/>
+			<mx:DataGridColumn headerText="Column 3" dataField="col3"/>
+		</mx:columns>
+	</mx:DataGrid>
+	<mx:Label x="295" y="10" text="LOBBY" id="lblLobbyTitle"/>
+	
+</mx:Canvas>
