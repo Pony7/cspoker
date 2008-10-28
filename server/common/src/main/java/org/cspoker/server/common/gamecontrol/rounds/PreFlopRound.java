@@ -25,6 +25,7 @@ import org.cspoker.common.api.lobby.holdemtable.event.SmallBlindEvent;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.event.NewPocketCardsEvent;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.cards.Card;
+import org.cspoker.common.elements.table.Rounds;
 import org.cspoker.server.common.elements.chips.IllegalValueException;
 import org.cspoker.server.common.gamecontrol.Game;
 import org.cspoker.server.common.gamecontrol.PokerTable;
@@ -47,8 +48,8 @@ public class PreFlopRound extends BettingRound {
 		GameSeatedPlayer currentPlayer = getGame().getCurrentPlayer();
 
 		if (currentPlayer != null) {
-			gameMediator.publishNewRoundEvent(new NewRoundEvent(toString(),
-					currentPlayer.getMemento()));
+			gameMediator.publishNewRoundEvent(new NewRoundEvent(getRound()));
+			gameMediator.publishNextPlayerEvent(new NextPlayerEvent(currentPlayer.getMemento()));
 		}
 		try {
 			// If there are only 2 players, blinds are inverted.
@@ -155,5 +156,9 @@ public class PreFlopRound extends BettingRound {
 
 	public String toString() {
 		return "pre-flop round";
+	}
+	
+	public Rounds getRound(){
+		return Rounds.PREFLOP;
 	}
 }

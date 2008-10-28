@@ -19,6 +19,7 @@ import org.apache.log4j.Logger;
 import org.cspoker.common.api.lobby.context.LobbyContext;
 import org.cspoker.common.api.lobby.holdemtable.context.HoldemTableContext;
 import org.cspoker.common.api.lobby.holdemtable.event.NewDealEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.NewRoundEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.NextPlayerEvent;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.HoldemPlayerContext;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
@@ -61,5 +62,7 @@ public class CallBot extends DefaultBot {
 	public void onNewDeal(NewDealEvent newDealEvent) {
 		System.out.println((deals++)+": "+newDealEvent);
 	}
+	
+	
 	
 }
