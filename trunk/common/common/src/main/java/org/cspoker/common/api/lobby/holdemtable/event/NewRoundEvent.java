@@ -19,7 +19,7 @@ package org.cspoker.common.api.lobby.holdemtable.event;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
-import org.cspoker.common.elements.player.Player;
+import org.cspoker.common.elements.table.Rounds;
 
 /**
  * A class to represent new round events.
@@ -32,40 +32,22 @@ public class NewRoundEvent extends HoldemTableEvent {
 
 	private static final long serialVersionUID = 5282936949568835084L;
 
-	private String roundName;
+	private Rounds round;
 
-	private Player player;
-
-	public NewRoundEvent(String roundName, Player player) {
-		this.roundName = roundName;
-		this.player = player;
-	}
-
-	public NewRoundEvent(String roundName) {
-		this.roundName = roundName;
+	public NewRoundEvent(Rounds round) {
+		this.round = round;
 	}
 
 	protected NewRoundEvent() {
 		// no op
 	}
 
-	public Player getPlayer() {
-		return player;
-	}
-
 	public String toString() {
-		if (player == null) {
-			return roundName + ":";
-		}
-		return roundName + ": " + player.getName() + " can begin to act.";
+		return round+"";
 	}
 
-	public String getRoundName() {
-		return roundName;
-	}
-
-	public Player getInitialPlayer() {
-		return player;
+	public Rounds getRound() {
+		return round;
 	}
 
 	public void dispatch(HoldemTableListener holdemTableListener) {

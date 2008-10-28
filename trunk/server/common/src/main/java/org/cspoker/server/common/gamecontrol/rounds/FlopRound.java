@@ -21,7 +21,9 @@ import java.util.HashSet;
 import org.apache.log4j.Logger;
 import org.cspoker.common.api.lobby.holdemtable.event.NewCommunityCardsEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.NewRoundEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.NextPlayerEvent;
 import org.cspoker.common.elements.cards.Card;
+import org.cspoker.common.elements.table.Rounds;
 import org.cspoker.server.common.gamecontrol.Game;
 import org.cspoker.server.common.gamecontrol.PokerTable;
 import org.cspoker.server.common.player.GameSeatedPlayer;
@@ -33,8 +35,8 @@ public class FlopRound extends BettingRound {
 		super(gameMediator, game);
 		GameSeatedPlayer currentPlayer = getGame().getCurrentPlayer();
 		if (currentPlayer != null) {
-			gameMediator.publishNewRoundEvent(new NewRoundEvent(toString(),
-					currentPlayer.getMemento()));
+			gameMediator.publishNewRoundEvent(new NewRoundEvent(getRound()));
+			gameMediator.publishNextPlayerEvent(new NextPlayerEvent(currentPlayer.getMemento()));
 		}
 		drawMuckCard();
 		drawOpenCard();
@@ -62,5 +64,9 @@ public class FlopRound extends BettingRound {
 
 	public String toString() {
 		return "flop round";
+	}
+	
+	public Rounds getRound(){
+		return Rounds.FLOP;
 	}
 }

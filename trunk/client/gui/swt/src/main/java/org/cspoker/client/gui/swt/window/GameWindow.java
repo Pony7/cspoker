@@ -288,9 +288,6 @@ public class GameWindow
 		for (PlayerSeatComposite psc : tableComposite.getPlayerSeatComposites(true)) {
 			psc.getPlayer().setBetChipsValue(0);
 		}
-		if (user.getMemento().equals(newRoundEvent.getInitialPlayer())) {
-			userInputComposite.prepareForUserInput();
-		}
 		userInputComposite.showDealerMessage(newRoundEvent);
 	}
 	

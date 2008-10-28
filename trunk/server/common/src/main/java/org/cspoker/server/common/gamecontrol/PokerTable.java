@@ -555,9 +555,6 @@ public class PokerTable {
 	 * 
 	 */
 	public synchronized void publishNewRoundEvent(NewRoundEvent event) {
-		if (event.getPlayer() != null) {
-			submitTimeOutHandler(event.getInitialPlayer());
-		}
 		for (HoldemTableListener listener : holdemTableListeners) {
 			listener.onNewRound(event);
 		}
