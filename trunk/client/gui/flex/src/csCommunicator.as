@@ -1,5 +1,7 @@
 package
 {
+	import cs.*;
+	
 	import flash.events.*;
 	import flash.net.*;
 	import flash.security.*;
@@ -163,6 +165,79 @@ package
     				
 		}
 		
+		
+		
+		
+		public function csStartGameAction():void
+		{
+						
+			idAction++;
+											
+			var xml:XML =						
+			<startGameAction id={idAction}/>;
+    		
+			
+					    
+    		csSendData(xml);
+    				
+		}
+		
+		public function csCallAction():void
+		{						
+			idAction++;
+											
+			var xml:XML =						
+			<callAction id={idAction}/>;
+    									    
+    		csSendData(xml);    				
+		}		
+		
+		public function csBetAction(amount:int ):void
+		{						
+			idAction++;
+											
+			var xml:XML =						
+			
+			<betAction amount={amount} id={idAction}/>;
+			    									    
+    		csSendData(xml);    				
+		}
+		
+		public function csFoldAction():void
+		{						
+			idAction++;
+											
+			var xml:XML =						
+			
+			<foldAction id={idAction}/>;
+						    									    
+    		csSendData(xml);    				
+		}
+		
+		public function csRaiseAction(amount:int ):void
+		{						
+			idAction++;
+											
+			var xml:XML =						
+			
+			<raiseAction amount={amount} id={idAction}/>;
+									    									   
+    		csSendData(xml);    				
+		}
+		
+		public function csCheckAction():void
+		{						
+			idAction++;
+											
+			var xml:XML =						
+			<checkAction id={idAction}/>;
+    									    
+    		csSendData(xml);    				
+		}		
+//-----------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------
+
 	private  function ParseDataIn(strIn:String):void{
 	
 	
@@ -174,11 +249,10 @@ package
 		
 		
 		
-		var strXML:String=strIn.replace("xsi:type","xsitype");
-		
-		
-		
-		var xmlDoc:XMLDocument = new XMLDocument(strXML);	
+		//var strXML:String=strIn.replace("xsi:type","xsitype");
+		//var xmlDoc:XMLDocument = new XMLDocument(strXML);
+			
+		var xmlDoc:XMLDocument = new XMLDocument(strIn);
 	
 		var decoder:SimpleXMLDecoder=new SimpleXMLDecoder(true);
 				
@@ -201,6 +275,10 @@ package
 		
 		
 			objResult=	contentObj.login;
+			
+			dispatchEvent(new csEventActions( csEventActions.OnLogin,objAction,objResult));
+			
+			return;
 		
 			
 		}
@@ -210,14 +288,19 @@ package
 	
 		if (contentObj.hasOwnProperty("successfulInvocationEvent")){
 		 
-	 	switch (contentObj.successfulInvocationEvent.action.xsitype){
+	 	//switch (contentObj.successfulInvocationEvent.action.xsitype){
+	 	switch (contentObj.successfulInvocationEvent.action["xsi:type"]){	
 	 
 	 		case "getTablesAction":
 		  			  	
 			objAction=contentObj.successfulInvocationEvent.action;
 			objResult=contentObj.successfulInvocationEvent.result.tables;
+			
+			var mTables:CSTableList= new CSTableList(contentObj.successfulInvocationEvent.result.tables);
 		  
-		  	dispatchEvent(new csEvent( csEvent.OnGetTablesAction,objAction,objResult));
+		  	dispatchEvent(new csEventActions( csEventActions.OnGetTablesAction,"getTablesAction",mTables));
+		  	
+		  	
 			
 			break;
 		
@@ -225,16 +308,21 @@ package
 		  			  	
 			objAction=contentObj.successfulInvocationEvent.action;
 			objResult=contentObj.successfulInvocationEvent.result;
+			
+			var mTable:CSTable= new CSTable(contentObj.successfulInvocationEvent.result);
 		  
-		  	dispatchEvent(new csEvent( csEvent.OnGetTableAction,"getTableAction",objResult));
+		  	dispatchEvent(new csEventActions( csEventActions.OnGetTableAction,"getTableAction",mTable));
+		  	
 		  	break;
 		
 			case "joinTableAction":
 		
 			objAction=contentObj.successfulInvocationEvent.action;
 			objResult=contentObj.successfulInvocationEvent.result;
+			
+			var mTable:CSTable= new CSTable(contentObj.successfulInvocationEvent.result);
 		
-			dispatchEvent(new csEvent( csEvent.OnJoinTableAction,"joinTableAction",objResult));
+			dispatchEvent(new csEventActions( csEventActions.OnJoinTableAction,"joinTableAction",mTable));
 		
 			break;
 			
@@ -243,7 +331,7 @@ package
 			objAction=contentObj.successfulInvocationEvent.action;
 			objResult=contentObj.successfulInvocationEvent.result;
 		
-			dispatchEvent(new csEvent( csEvent.OnLeaveTableAction,"leaveTableAction",objResult));
+			dispatchEvent(new csEventActions( csEventActions.OnLeaveTableAction,"leaveTableAction",objResult));
 		
 			break;
 			
@@ -251,8 +339,12 @@ package
 		
 			objAction=contentObj.successfulInvocationEvent.action;
 			objResult=contentObj.successfulInvocationEvent.result;
+			
+			
+		  
+		  	var mTable:CSTable= new CSTable(contentObj.successfulInvocationEvent.result);
 		
-			dispatchEvent(new csEvent( csEvent.OnCreateTableAction,"createTableAction",objResult));
+			dispatchEvent(new csEventActions( csEventActions.OnCreateTableAction,"createTableAction",mTable));
 		
 			break;
 			
@@ -260,6 +352,7 @@ package
 		}	 
 		 
 		
+		return;
 		 
 		 		
 		}
@@ -269,7 +362,9 @@ package
 			
 			objResult=contentObj.tableCreatedEvent.table;
 		  
-		  	dispatchEvent(new csEvent( csEvent.OnGetTableAction,"tableCreatedEvent",objResult));
+		  	var mTable:CSTable= new CSTable(contentObj.tableCreatedEvent.table);
+		  
+		  	dispatchEvent(new csEventActions( csEventActions.OnGetTableAction,"tableCreatedEvent",mTable));
 		  	
 		  	return;
 			
@@ -278,9 +373,10 @@ package
 		if (contentObj.hasOwnProperty("tableChangedEvent")){
 			
 			
-			objResult=contentObj.tableChangedEvent.table;
+			
+			var mTable:CSTable= new CSTable(contentObj.tableChangedEvent.table);
 		  
-		  	dispatchEvent(new csEvent( csEvent.OnGetTableAction,"tableChangedEvent",objResult));
+		  	dispatchEvent(new csEventActions( csEventActions.OnTableChangedEvent,"tableChangedEvent",mTable));
 		  	
 		  	return;
 			
@@ -289,14 +385,38 @@ package
 		if (contentObj.hasOwnProperty("tableRemovedEvent")){
 			
 			
-			objResult=contentObj.tableRemovedEvent;
+		//	var mTable:CSTable= new CSTable(contentObj.tableRemovedEvent);
+			
 		  
-		  	dispatchEvent(new csEvent( csEvent.OnGetTableAction,"tableRemovedEvent",objResult));
+		  	dispatchEvent(new csEventActions( csEventActions.OnTableRemovedEvent,"tableRemovedEvent",contentObj.tableRemovedEvent.id));
 		  	
 		  	return;
 			
 		}
 		
+		if (contentObj.hasOwnProperty("playerJoinedTableEvent")){
+			
+			
+			
+			var objPlayer:CSPlayer= new CSPlayer(contentObj.playerJoinedTableEvent.player);
+		  
+		  	dispatchEvent(new csEventActions( csEventActions.OnPlayerJoinedTableEvent,"playerJoinedTableEvent",objPlayer));
+		  	
+		  	return;
+			
+		}
+		
+		if (contentObj.hasOwnProperty("playerLeftTableEvent")){
+			
+			
+					  
+		  	var objPlayer:CSPlayer= new CSPlayer(contentObj.playerLeftTableEvent.player);
+		  
+		  	dispatchEvent(new csEventActions( csEventActions.OnPlayerLeftTableEvent,"playerLeftTableEvent",objPlayer));
+		  	
+		  	return;
+			
+		}
 		
 		 
 		if (contentObj.hasOwnProperty("illegalActionEvent")){
@@ -304,10 +424,84 @@ package
 			objAction=contentObj.illegalActionEvent.action;
 			objResult=contentObj.illegalActionEvent.msg;
 			
-			dispatchEvent(new csEvent( csEvent.OnIllegalActionEvent,objAction,objResult));
+			dispatchEvent(new csEventActions( csEventActions.OnIllegalActionEvent,objAction,objResult));
 			
 			
 		}
+		
+		// game logic
+		
+		if (contentObj.hasOwnProperty("newDealEvent")){
+			
+			
+			objResult=contentObj.newDealEvent;
+			
+			var objEvent:CSGameEvent=new CSGameEvent("newDealEvent",objResult);
+			
+			
+			dispatchEvent(new csEventActions( csEventActions.OnNewDealEvent,"newDealEvent",objEvent));
+			//dispatchEvent(new csEventActions( csEventActions.OnNewDealEvent,"newDealEvent",objResult));
+			
+			
+		}
+		
+		if (contentObj.hasOwnProperty("newRoundEvent")){
+			
+			
+			objResult=contentObj.newRoundEvent;
+			
+			var objEvent:CSGameEvent=new CSGameEvent("newRoundEvent",objResult);
+			dispatchEvent(new csEventActions( csEventActions.OnNewDealEvent,"newRoundEvent",objEvent));
+			
+			//dispatchEvent(new csEventActions( csEventActions.OnNewRoundEvent,"newRoundEvent",objResult));
+			
+			
+		}
+		
+		if (contentObj.hasOwnProperty("smallBlindEvent")){
+			
+			
+			objResult=contentObj.smallBlindEvent;
+			
+			var objEvent:CSGameEvent=new CSGameEvent("smallBlindEvent",objResult);
+			
+			dispatchEvent(new csEventActions( csEventActions.OnNewDealEvent,"smallBlindEvent",objEvent));
+			//dispatchEvent(new csEventActions( csEventActions.OnSmallBlindEvent,"smallBlindEvent",objResult));
+			
+			
+		}
+		
+		if (contentObj.hasOwnProperty("bigBlindEvent")){
+			
+			
+			objResult=contentObj.bigBlindEvent;
+			
+			var objEvent:CSGameEvent=new CSGameEvent("bigBlindEvent",objResult);
+			
+			dispatchEvent(new csEventActions( csEventActions.OnNewDealEvent,"bigBlindEvent",objEvent));
+			
+			//dispatchEvent(new csEventActions( csEventActions.OnBigBlindEvent,"bigBlindEvent",objResult));
+			
+			
+		}
+		
+		if (contentObj.hasOwnProperty("newPocketCardsEvent")){
+			
+			
+			objResult=contentObj.newPocketCardsEvent;
+			
+			var objEvent:CSGameEvent=new CSGameEvent("newPocketCardsEvent",objResult);
+			
+			dispatchEvent(new csEventActions( csEventActions.OnNewPocketCardsEvent,"newPocketCardsEvent",objEvent));
+			
+			
+			
+			//dispatchEvent(new csEventActions( csEventActions.OnNewPocketCardsEvent,"newPocketCardsEvent",objResult));
+			
+			
+		}
+		
+	
 	
 	}
 
@@ -331,7 +525,7 @@ private function closeHandler(event:Event):void {
    
  private function connectHandler(event:Event):void {
             trace("connectHandler: " + event);
-            dispatchEvent(new csEvent( csEvent.OnConnectionsStatus,null,"SUCCESS"));
+            dispatchEvent(new csEventActions( csEventActions.OnConnectionsStatus,null,"SUCCESS"));
         }
    
  private function dataHandler(event:DataEvent):void {
@@ -345,7 +539,7 @@ private function closeHandler(event:Event):void {
  private function ioErrorHandler(event:IOErrorEvent):void {
             trace("ioErrorHandler: " + event);
             //dispatchEvent(new Event("connectionStatus",));
-            dispatchEvent(new csEvent( csEvent.OnConnectionsStatus,null,"ERROR"));
+            dispatchEvent(new csEventActions( csEventActions.OnConnectionsStatus,null,"ERROR"));
             
         }
    

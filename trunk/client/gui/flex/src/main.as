@@ -1,4 +1,10 @@
 // ActionScript file
+import cs.CSCards;
+import cs.CSGameEvent;
+import cs.CSPlayer;
+import cs.CSTable;
+import cs.CSTableList;
+
 import flash.events.KeyboardEvent;
 import flash.ui.Keyboard;
 import flash.xml.*;
@@ -7,24 +13,33 @@ import mx.collections.ArrayCollection;
 import mx.controls.Alert;
 import mx.events.FlexEvent;
 
-
 private var csComm:csCommunicator= new csCommunicator();
+private var userName:String;
 
- 
+private var cards:CSCards=new CSCards;
+
+private var _running:Boolean;
+
+private var player0:CSPlayer;
+private var player1:CSPlayer;
+
+
+
+private var SeatedPlayer:CSPlayer;
 
 public function Initialize():void{
  
  	
- 	// txtMessage.addEventListener(FlexEvent.CREATION_COMPLETE,controlCreated);
- 	
-	 
-			
-}
-
-private function controlCreated(event:FlexEvent):void
-{
-		//txtMessage.addEventListener(KeyboardEvent.KEY_UP, OnKeyUp);
-		//OutputTextArea.addEventListener(FlexEvent.UPDATE_COMPLETE, OnOutputScroll);
+ 		
+ 		
+	 	txtMessage.addEventListener(KeyboardEvent.KEY_UP, OnKeyUp);
+		OutputTextArea.addEventListener(FlexEvent.UPDATE_COMPLETE, OnOutputScroll);
+		
+		
+//		imgFlop1.source=cards.getCard("CLUBS","DEUCE");
+		
+		
+		vsMain.selectedChild=cnvLogin;
 }
 
 public function OnKeyUp(event:KeyboardEvent):void
@@ -56,7 +71,7 @@ public function DoConnect():void
 	 
 	 btnConnect.label="Disconnect"
 	 
-	 csComm.addEventListener(csEvent.OnConnectionsStatus,OnConnectionStatus);
+	 csComm.addEventListener(csEventActions.OnConnectionsStatus,OnConnectionStatus);
 	 
 	 csComm.csConnect(dataServer[0],dataServer[1]);
 	 
@@ -94,7 +109,7 @@ private function AppendData(strIn:String):void
 public function OnSendClick():void
 {
 	
-	var input:String=txtMessage.text;		
+	var input:String=StripString( txtMessage.text);		
 	var inputArray:Array;
 	
 	inputArray=input.split(" "); 
@@ -148,7 +163,8 @@ public function OnSendClick():void
 		break;			
 		
 	case "leavetable":
-				
+		
+		
 		AppendData(input);
 		AppendData("------------------------");
 				
@@ -176,45 +192,182 @@ public function OnSendClick():void
 		}
 		else
 		{										
-			csComm.csCreateTableAction( inputArray[1]);														
+			csComm.csCreateTableAction( inputArray[1],30000);
+			//csComm.csCreateTableAction( inputArray[1],120000);																
 		}
 	
+		break;
+	
+	case "startgame":
+	
+		csComm.csStartGameAction();
+		AppendData(input);
+		AppendData("------------------------");
 		break;		
 	
-	}
+	
+	
+	case "bet":
+				
+		AppendData(input);
+		AppendData("------------------------");
+				
+		if (inputArray.length<2) {		
+			input="Error"
+			AppendData(input);
+			AppendData("------------------------");
+		}
+		else
+		{										
+			csComm.csBetAction( inputArray[2]);														
+		}
+	
+		break;
+	
+	case "raise":
+				
+		AppendData(input);
+		AppendData("------------------------");
+				
+		if (inputArray.length<2) {		
+			input="Error"
+			AppendData(input);
+			AppendData("------------------------");
+		}
+		else
+		{										
+			csComm.csRaiseAction( inputArray[2]);														
+		}
+	
+		break;
+		
+	case "call":
+	
+		csComm.csStartGameAction();
+		AppendData(input);
+		AppendData("------------------------");
+		break;
+		
+	case "fold":
+	
+		csComm.csStartGameAction();
+		AppendData(input);
+		AppendData("------------------------");
+		break;
+	
+	default:
+		
+		AppendData(input);
+	
+}
 	
 	txtMessage.text="";	
 		
 }
-        
-private function StripString(input:String):String
-{
-	 	
- 	input = input.replace(/\r*$/g, "");	
- 	return input;
+//-------------------------------------------------------------------------------
+// Game Actions
+//-------------------------------------------------------------------------------
+
+public function DoStartGameAction():void{
+	
+		
+		
+		btnAllIn.visible=true;
+		btnAllIn.enabled=true;
+		
+		btnBet.visible=true;
+		btnBet.enabled=true;
+		
+		btnCall.visible=true;
+		btnCall.enabled=true;
+		
+		btnCheck.visible=true;
+		btnCheck.enabled=true;
+		
+		btnFold.visible=true;
+		btnFold.enabled=true;
+		
+		btnRaise.visible=true;
+		btnRaise.enabled=true;
+		
+					
+		csComm.csStartGameAction();
+		
+		
+		
 }
+
+private function DoActionAllIn():void{
+	
+	//csComm.cs
+}
+
+private function DoActionRaise():void{
+	
+	csComm.csRaiseAction(Number( txtChips.text));
+}
+
+private function DoActionFold():void{
+	
+	csComm.csFoldAction();
+	
+}
+
+private function DoActionCall():void{
+	
+	csComm.csCallAction();
+}
+
+private function DoActionCheck():void{
+	
+	csComm.csCheckAction();
+}
+
+private function DoActionBet():void{
+	
+	csComm.csBetAction( Number( txtChips.text));
+}
+
+
+
+
+
+//-------------------------------------------------------------------------------
+// Game Actions
+//-------------------------------------------------------------------------------
+        
+
 //-----------------------------------------------------
 
 private function SetupListeners():void
 {
 	
-	csComm.addEventListener(csEvent.OnLogin,OnLogin);
-	csComm.addEventListener(csEvent.OnGetTablesAction,OnGetTablesAction);
-	csComm.addEventListener(csEvent.OnGetTableAction,OnGetTableAction);
-	
-	//csComm.addEventListener(csEvent.OnJoinTableAction,OnGetTableAction);
-	csComm.addEventListener(csEvent.OnJoinTableAction,OnTableAction);
-	csComm.addEventListener(csEvent.OnLeaveTableAction,OnTableAction);
-	csComm.addEventListener(csEvent.OnCreateTableAction,OnTableAction);
-
+	csComm.addEventListener(csEventActions.OnLogin,OnLogin);
+	csComm.addEventListener(csEventActions.OnGetTablesAction,OnGetTablesAction);
+	csComm.addEventListener(csEventActions.OnGetTableAction,OnGetTableAction);
 	
 	
+	csComm.addEventListener(csEventActions.OnJoinTableAction,OnJoinTableAction);
+	csComm.addEventListener(csEventActions.OnLeaveTableAction,OnLeaveTableAction);
+	csComm.addEventListener(csEventActions.OnCreateTableAction,OnCreateTableAction);
+	csComm.addEventListener(csEventActions.OnTableRemovedEvent,OnTableRemovedEvent);
+	csComm.addEventListener(csEventActions.OnTableChangedEvent,OnTableChangedEvent);
 	
-	csComm.addEventListener(csEvent.OnIllegalActionEvent,OnIllegalActionEvent);
+	csComm.addEventListener(csEventActions.OnPlayerJoinedTableEvent,OnPlayerAction);
+	csComm.addEventListener(csEventActions.OnPlayerLeftTableEvent,OnPlayerAction);
+		
+	csComm.addEventListener(csEventActions.OnIllegalActionEvent,OnIllegalActionEvent);
+	
+	csComm.addEventListener(csEventActions.OnNewDealEvent,OnNewDealEvent);
+	csComm.addEventListener(csEventActions.OnNewRoundEvent,OnNewRoundEvent);
+	csComm.addEventListener(csEventActions.OnSmallBlindEvent,OnSmallBlindEvent);
+	csComm.addEventListener(csEventActions.OnBigBlindEvent,OnBigBlindEvent);
+	csComm.addEventListener(csEventActions.OnNewPocketCardsEvent,OnNewPocketCardsEvent);
+	
 	
 }
 
-private function OnConnectionStatus(event:csEvent):void
+private function OnConnectionStatus(event:csEventActions):void
 {
 	
 	
@@ -232,15 +385,18 @@ private function OnConnectionStatus(event:csEvent):void
 
 }
 
-private function OnIllegalActionEvent(event:csEvent):void{
+private function OnIllegalActionEvent(event:csEventActions):void{
 	
 		var objMsg:Object=event.dataResult;
 	
 		AppendData(objMsg.toString());
 		AppendData("------------------------");
 }
-private function OnLogin(event:csEvent):void{
+private function OnLogin(event:csEventActions):void{
 	
+		userName=txtLoginUser.text;		
+		Alert.show("Logged in");
+		
 }
 //----------------------------------------------------------------------------------------------
 //----------------------------------------------------------------------------------------------
@@ -248,85 +404,39 @@ private function OnLogin(event:csEvent):void{
 //----------------------------------------------------------------------------------------------
 //----------------------------------------------------------------------------------------------
 
-private function OnGetTablesAction(event:csEvent):void{
+private function OnGetTablesAction(event:csEventActions):void{
 	
-		var objDataResult:Object=event.dataResult; //Data In from Server
-		
-		var objTables:ArrayCollection;		
-		var	objTable:Object;
-		
-		if (objDataResult !=null )
-		{
-		
-		
-		
-		//!!!!!!!!!!!!!!!!!!!!VERY IMPORTANT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-		// That a confirmed bug in FLEX
-		// ObjectProxy with 0 or 1 elements in collection
-		// will trown error in casting to ArrayCollection
-		//bellow is workout to resolve that problem
-		
-		
-		
-			objTables=objDataResult.table as ArrayCollection;
-				
-     			if (objTables == null)
-     			{
-          	 		objTables = new ArrayCollection([objDataResult.table]);
-     			}
-		
-		// End of casting ObjectProxy to ArrayCollection		
-		//--------------------------------------------------------------
-		
-		
-				
-		for each (objTable in objTables){
-		
-			var objProperty:Object=objTable.property;
-			var objPlayers:ArrayCollection;	
-		
-			var tableinfo:String;
-			var propertyinfo:String;
-			var playerinfo:String;
-		
-		
 			
-			tableinfo ="id:" + objTable.id + " name:" + objTable.name + " playing:" + objTable.playing; 	
-			propertyinfo ="bigBet:" + objProperty.bigBet + " bigBlind:" + objProperty.bigBlind + " smallBet:" + objProperty.smallBet + " smallBlind:" + objProperty.smallBlind + " delay:" + objProperty.delay; 
+	var objTables:CSTableList=event.dataResult;
+	var objTable:CSTable;
+	var tableinfo:String;
+	
+	
+	if(objTables.TablesCount>0){
 		
-			AppendData(tableinfo);
-			AppendData(propertyinfo);
-			
-			
-			
-			//!!!!!!!!!!!!!!!!!!!!VERY IMPORTANT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-		// !!! Same workout for casting ObjectProxy to ArrayCollection
 		
-			objPlayers=objTable.players.player as ArrayCollection;
 		
-			if (objPlayers == null)
-     		{
-          		 objPlayers = new ArrayCollection([objTable.players.player]);
-          		 
-     		}
-		
-		// End of casting ObjectProxy to ArrayCollection
-		//--------------------------------------------------------------	
-			
-			var objPlayer:Object;
-			
-			for each (objPlayer in objPlayers)
+		for each (objTable in objTables.tables)
+	
 			{
-				playerinfo="name:" + objPlayer.name + " id:" + objPlayer.id + " seatId:" + objPlayer.seatId + " stackValue:" + objPlayer.stackValue + " betChipsValue:" + objPlayer.betChipsValue; 
-				AppendData(playerinfo);
-			}
-			
-			AppendData("------------------------");
+				
+				
+							
+				tableinfo=  objTable.id.toString()+ " | " + objTable.name + " | " + objTable.PlayersCount;
+				//mTables.push(tableinfo);
+			//	mTables.addItem(objTable);
+				//mTables.addItem(tableinfo);
+				
+				
+				AppendData(tableinfo);						
+				
+				AppendData("------------------------");
 		 			
-			}	
+			
 		
-		}
-		else
+			}
+	}
+	else
 			// We are here, if no tables 
 		{
 			
@@ -336,6 +446,9 @@ private function OnGetTablesAction(event:csEvent):void{
 		
 		}
 		
+	//vsMain.selectedChild=cnvTables;
+	//lstTables.dataProvider=mTables;
+	
 	
 	
 }
@@ -346,11 +459,13 @@ private function OnGetTablesAction(event:csEvent):void{
 //----------------------------------------------------------------------------------------------
 //----------------------------------------------------------------------------------------------
 
-private function OnGetTableAction(event:csEvent):void{
+private function OnGetTableAction(event:csEventActions):void{
 	
-	var objDataResult:Object=event.dataResult; //Result Data In from Server
+	var objTable:CSTable=event.dataResult; //Result Data In from Server
 	var objDataAction:Object=event.dataAction; //Action Data In from Server
-	var objPlayers:ArrayCollection;	
+	
+	
+		
 	var tableinfo:String;
 	var playerinfo:String;
 	
@@ -358,43 +473,135 @@ private function OnGetTableAction(event:csEvent):void{
 			AppendData(objDataAction.toString());
 		
 			
+			if (objTable!=null){
 			
-			tableinfo ="id:" + objDataResult.id + " name:" + objDataResult.name + " playing:" + objDataResult.playing;
+			tableinfo="name :" + objTable.name + " players:" + objTable.PlayersCount + " playing :" + objTable.playing; 
+			
 			AppendData(tableinfo);
 	
-			if (objDataResult.players!=null){
-			
-				objPlayers=objDataResult.players.player as ArrayCollection;
-				var objPlayer:Object;
-			
-				if (objPlayers == null)
-     				{
-          		 
-          		 		objPlayers = new ArrayCollection([objDataResult.players.player]);
-          		 
-     				}	
-	
-				for each (objPlayer in objPlayers)
-					{
-					playerinfo="name:" + objPlayer.name + " id:" + objPlayer.id + " seatId:" + objPlayer.seatId + " stackValue:" + objPlayer.stackValue + " betChipsValue:" + objPlayer.betChipsValue; 
-					AppendData(playerinfo);
-				}
-			
 			}
 			else
-			// We are here, if no players
 			{
-				AppendData("No players");
+				AppendData("No table");
 			}
 			
 			AppendData("------------------------");
 		 			
 	
 }
-//
-// Just generic event handler, to print message
-//
-private function OnTableAction(event:csEvent):void{
+
+//----------------------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------------------
+//    			OnJoinTableAction
+//----------------------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------------------
+
+private function OnJoinTableAction(event:csEventActions):void{
+		
+	var objTable:CSTable=event.dataResult; //Result Data In from Server
+	var objDataAction:Object=event.dataAction; //Action Data In from Server
+
+	AppendData(objDataAction.toString());	
+	
+		
+	var tableinfo:String;
+	
+	
+		
+		AppendData(objDataAction.toString());
+		
+			
+			if (objTable!=null){
+			
+			tableinfo="name :" + objTable.name + " players:" + objTable.PlayersCount + " playing :" + objTable.playing; 
+			
+			AppendData(tableinfo);
+	
+			}
+			else
+			{
+				AppendData("No table");
+			}
+			
+		AppendData("------------------------");
+			
+	
+	
+	
+}
+
+//----------------------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------------------
+//    			OnCreateTableAction
+//----------------------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------------------
+
+private function OnCreateTableAction(event:csEventActions):void{
+		
+	var objTable:CSTable=event.dataResult; //Result Data In from Server
+	var objDataAction:Object=event.dataAction; //Action Data In from Server
+
+	AppendData(objDataAction.toString());	
+	
+		
+	var tableinfo:String;
+	
+	
+		
+		AppendData(objDataAction.toString());
+		
+			
+			if (objTable!=null){
+			
+			
+			
+					
+			
+			//var objSeatedPlayer:CSPlayer=new CSPlayer(objTable.players[0]);
+			
+			for each( var tempPlayer:CSPlayer in objTable.players)
+			{
+				if (tempPlayer.Name==userName){
+					
+					var objSeatedPlayer:CSPlayer=new CSPlayer(tempPlayer);					
+				}
+			}
+			
+			var playername:String="player"+objSeatedPlayer.SeatId;
+			
+			
+			//player0=new CSPlayer(objTable.players[0]); // seat 0
+			
+			this[playername]= new CSPlayer(objSeatedPlayer); 
+			
+			parsePlayer(this[playername]);
+			
+			tableinfo="ID :"+ objTable.id +" name :" + objTable.name + " players:" + objTable.PlayersCount + " playing :" + objTable.playing; 
+			
+			AppendData(tableinfo);
+	
+			}
+			else
+			{
+				AppendData("No table");
+			}
+			
+		AppendData("------------------------");
+			
+	
+	btnStartGame.visible=true;
+	btnStartGame.enabled=true;
+	
+	
+}
+
+//----------------------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------------------
+//    			OnLeaveTableAction
+//----------------------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------------------
+
+private function OnLeaveTableAction(event:csEventActions):void{
 	
 	var objDataResult:Object=event.dataResult; //Result Data In from Server
 	var objDataAction:Object=event.dataAction; //Action Data In from Server
@@ -402,4 +609,256 @@ private function OnTableAction(event:csEvent):void{
 	AppendData(objDataAction.toString());
 	AppendData("------------------------");
 	
+}
+
+//----------------------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------------------
+//    			OnTableRemovedEvent
+//----------------------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------------------
+
+private function OnTableRemovedEvent(event:csEventActions):void{
+	
+	
+	var objDataAction:Object=event.dataAction; //Action Data In from Server
+	var objTableID:int; 
+	var tableinfo:String;
+		
+	
+	
+		
+			AppendData(objDataAction.toString());
+		
+			
+			if (event.dataResult!=null){
+				
+					objTableID=event.dataResult;			
+			
+			tableinfo="tableID :" + objTableID; 
+			
+			AppendData(tableinfo);
+	
+			}
+			else
+			{
+				AppendData("No table");
+			}
+			
+			AppendData("------------------------");
+}
+
+
+//----------------------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------------------
+//    			OnTableChangedEvent
+//----------------------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------------------
+
+private function OnTableChangedEvent(event:csEventActions):void{
+	
+	var objTable:CSTable=event.dataResult; //Result Data In from Server
+	var objDataAction:Object=event.dataAction; //Action Data In from Server
+	
+	
+		
+	var tableinfo:String;
+	var playerinfo:String;
+	
+		
+			AppendData(objDataAction.toString());
+		
+			
+			if (objTable!=null){
+			
+			tableinfo="name :" + objTable.name + " players:" + objTable.PlayersCount + " playing :" + objTable.playing; 
+			
+			AppendData(tableinfo);
+	
+			}
+			else
+			{
+				AppendData("No table");
+			}
+			
+			AppendData("------------------------");
+}
+
+
+
+//----------------------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------------------
+//    				OnTableAction
+//				
+//			Just generic event handler, to print message
+//----------------------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------------------
+
+private function OnTableAction(event:csEventActions):void{
+	
+	var objDataResult:Object=event.dataResult; //Result Data In from Server
+	var objDataAction:Object=event.dataAction; //Action Data In from Server
+	
+	AppendData(objDataAction.toString());
+	AppendData("------------------------");
+	
+}
+
+//
+// Just generic event handler for players
+//
+private function OnPlayerAction(event:csEventActions):void{
+	
+	
+	var objDataAction:Object=event.dataAction; //Action Data In from Server
+	var objPlayer:CSPlayer= new CSPlayer(event.dataResult);
+	
+	var playerinfo:String;
+	
+		switch (event.dataAction){
+			
+			case "playerJoinedTableEvent":
+				
+				var playername:String="player"+objPlayer.SeatId;
+				this[playername]= new CSPlayer(objPlayer);
+				parsePlayer(this[playername]);
+			
+			break;
+			
+			case "playerLeftTableEvent":
+				
+				var playername:String="player"+objPlayer.SeatId;
+				this[playername]= null;
+			
+			break;
+			
+			
+			
+		}	
+	
+	
+	playerinfo="name:" + objPlayer.Name + " id:" + objPlayer.Id + " seatId:" + objPlayer.SeatId ;
+	
+	AppendData(objDataAction.toString());
+	AppendData(playerinfo);
+	AppendData("------------------------");
+	
+}
+
+private function OnNewDealEvent(event:csEventActions):void{
+	
+	var objDataResult:Object=event.dataResult; //Result Data In from Server
+	var objDataAction:Object=event.dataAction; //Action Data In from Server
+	
+	var objDealer:Object=objDataResult.dealer;
+	
+	AppendData(objDataAction.toString());
+	
+	//AppendData("Dealer :" + objDealer.name);
+	AppendData("------------------------");
+	
+	
+}
+
+private function OnNewRoundEvent(event:csEventActions):void{
+	
+	var objDataResult:Object=event.dataResult; //Result Data In from Server
+	var objDataAction:Object=event.dataAction; //Action Data In from Server
+	
+	//var objDealer:Object=objDataResult.dealer;
+	
+	AppendData(objDataAction.toString());
+	
+	//AppendData("Dealer :" + objDealer.name);
+	AppendData("------------------------");
+	
+	
+}
+
+private function OnSmallBlindEvent(event:csEventActions):void{
+	
+	var objDataResult:Object=event.dataResult; //Result Data In from Server
+	var objDataAction:Object=event.dataAction; //Action Data In from Server
+	
+	//var objDealer:Object=objDataResult.dealer;
+	
+	AppendData(objDataAction.toString());
+	
+	//AppendData("Dealer :" + objDealer.name);
+	AppendData("------------------------");
+	
+	
+}
+
+private function OnBigBlindEvent(event:csEventActions):void{
+	
+	var objDataResult:Object=event.dataResult; //Result Data In from Server
+	var objDataAction:Object=event.dataAction; //Action Data In from Server
+	
+		
+	AppendData(objDataAction.toString());	
+	AppendData("------------------------");
+	
+	
+}
+
+private function OnNewPocketCardsEvent(event:csEventActions):void{
+	
+
+	var objDataAction:Object=event.dataAction; //Action Data In from Server
+		
+	//var objGameEvent:CSGameEvent= new CSGameEvent("newDealEvent",event.dataResult);
+	var objGameEvent:CSGameEvent= event.dataResult;
+	
+	
+	//imgFlop1.source=cards.getCard("CLUBS","DEUCE");
+	
+	var seatID:int=objGameEvent.player.SeatId;
+	
+	this[ "imgCard"+seatID+"0"].source=cards.getCard(objGameEvent.pocketCards.card[0].suit,objGameEvent.pocketCards.card[0].rank);
+	this[ "imgCard"+seatID+"1"].source=cards.getCard(objGameEvent.pocketCards.card[1].suit,objGameEvent.pocketCards.card[1].rank);
+	
+	AppendData(objDataAction.toString());		
+	AppendData("------------------------");
+	
+	
+}
+
+private function parsePlayer(player:CSPlayer):void
+{
+
+		var seatID:int=player.SeatId;
+		var playerName:String;
+		
+	//	playerName=lblPlayer+seatID;
+		
+		 this[ "lblPlayer"+seatID].text=player.Name;
+		 this[ "lblChips"+seatID].text=player.StackValue;
+		 
+		 
+		
+		
+		
+
+}
+
+private function cnvsTablesComplited():void
+{
+		 var DGArray:Array = [
+         {Artist:'Pavement', Album:'Slanted and Enchanted', Price:11.99},
+         {Artist:'Pavement', Album:'Brighten the Corners', Price:11.99}];
+        
+        var initDG=new ArrayCollection(DGArray);
+     //   var spectrumColors:ArrayCollection = ["red","orange","yellow","green","blue","indigo","violet"];
+        
+		//gridTables.dataProvider=spectrumColors; 
+		
+		
+		//Alert.show("complited");
+}
+
+private function StripString(input:String):String
+{
+	 	
+ 	input = input.replace(/\r*$/g, "");	
+ 	return input;
 }
