@@ -49,7 +49,6 @@ public class PreFlopRound extends BettingRound {
 
 		if (currentPlayer != null) {
 			gameMediator.publishNewRoundEvent(new NewRoundEvent(getRound()));
-			gameMediator.publishNextPlayerEvent(new NextPlayerEvent(currentPlayer.getMemento()));
 		}
 		try {
 			// If there are only 2 players, blinds are inverted.
