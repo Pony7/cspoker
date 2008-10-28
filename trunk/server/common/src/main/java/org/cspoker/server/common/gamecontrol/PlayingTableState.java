@@ -249,6 +249,10 @@ public class PlayingTableState
 		checkIfEndedAndChangeRound();
 	}
 	
+	public synchronized void deal() throws IllegalActionException{
+		deal(game.getDealer());
+	}
+	
 	/**
 	 * The given player goes all-in.
 	 * 

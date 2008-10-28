@@ -28,8 +28,6 @@ public class ShowdownPlayer extends Player {
 
 	private static final long serialVersionUID = -1618593137613219527L;
 
-	private Player player;
-
 	@XmlElementWrapper
 	@XmlElement(name = "card")
 	private Set<Card> cards;
@@ -53,11 +51,7 @@ public class ShowdownPlayer extends Player {
 	}
 
 	public String toString() {
-		return player.getName() + " has a " + description;
-	}
-
-	public Player getPlayer() {
-		return player;
+		return getName() + " has a " + description;
 	}
 
 	public Set<Card> getAllCards() {

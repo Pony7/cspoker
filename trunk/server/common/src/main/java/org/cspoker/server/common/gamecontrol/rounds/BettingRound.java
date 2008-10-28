@@ -135,9 +135,11 @@ public abstract class BettingRound extends Round {
 		// Check whether the amount with which the bet chips pile
 		// is increased exceeds the player's stack.
 		if (amountToIncreaseBetPileWith(player) >= player.getStack().getValue()) {
-			throw new IllegalActionException(player.toString()+" can not call. "+
-					"Can not call a bet higher than your current amount of chips;"
-							+ " did you mean all-in??");
+			allIn(player);
+			return;
+//			throw new IllegalActionException(player.toString()+" can not call. "+
+//					"Can not call a bet higher than your current amount of chips;"
+//							+ " did you mean all-in??");
 		}
 
 		// Try to transfer the amount to the bet pile.
@@ -184,9 +186,11 @@ public abstract class BettingRound extends Round {
 		// go all-in explicitly.
 		if ((amount + amountToIncreaseBetPileWith(player)) >= player.getStack()
 				.getValue()) {
-			throw new IllegalActionException(player.toString()+ "can not raise. "+
-					"Can not raise with an amount higher than your current amount of chips;"
-							+ " did you mean all-in??");
+			allIn(player);
+			return;
+//			throw new IllegalActionException(player.toString()+ "can not raise. "+
+//					"Can not raise with an amount higher than your current amount of chips;"
+//							+ " did you mean all-in??");
 		}
 
 		// Try to transfer the amount to the bet pile.

@@ -91,7 +91,6 @@ public class ServerTable {
 		SeatId seatId = player.getSeatId();
 		if (seatId != null) {
 			players.remove(seatId);
-			player.setSeatId(null);
 		}
 	}
 
