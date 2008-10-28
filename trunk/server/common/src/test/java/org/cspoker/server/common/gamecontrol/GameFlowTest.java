@@ -988,7 +988,6 @@ public void test2PlayersSmallBlindRaises() {
 		try {
 			kenzo = new GameSeatedPlayer(factory.createNewPlayer("kenzo", 100), 50);
 			cedric = new GameSeatedPlayer(factory.createNewPlayer("cedric", 100), 50);
-			guy = new GameSeatedPlayer(factory.createNewPlayer("guy",100), 50);
 			table.addPlayer(kenzo);
 			table.addPlayer(cedric);
 			gameControl = new PlayingTableState(pokerTable, table, kenzo);
@@ -1014,7 +1013,34 @@ public void test2PlayersSmallBlindRaises() {
 		} catch (PlayerListFullException e) {
 			fail(e.getMessage());
 		}
-
+	}
+	
+	public void testTwoPlayersDealerRaisesCase(){
+		table = new ServerTable(8);
+		PlayingTableState gameControl;
+		try {
+			kenzo = new GameSeatedPlayer(factory.createNewPlayer("kenzo", 100), 100);
+			cedric = new GameSeatedPlayer(factory.createNewPlayer("cedric", 100), 100);
+			table.addPlayer(kenzo);
+			table.addPlayer(cedric);
+			gameControl = new PlayingTableState(pokerTable, table, kenzo);
+	        try {
+				gameControl.deal();
+			} catch (IllegalActionException e1) {
+				fail(e1.toString());
+			}
+			try {
+				gameControl.raise(kenzo, 30);
+				gameControl.call(cedric);
+			} catch (IllegalActionException e) {
+				fail(e.getMessage());
+			}
+			
+		} catch (IllegalValueException e) {
+			fail(e.getMessage());
+		} catch (PlayerListFullException e) {
+			fail(e.getMessage());
+		}
 	}
 
 }
