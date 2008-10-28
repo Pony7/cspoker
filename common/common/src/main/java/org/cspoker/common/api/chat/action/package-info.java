@@ -2,7 +2,7 @@
 @XmlSchema(namespace="http://www.cspoker.org/api/2008-9/chat/actions", 
 		xmlns={
 		@XmlNs(prefix = "action", 
-				namespaceURI="http://www.cspoker.org/api/2008-9/shared/action"),
+				namespaceURI="http://www.cspoker.org/api/2008-9/shared/action")
 })
 package org.cspoker.common.api.chat.action;
 
