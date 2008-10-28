@@ -1,0 +1,468 @@
+\documentclass[a4paper,11pt]{report}
+\usepackage[a4paper]{geometry}
+\usepackage[english]{babel}
+
+\author{Cedric~Cuypers, Kenzo~Tomita, Guy~Van~den~broeck} 
+% define title
+\title{Ontwerp en Analyse van Software Systemen II: a~poker~application} 
+\begin{document} 
+% generates the title 
+\maketitle 
+% insert the table of contents 
+\tableofcontents 
+\chapter{Introduction}
+\chapter{Business Goals}
+\chapter{Analysis}
+\section{Domain Model}
+TODO Cedric
+\section{Stakeholders and Actors}
+TODO Guy
+\section{Informal set of requirements}
+\section{Available Use Cases}
+\subsection{Create table}
+\textbf{Level:} user goal \\
+\textbf{Primary Actors:} Player, Admin \\
+\textbf{Stakeholders:} This player and other players.\\
+\textbf{Preconditions:} The player is logged-in.\\
+\textbf{Success Guarantee:} A new table with given configuration is created. \\
+\textbf{Main success scenario:} 
+\begin{enumerate}
+\item The actor selects to create a new table.
+\item The system asks for a name for the table.
+\item The actor enters a name for the table.
+\item The system proposes a number of available poker variants (e.g. Texas hold'em, Omaha hold'em, ...)
+\item The actor selects a poker variant. 
+\item The system asks for a table configuration for the chosen poker variant.
+\item The actor provides the system with a table configuration\footnote{A table configuration depends on the poker variant chosen. This could include the value of the blinds, bets, maximum number of players, auto-deal, minimal delay between 2 deals, ...}.
+\item The system creates a new table. 
+\item The system registers a new chat group for this table: \emph{\underline{Register chat group}}
+\item The system informs the actor the table is created.
+\item The system joins the actor to the table:  \emph{\underline{Join table}}
+\end{enumerate}
+\textbf{Extensions:}
+\begin{itemize}
+\item[3a.] The given name is not valid.
+\begin{enumerate}
+\item The actor can choose to retry (go to step 2) or to end the use case. 
+\end{enumerate}
+\item[7a.] The given table configuration is not valid. 
+\begin{enumerate}
+\item The actor can choose to retry (go to step 6) or to end the use case. 
+\end{enumerate}
+\end{itemize}
+\subsection{Show table list}
+\textbf{Level:} user goal \\
+\textbf{Primary Actors:} Player, Admin \\
+\textbf{Stakeholders:} \\
+\textbf{Preconditions:} The player is logged-in.\\
+\textbf{Success Guarantee:} A detailed list with the existing tables is shown.\\
+\textbf{Main success scenario:} 
+\begin{enumerate}
+\item The actor selects to show the table list.
+\item The system shows a detailed table list.
+\end{enumerate}
+
+\subsection{Join table}
+\textbf{Level:} user goal \\
+\textbf{Primary Actors:} Player, Admin \\
+\textbf{Stakeholders:} \\
+\textbf{Preconditions:} The player is logged-in.\\
+\textbf{Success Guarantee:} The joined player receives the table events. \\
+\textbf{Main success scenario:} 
+\begin{enumerate}
+\item The actor selects a table to join. 
+\item The system registers the actor at the table. 
+\item The system informs other joined users a new actor has joined the table.
+\item The system informs the actor he is joined at the table.
+\item The system informs the actor of new table events.
+\end{enumerate}
+\textbf{Extensions:}
+\begin{itemize}
+\item[1a.] The player is already joined at this table.
+\begin{enumerate}
+\item The system informs the actor he is already joined at this table.
+\item The actor can try this step with an other table, or end the use case.
+\end{enumerate}
+\end{itemize}
+
+\subsection{Leave table}
+\textbf{Level:} user goal \\
+\textbf{Primary Actors:} Player, Admin \\
+\textbf{Stakeholders:} \\
+\textbf{Preconditions:}
+\begin{itemize}
+\item The actor is logged-in.
+\item The actor is joined at the table.
+\end{itemize}
+\textbf{Success Guarantee:} The actor is no longer joined at the table. \\
+\textbf{Main success scenario:} 
+\begin{enumerate}
+\item The actor selects the option to leave the table.
+\item The system unregisters the actor from the table.
+\item The system informs the actor he has left the table. 
+\item The system informs all other joined players the actor has left. 
+\item The system does no longer inform the actor in case of table events.
+\end{enumerate}
+\textbf{Extensions:}
+\begin{itemize}
+\item[1a.] The selected person is sit-in at the table. 
+\begin{enumerate}
+\item The system performs a sit-out for the player: \emph{\underline{Sit-out}}
+\item The actor can try this step with an other seat, or end the use case.
+\end{enumerate}
+\end{itemize}
+
+\subsection{Sit-in}
+\textbf{Level:} user goal \\
+\textbf{Primary Actor:} Player \\
+\textbf{Stakeholders:} \\
+\textbf{Preconditions:}
+\begin{itemize}
+\item The player is logged-in.
+\item The player is joined at the table.
+\end{itemize}
+\textbf{Success Guarantee:} The player can act in the game.\\
+\textbf{Main success scenario:} 
+\begin{enumerate}
+\item The actor selects a seat to sit in. 
+\item The system asks for the buy-in amount for this table. 
+\item The actor enters the buy-in amount. 
+\item The system transfers the buy-in amount from the actors main stack to his table stack.
+\item The system registers the actor as a player at this table. 
+\item The system informs the actor he is sit-in at the table.
+\end{enumerate}
+\textbf{Extensions:}
+\begin{itemize}
+\item[1a.] The selected seat does not exist or is already taken.
+\begin{enumerate}
+\item The system informs the actor the seat does not exist or is already taken.
+\item The actor can try this step with an other seat, or end the use case.
+\end{enumerate}
+\item[1b.] The player is already sit-in at this table.
+\begin{enumerate}
+\item The system informs the actor he is already sit-in at this table.
+\item The use case ends.
+\end{enumerate}
+\item[3a.] The entered amount is not valid. 
+\begin{enumerate}
+\item The system informs the actor the entered amount is not valid.
+\item The actor can try this step with an other amount, or end the use case.
+\end{enumerate}
+\end{itemize}
+
+\subsection{Sit-out}
+\textbf{Level:} user goal \\
+\textbf{Primary Actor:} Player \\
+\textbf{Stakeholders:} \\
+\textbf{Preconditions:}
+\begin{itemize}
+\item The player is logged-in.
+\item The player is sit-in at the table.
+\end{itemize}
+\textbf{Success Guarantee:} The player can no longer act in the game.\\
+\textbf{Main success scenario:} 
+\begin{enumerate}
+\item The actor selects the option to sit-out the table.
+\item The system unregisters the actor as a player at this table. 
+\item The system transfers the table stack back to his main stack. 
+\item The system informs the actor he is no longer sit-in at the table. 
+\item The system informs all other joined users the actor is no longer sit-in at the table.
+\end{enumerate}
+\textbf{Extensions:}
+\begin{itemize}
+\item[2a.] The player is active in the current deal.
+\begin{enumerate}
+\item The system folds for the player: \emph{\underline{Fold action}}
+\end{enumerate}
+\end{itemize}
+
+\subsection{Table action (bet, raise, call or check)}
+\textbf{Level:} user goal \\
+\textbf{Primary Actor:} Player \\
+\textbf{Stakeholders:} \\
+\textbf{Preconditions:}
+\begin{itemize}
+\item The player is logged in.
+\item The player is sit-in at the table.
+\end{itemize}
+\textbf{Success Guarantee:} The selected action is performed. \\
+\textbf{Main success scenario:} 
+\begin{enumerate}
+\item The actor selects to bet, raise, call or check. 
+\item The system performs the selected action. 
+\item The system informs all other joined users the actor has performed an action at the table.
+\end{enumerate}
+\textbf{Extensions:}
+\begin{itemize}
+\item[1a.] The player chooses to bet or raise. 
+\begin{enumerate}
+\item The system aks for an amount.
+\item The actor enters the amount. 
+\item The system registers the action with the given amount.
+\end{enumerate}
+\item[1b.] It's not the turn of the player. 
+\begin{enumerate}
+\item The system informs the player it's not yet his turn. 
+\item The use case ends.
+\end{enumerate}
+\item[1c.] The action the player tries to perform is not valid. 
+\item[1d.] The player does not choose an action quick enough and a time-out occurs.
+\begin{enumerate}
+\item The system folds for the player: \emph{\underline{Fold action}}
+\item The use case ends.
+\end{enumerate}
+\end{itemize}
+
+\subsection{Fold action}
+\textbf{Level:} user goal \\
+\textbf{Primary Actor:} Player \\
+\textbf{Stakeholders:} \\
+\textbf{Preconditions:}
+\begin{itemize}
+\item The player is logged in.
+\item The player is sit-in at the table.
+\end{itemize}
+\textbf{Success Guarantee:} The player folds. \\
+\textbf{Main success scenario:} 
+\begin{enumerate}
+\item The actor selects fold.
+\item The system performs the fold action. 
+\item The system informs all other joined users the actor has folded at the table.
+\end{enumerate}
+
+\subsection{Show table information}
+\textbf{Level:} user goal \\
+\textbf{Primary Actor:} User \\
+\textbf{Stakeholders:} \\
+\textbf{Preconditions:}
+\begin{itemize}
+\item The user is logged in.
+\end{itemize}
+\textbf{Success Guarantee:} The table information is shown to the actor. \\
+\textbf{Main success scenario:} 
+\begin{enumerate}
+\item The actor selects the option to show table information. 
+\item The system asks to choose the table. 
+\item The actor chooses the table to show the information from.
+\item The system shows the table information\footnote{The table information consists of table id, name, a list of sit-in players, playing status and the table configuration.}. 
+\end{enumerate}
+
+\subsection{Register chat group}
+\textbf{Level:} subfunction \\
+\textbf{Primary Actor:} Other subsystem, Admin \\
+\textbf{Stakeholders:} The players who want to use the chat service to chat. \\
+\textbf{Preconditions:} none \\
+\textbf{Success Guarantee:} A new chat group is registered. \\
+\textbf{Main success scenario:} 
+\begin{enumerate}
+\item The actor chooses the option to register a new chat group. 
+\item The chat system asks for a name for the chat group. 
+\item The actor gives a name to the chat group. 
+\item The chat system returns a handler to send/receive messages from the newly created chat group. 
+\end{enumerate}
+\textbf{Extensions:}
+\begin{itemize}
+\item[3a.] The given name is invalid.
+\begin{enumerate}
+\item Actor can choose to retry (go to step 2) or to end the use case. 
+\end{enumerate}
+\end{itemize}
+
+\subsection{Unregister chat group}
+\textbf{Level:} subfunction \\
+\textbf{Primary Actor:} Other subsystem, Admin \\
+\textbf{Stakeholders:}  \\
+\textbf{Preconditions:} none \\
+\textbf{Success Guarantee:} A new chat group is registered. \\
+\textbf{Main success scenario:} 
+\begin{enumerate}
+\item The actor chooses the option to unregister a chat group. 
+\item The chat system asks for an id of the chat group to unregister.
+\item The actor provides an id to the chat system. 
+\item The chat system unregisters the relevant chat group. 
+\end{enumerate}
+\textbf{Extensions:}
+\begin{itemize}
+\item[3a.] The given id is invalid.
+\begin{enumerate}
+\item Actor can choose to retry (go to step 2) or to end the use case. 
+\end{enumerate}
+\end{itemize}
+
+\subsection{Send a message to a chat group}
+\textbf{Level:} subfunction \\
+\textbf{Primary Actors:} Table subsystem, Lobby subsystem, Player, Admin \\
+\textbf{Stakeholders:}  \\
+\textbf{Preconditions:} none \\
+\textbf{Success Guarantee:} The message is sent to the chat group.  \\
+\textbf{Main success scenario:} 
+\begin{enumerate}
+\item The actor chooses the option to send a message to a chat group. 
+\item The chat system asks for an id of the chat group. 
+\item The actor provides an id to the chat system.
+\item The chat system asks to enter a message. 
+\item The actor enters the message.
+\item The chat system sends the message to all the players subscribed to the chat group.
+\end{enumerate}
+\textbf{Extensions:}
+\begin{itemize}
+\item[3a.] The given id is invalid.
+\begin{enumerate}
+\item Actor can choose to retry (go to step 2) or to end the use case. 
+\end{enumerate}
+\item[5a.] The entered message is not valid. 
+\begin{enumerate}
+\item Actor can choose to retry (go to step 4) or to end the use case. 
+\end{enumerate}
+\end{itemize}
+
+\subsection{Login}
+\textbf{Level:} user goal \\
+\textbf{Primary Actor:} User \\
+\textbf{Stakeholders:} \\
+\textbf{Preconditions:} none \\
+\textbf{Success Guarantee:} The player is logged in.\\
+\textbf{Main success scenario:} 
+\begin{enumerate}
+\item The actor selects to login. 
+\item The system asks for a user name and password. 
+\item The actor enters his user name and password.
+\item The system authenticates the actor. 
+\item The system puts the actor in the lobby. 
+\item The system informs the actor he is logged in. 
+\end{enumerate}
+\textbf{Extensions:}
+\begin{itemize}
+\item[4a.] The system fails to authenticate the actor (user name - password combination is incorrect, user blocked, ...). 
+\begin{enumerate}
+\item Actor can choose to retry (go to step 2) or to end the use case. 
+\begin{enumerate}
+\item[1a.] The actor has tried to authenticate himself more often than a predefined threshold.
+\begin{enumerate}
+\item[1.] The system denies the actor to proceed the use case for a period of time.
+\end{enumerate}
+\end{enumerate}
+\end{enumerate}
+\end{itemize}
+
+\subsection{Logout}
+\textbf{Level:} user goal \\
+\textbf{Primary Actor:} User \\
+\textbf{Stakeholders:} \\
+\textbf{Preconditions:} The player is logged in. \\
+\textbf{Success Guarantee:} The player is logged out.\\
+\textbf{Main success scenario:} 
+\begin{enumerate}
+\item The actor selects to logout. 
+\item The system removes the actor from all the tables he is joined to: \emph{\underline{Leave table}}
+\item The system stores the state of the player.
+\item The system clears all actor related data. 
+\item The system informs the actor he is logged out. 
+\end{enumerate}
+
+\subsection{Create account}
+\textbf{Level:} user goal \\
+\textbf{Primary Actor:} User \\
+\textbf{Stakeholders:} \\
+\textbf{Preconditions:} \\
+\textbf{Success Guarantee:} A new account is created. \\
+\textbf{Main success scenario:} 
+\begin{enumerate}
+\item The actor selects to create a new account. 
+\item The system asks for a user name and password.
+\item The actor enters the user name and password (twice to exclude typos).
+\item The system creates a new account with given credentials. 
+\item The system informs the actor the account is created.
+\end{enumerate}
+\textbf{Miscellaneous:} user information could also mean an emailadres for confirmation or a captcha.
+
+\subsection{Request chips}
+\textbf{Level:} user goal \\
+\textbf{Primary Actor:} Player \\
+\textbf{Stakeholders:} \\
+\textbf{Preconditions:} The player is logged in. \\
+\textbf{Success Guarantee:} The player receives a number of chips to its main stack. \\
+\textbf{Main success scenario:} 
+\begin{enumerate}
+\item The actor selects to request a number of chips. 
+\item The system asks for the number of chips. 
+\item The actor enters an amount. 
+\item The system asks for a payment method. 
+\item The actor chooses the payment method. 
+\item The system redirects to a 3rd party component to perform the payment.
+\item The actor enters all necessary information asked by the 3rd party component. 
+\item The system performs the transaction. 
+\item The system provides the player with the respective amount of chips. 
+\end{enumerate}
+\textbf{Extensions:}
+\begin{itemize}
+\item[*a.] At any time, player cancels the operation. 
+\item[3a.] The amount is not valid. 
+\begin{enumerate}
+\item The system informs the actor the entered amount is invalid. 
+\item The actor can choose to retry (go to step 2) or to end the use case. 
+\end{enumerate}
+\item[7a.] The transaction can not be performed because the entered information is invalid. 
+\begin{enumerate}
+\item The system informs the actor the transaction couldn't be performed. 
+\item The actor can choose to retry (go to step 6), to choose another payment method (go to step 4) or to end operation. 
+\end{enumerate}
+\end{itemize}
+
+\chapter{Architecture: Functional viewpoint}
+\section{Architecture Component Diagram}
+\subsection{Account}
+The account component is responsible for managing users. It provides an interface to create, remove and block accounts. It also keeps track of the main stack each player has. This component interacts with the persistence component to store user data. 
+
+\begin{itemize}
+\item \emph{Persistence}: store user data.
+\end{itemize}
+
+\subsection{Cashier}
+\subsubsection{Responsibilities}
+The cashier component is responsible for providing players with chips. If real money is involved, this component will interchange real money with play chips. Otherwise any time-based function or admin functionality can provide players with chips through this component.
+\subsubsection{Dependencies}
+\begin{itemize}
+\item \emph{Account}: handle the chips transfer.
+\item \emph{External Financial Service}: handle money transfer.
+\end{itemize}
+\subsection{Chat}
+\subsubsection{Responsibilities}
+The chat component is responsible for managing chat groups and delivering chat messages to other players. The chat component provides an interface to create and remove chat groups. The lobby and table components will use this functionality to provide chat services to the players in the respective components.
+
+\subsection{Lobby}
+\subsubsection{Responsibilities}
+The lobby component is responsible for managing tables. It is a registry service for looking up existing tables. It is also the interface to create new tables. 
+\subsubsection{Dependencies}
+\begin{itemize}
+\item \emph{Table}: the lobby component creates the tables.
+\item \emph{Chat}: the lobby component uses the chat component to provide chat services to the players in the lobby.
+\end{itemize}
+
+\subsection{Table}
+\subsubsection{Responsibilities}
+The table component is responsible for handling player actions at a table. This component handles all the game play logic that is necessary to play poker.
+\subsubsection{Dependencies}
+\begin{itemize}
+\item \emph{Chat}: the table component uses the chat component to provide chat services to the players at the table.
+\item \emph{Dealer}: retrieve securely shuffled cards for playing a deal.
+\end{itemize}
+
+\subsection{Dealer}
+\subsubsection{Responsibilities}
+The dealer component is responsible to provide securely shuffled cards to the table component.
+
+\subsection{Communication}
+\subsubsection{Responsibilities}
+This component is responsible for the communication between client and server modules. It delegates API calls to the responsible component.
+
+\subsection{Persistence}
+\subsubsection{Responsibilities}
+This component is responsible for handling the persistence needs for all other components.
+
+
+\section{Use Cases applied on the component diagram}
+\section{Deployment View}
+The deployment view provides a mapping of the previously defined component instances onto the physical nodes in a computer network. 
+
+\end{document} 
