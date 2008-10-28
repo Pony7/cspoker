@@ -84,7 +84,7 @@ public class PokerTable {
 	
 	private String name;
 	
-	private TableState tableState;
+	private transient TableState tableState;
 	
 	private final ExtendedAccountContext creator;
 	
@@ -112,7 +112,6 @@ public class PokerTable {
 		this.configuration = configuration;
 		tableState = new WaitingTableState(this);
 		this.creator = creator;
-		
 		this.chatRoom = chatServer.addTableChatRoom(this);
 	}
 	
@@ -228,6 +227,13 @@ public class PokerTable {
 			throw new IllegalActionException("The game has already started.");
 		tableState = tableState.getNextState();
 	}
+	
+	public synchronized void startGame()
+	throws IllegalActionException {
+		if (tableState.isPlaying())
+			throw new IllegalActionException("The game has already started.");
+		tableState = tableState.getNextState();
+}
 	
 	/***************************************************************************
 	 * Player Actions
@@ -361,53 +367,41 @@ public class PokerTable {
 			unsubscribeHoldemTableListener(listener);
 	}
 	
-	public HoldemPlayerContext sitIn(SeatId seatId, int buyIn, ServerPlayer player,
+	public synchronized HoldemPlayerContext sitIn(SeatId seatId, int buyIn, ServerPlayer player,
 			HoldemPlayerListener holdemPlayerListener)
-			throws IllegalActionException {
+	throws IllegalActionException {
 		try {
-			if (sitInPlayers.size() > 0) {
+			HoldemPlayerContext toReturn = tableState.sitIn(seatId, new GameSeatedPlayer(player, buyIn));
+			sitInPlayers.put(player.getId(), holdemPlayerListener);
+			subscribeHoldemPlayerListener(player.getId(), holdemPlayerListener);
+			if (sitInPlayers.size() > 1) {
 				tableState = tableState.getNextState();
-				HoldemPlayerContext toReturn = tableState.sitIn(seatId, new GameSeatedPlayer(player, buyIn));
-				subscribeHoldemPlayerListener(player.getId(), holdemPlayerListener);
 				tableState.deal(tableState.getGame().getDealer());
-				return toReturn;
-			} else {
-				sitInPlayers.put(player.getId(), holdemPlayerListener);
-				HoldemPlayerContext toReturn = tableState.sitIn(seatId, new GameSeatedPlayer(player, buyIn));
-				subscribeHoldemPlayerListener(player.getId(), holdemPlayerListener);
-				return toReturn;
 			}
-			
+			return toReturn;
 		} catch (IllegalValueException e) {
 			throw new IllegalActionException("You can not sit in to this table with the given buy-in of " + buyIn
 					+ "chips.");
 		}
-		
+
 	}
 
 
-	public HoldemPlayerContext sitIn(int buyIn, ServerPlayer player,
+	public synchronized HoldemPlayerContext sitIn(int buyIn, ServerPlayer player,
 			HoldemPlayerListener holdemPlayerListener) throws IllegalActionException {
 		try {
-				if (sitInPlayers.size() > 0) {
-					tableState = tableState.getNextState();
-					HoldemPlayerContext toReturn = tableState.sitIn(new GameSeatedPlayer(player, buyIn));
-					subscribeHoldemPlayerListener(player.getId(), holdemPlayerListener);
-					tableState.deal(tableState.getGame().getDealer());
-					return toReturn;
-				} else {
-					sitInPlayers.put(player.getId(), holdemPlayerListener);
-					HoldemPlayerContext toReturn = tableState.sitIn(new GameSeatedPlayer(player, buyIn));
-					subscribeHoldemPlayerListener(player.getId(), holdemPlayerListener);
-					return toReturn;
-				}
-				
-			} catch (IllegalValueException e) {
-				throw new IllegalActionException("You can not sit in to this table with the given buy-in of " + buyIn
-						+ "chips.");
+			HoldemPlayerContext toReturn = tableState.sitIn(new GameSeatedPlayer(player, buyIn));
+			sitInPlayers.put(player.getId(), holdemPlayerListener);
+			subscribeHoldemPlayerListener(player.getId(), holdemPlayerListener);
+			if (sitInPlayers.size() > 1) {
+				tableState = tableState.getNextState();
+				tableState.deal(tableState.getGame().getDealer());
 			}
-			
-			// TODO (only if joined)
+			return toReturn;
+		} catch (IllegalValueException e) {
+			throw new IllegalActionException("You can not sit in to this table with the given buy-in of " + buyIn
+					+ "chips.");
+		}
 	}
 	
 	public void sitOut(GameSeatedPlayer player) {

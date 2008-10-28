@@ -53,12 +53,12 @@ public class NewCommunityCardsEvent extends HoldemTableEvent {
 	}
 
 	public String toString() {
-		String toReturn = "*** FLOP *** [";
+		String toReturn = "New Community Cards: ";
 		for (Card card : communityCards) {
 			toReturn += card;
 			toReturn += ", ";
 		}
-		return toReturn.substring(0, toReturn.length() - 2) + "]";
+		return toReturn.substring(0, toReturn.length() - 2) + ".";
 	}
 	
 	public void dispatch(HoldemTableListener holdemTableListener) {

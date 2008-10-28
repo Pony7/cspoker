@@ -51,5 +51,9 @@ public class AllInEvent extends HoldemTableEvent {
 	public void dispatch(HoldemTableListener holdemTableListener) {
 		holdemTableListener.onAllIn(this);
 	}
+	
+	public String toString(){
+		return player.getName()+" is all-in.";
+	}
 
 }
