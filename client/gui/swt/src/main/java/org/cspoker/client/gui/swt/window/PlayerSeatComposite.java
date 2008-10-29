@@ -341,6 +341,7 @@ public class PlayerSeatComposite
 	 */
 	public void showAction(final String action) {
 		playerStack.setText(ClientGUI.formatBet(player.getStackValue()));
+		playerStack.pack(true);
 		final String name = player.getName();
 		playerName.setText(action);
 		playerName.setForeground(Display.getDefault().getSystemColor(SWT.COLOR_BLUE));

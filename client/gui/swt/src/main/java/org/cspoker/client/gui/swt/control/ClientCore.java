@@ -61,6 +61,11 @@ public class ClientCore
 	 * Default port for sockets (<code>8081</code>)
 	 */
 	public static final int DEFAULT_PORT_SOCKET = 8081;
+	
+	/**
+	 * Default port for HTTP (<code>8080</code>)
+	 */
+	public static final int DEFAULT_PORT_HTTP = 8080;
 	/**
 	 * Default URL is <code>localhost</code>
 	 */

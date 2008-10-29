@@ -351,7 +351,8 @@ public class TableComposite
 		// Ship it
 		for (Winner winner : winners) {
 			PlayerSeatComposite winnerPC = findPlayerSeatCompositeByPlayerId(winner.getPlayer().getId());
-			winnerPC.getPlayer().setStackValue(winnerPC.getPlayer().getStackValue() + winner.getGainedAmount());
+			int newStackValue = winnerPC.getPlayer().getStackValue() + winner.getGainedAmount();
+			winnerPC.getPlayer().setStackValue(newStackValue);
 			ClientGUI.playAudio(ClientGUI.Resources.SOUND_FILE_SLIDE_CHIPS);
 			winnerPCs.add(winnerPC);
 			

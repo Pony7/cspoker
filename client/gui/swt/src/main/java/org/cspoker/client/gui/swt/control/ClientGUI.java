@@ -52,7 +52,8 @@ public class ClientGUI {
 		
 		public static final boolean ADDITIONAL_RESOURCES = false;
 		
-		private static final File IMAGE_DIR = new File("target/classes/images");
+		public static final File BASE_DIR = new File("src/main/resources");
+		private static final File IMAGE_DIR = new File(BASE_DIR, "images");
 		
 		/** Icon to be used for Shell images */
 		public static final File CS_POKER_ICON = new File(Resources.IMAGE_DIR, "csicon.png");
@@ -96,7 +97,7 @@ public class ClientGUI {
 		/** Default table background image */
 		public static final File TABLE_IMAGE = new File(THEMES_IMG_DIR, "table1.jpg");
 		
-		private static final File SOUND_DIR = new File("target/classes/Snd");
+		private static final File SOUND_DIR = new File(Resources.BASE_DIR, "Snd");
 		/** Plays a <i>Check</i> sound */
 		public static final File SOUND_FILE_CHECK = new File(SOUND_DIR, "snd4.wav");
 		/** Plays a <i>Fold</i> sound */
@@ -242,7 +243,7 @@ public class ClientGUI {
 	 */
 	public LoginDialog createNewLoginDialog() {
 		disposeCurrentShell();
-		return new LoginDialog(new Shell(display, SWT.SHELL_TRIM | SWT.APPLICATION_MODAL), SWT.NONE, clientCore);
+		return new LoginDialog(new Shell(display, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL), SWT.NONE, clientCore);
 	}
 	
 	/**
