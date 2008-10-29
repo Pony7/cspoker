@@ -33,6 +33,9 @@ public class RemoteRMIServer implements ExternalRemoteCSPokerServer {
 	//keeping this reference prevents some DGC problem to arise?
 	private ExternalRemoteCSPokerServer cspokerServer;
 
+	public RemoteRMIServer() throws RemoteException, NotBoundException {
+		this("localhost");
+	}
 	public RemoteRMIServer(String server) throws RemoteException, NotBoundException {
 		this(server, 1099);
 	}

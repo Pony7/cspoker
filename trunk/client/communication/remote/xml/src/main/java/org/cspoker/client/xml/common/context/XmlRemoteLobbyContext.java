@@ -66,9 +66,8 @@ public class XmlRemoteLobbyContext implements RemoteLobbyContext{
 	public RemoteHoldemTableContext joinHoldemTable(long tableID,
 			HoldemTableListener holdemTableListener) throws RemoteException,
 			IllegalActionException {
-		RemoteHoldemTableContext context;
-		if((context = contexts.putIfAbsent(tableID, 
-				new XmlRemoteHoldemTableContext(performer,generator,tableID, serverListenerTree)))!=null){
+		XmlRemoteHoldemTableContext context = new XmlRemoteHoldemTableContext(performer,generator,tableID, serverListenerTree);
+		if(contexts.putIfAbsent(tableID, context)==null){
 			serverListenerTree.getLobbyListenerTree().getHoldemTableListenerTree(tableID).setHoldemTableListener(holdemTableListener);
 			performer.perform(new JoinHoldemTableAction(generator.getNextID(),tableID));
 			return context;

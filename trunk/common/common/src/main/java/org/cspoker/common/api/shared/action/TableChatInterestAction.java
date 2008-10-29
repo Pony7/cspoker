@@ -24,6 +24,7 @@ import org.cspoker.common.api.shared.exception.IllegalActionException;
 public class TableChatInterestAction extends DispatchableAction<Void> {
 
 	private static final long serialVersionUID = -6219914092644893577L;
+
 	private long tableID;
 
 	public TableChatInterestAction(long id, long tableID) {

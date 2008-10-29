@@ -24,8 +24,7 @@ public abstract class ChatEvent implements Event{
 
 	public abstract void dispatch(ChatListener chatListener);
 	
-	
-	public ChatEvent() {
+	protected ChatEvent() {
 		// no op
 	}
 	

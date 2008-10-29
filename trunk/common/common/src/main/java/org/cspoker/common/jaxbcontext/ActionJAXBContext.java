@@ -25,7 +25,8 @@ import org.cspoker.common.api.account.action.GetAvatarAction;
 import org.cspoker.common.api.account.action.SetAvatarAction;
 import org.cspoker.common.api.cashier.action.GetMoneyAmountAction;
 import org.cspoker.common.api.cashier.action.RequestMoneyAction;
-import org.cspoker.common.api.chat.action.SendMessageAction;
+import org.cspoker.common.api.chat.action.SendServerMessageAction;
+import org.cspoker.common.api.chat.action.SendTableMessageAction;
 import org.cspoker.common.api.lobby.action.CreateHoldemTableAction;
 import org.cspoker.common.api.lobby.action.GetHoldemTableInformationAction;
 import org.cspoker.common.api.lobby.action.GetTableListAction;
@@ -36,6 +37,10 @@ import org.cspoker.common.api.lobby.holdemtable.holdemplayer.action.BetOrRaiseAc
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.action.CheckOrCallAction;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.action.FoldAction;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.action.LeaveGameAction;
+import org.cspoker.common.api.shared.action.ServerChatInterestAction;
+import org.cspoker.common.api.shared.action.TableChatInterestAction;
+import org.cspoker.common.elements.table.DetailedHoldemTable;
+import org.cspoker.common.elements.table.Table;
 
 public class ActionJAXBContext {
 
@@ -60,13 +65,16 @@ public class ActionJAXBContext {
 				//cashier
 				GetMoneyAmountAction.class, RequestMoneyAction.class,
 				//chat
-				SendMessageAction.class,
+				SendServerMessageAction.class,SendTableMessageAction.class,
 				//lobby
-				CreateHoldemTableAction.class,JoinHoldemTableAction.class,GetHoldemTableInformationAction.class, GetTableListAction.class,
+				CreateHoldemTableAction.class,JoinHoldemTableAction.class,GetHoldemTableInformationAction.class, 
+				GetTableListAction.class, DetailedHoldemTable.class, Table.class,
 				//table
 				LeaveTableAction.class,SitInAction.class,
 				//player
-				BetOrRaiseAction.class, CheckOrCallAction.class, FoldAction.class, LeaveGameAction.class
+				BetOrRaiseAction.class, CheckOrCallAction.class, FoldAction.class, LeaveGameAction.class,
+				//server
+				ServerChatInterestAction.class, TableChatInterestAction.class,
 				};
 	}
 

@@ -15,13 +15,10 @@
  */
 package org.cspoker.common.api.lobby.holdemtable.event;
 
-import javax.xml.bind.annotation.XmlRootElement;
-
 import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
 import org.cspoker.common.elements.player.Player;
 import org.cspoker.common.elements.pots.Pots;
 
-@XmlRootElement
 public class AllInEvent extends HoldemTableEvent {
 	
 	private static final long serialVersionUID = 2029273959014493873L;

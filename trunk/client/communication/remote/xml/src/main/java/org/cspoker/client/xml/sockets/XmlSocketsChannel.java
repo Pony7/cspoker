@@ -136,10 +136,13 @@ public class XmlSocketsChannel implements XmlActionSerializer {
 					}
 				}
 			} catch (IOException e) {
+				logger.error(e);
 				close();
 			} catch (InterruptedException e) {
+				logger.error(e);
 				Thread.currentThread().interrupt();
-			} catch (JAXBException exception) {
+			} catch (JAXBException e) {
+				logger.error(e);
 				close();
 			}
 		}

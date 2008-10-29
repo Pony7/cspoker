@@ -83,9 +83,8 @@ public class XmlRemoteServerContext implements RemoteServerContext {
 	
 	public RemoteChatContext getTableChatContext(ChatListener chatListener,
 			long tableID) throws RemoteException, IllegalActionException {
-		XmlRemoteTableChatContext context;
-		if((context = tableChatContexts.putIfAbsent(tableID, 
-				new XmlRemoteTableChatContext(performer,generator,tableID)))!=null){
+		XmlRemoteTableChatContext context = new XmlRemoteTableChatContext(performer,generator,tableID);
+		if(tableChatContexts.putIfAbsent(tableID, context)==null){
 			serverListenerTree.setTableChatListener(tableID, chatListener);
 			performer.perform(new TableChatInterestAction(generator.getNextID(),tableID));
 			return context;

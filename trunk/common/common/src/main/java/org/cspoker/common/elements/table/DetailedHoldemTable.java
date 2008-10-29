@@ -27,6 +27,7 @@ import org.cspoker.common.elements.player.SeatedPlayer;
  * An immutable class to represent a snapshot of the state of a table.
  * 
  */
+
 public class DetailedHoldemTable extends Table {
 
 	private static final long serialVersionUID = 1647960710321459407L;

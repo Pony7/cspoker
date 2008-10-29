@@ -140,7 +140,7 @@ public class WaitForIO implements Runnable, Prioritizable {
 				}
 			}
 		} catch (IOException e) {
-			logger.trace("Exception reading from socket, closing socket",e);
+			logger.debug("Exception reading from socket, closing socket",e);
 			ClientContext context = getContext(key, client);
 			context.closeConnection();
 		}
