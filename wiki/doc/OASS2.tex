@@ -1,6 +1,8 @@
 \documentclass[a4paper,11pt]{report}
 \usepackage[a4paper]{geometry}
 \usepackage[english]{babel}
+\usepackage{graphicx,subfigure}
+
 
 \author{Cedric~Cuypers, Kenzo~Tomita, Guy~Van~den~broeck} 
 % define title
@@ -439,56 +441,84 @@ TODO Guy
 \end{itemize}
 
 \chapter{Architecture: Functional viewpoint}
+The functional viewpoint presents the architectural elements needed to provide the core business of the poker application. This core business is translated into a core service, which is more specifically the service of providing poker tables. Additional issues needed to allow the poker company to perform its core business are also taken into account: account management, administration and cashier.
+
 \section{Architecture Component Diagram}
-\subsection{Account}
-The account component is responsible for managing users. It provides an interface to create, remove and block accounts. It also keeps track of the main stack each player has. This component interacts with the persistence component to store user data. 
+This section identifies several main internal components. The component diagram (Figure~\ref{fig:component}) also identifies the main interfaces that can be used by the components to communicate with each other.
 
-\begin{itemize}
-\item \emph{Persistence}: store user data.
-\end{itemize}
+To give a better understanding of each of the internal components a brief overview of each component is provided with an explanation of their role and responsibilities within the architecture.
 
-\subsection{Cashier}
-\subsubsection{Responsibilities}
-The cashier component is responsible for providing players with chips. If real money is involved, this component will interchange real money with play chips. Otherwise any time-based function or admin functionality can provide players with chips through this component.
-\subsubsection{Dependencies}
-\begin{itemize}
-\item \emph{Account}: handle the chips transfer.
-\item \emph{External Financial Service}: handle money transfer.
-\end{itemize}
-\subsection{Chat}
-\subsubsection{Responsibilities}
-The chat component is responsible for managing chat groups and delivering chat messages to other players. The chat component provides an interface to create and remove chat groups. The lobby and table components will use this functionality to provide chat services to the players in the respective components.
+\begin{figure}
+  \begin{center}
+    \includegraphics[angle=90, scale=0.6]{img_architecture_component_diagram.png}
+  \end{center}
+  \caption{Architecture from a functional viewpoint}\label{fig:component}
+\end{figure}
 
 \subsection{Lobby}
-\subsubsection{Responsibilities}
-The lobby component is responsible for managing tables. It is a registry service for looking up existing tables. It is also the interface to create new tables. 
-\subsubsection{Dependencies}
+The lobby component is responsible for managing tables. It is a registry service for looking up existing tables. It is also the interface to create and register new tables. 
+\subsubsection{Interfaces}
 \begin{itemize}
-\item \emph{Table}: the lobby component creates the tables.
-\item \emph{Chat}: the lobby component uses the chat component to provide chat services to the players in the lobby.
+\item \emph{lobby action}: This interface is used to handle lobby actions. This includes looking up tables, retrieving table information, creating tables, ...
+\item \emph{manage lobby}: This interface provides an admin the possibility to perform lobby related management.
 \end{itemize}
 
 \subsection{Table}
-\subsubsection{Responsibilities}
-The table component is responsible for handling player actions at a table. This component handles all the game play logic that is necessary to play poker.
-\subsubsection{Dependencies}
+The table component is responsible for handling player actions at a table. This component handles all the game play logic that is necessary to play a poker variant.
+\subsubsection{Interfaces}
 \begin{itemize}
-\item \emph{Chat}: the table component uses the chat component to provide chat services to the players at the table.
-\item \emph{Dealer}: retrieve securely shuffled cards for playing a deal.
+\item \emph{table action}: This interface is used to handle table actions. This includes sit-in, sit-out, check,  call, bet, raise and fold.
+\item \emph{manage table}: This interface provides an admin the possibility to perform table related management.
 \end{itemize}
 
-\subsection{Dealer}
-\subsubsection{Responsibilities}
-The dealer component is responsible to provide securely shuffled cards to the table component.
+\subsection{Account Management}
+The account management component is responsible for managing users. An account contains all user related data. It provides an interface to create, remove and block accounts. It also keeps track of the main stack each player has. This component interacts with the persistence component to store user data.
+\subsubsection{Interfaces}
+\begin{itemize}
+\item \emph{manage my account}: This interface provides a user the possibility to modify his own account data such as name, password, avatar, ...
+\item \emph{manage accounts}: This interface provides an admin the possibility to modify all account data. Additionally this interface is used to remove and block accounts. 
+\item \emph{transfer chips}: This interface is used to transfer chips from and to the account of player.
+\end{itemize}
+
+\subsection{Cashier}
+The cashier component is responsible for providing players with chips. If real money is involved, this component will interact with a third party payment component to exchange real money with chips. Otherwise any time-based function or admin functionality can provide players with chips through this component.
+\subsubsection{Interfaces}
+\begin{itemize}
+\item \emph{service interface}: This interface is used to provide players with chips. 
+\item \emph{manage cashier}: This interface is used by an admin to manage the functionality of the poker server.
+\end{itemize}
+
+\subsection{Chat Service}
+The chat component is responsible for managing chat groups and delivering chat messages to other players. The chat component provides an interface to create and remove chat groups. The lobby and table components will use this functionality to provide chat services to the players in the respective components.
+\subsubsection{Interfaces}
+\begin{itemize}
+\item \emph{service interface}: This interface is used to register a chat group and send messages to a chat group.
+\item \emph{manage chat rooms}: This interface is used by an admin to manage the functionality of the poker server.
+\end{itemize}
+
+\subsection{Cards Dealing Service}
+The cards dealing service component is responsible to provide securely shuffled cards to the table component.
+\begin{itemize}
+\item \emph{service interface}: This interface is used to retrieve and shuffle cards.
+\end{itemize}
+
+\subsection{Poker Variant Provider}
+The poker variant provider component is responsible for managing and providing the available poker variants. A  poker table is always configured with a poker variant provided by this component.
+\begin{itemize}
+\item \emph{service interface}: This interface is used to look up a poker variant and retrieve the necessary configuration to play a chosen poker variant.
+\end{itemize}
 
 \subsection{Communication}
-\subsubsection{Responsibilities}
 This component is responsible for the communication between client and server modules. It delegates API calls to the responsible component.
+\begin{itemize}
+\item \emph{notification}: This interface is used to send messages from the server core to the respective clients.
+\end{itemize}
 
-\subsection{Persistence}
-\subsubsection{Responsibilities}
+\subsection{Persistence Service}
 This component is responsible for handling the persistence needs for all other components.
-
+\begin{itemize}
+\item \emph{notification}: This interface is used to store and retrieve data from the persistent storage.
+\end{itemize}
 
 \section{Use Cases applied on the component diagram}
 \section{Deployment View}
