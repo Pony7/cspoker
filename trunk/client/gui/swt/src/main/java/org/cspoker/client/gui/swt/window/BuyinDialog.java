@@ -24,12 +24,7 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.*;
 
 /**
  * A dialog where the user can rebuy for a selected amount.
@@ -112,11 +107,8 @@ public class BuyinDialog
 		dialogShellLayout.makeColumnsEqualWidth = true;
 		getParent().setLayout(dialogShellLayout);
 		composite1 = new Composite(getParent(), SWT.NONE);
-		GridLayout composite1Layout = new GridLayout(2, true);
-		composite1Layout.makeColumnsEqualWidth = true;
-		composite1.setLayout(composite1Layout);
-		GridData composite1LData = new GridData(SWT.CENTER, SWT.CENTER, true, true);
-		composite1.setLayoutData(composite1LData);
+		composite1.setLayout(new GridLayout(2, true));
+		composite1.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, true));
 		{
 			{
 				rebuyAmountLabel = new Label(composite1, SWT.CENTER);

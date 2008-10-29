@@ -19,21 +19,16 @@ import org.cspoker.client.gui.swt.control.ClientCore;
 import org.cspoker.client.gui.swt.control.ClientGUI;
 import org.cspoker.client.gui.swt.control.SWTResourceManager;
 import org.cspoker.client.rmi.RemoteRMIServer;
+import org.cspoker.client.xml.http.RemoteHTTPServer;
+import org.cspoker.client.xml.sockets.RemoteSocketServer;
 import org.cspoker.common.RemoteCSPokerServer;
 import org.cspoker.common.api.shared.context.RemoteServerContext;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Combo;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.*;
 
 /**
  * A Simple Dialog which asks the user to provide a user name and corresponding
@@ -61,10 +56,9 @@ public class LoginDialog
 	private Text passwordText;
 	private Label passwordLabel;
 	private Combo serverCombo;
+	private Combo communicationCombo;
 	private Label serverLabel;
-	private Composite composite4;
-	private Composite composite3;
-	private Composite composite2;
+	private Label communicationLabel;
 	private Composite composite1;
 	private Button loginButton;
 	
@@ -93,76 +87,64 @@ public class LoginDialog
 		getParent().setText("Login to the CSPoker Server");
 		getParent().setImage(SWTResourceManager.getImage(ClientGUI.Resources.CS_POKER_ICON));
 		
+		GridData ldata = new GridData(SWT.CENTER, SWT.CENTER, true, true);
+		ldata.widthHint = 70;
 		getParent().setMinimumSize(250, 100);
 		GridLayout dialogShellLayout = new GridLayout();
 		dialogShellLayout.makeColumnsEqualWidth = true;
 		getParent().setLayout(dialogShellLayout);
 		composite1 = new Composite(getParent(), SWT.NONE);
-		GridLayout composite1Layout = new GridLayout();
-		composite1Layout.makeColumnsEqualWidth = true;
-		composite1.setLayout(composite1Layout);
-		GridData composite1LData = new GridData();
-		composite1LData.grabExcessHorizontalSpace = true;
-		composite1LData.grabExcessVerticalSpace = true;
-		composite1LData.horizontalAlignment = GridData.CENTER;
-		composite1.setLayoutData(composite1LData);
+		composite1.setLayout(new GridLayout(2, false));
+		composite1.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, true));
 		{
-			composite2 = new Composite(composite1, SWT.NONE);
-			FillLayout composite2Layout = new FillLayout(org.eclipse.swt.SWT.HORIZONTAL);
-			GridData composite2LData = new GridData();
-			composite2LData.horizontalAlignment = GridData.CENTER;
-			composite2LData.grabExcessHorizontalSpace = true;
-			composite2.setLayoutData(composite2LData);
-			composite2.setLayout(composite2Layout);
 			{
-				userNameLabel = new Label(composite2, SWT.CENTER);
+				userNameLabel = new Label(composite1, SWT.CENTER);
 				userNameLabel.setText("User Name:");
-				userNameLabel.setBounds(5, 20, 60, 30);
 			}
 			{
-				userNameText = new Text(composite2, SWT.SINGLE | SWT.CENTER);
-				userNameText.setBounds(38, 20, 60, 30);
+				userNameText = new Text(composite1, SWT.SINGLE | SWT.CENTER | SWT.BORDER);
 				userNameText.setText(clientCore.getUser().getUserName());
+				userNameText.setLayoutData(ldata);
+				
 			}
 		}
 		{
-			composite3 = new Composite(composite1, SWT.NONE);
-			FillLayout composite3Layout = new FillLayout(org.eclipse.swt.SWT.HORIZONTAL);
-			GridData composite3LData = new GridData();
-			composite3LData.horizontalAlignment = GridData.CENTER;
-			composite3.setLayoutData(composite3LData);
-			composite3.setLayout(composite3Layout);
 			{
-				passwordLabel = new Label(composite3, SWT.CENTER);
+				passwordLabel = new Label(composite1, SWT.CENTER);
 				passwordLabel.setText("Password:");
-				passwordLabel.setBounds(5, 50, 60, 30);
 			}
 			{
-				passwordText = new Text(composite3, SWT.CENTER);
+				passwordText = new Text(composite1, SWT.SINGLE | SWT.CENTER | SWT.BORDER);
 				passwordText.setText(clientCore.getUser().getPassword());
 				passwordText.setEchoChar('*');
+				passwordText.setLayoutData(ldata);
 			}
-			composite4 = new Composite(composite1, SWT.NONE);
-			FillLayout composite4Layout = new FillLayout(org.eclipse.swt.SWT.HORIZONTAL);
-			GridData composite4LData = new GridData();
-			composite3LData.horizontalAlignment = GridData.CENTER;
-			composite4.setLayoutData(composite4LData);
-			composite4.setLayout(composite4Layout);
 			{
-				serverLabel = new Label(composite4, SWT.CENTER);
+				serverLabel = new Label(composite1, SWT.CENTER);
 				serverLabel.setText("Server:");
-				serverLabel.setBounds(5, 50, 60, 30);
+				// serverLabel.setBounds(5, 50, 60, 30);
 			}
 			{
-				serverCombo = new Combo(composite4, SWT.CENTER);
+				serverCombo = new Combo(composite1, SWT.CENTER);
 				serverCombo.add(ClientCore.DEFAULT_URL);
 				serverCombo.add("192.168.178.21");
 				serverCombo.select(0);
-				serverCombo.setBounds(38, 20, 60, 30);
+				// serverCombo.setBounds(38, 20, 60, 30);
+				
+				communicationLabel = new Label(composite1, SWT.CENTER);
+				communicationLabel.setText("Communication:");
+				// communicationLabel.setBounds(5, 50, 60, 30);
+				
+				communicationCombo = new Combo(composite1, SWT.CENTER);
+				communicationCombo.add("RMI");
+				communicationCombo.add("HTTP");
+				communicationCombo.add("SOCKETS");
+				communicationCombo.select(0);
+				// communicationCombo.setBounds(38, 20, 60, 30);
 			}
 		}
 		{
-			loginButton = new Button(composite1, SWT.PUSH | SWT.CENTER);
+			loginButton = new Button(getParent(), SWT.PUSH | SWT.CENTER);
 			GridData loginButtonLData = new GridData();
 			loginButtonLData.horizontalAlignment = GridData.CENTER;
 			loginButton.setLayoutData(loginButtonLData);
@@ -184,8 +166,17 @@ public class LoginDialog
 						// RemoteCSPokerServer server =
 						// CommunicationProvider.global_provider.getProviders().get(0);
 						clientCore.setUser(new User(userNameText.getText(), passwordText.getText()));
-						RemoteCSPokerServer server = new RemoteRMIServer(ClientCore.DEFAULT_URL,
-								ClientCore.DEFAULT_PORT_RMI);
+						String communicationType = communicationCombo.getText();
+						RemoteCSPokerServer server = null;
+						if (communicationType.equalsIgnoreCase("RMI")) {
+							server = new RemoteRMIServer(ClientCore.DEFAULT_URL, ClientCore.DEFAULT_PORT_RMI);
+						} else if (communicationType.equalsIgnoreCase("HTTP")) {
+							server = new RemoteHTTPServer(ClientCore.DEFAULT_URL, ClientCore.DEFAULT_PORT_HTTP);
+						} else if (communicationType.equalsIgnoreCase("SOCKETS")) {
+							server = new RemoteSocketServer(ClientCore.DEFAULT_URL, ClientCore.DEFAULT_PORT_SOCKET);
+						} else {
+							throw new IllegalArgumentException("No communication specified");
+						}
 						result = clientCore.login(server);
 						assert (result != null) : "No exception thrown but still no Server Context?!";
 						getParent().close();
