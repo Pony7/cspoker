@@ -16,29 +16,8 @@ import java.util.Collections;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
-import org.cspoker.client.gui.swt.control.ClientGUI;
-import org.cspoker.client.gui.swt.control.GameState;
-import org.cspoker.client.gui.swt.control.MutableSeatedPlayer;
-import org.cspoker.client.gui.swt.control.SWTResourceManager;
-import org.cspoker.client.gui.swt.control.UserSeatedPlayer;
-import org.cspoker.common.api.lobby.holdemtable.event.AllInEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.BetEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.BigBlindEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.CallEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.CheckEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.FoldEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.JoinTableEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.LeaveTableEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.NewCommunityCardsEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.NewDealEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.NewRoundEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.NextPlayerEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.RaiseEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.ShowHandEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.SitInEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.SitOutEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.SmallBlindEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.WinnerEvent;
+import org.cspoker.client.gui.swt.control.*;
+import org.cspoker.common.api.lobby.holdemtable.event.*;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.event.NewPocketCardsEvent;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.listener.HoldemPlayerListener;
 import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
@@ -47,6 +26,7 @@ import org.cspoker.common.elements.player.Player;
 import org.cspoker.common.elements.player.SeatedPlayer;
 import org.cspoker.common.elements.pots.Pots;
 import org.cspoker.common.elements.table.DetailedHoldemTable;
+import org.cspoker.common.elements.table.Rounds;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
@@ -69,9 +49,9 @@ public class GameWindow
 		implements HoldemTableListener, HoldemPlayerListener {
 	
 	/** Minimum width so everything will still reasonably displayed */
-	public static final int MINIMUM_WIDTH = 550;
+	public static final int MINIMUM_WIDTH = 650;
 	/** Minimum height so everything will still reasonably displayed */
-	public static final int MINIMUM_HEIGHT = 600;
+	public static final int MINIMUM_HEIGHT = 650;
 	
 	private final static Logger logger = Logger.getLogger(GameWindow.class);
 	
@@ -137,10 +117,10 @@ public class GameWindow
 				Image scaled = new Image(Display.getDefault(), skin.getImageData().scaledTo(getShell().getSize().x,
 						getShell().getSize().y));
 				setBackgroundImage(scaled);
-				tableComposite.resetPotChipsArea();
-				for (PlayerSeatComposite psc : tableComposite.getPlayerSeatComposites(false)) {
-					psc.resetBetChipsDisplayArea();
-				}
+				updateTableGraphics();
+				logger.debug("TC: " + getTableComposite().getBounds());
+				logger.debug("PC: " + getTableComposite().getPlayerSeatComposites(false).get(0).getBounds());
+				logger.debug("GW: " + getShell().getBounds());
 			}
 		});
 	}
@@ -187,12 +167,12 @@ public class GameWindow
 		// betting/raising/calling
 		MutableSeatedPlayer player = getPlayerSeatComposite(bettor).getPlayer();
 		player.updateStackAndBetChips(amount);
-		// Game State update
-		// Set new reference bet pile in GameState
 		gameState.betRaise(amount, pots);
-		
 		player.getCurrentBetPile().clear();
 		player.getCurrentBetPile().addAll(gameState.getCurrentBetPile());
+		// Game State update
+		// Set new reference bet pile in GameState
+		
 		getPlayerSeatComposite(bettor).showAction(action);
 		
 		ClientGUI.playAudio(ClientGUI.Resources.SOUND_FILE_BETRAISE);
@@ -257,18 +237,24 @@ public class GameWindow
 	 * @see org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener#onNewDeal(org.cspoker.common.api.lobby.holdemtable.event.NewDealEvent)
 	 */
 	public void onNewDeal(NewDealEvent newDealEvent) {
+		logger.debug("New deal event received");
 		gameState.newRound();
 		gameState.setPots(new Pots(0));
 		
 		for (PlayerSeatComposite psc : tableComposite.getPlayerSeatComposites(true)) {
+			if (psc.getPlayer().isDealer()) {
+				// psc.moveDealerButton(newDealEvent.getDealer());
+			}
 			psc.setHoleCards(Arrays.asList(ClientGUI.UNKNOWN_CARD, ClientGUI.UNKNOWN_CARD));
 			// Draw dealer button
 			psc.getPlayer().setDealer(newDealEvent.getDealer().getId() == psc.getPlayer().getId());
-			psc.resetBetChipsDisplayArea();
+			// psc.resetBetChipsDisplayArea();
 			psc.getPlayer().setBetChipsValue(0);
 		}
 		userInputComposite.showDealerMessage(newDealEvent);
+		
 		tableComposite.redraw();
+		logger.debug("New deal event handled");
 		
 	}
 	
@@ -283,11 +269,11 @@ public class GameWindow
 	 * @see org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener#onNewRound(org.cspoker.common.api.lobby.holdemtable.event.NewRoundEvent)
 	 */
 	public void onNewRound(NewRoundEvent newRoundEvent) {
-		tableComposite.moveBetsToPot();
-		gameState.newRound();
-		for (PlayerSeatComposite psc : tableComposite.getPlayerSeatComposites(true)) {
-			psc.getPlayer().setBetChipsValue(0);
+		if (newRoundEvent.getRound() != Rounds.PREFLOP) {
+			tableComposite.moveBetsToPot();
 		}
+		gameState.newRound();
+		updateTableGraphics();
 		userInputComposite.showDealerMessage(newRoundEvent);
 	}
 	
@@ -395,18 +381,13 @@ public class GameWindow
 	 */
 	public void onWinner(final WinnerEvent winnerEvent) {
 		tableComposite.moveBetsToPot();
-		// FIXME XXX Make sure that this is better , i.e. new round
-		// doesnt start until animation stuff is complete
-		getDisplay().timerExec(2000, new Runnable() {
-			
-			/**
-			 * @see java.lang.Runnable#run()
-			 */
-			public void run() {
-				tableComposite.movePotsToWinners(winnerEvent.getWinners());
-				
-			}
-		});
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			logger.warn("Sleep interrupted", e);
+			Thread.currentThread().interrupt();
+		}
+		tableComposite.movePotsToWinners(winnerEvent.getWinners());
 		
 		tableComposite.clearCommunityCards();
 		tableComposite.getCommunityCardsComposite().setVisible(false);
@@ -440,10 +421,11 @@ public class GameWindow
 	public void show() {
 		Shell containingShell = getShell();
 		containingShell.open();
+		Display display = containingShell.getDisplay();
 		// Listen to events
-		while (!containingShell.isDisposed()) {
-			if (!containingShell.getDisplay().readAndDispatch())
-				containingShell.getDisplay().sleep();
+		while (!display.isDisposed()) {
+			if (!display.readAndDispatch())
+				display.sleep();
 		}
 	}
 	

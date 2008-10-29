@@ -18,6 +18,7 @@ package org.cspoker.client.gui.swt.control;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Vector;
 
@@ -25,17 +26,10 @@ import org.apache.log4j.Logger;
 import org.cspoker.common.elements.cards.Card;
 import org.cspoker.common.elements.cards.Rank;
 import org.cspoker.common.elements.cards.Suit;
+import org.eclipse.swt.SWTException;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
-import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.Cursor;
-import org.eclipse.swt.graphics.Font;
-import org.eclipse.swt.graphics.FontData;
-import org.eclipse.swt.graphics.GC;
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.ImageData;
-import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.Resource;
+import org.eclipse.swt.graphics.*;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Widget;
 
@@ -150,18 +144,30 @@ public class SWTResourceManager {
 	 * @return The image contained in the file
 	 */
 	public static Image getImage(File file) {
+		
+		if (resources.containsKey(file.toString()))
+			return (Image) resources.get(file.toString());
+		Image img = null;
+		FileInputStream imgStream = null;
 		try {
-			if (resources.containsKey(file.toString()))
-				return (Image) resources.get(file.toString());
-			Image img = new Image(Display.getDefault(), new FileInputStream(file.getAbsoluteFile()));
-			if (!file.isDirectory()) {
-				resources.put(file.toString(), img);
+			try {
+				imgStream = new FileInputStream(file.getAbsoluteFile());
+			} catch (FileNotFoundException e) {
+				logger.error("File not found", e);
 			}
-			return img;
-		} catch (Exception e) {
-			logger.error("SWTResourceManager.getImage: Error getting image", e);
-			return null;
+			img = new Image(Display.getDefault(), imgStream);
+		} finally {
+			if (imgStream != null)
+				try {
+					imgStream.close();
+				} catch (IOException ignored) {
+					// Ignore
+				}
 		}
+		if (!file.isDirectory()) {
+			resources.put(file.toString(), img);
+		}
+		return img;
 		
 	}
 	
@@ -201,7 +207,7 @@ public class SWTResourceManager {
 		return cardImg;
 	}
 	
-	public static Image getChipFromPNG(Chip chip, int size) {
+	private static Image getChipFromPNG(Chip chip, int size) {
 		if (resources.containsKey(chip.toString() + size))
 			return (Image) resources.get(chip.toString() + size);
 		Image chipPngImg = getImage(ClientGUI.Resources.FREE_CHIP_IMAGE_FILE);
@@ -220,13 +226,14 @@ public class SWTResourceManager {
 	}
 	
 	/**
-	 * @param chip
-	 * @param size
-	 * @return
-	 * @throws FileNotFoundException
+	 * @param chip Teh chip
+	 * @param size Desired size (1-6)
+	 * @return The chip image
+	 * @throws IOException If some kind of error occurs while retrieving the
+	 *             image resource
 	 */
 	public static Image getChipImage(Chip chip, int size)
-			throws FileNotFoundException {
+			throws IOException {
 		Image chipImg = null;
 		if (ClientGUI.Resources.ACTIVE_CHIP_DIR.equals(ClientGUI.Resources.FREE_CHIP_IMAGE_FILE)) {
 			chipImg = SWTResourceManager.getChipFromPNG(chip, size);
@@ -235,10 +242,28 @@ public class SWTResourceManager {
 			return chipImg;
 		if (resources.containsKey(chip.getImageFile(size).toString()))
 			return (Image) resources.get(chip.getImageFile(size).toString());
-		Image img = new Image(Display.getDefault(), new FileInputStream(chip.getImageFile(size).getAbsoluteFile()));
-		Image mask = new Image(Display.getDefault(), new FileInputStream(chip.getMaskImageFile(size).getAbsoluteFile()));
 		
-		Image icon = new Image(Display.getDefault(), img.getImageData(), mask.getImageData());
+		Image img = null;
+		Image mask = null;
+		Image icon = null;
+		FileInputStream imgStream = null;
+		FileInputStream maskStream = null;
+		try {
+			imgStream = new FileInputStream(chip.getImageFile(size).getAbsoluteFile());
+			maskStream = new FileInputStream(chip.getMaskImageFile(size).getAbsoluteFile());
+			
+			img = new Image(Display.getDefault(), imgStream);
+			mask = new Image(Display.getDefault(), maskStream);
+			icon = new Image(Display.getDefault(), img.getImageData(), mask.getImageData());
+			
+		} catch (SWTException swtEx) {
+			throw new IOException(swtEx);
+		} finally {
+			if (imgStream != null)
+				imgStream.close();
+			if (maskStream != null)
+				maskStream.close();
+		}
 		img.dispose();
 		mask.dispose();
 		resources.put(chip.getImageFile(size).toString(), icon);

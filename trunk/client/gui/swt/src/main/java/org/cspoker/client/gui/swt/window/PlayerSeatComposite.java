@@ -19,26 +19,20 @@ import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
 
 import org.apache.log4j.Logger;
-import org.cspoker.client.gui.swt.control.CardPaintListener;
-import org.cspoker.client.gui.swt.control.ClientGUI;
-import org.cspoker.client.gui.swt.control.MutableSeatedPlayer;
-import org.cspoker.client.gui.swt.control.UserSeatedPlayer;
+import org.cspoker.client.gui.swt.control.*;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.cards.Card;
+import org.cspoker.common.elements.player.Player;
 import org.cspoker.common.elements.player.SeatedPlayer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.ProgressBar;
+import org.eclipse.swt.widgets.*;
 
 /**
  * Represents a composite in the TableComposite where the player is visualized
@@ -60,8 +54,9 @@ public class PlayerSeatComposite
 		 */
 		@Override
 		public void mouseDown(MouseEvent evt) {
-			// Check if seat is occupied
-			if (getPlayer() != null) {
+			// Check if seat is occupied, TODO Improve, without string
+			// comparison
+			if (!getPlayer().getName().equalsIgnoreCase("Empty Seat")) {
 				return;
 			}
 			// If not, we can probably sit in
@@ -73,10 +68,12 @@ public class PlayerSeatComposite
 				// Dont do anything if the user is already sitting in
 				return;
 			}
-			player = user;
 			int amount = new BuyinDialog(getClientCore(), user.getCashierContext(), gameState.getTableMemento()
 					.getGameProperty().getBigBlind() * 100, true).open();
+			if (amount <= 0)
+				return;
 			try {
+				player = user;
 				user.sitIn(seatId, amount);
 				// Update the button accordingly with which the user can sit
 				// in and out
@@ -103,7 +100,8 @@ public class PlayerSeatComposite
 	
 	// SWT fields
 	private Label playerName;
-	Rectangle betChipsArea;
+	private Rectangle dealerChipLocation;
+	
 	private final ProgressBar timeLeftBar = new ProgressBar(this, SWT.SMOOTH);
 	
 	private final Runnable progressUpdater = new Runnable() {
@@ -137,6 +135,7 @@ public class PlayerSeatComposite
 	
 	private Composite holeCardsComposite;
 	private Label playerStack;
+	private Canvas chipsArea;
 	
 	private Future<?> timerAction = new FutureTask<Object>(progressUpdater, null);
 	private List<Card> holeCards = new ArrayList<Card>();
@@ -148,9 +147,10 @@ public class PlayerSeatComposite
 	 */
 	public PlayerSeatComposite(TableComposite parent, int style, int seatId) {
 		super(parent, style);
-		initGUI();
 		numberOfHoleCards = gameState.getNumberOfHoleCards();
+		player = MutableSeatedPlayer.UNOCCUPIED;
 		this.seatId = seatId;
+		initGUI();
 		reset();
 		
 	}
@@ -171,21 +171,36 @@ public class PlayerSeatComposite
 	 *         May be modified during animation threads. Reset to initial
 	 *         location via {@link #resetBetChipsDisplayArea()}
 	 */
-	public Rectangle getBetChipsDisplayArea() {
-		if (betChipsArea == null) {
-			resetBetChipsDisplayArea();
+	public Rectangle getDealerChipLocation() {
+		if (dealerChipLocation != null) {
+			return dealerChipLocation;
 		}
-		return betChipsArea;
-	}
-	
-	/**
-	 * Resets the area where the chips the player has bet are displayed to its
-	 * default value.
-	 * <p>
-	 * By default, the chips in the pot are displayed below the community cards.
-	 */
-	public void resetBetChipsDisplayArea() {
-		betChipsArea = getInitialChipDrawOffset();
+		int size = Math.min(Chip.MAX_IMG_SIZE, getParent().getSize().x / 200);
+		Image dealerChip = Chip.DEALER.getImage(size);
+		Rectangle betChipsArea = getInitialChipDrawOffset();
+		dealerChipLocation = new Rectangle(0, 0, dealerChip.getImageData().width, dealerChip.getImageData().height);
+		switch ((int) seatId) {
+			case 0:
+			case 1:
+				dealerChipLocation.x = betChipsArea.x + (betChipsArea.width - dealerChip.getImageData().width) / 2;
+				dealerChipLocation.y = betChipsArea.y;
+				return dealerChipLocation;
+			case 3:
+			case 4:
+				dealerChipLocation.x = betChipsArea.x + (betChipsArea.width - dealerChip.getImageData().width) / 2;
+				dealerChipLocation.y = betChipsArea.y + betChipsArea.height - dealerChip.getImageData().height;
+				return dealerChipLocation;
+			case 2:
+				dealerChipLocation.x = betChipsArea.x + betChipsArea.width - dealerChip.getImageData().width;
+				dealerChipLocation.y = betChipsArea.y + (betChipsArea.height - dealerChip.getImageData().height) / 2;
+				return dealerChipLocation;
+			case 5:
+				dealerChipLocation.x = betChipsArea.x;
+				dealerChipLocation.y = betChipsArea.y + (betChipsArea.height - dealerChip.getImageData().height) / 2;
+				return dealerChipLocation;
+				
+		}
+		return dealerChipLocation;
 	}
 	
 	/**
@@ -236,32 +251,33 @@ public class PlayerSeatComposite
 	
 	private void initGUI() {
 		GridLayout layout = new GridLayout(1, false);
-		layout.horizontalSpacing = 20;
-		layout.verticalSpacing = 20;
+		layout.horizontalSpacing = 1;
+		layout.verticalSpacing = 1;
+		layout.marginHeight = 1;
+		layout.marginWidth = 1;
 		setLayout(new GridLayout(1, false));
 		GridData data = new GridData(SWT.CENTER, SWT.CENTER, true, true);
 		data.widthHint = 150;
-		data.heightHint = 250;
-		data.minimumWidth = 100;
-		data.minimumHeight = 60;
-		
+		data.heightHint = 200;
+		data.minimumWidth = 80;
+		data.minimumHeight = 100;
 		setLayoutData(data);
 		{
 			playerName = new Label(this, SWT.SHADOW_NONE | SWT.CENTER | SWT.BORDER);
 			GridData player1NameLData = new GridData(SWT.DEFAULT, SWT.DEFAULT);
 			player1NameLData.horizontalAlignment = GridData.CENTER;
 			player1NameLData.widthHint = 100;
-			player1NameLData.minimumWidth = 80;
+			player1NameLData.minimumWidth = 55;
 			player1NameLData.grabExcessHorizontalSpace = true;
 			playerName.setLayoutData(player1NameLData);
 			playerName.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_INFO_BACKGROUND));
 		}
 		{
-			playerStack = new Label(this, SWT.CENTER);
+			playerStack = new Label(this, SWT.SHADOW_NONE | SWT.CENTER | SWT.BORDER);
 			GridData player1StackLData = new GridData(SWT.DEFAULT, SWT.DEFAULT);
 			player1StackLData.horizontalAlignment = GridData.CENTER;
 			player1StackLData.grabExcessHorizontalSpace = true;
-			player1StackLData.minimumWidth = 70;
+			player1StackLData.minimumWidth = 55;
 			playerStack.setLayoutData(player1StackLData);
 			playerStack.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_INFO_BACKGROUND));
 		}
@@ -269,6 +285,9 @@ public class PlayerSeatComposite
 			GridData timeLeftBarLData = new GridData(SWT.DEFAULT, SWT.DEFAULT);
 			timeLeftBarLData.horizontalAlignment = GridData.CENTER;
 			timeLeftBarLData.widthHint = 80;
+			timeLeftBarLData.heightHint = 10;
+			timeLeftBarLData.minimumWidth = 40;
+			timeLeftBarLData.grabExcessHorizontalSpace = true;
 			timeLeftBar.setLayoutData(timeLeftBarLData);
 		}
 		{
@@ -279,7 +298,7 @@ public class PlayerSeatComposite
 			GridData holeCardsCompositeLayoutData = new GridData(SWT.CENTER, SWT.CENTER, true, true);
 			holeCardsCompositeLayoutData.minimumWidth = numberOfHoleCards * ClientGUI.MINIMUM_CARD_WIDTH;
 			holeCardsCompositeLayoutData.minimumHeight = ClientGUI.MINIMUM_CARD_HEIGHT;
-			holeCardsCompositeLayoutData.widthHint = numberOfHoleCards * ClientGUI.PREFERRED_CARD_WIDTH;
+			holeCardsCompositeLayoutData.widthHint = numberOfHoleCards * ClientGUI.PREFERRED_CARD_WIDTH - 10;
 			holeCardsCompositeLayoutData.heightHint = ClientGUI.PREFERRED_CARD_HEIGHT;
 			holeCardsComposite.setLayoutData(holeCardsCompositeLayoutData);
 			holeCardsComposite.addPaintListener(new CardPaintListener(holeCards, 2, SWT.CENTER, -10));
@@ -315,8 +334,8 @@ public class PlayerSeatComposite
 	}
 	
 	/**
-	 * Briefly displays the action the player has taken in place of his user
-	 * name.
+	 * Refreshes chips and briefly displays the action the player has taken in
+	 * place of his user name.
 	 * 
 	 * @param action The action to display, i.e. <i>"Check"</i> or <i>"Fold"</i>
 	 */
@@ -339,6 +358,11 @@ public class PlayerSeatComposite
 				}
 			}
 		});
+	}
+	
+	public void moveDealerButton(Player nextDealer) {
+		// TODO
+		throw new UnsupportedOperationException("Not yet implemented");
 	}
 	
 	/**
@@ -371,7 +395,7 @@ public class PlayerSeatComposite
 	public void occupy(SeatedPlayer detailedPlayer) {
 		// Check is necessary because the variable might already be set to a
 		// UserSeatedPlayer
-		if (player == null) {
+		if (player == MutableSeatedPlayer.UNOCCUPIED) {
 			UserSeatedPlayer user = getParent().getParent().getUser();
 			player = detailedPlayer.equals(user.getMemento()) ? user : new MutableSeatedPlayer(detailedPlayer,
 					gameState);
@@ -389,11 +413,7 @@ public class PlayerSeatComposite
 	 * may be occupied by clicking on it
 	 */
 	public void reset() {
-		
-		player = null;
-		playerName.setText("Empty Seat");
-		playerStack.setText("");
-		playerStack.setVisible(false);
+		playerName.setText(player.getName());
 		holeCardsComposite.redraw();
 		timerAction.cancel(true);
 	}
@@ -408,5 +428,13 @@ public class PlayerSeatComposite
 	@Override
 	public TableComposite getParent() {
 		return (TableComposite) super.getParent();
+	}
+	
+	public Canvas getChipsArea() {
+		return chipsArea;
+	}
+	
+	public void setChipsArea(Canvas chipsArea) {
+		this.chipsArea = chipsArea;
 	}
 }
