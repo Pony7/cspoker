@@ -19,7 +19,9 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 
 import org.apache.log4j.Logger;
-import org.cspoker.common.api.chat.event.ChatEvent;
+import org.cspoker.common.api.chat.event.MessageEvent;
+import org.cspoker.common.api.chat.event.ServerChatEvents;
+import org.cspoker.common.api.chat.event.TableChatEvents;
 import org.cspoker.common.api.lobby.event.TableCreatedEvent;
 import org.cspoker.common.api.lobby.event.TableRemovedEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.BetEvent;
@@ -27,6 +29,8 @@ import org.cspoker.common.api.lobby.holdemtable.event.BigBlindEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.CallEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.CheckEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.FoldEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.HoldemTableTreeEventWrapper;
+import org.cspoker.common.api.lobby.holdemtable.event.JoinTableEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.LeaveTableEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.NewCommunityCardsEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.NewDealEvent;
@@ -41,6 +45,8 @@ import org.cspoker.common.api.lobby.holdemtable.holdemplayer.event.NewPocketCard
 import org.cspoker.common.api.shared.event.ActionPerformedEvent;
 import org.cspoker.common.api.shared.event.IllegalActionEvent;
 import org.cspoker.common.api.shared.event.RemoteExceptionEvent;
+import org.cspoker.common.elements.table.DetailedHoldemTable;
+import org.cspoker.common.elements.table.TableList;
 
 public class EventJAXBContext {
 
@@ -61,14 +67,14 @@ public class EventJAXBContext {
 	public static Class<?>[] getActions() {
 		return new Class<?>[] { 
 				//chat
-				ChatEvent.class,
+				ServerChatEvents.class,TableChatEvents.class, MessageEvent.class,
 				//lobby
-				TableCreatedEvent.class, TableRemovedEvent.class,
+				TableCreatedEvent.class, TableRemovedEvent.class, TableList.class, DetailedHoldemTable.class,
 				//table
 				BetEvent.class, BigBlindEvent.class, CallEvent.class, CheckEvent.class, FoldEvent.class, 
 				LeaveTableEvent.class, NewCommunityCardsEvent.class, NewDealEvent.class, NewRoundEvent.class, 
 				NextPlayerEvent.class, RaiseEvent.class, ShowHandEvent.class, SitInEvent.class, SmallBlindEvent.class, 
-				WinnerEvent.class,
+				JoinTableEvent.class, WinnerEvent.class, HoldemTableTreeEventWrapper.class,
 				//player
 				NewPocketCardsEvent.class,
 				//action

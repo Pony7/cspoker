@@ -15,8 +15,6 @@
  */
 package org.cspoker.common.api.lobby.holdemtable.event;
 
-import javax.xml.bind.annotation.XmlRootElement;
-
 import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
 import org.cspoker.common.elements.player.ShowdownPlayer;
 
@@ -26,7 +24,6 @@ import org.cspoker.common.elements.player.ShowdownPlayer;
  * @author Kenzo
  * 
  */
-@XmlRootElement
 public class ShowHandEvent extends HoldemTableEvent {
 
 	private static final long serialVersionUID = -3412700183566852150L;

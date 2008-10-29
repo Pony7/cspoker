@@ -15,12 +15,9 @@
  */
 package org.cspoker.common.api.chat.action;
 
-import javax.xml.bind.annotation.XmlRootElement;
-
 import org.cspoker.common.api.chat.context.ChatContext;
 import org.cspoker.common.api.shared.context.StaticServerContext;
 
-@XmlRootElement
 public abstract class SendMessageAction extends ChatAction<Void> {
 
 	private static final long serialVersionUID = -7513936752700505929L;

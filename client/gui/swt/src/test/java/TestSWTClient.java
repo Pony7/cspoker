@@ -10,9 +10,6 @@
  * 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
 import javax.security.auth.login.LoginException;
 
 import junit.framework.TestCase;
@@ -29,7 +26,6 @@ public class TestSWTClient
 	
 	private ClientCore client1;
 	private ClientCore client2;
-	ExecutorService tester = Executors.newFixedThreadPool(2);
 	
 	/*
 	 * (non-Javadoc)

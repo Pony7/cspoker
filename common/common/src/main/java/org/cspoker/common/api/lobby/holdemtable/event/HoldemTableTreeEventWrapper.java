@@ -15,10 +15,13 @@
  */
 package org.cspoker.common.api.lobby.holdemtable.event;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
 import org.cspoker.common.api.lobby.event.LobbyTreeEvent;
 import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListenerTree;
 import org.cspoker.common.api.lobby.listener.LobbyListenerTree;
 
+@XmlRootElement
 public class HoldemTableTreeEventWrapper extends LobbyTreeEvent {
 
 	private static final long serialVersionUID = 557148706756328395L;
@@ -27,13 +30,13 @@ public class HoldemTableTreeEventWrapper extends LobbyTreeEvent {
 
 	private HoldemTableTreeEvent event;
 	
-	public HoldemTableTreeEventWrapper() {
-		// no op
-	}
-	
 	public HoldemTableTreeEventWrapper(long tableID, HoldemTableTreeEvent event){
 		this.tableID = tableID;
 		this.event = event;
+	}
+	
+	protected HoldemTableTreeEventWrapper() {
+		// no op
 	}
 	
 	@Override

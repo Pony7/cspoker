@@ -15,65 +15,59 @@
  */
 package org.cspoker.client.bots;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.rmi.RemoteException;
 
 import javax.security.auth.login.LoginException;
 
 import org.apache.log4j.Logger;
-import org.cspoker.common.api.lobby.context.LobbyContext;
+import org.cspoker.common.RemoteCSPokerServer;
+import org.cspoker.common.api.lobby.context.RemoteLobbyContext;
 import org.cspoker.common.api.lobby.event.TableCreatedEvent;
 import org.cspoker.common.api.lobby.event.TableRemovedEvent;
 import org.cspoker.common.api.lobby.listener.LobbyListener;
-import org.cspoker.common.api.shared.context.AsynchronousServerContext;
-import org.cspoker.common.api.shared.context.ServerContext;
+import org.cspoker.common.api.shared.context.RemoteServerContext;
+import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.table.DetailedHoldemTable;
 import org.cspoker.common.elements.table.TableConfiguration;
 import org.cspoker.common.util.Log4JPropertiesLoader;
-import org.cspoker.server.common.CSPokerServerImpl;
 
 
 public class BotRunner implements LobbyListener {
 
 	static {
 		Log4JPropertiesLoader
-				.load("org/cspoker/client/bots/logging/log4j.properties");
+		.load("org/cspoker/client/bots/logging/log4j.properties");
 	}
-	
+
 	private final static Logger logger = Logger.getLogger(BotRunner.class);
-	
-	public static void main(String[] args) {
-		new BotRunner();
-	}
-	
-	public BotRunner() {
-		final ExecutorService executor = Executors.newSingleThreadExecutor();
-		executor.execute(new Runnable(){
-			
-			public void run() {
-				CSPokerServerImpl server = new CSPokerServerImpl();
-				try {
-					ServerContext serverguy = new AsynchronousServerContext(executor, server.login("guy", "test"));
-					LobbyContext lobbyguy = serverguy.getLobbyContext(BotRunner.this);
-					DetailedHoldemTable table = lobbyguy.createHoldemTable("BotTable", new TableConfiguration());
-					CallBot guy = new CallBot(lobbyguy,"guy",table.getId(), true);
-					
-					ServerContext serverkenzo = new AsynchronousServerContext(executor, server.login("kenzo", "test"));
-					LobbyContext lobbykenzo = serverkenzo.getLobbyContext(BotRunner.this);
-					CallBot kenzo = new CallBot(lobbykenzo,"kenzo",table.getId(), false);
-				} catch (LoginException e) {
-					throw new IllegalStateException("Login Failed");
-				}
-			}
-		});
+
+	public BotRunner(final RemoteCSPokerServer cspokerServer) {
+		try {
+			RemoteServerContext serverguy = cspokerServer.login("guy", "test");
+			RemoteLobbyContext lobbyguy = serverguy.getLobbyContext(BotRunner.this);
+			DetailedHoldemTable table = lobbyguy.createHoldemTable("BotTable", new TableConfiguration());
+			CallBot guy = new CallBot(lobbyguy,"guy",table.getId(), true);
+
+			RemoteServerContext serverkenzo = cspokerServer.login("kenzo", "test");
+			RemoteLobbyContext lobbykenzo = serverkenzo.getLobbyContext(BotRunner.this);
+			CallBot kenzo = new CallBot(lobbykenzo,"kenzo",table.getId(), false);
+		} catch (LoginException e) {
+			throw new IllegalStateException("Login Failed");
+		} catch (RemoteException e) {
+			logger.error(e);
+			throw new IllegalStateException("Server setup failed.",e);
+		} catch (IllegalActionException e) {
+			logger.error(e);
+			throw new IllegalStateException("Server setup failed.",e);
+		}
 	}
 
 	public void onTableCreated(TableCreatedEvent tableCreatedEvent) {
-		
+
 	}
 
 	public void onTableRemoved(TableRemovedEvent tableRemovedEvent) {
-		
+
 	}
 
 }

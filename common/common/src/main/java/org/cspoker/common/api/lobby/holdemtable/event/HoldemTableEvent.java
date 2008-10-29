@@ -18,7 +18,11 @@ package org.cspoker.common.api.lobby.holdemtable.event;
 import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
 import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListenerTree;
 
-public abstract class HoldemTableEvent implements HoldemTableTreeEvent {
+public abstract class HoldemTableEvent extends HoldemTableTreeEvent {
+	
+	protected HoldemTableEvent() {
+		// no op
+	}
 	
 	private static final long serialVersionUID = -3790630004275903549L;
 

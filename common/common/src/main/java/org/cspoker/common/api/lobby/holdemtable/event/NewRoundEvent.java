@@ -16,8 +16,6 @@
 
 package org.cspoker.common.api.lobby.holdemtable.event;
 
-import javax.xml.bind.annotation.XmlRootElement;
-
 import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
 import org.cspoker.common.elements.table.Rounds;
 
@@ -27,7 +25,6 @@ import org.cspoker.common.elements.table.Rounds;
  * @author Kenzo
  * 
  */
-@XmlRootElement
 public class NewRoundEvent extends HoldemTableEvent {
 
 	private static final long serialVersionUID = 5282936949568835084L;
