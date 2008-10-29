@@ -12,14 +12,8 @@
 package org.cspoker.client.gui.swt.control;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.NavigableMap;
-import java.util.NavigableSet;
-import java.util.TreeMap;
-import java.util.TreeSet;
+import java.io.IOException;
+import java.util.*;
 import java.util.Map.Entry;
 
 import org.eclipse.swt.graphics.Image;
@@ -93,6 +87,8 @@ public class Chip
 			Chip.ONE_HUNDRED_THOUSAND_DOLLAR_CHIP, Chip.FIVE_HUNDRED_THOUSAND_DOLLAR_CHIP,
 			Chip.ONE_MILLION_DOLLAR_CHIP, Chip.FIVE_MILLION_DOLLAR_CHIP));
 	
+	public static final int MAX_CHIPS_IN_PILE = 7;
+	
 	/**
 	 * Private chip creation constructor.
 	 * 
@@ -107,12 +103,15 @@ public class Chip
 	/**
 	 * @param size Parameter indicating the desired size of the returned image.
 	 * @return The corresponding chip image.
-	 * @throws FileNotFoundException
 	 */
-	public Image getImage(int size)
-			throws FileNotFoundException {
-		
-		return SWTResourceManager.getChipImage(this, size);
+	public Image getImage(int size) {
+		Image chipImg = null;
+		try {
+			chipImg = SWTResourceManager.getChipImage(this, size);
+		} catch (IOException e) {
+			throw new IllegalArgumentException("Chip image not found", e);
+		}
+		return chipImg;
 		
 	}
 	

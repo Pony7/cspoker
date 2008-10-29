@@ -13,6 +13,7 @@ package org.cspoker.client.gui.swt.control;
 
 import java.util.Collection;
 
+import org.apache.log4j.Logger;
 import org.cspoker.client.gui.swt.window.GameWindow;
 import org.cspoker.common.elements.cards.Card;
 import org.eclipse.swt.SWT;
@@ -31,6 +32,8 @@ import org.eclipse.swt.graphics.Image;
  */
 public class CardPaintListener
 		implements PaintListener {
+	
+	private final static Logger logger = Logger.getLogger(CardPaintListener.class);
 	
 	private Collection<Card> cards;
 	private int numberOfTotalCards;
@@ -74,9 +77,11 @@ public class CardPaintListener
 			
 			double scaleFactor = Math.min((double) cardHeight / (double) origHeight, (double) cardWidth
 					/ (double) origWidth);
-			assert (scaleFactor > 0) : "Wrong scale factor computed";
-			int scaledHeight = (int) (origHeight * scaleFactor);
-			int scaledWidth = (int) (origWidth * scaleFactor);
+			if (scaleFactor <= 0) {
+				logger.warn("Wrong scale factor computed");
+			}
+			int scaledHeight = Math.max((int) (origHeight * scaleFactor), ClientGUI.MINIMUM_CARD_HEIGHT);
+			int scaledWidth = Math.max((int) (origWidth * scaleFactor), ClientGUI.MINIMUM_CARD_WIDTH);
 			
 			if (x == -1 && alignment == SWT.CENTER) {
 				x = ((e.width - scaledWidth * cards.size()) - (spacing * (cards.size() - 1))) / 2;

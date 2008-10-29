@@ -20,12 +20,7 @@ import java.text.NumberFormat;
 import java.util.Collection;
 import java.util.Hashtable;
 
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-import javax.sound.sampled.DataLine;
-import javax.sound.sampled.LineEvent;
-import javax.sound.sampled.LineListener;
+import javax.sound.sampled.*;
 
 import org.apache.log4j.Logger;
 import org.cspoker.client.gui.swt.window.GameWindow;
@@ -99,7 +94,7 @@ public class ClientGUI {
 		static File ACTIVE_DECK_IMG_FILE = FOUR_COLOR_DECK_IMG_FILE;
 		
 		/** Default table background image */
-		public static final File TABLE_IMAGE = new File(THEMES_IMG_DIR, "Free_Simple_Table_Background.jpg");
+		public static final File TABLE_IMAGE = new File(THEMES_IMG_DIR, "table1.jpg");
 		
 		private static final File SOUND_DIR = new File("target/classes/Snd");
 		/** Plays a <i>Check</i> sound */
@@ -137,7 +132,7 @@ public class ClientGUI {
 	}
 	
 	/** Preferred width at which a card is best displayed */
-	public final static int PREFERRED_CARD_WIDTH = 60;
+	public final static int PREFERRED_CARD_WIDTH = 50;
 	
 	/** What do you think this is? */
 	public final static int MINIMUM_CARD_WIDTH = 30;

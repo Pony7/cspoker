@@ -39,24 +39,12 @@ import org.cspoker.common.elements.table.TableList;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
-import org.eclipse.swt.events.MouseAdapter;
-import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.ShellAdapter;
-import org.eclipse.swt.events.ShellEvent;
+import org.eclipse.swt.events.*;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.MenuItem;
-import org.eclipse.swt.widgets.MessageBox;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.swt.widgets.TableItem;
+import org.eclipse.swt.widgets.*;
 
 /**
  * The main lobby window. Listens to {@link LobbyEvent}s and {@link ChatEvent}s
@@ -141,8 +129,8 @@ public class LobbyWindow
 		if (serverContext == null)
 			throw new IllegalArgumentException("Please provide correct server context");
 		try {
-			this.context = serverContext.getLobbyContext(new AsynchronousLobbyListener(
-					new DisplayExecutor(getDisplay()), this));
+			this.context = serverContext.getLobbyContext(new AsynchronousLobbyListener(DisplayExecutor.getInstance(),
+					this));
 		} catch (RemoteException e) {
 			throw new IllegalArgumentException(e);
 		} catch (IllegalActionException exception) {
