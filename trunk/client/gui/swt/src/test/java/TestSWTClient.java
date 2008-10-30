@@ -10,37 +10,49 @@
  * 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-import javax.security.auth.login.LoginException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import junit.framework.TestCase;
 
 import org.cspoker.client.User;
 import org.cspoker.client.gui.swt.control.ClientCore;
+import org.cspoker.client.gui.swt.control.DisplayExecutor;
+import org.cspoker.client.gui.swt.window.GameWindow;
 import org.cspoker.client.gui.swt.window.LobbyWindow;
-import org.cspoker.client.rmi.RemoteRMIServer;
 import org.cspoker.common.RemoteCSPokerServer;
+import org.cspoker.common.elements.table.DetailedHoldemTable;
+import org.cspoker.common.elements.table.TableConfiguration;
 import org.eclipse.swt.widgets.Display;
 
-public class TestSWTClient
+public abstract class TestSWTClient
 		extends TestCase {
 	
-	private ClientCore client1;
+	private ClientCore client;
 	private ClientCore client2;
+	protected RemoteCSPokerServer server;
+	private DisplayExecutor displayexecutor;
+	private List<User> users;
 	
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see junit.framework.TestCase#setUp()
 	 */
 	@Override
 	protected void setUp()
 			throws Exception {
 		super.setUp();
+		setServer();
+		displayexecutor = DisplayExecutor.getInstance();
+		users = new ArrayList<User>();
+		users.addAll(Arrays.asList(new User("Stephan", "test"), new User("dummy", "test")));
 	}
+	
+	protected abstract void setServer();
 	
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see junit.framework.TestCase#tearDown()
 	 */
 	@Override
@@ -49,46 +61,58 @@ public class TestSWTClient
 		super.tearDown();
 	}
 	
-	public void testLogin() {
-		final RemoteCSPokerServer server = new RemoteRMIServer(ClientCore.DEFAULT_URL, ClientCore.DEFAULT_PORT_RMI);
-		client1 = new ClientCore(new User("Stephan", "test"));
-		client2 = new ClientCore(new User("dummy", "test"));
-		Display.getDefault().syncExec(new Runnable() {
-			
-			public void run() {
-				Display.getDefault().asyncExec(new Runnable() {
+	public void testPlay() {
+		int seatId = -1;
+		final int tableId = 0;
+		
+		int smallBlind = 50;
+		int buyin = smallBlind * 200;
+		int delay = 2000;
+		for (User u : users) {
+			seatId++;
+			try {
+				client = new ClientCore(u);
+				client.login(server);
+				
+				final LobbyWindow lobby = new LobbyWindow(client);
+				lobby.setLobbyContext(client.getCommunication());
+				client.getGui().setLobby(lobby);
+				
+				TableConfiguration tConfig = new TableConfiguration(smallBlind, delay);
+				DetailedHoldemTable table = lobby.getContext().createHoldemTable(u.getUserName() + "'s test table",
+						tConfig);
+				// Run blocking calls in extra thread
+				displayexecutor.execute(new Runnable() {
 					
+					@Override
 					public void run() {
-						try {
-							client1.login(server);
-						} catch (LoginException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-						LobbyWindow lobby = new LobbyWindow(client1);
-						lobby.setLobbyContext(client1.getCommunication());
-						client1.getGui().setLobby(lobby);
 						lobby.show();
+						
 					}
 				});
-				try {
-					client2.login(server);
-				} catch (LoginException e) {
-					e.printStackTrace();
-				}
-				LobbyWindow lobby = new LobbyWindow(client2);
-				lobby.setLobbyContext(client2.getCommunication());
-				client2.getGui().setLobby(lobby);
-				lobby.show();
-			}
-		});
-		synchronized (this) {
-			try {
-				wait(100000);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
+				final GameWindow w = client.getGui().getGameWindow(tableId, true);
+				w.getUser().sitIn(seatId, buyin);
+				// Run blocking calls in extra thread
+				displayexecutor.execute(new Runnable() {
+					
+					@Override
+					public void run() {
+						w.show();
+						
+					}
+				});
+				
+			} catch (Exception e) {
 				e.printStackTrace();
+				fail(e.getMessage());
 			}
 		}
+		// Listen to events#
+		Display display = Display.getDefault();
+		while (!display.isDisposed()) {
+			if (!display.readAndDispatch())
+				display.sleep();
+		}
+		
 	}
 }
