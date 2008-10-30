@@ -43,6 +43,8 @@ The following main stakeholders are identified in online poker:
  \item[Players] These are the people playing poker.
  \end{description}
 
+\subsection{Cheating}
+
 \section{Legal constraints}
 Event though poker is not a game of pure chance and skilful players are easy to distinguish from bad players, gambling laws do apply to poker in most countries. Online poker is legal in some countries but strongly regulated. Many banks are not allowed to transfer money to online poker sites. The legality of playing on a foreign poker site is unclear in most jurisdictions that don't allow gambling.
 
@@ -102,9 +104,25 @@ Before  describing the requirements in full detail, we will briefly describe the
 stakeholders. This helps to further classify the different requirements and use cases.
 
 \subsection{Online Casino}
-\subsection{Advertisers}
-\subsection{Players}
+The online casino is the company that provides the infrastructure for players to play games. Its responsabilities can be looked after by different parties:
+\begin{itemize}
+ \item A legal advisor that makes sure no laws are broken with respect to gambling and money transfers.
+ \item A security manager who makes sure that players are authenticated before they can play, that hidden information isn't published before a game is over, that players don't have multiple accounts and that players aren't using cheating software such as bots.
+ \item A financial advisor who makes sure the casino is making a profit by properly handling player money managed by the casino, by asking for an appropriate rake or striking a good balance between advertisements and content.
+\end{itemize}
 
+
+\subsection{Advertisers}
+The advertisers want to use the services offered by the casino for their marketing purposes. They 
+want to place advertisements in the services in order to convince the players to buy the 
+advertisers products or services. The advertisers can provide the major source of income for the casino.
+
+\subsection{Players}
+These are the people playing poker on the servers. 
+
+They are can be playing because they want to make money. In that case they will appreciate a low rake and they won't be bothered by advertisements. Trust and security is essential for these players.
+
+They can also be playing as a social activity and they won't care about the rake so much. They want the system to be easy to use and they are more inclined to click on advertisements.
 
 \section{Informal set of requirements}
 \subsection{Player Requirements}
