@@ -84,6 +84,17 @@ See Figure \ref{fig:domain}.
 \section{Stakeholders and Actors}
 TODO Guy
 \section{Informal set of requirements}
+\subsection{Player Requirements}
+\begin{enumerate}
+\item Joining and Leaving a table
+\item Sit-in and Sit-out from a table
+\item Performing a table action (bet, raise, call, check or fold)
+\item Send a message to a chat group
+\item Request chips from the cashier
+\end{enumerate}
+
+\subsection{Admin Requirements}
+
 \section{Available Use Cases}
 \subsection{Create table}
 \textbf{Level:} user goal \\
@@ -425,6 +436,11 @@ TODO Guy
 \item The system clears all actor related data. 
 \item The system informs the actor he is logged out. 
 \end{enumerate}
+\textbf{Extensions:}
+\begin{itemize}
+\item[1a.] The actor is automatically logged out because of a session time-out. 
+\item[1b.] The actor closes the client program.
+\end{itemize}
 
 \subsection{Create account}
 \textbf{Level:} user goal \\
@@ -552,7 +568,7 @@ This component is responsible for the communication between client and server mo
 \subsection{Persistence Service}
 This component is responsible for handling the persistence needs for all other components.
 \begin{itemize}
-\item \emph{notification}: This interface is used to store and retrieve data from the persistent storage.
+\item \emph{service interface}: This interface is used to store and retrieve data from the persistent storage.
 \end{itemize}
 
 \section{Use Cases applied on the component diagram}
