@@ -5,6 +5,7 @@ package models.connection
 	import flash.system.*;
 	
 	import models.*;
+	import models.utils.MD5;
 	
 	public class ServerConnection extends Object
 	{
@@ -152,9 +153,9 @@ package models.connection
 		public function csSendLogin(userName:String,userPassword:String):void
 		{	trace("sendingLogin...");
 			var userAgent:String = "Sockets Client";
-			
+			var passwordHash:String = MD5.hash(userPassword);
 			var xml:XML =
-			<login type="loginAction" username={userName} password={userPassword}  />;
+			<login type="loginAction" username={userName} password={passwordHash}  />;
 			csSendData(xml);
 		}
 	
