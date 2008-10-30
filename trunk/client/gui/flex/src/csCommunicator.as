@@ -1,20 +1,16 @@
 package
 {
 	import cs.*;
-	
 	import flash.events.*;
 	import flash.net.*;
 	import flash.security.*;
 	import flash.system.Security;
 	import flash.xml.*;
-	
 	import mx.controls.Alert;
 	import mx.rpc.xml.SimpleXMLDecoder;
 	
-	
 	public class csCommunicator extends EventDispatcher
 	{
-		
 		private var csSocket:XMLSocket;
 		private var isConnected:Boolean=false;
 		private var idAction:int=0;
@@ -23,83 +19,40 @@ package
 		public function csCommunicator()
 		{
 			csSocket= new XMLSocket();
-			configureListeners(csSocket);
-			
+			configureListeners(csSocket);			
 		}
 
-		
-		
 		public function csConnect(csServerAddress:String,csServPort:int):void
 		{
-		
-		
-		
-		Security.loadPolicyFile("xmlSocket://" + csServerAddress +":" + csServPort ); 
-		
-		
-		
-		
-		csSocket.connect(csServerAddress, csServPort);
-		
-		
+			Security.loadPolicyFile("xmlSocket://" + csServerAddress +":" + csServPort ); 
+			csSocket.connect(csServerAddress, csServPort);
 		}
 		
 		public function csDisconnect():void{
-			
 			csSocket.close();
-			
 		}
-		
 		
 		private function csSendData(xmlOut:XML):void{
-		
 			csSocket.send(xmlOut.toXMLString());
-		
 		}
 		
-		// Login to CS Server
-				
+		// Login to CS Server		
 		//public function csSendLogin(userName:String,userPassword:String,userAgent:String):void
 		public function csSendLogin(userName:String,userPassword:String):void
-		{
-		
-		
-		
-		
-		//var userAgent:String = "Flex Sockets Client";
-		var userAgent:String = "Sockets Client";
-		
-		
-		
-		
-	/*	var xml:XML = 
-		
-		<login username={userName} password={userPassword} useragent={userAgent}  />;
-	*/
-		
-		
-		var str:String="<login username=\'"+userName+"\' password=\'"+ userPassword + "\'  />";
-		
-		csSocket.send(str);
-		
-		//var xml:XML = new XML(str);		
-		//csSendData(xml);
-		
+		{	
+			var userAgent:String = "Sockets Client";
+			
+			var xml:XML =
+			<login username="{userName}" password="{userPassword}"  />;
+			csSocket.send(xml);
 		}
 	
 		public function csGetTablesAction():void
 		{
-			
-			
 			idAction++;
-											
 			var xml:XML =
-			
 			<getTablesAction type="GetTablesAction" id={idAction} />;
-			
 			csSendData(xml);
-			
-		
 		}
 		
 		public function csGetTableAction(tableID:int):void
@@ -249,30 +202,16 @@ package
 		
 		
 		
-		//var strXML:String=strIn.replace("xsi:type","xsitype");
-		//var xmlDoc:XMLDocument = new XMLDocument(strXML);
-			
 		var xmlDoc:XMLDocument = new XMLDocument(strIn);
 	
 		var decoder:SimpleXMLDecoder=new SimpleXMLDecoder(true);
 				
-		
-
-		contentObj=decoder.decodeXML(xmlDoc);
-		
-				
+		contentObj=decoder.decodeXML(xmlDoc);		
 		
 		var objAction:Object;
 		var objResult:Object;
 
-		
-		
-		
-		
-		
 		if (contentObj.hasOwnProperty("login")){
-		
-		
 		
 			objResult=	contentObj.login;
 			
@@ -530,9 +469,10 @@ private function closeHandler(event:Event):void {
    
  private function dataHandler(event:DataEvent):void {
         	
+        	trace("dataHandler: " + event);
+            
     		ParseDataIn(event.data);
     		
-            trace("dataHandler: " + event);
             //dispatchEvent(new csEvent( csEvent.ONCONNECTED,event.text));
         }
    

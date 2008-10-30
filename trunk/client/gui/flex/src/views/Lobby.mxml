@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="750" height="580" xmlns:views="views.*">
+	<mx:Script>
+		<![CDATA[
+			import models.lobby.LobbyModel;
+			import models.*;
+			
+			import views.GamesDataGrid;
+			
+			import flash.events.*;
+			import flash.filters.*;
+			import flash.utils.*;
+			import mx.binding.*;
+			import mx.core.*;
+		    import mx.events.*;
+			import mx.containers.*;
+			import mx.controls.*;
+
+			
+			protected var lobbyModel:LobbyModel = null;
+			private var uiContainer:UIComponent = null;
+			
+			public function endInit() : void{
+            	lobbyModel = new LobbyModel(this);
+            	uiContainer = new UIComponent();
+            	addChild(uiContainer);
+            	//btnJoinGame.enabled = true;
+            	
+            	gamesDG.endInit();
+            	return;
+        	}
+        	
+        	public function receiveLobbyMessage(objAction:Object, objResult:Object):void{
+        		trace("receiveLobbyMessage: " + objAction);
+        	}
+        	
+        	
+
+		]]>
+	</mx:Script>
+	<views:GamesDataGrid id="gamesDG" width="650" height="300"/>
+</mx:Canvas>
