@@ -19,10 +19,12 @@ import java.rmi.RemoteException;
 import java.text.NumberFormat;
 import java.util.Collection;
 import java.util.Hashtable;
+import java.util.prefs.Preferences;
 
 import javax.sound.sampled.*;
 
 import org.apache.log4j.Logger;
+import org.cspoker.client.User;
 import org.cspoker.client.gui.swt.window.GameWindow;
 import org.cspoker.client.gui.swt.window.LobbyWindow;
 import org.cspoker.client.gui.swt.window.LoginDialog;
@@ -50,7 +52,7 @@ public class ClientGUI {
 	 */
 	public static class Resources {
 		
-		public static final boolean ADDITIONAL_RESOURCES = false;
+		public static final boolean ADDITIONAL_RESOURCES = true;
 		
 		public static final File BASE_DIR = new File("src/main/resources");
 		private static final File IMAGE_DIR = new File(BASE_DIR, "images");
@@ -74,7 +76,7 @@ public class ClientGUI {
 		 * Chip resource currently in use (that's where the images are retrieved
 		 * from during play)
 		 */
-		static File ACTIVE_CHIP_DIR = FREE_CHIP_IMAGE_FILE;
+		public static File ACTIVE_CHIP_DIR;
 		
 		private final static File THEMES_IMG_DIR = new File(Resources.IMAGE_DIR, "themes");
 		private final static File CARDS_IMG_DIR = new File(Resources.IMAGE_DIR, "cards");
@@ -92,7 +94,7 @@ public class ClientGUI {
 		 * retrieved from during play). Initialized to use free Four color
 		 * deck-style cards
 		 */
-		static File ACTIVE_DECK_IMG_FILE = FOUR_COLOR_DECK_IMG_FILE;
+		public static File ACTIVE_DECK_IMG_FILE;
 		
 		/** Default table background image */
 		public static final File TABLE_IMAGE = new File(THEMES_IMG_DIR, "table1.jpg");
@@ -179,6 +181,16 @@ public class ClientGUI {
 		betFormatter.setMinimumFractionDigits(0);
 		betFormatter.setMaximumFractionDigits(2);
 		betFormatter.setGroupingUsed(false);
+		File cardFile = new File(Preferences.userRoot().get(User.Prefs.CARDS,
+				Resources.FOUR_COLOR_DECK_IMG_FILE.getPath()));
+		File chipFile = new File(Preferences.userRoot().get(User.Prefs.CHIPS, Resources.FREE_CHIP_IMAGE_FILE.getPath()));
+		
+		try {
+			setActiveCardDeck(cardFile);
+			setActiveChipsStyle(chipFile);
+		} catch (FileNotFoundException e) {
+			logger.error("File initialization failed: ", e);
+		}
 	}
 	
 	/**
@@ -329,6 +341,7 @@ public class ClientGUI {
 		if (!cardFileResource.exists()) {
 			throw new FileNotFoundException(cardFileResource.toString());
 		}
+		Preferences.userRoot().put(User.Prefs.CARDS, cardFileResource.toString());
 		SWTResourceManager.dispose();
 		Resources.ACTIVE_DECK_IMG_FILE = cardFileResource;
 		
@@ -350,6 +363,7 @@ public class ClientGUI {
 		if (!chipFileResource.exists()) {
 			throw new FileNotFoundException(chipFileResource.toString());
 		}
+		Preferences.userRoot().put(User.Prefs.CHIPS, chipFileResource.toString());
 		SWTResourceManager.dispose();
 		Resources.ACTIVE_CHIP_DIR = chipFileResource;
 		

@@ -296,7 +296,8 @@ public class LobbyWindow
 						cardsMenuItem.setMenu(cardsMenu);
 						fourColorDeckMenuItem = new MenuItem(cardsMenu, SWT.RADIO);
 						fourColorDeckMenuItem.setText("Four Color Deck");
-						fourColorDeckMenuItem.setSelection(true);
+						fourColorDeckMenuItem.setSelection(ClientGUI.Resources.ACTIVE_DECK_IMG_FILE
+								.equals(ClientGUI.Resources.FOUR_COLOR_DECK_IMG_FILE));
 						fourColorDeckMenuItem.addSelectionListener(new SelectionAdapter() {
 							
 							@Override
@@ -311,6 +312,8 @@ public class LobbyWindow
 						ftpCardsMenuItem = new MenuItem(cardsMenu, SWT.RADIO);
 						ftpCardsMenuItem.setText("Full Tilt Poker");
 						ftpCardsMenuItem.setEnabled(ClientGUI.Resources.ADDITIONAL_RESOURCES);
+						ftpCardsMenuItem.setSelection(ClientGUI.Resources.ACTIVE_DECK_IMG_FILE
+								.equals(ClientGUI.Resources.FTP_DECK_IMG_FILE));
 						ftpCardsMenuItem.addSelectionListener(new SelectionAdapter() {
 							
 							@Override
@@ -331,6 +334,8 @@ public class LobbyWindow
 							starsChipsMenuItem = new MenuItem(chipsMenu, SWT.RADIO);
 							starsChipsMenuItem.setText("Poker Stars");
 							starsChipsMenuItem.setEnabled(ClientGUI.Resources.ADDITIONAL_RESOURCES);
+							starsChipsMenuItem.setSelection(ClientGUI.Resources.ACTIVE_CHIP_DIR
+									.equals(ClientGUI.Resources.STARS_CHIP_IMG_DIR));
 							starsChipsMenuItem.addSelectionListener(new SelectionAdapter() {
 								
 								@Override
@@ -345,6 +350,8 @@ public class LobbyWindow
 							eptChipsMenuItem = new MenuItem(chipsMenu, SWT.RADIO);
 							eptChipsMenuItem.setText("European Poker Tour");
 							eptChipsMenuItem.setEnabled(ClientGUI.Resources.ADDITIONAL_RESOURCES);
+							eptChipsMenuItem.setSelection(ClientGUI.Resources.ACTIVE_CHIP_DIR
+									.equals(ClientGUI.Resources.EPT_CHIP_IMG_DIR));
 							eptChipsMenuItem.addSelectionListener(new SelectionAdapter() {
 								
 								@Override
@@ -359,7 +366,8 @@ public class LobbyWindow
 							
 							pokerWikiaChipsMenuItem = new MenuItem(chipsMenu, SWT.RADIO);
 							pokerWikiaChipsMenuItem.setText("Poker Wikia (Free) Chips");
-							pokerWikiaChipsMenuItem.setSelection(true);
+							pokerWikiaChipsMenuItem.setSelection(ClientGUI.Resources.ACTIVE_CHIP_DIR
+									.equals(ClientGUI.Resources.FREE_CHIP_IMAGE_FILE));
 							pokerWikiaChipsMenuItem.addSelectionListener(new SelectionAdapter() {
 								
 								@Override

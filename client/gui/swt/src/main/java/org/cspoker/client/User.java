@@ -9,6 +9,24 @@ import org.cspoker.common.elements.player.Player;
  */
 public class User {
 	
+	/**
+	 * Persistency support for user preferences
+	 */
+	public static final class Prefs {
+		
+		/**
+		 * Key for deck style preferences. The value stored is the path to the
+		 * file.
+		 */
+		public static final String CARDS = "CSPoker.Cards";
+		
+		/**
+		 * Key for chip style preferences. The value stored is the path to the
+		 * file.
+		 */
+		public static final String CHIPS = "CSPoker.Chips";
+	}
+	
 	/** Flag indicating whether the user is currently logged in */
 	private boolean loggedIn = false;
 	/**
@@ -79,5 +97,4 @@ public class User {
 		loggedIn = b;
 		
 	}
-	
 }
