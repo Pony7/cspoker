@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml">
+	
+	<mx:Script>
+		<![CDATA[
+			import models.*;
+			import models.lobby.DataGridRow;
+			import mx.collections.ArrayCollection;
+			
+			protected var gamesDataGridProvider:ArrayCollection;
+			
+			private function btnJoinGameClicked():void{
+				
+				var selectedTable:DataGridRow = dataGridComponent.selectedItem as DataGridRow;
+				
+				if(selectedTable != null){
+					Main.joinGame(selectedTable);
+				}else{
+					trace("selectedTable == null!!!" + selectedTable);
+				}
+				return;
+        	}
+        	
+        	public function endInit():void{
+        		
+        	}
+		]]>
+	</mx:Script>
+	<mx:Label x="295" y="10" text="LOBBY" id="lblLobbyTitle"/>
+	<mx:DataGrid x="29" y="36" width="621" height="277" id="dataGridComponent" dataProvider="{gamesDataGridProvider}">
+		<mx:columns>
+			<mx:DataGridColumn headerText="Column 1" dataField="col1"/>
+			<mx:DataGridColumn headerText="Column 2" dataField="col2"/>
+			<mx:DataGridColumn headerText="Column 3" dataField="col3"/>
+		</mx:columns>
+	</mx:DataGrid>
+	<mx:Button id="btnJoinGame" click="btnJoinGameClicked()" label="Join Game" />
+	
+</mx:Canvas>

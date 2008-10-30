@@ -1,22 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:WindowedApplication xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute"
-	xmlns:views="components.*"
-	creationComplete="init()">
+<mx:WindowedApplication xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" width="750" height="580" xmlns:views="views.*" creationComplete="launchApp()">
 	<mx:Script>
 		<![CDATA[
 			import models.Main;
-			import components.*;
-			private var main:Main = null;
 			
-			public function init():void{
-				main = new Main(this, lobby, table, connectionBox);
+			private var main:Main = null;
+			public function launchApp():void{
+				main = new Main(this, lobby, table, connectionBox, registerBox);
+				
 			}
 		]]>
 	</mx:Script>
-	<mx:ViewStack>
-		<views:ConnectionBox id="connectionBox"  label="CONNECTION"/>
+	<mx:ViewStack id="mainAppViewStack">
+		<views:ConnectionBox id="connectionBox" />
 		<views:Lobby id="lobby" />
 		<views:Table id="table" />
-		
+		<views:RegisterBox id="registerBox" />
 	</mx:ViewStack>
 </mx:WindowedApplication>

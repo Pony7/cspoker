@@ -1,10 +1,14 @@
 package models.lobby
 {
+	import views.*;
+	
 	public class LobbyModel extends Object
 	{
-		public function LobbyModel()
+		protected var lobby:Lobby = null;
+		
+		public function LobbyModel(passedLobby:Lobby)
 		{
-			super();
+			lobby = passedLobby;
 		}
 		
 	}
