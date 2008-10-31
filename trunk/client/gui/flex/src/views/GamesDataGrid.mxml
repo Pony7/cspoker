@@ -7,7 +7,8 @@
 			import models.lobby.DataGridRow;
 			import mx.collections.ArrayCollection;
 			
-			protected var gamesDataGridProvider:ArrayCollection;
+			[bindable]
+			protected var gamesDataGridProvider:ArrayCollection = new ArrayCollection();
 			
 			private function btnJoinGameClicked():void{
 				
@@ -22,7 +23,28 @@
         	}
         	
         	public function endInit():void{
+        		return;
+        	}
+        	
+        	public function onGetTables(tables:ArrayCollection):void{
+        		trace("onGetTables : " + tables);
         		
+        		gamesDataGridProvider.removeAll();
+        	}
+        	
+        	public function addRowObject(result:Object):void{
+        		var dgRow:DataGridRow = new DataGridRow(result);
+        		addTableRow(dgRow);
+        	}
+        	
+        	public function addTableRow(gameTableRow:DataGridRow):void{
+        		trace("calling add table row");
+        		var id:int = gameTableRow.getTableId();
+        		gamesDataGridProvider.addItemAt(gameTableRow, id);
+        	}
+        	
+        	public function clearTables():void{
+        		gamesDataGridProvider.removeAll();
         	}
 		]]>
 	</mx:Script>

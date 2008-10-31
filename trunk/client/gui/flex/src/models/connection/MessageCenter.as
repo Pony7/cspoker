@@ -10,6 +10,7 @@ package models.connection
 	
 	import models.*;
 	
+	import mx.collections.ArrayCollection;
 	import mx.rpc.xml.SimpleXMLDecoder;
 		
 	public class MessageCenter extends Object
@@ -20,6 +21,10 @@ package models.connection
 		
 		private var mTables:CSTableList = null;
 		private var mTable:CSTable = null;
+		
+		public var loginActionId:int = 0;
+		
+		private var loggedIn:Boolean = false;
 
 		
 		public function MessageCenter()
@@ -40,8 +45,11 @@ package models.connection
         }// end function
         	
 		public function parseDataIn(strIn:String):void{
-			trace("dataReceived: " );
+			trace("dataReceived: " + strIn);
+			
+			
 			var xmlDoc:XMLDocument = new XMLDocument(strIn);
+			
 			var decoder:SimpleXMLDecoder=new SimpleXMLDecoder(true);
 					
 			try{
@@ -50,36 +58,36 @@ package models.connection
 				trace("error decoding xml: " + strIn);
 				return;
 			}
+			var traceContentObj:Object = contentObj;
 			var objAction:Object;
 			var objResult:Object;
 			
 	
-			if (contentObj.hasOwnProperty("login")){
-				objResult=	contentObj.login;
-				
-				//dispatchEvent(new csEventActions( csEventActions.OnLogin,objAction,objResult));
-				
-				Main.lobby.receiveLobbyMessage(objAction, objResult);
+			if (contentObj.actionPerformedEvent.id == loginActionId){
+				trace("LOGIN SUCCESSFUL!!!");
+				Main.lobby.receiveLoginSucess();
 				return;
 			}
 			
-			if (contentObj.hasOwnProperty("successfulInvocationEvent")){
-			 	trace("successfulInvocationEvent");
-			 	
-		 		switch (contentObj.successfulInvocationEvent.action["xsi:type"]){	
-			 		case "getTablesAction":
-						objAction=contentObj.successfulInvocationEvent.action;
-						objResult=contentObj.successfulInvocationEvent.result.tables;
-						mTables = new CSTableList(contentObj.successfulInvocationEvent.result.tables);
+			if (contentObj.hasOwnProperty("actionPerformedEvent") && contentObj.actionPerformedEvent.hasOwnProperty("result")){
+			 	trace("result returned");
+			 	var resultType:String = contentObj.actionPerformedEvent.result["xsi:type"];
+			 	var result:Object = contentObj.actionPerformedEvent.result;
+		 		switch (resultType){	
+			 		case "ns7:tableList":
+						
+						//mTables = new CSTableList(result.tables);
+						
 				  		//dispatchEvent(new csEventActions( csEventActions.OnGetTablesAction,"getTablesAction",mTables));
-				  		Main.lobby.receiveLobbyMessage(objAction, objResult);
+				  		Main.lobby.receiveTablesList(result);
 				  		break;
 				
-					case "getTableAction":
-				  		objAction=contentObj.successfulInvocationEvent.action;
-						objResult=contentObj.successfulInvocationEvent.result;
-						mTable = new CSTable(contentObj.successfulInvocationEvent.result);
+					case "ns7:detailedHoldemTable":
+				  		
+						//mTable = new CSTable(contentObj.successfulInvocationEvent.result);
 				  		//dispatchEvent(new csEventActions( csEventActions.OnGetTableAction,"getTableAction",mTable));
+				  		Main.lobby.receiveDetailedTableInfo(result);
+				  		
 				  		break;
 				
 					case "joinTableAction":

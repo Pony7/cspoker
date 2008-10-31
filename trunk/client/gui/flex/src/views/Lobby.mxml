@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="750" height="580" xmlns:views="views.*">
+	
+	<views:GamesDataGrid id="gamesDG" name="gamesDG" width="650" height="300"/>
 	<mx:Script>
 		<![CDATA[
 			import models.lobby.LobbyModel;
 			import models.*;
 			
-			import views.GamesDataGrid;
+			import views.*;
 			
 			import flash.events.*;
 			import flash.filters.*;
@@ -20,23 +22,44 @@
 			protected var lobbyModel:LobbyModel = null;
 			private var uiContainer:UIComponent = null;
 			
+			public static var gamesDG:GamesDataGrid;
+			//private var gamesDG:GamesDataGrid;
+			
 			public function endInit() : void{
             	lobbyModel = new LobbyModel(this);
             	uiContainer = new UIComponent();
             	addChild(uiContainer);
             	//btnJoinGame.enabled = true;
             	
-            	gamesDG.endInit();
+            	//gamesDG.endInit();
             	return;
         	}
         	
-        	public function receiveLobbyMessage(objAction:Object, objResult:Object):void{
-        		trace("receiveLobbyMessage: " + objAction);
+        	public function receiveLobbyMessage(result:Object, resultType:String):void{
+        		trace("receiveLobbyMessage: " + resultType);
+        	}
+        	
+        	public function receiveLoginmessage():void{
+        		
+        	}
+        	
+        	public function receiveTablesList(result:Object):void{
+				trace("receiveTablesList");
+				lobbyModel.requestTables(result);
+			}
+			
+			public function receiveDetailedTableInfo(result:Object):void{
+				if(result != null) gamesDG.addRowObject(result);
+			}
+        	
+        	public function receiveLoginSucess():void{
+        		Main.getTables();
+        		Main.showLobby();
         	}
         	
         	
 
 		]]>
 	</mx:Script>
-	<views:GamesDataGrid id="gamesDG" width="650" height="300"/>
+	
 </mx:Canvas>

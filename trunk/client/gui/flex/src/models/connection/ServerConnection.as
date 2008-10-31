@@ -13,9 +13,11 @@ package models.connection
 		protected var hostName:String = "";
 		protected var socket:XMLSocket = null;
 		
+		
 		public var messageCenter:MessageCenter = null;
 		
 		private var idAction:int=0;
+		private var loginActionId:int=0;
 		
 		public function ServerConnection(passedMessageCenter:MessageCenter)
 		{
@@ -108,10 +110,6 @@ package models.connection
     		messageCenter.parseDataIn(event.data);
     	}
         
-        
-        
-        
-        
         private function securityErrorHandler(event:SecurityErrorEvent):void{
         	trace("Security error event..." + event.text);
         	return;
@@ -151,11 +149,15 @@ package models.connection
 		// Login to CS Server		
 		//public function csSendLogin(userName:String,userPassword:String,userAgent:String):void
 		public function csSendLogin(userName:String,userPassword:String):void
-		{	trace("sendingLogin...");
+		{	
+			idAction++;
+			messageCenter.loginActionId = idAction;
 			var userAgent:String = "Sockets Client";
 			var passwordHash:String = MD5.hash(userPassword);
 			var xml:XML =
-			<login type="loginAction" username={userName} password={passwordHash}  />;
+			
+			<ns13:loginAction id={idAction} xmlns:ns13="http://www.cspoker.org/api/2008-9/socket"><username>kenzo</username><passwordHash>test</passwordHash></ns13:loginAction>;
+
 			csSendData(xml);
 		}
 	
@@ -163,23 +165,16 @@ package models.connection
 		{
 			idAction++;
 			var xml:XML =
-			<getTablesAction type="GetTablesAction" id={idAction} />;
+			<ns5:getTableListAction id={idAction} xmlns:ns5="http://www.cspoker.org/api/2008-9/lobby/action"/>;
 			csSendData(xml);
 		}
 		
 		public function csGetTableAction(tableID:int):void
 		{
-			
-			
-			idAction++;
-											
+			idAction++;					
 			var xml:XML =
-			
-			<getTableAction type="getTableAction" tableid={tableID} id={idAction} />;
-			
+			<ns5:getHoldemTableInformationAction tableid={tableID} id={idAction} xmlns:ns5="http://www.cspoker.org/api/2008-9/lobby/action"/>;
 			csSendData(xml);
-			
-		
 		}
 		
 		public function csJoinTableAction(tableID:int,buyin:int=1000):void
