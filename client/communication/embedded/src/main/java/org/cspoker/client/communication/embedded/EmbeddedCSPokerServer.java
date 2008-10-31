@@ -15,24 +15,19 @@
  */
 package org.cspoker.client.communication.embedded;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
 import javax.security.auth.login.LoginException;
 
 import org.cspoker.common.CSPokerServer;
-import org.cspoker.common.api.shared.context.AsynchronousServerContext;
 import org.cspoker.common.api.shared.context.ServerContext;
 import org.cspoker.server.common.CSPokerServerImpl;
 
 public class EmbeddedCSPokerServer implements CSPokerServer {
 
 	private final CSPokerServer server = new CSPokerServerImpl();
-	private final ExecutorService executor = Executors.newSingleThreadExecutor();
 	
 	public ServerContext login(String username, String password)
 			throws LoginException {
-		return new AsynchronousServerContext(executor, server.login(username, password));
+		return server.login(username, password);
 	}
 
 }

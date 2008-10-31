@@ -16,6 +16,8 @@
 package org.cspoker.client.bots;
 
 import java.rmi.RemoteException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import javax.security.auth.login.LoginException;
 
@@ -42,24 +44,32 @@ public class BotRunner implements LobbyListener {
 	private final static Logger logger = Logger.getLogger(BotRunner.class);
 
 	public BotRunner(final RemoteCSPokerServer cspokerServer) {
-		try {
-			RemoteServerContext serverguy = cspokerServer.login("guy", "test");
-			RemoteLobbyContext lobbyguy = serverguy.getLobbyContext(BotRunner.this);
-			DetailedHoldemTable table = lobbyguy.createHoldemTable("BotTable", new TableConfiguration());
-			CallBot guy = new CallBot(lobbyguy,"guy",table.getId(), true);
 
-			RemoteServerContext serverkenzo = cspokerServer.login("kenzo", "test");
-			RemoteLobbyContext lobbykenzo = serverkenzo.getLobbyContext(BotRunner.this);
-			CallBot kenzo = new CallBot(lobbykenzo,"kenzo",table.getId(), false);
-		} catch (LoginException e) {
-			throw new IllegalStateException("Login Failed");
-		} catch (RemoteException e) {
-			logger.error(e);
-			throw new IllegalStateException("Server setup failed.",e);
-		} catch (IllegalActionException e) {
-			logger.error(e);
-			throw new IllegalStateException("Server setup failed.",e);
-		}
+		final ExecutorService executor = Executors.newSingleThreadExecutor();
+		executor.execute(new Runnable(){
+			@Override
+			public void run() {
+				try {
+					RemoteServerContext serverguy = cspokerServer.login("guy", "test");
+					RemoteLobbyContext lobbyguy = serverguy.getLobbyContext(BotRunner.this);
+					DetailedHoldemTable table = lobbyguy.createHoldemTable("BotTable", new TableConfiguration());
+					CallBot guy = new CallBot(lobbyguy,"guy",table.getId(), executor, true);
+
+					RemoteServerContext serverkenzo = cspokerServer.login("kenzo", "test");
+					RemoteLobbyContext lobbykenzo = serverkenzo.getLobbyContext(BotRunner.this);
+					CallBot kenzo = new CallBot(lobbykenzo,"kenzo",table.getId(), executor, false);
+				} catch (LoginException e) {
+					throw new IllegalStateException("Login Failed");
+				} catch (RemoteException e) {
+					logger.error(e);
+					throw new IllegalStateException("Server setup failed.",e);
+				} catch (IllegalActionException e) {
+					logger.error(e);
+					throw new IllegalStateException("Server setup failed.",e);
+				}
+			}
+		});
+		
 	}
 
 	public void onTableCreated(TableCreatedEvent tableCreatedEvent) {
