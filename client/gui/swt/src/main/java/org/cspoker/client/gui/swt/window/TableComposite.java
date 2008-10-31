@@ -50,6 +50,7 @@ public class TableComposite
 	
 	private List<PlayerSeatComposite> playerSeatComposites = new ArrayList<PlayerSeatComposite>();
 	private List<Canvas> playerBetAreas = new ArrayList<Canvas>();
+	private Rectangle dealerChipLocation;
 	private Canvas potChipsArea;
 	private int moneyInPot;
 	
@@ -147,20 +148,25 @@ public class TableComposite
 			
 			@Override
 			public void paintControl(PaintEvent e) {
+				Rectangle redrawArea = new Rectangle(e.x, e.y, e.width, e.height);
 				for (PlayerSeatComposite pc : getPlayerSeatComposites(true)) {
-					if (pc.getPlayer().getCurrentBetPile().size() > 0) {
-						drawChips(e.gc, pc.getChipsArea().getBounds(), pc.getPlayer().getCurrentBetPile(), false);
-						// Draw dealer chip into upper right corner of bet chips
-						// area
-						if (pc.getPlayer().isDealer()) {
-							NavigableMap<Chip, Integer> dealerChip = new TreeMap<Chip, Integer>();
-							dealerChip.put(Chip.DEALER, 1);
-							drawChips(e.gc, pc.getDealerChipLocation(), Arrays.asList(dealerChip), false);
-						}
+					if (pc.getPlayer().getCurrentBetPile().size() > 0
+							&& redrawArea.intersects(pc.getChipsArea().getBounds())) {
+						drawChips(e.gc, pc.getChipsArea().getBounds(), pc.getPlayer().getCurrentBetPile(), false, false);
+						
 					}
 				}
-				drawChips(e.gc, potChipsArea.getBounds(), Arrays.asList(Chip.getDistribution(getMoneyInPot())), true);
-				
+				// Draw dealer chip
+				NavigableMap<Chip, Integer> dealerChip = new TreeMap<Chip, Integer>();
+				dealerChip.put(Chip.DEALER, 1);
+				Rectangle dealerChipLocation = getDealerChipLocation();
+				if (dealerChipLocation != null && redrawArea.intersects(dealerChipLocation)) {
+					drawChips(e.gc, dealerChipLocation, Arrays.asList(dealerChip), false, true);
+				}
+				if (redrawArea.intersects(potChipsArea.getBounds()) && redrawArea.intersects(potChipsArea.getBounds())) {
+					drawChips(e.gc, potChipsArea.getBounds(), Arrays.asList(Chip.getDistribution(getMoneyInPot())),
+							true, false);
+				}
 			}
 		});
 	}
@@ -236,11 +242,13 @@ public class TableComposite
 	 * 
 	 * @param playerToAct The player who's turn it is
 	 */
-	void updateProgressBars(Player playerToAct) {
+	void proceedToNextPlayer(Player next) {
 		for (PlayerSeatComposite pc : getPlayerSeatComposites(true)) {
-			pc.stopTimer();
+			if (pc.isActive()) {
+				pc.setActive(false);
+			}
 		}
-		findPlayerSeatCompositeByPlayerId(playerToAct.getId()).startTimer();
+		findPlayerSeatCompositeByPlayerId(next.getId()).setActive(true);
 	}
 	
 	/**
@@ -288,11 +296,54 @@ public class TableComposite
 		return result;
 	}
 	
+	private void animateChips(final Rectangle from, final Rectangle to) {
+		logger.debug("Starting animation");
+		
+		final int timerInterval = 10;
+		final int steps = 30;
+		
+		getDisplay().syncExec(new Runnable() {
+			
+			double i = 0;
+			
+			public void run() {
+				
+				i++;
+				
+				final double xStep = (double) (from.x - to.x) / steps;
+				final double yStep = (double) ((from.y + from.height) - (to.y + to.height)) / steps;
+				Rectangle newBounds = new Rectangle(from.x - (int) (i * xStep), from.y - (int) (i * yStep), from.width,
+						from.height);
+				Rectangle redrawArea = dealerChipLocation.union(newBounds);
+				from.x = newBounds.x;
+				from.y = newBounds.y;
+				redraw(redrawArea.x, redrawArea.y, redrawArea.width, redrawArea.height, false);
+				update();
+				try {
+					Thread.sleep(timerInterval);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				if (i < steps) {
+					getDisplay().syncExec(this);
+				}
+			}
+		});
+		// Layout to reset the locations
+		layout();
+	}
+	
+	/**
+	 * TODO Redraw certain areas to minimize flicker
+	 * 
+	 * @param pcs
+	 * @param toPot
+	 */
 	private void animateChips(final List<PlayerSeatComposite> pcs, final boolean toPot) {
 		logger.debug("Starting animation");
 		
-		final int timerInterval = 15;
-		final int steps = 50;
+		final int timerInterval = 10;
+		final int steps = 30;
 		final Canvas to = toPot ? getPotChipsArea() : pcs.get(0).getChipsArea();
 		
 		getDisplay().syncExec(new Runnable() {
@@ -302,20 +353,22 @@ public class TableComposite
 			public void run() {
 				
 				i++;
+				
 				for (PlayerSeatComposite pc : pcs) {
 					Canvas from = toPot ? pc.getChipsArea() : getPotChipsArea();
 					Rectangle fromBounds = from.getBounds();
+					
 					Rectangle toBounds = to.getBounds();
 					final double xStep = (double) (fromBounds.x - toBounds.x) / steps;
 					final double yStep = (double) ((fromBounds.y + fromBounds.height) - (toBounds.y + toBounds.height))
 							/ steps;
 					
-					fromBounds.x -= (int) (i * xStep);
-					fromBounds.y -= (int) (i * yStep);
-					from.setBounds(fromBounds);
-					
+					Rectangle newBounds = new Rectangle(fromBounds.x - (int) (i * xStep), fromBounds.y
+							- (int) (i * yStep), fromBounds.width, fromBounds.height);
+					from.setBounds(newBounds);
+					Rectangle redrawArea = fromBounds.union(newBounds);
+					redraw(redrawArea.x, redrawArea.y, redrawArea.width, redrawArea.height, false);
 				}
-				redraw();
 				update();
 				try {
 					Thread.sleep(timerInterval);
@@ -399,11 +452,21 @@ public class TableComposite
 	 *            different chip values in the same pile
 	 */
 	public void drawChips(GC gc, Rectangle area, List<NavigableMap<Chip, Integer>> chipPiles,
-			boolean putDifferentValuesOnSeparatePiles) {
+			boolean putDifferentValuesOnSeparatePiles, boolean dealerButton) {
 		int amount = Chip.getValue(chipPiles);
-		int size = Math.min(Chip.MAX_IMG_SIZE, area.width / 50);
-		if (amount == 0)
+		int size = 1;
+		for (int i = 2; i <= 7; i++) {
+			Image chipImage = Chip.ONE_CENT_CHIP.getImage(i);
+			int imgHeight = chipImage.getBounds().height;
+			if (imgHeight + Chip.MAX_CHIPS_IN_PILE * i > area.height) {
+				size = i - 1;
+				break;
+			}
+		}
+		
+		if (amount == 0 && !dealerButton) {
 			return;
+		}
 		
 		int xCoord = area.x;
 		int standardXDistance = Chip.ONE_CENT_CHIP.getImage(size).getBounds().width + size;
@@ -451,9 +514,44 @@ public class TableComposite
 		// Annotate the chip pile image with a textual display of the bet amount
 		gc.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_BLACK));
 		gc.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_YELLOW));
-		gc.drawText(ClientGUI.formatBet(amount), xCoord, standardYLocation);
+		if (!dealerButton) {
+			gc.drawText(ClientGUI.formatBet(amount), xCoord, standardYLocation);
+		}
 		if (ClientGUI.COMPOSITE_BORDER_STYLE == SWT.BORDER)
 			gc.drawRectangle(area);
 		return;
+	}
+	
+	/**
+	 * @param psc
+	 * @param findPlayerSeatCompositeByPlayerId
+	 */
+	public void moveDealerButton(PlayerSeatComposite from, PlayerSeatComposite to) {
+		
+		Rectangle dealerButtonLocation = from.getDealerChipLocation();
+		dealerChipLocation = dealerButtonLocation;
+		Rectangle toLocation = to.getDealerChipLocation();
+		animateChips(dealerButtonLocation, toLocation);
+	}
+	
+	public Rectangle getDealerChipLocation() {
+		return dealerChipLocation;
+	}
+	
+	public void setDealerChipLocation(Rectangle dealerChipLocation) {
+		this.dealerChipLocation = dealerChipLocation;
+	}
+	
+	/**
+	 * Issue a redraw of the table (when chips have moved etc.)
+	 */
+	public void updateTableGraphics() {
+		for (PlayerSeatComposite psc : getPlayerSeatComposites(true)) {
+			if (psc.getPlayer().isDealer()) {
+				setDealerChipLocation(psc.getDealerChipLocation());
+			}
+			redraw();
+			update();
+		}
 	}
 }

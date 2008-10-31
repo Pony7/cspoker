@@ -38,7 +38,7 @@ public abstract class ClientComposite
 	private ClientCore core;
 	
 	/** ExecutorService for the GameWindow and its children. */
-	ExecutorService executor = Executors.newCachedThreadPool();
+	public static final ExecutorService executor = Executors.newCachedThreadPool();
 	
 	GameState gameState;
 	

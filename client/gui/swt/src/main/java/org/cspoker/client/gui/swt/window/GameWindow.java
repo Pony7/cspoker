@@ -57,7 +57,7 @@ public class GameWindow
 	
 	private final UserSeatedPlayer user;
 	private TableUserInputComposite userInputComposite;
-	private TableComposite tableComposite;
+	TableComposite tableComposite;
 	
 	/**
 	 * Creates a new <code>GameWindow</code>.
@@ -78,7 +78,8 @@ public class GameWindow
 		for (SeatedPlayer player : table.getPlayers()) {
 			tableComposite.findPlayerSeatCompositeBySeatId(player.getSeatId()).occupy(player);
 		}
-		
+		// Initialize chat context
+		user.getChatContext();
 		userInputComposite.getGameInfoText().insert("Click on an open seat to join the game");
 		
 	}
@@ -117,7 +118,7 @@ public class GameWindow
 				Image scaled = new Image(Display.getDefault(), skin.getImageData().scaledTo(getShell().getSize().x,
 						getShell().getSize().y));
 				setBackgroundImage(scaled);
-				updateTableGraphics();
+				tableComposite.updateTableGraphics();
 				logger.debug("TC: " + getTableComposite().getBounds());
 				logger.debug("PC: " + getTableComposite().getPlayerSeatComposites(false).get(0).getBounds());
 				logger.debug("GW: " + getShell().getBounds());
@@ -131,14 +132,6 @@ public class GameWindow
 	 */
 	private PlayerSeatComposite getPlayerSeatComposite(final Player player) {
 		return tableComposite.findPlayerSeatCompositeByPlayerId(player.getId());
-	}
-	
-	/**
-	 * Issue a redraw of the table (when chips have moved etc.)
-	 */
-	public void updateTableGraphics() {
-		tableComposite.redraw();
-		tableComposite.update();
 	}
 	
 	private void initGUI() {
@@ -176,7 +169,7 @@ public class GameWindow
 		getPlayerSeatComposite(bettor).showAction(action);
 		
 		ClientGUI.playAudio(ClientGUI.Resources.SOUND_FILE_BETRAISE);
-		updateTableGraphics();
+		tableComposite.updateTableGraphics();
 	}
 	
 	/**
@@ -221,7 +214,7 @@ public class GameWindow
 	public void onSitOut(SitOutEvent leaveGameEvent) {
 		getPlayerSeatComposite(leaveGameEvent.getPlayer()).reset();
 		userInputComposite.showDealerMessage(leaveGameEvent);
-		updateTableGraphics();
+		tableComposite.updateTableGraphics();
 		
 	}
 	
@@ -240,19 +233,21 @@ public class GameWindow
 		logger.debug("New deal event received");
 		gameState.newRound();
 		gameState.setPots(new Pots(0));
-		
+		PlayerSeatComposite newDealer = tableComposite.findPlayerSeatCompositeByPlayerId(newDealEvent.getDealer()
+				.getId());
 		for (PlayerSeatComposite psc : tableComposite.getPlayerSeatComposites(true)) {
 			if (psc.getPlayer().isDealer()) {
-				// psc.moveDealerButton(newDealEvent.getDealer());
+				tableComposite.moveDealerButton(psc, newDealer);
 			}
+			
 			psc.setHoleCards(Arrays.asList(ClientGUI.UNKNOWN_CARD, ClientGUI.UNKNOWN_CARD));
 			// Draw dealer button
 			psc.getPlayer().setDealer(newDealEvent.getDealer().getId() == psc.getPlayer().getId());
 			// psc.resetBetChipsDisplayArea();
 			psc.getPlayer().setBetChipsValue(0);
 		}
+		tableComposite.setDealerChipLocation(newDealer.getDealerChipLocation());
 		userInputComposite.showDealerMessage(newDealEvent);
-		
 		tableComposite.redraw();
 		logger.debug("New deal event handled");
 		
@@ -273,7 +268,7 @@ public class GameWindow
 			tableComposite.moveBetsToPot();
 		}
 		gameState.newRound();
-		updateTableGraphics();
+		tableComposite.updateTableGraphics();
 		userInputComposite.showDealerMessage(newRoundEvent);
 	}
 	
@@ -282,8 +277,7 @@ public class GameWindow
 	 */
 	public void onNextPlayer(NextPlayerEvent nextPlayerEvent) {
 		Player playerToAct = nextPlayerEvent.getPlayer();
-		tableComposite.updateProgressBars(playerToAct);
-		getPlayerSeatComposite(nextPlayerEvent.getPlayer()).startTimer();
+		tableComposite.proceedToNextPlayer(playerToAct);
 		userInputComposite.getGameActionGroup().setVisible(user.getMemento().equals(playerToAct));
 		if (user.getMemento().equals(playerToAct)) {
 			userInputComposite.prepareForUserInput();
