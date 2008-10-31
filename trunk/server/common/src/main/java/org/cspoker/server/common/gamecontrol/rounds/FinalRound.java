@@ -23,7 +23,7 @@ import org.cspoker.common.elements.table.Rounds;
 import org.cspoker.server.common.gamecontrol.Game;
 import org.cspoker.server.common.gamecontrol.PokerTable;
 import org.cspoker.server.common.gamecontrol.Showdown;
-import org.cspoker.server.common.player.GameSeatedPlayer;
+import org.cspoker.server.common.player.MutableSeatedPlayer;
 
 public class FinalRound extends BettingRound {
 	private static Logger logger = Logger.getLogger(FinalRound.class);
@@ -31,7 +31,7 @@ public class FinalRound extends BettingRound {
 	public FinalRound(PokerTable gameMediator, Game game) {
 		super(gameMediator, game);
 		
-		GameSeatedPlayer currentPlayer = game.getCurrentPlayer();
+		MutableSeatedPlayer currentPlayer = game.getCurrentPlayer();
 		if (currentPlayer != null) {
 			gameMediator.publishNewRoundEvent(new NewRoundEvent(getRound()));
 			gameMediator.publishNextPlayerEvent(new NextPlayerEvent(currentPlayer.getMemento()));

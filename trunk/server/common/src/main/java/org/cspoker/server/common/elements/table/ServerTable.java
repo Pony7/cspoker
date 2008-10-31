@@ -25,7 +25,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.player.SeatedPlayer;
 import org.cspoker.server.common.elements.id.SeatId;
-import org.cspoker.server.common.player.GameSeatedPlayer;
+import org.cspoker.server.common.player.MutableSeatedPlayer;
 
 /**
  * A class to represent players at the table.
@@ -40,7 +40,7 @@ public class ServerTable {
 	/**
 	 * A map containing the mapping between a seat id and a player.
 	 */
-	private final ConcurrentHashMap<SeatId, GameSeatedPlayer> players;
+	private final ConcurrentHashMap<SeatId, MutableSeatedPlayer> players;
 
 	private int maxNbPlayers;
 
@@ -59,7 +59,7 @@ public class ServerTable {
 		if(maxNbPlayers<=1)
 			throw new IllegalArgumentException("The given maximum number of players is invalid.");
 		this.maxNbPlayers = maxNbPlayers;
-		players = new ConcurrentHashMap<SeatId, GameSeatedPlayer>(maxNbPlayers);
+		players = new ConcurrentHashMap<SeatId, MutableSeatedPlayer>(maxNbPlayers);
 	}
 	
 	/***************************************************************************
@@ -83,7 +83,7 @@ public class ServerTable {
 	 * @post The given player isn't seated at this table anymore. |
 	 *       !new.hasAsPlayer(player)
 	 */
-	public synchronized void removePlayer(GameSeatedPlayer player) {
+	public synchronized void removePlayer(MutableSeatedPlayer player) {
 		if (!hasAsPlayer(player)) {
 			throw new IllegalArgumentException(player
 					+ " is not a player of this table.");
@@ -111,7 +111,7 @@ public class ServerTable {
 	 *             hasAsPlayer(player)
 	 * @post The given player is seated at this table. | new.hasAsPlayer(player)
 	 */
-	public synchronized SeatId addPlayer(GameSeatedPlayer player)
+	public synchronized SeatId addPlayer(MutableSeatedPlayer player)
 			throws PlayerListFullException {
 		if (player == null) {
 			throw new IllegalArgumentException("player should be effective.");
@@ -144,7 +144,7 @@ public class ServerTable {
 	 * @param player
 	 * @throws SeatTakenException
 	 */
-	public synchronized void addPlayer(SeatId seatId, GameSeatedPlayer player)
+	public synchronized void addPlayer(SeatId seatId, MutableSeatedPlayer player)
 			throws IllegalActionException, SeatTakenException {
 		if (!isValidSeatId(seatId)) {
 			throw new IllegalArgumentException(
@@ -186,7 +186,7 @@ public class ServerTable {
 	 * @param player
 	 *            The given player
 	 */
-	public boolean hasAsPlayer(GameSeatedPlayer player) {
+	public boolean hasAsPlayer(MutableSeatedPlayer player) {
 		return players.contains(player);
 	}
 
@@ -197,10 +197,10 @@ public class ServerTable {
 	 * 
 	 * @return The list with all the players at this table.
 	 */
-	public List<GameSeatedPlayer> getSeatedServerPlayers() {
-		List<GameSeatedPlayer> playerList = new ArrayList<GameSeatedPlayer>();
+	public List<MutableSeatedPlayer> getSeatedServerPlayers() {
+		List<MutableSeatedPlayer> playerList = new ArrayList<MutableSeatedPlayer>();
 		for (int i = 0; i < getMaxNbPlayers(); i++) {
-			GameSeatedPlayer player = players.get(new SeatId(i));
+			MutableSeatedPlayer player = players.get(new SeatId(i));
 			if (player != null) {
 				playerList.add(player);
 			}
@@ -219,7 +219,7 @@ public class ServerTable {
 	 */
 	public List<SeatedPlayer> getSeatedPlayers() {
 		List<SeatedPlayer> toReturn = new ArrayList<SeatedPlayer>();
-		for (GameSeatedPlayer player : players.values()) {
+		for (MutableSeatedPlayer player : players.values()) {
 			toReturn.add(player.getMemento());
 		}
 		return Collections.unmodifiableList(toReturn);
@@ -230,7 +230,7 @@ public class ServerTable {
 	 * 
 	 * @return A random player seated at this table.
 	 */
-	public synchronized GameSeatedPlayer getRandomPlayer() {
+	public synchronized MutableSeatedPlayer getRandomPlayer() {
 		List<SeatId> ids = new ArrayList<SeatId>(players.keySet());
 		return players.get(ids.get(new Random().nextInt(ids.size())));
 	}

@@ -15,7 +15,7 @@
  */
 package org.cspoker.server.common.chat.room;
 
-import org.cspoker.server.common.player.ServerPlayer;
+import org.cspoker.server.common.player.MutablePlayer;
 
 public class ServerChatRoom extends ChatRoom {
 
@@ -24,7 +24,7 @@ public class ServerChatRoom extends ChatRoom {
 	}
 	
 	@Override
-	public boolean canSubscribeListener(ServerPlayer player) {
+	public boolean canSubscribeListener(MutablePlayer player) {
 		return true;
 	}
 }

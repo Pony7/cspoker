@@ -51,47 +51,47 @@ import org.cspoker.server.common.gamecontrol.rounds.FlopRound;
 import org.cspoker.server.common.gamecontrol.rounds.PreFlopRound;
 import org.cspoker.server.common.gamecontrol.rounds.TurnRound;
 import org.cspoker.server.common.gamecontrol.rounds.WaitingRound;
-import org.cspoker.server.common.player.GameSeatedPlayer;
-import org.cspoker.server.common.player.ServerPlayer;
+import org.cspoker.server.common.player.MutableSeatedPlayer;
+import org.cspoker.server.common.player.MutablePlayer;
 
 public class GameFlowTest extends TestCase {
-	
+
+	private static Logger logger = Logger.getLogger(GameFlowTest.class);
+
 	static {
 		Log4JPropertiesLoader
-				.load("org/cspoker/server/common/logging/log4j.properties");
+		.load("org/cspoker/server/common/logging/log4j.properties");
 	}
-	
-	private static Logger logger = Logger.getLogger(GameFlowTest.class);
-	
-	private ServerTable table;
-	
+
+	private MutableSeatedPlayer cedric;
+
 	private DummyPlayerFactory factory = new DummyPlayerFactory();
-	
-	private GameSeatedPlayer kenzo;
-	
-	private GameSeatedPlayer cedric;
-	
-	private GameSeatedPlayer guy;
+
+	private MutableSeatedPlayer guy;
+
+	private MutableSeatedPlayer kenzo;
 
 	private PokerTable pokerTable;
-	
+
+	private ServerTable table;
+
 	public void setUp(){
 		table = new ServerTable(8);
 		pokerTable = new PokerTable(new TableId(0), "table", new TableConfiguration(), new ExtendedAccountContext(){
 
-			public ServerPlayer getPlayer() {
-				return null;
-			}
-
 			public void changePassword(String passwordHash) {
-				
+
 			}
 
 			public void createAccount(String username, String passwordHash) {
-				
+
 			}
 
 			public byte[] getAvatar(long playerId) {
+				return null;
+			}
+
+			public MutablePlayer getPlayer() {
 				return null;
 			}
 
@@ -100,9 +100,9 @@ public class GameFlowTest extends TestCase {
 			}
 
 			public void setAvatar(byte[] avatar) {
-				
+
 			}
-			
+
 		});
 		pokerTable.subscribeHoldemTableListener(new HoldemTableListener(){
 
@@ -112,7 +112,7 @@ public class GameFlowTest extends TestCase {
 
 			public void onBet(BetEvent betEvent) {
 				GameFlowTest.logger.info(betEvent);
-				
+
 			}
 
 			public void onBigBlind(BigBlindEvent bigBlindEvent) {
@@ -179,819 +179,691 @@ public class GameFlowTest extends TestCase {
 			public void onWinner(WinnerEvent winnerEvent) {
 				GameFlowTest.logger.info(winnerEvent);					
 			}
-			
+
 		});
 		try {
-			kenzo = new GameSeatedPlayer(factory.createNewPlayer("kenzo", 100), 100);
-			cedric = new GameSeatedPlayer(factory.createNewPlayer("cedric", 100), 100);
-			guy = new GameSeatedPlayer(factory.createNewPlayer("guy",100), 100);
+			kenzo = new MutableSeatedPlayer(factory.createNewPlayer("kenzo", 100), 100);
+			cedric = new MutableSeatedPlayer(factory.createNewPlayer("cedric", 100), 100);
+			guy = new MutableSeatedPlayer(factory.createNewPlayer("guy",100), 100);
 			table.addPlayer(kenzo);
 			table.addPlayer(cedric);
 			table.addPlayer(guy);
-			
+
 		} catch (IllegalValueException e) {
 			fail(e.getMessage());
 		} catch (PlayerListFullException e) {
 			fail(e.getMessage());
 		}
 	}
-	
-    public void testCase1() {
-    	PlayingTableState gameControl = new PlayingTableState(pokerTable, table, kenzo);
-        Game game = gameControl.getGame();
-        try {
+
+	public void test2AllInOneActivePlayerCase() {
+		try {
+			kenzo = new MutableSeatedPlayer(factory.createNewPlayer("Kenzo", 100), 100);
+			cedric = new MutableSeatedPlayer(factory.createNewPlayer("Cedric", 100),100);
+			guy = new MutableSeatedPlayer(factory.createNewPlayer("Guy", 200),200);
+			table = new ServerTable(8);
+			table.addPlayer(kenzo);
+			table.addPlayer(cedric);
+			table.addPlayer(guy);
+		} catch (IllegalValueException e) {
+			fail(e.getMessage());
+		} catch (PlayerListFullException e) {
+			fail(e.getMessage());
+		}
+		PlayingTableState gameControl = new PlayingTableState(pokerTable, table, kenzo);
+		try {
 			gameControl.deal();
 		} catch (IllegalActionException e1) {
 			fail(e1.toString());
 		}
+		Game game = gameControl.getGame();
 
-        // Pre-flop Round
-        assertEquals(PreFlopRound.class, gameControl.getRound().getClass());
-        assertTrue(game.getCurrentPlayer().equals(kenzo));
-
-        try {
-                gameControl.call(game.getCurrentPlayer());
-                assertEquals(PreFlopRound.class, gameControl.getRound().getClass());
-                gameControl.call(game.getCurrentPlayer());
-                assertEquals(PreFlopRound.class, gameControl.getRound().getClass());
-
-                // Big Blind Checks.
-                gameControl.check(game.getCurrentPlayer());
-
-        } catch (IllegalActionException e) {
-                fail(e.getMessage());
-        }
-
-        // Flop Round
-        assertEquals(FlopRound.class, gameControl.getRound().getClass());
-        try {
-                gameControl.check(game.getCurrentPlayer());
-                assertEquals(FlopRound.class, gameControl.getRound().getClass());
-                gameControl.check(game.getCurrentPlayer());
-                assertEquals(FlopRound.class, gameControl.getRound().getClass());
-                gameControl.check(game.getCurrentPlayer());
-        } catch (IllegalActionException e) {
-                fail(e.getMessage());
-        }
-
-        // Turn Round
-        assertEquals(TurnRound.class, gameControl.getRound().getClass());
-        try {
-                gameControl.check(game.getCurrentPlayer());
-                assertEquals(TurnRound.class, gameControl.getRound().getClass());
-                gameControl.check(game.getCurrentPlayer());
-                assertEquals(TurnRound.class, gameControl.getRound().getClass());
-                gameControl.check(game.getCurrentPlayer());
-        } catch (IllegalActionException e) {
-                fail(e.getMessage());
-        }
-
-        // Final Round
-        assertEquals(FinalRound.class, gameControl.getRound().getClass());
-        try {
-                gameControl.check(game.getCurrentPlayer());
-                assertEquals(FinalRound.class, gameControl.getRound().getClass());
-                gameControl.check(game.getCurrentPlayer());
-                assertEquals(FinalRound.class, gameControl.getRound().getClass());
-                gameControl.check(game.getCurrentPlayer());
-        } catch (IllegalActionException e) {
-                fail(e.getMessage());
-        }
-
-        // New Deal
-        assertEquals(cedric, game.getDealer());
-        assertEquals(PreFlopRound.class, gameControl.getRound().getClass());
-        try {
-                gameControl.call(game.getCurrentPlayer());
-                assertEquals(PreFlopRound.class, gameControl.getRound().getClass());
-                gameControl.call(game.getCurrentPlayer());
-                assertEquals(PreFlopRound.class, gameControl.getRound().getClass());
-                gameControl.check(game.getCurrentPlayer());
-        } catch (IllegalActionException e) {
-                fail(e.getMessage());
-        }
-
-        // Flop Round
-        assertEquals(FlopRound.class, gameControl.getRound().getClass());
-        try {
-                gameControl.check(game.getCurrentPlayer());
-                assertEquals(FlopRound.class, gameControl.getRound().getClass());
-                gameControl.check(game.getCurrentPlayer());
-                assertEquals(FlopRound.class, gameControl.getRound().getClass());
-                gameControl.check(game.getCurrentPlayer());
-        } catch (IllegalActionException e) {
-                fail(e.getMessage());
-        }
-
-        // Turn Round
-        assertEquals(TurnRound.class, gameControl.getRound().getClass());
-        try {
-                gameControl.check(game.getCurrentPlayer());
-                assertEquals(TurnRound.class, gameControl.getRound().getClass());
-                gameControl.check(game.getCurrentPlayer());
-                assertEquals(TurnRound.class, gameControl.getRound().getClass());
-                gameControl.check(game.getCurrentPlayer());
-        } catch (IllegalActionException e) {
-                fail(e.getMessage());
-        }
-
-        // Final Round
-        assertEquals(FinalRound.class, gameControl.getRound().getClass());
-        try {
-                gameControl.check(game.getCurrentPlayer());
-                assertEquals(FinalRound.class, gameControl.getRound().getClass());
-                gameControl.check(game.getCurrentPlayer());
-                assertEquals(FinalRound.class, gameControl.getRound().getClass());
-                gameControl.check(game.getCurrentPlayer());
-        } catch (IllegalActionException e) {
-                fail(e.getMessage());
-        }
-
-        // New Deal
-        assertEquals(guy, game.getDealer());
-        assertEquals(PreFlopRound.class, gameControl.getRound().getClass());
-}
-
-public void testCase2() {
-        PlayingTableState gameControl = new PlayingTableState(pokerTable, table, guy);
-        try {
-			gameControl.deal();
-		} catch (IllegalActionException e1) {
-			fail(e1.toString());
+		try {
+			gameControl.allIn(game.getCurrentPlayer());
+			gameControl.allIn(game.getCurrentPlayer());
+			gameControl.call(game.getCurrentPlayer());
+		} catch (IllegalActionException e) {
+			fail(e.getMessage());
 		}
-        Game game = gameControl.getGame();
-
-        // New Deal
-        assertEquals(guy, game.getDealer());
-        assertEquals(PreFlopRound.class, gameControl.getRound().getClass());
-
-        try {
-        		System.out.println(game.getCurrentPlayer());
-                gameControl.call(game.getCurrentPlayer());
-                assertEquals(PreFlopRound.class, gameControl.getRound().getClass());
-                gameControl.raise(game.getCurrentPlayer(), 10);
-                assertEquals(PreFlopRound.class, gameControl.getRound().getClass());
-                gameControl.call(game.getCurrentPlayer());
-                assertEquals(PreFlopRound.class, gameControl.getRound().getClass());
-                gameControl.raise(game.getCurrentPlayer(), 20);
-                assertEquals(PreFlopRound.class, gameControl.getRound().getClass());
-                gameControl.call(game.getCurrentPlayer());
-                assertEquals(PreFlopRound.class, gameControl.getRound().getClass());
-                gameControl.call(game.getCurrentPlayer());
-        } catch (IllegalActionException e) {
-                fail(e.getMessage());
-        }
-
-
-        // Flop Round
-        assertEquals(FlopRound.class, gameControl.getRound().getClass());
-        try {
-                gameControl.check(game.getCurrentPlayer());
-                gameControl.check(game.getCurrentPlayer());
-                gameControl.check(game.getCurrentPlayer());
-        } catch (IllegalActionException e) {
-                fail(e.getMessage());
-        }
-
-        // Turn Round
-        assertEquals(TurnRound.class, gameControl.getRound().getClass());
-        try {
-                gameControl.check(game.getCurrentPlayer());
-                gameControl.check(game.getCurrentPlayer());
-                gameControl.check(game.getCurrentPlayer());
-        } catch (IllegalActionException e) {
-                fail(e.getMessage());
-        }
-
-        // Final Round
-        assertEquals(FinalRound.class, gameControl.getRound().getClass());
-        try {
-                gameControl.check(game.getCurrentPlayer());
-                gameControl.check(game.getCurrentPlayer());
-                gameControl.check(game.getCurrentPlayer());
-        } catch (IllegalActionException e) {
-                fail(e.getMessage());
-        }
-
-        // New Deal
-        assertEquals(PreFlopRound.class, gameControl.getRound().getClass());
-}
-
-/**
- * Test Settings: > 3 players > Big blind raises.
- */
-public void testBigBlindRaisesCase() {
-        PlayingTableState gameControl = new PlayingTableState(pokerTable, table);
-        try {
-			gameControl.deal();
-		} catch (IllegalActionException e1) {
-			fail(e1.toString());
-		}
-        Game game = gameControl.getGame();
-
-        // Pre-flop Round
-        assertEquals(PreFlopRound.class, gameControl.getRound().getClass());
-        try {
-                gameControl.call(game.getCurrentPlayer());
-                gameControl.call(game.getCurrentPlayer());
-
-                // Big Blind Raises.
-                gameControl.raise(game.getCurrentPlayer(), 20);
-
-                assertEquals(PreFlopRound.class, gameControl.getRound().getClass());
-                gameControl.call(game.getCurrentPlayer());
-                assertEquals(PreFlopRound.class, gameControl.getRound().getClass());
-                gameControl.call(game.getCurrentPlayer());
-        } catch (IllegalActionException e) {
-                fail(e.getMessage());
-        }
-
-        // Flop Round
-        assertEquals(FlopRound.class, gameControl.getRound().getClass());
-        try {
-                gameControl.check(game.getCurrentPlayer());
-                gameControl.check(game.getCurrentPlayer());
-                gameControl.check(game.getCurrentPlayer());
-        } catch (IllegalActionException e) {
-                fail(e.getMessage());
-        }
-
-        // Turn Round
-        try {
-                gameControl.check(game.getCurrentPlayer());
-                gameControl.check(game.getCurrentPlayer());
-                gameControl.check(game.getCurrentPlayer());
-        } catch (IllegalActionException e) {
-                fail(e.getMessage());
-        }
-
-        // Final Round
-        try {
-                gameControl.check(game.getCurrentPlayer());
-                gameControl.check(game.getCurrentPlayer());
-                gameControl.check(game.getCurrentPlayer());
-        } catch (IllegalActionException e) {
-                fail(e.getMessage());
-        }
-}
-
-public void testAllInSmallBlindCase() {
-	try {
-
-		kenzo = new GameSeatedPlayer(factory.createNewPlayer("Kenzo", 100), 100);
-		cedric = new GameSeatedPlayer(factory.createNewPlayer("Cedric", 100),4);
-		guy = new GameSeatedPlayer(factory.createNewPlayer("Guy", 100),100);
-
-		table = new ServerTable(8);
-		table.addPlayer(kenzo);
-		table.addPlayer(cedric);
-		table.addPlayer(guy);
-	} catch (IllegalValueException e) {
-		fail(e.getMessage());
-	} catch (PlayerListFullException e) {
-		fail(e.getMessage());
+		// Game continues automatically
 	}
 
-        PlayingTableState gameControl = new PlayingTableState(pokerTable, table, kenzo);
-        try {
-			gameControl.deal();
-		} catch (IllegalActionException e1) {
-			fail(e1.toString());
-		}
-        Game game = gameControl.getGame();
-
-        try {
-                gameControl.call(game.getCurrentPlayer());
-                gameControl.check(game.getCurrentPlayer());
-        } catch (IllegalActionException e) {
-                fail(e.getMessage());
-        }
-
-        // Flop Round
-        try {
-                gameControl.check(game.getCurrentPlayer());
-                gameControl.check(game.getCurrentPlayer());
-        } catch (IllegalActionException e) {
-                fail(e.getMessage());
-        }
-
-        // Turn Round
-        try {
-                gameControl.check(game.getCurrentPlayer());
-                gameControl.check(game.getCurrentPlayer());
-        } catch (IllegalActionException e) {
-                fail(e.getMessage());
-        }
-
-        // Final Round
-        try {
-        	System.out.println("final round");
-                gameControl.check(game.getCurrentPlayer());
-                System.out.println("Check 1");
-                gameControl.check(game.getCurrentPlayer());
-                System.out.println("check 2");
-        } catch (IllegalActionException e) {
-                fail(e.getMessage());
-        }
-
-        GameFlowTest.logger.info("Next game...");
-
-        GameFlowTest.logger.info("Current Player:" + game.getCurrentPlayer());
-        GameFlowTest.logger.info("Next Dealer:" + game.getNextDealer());
-        GameFlowTest.logger.info(game.getFirstToActPlayer());
-        GameFlowTest.logger.info("Dealer: " + game.getDealer().getName());
-        GameFlowTest.logger.info(game.getCurrentDealPlayers());
-}
-
-public void testAllInBigBlindCase() {
-        try {
-                kenzo = new GameSeatedPlayer(factory.createNewPlayer("Kenzo", 100), 100);
-                cedric = new GameSeatedPlayer(factory.createNewPlayer("Cedric", 100),100);
-                guy = new GameSeatedPlayer(factory.createNewPlayer("Guy", 100),9);
-
-                table = new ServerTable(8);
-                table.addPlayer(kenzo);
-                table.addPlayer(cedric);
-                table.addPlayer(guy);
-        } catch (IllegalValueException e) {
-                fail(e.getMessage());
-        } catch (PlayerListFullException e) {
-                fail(e.getMessage());
-        }
-
-        PlayingTableState gameControl = new PlayingTableState(pokerTable, table, kenzo);
-        try {
-			gameControl.deal();
-		} catch (IllegalActionException e1) {
-			fail(e1.toString());
-		}
-        Game game = gameControl.getGame();
-
-        try {
-                gameControl.call(game.getCurrentPlayer());
-                gameControl.call(game.getCurrentPlayer());
-        } catch (IllegalActionException e) {
-                fail(e.getMessage());
-        }
-        // Flop Round
-        try {
-                gameControl.check(game.getCurrentPlayer());
-                gameControl.check(game.getCurrentPlayer());
-        } catch (IllegalActionException e) {
-                fail(e.getMessage());
-        }
-
-        // Turn Round
-        try {
-                gameControl.check(game.getCurrentPlayer());
-                gameControl.check(game.getCurrentPlayer());
-        } catch (IllegalActionException e) {
-                fail(e.getMessage());
-        }
-
-        // Final Round
-        try {
-                gameControl.check(game.getCurrentPlayer());
-                gameControl.check(game.getCurrentPlayer());
-        } catch (IllegalActionException e) {
-                fail(e.getMessage());
-        }
-}
-
-public void testBothBlindsAllInCase() {
-        try {
-            kenzo = new GameSeatedPlayer(factory.createNewPlayer("Kenzo", 100), 100);
-            cedric = new GameSeatedPlayer(factory.createNewPlayer("Cedric", 100),4);
-            guy = new GameSeatedPlayer(factory.createNewPlayer("Guy", 100),9);
-
-                table = new ServerTable(8);
-                table.addPlayer(kenzo);
-                table.addPlayer(cedric);
-                table.addPlayer(guy);
-        } catch (IllegalValueException e) {
-                fail(e.getMessage());
-        } catch (PlayerListFullException e) {
-                fail(e.getMessage());
-        }
-        PlayingTableState gameControl = new PlayingTableState(pokerTable, table, kenzo);
-        Game game = gameControl.getGame();
-        try {
-			gameControl.deal();
-		} catch (IllegalActionException e1) {
-			fail(e1.toString());
-		}
-
-        try {
-                gameControl.call(game.getCurrentPlayer());
-        } catch (IllegalActionException e) {
-                fail(e.getMessage());
-        }
-}
-
-public void test2AllInOneActivePlayerCase() {
-        try {
-            kenzo = new GameSeatedPlayer(factory.createNewPlayer("Kenzo", 100), 100);
-            cedric = new GameSeatedPlayer(factory.createNewPlayer("Cedric", 100),100);
-            guy = new GameSeatedPlayer(factory.createNewPlayer("Guy", 200),200);
-                table = new ServerTable(8);
-                table.addPlayer(kenzo);
-                table.addPlayer(cedric);
-                table.addPlayer(guy);
-        } catch (IllegalValueException e) {
-                fail(e.getMessage());
-        } catch (PlayerListFullException e) {
-                fail(e.getMessage());
-        }
-        PlayingTableState gameControl = new PlayingTableState(pokerTable, table, kenzo);
-        try {
-			gameControl.deal();
-		} catch (IllegalActionException e1) {
-			fail(e1.toString());
-		}
-        Game game = gameControl.getGame();
-
-        try {
-                gameControl.allIn(game.getCurrentPlayer());
-                gameControl.allIn(game.getCurrentPlayer());
-                gameControl.call(game.getCurrentPlayer());
-        } catch (IllegalActionException e) {
-                fail(e.getMessage());
-        }
-        // Game continues automatically
-}
-
-public void testAllAllInCase() {
-        try {
-                kenzo = new GameSeatedPlayer(factory.createNewPlayer("Kenzo", 200), 200);
-                cedric = new GameSeatedPlayer(factory.createNewPlayer("Cedric", 100),100);
-                guy = new GameSeatedPlayer(factory.createNewPlayer("Guy", 150),150);
-                
-                table = new ServerTable(8);
-                table.addPlayer(kenzo);
-                table.addPlayer(cedric);
-                table.addPlayer(guy);
-        } catch (IllegalValueException e) {
-                fail(e.getMessage());
-        } catch (PlayerListFullException e) {
-                fail(e.getMessage());
-        }
-
-        PlayingTableState gameControl = new PlayingTableState(pokerTable, table);
-        try {
-			gameControl.deal();
-		} catch (IllegalActionException e1) {
-			fail(e1.toString());
-		}
-        Game game = gameControl.getGame();
-
-        try {
-                gameControl.call(game.getCurrentPlayer());
-                gameControl.call(game.getCurrentPlayer());
-                gameControl.check(game.getCurrentPlayer());
-        } catch (IllegalActionException e) {
-                fail(e.getMessage());
-        }
-
-        // Flop Round
-        try {
-                gameControl.allIn(game.getCurrentPlayer());
-                gameControl.allIn(game.getCurrentPlayer());
-                gameControl.allIn(game.getCurrentPlayer());
-        } catch (IllegalActionException e) {
-                fail(e.getMessage());
-        }
-        GameFlowTest.logger.info("Common Cards: " + game.getCommunityCards());
-
-        // New game
-        GameSeatedPlayer testPlayer;
+	public void testAllAllInCase() {
 		try {
-			testPlayer = new GameSeatedPlayer(factory.createNewPlayer("Test", 150),150);
-                gameControl.sitIn(new SeatId(4), testPlayer);
-        } catch (IllegalActionException e) {
-                fail(e.getMessage());
-        } catch (IllegalValueException e) {
+			kenzo = new MutableSeatedPlayer(factory.createNewPlayer("Kenzo", 200), 200);
+			cedric = new MutableSeatedPlayer(factory.createNewPlayer("Cedric", 100),100);
+			guy = new MutableSeatedPlayer(factory.createNewPlayer("Guy", 150),150);
+
+			table = new ServerTable(8);
+			table.addPlayer(kenzo);
+			table.addPlayer(cedric);
+			table.addPlayer(guy);
+		} catch (IllegalValueException e) {
+			fail(e.getMessage());
+		} catch (PlayerListFullException e) {
 			fail(e.getMessage());
 		}
 
-}
-
-///*
-//* An all-in raise that is smaller than half the previous raise does not
-//* open up the round for more betting. Only calls are allowed.
-//*/
-//public void testAllInCallCase() {
-//      try {
-//              kenzo = playerFactory.createNewPlayer("Kenzo", 200);
-//              cedric = playerFactory.createNewPlayer("Cedric", 220);
-//              guy = playerFactory.createNewPlayer("Guy", 100);
-//
-//              TableId id = new TableId(0);
-//              gameMediator = new GameMediator(id);
-//              table = new GameTable(id, new GameProperty());
-//              table.addPlayer(kenzo);
-//              table.addPlayer(cedric);
-//              table.addPlayer(guy);
-//      } catch (IllegalValueException e) {
-//              fail(e.getMessage());
-//      } catch (PlayerListFullException e) {
-//              fail(e.getMessage());
-//      }
-//
-//      GameControl gameControl = new GameControl(gameMediator, table, kenzo);
-//
-//      try {
-//              gameControl.raise(kenzo, 75);
-//              gameControl.call(cedric);
-//              gameControl.allIn(guy);
-//      } catch (IllegalActionException e) {
-//              fail(e.getMessage());
-//      }
-//
-//      try {
-//              gameControl.raise(kenzo, 75);
-//              fail("Previous all in was not big enough to open up betting!");
-//      } catch (IllegalActionException e1) {
-//              // Should not reach here
-//      }
-//}
-
-/*
- * An all-in raise that is greater than half the previous raise opens up the
- * round for more betting.
- */
-public void testAllInRaiseCase() {
-        try {
-        	
-            kenzo = new GameSeatedPlayer(factory.createNewPlayer("Kenzo", 200), 200);
-            cedric = new GameSeatedPlayer(factory.createNewPlayer("Cedric", 220),220);
-            guy = new GameSeatedPlayer(factory.createNewPlayer("Guy", 100),100);
-
-                table = new ServerTable(8);
-
-                table.addPlayer(kenzo);
-                table.addPlayer(cedric);
-                table.addPlayer(guy);
-        } catch (IllegalValueException e) {
-                fail(e.getMessage());
-        } catch (PlayerListFullException e) {
-                fail(e.getMessage());
-        }
-
-        GameFlowTest.logger.info("Game Properties:");
-        GameFlowTest.logger.info("Small Blind: "
-                        + pokerTable.getTableConfiguration().getSmallBlind());
-        GameFlowTest.logger.info("Big Blind: "
-                        + pokerTable.getTableConfiguration().getBigBlind());
-
-        PlayingTableState gameControl = new PlayingTableState(pokerTable, table, kenzo);
-        try {
+		PlayingTableState gameControl = new PlayingTableState(pokerTable, table);
+		try {
 			gameControl.deal();
 		} catch (IllegalActionException e1) {
 			fail(e1.toString());
 		}
-        GameFlowTest.logger.info("Betting Rules: "
-                        + gameControl.getGame().getBettingRules().toString());
-        Game game = gameControl.getGame();
+		Game game = gameControl.getGame();
 
-        GameFlowTest.logger.info("Dealer: " + game.getDealer());
+		try {
+			gameControl.call(game.getCurrentPlayer());
+			gameControl.call(game.getCurrentPlayer());
+			gameControl.check(game.getCurrentPlayer());
+		} catch (IllegalActionException e) {
+			fail(e.getMessage());
+		}
 
-        GameFlowTest.logger.info(game.getCurrentDealPlayers());
-        GameFlowTest.logger.info("Kenzo's Cards: " + kenzo.getPocketCards());
-        GameFlowTest.logger.info("Cedric's Cards: " + cedric.getPocketCards());
-        GameFlowTest.logger.info("Guy's Cards: " + guy.getPocketCards());
+		// Flop Round
+		try {
+			gameControl.allIn(game.getCurrentPlayer());
+			gameControl.allIn(game.getCurrentPlayer());
+			gameControl.allIn(game.getCurrentPlayer());
+		} catch (IllegalActionException e) {
+			fail(e.getMessage());
+		}
+		GameFlowTest.logger.info("Common Cards: " + game.getCommunityCards());
 
-        try {
-                gameControl.raise(kenzo, 20);
-                gameControl.call(cedric);
-                gameControl.allIn(guy);
-        } catch (IllegalActionException e) {
-                fail(e.getMessage());
-        }
+		// New game
+		MutableSeatedPlayer testPlayer;
+		try {
+			testPlayer = new MutableSeatedPlayer(factory.createNewPlayer("Test", 150),150);
+			gameControl.sitIn(new SeatId(4), testPlayer);
+		} catch (IllegalActionException e) {
+			fail(e.getMessage());
+		} catch (IllegalValueException e) {
+			fail(e.getMessage());
+		}
 
-        try {
-                gameControl.raise(kenzo, 75);
-        } catch (IllegalActionException e1) {
-                fail("Previous all in big enough to open up betting!");
-        }
-        
-        
-}
+	}
 
-/*
- * Test that the dealer gets to act first on the first round in a heads up
- * game
- */
-public void testHeadsUpDealerSwitch() {
-        try {
-        	guy = new GameSeatedPlayer(factory.createNewPlayer("Guy", 100),100);
-            GameSeatedPlayer craig = new GameSeatedPlayer(factory.createNewPlayer("Craig", 100),100);
-        	table = new ServerTable(8);
-                table.addPlayer(guy);
-                table.addPlayer(craig);
-        } catch (IllegalValueException e) {
-                fail(e.getMessage());
-        } catch (PlayerListFullException e) {
-                fail(e.getMessage());
-        }
+	public void testAllInBigBlindCase() {
+		try {
+			kenzo = new MutableSeatedPlayer(factory.createNewPlayer("Kenzo", 100), 100);
+			cedric = new MutableSeatedPlayer(factory.createNewPlayer("Cedric", 100),100);
+			guy = new MutableSeatedPlayer(factory.createNewPlayer("Guy", 100),9);
 
-        PlayingTableState gameControl = new PlayingTableState(pokerTable, table);
-        try {
+			table = new ServerTable(8);
+			table.addPlayer(kenzo);
+			table.addPlayer(cedric);
+			table.addPlayer(guy);
+		} catch (IllegalValueException e) {
+			fail(e.getMessage());
+		} catch (PlayerListFullException e) {
+			fail(e.getMessage());
+		}
+
+		PlayingTableState gameControl = new PlayingTableState(pokerTable, table, kenzo);
+		try {
 			gameControl.deal();
 		} catch (IllegalActionException e1) {
 			fail(e1.toString());
 		}
-        Game game = gameControl.getGame();
+		Game game = gameControl.getGame();
 
-        try {
-                gameControl.call(game.getDealer());
-                gameControl.check(game.getCurrentPlayer());
+		try {
+			gameControl.call(game.getCurrentPlayer());
+			gameControl.call(game.getCurrentPlayer());
+		} catch (IllegalActionException e) {
+			fail(e.getMessage());
+		}
+		// Flop Round
+		try {
+			gameControl.check(game.getCurrentPlayer());
+			gameControl.check(game.getCurrentPlayer());
+		} catch (IllegalActionException e) {
+			fail(e.getMessage());
+		}
 
-                gameControl.check(game.getCurrentPlayer());
-                gameControl.check(game.getDealer());
-        } catch (IllegalActionException e) {
-                fail(e.getMessage());
-        }
-}
+		// Turn Round
+		try {
+			gameControl.check(game.getCurrentPlayer());
+			gameControl.check(game.getCurrentPlayer());
+		} catch (IllegalActionException e) {
+			fail(e.getMessage());
+		}
 
-public void testOnlyOneActivePlayer() {
+		// Final Round
+		try {
+			gameControl.check(game.getCurrentPlayer());
+			gameControl.check(game.getCurrentPlayer());
+		} catch (IllegalActionException e) {
+			fail(e.getMessage());
+		}
+	}
 
-        PlayingTableState gameControl = new PlayingTableState(pokerTable, table);
+	/*
+	 * An all-in raise that is greater than half the previous raise opens up the
+	 * round for more betting.
+	 */
+	public void testAllInRaiseCase() {
+		try {
 
-        Game game = gameControl.getGame();
-        try {
+			kenzo = new MutableSeatedPlayer(factory.createNewPlayer("Kenzo", 200), 200);
+			cedric = new MutableSeatedPlayer(factory.createNewPlayer("Cedric", 220),220);
+			guy = new MutableSeatedPlayer(factory.createNewPlayer("Guy", 100),100);
+
+			table = new ServerTable(8);
+
+			table.addPlayer(kenzo);
+			table.addPlayer(cedric);
+			table.addPlayer(guy);
+		} catch (IllegalValueException e) {
+			fail(e.getMessage());
+		} catch (PlayerListFullException e) {
+			fail(e.getMessage());
+		}
+
+		GameFlowTest.logger.info("Game Properties:");
+		GameFlowTest.logger.info("Small Blind: "
+				+ pokerTable.getTableConfiguration().getSmallBlind());
+		GameFlowTest.logger.info("Big Blind: "
+				+ pokerTable.getTableConfiguration().getBigBlind());
+
+		PlayingTableState gameControl = new PlayingTableState(pokerTable, table, kenzo);
+		try {
 			gameControl.deal();
 		} catch (IllegalActionException e1) {
 			fail(e1.toString());
 		}
-        try {
-                gameControl.fold(game.getCurrentPlayer());
-                gameControl.fold(game.getCurrentPlayer());
-        } catch (IllegalActionException e) {
-                fail(e.getMessage());
-        }
+		GameFlowTest.logger.info("Betting Rules: "
+				+ gameControl.getGame().getBettingRules().toString());
+		Game game = gameControl.getGame();
 
-        assertFalse(gameControl.getRound() instanceof WaitingRound);
+		GameFlowTest.logger.info("Dealer: " + game.getDealer());
 
-}
+		GameFlowTest.logger.info(game.getCurrentDealPlayers());
+		GameFlowTest.logger.info("Kenzo's Cards: " + kenzo.getPocketCards());
+		GameFlowTest.logger.info("Cedric's Cards: " + cedric.getPocketCards());
+		GameFlowTest.logger.info("Guy's Cards: " + guy.getPocketCards());
 
-public void testOnlyOneAllInPlayer() {
+		try {
+			gameControl.raise(kenzo, 20);
+			gameControl.call(cedric);
+			gameControl.allIn(guy);
+		} catch (IllegalActionException e) {
+			fail(e.getMessage());
+		}
 
-        PlayingTableState gameControl = new PlayingTableState(pokerTable, table);
-        try {
+		try {
+			gameControl.raise(kenzo, 75);
+		} catch (IllegalActionException e1) {
+			fail("Previous all in big enough to open up betting!");
+		}
+
+
+	}
+
+	/**
+	 * Test Settings: > 3 players > Big blind raises.
+	 */
+	public void testBigBlindRaisesCase() {
+		PlayingTableState gameControl = new PlayingTableState(pokerTable, table);
+		try {
 			gameControl.deal();
 		} catch (IllegalActionException e1) {
 			fail(e1.toString());
 		}
-        Game game = gameControl.getGame();
+		Game game = gameControl.getGame();
 
-        try {
-                gameControl.allIn(game.getCurrentPlayer());
-                gameControl.fold(game.getCurrentPlayer());
-                gameControl.fold(game.getCurrentPlayer());
-        } catch (IllegalActionException e) {
-                fail(e.getMessage());
-        }
-}
+		// Pre-flop Round
+		assertEquals(PreFlopRound.class, gameControl.getRound().getClass());
+		try {
+			gameControl.call(game.getCurrentPlayer());
+			gameControl.call(game.getCurrentPlayer());
 
-public void testOnlyOneAllInPlayer2() {
-        try {
-        	
-            kenzo = new GameSeatedPlayer(factory.createNewPlayer("Kenzo", 100), 100);
-            cedric = new GameSeatedPlayer(factory.createNewPlayer("Cedric", 200),200);
-            guy = new GameSeatedPlayer(factory.createNewPlayer("Guy", 200),200);
-            
-            	table = new ServerTable(8);
-                table.addPlayer(kenzo);
-                table.addPlayer(cedric);
-                table.addPlayer(guy);
-        } catch (IllegalValueException e) {
-                fail(e.getMessage());
-        } catch (PlayerListFullException e) {
-                fail(e.getMessage());
-        }
+			// Big Blind Raises.
+			gameControl.raise(game.getCurrentPlayer(), 20);
 
-        PlayingTableState gameControl = new PlayingTableState(pokerTable, table, kenzo);
-        try {
+			assertEquals(PreFlopRound.class, gameControl.getRound().getClass());
+			gameControl.call(game.getCurrentPlayer());
+			assertEquals(PreFlopRound.class, gameControl.getRound().getClass());
+			gameControl.call(game.getCurrentPlayer());
+		} catch (IllegalActionException e) {
+			fail(e.getMessage());
+		}
+
+		// Flop Round
+		assertEquals(FlopRound.class, gameControl.getRound().getClass());
+		try {
+			gameControl.check(game.getCurrentPlayer());
+			gameControl.check(game.getCurrentPlayer());
+			gameControl.check(game.getCurrentPlayer());
+		} catch (IllegalActionException e) {
+			fail(e.getMessage());
+		}
+
+		// Turn Round
+		try {
+			gameControl.check(game.getCurrentPlayer());
+			gameControl.check(game.getCurrentPlayer());
+			gameControl.check(game.getCurrentPlayer());
+		} catch (IllegalActionException e) {
+			fail(e.getMessage());
+		}
+
+		// Final Round
+		try {
+			gameControl.check(game.getCurrentPlayer());
+			gameControl.check(game.getCurrentPlayer());
+			gameControl.check(game.getCurrentPlayer());
+		} catch (IllegalActionException e) {
+			fail(e.getMessage());
+		}
+	}
+
+	public void testBothBlindsAllInCase() {
+		try {
+			kenzo = new MutableSeatedPlayer(factory.createNewPlayer("Kenzo", 100), 100);
+			cedric = new MutableSeatedPlayer(factory.createNewPlayer("Cedric", 100),4);
+			guy = new MutableSeatedPlayer(factory.createNewPlayer("Guy", 100),9);
+
+			table = new ServerTable(8);
+			table.addPlayer(kenzo);
+			table.addPlayer(cedric);
+			table.addPlayer(guy);
+		} catch (IllegalValueException e) {
+			fail(e.getMessage());
+		} catch (PlayerListFullException e) {
+			fail(e.getMessage());
+		}
+		PlayingTableState gameControl = new PlayingTableState(pokerTable, table, kenzo);
+		Game game = gameControl.getGame();
+		try {
 			gameControl.deal();
 		} catch (IllegalActionException e1) {
 			fail(e1.toString());
 		}
-        Game game = gameControl.getGame();
 
-        try {
-                gameControl.allIn(game.getCurrentPlayer());
-                gameControl.call(game.getCurrentPlayer());
-                gameControl.call(game.getCurrentPlayer());
+		try {
+			gameControl.call(game.getCurrentPlayer());
+		} catch (IllegalActionException e) {
+			fail(e.getMessage());
+		}
+	}
 
-                gameControl.fold(game.getCurrentPlayer());
-                gameControl.fold(game.getCurrentPlayer());
-        } catch (IllegalActionException e) {
-                fail(e.getMessage());
-        }
-}
-
-public void test2PlayersOneFold() {
-        try {
-        	
-            kenzo = new GameSeatedPlayer(factory.createNewPlayer("Kenzo", 500), 500);
-            cedric = new GameSeatedPlayer(factory.createNewPlayer("Cedric", 500),500);
-            
-            table = new ServerTable(8);
-                table.addPlayer(kenzo);
-                table.addPlayer(cedric);
-        } catch (IllegalValueException e) {
-                fail(e.getMessage());
-        } catch (PlayerListFullException e) {
-                fail(e.getMessage());
-        }
-        PlayingTableState gameControl = new PlayingTableState(pokerTable, table, kenzo);
-        try {
+	public void testCase1() {
+		PlayingTableState gameControl = new PlayingTableState(pokerTable, table, kenzo);
+		Game game = gameControl.getGame();
+		try {
 			gameControl.deal();
 		} catch (IllegalActionException e1) {
 			fail(e1.toString());
 		}
-        try {
-                gameControl.call(kenzo);
-                gameControl.raise(cedric, 20);
-                gameControl.call(kenzo);
 
-                gameControl.bet(cedric, 20);
-                gameControl.call(kenzo);
+		// Pre-flop Round
+		assertEquals(PreFlopRound.class, gameControl.getRound().getClass());
+		assertTrue(game.getCurrentPlayer().equals(kenzo));
 
-                gameControl.bet(cedric, 20);
-                gameControl.call(kenzo);
+		try {
+			gameControl.call(game.getCurrentPlayer());
+			assertEquals(PreFlopRound.class, gameControl.getRound().getClass());
+			gameControl.call(game.getCurrentPlayer());
+			assertEquals(PreFlopRound.class, gameControl.getRound().getClass());
 
-                gameControl.bet(cedric, 20);
-                gameControl.raise(kenzo, 50);
-                gameControl.fold(cedric);
+			// Big Blind Checks.
+			gameControl.check(game.getCurrentPlayer());
 
-        } catch (IllegalActionException e) {
-                fail(e.getMessage());
-        }
-}
+		} catch (IllegalActionException e) {
+			fail(e.getMessage());
+		}
 
-public void test2PlayersSmallBlindRaises() {
-        try {
+		// Flop Round
+		assertEquals(FlopRound.class, gameControl.getRound().getClass());
+		try {
+			gameControl.check(game.getCurrentPlayer());
+			assertEquals(FlopRound.class, gameControl.getRound().getClass());
+			gameControl.check(game.getCurrentPlayer());
+			assertEquals(FlopRound.class, gameControl.getRound().getClass());
+			gameControl.check(game.getCurrentPlayer());
+		} catch (IllegalActionException e) {
+			fail(e.getMessage());
+		}
 
-                kenzo = new GameSeatedPlayer(factory.createNewPlayer("Kenzo", 500), 500);
-                cedric = new GameSeatedPlayer(factory.createNewPlayer("Cedric", 500),500);
-                
-                
-                table = new ServerTable(8);
-                table.addPlayer(kenzo);
-                table.addPlayer(cedric);
-        } catch (IllegalValueException e) {
-                fail(e.getMessage());
-        } catch (PlayerListFullException e) {
-                fail(e.getMessage());
-        }
-        PlayingTableState gameControl = new PlayingTableState(pokerTable, table, kenzo);
-        try {
+		// Turn Round
+		assertEquals(TurnRound.class, gameControl.getRound().getClass());
+		try {
+			gameControl.check(game.getCurrentPlayer());
+			assertEquals(TurnRound.class, gameControl.getRound().getClass());
+			gameControl.check(game.getCurrentPlayer());
+			assertEquals(TurnRound.class, gameControl.getRound().getClass());
+			gameControl.check(game.getCurrentPlayer());
+		} catch (IllegalActionException e) {
+			fail(e.getMessage());
+		}
+
+		// Final Round
+		assertEquals(FinalRound.class, gameControl.getRound().getClass());
+		try {
+			gameControl.check(game.getCurrentPlayer());
+			assertEquals(FinalRound.class, gameControl.getRound().getClass());
+			gameControl.check(game.getCurrentPlayer());
+			assertEquals(FinalRound.class, gameControl.getRound().getClass());
+			gameControl.check(game.getCurrentPlayer());
+		} catch (IllegalActionException e) {
+			fail(e.getMessage());
+		}
+
+		// New Deal
+		assertEquals(cedric, game.getDealer());
+		assertEquals(PreFlopRound.class, gameControl.getRound().getClass());
+		try {
+			gameControl.call(game.getCurrentPlayer());
+			assertEquals(PreFlopRound.class, gameControl.getRound().getClass());
+			gameControl.call(game.getCurrentPlayer());
+			assertEquals(PreFlopRound.class, gameControl.getRound().getClass());
+			gameControl.check(game.getCurrentPlayer());
+		} catch (IllegalActionException e) {
+			fail(e.getMessage());
+		}
+
+		// Flop Round
+		assertEquals(FlopRound.class, gameControl.getRound().getClass());
+		try {
+			gameControl.check(game.getCurrentPlayer());
+			assertEquals(FlopRound.class, gameControl.getRound().getClass());
+			gameControl.check(game.getCurrentPlayer());
+			assertEquals(FlopRound.class, gameControl.getRound().getClass());
+			gameControl.check(game.getCurrentPlayer());
+		} catch (IllegalActionException e) {
+			fail(e.getMessage());
+		}
+
+		// Turn Round
+		assertEquals(TurnRound.class, gameControl.getRound().getClass());
+		try {
+			gameControl.check(game.getCurrentPlayer());
+			assertEquals(TurnRound.class, gameControl.getRound().getClass());
+			gameControl.check(game.getCurrentPlayer());
+			assertEquals(TurnRound.class, gameControl.getRound().getClass());
+			gameControl.check(game.getCurrentPlayer());
+		} catch (IllegalActionException e) {
+			fail(e.getMessage());
+		}
+
+		// Final Round
+		assertEquals(FinalRound.class, gameControl.getRound().getClass());
+		try {
+			gameControl.check(game.getCurrentPlayer());
+			assertEquals(FinalRound.class, gameControl.getRound().getClass());
+			gameControl.check(game.getCurrentPlayer());
+			assertEquals(FinalRound.class, gameControl.getRound().getClass());
+			gameControl.check(game.getCurrentPlayer());
+		} catch (IllegalActionException e) {
+			fail(e.getMessage());
+		}
+
+		// New Deal
+		assertEquals(guy, game.getDealer());
+		assertEquals(PreFlopRound.class, gameControl.getRound().getClass());
+	}
+
+	public void testCase2() {
+		PlayingTableState gameControl = new PlayingTableState(pokerTable, table, guy);
+		try {
 			gameControl.deal();
 		} catch (IllegalActionException e1) {
 			fail(e1.toString());
 		}
-        try {
-                gameControl.raise(kenzo, 20);
-        } catch (IllegalActionException e) {
-                fail(e.getMessage());
-        }
-        try {
-                gameControl.check(cedric);
-                fail("Exception expected: can not check after raise");
-        } catch (IllegalActionException e) {
-        }
+		Game game = gameControl.getGame();
 
-        try {
-                gameControl.call(cedric);
+		// New Deal
+		assertEquals(guy, game.getDealer());
+		assertEquals(PreFlopRound.class, gameControl.getRound().getClass());
 
-                assertEquals(FlopRound.class, gameControl.getRound().getClass());
-                gameControl.check(cedric);
-                gameControl.check(kenzo);
+		try {
+			System.out.println(game.getCurrentPlayer());
+			gameControl.call(game.getCurrentPlayer());
+			assertEquals(PreFlopRound.class, gameControl.getRound().getClass());
+			gameControl.raise(game.getCurrentPlayer(), 10);
+			assertEquals(PreFlopRound.class, gameControl.getRound().getClass());
+			gameControl.call(game.getCurrentPlayer());
+			assertEquals(PreFlopRound.class, gameControl.getRound().getClass());
+			gameControl.raise(game.getCurrentPlayer(), 20);
+			assertEquals(PreFlopRound.class, gameControl.getRound().getClass());
+			gameControl.call(game.getCurrentPlayer());
+			assertEquals(PreFlopRound.class, gameControl.getRound().getClass());
+			gameControl.call(game.getCurrentPlayer());
+		} catch (IllegalActionException e) {
+			fail(e.getMessage());
+		}
 
-                assertEquals(TurnRound.class, gameControl.getRound().getClass());
-                gameControl.check(cedric);
-                gameControl.check(kenzo);
-                assertEquals(FinalRound.class, gameControl.getRound().getClass());
-                gameControl.check(cedric);
-                gameControl.check(kenzo);
-        } catch (IllegalActionException e) {
-                fail(e.getMessage());
-        }
-        assertEquals(PreFlopRound.class, gameControl.getRound().getClass());
-}
 
-	
+		// Flop Round
+		assertEquals(FlopRound.class, gameControl.getRound().getClass());
+		try {
+			gameControl.check(game.getCurrentPlayer());
+			gameControl.check(game.getCurrentPlayer());
+			gameControl.check(game.getCurrentPlayer());
+		} catch (IllegalActionException e) {
+			fail(e.getMessage());
+		}
+
+		// Turn Round
+		assertEquals(TurnRound.class, gameControl.getRound().getClass());
+		try {
+			gameControl.check(game.getCurrentPlayer());
+			gameControl.check(game.getCurrentPlayer());
+			gameControl.check(game.getCurrentPlayer());
+		} catch (IllegalActionException e) {
+			fail(e.getMessage());
+		}
+
+		// Final Round
+		assertEquals(FinalRound.class, gameControl.getRound().getClass());
+		try {
+			gameControl.check(game.getCurrentPlayer());
+			gameControl.check(game.getCurrentPlayer());
+			gameControl.check(game.getCurrentPlayer());
+		} catch (IllegalActionException e) {
+			fail(e.getMessage());
+		}
+
+		// New Deal
+		assertEquals(PreFlopRound.class, gameControl.getRound().getClass());
+	}
+
+	public void testMultiplePlayersAllInSmallBlindCase() {
+		try {
+
+			kenzo = new MutableSeatedPlayer(factory.createNewPlayer("Kenzo", 100), 100);
+			cedric = new MutableSeatedPlayer(factory.createNewPlayer("Cedric", 100),4);
+			guy = new MutableSeatedPlayer(factory.createNewPlayer("Guy", 100),100);
+
+			table = new ServerTable(8);
+			table.addPlayer(kenzo);
+			table.addPlayer(cedric);
+			table.addPlayer(guy);
+		} catch (IllegalValueException e) {
+			fail(e.getMessage());
+		} catch (PlayerListFullException e) {
+			fail(e.getMessage());
+		}
+
+		PlayingTableState gameControl = new PlayingTableState(pokerTable, table, kenzo);
+		try {
+			gameControl.deal();
+		} catch (IllegalActionException e1) {
+			fail(e1.toString());
+		}
+		Game game = gameControl.getGame();
+
+		try {
+			gameControl.call(game.getCurrentPlayer());
+			gameControl.check(game.getCurrentPlayer());
+		} catch (IllegalActionException e) {
+			fail(e.getMessage());
+		}
+
+		// Flop Round
+		try {
+			gameControl.check(game.getCurrentPlayer());
+			gameControl.check(game.getCurrentPlayer());
+		} catch (IllegalActionException e) {
+			fail(e.getMessage());
+		}
+
+		// Turn Round
+		try {
+			gameControl.check(game.getCurrentPlayer());
+			gameControl.check(game.getCurrentPlayer());
+		} catch (IllegalActionException e) {
+			fail(e.getMessage());
+		}
+
+		// Final Round
+		try {
+			System.out.println("final round");
+			gameControl.check(game.getCurrentPlayer());
+			System.out.println("Check 1");
+			gameControl.check(game.getCurrentPlayer());
+			System.out.println("check 2");
+		} catch (IllegalActionException e) {
+			fail(e.getMessage());
+		}
+
+		GameFlowTest.logger.info("Next game...");
+
+		GameFlowTest.logger.info("Current Player:" + game.getCurrentPlayer());
+		GameFlowTest.logger.info("Next Dealer:" + game.getNextDealer());
+		GameFlowTest.logger.info(game.getFirstToActPlayer());
+		GameFlowTest.logger.info("Dealer: " + game.getDealer().getName());
+		GameFlowTest.logger.info(game.getCurrentDealPlayers());
+	}
+
+	///*
+	//* An all-in raise that is smaller than half the previous raise does not
+	//* open up the round for more betting. Only calls are allowed.
+	//*/
+	//public void testAllInCallCase() {
+	//      try {
+	//              kenzo = playerFactory.createNewPlayer("Kenzo", 200);
+	//              cedric = playerFactory.createNewPlayer("Cedric", 220);
+	//              guy = playerFactory.createNewPlayer("Guy", 100);
+	//
+	//              TableId id = new TableId(0);
+	//              gameMediator = new GameMediator(id);
+	//              table = new GameTable(id, new GameProperty());
+	//              table.addPlayer(kenzo);
+	//              table.addPlayer(cedric);
+	//              table.addPlayer(guy);
+	//      } catch (IllegalValueException e) {
+	//              fail(e.getMessage());
+	//      } catch (PlayerListFullException e) {
+	//              fail(e.getMessage());
+	//      }
+	//
+	//      GameControl gameControl = new GameControl(gameMediator, table, kenzo);
+	//
+	//      try {
+	//              gameControl.raise(kenzo, 75);
+	//              gameControl.call(cedric);
+	//              gameControl.allIn(guy);
+	//      } catch (IllegalActionException e) {
+	//              fail(e.getMessage());
+	//      }
+	//
+	//      try {
+	//              gameControl.raise(kenzo, 75);
+	//              fail("Previous all in was not big enough to open up betting!");
+	//      } catch (IllegalActionException e1) {
+	//              // Should not reach here
+	//      }
+	//}
+
+	public void testOnlyOneActivePlayer() {
+
+		PlayingTableState gameControl = new PlayingTableState(pokerTable, table);
+
+		Game game = gameControl.getGame();
+		try {
+			gameControl.deal();
+		} catch (IllegalActionException e1) {
+			fail(e1.toString());
+		}
+		try {
+			gameControl.fold(game.getCurrentPlayer());
+			gameControl.fold(game.getCurrentPlayer());
+		} catch (IllegalActionException e) {
+			fail(e.getMessage());
+		}
+
+		assertFalse(gameControl.getRound() instanceof WaitingRound);
+
+	}
+
+	public void testOnlyOneAllInPlayer() {
+
+		PlayingTableState gameControl = new PlayingTableState(pokerTable, table);
+		try {
+			gameControl.deal();
+		} catch (IllegalActionException e1) {
+			fail(e1.toString());
+		}
+		Game game = gameControl.getGame();
+
+		try {
+			gameControl.allIn(game.getCurrentPlayer());
+			gameControl.fold(game.getCurrentPlayer());
+			gameControl.fold(game.getCurrentPlayer());
+		} catch (IllegalActionException e) {
+			fail(e.getMessage());
+		}
+	}
+
+	public void testOnlyOneAllInPlayer2() {
+		try {
+
+			kenzo = new MutableSeatedPlayer(factory.createNewPlayer("Kenzo", 100), 100);
+			cedric = new MutableSeatedPlayer(factory.createNewPlayer("Cedric", 200),200);
+			guy = new MutableSeatedPlayer(factory.createNewPlayer("Guy", 200),200);
+
+			table = new ServerTable(8);
+			table.addPlayer(kenzo);
+			table.addPlayer(cedric);
+			table.addPlayer(guy);
+		} catch (IllegalValueException e) {
+			fail(e.getMessage());
+		} catch (PlayerListFullException e) {
+			fail(e.getMessage());
+		}
+
+		PlayingTableState gameControl = new PlayingTableState(pokerTable, table, kenzo);
+		try {
+			gameControl.deal();
+		} catch (IllegalActionException e1) {
+			fail(e1.toString());
+		}
+		Game game = gameControl.getGame();
+
+		try {
+			gameControl.allIn(game.getCurrentPlayer());
+			gameControl.call(game.getCurrentPlayer());
+			gameControl.call(game.getCurrentPlayer());
+
+			gameControl.fold(game.getCurrentPlayer());
+			gameControl.fold(game.getCurrentPlayer());
+		} catch (IllegalActionException e) {
+			fail(e.getMessage());
+		}
+	}
+
 	public void testTwoPlayersDealerChecksCase(){
 		table = new ServerTable(8);
 		PlayingTableState gameControl;
 		try {
-			kenzo = new GameSeatedPlayer(factory.createNewPlayer("kenzo", 100), 50);
-			cedric = new GameSeatedPlayer(factory.createNewPlayer("cedric", 100), 50);
+			kenzo = new MutableSeatedPlayer(factory.createNewPlayer("kenzo", 100), 50);
+			cedric = new MutableSeatedPlayer(factory.createNewPlayer("cedric", 100), 50);
 			table.addPlayer(kenzo);
 			table.addPlayer(cedric);
 			gameControl = new PlayingTableState(pokerTable, table, kenzo);
-	        try {
+			try {
 				gameControl.deal();
 			} catch (IllegalActionException e1) {
 				fail(e1.toString());
@@ -1007,24 +879,24 @@ public void test2PlayersSmallBlindRaises() {
 			} catch (IllegalActionException e) {
 				fail(e.getMessage());
 			}
-			
+
 		} catch (IllegalValueException e) {
 			fail(e.getMessage());
 		} catch (PlayerListFullException e) {
 			fail(e.getMessage());
 		}
 	}
-	
+
 	public void testTwoPlayersDealerRaisesCase(){
 		table = new ServerTable(8);
 		PlayingTableState gameControl;
 		try {
-			kenzo = new GameSeatedPlayer(factory.createNewPlayer("kenzo", 100), 100);
-			cedric = new GameSeatedPlayer(factory.createNewPlayer("cedric", 100), 100);
+			kenzo = new MutableSeatedPlayer(factory.createNewPlayer("kenzo", 100), 100);
+			cedric = new MutableSeatedPlayer(factory.createNewPlayer("cedric", 100), 100);
 			table.addPlayer(kenzo);
 			table.addPlayer(cedric);
 			gameControl = new PlayingTableState(pokerTable, table, kenzo);
-	        try {
+			try {
 				gameControl.deal();
 			} catch (IllegalActionException e1) {
 				fail(e1.toString());
@@ -1035,12 +907,183 @@ public void test2PlayersSmallBlindRaises() {
 			} catch (IllegalActionException e) {
 				fail(e.getMessage());
 			}
-			
+
 		} catch (IllegalValueException e) {
 			fail(e.getMessage());
 		} catch (PlayerListFullException e) {
 			fail(e.getMessage());
 		}
+	}
+
+	/*
+	 * Test that the dealer gets to act first on the first round in a heads up
+	 * game
+	 */
+	public void testTwoPlayersDealerSwitch() {
+		MutableSeatedPlayer craig = null;
+		try {
+			guy = new MutableSeatedPlayer(factory.createNewPlayer("Guy", 100),100);
+			craig = new MutableSeatedPlayer(factory.createNewPlayer("Craig", 100),100);
+			table = new ServerTable(8);
+			table.addPlayer(guy);
+			table.addPlayer(craig);
+		} catch (IllegalValueException e) {
+			fail(e.getMessage());
+		} catch (PlayerListFullException e) {
+			fail(e.getMessage());
+		}
+
+		PlayingTableState gameControl = new PlayingTableState(pokerTable, table, guy);
+		try {
+			gameControl.deal();
+		} catch (IllegalActionException e1) {
+			fail(e1.toString());
+		}
+
+		try {
+			gameControl.call(guy);
+			gameControl.check(craig);
+
+			gameControl.check(craig);
+			gameControl.check(guy);
+		} catch (IllegalActionException e) {
+			fail(e.getMessage());
+		}
+	}
+
+	public void testTwoPlayersOneFold() {
+		try {
+
+			kenzo = new MutableSeatedPlayer(factory.createNewPlayer("Kenzo", 500), 500);
+			cedric = new MutableSeatedPlayer(factory.createNewPlayer("Cedric", 500),500);
+
+			table = new ServerTable(8);
+			table.addPlayer(kenzo);
+			table.addPlayer(cedric);
+		} catch (IllegalValueException e) {
+			fail(e.getMessage());
+		} catch (PlayerListFullException e) {
+			fail(e.getMessage());
+		}
+		PlayingTableState gameControl = new PlayingTableState(pokerTable, table, kenzo);
+		try {
+			gameControl.deal();
+		} catch (IllegalActionException e1) {
+			fail(e1.toString());
+		}
+		
+		assertEquals(PreFlopRound.class, gameControl.getRound().getClass());
+		
+		try {
+			gameControl.call(kenzo);
+			gameControl.raise(cedric, 20);
+			gameControl.call(kenzo);
+
+			assertEquals(FlopRound.class, gameControl.getRound().getClass());
+			
+			gameControl.bet(cedric, 20);
+			gameControl.call(kenzo);
+
+			assertEquals(TurnRound.class, gameControl.getRound().getClass());
+			
+			gameControl.bet(cedric, 20);
+			gameControl.call(kenzo);
+			
+			assertEquals(FinalRound.class, gameControl.getRound().getClass());
+
+			gameControl.bet(cedric, 20);
+			gameControl.raise(kenzo, 50);
+			gameControl.fold(cedric);
+			
+			assertEquals(PreFlopRound.class, gameControl.getRound().getClass());
+
+		} catch (IllegalActionException e) {
+			fail(e.getMessage());
+		}
+	}
+
+
+	public void testTwoPlayersSmallBlindAllInCase(){
+		try {
+
+			kenzo = new MutableSeatedPlayer(factory.createNewPlayer("Kenzo", 100), 100);
+			cedric = new MutableSeatedPlayer(factory.createNewPlayer("Cedric", 100),4);
+
+			table = new ServerTable(8);
+			table.addPlayer(kenzo);
+			table.addPlayer(cedric);
+		} catch (IllegalValueException e) {
+			fail(e.getMessage());
+		} catch (PlayerListFullException e) {
+			fail(e.getMessage());
+		}
+
+		PlayingTableState gameControl = new PlayingTableState(pokerTable, table, cedric);
+		try {
+			gameControl.deal();
+		} catch (IllegalActionException e1) {
+			fail(e1.toString());
+		}
+		Game game = gameControl.getGame();
+
+		try {
+			gameControl.check(kenzo);
+			gameControl.call(kenzo);
+		} catch (IllegalActionException e) {
+			fail(e.getMessage());
+		}
+
+	}
+
+	public void testTwoPlayersSmallBlindRaises() {
+		try {
+
+			kenzo = new MutableSeatedPlayer(factory.createNewPlayer("Kenzo", 500), 500);
+			cedric = new MutableSeatedPlayer(factory.createNewPlayer("Cedric", 500),500);
+
+
+			table = new ServerTable(8);
+			table.addPlayer(kenzo);
+			table.addPlayer(cedric);
+		} catch (IllegalValueException e) {
+			fail(e.getMessage());
+		} catch (PlayerListFullException e) {
+			fail(e.getMessage());
+		}
+		PlayingTableState gameControl = new PlayingTableState(pokerTable, table, kenzo);
+		try {
+			gameControl.deal();
+		} catch (IllegalActionException e1) {
+			fail(e1.toString());
+		}
+		try {
+			gameControl.raise(kenzo, 20);
+		} catch (IllegalActionException e) {
+			fail(e.getMessage());
+		}
+		try {
+			gameControl.check(cedric);
+			fail("Exception expected: can not check after raise");
+		} catch (IllegalActionException e) {
+		}
+
+		try {
+			gameControl.call(cedric);
+
+			assertEquals(FlopRound.class, gameControl.getRound().getClass());
+			gameControl.check(cedric);
+			gameControl.check(kenzo);
+
+			assertEquals(TurnRound.class, gameControl.getRound().getClass());
+			gameControl.check(cedric);
+			gameControl.check(kenzo);
+			assertEquals(FinalRound.class, gameControl.getRound().getClass());
+			gameControl.check(cedric);
+			gameControl.check(kenzo);
+		} catch (IllegalActionException e) {
+			fail(e.getMessage());
+		}
+		assertEquals(PreFlopRound.class, gameControl.getRound().getClass());
 	}
 
 }

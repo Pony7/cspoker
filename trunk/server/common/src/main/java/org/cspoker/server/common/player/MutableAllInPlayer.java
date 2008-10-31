@@ -25,15 +25,15 @@ import org.cspoker.server.common.elements.chips.pot.GamePot;
  * @author Kenzo
  * 
  */
-public class GameAllInPlayer implements Comparable<GameAllInPlayer> {
+public class MutableAllInPlayer implements Comparable<MutableAllInPlayer> {
 
-	private final GameSeatedPlayer player;
+	private final MutableSeatedPlayer player;
 
-	public GameAllInPlayer(GameSeatedPlayer player) {
+	public MutableAllInPlayer(MutableSeatedPlayer player) {
 		this.player = player;
 	}
 
-	public GameSeatedPlayer getPlayer() {
+	public MutableSeatedPlayer getPlayer() {
 		return player;
 	}
 
@@ -54,7 +54,7 @@ public class GameAllInPlayer implements Comparable<GameAllInPlayer> {
 		player.getBetChips().transferAmountTo(amount, pot.getChips());
 	}
 
-	public int compareTo(GameAllInPlayer o) {
+	public int compareTo(MutableAllInPlayer o) {
 		return getBetValue() - o.getBetValue();
 	}
 
@@ -68,7 +68,7 @@ public class GameAllInPlayer implements Comparable<GameAllInPlayer> {
 		if (getClass() != obj.getClass()) {
 			return false;
 		}
-		final GameAllInPlayer other = (GameAllInPlayer) obj;
+		final MutableAllInPlayer other = (MutableAllInPlayer) obj;
 		if (player == null) {
 			if (other.player != null) {
 				return false;

@@ -33,13 +33,13 @@ import org.cspoker.server.common.elements.id.SeatId;
  * @author Kenzo
  * 
  */
-public class GameSeatedPlayer {
+public class MutableSeatedPlayer {
 	
 	/***************************************************************************
 	 * Variables
 	 **************************************************************************/
 	
-	private final ServerPlayer player;
+	private final MutablePlayer player;
 	
 	private final Chips stack;
 	
@@ -63,7 +63,7 @@ public class GameSeatedPlayer {
 	 * Constructor
 	 **************************************************************************/
 	
-	public GameSeatedPlayer(ServerPlayer player, int buyIn)
+	public MutableSeatedPlayer(MutablePlayer player, int buyIn)
 			throws IllegalValueException {
 		this.player = player;
 		this.stack = new Chips(buyIn);
@@ -194,7 +194,7 @@ public class GameSeatedPlayer {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		final GameSeatedPlayer other = (GameSeatedPlayer) obj;
+		final MutableSeatedPlayer other = (MutableSeatedPlayer) obj;
 		if (player == null) {
 			if (other.player != null)
 				return false;

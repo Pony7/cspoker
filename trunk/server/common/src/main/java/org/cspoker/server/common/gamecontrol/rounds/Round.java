@@ -21,7 +21,7 @@ import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.server.common.gamecontrol.Game;
 import org.cspoker.server.common.gamecontrol.PokerTable;
 import org.cspoker.server.common.gamecontrol.rules.BettingRules;
-import org.cspoker.server.common.player.GameSeatedPlayer;
+import org.cspoker.server.common.player.MutableSeatedPlayer;
 
 /**
  * An abstract class to represent rounds. A player can do actions in a round,
@@ -98,7 +98,7 @@ public abstract class Round {
 	 * @throws IllegalActionException
 	 *             [must] The action performed is not a valid action.
 	 */
-	public void check(GameSeatedPlayer player) throws IllegalActionException {
+	public void check(MutableSeatedPlayer player) throws IllegalActionException {
 		throw new IllegalActionException(player.getName()
 				+ " can not check in this round.");
 	}
@@ -115,7 +115,7 @@ public abstract class Round {
 	 * @throws IllegalActionException
 	 *             [must] The action performed is not a valid action.
 	 */
-	public void bet(GameSeatedPlayer player, int amount)
+	public void bet(MutableSeatedPlayer player, int amount)
 			throws IllegalActionException {
 		throw new IllegalActionException(player.getName() + " can not bet "
 				+ amount + " chips in this round.");
@@ -132,7 +132,7 @@ public abstract class Round {
 	 * @throws IllegalActionException
 	 *             [must] The action performed is not a valid action.
 	 */
-	public void call(GameSeatedPlayer player) throws IllegalActionException {
+	public void call(MutableSeatedPlayer player) throws IllegalActionException {
 		throw new IllegalActionException(player.getName()
 				+ " can not call in this round.");
 	}
@@ -149,7 +149,7 @@ public abstract class Round {
 	 * @throws IllegalActionException
 	 *             [must] The action performed is not a valid action.
 	 */
-	public void raise(GameSeatedPlayer player, int amount)
+	public void raise(MutableSeatedPlayer player, int amount)
 			throws IllegalActionException {
 		throw new IllegalActionException(player.getName()
 				+ " can not raise with " + amount + " chips in this round.");
@@ -168,12 +168,12 @@ public abstract class Round {
 	 * @throws IllegalActionException
 	 *             [must] The action performed is not a valid action.
 	 */
-	public void fold(GameSeatedPlayer player) throws IllegalActionException {
+	public void fold(MutableSeatedPlayer player) throws IllegalActionException {
 		throw new IllegalActionException(player.getName()
 				+ " can not fold in this round.");
 	}
 
-	public void foldAction(GameSeatedPlayer player) throws IllegalActionException {
+	public void foldAction(MutableSeatedPlayer player) throws IllegalActionException {
 	}
 
 	/**
@@ -187,7 +187,7 @@ public abstract class Round {
 	 * @throws IllegalActionException
 	 *             [must] The action performed is not a valid action.
 	 */
-	public void deal(GameSeatedPlayer player) throws IllegalActionException {
+	public void deal(MutableSeatedPlayer player) throws IllegalActionException {
 		throw new IllegalActionException(player.getName()
 				+ " can not deal in this round.");
 	}
@@ -202,7 +202,7 @@ public abstract class Round {
 	 * @throws IllegalActionException
 	 *             [must] The action performed is not a valid action.
 	 */
-	public void allIn(GameSeatedPlayer player) throws IllegalActionException {
+	public void allIn(MutableSeatedPlayer player) throws IllegalActionException {
 		throw new IllegalActionException(player.getName()
 				+ " can not go all-in in this round.");
 	}
@@ -241,16 +241,16 @@ public abstract class Round {
 	 * @param player
 	 *            The player who did the last event.
 	 */
-	protected void playerMadeEvent(GameSeatedPlayer player) {
+	protected void playerMadeEvent(MutableSeatedPlayer player) {
 		game.setLastActionPlayer(player);
 	}
 
-	public boolean onTurn(GameSeatedPlayer player) {
+	public boolean onTurn(MutableSeatedPlayer player) {
 		return game.getCurrentPlayer().equals(player);
 	}
 
 	protected void removeBrokePlayers() {
-		for (GameSeatedPlayer player : getGame().getTable().getSeatedServerPlayers()) {
+		for (MutableSeatedPlayer player : getGame().getTable().getSeatedServerPlayers()) {
 			if (player.getStack().getValue() == 0) {
 				try {
 					getGame().sitOut(player);

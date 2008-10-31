@@ -21,7 +21,7 @@ import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.HoldemPlaye
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.player.SeatedPlayer;
 import org.cspoker.server.common.elements.id.SeatId;
-import org.cspoker.server.common.player.GameSeatedPlayer;
+import org.cspoker.server.common.player.MutableSeatedPlayer;
 
 public abstract class TableState {
 
@@ -31,37 +31,37 @@ public abstract class TableState {
 		this.mediatingTable = table;
 	}
 
-	public abstract void bet(GameSeatedPlayer player, int amount) throws IllegalActionException;
+	public abstract void bet(MutableSeatedPlayer player, int amount) throws IllegalActionException;
 
-	public abstract void call(GameSeatedPlayer player)
+	public abstract void call(MutableSeatedPlayer player)
 	throws IllegalActionException;
 
-	public abstract void check(GameSeatedPlayer player)
+	public abstract void check(MutableSeatedPlayer player)
 	throws IllegalActionException;
 
-	public abstract void raise(GameSeatedPlayer player, int amount)
+	public abstract void raise(MutableSeatedPlayer player, int amount)
 	throws IllegalActionException;
 
-	public abstract void fold(GameSeatedPlayer player)
+	public abstract void fold(MutableSeatedPlayer player)
 	throws IllegalActionException;
 
-	public abstract void deal(GameSeatedPlayer player)
+	public abstract void deal(MutableSeatedPlayer player)
 	throws IllegalActionException;
 
-	public abstract void allIn(GameSeatedPlayer player)
+	public abstract void allIn(MutableSeatedPlayer player)
 	throws IllegalActionException;
 
-	public abstract HoldemPlayerContext sitIn(SeatId seatId, GameSeatedPlayer player)
+	public abstract HoldemPlayerContext sitIn(SeatId seatId, MutableSeatedPlayer player)
 	throws IllegalActionException;
 
-	public abstract HoldemPlayerContext sitIn(GameSeatedPlayer player)
+	public abstract HoldemPlayerContext sitIn(MutableSeatedPlayer player)
 	throws IllegalActionException;
 
-	public abstract void sitOut(GameSeatedPlayer player);
+	public abstract void sitOut(MutableSeatedPlayer player);
 
 	public abstract List<SeatedPlayer> getSeatedPlayers();
 
-	public abstract List<GameSeatedPlayer> getSeatedServerPlayers();
+	public abstract List<MutableSeatedPlayer> getSeatedServerPlayers();
 
 	/**
 	 * Check whether players are playing or not at this table.

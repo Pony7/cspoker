@@ -23,7 +23,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.cspoker.server.common.elements.chips.Chips;
 import org.cspoker.server.common.elements.chips.IllegalValueException;
-import org.cspoker.server.common.player.GameSeatedPlayer;
+import org.cspoker.server.common.player.MutableSeatedPlayer;
 
 /**
  * A class to represent a group of pots.
@@ -61,7 +61,7 @@ public class GamePots {
 	 * @throws IllegalValueException
 	 */
 	public void collectAmountFromPlayersToSidePot(int amount,
-			List<GameSeatedPlayer> players) throws IllegalValueException {
+			List<MutableSeatedPlayer> players) throws IllegalValueException {
 		if (isClosed()) {
 			return;
 		}
@@ -69,7 +69,7 @@ public class GamePots {
 		if ((amount > 0) || (pot.getChips().getValue() > 0)) {
 			GamePot sidePot = new GamePot();
 			pot.transferAllChipsTo(sidePot);
-			for (GameSeatedPlayer player : players) {
+			for (MutableSeatedPlayer player : players) {
 				try {
 					player.getBetChips().transferAmountTo(amount,
 							sidePot.getChips());
@@ -116,11 +116,11 @@ public class GamePots {
 	 * @param players
 	 *            The list of players from who to collect the bet chips from.
 	 */
-	public void collectChipsToPot(List<GameSeatedPlayer> players) {
+	public void collectChipsToPot(List<MutableSeatedPlayer> players) {
 		if (isClosed()) {
 			return;
 		}
-		for (GameSeatedPlayer player : players) {
+		for (MutableSeatedPlayer player : players) {
 			player.getBetChips().transferAllChipsTo(pot.getChips());
 		}
 	}
@@ -147,7 +147,7 @@ public class GamePots {
 	 * @param player
 	 *            The player who will have to show his cards at the end.
 	 */
-	public void addShowdownPlayer(GameSeatedPlayer player) {
+	public void addShowdownPlayer(MutableSeatedPlayer player) {
 		if (isClosed()) {
 			return;
 		}
@@ -168,14 +168,14 @@ public class GamePots {
 	 * 
 	 * @param showdownPlayers
 	 */
-	public void close(List<GameSeatedPlayer> showdownPlayers) {
+	public void close(List<MutableSeatedPlayer> showdownPlayers) {
 		if (isClosed()) {
 			return;
 		}
 		if (pot.getValue() > 0) {
 			pots.add(pot);
 		}
-		for (GameSeatedPlayer player : showdownPlayers) {
+		for (MutableSeatedPlayer player : showdownPlayers) {
 			addShowdownPlayer(player);
 		}
 		isClosed = true;

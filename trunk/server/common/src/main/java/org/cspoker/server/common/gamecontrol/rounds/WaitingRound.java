@@ -24,7 +24,7 @@ import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.player.SeatedPlayer;
 import org.cspoker.server.common.gamecontrol.Game;
 import org.cspoker.server.common.gamecontrol.PokerTable;
-import org.cspoker.server.common.player.GameSeatedPlayer;
+import org.cspoker.server.common.player.MutableSeatedPlayer;
 
 public class WaitingRound extends Round {
 	
@@ -45,7 +45,7 @@ public class WaitingRound extends Round {
 	 *             [must] The action performed is not a valid action.
 	 */
 
-	public void deal(GameSeatedPlayer player) throws IllegalActionException {
+	public void deal(MutableSeatedPlayer player) throws IllegalActionException {
 		// Check whether the given player can do this action.
 		if (!onTurn(player)) {
 			throw new IllegalActionException(player.getName()
@@ -65,7 +65,7 @@ public class WaitingRound extends Round {
 		game.dealNewHand();
 		List<SeatedPlayer> players = new ArrayList<SeatedPlayer>(game
 				.getNbCurrentDealPlayers());
-		for (GameSeatedPlayer player : game.getCurrentDealPlayers()) {
+		for (MutableSeatedPlayer player : game.getCurrentDealPlayers()) {
 			players.add(player.getMemento());
 		}
 		gameMediator.publishNewDealEvent(new NewDealEvent(players, game

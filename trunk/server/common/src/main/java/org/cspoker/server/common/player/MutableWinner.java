@@ -19,13 +19,13 @@ package org.cspoker.server.common.player;
 import org.cspoker.common.elements.player.Winner;
 import org.cspoker.server.common.elements.chips.Chips;
 
-public class GameWinner {
+public class MutableWinner {
 
-	private final GameSeatedPlayer winner;
+	private final MutableSeatedPlayer winner;
 
 	private final Chips chips = new Chips();
 
-	public GameWinner(GameSeatedPlayer winner) {
+	public MutableWinner(MutableSeatedPlayer winner) {
 		this.winner = winner;
 	}
 
