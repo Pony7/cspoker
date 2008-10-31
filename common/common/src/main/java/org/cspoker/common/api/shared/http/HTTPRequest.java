@@ -20,6 +20,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Queue;
 
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.cspoker.common.api.shared.action.DispatchableAction;
@@ -29,6 +30,7 @@ import org.cspoker.common.api.shared.event.ServerEvent;
 @XmlRootElement
 public class HTTPRequest {
 
+	@XmlElement(required=true,nillable=false) 
 	private List<DispatchableAction<?>> actions = Collections.synchronizedList(new ArrayList<DispatchableAction<?>>());
 
 	public HTTPRequest(Queue<DispatchableAction<?>> queue) {

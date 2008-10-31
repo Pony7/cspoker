@@ -22,7 +22,7 @@ import org.cspoker.common.api.shared.event.ServerEvent;
 import org.cspoker.common.api.shared.listener.ServerListenerTree;
 
 @XmlRootElement
-public class ServerChatEvents implements ServerEvent {
+public class ServerChatEvents extends ServerEvent {
 
 	private static final long serialVersionUID = 6449937716379015861L;
 
