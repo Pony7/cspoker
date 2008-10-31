@@ -52,6 +52,10 @@ public class ForwardingRemoteAccountContext implements RemoteAccountContext, Unr
 	public void setAvatar(byte[] avatar) throws RemoteException, IllegalActionException {
 		accountContext.setAvatar(avatar);
 	}
+
+	public long getPlayerID() throws RemoteException, IllegalActionException {
+		return accountContext.getPlayerID();
+	}
 	
 	@Override
 	protected void finalize() throws Throwable {

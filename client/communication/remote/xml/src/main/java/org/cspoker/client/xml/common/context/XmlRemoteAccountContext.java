@@ -23,6 +23,7 @@ import org.cspoker.client.xml.common.IDGenerator;
 import org.cspoker.common.api.account.action.ChangePasswordAction;
 import org.cspoker.common.api.account.action.CreateAccountAction;
 import org.cspoker.common.api.account.action.GetAvatarAction;
+import org.cspoker.common.api.account.action.GetPlayerIDAction;
 import org.cspoker.common.api.account.action.HasPasswordAction;
 import org.cspoker.common.api.account.action.SetAvatarAction;
 import org.cspoker.common.api.account.context.RemoteAccountContext;
@@ -59,6 +60,10 @@ public class XmlRemoteAccountContext implements RemoteAccountContext {
 
 	public void setAvatar(byte[] avatar) throws RemoteException, IllegalActionException {
 		performer.perform(new SetAvatarAction(generator.getNextID(), avatar));
+	}
+	
+	public long getPlayerID() throws RemoteException, IllegalActionException {
+		return performer.perform(new GetPlayerIDAction(generator.getNextID()));
 	}
 
 }
