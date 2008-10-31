@@ -36,6 +36,7 @@ package models
 			serverConnection = new ServerConnection(messageCenter);
 			
 			connectionBox.endInit();
+			lobby.endInit();
 			
 			//Security.allowDomain("*");
 		}
@@ -58,14 +59,27 @@ package models
 			serverConnection.csSendLogin(userName, userPass);
 		}
 		
+		public static function getTables():void{
+			serverConnection.csGetTablesAction();
+		}
+		
 		public static function connectHandler(event:Event):void{
-        	Main.showServerMessage("connected!!!");
+        	if(Config.SHOW_CONNECT_DIALOG) Main.showServerMessage("connected!!!");
         	connectionBox.showDisconnectButton();
         	return;
         }
         
+        /**
+         * takes a whole list of tables and sends out requests for each table's info 
+         * @param tablesList
+         * 
+         */        
+        public static function receiveTablesList(tablesList:XML):void{
+        	
+        }
+        
         public static function disconnectHandler(event:Event):void{
-        	Main.showServerMessage("disconnected...");
+        	if(Config.SHOW_DISCONNECT_DIALOG) Main.showServerMessage("disconnected...");
         	connectionBox.showConnectButton();
         }
 		
