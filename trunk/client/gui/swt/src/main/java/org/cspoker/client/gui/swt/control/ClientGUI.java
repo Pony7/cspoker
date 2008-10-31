@@ -71,7 +71,7 @@ public class ClientGUI {
 		 */
 		public final static File EPT_CHIP_IMG_DIR = new File(Resources.CHIP_DIR, "ept");
 		/** Contains Chip images from PokerWikia (free!) */
-		public static final File FREE_CHIP_IMAGE_FILE = new File(Resources.CHIP_DIR, "Chips_Free.png");
+		public static final File FREE_CHIPS = new File(Resources.CHIP_DIR, "pokerWikia");
 		/**
 		 * Chip resource currently in use (that's where the images are retrieved
 		 * from during play)
@@ -183,13 +183,15 @@ public class ClientGUI {
 		betFormatter.setGroupingUsed(false);
 		File cardFile = new File(Preferences.userRoot().get(User.Prefs.CARDS,
 				Resources.FOUR_COLOR_DECK_IMG_FILE.getPath()));
-		File chipFile = new File(Preferences.userRoot().get(User.Prefs.CHIPS, Resources.FREE_CHIP_IMAGE_FILE.getPath()));
+		File chipFile = new File(Preferences.userRoot().get(User.Prefs.CHIPS, Resources.FREE_CHIPS.getPath()));
 		
 		try {
 			setActiveCardDeck(cardFile);
 			setActiveChipsStyle(chipFile);
 		} catch (FileNotFoundException e) {
-			logger.error("File initialization failed: ", e);
+			logger.error("File initialization failed, removing from preferences: ", e);
+			Preferences.userRoot().remove(User.Prefs.CHIPS);
+			Preferences.userRoot().remove(User.Prefs.CARDS);
 		}
 	}
 	
@@ -312,7 +314,9 @@ public class ClientGUI {
 				}
 			});
 		} catch (Exception e) {
-			logger.warn("Could not play sound", e);
+			// Commented out because it seems not to work on ubuntu and spams
+			// the stack trace
+			// logger.warn("Could not play sound", e);
 		} finally {
 			if (stream != null) {
 				try {

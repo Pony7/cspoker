@@ -207,10 +207,10 @@ public class SWTResourceManager {
 		return cardImg;
 	}
 	
-	private static Image getChipFromPNG(Chip chip, int size) {
-		if (resources.containsKey(chip.toString() + size))
-			return (Image) resources.get(chip.toString() + size);
-		Image chipPngImg = getImage(ClientGUI.Resources.FREE_CHIP_IMAGE_FILE);
+	private static Image getChipFromPNG(Chip chip) {
+		if (resources.containsKey(chip.toString()))
+			return (Image) resources.get(chip.toString());
+		Image chipPngImg = getImage(new File(ClientGUI.Resources.FREE_CHIPS, "Chips_Free.png"));
 		if (chipPngImg == null)
 			return null;
 		// Calculate drawing values
@@ -221,7 +221,7 @@ public class SWTResourceManager {
 		yLookUp = indexInSet / 5 + 1;
 		Image chipImg = getImageFromCollection(chipPngImg, new Point(5, 3), new Point(xLookUp, yLookUp));
 		
-		resources.put(chip.toString() + size, chipImg);
+		resources.put(chip.toString(), chipImg);
 		return chipImg;
 	}
 	
@@ -235,8 +235,10 @@ public class SWTResourceManager {
 	public static Image getChipImage(Chip chip, int size)
 			throws IOException {
 		Image chipImg = null;
-		if (ClientGUI.Resources.ACTIVE_CHIP_DIR.equals(ClientGUI.Resources.FREE_CHIP_IMAGE_FILE)) {
-			chipImg = SWTResourceManager.getChipFromPNG(chip, size);
+		if (ClientGUI.Resources.ACTIVE_CHIP_DIR.equals(ClientGUI.Resources.FREE_CHIPS)) {
+			if (chip != Chip.DEALER) {
+				chipImg = SWTResourceManager.getChipFromPNG(chip);
+			}
 		}
 		if (chipImg != null)
 			return chipImg;

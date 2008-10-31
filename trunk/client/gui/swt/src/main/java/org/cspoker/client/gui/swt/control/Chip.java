@@ -195,7 +195,12 @@ public class Chip
 	 *         {@link ClientGUI.Resources#ACTIVE_CHIP_DIR}
 	 */
 	public File getImageFile(int size) {
-		return new File(ClientGUI.Resources.ACTIVE_CHIP_DIR, size + "/" + fileId + ".bmp");
+		File chip = new File(ClientGUI.Resources.ACTIVE_CHIP_DIR, size + "/" + fileId + ".bmp");
+		if (!chip.exists()) {
+			chip = new File(ClientGUI.Resources.ACTIVE_CHIP_DIR, fileId + ".bmp");
+		}
+		
+		return chip;
 		
 	}
 	
@@ -205,8 +210,11 @@ public class Chip
 	 *         {@link ClientGUI.Resources#ACTIVE_CHIP_DIR}
 	 */
 	public File getMaskImageFile(int size) {
-		return new File(ClientGUI.Resources.ACTIVE_CHIP_DIR, size + "/" + fileId + ".a.bmp");
-		
+		File mask = new File(ClientGUI.Resources.ACTIVE_CHIP_DIR, size + "/" + fileId + ".a.bmp");
+		if (!mask.exists()) {
+			mask = new File(ClientGUI.Resources.ACTIVE_CHIP_DIR, fileId + ".bmp");
+		}
+		return mask;
 	}
 	
 	/**

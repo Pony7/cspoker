@@ -367,13 +367,13 @@ public class LobbyWindow
 							pokerWikiaChipsMenuItem = new MenuItem(chipsMenu, SWT.RADIO);
 							pokerWikiaChipsMenuItem.setText("Poker Wikia (Free) Chips");
 							pokerWikiaChipsMenuItem.setSelection(ClientGUI.Resources.ACTIVE_CHIP_DIR
-									.equals(ClientGUI.Resources.FREE_CHIP_IMAGE_FILE));
+									.equals(ClientGUI.Resources.FREE_CHIPS));
 							pokerWikiaChipsMenuItem.addSelectionListener(new SelectionAdapter() {
 								
 								@Override
 								public void widgetSelected(SelectionEvent evt) {
 									try {
-										ClientGUI.setActiveChipsStyle(ClientGUI.Resources.FREE_CHIP_IMAGE_FILE);
+										ClientGUI.setActiveChipsStyle(ClientGUI.Resources.FREE_CHIPS);
 									} catch (FileNotFoundException e) {
 										logger.error("Could not change chip style", e);
 									}

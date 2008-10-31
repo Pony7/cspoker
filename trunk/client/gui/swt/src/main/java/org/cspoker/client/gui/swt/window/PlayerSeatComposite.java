@@ -22,13 +22,12 @@ import org.apache.log4j.Logger;
 import org.cspoker.client.gui.swt.control.*;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.cards.Card;
-import org.cspoker.common.elements.player.Player;
 import org.cspoker.common.elements.player.SeatedPlayer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -97,6 +96,7 @@ public class PlayerSeatComposite
 	
 	private int numberOfHoleCards = 2;
 	private final long seatId;
+	private boolean active;
 	
 	// SWT fields
 	private Label playerName;
@@ -106,6 +106,8 @@ public class PlayerSeatComposite
 	
 	private final Runnable progressUpdater = new Runnable() {
 		
+		private final Color colorDefault = Display.getDefault().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND);
+		private final Color colorAlternative = Display.getDefault().getSystemColor(SWT.COLOR_WIDGET_HIGHLIGHT_SHADOW);
 		final int maximum = timeLeftBar.getMaximum();
 		
 		/**
@@ -114,19 +116,24 @@ public class PlayerSeatComposite
 		public void run() {
 			for (final int[] i = new int[1]; i[0] <= maximum; i[0]++) {
 				try {
-					Thread.sleep(500);
+					Thread.sleep(1000);
 				} catch (InterruptedException e) {
+					playerName.setBackground(colorDefault);
+					playerName.update();
 					return;
 				}
-				if (Display.getDefault().isDisposed())
+				if (getDisplay().isDisposed())
 					return;
-				Display.getDefault().asyncExec(new Runnable() {
+				getDisplay().syncExec(new Runnable() {
 					
 					public void run() {
 						// TODO Blink here (border?!)...
 						if (timeLeftBar.isDisposed() || !timeLeftBar.isEnabled())
 							return;
 						timeLeftBar.setSelection(i[0]);
+						Color color = i[0] % 2 == 0 ? colorDefault : colorAlternative;
+						playerName.setBackground(color);
+						playerName.update();
 					}
 				});
 			}
@@ -172,73 +179,36 @@ public class PlayerSeatComposite
 	 *         location via {@link #resetBetChipsDisplayArea()}
 	 */
 	public Rectangle getDealerChipLocation() {
-		if (dealerChipLocation != null) {
-			return dealerChipLocation;
-		}
 		int size = Math.min(Chip.MAX_IMG_SIZE, getParent().getSize().x / 200);
 		Image dealerChip = Chip.DEALER.getImage(size);
-		Rectangle betChipsArea = getInitialChipDrawOffset();
+		Rectangle pcLocation = getBounds();
+		int x = 0;
+		int y = 0;
+		int width = dealerChip.getImageData().width;
+		int height = dealerChip.getImageData().height;
 		dealerChipLocation = new Rectangle(0, 0, dealerChip.getImageData().width, dealerChip.getImageData().height);
 		switch ((int) seatId) {
 			case 0:
-			case 1:
-				dealerChipLocation.x = betChipsArea.x + (betChipsArea.width - dealerChip.getImageData().width) / 2;
-				dealerChipLocation.y = betChipsArea.y;
-				return dealerChipLocation;
-			case 3:
-			case 4:
-				dealerChipLocation.x = betChipsArea.x + (betChipsArea.width - dealerChip.getImageData().width) / 2;
-				dealerChipLocation.y = betChipsArea.y + betChipsArea.height - dealerChip.getImageData().height;
-				return dealerChipLocation;
-			case 2:
-				dealerChipLocation.x = betChipsArea.x + betChipsArea.width - dealerChip.getImageData().width;
-				dealerChipLocation.y = betChipsArea.y + (betChipsArea.height - dealerChip.getImageData().height) / 2;
-				return dealerChipLocation;
 			case 5:
-				dealerChipLocation.x = betChipsArea.x;
-				dealerChipLocation.y = betChipsArea.y + (betChipsArea.height - dealerChip.getImageData().height) / 2;
-				return dealerChipLocation;
-				
-		}
-		return dealerChipLocation;
-	}
-	
-	/**
-	 * A utility method to determine where to draw the bet chips on the table
-	 * depending on the location of the composite in the grid
-	 * <p>
-	 * TODO Holy meatballs what a hack :-), Make this generic for other than
-	 * six-handed tables
-	 * 
-	 * @return A {@link Point} describing the preferred location to draw the
-	 *         chips at
-	 */
-	public Rectangle getInitialChipDrawOffset() {
-		int x = getLocation().x;
-		int y = getLocation().y;
-		Rectangle communityCardsLocation = getParent().getCommunityCardsComposite().getBounds();
-		switch ((int) seatId) {
-			case 0:
+				x = pcLocation.x + pcLocation.width;
+				y = pcLocation.y + pcLocation.height;
+				break;
 			case 1:
-				return new Rectangle(x, y + getBounds().height, getBounds().width, communityCardsLocation.y - y
-						- getBounds().height);
-				// Attention: Seat id 5 is on the left, 2 on the right (clock
-				// wise seat ids)
-			case 5:
-				return new Rectangle(x + getBounds().width, communityCardsLocation.y, communityCardsLocation.x - x
-						+ getBounds().width, communityCardsLocation.height);
-				
+				x = pcLocation.x - width;
+				y = pcLocation.y + pcLocation.height;
+				break;
 			case 2:
-				return new Rectangle(communityCardsLocation.x + communityCardsLocation.width, communityCardsLocation.y,
-						x - communityCardsLocation.x - communityCardsLocation.width, communityCardsLocation.height);
-			case 4:
 			case 3:
-				return new Rectangle(x, communityCardsLocation.y + communityCardsLocation.height, getBounds().width, y
-						- communityCardsLocation.y - communityCardsLocation.height);
-			default:
-				throw new IllegalArgumentException("Unsupported seat id for computing bet chips area: " + seatId);
+				x = pcLocation.x - width;
+				y = pcLocation.y;
+				break;
+			case 4:
+				x = pcLocation.x + pcLocation.width;
+				y = pcLocation.y;
+				break;
+			
 		}
-		
+		return new Rectangle(x, y, width, height);
 	}
 	
 	/**
@@ -270,7 +240,7 @@ public class PlayerSeatComposite
 			player1NameLData.minimumWidth = 55;
 			player1NameLData.grabExcessHorizontalSpace = true;
 			playerName.setLayoutData(player1NameLData);
-			playerName.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_INFO_BACKGROUND));
+			playerName.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
 		}
 		{
 			playerStack = new Label(this, SWT.SHADOW_NONE | SWT.CENTER | SWT.BORDER);
@@ -279,7 +249,7 @@ public class PlayerSeatComposite
 			player1StackLData.grabExcessHorizontalSpace = true;
 			player1StackLData.minimumWidth = 55;
 			playerStack.setLayoutData(player1StackLData);
-			playerStack.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_INFO_BACKGROUND));
+			playerStack.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
 		}
 		{
 			GridData timeLeftBarLData = new GridData(SWT.DEFAULT, SWT.DEFAULT);
@@ -361,19 +331,15 @@ public class PlayerSeatComposite
 		});
 	}
 	
-	public void moveDealerButton(Player nextDealer) {
-		// TODO
-		throw new UnsupportedOperationException("Not yet implemented");
-	}
-	
 	/**
 	 * Resets and starts the progress bar above the player's name, indicating
 	 * that it is this player's turn to act.
 	 */
-	public void startTimer() {
+	private void startTimer() {
 		timeLeftBar.setEnabled(true);
 		timeLeftBar.setVisible(true);
 		timeLeftBar.setSelection(0);
+		timeLeftBar.setMaximum(30);
 		// Update Progress Bar
 		timerAction.cancel(true);
 		timerAction = executor.submit(progressUpdater);
@@ -382,10 +348,21 @@ public class PlayerSeatComposite
 	/**
 	 * Stops the Progress Bar timer (if it is running)
 	 */
-	public void stopTimer() {
+	private void stopTimer() {
 		timerAction.cancel(true);
+		playerName.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
+		playerName.update();
 		timeLeftBar.setEnabled(false);
 		timeLeftBar.setVisible(false);
+	}
+	
+	public void setActive(boolean active) {
+		this.active = active;
+		if (active) {
+			startTimer();
+		} else {
+			stopTimer();
+		}
 	}
 	
 	/**
@@ -437,5 +414,9 @@ public class PlayerSeatComposite
 	
 	public void setChipsArea(Canvas chipsArea) {
 		this.chipsArea = chipsArea;
+	}
+	
+	public boolean isActive() {
+		return active;
 	}
 }
