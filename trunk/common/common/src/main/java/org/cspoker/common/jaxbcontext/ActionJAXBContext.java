@@ -22,6 +22,7 @@ import org.apache.log4j.Logger;
 import org.cspoker.common.api.account.action.ChangePasswordAction;
 import org.cspoker.common.api.account.action.CreateAccountAction;
 import org.cspoker.common.api.account.action.GetAvatarAction;
+import org.cspoker.common.api.account.action.GetPlayerIDAction;
 import org.cspoker.common.api.account.action.SetAvatarAction;
 import org.cspoker.common.api.cashier.action.GetMoneyAmountAction;
 import org.cspoker.common.api.cashier.action.RequestMoneyAction;
@@ -63,6 +64,7 @@ public class ActionJAXBContext {
 		return new Class<?>[] { 
 				//account
 				ChangePasswordAction.class, CreateAccountAction.class, GetAvatarAction.class, SetAvatarAction.class,
+				GetPlayerIDAction.class,
 				//cashier
 				GetMoneyAmountAction.class, RequestMoneyAction.class,
 				//chat

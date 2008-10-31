@@ -57,8 +57,11 @@ public class AccountContextImpl implements ExtendedAccountContext{
 	}
 
 	public boolean hasPassword(String passwordHash) {
-		//TODO
-		return false;
+		return authenticator.hasPassword(player.getName(), passwordHash);
+	}
+	
+	public long getPlayerID() {
+		return player.getId().getId();
 	}
 
 }

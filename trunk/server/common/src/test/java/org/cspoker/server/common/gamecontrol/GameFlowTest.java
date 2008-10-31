@@ -51,8 +51,8 @@ import org.cspoker.server.common.gamecontrol.rounds.FlopRound;
 import org.cspoker.server.common.gamecontrol.rounds.PreFlopRound;
 import org.cspoker.server.common.gamecontrol.rounds.TurnRound;
 import org.cspoker.server.common.gamecontrol.rounds.WaitingRound;
-import org.cspoker.server.common.player.MutableSeatedPlayer;
 import org.cspoker.server.common.player.MutablePlayer;
+import org.cspoker.server.common.player.MutableSeatedPlayer;
 
 public class GameFlowTest extends TestCase {
 
@@ -101,6 +101,10 @@ public class GameFlowTest extends TestCase {
 
 			public void setAvatar(byte[] avatar) {
 
+			}
+
+			public long getPlayerID() {
+				return 0;
 			}
 
 		});

@@ -13,39 +13,36 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.common.api.account.context;
+package org.cspoker.common.api.account.action;
 
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlRootElement;
 
-public class ForwardingAccountContext implements AccountContext{
+import org.cspoker.common.api.account.context.AccountContext;
 
-	private AccountContext accountContext;
+@XmlRootElement
+public class GetPlayerIDAction extends AccountAction<Long> {
 
-	public ForwardingAccountContext(AccountContext accountContext) {
-		this.accountContext  = accountContext;
-	}
-
-	public void changePassword(String passwordHash) {
-		accountContext.changePassword(passwordHash);
-	}
+	private static final long serialVersionUID = 3460864307190712325L;
 	
-	public boolean hasPassword(String passwordHash) {
-		return accountContext.hasPassword(passwordHash);
+	@XmlAttribute
+	private long playerId;
+	
+	public GetPlayerIDAction(long id) {
+		super(id);
 	}
 
-	public void createAccount(String username, String passwordHash) {
-		accountContext.createAccount(username, passwordHash);
+	protected GetPlayerIDAction() {
+		// no op
 	}
 
-	public byte[] getAvatar(long playerId) {
-		return accountContext.getAvatar(playerId);
+	public long getPlayerId() {
+		return playerId;
 	}
 
-	public void setAvatar(byte[] avatar) {
-		accountContext.setAvatar(avatar);
-	}
-
-	public long getPlayerID() {
+	@Override
+	public Long perform(AccountContext accountContext) {
 		return accountContext.getPlayerID();
 	}
-	
+
 }

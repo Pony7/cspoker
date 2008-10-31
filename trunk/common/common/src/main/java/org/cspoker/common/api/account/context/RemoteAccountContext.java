@@ -32,4 +32,6 @@ public interface RemoteAccountContext extends Remote{
 	
 	void setAvatar(byte[] avatar) throws RemoteException, IllegalActionException;
 	
+	long getPlayerID() throws RemoteException, IllegalActionException;
+	
 }

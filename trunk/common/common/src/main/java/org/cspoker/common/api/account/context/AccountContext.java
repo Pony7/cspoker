@@ -15,6 +15,10 @@
  */
 package org.cspoker.common.api.account.context;
 
+import java.rmi.RemoteException;
+
+import org.cspoker.common.api.shared.exception.IllegalActionException;
+
 public interface AccountContext extends RemoteAccountContext{
 
 	void changePassword(String passwordHash);
@@ -26,4 +30,6 @@ public interface AccountContext extends RemoteAccountContext{
 	byte[] getAvatar(long playerId);
 	
 	void setAvatar(byte[] avatar);
+	
+	long getPlayerID();
 }
