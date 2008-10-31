@@ -76,7 +76,6 @@ public class PlayerSeatComposite
 				user.sitIn(seatId, amount);
 				// Update the button accordingly with which the user can sit
 				// in and out
-				getParent().getParent().getUserInputComposite().generalActionHolder.setVisible(true);
 				Button sitInOutButton = getParent().getParent().getUserInputComposite().sitInOutButton;
 				sitInOutButton.setText("Sit Out");
 				sitInOutButton.setSelection(true);
@@ -96,18 +95,18 @@ public class PlayerSeatComposite
 	
 	private int numberOfHoleCards = 2;
 	private final long seatId;
+	/** Indicates whether this player is currently to act */
 	private boolean active;
 	
 	// SWT fields
 	private Label playerName;
-	private Rectangle dealerChipLocation;
 	
 	private final ProgressBar timeLeftBar = new ProgressBar(this, SWT.SMOOTH);
 	
 	private final Runnable progressUpdater = new Runnable() {
 		
 		private final Color colorDefault = Display.getDefault().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND);
-		private final Color colorAlternative = Display.getDefault().getSystemColor(SWT.COLOR_WIDGET_HIGHLIGHT_SHADOW);
+		private final Color colorAlternative = Display.getDefault().getSystemColor(SWT.COLOR_DARK_YELLOW);
 		final int maximum = timeLeftBar.getMaximum();
 		
 		/**
@@ -158,7 +157,7 @@ public class PlayerSeatComposite
 		player = MutableSeatedPlayer.UNOCCUPIED;
 		this.seatId = seatId;
 		initGUI();
-		reset();
+		updatePlayerInfo();
 		
 	}
 	
@@ -186,7 +185,6 @@ public class PlayerSeatComposite
 		int y = 0;
 		int width = dealerChip.getImageData().width;
 		int height = dealerChip.getImageData().height;
-		dealerChipLocation = new Rectangle(0, 0, dealerChip.getImageData().width, dealerChip.getImageData().height);
 		switch ((int) seatId) {
 			case 0:
 			case 5:
@@ -315,7 +313,7 @@ public class PlayerSeatComposite
 		final String name = player.getName();
 		playerName.setText(action);
 		playerName.setForeground(Display.getDefault().getSystemColor(SWT.COLOR_BLUE));
-		getDisplay().timerExec(2000, new Runnable() {
+		getDisplay().timerExec(3000, new Runnable() {
 			
 			/**
 			 * @see java.lang.Runnable#run()
@@ -375,8 +373,11 @@ public class PlayerSeatComposite
 		// UserSeatedPlayer
 		if (player == MutableSeatedPlayer.UNOCCUPIED) {
 			UserSeatedPlayer user = getParent().getParent().getUser();
-			player = detailedPlayer.equals(user.getMemento()) ? user : new MutableSeatedPlayer(detailedPlayer,
-					gameState);
+			
+			// TODO This is the only time we need to compare on the name (since
+			// I dont have my own correct id yet)
+			player = detailedPlayer.getName().equalsIgnoreCase(user.getMemento().getName()) ? user
+					: new MutableSeatedPlayer(detailedPlayer, gameState);
 		}
 		playerName.setForeground(Display.getDefault().getSystemColor(SWT.DEFAULT));
 		playerName.setVisible(true);
@@ -390,8 +391,13 @@ public class PlayerSeatComposite
 	 * Reset this {@link PlayerSeatComposite}, indicating an empty seat which
 	 * may be occupied by clicking on it
 	 */
-	public void reset() {
-		playerName.setText(player.getName());
+	public void updatePlayerInfo() {
+		String displayedName = player.getName();
+		if (player.isSittingOut()) {
+			displayedName = displayedName.concat(" (Sitting Out)");
+		}
+		playerName.setText(displayedName);
+		
 		holeCardsComposite.redraw();
 		timerAction.cancel(true);
 	}

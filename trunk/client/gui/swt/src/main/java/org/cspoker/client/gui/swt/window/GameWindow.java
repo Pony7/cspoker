@@ -212,7 +212,9 @@ public class GameWindow
 	 * @see org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener#onLeaveGame(org.cspoker.common.api.lobby.holdemtable.event.LeaveGameEvent)
 	 */
 	public void onSitOut(SitOutEvent leaveGameEvent) {
-		getPlayerSeatComposite(leaveGameEvent.getPlayer()).reset();
+		PlayerSeatComposite psc = getPlayerSeatComposite(leaveGameEvent.getPlayer());
+		psc.getPlayer().setSittingOut(true);
+		psc.updatePlayerInfo();
 		userInputComposite.showDealerMessage(leaveGameEvent);
 		tableComposite.updateTableGraphics();
 		
@@ -355,6 +357,8 @@ public class GameWindow
 	public void onSitIn(SitInEvent sitInEvent) {
 		if (user.getName().equalsIgnoreCase(sitInEvent.getPlayer().getName())) {
 			user.setPlayer(sitInEvent.getPlayer());
+			userInputComposite.generalActionHolder.setVisible(true);
+			
 		}
 		tableComposite.findPlayerSeatCompositeBySeatId(sitInEvent.getPlayer().getSeatId()).occupy(
 				sitInEvent.getPlayer());
@@ -388,6 +392,7 @@ public class GameWindow
 		for (PlayerSeatComposite psc : tableComposite.getPlayerSeatComposites(true)) {
 			Set<Card> noCards = Collections.emptySet();
 			psc.setHoleCards(noCards);
+			psc.setActive(false);
 		}
 		userInputComposite.showDealerMessage(winnerEvent);
 		redraw();

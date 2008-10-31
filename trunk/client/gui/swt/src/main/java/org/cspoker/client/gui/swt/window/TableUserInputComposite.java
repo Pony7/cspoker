@@ -186,6 +186,7 @@ public class TableUserInputComposite
 			gameActionGroup.setLayout(group2Layout);
 			GridData gameActionGroupLData = new GridData(SWT.CENTER, SWT.CENTER, true, true);
 			gameActionGroupLData.heightHint = 150;
+			gameActionGroupLData.widthHint = 300;
 			gameActionGroupLData.minimumHeight = 80;
 			gameActionGroupLData.minimumWidth = 200;
 			gameActionGroup.setLayoutData(gameActionGroupLData);
@@ -194,12 +195,15 @@ public class TableUserInputComposite
 				manualEnterBetGroup = new Composite(gameActionGroup, SWT.NONE | ClientGUI.COMPOSITE_BORDER_STYLE);
 				GridLayout manualEnterBetGroupLayout = new GridLayout(3, false);
 				manualEnterBetGroup.setLayout(manualEnterBetGroupLayout);
-				manualEnterBetGroup.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true));
+				GridData manualEnterBetGroupLData = new GridData(SWT.FILL, SWT.CENTER, true, true);
+				manualEnterBetGroupLData.minimumHeight = 40;
+				manualEnterBetGroupLData.minimumWidth = gameActionGroupLData.minimumWidth;
+				manualEnterBetGroup.setLayoutData(manualEnterBetGroupLData);
 				{
 					betSlider = new Slider(manualEnterBetGroup, SWT.NONE);
 					betSlider.setIncrement(gameState.getTableMemento().getGameProperty().getSmallBlind());
 					betSlider.setPageIncrement(betSlider.getIncrement() * 5);
-					betSlider.setLayoutData(new GridData(150, 20));
+					betSlider.setLayoutData(new GridData(100, 20));
 					betSlider.addSelectionListener(new SelectionAdapter() {
 						
 						@Override
@@ -217,7 +221,6 @@ public class TableUserInputComposite
 						
 						@Override
 						public void mouseDown(MouseEvent evt) {
-							System.err.println("Got pot raise: " + user.getPotRaiseAmount());
 							setNewBetRaiseAmount(user.getPotRaiseAmount());
 						}
 					});
@@ -254,9 +257,10 @@ public class TableUserInputComposite
 				foldCallRaiseLayout.spacing = 5;
 				foldCallRaiseButtonGroup.setLayout(foldCallRaiseLayout);
 				GridData foldCallRaiseLData = new GridData(SWT.FILL, SWT.CENTER, true, true);
-				foldCallRaiseLData.minimumHeight = 20;
+				foldCallRaiseLData.minimumHeight = 30;
+				foldCallRaiseLData.minimumWidth = 200;
 				foldCallRaiseLData.heightHint = 40;
-				foldCallRaiseLData.widthHint = 200;
+				foldCallRaiseLData.widthHint = 250;
 				foldCallRaiseButtonGroup.setLayoutData(foldCallRaiseLData);
 				{
 					foldButton = new Button(foldCallRaiseButtonGroup, SWT.PUSH | SWT.CENTER);
@@ -369,18 +373,13 @@ public class TableUserInputComposite
 	}
 	
 	private void updateCheckCallButton(boolean allIn) {
-		String text = (user.getToCallAmount() == 0) ? "Check" : "Call "
-				+ ClientGUI.formatBet(Math.min(user.getStackValue(), user.getToCallAmount()));
+		String amountAsString = ClientGUI.formatBet(Math.min(user.getStackValue(), user.getToCallAmount()));
+		String text = (user.getToCallAmount() == 0) ? "Check" : "Call " + amountAsString;
 		checkCallButton.setText(text);
 		if (allIn) {
-			markAllIn(checkCallButton);
+			checkCallButton.setText("All In (" + amountAsString + ")");
 		}
 		
-	}
-	
-	private void markAllIn(Button button) {
-		button.setText(button.getText() + " (All In)");
-		button.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_RED));
 	}
 	
 	/**
@@ -442,11 +441,13 @@ public class TableUserInputComposite
 	void updateBetRaiseButton() {
 		int totalBetRaiseAmount = betRaiseAmount + Chip.getValue(gameState.getCurrentBetPile());
 		boolean isAllIn = (user.getToCallAmount() + betRaiseAmount == user.getStackValue());
+		String amountAsString = ClientGUI.formatBet(totalBetRaiseAmount);
 		String text = (user.getBetChipsValue() > 0) ? "Raise to " : "Bet ";
-		betRaiseButton.setText(text + ClientGUI.formatBet(totalBetRaiseAmount));
+		betRaiseButton.setText(text + amountAsString);
 		if (isAllIn) {
-			markAllIn(betRaiseButton);
+			betRaiseButton.setText("All In (" + amountAsString + ")");
 		}
+		gameActionGroup.layout(true);
 	}
 	
 	/**
