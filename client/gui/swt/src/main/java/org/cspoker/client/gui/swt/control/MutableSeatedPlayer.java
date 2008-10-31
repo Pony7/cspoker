@@ -34,6 +34,7 @@ public class MutableSeatedPlayer {
 	private int stackValue;
 	private int betChipsValue;
 	private boolean dealer;
+	private boolean sittingOut;
 	private List<NavigableMap<Chip, Integer>> currentBetPile = new ArrayList<NavigableMap<Chip, Integer>>();
 	
 	protected GameState gameState;
@@ -117,5 +118,13 @@ public class MutableSeatedPlayer {
 	
 	public SeatedPlayer getMemento() {
 		return wrappedPlayer;
+	}
+	
+	public boolean isSittingOut() {
+		return sittingOut;
+	}
+	
+	public void setSittingOut(boolean sittingOut) {
+		this.sittingOut = sittingOut;
 	}
 }
