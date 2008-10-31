@@ -22,6 +22,14 @@ import org.cspoker.client.xml.common.XmlActionSerializer;
 
 public class RemoteSocketServer extends RemoteXmlServer {
 
+	public RemoteSocketServer() {
+		this("localhost");
+	}
+	
+	public RemoteSocketServer(String server) {
+		this(server, 8081);
+	}
+	
 	public RemoteSocketServer(String server, int port) {
 		super(server,port);
 	}

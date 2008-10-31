@@ -87,15 +87,15 @@ public class Lobby {
 	}
 	
 	public void removeTable(long tableId) {
-		PokerTable table = tables.get(tableId);
+		PokerTable table = tables.get(new TableId(tableId));
 		
 		if (table != null && table.isEmpty()) {
-			tables.remove(tableId);
-		}
-		Table tableInfo = table.getShortTableInformation();
-		table.terminate();
-		for (LobbyListener listener : lobbyListeners) {
-			listener.onTableRemoved(new TableRemovedEvent(tableInfo));
+			tables.remove(new TableId(tableId));
+			Table tableInfo = table.getShortTableInformation();
+			table.terminate();
+			for (LobbyListener listener : lobbyListeners) {
+				listener.onTableRemoved(new TableRemovedEvent(tableInfo));
+			}
 		}
 		
 		// TODO Concurrency issue: after removal joining table.

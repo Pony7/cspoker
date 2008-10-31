@@ -61,27 +61,27 @@ public class Player
 	public String toString() {
 		return getName() + " (#" + getId() + ")";
 	}
-	
-	/**
-	 * Compares on the name (not on the id!) The name should be unique across
-	 * the server
-	 * 
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
-	@Override
-	public boolean equals(Object obj) {
-		if (!(obj instanceof Player))
-			return false;
-		return ((Player) obj).getName().equalsIgnoreCase(getName());
-	}
-	
-	/**
-	 * Overridden because equals() is overridden, use id as hashCode
-	 * 
-	 * @see java.lang.Object#hashCode()
-	 */
+
 	@Override
 	public int hashCode() {
-		return (int) getId();
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + (int) (id ^ (id >>> 32));
+		return result;
 	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (!(obj instanceof Player))
+			return false;
+		Player other = (Player) obj;
+		if (id != other.id)
+			return false;
+		return true;
+	}
+	
 }

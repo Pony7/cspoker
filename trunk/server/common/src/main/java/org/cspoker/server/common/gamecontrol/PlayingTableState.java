@@ -75,7 +75,8 @@ public class PlayingTableState
 	 */
 	private Round round;
 	
-	private static final DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd - HH:mm:ss (z)");
+	//DateFormat class is not thread safe.
+	private static final String dateFormat = "yyyy/MM/dd - HH:mm:ss (z)";
 	
 	/***************************************************************************
 	 * Constructor
@@ -105,7 +106,7 @@ public class PlayingTableState
 		PlayingTableState.logger.info(getGame().getBettingRules().toString() + " " + "($"
 				+ gameMediator.getTableConfiguration().getSmallBlind() + "/"
 				+ gameMediator.getTableConfiguration().getBigBlind() + ") - "
-				+ PlayingTableState.dateFormat.format(new Date()));
+				+ (new SimpleDateFormat(PlayingTableState.dateFormat)).format(new Date()));
 		
 		List<GameSeatedPlayer> players = game.getCurrentDealPlayers();
 		for (GameSeatedPlayer player : players) {
@@ -331,7 +332,9 @@ public class PlayingTableState
 		
 		try {
 			round.foldAction(player);
-		} catch (IllegalActionException e) {}
+		} catch (IllegalActionException e) {
+			// no op
+		}
 		SeatedPlayer immutablePlayer = player.getMemento();
 		try {
 			game.sitOut(player);

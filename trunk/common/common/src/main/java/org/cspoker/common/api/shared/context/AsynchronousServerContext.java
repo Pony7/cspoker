@@ -30,7 +30,7 @@ import org.cspoker.common.api.lobby.listener.LobbyListener;
 @Immutable
 public class AsynchronousServerContext extends ForwardingServerContext {
 
-	private Executor executor;
+	final private Executor executor;
 
 	public AsynchronousServerContext(Executor executor, ServerContext serverContext) {
 		super(serverContext);

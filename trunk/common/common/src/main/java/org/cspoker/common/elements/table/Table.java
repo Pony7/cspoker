@@ -24,10 +24,10 @@ public class Table implements Serializable, Comparable<Table> {
 	private static final long serialVersionUID = 527893735230918726L;
 
 	@XmlAttribute
-	private long id;
+	protected long id;
 
 	@XmlAttribute
-	private String name;
+	protected String name;
 	
 	public Table(long id, String name){
 		this.id = id;
@@ -63,13 +63,14 @@ public class Table implements Serializable, Comparable<Table> {
 	public String toString(){
 		return getName()+" (#"+getId()+")";
 	}
+	
+	
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + (int) (id ^ (id >>> 32));
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		return result;
 	}
 
@@ -79,15 +80,10 @@ public class Table implements Serializable, Comparable<Table> {
 			return true;
 		if (obj == null)
 			return false;
-		if (getClass() != obj.getClass())
+		if (!(obj instanceof Table))
 			return false;
-		final Table other = (Table) obj;
+		Table other = (Table) obj;
 		if (id != other.id)
-			return false;
-		if (name == null) {
-			if (other.name != null)
-				return false;
-		} else if (!name.equals(other.name))
 			return false;
 		return true;
 	}

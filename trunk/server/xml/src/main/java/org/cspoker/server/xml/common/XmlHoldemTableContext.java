@@ -15,6 +15,8 @@
  */
 package org.cspoker.server.xml.common;
 
+import net.jcip.annotations.NotThreadSafe;
+
 import org.cspoker.common.api.lobby.holdemtable.context.ForwardingHoldemTableContext;
 import org.cspoker.common.api.lobby.holdemtable.context.HoldemTableContext;
 import org.cspoker.common.api.lobby.holdemtable.context.StaticHoldemTableContext;
@@ -22,6 +24,7 @@ import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.HoldemPlaye
 import org.cspoker.common.api.lobby.holdemtable.listener.UniversalTableListener;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 
+@NotThreadSafe
 public class XmlHoldemTableContext extends ForwardingHoldemTableContext
 implements StaticHoldemTableContext {
 

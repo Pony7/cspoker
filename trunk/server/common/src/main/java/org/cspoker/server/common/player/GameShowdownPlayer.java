@@ -98,27 +98,35 @@ public class GameShowdownPlayer implements Comparable<GameShowdownPlayer> {
 		return o.getBestHand().compareTo(getBestHand());
 	}
 
-	/**
-	 * 2 showdown players are equal if both their hands have the same value.
-	 * 
-	 */
-
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null) {
-			return false;
-		}
-		if (getClass() != obj.getClass()) {
-			return false;
-		}
-		final GameShowdownPlayer other = (GameShowdownPlayer) obj;
-		if (bestHand == null) {
-			return other.bestHand == null;
-		} else {
-			return getBestHand().equals(other.getBestHand());
-		}
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((getBestHand() == null) ? 0 : getBestHand().hashCode());
+		return result;
 	}
+
+	/**
+	 * 2 Players are equal when they have the same best hand.
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		GameShowdownPlayer other = (GameShowdownPlayer) obj;
+		if (bestHand == null) {
+			if (other.bestHand != null)
+				return false;
+		} else if (!getBestHand().equals(other.getBestHand()))
+			return false;
+		return true;
+	}
+	
+	
 
 }

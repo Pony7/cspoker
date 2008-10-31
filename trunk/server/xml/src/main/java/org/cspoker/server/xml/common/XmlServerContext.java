@@ -17,6 +17,8 @@ package org.cspoker.server.xml.common;
 
 import java.util.HashMap;
 
+import net.jcip.annotations.NotThreadSafe;
+
 import org.cspoker.common.api.chat.context.ChatContext;
 import org.cspoker.common.api.chat.listener.UniversalTableChatListener;
 import org.cspoker.common.api.lobby.context.StaticLobbyContext;
@@ -25,6 +27,7 @@ import org.cspoker.common.api.shared.context.ServerContext;
 import org.cspoker.common.api.shared.context.StaticServerContext;
 import org.cspoker.common.api.shared.listener.UniversalServerListener;
 
+@NotThreadSafe
 public class XmlServerContext extends ForwardingServerContext implements StaticServerContext {
 
 	private UniversalServerListener listener;
@@ -65,7 +68,7 @@ public class XmlServerContext extends ForwardingServerContext implements StaticS
 	public ChatContext getTableChatContext(long tableID) {
 		synchronized (tableChatLock) {
 			ChatContext chatContext;
-			if (tableChatContexts.containsKey(tableID)) {
+			if (!tableChatContexts.containsKey(tableID)) {
 				chatContext = super.getTableChatContext(
 						new UniversalTableChatListener(listener, tableID),
 						tableID);

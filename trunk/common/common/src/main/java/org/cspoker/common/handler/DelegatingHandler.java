@@ -50,7 +50,7 @@ public abstract class DelegatingHandler extends DefaultHandler {
 	public void characters(char[] ch, int start, int length)
 			throws SAXException {
 		if (handler != null) {
-			characters(ch, start, length);
+			handler.characters(ch, start, length);
 		}
 	}
 }
