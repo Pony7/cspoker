@@ -22,7 +22,7 @@ import java.util.List;
 
 import org.cspoker.server.common.elements.chips.Chips;
 import org.cspoker.server.common.elements.chips.IllegalValueException;
-import org.cspoker.server.common.player.GameSeatedPlayer;
+import org.cspoker.server.common.player.MutableSeatedPlayer;
 
 /**
  * The pot contains both a list of players and the chips that should be divided
@@ -41,7 +41,7 @@ public class GamePot {
 	/**
 	 * All the players that can take a share of this pot.
 	 */
-	private final List<GameSeatedPlayer> players;
+	private final List<MutableSeatedPlayer> players;
 
 	/**
 	 * The pile of chips in this pot.
@@ -59,7 +59,7 @@ public class GamePot {
 	 */
 	public GamePot() {
 		chips = new Chips();
-		players = new ArrayList<GameSeatedPlayer>();
+		players = new ArrayList<MutableSeatedPlayer>();
 	}
 
 	/**
@@ -69,11 +69,11 @@ public class GamePot {
 		return chips;
 	}
 
-	public List<GameSeatedPlayer> getPlayers() {
+	public List<MutableSeatedPlayer> getPlayers() {
 		return Collections.unmodifiableList(players);
 	}
 
-	public void addShowdownPlayer(GameSeatedPlayer player) {
+	public void addShowdownPlayer(MutableSeatedPlayer player) {
 		players.add(player);
 	}
 
@@ -99,7 +99,7 @@ public class GamePot {
 
 	public String toString() {
 		String toReturn = getValue() + " chips in this pot. Showdown players: ";
-		for (GameSeatedPlayer player : players) {
+		for (MutableSeatedPlayer player : players) {
 			toReturn += player.getName() + " ";
 		}
 		return toReturn;

@@ -16,7 +16,7 @@
 package org.cspoker.server.common.chat.room;
 
 import org.cspoker.server.common.gamecontrol.PokerTable;
-import org.cspoker.server.common.player.ServerPlayer;
+import org.cspoker.server.common.player.MutablePlayer;
 
 public class TableChatRoom extends ChatRoom {
 
@@ -34,7 +34,7 @@ public class TableChatRoom extends ChatRoom {
 		return table;
 	}
 	@Override
-	public boolean canSubscribeListener(ServerPlayer player) {
+	public boolean canSubscribeListener(MutablePlayer player) {
 		//check if the player is actually seated at the table of this chat room
 		return table.hasAsJoinedPlayer(player);
 	}

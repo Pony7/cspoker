@@ -31,7 +31,7 @@ import org.cspoker.server.common.elements.table.SeatTakenException;
 import org.cspoker.server.common.elements.table.ServerTable;
 import org.cspoker.server.common.gamecontrol.rules.BettingRules;
 import org.cspoker.server.common.gamecontrol.rules.NoLimit;
-import org.cspoker.server.common.player.GameSeatedPlayer;
+import org.cspoker.server.common.player.MutableSeatedPlayer;
 import org.cspoker.server.common.util.LoopingList;
 
 /**
@@ -62,12 +62,12 @@ public class Game {
 	/**
 	 * This looping list contains the active players of this game.
 	 */
-	private LoopingList<GameSeatedPlayer> currentHandPlayers;
+	private LoopingList<MutableSeatedPlayer> currentHandPlayers;
 
 	/**
 	 * This looping list contains the initial players of this game.
 	 */
-	private LoopingList<GameSeatedPlayer> initialCurrentHandPlayers;
+	private LoopingList<MutableSeatedPlayer> initialCurrentHandPlayers;
 
 	/**
 	 * This variable contains the deck of cards of this game.
@@ -87,12 +87,12 @@ public class Game {
 	/**
 	 * This variable contains the dealer of this game.
 	 */
-	private GameSeatedPlayer dealer;
+	private MutableSeatedPlayer dealer;
 
 	/**
 	 * This variable contains the firstToActPlayer of this game.
 	 */
-	private GameSeatedPlayer firstToActPlayer;
+	private MutableSeatedPlayer firstToActPlayer;
 
 	/**
 	 * The last event player is the last player that has done significant
@@ -104,20 +104,20 @@ public class Game {
 	 * in every next round, it is the player on to the left side of the player
 	 * with the dealer-button.
 	 */
-	private GameSeatedPlayer lastActionPlayer;
+	private MutableSeatedPlayer lastActionPlayer;
 
 	/**
 	 * This variable contains the next dealer of this game.
 	 */
-	private GameSeatedPlayer nextDealer;
+	private MutableSeatedPlayer nextDealer;
 
 	private BettingRules bettingRules;
 
-	public GameSeatedPlayer getLastActionPlayer() {
+	public MutableSeatedPlayer getLastActionPlayer() {
 		return lastActionPlayer;
 	}
 
-	public void setLastActionPlayer(GameSeatedPlayer player) {
+	public void setLastActionPlayer(MutableSeatedPlayer player) {
 		lastActionPlayer = player;
 	}
 
@@ -137,18 +137,18 @@ public class Game {
 		this(table, configuration, table.getRandomPlayer());
 	}
 
-	public Game(ServerTable table, TableConfiguration configuration, GameSeatedPlayer dealer) {
+	public Game(ServerTable table, TableConfiguration configuration, MutableSeatedPlayer dealer) {
 		this(table, configuration, dealer, new NoLimit());
 
 	}
 
-	public Game(ServerTable table, TableConfiguration configuration, GameSeatedPlayer dealer, BettingRules bettingRules) {
+	public Game(ServerTable table, TableConfiguration configuration, MutableSeatedPlayer dealer, BettingRules bettingRules) {
 		this.bettingRules = bettingRules;
 		this.table = table;
 		this.configuration = configuration;
-		List<GameSeatedPlayer> players = table.getSeatedServerPlayers();
-		currentHandPlayers = new LoopingList<GameSeatedPlayer>(players);
-		initialCurrentHandPlayers = new LoopingList<GameSeatedPlayer>(players);
+		List<MutableSeatedPlayer> players = table.getSeatedServerPlayers();
+		currentHandPlayers = new LoopingList<MutableSeatedPlayer>(players);
+		initialCurrentHandPlayers = new LoopingList<MutableSeatedPlayer>(players);
 		deck = new Deck();
 		communityCards = new ArrayList<Card>();
 		pots = new GamePots();
@@ -171,15 +171,15 @@ public class Game {
 		communityCards = new ArrayList<Card>();
 		deck = new Deck();
 		pots = new GamePots();
-		List<GameSeatedPlayer> players = table.getSeatedServerPlayers();
+		List<MutableSeatedPlayer> players = table.getSeatedServerPlayers();
 
 		// new looping lists
-		currentHandPlayers = new LoopingList<GameSeatedPlayer>(players);
-		initialCurrentHandPlayers = new LoopingList<GameSeatedPlayer>(players);
+		currentHandPlayers = new LoopingList<MutableSeatedPlayer>(players);
+		initialCurrentHandPlayers = new LoopingList<MutableSeatedPlayer>(players);
 
 		// make sure no one has pocket cards (TODO move to game player + bet
 		// pile)
-		for (GameSeatedPlayer player : currentHandPlayers.getList()) {
+		for (MutableSeatedPlayer player : currentHandPlayers.getList()) {
 			player.clearPocketCards();
 		}
 		setCurrentPlayer(dealer);
@@ -201,7 +201,7 @@ public class Game {
 	 * Return the firstToActPlayer of this game.
 	 * 
 	 */
-	public GameSeatedPlayer getFirstToActPlayer() {
+	public MutableSeatedPlayer getFirstToActPlayer() {
 		return firstToActPlayer;
 	}
 
@@ -215,7 +215,7 @@ public class Game {
 	 *         is part of this game. | result == firstToActPlayer!=null &&
 	 *         hasAsActivePlayer(firstToActPlayer)
 	 */
-	public boolean canHaveAsFirstToActPlayer(GameSeatedPlayer firstToActPlayer) {
+	public boolean canHaveAsFirstToActPlayer(MutableSeatedPlayer firstToActPlayer) {
 		return (firstToActPlayer != null)
 				&& hasAsActivePlayer(firstToActPlayer);
 	}
@@ -230,7 +230,7 @@ public class Game {
 	 * @post The firstToActPlayer of this game is set to the given
 	 *       firstToActPlayer. | new.getFirstToActPlayer() == firstToActPlayer
 	 */
-	public void setFirstToActPlayer(GameSeatedPlayer firstToActPlayer) {
+	public void setFirstToActPlayer(MutableSeatedPlayer firstToActPlayer) {
 		this.firstToActPlayer = firstToActPlayer;
 	}
 
@@ -244,7 +244,7 @@ public class Game {
 	 * @return The dealer of this game.
 	 * 
 	 */
-	public GameSeatedPlayer getDealer() {
+	public MutableSeatedPlayer getDealer() {
 		return dealer;
 	}
 
@@ -257,7 +257,7 @@ public class Game {
 	 *         at this table. | result == (dealer!=null) &&
 	 *         getTable().hasAsPlayer(dealer)
 	 */
-	public boolean canHaveAsDealer(GameSeatedPlayer dealer) {
+	public boolean canHaveAsDealer(MutableSeatedPlayer dealer) {
 		return (dealer != null) && getTable().hasAsPlayer(dealer);
 	}
 
@@ -271,7 +271,7 @@ public class Game {
 	 * @post The dealer of this game is set to the given dealer. |
 	 *       new.getDealer() == dealer
 	 */
-	public void setDealer(GameSeatedPlayer dealer) {
+	public void setDealer(MutableSeatedPlayer dealer) {
 		this.dealer = dealer;
 	}
 
@@ -285,7 +285,7 @@ public class Game {
 	 * @return The next dealer of this game.
 	 * 
 	 */
-	public GameSeatedPlayer getNextDealer() {
+	public MutableSeatedPlayer getNextDealer() {
 		return nextDealer;
 	}
 
@@ -299,7 +299,7 @@ public class Game {
 	 *         seated at this table. | result == (nextDealer!=null) &&
 	 *         getTable().hasAsPlayer(nextDealer)
 	 */
-	public boolean canHaveAsNextDealer(GameSeatedPlayer nextDealer) {
+	public boolean canHaveAsNextDealer(MutableSeatedPlayer nextDealer) {
 		return (nextDealer != null) && getTable().hasAsPlayer(nextDealer);
 	}
 
@@ -313,7 +313,7 @@ public class Game {
 	 * @post The next dealer of this game is set to the given next dealer. |
 	 *       new.getNextDealer() == nextDealer
 	 */
-	public void setNextDealer(GameSeatedPlayer nextDealer) {
+	public void setNextDealer(MutableSeatedPlayer nextDealer) {
 		this.nextDealer = nextDealer;
 	}
 
@@ -381,7 +381,7 @@ public class Game {
 	 * 
 	 * @return The current player of this game.
 	 */
-	public GameSeatedPlayer getCurrentPlayer() {
+	public MutableSeatedPlayer getCurrentPlayer() {
 		if (currentHandPlayers.size() == 0) {
 			return null;
 		}
@@ -393,7 +393,7 @@ public class Game {
 	 * 
 	 * @return The previous player of this game.
 	 */
-	public GameSeatedPlayer getPreviousPlayer() {
+	public MutableSeatedPlayer getPreviousPlayer() {
 		return currentHandPlayers.getPrevious();
 	}
 
@@ -402,7 +402,7 @@ public class Game {
 	 * 
 	 * @return The next player of this game.
 	 */
-	public GameSeatedPlayer getNextPlayer() {
+	public MutableSeatedPlayer getNextPlayer() {
 		return currentHandPlayers.getNext();
 	}
 
@@ -416,7 +416,7 @@ public class Game {
 	 * @post The current player is set to the given player
 	 *       |new.getCurrentPlayer()==player
 	 */
-	public void setCurrentPlayer(GameSeatedPlayer player) {
+	public void setCurrentPlayer(MutableSeatedPlayer player) {
 		currentHandPlayers.setCurrent(player);
 	}
 
@@ -437,7 +437,7 @@ public class Game {
 	 *         at this table, False otherwise. | result == (player!=null) &&
 	 *         hasAsActivePlayer(player)
 	 */
-	public boolean canHaveAsCurrentPlayer(GameSeatedPlayer player) {
+	public boolean canHaveAsCurrentPlayer(MutableSeatedPlayer player) {
 		return (player != null) && hasAsActivePlayer(player);
 	}
 
@@ -455,7 +455,7 @@ public class Game {
 	 * @post If the given player is the current player, the current player is
 	 *       changed to the next player.
 	 */
-	public void removePlayerFromCurrentDeal(GameSeatedPlayer player) {
+	public void removePlayerFromCurrentDeal(MutableSeatedPlayer player) {
 		if (getFirstToActPlayer().equals(player)) {
 			setFirstToActPlayer(currentHandPlayers.getNextTo(player));
 		}
@@ -470,7 +470,7 @@ public class Game {
 	 * 
 	 * @return The list of all active players in this game.
 	 */
-	public List<GameSeatedPlayer> getCurrentDealPlayers() {
+	public List<MutableSeatedPlayer> getCurrentDealPlayers() {
 		return currentHandPlayers.getList();
 	}
 
@@ -491,7 +491,7 @@ public class Game {
 	 * @return True if the given player is contained in the list of current deal
 	 *         players, False otherwise.
 	 */
-	public boolean hasAsActivePlayer(GameSeatedPlayer player) {
+	public boolean hasAsActivePlayer(MutableSeatedPlayer player) {
 		return currentHandPlayers.contains(player);
 	}
 
@@ -542,7 +542,7 @@ public class Game {
 	}
 
 	public void addTablePlayersToGame() {
-		currentHandPlayers = new LoopingList<GameSeatedPlayer>(table.getSeatedServerPlayers());
+		currentHandPlayers = new LoopingList<MutableSeatedPlayer>(table.getSeatedServerPlayers());
 	}
 
 	public void seatInitalDealPlayers() {
@@ -562,7 +562,7 @@ public class Game {
 	 * 
 	 **************************************************************************/
 
-	public SeatId sitIn(SeatId seatId, GameSeatedPlayer player)
+	public SeatId sitIn(SeatId seatId, MutableSeatedPlayer player)
 			throws SeatTakenException, PlayerListFullException, IllegalActionException{
 		table.addPlayer(seatId, player);
 		
@@ -576,7 +576,7 @@ public class Game {
 		return seatId;
 	}
 
-	public SeatId sitIn(GameSeatedPlayer player) throws PlayerListFullException {
+	public SeatId sitIn(MutableSeatedPlayer player) throws PlayerListFullException {
 		SeatId seatId = table.addPlayer(player);
 		
 		if (getDealer() == null) {
@@ -589,7 +589,7 @@ public class Game {
 		return seatId;
 	}
 
-	public void sitOut(GameSeatedPlayer player) throws IllegalActionException {
+	public void sitOut(MutableSeatedPlayer player) throws IllegalActionException {
 		if (!table.hasAsPlayer(player)) {
 			throw new IllegalActionException(player.getName()
 					+ " is not seated at this table.");
@@ -615,7 +615,7 @@ public class Game {
 	 * @pre The given dealer should be an active player at the table.
 	 *      |dealer!=null && hasAsActivePlayer(dealer)
 	 */
-	public void changeDealer(GameSeatedPlayer dealer) {
+	public void changeDealer(MutableSeatedPlayer dealer) {
 		if (dealer == null) {
 			throw new IllegalArgumentException(
 					"The given dealer should be effective");

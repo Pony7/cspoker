@@ -37,8 +37,8 @@ import org.cspoker.server.common.elements.chips.IllegalValueException;
 import org.cspoker.server.common.elements.chips.pot.GamePots;
 import org.cspoker.server.common.gamecontrol.Game;
 import org.cspoker.server.common.gamecontrol.PokerTable;
-import org.cspoker.server.common.player.GameAllInPlayer;
-import org.cspoker.server.common.player.GameSeatedPlayer;
+import org.cspoker.server.common.player.MutableAllInPlayer;
+import org.cspoker.server.common.player.MutableSeatedPlayer;
 
 /**
  * A class to represent betting rounds.
@@ -56,7 +56,7 @@ public abstract class BettingRound extends Round {
 	/**
 	 * This list contains all players who go all-in in this round.
 	 */
-	protected final List<GameAllInPlayer> allInPlayers;
+	protected final List<MutableAllInPlayer> allInPlayers;
 
 	protected final List<Chips> betsFromFoldedPlayers;
 
@@ -64,12 +64,12 @@ public abstract class BettingRound extends Round {
 
 	public BettingRound(PokerTable gameMediator, Game game) {
 		super(gameMediator, game);
-		allInPlayers = new ArrayList<GameAllInPlayer>();
+		allInPlayers = new ArrayList<MutableAllInPlayer>();
 		betsFromFoldedPlayers = new ArrayList<Chips>();
 		setBet(0);
 	}
 
-	public void check(GameSeatedPlayer player) throws IllegalActionException {
+	public void check(MutableSeatedPlayer player) throws IllegalActionException {
 		if (!onTurn(player)) {
 			throw new IllegalActionException(player.getName()
 					+ " can not check in this round. It should be your turn.");
@@ -81,7 +81,7 @@ public abstract class BettingRound extends Round {
 		game.nextPlayer();
 	}
 
-	public void bet(GameSeatedPlayer player, int amount)
+	public void bet(MutableSeatedPlayer player, int amount)
 			throws IllegalActionException {
 		if (!onTurn(player) || someoneHasBet() || onlyOnePlayerLeft()) {
 			throw new IllegalActionException(player.getName() + " can not bet "
@@ -121,7 +121,7 @@ public abstract class BettingRound extends Round {
 		game.nextPlayer();
 	}
 
-	public void call(GameSeatedPlayer player) throws IllegalActionException {
+	public void call(MutableSeatedPlayer player) throws IllegalActionException {
 		if (!onTurn(player) || !someoneHasBet()) {
 			throw new IllegalActionException(player.getName()
 					+ " can not call in this round.");
@@ -162,7 +162,7 @@ public abstract class BettingRound extends Round {
 		game.nextPlayer();
 	}
 
-	public void raise(GameSeatedPlayer player, int amount)
+	public void raise(MutableSeatedPlayer player, int amount)
 			throws IllegalActionException {
 		if (!onTurn(player) || !someoneHasBet() || onlyOnePlayerLeft()) {
 			throw new IllegalActionException(player.getName()
@@ -208,7 +208,7 @@ public abstract class BettingRound extends Round {
 		game.nextPlayer();
 	}
 
-	public void fold(GameSeatedPlayer player) throws IllegalActionException {
+	public void fold(MutableSeatedPlayer player) throws IllegalActionException {
 		if (!onTurn(player)) {
 			throw new IllegalActionException(player.getName()
 					+ " can not fold. It should be his turn to do an action.");
@@ -217,7 +217,7 @@ public abstract class BettingRound extends Round {
 		foldAction(player);
 	}
 
-	public void foldAction(GameSeatedPlayer player) {
+	public void foldAction(MutableSeatedPlayer player) {
 		player.clearPocketCards();
 
 		/**
@@ -240,7 +240,7 @@ public abstract class BettingRound extends Round {
 		// to next player.
 	}
 
-	public void allIn(GameSeatedPlayer player) throws IllegalActionException {
+	public void allIn(MutableSeatedPlayer player) throws IllegalActionException {
 		if (!onTurn(player)) {
 			throw new IllegalActionException(player.getName()
 					+ " can not go all-in. It isn't his turn to do an action.");
@@ -248,13 +248,13 @@ public abstract class BettingRound extends Round {
 		goAllIn(player);
 	}
 
-	protected void goAllIn(GameSeatedPlayer player) {
+	protected void goAllIn(MutableSeatedPlayer player) {
 		try {
 			player.transferAllChipsToBetPile();
 		} catch (IllegalValueException e) {
 			assert false;
 		}
-		allInPlayers.add(new GameAllInPlayer(player));
+		allInPlayers.add(new MutableAllInPlayer(player));
 		getGame().removePlayerFromCurrentDeal(player);
 		if (player.getBetChips().getValue() > getBet()) {
 			setBet(player.getBetChips().getValue());
@@ -355,7 +355,7 @@ public abstract class BettingRound extends Round {
 	 *            The player to collect the small blind from.
 	 * @throws IllegalValueException
 	 */
-	protected void collectSmallBlind(GameSeatedPlayer player)
+	protected void collectSmallBlind(MutableSeatedPlayer player)
 			throws IllegalValueException {
 		if (player.getStack().getValue() <= getGame().getTableConfiguration()
 				.getSmallBlind()) {
@@ -383,7 +383,7 @@ public abstract class BettingRound extends Round {
 	 *            The player to collect the big blind from.
 	 * @throws IllegalValueException
 	 */
-	protected void collectBigBlind(GameSeatedPlayer player)
+	protected void collectBigBlind(MutableSeatedPlayer player)
 			throws IllegalValueException {
 		if (player.getStack().getValue() <= getGame().getTableConfiguration()
 				.getBigBlind()) {
@@ -413,7 +413,7 @@ public abstract class BettingRound extends Round {
 	 * @return The number of chips the player must transfer to the bet pile to
 	 *         equal the current bet.
 	 */
-	protected int amountToIncreaseBetPileWith(GameSeatedPlayer player) {
+	protected int amountToIncreaseBetPileWith(MutableSeatedPlayer player) {
 		return getBet() - player.getBetChips().getValue();
 	}
 
@@ -479,15 +479,15 @@ public abstract class BettingRound extends Round {
 	 */
 	private void makeSidePots() {
 		Collections.sort(allInPlayers);
-		List<GameSeatedPlayer> players = game.getCurrentDealPlayers();
-		for (GameAllInPlayer allInPlayer : allInPlayers) {
+		List<MutableSeatedPlayer> players = game.getCurrentDealPlayers();
+		for (MutableAllInPlayer allInPlayer : allInPlayers) {
 			try {
 				BettingRound.logger.info(game.getPots());
 				game.getPots().collectAmountFromPlayersToSidePot(
 						allInPlayer.getBetValue(), players);
 				BettingRound.logger.info(game.getPots());
 				int betValue = allInPlayer.getBetValue();
-				for (GameAllInPlayer otherAllInPlayer : allInPlayers) {
+				for (MutableAllInPlayer otherAllInPlayer : allInPlayers) {
 					if (otherAllInPlayer.getBetValue() > 0) {
 						otherAllInPlayer.transferAmountTo(betValue, game
 								.getPots().getNewestSidePot());
@@ -532,7 +532,7 @@ public abstract class BettingRound extends Round {
 	protected void winner(GamePots pots) {
 		BettingRound.logger.info("** Only One Player Left **");
 		setPotsDividedToWinner(true);
-		GameSeatedPlayer winner = pots.getPots().get(0).getPlayers().get(0);
+		MutableSeatedPlayer winner = pots.getPots().get(0).getPlayers().get(0);
 		BettingRound.logger.info("Winner: " + winner.getName() + " wins "
 				+ pots.getTotalValue() + " chips");
 
@@ -603,7 +603,7 @@ public abstract class BettingRound extends Round {
 
 	public int getCurrentPotValue() {
 		int currentPlayerBets = 0;
-		for (GameSeatedPlayer player : game.getCurrentDealPlayers()) {
+		for (MutableSeatedPlayer player : game.getCurrentDealPlayers()) {
 			currentPlayerBets += player.getBetChips().getValue();
 		}
 		int foldedPlayerBets = 0;
@@ -612,7 +612,7 @@ public abstract class BettingRound extends Round {
 		}
 
 		int allInPlayerBets = 0;
-		for (GameAllInPlayer player : allInPlayers) {
+		for (MutableAllInPlayer player : allInPlayers) {
 			allInPlayerBets += player.getBetValue();
 		}
 		return game.getPots().getTotalValue() + currentPlayerBets

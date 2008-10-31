@@ -20,13 +20,13 @@ import javax.security.auth.login.LoginException;
 import org.cspoker.server.common.account.ExtendedAccountContext;
 import org.cspoker.server.common.authentication.XmlFileAuthenticator;
 import org.cspoker.server.common.player.PlayerFactory;
-import org.cspoker.server.common.player.ServerPlayer;
+import org.cspoker.server.common.player.MutablePlayer;
 
 public class AccountContextImpl implements ExtendedAccountContext{
 
 	private static XmlFileAuthenticator authenticator = new XmlFileAuthenticator();
 		
-	private ServerPlayer player;
+	private MutablePlayer player;
 
 	private String username;
 	
@@ -56,7 +56,7 @@ public class AccountContextImpl implements ExtendedAccountContext{
 		throw new UnsupportedOperationException();
 	}
 
-	public ServerPlayer getPlayer(){
+	public MutablePlayer getPlayer(){
 		return player;
 	}
 

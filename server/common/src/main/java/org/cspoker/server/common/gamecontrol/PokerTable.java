@@ -62,8 +62,8 @@ import org.cspoker.server.common.elements.chips.IllegalValueException;
 import org.cspoker.server.common.elements.id.PlayerId;
 import org.cspoker.server.common.elements.id.SeatId;
 import org.cspoker.server.common.elements.id.TableId;
-import org.cspoker.server.common.player.GameSeatedPlayer;
-import org.cspoker.server.common.player.ServerPlayer;
+import org.cspoker.server.common.player.MutableSeatedPlayer;
+import org.cspoker.server.common.player.MutablePlayer;
 import org.cspoker.server.common.util.threading.ScheduledRequestExecutor;
 
 /**
@@ -248,7 +248,7 @@ public class PokerTable {
 	 * @throws IllegalActionException [must] The action performed is not a valid
 	 *             action.
 	 */
-	public void allIn(GameSeatedPlayer player)
+	public void allIn(MutableSeatedPlayer player)
 			throws IllegalActionException {
 		tableState.allIn(player);
 		cancelOldTimeOut();
@@ -264,7 +264,7 @@ public class PokerTable {
 	 * @throws IllegalActionException [must] The action performed is not a valid
 	 *             action.
 	 */
-	public void bet(GameSeatedPlayer player, int amount)
+	public void bet(MutableSeatedPlayer player, int amount)
 			throws IllegalActionException {
 		tableState.bet(player, amount);
 		cancelOldTimeOut();
@@ -280,7 +280,7 @@ public class PokerTable {
 	 * @throws IllegalActionException [must] The action performed is not a valid
 	 *             action.
 	 */
-	public void call(GameSeatedPlayer player)
+	public void call(MutableSeatedPlayer player)
 			throws IllegalActionException {
 		tableState.call(player);
 		cancelOldTimeOut();
@@ -296,7 +296,7 @@ public class PokerTable {
 	 * @throws IllegalActionException [must] The action performed is not a valid
 	 *             action.
 	 */
-	public void check(GameSeatedPlayer player)
+	public void check(MutableSeatedPlayer player)
 			throws IllegalActionException {
 		tableState.check(player);
 		cancelOldTimeOut();
@@ -314,7 +314,7 @@ public class PokerTable {
 	 * @throws IllegalActionException [must] The action performed is not a valid
 	 *             action.
 	 */
-	public void fold(GameSeatedPlayer player)
+	public void fold(MutableSeatedPlayer player)
 			throws IllegalActionException {
 		tableState.fold(player);
 		cancelOldTimeOut();
@@ -330,13 +330,13 @@ public class PokerTable {
 	 * @throws IllegalActionException [must] The action performed is not a valid
 	 *             action.
 	 */
-	public void raise(GameSeatedPlayer player, int amount)
+	public void raise(MutableSeatedPlayer player, int amount)
 			throws IllegalActionException {
 		tableState.raise(player, amount);
 		cancelOldTimeOut();
 	}
 	
-	public HoldemTableContext joinTable(ServerPlayer player, HoldemTableListener holdemTableListener)
+	public HoldemTableContext joinTable(MutablePlayer player, HoldemTableListener holdemTableListener)
 			throws IllegalActionException {
 		if (player == null)
 			throw new IllegalArgumentException("The given player should be effective.");
@@ -351,7 +351,7 @@ public class PokerTable {
 		return new HoldemTableContextImpl(player, this);
 	}
 	
-	public boolean hasAsJoinedPlayer(ServerPlayer player) {
+	public boolean hasAsJoinedPlayer(MutablePlayer player) {
 		return player == null ? false : hasAsJoinedPlayer(player.getId());
 	}
 	
@@ -359,7 +359,7 @@ public class PokerTable {
 		return id == null ? false : joinedPlayers.containsKey(id);
 	}
 	
-	public void leaveTable(ServerPlayer player) {
+	public void leaveTable(MutablePlayer player) {
 		if (player == null)
 			throw new IllegalArgumentException("The given player should be effective.");
 		HoldemTableListener listener = joinedPlayers.remove(player.getId());
@@ -367,11 +367,11 @@ public class PokerTable {
 			unsubscribeHoldemTableListener(listener);
 	}
 	
-	public synchronized HoldemPlayerContext sitIn(SeatId seatId, int buyIn, ServerPlayer player,
+	public synchronized HoldemPlayerContext sitIn(SeatId seatId, int buyIn, MutablePlayer player,
 			HoldemPlayerListener holdemPlayerListener)
 	throws IllegalActionException {
 		try {
-			HoldemPlayerContext toReturn = tableState.sitIn(seatId, new GameSeatedPlayer(player, buyIn));
+			HoldemPlayerContext toReturn = tableState.sitIn(seatId, new MutableSeatedPlayer(player, buyIn));
 			sitInPlayers.put(player.getId(), holdemPlayerListener);
 			subscribeHoldemPlayerListener(player.getId(), holdemPlayerListener);
 			if (sitInPlayers.size() > 1) {
@@ -387,10 +387,10 @@ public class PokerTable {
 	}
 
 
-	public synchronized HoldemPlayerContext sitIn(int buyIn, ServerPlayer player,
+	public synchronized HoldemPlayerContext sitIn(int buyIn, MutablePlayer player,
 			HoldemPlayerListener holdemPlayerListener) throws IllegalActionException {
 		try {
-			HoldemPlayerContext toReturn = tableState.sitIn(new GameSeatedPlayer(player, buyIn));
+			HoldemPlayerContext toReturn = tableState.sitIn(new MutableSeatedPlayer(player, buyIn));
 			sitInPlayers.put(player.getId(), holdemPlayerListener);
 			subscribeHoldemPlayerListener(player.getId(), holdemPlayerListener);
 			if (sitInPlayers.size() > 1) {
@@ -404,7 +404,7 @@ public class PokerTable {
 		}
 	}
 	
-	public void sitOut(GameSeatedPlayer player) {
+	public synchronized void sitOut(MutableSeatedPlayer player) {
 		tableState.sitOut(player);
 		unsubscribeHoldemPlayerListener(player.getId(), sitInPlayers.get(player.getId()));
 		sitInPlayers.remove(player.getId());
@@ -795,7 +795,7 @@ public class PokerTable {
 				PokerTable.logger.info(player.getName() + " auto-fold called.");
 				
 				if (getCurrentTimeOut() == this && tableState.getGame() != null) {
-					GameSeatedPlayer gcPlayer = tableState.getGame().getCurrentPlayer();
+					MutableSeatedPlayer gcPlayer = tableState.getGame().getCurrentPlayer();
 					if (gcPlayer.getId().getId()==player.getId()) {
 						PokerTable.logger.info(player.getName() + " automatically folded.");
 						tableState.fold(gcPlayer);

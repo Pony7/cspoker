@@ -31,12 +31,12 @@ import org.cspoker.server.common.elements.cards.hand.Hand;
  * @author Kenzo
  * 
  */
-public class GameShowdownPlayer implements Comparable<GameShowdownPlayer> {
+public class MutableShowdownPlayer implements Comparable<MutableShowdownPlayer> {
 
 	/**
 	 * This variable contains the showdown player.
 	 */
-	private final GameSeatedPlayer player;
+	private final MutableSeatedPlayer player;
 
 	/**
 	 * This variable contains the showdown player's best hand.
@@ -51,7 +51,7 @@ public class GameShowdownPlayer implements Comparable<GameShowdownPlayer> {
 	 * @param bestHand
 	 *            The player's best hand.
 	 */
-	public GameShowdownPlayer(GameSeatedPlayer player, Hand bestHand) {
+	public MutableShowdownPlayer(MutableSeatedPlayer player, Hand bestHand) {
 		this.player = player;
 		this.bestHand = bestHand;
 
@@ -62,7 +62,7 @@ public class GameShowdownPlayer implements Comparable<GameShowdownPlayer> {
 	 * 
 	 * @return The effective showdown player, as a player.
 	 */
-	public GameSeatedPlayer getPlayer() {
+	public MutableSeatedPlayer getPlayer() {
 		return player;
 	}
 
@@ -94,7 +94,7 @@ public class GameShowdownPlayer implements Comparable<GameShowdownPlayer> {
 	 * 
 	 * -1 = first hand is best, 1 = second hand is best, 0 = tie
 	 */
-	public int compareTo(GameShowdownPlayer o) {
+	public int compareTo(MutableShowdownPlayer o) {
 		return o.getBestHand().compareTo(getBestHand());
 	}
 
@@ -118,7 +118,7 @@ public class GameShowdownPlayer implements Comparable<GameShowdownPlayer> {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		GameShowdownPlayer other = (GameShowdownPlayer) obj;
+		MutableShowdownPlayer other = (MutableShowdownPlayer) obj;
 		if (bestHand == null) {
 			if (other.bestHand != null)
 				return false;

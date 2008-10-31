@@ -52,7 +52,7 @@ public class PlayerFactory {
 	 *            The name for this new player.
 	 * @return A new player with given name and standard stack value.
 	 */
-	public ServerPlayer createNewPlayer(String name) {
+	public MutablePlayer createNewPlayer(String name) {
 		try {
 			return createNewPlayer(name, getStdStackValue());
 		} catch (IllegalValueException e) {
@@ -72,9 +72,9 @@ public class PlayerFactory {
 	 * @throws IllegalValueException
 	 *             [must] The given initial value is not valid.
 	 */
-	public ServerPlayer createNewPlayer(String name, int initialValue)
+	public MutablePlayer createNewPlayer(String name, int initialValue)
 			throws IllegalValueException {
-		return new ServerPlayer(getUniquePlayerId(), name, initialValue);
+		return new MutablePlayer(getUniquePlayerId(), name, initialValue);
 	}
 
 	/**

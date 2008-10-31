@@ -33,9 +33,9 @@ import org.cspoker.server.common.elements.cards.hand.Hand;
 import org.cspoker.server.common.elements.chips.IllegalValueException;
 import org.cspoker.server.common.elements.chips.pot.GamePot;
 import org.cspoker.server.common.elements.id.PlayerId;
-import org.cspoker.server.common.player.GameSeatedPlayer;
-import org.cspoker.server.common.player.GameShowdownPlayer;
-import org.cspoker.server.common.player.GameWinner;
+import org.cspoker.server.common.player.MutableSeatedPlayer;
+import org.cspoker.server.common.player.MutableShowdownPlayer;
+import org.cspoker.server.common.player.MutableWinner;
 
 /**
  * A class to determine who has won each pot.
@@ -52,7 +52,7 @@ public class Showdown {
 
 	private final PokerTable table;
 
-	private final Map<PlayerId, GameWinner> winnersMap = new HashMap<PlayerId, GameWinner>();
+	private final Map<PlayerId, MutableWinner> winnersMap = new HashMap<PlayerId, MutableWinner>();
 
 	/**
 	 * Construct a new showdown with given game and pots.
@@ -92,22 +92,22 @@ public class Showdown {
 		Showdown.logger.info(game.getPots());
 
 		// TODO all-in players always, others can choose to show or fold.
-		List<GameShowdownPlayer> showdownPlayers = getShowdownPlayersFromPot(game
+		List<MutableShowdownPlayer> showdownPlayers = getShowdownPlayersFromPot(game
 				.getPots().getPots().get(0));
 
-		for (GameShowdownPlayer player : showdownPlayers) {
+		for (MutableShowdownPlayer player : showdownPlayers) {
 			table.publishShowHandEvent(new ShowHandEvent(player
 					.getSavedShowdownPlayer()));
 		}
 
 		for (GamePot pot : game.getPots().getPots()) {
-			List<GameSeatedPlayer> winners = getWinners(pot);
+			List<MutableSeatedPlayer> winners = getWinners(pot);
 			splitPot(winners, pot);
 		}
 
 		Set<Winner> savedWinners = new HashSet<Winner>();
 
-		for (GameWinner winner : winnersMap.values()) {
+		for (MutableWinner winner : winnersMap.values()) {
 			if (winner.hasGainedChips()) {
 				savedWinners.add(winner.getSavedWinner());
 				Showdown.logger.info(winner);
@@ -133,16 +133,16 @@ public class Showdown {
 	 * @param pot
 	 *            The pot to divide between all winners.
 	 */
-	private void splitPot(List<GameSeatedPlayer> winners, GamePot pot) {
-		for (GameSeatedPlayer winner : winners) {
+	private void splitPot(List<MutableSeatedPlayer> winners, GamePot pot) {
+		for (MutableSeatedPlayer winner : winners) {
 			if (!winnersMap.containsKey(winner.getId())) {
-				winnersMap.put(winner.getId(), new GameWinner(winner));
+				winnersMap.put(winner.getId(), new MutableWinner(winner));
 			}
 		}
 
 		int nbChips_per_winner = pot.getChips().getValue() / winners.size();
 
-		for (GameSeatedPlayer player : winners) {
+		for (MutableSeatedPlayer player : winners) {
 			try {
 				pot.getChips().transferAmountTo(nbChips_per_winner,
 						winnersMap.get(player.getId()).getGainedChipsPile());
@@ -155,10 +155,10 @@ public class Showdown {
 		// the player with the single highest card gets the odd chips that can't
 		// be divided over the winners
 		if (pot.getChips().getValue() != 0) {
-			GameSeatedPlayer playerWithHighestSingleCard = winners.get(0);
+			MutableSeatedPlayer playerWithHighestSingleCard = winners.get(0);
 			Card highestCard = new Hand(playerWithHighestSingleCard
 					.getPocketCards()).getHighestRankCard();
-			for (GameSeatedPlayer player : winners) {
+			for (MutableSeatedPlayer player : winners) {
 				Card otherHighestCard = new Hand(player.getPocketCards())
 						.getHighestRankCard();
 				int compareSingleBestCard = highestCard
@@ -185,14 +185,14 @@ public class Showdown {
 	 *            The pot in which the winner(s) must be chosen.
 	 * @return The list of winners of the pot in the current game.
 	 */
-	private List<GameSeatedPlayer> getWinners(GamePot pot) {
-		List<GameShowdownPlayer> players = getShowdownPlayersFromPot(pot);
+	private List<MutableSeatedPlayer> getWinners(GamePot pot) {
+		List<MutableShowdownPlayer> players = getShowdownPlayersFromPot(pot);
 		Collections.sort(players);
-		for (GameShowdownPlayer player : players) {
+		for (MutableShowdownPlayer player : players) {
 			Showdown.logger.info(player);
 		}
-		GameShowdownPlayer winner = players.get(0);
-		List<GameSeatedPlayer> winners = new ArrayList<GameSeatedPlayer>();
+		MutableShowdownPlayer winner = players.get(0);
+		List<MutableSeatedPlayer> winners = new ArrayList<MutableSeatedPlayer>();
 		int i = 0;
 		while ((i < players.size()) && winner.equals(players.get(i))) {
 			winners.add(players.get(i).getPlayer());
@@ -208,10 +208,10 @@ public class Showdown {
 	 *            The pot from which the showdown players must be returned.
 	 * @return The list of showdown players in the current game.
 	 */
-	private List<GameShowdownPlayer> getShowdownPlayersFromPot(GamePot pot) {
-		List<GameShowdownPlayer> showDownPlayers = new ArrayList<GameShowdownPlayer>();
-		for (GameSeatedPlayer player : pot.getPlayers()) {
-			showDownPlayers.add(new GameShowdownPlayer(player,
+	private List<MutableShowdownPlayer> getShowdownPlayersFromPot(GamePot pot) {
+		List<MutableShowdownPlayer> showDownPlayers = new ArrayList<MutableShowdownPlayer>();
+		for (MutableSeatedPlayer player : pot.getPlayers()) {
+			showDownPlayers.add(new MutableShowdownPlayer(player,
 					getBestFiveCardHand(player)));
 		}
 		return showDownPlayers;
@@ -227,7 +227,7 @@ public class Showdown {
 	 * @note By using this method, the recalculation of finding the best 5 card
 	 *       hand is omitted.
 	 */
-	private Hand getBestFiveCardHand(GameSeatedPlayer player) {
+	private Hand getBestFiveCardHand(MutableSeatedPlayer player) {
 		List<Card> cards = new ArrayList<Card>(7);
 		cards.addAll(getGame().getCommunityCards());
 		cards.addAll(player.getPocketCards());

@@ -26,14 +26,14 @@ import org.cspoker.common.elements.cards.Card;
 import org.cspoker.common.elements.table.Rounds;
 import org.cspoker.server.common.gamecontrol.Game;
 import org.cspoker.server.common.gamecontrol.PokerTable;
-import org.cspoker.server.common.player.GameSeatedPlayer;
+import org.cspoker.server.common.player.MutableSeatedPlayer;
 
 public class FlopRound extends BettingRound {
 	private static Logger logger = Logger.getLogger(FlopRound.class);
 
 	public FlopRound(PokerTable gameMediator, Game game) {
 		super(gameMediator, game);
-		GameSeatedPlayer currentPlayer = getGame().getCurrentPlayer();
+		MutableSeatedPlayer currentPlayer = getGame().getCurrentPlayer();
 		if (currentPlayer != null) {
 			gameMediator.publishNewRoundEvent(new NewRoundEvent(getRound()));
 			gameMediator.publishNextPlayerEvent(new NextPlayerEvent(currentPlayer.getMemento()));

@@ -28,7 +28,7 @@ import org.cspoker.server.common.elements.id.SeatId;
 import org.cspoker.server.common.elements.table.PlayerListFullException;
 import org.cspoker.server.common.elements.table.SeatTakenException;
 import org.cspoker.server.common.elements.table.ServerTable;
-import org.cspoker.server.common.player.GameSeatedPlayer;
+import org.cspoker.server.common.player.MutableSeatedPlayer;
 
 /**
  * A class to represent players at the table.
@@ -67,7 +67,7 @@ public class WaitingTableState
 	 * @return The list with all the players at this table.
 	 */
 	@Override
-	public List<GameSeatedPlayer> getSeatedServerPlayers() {
+	public List<MutableSeatedPlayer> getSeatedServerPlayers() {
 		return serverTable.getSeatedServerPlayers();
 	}
 	
@@ -77,50 +77,50 @@ public class WaitingTableState
 	}
 	
 	@Override
-	public void allIn(GameSeatedPlayer player)
+	public void allIn(MutableSeatedPlayer player)
 			throws IllegalActionException {
 		throw new IllegalActionException("Going all-in is not a valid action.");
 	}
 	
 	@Override
-	public void bet(GameSeatedPlayer player, int amount)
+	public void bet(MutableSeatedPlayer player, int amount)
 			throws IllegalActionException {
 		throw new IllegalActionException("Bet is not a valid action.");
 	}
 	
 	@Override
-	public void call(GameSeatedPlayer player)
+	public void call(MutableSeatedPlayer player)
 			throws IllegalActionException {
 		throw new IllegalActionException("Call is not a valid action.");
 	}
 	
 	@Override
-	public void check(GameSeatedPlayer player)
+	public void check(MutableSeatedPlayer player)
 			throws IllegalActionException {
 		throw new IllegalActionException("Check is not a valid action.");
 	}
 	
 	@Override
-	public void deal(GameSeatedPlayer player)
+	public void deal(MutableSeatedPlayer player)
 			throws IllegalActionException {
 		throw new IllegalActionException("Deal is not a valid action.");
 	}
 	
 	@Override
-	public void fold(GameSeatedPlayer player)
+	public void fold(MutableSeatedPlayer player)
 			throws IllegalActionException {
 		throw new IllegalActionException("Fold is not a valid action.");
 		
 	}
 	
 	@Override
-	public void raise(GameSeatedPlayer player, int amount)
+	public void raise(MutableSeatedPlayer player, int amount)
 			throws IllegalActionException {
 		throw new IllegalActionException("Raise is not a valid action.");
 	}
 	
 	@Override
-	public HoldemPlayerContext sitIn(SeatId seatId, GameSeatedPlayer player)
+	public HoldemPlayerContext sitIn(SeatId seatId, MutableSeatedPlayer player)
 			throws IllegalActionException {
 		
 		try {
@@ -139,7 +139,7 @@ public class WaitingTableState
 	}
 
 	@Override
-	public HoldemPlayerContext sitIn(GameSeatedPlayer player)
+	public HoldemPlayerContext sitIn(MutableSeatedPlayer player)
 			throws IllegalActionException {
 		try {
 			serverTable.addPlayer(player);
@@ -153,7 +153,7 @@ public class WaitingTableState
 	}
 	
 	@Override
-	public void sitOut(GameSeatedPlayer player) {
+	public void sitOut(MutableSeatedPlayer player) {
 		serverTable.removePlayer(player);
 		mediatingTable.publishSitOutEvent(new SitOutEvent(player.getMemento(), false));
 	}

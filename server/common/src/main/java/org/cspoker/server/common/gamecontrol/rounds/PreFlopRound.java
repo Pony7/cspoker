@@ -29,8 +29,8 @@ import org.cspoker.common.elements.table.Rounds;
 import org.cspoker.server.common.elements.chips.IllegalValueException;
 import org.cspoker.server.common.gamecontrol.Game;
 import org.cspoker.server.common.gamecontrol.PokerTable;
-import org.cspoker.server.common.player.GameAllInPlayer;
-import org.cspoker.server.common.player.GameSeatedPlayer;
+import org.cspoker.server.common.player.MutableAllInPlayer;
+import org.cspoker.server.common.player.MutableSeatedPlayer;
 
 public class PreFlopRound extends BettingRound {
 
@@ -38,14 +38,14 @@ public class PreFlopRound extends BettingRound {
 
 	private boolean bigBlindChecked = false;
 
-	private GameSeatedPlayer bigBlindPlayer;
+	private MutableSeatedPlayer bigBlindPlayer;
 
 	private boolean bigBlindAllIn = false;
 
 	public PreFlopRound(PokerTable gameMediator, Game game) {
 		super(gameMediator, game);
 
-		GameSeatedPlayer currentPlayer = getGame().getCurrentPlayer();
+		MutableSeatedPlayer currentPlayer = getGame().getCurrentPlayer();
 
 		if (currentPlayer != null) {
 			gameMediator.publishNewRoundEvent(new NewRoundEvent(getRound()));
@@ -55,7 +55,7 @@ public class PreFlopRound extends BettingRound {
 			if (game.getNbCurrentDealPlayers() == 2) {
 				game.nextPlayer();
 			}
-			GameSeatedPlayer player = getGame().getCurrentPlayer();
+			MutableSeatedPlayer player = getGame().getCurrentPlayer();
 			collectSmallBlind(player);
 			getGame().nextPlayer();
 		} catch (IllegalValueException e) {
@@ -75,7 +75,7 @@ public class PreFlopRound extends BettingRound {
 		}
 
 		PreFlopRound.logger.info("*** HOLE CARDS ***");
-		for (GameSeatedPlayer player : getGame().getCurrentDealPlayers()) {
+		for (MutableSeatedPlayer player : getGame().getCurrentDealPlayers()) {
 			player.dealPocketCard(drawCard());
 			player.dealPocketCard(drawCard());
 
@@ -87,8 +87,8 @@ public class PreFlopRound extends BettingRound {
 							new HashSet<Card>(player.getPocketCards())));
 		}
 
-		for (GameAllInPlayer allInPlayer : allInPlayers) {
-			GameSeatedPlayer player = allInPlayer.getPlayer();
+		for (MutableAllInPlayer allInPlayer : allInPlayers) {
+			MutableSeatedPlayer player = allInPlayer.getPlayer();
 			player.dealPocketCard(drawCard());
 			player.dealPocketCard(drawCard());
 
@@ -105,7 +105,7 @@ public class PreFlopRound extends BettingRound {
 		}
 	}
 
-	public void check(GameSeatedPlayer player) throws IllegalActionException {
+	public void check(MutableSeatedPlayer player) throws IllegalActionException {
 		if (!onTurn(player)) {
 			throw new IllegalActionException(player.getName()
 					+ " can not check in this round.");

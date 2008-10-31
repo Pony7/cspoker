@@ -45,7 +45,7 @@ import org.cspoker.server.common.gamecontrol.rounds.Round;
 import org.cspoker.server.common.gamecontrol.rounds.WaitingRound;
 import org.cspoker.server.common.gamecontrol.rules.BettingRules;
 import org.cspoker.server.common.gamecontrol.rules.NoLimit;
-import org.cspoker.server.common.player.GameSeatedPlayer;
+import org.cspoker.server.common.player.MutableSeatedPlayer;
 import org.cspoker.server.common.util.threading.ScheduledRequestExecutor;
 
 /**
@@ -94,11 +94,11 @@ public class PlayingTableState
 		this(gameMediator, table, table.getRandomPlayer(), rules);
 	}
 	
-	public PlayingTableState(PokerTable gameMediator, ServerTable table, GameSeatedPlayer dealer) {
+	public PlayingTableState(PokerTable gameMediator, ServerTable table, MutableSeatedPlayer dealer) {
 		this(gameMediator, table, dealer, new NoLimit());
 	}
 	
-	public PlayingTableState(PokerTable gameMediator, ServerTable table, GameSeatedPlayer dealer, BettingRules rules) {
+	public PlayingTableState(PokerTable gameMediator, ServerTable table, MutableSeatedPlayer dealer, BettingRules rules) {
 		super(gameMediator);
 		
 		game = new Game(table, gameMediator.getTableConfiguration(), dealer, rules);
@@ -108,8 +108,8 @@ public class PlayingTableState
 				+ gameMediator.getTableConfiguration().getBigBlind() + ") - "
 				+ (new SimpleDateFormat(PlayingTableState.dateFormat)).format(new Date()));
 		
-		List<GameSeatedPlayer> players = game.getCurrentDealPlayers();
-		for (GameSeatedPlayer player : players) {
+		List<MutableSeatedPlayer> players = game.getCurrentDealPlayers();
+		for (MutableSeatedPlayer player : players) {
 			PlayingTableState.logger.info(player.toString());
 		}
 		
@@ -145,7 +145,7 @@ public class PlayingTableState
 	 *             action.
 	 */
 	@Override
-	public synchronized void bet(GameSeatedPlayer player, int amount)
+	public synchronized void bet(MutableSeatedPlayer player, int amount)
 			throws IllegalActionException {
 		round.bet(player, amount);
 		mediatingTable.publishBetEvent(new BetEvent(player.getMemento(), amount, new Pots(round.getCurrentPotValue())));
@@ -164,7 +164,7 @@ public class PlayingTableState
 	 *             action.
 	 */
 	@Override
-	public synchronized void call(GameSeatedPlayer player)
+	public synchronized void call(MutableSeatedPlayer player)
 			throws IllegalActionException {
 		round.call(player);
 		mediatingTable.publishCallEvent(new CallEvent(player.getMemento(), new Pots(round.getCurrentPotValue())));
@@ -183,7 +183,7 @@ public class PlayingTableState
 	 *             action.
 	 */
 	@Override
-	public synchronized void check(GameSeatedPlayer player)
+	public synchronized void check(MutableSeatedPlayer player)
 			throws IllegalActionException {
 		round.check(player);
 		mediatingTable.publishCheckEvent(new CheckEvent(player.getMemento()));
@@ -202,7 +202,7 @@ public class PlayingTableState
 	 *             action.
 	 */
 	@Override
-	public synchronized void raise(GameSeatedPlayer player, int amount)
+	public synchronized void raise(MutableSeatedPlayer player, int amount)
 			throws IllegalActionException {
 		round.raise(player, amount);
 		mediatingTable.publishRaiseEvent(new RaiseEvent(player.getMemento(), amount, new Pots(round
@@ -225,7 +225,7 @@ public class PlayingTableState
 	 *             action.
 	 */
 	@Override
-	public synchronized void fold(GameSeatedPlayer player)
+	public synchronized void fold(MutableSeatedPlayer player)
 			throws IllegalActionException {
 		round.fold(player);
 		mediatingTable.publishFoldEvent(new FoldEvent(player.getMemento()));
@@ -244,7 +244,7 @@ public class PlayingTableState
 	 *             action.
 	 */
 	@Override
-	public synchronized void deal(GameSeatedPlayer player)
+	public synchronized void deal(MutableSeatedPlayer player)
 			throws IllegalActionException {
 		round.deal(player);
 		checkIfEndedAndChangeRound();
@@ -264,14 +264,14 @@ public class PlayingTableState
 	 *             action.
 	 */
 	@Override
-	public synchronized void allIn(GameSeatedPlayer player)
+	public synchronized void allIn(MutableSeatedPlayer player)
 			throws IllegalActionException {
 		round.allIn(player);
 		checkIfEndedAndChangeRound();
 	}
 	
 	@Override
-	public synchronized HoldemPlayerContext sitIn(SeatId seatId, GameSeatedPlayer player)
+	public synchronized HoldemPlayerContext sitIn(SeatId seatId, MutableSeatedPlayer player)
 			throws IllegalActionException {
 		try {
 			game.sitIn(seatId, player);
@@ -299,7 +299,7 @@ public class PlayingTableState
 	}
 	
 	@Override
-	public synchronized HoldemPlayerContext sitIn(GameSeatedPlayer player)
+	public synchronized HoldemPlayerContext sitIn(MutableSeatedPlayer player)
 			throws IllegalActionException {
 		try {
 			game.sitIn(player);
@@ -325,7 +325,7 @@ public class PlayingTableState
 	}
 	
 	@Override
-	public synchronized void sitOut(GameSeatedPlayer player) {
+	public synchronized void sitOut(MutableSeatedPlayer player) {
 		if (!game.getTable().hasAsPlayer(player)) {
 			return;
 		}
@@ -354,7 +354,7 @@ public class PlayingTableState
 	}
 	
 	@Override
-	public List<GameSeatedPlayer> getSeatedServerPlayers() {
+	public List<MutableSeatedPlayer> getSeatedServerPlayers() {
 		return game.getTable().getSeatedServerPlayers();
 	}
 	
@@ -375,7 +375,7 @@ public class PlayingTableState
 		if (round.isRoundEnded()) {
 			changeToNextRound();
 		} else {
-			GameSeatedPlayer player = game.getCurrentPlayer();
+			MutableSeatedPlayer player = game.getCurrentPlayer();
 			if (player != null) {
 				mediatingTable.publishNextPlayerEvent(new NextPlayerEvent(player.getMemento()));
 			}

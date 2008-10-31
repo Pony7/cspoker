@@ -3,16 +3,16 @@ package org.cspoker.server.common;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.HoldemPlayerContext;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.server.common.gamecontrol.PokerTable;
-import org.cspoker.server.common.player.GameSeatedPlayer;
+import org.cspoker.server.common.player.MutableSeatedPlayer;
 
 public class HoldemPlayerContextImpl
 		implements HoldemPlayerContext {
 	
-	private GameSeatedPlayer player;
+	private MutableSeatedPlayer player;
 	
 	private PokerTable table;
 	
-	public HoldemPlayerContextImpl(GameSeatedPlayer player, PokerTable table) {
+	public HoldemPlayerContextImpl(MutableSeatedPlayer player, PokerTable table) {
 		this.player = player;
 		this.table = table;
 	}
