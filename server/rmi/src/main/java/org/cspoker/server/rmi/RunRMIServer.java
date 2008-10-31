@@ -23,7 +23,7 @@ import org.cspoker.server.common.CSPokerServerImpl;
 
 public class RunRMIServer {
 
-	public static RMIServer server;
+	static RMIServer server;
 
 	static {
 		Log4JPropertiesLoader

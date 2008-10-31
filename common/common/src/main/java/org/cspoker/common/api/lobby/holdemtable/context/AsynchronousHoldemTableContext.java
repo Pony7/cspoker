@@ -27,7 +27,7 @@ import org.cspoker.common.api.shared.exception.IllegalActionException;
 @Immutable
 public class AsynchronousHoldemTableContext extends ForwardingHoldemTableContext {
 
-	protected Executor executor;
+	final protected Executor executor;
 	
 	public AsynchronousHoldemTableContext(Executor executor, HoldemTableContext holdemTableContext) {
 		super(holdemTableContext);

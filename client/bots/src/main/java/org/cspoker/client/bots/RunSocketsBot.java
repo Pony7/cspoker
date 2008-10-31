@@ -18,14 +18,14 @@ package org.cspoker.client.bots;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 
-import org.cspoker.client.rmi.RemoteRMIServer;
+import org.cspoker.client.xml.sockets.RemoteSocketServer;
 
-public class RunRemoteBot {
+public class RunSocketsBot {
 
 	public static BotRunner runner;
 	
 	public static void main(String[] args) throws RemoteException, NotBoundException {
-		runner = new BotRunner(new RemoteRMIServer());
+		runner = new BotRunner(new RemoteSocketServer());
 	}
 	
 }

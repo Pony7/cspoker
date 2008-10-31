@@ -147,7 +147,7 @@ public class ClientCore
 	 * @see java.lang.Runnable#run()
 	 */
 	public void run() {
-		CommunicationProvider communicationProvider = new CommunicationProvider();
+		// CommunicationProvider communicationProvider = new CommunicationProvider();
 		// new LoadProvidersFromXml(communicationProvider);
 		// new LoadEmbeddedProvider(communicationProvider);
 		// Run the whole GUI inside a try-catch for now so we can catch

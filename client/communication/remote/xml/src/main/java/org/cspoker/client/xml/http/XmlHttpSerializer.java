@@ -18,6 +18,7 @@ package org.cspoker.client.xml.http;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.Reader;
 import java.net.HttpURLConnection;
 import java.net.ProtocolException;
 import java.net.URL;
@@ -76,7 +77,7 @@ public class XmlHttpSerializer implements XmlActionSerializer {
 		}
 		
 		HTTPRequest request = new HTTPRequest(actions);
-		
+		BufferedReader in=null;
 		try {
 			HttpURLConnection connection = (HttpURLConnection) url
 			.openConnection();
@@ -100,7 +101,7 @@ public class XmlHttpSerializer implements XmlActionSerializer {
 			} else if (connection.getResponseCode() / 100 == 4
 					|| connection.getResponseCode() / 100 == 5) {
 				String line;
-				BufferedReader in = new BufferedReader(new InputStreamReader(
+				in = new BufferedReader(new InputStreamReader(
 						connection.getInputStream()));
 				StringBuffer buffer = new StringBuffer();
 				while ((line = in.readLine()) != null) {
@@ -123,6 +124,7 @@ public class XmlHttpSerializer implements XmlActionSerializer {
 				eventListener.onActionPerformed(event);
 			}
 		} catch (ProtocolException exception) {
+			close(in);
 			throwRemoteExceptions(request,exception.getMessage());
 		} catch (PropertyException exception) {
 			throwRemoteExceptions(request,exception.getMessage());
@@ -130,9 +132,16 @@ public class XmlHttpSerializer implements XmlActionSerializer {
 			throwRemoteExceptions(request,exception.getMessage());
 		} catch (JAXBException exception) {
 			throwRemoteExceptions(request,exception.getMessage());
-		}
+		} 
 	}
 
+	private void close(Reader r){
+		try {
+			r.close();
+		} catch (IOException e) {
+		}
+	}
+	
 	private void throwRemoteExceptions(HTTPRequest request, String message){
 		for(DispatchableAction<?> action:request.getActions()){
 			eventListener.onActionPerformed(action.getRemoteExceptionEvent(new RemoteException(message)));

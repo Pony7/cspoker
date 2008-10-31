@@ -17,6 +17,8 @@ package org.cspoker.server.xml.common;
 
 import java.util.concurrent.ConcurrentHashMap;
 
+import net.jcip.annotations.NotThreadSafe;
+
 import org.cspoker.common.api.lobby.context.ForwardingLobbyContext;
 import org.cspoker.common.api.lobby.context.LobbyContext;
 import org.cspoker.common.api.lobby.context.StaticLobbyContext;
@@ -24,6 +26,7 @@ import org.cspoker.common.api.lobby.holdemtable.listener.UniversalTableListener;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.api.shared.listener.UniversalServerListener;
 
+@NotThreadSafe
 public class XmlLobbyContext extends ForwardingLobbyContext implements StaticLobbyContext {
 
 	private UniversalServerListener listener;

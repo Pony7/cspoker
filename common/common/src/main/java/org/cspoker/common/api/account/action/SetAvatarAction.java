@@ -37,10 +37,6 @@ public class SetAvatarAction extends AccountAction<Void> {
 		// no op
 	}
 
-	public byte[] getAvatar() {
-		return avatar;
-	}
-
 	@Override
 	public Void perform(AccountContext accountContext) {
 		accountContext.setAvatar(avatar);
