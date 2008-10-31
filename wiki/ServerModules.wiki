@@ -1,5 +1,5 @@
 #summary The modules of the server
-#labels Phase-Design
+#labels Phase-Design,Deprecated
 
 = Introduction =
 
