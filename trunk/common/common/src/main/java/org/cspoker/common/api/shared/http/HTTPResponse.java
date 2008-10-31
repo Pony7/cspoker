@@ -20,6 +20,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Queue;
 
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.cspoker.common.api.shared.event.ActionEvent;
@@ -28,7 +29,10 @@ import org.cspoker.common.api.shared.event.ServerEvent;
 @XmlRootElement
 public class HTTPResponse {
 
+	@XmlElement(required=true,nillable=false) 
 	private List<ServerEvent> events = Collections.synchronizedList(new ArrayList<ServerEvent>());
+	
+	@XmlElement(required=true,nillable=false) 
 	private List<ActionEvent<?>> actionResults = Collections.synchronizedList(new ArrayList<ActionEvent<?>>());
 	
 	public HTTPResponse() {

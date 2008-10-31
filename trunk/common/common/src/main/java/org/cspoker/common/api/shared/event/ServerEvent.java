@@ -18,8 +18,10 @@ package org.cspoker.common.api.shared.event;
 
 import org.cspoker.common.api.shared.listener.ServerListenerTree;
 
-public interface ServerEvent extends Event {
+public abstract class ServerEvent implements Event {
 
-	void dispatch(ServerListenerTree listenerTree);
+	private static final long serialVersionUID = 7439891027088408306L;
+
+	public abstract void dispatch(ServerListenerTree listenerTree);
 
 }

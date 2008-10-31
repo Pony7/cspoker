@@ -19,7 +19,7 @@ import org.cspoker.common.api.lobby.listener.LobbyListenerTree;
 import org.cspoker.common.api.shared.event.ServerEvent;
 import org.cspoker.common.api.shared.listener.ServerListenerTree;
 
-public abstract class LobbyTreeEvent implements ServerEvent {
+public abstract class LobbyTreeEvent extends ServerEvent {
 
 	private static final long serialVersionUID = 557148706756328395L;
 

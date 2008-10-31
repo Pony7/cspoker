@@ -1,5 +1,5 @@
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlSchema(namespace="http://www.cspoker.org/api/2008-8/elements/table")
+@XmlSchema(namespace="http://www.cspoker.org/api/2008-11/")
 package org.cspoker.common.elements.table;
 
 
