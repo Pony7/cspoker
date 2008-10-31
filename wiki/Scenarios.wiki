@@ -5,38 +5,23 @@
 
 All possible scenarios that can occur in a poker game and should be tested. Please add any if you feel a scenario is missing.
 
-= Scenarios =
+== Terminology ==
+  * Active player: a player who can perform an action at the table.
 
-== 1 active player left _(tested)_ ==
+= Texas Hold'Em Poker Scenarios =
 
-The active player collects all the chips.
+== Multiple Players ==
+  * *One active player left:* The active player collects all the chips. _tested_
+  * *One all-in player left:* The all-in player collects all the chips. _tested_
+  * *Only all-in players and at most one active player*: The rounds have to be changed automatically, without betting possibility until showdown.
+  * *Small Blind All-in:* The next player must bet the big blind, which everyone else calls/raises. [http://www.learn-texas-holdem.com/questions/small-blind-not-enough-chips.htm link]
+  * *Big Blind All-in:* The other players must call the all-in amount, not the big blind amount. [http://www.learn-texas-holdem.com/questions/big-blind-all-in.htm link]
+  * *Both Blinds All-in*
 
-== 1 all-in player left _(tested)_ ==
-
-The all-in player collects all the chips.
-
-== only all-in players and maximum 1 active player _(tested)_ ==
-
-The game control should automatically change to next rounds, without betting, until showdown.
-
-== small blind goes all in _(tested)_ ==
-
-The next player must bet the big blind, which everyone else calls/raises.
-[http://www.learn-texas-holdem.com/questions/small-blind-not-enough-chips.htm link]
-
-== 2 players and small blind goes all-in ==
-
-The other player must call the all-in amount and not enter the big blind.
-
-== big blind goes all in _(tested)_ ==
-
-The other players must call the all-in amount, not the big blind amount.
-[http://www.learn-texas-holdem.com/questions/big-blind-all-in.htm link]
-
-== small blind and big blind go all in _(tested)_ ==
-
-
-
-
-
- 
+== Two Players ==
+  * *Blinds are inversed and dealer starts to act*
+=== All-in ===
+If there is at least one all-in player, the rounds have to be switched automatically.
+  * *Small Blind All-in:* The other player must call the all-in amount and not pay the big blind.
+  * *Big Blind All-in:* The small blind player must call the all-in amount.
+  * *Both Blinds All-in*
