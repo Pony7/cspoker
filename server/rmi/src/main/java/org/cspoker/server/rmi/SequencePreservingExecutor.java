@@ -48,10 +48,6 @@ public class SequencePreservingExecutor implements Executor {
 		if(taskPending.compareAndSet(false, true)){
 			executor.execute(new Runnable(){
 				public void run() {
-					//empty the queue before leaving a window for new runnables to be submitted
-					readQueue();
-					//take a lock to prevent 2 runnables of this kind to poll the queue simultaneously and
-					//switch the order of events.
 					synchronized (queueReaderLock) {
 						// allow new runnables of this kind to be submitted
 						taskPending.set(false);
