@@ -84,7 +84,7 @@ public abstract class AbstractHttpHandler implements HttpHandler {
 	protected void throwException(HttpExchange http, Throwable e, int status)
 			throws IOException {
 		try {
-			logger.error("Returning serialized exception", e);
+			logger.debug("Returning serialized exception", e);
 			if (e instanceof HttpException) {
 				// e has http status information
 				status = ((HttpException) e).getStatus();

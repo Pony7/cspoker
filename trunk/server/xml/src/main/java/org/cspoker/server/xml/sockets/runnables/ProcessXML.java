@@ -26,7 +26,7 @@ import org.cspoker.common.api.shared.action.DispatchableAction;
 import org.cspoker.common.api.shared.socket.LoginAction;
 import org.cspoker.common.jaxbcontext.ActionJAXBContext;
 import org.cspoker.common.jaxbcontext.AllSocketJAXBContexts;
-import org.cspoker.server.common.util.threading.Prioritizable;
+import org.cspoker.common.util.threading.Prioritizable;
 import org.cspoker.server.xml.sockets.ClientContext;
 import org.cspoker.server.xml.sockets.security.PolicyFile;
 

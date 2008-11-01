@@ -54,6 +54,7 @@ import org.cspoker.common.elements.player.Player;
 import org.cspoker.common.elements.table.DetailedHoldemTable;
 import org.cspoker.common.elements.table.Table;
 import org.cspoker.common.elements.table.TableConfiguration;
+import org.cspoker.common.util.threading.ScheduledRequestExecutor;
 import org.cspoker.server.common.HoldemTableContextImpl;
 import org.cspoker.server.common.account.ExtendedAccountContext;
 import org.cspoker.server.common.chat.ChatServer;
@@ -64,7 +65,6 @@ import org.cspoker.server.common.elements.id.SeatId;
 import org.cspoker.server.common.elements.id.TableId;
 import org.cspoker.server.common.player.MutableSeatedPlayer;
 import org.cspoker.server.common.player.MutablePlayer;
-import org.cspoker.server.common.util.threading.ScheduledRequestExecutor;
 
 /**
  * A class of game mediators to decouple the game control from all users:

@@ -24,10 +24,18 @@ import org.cspoker.client.xml.common.XmlActionSerializer;
 
 public class RemoteHTTPServer extends RemoteXmlServer {
 
+	public RemoteHTTPServer() {
+		this("localhost");
+	}
+	
+	public RemoteHTTPServer(String server) {
+		this(server,8080);
+	}
+	
 	public RemoteHTTPServer(String server, int port) {
 		super(server,port);
 	}
-	
+
 	@Override
 	protected XmlActionSerializer createXmlActionSerializer(String username,
 			String password) throws RemoteException {

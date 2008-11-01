@@ -61,6 +61,8 @@ public class CSPokerHandler extends AbstractHttpHandler {
 	protected byte[] getResponse(HttpExchange http) throws HttpExceptionImpl {
 		final Pair<String,String> credentials = AbstractHttpHandler.getCredentials(http.getRequestHeaders());
 
+		logger.debug("HTTP request from "+credentials.getLeft());
+		
 		Pair<StaticServerContext, Queue<ServerEvent>> state;
 		try {
 			state = contexts.getOrCreate(credentials.getLeft(), new IFactory1<Pair<StaticServerContext, Queue<ServerEvent>>, LoginException>(){
@@ -94,7 +96,7 @@ public class CSPokerHandler extends AbstractHttpHandler {
 			HTTPResponse response = request.performRequest(state.getLeft(), state.getRight());
 
 			StringWriter xml = new StringWriter();
-			Marshaller m = EventJAXBContext.context.createMarshaller();
+			Marshaller m = AllHTTPJAXBContexts.context.createMarshaller();
 			m.setProperty(Marshaller.JAXB_FRAGMENT, true);
 			m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 			m.marshal(response, xml);
@@ -103,9 +105,11 @@ public class CSPokerHandler extends AbstractHttpHandler {
 					+ ":\n" + xml);
 			return xml.toString().getBytes();
 		} catch (JAXBException e) {
+			logger.debug(e);
 			throw new HttpExceptionImpl(e, 400);
-		} catch (LoginException exception) {
-			throw new HttpExceptionImpl(exception, 401);
+		} catch (LoginException e) {
+			logger.debug(e);
+			throw new HttpExceptionImpl(e, 401);
 		}
 	}
 
