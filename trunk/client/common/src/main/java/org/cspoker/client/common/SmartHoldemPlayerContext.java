@@ -3,40 +3,36 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- *
+ * 
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
- *
+ *  
  *  You should have received a copy of the GNU General Public License
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 package org.cspoker.client.common;
 
-import java.rmi.RemoteException;
+import java.util.Set;
 
-import org.cspoker.common.api.chat.context.ForwardingRemoteChatContext;
-import org.cspoker.common.api.chat.context.RemoteChatContext;
-import org.cspoker.common.api.chat.listener.ChatListener;
-import org.cspoker.common.api.chat.listener.ForwardingChatListener;
+import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.ForwardingRemoteHoldemPlayerContext;
+import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.RemoteHoldemPlayerContext;
+import org.cspoker.common.elements.cards.Card;
 
-public class SmartChatContext extends ForwardingRemoteChatContext {
+public class SmartHoldemPlayerContext extends ForwardingRemoteHoldemPlayerContext {
 
-	private ForwardingChatListener chatListener;
+	private final SmartHoldemPlayerListener smartListener;
 
-	public SmartChatContext(RemoteChatContext remoteChatContext, ForwardingChatListener chatListener) throws RemoteException {
-		super(remoteChatContext);
-		this.chatListener = chatListener;
+	public SmartHoldemPlayerContext(RemoteHoldemPlayerContext remoteHoldemPlayerContext,
+			SmartHoldemPlayerListener smartListener) {
+		super(remoteHoldemPlayerContext);
+		this.smartListener = smartListener;
 	}
 	
-	public void subscribe(ChatListener listener){
-		chatListener.subscribe(listener);
+	public Set<Card> getPocketCards(){
+		return smartListener.getPocketCards();
 	}
 	
-	public void unSubscribe(ChatListener listener){
-		chatListener.unSubscribe(listener);
-	}
-
 }

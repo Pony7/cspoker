@@ -22,7 +22,7 @@ import org.cspoker.common.api.chat.listener.UniversalTableChatListener;
 import org.cspoker.common.api.lobby.holdemtable.listener.UniversalTableListener;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 
-public class JoinTableCommand extends RemoteCommand {
+public class JoinTableCommand extends CommandImpl {
 
 
 	public JoinTableCommand(Client client, Console console) {

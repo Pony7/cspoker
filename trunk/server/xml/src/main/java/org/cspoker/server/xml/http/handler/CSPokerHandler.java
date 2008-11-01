@@ -34,7 +34,6 @@ import org.cspoker.common.api.shared.http.HTTPResponse;
 import org.cspoker.common.api.shared.listener.ServerEventListener;
 import org.cspoker.common.api.shared.listener.UniversalServerListener;
 import org.cspoker.common.jaxbcontext.AllHTTPJAXBContexts;
-import org.cspoker.common.jaxbcontext.EventJAXBContext;
 import org.cspoker.common.util.Pair;
 import org.cspoker.common.util.lazy.IFactory1;
 import org.cspoker.common.util.lazy.LazyMap1;

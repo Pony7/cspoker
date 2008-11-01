@@ -21,42 +21,32 @@ import org.cspoker.common.elements.player.Player;
 import org.cspoker.common.elements.pots.Pots;
 
 /**
- * A class to represent big blind events.
- * 
- * @author Kenzo
+ * A class to represent pots changed events.
  * 
  */
-public class BigBlindEvent extends HoldemTableEvent {
+public class PotsChangedEvent extends HoldemTableEvent {
 
-	private static final long serialVersionUID = -7908022421547219241L;
+	private static final long serialVersionUID = 2635398487301274173L;
 
-	private Player player;
+	private Pots pots;
 
-	private int amount;
-
-	public BigBlindEvent(Player player, int amount) {
-		this.player = player;
-		this.amount = amount;
+	public PotsChangedEvent(Pots pots) {
+		this.pots = pots;
 	}
 
-	protected BigBlindEvent() {
+	protected PotsChangedEvent() {
 		// no op
 	}
 
 	public String toString() {
-		return getPlayer().getName() + " bets the big blind of " + getAmount()
-				+ " chips.";
+		return  "Pots changed to a total of "+pots.getTotalValue();
 	}
-
-	public int getAmount() {
-		return amount;
-	}
-
-	public Player getPlayer() {
-		return player;
+	
+	public Pots getPots() {
+		return pots;
 	}
 
 	public void dispatch(HoldemTableListener holdemTableListener) {
-		holdemTableListener.onBigBlind(this);
+		holdemTableListener.onPotsChanged(this);
 	}
 }

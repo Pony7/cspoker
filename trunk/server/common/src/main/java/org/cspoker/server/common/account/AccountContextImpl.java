@@ -18,8 +18,8 @@
 import javax.security.auth.login.LoginException;
 
 import org.cspoker.server.common.authentication.XmlFileAuthenticator;
-import org.cspoker.server.common.player.PlayerFactory;
 import org.cspoker.server.common.player.MutablePlayer;
+import org.cspoker.server.common.player.PlayerFactory;
 
 public class AccountContextImpl implements ExtendedAccountContext{
 

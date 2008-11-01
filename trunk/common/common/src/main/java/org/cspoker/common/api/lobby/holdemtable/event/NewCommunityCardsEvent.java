@@ -46,7 +46,7 @@ public class NewCommunityCardsEvent extends HoldemTableEvent {
 		// no op
 	}
 
-	public Set<Card> getCommonCards() {
+	public Set<Card> getCommunityCards() {
 		return communityCards;
 	}
 

@@ -16,7 +16,6 @@
 
 package org.cspoker.server.common.gamecontrol;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -28,6 +27,7 @@ import org.cspoker.common.api.lobby.holdemtable.event.CallEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.CheckEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.FoldEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.NextPlayerEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.PotsChangedEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.RaiseEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.SitInEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.SitOutEvent;
@@ -148,7 +148,8 @@ public class PlayingTableState
 	public synchronized void bet(MutableSeatedPlayer player, int amount)
 			throws IllegalActionException {
 		round.bet(player, amount);
-		mediatingTable.publishBetEvent(new BetEvent(player.getMemento(), amount, new Pots(round.getCurrentPotValue())));
+		mediatingTable.publishBetEvent(new BetEvent(player.getMemento(), amount));
+		mediatingTable.publishPotsChangedEvent(new PotsChangedEvent(new Pots(round.getCurrentPotValue())));
 		PlayingTableState.logger.info(player.getName() + " bets " + amount + ".");
 		checkIfEndedAndChangeRound();
 	}
@@ -167,7 +168,8 @@ public class PlayingTableState
 	public synchronized void call(MutableSeatedPlayer player)
 			throws IllegalActionException {
 		round.call(player);
-		mediatingTable.publishCallEvent(new CallEvent(player.getMemento(), new Pots(round.getCurrentPotValue())));
+		mediatingTable.publishCallEvent(new CallEvent(player.getMemento()));
+		mediatingTable.publishPotsChangedEvent(new PotsChangedEvent(new Pots(round.getCurrentPotValue())));
 		PlayingTableState.logger.info(player.getName() + " calls.");
 		checkIfEndedAndChangeRound();
 	}
@@ -205,8 +207,8 @@ public class PlayingTableState
 	public synchronized void raise(MutableSeatedPlayer player, int amount)
 			throws IllegalActionException {
 		round.raise(player, amount);
-		mediatingTable.publishRaiseEvent(new RaiseEvent(player.getMemento(), amount, new Pots(round
-				.getCurrentPotValue())));
+		mediatingTable.publishRaiseEvent(new RaiseEvent(player.getMemento(), amount));
+		mediatingTable.publishPotsChangedEvent(new PotsChangedEvent(new Pots(round.getCurrentPotValue())));
 		PlayingTableState.logger.info(player.getName() + ": raises $" + amount + " to $"
 				+ player.getMemento().getBetChipsValue());
 		checkIfEndedAndChangeRound();

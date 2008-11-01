@@ -19,7 +19,11 @@ import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
 
 import org.apache.log4j.Logger;
-import org.cspoker.client.gui.swt.control.*;
+import org.cspoker.client.gui.swt.control.CardPaintListener;
+import org.cspoker.client.gui.swt.control.Chip;
+import org.cspoker.client.gui.swt.control.ClientGUI;
+import org.cspoker.client.gui.swt.control.MutableSeatedPlayer;
+import org.cspoker.client.gui.swt.control.UserSeatedPlayer;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.cards.Card;
 import org.cspoker.common.elements.player.SeatedPlayer;
@@ -31,7 +35,13 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.*;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Canvas;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.ProgressBar;
 
 /**
  * Represents a composite in the TableComposite where the player is visualized

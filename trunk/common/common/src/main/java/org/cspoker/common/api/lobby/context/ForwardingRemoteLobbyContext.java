@@ -18,6 +18,8 @@ package org.cspoker.common.api.lobby.context;
 import java.rmi.RemoteException;
 import java.rmi.server.Unreferenced;
 
+import net.jcip.annotations.Immutable;
+
 import org.apache.log4j.Logger;
 import org.cspoker.common.api.lobby.holdemtable.context.RemoteHoldemTableContext;
 import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
@@ -26,6 +28,7 @@ import org.cspoker.common.elements.table.DetailedHoldemTable;
 import org.cspoker.common.elements.table.TableConfiguration;
 import org.cspoker.common.elements.table.TableList;
 
+@Immutable
 public class ForwardingRemoteLobbyContext implements RemoteLobbyContext, Unreferenced{
 
 
@@ -33,7 +36,7 @@ public class ForwardingRemoteLobbyContext implements RemoteLobbyContext, Unrefer
 	
 	protected final RemoteLobbyContext lobbyContext;
 
-	public ForwardingRemoteLobbyContext(RemoteLobbyContext lobbyContext) throws RemoteException {
+	public ForwardingRemoteLobbyContext(RemoteLobbyContext lobbyContext) {
 		this.lobbyContext  = lobbyContext;
 	}
 

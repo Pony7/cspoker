@@ -15,9 +15,6 @@
  */
 package org.cspoker.common.api.account.context;
 
-import java.rmi.RemoteException;
-
-import org.cspoker.common.api.shared.exception.IllegalActionException;
 
 public interface AccountContext extends RemoteAccountContext{
 

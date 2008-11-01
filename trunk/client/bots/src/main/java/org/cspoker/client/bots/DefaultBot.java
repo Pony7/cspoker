@@ -27,6 +27,7 @@ import org.cspoker.common.api.lobby.holdemtable.event.NewCommunityCardsEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.NewDealEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.NewRoundEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.NextPlayerEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.PotsChangedEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.RaiseEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.ShowHandEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.SitInEvent;
@@ -113,6 +114,11 @@ public class DefaultBot implements HoldemTableListener, HoldemPlayerListener{
 	}
 
 	public void onNewPocketCards(NewPocketCardsEvent newPocketCardsEvent) {
+		
+	}
+
+	@Override
+	public void onPotsChanged(PotsChangedEvent potsChangedEvent) {
 		
 	}
 

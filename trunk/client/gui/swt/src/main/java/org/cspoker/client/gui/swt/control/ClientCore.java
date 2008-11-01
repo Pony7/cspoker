@@ -17,7 +17,6 @@ import javax.security.auth.login.LoginException;
 
 import org.apache.log4j.Logger;
 import org.cspoker.client.User;
-import org.cspoker.client.common.CommunicationProvider;
 import org.cspoker.client.gui.swt.window.GameWindow;
 import org.cspoker.client.gui.swt.window.LobbyWindow;
 import org.cspoker.client.gui.swt.window.LoginDialog;

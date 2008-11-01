@@ -34,10 +34,7 @@ public class RaiseEvent extends HoldemTableEvent {
 
 	private int amount;
 
-	private Pots pots;
-
-	public RaiseEvent(Player player, int amount, Pots pots) {
-		this.pots = pots;
+	public RaiseEvent(Player player, int amount) {
 		this.player = player;
 		this.amount = amount;
 	}
@@ -59,10 +56,6 @@ public class RaiseEvent extends HoldemTableEvent {
 		return player;
 	}
 	
-	public Pots getPots() {
-		return pots;
-	}
-
 	public void dispatch(HoldemTableListener holdemTableListener) {
 		holdemTableListener.onRaise(this);
 	}

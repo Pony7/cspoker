@@ -18,12 +18,12 @@ package org.cspoker.client.gui.text.commands;
 import org.cspoker.client.gui.text.Client;
 import org.cspoker.client.gui.text.Console;
 
-public abstract class RemoteCommand implements Command {
+public abstract class CommandImpl implements Command {
 
 	protected Console console;
 	protected Client client;
 
-	public RemoteCommand(Client client, Console console) {
+	public CommandImpl(Client client, Console console) {
 		this.client = client;
 		this.console = console;
 	}

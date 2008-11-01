@@ -19,22 +19,24 @@ import java.rmi.RemoteException;
 
 import net.jcip.annotations.Immutable;
 
-import org.cspoker.common.api.lobby.listener.LobbyListener;
-import org.cspoker.common.api.shared.context.ForwardingRemoteServerContext;
-import org.cspoker.common.api.shared.context.RemoteServerContext;
+import org.cspoker.common.api.lobby.context.ForwardingRemoteLobbyContext;
+import org.cspoker.common.api.lobby.context.RemoteLobbyContext;
+import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 
 @Immutable
-public class SmartClientContext extends ForwardingRemoteServerContext{
+public class SmartLobbyContext extends ForwardingRemoteLobbyContext {
 
-	public SmartClientContext(RemoteServerContext serverContext) {
-		super(serverContext);
-	}
-
-	@Override
-	public SmartLobbyContext getLobbyContext(LobbyListener lobbyListener)
-			throws RemoteException, IllegalActionException {
-		return new SmartLobbyContext(super.getLobbyContext(lobbyListener));
+	public SmartLobbyContext(RemoteLobbyContext lobbyContext) {
+		super(lobbyContext);
 	}
 	
+	@Override
+	public SmartHoldemTableContext joinHoldemTable(long tableId,
+			HoldemTableListener holdemTableListener) throws RemoteException,
+			IllegalActionException {
+		SmartHoldemTableListener smartListener = new SmartHoldemTableListener(holdemTableListener);
+		return new SmartHoldemTableContext(super.joinHoldemTable(tableId, smartListener),smartListener);
+	}
+
 }

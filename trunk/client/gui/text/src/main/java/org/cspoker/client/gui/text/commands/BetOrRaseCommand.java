@@ -18,7 +18,7 @@ package org.cspoker.client.gui.text.commands;
 import org.cspoker.client.gui.text.Client;
 import org.cspoker.client.gui.text.Console;
 
-public class BetOrRaseCommand extends RemoteCommand {
+public class BetOrRaseCommand extends CommandImpl {
 
 	public BetOrRaseCommand(Client client, Console console) {
 		super(client, console);

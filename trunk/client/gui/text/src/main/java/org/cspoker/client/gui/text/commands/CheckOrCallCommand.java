@@ -18,7 +18,7 @@ package org.cspoker.client.gui.text.commands;
 import org.cspoker.client.gui.text.Client;
 import org.cspoker.client.gui.text.Console;
 
-public class CheckOrCallCommand extends RemoteCommand {
+public class CheckOrCallCommand extends CommandImpl {
 
 	public CheckOrCallCommand(Client client, Console console) {
 		super(client, console);

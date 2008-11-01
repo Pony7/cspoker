@@ -27,7 +27,7 @@ public class ForwardingRemoteHoldemPlayerContext implements RemoteHoldemPlayerCo
 	
 	private final RemoteHoldemPlayerContext holdemPlayerContext;
 
-	public ForwardingRemoteHoldemPlayerContext(RemoteHoldemPlayerContext holdemPlayerContext) throws RemoteException {
+	public ForwardingRemoteHoldemPlayerContext(RemoteHoldemPlayerContext holdemPlayerContext) {
 		this.holdemPlayerContext  = holdemPlayerContext;
 	}
 
