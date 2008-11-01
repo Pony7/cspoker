@@ -19,7 +19,6 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 
 import org.apache.log4j.Logger;
-import org.cspoker.common.api.shared.socket.LoginAction;
 
 public class SocketJAXBContext {
 
@@ -38,8 +37,7 @@ public class SocketJAXBContext {
 	}
 
 	public static Class<?>[] getActions() {
-		return new Class<?>[] { 
-				LoginAction.class
+		return new Class<?>[] {
 		};
 	}
 

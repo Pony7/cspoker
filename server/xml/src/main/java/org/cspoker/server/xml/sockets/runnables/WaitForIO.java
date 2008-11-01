@@ -30,7 +30,7 @@ import java.util.concurrent.Executor;
 
 import org.apache.log4j.Logger;
 import org.cspoker.common.CSPokerServer;
-import org.cspoker.server.common.util.threading.Prioritizable;
+import org.cspoker.common.util.threading.Prioritizable;
 import org.cspoker.server.xml.sockets.ClientContext;
 
 public class WaitForIO implements Runnable, Prioritizable {

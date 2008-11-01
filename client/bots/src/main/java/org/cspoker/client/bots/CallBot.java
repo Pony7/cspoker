@@ -85,9 +85,9 @@ public class CallBot extends DefaultBot {
 	public void onNewDeal(NewDealEvent newDealEvent) {
 		if(doOutput){
 			++deals;
-			if(deals%64==0){
+			if(deals%32==0){
 				System.out.println("deals "+(deals)+": "+newDealEvent);
-				System.out.println(deals*1000/(1+System.currentTimeMillis()-startTime)+" deals per second");
+				System.out.println((deals*1000.0)/(1+System.currentTimeMillis()-startTime)+" deals per second");
 			}
 		}
 	}

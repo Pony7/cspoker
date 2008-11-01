@@ -41,6 +41,7 @@ import org.cspoker.common.api.lobby.holdemtable.holdemplayer.action.FoldAction;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.action.LeaveGameAction;
 import org.cspoker.common.api.shared.action.ServerChatInterestAction;
 import org.cspoker.common.api.shared.action.TableChatInterestAction;
+import org.cspoker.common.api.shared.socket.LoginAction;
 import org.cspoker.common.elements.table.DetailedHoldemTable;
 import org.cspoker.common.elements.table.Table;
 
@@ -61,7 +62,9 @@ public class ActionJAXBContext {
 	}
 
 	public static Class<?>[] getActions() {
-		return new Class<?>[] { 
+		return new Class<?>[] {
+				//login
+				LoginAction.class,
 				//account
 				ChangePasswordAction.class, CreateAccountAction.class, GetAvatarAction.class, SetAvatarAction.class,
 				GetPlayerIDAction.class,

@@ -26,13 +26,16 @@ import java.rmi.RemoteException;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.PropertyException;
 import javax.xml.bind.Unmarshaller;
+
+import net.jcip.annotations.GuardedBy;
+import net.jcip.annotations.ThreadSafe;
 
 import org.apache.log4j.Logger;
 import org.cspoker.client.xml.common.XmlActionSerializer;
@@ -43,25 +46,38 @@ import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.api.shared.http.HTTPRequest;
 import org.cspoker.common.api.shared.http.HTTPResponse;
 import org.cspoker.common.api.shared.listener.ActionAndServerEventListener;
-import org.cspoker.common.jaxbcontext.ActionJAXBContext;
 import org.cspoker.common.jaxbcontext.AllHTTPJAXBContexts;
 import org.cspoker.common.util.Base64;
+import org.cspoker.common.util.threading.LoggingThreadFactory;
 
+@ThreadSafe
 public class XmlHttpSerializer implements XmlActionSerializer {
 
 	private final static Logger logger = Logger.getLogger(XmlHttpSerializer.class);
-	private final ScheduledExecutorService scheduler;
+	
+	public final static long millisBetweenPolling = 1500;
+
 	private final URL url;
 	private final String authorizationString;
-	private final AtomicBoolean polling = new AtomicBoolean(false);
+
 	private final ConcurrentLinkedQueue<DispatchableAction<?>> actions = new ConcurrentLinkedQueue<DispatchableAction<?>>();
+
+	private final ScheduledExecutorService scheduler;
+	
+	@GuardedBy("pollerLock")
+	private ScheduledFuture<?> poller;
+	private final Object pollerLock = new Object();
+	
 	private volatile ActionAndServerEventListener eventListener;
 
 	public XmlHttpSerializer(URL url, final String username, final String password) {
 		authorizationString = "Basic "
 			+ Base64.encode((username + ":" + password).getBytes(), 0);
 		this.url = url;
-		scheduler = Executors.newScheduledThreadPool(1);
+		scheduler = Executors.newSingleThreadScheduledExecutor(new LoggingThreadFactory("http"));
+		synchronized (pollerLock) {
+			poller = new DummyScheduledFuture<Object>();
+		}
 	}
 
 
@@ -71,11 +87,6 @@ public class XmlHttpSerializer implements XmlActionSerializer {
 	}
 
 	public synchronized void sendRequest() {
-		if(polling.compareAndSet(false, true)){
-			scheduler.scheduleWithFixedDelay(new SendRequest(this), 1500, 1500,
-					TimeUnit.MILLISECONDS);
-		}
-		
 		HTTPRequest request = new HTTPRequest(actions);
 		BufferedReader in=null;
 		try {
@@ -89,7 +100,7 @@ public class XmlHttpSerializer implements XmlActionSerializer {
 			connection.setRequestMethod("POST");
 
 
-			Marshaller m = ActionJAXBContext.context.createMarshaller();
+			Marshaller m = AllHTTPJAXBContexts.context.createMarshaller();
 			m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 			m.marshal(request, connection.getOutputStream());
 
@@ -141,7 +152,7 @@ public class XmlHttpSerializer implements XmlActionSerializer {
 		} catch (IOException e) {
 		}
 	}
-	
+
 	private void throwRemoteExceptions(HTTPRequest request, String message){
 		for(DispatchableAction<?> action:request.getActions()){
 			eventListener.onActionPerformed(action.getRemoteExceptionEvent(new RemoteException(message)));
@@ -160,6 +171,32 @@ public class XmlHttpSerializer implements XmlActionSerializer {
 
 	public void perform(DispatchableAction<?> action)
 	throws RemoteException {
+		logger.debug("Action added: "+action);
 		actions.add(action);
+		pollNow();
+	}
+	
+	private void pollNow() {
+		synchronized (pollerLock) {
+			if (poller.cancel(false)) {
+				logger
+						.debug("Cancelled submitted poller task, submitting a new one immediately");
+				poller = scheduler.schedule(new Poller(), 0,
+						TimeUnit.MILLISECONDS);
+			} else {
+				logger
+						.debug("Failed to cancel poller task. It's most likely in progress.");
+			}
+		}
+	}
+	
+	private class Poller implements Runnable{
+		public void run() {
+			logger.debug("Sending request.");
+			sendRequest();
+			synchronized (pollerLock) {
+				poller = scheduler.schedule(this, millisBetweenPolling, TimeUnit.MILLISECONDS);
+			}
+		}
 	}
 }

@@ -33,7 +33,7 @@ import org.cspoker.common.api.shared.context.AsynchronousServerContext;
 import org.cspoker.common.api.shared.context.ExternalRemoteServerContext;
 import org.cspoker.common.api.shared.context.RemoteServerContext;
 import org.cspoker.common.api.shared.context.ServerContext;
-import org.cspoker.server.common.util.threading.RequestExecutor;
+import org.cspoker.common.util.threading.RequestExecutor;
 import org.cspoker.server.rmi.export.ExportingServerContext;
 import org.cspoker.server.rmi.unremote.context.UnremoteServerContext;
 

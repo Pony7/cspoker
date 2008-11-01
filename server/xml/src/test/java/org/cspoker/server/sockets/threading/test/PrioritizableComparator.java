@@ -20,8 +20,8 @@ import java.util.concurrent.PriorityBlockingQueue;
 
 import junit.framework.TestCase;
 
-import org.cspoker.server.common.util.threading.Prioritizable;
-import org.cspoker.server.common.util.threading.SocketRunnableComparator;
+import org.cspoker.common.util.threading.Prioritizable;
+import org.cspoker.common.util.threading.SocketRunnableComparator;
 
 public class PrioritizableComparator extends TestCase {
 

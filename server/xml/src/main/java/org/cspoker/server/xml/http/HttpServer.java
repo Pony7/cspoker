@@ -21,7 +21,7 @@ import java.rmi.RemoteException;
 
 import org.apache.log4j.Logger;
 import org.cspoker.common.CSPokerServer;
-import org.cspoker.server.common.util.threading.RequestExecutor;
+import org.cspoker.common.util.threading.RequestExecutor;
 import org.cspoker.server.xml.http.handler.CSPokerHandler;
 import org.cspoker.server.xml.http.handler.CrossDomain;
 
