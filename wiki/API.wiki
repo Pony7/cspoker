@@ -639,7 +639,6 @@ Authentication in the case of HTTP is done through the _Authorization_ header. F
 				<xs:sequence>
 					<xs:element name="player" type="tns:player" minOccurs="0" />
 					<xs:element name="amount" type="xs:int" />
-					<xs:element name="pots" type="tns:pots" minOccurs="0" />
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -657,17 +656,12 @@ Authentication in the case of HTTP is done through the _Authorization_ header. F
 		<xs:sequence />
 	</xs:complexType>
 
-	<xs:simpleType name="pots">
-		<xs:restriction base="xs:int" />
-	</xs:simpleType>
-
 	<xs:complexType name="bigBlindEvent">
 		<xs:complexContent>
 			<xs:extension base="tns:holdemTableEvent">
 				<xs:sequence>
 					<xs:element name="player" type="tns:player" minOccurs="0" />
 					<xs:element name="amount" type="xs:int" />
-					<xs:element name="pots" type="tns:pots" minOccurs="0" />
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -678,7 +672,6 @@ Authentication in the case of HTTP is done through the _Authorization_ header. F
 			<xs:extension base="tns:holdemTableEvent">
 				<xs:sequence>
 					<xs:element name="player" type="tns:player" minOccurs="0" />
-					<xs:element name="pots" type="tns:pots" minOccurs="0" />
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -776,7 +769,6 @@ Authentication in the case of HTTP is done through the _Authorization_ header. F
 				<xs:sequence>
 					<xs:element name="player" type="tns:player" minOccurs="0" />
 					<xs:element name="amount" type="xs:int" />
-					<xs:element name="pots" type="tns:pots" minOccurs="0" />
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -837,7 +829,6 @@ Authentication in the case of HTTP is done through the _Authorization_ header. F
 				<xs:sequence>
 					<xs:element name="player" type="tns:player" minOccurs="0" />
 					<xs:element name="amount" type="xs:int" />
-					<xs:element name="pots" type="tns:pots" minOccurs="0" />
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -882,6 +873,20 @@ Authentication in the case of HTTP is done through the _Authorization_ header. F
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
+
+	<xs:complexType name="potsChangedEvent">
+		<xs:complexContent>
+			<xs:extension base="tns:holdemTableEvent">
+				<xs:sequence>
+					<xs:element name="pots" type="tns:pots" minOccurs="0" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:simpleType name="pots">
+		<xs:restriction base="xs:int" />
+	</xs:simpleType>
 
 	<xs:complexType name="newPocketCardsEvent">
 		<xs:complexContent>
