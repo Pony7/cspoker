@@ -18,7 +18,6 @@ package org.cspoker.common.api.lobby.holdemtable.event;
 
 import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
 import org.cspoker.common.elements.player.Player;
-import org.cspoker.common.elements.pots.Pots;
 
 /**
  * A class to represent call events.
@@ -32,10 +31,7 @@ public class CallEvent extends HoldemTableEvent {
 
 	private Player player;
 
-	private Pots pots;
-
-	public CallEvent(Player player, Pots pots) {
-		this.pots = pots;
+	public CallEvent(Player player) {
 		this.player = player;
 	}
 
@@ -49,10 +45,6 @@ public class CallEvent extends HoldemTableEvent {
 
 	public Player getPlayer() {
 		return player;
-	}
-	
-	public Pots getPots() {
-		return pots;
 	}
 
 	public void dispatch(HoldemTableListener holdemTableListener) {

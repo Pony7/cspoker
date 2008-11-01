@@ -18,7 +18,7 @@ package org.cspoker.client.gui.text.commands;
 import org.cspoker.client.gui.text.Client;
 import org.cspoker.client.gui.text.Console;
 
-public class LeaveTableCommand extends RemoteCommand {
+public class LeaveTableCommand extends CommandImpl {
 	
 	public LeaveTableCommand(Client client, Console console) {
 		super(client, console);

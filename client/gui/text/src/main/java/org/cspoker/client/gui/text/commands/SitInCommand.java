@@ -20,7 +20,7 @@ import org.cspoker.client.gui.text.Console;
 import org.cspoker.client.gui.text.eventlistener.PrintListener;
 import org.cspoker.common.api.lobby.holdemtable.listener.UniversalTableListener;
 
-public class SitInCommand extends RemoteCommand {
+public class SitInCommand extends CommandImpl {
 	
 
 	public SitInCommand(Client client, Console console) {

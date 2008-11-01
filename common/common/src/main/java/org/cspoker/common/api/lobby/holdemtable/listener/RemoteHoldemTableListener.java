@@ -30,6 +30,7 @@ import org.cspoker.common.api.lobby.holdemtable.event.NewCommunityCardsEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.NewDealEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.NewRoundEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.NextPlayerEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.PotsChangedEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.RaiseEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.ShowHandEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.SitInEvent;
@@ -75,5 +76,7 @@ public interface RemoteHoldemTableListener extends EventListener, Remote{
 	void onSmallBlind(SmallBlindEvent smallBlindEvent) throws RemoteException;
 
 	void onWinner(WinnerEvent winnerEvent) throws RemoteException;
+
+	void onPotsChanged(PotsChangedEvent potsChangedEvent) throws RemoteException;
 	
 }

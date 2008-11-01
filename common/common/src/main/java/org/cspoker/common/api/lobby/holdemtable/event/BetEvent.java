@@ -31,10 +31,7 @@ public class BetEvent extends HoldemTableEvent {
 
 	private int amount;
 
-	private Pots pots;
-
-	public BetEvent(Player player, int amount, Pots pots) {
-		this.pots = pots;
+	public BetEvent(Player player, int amount) {
 		this.player = player;
 		this.amount = amount;
 	}
@@ -53,10 +50,6 @@ public class BetEvent extends HoldemTableEvent {
 
 	public Player getPlayer() {
 		return player;
-	}
-
-	public Pots getPots() {
-		return pots;
 	}
 	
 	public void dispatch(HoldemTableListener holdemTableListener) {

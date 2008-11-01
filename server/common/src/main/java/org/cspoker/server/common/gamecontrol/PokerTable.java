@@ -39,6 +39,7 @@ import org.cspoker.common.api.lobby.holdemtable.event.NewCommunityCardsEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.NewDealEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.NewRoundEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.NextPlayerEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.PotsChangedEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.RaiseEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.ShowHandEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.SitInEvent;
@@ -63,8 +64,8 @@ import org.cspoker.server.common.elements.chips.IllegalValueException;
 import org.cspoker.server.common.elements.id.PlayerId;
 import org.cspoker.server.common.elements.id.SeatId;
 import org.cspoker.server.common.elements.id.TableId;
-import org.cspoker.server.common.player.MutableSeatedPlayer;
 import org.cspoker.server.common.player.MutablePlayer;
+import org.cspoker.server.common.player.MutableSeatedPlayer;
 
 /**
  * A class of game mediators to decouple the game control from all users:
@@ -491,6 +492,19 @@ public class PokerTable {
 	public synchronized void publishCallEvent(CallEvent event) {
 		for (HoldemTableListener listener : holdemTableListeners) {
 			listener.onCall(event);
+		}
+	}
+	
+	/**
+	 * Inform all subscribed holdem table listeners a pots changed event has occurred.
+	 * 
+	 * Each subscribed holdem table listener is updated by calling their
+	 * onPotsChanged() method.
+	 * 
+	 */
+	public synchronized void publishPotsChangedEvent(PotsChangedEvent event) {
+		for (HoldemTableListener listener : holdemTableListeners) {
+			listener.onPotsChanged(event);
 		}
 	}
 	

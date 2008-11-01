@@ -18,7 +18,7 @@ package org.cspoker.client.gui.text.commands;
 import org.cspoker.client.gui.text.Client;
 import org.cspoker.client.gui.text.Console;
 
-public class TableChatCommand extends RemoteCommand {
+public class TableChatCommand extends CommandImpl {
 	
 	public TableChatCommand(Client client, Console console) {
 		super(client, console);

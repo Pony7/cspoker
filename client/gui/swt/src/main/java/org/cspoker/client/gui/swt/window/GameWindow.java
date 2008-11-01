@@ -16,8 +16,30 @@ import java.util.Collections;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
-import org.cspoker.client.gui.swt.control.*;
-import org.cspoker.common.api.lobby.holdemtable.event.*;
+import org.cspoker.client.gui.swt.control.ClientGUI;
+import org.cspoker.client.gui.swt.control.GameState;
+import org.cspoker.client.gui.swt.control.MutableSeatedPlayer;
+import org.cspoker.client.gui.swt.control.SWTResourceManager;
+import org.cspoker.client.gui.swt.control.UserSeatedPlayer;
+import org.cspoker.common.api.lobby.holdemtable.event.AllInEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.BetEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.BigBlindEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.CallEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.CheckEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.FoldEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.JoinTableEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.LeaveTableEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.NewCommunityCardsEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.NewDealEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.NewRoundEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.NextPlayerEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.PotsChangedEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.RaiseEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.ShowHandEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.SitInEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.SitOutEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.SmallBlindEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.WinnerEvent;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.event.NewPocketCardsEvent;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.listener.HoldemPlayerListener;
 import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
@@ -224,7 +246,7 @@ public class GameWindow
 	 * @see org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener#onNewCommunityCards(org.cspoker.common.api.lobby.holdemtable.event.NewCommunityCardsEvent)
 	 */
 	public void onNewCommunityCards(NewCommunityCardsEvent newCommunityCardsEvent) {
-		tableComposite.addCommunityCards(newCommunityCardsEvent.getCommonCards());
+		tableComposite.addCommunityCards(newCommunityCardsEvent.getCommunityCards());
 		userInputComposite.showDealerMessage(newCommunityCardsEvent);
 	}
 	
@@ -411,6 +433,12 @@ public class GameWindow
 	@Override
 	public void onLeaveTable(LeaveTableEvent leaveGameEvent) {
 	// TODO implement
+	}
+
+
+	@Override
+	public void onPotsChanged(PotsChangedEvent potsChangedEvent) {
+		// TODO implement
 	}
 	
 	/**

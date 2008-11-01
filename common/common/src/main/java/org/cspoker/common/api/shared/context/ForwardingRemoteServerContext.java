@@ -17,6 +17,8 @@ package org.cspoker.common.api.shared.context;
 
 import java.rmi.RemoteException;
 
+import net.jcip.annotations.Immutable;
+
 import org.apache.log4j.Logger;
 import org.cspoker.common.api.account.context.RemoteAccountContext;
 import org.cspoker.common.api.cashier.context.RemoteCashierContext;
@@ -26,6 +28,7 @@ import org.cspoker.common.api.lobby.context.RemoteLobbyContext;
 import org.cspoker.common.api.lobby.listener.LobbyListener;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 
+@Immutable
 public class ForwardingRemoteServerContext implements RemoteServerContext {
 
 	private final static Logger logger = Logger.getLogger(ForwardingRemoteServerContext.class);

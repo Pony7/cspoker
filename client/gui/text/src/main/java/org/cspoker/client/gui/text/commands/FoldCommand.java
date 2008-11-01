@@ -18,7 +18,7 @@ package org.cspoker.client.gui.text.commands;
 import org.cspoker.client.gui.text.Client;
 import org.cspoker.client.gui.text.Console;
 
-public class FoldCommand extends RemoteCommand {
+public class FoldCommand extends CommandImpl {
 	
 	public FoldCommand(Client client, Console console) {
 		super(client, console);

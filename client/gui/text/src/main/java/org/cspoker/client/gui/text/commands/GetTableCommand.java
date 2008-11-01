@@ -20,7 +20,7 @@ import org.cspoker.client.gui.text.Console;
 import org.cspoker.common.elements.player.SeatedPlayer;
 import org.cspoker.common.elements.table.DetailedHoldemTable;
 
-public class GetTableCommand extends RemoteCommand {
+public class GetTableCommand extends CommandImpl {
 
 	public GetTableCommand(Client client, Console console) {
 		super(client, console);

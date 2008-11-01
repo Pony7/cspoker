@@ -18,7 +18,6 @@ package org.cspoker.common.api.lobby.holdemtable.event;
 
 import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
 import org.cspoker.common.elements.player.Player;
-import org.cspoker.common.elements.pots.Pots;
 
 /**
  * A class to represent small blind events.
@@ -34,10 +33,7 @@ public class SmallBlindEvent extends HoldemTableEvent {
 
 	private int amount;
 
-	private Pots pots;
-
-	public SmallBlindEvent(Player player, int amount, Pots pots) {
-		this.pots = pots;
+	public SmallBlindEvent(Player player, int amount) {
 		this.player = player;
 		this.amount = amount;
 	}
@@ -57,10 +53,6 @@ public class SmallBlindEvent extends HoldemTableEvent {
 
 	public Player getPlayer() {
 		return player;
-	}
-
-	public Pots getPots() {
-		return pots;
 	}
 
 	public void dispatch(HoldemTableListener holdemTableListener) {

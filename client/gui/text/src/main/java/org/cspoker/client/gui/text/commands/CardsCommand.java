@@ -18,27 +18,19 @@ package org.cspoker.client.gui.text.commands;
 import java.util.Iterator;
 import java.util.Set;
 
+import org.cspoker.client.gui.text.Client;
 import org.cspoker.client.gui.text.Console;
-import org.cspoker.client.gui.text.savedstate.Cards;
 import org.cspoker.common.elements.cards.Card;
 
-public class CardsCommand implements Command {
+public class CardsCommand extends CommandImpl {
 
-	private Cards cards;
-	private Console console;
-
-	public CardsCommand(Console console, Cards cards) {
-		this.cards = cards;
-		this.console = console;
+	public CardsCommand(Client client, Console console) {
+		super(client,console);
 	}
 
 	public void execute(String... args) throws Exception {
-		Set<Card> privateCards;
-		Set<Card> communityCards;
-		synchronized (cards) {
-			privateCards = cards.getPrivateCards();
-			communityCards = cards.getCommonCards();
-		}
+		Set<Card>  privateCards = client.getCurrentPlayerContext().getPocketCards();
+		Set<Card>  communityCards = client.getCurrentTableContext().getCommunityCards();
 		String result = "You hold: ";
 		if (privateCards.size() != 2) {
 			result += "nothing";

@@ -20,6 +20,10 @@ import java.util.HashMap;
 
 import javax.security.auth.login.LoginException;
 
+import org.cspoker.client.common.SmartClientContext;
+import org.cspoker.client.common.SmartHoldemPlayerContext;
+import org.cspoker.client.common.SmartHoldemTableContext;
+import org.cspoker.client.common.SmartLobbyContext;
 import org.cspoker.client.gui.text.commands.BetOrRaseCommand;
 import org.cspoker.client.gui.text.commands.CardsCommand;
 import org.cspoker.client.gui.text.commands.CheckOrCallCommand;
@@ -36,8 +40,6 @@ import org.cspoker.client.gui.text.commands.ServerChatCommand;
 import org.cspoker.client.gui.text.commands.SitInCommand;
 import org.cspoker.client.gui.text.commands.TableChatCommand;
 import org.cspoker.client.gui.text.eventlistener.PrintListener;
-import org.cspoker.client.gui.text.savedstate.Cards;
-import org.cspoker.client.gui.text.savedstate.Pot;
 import org.cspoker.common.RemoteCSPokerServer;
 import org.cspoker.common.api.chat.context.RemoteChatContext;
 import org.cspoker.common.api.lobby.context.RemoteLobbyContext;
@@ -56,17 +58,17 @@ public class Client {
 	
 	private Console console;
 
-	private RemoteServerContext serverContext;
+	private SmartClientContext serverContext;
 
 	private UniversalServerListener serverlistener;
 
 	private final RemoteChatContext serverChatContext;
 
-	private final RemoteLobbyContext lobbyContext;
+	private final SmartLobbyContext lobbyContext;
 
-	private RemoteHoldemPlayerContext currentPlayerContext;
+	private SmartHoldemPlayerContext currentPlayerContext;
 
-	private RemoteHoldemTableContext currentTableContext;
+	private SmartHoldemTableContext currentTableContext;
 
 	private long currentTableID;
 
@@ -75,7 +77,7 @@ public class Client {
 	public Client(final String username, final String password,
 			Console console, RemoteCSPokerServer server) throws RemoteException, LoginException, IllegalActionException {
 		this.console = console;
-		serverContext = server.login(username, password);
+		serverContext = new SmartClientContext(server.login(username, password));
 		serverlistener = new UniversalServerListener(new PrintListener(console));
 		serverChatContext = serverContext.getServerChatContext(serverlistener);
 		lobbyContext = serverContext.getLobbyContext(serverlistener);
@@ -105,12 +107,10 @@ public class Client {
 		commands.put("TABLECHAT", new TableChatCommand(this, console));
 
 		//Local
-		Cards cards = new Cards();
-		Pot pot = new Pot();
-		CardsCommand cardsCommand = new CardsCommand(console, cards);
+		CardsCommand cardsCommand = new CardsCommand(this,console);
 		commands.put("CARDS", cardsCommand);
 		
-		PotCommand potCommand = new PotCommand(console, pot);
+		PotCommand potCommand = new PotCommand(this, console);
 		commands.put("POT", potCommand);
 
 		HelpCommand help = new HelpCommand(console);
@@ -137,7 +137,7 @@ public class Client {
 		return this.serverContext;
 	}
 	
-	public RemoteLobbyContext getLobbyContext() {
+	public SmartLobbyContext getLobbyContext() {
 		return this.lobbyContext;
 	}
 	
@@ -145,21 +145,21 @@ public class Client {
 		return this.serverChatContext;
 	}
 
-	public RemoteHoldemPlayerContext getCurrentPlayerContext() {
+	public SmartHoldemPlayerContext getCurrentPlayerContext() {
 		return currentPlayerContext;
 	}
 	
 	public void setCurrentPlayerContext(
-			RemoteHoldemPlayerContext currentPlayerContext) {
+			SmartHoldemPlayerContext currentPlayerContext) {
 		this.currentPlayerContext = currentPlayerContext;
 	}
 
-	public RemoteHoldemTableContext getCurrentTableContext() {
+	public SmartHoldemTableContext getCurrentTableContext() {
 		return currentTableContext;
 	}
 
 	public void setCurrentTableContext(
-			RemoteHoldemTableContext currentTableContext) {
+			SmartHoldemTableContext currentTableContext) {
 		this.currentTableContext = currentTableContext;
 	}
 

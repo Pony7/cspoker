@@ -29,6 +29,7 @@ import org.cspoker.common.api.lobby.holdemtable.event.NewCommunityCardsEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.NewDealEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.NewRoundEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.NextPlayerEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.PotsChangedEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.RaiseEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.ShowHandEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.SitInEvent;
@@ -182,10 +183,18 @@ public class AsynchronousHoldemTableListener implements HoldemTableListener{
 		});
 	}
 
-	public void onSitOut(final SitOutEvent sitOut) {
+	public void onSitOut(final SitOutEvent sitOutEvent) {
 		executor.execute(new Runnable() {
 			public void run() {
-				holdemTableListener.onSitOut(sitOut);
+				holdemTableListener.onSitOut(sitOutEvent);
+			}
+		});
+	}
+
+	public void onPotsChanged(final PotsChangedEvent potsChangedEvent) {
+		executor.execute(new Runnable() {
+			public void run() {
+				holdemTableListener.onPotsChanged(potsChangedEvent);
 			}
 		});
 	}

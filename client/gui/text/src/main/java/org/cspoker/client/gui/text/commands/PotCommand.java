@@ -15,21 +15,17 @@
  */
 package org.cspoker.client.gui.text.commands;
 
+import org.cspoker.client.gui.text.Client;
 import org.cspoker.client.gui.text.Console;
-import org.cspoker.client.gui.text.savedstate.Pot;
 
-public class PotCommand implements Command {
+public class PotCommand extends CommandImpl {
 
-	private Pot pot;
-	private Console console;
-
-	public PotCommand(Console console, Pot pot) {
-		this.pot = pot;
-		this.console = console;
+	public PotCommand(Client client, Console console) {
+		super(client,console);
 	}
 
 	public void execute(String... args) throws Exception {
-		console.print("The total pot is " + pot.getPot() + " chips.");
+		console.print("The total pot is " + client.getCurrentTableContext().getPots().getTotalValue() + " chips.");
 	}
 
 }

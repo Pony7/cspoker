@@ -18,7 +18,7 @@ package org.cspoker.client.gui.text.commands;
 import org.cspoker.client.gui.text.Client;
 import org.cspoker.client.gui.text.Console;
 
-public class SitOutCommand extends RemoteCommand {
+public class SitOutCommand extends CommandImpl {
 	
 
 	public SitOutCommand(Client client, Console console) {

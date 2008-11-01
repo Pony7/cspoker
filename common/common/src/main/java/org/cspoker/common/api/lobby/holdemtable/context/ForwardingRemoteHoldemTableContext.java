@@ -18,18 +18,21 @@ package org.cspoker.common.api.lobby.holdemtable.context;
 import java.rmi.RemoteException;
 import java.rmi.server.Unreferenced;
 
+import net.jcip.annotations.Immutable;
+
 import org.apache.log4j.Logger;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.RemoteHoldemPlayerContext;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.listener.HoldemPlayerListener;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 
+@Immutable
 public class ForwardingRemoteHoldemTableContext implements RemoteHoldemTableContext, Unreferenced{
 
 	private final static Logger logger = Logger.getLogger(ForwardingRemoteHoldemTableContext.class);
 
 	private RemoteHoldemTableContext holdemTableContext;
 
-	public ForwardingRemoteHoldemTableContext(RemoteHoldemTableContext holdemTableContext) throws RemoteException {
+	public ForwardingRemoteHoldemTableContext(RemoteHoldemTableContext holdemTableContext) {
 		this.holdemTableContext  = holdemTableContext;
 	}
 

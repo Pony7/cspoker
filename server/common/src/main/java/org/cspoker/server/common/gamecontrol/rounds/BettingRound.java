@@ -26,6 +26,7 @@ import org.apache.log4j.Logger;
 import org.cspoker.common.api.lobby.holdemtable.event.AllInEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.BigBlindEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.NewCommunityCardsEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.PotsChangedEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.SmallBlindEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.WinnerEvent;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
@@ -369,8 +370,8 @@ public abstract class BettingRound extends Round {
 				getGame().getTableConfiguration().getSmallBlind());
 		playerMadeEvent(player);
 		gameMediator.publishSmallBlindEvent(new SmallBlindEvent(player
-				.getMemento(), getGame().getTableConfiguration().getSmallBlind(),
-				new Pots(getCurrentPotValue())));
+				.getMemento(), getGame().getTableConfiguration().getSmallBlind()));
+		gameMediator.publishPotsChangedEvent(new PotsChangedEvent(new Pots(getCurrentPotValue())));
 		BettingRound.logger.info(player.getName() + ": posts small blind $"
 				+ getGame().getTableConfiguration().getSmallBlind());
 
@@ -397,8 +398,8 @@ public abstract class BettingRound extends Round {
 		setBet(getGame().getTableConfiguration().getBigBlind());
 		playerMadeEvent(player);
 		gameMediator.publishBigBlindEvent(new BigBlindEvent(player
-				.getMemento(), getGame().getTableConfiguration().getBigBlind(),
-				new Pots(getCurrentPotValue())));
+				.getMemento(), getGame().getTableConfiguration().getBigBlind()));
+		gameMediator.publishPotsChangedEvent(new PotsChangedEvent(new Pots(getCurrentPotValue())));
 		BettingRound.logger.info(getGame().getCurrentPlayer().getName()
 				+ ": posts big blind $"
 				+ getGame().getTableConfiguration().getBigBlind());

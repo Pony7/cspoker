@@ -19,7 +19,7 @@ import org.cspoker.client.gui.text.Client;
 import org.cspoker.client.gui.text.Console;
 import org.cspoker.common.elements.table.Table;
 
-public class GetTablesCommand extends RemoteCommand {
+public class GetTablesCommand extends CommandImpl {
 	
 
 	public GetTablesCommand(Client client, Console console) {
