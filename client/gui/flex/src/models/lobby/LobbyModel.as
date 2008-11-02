@@ -15,8 +15,8 @@ package models.lobby
 		public function requestTables(result:Object):void{
 			if(!result.hasOwnProperty("tables")) return;
 			for each(var table:Object in result.tables){
-				trace("requesting table..." + table.id);
-				if(table.id != null) Main.serverConnection.csGetTableAction(table.id);			
+				trace("requesting table..." + table["id"]);
+				if(table["id"] != null) Main.serverConnection.csGetTableAction(table["id"]);			
 				
 			}
 		}
