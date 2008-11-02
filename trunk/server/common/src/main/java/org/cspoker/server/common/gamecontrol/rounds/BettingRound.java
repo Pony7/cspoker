@@ -84,7 +84,7 @@ public abstract class BettingRound extends Round {
 
 	public void bet(MutableSeatedPlayer player, int amount)
 			throws IllegalActionException {
-		if (!onTurn(player) || someoneHasBet() || onlyOnePlayerLeft()) {
+		if (!onTurn(player) || someoneHasBet() || onlyOnePlayerLeft() || onlyOnePlayerLeftBesidesAllInPlayers()) {
 			throw new IllegalActionException(player.getName() + " can not bet "
 					+ amount + " chips in this round.");
 		}
@@ -103,9 +103,8 @@ public abstract class BettingRound extends Round {
 		
 		
 		if (amount >= player.getStack().getValue()) {
-			throw new IllegalActionException(player.toString()+" can not bet. "+
-					"Can not bet an amount higher than your current amount of chips;"
-							+ " did you mean all-in??");
+			allIn(player);
+			return;
 		}
 
 		try {
@@ -123,14 +122,19 @@ public abstract class BettingRound extends Round {
 	}
 
 	public void call(MutableSeatedPlayer player) throws IllegalActionException {
-		if (!onTurn(player) || !someoneHasBet()) {
+		if (!onTurn(player)) {
 			throw new IllegalActionException(player.getName()
-					+ " can not call in this round.");
+					+ " can not call in this round. It's not his turn.");
+		}
+		
+		if(!someoneHasBet()){
+			throw new IllegalActionException(player.getName()
+					+ " can not call in this round. No one has bet.");
 		}
 
 		if (getBet() == player.getBetChips().getValue()) {
 			throw new IllegalActionException(player.getName()
-					+ " can not call in this round.");
+					+ " can not call in this round. He has already bet the amount.");
 		}
 
 		// Check whether the amount with which the bet chips pile
@@ -165,7 +169,7 @@ public abstract class BettingRound extends Round {
 
 	public void raise(MutableSeatedPlayer player, int amount)
 			throws IllegalActionException {
-		if (!onTurn(player) || !someoneHasBet() || onlyOnePlayerLeft()) {
+		if (!onTurn(player) || !someoneHasBet() || onlyOnePlayerLeft() || onlyOnePlayerLeftBesidesAllInPlayers()) {
 			throw new IllegalActionException(player.getName()
 					+ " can not raise with " + amount + " chips in this round.");
 		}
@@ -184,14 +188,11 @@ public abstract class BettingRound extends Round {
 
 		// If the total number of chips needed for this raise,
 		// exceeds or equals the stack of the player, the player should
-		// go all-in explicitly.
+		// go all-in.
 		if ((amount + amountToIncreaseBetPileWith(player)) >= player.getStack()
 				.getValue()) {
 			allIn(player);
 			return;
-//			throw new IllegalActionException(player.toString()+ "can not raise. "+
-//					"Can not raise with an amount higher than your current amount of chips;"
-//							+ " did you mean all-in??");
 		}
 
 		// Try to transfer the amount to the bet pile.
@@ -557,13 +558,19 @@ public abstract class BettingRound extends Round {
 		return (getGame().getNbCurrentDealPlayers() + allInPlayers.size()
 				+ getGame().getPots().getNbShowdownPlayers() <= 1);
 	}
+	
+	
+	public boolean currentDealPlayerCalled(){
+		return getGame().getCurrentDealPlayers().get(0).getBetChips().getValue() == getBet();
+	}
+	
+	public boolean onlyOnePlayerLeftBesidesAllInPlayers(){
+		return getGame().getNbCurrentDealPlayers() == 1 && (allInPlayers.size() + getGame().getPots().getNbShowdownPlayers() > 0);
+	}
 
-	public boolean onlyOnePlayerLeftBesidesAllInPlayers() {
+	public boolean onlyOnePlayerLeftBesidesAllInPlayersAndCalled() {
 		// the player must have called
-		return ((getGame().getNbCurrentDealPlayers() == 1)
-				&& (allInPlayers.size()
-						+ getGame().getPots().getNbShowdownPlayers() > 1) && (getGame()
-				.getCurrentDealPlayers().get(0).getBetChips().getValue() == getBet()));
+		return onlyOnePlayerLeftBesidesAllInPlayers() && currentDealPlayerCalled();
 	}
 
 	public boolean onlyOneActivePlayer() {
@@ -598,7 +605,7 @@ public abstract class BettingRound extends Round {
 
 	public boolean isRoundEnded() {
 		return super.isRoundEnded() || onlyAllInPlayers()
-				|| onlyOnePlayerLeftBesidesAllInPlayers()
+				|| onlyOnePlayerLeftBesidesAllInPlayersAndCalled()
 				|| onlyOneActivePlayer();
 	}
 
