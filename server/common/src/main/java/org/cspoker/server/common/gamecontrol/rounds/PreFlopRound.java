@@ -110,10 +110,16 @@ public class PreFlopRound extends BettingRound {
 					+ " can not check in this round.");
 		}
 		if(game.getNbSeatedPlayers()==2 && game.getDealer().equals(player)){
-			game.getDealer().equals(player);
 			throw new IllegalActionException(player.getName()
 					+ " can not check in this round. Someone has already bet.");
 		}
+		
+		//Small Blind All-in
+		if(game.getNbSeatedPlayers()==2 && bigBlindPlayer==null){
+			throw new IllegalActionException(player.getName()
+					+ " can not check in this round. You should call the all-in small blind.");
+		}
+		
 		if (bigBlindPlayer.equals(player) && someoneHasRaised()) {
 			throw new IllegalActionException(player.getName()
 					+ " can not check in this round. Someone has already bet.");

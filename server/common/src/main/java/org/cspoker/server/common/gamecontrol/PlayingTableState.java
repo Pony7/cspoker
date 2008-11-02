@@ -396,7 +396,7 @@ public class PlayingTableState
 			submitAutoDealHandler();
 		}
 		
-		if ((round instanceof BettingRound) && ((BettingRound) round).onlyOnePlayerLeftBesidesAllInPlayers()) {
+		if ((round instanceof BettingRound) && ((BettingRound) round).onlyOnePlayerLeftBesidesAllInPlayersAndCalled()) {
 			changeToNextRound();
 		}
 		if ((round instanceof BettingRound) && ((BettingRound) round).onlyAllInPlayers()) {

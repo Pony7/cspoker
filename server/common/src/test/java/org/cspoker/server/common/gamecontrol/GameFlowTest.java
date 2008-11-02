@@ -15,6 +15,9 @@
  */
 package org.cspoker.server.common.gamecontrol;
 
+import java.util.Arrays;
+import java.util.List;
+
 import junit.framework.TestCase;
 
 import org.apache.log4j.Logger;
@@ -184,7 +187,7 @@ public class GameFlowTest extends TestCase {
 			public void onWinner(WinnerEvent winnerEvent) {
 				GameFlowTest.logger.info(winnerEvent);					
 			}
-			
+
 			public void onPotsChanged(PotsChangedEvent potsChangedEvent) {
 				GameFlowTest.logger.info(potsChangedEvent);		
 			}
@@ -877,6 +880,46 @@ public class GameFlowTest extends TestCase {
 			} catch (IllegalActionException e1) {
 				fail(e1.toString());
 			}
+
+
+
+
+			try {
+				gameControl.check(kenzo);
+				fail("Exception Expected.");
+			} catch (IllegalActionException e) {
+			}
+
+
+
+			try {
+				gameControl.call(kenzo);
+				gameControl.check(cedric);
+			} catch (IllegalActionException e) {
+				fail(e.getMessage());
+			}
+
+		} catch (IllegalValueException e) {
+			fail(e.getMessage());
+		} catch (PlayerListFullException e) {
+			fail(e.getMessage());
+		}
+	}
+
+	public void testTwoPlayersNormalCase(){
+		table = new ServerTable(8);
+		PlayingTableState gameControl;
+		try {
+			kenzo = new MutableSeatedPlayer(factory.createNewPlayer("kenzo", 100), 100);
+			cedric = new MutableSeatedPlayer(factory.createNewPlayer("cedric", 100), 100);
+			table.addPlayer(kenzo);
+			table.addPlayer(cedric);
+			gameControl = new PlayingTableState(pokerTable, table, kenzo);
+			try {
+				gameControl.deal();
+			} catch (IllegalActionException e1) {
+				fail(e1.toString());
+			}
 			try {
 				gameControl.check(kenzo);
 				fail("Exception Expected.");
@@ -888,6 +931,35 @@ public class GameFlowTest extends TestCase {
 			} catch (IllegalActionException e) {
 				fail(e.getMessage());
 			}
+
+			assertEquals(FlopRound.class, gameControl.getRound().getClass());
+
+			try {
+				gameControl.check(cedric);
+				gameControl.check(kenzo);
+			} catch (IllegalActionException e) {
+				fail(e.getMessage());
+			}
+
+			assertEquals(TurnRound.class, gameControl.getRound().getClass());
+
+			try {
+				gameControl.check(cedric);
+				gameControl.check(kenzo);
+			} catch (IllegalActionException e) {
+				fail(e.getMessage());
+			}
+
+			assertEquals(FinalRound.class, gameControl.getRound().getClass());
+
+			try {
+				gameControl.check(cedric);
+				gameControl.check(kenzo);
+			} catch (IllegalActionException e) {
+				fail(e.getMessage());
+			}
+
+			assertEquals(PreFlopRound.class, gameControl.getRound().getClass());
 
 		} catch (IllegalValueException e) {
 			fail(e.getMessage());
@@ -980,30 +1052,30 @@ public class GameFlowTest extends TestCase {
 		} catch (IllegalActionException e1) {
 			fail(e1.toString());
 		}
-		
+
 		assertEquals(PreFlopRound.class, gameControl.getRound().getClass());
-		
+
 		try {
 			gameControl.call(kenzo);
 			gameControl.raise(cedric, 20);
 			gameControl.call(kenzo);
 
 			assertEquals(FlopRound.class, gameControl.getRound().getClass());
-			
+
 			gameControl.bet(cedric, 20);
 			gameControl.call(kenzo);
 
 			assertEquals(TurnRound.class, gameControl.getRound().getClass());
-			
+
 			gameControl.bet(cedric, 20);
 			gameControl.call(kenzo);
-			
+
 			assertEquals(FinalRound.class, gameControl.getRound().getClass());
 
 			gameControl.bet(cedric, 20);
 			gameControl.raise(kenzo, 50);
 			gameControl.fold(cedric);
-			
+
 			assertEquals(PreFlopRound.class, gameControl.getRound().getClass());
 
 		} catch (IllegalActionException e) {
@@ -1012,6 +1084,12 @@ public class GameFlowTest extends TestCase {
 	}
 
 
+	/**
+	 * 2 players: 5/10
+	 * Cedric small blind with 4 chips.
+	 * Kenzo calls and automatic show down.
+	 * 
+	 */
 	public void testTwoPlayersSmallBlindAllInCase(){
 		try {
 
@@ -1033,14 +1111,15 @@ public class GameFlowTest extends TestCase {
 		} catch (IllegalActionException e1) {
 			fail(e1.toString());
 		}
-		Game game = gameControl.getGame();
 
 		try {
-			gameControl.check(kenzo);
-			gameControl.call(kenzo);
-		} catch (IllegalActionException e) {
-			fail(e.getMessage());
+			performAction(gameControl, kenzo, Action.call, 5);
+		} catch (IllegalActionException e1) {
+			fail(e1.toString());
 		}
+
+		//Verify auto-showdown
+		assertNotSame(FlopRound.class, gameControl.getRound().getClass());
 
 	}
 
@@ -1093,6 +1172,140 @@ public class GameFlowTest extends TestCase {
 			fail(e.getMessage());
 		}
 		assertEquals(PreFlopRound.class, gameControl.getRound().getClass());
+	}
+
+	/**
+	 * 2 players: 5/10
+	 * Kenzo big blind with 8 chips (> big blind)
+	 * Cedric calls and automatic show down.
+	 * 
+	 */
+	public void testTwoPlayersBigBlindAllInCase1(){
+		try {
+
+			kenzo = new MutableSeatedPlayer(factory.createNewPlayer("Kenzo", 100), 8);
+			cedric = new MutableSeatedPlayer(factory.createNewPlayer("Cedric", 100),100);
+
+			table = new ServerTable(8);
+			table.addPlayer(kenzo);
+			table.addPlayer(cedric);
+		} catch (IllegalValueException e) {
+			fail(e.getMessage());
+		} catch (PlayerListFullException e) {
+			fail(e.getMessage());
+		}
+
+		PlayingTableState gameControl = new PlayingTableState(pokerTable, table, cedric);
+		try {
+			gameControl.deal();
+		} catch (IllegalActionException e1) {
+			fail(e1.toString());
+		}
+
+		try {
+			performAction(gameControl, cedric, Action.call, 5);
+		} catch (IllegalActionException e1) {
+			fail(e1.toString());
+		}
+
+		//Verify auto-showdown
+		assertNotSame(FlopRound.class, gameControl.getRound().getClass());
+
+	}
+	
+	/**
+	 * 2 players: 5/10
+	 * Kenzo big blind with 4 chips (< small blind)
+	 * automatic show down.
+	 * 
+	 */
+	public void testTwoPlayersBigBlindAllInCase2(){
+		try {
+
+			kenzo = new MutableSeatedPlayer(factory.createNewPlayer("Kenzo", 100), 4);
+			cedric = new MutableSeatedPlayer(factory.createNewPlayer("Cedric", 100),100);
+
+			table = new ServerTable(8);
+			table.addPlayer(kenzo);
+			table.addPlayer(cedric);
+		} catch (IllegalValueException e) {
+			fail(e.getMessage());
+		} catch (PlayerListFullException e) {
+			fail(e.getMessage());
+		}
+
+		PlayingTableState gameControl = new PlayingTableState(pokerTable, table, cedric);
+		try {
+			gameControl.deal();
+		} catch (IllegalActionException e1) {
+			fail(e1.toString());
+		}
+
+		//Verify auto-showdown
+		assertNotSame(FlopRound.class, gameControl.getRound().getClass());
+
+	}
+
+	public void performAction(PlayingTableState gameControl, MutableSeatedPlayer player, Action action, int argument, Action... validAlternatives) throws IllegalActionException{
+		List<Action> alternatives = Arrays.asList(validAlternatives);
+
+		for (Action generalAction : Action.values()) {
+			if(generalAction != action && generalAction!=Action.fold && !alternatives.contains(generalAction)){
+				try {
+					GameFlowTest.logger.info("++ "+player+ " tries to "+generalAction);
+					generalAction.performAction(gameControl, player, argument);
+					fail(player+" should not be able to "+generalAction);
+				} catch (IllegalActionException e) {
+					GameFlowTest.logger.info("++ "+player+ " action denied");
+				}
+			}
+		}
+		action.performAction(gameControl, player, argument);
+	}
+
+	private enum Action{
+		check{
+			@Override
+			public void performAction(PlayingTableState gameControl,
+					MutableSeatedPlayer player, int arguement) throws IllegalActionException {
+				gameControl.check(player);
+			}
+		}
+		, call{
+
+			@Override
+			public void performAction(PlayingTableState gameControl,
+					MutableSeatedPlayer player, int argument) throws IllegalActionException {
+				gameControl.call(player);
+			}
+
+		}, bet{
+
+			@Override
+			public void performAction(PlayingTableState gameControl,
+					MutableSeatedPlayer player, int argument) throws IllegalActionException {
+				gameControl.bet(player, argument);
+			}
+
+		}, raise{
+
+			@Override
+			public void performAction(PlayingTableState gameControl,
+					MutableSeatedPlayer player, int argument) throws IllegalActionException {
+				gameControl.raise(player, argument);
+			}
+
+		}, fold{
+
+			@Override
+			public void performAction(PlayingTableState gameControl,
+					MutableSeatedPlayer player, int argument) throws IllegalActionException {
+				gameControl.fold(player);
+			}
+		};
+
+		public abstract void performAction(PlayingTableState gameControl, MutableSeatedPlayer player, int argument) throws IllegalActionException;
+
 	}
 
 }
