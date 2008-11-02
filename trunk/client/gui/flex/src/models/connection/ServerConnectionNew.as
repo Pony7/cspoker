@@ -7,19 +7,19 @@ package models.connection
 	import models.*;
 	import models.utils.MD5;
 	
-	public class ServerConnection extends Object
+	public class ServerConnectionNew extends Object
 	{
 		protected var connectionPort:int = 0;
 		protected var hostName:String = "";
 		protected var socket:XMLSocket = null;
 		
 		
-		public var messageCenter:MessageCenter = null;
+		public var messageCenter:MessageCenterNew = null;
 		
 		private var idAction:int=0;
 		private var loginActionId:int=0;
 		
-		public function ServerConnection(passedMessageCenter:MessageCenter)
+		public function ServerConnectionNew(passedMessageCenter:MessageCenterNew)
 		{
 			messageCenter = passedMessageCenter;	
 			super();
@@ -156,8 +156,7 @@ package models.connection
 			var passwordHash:String = MD5.hash(userPassword);
 			var xml:XML =
 			
-			<ns5:loginAction id={idAction} xmlns:ns5="http://www.cspoker.org/api/2008-11/"><username>kenzo</username><passwordHash>test</passwordHash></ns5:loginAction>;
-
+			<login username={userName} password={userPassword}  />;
 			csSendData(xml);
 		}
 	
@@ -165,7 +164,7 @@ package models.connection
 		{
 			idAction++;
 			var xml:XML =
-			<ns5:getTableListAction id={idAction} xmlns:ns5="http://www.cspoker.org/api/2008-11/"/>;
+			<getTablesAction type="GetTablesAction" id={idAction} />;
 			csSendData(xml);
 		}
 		
@@ -173,7 +172,7 @@ package models.connection
 		{
 			idAction++;					
 			var xml:XML =
-			<ns5:getHoldemTableInformationAction tableid={tableID} id={idAction} xmlns:ns5="http://www.cspoker.org/api/2008-11/"/>;
+			<getTableAction type="getTableAction" tableid={tableID} id={idAction} />;
 			csSendData(xml);
 		}
 		

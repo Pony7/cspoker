@@ -63,7 +63,7 @@ package models.connection
 			var objResult:Object;
 			
 	
-			if (contentObj.actionPerformedEvent.id == loginActionId){
+			if (contentObj.hasOwnProperty("actionPerformedEvent") && contentObj.actionPerformedEvent.id == loginActionId){
 				trace("LOGIN SUCCESSFUL!!!");
 				Main.lobby.receiveLoginSucess();
 				return;
@@ -74,7 +74,7 @@ package models.connection
 			 	var resultType:String = contentObj.actionPerformedEvent.result["xsi:type"];
 			 	var result:Object = contentObj.actionPerformedEvent.result;
 		 		switch (resultType){	
-			 		case "ns7:tableList":
+			 		case "ns2:tableList":
 						
 						//mTables = new CSTableList(result.tables);
 						
@@ -82,7 +82,7 @@ package models.connection
 				  		Main.lobby.receiveTablesList(result);
 				  		break;
 				
-					case "ns7:detailedHoldemTable":
+					case "ns2:detailedHoldemTable":
 				  		
 						//mTable = new CSTable(contentObj.successfulInvocationEvent.result);
 				  		//dispatchEvent(new csEventActions( csEventActions.OnGetTableAction,"getTableAction",mTable));

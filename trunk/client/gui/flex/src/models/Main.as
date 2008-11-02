@@ -23,7 +23,11 @@ package models
 		
 		public var container:UIComponent;
 		public static var messageCenter:MessageCenter = null;
-		public static var serverConnection:ServerConnection = null;	
+		public static var serverConnection:ServerConnection = null;
+		
+			
+		//public static var newServerConnection:ServerConnectionNew = null;
+		//public static var newMessageCenter:MessageCenterNew = null;
 		
 		public function Main(passedContainerApp:CSPoker, passedLobby:Lobby, passedTable:Table, passedConnectionBox:ConnectionBox, passedRegisterBox:RegisterBox):void{
 			trace("Launching CS Poker...");
@@ -34,6 +38,8 @@ package models
 			registerBox = passedRegisterBox;
 			messageCenter = new MessageCenter();
 			serverConnection = new ServerConnection(messageCenter);
+				
+			
 			
 			connectionBox.endInit();
 			lobby.endInit();
@@ -111,8 +117,6 @@ package models
 		public static function showRegisterBox():void{
 			containerApp.mainAppViewStack.selectedChild=registerBox;
 		}
-		
-		
 		
 	}
 }
