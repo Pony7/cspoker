@@ -26,12 +26,13 @@ import org.cspoker.common.elements.table.TableId;
 
 @XmlRootElement
 @Immutable
-public class TableChatEvents extends ServerEvent {
-
+public class TableChatEvents
+		extends ServerEvent {
+	
 	private static final long serialVersionUID = 557148706756328395L;
-
+	
 	private final TableId tableID;
-
+	
 	private final ChatEvent chatEvent;
 	
 	public TableChatEvents() {
@@ -39,11 +40,12 @@ public class TableChatEvents extends ServerEvent {
 		chatEvent = null;
 	}
 	
-	public TableChatEvents(TableId tableID, ChatEvent chatEvent){
+	public TableChatEvents(TableId tableID, ChatEvent chatEvent) {
 		this.tableID = tableID;
 		this.chatEvent = chatEvent;
 	}
 	
+	@Override
 	public void dispatch(ServerListenerTree serverListenerTree) {
 		ChatListener listenerTree = serverListenerTree.getTableChatListener(tableID);
 		chatEvent.dispatch(listenerTree);
@@ -51,7 +53,7 @@ public class TableChatEvents extends ServerEvent {
 	
 	@Override
 	public String toString() {
-		return "Table #"+tableID+" | "+chatEvent.toString();
+		return "Table #" + tableID + " | " + chatEvent.toString();
 	}
-
+	
 }

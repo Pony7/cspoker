@@ -42,6 +42,7 @@ public class CheckEvent extends HoldemTableEvent {
 		player = null;
 	}
 
+	@Override
 	public String toString() {
 		return getPlayer().getName() + " checks.";
 	}
@@ -50,6 +51,7 @@ public class CheckEvent extends HoldemTableEvent {
 		return player;
 	}
 
+	@Override
 	public void dispatch(HoldemTableListener holdemTableListener) {
 		holdemTableListener.onCheck(this);
 	}

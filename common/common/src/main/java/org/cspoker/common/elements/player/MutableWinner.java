@@ -44,6 +44,7 @@ public class MutableWinner {
 		return new Winner(winner.getMemento(), chips.getValue());
 	}
 
+	@Override
 	public String toString() {
 		return winner.getName() + " has gained " + chips + ".";
 	}

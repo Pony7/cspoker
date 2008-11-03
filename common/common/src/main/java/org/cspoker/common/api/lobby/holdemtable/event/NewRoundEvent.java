@@ -42,6 +42,7 @@ public class NewRoundEvent extends HoldemTableEvent {
 		round = null;
 	}
 
+	@Override
 	public String toString() {
 		return round+"";
 	}
@@ -50,6 +51,7 @@ public class NewRoundEvent extends HoldemTableEvent {
 		return round;
 	}
 
+	@Override
 	public void dispatch(HoldemTableListener holdemTableListener) {
 		holdemTableListener.onNewRound(this);
 	}

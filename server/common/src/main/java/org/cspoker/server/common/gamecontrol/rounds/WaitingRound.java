@@ -45,6 +45,7 @@ public class WaitingRound extends Round {
 	 *             [must] The action performed is not a valid action.
 	 */
 
+	@Override
 	public void deal(MutableSeatedPlayer player) throws IllegalActionException {
 		// Check whether the given player can do this action.
 		if (!onTurn(player)) {
@@ -61,6 +62,7 @@ public class WaitingRound extends Round {
 		// and change to the preflop round.
 	}
 
+	@Override
 	public void endRound() {
 		game.dealNewHand();
 		List<SeatedPlayer> players = new ArrayList<SeatedPlayer>(game
@@ -72,18 +74,22 @@ public class WaitingRound extends Round {
 				.getDealer().getMemento()));
 	}
 
+	@Override
 	public Round getNextRound() {
 		return new PreFlopRound(gameMediator, getGame());
 	}
 
+	@Override
 	public boolean isLowBettingRound() {
 		return false;
 	}
 
+	@Override
 	public boolean isHighBettingRound() {
 		return false;
 	}
 
+	@Override
 	public String toString() {
 		return "waiting round";
 	}

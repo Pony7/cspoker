@@ -25,20 +25,22 @@ import org.cspoker.common.api.shared.listener.ServerListenerTree;
 
 @XmlRootElement
 @Immutable
-public class ServerChatEvents extends ServerEvent {
-
+public class ServerChatEvents
+		extends ServerEvent {
+	
 	private static final long serialVersionUID = 6449937716379015861L;
-
+	
 	private final ChatEvent chatEvent;
 	
 	public ServerChatEvents() {
 		chatEvent = null;
 	}
 	
-	public ServerChatEvents(ChatEvent chatEvent){
+	public ServerChatEvents(ChatEvent chatEvent) {
 		this.chatEvent = chatEvent;
 	}
 	
+	@Override
 	public void dispatch(ServerListenerTree serverListenerTree) {
 		ChatListener listenerTree = serverListenerTree.getServerChatListener();
 		chatEvent.dispatch(listenerTree);
@@ -48,5 +50,5 @@ public class ServerChatEvents extends ServerEvent {
 	public String toString() {
 		return "Server | " + chatEvent.toString();
 	}
-
+	
 }

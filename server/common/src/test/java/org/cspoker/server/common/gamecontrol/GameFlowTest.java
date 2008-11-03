@@ -80,6 +80,7 @@ public class GameFlowTest extends TestCase {
 
 	private ServerTable table;
 
+	@Override
 	public void setUp(){
 		table = new ServerTable(8);
 		pokerTable = new PokerTable(new TableId(0), "table", new TableConfiguration(), new ExtendedAccountContext(){

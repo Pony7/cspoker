@@ -46,6 +46,7 @@ public class Winner implements Serializable {
 		return player;
 	}
 
+	@Override
 	public String toString() {
 		return player.getName() + " has gained " + gainedAmount + " chips.";
 	}

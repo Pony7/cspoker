@@ -82,6 +82,7 @@ public class SeatedPlayer extends Player {
 		return betChipsValue;
 	}
 
+	@Override
 	public String toString() {
 		return getName()+" (#"+getId()+")";
 	}

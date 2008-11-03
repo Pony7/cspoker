@@ -15,7 +15,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.NavigableMap;
 
+import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.elements.player.SeatedPlayer;
+import org.cspoker.common.elements.table.SeatId;
 
 /**
  * Will comment later due to maybe pending changes in Server design
@@ -38,8 +40,8 @@ public class MutableSeatedPlayer {
 	private List<NavigableMap<Chip, Integer>> currentBetPile = new ArrayList<NavigableMap<Chip, Integer>>();
 	
 	protected GameState gameState;
-	public final static MutableSeatedPlayer UNOCCUPIED = new MutableSeatedPlayer(new SeatedPlayer(Long.MAX_VALUE,
-			Long.MAX_VALUE, "Empty Seat", 0, 0), null);
+	public final static MutableSeatedPlayer UNOCCUPIED = new MutableSeatedPlayer(new SeatedPlayer(new PlayerId(
+			Long.MAX_VALUE), new SeatId(Long.MAX_VALUE), "Empty Seat", 0, 0), null);
 	
 	public MutableSeatedPlayer(SeatedPlayer player, GameState gameState) {
 		setPlayer(player);
@@ -65,7 +67,7 @@ public class MutableSeatedPlayer {
 		return wrappedPlayer.getName();
 	}
 	
-	public long getSeatId() {
+	public SeatId getSeatId() {
 		return wrappedPlayer.getSeatId();
 	}
 	
@@ -77,7 +79,7 @@ public class MutableSeatedPlayer {
 		dealer = b;
 	}
 	
-	public long getId() {
+	public PlayerId getId() {
 		return wrappedPlayer.getId();
 	}
 	

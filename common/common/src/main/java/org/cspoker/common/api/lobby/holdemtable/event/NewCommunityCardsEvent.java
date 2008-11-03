@@ -53,6 +53,7 @@ public class NewCommunityCardsEvent extends HoldemTableEvent {
 		return communityCards;
 	}
 
+	@Override
 	public String toString() {
 		String toReturn = "New Community Cards: ";
 		for (Card card : communityCards) {
@@ -62,6 +63,7 @@ public class NewCommunityCardsEvent extends HoldemTableEvent {
 		return toReturn.substring(0, toReturn.length() - 2) + ".";
 	}
 	
+	@Override
 	public void dispatch(HoldemTableListener holdemTableListener) {
 		holdemTableListener.onNewCommunityCards(this);
 	}

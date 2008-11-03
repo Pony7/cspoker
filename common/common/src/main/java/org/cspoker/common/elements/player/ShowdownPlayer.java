@@ -50,6 +50,7 @@ public class ShowdownPlayer extends Player {
 		// no op
 	}
 
+	@Override
 	public String toString() {
 		return getName() + " has a " + description;
 	}

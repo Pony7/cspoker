@@ -62,6 +62,7 @@ public class MutablePlayer {
 		return stack;
 	}
 	
+	@Override
 	public String toString(){
 		return getName()+" (#"+getId()+")";
 	}

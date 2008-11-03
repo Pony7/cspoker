@@ -69,8 +69,7 @@ public class GameState {
 		return 2;
 	}
 	
-	public void betRaise(int amount, Pots newPots) {
-		pots = newPots;
+	public void betRaise(int amount) {
 		if (amount == 0) {
 			return;
 		}

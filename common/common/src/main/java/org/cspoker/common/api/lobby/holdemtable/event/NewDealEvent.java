@@ -57,6 +57,7 @@ public class NewDealEvent extends HoldemTableEvent {
 		return players;
 	}
 
+	@Override
 	public String toString() {
 		String toReturn = "A new deal with ";
 		for (SeatedPlayer player : players) {
@@ -70,6 +71,7 @@ public class NewDealEvent extends HoldemTableEvent {
 				+ " is dealer.";
 	}
 	
+	@Override
 	public void dispatch(HoldemTableListener holdemTableListener) {
 		holdemTableListener.onNewDeal(this);
 	}

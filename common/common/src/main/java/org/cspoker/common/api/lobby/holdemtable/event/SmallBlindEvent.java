@@ -46,6 +46,7 @@ public class SmallBlindEvent extends HoldemTableEvent {
 		amount = 0;
 	}
 
+	@Override
 	public String toString() {
 		return getPlayer().getName() + " bets the small blind of "
 				+ getAmount() + " chips.";
@@ -59,6 +60,7 @@ public class SmallBlindEvent extends HoldemTableEvent {
 		return player;
 	}
 
+	@Override
 	public void dispatch(HoldemTableListener holdemTableListener) {
 		holdemTableListener.onSmallBlind(this);
 	}

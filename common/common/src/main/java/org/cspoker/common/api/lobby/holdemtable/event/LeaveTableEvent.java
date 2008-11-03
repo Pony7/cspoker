@@ -42,6 +42,7 @@ public class LeaveTableEvent extends HoldemTableEvent {
 		player = null;
 	}
 
+	@Override
 	public String toString() {
 		return player.getName() + " has left this table.";
 	}
@@ -50,6 +51,7 @@ public class LeaveTableEvent extends HoldemTableEvent {
 		return player;
 	}
 
+	@Override
 	public void dispatch(HoldemTableListener holdemTableListener) {
 		holdemTableListener.onLeaveTable(this);
 	}

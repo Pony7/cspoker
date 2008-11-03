@@ -47,6 +47,7 @@ public class NewPocketCardsEvent extends HoldemPlayerEvent {
 		return pocketCards;
 	}
 
+	@Override
 	public String toString() {
 		String toReturn = "You have received new pocket cards: ";
 		for (Card card : getPocketCards()) {
@@ -56,6 +57,7 @@ public class NewPocketCardsEvent extends HoldemPlayerEvent {
 		return toReturn.substring(0, toReturn.length() - 2) + ".";
 	}
 	
+	@Override
 	public void dispatch(HoldemPlayerListener holdemPlayerListener) {
 		holdemPlayerListener.onNewPocketCards(this);
 	}

@@ -22,33 +22,34 @@ import java.rmi.RemoteException;
 import org.cspoker.client.xml.common.RemoteXmlServer;
 import org.cspoker.client.xml.common.XmlActionSerializer;
 
-public class RemoteHTTPServer extends RemoteXmlServer {
-
+public class RemoteHTTPServer
+		extends RemoteXmlServer {
+	
 	public RemoteHTTPServer() {
 		this("localhost");
 	}
 	
 	public RemoteHTTPServer(String server) {
-		this(server,8080);
+		this(server, 8080);
 	}
 	
 	public RemoteHTTPServer(String server, int port) {
-		super(server,port);
+		super(server, port);
 	}
-
+	
 	@Override
-	protected XmlActionSerializer createXmlActionSerializer(String username,
-			String password) throws RemoteException {
+	protected XmlActionSerializer createXmlActionSerializer(String username, String password)
+			throws RemoteException {
 		try {
-			return new XmlHttpSerializer(new URL("http://" + server
-					+ ":" + port + "/cspoker/"), username, password);
+			return new XmlHttpSerializer(new URL("http://" + server + ":" + port + "/cspoker/"), username, password);
 		} catch (MalformedURLException exception) {
 			throw new RemoteException("Bad URL", exception);
 		}
 	}
 	
+	@Override
 	public String toString() {
 		return "http://" + server + ":" + port;
 	}
-
+	
 }

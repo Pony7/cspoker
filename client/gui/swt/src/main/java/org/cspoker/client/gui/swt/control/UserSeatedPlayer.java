@@ -29,6 +29,8 @@ import org.cspoker.common.api.lobby.holdemtable.listener.AsynchronousHoldemTable
 import org.cspoker.common.api.shared.context.RemoteServerContext;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.player.SeatedPlayer;
+import org.cspoker.common.elements.table.SeatId;
+import org.cspoker.common.elements.table.TableId;
 
 /**
  * Represents a user who is sitting at/observing a certain table
@@ -44,7 +46,7 @@ public class UserSeatedPlayer
 	private final static Logger logger = Logger.getLogger(UserSeatedPlayer.class);
 	private final GameWindow gameWindow;
 	private final Executor displayExecutor;
-	private final long tableId;
+	private final TableId tableId;
 	
 	RemoteHoldemTableContext tableContext;
 	RemoteHoldemPlayerContext playerContext;
@@ -61,8 +63,8 @@ public class UserSeatedPlayer
 	 * @param gameState The {@link GameState} for this table
 	 */
 	public UserSeatedPlayer(GameWindow gameWindow, ClientCore core, GameState gameState) {
-		super(new SeatedPlayer(core.getUser().getPlayer().getId(), Long.MAX_VALUE,
-				core.getUser().getPlayer().getName(), 0, 0), gameState);
+		super(new SeatedPlayer(core.getUser().getPlayer().getId(), new SeatId(Long.MAX_VALUE), core.getUser()
+				.getPlayer().getName(), 0, 0), gameState);
 		assert (gameWindow != null) : "We need the GameWindow as the listener!";
 		this.gameWindow = gameWindow;
 		this.displayExecutor = DisplayExecutor.getInstance();
@@ -126,11 +128,11 @@ public class UserSeatedPlayer
 	 * @throws RemoteException When the sit in request was unsuccessful
 	 * @throws IllegalStateException
 	 */
-	public void sitIn(long seatId, int amount)
+	public void sitIn(SeatId seatId, int amount)
 			throws RemoteException, IllegalActionException {
 		if (tableContext == null)
 			throw new IllegalStateException("No table context available, you can not sit in");
-		assert (seatId >= 0 && seatId != Long.MAX_VALUE) : "Illegal seat id provided: " + seatId;
+		assert (seatId.getId() >= 0 && seatId.getId() != Long.MAX_VALUE) : "Illegal seat id provided: " + seatId;
 		playerContext = tableContext.sitIn(seatId, amount, new AsynchronousHoldemPlayerListener(displayExecutor,
 				gameWindow));
 		sittingIn = true;

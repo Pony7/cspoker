@@ -34,6 +34,7 @@ public class TestHandIterator extends TestCase {
 
 	protected Hand hand1;
 
+	@Override
 	protected void setUp() throws Exception {
 		hand1 = new Hand();
 

@@ -24,7 +24,8 @@ import org.cspoker.common.elements.player.Player;
 
 @XmlRootElement
 @Immutable
-public class MessageEvent extends ChatEvent {
+public class MessageEvent
+		extends ChatEvent {
 	
 	private static final long serialVersionUID = -4744953146472211045L;
 	
@@ -35,12 +36,13 @@ public class MessageEvent extends ChatEvent {
 		this.player = player;
 		this.message = message;
 	}
-
+	
 	protected MessageEvent() {
 		player = null;
 		message = null;
 	}
-
+	
+	@Override
 	public String toString() {
 		return getPlayer().getName() + " says: " + getMessage();
 	}
@@ -53,8 +55,12 @@ public class MessageEvent extends ChatEvent {
 		return this.message;
 	}
 	
+	/**
+	 * @see org.cspoker.common.api.chat.event.ChatEvent#dispatch(org.cspoker.common.api.chat.listener.ChatListener)
+	 */
+	@Override
 	public void dispatch(ChatListener chatListener) {
 		chatListener.onMessage(this);
 	}
-
+	
 }

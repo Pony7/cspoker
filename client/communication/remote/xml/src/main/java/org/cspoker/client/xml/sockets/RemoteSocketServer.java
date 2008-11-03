@@ -20,8 +20,9 @@ import java.rmi.RemoteException;
 import org.cspoker.client.xml.common.RemoteXmlServer;
 import org.cspoker.client.xml.common.XmlActionSerializer;
 
-public class RemoteSocketServer extends RemoteXmlServer {
-
+public class RemoteSocketServer
+		extends RemoteXmlServer {
+	
 	public RemoteSocketServer() {
 		this("localhost");
 	}
@@ -31,17 +32,18 @@ public class RemoteSocketServer extends RemoteXmlServer {
 	}
 	
 	public RemoteSocketServer(String server, int port) {
-		super(server,port);
+		super(server, port);
 	}
-
+	
+	@Override
 	public String toString() {
 		return "socket://" + server + ":" + port;
 	}
-
+	
 	@Override
-	protected XmlActionSerializer createXmlActionSerializer(String username,
-			String password) throws RemoteException {
-		return new XmlSocketsChannel(server, port, username,password);
+	protected XmlActionSerializer createXmlActionSerializer(String username, String password)
+			throws RemoteException {
+		return new XmlSocketsChannel(server, port, username, password);
 	}
-
+	
 }

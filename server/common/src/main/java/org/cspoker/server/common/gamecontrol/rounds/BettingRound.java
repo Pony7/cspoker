@@ -70,6 +70,7 @@ public abstract class BettingRound extends Round {
 		setBet(0);
 	}
 
+	@Override
 	public void check(MutableSeatedPlayer player) throws IllegalActionException {
 		if (!onTurn(player)) {
 			throw new IllegalActionException(player.getName()
@@ -82,6 +83,7 @@ public abstract class BettingRound extends Round {
 		game.nextPlayer();
 	}
 
+	@Override
 	public void bet(MutableSeatedPlayer player, int amount)
 			throws IllegalActionException {
 		if (!onTurn(player) || someoneHasBet() || onlyOnePlayerLeft() || onlyOnePlayerLeftBesidesAllInPlayers()) {
@@ -121,6 +123,7 @@ public abstract class BettingRound extends Round {
 		game.nextPlayer();
 	}
 
+	@Override
 	public void call(MutableSeatedPlayer player) throws IllegalActionException {
 		if (!onTurn(player)) {
 			throw new IllegalActionException(player.getName()
@@ -167,6 +170,7 @@ public abstract class BettingRound extends Round {
 		game.nextPlayer();
 	}
 
+	@Override
 	public void raise(MutableSeatedPlayer player, int amount)
 			throws IllegalActionException {
 		if (!onTurn(player) || !someoneHasBet() || onlyOnePlayerLeft() || onlyOnePlayerLeftBesidesAllInPlayers()) {
@@ -210,6 +214,7 @@ public abstract class BettingRound extends Round {
 		game.nextPlayer();
 	}
 
+	@Override
 	public void fold(MutableSeatedPlayer player) throws IllegalActionException {
 		if (!onTurn(player)) {
 			throw new IllegalActionException(player.getName()
@@ -219,6 +224,7 @@ public abstract class BettingRound extends Round {
 		foldAction(player);
 	}
 
+	@Override
 	public void foldAction(MutableSeatedPlayer player) {
 		player.clearPocketCards();
 
@@ -242,6 +248,7 @@ public abstract class BettingRound extends Round {
 		// to next player.
 	}
 
+	@Override
 	public void allIn(MutableSeatedPlayer player) throws IllegalActionException {
 		if (!onTurn(player)) {
 			throw new IllegalActionException(player.getName()
@@ -603,12 +610,14 @@ public abstract class BettingRound extends Round {
 	 * @return True if the round is ended, false otherwise.
 	 */
 
+	@Override
 	public boolean isRoundEnded() {
 		return super.isRoundEnded() || onlyAllInPlayers()
 				|| onlyOnePlayerLeftBesidesAllInPlayersAndCalled()
 				|| onlyOneActivePlayer();
 	}
 
+	@Override
 	public int getCurrentPotValue() {
 		int currentPlayerBets = 0;
 		for (MutableSeatedPlayer player : game.getCurrentDealPlayers()) {
@@ -627,6 +636,7 @@ public abstract class BettingRound extends Round {
 				+ foldedPlayerBets + allInPlayerBets;
 	}
 
+	@Override
 	public void endRound() {
 		collectChips();
 		// if there are no all-in players and only one active player left

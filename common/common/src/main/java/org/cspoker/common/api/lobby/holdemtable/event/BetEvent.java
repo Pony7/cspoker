@@ -43,6 +43,7 @@ public class BetEvent extends HoldemTableEvent {
 		amount = 0;
 	}
 
+	@Override
 	public String toString() {
 		return getPlayer().getName() + " bets " + getAmount() + " chips.";
 	}
@@ -55,6 +56,7 @@ public class BetEvent extends HoldemTableEvent {
 		return player;
 	}
 	
+	@Override
 	public void dispatch(HoldemTableListener holdemTableListener) {
 		holdemTableListener.onBet(this);
 	}

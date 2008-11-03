@@ -18,8 +18,6 @@ package org.cspoker.common.api.shared.event;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
-import net.jcip.annotations.Immutable;
-
 import org.cspoker.common.api.shared.action.DispatchableAction;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 

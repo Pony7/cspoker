@@ -38,7 +38,8 @@ public class ActionPerformedEvent<T> extends ActionEvent<T> {
                 result = null;
         }
 
-        public T getResult() {
+        @Override
+		public T getResult() {
                 return result;
         }
         

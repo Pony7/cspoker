@@ -30,47 +30,48 @@ import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.elements.table.Rounds;
 import org.cspoker.common.elements.table.TableId;
 
-public class RuleBasedBot extends DefaultBot {
-
+public class RuleBasedBot
+		extends DefaultBot {
+	
 	private final static Logger logger = Logger.getLogger(BotRunner.class);
 	Random random = new Random();
-
-	public RuleBasedBot(SmartLobbyContext lobby, PlayerId playerID, TableId tableID, ExecutorService executor, boolean doOutput) {
+	
+	public RuleBasedBot(SmartLobbyContext lobby, PlayerId playerID, TableId tableID, ExecutorService executor,
+			boolean doOutput) {
 		super(lobby, playerID, tableID, executor, doOutput);
 	}
-
+	
 	@Override
 	public void doNextAction() {
-		executor.execute(new Runnable(){
-			@Override
+		executor.execute(new Runnable() {
+			
 			public void run() {
 				try {
-					if(tableContext.getCurrentRound().equals(Rounds.PREFLOP)){
+					if (tableContext.getCurrentRound().equals(Rounds.PREFLOP)) {
 						playerContext.checkOrCall();
-					}else{
+					} else {
 						float betProbability;
-						if(playerContext.haveA(Rank.ACE) || playerContext.havePocketPair()){
+						if (playerContext.haveA(Rank.ACE) || playerContext.havePocketPair()) {
 							betProbability = 0.99F;
-						}else{
+						} else {
 							betProbability = 0.01F;
 						}
-						if(random.nextFloat()<betProbability){
-							playerContext.raiseMaxBetWith(lobbyContext.getHoldemTableInformation(tableID).getGameProperty().getBigBlind());
-						}else{
+						if (random.nextFloat() < betProbability) {
+							playerContext.raiseMaxBetWith(lobbyContext.getHoldemTableInformation(tableID)
+									.getGameProperty().getBigBlind());
+						} else {
 							playerContext.raiseMaxBetWith(0);
 						}
 					}
 				} catch (IllegalActionException e) {
 					logger.error(e);
-					throw new IllegalStateException("Call was not allowed.",e);
-				}catch (RemoteException e) {
+					throw new IllegalStateException("Call was not allowed.", e);
+				} catch (RemoteException e) {
 					logger.error(e);
-					throw new IllegalStateException("Call failed.",e);
+					throw new IllegalStateException("Call failed.", e);
 				}
 			}
 		});
 	}
-
-
-
+	
 }

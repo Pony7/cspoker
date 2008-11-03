@@ -72,11 +72,13 @@ public class XmlFileAuthenticator {
 
 			private StringBuilder sb = new StringBuilder();
 
+			@Override
 			public void characters(char[] ch, int start, int length)
 					throws SAXException {
 				sb.append(ch, start, length);
 			}
 
+			@Override
 			public void startElement(String uri, String localName, String name,
 					Attributes attributes) throws SAXException {
 				sb.setLength(0);
@@ -84,6 +86,7 @@ public class XmlFileAuthenticator {
 
 			private String lastname;
 
+			@Override
 			public void endElement(String uri, String localName, String name)
 					throws SAXException {
 				if (name.equalsIgnoreCase("name")) {

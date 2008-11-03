@@ -42,6 +42,7 @@ public class SeatId implements Serializable{
 		return seatId;
 	}
 	
+	@Override
 	public String toString(){
 		return "#"+Long.toString(seatId);
 	}

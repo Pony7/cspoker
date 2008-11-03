@@ -19,14 +19,11 @@ import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
 
 import org.apache.log4j.Logger;
-import org.cspoker.client.gui.swt.control.CardPaintListener;
-import org.cspoker.client.gui.swt.control.Chip;
-import org.cspoker.client.gui.swt.control.ClientGUI;
-import org.cspoker.client.gui.swt.control.MutableSeatedPlayer;
-import org.cspoker.client.gui.swt.control.UserSeatedPlayer;
+import org.cspoker.client.gui.swt.control.*;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.cards.Card;
 import org.cspoker.common.elements.player.SeatedPlayer;
+import org.cspoker.common.elements.table.SeatId;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
@@ -35,13 +32,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Canvas;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.ProgressBar;
+import org.eclipse.swt.widgets.*;
 
 /**
  * Represents a composite in the TableComposite where the player is visualized
@@ -104,7 +95,7 @@ public class PlayerSeatComposite
 	private MutableSeatedPlayer player;
 	
 	private int numberOfHoleCards = 2;
-	private final long seatId;
+	private final SeatId seatId;
 	/** Indicates whether this player is currently to act */
 	private boolean active;
 	
@@ -161,7 +152,7 @@ public class PlayerSeatComposite
 	 * @param style
 	 * @param seatId
 	 */
-	public PlayerSeatComposite(TableComposite parent, int style, int seatId) {
+	public PlayerSeatComposite(TableComposite parent, int style, SeatId seatId) {
 		super(parent, style);
 		numberOfHoleCards = gameState.getNumberOfHoleCards();
 		player = MutableSeatedPlayer.UNOCCUPIED;
@@ -195,7 +186,7 @@ public class PlayerSeatComposite
 		int y = 0;
 		int width = dealerChip.getImageData().width;
 		int height = dealerChip.getImageData().height;
-		switch ((int) seatId) {
+		switch ((int) seatId.getId()) {
 			case 0:
 			case 5:
 				x = pcLocation.x + pcLocation.width;
@@ -415,7 +406,7 @@ public class PlayerSeatComposite
 	/**
 	 * @return The immutable seat id associated with this PlayerSeatComposite
 	 */
-	public long getSeatId() {
+	public SeatId getSeatId() {
 		return seatId;
 	}
 	

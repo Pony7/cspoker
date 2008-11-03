@@ -59,6 +59,7 @@ public class MutableAllInPlayer implements Comparable<MutableAllInPlayer> {
 		return getBetValue() - o.getBetValue();
 	}
 
+	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {
 			return true;
@@ -80,6 +81,7 @@ public class MutableAllInPlayer implements Comparable<MutableAllInPlayer> {
 		return true;
 	}
 
+	@Override
 	public String toString() {
 		return String.valueOf(getBetValue());
 	}

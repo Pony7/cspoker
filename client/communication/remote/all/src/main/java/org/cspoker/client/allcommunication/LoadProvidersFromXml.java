@@ -31,14 +31,14 @@ import org.xml.sax.helpers.DefaultHandler;
 import org.xml.sax.helpers.XMLReaderFactory;
 
 public class LoadProvidersFromXml {
-
+	
 	private static Logger logger = Logger.getLogger(LoadProvidersFromXml.class);
 	private final CommunicationProvider provider;
-
+	
 	public LoadProvidersFromXml(CommunicationProvider provider) {
 		this("org/cspoker/client/allcommunication/providers.xml", provider);
 	}
-
+	
 	public LoadProvidersFromXml(String file, CommunicationProvider provider) {
 		this.provider = provider;
 		XMLReader xr;
@@ -51,38 +51,37 @@ public class LoadProvidersFromXml {
 		DefaultHandler handler = getHandler();
 		xr.setContentHandler(handler);
 		xr.setErrorHandler(handler);
-
+		
 		InputStream is = getClass().getClassLoader().getResourceAsStream(file);
 		InputSource source = new InputSource(is);
-
+		
 		try {
 			xr.parse(source);
 		} catch (IOException e) {
 			logger.error(e.getMessage(), e);
-			throw new IllegalStateException(
-					"Error reading authentication file: " + e.getMessage());
+			throw new IllegalStateException("Error reading authentication file: " + e.getMessage());
 		} catch (SAXException e) {
 			logger.error(e.getMessage(), e);
-			throw new IllegalStateException("Error parsing XML: "
-					+ e.getMessage());
+			throw new IllegalStateException("Error parsing XML: " + e.getMessage());
 		}
 	}
-
+	
 	private DefaultHandler getHandler() {
 		return new DefaultHandler() {
-
-			public void startElement(String uri, String localName, String name,
-					Attributes attributes) throws SAXException {
+			
+			@Override
+			public void startElement(String uri, String localName, String name, Attributes attributes)
+					throws SAXException {
 				if (localName.equals("provider")) {
 					String address = attributes.getValue("address");
 					int port = Integer.parseInt(attributes.getValue("port"));
 					String type = attributes.getValue("type");
 					if (type.equals("rmi")) {
-						provider.addRemoteCSPokerServer(new RemoteRMIServer(address,port));
+						provider.addRemoteCSPokerServer(new RemoteRMIServer(address, port));
 					} else if (type.equals("http")) {
-						provider.addRemoteCSPokerServer(new RemoteHTTPServer(address,port));
+						provider.addRemoteCSPokerServer(new RemoteHTTPServer(address, port));
 					} else if (type.equals("socket")) {
-						provider.addRemoteCSPokerServer(new RemoteSocketServer(address,port));
+						provider.addRemoteCSPokerServer(new RemoteSocketServer(address, port));
 					} else {
 						throw new SAXException("Unknown provider type: " + type);
 					}
@@ -90,5 +89,5 @@ public class LoadProvidersFromXml {
 			}
 		};
 	}
-
+	
 }

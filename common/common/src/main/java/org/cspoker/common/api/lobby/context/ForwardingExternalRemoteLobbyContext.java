@@ -32,6 +32,7 @@ public class ForwardingExternalRemoteLobbyContext extends ForwardingRemoteLobbyC
 		this.lobbyContext  = lobbyContext;
 	}
 
+	@Override
 	public ExternalRemoteHoldemTableContext joinHoldemTable(TableId tableId,
 			HoldemTableListener holdemTableListener) throws RemoteException, IllegalActionException {
 		return lobbyContext.joinHoldemTable(tableId, holdemTableListener);

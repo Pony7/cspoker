@@ -25,26 +25,28 @@ import javax.security.auth.login.LoginException;
 import org.cspoker.common.ExternalRemoteCSPokerServer;
 import org.cspoker.common.api.shared.context.ExternalRemoteServerContext;
 
-public class RemoteRMIServer implements ExternalRemoteCSPokerServer {
-
+public class RemoteRMIServer
+		implements ExternalRemoteCSPokerServer {
+	
 	private String server;
 	private int port;
 	
-	//keeping this reference prevents some DGC problem to arise?
+	// keeping this reference prevents some DGC problem to arise?
 	private ExternalRemoteCSPokerServer cspokerServer;
-
-	public RemoteRMIServer() throws RemoteException, NotBoundException {
+	
+	public RemoteRMIServer() {
 		this("localhost");
 	}
-	public RemoteRMIServer(String server) throws RemoteException, NotBoundException {
+	
+	public RemoteRMIServer(String server) {
 		this(server, 1099);
 	}
-
+	
 	public RemoteRMIServer(String server, int port) {
 		this.server = server;
 		this.port = port;
 	}
-
+	
 	public ExternalRemoteServerContext login(String username, String password)
 			throws RemoteException, LoginException {
 		System.setSecurityManager(null);
@@ -52,7 +54,7 @@ public class RemoteRMIServer implements ExternalRemoteCSPokerServer {
 		try {
 			cspokerServer = (ExternalRemoteCSPokerServer) registry.lookup("CSPokerServer");
 		} catch (NotBoundException exception) {
-			throw new RemoteException("CSPokerServer not found in registry.",exception);
+			throw new RemoteException("CSPokerServer not found in registry.", exception);
 		}
 		ExternalRemoteServerContext context = cspokerServer.login(username, password);
 		return new ServerContextStub(context);
@@ -60,7 +62,7 @@ public class RemoteRMIServer implements ExternalRemoteCSPokerServer {
 	
 	@Override
 	public String toString() {
-		return "rmi://"+server+":"+port;
+		return "rmi://" + server + ":" + port;
 	}
-
+	
 }
