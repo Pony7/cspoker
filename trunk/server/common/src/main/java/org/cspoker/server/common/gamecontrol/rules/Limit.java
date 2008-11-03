@@ -84,6 +84,7 @@ public class Limit extends BettingRules {
 	 * Raise
 	 **************************************************************************/
 
+	@Override
 	public boolean isValidRaise(int amount, BettingRound round) {
 		if (getNBRaises() >= maxNBRaises) {
 			setLastRaiseErrorMessage("ERROR : the maximum number of raises in this round has been reached");
@@ -106,6 +107,7 @@ public class Limit extends BettingRules {
 	 * Increases the number of raises in this round by one
 	 */
 
+	@Override
 	public void incrementNBRaises() {
 		if (getNBRaises() >= maxNBRaises) {
 			throw new IllegalStateException();
@@ -117,6 +119,7 @@ public class Limit extends BettingRules {
 	 * Betting
 	 **************************************************************************/
 
+	@Override
 	public boolean isValidBet(int amount, BettingRound round) {
 		if (round.isLowBettingRound() && (amount % getSmallBet() != 0)) {
 			setLastRaiseErrorMessage("ERROR : the bet amount must be n times the small bet of this round being "
@@ -131,6 +134,7 @@ public class Limit extends BettingRules {
 		return super.isValidBet(amount, round);
 	}
 
+	@Override
 	public String toString() {
 		return "Hold'em Limit";
 	}

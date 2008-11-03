@@ -59,6 +59,7 @@ public class Table implements Serializable, Comparable<Table> {
 		return name;
 	}
 	
+	@Override
 	public String toString(){
 		return getName()+" ("+getId()+")";
 	}

@@ -15,8 +15,6 @@
  */
 package org.cspoker.common.api.lobby.holdemtable.holdemplayer.action;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import net.jcip.annotations.Immutable;

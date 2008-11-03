@@ -46,6 +46,7 @@ public class SchemaGen {
 				this.file = file;
 			}
 
+			@Override
 			public Result createOutput( String namespaceUri, String suggestedFileName ) throws IOException {
 				//actions
 				if(namespaceUri.equals("http://www.cspoker.org/api/2008-11/")){

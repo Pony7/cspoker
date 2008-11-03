@@ -27,32 +27,32 @@ import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.elements.table.TableId;
 
-public class CallBot extends DefaultBot {
-
+public class CallBot
+		extends DefaultBot {
+	
 	private final static Logger logger = Logger.getLogger(BotRunner.class);
-
-	public CallBot(SmartLobbyContext lobbyguy, PlayerId playerID, TableId tableID, ExecutorService executor, boolean doOutput) {
+	
+	public CallBot(SmartLobbyContext lobbyguy, PlayerId playerID, TableId tableID, ExecutorService executor,
+			boolean doOutput) {
 		super(lobbyguy, playerID, tableID, executor, doOutput);
 	}
-
+	
 	@Override
 	public void doNextAction() {
-		executor.execute(new Runnable(){
-			@Override
+		executor.execute(new Runnable() {
+			
 			public void run() {
 				try {
 					playerContext.checkOrCall();
 				} catch (IllegalActionException e) {
 					logger.error(e);
-					throw new IllegalStateException("Call was not allowed.",e);
-				}catch (RemoteException e) {
+					throw new IllegalStateException("Call was not allowed.", e);
+				} catch (RemoteException e) {
 					logger.error(e);
-					throw new IllegalStateException("Call failed.",e);
+					throw new IllegalStateException("Call failed.", e);
 				}
 			}
 		});
 	}
-
-
-
+	
 }

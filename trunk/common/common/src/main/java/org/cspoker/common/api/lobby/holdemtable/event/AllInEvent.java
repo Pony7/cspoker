@@ -53,6 +53,7 @@ public class AllInEvent extends HoldemTableEvent {
 		holdemTableListener.onAllIn(this);
 	}
 	
+	@Override
 	public String toString(){
 		return player.getName()+" is all-in.";
 	}

@@ -31,6 +31,7 @@ import org.cspoker.common.api.lobby.listener.LobbyListenerTree;
 import org.cspoker.common.api.shared.context.RemoteServerContext;
 import org.cspoker.common.api.shared.context.ServerContext;
 import org.cspoker.common.api.shared.listener.ServerListenerTree;
+import org.cspoker.common.elements.table.TableId;
 import org.cspoker.common.util.Log4JPropertiesLoader;
 import org.eclipse.swt.widgets.Display;
 
@@ -146,7 +147,8 @@ public class ClientCore
 	 * @see java.lang.Runnable#run()
 	 */
 	public void run() {
-		// CommunicationProvider communicationProvider = new CommunicationProvider();
+		// CommunicationProvider communicationProvider = new
+		// CommunicationProvider();
 		// new LoadProvidersFromXml(communicationProvider);
 		// new LoadEmbeddedProvider(communicationProvider);
 		// Run the whole GUI inside a try-catch for now so we can catch
@@ -233,7 +235,7 @@ public class ClientCore
 				return getGui().getLobby();
 			}
 			
-			public HoldemTableListenerTree getHoldemTableListenerTree(final long tableId) {
+			public HoldemTableListenerTree getHoldemTableListenerTree(final TableId tableId) {
 				return new HoldemTableListenerTree() {
 					
 					public HoldemTableListener getHoldemTableListener() {
@@ -289,7 +291,7 @@ public class ClientCore
 	}
 	
 	@Override
-	public ChatListener getTableChatListener(long tableID) {
+	public ChatListener getTableChatListener(TableId tableID) {
 		return gui.getGameWindow(tableID, false).getUserInputComposite();
 	}
 }

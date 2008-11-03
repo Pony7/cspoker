@@ -46,6 +46,7 @@ public class RaiseEvent extends HoldemTableEvent {
 		amount = 0;
 	}
 
+	@Override
 	public String toString() {
 		return getPlayer().getName() + " raises with " + getAmount()
 				+ " chips.";
@@ -59,6 +60,7 @@ public class RaiseEvent extends HoldemTableEvent {
 		return player;
 	}
 	
+	@Override
 	public void dispatch(HoldemTableListener holdemTableListener) {
 		holdemTableListener.onRaise(this);
 	}

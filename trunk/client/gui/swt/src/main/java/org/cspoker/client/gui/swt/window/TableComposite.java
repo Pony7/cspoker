@@ -11,12 +11,8 @@
  */
 package org.cspoker.client.gui.swt.window;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.*;
 import java.util.List;
-import java.util.NavigableMap;
-import java.util.Set;
-import java.util.TreeMap;
 import java.util.Map.Entry;
 
 import org.apache.log4j.Logger;
@@ -26,7 +22,9 @@ import org.cspoker.client.gui.swt.control.ClientGUI;
 import org.cspoker.client.gui.swt.control.MutableSeatedPlayer;
 import org.cspoker.common.elements.cards.Card;
 import org.cspoker.common.elements.player.Player;
+import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.elements.player.Winner;
+import org.cspoker.common.elements.table.SeatId;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
@@ -36,11 +34,7 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Canvas;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.*;
 
 /**
  * The main composite in the game window. Contains the
@@ -100,9 +94,9 @@ public class TableComposite
 		setLayoutData(tableCompositeLData);
 		setBackgroundMode(SWT.INHERIT_FORCE);
 		insertHolderLabel();
-		insertPlayerSeatComposite(0);
+		insertPlayerSeatComposite(new SeatId(0));
 		insertHolderLabel();
-		insertPlayerSeatComposite(1);
+		insertPlayerSeatComposite(new SeatId(1));
 		insertHolderLabel();
 		insertHolderLabel();
 		insertBetArea();
@@ -110,7 +104,7 @@ public class TableComposite
 		insertBetArea();
 		insertHolderLabel();
 		// End second row
-		insertPlayerSeatComposite(5);
+		insertPlayerSeatComposite(new SeatId(5));
 		insertBetArea();
 		communityCardsComposite = new Composite(this, SWT.NONE | ClientGUI.COMPOSITE_BORDER_STYLE);
 		communityCardsComposite.setLayout(new GridLayout(5, true));
@@ -124,7 +118,7 @@ public class TableComposite
 		communityCardsComposite.setBackgroundMode(SWT.INHERIT_NONE);
 		communityCardsComposite.addPaintListener(new CardPaintListener(communityCards, 5, SWT.LEFT, 5));
 		insertBetArea();
-		insertPlayerSeatComposite(2);
+		insertPlayerSeatComposite(new SeatId(2));
 		insertHolderLabel();
 		insertBetArea();
 		potChipsArea = new Canvas(this, SWT.NONE | ClientGUI.COMPOSITE_BORDER_STYLE);
@@ -140,9 +134,9 @@ public class TableComposite
 		insertHolderLabel();
 		// End fourth row
 		insertHolderLabel();
-		insertPlayerSeatComposite(4);
+		insertPlayerSeatComposite(new SeatId(4));
 		insertHolderLabel();
-		insertPlayerSeatComposite(3);
+		insertPlayerSeatComposite(new SeatId(3));
 		insertHolderLabel();
 		
 		for (int i = 0; i < playerSeatComposites.size(); i++) {
@@ -198,7 +192,7 @@ public class TableComposite
 	/**
 	 * 
 	 */
-	private void insertPlayerSeatComposite(int seatId) {
+	private void insertPlayerSeatComposite(SeatId seatId) {
 		playerSeatComposites.add(new PlayerSeatComposite(this, SWT.NONE | ClientGUI.COMPOSITE_BORDER_STYLE, seatId));
 	}
 	
@@ -216,10 +210,10 @@ public class TableComposite
 	 * @throws IllegalArgumentException If no player with the given id is
 	 *             sitting at the table
 	 */
-	public PlayerSeatComposite findPlayerSeatCompositeByPlayerId(long playerId)
+	public PlayerSeatComposite findPlayerSeatCompositeByPlayerId(PlayerId playerId)
 			throws IllegalArgumentException {
 		for (PlayerSeatComposite pc : getPlayerSeatComposites(true)) {
-			if (pc.getPlayer().getId() == playerId) {
+			if (pc.getPlayer().getId().equals(playerId)) {
 				return pc;
 			}
 		}
@@ -235,10 +229,10 @@ public class TableComposite
 	 * @throws IllegalArgumentException If no seat with the given id is
 	 *             available at the table (i.e. seatId 10 for a 6-handed table)
 	 */
-	public PlayerSeatComposite findPlayerSeatCompositeBySeatId(long seatId)
+	public PlayerSeatComposite findPlayerSeatCompositeBySeatId(SeatId seatId)
 			throws IllegalArgumentException {
 		for (PlayerSeatComposite pc : getPlayerSeatComposites(false)) {
-			if (pc.getSeatId() == seatId) {
+			if (pc.getSeatId().equals(seatId)) {
 				return pc;
 			}
 		}

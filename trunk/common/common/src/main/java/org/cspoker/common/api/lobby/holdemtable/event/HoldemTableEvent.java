@@ -29,6 +29,7 @@ public abstract class HoldemTableEvent extends HoldemTableTreeEvent {
 	
 	private static final long serialVersionUID = -3790630004275903549L;
 
+	@Override
 	public void dispatch(HoldemTableListenerTree holdemTableListenerTree){
 		dispatch(holdemTableListenerTree.getHoldemTableListener());
 	}

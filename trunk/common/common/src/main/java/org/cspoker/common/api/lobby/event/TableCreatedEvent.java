@@ -44,6 +44,7 @@ public class TableCreatedEvent extends LobbyEvent {
 		table = null;
 	}
 
+	@Override
 	public String toString() {
 		return player.getName() + " has created a new table: "
 				+ table.getName() + " (#" + table.getId() + ").";

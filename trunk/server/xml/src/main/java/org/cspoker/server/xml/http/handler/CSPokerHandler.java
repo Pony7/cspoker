@@ -57,6 +57,7 @@ public class CSPokerHandler extends AbstractHttpHandler {
 		this.cspokerServer = cspokerServer;
 	}
 
+	@Override
 	protected byte[] getResponse(HttpExchange http) throws HttpExceptionImpl {
 		final Pair<String,String> credentials = AbstractHttpHandler.getCredentials(http.getRequestHeaders());
 

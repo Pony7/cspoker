@@ -42,6 +42,7 @@ public class FoldEvent extends HoldemTableEvent {
 		player = null;
 	}
 
+	@Override
 	public String toString() {
 		return getPlayer().getName() + " folds.";
 	}
@@ -50,6 +51,7 @@ public class FoldEvent extends HoldemTableEvent {
 		return player;
 	}
 
+	@Override
 	public void dispatch(HoldemTableListener holdemTableListener) {
 		holdemTableListener.onFold(this);
 	}

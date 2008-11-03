@@ -16,30 +16,8 @@ import java.util.Collections;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
-import org.cspoker.client.gui.swt.control.ClientGUI;
-import org.cspoker.client.gui.swt.control.GameState;
-import org.cspoker.client.gui.swt.control.MutableSeatedPlayer;
-import org.cspoker.client.gui.swt.control.SWTResourceManager;
-import org.cspoker.client.gui.swt.control.UserSeatedPlayer;
-import org.cspoker.common.api.lobby.holdemtable.event.AllInEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.BetEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.BigBlindEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.CallEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.CheckEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.FoldEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.JoinTableEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.LeaveTableEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.NewCommunityCardsEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.NewDealEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.NewRoundEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.NextPlayerEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.PotsChangedEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.RaiseEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.ShowHandEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.SitInEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.SitOutEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.SmallBlindEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.WinnerEvent;
+import org.cspoker.client.gui.swt.control.*;
+import org.cspoker.common.api.lobby.holdemtable.event.*;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.event.NewPocketCardsEvent;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.listener.HoldemPlayerListener;
 import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
@@ -173,16 +151,16 @@ public class GameWindow
 	 * @see org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener#onBet(org.cspoker.common.api.lobby.holdemtable.event.BetEvent)
 	 */
 	public void onBet(BetEvent betEvent) {
-		handleActionChangedPot(betEvent.getPots(), betEvent.getAmount(), betEvent.getPlayer(), "Bet");
+		handleActionChangedPot(betEvent.getAmount(), betEvent.getPlayer(), "Bet");
 		userInputComposite.showDealerMessage(betEvent);
 	}
 	
-	private void handleActionChangedPot(Pots pots, int amount, Player bettor, String action) {
+	private void handleActionChangedPot(int amount, Player bettor, String action) {
 		// Update the chip stack of the player who changed the pot by
 		// betting/raising/calling
 		MutableSeatedPlayer player = getPlayerSeatComposite(bettor).getPlayer();
 		player.updateStackAndBetChips(amount);
-		gameState.betRaise(amount, pots);
+		gameState.betRaise(amount);
 		player.getCurrentBetPile().clear();
 		player.getCurrentBetPile().addAll(gameState.getCurrentBetPile());
 		// Game State update
@@ -200,7 +178,7 @@ public class GameWindow
 	public void onBigBlind(final BigBlindEvent event) {
 		// Special case: clear bet pile so we draw big blind in one stack
 		gameState.getCurrentBetPile().clear();
-		handleActionChangedPot(event.getPots(), event.getAmount(), event.getPlayer(), "Big Blind");
+		handleActionChangedPot(event.getAmount(), event.getPlayer(), "Big Blind");
 		userInputComposite.showDealerMessage(event);
 	}
 	
@@ -208,7 +186,7 @@ public class GameWindow
 	 * @see org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener#onCall(org.cspoker.common.api.lobby.holdemtable.event.CallEvent)
 	 */
 	public void onCall(CallEvent callEvent) {
-		handleActionChangedPot(callEvent.getPots(), 0, callEvent.getPlayer(), "Call");
+		handleActionChangedPot(0, callEvent.getPlayer(), "Call");
 		userInputComposite.showDealerMessage(callEvent);
 		
 	}
@@ -266,7 +244,7 @@ public class GameWindow
 			
 			psc.setHoleCards(Arrays.asList(ClientGUI.UNKNOWN_CARD, ClientGUI.UNKNOWN_CARD));
 			// Draw dealer button
-			psc.getPlayer().setDealer(newDealEvent.getDealer().getId() == psc.getPlayer().getId());
+			psc.getPlayer().setDealer(newDealEvent.getDealer().equals(psc.getPlayer()));
 			// psc.resetBetChipsDisplayArea();
 			psc.getPlayer().setBetChipsValue(0);
 		}
@@ -360,7 +338,7 @@ public class GameWindow
 	 * @see org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener#onRaise(org.cspoker.common.api.lobby.holdemtable.event.RaiseEvent)
 	 */
 	public void onRaise(RaiseEvent raiseEvent) {
-		handleActionChangedPot(raiseEvent.getPots(), raiseEvent.getAmount(), raiseEvent.getPlayer(), "Raise");
+		handleActionChangedPot(raiseEvent.getAmount(), raiseEvent.getPlayer(), "Raise");
 		userInputComposite.showDealerMessage(raiseEvent);
 	}
 	
@@ -391,8 +369,7 @@ public class GameWindow
 	 * @see org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener#onSmallBlind(org.cspoker.common.api.lobby.holdemtable.event.SmallBlindEvent)
 	 */
 	public void onSmallBlind(SmallBlindEvent smallBlindEvent) {
-		handleActionChangedPot(smallBlindEvent.getPots(), smallBlindEvent.getAmount(), smallBlindEvent.getPlayer(),
-				"Small Blind");
+		handleActionChangedPot(smallBlindEvent.getAmount(), smallBlindEvent.getPlayer(), "Small Blind");
 		userInputComposite.showDealerMessage(smallBlindEvent);
 	}
 	
@@ -434,11 +411,10 @@ public class GameWindow
 	public void onLeaveTable(LeaveTableEvent leaveGameEvent) {
 	// TODO implement
 	}
-
-
+	
 	@Override
 	public void onPotsChanged(PotsChangedEvent potsChangedEvent) {
-		// TODO implement
+		gameState.setPots(potsChangedEvent.getPots());
 	}
 	
 	/**

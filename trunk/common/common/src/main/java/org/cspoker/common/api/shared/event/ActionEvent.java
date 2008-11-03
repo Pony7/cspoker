@@ -19,8 +19,6 @@ import java.rmi.RemoteException;
 
 import javax.xml.bind.annotation.XmlTransient;
 
-import net.jcip.annotations.Immutable;
-
 import org.cspoker.common.api.shared.action.DispatchableAction;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 

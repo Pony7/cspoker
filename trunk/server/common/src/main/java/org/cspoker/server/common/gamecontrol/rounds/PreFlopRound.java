@@ -104,6 +104,7 @@ public class PreFlopRound extends BettingRound {
 		}
 	}
 
+	@Override
 	public void check(MutableSeatedPlayer player) throws IllegalActionException {
 		if (!onTurn(player)) {
 			throw new IllegalActionException(player.getName()
@@ -129,6 +130,7 @@ public class PreFlopRound extends BettingRound {
 		game.nextPlayer();
 	}
 
+	@Override
 	public boolean isRoundEnded() {
 		return ((super.isRoundEnded() && (someoneHasRaised() || bigBlindAllIn()
 				|| someoneBigAllIn() || onlyOneActivePlayer()))
@@ -143,6 +145,7 @@ public class PreFlopRound extends BettingRound {
 		return bigBlindChecked;
 	}
 
+	@Override
 	public Round getNextRound() {
 		if (potsDividedToWinner()) {
 			return getNewDealRound();
@@ -150,14 +153,17 @@ public class PreFlopRound extends BettingRound {
 		return new FlopRound(gameMediator, getGame());
 	}
 
+	@Override
 	public boolean isLowBettingRound() {
 		return true;
 	}
 
+	@Override
 	public boolean isHighBettingRound() {
 		return !isLowBettingRound();
 	}
 
+	@Override
 	public String toString() {
 		return "pre-flop round";
 	}

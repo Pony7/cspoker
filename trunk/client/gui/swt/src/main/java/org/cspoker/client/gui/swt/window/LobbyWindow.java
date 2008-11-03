@@ -32,31 +32,17 @@ import org.cspoker.common.api.lobby.listener.AsynchronousLobbyListener;
 import org.cspoker.common.api.lobby.listener.LobbyListener;
 import org.cspoker.common.api.shared.context.RemoteServerContext;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
-import org.cspoker.common.elements.table.DetailedHoldemTable;
+import org.cspoker.common.elements.table.*;
 import org.cspoker.common.elements.table.Table;
-import org.cspoker.common.elements.table.TableConfiguration;
-import org.cspoker.common.elements.table.TableList;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
-import org.eclipse.swt.events.MouseAdapter;
-import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.ShellAdapter;
-import org.eclipse.swt.events.ShellEvent;
+import org.eclipse.swt.events.*;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.MenuItem;
-import org.eclipse.swt.widgets.MessageBox;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.swt.widgets.TableItem;
+import org.eclipse.swt.widgets.*;
 
 /**
  * The main lobby window. Listens to {@link LobbyEvent}s and {@link ChatEvent}s
@@ -186,7 +172,7 @@ public class LobbyWindow
 									TableItem[] selectedItems = availableGameTables.getSelection();
 									if (selectedItems.length == 1) {
 										// Open selected table
-										long tid = (Long.parseLong(selectedItems[0].getText(1)));
+										TableId tid = new TableId(Long.parseLong(selectedItems[0].getText(1)));
 										
 										GameWindow w = getClientCore().getGui().getGameWindow(tid, true);
 										w.show();
@@ -507,7 +493,7 @@ public class LobbyWindow
 		}
 		TableConfiguration tInfo = t.getGameProperty();
 		TableItem item = new TableItem(availableGameTables, SWT.NONE);
-		item.setText(new String[] { t.getName(), Long.toString(t.getId()),
+		item.setText(new String[] { t.getName(), Long.toString(t.getId().getId()),
 				ClientGUI.formatBet(tInfo.getSmallBlind()) + "/" + ClientGUI.formatBet(tInfo.getBigBlind()),
 				"Holdem No Limit", Integer.toString(t.getNbPlayers()) + "/" + tInfo.getMaxNbPlayers() });
 		item.setData(t);

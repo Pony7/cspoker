@@ -1,6 +1,7 @@
 package org.cspoker.client;
 
 import org.cspoker.common.elements.player.Player;
+import org.cspoker.common.elements.player.PlayerId;
 
 /**
  * A user of this game. Will hopefully be Immutable once API is complete.
@@ -61,7 +62,7 @@ public class User {
 		this.password = password;
 		// TODO This is not good, do we get our player id from somewhere else??
 		// It's nice to have this in the GameWindow
-		this.player = new Player(0, name);
+		this.player = new Player(new PlayerId(0), name);
 	}
 	
 	/***************************************************************************

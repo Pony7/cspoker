@@ -15,9 +15,6 @@
  */
 package org.cspoker.common.api.lobby.holdemtable.holdemplayer.action;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-
 import net.jcip.annotations.Immutable;
 
 import org.cspoker.common.api.lobby.holdemtable.action.HoldemTableAction;
@@ -41,6 +38,7 @@ public abstract class HoldemPlayerAction<T> extends HoldemTableAction<T> {
 		// no op
 	}
 
+	@Override
 	public T perform(StaticHoldemTableContext holdemTableContext) throws IllegalActionException{
 		return perform(holdemTableContext.getHoldemPlayerContext());
 	}

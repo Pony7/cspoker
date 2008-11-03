@@ -35,53 +35,52 @@ import org.cspoker.common.elements.table.DetailedHoldemTable;
 import org.cspoker.common.elements.table.TableConfiguration;
 import org.cspoker.common.util.Log4JPropertiesLoader;
 
-
-public class BotRunner implements LobbyListener {
-
+public class BotRunner
+		implements LobbyListener {
+	
 	static {
-		Log4JPropertiesLoader
-		.load("org/cspoker/client/bots/logging/log4j.properties");
+		Log4JPropertiesLoader.load("org/cspoker/client/bots/logging/log4j.properties");
 	}
-
+	
 	private final static Logger logger = Logger.getLogger(BotRunner.class);
-
+	
 	public BotRunner(final RemoteCSPokerServer cspokerServer) {
-
+		
 		final ExecutorService executor = Executors.newSingleThreadExecutor();
-		executor.execute(new Runnable(){
-			@Override
+		executor.execute(new Runnable() {
+			
 			public void run() {
 				try {
 					SmartClientContext serverguy = new SmartClientContext(cspokerServer.login("guy", "test"));
 					SmartLobbyContext lobbyguy = serverguy.getLobbyContext(BotRunner.this);
 					DetailedHoldemTable table = lobbyguy.createHoldemTable("BotTable", new TableConfiguration());
-					RuleBasedBot guy = new RuleBasedBot(lobbyguy,serverguy.getAccountContext().getPlayerID(),
-							table.getId(), executor, true);
-
+					RuleBasedBot guy = new RuleBasedBot(lobbyguy, serverguy.getAccountContext().getPlayerID(), table
+							.getId(), executor, true);
+					
 					SmartClientContext serverkenzo = new SmartClientContext(cspokerServer.login("kenzo", "test"));
 					SmartLobbyContext lobbykenzo = serverkenzo.getLobbyContext(BotRunner.this);
-					CallBot kenzo = new CallBot(lobbykenzo,serverkenzo.getAccountContext().getPlayerID()
-							,table.getId(), executor, false);
+					CallBot kenzo = new CallBot(lobbykenzo, serverkenzo.getAccountContext().getPlayerID(), table
+							.getId(), executor, false);
 				} catch (LoginException e) {
 					throw new IllegalStateException("Login Failed");
 				} catch (RemoteException e) {
 					logger.error(e);
-					throw new IllegalStateException("Server setup failed.",e);
+					throw new IllegalStateException("Server setup failed.", e);
 				} catch (IllegalActionException e) {
 					logger.error(e);
-					throw new IllegalStateException("Server setup failed.",e);
+					throw new IllegalStateException("Server setup failed.", e);
 				}
 			}
 		});
 		
 	}
-
+	
 	public void onTableCreated(TableCreatedEvent tableCreatedEvent) {
 
 	}
-
+	
 	public void onTableRemoved(TableRemovedEvent tableRemovedEvent) {
 
 	}
-
+	
 }

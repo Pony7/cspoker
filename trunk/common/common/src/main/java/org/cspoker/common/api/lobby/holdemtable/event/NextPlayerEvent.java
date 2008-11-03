@@ -46,10 +46,12 @@ public class NextPlayerEvent extends HoldemTableEvent {
 		return player;
 	}
 
+	@Override
 	public String toString() {
 		return "It's " + player.getName() + "'s turn.";
 	}
 	
+	@Override
 	public void dispatch(HoldemTableListener holdemTableListener) {
 		holdemTableListener.onNextPlayer(this);
 	}

@@ -41,6 +41,7 @@ public class ShowHandEvent extends HoldemTableEvent {
 		player = null;
 	}
 
+	@Override
 	public String toString() {
 		return player.toString();
 	}
@@ -49,6 +50,7 @@ public class ShowHandEvent extends HoldemTableEvent {
 		return player;
 	}
 	
+	@Override
 	public void dispatch(HoldemTableListener holdemTableListener) {
 		holdemTableListener.onShowHand(this);
 	}

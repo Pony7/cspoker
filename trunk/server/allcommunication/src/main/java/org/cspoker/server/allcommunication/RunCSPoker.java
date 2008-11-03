@@ -35,29 +35,28 @@ import org.xml.sax.helpers.DefaultHandler;
 import org.xml.sax.helpers.XMLReaderFactory;
 
 public class RunCSPoker {
-
+	
 	static {
-		Log4JPropertiesLoader
-				.load("org/cspoker/server/allcommunication/logging/log4j.properties");
+		Log4JPropertiesLoader.load("org/cspoker/server/allcommunication/logging/log4j.properties");
 	}
-
+	
 	private static Logger logger = Logger.getLogger(RunCSPoker.class);
-
+	
 	public static void main(String[] args) {
 		new RunCSPoker();
 	}
-
+	
 	/**
 	 * Hack to prevent GC of Remote Object
 	 */
 	private static RMIServer rmiserver;
 	
 	private final CSPokerServer cspokerServer;
-
+	
 	public RunCSPoker() {
 		this("org/cspoker/server/allcommunication/servers.xml");
 	}
-
+	
 	public RunCSPoker(String file) {
 		XMLReader xr;
 		try {
@@ -72,28 +71,27 @@ public class RunCSPoker {
 		DefaultHandler handler = getHandler();
 		xr.setContentHandler(handler);
 		xr.setErrorHandler(handler);
-
+		
 		InputStream is = getClass().getClassLoader().getResourceAsStream(file);
 		InputSource source = new InputSource(is);
-
+		
 		try {
 			xr.parse(source);
 		} catch (IOException e) {
 			logger.error(e.getMessage(), e);
-			throw new IllegalStateException(
-					"Error reading authentication file: " + e.getMessage());
+			throw new IllegalStateException("Error reading authentication file: " + e.getMessage());
 		} catch (SAXException e) {
 			logger.error(e.getMessage(), e);
-			throw new IllegalStateException("Error parsing XML: "
-					+ e.getMessage());
+			throw new IllegalStateException("Error parsing XML: " + e.getMessage());
 		}
 	}
-
+	
 	private DefaultHandler getHandler() {
 		return new DefaultHandler() {
-
-			public void startElement(String uri, String localName, String name,
-					Attributes attributes) throws SAXException {
+			
+			@Override
+			public void startElement(String uri, String localName, String name, Attributes attributes)
+					throws SAXException {
 				if (localName.equals("server")) {
 					int port = Integer.parseInt(attributes.getValue("port"));
 					String type = attributes.getValue("type");
@@ -103,25 +101,21 @@ public class RunCSPoker {
 							rmiserver = new RMIServer(port, cspokerServer);
 							rmiserver.start();
 						} catch (AccessException e) {
-							logger.warn("Failed to start RMI server at port "
-									+ port, e);
+							logger.warn("Failed to start RMI server at port " + port, e);
 						} catch (RemoteException e) {
-							logger.warn("Failed to start RMI server at port "
-									+ port, e);
+							logger.warn("Failed to start RMI server at port " + port, e);
 						}
 					} else if (type.equals("http")) {
 						try {
 							(new HttpServer(port, cspokerServer)).start();
 						} catch (RemoteException e) {
-							logger.warn("Failed to start RMI server at port "
-									+ port, e);
+							logger.warn("Failed to start RMI server at port " + port, e);
 						}
 					} else if (type.equals("socket")) {
 						try {
 							(new SocketServer(port, cspokerServer)).start();
 						} catch (RemoteException e) {
-							logger.warn("Failed to start RMI server at port "
-									+ port, e);
+							logger.warn("Failed to start RMI server at port " + port, e);
 						}
 					} else {
 						throw new SAXException("Unknown provider type: " + type);
@@ -130,5 +124,5 @@ public class RunCSPoker {
 			}
 		};
 	}
-
+	
 }

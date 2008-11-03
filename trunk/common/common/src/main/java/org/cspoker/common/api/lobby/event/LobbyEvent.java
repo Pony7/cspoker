@@ -25,6 +25,7 @@ public abstract class LobbyEvent extends LobbyTreeEvent {
 
 	private static final long serialVersionUID = -2965573491645342800L;
 
+	@Override
 	public void dispatch(LobbyListenerTree lobbyListenerTree){
 		dispatch(lobbyListenerTree.getLobbyListener());
 	}

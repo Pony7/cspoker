@@ -27,6 +27,7 @@ public class LoopingListTest extends TestCase {
 
 	private List<Object> initialList;
 
+	@Override
 	protected void setUp() {
 		initialList = new ArrayList<Object>();
 		initialList.add(new Object());

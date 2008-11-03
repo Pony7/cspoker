@@ -31,13 +31,14 @@ import org.cspoker.common.api.shared.context.ForwardingExternalRemoteServerConte
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.table.TableId;
 
-public class ServerContextStub extends ForwardingExternalRemoteServerContext{
-
-	public ServerContextStub(ExternalRemoteServerContext serverContext) throws RemoteException {
+public class ServerContextStub
+		extends ForwardingExternalRemoteServerContext {
+	
+	public ServerContextStub(ExternalRemoteServerContext serverContext) {
 		super(serverContext);
 	}
 	
-	//Must wrap the listener because RMI doesn't like interface hierarchies.
+	// Must wrap the listener because RMI doesn't like interface hierarchies.
 	@Override
 	public RemoteChatContext getServerChatContext(ChatListener chatListener)
 			throws RemoteException, IllegalActionException {
@@ -53,17 +54,17 @@ public class ServerContextStub extends ForwardingExternalRemoteServerContext{
 	}
 	
 	@Override
-	public RemoteChatContext getTableChatContext(ChatListener chatListener,TableId tableId)
+	public RemoteChatContext getTableChatContext(ChatListener chatListener, TableId tableId)
 			throws RemoteException, IllegalActionException {
 		return super.getTableChatContext((RemoteChatListener) UnicastRemoteObject.exportObject(
-				new ForwardingRemoteChatListener(chatListener), 0),tableId);
+				new ForwardingRemoteChatListener(chatListener), 0), tableId);
 	}
 	
 	@Override
-	public RemoteChatContext getTableChatContext(RemoteChatListener chatListener,
-			TableId tableId) throws RemoteException {
+	public RemoteChatContext getTableChatContext(RemoteChatListener chatListener, TableId tableId)
+			throws RemoteException {
 		return super.getTableChatContext((RemoteChatListener) UnicastRemoteObject.exportObject(
-				new ForwardingRemoteChatListener(chatListener), 0),tableId);
+				new ForwardingRemoteChatListener(chatListener), 0), tableId);
 	}
 	
 	@Override
@@ -79,5 +80,5 @@ public class ServerContextStub extends ForwardingExternalRemoteServerContext{
 		return new LobbyContextStub(super.getLobbyContext((RemoteLobbyListener) UnicastRemoteObject.exportObject(
 				new ForwardingRemoteLobbyListener(lobbyListener), 0)));
 	}
-
+	
 }

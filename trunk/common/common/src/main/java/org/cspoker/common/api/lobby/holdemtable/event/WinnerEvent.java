@@ -49,6 +49,7 @@ public class WinnerEvent extends HoldemTableEvent {
 		return winners;
 	}
 
+	@Override
 	public String toString() {
 		String toReturn = "Winners: ";
 		for (Winner winner : winners) {
@@ -59,6 +60,7 @@ public class WinnerEvent extends HoldemTableEvent {
 		return toReturn.substring(0, toReturn.length() - 2) + ".";
 	}
 
+	@Override
 	public void dispatch(HoldemTableListener holdemTableListener) {
 		holdemTableListener.onWinner(this);
 	}

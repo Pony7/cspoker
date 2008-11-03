@@ -24,6 +24,7 @@ public abstract class DelegatingHandler extends DefaultHandler {
 	private ContentHandler handler = null;
 	private int layers = 0;
 
+	@Override
 	public void startElement(String uri, String localName, String qName,
 			Attributes atts) throws SAXException {
 		if (handler == null) {
@@ -37,6 +38,7 @@ public abstract class DelegatingHandler extends DefaultHandler {
 	public abstract ContentHandler getHandler(String uri, String localName,
 			String qName, Attributes atts) throws SAXException;
 
+	@Override
 	public void endElement(String uri, String localName, String qName)
 			throws SAXException {
 		--layers;
@@ -47,6 +49,7 @@ public abstract class DelegatingHandler extends DefaultHandler {
 		}
 	}
 
+	@Override
 	public void characters(char[] ch, int start, int length)
 			throws SAXException {
 		if (handler != null) {

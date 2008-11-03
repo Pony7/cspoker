@@ -84,6 +84,7 @@ public class MutableShowdownPlayer implements Comparable<MutableShowdownPlayer> 
 	 * Returns a textual representation of this showdown player.
 	 */
 
+	@Override
 	public String toString() {
 		return player.getName() + " has a " + getBestHand();
 	}

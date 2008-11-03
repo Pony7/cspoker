@@ -40,6 +40,7 @@ public class PotsChangedEvent extends HoldemTableEvent {
 		pots = null;
 	}
 
+	@Override
 	public String toString() {
 		return  "Pots changed to a total of "+pots.getTotalValue();
 	}
@@ -48,6 +49,7 @@ public class PotsChangedEvent extends HoldemTableEvent {
 		return pots;
 	}
 
+	@Override
 	public void dispatch(HoldemTableListener holdemTableListener) {
 		holdemTableListener.onPotsChanged(this);
 	}

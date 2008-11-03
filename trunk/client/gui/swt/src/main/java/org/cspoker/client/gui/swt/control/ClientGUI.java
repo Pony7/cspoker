@@ -21,12 +21,7 @@ import java.util.Collection;
 import java.util.Hashtable;
 import java.util.prefs.Preferences;
 
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-import javax.sound.sampled.DataLine;
-import javax.sound.sampled.LineEvent;
-import javax.sound.sampled.LineListener;
+import javax.sound.sampled.*;
 
 import org.apache.log4j.Logger;
 import org.cspoker.client.User;
@@ -36,6 +31,7 @@ import org.cspoker.client.gui.swt.window.LoginDialog;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.cards.Card;
 import org.cspoker.common.elements.table.DetailedHoldemTable;
+import org.cspoker.common.elements.table.TableId;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.MessageBox;
@@ -121,7 +117,7 @@ public class ClientGUI {
 	private LobbyWindow lobby;
 	private final static Logger logger = Logger.getLogger(ClientGUI.class);
 	// TODO Better way of storing/retrieving the open GameWindows?
-	private Hashtable<Long, GameWindow> gameWindows;
+	private Hashtable<TableId, GameWindow> gameWindows;
 	
 	/**
 	 * @return The UI {@link Display} used throughout. All windows created by
@@ -182,7 +178,7 @@ public class ClientGUI {
 	public ClientGUI(ClientCore clientCore) {
 		display = Display.getDefault();
 		this.clientCore = clientCore;
-		gameWindows = new Hashtable<Long, GameWindow>();
+		gameWindows = new Hashtable<TableId, GameWindow>();
 		betFormatter.setMinimumFractionDigits(0);
 		betFormatter.setMaximumFractionDigits(2);
 		betFormatter.setGroupingUsed(false);
@@ -411,7 +407,7 @@ public class ClientGUI {
 	 *         is created when <code>createNew</code> is <code>true</code>,
 	 *         otherwise <code>null</code> is returned
 	 */
-	public GameWindow getGameWindow(long tableId, boolean createNew) {
+	public GameWindow getGameWindow(TableId tableId, boolean createNew) {
 		GameWindow w = gameWindows.get(tableId);
 		if (w == null && createNew) {
 			// No Game Window for this table yet

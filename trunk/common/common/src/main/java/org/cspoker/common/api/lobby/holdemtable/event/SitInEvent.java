@@ -43,6 +43,7 @@ public class SitInEvent extends HoldemTableEvent {
 		player = null;
 	}
 
+	@Override
 	public String toString() {
 		return player.getName() + " sits in.";
 	}
@@ -55,6 +56,7 @@ public class SitInEvent extends HoldemTableEvent {
 		return player;
 	}
 	
+	@Override
 	public void dispatch(HoldemTableListener holdemTableListener) {
 		holdemTableListener.onSitIn(this);
 	}

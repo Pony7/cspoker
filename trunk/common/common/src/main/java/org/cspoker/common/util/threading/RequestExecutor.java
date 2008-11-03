@@ -89,16 +89,19 @@ public class RequestExecutor extends AbstractExecutorService {
 		return executor.shutdownNow();
 	}
 
+	@Override
 	public <T> Future<T> submit(Callable<T> task) {
 		logger.trace("Received task: " + task);
 		return executor.submit(task);
 	}
 
+	@Override
 	public Future<?> submit(Runnable task) {
 		logger.trace("Received task: " + task);
 		return executor.submit(task);
 	}
 
+	@Override
 	public <T> Future<T> submit(Runnable task, T result) {
 		logger.trace("Received task: " + task);
 		return executor.submit(task, result);

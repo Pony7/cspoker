@@ -36,6 +36,7 @@ public class PotLimit extends BettingRules {
 	
 	//TODO The pot limit is the value after a call!
 
+	@Override
 	public boolean isValidRaise(int amount, BettingRound round) {
 		if (amount < getLastBetAmount()) {
 			setLastRaiseErrorMessage("ERROR : the bet amount must be at least the amount of the previous bet/raise "
@@ -55,6 +56,7 @@ public class PotLimit extends BettingRules {
 	 * Betting
 	 **************************************************************************/
 
+	@Override
 	public boolean isValidBet(int amount, BettingRound round) {
 		int potValue = round.getCurrentPotValue();
 		if (amount > potValue) {
@@ -65,6 +67,7 @@ public class PotLimit extends BettingRules {
 		return super.isValidBet(amount, round);
 	}
 
+	@Override
 	public String toString() {
 		return "Hold'em Pot Limit";
 	}

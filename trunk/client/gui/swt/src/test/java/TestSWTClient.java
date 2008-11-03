@@ -22,15 +22,15 @@ import org.cspoker.client.gui.swt.control.DisplayExecutor;
 import org.cspoker.client.gui.swt.window.GameWindow;
 import org.cspoker.client.gui.swt.window.LobbyWindow;
 import org.cspoker.common.RemoteCSPokerServer;
-import org.cspoker.common.elements.table.DetailedHoldemTable;
+import org.cspoker.common.elements.table.SeatId;
 import org.cspoker.common.elements.table.TableConfiguration;
+import org.cspoker.common.elements.table.TableId;
 import org.eclipse.swt.widgets.Display;
 
 public abstract class TestSWTClient
 		extends TestCase {
 	
 	private ClientCore client;
-	private ClientCore client2;
 	protected RemoteCSPokerServer server;
 	private DisplayExecutor displayexecutor;
 	private List<User> users;
@@ -63,7 +63,7 @@ public abstract class TestSWTClient
 	
 	public void testPlay() {
 		int seatId = -1;
-		final int tableId = 0;
+		final TableId tableId = new TableId(0);
 		
 		int smallBlind = 50;
 		int buyin = smallBlind * 200;
@@ -79,8 +79,7 @@ public abstract class TestSWTClient
 				client.getGui().setLobby(lobby);
 				
 				TableConfiguration tConfig = new TableConfiguration(smallBlind, delay);
-				DetailedHoldemTable table = lobby.getContext().createHoldemTable(u.getUserName() + "'s test table",
-						tConfig);
+				lobby.getContext().createHoldemTable(u.getUserName() + "'s test table", tConfig);
 				// Run blocking calls in extra thread
 				displayexecutor.execute(new Runnable() {
 					
@@ -91,7 +90,7 @@ public abstract class TestSWTClient
 					}
 				});
 				final GameWindow w = client.getGui().getGameWindow(tableId, true);
-				w.getUser().sitIn(seatId, buyin);
+				w.getUser().sitIn(new SeatId(seatId), buyin);
 				// Run blocking calls in extra thread
 				displayexecutor.execute(new Runnable() {
 					

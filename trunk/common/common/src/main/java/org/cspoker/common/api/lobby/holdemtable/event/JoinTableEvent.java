@@ -39,6 +39,7 @@ public class JoinTableEvent extends HoldemTableEvent {
 		return player;
 	}
 	
+	@Override
 	public String toString() {
 		return player.getName() + " has joined this table.";
 	}

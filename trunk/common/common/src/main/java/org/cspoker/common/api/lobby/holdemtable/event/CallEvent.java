@@ -42,6 +42,7 @@ public class CallEvent extends HoldemTableEvent {
 		player = null;
 	}
 
+	@Override
 	public String toString() {
 		return getPlayer().getName() + " calls.";
 	}
@@ -50,6 +51,7 @@ public class CallEvent extends HoldemTableEvent {
 		return player;
 	}
 
+	@Override
 	public void dispatch(HoldemTableListener holdemTableListener) {
 		holdemTableListener.onCall(this);
 	}

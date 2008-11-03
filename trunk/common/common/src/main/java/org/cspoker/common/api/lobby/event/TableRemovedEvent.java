@@ -42,6 +42,7 @@ public class TableRemovedEvent extends LobbyEvent {
 		return table;
 	}
 
+	@Override
 	public String toString() {
 		return "Table " + table.toString() + " has been removed.";
 	}
