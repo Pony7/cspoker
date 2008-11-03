@@ -173,7 +173,8 @@ package models.connection
 		{
 			idAction++;					
 			var xml:XML =
-			<ns5:getHoldemTableInformationAction tableid={tableID} id={idAction} xmlns:ns5="http://www.cspoker.org/api/2008-11/"/>;
+			<ns5:getHoldemTableInformationAction tableId={tableID} id={idAction} xmlns:ns5="http://www.cspoker.org/api/2008-11/"/>;
+
 			csSendData(xml);
 		}
 		
@@ -181,13 +182,11 @@ package models.connection
 		{
 						
 			idAction++;
-											
-			var xml:XML =
-
-			<joinTableAction id={idAction}>
-			<tableId>{tableID}</tableId>
-			<buyin>{buyin}</buyin>
-			</joinTableAction>;
+			messageCenter.joinTableActionId = idAction;	
+								
+			var xml:XML = <ns5:joinHoldemTableAction id={idAction} xmlns:ns5="http://www.cspoker.org/api/2008-11/">
+        <tableId>{tableID}</tableId>
+        </ns5:joinHoldemTableAction>;
     
     		csSendData(xml);
     				
@@ -208,17 +207,16 @@ package models.connection
     				
 		}
 		
-		public function csCreateTableAction(tableName:String,delay:int=0,bigBet:int=20,smallBet:int=10,bigBlind:int=10,smallBlind:int=5):void
+		public function csCreateTableAction(tableName:String,delay:int=0,bigBet:int=20,smallBet:int=10,bigBlind:int=10,smallBlind:int=5,autoDeal:Boolean=false,autoBlinds:Boolean=false, maxNbPlayers:int=10):void
 		{
 						
 			idAction++;
 											
 			var xml:XML =
-			
-			<createTableAction id={idAction}>
-		    <name>{tableName}</name>
-    		<settings delay={delay} bigBet={bigBet} smallBet={smallBet} bigBlind={bigBlind} smallBlind={smallBlind}/>
-    		</createTableAction>;
+			<ns5:createHoldemTableAction id={idAction} xmlns:ns5="http://www.cspoker.org/api/2008-11/">
+			<name>{tableName}</name>
+    		<configuration autoDeal={autoDeal} maxNbPlayers={maxNbPlayers} autoBlinds={autoBlinds} delay={delay} bigBet={bigBet} smallBet={smallBet} bigBlind={bigBlind} smallBlind={smallBlind}/>
+    		</ns5:createHoldemTableAction>;
 
     
     		csSendData(xml);

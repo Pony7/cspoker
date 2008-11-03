@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml">
+	<mx:Script>
+		<![CDATA[
+			import models.*;
+			import views.*;
+			
+			
+			private var tableModel:TabelModel;
+			private var seatModel:seatModel;
+			private var player:Player;
+			
+			
+		]]>
+	</mx:Script>
+</mx:Canvas>
