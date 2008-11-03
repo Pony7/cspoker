@@ -16,6 +16,8 @@
 
 package org.cspoker.common.api.lobby.holdemtable.event;
 
+import net.jcip.annotations.Immutable;
+
 import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
 import org.cspoker.common.elements.player.Player;
 
@@ -25,18 +27,19 @@ import org.cspoker.common.elements.player.Player;
  * @author Kenzo
  * 
  */
+@Immutable
 public class CheckEvent extends HoldemTableEvent {
 
 	private static final long serialVersionUID = -1128439307716720778L;
 
-	private Player player;
+	private final Player player;
 
 	public CheckEvent(Player player) {
 		this.player = player;
 	}
 
 	protected CheckEvent() {
-		// no op
+		player = null;
 	}
 
 	public String toString() {

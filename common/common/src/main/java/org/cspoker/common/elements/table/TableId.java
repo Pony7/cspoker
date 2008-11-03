@@ -13,15 +13,26 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.server.common.elements.id;
+package org.cspoker.common.elements.table;
+
+import java.io.Serializable;
+
+import net.jcip.annotations.Immutable;
 
 /**
  * A class to represent table ids.
  *
  */
-public class TableId {
+@Immutable
+public class TableId implements Serializable{
+	
+	private static final long serialVersionUID = -7208506804565810922L;
 	
 	private final long tableId;
+	
+	public TableId() {
+		this(0);
+	}
 	
 	public TableId(long tableId){
 		this.tableId = tableId;

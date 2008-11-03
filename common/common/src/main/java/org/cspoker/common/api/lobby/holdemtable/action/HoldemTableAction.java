@@ -18,26 +18,31 @@ package org.cspoker.common.api.lobby.holdemtable.action;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 
+import net.jcip.annotations.Immutable;
+
 import org.cspoker.common.api.lobby.action.LobbyAction;
 import org.cspoker.common.api.lobby.context.StaticLobbyContext;
 import org.cspoker.common.api.lobby.holdemtable.context.StaticHoldemTableContext;
+import org.cspoker.common.api.shared.event.EventId;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
+import org.cspoker.common.elements.table.TableId;
 
 
 @XmlAccessorType(XmlAccessType.FIELD)
+@Immutable
 public abstract class HoldemTableAction<T> extends LobbyAction<T> {
 
 	private static final long serialVersionUID = 4151821035256457839L;
 
-	private long tableId;
+	private final TableId tableId;
 
-	public HoldemTableAction(long id, long tableId) {
+	public HoldemTableAction(EventId id, TableId tableId) {
 		super(id);
 		this.tableId = tableId;
 	}
 
 	protected HoldemTableAction() {
-		// no op
+		tableId = null;
 	}
 
 	@Override
@@ -47,7 +52,7 @@ public abstract class HoldemTableAction<T> extends LobbyAction<T> {
 
 	public abstract T perform(StaticHoldemTableContext holdemTableContext) throws IllegalActionException;
 	
-	public long getTableId() {
+	public TableId getTableId() {
 		return tableId;
 	}
 

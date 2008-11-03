@@ -17,14 +17,18 @@ package org.cspoker.common.api.chat.action;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
+import net.jcip.annotations.Immutable;
+
 import org.cspoker.common.api.shared.context.StaticServerContext;
+import org.cspoker.common.api.shared.event.EventId;
 
 @XmlRootElement
+@Immutable
 public class SendServerMessageAction extends SendMessageAction {
 
 	private static final long serialVersionUID = 3858462359562413000L;
 
-	public SendServerMessageAction(long id, String message) {
+	public SendServerMessageAction(EventId id, String message) {
 		super(id,message);
 	}
 

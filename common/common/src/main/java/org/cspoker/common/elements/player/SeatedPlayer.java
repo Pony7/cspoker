@@ -19,6 +19,8 @@ package org.cspoker.common.elements.player;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 
+import org.cspoker.common.elements.table.SeatId;
+
 /**
  * A class of immutable players.
  * 
@@ -28,7 +30,7 @@ public class SeatedPlayer extends Player {
 
 	private static final long serialVersionUID = -9200622390366978194L;
 
-	private long seatId;
+	private SeatId seatId;
 
 	/**
 	 * The stack of this player.
@@ -41,7 +43,7 @@ public class SeatedPlayer extends Player {
 	 */
 	private int betChipsValue;
 
-	public SeatedPlayer(long id, long seatId, String name, int stackValue,
+	public SeatedPlayer(PlayerId id, SeatId seatId, String name, int stackValue,
 			int betChipsValue) {
 		super(id, name);
 		this.seatId = seatId;
@@ -58,7 +60,7 @@ public class SeatedPlayer extends Player {
 	 * 
 	 * @return The seat id of this player.
 	 */
-	public long getSeatId() {
+	public SeatId getSeatId() {
 		return seatId;
 	}
 

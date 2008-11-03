@@ -19,11 +19,11 @@ package org.cspoker.server.common.gamecontrol.rounds;
 import org.apache.log4j.Logger;
 import org.cspoker.common.api.lobby.holdemtable.event.NewRoundEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.NextPlayerEvent;
+import org.cspoker.common.elements.player.MutableSeatedPlayer;
 import org.cspoker.common.elements.table.Rounds;
 import org.cspoker.server.common.gamecontrol.Game;
 import org.cspoker.server.common.gamecontrol.PokerTable;
 import org.cspoker.server.common.gamecontrol.Showdown;
-import org.cspoker.server.common.player.MutableSeatedPlayer;
 
 public class FinalRound extends BettingRound {
 	private static Logger logger = Logger.getLogger(FinalRound.class);

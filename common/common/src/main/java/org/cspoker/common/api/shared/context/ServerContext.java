@@ -21,6 +21,7 @@ import org.cspoker.common.api.chat.context.ChatContext;
 import org.cspoker.common.api.chat.listener.ChatListener;
 import org.cspoker.common.api.lobby.context.LobbyContext;
 import org.cspoker.common.api.lobby.listener.LobbyListener;
+import org.cspoker.common.elements.table.TableId;
 
 public interface ServerContext extends RemoteServerContext{
 
@@ -30,7 +31,7 @@ public interface ServerContext extends RemoteServerContext{
 	
 	ChatContext getServerChatContext(ChatListener chatListener);
 
-	ChatContext getTableChatContext(ChatListener chatListener,long tableId);
+	ChatContext getTableChatContext(ChatListener chatListener,TableId tableId);
 	
 	LobbyContext getLobbyContext(LobbyListener lobbyListener);
 	

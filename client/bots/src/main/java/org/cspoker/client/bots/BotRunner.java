@@ -22,12 +22,14 @@ import java.util.concurrent.Executors;
 import javax.security.auth.login.LoginException;
 
 import org.apache.log4j.Logger;
+import org.cspoker.client.bots.simple.CallBot;
+import org.cspoker.client.bots.simple.RuleBasedBot;
+import org.cspoker.client.common.SmartClientContext;
+import org.cspoker.client.common.SmartLobbyContext;
 import org.cspoker.common.RemoteCSPokerServer;
-import org.cspoker.common.api.lobby.context.RemoteLobbyContext;
 import org.cspoker.common.api.lobby.event.TableCreatedEvent;
 import org.cspoker.common.api.lobby.event.TableRemovedEvent;
 import org.cspoker.common.api.lobby.listener.LobbyListener;
-import org.cspoker.common.api.shared.context.RemoteServerContext;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.table.DetailedHoldemTable;
 import org.cspoker.common.elements.table.TableConfiguration;
@@ -50,14 +52,16 @@ public class BotRunner implements LobbyListener {
 			@Override
 			public void run() {
 				try {
-					RemoteServerContext serverguy = cspokerServer.login("guy", "test");
-					RemoteLobbyContext lobbyguy = serverguy.getLobbyContext(BotRunner.this);
+					SmartClientContext serverguy = new SmartClientContext(cspokerServer.login("guy", "test"));
+					SmartLobbyContext lobbyguy = serverguy.getLobbyContext(BotRunner.this);
 					DetailedHoldemTable table = lobbyguy.createHoldemTable("BotTable", new TableConfiguration());
-					CallBot guy = new CallBot(lobbyguy,"guy",table.getId(), executor, true);
+					RuleBasedBot guy = new RuleBasedBot(lobbyguy,serverguy.getAccountContext().getPlayerID(),
+							table.getId(), executor, true);
 
-					RemoteServerContext serverkenzo = cspokerServer.login("kenzo", "test");
-					RemoteLobbyContext lobbykenzo = serverkenzo.getLobbyContext(BotRunner.this);
-					CallBot kenzo = new CallBot(lobbykenzo,"kenzo",table.getId(), executor, false);
+					SmartClientContext serverkenzo = new SmartClientContext(cspokerServer.login("kenzo", "test"));
+					SmartLobbyContext lobbykenzo = serverkenzo.getLobbyContext(BotRunner.this);
+					CallBot kenzo = new CallBot(lobbykenzo,serverkenzo.getAccountContext().getPlayerID()
+							,table.getId(), executor, false);
 				} catch (LoginException e) {
 					throw new IllegalStateException("Login Failed");
 				} catch (RemoteException e) {

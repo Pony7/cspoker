@@ -57,37 +57,37 @@ public class TableConfiguration implements Serializable {
 	 * The value of a small bet, used in the first three rounds
 	 */
 	@XmlAttribute
-	private int smallBet;
+	private final int smallBet;
 
 	/**
 	 * The value of a big bet, used in the fourth and final round
 	 */
 	@XmlAttribute
-	private int bigBet;
+	private final int bigBet;
 
 	/**
 	 * Whether dealing is done automatically
 	 */
 	@XmlAttribute
-	private boolean autoDeal;
+	private final boolean autoDeal;
 
 	/**
 	 * Whether blind payment is done automatically
 	 */
 	@XmlAttribute
-	private boolean autoBlinds;
+	private final boolean autoBlinds;
 
 	/**
 	 * The maximum number of players in a game
 	 */
 	@XmlAttribute
-	private int maxNbPlayers;
+	private final int maxNbPlayers;
 
 	/**
 	 * The delay between two deals.
 	 */
 	@XmlAttribute
-	private long delay;
+	private final long delay;
 
 	/***************************************************************************
 	 * Constructors
@@ -143,6 +143,7 @@ public class TableConfiguration implements Serializable {
 		this.delay = delay;
 		maxNbPlayers = 8;
 		autoDeal = true;
+		autoBlinds = true;
 	}
 
 	/***************************************************************************

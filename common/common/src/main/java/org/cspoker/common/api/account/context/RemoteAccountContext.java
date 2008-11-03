@@ -19,6 +19,7 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 import org.cspoker.common.api.shared.exception.IllegalActionException;
+import org.cspoker.common.elements.player.PlayerId;
 
 public interface RemoteAccountContext extends Remote{
 
@@ -28,10 +29,10 @@ public interface RemoteAccountContext extends Remote{
 	
 	void createAccount(String username, String passwordHash) throws RemoteException, IllegalActionException;
 	
-	byte[] getAvatar(long playerId) throws RemoteException, IllegalActionException;
+	byte[] getAvatar(PlayerId playerId) throws RemoteException, IllegalActionException;
 	
 	void setAvatar(byte[] avatar) throws RemoteException, IllegalActionException;
 	
-	long getPlayerID() throws RemoteException, IllegalActionException;
+	PlayerId getPlayerID() throws RemoteException, IllegalActionException;
 	
 }

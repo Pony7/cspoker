@@ -17,6 +17,9 @@ package org.cspoker.common.api.shared.action;
 
 import java.io.Serializable;
 
+import net.jcip.annotations.Immutable;
+
+@Immutable
 public interface Action extends Serializable{
 	
 }

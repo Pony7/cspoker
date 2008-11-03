@@ -24,12 +24,12 @@ import org.cspoker.common.api.lobby.holdemtable.event.NextPlayerEvent;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.event.NewPocketCardsEvent;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.cards.Card;
+import org.cspoker.common.elements.chips.IllegalValueException;
+import org.cspoker.common.elements.player.MutableAllInPlayer;
+import org.cspoker.common.elements.player.MutableSeatedPlayer;
 import org.cspoker.common.elements.table.Rounds;
-import org.cspoker.server.common.elements.chips.IllegalValueException;
 import org.cspoker.server.common.gamecontrol.Game;
 import org.cspoker.server.common.gamecontrol.PokerTable;
-import org.cspoker.server.common.player.MutableAllInPlayer;
-import org.cspoker.server.common.player.MutableSeatedPlayer;
 
 public class PreFlopRound extends BettingRound {
 

@@ -15,22 +15,26 @@
  */
 package org.cspoker.common.api.chat.action;
 
+import net.jcip.annotations.Immutable;
+
 import org.cspoker.common.api.chat.context.ChatContext;
 import org.cspoker.common.api.shared.context.StaticServerContext;
+import org.cspoker.common.api.shared.event.EventId;
 
+@Immutable
 public abstract class SendMessageAction extends ChatAction<Void> {
 
 	private static final long serialVersionUID = -7513936752700505929L;
 	
-	private String message;
+	private final String message;
 
-	public SendMessageAction(long id, String message) {
+	public SendMessageAction(EventId id, String message) {
 		super(id);
 		this.message = message;
 	}
 
 	protected SendMessageAction() {
-		// no op
+		message = null;
 	}
 	
 	@Override

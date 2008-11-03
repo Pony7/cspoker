@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.NavigableMap;
 
-import org.cspoker.common.elements.pots.Pots;
+import org.cspoker.common.elements.chips.Pots;
 import org.cspoker.common.elements.table.DetailedHoldemTable;
 
 /**

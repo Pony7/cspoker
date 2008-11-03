@@ -17,23 +17,28 @@ package org.cspoker.common.api.shared.action;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
+import net.jcip.annotations.Immutable;
+
 import org.cspoker.common.api.shared.context.StaticServerContext;
+import org.cspoker.common.api.shared.event.EventId;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
+import org.cspoker.common.elements.table.TableId;
 
 @XmlRootElement
+@Immutable
 public class TableChatInterestAction extends DispatchableAction<Void> {
 
 	private static final long serialVersionUID = -6219914092644893577L;
 
-	private long tableID;
+	private final TableId tableID;
 
-	public TableChatInterestAction(long id, long tableID) {
+	public TableChatInterestAction(EventId id, TableId tableID) {
 		super(id);
 		this.tableID = tableID;
 	}
 
 	protected TableChatInterestAction() {
-		// no op
+		tableID = null;
 	}
 
 	@Override

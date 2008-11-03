@@ -15,9 +15,12 @@
  */
 package org.cspoker.common.api.chat.event;
 
+import net.jcip.annotations.Immutable;
+
 import org.cspoker.common.api.chat.listener.ChatListener;
 import org.cspoker.common.api.shared.event.Event;
 
+@Immutable
 public abstract class ChatEvent implements Event{
 
 	private static final long serialVersionUID = 6945189419298925852L;

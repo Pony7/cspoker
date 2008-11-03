@@ -17,32 +17,37 @@ package org.cspoker.common.api.lobby.action;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
+import net.jcip.annotations.Immutable;
+
 import org.cspoker.common.api.lobby.context.StaticLobbyContext;
+import org.cspoker.common.api.shared.event.EventId;
 import org.cspoker.common.elements.table.DetailedHoldemTable;
 import org.cspoker.common.elements.table.TableConfiguration;
 
 @XmlRootElement
+@Immutable
 public class CreateHoldemTableAction extends LobbyAction<DetailedHoldemTable> {
 
 	private static final long serialVersionUID = 2423639524369017909L;
 	
-	private String name;
-	private TableConfiguration configuration;
+	private final String name;
+	private final TableConfiguration configuration;
 
-	public CreateHoldemTableAction(long id, String name) {
+	public CreateHoldemTableAction(EventId id, String name) {
 		super(id);
 		this.name = name;
 		configuration = null;
 	}
 
-	public CreateHoldemTableAction(long id, String name, TableConfiguration settings) {
+	public CreateHoldemTableAction(EventId id, String name, TableConfiguration settings) {
 		super(id);
 		this.name = name;
 		this.configuration = settings;
 	}
 
 	protected CreateHoldemTableAction() {
-		// no op
+		name = null;
+		configuration = null;
 	}
 
 	@Override

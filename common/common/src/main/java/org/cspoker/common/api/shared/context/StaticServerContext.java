@@ -17,12 +17,13 @@ package org.cspoker.common.api.shared.context;
 
 import org.cspoker.common.api.chat.context.ChatContext;
 import org.cspoker.common.api.lobby.context.StaticLobbyContext;
+import org.cspoker.common.elements.table.TableId;
 
 public interface StaticServerContext extends ServerContext{
 
 	public ChatContext getServerChatContext();
 	
-	public ChatContext getTableChatContext(long tableID);
+	public ChatContext getTableChatContext(TableId tableID);
 	
 	public StaticLobbyContext getLobbyContext();
 	

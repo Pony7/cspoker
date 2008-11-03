@@ -19,6 +19,7 @@ import org.cspoker.client.gui.text.Client;
 import org.cspoker.client.gui.text.Console;
 import org.cspoker.client.gui.text.eventlistener.PrintListener;
 import org.cspoker.common.api.lobby.holdemtable.listener.UniversalTableListener;
+import org.cspoker.common.elements.table.SeatId;
 
 public class SitInCommand extends CommandImpl {
 	
@@ -28,7 +29,7 @@ public class SitInCommand extends CommandImpl {
 	}
 
 	public void execute(String... args) throws Exception {
-		client.setCurrentPlayerContext(client.getCurrentTableContext().sitIn(Integer.parseInt(args[0]), Integer.parseInt(args[1]), 
+		client.setCurrentPlayerContext(client.getCurrentTableContext().sitIn(new SeatId(Integer.parseInt(args[0])), Integer.parseInt(args[1]), 
 				new UniversalTableListener(new PrintListener(console),client.getCurrentTableID())));
 	}
 

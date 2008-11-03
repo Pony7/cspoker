@@ -15,6 +15,8 @@
  */
 package org.cspoker.common.api.account.context;
 
+import org.cspoker.common.elements.player.PlayerId;
+
 
 public class ForwardingAccountContext implements AccountContext{
 
@@ -36,7 +38,7 @@ public class ForwardingAccountContext implements AccountContext{
 		accountContext.createAccount(username, passwordHash);
 	}
 
-	public byte[] getAvatar(long playerId) {
+	public byte[] getAvatar(PlayerId playerId) {
 		return accountContext.getAvatar(playerId);
 	}
 
@@ -44,7 +46,7 @@ public class ForwardingAccountContext implements AccountContext{
 		accountContext.setAvatar(avatar);
 	}
 
-	public long getPlayerID() {
+	public PlayerId getPlayerID() {
 		return accountContext.getPlayerID();
 	}
 	

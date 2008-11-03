@@ -34,6 +34,7 @@ import org.cspoker.common.api.shared.context.ExternalServerContext;
 import org.cspoker.common.api.shared.context.ForwardingExternalRemoteServerContext;
 import org.cspoker.common.api.shared.context.ServerContextConverter;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
+import org.cspoker.common.elements.table.TableId;
 
 public class ExportingServerContext extends ForwardingExternalRemoteServerContext {
 
@@ -91,7 +92,7 @@ public class ExportingServerContext extends ForwardingExternalRemoteServerContex
 	
 	@Override
 	public RemoteChatContext getTableChatContext(ChatListener chatListener,
-			long tableId) throws RemoteException, IllegalActionException {
+			TableId tableId) throws RemoteException, IllegalActionException {
 		try {
 			RemoteChatContext wrappedContext = new ForwardingRemoteChatContext(super.getTableChatContext(chatListener, tableId));
 			return (RemoteChatContext) UnicastRemoteObject.exportObject(wrappedContext, 0);
@@ -103,7 +104,7 @@ public class ExportingServerContext extends ForwardingExternalRemoteServerContex
 	
 	@Override
 	public RemoteChatContext getTableChatContext(
-			RemoteChatListener chatListener, long tableId)
+			RemoteChatListener chatListener, TableId tableId)
 			throws RemoteException {
 		try {
 			RemoteChatContext wrappedContext = new ForwardingRemoteChatContext(super.getTableChatContext(chatListener, tableId));

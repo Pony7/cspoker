@@ -24,6 +24,7 @@ import org.cspoker.common.api.chat.listener.ChatListener;
 import org.cspoker.common.api.lobby.context.LobbyContext;
 import org.cspoker.common.api.lobby.listener.LobbyListener;
 import org.cspoker.common.api.shared.context.ServerContext;
+import org.cspoker.common.elements.table.TableId;
 import org.cspoker.server.common.account.AccountContextImpl;
 import org.cspoker.server.common.account.ExtendedAccountContext;
 import org.cspoker.server.common.chat.ChatServer;
@@ -77,7 +78,7 @@ public class ServerContextImpl
 		return getChatContext();
 	}
 	
-	public ChatContext getTableChatContext(ChatListener chatListener, long tableId) {
+	public ChatContext getTableChatContext(ChatListener chatListener, TableId tableId) {
 		ChatRoom table = ChatServer.getInstance().getTableChatRoom(tableId);
 		if (table == null)
 			throw new IllegalArgumentException("No such table id!");

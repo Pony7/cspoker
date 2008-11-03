@@ -13,15 +13,26 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.server.common.elements.id;
+package org.cspoker.common.elements.table;
+
+import java.io.Serializable;
+
+import net.jcip.annotations.Immutable;
 
 /**
  * A class to represent seat ids.
  *
  */
-public class SeatId {
+@Immutable
+public class SeatId implements Serializable{
+	
+	private static final long serialVersionUID = -2997117736649022785L;
 	
 	private final long seatId;
+	
+	public SeatId() {
+		this(0);
+	}
 	
 	public SeatId(long seatId){
 		this.seatId = seatId;

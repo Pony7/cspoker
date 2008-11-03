@@ -42,12 +42,15 @@ import org.cspoker.common.api.lobby.holdemtable.event.SmallBlindEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.WinnerEvent;
 import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
+import org.cspoker.common.elements.chips.IllegalValueException;
+import org.cspoker.common.elements.player.MutablePlayer;
+import org.cspoker.common.elements.player.MutableSeatedPlayer;
+import org.cspoker.common.elements.player.PlayerId;
+import org.cspoker.common.elements.table.SeatId;
 import org.cspoker.common.elements.table.TableConfiguration;
+import org.cspoker.common.elements.table.TableId;
 import org.cspoker.common.util.Log4JPropertiesLoader;
 import org.cspoker.server.common.account.ExtendedAccountContext;
-import org.cspoker.server.common.elements.chips.IllegalValueException;
-import org.cspoker.server.common.elements.id.SeatId;
-import org.cspoker.server.common.elements.id.TableId;
 import org.cspoker.server.common.elements.table.PlayerListFullException;
 import org.cspoker.server.common.elements.table.ServerTable;
 import org.cspoker.server.common.gamecontrol.rounds.FinalRound;
@@ -55,8 +58,6 @@ import org.cspoker.server.common.gamecontrol.rounds.FlopRound;
 import org.cspoker.server.common.gamecontrol.rounds.PreFlopRound;
 import org.cspoker.server.common.gamecontrol.rounds.TurnRound;
 import org.cspoker.server.common.gamecontrol.rounds.WaitingRound;
-import org.cspoker.server.common.player.MutablePlayer;
-import org.cspoker.server.common.player.MutableSeatedPlayer;
 
 public class GameFlowTest extends TestCase {
 
@@ -91,7 +92,7 @@ public class GameFlowTest extends TestCase {
 
 			}
 
-			public byte[] getAvatar(long playerId) {
+			public byte[] getAvatar(PlayerId playerId) {
 				return null;
 			}
 
@@ -107,8 +108,8 @@ public class GameFlowTest extends TestCase {
 
 			}
 
-			public long getPlayerID() {
-				return 0;
+			public PlayerId getPlayerID() {
+				return new PlayerId(0);
 			}
 
 		});

@@ -16,6 +16,8 @@
 
 package org.cspoker.common.api.lobby.holdemtable.event;
 
+import net.jcip.annotations.Immutable;
+
 import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
 import org.cspoker.common.elements.table.Rounds;
 
@@ -25,18 +27,19 @@ import org.cspoker.common.elements.table.Rounds;
  * @author Kenzo
  * 
  */
+@Immutable
 public class NewRoundEvent extends HoldemTableEvent {
 
 	private static final long serialVersionUID = 5282936949568835084L;
 
-	private Rounds round;
+	private final Rounds round;
 
 	public NewRoundEvent(Rounds round) {
 		this.round = round;
 	}
 
 	protected NewRoundEvent() {
-		// no op
+		round = null;
 	}
 
 	public String toString() {

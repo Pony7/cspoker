@@ -16,8 +16,11 @@
 
 package org.cspoker.common.api.lobby.holdemtable.event;
 
+import net.jcip.annotations.Immutable;
+
 import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
 import org.cspoker.common.elements.player.SeatedPlayer;
+import org.cspoker.common.elements.table.SeatId;
 
 /**
  * A class to represent player joining games events.
@@ -25,25 +28,26 @@ import org.cspoker.common.elements.player.SeatedPlayer;
  * @author Kenzo
  * 
  */
+@Immutable
 public class SitInEvent extends HoldemTableEvent {
 
 	private static final long serialVersionUID = 3276571712883586966L;
 
-	private SeatedPlayer player;
+	private final SeatedPlayer player;
 
 	public SitInEvent(SeatedPlayer player) {
 		this.player = player;
 	}
 
 	protected SitInEvent() {
-		// no op
+		player = null;
 	}
 
 	public String toString() {
 		return player.getName() + " sits in.";
 	}
 
-	public long getSeatId() {
+	public SeatId getSeatId() {
 		return getPlayer().getSeatId();
 	}
 

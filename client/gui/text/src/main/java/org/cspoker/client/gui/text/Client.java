@@ -42,12 +42,10 @@ import org.cspoker.client.gui.text.commands.TableChatCommand;
 import org.cspoker.client.gui.text.eventlistener.PrintListener;
 import org.cspoker.common.RemoteCSPokerServer;
 import org.cspoker.common.api.chat.context.RemoteChatContext;
-import org.cspoker.common.api.lobby.context.RemoteLobbyContext;
-import org.cspoker.common.api.lobby.holdemtable.context.RemoteHoldemTableContext;
-import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.RemoteHoldemPlayerContext;
 import org.cspoker.common.api.shared.context.RemoteServerContext;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.api.shared.listener.UniversalServerListener;
+import org.cspoker.common.elements.table.TableId;
 
 /**
  * Connect to the given server and passes on user commands.
@@ -70,7 +68,7 @@ public class Client {
 
 	private SmartHoldemTableContext currentTableContext;
 
-	private long currentTableID;
+	private TableId currentTableID;
 
 	private RemoteChatContext currentTableChatContext;
 
@@ -163,11 +161,11 @@ public class Client {
 		this.currentTableContext = currentTableContext;
 	}
 
-	public long getCurrentTableID() {
+	public TableId getCurrentTableID() {
 		return currentTableID;
 	}
 	
-	public void setCurrentTableID(long currentTableID) {
+	public void setCurrentTableID(TableId currentTableID) {
 		this.currentTableID = currentTableID;
 	}
 

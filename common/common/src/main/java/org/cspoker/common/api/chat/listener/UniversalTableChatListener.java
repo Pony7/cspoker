@@ -19,13 +19,14 @@ import org.cspoker.common.api.chat.event.MessageEvent;
 import org.cspoker.common.api.chat.event.TableChatEvents;
 import org.cspoker.common.api.shared.event.ServerEvent;
 import org.cspoker.common.api.shared.listener.ServerEventListener;
+import org.cspoker.common.elements.table.TableId;
 
 public class UniversalTableChatListener implements ChatListener{
 
 	private final ServerEventListener serverEventListener;
-	private final long tableId;
+	private final TableId tableId;
 
-	public UniversalTableChatListener(ServerEventListener serverEventListener, long tableId) {
+	public UniversalTableChatListener(ServerEventListener serverEventListener, TableId tableId) {
 		this.serverEventListener = serverEventListener;
 		this.tableId = tableId;
 	}

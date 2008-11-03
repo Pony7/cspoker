@@ -16,6 +16,8 @@
 
 package org.cspoker.common.api.lobby.holdemtable.event;
 
+import net.jcip.annotations.Immutable;
+
 import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
 import org.cspoker.common.elements.player.Player;
 
@@ -25,13 +27,14 @@ import org.cspoker.common.elements.player.Player;
  * @author Kenzo
  * 
  */
+@Immutable
 public class SmallBlindEvent extends HoldemTableEvent {
 
 	private static final long serialVersionUID = 8729210630280570765L;
 
-	private Player player;
+	private final Player player;
 
-	private int amount;
+	private final int amount;
 
 	public SmallBlindEvent(Player player, int amount) {
 		this.player = player;
@@ -39,7 +42,8 @@ public class SmallBlindEvent extends HoldemTableEvent {
 	}
 
 	protected SmallBlindEvent() {
-		// no op
+		player = null;
+		amount = 0;
 	}
 
 	public String toString() {

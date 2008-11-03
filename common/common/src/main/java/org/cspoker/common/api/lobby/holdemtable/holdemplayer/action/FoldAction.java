@@ -17,15 +17,20 @@ package org.cspoker.common.api.lobby.holdemtable.holdemplayer.action;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
+import net.jcip.annotations.Immutable;
+
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.HoldemPlayerContext;
+import org.cspoker.common.api.shared.event.EventId;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
+import org.cspoker.common.elements.table.TableId;
 
 @XmlRootElement
+@Immutable
 public class FoldAction extends HoldemPlayerAction<Void> {
 
 	private static final long serialVersionUID = -8222648524080616602L;
 
-	public FoldAction(long id, long tableId) {
+	public FoldAction(EventId id, TableId tableId) {
 		super(id,tableId);
 	}
 

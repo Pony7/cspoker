@@ -17,10 +17,11 @@ package org.cspoker.common.api.lobby.holdemtable.context;
 
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.HoldemPlayerContext;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
+import org.cspoker.common.elements.table.SeatId;
 
 public interface StaticHoldemTableContext extends HoldemTableContext {
 
-	public void sitIn(long seatId, int buyIn) throws IllegalActionException;
+	public void sitIn(SeatId seatId, int buyIn) throws IllegalActionException;
 	
 	public void sitIn(int buyIn) throws IllegalActionException;
 	

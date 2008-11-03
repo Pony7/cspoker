@@ -17,15 +17,19 @@ package org.cspoker.common.api.shared.action;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
+import net.jcip.annotations.Immutable;
+
 import org.cspoker.common.api.shared.context.StaticServerContext;
+import org.cspoker.common.api.shared.event.EventId;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 
 @XmlRootElement
+@Immutable
 public class ServerChatInterestAction extends DispatchableAction<Void> {
 
 	private static final long serialVersionUID = -6219914092644893577L;
 
-	public ServerChatInterestAction(long id) {
+	public ServerChatInterestAction(EventId id) {
 		super(id);
 	}
 

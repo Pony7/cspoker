@@ -22,6 +22,7 @@ import java.util.concurrent.Semaphore;
 import org.cspoker.common.api.shared.action.ActionPerformer;
 import org.cspoker.common.api.shared.action.DispatchableAction;
 import org.cspoker.common.api.shared.event.ActionEvent;
+import org.cspoker.common.api.shared.event.EventId;
 import org.cspoker.common.api.shared.event.ServerEvent;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.api.shared.listener.ActionAndServerEventListener;
@@ -29,8 +30,8 @@ import org.cspoker.common.api.shared.listener.ServerListenerTree;
 
 public class CallSynchronizer implements ActionPerformer, ActionAndServerEventListener {
 
-	private ConcurrentHashMap<Long, Semaphore> semaphores = new ConcurrentHashMap<Long, Semaphore>();
-	private ConcurrentHashMap<Long, ActionEvent<?>> actionEvents = new ConcurrentHashMap<Long, ActionEvent<?>>();
+	private ConcurrentHashMap<EventId, Semaphore> semaphores = new ConcurrentHashMap<EventId, Semaphore>();
+	private ConcurrentHashMap<EventId, ActionEvent<?>> actionEvents = new ConcurrentHashMap<EventId, ActionEvent<?>>();
 	private XmlActionSerializer serializer;
 	private ServerListenerTree listenerTree;
 	

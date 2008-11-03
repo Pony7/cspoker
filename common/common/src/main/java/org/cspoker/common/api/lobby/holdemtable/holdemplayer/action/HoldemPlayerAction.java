@@ -18,18 +18,22 @@ package org.cspoker.common.api.lobby.holdemtable.holdemplayer.action;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 
+import net.jcip.annotations.Immutable;
+
 import org.cspoker.common.api.lobby.holdemtable.action.HoldemTableAction;
 import org.cspoker.common.api.lobby.holdemtable.context.StaticHoldemTableContext;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.HoldemPlayerContext;
+import org.cspoker.common.api.shared.event.EventId;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
+import org.cspoker.common.elements.table.TableId;
 
 
-@XmlAccessorType(XmlAccessType.FIELD)
+@Immutable
 public abstract class HoldemPlayerAction<T> extends HoldemTableAction<T> {
 
 	private static final long serialVersionUID = 4151821035256457839L;
 
-	public HoldemPlayerAction(long id, long tableId) {
+	public HoldemPlayerAction(EventId id, TableId tableId) {
 		super(id, tableId);
 	}
 

@@ -18,18 +18,21 @@ package org.cspoker.common.api.lobby.event;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
+import net.jcip.annotations.Immutable;
+
 import org.cspoker.common.api.lobby.listener.LobbyListener;
 import org.cspoker.common.elements.player.Player;
 import org.cspoker.common.elements.table.Table;
 
 @XmlRootElement
+@Immutable
 public class TableCreatedEvent extends LobbyEvent {
 
 	private static final long serialVersionUID = -3408596246641282753L;
 
-	private Table table;
+	private final Table table;
 
-	private Player player;
+	private final Player player;
 
 	public TableCreatedEvent(Player player, Table table) {
 		this.player = player;
@@ -37,7 +40,8 @@ public class TableCreatedEvent extends LobbyEvent {
 	}
 
 	protected TableCreatedEvent() {
-		// no op
+		player = null;
+		table = null;
 	}
 
 	public String toString() {

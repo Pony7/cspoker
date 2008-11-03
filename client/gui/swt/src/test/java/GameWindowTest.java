@@ -26,10 +26,10 @@ import org.cspoker.common.api.lobby.holdemtable.holdemplayer.event.NewPocketCard
 import org.cspoker.common.elements.cards.Card;
 import org.cspoker.common.elements.cards.Rank;
 import org.cspoker.common.elements.cards.Suit;
+import org.cspoker.common.elements.chips.Pots;
 import org.cspoker.common.elements.player.SeatedPlayer;
 import org.cspoker.common.elements.player.ShowdownPlayer;
 import org.cspoker.common.elements.player.Winner;
-import org.cspoker.common.elements.pots.Pots;
 import org.cspoker.common.elements.table.DetailedHoldemTable;
 import org.cspoker.common.elements.table.TableConfiguration;
 import org.eclipse.swt.widgets.Display;

@@ -44,9 +44,9 @@ import org.cspoker.common.api.lobby.holdemtable.holdemplayer.event.NewPocketCard
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.listener.HoldemPlayerListener;
 import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
 import org.cspoker.common.elements.cards.Card;
+import org.cspoker.common.elements.chips.Pots;
 import org.cspoker.common.elements.player.Player;
 import org.cspoker.common.elements.player.SeatedPlayer;
-import org.cspoker.common.elements.pots.Pots;
 import org.cspoker.common.elements.table.DetailedHoldemTable;
 import org.cspoker.common.elements.table.Rounds;
 import org.eclipse.swt.SWT;

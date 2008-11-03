@@ -21,6 +21,7 @@ import java.rmi.RemoteException;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.RemoteHoldemPlayerContext;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.listener.HoldemPlayerListener;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
+import org.cspoker.common.elements.table.SeatId;
 
 public interface RemoteHoldemTableContext extends Remote {
 
@@ -40,7 +41,7 @@ public interface RemoteHoldemTableContext extends Remote {
 	 * @throws IllegalActionException
 	 * 		   The player is already seated at the table.
 	 */
-	RemoteHoldemPlayerContext sitIn(long seatId, int amount, HoldemPlayerListener holdemPlayerListener) throws RemoteException, IllegalActionException;
+	RemoteHoldemPlayerContext sitIn(SeatId seatId, int amount, HoldemPlayerListener holdemPlayerListener) throws RemoteException, IllegalActionException;
 	
 	/**
 	 * Sit in at the current table at any free seat with a given buy in amount.

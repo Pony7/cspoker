@@ -17,22 +17,25 @@ package org.cspoker.common.api.lobby.event;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
+import net.jcip.annotations.Immutable;
+
 import org.cspoker.common.api.lobby.listener.LobbyListener;
 import org.cspoker.common.elements.table.Table;
 
 @XmlRootElement
+@Immutable
 public class TableRemovedEvent extends LobbyEvent {
 
 	private static final long serialVersionUID = 3201252758310449164L;
 
-	private Table table;
+	private final Table table;
 
 	public TableRemovedEvent(Table table) {
 		this.table = table;
 	}
 
 	protected TableRemovedEvent() {
-		// no op
+		table = null;
 	}
 
 	public Table getTableId() {

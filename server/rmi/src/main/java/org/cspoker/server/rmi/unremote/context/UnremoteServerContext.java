@@ -24,6 +24,7 @@ import org.cspoker.common.api.shared.Trigger;
 import org.cspoker.common.api.shared.context.ExternalServerContext;
 import org.cspoker.common.api.shared.context.ForwardingServerContext;
 import org.cspoker.common.api.shared.context.ServerContext;
+import org.cspoker.common.elements.table.TableId;
 import org.cspoker.server.rmi.unremote.listener.UnremoteChatListener;
 import org.cspoker.server.rmi.unremote.listener.UnremoteLobbyListener;
 
@@ -40,7 +41,7 @@ public class UnremoteServerContext extends ForwardingServerContext implements Ex
 		return super.getServerChatContext(new UnremoteChatListener(connection,chatListener));
 	}
 	
-	public ChatContext getTableChatContext(RemoteChatListener chatListener,long tableId) {
+	public ChatContext getTableChatContext(RemoteChatListener chatListener,TableId tableId) {
 		return super.getTableChatContext(new UnremoteChatListener(connection,chatListener),tableId);
 	}
 	

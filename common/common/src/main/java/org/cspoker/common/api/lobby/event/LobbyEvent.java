@@ -15,9 +15,12 @@
  */
 package org.cspoker.common.api.lobby.event;
 
+import net.jcip.annotations.Immutable;
+
 import org.cspoker.common.api.lobby.listener.LobbyListener;
 import org.cspoker.common.api.lobby.listener.LobbyListenerTree;
 
+@Immutable
 public abstract class LobbyEvent extends LobbyTreeEvent {
 
 	private static final long serialVersionUID = -2965573491645342800L;

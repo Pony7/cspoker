@@ -39,13 +39,14 @@ import org.cspoker.common.api.lobby.holdemtable.holdemplayer.event.NewPocketCard
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.listener.HoldemPlayerListener;
 import org.cspoker.common.api.shared.event.ServerEvent;
 import org.cspoker.common.api.shared.listener.ServerEventListener;
+import org.cspoker.common.elements.table.TableId;
 
 public class UniversalTableListener implements ServerEventListener, HoldemPlayerListener, HoldemTableListener{
 
 	private final ServerEventListener serverEventListener;
-	private final long tableId;
+	private final TableId tableId;
 
-	public UniversalTableListener(ServerEventListener serverEventListener, long tableId) {
+	public UniversalTableListener(ServerEventListener serverEventListener, TableId tableId) {
 		this.serverEventListener = serverEventListener;
 		this.tableId = tableId;
 	}

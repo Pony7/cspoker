@@ -14,7 +14,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-package org.cspoker.server.common.elements.cards.hand;
+package org.cspoker.common.elements.hand;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -29,7 +29,7 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 import org.apache.oro.text.perl.Perl5Util;
 import org.cspoker.common.elements.cards.Rank;
-import org.cspoker.server.common.elements.cards.hand.Hand.HandInfo;
+import org.cspoker.common.elements.hand.Hand.HandInfo;
 
 /**
  * @author Craig Motlin
@@ -77,7 +77,7 @@ public final class HandRanks {
 				.getClass()
 				.getClassLoader()
 				.getResourceAsStream(
-						"org/cspoker/server/common/game/elements/cards/hand/handRanks.txt");
+						"org/cspoker/common/elements/hand/handRanks.txt");
 		try {
 			final BufferedReader bufferedReader = new BufferedReader(
 					new InputStreamReader(in));

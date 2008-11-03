@@ -18,8 +18,9 @@ package org.cspoker.server.common.player;
 
 import java.util.concurrent.atomic.AtomicLong;
 
-import org.cspoker.server.common.elements.chips.IllegalValueException;
-import org.cspoker.server.common.elements.id.PlayerId;
+import org.cspoker.common.elements.chips.IllegalValueException;
+import org.cspoker.common.elements.player.MutablePlayer;
+import org.cspoker.common.elements.player.PlayerId;
 
 /**
  * 

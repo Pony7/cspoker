@@ -20,6 +20,8 @@ import java.io.Serializable;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
+import net.jcip.annotations.Immutable;
+
 @XmlRootElement
 public interface Event extends Serializable {
 

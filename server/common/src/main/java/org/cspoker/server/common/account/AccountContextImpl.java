@@ -17,8 +17,9 @@
 
 import javax.security.auth.login.LoginException;
 
+import org.cspoker.common.elements.player.MutablePlayer;
+import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.server.common.authentication.XmlFileAuthenticator;
-import org.cspoker.server.common.player.MutablePlayer;
 import org.cspoker.server.common.player.PlayerFactory;
 
 public class AccountContextImpl implements ExtendedAccountContext{
@@ -44,7 +45,7 @@ public class AccountContextImpl implements ExtendedAccountContext{
 		throw new UnsupportedOperationException();
 	}
 
-	public byte[] getAvatar(long playerId) throws UnsupportedOperationException {
+	public byte[] getAvatar(PlayerId playerId) throws UnsupportedOperationException {
 		throw new UnsupportedOperationException();
 	}
 
@@ -60,8 +61,8 @@ public class AccountContextImpl implements ExtendedAccountContext{
 		return authenticator.hasPassword(player.getName(), passwordHash);
 	}
 	
-	public long getPlayerID() {
-		return player.getId().getId();
+	public PlayerId getPlayerID() {
+		return player.getId();
 	}
 
 }

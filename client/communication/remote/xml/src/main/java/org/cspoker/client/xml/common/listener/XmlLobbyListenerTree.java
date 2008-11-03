@@ -21,14 +21,15 @@ import net.jcip.annotations.ThreadSafe;
 
 import org.cspoker.common.api.lobby.listener.LobbyListener;
 import org.cspoker.common.api.lobby.listener.LobbyListenerTree;
+import org.cspoker.common.elements.table.TableId;
 
 @ThreadSafe
 public class XmlLobbyListenerTree implements LobbyListenerTree {
 
-	private final ConcurrentHashMap<Long, XmlHoldemTableListenerTree> listenerTrees = new ConcurrentHashMap<Long, XmlHoldemTableListenerTree>();
+	private final ConcurrentHashMap<TableId, XmlHoldemTableListenerTree> listenerTrees = new ConcurrentHashMap<TableId, XmlHoldemTableListenerTree>();
 	private volatile LobbyListener lobbyListener;
 
-	public XmlHoldemTableListenerTree getHoldemTableListenerTree(long tableId) {
+	public XmlHoldemTableListenerTree getHoldemTableListenerTree(TableId tableId) {
 		listenerTrees.putIfAbsent(tableId, new XmlHoldemTableListenerTree());
 		return listenerTrees.get(tableId);
 	}

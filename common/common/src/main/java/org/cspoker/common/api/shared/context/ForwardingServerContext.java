@@ -21,6 +21,7 @@ import org.cspoker.common.api.chat.context.ChatContext;
 import org.cspoker.common.api.chat.listener.ChatListener;
 import org.cspoker.common.api.lobby.context.LobbyContext;
 import org.cspoker.common.api.lobby.listener.LobbyListener;
+import org.cspoker.common.elements.table.TableId;
 
 public class ForwardingServerContext implements ServerContext {
 
@@ -43,7 +44,7 @@ public class ForwardingServerContext implements ServerContext {
 	}
 
 	public ChatContext getTableChatContext(ChatListener chatListener,
-			long tableId) {
+			TableId tableId) {
 		return serverContext.getTableChatContext(chatListener,tableId);
 	}
 	

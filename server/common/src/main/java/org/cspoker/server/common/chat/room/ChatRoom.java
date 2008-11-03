@@ -20,8 +20,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.cspoker.common.api.chat.event.MessageEvent;
 import org.cspoker.common.api.chat.listener.ChatListener;
+import org.cspoker.common.elements.player.MutablePlayer;
 import org.cspoker.common.elements.player.Player;
-import org.cspoker.server.common.player.MutablePlayer;
 
 public abstract class ChatRoom {
 

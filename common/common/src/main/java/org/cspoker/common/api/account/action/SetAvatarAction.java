@@ -18,23 +18,27 @@ package org.cspoker.common.api.account.action;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import net.jcip.annotations.Immutable;
+
 import org.cspoker.common.api.account.context.AccountContext;
+import org.cspoker.common.api.shared.event.EventId;
 
 @XmlRootElement
+@Immutable
 public class SetAvatarAction extends AccountAction<Void> {
 
 	private static final long serialVersionUID = 7472321702232419097L;
 
 	@XmlAttribute
-	private byte[] avatar;
+	private final byte[] avatar;
 	
-	public SetAvatarAction(long id, byte[] avatar) {
+	public SetAvatarAction(EventId id, byte[] avatar) {
 		super(id);
-		this.avatar = avatar;
+		this.avatar = avatar.clone();
 	}
 
 	protected SetAvatarAction() {
-		// no op
+		avatar = null;
 	}
 
 	@Override

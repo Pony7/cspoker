@@ -15,16 +15,20 @@
  */
 package org.cspoker.common.api.lobby.action;
 
+import net.jcip.annotations.Immutable;
+
 import org.cspoker.common.api.lobby.context.StaticLobbyContext;
 import org.cspoker.common.api.shared.action.DispatchableAction;
 import org.cspoker.common.api.shared.context.StaticServerContext;
+import org.cspoker.common.api.shared.event.EventId;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 
+@Immutable
 public abstract class LobbyAction<T> extends DispatchableAction<T> {
 
 	private static final long serialVersionUID = -6219914092644893577L;
 
-	public LobbyAction(long id) {
+	public LobbyAction(EventId id) {
 		super(id);
 	}
 

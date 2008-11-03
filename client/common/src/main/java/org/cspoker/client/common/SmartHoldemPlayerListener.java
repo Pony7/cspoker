@@ -15,6 +15,7 @@
  */
 package org.cspoker.client.common;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.event.NewPocketCardsEvent;
@@ -37,7 +38,7 @@ public class SmartHoldemPlayerListener extends ForwardingHoldemPlayerListener {
 	}
 
 	public Set<Card> getPocketCards() {
-		return pocketCards;
+		return new HashSet<Card>(pocketCards);
 	}
 
 }

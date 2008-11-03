@@ -20,6 +20,7 @@ import org.cspoker.common.api.chat.listener.RemoteChatListener;
 import org.cspoker.common.api.lobby.context.ExternalLobbyContext;
 import org.cspoker.common.api.lobby.listener.LobbyListener;
 import org.cspoker.common.api.lobby.listener.RemoteLobbyListener;
+import org.cspoker.common.elements.table.TableId;
 
 //Can't extend ExternalRemoteServerContext because of a bug in the Sun JDK 6 compiler.
 //see http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6294779
@@ -27,7 +28,7 @@ public interface ExternalServerContext extends ServerContext/*, ExternalRemoteSe
 
 	public ChatContext getServerChatContext(RemoteChatListener chatListener);
 	
-	public ChatContext getTableChatContext(RemoteChatListener chatListener,long tableId);
+	public ChatContext getTableChatContext(RemoteChatListener chatListener,TableId tableId);
 	
 	public ExternalLobbyContext getLobbyContext(LobbyListener lobbyListener);
 	

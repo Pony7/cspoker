@@ -26,6 +26,7 @@ import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.table.DetailedHoldemTable;
 import org.cspoker.common.elements.table.TableConfiguration;
+import org.cspoker.common.elements.table.TableId;
 import org.cspoker.common.elements.table.TableList;
 
 @Immutable
@@ -45,7 +46,7 @@ public class ForwardingRemoteLobbyContext implements RemoteLobbyContext, Unrefer
 		return lobbyContext.createHoldemTable(name, configuration);
 	}
 
-	public DetailedHoldemTable getHoldemTableInformation(long tableId)
+	public DetailedHoldemTable getHoldemTableInformation(TableId tableId)
 			throws RemoteException, IllegalActionException {
 		return lobbyContext.getHoldemTableInformation(tableId);
 	}
@@ -54,7 +55,7 @@ public class ForwardingRemoteLobbyContext implements RemoteLobbyContext, Unrefer
 		return lobbyContext.getTableList();
 	}
 
-	public RemoteHoldemTableContext joinHoldemTable(long tableId,
+	public RemoteHoldemTableContext joinHoldemTable(TableId tableId,
 			HoldemTableListener holdemTableListener) throws RemoteException, IllegalActionException {
 		return lobbyContext.joinHoldemTable(tableId, holdemTableListener);
 	}

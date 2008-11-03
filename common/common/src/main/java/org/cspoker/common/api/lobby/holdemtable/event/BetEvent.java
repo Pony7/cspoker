@@ -16,20 +16,22 @@
 
 package org.cspoker.common.api.lobby.holdemtable.event;
 
+import net.jcip.annotations.Immutable;
+
 import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
 import org.cspoker.common.elements.player.Player;
-import org.cspoker.common.elements.pots.Pots;
 
 /**
  * A class to represent bet events.
  */
+@Immutable
 public class BetEvent extends HoldemTableEvent {
 
 	private static final long serialVersionUID = -1968724398831151650L;
 
-	private Player player;
+	private final Player player;
 
-	private int amount;
+	private final int amount;
 
 	public BetEvent(Player player, int amount) {
 		this.player = player;
@@ -37,7 +39,8 @@ public class BetEvent extends HoldemTableEvent {
 	}
 
 	protected BetEvent() {
-		// no op
+		player = null;
+		amount = 0;
 	}
 
 	public String toString() {

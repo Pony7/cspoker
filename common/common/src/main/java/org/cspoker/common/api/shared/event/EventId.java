@@ -13,29 +13,40 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.server.common.elements.id;
+package org.cspoker.common.api.shared.event;
 
-public class PlayerId {
+import java.io.Serializable;
+
+import net.jcip.annotations.Immutable;
+
+@Immutable
+public class EventId implements Serializable{
 	
-	private final long playerId;
+	private static final long serialVersionUID = 7553024997059636301L;
 	
-	public PlayerId(long playerId){
-		this.playerId = playerId;
+	private final long eventId;
+
+	public EventId() {
+		this(0);
 	}
 	
+	public EventId(long eventId){
+		this.eventId = eventId;
+	}
+
 	public long getId(){
-		return playerId;
+		return eventId;
 	}
 	
 	public String toString(){
-		return "#"+Long.toString(playerId);
+		return "#"+Long.toString(eventId);
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + (int) (playerId ^ (playerId >>> 32));
+		result = prime * result + (int) (eventId ^ (eventId >>> 32));
 		return result;
 	}
 
@@ -47,8 +58,8 @@ public class PlayerId {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		final PlayerId other = (PlayerId) obj;
-		if (playerId != other.playerId)
+		final EventId other = (EventId) obj;
+		if (eventId != other.eventId)
 			return false;
 		return true;
 	}

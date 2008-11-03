@@ -17,25 +17,31 @@ package org.cspoker.common.api.shared.socket;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
+import net.jcip.annotations.Immutable;
+
 import org.cspoker.common.api.shared.action.DispatchableAction;
 import org.cspoker.common.api.shared.context.StaticServerContext;
+import org.cspoker.common.api.shared.event.EventId;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 
 @XmlRootElement
+@Immutable
 public class LoginAction extends DispatchableAction<Void> {
 
 	private static final long serialVersionUID = -2677247916335298486L;
 	
-	private String username;
-	private String passwordHash;
+	private final String username;
+	private final String passwordHash;
 
-	public LoginAction(String username, String passwordHash){
+	public LoginAction(EventId id, String username, String passwordHash){
+		super(id);
 		this.username = username;
 		this.passwordHash = passwordHash;
 	}
 	
 	protected LoginAction() {
-		// no op
+		username = null;
+		passwordHash = null;
 	}
 	
 	public String getUsername() {

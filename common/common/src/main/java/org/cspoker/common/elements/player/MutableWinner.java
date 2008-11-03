@@ -14,10 +14,9 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-package org.cspoker.server.common.player;
+package org.cspoker.common.elements.player;
 
-import org.cspoker.common.elements.player.Winner;
-import org.cspoker.server.common.elements.chips.Chips;
+import org.cspoker.common.elements.chips.Chips;
 
 public class MutableWinner {
 

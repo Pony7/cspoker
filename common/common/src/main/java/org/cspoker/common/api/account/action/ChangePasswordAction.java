@@ -18,23 +18,27 @@ package org.cspoker.common.api.account.action;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import net.jcip.annotations.Immutable;
+
 import org.cspoker.common.api.account.context.AccountContext;
+import org.cspoker.common.api.shared.event.EventId;
 
 @XmlRootElement
+@Immutable
 public class ChangePasswordAction extends AccountAction<Void> {
 
 	private static final long serialVersionUID = 7472321702232419097L;
 
 	@XmlAttribute
-	private String passwordHash;
+	private final String passwordHash;
 	
-	public ChangePasswordAction(long id, String passwordHash) {
+	public ChangePasswordAction(EventId id, String passwordHash) {
 		super(id);
 		this.passwordHash = passwordHash;
 	}
 
 	protected ChangePasswordAction() {
-		// no op
+		this.passwordHash = null;
 	}
 
 	public String getPasswordHash() {

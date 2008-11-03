@@ -19,10 +19,10 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.cspoker.common.api.chat.listener.ChatListener;
 import org.cspoker.common.elements.player.Player;
+import org.cspoker.common.elements.player.PlayerId;
+import org.cspoker.common.elements.table.TableId;
 import org.cspoker.server.common.chat.room.ServerChatRoom;
 import org.cspoker.server.common.chat.room.TableChatRoom;
-import org.cspoker.server.common.elements.id.PlayerId;
-import org.cspoker.server.common.elements.id.TableId;
 import org.cspoker.server.common.gamecontrol.PokerTable;
 
 public class ChatServer {
@@ -49,8 +49,8 @@ public class ChatServer {
 	public TableChatRoom addTableChatRoom(PokerTable table){
 		return tables.put(table.getTableId(),new TableChatRoom(table));
 	}
-	public TableChatRoom getTableChatRoom(long tableId){
-		return tables.get(new TableId(tableId));
+	public TableChatRoom getTableChatRoom(TableId tableId){
+		return tables.get(tableId);
 	}
 	public ServerChatRoom getServerChatRoom(){
 		return serverChatRoom;

@@ -18,27 +18,32 @@ package org.cspoker.common.api.account.action;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import net.jcip.annotations.Immutable;
+
 import org.cspoker.common.api.account.context.AccountContext;
+import org.cspoker.common.api.shared.event.EventId;
 
 @XmlRootElement
+@Immutable
 public class CreateAccountAction extends AccountAction<Void> {
 
 	private static final long serialVersionUID = 7472321702232419097L;
 
 	@XmlAttribute
-	private String username;
+	private final String username;
 
 	@XmlAttribute
-	private String passwordHash;
+	private final String passwordHash;
 	
-	public CreateAccountAction(long id, String username, String passwordHash) {
+	public CreateAccountAction(EventId id, String username, String passwordHash) {
 		super(id);
 		this.username = username;
 		this.passwordHash = passwordHash;
 	}
 
 	protected CreateAccountAction() {
-		// no op
+		username = null;
+		passwordHash = null;
 	}
 
 	public String getUsername() {

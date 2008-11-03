@@ -22,13 +22,13 @@ import org.cspoker.common.api.lobby.holdemtable.event.SitInEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.SitOutEvent;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.HoldemPlayerContext;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
+import org.cspoker.common.elements.player.MutableSeatedPlayer;
 import org.cspoker.common.elements.player.SeatedPlayer;
+import org.cspoker.common.elements.table.SeatId;
 import org.cspoker.server.common.HoldemPlayerContextImpl;
-import org.cspoker.server.common.elements.id.SeatId;
 import org.cspoker.server.common.elements.table.PlayerListFullException;
 import org.cspoker.server.common.elements.table.SeatTakenException;
 import org.cspoker.server.common.elements.table.ServerTable;
-import org.cspoker.server.common.player.MutableSeatedPlayer;
 
 /**
  * A class to represent players at the table.

@@ -23,6 +23,7 @@ import org.cspoker.common.api.lobby.context.ExternalRemoteLobbyContext;
 import org.cspoker.common.api.lobby.listener.LobbyListener;
 import org.cspoker.common.api.lobby.listener.RemoteLobbyListener;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
+import org.cspoker.common.elements.table.TableId;
 
 public class ForwardingExternalRemoteServerContext extends ForwardingRemoteServerContext implements ExternalRemoteServerContext {
 
@@ -49,7 +50,7 @@ public class ForwardingExternalRemoteServerContext extends ForwardingRemoteServe
 	}
 
 	public RemoteChatContext getTableChatContext(RemoteChatListener chatListener,
-			long tableId) throws RemoteException {
+			TableId tableId) throws RemoteException {
 		return serverContext.getTableChatContext(chatListener, tableId);
 	}
 }

@@ -21,6 +21,7 @@ import org.cspoker.client.gui.text.eventlistener.PrintListener;
 import org.cspoker.common.api.chat.listener.UniversalTableChatListener;
 import org.cspoker.common.api.lobby.holdemtable.listener.UniversalTableListener;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
+import org.cspoker.common.elements.table.TableId;
 
 public class JoinTableCommand extends CommandImpl {
 
@@ -33,7 +34,7 @@ public class JoinTableCommand extends CommandImpl {
 		if(client.getCurrentTableContext()!= null){
 			throw new IllegalActionException("Joining multiple tables isn't supported by this client.");
 		}
-		long tableID = Long.parseLong(args[0]);
+		TableId tableID = new TableId(Long.parseLong(args[0]));
 		client.setCurrentTableContext(client.getLobbyContext().joinHoldemTable(tableID, 
 				new UniversalTableListener(new PrintListener(console),tableID)
 		));

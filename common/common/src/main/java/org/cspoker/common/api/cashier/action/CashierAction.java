@@ -15,15 +15,19 @@
  */
 package org.cspoker.common.api.cashier.action;
 
+import net.jcip.annotations.Immutable;
+
 import org.cspoker.common.api.cashier.context.CashierContext;
 import org.cspoker.common.api.shared.action.DispatchableAction;
 import org.cspoker.common.api.shared.context.StaticServerContext;
+import org.cspoker.common.api.shared.event.EventId;
 
+@Immutable
 public abstract class CashierAction<T> extends DispatchableAction<T> {
 
 	private static final long serialVersionUID = 6542312781797096164L;
 
-	public CashierAction(long id) {
+	public CashierAction(EventId id) {
 		super(id);
 	}
 

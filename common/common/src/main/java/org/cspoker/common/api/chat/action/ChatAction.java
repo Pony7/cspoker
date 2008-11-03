@@ -15,15 +15,19 @@
  */
 package org.cspoker.common.api.chat.action;
 
+import net.jcip.annotations.Immutable;
+
 import org.cspoker.common.api.chat.context.ChatContext;
 import org.cspoker.common.api.shared.action.DispatchableAction;
 import org.cspoker.common.api.shared.context.StaticServerContext;
+import org.cspoker.common.api.shared.event.EventId;
 
+@Immutable
 public abstract class ChatAction<T> extends DispatchableAction<T> {
 
 	private static final long serialVersionUID = 6542312781797096164L;
 
-	public ChatAction(long id) {
+	public ChatAction(EventId id) {
 		super(id);
 	}
 

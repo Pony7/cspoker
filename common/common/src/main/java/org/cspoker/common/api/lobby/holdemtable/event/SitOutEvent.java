@@ -15,16 +15,19 @@
  */
 package org.cspoker.common.api.lobby.holdemtable.event;
 
+import net.jcip.annotations.Immutable;
+
 import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
 import org.cspoker.common.elements.player.Player;
 
+@Immutable
 public class SitOutEvent extends HoldemTableEvent {
 	
 	private static final long serialVersionUID = 5233575816991835637L;
 
-	private Player player;
+	private final Player player;
 	
-	private boolean forced;
+	private final boolean forced;
 	
 	public SitOutEvent(Player player, boolean forced){
 		this.player = player;
@@ -32,7 +35,8 @@ public class SitOutEvent extends HoldemTableEvent {
 	}
 	
 	protected SitOutEvent(){
-		// no op
+		player = null;
+		forced = false;
 	}
 	
 	public Player getPlayer(){

@@ -3,30 +3,54 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
+ *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
- *  
+ *
  *  You should have received a copy of the GNU General Public License
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.server.common.elements.cards.hand;
 
-public enum HandType {
-	HIGH_CARD("HC"), PAIR("1P"), TWO_PAIR("2P"), THREE_OF_A_KIND("3K"), FOUR_OF_A_KIND(
-			"4K"), FULL_HOUSE("FH"), FLUSH("F"), STRAIGHT("S"), STRAIGHT_FLUSH(
-			"SF");
+package org.cspoker.common.elements.chips;
 
-	private String description;
+import java.io.Serializable;
+import java.util.List;
 
-	private HandType(final String description) {
-		this.description = description;
+import javax.xml.bind.annotation.XmlValue;
+
+import net.jcip.annotations.Immutable;
+
+@Immutable
+public class Pots implements Serializable {
+
+	private static final long serialVersionUID = 2133563839323145402L;
+
+	@XmlValue
+	private final int totalValue;
+
+	public Pots(int totalValue) {
+		this.totalValue = totalValue;
 	}
 
-	public String getDescription() {
-		return description;
+	protected Pots() {
+		totalValue = 0;
 	}
+
+	public List<Pot> getActivePot() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public List<Pot> getAllPots() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public int getTotalValue() {
+		return totalValue;
+	}
+
 }

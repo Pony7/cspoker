@@ -15,6 +15,8 @@
  */
 package org.cspoker.common.api.account.context;
 
+import org.cspoker.common.elements.player.PlayerId;
+
 
 public interface AccountContext extends RemoteAccountContext{
 
@@ -24,9 +26,9 @@ public interface AccountContext extends RemoteAccountContext{
 	
 	void createAccount(String username, String passwordHash);
 	
-	byte[] getAvatar(long playerId);
+	byte[] getAvatar(PlayerId playerId);
 	
 	void setAvatar(byte[] avatar);
 	
-	long getPlayerID();
+	PlayerId getPlayerID();
 }

@@ -17,12 +17,14 @@ package org.cspoker.client.xml.common;
 
 import java.util.concurrent.atomic.AtomicLong;
 
+import org.cspoker.common.api.shared.event.EventId;
+
 public class IDGenerator {
 
 	AtomicLong id = new AtomicLong(0);
 	
-	public long getNextID(){
-		return id.incrementAndGet();
+	public EventId getNextID(){
+		return new EventId(id.incrementAndGet());
 	}
 	
 }

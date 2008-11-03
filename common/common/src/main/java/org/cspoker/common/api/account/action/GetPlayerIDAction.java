@@ -15,20 +15,21 @@
  */
 package org.cspoker.common.api.account.action;
 
-import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import net.jcip.annotations.Immutable;
+
 import org.cspoker.common.api.account.context.AccountContext;
+import org.cspoker.common.api.shared.event.EventId;
+import org.cspoker.common.elements.player.PlayerId;
 
 @XmlRootElement
-public class GetPlayerIDAction extends AccountAction<Long> {
+@Immutable
+public class GetPlayerIDAction extends AccountAction<PlayerId> {
 
 	private static final long serialVersionUID = 3460864307190712325L;
 	
-	@XmlAttribute
-	private long playerId;
-	
-	public GetPlayerIDAction(long id) {
+	public GetPlayerIDAction(EventId id) {
 		super(id);
 	}
 
@@ -36,12 +37,8 @@ public class GetPlayerIDAction extends AccountAction<Long> {
 		// no op
 	}
 
-	public long getPlayerId() {
-		return playerId;
-	}
-
 	@Override
-	public Long perform(AccountContext accountContext) {
+	public PlayerId perform(AccountContext accountContext) {
 		return accountContext.getPlayerID();
 	}
 

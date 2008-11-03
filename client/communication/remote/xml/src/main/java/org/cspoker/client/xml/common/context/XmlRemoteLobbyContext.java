@@ -33,6 +33,7 @@ import org.cspoker.common.api.shared.action.ActionPerformer;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.table.DetailedHoldemTable;
 import org.cspoker.common.elements.table.TableConfiguration;
+import org.cspoker.common.elements.table.TableId;
 import org.cspoker.common.elements.table.TableList;
 
 @ThreadSafe
@@ -40,7 +41,7 @@ public class XmlRemoteLobbyContext implements RemoteLobbyContext{
 
 	private ActionPerformer performer;
 	private IDGenerator generator;
-	private ConcurrentHashMap<Long, RemoteHoldemTableContext> contexts = new ConcurrentHashMap<Long, RemoteHoldemTableContext>();
+	private ConcurrentHashMap<TableId, RemoteHoldemTableContext> contexts = new ConcurrentHashMap<TableId, RemoteHoldemTableContext>();
 	private XmlServerListenerTree serverListenerTree;
 
 	public XmlRemoteLobbyContext(ActionPerformer performer, IDGenerator generator, XmlServerListenerTree serverListenerTree) {
@@ -54,7 +55,7 @@ public class XmlRemoteLobbyContext implements RemoteLobbyContext{
 		return performer.perform(new CreateHoldemTableAction(generator.getNextID(),name,configuration));
 	}
 
-	public DetailedHoldemTable getHoldemTableInformation(long tableId)
+	public DetailedHoldemTable getHoldemTableInformation(TableId tableId)
 			throws RemoteException, IllegalActionException {
 		return performer.perform(new GetHoldemTableInformationAction(generator.getNextID(), tableId));
 	}
@@ -63,7 +64,7 @@ public class XmlRemoteLobbyContext implements RemoteLobbyContext{
 		return performer.perform(new GetTableListAction(generator.getNextID()));
 	}
 
-	public RemoteHoldemTableContext joinHoldemTable(long tableID,
+	public RemoteHoldemTableContext joinHoldemTable(TableId tableID,
 			HoldemTableListener holdemTableListener) throws RemoteException,
 			IllegalActionException {
 		XmlRemoteHoldemTableContext context = new XmlRemoteHoldemTableContext(performer,generator,tableID, serverListenerTree);
