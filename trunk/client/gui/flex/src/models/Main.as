@@ -43,6 +43,7 @@ package models
 			
 			connectionBox.endInit();
 			lobby.endInit();
+			table.endInit();
 			
 			//Security.allowDomain("*");
 		}
@@ -69,6 +70,11 @@ package models
 			serverConnection.csGetTablesAction();
 		}
 		
+		public static function createNewTable(tableName:String):void{
+			serverConnection.csCreateTableAction(tableName);
+			lobby.gamesDG.refreshGames();
+		}
+		
 		public static function connectHandler(event:Event):void{
         	if(Config.SHOW_CONNECT_DIALOG) Main.showServerMessage("connected!!!");
         	connectionBox.showDisconnectButton();
@@ -92,7 +98,11 @@ package models
 		
 		
 		public static function joinGame(selectedTable:DataGridRow):void{
+			
+			serverConnection.csJoinTableAction(selectedTable.tableId);
+			table.loadTableInfo(selectedTable);
 			trace("join game called: " + selectedTable);
+			
 		}
 		
 		public static function showServerMessage(message:String) : void

@@ -18,6 +18,7 @@
 			import mx.containers.*;
 			import mx.controls.*;
 
+			import mx.managers.PopUpManager;
 			
 			protected var lobbyModel:LobbyModel = null;
 			private var uiContainer:UIComponent = null;
@@ -49,13 +50,26 @@
 			}
 			
 			public function receiveDetailedTableInfo(result:Object):void{
-				if(result != null) gamesDG.addRowObject(result);
+				try{
+					if(result != null) gamesDG.addRowObject(result);
+			
+				}catch(e:Error){
+					trace("error addRowObject..." + e.message);
+				}
 			}
         	
         	public function receiveLoginSucess():void{
         		Main.getTables();
         		Main.showLobby();
         	}
+        	
+        	public function showCreateBox():void{
+        		var dialogBox:* = new CreateTableBox();
+        		PopUpManager.addPopUp(dialogBox, this, true);
+            	
+        	}
+        	
+        	
         	
         	
 

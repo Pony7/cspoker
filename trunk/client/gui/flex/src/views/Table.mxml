@@ -1,8 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="750" height="580" backgroundImage="images/table1.jpg">
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" 
+	backgroundImage="images/table1.jpg" width="750" height="670">
 	<mx:Script>
 		<![CDATA[
+			import models.lobby.DataGridRow;
+			import models.*;
+			import views.*;
+			
+			public var tableId:int = 0;
+			
+			public var tableItem:DataGridRow;
+			
+			
+			
+			
+			
+			private function leaveGameClicked():void{
+				Main.serverConnection.csLeaveTableAction(tableId);
+				Main.showLobby();
+				Main.lobby.gamesDG.refreshGames();
+			}
+			
+			
+			public function endInit():void{
+				
+			}
+			
+			public function loadTableInfo(tableItemPassed:DataGridRow):void{
+				tableItem = tableItemPassed;
+			}
+			
+			public function setTableId(tableId:int):void{
+				this.tableId = tableId;
+			}
+			
+			public function receiveJoinTableSuccess(tableId:int):void{
+				trace("Table.receiveJoinTableSuccess...");
+				if(tableId >= 0) setTableId(tableId);
+				Main.showTable();
+			}
 			
 		]]>
 	</mx:Script>
+	<mx:Button x="0" y="0" label="Back to Lobby" id="btnLeaveGame" click="leaveGameClicked()"/>
 </mx:Canvas>

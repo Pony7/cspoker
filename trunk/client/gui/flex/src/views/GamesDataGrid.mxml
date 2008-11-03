@@ -3,12 +3,14 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import mx.controls.dataGridClasses.DataGridColumn;
 			import models.*;
 			import models.lobby.DataGridRow;
 			import mx.collections.ArrayCollection;
 			
 			[Bindable]
-			protected var gamesDataGridProvider:ArrayCollection = new ArrayCollection();
+			public var gamesDataGridProvider:ArrayCollection = new ArrayCollection();
+
 			
 			private function btnJoinGameClicked():void{
 				
@@ -33,8 +35,14 @@
         	}
         	
         	public function addRowObject(result:Object):void{
-        		var dgRow:DataGridRow = new DataGridRow(result);
-        		addTableRow(dgRow);
+        		try{
+        			var dgRow:DataGridRow = new DataGridRow(result);
+        			addTableRow(dgRow);	
+        		}catch(e:Error){
+        			trace("add table error..." + e.message);
+        		}
+        		
+        		
         	}
         	
         	public function addTableRow(gameTableRow:DataGridRow):void{
@@ -46,16 +54,45 @@
         	public function clearTables():void{
         		gamesDataGridProvider.removeAll();
         	}
+        	
+        	private function getBlindsLabel(item:Object, column:DataGridColumn):String{
+        		return item.smallBlind + " / " + item.bigBlind;
+        	}
+        	
+        	private function getPlayersLabel(item:Object, column:DataGridColumn):String{
+        		return item.nbPlayers + " / " + item.maxNbPlayers;
+        	}
+        	
+        	private function getMinBuyLabel(item:Object, column:DataGridColumn):int{
+        		return item.smallBlind * 4;
+        	}
+        	private function getMaxBuyLabel(item:Object, column:DataGridColumn):int{
+	        	return item.bigBlind * 10;
+	        }
+	        
+	        public function refreshGames():void{
+	        	clearTables();
+	        	Main.getTables();
+	        }
+	        
+	        private function btnCreateClick():void{
+	        	Main.lobby.showCreateBox();
+	        }
 		]]>
+		
 	</mx:Script>
 	<mx:Label x="295" y="10" text="LOBBY" id="lblLobbyTitle"/>
 	<mx:DataGrid x="29" y="36" width="621" height="277" id="dataGridComponent" dataProvider="{gamesDataGridProvider}">
 		<mx:columns>
-			<mx:DataGridColumn headerText="Column 1" dataField="col1"/>
-			<mx:DataGridColumn headerText="Column 2" dataField="col2"/>
-			<mx:DataGridColumn headerText="Column 3" dataField="col3"/>
+			<mx:DataGridColumn dataField="tableName" headerText="Room" width="77" />
+			<mx:DataGridColumn dataField="smallBlind" headerText="Blinds" width="45" labelFunction="getBlindsLabel" />
+			<mx:DataGridColumn dataField="players" headerText="Players" width="45" labelFunction="getPlayersLabel" />
+			<mx:DataGridColumn dataField="minBuy" headerText="Min Buyin" width="30" labelFunction="getMinBuyLabel" />
+			<mx:DataGridColumn dataField="maxBuy" headerText="Max Buyin" width="30" labelFunction="getMaxBuyLabel" />
+			<mx:DataGridColumn dataField="gameType" headerText="Game Type" width="100" />
 		</mx:columns>
 	</mx:DataGrid>
 	<mx:Button id="btnJoinGame" click="btnJoinGameClicked()" label="Join Game" />
-	
+	<mx:Button id="btnRefresh" click="refreshGames()" label="Refresh"  x="191"/>
+	<mx:Button x="107" y="0" label="Create" id="btnCreate" click="btnCreateClick()"/>
 </mx:Canvas>

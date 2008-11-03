@@ -10,7 +10,6 @@ package models.connection
 	
 	import models.*;
 	
-	import mx.collections.ArrayCollection;
 	import mx.rpc.xml.SimpleXMLDecoder;
 		
 	public class MessageCenter extends Object
@@ -23,6 +22,7 @@ package models.connection
 		private var mTable:CSTable = null;
 		
 		public var loginActionId:int = 0;
+		public var joinTableActionId:int = 0;
 		
 		private var loggedIn:Boolean = false;
 
@@ -45,7 +45,6 @@ package models.connection
         }// end function
         	
 		public function parseDataIn(strIn:String):void{
-			trace("dataReceived: " + strIn);
 			
 			
 			var xmlDoc:XMLDocument = new XMLDocument(strIn);
@@ -66,6 +65,13 @@ package models.connection
 			if (contentObj.hasOwnProperty("actionPerformedEvent") && contentObj.actionPerformedEvent.id == loginActionId){
 				trace("LOGIN SUCCESSFUL!!!");
 				Main.lobby.receiveLoginSucess();
+				return;
+			}
+			
+			if (contentObj.hasOwnProperty("actionPerformedEvent") && contentObj.actionPerformedEvent.id == joinTableActionId){
+				trace("JOIN TABLE SUCCESSFUL!!!");
+				var tableId:int = contentObj.actionPerformedEvent.id;
+				Main.table.receiveJoinTableSuccess(tableId);
 				return;
 			}
 			
@@ -91,9 +97,10 @@ package models.connection
 				  		break;
 				
 					case "joinTableAction":
-						objAction=contentObj.successfulInvocationEvent.action;
-						objResult=contentObj.successfulInvocationEvent.result;
-						mTable = new CSTable(contentObj.successfulInvocationEvent.result);
+						
+						
+						
+						//mTable = new CSTable(contentObj.successfulInvocationEvent.result);
 						//dispatchEvent(new csEventActions( csEventActions.OnJoinTableAction,"joinTableAction",mTable));
 					break;
 					
@@ -103,25 +110,20 @@ package models.connection
 						//dispatchEvent(new csEventActions( csEventActions.OnLeaveTableAction,"leaveTableAction",objResult));
 						break;
 					
-					case "createTableAction":
-						objAction=contentObj.successfulInvocationEvent.action;
-						objResult=contentObj.successfulInvocationEvent.result;
-						mTable = new CSTable(contentObj.successfulInvocationEvent.result);
-						//dispatchEvent(new csEventActions( csEventActions.OnCreateTableAction,"createTableAction",mTable));
+					case "ns2:createTableAction":
+						Main.showServerMessage("TABLE CREATED!!!!");
 						break;
 				}	 
 				return;
 			}
 			 
-			if (contentObj.hasOwnProperty("tableCreatedEvent")){
-				objResult=contentObj.tableCreatedEvent.table;
-			  	mTable = new CSTable(contentObj.tableCreatedEvent.table);
-			  	//dispatchEvent(new csEventActions( csEventActions.OnGetTableAction,"tableCreatedEvent",mTable));
-			  	return;
-			}
+			
 			
 			if (contentObj.hasOwnProperty("tableChangedEvent")){
-				mTable = new CSTable(contentObj.tableChangedEvent.table);
+				/* TODO:  ADD IN TABLECHANGEDEVENT"
+				*/
+				
+				//mTable = new CSTable(contentObj.tableChangedEvent.table);
 			  	//dispatchEvent(new csEventActions( csEventActions.OnTableChangedEvent,"tableChangedEvent",mTable));
 			  	return;
 			}
