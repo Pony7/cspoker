@@ -39,8 +39,6 @@ Immediatly after setting up the TCP connection with the server, a _loginAction_ 
 		<xs:attribute name="id" type="xs:long" use="required" />
 	</xs:complexType>
 </xs:schema>
-
-
 }}}
 
 ==RESTful HTTP==
@@ -63,8 +61,12 @@ Authentication in the case of HTTP is done through the _Authorization_ header. F
 
 	<xs:complexType name="dispatchableAction" abstract="true">
 		<xs:sequence />
-		<xs:attribute name="id" type="xs:long" use="required" />
+		<xs:attribute name="id" type="tns:eventId" />
 	</xs:complexType>
+
+	<xs:simpleType name="eventId">
+		<xs:restriction base="xs:long" />
+	</xs:simpleType>
 
 	<xs:complexType name="httpResponse">
 		<xs:sequence>
@@ -80,9 +82,8 @@ Authentication in the case of HTTP is done through the _Authorization_ header. F
 	</xs:complexType>
 
 	<xs:complexType name="actionEvent" abstract="true">
-		<xs:sequence>
-			<xs:element name="id" type="xs:long" />
-		</xs:sequence>
+		<xs:sequence />
+		<xs:attribute name="id" type="tns:eventId" />
 	</xs:complexType>
 </xs:schema>
 }}}
@@ -121,6 +122,8 @@ Authentication in the case of HTTP is done through the _Authorization_ header. F
 
 	<xs:element name="leaveTableAction" type="tns:leaveTableAction" />
 
+	<xs:element name="loginAction" type="tns:loginAction" />
+
 	<xs:element name="requestMoneyAction" type="tns:requestMoneyAction" />
 
 	<xs:element name="sendServerMessageAction" type="tns:sendServerMessageAction" />
@@ -136,6 +139,27 @@ Authentication in the case of HTTP is done through the _Authorization_ header. F
 	<xs:element name="sitInAnywhereAction" type="tns:sitInAnywhereAction" />
 
 	<xs:element name="tableChatInterestAction" type="tns:tableChatInterestAction" />
+
+	<xs:complexType name="loginAction">
+		<xs:complexContent>
+			<xs:extension base="tns:dispatchableAction">
+				<xs:sequence>
+					<xs:element name="username" type="xs:string" minOccurs="0" />
+					<xs:element name="passwordHash" type="xs:string"
+						minOccurs="0" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:complexType name="dispatchableAction" abstract="true">
+		<xs:sequence />
+		<xs:attribute name="id" type="tns:eventId" />
+	</xs:complexType>
+
+	<xs:simpleType name="eventId">
+		<xs:restriction base="xs:long" />
+	</xs:simpleType>
 
 	<xs:complexType name="changePasswordAction">
 		<xs:complexContent>
@@ -154,11 +178,6 @@ Authentication in the case of HTTP is done through the _Authorization_ header. F
 		</xs:complexContent>
 	</xs:complexType>
 
-	<xs:complexType name="dispatchableAction" abstract="true">
-		<xs:sequence />
-		<xs:attribute name="id" type="xs:long" use="required" />
-	</xs:complexType>
-
 	<xs:complexType name="createAccountAction">
 		<xs:complexContent>
 			<xs:extension base="tns:accountAction">
@@ -173,10 +192,14 @@ Authentication in the case of HTTP is done through the _Authorization_ header. F
 		<xs:complexContent>
 			<xs:extension base="tns:accountAction">
 				<xs:sequence />
-				<xs:attribute name="playerId" type="xs:long" use="required" />
+				<xs:attribute name="playerId" type="tns:playerId" />
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
+
+	<xs:simpleType name="playerId">
+		<xs:restriction base="xs:long" />
+	</xs:simpleType>
 
 	<xs:complexType name="setAvatarAction">
 		<xs:complexContent>
@@ -191,7 +214,6 @@ Authentication in the case of HTTP is done through the _Authorization_ header. F
 		<xs:complexContent>
 			<xs:extension base="tns:accountAction">
 				<xs:sequence />
-				<xs:attribute name="playerId" type="xs:long" use="required" />
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
@@ -249,12 +271,15 @@ Authentication in the case of HTTP is done through the _Authorization_ header. F
 	<xs:complexType name="sendTableMessageAction">
 		<xs:complexContent>
 			<xs:extension base="tns:sendMessageAction">
-				<xs:sequence>
-					<xs:element name="tableID" type="xs:long" />
-				</xs:sequence>
+				<xs:sequence />
+				<xs:attribute name="tableID" type="tns:tableId" />
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
+
+	<xs:simpleType name="tableId">
+		<xs:restriction base="xs:long" />
+	</xs:simpleType>
 
 	<xs:complexType name="createHoldemTableAction">
 		<xs:complexContent>
@@ -291,9 +316,8 @@ Authentication in the case of HTTP is done through the _Authorization_ header. F
 	<xs:complexType name="joinHoldemTableAction">
 		<xs:complexContent>
 			<xs:extension base="tns:lobbyAction">
-				<xs:sequence>
-					<xs:element name="tableId" type="xs:long" />
-				</xs:sequence>
+				<xs:sequence />
+				<xs:attribute name="tableId" type="tns:tableId" />
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
@@ -302,7 +326,7 @@ Authentication in the case of HTTP is done through the _Authorization_ header. F
 		<xs:complexContent>
 			<xs:extension base="tns:lobbyAction">
 				<xs:sequence />
-				<xs:attribute name="tableId" type="xs:long" use="required" />
+				<xs:attribute name="tableId" type="tns:tableId" />
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
@@ -337,7 +361,7 @@ Authentication in the case of HTTP is done through the _Authorization_ header. F
 
 	<xs:complexType name="table">
 		<xs:sequence />
-		<xs:attribute name="id" type="xs:long" use="required" />
+		<xs:attribute name="id" type="tns:tableId" />
 		<xs:attribute name="name" type="xs:string" />
 	</xs:complexType>
 
@@ -345,7 +369,7 @@ Authentication in the case of HTTP is done through the _Authorization_ header. F
 		<xs:complexContent>
 			<xs:extension base="tns:player">
 				<xs:sequence>
-					<xs:element name="seatId" type="xs:long" />
+					<xs:element name="seatId" type="tns:seatId" minOccurs="0" />
 					<xs:element name="stackValue" type="xs:int" />
 					<xs:element name="betChipsValue" type="xs:int" />
 				</xs:sequence>
@@ -354,11 +378,14 @@ Authentication in the case of HTTP is done through the _Authorization_ header. F
 	</xs:complexType>
 
 	<xs:complexType name="player">
-		<xs:sequence>
-			<xs:element name="name" type="xs:string" minOccurs="0" />
-		</xs:sequence>
-		<xs:attribute name="id" type="xs:long" use="required" />
+		<xs:sequence />
+		<xs:attribute name="id" type="tns:playerId" />
+		<xs:attribute name="name" type="xs:string" />
 	</xs:complexType>
+
+	<xs:simpleType name="seatId">
+		<xs:restriction base="xs:long" />
+	</xs:simpleType>
 
 	<xs:complexType name="leaveTableAction">
 		<xs:complexContent>
@@ -371,9 +398,8 @@ Authentication in the case of HTTP is done through the _Authorization_ header. F
 	<xs:complexType name="holdemTableAction" abstract="true">
 		<xs:complexContent>
 			<xs:extension base="tns:lobbyAction">
-				<xs:sequence>
-					<xs:element name="tableId" type="xs:long" />
-				</xs:sequence>
+				<xs:sequence />
+				<xs:attribute name="tableId" type="tns:tableId" />
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
@@ -381,10 +407,9 @@ Authentication in the case of HTTP is done through the _Authorization_ header. F
 	<xs:complexType name="sitInAction">
 		<xs:complexContent>
 			<xs:extension base="tns:holdemTableAction">
-				<xs:sequence>
-					<xs:element name="seatId" type="xs:long" />
-					<xs:element name="buyIn" type="xs:int" />
-				</xs:sequence>
+				<xs:sequence />
+				<xs:attribute name="seatId" type="tns:seatId" />
+				<xs:attribute name="buyIn" type="xs:int" use="required" />
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
@@ -392,9 +417,8 @@ Authentication in the case of HTTP is done through the _Authorization_ header. F
 	<xs:complexType name="sitInAnywhereAction">
 		<xs:complexContent>
 			<xs:extension base="tns:holdemTableAction">
-				<xs:sequence>
-					<xs:element name="buyIn" type="xs:int" />
-				</xs:sequence>
+				<xs:sequence />
+				<xs:attribute name="buyIn" type="xs:int" use="required" />
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
@@ -451,9 +475,8 @@ Authentication in the case of HTTP is done through the _Authorization_ header. F
 	<xs:complexType name="tableChatInterestAction">
 		<xs:complexContent>
 			<xs:extension base="tns:dispatchableAction">
-				<xs:sequence>
-					<xs:element name="tableID" type="xs:long" />
-				</xs:sequence>
+				<xs:sequence />
+				<xs:attribute name="tableID" type="tns:tableId" />
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
@@ -507,13 +530,17 @@ Authentication in the case of HTTP is done through the _Authorization_ header. F
 		<xs:complexContent>
 			<xs:extension base="tns:serverEvent">
 				<xs:sequence>
-					<xs:element name="tableID" type="xs:long" />
 					<xs:element name="chatEvent" type="tns:chatEvent"
 						minOccurs="0" />
 				</xs:sequence>
+				<xs:attribute name="tableID" type="tns:tableId" />
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
+
+	<xs:simpleType name="tableId">
+		<xs:restriction base="xs:long" />
+	</xs:simpleType>
 
 	<xs:complexType name="messageEvent">
 		<xs:complexContent>
@@ -527,11 +554,14 @@ Authentication in the case of HTTP is done through the _Authorization_ header. F
 	</xs:complexType>
 
 	<xs:complexType name="player">
-		<xs:sequence>
-			<xs:element name="name" type="xs:string" minOccurs="0" />
-		</xs:sequence>
-		<xs:attribute name="id" type="xs:long" use="required" />
+		<xs:sequence />
+		<xs:attribute name="id" type="tns:playerId" />
+		<xs:attribute name="name" type="xs:string" />
 	</xs:complexType>
+
+	<xs:simpleType name="playerId">
+		<xs:restriction base="xs:long" />
+	</xs:simpleType>
 
 	<xs:complexType name="tableCreatedEvent">
 		<xs:complexContent>
@@ -562,7 +592,7 @@ Authentication in the case of HTTP is done through the _Authorization_ header. F
 
 	<xs:complexType name="table">
 		<xs:sequence />
-		<xs:attribute name="id" type="xs:long" use="required" />
+		<xs:attribute name="id" type="tns:tableId" />
 		<xs:attribute name="name" type="xs:string" />
 	</xs:complexType>
 
@@ -613,13 +643,17 @@ Authentication in the case of HTTP is done through the _Authorization_ header. F
 		<xs:complexContent>
 			<xs:extension base="tns:player">
 				<xs:sequence>
-					<xs:element name="seatId" type="xs:long" />
+					<xs:element name="seatId" type="tns:seatId" minOccurs="0" />
 					<xs:element name="stackValue" type="xs:int" />
 					<xs:element name="betChipsValue" type="xs:int" />
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
+
+	<xs:simpleType name="seatId">
+		<xs:restriction base="xs:long" />
+	</xs:simpleType>
 
 	<xs:complexType name="tableConfiguration">
 		<xs:sequence />
@@ -661,8 +695,8 @@ Authentication in the case of HTTP is done through the _Authorization_ header. F
 			<xs:extension base="tns:holdemTableEvent">
 				<xs:sequence>
 					<xs:element name="player" type="tns:player" minOccurs="0" />
-					<xs:element name="amount" type="xs:int" />
 				</xs:sequence>
+				<xs:attribute name="amount" type="xs:int" use="required" />
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
@@ -768,8 +802,8 @@ Authentication in the case of HTTP is done through the _Authorization_ header. F
 			<xs:extension base="tns:holdemTableEvent">
 				<xs:sequence>
 					<xs:element name="player" type="tns:player" minOccurs="0" />
-					<xs:element name="amount" type="xs:int" />
 				</xs:sequence>
+				<xs:attribute name="amount" type="xs:int" use="required" />
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
@@ -828,8 +862,8 @@ Authentication in the case of HTTP is done through the _Authorization_ header. F
 			<xs:extension base="tns:holdemTableEvent">
 				<xs:sequence>
 					<xs:element name="player" type="tns:player" minOccurs="0" />
-					<xs:element name="amount" type="xs:int" />
 				</xs:sequence>
+				<xs:attribute name="amount" type="xs:int" use="required" />
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
@@ -866,10 +900,10 @@ Authentication in the case of HTTP is done through the _Authorization_ header. F
 		<xs:complexContent>
 			<xs:extension base="tns:lobbyTreeEvent">
 				<xs:sequence>
-					<xs:element name="tableID" type="xs:long" />
 					<xs:element name="event" type="tns:holdemTableTreeEvent"
 						minOccurs="0" />
 				</xs:sequence>
+				<xs:attribute name="tableID" type="tns:tableId" />
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
@@ -924,10 +958,13 @@ Authentication in the case of HTTP is done through the _Authorization_ header. F
 	</xs:complexType>
 
 	<xs:complexType name="actionEvent" abstract="true">
-		<xs:sequence>
-			<xs:element name="id" type="xs:long" />
-		</xs:sequence>
+		<xs:sequence />
+		<xs:attribute name="id" type="tns:eventId" />
 	</xs:complexType>
+
+	<xs:simpleType name="eventId">
+		<xs:restriction base="xs:long" />
+	</xs:simpleType>
 
 	<xs:complexType name="illegalActionEvent">
 		<xs:complexContent>
