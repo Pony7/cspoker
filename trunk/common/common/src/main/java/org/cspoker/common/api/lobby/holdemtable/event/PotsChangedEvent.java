@@ -16,26 +16,28 @@
 
 package org.cspoker.common.api.lobby.holdemtable.event;
 
+import net.jcip.annotations.Immutable;
+
 import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
-import org.cspoker.common.elements.player.Player;
-import org.cspoker.common.elements.pots.Pots;
+import org.cspoker.common.elements.chips.Pots;
 
 /**
  * A class to represent pots changed events.
  * 
  */
+@Immutable
 public class PotsChangedEvent extends HoldemTableEvent {
 
 	private static final long serialVersionUID = 2635398487301274173L;
 
-	private Pots pots;
+	private final Pots pots;
 
 	public PotsChangedEvent(Pots pots) {
 		this.pots = pots;
 	}
 
 	protected PotsChangedEvent() {
-		// no op
+		pots = null;
 	}
 
 	public String toString() {

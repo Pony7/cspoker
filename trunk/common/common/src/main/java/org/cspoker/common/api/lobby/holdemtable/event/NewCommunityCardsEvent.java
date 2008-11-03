@@ -21,6 +21,8 @@ import java.util.Set;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 
+import net.jcip.annotations.Immutable;
+
 import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
 import org.cspoker.common.elements.cards.Card;
 
@@ -30,20 +32,21 @@ import org.cspoker.common.elements.cards.Card;
  * @author Kenzo
  * 
  */
+@Immutable
 public class NewCommunityCardsEvent extends HoldemTableEvent {
 
 	private static final long serialVersionUID = -5063239366087788741L;
 
 	@XmlElementWrapper
 	@XmlElement(name = "card")
-	private Set<Card> communityCards;
+	private final Set<Card> communityCards;
 
 	public NewCommunityCardsEvent(Set<Card> commonCards) {
 		communityCards = Collections.unmodifiableSet(commonCards);
 	}
 
 	protected NewCommunityCardsEvent() {
-		// no op
+		communityCards = null;
 	}
 
 	public Set<Card> getCommunityCards() {

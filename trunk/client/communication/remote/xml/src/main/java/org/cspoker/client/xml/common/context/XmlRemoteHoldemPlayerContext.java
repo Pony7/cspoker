@@ -27,15 +27,16 @@ import org.cspoker.common.api.lobby.holdemtable.holdemplayer.action.LeaveGameAct
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.RemoteHoldemPlayerContext;
 import org.cspoker.common.api.shared.action.ActionPerformer;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
+import org.cspoker.common.elements.table.TableId;
 
 @ThreadSafe
 public class XmlRemoteHoldemPlayerContext implements RemoteHoldemPlayerContext {
 
 	private ActionPerformer performer;
 	private IDGenerator generator;
-	private long tableID;
+	private TableId tableID;
 
-	public XmlRemoteHoldemPlayerContext(ActionPerformer performer, IDGenerator generator, long tableID) {
+	public XmlRemoteHoldemPlayerContext(ActionPerformer performer, IDGenerator generator, TableId tableID) {
 		this.performer = performer;
 		this.generator = generator;
 		this.tableID = tableID;

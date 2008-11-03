@@ -15,21 +15,24 @@
  */
 package org.cspoker.common.api.lobby.holdemtable.event;
 
+import net.jcip.annotations.Immutable;
+
 import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
 import org.cspoker.common.elements.player.Player;
 
+@Immutable
 public class JoinTableEvent extends HoldemTableEvent {
 	
 	private static final long serialVersionUID = -803418266888400234L;
 	
-	private Player player;
+	private final Player player;
 	
 	public JoinTableEvent(Player player) {
 		this.player = player;
 	}
 
 	protected JoinTableEvent() {
-		// no op
+		player = null;
 	}
 	
 	public Player getPlayer(){

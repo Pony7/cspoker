@@ -17,11 +17,12 @@ package org.cspoker.common.api.lobby.listener;
 
 import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListenerTree;
 import org.cspoker.common.api.shared.listener.ListenerTree;
+import org.cspoker.common.elements.table.TableId;
 
 public interface LobbyListenerTree extends ListenerTree{
 
 	LobbyListener getLobbyListener();
 	
-	HoldemTableListenerTree getHoldemTableListenerTree(long tableId);
+	HoldemTableListenerTree getHoldemTableListenerTree(TableId tableId);
 	
 }

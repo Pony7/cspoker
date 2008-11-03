@@ -20,10 +20,11 @@ import java.rmi.RemoteException;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.RemoteHoldemPlayerContext;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.listener.RemoteHoldemPlayerListener;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
+import org.cspoker.common.elements.table.SeatId;
 
 public interface ExternalRemoteHoldemTableContext extends RemoteHoldemTableContext {
 	
-	public RemoteHoldemPlayerContext sitIn(long seatId, int buyIn,
+	public RemoteHoldemPlayerContext sitIn(SeatId seatId, int buyIn,
 			RemoteHoldemPlayerListener holdemPlayerListener) throws IllegalActionException, RemoteException;
 	
 	public RemoteHoldemPlayerContext sitIn(int buyIn,

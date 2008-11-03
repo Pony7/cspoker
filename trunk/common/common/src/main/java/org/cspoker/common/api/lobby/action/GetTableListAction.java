@@ -17,15 +17,19 @@ package org.cspoker.common.api.lobby.action;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
+import net.jcip.annotations.Immutable;
+
 import org.cspoker.common.api.lobby.context.StaticLobbyContext;
+import org.cspoker.common.api.shared.event.EventId;
 import org.cspoker.common.elements.table.TableList;
 
 @XmlRootElement
+@Immutable
 public class GetTableListAction extends LobbyAction<TableList> {
 
 	private static final long serialVersionUID = 7897218843022885169L;
 
-	public GetTableListAction(long id) {
+	public GetTableListAction(EventId id) {
 		super(id);
 	}
 

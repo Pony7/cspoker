@@ -18,6 +18,8 @@ package org.cspoker.common.api.shared.event;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
+import net.jcip.annotations.Immutable;
+
 import org.cspoker.common.api.shared.action.DispatchableAction;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 
@@ -29,7 +31,7 @@ public class IllegalActionEvent<T> extends ActionEvent<T> {
     	@XmlTransient
         private IllegalActionException exception;
 
-		private String message = null;
+		private final String message;
 
         public IllegalActionEvent(DispatchableAction<T> action, IllegalActionException exception) {
                 super(action);
@@ -43,7 +45,7 @@ public class IllegalActionEvent<T> extends ActionEvent<T> {
         }
 
         protected IllegalActionEvent() {
-                // no op
+                message = null;
         }
 
     	public IllegalActionException getException() {

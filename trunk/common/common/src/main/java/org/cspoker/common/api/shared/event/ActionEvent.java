@@ -19,6 +19,8 @@ import java.rmi.RemoteException;
 
 import javax.xml.bind.annotation.XmlTransient;
 
+import net.jcip.annotations.Immutable;
+
 import org.cspoker.common.api.shared.action.DispatchableAction;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 
@@ -27,24 +29,25 @@ public abstract class ActionEvent<T> implements Event{
         private static final long serialVersionUID = -3647664952883269411L;
 
         @XmlTransient
-        private DispatchableAction<T> action;
+        private final DispatchableAction<T> action;
         
-        private long id;
+        private final EventId id;
 
         public ActionEvent(DispatchableAction<T> action) {
                 this.action = action;
                 this.id = action.getID();
         }
         
-        public ActionEvent() {
-			// no op
+        protected ActionEvent() {
+			action = null;
+			id = null;
 		}
 
         public DispatchableAction<T> getAction() {
                 return action;
         }
         
-        public long getID(){
+        public EventId getID(){
         	return id;
         }
         

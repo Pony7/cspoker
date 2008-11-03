@@ -27,6 +27,7 @@ import org.cspoker.common.api.lobby.context.LobbyContextConverter;
 import org.cspoker.common.api.lobby.listener.LobbyListener;
 import org.cspoker.common.api.lobby.listener.RemoteLobbyListener;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
+import org.cspoker.common.elements.table.TableId;
 
 /**
  * A wrapper class that converts a ServerContextConverter in to a ExternalRemoteServerContext.
@@ -65,7 +66,7 @@ public class ServerContextConverter implements ExternalRemoteServerContext {
 	}
 
 	public RemoteChatContext getTableChatContext(
-			RemoteChatListener chatListener, long tableId)
+			RemoteChatListener chatListener, TableId tableId)
 			throws RemoteException {
 		return serverContext.getTableChatContext(chatListener, tableId);
 	}
@@ -84,7 +85,7 @@ public class ServerContextConverter implements ExternalRemoteServerContext {
 	}
 
 	public RemoteChatContext getTableChatContext(ChatListener chatListener,
-			long tableId) throws RemoteException, IllegalActionException {
+			TableId tableId) throws RemoteException, IllegalActionException {
 		return serverContext.getServerChatContext(chatListener);
 	}
 

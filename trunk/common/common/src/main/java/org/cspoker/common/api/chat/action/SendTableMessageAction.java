@@ -17,22 +17,27 @@ package org.cspoker.common.api.chat.action;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
+import net.jcip.annotations.Immutable;
+
 import org.cspoker.common.api.shared.context.StaticServerContext;
+import org.cspoker.common.api.shared.event.EventId;
+import org.cspoker.common.elements.table.TableId;
 
 @XmlRootElement
+@Immutable
 public class SendTableMessageAction extends SendMessageAction {
 	
 	private static final long serialVersionUID = -1855545270029265281L;
 	
-	private long tableID;
+	private final TableId tableID;
 
-	public SendTableMessageAction(long id, String message, long tableID) {
+	public SendTableMessageAction(EventId id, String message, TableId tableID) {
 		super(id,message);
 		this.tableID = tableID;
 	}
 
 	protected SendTableMessageAction() {
-		// no op
+		tableID = null;
 	}
 	
 	@Override

@@ -17,14 +17,18 @@ package org.cspoker.common.api.cashier.action;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
+import net.jcip.annotations.Immutable;
+
 import org.cspoker.common.api.cashier.context.CashierContext;
+import org.cspoker.common.api.shared.event.EventId;
 
 @XmlRootElement
+@Immutable
 public class RequestMoneyAction extends CashierAction<Void> {
 
 	private static final long serialVersionUID = 567436868321801958L;
 
-	public RequestMoneyAction(long id) {
+	public RequestMoneyAction(EventId id) {
 		super(id);
 	}
 

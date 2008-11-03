@@ -25,6 +25,7 @@ import org.cspoker.common.api.lobby.holdemtable.holdemplayer.listener.Forwarding
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.listener.HoldemPlayerListener;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.listener.RemoteHoldemPlayerListener;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
+import org.cspoker.common.elements.table.SeatId;
 
 public class HoldemTableContextStub extends ForwardingExternalRemoteHoldemTableContext{
 
@@ -34,7 +35,7 @@ public class HoldemTableContextStub extends ForwardingExternalRemoteHoldemTableC
 	}
 	
 	@Override
-	public RemoteHoldemPlayerContext sitIn(long seatId, int buyIn,
+	public RemoteHoldemPlayerContext sitIn(SeatId seatId, int buyIn,
 			HoldemPlayerListener holdemPlayerListener) throws RemoteException, IllegalActionException {
 		return super.sitIn(seatId, buyIn,(RemoteHoldemPlayerListener) UnicastRemoteObject.exportObject(
 				new ForwardingRemoteHoldemPlayerListener(holdemPlayerListener), 0));

@@ -24,15 +24,16 @@ import org.cspoker.common.api.chat.action.SendTableMessageAction;
 import org.cspoker.common.api.chat.context.RemoteChatContext;
 import org.cspoker.common.api.shared.action.ActionPerformer;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
+import org.cspoker.common.elements.table.TableId;
 
 @ThreadSafe
 public class XmlRemoteTableChatContext implements RemoteChatContext {
 
 	protected ActionPerformer performer;
 	protected IDGenerator generator;
-	private long tableID;
+	private TableId tableID;
 
-	public XmlRemoteTableChatContext(ActionPerformer performer, IDGenerator generator, long tableID) {
+	public XmlRemoteTableChatContext(ActionPerformer performer, IDGenerator generator, TableId tableID) {
 		this.performer = performer;
 		this.generator = generator;
 		this.tableID = tableID;

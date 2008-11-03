@@ -14,40 +14,24 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-package org.cspoker.common.elements.pots;
+package org.cspoker.common.elements.chips;
 
-import java.io.Serializable;
-import java.util.List;
+/**
+ * Thrown to indicate that the transfer of chips involves illegal amounts.
+ * 
+ * @author Kenzo
+ * 
+ */
+public class IllegalValueException extends Exception {
 
-import javax.xml.bind.annotation.XmlValue;
-
-public class Pots implements Serializable {
-
-	private static final long serialVersionUID = 2133563839323145402L;
-
-	@XmlValue
-	private int totalValue;
-
-	public Pots(int totalValue) {
-		this.totalValue = totalValue;
+	public IllegalValueException() {
+		super();
 	}
 
-	protected Pots() {
-		// no op
+	public IllegalValueException(String msg) {
+		super(msg);
 	}
 
-	public List<Pot> getActivePot() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public List<Pot> getAllPots() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public int getTotalValue() {
-		return totalValue;
-	}
+	private static final long serialVersionUID = -7047452830268859725L;
 
 }

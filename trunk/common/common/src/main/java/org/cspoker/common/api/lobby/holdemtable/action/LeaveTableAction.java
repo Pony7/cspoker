@@ -17,15 +17,20 @@ package org.cspoker.common.api.lobby.holdemtable.action;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
+import net.jcip.annotations.Immutable;
+
 import org.cspoker.common.api.lobby.holdemtable.context.StaticHoldemTableContext;
+import org.cspoker.common.api.shared.event.EventId;
+import org.cspoker.common.elements.table.TableId;
 
 
 @XmlRootElement
+@Immutable
 public class LeaveTableAction extends HoldemTableAction<Void> {
 
 	private static final long serialVersionUID = -7081268497360864346L;
 
-	public LeaveTableAction(long id, long tableId) {
+	public LeaveTableAction(EventId id, TableId tableId) {
 		super(id,tableId);
 	}
 

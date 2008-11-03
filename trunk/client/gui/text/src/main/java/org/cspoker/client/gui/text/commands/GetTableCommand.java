@@ -19,6 +19,7 @@ import org.cspoker.client.gui.text.Client;
 import org.cspoker.client.gui.text.Console;
 import org.cspoker.common.elements.player.SeatedPlayer;
 import org.cspoker.common.elements.table.DetailedHoldemTable;
+import org.cspoker.common.elements.table.TableId;
 
 public class GetTableCommand extends CommandImpl {
 
@@ -27,7 +28,7 @@ public class GetTableCommand extends CommandImpl {
 	}
 
 	public void execute(String... args) throws Exception {
-		DetailedHoldemTable t = client.getLobbyContext().getHoldemTableInformation(Integer.parseInt(args[0]));
+		DetailedHoldemTable t = client.getLobbyContext().getHoldemTableInformation(new TableId(Integer.parseInt(args[0])));
 		String s = "Table name: " + t.getName() + " (" + t.getId() + ")" + n
 				+ " " + t.getNbPlayers() + " players:" + n;
 		for (SeatedPlayer p : t.getPlayers()) {

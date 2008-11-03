@@ -23,6 +23,7 @@ import org.cspoker.client.xml.common.context.XmlRemoteServerContext;
 import org.cspoker.client.xml.common.listener.XmlServerListenerTree;
 import org.cspoker.common.RemoteCSPokerServer;
 import org.cspoker.common.api.shared.context.RemoteServerContext;
+import org.cspoker.common.api.shared.event.EventId;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.api.shared.socket.LoginAction;
 
@@ -42,7 +43,7 @@ public abstract class RemoteXmlServer implements RemoteCSPokerServer {
 		XmlServerListenerTree listenerTree = new XmlServerListenerTree();
 		CallSynchronizer callSynchronizer = new CallSynchronizer(listenerTree,serializer);
 		try {
-			callSynchronizer.perform(new LoginAction(username, password));
+			callSynchronizer.perform(new LoginAction(new EventId(), username, password));
 		} catch (IllegalActionException exception) {
 			throw new LoginException(exception.getMessage());
 		}

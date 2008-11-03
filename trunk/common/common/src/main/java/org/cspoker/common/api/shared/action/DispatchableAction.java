@@ -17,28 +17,29 @@ package org.cspoker.common.api.shared.action;
 
 import java.rmi.RemoteException;
 
-import javax.xml.bind.annotation.XmlAttribute;
+import net.jcip.annotations.Immutable;
 
 import org.cspoker.common.api.shared.context.StaticServerContext;
 import org.cspoker.common.api.shared.event.ActionEvent;
 import org.cspoker.common.api.shared.event.ActionPerformedEvent;
+import org.cspoker.common.api.shared.event.EventId;
 import org.cspoker.common.api.shared.event.IllegalActionEvent;
 import org.cspoker.common.api.shared.event.RemoteExceptionEvent;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 
+@Immutable
 public abstract class DispatchableAction<T> implements Action {
 
 	private static final long serialVersionUID = -7188969396903443467L;
 	
-	@XmlAttribute
-	private long id;
+	private final EventId id;
 
-	public DispatchableAction(long id) {
+	public DispatchableAction(EventId id) {
 		this.id = id;
 	}
 
 	protected DispatchableAction() {
-		// no op
+		id = null;
 	}
 	
 	public ActionEvent<T> wrappedPerform(StaticServerContext serverContext){
@@ -51,15 +52,33 @@ public abstract class DispatchableAction<T> implements Action {
 
 	public abstract T perform(StaticServerContext serverContext) throws IllegalActionException;
 
-	public long getID() {
+	public EventId getID() {
 		return id;
 	}
-
+	
+	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + (int) (id ^ (id >>> 32));
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (!(obj instanceof DispatchableAction))
+			return false;
+		DispatchableAction<?> other = (DispatchableAction<?>) obj;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		return true;
 	}
 
 	public IllegalActionEvent<T> getIllegalActionEvent(IllegalActionException exception){

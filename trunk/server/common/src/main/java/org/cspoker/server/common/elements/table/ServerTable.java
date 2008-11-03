@@ -23,9 +23,9 @@ import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.cspoker.common.api.shared.exception.IllegalActionException;
+import org.cspoker.common.elements.player.MutableSeatedPlayer;
 import org.cspoker.common.elements.player.SeatedPlayer;
-import org.cspoker.server.common.elements.id.SeatId;
-import org.cspoker.server.common.player.MutableSeatedPlayer;
+import org.cspoker.common.elements.table.SeatId;
 
 /**
  * A class to represent players at the table.

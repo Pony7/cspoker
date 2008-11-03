@@ -15,6 +15,13 @@
  */
 package org.cspoker.client.bots;
 
+import java.rmi.RemoteException;
+import java.util.concurrent.ExecutorService;
+
+import org.apache.log4j.Logger;
+import org.cspoker.client.common.SmartHoldemPlayerContext;
+import org.cspoker.client.common.SmartHoldemTableContext;
+import org.cspoker.client.common.SmartLobbyContext;
 import org.cspoker.common.api.lobby.holdemtable.event.AllInEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.BetEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.BigBlindEvent;
@@ -37,9 +44,66 @@ import org.cspoker.common.api.lobby.holdemtable.event.WinnerEvent;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.event.NewPocketCardsEvent;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.listener.HoldemPlayerListener;
 import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
+import org.cspoker.common.api.shared.exception.IllegalActionException;
+import org.cspoker.common.elements.player.PlayerId;
+import org.cspoker.common.elements.table.TableId;
 
 public class DefaultBot implements HoldemTableListener, HoldemPlayerListener{
 
+	private final static Logger logger = Logger.getLogger(DefaultBot.class);
+
+	protected final SmartLobbyContext lobbyContext;
+	protected final SmartHoldemTableContext tableContext;
+	protected final SmartHoldemPlayerContext playerContext;
+
+	protected final TableId tableID;
+	protected final PlayerId playerID;
+	protected long deals = 1;
+	protected final boolean doOutput;
+	protected final long startTime;
+	protected final ExecutorService executor;
+
+	public DefaultBot(SmartLobbyContext lobbyContext, PlayerId playerID, TableId tableID, ExecutorService executor, boolean doOutput) {
+		this.playerID = playerID;
+		this.doOutput = doOutput;
+		this.tableID = tableID;
+		this.startTime = System.currentTimeMillis();
+		this.executor = executor;
+		this.lobbyContext = lobbyContext;
+		try {
+			tableContext = lobbyContext.joinHoldemTable(tableID,this);
+			playerContext = tableContext.sitIn(10000,this);
+		} catch (IllegalActionException e) {
+			logger.error(e);
+			throw new IllegalStateException("Failed to join table.",e);
+		} catch (RemoteException e) {
+			logger.error(e);
+			throw new IllegalStateException("Failed to join table.",e);
+		}
+	}
+	
+	public void doNextAction(){
+		
+	}
+	
+	@Override
+	public void onNextPlayer(final NextPlayerEvent nextPlayerEvent) {
+		if(nextPlayerEvent.getPlayer().getId().equals(playerID)){
+			doNextAction();
+		}
+	}
+
+	@Override
+	public void onNewDeal(NewDealEvent newDealEvent) {
+		if(doOutput){
+			++deals;
+			if(deals%32==0){
+				System.out.println("deals "+(deals)+": "+newDealEvent);
+				System.out.println((deals*1000.0)/(1+System.currentTimeMillis()-startTime)+" deals per second");
+			}
+		}
+	}
+	
 	public void onAllIn(AllInEvent allInEvent) {
 		
 	}
@@ -77,15 +141,7 @@ public class DefaultBot implements HoldemTableListener, HoldemPlayerListener{
 		
 	}
 
-	public void onNewDeal(NewDealEvent newDealEvent) {
-		
-	}
-
 	public void onNewRound(NewRoundEvent newRoundEvent) {
-		
-	}
-
-	public void onNextPlayer(NextPlayerEvent nextPlayerEvent) {
 		
 	}
 

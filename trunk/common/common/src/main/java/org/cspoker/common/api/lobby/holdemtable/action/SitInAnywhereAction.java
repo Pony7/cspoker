@@ -17,23 +17,28 @@ package org.cspoker.common.api.lobby.holdemtable.action;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
+import net.jcip.annotations.Immutable;
+
 import org.cspoker.common.api.lobby.holdemtable.context.StaticHoldemTableContext;
+import org.cspoker.common.api.shared.event.EventId;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
+import org.cspoker.common.elements.table.TableId;
 
 @XmlRootElement
+@Immutable
 public class SitInAnywhereAction extends HoldemTableAction<Void> {
 
 	private static final long serialVersionUID = 7302000503865264469L;
 	
-	private int buyIn;
+	private final int buyIn;
 
-	public SitInAnywhereAction(long id, long tableId, int buyIn) {
+	public SitInAnywhereAction(EventId id, TableId tableId, int buyIn) {
 		super(id, tableId);
 		this.buyIn = buyIn;
 	}
 
 	protected SitInAnywhereAction() {
-		// no op
+		buyIn = 0;
 	}
 
 	@Override

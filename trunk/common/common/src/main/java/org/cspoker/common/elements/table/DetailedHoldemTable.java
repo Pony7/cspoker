@@ -40,7 +40,7 @@ public class DetailedHoldemTable extends Table {
 
 	private TableConfiguration property;
 
-	public DetailedHoldemTable(long id, String name, List<SeatedPlayer> players,
+	public DetailedHoldemTable(TableId id, String name, List<SeatedPlayer> players,
 			boolean playing, TableConfiguration property) {
 		super(id,name);
 		if (players == null) {

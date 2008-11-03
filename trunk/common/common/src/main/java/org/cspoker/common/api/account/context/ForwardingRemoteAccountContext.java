@@ -20,6 +20,7 @@ import java.rmi.server.Unreferenced;
 
 import org.apache.log4j.Logger;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
+import org.cspoker.common.elements.player.PlayerId;
 
 
 public class ForwardingRemoteAccountContext implements RemoteAccountContext, Unreferenced{
@@ -45,7 +46,7 @@ public class ForwardingRemoteAccountContext implements RemoteAccountContext, Unr
 		accountContext.createAccount(username, passwordHash);
 	}
 
-	public byte[] getAvatar(long playerId) throws RemoteException, IllegalActionException {
+	public byte[] getAvatar(PlayerId playerId) throws RemoteException, IllegalActionException {
 		return accountContext.getAvatar(playerId);
 	}
 
@@ -53,7 +54,7 @@ public class ForwardingRemoteAccountContext implements RemoteAccountContext, Unr
 		accountContext.setAvatar(avatar);
 	}
 
-	public long getPlayerID() throws RemoteException, IllegalActionException {
+	public PlayerId getPlayerID() throws RemoteException, IllegalActionException {
 		return accountContext.getPlayerID();
 	}
 	

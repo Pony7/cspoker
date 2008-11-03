@@ -17,26 +17,31 @@ package org.cspoker.common.api.lobby.holdemtable.event;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
+import net.jcip.annotations.Immutable;
+
 import org.cspoker.common.api.lobby.event.LobbyTreeEvent;
 import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListenerTree;
 import org.cspoker.common.api.lobby.listener.LobbyListenerTree;
+import org.cspoker.common.elements.table.TableId;
 
 @XmlRootElement
+@Immutable
 public class HoldemTableTreeEventWrapper extends LobbyTreeEvent {
 
 	private static final long serialVersionUID = 557148706756328395L;
 
-	private long tableID;
+	private final TableId tableID;
 
-	private HoldemTableTreeEvent event;
+	private final HoldemTableTreeEvent event;
 	
-	public HoldemTableTreeEventWrapper(long tableID, HoldemTableTreeEvent event){
+	public HoldemTableTreeEventWrapper(TableId tableID, HoldemTableTreeEvent event){
 		this.tableID = tableID;
 		this.event = event;
 	}
 	
 	protected HoldemTableTreeEventWrapper() {
-		// no op
+		tableID = null;
+		event = null;
 	}
 	
 	@Override

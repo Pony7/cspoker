@@ -17,14 +17,19 @@ package org.cspoker.common.api.lobby.holdemtable.holdemplayer.action;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
+import net.jcip.annotations.Immutable;
+
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.HoldemPlayerContext;
+import org.cspoker.common.api.shared.event.EventId;
+import org.cspoker.common.elements.table.TableId;
 
 @XmlRootElement
+@Immutable
 public class LeaveGameAction extends HoldemPlayerAction<Void> {
 
 	private static final long serialVersionUID = -2251924692529703613L;
 
-	public LeaveGameAction(long id, long tableId) {
+	public LeaveGameAction(EventId id, TableId tableId) {
 		super(id,tableId);
 	}
 

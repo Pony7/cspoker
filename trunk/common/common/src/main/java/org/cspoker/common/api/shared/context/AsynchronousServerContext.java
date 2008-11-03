@@ -26,6 +26,7 @@ import org.cspoker.common.api.lobby.context.AsynchronousLobbyContext;
 import org.cspoker.common.api.lobby.context.LobbyContext;
 import org.cspoker.common.api.lobby.listener.AsynchronousLobbyListener;
 import org.cspoker.common.api.lobby.listener.LobbyListener;
+import org.cspoker.common.elements.table.TableId;
 
 @Immutable
 public class AsynchronousServerContext extends ForwardingServerContext {
@@ -43,7 +44,7 @@ public class AsynchronousServerContext extends ForwardingServerContext {
 	}
 	
 	@Override
-	public ChatContext getTableChatContext(ChatListener chatListener,long tableId) {
+	public ChatContext getTableChatContext(ChatListener chatListener,TableId tableId) {
 		return super.getTableChatContext(new AsynchronousChatListener(executor,chatListener),tableId);
 	}
 	

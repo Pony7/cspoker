@@ -7,9 +7,9 @@ import org.cspoker.common.api.lobby.listener.LobbyListener;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.table.DetailedHoldemTable;
 import org.cspoker.common.elements.table.TableConfiguration;
+import org.cspoker.common.elements.table.TableId;
 import org.cspoker.common.elements.table.TableList;
 import org.cspoker.server.common.account.ExtendedAccountContext;
-import org.cspoker.server.common.elements.id.TableId;
 import org.cspoker.server.common.lobby.Lobby;
 
 public class LobbyContextImpl
@@ -27,7 +27,7 @@ public class LobbyContextImpl
 		return lobby.createTable(accountContext, name, configuration);
 	}
 	
-	public DetailedHoldemTable getHoldemTableInformation(long tableId) {
+	public DetailedHoldemTable getHoldemTableInformation(TableId tableId) {
 		return lobby.getTableInformation(tableId);
 	}
 	
@@ -35,9 +35,9 @@ public class LobbyContextImpl
 		return lobby.getTableList();
 	}
 	
-	public HoldemTableContext joinHoldemTable(long tableId, HoldemTableListener holdemTableListener)
+	public HoldemTableContext joinHoldemTable(TableId tableId, HoldemTableListener holdemTableListener)
 			throws IllegalActionException {
-		return lobby.joinTable(new TableId(tableId), holdemTableListener, accountContext);
+		return lobby.joinTable(tableId, holdemTableListener, accountContext);
 	}
 	
 	public void subscribe(LobbyListener lobbyListener) {

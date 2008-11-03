@@ -28,14 +28,14 @@ import org.apache.log4j.Logger;
 import org.cspoker.common.api.lobby.holdemtable.event.ShowHandEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.WinnerEvent;
 import org.cspoker.common.elements.cards.Card;
+import org.cspoker.common.elements.chips.GamePot;
+import org.cspoker.common.elements.chips.IllegalValueException;
+import org.cspoker.common.elements.hand.Hand;
+import org.cspoker.common.elements.player.MutableSeatedPlayer;
+import org.cspoker.common.elements.player.MutableShowdownPlayer;
+import org.cspoker.common.elements.player.MutableWinner;
+import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.elements.player.Winner;
-import org.cspoker.server.common.elements.cards.hand.Hand;
-import org.cspoker.server.common.elements.chips.IllegalValueException;
-import org.cspoker.server.common.elements.chips.pot.GamePot;
-import org.cspoker.server.common.elements.id.PlayerId;
-import org.cspoker.server.common.player.MutableSeatedPlayer;
-import org.cspoker.server.common.player.MutableShowdownPlayer;
-import org.cspoker.server.common.player.MutableWinner;
 
 /**
  * A class to determine who has won each pot.

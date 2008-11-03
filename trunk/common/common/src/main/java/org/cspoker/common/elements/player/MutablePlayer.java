@@ -13,12 +13,10 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.server.common.player;
+package org.cspoker.common.elements.player;
 
-import org.cspoker.common.elements.player.Player;
-import org.cspoker.server.common.elements.chips.Chips;
-import org.cspoker.server.common.elements.chips.IllegalValueException;
-import org.cspoker.server.common.elements.id.PlayerId;
+import org.cspoker.common.elements.chips.Chips;
+import org.cspoker.common.elements.chips.IllegalValueException;
 
 public class MutablePlayer {
 
@@ -41,11 +39,15 @@ public class MutablePlayer {
 	 * @throws IllegalValueException
 	 *         The given initial value is not valid.
 	 */
-	MutablePlayer(PlayerId id, String name, int initialNbChips)
+	public MutablePlayer(PlayerId id, String name, int initialNbChips)
 			throws IllegalValueException {
 		this.id = id;
 		this.name = name;
 		stack = new Chips(initialNbChips);
+	}
+	
+	public MutablePlayer(Player player) throws IllegalValueException {
+		this(player.getId(),player.getName(),0);
 	}
 	
 	public PlayerId getId() {
@@ -68,6 +70,6 @@ public class MutablePlayer {
 	 * Returns a snapshot of this game player.
 	 */
 	public Player getMemento(){
-		return new Player(id.getId(), name);
+		return new Player(getId(), getName());
 	}
 }

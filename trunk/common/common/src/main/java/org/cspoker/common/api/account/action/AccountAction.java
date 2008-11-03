@@ -15,15 +15,19 @@
  */
 package org.cspoker.common.api.account.action;
 
+import net.jcip.annotations.Immutable;
+
 import org.cspoker.common.api.account.context.AccountContext;
 import org.cspoker.common.api.shared.action.DispatchableAction;
 import org.cspoker.common.api.shared.context.StaticServerContext;
+import org.cspoker.common.api.shared.event.EventId;
 
+@Immutable
 public abstract class AccountAction<T> extends DispatchableAction<T> {
 
 	private static final long serialVersionUID = 1672149720723666483L;
 
-	public AccountAction(long id) {
+	public AccountAction(EventId id) {
 		super(id);
 	}
 

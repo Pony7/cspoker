@@ -30,7 +30,7 @@ public class RemoteExceptionEvent<T> extends ActionEvent<T> {
     	@XmlTransient
         private RemoteException exception;
 
-		private String message = null;
+		private final String message;
 
         public RemoteExceptionEvent(DispatchableAction<T> action,RemoteException exception) {
                 super(action);
@@ -44,7 +44,7 @@ public class RemoteExceptionEvent<T> extends ActionEvent<T> {
         }
 
         protected RemoteExceptionEvent() {
-                // no op
+             message = null;
         }
 
     	public RemoteException getException() {

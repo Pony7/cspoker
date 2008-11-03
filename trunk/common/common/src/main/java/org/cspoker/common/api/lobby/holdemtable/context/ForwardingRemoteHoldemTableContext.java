@@ -24,13 +24,14 @@ import org.apache.log4j.Logger;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.RemoteHoldemPlayerContext;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.listener.HoldemPlayerListener;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
+import org.cspoker.common.elements.table.SeatId;
 
 @Immutable
 public class ForwardingRemoteHoldemTableContext implements RemoteHoldemTableContext, Unreferenced{
 
 	private final static Logger logger = Logger.getLogger(ForwardingRemoteHoldemTableContext.class);
 
-	private RemoteHoldemTableContext holdemTableContext;
+	private final RemoteHoldemTableContext holdemTableContext;
 
 	public ForwardingRemoteHoldemTableContext(RemoteHoldemTableContext holdemTableContext) {
 		this.holdemTableContext  = holdemTableContext;
@@ -40,7 +41,7 @@ public class ForwardingRemoteHoldemTableContext implements RemoteHoldemTableCont
 		holdemTableContext.leaveTable();
 	}
 
-	public RemoteHoldemPlayerContext sitIn(long seatId, int amount, HoldemPlayerListener holdemPlayerListener)
+	public RemoteHoldemPlayerContext sitIn(SeatId seatId, int amount, HoldemPlayerListener holdemPlayerListener)
 	throws RemoteException, IllegalActionException {
 		return holdemTableContext.sitIn(seatId, amount, holdemPlayerListener);
 	}

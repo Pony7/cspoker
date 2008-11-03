@@ -15,7 +15,7 @@
  */
 package org.cspoker.server.common.elements.table;
 
-import org.cspoker.server.common.elements.id.SeatId;
+import org.cspoker.common.elements.table.SeatId;
 
 
 

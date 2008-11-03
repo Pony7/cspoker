@@ -15,29 +15,32 @@
  */
 package org.cspoker.common.api.account.action;
 
-import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import net.jcip.annotations.Immutable;
+
 import org.cspoker.common.api.account.context.AccountContext;
+import org.cspoker.common.api.shared.event.EventId;
+import org.cspoker.common.elements.player.PlayerId;
 
 @XmlRootElement
+@Immutable
 public class GetAvatarAction extends AccountAction<byte[]> {
 
 	private static final long serialVersionUID = 7472321702232419097L;
 
-	@XmlAttribute
-	private long playerId;
+	private final PlayerId playerId;
 	
-	public GetAvatarAction(long id, long playerId) {
+	public GetAvatarAction(EventId id, PlayerId playerId) {
 		super(id);
 		this.playerId = playerId;
 	}
 
 	protected GetAvatarAction() {
-		// no op
+		playerId = null;
 	}
 
-	public long getPlayerId() {
+	public PlayerId getPlayerId() {
 		return playerId;
 	}
 

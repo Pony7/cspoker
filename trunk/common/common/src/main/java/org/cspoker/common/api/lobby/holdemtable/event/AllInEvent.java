@@ -15,17 +15,20 @@
  */
 package org.cspoker.common.api.lobby.holdemtable.event;
 
-import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
-import org.cspoker.common.elements.player.Player;
-import org.cspoker.common.elements.pots.Pots;
+import net.jcip.annotations.Immutable;
 
+import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
+import org.cspoker.common.elements.chips.Pots;
+import org.cspoker.common.elements.player.Player;
+
+@Immutable
 public class AllInEvent extends HoldemTableEvent {
 	
 	private static final long serialVersionUID = 2029273959014493873L;
 
-	private Player player;
+	private final Player player;
 	
-	private Pots pots;
+	private final Pots pots;
 	
 	public AllInEvent(Player player, Pots pots){
 		this.player = player;
@@ -33,7 +36,8 @@ public class AllInEvent extends HoldemTableEvent {
 	}
 	
 	protected AllInEvent(){
-		// no op
+		player = null;
+		pots = null;
 	}
 	
 	public Player getPlayer(){

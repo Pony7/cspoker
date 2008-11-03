@@ -14,15 +14,13 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-package org.cspoker.server.common.elements.chips.pot;
+package org.cspoker.common.elements.chips;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.cspoker.server.common.elements.chips.Chips;
-import org.cspoker.server.common.elements.chips.IllegalValueException;
-import org.cspoker.server.common.player.MutableSeatedPlayer;
+import org.cspoker.common.elements.player.MutableSeatedPlayer;
 
 /**
  * The pot contains both a list of players and the chips that should be divided

@@ -14,21 +14,19 @@
  * Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-package org.cspoker.server.common.player;
+package org.cspoker.common.elements.player;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.cspoker.common.elements.cards.Card;
-import org.cspoker.common.elements.player.SeatedPlayer;
-import org.cspoker.server.common.elements.chips.Chips;
-import org.cspoker.server.common.elements.chips.IllegalValueException;
-import org.cspoker.server.common.elements.id.PlayerId;
-import org.cspoker.server.common.elements.id.SeatId;
+import org.cspoker.common.elements.chips.Chips;
+import org.cspoker.common.elements.chips.IllegalValueException;
+import org.cspoker.common.elements.table.SeatId;
 
 /**
- * A class to represent players: bots or humans.
+ * A class to represent players.
  * 
  * @author Kenzo
  * 
@@ -71,6 +69,13 @@ public class MutableSeatedPlayer {
 		pocketCards = new CopyOnWriteArrayList<Card>();
 	}
 	
+	public MutableSeatedPlayer(SeatedPlayer seatedPlayer) throws IllegalValueException {
+		this.player = new MutablePlayer(seatedPlayer);
+		this.stack = new Chips(seatedPlayer.getStackValue());
+		betChips = new Chips(seatedPlayer.getBetChipsValue());
+		pocketCards = new CopyOnWriteArrayList<Card>();
+	}
+
 	/**
 	 * Returns the name of this player.
 	 * 
@@ -163,7 +168,7 @@ public class MutableSeatedPlayer {
 	}
 	
 	public synchronized SeatedPlayer getMemento() {
-		return new SeatedPlayer(getId().getId(), getSeatId().getId(), getName(), getStack().getValue(), getBetChips()
+		return new SeatedPlayer(getId(), getSeatId(), getName(), getStack().getValue(), getBetChips()
 				.getValue());
 	}
 	

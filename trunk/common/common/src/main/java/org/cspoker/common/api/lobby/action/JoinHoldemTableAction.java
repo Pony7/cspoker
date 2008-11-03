@@ -17,23 +17,28 @@ package org.cspoker.common.api.lobby.action;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
+import net.jcip.annotations.Immutable;
+
 import org.cspoker.common.api.lobby.context.StaticLobbyContext;
+import org.cspoker.common.api.shared.event.EventId;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
+import org.cspoker.common.elements.table.TableId;
 
 @XmlRootElement
+@Immutable
 public class JoinHoldemTableAction extends LobbyAction<Void> {
 
 	private static final long serialVersionUID = -6693307709200837257L;
 
-	private long tableId;
+	private final TableId tableId;
 
-	public JoinHoldemTableAction(long id, long tableId) {
+	public JoinHoldemTableAction(EventId id, TableId tableId) {
 		super(id);
 		this.tableId = tableId;
 	}
 
 	protected JoinHoldemTableAction() {
-		// no op
+		tableId = null;
 	}
 	
 	@Override

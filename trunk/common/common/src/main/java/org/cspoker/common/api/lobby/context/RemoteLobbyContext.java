@@ -23,17 +23,18 @@ import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.table.DetailedHoldemTable;
 import org.cspoker.common.elements.table.TableConfiguration;
+import org.cspoker.common.elements.table.TableId;
 import org.cspoker.common.elements.table.TableList;
 
 public interface RemoteLobbyContext extends Remote {
 
 	//Actions
 	
-	RemoteHoldemTableContext joinHoldemTable(long tableId, HoldemTableListener holdemTableListener) throws RemoteException, IllegalActionException;
+	RemoteHoldemTableContext joinHoldemTable(TableId tableId, HoldemTableListener holdemTableListener) throws RemoteException, IllegalActionException;
 
 	DetailedHoldemTable createHoldemTable(String name, TableConfiguration configuration) throws RemoteException, IllegalActionException;
 
-	DetailedHoldemTable getHoldemTableInformation(long tableId) throws RemoteException, IllegalActionException;
+	DetailedHoldemTable getHoldemTableInformation(TableId tableId) throws RemoteException, IllegalActionException;
 
 	TableList getTableList() throws RemoteException, IllegalActionException;	
 }

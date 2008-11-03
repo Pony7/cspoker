@@ -15,8 +15,8 @@
  */
 package org.cspoker.server.common.chat.room;
 
+import org.cspoker.common.elements.player.MutablePlayer;
 import org.cspoker.server.common.gamecontrol.PokerTable;
-import org.cspoker.server.common.player.MutablePlayer;
 
 public class TableChatRoom extends ChatRoom {
 

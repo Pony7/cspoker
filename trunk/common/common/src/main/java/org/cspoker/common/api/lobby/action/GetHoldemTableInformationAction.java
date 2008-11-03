@@ -15,27 +15,30 @@
  */
 package org.cspoker.common.api.lobby.action;
 
-import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import net.jcip.annotations.Immutable;
+
 import org.cspoker.common.api.lobby.context.StaticLobbyContext;
+import org.cspoker.common.api.shared.event.EventId;
 import org.cspoker.common.elements.table.DetailedHoldemTable;
+import org.cspoker.common.elements.table.TableId;
 
 @XmlRootElement
+@Immutable
 public class GetHoldemTableInformationAction extends LobbyAction<DetailedHoldemTable> {
 
 	private static final long serialVersionUID = 7897218843022885169L;
 
-	@XmlAttribute
-	private long tableId;
+	private final TableId tableId;
 
-	public GetHoldemTableInformationAction(long id, long tableid) {
+	public GetHoldemTableInformationAction(EventId id, TableId tableid) {
 		super(id);
 		this.tableId = tableid;
 	}
 
 	protected GetHoldemTableInformationAction() {
-		// no op
+		tableId = null;
 	}
 
 	@Override

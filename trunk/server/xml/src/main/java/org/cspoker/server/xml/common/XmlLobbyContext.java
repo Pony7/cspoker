@@ -25,24 +25,25 @@ import org.cspoker.common.api.lobby.context.StaticLobbyContext;
 import org.cspoker.common.api.lobby.holdemtable.listener.UniversalTableListener;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.api.shared.listener.UniversalServerListener;
+import org.cspoker.common.elements.table.TableId;
 
 @NotThreadSafe
 public class XmlLobbyContext extends ForwardingLobbyContext implements StaticLobbyContext {
 
 	private UniversalServerListener listener;
-	private final ConcurrentHashMap<Long, XmlHoldemTableContext> contexts = new ConcurrentHashMap<Long, XmlHoldemTableContext>();
+	private final ConcurrentHashMap<TableId, XmlHoldemTableContext> contexts = new ConcurrentHashMap<TableId, XmlHoldemTableContext>();
 	
 	public XmlLobbyContext(LobbyContext lobbyContext, UniversalServerListener listener) {
 		super(lobbyContext);
 		this.listener = listener;
 	}
 
-	public XmlHoldemTableContext getHoldemTableContext(long tableId) {
+	public XmlHoldemTableContext getHoldemTableContext(TableId tableId) {
 		return contexts.get(tableId);
 	}
 
 	//The context that we delegating to is responsible for synchronizing concurrent join actions.
-	public void joinHoldemTable(long tableId) throws IllegalActionException {
+	public void joinHoldemTable(TableId tableId) throws IllegalActionException {
 		UniversalTableListener tableListener = new UniversalTableListener(listener, tableId);
 		XmlHoldemTableContext newContext = new XmlHoldemTableContext(super.joinHoldemTable(tableId, tableListener),tableListener);
 		contexts.put(tableId, newContext);

@@ -17,14 +17,17 @@ package org.cspoker.common.api.shared.event;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
+import net.jcip.annotations.Immutable;
+
 import org.cspoker.common.api.shared.action.DispatchableAction;
 
 @XmlRootElement
+@Immutable
 public class ActionPerformedEvent<T> extends ActionEvent<T> {
 
         private static final long serialVersionUID = 8350435427841245148L;
 
-        private T result;
+        private final T result;
 
         public ActionPerformedEvent(DispatchableAction<T> action, T result) {
                 super(action);
@@ -32,7 +35,7 @@ public class ActionPerformedEvent<T> extends ActionEvent<T> {
         }
 
         protected ActionPerformedEvent() {
-                // no op
+                result = null;
         }
 
         public T getResult() {

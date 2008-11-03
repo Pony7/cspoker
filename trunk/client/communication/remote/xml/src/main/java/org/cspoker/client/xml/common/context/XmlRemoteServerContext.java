@@ -34,6 +34,7 @@ import org.cspoker.common.api.shared.action.ServerChatInterestAction;
 import org.cspoker.common.api.shared.action.TableChatInterestAction;
 import org.cspoker.common.api.shared.context.RemoteServerContext;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
+import org.cspoker.common.elements.table.TableId;
 
 @ThreadSafe
 public class XmlRemoteServerContext implements RemoteServerContext {
@@ -45,7 +46,7 @@ public class XmlRemoteServerContext implements RemoteServerContext {
 	private final XmlRemoteCashierContext cashierContext;
 	private final AtomicReference<RemoteChatContext> serverChatContext = new AtomicReference<RemoteChatContext>();
 	private final AtomicReference<RemoteLobbyContext> lobbyContext = new AtomicReference<RemoteLobbyContext>();
-	private final ConcurrentHashMap<Long, XmlRemoteTableChatContext>  tableChatContexts = new ConcurrentHashMap<Long, XmlRemoteTableChatContext>();
+	private final ConcurrentHashMap<TableId, XmlRemoteTableChatContext>  tableChatContexts = new ConcurrentHashMap<TableId, XmlRemoteTableChatContext>();
 	
 	private final XmlServerListenerTree serverListenerTree;
 
@@ -82,7 +83,7 @@ public class XmlRemoteServerContext implements RemoteServerContext {
 	}
 	
 	public RemoteChatContext getTableChatContext(ChatListener chatListener,
-			long tableID) throws RemoteException, IllegalActionException {
+			TableId tableID) throws RemoteException, IllegalActionException {
 		XmlRemoteTableChatContext context = new XmlRemoteTableChatContext(performer,generator,tableID);
 		if(tableChatContexts.putIfAbsent(tableID, context)==null){
 			serverListenerTree.setTableChatListener(tableID, chatListener);

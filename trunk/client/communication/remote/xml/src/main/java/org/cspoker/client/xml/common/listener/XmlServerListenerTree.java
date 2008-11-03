@@ -20,6 +20,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import net.jcip.annotations.ThreadSafe;
 
 import org.cspoker.common.api.chat.listener.ChatListener;
+import org.cspoker.common.elements.table.TableId;
 
 @ThreadSafe
 public class XmlServerListenerTree implements
@@ -27,7 +28,7 @@ public class XmlServerListenerTree implements
 
 	private volatile ChatListener serverChatListener;
 	private final XmlLobbyListenerTree lobbyListenerTree;
-	private final ConcurrentHashMap<Long, ChatListener> tableChatListener = new ConcurrentHashMap<Long, ChatListener>();
+	private final ConcurrentHashMap<TableId, ChatListener> tableChatListener = new ConcurrentHashMap<TableId, ChatListener>();
 
 	public XmlServerListenerTree() {
 		lobbyListenerTree = new XmlLobbyListenerTree();
@@ -45,11 +46,11 @@ public class XmlServerListenerTree implements
 		this.serverChatListener = serverChatListener;
 	}
 
-	public ChatListener getTableChatListener(long tableID) {
+	public ChatListener getTableChatListener(TableId tableID) {
 		return tableChatListener.get(tableID);
 	}
 
-	public void setTableChatListener(long tableID, ChatListener listener) {
+	public void setTableChatListener(TableId tableID, ChatListener listener) {
 		tableChatListener.put(tableID, listener);
 	}
 	

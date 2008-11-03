@@ -18,6 +18,7 @@ package org.cspoker.common.api.lobby.holdemtable.context;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.HoldemPlayerContext;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.listener.HoldemPlayerListener;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
+import org.cspoker.common.elements.table.SeatId;
 
 public interface HoldemTableContext extends RemoteHoldemTableContext{
 
@@ -33,7 +34,7 @@ public interface HoldemTableContext extends RemoteHoldemTableContext{
 	 * The player chooses to sit-in at the table. 
 	 * A player who is sit-in can act at the table. He will also receive pocket cards.
 	 */
-	HoldemPlayerContext sitIn(long seatId, int buyIn, HoldemPlayerListener holdemPlayerListener) throws IllegalActionException;
+	HoldemPlayerContext sitIn(SeatId seatId, int buyIn, HoldemPlayerListener holdemPlayerListener) throws IllegalActionException;
 	
 
 	HoldemPlayerContext sitIn(int buyIn, HoldemPlayerListener holdemPlayerListener) throws IllegalActionException;

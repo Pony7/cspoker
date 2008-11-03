@@ -17,19 +17,22 @@ package org.cspoker.common.api.chat.event;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
+import net.jcip.annotations.Immutable;
+
 import org.cspoker.common.api.chat.listener.ChatListener;
 import org.cspoker.common.api.shared.event.ServerEvent;
 import org.cspoker.common.api.shared.listener.ServerListenerTree;
 
 @XmlRootElement
+@Immutable
 public class ServerChatEvents extends ServerEvent {
 
 	private static final long serialVersionUID = 6449937716379015861L;
 
-	private ChatEvent chatEvent;
+	private final ChatEvent chatEvent;
 	
 	public ServerChatEvents() {
-		// no op
+		chatEvent = null;
 	}
 	
 	public ServerChatEvents(ChatEvent chatEvent){

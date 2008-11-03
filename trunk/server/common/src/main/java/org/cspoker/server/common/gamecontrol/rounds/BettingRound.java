@@ -31,15 +31,15 @@ import org.cspoker.common.api.lobby.holdemtable.event.SmallBlindEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.WinnerEvent;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.cards.Card;
+import org.cspoker.common.elements.chips.Chips;
+import org.cspoker.common.elements.chips.GamePots;
+import org.cspoker.common.elements.chips.IllegalValueException;
+import org.cspoker.common.elements.chips.Pots;
+import org.cspoker.common.elements.player.MutableAllInPlayer;
+import org.cspoker.common.elements.player.MutableSeatedPlayer;
 import org.cspoker.common.elements.player.Winner;
-import org.cspoker.common.elements.pots.Pots;
-import org.cspoker.server.common.elements.chips.Chips;
-import org.cspoker.server.common.elements.chips.IllegalValueException;
-import org.cspoker.server.common.elements.chips.pot.GamePots;
 import org.cspoker.server.common.gamecontrol.Game;
 import org.cspoker.server.common.gamecontrol.PokerTable;
-import org.cspoker.server.common.player.MutableAllInPlayer;
-import org.cspoker.server.common.player.MutableSeatedPlayer;
 
 /**
  * A class to represent betting rounds.

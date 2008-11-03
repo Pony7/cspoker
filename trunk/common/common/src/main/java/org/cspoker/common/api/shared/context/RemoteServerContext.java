@@ -25,6 +25,7 @@ import org.cspoker.common.api.chat.listener.ChatListener;
 import org.cspoker.common.api.lobby.context.RemoteLobbyContext;
 import org.cspoker.common.api.lobby.listener.LobbyListener;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
+import org.cspoker.common.elements.table.TableId;
 
 public interface RemoteServerContext extends Remote{
 
@@ -34,7 +35,7 @@ public interface RemoteServerContext extends Remote{
 	
 	RemoteChatContext getServerChatContext(ChatListener chatListener) throws RemoteException, IllegalActionException;
 
-	RemoteChatContext getTableChatContext(ChatListener chatListener,long tableId) throws RemoteException, IllegalActionException;
+	RemoteChatContext getTableChatContext(ChatListener chatListener,TableId tableId) throws RemoteException, IllegalActionException;
 
 	RemoteLobbyContext getLobbyContext(LobbyListener lobbyListener) throws RemoteException, IllegalActionException;
 	

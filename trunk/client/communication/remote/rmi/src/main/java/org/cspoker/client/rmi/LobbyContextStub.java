@@ -27,6 +27,7 @@ import org.cspoker.common.api.lobby.holdemtable.listener.ForwardingRemoteHoldemT
 import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
 import org.cspoker.common.api.lobby.holdemtable.listener.RemoteHoldemTableListener;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
+import org.cspoker.common.elements.table.TableId;
 import org.cspoker.common.util.lazy.IWrapper1;
 
 public class LobbyContextStub extends ForwardingExternalRemoteLobbyContext{
@@ -39,7 +40,7 @@ public class LobbyContextStub extends ForwardingExternalRemoteLobbyContext{
 	}
 
 	@Override
-	public ExternalRemoteHoldemTableContext joinHoldemTable(long tableId,
+	public ExternalRemoteHoldemTableContext joinHoldemTable(TableId tableId,
 			HoldemTableListener holdemTableListener) throws RemoteException, IllegalActionException {
 		RemoteHoldemTableListener stub = (RemoteHoldemTableListener) UnicastRemoteObject.exportObject(
 				new ForwardingRemoteHoldemTableListener(holdemTableListener), 0);
@@ -48,7 +49,7 @@ public class LobbyContextStub extends ForwardingExternalRemoteLobbyContext{
 	}
 
 	@Override
-	public ExternalRemoteHoldemTableContext joinHoldemTable(long tableId,
+	public ExternalRemoteHoldemTableContext joinHoldemTable(TableId tableId,
 			RemoteHoldemTableListener holdemTableListener)
 	throws IllegalActionException, RemoteException {
 		RemoteHoldemTableListener stub = (RemoteHoldemTableListener) UnicastRemoteObject.exportObject(

@@ -16,8 +16,11 @@
 
 package org.cspoker.common.api.shared.event;
 
+import net.jcip.annotations.Immutable;
+
 import org.cspoker.common.api.shared.listener.ServerListenerTree;
 
+@Immutable
 public abstract class ServerEvent implements Event {
 
 	private static final long serialVersionUID = 7439891027088408306L;

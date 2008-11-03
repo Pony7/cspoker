@@ -23,19 +23,22 @@ import java.util.Queue;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import net.jcip.annotations.Immutable;
+
 import org.cspoker.common.api.shared.event.ActionEvent;
 import org.cspoker.common.api.shared.event.ServerEvent;
 
 @XmlRootElement
+@Immutable
 public class HTTPResponse {
 
 	@XmlElement(required=true,nillable=false) 
-	private List<ServerEvent> events = Collections.synchronizedList(new ArrayList<ServerEvent>());
+	private final List<ServerEvent> events = Collections.synchronizedList(new ArrayList<ServerEvent>());
 	
 	@XmlElement(required=true,nillable=false) 
-	private List<ActionEvent<?>> actionResults = Collections.synchronizedList(new ArrayList<ActionEvent<?>>());
+	private final List<ActionEvent<?>> actionResults = Collections.synchronizedList(new ArrayList<ActionEvent<?>>());
 	
-	public HTTPResponse() {
+	protected HTTPResponse() {
 		// no op
 	}
 	

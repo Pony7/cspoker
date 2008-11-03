@@ -16,9 +16,10 @@
 
 package org.cspoker.common.api.lobby.holdemtable.event;
 
+import net.jcip.annotations.Immutable;
+
 import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
 import org.cspoker.common.elements.player.Player;
-import org.cspoker.common.elements.pots.Pots;
 
 /**
  * A class to represent big blind events.
@@ -26,13 +27,14 @@ import org.cspoker.common.elements.pots.Pots;
  * @author Kenzo
  * 
  */
+@Immutable
 public class BigBlindEvent extends HoldemTableEvent {
 
 	private static final long serialVersionUID = -7908022421547219241L;
 
-	private Player player;
+	private final Player player;
 
-	private int amount;
+	private final int amount;
 
 	public BigBlindEvent(Player player, int amount) {
 		this.player = player;
@@ -40,7 +42,8 @@ public class BigBlindEvent extends HoldemTableEvent {
 	}
 
 	protected BigBlindEvent() {
-		// no op
+		player = null;
+		amount = 0;
 	}
 
 	public String toString() {

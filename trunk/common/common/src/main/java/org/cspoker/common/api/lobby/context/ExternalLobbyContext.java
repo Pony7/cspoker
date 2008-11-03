@@ -19,16 +19,17 @@ import org.cspoker.common.api.lobby.holdemtable.context.ExternalHoldemTableConte
 import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
 import org.cspoker.common.api.lobby.holdemtable.listener.RemoteHoldemTableListener;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
+import org.cspoker.common.elements.table.TableId;
 
 //Can't extend ExternalRemoteLobbyContext because of a bug in the Sun JDK 6 compiler.
 //see http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6294779
 public interface ExternalLobbyContext extends LobbyContext/*, ExternalRemoteLobbyContext*/{
 
-	public ExternalHoldemTableContext joinHoldemTable(long tableId,
+	public ExternalHoldemTableContext joinHoldemTable(TableId tableId,
 			HoldemTableListener holdemTableListener)
 			throws IllegalActionException;
 	
-	public ExternalHoldemTableContext joinHoldemTable(long tableId,
+	public ExternalHoldemTableContext joinHoldemTable(TableId tableId,
 			RemoteHoldemTableListener holdemTableListener) throws IllegalActionException;
 	
 }

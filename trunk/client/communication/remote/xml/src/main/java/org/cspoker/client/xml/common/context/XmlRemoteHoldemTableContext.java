@@ -30,18 +30,20 @@ import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.RemoteHolde
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.listener.HoldemPlayerListener;
 import org.cspoker.common.api.shared.action.ActionPerformer;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
+import org.cspoker.common.elements.table.SeatId;
+import org.cspoker.common.elements.table.TableId;
 
 @ThreadSafe
 public class XmlRemoteHoldemTableContext implements RemoteHoldemTableContext {
 
 	private ActionPerformer performer;
 	private IDGenerator generator;
-	private long tableID;
+	private TableId tableID;
 	
 	private final AtomicReference<RemoteHoldemPlayerContext> playerContext = new AtomicReference<RemoteHoldemPlayerContext>();
 	private XmlServerListenerTree serverListenerTree;
 
-	public XmlRemoteHoldemTableContext(ActionPerformer performer, IDGenerator generator, long tableID, XmlServerListenerTree serverListenerTree) {
+	public XmlRemoteHoldemTableContext(ActionPerformer performer, IDGenerator generator, TableId tableID, XmlServerListenerTree serverListenerTree) {
 		this.performer = performer;
 		this.generator = generator;
 		this.tableID = tableID;
@@ -52,7 +54,7 @@ public class XmlRemoteHoldemTableContext implements RemoteHoldemTableContext {
 		performer.perform(new LeaveTableAction(generator.getNextID(),tableID));
 	}
 
-	public RemoteHoldemPlayerContext sitIn(long seatId, int amount,
+	public RemoteHoldemPlayerContext sitIn(SeatId seatId, int amount,
 			HoldemPlayerListener holdemPlayerListener) throws RemoteException,
 			IllegalActionException {
 		if(playerContext.compareAndSet(null, new XmlRemoteHoldemPlayerContext(performer,generator,tableID))){

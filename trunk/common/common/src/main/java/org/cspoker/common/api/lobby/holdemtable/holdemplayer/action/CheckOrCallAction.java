@@ -19,16 +19,20 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import net.jcip.annotations.Immutable;
+
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.HoldemPlayerContext;
+import org.cspoker.common.api.shared.event.EventId;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
+import org.cspoker.common.elements.table.TableId;
 
 @XmlRootElement
-@XmlAccessorType(XmlAccessType.FIELD)
+@Immutable
 public class CheckOrCallAction extends HoldemPlayerAction<Void> {
 
 	private static final long serialVersionUID = -8261657497029143378L;
 
-	public CheckOrCallAction(long id, long tableId) {
+	public CheckOrCallAction(EventId id, TableId tableId) {
 		super(id,tableId);
 	}
 

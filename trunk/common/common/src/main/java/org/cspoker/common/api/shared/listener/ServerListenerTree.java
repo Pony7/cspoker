@@ -17,12 +17,13 @@ package org.cspoker.common.api.shared.listener;
 
 import org.cspoker.common.api.chat.listener.ChatListener;
 import org.cspoker.common.api.lobby.listener.LobbyListenerTree;
+import org.cspoker.common.elements.table.TableId;
 
 public interface ServerListenerTree extends ListenerTree{
 
 	ChatListener getServerChatListener();
 	
-	ChatListener getTableChatListener(long tableID);
+	ChatListener getTableChatListener(TableId tableID);
 	
 	LobbyListenerTree getLobbyListenerTree();
 	

@@ -26,6 +26,7 @@ import org.cspoker.common.api.shared.context.ForwardingServerContext;
 import org.cspoker.common.api.shared.context.ServerContext;
 import org.cspoker.common.api.shared.context.StaticServerContext;
 import org.cspoker.common.api.shared.listener.UniversalServerListener;
+import org.cspoker.common.elements.table.TableId;
 
 @NotThreadSafe
 public class XmlServerContext extends ForwardingServerContext implements StaticServerContext {
@@ -38,7 +39,7 @@ public class XmlServerContext extends ForwardingServerContext implements StaticS
 	private ChatContext serverChatContext;
 	private Object serverChatLock = new Object();
 	
-	private final HashMap<Long, ChatContext> tableChatContexts = new HashMap<Long, ChatContext>();
+	private final HashMap<TableId, ChatContext> tableChatContexts = new HashMap<TableId, ChatContext>();
 	private Object tableChatLock = new Object();
 
 	public XmlServerContext(ServerContext context, UniversalServerListener listener) {
@@ -65,7 +66,7 @@ public class XmlServerContext extends ForwardingServerContext implements StaticS
 		}
 	}
 
-	public ChatContext getTableChatContext(long tableID) {
+	public ChatContext getTableChatContext(TableId tableID) {
 		synchronized (tableChatLock) {
 			ChatContext chatContext;
 			if (!tableChatContexts.containsKey(tableID)) {

@@ -18,24 +18,29 @@ package org.cspoker.common.api.lobby.holdemtable.holdemplayer.action;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import net.jcip.annotations.Immutable;
+
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.HoldemPlayerContext;
+import org.cspoker.common.api.shared.event.EventId;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
+import org.cspoker.common.elements.table.TableId;
 
 @XmlRootElement
+@Immutable
 public class BetOrRaiseAction extends HoldemPlayerAction<Void> {
 
 	private static final long serialVersionUID = 7370121685541484279L;
 
 	@XmlAttribute
-	private int amount;
+	private final int amount;
 
-	public BetOrRaiseAction(long id, long tableId, int amount) {
+	public BetOrRaiseAction(EventId id, TableId tableId, int amount) {
 		super(id,tableId);
 		this.amount = amount;
 	}
 
 	protected BetOrRaiseAction() {
-		// no op
+		amount = 0;
 	}
 	
 	@Override

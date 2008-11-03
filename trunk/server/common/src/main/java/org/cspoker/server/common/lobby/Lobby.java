@@ -18,9 +18,9 @@ import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.table.DetailedHoldemTable;
 import org.cspoker.common.elements.table.Table;
 import org.cspoker.common.elements.table.TableConfiguration;
+import org.cspoker.common.elements.table.TableId;
 import org.cspoker.common.elements.table.TableList;
 import org.cspoker.server.common.account.ExtendedAccountContext;
-import org.cspoker.server.common.elements.id.TableId;
 import org.cspoker.server.common.gamecontrol.PokerTable;
 
 public class Lobby {
@@ -53,15 +53,14 @@ public class Lobby {
 		tables.put(tableId, table);
 		
 		for (LobbyListener listener : lobbyListeners) {
-			listener.onTableCreated(new TableCreatedEvent(accountContext.getPlayer().getMemento(), new Table(tableId
-					.getId(), name)));
+			listener.onTableCreated(new TableCreatedEvent(accountContext.getPlayer().getMemento(), new Table(tableId, name)));
 		}
 		
 		return table.getTableInformation();
 	}
 	
-	public DetailedHoldemTable getTableInformation(long tableId) {
-		PokerTable table = tables.get(new TableId(tableId));
+	public DetailedHoldemTable getTableInformation(TableId tableId) {
+		PokerTable table = tables.get(tableId);
 		return table != null ? table.getTableInformation() : null;
 	}
 	

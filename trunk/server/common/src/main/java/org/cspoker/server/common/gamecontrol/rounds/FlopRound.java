@@ -23,10 +23,10 @@ import org.cspoker.common.api.lobby.holdemtable.event.NewCommunityCardsEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.NewRoundEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.NextPlayerEvent;
 import org.cspoker.common.elements.cards.Card;
+import org.cspoker.common.elements.player.MutableSeatedPlayer;
 import org.cspoker.common.elements.table.Rounds;
 import org.cspoker.server.common.gamecontrol.Game;
 import org.cspoker.server.common.gamecontrol.PokerTable;
-import org.cspoker.server.common.player.MutableSeatedPlayer;
 
 public class FlopRound extends BettingRound {
 	private static Logger logger = Logger.getLogger(FlopRound.class);

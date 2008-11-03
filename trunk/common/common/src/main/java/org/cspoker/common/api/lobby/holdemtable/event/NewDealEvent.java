@@ -19,6 +19,8 @@ package org.cspoker.common.api.lobby.holdemtable.event;
 import java.util.Collections;
 import java.util.List;
 
+import net.jcip.annotations.Immutable;
+
 import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
 import org.cspoker.common.elements.player.SeatedPlayer;
 
@@ -28,13 +30,14 @@ import org.cspoker.common.elements.player.SeatedPlayer;
  * @author Kenzo
  * 
  */
+@Immutable
 public class NewDealEvent extends HoldemTableEvent {
 
 	private static final long serialVersionUID = 8048593844056212117L;
 
-	private List<SeatedPlayer> players;
+	private final List<SeatedPlayer> players;
 
-	private SeatedPlayer dealer;
+	private final SeatedPlayer dealer;
 
 	public NewDealEvent(List<SeatedPlayer> players, SeatedPlayer dealer) {
 		this.players = Collections.unmodifiableList(players);
@@ -42,11 +45,16 @@ public class NewDealEvent extends HoldemTableEvent {
 	}
 
 	protected NewDealEvent() {
-		// no op
+		players = null;
+		dealer = null;
 	}
 
 	public SeatedPlayer getDealer() {
 		return dealer;
+	}
+	
+	public List<SeatedPlayer> getPlayers() {
+		return players;
 	}
 
 	public String toString() {

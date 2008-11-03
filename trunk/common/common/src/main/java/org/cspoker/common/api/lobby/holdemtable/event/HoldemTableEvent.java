@@ -15,9 +15,12 @@
  */
 package org.cspoker.common.api.lobby.holdemtable.event;
 
+import net.jcip.annotations.Immutable;
+
 import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
 import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListenerTree;
 
+@Immutable
 public abstract class HoldemTableEvent extends HoldemTableTreeEvent {
 	
 	protected HoldemTableEvent() {

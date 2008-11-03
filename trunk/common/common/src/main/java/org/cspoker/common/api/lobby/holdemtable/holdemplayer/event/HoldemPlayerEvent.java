@@ -15,10 +15,13 @@
  */
 package org.cspoker.common.api.lobby.holdemtable.holdemplayer.event;
 
+import net.jcip.annotations.Immutable;
+
 import org.cspoker.common.api.lobby.holdemtable.event.HoldemTableTreeEvent;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.listener.HoldemPlayerListener;
 import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListenerTree;
 
+@Immutable
 public abstract class HoldemPlayerEvent extends HoldemTableTreeEvent {
 	
 	private static final long serialVersionUID = 7840723687804921623L;

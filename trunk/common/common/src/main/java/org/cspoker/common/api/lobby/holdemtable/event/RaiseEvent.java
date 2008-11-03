@@ -16,9 +16,10 @@
 
 package org.cspoker.common.api.lobby.holdemtable.event;
 
+import net.jcip.annotations.Immutable;
+
 import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
 import org.cspoker.common.elements.player.Player;
-import org.cspoker.common.elements.pots.Pots;
 
 /**
  * A class to represent raise events.
@@ -26,13 +27,14 @@ import org.cspoker.common.elements.pots.Pots;
  * @author Kenzo
  * 
  */
+@Immutable
 public class RaiseEvent extends HoldemTableEvent {
 
 	private static final long serialVersionUID = -5634645028675762487L;
 
-	private Player player;
+	private final Player player;
 
-	private int amount;
+	private final int amount;
 
 	public RaiseEvent(Player player, int amount) {
 		this.player = player;
@@ -40,7 +42,8 @@ public class RaiseEvent extends HoldemTableEvent {
 	}
 
 	protected RaiseEvent() {
-		// no op
+		player = null;
+		amount = 0;
 	}
 
 	public String toString() {

@@ -18,10 +18,10 @@ package org.cspoker.server.common.gamecontrol.rounds;
 
 import org.cspoker.common.api.lobby.holdemtable.event.SitOutEvent;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
+import org.cspoker.common.elements.player.MutableSeatedPlayer;
 import org.cspoker.server.common.gamecontrol.Game;
 import org.cspoker.server.common.gamecontrol.PokerTable;
 import org.cspoker.server.common.gamecontrol.rules.BettingRules;
-import org.cspoker.server.common.player.MutableSeatedPlayer;
 
 /**
  * An abstract class to represent rounds. A player can do actions in a round,

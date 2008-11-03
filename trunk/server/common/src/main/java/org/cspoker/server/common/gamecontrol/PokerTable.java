@@ -51,21 +51,21 @@ import org.cspoker.common.api.lobby.holdemtable.holdemplayer.event.NewPocketCard
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.listener.HoldemPlayerListener;
 import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
+import org.cspoker.common.elements.chips.IllegalValueException;
+import org.cspoker.common.elements.player.MutablePlayer;
+import org.cspoker.common.elements.player.MutableSeatedPlayer;
 import org.cspoker.common.elements.player.Player;
+import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.elements.table.DetailedHoldemTable;
+import org.cspoker.common.elements.table.SeatId;
 import org.cspoker.common.elements.table.Table;
 import org.cspoker.common.elements.table.TableConfiguration;
+import org.cspoker.common.elements.table.TableId;
 import org.cspoker.common.util.threading.ScheduledRequestExecutor;
 import org.cspoker.server.common.HoldemTableContextImpl;
 import org.cspoker.server.common.account.ExtendedAccountContext;
 import org.cspoker.server.common.chat.ChatServer;
 import org.cspoker.server.common.chat.room.TableChatRoom;
-import org.cspoker.server.common.elements.chips.IllegalValueException;
-import org.cspoker.server.common.elements.id.PlayerId;
-import org.cspoker.server.common.elements.id.SeatId;
-import org.cspoker.server.common.elements.id.TableId;
-import org.cspoker.server.common.player.MutablePlayer;
-import org.cspoker.server.common.player.MutableSeatedPlayer;
 
 /**
  * A class of game mediators to decouple the game control from all users:
@@ -194,11 +194,11 @@ public class PokerTable {
 	 * @return A short description for this table: #id and name.
 	 */
 	public Table getShortTableInformation() {
-		return new Table(getTableId().getId(), getName());
+		return new Table(getTableId(), getName());
 	}
 	
 	public DetailedHoldemTable getTableInformation() {
-		return new DetailedHoldemTable(getTableId().getId(), getName(), tableState.getSeatedPlayers(), tableState
+		return new DetailedHoldemTable(getTableId(), getName(), tableState.getSeatedPlayers(), tableState
 				.isPlaying(), configuration);
 	}
 	
@@ -810,7 +810,7 @@ public class PokerTable {
 				
 				if (getCurrentTimeOut() == this && tableState.getGame() != null) {
 					MutableSeatedPlayer gcPlayer = tableState.getGame().getCurrentPlayer();
-					if ((gcPlayer.getId().equals(new PlayerId(player.getId())))) {
+					if ((gcPlayer.getId().equals(player.getId()))) {
 						PokerTable.logger.info(player.getName() + " automatically folded.");
 						tableState.fold(gcPlayer);
 					}
