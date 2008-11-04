@@ -15,32 +15,36 @@
  */
 package org.cspoker.common.api.lobby.holdemtable.event;
 
+import javax.xml.bind.annotation.XmlAttribute;
+
 import net.jcip.annotations.Immutable;
 
 import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
-import org.cspoker.common.elements.player.Player;
+import org.cspoker.common.elements.player.PlayerId;
 
 @Immutable
 public class SitOutEvent extends HoldemTableEvent {
 	
 	private static final long serialVersionUID = 5233575816991835637L;
 
-	private final Player player;
-	
+	@XmlAttribute
+	private final PlayerId playerId;
+
+	@XmlAttribute
 	private final boolean forced;
 	
-	public SitOutEvent(Player player, boolean forced){
-		this.player = player;
+	public SitOutEvent(PlayerId player, boolean forced){
+		this.playerId = player;
 		this.forced = forced;
 	}
 	
 	protected SitOutEvent(){
-		player = null;
+		playerId = null;
 		forced = false;
 	}
 	
-	public Player getPlayer(){
-		return player;
+	public PlayerId getPlayerId(){
+		return playerId;
 	}
 	
 	public boolean isForced(){

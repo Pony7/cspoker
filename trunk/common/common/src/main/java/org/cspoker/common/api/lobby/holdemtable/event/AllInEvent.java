@@ -15,33 +15,36 @@
  */
 package org.cspoker.common.api.lobby.holdemtable.event;
 
+import javax.xml.bind.annotation.XmlAttribute;
+
 import net.jcip.annotations.Immutable;
 
 import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
 import org.cspoker.common.elements.chips.Pots;
-import org.cspoker.common.elements.player.Player;
+import org.cspoker.common.elements.player.PlayerId;
 
 @Immutable
 public class AllInEvent extends HoldemTableEvent {
 	
 	private static final long serialVersionUID = 2029273959014493873L;
 
-	private final Player player;
+	@XmlAttribute
+	private final PlayerId playerId;
 	
 	private final Pots pots;
 	
-	public AllInEvent(Player player, Pots pots){
-		this.player = player;
+	public AllInEvent(PlayerId player, Pots pots){
+		this.playerId = player;
 		this.pots = pots;
 	}
 	
 	protected AllInEvent(){
-		player = null;
+		playerId = null;
 		pots = null;
 	}
 	
-	public Player getPlayer(){
-		return player;
+	public PlayerId getPlayerId(){
+		return playerId;
 	}
 	
 	public Pots getPots(){
@@ -55,7 +58,7 @@ public class AllInEvent extends HoldemTableEvent {
 	
 	@Override
 	public String toString(){
-		return player.getName()+" is all-in.";
+		return playerId+" is all-in.";
 	}
 
 }

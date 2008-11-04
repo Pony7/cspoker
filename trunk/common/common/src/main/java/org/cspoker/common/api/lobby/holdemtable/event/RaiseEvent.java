@@ -22,6 +22,7 @@ import net.jcip.annotations.Immutable;
 
 import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
 import org.cspoker.common.elements.player.Player;
+import org.cspoker.common.elements.player.PlayerId;
 
 /**
  * A class to represent raise events.
@@ -34,24 +35,29 @@ public class RaiseEvent extends HoldemTableEvent {
 
 	private static final long serialVersionUID = -5634645028675762487L;
 
-	private final Player player;
+	@XmlAttribute
+	private final PlayerId playerId;
 
 	@XmlAttribute
 	private final int amount;
 
-	public RaiseEvent(Player player, int amount) {
-		this.player = player;
+	public RaiseEvent(PlayerId player, int amount) {
+		this.playerId = player;
 		this.amount = amount;
 	}
 
 	protected RaiseEvent() {
-		player = null;
+		playerId = null;
 		amount = 0;
+	}
+
+	public RaiseEvent(Player player, int amount) {
+		this(player.getId(), amount);
 	}
 
 	@Override
 	public String toString() {
-		return getPlayer().getName() + " raises with " + getAmount()
+		return getPlayerId() + " raises with " + getAmount()
 				+ " chips.";
 	}
 
@@ -59,8 +65,8 @@ public class RaiseEvent extends HoldemTableEvent {
 		return amount;
 	}
 
-	public Player getPlayer() {
-		return player;
+	public PlayerId getPlayerId() {
+		return playerId;
 	}
 	
 	@Override

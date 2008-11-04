@@ -21,7 +21,7 @@ import javax.xml.bind.annotation.XmlAttribute;
 import net.jcip.annotations.Immutable;
 
 import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
-import org.cspoker.common.elements.player.Player;
+import org.cspoker.common.elements.player.PlayerId;
 
 /**
  * A class to represent big blind events.
@@ -34,24 +34,25 @@ public class BigBlindEvent extends HoldemTableEvent {
 
 	private static final long serialVersionUID = -7908022421547219241L;
 
-	private final Player player;
+	@XmlAttribute
+	private final PlayerId playerId;
 
 	@XmlAttribute
 	private final int amount;
 
-	public BigBlindEvent(Player player, int amount) {
-		this.player = player;
+	public BigBlindEvent(PlayerId player, int amount) {
+		this.playerId = player;
 		this.amount = amount;
 	}
 
 	protected BigBlindEvent() {
-		player = null;
+		playerId = null;
 		amount = 0;
 	}
 
 	@Override
 	public String toString() {
-		return getPlayer().getName() + " bets the big blind of " + getAmount()
+		return getPlayerId() + " bets the big blind of " + getAmount()
 				+ " chips.";
 	}
 
@@ -59,8 +60,8 @@ public class BigBlindEvent extends HoldemTableEvent {
 		return amount;
 	}
 
-	public Player getPlayer() {
-		return player;
+	public PlayerId getPlayerId() {
+		return playerId;
 	}
 
 	@Override

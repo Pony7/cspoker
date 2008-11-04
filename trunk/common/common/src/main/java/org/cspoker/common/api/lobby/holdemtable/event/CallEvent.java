@@ -20,6 +20,7 @@ import net.jcip.annotations.Immutable;
 
 import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
 import org.cspoker.common.elements.player.Player;
+import org.cspoker.common.elements.player.PlayerId;
 
 /**
  * A class to represent call events.
@@ -32,23 +33,27 @@ public class CallEvent extends HoldemTableEvent {
 
 	private static final long serialVersionUID = -78379299188217626L;
 
-	private final Player player;
+	private final PlayerId playerId;
 
-	public CallEvent(Player player) {
-		this.player = player;
+	public CallEvent(PlayerId player) {
+		this.playerId = player;
 	}
 
 	protected CallEvent() {
-		player = null;
+		playerId = null;
+	}
+
+	public CallEvent(Player player) {
+		this(player.getId());
 	}
 
 	@Override
 	public String toString() {
-		return getPlayer().getName() + " calls.";
+		return getPlayerId() + " calls.";
 	}
 
-	public Player getPlayer() {
-		return player;
+	public PlayerId getPlayerId() {
+		return playerId;
 	}
 
 	@Override

@@ -16,10 +16,13 @@
 
 package org.cspoker.common.api.lobby.holdemtable.event;
 
+import javax.xml.bind.annotation.XmlAttribute;
+
 import net.jcip.annotations.Immutable;
 
 import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
 import org.cspoker.common.elements.player.Player;
+import org.cspoker.common.elements.player.PlayerId;
 
 /**
  * A class to represent new player events.
@@ -32,23 +35,28 @@ public class NextPlayerEvent extends HoldemTableEvent {
 
 	private static final long serialVersionUID = -2048233796443189725L;
 
-	private final Player player;
+	@XmlAttribute
+	private final PlayerId playerId;
 
-	public NextPlayerEvent(Player player) {
-		this.player = player;
+	public NextPlayerEvent(PlayerId player) {
+		this.playerId = player;
 	}
 
 	protected NextPlayerEvent() {
-		player = null;
+		playerId = null;
 	}
 
-	public Player getPlayer() {
-		return player;
+	public NextPlayerEvent(Player player) {
+		this(player.getId());
+	}
+
+	public PlayerId getPlayerId() {
+		return playerId;
 	}
 
 	@Override
 	public String toString() {
-		return "It's " + player.getName() + "'s turn.";
+		return "It's " + playerId + "'s turn.";
 	}
 	
 	@Override

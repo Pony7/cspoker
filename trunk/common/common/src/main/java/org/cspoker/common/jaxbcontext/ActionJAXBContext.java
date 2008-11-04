@@ -39,6 +39,7 @@ import org.cspoker.common.api.lobby.holdemtable.holdemplayer.action.BetOrRaiseAc
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.action.CheckOrCallAction;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.action.FoldAction;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.action.LeaveGameAction;
+import org.cspoker.common.api.shared.action.LogoutAction;
 import org.cspoker.common.api.shared.action.ServerChatInterestAction;
 import org.cspoker.common.api.shared.action.TableChatInterestAction;
 import org.cspoker.common.api.shared.socket.LoginAction;
@@ -80,7 +81,7 @@ public class ActionJAXBContext {
 				//player
 				BetOrRaiseAction.class, CheckOrCallAction.class, FoldAction.class, LeaveGameAction.class,
 				//server
-				ServerChatInterestAction.class, TableChatInterestAction.class,
+				ServerChatInterestAction.class, TableChatInterestAction.class, LogoutAction.class
 				};
 	}
 

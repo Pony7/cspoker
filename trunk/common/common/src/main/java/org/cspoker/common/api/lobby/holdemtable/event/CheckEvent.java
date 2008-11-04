@@ -16,10 +16,12 @@
 
 package org.cspoker.common.api.lobby.holdemtable.event;
 
+import javax.xml.bind.annotation.XmlAttribute;
+
 import net.jcip.annotations.Immutable;
 
 import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
-import org.cspoker.common.elements.player.Player;
+import org.cspoker.common.elements.player.PlayerId;
 
 /**
  * A class to represent check events.
@@ -32,23 +34,24 @@ public class CheckEvent extends HoldemTableEvent {
 
 	private static final long serialVersionUID = -1128439307716720778L;
 
-	private final Player player;
+	@XmlAttribute
+	private final PlayerId playerId;
 
-	public CheckEvent(Player player) {
-		this.player = player;
+	public CheckEvent(PlayerId player) {
+		this.playerId = player;
 	}
 
 	protected CheckEvent() {
-		player = null;
+		playerId = null;
 	}
 
 	@Override
 	public String toString() {
-		return getPlayer().getName() + " checks.";
+		return getPlayerId() + " checks.";
 	}
 
-	public Player getPlayer() {
-		return player;
+	public PlayerId getPlayerId() {
+		return playerId;
 	}
 
 	@Override

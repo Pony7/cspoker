@@ -16,10 +16,12 @@
 
 package org.cspoker.common.api.lobby.holdemtable.event;
 
+import javax.xml.bind.annotation.XmlAttribute;
+
 import net.jcip.annotations.Immutable;
 
 import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
-import org.cspoker.common.elements.player.Player;
+import org.cspoker.common.elements.player.PlayerId;
 
 /**
  * A class to represent leaving player events.
@@ -32,23 +34,24 @@ public class LeaveTableEvent extends HoldemTableEvent {
 
 	private static final long serialVersionUID = -5339079807813674278L;
 
-	private final Player player;
+	@XmlAttribute
+	private final PlayerId playerId;
 	
-	public LeaveTableEvent(Player player) {
-		this.player = player;
+	public LeaveTableEvent(PlayerId player) {
+		this.playerId = player;
 	}
 
 	protected LeaveTableEvent() {
-		player = null;
+		playerId = null;
 	}
 
 	@Override
 	public String toString() {
-		return player.getName() + " has left this table.";
+		return playerId + " has left this table.";
 	}
 
-	public Player getPlayer() {
-		return player;
+	public PlayerId getPlayerId() {
+		return playerId;
 	}
 
 	@Override
