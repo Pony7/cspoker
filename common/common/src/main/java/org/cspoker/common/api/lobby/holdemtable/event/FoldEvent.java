@@ -16,10 +16,13 @@
 
 package org.cspoker.common.api.lobby.holdemtable.event;
 
+import javax.xml.bind.annotation.XmlAttribute;
+
 import net.jcip.annotations.Immutable;
 
 import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
 import org.cspoker.common.elements.player.Player;
+import org.cspoker.common.elements.player.PlayerId;
 
 /**
  * A class to represent fold events.
@@ -32,23 +35,28 @@ public class FoldEvent extends HoldemTableEvent {
 
 	private static final long serialVersionUID = -7805526864154493974L;
 
-	private final Player player;
+	@XmlAttribute
+	private final PlayerId playerId;
 
-	public FoldEvent(Player player) {
-		this.player = player;
+	public FoldEvent(PlayerId player) {
+		this.playerId = player;
 	}
 
 	protected FoldEvent() {
-		player = null;
+		playerId = null;
+	}
+
+	public FoldEvent(Player player) {
+		this(player.getId());
 	}
 
 	@Override
 	public String toString() {
-		return getPlayer().getName() + " folds.";
+		return getPlayerId() + " folds.";
 	}
 
-	public Player getPlayer() {
-		return player;
+	public PlayerId getPlayerId() {
+		return playerId;
 	}
 
 	@Override

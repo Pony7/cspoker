@@ -347,7 +347,7 @@ public class PokerTable {
 		if (joinedPlayers.putIfAbsent(player.getId(), holdemTableListener) != null)
 			throw new IllegalActionException(player.toString() + " is already joined at this table.");
 		
-		publishJoinTableEvent(new JoinTableEvent(player.getMemento()));
+		publishJoinTableEvent(new JoinTableEvent(player.getId()));
 		subscribeHoldemTableListener(holdemTableListener);
 		return new HoldemTableContextImpl(player, this);
 	}
@@ -611,7 +611,7 @@ public class PokerTable {
 	 */
 	public void publishNextPlayerEvent(NextPlayerEvent event) {
 		cancelOldTimeOut();
-		submitTimeOutHandler(event.getPlayer());
+		submitTimeOutHandler(event.getPlayerId());
 		for (HoldemTableListener listener : holdemTableListeners) {
 			listener.onNextPlayer(event);
 		}
@@ -771,12 +771,12 @@ public class PokerTable {
 	 */
 	private final ConcurrentMap<PlayerId, List<HoldemPlayerListener>> holdemPlayerListeners = new ConcurrentHashMap<PlayerId, List<HoldemPlayerListener>>();
 	
-	private synchronized void submitTimeOutHandler(Player player) {
+	private synchronized void submitTimeOutHandler(PlayerId player) {
 		currentTimeOut = new PlayerActionTimeOut(player);
 		oldFuture = currentFuture;
 		cancelOldTimeOut();
 		currentFuture = ScheduledRequestExecutor.getInstance().schedule(currentTimeOut, 30, TimeUnit.SECONDS);
-		PokerTable.logger.info(player.getName() + " action time out submitted.");
+		PokerTable.logger.info("player " + player + " action time out submitted.");
 	}
 	
 	private PlayerActionTimeOut currentTimeOut;
@@ -798,20 +798,20 @@ public class PokerTable {
 	private class PlayerActionTimeOut
 			implements Runnable {
 		
-		private Player player;
+		private PlayerId player;
 		
-		public PlayerActionTimeOut(Player player) {
+		public PlayerActionTimeOut(PlayerId player) {
 			this.player = player;
 		}
 		
 		public void run() {
 			try {
-				PokerTable.logger.info(player.getName() + " auto-fold called.");
+				PokerTable.logger.info("Player " + player + " auto-fold called.");
 				
 				if (getCurrentTimeOut() == this && tableState.getGame() != null) {
 					MutableSeatedPlayer gcPlayer = tableState.getGame().getCurrentPlayer();
 					if ((gcPlayer.getId().equals(player.getId()))) {
-						PokerTable.logger.info(player.getName() + " automatically folded.");
+						PokerTable.logger.info("Player " + player + " automatically folded.");
 						tableState.fold(gcPlayer);
 					}
 				}

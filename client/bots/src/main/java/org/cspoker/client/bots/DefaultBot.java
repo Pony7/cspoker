@@ -74,7 +74,7 @@ public class DefaultBot
 	 * @see org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener#onNextPlayer(org.cspoker.common.api.lobby.holdemtable.event.NextPlayerEvent)
 	 */
 	public void onNextPlayer(final NextPlayerEvent nextPlayerEvent) {
-		if (nextPlayerEvent.getPlayer().getId().equals(playerID)) {
+		if (nextPlayerEvent.getPlayerId().equals(playerID)) {
 			doNextAction();
 		}
 	}

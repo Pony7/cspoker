@@ -270,7 +270,7 @@ public abstract class BettingRound extends Round {
 			playerMadeEvent(player);
 			someoneBigAllIn = true;
 		}		
-		gameMediator.publishAllInEvent(new AllInEvent(player.getMemento(),
+		gameMediator.publishAllInEvent(new AllInEvent(player.getId(),
 				new Pots(getCurrentPotValue())));
 		
 		// TODO put amount of raise
@@ -378,7 +378,7 @@ public abstract class BettingRound extends Round {
 				getGame().getTableConfiguration().getSmallBlind());
 		playerMadeEvent(player);
 		gameMediator.publishSmallBlindEvent(new SmallBlindEvent(player
-				.getMemento(), getGame().getTableConfiguration().getSmallBlind()));
+				.getId(), getGame().getTableConfiguration().getSmallBlind()));
 		gameMediator.publishPotsChangedEvent(new PotsChangedEvent(new Pots(getCurrentPotValue())));
 		BettingRound.logger.info(player.getName() + ": posts small blind $"
 				+ getGame().getTableConfiguration().getSmallBlind());
@@ -406,7 +406,7 @@ public abstract class BettingRound extends Round {
 		setBet(getGame().getTableConfiguration().getBigBlind());
 		playerMadeEvent(player);
 		gameMediator.publishBigBlindEvent(new BigBlindEvent(player
-				.getMemento(), getGame().getTableConfiguration().getBigBlind()));
+				.getId(), getGame().getTableConfiguration().getBigBlind()));
 		gameMediator.publishPotsChangedEvent(new PotsChangedEvent(new Pots(getCurrentPotValue())));
 		BettingRound.logger.info(getGame().getCurrentPlayer().getName()
 				+ ": posts big blind $"

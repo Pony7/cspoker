@@ -36,7 +36,6 @@ import org.cspoker.common.api.lobby.holdemtable.event.SmallBlindEvent;
 import org.cspoker.common.api.lobby.holdemtable.listener.ForwardingHoldemTableListener;
 import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
 import org.cspoker.common.elements.cards.Card;
-import org.cspoker.common.elements.chips.Chips;
 import org.cspoker.common.elements.chips.IllegalValueException;
 import org.cspoker.common.elements.chips.Pots;
 import org.cspoker.common.elements.player.MutableSeatedPlayer;
@@ -119,7 +118,7 @@ public class SmartHoldemTableListener extends ForwardingHoldemTableListener {
 	public void onAllIn(AllInEvent allInEvent) {
 		synchronized (playersLock) {
 			try {
-				players.get(allInEvent.getPlayer().getId()).transferAllChipsToBetPile();
+				players.get(allInEvent.getPlayerId().getId()).transferAllChipsToBetPile();
 			} catch (IllegalValueException e) {
 				logger.error(e);
 				throw new IllegalStateException(e);
@@ -130,26 +129,26 @@ public class SmartHoldemTableListener extends ForwardingHoldemTableListener {
 	
 	@Override
 	public void onBet(BetEvent betEvent) {
-		addToBet(betEvent.getPlayer().getId(), betEvent.getAmount());
+		addToBet(betEvent.getPlayerId(), betEvent.getAmount());
 		super.onBet(betEvent);
 	}
 	
 	@Override
 	public void onBigBlind(BigBlindEvent bigBlindEvent) {
-		addToBet(bigBlindEvent.getPlayer().getId(), bigBlindEvent.getAmount());
+		addToBet(bigBlindEvent.getPlayerId(), bigBlindEvent.getAmount());
 		super.onBigBlind(bigBlindEvent);
 	}
 	
 	@Override
 	public void onSmallBlind(SmallBlindEvent smallBlindEvent) {
-		addToBet(smallBlindEvent.getPlayer().getId(), smallBlindEvent.getAmount());
+		addToBet(smallBlindEvent.getPlayerId(), smallBlindEvent.getAmount());
 		super.onSmallBlind(smallBlindEvent);
 	}
 	
 	@Override
 	public void onCall(CallEvent callEvent) {
 		synchronized (playersLock) {
-			addToBet(callEvent.getPlayer().getId(),getDeficit(callEvent.getPlayer().getId()));
+			addToBet(callEvent.getPlayerId(),getDeficit(callEvent.getPlayerId()));
 		}
 		super.onCall(callEvent);
 	}
@@ -157,7 +156,7 @@ public class SmartHoldemTableListener extends ForwardingHoldemTableListener {
 	@Override
 	public void onRaise(RaiseEvent raiseEvent) {
 		synchronized (playersLock) {
-			addToBet(raiseEvent.getPlayer().getId(),getDeficit(raiseEvent.getPlayer().getId())+raiseEvent.getAmount());
+			addToBet(raiseEvent.getPlayerId(),getDeficit(raiseEvent.getPlayerId())+raiseEvent.getAmount());
 		}
 		super.onRaise(raiseEvent);
 	}

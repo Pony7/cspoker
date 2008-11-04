@@ -255,7 +255,7 @@ public abstract class Round {
 				try {
 					getGame().sitOut(player);
 					gameMediator
-							.publishSitOutEvent(new SitOutEvent(player.getMemento(), true));
+							.publishSitOutEvent(new SitOutEvent(player.getId(), true));
 				} catch (IllegalActionException e) {
 					throw new IllegalStateException();
 				}

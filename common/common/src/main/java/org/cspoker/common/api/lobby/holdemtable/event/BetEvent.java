@@ -16,10 +16,13 @@
 
 package org.cspoker.common.api.lobby.holdemtable.event;
 
+import javax.xml.bind.annotation.XmlAttribute;
+
 import net.jcip.annotations.Immutable;
 
 import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
 import org.cspoker.common.elements.player.Player;
+import org.cspoker.common.elements.player.PlayerId;
 
 /**
  * A class to represent bet events.
@@ -29,31 +32,36 @@ public class BetEvent extends HoldemTableEvent {
 
 	private static final long serialVersionUID = -1968724398831151650L;
 
-	private final Player player;
+	@XmlAttribute
+	private final PlayerId playerId;
 
 	private final int amount;
 
-	public BetEvent(Player player, int amount) {
-		this.player = player;
+	public BetEvent(PlayerId player, int amount) {
+		this.playerId = player;
 		this.amount = amount;
 	}
 
 	protected BetEvent() {
-		player = null;
+		playerId = null;
 		amount = 0;
+	}
+
+	public BetEvent(Player player, int amount) {
+		this(player.getId(),amount);
 	}
 
 	@Override
 	public String toString() {
-		return getPlayer().getName() + " bets " + getAmount() + " chips.";
+		return getPlayerId() + " bets " + getAmount() + " chips.";
 	}
 
 	public int getAmount() {
 		return amount;
 	}
 
-	public Player getPlayer() {
-		return player;
+	public PlayerId getPlayerId() {
+		return playerId;
 	}
 	
 	@Override

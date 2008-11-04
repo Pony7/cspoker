@@ -148,7 +148,7 @@ public class PlayingTableState
 	public synchronized void bet(MutableSeatedPlayer player, int amount)
 			throws IllegalActionException {
 		round.bet(player, amount);
-		mediatingTable.publishBetEvent(new BetEvent(player.getMemento(), amount));
+		mediatingTable.publishBetEvent(new BetEvent(player.getId(), amount));
 		mediatingTable.publishPotsChangedEvent(new PotsChangedEvent(new Pots(round.getCurrentPotValue())));
 		PlayingTableState.logger.info(player.getName() + " bets " + amount + ".");
 		checkIfEndedAndChangeRound();
@@ -168,7 +168,7 @@ public class PlayingTableState
 	public synchronized void call(MutableSeatedPlayer player)
 			throws IllegalActionException {
 		round.call(player);
-		mediatingTable.publishCallEvent(new CallEvent(player.getMemento()));
+		mediatingTable.publishCallEvent(new CallEvent(player.getId()));
 		mediatingTable.publishPotsChangedEvent(new PotsChangedEvent(new Pots(round.getCurrentPotValue())));
 		PlayingTableState.logger.info(player.getName() + " calls.");
 		checkIfEndedAndChangeRound();
@@ -188,7 +188,7 @@ public class PlayingTableState
 	public synchronized void check(MutableSeatedPlayer player)
 			throws IllegalActionException {
 		round.check(player);
-		mediatingTable.publishCheckEvent(new CheckEvent(player.getMemento()));
+		mediatingTable.publishCheckEvent(new CheckEvent(player.getId()));
 		PlayingTableState.logger.info(player.getName() + " checks.");
 		checkIfEndedAndChangeRound();
 	}
@@ -207,7 +207,7 @@ public class PlayingTableState
 	public synchronized void raise(MutableSeatedPlayer player, int amount)
 			throws IllegalActionException {
 		round.raise(player, amount);
-		mediatingTable.publishRaiseEvent(new RaiseEvent(player.getMemento(), amount));
+		mediatingTable.publishRaiseEvent(new RaiseEvent(player.getId(), amount));
 		mediatingTable.publishPotsChangedEvent(new PotsChangedEvent(new Pots(round.getCurrentPotValue())));
 		PlayingTableState.logger.info(player.getName() + ": raises $" + amount + " to $"
 				+ player.getMemento().getBetChipsValue());
@@ -230,7 +230,7 @@ public class PlayingTableState
 	public synchronized void fold(MutableSeatedPlayer player)
 			throws IllegalActionException {
 		round.fold(player);
-		mediatingTable.publishFoldEvent(new FoldEvent(player.getMemento()));
+		mediatingTable.publishFoldEvent(new FoldEvent(player.getId()));
 		PlayingTableState.logger.info(player.getName() + ": folds");
 		checkIfEndedAndChangeRound();
 	}
@@ -340,7 +340,7 @@ public class PlayingTableState
 		SeatedPlayer immutablePlayer = player.getMemento();
 		try {
 			game.sitOut(player);
-			mediatingTable.publishSitOutEvent(new SitOutEvent(immutablePlayer, false));
+			mediatingTable.publishSitOutEvent(new SitOutEvent(immutablePlayer.getId(), false));
 		} catch (IllegalActionException e) {}
 		
 		if (game.hasNoSeatedPlayers()) {
@@ -379,7 +379,7 @@ public class PlayingTableState
 		} else {
 			MutableSeatedPlayer player = game.getCurrentPlayer();
 			if (player != null) {
-				mediatingTable.publishNextPlayerEvent(new NextPlayerEvent(player.getMemento()));
+				mediatingTable.publishNextPlayerEvent(new NextPlayerEvent(player.getId()));
 			}
 		}
 	}

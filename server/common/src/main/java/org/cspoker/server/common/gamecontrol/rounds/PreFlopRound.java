@@ -100,7 +100,7 @@ public class PreFlopRound extends BettingRound {
 
 		if (getGame().getNbCurrentDealPlayers() > 1) {
 			gameMediator.publishNextPlayerEvent(new NextPlayerEvent(game
-					.getCurrentPlayer().getMemento()));
+					.getCurrentPlayer().getId()));
 		}
 	}
 
