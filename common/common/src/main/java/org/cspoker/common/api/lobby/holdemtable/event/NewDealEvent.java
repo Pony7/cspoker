@@ -22,6 +22,8 @@ import java.util.List;
 import net.jcip.annotations.Immutable;
 
 import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
+import org.cspoker.common.elements.player.Player;
+import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.elements.player.SeatedPlayer;
 
 /**
@@ -37,20 +39,24 @@ public class NewDealEvent extends HoldemTableEvent {
 
 	private final List<SeatedPlayer> players;
 
-	private final SeatedPlayer dealer;
+	private final PlayerId dealerId;
 
-	public NewDealEvent(List<SeatedPlayer> players, SeatedPlayer dealer) {
+	public NewDealEvent(List<SeatedPlayer> players, PlayerId dealerId) {
 		this.players = Collections.unmodifiableList(players);
-		this.dealer = dealer;
+		this.dealerId = dealerId;
 	}
 
 	protected NewDealEvent() {
 		players = null;
-		dealer = null;
+		dealerId = null;
 	}
 
-	public SeatedPlayer getDealer() {
-		return dealer;
+	public NewDealEvent(List<SeatedPlayer> players, Player dealer) {
+		this(players, dealer.getId());
+	}
+
+	public PlayerId getDealer() {
+		return dealerId;
 	}
 	
 	public List<SeatedPlayer> getPlayers() {
@@ -67,8 +73,8 @@ public class NewDealEvent extends HoldemTableEvent {
 			toReturn += " chips), ";
 		}
 		return toReturn.substring(0, toReturn.length() - 2)
-				+ " as initial players of this table. " + dealer.getName()
-				+ " is dealer.";
+				+ " as initial players of this table. " 
+				+ "Player " + dealerId + " is dealer.";
 	}
 	
 	@Override
