@@ -46,6 +46,10 @@ public class ServerContextConverter implements ExternalRemoteServerContext {
 	public ServerContextConverter(ExternalServerContext serverContext) {
 		this.serverContext=serverContext;
 	}
+	
+	public void logout() {
+		serverContext.logout();
+	}
 
 	public ExternalRemoteLobbyContext getLobbyContext(
 			LobbyListener lobbyListener) throws RemoteException,

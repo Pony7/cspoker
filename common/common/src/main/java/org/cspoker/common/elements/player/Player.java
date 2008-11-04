@@ -19,15 +19,18 @@ import java.io.Serializable;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Player
 		implements Serializable {
 	
 	private static final long serialVersionUID = -452248757827187248L;
-	
+
+	@XmlAttribute
 	private PlayerId id;
-	
+
+	@XmlAttribute
 	private String name;
 	
 	public Player(PlayerId id, String name) {

@@ -86,5 +86,9 @@ public class ServerContextImpl
 		((ChatContextImpl) chatContext).setListener(chatListener);
 		return getChatContext();
 	}
+
+	public void logout() {
+		// implement
+	}
 	
 }

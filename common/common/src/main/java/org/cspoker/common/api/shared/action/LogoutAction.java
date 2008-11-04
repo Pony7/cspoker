@@ -13,42 +13,33 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.common.api.account.action;
+package org.cspoker.common.api.shared.action;
 
-import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import net.jcip.annotations.Immutable;
 
-import org.cspoker.common.api.account.context.AccountContext;
+import org.cspoker.common.api.shared.context.StaticServerContext;
 import org.cspoker.common.api.shared.event.EventId;
-import org.cspoker.common.elements.player.PlayerId;
 
 @XmlRootElement
 @Immutable
-public class GetAvatarAction extends AccountAction<byte[]> {
+public class LogoutAction extends DispatchableAction<Void> {
 
-	private static final long serialVersionUID = 7472321702232419097L;
+	private static final long serialVersionUID = -7045555652630686269L;
 
-	@XmlAttribute
-	private final PlayerId playerId;
-	
-	public GetAvatarAction(EventId id, PlayerId playerId) {
+	public LogoutAction(EventId id) {
 		super(id);
-		this.playerId = playerId;
 	}
 
-	protected GetAvatarAction() {
-		playerId = null;
-	}
-
-	public PlayerId getPlayerId() {
-		return playerId;
+	protected LogoutAction() {
+		// no op
 	}
 
 	@Override
-	public byte[] perform(AccountContext accountContext) {
-		return accountContext.getAvatar(playerId);
+	public Void perform(StaticServerContext serverContext) {
+		serverContext.logout();
+		return null;
 	}
-
+	
 }

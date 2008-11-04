@@ -29,6 +29,8 @@ import org.cspoker.common.elements.table.TableId;
 
 public interface RemoteServerContext extends Remote{
 
+	void logout() throws RemoteException, IllegalActionException;
+	
 	RemoteAccountContext getAccountContext() throws RemoteException;
 	
 	RemoteCashierContext getCashierContext() throws RemoteException;

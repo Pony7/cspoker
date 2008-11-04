@@ -17,6 +17,7 @@ package org.cspoker.common.api.lobby.holdemtable.action;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
 
 import net.jcip.annotations.Immutable;
 
@@ -34,6 +35,7 @@ public abstract class HoldemTableAction<T> extends LobbyAction<T> {
 
 	private static final long serialVersionUID = 4151821035256457839L;
 
+	@XmlAttribute
 	private final TableId tableId;
 
 	public HoldemTableAction(EventId id, TableId tableId) {

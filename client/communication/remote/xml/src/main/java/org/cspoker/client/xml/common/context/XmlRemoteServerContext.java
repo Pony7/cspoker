@@ -30,6 +30,7 @@ import org.cspoker.common.api.chat.listener.ChatListener;
 import org.cspoker.common.api.lobby.context.RemoteLobbyContext;
 import org.cspoker.common.api.lobby.listener.LobbyListener;
 import org.cspoker.common.api.shared.action.ActionPerformer;
+import org.cspoker.common.api.shared.action.LogoutAction;
 import org.cspoker.common.api.shared.action.ServerChatInterestAction;
 import org.cspoker.common.api.shared.action.TableChatInterestAction;
 import org.cspoker.common.api.shared.context.RemoteServerContext;
@@ -60,6 +61,10 @@ public class XmlRemoteServerContext implements RemoteServerContext {
 		this.serverListenerTree = serverListenerTree;
 		this.accountContext = new XmlRemoteAccountContext(performer, generator);
 		this.cashierContext = new XmlRemoteCashierContext(performer, generator);
+	}
+
+	public void logout() throws RemoteException, IllegalActionException {
+		performer.perform(new LogoutAction(generator.getNextID()));
 	}
 	
 	public RemoteAccountContext getAccountContext() throws RemoteException {

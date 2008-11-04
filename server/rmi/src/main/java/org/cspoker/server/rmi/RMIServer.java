@@ -33,6 +33,7 @@ import org.cspoker.common.api.shared.context.AsynchronousServerContext;
 import org.cspoker.common.api.shared.context.ExternalRemoteServerContext;
 import org.cspoker.common.api.shared.context.RemoteServerContext;
 import org.cspoker.common.api.shared.context.ServerContext;
+import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.util.threading.RequestExecutor;
 import org.cspoker.server.rmi.export.ExportingServerContext;
 import org.cspoker.server.rmi.unremote.context.UnremoteServerContext;
@@ -54,13 +55,13 @@ public class RMIServer
 	public ExternalRemoteServerContext login(String username, String password)
 			throws LoginException, RemoteException {
 		ServerContext rootServer = cspokerServer.login(username, password);
-		Trigger connection = new Trigger(){
+		Trigger connectionLostTrigger = new Trigger(){
 			public void trigger() {
-				//TODO implement
+				
 			}
 		};
 		RemoteServerContext context = new ExportingServerContext(
-				new UnremoteServerContext(connection, new AsynchronousServerContext(
+				new UnremoteServerContext(new AsynchronousServerContext(
 						new SequencePreservingExecutor(RequestExecutor.getInstance()), rootServer)));
 		try {
 			UnicastRemoteObject.unexportObject(context, true);

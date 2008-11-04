@@ -164,7 +164,7 @@ public class SmartHoldemTableListener extends ForwardingHoldemTableListener {
 	
 	public int getDeficit(PlayerId playerId){
 		synchronized (playersLock) {
-			return getMaxBet()-players.get(playerId).getBetChips().getValue();
+			return Math.min(players.get(playerId).getBetChips().getValue(),getMaxBet()-players.get(playerId).getBetChips().getValue());
 		}
 	}
 	

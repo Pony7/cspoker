@@ -30,28 +30,37 @@ import org.cspoker.server.rmi.unremote.listener.UnremoteLobbyListener;
 
 public class UnremoteServerContext extends ForwardingServerContext implements ExternalServerContext {
 
-	private Trigger connection;
+	private Trigger connectionLost;
 
-	public UnremoteServerContext(Trigger connection, ServerContext serverContext) {
+	public UnremoteServerContext(ServerContext serverContext) {
 		super(serverContext);
-		this.connection = connection;
+		this.connectionLost = new Trigger(){
+			public void trigger() {
+				logout();
+			}
+		};
+	}
+	
+	public UnremoteServerContext(Trigger connectionLost, ServerContext serverContext) {
+		super(serverContext);
+		this.connectionLost = connectionLost;
 	}
 	
 	public ChatContext getServerChatContext(RemoteChatListener chatListener) {
-		return super.getServerChatContext(new UnremoteChatListener(connection,chatListener));
+		return super.getServerChatContext(new UnremoteChatListener(connectionLost,chatListener));
 	}
 	
 	public ChatContext getTableChatContext(RemoteChatListener chatListener,TableId tableId) {
-		return super.getTableChatContext(new UnremoteChatListener(connection,chatListener),tableId);
+		return super.getTableChatContext(new UnremoteChatListener(connectionLost,chatListener),tableId);
 	}
 	
 	public ExternalLobbyContext getLobbyContext(RemoteLobbyListener lobbyListener) {
-		return new UnremoteLobbyContext(connection, super.getLobbyContext(new UnremoteLobbyListener(connection, lobbyListener)));
+		return new UnremoteLobbyContext(connectionLost, super.getLobbyContext(new UnremoteLobbyListener(connectionLost, lobbyListener)));
 	}
 	
 	@Override
 	public ExternalLobbyContext getLobbyContext(LobbyListener lobbyListener) {
-		return new UnremoteLobbyContext(connection, super.getLobbyContext(lobbyListener));
+		return new UnremoteLobbyContext(connectionLost, super.getLobbyContext(lobbyListener));
 	}
 	
 }

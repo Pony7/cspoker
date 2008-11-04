@@ -17,6 +17,8 @@ package org.cspoker.common.api.shared.action;
 
 import java.rmi.RemoteException;
 
+import javax.xml.bind.annotation.XmlAttribute;
+
 import net.jcip.annotations.Immutable;
 
 import org.cspoker.common.api.shared.context.StaticServerContext;
@@ -31,7 +33,8 @@ import org.cspoker.common.api.shared.exception.IllegalActionException;
 public abstract class DispatchableAction<T> implements Action {
 
 	private static final long serialVersionUID = -7188969396903443467L;
-	
+
+	@XmlAttribute
 	private final EventId id;
 
 	public DispatchableAction(EventId id) {

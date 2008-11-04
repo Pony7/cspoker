@@ -17,6 +17,8 @@ package org.cspoker.common.elements.player;
 
 import java.io.Serializable;
 
+import javax.xml.bind.annotation.XmlValue;
+
 import net.jcip.annotations.Immutable;
 
 @Immutable
@@ -24,6 +26,7 @@ public class PlayerId implements Serializable{
 	
 	private static final long serialVersionUID = 12806955662038980L;
 	
+	@XmlValue
 	private final long playerId;
 	
 	public PlayerId() {

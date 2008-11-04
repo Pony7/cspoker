@@ -55,8 +55,8 @@ public class DefaultBot
 		this.executor = executor;
 		this.lobbyContext = lobbyContext;
 		try {
-			tableContext = lobbyContext.joinHoldemTable(tableID, this);
-			playerContext = tableContext.sitIn(10000, this);
+			tableContext = lobbyContext.joinHoldemTable(tableID,this);
+			playerContext = tableContext.sitIn(5000,this);
 		} catch (IllegalActionException e) {
 			logger.error(e);
 			throw new IllegalStateException("Failed to join table.", e);

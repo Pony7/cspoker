@@ -65,10 +65,11 @@ public class RuleBasedBot
 					}
 				} catch (IllegalActionException e) {
 					logger.error(e);
-					throw new IllegalStateException("Call was not allowed.", e);
-				} catch (RemoteException e) {
+					throw new IllegalStateException("Action was not allowed.",e);
+				}catch (RemoteException e) {
 					logger.error(e);
-					throw new IllegalStateException("Call failed.", e);
+					throw new IllegalStateException("Action failed.",e);
+
 				}
 			}
 		});
