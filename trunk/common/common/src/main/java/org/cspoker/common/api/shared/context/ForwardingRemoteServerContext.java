@@ -36,6 +36,10 @@ public class ForwardingRemoteServerContext implements RemoteServerContext {
 	
 	private final RemoteServerContext serverContext;
 
+	public void logout() throws RemoteException, IllegalActionException {
+		serverContext.logout();
+	}
+	
 	public ForwardingRemoteServerContext(RemoteServerContext serverContext) {
 		this.serverContext = serverContext;
 	}

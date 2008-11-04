@@ -16,6 +16,8 @@
 
 package org.cspoker.common.api.lobby.holdemtable.event;
 
+import javax.xml.bind.annotation.XmlAttribute;
+
 import net.jcip.annotations.Immutable;
 
 import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
@@ -34,6 +36,7 @@ public class BigBlindEvent extends HoldemTableEvent {
 
 	private final Player player;
 
+	@XmlAttribute
 	private final int amount;
 
 	public BigBlindEvent(Player player, int amount) {

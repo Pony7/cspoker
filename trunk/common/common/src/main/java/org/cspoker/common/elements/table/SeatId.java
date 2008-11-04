@@ -17,6 +17,8 @@ package org.cspoker.common.elements.table;
 
 import java.io.Serializable;
 
+import javax.xml.bind.annotation.XmlValue;
+
 import net.jcip.annotations.Immutable;
 
 /**
@@ -27,7 +29,8 @@ import net.jcip.annotations.Immutable;
 public class SeatId implements Serializable{
 	
 	private static final long serialVersionUID = -2997117736649022785L;
-	
+
+	@XmlValue
 	private final long seatId;
 	
 	public SeatId() {

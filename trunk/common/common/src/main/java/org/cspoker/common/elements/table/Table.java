@@ -23,6 +23,7 @@ public class Table implements Serializable, Comparable<Table> {
 
 	private static final long serialVersionUID = 527893735230918726L;
 
+	@XmlAttribute
 	protected TableId id;
 
 	@XmlAttribute

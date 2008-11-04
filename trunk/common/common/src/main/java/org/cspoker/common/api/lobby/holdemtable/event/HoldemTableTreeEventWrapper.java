@@ -15,6 +15,7 @@
  */
 package org.cspoker.common.api.lobby.holdemtable.event;
 
+import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import net.jcip.annotations.Immutable;
@@ -30,6 +31,7 @@ public class HoldemTableTreeEventWrapper extends LobbyTreeEvent {
 
 	private static final long serialVersionUID = 557148706756328395L;
 
+	@XmlAttribute
 	private final TableId tableID;
 
 	private final HoldemTableTreeEvent event;

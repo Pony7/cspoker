@@ -17,6 +17,8 @@ package org.cspoker.common.api.shared.event;
 
 import java.io.Serializable;
 
+import javax.xml.bind.annotation.XmlValue;
+
 import net.jcip.annotations.Immutable;
 
 @Immutable
@@ -24,30 +26,31 @@ public class EventId implements Serializable{
 	
 	private static final long serialVersionUID = 7553024997059636301L;
 	
-	private final long eventId;
+	@XmlValue
+	private final long id;
 
 	public EventId() {
 		this(0);
 	}
 	
 	public EventId(long eventId){
-		this.eventId = eventId;
+		this.id = eventId;
 	}
 
 	public long getId(){
-		return eventId;
+		return id;
 	}
 	
 	@Override
 	public String toString(){
-		return "#"+Long.toString(eventId);
+		return "#"+Long.toString(id);
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + (int) (eventId ^ (eventId >>> 32));
+		result = prime * result + (int) (id ^ (id >>> 32));
 		return result;
 	}
 
@@ -60,7 +63,7 @@ public class EventId implements Serializable{
 		if (getClass() != obj.getClass())
 			return false;
 		final EventId other = (EventId) obj;
-		if (eventId != other.eventId)
+		if (id != other.id)
 			return false;
 		return true;
 	}

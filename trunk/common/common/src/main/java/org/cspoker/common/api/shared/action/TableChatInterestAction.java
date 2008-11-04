@@ -15,6 +15,7 @@
  */
 package org.cspoker.common.api.shared.action;
 
+import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import net.jcip.annotations.Immutable;
@@ -30,6 +31,7 @@ public class TableChatInterestAction extends DispatchableAction<Void> {
 
 	private static final long serialVersionUID = -6219914092644893577L;
 
+	@XmlAttribute
 	private final TableId tableID;
 
 	public TableChatInterestAction(EventId id, TableId tableID) {

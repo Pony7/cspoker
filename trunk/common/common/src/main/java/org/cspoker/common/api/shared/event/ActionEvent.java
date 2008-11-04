@@ -17,6 +17,7 @@ package org.cspoker.common.api.shared.event;
 
 import java.rmi.RemoteException;
 
+import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlTransient;
 
 import org.cspoker.common.api.shared.action.DispatchableAction;
@@ -28,7 +29,8 @@ public abstract class ActionEvent<T> implements Event{
 
         @XmlTransient
         private final DispatchableAction<T> action;
-        
+
+    	@XmlAttribute
         private final EventId id;
 
         public ActionEvent(DispatchableAction<T> action) {

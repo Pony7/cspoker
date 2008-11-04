@@ -15,6 +15,8 @@
  */
 package org.cspoker.common.api.shared.context;
 
+import net.jcip.annotations.Immutable;
+
 import org.cspoker.common.api.account.context.AccountContext;
 import org.cspoker.common.api.cashier.context.CashierContext;
 import org.cspoker.common.api.chat.context.ChatContext;
@@ -23,10 +25,15 @@ import org.cspoker.common.api.lobby.context.LobbyContext;
 import org.cspoker.common.api.lobby.listener.LobbyListener;
 import org.cspoker.common.elements.table.TableId;
 
+@Immutable
 public class ForwardingServerContext implements ServerContext {
 
 	private final ServerContext serverContext;
 
+	public void logout() {
+		serverContext.logout();
+	}
+	
 	public ForwardingServerContext(ServerContext serverContext) {
 		this.serverContext = serverContext;
 	}

@@ -25,6 +25,8 @@ import org.cspoker.common.elements.table.TableId;
 
 public interface ServerContext extends RemoteServerContext{
 
+	void logout();
+	
 	AccountContext getAccountContext();
 	
 	CashierContext getCashierContext();

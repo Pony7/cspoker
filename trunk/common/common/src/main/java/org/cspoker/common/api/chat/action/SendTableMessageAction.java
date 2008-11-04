@@ -15,6 +15,7 @@
  */
 package org.cspoker.common.api.chat.action;
 
+import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import net.jcip.annotations.Immutable;
@@ -28,7 +29,8 @@ import org.cspoker.common.elements.table.TableId;
 public class SendTableMessageAction extends SendMessageAction {
 	
 	private static final long serialVersionUID = -1855545270029265281L;
-	
+
+	@XmlAttribute
 	private final TableId tableID;
 
 	public SendTableMessageAction(EventId id, String message, TableId tableID) {

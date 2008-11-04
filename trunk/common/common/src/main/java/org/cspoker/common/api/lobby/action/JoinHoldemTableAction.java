@@ -15,6 +15,7 @@
  */
 package org.cspoker.common.api.lobby.action;
 
+import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import net.jcip.annotations.Immutable;
@@ -30,6 +31,7 @@ public class JoinHoldemTableAction extends LobbyAction<Void> {
 
 	private static final long serialVersionUID = -6693307709200837257L;
 
+	@XmlAttribute
 	private final TableId tableId;
 
 	public JoinHoldemTableAction(EventId id, TableId tableId) {

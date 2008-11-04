@@ -15,6 +15,7 @@
  */
 package org.cspoker.common.api.lobby.holdemtable.action;
 
+import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import net.jcip.annotations.Immutable;
@@ -32,8 +33,10 @@ public class SitInAction extends HoldemTableAction<Void> {
 
 	private static final long serialVersionUID = 5400969226725585815L;
 
+	@XmlAttribute
 	private final SeatId seatId;
 
+	@XmlAttribute
 	private final int buyIn;
 
 	public SitInAction(EventId id, TableId tableId, SeatId seatId, int buyIn) {
