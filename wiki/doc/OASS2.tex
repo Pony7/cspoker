@@ -3,16 +3,18 @@
 \usepackage[english]{babel}
 \usepackage{graphicx,subfigure}
 
-
 \author{Cedric~Cuypers, Kenzo~Tomita, Guy~Van~den~broeck} 
 % define title
-\title{Ontwerp en Analyse van Software Systemen II: a~poker~application} 
+\title{Ontwerp en Analyse van Software Systemen II: an~online~poker~application} 
 \begin{document} 
 % generates the title 
 \maketitle 
 % insert the table of contents 
 \tableofcontents 
 \chapter{Introduction}
+
+Online poker is one of the markets that have emerged from the popularity of the internet. It's the translation of a traditional casino game to an online variant. This conversion is very challenging because the dynamics and trust relations are far more complex compared to a regular casino that can rely on camera surveillance and tangible trust boundaries. If the risks for serving an online poker server could be managed, a market with high profits can be exploited. The proposed architecture for such online poker server is derived from of an existing open source poker server developed by students at K.U.Leuven. 
+
 \chapter{Business goals}
 
 \section{Business environment}
@@ -46,7 +48,7 @@ The following main stakeholders are identified in online poker:
 \subsection{Cheating}
 Because money is involved, online casinos are frequently the victim of cheating. Most cases can be classified in these categories:
 \begin{description}
- \item[Predicting the shuffle] When cards are shuffled in an unfair or predictable fashion, some player can gain an unfair advantage. Poker casionos themselfs are often accused of cheating with their shuffle algorithm to give casino bots or employees an advantage. Poker players can also cheat through the shuffling system if they can predict its behaviour in some way. A history of all games played is provided by most casinos to enable its user base to verify the integritry of the shuffling system.
+ \item[Predicting the shuffle] When cards are shuffled in an unfair or predictable fashion, some player can gain an unfair advantage. Poker casionos themselfs are often accused of cheating with their shuffle algorithm to give casino bots or employees an advantage. Poker players can also cheat through the shuffling system if they can predict its behaviour in some way. A history of all games played is provided by most casinos to enable its user base to verify the integritry of the shuffling system. To assure players the shuffling is done fair most online casinos hire external professionals to audit their code and place a certificate on their website. 
  \item[Insider Cheating] Insiders can sometimes access hidden information and use it to gain an unfair advantage when they play themselves.
  \item[Collusion] This is probably the most difficult form of cheating to counter. It can happen when a player has multiple accounts or plays with friends on the same table. By sharing information one can manipulate the game to gain an unfair advantage.
 \item[Bots] Automated poker players could become so strong that they beat regular players. Cheating with bots is countered by checking which programs run on the player's machine concurrently.
@@ -55,14 +57,14 @@ Because money is involved, online casinos are frequently the victim of cheating.
 
 
 \section{Legal constraints}
-Event though poker is not a game of pure chance and skilful players are easy to distinguish from bad players, gambling laws do apply to poker in most countries. Online poker is legal in some countries but strongly regulated. Many banks are not allowed to transfer money to online poker sites. The legality of playing on a foreign poker site is unclear in most jurisdictions that don't allow gambling.
+Even though poker is not a game of pure chance and skilful players are easy to distinguish from bad players, gambling laws do apply to poker in most countries. Online poker is legal in some countries but strongly regulated. Many banks are not allowed to transfer money to online poker sites. The legality of playing on a foreign poker site is unclear in most jurisdictions that don't allow gambling.
 
 All these rules obviously don't apply to online poker games that use virtual money and get their revenue from advertisement.
 
 \section{Business and technical constraints}
 
 \subsection{Business goals}
-Based on the previous discussion, we can now easily enumerate the primary business goals for the Online Casino.
+Based on the previous discussion, we can now easily enumerate the primary business goals for the Online Casino. \\
  Primary business goals:
 \begin{itemize}
 \item Being attractive to paying advertisers
@@ -75,16 +77,17 @@ the primary goals.
 Secondary business goals:
 \begin{itemize}
 \item Ease of management: By automating internal management processes (customer management, accounting), internal efficiency can be optimized, and operational costs can be minimized. 
-\item Ease  of  advertisement:  Ideally the software helps the advertiser to optimize its advertisements (e.g. by helping adding relevant metaï¿½data).
+\item Ease  of  advertisement:  Ideally the software helps the advertiser to optimize its advertisements (e.g. by helping adding relevant meta-data).
 \item Advertisement   feedback:   It   is   very   interesting   for   advertisers   to   consult   advertisement statistics, as these provide them a measure for the success of their advertisement campaign. These statistics could include: the percentage of all players that have seen the advertisement, the 
   profile of an average player that had interest in the advertisement, etc. 
-\item User experience: Ensuring that the user experience is stateï¿½ofï¿½theï¿½art. This includes a graphically appealing interface for the player, fast response times and good availability. Alternative online casinos are only a click away when the user is upset.
+\item User experience: Ensuring that the user experience is state-of-the-art. This includes a graphically appealing interface for the player, fast response times and good availability. Alternative online casinos are only a click away when the user is upset.
+
 \item Assurance   of   customer   data   confidentiality:   Due   to   legislative   privacy   regulations,   the confidentiality of both types of customers data (players and advertisers) needs to be assured at all times. It must for example not be possible for advertisers to derive which exact players have seen their advertisements. Gambling isn't legally or socially accepted everywhere, so it is best kept private.
 \item Assurance that the game is fair, that no parties have inside information or that cheating is happening in any form.
 \end{itemize}
 
 \subsection{Market differentiators}
-For differentiation with the ever­growing competition, the following key elements have been selected:
+For differentiation with the everâ‰ growing competition, the following key elements have been selected:
 \begin{itemize}
 \item Casino image: The casino must look more trustworthy than its competitors. Good security measures must be in place and the players should never be confronted with flaws in the system. Trust can also be achieved by attracting the masses. People will have a subjective sense of security when you are more popular than your competitor.
 \item Targeted advertisements: The casino can offer the advertiser consumer targeted advertising or advertisements for topics that are interesting for advertisers (expensive keywords).
@@ -129,21 +132,19 @@ advertisers products or services. The advertisers can provide the major source o
 \subsection{Players}
 These are the people playing poker on the servers. 
 
-They are can be playing because they want to make money. In that case they will appreciate a low rake and they won't be bothered by advertisements. Trust and security is essential for these players.
+They can be playing because they want to make more money. In that case they will appreciate a low rake and they won't be bothered by advertisements. Trust and security is essential for these players.
 
 They can also be playing as a social activity and they won't care about the rake so much. They want the system to be easy to use and they are more inclined to click on advertisements.
 
 \section{Informal set of requirements}
-\subsection{Player Requirements}
 \begin{enumerate}
-\item Joining and Leaving a table
-\item Sit-in and Sit-out from a table
-\item Performing a table action (bet, raise, call, check or fold)
-\item Send a message to a chat group
-\item Request chips from the cashier
+\item The player should be able to look-up a table in the lobby
+\item The player should be able to join and leave a table
+\item The player should be able to sit-in and sit-out from a table
+\item The player should be able to perform a table action (bet, raise, call, check or fold)
+\item The player should be able to send a message to a chat group
+\item The player should be able to request chips from the cashier
 \end{enumerate}
-
-\subsection{Admin Requirements}
 
 \section{Available Use Cases}
 \subsection{Create table}
@@ -573,16 +574,15 @@ The table component is responsible for handling player actions at a table. This 
 \end{itemize}
 
 \subsection{Account Management}
-The account management component is responsible for managing users. An account contains all user related data. It provides an interface to create, remove and block accounts. It also keeps track of the main stack each player has. This component interacts with the persistence component to store user data.
+The account management component is responsible for managing users. An account contains all user related data. It provides an interface to create, remove and block accounts. This component interacts with the persistence component to store user data.
 \subsubsection{Interfaces}
 \begin{itemize}
-\item \emph{manage my account}: This interface provides a user the possibility to modify his own account data such as name, password, avatar, ...
+\item \emph{service interface}: This interface provides a user the possibility to modify his own account data such as name, password, avatar, ... It is also used to verify the credentials of a user.
 \item \emph{manage accounts}: This interface provides an admin the possibility to modify all account data. Additionally this interface is used to remove and block accounts. 
-\item \emph{transfer chips}: This interface is used to transfer chips from and to the account of player.
 \end{itemize}
 
 \subsection{Cashier}
-The cashier component is responsible for providing players with chips. If real money is involved, this component will interact with a third party payment component to exchange real money with chips. Otherwise any time-based function or admin functionality can provide players with chips through this component.
+The cashier component is responsible for providing players with chips. It also keeps track of the main stack each player has. If real money is involved, this component will interact with a third party payment component to exchange real money with chips. Otherwise any time-based function or admin functionality can provide players with chips through this component.
 \subsubsection{Interfaces}
 \begin{itemize}
 \item \emph{service interface}: This interface is used to provide players with chips. 
@@ -622,6 +622,93 @@ This component is responsible for handling the persistence needs for all other c
 \end{itemize}
 
 \section{Use Cases applied on the component diagram}
+This section translates the most relevant use cases to the component architecture diagram. For a detailed description of the use cases we refer to the system requirements.
+
+Each use case is presented in a compact format that illustrates every step as follows: Sending Component $\rightarrow$ Message $\rightarrow$ (Receiving Component):Interface. In other words, every step identifies the component that sends the message, the message itself, the component that receives that message and the interface of this component where the message arrives.
+
+\subsection{Create table}
+\begin{enumerate}
+\item Communication $\rightarrow$ create table $\rightarrow$ (Player Action API):player action
+\item Player Action API $\rightarrow$ create table $\rightarrow$ (Lobby):lobby action
+\item Lobby $\rightarrow$ lookup poker variant $\rightarrow$ (Poker Variant Provider):service interface
+\item Lobby $\rightarrow$ register chat group $\rightarrow$ (Chat Service):service interface
+\item Lobby $\rightarrow$ send event $\rightarrow$ (Communication):notification
+\end{enumerate}
+
+\subsection{Show table list}
+\begin{enumerate}
+\item Communication $\rightarrow$ show table list $\rightarrow$ (Player Action API):player action
+\item Player Action API $\rightarrow$ show table list $\rightarrow$ (Lobby):lobby action
+\end{enumerate}
+
+\subsection{Join table}
+\begin{enumerate}
+\item Communication $\rightarrow$ join table $\rightarrow$ (Player Action API):player action
+\item Player Action API $\rightarrow$ join table $\rightarrow$ (Table):table action
+\item Table $\rightarrow$ send event $\rightarrow$ (Communication):notification
+\end{enumerate}
+
+\subsection{Leave table}
+\begin{enumerate}
+\item Communication $\rightarrow$ leave table $\rightarrow$ (Player Action API):player action
+\item Player Action API $\rightarrow$ leave table $\rightarrow$ (Table):table action
+\item Table $\rightarrow$ send event $\rightarrow$ (Communication):notification
+\end{enumerate}
+
+\subsection{Sit-in}
+\begin{enumerate}
+\item Communication $\rightarrow$ sit-in $\rightarrow$ (Player Action API):player action
+\item Player Action API $\rightarrow$ sit-in $\rightarrow$ (Table):table action
+\item Table $\rightarrow$ request chips $\rightarrow$ (Cashier): service interface
+\item Table $\rightarrow$ send event $\rightarrow$ (Communication):notification
+\end{enumerate}
+
+\subsection{Sit-out}
+\begin{enumerate}
+\item Communication $\rightarrow$ sit-out $\rightarrow$ (Player Action API):player action
+\item Player Action API $\rightarrow$ sit-out $\rightarrow$ (Table):table action
+\item Table $\rightarrow$ send event $\rightarrow$ (Communication):notification
+\end{enumerate}
+
+\subsection{Table action}
+\begin{enumerate}
+\item Communication $\rightarrow$ bet, raise, call, check, fold $\rightarrow$ (Player Action API):player action
+\item Player Action API $\rightarrow$ bet, raise, call, check, fold $\rightarrow$ (Table):table action
+\item Table $\rightarrow$ send event $\rightarrow$ (Communication):notification
+\end{enumerate}
+
+\subsection{Send a message to a chat group}
+\begin{enumerate}
+\item Communication $\rightarrow$ send message $\rightarrow$ (Player Action API):player action
+\item Player Action API $\rightarrow$ send message $\rightarrow$ (Chat Service):service interface
+\end{enumerate}
+
+\subsection{Login}
+\begin{enumerate}
+\item Communication $\rightarrow$ login $\rightarrow$ (Player Action API):login
+\item Player Action API $\rightarrow$ login $\rightarrow$ (Account Management):service interface
+\end{enumerate}
+
+\subsection{Logout}
+\begin{enumerate}
+\item Communication $\rightarrow$ logout $\rightarrow$ (Player Action API):logout
+\item Player Action API $\rightarrow$ logout $\rightarrow$ (Account Management):service interface
+\end{enumerate}
+
+\subsection{Create account}
+\begin{enumerate}
+\item Communication $\rightarrow$ create account $\rightarrow$ (Player Action API):player action
+\item Player Action API $\rightarrow$ create account $\rightarrow$ (Account Management):service interface
+\item Account Management $\rightarrow$ store data $\rightarrow$ (Persistence Service):service interface
+\end{enumerate}
+
+\subsection{Request chips}
+\begin{enumerate}
+\item Communication $\rightarrow$ request chips $\rightarrow$ (Player Action API):player action
+\item Player Action API $\rightarrow$ request chips $\rightarrow$ (Cashier):service interface
+\item Cashier $\rightarrow$ process transaction $\rightarrow$ (Third Party Payment Service):service interface
+\end{enumerate}
+
 \section{Deployment View}
 The deployment view (Figure \ref{fig:deployment}) provides a mapping of the previously defined component instances onto the physical nodes in a computer network. 
 \begin{figure}
