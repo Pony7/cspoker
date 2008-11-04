@@ -236,8 +236,7 @@ public class GameWindow
 		logger.debug("New deal event received");
 		gameState.newRound();
 		gameState.setPots(new Pots(0));
-		PlayerSeatComposite newDealer = tableComposite.findPlayerSeatCompositeByPlayerId(newDealEvent.getDealer()
-				.getId());
+		PlayerSeatComposite newDealer = tableComposite.findPlayerSeatCompositeByPlayerId(newDealEvent.getDealer());
 		for (PlayerSeatComposite psc : tableComposite.getPlayerSeatComposites(true)) {
 			if (psc.getPlayer().isDealer()) {
 				tableComposite.moveDealerButton(psc, newDealer);
