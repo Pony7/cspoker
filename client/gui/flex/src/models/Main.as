@@ -81,6 +81,11 @@ package models
         	return;
         }
         
+        public static function sendSitIn(seatId:int, buyInAmount:int):void{
+        	var theTableId:int = table.tableItem.getTableId();
+        	serverConnection.csSitInAction(theTableId, seatId, buyInAmount);
+        }
+        
         /**
          * takes a whole list of tables and sends out requests for each table's info 
          * @param tablesList

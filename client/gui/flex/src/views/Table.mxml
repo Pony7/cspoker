@@ -1,19 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" 
-	backgroundImage="images/table1.jpg" width="750" height="670" xmlns:ns1="views.*">
+	backgroundImage="images/table1.jpg" width="750" height="670" xmlns:views="views.*">
 	<mx:Script>
 		<![CDATA[
+			import models.chips.ChipStack;
+			import models.table.TableModel;
+			import mx.core.UIComponent;
 			import models.lobby.DataGridRow;
 			import models.*;
 			import views.*;
 			
 			import mx.managers.PopUpManager;
 			
-			public var tableId:int = 0;
-			
+			public var tableId:int = -1;
 			public var tableItem:DataGridRow;
 			
+			public var tableModel:TableModel;
 			
+			
+			public var cardLocations:Array;
+			public var dealerButtonLocations:Array;
+			public var betLocations:Array;
+			public var flopCardLocations:Array;
+			public var seatLocations:Array;
+			
+			public var tablePermItemsContainer:UIComponent;
+			public var tableTempItemsContainer:UIComponent;
+			
+			public var pot:ChipStack;
+			
+			public function init():void{
+				
+				tablePermItemsContainer = new UIComponent();
+            	addChild(tablePermItemsContainer);
+            	tableTempItemsContainer = new UIComponent();
+            	addChild(tableTempItemsContainer);
+				cardLocations = [cardLocation0, cardLocation1, cardLocation2, cardLocation3, cardLocation4, cardLocation5, cardLocation6, cardLocation7, cardLocation8, cardLocation9];
+            	dealerButtonLocations = [dealerButton0, dealerButton1, dealerButton2, dealerButton3, dealerButton4, dealerButton5, dealerButton6, dealerButton7, dealerButton8, dealerButton9];
+            	betLocations = [betLocation0, betLocation1, betLocation2, betLocation3, betLocation4, betLocation5, betLocation6, betLocation7, betLocation8, betLocation9];
+           		flopCardLocations = [flop0, flop1, flop2, flop3, flop4];
+           		seatLocations = [seat0, seat1, seat2, seat3, seat4, seat5, seat6, seat7, seat8, seat9];
+           		pot = new ChipStack();
+           		pot.x = potLocation.x;
+           		pot.y = potLocation.y;
+           		
+           		this.tableModel = new TableModel(this, seatLocations, pot);
+           		
+           		seat0.init(this, this.tableModel, 0, betLocation0);
+            	seat1.init(this, this.tableModel, 1, betLocation1);
+           	 	seat2.init(this, this.tableModel, 2, betLocation2);
+           	 	seat3.init(this, this.tableModel, 3, betLocation3);
+            	seat4.init(this, this.tableModel, 4, betLocation4);
+            	seat5.init(this, this.tableModel, 5, betLocation5);
+            	seat6.init(this, this.tableModel, 6, betLocation6);
+            	seat7.init(this, this.tableModel, 7, betLocation7);
+            	seat8.init(this, this.tableModel, 8, betLocation8);
+            	seat9.init(this, this.tableModel, 9, betLocation9);
+			}
 			
 			
 			private function leaveGameClicked():void{
@@ -55,24 +98,72 @@
 		]]>
 	</mx:Script>
 	<mx:Button x="0" y="0" label="Back to Lobby" id="btnLeaveGame" click="leaveGameClicked()"/>
-	<ns1:Seat x="480" y="0" id="seat0" seatNumber="0">
-	</ns1:Seat>
-	<ns1:Seat x="636" y="46" id="seat1" seatNumber="1">
-	</ns1:Seat>
-	<ns1:Seat x="668" y="207" id="seat2" seatNumber="2">
-	</ns1:Seat>
-	<ns1:Seat x="617" y="353" id="seat3" seatNumber="3">
-	</ns1:Seat>
-	<ns1:Seat x="458" y="384" id="seat4" seatNumber="4">
-	</ns1:Seat>
-	<ns1:Seat x="214" y="384" id="seat5" seatNumber="5">
-	</ns1:Seat>
-	<ns1:Seat x="54" y="338" id="seat6" seatNumber="6">
-	</ns1:Seat>
-	<ns1:Seat x="0" y="207" id="seat7" seatNumber="7">
-	</ns1:Seat>
-	<ns1:Seat x="24" y="46" id="seat8" seatNumber="8">
-	</ns1:Seat>
-	<ns1:Seat x="195" y="0" id="seat9" seatNumber="9">
-	</ns1:Seat>
+	<views:Seat x="480" y="0" id="seat0" seatNumber="0">
+	</views:Seat>
+	<views:Seat x="636" y="46" id="seat1" seatNumber="1">
+	</views:Seat>
+	<views:Seat x="668" y="207" id="seat2" seatNumber="2">
+	</views:Seat>
+	<views:Seat x="617" y="353" id="seat3" seatNumber="3">
+	</views:Seat>
+	<views:Seat x="458" y="384" id="seat4" seatNumber="4">
+	</views:Seat>
+	<views:Seat x="214" y="384" id="seat5" seatNumber="5">
+	</views:Seat>
+	<views:Seat x="54" y="338" id="seat6" seatNumber="6">
+	</views:Seat>
+	<views:Seat x="0" y="207" id="seat7" seatNumber="7">
+	</views:Seat>
+	<views:Seat x="24" y="46" id="seat8" seatNumber="8">
+	</views:Seat>
+	<views:Seat x="195" y="0" id="seat9" seatNumber="9">
+	</views:Seat>
+	<mx:Canvas x="448" y="93" width="24" height="24" id="betLocation0" />
+	<mx:Canvas x="602" y="117" width="24" height="24" id="betLocation1" />
+	<mx:Canvas x="640" y="202" width="24" height="24" id="betLocation2" />
+	<mx:Canvas x="582" y="377" width="24" height="24" id="betLocation3" />
+	<mx:Canvas x="428" y="382" width="24" height="24" id="betLocation4" />
+	<mx:Canvas x="301" y="379" width="24" height="24" id="betLocation5" />
+	<mx:Canvas x="137" y="376" width="24" height="24" id="betLocation6" />
+	<mx:Canvas x="85" y="207" width="24" height="24" id="betLocation7" />
+	<mx:Canvas x="121" y="108" width="24" height="24" id="betLocation8" />
+	<mx:Canvas x="286" y="89" width="24" height="24" id="betLocation9" />
+	
+	<mx:Canvas x="479" y="114" width="72" height="50" id="cardLocation0" />
+	<mx:Canvas x="570" y="150" width="72" height="50" id="cardLocation1" />
+	<mx:Canvas x="596" y="234" width="72" height="50" id="cardLocation2" />
+	<mx:Canvas x="568" y="301" width="72" height="50" id="cardLocation3" />
+	<mx:Canvas x="458" y="328" width="72" height="50" id="cardLocation4" />
+	<mx:Canvas x="139" y="297" width="72" height="50" id="cardLocation5" />
+	<mx:Canvas x="225" y="332" width="72" height="50" id="cardLocation6" />
+	<mx:Canvas x="85" y="234" width="72" height="50" id="cardLocation7" />
+	<mx:Canvas x="107" y="135" width="72" height="50" id="cardLocation8" />
+	<mx:Canvas x="234" y="115" width="72" height="50" id="cardLocation9" />
+	
+	<mx:Canvas x="451" y="121" width="20" height="20" id="dealerButton0" />
+	<mx:Canvas x="649.55" y="160" width="25" height="25" id="dealerButton1" />
+	<mx:Canvas x="647.55" y="291.55" width="25" height="25" id="dealerButton2" />
+	<mx:Canvas x="567.95" y="353" width="25" height="25" id="dealerButton3" />
+	<mx:Canvas x="428.5" y="349" width="25" height="25" id="dealerButton4" />
+	<mx:Canvas x="301.55" y="349" width="25" height="25" id="dealerButton5" />
+	<mx:Canvas x="137" y="349" width="25" height="25" id="dealerButton6" />
+	<mx:Canvas x="84.05" y="291.55" width="25" height="25" id="dealerButton7" />
+	<mx:Canvas x="74.4" y="160" width="25" height="25" id="dealerButton8" />
+	<mx:Canvas x="201.45" y="117.5" width="25" height="25" id="dealerButton9" />
+	<mx:Canvas x="235.9" y="207" width="50" height="65" id="flop0">
+	</mx:Canvas>
+	<mx:Canvas x="291.45" y="207" width="50" height="65" id="flop1">
+	</mx:Canvas>
+	<mx:Canvas x="347.05" y="207" width="50" height="65" id="flop2">
+	</mx:Canvas>
+	<mx:Canvas x="403.65" y="207" width="50" height="65" id="flop3">
+	</mx:Canvas>
+	<mx:Canvas x="459.2" y="207" width="50" height="65" id="flop4">
+	</mx:Canvas>
+	<mx:Canvas x="403.65" y="280" width="15" height="15" id="potLocation">
+	</mx:Canvas>
+	
+	
+	<views:GamePanelOnTurn x="249.05" y="501.6" width="280.98486" height="159.31818" />
+	
 </mx:Canvas>

@@ -20,7 +20,7 @@ package models.lobby
         public var minimumBuyin:int = -1; */
 
 		public var playing:Boolean;
-		public var tableId:Number = -1;
+		public var tableId:int = -1;
 		public var tableName:String = null;
 		public var delay:int = 0;
 		public var maxNbPlayers:int = 0;
@@ -34,7 +34,7 @@ package models.lobby
 		
 		public var gameType:String = "";
 		
-		public var playersList:ArrayCollection = null;
+		public var playersList:ArrayCollection = new ArrayCollection();
 		
 		public function DataGridRow(result:Object)
 		{
@@ -42,28 +42,41 @@ package models.lobby
 			if(result["name"] != null) tableName = result["name"];
 			playing = Boolean(result.playing);
 			var property:Object = result.property;
-			var players:ArrayCollection = result.players;
+			
+			if(result.players != null){
+				if(result.players.player.hasOwnProperty("name")){
+					playersList.addItem(result.players.player);
+				}else{
+					for each(var s:Object in result.players.player){
+                  		playersList.addItem(s);
+             	 	}
+					
+				}
+			}
+			
 			delay = property["delay"];
 			maxNbPlayers = property["maxNbPlayers"];
-			if(players != null) nbPlayers = players.length;
+			if(playersList != null) nbPlayers = playersList.length;
 			autoBlinds = property["autoBlinds"];
 			autoDeal = property["autoDeal"];
 			bigBet = property["bigBet"];
 			smallBet = property["smallBet"];
 			bigBlind = property["bigBlind"];
 			smallBlind = property["smallBlind"];
-			playersList = result.players;
+			//playersList = result.players;
 			
 			if(String(result["xsi:type"]) == "ns2:detailedHoldemTable"){
 				gameType = "No Limit";
 			} 
 			return;
 		}		
+		
 		public function getTableId():int{
-			var id:int = 0;
-			id = this.tableId;
-			return id;
+				return this.tableId;
 		}
+		
+		
+		
 		
 		public function createRowFromTableList(tableObj:Object):void{
 			trace("createRowFromTableList: " + tableObj);
