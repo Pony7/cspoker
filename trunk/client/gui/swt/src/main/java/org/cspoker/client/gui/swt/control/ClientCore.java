@@ -30,6 +30,7 @@ import org.cspoker.common.api.lobby.listener.LobbyListener;
 import org.cspoker.common.api.lobby.listener.LobbyListenerTree;
 import org.cspoker.common.api.shared.context.RemoteServerContext;
 import org.cspoker.common.api.shared.context.ServerContext;
+import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.api.shared.listener.ServerListenerTree;
 import org.cspoker.common.elements.table.TableId;
 import org.cspoker.common.util.Log4JPropertiesLoader;
@@ -176,6 +177,15 @@ public class ClientCore
 			});
 			// and then start anew
 			run();
+		} finally {
+			logger.info("Logging out");
+			try {
+				getCommunication().logout();
+			} catch (RemoteException e) {
+				handleRemoteException(e);
+			} catch (IllegalActionException e) {
+				logger.error("This should not happen", e);
+			}
 		}
 	}
 	
