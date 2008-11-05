@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml">
+	<mx:Script>
+		<![CDATA[
+			import models.*;
+			import mx.managers.PopUpManager;
+			
+			public var seatId:int = -1;
+			
+			private function btnCancelClick():void{
+				Main.showLobby();
+				PopUpManager.removePopUp(this);
+        	 	return;
+			}
+			
+			private function btnBuyInClick():void{
+				//Main.sendBuyIn();
+			}
+			
+			public function setBuyInSeatId(seatId:int):void{
+				this.seatId = seatId;
+			}
+			
+		]]>
+	</mx:Script>
+	
+	
+	<mx:Label text="BUY IN MENU" />
+	<mx:TextInput text="amount" id="buyInAmount"  x="23" y="119"/>
+	<mx:Button label="Buy In" id="btnCreateNow" click="btnBuyInClick()" x="45" y="201"/>
+	<mx:Button label="Cancel" id="btnCancel" click="btnCancelClick()"  x="168.5" y="201"/>
+	
+</mx:Canvas>

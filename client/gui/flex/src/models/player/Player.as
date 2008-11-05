@@ -8,7 +8,7 @@ package models.player
 	{
 		protected var playerSeat:Seat;
 		protected var cards:Array;
-		protected var playerInformation:PlayerInfoItem;
+		protected var playerInformation:PlayerValueObject;
 		public function Player(passedSeat:Seat)
 		{
 			playerSeat = passedSeat;

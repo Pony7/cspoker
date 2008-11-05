@@ -17,4 +17,5 @@
 		<views:Table id="table" width="750" height="670" x="0" y="0" />
 		<views:RegisterBox id="registerBox" width="750" height="670"/>
 	</mx:ViewStack>
+	
 </mx:WindowedApplication>

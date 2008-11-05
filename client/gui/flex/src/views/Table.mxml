@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" 
-	backgroundImage="images/table1.jpg" width="750" height="670">
+	backgroundImage="images/table1.jpg" width="750" height="670" xmlns:ns1="views.*">
 	<mx:Script>
 		<![CDATA[
 			import models.lobby.DataGridRow;
 			import models.*;
 			import views.*;
 			
+			import mx.managers.PopUpManager;
+			
 			public var tableId:int = 0;
 			
 			public var tableItem:DataGridRow;
-			
 			
 			
 			
@@ -37,10 +38,41 @@
 			public function receiveJoinTableSuccess(tableId:int):void{
 				trace("Table.receiveJoinTableSuccess...");
 				if(tableId >= 0) setTableId(tableId);
+				if(tableItem.playersList != null){
+					// load players list if there are any...
+				}
 				Main.showTable();
+			}
+			
+			public function showBuyInDialog(seat:Seat):void{
+				trace("showBuyInDialog clicked!!! from: " + seat.id);
+				var buyInBox:BuyInDialog = new BuyInDialog();
+				buyInBox.setBuyInSeatId(seat.seatNumber);
+        		PopUpManager.addPopUp(buyInBox, this, true);
+            	
 			}
 			
 		]]>
 	</mx:Script>
 	<mx:Button x="0" y="0" label="Back to Lobby" id="btnLeaveGame" click="leaveGameClicked()"/>
+	<ns1:Seat x="480" y="0" id="seat0" seatNumber="0">
+	</ns1:Seat>
+	<ns1:Seat x="636" y="46" id="seat1" seatNumber="1">
+	</ns1:Seat>
+	<ns1:Seat x="668" y="207" id="seat2" seatNumber="2">
+	</ns1:Seat>
+	<ns1:Seat x="617" y="353" id="seat3" seatNumber="3">
+	</ns1:Seat>
+	<ns1:Seat x="458" y="384" id="seat4" seatNumber="4">
+	</ns1:Seat>
+	<ns1:Seat x="214" y="384" id="seat5" seatNumber="5">
+	</ns1:Seat>
+	<ns1:Seat x="54" y="338" id="seat6" seatNumber="6">
+	</ns1:Seat>
+	<ns1:Seat x="0" y="207" id="seat7" seatNumber="7">
+	</ns1:Seat>
+	<ns1:Seat x="24" y="46" id="seat8" seatNumber="8">
+	</ns1:Seat>
+	<ns1:Seat x="195" y="0" id="seat9" seatNumber="9">
+	</ns1:Seat>
 </mx:Canvas>

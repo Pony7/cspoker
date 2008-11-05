@@ -178,15 +178,14 @@ package models.connection
 			csSendData(xml);
 		}
 		
-		public function csJoinTableAction(tableID:int,buyin:int=1000):void
+		public function csJoinTableAction(tableId:int,buyin:int=1000):void
 		{
 						
 			idAction++;
 			messageCenter.joinTableActionId = idAction;	
 								
-			var xml:XML = <ns5:joinHoldemTableAction id={idAction} xmlns:ns5="http://www.cspoker.org/api/2008-11/">
-        <tableId>{tableID}</tableId>
-        </ns5:joinHoldemTableAction>;
+			var xml:XML = <ns5:joinHoldemTableAction tableId={tableId} 
+			id={idAction} xmlns:ns5="http://www.cspoker.org/api/2008-11/"/>;
     
     		csSendData(xml);
     				

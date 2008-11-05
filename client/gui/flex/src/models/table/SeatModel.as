@@ -1,10 +1,15 @@
 package models.table
 {
+	import models.*;
+	
+	import views.*;
+	
 	public class SeatModel extends Object
 	{
-		public function SeatModel()
+		public var seat:Seat;
+		public function SeatModel(seat:Seat)
 		{
-			super();
+			this.seat = seat;
 		}
 		
 	}

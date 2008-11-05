@@ -1,16 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml">
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="82" height="110" alpha="1.0" currentState="empty">
+	<mx:states>
+		<mx:State name="empty">
+			<mx:SetStyle name="backgroundAlpha" value="0.0"/>
+			<mx:SetStyle name="borderColor" value="#FFFFFF"/>
+			<mx:SetStyle name="borderStyle" value="none"/>
+		</mx:State>
+		<mx:State name="filledSeat">
+			<mx:RemoveChild target="{image1}"/>
+			<mx:SetStyle name="borderStyle" value="solid"/>
+			<mx:SetStyle name="borderThickness" value="3"/>
+			<mx:SetStyle name="cornerRadius" value="11"/>
+			<mx:SetStyle name="themeColor" value="#6C6C6C"/>
+			<mx:SetStyle name="borderColor" value="#6F6F6F"/>
+			<mx:AddChild position="lastChild">
+				<mx:Image x="9" y="8" id="userPhoto" maxHeight="60" maxWidth="60" scaleContent="true" source="images/seat/noimg.jpg"/>
+			</mx:AddChild>
+			<mx:AddChild position="lastChild">
+				<mx:TextArea x="10" y="60" id="userName" text="Use Name" maxChars="7" wordWrap="false" editable="false" enabled="true" fontSize="11" textAlign="center" selectable="false" width="62" height="24" fontWeight="bold"/>
+			</mx:AddChild>
+			<mx:AddChild position="lastChild">
+				<mx:TextArea x="10" y="74" id="numChips" text="$" wordWrap="false" width="62" height="24" fontSize="12" editable="false" enabled="true" textAlign="center" fontWeight="bold" selectable="false"/>
+			</mx:AddChild>
+		</mx:State>
+	</mx:states>
 	<mx:Script>
 		<![CDATA[
+			import models.table.SeatModel;
+			import models.table.TableModel;
+			import mx.core.UIComponent;
+			import models.player.Player;
+			
 			import models.*;
 			import views.*;
 			
-			
-			private var tableModel:TabelModel;
-			private var seatModel:seatModel;
+			private var masterTable:Table;
+			private var tableModel:TableModel;
+			private var seatModel:SeatModel;
 			private var player:Player;
 			
+			private var tablePosition:int = -1;
+			
+			public var betLocation:Canvas;
+			
+			public var seatItemsContainer:UIComponent;
+			
+			public var seatNumber:int;
+			
+			public function initEnd():void{
+				
+			}
+			
+			public function refresh():void{
+				
+			}
+			
+			
+			
+			public function init(passedTable:Table, passedTableModel:TableModel, passedTablePosition:int, passedBetLocation:Canvas):void{
+				this.masterTable = passedTable;
+				this.tableModel = passedTableModel;
+				this.tablePosition = passedTablePosition;
+				this.betLocation = passedBetLocation;
+				this.seatModel = new SeatModel(this);
+				this.player = new Player(this);
+				seatItemsContainer = new UIComponent;
+				addChild(seatItemsContainer);
+			}
+			
+			public function showBuyInClicked():void{
+				Main.table.showBuyInDialog(this)
+			}
 			
 		]]>
 	</mx:Script>
+	<mx:Image source="images/seat/seatbutton_forflex.jpg" width="82" height="22" useHandCursor="true" click="showBuyInClicked()" verticalCenter="-4" horizontalCenter="0" id="image1"/>
 </mx:Canvas>
