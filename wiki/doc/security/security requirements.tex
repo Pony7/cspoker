@@ -1,7 +1,9 @@
 \documentclass[a4paper,11pt]{report}
 \usepackage[a4paper]{geometry}
 \usepackage[english]{babel}
+\usepackage{graphicx,subfigure}
 \setcounter{secnumdepth}{3} 
+
 
 \author{Cedric~Cuypers, Kenzo~Tomita, Guy~Van~den~Broeck} 
 % define title
@@ -15,6 +17,28 @@
 \chapter{Introduction}
 \chapter{Identifying threats}
 \section{DFDs}
+
+\begin{figure}
+  \begin{center}
+    \includegraphics{context_diagram}
+  \end{center}
+  \caption{Context Level DFD}\label{fig:context}
+\end{figure}
+
+\begin{figure}
+  \begin{center}
+    \includegraphics[scale=0.8]{dfd_level_0}
+  \end{center}
+  \caption{DFD Level 0}\label{fig:level_0}
+\end{figure}
+
+\begin{figure}
+  \begin{center}
+    \includegraphics[scale=0.7]{dfd_level_0_player}
+  \end{center}
+  \caption{DFD Level 0 - only player}\label{fig:level_0_player}
+\end{figure}
+
 \section{Rationale}
 \subsection{Assumptions}
 \begin{itemize}
