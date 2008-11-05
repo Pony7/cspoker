@@ -364,8 +364,10 @@ public class PokerTable {
 		if (player == null)
 			throw new IllegalArgumentException("The given player should be effective.");
 		HoldemTableListener listener = joinedPlayers.remove(player.getId());
-		if (listener != null)
+		if (listener != null){
 			unsubscribeHoldemTableListener(listener);
+			publishLeaveTableEvent(new LeaveTableEvent(player.getMemento()));
+		}
 	}
 	
 	public synchronized HoldemPlayerContext sitIn(SeatId seatId, int buyIn, MutablePlayer player,
