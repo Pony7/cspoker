@@ -35,6 +35,7 @@ import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.HoldemPlaye
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.chips.Pots;
 import org.cspoker.common.elements.player.MutableSeatedPlayer;
+import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.elements.player.SeatedPlayer;
 import org.cspoker.common.elements.table.SeatId;
 import org.cspoker.common.util.threading.ScheduledRequestExecutor;
@@ -356,8 +357,8 @@ public class PlayingTableState
 	}
 	
 	@Override
-	public List<MutableSeatedPlayer> getSeatedServerPlayers() {
-		return game.getTable().getSeatedServerPlayers();
+	public List<MutableSeatedPlayer> getMutableSeatedPlayers() {
+		return game.getTable().getMutableSeatedPlayers();
 	}
 	
 	@Override
@@ -437,6 +438,15 @@ public class PlayingTableState
 	@Override
 	public TableState getNextState() {
 		return this;
+	}
+
+	@Override
+	public MutableSeatedPlayer getMutableSeatedPlayer(PlayerId id) {
+		for(MutableSeatedPlayer player :game.getTable().getMutableSeatedPlayers()){
+			if(player.getId().equals(id))
+				return player;
+		}
+		return null;
 	}
 	
 }

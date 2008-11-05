@@ -197,7 +197,7 @@ public class ServerTable {
 	 * 
 	 * @return The list with all the players at this table.
 	 */
-	public List<MutableSeatedPlayer> getSeatedServerPlayers() {
+	public List<MutableSeatedPlayer> getMutableSeatedPlayers() {
 		List<MutableSeatedPlayer> playerList = new ArrayList<MutableSeatedPlayer>();
 		for (int i = 0; i < getMaxNbPlayers(); i++) {
 			MutableSeatedPlayer player = players.get(new SeatId(i));

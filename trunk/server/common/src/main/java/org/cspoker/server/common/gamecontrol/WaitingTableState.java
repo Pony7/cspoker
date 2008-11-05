@@ -23,6 +23,7 @@ import org.cspoker.common.api.lobby.holdemtable.event.SitOutEvent;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.HoldemPlayerContext;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.player.MutableSeatedPlayer;
+import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.elements.player.SeatedPlayer;
 import org.cspoker.common.elements.table.SeatId;
 import org.cspoker.server.common.HoldemPlayerContextImpl;
@@ -67,8 +68,8 @@ public class WaitingTableState
 	 * @return The list with all the players at this table.
 	 */
 	@Override
-	public List<MutableSeatedPlayer> getSeatedServerPlayers() {
-		return serverTable.getSeatedServerPlayers();
+	public List<MutableSeatedPlayer> getMutableSeatedPlayers() {
+		return serverTable.getMutableSeatedPlayers();
 	}
 	
 	@Override
@@ -161,5 +162,14 @@ public class WaitingTableState
 	@Override
 	public PlayingTableState getNextState() {
 		return new PlayingTableState(mediatingTable, serverTable);
+	}
+
+	@Override
+	public MutableSeatedPlayer getMutableSeatedPlayer(PlayerId id) {
+		for(MutableSeatedPlayer player :serverTable.getMutableSeatedPlayers()){
+			if(player.getId().equals(id))
+				return player;
+		}
+		return null;
 	}
 }

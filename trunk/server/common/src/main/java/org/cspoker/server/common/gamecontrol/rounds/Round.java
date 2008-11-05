@@ -250,7 +250,7 @@ public abstract class Round {
 	}
 
 	protected void removeBrokePlayers() {
-		for (MutableSeatedPlayer player : getGame().getTable().getSeatedServerPlayers()) {
+		for (MutableSeatedPlayer player : getGame().getTable().getMutableSeatedPlayers()) {
 			if (player.getStack().getValue() == 0) {
 				try {
 					getGame().sitOut(player);
