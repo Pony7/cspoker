@@ -23,7 +23,6 @@ import org.cspoker.common.api.lobby.holdemtable.holdemplayer.listener.HoldemPlay
 import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
 import org.cspoker.common.elements.cards.Card;
 import org.cspoker.common.elements.chips.Pots;
-import org.cspoker.common.elements.player.Player;
 import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.elements.player.SeatedPlayer;
 import org.cspoker.common.elements.table.DetailedHoldemTable;
@@ -215,7 +214,14 @@ public class GameWindow
 	public void onSitOut(SitOutEvent leaveGameEvent) {
 		PlayerSeatComposite psc = getPlayerSeatComposite(leaveGameEvent.getPlayerId());
 		psc.getPlayer().setSittingOut(true);
+		
 		psc.updatePlayerInfo();
+		if (leaveGameEvent.getPlayerId().equals(user.getMemento().getId())) {
+			userInputComposite.sitInOutButton.setText("Sit In");
+		}
+		if (!userInputComposite.sitInOutButton.isFocusControl()) {
+			userInputComposite.sitInOutButton.setSelection(false);
+		}
 		userInputComposite.showDealerMessage(leaveGameEvent);
 		tableComposite.updateTableGraphics();
 		
@@ -280,59 +286,13 @@ public class GameWindow
 	public void onNextPlayer(NextPlayerEvent nextPlayerEvent) {
 		PlayerId playerToAct = nextPlayerEvent.getPlayerId();
 		tableComposite.proceedToNextPlayer(playerToAct);
-		userInputComposite.getGameActionGroup().setVisible(user.getMemento().equals(playerToAct));
+		userInputComposite.getGameActionGroup().setVisible(user.getMemento().getId().equals(playerToAct));
 		if (user.getMemento().equals(playerToAct)) {
 			userInputComposite.prepareForUserInput();
 		}
 		userInputComposite.update();
 		
 	}
-	
-	// FIXME Old API methods
-	// /**
-	// * @deprecated Old API, replaced onSitIn ?
-	// * @param event
-	// * @throws RemoteException
-	// */
-	// @Deprecated
-	// public void onPlayerJoinedTableEvent(final SitInEvent event)
-	// throws RemoteException {
-	// event.dispatch(getPlayerSeatComposite(event.getPlayer()));
-	// }
-	
-	// /**
-	// * @deprecated Old API ? Maybe with CashierListener?
-	// * @param event
-	// * @throws RemoteException
-	// */
-	// @Deprecated
-	// public void onPlayerReboughtEvent(PlayerReboughtEvent event)
-	// throws RemoteException {
-	// event.dispatch(getPlayerSeatComposite(event.getPlayer()));
-	//		
-	// }
-	
-	// /**
-	// * @deprecated Old API ? But we need this to know the player has sat out
-	// and
-	// * may sit in again but has not left
-	// * @param event
-	// * @throws RemoteException
-	// */
-	// @Deprecated
-	// public void onPlayerSatOutEvent(PlayerSatOutEvent event)
-	// throws RemoteException {
-	//		
-	// // User might automatically sit out if busto, set the button selection
-	// // accordingly
-	// if (isUser(event.getPlayer())) {
-	// userInputComposite.sitInOutButton.setText("Sit In");
-	// if (!userInputComposite.sitInOutButton.isFocusControl()) {
-	// userInputComposite.sitInOutButton.setSelection(false);
-	// }
-	// }
-	// event.dispatch(getPlayerSeatComposite(event.getPlayer()));
-	// }
 	
 	/**
 	 * @see org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener#onRaise(org.cspoker.common.api.lobby.holdemtable.event.RaiseEvent)
