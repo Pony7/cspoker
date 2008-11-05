@@ -8,25 +8,27 @@
 			public var seatId:int = -1;
 			
 			private function btnCancelClick():void{
-				Main.showLobby();
 				PopUpManager.removePopUp(this);
         	 	return;
 			}
 			
 			private function btnBuyInClick():void{
-				//Main.sendBuyIn();
+				trace("sending buyin: " + seatId + ":" + buyInAmount.text);
+				Main.sendSitIn(seatId, int(buyInAmount.text));
 			}
 			
 			public function setBuyInSeatId(seatId:int):void{
 				this.seatId = seatId;
 			}
 			
+			
+			
 		]]>
 	</mx:Script>
 	
 	
 	<mx:Label text="BUY IN MENU" />
-	<mx:TextInput text="amount" id="buyInAmount"  x="23" y="119"/>
+	<mx:TextInput text="100" id="buyInAmount"  x="23" y="119"/>
 	<mx:Button label="Buy In" id="btnCreateNow" click="btnBuyInClick()" x="45" y="201"/>
 	<mx:Button label="Cancel" id="btnCancel" click="btnCancelClick()"  x="168.5" y="201"/>
 	

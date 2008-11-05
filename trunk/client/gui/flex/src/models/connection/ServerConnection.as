@@ -191,6 +191,26 @@ package models.connection
     				
 		}
 		
+		
+		public function csSitInAction(tableId:int, seatId:int, buyInAmount:int = 100):void{
+			idAction++;
+			var xml:XML = <ns5:sitInAction seatId={seatId} tableId={tableId}
+			id={idAction} buyIn={buyInAmount} xmlns:ns5="http://www.cspoker.org/api/2008-11/"/>;
+    
+    		csSendData(xml);
+    				
+		}
+		
+		
+		public function csGetMoneyAmountAction():void{
+			idAction++;
+			
+			var xml:XML = <ns5:requestMoneyAction
+			id={idAction} xmlns:ns5="http://www.cspoker.org/api/2008-11/"/>;
+    
+    		csSendData(xml);
+		}
+		
 		public function csLeaveTableAction(tableID:int):void
 		{
 						
