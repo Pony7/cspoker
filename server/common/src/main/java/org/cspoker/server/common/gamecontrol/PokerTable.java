@@ -363,9 +363,15 @@ public class PokerTable {
 	public void leaveTable(MutablePlayer player) {
 		if (player == null)
 			throw new IllegalArgumentException("The given player should be effective.");
-		HoldemTableListener listener = joinedPlayers.remove(player.getId());
-		if (listener != null){
-			unsubscribeHoldemTableListener(listener);
+		HoldemPlayerListener playerListener = sitInPlayers.get(player.getId());
+		HoldemTableListener tableListener = joinedPlayers.remove(player.getId());
+		
+		if(playerListener != null){
+			sitOut(tableState.getMutableSeatedPlayer(player.getId()));
+		}
+		
+		if (tableListener != null){
+			unsubscribeHoldemTableListener(tableListener);
 			publishLeaveTableEvent(new LeaveTableEvent(player.getMemento().getId()));
 		}
 	}

@@ -20,6 +20,7 @@ import java.util.List;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.HoldemPlayerContext;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.player.MutableSeatedPlayer;
+import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.elements.player.SeatedPlayer;
 import org.cspoker.common.elements.table.SeatId;
 
@@ -61,7 +62,9 @@ public abstract class TableState {
 
 	public abstract List<SeatedPlayer> getSeatedPlayers();
 
-	public abstract List<MutableSeatedPlayer> getSeatedServerPlayers();
+	public abstract List<MutableSeatedPlayer> getMutableSeatedPlayers();
+	
+	public abstract MutableSeatedPlayer getMutableSeatedPlayer(PlayerId id);
 
 	/**
 	 * Check whether players are playing or not at this table.

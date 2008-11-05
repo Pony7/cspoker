@@ -146,7 +146,7 @@ public class Game {
 		this.bettingRules = bettingRules;
 		this.table = table;
 		this.configuration = configuration;
-		List<MutableSeatedPlayer> players = table.getSeatedServerPlayers();
+		List<MutableSeatedPlayer> players = table.getMutableSeatedPlayers();
 		currentHandPlayers = new LoopingList<MutableSeatedPlayer>(players);
 		initialCurrentHandPlayers = new LoopingList<MutableSeatedPlayer>(players);
 		deck = new Deck();
@@ -171,7 +171,7 @@ public class Game {
 		communityCards = new ArrayList<Card>();
 		deck = new Deck();
 		pots = new GamePots();
-		List<MutableSeatedPlayer> players = table.getSeatedServerPlayers();
+		List<MutableSeatedPlayer> players = table.getMutableSeatedPlayers();
 
 		// new looping lists
 		currentHandPlayers = new LoopingList<MutableSeatedPlayer>(players);
@@ -542,7 +542,7 @@ public class Game {
 	}
 
 	public void addTablePlayersToGame() {
-		currentHandPlayers = new LoopingList<MutableSeatedPlayer>(table.getSeatedServerPlayers());
+		currentHandPlayers = new LoopingList<MutableSeatedPlayer>(table.getMutableSeatedPlayers());
 	}
 
 	public void seatInitalDealPlayers() {
