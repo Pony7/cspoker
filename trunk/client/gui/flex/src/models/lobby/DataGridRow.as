@@ -34,6 +34,8 @@ package models.lobby
 		
 		public var gameType:String = "";
 		
+		public var playersList:ArrayCollection = null;
+		
 		public function DataGridRow(result:Object)
 		{
 			if(result["id"] != null) tableId = result["id"];
@@ -50,7 +52,7 @@ package models.lobby
 			smallBet = property["smallBet"];
 			bigBlind = property["bigBlind"];
 			smallBlind = property["smallBlind"];
-			
+			playersList = result.players;
 			
 			if(String(result["xsi:type"]) == "ns2:detailedHoldemTable"){
 				gameType = "No Limit";

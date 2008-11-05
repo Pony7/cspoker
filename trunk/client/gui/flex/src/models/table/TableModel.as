@@ -1,8 +1,8 @@
-package models
+package models.table
 {
 	import models.connection.*;
 	import models.*;
-	import components.*;
+	import views.*;
 	
 	
 	public class TableModel extends Object
