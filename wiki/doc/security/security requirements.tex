@@ -71,7 +71,7 @@
 \item Only administrators of the online casino can place code on the online poker servers.
 \item Only the code that is running on trusted locations can be used as part of the system.
 \item Poker servers are authenticated.
-\item Messages coming out of the repository are signed.
+\item Messages coming out of the poker server are signed.
 \end{itemize}
 \end{itemize}
 
@@ -101,6 +101,120 @@
 \end{itemize}
 
 \subsubsection{Repudiation of an action at the poker server}
+\textbf{Primary mis-actor:}
+\begin{itemize}
+\item Crook
+\end{itemize}
+\textbf{Basic path:}
+\begin{itemize}
+\item The mis-actor performs an action at the poker server.
+\item The mis-actor denies he performed the action.
+\end{itemize}
+\textbf{Alternative paths:}
+\begin{itemize}
+\item 
+\end{itemize}
+\textbf{Capture points:}
+\begin{itemize}
+\item \textbf{Prevention:}
+\begin{itemize}
+\item 
+\end{itemize}
+\item \textbf{Detection:}
+\begin{itemize}
+\item 
+\end{itemize}
+\end{itemize}
+\subsubsection{Information disclosure at the poker server}
+\textbf{Primary mis-actor:}
+\begin{itemize}
+\item Crook
+\end{itemize}
+\textbf{Basic path:}
+\begin{itemize}
+\item The mis-actor spoofs an other actor with access to private information (e.g. user names, passwords, ...).
+\item The mis-actor uses the private information.
+\end{itemize}
+\textbf{Alternative paths:}
+\begin{itemize}
+\item Elevation of privilege of the mis-actor leads to information disclosure.
+\item The mis-actor sends invalid input to the poker server.
+\item The mis-actor has access to the memory and can alter its state (e.g. debugging mode).
+\end{itemize}
+\textbf{Capture points:}
+\begin{itemize}
+\item \textbf{Prevention:}
+\begin{itemize}
+\item 
+\end{itemize}
+\item \textbf{Detection:}
+\begin{itemize}
+\item 
+\end{itemize}
+\end{itemize}
+
+\subsubsection{DoS against the poker server}
+\textbf{Primary mis-actor:}
+\begin{itemize}
+\item Crook
+\end{itemize}
+\textbf{Basic path:}
+\begin{itemize}
+\item The mis-actor sends invalid input to the poker server. 
+\item The poker server crashes.
+\item The poker server becomes unavailable.
+\end{itemize}
+\textbf{Alternative paths:}
+\begin{itemize}
+\item The mis-actor crashes the poker server by tampering with the poker server.
+\item The mis-actor consumes application-specific resources (e.g. send more login requests per second than the poker server can handle).
+\item The mis-actor consumes fundamental resources.
+\end{itemize}
+\textbf{Capture points:}
+\begin{itemize}
+\item \textbf{Prevention:}
+\begin{itemize}
+\item All input is validated.
+\item The poker server is load-balanced.
+\end{itemize}
+\item \textbf{Detection:}
+\begin{itemize}
+\item Access to the poker server is securely logged.
+\end{itemize}
+\end{itemize}
+
+\subsubsection{Elevation of privilege at the poker server}
+textbf{Primary mis-actor:}
+\begin{itemize}
+\item Crook
+\end{itemize}
+\textbf{Basic path:}
+\begin{itemize}
+\item The mis-actor logs in.
+\item He activates the role (administrator) with higher privileges.
+\item The mis-actor gains higher privileges. 
+\item The mis-actor misuses the higher privileges.
+\end{itemize}
+\textbf{Alternative paths:}
+\begin{itemize}
+\item The mis-actor spoofs the identity of an other actor (administrator) with higher privileges.
+\item The mis-actor tampers with the poker server to gain more privileges. 
+\item The mis-actor sends invalid input to the poker server. 
+\item The mis-actor has access to the memory and can alter its state (e.g. debugging mode).
+\end{itemize}
+\textbf{Capture points:}
+\begin{itemize}
+\item \textbf{Prevention:}
+\begin{itemize}
+\item Authentication and authorisation system that verifies credentials.
+\item Spoofing user and tampering with poker server prevention.
+\end{itemize}
+\item \textbf{Detection:}
+\begin{itemize}
+\item Access to the poker server is securely logged. The log can be compared with the security policy to verify if an actor is allowed to do the action.
+\end{itemize}
+\end{itemize}
+
 \subsection{Lobby}
 \subsection{Table}
 \subsubsection{Spoofing a table}
