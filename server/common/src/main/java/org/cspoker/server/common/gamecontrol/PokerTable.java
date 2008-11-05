@@ -366,7 +366,7 @@ public class PokerTable {
 		HoldemTableListener listener = joinedPlayers.remove(player.getId());
 		if (listener != null){
 			unsubscribeHoldemTableListener(listener);
-			publishLeaveTableEvent(new LeaveTableEvent(player.getMemento()));
+			publishLeaveTableEvent(new LeaveTableEvent(player.getMemento().getId()));
 		}
 	}
 	
