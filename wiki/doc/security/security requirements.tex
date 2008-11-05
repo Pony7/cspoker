@@ -16,6 +16,11 @@
 \chapter{Identifying threats}
 \section{DFDs}
 \section{Rationale}
+\subsection{Assumptions}
+\begin{itemize}
+\item Not protecting application from administrators with debuggers.
+\end{itemize}
+
 \section{Misuse Cases}
 \subsection{Template}
 \textbf{Primary mis-actor:}
@@ -45,8 +50,57 @@
 \subsection{Player}
 \subsection{Poker Server}
 \subsubsection{Spoofing the poker server}
+\textbf{Primary mis-actor:}
+\begin{itemize}
+\item Crook
+\end{itemize}
+\textbf{Basic path:}
+\begin{itemize}
+\item The mis-actor prepares the process that can spoof a poker server.
+\item The mis-actor deploys its process on the online casino servers (performed by a skilled insider).
+\item The mis-actor can cheat and steal sensitive data from the users.
+\end{itemize}
+\textbf{Alternative paths:}
+\begin{itemize}
+\item The mis-actor deploys its process on an external server (performed by a skilled outsider).
+\end{itemize}
+\textbf{Capture points:}
+\begin{itemize}
+\item \textbf{Prevention:}
+\begin{itemize}
+\item Only administrators of the online casino can place code on the online poker servers.
+\item Only the code that is running on trusted locations can be used as part of the system.
+\item Poker servers are authenticated.
+\item Messages coming out of the repository are signed.
+\end{itemize}
+\end{itemize}
 
+\subsubsection{Tampering with the poker server}
+\textbf{Primary mis-actor:}
+\begin{itemize}
+\item Crook
+\end{itemize}
+\textbf{Basic path:}
+\begin{itemize}
+\item The mis-actor sends invalid input to the poker server.
+\item The message corrupts the state of the poker server. 
+\item While the poker server is in the corrupted state, the mis-actor controls the behavior of that poker server.
+\item The mis-actor can cheat and steal sensitive data from the users.
+\end{itemize}
+\textbf{Alternative paths:}
+\begin{itemize}
+\item The mis-ator provides false credentials (spoofing an administrator) and modifies the poker server.
+\end{itemize}
+\textbf{Capture points:}
+\begin{itemize}
+\item \textbf{Prevention:}
+\begin{itemize}
+\item All input is validated.
+\item Spoofing an administrator should be impossible.
+\end{itemize}
+\end{itemize}
 
+\subsubsection{Repudiation of an action at the poker server}
 \subsection{Lobby}
 \subsection{Table}
 \subsection{Chat Service}
