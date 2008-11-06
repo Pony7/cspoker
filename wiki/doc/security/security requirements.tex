@@ -29,6 +29,15 @@ Finally, we present examples of business threats that cannot be discovered using
 \chapter{Identifying threats}
 \section{DFDs}
 Figure \ref{fig:context} shows the context level of the DFD. Figure \ref{fig:level_0} shows the level-0 DFD. The arrows are not annotated to make the diagram readable. A simplified version with only the player and annotated arrows can be found in figure \ref{fig:level_0_player}. In the following analysis only the interaction with the player will be considered as misuse cases, as those with an administrator as external entity are similar. Although some processes are complex and should be drilled down, we've chosen to do the STRIDE analysis on level-0 because it would already generate sufficient documentation.
+
+There are several trust boundaries that can be identified in the DFDs. First of all there is the trust boundary between the external entities and the processes. All input coming from the external entities should be validated and the data flow from the processes to the external entities should be analyzed for not leaking sensitive, private or confidential data. Inside this trust boundary several smaller trust boundaries can be recognized. These are the processes that deal with sensitive, private data: 
+\begin{itemize}
+\item \textbf{Account Management:} account data should be protected and all data flowing out of this process should be verified extensively. 
+\item \textbf{Table:} hole cards are confidential data only accessible for the player to whom they belong and the game engine to verify the winner at the end of a deal.
+\item \textbf{Logging Engine:} the logging should happen in a secure way so there is no possibility to alter the log, therefor the log entries arriving at the logging engine should be validated. The log also contains very sensitive data, so the access is only allowed to a very limited number of entities and processes.
+\end{itemize}
+ 
+
 \begin{figure}[h]
   \begin{center}
     \includegraphics[scale=0.8]{context_diagram}
@@ -815,6 +824,7 @@ Here we choose to reduce the number of data flows from/to the Player because int
 \end{itemize}
 \subsubsection{A malicious player with admin rights uses confidential information in a game and act on it}
 \textbf{Summary:} If an admin has access to the card info of all the players at a table, he can act on perfect knowledge which is a huge advantage.
+
 \subsubsection{A malicious player misuses the right to ask the admin to view the log of the table}
 \textbf{Summary:} The malicious player misuses the possibility to view the table log pretending to be suspicious of collusion. The malicious player can verify the hands of all the opponents, also those who have chosen not to show their cards. By this way he can gain more insight into the strategy of its opponents (whether someone is bluffing or not, ...). Consulting the log is only possible after the game has been played so there is no direct influence, but in the long run gives an unfair advantage and allows profiling of a players behaviour.
 \subsubsection{A malicious player can flood the network of another player to force a time-out}
