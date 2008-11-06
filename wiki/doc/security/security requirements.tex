@@ -567,6 +567,7 @@ Because interaction between a Player and the different processes is very similar
 \item \textbf{Prevention:}
 \begin{itemize}
 \item Use antireplay defences and a strong message and channel integrity algorithm.
+\item Prevent spoofing of Players.
 \end{itemize}
 \end{itemize}
 
@@ -577,20 +578,21 @@ Because interaction between a Player and the different processes is very similar
 \end{itemize}
 \textbf{Basic path:}
 \begin{itemize}
-\item The mis-actor find a weakness in the integrity of token requests.
-\item The mis-actor intercepts a token request sent by another Player.
-\item The mis-actor replays the token request to obtain a token.
+\item The mis-actor find a weakness in the integrity of tokens sent to the Player.
+\item The mis-actor intercepts a token.
+\item The mis-actor modifies token before sending it to the Player with a MITM attack. The modified token can refer to a process spoofed by the mis-actor..
 \end{itemize}
 \textbf{Alternative paths:}
 \begin{itemize}
-\item The mis-actor spoofs another Player to send fake token requests.
-\item The mis-actor performs a MITM attack and eavesdrop on the token requests sent by a genuine Player.
+\item The mis-actor spoofs the Poker Server to send fake tokens.
+\item The mis-actor modifies or replays tokens.
 \end{itemize}
 \textbf{Capture points:}
 \begin{itemize}
 \item \textbf{Prevention:}
 \begin{itemize}
 \item Use antireplay defences and a strong message and channel integrity algorithm.
+\item Prevent spoofing of the Poker Server.
 \end{itemize}
 \end{itemize}
 
@@ -601,18 +603,44 @@ Because interaction between a Player and the different processes is very similar
 \end{itemize}
 \textbf{Basic path:}
 \begin{itemize}
-\item The mis-actor find a weakness in the integrity of actions actions
-\item The mis-actor changes messages to his advantage, sends fake messages that go undetected or replays messages sent by a Player. (For example: the mis-actor replaces the bet amount by a larger number when he has very good cards)
+\item The mis-actor find a weakness in the integrity of actions.
+\item The mis-actor changes messages to his advantage, sends fake messages that go undetected or replays messages sent by a Player (For example: the mis-actor replaces the bet amount by a larger number when he has very good cards)
 \end{itemize}
 \textbf{Alternative paths:}
 \begin{itemize}
 \item The mis-actor violates the integrity of the channel to tamper with the data flow.
+\item The mis-actor spoofs a Player to send fake actions.
 \end{itemize}
 \textbf{Capture points:}
 \begin{itemize}
 \item \textbf{Prevention:}
 \begin{itemize}
 \item Use antireplay defences and a strong message and channel integrity algorithm.
+\item Prevent spoofing of Players.
+\end{itemize}
+\end{itemize}
+
+\subsubsection{Tampering with responses and events}
+\textbf{Primary mis-actor:}
+\begin{itemize}
+\item Crook
+\end{itemize}
+\textbf{Basic path:}
+\begin{itemize}
+\item The mis-actor find a weakness in the integrity of responses or events.
+\item The mis-actor changes events to his advantage, sends fake events or replays events (For example: the mis-actor replaces the pocket cards sent to another player by aces to trick him in to betting excessively).
+\end{itemize}
+\textbf{Alternative paths:}
+\begin{itemize}
+\item The mis-actor violates the integrity of the channel to tamper with the data flow.
+\item The mis-actor spoofs the Poker Server to send fake actions.
+\end{itemize}
+\textbf{Capture points:}
+\begin{itemize}
+\item \textbf{Prevention:}
+\begin{itemize}
+\item Use antireplay defences and a strong message and channel integrity algorithm.
+\item Prevent spoofing the Poker Server.
 \end{itemize}
 \end{itemize}
 
