@@ -24,24 +24,7 @@ import org.cspoker.common.api.chat.event.ServerChatEvents;
 import org.cspoker.common.api.chat.event.TableChatEvents;
 import org.cspoker.common.api.lobby.event.TableCreatedEvent;
 import org.cspoker.common.api.lobby.event.TableRemovedEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.BetEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.BigBlindEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.CallEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.CheckEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.FoldEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.HoldemTableTreeEventWrapper;
-import org.cspoker.common.api.lobby.holdemtable.event.JoinTableEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.LeaveTableEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.NewCommunityCardsEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.NewDealEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.NewRoundEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.NextPlayerEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.PotsChangedEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.RaiseEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.ShowHandEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.SitInEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.SmallBlindEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.WinnerEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.*;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.event.NewPocketCardsEvent;
 import org.cspoker.common.api.shared.event.ActionPerformedEvent;
 import org.cspoker.common.api.shared.event.IllegalActionEvent;
@@ -50,12 +33,11 @@ import org.cspoker.common.elements.table.DetailedHoldemTable;
 import org.cspoker.common.elements.table.TableList;
 
 public class EventJAXBContext {
-
-	private final static Logger logger = Logger
-			.getLogger(EventJAXBContext.class);
-
+	
+	private final static Logger logger = Logger.getLogger(EventJAXBContext.class);
+	
 	public final static JAXBContext context = initContext();
-
+	
 	private static JAXBContext initContext() {
 		try {
 			return JAXBContext.newInstance(getActions());
@@ -64,23 +46,28 @@ public class EventJAXBContext {
 			throw new IllegalStateException(e);
 		}
 	}
-
+	
 	public static Class<?>[] getActions() {
-		return new Class<?>[] { 
-				//chat
-				ServerChatEvents.class,TableChatEvents.class, MessageEvent.class,
-				//lobby
-				TableCreatedEvent.class, TableRemovedEvent.class, TableList.class, DetailedHoldemTable.class,
-				//table
-				BetEvent.class, BigBlindEvent.class, CallEvent.class, CheckEvent.class, FoldEvent.class, 
-				LeaveTableEvent.class, NewCommunityCardsEvent.class, NewDealEvent.class, NewRoundEvent.class, 
-				NextPlayerEvent.class, RaiseEvent.class, ShowHandEvent.class, SitInEvent.class, SmallBlindEvent.class, 
-				JoinTableEvent.class, WinnerEvent.class, HoldemTableTreeEventWrapper.class, PotsChangedEvent.class,
-				//player
+		return new Class<?>[] {
+				// chat
+				ServerChatEvents.class,
+				TableChatEvents.class,
+				MessageEvent.class,
+				// lobby
+				TableCreatedEvent.class,
+				TableRemovedEvent.class,
+				TableList.class,
+				DetailedHoldemTable.class,
+				// table
+				BetEvent.class, BigBlindEvent.class, CallEvent.class, CheckEvent.class, FoldEvent.class,
+				LeaveTableEvent.class, NewCommunityCardsEvent.class, NewDealEvent.class, NewRoundEvent.class,
+				NextPlayerEvent.class, RaiseEvent.class, ShowHandEvent.class, SitInEvent.class, SitOutEvent.class,
+				SmallBlindEvent.class, JoinTableEvent.class, WinnerEvent.class, HoldemTableTreeEventWrapper.class,
+				PotsChangedEvent.class,
+				// player
 				NewPocketCardsEvent.class,
-				//action
-				ActionPerformedEvent.class, IllegalActionEvent.class, RemoteExceptionEvent.class,
-		};
+				// action
+				ActionPerformedEvent.class, IllegalActionEvent.class, RemoteExceptionEvent.class, };
 	}
-
+	
 }

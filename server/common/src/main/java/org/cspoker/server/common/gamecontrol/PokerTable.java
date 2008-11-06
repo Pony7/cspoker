@@ -19,33 +19,11 @@ package org.cspoker.server.common.gamecontrol;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 import org.apache.log4j.Logger;
 import org.cspoker.common.api.lobby.holdemtable.context.HoldemTableContext;
-import org.cspoker.common.api.lobby.holdemtable.event.AllInEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.BetEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.BigBlindEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.CallEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.CheckEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.FoldEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.JoinTableEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.LeaveTableEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.NewCommunityCardsEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.NewDealEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.NewRoundEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.NextPlayerEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.PotsChangedEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.RaiseEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.ShowHandEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.SitInEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.SitOutEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.SmallBlindEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.WinnerEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.*;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.HoldemPlayerContext;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.event.NewPocketCardsEvent;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.listener.HoldemPlayerListener;
@@ -54,13 +32,8 @@ import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.chips.IllegalValueException;
 import org.cspoker.common.elements.player.MutablePlayer;
 import org.cspoker.common.elements.player.MutableSeatedPlayer;
-import org.cspoker.common.elements.player.Player;
 import org.cspoker.common.elements.player.PlayerId;
-import org.cspoker.common.elements.table.DetailedHoldemTable;
-import org.cspoker.common.elements.table.SeatId;
-import org.cspoker.common.elements.table.Table;
-import org.cspoker.common.elements.table.TableConfiguration;
-import org.cspoker.common.elements.table.TableId;
+import org.cspoker.common.elements.table.*;
 import org.cspoker.common.util.threading.ScheduledRequestExecutor;
 import org.cspoker.server.common.HoldemTableContextImpl;
 import org.cspoker.server.common.account.ExtendedAccountContext;
@@ -70,8 +43,6 @@ import org.cspoker.server.common.chat.room.TableChatRoom;
 /**
  * A class of game mediators to decouple the game control from all users:
  * server, gui, logger, ...
- * 
- * 
  */
 public class PokerTable {
 	
@@ -122,7 +93,6 @@ public class PokerTable {
 	
 	/**
 	 * Return the name of this table.
-	 * 
 	 */
 	public String getName() {
 		return name;
@@ -198,8 +168,8 @@ public class PokerTable {
 	}
 	
 	public DetailedHoldemTable getTableInformation() {
-		return new DetailedHoldemTable(getTableId(), getName(), tableState.getSeatedPlayers(), tableState
-				.isPlaying(), configuration);
+		return new DetailedHoldemTable(getTableId(), getName(), tableState.getSeatedPlayers(), tableState.isPlaying(),
+				configuration);
 	}
 	
 	/**
@@ -230,11 +200,11 @@ public class PokerTable {
 	}
 	
 	public synchronized void startGame()
-	throws IllegalActionException {
+			throws IllegalActionException {
 		if (tableState.isPlaying())
 			throw new IllegalActionException("The game has already started.");
 		tableState = tableState.getNextState();
-}
+	}
 	
 	/***************************************************************************
 	 * Player Actions
@@ -304,10 +274,8 @@ public class PokerTable {
 	}
 	
 	/**
-	 * The given player folds the cards.
-	 * 
-	 * The player will not be able to take any actions in the coming rounds of
-	 * the current deal.
+	 * The given player folds the cards. The player will not be able to take any
+	 * actions in the coming rounds of the current deal.
 	 * 
 	 * @param player The player who folds.
 	 * @throws IllegalActionException [must] It's not the turn of the given
@@ -365,46 +333,46 @@ public class PokerTable {
 			throw new IllegalArgumentException("The given player should be effective.");
 		HoldemPlayerListener playerListener = sitInPlayers.get(player.getId());
 		HoldemTableListener tableListener = joinedPlayers.remove(player.getId());
-		
-		if(playerListener != null){
-			sitOut(tableState.getMutableSeatedPlayer(player.getId()));
+		if (playerListener != null) {
+			tableState.leave(player);
+			unsubscribeHoldemPlayerListener(player.getId(), playerListener);
 		}
 		
-		if (tableListener != null){
+		if (tableListener != null) {
 			unsubscribeHoldemTableListener(tableListener);
-			publishLeaveTableEvent(new LeaveTableEvent(player.getMemento().getId()));
 		}
+		
 	}
 	
 	public synchronized HoldemPlayerContext sitIn(SeatId seatId, int buyIn, MutablePlayer player,
 			HoldemPlayerListener holdemPlayerListener)
-	throws IllegalActionException {
+			throws IllegalActionException {
 		try {
 			HoldemPlayerContext toReturn = tableState.sitIn(seatId, new MutableSeatedPlayer(player, buyIn));
 			sitInPlayers.put(player.getId(), holdemPlayerListener);
 			subscribeHoldemPlayerListener(player.getId(), holdemPlayerListener);
-			if (sitInPlayers.size() > 1) {
+			if (sitInPlayers.size() == 2) {
 				tableState = tableState.getNextState();
-				tableState.deal(tableState.getGame().getDealer());
+				tableState.deal();
 			}
 			return toReturn;
 		} catch (IllegalValueException e) {
 			throw new IllegalActionException("You can not sit in to this table with the given buy-in of " + buyIn
 					+ "chips.");
 		}
-
+		
 	}
-
-
+	
 	public synchronized HoldemPlayerContext sitIn(int buyIn, MutablePlayer player,
-			HoldemPlayerListener holdemPlayerListener) throws IllegalActionException {
+			HoldemPlayerListener holdemPlayerListener)
+			throws IllegalActionException {
 		try {
 			HoldemPlayerContext toReturn = tableState.sitIn(new MutableSeatedPlayer(player, buyIn));
 			sitInPlayers.put(player.getId(), holdemPlayerListener);
 			subscribeHoldemPlayerListener(player.getId(), holdemPlayerListener);
-			if (sitInPlayers.size() > 1) {
+			if (sitInPlayers.size() == 2) {
 				tableState = tableState.getNextState();
-				tableState.deal(tableState.getGame().getDealer());
+				tableState.deal();
 			}
 			return toReturn;
 		} catch (IllegalValueException e) {
@@ -453,10 +421,8 @@ public class PokerTable {
 	
 	/**
 	 * Inform all subscribed holdem table listeners a fold event has occurred.
-	 * 
 	 * Each subscribed holdem table listener is updated by calling their
 	 * onFold() method.
-	 * 
 	 */
 	public synchronized void publishFoldEvent(FoldEvent event) {
 		for (HoldemTableListener listener : holdemTableListeners) {
@@ -466,10 +432,8 @@ public class PokerTable {
 	
 	/**
 	 * Inform all subscribed holdem table listeners a raise event has occurred.
-	 * 
 	 * Each subscribed holdem table listener is updated by calling their
 	 * onRaise() method.
-	 * 
 	 */
 	public synchronized void publishRaiseEvent(RaiseEvent event) {
 		for (HoldemTableListener listener : holdemTableListeners) {
@@ -479,10 +443,8 @@ public class PokerTable {
 	
 	/**
 	 * Inform all subscribed holdem table listeners a check event has occurred.
-	 * 
 	 * Each subscribed holdem table listener is updated by calling their
 	 * onCheck() method.
-	 * 
 	 */
 	public synchronized void publishCheckEvent(CheckEvent event) {
 		for (HoldemTableListener listener : holdemTableListeners) {
@@ -492,10 +454,8 @@ public class PokerTable {
 	
 	/**
 	 * Inform all subscribed holdem table listeners a call event has occurred.
-	 * 
 	 * Each subscribed holdem table listener is updated by calling their
 	 * onCall() method.
-	 * 
 	 */
 	public synchronized void publishCallEvent(CallEvent event) {
 		for (HoldemTableListener listener : holdemTableListeners) {
@@ -504,11 +464,9 @@ public class PokerTable {
 	}
 	
 	/**
-	 * Inform all subscribed holdem table listeners a pots changed event has occurred.
-	 * 
-	 * Each subscribed holdem table listener is updated by calling their
-	 * onPotsChanged() method.
-	 * 
+	 * Inform all subscribed holdem table listeners a pots changed event has
+	 * occurred. Each subscribed holdem table listener is updated by calling
+	 * their onPotsChanged() method.
 	 */
 	public synchronized void publishPotsChangedEvent(PotsChangedEvent event) {
 		for (HoldemTableListener listener : holdemTableListeners) {
@@ -518,10 +476,8 @@ public class PokerTable {
 	
 	/**
 	 * Inform all subscribed holdem table listeners a bet event has occurred.
-	 * 
 	 * Each subscribed holdem table listener is updated by calling their onBet()
 	 * method.
-	 * 
 	 */
 	public synchronized void publishBetEvent(BetEvent event) {
 		for (HoldemTableListener listener : holdemTableListeners) {
@@ -530,11 +486,9 @@ public class PokerTable {
 	}
 	
 	/**
-	 * Inform all subscribed winner listeners a winner event has occurred.
-	 * 
-	 * Each subscribed winner listener is updated by calling their
-	 * onWinnerEvent() method.
-	 * 
+	 * Inform all subscribed winner listeners a winner event has occurred. Each
+	 * subscribed winner listener is updated by calling their onWinnerEvent()
+	 * method.
 	 */
 	public void publishAllInEvent(AllInEvent event) {
 		for (HoldemTableListener listener : holdemTableListeners) {
@@ -544,11 +498,8 @@ public class PokerTable {
 	
 	/**
 	 * Inform all subscribed small blind listeners a small blind event has
-	 * occurred.
-	 * 
-	 * Each subscribed small blind listener is updated by calling their
-	 * onSmallBlind() method.
-	 * 
+	 * occurred. Each subscribed small blind listener is updated by calling
+	 * their onSmallBlind() method.
 	 */
 	public synchronized void publishSmallBlindEvent(SmallBlindEvent event) {
 		for (HoldemTableListener listener : holdemTableListeners) {
@@ -558,10 +509,8 @@ public class PokerTable {
 	
 	/**
 	 * Inform all subscribed big blind listeners a big blind event has occurred.
-	 * 
 	 * Each subscribed big blind listener is updated by calling their
 	 * onBigBlind() method.
-	 * 
 	 */
 	public synchronized void publishBigBlindEvent(BigBlindEvent event) {
 		for (HoldemTableListener listener : holdemTableListeners) {
@@ -571,10 +520,8 @@ public class PokerTable {
 	
 	/**
 	 * Inform all subscribed new round listeners a new round event has occurred.
-	 * 
 	 * Each subscribed new round listener is updated by calling their
 	 * onNewRoundEvent() method.
-	 * 
 	 */
 	public synchronized void publishNewRoundEvent(NewRoundEvent event) {
 		for (HoldemTableListener listener : holdemTableListeners) {
@@ -584,11 +531,8 @@ public class PokerTable {
 	
 	/**
 	 * Inform all subscribed new common cards listeners a new common cards event
-	 * has occurred.
-	 * 
-	 * Each subscribed new common cards listener is updated by calling their
-	 * onNewCommonCardsEvent() method.
-	 * 
+	 * has occurred. Each subscribed new common cards listener is updated by
+	 * calling their onNewCommonCardsEvent() method.
 	 */
 	public synchronized void publishNewCommonCardsEvent(NewCommunityCardsEvent event) {
 		for (HoldemTableListener listener : holdemTableListeners) {
@@ -598,10 +542,8 @@ public class PokerTable {
 	
 	/**
 	 * Inform all subscribed new deal listeners a new deal event has occurred.
-	 * 
 	 * Each subscribed new deal listener is updated by calling their
 	 * onNewDealEvent() method.
-	 * 
 	 */
 	public synchronized void publishNewDealEvent(NewDealEvent event) {
 		for (HoldemTableListener listener : holdemTableListeners) {
@@ -611,11 +553,8 @@ public class PokerTable {
 	
 	/**
 	 * Inform all subscribed next player listeners a next player event has
-	 * occurred.
-	 * 
-	 * Each subscribed next player listener is updated by calling their
-	 * onNextPlayerEvent() method.
-	 * 
+	 * occurred. Each subscribed next player listener is updated by calling
+	 * their onNextPlayerEvent() method.
 	 */
 	public void publishNextPlayerEvent(NextPlayerEvent event) {
 		cancelOldTimeOut();
@@ -626,11 +565,9 @@ public class PokerTable {
 	}
 	
 	/**
-	 * Inform all subscribed winner listeners a winner event has occurred.
-	 * 
-	 * Each subscribed winner listener is updated by calling their
-	 * onWinnerEvent() method.
-	 * 
+	 * Inform all subscribed winner listeners a winner event has occurred. Each
+	 * subscribed winner listener is updated by calling their onWinnerEvent()
+	 * method.
 	 */
 	public void publishWinnerEvent(WinnerEvent event) {
 		for (HoldemTableListener listener : holdemTableListeners) {
@@ -640,10 +577,8 @@ public class PokerTable {
 	
 	/**
 	 * Inform all subscribed show hand listeners a show hand event has occurred.
-	 * 
 	 * Each subscribed show hand listener is updated by calling their
 	 * onShowHandEvent() method.
-	 * 
 	 */
 	public void publishShowHandEvent(ShowHandEvent event) {
 		for (HoldemTableListener listener : holdemTableListeners) {
@@ -653,11 +588,8 @@ public class PokerTable {
 	
 	/**
 	 * Inform all subscribed player joined game listeners a player joined game
-	 * event has occurred.
-	 * 
-	 * Each subscribed player joined game listener is updated by calling their
-	 * onJoinTable() method.
-	 * 
+	 * event has occurred. Each subscribed player joined game listener is
+	 * updated by calling their onJoinTable() method.
 	 */
 	public void publishJoinTableEvent(JoinTableEvent event) {
 		for (HoldemTableListener listener : holdemTableListeners) {
@@ -667,11 +599,8 @@ public class PokerTable {
 	
 	/**
 	 * Inform all subscribed player left table listeners a player left table
-	 * event has occurred.
-	 * 
-	 * Each subscribed player left table listener is updated by calling their
-	 * onLeaveTable() method.
-	 * 
+	 * event has occurred. Each subscribed player left table listener is updated
+	 * by calling their onLeaveTable() method.
 	 */
 	public void publishLeaveTableEvent(LeaveTableEvent event) {
 		for (HoldemTableListener listener : holdemTableListeners) {
@@ -697,11 +626,8 @@ public class PokerTable {
 	
 	/**
 	 * Inform all subscribed new private cards listeners a new private cards
-	 * event event has occurred.
-	 * 
-	 * Each subscribed new private cards listener is updated by calling their
-	 * onNewPrivateCards() method.
-	 * 
+	 * event event has occurred. Each subscribed new private cards listener is
+	 * updated by calling their onNewPrivateCards() method.
 	 */
 	public synchronized void publishNewPocketCardsEvent(PlayerId id, NewPocketCardsEvent event) {
 		List<HoldemPlayerListener> listeners = holdemPlayerListeners.get(id);
@@ -718,7 +644,6 @@ public class PokerTable {
 	 * 
 	 * @param id The id of the player to get the new private cards events from.
 	 * @param listener The listener to subscribe.
-	 * 
 	 * @note This method is both non-blocking and thread-safe.
 	 */
 	public void subscribeHoldemPlayerListener(PlayerId id, HoldemPlayerListener listener) {

@@ -408,21 +408,16 @@ public class TableUserInputComposite
 	void sitInOutButtonMouseDown(MouseEvent evt) {
 		logger.debug("sitInOutButton.widgetSelected, event=" + evt);
 		
-		if (!sitInOutButton.getSelection()) {
-			try {
-				
+		try {
+			if (!sitInOutButton.getSelection()) {
 				user.sitIn(user.getSeatId(), user.getStackValue());
-			} catch (RemoteException e) {
-				getClientCore().handleRemoteException(e);
-				return;
-			} catch (IllegalActionException e) {
-				logger.error("This should not happen", e);
+			} else {
+				user.getPlayerContext().sitOut();
 			}
-		} else {
-			// TODO This is still to implement, sitOut() should not be equal to
-			// leaveGame()
-			// leaveGame()
-			// user.getPlayerContext().sitOut();
+		} catch (RemoteException e) {
+			getClientCore().handleRemoteException(e);
+		} catch (IllegalActionException e) {
+			logger.error("This should not happen", e);
 		}
 	}
 	

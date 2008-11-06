@@ -29,7 +29,6 @@ import org.cspoker.common.elements.table.SeatId;
  * A class to represent players.
  * 
  * @author Kenzo
- * 
  */
 public class MutableSeatedPlayer {
 	
@@ -43,7 +42,6 @@ public class MutableSeatedPlayer {
 	
 	/**
 	 * The chips the player has bet in this round.
-	 * 
 	 */
 	private final Chips betChips;
 	
@@ -57,6 +55,8 @@ public class MutableSeatedPlayer {
 	 */
 	private SeatId seatId;
 	
+	private boolean sittingIn;
+	
 	/***************************************************************************
 	 * Constructor
 	 **************************************************************************/
@@ -69,13 +69,14 @@ public class MutableSeatedPlayer {
 		pocketCards = new CopyOnWriteArrayList<Card>();
 	}
 	
-	public MutableSeatedPlayer(SeatedPlayer seatedPlayer) throws IllegalValueException {
+	public MutableSeatedPlayer(SeatedPlayer seatedPlayer)
+			throws IllegalValueException {
 		this.player = new MutablePlayer(seatedPlayer);
 		this.stack = new Chips(seatedPlayer.getStackValue());
 		betChips = new Chips(seatedPlayer.getBetChipsValue());
 		pocketCards = new CopyOnWriteArrayList<Card>();
 	}
-
+	
 	/**
 	 * Returns the name of this player.
 	 * 
@@ -143,7 +144,6 @@ public class MutableSeatedPlayer {
 	
 	/**
 	 * Deal a pocket card to this player.
-	 * 
 	 */
 	public void dealPocketCard(Card... cards) {
 		for (Card card : cards) {
@@ -152,10 +152,8 @@ public class MutableSeatedPlayer {
 	}
 	
 	/**
-	 * Returns the pocket cards of this player.
-	 * 
-	 * A change in the returned list, does not change the internal
-	 * representation.
+	 * Returns the pocket cards of this player. A change in the returned list,
+	 * does not change the internal representation.
 	 * 
 	 * @return The pocket cards of this player.
 	 */
@@ -168,8 +166,7 @@ public class MutableSeatedPlayer {
 	}
 	
 	public synchronized SeatedPlayer getMemento() {
-		return new SeatedPlayer(getId(), getSeatId(), getName(), getStack().getValue(), getBetChips()
-				.getValue());
+		return new SeatedPlayer(getId(), getSeatId(), getName(), getStack().getValue(), getBetChips().getValue());
 	}
 	
 	@Override
@@ -206,5 +203,13 @@ public class MutableSeatedPlayer {
 		} else if (!player.equals(other.player))
 			return false;
 		return true;
+	}
+	
+	public boolean isSittingIn() {
+		return sittingIn;
+	}
+	
+	public void setSittingIn(boolean sittingIn) {
+		this.sittingIn = sittingIn;
 	}
 }

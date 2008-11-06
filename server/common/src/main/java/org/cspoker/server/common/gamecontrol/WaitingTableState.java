@@ -22,6 +22,7 @@ import org.cspoker.common.api.lobby.holdemtable.event.SitInEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.SitOutEvent;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.HoldemPlayerContext;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
+import org.cspoker.common.elements.player.MutablePlayer;
 import org.cspoker.common.elements.player.MutableSeatedPlayer;
 import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.elements.player.SeatedPlayer;
@@ -34,11 +35,9 @@ import org.cspoker.server.common.elements.table.ServerTable;
 /**
  * A class to represent players at the table.
  * 
- * 
  * @invar A table must have a valid game property. |
  *        canHaveAsGameProperty(getGameProperty())
  * @invar Each player at the table is unique.
- * 
  */
 public class WaitingTableState
 		extends TableState {
@@ -61,9 +60,8 @@ public class WaitingTableState
 	}
 	
 	/**
-	 * Returns the list with all the players at this table.
-	 * 
-	 * The returned list is unmodifiable.
+	 * Returns the list with all the players at this table. The returned list is
+	 * unmodifiable.
 	 * 
 	 * @return The list with all the players at this table.
 	 */
@@ -102,7 +100,7 @@ public class WaitingTableState
 	}
 	
 	@Override
-	public void deal(MutableSeatedPlayer player)
+	public void deal()
 			throws IllegalActionException {
 		throw new IllegalActionException("Deal is not a valid action.");
 	}
@@ -125,7 +123,9 @@ public class WaitingTableState
 			throws IllegalActionException {
 		
 		try {
-			serverTable.addPlayer(seatId, player);
+			if (!serverTable.hasAsPlayer(player)) {
+				serverTable.addPlayer(seatId, player);
+			}
 		} catch (SeatTakenException e) {
 			throw new IllegalActionException("Joining table " + mediatingTable.getTableId().toString()
 					+ " is not a valid action." + e.getMessage());
@@ -133,29 +133,31 @@ public class WaitingTableState
 			throw new IllegalActionException("Joining table " + mediatingTable.getTableId().toString()
 					+ " is not a valid action." + e.getMessage());
 		}
-		
+		player.setSittingIn(true);
 		mediatingTable.publishSitInEvent(new SitInEvent(player.getMemento()));
 		return new HoldemPlayerContextImpl(player, mediatingTable);
 		
 	}
-
+	
 	@Override
 	public HoldemPlayerContext sitIn(MutableSeatedPlayer player)
 			throws IllegalActionException {
 		try {
-			serverTable.addPlayer(player);
+			if (!serverTable.hasAsPlayer(player)) {
+				serverTable.addPlayer(player);
+			}
 		} catch (PlayerListFullException e) {
-			throw new IllegalActionException("Joining table " + mediatingTable.getTableId().toString()
-					+ " failed: " + e.getMessage());
+			throw new IllegalActionException("Joining table " + mediatingTable.getTableId().toString() + " failed: "
+					+ e.getMessage());
 		}
-		
+		player.setSittingIn(true);
 		mediatingTable.publishSitInEvent(new SitInEvent(player.getMemento()));
 		return new HoldemPlayerContextImpl(player, mediatingTable);
 	}
 	
 	@Override
 	public void sitOut(MutableSeatedPlayer player) {
-		serverTable.removePlayer(player);
+		player.setSittingIn(false);
 		mediatingTable.publishSitOutEvent(new SitOutEvent(player.getId(), false));
 	}
 	
@@ -163,13 +165,25 @@ public class WaitingTableState
 	public PlayingTableState getNextState() {
 		return new PlayingTableState(mediatingTable, serverTable);
 	}
-
+	
 	@Override
 	public MutableSeatedPlayer getMutableSeatedPlayer(PlayerId id) {
-		for(MutableSeatedPlayer player :serverTable.getMutableSeatedPlayers()){
-			if(player.getId().equals(id))
+		for (MutableSeatedPlayer player : serverTable.getMutableSeatedPlayers()) {
+			if (player.getId().equals(id))
 				return player;
 		}
 		return null;
+	}
+	
+	/**
+	 * @param player
+	 * @throws IllegalActionException
+	 * @see org.cspoker.server.common.gamecontrol.TableState#leave(org.cspoker.common.elements.player.MutablePlayer)
+	 */
+	@Override
+	public void leave(MutablePlayer player) {
+		MutableSeatedPlayer seated = getMutableSeatedPlayer(player.getId());
+		serverTable.removePlayer(seated);
+		
 	}
 }

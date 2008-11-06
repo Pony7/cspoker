@@ -25,16 +25,17 @@ import org.cspoker.common.elements.table.TableId;
 
 @XmlRootElement
 @Immutable
-public class LeaveGameAction extends HoldemPlayerAction<Void> {
-
+public class SitOutAction
+		extends HoldemPlayerAction<Void> {
+	
 	private static final long serialVersionUID = -2251924692529703613L;
-
-	public LeaveGameAction(EventId id, TableId tableId) {
-		super(id,tableId);
+	
+	public SitOutAction(EventId id, TableId tableId) {
+		super(id, tableId);
 	}
-
-	protected LeaveGameAction() {
-		// no op
+	
+	protected SitOutAction() {
+	// no op
 	}
 	
 	@Override
@@ -42,5 +43,5 @@ public class LeaveGameAction extends HoldemPlayerAction<Void> {
 		holdemPlayerContext.sitOut();
 		return null;
 	}
-
+	
 }

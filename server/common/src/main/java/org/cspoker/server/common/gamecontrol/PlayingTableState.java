@@ -22,18 +22,11 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
-import org.cspoker.common.api.lobby.holdemtable.event.BetEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.CallEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.CheckEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.FoldEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.NextPlayerEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.PotsChangedEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.RaiseEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.SitInEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.SitOutEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.*;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.HoldemPlayerContext;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.chips.Pots;
+import org.cspoker.common.elements.player.MutablePlayer;
 import org.cspoker.common.elements.player.MutableSeatedPlayer;
 import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.elements.player.SeatedPlayer;
@@ -54,7 +47,6 @@ import org.cspoker.server.common.gamecontrol.rules.NoLimit;
  * the state (round) in which the players are.
  * 
  * @author Kenzo
- * 
  */
 public class PlayingTableState
 		extends TableState {
@@ -72,11 +64,10 @@ public class PlayingTableState
 	
 	/**
 	 * The variable containing the round in which the current game is.
-	 * 
 	 */
 	private Round round;
 	
-	//DateFormat class is not thread safe.
+	// DateFormat class is not thread safe.
 	private static final String dateFormat = "yyyy/MM/dd - HH:mm:ss (z)";
 	
 	/***************************************************************************
@@ -85,7 +76,6 @@ public class PlayingTableState
 	
 	/**
 	 * Construct a new game control with given table.
-	 * 
 	 */
 	public PlayingTableState(PokerTable gameMediator, ServerTable table) {
 		this(gameMediator, table, table.getRandomPlayer());
@@ -216,10 +206,8 @@ public class PlayingTableState
 	}
 	
 	/**
-	 * The given player folds the cards.
-	 * 
-	 * The player will not be able to take any actions in the coming rounds of
-	 * the current deal.
+	 * The given player folds the cards. The player will not be able to take any
+	 * actions in the coming rounds of the current deal.
 	 * 
 	 * @param player The player who folds.
 	 * @throws IllegalActionException [must] It's not the turn of the given
@@ -247,14 +235,10 @@ public class PlayingTableState
 	 *             action.
 	 */
 	@Override
-	public synchronized void deal(MutableSeatedPlayer player)
+	public synchronized void deal()
 			throws IllegalActionException {
-		round.deal(player);
+		round.deal(game.getDealer());
 		checkIfEndedAndChangeRound();
-	}
-	
-	public synchronized void deal() throws IllegalActionException{
-		deal(game.getDealer());
 	}
 	
 	/**
@@ -309,7 +293,7 @@ public class PlayingTableState
 		} catch (PlayerListFullException e) {
 			throw new IllegalActionException(e.getMessage());
 		}
-		
+		player.setSittingIn(true);
 		mediatingTable.publishSitInEvent(new SitInEvent(player.getMemento()));
 		
 		// auto-deal
@@ -329,19 +313,13 @@ public class PlayingTableState
 	
 	@Override
 	public synchronized void sitOut(MutableSeatedPlayer player) {
+		
 		if (!game.getTable().hasAsPlayer(player)) {
 			return;
 		}
-		
+		player.setSittingIn(false);
 		try {
-			round.foldAction(player);
-		} catch (IllegalActionException e) {
-			// no op
-		}
-		SeatedPlayer immutablePlayer = player.getMemento();
-		try {
-			game.sitOut(player);
-			mediatingTable.publishSitOutEvent(new SitOutEvent(immutablePlayer.getId(), false));
+			game.sitOut(player, false);
 		} catch (IllegalActionException e) {}
 		
 		if (game.hasNoSeatedPlayers()) {
@@ -387,7 +365,6 @@ public class PlayingTableState
 	
 	/**
 	 * End this round and change the round to the next round.
-	 * 
 	 */
 	private void changeToNextRound() {
 		round.endRound();
@@ -414,7 +391,7 @@ public class PlayingTableState
 					+ " showdown players. Auto-deal handler submitted with a delay of " + delay + " ms.");
 		} else {
 			try {
-				deal(game.getDealer());
+				deal();
 			} catch (IllegalActionException e) {}
 		}
 		
@@ -428,7 +405,7 @@ public class PlayingTableState
 		public void run() {
 			try {
 				PlayingTableState.logger.info(game.getDealer() + " auto-deal called.");
-				deal(game.getDealer());
+				deal();
 			} catch (IllegalActionException e) {
 				PlayingTableState.logger.error(e);
 			}
@@ -439,14 +416,36 @@ public class PlayingTableState
 	public TableState getNextState() {
 		return this;
 	}
-
+	
 	@Override
 	public MutableSeatedPlayer getMutableSeatedPlayer(PlayerId id) {
-		for(MutableSeatedPlayer player :game.getTable().getMutableSeatedPlayers()){
-			if(player.getId().equals(id))
+		for (MutableSeatedPlayer player : game.getTable().getMutableSeatedPlayers()) {
+			if (player.getId().equals(id))
 				return player;
 		}
 		return null;
+	}
+	
+	/**
+	 * @param player
+	 * @throws IllegalActionException
+	 * @see org.cspoker.server.common.gamecontrol.TableState#leave(org.cspoker.common.elements.player.MutableSeatedPlayer)
+	 */
+	@Override
+	public void leave(MutablePlayer player) {
+		MutableSeatedPlayer seated = getMutableSeatedPlayer(player.getId());
+		if (!game.getTable().hasAsPlayer(seated)) {
+			logger.warn(player + " is not seated at the table.");
+			return;
+		}
+		
+		try {
+			round.foldAction(seated);
+		} catch (IllegalActionException e) {
+			// no op
+		}
+		sitOut(seated);
+		game.getTable().removePlayer(seated);
 	}
 	
 }

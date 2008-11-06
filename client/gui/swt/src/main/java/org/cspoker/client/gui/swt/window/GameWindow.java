@@ -13,6 +13,7 @@ package org.cspoker.client.gui.swt.window;
 
 import java.rmi.RemoteException;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Set;
 
@@ -224,24 +225,27 @@ public class GameWindow
 	 */
 	public void onFold(FoldEvent foldEvent) {
 		getPlayerSeatComposite(foldEvent.getPlayerId()).showAction("Fold");
+		Collection<Card> noCards = Collections.emptySet();
+		getPlayerSeatComposite(foldEvent.getPlayerId()).setHoleCards(noCards);
 		userInputComposite.showDealerMessage(foldEvent);
 	}
 	
 	/**
 	 * @see org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener#onLeaveGame(org.cspoker.common.api.lobby.holdemtable.event.LeaveGameEvent)
 	 */
-	public void onSitOut(SitOutEvent leaveGameEvent) {
-		PlayerSeatComposite psc = getPlayerSeatComposite(leaveGameEvent.getPlayerId());
+	public void onSitOut(SitOutEvent sitOutEvent) {
+		PlayerSeatComposite psc = getPlayerSeatComposite(sitOutEvent.getPlayerId());
 		psc.getPlayer().setSittingOut(true);
 		
 		psc.updatePlayerInfo();
-		if (leaveGameEvent.getPlayerId().equals(user.getMemento().getId())) {
+		if (sitOutEvent.getPlayerId().equals(user.getMemento().getId())) {
 			userInputComposite.sitInOutButton.setText("Sit In");
+			if (!userInputComposite.sitInOutButton.isFocusControl()) {
+				userInputComposite.sitInOutButton.setSelection(false);
+			}
 		}
-		if (!userInputComposite.sitInOutButton.isFocusControl()) {
-			userInputComposite.sitInOutButton.setSelection(false);
-		}
-		userInputComposite.showDealerMessage(leaveGameEvent);
+		
+		userInputComposite.showDealerMessage(sitOutEvent);
 		tableComposite.updateTableGraphics();
 		
 	}
@@ -336,6 +340,8 @@ public class GameWindow
 	public void onSitIn(SitInEvent sitInEvent) {
 		if (user.getName().equalsIgnoreCase(sitInEvent.getPlayer().getName())) {
 			user.setPlayer(sitInEvent.getPlayer());
+			userInputComposite.sitInOutButton.setSelection(true);
+			userInputComposite.sitInOutButton.setText("Sit Out");
 			userInputComposite.generalActionHolder.setVisible(true);
 			
 		}
