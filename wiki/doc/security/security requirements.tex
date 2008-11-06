@@ -7,7 +7,7 @@
 
 \author{Cedric~Cuypers, Kenzo~Tomita, Guy~Van~den~Broeck} 
 % define title
-\title{Security Requirements Poker Application} 
+\title{Security Requirements: Poker Application} 
 
 \bibliographystyle{alpha}
 
@@ -20,7 +20,7 @@
 \chapter{Introduction}
 \chapter{Identifying threats}
 \section{DFDs}
-Figure \ref{fig:context} shows the context level of the DFD. Figure \ref{fig:level_0} shows the level-0 DFD. The arrows are not annotated to make the diagram readable. A simplified version with only the player and annotated arrows can be found in figure \ref{fig:level_0_player}. In the following analysis only the interaction with the player will be considered as misuse cases, as those with an administrator as external entity are similar. Although some processes are complex and should be drilled down, we've chosen to do the STRIDE analysis on level-0 because it would generate sufficient documentation.
+Figure \ref{fig:context} shows the context level of the DFD. Figure \ref{fig:level_0} shows the level-0 DFD. The arrows are not annotated to make the diagram readable. A simplified version with only the player and annotated arrows can be found in figure \ref{fig:level_0_player}. In the following analysis only the interaction with the player will be considered as misuse cases, as those with an administrator as external entity are similar. Although some processes are complex and should be drilled down, we've chosen to do the STRIDE analysis on level-0 because it would already generate sufficient documentation.
 \begin{figure}[h]
   \begin{center}
     \includegraphics[scale=0.8]{context_diagram}
@@ -74,10 +74,12 @@ Figure \ref{fig:context} shows the context level of the DFD. Figure \ref{fig:lev
 \item Make sure credentials are well protected on the server side.
 \item Transmit credentials over the wire securely.
 \item Test credentials for uniqueness and complexity.
+\item Certify client software to enforce that credentials are handled securely.
 \end{itemize}
 \end{itemize}
 
 \subsubsection{Repudiation of a Player}
+\label{Repudiation of a Player}
 \textbf{Primary mis-actor:}
 \begin{itemize}
 \item Crook
@@ -85,7 +87,7 @@ Figure \ref{fig:context} shows the context level of the DFD. Figure \ref{fig:lev
 \textbf{Basic path:}
 \begin{itemize}
 \item The mis-actor performs an action or transaction.
-\item The mis-actor repudiates the action or transaction (For example: he repudiates his bet when it turns out that another player has a better hand).
+\item The mis-actor repudiates the action or transaction For example, he repudiates his bet when it turns out that another player has a better hand.
 \item The system fails to prove that the mis-actor is responsible.
 \end{itemize}
 \textbf{Alternative paths:}
@@ -156,31 +158,8 @@ Figure \ref{fig:context} shows the context level of the DFD. Figure \ref{fig:lev
 \end{itemize}
 
 \subsubsection{Repudiation of an action at the poker server}
-\textbf{Primary mis-actor:}
-\begin{itemize}
-\item Crook
-\end{itemize}
-\textbf{Basic path:}
-\begin{itemize}
-\item The mis-actor performs an action at the poker server.
-\item The mis-actor denies he performed the action.
-\item The system fails to prove that the mis-actor is responsible. 
-\end{itemize}
-\textbf{Alternative paths:}
-\begin{itemize}
-\item The mis-actor performs a replay from an action of an other actor. 
-\item The mis-actor tampers with logging to remove evidence. 
-\item The mis-actor spoofs an other actor.
-\end{itemize}
-\textbf{Capture points:}
-\begin{itemize}
-\item \textbf{Prevention:}
-\begin{itemize}
-\item Protection against replay attacks. 
-\item Log all actions in a secure way.
-\item Strong authentication to make spoofing impossible. 
-\end{itemize}
-\end{itemize}
+See section \ref{Repudiation of a Player}.
+
 \subsubsection{Information disclosure at the poker server}
 \textbf{Primary mis-actor:}
 \begin{itemize}
@@ -851,8 +830,8 @@ business threats where a mis-actor might use this to profile certain players.
 at this level. Otherwise the number of misuse cases would explode.
 \end{itemize}
 
-\nocite{1202957}.
-\nocite{citeulike:174301}.
+\nocite{1202957}
+\nocite{citeulike:174301}
 
 \addcontentsline{toc}{chapter}{Bibliography}
 \bibliography{oass2}
