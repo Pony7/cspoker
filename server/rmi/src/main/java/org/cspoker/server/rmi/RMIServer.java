@@ -28,12 +28,10 @@ import org.apache.log4j.Logger;
 import org.cspoker.common.CSPokerServer;
 import org.cspoker.common.ExternalRemoteCSPokerServer;
 import org.cspoker.common.RemoteCSPokerServer;
-import org.cspoker.common.api.shared.Trigger;
 import org.cspoker.common.api.shared.context.AsynchronousServerContext;
 import org.cspoker.common.api.shared.context.ExternalRemoteServerContext;
 import org.cspoker.common.api.shared.context.RemoteServerContext;
 import org.cspoker.common.api.shared.context.ServerContext;
-import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.util.threading.RequestExecutor;
 import org.cspoker.server.rmi.export.ExportingServerContext;
 import org.cspoker.server.rmi.unremote.context.UnremoteServerContext;
@@ -45,7 +43,10 @@ public class RMIServer
 	
 	private final int port;
 	
-	private final CSPokerServer cspokerServer;
+	final CSPokerServer cspokerServer;
+
+	//hack to prevent GC?
+	RemoteCSPokerServer stub;
 	
 	public RMIServer(int port, CSPokerServer cspokerServer) {
 		this.port = port;
@@ -55,11 +56,6 @@ public class RMIServer
 	public ExternalRemoteServerContext login(String username, String password)
 			throws LoginException, RemoteException {
 		ServerContext rootServer = cspokerServer.login(username, password);
-		Trigger connectionLostTrigger = new Trigger(){
-			public void trigger() {
-				
-			}
-		};
 		RemoteServerContext context = new ExportingServerContext(
 				new UnremoteServerContext(new AsynchronousServerContext(
 						new SequencePreservingExecutor(RequestExecutor.getInstance()), rootServer)));
@@ -82,7 +78,7 @@ public class RMIServer
 				public Void call()
 						throws RemoteException {
 					Registry registry = LocateRegistry.createRegistry(port);
-					RemoteCSPokerServer stub = (RemoteCSPokerServer) UnicastRemoteObject.exportObject(RMIServer.this, 0);
+					stub = (RemoteCSPokerServer) UnicastRemoteObject.exportObject(RMIServer.this, 0);
 					try {
 						registry.bind("CSPokerServer", stub);
 					} catch (AlreadyBoundException exception) {

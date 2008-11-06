@@ -34,8 +34,8 @@ import org.cspoker.common.elements.player.PlayerId;
 @ThreadSafe
 public class XmlRemoteAccountContext implements RemoteAccountContext {
 
-	private ActionPerformer performer;
-	private IDGenerator generator;
+	private final ActionPerformer performer;
+	private final IDGenerator generator;
 
 	public XmlRemoteAccountContext(ActionPerformer performer, IDGenerator generator) {
 		this.performer = performer;

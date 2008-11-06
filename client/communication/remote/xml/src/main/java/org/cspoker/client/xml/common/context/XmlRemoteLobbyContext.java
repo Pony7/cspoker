@@ -29,6 +29,7 @@ import org.cspoker.common.api.lobby.action.JoinHoldemTableAction;
 import org.cspoker.common.api.lobby.context.RemoteLobbyContext;
 import org.cspoker.common.api.lobby.holdemtable.context.RemoteHoldemTableContext;
 import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
+import org.cspoker.common.api.shared.Trigger;
 import org.cspoker.common.api.shared.action.ActionPerformer;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.table.DetailedHoldemTable;
@@ -39,10 +40,10 @@ import org.cspoker.common.elements.table.TableList;
 @ThreadSafe
 public class XmlRemoteLobbyContext implements RemoteLobbyContext{
 
-	private ActionPerformer performer;
-	private IDGenerator generator;
-	private ConcurrentHashMap<TableId, RemoteHoldemTableContext> contexts = new ConcurrentHashMap<TableId, RemoteHoldemTableContext>();
-	private XmlServerListenerTree serverListenerTree;
+	private final ActionPerformer performer;
+	private final IDGenerator generator;
+	private final ConcurrentHashMap<TableId, RemoteHoldemTableContext> contexts = new ConcurrentHashMap<TableId, RemoteHoldemTableContext>();
+	private final XmlServerListenerTree serverListenerTree;
 
 	public XmlRemoteLobbyContext(ActionPerformer performer, IDGenerator generator, XmlServerListenerTree serverListenerTree) {
 		this.performer = performer;
@@ -64,10 +65,15 @@ public class XmlRemoteLobbyContext implements RemoteLobbyContext{
 		return performer.perform(new GetTableListAction(generator.getNextID()));
 	}
 
-	public RemoteHoldemTableContext joinHoldemTable(TableId tableID,
+	public RemoteHoldemTableContext joinHoldemTable(final TableId tableID,
 			HoldemTableListener holdemTableListener) throws RemoteException,
 			IllegalActionException {
-		XmlRemoteHoldemTableContext context = new XmlRemoteHoldemTableContext(performer,generator,tableID, serverListenerTree);
+		Trigger staleTableContext = new Trigger(){
+			public void trigger() {
+				contexts.remove(tableID);
+			}
+		};
+		XmlRemoteHoldemTableContext context = new XmlRemoteHoldemTableContext(performer,generator,tableID, serverListenerTree,staleTableContext);
 		if(contexts.putIfAbsent(tableID, context)==null){
 			serverListenerTree.getLobbyListenerTree().getHoldemTableListenerTree(tableID).setHoldemTableListener(holdemTableListener);
 			performer.perform(new JoinHoldemTableAction(generator.getNextID(),tableID));

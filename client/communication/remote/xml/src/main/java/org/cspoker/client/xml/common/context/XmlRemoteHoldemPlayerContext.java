@@ -25,6 +25,7 @@ import org.cspoker.common.api.lobby.holdemtable.holdemplayer.action.CheckOrCallA
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.action.FoldAction;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.action.SitOutAction;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.RemoteHoldemPlayerContext;
+import org.cspoker.common.api.shared.Trigger;
 import org.cspoker.common.api.shared.action.ActionPerformer;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.table.TableId;
@@ -32,18 +33,20 @@ import org.cspoker.common.elements.table.TableId;
 @ThreadSafe
 public class XmlRemoteHoldemPlayerContext implements RemoteHoldemPlayerContext {
 
-	private ActionPerformer performer;
-	private IDGenerator generator;
-	private TableId tableID;
+	private final ActionPerformer performer;
+	private final IDGenerator generator;
+	private final TableId tableID;
+	private final Trigger stalePlayerContextTrigger;
 
-	public XmlRemoteHoldemPlayerContext(ActionPerformer performer, IDGenerator generator, TableId tableID) {
+	public XmlRemoteHoldemPlayerContext(ActionPerformer performer, IDGenerator generator, TableId tableID, Trigger stalePlayerContextTrigger) {
 		this.performer = performer;
 		this.generator = generator;
 		this.tableID = tableID;
+		this.stalePlayerContextTrigger = stalePlayerContextTrigger;
 	}
-	
+
 	public void betOrRaise(int amount) throws RemoteException,
-			IllegalActionException {
+	IllegalActionException {
 		performer.perform(new BetOrRaiseAction(generator.getNextID(),tableID,amount));
 	}
 
@@ -56,7 +59,10 @@ public class XmlRemoteHoldemPlayerContext implements RemoteHoldemPlayerContext {
 	}
 
 	public void sitOut() throws RemoteException, IllegalActionException {
-		performer.perform(new SitOutAction(generator.getNextID(),tableID));
+		performer.perform(new SitOutAction(generator.getNextID(),
+				tableID));
+		//TODO synchronization needed?
+		stalePlayerContextTrigger.trigger();
 	}
 
 }

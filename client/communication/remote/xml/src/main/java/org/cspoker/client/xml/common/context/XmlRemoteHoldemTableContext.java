@@ -28,6 +28,7 @@ import org.cspoker.common.api.lobby.holdemtable.action.SitInAnywhereAction;
 import org.cspoker.common.api.lobby.holdemtable.context.RemoteHoldemTableContext;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.RemoteHoldemPlayerContext;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.listener.HoldemPlayerListener;
+import org.cspoker.common.api.shared.Trigger;
 import org.cspoker.common.api.shared.action.ActionPerformer;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.table.SeatId;
@@ -36,28 +37,38 @@ import org.cspoker.common.elements.table.TableId;
 @ThreadSafe
 public class XmlRemoteHoldemTableContext implements RemoteHoldemTableContext {
 
-	private ActionPerformer performer;
-	private IDGenerator generator;
-	private TableId tableID;
+	private final ActionPerformer performer;
+	private final IDGenerator generator;
+	private final TableId tableID;
 	
 	private final AtomicReference<RemoteHoldemPlayerContext> playerContext = new AtomicReference<RemoteHoldemPlayerContext>();
-	private XmlServerListenerTree serverListenerTree;
-
-	public XmlRemoteHoldemTableContext(ActionPerformer performer, IDGenerator generator, TableId tableID, XmlServerListenerTree serverListenerTree) {
+	private final XmlServerListenerTree serverListenerTree;
+	private final Trigger stalePlayerContextTrigger;
+	private final Trigger staleTableContextTrigger;
+	
+	public XmlRemoteHoldemTableContext(ActionPerformer performer, IDGenerator generator, TableId tableID, XmlServerListenerTree serverListenerTree, Trigger staleTableContextTrigger) {
 		this.performer = performer;
 		this.generator = generator;
 		this.tableID = tableID;
 		this.serverListenerTree = serverListenerTree;
+		stalePlayerContextTrigger = new Trigger(){
+			public void trigger() {
+				playerContext.set(null);
+			}
+		};
+		this.staleTableContextTrigger = staleTableContextTrigger;
 	}
 	
 	public void leaveTable() throws RemoteException, IllegalActionException {
 		performer.perform(new LeaveTableAction(generator.getNextID(),tableID));
+		//TODO synchronization needed?
+		staleTableContextTrigger.trigger();
 	}
 
 	public RemoteHoldemPlayerContext sitIn(SeatId seatId, int amount,
 			HoldemPlayerListener holdemPlayerListener) throws RemoteException,
 			IllegalActionException {
-		if(playerContext.compareAndSet(null, new XmlRemoteHoldemPlayerContext(performer,generator,tableID))){
+		if(playerContext.compareAndSet(null, new XmlRemoteHoldemPlayerContext(performer,generator,tableID, stalePlayerContextTrigger))){
 			serverListenerTree.getLobbyListenerTree().getHoldemTableListenerTree(tableID).setHoldemPlayerListener(holdemPlayerListener);
 			performer.perform(new SitInAction(generator.getNextID(),tableID,seatId,amount));
 			return playerContext.get();
@@ -69,7 +80,7 @@ public class XmlRemoteHoldemTableContext implements RemoteHoldemTableContext {
 	public RemoteHoldemPlayerContext sitIn(int amount,
 			HoldemPlayerListener holdemPlayerListener) throws RemoteException,
 			IllegalActionException {
-		if(playerContext.compareAndSet(null, new XmlRemoteHoldemPlayerContext(performer,generator,tableID))){
+		if(playerContext.compareAndSet(null, new XmlRemoteHoldemPlayerContext(performer,generator,tableID, stalePlayerContextTrigger))){
 			serverListenerTree.getLobbyListenerTree().getHoldemTableListenerTree(tableID).setHoldemPlayerListener(holdemPlayerListener);
 			performer.perform(new SitInAnywhereAction(generator.getNextID(),tableID,amount));
 			return playerContext.get();

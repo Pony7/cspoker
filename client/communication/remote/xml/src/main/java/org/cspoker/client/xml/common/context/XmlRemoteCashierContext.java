@@ -29,8 +29,8 @@ import org.cspoker.common.api.shared.exception.IllegalActionException;
 @ThreadSafe
 public class XmlRemoteCashierContext implements RemoteCashierContext {
 
-	private ActionPerformer performer;
-	private IDGenerator generator;
+	private final ActionPerformer performer;
+	private final IDGenerator generator;
 
 	public XmlRemoteCashierContext(ActionPerformer performer, IDGenerator generator) {
 		this.performer = performer;

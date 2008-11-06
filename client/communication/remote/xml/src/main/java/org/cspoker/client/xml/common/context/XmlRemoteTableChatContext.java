@@ -29,9 +29,9 @@ import org.cspoker.common.elements.table.TableId;
 @ThreadSafe
 public class XmlRemoteTableChatContext implements RemoteChatContext {
 
-	protected ActionPerformer performer;
-	protected IDGenerator generator;
-	private TableId tableID;
+	private final ActionPerformer performer;
+	private final IDGenerator generator;
+	private final TableId tableID;
 
 	public XmlRemoteTableChatContext(ActionPerformer performer, IDGenerator generator, TableId tableID) {
 		this.performer = performer;
