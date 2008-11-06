@@ -299,93 +299,24 @@ Figure \ref{fig:context} shows the context level of the DFD. Figure \ref{fig:lev
 \subsubsection{Elevation of privilege at the lobby}
 \subsection{Table}
 \subsubsection{Spoofing a table}
-\textbf{Primary mis-actor:}
-\begin{itemize}
-\item 
-\end{itemize}
-\textbf{Basic path:}
-\begin{itemize}
-\item 
-\end{itemize}
-\textbf{Alternative paths:}
-\begin{itemize}
-\item 
-\end{itemize}
-\textbf{Capture points:}
-\begin{itemize}
-\item \textbf{Prevention:}
-\begin{itemize}
-\item 
-\end{itemize}
-\item \textbf{Detection:}
-\begin{itemize}
-\item 
-\end{itemize}
-\end{itemize}
 \subsubsection{Tampering with a table}
-\textbf{Primary mis-actor:}
-\begin{itemize}
-\item 
-\end{itemize}
-\textbf{Basic path:}
-\begin{itemize}
-\item 
-\end{itemize}
-\textbf{Alternative paths:}
-\begin{itemize}
-\item 
-\end{itemize}
-\textbf{Capture points:}
-\begin{itemize}
-\item \textbf{Prevention:}
-\begin{itemize}
-\item 
-\end{itemize}
-\item \textbf{Detection:}
-\begin{itemize}
-\item 
-\end{itemize}
-\end{itemize}
 \subsubsection{Repudiation of a table}
-\textbf{Primary mis-actor:}
-\begin{itemize}
-\item 
-\end{itemize}
-\textbf{Basic path:}
-\begin{itemize}
-\item 
-\end{itemize}
-\textbf{Alternative paths:}
-\begin{itemize}
-\item 
-\end{itemize}
-\textbf{Capture points:}
-\begin{itemize}
-\item \textbf{Prevention:}
-\begin{itemize}
-\item 
-\end{itemize}
-\item \textbf{Detection:}
-\begin{itemize}
-\item 
-\end{itemize}
-\end{itemize}
 \subsubsection{Information disclosure at a table}
-\textbf{Assets:}
-\begin{itemize}
-\item Hole Cards
-\end{itemize}
 \textbf{Primary mis-actor:}
 \begin{itemize}
 \item Crook
 \end{itemize}
 \textbf{Basic path:}
 \begin{itemize}
-\item 
+\item The mis-actor spoofs an other actor with access to private information regarding this table
+(e.g. pocket cards of players, ...).
+\item The mis-actor uses the private information.
 \end{itemize}
 \textbf{Alternative paths:}
 \begin{itemize}
-\item 
+\item Elevation of privilege of the mis-actor leads to information disclosure.
+\item The mis-actor sends invalid input to the table.
+\item The mis-actor has access to the memory and can alter its state (e.g. debugging mode).
 \end{itemize}
 \textbf{Capture points:}
 \begin{itemize}
@@ -398,30 +329,8 @@ Figure \ref{fig:context} shows the context level of the DFD. Figure \ref{fig:lev
 \item 
 \end{itemize}
 \end{itemize}
+
 \subsubsection{DoS against a table}
-\textbf{Primary mis-actor:}
-\begin{itemize}
-\item 
-\end{itemize}
-\textbf{Basic path:}
-\begin{itemize}
-\item 
-\end{itemize}
-\textbf{Alternative paths:}
-\begin{itemize}
-\item 
-\end{itemize}
-\textbf{Capture points:}
-\begin{itemize}
-\item \textbf{Prevention:}
-\begin{itemize}
-\item 
-\end{itemize}
-\item \textbf{Detection:}
-\begin{itemize}
-\item 
-\end{itemize}
-\end{itemize}
 \subsubsection{Elevation of Privilege}
 \subsection{Chat Service}
 \subsection{Cashier}
