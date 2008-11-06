@@ -95,10 +95,6 @@ Figure \ref{fig:context} shows the context level of the DFD. Figure \ref{fig:lev
 \item Transmit credentials over the wire securely.
 \item Test credentials for uniqueness and complexity.
 \end{itemize}
-\item \textbf{Detection:}
-\begin{itemize}
-\item Validate input.
-\end{itemize}
 \end{itemize}
 
 \subsubsection{Repudiation of a Player}
@@ -108,22 +104,22 @@ Figure \ref{fig:context} shows the context level of the DFD. Figure \ref{fig:lev
 \end{itemize}
 \textbf{Basic path:}
 \begin{itemize}
-\item The mis-actor prepares the process that can spoof a poker server.
-\item The mis-actor deploys its process on the online casino servers (performed by a skilled insider).
-\item The mis-actor can cheat and steal sensitive data from the users.
+\item The mis-actor performs an action or transaction.
+\item The mis-actor repudiates the action or transaction (For example: he repudiates his bet when it turns out that another player has a better hand).
+\item The system fails to prove that the mis-actor is responsible.
 \end{itemize}
 \textbf{Alternative paths:}
 \begin{itemize}
-\item The mis-actor deploys its process on an external server (performed by a skilled outsider).
+\item The mis-actor tampers with the logging process to remove evidence.
 \end{itemize}
 \textbf{Capture points:}
 \begin{itemize}
 \item \textbf{Prevention:}
 \begin{itemize}
-\item Only administrators of the online casino can place code on the online poker servers.
-\item Only the code that is running on trusted locations can be used as part of the system.
-\item Poker servers are authenticated.
-\item Messages coming out of the repository are signed.
+\item Use a strong signature system for messages originating from the player.
+\item Use antireplay defences.
+\item Log all actions and transactions.
+\item Secure access to the logging process.
 \end{itemize}
 \end{itemize}
 
@@ -541,4 +537,84 @@ store can handle).
 \subsubsection{Tampering with the audit log}
 \subsubsection{Repudiation of logging something in the audit log}
 \subsubsection{Information disclosure of the audit log}
+
+\subsection{Data Flows from a Player}
+
+\subsubsection{Tampering with the Data Flow from a Player to the Poker Server}
+\textbf{Primary mis-actor:}
+\begin{itemize}
+\item Crook
+\end{itemize}
+\textbf{Basic path:}
+\begin{itemize}
+\item The mis-actor find a weakness in the integrity of messages in the data flow.
+\item The mis-actor changes messages to his advantage, sends fake messages that go undetected or replays messages sent by a Player.
+\end{itemize}
+\textbf{Alternative paths:}
+\begin{itemize}
+\item The mis-actor tampers with the logging process to remove evidence.
+\end{itemize}
+\textbf{Capture points:}
+\begin{itemize}
+\item \textbf{Prevention:}
+\begin{itemize}
+\item Use a strong signature system for messages originating from the player.
+\item Use antireplay defences.
+\item Log all actions and transactions.
+\item Secure access to the logging process.
+\end{itemize}
+\end{itemize}
+
+\subsubsection{Information Disclosure of the Data Flow from a Player to the Poker Server}
+\textbf{Primary mis-actor:}
+\begin{itemize}
+\item Crook
+\end{itemize}
+\textbf{Basic path:}
+\begin{itemize}
+\item The mis-actor performs an action or transaction.
+\item The mis-actor repudiates the action or transaction.
+\item The system fails to prove that the mis-actor is responsible.
+\end{itemize}
+\textbf{Alternative paths:}
+\begin{itemize}
+\item The mis-actor tampers with the logging process to remove evidence.
+\end{itemize}
+\textbf{Capture points:}
+\begin{itemize}
+\item \textbf{Prevention:}
+\begin{itemize}
+\item Use a strong signature system for messages originating from the player.
+\item Use antireplay defences.
+\item Log all actions and transactions.
+\item Secure access to the logging process.
+\end{itemize}
+\end{itemize}
+
+\subsubsection{Denial of Service of the Data Flow from a Player to the Poker Server}
+\textbf{Primary mis-actor:}
+\begin{itemize}
+\item Crook
+\end{itemize}
+\textbf{Basic path:}
+\begin{itemize}
+\item The mis-actor performs an action or transaction.
+\item The mis-actor repudiates the action or transaction.
+\item The system fails to prove that the mis-actor is responsible.
+\end{itemize}
+\textbf{Alternative paths:}
+\begin{itemize}
+\item The mis-actor tampers with the logging process to remove evidence.
+\end{itemize}
+\textbf{Capture points:}
+\begin{itemize}
+\item \textbf{Prevention:}
+\begin{itemize}
+\item Use a strong signature system for messages originating from the player.
+\item Use antireplay defences.
+\item Log all actions and transactions.
+\item Secure access to the logging process.
+\end{itemize}
+\end{itemize}
+
 \end{document} 
