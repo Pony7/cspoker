@@ -167,7 +167,7 @@ See section \ref{Repudiation of a Player}.
 \end{itemize}
 \textbf{Basic path:}
 \begin{itemize}
-\item The mis-actor spoofs an other actor with access to private information (e.g. user names, passwords, ...).
+\item The mis-actor spoofs another actor with access to private information (e.g. user names, passwords, ...).
 \item The mis-actor uses the private information.
 \end{itemize}
 \textbf{Alternative paths:}
@@ -814,14 +814,14 @@ Here we choose to reduce the number of data flows from/to the Player because int
 \subsection{Multi player Cheating}
 \subsubsection{Multiple players at a table collaborate}
 \textbf{Summary:} By collaborating they have access to more knowledge than legitimate. With this extra knowledge they have a more accurate view on the outs. They can protect each other, or they can raise each other to force the other players to call higher chip amounts to enlarge the pot.
-\subsubsection{An admin collaborates with a player to play with full information access}
+\subsubsection{An admin collaborates with a player to play with full information disclosure}
 \textbf{Summary:} An admin who has access to the pocket cards could pass the secret information to a collaborating player. This collaboration leads to perfect information access and a perfect strategy. The collaboration is an attempt to camouflage the cheating.
 
 \section{Log}
 \textbf{30-10-2008}
 \begin{itemize}
 \item We decided to only consider the RMI protocol as communication protocol for the poker application in this 
-security analysis, and to not got into depth in the sockets or http protocol.
+security analysis, and to not got into depth in the sockets or http protocol. For these protocols, a front-end is added to the architecture that delegates to the different processes also used by RMI.
 \item Table communicates with Cashier instead of with Account Management process to obtain an amount of chips
 of the main stack of a player and bring it to the table stack of that player.
 \item For liability reasons, the log with game details must be made public after a game. This is reflected in some
