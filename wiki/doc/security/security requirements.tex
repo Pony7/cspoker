@@ -663,21 +663,21 @@ Because interaction between a Player and the different processes is very similar
 \end{itemize}
 \textbf{Basic path:}
 \begin{itemize}
-\item The mis-actor finds a weakness in the confidentiality of token requests and the channel used to send them.
-\item The mis-actor observes who is playing and what modules they are requesting tokens for.
+\item The mis-actor incapacitates the channel by incapacitating the Player or process.
+\item The Player cannot request tokens.
 \end{itemize}
 \textbf{Alternative paths:}
 \begin{itemize}
-\item The mis-actor sets up a MITM attack.
-\item The mis-actor observes data through a side channel.
+\item The mis-actor consumes resources required by the Player or process.
+\item The mis-actor corrupts the token requests.
+\item The mis-actor preplays token requests, making that functionality unavailable for a Player.
 \end{itemize}
 \textbf{Capture points:}
 \begin{itemize}
 \item \textbf{Prevention:}
 \begin{itemize}
-\item Use stong message confidentiality.
-\item Use strong channel confidentiality.
-\item Review known side channel vulnerabilities to determine if they apply and fix them.
+\item Prevent tampering, spoofing and DOS of the endpoints and data flow.
+\item Limit the number of resources the process depends on.
 \end{itemize}
 \end{itemize}
 
@@ -688,21 +688,19 @@ Because interaction between a Player and the different processes is very similar
 \end{itemize}
 \textbf{Basic path:}
 \begin{itemize}
-\item The mis-actor finds a weakness in the confidentiality of token message and the channel used to send them.
-\item The mis-actor observes the tokens and can use them in a spoofing attack.
+\item The mis-actor incapacitates the channel by incapacitating the Player or process.
+\item The Player cannot receive tokens.
 \end{itemize}
 \textbf{Alternative paths:}
 \begin{itemize}
-\item The mis-actor sets up a MITM attack.
-\item The mis-actor observes data through a side channel.
+\item The mis-actor consumes resources required by the Player or process.
 \end{itemize}
 \textbf{Capture points:}
 \begin{itemize}
 \item \textbf{Prevention:}
 \begin{itemize}
-\item Use stong message confidentiality.
-\item Use strong channel confidentiality.
-\item Review known side channel vulnerabilities to determine if they apply and fix them.
+\item Prevent tampering, spoofing and DOS of the endpoints and data flow.
+\item Limit the number of resources the process depends on.
 \end{itemize}
 \end{itemize}
 
@@ -713,21 +711,21 @@ Because interaction between a Player and the different processes is very similar
 \end{itemize}
 \textbf{Basic path:}
 \begin{itemize}
-\item The mis-actor finds a weakness in the confidentiality of actions and the channel used to send them.
-\item The mis-actor observes the actions and can abuse private chat information and other confidential actions performed by the Player.
+\item The mis-actor incapacitates the channel by incapacitating the Player or process.
+\item The Player cannot perform actions. For example, this can lead to timeouts where the server folds on behalf of a non-responsive player, giving an unfair advantage to the mis-actor.
 \end{itemize}
 \textbf{Alternative paths:}
 \begin{itemize}
-\item The mis-actor sets up a MITM attack.
-\item The mis-actor observes data through a side channel.
+\item The mis-actor consumes resources required by the Player or process.
+\item The mis-actor corrupts the actions.
+\item The mis-actor preplays actions, making them unavailable for a Player.
 \end{itemize}
 \textbf{Capture points:}
 \begin{itemize}
 \item \textbf{Prevention:}
 \begin{itemize}
-\item Use stong message confidentiality.
-\item Use strong channel confidentiality.
-\item Review known side channel vulnerabilities to determine if they apply and fix them.
+\item Prevent tampering, spoofing and DOS of the endpoints and data flow.
+\item Limit the number of resources the process depends on.
 \end{itemize}
 \end{itemize}
 
@@ -738,47 +736,22 @@ Because interaction between a Player and the different processes is very similar
 \end{itemize}
 \textbf{Basic path:}
 \begin{itemize}
-\item The mis-actor finds a weakness in the confidentiality of events/responses and the channel used to send them.
-\item The mis-actor observes events that give him an unfair advantage in the game, like the pocket cards of competitors. 
+\item The mis-actor incapacitates the channel by incapacitating the Player or process.
+\item The Player cannot receive events/responses.
 \end{itemize}
 \textbf{Alternative paths:}
 \begin{itemize}
-\item The mis-actor sets up a MITM attack.
-\item The mis-actor observes data through a side channel.
+\item The mis-actor consumes resources required by the Player or process.
 \end{itemize}
 \textbf{Capture points:}
 \begin{itemize}
 \item \textbf{Prevention:}
 \begin{itemize}
-\item Use stong message confidentiality.
-\item Use strong channel confidentiality.
-\item Review known side channel vulnerabilities to determine if they apply and fix them.
+\item Prevent tampering, spoofing and DOS of the endpoints and data flow.
+\item Limit the number of resources the process depends on.
 \end{itemize}
 \end{itemize}
 
-\textbf{Primary mis-actor:}
-\begin{itemize}
-\item Crook
-\end{itemize}
-\textbf{Basic path:}
-\begin{itemize}
-\item The mis-actor finds a weakness in the confidentiality of events/responses and the channel used to send them.
-\item The mis-actor observes events that give him an unfair advantage in the game, like the pocket cards of competitors. 
-\end{itemize}
-\textbf{Alternative paths:}
-\begin{itemize}
-\item The mis-actor sets up a MITM attack.
-\item The mis-actor observes data through a side channel.
-\end{itemize}
-\textbf{Capture points:}
-\begin{itemize}
-\item \textbf{Prevention:}
-\begin{itemize}
-\item Use stong message confidentiality.
-\item Use strong channel confidentiality.
-\item Review known side channel vulnerabilities to determine if they apply and fix them.
-\end{itemize}
-\end{itemize}
 \subsection{Data Flows to Logging Engine}
 \subsubsection{Tampering with logging requests}
 \textbf{Primary mis-actor:}
