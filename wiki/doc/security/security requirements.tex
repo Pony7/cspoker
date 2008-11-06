@@ -573,7 +573,7 @@ textbf{Primary mis-actor:}
 \textbf{Basic path:}
 \begin{itemize}
 \item The mis-actor gains access to the data store
-\item The mis-actor puts date directly in the data store
+\item The mis-actor puts data directly in the data store
 \end{itemize}
 \textbf{Alternative paths:}
 \begin{itemize}
@@ -607,17 +607,23 @@ and the account data store.
 \end{itemize}
 \textbf{Basic path:}
 \begin{itemize}
-\item 
+\item The mis-actor gains access to the data store
+\item The mis-actor reads private data from data store
 \end{itemize}
 \textbf{Alternative paths:}
 \begin{itemize}
-\item 
+\item The mis-actor spoofs the account management process
 \end{itemize}
 \textbf{Capture points:}
 \begin{itemize}
 \item \textbf{Prevention:}
 \begin{itemize}
-\item 
+\item encrypting the data with a key only known to the account management process
+\item data store is protected by the internal policies
+\item extra-monitor access is impossible (behind a reliable firewall)
+\item only private or local networks are used for communication between the account management process 
+and the account data store.
+\item prevent spoofing of account management process
 \end{itemize}
 \item \textbf{Detection:}
 \begin{itemize}
