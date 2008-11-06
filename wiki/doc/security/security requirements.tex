@@ -45,7 +45,7 @@ Figure \ref{fig:context} shows the context level of the DFD. Figure \ref{fig:lev
 \item Not protecting application from administrators with debuggers.
 \end{itemize}
 
-\section{Misuse Cases}
+\section{Architecture based Misuse Cases}
 \subsection{Template}
 \textbf{Primary mis-actor:}
 \begin{itemize}
@@ -507,7 +507,7 @@ and the account data store.
 \textbf{Basic path:}
 \begin{itemize}
 \item The mis-actor gains access to the data store.
-\item The mis-actor corrupts the data of the data store (tampering of the data store).
+\item The mis-actor corrupts the data store by sending invalid input.
 \item The data store crashes and becomes unavailable.
 \end{itemize}
 \textbf{Alternative paths:}
@@ -516,18 +516,18 @@ and the account data store.
 capacity of the data store.
 \item The mis-actor consumes application-specific resources (e.g. submit more queries per second that the data 
 store can handle).
-\item The mis-actor consumes fundamental resources.
+\item The mis-actor injects malicious SQL queries (or other) to an user of the data store. When this injection reaches the data store it crashes.
 \end{itemize}
 \textbf{Capture points:}
 \begin{itemize}
 \item \textbf{Prevention:}
 \begin{itemize}
-\item Prevent tampering with the data store.
+\item Invalid queries are filtered.
+\item Data store is protected by the internal policies.
+\item Extra-monitor access is impossible (behind a reliable firewall).
+\item Only private or local networks are used for communication between the account management process 
+and the account data store.
 \item The data store is load-balanced.
-\end{itemize}
-\item \textbf{Detection:}
-\begin{itemize}
-\item Acces to the data store is securely logged.
 \end{itemize}
 \end{itemize}
 \subsection{Logging Engine}
@@ -620,4 +620,6 @@ store can handle).
 \item Secure access to the logging process.
 \end{itemize}
 \end{itemize}
+
+\section{Business Logic Misuse Cases}
 \end{document} 
