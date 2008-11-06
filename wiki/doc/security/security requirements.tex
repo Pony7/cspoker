@@ -45,7 +45,8 @@ Figure \ref{fig:context} shows the context level of the DFD. Figure \ref{fig:lev
 \section{Rationale}
 \subsection{Assumptions}
 \begin{itemize}
-\item Not protecting application from administrators with debuggers.
+\item There is an internal policy to restrict physical access to the servers. 
+\item There is no protection needed against an administrator with a debugger (can read and alter memory).
 \end{itemize}
 
 \section{Architecture based Misuse Cases}
@@ -322,11 +323,11 @@ Figure \ref{fig:context} shows the context level of the DFD. Figure \ref{fig:lev
 \begin{itemize}
 \item \textbf{Prevention:}
 \begin{itemize}
-\item 
+\item All input is validated.
 \end{itemize}
 \item \textbf{Detection:}
 \begin{itemize}
-\item 
+\item The behavior of the mis-actor is influenced by the information disclosure. This altered behavior could be detected by examining the logs.
 \end{itemize}
 \end{itemize}
 
@@ -401,10 +402,6 @@ and the account data store.
 \item only private or local networks are used for communication between the account management process 
 and the account data store.
 \item prevent spoofing of account management process
-\end{itemize}
-\item \textbf{Detection:}
-\begin{itemize}
-\item 
 \end{itemize}
 \end{itemize}
 
@@ -836,11 +833,11 @@ Here we choose to reduce the number of data flows from/to the Player because int
 \item Crook
 \end{itemize}
 \textbf{Basic path:}
-\begin{enumerate}
-\item[bf1.] The malicious player creates multiple accounts. 
-\item[bf2.] The malicious player is sit-in at a table with different accounts.
-\item[bf3.] The malicious player uses the additional knowledge to make statistically more successful decisions. 
-\end{enumerate}
+\begin{itemize}
+\item The malicious player creates multiple accounts. 
+\item The malicious player is sit-in at a table with different accounts.
+\item The malicious player uses the additional knowledge to make statistically more successful decisions. 
+\end{itemize}
 \textbf{Capture points:}
 \begin{itemize}
 \item \textbf{Prevention:}
