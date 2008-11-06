@@ -802,6 +802,30 @@ Because interaction between a Player and the different processes is very similar
 \item Review known side channel vulnerabilities to determine if they apply and fix them.
 \end{itemize}
 \end{itemize}
+\subsubsection{Denial of Service of logging requests}
+\textbf{Primary mis-actor:}
+\begin{itemize}
+\item Crook
+\end{itemize}
+\textbf{Basic path:}
+\begin{itemize}
+\item The mis-actor incapacitates the channel by incapacitating the Logging Engine.
+\item No process cannot log things.
+\end{itemize}
+\textbf{Alternative paths:}
+\begin{itemize}
+\item The mis-actor consumes resources required by other processes.
+\item The mis-actor corrupts the logging requests.
+\item The mis-actor preplays logging requests, making that functionality unavailable for other processes.
+\end{itemize}
+\textbf{Capture points:}
+\begin{itemize}
+\item \textbf{Prevention:}
+\begin{itemize}
+\item Prevent tampering, spoofing and DOS of the endpoints and data flow.
+\item Limit the number of resources the process depends on.
+\end{itemize}
+\end{itemize}
 \section{Business Logic Misuse Cases}
 \subsection{Single player Cheating}
 \subsubsection{A player uses multiple accounts to access more confidential information}
@@ -831,7 +855,7 @@ Because interaction between a Player and the different processes is very similar
 \subsubsection{A malicious player with admin rights uses confidential information in a game and act on it}
 \textbf{Summary:} If an admin has access to the card info of all the players at a table, he can act on perfect knowledge which is a huge advantage.
 \subsubsection{A malicious player misuses the right to ask the admin to view the log of the table}
-\textbf{Summary:} The malicious player misuses the possibility to view the table log pretending to be suspicious of collusion. The malicious player can verify the hands of all the opponents, also those who have chosen not to show their cards. By this way he can gain more insight into the strategy of its opponents (whether someone is bluffing or not, ...). Consulting the log is only possible after the game has been played so there is no direct influence, but in the long run gives an unfair advantage.
+\textbf{Summary:} The malicious player misuses the possibility to view the table log pretending to be suspicious of collusion. The malicious player can verify the hands of all the opponents, also those who have chosen not to show their cards. By this way he can gain more insight into the strategy of its opponents (whether someone is bluffing or not, ...). Consulting the log is only possible after the game has been played so there is no direct influence, but in the long run gives an unfair advantage and allows profiling of a players behaviour.
 \subsubsection{A malicious player can flood the network of another player to force a time-out}
 \textbf{Summary:} A malicious player can flood the network of an opponent at a crucial moment so no communication between this opponent and the poker server is possible. This will lead to a time-out of the opponent. Depending on the time-out policy the malicious player can have a huge advantage.
 \subsection{Multi player Cheating}
