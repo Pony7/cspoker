@@ -28,8 +28,8 @@ import org.cspoker.common.api.shared.exception.IllegalActionException;
 @ThreadSafe
 public class XmlRemoteServerChatContext implements RemoteChatContext {
 
-	protected ActionPerformer performer;
-	protected IDGenerator generator;
+	private final ActionPerformer performer;
+	private final IDGenerator generator;
 
 	public XmlRemoteServerChatContext(ActionPerformer performer, IDGenerator generator) {
 		this.performer = performer;
