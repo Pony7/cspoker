@@ -1,5 +1,6 @@
 \documentclass[a4paper,11pt]{report}
 \usepackage[a4paper]{geometry}
+% \usepackage{a4wide}
 \usepackage[english]{babel}
 \usepackage{graphicx,subfigure}
 \setcounter{secnumdepth}{3} 
@@ -18,6 +19,13 @@
 \tableofcontents 
 
 \chapter{Introduction}
+This document starts from an existing architecture of a poker application that was originally designed with only an intuitive idea of security threats for poker applications. By modelling the data flow through the application we try to locate areas that can be subjected to these threats. 
+
+For a subset of entities we apply STRIDE to elicit security threats and we use threat tree patterns to render these threats more concrete. The results are documented as misuse cases.
+
+Finally, we present examples of business threats that cannot be discovered using the STRIDE methodology. 
+
+
 \chapter{Identifying threats}
 \section{DFDs}
 Figure \ref{fig:context} shows the context level of the DFD. Figure \ref{fig:level_0} shows the level-0 DFD. The arrows are not annotated to make the diagram readable. A simplified version with only the player and annotated arrows can be found in figure \ref{fig:level_0_player}. In the following analysis only the interaction with the player will be considered as misuse cases, as those with an administrator as external entity are similar. Although some processes are complex and should be drilled down, we've chosen to do the STRIDE analysis on level-0 because it would already generate sufficient documentation.
