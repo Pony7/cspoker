@@ -604,9 +604,9 @@ Because interaction between a Player and the different processes is very similar
 \textbf{Basic path:}
 \begin{itemize}
 \item The mis-actor find a weakness in the integrity of actions.
-\item The mis-actor changes messages to his advantage, sends fake messages that go undetected or replays messages sent by a Player (For example: the mis-actor replaces the bet amount by a larger number when he has very good cards)
+\item The mis-actor changes messages to his advantage, sends fake messages that go undetected or replays messages sent by a Player. For example, the mis-actor can replace the bet amount by a larger number when he has very good cards)
 \end{itemize}
-\textbf{Alternative paths:}
+\textbf{Alternative paths:} 
 \begin{itemize}
 \item The mis-actor violates the integrity of the channel to tamper with the data flow.
 \item The mis-actor spoofs a Player to send fake actions.
@@ -628,7 +628,7 @@ Because interaction between a Player and the different processes is very similar
 \textbf{Basic path:}
 \begin{itemize}
 \item The mis-actor find a weakness in the integrity of responses or events.
-\item The mis-actor changes events to his advantage, sends fake events or replays events (For example: the mis-actor replaces the pocket cards sent to another player by aces to trick him in to betting excessively).
+\item The mis-actor changes events to his advantage, sends fake events or replays events For example, the mis-actor can replace the pocket cards sent to another player by aces to trick him in to betting excessively.
 \end{itemize}
 \textbf{Alternative paths:}
 \begin{itemize}
@@ -644,55 +644,205 @@ Because interaction between a Player and the different processes is very similar
 \end{itemize}
 \end{itemize}
 
-\subsubsection{Information Disclosure of the Data Flow from a Player to the Poker Server}
+
+\subsubsection{Information Disclosure of token requests}
 \textbf{Primary mis-actor:}
 \begin{itemize}
 \item Crook
 \end{itemize}
 \textbf{Basic path:}
 \begin{itemize}
-\item The mis-actor performs an action or transaction.
-\item The mis-actor repudiates the action or transaction.
-\item The system fails to prove that the mis-actor is responsible.
+\item The mis-actor finds a weakness in the confidentiality of token requests and the channel used to send them.
+\item The mis-actor observes who is playing and what modules they are requesting tokens for.
 \end{itemize}
 \textbf{Alternative paths:}
 \begin{itemize}
-\item The mis-actor tampers with the logging process to remove evidence.
+\item The mis-actor sets up a MITM attack.
+\item The mis-actor observes data through a side channel.
 \end{itemize}
 \textbf{Capture points:}
 \begin{itemize}
 \item \textbf{Prevention:}
 \begin{itemize}
-\item Use a strong signature system for messages originating from the player.
-\item Use antireplay defences.
-\item Log all actions and transactions.
-\item Secure access to the logging process.
+\item Use stong message confidentiality.
+\item Use strong channel confidentiality.
+\item Review known side channel vulnerabilities to determine if they apply and fix them.
 \end{itemize}
 \end{itemize}
 
-\subsubsection{Denial of Service of the Data Flow from a Player to the Poker Server}
+\subsubsection{Information Disclosure of tokens}
 \textbf{Primary mis-actor:}
 \begin{itemize}
 \item Crook
 \end{itemize}
 \textbf{Basic path:}
 \begin{itemize}
-\item The mis-actor performs an action or transaction.
-\item The mis-actor repudiates the action or transaction.
-\item The system fails to prove that the mis-actor is responsible.
+\item The mis-actor finds a weakness in the confidentiality of token message and the channel used to send them.
+\item The mis-actor observes the tokens and can use them in a spoofing attack.
 \end{itemize}
 \textbf{Alternative paths:}
 \begin{itemize}
-\item The mis-actor tampers with the logging process to remove evidence.
+\item The mis-actor sets up a MITM attack.
+\item The mis-actor observes data through a side channel.
 \end{itemize}
 \textbf{Capture points:}
 \begin{itemize}
 \item \textbf{Prevention:}
 \begin{itemize}
-\item Use a strong signature system for messages originating from the player.
-\item Use antireplay defences.
-\item Log all actions and transactions.
-\item Secure access to the logging process.
+\item Use stong message confidentiality.
+\item Use strong channel confidentiality.
+\item Review known side channel vulnerabilities to determine if they apply and fix them.
+\end{itemize}
+\end{itemize}
+
+\subsubsection{Information Disclosure of actions}
+\textbf{Primary mis-actor:}
+\begin{itemize}
+\item Crook
+\end{itemize}
+\textbf{Basic path:}
+\begin{itemize}
+\item The mis-actor finds a weakness in the confidentiality of actions and the channel used to send them.
+\item The mis-actor observes the actions and can abuse private chat information and other confidential actions performed by the Player.
+\end{itemize}
+\textbf{Alternative paths:}
+\begin{itemize}
+\item The mis-actor sets up a MITM attack.
+\item The mis-actor observes data through a side channel.
+\end{itemize}
+\textbf{Capture points:}
+\begin{itemize}
+\item \textbf{Prevention:}
+\begin{itemize}
+\item Use stong message confidentiality.
+\item Use strong channel confidentiality.
+\item Review known side channel vulnerabilities to determine if they apply and fix them.
+\end{itemize}
+\end{itemize}
+
+\subsubsection{Information Disclosure of responses and events}
+\textbf{Primary mis-actor:}
+\begin{itemize}
+\item Crook
+\end{itemize}
+\textbf{Basic path:}
+\begin{itemize}
+\item The mis-actor finds a weakness in the confidentiality of events/responses and the channel used to send them.
+\item The mis-actor observes events that give him an unfair advantage in the game, like the pocket cards of competitors. 
+\end{itemize}
+\textbf{Alternative paths:}
+\begin{itemize}
+\item The mis-actor sets up a MITM attack.
+\item The mis-actor observes data through a side channel.
+\end{itemize}
+\textbf{Capture points:}
+\begin{itemize}
+\item \textbf{Prevention:}
+\begin{itemize}
+\item Use stong message confidentiality.
+\item Use strong channel confidentiality.
+\item Review known side channel vulnerabilities to determine if they apply and fix them.
+\end{itemize}
+\end{itemize}
+
+
+\subsubsection{Denial of Service of token requests}
+\textbf{Primary mis-actor:}
+\begin{itemize}
+\item Crook
+\end{itemize}
+\textbf{Basic path:}
+\begin{itemize}
+\item The mis-actor finds a weakness in the confidentiality of token requests and the channel used to send them.
+\item The mis-actor observes who is playing and what modules they are requesting tokens for.
+\end{itemize}
+\textbf{Alternative paths:}
+\begin{itemize}
+\item The mis-actor sets up a MITM attack.
+\item The mis-actor observes data through a side channel.
+\end{itemize}
+\textbf{Capture points:}
+\begin{itemize}
+\item \textbf{Prevention:}
+\begin{itemize}
+\item Use stong message confidentiality.
+\item Use strong channel confidentiality.
+\item Review known side channel vulnerabilities to determine if they apply and fix them.
+\end{itemize}
+\end{itemize}
+
+\subsubsection{Denial of Service of tokens}
+\textbf{Primary mis-actor:}
+\begin{itemize}
+\item Crook
+\end{itemize}
+\textbf{Basic path:}
+\begin{itemize}
+\item The mis-actor finds a weakness in the confidentiality of token message and the channel used to send them.
+\item The mis-actor observes the tokens and can use them in a spoofing attack.
+\end{itemize}
+\textbf{Alternative paths:}
+\begin{itemize}
+\item The mis-actor sets up a MITM attack.
+\item The mis-actor observes data through a side channel.
+\end{itemize}
+\textbf{Capture points:}
+\begin{itemize}
+\item \textbf{Prevention:}
+\begin{itemize}
+\item Use stong message confidentiality.
+\item Use strong channel confidentiality.
+\item Review known side channel vulnerabilities to determine if they apply and fix them.
+\end{itemize}
+\end{itemize}
+
+\subsubsection{Denial of Service of actions}
+\textbf{Primary mis-actor:}
+\begin{itemize}
+\item Crook
+\end{itemize}
+\textbf{Basic path:}
+\begin{itemize}
+\item The mis-actor finds a weakness in the confidentiality of actions and the channel used to send them.
+\item The mis-actor observes the actions and can abuse private chat information and other confidential actions performed by the Player.
+\end{itemize}
+\textbf{Alternative paths:}
+\begin{itemize}
+\item The mis-actor sets up a MITM attack.
+\item The mis-actor observes data through a side channel.
+\end{itemize}
+\textbf{Capture points:}
+\begin{itemize}
+\item \textbf{Prevention:}
+\begin{itemize}
+\item Use stong message confidentiality.
+\item Use strong channel confidentiality.
+\item Review known side channel vulnerabilities to determine if they apply and fix them.
+\end{itemize}
+\end{itemize}
+
+\subsubsection{Denial of Service of responses and events}
+\textbf{Primary mis-actor:}
+\begin{itemize}
+\item Crook
+\end{itemize}
+\textbf{Basic path:}
+\begin{itemize}
+\item The mis-actor finds a weakness in the confidentiality of events/responses and the channel used to send them.
+\item The mis-actor observes events that give him an unfair advantage in the game, like the pocket cards of competitors. 
+\end{itemize}
+\textbf{Alternative paths:}
+\begin{itemize}
+\item The mis-actor sets up a MITM attack.
+\item The mis-actor observes data through a side channel.
+\end{itemize}
+\textbf{Capture points:}
+\begin{itemize}
+\item \textbf{Prevention:}
+\begin{itemize}
+\item Use stong message confidentiality.
+\item Use strong channel confidentiality.
+\item Review known side channel vulnerabilities to determine if they apply and fix them.
 \end{itemize}
 \end{itemize}
 
