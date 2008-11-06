@@ -47,6 +47,7 @@ Figure \ref{fig:context} shows the context level of the DFD. Figure \ref{fig:lev
 \begin{itemize}
 \item There is an internal policy to restrict physical access to the servers. 
 \item There is no protection needed against an administrator with a debugger (can read and alter memory).
+\item Side channels aren't available to mis-actors.
 \end{itemize}
 
 \section{Architecture based Misuse Cases}
@@ -862,8 +863,21 @@ Here we choose to reduce the number of data flows from/to the Player because int
 \subsubsection{An admin collaborates with a player to play with full information access}
 \textbf{Summary:} An admin who has access to the pocket cards could pass the secret information to a collaborating player. This collaboration leads to perfect information access and a perfect strategy. The collaboration is an attempt to camouflage the cheating.
 
-\nocite{1202957}
-\nocite{citeulike:174301}
+\section{Log}
+\textbf{30-10-2008}
+\begin{itemize}
+\item We decided to only consider the RMI protocol as communication protocol for the poker application in this 
+security analysis, and to not got into depth in the sockets or http protocol.
+\item Table communicates with Cashier instead of with Account Management process to obtain an amount of chips
+of the main stack of a player and bring it to the table stack of that player.
+\item For liability reasons, the log with game details must be made public after a game. This is reflected in some
+business threats where a mis-actor might use this to profile certain players.
+\item We decided to connect complex process in the Level 0 DFD directly to data stores so whe can apply STRIDE
+at this level. Otherwise the number of misuse cases would explode.
+\end{itemize}
+
+\nocite{1202957}.
+\nocite{citeulike:174301}.
 
 \addcontentsline{toc}{chapter}{Bibliography}
 \bibliography{oass2}
