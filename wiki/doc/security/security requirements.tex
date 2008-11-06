@@ -603,7 +603,7 @@ and the account data store.
 \subsubsection{Information disclosure of account data}
 \textbf{Primary mis-actor:}
 \begin{itemize}
-\item 
+\item Crook
 \end{itemize}
 \textbf{Basic path:}
 \begin{itemize}
@@ -618,7 +618,7 @@ and the account data store.
 \begin{itemize}
 \item \textbf{Prevention:}
 \begin{itemize}
-\item encrypting the data with a key only known to the account management process
+\item encrypting the data with a key only known to the owner of the account and the account management system
 \item data store is protected by the internal policies
 \item extra-monitor access is impossible (behind a reliable firewall)
 \item only private or local networks are used for communication between the account management process 
@@ -634,25 +634,32 @@ and the account data store.
 \subsubsection{DoS against account data}
 \textbf{Primary mis-actor:}
 \begin{itemize}
-\item 
+\item Crook
 \end{itemize}
 \textbf{Basic path:}
 \begin{itemize}
-\item 
+\item The mis-actor gains access to the data store.
+\item The mis-actor corrupts the data of the data store (tampering of the data store).
+\item The data store crashes and becomes unavailable.
 \end{itemize}
 \textbf{Alternative paths:}
 \begin{itemize}
-\item 
+\item The mis-actor floods the data store by placing large amounts of data into the data store and exceeds the 
+capacity of the data store.
+\item The mis-actor consumes application-specific resources (e.g. submit more queries per second that the data 
+store can handle).
+\item The mis-actor consumes fundamental resources.
 \end{itemize}
 \textbf{Capture points:}
 \begin{itemize}
 \item \textbf{Prevention:}
 \begin{itemize}
-\item 
+\item Prevent tampering with the data store.
+\item The data store is load-balanced.
 \end{itemize}
 \item \textbf{Detection:}
 \begin{itemize}
-\item 
+\item Acces to the data store is securely logged.
 \end{itemize}
 \end{itemize}
 \textbf{Primary mis-actor:}
