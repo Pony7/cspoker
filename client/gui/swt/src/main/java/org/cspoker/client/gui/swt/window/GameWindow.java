@@ -11,6 +11,7 @@
  */
 package org.cspoker.client.gui.swt.window;
 
+import java.rmi.RemoteException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Set;
@@ -21,6 +22,7 @@ import org.cspoker.common.api.lobby.holdemtable.event.*;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.event.NewPocketCardsEvent;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.listener.HoldemPlayerListener;
 import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
+import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.cards.Card;
 import org.cspoker.common.elements.chips.Pots;
 import org.cspoker.common.elements.player.PlayerId;
@@ -30,10 +32,13 @@ import org.cspoker.common.elements.table.Rounds;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
+import org.eclipse.swt.events.ShellAdapter;
+import org.eclipse.swt.events.ShellEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 
 /**
@@ -99,7 +104,6 @@ public class GameWindow
 		shell.setMinimumSize(MINIMUM_WIDTH, MINIMUM_HEIGHT);
 		// TODO Somehow lock fixed x:y relation
 		logger.debug("Shell size: " + shell.getSize());
-		createCloseListener();
 		shell.addPaintListener(new PaintListener() {
 			
 			/**
@@ -119,9 +123,24 @@ public class GameWindow
 						getShell().getSize().y));
 				setBackgroundImage(scaled);
 				tableComposite.updateTableGraphics();
-				logger.debug("TC: " + getTableComposite().getBounds());
-				logger.debug("PC: " + getTableComposite().getPlayerSeatComposites(false).get(0).getBounds());
-				logger.debug("GW: " + getShell().getBounds());
+				// logger.debug("TC: " + getTableComposite().getBounds());
+				// logger.debug("PC: " +
+				// getTableComposite().getPlayerSeatComposites(false).get(0).getBounds());
+				// logger.debug("GW: " + getShell().getBounds());
+			}
+		});
+		shell.addShellListener(new ShellAdapter() {
+			
+			/**
+			 * @see org.eclipse.swt.events.ShellAdapter#shellClosed(org.eclipse.swt.events.ShellEvent)
+			 */
+			@Override
+			public void shellClosed(ShellEvent e) {
+				int style = SWT.APPLICATION_MODAL | SWT.YES | SWT.NO;
+				MessageBox messageBox = new MessageBox(getShell(), style);
+				messageBox.setText("Leave table");
+				messageBox.setMessage("Are you sure you want to leave this table?");
+				e.doit = messageBox.open() == SWT.YES;
 			}
 		});
 	}
@@ -359,17 +378,17 @@ public class GameWindow
 	
 	@Override
 	public void onAllIn(AllInEvent allInEvent) {
-	// TODO implement
+		userInputComposite.showDealerMessage(allInEvent);
 	}
 	
 	@Override
 	public void onJoinTable(JoinTableEvent joinTableEvent) {
-	// TODO implement
+		userInputComposite.showDealerMessage(joinTableEvent);
 	}
 	
 	@Override
 	public void onLeaveTable(LeaveTableEvent leaveGameEvent) {
-	// TODO implement
+		userInputComposite.showDealerMessage(leaveGameEvent);
 	}
 	
 	@Override
@@ -386,9 +405,19 @@ public class GameWindow
 		containingShell.open();
 		Display display = containingShell.getDisplay();
 		// Listen to events
-		while (!display.isDisposed()) {
+		while (!containingShell.isDisposed() && !display.isDisposed()) {
 			if (!display.readAndDispatch())
 				display.sleep();
+		}
+		// Finally leave table
+		logger.info("Leaving table");
+		try {
+			user.getTableContext().leaveTable();
+			getClientCore().getGui().getGameWindows().remove(this);
+		} catch (RemoteException e1) {
+			getClientCore().handleRemoteException(e1);
+		} catch (IllegalActionException e1) {
+			logger.error("This should not happen", e1);
 		}
 	}
 	
