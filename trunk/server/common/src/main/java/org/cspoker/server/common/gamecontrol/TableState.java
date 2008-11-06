@@ -19,63 +19,67 @@ import java.util.List;
 
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.HoldemPlayerContext;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
+import org.cspoker.common.elements.player.MutablePlayer;
 import org.cspoker.common.elements.player.MutableSeatedPlayer;
 import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.elements.player.SeatedPlayer;
 import org.cspoker.common.elements.table.SeatId;
 
 public abstract class TableState {
-
+	
 	protected final PokerTable mediatingTable;
-
-	public TableState(PokerTable table){
+	
+	public TableState(PokerTable table) {
 		this.mediatingTable = table;
 	}
-
-	public abstract void bet(MutableSeatedPlayer player, int amount) throws IllegalActionException;
-
+	
+	public abstract void bet(MutableSeatedPlayer player, int amount)
+			throws IllegalActionException;
+	
 	public abstract void call(MutableSeatedPlayer player)
-	throws IllegalActionException;
-
+			throws IllegalActionException;
+	
 	public abstract void check(MutableSeatedPlayer player)
-	throws IllegalActionException;
-
+			throws IllegalActionException;
+	
 	public abstract void raise(MutableSeatedPlayer player, int amount)
-	throws IllegalActionException;
-
+			throws IllegalActionException;
+	
 	public abstract void fold(MutableSeatedPlayer player)
-	throws IllegalActionException;
-
-	public abstract void deal(MutableSeatedPlayer player)
-	throws IllegalActionException;
-
+			throws IllegalActionException;
+	
+	public abstract void deal()
+			throws IllegalActionException;
+	
 	public abstract void allIn(MutableSeatedPlayer player)
-	throws IllegalActionException;
-
+			throws IllegalActionException;
+	
+	public abstract void leave(MutablePlayer player);
+	
 	public abstract HoldemPlayerContext sitIn(SeatId seatId, MutableSeatedPlayer player)
-	throws IllegalActionException;
-
+			throws IllegalActionException;
+	
 	public abstract HoldemPlayerContext sitIn(MutableSeatedPlayer player)
-	throws IllegalActionException;
-
+			throws IllegalActionException;
+	
 	public abstract void sitOut(MutableSeatedPlayer player);
-
+	
 	public abstract List<SeatedPlayer> getSeatedPlayers();
-
+	
 	public abstract List<MutableSeatedPlayer> getMutableSeatedPlayers();
 	
 	public abstract MutableSeatedPlayer getMutableSeatedPlayer(PlayerId id);
-
+	
 	/**
 	 * Check whether players are playing or not at this table.
 	 * 
 	 * @return True if players are playing at this table, False otherwise.
 	 */
 	public abstract boolean isPlaying();
-
+	
 	public Game getGame() {
 		return null;
 	}
-
+	
 	public abstract TableState getNextState();
 }

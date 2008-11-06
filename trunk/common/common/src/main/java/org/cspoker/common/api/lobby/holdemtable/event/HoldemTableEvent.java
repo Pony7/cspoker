@@ -21,19 +21,29 @@ import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
 import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListenerTree;
 
 @Immutable
-public abstract class HoldemTableEvent extends HoldemTableTreeEvent {
+public abstract class HoldemTableEvent
+		extends HoldemTableTreeEvent {
 	
 	protected HoldemTableEvent() {
-		// no op
+	// no op
 	}
 	
 	private static final long serialVersionUID = -3790630004275903549L;
-
+	
 	@Override
-	public void dispatch(HoldemTableListenerTree holdemTableListenerTree){
+	public void dispatch(HoldemTableListenerTree holdemTableListenerTree) {
 		dispatch(holdemTableListenerTree.getHoldemTableListener());
 	}
 	
 	public abstract void dispatch(HoldemTableListener holdemTableListener);
-
+	
+	/**
+	 * @return
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return getClass().toString();
+	}
+	
 }
