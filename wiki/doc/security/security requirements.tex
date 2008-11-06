@@ -8,6 +8,9 @@
 \author{Cedric~Cuypers, Kenzo~Tomita, Guy~Van~den~Broeck} 
 % define title
 \title{Security Requirements Poker Application} 
+
+\bibliographystyle{alpha}
+
 \begin{document} 
 % generates the title 
 \maketitle 
@@ -450,7 +453,8 @@ and the account data store.
 
 \subsection{Data Flows from a Player}
 
-Because interaction between a Player and the different processes is very similar, we choose to simplify these misuse cases. We only consider requests for tokens (login actions), actions sent to a process, tokens sent to a Player and events/responses sent to a Player.
+According to \cite[p117]{1202957}, one of the first concerns before doing threat analysis should be to reduce the number of entities to analyze.
+Here we choose to reduce the number of data flows from/to the Player because interaction between a Player and the different processes is very similar (using the same technology, similar entities with similar confidentiality). We only consider requests for tokens (login actions), actions sent to a process, tokens sent to a Player and events/responses sent to a Player.
 
 \subsubsection{Tampering with token requests}
 \textbf{Primary mis-actor:}
@@ -860,5 +864,11 @@ Because interaction between a Player and the different processes is very similar
 \textbf{Summary:} By collaborating they have access to more knowledge than legitimate. With this extra knowledge they have a more accurate view on the outs. They can protect each other, or they can raise each other to force the other players to call higher chip amounts to enlarge the pot.
 \subsubsection{An admin collaborates with a player to play with full information access}
 \textbf{Summary:} An admin who has access to the pocket cards could pass the secret information to a collaborating player. This collaboration leads to perfect information access and a perfect strategy. The collaboration is an attempt to camouflage the cheating.
+
+\nocite{1202957}.
+\nocite{citeulike:174301}.
+
+\addcontentsline{toc}{chapter}{Bibliography}
+\bibliography{oass2}
 
 \end{document} 
