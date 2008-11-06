@@ -320,11 +320,12 @@ public class PlayerSeatComposite
 			 * @see java.lang.Runnable#run()
 			 */
 			public void run() {
-				playerName.setForeground(Display.getDefault().getSystemColor(SWT.DEFAULT));
+				
 				// Check because this may have been outdated in the meantime
 				// (sit out etc.)
 				if (!playerName.isDisposed()) {
 					playerName.setText(name);
+					playerName.setForeground(Display.getDefault().getSystemColor(SWT.DEFAULT));
 				}
 			}
 		});

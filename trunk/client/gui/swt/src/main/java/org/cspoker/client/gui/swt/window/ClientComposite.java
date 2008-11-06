@@ -17,11 +17,7 @@ import java.util.concurrent.Executors;
 import org.cspoker.client.gui.swt.control.ClientCore;
 import org.cspoker.client.gui.swt.control.GameState;
 import org.cspoker.client.gui.swt.control.SWTResourceManager;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.MessageBox;
 
 /**
  * A superclass of all windows
@@ -85,23 +81,6 @@ public abstract class ClientComposite
 	
 	private GameState getGameState() {
 		return gameState;
-	}
-	
-	/**
-	 * Creates and adds a Listener to the shell which pops up a confirmation
-	 * dialog when the window is closed
-	 */
-	protected void createCloseListener() {
-		getShell().addListener(SWT.Close, new Listener() {
-			
-			public void handleEvent(Event event) {
-				int style = SWT.APPLICATION_MODAL | SWT.YES | SWT.NO;
-				MessageBox messageBox = new MessageBox(getShell(), style);
-				messageBox.setText("Information");
-				messageBox.setMessage("Are you sure you want to exit?");
-				event.doit = messageBox.open() == SWT.YES;
-			}
-		});
 	}
 	
 	/**

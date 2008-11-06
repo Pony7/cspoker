@@ -13,6 +13,7 @@ package org.cspoker.client.gui.swt.control;
 
 import java.util.concurrent.Executor;
 
+import org.apache.log4j.Logger;
 import org.eclipse.swt.widgets.Display;
 
 /**
@@ -23,6 +24,7 @@ import org.eclipse.swt.widgets.Display;
 public class DisplayExecutor
 		implements Executor {
 	
+	private static Logger logger = Logger.getLogger(DisplayExecutor.class);
 	private final Display display;
 	private static DisplayExecutor INSTANCE;
 	
@@ -49,8 +51,11 @@ public class DisplayExecutor
 	 * @throws IllegalStateException If the inherent display has been disposed
 	 */
 	public void execute(Runnable command) {
-		if (display.isDisposed())
-			throw new IllegalStateException("Display is disposed");
+		if (display.isDisposed()) {
+			logger.error("Display is disposed, possible received event after closing windows");
+			logger.warn("Client will not handle event!");
+			return;
+		}
 		display.asyncExec(command);
 	}
 	

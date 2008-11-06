@@ -37,10 +37,7 @@ import org.cspoker.common.elements.table.Table;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
-import org.eclipse.swt.events.MouseAdapter;
-import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.*;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
@@ -116,7 +113,6 @@ public class LobbyWindow
 			throws IllegalArgumentException {
 		super(new Shell(core.getGui().getDisplay()), SWT.NONE, core);
 		initGUI();
-		createCloseListener();
 		// Register as a resource user - SWTResourceManager will
 		// handle the obtaining and disposing of resources
 		SWTResourceManager.registerResourceUser(this);
@@ -147,8 +143,10 @@ public class LobbyWindow
 		try {
 			setSize(new Point(400, 300));
 			setLayout(new FillLayout(SWT.HORIZONTAL));
+			
 			{
 				tableFolder = new CTabFolder(this, SWT.NONE);
+				tableFolder.setLayout(new FillLayout());
 				{
 					cTabItem1 = new CTabItem(tableFolder, SWT.NONE);
 					cTabItem1.setText("Tables");
@@ -160,9 +158,11 @@ public class LobbyWindow
 						composite1Layout.makeColumnsEqualWidth = true;
 						composite1.setLayout(composite1Layout);
 						{
-							GridData table1LData = new GridData();
-							table1LData.widthHint = 343;
-							table1LData.heightHint = 164;
+							GridData table1LData = new GridData(SWT.FILL, SWT.FILL, true, true);
+							table1LData.widthHint = 200;
+							table1LData.heightHint = 100;
+							table1LData.minimumWidth = 200;
+							table1LData.minimumHeight = 100;
 							availableGameTables = new org.eclipse.swt.widgets.Table(composite1, SWT.SINGLE | SWT.BORDER);
 							availableGameTables.setLayoutData(table1LData);
 							availableGameTables.setHeaderVisible(true);
@@ -177,8 +177,14 @@ public class LobbyWindow
 										// Open selected table
 										TableId tid = new TableId(Long.parseLong(selectedItems[0].getText(1)));
 										
-										GameWindow w = getClientCore().getGui().getGameWindow(tid, true);
-										w.show();
+										final GameWindow w = getClientCore().getGui().getGameWindow(tid, true);
+										getDisplay().asyncExec(new Runnable() {
+											
+											public void run() {
+												w.show();
+											}
+										});
+										
 									}
 								}
 							});
@@ -423,15 +429,48 @@ public class LobbyWindow
 	 * queue until this window's shell is disposed.
 	 */
 	public void show() {
-		Shell shell = getShell();
+		final Shell shell = getShell();
+		final Display display = shell.getDisplay();
 		shell.setText("CSPoker - Logged in as " + getClientCore().getUser().getUserName());
 		shell.setLayout(new FillLayout());
 		shell.setSize(getSize());
+		shell.addShellListener(new ShellAdapter() {
+			
+			/**
+			 * Upon close, the display is disposed. This will stop all Game
+			 * windows from listening to events and initiate their shutdown hook
+			 * 
+			 * @see org.eclipse.swt.events.ShellAdapter#shellClosed(org.eclipse.swt.events.ShellEvent)
+			 */
+			@Override
+			public void shellClosed(ShellEvent e) {
+				int style = SWT.APPLICATION_MODAL | SWT.YES | SWT.NO;
+				MessageBox messageBox = new MessageBox(getShell(), style);
+				messageBox.setText("Close Window");
+				messageBox.setMessage("Are you sure you want to exit?");
+				e.doit = messageBox.open() == SWT.YES;
+				// Lobby has been closed
+				// Dispose of the display entirely so all GameWindows are closed
+				// as well
+				if (e.doit)
+					display.dispose();
+			}
+		});
+		
 		shell.open();
 		refreshTables();
-		while (!shell.isDisposed()) {
+		while (!shell.isDisposed() && !this.isDisposed()) {
 			if (!shell.getDisplay().readAndDispatch())
-				shell.getDisplay().sleep();
+				display.sleep();
+		}
+		logger.info("Logging out");
+		
+		try {
+			getClientCore().getCommunication().logout();
+		} catch (RemoteException e) {
+			getClientCore().handleRemoteException(e);
+		} catch (IllegalActionException e) {
+			logger.error("This should not happen", e);
 		}
 	}
 	

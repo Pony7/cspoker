@@ -26,15 +26,11 @@ import org.cspoker.common.api.shared.context.RemoteServerContext;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.ShellAdapter;
+import org.eclipse.swt.events.ShellEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Combo;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.*;
 
 /**
  * A Simple Dialog which asks the user to provide a user name and corresponding
@@ -76,9 +72,18 @@ public class LoginDialog
 	 * <li>pressed the <code>Login</code> button
 	 */
 	public void open() {
+		getParent().addShellListener(new ShellAdapter() {
+			
+			@Override
+			public void shellClosed(ShellEvent e) {
+				if (!loginButton.isFocusControl())
+					System.exit(0);
+			}
+		});
 		getParent().layout();
 		getParent().pack();
 		getParent().open();
+		
 		Display display = clientCore.getGui().getDisplay();
 		while (!getParent().isDisposed()) {
 			if (!display.readAndDispatch())

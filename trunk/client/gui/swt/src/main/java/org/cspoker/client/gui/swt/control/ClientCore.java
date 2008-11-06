@@ -17,7 +17,6 @@ import javax.security.auth.login.LoginException;
 
 import org.apache.log4j.Logger;
 import org.cspoker.client.User;
-import org.cspoker.client.gui.swt.window.GameWindow;
 import org.cspoker.client.gui.swt.window.LobbyWindow;
 import org.cspoker.client.gui.swt.window.LoginDialog;
 import org.cspoker.common.CSPokerServer;
@@ -30,11 +29,9 @@ import org.cspoker.common.api.lobby.listener.LobbyListener;
 import org.cspoker.common.api.lobby.listener.LobbyListenerTree;
 import org.cspoker.common.api.shared.context.RemoteServerContext;
 import org.cspoker.common.api.shared.context.ServerContext;
-import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.api.shared.listener.ServerListenerTree;
 import org.cspoker.common.elements.table.TableId;
 import org.cspoker.common.util.Log4JPropertiesLoader;
-import org.eclipse.swt.widgets.Display;
 
 /**
  * The core of the SWT client which manages the windows, the remote
@@ -159,33 +156,21 @@ public class ClientCore
 			getUser().setLoggedIn(true);
 			// TODO Make sure we register to receive events from the server
 			// communication.subscribe(this);
-			LobbyWindow lobby = new LobbyWindow(this);
+			final LobbyWindow lobby = new LobbyWindow(this);
 			lobby.setLobbyContext(this.getCommunication());
 			getGui().setLobby(lobby);
+			// Open the Lobby window, blocking operation
 			lobby.show();
+			// Lobby has been closed
+			logger.info("Client done");
 		} catch (final Exception e) {
 			logger.error("Unexpected error", e);
 			logger.info("Attempting reset");
 			resetAll();
 			// TODO Kill communication, reset everything
-			
-			Display.getDefault().asyncExec(new Runnable() {
-				
-				public void run() {
-					ClientGUI.displayException(e);
-				}
-			});
+			ClientGUI.displayException(e);
 			// and then start anew
 			run();
-		} finally {
-			logger.info("Logging out");
-			try {
-				getCommunication().logout();
-			} catch (RemoteException e) {
-				handleRemoteException(e);
-			} catch (IllegalActionException e) {
-				logger.error("This should not happen", e);
-			}
 		}
 	}
 	
@@ -194,11 +179,6 @@ public class ClientCore
 	 * kills the server communication.
 	 */
 	public void resetAll() {
-		for (GameWindow w : getGui().getGameWindows()) {
-			if (!w.isDisposed())
-				w.dispose();
-		}
-		getGui().getGameWindows().clear();
 		if (!gui.getLobby().getShell().isDisposed())
 			gui.getLobby().getShell().dispose();
 		getUser().setLoggedIn(false);
