@@ -568,25 +568,35 @@ textbf{Primary mis-actor:}
 \subsubsection{Tampering with account data}
 \textbf{Primary mis-actor:}
 \begin{itemize}
-\item 
+\item Crook
 \end{itemize}
 \textbf{Basic path:}
 \begin{itemize}
-\item 
+\item The mis-actor gains access to the data store
+\item The mis-actor puts date directly in the data store
 \end{itemize}
 \textbf{Alternative paths:}
 \begin{itemize}
-\item 
+\item The mis-actor removes data directly from the data store
+\item There may be overcapacity failures: the mis-actor floods the data store by placing large 
+amounts of data into the data store. As a consequence data in the beginning of the store might be overwritten
+, data written to the store might be discarded or the data store might crash, depending on the implementation of
+the data store.
 \end{itemize}
 \textbf{Capture points:}
 \begin{itemize}
 \item \textbf{Prevention:}
 \begin{itemize}
-\item 
+\item placing and removing of data in the data store is securely logged
+\item data store is protected by the internal policies
+\item extra-monitor access is impossible (behind a reliable firewall)
+\item overcapacity failures are handled accordingly
+\item only private or local networks are used for communication between the account management process 
+and the account data store.
 \end{itemize}
 \item \textbf{Detection:}
 \begin{itemize}
-\item 
+\item logs can be searched for adding of removing falsified data
 \end{itemize}
 \end{itemize}
 
