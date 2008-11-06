@@ -17,7 +17,7 @@
 \chapter{Introduction}
 \chapter{Identifying threats}
 \section{DFDs}
-
+Figure \ref{fig:context} shows the context level of the DFD. Figure \ref{fig:level_0} shows the level-0 DFD. The arrows are not annotated to make the diagram readable. A simplified version with only the player and annotated arrows can be found in figure \ref{fig:level_0_player}. In the following analysis only the interaction with the player will be considered as misuse cases with an administrator as external entity are similar.
 \begin{figure}
   \begin{center}
     \includegraphics{context_diagram}
@@ -29,14 +29,14 @@
   \begin{center}
     \includegraphics[scale=0.8]{dfd_level_0}
   \end{center}
-  \caption{DFD Level 0}\label{fig:level_0}
+  \caption{DFD Level-0}\label{fig:level_0}
 \end{figure}
 
 \begin{figure}
   \begin{center}
     \includegraphics[scale=0.7]{dfd_level_0_player}
   \end{center}
-  \caption{DFD Level 0 - only player}\label{fig:level_0_player}
+  \caption{DFD Level-0 - only player}\label{fig:level_0_player}
 \end{figure}
 
 \section{Rationale}
@@ -295,6 +295,12 @@ textbf{Primary mis-actor:}
 \end{itemize}
 
 \subsection{Lobby}
+\subsubsection{Spoofing a lobby}
+\subsubsection{Tampering with the lobby}
+\subsubsection{Repudiation of an action at the lobby}
+\subsubsection{Information disclosure at the lobby}
+\subsubsection{DoS against the lobby}
+\subsubsection{Elevation of privilege at the lobby}
 \subsection{Table}
 \subsubsection{Spoofing a table}
 \textbf{Primary mis-actor:}
@@ -607,8 +613,8 @@ and the account data store.
 \end{itemize}
 \textbf{Basic path:}
 \begin{itemize}
-\item The mis-actor gains access to the data store
-\item The mis-actor reads private data from data store
+\item The mis-actor gains access to the data store.
+\item The mis-actor reads private data from data store.
 \end{itemize}
 \textbf{Alternative paths:}
 \begin{itemize}
