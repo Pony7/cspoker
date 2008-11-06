@@ -671,6 +671,7 @@ Because interaction between a Player and the different processes is very similar
 \end{itemize}
 
 \subsubsection{Information Disclosure of tokens}
+
 \textbf{Primary mis-actor:}
 \begin{itemize}
 \item Crook
@@ -846,6 +847,79 @@ Because interaction between a Player and the different processes is very similar
 \end{itemize}
 \end{itemize}
 
+\textbf{Primary mis-actor:}
+\begin{itemize}
+\item Crook
+\end{itemize}
+\textbf{Basic path:}
+\begin{itemize}
+\item The mis-actor finds a weakness in the confidentiality of events/responses and the channel used to send them.
+\item The mis-actor observes events that give him an unfair advantage in the game, like the pocket cards of competitors. 
+\end{itemize}
+\textbf{Alternative paths:}
+\begin{itemize}
+\item The mis-actor sets up a MITM attack.
+\item The mis-actor observes data through a side channel.
+\end{itemize}
+\textbf{Capture points:}
+\begin{itemize}
+\item \textbf{Prevention:}
+\begin{itemize}
+\item Use stong message confidentiality.
+\item Use strong channel confidentiality.
+\item Review known side channel vulnerabilities to determine if they apply and fix them.
+\end{itemize}
+\end{itemize}
+\subsection{Data Flows to Logging Engine}
+\subsubsection{Tampering with logging requests}
+\textbf{Primary mis-actor:}
+\begin{itemize}
+\item Crook
+\end{itemize}
+\textbf{Basic path:}
+\begin{itemize}
+\item The mis-actor find a weakness in the integrity of logging requests.
+\item The mis-actor intercepts a logging request sent by another process.
+\item The mis-actor replays the logging request to duplicate the thing to be logged.
+\end{itemize}
+\textbf{Alternative paths:}
+\begin{itemize}
+\item The mis-actor spoofs another Player to send fake logging requests.
+\item The mis-actor performs a MITM attack and eavesdrop on the logging requests sent by a genuine process.
+\end{itemize}
+\textbf{Capture points:}
+\begin{itemize}
+\item \textbf{Prevention:}
+\begin{itemize}
+\item Use antireplay defences and a strong message and channel integrity algorithm.
+\item Prevent spoofing of processes.
+\end{itemize}
+\end{itemize}
+
+\subsubsection{Information Disclosure of logging requests}
+\textbf{Primary mis-actor:}
+\begin{itemize}
+\item Crook
+\end{itemize}
+\textbf{Basic path:}
+\begin{itemize}
+\item The mis-actor finds a weakness in the confidentiality of logging requests and the channel used to send them.
+\item The mis-actor observes which process wants to log something and what they want to log.
+\end{itemize}
+\textbf{Alternative paths:}
+\begin{itemize}
+\item The mis-actor sets up a MITM attack.
+\item The mis-actor observes data through a side channel.
+\end{itemize}
+\textbf{Capture points:}
+\begin{itemize}
+\item \textbf{Prevention:}
+\begin{itemize}
+\item Use stong message confidentiality.
+\item Use strong channel confidentiality.
+\item Review known side channel vulnerabilities to determine if they apply and fix them.
+\end{itemize}
+\end{itemize}
 \section{Business Logic Misuse Cases}
 \subsection{Single player Cheating}
 \subsubsection{A player uses multiple accounts to access more confidential information}
