@@ -697,4 +697,41 @@ Because interaction between a Player and the different processes is very similar
 \end{itemize}
 
 \section{Business Logic Misuse Cases}
+\subsection{Single player Cheating}
+\subsubsection{A player uses multiple accounts to access more confidential information}
+\textbf{Summary:} The malicious player uses multiple accounts at the same table. He uses the extra information to  have a more accurate view on the outs\footnote{Any unseen card that, if drawn, will improve a player's hand to one that is likely to win. The number of outs can be converted to the probability of making the hand on the next card.}. He gains an unfair advantage over the other innocent players. \\
+\textbf{Primary mis-actor:}
+\begin{itemize}
+\item Crook
+\end{itemize}
+\textbf{Basic path:}
+\begin{enumerate}
+\item[bf1.] The malicious player creates multiple accounts. 
+\item[bf2.] The malicious player is sit-in at a table with different accounts.
+\item[bf3.] The malicious player uses the additional knowledge to make statistically more successful decisions. 
+\end{enumerate}
+\textbf{Capture points:}
+\begin{itemize}
+\item \textbf{Prevention:}
+\begin{itemize}
+\item Each player can have at most 1 account.
+\item Limit the number of simultaneous connections from 1 ip-address to 1 account.
+\end{itemize}
+\item \textbf{Detection:}
+\begin{itemize}
+\item The behavior of the malicious player is influenced by the extra knowledge. This could lead to inexplicable actions that can only be explained with the knowledge of the pocket cards of the other players. This behavior can be detected by consulting the logs.
+\end{itemize}
+\end{itemize}
+\subsubsection{A malicious player with admin rights uses confidential information in a game and act on it}
+\textbf{Summary:} If an admin has access to the card info of all the players at a table, he can act on perfect knowledge which is a huge advantage.
+\subsubsection{A malicious player misuses the right to ask the admin to view the log of the table}
+\textbf{Summary:} The malicious player misuses the possibility to view the table log pretending to be suspicious of collusion. The malicious player can verify the hands of all the opponents, also those who have chosen not to show their cards. By this way he can gain more insight into the strategy of its opponents (whether someone is bluffing or not, ...). Consulting the log is only possible after the game has been played so there is no direct influence, but in the long run gives an unfair advantage.
+\subsubsection{A malicious player can flood the network of another player to force a time-out}
+\textbf{Summary:} A malicious player can flood the network of an opponent at a crucial moment so no communication between this opponent and the poker server is possible. This will lead to a time-out of the opponent. Depending on the time-out policy the malicious player can have a huge advantage.
+\subsection{Multi player Cheating}
+\subsubsection{Multiple players at a table collaborate}
+\textbf{Summary:} By collaborating they have access to more knowledge than legitimate. With this extra knowledge they have a more accurate view on the outs. They can protect each other, or they can raise each other to force the other players to call higher chip amounts to enlarge the pot.
+\subsubsection{An admin collaborates with a player to play with full information access}
+\textbf{Summary:} An admin who has access to the pocket cards could pass the secret information to a collaborating player. This collaboration leads to perfect information access and a perfect strategy. The collaboration is an attempt to camouflage the cheating.
+
 \end{document} 
