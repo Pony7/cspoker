@@ -116,6 +116,27 @@ package models.connection
 				}	 
 				return;
 			}
+			
+			if(contentObj.hasOwnProperty("holdemTableTreeEventWrapper")){
+				// AFTER JOIN TABLE, RECEIVE THESE....
+				var event:Object = contentObj.holdemTableTreeEventWrapper.event;
+				var eventType:String = event["xsi:type"];
+				
+				// SWITCH STATEMENT FOR HOLDEM TABLE EVENTS...
+				switch(eventType){
+					case "ns2:sitInEvent":
+						trace("sitInEvent received!!!");
+						break;
+					case "ns2:newDealEvent":
+						trace("newDealEvent received!!!");
+						break;
+					
+					
+					
+					
+				}
+				
+			}
 			 
 			
 			
