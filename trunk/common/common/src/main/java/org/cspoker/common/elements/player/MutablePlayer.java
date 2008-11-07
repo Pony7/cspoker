@@ -16,61 +16,61 @@
 package org.cspoker.common.elements.player;
 
 import org.cspoker.common.elements.chips.Chips;
-import org.cspoker.common.elements.chips.IllegalValueException;
 
 public class MutablePlayer {
-
+	
 	private final PlayerId id;
-
+	
 	private final String name;
-
+	
 	private final Chips stack;
 	
 	/***************************************************************************
 	 * Constructor
 	 **************************************************************************/
-
+	
 	/**
 	 * Construct a new player with given id, name and initial number of chips.
 	 * 
 	 * @post The chips pile is effective and the value of chips is the same as
 	 *       the given initial value.
-	 *       
-	 * @throws IllegalValueException
-	 *         The given initial value is not valid.
+	 * @throws IllegalArgumentException The given initial value is not valid.
 	 */
-	public MutablePlayer(PlayerId id, String name, int initialNbChips)
-			throws IllegalValueException {
+	public MutablePlayer(PlayerId id, String name, int initialNbChips) {
 		this.id = id;
 		this.name = name;
 		stack = new Chips(initialNbChips);
 	}
 	
-	public MutablePlayer(Player player) throws IllegalValueException {
-		this(player.getId(),player.getName(),0);
+	public MutablePlayer(Player player) {
+		this(player.getId(), player.getName(), 0);
+	}
+	
+	public MutablePlayer(SeatedPlayer player) {
+		this(player.getId(), player.getName(), player.getStackValue());
 	}
 	
 	public PlayerId getId() {
 		return id;
 	}
 	
-	public String getName(){
+	public String getName() {
 		return name;
 	}
-		
-	public Chips getStack(){
+	
+	public Chips getStack() {
 		return stack;
 	}
 	
 	@Override
-	public String toString(){
-		return getName()+" (#"+getId()+")";
+	public String toString() {
+		return getName() + " (#" + getId() + ")";
 	}
 	
 	/**
 	 * Returns a snapshot of this game player.
 	 */
-	public Player getMemento(){
+	public Player getMemento() {
 		return new Player(getId(), getName());
 	}
 }

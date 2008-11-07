@@ -1,6 +1,9 @@
 package org.cspoker.client;
 
-import org.cspoker.common.elements.player.Player;
+import java.rmi.RemoteException;
+
+import org.cspoker.common.api.account.context.RemoteAccountContext;
+import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.player.PlayerId;
 
 /**
@@ -9,6 +12,9 @@ import org.cspoker.common.elements.player.PlayerId;
  * @author Cedric, Stephan
  */
 public class User {
+	
+	/** {@link RemoteAccountContext} retrieved from server after login */
+	private RemoteAccountContext accountContext;
 	
 	/**
 	 * Persistency support for user preferences
@@ -28,25 +34,11 @@ public class User {
 		public static final String CHIPS = "CSPoker.Chips";
 	}
 	
-	/** Flag indicating whether the user is currently logged in */
-	private boolean loggedIn = false;
 	/**
 	 * The name of this user
 	 */
 	private final String userName;
 	private final String password;
-	
-	private Player player;
-	
-	/**
-	 * @return The player represented by this user
-	 *         <p>
-	 *         TODO Changed with the new API. Set this accordingly, preferably
-	 *         as a final variable
-	 */
-	public Player getPlayer() {
-		return player;
-	}
 	
 	/***************************************************************************
 	 * Constructor
@@ -60,9 +52,6 @@ public class User {
 	public User(String name, String password) {
 		this.userName = name;
 		this.password = password;
-		// TODO This is not good, do we get our player id from somewhere else??
-		// It's nice to have this in the GameWindow
-		this.player = new Player(new PlayerId(0), name);
 	}
 	
 	/***************************************************************************
@@ -87,15 +76,31 @@ public class User {
 	 *         connection, <code>false</code> otherwise
 	 */
 	public boolean isLoggedIn() {
-		return loggedIn;
+		return (accountContext != null);
 	}
 	
 	/**
-	 * @param b The <i>logged in</i> - status
+	 * @param accountContext
 	 */
-	public void setLoggedIn(boolean b) {
-		assert (loggedIn == !b) : "Tried to set logged in to " + b + " but status was already like this";
-		loggedIn = b;
+	public void setAccountContext(RemoteAccountContext accountContext) {
+		this.accountContext = accountContext;
 		
+	}
+	
+	/**
+	 * @return
+	 * @throws IllegalStateException When there is no account context
+	 */
+	public PlayerId getPlayerId() {
+		if (accountContext == null) {
+			throw new IllegalStateException("No account context");
+		}
+		try {
+			return accountContext.getPlayerID();
+		} catch (RemoteException e) {
+			throw new IllegalStateException(e);
+		} catch (IllegalActionException e) {
+			throw new IllegalStateException(e);
+		}
 	}
 }

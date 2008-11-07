@@ -33,7 +33,6 @@ import org.cspoker.common.elements.player.SeatedPlayer;
 import org.cspoker.common.elements.table.SeatId;
 import org.cspoker.common.util.threading.ScheduledRequestExecutor;
 import org.cspoker.server.common.HoldemPlayerContextImpl;
-import org.cspoker.server.common.elements.table.PlayerListFullException;
 import org.cspoker.server.common.elements.table.SeatTakenException;
 import org.cspoker.server.common.elements.table.ServerTable;
 import org.cspoker.server.common.gamecontrol.rounds.BettingRound;
@@ -264,50 +263,9 @@ public class PlayingTableState
 			game.sitIn(seatId, player);
 		} catch (SeatTakenException e) {
 			throw new IllegalActionException(e.getMessage());
-		} catch (PlayerListFullException e) {
-			throw new IllegalActionException(e.getMessage());
 		}
 		
 		mediatingTable.publishSitInEvent(new SitInEvent(player.getMemento()));
-		
-		// auto-deal
-		// try {
-		// if (game.getNbSeatedPlayers() == 2) {
-		//				
-		// deal(game.getDealer());
-		// }
-		// } catch (IllegalActionException e) {
-		// game.sitOut(player);
-		// mediatingTable.publishSitOutEvent(new
-		// SitOutEvent(player.getMemento(), true));
-		// }
-		
-		return new HoldemPlayerContextImpl(player, mediatingTable);
-	}
-	
-	@Override
-	public synchronized HoldemPlayerContext sitIn(MutableSeatedPlayer player)
-			throws IllegalActionException {
-		try {
-			game.sitIn(player);
-		} catch (PlayerListFullException e) {
-			throw new IllegalActionException(e.getMessage());
-		}
-		player.setSittingIn(true);
-		mediatingTable.publishSitInEvent(new SitInEvent(player.getMemento()));
-		
-		// auto-deal
-		// try {
-		// if (game.getNbSeatedPlayers() == 2) {
-		//				
-		// deal(game.getDealer());
-		// }
-		// } catch (IllegalActionException e) {
-		// game.sitOut(player);
-		// mediatingTable.publishSitOutEvent(new
-		// SitOutEvent(player.getMemento(), true));
-		// }
-		
 		return new HoldemPlayerContextImpl(player, mediatingTable);
 	}
 	

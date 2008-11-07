@@ -18,14 +18,19 @@ import java.util.Collections;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
-import org.cspoker.client.gui.swt.control.*;
+import org.cspoker.client.gui.swt.control.ClientGUI;
+import org.cspoker.client.gui.swt.control.GameState;
+import org.cspoker.client.gui.swt.control.SWTResourceManager;
+import org.cspoker.client.gui.swt.control.UserSeatedPlayer;
 import org.cspoker.common.api.lobby.holdemtable.event.*;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.event.NewPocketCardsEvent;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.listener.HoldemPlayerListener;
 import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.cards.Card;
+import org.cspoker.common.elements.chips.IllegalValueException;
 import org.cspoker.common.elements.chips.Pots;
+import org.cspoker.common.elements.player.MutableSeatedPlayer;
 import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.elements.player.SeatedPlayer;
 import org.cspoker.common.elements.table.DetailedHoldemTable;
@@ -60,7 +65,6 @@ public class GameWindow
 	public static final int MINIMUM_HEIGHT = 650;
 	
 	private final static Logger logger = Logger.getLogger(GameWindow.class);
-	
 	private final UserSeatedPlayer user;
 	private TableUserInputComposite userInputComposite;
 	TableComposite tableComposite;
@@ -77,12 +81,16 @@ public class GameWindow
 	public GameWindow(LobbyWindow lobbyWindow, DetailedHoldemTable table) {
 		super(new Shell(lobbyWindow.getDisplay(), SWT.CLOSE | SWT.RESIZE), SWT.NONE, lobbyWindow.getClientCore());
 		gameState = new GameState(table);
-		user = new UserSeatedPlayer(this, getClientCore(), gameState);
+		try {
+			user = new UserSeatedPlayer(this, getClientCore(), gameState);
+		} catch (IllegalValueException e) {
+			throw new IllegalStateException(e);
+		}
 		user.joinTable(lobbyWindow.getContext());
-		
 		initGUI();
 		for (SeatedPlayer player : table.getPlayers()) {
-			tableComposite.findPlayerSeatCompositeBySeatId(player.getSeatId()).occupy(player);
+			MutableSeatedPlayer mutable = new MutableSeatedPlayer(player);
+			tableComposite.findPlayerSeatCompositeBySeatId(player.getSeatId()).occupy(mutable);
 		}
 		// Initialize chat context
 		user.getChatContext();
@@ -179,10 +187,10 @@ public class GameWindow
 		// Update the chip stack of the player who changed the pot by
 		// betting/raising/calling
 		MutableSeatedPlayer player = getPlayerSeatComposite(playerId).getPlayer();
-		player.updateStackAndBetChips(amount);
+		gameState.updateStackAndBetChips(player, amount);
 		gameState.betRaise(amount);
-		player.getCurrentBetPile().clear();
-		player.getCurrentBetPile().addAll(gameState.getCurrentBetPile());
+		gameState.getBetPile(player).clear();
+		gameState.getBetPile(player).addAll(gameState.getCurrentBetPile());
 		// Game State update
 		// Set new reference bet pile in GameState
 		
@@ -235,7 +243,7 @@ public class GameWindow
 	 */
 	public void onSitOut(SitOutEvent sitOutEvent) {
 		PlayerSeatComposite psc = getPlayerSeatComposite(sitOutEvent.getPlayerId());
-		psc.getPlayer().setSittingOut(true);
+		psc.getPlayer().setSittingIn(false);
 		
 		psc.updatePlayerInfo();
 		if (sitOutEvent.getPlayerId().equals(user.getMemento().getId())) {
@@ -267,15 +275,16 @@ public class GameWindow
 		gameState.setPots(new Pots(0));
 		PlayerSeatComposite newDealer = tableComposite.findPlayerSeatCompositeByPlayerId(newDealEvent.getDealer());
 		for (PlayerSeatComposite psc : tableComposite.getPlayerSeatComposites(true)) {
-			if (psc.getPlayer().isDealer()) {
+			if (psc.getPlayer().equals(gameState.getDealer())) {
 				tableComposite.moveDealerButton(psc, newDealer);
+				gameState.setDealer(newDealer.getPlayer());
 			}
 			
 			psc.setHoleCards(Arrays.asList(ClientGUI.UNKNOWN_CARD, ClientGUI.UNKNOWN_CARD));
-			// Draw dealer button
-			psc.getPlayer().setDealer(newDealEvent.getDealer().equals(psc.getPlayer()));
-			psc.getPlayer().setBetChipsValue(0);
+			psc.getPlayer().getBetChips().discard();
+			gameState.getBetPile(psc.getPlayer()).clear();
 		}
+		
 		userInputComposite.showDealerMessage(newDealEvent);
 		tableComposite.redraw();
 		logger.debug("New deal event handled");
@@ -336,15 +345,16 @@ public class GameWindow
 	 * @see org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener#onSitIn(org.cspoker.common.api.lobby.holdemtable.event.SitInEvent)
 	 */
 	public void onSitIn(SitInEvent sitInEvent) {
-		if (user.getName().equalsIgnoreCase(sitInEvent.getPlayer().getName())) {
-			user.setPlayer(sitInEvent.getPlayer());
+		MutableSeatedPlayer player = new MutableSeatedPlayer(sitInEvent.getPlayer());
+		
+		if (user.getId().equals(sitInEvent.getPlayer().getId())) {
+			user.update(sitInEvent.getPlayer());
 			userInputComposite.generalActionHolder.setVisible(true);
 			userInputComposite.sitInOutButton.setText("Sit Out");
 			userInputComposite.sitInOutButton.setSelection(true);
-			
+			player = user;
 		}
-		tableComposite.findPlayerSeatCompositeBySeatId(sitInEvent.getPlayer().getSeatId()).occupy(
-				sitInEvent.getPlayer());
+		tableComposite.findPlayerSeatCompositeBySeatId(sitInEvent.getPlayer().getSeatId()).occupy(player);
 		userInputComposite.showDealerMessage(sitInEvent);
 	}
 	
@@ -375,9 +385,9 @@ public class GameWindow
 			Set<Card> noCards = Collections.emptySet();
 			psc.setHoleCards(noCards);
 			psc.setActive(false);
+			psc.updatePlayerInfo();
 		}
 		userInputComposite.showDealerMessage(winnerEvent);
-		redraw();
 	}
 	
 	/**

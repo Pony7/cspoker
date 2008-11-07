@@ -124,6 +124,14 @@ public class WaitingTableState
 		
 		try {
 			if (!serverTable.hasAsPlayer(player)) {
+				if (seatId == null) {
+					try {
+						serverTable.addPlayer(player);
+					} catch (PlayerListFullException e) {
+						throw new IllegalActionException("Joining table " + mediatingTable.getTableId().toString()
+								+ " failed: " + e.getMessage());
+					}
+				}
 				serverTable.addPlayer(seatId, player);
 			}
 		} catch (SeatTakenException e) {
@@ -137,22 +145,6 @@ public class WaitingTableState
 		mediatingTable.publishSitInEvent(new SitInEvent(player.getMemento()));
 		return new HoldemPlayerContextImpl(player, mediatingTable);
 		
-	}
-	
-	@Override
-	public HoldemPlayerContext sitIn(MutableSeatedPlayer player)
-			throws IllegalActionException {
-		try {
-			if (!serverTable.hasAsPlayer(player)) {
-				serverTable.addPlayer(player);
-			}
-		} catch (PlayerListFullException e) {
-			throw new IllegalActionException("Joining table " + mediatingTable.getTableId().toString() + " failed: "
-					+ e.getMessage());
-		}
-		player.setSittingIn(true);
-		mediatingTable.publishSitInEvent(new SitInEvent(player.getMemento()));
-		return new HoldemPlayerContextImpl(player, mediatingTable);
 	}
 	
 	@Override

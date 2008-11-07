@@ -19,10 +19,13 @@ import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
 
 import org.apache.log4j.Logger;
-import org.cspoker.client.gui.swt.control.*;
+import org.cspoker.client.gui.swt.control.CardPaintListener;
+import org.cspoker.client.gui.swt.control.Chip;
+import org.cspoker.client.gui.swt.control.ClientGUI;
+import org.cspoker.client.gui.swt.control.UserSeatedPlayer;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.cards.Card;
-import org.cspoker.common.elements.player.SeatedPlayer;
+import org.cspoker.common.elements.player.MutableSeatedPlayer;
 import org.cspoker.common.elements.table.SeatId;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
@@ -54,9 +57,8 @@ public class PlayerSeatComposite
 		 */
 		@Override
 		public void mouseDown(MouseEvent evt) {
-			// Check if seat is occupied, TODO Improve, without string
-			// comparison
-			if (!getPlayer().getName().equalsIgnoreCase("Empty Seat")) {
+			// Check if seat is occupied
+			if (player != null) {
 				return;
 			}
 			// If not, we can probably sit in
@@ -155,7 +157,7 @@ public class PlayerSeatComposite
 	public PlayerSeatComposite(TableComposite parent, int style, SeatId seatId) {
 		super(parent, style);
 		numberOfHoleCards = gameState.getNumberOfHoleCards();
-		player = MutableSeatedPlayer.UNOCCUPIED;
+		player = null;
 		this.seatId = seatId;
 		initGUI();
 		updatePlayerInfo();
@@ -309,7 +311,7 @@ public class PlayerSeatComposite
 	 * @param action The action to display, i.e. <i>"Check"</i> or <i>"Fold"</i>
 	 */
 	public void showAction(final String action) {
-		playerStack.setText(ClientGUI.formatBet(player.getStackValue()));
+		playerStack.setText(ClientGUI.formatBet(player.getStack().getValue()));
 		playerStack.pack(true);
 		final String name = player.getName();
 		playerName.setText(action);
@@ -370,22 +372,19 @@ public class PlayerSeatComposite
 	 * 
 	 * @param detailedPlayer The player to use as an update.
 	 */
-	public void occupy(SeatedPlayer detailedPlayer) {
+	public void occupy(MutableSeatedPlayer detailedPlayer) {
 		// Check is necessary because the variable might already be set to a
 		// UserSeatedPlayer
-		if (player == MutableSeatedPlayer.UNOCCUPIED) {
-			UserSeatedPlayer user = getParent().getParent().getUser();
-			
-			// TODO This is the only time we need to compare on the name (since
-			// I dont have my own correct id yet)
-			player = detailedPlayer.getName().equalsIgnoreCase(user.getMemento().getName()) ? user
-					: new MutableSeatedPlayer(detailedPlayer, gameState);
+		if (player == null) {
+			player = detailedPlayer;
+		} else {
+			logger.warn("Trying to occupy seat with " + detailedPlayer + ", " + player + " already sitting here");
 		}
 		playerName.setForeground(Display.getDefault().getSystemColor(SWT.DEFAULT));
 		playerName.setVisible(true);
 		playerName.setText(detailedPlayer.getName());
 		playerStack.setVisible(true);
-		playerStack.setText(ClientGUI.formatBet(detailedPlayer.getStackValue()));
+		playerStack.setText(ClientGUI.formatBet(detailedPlayer.getStack().getValue()));
 		update();
 	}
 	
@@ -394,12 +393,16 @@ public class PlayerSeatComposite
 	 * may be occupied by clicking on it
 	 */
 	public void updatePlayerInfo() {
-		String displayedName = player.getName();
-		if (player.isSittingOut()) {
+		String displayedName = (player == null) ? "Empty Seat" : player.getName();
+		if (player != null && !player.isSittingIn()) {
 			displayedName = displayedName.concat(" (Sitting Out)");
 		}
 		playerName.setText(displayedName);
-		
+		if (player == null) {
+			return;
+		}
+		playerStack.setText(ClientGUI.formatBet(player.getStack().getValue()));
+		playerStack.pack(true);
 		holeCardsComposite.redraw();
 		timerAction.cancel(true);
 	}

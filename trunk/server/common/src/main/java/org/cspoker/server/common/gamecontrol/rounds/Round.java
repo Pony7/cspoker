@@ -161,7 +161,9 @@ public abstract class Round {
 	}
 	
 	public void foldAction(MutableSeatedPlayer player)
-			throws IllegalActionException {}
+			throws IllegalActionException {
+		throw new IllegalActionException(player.getName() + " can not fold in this round.");
+	}
 	
 	/**
 	 * The player who the dealer-button has been dealt to can choose to start

@@ -29,7 +29,6 @@ import org.cspoker.common.api.lobby.holdemtable.holdemplayer.event.NewPocketCard
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.listener.HoldemPlayerListener;
 import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
-import org.cspoker.common.elements.chips.IllegalValueException;
 import org.cspoker.common.elements.player.MutablePlayer;
 import org.cspoker.common.elements.player.MutableSeatedPlayer;
 import org.cspoker.common.elements.player.PlayerId;
@@ -344,6 +343,15 @@ public class PokerTable {
 		
 	}
 	
+	/**
+	 * @param seatId May be <code>null</code> if the server should select a
+	 *            {@link SeatId} automatically
+	 * @param buyIn buyin amount
+	 * @param player Player
+	 * @param holdemPlayerListener Listener for events
+	 * @return The {@link HoldemPlayerContext}
+	 * @throws IllegalActionException
+	 */
 	public synchronized HoldemPlayerContext sitIn(SeatId seatId, int buyIn, MutablePlayer player,
 			HoldemPlayerListener holdemPlayerListener)
 			throws IllegalActionException {
@@ -356,29 +364,21 @@ public class PokerTable {
 				tableState.deal();
 			}
 			return toReturn;
-		} catch (IllegalValueException e) {
+		} catch (IllegalArgumentException e) {
 			throw new IllegalActionException("You can not sit in to this table with the given buy-in of " + buyIn
 					+ "chips.");
 		}
 		
 	}
 	
+	/**
+	 * Calls {@link #sitIn(SeatId, int, MutablePlayer, HoldemPlayerListener)}
+	 * with SeatId <code>null</code>
+	 */
 	public synchronized HoldemPlayerContext sitIn(int buyIn, MutablePlayer player,
 			HoldemPlayerListener holdemPlayerListener)
 			throws IllegalActionException {
-		try {
-			HoldemPlayerContext toReturn = tableState.sitIn(new MutableSeatedPlayer(player, buyIn, true));
-			sitInPlayers.put(player.getId(), holdemPlayerListener);
-			subscribeHoldemPlayerListener(player.getId(), holdemPlayerListener);
-			if (sitInPlayers.size() == 2) {
-				tableState = tableState.getNextState();
-				tableState.deal();
-			}
-			return toReturn;
-		} catch (IllegalValueException e) {
-			throw new IllegalActionException("You can not sit in to this table with the given buy-in of " + buyIn
-					+ "chips.");
-		}
+		return sitIn(null, buyIn, player, holdemPlayerListener);
 	}
 	
 	public synchronized void sitOut(MutableSeatedPlayer player) {

@@ -561,7 +561,14 @@ public class Game {
 	 **************************************************************************/
 	
 	public SeatId sitIn(SeatId seatId, MutableSeatedPlayer player)
-			throws SeatTakenException, PlayerListFullException, IllegalActionException {
+			throws SeatTakenException, IllegalActionException {
+		if (seatId == null) {
+			try {
+				table.addPlayer(player);
+			} catch (PlayerListFullException e) {
+				throw new IllegalActionException(e.getMessage(), e);
+			}
+		}
 		table.addPlayer(seatId, player);
 		
 		if (getDealer() == null) {

@@ -21,162 +21,147 @@ import org.apache.log4j.Logger;
 /**
  * A class to represent chips.
  * 
- * 
  * @invar The value of these chips should be valid. |canHaveAsValue(getValue())
- * 
  * @note The case of overflow should also be handled.
- * 
  */
 public class Chips {
-
+	
 	private static Logger logger = Logger.getLogger(Chips.class);
-
+	
 	/***************************************************************************
 	 * Constructor
 	 **************************************************************************/
-
+	
 	/**
 	 * Construct a new chips pile with given initial value.
 	 * 
-	 * @param initalValue
-	 *            The initial value for this new chips pile.
+	 * @param initalValue The initial value for this new chips pile.
 	 * @effect Set the value of these chips to the given value.
 	 *         |setValue(initalValue)
-	 * @throws IllegalValueException
-	 *             [must] The given initial value is not a legal value for the
-	 *             chips. | !canHaveAsValue(initalValue)
+	 * @throws IllegalArgumentException [must] The given initial value is not a
+	 *             legal value for the chips. | !canHaveAsValue(initalValue)
 	 */
-	public Chips(int initalValue) throws IllegalValueException {
+	public Chips(int initalValue) {
 		setValue(initalValue);
 	}
 	
-	public Chips(Chips chips)  {
+	public Chips(Chips chips) {
 		value = chips.getValue();
 	}
-
+	
 	/**
 	 * Construct a new chips pile with 0 as initial value.
 	 * 
 	 * @effect Set the value of these chips to 0. |setValue(0)
 	 */
 	public Chips() {
-
+		
 		try {
 			setValue(0);
-		} catch (IllegalValueException e) {
+		} catch (IllegalArgumentException e) {
 			// 0 is always a valid value.
 			assert false;
 		}
 	}
-
+	
 	/***************************************************************************
 	 * Value
 	 **************************************************************************/
-
+	
 	/**
 	 * This variable contains the value of the chips.
 	 */
 	private int value;
-
+	
 	/**
 	 * Return the value of these chips.
-	 * 
 	 */
 	public int getValue() {
 		return value;
 	}
-
+	
 	/**
 	 * Check whether chips can have the given value as their value.
 	 * 
-	 * @param value
-	 *            The value to check.
+	 * @param value The value to check.
 	 * @return The value should be positive. | value>=0
 	 */
 	public static boolean canHaveAsValue(int value) {
 		return value >= 0;
 	}
-
+	
 	/**
 	 * Set the value of this chips to the given value.
 	 * 
-	 * @param value
-	 *            The new value for this chips.
-	 * @post The value of this chips is set to the given value. | new.getValue() ==
-	 *       value
-	 * @throws IllegalValueException
-	 *             [must] The given value is not a legal value for the chips. |
-	 *             !canHaveAsValue(value)
+	 * @param value The new value for this chips.
+	 * @post The value of this chips is set to the given value. | new.getValue()
+	 *       == value
+	 * @throws IllegalArgumentException [must] The given value is not a legal
+	 *             value for the chips. | !canHaveAsValue(value)
 	 */
-	private void setValue(int value) throws IllegalValueException {
+	private void setValue(int value) {
 		if (!canHaveAsValue(value)) {
-			throw new IllegalValueException();
+			throw new IllegalArgumentException("Can not set chips to value" + value);
 		}
 		this.value = value;
 	}
-
+	
 	/***************************************************************************
 	 * Mutators
 	 **************************************************************************/
-
+	
 	/**
 	 * Increase the value of the pile of chips with given amount.
 	 * 
-	 * @param amount
-	 *            The amount to increase the value of the pile of chips with.
+	 * @param amount The amount to increase the value of the pile of chips with.
 	 * @pre The amount should be positive. |amount>=0
 	 * @effect Set the value of the pile of chips to the value increased with
 	 *         given amount. |setValue(getValue()+amount)
-	 * @throws IllegalValueException
-	 *             [must] The new value is not a legal value for the chips. |
-	 *             !canHaveAsValue(new.getValue())
+	 * @throws IllegalValueException [must] The new value is not a legal value
+	 *             for the chips. | !canHaveAsValue(new.getValue())
 	 */
-	private void increaseWith(int amount) throws IllegalValueException {
+	private void increaseWith(int amount)
+			throws IllegalValueException {
 		if (amount < 0) {
 			throw new IllegalArgumentException();
 		}
 		setValue(getValue() + amount);
 	}
-
+	
 	/**
 	 * Decrease the value of the pile of chips with given amount.
 	 * 
-	 * @param amount
-	 *            The amount to decrease the value of the pile of chips with.
+	 * @param amount The amount to decrease the value of the pile of chips with.
 	 * @pre The amount should be positive. |amount>=0
 	 * @effect Set the value of the pile of chips to the value decreased with
 	 *         given amount. |setValue(getValue()-amount)
-	 * @throws IllegalValueException
-	 *             [must] The new value is not a legal value for the chips. |
-	 *             !canHaveAsValue(new.getValue())
+	 * @throws IllegalValueException [must] The new value is not a legal value
+	 *             for the chips. | !canHaveAsValue(new.getValue())
 	 */
-	private void decreaseWith(int amount) throws IllegalValueException {
+	private void decreaseWith(int amount)
+			throws IllegalValueException {
 		if (amount < 0) {
 			throw new IllegalArgumentException();
 		}
 		setValue(getValue() - amount);
 	}
-
+	
 	/**
 	 * Transfer the given amount from this pile of chips to the given pile of
 	 * chips.
 	 * 
-	 * @param amount
-	 *            The amount to transfer.
-	 * @param receiver
-	 *            The pile of chips to transfer the amount of chips to.
+	 * @param amount The amount to transfer.
+	 * @param receiver The pile of chips to transfer the amount of chips to.
 	 * @pre The receiver should be effective. | receiver!=null
 	 * @pre The amount should be positive. | amount>=0
 	 * @effect Decrease this pile with given amount. |decreaseWith(amount)
 	 * @effect Increase the receiving pile with given amount.
 	 *         |receiver.increaseWith(amount)
-	 * @throws IllegalValueException
-	 *             [must] This pile of chips can not have the new value as its
-	 *             value. | !canHaveAsValue(new.getValue())
-	 * @throws IllegalValueException
-	 *             [must] This given pile of chips can not have the new value as
-	 *             its value. | !canHaveAsValue(new.receiver.getValue())
-	 * 
+	 * @throws IllegalValueException [must] This pile of chips can not have the
+	 *             new value as its value. | !canHaveAsValue(new.getValue())
+	 * @throws IllegalValueException [must] This given pile of chips can not
+	 *             have the new value as its value. |
+	 *             !canHaveAsValue(new.receiver.getValue())
 	 * @note This method should be synchronized because it is an atomic
 	 *       operation. Otherwise there is the risk that the invariants will not
 	 *       hold after exiting the method.
@@ -184,24 +169,21 @@ public class Chips {
 	public synchronized void transferAmountTo(int amount, Chips receiver)
 			throws IllegalValueException {
 		if (receiver == null) {
-			throw new IllegalArgumentException(
-					"The given receiver should be effective.");
+			throw new IllegalArgumentException("The given receiver should be effective.");
 		}
 		if (amount < 0) {
-			throw new IllegalArgumentException("Can not transfer " + amount
-					+ " from this pile with " + toString() + " to "
-					+ receiver.toString());
+			throw new IllegalArgumentException("Can not transfer " + amount + " from this pile with " + toString()
+					+ " to " + receiver.toString());
 		}
 		
 		decreaseWith(amount);
 		receiver.increaseWith(amount);
 	}
-
+	
 	/**
 	 * Transfer the all chips from this pile to the given pile of chips.
 	 * 
-	 * @param receiver
-	 *            The pile of chips to transfer all the chips to.
+	 * @param receiver The pile of chips to transfer all the chips to.
 	 * @effect All the chips of this pile are transfered to the given pile of
 	 *         chips. |transferAmountTo(getValue(), receiver)
 	 */
@@ -213,24 +195,23 @@ public class Chips {
 			assert false;
 		}
 	}
-
+	
 	public synchronized Chips getCopy() {
 		try {
 			return new Chips(value);
-		} catch (IllegalValueException e) {
+		} catch (IllegalArgumentException e) {
 			logger.error(e);
-			throw new IllegalStateException(
-					"Class-invariant is not respected. Chips must have valid values.");
+			throw new IllegalStateException("Class-invariant is not respected. Chips must have valid values.");
 		}
 	}
-
+	
 	@Override
 	public String toString() {
 		return Integer.valueOf(getValue()).toString();
 	}
-
+	
 	public void discard() {
 		value = 0;
 	}
-
+	
 }
