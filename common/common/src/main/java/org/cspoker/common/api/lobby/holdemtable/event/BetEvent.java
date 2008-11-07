@@ -35,6 +35,7 @@ public class BetEvent extends HoldemTableEvent {
 	@XmlAttribute
 	private final PlayerId playerId;
 
+	@XmlAttribute
 	private final int amount;
 
 	public BetEvent(PlayerId player, int amount) {
