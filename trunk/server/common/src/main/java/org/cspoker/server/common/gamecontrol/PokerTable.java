@@ -348,7 +348,7 @@ public class PokerTable {
 			HoldemPlayerListener holdemPlayerListener)
 			throws IllegalActionException {
 		try {
-			HoldemPlayerContext toReturn = tableState.sitIn(seatId, new MutableSeatedPlayer(player, buyIn));
+			HoldemPlayerContext toReturn = tableState.sitIn(seatId, new MutableSeatedPlayer(player, buyIn, true));
 			sitInPlayers.put(player.getId(), holdemPlayerListener);
 			subscribeHoldemPlayerListener(player.getId(), holdemPlayerListener);
 			if (sitInPlayers.size() == 2) {
@@ -367,7 +367,7 @@ public class PokerTable {
 			HoldemPlayerListener holdemPlayerListener)
 			throws IllegalActionException {
 		try {
-			HoldemPlayerContext toReturn = tableState.sitIn(new MutableSeatedPlayer(player, buyIn));
+			HoldemPlayerContext toReturn = tableState.sitIn(new MutableSeatedPlayer(player, buyIn, true));
 			sitInPlayers.put(player.getId(), holdemPlayerListener);
 			subscribeHoldemPlayerListener(player.getId(), holdemPlayerListener);
 			if (sitInPlayers.size() == 2) {

@@ -11,12 +11,8 @@
  */
 package org.cspoker.client.gui.swt.window;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.*;
 import java.util.List;
-import java.util.NavigableMap;
-import java.util.Set;
-import java.util.TreeMap;
 import java.util.Map.Entry;
 
 import org.apache.log4j.Logger;
@@ -37,11 +33,7 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Canvas;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.*;
 
 /**
  * The main composite in the game window. Contains the
@@ -91,8 +83,6 @@ public class TableComposite
 	private void initGUI() {
 		
 		GridLayout layout = new GridLayout(5, false);
-		// layout.horizontalSpacing = 50;
-		// layout.verticalSpacing = 50;
 		setLayout(layout);
 		GridData tableCompositeLData = new GridData(SWT.FILL, SWT.FILL, true, true);
 		tableCompositeLData.heightHint = 750;
@@ -113,30 +103,12 @@ public class TableComposite
 		// End second row
 		insertPlayerSeatComposite(new SeatId(5));
 		insertBetArea();
-		communityCardsComposite = new Composite(this, SWT.NONE | ClientGUI.COMPOSITE_BORDER_STYLE);
-		communityCardsComposite.setLayout(new GridLayout(5, true));
-		GridData communityCardsLayoutData = new GridData(SWT.CENTER, SWT.CENTER, true, true);
-		communityCardsLayoutData.horizontalSpan = 1;
-		communityCardsLayoutData.widthHint = 5 * (ClientGUI.PREFERRED_CARD_WIDTH + 5);
-		communityCardsLayoutData.heightHint = ClientGUI.PREFERRED_CARD_HEIGHT;
-		communityCardsLayoutData.minimumWidth = 5 * (ClientGUI.MINIMUM_CARD_WIDTH + 5);
-		communityCardsLayoutData.minimumHeight = ClientGUI.MINIMUM_CARD_HEIGHT;
-		communityCardsComposite.setLayoutData(communityCardsLayoutData);
-		communityCardsComposite.setBackgroundMode(SWT.INHERIT_NONE);
-		communityCardsComposite.addPaintListener(new CardPaintListener(communityCards, 5, SWT.LEFT, 5));
+		insertCommunityCardsComposite();
 		insertBetArea();
 		insertPlayerSeatComposite(new SeatId(2));
 		insertHolderLabel();
 		insertBetArea();
-		potChipsArea = new Canvas(this, SWT.NONE | ClientGUI.COMPOSITE_BORDER_STYLE);
-		GridData betAreaLayoutData = new GridData(SWT.CENTER, SWT.CENTER, true, true);
-		betAreaLayoutData.widthHint = communityCardsLayoutData.widthHint;
-		betAreaLayoutData.heightHint = 100;
-		betAreaLayoutData.minimumWidth = communityCardsLayoutData.minimumWidth;
-		betAreaLayoutData.minimumHeight = 50;
-		potChipsArea.setLayout(new FillLayout());
-		potChipsArea.setLayoutData(betAreaLayoutData);
-		potChipsArea.setVisible(false);
+		insertPotChipsCanvas();
 		insertBetArea();
 		insertHolderLabel();
 		// End fourth row
@@ -152,9 +124,15 @@ public class TableComposite
 			psc.setChipsArea(chipsForPlayerArea);
 			
 		}
-		
+		// Add a PaintListener for updating chips (redraw() and update())
 		addPaintListener(new PaintListener() {
 			
+			/**
+			 * PaintListener for the table. Takes redraw area into consideration
+			 * and redraws only the affected areas
+			 * 
+			 * @see org.eclipse.swt.events.PaintListener#paintControl(org.eclipse.swt.events.PaintEvent)
+			 */
 			@Override
 			public void paintControl(PaintEvent e) {
 				Rectangle redrawArea = new Rectangle(e.x, e.y, e.width, e.height);
@@ -168,7 +146,6 @@ public class TableComposite
 				// Draw dealer chip
 				NavigableMap<Chip, Integer> dealerChip = new TreeMap<Chip, Integer>();
 				dealerChip.put(Chip.DEALER, 1);
-				Rectangle dealerChipLocation = getDealerChipLocation();
 				if (dealerChipLocation != null && redrawArea.intersects(dealerChipLocation)) {
 					drawChips(e.gc, dealerChipLocation, Arrays.asList(dealerChip), false, true);
 				}
@@ -181,7 +158,40 @@ public class TableComposite
 	}
 	
 	/**
-	 * 
+	 * Configures canvas where the chips in the pots are displayed
+	 */
+	private void insertPotChipsCanvas() {
+		potChipsArea = new Canvas(this, SWT.NONE | ClientGUI.COMPOSITE_BORDER_STYLE);
+		GridData betAreaLayoutData = new GridData(SWT.CENTER, SWT.CENTER, true, true);
+		betAreaLayoutData.widthHint = 5 * (ClientGUI.PREFERRED_CARD_WIDTH + 5);
+		betAreaLayoutData.heightHint = 100;
+		betAreaLayoutData.minimumWidth = 5 * (ClientGUI.MINIMUM_CARD_WIDTH + 5);
+		betAreaLayoutData.minimumHeight = 50;
+		potChipsArea.setLayout(new FillLayout());
+		potChipsArea.setLayoutData(betAreaLayoutData);
+		potChipsArea.setVisible(false);
+	}
+	
+	/**
+	 * Configures composite containing the community cards
+	 */
+	private void insertCommunityCardsComposite() {
+		communityCardsComposite = new Composite(this, SWT.NONE | ClientGUI.COMPOSITE_BORDER_STYLE);
+		communityCardsComposite.setLayout(new GridLayout(5, true));
+		GridData communityCardsLayoutData = new GridData(SWT.CENTER, SWT.CENTER, true, true);
+		communityCardsLayoutData.horizontalSpan = 1;
+		communityCardsLayoutData.widthHint = 5 * (ClientGUI.PREFERRED_CARD_WIDTH + 5);
+		communityCardsLayoutData.heightHint = ClientGUI.PREFERRED_CARD_HEIGHT;
+		communityCardsLayoutData.minimumWidth = 5 * (ClientGUI.MINIMUM_CARD_WIDTH + 5);
+		communityCardsLayoutData.minimumHeight = ClientGUI.MINIMUM_CARD_HEIGHT;
+		communityCardsComposite.setLayoutData(communityCardsLayoutData);
+		communityCardsComposite.setBackgroundMode(SWT.INHERIT_NONE);
+		communityCardsComposite.addPaintListener(new CardPaintListener(communityCards, 5, SWT.LEFT, 5));
+		return;
+	}
+	
+	/**
+	 * Insert an Area where chips can be displayed
 	 */
 	private void insertBetArea() {
 		Canvas betArea = new Canvas(this, SWT.NONE | ClientGUI.COMPOSITE_BORDER_STYLE);
@@ -197,12 +207,15 @@ public class TableComposite
 	}
 	
 	/**
-	 * 
+	 * GUI initialization
 	 */
 	private void insertPlayerSeatComposite(SeatId seatId) {
 		playerSeatComposites.add(new PlayerSeatComposite(this, SWT.NONE | ClientGUI.COMPOSITE_BORDER_STYLE, seatId));
 	}
 	
+	/**
+	 * Insert invisible dummy label in Grid to occupy Grid cell
+	 */
 	private void insertHolderLabel() {
 		new Label(this, SWT.NONE | ClientGUI.COMPOSITE_BORDER_STYLE).setVisible(false);
 	}
@@ -253,7 +266,7 @@ public class TableComposite
 	 */
 	void proceedToNextPlayer(PlayerId next) {
 		for (PlayerSeatComposite pc : getPlayerSeatComposites(true)) {
-			if (pc.isActive()) {
+			if (pc.isToAct()) {
 				pc.setActive(false);
 			}
 		}
@@ -541,14 +554,7 @@ public class TableComposite
 		dealerChipLocation = dealerButtonLocation;
 		Rectangle toLocation = to.getDealerChipLocation();
 		animateChips(dealerButtonLocation, toLocation);
-	}
-	
-	public Rectangle getDealerChipLocation() {
-		return dealerChipLocation;
-	}
-	
-	public void setDealerChipLocation(Rectangle dealerChipLocation) {
-		this.dealerChipLocation = dealerChipLocation;
+		dealerChipLocation = toLocation;
 	}
 	
 	/**
@@ -557,7 +563,7 @@ public class TableComposite
 	public void updateTableGraphics() {
 		for (PlayerSeatComposite psc : getPlayerSeatComposites(true)) {
 			if (psc.getPlayer().isDealer()) {
-				setDealerChipLocation(psc.getDealerChipLocation());
+				dealerChipLocation = psc.getDealerChipLocation();
 			}
 			redraw();
 			update();

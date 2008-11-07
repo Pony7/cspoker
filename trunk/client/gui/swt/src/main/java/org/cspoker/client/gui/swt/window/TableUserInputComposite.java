@@ -411,8 +411,10 @@ public class TableUserInputComposite
 		try {
 			if (!sitInOutButton.getSelection()) {
 				user.sitIn(user.getSeatId(), user.getStackValue());
+				sitInOutButton.setText("Sit Out");
 			} else {
 				user.getPlayerContext().sitOut();
+				sitInOutButton.setText("Sit In");
 			}
 		} catch (RemoteException e) {
 			getClientCore().handleRemoteException(e);

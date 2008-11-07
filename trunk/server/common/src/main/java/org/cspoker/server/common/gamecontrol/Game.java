@@ -538,8 +538,18 @@ public class Game {
 		currentHandPlayers = initialCurrentHandPlayers;
 	}
 	
+	/**
+	 * @return The number of players sitting at the table which are ready to
+	 *         play or playing (not "sitting out")
+	 */
 	public int getNbSeatedPlayers() {
-		return table.getNbPlayers();
+		int result = 0;
+		for (MutableSeatedPlayer player : table.getMutableSeatedPlayers()) {
+			if (player.isSittingIn()) {
+				result++;
+			}
+		}
+		return result;
 	}
 	
 	public boolean hasNoSeatedPlayers() {
