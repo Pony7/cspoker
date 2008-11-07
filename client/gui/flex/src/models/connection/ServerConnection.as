@@ -211,16 +211,14 @@ package models.connection
     		csSendData(xml);
 		}
 		
-		public function csLeaveTableAction(tableID:int):void
+		public function csLeaveTableAction(tableId:int):void
 		{
 						
 			idAction++;
 											
 			var xml:XML =
 			
-			<leaveTableAction id={idAction}>
-    		<tableId>{tableID}</tableId>
-			</leaveTableAction>;
+			<ns5:leaveTableAction id={idAction} tableId={tableId} xmlns:ns5="http://www.cspoker.org/api/2008-11/"/>;
 					    
     		csSendData(xml);
     				

@@ -34,6 +34,7 @@ package models.lobby
 		
 		public var gameType:String = "";
 		
+		public var playersObj:Object = null;
 		public var playersList:ArrayCollection = new ArrayCollection();
 		
 		public function DataGridRow(result:Object)
@@ -56,7 +57,10 @@ package models.lobby
 			
 			delay = property["delay"];
 			maxNbPlayers = property["maxNbPlayers"];
-			if(playersList != null) nbPlayers = playersList.length;
+			if(playersList.length >= 1){
+				nbPlayers = playersList.length;
+				playersObj = result.players.player;
+			}else nbPlayers = 0;
 			autoBlinds = property["autoBlinds"];
 			autoDeal = property["autoDeal"];
 			bigBet = property["bigBet"];

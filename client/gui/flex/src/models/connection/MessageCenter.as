@@ -70,8 +70,8 @@ package models.connection
 			
 			if (contentObj.hasOwnProperty("actionPerformedEvent") && contentObj.actionPerformedEvent.id == joinTableActionId){
 				trace("JOIN TABLE SUCCESSFUL!!!");
-				var tableId:int = contentObj.actionPerformedEvent.id;
-				Main.table.receiveJoinTableSuccess(tableId);
+				//var tableId:int = contentObj.actionPerformedEvent.id;
+				Main.table.receiveJoinTableSuccess();
 				return;
 			}
 			
@@ -122,10 +122,13 @@ package models.connection
 				var event:Object = contentObj.holdemTableTreeEventWrapper.event;
 				var eventType:String = event["xsi:type"];
 				
+				var seatId:int;
 				// SWITCH STATEMENT FOR HOLDEM TABLE EVENTS...
 				switch(eventType){
 					case "ns2:sitInEvent":
-						trace("sitInEvent received!!!");
+						seatId = event.player.seatId;
+						trace("sitInEvent received!!! Seat:" + String(seatId));
+						Main.table.getSeatById(seatId).receiveSitIn(event.player);
 						break;
 					case "ns2:newDealEvent":
 						trace("newDealEvent received!!!");

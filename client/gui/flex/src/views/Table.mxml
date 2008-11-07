@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" 
-	backgroundImage="images/table1.jpg" width="750" height="670" xmlns:views="views.*">
+	backgroundImage="images/table1.jpg" width="750" height="670" xmlns:views="views.*" creationComplete="init()">
 	<mx:Script>
 		<![CDATA[
 			import models.chips.ChipStack;
@@ -8,6 +8,7 @@
 			import mx.core.UIComponent;
 			import models.lobby.DataGridRow;
 			import models.*;
+			
 			import views.*;
 			
 			import mx.managers.PopUpManager;
@@ -26,6 +27,8 @@
 			
 			public var tablePermItemsContainer:UIComponent;
 			public var tableTempItemsContainer:UIComponent;
+			
+			public var tableInitialized:Boolean = false;
 			
 			public var pot:ChipStack;
 			
@@ -56,10 +59,25 @@
             	seat7.init(this, this.tableModel, 7, betLocation7);
             	seat8.init(this, this.tableModel, 8, betLocation8);
             	seat9.init(this, this.tableModel, 9, betLocation9);
+            	
+            	tableInitialized = true;
+            	
+            	onTableLoadStart();
+            	
+            	
 			}
 			
 			
+			public function getSeatById(seatId:int):Seat{
+				if(seatId >= 0 && seatId < 10){
+					return seatLocations[seatId];
+				}else{
+					return null;
+				}
+			}
+			
 			private function leaveGameClicked():void{
+				trace("leaveGameClicked -> table:" + tableId);
 				Main.serverConnection.csLeaveTableAction(tableId);
 				Main.showLobby();
 				Main.lobby.gamesDG.refreshGames();
@@ -67,7 +85,7 @@
 			
 			
 			public function endInit():void{
-				
+				init();
 			}
 			
 			public function loadTableInfo(tableItemPassed:DataGridRow):void{
@@ -78,14 +96,38 @@
 				this.tableId = tableId;
 			}
 			
-			public function receiveJoinTableSuccess(tableId:int):void{
-				trace("Table.receiveJoinTableSuccess...");
-				if(tableId >= 0) setTableId(tableId);
-				if(tableItem.playersList != null){
-					// load players list if there are any...
-				}
+			public function receiveJoinTableSuccess():void{
 				Main.showTable();
+				trace("Table.receiveJoinTableSuccess...");
+				if(tableInitialized == true){
+					onTableLoadStart();
+				}
+				
 			}
+			
+			public function onTableLoadStart():void{
+				if(tableItem == null) return;
+				if(tableItem.playersObj != null){
+					var id:int = -1;
+					var seatId:int = -1;
+					// load players list if there are any...
+					if(tableItem.playersObj.hasOwnProperty("name")){
+						seatId = tableItem.playersObj.seatId;
+						getSeatById(seatId).receiveSitIn(tableItem.playersObj);
+					}else{
+						for each(var player:Object in tableItem.playersObj){
+							id = player.id;
+							seatId = player.seatId;
+						
+							trace("sitInEvent received!!! Seat:" + String(seatId) + "player: " + String(player));
+							getSeatById(seatId).receiveSitIn(player);
+						}
+						
+					}
+				}
+			}
+			
+			
 			
 			public function showBuyInDialog(seat:Seat):void{
 				trace("showBuyInDialog clicked!!! from: " + seat.id);
