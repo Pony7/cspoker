@@ -11,6 +11,10 @@ package models
 	import mx.core.UIComponent;
 	import mx.managers.*;
 	
+	import flash.events.Event;
+    import flash.events.EventDispatcher;
+
+	
 	import views.*;
 	
 	public class Main extends Object
@@ -32,6 +36,10 @@ package models
 		public function Main(passedContainerApp:CSPoker, passedLobby:Lobby, passedTable:Table, passedConnectionBox:ConnectionBox, passedRegisterBox:RegisterBox):void{
 			trace("Launching CS Poker...");
 			containerApp = passedContainerApp;
+			
+			containerApp.addEventListener(Event.CLOSING,closeHandler)
+  
+
 			table = passedTable;
 			lobby = passedLobby;
 			connectionBox = passedConnectionBox;
@@ -43,7 +51,7 @@ package models
 			
 			connectionBox.endInit();
 			lobby.endInit();
-			table.endInit();
+			//table.endInit();
 			
 			//Security.allowDomain("*");
 		}
@@ -105,9 +113,17 @@ package models
 		public static function joinGame(selectedTable:DataGridRow):void{
 			
 			serverConnection.csJoinTableAction(selectedTable.tableId);
+			table.setTableId(selectedTable.tableId);
 			table.loadTableInfo(selectedTable);
 			trace("join game called: " + selectedTable);
 			
+		}
+		
+		public function closeHandler(evt:Event):void{
+		
+     		if(serverConnection.isConnected()) serverConnection.csLeaveTableAction(table.tableId);
+         	trace("closeHandler called, exiting...");
+         	containerApp.exit();
 		}
 		
 		public static function showServerMessage(message:String) : void

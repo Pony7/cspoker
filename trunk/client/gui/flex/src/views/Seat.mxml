@@ -17,7 +17,7 @@
 				<mx:Image x="9" y="8" id="userPhoto" maxHeight="60" maxWidth="60" scaleContent="true" source="images/seat/noimg.jpg"/>
 			</mx:AddChild>
 			<mx:AddChild position="lastChild">
-				<mx:TextArea x="10" y="60" id="userName" text="Use Name" maxChars="7" wordWrap="false" editable="false" enabled="true" fontSize="11" textAlign="center" selectable="false" width="62" height="24" fontWeight="bold"/>
+				<mx:TextArea x="10" y="60" id="userName" text="User Name" maxChars="7" wordWrap="false" editable="false" enabled="true" fontSize="11" textAlign="center" selectable="false" width="62" height="24" fontWeight="bold"/>
 			</mx:AddChild>
 			<mx:AddChild position="lastChild">
 				<mx:TextArea x="10" y="74" id="numChips" text="$" wordWrap="false" width="62" height="24" fontSize="12" editable="false" enabled="true" textAlign="center" fontWeight="bold" selectable="false"/>
@@ -26,6 +26,7 @@
 	</mx:states>
 	<mx:Script>
 		<![CDATA[
+			import mx.collections.ArrayCollection;
 			import models.table.SeatModel;
 			import models.table.TableModel;
 			import mx.core.UIComponent;
@@ -51,9 +52,7 @@
 				
 			}
 			
-			public function refresh():void{
-				
-			}
+			
 			
 			
 			
@@ -70,6 +69,28 @@
 			
 			public function showBuyInClicked():void{
 				Main.table.showBuyInDialog(this)
+			}
+			
+			public function receiveSitIn(passedPlayerObj:Object):void{
+				player.sitInPlayer(passedPlayerObj);
+				// player.getAvatar();
+				drawSitIn();
+			}
+			
+			
+			private function drawSitIn():void{
+				this.currentState = "filledSeat";
+				this.refresh();
+			}
+			
+			public function refresh():void{
+				userName.text = player.getPlayerName();
+				numChips.text = "$" + String(player.getStackSize());
+									
+			}
+			
+			private function drawStandUp():void{
+				this.currentState = "empty";
 			}
 			
 		]]>
