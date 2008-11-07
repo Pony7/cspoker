@@ -75,6 +75,18 @@ public class MutableSeatedPlayer {
 		this.stack = new Chips(seatedPlayer.getStackValue());
 		betChips = new Chips(seatedPlayer.getBetChipsValue());
 		pocketCards = new CopyOnWriteArrayList<Card>();
+		sittingIn = true;
+	}
+	
+	/**
+	 * @param player
+	 * @param buyIn
+	 * @param sittingIn
+	 */
+	public MutableSeatedPlayer(MutablePlayer player, int buyIn, boolean sittingIn)
+			throws IllegalValueException {
+		this(player, buyIn);
+		this.sittingIn = sittingIn;
 	}
 	
 	/**

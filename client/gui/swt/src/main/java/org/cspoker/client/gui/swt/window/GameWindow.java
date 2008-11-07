@@ -239,8 +239,8 @@ public class GameWindow
 		
 		psc.updatePlayerInfo();
 		if (sitOutEvent.getPlayerId().equals(user.getMemento().getId())) {
-			userInputComposite.sitInOutButton.setText("Sit In");
 			if (!userInputComposite.sitInOutButton.isFocusControl()) {
+				userInputComposite.sitInOutButton.setText("Sit In");
 				userInputComposite.sitInOutButton.setSelection(false);
 			}
 		}
@@ -274,10 +274,8 @@ public class GameWindow
 			psc.setHoleCards(Arrays.asList(ClientGUI.UNKNOWN_CARD, ClientGUI.UNKNOWN_CARD));
 			// Draw dealer button
 			psc.getPlayer().setDealer(newDealEvent.getDealer().equals(psc.getPlayer()));
-			// psc.resetBetChipsDisplayArea();
 			psc.getPlayer().setBetChipsValue(0);
 		}
-		tableComposite.setDealerChipLocation(newDealer.getDealerChipLocation());
 		userInputComposite.showDealerMessage(newDealEvent);
 		tableComposite.redraw();
 		logger.debug("New deal event handled");
@@ -340,9 +338,9 @@ public class GameWindow
 	public void onSitIn(SitInEvent sitInEvent) {
 		if (user.getName().equalsIgnoreCase(sitInEvent.getPlayer().getName())) {
 			user.setPlayer(sitInEvent.getPlayer());
-			userInputComposite.sitInOutButton.setSelection(true);
-			userInputComposite.sitInOutButton.setText("Sit Out");
 			userInputComposite.generalActionHolder.setVisible(true);
+			userInputComposite.sitInOutButton.setText("Sit Out");
+			userInputComposite.sitInOutButton.setSelection(true);
 			
 		}
 		tableComposite.findPlayerSeatCompositeBySeatId(sitInEvent.getPlayer().getSeatId()).occupy(
@@ -364,7 +362,7 @@ public class GameWindow
 	public void onWinner(final WinnerEvent winnerEvent) {
 		tableComposite.moveBetsToPot();
 		try {
-			Thread.sleep(2000);
+			Thread.sleep(1000);
 		} catch (InterruptedException e) {
 			logger.warn("Sleep interrupted", e);
 			Thread.currentThread().interrupt();
@@ -382,24 +380,39 @@ public class GameWindow
 		redraw();
 	}
 	
+	/**
+	 * @see org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener#onAllIn(org.cspoker.common.api.lobby.holdemtable.event.AllInEvent)
+	 */
 	@Override
 	public void onAllIn(AllInEvent allInEvent) {
 		userInputComposite.showDealerMessage(allInEvent);
 	}
 	
+	/**
+	 * @see org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener#onJoinTable(org.cspoker.common.api.lobby.holdemtable.event.JoinTableEvent)
+	 */
 	@Override
 	public void onJoinTable(JoinTableEvent joinTableEvent) {
 		userInputComposite.showDealerMessage(joinTableEvent);
 	}
 	
+	/**
+	 * @see org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener#onLeaveTable(org.cspoker.common.api.lobby.holdemtable.event.LeaveTableEvent)
+	 */
 	@Override
 	public void onLeaveTable(LeaveTableEvent leaveGameEvent) {
 		userInputComposite.showDealerMessage(leaveGameEvent);
 	}
 	
+	/**
+	 * y
+	 * 
+	 * @see org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener#onPotsChanged(org.cspoker.common.api.lobby.holdemtable.event.PotsChangedEvent)
+	 */
 	@Override
 	public void onPotsChanged(PotsChangedEvent potsChangedEvent) {
 		gameState.setPots(potsChangedEvent.getPots());
+		userInputComposite.showDealerMessage(potsChangedEvent);
 	}
 	
 	/**

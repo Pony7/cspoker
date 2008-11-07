@@ -59,11 +59,11 @@ public class EventJAXBContext {
 				TableList.class,
 				DetailedHoldemTable.class,
 				// table
-				BetEvent.class, BigBlindEvent.class, CallEvent.class, CheckEvent.class, FoldEvent.class,
-				LeaveTableEvent.class, NewCommunityCardsEvent.class, NewDealEvent.class, NewRoundEvent.class,
-				NextPlayerEvent.class, RaiseEvent.class, ShowHandEvent.class, SitInEvent.class, SitOutEvent.class,
-				SmallBlindEvent.class, JoinTableEvent.class, WinnerEvent.class, HoldemTableTreeEventWrapper.class,
-				PotsChangedEvent.class,
+				AllInEvent.class, BetEvent.class, BigBlindEvent.class, CallEvent.class, CheckEvent.class,
+				FoldEvent.class, LeaveTableEvent.class, NewCommunityCardsEvent.class, NewDealEvent.class,
+				NewRoundEvent.class, NextPlayerEvent.class, RaiseEvent.class, ShowHandEvent.class, SitInEvent.class,
+				SitOutEvent.class, SmallBlindEvent.class, JoinTableEvent.class, WinnerEvent.class,
+				HoldemTableTreeEventWrapper.class, PotsChangedEvent.class,
 				// player
 				NewPocketCardsEvent.class,
 				// action

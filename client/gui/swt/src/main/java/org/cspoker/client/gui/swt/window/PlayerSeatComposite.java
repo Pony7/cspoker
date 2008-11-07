@@ -97,7 +97,7 @@ public class PlayerSeatComposite
 	private int numberOfHoleCards = 2;
 	private final SeatId seatId;
 	/** Indicates whether this player is currently to act */
-	private boolean active;
+	private boolean toAct;
 	
 	// SWT fields
 	private Label playerName;
@@ -357,7 +357,7 @@ public class PlayerSeatComposite
 	}
 	
 	public void setActive(boolean active) {
-		this.active = active;
+		this.toAct = active;
 		if (active) {
 			startTimer();
 		} else {
@@ -424,7 +424,7 @@ public class PlayerSeatComposite
 		this.chipsArea = chipsArea;
 	}
 	
-	public boolean isActive() {
-		return active;
+	public boolean isToAct() {
+		return toAct;
 	}
 }
