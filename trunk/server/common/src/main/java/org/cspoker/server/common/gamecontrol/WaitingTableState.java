@@ -120,18 +120,17 @@ public class WaitingTableState
 	
 	@Override
 	public HoldemPlayerContext sitIn(SeatId seatId, MutableSeatedPlayer player)
-			throws IllegalActionException {
-		
+	throws IllegalActionException {
+
 		try {
-			if (!serverTable.hasAsPlayer(player)) {
-				if (seatId == null) {
-					try {
-						serverTable.addPlayer(player);
-					} catch (PlayerListFullException e) {
-						throw new IllegalActionException("Joining table " + mediatingTable.getTableId().toString()
-								+ " failed: " + e.getMessage());
-					}
+			if (seatId == null) {
+				try {
+					seatId = serverTable.addPlayer(player);
+				} catch (PlayerListFullException e) {
+					throw new IllegalActionException("Joining table " + mediatingTable.getTableId().toString()
+							+ " failed: " + e.getMessage());
 				}
+			}else{
 				serverTable.addPlayer(seatId, player);
 			}
 		} catch (SeatTakenException e) {
