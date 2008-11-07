@@ -156,6 +156,8 @@ public class XmlSocketsChannel implements XmlActionSerializer {
 	public synchronized void perform(DispatchableAction<?> action) throws RemoteException {
 		try {
 			Marshaller marshaller = AllSocketJAXBContexts.context.createMarshaller();
+			marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+			marshaller.setProperty(Marshaller.JAXB_FRAGMENT, true);
 			marshaller.marshal(action, socketWriter);
 			socketWriter.write(((char) 0x00));
 			socketWriter.flush();

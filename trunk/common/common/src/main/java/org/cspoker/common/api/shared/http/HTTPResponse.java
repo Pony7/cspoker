@@ -38,8 +38,7 @@ public class HTTPResponse {
 	@XmlElement(required=true,nillable=false) 
 	private final List<ActionEvent<?>> actionResults = Collections.synchronizedList(new ArrayList<ActionEvent<?>>());
 	
-	protected HTTPResponse() {
-		// no op
+	public HTTPResponse() {
 	}
 	
 	public void addServerEvent(ServerEvent event){

@@ -102,6 +102,7 @@ public class XmlHttpSerializer implements XmlActionSerializer {
 
 			Marshaller m = AllHTTPJAXBContexts.context.createMarshaller();
 			m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+			m.setProperty(Marshaller.JAXB_FRAGMENT, true);
 			m.marshal(request, connection.getOutputStream());
 
 			connection.getOutputStream().flush();
