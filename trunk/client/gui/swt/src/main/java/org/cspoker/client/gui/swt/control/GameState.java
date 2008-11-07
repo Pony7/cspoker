@@ -17,7 +17,9 @@ import org.apache.log4j.Logger;
 import org.cspoker.common.elements.chips.IllegalValueException;
 import org.cspoker.common.elements.chips.Pots;
 import org.cspoker.common.elements.player.MutableSeatedPlayer;
+import org.cspoker.common.elements.player.SeatedPlayer;
 import org.cspoker.common.elements.table.DetailedHoldemTable;
+import org.cspoker.common.elements.table.Rounds;
 
 /**
  * @author Stephan Schmidt
@@ -42,7 +44,13 @@ public class GameState {
 	public GameState(DetailedHoldemTable table) {
 		setTableMemento(table);
 		pots = new Pots(0);
-		currentBetPile = new ArrayList<NavigableMap<Chip, Integer>>();
+		for (SeatedPlayer player : table.getPlayers()) {
+			betPiles.put(new MutableSeatedPlayer(player), Arrays
+					.asList(Chip.getDistribution(player.getBetChipsValue())));
+			totalBetRaiseAmount = Math.max(totalBetRaiseAmount, player.getBetChipsValue());
+		}
+		currentBetPile = new ArrayList<NavigableMap<Chip, Integer>>(Arrays.asList(Chip
+				.getDistribution(totalBetRaiseAmount)));
 	}
 	
 	/**
@@ -93,15 +101,7 @@ public class GameState {
 		return currentBetPile;
 	}
 	
-	public int getLastBetRaiseAmount() {
-		return lastBetRaiseAmount;
-	}
-	
-	public int getLastBetChipsTotal() {
-		return totalBetRaiseAmount;
-	}
-	
-	public void newRound() {
+	public void newRound(Rounds round) {
 		lastBetRaiseAmount = 0;
 		totalBetRaiseAmount = 0;
 		currentBetPile.clear();
@@ -113,7 +113,7 @@ public class GameState {
 	}
 	
 	public int getToCallAmount(MutableSeatedPlayer mutableSeatedPlayer) {
-		return Chip.getValue(getCurrentBetPile()) - mutableSeatedPlayer.getBetChips().getValue();
+		return Chip.getValue(currentBetPile) - mutableSeatedPlayer.getBetChips().getValue();
 	}
 	
 	public int getPotRaiseAmount(MutableSeatedPlayer mutableSeatedPlayer) {
@@ -123,7 +123,8 @@ public class GameState {
 	
 	public int getMinBetRaiseAmount(MutableSeatedPlayer mutableSeatedPlayer) {
 		return Math.max(0, Math.min(mutableSeatedPlayer.getStack().getValue() - getToCallAmount(mutableSeatedPlayer),
-				Math.max(getLastBetRaiseAmount(), getToCallAmount(mutableSeatedPlayer))));
+				Math.max(Math.max(tableMemento.getGameProperty().getBigBlind(), lastBetRaiseAmount),
+						getToCallAmount(mutableSeatedPlayer))));
 	}
 	
 	public void updateStackAndBetChips(MutableSeatedPlayer mutableSeatedPlayer, int betRaiseAmount) {

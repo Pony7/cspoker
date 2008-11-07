@@ -480,7 +480,7 @@ public class TableComposite
 			boolean putDifferentValuesOnSeparatePiles, boolean dealerButton) {
 		int amount = Chip.getValue(chipPiles);
 		int size = 1;
-		for (int i = 2; i <= 7; i++) {
+		for (int i = 2; i < 7; i++) {
 			Image chipImage = Chip.ONE_CENT_CHIP.getImage(i);
 			int imgHeight = chipImage.getBounds().height;
 			if (imgHeight + Chip.MAX_CHIPS_IN_PILE * i > area.height) {

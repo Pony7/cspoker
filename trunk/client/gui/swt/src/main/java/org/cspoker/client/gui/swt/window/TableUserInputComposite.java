@@ -443,7 +443,7 @@ public class TableUserInputComposite
 		int totalBetRaiseAmount = betRaiseAmount + Chip.getValue(gameState.getCurrentBetPile());
 		boolean isAllIn = (gameState.getToCallAmount(user) + betRaiseAmount == user.getStack().getValue());
 		String amountAsString = ClientGUI.formatBet(totalBetRaiseAmount);
-		String text = (user.getBetChips().getValue() > 0) ? "Raise to " : "Bet ";
+		String text = (gameState.getToCallAmount(user) != 0) ? "Raise to " : "Bet ";
 		betRaiseButton.setText(text + amountAsString);
 		if (isAllIn) {
 			betRaiseButton.setText("All In (" + amountAsString + ")");
