@@ -153,7 +153,6 @@ public class ClientCore
 		// unexpected failures
 		try {
 			gui.createNewLoginDialog().open();
-			getUser().setLoggedIn(true);
 			// TODO Make sure we register to receive events from the server
 			// communication.subscribe(this);
 			final LobbyWindow lobby = new LobbyWindow(this);
@@ -181,7 +180,6 @@ public class ClientCore
 	public void resetAll() {
 		if (!gui.getLobby().getShell().isDisposed())
 			gui.getLobby().getShell().dispose();
-		getUser().setLoggedIn(false);
 		// TODO replace or ignore?
 		// communication.trigger();
 	}
@@ -268,6 +266,7 @@ public class ClientCore
 			throws LoginException {
 		try {
 			communication = loginServer.login(user.getUserName(), user.getPassword());
+			getUser().setAccountContext(communication.getAccountContext());
 		} catch (RemoteException e) {
 			handleRemoteException(e);
 		}

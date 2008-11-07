@@ -11,11 +11,12 @@
  */
 package org.cspoker.client.gui.swt.control;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NavigableMap;
+import java.util.*;
 
+import org.apache.log4j.Logger;
+import org.cspoker.common.elements.chips.IllegalValueException;
 import org.cspoker.common.elements.chips.Pots;
+import org.cspoker.common.elements.player.MutableSeatedPlayer;
 import org.cspoker.common.elements.table.DetailedHoldemTable;
 
 /**
@@ -32,6 +33,11 @@ public class GameState {
 	private List<NavigableMap<Chip, Integer>> currentBetPile = new ArrayList<NavigableMap<Chip, Integer>>();
 	private int lastBetRaiseAmount;
 	private int totalBetRaiseAmount;
+	
+	private Map<MutableSeatedPlayer, List<NavigableMap<Chip, Integer>>> betPiles = new Hashtable<MutableSeatedPlayer, List<NavigableMap<Chip, Integer>>>();
+	
+	private MutableSeatedPlayer dealer;
+	private Logger logger = Logger.getLogger(GameState.class);
 	
 	public GameState(DetailedHoldemTable table) {
 		setTableMemento(table);
@@ -99,10 +105,67 @@ public class GameState {
 		lastBetRaiseAmount = 0;
 		totalBetRaiseAmount = 0;
 		currentBetPile.clear();
+		betPiles.clear();
 	}
 	
 	public void setPots(Pots pots) {
 		this.pots = pots;
+	}
+	
+	public int getToCallAmount(MutableSeatedPlayer mutableSeatedPlayer) {
+		return Chip.getValue(getCurrentBetPile()) - mutableSeatedPlayer.getBetChips().getValue();
+	}
+	
+	public int getPotRaiseAmount(MutableSeatedPlayer mutableSeatedPlayer) {
+		return Math.max(0, Math.min(mutableSeatedPlayer.getStack().getValue() - getToCallAmount(mutableSeatedPlayer),
+				getToCallAmount(mutableSeatedPlayer) + getPots().getTotalValue()));
+	}
+	
+	public int getMinBetRaiseAmount(MutableSeatedPlayer mutableSeatedPlayer) {
+		return Math.max(0, Math.min(mutableSeatedPlayer.getStack().getValue() - getToCallAmount(mutableSeatedPlayer),
+				Math.max(getLastBetRaiseAmount(), getToCallAmount(mutableSeatedPlayer))));
+	}
+	
+	public void updateStackAndBetChips(MutableSeatedPlayer mutableSeatedPlayer, int betRaiseAmount) {
+		int totalAmount = getToCallAmount(mutableSeatedPlayer) + betRaiseAmount;
+		try {
+			mutableSeatedPlayer.getStack().transferAmountTo(totalAmount, mutableSeatedPlayer.getBetChips());
+		} catch (IllegalValueException e) {
+			logger.error(e);
+		}
+	}
+	
+	public void setBetChipsValue(MutableSeatedPlayer mutableSeatedPlayer, int newBetChipsValue) {
+		List<NavigableMap<Chip, Integer>> playerBetPile = getBetPile(mutableSeatedPlayer);
+		playerBetPile.clear();
+		playerBetPile.addAll(currentBetPile);
+		playerBetPile.add(Chip.getDistribution(newBetChipsValue));
+		betPiles.put(mutableSeatedPlayer, playerBetPile);
+		
+	}
+	
+	public List<NavigableMap<Chip, Integer>> getBetPile(MutableSeatedPlayer player) {
+		List<NavigableMap<Chip, Integer>> betPile = betPiles.get(player);
+		if (betPile == null) {
+			betPile = new ArrayList<NavigableMap<Chip, Integer>>(Arrays.asList(Chip.getDistribution(0)));
+			betPiles.put(player, betPile);
+		}
+		return betPile;
+	}
+	
+	/**
+	 * @return
+	 */
+	public MutableSeatedPlayer getDealer() {
+		return dealer;
+	}
+	
+	/**
+	 * @param player
+	 */
+	public void setDealer(MutableSeatedPlayer player) {
+		this.dealer = player;
+		
 	}
 	
 }

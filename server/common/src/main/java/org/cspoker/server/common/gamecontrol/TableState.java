@@ -59,9 +59,6 @@ public abstract class TableState {
 	public abstract HoldemPlayerContext sitIn(SeatId seatId, MutableSeatedPlayer player)
 			throws IllegalActionException;
 	
-	public abstract HoldemPlayerContext sitIn(MutableSeatedPlayer player)
-			throws IllegalActionException;
-	
 	public abstract void sitOut(MutableSeatedPlayer player);
 	
 	public abstract List<SeatedPlayer> getSeatedPlayers();

@@ -23,16 +23,7 @@ import net.jcip.annotations.GuardedBy;
 import net.jcip.annotations.ThreadSafe;
 
 import org.apache.log4j.Logger;
-import org.cspoker.common.api.lobby.holdemtable.event.AllInEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.BetEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.BigBlindEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.CallEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.NewCommunityCardsEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.NewDealEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.NewRoundEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.PotsChangedEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.RaiseEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.SmallBlindEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.*;
 import org.cspoker.common.api.lobby.holdemtable.listener.ForwardingHoldemTableListener;
 import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
 import org.cspoker.common.elements.cards.Card;
@@ -44,8 +35,9 @@ import org.cspoker.common.elements.player.SeatedPlayer;
 import org.cspoker.common.elements.table.Rounds;
 
 @ThreadSafe
-public class SmartHoldemTableListener extends ForwardingHoldemTableListener {
-
+public class SmartHoldemTableListener
+		extends ForwardingHoldemTableListener {
+	
 	private final static Logger logger = Logger.getLogger(SmartHoldemTableListener.class);
 	
 	private volatile Pots pots;
@@ -56,11 +48,11 @@ public class SmartHoldemTableListener extends ForwardingHoldemTableListener {
 	private final HashMap<PlayerId, MutableSeatedPlayer> players = new HashMap<PlayerId, MutableSeatedPlayer>();
 	
 	private final Object playersLock = new Object();
-
+	
 	public SmartHoldemTableListener(HoldemTableListener holdemTableListener) {
 		super(holdemTableListener);
 	}
-
+	
 	public Pots getPots() {
 		return pots;
 	}
@@ -80,17 +72,16 @@ public class SmartHoldemTableListener extends ForwardingHoldemTableListener {
 	}
 	
 	@Override
-	public void onNewCommunityCards(
-			NewCommunityCardsEvent newCommunityCardsEvent) {
+	public void onNewCommunityCards(NewCommunityCardsEvent newCommunityCardsEvent) {
 		this.communityCards = newCommunityCardsEvent.getCommunityCards();
 		super.onNewCommunityCards(newCommunityCardsEvent);
 	}
-
+	
 	@Override
 	public void onNewRound(NewRoundEvent newRoundEvent) {
 		this.round = newRoundEvent.getRound();
 		synchronized (playersLock) {
-			for(MutableSeatedPlayer player:players.values()){
+			for (MutableSeatedPlayer player : players.values()) {
 				player.getBetChips().discard();
 			}
 		}
@@ -102,10 +93,10 @@ public class SmartHoldemTableListener extends ForwardingHoldemTableListener {
 		List<SeatedPlayer> seatedPlayers = newDealEvent.getPlayers();
 		synchronized (playersLock) {
 			players.clear();
-			for(SeatedPlayer seatedPlayer:seatedPlayers){
+			for (SeatedPlayer seatedPlayer : seatedPlayers) {
 				try {
 					players.put(seatedPlayer.getId(), new MutableSeatedPlayer(seatedPlayer));
-				} catch (IllegalValueException e) {
+				} catch (IllegalArgumentException e) {
 					logger.error(e);
 					throw new IllegalStateException(e);
 				}
@@ -148,7 +139,7 @@ public class SmartHoldemTableListener extends ForwardingHoldemTableListener {
 	@Override
 	public void onCall(CallEvent callEvent) {
 		synchronized (playersLock) {
-			addToBet(callEvent.getPlayerId(),getDeficit(callEvent.getPlayerId()));
+			addToBet(callEvent.getPlayerId(), getDeficit(callEvent.getPlayerId()));
 		}
 		super.onCall(callEvent);
 	}
@@ -156,29 +147,30 @@ public class SmartHoldemTableListener extends ForwardingHoldemTableListener {
 	@Override
 	public void onRaise(RaiseEvent raiseEvent) {
 		synchronized (playersLock) {
-			addToBet(raiseEvent.getPlayerId(),getDeficit(raiseEvent.getPlayerId())+raiseEvent.getAmount());
+			addToBet(raiseEvent.getPlayerId(), getDeficit(raiseEvent.getPlayerId()) + raiseEvent.getAmount());
 		}
 		super.onRaise(raiseEvent);
 	}
 	
-	public int getDeficit(PlayerId playerId){
+	public int getDeficit(PlayerId playerId) {
 		synchronized (playersLock) {
-			return Math.min(players.get(playerId).getBetChips().getValue(),getMaxBet()-players.get(playerId).getBetChips().getValue());
+			return Math.min(players.get(playerId).getBetChips().getValue(), getMaxBet()
+					- players.get(playerId).getBetChips().getValue());
 		}
 	}
 	
 	private int getMaxBet() {
 		synchronized (playersLock) {
 			int max = 0;
-			for(MutableSeatedPlayer player:players.values()){
-				if(player.getBetChips().getValue()>max){
+			for (MutableSeatedPlayer player : players.values()) {
+				if (player.getBetChips().getValue() > max) {
 					max = player.getBetChips().getValue();
 				}
 			}
 			return max;
 		}
 	}
-
+	
 	private void addToBet(PlayerId playerId, int amount) {
 		synchronized (playersLock) {
 			try {

@@ -222,7 +222,7 @@ public class TableUserInputComposite
 						
 						@Override
 						public void mouseDown(MouseEvent evt) {
-							setNewBetRaiseAmount(user.getPotRaiseAmount());
+							setNewBetRaiseAmount(gameState.getPotRaiseAmount(user));
 						}
 					});
 				}
@@ -235,13 +235,14 @@ public class TableUserInputComposite
 						@Override
 						public void keyReleased(KeyEvent e) {
 							betAmountTextField.setToolTipText("Minimum is "
-									+ ClientGUI.formatBet(user.getMinBetRaiseAmount()
+									+ ClientGUI.formatBet(gameState.getMinBetRaiseAmount(user)
 											+ Chip.getValue(gameState.getCurrentBetPile())));
 							try {
 								int desiredAmount = ClientGUI.parseBet(betAmountTextField.getText());
 								
-								if (desiredAmount - user.getToCallAmount() >= user.getMinBetRaiseAmount()) {
-									setNewBetRaiseAmount(desiredAmount - user.getToCallAmount());
+								if (desiredAmount - gameState.getToCallAmount(user) >= gameState
+										.getMinBetRaiseAmount(user)) {
+									setNewBetRaiseAmount(desiredAmount - gameState.getToCallAmount(user));
 								}
 							} catch (Exception ex) {
 								logger.error("Could not parse manual bet input", ex);
@@ -360,10 +361,10 @@ public class TableUserInputComposite
 	
 	void prepareForUserInput() {
 		logger.info("Users turn");
-		boolean toCallAllIn = user.getStackValue() <= user.getToCallAmount();
+		boolean toCallAllIn = user.getStack().getValue() <= gameState.getToCallAmount(user);
 		updateCheckCallButton(toCallAllIn);
 		if (!toCallAllIn) {
-			setNewBetRaiseAmount(user.getMinBetRaiseAmount());
+			setNewBetRaiseAmount(gameState.getMinBetRaiseAmount(user));
 			betAmountTextField.selectAll();
 			betAmountTextField.setFocus();
 		}
@@ -375,8 +376,9 @@ public class TableUserInputComposite
 	}
 	
 	private void updateCheckCallButton(boolean allIn) {
-		String amountAsString = ClientGUI.formatBet(Math.min(user.getStackValue(), user.getToCallAmount()));
-		String text = (user.getToCallAmount() == 0) ? "Check" : "Call " + amountAsString;
+		String amountAsString = ClientGUI.formatBet(Math.min(user.getStack().getValue(), gameState
+				.getToCallAmount(user)));
+		String text = (gameState.getToCallAmount(user) == 0) ? "Check" : "Call " + amountAsString;
 		checkCallButton.setText(text);
 		if (allIn) {
 			checkCallButton.setText("All In (" + amountAsString + ")");
@@ -411,7 +413,7 @@ public class TableUserInputComposite
 		
 		try {
 			if (!sitInOutButton.getSelection()) {
-				user.sitIn(user.getSeatId(), user.getStackValue());
+				user.sitIn(user.getSeatId(), user.getStack().getValue());
 				sitInOutButton.setText("Sit Out");
 			} else {
 				user.getPlayerContext().sitOut();
@@ -425,23 +427,23 @@ public class TableUserInputComposite
 	}
 	
 	void updateBetSlider() {
-		betSlider.setMaximum(user.getStackValue() + user.getBetChipsValue());
+		betSlider.setMaximum(user.getStack().getValue() + user.getBetChips().getValue());
 		// +10 is some weirdo behavior/bug??
 		// native windows bug fix;
-		betSlider.setSelection(user.getStackValue() + user.getBetChipsValue());
+		betSlider.setSelection(user.getStack().getValue() + user.getBetChips().getValue());
 		int extras = betSlider.getMaximum() - betSlider.getSelection();
 		if (extras != 0) {
 			betSlider.setMaximum(betSlider.getMaximum() + extras);
 		}
-		betSlider.setMinimum(user.getMinBetRaiseAmount() + Chip.getValue(gameState.getCurrentBetPile()));
+		betSlider.setMinimum(gameState.getMinBetRaiseAmount(user) + Chip.getValue(gameState.getCurrentBetPile()));
 		betSlider.setSelection(betRaiseAmount + Chip.getValue(gameState.getCurrentBetPile()));
 	}
 	
 	void updateBetRaiseButton() {
 		int totalBetRaiseAmount = betRaiseAmount + Chip.getValue(gameState.getCurrentBetPile());
-		boolean isAllIn = (user.getToCallAmount() + betRaiseAmount == user.getStackValue());
+		boolean isAllIn = (gameState.getToCallAmount(user) + betRaiseAmount == user.getStack().getValue());
 		String amountAsString = ClientGUI.formatBet(totalBetRaiseAmount);
-		String text = (user.getBetChipsValue() > 0) ? "Raise to " : "Bet ";
+		String text = (user.getBetChips().getValue() > 0) ? "Raise to " : "Bet ";
 		betRaiseButton.setText(text + amountAsString);
 		if (isAllIn) {
 			betRaiseButton.setText("All In (" + amountAsString + ")");

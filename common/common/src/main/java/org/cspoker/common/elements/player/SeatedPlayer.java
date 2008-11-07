@@ -23,38 +23,42 @@ import org.cspoker.common.elements.table.SeatId;
 
 /**
  * A class of immutable players.
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-public class SeatedPlayer extends Player {
-
+public class SeatedPlayer
+		extends Player {
+	
 	private static final long serialVersionUID = -9200622390366978194L;
-
+	
 	private SeatId seatId;
-
+	
 	/**
 	 * The stack of this player.
 	 */
 	private int stackValue;
-
+	
 	/**
 	 * The chips the player has bet in this round.
-	 * 
 	 */
 	private int betChipsValue;
-
-	public SeatedPlayer(PlayerId id, SeatId seatId, String name, int stackValue,
-			int betChipsValue) {
+	
+	/**
+	 * Player is sitting in.
+	 */
+	private boolean sittingIn;
+	
+	public SeatedPlayer(PlayerId id, SeatId seatId, String name, int stackValue, int betChipsValue, boolean sittingIn) {
 		super(id, name);
 		this.seatId = seatId;
 		this.stackValue = stackValue;
 		this.betChipsValue = betChipsValue;
+		this.sittingIn = sittingIn;
 	}
-
+	
 	protected SeatedPlayer() {
-		// no op
+	// no op
 	}
-
+	
 	/**
 	 * Returns the seat id of this player.
 	 * 
@@ -63,7 +67,7 @@ public class SeatedPlayer extends Player {
 	public SeatId getSeatId() {
 		return seatId;
 	}
-
+	
 	/**
 	 * Returns the stack value of this player.
 	 * 
@@ -72,7 +76,7 @@ public class SeatedPlayer extends Player {
 	public int getStackValue() {
 		return stackValue;
 	}
-
+	
 	/**
 	 * Returns the bet chips value of this player.
 	 * 
@@ -81,10 +85,19 @@ public class SeatedPlayer extends Player {
 	public int getBetChipsValue() {
 		return betChipsValue;
 	}
-
+	
 	@Override
 	public String toString() {
-		return getName()+" (#"+getId()+")";
+		return getName() + " (#" + getId() + ")";
 	}
-
+	
+	/**
+	 * @return <code>true</code> if the player is sitting in and ready to play,
+	 *         <code>false</code> otherwise (the player will skip the next hands
+	 *         until he sits back in)
+	 */
+	public boolean isSittingIn() {
+		return sittingIn;
+	}
+	
 }

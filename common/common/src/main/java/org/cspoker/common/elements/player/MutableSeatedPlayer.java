@@ -38,13 +38,6 @@ public class MutableSeatedPlayer {
 	
 	private final MutablePlayer player;
 	
-	private final Chips stack;
-	
-	/**
-	 * The chips the player has bet in this round.
-	 */
-	private final Chips betChips;
-	
 	/**
 	 * The hand cards.
 	 */
@@ -57,34 +50,46 @@ public class MutableSeatedPlayer {
 	
 	private boolean sittingIn;
 	
+	private Chips betChips;
+	
 	/***************************************************************************
 	 * Constructor
 	 **************************************************************************/
 	
-	public MutableSeatedPlayer(MutablePlayer player, int buyIn)
-			throws IllegalValueException {
+	/**
+	 * @param player The mutable player object
+	 * @param buyIn the buyin amount
+	 * @throws IllegalArgumentException If the given buyin is illegal
+	 */
+	public MutableSeatedPlayer(MutablePlayer player, int buyIn) {
 		this.player = player;
-		this.stack = new Chips(buyIn);
-		betChips = new Chips();
+		player.getStack().discard();
+		
+		new Chips(buyIn).transferAllChipsTo(player.getStack());
+		betChips = new Chips(0);
+		
 		pocketCards = new CopyOnWriteArrayList<Card>();
-	}
-	
-	public MutableSeatedPlayer(SeatedPlayer seatedPlayer)
-			throws IllegalValueException {
-		this.player = new MutablePlayer(seatedPlayer);
-		this.stack = new Chips(seatedPlayer.getStackValue());
-		betChips = new Chips(seatedPlayer.getBetChipsValue());
-		pocketCards = new CopyOnWriteArrayList<Card>();
-		sittingIn = true;
+		sittingIn = false;
 	}
 	
 	/**
-	 * @param player
-	 * @param buyIn
-	 * @param sittingIn
+	 * @param player The {@link SeatedPlayer} object
+	 * @throws IllegalArgumentException If the player is in an illegal state
 	 */
-	public MutableSeatedPlayer(MutablePlayer player, int buyIn, boolean sittingIn)
-			throws IllegalValueException {
+	public MutableSeatedPlayer(SeatedPlayer seatedPlayer) {
+		this.player = new MutablePlayer(seatedPlayer);
+		betChips = new Chips(seatedPlayer.getBetChipsValue());
+		pocketCards = new CopyOnWriteArrayList<Card>();
+		this.sittingIn = seatedPlayer.isSittingIn();
+	}
+	
+	/**
+	 * @param player The mutable player object
+	 * @param buyIn the buyin amount
+	 * @param sittingIn Whether the player is initially sitting in
+	 * @throws IllegalArgumentException If the given buyin is illegal
+	 */
+	public MutableSeatedPlayer(MutablePlayer player, int buyIn, boolean sittingIn) {
 		this(player, buyIn);
 		this.sittingIn = sittingIn;
 	}
@@ -133,7 +138,7 @@ public class MutableSeatedPlayer {
 	 **************************************************************************/
 	
 	public Chips getStack() {
-		return stack;
+		return player.getStack();
 	}
 	
 	public Chips getBetChips() {
@@ -178,7 +183,8 @@ public class MutableSeatedPlayer {
 	}
 	
 	public synchronized SeatedPlayer getMemento() {
-		return new SeatedPlayer(getId(), getSeatId(), getName(), getStack().getValue(), getBetChips().getValue());
+		return new SeatedPlayer(getId(), getSeatId(), getName(), getStack().getValue(), getBetChips().getValue(),
+				sittingIn);
 	}
 	
 	@Override
@@ -217,6 +223,11 @@ public class MutableSeatedPlayer {
 		return true;
 	}
 	
+	/**
+	 * @return <code>true</code> if the player is sitting in and ready to play,
+	 *         <code>false</code> otherwise (the player will skip the next hands
+	 *         until he sits back in)
+	 */
 	public boolean isSittingIn() {
 		return sittingIn;
 	}

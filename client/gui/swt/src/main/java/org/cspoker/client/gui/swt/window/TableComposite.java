@@ -19,8 +19,8 @@ import org.apache.log4j.Logger;
 import org.cspoker.client.gui.swt.control.CardPaintListener;
 import org.cspoker.client.gui.swt.control.Chip;
 import org.cspoker.client.gui.swt.control.ClientGUI;
-import org.cspoker.client.gui.swt.control.MutableSeatedPlayer;
 import org.cspoker.common.elements.cards.Card;
+import org.cspoker.common.elements.chips.Chips;
 import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.elements.player.Winner;
 import org.cspoker.common.elements.table.SeatId;
@@ -137,9 +137,10 @@ public class TableComposite
 			public void paintControl(PaintEvent e) {
 				Rectangle redrawArea = new Rectangle(e.x, e.y, e.width, e.height);
 				for (PlayerSeatComposite pc : getPlayerSeatComposites(true)) {
-					if (pc.getPlayer().getCurrentBetPile().size() > 0
+					if (gameState.getBetPile(pc.getPlayer()).size() > 0
 							&& redrawArea.intersects(pc.getChipsArea().getBounds())) {
-						drawChips(e.gc, pc.getChipsArea().getBounds(), pc.getPlayer().getCurrentBetPile(), false, false);
+						drawChips(e.gc, pc.getChipsArea().getBounds(), gameState.getBetPile(pc.getPlayer()), false,
+								false);
 						
 					}
 				}
@@ -280,16 +281,15 @@ public class TableComposite
 		List<PlayerSeatComposite> allPlayers = getPlayerSeatComposites(true);
 		// Determine locations of the chip piles on the table
 		for (PlayerSeatComposite pc : allPlayers) {
-			if (pc.getPlayer().getCurrentBetPile().size() != 0) {
-
-			} else {
+			if (gameState.getBetPile(pc.getPlayer()).size() == 0) {
 				allPlayers.remove(pc);
 			}
 		}
 		
 		animateChips(allPlayers, true);
 		for (PlayerSeatComposite pc : getPlayerSeatComposites(true)) {
-			pc.getPlayer().setBetChipsValue(0);
+			pc.getPlayer().getBetChips().discard();
+			gameState.getBetPile(pc.getPlayer()).clear();
 		}
 		
 		moneyInPot = gameState.getPots().getTotalValue();
@@ -309,7 +309,7 @@ public class TableComposite
 		for (Control c : getChildren()) {
 			if (c instanceof PlayerSeatComposite) {
 				PlayerSeatComposite pc = (PlayerSeatComposite) c;
-				if (pc.getPlayer() == MutableSeatedPlayer.UNOCCUPIED && onlyOccupied) {
+				if (pc.getPlayer() == null && onlyOccupied) {
 					continue;
 				}
 				result.add(pc);
@@ -426,8 +426,11 @@ public class TableComposite
 		// Ship it
 		for (Winner winner : winners) {
 			PlayerSeatComposite winnerPC = findPlayerSeatCompositeByPlayerId(winner.getPlayer().getId());
-			int newStackValue = winnerPC.getPlayer().getStackValue() + winner.getGainedAmount();
-			winnerPC.getPlayer().setStackValue(newStackValue);
+			try {
+				new Chips(winner.getGainedAmount()).transferAllChipsTo(winnerPC.getPlayer().getStack());
+			} catch (IllegalArgumentException e) {
+				logger.error(e);
+			}
 			ClientGUI.playAudio(ClientGUI.Resources.SOUND_FILE_SLIDE_CHIPS);
 			winnerPCs.add(winnerPC);
 			
@@ -562,7 +565,7 @@ public class TableComposite
 	 */
 	public void updateTableGraphics() {
 		for (PlayerSeatComposite psc : getPlayerSeatComposites(true)) {
-			if (psc.getPlayer().isDealer()) {
+			if (psc.getPlayer().equals(gameState.getDealer())) {
 				dealerChipLocation = psc.getDealerChipLocation();
 			}
 			redraw();

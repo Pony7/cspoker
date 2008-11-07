@@ -16,16 +16,19 @@
 
 package org.cspoker.common.api.shared.exception;
 
-
 /**
  * Thrown to indicate that the tried action is not a valid action.
- * 
  */
-public class IllegalActionException extends Exception {
-
+public class IllegalActionException
+		extends Exception {
+	
 	private static final long serialVersionUID = -5675804638273023229L;
-
+	
 	public IllegalActionException(String message) {
 		super(message);
+	}
+	
+	public IllegalActionException(String message, Throwable e) {
+		super(message, e);
 	}
 }

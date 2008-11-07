@@ -28,6 +28,9 @@ import org.cspoker.common.api.lobby.holdemtable.holdemplayer.listener.Asynchrono
 import org.cspoker.common.api.lobby.holdemtable.listener.AsynchronousHoldemTableListener;
 import org.cspoker.common.api.shared.context.RemoteServerContext;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
+import org.cspoker.common.elements.chips.Chips;
+import org.cspoker.common.elements.chips.IllegalValueException;
+import org.cspoker.common.elements.player.MutableSeatedPlayer;
 import org.cspoker.common.elements.player.SeatedPlayer;
 import org.cspoker.common.elements.table.SeatId;
 import org.cspoker.common.elements.table.TableId;
@@ -52,7 +55,7 @@ public class UserSeatedPlayer
 	RemoteHoldemPlayerContext playerContext;
 	RemoteChatContext chatContext;
 	private RemoteCashierContext cashierContext;
-	private boolean sittingIn;
+	private GameState gameState;
 	
 	/**
 	 * Create a new UserSeatedPlayer representing the player for a given
@@ -61,10 +64,13 @@ public class UserSeatedPlayer
 	 * @param gameWindow The GameWindow the user is sitting at
 	 * @param user The {@link User}
 	 * @param gameState The {@link GameState} for this table
+	 * @throws IllegalValueException
 	 */
-	public UserSeatedPlayer(GameWindow gameWindow, ClientCore core, GameState gameState) {
-		super(new SeatedPlayer(core.getUser().getPlayer().getId(), new SeatId(Long.MAX_VALUE), core.getUser()
-				.getPlayer().getName(), 0, 0), gameState);
+	public UserSeatedPlayer(GameWindow gameWindow, ClientCore core, GameState gameState)
+			throws IllegalValueException {
+		super(new SeatedPlayer(core.getUser().getPlayerId(), new SeatId(Long.MAX_VALUE), core.getUser().getUserName(),
+				0, 0, false));
+		this.gameState = gameState;
 		assert (gameWindow != null) : "We need the GameWindow as the listener!";
 		this.gameWindow = gameWindow;
 		this.displayExecutor = DisplayExecutor.getInstance();
@@ -135,7 +141,6 @@ public class UserSeatedPlayer
 		assert (seatId.getId() >= 0 && seatId.getId() != Long.MAX_VALUE) : "Illegal seat id provided: " + seatId;
 		playerContext = tableContext.sitIn(seatId, amount, new AsynchronousHoldemPlayerListener(displayExecutor,
 				gameWindow));
-		sittingIn = true;
 	}
 	
 	/**
@@ -186,10 +191,14 @@ public class UserSeatedPlayer
 		}
 	}
 	
-	/**
-	 * @return Whether the user is sitting at the given table
-	 */
-	public boolean isSittingIn() {
-		return sittingIn;
+	public void update(SeatedPlayer player) {
+		assert (player.getId().equals(this.getId()));
+		try {
+			new Chips(player.getStackValue()).transferAllChipsTo(getStack());
+			new Chips(player.getBetChipsValue()).transferAllChipsTo(getBetChips());
+		} catch (IllegalArgumentException e) {
+			logger.error(e);
+		}
+		
 	}
 }
