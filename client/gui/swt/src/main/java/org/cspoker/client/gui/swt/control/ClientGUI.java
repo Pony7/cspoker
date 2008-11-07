@@ -55,7 +55,7 @@ public class ClientGUI {
 		
 		public static final boolean ADDITIONAL_RESOURCES = true;
 		
-		public static final File BASE_DIR = new File("src/main/resources");
+		public static final File BASE_DIR = new File("target/classes");
 		private static final File IMAGE_DIR = new File(BASE_DIR, "images");
 		
 		/** Icon to be used for Shell images */

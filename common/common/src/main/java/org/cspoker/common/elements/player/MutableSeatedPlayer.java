@@ -199,7 +199,7 @@ public class MutableSeatedPlayer {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((player == null) ? 0 : player.hashCode());
+		result = (int) (prime * result + ((player == null) ? 0 : player.getId().getId()));
 		return result;
 	}
 	

@@ -331,6 +331,7 @@ public class PlayerSeatComposite
 				}
 			}
 		});
+		layout(true);
 	}
 	
 	/**
@@ -405,6 +406,7 @@ public class PlayerSeatComposite
 		playerStack.pack(true);
 		holeCardsComposite.redraw();
 		timerAction.cancel(true);
+		layout(true);
 	}
 	
 	/**

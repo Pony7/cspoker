@@ -95,7 +95,7 @@ public class GameWindow
 		// Initialize chat context
 		user.getChatContext();
 		userInputComposite.getGameInfoText().insert("Click on an open seat to join the game");
-		
+		tableComposite.updateTableGraphics();
 	}
 	
 	/**
@@ -271,20 +271,19 @@ public class GameWindow
 	 */
 	public void onNewDeal(NewDealEvent newDealEvent) {
 		logger.debug("New deal event received");
-		gameState.newRound();
+		gameState.newRound(Rounds.PREFLOP);
 		gameState.setPots(new Pots(0));
 		PlayerSeatComposite newDealer = tableComposite.findPlayerSeatCompositeByPlayerId(newDealEvent.getDealer());
 		for (PlayerSeatComposite psc : tableComposite.getPlayerSeatComposites(true)) {
 			if (psc.getPlayer().equals(gameState.getDealer())) {
 				tableComposite.moveDealerButton(psc, newDealer);
-				gameState.setDealer(newDealer.getPlayer());
 			}
 			
 			psc.setHoleCards(Arrays.asList(ClientGUI.UNKNOWN_CARD, ClientGUI.UNKNOWN_CARD));
 			psc.getPlayer().getBetChips().discard();
 			gameState.getBetPile(psc.getPlayer()).clear();
 		}
-		
+		gameState.setDealer(newDealer.getPlayer());
 		userInputComposite.showDealerMessage(newDealEvent);
 		tableComposite.redraw();
 		logger.debug("New deal event handled");
@@ -305,7 +304,7 @@ public class GameWindow
 		if (newRoundEvent.getRound() != Rounds.PREFLOP) {
 			tableComposite.moveBetsToPot();
 		}
-		gameState.newRound();
+		gameState.newRound(newRoundEvent.getRound());
 		tableComposite.updateTableGraphics();
 		userInputComposite.showDealerMessage(newRoundEvent);
 	}

@@ -193,9 +193,12 @@ public class UserSeatedPlayer
 	
 	public void update(SeatedPlayer player) {
 		assert (player.getId().equals(this.getId()));
+		assert (player.getName().equalsIgnoreCase(this.getName()));
 		try {
 			new Chips(player.getStackValue()).transferAllChipsTo(getStack());
 			new Chips(player.getBetChipsValue()).transferAllChipsTo(getBetChips());
+			setSeatId(player.getSeatId());
+			setSittingIn(player.isSittingIn());
 		} catch (IllegalArgumentException e) {
 			logger.error(e);
 		}
