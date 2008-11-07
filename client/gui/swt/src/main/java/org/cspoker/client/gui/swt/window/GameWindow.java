@@ -308,7 +308,7 @@ public class GameWindow
 		PlayerId playerToAct = nextPlayerEvent.getPlayerId();
 		tableComposite.proceedToNextPlayer(playerToAct);
 		userInputComposite.getGameActionGroup().setVisible(user.getMemento().getId().equals(playerToAct));
-		if (user.getMemento().equals(playerToAct)) {
+		if (user.getMemento().getId().equals(playerToAct)) {
 			userInputComposite.prepareForUserInput();
 		}
 		userInputComposite.update();

@@ -371,6 +371,7 @@ public class TableUserInputComposite
 		foldCallRaiseButtonGroup.setVisible(true);
 		betRaiseButton.setVisible(!toCallAllIn);
 		manualEnterBetGroup.setVisible(!toCallAllIn);
+		gameActionGroup.layout(true);
 	}
 	
 	private void updateCheckCallButton(boolean allIn) {
@@ -380,7 +381,7 @@ public class TableUserInputComposite
 		if (allIn) {
 			checkCallButton.setText("All In (" + amountAsString + ")");
 		}
-		
+		gameActionGroup.layout(true);
 	}
 	
 	/**
