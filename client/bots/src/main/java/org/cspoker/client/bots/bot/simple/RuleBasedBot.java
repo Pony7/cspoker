@@ -14,15 +14,17 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.client.bots.simple;
+package org.cspoker.client.bots.bot.simple;
 
 import java.rmi.RemoteException;
 import java.util.Random;
 import java.util.concurrent.ExecutorService;
 
 import org.apache.log4j.Logger;
-import org.cspoker.client.bots.BotRunner;
-import org.cspoker.client.bots.DefaultBot;
+import org.cspoker.client.bots.bot.AbstractBot;
+import org.cspoker.client.bots.bot.Bot;
+import org.cspoker.client.bots.bot.BotFactory;
+import org.cspoker.client.bots.listener.BotListener;
 import org.cspoker.client.common.SmartLobbyContext;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.cards.Rank;
@@ -31,14 +33,15 @@ import org.cspoker.common.elements.table.Rounds;
 import org.cspoker.common.elements.table.TableId;
 
 public class RuleBasedBot
-		extends DefaultBot {
+		extends AbstractBot {
 	
-	private final static Logger logger = Logger.getLogger(BotRunner.class);
+	private final static Logger logger = Logger.getLogger(RuleBasedBot.class);
 	Random random = new Random();
-	
-	public RuleBasedBot(SmartLobbyContext lobby, PlayerId playerID, TableId tableID, ExecutorService executor,
-			boolean doOutput) {
-		super(lobby, playerID, tableID, executor, doOutput);
+
+	public RuleBasedBot(PlayerId playerId, TableId tableId,
+			SmartLobbyContext lobby, ExecutorService executor,
+			BotListener... botListeners) {
+		super(playerId, tableId, lobby, executor, botListeners);
 	}
 	
 	@Override
@@ -73,6 +76,24 @@ public class RuleBasedBot
 				}
 			}
 		});
+	}
+	
+
+	
+	public static BotFactory getBotFactory(){
+		return new BotFactory(){
+			@Override
+			public Bot createBot(PlayerId playerId, TableId tableId,
+					SmartLobbyContext lobby, ExecutorService executor,
+					BotListener... botListeners) {
+				return new RuleBasedBot(playerId, tableId, lobby, executor, botListeners);
+			}
+			
+			@Override
+			public String toString() {
+				return "RuleBasedBotv1";
+			}
+		};
 	}
 	
 }

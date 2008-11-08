@@ -23,14 +23,12 @@ import org.cspoker.server.common.authentication.XmlFileAuthenticator;
 import org.cspoker.server.common.player.PlayerFactory;
 
 public class AccountContextImpl implements ExtendedAccountContext{
-
-	private static XmlFileAuthenticator authenticator = new XmlFileAuthenticator();
 		
 	private MutablePlayer player;
 	
-
 	public AccountContextImpl(String username, String password) throws LoginException {
-		if(!authenticator.hasPassword(username, password)){
+		//TODO make login system plugable
+		if(username==null || password == null || username.length()==0 || !password.equals("test")){
 			throw new LoginException();
 		}
 		player = PlayerFactory.global_Player_Factory.createNewPlayer(username);
@@ -58,7 +56,7 @@ public class AccountContextImpl implements ExtendedAccountContext{
 	}
 
 	public boolean hasPassword(String passwordHash) {
-		return authenticator.hasPassword(player.getName(), passwordHash);
+		return passwordHash!=null && passwordHash.equals("test");
 	}
 	
 	public PlayerId getPlayerID() {
