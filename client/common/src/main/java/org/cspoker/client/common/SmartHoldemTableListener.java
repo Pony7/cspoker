@@ -36,47 +36,47 @@ import org.cspoker.common.elements.table.Rounds;
 
 @ThreadSafe
 public class SmartHoldemTableListener
-		extends ForwardingHoldemTableListener {
-	
+extends ForwardingHoldemTableListener {
+
 	private final static Logger logger = Logger.getLogger(SmartHoldemTableListener.class);
-	
+
 	private volatile Pots pots;
 	private volatile Set<Card> communityCards;
 	private volatile Rounds round;
-	
+
 	@GuardedBy("playersLock")
 	private final HashMap<PlayerId, MutableSeatedPlayer> players = new HashMap<PlayerId, MutableSeatedPlayer>();
-	
+
 	private final Object playersLock = new Object();
-	
+
 	public SmartHoldemTableListener(HoldemTableListener holdemTableListener) {
 		super(holdemTableListener);
 	}
-	
+
 	public Pots getPots() {
 		return pots;
 	}
-	
+
 	public Set<Card> getCommunityCards() {
 		return communityCards;
 	}
-	
+
 	public Rounds getCurrentRound() {
 		return round;
 	}
-	
+
 	@Override
 	public void onPotsChanged(PotsChangedEvent potsChangedEvent) {
 		pots = potsChangedEvent.getPots();
 		super.onPotsChanged(potsChangedEvent);
 	}
-	
+
 	@Override
 	public void onNewCommunityCards(NewCommunityCardsEvent newCommunityCardsEvent) {
 		this.communityCards = newCommunityCardsEvent.getCommunityCards();
 		super.onNewCommunityCards(newCommunityCardsEvent);
 	}
-	
+
 	@Override
 	public void onNewRound(NewRoundEvent newRoundEvent) {
 		this.round = newRoundEvent.getRound();
@@ -87,7 +87,7 @@ public class SmartHoldemTableListener
 		}
 		super.onNewRound(newRoundEvent);
 	}
-	
+
 	@Override
 	public void onNewDeal(NewDealEvent newDealEvent) {
 		List<SeatedPlayer> seatedPlayers = newDealEvent.getPlayers();
@@ -104,7 +104,7 @@ public class SmartHoldemTableListener
 		}
 		super.onNewDeal(newDealEvent);
 	}
-	
+
 	@Override
 	public void onAllIn(AllInEvent allInEvent) {
 		logger.trace(allInEvent);
@@ -118,28 +118,28 @@ public class SmartHoldemTableListener
 		}
 		super.onAllIn(allInEvent);
 	}
-	
+
 	@Override
 	public void onBet(BetEvent betEvent) {
 		logger.trace(betEvent);
 		addToBet(betEvent.getPlayerId(), betEvent.getAmount());
 		super.onBet(betEvent);
 	}
-	
+
 	@Override
 	public void onBigBlind(BigBlindEvent bigBlindEvent) {
 		logger.trace(bigBlindEvent);
 		addToBet(bigBlindEvent.getPlayerId(), bigBlindEvent.getAmount());
 		super.onBigBlind(bigBlindEvent);
 	}
-	
+
 	@Override
 	public void onSmallBlind(SmallBlindEvent smallBlindEvent) {
 		logger.trace(smallBlindEvent);
 		addToBet(smallBlindEvent.getPlayerId(), smallBlindEvent.getAmount());
 		super.onSmallBlind(smallBlindEvent);
 	}
-	
+
 	@Override
 	public void onCall(CallEvent callEvent) {
 		logger.trace(callEvent);
@@ -148,7 +148,7 @@ public class SmartHoldemTableListener
 		}
 		super.onCall(callEvent);
 	}
-	
+
 	@Override
 	public void onRaise(RaiseEvent raiseEvent) {
 		logger.trace(raiseEvent);
@@ -157,14 +157,14 @@ public class SmartHoldemTableListener
 		}
 		super.onRaise(raiseEvent);
 	}
-	
+
 	public int getDeficit(PlayerId playerId) {
 		synchronized (playersLock) {
 			return Math.min(players.get(playerId).getBetChips().getValue(), getMaxBet()
 					- players.get(playerId).getBetChips().getValue());
 		}
 	}
-	
+
 	private int getMaxBet() {
 		synchronized (playersLock) {
 			int max = 0;
@@ -176,7 +176,7 @@ public class SmartHoldemTableListener
 			return max;
 		}
 	}
-	
+
 	private void addToBet(PlayerId playerId, int amount) {
 		synchronized (playersLock) {
 			try {
@@ -193,12 +193,23 @@ public class SmartHoldemTableListener
 			return players.containsKey(playerID);
 		}
 	}
-	
+
 	@Override
 	public void onSitOut(SitOutEvent sitOutEvent) {
 		synchronized (playersLock) {
 			players.remove(sitOutEvent.getPlayerId());
 		}
 		super.onSitOut(sitOutEvent);
+	}
+
+	public int getStackPlusBet(PlayerId playerID) {
+		synchronized (playersLock) {
+			MutableSeatedPlayer player = players.get(playerID);
+			if(player==null){
+				return 0;
+			}else{
+				return player.getStack().getValue()+player.getBetChips().getValue();
+			}
+		}
 	}
 }

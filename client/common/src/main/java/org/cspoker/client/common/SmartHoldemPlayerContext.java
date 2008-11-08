@@ -24,6 +24,7 @@ import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.RemoteHolde
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.cards.Card;
 import org.cspoker.common.elements.cards.Rank;
+import org.cspoker.common.elements.player.PlayerId;
 
 public class SmartHoldemPlayerContext extends ForwardingRemoteHoldemPlayerContext {
 
