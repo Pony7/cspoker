@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:WindowedApplication xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" creationComplete="init()">
+	<mx:Script>
+		<![CDATA[
+			import models.chips.ChipStack;
+			import models.*;
+			import views.*;
+			
+			public var chipStack:ChipStack;
+			
+			public function testChips(stackSize:int):void{
+				
+			}
+			
+			public function init():void{
+				chipStack = new ChipStack(potLocation);
+				
+			}
+			
+			public function btnTestClicked(stackSize:int):void{
+				chipStack.calculateGraphics(stackSize);
+			}
+		]]>
+	</mx:Script>
+	<mx:Canvas x="251" y="156" id="potLocation" >
+	</mx:Canvas>
+	<mx:TextArea x="240" y="180" width="50" text="55" height="20" id="chipAmount"/>
+	<mx:Button x="240" y="220" label="Test Chips" id="btnTestChips" click="btnTestClicked(int(chipAmount.text))" />
+</mx:WindowedApplication>
