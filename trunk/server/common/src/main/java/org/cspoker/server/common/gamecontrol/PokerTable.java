@@ -490,7 +490,7 @@ public class PokerTable {
 	 * subscribed winner listener is updated by calling their onWinnerEvent()
 	 * method.
 	 */
-	public void publishAllInEvent(AllInEvent event) {
+	public synchronized void publishAllInEvent(AllInEvent event) {
 		for (HoldemTableListener listener : holdemTableListeners) {
 			listener.onAllIn(event);
 		}
@@ -556,7 +556,7 @@ public class PokerTable {
 	 * occurred. Each subscribed next player listener is updated by calling
 	 * their onNextPlayerEvent() method.
 	 */
-	public void publishNextPlayerEvent(NextPlayerEvent event) {
+	public synchronized void publishNextPlayerEvent(NextPlayerEvent event) {
 		cancelOldTimeOut();
 		submitTimeOutHandler(event.getPlayerId());
 		for (HoldemTableListener listener : holdemTableListeners) {
@@ -569,7 +569,7 @@ public class PokerTable {
 	 * subscribed winner listener is updated by calling their onWinnerEvent()
 	 * method.
 	 */
-	public void publishWinnerEvent(WinnerEvent event) {
+	public synchronized void publishWinnerEvent(WinnerEvent event) {
 		for (HoldemTableListener listener : holdemTableListeners) {
 			listener.onWinner(event);
 		}
@@ -580,7 +580,7 @@ public class PokerTable {
 	 * Each subscribed show hand listener is updated by calling their
 	 * onShowHandEvent() method.
 	 */
-	public void publishShowHandEvent(ShowHandEvent event) {
+	public synchronized void publishShowHandEvent(ShowHandEvent event) {
 		for (HoldemTableListener listener : holdemTableListeners) {
 			listener.onShowHand(event);
 		}

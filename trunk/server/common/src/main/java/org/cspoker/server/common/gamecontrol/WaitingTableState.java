@@ -35,9 +35,6 @@ import org.cspoker.server.common.elements.table.ServerTable;
 /**
  * A class to represent players at the table.
  * 
- * @invar A table must have a valid game property. |
- *        canHaveAsGameProperty(getGameProperty())
- * @invar Each player at the table is unique.
  */
 public class WaitingTableState
 		extends TableState {
