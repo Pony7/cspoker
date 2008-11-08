@@ -22,8 +22,7 @@
 			}
 		]]>
 	</mx:Script>
-	<mx:Canvas x="251" y="156" id="potLocation" >
-	</mx:Canvas>
-	<mx:TextArea x="240" y="180" width="50" text="55" height="20" id="chipAmount"/>
-	<mx:Button x="240" y="220" label="Test Chips" id="btnTestChips" click="btnTestClicked(int(chipAmount.text))" />
+	<mx:Canvas x="266" y="126" id="potLocation" />
+	<mx:TextArea id="chipAmountTest" text="65"  x="72" y="221"/>
+	<mx:Button x="240" y="220" label="Test Chips" id="btnTestChips" click="btnTestClicked(int(chipAmountTest.text))" />
 </mx:WindowedApplication>

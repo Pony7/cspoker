@@ -1,14 +1,16 @@
 package models.chips
 {
 	import mx.containers.Canvas;
-	import mx.controls.Image;
 	
+	import views.ChipStackView;
 	
 	public class ChipStack extends Canvas
 	{
 		
 		public var chipsInStack:int = 0;
 		public var container:Canvas = null;
+		
+		public var chipStackView:ChipStackView;
 	
 		public var leftIncrement:int;
 		public var rightIncrement:int;
@@ -18,7 +20,8 @@ package models.chips
 		{
 			trace("calling ChipStack... " + passedContainer);
 			container = passedContainer;
-			
+			chipStackView= new ChipStackView();
+			container.addChild(chipStackView);
 		}
 		
 		public function calculateGraphics(chipCount:int):void{
@@ -97,66 +100,20 @@ package models.chips
 			//names.push("1", "5", "25", "100", "500", "1000", "2500", "10000");
 			names.push("1Chip.gif", "5Chip.gif", "25Chip.gif", "100Chip.gif", "500Chip.gif", "1000Chip.gif", "2500Chip.gif", "10000Chip.gif");
 		
-			trace(counts);
-			trace(names);
+			//trace(counts);
+			//trace(names);
 		
-			drawChips(names, counts, chipCount);
-			
+			chipStackView.drawChips(names, counts, chipCount);
+			chipStackView.setText(chipCount);
 		}// end function
 		
 		
-		private function drawChips(names:Array, counts:Array, chipCount:int):void{
-			
-			var index:int = 0;
-			var incrementIndex:int = 0;
-			var x:int = 0;  // used for moving chips horizontally.
-			var y:int = 0; // used for stacking chips.
-			var addX:Boolean = false;
-			var maxStack:int = 4;
-			
-			
-			
-			for each(var count:int in counts){
-				if(maxStack == 0){
-					break;
-				}
-			//trace(names[count] + " = " + counts[count]);
-			while(count > 0){
-				//trace("attaching movie: " + names[count]);
-				//container.createEmptyMovieClip("container"+index, container.getNextHighestDepth());
-				//container["container"+index].attachMovie("chip"+names[count], "chip"+index, this.getNextHighestDepth(), {_x:x, _y:y});
-				var image:Image = new Image();
-				image.source = "images/chips/"+names[incrementIndex];
-				image.x = x;
-				image.y = y;
-				trace("adding child: " + image.source);
-				container.addChild(image);
-				
-				count--;
-				
-				//counts[count] = counts[count]-1;
-				//trace(index);
-				index++;
-				
-				y = y-4;
-				addX = true;
-			}
-			incrementIndex++;
-			
-				if(addX == true){
-					y = 0;
-					x = x+25;
-					addX = false;
-					maxStack--;
-				}
-			
-			
-			}
-		}
+		
 			
 		
 		private function clearStack():void{
-			
+			chipStackView.visible = false;
+			delete this;
 		}
 		
 		public function addToStack(chipAmount:int):void{
