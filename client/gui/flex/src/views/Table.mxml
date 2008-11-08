@@ -43,7 +43,7 @@
             	betLocations = [betLocation0, betLocation1, betLocation2, betLocation3, betLocation4, betLocation5, betLocation6, betLocation7, betLocation8, betLocation9];
            		flopCardLocations = [flop0, flop1, flop2, flop3, flop4];
            		seatLocations = [seat0, seat1, seat2, seat3, seat4, seat5, seat6, seat7, seat8, seat9];
-           		pot = new ChipStack();
+           		pot = new ChipStack(potLocation);
            		pot.x = potLocation.x;
            		pot.y = potLocation.y;
            		
