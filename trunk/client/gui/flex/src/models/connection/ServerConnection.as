@@ -240,6 +240,28 @@ package models.connection
     				
 		}
 		
+		public function csGetAvatarAction(playerId:int):void{
+			idAction++;
+			var xml:XML =
+			
+			<ns5:getAvatarAction id={idAction} playerId={playerId} xmlns:ns5="http://www.cspoker.org/api/2008-11/"/>;
+					    
+    		csSendData(xml);
+		}
+		
+		public function csSendTableMessageAction(tableId:int, message:String):void{
+			
+			idAction++;
+			var xml:XML =
+			
+			<ns5:sendTableMessageAction id={idAction} tableID={tableId} xmlns:ns5="http://www.cspoker.org/api/2008-11/">
+			<message>{message}</message>
+			</ns5:sendTableMessageAction>;
+					    
+    		csSendData(xml);
+			
+		}
+		
 		
 		
 		
