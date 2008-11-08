@@ -24,9 +24,12 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.cspoker.common.api.lobby.holdemtable.event.AllInEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.BetEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.BigBlindEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.CallEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.NewCommunityCardsEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.PotsChangedEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.RaiseEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.SmallBlindEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.WinnerEvent;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
@@ -121,6 +124,9 @@ public abstract class BettingRound extends Round {
 		getBettingRules().setLastBetAmount(amount);
 		playerMadeEvent(player);
 		game.nextPlayer();
+		gameMediator.publishBetEvent(new BetEvent(player.getId(), amount));
+		gameMediator.publishPotsChangedEvent(new PotsChangedEvent(new Pots(getCurrentPotValue())));
+		BettingRound.logger.info(player.getName() + " bets " + amount + ".");
 	}
 
 	@Override
@@ -145,9 +151,6 @@ public abstract class BettingRound extends Round {
 		if (amountToIncreaseBetPileWith(player) >= player.getStack().getValue()) {
 			allIn(player);
 			return;
-//			throw new IllegalActionException(player.toString()+" can not call. "+
-//					"Can not call a bet higher than your current amount of chips;"
-//							+ " did you mean all-in??");
 		}
 
 		// Try to transfer the amount to the bet pile.
@@ -168,6 +171,10 @@ public abstract class BettingRound extends Round {
 
 		// Change to next player
 		game.nextPlayer();
+		
+		gameMediator.publishCallEvent(new CallEvent(player.getId()));
+		gameMediator.publishPotsChangedEvent(new PotsChangedEvent(new Pots(getCurrentPotValue())));
+		BettingRound.logger.info(player.getName() + " calls.");
 	}
 
 	@Override
@@ -212,6 +219,11 @@ public abstract class BettingRound extends Round {
 		getBettingRules().setLastBetAmount(amount);
 		playerMadeEvent(player);
 		game.nextPlayer();
+		
+		gameMediator.publishRaiseEvent(new RaiseEvent(player.getId(), amount));
+		gameMediator.publishPotsChangedEvent(new PotsChangedEvent(new Pots(getCurrentPotValue())));
+		BettingRound.logger.info(player.getName() + ": raises $" + amount + " to $"
+				+ player.getMemento().getBetChipsValue());
 	}
 
 	@Override

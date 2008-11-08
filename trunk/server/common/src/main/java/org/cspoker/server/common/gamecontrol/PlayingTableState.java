@@ -139,9 +139,6 @@ public class PlayingTableState
 	public synchronized void bet(MutableSeatedPlayer player, int amount)
 			throws IllegalActionException {
 		round.bet(player, amount);
-		mediatingTable.publishBetEvent(new BetEvent(player.getId(), amount));
-		mediatingTable.publishPotsChangedEvent(new PotsChangedEvent(new Pots(round.getCurrentPotValue())));
-		PlayingTableState.logger.info(player.getName() + " bets " + amount + ".");
 		checkIfEndedAndChangeRound();
 	}
 	
@@ -159,9 +156,6 @@ public class PlayingTableState
 	public synchronized void call(MutableSeatedPlayer player)
 			throws IllegalActionException {
 		round.call(player);
-		mediatingTable.publishCallEvent(new CallEvent(player.getId()));
-		mediatingTable.publishPotsChangedEvent(new PotsChangedEvent(new Pots(round.getCurrentPotValue())));
-		PlayingTableState.logger.info(player.getName() + " calls.");
 		checkIfEndedAndChangeRound();
 	}
 	
@@ -198,10 +192,6 @@ public class PlayingTableState
 	public synchronized void raise(MutableSeatedPlayer player, int amount)
 			throws IllegalActionException {
 		round.raise(player, amount);
-		mediatingTable.publishRaiseEvent(new RaiseEvent(player.getId(), amount));
-		mediatingTable.publishPotsChangedEvent(new PotsChangedEvent(new Pots(round.getCurrentPotValue())));
-		PlayingTableState.logger.info(player.getName() + ": raises $" + amount + " to $"
-				+ player.getMemento().getBetChipsValue());
 		checkIfEndedAndChangeRound();
 	}
 	
