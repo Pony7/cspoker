@@ -128,6 +128,14 @@
 			}
 			
 			
+			public function chipsToPot():void{
+				for each(var seat:Seat in seatLocations){
+					seat.sendChipsToPot(this.potLocation);
+					
+				}		
+			}
+			
+			
 			
 			public function showBuyInDialog(seat:Seat):void{
 				trace("showBuyInDialog clicked!!! from: " + seat.id);
@@ -160,16 +168,16 @@
 	</views:Seat>
 	<views:Seat x="195" y="0" id="seat9" seatNumber="9">
 	</views:Seat>
-	<mx:Canvas x="448" y="93" width="24" height="24" id="betLocation0" />
-	<mx:Canvas x="602" y="117" width="24" height="24" id="betLocation1" />
-	<mx:Canvas x="640" y="202" width="24" height="24" id="betLocation2" />
-	<mx:Canvas x="582" y="377" width="24" height="24" id="betLocation3" />
-	<mx:Canvas x="428" y="382" width="24" height="24" id="betLocation4" />
-	<mx:Canvas x="301" y="379" width="24" height="24" id="betLocation5" />
-	<mx:Canvas x="137" y="376" width="24" height="24" id="betLocation6" />
-	<mx:Canvas x="85" y="207" width="24" height="24" id="betLocation7" />
-	<mx:Canvas x="121" y="108" width="24" height="24" id="betLocation8" />
-	<mx:Canvas x="286" y="89" width="24" height="24" id="betLocation9" />
+	<mx:Canvas x="448" y="93" id="betLocation0" />
+	<mx:Canvas x="602" y="117" id="betLocation1" />
+	<mx:Canvas x="640" y="202" id="betLocation2" />
+	<mx:Canvas x="582" y="377" id="betLocation3" />
+	<mx:Canvas x="428" y="382" id="betLocation4" />
+	<mx:Canvas x="301" y="379" id="betLocation5" />
+	<mx:Canvas x="137" y="376" id="betLocation6" />
+	<mx:Canvas x="85" y="207" id="betLocation7" />
+	<mx:Canvas x="121" y="108" id="betLocation8" />
+	<mx:Canvas x="286" y="89" id="betLocation9" />
 	
 	<mx:Canvas x="479" y="114" width="72" height="50" id="cardLocation0" />
 	<mx:Canvas x="570" y="150" width="72" height="50" id="cardLocation1" />
@@ -202,7 +210,7 @@
 	</mx:Canvas>
 	<mx:Canvas x="459.2" y="207" width="50" height="65" id="flop4">
 	</mx:Canvas>
-	<mx:Canvas x="403.65" y="280" width="15" height="15" id="potLocation">
+	<mx:Canvas x="403.65" y="280" id="potLocation">
 	</mx:Canvas>
 	
 	

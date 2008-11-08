@@ -97,7 +97,8 @@ NOTES:
 CODED BY: Jack Doyle, jack@greensock.com
 Copyright 2008, GreenSock (This work is subject to the terms in http://www.greensock.com/terms_of_use.html.)
 */
-
+package models.utils
+{
 import TweenLite;
 
 class OverwriteManager {	
@@ -175,5 +176,7 @@ class OverwriteManager {
 			delete $vars[p];
 		}
 	}
+
+}
 
 }

@@ -15,12 +15,12 @@
 			private function btnBuyInClick():void{
 				trace("sending buyin: " + seatId + ":" + buyInAmount.text);
 				Main.sendSitIn(seatId, int(buyInAmount.text));
+				PopUpManager.removePopUp(this);
 			}
 			
 			public function setBuyInSeatId(seatId:int):void{
 				this.seatId = seatId;
 			}
-			
 			
 			
 		]]>

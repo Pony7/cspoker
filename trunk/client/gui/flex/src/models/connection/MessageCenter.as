@@ -123,6 +123,7 @@ package models.connection
 				var eventType:String = event["xsi:type"];
 				
 				var seatId:int;
+				var playerId:int;
 				// SWITCH STATEMENT FOR HOLDEM TABLE EVENTS...
 				switch(eventType){
 					case "ns2:sitInEvent":
@@ -133,9 +134,40 @@ package models.connection
 					case "ns2:newDealEvent":
 						trace("newDealEvent received!!!");
 						break;
+						
+					case "ns2:smallBlindEvent":
+						trace("smallBlindEvent received...");
+						var smallBlindAmount:int = event["amount"];
+						playerId = event["playerId"];
+						try{
+							Main.table.tableModel.getPlayerByPlayerId(playerId).paySmallBlind(smallBlindAmount);
+						}catch(e:Error){
+							trace("bigBlind Error: " + e.message);
+						}
+						break;
+						
+					case "ns2:bigBlindEvent":
+						trace("bigBlindEvent received...");
+						var bigBlindAmount:int = event["amount"];
+						playerId = event["playerId"];
+						try{
+							Main.table.tableModel.getPlayerByPlayerId(playerId).payBigBlind(bigBlindAmount);
+						}catch(e:Error){
+							trace("bigBlind Error: " + e.message);
+						}
+						
+						break;
 					
 					
+					case "ns2:newRoundEvent":
+						var round:String = event.round;
+						trace("new Round Event: " + round);
+						break;
 					
+					case "ns2:potsChangedEvent":
+						trace("potsChangedEvent");
+						Main.table.tableModel.receivePotsChangedEvent(event.pots);
+						break;
 					
 				}
 				

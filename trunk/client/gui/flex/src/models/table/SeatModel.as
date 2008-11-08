@@ -12,5 +12,7 @@ package models.table
 			this.seat = seat;
 		}
 		
+		//public function 
+		
 	}
 }
