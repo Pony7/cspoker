@@ -24,6 +24,7 @@ import org.cspoker.client.bots.listener.BotListener;
 import org.cspoker.client.common.SmartHoldemPlayerContext;
 import org.cspoker.client.common.SmartHoldemTableContext;
 import org.cspoker.client.common.SmartLobbyContext;
+import org.cspoker.common.api.account.action.GetPlayerIDAction;
 import org.cspoker.common.api.lobby.holdemtable.event.AllInEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.BetEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.BigBlindEvent;
@@ -86,7 +87,7 @@ implements Bot {
 				try {
 					started = true;
 					tableContext = lobbyContext.joinHoldemTable(tableID,AbstractBot.this);
-					playerContext = tableContext.sitIn(bigBlindBuyIn*bigBlind,AbstractBot.this);
+					playerContext = tableContext.sitIn(getBuyIn(),AbstractBot.this);
 				} catch (IllegalActionException e) {
 					e.printStackTrace();
 					throw new IllegalStateException("Failed to join table.", e);
@@ -140,6 +141,15 @@ implements Bot {
 				}
 			}
 		});
+	}
+
+	private int getBuyIn() {
+		return bigBlindBuyIn*bigBlind;
+	}
+	
+	@Override
+	public int getProfit() {
+		return tableContext.getStackPlusBet(playerID)-getBuyIn();
 	}
 
 	public void onAllIn(AllInEvent allInEvent) {

@@ -25,5 +25,7 @@ public interface Bot extends HoldemTableListener, HoldemPlayerListener{
 	void start();
 
 	void stop();
+	
+	int getProfit();
 
 }

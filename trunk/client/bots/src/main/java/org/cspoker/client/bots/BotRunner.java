@@ -25,9 +25,7 @@ import org.apache.log4j.Logger;
 import org.cspoker.client.bots.bot.AbstractBot;
 import org.cspoker.client.bots.bot.Bot;
 import org.cspoker.client.bots.bot.BotFactory;
-import org.cspoker.client.bots.bot.simple.CallBot;
 import org.cspoker.client.bots.bot.simple.CallBotFactory;
-import org.cspoker.client.bots.bot.simple.RuleBasedBot;
 import org.cspoker.client.bots.bot.simple.RuleBasedBotFactory;
 import org.cspoker.client.bots.listener.BotListener;
 import org.cspoker.client.bots.listener.GameLimitingBotListener;
@@ -50,6 +48,8 @@ import org.cspoker.common.util.threading.RequestExecutor;
 public class BotRunner
 		implements LobbyListener {
 	
+	private static final int nbGamesPerConfrontation = 10000;
+
 	static {
 		Log4JPropertiesLoader.load("org/cspoker/client/bots/logging/log4j.properties");
 	}
@@ -67,6 +67,9 @@ public class BotRunner
 	
 	private volatile Bot bot1 = null;
 	private volatile Bot bot2 = null;
+
+	private volatile int bot1profit = 0;
+	private volatile int bot2profit = 0;
 	
 	private volatile int botIndex1 = 0;
 	private volatile int botIndex2 = 0;
@@ -95,7 +98,7 @@ public class BotRunner
 			
 			executor = Executors.newSingleThreadExecutor();
 			
-			speedMinitor =  new SpeedTestBotListener();
+			speedMinitor =  new SpeedTestBotListener(1000);
 		
 			iterateBots();
 			
@@ -125,7 +128,7 @@ public class BotRunner
 	}
 	
 	private void resetStateAndStartPlay(){
-		gameLimiter = new GameLimitingBotListener(this);
+		gameLimiter = new GameLimitingBotListener(this,nbGamesPerConfrontation);
 		playOnNewtable();
 	}
 
@@ -166,12 +169,18 @@ public class BotRunner
 	}
 
 	private void stopRunningBots() {
+		bot1profit += bot1.getProfit();
+		bot2profit += bot2.getProfit();
 		bot1.stop();
 		bot2.stop();
 	}
 
 	public void moveToNextCombination() {
 		stopRunningBots();
+		logger.warn(bots[botIndex1].toString()+" averages "+(bot1profit*1.0/AbstractBot.bigBlind/nbGamesPerConfrontation)+"bb/game");
+		logger.warn(bots[botIndex2].toString()+" averages "+(bot2profit*1.0/AbstractBot.bigBlind/nbGamesPerConfrontation)+"bb/game");
+		bot1profit = 0;
+		bot2profit = 0;
 		iterateBots();
 	}
 	
