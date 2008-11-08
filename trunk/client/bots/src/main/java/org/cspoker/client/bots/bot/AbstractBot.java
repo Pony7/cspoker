@@ -149,7 +149,7 @@ implements Bot {
 	
 	@Override
 	public int getProfit() {
-		return tableContext.getStackPlusBet(playerID)-getBuyIn();
+		return tableContext.getAllStakes(playerID)-getBuyIn();
 	}
 
 	public void onAllIn(AllInEvent allInEvent) {

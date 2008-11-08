@@ -77,8 +77,8 @@ public class SmartHoldemTableContext extends ForwardingRemoteHoldemTableContext 
 
 
 
-	public int getStackPlusBet(PlayerId playerID) {
-		return smartTableListener.getStackPlusBet(playerID);
+	public int getAllStakes(PlayerId playerID) {
+		return smartTableListener.getAllStakes(playerID);
 	}
 	
 }

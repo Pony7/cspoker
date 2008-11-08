@@ -91,6 +91,7 @@ extends ForwardingHoldemTableListener {
 	@Override
 	public void onNewDeal(NewDealEvent newDealEvent) {
 		List<SeatedPlayer> seatedPlayers = newDealEvent.getPlayers();
+		pots = null;
 		synchronized (playersLock) {
 			players.clear();
 			for (SeatedPlayer seatedPlayer : seatedPlayers) {
@@ -165,7 +166,7 @@ extends ForwardingHoldemTableListener {
 		}
 	}
 
-	private int getMaxBet() {
+	public int getMaxBet() {
 		synchronized (playersLock) {
 			int max = 0;
 			for (MutableSeatedPlayer player : players.values()) {
@@ -202,12 +203,15 @@ extends ForwardingHoldemTableListener {
 		super.onSitOut(sitOutEvent);
 	}
 
-	public int getStackPlusBet(PlayerId playerID) {
+	public int getAllStakes(PlayerId playerID) {
 		synchronized (playersLock) {
 			MutableSeatedPlayer player = players.get(playerID);
 			if(player==null){
 				return 0;
 			}else{
+				if(getPots()!=null && getPots().getTotalValue()>0){
+					throw new IllegalStateException("Pots are not empty, can't calculate all stakes");
+				}
 				return player.getStack().getValue()+player.getBetChips().getValue();
 			}
 		}
