@@ -26,6 +26,7 @@ import org.cspoker.common.api.lobby.holdemtable.holdemplayer.listener.HoldemPlay
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.cards.Card;
 import org.cspoker.common.elements.chips.Pots;
+import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.elements.table.Rounds;
 import org.cspoker.common.elements.table.SeatId;
 
@@ -68,6 +69,10 @@ public class SmartHoldemTableContext extends ForwardingRemoteHoldemTableContext 
 
 	public Rounds getCurrentRound() {
 		return smartTableListener.getCurrentRound();
+	}
+
+	public boolean isPlaying(PlayerId playerID) {
+		return smartTableListener.isPlaying(playerID);
 	}
 
 }

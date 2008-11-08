@@ -107,9 +107,10 @@ public class SmartHoldemTableListener
 	
 	@Override
 	public void onAllIn(AllInEvent allInEvent) {
+		logger.trace(allInEvent);
 		synchronized (playersLock) {
 			try {
-				players.get(allInEvent.getPlayerId().getId()).transferAllChipsToBetPile();
+				players.get(allInEvent.getPlayerId()).transferAllChipsToBetPile();
 			} catch (IllegalValueException e) {
 				logger.error(e);
 				throw new IllegalStateException(e);
@@ -120,24 +121,28 @@ public class SmartHoldemTableListener
 	
 	@Override
 	public void onBet(BetEvent betEvent) {
+		logger.trace(betEvent);
 		addToBet(betEvent.getPlayerId(), betEvent.getAmount());
 		super.onBet(betEvent);
 	}
 	
 	@Override
 	public void onBigBlind(BigBlindEvent bigBlindEvent) {
+		logger.trace(bigBlindEvent);
 		addToBet(bigBlindEvent.getPlayerId(), bigBlindEvent.getAmount());
 		super.onBigBlind(bigBlindEvent);
 	}
 	
 	@Override
 	public void onSmallBlind(SmallBlindEvent smallBlindEvent) {
+		logger.trace(smallBlindEvent);
 		addToBet(smallBlindEvent.getPlayerId(), smallBlindEvent.getAmount());
 		super.onSmallBlind(smallBlindEvent);
 	}
 	
 	@Override
 	public void onCall(CallEvent callEvent) {
+		logger.trace(callEvent);
 		synchronized (playersLock) {
 			addToBet(callEvent.getPlayerId(), getDeficit(callEvent.getPlayerId()));
 		}
@@ -146,6 +151,7 @@ public class SmartHoldemTableListener
 	
 	@Override
 	public void onRaise(RaiseEvent raiseEvent) {
+		logger.trace(raiseEvent);
 		synchronized (playersLock) {
 			addToBet(raiseEvent.getPlayerId(), getDeficit(raiseEvent.getPlayerId()) + raiseEvent.getAmount());
 		}
@@ -180,5 +186,19 @@ public class SmartHoldemTableListener
 				throw new IllegalStateException(e);
 			}
 		}
+	}
+
+	public boolean isPlaying(PlayerId playerID) {
+		synchronized (playersLock) {
+			return players.containsKey(playerID);
+		}
+	}
+	
+	@Override
+	public void onSitOut(SitOutEvent sitOutEvent) {
+		synchronized (playersLock) {
+			players.remove(sitOutEvent.getPlayerId());
+		}
+		super.onSitOut(sitOutEvent);
 	}
 }

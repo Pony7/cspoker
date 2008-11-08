@@ -709,7 +709,7 @@ public class PokerTable {
 		oldFuture = currentFuture;
 		cancelOldTimeOut();
 		currentFuture = ScheduledRequestExecutor.getInstance().schedule(currentTimeOut, 30, TimeUnit.SECONDS);
-		PokerTable.logger.info("player " + player + " action time out submitted.");
+		PokerTable.logger.debug("player " + player + " action time out submitted.");
 	}
 	
 	private PlayerActionTimeOut currentTimeOut;

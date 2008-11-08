@@ -22,17 +22,25 @@ import java.util.concurrent.Executors;
 import javax.security.auth.login.LoginException;
 
 import org.apache.log4j.Logger;
-import org.cspoker.client.bots.simple.CallBot;
-import org.cspoker.client.bots.simple.RuleBasedBot;
+import org.cspoker.client.bots.bot.AbstractBot;
+import org.cspoker.client.bots.bot.Bot;
+import org.cspoker.client.bots.bot.BotFactory;
+import org.cspoker.client.bots.bot.simple.CallBot;
+import org.cspoker.client.bots.bot.simple.RuleBasedBot;
+import org.cspoker.client.bots.listener.BotListener;
+import org.cspoker.client.bots.listener.ReSitInBotListener;
+import org.cspoker.client.bots.listener.SpeedTestBotListener;
 import org.cspoker.client.common.SmartClientContext;
 import org.cspoker.client.common.SmartLobbyContext;
 import org.cspoker.common.RemoteCSPokerServer;
 import org.cspoker.common.api.lobby.event.TableCreatedEvent;
 import org.cspoker.common.api.lobby.event.TableRemovedEvent;
+import org.cspoker.common.api.lobby.listener.DefaultLobbyListener;
 import org.cspoker.common.api.lobby.listener.LobbyListener;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
-import org.cspoker.common.elements.table.DetailedHoldemTable;
+import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.elements.table.TableConfiguration;
+import org.cspoker.common.elements.table.TableId;
 import org.cspoker.common.util.Log4JPropertiesLoader;
 
 public class BotRunner
@@ -43,44 +51,107 @@ public class BotRunner
 	}
 	
 	private final static Logger logger = Logger.getLogger(BotRunner.class);
+
+	private final BotFactory[] bots;
+
+	private final SmartLobbyContext[] botLobbies;
+	private final PlayerId[] botIDs;
+
+	protected final SmartLobbyContext directorLobby;
+
+	private final ExecutorService executor;
 	
-	public BotRunner(final RemoteCSPokerServer cspokerServer) {
-		
-		final ExecutorService executor = Executors.newSingleThreadExecutor();
-		executor.execute(new Runnable() {
+	private volatile Bot bot1 = null;
+	private volatile Bot bot2 = null;
+	
+	private int botIndex1 = 0;
+	private int botIndex2 = 0;
+
+	private final BotListener speedMinitor = new SpeedTestBotListener();
+	
+	public BotRunner(RemoteCSPokerServer cspokerServer){
+		this(cspokerServer, new BotFactory[]{CallBot.getBotFactory(), RuleBasedBot.getBotFactory()});
+	}
+	
+	public BotRunner(RemoteCSPokerServer cspokerServer, BotFactory[] bots) {
+		try {
+			this.bots = bots;
+			botLobbies = new SmartLobbyContext[bots.length];
+			botIDs = new PlayerId[bots.length];
 			
-			public void run() {
-				try {
-					SmartClientContext serverguy = new SmartClientContext(cspokerServer.login("guy", "test"));
-					SmartLobbyContext lobbyguy = serverguy.getLobbyContext(BotRunner.this);
-					DetailedHoldemTable table = lobbyguy.createHoldemTable("BotTable", new TableConfiguration());
-					RuleBasedBot guy = new RuleBasedBot(lobbyguy, serverguy.getAccountContext().getPlayerID(), table
-							.getId(), executor, true);
-					
-					SmartClientContext serverkenzo = new SmartClientContext(cspokerServer.login("kenzo", "test"));
-					SmartLobbyContext lobbykenzo = serverkenzo.getLobbyContext(BotRunner.this);
-					CallBot kenzo = new CallBot(lobbykenzo, serverkenzo.getAccountContext().getPlayerID(), table
-							.getId(), executor, false);
-				} catch (LoginException e) {
-					throw new IllegalStateException("Login Failed");
-				} catch (RemoteException e) {
-					logger.error(e);
-					throw new IllegalStateException("Server setup failed.", e);
-				} catch (IllegalActionException e) {
-					logger.error(e);
-					throw new IllegalStateException("Server setup failed.", e);
-				}
+			SmartClientContext director = new SmartClientContext(cspokerServer.login("director", "test"));
+			directorLobby = director.getLobbyContext(BotRunner.this);
+			
+			for(int i=0;i<bots.length;i++){
+				SmartClientContext clientContext = new SmartClientContext(cspokerServer.login(bots[i].toString(), "test"));
+				botLobbies[i] = clientContext.getLobbyContext(new DefaultLobbyListener());
+				botIDs[i] = clientContext.getAccountContext().getPlayerID();
 			}
-		});
+			
+			executor = Executors.newSingleThreadExecutor();
+		
+			iterateBots();
+			
+		} catch (LoginException e) {
+			throw new IllegalStateException("Login Failed",e);
+		} catch (RemoteException e) {
+			logger.error(e);
+			throw new IllegalStateException("Server setup failed.", e);
+		} catch (IllegalActionException e) {
+			logger.error(e);
+			throw new IllegalStateException("Server setup failed.", e);
+		}
 		
 	}
 	
-	public void onTableCreated(TableCreatedEvent tableCreatedEvent) {
+	private void iterateBots() {
+		if(botIndex2<bots.length-1){
+			botIndex2++;
+			playOnNewtable();
+		}else if(botIndex2<bots.length-1){
+			botIndex1++;
+			botIndex2 = botIndex1+1;
+			playOnNewtable();
+		}else{
+			shutdown();
+		}
+	}
+	
 
+	private void playOnNewtable() {
+		try {
+			TableId tableId = directorLobby.createHoldemTable(bots[botIndex1].toString()+" vs "+bots[botIndex2].toString(), 
+					new TableConfiguration(AbstractBot.bigBlind)).getId();
+			bot1 = bots[botIndex1].createBot(botIDs[botIndex1], tableId, botLobbies[botIndex1], executor, 
+					new ReSitInBotListener(this), speedMinitor );
+			bot1.start();
+			bot2 = bots[botIndex2].createBot(botIDs[botIndex2], tableId, botLobbies[botIndex2], executor);
+			bot2.start();
+		} catch (RemoteException e) {
+			logger.error(e);
+			throw new IllegalStateException("Server setup failed.", e);
+		} catch (IllegalActionException e) {
+			logger.error(e);
+			throw new IllegalStateException("Server setup failed.", e);
+		}
+	}
+
+	private void shutdown() {
+		executor.shutdown();
+	}
+
+	public void onTableCreated(TableCreatedEvent tableCreatedEvent) {
+		logger.info(tableCreatedEvent.getTable().getName()+" table created.");
 	}
 	
 	public void onTableRemoved(TableRemovedEvent tableRemovedEvent) {
+		logger.info("Table " + tableRemovedEvent.getTableId()+" removed.");
+	}
 
+	public void respawnBots() {
+		bot1.stop();
+		bot2.stop();
+		playOnNewtable();
 	}
 	
 }

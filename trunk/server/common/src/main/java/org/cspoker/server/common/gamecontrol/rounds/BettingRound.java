@@ -503,7 +503,7 @@ public abstract class BettingRound extends Round {
 		List<MutableSeatedPlayer> players = game.getCurrentDealPlayers();
 		for (MutableAllInPlayer allInPlayer : allInPlayers) {
 			try {
-				BettingRound.logger.info(game.getPots());
+				BettingRound.logger.debug(game.getPots());
 				game.getPots().collectAmountFromPlayersToSidePot(
 						allInPlayer.getBetValue(), players);
 				BettingRound.logger.info(game.getPots());

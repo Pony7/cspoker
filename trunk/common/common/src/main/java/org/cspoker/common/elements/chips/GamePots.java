@@ -63,7 +63,7 @@ public class GamePots {
 		if (isClosed()) {
 			return;
 		}
-		GamePots.logger.info("collect " + amount);
+		GamePots.logger.debug("collect " + amount);
 		if ((amount > 0) || (pot.getChips().getValue() > 0)) {
 			GamePot sidePot = new GamePot();
 			pot.transferAllChipsTo(sidePot);
