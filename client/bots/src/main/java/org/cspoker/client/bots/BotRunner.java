@@ -26,8 +26,11 @@ import org.cspoker.client.bots.bot.AbstractBot;
 import org.cspoker.client.bots.bot.Bot;
 import org.cspoker.client.bots.bot.BotFactory;
 import org.cspoker.client.bots.bot.simple.CallBot;
+import org.cspoker.client.bots.bot.simple.CallBotFactory;
 import org.cspoker.client.bots.bot.simple.RuleBasedBot;
+import org.cspoker.client.bots.bot.simple.RuleBasedBotFactory;
 import org.cspoker.client.bots.listener.BotListener;
+import org.cspoker.client.bots.listener.GameLimitingBotListener;
 import org.cspoker.client.bots.listener.ReSitInBotListener;
 import org.cspoker.client.bots.listener.SpeedTestBotListener;
 import org.cspoker.client.common.SmartClientContext;
@@ -42,6 +45,7 @@ import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.elements.table.TableConfiguration;
 import org.cspoker.common.elements.table.TableId;
 import org.cspoker.common.util.Log4JPropertiesLoader;
+import org.cspoker.common.util.threading.RequestExecutor;
 
 public class BotRunner
 		implements LobbyListener {
@@ -64,13 +68,14 @@ public class BotRunner
 	private volatile Bot bot1 = null;
 	private volatile Bot bot2 = null;
 	
-	private int botIndex1 = 0;
-	private int botIndex2 = 0;
+	private volatile int botIndex1 = 0;
+	private volatile int botIndex2 = 0;
 
-	private final BotListener speedMinitor = new SpeedTestBotListener();
+	private final BotListener speedMinitor;
+	private volatile BotListener gameLimiter;
 	
 	public BotRunner(RemoteCSPokerServer cspokerServer){
-		this(cspokerServer, new BotFactory[]{CallBot.getBotFactory(), RuleBasedBot.getBotFactory()});
+		this(cspokerServer, new BotFactory[]{new CallBotFactory(), new CallBotFactory(), new RuleBasedBotFactory()});
 	}
 	
 	public BotRunner(RemoteCSPokerServer cspokerServer, BotFactory[] bots) {
@@ -89,6 +94,8 @@ public class BotRunner
 			}
 			
 			executor = Executors.newSingleThreadExecutor();
+			
+			speedMinitor =  new SpeedTestBotListener();
 		
 			iterateBots();
 			
@@ -107,23 +114,27 @@ public class BotRunner
 	private void iterateBots() {
 		if(botIndex2<bots.length-1){
 			botIndex2++;
-			playOnNewtable();
-		}else if(botIndex2<bots.length-1){
+			resetStateAndStartPlay();
+		}else if(botIndex1<bots.length-2){
 			botIndex1++;
 			botIndex2 = botIndex1+1;
-			playOnNewtable();
+			resetStateAndStartPlay();
 		}else{
 			shutdown();
 		}
 	}
 	
+	private void resetStateAndStartPlay(){
+		gameLimiter = new GameLimitingBotListener(this);
+		playOnNewtable();
+	}
 
 	private void playOnNewtable() {
 		try {
 			TableId tableId = directorLobby.createHoldemTable(bots[botIndex1].toString()+" vs "+bots[botIndex2].toString(), 
 					new TableConfiguration(AbstractBot.bigBlind)).getId();
 			bot1 = bots[botIndex1].createBot(botIDs[botIndex1], tableId, botLobbies[botIndex1], executor, 
-					new ReSitInBotListener(this), speedMinitor );
+					new ReSitInBotListener(this), speedMinitor,gameLimiter);
 			bot1.start();
 			bot2 = bots[botIndex2].createBot(botIDs[botIndex2], tableId, botLobbies[botIndex2], executor);
 			bot2.start();
@@ -138,6 +149,7 @@ public class BotRunner
 
 	private void shutdown() {
 		executor.shutdown();
+		RequestExecutor.getInstance().shutdown();
 	}
 
 	public void onTableCreated(TableCreatedEvent tableCreatedEvent) {
@@ -149,9 +161,18 @@ public class BotRunner
 	}
 
 	public void respawnBots() {
+		stopRunningBots();
+		playOnNewtable();
+	}
+
+	private void stopRunningBots() {
 		bot1.stop();
 		bot2.stop();
-		playOnNewtable();
+	}
+
+	public void moveToNextCombination() {
+		stopRunningBots();
+		iterateBots();
 	}
 	
 }

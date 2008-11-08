@@ -60,9 +60,10 @@ public class LoggingThreadPool extends ThreadPoolExecutor {
 	@Override
 	protected void terminated() {
 		try {
-			logger.trace(String.format("Terminated: avg time=%dns", totalTime
-					.get()
-					/ numTasks.get()));
+			if (numTasks.get()>0) {
+				logger.trace(String.format("Terminated: avg time=%dns",
+						totalTime.get() / numTasks.get()));
+			}
 		} finally {
 			super.terminated();
 		}
