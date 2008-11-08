@@ -69,6 +69,7 @@ public class MutableSeatedPlayer {
 		betChips = new Chips(0);
 		
 		pocketCards = new CopyOnWriteArrayList<Card>();
+		//TODO Kenzo: Why default false??
 		sittingIn = false;
 	}
 	

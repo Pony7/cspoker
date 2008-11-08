@@ -101,6 +101,7 @@ public class PlayingTableState
 		List<MutableSeatedPlayer> players = game.getCurrentDealPlayers();
 		for (MutableSeatedPlayer player : players) {
 			PlayingTableState.logger.info(player.toString());
+			player.setSittingIn(true);
 		}
 		
 		round = new WaitingRound(gameMediator, game);
