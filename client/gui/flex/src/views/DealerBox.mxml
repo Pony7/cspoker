@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml">
+	
+	<mx:Script>
+		<![CDATA[
+			import models.*;
+			
+			private var chatString:String = "";
+			
+			public function dealerMessage(message:String):void{
+				chatString = chatString + message + "\n";
+				dealerText.htmlText = chatString;
+			}
+			
+			public function dealerChatChanged() : void{
+            	dealerText.verticalScrollPosition = dealerText.maxVerticalScrollPosition + 100;
+            	return;
+        	}// end function
+		]]>
+	</mx:Script>
+	
+	<mx:Style>
+		.dealerChat{
+			color:16666666;
+			background-color:0;
+			background-alpha:0.2;
+			border-style:none;
+			font-family:"Arial";
+		}
+	</mx:Style>
+	<mx:TextArea id="dealerText" styleName="dealerChat" change="dealerChatChanged()" width="257" height="143"/>
+</mx:Canvas>

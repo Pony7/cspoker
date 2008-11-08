@@ -17,11 +17,12 @@
 			}
 			
 			public function init():void{
-				
+				this.visible = false;
 			}
 			
 			public function drawChips(names:Array, counts:Array, chipCount:int):void{
-			
+				
+				this.visible = true;
 				var index:int = 0;
 				var incrementIndex:int = 0;
 				var x:int = 0;  // used for moving chips horizontally.
@@ -78,5 +79,5 @@
 		}
 	</mx:Style>
 	<mx:Canvas id="stackLocation" top="2" left="6"/>
-	<mx:TextArea x="2" y="27" width="50" height="20" text="$" id="chipAmount" styleName="chipStackStyle"/>
+	<mx:TextArea x="2" y="27" width="50" height="20" text="$" id="chipAmount" editable="false" selectable="false" styleName="chipStackStyle"/>
 </mx:Canvas>

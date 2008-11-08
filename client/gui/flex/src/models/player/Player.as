@@ -22,6 +22,7 @@ package models.player
 			this.id = playerObj.id;	
 			playerInformation = new PlayerValueObject(null, playerObj.name, playerObj.stackValue, playerObj.betChipsValue, playerObj.seatId, null);
 			Main.table.tableModel.mapPlayerToId(this.id, this);
+			Main.serverConnection.csGetAvatarAction(this.id);
 		}
 		
 		public function paySmallBlind(amount:int):void{

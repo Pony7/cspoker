@@ -145,6 +145,10 @@
             	
 			}
 			
+			public function dealAnimation(seatedPlayers:Object):void{
+				/*TODO: FILL IN DEAL ANIMATION WITH TWEENS*/
+			}
+			
 		]]>
 	</mx:Script>
 	<mx:Button x="0" y="0" label="Back to Lobby" id="btnLeaveGame" click="leaveGameClicked()"/>
@@ -212,8 +216,7 @@
 	</mx:Canvas>
 	<mx:Canvas x="403.65" y="280" id="potLocation">
 	</mx:Canvas>
-	
-	
-	<views:GamePanelOnTurn x="249.05" y="501.6" width="280.98486" height="159.31818" />
-	
+	<views:GamePanel id="gamePanel"  x="281.1" y="561" width="187.75" height="98"/>
+	<views:DealerBox id="dealerBox"  x="4" y="522"/>
+	<views:PlayerChatBox id="playerChatBox"  x="486" y="522"/>
 </mx:Canvas>

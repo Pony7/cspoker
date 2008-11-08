@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml">
-	<mx:Button label="Call" id="btnCallCheck" left="10" top="10"/>
-	<mx:Button label="Fold" id="btnFold" right="10" top="10"/>
-	<mx:Button label="Bet" id="btnBet" verticalCenter="-69" left="10"/>
-	<mx:TextArea id="txtBetAmount" text="$" width="104" height="30" fontSize="14" verticalCenter="-68" horizontalCenter="-79"/>
-	
-</mx:Canvas>

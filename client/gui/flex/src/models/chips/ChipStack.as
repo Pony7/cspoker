@@ -22,6 +22,7 @@ package models.chips
 			container = passedContainer;
 			chipStackView= new ChipStackView();
 			container.addChild(chipStackView);
+			
 		}
 		
 		public function calculateGraphics(chipCount:int):void{
@@ -108,10 +109,7 @@ package models.chips
 		}// end function
 		
 		
-		
-			
-		
-		private function clearStack():void{
+		public function clearStack():void{
 			chipStackView.visible = false;
 			delete this;
 		}

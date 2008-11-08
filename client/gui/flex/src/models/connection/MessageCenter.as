@@ -172,6 +172,18 @@ package models.connection
 				}
 				
 			}
+			
+			if(contentObj.hasOwnProperty("tableChatEvents")){
+				
+				try{
+					var chatEvent:Object = contentObj.tableChatEvents.chatEvent;
+					var player:Object = chatEvent.player;
+					var message:String = chatEvent.message;
+					Main.table.playerChatBox.playerChatMessage(message, player);
+				}catch(e:Error){
+					trace("playerChatError: " + e.message);
+				}
+			}
 			 
 			
 			
