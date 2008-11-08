@@ -16,31 +16,29 @@
 package org.cspoker.client.bots.listener;
 
 import org.apache.log4j.Logger;
+import org.cspoker.client.bots.BotRunner;
 
-public class SpeedTestBotListener extends DealCountingListener{
+public class GameLimitingBotListener extends DealCountingListener{
 
-	private final static Logger logger = Logger.getLogger(SpeedTestBotListener.class);
+	private final static Logger logger = Logger.getLogger(GameLimitingBotListener.class);
+
+	private final int maxNbGames;
+
+	private final BotRunner botRunner;
 	
-	private volatile long startTime;
-
-	private final int reportInterval;
-	
-	public SpeedTestBotListener() {
-		this(64);
+	public GameLimitingBotListener(BotRunner botRunner) {
+		this(botRunner,10000);
 	}
 	
-	public SpeedTestBotListener(int reportInterval) {
-		this.reportInterval = reportInterval;
+	public GameLimitingBotListener(BotRunner botRunner, int maxNbGames) {
+		this.maxNbGames = maxNbGames;
+		this.botRunner = botRunner;
 	}
 	
 	@Override
 	public void onNewDeal() {
-		int deals = getDeals();
-		if(deals == 0){
-			startTime = System.currentTimeMillis();
-		}else if(deals%reportInterval==0){
-			long nowTime = System.currentTimeMillis();
-			logger.warn("deal #"+deals+" in "+(nowTime-startTime)+"("+(deals*1000.0/(nowTime-startTime))+" average)");
+		if(getDeals()==maxNbGames){
+			botRunner.moveToNextCombination();
 		}
 		super.onNewDeal();
 	}

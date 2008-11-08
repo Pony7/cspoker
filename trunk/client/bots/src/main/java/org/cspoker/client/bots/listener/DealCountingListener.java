@@ -15,34 +15,18 @@
  */
 package org.cspoker.client.bots.listener;
 
-import org.apache.log4j.Logger;
-
-public class SpeedTestBotListener extends DealCountingListener{
-
-	private final static Logger logger = Logger.getLogger(SpeedTestBotListener.class);
+public class DealCountingListener extends DefaultBotListener{
 	
-	private volatile long startTime;
-
-	private final int reportInterval;
-	
-	public SpeedTestBotListener() {
-		this(64);
-	}
-	
-	public SpeedTestBotListener(int reportInterval) {
-		this.reportInterval = reportInterval;
-	}
+	private volatile int deals = 0;
 	
 	@Override
 	public void onNewDeal() {
-		int deals = getDeals();
-		if(deals == 0){
-			startTime = System.currentTimeMillis();
-		}else if(deals%reportInterval==0){
-			long nowTime = System.currentTimeMillis();
-			logger.warn("deal #"+deals+" in "+(nowTime-startTime)+"("+(deals*1000.0/(nowTime-startTime))+" average)");
-		}
+		++deals;
 		super.onNewDeal();
+	}
+	
+	public int getDeals() {
+		return deals;
 	}
 	
 }

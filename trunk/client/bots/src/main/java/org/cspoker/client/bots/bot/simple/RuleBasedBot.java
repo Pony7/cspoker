@@ -22,8 +22,6 @@ import java.util.concurrent.ExecutorService;
 
 import org.apache.log4j.Logger;
 import org.cspoker.client.bots.bot.AbstractBot;
-import org.cspoker.client.bots.bot.Bot;
-import org.cspoker.client.bots.bot.BotFactory;
 import org.cspoker.client.bots.listener.BotListener;
 import org.cspoker.client.common.SmartLobbyContext;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
@@ -76,24 +74,6 @@ public class RuleBasedBot
 				}
 			}
 		});
-	}
-	
-
-	
-	public static BotFactory getBotFactory(){
-		return new BotFactory(){
-			@Override
-			public Bot createBot(PlayerId playerId, TableId tableId,
-					SmartLobbyContext lobby, ExecutorService executor,
-					BotListener... botListeners) {
-				return new RuleBasedBot(playerId, tableId, lobby, executor, botListeners);
-			}
-			
-			@Override
-			public String toString() {
-				return "RuleBasedBotv1";
-			}
-		};
 	}
 	
 }
