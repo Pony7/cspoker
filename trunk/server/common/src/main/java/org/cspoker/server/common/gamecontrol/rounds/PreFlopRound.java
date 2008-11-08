@@ -96,7 +96,7 @@ public class PreFlopRound
 					.getPocketCards())));
 		}
 		
-		if (getGame().getNbCurrentDealPlayers() > 1) {
+		if (getGame().getNbCurrentDealPlayers() > 1 || !onlyOnePlayerLeftBesidesAllInPlayersAndCalled()) {
 			gameMediator.publishNextPlayerEvent(new NextPlayerEvent(game.getCurrentPlayer().getId()));
 		}
 	}
