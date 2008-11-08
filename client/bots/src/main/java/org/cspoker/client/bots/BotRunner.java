@@ -69,7 +69,6 @@ public class BotRunner
 	private volatile Bot bot2 = null;
 
 	private volatile int bot1profit = 0;
-	private volatile int bot2profit = 0;
 	
 	private volatile int botIndex1 = 0;
 	private volatile int botIndex2 = 0;
@@ -98,7 +97,7 @@ public class BotRunner
 			
 			executor = Executors.newSingleThreadExecutor();
 			
-			speedMinitor =  new SpeedTestBotListener(1000);
+			speedMinitor =  new SpeedTestBotListener(2000);
 		
 			iterateBots();
 			
@@ -170,17 +169,15 @@ public class BotRunner
 
 	private void stopRunningBots() {
 		bot1profit += bot1.getProfit();
-		bot2profit += bot2.getProfit();
 		bot1.stop();
 		bot2.stop();
 	}
 
 	public void moveToNextCombination() {
 		stopRunningBots();
-		logger.warn(bots[botIndex1].toString()+" averages "+(bot1profit*1.0/AbstractBot.bigBlind/nbGamesPerConfrontation)+"bb/game");
-		logger.warn(bots[botIndex2].toString()+" averages "+(bot2profit*1.0/AbstractBot.bigBlind/nbGamesPerConfrontation)+"bb/game");
+		logger.warn(bots[botIndex1].toString()+" averages "+(bot1profit*1.0/AbstractBot.bigBlind/nbGamesPerConfrontation)+" bb/game");
+		logger.warn(bots[botIndex2].toString()+" averages "+(-bot1profit*1.0/AbstractBot.bigBlind/nbGamesPerConfrontation)+" bb/game");
 		bot1profit = 0;
-		bot2profit = 0;
 		iterateBots();
 	}
 	

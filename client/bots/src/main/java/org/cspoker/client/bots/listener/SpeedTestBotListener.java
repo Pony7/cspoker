@@ -20,29 +20,30 @@ import org.apache.log4j.Logger;
 public class SpeedTestBotListener extends DealCountingListener{
 
 	private final static Logger logger = Logger.getLogger(SpeedTestBotListener.class);
-	
+
 	private volatile long startTime;
 
 	private final int reportInterval;
-	
+
 	public SpeedTestBotListener() {
 		this(64);
 	}
-	
+
 	public SpeedTestBotListener(int reportInterval) {
 		this.reportInterval = reportInterval;
 	}
-	
+
 	@Override
 	public void onNewDeal() {
 		int deals = getDeals();
-		if(deals == 0){
-			startTime = System.currentTimeMillis();
-		}else if(deals%reportInterval==0){
+		if(deals%reportInterval==0){
 			long nowTime = System.currentTimeMillis();
-			logger.warn("deal #"+deals+" in "+(nowTime-startTime)+"("+(deals*1000.0/(nowTime-startTime))+" average)");
+			if(startTime>0){
+				logger.warn("deal #"+deals+" at "+(reportInterval*1000.0/(nowTime-startTime))+" games/s");
+			}
+			startTime = nowTime;
 		}
 		super.onNewDeal();
 	}
-	
+
 }
