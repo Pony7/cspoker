@@ -104,28 +104,6 @@ public class PreFlopRound
 	@Override
 	public void check(MutableSeatedPlayer player)
 			throws IllegalActionException {
-//		if (!onTurn(player)) {
-//			throw new IllegalActionException(player.getName() + " it is not your turn to act.");
-//		}
-//		
-//		if(game.getNbSeatedPlayers()==2 && game.getDealer().equals(player)){
-//			throw new IllegalActionException(player.getName()
-//					+ " can not check in this round. Someone has already bet.");
-//		}
-//		
-//		//Small Blind All-in
-//		if(game.getNbSeatedPlayers()==2 && bigBlindPlayer==null){
-//			throw new IllegalActionException(player.getName()
-//					+ " can not check in this round. You should call the all-in small blind.");
-//		}
-//		
-//		if (bigBlindPlayer.equals(player) && someoneHasRaised()) {
-//			throw new IllegalActionException(player.getName()
-//					+ " can not check in this round. Someone has already bet.");
-//		} else {
-//			bigBlindChecked = true;
-//		}
-//		game.nextPlayer();
         if (!onTurn(player)) {
             throw new IllegalActionException(player.getName() + " it is not your turn to act.");
     }
