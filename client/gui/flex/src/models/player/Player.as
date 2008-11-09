@@ -6,7 +6,7 @@ package models.player
 	
 	public class Player extends Object
 	{
-		protected var playerSeat:Seat;
+		public var playerSeat:Seat;
 		protected var cards:Array;
 		protected var playerInformation:PlayerValueObject;
 		
@@ -54,7 +54,7 @@ package models.player
 		}
 		
 		public function getSeatId():int{
-			return this.id;
+			return this.playerSeat.seatNumber;
 		}
 	}
 }

@@ -53,6 +53,7 @@ package models.table
 		}
 		
 		public function receivePocketCardsEvent(pocketCards:Object):void{
+			table.dealPocketCards(playerMap, pocketCards.card);
 			
 		}
 		

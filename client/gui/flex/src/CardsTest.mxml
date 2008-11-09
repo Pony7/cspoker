@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:WindowedApplication xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" creationComplete="init()">
+
+<mx:Script>
+	<![CDATA[
+		import models.cards.CardDeck;
+		import models.*;
+		import views.*;
+		
+		public var card:CardDeck = null; 
+		public var card2:CardDeck = null;
+		public function init():void{
+			card = new CardDeck(dealLocation);
+			card2 = new CardDeck(dealLocation);
+		}
+		
+		public function btnTestCardsClicked():void{
+			var suit:String = cmbSuit.selectedLabel;
+			var rank:String = cmbRanks.selectedLabel;
+			//card = new CardDeck(dealLocation, suit, rank, 66,75, 0, 0);
+			card.calculateCardGraphics(suit, rank, 33,44,0,0);
+			//dealLocation.addChild(card);
+			
+			//card.calculateCardGraphics(suit, rank);
+		}
+		
+		public function btnTestCards2Clicked():void{
+			var suit:String = cmbSuit.selectedLabel;
+			var rank:String = cmbRanks.selectedLabel;
+			card2.calculateCardGraphics(suit, rank, 33,44,0+28,0);
+						
+		}
+		
+		public function btnRemoveCard1Clicked():void{
+			card.clearCard();
+		}
+		
+		public function btnRemoveCard2Clicked():void{
+			card2.clearCard();
+		}
+	]]>
+</mx:Script>
+<mx:Model id="suits">
+	<data>
+		<suit>HEARTS</suit>
+		<suit>DIAMONDS</suit>
+		<suit>SPADES</suit>
+		<suit>CLUBS</suit>
+	</data>
+</mx:Model>
+<mx:Model id="ranks">
+	<data>
+		<rank>TWO</rank>
+		<rank>THREE</rank>
+		<rank>FOUR</rank>
+		<rank>FIVE</rank>
+		<rank>SEVEN</rank>
+		<rank>EIGHT</rank>
+		<rank>NINE</rank>
+		<rank>TEN</rank>
+		<rank>JACK</rank>
+		<rank>QUEEN</rank>
+		<rank>KING</rank>
+		<rank>ACE</rank>
+	</data>
+</mx:Model>
+	<mx:Canvas x="83" y="33" id="dealLocation" width="200" height="200" borderStyle="solid" borderThickness="2"/>
+	<mx:ComboBox x="34" y="121" id="cmbSuit" dataProvider="{suits.suit}" selectedIndex="0"></mx:ComboBox>
+	<mx:ComboBox x="34" y="165" id="cmbRanks" rowCount="13" dataProvider="{ranks.rank}"></mx:ComboBox>
+	<mx:Button label="text cards..." id="btnTestCards" click="btnTestCardsClicked()"  x="198.5" y="121"/>
+	<mx:Button label="text cards...2nd" id="btnTestCards2" click="btnTestCards2Clicked()"  x="192.5" y="165"/>
+	<mx:Button x="308" y="121" label="Remove Card 1" id="btnRemoveCard1" click="btnRemoveCard1Clicked()"/>
+	<mx:Button x="322" y="165" label="Remove Card 2" id="btnRemoveCard2" click="btnRemoveCard2Clicked()"/>
+</mx:WindowedApplication>
