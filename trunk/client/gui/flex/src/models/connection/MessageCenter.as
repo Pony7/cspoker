@@ -96,13 +96,9 @@ package models.connection
 				  		
 				  		break;
 				
-					case "joinTableAction":
-						
-						
-						
-						//mTable = new CSTable(contentObj.successfulInvocationEvent.result);
-						//dispatchEvent(new csEventActions( csEventActions.OnJoinTableAction,"joinTableAction",mTable));
-					break;
+					case "ns2:playerId":
+						Main.receiveClientPlayerId(int(result));
+						break;
 					
 					case "leaveTableAction":
 						objAction=contentObj.successfulInvocationEvent.action;
@@ -130,6 +126,7 @@ package models.connection
 						seatId = event.player.seatId;
 						trace("sitInEvent received!!! Seat:" + String(seatId));
 						Main.table.getSeatById(seatId).receiveSitIn(event.player);
+						return;
 						break;
 					case "ns2:newDealEvent":
 						trace("newDealEvent received!!!");
@@ -168,6 +165,10 @@ package models.connection
 						trace("potsChangedEvent");
 						Main.table.tableModel.receivePotsChangedEvent(event.pots);
 						break;
+						
+					case "ns2:newPocketCardsEvent":
+						trace("new pocket cards event!!!");
+						Main.table.tableModel.receivePocketCardsEvent(event.pocketCards);
 					
 				}
 				

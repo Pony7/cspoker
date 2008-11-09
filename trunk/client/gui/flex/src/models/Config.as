@@ -7,7 +7,14 @@ package models
 		public static const SHOW_CONNECT_DIALOG:Boolean = false;
 		public static const SHOW_DISCONNECT_DIALOG:Boolean = true;
 		
-		public static const USE_OLD_API:Boolean = true;
+		public static const POCKETCARD_WIDTH:int = 45;
+		public static const POCKETCARD_HEIGHT:int = 55;
+		public static const FLOPCARD_WIDTH:int = 55;
+		public static const FLOPCARD_HEIGHT:int = 65;
+		
+		
+		
+		//public static const USE_OLD_API:Boolean = true;
 		public function Config()
 		{
 			super();

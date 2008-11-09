@@ -26,6 +26,7 @@
 	</mx:states>
 	<mx:Script>
 		<![CDATA[
+			import models.cards.CardDeck;
 			import mx.collections.ArrayCollection;
 			import models.table.SeatModel;
 			import models.table.TableModel;
@@ -33,8 +34,11 @@
 			import models.player.Player;
 			import models.chips.ChipStack;
 			
+			import flash.filters.DropShadowFilter;  
+			
 			import models.utils.*;
 			import models.utils.easing.Back;
+			import models.Config;
 			
 			import models.*;
 			import views.*;
@@ -43,6 +47,7 @@
 			private var tableModel:TableModel;
 			private var seatModel:SeatModel;
 			private var player:Player;
+			private var cardsLocation:Canvas;
 			
 			private var tablePosition:int = -1;
 			
@@ -52,18 +57,29 @@
 			
 			public var seatNumber:int;
 			
+			private var card1:CardDeck;
+			private var card2:CardDeck;
+
 			public function initEnd():void{
 				
 			}
 			
 			
-			public function init(passedTable:Table, passedTableModel:TableModel, passedTablePosition:int, passedBetLocation:Canvas):void{
+			public function init(passedTable:Table, passedTableModel:TableModel, passedTablePosition:int, passedBetLocation:Canvas, passedCardsLocation:Canvas):void{
 				this.masterTable = passedTable;
 				this.tableModel = passedTableModel;
 				this.tablePosition = passedTablePosition;
 				this.betLocation = passedBetLocation;
 				this.seatModel = new SeatModel(this);
 				this.player = new Player(this);
+				this.cardsLocation = passedCardsLocation;
+				
+				card1 = new CardDeck(cardsLocation);
+				card2 = new CardDeck(cardsLocation);
+				
+				chipStack = new ChipStack(betLocation);
+				
+				
 				seatItemsContainer = new UIComponent;
 				addChild(seatItemsContainer);
 			}
@@ -75,6 +91,14 @@
 			public function receiveSitIn(passedPlayerObj:Object):void{
 				player.sitInPlayer(passedPlayerObj);
 				// player.getAvatar();
+				if(passedPlayerObj.id == Main.clientPlayerId){
+					Main.clientSeat = this;
+				}
+				
+				var ds:DropShadowFilter = new DropShadowFilter();  
+				ds.distance = 6;  
+				ds.alpha = .6;  
+				this.filters = [ds];
 				drawSitIn();
 			}
 			
@@ -100,7 +124,17 @@
 				trace("The tween has finished! argument1 = " + argument1 + ", and argument2 = " + argument2);
 			}
 			
+			public function dealPocketCardsClient(cards:Object):void{
+				var tempCard1:Object = cards[0];
+				var tempCard2:Object = cards[1];
+				card1.calculateCardGraphics(tempCard1.suit, tempCard1.rank, Config.POCKETCARD_WIDTH,Config.POCKETCARD_HEIGHT,0,0);
+				card2.calculateCardGraphics(tempCard2.suit, tempCard2.rank, Config.POCKETCARD_WIDTH,Config.POCKETCARD_HEIGHT,0+Config.POCKETCARD_WIDTH - 4,0);
+			}
 			
+			public function dealPocketCardsOpponent():void{
+				card1.loadHiddenCard(Config.POCKETCARD_WIDTH,Config.POCKETCARD_HEIGHT,0,0);
+				card2.loadHiddenCard(Config.POCKETCARD_WIDTH,Config.POCKETCARD_HEIGHT,0+Config.POCKETCARD_WIDTH - 4,0);
+			}
 			
 			private function drawStandUp():void{
 				this.currentState = "empty";
@@ -111,7 +145,7 @@
 					chipStack.addToStack(amount);
 					
 				}else{
-					chipStack = new ChipStack(betLocation);
+					//chipStack = new ChipStack(betLocation);
 					chipStack.calculateGraphics(amount);
 					
 				}

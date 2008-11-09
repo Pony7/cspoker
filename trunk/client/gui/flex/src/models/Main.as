@@ -11,10 +11,6 @@ package models
 	import mx.core.UIComponent;
 	import mx.managers.*;
 	
-	import flash.events.Event;
-    import flash.events.EventDispatcher;
-
-	
 	import views.*;
 	
 	public class Main extends Object
@@ -29,6 +25,9 @@ package models
 		public static var messageCenter:MessageCenter = null;
 		public static var serverConnection:ServerConnection = null;
 		
+		public static var clientSeatId:int = -1;
+		public static var clientPlayerId:int = -1;
+		public static var clientSeat:Seat = null;
 			
 		//public static var newServerConnection:ServerConnectionNew = null;
 		//public static var newMessageCenter:MessageCenterNew = null;
@@ -89,10 +88,18 @@ package models
         	return;
         }
         
+        
+        
         public static function sendSitIn(seatId:int, buyInAmount:int):void{
         	var theTableId:int = table.tableItem.getTableId();
+        	clientSeatId = seatId;
         	serverConnection.csSitInAction(theTableId, seatId, buyInAmount);
         }
+        
+        public static function receiveClientPlayerId(passedClientPlayerId:int):void{
+        	clientPlayerId = passedClientPlayerId;
+        }
+        
         
         /**
          * takes a whole list of tables and sends out requests for each table's info 

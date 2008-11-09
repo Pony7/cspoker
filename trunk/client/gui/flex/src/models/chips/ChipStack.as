@@ -23,6 +23,7 @@ package models.chips
 			chipStackView= new ChipStackView();
 			container.addChild(chipStackView);
 			
+			
 		}
 		
 		public function calculateGraphics(chipCount:int):void{

@@ -249,6 +249,15 @@ package models.connection
     		csSendData(xml);
 		}
 		
+		public function csGetPlayerIdAction():void{
+			idAction++;
+			var xml:XML =
+			
+			<ns5:getPlayerIDAction id={idAction} xmlns:ns5="http://www.cspoker.org/api/2008-11/"/>;
+					    
+    		csSendData(xml);
+		}
+		
 		public function csSendTableMessageAction(tableId:int, message:String):void{
 			
 			idAction++;

@@ -3,6 +3,8 @@
 	backgroundImage="images/table1.jpg" width="750" height="670" xmlns:views="views.*" creationComplete="init()">
 	<mx:Script>
 		<![CDATA[
+			import models.player.Player;
+			import models.cards.CardDeck;
 			import models.chips.ChipStack;
 			import models.table.TableModel;
 			import mx.core.UIComponent;
@@ -28,6 +30,13 @@
 			public var tablePermItemsContainer:UIComponent;
 			public var tableTempItemsContainer:UIComponent;
 			
+			public var flopCard0:CardDeck;
+			public var flopCard1:CardDeck;
+			public var flopCard2:CardDeck;
+			public var flopCard3:CardDeck;
+			public var flopCard4:CardDeck;
+			
+			
 			public var tableInitialized:Boolean = false;
 			
 			public var pot:ChipStack;
@@ -49,20 +58,26 @@
            		
            		this.tableModel = new TableModel(this, seatLocations, pot);
            		
-           		seat0.init(this, this.tableModel, 0, betLocation0);
-            	seat1.init(this, this.tableModel, 1, betLocation1);
-           	 	seat2.init(this, this.tableModel, 2, betLocation2);
-           	 	seat3.init(this, this.tableModel, 3, betLocation3);
-            	seat4.init(this, this.tableModel, 4, betLocation4);
-            	seat5.init(this, this.tableModel, 5, betLocation5);
-            	seat6.init(this, this.tableModel, 6, betLocation6);
-            	seat7.init(this, this.tableModel, 7, betLocation7);
-            	seat8.init(this, this.tableModel, 8, betLocation8);
-            	seat9.init(this, this.tableModel, 9, betLocation9);
+           		seat0.init(this, this.tableModel, 0, betLocation0, cardLocation0);
+            	seat1.init(this, this.tableModel, 1, betLocation1, cardLocation1);
+           	 	seat2.init(this, this.tableModel, 2, betLocation2, cardLocation2);
+           	 	seat3.init(this, this.tableModel, 3, betLocation3, cardLocation3);
+            	seat4.init(this, this.tableModel, 4, betLocation4, cardLocation4);
+            	seat5.init(this, this.tableModel, 5, betLocation5, cardLocation5);
+            	seat6.init(this, this.tableModel, 6, betLocation6, cardLocation6);
+            	seat7.init(this, this.tableModel, 7, betLocation7, cardLocation7);
+            	seat8.init(this, this.tableModel, 8, betLocation8, cardLocation8);
+            	seat9.init(this, this.tableModel, 9, betLocation9, cardLocation9);
             	
             	tableInitialized = true;
             	
             	onTableLoadStart();
+            	
+            	flopCard0 = new CardDeck(flop0);
+            	flopCard1 = new CardDeck(flop1);
+            	flopCard2 = new CardDeck(flop2);
+            	flopCard3 = new CardDeck(flop3);
+            	flopCard4 = new CardDeck(flop4);
             	
             	
 			}
@@ -80,6 +95,7 @@
 				trace("leaveGameClicked -> table:" + tableId);
 				Main.serverConnection.csLeaveTableAction(tableId);
 				Main.showLobby();
+				cleanTableUpLeaveRoom();
 				Main.lobby.gamesDG.refreshGames();
 			}
 			
@@ -98,10 +114,22 @@
 			
 			public function receiveJoinTableSuccess():void{
 				Main.showTable();
+				
+				
 				trace("Table.receiveJoinTableSuccess...");
 				if(tableInitialized == true){
 					onTableLoadStart();
 				}
+				
+				Main.serverConnection.csGetPlayerIdAction();
+				
+				/*
+				try{
+					Main.clientSeat = Main.table.getSeatById(Main.clientSeatId);
+				}catch(e:Error){
+					trace("error getting clientSeat: " + e.message);
+				}
+				*/
 				
 			}
 			
@@ -118,15 +146,12 @@
 						for each(var player:Object in tableItem.playersObj){
 							id = player.id;
 							seatId = player.seatId;
-						
 							trace("sitInEvent received!!! Seat:" + String(seatId) + "player: " + String(player));
 							getSeatById(seatId).receiveSitIn(player);
 						}
-						
 					}
 				}
 			}
-			
 			
 			public function chipsToPot():void{
 				for each(var seat:Seat in seatLocations){
@@ -135,18 +160,36 @@
 				}		
 			}
 			
-			
-			
 			public function showBuyInDialog(seat:Seat):void{
 				trace("showBuyInDialog clicked!!! from: " + seat.id);
 				var buyInBox:BuyInDialog = new BuyInDialog();
 				buyInBox.setBuyInSeatId(seat.seatNumber);
         		PopUpManager.addPopUp(buyInBox, this, true);
-            	
 			}
 			
 			public function dealAnimation(seatedPlayers:Object):void{
+				trace("deal animation called");
 				/*TODO: FILL IN DEAL ANIMATION WITH TWEENS*/
+			}
+			
+			public function cleanTableUpLeaveRoom():void{
+				this.init();
+			}
+			
+			public function dealPocketCards(dealPlayers:Object, cards:Object):void{
+				this.dealAnimation(dealPlayers);
+				for each(var tempPlayer:Player in dealPlayers){
+					var clientSeatId:int = Main.clientSeatId;
+					var tempPlayerId:int = tempPlayer.getSeatId();
+					var clientSeat:Seat = Main.clientSeat;
+					if(tempPlayer.getSeatId() == Main.clientSeatId){
+						// deal client cards
+						Main.clientSeat.dealPocketCardsClient(cards);
+					}else{
+						// deal other player's cards
+						tempPlayer.playerSeat.dealPocketCardsOpponent();
+					}
+				}
 			}
 			
 		]]>
@@ -172,27 +215,27 @@
 	</views:Seat>
 	<views:Seat x="195" y="0" id="seat9" seatNumber="9">
 	</views:Seat>
-	<mx:Canvas x="448" y="93" id="betLocation0" />
-	<mx:Canvas x="602" y="117" id="betLocation1" />
-	<mx:Canvas x="640" y="202" id="betLocation2" />
+	<mx:Canvas x="436" y="84" id="betLocation0" />
+	<mx:Canvas x="596" y="95" id="betLocation1" />
+	<mx:Canvas x="636" y="199" id="betLocation2" />
 	<mx:Canvas x="582" y="377" id="betLocation3" />
 	<mx:Canvas x="428" y="382" id="betLocation4" />
 	<mx:Canvas x="301" y="379" id="betLocation5" />
 	<mx:Canvas x="137" y="376" id="betLocation6" />
-	<mx:Canvas x="85" y="207" id="betLocation7" />
-	<mx:Canvas x="121" y="108" id="betLocation8" />
-	<mx:Canvas x="286" y="89" id="betLocation9" />
+	<mx:Canvas x="85" y="203" id="betLocation7" />
+	<mx:Canvas x="121" y="102" id="betLocation8" />
+	<mx:Canvas x="302" y="82" id="betLocation9" />
 	
-	<mx:Canvas x="479" y="114" width="72" height="50" id="cardLocation0" />
-	<mx:Canvas x="570" y="150" width="72" height="50" id="cardLocation1" />
-	<mx:Canvas x="596" y="234" width="72" height="50" id="cardLocation2" />
-	<mx:Canvas x="568" y="301" width="72" height="50" id="cardLocation3" />
-	<mx:Canvas x="458" y="328" width="72" height="50" id="cardLocation4" />
-	<mx:Canvas x="139" y="297" width="72" height="50" id="cardLocation5" />
-	<mx:Canvas x="225" y="332" width="72" height="50" id="cardLocation6" />
-	<mx:Canvas x="85" y="234" width="72" height="50" id="cardLocation7" />
-	<mx:Canvas x="107" y="135" width="72" height="50" id="cardLocation8" />
-	<mx:Canvas x="234" y="115" width="72" height="50" id="cardLocation9" />
+	<mx:Canvas x="480" y="115" id="cardLocation0" />
+	<mx:Canvas x="565" y="145" id="cardLocation1" />
+	<mx:Canvas x="596" y="246" id="cardLocation2" />
+	<mx:Canvas x="568" y="301" id="cardLocation3" />
+	<mx:Canvas x="458" y="328" id="cardLocation4" />
+	<mx:Canvas x="223" y="327" id="cardLocation5" />
+	<mx:Canvas x="135" y="307" id="cardLocation6" />
+	<mx:Canvas x="85" y="239" id="cardLocation7" />
+	<mx:Canvas x="108" y="142" id="cardLocation8" />
+	<mx:Canvas x="234" y="121" id="cardLocation9" />
 	
 	<mx:Canvas x="451" y="121" width="20" height="20" id="dealerButton0" />
 	<mx:Canvas x="649.55" y="160" width="25" height="25" id="dealerButton1" />
@@ -201,18 +244,18 @@
 	<mx:Canvas x="428.5" y="349" width="25" height="25" id="dealerButton4" />
 	<mx:Canvas x="301.55" y="349" width="25" height="25" id="dealerButton5" />
 	<mx:Canvas x="137" y="349" width="25" height="25" id="dealerButton6" />
-	<mx:Canvas x="84.05" y="291.55" width="25" height="25" id="dealerButton7" />
+	<mx:Canvas x="80.05" y="295.55" width="25" height="25" id="dealerButton7" />
 	<mx:Canvas x="74.4" y="160" width="25" height="25" id="dealerButton8" />
 	<mx:Canvas x="201.45" y="117.5" width="25" height="25" id="dealerButton9" />
-	<mx:Canvas x="235.9" y="207" width="50" height="65" id="flop0">
+	<mx:Canvas x="235.9" y="207" id="flop0">
 	</mx:Canvas>
-	<mx:Canvas x="291.45" y="207" width="50" height="65" id="flop1">
+	<mx:Canvas x="291.45" y="207" id="flop1">
 	</mx:Canvas>
-	<mx:Canvas x="347.05" y="207" width="50" height="65" id="flop2">
+	<mx:Canvas x="347.05" y="207" id="flop2">
 	</mx:Canvas>
-	<mx:Canvas x="403.65" y="207" width="50" height="65" id="flop3">
+	<mx:Canvas x="403.65" y="207" id="flop3">
 	</mx:Canvas>
-	<mx:Canvas x="459.2" y="207" width="50" height="65" id="flop4">
+	<mx:Canvas x="459.2" y="207" id="flop4">
 	</mx:Canvas>
 	<mx:Canvas x="403.65" y="280" id="potLocation">
 	</mx:Canvas>
