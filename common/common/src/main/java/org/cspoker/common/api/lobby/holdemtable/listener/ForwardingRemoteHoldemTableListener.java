@@ -32,7 +32,6 @@ import org.cspoker.common.api.lobby.holdemtable.event.NewCommunityCardsEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.NewDealEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.NewRoundEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.NextPlayerEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.PotsChangedEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.RaiseEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.ShowHandEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.SitInEvent;
@@ -166,12 +165,6 @@ public class ForwardingRemoteHoldemTableListener extends ForwardingListener<Remo
 		}
 	}
 	
-	public void onPotsChanged(PotsChangedEvent potsChangedEvent)
-			throws RemoteException {
-		for(RemoteHoldemTableListener listener:listeners){
-			listener.onPotsChanged(potsChangedEvent);
-		}
-	}
 	
 	@Override
 	protected void finalize() throws Throwable {

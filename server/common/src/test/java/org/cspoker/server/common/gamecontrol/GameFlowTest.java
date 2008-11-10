@@ -36,7 +36,6 @@ import org.cspoker.common.api.lobby.holdemtable.event.NewCommunityCardsEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.NewDealEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.NewRoundEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.NextPlayerEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.PotsChangedEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.RaiseEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.ShowHandEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.SitInEvent;
@@ -1417,10 +1416,6 @@ public class GameFlowTest extends TestCase {
 
 		public synchronized void onNextPlayer(NextPlayerEvent nextPlayerEvent) {
 			verifyEvent(nextPlayerEvent);
-		}
-
-		public synchronized void onPotsChanged(PotsChangedEvent potsChangedEvent) {
-			verifyEvent(potsChangedEvent);
 		}
 
 		public synchronized void onRaise(RaiseEvent raiseEvent) {
