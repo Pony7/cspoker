@@ -77,6 +77,6 @@ public abstract class TableState {
 	public Game getGame() {
 		return null;
 	}
-	
+		
 	public abstract TableState getNextState();
 }

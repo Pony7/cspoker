@@ -167,8 +167,13 @@ public class PokerTable {
 	}
 	
 	public DetailedHoldemTable getTableInformation() {
-		return new DetailedHoldemTable(getTableId(), getName(), tableState.getSeatedPlayers(), tableState.isPlaying(),
-				configuration);
+		if(tableState.isPlaying()){
+			return new DetailedHoldemTable(getTableId(), getName(), tableState.getSeatedPlayers(), tableState.isPlaying(),
+					configuration, tableState.getGame().getPots().getSnapshot(), tableState.getGame().getDealer().getMemento());
+		}else{
+			return new DetailedHoldemTable(getTableId(), getName(), tableState.getSeatedPlayers(), tableState.isPlaying(),
+					configuration, null, null);
+		}
 	}
 	
 	/**
