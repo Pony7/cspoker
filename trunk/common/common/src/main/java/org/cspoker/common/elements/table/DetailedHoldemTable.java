@@ -21,39 +21,48 @@ import java.util.List;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 
+import net.jcip.annotations.Immutable;
+
+import org.cspoker.common.elements.chips.Pots;
 import org.cspoker.common.elements.player.SeatedPlayer;
 
 /**
  * An immutable class to represent a snapshot of the state of a table.
  * 
  */
-
+@Immutable
 public class DetailedHoldemTable extends Table {
 
 	private static final long serialVersionUID = 1647960710321459407L;
 
 	@XmlElementWrapper
 	@XmlElement(name = "player")
-	private List<SeatedPlayer> players;
+	private final List<SeatedPlayer> players;
 
-	private boolean playing;
+	private final boolean playing;
 
-	private TableConfiguration property;
+	private final TableConfiguration property;
+	
+	private final Pots pots;
+	
+	private final SeatedPlayer dealer;
 
 	public DetailedHoldemTable(TableId id, String name, List<SeatedPlayer> players,
-			boolean playing, TableConfiguration property) {
+			boolean playing, TableConfiguration property, Pots pots, SeatedPlayer dealer) {
 		super(id,name);
-		if (players == null) {
-			throw new IllegalArgumentException(
-					"The given list of players must be effective.");
-		}
 		this.players = Collections.unmodifiableList(players);
 		this.playing = playing;
 		this.property = property;
+		this.pots = pots;
+		this.dealer = dealer;
 	}
 
 	protected DetailedHoldemTable() {
-		// no op
+		this.players = null;
+		this.playing = false;
+		this.property = null;
+		this.pots = null;
+		this.dealer = null;
 	}
 
 	/**
@@ -90,6 +99,14 @@ public class DetailedHoldemTable extends Table {
 	 */
 	public TableConfiguration getGameProperty() {
 		return property;
+	}
+	
+	public Pots getPots(){
+		return pots;
+	}
+	
+	public SeatedPlayer getDealer(){
+		return dealer;
 	}
 
 }
