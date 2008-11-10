@@ -17,22 +17,51 @@
 package org.cspoker.common.elements.chips;
 
 import java.io.Serializable;
-import java.util.List;
+import java.util.Set;
+
+import net.jcip.annotations.Immutable;
 
 import org.cspoker.common.elements.player.SeatedPlayer;
 
+@Immutable
 public class Pot implements Serializable {
 
 	private static final long serialVersionUID = -6468969689319977981L;
-
-	public int getValue() {
-		// TODO
-		return 0;
+	
+	private final Set<SeatedPlayer> contributors;
+	
+	private final int value;
+	
+	public Pot(Set<SeatedPlayer> players, int value){
+		this.contributors = players;
+		this.value = value;
 	}
-
-	public List<SeatedPlayer> getPlayers() {
-		// TODO
-		return null;
+	
+	protected Pot(){
+		this.contributors = null;
+		this.value = 0;
+	}
+	
+	/**
+	 * Returns the value of this pot.
+	 * 
+	 * @return The value of this pot.
+	 */
+	public int getValue() {
+		return value;
+	}
+	
+	/**
+	 * Returns the list of players who have contributed to this pot.
+	 * 
+	 * @return The list of players who have contributed to this pot.
+	 */
+	public Set<SeatedPlayer> getContributors() {
+		return contributors;
+	}
+	
+	public String toString(){
+		return contributors.toString()+" > "+value+" chips";
 	}
 
 }

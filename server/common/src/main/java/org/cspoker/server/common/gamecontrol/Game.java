@@ -24,7 +24,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.apache.log4j.Logger;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.cards.Card;
-import org.cspoker.common.elements.chips.GamePots;
+import org.cspoker.common.elements.chips.MutablePots;
 import org.cspoker.common.elements.player.MutableSeatedPlayer;
 import org.cspoker.common.elements.table.SeatId;
 import org.cspoker.common.elements.table.TableConfiguration;
@@ -88,7 +88,7 @@ public class Game {
 	/**
 	 * This variable contains all the pots in this game.
 	 */
-	private GamePots pots;
+	private MutablePots pots;
 	
 	/**
 	 * This variable contains the dealer of this game.
@@ -155,7 +155,7 @@ public class Game {
 		playersSittingOutNextRound = new ConcurrentHashMap<MutableSeatedPlayer, Boolean>();
 		deck = new Deck();
 		communityCards = new ArrayList<Card>();
-		pots = new GamePots();
+		pots = new MutablePots(players);
 		changeDealer(dealer);
 		nbShowdownPlayers = 0;
 	}
@@ -173,10 +173,10 @@ public class Game {
 		nbShowdownPlayers = 0;
 		communityCards = new ArrayList<Card>();
 		deck = new Deck();
-		pots = new GamePots();
 		List<MutableSeatedPlayer> players = new ArrayList<MutableSeatedPlayer>();
 		players.addAll(table.getMutableSeatedPlayers());
 		players.removeAll(playersSittingOutNextRound.keySet());
+		pots = new MutablePots(players);
 		playersSittingOutNextRound.clear();
 		
 		// new looping lists
@@ -343,7 +343,7 @@ public class Game {
 	 * 
 	 * @return The pots of this game.
 	 */
-	public GamePots getPots() {
+	public MutablePots getPots() {
 		return pots;
 	}
 	

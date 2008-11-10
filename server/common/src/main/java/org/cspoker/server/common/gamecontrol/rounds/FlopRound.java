@@ -23,7 +23,6 @@ import org.cspoker.common.api.lobby.holdemtable.event.NewCommunityCardsEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.NewRoundEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.NextPlayerEvent;
 import org.cspoker.common.elements.cards.Card;
-import org.cspoker.common.elements.player.MutableSeatedPlayer;
 import org.cspoker.common.elements.table.Rounds;
 import org.cspoker.server.common.gamecontrol.Game;
 import org.cspoker.server.common.gamecontrol.PokerTable;
@@ -33,13 +32,7 @@ public class FlopRound extends BettingRound {
 
 	public FlopRound(PokerTable gameMediator, Game game) {
 		super(gameMediator, game);
-		MutableSeatedPlayer currentPlayer = getGame().getCurrentPlayer();
-		if (currentPlayer != null) {
-			gameMediator.publishNewRoundEvent(new NewRoundEvent(getRound()));
-			if (getGame().getNbCurrentDealPlayers() > 1) {
-				gameMediator.publishNextPlayerEvent(new NextPlayerEvent(game.getCurrentPlayer().getId()));
-			}
-		}
+		gameMediator.publishNewRoundEvent(new NewRoundEvent(getRound(), game.getPots().getSnapshot()));
 		drawMuckCard();
 		drawOpenCard();
 		drawOpenCard();
@@ -47,6 +40,11 @@ public class FlopRound extends BettingRound {
 		gameMediator.publishNewCommonCardsEvent(new NewCommunityCardsEvent(
 				new HashSet<Card>(getGame().getCommunityCards())));
 		FlopRound.logger.info("*** FLOP *** " + game.getCommunityCards());
+		if (getGame().getCurrentPlayer()!=null && getGame().getNbCurrentDealPlayers() > 1) {
+			gameMediator.publishNextPlayerEvent(new NextPlayerEvent(game.getCurrentPlayer().getId()));
+		}
+		
+		
 	}
 
 	@Override

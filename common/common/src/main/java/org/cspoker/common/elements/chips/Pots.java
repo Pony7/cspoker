@@ -30,27 +30,34 @@ public class Pots implements Serializable {
 
 	@XmlValue
 	private final int totalValue;
-
-	public Pots(int totalValue) {
+	
+	private final List<Pot> pots;
+	
+	public Pots(List<Pot> pots, int totalValue){
+		this.pots = pots;
 		this.totalValue = totalValue;
 	}
+	
 
 	protected Pots() {
+		this.pots = null;
 		totalValue = 0;
 	}
 
-	public List<Pot> getActivePot() {
-		// TODO Auto-generated method stub
-		return null;
+	public Pot getActivePot() {
+		return pots.get(0);
 	}
 
 	public List<Pot> getAllPots() {
-		// TODO Auto-generated method stub
-		return null;
+		return pots;
 	}
 
 	public int getTotalValue() {
 		return totalValue;
+	}
+	
+	public String toString(){
+		return "pots:" + pots.toString()+" total value:"+totalValue+ " chips";
 	}
 
 }

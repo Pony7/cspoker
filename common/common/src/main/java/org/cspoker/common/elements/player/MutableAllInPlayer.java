@@ -16,14 +16,10 @@
 
 package org.cspoker.common.elements.player;
 
-import org.cspoker.common.elements.chips.GamePot;
-import org.cspoker.common.elements.chips.IllegalValueException;
 
 
 /**
  * A class to represent all-in players.
- * 
- * @author Kenzo
  * 
  */
 public class MutableAllInPlayer implements Comparable<MutableAllInPlayer> {
@@ -40,19 +36,6 @@ public class MutableAllInPlayer implements Comparable<MutableAllInPlayer> {
 
 	public int getBetValue() {
 		return player.getBetChips().getValue();
-	}
-
-	public void transferAllChipsTo(GamePot pot) {
-		try {
-			transferAmountTo(player.getBetChips().getValue(), pot);
-		} catch (IllegalValueException e) {
-			assert false;
-		}
-	}
-
-	public void transferAmountTo(int amount, GamePot pot)
-			throws IllegalValueException {
-		player.getBetChips().transferAmountTo(amount, pot.getChips());
 	}
 
 	public int compareTo(MutableAllInPlayer o) {
