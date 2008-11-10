@@ -1,5 +1,5 @@
 \documentclass[a4paper,11pt]{report}
-\usepackage[a4paper]{geometry}
+\usepackage{a4wide}
 \usepackage[english]{babel}
 \usepackage{graphicx,subfigure}
 
@@ -41,7 +41,6 @@ There are a number of differences between online and offline play with respect t
 The following main stakeholders are identified in online poker:
 \begin{description}
  \item[Online Casino] This is the company offering the possibility for people to play poker on their infrastructure. They are trusted by the players to keep certain aspects of the game secret and to handle the money in circulation safely.
- \item[Advertisers] This is the organization to which exposure is sold. They are a source of revenue for the Online Casino. Typically they can be unaware of the poker context in which their advertisements are shown or they can mine the data provided by the Online Casino to specifically target certain people and situations. More often than not they don't deal with the Online Casino directly but operate through a third party.
  \item[Players] These are the people playing poker.
  \end{description}
 
@@ -54,8 +53,6 @@ Because money is involved, online casinos are frequently the victim of cheating.
 \item[Bots] Automated poker players could become so strong that they beat regular players. Cheating with bots is countered by checking which programs run on the player's machine concurrently.
  \end{description}
 
-
-
 \section{Legal constraints}
 Even though poker is not a game of pure chance and skilful players are easy to distinguish from bad players, gambling laws do apply to poker in most countries. Online poker is legal in some countries but strongly regulated. Many banks are not allowed to transfer money to online poker sites. The legality of playing on a foreign poker site is unclear in most jurisdictions that don't allow gambling.
 
@@ -64,33 +61,24 @@ All these rules obviously don't apply to online poker games that use virtual mon
 \section{Business and technical constraints}
 
 \subsection{Business goals}
-Based on the previous discussion, we can now easily enumerate the primary business goals for the Online Casino. \\
- Primary business goals:
-\begin{itemize}
-\item Being attractive to paying advertisers
-\item Being attractive to paying players or players that are interesting for the advertiser
-\end{itemize}
+Based on the previous discussion, we can see that there is only one primary business goals for the Online Casino: Being attractive to players.
+This can be split up in attactiveness for new players that will create a critical mass and attractiveness to high stakes players that bring in most of the profit.
 
 Aside from the primary goals, secondary goals exist. Each of these goals can directly be traced back to 
 the primary goals.
 
 Secondary business goals:
 \begin{itemize}
-\item Ease of management: By automating internal management processes (customer management, accounting), internal efficiency can be optimized, and operational costs can be minimized. 
-\item Ease  of  advertisement:  Ideally the software helps the advertiser to optimize its advertisements (e.g. by helping adding relevant meta-data).
-\item Advertisement   feedback:   It   is   very   interesting   for   advertisers   to   consult   advertisement statistics, as these provide them a measure for the success of their advertisement campaign. These statistics could include: the percentage of all players that have seen the advertisement, the 
-  profile of an average player that had interest in the advertisement, etc. 
+\item Ease of management: By automating internal management processes (customer management, accounting), internal efficiency can be optimized, and operational costs can be minimized.
 \item User experience: Ensuring that the user experience is state-of-the-art. This includes a graphically appealing interface for the player, fast response times and good availability. Alternative online casinos are only a click away when the user is upset.
-
-\item Assurance   of   customer   data   confidentiality:   Due   to   legislative   privacy   regulations,   the confidentiality of both types of customers data (players and advertisers) needs to be assured at all times. It must for example not be possible for advertisers to derive which exact players have seen their advertisements. Gambling isn't legally or socially accepted everywhere, so it is best kept private.
+\item Assurance   of   customer   data   confidentiality:   Due   to   legislative   privacy   regulations,   the confidentiality of customers data needs to be assured at all times. Gambling isn't legally or socially accepted everywhere, so it is best kept private.
 \item Assurance that the game is fair, that no parties have inside information or that cheating is happening in any form.
 \end{itemize}
 
 \subsection{Market differentiators}
-For differentiation with the ever≠growing competition, the following key elements have been selected:
+For differentiation with the evergrowing competition, the following key elements have been selected:
 \begin{itemize}
 \item Casino image: The casino must look more trustworthy than its competitors. Good security measures must be in place and the players should never be confronted with flaws in the system. Trust can also be achieved by attracting the masses. People will have a subjective sense of security when you are more popular than your competitor.
-\item Targeted advertisements: The casino can offer the advertiser consumer targeted advertising or advertisements for topics that are interesting for advertisers (expensive keywords).
 \item Ease of use: The online casino should not make any assumptions about the system the player is using or his technical skills. For a new player, it should be easy and efficient to install and run the software.
 \end{itemize}
 
@@ -130,17 +118,12 @@ The online casino is the company that provides the infrastructure for players to
 \end{itemize}
 
 
-\subsection{Advertisers}
-The advertisers want to use the services offered by the casino for their marketing purposes. They 
-want to place advertisements in the services in order to convince the players to buy the 
-advertisers products or services. The advertisers can provide the major source of income for the casino.
-
 \subsection{Players}
 These are the people playing poker on the servers. 
 
-They can be playing because they want to make more money. In that case they will appreciate a low rake and they won't be bothered by advertisements. Trust and security is essential for these players.
+They can be playing because they want to make more money. In that case they will appreciate a low rake. Trust and security is essential for these players.
 
-They can also be playing as a social activity and they won't care about the rake so much. They want the system to be easy to use and they are more inclined to click on advertisements.
+They can also be playing as a social activity and they won't care about the rake so much. They want the system to be easy to use.
 
 \section{Informal set of requirements}
 \begin{enumerate}
