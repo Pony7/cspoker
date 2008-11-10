@@ -28,7 +28,6 @@ import org.cspoker.common.api.lobby.holdemtable.event.NewCommunityCardsEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.NewDealEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.NewRoundEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.NextPlayerEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.PotsChangedEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.RaiseEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.ShowHandEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.SitInEvent;
@@ -134,10 +133,6 @@ public class UniversalTableListener implements ServerEventListener, HoldemPlayer
 
 	public void onSitOut(SitOutEvent sitOutEvent) {
 		onServerEvent(new HoldemTableTreeEventWrapper(tableId, sitOutEvent));
-	}
-	
-	public void onPotsChanged(PotsChangedEvent potsChangedEvent) {
-		onServerEvent(new HoldemTableTreeEventWrapper(tableId, potsChangedEvent));
 	}
 	
 }

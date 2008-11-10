@@ -208,11 +208,4 @@ public abstract class AbstractBot
 
 	}
 	
-	/**
-	 * @see org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener#onPotsChanged(org.cspoker.common.api.lobby.holdemtable.event.PotsChangedEvent)
-	 */
-	public void onPotsChanged(PotsChangedEvent potsChangedEvent) {
-
-	}
-	
 }

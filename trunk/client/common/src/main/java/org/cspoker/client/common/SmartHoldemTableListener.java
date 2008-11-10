@@ -66,12 +66,6 @@ extends ForwardingHoldemTableListener {
 	}
 
 	@Override
-	public void onPotsChanged(PotsChangedEvent potsChangedEvent) {
-		pots = potsChangedEvent.getPots();
-		super.onPotsChanged(potsChangedEvent);
-	}
-
-	@Override
 	public void onNewCommunityCards(NewCommunityCardsEvent newCommunityCardsEvent) {
 		this.communityCards = newCommunityCardsEvent.getCommunityCards();
 		super.onNewCommunityCards(newCommunityCardsEvent);
@@ -80,6 +74,7 @@ extends ForwardingHoldemTableListener {
 	@Override
 	public void onNewRound(NewRoundEvent newRoundEvent) {
 		this.round = newRoundEvent.getRound();
+		pots = newRoundEvent.getPots();
 		synchronized (playersLock) {
 			for (MutableSeatedPlayer player : players.values()) {
 				player.getBetChips().discard();
@@ -112,7 +107,7 @@ extends ForwardingHoldemTableListener {
 		synchronized (playersLock) {
 			try {
 				players.get(allInEvent.getPlayerId()).transferAllChipsToBetPile();
-			} catch (IllegalValueException e) {
+			} catch (IllegalArgumentException e) {
 				logger.error(e);
 				throw new IllegalStateException(e);
 			}
