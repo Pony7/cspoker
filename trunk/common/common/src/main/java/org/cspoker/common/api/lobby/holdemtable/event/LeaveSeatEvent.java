@@ -13,49 +13,50 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-
 package org.cspoker.common.api.lobby.holdemtable.event;
+
+import javax.xml.bind.annotation.XmlAttribute;
 
 import net.jcip.annotations.Immutable;
 
 import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
-import org.cspoker.common.elements.player.Player;
 import org.cspoker.common.elements.player.PlayerId;
+import org.cspoker.common.elements.table.SeatId;
 
-/**
- * A class to represent call events.
- * 
- */
 @Immutable
-public class CallEvent extends HoldemTableEvent {
+public class LeaveSeatEvent extends HoldemTableEvent{
+	
+	private static final long serialVersionUID = -5883144492630795494L;
 
-	private static final long serialVersionUID = -78379299188217626L;
-
+	@XmlAttribute
+	private final SeatId seatId;
+	
+	@XmlAttribute
 	private final PlayerId playerId;
-
-	public CallEvent(PlayerId player) {
-		this.playerId = player;
+	
+	public LeaveSeatEvent(SeatId seatId, PlayerId playerId){
+		this.seatId = seatId;
+		this.playerId = playerId;
 	}
-
-	protected CallEvent() {
-		playerId = null;
+	
+	protected LeaveSeatEvent(){
+		this.seatId = null;
+		this.playerId = null;
 	}
-
-	public CallEvent(Player player) {
-		this(player.getId());
+	
+	public SeatId getSeatId(){
+		return seatId;
 	}
-
-	@Override
-	public String toString() {
-		return getPlayerId() + " calls.";
-	}
-
-	public PlayerId getPlayerId() {
+	
+	public PlayerId getPlayerId(){
 		return playerId;
 	}
 
 	@Override
 	public void dispatch(HoldemTableListener holdemTableListener) {
-		holdemTableListener.onCall(this);
+		holdemTableListener.onLeaveSeat(this);
 	}
+	
+	
+
 }

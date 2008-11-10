@@ -27,8 +27,6 @@ import org.cspoker.common.elements.player.Winner;
 /**
  * A class to represent winner events.
  * 
- * @author Kenzo
- * 
  */
 @Immutable
 public class WinnerEvent extends HoldemTableEvent {

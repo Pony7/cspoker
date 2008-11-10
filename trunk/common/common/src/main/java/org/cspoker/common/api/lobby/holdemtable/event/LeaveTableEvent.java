@@ -26,8 +26,6 @@ import org.cspoker.common.elements.player.PlayerId;
 /**
  * A class to represent leaving player events.
  * 
- * @author Kenzo
- * 
  */
 @Immutable
 public class LeaveTableEvent extends HoldemTableEvent {

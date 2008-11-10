@@ -208,4 +208,8 @@ public abstract class AbstractBot
 
 	}
 	
+	public void onLeaveSeat(LeaveSeatEvent leaveSeatEvent){
+		
+	}
+	
 }

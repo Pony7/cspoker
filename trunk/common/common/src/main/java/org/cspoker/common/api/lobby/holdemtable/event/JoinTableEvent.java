@@ -49,8 +49,7 @@ public class JoinTableEvent extends HoldemTableEvent {
 	
 	@Override
 	public void dispatch(HoldemTableListener holdemTableListener) {
-		// TODO Auto-generated method stub
-
+		holdemTableListener.onJoinTable(this);
 	}
 
 }

@@ -27,8 +27,6 @@ import org.cspoker.common.elements.player.PlayerId;
 /**
  * A class to represent raise events.
  * 
- * @author Kenzo
- * 
  */
 @Immutable
 public class RaiseEvent extends HoldemTableEvent {
