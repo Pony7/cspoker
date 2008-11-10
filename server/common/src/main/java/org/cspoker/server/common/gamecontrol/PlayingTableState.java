@@ -309,7 +309,7 @@ public class PlayingTableState
 		} else {
 			MutableSeatedPlayer player = game.getCurrentPlayer();
 			if (player != null) {
-				mediatingTable.publishNextPlayerEvent(new NextPlayerEvent(player.getId()));
+				mediatingTable.publishNextPlayerEvent(new NextPlayerEvent(player.getId(),round.getBet()-player.getBetChips().getValue()));
 			}
 		}
 	}
