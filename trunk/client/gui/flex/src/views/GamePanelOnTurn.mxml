@@ -1,8 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml">
-	<mx:Button label="Call" id="btnCallCheck" left="10" top="10"/>
-	<mx:Button label="Fold" id="btnFold" right="10" top="10"/>
-	<mx:Button label="Bet" id="btnBet" verticalCenter="-69" left="10"/>
-	<mx:TextArea id="txtBetAmount" text="$" width="104" height="30" fontSize="14" verticalCenter="-68" horizontalCenter="-79"/>
+<mx:Script>
+	<![CDATA[
+		import models.Main;
+		
+		public var chipsToCall:int = 0;
+		public var maxBet:int = 0;
+		
+		public function setConstraints(chipsToCall:int, maxBet:int):void{
+			this.chipsToCall = chipsToCall;
+			this.maxBet = maxBet;
+			
+			if(chipsToCall == 0) btnCallCheck.label = "Check";
+			else if(chipsToCall == maxBet){ 
+				btnCallCheck.label = "Call: (allin)";
+				
+			}else btnCallCheck.label = "Call: " + String(chipsToCall);
+			
+			txtBetAmount.text = String(maxBet);
+		}
+		
+		public function btnCallCheckClicked():void{
+			if(Main.clientTurn == true){
+				Main.serverConnection.csCheckOrCallAction(Main.table.tableId);
+			}
+		}
+		
+		public function btnFoldClicked():void{
+			if(Main.clientTurn == true){
+				Main.serverConnection.csFoldAction(Main.table.tableId);
+			}
+		}
+		
+		public function btnBetClicked():void{
+			if(Main.clientTurn == true && int(txtBetAmount.text) > 0){
+				Main.serverConnection.csBetOrRaiseAction(Main.table.tableId, int(txtBetAmount.text));
+			}
+		}
+	]]>
+</mx:Script>
+	<mx:Button label="Call" id="btnCallCheck"  x="4" y="15" click="btnCallCheckClicked()"/>
+	<mx:Button label="Fold" id="btnFold"  x="58" y="15" click="btnFoldClicked()"/>
+	<mx:Button label="Bet" id="btnBet"  y="45" x="4" click="btnBetClicked()"/>
+	<mx:TextArea id="txtBetAmount" text="$" width="104" height="30" fontSize="14" x="58" y="45"/>
 	
 </mx:Canvas>

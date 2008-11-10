@@ -116,12 +116,15 @@
 			
 			public function sendChipsToPot(potLocation:Canvas):void{
 				if(player.getBetChips() > 0){
-					TweenLite.to(this.chipStack.chipStackView, 5, {alpha:0.5, x:potLocation.x, y:potLocation.y, ease:Back.easeOut, delay:2, onComplete:onFinishTween, onCompleteParams:[5, this.chipStack.chipStackView]});
+					var potX:int = Main.table.pot.x;
+					var potY:int = Main.table.pot.y;
+					TweenLite.to(this.chipStack, 2, {alpha:1, x:potX, y:potY, delay:.5, onComplete:onFinishTween, onCompleteParams:[this.chipStack]});
 				}
 			}
 		
-			public function onFinishTween(argument1:Number, argument2:MovieClip):void {
-				trace("The tween has finished! argument1 = " + argument1 + ", and argument2 = " + argument2);
+			public function onFinishTween(chipStack:ChipStack):void {
+				trace("The tween has finished! (chipStack to pot)");
+				chipStack.clearStack();
 			}
 			
 			public function dealPocketCardsClient(cards:Object):void{
@@ -149,6 +152,14 @@
 					chipStack.calculateGraphics(amount);
 					
 				}
+			}
+			
+			public function showFold():void{
+				
+			}
+			
+			public function showAllIn():void{
+				
 			}
 			
 		]]>

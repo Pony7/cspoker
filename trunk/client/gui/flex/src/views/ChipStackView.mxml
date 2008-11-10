@@ -78,6 +78,6 @@
 			
 		}
 	</mx:Style>
-	<mx:Canvas id="stackLocation" top="2" left="6"/>
+	<mx:Canvas id="stackLocation" x="2" y="6"/>
 	<mx:TextArea x="2" y="27" width="50" height="20" text="$" id="chipAmount" editable="false" selectable="false" styleName="chipStackStyle"/>
 </mx:Canvas>

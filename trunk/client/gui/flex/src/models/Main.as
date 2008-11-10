@@ -28,6 +28,8 @@ package models
 		public static var clientSeatId:int = -1;
 		public static var clientPlayerId:int = -1;
 		public static var clientSeat:Seat = null;
+		public static var clientTurn:Boolean = false;
+		public static var maxBet:int = 0;
 			
 		//public static var newServerConnection:ServerConnectionNew = null;
 		//public static var newMessageCenter:MessageCenterNew = null;
