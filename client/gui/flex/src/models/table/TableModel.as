@@ -68,6 +68,10 @@ package models.table
 			}
 		}
 		
+		public function receiveWinnersEvent(eventObj:Object):void{
+			/* TODO */
+		}
+		
 		public function receiveNewRoundEvent(eventObj:Object):void{
 			trace("receiveNewRoundEvent...");
 			this.currentRound = eventObj.round;

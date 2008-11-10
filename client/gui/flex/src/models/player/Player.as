@@ -13,6 +13,11 @@ package models.player
 		public var id:int = -1;
 		public var chipsToCall:int = 0;
 		
+		public var handDescription:String = "";
+		public var bestCards:Object;
+		public var handCards:Object;
+		
+		
 		public function Player(passedSeat:Seat)
 		{
 			playerSeat = passedSeat;
@@ -96,6 +101,16 @@ package models.player
 			playerSeat.chipsToBet(amount);
 			incrementBetChips(amount);
 			return;
+		}
+		
+		public function showCardsEvent(cards:Object, description:String, handCards:Object):void{
+			trace("show cards event");
+			/* TODO: */
+			this.handDescription = description;
+			this.bestCards = cards;
+			this.handCards = handCards;
+			return;
+			
 		}
 		
 		public function foldEvent():void{
