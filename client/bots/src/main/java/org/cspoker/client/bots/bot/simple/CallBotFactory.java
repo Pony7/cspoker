@@ -25,25 +25,31 @@ import org.cspoker.client.common.SmartLobbyContext;
 import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.elements.table.TableId;
 
-public class CallBotFactory implements BotFactory {
-
+public class CallBotFactory
+		implements BotFactory {
+	
 	private static int copies = 0;
 	private final int copy;
-
+	
 	public CallBotFactory() {
 		this.copy = ++copies;
 	}
 	
-	@Override
-	public Bot createBot(PlayerId playerId, TableId tableId,
-			SmartLobbyContext lobby, ExecutorService executor,
+	/**
+	 * @see org.cspoker.client.bots.bot.BotFactory#createBot(org.cspoker.common.elements.player.PlayerId,
+	 *      org.cspoker.common.elements.table.TableId,
+	 *      org.cspoker.client.common.SmartLobbyContext,
+	 *      java.util.concurrent.ExecutorService,
+	 *      org.cspoker.client.bots.listener.BotListener[])
+	 */
+	public Bot createBot(PlayerId playerId, TableId tableId, SmartLobbyContext lobby, ExecutorService executor,
 			BotListener... botListeners) {
 		copies++;
 		return new CallBot(playerId, tableId, lobby, executor, botListeners);
 	}
-
+	
 	@Override
 	public String toString() {
-		return "CallBotv1-"+copy;
+		return "CallBotv1-" + copy;
 	}
 }

@@ -34,7 +34,9 @@ public class RuleBasedBotFactory implements BotFactory {
 		this.copy = ++copies;
 	}
 	
-	@Override
+	/**
+	 * @see org.cspoker.client.bots.bot.BotFactory#createBot(org.cspoker.common.elements.player.PlayerId, org.cspoker.common.elements.table.TableId, org.cspoker.client.common.SmartLobbyContext, java.util.concurrent.ExecutorService, org.cspoker.client.bots.listener.BotListener[])
+	 */
 	public Bot createBot(PlayerId playerId, TableId tableId,
 			SmartLobbyContext lobby, ExecutorService executor,
 			BotListener... botListeners) {
