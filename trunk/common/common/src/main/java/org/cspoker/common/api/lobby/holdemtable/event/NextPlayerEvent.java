@@ -21,7 +21,6 @@ import javax.xml.bind.annotation.XmlAttribute;
 import net.jcip.annotations.Immutable;
 
 import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
-import org.cspoker.common.elements.player.Player;
 import org.cspoker.common.elements.player.PlayerId;
 
 /**
@@ -37,21 +36,34 @@ public class NextPlayerEvent extends HoldemTableEvent {
 
 	@XmlAttribute
 	private final PlayerId playerId;
-
+	
+	private final int callAmount;
+	
 	public NextPlayerEvent(PlayerId player) {
+		this(player,0);
+	}
+
+	public NextPlayerEvent(PlayerId player, int callAmount) {
 		this.playerId = player;
+		this.callAmount = callAmount;
 	}
 
 	protected NextPlayerEvent() {
 		playerId = null;
-	}
-
-	public NextPlayerEvent(Player player) {
-		this(player.getId());
+		callAmount = 0;
 	}
 
 	public PlayerId getPlayerId() {
 		return playerId;
+	}
+	
+	/**
+	 * Returns the amount of chips that is needed to call the current bet amount.
+	 * 
+	 * @return The amount of chips that is needed to call the current bet amount.
+	 */
+	public int getCallAmount(){
+		return callAmount;
 	}
 
 	@Override

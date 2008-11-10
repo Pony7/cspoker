@@ -265,4 +265,8 @@ public abstract class Round {
 	protected void setPotsDividedToWinner(boolean flag) {
 		potsDividedToWinner = flag;
 	}
+	
+	public int getBet(){
+		throw new IllegalStateException();
+	}
 }

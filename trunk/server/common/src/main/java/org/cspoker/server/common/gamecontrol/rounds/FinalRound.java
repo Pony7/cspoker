@@ -36,7 +36,7 @@ public class FinalRound extends BettingRound {
 		drawOpenCardAndPublishCommonCard();
 		FinalRound.logger.info("*** RIVER *** " + game.getCommunityCards());
 		if (getGame().getCurrentPlayer()!=null && getGame().getNbCurrentDealPlayers() > 1) {
-			gameMediator.publishNextPlayerEvent(new NextPlayerEvent(game.getCurrentPlayer().getId()));
+			gameMediator.publishNextPlayerEvent(new NextPlayerEvent(game.getCurrentPlayer().getId(),0));
 		}
 	}
 
