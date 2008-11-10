@@ -29,8 +29,6 @@ import org.cspoker.common.elements.cards.Card;
 /**
  * A class to represent new community cards events.
  * 
- * @author Kenzo
- * 
  */
 @Immutable
 public class NewCommunityCardsEvent extends HoldemTableEvent {

@@ -23,8 +23,6 @@ import org.cspoker.common.elements.player.ShowdownPlayer;
 /**
  * A class to represent show hand events.
  * 
- * @author Kenzo
- * 
  */
 @Immutable
 public class ShowHandEvent extends HoldemTableEvent {

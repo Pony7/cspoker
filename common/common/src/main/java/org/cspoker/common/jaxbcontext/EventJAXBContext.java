@@ -32,6 +32,7 @@ import org.cspoker.common.api.lobby.holdemtable.event.CheckEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.FoldEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.HoldemTableTreeEventWrapper;
 import org.cspoker.common.api.lobby.holdemtable.event.JoinTableEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.LeaveSeatEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.LeaveTableEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.NewCommunityCardsEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.NewDealEvent;
@@ -80,7 +81,7 @@ public class EventJAXBContext {
 				AllInEvent.class, BetEvent.class, BigBlindEvent.class, CallEvent.class, CheckEvent.class,
 				FoldEvent.class, LeaveTableEvent.class, NewCommunityCardsEvent.class, NewDealEvent.class,
 				NewRoundEvent.class, NextPlayerEvent.class, RaiseEvent.class, ShowHandEvent.class, SitInEvent.class,
-				SitOutEvent.class, SmallBlindEvent.class, JoinTableEvent.class, WinnerEvent.class,
+				SitOutEvent.class, SmallBlindEvent.class, JoinTableEvent.class, WinnerEvent.class, LeaveSeatEvent.class,
 				HoldemTableTreeEventWrapper.class,
 				// player
 				NewPocketCardsEvent.class,

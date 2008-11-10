@@ -25,8 +25,6 @@ import org.cspoker.common.elements.table.SeatId;
 /**
  * A class to represent player joining games events.
  * 
- * @author Kenzo
- * 
  */
 @Immutable
 public class SitInEvent extends HoldemTableEvent {

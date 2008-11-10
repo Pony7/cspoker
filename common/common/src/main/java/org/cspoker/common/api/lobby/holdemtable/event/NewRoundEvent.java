@@ -25,8 +25,6 @@ import org.cspoker.common.elements.table.Rounds;
 /**
  * A class to represent new round events.
  * 
- * @author Kenzo
- * 
  */
 @Immutable
 public class NewRoundEvent extends HoldemTableEvent {

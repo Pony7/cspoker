@@ -29,8 +29,6 @@ import org.cspoker.common.elements.player.SeatedPlayer;
 /**
  * A class to represent new deal events.
  * 
- * @author Kenzo
- * 
  */
 @Immutable
 public class NewDealEvent extends HoldemTableEvent {

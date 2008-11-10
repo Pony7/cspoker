@@ -26,8 +26,6 @@ import org.cspoker.common.elements.player.PlayerId;
 /**
  * A class to represent big blind events.
  * 
- * @author Kenzo
- * 
  */
 @Immutable
 public class BigBlindEvent extends HoldemTableEvent {

@@ -27,6 +27,7 @@ import org.cspoker.common.api.lobby.holdemtable.event.CallEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.CheckEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.FoldEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.JoinTableEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.LeaveSeatEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.LeaveTableEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.NewCommunityCardsEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.NewDealEvent;
@@ -43,7 +44,7 @@ import org.cspoker.common.api.shared.listener.ForwardingListener;
 public class ForwardingRemoteHoldemTableListener extends ForwardingListener<RemoteHoldemTableListener> implements RemoteHoldemTableListener, Unreferenced {
 
 	private final static Logger logger = Logger.getLogger(ForwardingRemoteHoldemTableListener.class);
-	
+
 	public ForwardingRemoteHoldemTableListener() {
 		super();
 	}
@@ -51,7 +52,7 @@ public class ForwardingRemoteHoldemTableListener extends ForwardingListener<Remo
 	public ForwardingRemoteHoldemTableListener(List<RemoteHoldemTableListener> listeners) {
 		super(listeners);
 	}
-	
+
 	public ForwardingRemoteHoldemTableListener(RemoteHoldemTableListener listener) {
 		super(listener);
 	}
@@ -164,8 +165,14 @@ public class ForwardingRemoteHoldemTableListener extends ForwardingListener<Remo
 			listener.onSitOut(sitOut);
 		}
 	}
-	
-	
+
+	public void onLeaveSeat(LeaveSeatEvent leaveSeatEvent) throws RemoteException {
+		for(RemoteHoldemTableListener listener:listeners){
+			listener.onLeaveSeat(leaveSeatEvent);
+		}
+	}
+
+
 	@Override
 	protected void finalize() throws Throwable {
 		try {
@@ -178,5 +185,7 @@ public class ForwardingRemoteHoldemTableListener extends ForwardingListener<Remo
 	public void unreferenced() {
 		logger.debug("No more server referencing: "+this);
 	}
-	
+
+
+
 }

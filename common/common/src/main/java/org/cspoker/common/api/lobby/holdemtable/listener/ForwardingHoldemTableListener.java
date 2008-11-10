@@ -24,6 +24,7 @@ import org.cspoker.common.api.lobby.holdemtable.event.CallEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.CheckEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.FoldEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.JoinTableEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.LeaveSeatEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.LeaveTableEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.NewCommunityCardsEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.NewDealEvent;
@@ -157,6 +158,12 @@ public class ForwardingHoldemTableListener extends ForwardingListener<HoldemTabl
 	public void onSitOut(SitOutEvent sitOutEvent) {
 		for(HoldemTableListener listener:listeners){
 			listener.onSitOut(sitOutEvent);
+		}
+	}
+
+	public void onLeaveSeat(LeaveSeatEvent leaveSeatEvent) {
+		for(HoldemTableListener listener:listeners){
+			listener.onLeaveSeat(leaveSeatEvent);
 		}
 	}
 	
