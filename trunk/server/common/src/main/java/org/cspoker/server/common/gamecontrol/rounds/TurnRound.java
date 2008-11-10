@@ -19,7 +19,6 @@ package org.cspoker.server.common.gamecontrol.rounds;
 import org.apache.log4j.Logger;
 import org.cspoker.common.api.lobby.holdemtable.event.NewRoundEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.NextPlayerEvent;
-import org.cspoker.common.elements.player.MutableSeatedPlayer;
 import org.cspoker.common.elements.table.Rounds;
 import org.cspoker.server.common.gamecontrol.Game;
 import org.cspoker.server.common.gamecontrol.PokerTable;
@@ -29,16 +28,13 @@ public class TurnRound extends BettingRound {
 
 	public TurnRound(PokerTable gameMediator, Game game) {
 		super(gameMediator, game);
-		MutableSeatedPlayer currentPlayer = getGame().getCurrentPlayer();
-		if (currentPlayer != null) {
-			gameMediator.publishNewRoundEvent(new NewRoundEvent(getRound()));
-			if (getGame().getNbCurrentDealPlayers() > 1) {
-				gameMediator.publishNextPlayerEvent(new NextPlayerEvent(game.getCurrentPlayer().getId()));
-			}
-		}
+		gameMediator.publishNewRoundEvent(new NewRoundEvent(getRound(), game.getPots().getSnapshot()));
 		drawMuckCard();
 		drawOpenCardAndPublishCommonCard();
 		TurnRound.logger.info("*** TURN *** " + game.getCommunityCards());
+		if (getGame().getCurrentPlayer()!=null && getGame().getNbCurrentDealPlayers() > 1) {
+			gameMediator.publishNextPlayerEvent(new NextPlayerEvent(game.getCurrentPlayer().getId()));
+		}
 	}
 
 	@Override

@@ -16,7 +16,9 @@
 package org.cspoker.server.common.gamecontrol;
 
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import junit.framework.TestCase;
 
@@ -27,6 +29,7 @@ import org.cspoker.common.api.lobby.holdemtable.event.BigBlindEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.CallEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.CheckEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.FoldEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.HoldemTableEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.JoinTableEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.LeaveTableEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.NewCommunityCardsEvent;
@@ -41,6 +44,7 @@ import org.cspoker.common.api.lobby.holdemtable.event.SitOutEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.SmallBlindEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.WinnerEvent;
 import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
+import org.cspoker.common.api.shared.event.Event;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.chips.IllegalValueException;
 import org.cspoker.common.elements.player.MutablePlayer;
@@ -67,10 +71,10 @@ public class GameFlowTest extends TestCase {
 		Log4JPropertiesLoader
 		.load("org/cspoker/server/common/logging/log4j.properties");
 	}
+	
+	private DummyPlayerFactory factory = new DummyPlayerFactory();
 
 	private MutableSeatedPlayer cedric;
-
-	private DummyPlayerFactory factory = new DummyPlayerFactory();
 
 	private MutableSeatedPlayer guy;
 
@@ -79,9 +83,15 @@ public class GameFlowTest extends TestCase {
 	private PokerTable pokerTable;
 
 	private ServerTable table;
+	
+	private EventSequenceChecker events;
+	
+	private List<Class<? extends HoldemTableEvent>> newDealEvents = Arrays.asList(NewDealEvent.class, NewRoundEvent.class, 
+			SmallBlindEvent.class, BigBlindEvent.class, NextPlayerEvent.class);
 
 	@Override
 	public void setUp(){
+		events = new EventSequenceChecker();
 		table = new ServerTable(8);
 		pokerTable = new PokerTable(new TableId(0), "table", new TableConfiguration(), new ExtendedAccountContext(){
 
@@ -114,87 +124,7 @@ public class GameFlowTest extends TestCase {
 			}
 
 		});
-		pokerTable.subscribeHoldemTableListener(new HoldemTableListener(){
-
-			public void onAllIn(AllInEvent allInEvent) {
-				GameFlowTest.logger.info(allInEvent);
-			}
-
-			public void onBet(BetEvent betEvent) {
-				GameFlowTest.logger.info(betEvent);
-
-			}
-
-			public void onBigBlind(BigBlindEvent bigBlindEvent) {
-				GameFlowTest.logger.info(bigBlindEvent);
-			}
-
-			public void onCall(CallEvent callEvent) {
-				GameFlowTest.logger.info(callEvent);					
-			}
-
-			public void onCheck(CheckEvent checkEvent) {
-				GameFlowTest.logger.info(checkEvent);					
-			}
-
-			public void onFold(FoldEvent foldEvent) {
-				GameFlowTest.logger.info(foldEvent);					
-			}
-
-			public void onJoinTable(JoinTableEvent joinTableEvent) {
-				GameFlowTest.logger.info(joinTableEvent);					
-			}
-
-			public void onLeaveTable(LeaveTableEvent leaveTableEvent) {
-				GameFlowTest.logger.info(leaveTableEvent);					
-			}
-
-			public void onNewCommunityCards(
-					NewCommunityCardsEvent newCommunityCardsEvent) {
-				GameFlowTest.logger.info(newCommunityCardsEvent);							
-			}
-
-			public void onNewDeal(NewDealEvent newDealEvent) {
-				GameFlowTest.logger.info(newDealEvent);							
-			}
-
-			public void onNewRound(NewRoundEvent newRoundEvent) {
-				GameFlowTest.logger.info(newRoundEvent);							
-			}
-
-			public void onNextPlayer(NextPlayerEvent nextPlayerEvent) {
-				GameFlowTest.logger.info(nextPlayerEvent);							
-			}
-
-			public void onRaise(RaiseEvent raiseEvent) {
-				GameFlowTest.logger.info(raiseEvent);							
-			}
-
-			public void onShowHand(ShowHandEvent showHandEvent) {
-				GameFlowTest.logger.info(showHandEvent);							
-			}
-
-			public void onSitIn(SitInEvent sitInEvent) {
-				GameFlowTest.logger.info(sitInEvent);
-			}
-
-			public void onSitOut(SitOutEvent sitOutEvent) {
-				GameFlowTest.logger.info(sitOutEvent);					
-			}
-
-			public void onSmallBlind(SmallBlindEvent smallBlindEvent) {
-				GameFlowTest.logger.info(smallBlindEvent);					
-			}
-
-			public void onWinner(WinnerEvent winnerEvent) {
-				GameFlowTest.logger.info(winnerEvent);					
-			}
-
-			public void onPotsChanged(PotsChangedEvent potsChangedEvent) {
-				GameFlowTest.logger.info(potsChangedEvent);		
-			}
-
-		});
+		pokerTable.subscribeHoldemTableListener(events);
 		try {
 			kenzo = new MutableSeatedPlayer(factory.createNewPlayer("kenzo", 100), 100);
 			cedric = new MutableSeatedPlayer(factory.createNewPlayer("cedric", 100), 100);
@@ -224,6 +154,9 @@ public class GameFlowTest extends TestCase {
 		} catch (PlayerListFullException e) {
 			fail(e.getMessage());
 		}
+		
+		events.add(newDealEvents);
+		
 		PlayingTableState gameControl = new PlayingTableState(pokerTable, table, kenzo);
 		try {
 			gameControl.deal();
@@ -231,15 +164,28 @@ public class GameFlowTest extends TestCase {
 			fail(e1.toString());
 		}
 		Game game = gameControl.getGame();
-
+		
+		events.checkEmpty();
+		
+		events.add(AllInEvent.class, NextPlayerEvent.class);
+		events.add(AllInEvent.class, NextPlayerEvent.class);
+		events.add(CallEvent.class);
+		events.add(NewRoundEvent.class, NewCommunityCardsEvent.class);
+		events.add(NewRoundEvent.class, NewCommunityCardsEvent.class);
+		events.add(NewRoundEvent.class, NewCommunityCardsEvent.class);
+		
+		events.add(ShowHandEvent.class, ShowHandEvent.class, ShowHandEvent.class, WinnerEvent.class);
+		
+		events.ignore();
+		
 		try {
-			gameControl.allIn(game.getCurrentPlayer());
-			gameControl.allIn(game.getCurrentPlayer());
+			gameControl.raise(game.getCurrentPlayer(),100);
+			gameControl.call(game.getCurrentPlayer());
 			gameControl.call(game.getCurrentPlayer());
 		} catch (IllegalActionException e) {
 			fail(e.getMessage());
 		}
-		// Game continues automatically
+
 	}
 
 	public void testAllAllInCase() {
@@ -259,13 +205,20 @@ public class GameFlowTest extends TestCase {
 		}
 
 		PlayingTableState gameControl = new PlayingTableState(pokerTable, table);
+		
+		events.add(newDealEvents);
+		
 		try {
 			gameControl.deal();
 		} catch (IllegalActionException e1) {
 			fail(e1.toString());
 		}
 		Game game = gameControl.getGame();
-
+		
+		events.add(CallEvent.class, NextPlayerEvent.class);
+		events.add(CallEvent.class, NextPlayerEvent.class);
+		events.add(CheckEvent.class, NewRoundEvent.class, NewCommunityCardsEvent.class, NextPlayerEvent.class);
+		
 		try {
 			gameControl.call(game.getCurrentPlayer());
 			gameControl.call(game.getCurrentPlayer());
@@ -273,7 +226,15 @@ public class GameFlowTest extends TestCase {
 		} catch (IllegalActionException e) {
 			fail(e.getMessage());
 		}
-
+		
+		events.add(AllInEvent.class, NextPlayerEvent.class);
+		events.add(AllInEvent.class, NextPlayerEvent.class);
+		events.add(AllInEvent.class, NewRoundEvent.class, NewCommunityCardsEvent.class);
+		events.add(NewRoundEvent.class, NewCommunityCardsEvent.class);
+		events.add(ShowHandEvent.class, ShowHandEvent.class, ShowHandEvent.class, WinnerEvent.class);
+		
+		events.ignore();
+		
 		// Flop Round
 		try {
 			gameControl.allIn(game.getCurrentPlayer());
@@ -314,6 +275,10 @@ public class GameFlowTest extends TestCase {
 		}
 
 		PlayingTableState gameControl = new PlayingTableState(pokerTable, table, kenzo);
+		
+		events.add(NewDealEvent.class, NewRoundEvent.class, 
+				SmallBlindEvent.class, AllInEvent.class, NextPlayerEvent.class);
+		
 		try {
 			gameControl.deal();
 		} catch (IllegalActionException e1) {
@@ -321,12 +286,21 @@ public class GameFlowTest extends TestCase {
 		}
 		Game game = gameControl.getGame();
 
+		events.add(CallEvent.class, NextPlayerEvent.class);
+		events.add(CallEvent.class);
+		events.add(NewRoundEvent.class, NewCommunityCardsEvent.class, NextPlayerEvent.class);
+		
 		try {
 			gameControl.call(game.getCurrentPlayer());
 			gameControl.call(game.getCurrentPlayer());
 		} catch (IllegalActionException e) {
 			fail(e.getMessage());
 		}
+		
+		events.add(CheckEvent.class, NextPlayerEvent.class);
+		events.add(CheckEvent.class);
+		events.add(NewRoundEvent.class, NewCommunityCardsEvent.class, NextPlayerEvent.class);
+		
 		// Flop Round
 		try {
 			gameControl.check(game.getCurrentPlayer());
@@ -334,6 +308,10 @@ public class GameFlowTest extends TestCase {
 		} catch (IllegalActionException e) {
 			fail(e.getMessage());
 		}
+		
+		events.add(CheckEvent.class, NextPlayerEvent.class);
+		events.add(CheckEvent.class);
+		events.add(NewRoundEvent.class, NewCommunityCardsEvent.class, NextPlayerEvent.class);
 
 		// Turn Round
 		try {
@@ -342,6 +320,11 @@ public class GameFlowTest extends TestCase {
 		} catch (IllegalActionException e) {
 			fail(e.getMessage());
 		}
+		
+		events.add(CheckEvent.class, NextPlayerEvent.class);
+		events.add(CheckEvent.class);
+		events.add(ShowHandEvent.class, ShowHandEvent.class, ShowHandEvent.class, WinnerEvent.class);
+		events.ignore();
 
 		// Final Round
 		try {
@@ -381,6 +364,9 @@ public class GameFlowTest extends TestCase {
 				+ pokerTable.getTableConfiguration().getBigBlind());
 
 		PlayingTableState gameControl = new PlayingTableState(pokerTable, table, kenzo);
+		
+		events.add(newDealEvents);
+		
 		try {
 			gameControl.deal();
 		} catch (IllegalActionException e1) {
@@ -397,6 +383,12 @@ public class GameFlowTest extends TestCase {
 		GameFlowTest.logger.info("Cedric's Cards: " + cedric.getPocketCards());
 		GameFlowTest.logger.info("Guy's Cards: " + guy.getPocketCards());
 
+		events.add(RaiseEvent.class, NextPlayerEvent.class);
+		events.add(CallEvent.class, NextPlayerEvent.class);
+		events.add(AllInEvent.class, NextPlayerEvent.class);
+		events.add(RaiseEvent.class, NextPlayerEvent.class);
+		
+		
 		try {
 			gameControl.raise(kenzo, 20);
 			gameControl.call(cedric);
@@ -419,13 +411,22 @@ public class GameFlowTest extends TestCase {
 	 */
 	public void testBigBlindRaisesCase() {
 		PlayingTableState gameControl = new PlayingTableState(pokerTable, table);
+		
+		events.add(newDealEvents);
+		
 		try {
 			gameControl.deal();
 		} catch (IllegalActionException e1) {
 			fail(e1.toString());
 		}
 		Game game = gameControl.getGame();
-
+		
+		events.add(CallEvent.class, NextPlayerEvent.class);
+		events.add(CallEvent.class, NextPlayerEvent.class);
+		events.add(RaiseEvent.class, NextPlayerEvent.class);
+		events.add(CallEvent.class, NextPlayerEvent.class);
+		events.add(CallEvent.class, NewRoundEvent.class, NewCommunityCardsEvent.class, NextPlayerEvent.class);
+		
 		// Pre-flop Round
 		assertEquals(PreFlopRound.class, gameControl.getRound().getClass());
 		try {
@@ -442,7 +443,11 @@ public class GameFlowTest extends TestCase {
 		} catch (IllegalActionException e) {
 			fail(e.getMessage());
 		}
-
+		
+		events.add(CheckEvent.class, NextPlayerEvent.class);
+		events.add(CheckEvent.class, NextPlayerEvent.class);
+		events.add(CheckEvent.class, NewRoundEvent.class, NewCommunityCardsEvent.class, NextPlayerEvent.class);
+		
 		// Flop Round
 		assertEquals(FlopRound.class, gameControl.getRound().getClass());
 		try {
@@ -452,6 +457,10 @@ public class GameFlowTest extends TestCase {
 		} catch (IllegalActionException e) {
 			fail(e.getMessage());
 		}
+		
+		events.add(CheckEvent.class, NextPlayerEvent.class);
+		events.add(CheckEvent.class, NextPlayerEvent.class);
+		events.add(CheckEvent.class, NewRoundEvent.class, NewCommunityCardsEvent.class, NextPlayerEvent.class);
 
 		// Turn Round
 		try {
@@ -461,7 +470,13 @@ public class GameFlowTest extends TestCase {
 		} catch (IllegalActionException e) {
 			fail(e.getMessage());
 		}
-
+		
+		events.add(CheckEvent.class, NextPlayerEvent.class);
+		events.add(CheckEvent.class, NextPlayerEvent.class);
+		events.add(CheckEvent.class);
+		events.add(ShowHandEvent.class, ShowHandEvent.class, ShowHandEvent.class, WinnerEvent.class);
+		events.ignore();
+		
 		// Final Round
 		try {
 			gameControl.check(game.getCurrentPlayer());
@@ -1214,7 +1229,7 @@ public class GameFlowTest extends TestCase {
 		assertNotSame(FlopRound.class, gameControl.getRound().getClass());
 
 	}
-	
+
 	/**
 	 * 2 players: 5/10
 	 * Kenzo big blind with 4 chips (< small blind)
@@ -1309,5 +1324,127 @@ public class GameFlowTest extends TestCase {
 		public abstract void performAction(PlayingTableState gameControl, MutableSeatedPlayer player, int argument) throws IllegalActionException;
 
 	}
+	
+	/**
+	 * A class to verify whether all necessary events are thrown at the right moment. 
+	 *
+	 */
+	private class EventSequenceChecker implements HoldemTableListener{
 
-}
+		private LinkedList<Class<? extends HoldemTableEvent>> eventSequence = new LinkedList<Class<? extends HoldemTableEvent>>();
+		
+		private boolean flag = false;
+		
+		/**
+		 * Put the given expected events as next events that should occur after 
+		 * 
+		 * @param event
+		 */
+		public synchronized void add(Class<? extends HoldemTableEvent>...event){
+			eventSequence.addAll(Arrays.asList(event));
+		}
+		
+		public synchronized void add(
+				List<Class<? extends HoldemTableEvent>> events) {
+			eventSequence.addAll(events);
+		}
+		
+		public void ignore(){
+			flag = true;
+		}
+
+		/**
+		 * Check whether the event sequence is empty.
+		 */
+		public synchronized void checkEmpty(){
+			if(!eventSequence.isEmpty())
+				fail("There are still expected events that should happen: "+events);
+		}
+
+		private synchronized void verifyEvent(Event event){
+			try {
+				assertEquals(eventSequence.remove(), event.getClass());
+			} catch (NoSuchElementException e) {
+				if(!flag){
+					fail("An unexpected event occured: "+event);
+				}
+			}
+		}
+
+		public synchronized void onAllIn(AllInEvent allInEvent) {
+			verifyEvent(allInEvent);
+		}
+
+
+		public synchronized void onBet(BetEvent betEvent) {
+			verifyEvent(betEvent);
+		}
+
+		public synchronized void onBigBlind(BigBlindEvent bigBlindEvent) {
+			verifyEvent(bigBlindEvent);
+		}
+
+		public synchronized void onCall(CallEvent callEvent) {
+			verifyEvent(callEvent);
+		}
+
+		public synchronized void onCheck(CheckEvent checkEvent) {
+			verifyEvent(checkEvent);
+		}
+
+		public synchronized void onFold(FoldEvent foldEvent) {
+			verifyEvent(foldEvent);
+		}
+
+		public synchronized void onJoinTable(JoinTableEvent joinTableEvent) {
+		}
+
+		public synchronized void onLeaveTable(LeaveTableEvent leaveGameEvent) {
+		}
+
+		public synchronized void onNewCommunityCards(
+				NewCommunityCardsEvent newCommunityCardsEvent) {
+			verifyEvent(newCommunityCardsEvent);
+		}
+
+		public synchronized void onNewDeal(NewDealEvent newDealEvent) {
+			verifyEvent(newDealEvent);
+		}
+
+		public synchronized void onNewRound(NewRoundEvent newRoundEvent) {
+			verifyEvent(newRoundEvent);
+		}
+
+		public synchronized void onNextPlayer(NextPlayerEvent nextPlayerEvent) {
+			verifyEvent(nextPlayerEvent);
+		}
+
+		public synchronized void onPotsChanged(PotsChangedEvent potsChangedEvent) {
+			verifyEvent(potsChangedEvent);
+		}
+
+		public synchronized void onRaise(RaiseEvent raiseEvent) {
+			verifyEvent(raiseEvent);
+		}
+
+		public synchronized void onShowHand(ShowHandEvent showHandEvent) {
+			verifyEvent(showHandEvent);
+		}
+
+		public synchronized void onSitIn(SitInEvent sitInEvent) {
+			//no-op
+		}
+
+		public synchronized void onSitOut(SitOutEvent sitOutEvent) {
+			//no-op
+		}
+
+		public synchronized void onSmallBlind(SmallBlindEvent smallBlindEvent) {
+			verifyEvent(smallBlindEvent);
+		}
+
+		public synchronized void onWinner(WinnerEvent winnerEvent) {
+			verifyEvent(winnerEvent);
+		}
+	}
+	}

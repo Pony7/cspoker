@@ -17,7 +17,6 @@
 package org.cspoker.server.common.gamecontrol.rounds;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -28,16 +27,14 @@ import org.cspoker.common.api.lobby.holdemtable.event.BetEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.BigBlindEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.CallEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.NewCommunityCardsEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.PotsChangedEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.RaiseEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.SmallBlindEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.WinnerEvent;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.cards.Card;
 import org.cspoker.common.elements.chips.Chips;
-import org.cspoker.common.elements.chips.GamePots;
 import org.cspoker.common.elements.chips.IllegalValueException;
-import org.cspoker.common.elements.chips.Pots;
+import org.cspoker.common.elements.chips.MutablePots;
 import org.cspoker.common.elements.player.MutableAllInPlayer;
 import org.cspoker.common.elements.player.MutableSeatedPlayer;
 import org.cspoker.common.elements.player.Winner;
@@ -49,7 +46,7 @@ import org.cspoker.server.common.gamecontrol.PokerTable;
  * 
  */
 public abstract class BettingRound extends Round {
-	
+
 	private static Logger logger = Logger.getLogger(BettingRound.class);
 
 	/**
@@ -88,7 +85,7 @@ public abstract class BettingRound extends Round {
 
 	@Override
 	public void bet(MutableSeatedPlayer player, int amount)
-			throws IllegalActionException {
+	throws IllegalActionException {
 		if (!onTurn(player) || someoneHasBet() || onlyOnePlayerLeft() || onlyOnePlayerLeftBesidesAllInPlayers()) {
 			throw new IllegalActionException(player.getName() + " can not bet "
 					+ amount + " chips in this round.");
@@ -103,10 +100,10 @@ public abstract class BettingRound extends Round {
 		// Can not bet with zero, it is equal to check. Please use check.
 		if (amount == 0) {
 			throw new IllegalActionException(player.toString()+" can not bet. "+
-					"Can not bet with 0 chips. Did you mean check?");
+			"Can not bet with 0 chips. Did you mean check?");
 		}
-		
-		
+
+
 		if (amount >= player.getStack().getValue()) {
 			allIn(player);
 			return;
@@ -125,7 +122,6 @@ public abstract class BettingRound extends Round {
 		playerMadeEvent(player);
 		game.nextPlayer();
 		gameMediator.publishBetEvent(new BetEvent(player.getId(), amount));
-		gameMediator.publishPotsChangedEvent(new PotsChangedEvent(new Pots(getCurrentPotValue())));
 		BettingRound.logger.info(player.getName() + " bets " + amount + ".");
 	}
 
@@ -135,7 +131,7 @@ public abstract class BettingRound extends Round {
 			throw new IllegalActionException(player.getName()
 					+ " can not call in this round. It's not his turn.");
 		}
-		
+
 		if(!someoneHasBet()){
 			throw new IllegalActionException(player.getName()
 					+ " can not call in this round. No one has bet.");
@@ -171,15 +167,14 @@ public abstract class BettingRound extends Round {
 
 		// Change to next player
 		game.nextPlayer();
-		
+
 		gameMediator.publishCallEvent(new CallEvent(player.getId()));
-		gameMediator.publishPotsChangedEvent(new PotsChangedEvent(new Pots(getCurrentPotValue())));
 		BettingRound.logger.info(player.getName() + " calls.");
 	}
 
 	@Override
 	public void raise(MutableSeatedPlayer player, int amount)
-			throws IllegalActionException {
+	throws IllegalActionException {
 		if (!onTurn(player) || !someoneHasBet() || onlyOnePlayerLeft() || onlyOnePlayerLeftBesidesAllInPlayers()) {
 			throw new IllegalActionException(player.getName()
 					+ " can not raise with " + amount + " chips in this round.");
@@ -194,7 +189,7 @@ public abstract class BettingRound extends Round {
 		// Can not raise with zero, it is equal to call. Please use call.
 		if (amount == 0) {
 			throw new IllegalActionException(player.toString()+" can not raise. "+
-					"Can not raise with 0 chips. Did you mean call?");
+			"Can not raise with 0 chips. Did you mean call?");
 		}
 
 		// If the total number of chips needed for this raise,
@@ -219,9 +214,8 @@ public abstract class BettingRound extends Round {
 		getBettingRules().setLastBetAmount(amount);
 		playerMadeEvent(player);
 		game.nextPlayer();
-		
+
 		gameMediator.publishRaiseEvent(new RaiseEvent(player.getId(), amount));
-		gameMediator.publishPotsChangedEvent(new PotsChangedEvent(new Pots(getCurrentPotValue())));
 		BettingRound.logger.info(player.getName() + ": raises $" + amount + " to $"
 				+ player.getMemento().getBetChipsValue());
 	}
@@ -255,6 +249,7 @@ public abstract class BettingRound extends Round {
 			betsFromFoldedPlayers.add(chips);
 		}
 		game.removePlayerFromCurrentDeal(player);
+		game.getPots().removeContributor(player);
 
 		// removing from game, automatically switches
 		// to next player.
@@ -270,11 +265,9 @@ public abstract class BettingRound extends Round {
 	}
 
 	protected void goAllIn(MutableSeatedPlayer player) {
-		try {
-			player.transferAllChipsToBetPile();
-		} catch (IllegalValueException e) {
-			assert false;
-		}
+		int amount = player.getStack().getValue();
+		player.transferAllChipsToBetPile();
+
 		allInPlayers.add(new MutableAllInPlayer(player));
 		getGame().removePlayerFromCurrentDeal(player);
 		if (player.getBetChips().getValue() > getBet()) {
@@ -282,14 +275,13 @@ public abstract class BettingRound extends Round {
 			playerMadeEvent(player);
 			someoneBigAllIn = true;
 		}		
-		gameMediator.publishAllInEvent(new AllInEvent(player.getId(),
-				new Pots(getCurrentPotValue())));
-		
+		gameMediator.publishAllInEvent(new AllInEvent(player.getId(),amount));
+
 		// TODO put amount of raise
 		BettingRound.logger
-				.info(player.getName() + ": raises to $"
-						+ player.getMemento().getBetChipsValue()
-						+ " and is all-in");
+		.info(player.getName() + ": raises to $"
+				+ player.getMemento().getBetChipsValue()
+				+ " and is all-in");
 	}
 
 	/**
@@ -377,7 +369,7 @@ public abstract class BettingRound extends Round {
 	 * @throws IllegalValueException
 	 */
 	protected void collectSmallBlind(MutableSeatedPlayer player)
-			throws IllegalValueException {
+	throws IllegalValueException {
 		if (player.getStack().getValue() <= getGame().getTableConfiguration()
 				.getSmallBlind()) {
 			throw new IllegalValueException();
@@ -391,7 +383,6 @@ public abstract class BettingRound extends Round {
 		playerMadeEvent(player);
 		gameMediator.publishSmallBlindEvent(new SmallBlindEvent(player
 				.getId(), getGame().getTableConfiguration().getSmallBlind()));
-		gameMediator.publishPotsChangedEvent(new PotsChangedEvent(new Pots(getCurrentPotValue())));
 		BettingRound.logger.info(player.getName() + ": posts small blind $"
 				+ getGame().getTableConfiguration().getSmallBlind());
 
@@ -405,7 +396,7 @@ public abstract class BettingRound extends Round {
 	 * @throws IllegalValueException
 	 */
 	protected void collectBigBlind(MutableSeatedPlayer player)
-			throws IllegalValueException {
+	throws IllegalValueException {
 		if (player.getStack().getValue() <= getGame().getTableConfiguration()
 				.getBigBlind()) {
 			throw new IllegalValueException();
@@ -419,7 +410,6 @@ public abstract class BettingRound extends Round {
 		playerMadeEvent(player);
 		gameMediator.publishBigBlindEvent(new BigBlindEvent(player
 				.getId(), getGame().getTableConfiguration().getBigBlind()));
-		gameMediator.publishPotsChangedEvent(new PotsChangedEvent(new Pots(getCurrentPotValue())));
 		BettingRound.logger.info(getGame().getCurrentPlayer().getName()
 				+ ": posts big blind $"
 				+ getGame().getTableConfiguration().getBigBlind());
@@ -490,50 +480,8 @@ public abstract class BettingRound extends Round {
 	 * 
 	 */
 	protected void collectChips() {
-		makeSidePots();
+		game.getPots().createSidePots(allInPlayers, betsFromFoldedPlayers);
 		collectBets();
-	}
-
-	/***************************************************************************
-	 * Move all-in players to side pot.
-	 * 
-	 */
-	private void makeSidePots() {
-		Collections.sort(allInPlayers);
-		List<MutableSeatedPlayer> players = game.getCurrentDealPlayers();
-		for (MutableAllInPlayer allInPlayer : allInPlayers) {
-			try {
-				BettingRound.logger.debug(game.getPots());
-				game.getPots().collectAmountFromPlayersToSidePot(
-						allInPlayer.getBetValue(), players);
-				BettingRound.logger.info(game.getPots());
-				int betValue = allInPlayer.getBetValue();
-				for (MutableAllInPlayer otherAllInPlayer : allInPlayers) {
-					if (otherAllInPlayer.getBetValue() > 0) {
-						otherAllInPlayer.transferAmountTo(betValue, game
-								.getPots().getNewestSidePot());
-					}
-				}
-				for (Chips c : betsFromFoldedPlayers) {
-					if (c.getValue() > allInPlayer.getBetValue()) {
-						c.transferAmountTo(allInPlayer.getBetValue(), game
-								.getPots().getNewestSidePot().getChips());
-					} else {
-						c.transferAllChipsTo(game.getPots().getNewestSidePot()
-								.getChips());
-						betsFromFoldedPlayers.remove(c);
-					}
-				}
-
-			} catch (IllegalValueException e) {
-				BettingRound.logger.error(e.getLocalizedMessage(), e);
-				assert false;
-			}
-			BettingRound.logger.info(game.getPots());
-			game.getPots().addShowdownPlayer(allInPlayer.getPlayer());
-		}
-
-		allInPlayers.clear();
 	}
 
 	/**
@@ -541,8 +489,8 @@ public abstract class BettingRound extends Round {
 	 * 
 	 */
 	private void collectBets() {
-		game.getPots().collectChipsToPot(game.getCurrentDealPlayers());
-		game.getPots().collectChipsToPotFromChips(betsFromFoldedPlayers);
+		game.getPots().getMainPot().collectAllChips();
+		game.getPots().getMainPot().collectAllChips(betsFromFoldedPlayers);
 		betsFromFoldedPlayers.clear();
 	}
 
@@ -550,17 +498,22 @@ public abstract class BettingRound extends Round {
 	 * Winner
 	 **************************************************************************/
 
-	protected void winner(GamePots pots) {
+	protected void winner(MutablePots pots) {
 		BettingRound.logger.info("** Only One Player Left **");
 		setPotsDividedToWinner(true);
-		MutableSeatedPlayer winner = pots.getPots().get(0).getPlayers().get(0);
+
+		if(pots.getMainPot().getContributors().size()!=1)
+			throw new IllegalStateException("There can be only one winner. It's an illegal winner call.");
+
+		MutableSeatedPlayer winner = pots.getMainPot().getContributors().iterator().next();
+
 		BettingRound.logger.info("Winner: " + winner.getName() + " wins "
 				+ pots.getTotalValue() + " chips");
 
-		int gainedChipsValue = pots.getPots().get(0).getChips().getValue();
+		int gainedChipsValue = pots.getMainPot().getChips().getValue();
 		Set<Winner> savedWinner = new HashSet<Winner>(1);
 		savedWinner.add(new Winner(winner.getMemento(), gainedChipsValue));
-		pots.getPots().get(0).getChips().transferAllChipsTo(winner.getStack());
+		pots.getMainPot().getChips().transferAllChipsTo(winner.getStack());
 
 		gameMediator.publishWinnerEvent(new WinnerEvent(savedWinner));
 	}
@@ -577,12 +530,12 @@ public abstract class BettingRound extends Round {
 		return (getGame().getNbCurrentDealPlayers() + allInPlayers.size()
 				+ getGame().getPots().getNbShowdownPlayers() <= 1);
 	}
-	
-	
+
+
 	public boolean currentDealPlayerCalled(){
 		return getGame().getCurrentDealPlayers().get(0).getBetChips().getValue() == getBet();
 	}
-	
+
 	public boolean onlyOnePlayerLeftBesidesAllInPlayers(){
 		return getGame().getNbCurrentDealPlayers() == 1 && (allInPlayers.size() + getGame().getPots().getNbShowdownPlayers() > 0);
 	}
@@ -605,8 +558,8 @@ public abstract class BettingRound extends Round {
 	 */
 	public boolean onlyAllInPlayers() {
 		return (game.getNbCurrentDealPlayers() == 0)
-				&& (allInPlayers.size()
-						+ getGame().getPots().getNbShowdownPlayers() > 1);
+		&& (allInPlayers.size()
+				+ getGame().getPots().getNbShowdownPlayers() > 1);
 	}
 
 	/***************************************************************************
@@ -625,8 +578,8 @@ public abstract class BettingRound extends Round {
 	@Override
 	public boolean isRoundEnded() {
 		return super.isRoundEnded() || onlyAllInPlayers()
-				|| onlyOnePlayerLeftBesidesAllInPlayersAndCalled()
-				|| onlyOneActivePlayer();
+		|| onlyOnePlayerLeftBesidesAllInPlayersAndCalled()
+		|| onlyOneActivePlayer();
 	}
 
 	@Override
@@ -645,7 +598,7 @@ public abstract class BettingRound extends Round {
 			allInPlayerBets += player.getBetValue();
 		}
 		return game.getPots().getTotalValue() + currentPlayerBets
-				+ foldedPlayerBets + allInPlayerBets;
+		+ foldedPlayerBets + allInPlayerBets;
 	}
 
 	@Override
@@ -653,7 +606,6 @@ public abstract class BettingRound extends Round {
 		collectChips();
 		// if there are no all-in players and only one active player left
 		if (onlyOnePlayerLeft()) {
-			game.getPots().close(game.getCurrentDealPlayers());
 			winner(game.getPots());
 			game.initializeForNewHand();
 		}

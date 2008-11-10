@@ -19,7 +19,6 @@ package org.cspoker.server.common.gamecontrol.rounds;
 import org.apache.log4j.Logger;
 import org.cspoker.common.api.lobby.holdemtable.event.NewRoundEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.NextPlayerEvent;
-import org.cspoker.common.elements.player.MutableSeatedPlayer;
 import org.cspoker.common.elements.table.Rounds;
 import org.cspoker.server.common.gamecontrol.Game;
 import org.cspoker.server.common.gamecontrol.PokerTable;
@@ -30,18 +29,15 @@ public class FinalRound extends BettingRound {
 
 	public FinalRound(PokerTable gameMediator, Game game) {
 		super(gameMediator, game);
-		
-		MutableSeatedPlayer currentPlayer = game.getCurrentPlayer();
-		if (currentPlayer != null) {
-			gameMediator.publishNewRoundEvent(new NewRoundEvent(getRound()));
-			if (getGame().getNbCurrentDealPlayers() > 1) {
-				gameMediator.publishNextPlayerEvent(new NextPlayerEvent(game.getCurrentPlayer().getId()));
-			}
-		}
-		
+
+		gameMediator.publishNewRoundEvent(new NewRoundEvent(getRound(), game.getPots().getSnapshot()));
+
 		drawMuckCard();
 		drawOpenCardAndPublishCommonCard();
 		FinalRound.logger.info("*** RIVER *** " + game.getCommunityCards());
+		if (getGame().getCurrentPlayer()!=null && getGame().getNbCurrentDealPlayers() > 1) {
+			gameMediator.publishNextPlayerEvent(new NextPlayerEvent(game.getCurrentPlayer().getId()));
+		}
 	}
 
 	@Override
@@ -50,7 +46,6 @@ public class FinalRound extends BettingRound {
 			super.endRound();
 		} else {
 			collectChips();
-			game.getPots().close(game.getCurrentDealPlayers());
 			Showdown showdown = new Showdown(gameMediator, getGame());
 			showdown.determineWinners();
 			game.showdownOccured(showdown.getNbShowdownPlayers());
@@ -78,7 +73,7 @@ public class FinalRound extends BettingRound {
 	public String toString() {
 		return "final round";
 	}
-	
+
 	public Rounds getRound(){
 		return Rounds.FINAL;
 	}

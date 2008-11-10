@@ -31,24 +31,24 @@ public class AllInEvent extends HoldemTableEvent {
 	@XmlAttribute
 	private final PlayerId playerId;
 	
-	private final Pots pots;
+	private final int amount;
 	
-	public AllInEvent(PlayerId player, Pots pots){
+	public AllInEvent(PlayerId player, int amount){
 		this.playerId = player;
-		this.pots = pots;
+		this.amount = amount;
 	}
 	
 	protected AllInEvent(){
 		playerId = null;
-		pots = null;
+		amount = 0;
 	}
 	
 	public PlayerId getPlayerId(){
 		return playerId;
 	}
 	
-	public Pots getPots(){
-		 return pots;
+	public int getAmount(){
+		return amount;
 	}
 
 	@Override

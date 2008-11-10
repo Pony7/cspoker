@@ -121,7 +121,7 @@ public class Chips {
 	 *             for the chips. | !canHaveAsValue(new.getValue())
 	 */
 	private void increaseWith(int amount)
-			throws IllegalValueException {
+			throws IllegalArgumentException {
 		if (amount < 0) {
 			throw new IllegalArgumentException();
 		}
@@ -139,7 +139,7 @@ public class Chips {
 	 *             for the chips. | !canHaveAsValue(new.getValue())
 	 */
 	private void decreaseWith(int amount)
-			throws IllegalValueException {
+			throws IllegalArgumentException {
 		if (amount < 0) {
 			throw new IllegalArgumentException();
 		}
@@ -167,7 +167,7 @@ public class Chips {
 	 *       hold after exiting the method.
 	 */
 	public synchronized void transferAmountTo(int amount, Chips receiver)
-			throws IllegalValueException {
+			throws IllegalArgumentException {
 		if (receiver == null) {
 			throw new IllegalArgumentException("The given receiver should be effective.");
 		}
@@ -190,7 +190,7 @@ public class Chips {
 	public synchronized void transferAllChipsTo(Chips receiver) {
 		try {
 			transferAmountTo(getValue(), receiver);
-		} catch (IllegalValueException e) {
+		} catch (IllegalArgumentException e) {
 			logger.error(e);
 			assert false;
 		}

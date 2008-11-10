@@ -151,8 +151,7 @@ public class MutableSeatedPlayer {
 		getStack().transferAmountTo(amount, getBetChips());
 	}
 	
-	public synchronized void transferAllChipsToBetPile()
-			throws IllegalValueException {
+	public synchronized void transferAllChipsToBetPile(){
 		getStack().transferAllChipsTo(getBetChips());
 	}
 	

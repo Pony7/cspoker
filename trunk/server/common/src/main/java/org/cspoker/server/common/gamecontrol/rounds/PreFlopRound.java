@@ -32,24 +32,21 @@ import org.cspoker.server.common.gamecontrol.Game;
 import org.cspoker.server.common.gamecontrol.PokerTable;
 
 public class PreFlopRound
-		extends BettingRound {
-	
+extends BettingRound {
+
 	private static Logger logger = Logger.getLogger(PreFlopRound.class);
-	
+
 	private boolean bigBlindChecked = false;
-	
+
 	private MutableSeatedPlayer bigBlindPlayer;
-	
+
 	private boolean bigBlindAllIn = false;
-	
+
 	public PreFlopRound(PokerTable gameMediator, Game game) {
 		super(gameMediator, game);
+
+		gameMediator.publishNewRoundEvent(new NewRoundEvent(getRound(), game.getPots().getSnapshot()));
 		
-		MutableSeatedPlayer currentPlayer = getGame().getCurrentPlayer();
-		
-		if (currentPlayer != null) {
-			gameMediator.publishNewRoundEvent(new NewRoundEvent(getRound()));
-		}
 		try {
 			// If there are only 2 players, blinds are inverted.
 			if (game.getNbCurrentDealPlayers() == 2) {
@@ -62,7 +59,7 @@ public class PreFlopRound
 			goAllIn(getGame().getCurrentPlayer());
 			someoneBigAllIn = false;
 		}
-		
+
 		if (getGame().getNbCurrentDealPlayers() != 1) {
 			try {
 				bigBlindPlayer = getGame().getCurrentPlayer();
@@ -73,67 +70,67 @@ public class PreFlopRound
 				bigBlindAllIn = true;
 			}
 		}
-		
+
 		PreFlopRound.logger.info("*** HOLE CARDS ***");
 		for (MutableSeatedPlayer player : getGame().getCurrentDealPlayers()) {
 			player.dealPocketCard(drawCard());
 			player.dealPocketCard(drawCard());
-			
+
 			PreFlopRound.logger.info("Dealt to " + player.getName() + " " + player.getPocketCards());
-			
+
 			gameMediator.publishNewPocketCardsEvent(player.getId(), new NewPocketCardsEvent(new HashSet<Card>(player
 					.getPocketCards())));
 		}
-		
+
 		for (MutableAllInPlayer allInPlayer : allInPlayers) {
 			MutableSeatedPlayer player = allInPlayer.getPlayer();
 			player.dealPocketCard(drawCard());
 			player.dealPocketCard(drawCard());
-			
+
 			PreFlopRound.logger.info("Dealt to " + player.getName() + " " + player.getPocketCards());
-			
+
 			gameMediator.publishNewPocketCardsEvent(player.getId(), new NewPocketCardsEvent(new HashSet<Card>(player
 					.getPocketCards())));
 		}
-		
-		if (getGame().getNbCurrentDealPlayers() > 1 || !onlyOnePlayerLeftBesidesAllInPlayersAndCalled()) {
+
+		if (game.getCurrentPlayer()!=null && getGame().getNbCurrentDealPlayers() > 1 || !onlyOnePlayerLeftBesidesAllInPlayersAndCalled()) {
 			gameMediator.publishNextPlayerEvent(new NextPlayerEvent(game.getCurrentPlayer().getId()));
 		}
 	}
-	
+
 	@Override
 	public void check(MutableSeatedPlayer player)
-			throws IllegalActionException {
-        if (!onTurn(player)) {
-            throw new IllegalActionException(player.getName() + " it is not your turn to act.");
-    }
-    
-    if (game.getLastActionPlayer().getBetChips().getValue() > player.getBetChips().getValue()) {
-            throw new IllegalActionException(player.getName() + " can not check in this round. "
-                            + game.getLastActionPlayer() + " has bet " + game.getLastActionPlayer().getBetChips().getValue()
-                            + " and you have only bet " + player.getBetChips().getValue());
-            
-    } else {
-            bigBlindChecked = true;
-    }
-    game.nextPlayer();
+	throws IllegalActionException {
+		if (!onTurn(player)) {
+			throw new IllegalActionException(player.getName() + " it is not your turn to act.");
+		}
+
+		if (game.getLastActionPlayer().getBetChips().getValue() > player.getBetChips().getValue()) {
+			throw new IllegalActionException(player.getName() + " can not check in this round. "
+					+ game.getLastActionPlayer() + " has bet " + game.getLastActionPlayer().getBetChips().getValue()
+					+ " and you have only bet " + player.getBetChips().getValue());
+
+		} else {
+			bigBlindChecked = true;
+		}
+		game.nextPlayer();
 
 	}
-	
+
 	@Override
 	public boolean isRoundEnded() {
 		return ((super.isRoundEnded() && (someoneHasRaised() || bigBlindAllIn() || someoneBigAllIn() || onlyOneActivePlayer()))
 				|| bigBlindChecked() || onlyOnePlayerLeft());
 	}
-	
+
 	private boolean bigBlindAllIn() {
 		return bigBlindAllIn;
 	}
-	
+
 	private boolean bigBlindChecked() {
 		return bigBlindChecked;
 	}
-	
+
 	@Override
 	public Round getNextRound() {
 		if (potsDividedToWinner()) {
@@ -141,22 +138,22 @@ public class PreFlopRound
 		}
 		return new FlopRound(gameMediator, getGame());
 	}
-	
+
 	@Override
 	public boolean isLowBettingRound() {
 		return true;
 	}
-	
+
 	@Override
 	public boolean isHighBettingRound() {
 		return !isLowBettingRound();
 	}
-	
+
 	@Override
 	public String toString() {
 		return "pre-flop round";
 	}
-	
+
 	public Rounds getRound() {
 		return Rounds.PREFLOP;
 	}

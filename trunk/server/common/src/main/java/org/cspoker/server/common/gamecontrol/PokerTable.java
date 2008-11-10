@@ -464,17 +464,6 @@ public class PokerTable {
 	}
 	
 	/**
-	 * Inform all subscribed holdem table listeners a pots changed event has
-	 * occurred. Each subscribed holdem table listener is updated by calling
-	 * their onPotsChanged() method.
-	 */
-	public synchronized void publishPotsChangedEvent(PotsChangedEvent event) {
-		for (HoldemTableListener listener : holdemTableListeners) {
-			listener.onPotsChanged(event);
-		}
-	}
-	
-	/**
 	 * Inform all subscribed holdem table listeners a bet event has occurred.
 	 * Each subscribed holdem table listener is updated by calling their onBet()
 	 * method.
@@ -524,6 +513,7 @@ public class PokerTable {
 	 * onNewRoundEvent() method.
 	 */
 	public synchronized void publishNewRoundEvent(NewRoundEvent event) {
+		PokerTable.logger.info(event);
 		for (HoldemTableListener listener : holdemTableListeners) {
 			listener.onNewRound(event);
 		}
@@ -608,13 +598,13 @@ public class PokerTable {
 		}
 	}
 	
-	public void publishSitInEvent(SitInEvent event) {
+	public synchronized void publishSitInEvent(SitInEvent event) {
 		for (HoldemTableListener listener : holdemTableListeners) {
 			listener.onSitIn(event);
 		}
 	}
 	
-	public void publishSitOutEvent(SitOutEvent event) {
+	public synchronized void publishSitOutEvent(SitOutEvent event) {
 		for (HoldemTableListener listener : holdemTableListeners) {
 			listener.onSitOut(event);
 		}
