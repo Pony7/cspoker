@@ -19,8 +19,6 @@ package org.cspoker.common.elements.chips;
 import java.io.Serializable;
 import java.util.List;
 
-import javax.xml.bind.annotation.XmlValue;
-
 import net.jcip.annotations.Immutable;
 
 @Immutable
@@ -28,7 +26,6 @@ public class Pots implements Serializable {
 
 	private static final long serialVersionUID = 2133563839323145402L;
 
-	@XmlValue
 	private final int totalValue;
 	
 	private final List<Pot> pots;
