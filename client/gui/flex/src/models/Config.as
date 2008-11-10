@@ -12,6 +12,8 @@ package models
 		public static const FLOPCARD_WIDTH:int = 55;
 		public static const FLOPCARD_HEIGHT:int = 65;
 		
+		public static const SPOTLIGHT_RADIUS:int = 100;
+		public static const SPOTLIGHT_ALPHA:Number = 0.5;
 		
 		
 		//public static const USE_OLD_API:Boolean = true;

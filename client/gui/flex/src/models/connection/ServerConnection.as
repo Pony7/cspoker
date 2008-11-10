@@ -271,6 +271,27 @@ package models.connection
 			
 		}
 		
+		public function csCheckOrCallAction(tableId:int):void{
+			idAction++;
+			var xml:XML =
+			<ns5:checkOrCallAction id={idAction} tableId={tableId} xmlns:ns5="http://www.cspoker.org/api/2008-11/"/>;   
+    		csSendData(xml);
+		}
+		
+		public function csBetOrRaiseAction(tableId:int, amount:int):void{
+			idAction++;
+			var xml:XML =
+			<ns5:betOrRaiseAction id={idAction} amount={amount} tableId={tableId} xmlns:ns5="http://www.cspoker.org/api/2008-11/"/>;    
+    		csSendData(xml);
+		}
+		
+		public function csFoldAction(tableId:int):void{
+			idAction++;
+			var xml:XML =
+			<ns5:foldAction id={idAction} tableId={tableId} xmlns:ns5="http://www.cspoker.org/api/2008-11/"/>;
+    		csSendData(xml);
+		}
+		
 		
 		
 		
@@ -288,58 +309,11 @@ package models.connection
     				
 		}
 		
-		public function csCallAction():void
-		{						
-			idAction++;
-											
-			var xml:XML =						
-			<callAction id={idAction}/>;
-    									    
-    		csSendData(xml);    				
-		}		
 		
-		public function csBetAction(amount:int ):void
-		{						
-			idAction++;
-											
-			var xml:XML =						
+		
+		
+		
 			
-			<betAction amount={amount} id={idAction}/>;
-			    									    
-    		csSendData(xml);    				
-		}
-		
-		public function csFoldAction():void
-		{						
-			idAction++;
-											
-			var xml:XML =						
-			
-			<foldAction id={idAction}/>;
-						    									    
-    		csSendData(xml);    				
-		}
-		
-		public function csRaiseAction(amount:int ):void
-		{						
-			idAction++;
-											
-			var xml:XML =						
-			
-			<raiseAction amount={amount} id={idAction}/>;
-									    									   
-    		csSendData(xml);    				
-		}
-		
-		public function csCheckAction():void
-		{						
-			idAction++;
-											
-			var xml:XML =						
-			<checkAction id={idAction}/>;
-    									    
-    		csSendData(xml);    				
-		}		
 //-----------------------------------------------------------------------------------
 //-----------------------------------------------------------------------------------
 //-----------------------------------------------------------------------------------

@@ -1,8 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="336">
-	<mx:Button label="Call" id="btnCallCheck"  x="4" y="15"/>
-	<mx:Button label="Fold" id="btnFold"  x="58" y="15"/>
-	<mx:Button label="Bet" id="btnBet"  y="45" x="4"/>
-	<mx:TextArea id="txtBetAmount" text="$" width="104" height="30" fontSize="14" x="58" y="45"/>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="336" xmlns:views="views.*">
+
+<mx:Script>
+	<![CDATA[
+		public function showOnTurn():void{
+			gamePanelViewStack.selectedChild = gamePanelOnTurn;
+		}
+		
+		public function showOffTurn():void{
+			gamePanelViewStack.selectedChild = gamePanelOffTurn;
+		}
+	]]>
+</mx:Script>
+<mx:ViewStack id="gamePanelViewStack">
+	<views:GamePanelOnTurn id="gamePanelOnTurn" />
+	<views:GamePanelOffTurn id="gamePanelOffTurn" />
+</mx:ViewStack>
 	
 </mx:Canvas>

@@ -36,6 +36,8 @@
 			public var flopCard3:CardDeck;
 			public var flopCard4:CardDeck;
 			
+			public var spotLight:SpotLight;
+			
 			
 			public var tableInitialized:Boolean = false;
 			
@@ -78,6 +80,10 @@
             	flopCard2 = new CardDeck(flop2);
             	flopCard3 = new CardDeck(flop3);
             	flopCard4 = new CardDeck(flop4);
+            	
+            	spotLight = new SpotLight(this.parentApplication.width / 2, this.parentApplication.height / 2);
+            	spotLight.visible = false;
+            	tableTempItemsContainer.addChild(spotLight);
             	
             	
 			}
@@ -155,9 +161,34 @@
 			
 			public function chipsToPot():void{
 				for each(var seat:Seat in seatLocations){
-					seat.sendChipsToPot(this.potLocation);
+					if(seat.userName != null) seat.sendChipsToPot(this.potLocation);
 					
 				}		
+			}
+			
+			public function dealFlopCards(cards:Object):void{
+				trace("dealing flop cards: " + cards);
+				var tempCard1:Object = cards[0];
+				var tempCard2:Object = cards[1];
+				var tempCard3:Object = cards[2];
+				flopCard0.calculateCardGraphics(tempCard1.suit, tempCard1.rank, Config.FLOPCARD_WIDTH,Config.FLOPCARD_HEIGHT,0,0);
+				flopCard1.calculateCardGraphics(tempCard2.suit, tempCard2.rank, Config.FLOPCARD_WIDTH,Config.FLOPCARD_HEIGHT,0,0);
+				flopCard2.calculateCardGraphics(tempCard3.suit, tempCard3.rank, Config.FLOPCARD_WIDTH,Config.FLOPCARD_HEIGHT,0,0);
+				return;
+			}
+			
+			public function dealTurnCard(card:Object):void{
+				trace("dealing turn card: " + card);
+				var tempCard1:Object = card;
+				flopCard3.calculateCardGraphics(tempCard1.suit, tempCard1.rank, Config.FLOPCARD_WIDTH,Config.FLOPCARD_HEIGHT,0,0);
+				return;
+			}
+			
+			public function dealRiverCard(card:Object):void{
+				trace("dealing river card: " + card);
+				var tempCard1:Object = card;
+				flopCard4.calculateCardGraphics(tempCard1.suit, tempCard1.rank, Config.FLOPCARD_WIDTH,Config.FLOPCARD_HEIGHT,0,0);
+				return;	
 			}
 			
 			public function showBuyInDialog(seat:Seat):void{

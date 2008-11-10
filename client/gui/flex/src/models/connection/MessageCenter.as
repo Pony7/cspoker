@@ -152,6 +152,7 @@ package models.connection
 						}catch(e:Error){
 							trace("bigBlind Error: " + e.message);
 						}
+						return;
 						
 						break;
 					
@@ -159,16 +160,119 @@ package models.connection
 					case "ns2:newRoundEvent":
 						var round:String = event.round;
 						trace("new Round Event: " + round);
+						Main.table.tableModel.receiveNewRoundEvent(event);
+						return;
+						break;
+						
+					case "ns2:newCommunityCardsEvent":
+						trace("newCommunityCardsEvent");
+						var cards:Object = event.communityCards;
+						Main.table.tableModel.receiveFlopCardsEvent(cards);
+						return;
 						break;
 					
 					case "ns2:potsChangedEvent":
 						trace("potsChangedEvent");
 						Main.table.tableModel.receivePotsChangedEvent(event.pots);
+						return;
 						break;
 						
 					case "ns2:newPocketCardsEvent":
 						trace("new pocket cards event!!!");
 						Main.table.tableModel.receivePocketCardsEvent(event.pocketCards);
+						return;
+						break;
+					
+					case "ns2:nextPlayerEvent":
+						trace("nextPlayerEvent received: ");
+						var tempPlayerId:int = event["playerId"];
+						Main.table.tableModel.getPlayerByPlayerId(tempPlayerId).receiveNextPlayerEvent(tempPlayerId);
+						return;
+						break;
+						
+					case "ns2:checkEvent":
+						var tempPlayerId1:int = event["playerId"];
+						Main.table.tableModel.getPlayerByPlayerId(tempPlayerId1).checkEvent();
+						return;
+						break;
+					
+					case "ns2:foldEvent":
+						var tempPlayerId2:int = event["playerId"];
+						Main.table.tableModel.getPlayerByPlayerId(tempPlayerId2).foldEvent();
+						return;
+						break;
+						
+					case "ns2:raiseEvent":
+						var tempPlayerId3:int = event["playerId"];
+						var amount:int = event["amount"];
+						Main.table.tableModel.getPlayerByPlayerId(tempPlayerId3).betEvent(amount);
+						return;
+						break;
+						
+					case "ns2:allInEvent":
+						var tempPlayerId4:int = event["playerId"];
+						Main.table.tableModel.getPlayerByPlayerId(tempPlayerId4).allInEvent();
+						return;
+						break;
+						
+					case "ns2:winnerEvent":
+						trace("winner Event received!!!");
+						var winners:Object = event.winners;
+						/*
+						<event xsi:type="ns2:winnerEvent" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <winners>
+            <gainedAmount>110</gainedAmount>
+            <player xsi:type="ns2:seatedPlayer" name="guy" id="0">
+                <seatId>2</seatId>
+                <stackValue>145</stackValue>
+                <betChipsValue>0</betChipsValue>
+                <sittingIn>true</sittingIn>
+            </player>
+        </winners>
+    </event>
+    					*/
+						return;
+						break;
+						
+					case "ns2:showHandEvent":
+						trace("show hand event: ");
+						
+						/*
+						<event xsi:type="ns2:showHandEvent" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <player name="kenzo" id="1">
+            <cards>
+                <card suit="SPADES" rank="NINE"/>
+                <card suit="CLUBS" rank="SEVEN"/>
+                <card suit="DIAMONDS" rank="EIGHT"/>
+                <card suit="SPADES" rank="SEVEN"/>
+                <card suit="SPADES" rank="ACE"/>
+            </cards>
+            <description>Pair of Sevens</description>
+            <handCards>
+                <card suit="CLUBS" rank="SEVEN"/>
+                <card suit="DIAMONDS" rank="EIGHT"/>
+            </handCards>
+        </player>
+    </event>	
+    
+    <event xsi:type="ns2:showHandEvent" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <player name="guy" id="0">
+            <cards>
+                <card suit="SPADES" rank="NINE"/>
+                <card suit="SPADES" rank="EIGHT"/>
+                <card suit="SPADES" rank="DEUCE"/>
+                <card suit="SPADES" rank="SEVEN"/>
+                <card suit="SPADES" rank="ACE"/>
+            </cards>
+            <description>Ace-High Flush</description>
+            <handCards>
+                <card suit="SPADES" rank="EIGHT"/>
+                <card suit="SPADES" rank="DEUCE"/>
+            </handCards>
+        </player>
+    </event>			*/
+    						return;
+    						break;
 					
 				}
 				
@@ -188,72 +292,7 @@ package models.connection
 			 
 			
 			
-			if (contentObj.hasOwnProperty("tableChangedEvent")){
-				/* TODO:  ADD IN TABLECHANGEDEVENT"
-				*/
-				
-				//mTable = new CSTable(contentObj.tableChangedEvent.table);
-			  	//dispatchEvent(new csEventActions( csEventActions.OnTableChangedEvent,"tableChangedEvent",mTable));
-			  	return;
-			}
 			
-			if (contentObj.hasOwnProperty("tableRemovedEvent")){
-				//	var mTable:CSTable= new CSTable(contentObj.tableRemovedEvent);
-			  	//dispatchEvent(new csEventActions( csEventActions.OnTableRemovedEvent,"tableRemovedEvent",contentObj.tableRemovedEvent.id));
-			  	return;
-			}
-			
-			if (contentObj.hasOwnProperty("playerJoinedTableEvent")){
-				var objPlayer:CSPlayer= new CSPlayer(contentObj.playerJoinedTableEvent.player);
-			  	//dispatchEvent(new csEventActions( csEventActions.OnPlayerJoinedTableEvent,"playerJoinedTableEvent",objPlayer));
-			  	return;
-			}
-			
-			if (contentObj.hasOwnProperty("playerLeftTableEvent")){
-				var objPlayer:CSPlayer= new CSPlayer(contentObj.playerLeftTableEvent.player);
-			  	//dispatchEvent(new csEventActions( csEventActions.OnPlayerLeftTableEvent,"playerLeftTableEvent",objPlayer));
-			  	return;
-			}
-			
-			if (contentObj.hasOwnProperty("illegalActionEvent")){
-				objAction=contentObj.illegalActionEvent.action;
-				objResult=contentObj.illegalActionEvent.msg;
-				//dispatchEvent(new csEventActions( csEventActions.OnIllegalActionEvent,objAction,objResult));
-				return;
-			}
-			
-			
-			// game logic (goes to tableModel)		
-			if (contentObj.hasOwnProperty("newDealEvent")){
-				objResult=contentObj.newDealEvent;
-				var objEvent:CSGameEvent=new CSGameEvent("newDealEvent",objResult);
-				//dispatchEvent(new csEventActions( csEventActions.OnNewDealEvent,"newDealEvent",objEvent));
-			}
-			
-			if (contentObj.hasOwnProperty("newRoundEvent")){
-				objResult=contentObj.newRoundEvent;
-				var objEvent:CSGameEvent=new CSGameEvent("newRoundEvent",objResult);
-				//dispatchEvent(new csEventActions( csEventActions.OnNewDealEvent,"newRoundEvent",objEvent));
-			}
-			
-			if (contentObj.hasOwnProperty("smallBlindEvent")){
-				objResult=contentObj.smallBlindEvent;
-				var objEvent:CSGameEvent=new CSGameEvent("smallBlindEvent",objResult);
-				//dispatchEvent(new csEventActions( csEventActions.OnNewDealEvent,"smallBlindEvent",objEvent));
-			}
-			
-			if (contentObj.hasOwnProperty("bigBlindEvent")){
-				objResult=contentObj.bigBlindEvent;
-				var objEvent:CSGameEvent=new CSGameEvent("bigBlindEvent",objResult);
-				//dispatchEvent(new csEventActions( csEventActions.OnNewDealEvent,"bigBlindEvent",objEvent));
-			}
-			
-			if (contentObj.hasOwnProperty("newPocketCardsEvent")){
-				objResult=contentObj.newPocketCardsEvent;
-				var objEvent:CSGameEvent=new CSGameEvent("newPocketCardsEvent",objResult);
-				//dispatchEvent(new csEventActions( csEventActions.OnNewPocketCardsEvent,"newPocketCardsEvent",objEvent));
-				
-			}
 		}// end function
 		
 		

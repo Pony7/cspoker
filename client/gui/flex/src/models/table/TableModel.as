@@ -17,6 +17,7 @@ package models.table
 		public var pot:ChipStack;
 		public var playerMap:Dictionary = new Dictionary();
 		public var potSize:int = 0;
+		public var currentRound:String = "WAITING";
 		
 		public function TableModel(table:Table, seatsArray:Array, pot:ChipStack)
 		{
@@ -31,9 +32,14 @@ package models.table
 		
 		public function receivePotsChangedEvent(pots:Object):void{
 			var potsTotal:int = 0;
-			for each(var pot:int in pots){
-				potsTotal += pot;
+			if(pots.isPrototypeOf(Object)){
+				for each(var pot:int in pots){
+					potsTotal += pot;
+				}
+			}else{
+				potsTotal = int(pots);
 			}
+			
 			this.potSize = potsTotal;
 		}
 		
@@ -46,10 +52,35 @@ package models.table
 			else return null;
 		}
 		
+		public function receiveFlopCardsEvent(cards:Object):void{
+			if(this.currentRound == "FLOP"){
+				// deal 3 flop cards...
+				table.dealFlopCards(cards.card);
+				return;	
+			}else if(this.currentRound == "TURN"){
+				// deal turn card...
+				table.dealTurnCard(cards.card);
+				return;
+			}else if(this.currentRound == "RIVER"){
+				// deal river card...
+				table.dealRiverCard(cards.card);
+				return;
+			}
+		}
+		
 		public function receiveNewRoundEvent(eventObj:Object):void{
 			trace("receiveNewRoundEvent...");
+			this.currentRound = eventObj.round;
+			
+			if(this.currentRound == "PREFLOP"){
+				return;
+						
+			}
 			table.chipsToPot();
-			if(this.potSize > 0) table.pot.calculateGraphics(this.potSize);
+			if(this.potSize > 0){
+				table.pot.calculateGraphics(this.potSize);
+				table.pot.visible = true;
+			}
 		}
 		
 		public function receivePocketCardsEvent(pocketCards:Object):void{
