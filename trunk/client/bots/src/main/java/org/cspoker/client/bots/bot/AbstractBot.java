@@ -17,61 +17,40 @@ package org.cspoker.client.bots.bot;
 
 import java.rmi.RemoteException;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.apache.log4j.Logger;
 import org.cspoker.client.bots.listener.BotListener;
 import org.cspoker.client.common.SmartHoldemPlayerContext;
 import org.cspoker.client.common.SmartHoldemTableContext;
 import org.cspoker.client.common.SmartLobbyContext;
-import org.cspoker.common.api.account.action.GetPlayerIDAction;
-import org.cspoker.common.api.lobby.holdemtable.event.AllInEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.BetEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.BigBlindEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.CallEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.CheckEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.FoldEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.JoinTableEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.LeaveTableEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.NewCommunityCardsEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.NewDealEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.NewRoundEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.NextPlayerEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.PotsChangedEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.RaiseEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.ShowHandEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.SitInEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.SitOutEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.SmallBlindEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.WinnerEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.*;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.event.NewPocketCardsEvent;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.elements.table.TableId;
 
 public abstract class AbstractBot
-implements Bot {
-
+		implements Bot {
+	
 	private final static Logger logger = Logger.getLogger(AbstractBot.class);
-
+	
 	public static final int bigBlind = 10;
 	public static final int bigBlindBuyIn = 500;
-
+	
 	protected final SmartLobbyContext lobbyContext;
 	protected volatile SmartHoldemTableContext tableContext;
 	protected volatile SmartHoldemPlayerContext playerContext;
 	
 	private volatile boolean started = false;
-
+	
 	protected final TableId tableID;
 	protected final PlayerId playerID;
-
+	
 	private final BotListener[] botListeners;
-
+	
 	protected final ExecutorService executor;
-
-	public AbstractBot(PlayerId playerId, TableId tableId,
-			SmartLobbyContext lobby, ExecutorService executor,
+	
+	public AbstractBot(PlayerId playerId, TableId tableId, SmartLobbyContext lobby, ExecutorService executor,
 			BotListener... botListeners) {
 		this.playerID = playerId;
 		this.tableID = tableId;
@@ -79,15 +58,15 @@ implements Bot {
 		this.botListeners = botListeners;
 		this.executor = executor;
 	}
-
-	public void start(){
-		executor.execute(new Runnable(){
-			@Override
+	
+	public void start() {
+		executor.execute(new Runnable() {
+			
 			public void run() {
 				try {
 					started = true;
-					tableContext = lobbyContext.joinHoldemTable(tableID,AbstractBot.this);
-					playerContext = tableContext.sitIn(getBuyIn(),AbstractBot.this);
+					tableContext = lobbyContext.joinHoldemTable(tableID, AbstractBot.this);
+					playerContext = tableContext.sitIn(getBuyIn(), AbstractBot.this);
 				} catch (IllegalActionException e) {
 					e.printStackTrace();
 					throw new IllegalStateException("Failed to join table.", e);
@@ -98,12 +77,13 @@ implements Bot {
 			}
 		});
 	}
-
-	/* (non-Javadoc)
+	
+	/*
+	 * (non-Javadoc)
 	 * @see org.cspoker.client.bots.Bot#doNextAction()
 	 */
 	public abstract void doNextAction();
-
+	
 	/**
 	 * @see org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener#onNextPlayer(org.cspoker.common.api.lobby.holdemtable.event.NextPlayerEvent)
 	 */
@@ -112,7 +92,7 @@ implements Bot {
 			doNextAction();
 		}
 	}
-
+	
 	/**
 	 * @see org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener#onNewDeal(org.cspoker.common.api.lobby.holdemtable.event.NewDealEvent)
 	 */
@@ -123,12 +103,14 @@ implements Bot {
 			}
 		}
 	}
-
-	@Override
+	
+	/**
+	 * @see org.cspoker.client.bots.bot.Bot#stop()
+	 */
 	public void stop() {
 		started = false;
-		executor.execute(new Runnable(){
-			@Override
+		executor.execute(new Runnable() {
+			
 			public void run() {
 				try {
 					tableContext.leaveTable();
@@ -142,68 +124,70 @@ implements Bot {
 			}
 		});
 	}
-
+	
 	private int getBuyIn() {
-		return bigBlindBuyIn*bigBlind;
+		return bigBlindBuyIn * bigBlind;
 	}
 	
-	@Override
+	/**
+	 * @see org.cspoker.client.bots.bot.Bot#getProfit()
+	 */
 	public int getProfit() {
-		return tableContext.getAllStakes(playerID)-getBuyIn();
+		return tableContext.getAllStakes(playerID) - getBuyIn();
 	}
-
+	
 	public void onAllIn(AllInEvent allInEvent) {
 
 	}
-
+	
 	public void onBet(BetEvent betEvent) {
 
 	}
-
+	
 	public void onBigBlind(BigBlindEvent bigBlindEvent) {
 
 	}
-
+	
 	public void onCall(CallEvent callEvent) {
 
 	}
-
+	
 	public void onCheck(CheckEvent checkEvent) {
 
 	}
-
+	
 	public void onFold(FoldEvent foldEvent) {
 
 	}
-
+	
 	public void onJoinTable(JoinTableEvent joinTableEvent) {
 
 	}
-
+	
 	public void onLeaveTable(LeaveTableEvent leaveGameEvent) {
 
 	}
-
+	
 	public void onNewCommunityCards(NewCommunityCardsEvent newCommunityCardsEvent) {
 
 	}
-
+	
 	public void onNewRound(NewRoundEvent newRoundEvent) {
 
 	}
-
+	
 	public void onRaise(RaiseEvent raiseEvent) {
 
 	}
-
+	
 	public void onShowHand(ShowHandEvent showHandEvent) {
 
 	}
-
+	
 	public void onSitIn(SitInEvent sitInEvent) {
 
 	}
-
+	
 	public void onSitOut(SitOutEvent sitOutEvent) {
 		if (started) {
 			for (BotListener botListener : botListeners) {
@@ -211,24 +195,24 @@ implements Bot {
 			}
 		}
 	}
-
+	
 	public void onSmallBlind(SmallBlindEvent smallBlindEvent) {
 
 	}
-
+	
 	public void onWinner(WinnerEvent winnerEvent) {
 
 	}
-
+	
 	public void onNewPocketCards(NewPocketCardsEvent newPocketCardsEvent) {
 
 	}
-
+	
 	/**
 	 * @see org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener#onPotsChanged(org.cspoker.common.api.lobby.holdemtable.event.PotsChangedEvent)
 	 */
 	public void onPotsChanged(PotsChangedEvent potsChangedEvent) {
 
 	}
-
+	
 }

@@ -15,16 +15,25 @@
  */
 package org.cspoker.client.bots.listener;
 
-public class DefaultBotListener implements BotListener{
+public class DefaultBotListener
+		implements BotListener {
 	
-	@Override
+	/**
+	 * <code>no op</code>
+	 * 
+	 * @see org.cspoker.client.bots.listener.BotListener#onNewDeal()
+	 */
 	public void onNewDeal() {
-		// no op
+	// no op
 	}
-
-	@Override
+	
+	/**
+	 * <code>no op</code>
+	 * 
+	 * @see org.cspoker.client.bots.listener.BotListener#onSitOut()
+	 */
 	public void onSitOut() {
-		// no op
+	// no op
 	}
-
+	
 }
