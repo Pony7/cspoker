@@ -1,0 +1,8 @@
+#summary Documentation on the current software architecture
+#labels Phase-Requirements,Phase-Design
+
+= Introduction = 
+More documentation will follow...
+
+= Player State Diagram =
+[http://cspoker.googlecode.com/svn/wiki/img/player_state_diagram_0.1.png]
