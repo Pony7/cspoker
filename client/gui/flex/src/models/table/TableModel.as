@@ -62,6 +62,11 @@ package models.table
 			}
 		}
 		
+		public function cleanUpTableData():void{
+			/* cleans up data elements in table */
+			
+		}
+		
 		public function receiveWinnersEvent(eventObj:Object):void{
 			/* TODO */
 		}
@@ -86,6 +91,28 @@ package models.table
 			
 		}
 		
+		public function receiveShowCardsEvent(player:Object):void{
+			var playerId:int = int(player.id);
+			var playerCards:Object = player.handCards;
+			if(Main.clientPlayerId != playerId){
+				
+				try{
+					this.getPlayerByPlayerId(playerId).setHandDescription(player.description);
+				}catch(e:Error){
+					trace("Error in setting hand description: " + e.message);
+				}
+				
+				/* show opponent's hand to client */
+				try{
+					this.getPlayerByPlayerId(playerId).playerSeat.showOpponentCards(playerCards);	
+				}catch(e:Error){
+					trace("Error in receiveShowCardsEvent: " + e.message);
+				}
+				
+				
+				
+			}	
+		}
 		
 		
 	}

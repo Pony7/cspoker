@@ -30,6 +30,14 @@ package models.player
 			Main.serverConnection.csGetAvatarAction(this.id);
 		}
 		
+		public function updatePlayer(playerObj:Object):void{
+			this.id = playerObj.id;	
+			this.playerInformation = new PlayerValueObject(null, playerObj.name, playerObj.stackValue, playerObj.betChipsValue, playerObj.seatId, null);
+			//Main.table.tableModel.mapPlayerToId(this.id, this);
+			//Main.serverConnection.csGetAvatarAction(this.id);
+			this.playerSeat.refresh();
+		}
+		
 		public function paySmallBlind(amount:int):void{
 			playerSeat.chipsToBet(amount);
 			playerInformation.stackSize -= amount;
@@ -139,6 +147,18 @@ package models.player
 		public function incrementBetChips(amount:int):void{
 			playerInformation.betSize += amount;
 			return;
+		}
+		
+		public function setHandDescription(description:String):void{
+			this.handDescription = description;
+		}
+		
+		public function getHandDescription():String{
+			if(this.description != "" && this.description != null){
+				return this.description;
+			}else{
+				return null;
+			}
 		}
 		
 		public function getStackSize():int{
