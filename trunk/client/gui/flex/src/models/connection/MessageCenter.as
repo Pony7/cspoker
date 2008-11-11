@@ -220,60 +220,42 @@ package models.connection
 					case "ns2:winnerEvent":
 						trace("winner Event received!!!");
 						var winners:Object = event.winners;
-						/*
-						<event xsi:type="ns2:winnerEvent" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-        <winners>
-            <gainedAmount>110</gainedAmount>
-            <player xsi:type="ns2:seatedPlayer" name="guy" id="0">
-                <seatId>2</seatId>
-                <stackValue>145</stackValue>
-                <betChipsValue>0</betChipsValue>
-                <sittingIn>true</sittingIn>
-            </player>
-        </winners>
-    </event>
-    					*/
+						
+						var count:int = 0;
+						var potDescriptionText = "";
+						var player:Object;
+						if(event.winners.player.hasOwnProperty("seatId")){
+							
+							count++;
+							/* ONE WINNER */
+							
+							if(count == 1) potDescriptionText = "main pot";
+							else potDescriptionText = "side pot";
+							player = event.winners.player;
+							Main.table.tableModel.getPlayerByPlayerId(player.id).updatePlayer(player);
+							Main.table.dealerBox.dealerMessage("Player " + player.getPlayerName() + " has won the " 
+								+ potDescriptionText + " of " + event.winners.gainedAmount);  
+						}else{
+							for each(var winner:Object in event.winners){
+								count++;
+							/* MULTIPLE POTS */
+								if(count == 1) potDescriptionText = "main pot";
+								else potDescriptionText = "side pot";
+								player = winner.player;
+								Main.table.tableModel.getPlayerByPlayerId(player.id).updatePlayer(player);
+								Main.table.dealerBox.dealerMessage("Player " + player.getPlayerName() + " has won the " 
+								+ potDescriptionText + " of " + winner.gainedAmount);  
+							}
+						}
+					
 						return;
 						break;
 						
 					case "ns2:showHandEvent":
 						trace("show hand event: ");
-						
-						/*
-						<event xsi:type="ns2:showHandEvent" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-        <player name="kenzo" id="1">
-            <cards>
-                <card suit="SPADES" rank="NINE"/>
-                <card suit="CLUBS" rank="SEVEN"/>
-                <card suit="DIAMONDS" rank="EIGHT"/>
-                <card suit="SPADES" rank="SEVEN"/>
-                <card suit="SPADES" rank="ACE"/>
-            </cards>
-            <description>Pair of Sevens</description>
-            <handCards>
-                <card suit="CLUBS" rank="SEVEN"/>
-                <card suit="DIAMONDS" rank="EIGHT"/>
-            </handCards>
-        </player>
-    </event>	
-    
-    <event xsi:type="ns2:showHandEvent" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-        <player name="guy" id="0">
-            <cards>
-                <card suit="SPADES" rank="NINE"/>
-                <card suit="SPADES" rank="EIGHT"/>
-                <card suit="SPADES" rank="DEUCE"/>
-                <card suit="SPADES" rank="SEVEN"/>
-                <card suit="SPADES" rank="ACE"/>
-            </cards>
-            <description>Ace-High Flush</description>
-            <handCards>
-                <card suit="SPADES" rank="EIGHT"/>
-                <card suit="SPADES" rank="DEUCE"/>
-            </handCards>
-        </player>
-    </event>			*/
-    						return;
+						var player:Object = event.player;
+						Main.table.tableModel.receiveShowHandEvent(player);
+												return;
     						break;
 					
 				}

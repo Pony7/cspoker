@@ -89,6 +89,17 @@
 			}
 			
 			
+			public function cleanUpTable():void{
+				/* cleans up visual elements */
+				
+					
+					
+					
+				// call for data to be cleaned up.
+				this.tableModel.cleanUpTableData();
+			}
+			
+			
 			public function getSeatById(seatId:int):Seat{
 				if(seatId >= 0 && seatId < 10){
 					return seatLocations[seatId];
