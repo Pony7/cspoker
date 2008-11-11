@@ -160,6 +160,7 @@ package models.connection
 					case "ns2:newRoundEvent":
 						var round:String = event.round;
 						trace("new Round Event: " + round);
+						Main.table.tableModel.receivePotsChangedEvent(event.pots);
 						Main.table.tableModel.receiveNewRoundEvent(event);
 						return;
 						break;
@@ -186,7 +187,8 @@ package models.connection
 					case "ns2:nextPlayerEvent":
 						trace("nextPlayerEvent received: ");
 						var tempPlayerId:int = event["playerId"];
-						Main.table.tableModel.getPlayerByPlayerId(tempPlayerId).receiveNextPlayerEvent(tempPlayerId);
+						
+						Main.table.tableModel.getPlayerByPlayerId(tempPlayerId).receiveNextPlayerEvent(tempPlayerId, int(event.callAmount));
 						return;
 						break;
 						

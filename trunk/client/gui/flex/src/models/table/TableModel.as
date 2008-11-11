@@ -31,16 +31,10 @@ package models.table
 		}
 		
 		public function receivePotsChangedEvent(pots:Object):void{
-			var potsTotal:int = 0;
-			if(pots.isPrototypeOf(Object)){
-				for each(var pot:int in pots){
-					potsTotal += pot;
-				}
-			}else{
-				potsTotal = int(pots);
-			}
+			//var potsTotal:int = 0;
 			
-			this.potSize = potsTotal;
+			
+			this.potSize = pots.totalValue;
 		}
 		
 		public function removedMappedPlayer(playerId:int):void{
@@ -61,7 +55,7 @@ package models.table
 				// deal turn card...
 				table.dealTurnCard(cards.card);
 				return;
-			}else if(this.currentRound == "RIVER"){
+			}else if(this.currentRound == "FINAL"){
 				// deal river card...
 				table.dealRiverCard(cards.card);
 				return;

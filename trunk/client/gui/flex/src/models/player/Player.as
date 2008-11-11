@@ -51,32 +51,32 @@ package models.player
 		//public function 
 		
 		
-		public function receiveNextPlayerEvent(playerId:int):void{
+		public function receiveNextPlayerEvent(playerId:int, callAmount:int):void{
 			// move spotlight;
 			Main.table.spotLight.moveSpotLight(this.playerSeat.x + (this.playerSeat.width / 2), this.playerSeat.y + (this.playerSeat.height / 2));
 			
 			// determine if client's turn or opponent's turn.
 			if(playerId == Main.clientPlayerId){
 				// client's turn:
-				this.clientTurn();
+				this.clientTurn(callAmount);
 			}else{
 				// opponent's turn:
-				this.opponentTurn();
+				this.opponentTurn(callAmount);
 			}
 		}
 		
-		private function clientTurn():void{
+		private function clientTurn(callAmount:int):void{
 			Main.clientTurn = true;
 			Main.table.gamePanel.showOnTurn();
-			chipsToCall = (Main.maxBet - this.getBetChips());
+			chipsToCall = callAmount;
 			var maxBet:int = this.getStackSize();
 			
 			Main.table.gamePanel.gamePanelOnTurn.setConstraints(chipsToCall, maxBet);
 			
 		}
 		
-		private function opponentTurn():void{
-			chipsToCall = (Main.maxBet - this.getBetChips());
+		private function opponentTurn(callAmount:int):void{
+			chipsToCall = callAmount;
 			Main.clientTurn = false;
 			Main.table.gamePanel.showOffTurn();
 		}
@@ -131,6 +131,7 @@ package models.player
 		}
 		
 		public function getBetChips():int{
+			if(playerInformation == null) return 0;
 			if(playerInformation.betSize == -1) return 0;
 			else return playerInformation.betSize;
 		}
