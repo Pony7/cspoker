@@ -202,9 +202,11 @@ public abstract class BettingRound extends Round {
 		}
 
 		// Try to transfer the amount to the bet pile.
+		
+		int movedAmount = amountToIncreaseBetPileWith(player) + amount;
+		
 		try {
-			player.transferAmountToBetPile(amountToIncreaseBetPileWith(player)
-					+ amount);
+			player.transferAmountToBetPile(movedAmount);
 		} catch (IllegalValueException e) {
 			throw new IllegalActionException(player.toString()+" can not raise."+ e
 					.getMessage());
@@ -215,7 +217,7 @@ public abstract class BettingRound extends Round {
 		playerMadeEvent(player);
 		game.nextPlayer();
 
-		gameMediator.publishRaiseEvent(new RaiseEvent(player.getId(), amount));
+		gameMediator.publishRaiseEvent(new RaiseEvent(player.getId(), amount, movedAmount));
 		BettingRound.logger.info(player.getName() + ": raises $" + amount + " to $"
 				+ player.getMemento().getBetChipsValue());
 	}
