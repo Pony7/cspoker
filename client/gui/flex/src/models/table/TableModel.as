@@ -91,7 +91,7 @@ package models.table
 			
 		}
 		
-		public function receiveShowCardsEvent(player:Object):void{
+		public function receiveShowHandEvent(player:Object):void{
 			var playerId:int = int(player.id);
 			var playerCards:Object = player.handCards;
 			if(Main.clientPlayerId != playerId){

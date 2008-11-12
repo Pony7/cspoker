@@ -155,7 +155,7 @@
 			}
 			
 			public function showOpponentCards(handCards:Object):void{
-				this.dealPocketCardsClient(handCards:Object);
+				this.dealPocketCardsClient(handCards);
 			}
 			
 			public function showFold():void{

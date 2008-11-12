@@ -154,8 +154,8 @@ package models.player
 		}
 		
 		public function getHandDescription():String{
-			if(this.description != "" && this.description != null){
-				return this.description;
+			if(this.handDescription != "" && this.handDescription != null){
+				return this.handDescription;
 			}else{
 				return null;
 			}
