@@ -25,6 +25,7 @@ import org.cspoker.common.api.lobby.holdemtable.event.SitOutEvent;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.player.MutableSeatedPlayer;
 import org.cspoker.common.elements.player.SeatedPlayer;
+import org.cspoker.common.elements.table.Rounds;
 import org.cspoker.server.common.gamecontrol.Game;
 import org.cspoker.server.common.gamecontrol.PokerTable;
 
@@ -99,5 +100,9 @@ public class WaitingRound
 	@Override
 	public String toString() {
 		return "waiting round";
+	}
+	
+	public Rounds getRound(){
+		return Rounds.WAITING;
 	}
 }

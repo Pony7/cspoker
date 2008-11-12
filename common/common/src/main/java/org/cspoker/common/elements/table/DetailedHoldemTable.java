@@ -51,9 +51,11 @@ public class DetailedHoldemTable extends Table {
 	@XmlElementWrapper
 	@XmlElement(name = "card")
 	private final List<Card> communityCards;
+	
+	private final Rounds round;
 
 	public DetailedHoldemTable(TableId id, String name, List<SeatedPlayer> players,
-			boolean playing, TableConfiguration property, Pots pots, SeatedPlayer dealer, List<Card> communityCards) {
+			boolean playing, TableConfiguration property, Pots pots, SeatedPlayer dealer, List<Card> communityCards, Rounds round) {
 		super(id,name);
 		this.players = new ArrayList<SeatedPlayer>(players);
 		this.playing = playing;
@@ -61,11 +63,12 @@ public class DetailedHoldemTable extends Table {
 		this.pots = pots;
 		this.dealer = dealer;
 		this.communityCards = new ArrayList<Card>(communityCards);
+		this.round = round;
 	}
 	
 	public DetailedHoldemTable(TableId id, String name, List<SeatedPlayer> players,
 			boolean playing, TableConfiguration property) {
-		this(id,name, players, playing, property, null, null, null);
+		this(id,name, players, playing, property, null, null, null, null);
 	}
 
 	protected DetailedHoldemTable() {
@@ -75,6 +78,7 @@ public class DetailedHoldemTable extends Table {
 		this.pots = null;
 		this.dealer = null;
 		this.communityCards = null;
+		this.round = null;
 	}
 
 	/**

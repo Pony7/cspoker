@@ -16,7 +16,7 @@
 package org.cspoker.common.elements.table;
 
 public enum Rounds {
-	
+	WAITING("waiting round"),
 	PREFLOP("pre-flop round"),
 	FLOP("flop round"),
 	TURN("turn round"),
