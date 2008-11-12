@@ -1,12 +1,13 @@
 package models.table
 {
 	import flash.utils.Dictionary;
-	import mx.containers.Canvas;
 	
 	import models.*;
 	import models.chips.*;
 	import models.connection.*;
 	import models.player.Player;
+	
+	import mx.containers.Canvas;
 	
 	import views.*;
 	
@@ -74,6 +75,14 @@ package models.table
 		public function cleanUpTableData():void{
 			/* cleans up data elements in table */
 			
+			for each(var player:Player in this.playerMap){
+				try{
+					player.playerSeat.resetForNewGame();
+					removedMappedPlayer(player.id);
+				}catch(e:Error){
+					trace("Error cleaning up table data: " + e.message);					
+				}
+			}
 		}
 		
 		public function receiveWinnersEvent(eventObj:Object):void{

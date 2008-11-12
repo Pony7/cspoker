@@ -130,6 +130,8 @@ package models.connection
 						break;
 					case "ns2:newDealEvent":
 						trace("newDealEvent received!!!");
+						var dealer:int = event.dealerId;
+						Main.table.tableModel.receiveNewDealEvent(dealer);
 						break;
 						
 					case "ns2:smallBlindEvent":
