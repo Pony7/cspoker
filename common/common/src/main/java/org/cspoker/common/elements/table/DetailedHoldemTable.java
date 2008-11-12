@@ -48,6 +48,8 @@ public class DetailedHoldemTable extends Table {
 	
 	private final SeatedPlayer dealer;
 	
+	@XmlElementWrapper
+	@XmlElement(name = "card")
 	private final List<Card> communityCards;
 
 	public DetailedHoldemTable(TableId id, String name, List<SeatedPlayer> players,
