@@ -29,8 +29,6 @@ import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.cards.Card;
 import org.cspoker.common.elements.chips.IllegalValueException;
-import org.cspoker.common.elements.chips.Pots;
-import org.cspoker.common.elements.player.MutableSeatedPlayer;
 import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.elements.player.SeatedPlayer;
 import org.cspoker.common.elements.table.DetailedHoldemTable;
@@ -80,7 +78,7 @@ public class GameWindow
 	 */
 	public GameWindow(LobbyWindow lobbyWindow, DetailedHoldemTable table) {
 		super(new Shell(lobbyWindow.getDisplay(), SWT.CLOSE | SWT.RESIZE), SWT.NONE, lobbyWindow.getClientCore());
-		gameState = new GameState(table);
+		gameState = new GameState(this, table);
 		try {
 			user = new UserSeatedPlayer(this, getClientCore(), gameState);
 		} catch (IllegalValueException e) {
@@ -89,8 +87,7 @@ public class GameWindow
 		user.joinTable(lobbyWindow.getContext());
 		initGUI();
 		for (SeatedPlayer player : table.getPlayers()) {
-			MutableSeatedPlayer mutable = new MutableSeatedPlayer(player);
-			tableComposite.findPlayerSeatCompositeBySeatId(player.getSeatId()).occupy(mutable);
+			tableComposite.findPlayerSeatCompositeBySeatId(player.getSeatId()).occupy(player);
 		}
 		// Initialize chat context
 		user.getChatContext();
@@ -105,8 +102,8 @@ public class GameWindow
 	 */
 	private void configureShell(final Shell shell) {
 		// Get table info for display purposes
-		shell.setText("Logged in as " + getClientCore().getUser().getUserName() + ", Table "
-				+ gameState.getTableMemento().getName() + "(Id: " + gameState.getTableMemento().getId() + ")");
+		shell.setText("Logged in as " + getClientCore().getUser().getUserName() + ", Table " + gameState.getTableName()
+				+ "(Id: " + gameState.getTableId() + ")");
 		shell.setImage(SWTResourceManager.getImage(ClientGUI.Resources.CS_POKER_ICON));
 		shell.setLayout(new GridLayout());
 		logger.debug("gw size: " + getSize());
@@ -184,19 +181,9 @@ public class GameWindow
 	}
 	
 	private void handleActionChangedPot(int amount, PlayerId playerId, String action) {
-		// Update the chip stack of the player who changed the pot by
-		// betting/raising/calling
-		MutableSeatedPlayer player = getPlayerSeatComposite(playerId).getPlayer();
-		gameState.updateStackAndBetChips(player, amount);
-		gameState.betRaise(amount);
-		gameState.getBetPile(player).clear();
-		gameState.getBetPile(player).addAll(gameState.getCurrentBetPile());
-		// Game State update
-		// Set new reference bet pile in GameState
-		
 		getPlayerSeatComposite(playerId).showAction(action);
-		
 		ClientGUI.playAudio(ClientGUI.Resources.SOUND_FILE_BETRAISE);
+		
 		tableComposite.updateTableGraphics();
 	}
 	
@@ -204,8 +191,6 @@ public class GameWindow
 	 * @see org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener#onBigBlind(org.cspoker.common.api.lobby.holdemtable.event.BigBlindEvent)
 	 */
 	public void onBigBlind(final BigBlindEvent event) {
-		// Special case: clear bet pile so we draw big blind in one stack
-		gameState.getCurrentBetPile().clear();
 		handleActionChangedPot(event.getAmount(), event.getPlayerId(), "Big Blind");
 		userInputComposite.showDealerMessage(event);
 	}
@@ -243,10 +228,8 @@ public class GameWindow
 	 */
 	public void onSitOut(SitOutEvent sitOutEvent) {
 		PlayerSeatComposite psc = getPlayerSeatComposite(sitOutEvent.getPlayerId());
-		psc.getPlayer().setSittingIn(false);
-		
 		psc.updatePlayerInfo();
-		if (sitOutEvent.getPlayerId().equals(user.getMemento().getId())) {
+		if (sitOutEvent.getPlayerId().equals(user.getId())) {
 			if (!userInputComposite.sitInOutButton.isFocusControl()) {
 				userInputComposite.sitInOutButton.setText("Sit In");
 				userInputComposite.sitInOutButton.setSelection(false);
@@ -271,19 +254,14 @@ public class GameWindow
 	 */
 	public void onNewDeal(NewDealEvent newDealEvent) {
 		logger.debug("New deal event received");
-		gameState.newRound(Rounds.PREFLOP);
-		gameState.setPots(new Pots(0));
 		PlayerSeatComposite newDealer = tableComposite.findPlayerSeatCompositeByPlayerId(newDealEvent.getDealer());
 		for (PlayerSeatComposite psc : tableComposite.getPlayerSeatComposites(true)) {
-			if (psc.getPlayer().equals(gameState.getDealer())) {
+			if (psc.getPlayerId().equals(gameState.getDealer())) {
 				tableComposite.moveDealerButton(psc, newDealer);
 			}
 			
 			psc.setHoleCards(Arrays.asList(ClientGUI.UNKNOWN_CARD, ClientGUI.UNKNOWN_CARD));
-			psc.getPlayer().getBetChips().discard();
-			gameState.getBetPile(psc.getPlayer()).clear();
 		}
-		gameState.setDealer(newDealer.getPlayer());
 		userInputComposite.showDealerMessage(newDealEvent);
 		tableComposite.redraw();
 		logger.debug("New deal event handled");
@@ -301,10 +279,10 @@ public class GameWindow
 	 * @see org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener#onNewRound(org.cspoker.common.api.lobby.holdemtable.event.NewRoundEvent)
 	 */
 	public void onNewRound(NewRoundEvent newRoundEvent) {
+		
 		if (newRoundEvent.getRound() != Rounds.PREFLOP) {
 			tableComposite.moveBetsToPot();
 		}
-		gameState.newRound(newRoundEvent.getRound());
 		tableComposite.updateTableGraphics();
 		userInputComposite.showDealerMessage(newRoundEvent);
 	}
@@ -315,8 +293,8 @@ public class GameWindow
 	public void onNextPlayer(NextPlayerEvent nextPlayerEvent) {
 		PlayerId playerToAct = nextPlayerEvent.getPlayerId();
 		tableComposite.proceedToNextPlayer(playerToAct);
-		userInputComposite.getGameActionGroup().setVisible(user.getMemento().getId().equals(playerToAct));
-		if (user.getMemento().getId().equals(playerToAct)) {
+		userInputComposite.getGameActionGroup().setVisible(user.getId().equals(playerToAct));
+		if (user.getId().equals(playerToAct)) {
 			userInputComposite.prepareForUserInput();
 		}
 		userInputComposite.update();
@@ -337,23 +315,21 @@ public class GameWindow
 	public void onShowHand(ShowHandEvent showHandEvent) {
 		getPlayerSeatComposite(showHandEvent.getShowdownPlayer().getId()).setHoleCards(
 				showHandEvent.getShowdownPlayer().getHandCards());
-		// userInputComposite.showDealerMessage(showHandEvent);
+		userInputComposite.showDealerMessage(showHandEvent);
 	}
 	
 	/**
 	 * @see org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener#onSitIn(org.cspoker.common.api.lobby.holdemtable.event.SitInEvent)
 	 */
 	public void onSitIn(SitInEvent sitInEvent) {
-		MutableSeatedPlayer player = new MutableSeatedPlayer(sitInEvent.getPlayer());
 		
 		if (user.getId().equals(sitInEvent.getPlayer().getId())) {
-			user.update(sitInEvent.getPlayer());
 			userInputComposite.generalActionHolder.setVisible(true);
 			userInputComposite.sitInOutButton.setText("Sit Out");
 			userInputComposite.sitInOutButton.setSelection(true);
-			player = user;
 		}
-		tableComposite.findPlayerSeatCompositeBySeatId(sitInEvent.getPlayer().getSeatId()).occupy(player);
+		tableComposite.findPlayerSeatCompositeBySeatId(sitInEvent.getPlayer().getSeatId()).occupy(
+				gameState.getSnapshot(sitInEvent.getPlayer().getId()));
 		userInputComposite.showDealerMessage(sitInEvent);
 	}
 	
@@ -378,7 +354,7 @@ public class GameWindow
 		}
 		tableComposite.movePotsToWinners(winnerEvent.getWinners());
 		
-		tableComposite.clearCommunityCards();
+		tableComposite.getCommunityCardsComposite().redraw();
 		tableComposite.getCommunityCardsComposite().setVisible(false);
 		for (PlayerSeatComposite psc : tableComposite.getPlayerSeatComposites(true)) {
 			Set<Card> noCards = Collections.emptySet();
@@ -394,6 +370,7 @@ public class GameWindow
 	 */
 	@Override
 	public void onAllIn(AllInEvent allInEvent) {
+		handleActionChangedPot(allInEvent.getAmount(), allInEvent.getPlayerId(), "All In");
 		userInputComposite.showDealerMessage(allInEvent);
 	}
 	
@@ -411,17 +388,6 @@ public class GameWindow
 	@Override
 	public void onLeaveTable(LeaveTableEvent leaveGameEvent) {
 		userInputComposite.showDealerMessage(leaveGameEvent);
-	}
-	
-	/**
-	 * y
-	 * 
-	 * @see org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener#onPotsChanged(org.cspoker.common.api.lobby.holdemtable.event.PotsChangedEvent)
-	 */
-	@Override
-	public void onPotsChanged(PotsChangedEvent potsChangedEvent) {
-		gameState.setPots(potsChangedEvent.getPots());
-		userInputComposite.showDealerMessage(potsChangedEvent);
 	}
 	
 	/**
@@ -478,5 +444,15 @@ public class GameWindow
 	 */
 	public UserSeatedPlayer getUser() {
 		return user;
+	}
+	
+	/**
+	 * @param leaveSeatEvent
+	 * @see org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener#onLeaveSeat(org.cspoker.common.api.lobby.holdemtable.event.LeaveSeatEvent)
+	 */
+	@Override
+	public void onLeaveSeat(LeaveSeatEvent leaveSeatEvent) {
+	// TODO Auto-generated method stub
+	
 	}
 }

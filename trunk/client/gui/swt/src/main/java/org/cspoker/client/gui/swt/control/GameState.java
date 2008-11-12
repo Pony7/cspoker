@@ -14,64 +14,66 @@ package org.cspoker.client.gui.swt.control;
 import java.util.*;
 
 import org.apache.log4j.Logger;
-import org.cspoker.common.elements.chips.IllegalValueException;
-import org.cspoker.common.elements.chips.Pots;
+import org.cspoker.client.common.SmartHoldemTableListener;
+import org.cspoker.client.gui.swt.window.GameWindow;
+import org.cspoker.common.api.lobby.holdemtable.event.NewDealEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.NewRoundEvent;
 import org.cspoker.common.elements.player.MutableSeatedPlayer;
+import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.elements.player.SeatedPlayer;
 import org.cspoker.common.elements.table.DetailedHoldemTable;
-import org.cspoker.common.elements.table.Rounds;
+import org.cspoker.common.elements.table.TableConfiguration;
+import org.cspoker.common.elements.table.TableId;
 
 /**
  * @author Stephan Schmidt
  */
-public class GameState {
+public class GameState
+		extends SmartHoldemTableListener {
 	
+	private final TableId tableId;
+	private final String tableName;
 	/**
 	 * Table snapshot retrieved from the server upon initialization (for
 	 * GameProperty Info etc.)
 	 */
-	private DetailedHoldemTable tableMemento;
-	private Pots pots;
-	private List<NavigableMap<Chip, Integer>> currentBetPile = new ArrayList<NavigableMap<Chip, Integer>>();
-	private int lastBetRaiseAmount;
-	private int totalBetRaiseAmount;
+	private final TableConfiguration tableConfiguration;
+	private Map<PlayerId, List<Integer>> betPiles = new HashMap<PlayerId, List<Integer>>();
+	private PlayerId lastActed;
 	
-	private Map<MutableSeatedPlayer, List<NavigableMap<Chip, Integer>>> betPiles = new Hashtable<MutableSeatedPlayer, List<NavigableMap<Chip, Integer>>>();
-	
-	private MutableSeatedPlayer dealer;
 	private Logger logger = Logger.getLogger(GameState.class);
 	
-	public GameState(DetailedHoldemTable table) {
-		setTableMemento(table);
-		pots = new Pots(0);
+	public GameState(GameWindow gameWindow, DetailedHoldemTable table) {
+		super(gameWindow);
+		tableConfiguration = table.getTableConfiguration();
+		tableId = table.getId();
+		tableName = table.getName();
+		initialize(table);
+	}
+	
+	/**
+	 * Initializes the GameState with the {@link DetailedHoldemTable} from the
+	 * server
+	 * 
+	 * @param table The initial table configuration
+	 */
+	private void initialize(DetailedHoldemTable table) {
 		for (SeatedPlayer player : table.getPlayers()) {
-			betPiles.put(new MutableSeatedPlayer(player), Arrays
-					.asList(Chip.getDistribution(player.getBetChipsValue())));
-			totalBetRaiseAmount = Math.max(totalBetRaiseAmount, player.getBetChipsValue());
+			players.put(player.getId(), new MutableSeatedPlayer(player));
+			if (table.getDealer() != null) {
+				dealer = table.getDealer().getId();
+			}
+			getCommunityCards().addAll(table.getCommunityCards());
+			pots = table.getPots();
+			betPiles.put(player.getId(), new ArrayList<Integer>(player.getBetChipsValue()));
 		}
-		currentBetPile = new ArrayList<NavigableMap<Chip, Integer>>(Arrays.asList(Chip
-				.getDistribution(totalBetRaiseAmount)));
 	}
 	
 	/**
 	 * @return the tableMemento
 	 */
-	public DetailedHoldemTable getTableMemento() {
-		return tableMemento;
-	}
-	
-	/**
-	 * @param tableMemento the tableMemento to set
-	 */
-	public void setTableMemento(DetailedHoldemTable tableMemento) {
-		this.tableMemento = tableMemento;
-	}
-	
-	/**
-	 * @return the pots
-	 */
-	public Pots getPots() {
-		return pots;
+	public TableConfiguration getTableConfiguration() {
+		return tableConfiguration;
 	}
 	
 	/**
@@ -83,90 +85,114 @@ public class GameState {
 		return 2;
 	}
 	
-	public void betRaise(int amount) {
-		if (amount == 0) {
-			return;
-		}
-		if (amount < 0) {
-			throw new IllegalArgumentException("Cannot add negative amount to bet pile");
-		} else {
-			totalBetRaiseAmount += amount;
-			lastBetRaiseAmount = amount;
-			currentBetPile.add(Chip.getDistribution(amount));
-		}
+	public int getPotRaiseAmount(PlayerId player) {
+		SeatedPlayer snapshot = getSnapshot(player);
+		int potRaise = getTotalPot() + getToCall(player);
+		potRaise = Math.min(potRaise, snapshot.getStackValue() - getToCall(player));
+		potRaise = Math.max(potRaise, 0);
 		
+		return potRaise;
 	}
 	
-	public List<NavigableMap<Chip, Integer>> getCurrentBetPile() {
-		return currentBetPile;
-	}
-	
-	public void newRound(Rounds round) {
-		lastBetRaiseAmount = 0;
-		totalBetRaiseAmount = 0;
-		currentBetPile.clear();
-		betPiles.clear();
-	}
-	
-	public void setPots(Pots pots) {
-		this.pots = pots;
-	}
-	
-	public int getToCallAmount(MutableSeatedPlayer mutableSeatedPlayer) {
-		return Chip.getValue(currentBetPile) - mutableSeatedPlayer.getBetChips().getValue();
-	}
-	
-	public int getPotRaiseAmount(MutableSeatedPlayer mutableSeatedPlayer) {
-		return Math.max(0, Math.min(mutableSeatedPlayer.getStack().getValue() - getToCallAmount(mutableSeatedPlayer),
-				getToCallAmount(mutableSeatedPlayer) + getPots().getTotalValue()));
-	}
-	
-	public int getMinBetRaiseAmount(MutableSeatedPlayer mutableSeatedPlayer) {
-		return Math.max(0, Math.min(mutableSeatedPlayer.getStack().getValue() - getToCallAmount(mutableSeatedPlayer),
-				Math.max(Math.max(tableMemento.getGameProperty().getBigBlind(), lastBetRaiseAmount),
-						getToCallAmount(mutableSeatedPlayer))));
-	}
-	
-	public void updateStackAndBetChips(MutableSeatedPlayer mutableSeatedPlayer, int betRaiseAmount) {
-		int totalAmount = getToCallAmount(mutableSeatedPlayer) + betRaiseAmount;
-		try {
-			mutableSeatedPlayer.getStack().transferAmountTo(totalAmount, mutableSeatedPlayer.getBetChips());
-		} catch (IllegalValueException e) {
-			logger.error(e);
-		}
-	}
-	
-	public void setBetChipsValue(MutableSeatedPlayer mutableSeatedPlayer, int newBetChipsValue) {
-		List<NavigableMap<Chip, Integer>> playerBetPile = getBetPile(mutableSeatedPlayer);
-		playerBetPile.clear();
-		playerBetPile.addAll(currentBetPile);
-		playerBetPile.add(Chip.getDistribution(newBetChipsValue));
-		betPiles.put(mutableSeatedPlayer, playerBetPile);
-		
-	}
-	
-	public List<NavigableMap<Chip, Integer>> getBetPile(MutableSeatedPlayer player) {
-		List<NavigableMap<Chip, Integer>> betPile = betPiles.get(player);
-		if (betPile == null) {
-			betPile = new ArrayList<NavigableMap<Chip, Integer>>(Arrays.asList(Chip.getDistribution(0)));
-			betPiles.put(player, betPile);
-		}
-		return betPile;
+	public int getMinBetRaiseAmount(PlayerId player) {
+		SeatedPlayer snapshot = getSnapshot(player);
+		int bigBlind = tableConfiguration.getBigBlind();
+		int lastRaise = getLastBetRaiseAmount();
+		int minBetRaise = Math.max(bigBlind, lastRaise);
+		int moneyRemaining = snapshot.getStackValue() - getToCall(player);
+		minBetRaise = Math.min(minBetRaise, moneyRemaining);
+		return minBetRaise;
 	}
 	
 	/**
 	 * @return
 	 */
-	public MutableSeatedPlayer getDealer() {
-		return dealer;
+	public List<Integer> getBetPile(PlayerId player) {
+		List<NavigableMap<Chip, Integer>> chipStacks = new ArrayList<NavigableMap<Chip, Integer>>();
+		if (!betPiles.containsKey(player)) {
+			betPiles.put(player, new ArrayList<Integer>());
+		}
+		return betPiles.get(player);
 	}
 	
 	/**
-	 * @param player
+	 * Add all the bets by all players from current round (not yet in middle)
+	 * and the pot in the middle
+	 * 
+	 * @return
 	 */
-	public void setDealer(MutableSeatedPlayer player) {
-		this.dealer = player;
-		
+	private int getTotalPot() {
+		int pot = getPots().getTotalValue();
+		for (List<Integer> bets : betPiles.values()) {
+			for (Integer bet : bets) {
+				pot += bet;
+			}
+		}
+		return pot;
 	}
 	
+	@Override
+	protected void addToBet(PlayerId playerId, int amount) {
+		int toCall = getToCall(playerId);
+		super.addToBet(playerId, amount);
+		
+		List<Integer> currentPile = betPiles.get(playerId);
+		if (lastActed == null) {
+			// This may be the case when the player just joined observing ...
+			currentPile.add(amount);
+		} else {
+			List<Integer> lastPile = betPiles.get(lastActed);
+			currentPile.clear();
+			currentPile.addAll(lastPile);
+			currentPile.add(amount - toCall);
+			
+			int totalAmount = 0;
+			for (Integer i : currentPile) {
+				totalAmount += i;
+				
+			}
+			// use just one stack when less or equal than big blind (may be in
+			// small blind ...)
+			if (totalAmount <= tableConfiguration.getBigBlind()) {
+				currentPile.clear();
+				currentPile.add(totalAmount);
+			}
+		}
+		lastActed = playerId;
+	}
+	
+	/**
+	 * @param newRoundEvent
+	 * @see org.cspoker.client.common.SmartHoldemTableListener#onNewRound(org.cspoker.common.api.lobby.holdemtable.event.NewRoundEvent)
+	 */
+	@Override
+	public void onNewRound(NewRoundEvent newRoundEvent) {
+		super.onNewRound(newRoundEvent);
+		for (List<Integer> bets : betPiles.values()) {
+			bets.clear();
+		}
+	}
+	
+	@Override
+	public void onNewDeal(NewDealEvent newDealEvent) {
+		super.onNewDeal(newDealEvent);
+		lastActed = getDealer();
+		betPiles.clear();
+		List<SeatedPlayer> seatedPlayers = newDealEvent.getPlayers();
+		for (SeatedPlayer seatedPlayer : seatedPlayers) {
+			betPiles.put(seatedPlayer.getId(), new ArrayList<Integer>());
+		}
+	}
+	
+	public List<NavigableMap<Chip, Integer>> getBetChipStacks() {
+		return null;
+	}
+	
+	public TableId getTableId() {
+		return tableId;
+	}
+	
+	public String getTableName() {
+		return tableName;
+	}
 }

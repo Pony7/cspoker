@@ -28,12 +28,9 @@ import org.cspoker.common.api.lobby.holdemtable.holdemplayer.listener.Asynchrono
 import org.cspoker.common.api.lobby.holdemtable.listener.AsynchronousHoldemTableListener;
 import org.cspoker.common.api.shared.context.RemoteServerContext;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
-import org.cspoker.common.elements.chips.Chips;
 import org.cspoker.common.elements.chips.IllegalValueException;
-import org.cspoker.common.elements.player.MutableSeatedPlayer;
-import org.cspoker.common.elements.player.SeatedPlayer;
+import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.elements.table.SeatId;
-import org.cspoker.common.elements.table.TableId;
 
 /**
  * Represents a user who is sitting at/observing a certain table
@@ -43,13 +40,13 @@ import org.cspoker.common.elements.table.TableId;
  * 
  * @author Stephan Schmidt
  */
-public class UserSeatedPlayer
-		extends MutableSeatedPlayer {
+public class UserSeatedPlayer {
+	
+	private PlayerId playerId;
 	
 	private final static Logger logger = Logger.getLogger(UserSeatedPlayer.class);
 	private final GameWindow gameWindow;
 	private final Executor displayExecutor;
-	private final TableId tableId;
 	
 	RemoteHoldemTableContext tableContext;
 	RemoteHoldemPlayerContext playerContext;
@@ -68,13 +65,11 @@ public class UserSeatedPlayer
 	 */
 	public UserSeatedPlayer(GameWindow gameWindow, ClientCore core, GameState gameState)
 			throws IllegalValueException {
-		super(new SeatedPlayer(core.getUser().getPlayerId(), new SeatId(Long.MAX_VALUE), core.getUser().getUserName(),
-				0, 0, false));
 		this.gameState = gameState;
 		assert (gameWindow != null) : "We need the GameWindow as the listener!";
 		this.gameWindow = gameWindow;
 		this.displayExecutor = DisplayExecutor.getInstance();
-		tableId = gameState.getTableMemento().getId();
+		playerId = core.getUser().getPlayerId();
 	}
 	
 	/**
@@ -154,8 +149,8 @@ public class UserSeatedPlayer
 	public void joinTable(RemoteLobbyContext lobbyContext) {
 		assert (lobbyContext != null);
 		try {
-			tableContext = lobbyContext.joinHoldemTable(gameState.getTableMemento().getId(),
-					new AsynchronousHoldemTableListener(displayExecutor, gameWindow));
+			tableContext = lobbyContext.joinHoldemTable(gameState.getTableId(), new AsynchronousHoldemTableListener(
+					displayExecutor, gameState));
 		} catch (RemoteException e) {
 			throw new IllegalStateException(e);
 		} catch (IllegalActionException e) {
@@ -174,7 +169,7 @@ public class UserSeatedPlayer
 		assert (communication != null);
 		try {
 			chatContext = communication.getTableChatContext(new AsynchronousChatListener(displayExecutor, gameWindow
-					.getUserInputComposite()), tableId);
+					.getUserInputComposite()), gameState.getTableId());
 		} catch (RemoteException e) {
 			throw new IllegalStateException(e);
 		} catch (IllegalActionException e) {
@@ -191,17 +186,10 @@ public class UserSeatedPlayer
 		}
 	}
 	
-	public void update(SeatedPlayer player) {
-		assert (player.getId().equals(this.getId()));
-		assert (player.getName().equalsIgnoreCase(this.getName()));
-		try {
-			new Chips(player.getStackValue()).transferAllChipsTo(getStack());
-			new Chips(player.getBetChipsValue()).transferAllChipsTo(getBetChips());
-			setSeatId(player.getSeatId());
-			setSittingIn(player.isSittingIn());
-		} catch (IllegalArgumentException e) {
-			logger.error(e);
-		}
-		
+	/**
+	 * @return
+	 */
+	public PlayerId getId() {
+		return playerId;
 	}
 }

@@ -14,8 +14,10 @@ package org.cspoker.client.gui.swt.window;
 import java.io.FileNotFoundException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.prefs.Preferences;
 
 import org.apache.log4j.Logger;
+import org.cspoker.client.User;
 import org.cspoker.client.gui.swt.control.ClientCore;
 import org.cspoker.client.gui.swt.control.ClientGUI;
 import org.cspoker.client.gui.swt.control.DisplayExecutor;
@@ -90,6 +92,7 @@ public class LobbyWindow
 	
 	private MenuItem uiMenuItem;
 	private Menu uiMenu;
+	private MenuItem soundMenuItem;
 	private MenuItem cardsMenuItem;
 	private MenuItem chipsMenuItem;
 	
@@ -294,6 +297,21 @@ public class LobbyWindow
 					{
 						uiMenu = new Menu(uiMenuItem);
 						uiMenuItem.setMenu(uiMenu);
+						
+						{
+							soundMenuItem = new MenuItem(uiMenu, SWT.CHECK);
+							soundMenuItem.setText("Play Sound");
+							soundMenuItem.addSelectionListener(new SelectionAdapter() {
+								
+								@Override
+								public void widgetSelected(SelectionEvent evt) {
+									
+									ClientGUI.SOUND_ON = soundMenuItem.getSelection();
+									Preferences.userRoot().put(User.Prefs.SOUND, Boolean.toString(ClientGUI.SOUND_ON));
+								}
+							});
+						}
+						
 						{
 							cardsMenuItem = new MenuItem(uiMenu, SWT.CASCADE);
 							cardsMenuItem.setText("Cards");
@@ -526,7 +544,7 @@ public class LobbyWindow
 				return;
 			}
 		}
-		TableConfiguration tInfo = t.getGameProperty();
+		TableConfiguration tInfo = t.getTableConfiguration();
 		TableItem item = new TableItem(availableGameTables, SWT.NONE);
 		item.setText(new String[] { t.getName(), Long.toString(t.getId().getId()),
 				ClientGUI.formatBet(tInfo.getSmallBlind()) + "/" + ClientGUI.formatBet(tInfo.getBigBlind()),

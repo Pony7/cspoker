@@ -115,6 +115,7 @@ public class ClientGUI {
 	private final Display display;
 	private final ClientCore clientCore;
 	private LobbyWindow lobby;
+	public static boolean SOUND_ON = true;
 	private final static Logger logger = Logger.getLogger(ClientGUI.class);
 	// TODO Better way of storing/retrieving the open GameWindows?
 	private Hashtable<TableId, GameWindow> gameWindows;
@@ -183,14 +184,14 @@ public class ClientGUI {
 		betFormatter.setMaximumFractionDigits(2);
 		betFormatter.setGroupingUsed(false);
 		File cardFile = new File(Preferences.userRoot().get(User.Prefs.CARDS,
-				Resources.FOUR_COLOR_DECK_IMG_FILE.getPath()));
-		File chipFile = new File(Preferences.userRoot().get(User.Prefs.CHIPS, Resources.FREE_CHIPS.getPath()));
-		
+				Resources.FOUR_COLOR_DECK_IMG_FILE.toString()));
+		File chipFile = new File(Preferences.userRoot().get(User.Prefs.CHIPS, Resources.FREE_CHIPS.toString()));
 		try {
 			setActiveCardDeck(cardFile);
 			setActiveChipsStyle(chipFile);
+			SOUND_ON = Boolean.parseBoolean(Preferences.userRoot().get(User.Prefs.SOUND, Boolean.toString(true)));
 		} catch (FileNotFoundException e) {
-			logger.error("File initialization failed, removing from preferences: ", e);
+			logger.warn("File initialization failed, removing from preferences: ", e);
 			Preferences.userRoot().remove(User.Prefs.CHIPS);
 			Preferences.userRoot().remove(User.Prefs.CARDS);
 		}
@@ -298,6 +299,9 @@ public class ClientGUI {
 	 * @param file Plays the given audio file
 	 */
 	public static void playAudio(File file) {
+		if (SOUND_ON == false) {
+			return;
+		}
 		AudioInputStream stream = null;
 		Clip clip = null;
 		try {
