@@ -220,6 +220,7 @@ package models.connection
 					case "ns2:winnerEvent":
 						trace("winner Event received!!!");
 						var winners:Object = event.winners;
+
 						
 						var count:int = 0;
 						var potDescriptionText = "";
@@ -247,7 +248,22 @@ package models.connection
 								+ potDescriptionText + " of " + winner.gainedAmount);  
 							}
 						}
-					
+						
+						
+						/*
+						<event xsi:type="ns2:winnerEvent" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <winners>
+            <gainedAmount>110</gainedAmount>
+            <player xsi:type="ns2:seatedPlayer" name="guy" id="0">
+                <seatId>2</seatId>
+                <stackValue>145</stackValue>
+                <betChipsValue>0</betChipsValue>
+                <sittingIn>true</sittingIn>
+            </player>
+        </winners>
+    </event>
+    					*/
+
 						return;
 						break;
 						
@@ -255,8 +271,8 @@ package models.connection
 						trace("show hand event: ");
 						var player:Object = event.player;
 						Main.table.tableModel.receiveShowHandEvent(player);
-												return;
-    						break;
+						return;
+    					break;
 					
 				}
 				
