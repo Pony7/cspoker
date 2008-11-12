@@ -1164,6 +1164,9 @@ public class GameFlowTest extends TestCase {
 			fail(e.getMessage());
 		}
 		PlayingTableState gameControl = new PlayingTableState(pokerTable, table, kenzo);
+		
+		events.ignore();
+		
 		try {
 			gameControl.deal();
 		} catch (IllegalActionException e1) {
@@ -1380,79 +1383,95 @@ public class GameFlowTest extends TestCase {
 		}
 
 		public synchronized void onAllIn(AllInEvent allInEvent) {
+			GameFlowTest.logger.info(allInEvent);
 			verifyEvent(allInEvent);
 		}
 
 
 		public synchronized void onBet(BetEvent betEvent) {
+			GameFlowTest.logger.info(betEvent);
 			verifyEvent(betEvent);
 		}
 
 		public synchronized void onBigBlind(BigBlindEvent bigBlindEvent) {
+			GameFlowTest.logger.info(bigBlindEvent);
 			verifyEvent(bigBlindEvent);
 		}
 
 		public synchronized void onCall(CallEvent callEvent) {
+			GameFlowTest.logger.info(callEvent);
 			verifyEvent(callEvent);
 		}
 
 		public synchronized void onCheck(CheckEvent checkEvent) {
+			GameFlowTest.logger.info(checkEvent);
 			verifyEvent(checkEvent);
 		}
 
 		public synchronized void onFold(FoldEvent foldEvent) {
+			GameFlowTest.logger.info(foldEvent);
 			verifyEvent(foldEvent);
 		}
 
 		public synchronized void onJoinTable(JoinTableEvent joinTableEvent) {
+			GameFlowTest.logger.info(joinTableEvent);
 		}
 
-		public synchronized void onLeaveTable(LeaveTableEvent leaveGameEvent) {
+		public synchronized void onLeaveTable(LeaveTableEvent leaveTableEvent) {
+			GameFlowTest.logger.info(leaveTableEvent);
 		}
 
 		public synchronized void onNewCommunityCards(
 				NewCommunityCardsEvent newCommunityCardsEvent) {
+			GameFlowTest.logger.info(newCommunityCardsEvent);
 			verifyEvent(newCommunityCardsEvent);
 		}
 
 		public synchronized void onNewDeal(NewDealEvent newDealEvent) {
+			GameFlowTest.logger.info(newDealEvent);
 			verifyEvent(newDealEvent);
 		}
 
 		public synchronized void onNewRound(NewRoundEvent newRoundEvent) {
+			GameFlowTest.logger.info(newRoundEvent);
 			verifyEvent(newRoundEvent);
 		}
 
 		public synchronized void onNextPlayer(NextPlayerEvent nextPlayerEvent) {
+			GameFlowTest.logger.info(nextPlayerEvent);
 			verifyEvent(nextPlayerEvent);
 		}
 
 		public synchronized void onRaise(RaiseEvent raiseEvent) {
+			GameFlowTest.logger.info(raiseEvent);
 			verifyEvent(raiseEvent);
 		}
 
 		public synchronized void onShowHand(ShowHandEvent showHandEvent) {
+			GameFlowTest.logger.info(showHandEvent);
 			verifyEvent(showHandEvent);
 		}
 
 		public synchronized void onSitIn(SitInEvent sitInEvent) {
-			//no-op
+			GameFlowTest.logger.info(sitInEvent);
 		}
 
 		public synchronized void onSitOut(SitOutEvent sitOutEvent) {
-			//no-op
+			GameFlowTest.logger.info(sitOutEvent);
 		}
 
 		public synchronized void onSmallBlind(SmallBlindEvent smallBlindEvent) {
+			GameFlowTest.logger.info(smallBlindEvent);
 			verifyEvent(smallBlindEvent);
 		}
 
 		public synchronized void onWinner(WinnerEvent winnerEvent) {
+			GameFlowTest.logger.info(winnerEvent);
 			verifyEvent(winnerEvent);
 		}
 
 		public void onLeaveSeat(LeaveSeatEvent leaveSeatEvent) {
-			//no-op
+			GameFlowTest.logger.info(leaveSeatEvent);
 		}
 	}
 }

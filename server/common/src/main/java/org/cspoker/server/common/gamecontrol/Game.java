@@ -17,6 +17,7 @@
 package org.cspoker.server.common.gamecontrol;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -527,7 +528,7 @@ public class Game {
 	 * @return The list of all community cards.
 	 */
 	public List<Card> getCommunityCards() {
-		return new ArrayList<Card>(communityCards);
+		return Collections.unmodifiableList(communityCards);
 	}
 	
 	public void addTablePlayersToGame() {

@@ -59,7 +59,7 @@ public class RuleBasedBot
 						}
 						if (random.nextFloat() < betProbability) {
 							playerContext.raiseMaxBetWith(lobbyContext.getHoldemTableInformation(tableID)
-									.getGameProperty().getBigBlind());
+									.getTableConfiguration().getBigBlind());
 						} else {
 							playerContext.raiseMaxBetWith(0);
 						}

@@ -32,6 +32,7 @@ import org.cspoker.common.elements.player.MutablePlayer;
 import org.cspoker.common.elements.player.MutableSeatedPlayer;
 import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.elements.player.SeatedPlayer;
+import org.cspoker.common.elements.table.DetailedHoldemTable;
 import org.cspoker.common.elements.table.SeatId;
 import org.cspoker.common.util.threading.ScheduledRequestExecutor;
 import org.cspoker.server.common.HoldemPlayerContextImpl;
@@ -397,6 +398,12 @@ public class PlayingTableState
 		}
 		sitOut(seated);
 		game.getTable().removePlayer(seated);
+	}
+
+	@Override
+	public DetailedHoldemTable getTableInformation() {
+		return new DetailedHoldemTable(mediatingTable.getTableId(), mediatingTable.getName(), getSeatedPlayers(), isPlaying(),
+				mediatingTable.getTableConfiguration(), getGame().getPots().getSnapshot(), getGame().getDealer().getMemento(), getGame().getCommunityCards());
 	}
 	
 }

@@ -23,6 +23,7 @@ import org.cspoker.common.elements.player.MutablePlayer;
 import org.cspoker.common.elements.player.MutableSeatedPlayer;
 import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.elements.player.SeatedPlayer;
+import org.cspoker.common.elements.table.DetailedHoldemTable;
 import org.cspoker.common.elements.table.SeatId;
 
 public abstract class TableState {
@@ -79,4 +80,6 @@ public abstract class TableState {
 	}
 		
 	public abstract TableState getNextState();
+
+	public abstract DetailedHoldemTable getTableInformation();
 }

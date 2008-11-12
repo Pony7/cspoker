@@ -15,7 +15,7 @@
  */
 package org.cspoker.common.elements.table;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlElement;
@@ -23,6 +23,7 @@ import javax.xml.bind.annotation.XmlElementWrapper;
 
 import net.jcip.annotations.Immutable;
 
+import org.cspoker.common.elements.cards.Card;
 import org.cspoker.common.elements.chips.Pots;
 import org.cspoker.common.elements.player.SeatedPlayer;
 
@@ -46,15 +47,23 @@ public class DetailedHoldemTable extends Table {
 	private final Pots pots;
 	
 	private final SeatedPlayer dealer;
+	
+	private final List<Card> communityCards;
 
 	public DetailedHoldemTable(TableId id, String name, List<SeatedPlayer> players,
-			boolean playing, TableConfiguration property, Pots pots, SeatedPlayer dealer) {
+			boolean playing, TableConfiguration property, Pots pots, SeatedPlayer dealer, List<Card> communityCards) {
 		super(id,name);
-		this.players = Collections.unmodifiableList(players);
+		this.players = new ArrayList<SeatedPlayer>(players);
 		this.playing = playing;
 		this.property = property;
 		this.pots = pots;
 		this.dealer = dealer;
+		this.communityCards = new ArrayList<Card>(communityCards);
+	}
+	
+	public DetailedHoldemTable(TableId id, String name, List<SeatedPlayer> players,
+			boolean playing, TableConfiguration property) {
+		this(id,name, players, playing, property, null, null, null);
 	}
 
 	protected DetailedHoldemTable() {
@@ -63,6 +72,7 @@ public class DetailedHoldemTable extends Table {
 		this.property = null;
 		this.pots = null;
 		this.dealer = null;
+		this.communityCards = null;
 	}
 
 	/**
@@ -97,7 +107,7 @@ public class DetailedHoldemTable extends Table {
 	 * 
 	 * @return The game property of this table.
 	 */
-	public TableConfiguration getGameProperty() {
+	public TableConfiguration getTableConfiguration() {
 		return property;
 	}
 	
@@ -107,6 +117,10 @@ public class DetailedHoldemTable extends Table {
 	
 	public SeatedPlayer getDealer(){
 		return dealer;
+	}
+	
+	public List<Card> getCommunityCards(){
+		return communityCards;
 	}
 
 }
