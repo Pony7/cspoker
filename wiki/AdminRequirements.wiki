@@ -8,7 +8,12 @@ All admin related functionality that should be added in a future version. Feel f
 = Overview =
 
 == High Priority Functionality ==
-  * Configure chips generating function to provide broke players with chips
+  * Lobby
+    * Remove table
+  * Table
+    * Kick-out player
+  * Cashier
+    * Configure chips generating function to provide broke players with chips
   * Account Management
     * Block Account
 
