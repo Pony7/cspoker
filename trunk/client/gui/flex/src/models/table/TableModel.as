@@ -1,6 +1,7 @@
 package models.table
 {
 	import flash.utils.Dictionary;
+	import mx.containers.Canvas;
 	
 	import models.*;
 	import models.chips.*;
@@ -32,9 +33,17 @@ package models.table
 		
 		public function receivePotsChangedEvent(pots:Object):void{
 			//var potsTotal:int = 0;
-			
-			
 			this.potSize = pots.totalValue;
+		}
+		
+		public function receiveNewDealEvent(dealer:int):void{
+			try{
+				var seatNumber:int = this.getPlayerByPlayerId(dealer).playerSeat.seatNumber;
+				var dealerButtonLocation:Canvas = table.dealerButtonLocations[seatNumber];
+				table.dealerButton.moveDealerButton(dealerButtonLocation.x, dealerButtonLocation.y);
+			}catch(e:Error){
+				trace("error on newDealEvent: " + e.message);
+			}
 		}
 		
 		public function removedMappedPlayer(playerId:int):void{
