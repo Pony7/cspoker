@@ -21,7 +21,6 @@ import javax.xml.bind.annotation.XmlAttribute;
 import net.jcip.annotations.Immutable;
 
 import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
-import org.cspoker.common.elements.player.Player;
 import org.cspoker.common.elements.player.PlayerId;
 
 /**
@@ -38,19 +37,20 @@ public class RaiseEvent extends HoldemTableEvent {
 
 	@XmlAttribute
 	private final int amount;
+	
+	@XmlAttribute
+	private final int movedAmount;
 
-	public RaiseEvent(PlayerId player, int amount) {
+	public RaiseEvent(PlayerId player, int amount, int movedAmount) {
 		this.playerId = player;
 		this.amount = amount;
+		this.movedAmount = movedAmount;
 	}
 
 	protected RaiseEvent() {
 		playerId = null;
 		amount = 0;
-	}
-
-	public RaiseEvent(Player player, int amount) {
-		this(player.getId(), amount);
+		movedAmount = 0;
 	}
 
 	@Override
@@ -61,6 +61,16 @@ public class RaiseEvent extends HoldemTableEvent {
 
 	public int getAmount() {
 		return amount;
+	}
+	
+	/**
+	 * Returns the number of chips that is moved from the player's main stack to the bet stack to make the raise.
+	 * (Call previous bet/raise + raise amount)
+	 * 
+	 * @return The number of chips that is moved from the player's main stack to the bet stack to make the raise.
+	 */
+	public int getMovedAmount(){
+		return movedAmount;
 	}
 
 	public PlayerId getPlayerId() {
