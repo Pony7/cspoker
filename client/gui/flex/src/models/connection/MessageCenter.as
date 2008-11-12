@@ -223,7 +223,7 @@ package models.connection
 
 						
 						var count:int = 0;
-						var potDescriptionText = "";
+						var potDescriptionText:String = "";
 						var player:Object;
 						if(event.winners.player.hasOwnProperty("seatId")){
 							
@@ -234,8 +234,10 @@ package models.connection
 							else potDescriptionText = "side pot";
 							player = event.winners.player;
 							Main.table.tableModel.getPlayerByPlayerId(player.id).updatePlayer(player);
-							Main.table.dealerBox.dealerMessage("Player " + player.getPlayerName() + " has won the " 
-								+ potDescriptionText + " of " + event.winners.gainedAmount);  
+							Main.table.dealerBox.dealerMessage("Player " + player.name + " has won the " 
+								+ potDescriptionText + " of " + event.winners.gainedAmount + " with a " + potDescriptionText);
+							/* MOVE THE POT CHIPS TO THE PLAYER ANIMATION */
+							
 						}else{
 							for each(var winner:Object in event.winners){
 								count++;
@@ -244,10 +246,12 @@ package models.connection
 								else potDescriptionText = "side pot";
 								player = winner.player;
 								Main.table.tableModel.getPlayerByPlayerId(player.id).updatePlayer(player);
-								Main.table.dealerBox.dealerMessage("Player " + player.getPlayerName() + " has won the " 
-								+ potDescriptionText + " of " + winner.gainedAmount);  
+								Main.table.dealerBox.dealerMessage("Player " + player.name + " has won the " 
+								+ potDescriptionText + " of " + winner.gainedAmount + " with a " + potDescriptionText);  
 							}
 						}
+						
+						Main.table.cleanUpTable();
 						
 						
 						/*

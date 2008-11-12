@@ -37,6 +37,7 @@
 			public var flopCard4:CardDeck;
 			
 			public var spotLight:SpotLight;
+			public var dealerButton:DealerButton;
 			
 			
 			public var tableInitialized:Boolean = false;
@@ -72,7 +73,6 @@
             	seat9.init(this, this.tableModel, 9, betLocation9, cardLocation9);
             	
             	tableInitialized = true;
-            	
             	onTableLoadStart();
             	
             	flopCard0 = new CardDeck(flop0);
@@ -85,14 +85,18 @@
             	spotLight.visible = false;
             	tableTempItemsContainer.addChild(spotLight);
             	
+            	dealerButton = new DealerButton(0,0);
+            	dealerButton.visible = false;
+            	tableTempItemsContainer.addChild(dealerButton);
             	
 			}
 			
 			
 			public function cleanUpTable():void{
 				/* cleans up visual elements */
+				spotLight.hideSpotLight();
+				dealerButton.hideDealerButton();
 				
-					
 					
 					
 				// call for data to be cleaned up.
