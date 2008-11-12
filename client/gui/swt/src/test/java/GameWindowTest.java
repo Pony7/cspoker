@@ -70,28 +70,28 @@ public class GameWindowTest
 							Rank.QUEEN, Suit.DIAMONDS), new Card(Rank.ACE, Suit.HEARTS),
 							new Card(Rank.SIX, Suit.HEARTS)))));
 					Thread.sleep(MS_ACTION_DELAY);
-					w.onNextPlayer(new NextPlayerEvent(player1));
+					w.onNextPlayer(new NextPlayerEvent(player1.getId()));
 					Thread.sleep(MS_ACTION_DELAY);
 					w.onBet(new BetEvent(player1, 15));
-					w.onNextPlayer(new NextPlayerEvent(player2));
+					w.onNextPlayer(new NextPlayerEvent(player2.getId()));
 					Thread.sleep(MS_ACTION_DELAY);
 					w.onRaise(new RaiseEvent(player2, 45));
-					w.onNextPlayer(new NextPlayerEvent(player3));
+					w.onNextPlayer(new NextPlayerEvent(player3.getId()));
 					Thread.sleep(MS_ACTION_DELAY);
 					w.onRaise(new RaiseEvent(player3, 320));
-					w.onNextPlayer(new NextPlayerEvent(player4));
+					w.onNextPlayer(new NextPlayerEvent(player4.getId()));
 					Thread.sleep(MS_ACTION_DELAY);
 					w.onCall(new CallEvent(player4));
-					w.onNextPlayer(new NextPlayerEvent(player1));
+					w.onNextPlayer(new NextPlayerEvent(player1.getId()));
 					Thread.sleep(MS_ACTION_DELAY);
 					w.onFold(new FoldEvent(player1));
-					w.onNextPlayer(new NextPlayerEvent(player2));
+					w.onNextPlayer(new NextPlayerEvent(player2.getId()));
 					Thread.sleep(MS_ACTION_DELAY);
 					w.onRaise(new RaiseEvent(player2, 1200));
-					w.onNextPlayer(new NextPlayerEvent(player3));
+					w.onNextPlayer(new NextPlayerEvent(player3.getId()));
 					Thread.sleep(MS_ACTION_DELAY);
 					w.onFold(new FoldEvent(player3));
-					w.onNextPlayer(new NextPlayerEvent(player4));
+					w.onNextPlayer(new NextPlayerEvent(player4.getId()));
 					Thread.sleep(MS_ACTION_DELAY);
 					w.onCall(new CallEvent(player4));
 					Thread.sleep(MS_ACTION_DELAY);
@@ -107,7 +107,7 @@ public class GameWindowTest
 					Thread.sleep(MS_ACTION_DELAY);
 					w.onNewDeal(new NewDealEvent(seatedPlayers, player2));
 					Thread.sleep(MS_ACTION_DELAY);
-					w.onNextPlayer(new NextPlayerEvent(player3));
+					w.onNextPlayer(new NextPlayerEvent(player3.getId()));
 				} catch (IllegalArgumentException e) {
 					System.err.println(e);
 					e.printStackTrace();

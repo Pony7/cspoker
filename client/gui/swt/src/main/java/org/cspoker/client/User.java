@@ -32,6 +32,9 @@ public class User {
 		 * file.
 		 */
 		public static final String CHIPS = "CSPoker.Chips";
+		
+		/** Key for sound preference (sound on/off) */
+		public static final String SOUND = "CS.Poker.Sound";
 	}
 	
 	/**

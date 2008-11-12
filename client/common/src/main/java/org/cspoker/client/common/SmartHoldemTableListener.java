@@ -15,9 +15,7 @@
  */
 package org.cspoker.client.common;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import net.jcip.annotations.GuardedBy;
 import net.jcip.annotations.ThreadSafe;
@@ -27,54 +25,61 @@ import org.cspoker.common.api.lobby.holdemtable.event.*;
 import org.cspoker.common.api.lobby.holdemtable.listener.ForwardingHoldemTableListener;
 import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
 import org.cspoker.common.elements.cards.Card;
+import org.cspoker.common.elements.chips.Chips;
 import org.cspoker.common.elements.chips.IllegalValueException;
 import org.cspoker.common.elements.chips.Pots;
 import org.cspoker.common.elements.player.MutableSeatedPlayer;
 import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.elements.player.SeatedPlayer;
+import org.cspoker.common.elements.player.Winner;
 import org.cspoker.common.elements.table.Rounds;
 
 @ThreadSafe
 public class SmartHoldemTableListener
-extends ForwardingHoldemTableListener {
-
+		extends ForwardingHoldemTableListener {
+	
 	private final static Logger logger = Logger.getLogger(SmartHoldemTableListener.class);
-
-	private volatile Pots pots;
-	private volatile Set<Card> communityCards;
+	
+	protected volatile Pots pots = new Pots(null, 0);
+	private final Set<Card> communityCards = Collections.synchronizedSet(new HashSet<Card>());
 	private volatile Rounds round;
-
+	protected volatile PlayerId dealer;
+	private volatile int lastBetRaiseAmount;
+	
 	@GuardedBy("playersLock")
-	private final HashMap<PlayerId, MutableSeatedPlayer> players = new HashMap<PlayerId, MutableSeatedPlayer>();
-
+	protected final HashMap<PlayerId, MutableSeatedPlayer> players = new HashMap<PlayerId, MutableSeatedPlayer>();
+	
 	private final Object playersLock = new Object();
-
+	
 	public SmartHoldemTableListener(HoldemTableListener holdemTableListener) {
 		super(holdemTableListener);
 	}
-
+	
 	public Pots getPots() {
 		return pots;
 	}
-
+	
 	public Set<Card> getCommunityCards() {
 		return communityCards;
 	}
-
+	
 	public Rounds getCurrentRound() {
 		return round;
 	}
-
+	
 	@Override
 	public void onNewCommunityCards(NewCommunityCardsEvent newCommunityCardsEvent) {
-		this.communityCards = newCommunityCardsEvent.getCommunityCards();
+		logger.trace(newCommunityCardsEvent);
+		communityCards.addAll(newCommunityCardsEvent.getCommunityCards());
 		super.onNewCommunityCards(newCommunityCardsEvent);
 	}
-
+	
 	@Override
 	public void onNewRound(NewRoundEvent newRoundEvent) {
+		logger.trace(newRoundEvent);
 		this.round = newRoundEvent.getRound();
 		pots = newRoundEvent.getPots();
+		lastBetRaiseAmount = 0;
 		synchronized (playersLock) {
 			for (MutableSeatedPlayer player : players.values()) {
 				player.getBetChips().discard();
@@ -82,11 +87,32 @@ extends ForwardingHoldemTableListener {
 		}
 		super.onNewRound(newRoundEvent);
 	}
-
+	
+	/**
+	 * @param winnerEvent
+	 * @see org.cspoker.common.api.lobby.holdemtable.listener.ForwardingHoldemTableListener#onWinner(org.cspoker.common.api.lobby.holdemtable.event.WinnerEvent)
+	 */
+	@Override
+	public void onWinner(WinnerEvent winnerEvent) {
+		
+		for (Winner winner : winnerEvent.getWinners()) {
+			try {
+				new Chips(winner.getGainedAmount()).transferAllChipsTo(players.get(winner.getPlayer().getId())
+						.getStack());
+			} catch (IllegalArgumentException e) {
+				logger.error(e);
+			}
+		}
+		super.onWinner(winnerEvent);
+	}
+	
 	@Override
 	public void onNewDeal(NewDealEvent newDealEvent) {
+		logger.trace(newDealEvent);
 		List<SeatedPlayer> seatedPlayers = newDealEvent.getPlayers();
-		pots = null;
+		pots = new Pots(null, 0);
+		communityCards.clear();
+		dealer = newDealEvent.getDealer();
 		synchronized (playersLock) {
 			players.clear();
 			for (SeatedPlayer seatedPlayer : seatedPlayers) {
@@ -100,67 +126,63 @@ extends ForwardingHoldemTableListener {
 		}
 		super.onNewDeal(newDealEvent);
 	}
-
+	
 	@Override
 	public void onAllIn(AllInEvent allInEvent) {
 		logger.trace(allInEvent);
-		synchronized (playersLock) {
-			try {
-				players.get(allInEvent.getPlayerId()).transferAllChipsToBetPile();
-			} catch (IllegalArgumentException e) {
-				logger.error(e);
-				throw new IllegalStateException(e);
-			}
-		}
+		addToBet(allInEvent.getPlayerId(), allInEvent.getAmount());
+		lastBetRaiseAmount = Math.max(lastBetRaiseAmount, allInEvent.getAmount());
 		super.onAllIn(allInEvent);
 	}
-
+	
 	@Override
 	public void onBet(BetEvent betEvent) {
 		logger.trace(betEvent);
 		addToBet(betEvent.getPlayerId(), betEvent.getAmount());
+		lastBetRaiseAmount = betEvent.getAmount();
 		super.onBet(betEvent);
 	}
-
+	
 	@Override
 	public void onBigBlind(BigBlindEvent bigBlindEvent) {
 		logger.trace(bigBlindEvent);
 		addToBet(bigBlindEvent.getPlayerId(), bigBlindEvent.getAmount());
+		lastBetRaiseAmount = bigBlindEvent.getAmount();
 		super.onBigBlind(bigBlindEvent);
 	}
-
+	
 	@Override
 	public void onSmallBlind(SmallBlindEvent smallBlindEvent) {
 		logger.trace(smallBlindEvent);
 		addToBet(smallBlindEvent.getPlayerId(), smallBlindEvent.getAmount());
 		super.onSmallBlind(smallBlindEvent);
 	}
-
+	
 	@Override
 	public void onCall(CallEvent callEvent) {
 		logger.trace(callEvent);
 		synchronized (playersLock) {
-			addToBet(callEvent.getPlayerId(), getDeficit(callEvent.getPlayerId()));
+			addToBet(callEvent.getPlayerId(), getToCall(callEvent.getPlayerId()));
 		}
 		super.onCall(callEvent);
 	}
-
+	
 	@Override
 	public void onRaise(RaiseEvent raiseEvent) {
 		logger.trace(raiseEvent);
 		synchronized (playersLock) {
-			addToBet(raiseEvent.getPlayerId(), getDeficit(raiseEvent.getPlayerId()) + raiseEvent.getAmount());
+			addToBet(raiseEvent.getPlayerId(), getToCall(raiseEvent.getPlayerId()) + raiseEvent.getAmount());
 		}
+		lastBetRaiseAmount = raiseEvent.getAmount();
 		super.onRaise(raiseEvent);
 	}
-
-	public int getDeficit(PlayerId playerId) {
+	
+	public int getToCall(PlayerId playerId) {
 		synchronized (playersLock) {
-			return Math.min(players.get(playerId).getBetChips().getValue(), getMaxBet()
-					- players.get(playerId).getBetChips().getValue());
+			return Math.max(0, getMaxBet() - players.get(playerId).getBetChips().getValue());
 		}
 	}
-
+	
 	public int getMaxBet() {
 		synchronized (playersLock) {
 			int max = 0;
@@ -172,8 +194,8 @@ extends ForwardingHoldemTableListener {
 			return max;
 		}
 	}
-
-	private void addToBet(PlayerId playerId, int amount) {
+	
+	protected void addToBet(PlayerId playerId, int amount) {
 		synchronized (playersLock) {
 			try {
 				players.get(playerId).transferAmountToBetPile(amount);
@@ -183,13 +205,28 @@ extends ForwardingHoldemTableListener {
 			}
 		}
 	}
-
+	
 	public boolean isPlaying(PlayerId playerID) {
 		synchronized (playersLock) {
 			return players.containsKey(playerID);
 		}
 	}
-
+	
+	@Override
+	public void onSitIn(SitInEvent sitInEvent) {
+		SeatedPlayer newPlayer = sitInEvent.getPlayer();
+		synchronized (playersLock) {
+			try {
+				players.put(newPlayer.getId(), new MutableSeatedPlayer(newPlayer));
+			} catch (IllegalArgumentException e) {
+				logger.error(e);
+				throw new IllegalStateException(e);
+			}
+			
+		}
+		super.onSitIn(sitInEvent);
+	}
+	
 	@Override
 	public void onSitOut(SitOutEvent sitOutEvent) {
 		synchronized (playersLock) {
@@ -197,18 +234,44 @@ extends ForwardingHoldemTableListener {
 		}
 		super.onSitOut(sitOutEvent);
 	}
-
+	
 	public int getAllStakes(PlayerId playerID) {
 		synchronized (playersLock) {
 			MutableSeatedPlayer player = players.get(playerID);
-			if(player==null){
+			if (player == null) {
 				return 0;
-			}else{
-				if(getPots()!=null && getPots().getTotalValue()>0){
+			} else {
+				if (getPots() != null && getPots().getTotalValue() > 0) {
 					throw new IllegalStateException("Pots are not empty, can't calculate all stakes");
 				}
-				return player.getStack().getValue()+player.getBetChips().getValue();
+				return player.getStack().getValue() + player.getBetChips().getValue();
 			}
+		}
+	}
+	
+	/**
+	 * @return Current dealer
+	 */
+	public PlayerId getDealer() {
+		return dealer;
+	}
+	
+	/**
+	 * Allows easier computing of a valid next raise (needs to be at least the
+	 * amount of the last raise (or the remaining stack))
+	 * 
+	 * @return
+	 */
+	public int getLastBetRaiseAmount() {
+		return lastBetRaiseAmount;
+	}
+	
+	public SeatedPlayer getSnapshot(PlayerId id) {
+		MutableSeatedPlayer player = players.get(id);
+		if (player == null) {
+			return null;
+		} else {
+			return players.get(id).getMemento();
 		}
 	}
 }

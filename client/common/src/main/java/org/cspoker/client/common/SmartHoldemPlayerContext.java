@@ -72,7 +72,7 @@ public class SmartHoldemPlayerContext extends ForwardingRemoteHoldemPlayerContex
 	}
 
 	public void raiseMaxBetWith(int bet) throws RemoteException, IllegalActionException {
-		int deficit = smartTableListener.getDeficit(smartClientContext.getAccountContext().getPlayerID());
+		int deficit = smartTableListener.getToCall(smartClientContext.getAccountContext().getPlayerID());
 		if(deficit>bet){
 			logger.trace("Folding");
 			fold();

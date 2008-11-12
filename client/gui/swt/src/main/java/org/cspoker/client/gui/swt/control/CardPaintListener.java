@@ -64,6 +64,9 @@ public class CardPaintListener
 	 * @see org.eclipse.swt.events.PaintListener#paintControl(org.eclipse.swt.events.PaintEvent)
 	 */
 	public void paintControl(PaintEvent e) {
+		if (cards == null) {
+			return;
+		}
 		if (cards.size() == 0)
 			return;
 		int x = -1;
