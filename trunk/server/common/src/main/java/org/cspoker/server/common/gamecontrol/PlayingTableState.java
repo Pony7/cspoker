@@ -403,7 +403,7 @@ public class PlayingTableState
 	@Override
 	public DetailedHoldemTable getTableInformation() {
 		return new DetailedHoldemTable(mediatingTable.getTableId(), mediatingTable.getName(), getSeatedPlayers(), isPlaying(),
-				mediatingTable.getTableConfiguration(), getGame().getPots().getSnapshot(), getGame().getDealer().getMemento(), getGame().getCommunityCards());
+				mediatingTable.getTableConfiguration(), getGame().getPots().getSnapshot(), getGame().getDealer().getMemento(), getGame().getCommunityCards(), round.getRound());
 	}
 	
 }
