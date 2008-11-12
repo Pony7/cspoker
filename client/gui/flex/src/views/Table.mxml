@@ -37,7 +37,6 @@
 			public var flopCard4:CardDeck;
 			
 			public var spotLight:SpotLight;
-			public var dealerButton:DealerButton;
 			
 			
 			public var tableInitialized:Boolean = false;
@@ -85,9 +84,6 @@
             	spotLight.visible = false;
             	tableTempItemsContainer.addChild(spotLight);
             	
-            	dealerButton = new DealerButton(0,0);
-            	dealerButton.visible = false;
-            	tableTempItemsContainer.addChild(dealerButton);
             	
 			}
 			
@@ -97,8 +93,6 @@
 				spotLight.hideSpotLight();
 				dealerButton.hideDealerButton();
 				
-					
-					
 				// call for data to be cleaned up.
 				this.tableModel.cleanUpTableData();
 			}
@@ -241,25 +235,25 @@
 		]]>
 	</mx:Script>
 	<mx:Button x="0" y="0" label="Back to Lobby" id="btnLeaveGame" click="leaveGameClicked()"/>
-	<views:Seat x="480" y="0" id="seat0" seatNumber="0">
+	<views:Seat x="480" y="0" id="seat0" seatNumber="0" verticalScrollPolicy="off" horizontalScrollPolicy="off">
 	</views:Seat>
-	<views:Seat x="636" y="46" id="seat1" seatNumber="1">
+	<views:Seat x="636" y="46" id="seat1" seatNumber="1" verticalScrollPolicy="off" horizontalScrollPolicy="off">
 	</views:Seat>
-	<views:Seat x="668" y="207" id="seat2" seatNumber="2">
+	<views:Seat x="668" y="207" id="seat2" seatNumber="2" verticalScrollPolicy="off" horizontalScrollPolicy="off">
 	</views:Seat>
-	<views:Seat x="617" y="353" id="seat3" seatNumber="3">
+	<views:Seat x="617" y="353" id="seat3" seatNumber="3" verticalScrollPolicy="off" horizontalScrollPolicy="off">
 	</views:Seat>
-	<views:Seat x="458" y="384" id="seat4" seatNumber="4">
+	<views:Seat x="458" y="384" id="seat4" seatNumber="4" verticalScrollPolicy="off" horizontalScrollPolicy="off">
 	</views:Seat>
-	<views:Seat x="214" y="384" id="seat5" seatNumber="5">
+	<views:Seat x="214" y="384" id="seat5" seatNumber="5" verticalScrollPolicy="off" horizontalScrollPolicy="off">
 	</views:Seat>
-	<views:Seat x="54" y="338" id="seat6" seatNumber="6">
+	<views:Seat x="54" y="338" id="seat6" seatNumber="6" verticalScrollPolicy="off" horizontalScrollPolicy="off">
 	</views:Seat>
-	<views:Seat x="0" y="207" id="seat7" seatNumber="7">
+	<views:Seat x="0" y="207" id="seat7" seatNumber="7" verticalScrollPolicy="off" horizontalScrollPolicy="off">
 	</views:Seat>
-	<views:Seat x="24" y="46" id="seat8" seatNumber="8">
+	<views:Seat x="24" y="46" id="seat8" seatNumber="8" verticalScrollPolicy="off" horizontalScrollPolicy="off">
 	</views:Seat>
-	<views:Seat x="195" y="0" id="seat9" seatNumber="9">
+	<views:Seat x="195" y="0" id="seat9" seatNumber="9" verticalScrollPolicy="off" horizontalScrollPolicy="off">
 	</views:Seat>
 	<mx:Canvas x="436" y="84" id="betLocation0" />
 	<mx:Canvas x="596" y="95" id="betLocation1" />
@@ -308,4 +302,5 @@
 	<views:GamePanel id="gamePanel"  x="281.1" y="561" width="187.75" height="98"/>
 	<views:DealerBox id="dealerBox"  x="4" y="522"/>
 	<views:PlayerChatBox id="playerChatBox"  x="486" y="522"/>
+	<views:DealerButton id="dealerButton" x="400" y="400" visible="false" />
 </mx:Canvas>
