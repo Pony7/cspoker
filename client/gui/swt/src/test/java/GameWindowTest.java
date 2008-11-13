@@ -75,10 +75,10 @@ public class GameWindowTest
 					w.onBet(new BetEvent(player1, 15));
 					w.onNextPlayer(new NextPlayerEvent(player2.getId()));
 					Thread.sleep(MS_ACTION_DELAY);
-					w.onRaise(new RaiseEvent(player2, 45));
+					w.onRaise(new RaiseEvent(player2.getId(), 30, 45));
 					w.onNextPlayer(new NextPlayerEvent(player3.getId()));
 					Thread.sleep(MS_ACTION_DELAY);
-					w.onRaise(new RaiseEvent(player3, 320));
+					w.onRaise(new RaiseEvent(player3.getId(), 100, 145));
 					w.onNextPlayer(new NextPlayerEvent(player4.getId()));
 					Thread.sleep(MS_ACTION_DELAY);
 					w.onCall(new CallEvent(player4));
@@ -87,7 +87,7 @@ public class GameWindowTest
 					w.onFold(new FoldEvent(player1));
 					w.onNextPlayer(new NextPlayerEvent(player2.getId()));
 					Thread.sleep(MS_ACTION_DELAY);
-					w.onRaise(new RaiseEvent(player2, 1200));
+					w.onRaise(new RaiseEvent(player2.getId(), 500, 545));
 					w.onNextPlayer(new NextPlayerEvent(player3.getId()));
 					Thread.sleep(MS_ACTION_DELAY);
 					w.onFold(new FoldEvent(player3));
