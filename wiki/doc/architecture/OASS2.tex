@@ -93,6 +93,12 @@ The business has the following constraints:
 \chapter{Analysis}
 \section{Domain Model}
 See figure \ref{fig:domain_poker} and figure \ref{fig:domain_chat}.
+\subsection{Constraints}
+There are some constraints related to some actions in the domain model:
+\begin{itemize}
+\item A player can't transfer chips from his main stack to his table stack if there isn't a deal going on at that moment 
+at that table; so he can only transfer chips in between deals or if he is broke or sitting out.
+\end{itemize}
 \begin{figure}
   \begin{center}
     \includegraphics[angle=90, scale=0.6]{img_domain_model_poker.png}
