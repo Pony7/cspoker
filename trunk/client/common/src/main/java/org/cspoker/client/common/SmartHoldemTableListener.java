@@ -32,41 +32,62 @@ import org.cspoker.common.elements.player.MutableSeatedPlayer;
 import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.elements.player.SeatedPlayer;
 import org.cspoker.common.elements.player.Winner;
+import org.cspoker.common.elements.table.DetailedHoldemTable;
 import org.cspoker.common.elements.table.Rounds;
 
+/**
+ * A stateful listener which stores information of the current state of the
+ * game. You can access this information via the object provided by
+ * {@link #getTableInformationProvider()}
+ */
 @ThreadSafe
 public class SmartHoldemTableListener
 		extends ForwardingHoldemTableListener {
 	
 	private final static Logger logger = Logger.getLogger(SmartHoldemTableListener.class);
+	private DetailedHoldemTable table;
 	
-	protected volatile Pots pots = new Pots(null, 0);
-	private final Set<Card> communityCards = Collections.synchronizedSet(new HashSet<Card>());
-	private volatile Rounds round;
-	protected volatile PlayerId dealer;
-	private volatile int lastBetRaiseAmount;
+	// The mutable state fields are package private and (hopefully thread-safe)
+	// via volatile modifiers and wrapping them in synchronized collections
+	volatile Pots pots = new Pots(null, 0);
+	final Set<Card> communityCards = Collections.synchronizedSet(new HashSet<Card>());
+	volatile Rounds round;
+	volatile PlayerId dealer;
+	volatile int lastBetRaiseAmount;
+	List<Integer> betsInCurrentRound = Collections.synchronizedList(new ArrayList<Integer>());
+	Map<PlayerId, Integer> inPotUntilBettingRound = Collections.synchronizedMap(new HashMap<PlayerId, Integer>());
+	
+	TableInformationProvider infoProvider;
 	
 	@GuardedBy("playersLock")
-	protected final HashMap<PlayerId, MutableSeatedPlayer> players = new HashMap<PlayerId, MutableSeatedPlayer>();
+	final HashMap<PlayerId, MutableSeatedPlayer> players = new HashMap<PlayerId, MutableSeatedPlayer>();
 	
-	private final Object playersLock = new Object();
+	final Object playersLock = new Object();
 	
-	public SmartHoldemTableListener(HoldemTableListener holdemTableListener) {
-		super(holdemTableListener);
+	volatile PlayerId lastActed;
+	
+	/**
+	 * Constructor
+	 */
+	public SmartHoldemTableListener(HoldemTableListener forwardToMe) {
+		super(forwardToMe);
 	}
 	
-	public Pots getPots() {
-		return pots;
+	/**
+	 * @param table The {@link DetailedHoldemTable} to initialize this listener
+	 *            with
+	 * @param forwardToMe
+	 */
+	public SmartHoldemTableListener(DetailedHoldemTable table, HoldemTableListener forwardToMe) {
+		this(forwardToMe);
+		initialize(table);
 	}
 	
-	public Set<Card> getCommunityCards() {
-		return communityCards;
-	}
-	
-	public Rounds getCurrentRound() {
-		return round;
-	}
-	
+	/**
+	 * Updates internal state
+	 * 
+	 * @see org.cspoker.common.api.lobby.holdemtable.listener.ForwardingHoldemTableListener#onNewCommunityCards(org.cspoker.common.api.lobby.holdemtable.event.NewCommunityCardsEvent)
+	 */
 	@Override
 	public void onNewCommunityCards(NewCommunityCardsEvent newCommunityCardsEvent) {
 		logger.trace(newCommunityCardsEvent);
@@ -74,22 +95,33 @@ public class SmartHoldemTableListener
 		super.onNewCommunityCards(newCommunityCardsEvent);
 	}
 	
+	/**
+	 * Updates internal state
+	 * 
+	 * @see org.cspoker.common.api.lobby.holdemtable.listener.ForwardingHoldemTableListener#onNewRound(org.cspoker.common.api.lobby.holdemtable.event.NewRoundEvent)
+	 */
 	@Override
 	public void onNewRound(NewRoundEvent newRoundEvent) {
+		super.onNewRound(newRoundEvent);
 		logger.trace(newRoundEvent);
 		this.round = newRoundEvent.getRound();
 		pots = newRoundEvent.getPots();
+		betsInCurrentRound.clear();
+		for (Map.Entry<PlayerId, Integer> entry : inPotUntilBettingRound.entrySet()) {
+			entry.setValue(0);
+		}
 		lastBetRaiseAmount = 0;
 		synchronized (playersLock) {
 			for (MutableSeatedPlayer player : players.values()) {
 				player.getBetChips().discard();
 			}
 		}
-		super.onNewRound(newRoundEvent);
+		
 	}
 	
 	/**
-	 * @param winnerEvent
+	 * Updates internal state
+	 * 
 	 * @see org.cspoker.common.api.lobby.holdemtable.listener.ForwardingHoldemTableListener#onWinner(org.cspoker.common.api.lobby.holdemtable.event.WinnerEvent)
 	 */
 	@Override
@@ -106,6 +138,11 @@ public class SmartHoldemTableListener
 		super.onWinner(winnerEvent);
 	}
 	
+	/**
+	 * Updates internal state
+	 * 
+	 * @see org.cspoker.common.api.lobby.holdemtable.listener.ForwardingHoldemTableListener#onNewDeal(org.cspoker.common.api.lobby.holdemtable.event.NewDealEvent)
+	 */
 	@Override
 	public void onNewDeal(NewDealEvent newDealEvent) {
 		logger.trace(newDealEvent);
@@ -113,6 +150,7 @@ public class SmartHoldemTableListener
 		pots = new Pots(null, 0);
 		communityCards.clear();
 		dealer = newDealEvent.getDealer();
+		lastActed = dealer;
 		synchronized (playersLock) {
 			players.clear();
 			for (SeatedPlayer seatedPlayer : seatedPlayers) {
@@ -125,8 +163,18 @@ public class SmartHoldemTableListener
 			}
 		}
 		super.onNewDeal(newDealEvent);
+		
+		betsInCurrentRound.clear();
+		for (SeatedPlayer seatedPlayer : seatedPlayers) {
+			inPotUntilBettingRound.put(seatedPlayer.getId(), 0);
+		}
 	}
 	
+	/**
+	 * Updates internal state
+	 * 
+	 * @see org.cspoker.common.api.lobby.holdemtable.listener.ForwardingHoldemTableListener#onAllIn(org.cspoker.common.api.lobby.holdemtable.event.AllInEvent)
+	 */
 	@Override
 	public void onAllIn(AllInEvent allInEvent) {
 		logger.trace(allInEvent);
@@ -143,14 +191,24 @@ public class SmartHoldemTableListener
 		super.onBet(betEvent);
 	}
 	
+	/**
+	 * Updates internal state
+	 * 
+	 * @see org.cspoker.common.api.lobby.holdemtable.listener.ForwardingHoldemTableListener#onBigBlind(org.cspoker.common.api.lobby.holdemtable.event.BigBlindEvent)
+	 */
 	@Override
 	public void onBigBlind(BigBlindEvent bigBlindEvent) {
 		logger.trace(bigBlindEvent);
 		addToBet(bigBlindEvent.getPlayerId(), bigBlindEvent.getAmount());
-		lastBetRaiseAmount = bigBlindEvent.getAmount();
+		lastBetRaiseAmount = bigBlindEvent.getAmount() / 2;
 		super.onBigBlind(bigBlindEvent);
 	}
 	
+	/**
+	 * Updates internal state
+	 * 
+	 * @see org.cspoker.common.api.lobby.holdemtable.listener.ForwardingHoldemTableListener#onSmallBlind(org.cspoker.common.api.lobby.holdemtable.event.SmallBlindEvent)
+	 */
 	@Override
 	public void onSmallBlind(SmallBlindEvent smallBlindEvent) {
 		logger.trace(smallBlindEvent);
@@ -158,60 +216,70 @@ public class SmartHoldemTableListener
 		super.onSmallBlind(smallBlindEvent);
 	}
 	
+	/**
+	 * Updates internal state
+	 * 
+	 * @see org.cspoker.common.api.lobby.holdemtable.listener.ForwardingHoldemTableListener#onCall(org.cspoker.common.api.lobby.holdemtable.event.CallEvent)
+	 */
 	@Override
 	public void onCall(CallEvent callEvent) {
 		logger.trace(callEvent);
 		synchronized (playersLock) {
-			addToBet(callEvent.getPlayerId(), getToCall(callEvent.getPlayerId()));
+			addToBet(callEvent.getPlayerId(), lastBetRaiseAmount
+					- getPlayers().get(callEvent.getPlayerId()).getBetChipsValue());
 		}
 		super.onCall(callEvent);
 	}
 	
+	/**
+	 * Updates internal state
+	 * 
+	 * @see org.cspoker.common.api.lobby.holdemtable.listener.ForwardingHoldemTableListener#onRaise(org.cspoker.common.api.lobby.holdemtable.event.RaiseEvent)
+	 */
 	@Override
 	public void onRaise(RaiseEvent raiseEvent) {
 		logger.trace(raiseEvent);
+		lastBetRaiseAmount = raiseEvent.getMovedAmount()
+				+ getPlayers().get(raiseEvent.getPlayerId()).getBetChipsValue();
 		synchronized (playersLock) {
-			addToBet(raiseEvent.getPlayerId(), getToCall(raiseEvent.getPlayerId()) + raiseEvent.getAmount());
+			addToBet(raiseEvent.getPlayerId(), raiseEvent.getAmount());
 		}
-		lastBetRaiseAmount = raiseEvent.getAmount();
+		
 		super.onRaise(raiseEvent);
 	}
 	
-	public int getToCall(PlayerId playerId) {
-		synchronized (playersLock) {
-			return Math.max(0, getMaxBet() - players.get(playerId).getBetChips().getValue());
-		}
-	}
-	
-	public int getMaxBet() {
-		synchronized (playersLock) {
-			int max = 0;
-			for (MutableSeatedPlayer player : players.values()) {
-				if (player.getBetChips().getValue() > max) {
-					max = player.getBetChips().getValue();
-				}
-			}
-			return max;
-		}
-	}
-	
+	/**
+	 * Updates internal state by moving given amount to mutable player's bet
+	 * pile
+	 * 
+	 * @param playerId
+	 * @param amount
+	 */
 	protected void addToBet(PlayerId playerId, int amount) {
 		synchronized (playersLock) {
 			try {
-				players.get(playerId).transferAmountToBetPile(amount);
+				players.get(playerId).transferAmountToBetPile(
+						amount + getTableInformationProvider().getToCall(playerId));
 			} catch (IllegalValueException e) {
 				logger.error(e);
 				throw new IllegalStateException(e);
 			}
 		}
-	}
-	
-	public boolean isPlaying(PlayerId playerID) {
-		synchronized (playersLock) {
-			return players.containsKey(playerID);
+		// Special case small blind
+		if (betsInCurrentRound.size() == 1
+				&& betsInCurrentRound.get(0) == getTableInformationProvider().getTableConfiguration().getSmallBlind()) {
+			amount = amount / 2;
 		}
+		betsInCurrentRound.add(amount);
+		inPotUntilBettingRound.put(playerId, betsInCurrentRound.size());
+		lastActed = playerId;
 	}
 	
+	/**
+	 * Updates internal state
+	 * 
+	 * @see org.cspoker.common.api.lobby.holdemtable.listener.ForwardingHoldemTableListener#onSitIn(org.cspoker.common.api.lobby.holdemtable.event.SitInEvent)
+	 */
 	@Override
 	public void onSitIn(SitInEvent sitInEvent) {
 		SeatedPlayer newPlayer = sitInEvent.getPlayer();
@@ -224,54 +292,79 @@ public class SmartHoldemTableListener
 			}
 			
 		}
+		inPotUntilBettingRound.put(newPlayer.getId(), 0);
 		super.onSitIn(sitInEvent);
 	}
 	
+	/**
+	 * Updates internal state
+	 * 
+	 * @see org.cspoker.common.api.lobby.holdemtable.listener.ForwardingHoldemTableListener#onSitOut(org.cspoker.common.api.lobby.holdemtable.event.SitOutEvent)
+	 */
 	@Override
 	public void onSitOut(SitOutEvent sitOutEvent) {
 		synchronized (playersLock) {
 			players.remove(sitOutEvent.getPlayerId());
 		}
+		inPotUntilBettingRound.remove(sitOutEvent.getPlayerId());
 		super.onSitOut(sitOutEvent);
 	}
 	
-	public int getAllStakes(PlayerId playerID) {
-		synchronized (playersLock) {
-			MutableSeatedPlayer player = players.get(playerID);
-			if (player == null) {
-				return 0;
-			} else {
-				if (getPots() != null && getPots().getTotalValue() > 0) {
-					throw new IllegalStateException("Pots are not empty, can't calculate all stakes");
-				}
-				return player.getStack().getValue() + player.getBetChips().getValue();
-			}
-		}
-	}
-	
 	/**
-	 * @return Current dealer
-	 */
-	public PlayerId getDealer() {
-		return dealer;
-	}
-	
-	/**
-	 * Allows easier computing of a valid next raise (needs to be at least the
-	 * amount of the last raise (or the remaining stack))
+	 * This method returns a {@link TableInformationProvider}. Use this provider
+	 * to query state information while the game is progressing, the
+	 * {@link SmartHoldemTableListener} merely keeps track of the current table
+	 * state
 	 * 
 	 * @return
 	 */
-	public int getLastBetRaiseAmount() {
-		return lastBetRaiseAmount;
+	public TableInformationProvider getTableInformationProvider() {
+		if (infoProvider == null) {
+			if (table == null) {
+				throw new IllegalStateException("No table available");
+			}
+			infoProvider = new TableInformationProvider(table, this);
+		}
+		return infoProvider;
 	}
 	
-	public SeatedPlayer getSnapshot(PlayerId id) {
-		MutableSeatedPlayer player = players.get(id);
-		if (player == null) {
-			return null;
-		} else {
-			return players.get(id).getMemento();
+	/**
+	 * @return An immutable copy of the players map
+	 */
+	public Map<PlayerId, SeatedPlayer> getPlayers() {
+		Map<PlayerId, SeatedPlayer> playersSnapshot = new HashMap<PlayerId, SeatedPlayer>();
+		for (Map.Entry<PlayerId, MutableSeatedPlayer> entry : players.entrySet()) {
+			playersSnapshot.put(entry.getKey(), entry.getValue().getMemento());
+		}
+		return Collections.unmodifiableMap(playersSnapshot);
+	}
+	
+	/**
+	 * Initializes the stateful listener with the {@link DetailedHoldemTable}
+	 * from the server. This is important for example for players joining a
+	 * table where a game is in progress
+	 * <p>
+	 * This method is called by the constructor, but the table can also be
+	 * provided later. If the table has not been provided,
+	 * {@link #getTableInformationProvider()} will throw a
+	 * {@link IllegalStateException}
+	 * 
+	 * @param table The initial table configuration
+	 */
+	public void initialize(DetailedHoldemTable table) {
+		logger.trace("Initializing table state after joining");
+		this.table = table;
+		for (SeatedPlayer player : table.getPlayers()) {
+			players.put(player.getId(), new MutableSeatedPlayer(player));
+			if (table.getDealer() != null) {
+				dealer = table.getDealer().getId();
+			}
+			communityCards.clear();
+			communityCards.addAll(table.getCommunityCards());
+			pots = table.getPots();
+			round = table.getRound();
+			inPotUntilBettingRound.put(player.getId(), 0);
 		}
 	}
+	
 }

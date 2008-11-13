@@ -18,8 +18,8 @@ import java.util.Collections;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
+import org.cspoker.client.common.SmartHoldemTableListener;
 import org.cspoker.client.gui.swt.control.ClientGUI;
-import org.cspoker.client.gui.swt.control.GameState;
 import org.cspoker.client.gui.swt.control.SWTResourceManager;
 import org.cspoker.client.gui.swt.control.UserSeatedPlayer;
 import org.cspoker.common.api.lobby.holdemtable.event.*;
@@ -78,9 +78,10 @@ public class GameWindow
 	 */
 	public GameWindow(LobbyWindow lobbyWindow, DetailedHoldemTable table) {
 		super(new Shell(lobbyWindow.getDisplay(), SWT.CLOSE | SWT.RESIZE), SWT.NONE, lobbyWindow.getClientCore());
-		gameState = new GameState(this, table);
+		SmartHoldemTableListener listener = new SmartHoldemTableListener(table, this);
+		gameState = listener.getTableInformationProvider();
 		try {
-			user = new UserSeatedPlayer(this, getClientCore(), gameState);
+			user = new UserSeatedPlayer(this, getClientCore(), listener);
 		} catch (IllegalValueException e) {
 			throw new IllegalStateException(e);
 		}

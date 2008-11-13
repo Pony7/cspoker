@@ -14,8 +14,8 @@ package org.cspoker.client.gui.swt.window;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import org.cspoker.client.common.TableInformationProvider;
 import org.cspoker.client.gui.swt.control.ClientCore;
-import org.cspoker.client.gui.swt.control.GameState;
 import org.cspoker.client.gui.swt.control.SWTResourceManager;
 import org.eclipse.swt.widgets.Composite;
 
@@ -36,7 +36,7 @@ public abstract class ClientComposite
 	/** ExecutorService for the GameWindow and its children. */
 	public static final ExecutorService executor = Executors.newCachedThreadPool();
 	
-	GameState gameState;
+	TableInformationProvider gameState;
 	
 	/***************************************************************************
 	 * Constructor
@@ -69,7 +69,7 @@ public abstract class ClientComposite
 	 */
 	public ClientComposite(ClientComposite parent, int style) {
 		this(parent, style, parent.getClientCore());
-		this.gameState = parent.getGameState();
+		this.gameState = parent.getTableInformationProvider();
 		// Register as a resource user - SWTResourceManager will
 		// handle the obtaining and disposing of resources
 		SWTResourceManager.registerResourceUser(this);
@@ -79,7 +79,7 @@ public abstract class ClientComposite
 	 * Methods
 	 **************************************************************************/
 	
-	private GameState getGameState() {
+	private TableInformationProvider getTableInformationProvider() {
 		return gameState;
 	}
 	

@@ -31,54 +31,53 @@ import org.cspoker.common.elements.table.Rounds;
 import org.cspoker.common.elements.table.SeatId;
 
 @Immutable
-public class SmartHoldemTableContext extends ForwardingRemoteHoldemTableContext {
-
+public class SmartHoldemTableContext
+		extends ForwardingRemoteHoldemTableContext {
+	
 	private final SmartHoldemTableListener smartTableListener;
 	private final SmartClientContext smartClientContext;
-
-	public SmartHoldemTableContext(RemoteHoldemTableContext holdemTableContext,
-			SmartHoldemTableListener smartListener, SmartClientContext smartClientContext) {
+	
+	public SmartHoldemTableContext(RemoteHoldemTableContext holdemTableContext, SmartHoldemTableListener smartListener,
+			SmartClientContext smartClientContext) {
 		super(holdemTableContext);
 		this.smartTableListener = smartListener;
 		this.smartClientContext = smartClientContext;
 	}
-
-	public Pots getPots(){
-		return smartTableListener.getPots();
+	
+	public Pots getPots() {
+		return smartTableListener.getTableInformationProvider().getPots();
 	}
 	
-	public Set<Card> getCommunityCards(){
-		return smartTableListener.getCommunityCards();
-	}
-	
-	@Override
-	public SmartHoldemPlayerContext sitIn(int amount,
-			HoldemPlayerListener holdemPlayerListener) throws RemoteException,
-			IllegalActionException {
-		SmartHoldemPlayerListener smartPlayerListener = new SmartHoldemPlayerListener(holdemPlayerListener);
-		return new SmartHoldemPlayerContext(super.sitIn(amount, smartPlayerListener),smartTableListener,smartPlayerListener,smartClientContext);
+	public Set<Card> getCommunityCards() {
+		return smartTableListener.getTableInformationProvider().getCommunityCards();
 	}
 	
 	@Override
-	public SmartHoldemPlayerContext sitIn(SeatId seatId, int amount,
-			HoldemPlayerListener holdemPlayerListener) throws RemoteException,
-			IllegalActionException {
+	public SmartHoldemPlayerContext sitIn(int amount, HoldemPlayerListener holdemPlayerListener)
+			throws RemoteException, IllegalActionException {
 		SmartHoldemPlayerListener smartPlayerListener = new SmartHoldemPlayerListener(holdemPlayerListener);
-		return new SmartHoldemPlayerContext(super.sitIn(seatId, amount, smartPlayerListener),smartTableListener,smartPlayerListener,smartClientContext);
+		return new SmartHoldemPlayerContext(super.sitIn(amount, smartPlayerListener), smartTableListener,
+				smartPlayerListener, smartClientContext);
 	}
-
+	
+	@Override
+	public SmartHoldemPlayerContext sitIn(SeatId seatId, int amount, HoldemPlayerListener holdemPlayerListener)
+			throws RemoteException, IllegalActionException {
+		SmartHoldemPlayerListener smartPlayerListener = new SmartHoldemPlayerListener(holdemPlayerListener);
+		return new SmartHoldemPlayerContext(super.sitIn(seatId, amount, smartPlayerListener), smartTableListener,
+				smartPlayerListener, smartClientContext);
+	}
+	
 	public Rounds getCurrentRound() {
-		return smartTableListener.getCurrentRound();
+		return smartTableListener.getTableInformationProvider().getCurrentRound();
 	}
-
+	
 	public boolean isPlaying(PlayerId playerID) {
-		return smartTableListener.isPlaying(playerID);
+		return smartTableListener.getTableInformationProvider().isPlaying(playerID);
 	}
-
-
-
+	
 	public int getAllStakes(PlayerId playerID) {
-		return smartTableListener.getAllStakes(playerID);
+		return smartTableListener.getTableInformationProvider().getAllStakes(playerID);
 	}
 	
 }

@@ -16,6 +16,8 @@ import java.util.concurrent.Executor;
 
 import org.apache.log4j.Logger;
 import org.cspoker.client.User;
+import org.cspoker.client.common.SmartHoldemTableListener;
+import org.cspoker.client.common.TableInformationProvider;
 import org.cspoker.client.gui.swt.window.GameWindow;
 import org.cspoker.common.api.cashier.context.RemoteCashierContext;
 import org.cspoker.common.api.chat.context.RemoteChatContext;
@@ -52,7 +54,8 @@ public class UserSeatedPlayer {
 	RemoteHoldemPlayerContext playerContext;
 	RemoteChatContext chatContext;
 	private RemoteCashierContext cashierContext;
-	private GameState gameState;
+	private SmartHoldemTableListener listener;
+	private TableInformationProvider tableInformationProvider;
 	
 	/**
 	 * Create a new UserSeatedPlayer representing the player for a given
@@ -63,9 +66,10 @@ public class UserSeatedPlayer {
 	 * @param gameState The {@link GameState} for this table
 	 * @throws IllegalValueException
 	 */
-	public UserSeatedPlayer(GameWindow gameWindow, ClientCore core, GameState gameState)
+	public UserSeatedPlayer(GameWindow gameWindow, ClientCore core, SmartHoldemTableListener listener)
 			throws IllegalValueException {
-		this.gameState = gameState;
+		this.listener = listener;
+		tableInformationProvider = listener.getTableInformationProvider();
 		assert (gameWindow != null) : "We need the GameWindow as the listener!";
 		this.gameWindow = gameWindow;
 		this.displayExecutor = DisplayExecutor.getInstance();
@@ -149,8 +153,8 @@ public class UserSeatedPlayer {
 	public void joinTable(RemoteLobbyContext lobbyContext) {
 		assert (lobbyContext != null);
 		try {
-			tableContext = lobbyContext.joinHoldemTable(gameState.getTableId(), new AsynchronousHoldemTableListener(
-					displayExecutor, gameState));
+			tableContext = lobbyContext.joinHoldemTable(tableInformationProvider.getTableId(),
+					new AsynchronousHoldemTableListener(displayExecutor, listener));
 		} catch (RemoteException e) {
 			throw new IllegalStateException(e);
 		} catch (IllegalActionException e) {
@@ -169,7 +173,7 @@ public class UserSeatedPlayer {
 		assert (communication != null);
 		try {
 			chatContext = communication.getTableChatContext(new AsynchronousChatListener(displayExecutor, gameWindow
-					.getUserInputComposite()), gameState.getTableId());
+					.getUserInputComposite()), tableInformationProvider.getTableId());
 		} catch (RemoteException e) {
 			throw new IllegalStateException(e);
 		} catch (IllegalActionException e) {

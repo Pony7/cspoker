@@ -24,36 +24,37 @@ import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.RemoteHolde
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.cards.Card;
 import org.cspoker.common.elements.cards.Rank;
-import org.cspoker.common.elements.player.PlayerId;
 
-public class SmartHoldemPlayerContext extends ForwardingRemoteHoldemPlayerContext {
-
+public class SmartHoldemPlayerContext
+		extends ForwardingRemoteHoldemPlayerContext {
+	
 	private final static Logger logger = Logger.getLogger(SmartHoldemPlayerContext.class);
 	
 	private final SmartHoldemPlayerListener smartPlayerListener;
 	private final SmartHoldemTableListener smartTableListener;
 	private final SmartClientContext smartClientContext;
-
+	
 	public SmartHoldemPlayerContext(RemoteHoldemPlayerContext remoteHoldemPlayerContext,
-			SmartHoldemTableListener smartTableListener, SmartHoldemPlayerListener smartPlayerListener, SmartClientContext smartClientContext) {
+			SmartHoldemTableListener smartTableListener, SmartHoldemPlayerListener smartPlayerListener,
+			SmartClientContext smartClientContext) {
 		super(remoteHoldemPlayerContext);
 		this.smartTableListener = smartTableListener;
 		this.smartPlayerListener = smartPlayerListener;
 		this.smartClientContext = smartClientContext;
 	}
 	
-	public Set<Card> getPocketCards(){
+	public Set<Card> getPocketCards() {
 		return smartPlayerListener.getPocketCards();
 	}
 	
 	public boolean havePocketPair() {
 		Set<Card> cards = getPocketCards();
 		Card previous = null;
-		for(Card card:cards){
-			if(previous==null){
+		for (Card card : cards) {
+			if (previous == null) {
 				previous = card;
-			}else{
-				if(previous.getRank().equals(card)){
+			} else {
+				if (previous.getRank().equals(card)) {
 					return true;
 				}
 			}
@@ -61,27 +62,29 @@ public class SmartHoldemPlayerContext extends ForwardingRemoteHoldemPlayerContex
 		return false;
 	}
 	
-	public boolean haveA(Rank rank){
+	public boolean haveA(Rank rank) {
 		Set<Card> cards = getPocketCards();
-		for(Card card:cards){
-			if(card.getRank().equals(rank)){
+		for (Card card : cards) {
+			if (card.getRank().equals(rank)) {
 				return true;
 			}
 		}
 		return false;
 	}
-
-	public void raiseMaxBetWith(int bet) throws RemoteException, IllegalActionException {
-		int deficit = smartTableListener.getToCall(smartClientContext.getAccountContext().getPlayerID());
-		if(deficit>bet){
+	
+	public void raiseMaxBetWith(int bet)
+			throws RemoteException, IllegalActionException {
+		int deficit = smartTableListener.getTableInformationProvider().getToCall(
+				smartClientContext.getAccountContext().getPlayerID());
+		if (deficit > bet) {
 			logger.trace("Folding");
 			fold();
-		}else if (deficit==bet){
+		} else if (deficit == bet) {
 			logger.trace("Calling");
 			checkOrCall();
-		}else{
-			logger.trace("Raising with "+(bet-deficit));
-			betOrRaise(bet-deficit);
+		} else {
+			logger.trace("Raising with " + (bet - deficit));
+			betOrRaise(bet - deficit);
 		}
 	}
 	
