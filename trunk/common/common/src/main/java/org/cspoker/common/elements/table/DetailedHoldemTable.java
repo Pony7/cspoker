@@ -57,12 +57,12 @@ public class DetailedHoldemTable extends Table {
 	public DetailedHoldemTable(TableId id, String name, List<SeatedPlayer> players,
 			boolean playing, TableConfiguration property, Pots pots, SeatedPlayer dealer, List<Card> communityCards, Rounds round) {
 		super(id,name);
-		this.players = new ArrayList<SeatedPlayer>(players);
+		this.players = players==null? new ArrayList<SeatedPlayer>():new ArrayList<SeatedPlayer>(players);
 		this.playing = playing;
 		this.property = property;
 		this.pots = pots;
 		this.dealer = dealer;
-		this.communityCards = new ArrayList<Card>(communityCards);
+		this.communityCards = communityCards==null? new ArrayList<Card>():new ArrayList<Card>(communityCards);
 		this.round = round;
 	}
 	
@@ -127,6 +127,10 @@ public class DetailedHoldemTable extends Table {
 	
 	public List<Card> getCommunityCards(){
 		return communityCards;
+	}
+	
+	public Rounds getRound() {
+		return round;
 	}
 
 }
