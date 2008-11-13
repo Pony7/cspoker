@@ -69,19 +69,22 @@ There are several trust boundaries that can be identified in the DFDs. First of 
 \section{Architecture based Misuse Cases}
 \subsection{Player}
 \subsubsection{Spoofing a Player}
+\textbf{Summary:} \\
+The mis-actor gains access to the poker server pretending to be a legitimate user. To achieve this goal he can use false credentials or credentials of an existing user. He could also bypass the authentication system to realize the same objective. \\
 \textbf{Primary mis-actor:}
 \begin{itemize}
 \item Crook
 \end{itemize}
 \textbf{Basic path:}
 \begin{itemize}
-\item The mis-actor obtains the credentials of a legitimate player or finds a way to fake credentials.
+\item The mis-actor obtains the credentials of a legitimate player.
 \item The mis-actor authenticates with the poker server.
 \item The mis-actor can take actions on behalf of a legitimate player.
 \end{itemize}
 \textbf{Alternative paths:}
 \begin{itemize}
 \item The mis-actor bypasses the authentication system by exploiting a weakness.
+\item The mis-actor finds a way to fake credentials.
 \end{itemize}
 \textbf{Capture points:}
 \begin{itemize}
@@ -91,6 +94,34 @@ There are several trust boundaries that can be identified in the DFDs. First of 
 \item Transmit credentials over the wire securely.
 \item Test credentials for uniqueness and complexity.
 \item Certify client software to enforce that credentials are handled securely.
+\end{itemize}
+\end{itemize}
+\textbf{Triggers:}\\
+Always true, i.e., this can happen at any time. \\
+\textbf{Preconditions:}
+\begin{itemize}
+\item Credentials can be falsified.
+\item Credentials are not well protected.
+\item There is no authentication system or the authentication system is too weak.
+\end{itemize}
+\textbf{Assumptions:}
+\begin{itemize}
+\item The players are careless with their credentials (e.g. store user name/password in a text file).
+\item The players choose easy passwords.
+\end{itemize}
+\textbf{Worst case threat:}\\
+The crook can play with the spoofed identity against his own identity and win all chips from spoofed identity. \\
+\textbf{Prevention Guarantee:} \\
+Only authentic users can gain access at the poker server. \\
+\textbf{Stakeholders and risks:}
+\begin{itemize}
+\item Player: 
+\begin{itemize}
+\item Potential loss of money if his identity is misused and all chips are transfered to an other account.
+\end{itemize}
+\item Online Casino: 
+\begin{itemize}
+\item Lost confidence if security problems get publicized.
 \end{itemize}
 \end{itemize}
 
@@ -264,15 +295,29 @@ See section \ref{Repudiation of a Player}.
 
 \subsection{Lobby}
 \subsubsection{Spoofing a lobby}
+\textbf{Summary:} \\
+The mis-actor prepares a process to spoof the lobby and deploys it on one of the online casino servers or on an external server. Every player connecting to a table through the lobby can be diverted to an untrusted table.
 \subsubsection{Tampering with the lobby}
+\textbf{Summary:} \\
+The mis-actor tampers with the lobby to modify its functionality. A player connecting to a table through the lobby can be diverted to an untrusted table. 
 \subsubsection{Repudiation of an action at the lobby}
 \subsubsection{Information disclosure at the lobby}
 \subsubsection{DoS against the lobby}
+\textbf{Summary:} \\
+The mis-actor performs actions leading to a crash or overloading the capacity of the lobby. As a result, the lobby can no longer be reached by the users.
 \subsubsection{Elevation of privilege at the lobby}
+\textbf{Summary:} \\
+The mis-actor performs actions leading to the possibility to do administrator actions. He can achieve this by presenting false credentials, spoofing an administrator or tampering with the lobby or account management.
 \subsection{Table}
 \subsubsection{Spoofing a table}
+\textbf{Summary:} \\
+The mis-actor prepares a process to spoof the table and deploys it on one of the online casino servers or on an external server. Every player connecting to this table can be scammed. The spoofed table could provide the mis-actor with all confidential information or deal crafted hands to maximize the profit of the mis-actor (e.g. deal a full house to an innocent player and deal a four of a kind to himself and lure the innocent player to go all-in).
 \subsubsection{Tampering with a table}
+\textbf{Summary:} \\
+The mis-actor tampers with the lobby to modify its functionality. Every player connecting to this table can be scammed. The tampered table could provide the mis-actor with all confidential information or deal crafted hands to maximize the profit of the mis-actor (e.g. deal a full house to an innocent player and deal a four of a kind to himself and lure the innocent player to go all-in).
 \subsubsection{Repudiation of a table}
+\textbf{Summary:} \\
+The online casino denies a player has won a number of chips or has received certain hole cards. This is possible if there is no log or if the log could be modified. It is also possible that the hand evaluation system has been tampered and this should be detected afterwards. 
 \subsubsection{Information disclosure at a table}
 \textbf{Primary mis-actor:}
 \begin{itemize}
@@ -303,7 +348,11 @@ See section \ref{Repudiation of a Player}.
 \end{itemize}
 
 \subsubsection{DoS against a table}
-\subsubsection{Elevation of Privilege}
+\textbf{Summary:} \\
+The mis-actor performs actions leading to a crash or overloading the capacity of the table. As a result, the table can no longer be reached by the users.
+\subsubsection{Elevation of Privilege at the table}
+\textbf{Summary:} \\
+The mis-actor performs actions leading to the possibility to do administrator actions. He can achieve this by presenting false credentials, spoofing an administrator or tampering with the lobby or account management.
 \subsection{Chat Service}
 \subsection{Cashier}
 \subsection{Account Management}
@@ -826,8 +875,10 @@ Here we choose to reduce the number of data flows from/to the Player because int
 
 \subsubsection{A malicious player misuses the right to ask the admin to view the log of the table}
 \textbf{Summary:} The malicious player misuses the possibility to view the table log pretending to be suspicious of collusion. The malicious player can verify the hands of all the opponents, also those who have chosen not to show their cards. By this way he can gain more insight into the strategy of its opponents (whether someone is bluffing or not, ...). Consulting the log is only possible after the game has been played so there is no direct influence, but in the long run gives an unfair advantage and allows profiling of a players behaviour.
+
 \subsubsection{A malicious player can flood the network of another player to force a time-out}
 \textbf{Summary:} A malicious player can flood the network of an opponent at a crucial moment so no communication between this opponent and the poker server is possible. This will lead to a time-out of the opponent. Depending on the time-out policy the malicious player can have a huge advantage.
+
 \subsection{Multi player Cheating}
 \subsubsection{Multiple players at a table collaborate}
 \textbf{Summary:} By collaborating they have access to more knowledge than legitimate. With this extra knowledge they have a more accurate view on the outs. They can protect each other, or they can raise each other to force the other players to call higher chip amounts to enlarge the pot.
