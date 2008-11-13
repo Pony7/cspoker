@@ -80,6 +80,7 @@ package models
 		}
 		
 		public static function createNewTable(tableName:String):void{
+			var delay:int = 12;
 			serverConnection.csCreateTableAction(tableName);
 			lobby.gamesDG.refreshGames();
 		}
