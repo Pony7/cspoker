@@ -52,10 +52,10 @@ public class DetailedHoldemTable extends Table {
 	@XmlElement(name = "card")
 	private final List<Card> communityCards;
 	
-	private final Rounds round;
+	private final Round round;
 
 	public DetailedHoldemTable(TableId id, String name, List<SeatedPlayer> players,
-			boolean playing, TableConfiguration property, Pots pots, SeatedPlayer dealer, List<Card> communityCards, Rounds round) {
+			boolean playing, TableConfiguration property, Pots pots, SeatedPlayer dealer, List<Card> communityCards, Round round) {
 		super(id,name);
 		this.players = players==null? new ArrayList<SeatedPlayer>():new ArrayList<SeatedPlayer>(players);
 		this.playing = playing;
@@ -129,7 +129,7 @@ public class DetailedHoldemTable extends Table {
 		return communityCards;
 	}
 	
-	public Rounds getRound() {
+	public Round getRound() {
 		return round;
 	}
 

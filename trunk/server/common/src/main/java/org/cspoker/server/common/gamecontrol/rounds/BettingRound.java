@@ -45,7 +45,7 @@ import org.cspoker.server.common.gamecontrol.PokerTable;
  * A class to represent betting rounds.
  * 
  */
-public abstract class BettingRound extends Round {
+public abstract class BettingRound extends AbstractRound {
 
 	private static Logger logger = Logger.getLogger(BettingRound.class);
 

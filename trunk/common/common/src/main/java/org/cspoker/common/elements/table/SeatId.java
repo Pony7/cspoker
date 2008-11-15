@@ -31,17 +31,17 @@ public class SeatId implements Serializable{
 	private static final long serialVersionUID = -2997117736649022785L;
 
 	@XmlValue
-	private final long seatId;
+	private final int seatId;
 	
 	public SeatId() {
 		this(0);
 	}
 	
-	public SeatId(long seatId){
+	public SeatId(int seatId){
 		this.seatId = seatId;
 	}
 
-	public long getId() {
+	public int getId() {
 		return seatId;
 	}
 	

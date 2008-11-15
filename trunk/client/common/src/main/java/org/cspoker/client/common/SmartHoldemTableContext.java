@@ -16,6 +16,7 @@
 package org.cspoker.client.common;
 
 import java.rmi.RemoteException;
+import java.util.Map;
 import java.util.Set;
 
 import net.jcip.annotations.Immutable;
@@ -27,7 +28,8 @@ import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.cards.Card;
 import org.cspoker.common.elements.chips.Pots;
 import org.cspoker.common.elements.player.PlayerId;
-import org.cspoker.common.elements.table.Rounds;
+import org.cspoker.common.elements.player.SeatedPlayer;
+import org.cspoker.common.elements.table.Round;
 import org.cspoker.common.elements.table.SeatId;
 
 @Immutable
@@ -68,7 +70,7 @@ public class SmartHoldemTableContext
 				smartPlayerListener, smartClientContext);
 	}
 	
-	public Rounds getCurrentRound() {
+	public Round getCurrentRound() {
 		return smartTableListener.getTableInformationProvider().getCurrentRound();
 	}
 	
@@ -78,6 +80,10 @@ public class SmartHoldemTableContext
 	
 	public int getAllStakes(PlayerId playerID) {
 		return smartTableListener.getTableInformationProvider().getAllStakes(playerID);
+	}
+
+	public Map<PlayerId, SeatedPlayer> getPlayers() {
+		return smartTableListener.getPlayers();
 	}
 	
 }

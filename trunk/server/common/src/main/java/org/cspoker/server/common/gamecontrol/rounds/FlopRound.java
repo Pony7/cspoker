@@ -23,7 +23,7 @@ import org.cspoker.common.api.lobby.holdemtable.event.NewCommunityCardsEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.NewRoundEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.NextPlayerEvent;
 import org.cspoker.common.elements.cards.Card;
-import org.cspoker.common.elements.table.Rounds;
+import org.cspoker.common.elements.table.Round;
 import org.cspoker.server.common.gamecontrol.Game;
 import org.cspoker.server.common.gamecontrol.PokerTable;
 
@@ -48,7 +48,7 @@ public class FlopRound extends BettingRound {
 	}
 
 	@Override
-	public Round getNextRound() {
+	public AbstractRound getNextRound() {
 		if (potsDividedToWinner()) {
 			return getNewDealRound();
 		}
@@ -70,7 +70,7 @@ public class FlopRound extends BettingRound {
 		return "flop round";
 	}
 	
-	public Rounds getRound(){
-		return Rounds.FLOP;
+	public Round getRound(){
+		return Round.FLOP;
 	}
 }

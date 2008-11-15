@@ -19,7 +19,7 @@ package org.cspoker.server.common.gamecontrol.rounds;
 import org.apache.log4j.Logger;
 import org.cspoker.common.api.lobby.holdemtable.event.NewRoundEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.NextPlayerEvent;
-import org.cspoker.common.elements.table.Rounds;
+import org.cspoker.common.elements.table.Round;
 import org.cspoker.server.common.gamecontrol.Game;
 import org.cspoker.server.common.gamecontrol.PokerTable;
 
@@ -38,7 +38,7 @@ public class TurnRound extends BettingRound {
 	}
 
 	@Override
-	public Round getNextRound() {
+	public AbstractRound getNextRound() {
 		if (potsDividedToWinner()) {
 			return getNewDealRound();
 		}
@@ -60,7 +60,7 @@ public class TurnRound extends BettingRound {
 		return "turn round";
 	}
 	
-	public Rounds getRound(){
-		return Rounds.TURN;
+	public Round getRound(){
+		return Round.TURN;
 	}
 }

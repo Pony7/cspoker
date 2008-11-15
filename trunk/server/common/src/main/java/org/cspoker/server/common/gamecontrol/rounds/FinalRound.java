@@ -19,7 +19,7 @@ package org.cspoker.server.common.gamecontrol.rounds;
 import org.apache.log4j.Logger;
 import org.cspoker.common.api.lobby.holdemtable.event.NewRoundEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.NextPlayerEvent;
-import org.cspoker.common.elements.table.Rounds;
+import org.cspoker.common.elements.table.Round;
 import org.cspoker.server.common.gamecontrol.Game;
 import org.cspoker.server.common.gamecontrol.PokerTable;
 import org.cspoker.server.common.gamecontrol.Showdown;
@@ -55,7 +55,7 @@ public class FinalRound extends BettingRound {
 	}
 
 	@Override
-	public Round getNextRound() {
+	public AbstractRound getNextRound() {
 		return getNewDealRound();
 	}
 
@@ -74,7 +74,7 @@ public class FinalRound extends BettingRound {
 		return "final round";
 	}
 
-	public Rounds getRound(){
-		return Rounds.FINAL;
+	public Round getRound(){
+		return Round.FINAL;
 	}
 }
