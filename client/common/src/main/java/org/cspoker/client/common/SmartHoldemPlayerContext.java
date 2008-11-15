@@ -19,36 +19,35 @@ import java.rmi.RemoteException;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
+import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.ForwardingRemoteHoldemPlayerContext;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.RemoteHoldemPlayerContext;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.cards.Card;
 import org.cspoker.common.elements.cards.Rank;
+import org.cspoker.common.elements.player.PlayerId;
 
 public class SmartHoldemPlayerContext
 		extends ForwardingRemoteHoldemPlayerContext {
 	
 	private final static Logger logger = Logger.getLogger(SmartHoldemPlayerContext.class);
+	private final TableState state;
+	private final PlayerId playerId;
 	
-	private final SmartHoldemPlayerListener smartPlayerListener;
-	private final SmartHoldemTableListener smartTableListener;
-	private final SmartClientContext smartClientContext;
 	
-	public SmartHoldemPlayerContext(RemoteHoldemPlayerContext remoteHoldemPlayerContext,
-			SmartHoldemTableListener smartTableListener, SmartHoldemPlayerListener smartPlayerListener,
-			SmartClientContext smartClientContext) {
+	public SmartHoldemPlayerContext(RemoteHoldemPlayerContext remoteHoldemPlayerContext,TableState state, PlayerId playerId) {
 		super(remoteHoldemPlayerContext);
-		this.smartTableListener = smartTableListener;
-		this.smartPlayerListener = smartPlayerListener;
-		this.smartClientContext = smartClientContext;
+		this.state = state;
+		this.playerId = playerId;
 	}
+
 	
-	public Set<Card> getPocketCards() {
-		return smartPlayerListener.getPocketCards();
+	public GameState getGameState() {
+		return state.getGameState();
 	}
 	
 	public boolean havePocketPair() {
-		Set<Card> cards = getPocketCards();
+		Set<Card> cards = getGameState().getCards(playerId);
 		Card previous = null;
 		for (Card card : cards) {
 			if (previous == null) {
@@ -63,7 +62,7 @@ public class SmartHoldemPlayerContext
 	}
 	
 	public boolean haveA(Rank rank) {
-		Set<Card> cards = getPocketCards();
+		Set<Card> cards = getGameState().getCards(playerId);
 		for (Card card : cards) {
 			if (card.getRank().equals(rank)) {
 				return true;
@@ -72,13 +71,9 @@ public class SmartHoldemPlayerContext
 		return false;
 	}
 	
-	public int getDeficit() throws RemoteException, IllegalActionException{
-		return smartTableListener.getTableInformationProvider().getToCall(smartClientContext.getAccountContext().getPlayerID());
-	}
-	
 	public void raiseMaxBetWith(int bet)
 			throws RemoteException, IllegalActionException {
-		int deficit = getDeficit();
+		int deficit = getGameState().getDeficit(playerId);
 		if (deficit > bet) {
 			logger.trace("Folding");
 			fold();

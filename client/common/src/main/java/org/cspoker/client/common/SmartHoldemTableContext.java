@@ -16,74 +16,49 @@
 package org.cspoker.client.common;
 
 import java.rmi.RemoteException;
-import java.util.Map;
-import java.util.Set;
 
 import net.jcip.annotations.Immutable;
 
+import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.common.api.lobby.holdemtable.context.ForwardingRemoteHoldemTableContext;
 import org.cspoker.common.api.lobby.holdemtable.context.RemoteHoldemTableContext;
+import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.RemoteHoldemPlayerContext;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.listener.HoldemPlayerListener;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
-import org.cspoker.common.elements.cards.Card;
-import org.cspoker.common.elements.chips.Pots;
 import org.cspoker.common.elements.player.PlayerId;
-import org.cspoker.common.elements.player.SeatedPlayer;
-import org.cspoker.common.elements.table.Round;
 import org.cspoker.common.elements.table.SeatId;
 
 @Immutable
 public class SmartHoldemTableContext
 		extends ForwardingRemoteHoldemTableContext {
 	
-	private final SmartHoldemTableListener smartTableListener;
-	private final SmartClientContext smartClientContext;
-	
-	public SmartHoldemTableContext(RemoteHoldemTableContext holdemTableContext, SmartHoldemTableListener smartListener,
-			SmartClientContext smartClientContext) {
-		super(holdemTableContext);
-		this.smartTableListener = smartListener;
-		this.smartClientContext = smartClientContext;
-	}
-	
-	public Pots getPots() {
-		return smartTableListener.getTableInformationProvider().getPots();
-	}
-	
-	public Set<Card> getCommunityCards() {
-		return smartTableListener.getTableInformationProvider().getCommunityCards();
-	}
-	
-	@Override
-	public SmartHoldemPlayerContext sitIn(int amount, HoldemPlayerListener holdemPlayerListener)
-			throws RemoteException, IllegalActionException {
-		SmartHoldemPlayerListener smartPlayerListener = new SmartHoldemPlayerListener(holdemPlayerListener);
-		return new SmartHoldemPlayerContext(super.sitIn(amount, smartPlayerListener), smartTableListener,
-				smartPlayerListener, smartClientContext);
-	}
-	
-	@Override
-	public SmartHoldemPlayerContext sitIn(SeatId seatId, int amount, HoldemPlayerListener holdemPlayerListener)
-			throws RemoteException, IllegalActionException {
-		SmartHoldemPlayerListener smartPlayerListener = new SmartHoldemPlayerListener(holdemPlayerListener);
-		return new SmartHoldemPlayerContext(super.sitIn(seatId, amount, smartPlayerListener), smartTableListener,
-				smartPlayerListener, smartClientContext);
-	}
-	
-	public Round getCurrentRound() {
-		return smartTableListener.getTableInformationProvider().getCurrentRound();
-	}
-	
-	public boolean isPlaying(PlayerId playerID) {
-		return smartTableListener.getTableInformationProvider().isPlaying(playerID);
-	}
-	
-	public int getAllStakes(PlayerId playerID) {
-		return smartTableListener.getTableInformationProvider().getAllStakes(playerID);
-	}
+	private TableState state;
+	private PlayerId playerId;
 
-	public Map<PlayerId, SeatedPlayer> getPlayers() {
-		return smartTableListener.getPlayers();
+	public SmartHoldemTableContext(RemoteHoldemTableContext holdemTableContext, TableState state, PlayerId playerId) {
+		super(holdemTableContext);
+		this.state = state;
+		this.playerId = playerId;
+	}
+	
+	@Override
+	public RemoteHoldemPlayerContext sitIn(int amount,
+			HoldemPlayerListener holdemPlayerListener) throws RemoteException,
+			IllegalActionException {
+		RemoteHoldemPlayerContext listener = super.sitIn(amount, new SmartHoldemPlayerListener(holdemPlayerListener,state));
+		return new SmartHoldemPlayerContext(listener,state,playerId);
+	}
+	
+	@Override
+	public RemoteHoldemPlayerContext sitIn(SeatId seatId, int amount,
+			HoldemPlayerListener holdemPlayerListener) throws RemoteException,
+			IllegalActionException {
+		RemoteHoldemPlayerContext listener = super.sitIn(seatId, amount, new SmartHoldemPlayerListener(holdemPlayerListener,state));
+		return new SmartHoldemPlayerContext(listener,state,playerId);
+	}
+	
+	public GameState getGameState() {
+		return state.getGameState();
 	}
 	
 }

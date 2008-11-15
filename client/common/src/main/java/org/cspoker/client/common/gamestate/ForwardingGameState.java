@@ -63,10 +63,6 @@ public abstract class ForwardingGameState extends AbstractGameState{
 		return gameState.getNextToAct();
 	}
 
-	public TableConfiguration getTableConfiguration() {
-		return gameState.getTableConfiguration();
-	}
-
 	public Round getRound() {
 		return gameState.getRound();
 	}

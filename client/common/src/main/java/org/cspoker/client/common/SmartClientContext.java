@@ -34,7 +34,7 @@ public class SmartClientContext extends ForwardingRemoteServerContext{
 	@Override
 	public SmartLobbyContext getLobbyContext(LobbyListener lobbyListener)
 			throws RemoteException, IllegalActionException {
-		return new SmartLobbyContext(super.getLobbyContext(lobbyListener), this);
+		return new SmartLobbyContext(super.getLobbyContext(lobbyListener), getAccountContext().getPlayerID());
 	}
 	
 }
