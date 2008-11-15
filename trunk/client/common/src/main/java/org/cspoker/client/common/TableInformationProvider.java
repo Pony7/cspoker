@@ -15,6 +15,7 @@
  */
 package org.cspoker.client.common;
 
+import java.security.acl.LastOwnerException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -71,6 +72,7 @@ public class TableInformationProvider {
 				return 0;
 			} else {
 				if (getPots() != null && getPots().getTotalValue() > 0) {
+					logger.warn(getPots());
 					throw new IllegalStateException("Pots are not empty, can't calculate all stakes");
 				}
 				return player.getStack().getValue() + player.getBetChips().getValue();
@@ -99,8 +101,8 @@ public class TableInformationProvider {
 	 * 
 	 * @return
 	 */
-	public int getLastBetRaiseAmount() {
-		return listener.lastBetRaiseAmount;
+	public int getMaxBet() {
+		return listener.maxBet;
 	}
 	
 	public int getPotRaiseAmount(PlayerId player) {
@@ -123,25 +125,11 @@ public class TableInformationProvider {
 	public int getMinBetRaiseAmount(PlayerId player) {
 		SeatedPlayer snapshot = getSnapshot(player);
 		int bigBlind = tableConfiguration.getBigBlind();
-		int lastRaise = getLastBetRaiseAmount();
+		int lastRaise = getMaxBet();
 		int minBetRaise = Math.max(bigBlind, lastRaise);
 		int moneyRemaining = snapshot.getStackValue() - getToCall(player);
 		minBetRaise = Math.min(minBetRaise, moneyRemaining);
 		return minBetRaise;
-	}
-	
-	/**
-	 * @return The player who has bet the most chips in this round
-	 */
-	public int getMaxBet() {
-		int max = 0;
-		for (SeatedPlayer player : listener.getPlayers().values()) {
-			if (player.getBetChipsValue() > max) {
-				max = player.getBetChipsValue();
-			}
-		}
-		
-		return max;
 	}
 	
 	/**
@@ -178,10 +166,7 @@ public class TableInformationProvider {
 	 *         and he wants to stay in the hand
 	 */
 	public int getToCall(PlayerId playerId) {
-		if (getMaxBet() == tableConfiguration.getSmallBlind()) {
-			return 0;
-		}
-		return Math.max(0, getMaxBet() - getSnapshot(playerId).getBetChipsValue());
+		return getMaxBet()-listener.getPlayers().get(playerId).getBetChipsValue();
 	}
 	
 	public boolean isPlaying(PlayerId playerID) {
