@@ -72,10 +72,13 @@ public class SmartHoldemPlayerContext
 		return false;
 	}
 	
+	public int getDeficit() throws RemoteException, IllegalActionException{
+		return smartTableListener.getTableInformationProvider().getToCall(smartClientContext.getAccountContext().getPlayerID());
+	}
+	
 	public void raiseMaxBetWith(int bet)
 			throws RemoteException, IllegalActionException {
-		int deficit = smartTableListener.getTableInformationProvider().getToCall(
-				smartClientContext.getAccountContext().getPlayerID());
+		int deficit = getDeficit();
 		if (deficit > bet) {
 			logger.trace("Folding");
 			fold();

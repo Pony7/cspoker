@@ -15,15 +15,34 @@
  */
 package org.cspoker.client.common;
 
-import java.util.*;
+import java.rmi.RemoteException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import net.jcip.annotations.GuardedBy;
 import net.jcip.annotations.ThreadSafe;
 
 import org.apache.log4j.Logger;
-import org.cspoker.common.api.lobby.holdemtable.event.*;
+import org.cspoker.common.api.lobby.holdemtable.event.AllInEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.BetEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.BigBlindEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.CallEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.NewCommunityCardsEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.NewDealEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.NewRoundEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.RaiseEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.SitInEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.SitOutEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.SmallBlindEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.WinnerEvent;
 import org.cspoker.common.api.lobby.holdemtable.listener.ForwardingHoldemTableListener;
 import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
+import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.cards.Card;
 import org.cspoker.common.elements.chips.Chips;
 import org.cspoker.common.elements.chips.IllegalValueException;
@@ -34,6 +53,7 @@ import org.cspoker.common.elements.player.SeatedPlayer;
 import org.cspoker.common.elements.player.Winner;
 import org.cspoker.common.elements.table.DetailedHoldemTable;
 import org.cspoker.common.elements.table.Rounds;
+import org.cspoker.common.elements.table.TableId;
 
 /**
  * A stateful listener which stores information of the current state of the
@@ -45,7 +65,7 @@ public class SmartHoldemTableListener
 		extends ForwardingHoldemTableListener {
 	
 	private final static Logger logger = Logger.getLogger(SmartHoldemTableListener.class);
-	private DetailedHoldemTable table;
+	private final DetailedHoldemTable table;
 	
 	// The mutable state fields are package private and (hopefully thread-safe)
 	// via volatile modifiers and wrapping them in synchronized collections
@@ -57,7 +77,7 @@ public class SmartHoldemTableListener
 	List<Integer> betsInCurrentRound = Collections.synchronizedList(new ArrayList<Integer>());
 	Map<PlayerId, Integer> inPotUntilBettingRound = Collections.synchronizedMap(new HashMap<PlayerId, Integer>());
 	
-	TableInformationProvider infoProvider;
+	volatile TableInformationProvider infoProvider;
 	
 	@GuardedBy("playersLock")
 	final HashMap<PlayerId, MutableSeatedPlayer> players = new HashMap<PlayerId, MutableSeatedPlayer>();
@@ -68,19 +88,24 @@ public class SmartHoldemTableListener
 	
 	/**
 	 * Constructor
+	 * @throws IllegalActionException 
+	 * @throws RemoteException 
 	 */
-	public SmartHoldemTableListener(HoldemTableListener forwardToMe) {
-		super(forwardToMe);
+	public SmartHoldemTableListener(TableId tableId, HoldemTableListener holdemTableListener, SmartLobbyContext lobbyContext) throws RemoteException, IllegalActionException {
+		super(holdemTableListener);
+		this.table = lobbyContext.getHoldemTableInformation(tableId);
+		initialize();
 	}
 	
 	/**
-	 * @param table The {@link DetailedHoldemTable} to initialize this listener
+	 * @param holdemTableListener The {@link DetailedHoldemTable} to initialize this listener
 	 *            with
-	 * @param forwardToMe
+	 * @param smartLobbyContext
 	 */
-	public SmartHoldemTableListener(DetailedHoldemTable table, HoldemTableListener forwardToMe) {
-		this(forwardToMe);
-		initialize(table);
+	public SmartHoldemTableListener(HoldemTableListener holdemTableListener, DetailedHoldemTable holdemtable) {
+		super(holdemTableListener);
+		this.table = holdemtable;
+		initialize();
 	}
 	
 	/**
@@ -320,9 +345,6 @@ public class SmartHoldemTableListener
 	 */
 	public TableInformationProvider getTableInformationProvider() {
 		if (infoProvider == null) {
-			if (table == null) {
-				throw new IllegalStateException("No table available");
-			}
 			infoProvider = new TableInformationProvider(table, this);
 		}
 		return infoProvider;
@@ -348,12 +370,9 @@ public class SmartHoldemTableListener
 	 * provided later. If the table has not been provided,
 	 * {@link #getTableInformationProvider()} will throw a
 	 * {@link IllegalStateException}
-	 * 
-	 * @param table The initial table configuration
 	 */
-	public void initialize(DetailedHoldemTable table) {
+	private void initialize() {
 		logger.trace("Initializing table state after joining");
-		this.table = table;
 		for (SeatedPlayer player : table.getPlayers()) {
 			players.put(player.getId(), new MutableSeatedPlayer(player));
 			if (table.getDealer() != null) {
