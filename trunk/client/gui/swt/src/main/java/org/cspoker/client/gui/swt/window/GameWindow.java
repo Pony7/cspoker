@@ -78,7 +78,7 @@ public class GameWindow
 	 */
 	public GameWindow(LobbyWindow lobbyWindow, DetailedHoldemTable table) {
 		super(new Shell(lobbyWindow.getDisplay(), SWT.CLOSE | SWT.RESIZE), SWT.NONE, lobbyWindow.getClientCore());
-		SmartHoldemTableListener listener = new SmartHoldemTableListener(table, this);
+		SmartHoldemTableListener listener = new SmartHoldemTableListener(this, table);
 		gameState = listener.getTableInformationProvider();
 		try {
 			user = new UserSeatedPlayer(this, getClientCore(), listener);

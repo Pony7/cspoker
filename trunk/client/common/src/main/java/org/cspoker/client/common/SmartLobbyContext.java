@@ -39,7 +39,7 @@ public class SmartLobbyContext extends ForwardingRemoteLobbyContext {
 	public SmartHoldemTableContext joinHoldemTable(TableId tableId,
 			HoldemTableListener holdemTableListener) throws RemoteException,
 			IllegalActionException {
-		SmartHoldemTableListener smartListener = new SmartHoldemTableListener(holdemTableListener);
+		SmartHoldemTableListener smartListener = new SmartHoldemTableListener(tableId, holdemTableListener, this);
 		return new SmartHoldemTableContext(super.joinHoldemTable(tableId, smartListener),smartListener,smartClientContext);
 	}
 

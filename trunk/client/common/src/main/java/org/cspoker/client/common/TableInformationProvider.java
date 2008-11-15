@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import net.jcip.annotations.Immutable;
 import net.jcip.annotations.ThreadSafe;
 
 import org.apache.log4j.Logger;
@@ -44,15 +45,17 @@ import org.cspoker.common.elements.table.TableId;
 @ThreadSafe
 public class TableInformationProvider {
 	
+	private static Logger logger = Logger.getLogger(TableInformationProvider.class);
+	
 	private final TableId tableId;
 	private final String tableName;
+	
 	/**
 	 * Table snapshot retrieved from the server upon initialization (for
 	 * GameProperty Info etc.)
 	 */
 	private final TableConfiguration tableConfiguration;
-	SmartHoldemTableListener listener;
-	private static Logger logger = Logger.getLogger(TableInformationProvider.class);
+	private final SmartHoldemTableListener listener;
 	
 	public TableInformationProvider(DetailedHoldemTable table, SmartHoldemTableListener listener) {
 		tableId = table.getId();
