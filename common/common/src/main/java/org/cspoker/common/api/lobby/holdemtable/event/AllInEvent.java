@@ -57,7 +57,7 @@ public class AllInEvent extends HoldemTableEvent {
 	
 	@Override
 	public String toString(){
-		return playerId+" is all-in.";
+		return playerId+" is all-in with "+amount+".";
 	}
 
 }

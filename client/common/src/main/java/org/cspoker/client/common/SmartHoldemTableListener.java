@@ -203,7 +203,7 @@ public class SmartHoldemTableListener
 	@Override
 	public void onAllIn(AllInEvent allInEvent) {
 		logger.trace(allInEvent);
-		addToBet(allInEvent.getPlayerId(), allInEvent.getAmount());
+		addToBetAbsolute(allInEvent.getPlayerId(), allInEvent.getAmount());
 		lastBetRaiseAmount = Math.max(lastBetRaiseAmount, allInEvent.getAmount());
 		super.onAllIn(allInEvent);
 	}
@@ -211,7 +211,7 @@ public class SmartHoldemTableListener
 	@Override
 	public void onBet(BetEvent betEvent) {
 		logger.trace(betEvent);
-		addToBet(betEvent.getPlayerId(), betEvent.getAmount());
+		addToBetRelative(betEvent.getPlayerId(), betEvent.getAmount());
 		lastBetRaiseAmount = betEvent.getAmount();
 		super.onBet(betEvent);
 	}
@@ -224,7 +224,7 @@ public class SmartHoldemTableListener
 	@Override
 	public void onBigBlind(BigBlindEvent bigBlindEvent) {
 		logger.trace(bigBlindEvent);
-		addToBet(bigBlindEvent.getPlayerId(), bigBlindEvent.getAmount());
+		addToBetRelative(bigBlindEvent.getPlayerId(), bigBlindEvent.getAmount());
 		lastBetRaiseAmount = bigBlindEvent.getAmount() / 2;
 		super.onBigBlind(bigBlindEvent);
 	}
@@ -237,7 +237,7 @@ public class SmartHoldemTableListener
 	@Override
 	public void onSmallBlind(SmallBlindEvent smallBlindEvent) {
 		logger.trace(smallBlindEvent);
-		addToBet(smallBlindEvent.getPlayerId(), smallBlindEvent.getAmount());
+		addToBetRelative(smallBlindEvent.getPlayerId(), smallBlindEvent.getAmount());
 		super.onSmallBlind(smallBlindEvent);
 	}
 	
@@ -250,7 +250,7 @@ public class SmartHoldemTableListener
 	public void onCall(CallEvent callEvent) {
 		logger.trace(callEvent);
 		synchronized (playersLock) {
-			addToBet(callEvent.getPlayerId(), lastBetRaiseAmount
+			addToBetRelative(callEvent.getPlayerId(), lastBetRaiseAmount
 					- getPlayers().get(callEvent.getPlayerId()).getBetChipsValue());
 		}
 		super.onCall(callEvent);
@@ -267,7 +267,7 @@ public class SmartHoldemTableListener
 		lastBetRaiseAmount = raiseEvent.getMovedAmount()
 				+ getPlayers().get(raiseEvent.getPlayerId()).getBetChipsValue();
 		synchronized (playersLock) {
-			addToBet(raiseEvent.getPlayerId(), raiseEvent.getAmount());
+			addToBetRelative(raiseEvent.getPlayerId(), raiseEvent.getAmount());
 		}
 		
 		super.onRaise(raiseEvent);
@@ -280,17 +280,12 @@ public class SmartHoldemTableListener
 	 * @param playerId
 	 * @param amount
 	 */
-	protected void addToBet(PlayerId playerId, int amount) {
+	protected void addToBetRelative(PlayerId playerId, int amount) {
 		synchronized (playersLock) {
-			try {
-				players.get(playerId).transferAmountToBetPile(
-						amount + getTableInformationProvider().getToCall(playerId));
-			} catch (IllegalValueException e) {
-				logger.error(e);
-				throw new IllegalStateException(e);
-			}
+			addToBetAbsolute(playerId, amount + getTableInformationProvider().getToCall(playerId));
 		}
 		// Special case small blind
+		//TODO make less ugly
 		if (betsInCurrentRound.size() == 1
 				&& betsInCurrentRound.get(0) == getTableInformationProvider().getTableConfiguration().getSmallBlind()) {
 			amount = amount / 2;
@@ -298,6 +293,24 @@ public class SmartHoldemTableListener
 		betsInCurrentRound.add(amount);
 		inPotUntilBettingRound.put(playerId, betsInCurrentRound.size());
 		lastActed = playerId;
+	}
+	
+	/**
+	 * Updates internal state by moving given amount to mutable player's bet
+	 * pile
+	 * 
+	 * @param playerId
+	 * @param amount
+	 */
+	protected void addToBetAbsolute(PlayerId playerId, int amount) {
+		synchronized (playersLock) {
+			try {
+				players.get(playerId).transferAmountToBetPile(amount);
+			} catch (IllegalValueException e) {
+				logger.error(e);
+				throw new IllegalStateException(e);
+			}
+		}
 	}
 	
 	/**
