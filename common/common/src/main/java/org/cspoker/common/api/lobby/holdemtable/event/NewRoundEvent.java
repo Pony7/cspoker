@@ -20,7 +20,7 @@ import net.jcip.annotations.Immutable;
 
 import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
 import org.cspoker.common.elements.chips.Pots;
-import org.cspoker.common.elements.table.Rounds;
+import org.cspoker.common.elements.table.Round;
 
 /**
  * A class to represent new round events.
@@ -31,11 +31,11 @@ public class NewRoundEvent extends HoldemTableEvent {
 
 	private static final long serialVersionUID = 5282936949568835084L;
 
-	private final Rounds round;
+	private final Round round;
 	
 	private final Pots pots;
 
-	public NewRoundEvent(Rounds round, Pots pots) {
+	public NewRoundEvent(Round round, Pots pots) {
 		this.round = round;
 		this.pots = pots;
 	}
@@ -50,7 +50,7 @@ public class NewRoundEvent extends HoldemTableEvent {
 		return round+" "+pots;
 	}
 
-	public Rounds getRound() {
+	public Round getRound() {
 		return round;
 	}
 	

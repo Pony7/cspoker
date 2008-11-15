@@ -19,7 +19,7 @@ package org.cspoker.server.common.gamecontrol.rounds;
 import org.cspoker.common.api.lobby.holdemtable.event.SitOutEvent;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.player.MutableSeatedPlayer;
-import org.cspoker.common.elements.table.Rounds;
+import org.cspoker.common.elements.table.Round;
 import org.cspoker.server.common.gamecontrol.Game;
 import org.cspoker.server.common.gamecontrol.PokerTable;
 import org.cspoker.server.common.gamecontrol.rules.BettingRules;
@@ -28,7 +28,7 @@ import org.cspoker.server.common.gamecontrol.rules.BettingRules;
  * An abstract class to represent rounds. A player can do actions in a round,
  * such as checking, betting, ...
  */
-public abstract class Round {
+public abstract class AbstractRound {
 	
 	/***************************************************************************
 	 * Variables
@@ -53,7 +53,7 @@ public abstract class Round {
 	 * 
 	 * @param game The game to create a new round for.
 	 */
-	public Round(PokerTable gameMediator, Game game) {
+	public AbstractRound(PokerTable gameMediator, Game game) {
 		this.gameMediator = gameMediator;
 		this.game = game;
 		getBettingRules().setBetPlaced(false);
@@ -217,7 +217,7 @@ public abstract class Round {
 	/**
 	 * Returns the next round.
 	 */
-	public abstract Round getNextRound();
+	public abstract AbstractRound getNextRound();
 	
 	/**
 	 * Set the last event player to the given player.
@@ -253,7 +253,7 @@ public abstract class Round {
 		return 0;
 	}
 	
-	protected Round getNewDealRound() {
+	protected AbstractRound getNewDealRound() {
 		return new WaitingRound(gameMediator, game);
 	}
 	
@@ -271,5 +271,5 @@ public abstract class Round {
 		throw new IllegalStateException();
 	}
 	
-	public abstract Rounds getRound();
+	public abstract Round getRound();
 }

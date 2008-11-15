@@ -15,12 +15,10 @@
  */
 package org.cspoker.client.common;
 
-import java.security.acl.LastOwnerException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import net.jcip.annotations.Immutable;
 import net.jcip.annotations.ThreadSafe;
 
 import org.apache.log4j.Logger;
@@ -30,7 +28,7 @@ import org.cspoker.common.elements.player.MutableSeatedPlayer;
 import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.elements.player.SeatedPlayer;
 import org.cspoker.common.elements.table.DetailedHoldemTable;
-import org.cspoker.common.elements.table.Rounds;
+import org.cspoker.common.elements.table.Round;
 import org.cspoker.common.elements.table.TableConfiguration;
 import org.cspoker.common.elements.table.TableId;
 
@@ -84,7 +82,7 @@ public class TableInformationProvider {
 		return listener.communityCards;
 	}
 	
-	public Rounds getCurrentRound() {
+	public Round getCurrentRound() {
 		return listener.round;
 	}
 	

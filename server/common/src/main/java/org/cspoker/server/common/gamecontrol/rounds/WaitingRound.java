@@ -25,12 +25,12 @@ import org.cspoker.common.api.lobby.holdemtable.event.SitOutEvent;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.player.MutableSeatedPlayer;
 import org.cspoker.common.elements.player.SeatedPlayer;
-import org.cspoker.common.elements.table.Rounds;
+import org.cspoker.common.elements.table.Round;
 import org.cspoker.server.common.gamecontrol.Game;
 import org.cspoker.server.common.gamecontrol.PokerTable;
 
 public class WaitingRound
-		extends Round {
+		extends AbstractRound {
 	
 	public WaitingRound(PokerTable gameMediator, Game game) {
 		super(gameMediator, game);
@@ -83,7 +83,7 @@ public class WaitingRound
 	}
 	
 	@Override
-	public Round getNextRound() {
+	public AbstractRound getNextRound() {
 		return new PreFlopRound(gameMediator, getGame());
 	}
 	
@@ -102,7 +102,7 @@ public class WaitingRound
 		return "waiting round";
 	}
 	
-	public Rounds getRound(){
-		return Rounds.WAITING;
+	public Round getRound(){
+		return Round.WAITING;
 	}
 }

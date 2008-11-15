@@ -15,7 +15,7 @@
  */
 package org.cspoker.common.elements.table;
 
-public enum Rounds {
+public enum Round {
 	WAITING("waiting round"),
 	PREFLOP("pre-flop round"),
 	FLOP("flop round"),
@@ -24,7 +24,7 @@ public enum Rounds {
 	
 	private String name;
 
-	private Rounds(String name) {
+	private Round(String name) {
 		this.name = name;
 	}
 	

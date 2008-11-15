@@ -53,7 +53,7 @@ import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.elements.player.SeatedPlayer;
 import org.cspoker.common.elements.player.Winner;
 import org.cspoker.common.elements.table.DetailedHoldemTable;
-import org.cspoker.common.elements.table.Rounds;
+import org.cspoker.common.elements.table.Round;
 import org.cspoker.common.elements.table.TableId;
 
 /**
@@ -72,7 +72,7 @@ public class SmartHoldemTableListener
 	// via volatile modifiers and wrapping them in synchronized collections
 	volatile Pots pots = new Pots(null, 0);
 	final Set<Card> communityCards = Collections.synchronizedSet(new HashSet<Card>());
-	volatile Rounds round;
+	volatile Round round;
 	volatile PlayerId dealer;
 	volatile int maxBet;
 	List<Integer> betsInCurrentRound = Collections.synchronizedList(new ArrayList<Integer>());

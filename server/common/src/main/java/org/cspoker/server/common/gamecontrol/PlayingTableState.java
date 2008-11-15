@@ -33,13 +33,14 @@ import org.cspoker.common.elements.player.MutableSeatedPlayer;
 import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.elements.player.SeatedPlayer;
 import org.cspoker.common.elements.table.DetailedHoldemTable;
+import org.cspoker.common.elements.table.Round;
 import org.cspoker.common.elements.table.SeatId;
 import org.cspoker.common.util.threading.ScheduledRequestExecutor;
 import org.cspoker.server.common.HoldemPlayerContextImpl;
 import org.cspoker.server.common.elements.table.SeatTakenException;
 import org.cspoker.server.common.elements.table.ServerTable;
+import org.cspoker.server.common.gamecontrol.rounds.AbstractRound;
 import org.cspoker.server.common.gamecontrol.rounds.BettingRound;
-import org.cspoker.server.common.gamecontrol.rounds.Round;
 import org.cspoker.server.common.gamecontrol.rounds.WaitingRound;
 import org.cspoker.server.common.gamecontrol.rules.BettingRules;
 import org.cspoker.server.common.gamecontrol.rules.NoLimit;
@@ -67,7 +68,7 @@ public class PlayingTableState
 	/**
 	 * The variable containing the round in which the current game is.
 	 */
-	private Round round;
+	private AbstractRound round;
 	
 	// DateFormat class is not thread safe.
 	private static final String dateFormat = "yyyy/MM/dd - HH:mm:ss (z)";
@@ -120,7 +121,7 @@ public class PlayingTableState
 		return game;
 	}
 	
-	public Round getRound() {
+	public AbstractRound getRound() {
 		return round;
 	}
 	

@@ -22,6 +22,8 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 
+import net.jcip.annotations.Immutable;
+
 /**
  * 
  * This class should contain all parameters of a game, such as maximum number of
@@ -32,6 +34,7 @@ import javax.xml.bind.annotation.XmlAttribute;
  */
 
 @XmlAccessorType(XmlAccessType.FIELD)
+@Immutable
 public class TableConfiguration implements Serializable {
 
 	private static final long serialVersionUID = -7488999804059098465L;

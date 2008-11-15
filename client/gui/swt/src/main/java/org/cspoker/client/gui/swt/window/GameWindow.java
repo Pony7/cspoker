@@ -32,7 +32,7 @@ import org.cspoker.common.elements.chips.IllegalValueException;
 import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.elements.player.SeatedPlayer;
 import org.cspoker.common.elements.table.DetailedHoldemTable;
-import org.cspoker.common.elements.table.Rounds;
+import org.cspoker.common.elements.table.Round;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
@@ -281,7 +281,7 @@ public class GameWindow
 	 */
 	public void onNewRound(NewRoundEvent newRoundEvent) {
 		
-		if (newRoundEvent.getRound() != Rounds.PREFLOP) {
+		if (newRoundEvent.getRound() != Round.PREFLOP) {
 			tableComposite.moveBetsToPot();
 		}
 		tableComposite.updateTableGraphics();
