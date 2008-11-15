@@ -14,46 +14,38 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.client.bots.bot.simple;
+package org.cspoker.client.bots.bot.rule;
 
-import java.rmi.RemoteException;
 import java.util.concurrent.ExecutorService;
 
-import org.apache.log4j.Logger;
-import org.cspoker.client.bots.bot.AbstractBot;
+import org.cspoker.client.bots.bot.Bot;
+import org.cspoker.client.bots.bot.BotFactory;
 import org.cspoker.client.bots.listener.BotListener;
 import org.cspoker.client.common.SmartLobbyContext;
-import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.elements.table.TableId;
 
-public class CallBot
-		extends AbstractBot {
+public class RuleBasedBotFactory implements BotFactory {
+
+	private static int copies = 0;
+	private final int copy;
+
+	public RuleBasedBotFactory() {
+		this.copy = ++copies;
+	}
 	
-	private final static Logger logger = Logger.getLogger(CallBot.class);
-	
-	public CallBot(PlayerId playerId, TableId tableId,
+	/**
+	 * @see org.cspoker.client.bots.bot.BotFactory#createBot(org.cspoker.common.elements.player.PlayerId, org.cspoker.common.elements.table.TableId, org.cspoker.client.common.SmartLobbyContext, java.util.concurrent.ExecutorService, org.cspoker.client.bots.listener.BotListener[])
+	 */
+	public Bot createBot(PlayerId playerId, TableId tableId,
 			SmartLobbyContext lobby, ExecutorService executor,
 			BotListener... botListeners) {
-		super(playerId, tableId, lobby, executor, botListeners);
+		copies++;
+		return new RuleBasedBot(playerId, tableId, lobby, executor, botListeners);
 	}
-	
+
 	@Override
-	public void doNextAction() {
-		executor.execute(new Runnable() {
-			
-			public void run() {
-				try {
-					playerContext.checkOrCall();
-				} catch (IllegalActionException e) {
-					logger.error(e);
-					throw new IllegalStateException("Call was not allowed.", e);
-				} catch (RemoteException e) {
-					logger.error(e);
-					throw new IllegalStateException("Call failed.", e);
-				}
-			}
-		});
+	public String toString() {
+		return "RuleBasedBotv1-"+copy;
 	}
-	
 }

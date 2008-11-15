@@ -15,50 +15,40 @@
  */
 package org.cspoker.client.common.gamestate;
 
+import org.cspoker.common.api.lobby.holdemtable.event.CallEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.HoldemTableEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.RaiseEvent;
 import org.cspoker.common.elements.player.PlayerId;
 
-public class RaiseState extends ForwardingGameState {
+public class CallState extends ForwardingGameState {
 
-	private final RaiseEvent raiseEvent;
+	private final CallEvent callEvent;
 	private final int newBetSize;
 	private final int newStack;
 	private final int newPotSize;
 
-	public RaiseState(GameState gameState, RaiseEvent raiseEvent) {
+	public CallState(GameState gameState, CallEvent callEvent) {
 		super(gameState);
-		this.raiseEvent = raiseEvent;
-		this.newBetSize = super.getLargestBet()+raiseEvent.getAmount();
-		int chipsMoved = newBetSize-super.getBetSize(raiseEvent.getPlayerId());
-		this.newStack = super.getStack(raiseEvent.getPlayerId())-chipsMoved;
+		this.callEvent = callEvent;
+		this.newBetSize = super.getLargestBet();
+		int chipsMoved = newBetSize-super.getBetSize(callEvent.getPlayerId());
+		this.newStack = super.getStack(callEvent.getPlayerId())-chipsMoved;
 		this.newPotSize = super.getPotSize()+chipsMoved;
 	}
 
 	@Override
 	public int getBetSize(PlayerId playerId) {
-		if(raiseEvent.getPlayerId().equals(playerId)){
+		if(callEvent.getPlayerId().equals(playerId)){
 			return newBetSize;
 		}
 		return super.getBetSize(playerId);
 	}
 
 	@Override
-	public int getLargestBet() {
-		return Math.max(super.getLargestBet(),newBetSize);
-	}
-
-	@Override
 	public int getStack(PlayerId playerId) {		
-		if(raiseEvent.getPlayerId().equals(playerId)){
+		if(callEvent.getPlayerId().equals(playerId)){
 			return newStack;
 		}
 		return super.getStack(playerId);
-	}
-
-	@Override
-	public int getMinNextRaise() {
-		return raiseEvent.getAmount();
 	}
 
 	@Override
@@ -67,7 +57,7 @@ public class RaiseState extends ForwardingGameState {
 	}
 	
 	public HoldemTableEvent getLastEvent() {
-		return raiseEvent;
+		return callEvent;
 	}
 	
 }

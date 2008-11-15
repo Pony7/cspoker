@@ -32,7 +32,13 @@ public interface GameState {
 	public int getStack(PlayerId playerId);
 	public int getBetSize(PlayerId playerId);
 	public SeatId getSeatId(PlayerId playerId);
+	
 	public boolean isPlaying(PlayerId playerId);
+	
+	/**
+	 * A derived state property that says whether a player is all-in or not.
+	 */
+	public boolean isAllIn(PlayerId playerId);
 	
 	/**
 	 * A derived state property that is the difference between the largest bet and the
@@ -62,8 +68,6 @@ public interface GameState {
 	public int getLargestBet();
 	public int getMinNextRaise();
 	
-	public TableConfiguration getTableConfiguration();
-	
 	public Round getRound();
 
 	public Set<Card> getCards(PlayerId playerId);
@@ -71,5 +75,7 @@ public interface GameState {
 	
 	public GameState getPreviousGameState();
 	public HoldemTableEvent getLastEvent();
+	
+	
 	
 }

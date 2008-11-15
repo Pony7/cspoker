@@ -29,7 +29,7 @@ public class BetState extends ForwardingGameState {
 	public BetState(GameState gameState, BetEvent betEvent) {
 		super(gameState);
 		this.betEvent = betEvent;
-		this.newStack = super.getStack(betEvent.getPlayerId())+betEvent.getAmount();;
+		this.newStack = super.getStack(betEvent.getPlayerId())-betEvent.getAmount();;
 		this.newPotSize = super.getPotSize()+betEvent.getAmount();;
 	}
 

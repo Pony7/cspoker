@@ -13,29 +13,35 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.client.common.gamestate;
+package org.cspoker.client.bots.bot.search;
 
-import org.cspoker.common.elements.player.PlayerId;
+import org.cspoker.client.common.SmartHoldemPlayerContext;
 
-/**
- * Abstract GameState partial implementation.
- * Only methods that are a simple combination of other methods should be implemented here.
- * 
- * @author guy
- *
- */
-public abstract class AbstractGameState implements GameState {
+public class BotActionNode {
 
-	public final int getDeficit(PlayerId playerId) {
-		return getLargestBet()-getBetSize(playerId);
+	private final GameState gameState;
+
+	public BotActionNode(GameState gameState) {
+		this.gameState = gameState;
 	}
 	
-	public final int getCallValue(PlayerId playerId) {
-		return Math.min(getDeficit(playerId), getStack(playerId));
+	double getMaxEV(){
+		
 	}
 	
-	public final boolean isAllIn(PlayerId playerId) {
-		return getStack(playerId)>0;
+	public double getCheckCallEV(){
+		
+	}
+	
+	public double getBetRaiseEV(int amount){
+		
+	}
+
+	public void performMaxAction(SmartHoldemPlayerContext playerContext) {
+		double checkCallEV = getCheckCallEV();
+		double betRaise1EV = getBetRaiseEV()
+		if()
+		
 	}
 	
 }

@@ -15,30 +15,16 @@
  */
 package org.cspoker.client.common;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import org.cspoker.common.api.lobby.holdemtable.holdemplayer.event.NewPocketCardsEvent;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.listener.ForwardingHoldemPlayerListener;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.listener.HoldemPlayerListener;
-import org.cspoker.common.elements.cards.Card;
 
 public class SmartHoldemPlayerListener extends ForwardingHoldemPlayerListener {
 
-	private volatile Set<Card> pocketCards;
-
-	public SmartHoldemPlayerListener(HoldemPlayerListener holdemPlayerListener) {
+	private TableState tableState;
+	
+	public SmartHoldemPlayerListener(HoldemPlayerListener holdemPlayerListener,TableState tableState) {
 		super(holdemPlayerListener);
+		this.tableState = tableState;
 	}
 	
-	@Override
-	public void onNewPocketCards(NewPocketCardsEvent newPocketCardsEvent) {
-		this.pocketCards = newPocketCardsEvent.getPocketCards();
-		super.onNewPocketCards(newPocketCardsEvent);
-	}
-
-	public Set<Card> getPocketCards() {
-		return new HashSet<Card>(pocketCards);
-	}
-
 }

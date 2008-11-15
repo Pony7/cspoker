@@ -99,10 +99,6 @@ public class InitialGameState extends AbstractGameState {
 		return stacks[getSeatId(playerId).getId()];
 	}
 
-	public TableConfiguration getTableConfiguration() {
-		return tableConfiguration;
-	}
-
 	public PlayerId getDealer() {
 		return dealer;
 	}
