@@ -154,7 +154,7 @@ public abstract class AbstractBot
 	public int getProfit() {
 		GameState state = tableContext.getGameState();
 		if(state.getPreviousRoundsPotSize()>0){
-			throw new IllegalStateException("There is a pot from previous rounds. Can't calculate profit.");
+			throw new IllegalStateException("There is a pot from previous rounds ("+state.getPreviousRoundsPotSize()+"). Can't calculate profit.");
 		}
 		return state.getStack(playerID)+state.getBetSize(playerID) - getBuyIn();
 	}

@@ -38,7 +38,7 @@ public abstract class AbstractGameState implements GameState {
 		return getStack(playerId)>0;
 	}
 	
-	public int getGamePotSize() {
+	public final int getGamePotSize() {
 		return getPreviousRoundsPotSize()+getRoundPotSize();
 	}
 	
