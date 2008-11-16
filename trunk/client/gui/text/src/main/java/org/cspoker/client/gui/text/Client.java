@@ -131,7 +131,7 @@ public class Client {
 		// no op
 	}
 
-	public RemoteServerContext getServerContext() {
+	public SmartClientContext getServerContext() {
 		return this.serverContext;
 	}
 	

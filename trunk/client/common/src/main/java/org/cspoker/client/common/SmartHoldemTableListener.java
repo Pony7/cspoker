@@ -33,6 +33,7 @@ import org.cspoker.client.common.gamestate.ShowHandState;
 import org.cspoker.client.common.gamestate.SitInState;
 import org.cspoker.client.common.gamestate.SitOutState;
 import org.cspoker.client.common.gamestate.SmallBlindState;
+import org.cspoker.client.common.gamestate.WinnerState;
 import org.cspoker.common.api.lobby.holdemtable.event.AllInEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.BetEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.BigBlindEvent;
@@ -184,7 +185,7 @@ public class SmartHoldemTableListener
 	
 	@Override
 	public void onWinner(WinnerEvent winnerEvent) {
-		// TODO Auto-generated method stub
+		tableState.setGameState(new WinnerState(tableState.getGameState(), winnerEvent));
 		super.onWinner(winnerEvent);
 	}
 }

@@ -29,8 +29,8 @@ public class CardsCommand extends CommandImpl {
 	}
 
 	public void execute(String... args) throws Exception {
-		Set<Card>  privateCards = client.getCurrentPlayerContext().getPocketCards();
-		Set<Card>  communityCards = client.getCurrentTableContext().getCommunityCards();
+		Set<Card>  privateCards = client.getCurrentPlayerContext().getGameState().getCards(client.getServerContext().getAccountContext().getPlayerID());
+		Set<Card>  communityCards = client.getCurrentTableContext().getGameState().getCommunityCards();
 		String result = "You hold: ";
 		if (privateCards.size() != 2) {
 			result += "nothing";

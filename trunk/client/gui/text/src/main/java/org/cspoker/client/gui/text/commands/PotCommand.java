@@ -25,7 +25,7 @@ public class PotCommand extends CommandImpl {
 	}
 
 	public void execute(String... args) throws Exception {
-		console.print("The total pot is " + client.getCurrentTableContext().getPots().getTotalValue() + " chips.");
+		console.print("The total pot is " + client.getCurrentTableContext().getGameState().getGamePotSize() + " chips.");
 	}
 
 }
