@@ -15,16 +15,27 @@
  */
 package org.cspoker.client.common;
 
+import org.cspoker.client.common.gamestate.NewPocketCardsState;
+import org.cspoker.common.api.lobby.holdemtable.holdemplayer.event.NewPocketCardsEvent;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.listener.ForwardingHoldemPlayerListener;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.listener.HoldemPlayerListener;
+import org.cspoker.common.elements.player.PlayerId;
 
 public class SmartHoldemPlayerListener extends ForwardingHoldemPlayerListener {
 
-	private TableState tableState;
+	private final TableState tableState;
+	private final PlayerId playerId;
 	
-	public SmartHoldemPlayerListener(HoldemPlayerListener holdemPlayerListener,TableState tableState) {
+	public SmartHoldemPlayerListener(HoldemPlayerListener holdemPlayerListener,TableState tableState, PlayerId playerId) {
 		super(holdemPlayerListener);
 		this.tableState = tableState;
+		this.playerId = playerId;
+	}
+	
+	@Override
+	public void onNewPocketCards(NewPocketCardsEvent newPocketCardsEvent) {
+		tableState.setGameState(new NewPocketCardsState(tableState.getGameState(),playerId,newPocketCardsEvent));
+		super.onNewPocketCards(newPocketCardsEvent);
 	}
 	
 }

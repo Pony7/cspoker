@@ -48,7 +48,7 @@ public class RuleBasedBot
 			
 			public void run() {
 				try {
-					if (tableContext.getCurrentRound().equals(Round.PREFLOP)) {
+					if (tableContext.getGameState().getRound().equals(Round.PREFLOP)) {
 						playerContext.checkOrCall();
 					} else {
 						float betProbability;

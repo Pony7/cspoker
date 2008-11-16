@@ -21,7 +21,6 @@ import org.cspoker.common.elements.cards.Card;
 import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.elements.table.Round;
 import org.cspoker.common.elements.table.SeatId;
-import org.cspoker.common.elements.table.TableConfiguration;
 
 public abstract class ForwardingGameState extends AbstractGameState{
 
@@ -47,8 +46,12 @@ public abstract class ForwardingGameState extends AbstractGameState{
 		return gameState.getPlayerId(seatId);
 	}
 
-	public int getPotSize() {
-		return gameState.getPotSize();
+	public int getPreviousRoundsPotSize() {
+		return gameState.getPreviousRoundsPotSize();
+	}
+
+	public int getRoundPotSize() {
+		return gameState.getRoundPotSize();
 	}
 
 	public SeatId getSeatId(PlayerId playerId) {
@@ -79,12 +82,20 @@ public abstract class ForwardingGameState extends AbstractGameState{
 		return gameState.getDealer();
 	}
 
-	public boolean isPlaying(PlayerId playerId) {
-		return gameState.isPlaying(playerId);
+	public boolean hasFolded(PlayerId playerId) {
+		return gameState.hasFolded(playerId);
 	}
 	
 	public GameState getPreviousGameState() {
 		return gameState;
+	}
+	
+	public PlayerId getLastBettor() {
+		return gameState.getLastBettor();
+	}
+	
+	public boolean sitsIn(PlayerId playerId) {
+		return gameState.sitsIn(playerId);
 	}
 
 }

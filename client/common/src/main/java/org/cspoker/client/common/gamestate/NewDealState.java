@@ -15,12 +15,11 @@
  */
 package org.cspoker.client.common.gamestate;
 
-import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Set;
 
 import org.cspoker.common.api.lobby.holdemtable.event.HoldemTableEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.NewDealEvent;
 import org.cspoker.common.elements.cards.Card;
 import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.elements.player.SeatedPlayer;
@@ -28,25 +27,26 @@ import org.cspoker.common.elements.table.Round;
 import org.cspoker.common.elements.table.SeatId;
 import org.cspoker.common.elements.table.TableConfiguration;
 
-public class InitialGameState extends AbstractGameState {
+public class NewDealState extends AbstractGameState {
 	
 	private final TableConfiguration tableConfiguration;
-	private final PlayerId dealer;
-	private PlayerId[] players;
+	private final PlayerId[] players;
 	private int[] stacks;
-	private final boolean[] isPlaying;
+	private final boolean[] sitsIn;
+	private final NewDealEvent event;
 	
-	public InitialGameState(TableConfiguration tableConfiguration, PlayerId dealer, Collection<SeatedPlayer> players) {
+	public NewDealState(TableConfiguration tableConfiguration, NewDealEvent newDealEvent) {
+		this.event = newDealEvent;
 		this.tableConfiguration = tableConfiguration;
-		this.dealer = dealer;
-		HashMap<PlayerId, SeatId> seatsBuilder = new HashMap<PlayerId, SeatId>(tableConfiguration.getMaxNbPlayers());
+		
 		this.players = new PlayerId[tableConfiguration.getMaxNbPlayers()];
-		this.isPlaying = new boolean[tableConfiguration.getMaxNbPlayers()];
-		for (SeatedPlayer seatedPlayer : players) {
-			isPlaying[seatedPlayer.getSeatId().getId()] = true;
+		this.sitsIn = new boolean[tableConfiguration.getMaxNbPlayers()];
+		this.stacks = new int[tableConfiguration.getMaxNbPlayers()];
+		
+		for (SeatedPlayer seatedPlayer : newDealEvent.getPlayers()) {
+			this.sitsIn[seatedPlayer.getSeatId().getId()] = seatedPlayer.isSittingIn();
 			this.players[seatedPlayer.getSeatId().getId()] = seatedPlayer.getId();
 			this.stacks[seatedPlayer.getSeatId().getId()] = seatedPlayer.getStackValue();
-			seatsBuilder.put(seatedPlayer.getId(), seatedPlayer.getSeatId());
 		}
 	}
 
@@ -78,7 +78,11 @@ public class InitialGameState extends AbstractGameState {
 		return players[seatId.getId()];
 	}
 
-	public int getPotSize() {
+	public int getRoundPotSize() {
+		return 0;
+	}
+	
+	public int getPreviousRoundsPotSize() {
 		return 0;
 	}
 
@@ -100,18 +104,26 @@ public class InitialGameState extends AbstractGameState {
 	}
 
 	public PlayerId getDealer() {
-		return dealer;
+		return event.getDealer();
 	}
 	
-	public boolean isPlaying(PlayerId playerId) {
-		return isPlaying[getSeatId(playerId).getId()];
+	public boolean hasFolded(PlayerId playerId) {
+		return false;
 	}
 	
 	public HoldemTableEvent getLastEvent() {
-		return null;
+		return event;
 	}
 	
 	public GameState getPreviousGameState() {
 		return null;
+	}
+	
+	public PlayerId getLastBettor() {
+		return null;
+	}
+	
+	public boolean sitsIn(PlayerId playerId) {
+		return sitsIn[getSeatId(playerId).getId()];
 	}
 }

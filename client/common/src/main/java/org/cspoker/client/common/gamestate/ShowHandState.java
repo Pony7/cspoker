@@ -15,31 +15,32 @@
  */
 package org.cspoker.client.common.gamestate;
 
+import java.util.Set;
+
+import org.cspoker.common.api.lobby.holdemtable.event.HoldemTableTreeEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.ShowHandEvent;
+import org.cspoker.common.elements.cards.Card;
 import org.cspoker.common.elements.player.PlayerId;
 
-/**
- * Abstract GameState partial implementation.
- * Only methods that are a simple combination of other methods should be implemented here.
- * 
- * @author guy
- *
- */
-public abstract class AbstractGameState implements GameState {
+public class ShowHandState extends ForwardingGameState {
 
-	public final int getDeficit(PlayerId playerId) {
-		return getLargestBet()-getBetSize(playerId);
+	private final ShowHandEvent event;
+
+	public ShowHandState(GameState gameState, ShowHandEvent event) {
+		super(gameState);
+		this.event = event;
 	}
+
+	@Override
+	public Set<Card> getCards(PlayerId playerId) {
+		if(event.getShowdownPlayer().getId().equals(playerId)){
+			return event.getShowdownPlayer().getHandCards();
+		}
+		return super.getCards(playerId);
+	} 
 	
-	public final int getCallValue(PlayerId playerId) {
-		return Math.min(getDeficit(playerId), getStack(playerId));
+	public HoldemTableTreeEvent getLastEvent() {
+		return event;
 	}
-	
-	public final boolean isAllIn(PlayerId playerId) {
-		return getStack(playerId)>0;
-	}
-	
-	public int getGamePotSize() {
-		return getPreviousRoundsPotSize()+getRoundPotSize();
-	}
-	
+
 }

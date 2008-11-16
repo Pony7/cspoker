@@ -15,31 +15,29 @@
  */
 package org.cspoker.client.common.gamestate;
 
+import org.cspoker.common.api.lobby.holdemtable.event.HoldemTableEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.SitOutEvent;
 import org.cspoker.common.elements.player.PlayerId;
 
-/**
- * Abstract GameState partial implementation.
- * Only methods that are a simple combination of other methods should be implemented here.
- * 
- * @author guy
- *
- */
-public abstract class AbstractGameState implements GameState {
+public class SitOutState extends ForwardingGameState {
 
-	public final int getDeficit(PlayerId playerId) {
-		return getLargestBet()-getBetSize(playerId);
+	private final SitOutEvent event;
+
+	public SitOutState(GameState gameState, SitOutEvent event) {
+		super(gameState);
+		this.event = event;
 	}
 	
-	public final int getCallValue(PlayerId playerId) {
-		return Math.min(getDeficit(playerId), getStack(playerId));
+	@Override
+	public boolean sitsIn(PlayerId playerId) {
+		if(event.getPlayerId().equals(playerId)){
+			return false;
+		}
+		return super.sitsIn(playerId);
 	}
 	
-	public final boolean isAllIn(PlayerId playerId) {
-		return getStack(playerId)>0;
-	}
-	
-	public int getGamePotSize() {
-		return getPreviousRoundsPotSize()+getRoundPotSize();
+	public HoldemTableEvent getLastEvent() {
+		return event;
 	}
 	
 }
