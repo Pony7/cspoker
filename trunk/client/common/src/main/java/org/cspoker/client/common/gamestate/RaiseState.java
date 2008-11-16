@@ -32,7 +32,7 @@ public class RaiseState extends ForwardingGameState {
 		this.newBetSize = super.getLargestBet()+raiseEvent.getAmount();
 		int chipsMoved = newBetSize-super.getBetSize(raiseEvent.getPlayerId());
 		this.newStack = super.getStack(raiseEvent.getPlayerId())-chipsMoved;
-		this.newPotSize = super.getPotSize()+chipsMoved;
+		this.newPotSize = super.getRoundPotSize()+chipsMoved;
 	}
 
 	@Override
@@ -62,12 +62,17 @@ public class RaiseState extends ForwardingGameState {
 	}
 
 	@Override
-	public int getPotSize() {
+	public int getRoundPotSize() {
 		return newPotSize;
 	}
 	
 	public HoldemTableEvent getLastEvent() {
 		return raiseEvent;
+	}
+	
+	@Override
+	public PlayerId getLastBettor() {
+		return raiseEvent.getPlayerId();
 	}
 	
 }

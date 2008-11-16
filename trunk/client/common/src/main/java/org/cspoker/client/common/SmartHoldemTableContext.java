@@ -32,8 +32,8 @@ import org.cspoker.common.elements.table.SeatId;
 public class SmartHoldemTableContext
 		extends ForwardingRemoteHoldemTableContext {
 	
-	private TableState state;
-	private PlayerId playerId;
+	private final TableState state;
+	private final PlayerId playerId;
 
 	public SmartHoldemTableContext(RemoteHoldemTableContext holdemTableContext, TableState state, PlayerId playerId) {
 		super(holdemTableContext);
@@ -42,18 +42,18 @@ public class SmartHoldemTableContext
 	}
 	
 	@Override
-	public RemoteHoldemPlayerContext sitIn(int amount,
+	public SmartHoldemPlayerContext sitIn(int amount,
 			HoldemPlayerListener holdemPlayerListener) throws RemoteException,
 			IllegalActionException {
-		RemoteHoldemPlayerContext listener = super.sitIn(amount, new SmartHoldemPlayerListener(holdemPlayerListener,state));
+		RemoteHoldemPlayerContext listener = super.sitIn(amount, new SmartHoldemPlayerListener(holdemPlayerListener,state,playerId));
 		return new SmartHoldemPlayerContext(listener,state,playerId);
 	}
 	
 	@Override
-	public RemoteHoldemPlayerContext sitIn(SeatId seatId, int amount,
+	public SmartHoldemPlayerContext sitIn(SeatId seatId, int amount,
 			HoldemPlayerListener holdemPlayerListener) throws RemoteException,
 			IllegalActionException {
-		RemoteHoldemPlayerContext listener = super.sitIn(seatId, amount, new SmartHoldemPlayerListener(holdemPlayerListener,state));
+		RemoteHoldemPlayerContext listener = super.sitIn(seatId, amount, new SmartHoldemPlayerListener(holdemPlayerListener,state,playerId));
 		return new SmartHoldemPlayerContext(listener,state,playerId);
 	}
 	

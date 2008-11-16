@@ -16,6 +16,7 @@
 package org.cspoker.client.bots.bot.search;
 
 import org.cspoker.client.common.SmartHoldemPlayerContext;
+import org.cspoker.client.common.gamestate.GameState;
 
 public class BotActionNode {
 

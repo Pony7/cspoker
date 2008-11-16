@@ -15,29 +15,36 @@
  */
 package org.cspoker.client.common.gamestate;
 
-import org.cspoker.common.api.lobby.holdemtable.event.FoldEvent;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+
 import org.cspoker.common.api.lobby.holdemtable.event.HoldemTableEvent;
-import org.cspoker.common.elements.player.PlayerId;
+import org.cspoker.common.api.lobby.holdemtable.event.NewCommunityCardsEvent;
+import org.cspoker.common.elements.cards.Card;
 
-public class FoldState extends ForwardingGameState {
+public class NewCommunityCardsState extends ForwardingGameState {
 
-	private final FoldEvent foldEvent;
+	private final NewCommunityCardsEvent event;
 
-	public FoldState(GameState gameState, FoldEvent foldEvent) {
+	private final Set<Card> cards;
+
+	public NewCommunityCardsState(GameState gameState, NewCommunityCardsEvent event) {
 		super(gameState);
-		this.foldEvent = foldEvent;
+		this.event = event;
+		Set<Card> buildingCards = new HashSet<Card>();
+		buildingCards.addAll(super.getCommunityCards());
+		buildingCards.addAll(event.getCommunityCards());
+		this.cards = Collections.unmodifiableSet(buildingCards);
 	}
-	
+
 	@Override
-	public boolean hasFolded(PlayerId playerId) {
-		if(foldEvent.getPlayerId().equals(playerId)){
-			return true;
-		}
-		return super.hasFolded(playerId);
+	public Set<Card> getCommunityCards() {
+		return cards;
 	}
 	
 	public HoldemTableEvent getLastEvent() {
-		return foldEvent;
+		return event;
 	}
-	
+
 }

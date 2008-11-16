@@ -23,7 +23,26 @@ import org.cspoker.client.bots.listener.BotListener;
 import org.cspoker.client.common.SmartHoldemPlayerContext;
 import org.cspoker.client.common.SmartHoldemTableContext;
 import org.cspoker.client.common.SmartLobbyContext;
-import org.cspoker.common.api.lobby.holdemtable.event.*;
+import org.cspoker.client.common.gamestate.GameState;
+import org.cspoker.common.api.lobby.holdemtable.event.AllInEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.BetEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.BigBlindEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.CallEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.CheckEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.FoldEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.JoinTableEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.LeaveSeatEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.LeaveTableEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.NewCommunityCardsEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.NewDealEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.NewRoundEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.NextPlayerEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.RaiseEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.ShowHandEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.SitInEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.SitOutEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.SmallBlindEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.WinnerEvent;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.event.NewPocketCardsEvent;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.player.PlayerId;
@@ -133,7 +152,11 @@ public abstract class AbstractBot
 	 * @see org.cspoker.client.bots.bot.Bot#getProfit()
 	 */
 	public int getProfit() {
-		return tableContext.getAllStakes(playerID) - getBuyIn();
+		GameState state = tableContext.getGameState();
+		if(state.getPreviousRoundsPotSize()>0){
+			throw new IllegalStateException("There is a pot from previous rounds. Can't calculate profit.");
+		}
+		return state.getStack(playerID)+state.getBetSize(playerID) - getBuyIn();
 	}
 	
 	public void onAllIn(AllInEvent allInEvent) {

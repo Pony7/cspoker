@@ -13,47 +13,36 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.client.bots.bot.search;
+package org.cspoker.client.common.gamestate;
 
-import java.util.Map;
 import java.util.Set;
 
-import net.jcip.annotations.Immutable;
-
+import org.cspoker.common.api.lobby.holdemtable.event.HoldemTableTreeEvent;
+import org.cspoker.common.api.lobby.holdemtable.holdemplayer.event.NewPocketCardsEvent;
 import org.cspoker.common.elements.cards.Card;
 import org.cspoker.common.elements.player.PlayerId;
-import org.cspoker.common.elements.player.SeatedPlayer;
 
-@Immutable
-public class GameState {
+public class NewPocketCardsState extends ForwardingGameState {
 
-	private final Set<Card> communityCards;
-	private final Map<PlayerId, SeatedPlayer> players;
-	private final int minRaise;
-	private final int stack;
+	private final NewPocketCardsEvent event;
+	private final PlayerId playerId;
 
-	public GameState(Set<Card> communityCards,
-			Map<PlayerId, SeatedPlayer> players, int minRaise, int stack) {
-		this.communityCards = communityCards;
-		this.players = players;
-		this.minRaise = minRaise;
-		this.stack = stack;
+	public NewPocketCardsState(GameState gameState, PlayerId playerId, NewPocketCardsEvent event) {
+		super(gameState);
+		this.event = event;
+		this.playerId = playerId;
 	}
-	
-	public Set<Card> getCommunityCards() {
-		return communityCards;
+
+	@Override
+	public Set<Card> getCards(PlayerId playerId) {
+		if(this.playerId.equals(playerId)){
+			return event.getPocketCards();
+		}
+		return super.getCards(playerId);
 	}
-	
-	public Map<PlayerId, SeatedPlayer> getPlayers() {
-		return players;
-	}
-	
-	public int getMinRaise() {
-		return minRaise;
-	}
-	
-	public int getStack() {
-		return stack;
+
+	public HoldemTableTreeEvent getLastEvent() {
+		return event;
 	}
 
 }

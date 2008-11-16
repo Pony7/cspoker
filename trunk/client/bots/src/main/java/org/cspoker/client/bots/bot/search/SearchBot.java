@@ -46,7 +46,7 @@ public class SearchBot
 		executor.execute(new Runnable() {
 			public void run() {
 				try {
-					switch (tableContext.getCurrentRound()) {
+					switch (tableContext.getGameState().getRound()) {
 						case PREFLOP:
 							playerContext.checkOrCall();
 							break;
@@ -57,7 +57,7 @@ public class SearchBot
 							playerContext.checkOrCall();
 							break;
 						case FINAL:
-							BotActionNode node = new BotActionNode(new GameState(tableContext.getCommunityCards(), tableContext.getPlayers(), playerContext.getMinRaise(), playerContext.getStack()));
+							BotActionNode node = new BotActionNode(tableContext.getGameState());
 							node.performMaxAction(playerContext);
 							break;
 						default:

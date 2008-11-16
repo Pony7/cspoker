@@ -15,40 +15,37 @@
  */
 package org.cspoker.client.common.gamestate;
 
-import org.cspoker.common.api.lobby.holdemtable.event.BetEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.HoldemTableEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.SmallBlindEvent;
 import org.cspoker.common.elements.player.PlayerId;
 
-public class BetState extends ForwardingGameState {
+public class SmallBlindState extends ForwardingGameState {
 
-	private final BetEvent betEvent;
-	
+	private final SmallBlindEvent event;
 	private final int newStack;
-	private final int newPotSize;
 
-	public BetState(GameState gameState, BetEvent betEvent) {
+	public SmallBlindState(GameState gameState, SmallBlindEvent event) {
 		super(gameState);
-		this.betEvent = betEvent;
-		this.newStack = super.getStack(betEvent.getPlayerId())-betEvent.getAmount();;
-		this.newPotSize = super.getRoundPotSize()+betEvent.getAmount();;
+		this.event = event;
+		this.newStack = super.getStack(event.getPlayerId())-event.getAmount();;
 	}
 
 	@Override
 	public int getBetSize(PlayerId playerId) {
-		if(betEvent.getPlayerId().equals(playerId)){
-			return betEvent.getAmount();
+		if(event.getPlayerId().equals(playerId)){
+			return event.getAmount();
 		}
 		return super.getBetSize(playerId);
 	}
 
 	@Override
 	public int getLargestBet() {
-		return betEvent.getAmount();
+		return event.getAmount();
 	}
 
 	@Override
 	public int getStack(PlayerId playerId) {		
-		if(betEvent.getPlayerId().equals(playerId)){
+		if(event.getPlayerId().equals(playerId)){
 			return newStack;
 		}
 		return super.getStack(playerId);
@@ -56,21 +53,21 @@ public class BetState extends ForwardingGameState {
 
 	@Override
 	public int getMinNextRaise() {
-		return betEvent.getAmount();
+		return event.getAmount();
 	}
 
 	@Override
 	public int getRoundPotSize() {
-		return newPotSize;
+		return event.getAmount();
 	}
 	
 	public HoldemTableEvent getLastEvent() {
-		return betEvent;
+		return event;
 	}
 	
 	@Override
 	public PlayerId getLastBettor() {
-		return betEvent.getPlayerId();
+		return event.getPlayerId();
 	}
 
 }
