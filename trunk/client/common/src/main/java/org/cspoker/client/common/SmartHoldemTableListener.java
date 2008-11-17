@@ -25,9 +25,13 @@ import org.cspoker.client.common.gamestate.modifiers.BigBlindState;
 import org.cspoker.client.common.gamestate.modifiers.CallState;
 import org.cspoker.client.common.gamestate.modifiers.CheckState;
 import org.cspoker.client.common.gamestate.modifiers.FoldState;
+import org.cspoker.client.common.gamestate.modifiers.JoinTableState;
+import org.cspoker.client.common.gamestate.modifiers.LeaveSeatState;
+import org.cspoker.client.common.gamestate.modifiers.LeaveTableState;
 import org.cspoker.client.common.gamestate.modifiers.NewCommunityCardsState;
 import org.cspoker.client.common.gamestate.modifiers.NewDealState;
 import org.cspoker.client.common.gamestate.modifiers.NewRoundState;
+import org.cspoker.client.common.gamestate.modifiers.NextPlayerState;
 import org.cspoker.client.common.gamestate.modifiers.RaiseState;
 import org.cspoker.client.common.gamestate.modifiers.ShowHandState;
 import org.cspoker.client.common.gamestate.modifiers.SitInState;
@@ -153,21 +157,9 @@ public class SmartHoldemTableListener
 	}
 	
 	@Override
-	public void onJoinTable(JoinTableEvent joinTableEvent) {
-		// TODO Auto-generated method stub
-		super.onJoinTable(joinTableEvent);
-	}
-	
-	@Override
 	public void onLeaveSeat(LeaveSeatEvent leaveSeatEvent) {
-		// TODO Auto-generated method stub
+		tableState.setGameState(new LeaveSeatState(tableState.getGameState(), leaveSeatEvent));
 		super.onLeaveSeat(leaveSeatEvent);
-	}
-	
-	@Override
-	public void onLeaveTable(LeaveTableEvent leaveGameEvent) {
-		// TODO Auto-generated method stub
-		super.onLeaveTable(leaveGameEvent);
 	}
 	
 	@Override
@@ -179,7 +171,7 @@ public class SmartHoldemTableListener
 	
 	@Override
 	public void onNextPlayer(NextPlayerEvent nextPlayerEvent) {
-		// TODO Auto-generated method stub
+		tableState.setGameState(new NextPlayerState(tableState.getGameState(), nextPlayerEvent));
 		super.onNextPlayer(nextPlayerEvent);
 	}
 	
@@ -187,5 +179,17 @@ public class SmartHoldemTableListener
 	public void onWinner(WinnerEvent winnerEvent) {
 		tableState.setGameState(new WinnerState(tableState.getGameState(), winnerEvent));
 		super.onWinner(winnerEvent);
+	}
+	
+	@Override
+	public void onLeaveTable(LeaveTableEvent leaveGameEvent) {
+		tableState.setGameState(new LeaveTableState(tableState.getGameState(), leaveGameEvent));
+		super.onLeaveTable(leaveGameEvent);
+	}
+	
+	@Override
+	public void onJoinTable(JoinTableEvent joinTableEvent) {
+		tableState.setGameState(new JoinTableState(tableState.getGameState(), joinTableEvent));
+		super.onJoinTable(joinTableEvent);
 	}
 }
