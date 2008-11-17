@@ -52,7 +52,7 @@ public interface HoldemTableListener extends RemoteHoldemTableListener {
 	
 	void onJoinTable(JoinTableEvent joinTableEvent);
 
-	void onLeaveTable(LeaveTableEvent leaveGameEvent);
+	void onLeaveTable(LeaveTableEvent leaveTableEvent);
 	
 	void onLeaveSeat(LeaveSeatEvent leaveSeatEvent);
 

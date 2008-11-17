@@ -55,7 +55,7 @@ public interface RemoteHoldemTableListener extends EventListener, Remote{
 	
 	void onJoinTable(JoinTableEvent joinTableEvent) throws RemoteException;
 
-	void onLeaveTable(LeaveTableEvent leaveGameEvent) throws RemoteException;
+	void onLeaveTable(LeaveTableEvent leaveTableEvent) throws RemoteException;
 	
 	void onLeaveSeat(LeaveSeatEvent leaveSeatEvent) throws RemoteException;
 

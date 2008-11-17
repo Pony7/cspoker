@@ -16,42 +16,23 @@
 package org.cspoker.client.common.gamestate.modifiers;
 
 import org.cspoker.client.common.gamestate.ForwardingGameState;
-import org.cspoker.client.common.gamestate.ForwardingPlayerState;
 import org.cspoker.client.common.gamestate.GameState;
-import org.cspoker.client.common.gamestate.PlayerState;
 import org.cspoker.common.api.lobby.holdemtable.event.HoldemTableEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.SitOutEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.NextPlayerEvent;
 import org.cspoker.common.elements.player.PlayerId;
-import org.cspoker.common.elements.table.SeatId;
 
-public class SitOutState extends ForwardingGameState {
+public class NextPlayerState extends ForwardingGameState {
 
-	private final SitOutEvent event;
-	private final PlayerState playerState;
+	private final NextPlayerEvent event;
 
-	public SitOutState(GameState gameState, SitOutEvent event) {
+	public NextPlayerState(GameState gameState, NextPlayerEvent event) {
 		super(gameState);
 		this.event = event;
-		playerState = new ForwardingPlayerState(super.getPlayer(event.getPlayerId())){
-			@Override
-			public PlayerId getPlayerId() {
-				return SitOutState.this.event.getPlayerId();
-			}
-			
-			@Override
-			public boolean sitsIn() {
-				return false;
-			}
-			
-		};
 	}
-
+	
 	@Override
-	public PlayerState getPlayer(PlayerId playerId) {
-		if(event.getPlayerId().equals(playerId)){
-			return playerState;
-		}
-		return super.getPlayer(playerId);
+	public PlayerId getNextToAct() {
+		return event.getPlayerId();
 	}
 	
 	public HoldemTableEvent getLastEvent() {
