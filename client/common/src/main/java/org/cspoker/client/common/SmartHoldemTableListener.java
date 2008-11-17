@@ -18,22 +18,22 @@ package org.cspoker.client.common;
 import net.jcip.annotations.ThreadSafe;
 
 import org.apache.log4j.Logger;
-import org.cspoker.client.common.gamestate.AllInState;
-import org.cspoker.client.common.gamestate.BetState;
-import org.cspoker.client.common.gamestate.BigBlindState;
-import org.cspoker.client.common.gamestate.CallState;
-import org.cspoker.client.common.gamestate.CheckState;
-import org.cspoker.client.common.gamestate.FoldState;
 import org.cspoker.client.common.gamestate.GameState;
-import org.cspoker.client.common.gamestate.NewCommunityCardsState;
-import org.cspoker.client.common.gamestate.NewDealState;
-import org.cspoker.client.common.gamestate.NewRoundState;
-import org.cspoker.client.common.gamestate.RaiseState;
-import org.cspoker.client.common.gamestate.ShowHandState;
-import org.cspoker.client.common.gamestate.SitInState;
-import org.cspoker.client.common.gamestate.SitOutState;
-import org.cspoker.client.common.gamestate.SmallBlindState;
-import org.cspoker.client.common.gamestate.WinnerState;
+import org.cspoker.client.common.gamestate.modifiers.AllInState;
+import org.cspoker.client.common.gamestate.modifiers.BetState;
+import org.cspoker.client.common.gamestate.modifiers.BigBlindState;
+import org.cspoker.client.common.gamestate.modifiers.CallState;
+import org.cspoker.client.common.gamestate.modifiers.CheckState;
+import org.cspoker.client.common.gamestate.modifiers.FoldState;
+import org.cspoker.client.common.gamestate.modifiers.NewCommunityCardsState;
+import org.cspoker.client.common.gamestate.modifiers.NewDealState;
+import org.cspoker.client.common.gamestate.modifiers.NewRoundState;
+import org.cspoker.client.common.gamestate.modifiers.RaiseState;
+import org.cspoker.client.common.gamestate.modifiers.ShowHandState;
+import org.cspoker.client.common.gamestate.modifiers.SitInState;
+import org.cspoker.client.common.gamestate.modifiers.SitOutState;
+import org.cspoker.client.common.gamestate.modifiers.SmallBlindState;
+import org.cspoker.client.common.gamestate.modifiers.WinnerState;
 import org.cspoker.common.api.lobby.holdemtable.event.AllInEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.BetEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.BigBlindEvent;
@@ -141,7 +141,7 @@ public class SmartHoldemTableListener
 	
 	@Override
 	public void onNewRound(NewRoundEvent newRoundEvent) {
-		tableState.setGameState(new NewRoundState(tableState.getTableConfiguration(), tableState.getGameState(),newRoundEvent));
+		tableState.setGameState(new NewRoundState(tableState.getTableConfiguration(),tableState.getGameState(),newRoundEvent));
 		super.onNewRound(newRoundEvent);
 	}
 	

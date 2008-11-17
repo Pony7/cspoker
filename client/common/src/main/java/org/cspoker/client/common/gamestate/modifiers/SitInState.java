@@ -13,72 +13,84 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.client.common.gamestate;
+package org.cspoker.client.common.gamestate.modifiers;
 
 import java.util.Collections;
 import java.util.Set;
 
+import org.cspoker.client.common.gamestate.AbstractPlayerState;
+import org.cspoker.client.common.gamestate.ForwardingGameState;
+import org.cspoker.client.common.gamestate.GameState;
+import org.cspoker.client.common.gamestate.PlayerState;
 import org.cspoker.common.api.lobby.holdemtable.event.HoldemTableEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.SitInEvent;
 import org.cspoker.common.elements.cards.Card;
 import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.elements.table.SeatId;
 
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Sets;
+
 public class SitInState extends ForwardingGameState {
 
 	private final SitInEvent event;
-
+	private final PlayerState playerState;
+	
 	public SitInState(GameState gameState, SitInEvent event) {
 		super(gameState);
 		this.event = event;
+		playerState = new AbstractPlayerState(){
+
+			public int getBet() {
+				return 0;
+			}
+
+			public Set<Card> getCards() {
+				return Collections.emptySet();
+			}
+
+			public PlayerId getPlayerId() {
+				return SitInState.this.event.getPlayer().getId();
+			}
+
+			public SeatId getSeatId() {
+				return SitInState.this.event.getPlayer().getSeatId();
+			}
+
+			public int getStack() {
+				return SitInState.this.event.getPlayer().getStackValue();
+			}
+
+			public boolean hasFolded() {
+				return false;
+			}
+
+			public boolean sitsIn() {
+				return true;
+			}
+			
+		};
 	}
 
 	@Override
-	public boolean sitsIn(PlayerId playerId) {
+	public PlayerState getPlayer(PlayerId playerId) {
 		if(event.getPlayer().getId().equals(playerId)){
-			return true;
+			return playerState;
 		}
-		return super.sitsIn(playerId);
+		return super.getPlayer(playerId);
 	}
-
+	
 	@Override
-	public int getBetSize(PlayerId playerId) {
-		if(event.getPlayer().getId().equals(playerId)){
-			return 0;
-		}
-		return super.getBetSize(playerId);
+	public Set<PlayerId> getAllSeatedPlayers() {
+		return Sets.union(super.getAllSeatedPlayers(),ImmutableSet.of(event.getPlayer().getId()));
 	}
-
-	@Override
-	public Set<Card> getCards(PlayerId playerId) {
-		if(event.getPlayer().getId().equals(playerId)){
-			return Collections.emptySet();
-		}
-		return super.getCards(playerId);
-	}
-
+	
 	@Override
 	public PlayerId getPlayerId(SeatId seatId) {
 		if(event.getPlayer().getSeatId().equals(seatId)){
 			return event.getPlayer().getId();
 		}
 		return super.getPlayerId(seatId);
-	}
-
-	@Override
-	public SeatId getSeatId(PlayerId playerId) {
-		if(event.getPlayer().getId().equals(playerId)){
-			return event.getPlayer().getSeatId();
-		}
-		return super.getSeatId(playerId);
-	}
-
-	@Override
-	public int getStack(PlayerId playerId) {		
-		if(event.getPlayer().getId().equals(playerId)){
-			return event.getPlayer().getStackValue();
-		}
-		return super.getStack(playerId);
 	}
 
 	public HoldemTableEvent getLastEvent() {

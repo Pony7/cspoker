@@ -24,6 +24,7 @@ import org.cspoker.client.common.SmartHoldemPlayerContext;
 import org.cspoker.client.common.SmartHoldemTableContext;
 import org.cspoker.client.common.SmartLobbyContext;
 import org.cspoker.client.common.gamestate.GameState;
+import org.cspoker.client.common.gamestate.PlayerState;
 import org.cspoker.common.api.lobby.holdemtable.event.AllInEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.BetEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.BigBlindEvent;
@@ -156,7 +157,8 @@ public abstract class AbstractBot
 		if(state.getPreviousRoundsPotSize()>0){
 			throw new IllegalStateException("There is a pot from previous rounds ("+state.getPreviousRoundsPotSize()+"). Can't calculate profit.");
 		}
-		return state.getStack(playerID)+state.getBetSize(playerID) - getBuyIn();
+		PlayerState playerState = state.getPlayer(playerID);
+		return playerState.getStack()+playerState.getBet() - getBuyIn();
 	}
 	
 	public void onAllIn(AllInEvent allInEvent) {

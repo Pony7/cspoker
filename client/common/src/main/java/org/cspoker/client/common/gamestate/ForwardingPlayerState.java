@@ -17,32 +17,44 @@ package org.cspoker.client.common.gamestate;
 
 import java.util.Set;
 
-import org.cspoker.common.api.lobby.holdemtable.event.HoldemTableTreeEvent;
-import org.cspoker.common.api.lobby.holdemtable.holdemplayer.event.NewPocketCardsEvent;
 import org.cspoker.common.elements.cards.Card;
 import org.cspoker.common.elements.player.PlayerId;
+import org.cspoker.common.elements.table.SeatId;
 
-public class NewPocketCardsState extends ForwardingGameState {
+public abstract class ForwardingPlayerState extends AbstractPlayerState{
 
-	private final NewPocketCardsEvent event;
-	private final PlayerId playerId;
+	private final PlayerState playerState;
 
-	public NewPocketCardsState(GameState gameState, PlayerId playerId, NewPocketCardsEvent event) {
-		super(gameState);
-		this.event = event;
-		this.playerId = playerId;
+	public ForwardingPlayerState(PlayerState playerState) {
+		this.playerState = playerState;
 	}
-
-	@Override
-	public Set<Card> getCards(PlayerId playerId) {
-		if(this.playerId.equals(playerId)){
-			return event.getPocketCards();
-		}
-		return super.getCards(playerId);
+	
+	public int getBet() {
+		return playerState.getBet();
 	}
-
-	public HoldemTableTreeEvent getLastEvent() {
-		return event;
+	
+	public Set<Card> getCards() {
+		return playerState.getCards();
 	}
-
+	
+	public int getStack() {
+		return playerState.getStack();
+	}
+	
+	public boolean hasFolded() {
+		return playerState.hasFolded();
+	}
+	
+	public boolean sitsIn() {
+		return playerState.sitsIn();
+	}
+	
+	public SeatId getSeatId() {
+		return playerState.getSeatId();
+	}
+	
+	public PlayerId getPlayerId() {
+		return playerState.getPlayerId();
+	}
+	
 }

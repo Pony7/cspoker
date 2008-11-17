@@ -13,38 +13,24 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.client.common.gamestate;
+package org.cspoker.client.common.gamestate.modifiers;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
-
+import org.cspoker.client.common.gamestate.ForwardingGameState;
+import org.cspoker.client.common.gamestate.GameState;
+import org.cspoker.common.api.lobby.holdemtable.event.CheckEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.HoldemTableEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.NewCommunityCardsEvent;
-import org.cspoker.common.elements.cards.Card;
 
-public class NewCommunityCardsState extends ForwardingGameState {
+public class CheckState extends ForwardingGameState {
 
-	private final NewCommunityCardsEvent event;
+	private final CheckEvent checkEvent;
 
-	private final Set<Card> cards;
-
-	public NewCommunityCardsState(GameState gameState, NewCommunityCardsEvent event) {
+	public CheckState(GameState gameState, CheckEvent checkEvent) {
 		super(gameState);
-		this.event = event;
-		Set<Card> buildingCards = new HashSet<Card>();
-		buildingCards.addAll(super.getCommunityCards());
-		buildingCards.addAll(event.getCommunityCards());
-		this.cards = Collections.unmodifiableSet(buildingCards);
-	}
-
-	@Override
-	public Set<Card> getCommunityCards() {
-		return cards;
+		this.checkEvent = checkEvent;
 	}
 	
 	public HoldemTableEvent getLastEvent() {
-		return event;
+		return checkEvent;
 	}
-
+	
 }

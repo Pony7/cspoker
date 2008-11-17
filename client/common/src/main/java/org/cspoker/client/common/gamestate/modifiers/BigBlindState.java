@@ -13,8 +13,12 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.client.common.gamestate;
+package org.cspoker.client.common.gamestate.modifiers;
 
+import org.cspoker.client.common.gamestate.ForwardingGameState;
+import org.cspoker.client.common.gamestate.ForwardingPlayerState;
+import org.cspoker.client.common.gamestate.GameState;
+import org.cspoker.client.common.gamestate.PlayerState;
 import org.cspoker.common.api.lobby.holdemtable.event.BigBlindEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.HoldemTableEvent;
 import org.cspoker.common.elements.player.PlayerId;
@@ -22,35 +26,54 @@ import org.cspoker.common.elements.player.PlayerId;
 public class BigBlindState extends ForwardingGameState {
 
 	private final BigBlindEvent event;
-	private final int newStack;
 	private final int newPot;
+	private final PlayerState playerState;
 
 	public BigBlindState(GameState gameState, BigBlindEvent event) {
 		super(gameState);
 		this.event = event;
-		this.newStack = super.getStack(event.getPlayerId())-event.getAmount();
+		PlayerState oldPlayerState = super.getPlayer(event.getPlayerId());
+		final int newStack = oldPlayerState.getStack()-event.getAmount();
 		this.newPot = super.getRoundPotSize()+event.getAmount();
+		playerState = new ForwardingPlayerState(oldPlayerState){
+			@Override
+			public int getBet() {
+				return BigBlindState.this.event.getAmount();
+			}
+			
+			@Override
+			public int getStack() {
+				return newStack;
+			}
+			
+			@Override
+			public boolean sitsIn() {
+				return true;
+			}
+			
+			@Override
+			public boolean hasFolded() {
+				return false;
+			}
+			
+			@Override
+			public PlayerId getPlayerId() {
+				return BigBlindState.this.event.getPlayerId();
+			}
+		};
 	}
-
+	
 	@Override
-	public int getBetSize(PlayerId playerId) {
+	public PlayerState getPlayer(PlayerId playerId) {
 		if(event.getPlayerId().equals(playerId)){
-			return event.getAmount();
+			return playerState;
 		}
-		return super.getBetSize(playerId);
+		return super.getPlayer(playerId);
 	}
 
 	@Override
 	public int getLargestBet() {
 		return event.getAmount();
-	}
-
-	@Override
-	public int getStack(PlayerId playerId) {		
-		if(event.getPlayerId().equals(playerId)){
-			return newStack;
-		}
-		return super.getStack(playerId);
 	}
 
 	@Override

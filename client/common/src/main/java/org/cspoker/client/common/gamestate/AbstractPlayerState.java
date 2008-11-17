@@ -15,20 +15,18 @@
  */
 package org.cspoker.client.common.gamestate;
 
-import org.cspoker.common.api.lobby.holdemtable.event.CheckEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.HoldemTableEvent;
 
-public class CheckState extends ForwardingGameState {
+/**
+ * Abstract PlayerState partial implementation.
+ * Only methods that are a simple combination of other methods should be implemented here.
+ * 
+ * @author guy
+ *
+ */
+public abstract class AbstractPlayerState implements PlayerState {
 
-	private final CheckEvent checkEvent;
-
-	public CheckState(GameState gameState, CheckEvent checkEvent) {
-		super(gameState);
-		this.checkEvent = checkEvent;
-	}
-	
-	public HoldemTableEvent getLastEvent() {
-		return checkEvent;
+	public final boolean isAllIn() {
+		return getStack()>0;
 	}
 	
 }

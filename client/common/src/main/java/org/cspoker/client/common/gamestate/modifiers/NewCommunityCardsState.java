@@ -13,31 +13,34 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.client.common.gamestate;
+package org.cspoker.client.common.gamestate.modifiers;
 
-import org.cspoker.common.api.lobby.holdemtable.event.FoldEvent;
+import java.util.Set;
+
+import org.cspoker.client.common.gamestate.ForwardingGameState;
+import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.common.api.lobby.holdemtable.event.HoldemTableEvent;
-import org.cspoker.common.elements.player.PlayerId;
+import org.cspoker.common.api.lobby.holdemtable.event.NewCommunityCardsEvent;
+import org.cspoker.common.elements.cards.Card;
 
-public class FoldState extends ForwardingGameState {
+import com.google.common.collect.Sets;
 
-	private final FoldEvent foldEvent;
+public class NewCommunityCardsState extends ForwardingGameState {
 
-	public FoldState(GameState gameState, FoldEvent foldEvent) {
+	private final NewCommunityCardsEvent event;
+
+	public NewCommunityCardsState(GameState gameState, NewCommunityCardsEvent event) {
 		super(gameState);
-		this.foldEvent = foldEvent;
+		this.event = event;
 	}
-	
+
 	@Override
-	public boolean hasFolded(PlayerId playerId) {
-		if(foldEvent.getPlayerId().equals(playerId)){
-			return true;
-		}
-		return super.hasFolded(playerId);
+	public Set<Card> getCommunityCards() {
+		return Sets.union(super.getCommunityCards(),event.getCommunityCards());
 	}
 	
 	public HoldemTableEvent getLastEvent() {
-		return foldEvent;
+		return event;
 	}
-	
+
 }
