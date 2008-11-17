@@ -29,10 +29,6 @@ public abstract class ForwardingGameState extends AbstractGameState{
 	public ForwardingGameState(GameState gameState) {
 		this.gameState = gameState;
 	}
-	
-	public int getBetSize(PlayerId playerId) {
-		return gameState.getBetSize(playerId);
-	}
 
 	public int getLargestBet() {
 		return gameState.getLargestBet();
@@ -40,10 +36,6 @@ public abstract class ForwardingGameState extends AbstractGameState{
 
 	public int getMinNextRaise() {
 		return gameState.getMinNextRaise();
-	}
-
-	public PlayerId getPlayerId(SeatId seatId) {
-		return gameState.getPlayerId(seatId);
 	}
 
 	public int getPreviousRoundsPotSize() {
@@ -54,24 +46,8 @@ public abstract class ForwardingGameState extends AbstractGameState{
 		return gameState.getRoundPotSize();
 	}
 
-	public SeatId getSeatId(PlayerId playerId) {
-		return gameState.getSeatId(playerId);
-	}
-
-	public int getStack(PlayerId playerId) {
-		return gameState.getStack(playerId);
-	}
-	
-	public PlayerId getNextToAct() {
-		return gameState.getNextToAct();
-	}
-
 	public Round getRound() {
 		return gameState.getRound();
-	}
-
-	public Set<Card> getCards(PlayerId playerId) {
-		return gameState.getCards(playerId);
 	}
 
 	public Set<Card> getCommunityCards() {
@@ -82,20 +58,27 @@ public abstract class ForwardingGameState extends AbstractGameState{
 		return gameState.getDealer();
 	}
 
-	public boolean hasFolded(PlayerId playerId) {
-		return gameState.hasFolded(playerId);
-	}
-	
 	public GameState getPreviousGameState() {
-		return gameState;
+		return gameState; //no delegation!
 	}
 	
 	public PlayerId getLastBettor() {
 		return gameState.getLastBettor();
 	}
 	
-	public boolean sitsIn(PlayerId playerId) {
-		return gameState.sitsIn(playerId);
+	public PlayerId getNextToAct() {
+		return gameState.getNextToAct();
 	}
-
+	
+	public PlayerState getPlayer(PlayerId playerId) {
+		return gameState.getPlayer(playerId);
+	}
+	
+	public PlayerId getPlayerId(SeatId seatId) {
+		return gameState.getPlayerId(seatId);
+	}
+	
+	public Set<PlayerId> getAllSeatedPlayers() {
+		return gameState.getAllSeatedPlayers();
+	}
 }

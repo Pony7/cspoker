@@ -15,7 +15,7 @@
  */
 package org.cspoker.client.common;
 
-import org.cspoker.client.common.gamestate.NewPocketCardsState;
+import org.cspoker.client.common.gamestate.modifiers.NewPocketCardsState;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.event.NewPocketCardsEvent;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.listener.ForwardingHoldemPlayerListener;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.listener.HoldemPlayerListener;

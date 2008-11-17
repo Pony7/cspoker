@@ -13,27 +13,50 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.client.common.gamestate;
+package org.cspoker.client.common.gamestate.modifiers;
 
+import org.cspoker.client.common.gamestate.ForwardingGameState;
+import org.cspoker.client.common.gamestate.ForwardingPlayerState;
+import org.cspoker.client.common.gamestate.GameState;
+import org.cspoker.client.common.gamestate.PlayerState;
+import org.cspoker.common.api.lobby.holdemtable.event.FoldEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.HoldemTableEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.SitOutEvent;
 import org.cspoker.common.elements.player.PlayerId;
 
-public class SitOutState extends ForwardingGameState {
+public class FoldState extends ForwardingGameState {
 
-	private final SitOutEvent event;
+	private final FoldEvent event;
+	private final PlayerState playerState;
 
-	public SitOutState(GameState gameState, SitOutEvent event) {
+	public FoldState(GameState gameState, FoldEvent event) {
 		super(gameState);
 		this.event = event;
+		playerState = new ForwardingPlayerState(super.getPlayer(event.getPlayerId())){
+			
+			@Override
+			public boolean hasFolded() {
+				return true;
+			}
+			
+			@Override
+			public boolean sitsIn() {
+				return true;
+			}
+			
+			@Override
+			public PlayerId getPlayerId() {
+				return FoldState.this.event.getPlayerId();
+			}
+			
+		};
 	}
 	
 	@Override
-	public boolean sitsIn(PlayerId playerId) {
+	public PlayerState getPlayer(PlayerId playerId) {
 		if(event.getPlayerId().equals(playerId)){
-			return false;
+			return playerState;
 		}
-		return super.sitsIn(playerId);
+		return super.getPlayer(playerId);
 	}
 	
 	public HoldemTableEvent getLastEvent() {

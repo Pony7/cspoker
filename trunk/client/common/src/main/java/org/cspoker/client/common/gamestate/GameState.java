@@ -26,21 +26,24 @@ import org.cspoker.common.elements.table.Round;
 import org.cspoker.common.elements.table.SeatId;
 
 @Immutable
+/**
+ * States of the game.
+ * 
+ */
 public interface GameState {
-
-	public int getStack(PlayerId playerId);
-	public int getBetSize(PlayerId playerId);
-	public SeatId getSeatId(PlayerId playerId);
-	public boolean hasFolded(PlayerId playerId);
-	public boolean sitsIn(PlayerId playerId);
 	
 	/**
-	 * Returns the PlayerId of the player sitting in the given seat or null
+	 * Returns the PlayerState of the player sitting in the given seat or null
 	 * if the seat is empty;
 	 */
 	public PlayerId getPlayerId(SeatId seatId);
 	
+	public PlayerState getPlayer(PlayerId playerId);
+	
+	public Set<PlayerId> getAllSeatedPlayers();
+	
 	public PlayerId getDealer();
+	
 	public PlayerId getLastBettor();
 	
 	/**
@@ -49,23 +52,22 @@ public interface GameState {
 	public PlayerId getNextToAct();
 
 	public int getPreviousRoundsPotSize();
-	public int getRoundPotSize();
+	public int getRoundPotSize();	
+	
+	/**
+	 * A derived state property that is the sum of the pot this round and previous rounds.
+	 */
+	public int getGamePotSize();
 	
 	public int getLargestBet();
 	public int getMinNextRaise();
 	
 	public Round getRound();
-
-	public Set<Card> getCards(PlayerId playerId);
+	
 	public Set<Card> getCommunityCards();
 	
 	public GameState getPreviousGameState();
 	public HoldemTableTreeEvent getLastEvent();
-	
-	/**
-	 * A derived state property that says whether a player is all-in or not.
-	 */
-	public boolean isAllIn(PlayerId playerId);
 	
 	/**
 	 * A derived state property that is the difference between the largest bet and the
@@ -77,10 +79,5 @@ public interface GameState {
 	 * A derived state property that is the minimum of the player deficit and stack.
 	 */
 	public int getCallValue(PlayerId playerId);
-	
-	/**
-	 * A derived state property that is the sum of the pot this round and previous rounds.
-	 */
-	public int getGamePotSize();
 	
 }

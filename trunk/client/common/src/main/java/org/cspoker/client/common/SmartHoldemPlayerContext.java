@@ -47,7 +47,7 @@ public class SmartHoldemPlayerContext
 	}
 	
 	public boolean havePocketPair() {
-		Set<Card> cards = getGameState().getCards(playerId);
+		Set<Card> cards = getGameState().getPlayer(playerId).getCards();
 		Card previous = null;
 		for (Card card : cards) {
 			if (previous == null) {
@@ -62,7 +62,7 @@ public class SmartHoldemPlayerContext
 	}
 	
 	public boolean haveA(Rank rank) {
-		Set<Card> cards = getGameState().getCards(playerId);
+		Set<Card> cards = getGameState().getPlayer(playerId).getCards();
 		for (Card card : cards) {
 			if (card.getRank().equals(rank)) {
 				return true;

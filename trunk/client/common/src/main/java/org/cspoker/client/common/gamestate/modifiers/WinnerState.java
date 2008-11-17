@@ -13,38 +13,61 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.client.common.gamestate;
+package org.cspoker.client.common.gamestate.modifiers;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-
+import org.cspoker.client.common.gamestate.ForwardingGameState;
+import org.cspoker.client.common.gamestate.ForwardingPlayerState;
+import org.cspoker.client.common.gamestate.GameState;
+import org.cspoker.client.common.gamestate.PlayerState;
 import org.cspoker.common.api.lobby.holdemtable.event.HoldemTableEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.WinnerEvent;
 import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.elements.player.Winner;
 
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableMap.Builder;
+
 public class WinnerState extends ForwardingGameState {
 
 	private final WinnerEvent event;
 
-	private final Map<PlayerId, Integer> gained;
+	private final ImmutableMap<PlayerId, Integer> gained;
 	
 	public WinnerState(GameState gameState, WinnerEvent event) {
 		super(gameState);
 		this.event = event;
-		HashMap<PlayerId, Integer> buildingGained = new HashMap<PlayerId, Integer>();
+		Builder<PlayerId, Integer> gainedBuilder = ImmutableMap.builder();
 		for(Winner winner:event.getWinners()){
-			buildingGained.put(winner.getPlayer().getId(), winner.getGainedAmount());
+			gainedBuilder.put(winner.getPlayer().getId(), winner.getGainedAmount());
 		}
-		gained = Collections.unmodifiableMap(buildingGained);
+		gained = gainedBuilder.build();
 	}
+	
 	
 	@Override
-	public int getBetSize(PlayerId playerId) {
-		return 0;
+	public PlayerState getPlayer(final PlayerId playerId) {
+		return new ForwardingPlayerState(super.getPlayer(playerId)){
+			@Override
+			public int getBet() {
+				return 0;
+			}
+			
+			@Override
+			public int getStack() {
+				Integer gainedValue;
+				if((gainedValue = gained.get(playerId))!=null){
+					return super.getStack()+gainedValue;
+				}
+				return super.getStack();
+			}
+			
+			@Override
+			public PlayerId getPlayerId() {
+				return playerId;
+			}
+			
+		};
 	}
-	
 	@Override
 	public int getPreviousRoundsPotSize() {
 		return 0;
@@ -53,15 +76,6 @@ public class WinnerState extends ForwardingGameState {
 	@Override
 	public int getRoundPotSize() {
 		return 0;
-	}
-	
-	@Override
-	public int getStack(PlayerId playerId) {
-		Integer gainedValue;
-		if((gainedValue = gained.get(playerId))!=null){
-			return super.getStack(playerId)+gainedValue;
-		}
-		return super.getStack(playerId);
 	}
 	
 	public HoldemTableEvent getLastEvent() {

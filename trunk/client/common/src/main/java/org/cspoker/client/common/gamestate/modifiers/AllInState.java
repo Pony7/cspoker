@@ -13,8 +13,12 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.client.common.gamestate;
+package org.cspoker.client.common.gamestate.modifiers;
 
+import org.cspoker.client.common.gamestate.ForwardingGameState;
+import org.cspoker.client.common.gamestate.ForwardingPlayerState;
+import org.cspoker.client.common.gamestate.GameState;
+import org.cspoker.client.common.gamestate.PlayerState;
 import org.cspoker.common.api.lobby.holdemtable.event.AllInEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.HoldemTableEvent;
 import org.cspoker.common.elements.player.PlayerId;
@@ -26,40 +30,65 @@ public class AllInState extends ForwardingGameState {
 	private final int newPotSize;
 
 	private final int raise;
+	
+	private final PlayerState playerState;
 
 	private final int newBetSize;
 
 	public AllInState(GameState gameState, AllInEvent event) {
 		super(gameState);
 		this.event = event;
+		
+		PlayerState player = super.getPlayer(event.getPlayerId());
 		this.newPotSize = super.getRoundPotSize()+event.getAmount();
-		this.newBetSize = super.getBetSize(event.getPlayerId())+event.getAmount();
+		
+		this.newBetSize = player.getBet()+event.getAmount();
 		int buildingRaise = newBetSize-super.getLargestBet();
 		if(buildingRaise<0){
 			buildingRaise=0;
 		}
 		raise = buildingRaise;
+		this.playerState = new ForwardingPlayerState(player){
+			
+			@Override
+			public int getBet() {
+				return AllInState.this.newBetSize;
+			}
+			
+			@Override
+			public int getStack() {
+				return 0;
+			}
+			
+			@Override
+			public PlayerId getPlayerId() {
+				return AllInState.this.event.getPlayerId();
+			}
+			
+			@Override
+			public boolean hasFolded() {
+				return false;
+			}
+			
+			@Override
+			public boolean sitsIn() {
+				return true;
+			}
+			
+		};
 	}
-
+	
 	@Override
-	public int getBetSize(PlayerId playerId) {
+	public PlayerState getPlayer(PlayerId playerId) {
 		if(event.getPlayerId().equals(playerId)){
-			return newBetSize;
+			return playerState;
 		}
-		return super.getBetSize(playerId);
+		return super.getPlayer(playerId);
 	}
 
 	@Override
 	public int getLargestBet() {
 		return raise>0 ? newBetSize : super.getLargestBet();
-	}
-
-	@Override
-	public int getStack(PlayerId playerId) {		
-		if(event.getPlayerId().equals(playerId)){
-			return 0;
-		}
-		return super.getStack(playerId);
 	}
 
 	@Override
@@ -74,14 +103,6 @@ public class AllInState extends ForwardingGameState {
 	
 	public HoldemTableEvent getLastEvent() {
 		return event;
-	}
-	
-	@Override
-	public boolean hasFolded(PlayerId playerId) {
-		if(event.getPlayerId().equals(playerId)){
-			return false;
-		}
-		return super.hasFolded(playerId);
 	}
 	
 	@Override

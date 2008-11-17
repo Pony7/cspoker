@@ -17,9 +17,12 @@ package org.cspoker.client.common.gamestate;
 
 import org.cspoker.common.elements.player.PlayerId;
 
+
 /**
  * Abstract GameState partial implementation.
  * Only methods that are a simple combination of other methods should be implemented here.
+ * 
+ * This is the only place where you can safely call other methods in the same state.
  * 
  * @author guy
  *
@@ -27,17 +30,15 @@ import org.cspoker.common.elements.player.PlayerId;
 public abstract class AbstractGameState implements GameState {
 
 	public final int getDeficit(PlayerId playerId) {
-		return getLargestBet()-getBetSize(playerId);
+		return getLargestBet()-getPlayer(playerId).getBet();
 	}
 	
 	public final int getCallValue(PlayerId playerId) {
-		return Math.min(getDeficit(playerId), getStack(playerId));
+		PlayerState player = getPlayer(playerId);
+		return Math.min(getLargestBet()-player.getBet(), player.getStack());
 	}
 	
-	public final boolean isAllIn(PlayerId playerId) {
-		return getStack(playerId)>0;
-	}
-	
+
 	public final int getGamePotSize() {
 		return getPreviousRoundsPotSize()+getRoundPotSize();
 	}

@@ -13,10 +13,14 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.client.common.gamestate;
+package org.cspoker.client.common.gamestate.modifiers;
 
 import java.util.Set;
 
+import org.cspoker.client.common.gamestate.ForwardingGameState;
+import org.cspoker.client.common.gamestate.ForwardingPlayerState;
+import org.cspoker.client.common.gamestate.GameState;
+import org.cspoker.client.common.gamestate.PlayerState;
 import org.cspoker.common.api.lobby.holdemtable.event.HoldemTableTreeEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.ShowHandEvent;
 import org.cspoker.common.elements.cards.Card;
@@ -25,19 +29,33 @@ import org.cspoker.common.elements.player.PlayerId;
 public class ShowHandState extends ForwardingGameState {
 
 	private final ShowHandEvent event;
+	private final PlayerState playerState;
 
 	public ShowHandState(GameState gameState, ShowHandEvent event) {
 		super(gameState);
 		this.event = event;
+		this.playerState = new ForwardingPlayerState(super.getPlayer(event.getShowdownPlayer().getId())){
+			
+			@Override
+			public Set<Card> getCards() {
+				return ShowHandState.this.event.getShowdownPlayer().getHandCards();
+			}
+			
+			@Override
+			public PlayerId getPlayerId() {
+				return ShowHandState.this.event.getShowdownPlayer().getId();
+			}
+			
+		};
 	}
-
+	
 	@Override
-	public Set<Card> getCards(PlayerId playerId) {
+	public PlayerState getPlayer(PlayerId playerId) {
 		if(event.getShowdownPlayer().getId().equals(playerId)){
-			return event.getShowdownPlayer().getHandCards();
+			return playerState;
 		}
-		return super.getCards(playerId);
-	} 
+		return super.getPlayer(playerId);
+	}
 	
 	public HoldemTableTreeEvent getLastEvent() {
 		return event;
