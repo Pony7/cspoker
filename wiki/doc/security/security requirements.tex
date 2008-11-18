@@ -885,6 +885,19 @@ Here we choose to reduce the number of data flows from/to the Player because int
 \subsubsection{An admin collaborates with a player to play with full information disclosure}
 \textbf{Summary:} An admin who has access to the pocket cards could pass the secret information to a collaborating player. This collaboration leads to perfect information access and a perfect strategy. The collaboration is an attempt to camouflage the cheating.
 
+\section{Criticism}
+\begin{itemize}
+\item The classification of the threat three isn't very clear sometimes: e.g. you can tamper with the server process
+to spoof the server and thus tampering with the data.
+\item The threat three isn't complete; for instance there is nothing in it about spoofing by corruption of 
+DNS records.
+\item Some business use cases can't be covered with the list of security patterns in the given catalog
+\item The list of labels is incomplete for some security patterns in the catalog: e.g. Secure Pipe should also have
+the confidentiality-label.
+\item Some patterns that are mentioned by other security patterns, aren't listed in the catalog: e.g. Secure Pipe 
+benefits from Security Association, but the latter pattern isn't listed in the catalog.
+\end{itemize}
+
 \section{Log}
 \textbf{30-10-2008}
 \begin{itemize}
