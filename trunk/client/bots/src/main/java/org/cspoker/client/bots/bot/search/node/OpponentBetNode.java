@@ -24,29 +24,33 @@ import org.cspoker.common.elements.player.PlayerId;
 
 public abstract class OpponentBetNode extends OpponentActionNode{
 
-	public OpponentBetNode(PlayerId botId, PlayerId opponentId, GameState gameState) {
-		super(botId,opponentId,gameState);
+	public OpponentBetNode(PlayerId botId, PlayerId opponentId, GameState gameState, int depth) {
+		super(botId,opponentId,gameState, depth);
 	}
-	
+
 	public void expand(){
 		//TODO figure out weights
 		expandAction(new SimulatedOpponentAction(
 				new FoldAction(),
 				0.1));
 		expandAction(new SimulatedOpponentAction(
-					new CallAction(),
-					0.6));	
-		if(Math.random()<0.1){
-			expandAction(new SimulatedOpponentAction(
-					new RaiseAction(gameState.getLowerRaiseBound(playerId)),
-					0.2));
+				new CallAction(),
+				0.6));	
+		if(!gameState.getPlayer(botId).isAllIn()){
+			if(gameState.isAllowedToRaise(playerId)){
+				if(Math.random()<0.2){
+					expandAction(new SimulatedOpponentAction(
+							new RaiseAction(gameState.getLowerRaiseBound(playerId)),
+							0.2));
+				}
+				if(Math.random()<0.1){
+					expandAction(new SimulatedOpponentAction(
+							new RaiseAction(Math.min(5*gameState.getLowerRaiseBound(playerId),gameState.getUpperRaiseBound(playerId))),
+							0.1));
+				}
 			}
-		if(Math.random()<0.05){
-			expandAction(new SimulatedOpponentAction(
-					new RaiseAction(Math.min(5*gameState.getLowerRaiseBound(playerId),gameState.getUpperRaiseBound(playerId))),
-					0.1));
-		}
 
+		}
 	}
-		
+
 }

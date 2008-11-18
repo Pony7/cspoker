@@ -98,7 +98,7 @@ public interface GameState {
 	/**
 	 * A derived state property whether the given player has enough money to raise.
 	 */
-	public boolean canRaise(PlayerId playerId);
+	public boolean isAllowedToRaise(PlayerId playerId);
 
 	public PlayerState previewNextToAct();
 

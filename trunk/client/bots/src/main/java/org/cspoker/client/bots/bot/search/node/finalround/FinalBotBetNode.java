@@ -17,7 +17,6 @@ package org.cspoker.client.bots.bot.search.node.finalround;
 
 
 import org.apache.log4j.Logger;
-import org.cspoker.client.bots.bot.search.SearchBot;
 import org.cspoker.client.bots.bot.search.node.ActionNode;
 import org.cspoker.client.bots.bot.search.node.BotBetNode;
 import org.cspoker.client.common.gamestate.GameState;
@@ -26,23 +25,21 @@ import org.cspoker.common.elements.player.PlayerId;
 
 public class FinalBotBetNode extends BotBetNode{
 	
-	private final static Logger logger = Logger.getLogger(BotBetNode.class);
+	private final static Logger logger = Logger.getLogger(FinalBotBetNode.class);
 
-	public FinalBotBetNode(PlayerId botId, GameState gameState) {
-		super(botId,gameState);
+	public FinalBotBetNode(PlayerId botId, GameState gameState, int depth) {
+		super(botId,gameState, depth);
 	}
 
 	protected double doNextPlayer(GameState newGameState, PlayerState nextToAct) {
-		logger.trace("Moving on the next opponent: "+nextToAct.getPlayerId());
-		ActionNode nextNode = new FinalOpponentBetNode(playerId, nextToAct.getPlayerId(),newGameState);
+		ActionNode nextNode = new FinalOpponentBetNode(playerId, nextToAct.getPlayerId(),newGameState,depth+1);
 		nextNode.expand();
 		return nextNode.getEV();
 	}
 
 	protected double doRoundEnd(GameState newGameState) {
-		logger.trace("Ending round with showdown");
 		//round is over
-		ShowdownNode showdownNode = new ShowdownNode(playerId, newGameState);
+		ShowdownNode showdownNode = new ShowdownNode(playerId, newGameState,depth+1);
 		showdownNode.expand();
 		return showdownNode.getEV();
 	}

@@ -23,14 +23,17 @@ import org.cspoker.common.elements.player.PlayerId;
 
 public abstract class BotBetNode extends BotActionNode{
 
-	public BotBetNode(PlayerId playerId, GameState gameState) {
-		super(playerId,gameState);
+	public BotBetNode(PlayerId playerId, GameState gameState,int depth) {
+		super(playerId,gameState,depth);
 	}
-	
+
 	public void expand(){
+		// fold will always be better higher up the tree? should remove?
 		expandAction(new FoldAction());
 		expandAction(new CallAction());
-		expandAction(new RaiseAction(gameState.getLowerRaiseBound(playerId)));
-		expandAction(new RaiseAction(Math.min(5*gameState.getLowerRaiseBound(playerId),gameState.getUpperRaiseBound(playerId))));
+		if(gameState.isAllowedToRaise(playerId)){
+			expandAction(new RaiseAction(gameState.getLowerRaiseBound(playerId)));
+			expandAction(new RaiseAction(Math.min(5*gameState.getLowerRaiseBound(playerId),gameState.getUpperRaiseBound(playerId))));
+		}
 	}
 }

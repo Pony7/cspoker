@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.cspoker.client.bots.bot.search.SearchBot;
 import org.cspoker.client.bots.bot.search.action.BotActionEvaluation;
 import org.cspoker.client.bots.bot.search.action.SimulatedBotAction;
 import org.cspoker.client.common.gamestate.GameState;
@@ -37,27 +36,38 @@ public abstract class BotActionNode extends ActionNode{
 	
 	protected final List<BotActionEvaluation> actions = new ArrayList<BotActionEvaluation>();
 
-	public BotActionNode(PlayerId playerId, GameState gameState) {
-		super(playerId,gameState);
+	public BotActionNode(PlayerId playerId, GameState gameState,int depth) {
+		super(playerId,gameState,depth);
 	}
 
 	public abstract void expand();
 
 	protected void expandAction(SimulatedBotAction action) {
+		StringBuilder spaces = new StringBuilder("");
+		for(int i=0;i<depth;i++){
+			spaces.append("   ");
+		}
+		if(logger.isTraceEnabled()){
+			System.out.println(spaces+"BotAction: "+action);
+		}
 		double EV;
 		if(action.hasSubTree()){
 			GameState newGameState = action.getNextState(gameState, playerId);
 			PlayerState nextToAct;
-			if((nextToAct=newGameState.previewNextToAct())==null || newGameState.getPlayer(playerId).isAllIn()){
+			if((nextToAct=newGameState.previewNextToAct())==null){
 				EV = doRoundEnd(newGameState);
 			}else{
 				newGameState = new NextPlayerState(newGameState,new NextPlayerEvent(nextToAct.getPlayerId()));
 				EV = doNextPlayer(newGameState, nextToAct);
 			}
 		}else{
-			EV = 0;
+			EV = gameState.getPlayer(playerId).getStack();
 		}
 		actions.add(new BotActionEvaluation(action,EV));
+
+		if(logger.isTraceEnabled()){
+			System.out.println(spaces+"EV="+EV);
+		}
 	}
 
 	protected abstract double doNextPlayer(GameState newGameState, PlayerState nextToAct) ;

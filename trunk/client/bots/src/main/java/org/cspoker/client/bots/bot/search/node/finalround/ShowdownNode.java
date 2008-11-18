@@ -35,13 +35,15 @@ import com.google.common.collect.Multiset.Entry;
 
 public class ShowdownNode implements GameTreeNode{
 
-	private PlayerId botId;
-	private GameState gameState;
-	private Multiset<Integer> EVs = new HashMultiset<Integer>();
+	private final PlayerId botId;
+	private final GameState gameState;
+	private final Multiset<Integer> EVs = new HashMultiset<Integer>();
+	private final int depth;
 	
-	public ShowdownNode(PlayerId botId, GameState gameState) {
+	public ShowdownNode(PlayerId botId, GameState gameState, int depth) {
 		this.botId = botId;
 		this.gameState = gameState;
+		this.depth = depth;
 	}
 
 	@Override
@@ -63,8 +65,9 @@ public class ShowdownNode implements GameTreeNode{
 		Set<Card> communityCards = sampleCommunityCards(usedCards,gameState.getCommunityCards());
 		usedCards.addAll(communityCards);
 
-		int winEV = gameState.getGamePotSize();
-
+		int loseEV = botState.getStack();
+		int winEV = loseEV+gameState.getGamePotSize();
+		
 		int botRank =  new Hand(Sets.union(communityCards, botCards)).getBestFiveRank();
 
 		for(int i=0;i<nbSamples;i++){

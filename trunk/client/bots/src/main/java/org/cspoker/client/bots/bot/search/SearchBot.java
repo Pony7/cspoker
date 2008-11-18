@@ -62,9 +62,9 @@ public class SearchBot
 							logger.debug("Searching final round game tree.");
 							BotActionNode actionNode;
 							if(tableContext.getGameState().hasBet()){
-								actionNode = new FinalBotBetNode(playerID, playerContext.getGameState());
+								actionNode = new FinalBotBetNode(playerID, playerContext.getGameState(),0);
 							}else{
-								actionNode = new FinalBotNoBetNode(playerID, playerContext.getGameState());
+								actionNode = new FinalBotNoBetNode(playerID, playerContext.getGameState(),0);
 							}
 							actionNode.expand();
 							actionNode.performbestAction(playerContext);

@@ -22,10 +22,12 @@ public abstract class ActionNode implements GameTreeNode{
 
 	protected final GameState gameState;
 	protected final PlayerId playerId;
+	protected final int depth;
 
-	public ActionNode(PlayerId playerId, GameState gameState) {
+	public ActionNode(PlayerId playerId, GameState gameState, int depth) {
 		this.gameState = gameState;
 		this.playerId = playerId;
+		this.depth = depth;
 	}
 	
 }

@@ -18,6 +18,7 @@ package org.cspoker.client.common.gamestate;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
 import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.elements.table.Round;
 import org.cspoker.common.elements.table.SeatId;
@@ -34,6 +35,8 @@ import org.cspoker.common.elements.table.SeatId;
  */
 public abstract class AbstractGameState implements GameState {
 
+	private final static Logger logger = Logger.getLogger(AbstractGameState.class);
+
 	public final int getDeficit(PlayerId playerId) {
 		return getLargestBet()-getPlayer(playerId).getBet();
 	}
@@ -42,17 +45,27 @@ public abstract class AbstractGameState implements GameState {
 		PlayerState player = getPlayer(playerId);
 		return Math.min(getLargestBet()-player.getBet(), player.getStack());
 	}
-	
-	public final boolean canRaise(PlayerId playerId) {
+
+	public final boolean isAllowedToRaise(PlayerId playerId) {
 		PlayerState player = getPlayer(playerId);
-		return getLargestBet()-player.getBet()<player.getStack();
+		if(getLargestBet()-player.getBet()>=player.getStack()){
+			return false;
+		}
+		Set<PlayerState> otherPlayers = getAllSeatedPlayers();
+		for(PlayerState otherPlayer:otherPlayers){
+			//check whether we are the only active player left in the game.
+			if(!otherPlayer.getPlayerId().equals(playerId) && otherPlayer.isActivelyPlaying()){
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public final int getLowerRaiseBound(PlayerId playerId) {
 		PlayerState player = getPlayer(playerId);
 		return Math.min(getMinNextRaise(),player.getStack());
 	}
-	
+
 	public final int getUpperRaiseBound(PlayerId playerId) {
 		PlayerState player = getPlayer(playerId);
 		return player.getStack()-(getLargestBet()-player.getBet());
@@ -61,11 +74,11 @@ public abstract class AbstractGameState implements GameState {
 	public final int getGamePotSize() {
 		return getPreviousRoundsPotSize()+getRoundPotSize();
 	}
-	
+
 	public boolean hasBet() {
 		return getLargestBet()>0;
 	}
-	
+
 	public final Set<PlayerState> getAllSeatedPlayers() {
 		Set<PlayerId> ids = getAllSeatedPlayerIds();
 		HashSet<PlayerState> states = new HashSet<PlayerState>();
@@ -81,16 +94,32 @@ public abstract class AbstractGameState implements GameState {
 			throw new UnsupportedOperationException("Not yet implemented");
 		}else{
 			PlayerId lastBettor = getLastBettor();
-
 			PlayerId startId = getNextToAct();
 
 			PlayerId currentId = startId;
 			PlayerState currentPlayer = getPlayer(currentId);
 			SeatId currentSeat = currentPlayer.getSeatId();
+			PlayerId previousId = null;
 			do{
+				previousId = currentId;
 				currentSeat = new SeatId((currentSeat.getId()+1)%getTableConfiguration().getMaxNbPlayers());
 				currentId = getPlayerId(currentSeat);
-				if((lastBettor!=null && lastBettor.equals(currentId)) || startId.equals(currentId)){
+
+				if(lastBettor!=null){
+					//somebody has raised
+					if(lastBettor.equals(currentId)){
+						//everybody has called
+						return null;
+					}
+				}else{
+					//nobody has raised
+					if(getDealer().equals(previousId)){
+						//everybody checked
+						return null;
+					}
+				}
+				if(startId.equals(currentId)){
+					//nobody should act apart from the current one
 					return null;
 				}
 				currentPlayer = getPlayer(currentId);

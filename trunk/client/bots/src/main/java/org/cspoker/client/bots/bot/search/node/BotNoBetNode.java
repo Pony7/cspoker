@@ -22,12 +22,13 @@ import org.cspoker.common.elements.player.PlayerId;
 
 public abstract class BotNoBetNode extends BotActionNode{
 
-	public BotNoBetNode(PlayerId playerId, GameState gameState) {
-		super(playerId,gameState);
+	public BotNoBetNode(PlayerId playerId, GameState gameState,int depth) {
+		super(playerId,gameState,depth);
 	}
-	
+
 	public void expand(){
 		expandAction(new CheckAction());
+		//if(gameState.isAllowedToRaise(playerId)) -> not needed?
 		expandAction(new BetAction(gameState.getLowerRaiseBound(playerId)));
 		expandAction(new BetAction(Math.min(5*gameState.getLowerRaiseBound(playerId),gameState.getUpperRaiseBound(playerId))));
 	}

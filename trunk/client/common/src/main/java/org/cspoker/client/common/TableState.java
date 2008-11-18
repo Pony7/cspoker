@@ -22,7 +22,7 @@ public class TableState {
 
 	private final TableConfiguration tableConfiguration;
 
-	private GameState gameState = null;
+	private GameState gameState;
 	
 	public TableState(TableConfiguration tableConfiguration) {
 		this.tableConfiguration = tableConfiguration;

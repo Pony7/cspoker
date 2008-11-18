@@ -33,4 +33,9 @@ public class SimulatedOpponentAction {
 		return probability;
 	}
 	
+	@Override
+	public String toString() {
+		return action.toString()+" with prob="+probability;
+	}
+	
 }

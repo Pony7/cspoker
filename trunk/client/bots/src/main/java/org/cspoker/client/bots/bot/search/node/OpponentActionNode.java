@@ -18,6 +18,7 @@ package org.cspoker.client.bots.bot.search.node;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.cspoker.client.bots.bot.search.action.OpponentActionEvaluation;
 import org.cspoker.client.bots.bot.search.action.SimulatedOpponentAction;
 import org.cspoker.client.common.gamestate.GameState;
@@ -28,17 +29,26 @@ import org.cspoker.common.elements.player.PlayerId;
 
 public abstract class OpponentActionNode extends ActionNode{
 
+	private final static Logger logger = Logger.getLogger(OpponentActionNode.class);
+	
 	protected final PlayerId botId;
 	protected final List<OpponentActionEvaluation> actions = new ArrayList<OpponentActionEvaluation>();
 
-	public OpponentActionNode(PlayerId botId, PlayerId opponentId, GameState gameState) {
-		super(opponentId,gameState);
+	public OpponentActionNode(PlayerId botId, PlayerId opponentId, GameState gameState, int depth) {
+		super(opponentId,gameState, depth);
 		this.botId = botId;
 	}
 	
 	public abstract void expand();
 
 	public void expandAction(SimulatedOpponentAction action) {
+		StringBuilder spaces = new StringBuilder("");
+		for(int i=0;i<depth;i++){
+			spaces.append("   ");
+		}
+		if(logger.isTraceEnabled()){
+			System.out.println(spaces+"OpponentAction: "+action);
+		}
 		double EV;
 		if(action.getAction().hasSubTree()){
 			GameState newGameState = action.getAction().getNextState(gameState, playerId);
@@ -50,9 +60,13 @@ public abstract class OpponentActionNode extends ActionNode{
 				EV = doNextPlayer(newGameState, nextToAct);
 			}
 		}else{
-			EV = 0;
+			EV = gameState.getPlayer(botId).getStack();
 		}
 		actions.add(new OpponentActionEvaluation(action,EV));
+
+		if(logger.isTraceEnabled()){
+			System.out.println(spaces+"EV="+EV);
+		}
 	}
 
 	protected abstract double doNextPlayer(GameState newGameState, PlayerState nextToAct) ;
