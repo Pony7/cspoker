@@ -88,7 +88,7 @@ public abstract class AbstractGameState implements GameState {
 			PlayerState currentPlayer = getPlayer(currentId);
 			SeatId currentSeat = currentPlayer.getSeatId();
 			do{
-				currentSeat = new SeatId(currentSeat.getId()+1);
+				currentSeat = new SeatId((currentSeat.getId()+1)%getTableConfiguration().getMaxNbPlayers());
 				currentId = getPlayerId(currentSeat);
 				if((lastBettor!=null && lastBettor.equals(currentId)) || startId.equals(currentId)){
 					return null;
