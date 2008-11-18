@@ -46,7 +46,7 @@ public class ShowdownNode implements GameTreeNode{
 
 	@Override
 	public void expand() {
-		int nbSamples = 5;
+		int nbSamples = 20;
 		PlayerState botState = gameState.getPlayer(botId);
 		Set<PlayerState> activeOpponents = Sets.filter(gameState.getAllSeatedPlayers(),new Predicate<PlayerState>(){
 			@Override

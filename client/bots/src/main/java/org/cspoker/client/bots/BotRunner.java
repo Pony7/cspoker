@@ -49,7 +49,7 @@ import org.cspoker.common.util.threading.RequestExecutor;
 public class BotRunner
 		implements LobbyListener {
 	
-	private static final int nbGamesPerConfrontation = 50000;
+	private static final int nbGamesPerConfrontation = 14000;
 
 	static {
 		Log4JPropertiesLoader.load("org/cspoker/client/bots/logging/log4j.properties");
@@ -78,7 +78,7 @@ public class BotRunner
 	private volatile BotListener gameLimiter;
 	
 	public BotRunner(RemoteCSPokerServer cspokerServer){
-		this(cspokerServer, new BotFactory[]{new CallBotFactory(), new SearchBotFactory(), new RuleBasedBotFactory()});
+		this(cspokerServer, new BotFactory[]{new SearchBotFactory(), new CallBotFactory(), new RuleBasedBotFactory()});
 	}
 	
 	public BotRunner(RemoteCSPokerServer cspokerServer, BotFactory[] bots) {
@@ -156,11 +156,11 @@ public class BotRunner
 	}
 
 	public void onTableCreated(TableCreatedEvent tableCreatedEvent) {
-		logger.info(tableCreatedEvent.getTable().getName()+" table created.");
+		logger.debug(tableCreatedEvent.getTable().getName()+" table created.");
 	}
 	
 	public void onTableRemoved(TableRemovedEvent tableRemovedEvent) {
-		logger.info("Table " + tableRemovedEvent.getTableId()+" removed.");
+		logger.debug("Table " + tableRemovedEvent.getTableId()+" removed.");
 	}
 
 	public void respawnBots() {

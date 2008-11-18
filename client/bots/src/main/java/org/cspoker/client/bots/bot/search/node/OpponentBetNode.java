@@ -36,12 +36,12 @@ public abstract class OpponentBetNode extends OpponentActionNode{
 		expandAction(new SimulatedOpponentAction(
 					new CallAction(),
 					0.6));	
-		if(Math.random()<0.01){
+		if(Math.random()<0.1){
 			expandAction(new SimulatedOpponentAction(
 					new RaiseAction(gameState.getLowerRaiseBound(playerId)),
 					0.2));
 			}
-		if(Math.random()<0.005){
+		if(Math.random()<0.05){
 			expandAction(new SimulatedOpponentAction(
 					new RaiseAction(Math.min(5*gameState.getLowerRaiseBound(playerId),gameState.getUpperRaiseBound(playerId))),
 					0.1));

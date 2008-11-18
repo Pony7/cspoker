@@ -32,12 +32,12 @@ public abstract class OpponentNoBetNode extends OpponentActionNode{
 		expandAction(new SimulatedOpponentAction(
 				new CheckAction(),
 				0.7));
-		if(Math.random()<0.02){
+		if(Math.random()<0.2){
 			expandAction(new SimulatedOpponentAction(
 					new BetAction(gameState.getLowerRaiseBound(playerId)),
 					0.2));	
 		}
-		if(Math.random()<0.01){
+		if(Math.random()<0.1){
 		expandAction(new SimulatedOpponentAction(
 				new BetAction(Math.min(5*gameState.getLowerRaiseBound(playerId),gameState.getUpperRaiseBound(playerId))),
 				0.1));

@@ -77,8 +77,7 @@ public abstract class BotActionNode extends ActionNode{
 
 	public void performbestAction(RemoteHoldemPlayerContext context) throws RemoteException,
 	IllegalActionException {
-
-		double maxEv=0;
+		double maxEv=Double.NEGATIVE_INFINITY;
 		SimulatedBotAction action = null;
 		for(BotActionEvaluation eval : actions){
 			logger.trace("Considering: "+eval.toString());

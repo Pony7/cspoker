@@ -33,12 +33,14 @@ public class FinalBotBetNode extends BotBetNode{
 	}
 
 	protected double doNextPlayer(GameState newGameState, PlayerState nextToAct) {
+		logger.trace("Moving on the next opponent: "+nextToAct.getPlayerId());
 		ActionNode nextNode = new FinalOpponentBetNode(playerId, nextToAct.getPlayerId(),newGameState);
 		nextNode.expand();
 		return nextNode.getEV();
 	}
 
 	protected double doRoundEnd(GameState newGameState) {
+		logger.trace("Ending round with showdown");
 		//round is over
 		ShowdownNode showdownNode = new ShowdownNode(playerId, newGameState);
 		showdownNode.expand();

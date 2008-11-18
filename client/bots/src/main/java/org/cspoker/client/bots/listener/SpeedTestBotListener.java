@@ -39,7 +39,7 @@ public class SpeedTestBotListener extends DealCountingListener{
 		if(deals%reportInterval==0){
 			long nowTime = System.currentTimeMillis();
 			if(startTime>0){
-				logger.warn("deal #"+deals+" at "+(reportInterval*1000.0/(nowTime-startTime))+" games/s");
+				logger.info("deal #"+deals+" at "+(reportInterval*1000.0/(nowTime-startTime))+" games/s");
 			}
 			startTime = nowTime;
 		}

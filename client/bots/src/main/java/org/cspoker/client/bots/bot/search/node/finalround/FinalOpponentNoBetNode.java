@@ -15,6 +15,7 @@
  */
 package org.cspoker.client.bots.bot.search.node.finalround;
 
+import org.apache.log4j.Logger;
 import org.cspoker.client.bots.bot.search.node.ActionNode;
 import org.cspoker.client.bots.bot.search.node.OpponentNoBetNode;
 import org.cspoker.client.common.gamestate.GameState;
@@ -23,11 +24,14 @@ import org.cspoker.common.elements.player.PlayerId;
 
 public class FinalOpponentNoBetNode extends OpponentNoBetNode{
 	
+	private final static Logger logger = Logger.getLogger(FinalOpponentNoBetNode.class);
+	
 	public FinalOpponentNoBetNode(PlayerId botId, PlayerId opponentId, GameState gameState) {
 		super(botId,opponentId,gameState);
 	}
 
 	protected double doNextPlayer(GameState newGameState, PlayerState nextToAct) {
+		logger.trace("Moving on the next player: "+nextToAct.getPlayerId());
 		ActionNode nextNode;
 		if(nextToAct.getPlayerId().equals(botId)){
 			if(newGameState.hasBet()){
@@ -48,6 +52,7 @@ public class FinalOpponentNoBetNode extends OpponentNoBetNode{
 	}
 
 	protected double doRoundEnd(GameState newGameState) {
+		logger.trace("Ending round with showdown");
 		//round is over
 		ShowdownNode showdownNode = new ShowdownNode(botId, newGameState);
 		showdownNode.expand();
