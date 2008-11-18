@@ -30,6 +30,9 @@ package models
 		public static var clientSeat:Seat = null;
 		public static var clientTurn:Boolean = false;
 		public static var maxBet:int = 0;
+		public static var detailedTables:Dictionary = new Dictionary;
+		
+		public static var isInTable:Boolean = false;
 			
 		//public static var newServerConnection:ServerConnectionNew = null;
 		//public static var newMessageCenter:MessageCenterNew = null;
@@ -79,9 +82,9 @@ package models
 			serverConnection.csGetTablesAction();
 		}
 		
-		public static function createNewTable(tableName:String):void{
-			var delay:int = 12;
-			serverConnection.csCreateTableAction(tableName);
+		public static function createNewTable(tableName:String, delay:int):void{
+			//var delay:int = 12;
+			serverConnection.csCreateTableAction(tableName, delay);
 			lobby.gamesDG.refreshGames();
 		}
 		
@@ -124,6 +127,7 @@ package models
 			
 			serverConnection.csJoinTableAction(selectedTable.tableId);
 			table.setTableId(selectedTable.tableId);
+			Main.table.setTableId(selectedTable.tableId);
 			table.loadTableInfo(selectedTable);
 			trace("join game called: " + selectedTable);
 			
@@ -147,9 +151,11 @@ package models
 		
 		
 		public static function showTable():void{
+			Main.isInTable = true;
 			containerApp.mainAppViewStack.selectedChild=table;
 		}		
 		public static function showLobby():void{
+			Main.isInTable = false;
 			containerApp.mainAppViewStack.selectedChild=lobby;
 		}
 		public static function showConnectionBox():void{

@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml">
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" backgroundColor="0" backgroundAlpha=".35">
 	<mx:Script>
 		<![CDATA[
 			import models.*;
 			import mx.managers.PopUpManager;
 			
 			private function btnCreateNowClick():void{
-				Main.createNewTable(roomName.text);
+				Main.createNewTable(roomName.text, int(delay.text));
 				PopUpManager.removePopUp(this);
 			}
 			
@@ -24,4 +24,6 @@
 	<mx:TextInput text="name..." id="roomName"  x="23" y="119"/>
 	<mx:Button label="Create now" id="btnCreateNow" click="btnCreateNowClick()" x="45" y="201"/>
 	<mx:Button label="Cancel" id="btnCancel" click="btnCancelClick()"  x="168.5" y="201"/>
+	<mx:TextInput x="83" y="149" text="10" id="delay" enabled="true" width="52"/>
+	<mx:Label x="23" y="149" text="DELAY:" id="lblDelay"/>
 </mx:Canvas>

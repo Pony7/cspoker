@@ -167,6 +167,7 @@ package models.connection
 			var xml:XML =
 			<ns5:getTableListAction id={idAction} xmlns:ns5="http://www.cspoker.org/api/2008-11/"/>;
 			csSendData(xml);
+			return;
 		}
 		
 		public function csGetTableAction(tableID:int):void
@@ -176,6 +177,7 @@ package models.connection
 			<ns5:getHoldemTableInformationAction tableId={tableID} id={idAction} xmlns:ns5="http://www.cspoker.org/api/2008-11/"/>;
 
 			csSendData(xml);
+			return;
 		}
 		
 		public function csJoinTableAction(tableId:int,buyin:int=1000):void
@@ -183,6 +185,7 @@ package models.connection
 						
 			idAction++;
 			messageCenter.joinTableActionId = idAction;	
+			Main.table.setTableId(tableId);
 								
 			var xml:XML = <ns5:joinHoldemTableAction tableId={tableId} 
 			id={idAction} xmlns:ns5="http://www.cspoker.org/api/2008-11/"/>;
