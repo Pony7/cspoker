@@ -14,16 +14,15 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-package org.cspoker.server.common.elements.cards.deck;
+package org.cspoker.common.elements.cards;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.cspoker.common.elements.cards.Card;
-import org.cspoker.common.elements.cards.Rank;
-import org.cspoker.common.elements.cards.Suit;
-import org.cspoker.server.common.elements.cards.deck.randomGenerator.randomGenerator.RandomOrgSeededRandomGenerator;
+import org.cspoker.common.util.random.RandomOrgSeededRandomGenerator;
+
+import com.google.common.collect.ImmutableList;
 
 /**
  * A class to represent a deck of cards.
@@ -34,7 +33,7 @@ public class Deck {
 	/*
 	 * Sorted prototype deck for copying
 	 */
-	private static final List<Card> PROTO_DECK;
+	private static final ImmutableList<Card> PROTO_DECK;
 
 	static {
 		// Initialize prototype deck
@@ -44,21 +43,33 @@ public class Deck {
 				deck.add(new Card(rank, suit));
 			}
 		}
-		PROTO_DECK = Collections.unmodifiableList(deck);
+		PROTO_DECK = ImmutableList.copyOf(deck);
 	}
 
+	public static Deck createTruelyRandomDeck(){
+		List<Card> cards = new ArrayList<Card>(Deck.PROTO_DECK);
+		Collections.shuffle(cards, RandomOrgSeededRandomGenerator.getInstance()
+				.getRandom());	
+		return new Deck(cards);
+	}
+
+	public static Deck createWeaklyRandomDeck(){
+		List<Card> cards = new ArrayList<Card>(Deck.PROTO_DECK);
+		Collections.shuffle(cards);	
+		return new Deck(cards);
+	}
+	
+	
 	/**
 	 * The sequence of cards in this deck.
 	 */
 	private final List<Card> cards;
-
+	
 	/**
 	 * Construct a new deck of cards and shuffle it.
 	 */
-	public Deck() {
-		cards = new ArrayList<Card>(Deck.PROTO_DECK);
-		Collections.shuffle(cards, RandomOrgSeededRandomGenerator.getInstance()
-				.getRandom());
+	private Deck(List<Card> cards) {
+		this.cards = cards;
 	}
 
 	/**

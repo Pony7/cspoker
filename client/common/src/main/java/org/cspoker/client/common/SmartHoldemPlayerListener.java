@@ -25,17 +25,19 @@ public class SmartHoldemPlayerListener extends ForwardingHoldemPlayerListener {
 
 	private final TableState tableState;
 	private final PlayerId playerId;
-	
+
 	public SmartHoldemPlayerListener(HoldemPlayerListener holdemPlayerListener,TableState tableState, PlayerId playerId) {
 		super(holdemPlayerListener);
 		this.tableState = tableState;
 		this.playerId = playerId;
 	}
-	
+
 	@Override
 	public void onNewPocketCards(NewPocketCardsEvent newPocketCardsEvent) {
-		tableState.setGameState(new NewPocketCardsState(tableState.getGameState(),playerId,newPocketCardsEvent));
+		synchronized(this){
+			tableState.setGameState(new NewPocketCardsState(tableState.getGameState(),playerId,newPocketCardsEvent));
+		}
 		super.onNewPocketCards(newPocketCardsEvent);
 	}
-	
+
 }

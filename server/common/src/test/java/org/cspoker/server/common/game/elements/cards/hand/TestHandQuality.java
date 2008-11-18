@@ -23,11 +23,11 @@ import java.util.Map.Entry;
 import junit.framework.TestCase;
 
 import org.apache.log4j.Logger;
+import org.cspoker.common.elements.cards.Deck;
 import org.cspoker.common.elements.cards.Rank;
 import org.cspoker.common.elements.cards.Suit;
 import org.cspoker.common.elements.hand.Hand;
 import org.cspoker.common.elements.hand.HandType;
-import org.cspoker.server.common.elements.cards.deck.Deck;
 
 /**
  * A test class for the quality of a hand
@@ -233,7 +233,7 @@ public class TestHandQuality extends TestCase {
 		Map<String, Integer> rankMap = new HashMap<String, Integer>();
 		double totalTests = 10000.0;
 		for (int j = 0; j < totalTests; j++) {
-			Deck deck = new Deck();
+			Deck deck = Deck.createTruelyRandomDeck();
 			Hand hand1 = new Hand(deck.deal(5));
 			Hand hand2 = new Hand(deck.deal(5));
 

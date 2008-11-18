@@ -25,11 +25,11 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.apache.log4j.Logger;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.cards.Card;
+import org.cspoker.common.elements.cards.Deck;
 import org.cspoker.common.elements.chips.MutablePots;
 import org.cspoker.common.elements.player.MutableSeatedPlayer;
 import org.cspoker.common.elements.table.SeatId;
 import org.cspoker.common.elements.table.TableConfiguration;
-import org.cspoker.server.common.elements.cards.deck.Deck;
 import org.cspoker.server.common.elements.table.PlayerListFullException;
 import org.cspoker.server.common.elements.table.SeatTakenException;
 import org.cspoker.server.common.elements.table.ServerTable;
@@ -154,7 +154,7 @@ public class Game {
 		currentHandPlayers = new LoopingList<MutableSeatedPlayer>(players);
 		initialCurrentHandPlayers = new LoopingList<MutableSeatedPlayer>(players);
 		playersSittingOutNextRound = new ConcurrentHashMap<MutableSeatedPlayer, Boolean>();
-		deck = new Deck();
+		deck = Deck.createTruelyRandomDeck();
 		communityCards = new ArrayList<Card>();
 		pots = new MutablePots(players);
 		changeDealer(dealer);
@@ -173,7 +173,7 @@ public class Game {
 	public void dealNewHand() {
 		nbShowdownPlayers = 0;
 		communityCards = new ArrayList<Card>();
-		deck = new Deck();
+		deck = Deck.createTruelyRandomDeck();
 		List<MutableSeatedPlayer> players = new ArrayList<MutableSeatedPlayer>();
 		players.addAll(table.getMutableSeatedPlayers());
 		players.removeAll(playersSittingOutNextRound.keySet());

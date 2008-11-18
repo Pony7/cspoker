@@ -18,12 +18,12 @@ package org.cspoker.server.common.game.elements.cards.hand;
 import junit.framework.TestCase;
 
 import org.apache.log4j.Logger;
+import org.cspoker.common.elements.cards.Deck;
 import org.cspoker.common.elements.cards.Rank;
 import org.cspoker.common.elements.cards.Suit;
 import org.cspoker.common.elements.hand.Hand;
 import org.cspoker.common.elements.hand.HandType;
 import org.cspoker.common.util.Log4JPropertiesLoader;
-import org.cspoker.server.common.elements.cards.deck.Deck;
 
 /**
  * A test class for all the methods in the HandEvaluator class
@@ -638,7 +638,7 @@ public class TestHandEvaluator extends TestCase {
 		long startTime = System.currentTimeMillis();
 
 		for (int i = 0; i < 10000; i++) {
-			deck = new Deck();
+			deck = Deck.createTruelyRandomDeck();
 			Hand hand1 = new Hand();
 			Hand hand2 = new Hand();
 

@@ -22,6 +22,7 @@ import java.util.List;
 
 import org.cspoker.common.elements.cards.Card;
 import org.cspoker.common.elements.cards.Suit;
+import org.cspoker.common.util.Pair;
 
 /**
  * A class of hands, that contain 0 to 7 cards
@@ -439,8 +440,18 @@ public class Hand implements Iterable<Card>, Comparable<Hand> {
 	 * @return The best five card hand that is a subset
 	 */
 	public Hand getBestFive() {
+		Pair<Hand,Integer> pair = getBestFiveWithRank();
+		return pair.getLeft();
+	}
+	
+	public int getBestFiveRank() {
+		Pair<Hand,Integer> pair = getBestFiveWithRank();
+		return pair.getRight();
+	}
+	
+	public Pair<Hand,Integer> getBestFiveWithRank() {
 		if (cards.size() == 5) {
-			return this;
+			return new Pair<Hand, Integer>(this,getRank());
 		}
 
 		assert cards.size() == 7 || cards.size() == 6 : "Illegal state, hand size != 7 or 6 or 5";
@@ -448,7 +459,7 @@ public class Hand implements Iterable<Card>, Comparable<Hand> {
 		int minRank = Integer.MAX_VALUE;
 		List<Card> bestHand = null;
 
-		// Refactor
+		//TODO Refactor
 		if (cards.size() == 7) {
 			for (int i = 0; i < 6; i++) {
 				for (int j = i + 1; j < 7; j++) {
@@ -477,12 +488,12 @@ public class Hand implements Iterable<Card>, Comparable<Hand> {
 			}
 		}
 
-		return new Hand(bestHand);
+		return new Pair<Hand, Integer>(new Hand(bestHand),minRank);
 	}
 
 	public int compareTo(Hand other) {
-		Integer thisRank = getBestFive().getRank();
-		Integer otherRank = other.getBestFive().getRank();
+		Integer thisRank = getBestFiveRank();
+		Integer otherRank = other.getBestFiveRank();
 		return otherRank.compareTo(thisRank);
 	}
 

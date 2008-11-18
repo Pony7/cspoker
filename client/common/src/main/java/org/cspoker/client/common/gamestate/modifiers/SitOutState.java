@@ -22,7 +22,6 @@ import org.cspoker.client.common.gamestate.PlayerState;
 import org.cspoker.common.api.lobby.holdemtable.event.HoldemTableEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.SitOutEvent;
 import org.cspoker.common.elements.player.PlayerId;
-import org.cspoker.common.elements.table.SeatId;
 
 public class SitOutState extends ForwardingGameState {
 

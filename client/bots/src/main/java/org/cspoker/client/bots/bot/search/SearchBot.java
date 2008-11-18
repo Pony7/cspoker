@@ -21,18 +21,20 @@ import java.util.concurrent.ExecutorService;
 
 import org.apache.log4j.Logger;
 import org.cspoker.client.bots.bot.AbstractBot;
+import org.cspoker.client.bots.bot.search.node.BotActionNode;
+import org.cspoker.client.bots.bot.search.node.finalround.FinalBotBetNode;
+import org.cspoker.client.bots.bot.search.node.finalround.FinalBotNoBetNode;
 import org.cspoker.client.bots.listener.BotListener;
 import org.cspoker.client.common.SmartLobbyContext;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
-import org.cspoker.common.elements.cards.Rank;
 import org.cspoker.common.elements.player.PlayerId;
-import org.cspoker.common.elements.table.Round;
 import org.cspoker.common.elements.table.TableId;
 
 public class SearchBot
 		extends AbstractBot {
 	
 	private final static Logger logger = Logger.getLogger(SearchBot.class);
+	
 	Random random = new Random();
 
 	public SearchBot(PlayerId playerId, TableId tableId,
@@ -57,8 +59,15 @@ public class SearchBot
 							playerContext.checkOrCall();
 							break;
 						case FINAL:
-							BotActionNode node = new BotActionNode(tableContext.getGameState());
-							node.performMaxAction(playerContext);
+							logger.debug("Searching final round game tree.");
+							BotActionNode actionNode;
+							if(tableContext.getGameState().hasBet()){
+								actionNode = new FinalBotBetNode(playerID, playerContext.getGameState());
+							}else{
+								actionNode = new FinalBotNoBetNode(playerID, playerContext.getGameState());
+							}
+							actionNode.expand();
+							actionNode.performbestAction(playerContext);
 							break;
 						default:
 							throw new IllegalStateException("What round are we in?");

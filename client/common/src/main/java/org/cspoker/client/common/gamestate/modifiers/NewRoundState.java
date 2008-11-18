@@ -34,7 +34,6 @@ import com.google.common.collect.ImmutableMap.Builder;
 
 public class NewRoundState extends AbstractGameState {
 
-	private final TableConfiguration tableConfiguration;
 	private NewRoundEvent event;
 
 	private final ImmutableMap<SeatId, PlayerId> seatPlayer;
@@ -42,18 +41,20 @@ public class NewRoundState extends AbstractGameState {
 	
 	private final PlayerId dealer;
 	private final Set<Card> communityCards;
+
+	private final TableConfiguration tableConfiguration;
 	
-	public NewRoundState(TableConfiguration tableConfiguration, GameState gameState, NewRoundEvent event) {
-		this.tableConfiguration = tableConfiguration;
+	public NewRoundState(GameState gameState, NewRoundEvent event) {
 		this.event = event;
-		
+
+		this.tableConfiguration = gameState.getTableConfiguration();
 		this.dealer = gameState.getDealer();
 		this.communityCards = gameState.getCommunityCards();
 
 		Builder<PlayerId, PlayerState> playerStateBuilder = ImmutableMap.builder();
 		Builder<SeatId, PlayerId> seatPlayerBuilder = ImmutableMap.builder();
 		
-		Set<PlayerId> playersIds = gameState.getAllSeatedPlayers();
+		Set<PlayerId> playersIds = gameState.getAllSeatedPlayerIds();
 		
 		for(final PlayerId playerId:playersIds){
 			PlayerState oldPlayerState = gameState.getPlayer(playerId);
@@ -101,8 +102,12 @@ public class NewRoundState extends AbstractGameState {
 		seatPlayer = seatPlayerBuilder.build();
 		playerStates = playerStateBuilder.build();
 	}
+	
+	public TableConfiguration getTableConfiguration() {
+		return tableConfiguration;
+	}
 
-	public Set<PlayerId> getAllSeatedPlayers() {
+	public Set<PlayerId> getAllSeatedPlayerIds() {
 		return playerStates.keySet();
 	}
 	
@@ -151,10 +156,14 @@ public class NewRoundState extends AbstractGameState {
 	}
 
 	public Round getRound() {
-		return Round.PREFLOP;
+		return event.getRound();
 	}
 
 	public int getRoundPotSize() {
 		return 0;
+	}
+	
+	public int getNbSeats() {
+		return tableConfiguration.getMaxNbPlayers();
 	}
 }

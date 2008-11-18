@@ -13,36 +13,24 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.client.bots.bot.search;
+package org.cspoker.client.bots.bot.search.action;
 
-import org.cspoker.client.common.SmartHoldemPlayerContext;
-import org.cspoker.client.common.gamestate.GameState;
+public class SimulatedOpponentAction {
 
-public class BotActionNode {
+	private final SimulatedBotAction action;
+	private final double probability;
 
-	private final GameState gameState;
-
-	public BotActionNode(GameState gameState) {
-		this.gameState = gameState;
+	public SimulatedOpponentAction(SimulatedBotAction action, double probability) {
+		this.action = action;
+		this.probability = probability;
 	}
 	
-	double getMaxEV(){
-		
+	public SimulatedBotAction getAction() {
+		return action;
 	}
 	
-	public double getCheckCallEV(){
-		
-	}
-	
-	public double getBetRaiseEV(int amount){
-		
-	}
-
-	public void performMaxAction(SmartHoldemPlayerContext playerContext) {
-		double checkCallEV = getCheckCallEV();
-		double betRaise1EV = getBetRaiseEV()
-		if()
-		
+	public double getProbability() {
+		return probability;
 	}
 	
 }

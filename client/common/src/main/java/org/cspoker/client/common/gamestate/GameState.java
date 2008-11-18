@@ -24,6 +24,7 @@ import org.cspoker.common.elements.cards.Card;
 import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.elements.table.Round;
 import org.cspoker.common.elements.table.SeatId;
+import org.cspoker.common.elements.table.TableConfiguration;
 
 @Immutable
 /**
@@ -32,6 +33,8 @@ import org.cspoker.common.elements.table.SeatId;
  */
 public interface GameState {
 	
+	public TableConfiguration getTableConfiguration();
+	
 	/**
 	 * Returns the PlayerState of the player sitting in the given seat or null
 	 * if the seat is empty;
@@ -39,8 +42,10 @@ public interface GameState {
 	public PlayerId getPlayerId(SeatId seatId);
 	
 	public PlayerState getPlayer(PlayerId playerId);
+
+	public Set<PlayerId> getAllSeatedPlayerIds();
 	
-	public Set<PlayerId> getAllSeatedPlayers();
+	public Set<PlayerState> getAllSeatedPlayers();
 	
 	public PlayerId getDealer();
 	
@@ -79,5 +84,24 @@ public interface GameState {
 	 * A derived state property that is the minimum of the player deficit and stack.
 	 */
 	public int getCallValue(PlayerId playerId);
+
+	/**
+	 * A derived state property that is the minimum of the minimal raise and stack.
+	 */
+	public int getLowerRaiseBound(PlayerId playerId);
+	
+	/**
+	 * A derived state property that is the minimum of the minimal raise and stack.
+	 */
+	public int getUpperRaiseBound(PlayerId playerId);
+	
+	/**
+	 * A derived state property whether the given player has enough money to raise.
+	 */
+	public boolean canRaise(PlayerId playerId);
+
+	public PlayerState previewNextToAct();
+
+	public boolean hasBet();
 	
 }

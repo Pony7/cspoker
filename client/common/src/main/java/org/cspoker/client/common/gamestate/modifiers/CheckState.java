@@ -19,6 +19,7 @@ import org.cspoker.client.common.gamestate.ForwardingGameState;
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.common.api.lobby.holdemtable.event.CheckEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.HoldemTableEvent;
+import org.cspoker.common.elements.player.PlayerId;
 
 public class CheckState extends ForwardingGameState {
 
@@ -31,6 +32,16 @@ public class CheckState extends ForwardingGameState {
 	
 	public HoldemTableEvent getLastEvent() {
 		return checkEvent;
+	}
+	
+	@Override
+	public int getLargestBet() {
+		return 0;
+	}
+	
+	@Override
+	public PlayerId getLastBettor() {
+		return null;
 	}
 	
 }

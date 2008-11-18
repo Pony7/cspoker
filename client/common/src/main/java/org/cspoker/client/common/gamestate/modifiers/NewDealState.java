@@ -87,8 +87,12 @@ public class NewDealState extends AbstractGameState {
 		seatPlayer = seatPlayerBuilder.build();
 		playerStates = playerStateBuilder.build();
 	}
+	
+	public TableConfiguration getTableConfiguration() {
+		return tableConfiguration;
+	}
 
-	public Set<PlayerId> getAllSeatedPlayers() {
+	public Set<PlayerId> getAllSeatedPlayerIds() {
 		return playerStates.keySet();
 	}
 	
