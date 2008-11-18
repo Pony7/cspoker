@@ -9,6 +9,7 @@ package models.connection
 	import flash.xml.*;
 	
 	import models.*;
+	import models.player.Player;
 	
 	import mx.rpc.xml.SimpleXMLDecoder;
 		
@@ -41,6 +42,7 @@ package models.connection
         {
             Main.showServerMessage("You have been disconnected from the server.  Please reload the application and try again...");
             Main.showConnectionBox();
+            
             return;
         }// end function
         	
@@ -71,7 +73,7 @@ package models.connection
 			if (contentObj.hasOwnProperty("actionPerformedEvent") && contentObj.actionPerformedEvent.id == joinTableActionId){
 				trace("JOIN TABLE SUCCESSFUL!!!");
 				//var tableId:int = contentObj.actionPerformedEvent.id;
-				Main.table.receiveJoinTableSuccess();
+				Main.table.receiveJoinTableSuccess(Main.table.tableId);
 				return;
 			}
 			
@@ -109,6 +111,9 @@ package models.connection
 					case "ns2:createTableAction":
 						Main.showServerMessage("TABLE CREATED!!!!");
 						break;
+						
+					case "ns2:joinHoldemTableAction":
+						
 				}	 
 				return;
 			}
@@ -131,6 +136,7 @@ package models.connection
 					case "ns2:newDealEvent":
 						trace("newDealEvent received!!!");
 						var dealer:int = event.dealerId;
+						Main.table.tableModel.loadGameStateFromNewDeal(event);
 						Main.table.tableModel.receiveNewDealEvent(dealer);
 						break;
 						
@@ -155,7 +161,6 @@ package models.connection
 							trace("bigBlind Error: " + e.message);
 						}
 						return;
-						
 						break;
 					
 					
@@ -221,13 +226,14 @@ package models.connection
 						
 					case "ns2:winnerEvent":
 						trace("winner Event received!!!");
+						if(Main.isInTable == false) return;
 						var winners:Object = event.winners;
 
 						
 						var count:int = 0;
 						var potDescriptionText:String = "";
 						var player:Object;
-						if(event.winners.player.hasOwnProperty("seatId")){
+						if(winners.player.hasOwnProperty("seatId")){
 							
 							count++;
 							/* ONE WINNER */
@@ -235,6 +241,8 @@ package models.connection
 							if(count == 1) potDescriptionText = "main pot";
 							else potDescriptionText = "side pot";
 							player = event.winners.player;
+							var winningPlayer:Player = Main.table.tableModel.getPlayerByPlayerId(player.id);
+							
 							Main.table.tableModel.getPlayerByPlayerId(player.id).updatePlayer(player);
 							Main.table.dealerBox.dealerMessage("Player " + player.name + " has won the " 
 								+ potDescriptionText + " of " + event.winners.gainedAmount + " with a " + potDescriptionText);

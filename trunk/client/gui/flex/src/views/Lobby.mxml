@@ -52,6 +52,8 @@
 			public function receiveDetailedTableInfo(result:Object):void{
 				try{
 					if(result != null) gamesDG.addRowObject(result);
+					var detailedTables:Dictionary = Main.detailedTables;
+					detailedTables[result.id] = result;
 			
 				}catch(e:Error){
 					trace("error addRowObject..." + e.message);
@@ -67,6 +69,7 @@
         	public function showCreateBox():void{
         		var dialogBox:* = new CreateTableBox();
         		PopUpManager.addPopUp(dialogBox, this, true);
+        		
             	
         	}
         	

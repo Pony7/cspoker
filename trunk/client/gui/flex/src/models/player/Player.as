@@ -30,6 +30,13 @@ package models.player
 			Main.serverConnection.csGetAvatarAction(this.id);
 		}
 		
+		public function sitOutPlayer():void{
+			this.playerInformation = null;
+			this.playerSeat.resetForNewGame();
+			Main.table.tableModel.removedMappedPlayer(this.id);
+			return;
+		}
+		
 		public function updatePlayer(playerObj:Object):void{
 			this.id = playerObj.id;	
 			this.playerInformation = new PlayerValueObject(null, playerObj.name, playerObj.stackValue, playerObj.betChipsValue, playerObj.seatId, null);

@@ -32,6 +32,15 @@ package models.table
 			playerMap[playerId] = player;
 		}
 		
+		public function getSeatBySeatId(seatId:int):Seat{
+			if(this.seatLocations[seatId] != null) return this.seatLocations[seatId];
+			else return null;
+		}
+		
+		public function removedMappedPlayer(playerId:int):void{
+			if(playerMap[playerId] != null) delete playerMap[playerId];
+		}
+		
 		public function receivePotsChangedEvent(pots:Object):void{
 			//var potsTotal:int = 0;
 			this.potSize = pots.totalValue;
@@ -45,10 +54,6 @@ package models.table
 			}catch(e:Error){
 				trace("error on newDealEvent: " + e.message);
 			}
-		}
-		
-		public function removedMappedPlayer(playerId:int):void{
-			if(playerMap[playerId] != null) delete playerMap[playerId];
 		}
 		
 		public function getPlayerByPlayerId(playerId:int):Player{
@@ -78,7 +83,7 @@ package models.table
 			for each(var player:Player in this.playerMap){
 				try{
 					player.playerSeat.resetForNewGame();
-					removedMappedPlayer(player.id);
+					//removedMappedPlayer(player.id);
 				}catch(e:Error){
 					trace("Error cleaning up table data: " + e.message);					
 				}
@@ -94,9 +99,9 @@ package models.table
 			this.currentRound = eventObj.round;
 			
 			if(this.currentRound == "PREFLOP"){
-				return;
-						
+				return;	
 			}
+			
 			table.chipsToPot();
 			if(this.potSize > 0){
 				table.pot.calculateGraphics(this.potSize);
@@ -130,6 +135,75 @@ package models.table
 				
 				
 			}	
+		}
+		
+		public function loadGameStateFromNewDeal(result:Object):void{
+			for each(var player:Player in this.playerMap){
+				player.sitOutPlayer();
+			}
+			var seatId:int = -1;
+			
+			for each(var sitInPlayer:Object in result.players){
+						seatId = sitInPlayer.seatId;
+						this.getSeatBySeatId(seatId).receiveSitIn(sitInPlayer);
+						if(sitInPlayer.betChipsValue != 0) this.getSeatBySeatId(seatId).chipsToBet(sitInPlayer.betChipsValue);
+			}
+			
+			
+			
+		}
+		
+		
+		public function loadGameStateFromDetailedTable(result:Object):void{
+			trace("load current game state called!!!");
+			for each(var player:Player in this.playerMap){
+				player.sitOutPlayer();
+			}
+			
+			this.table.cleanUpTable();
+			
+			
+			var players:Object = result.players;
+			var seatId:int = -1;
+			
+			if(players != null){
+				
+				if(players.player.hasOwnProperty("name")){
+					
+					seatId = players.player.seatId;
+					this.getSeatBySeatId(seatId).receiveSitIn(players.player);
+					if(players.player.betChipsValue != 0) this.getSeatBySeatId(seatId).chipsToBet(players.player.betChipsValue);
+				}else{
+					for each(var sitInPlayer:Object in players.player){
+						seatId = sitInPlayer.seatId;
+						this.getSeatBySeatId(seatId).receiveSitIn(sitInPlayer);
+						if(sitInPlayer.betChipsValue != 0) this.getSeatBySeatId(seatId).chipsToBet(sitInPlayer.betChipsValue);
+					}
+				}
+				
+			}
+			
+			var round:String = result.round;
+			var isPlaying:Boolean = result.playing;
+			
+			
+			if(isPlaying == true && round != "WAITING"){
+				// show the pot:
+				this.receivePotsChangedEvent(result.pots);
+			
+				// new round event:
+				this.receiveNewRoundEvent(result);
+			
+				// dealer button:
+				var dealerId:int = result.dealer.id;
+				this.receiveNewDealEvent(dealerId);
+				
+				// flop cards:
+				if(result.communityCards != null) this.receiveFlopCardsEvent(result.communityCards);
+			}
+			
+			
+			
 		}
 		
 		

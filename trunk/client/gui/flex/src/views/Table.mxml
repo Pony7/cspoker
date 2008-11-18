@@ -42,6 +42,7 @@
 			public var tableInitialized:Boolean = false;
 			
 			public var pot:ChipStack;
+			public var tableObj:Object;
 			
 			public function init():void{
 				
@@ -84,7 +85,7 @@
             	spotLight.visible = false;
             	tableTempItemsContainer.addChild(spotLight);
             	
-            	
+            	this.tableModel.loadGameStateFromDetailedTable(this.tableObj);
 			}
 			
 			
@@ -93,8 +94,22 @@
 				spotLight.hideSpotLight();
 				dealerButton.hideDealerButton();
 				
+				// set each seat back to nothing.
+				this.hideFlopCards();
+				
+				// hide pot:
+				this.pot.clearStack();
+				
 				// call for data to be cleaned up.
 				this.tableModel.cleanUpTableData();
+			}
+			
+			public function hideFlopCards():void{
+				flopCard0.clearCard();
+				flopCard1.clearCard();
+				flopCard2.clearCard();
+				flopCard3.clearCard();
+				flopCard4.clearCard();
 			}
 			
 			
@@ -127,24 +142,24 @@
 				this.tableId = tableId;
 			}
 			
-			public function receiveJoinTableSuccess():void{
+			public function receiveJoinTableSuccess(tableId:int):void{
 				Main.showTable();
 				
 				
 				trace("Table.receiveJoinTableSuccess...");
+				
 				if(tableInitialized == true){
 					onTableLoadStart();
 				}
 				
 				Main.serverConnection.csGetPlayerIdAction();
 				
-				/*
-				try{
-					Main.clientSeat = Main.table.getSeatById(Main.clientSeatId);
-				}catch(e:Error){
-					trace("error getting clientSeat: " + e.message);
-				}
-				*/
+				var detailedTables:Dictionary = Main.detailedTables;
+				var tableObj:Object = detailedTables[int(tableId)];
+				this.tableObj = tableObj;
+				
+				if(this.tableModel != null) this.tableModel.loadGameStateFromDetailedTable(this.tableObj);
+				
 				
 			}
 			
@@ -213,7 +228,7 @@
 			}
 			
 			public function cleanTableUpLeaveRoom():void{
-				this.init();
+				this.cleanUpTable();
 			}
 			
 			public function dealPocketCards(dealPlayers:Object, cards:Object):void{
