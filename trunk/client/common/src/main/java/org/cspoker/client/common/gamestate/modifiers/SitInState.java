@@ -81,8 +81,8 @@ public class SitInState extends ForwardingGameState {
 	}
 	
 	@Override
-	public Set<PlayerId> getAllSeatedPlayers() {
-		return Sets.union(super.getAllSeatedPlayers(),ImmutableSet.of(event.getPlayer().getId()));
+	public Set<PlayerId> getAllSeatedPlayerIds() {
+		return Sets.union(super.getAllSeatedPlayerIds(),ImmutableSet.of(event.getPlayer().getId()));
 	}
 	
 	@Override

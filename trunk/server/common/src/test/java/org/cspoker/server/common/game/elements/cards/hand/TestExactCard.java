@@ -24,9 +24,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.cspoker.common.elements.cards.Card;
+import org.cspoker.common.elements.cards.Deck;
 import org.cspoker.common.elements.cards.Rank;
 import org.cspoker.common.elements.cards.Suit;
-import org.cspoker.server.common.elements.cards.deck.Deck;
 
 /**
  * @author Duplicity
@@ -38,7 +38,7 @@ public class TestExactCard {
 	public TestExactCard() {
 		cardMap = new HashMap<CardShell, Card>();
 
-		final Deck deck = new Deck();
+		final Deck deck = Deck.createTruelyRandomDeck();
 		final List<Card> list = deck.deal(52);
 		for (final Card card : list) {
 			final Rank rank = card.getRank();

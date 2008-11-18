@@ -21,6 +21,7 @@ import org.cspoker.common.elements.cards.Card;
 import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.elements.table.Round;
 import org.cspoker.common.elements.table.SeatId;
+import org.cspoker.common.elements.table.TableConfiguration;
 
 public abstract class ForwardingGameState extends AbstractGameState{
 
@@ -78,7 +79,11 @@ public abstract class ForwardingGameState extends AbstractGameState{
 		return gameState.getPlayerId(seatId);
 	}
 	
-	public Set<PlayerId> getAllSeatedPlayers() {
-		return gameState.getAllSeatedPlayers();
+	public Set<PlayerId> getAllSeatedPlayerIds() {
+		return gameState.getAllSeatedPlayerIds();
+	}
+	
+	public TableConfiguration getTableConfiguration() {
+		return gameState.getTableConfiguration();
 	}
 }

@@ -27,6 +27,7 @@ import org.cspoker.client.bots.bot.Bot;
 import org.cspoker.client.bots.bot.BotFactory;
 import org.cspoker.client.bots.bot.rule.CallBotFactory;
 import org.cspoker.client.bots.bot.rule.RuleBasedBotFactory;
+import org.cspoker.client.bots.bot.search.SearchBotFactory;
 import org.cspoker.client.bots.listener.BotListener;
 import org.cspoker.client.bots.listener.GameLimitingBotListener;
 import org.cspoker.client.bots.listener.ReSitInBotListener;
@@ -77,7 +78,7 @@ public class BotRunner
 	private volatile BotListener gameLimiter;
 	
 	public BotRunner(RemoteCSPokerServer cspokerServer){
-		this(cspokerServer, new BotFactory[]{new CallBotFactory(), new CallBotFactory(), new RuleBasedBotFactory()});
+		this(cspokerServer, new BotFactory[]{new CallBotFactory(), new SearchBotFactory(), new RuleBasedBotFactory()});
 	}
 	
 	public BotRunner(RemoteCSPokerServer cspokerServer, BotFactory[] bots) {

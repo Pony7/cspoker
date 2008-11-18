@@ -13,32 +13,34 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.client.common.gamestate.modifiers;
+package org.cspoker.client.bots.bot.search.action;
 
-import org.cspoker.client.common.gamestate.ForwardingGameState;
+import java.rmi.RemoteException;
+
 import org.cspoker.client.common.gamestate.GameState;
-import org.cspoker.common.api.lobby.holdemtable.event.HoldemTableEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.NextPlayerEvent;
+import org.cspoker.client.common.gamestate.modifiers.CheckState;
+import org.cspoker.common.api.lobby.holdemtable.event.CheckEvent;
+import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.RemoteHoldemPlayerContext;
+import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.player.PlayerId;
 
-public class NextPlayerState extends ForwardingGameState {
+public class CheckAction extends SimulatedBotAction{
 
-	private final NextPlayerEvent event;
-
-	//TODO integrate callamount?
-	
-	public NextPlayerState(GameState gameState, NextPlayerEvent event) {
-		super(gameState);
-		this.event = event;
+	public CheckAction() {
 	}
 	
 	@Override
-	public PlayerId getNextToAct() {
-		return event.getPlayerId();
+	public void perform(RemoteHoldemPlayerContext context) throws RemoteException, IllegalActionException {
+		context.checkOrCall();
 	}
 	
-	public HoldemTableEvent getLastEvent() {
-		return event;
+	@Override
+	public GameState getNextState(GameState gameState, PlayerId actor) {
+		return new CheckState(gameState, new CheckEvent(actor));
 	}
-	
+
+	@Override
+	public String toString() {
+		return "Checking";
+	}
 }

@@ -35,9 +35,8 @@ public class RaiseState extends ForwardingGameState {
 		this.event = event;
 		PlayerState oldPlayerState = super.getPlayer(event.getPlayerId());
 		this.newBetSize = super.getLargestBet()+event.getAmount();
-		int chipsMoved = newBetSize-oldPlayerState.getBet();
-		final int newStack = oldPlayerState.getStack()-chipsMoved;
-		this.newPotSize = super.getRoundPotSize()+chipsMoved;
+		final int newStack = oldPlayerState.getStack()-event.getMovedAmount();
+		this.newPotSize = super.getRoundPotSize()+event.getMovedAmount();
 		playerState = new ForwardingPlayerState(oldPlayerState){
 			@Override
 			public int getBet() {
