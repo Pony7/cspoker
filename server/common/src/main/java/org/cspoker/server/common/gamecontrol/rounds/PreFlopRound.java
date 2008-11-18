@@ -94,7 +94,7 @@ extends BettingRound {
 		}
 
 		if (game.getCurrentPlayer()!=null && getGame().getNbCurrentDealPlayers() > 1 || !onlyOnePlayerLeftBesidesAllInPlayersAndCalled()) {
-			gameMediator.publishNextPlayerEvent(new NextPlayerEvent(game.getCurrentPlayer().getId()));
+			gameMediator.publishNextPlayerEvent(new NextPlayerEvent(game.getCurrentPlayer().getId(), amountToIncreaseBetPileWith(game.getCurrentPlayer())));
 		}
 	}
 
