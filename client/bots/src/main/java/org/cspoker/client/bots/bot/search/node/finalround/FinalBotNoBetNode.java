@@ -27,26 +27,25 @@ public class FinalBotNoBetNode extends BotNoBetNode{
 	
 	private final static Logger logger = Logger.getLogger(FinalBotNoBetNode.class);
 
-	public FinalBotNoBetNode(PlayerId botId, GameState gameState) {
-		super(botId,gameState);
+	public FinalBotNoBetNode(PlayerId botId, GameState gameState, int depth) {
+		super(botId,gameState, depth);
 	}
 
 	protected double doNextPlayer(GameState newGameState, PlayerState nextToAct) {
-		logger.trace("Moving on the next opponent: "+nextToAct.getPlayerId());
 		ActionNode nextNode;
+
 		if(newGameState.hasBet()){
-			nextNode = new FinalOpponentBetNode(playerId, nextToAct.getPlayerId(),newGameState);
+			nextNode = new FinalOpponentBetNode(playerId, nextToAct.getPlayerId(),newGameState,depth+1);
 		}else{
-			nextNode = new FinalOpponentNoBetNode(playerId, nextToAct.getPlayerId(),newGameState);
+			nextNode = new FinalOpponentNoBetNode(playerId, nextToAct.getPlayerId(),newGameState,depth+1);
 		}
 		nextNode.expand();
 		return nextNode.getEV();
 	}
 
 	protected double doRoundEnd(GameState newGameState) {
-		logger.trace("Ending round with showdown");
 		//round is over
-		ShowdownNode showdownNode = new ShowdownNode(playerId, newGameState);
+		ShowdownNode showdownNode = new ShowdownNode(playerId, newGameState,depth+1);
 		showdownNode.expand();
 		return showdownNode.getEV();
 	}

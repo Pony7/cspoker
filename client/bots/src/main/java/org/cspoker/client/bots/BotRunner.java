@@ -176,8 +176,8 @@ public class BotRunner
 
 	public void moveToNextCombination() {
 		stopRunningBots();
-		logger.warn(bots[botIndex1].toString()+" averages "+(bot1profit*1.0/AbstractBot.bigBlind/nbGamesPerConfrontation)+" bb/game");
-		logger.warn(bots[botIndex2].toString()+" averages "+(-bot1profit*1.0/AbstractBot.bigBlind/nbGamesPerConfrontation)+" bb/game");
+		logger.info(bots[botIndex1].toString()+" averages "+(bot1profit*1.0/AbstractBot.bigBlind/nbGamesPerConfrontation)+" bb/game");
+		logger.info(bots[botIndex2].toString()+" averages "+(-bot1profit*1.0/AbstractBot.bigBlind/nbGamesPerConfrontation)+" bb/game");
 		bot1profit = 0;
 		iterateBots();
 	}

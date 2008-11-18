@@ -26,25 +26,24 @@ public class FinalOpponentNoBetNode extends OpponentNoBetNode{
 	
 	private final static Logger logger = Logger.getLogger(FinalOpponentNoBetNode.class);
 	
-	public FinalOpponentNoBetNode(PlayerId botId, PlayerId opponentId, GameState gameState) {
-		super(botId,opponentId,gameState);
+	public FinalOpponentNoBetNode(PlayerId botId, PlayerId opponentId, GameState gameState, int depth) {
+		super(botId,opponentId,gameState, depth);
 	}
 
 	protected double doNextPlayer(GameState newGameState, PlayerState nextToAct) {
-		logger.trace("Moving on the next player: "+nextToAct.getPlayerId());
 		ActionNode nextNode;
 		if(nextToAct.getPlayerId().equals(botId)){
 			if(newGameState.hasBet()){
-				nextNode = new FinalBotBetNode(botId,newGameState);
+				nextNode = new FinalBotBetNode(botId,newGameState,depth+1);
 			}else{
-				nextNode = new FinalBotNoBetNode(botId,newGameState);
+				nextNode = new FinalBotNoBetNode(botId,newGameState,depth+1);
 			}
 			
 		}else{
 			if(newGameState.hasBet()){
-				nextNode = new FinalOpponentBetNode(botId, nextToAct.getPlayerId(),newGameState);
+				nextNode = new FinalOpponentBetNode(botId, nextToAct.getPlayerId(),newGameState,depth+1);
 			}else{
-				nextNode = new FinalOpponentNoBetNode(botId, nextToAct.getPlayerId(),newGameState);
+				nextNode = new FinalOpponentNoBetNode(botId, nextToAct.getPlayerId(),newGameState,depth+1);
 			}	
 		}
 		nextNode.expand();
@@ -52,9 +51,8 @@ public class FinalOpponentNoBetNode extends OpponentNoBetNode{
 	}
 
 	protected double doRoundEnd(GameState newGameState) {
-		logger.trace("Ending round with showdown");
 		//round is over
-		ShowdownNode showdownNode = new ShowdownNode(botId, newGameState);
+		ShowdownNode showdownNode = new ShowdownNode(botId, newGameState,depth+1);
 		showdownNode.expand();
 		return showdownNode.getEV();
 	}

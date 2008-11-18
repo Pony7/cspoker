@@ -42,4 +42,6 @@ public interface PlayerState {
 	 */
 	boolean isAllIn();
 	
+	boolean isActivelyPlaying();
+	
 }
