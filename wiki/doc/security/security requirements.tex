@@ -1238,6 +1238,143 @@ To reduce the workload and the documentation, only a cohesive selection of compo
   \caption{DFD Level-0 - only player - simplified}\label{fig:dfd_level_0_player_simplified}
 \end{figure}
 
+\section{Security Objectives}
+\subsection{Authentication (26 MUCs)}
+\begin{enumerate}
+\item Spoofing a player
+\item Repudiation of a player
+\item Spoofing the poker server
+\item Tampering with the poker server
+\item Repudiation of the poker server
+\item Information disclosure at the poker server
+\item Elevation of privilege at the poker server
+\item Spoofing a table
+\item Tampering with a table
+\item Repudiation of a table 
+\item Information disclosure at a table 
+\item Elevation of Privilege at the table
+\item Spooﬁng the account management system
+\item Tampering with the account management system
+\item Repudiation of using the account management system
+\item Information disclosure of the account management system
+\item Elevation of Privilege at the account management system
+\item Spooﬁng the logging engine
+\item Tampering with the logging engine 
+\item Repudiation of using the logging engine
+\item Information disclosure of the logging engine 
+\item Elevation of Privilege at the logging engine
+\item Tampering with the audit log
+\item Information disclosure of the audit log
+\item Tampering with account data
+\item Information disclosure of account data 
+\end{enumerate}
+
+\subsection{Authorization (21 MUCs)}
+\begin{enumerate}
+\item Repudiation of a player
+\item Tampering with the poker server
+\item Repudiation of the poker server
+\item Information disclosure at the poker server
+\item Elevation of privilege at the poker server
+\item Tampering with a table
+\item Repudiation of a table 
+\item Information disclosure at a table
+\item Elevation of Privilege at the table
+\item Tampering with the account management system
+\item Repudiation of the account management system
+\item Information disclosure of the account management system
+\item Elevation of Privilege at the account management system 
+\item Tampering with the logging engine 
+\item Repudiation of the logging engine 
+\item Information disclosure of the logging engine 
+\item Elevation of Privilege at the logging engine
+\item Tampering with the audit log
+\item Information disclosure of the audit log
+\item Tampering with account data
+\item Information disclosure of account data 
+\end{enumerate}
+
+\subsection{Application Integrity (12 MUCs)}
+\begin{enumerate}
+\item Tampering with the poker server
+\item Information disclosure at the poker server
+\item Elevation of privilege at the poker server
+\item Tampering with a table
+\item Information disclosure at a table 
+\item Elevation of Privilege at the table
+\item Tampering with the account management system
+\item Information disclosure of the account management system
+\item Elevation of Privilege at the account management system 
+\item Tampering with the logging engine 
+\item Information disclosure of the logging engine 
+\item Elevation of Privilege at the logging engine
+\end{enumerate}
+
+\subsection{Availability (10 MUCs)}
+\begin{enumerate}
+\item Denial of Service against the poker server
+\item Denial of Service against a table 
+\item Denial of Service against the account management system
+\item Denial of Service against the logging engine
+\item Denial of Service against the audit log
+\item Denial of Service against account data
+\item Denial of Service of token requests 
+\item Denial of Service of tokens 
+\item Denial of Service of actions
+\item Denial of Service of logging requests
+\end{enumerate}
+
+\subsection{Non-repudiation (6 MUCs)}
+\begin{enumerate}
+\item Repudiation of a player
+\item Repudiation of the poker server
+\item Repudiation of a table
+\item Repudiation of the account management system
+\item Repudiation of the logging engine 
+\item Repudiation of the audit log
+\end{enumerate}
+
+\subsection{Transmission Integrity (5 MUCs)}
+\begin{enumerate}
+\item Tampering with token requests
+\item Tampering with tokens
+\item Tampering with actions
+\item Tampering with responses and events 
+\item Tampering with logging requests 
+\end{enumerate}
+
+\subsection{Transmission Confidentiality (5 MUCs)}
+\begin{enumerate}
+\item Information Disclosure of token requests
+\item Information Disclosure of tokens
+\item Information Disclosure of actions
+\item Information Disclosure of responses and events
+\item Information Disclosure of logging requests 
+\end{enumerate}
+
+\subsection{Auditing (4 MUCs)}
+\begin{enumerate}
+\item Repudiation of a player
+\item Repudiation of the poker server
+\item Repudiation of a table
+\item Repudiation of the account management system
+\end{enumerate}
+
+\subsection{Storage Integrity (2 MUCs)}
+\begin{enumerate}
+\item Tampering with the audit log
+\item Tampering with account data
+\end{enumerate}
+
+\subsection{Storage Confidentiality (2 MUCs)}
+\begin{enumerate}
+\item Information disclosure of the audit log
+\item Information disclosure of account data 
+\end{enumerate}
+
+\subsection{Application Confidentiality}
+This is not applicable since the code is open source.
+
 \chapter{Securing the architecture}
 
 \section{Criticism}
