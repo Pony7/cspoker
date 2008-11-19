@@ -1229,13 +1229,20 @@ The mis-actor can be detected and appropriate sanctions can be taken. \\
 \textbf{Summary:} A malicious player provides a modified client on a website. This client is modified to send hole cards information to the computer system of the malicious player. An innocent player could download this modified client to play on the real poker server, unaware that the client is modified. The malicious player gains an unfair advantage when he is sit-in at the same table as the tricked player.
 
 \section{Simplification}
-To reduce the workload and the documentation, only a cohesive selection of components will be secured. The DFD for the simplified version can be found in figure \ref{fig:dfd_level_0_player_simplified}. This means following components will be omitted for future analysis: Cashier, Lobby and Chat Service. Although some of these components will benefit from the instantiated patterns, potential conflicts could arise if the omitted components would be secured in a future phase.
+To reduce the workload and the documentation, only a cohesive selection of components will be secured. The DFD for the simplified version can be found in figure \ref{fig:dfd_level_0_player_simplified}. The simplified deployment view in figure \ref{fig: deployment_simplified}.
+This means following components will be omitted for future analysis: Cashier, Lobby and Chat Service. Although some of these components will benefit from the instantiated patterns, potential conflicts could arise if the omitted components would be secured in a future phase.
 
 \begin{figure}[h]
   \begin{center}
     \includegraphics[scale=0.8]{dfd_level_0_player_simplified}
   \end{center}
   \caption{DFD Level-0 - only player - simplified}\label{fig:dfd_level_0_player_simplified}
+\end{figure}
+\begin{figure}[h]
+  \begin{center}
+    \includegraphics[angle=90,scale=0.65]{deployment_simplified.png}
+  \end{center}
+  \caption{Deployment View - simplified}\label{fig: deployment_simplified}
 \end{figure}
 
 \section{Security Objectives}
@@ -1376,19 +1383,6 @@ To reduce the workload and the documentation, only a cohesive selection of compo
 This is not applicable since the code is open source.
 
 \chapter{Securing the architecture}
-
-\section{Criticism}
-\begin{itemize}
-\item The classification of the threat three isn't very clear sometimes: e.g. you can tamper with the server process
-to spoof the server and thus tampering with the data.
-\item The threat three isn't complete; for instance there is nothing in it about spoofing by corruption of 
-DNS records.
-\item Some business use cases can't be covered with the list of security patterns in the given catalog
-\item The list of labels is incomplete for some security patterns in the catalog: e.g. Secure Pipe should also have
-the confidentiality-label.
-\item Some patterns that are mentioned by other security patterns, aren't listed in the catalog: e.g. Secure Pipe 
-benefits from Security Association, but the latter pattern isn't listed in the catalog.
-\end{itemize}
 
 \section{Quality trade-off labels}
 \label{labels}
