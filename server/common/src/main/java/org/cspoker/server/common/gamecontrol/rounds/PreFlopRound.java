@@ -16,6 +16,7 @@
 
 package org.cspoker.server.common.gamecontrol.rounds;
 
+import java.util.EnumSet;
 import java.util.HashSet;
 
 import org.apache.log4j.Logger;
@@ -78,8 +79,9 @@ extends BettingRound {
 
 			PreFlopRound.logger.info("Dealt to " + player.getName() + " " + player.getPocketCards());
 
-			gameMediator.publishNewPocketCardsEvent(player.getId(), new NewPocketCardsEvent(new HashSet<Card>(player
-					.getPocketCards())));
+			EnumSet<Card> cards = EnumSet.noneOf(Card.class);
+			cards.addAll(player.getPocketCards());
+			gameMediator.publishNewPocketCardsEvent(player.getId(), new NewPocketCardsEvent(cards));
 		}
 
 		for (MutableAllInPlayer allInPlayer : allInPlayers) {

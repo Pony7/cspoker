@@ -37,13 +37,7 @@ public class Deck {
 
 	static {
 		// Initialize prototype deck
-		List<Card> deck = new ArrayList<Card>();
-		for (final Suit suit : Suit.values()) {
-			for (final Rank rank : Rank.values()) {
-				deck.add(new Card(rank, suit));
-			}
-		}
-		PROTO_DECK = ImmutableList.copyOf(deck);
+		PROTO_DECK = ImmutableList.of(Card.values());
 	}
 
 	public static Deck createTruelyRandomDeck(){

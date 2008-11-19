@@ -16,7 +16,7 @@
 
 package org.cspoker.server.common.gamecontrol.rounds;
 
-import java.util.HashSet;
+import java.util.EnumSet;
 
 import org.apache.log4j.Logger;
 import org.cspoker.common.api.lobby.holdemtable.event.NewCommunityCardsEvent;
@@ -37,8 +37,9 @@ public class FlopRound extends BettingRound {
 		drawOpenCard();
 		drawOpenCard();
 		drawOpenCard();
-		gameMediator.publishNewCommonCardsEvent(new NewCommunityCardsEvent(
-				new HashSet<Card>(getGame().getCommunityCards())));
+		EnumSet<Card> cards = EnumSet.noneOf(Card.class);
+		cards.addAll(getGame().getCommunityCards());
+		gameMediator.publishNewCommonCardsEvent(new NewCommunityCardsEvent(cards));
 		FlopRound.logger.info("*** FLOP *** " + game.getCommunityCards());
 		if (getGame().getCurrentPlayer()!=null && getGame().getNbCurrentDealPlayers() > 1) {
 			gameMediator.publishNextPlayerEvent(new NextPlayerEvent(game.getCurrentPlayer().getId()));
