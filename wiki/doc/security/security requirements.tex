@@ -938,7 +938,9 @@ Here we choose to reduce the number of data flows from/to the Player because int
 \item Limit the number of resources the process depends on.
 \end{itemize}
 \end{itemize}
+
 \section{Business Logic Misuse Cases}
+
 \subsection{Single player Cheating}
 \subsubsection{A player uses multiple accounts to access more confidential information}
 \textbf{Summary:} The malicious player uses multiple accounts at the same table. He uses the extra information to  have a more accurate view on the outs\footnote{Any unseen card that, if drawn, will improve a player's hand to one that is likely to win. The number of outs can be converted to the probability of making the hand on the next card.}. He gains an unfair advantage over the other innocent players. \\
@@ -1044,6 +1046,10 @@ The mis-actors can be detected and their account can be blocked. \\
 \begin{itemize}
 \item Loss of fairness and as a consequence potential loss of money.
 \end{itemize}
+\item Online casino: 
+\begin{itemize}
+\item Reputation is damaged and as a consequence potential loss of revenue.
+\end{itemize}
 \end{itemize}
 
 \subsubsection{An admin collaborates with a player to play with full information disclosure}
@@ -1114,14 +1120,11 @@ The insider and the collaborator can be detected and appropriate sanctions can b
 \begin{itemize}
 \item Loss of fairness and as a consequence potential loss of money.
 \end{itemize}
+\item Online casino: 
+\begin{itemize}
+\item Reputation is damaged and as a consequence potential loss of revenue.
 \end{itemize}
-
-
-\subsubsection{Chip dumping}
-
-\subsubsection{Spyware on the computer system of honest players}
-
-\subsubsection{Altered client provided to the players}
+\end{itemize}
 
 \subsubsection{Malicious player can predict hole and community cards}
 \textbf{Summary:} A malicious player can predict the hole and community cards of every deal by deducing the next numbers in the random number generator from the observed cards. The security through obscurity approach for application integrity is unfeasible as the code is open source. \\
@@ -1181,6 +1184,15 @@ The mis-actor can be detected and appropriate sanctions can be taken. \\
 \end{itemize}
 \end{itemize}
 
+\subsubsection{Chip dumping}
+\textbf{Summary:} Chip dumping is the act of deliberately losing chips (most of the time in a heads-up game) to a known opponent. This can be a way to transfer money from a fraudulent account, set-up with stolen credit cards or other stolen funds to a legitimate account. This can also be an attempt to perform money laundry. If chip dumping happens in a tournament, it is a severe form of cheating since the winner is the player who has the highest stack in the end. \\
+
+\subsubsection{Placing spyware on the computer systems of honest players}
+\textbf{Summary:} A malicious player can put spyware on the computer system of honest players. This spyware observes the hole cards of the player and sends this information to the malicious player. As the malicious player has access to more information, he gains an unfair advantage over the honest players. \\
+
+\subsubsection{Altered client provided to the players}
+\textbf{Summary:} A malicious player provides a modified client on a website. This client is modified to send hole cards information to the computer system of the malicious player. An innocent player could download this modified client to play on the real poker server, unaware that the client is modified. The malicious player gains an unfair advantage when he is sit-in at the same table as the tricked player.
+
 \section{Simplification}
 To reduce the workload and the documentation, only a cohesive selection of components will be secured. The DFD for the simplified version can be found in figure \ref{fig:dfd_level_0_player_simplified}. This means following components will be omitted for future analysis: Cashier, Lobby and Chat Service. Although some of these components will benefit from the instantiated patterns, potential conflicts could arise if the omitted components would be secured in a future phase.
 
@@ -1192,6 +1204,20 @@ To reduce the workload and the documentation, only a cohesive selection of compo
 \end{figure}
 
 \chapter{Securing the architecture}
+
+\section{Criticism}
+\begin{itemize}
+\item The classification of the threat three isn't very clear sometimes: e.g. you can tamper with the server process
+to spoof the server and thus tampering with the data.
+\item The threat three isn't complete; for instance there is nothing in it about spoofing by corruption of 
+DNS records.
+\item Some business use cases can't be covered with the list of security patterns in the given catalog
+\item The list of labels is incomplete for some security patterns in the catalog: e.g. Secure Pipe should also have
+the confidentiality-label.
+\item Some patterns that are mentioned by other security patterns, aren't listed in the catalog: e.g. Secure Pipe 
+benefits from Security Association, but the latter pattern isn't listed in the catalog.
+\end{itemize}
+
 \section{Quality trade-off labels}
 \label{labels}
 By analyzing the business goals, we constructed the following ordered list of quality trade-off labels:
