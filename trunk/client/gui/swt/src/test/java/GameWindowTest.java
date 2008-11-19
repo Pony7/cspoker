@@ -63,7 +63,7 @@ public class GameWindowTest
 					Thread.sleep(MS_ACTION_DELAY);
 					w.onNewDeal(new NewDealEvent(seatedPlayers, player1));
 					Thread.sleep(MS_ACTION_DELAY);
-					w.onNewPocketCards(new NewPocketCardsEvent(new HashSet<Card>(Arrays.asList(new Card(Rank.QUEEN,
+					w.onNewPocketCards(new NewPocketCardsEvent(new EnumSet<Card>(Arrays.asList(new Card(Rank.QUEEN,
 							Suit.HEARTS), new Card(Rank.ACE, Suit.CLUBS)))));
 					Thread.sleep(MS_ACTION_DELAY);
 					w.onNewCommunityCards(new NewCommunityCardsEvent(new HashSet<Card>(Arrays.asList(new Card(

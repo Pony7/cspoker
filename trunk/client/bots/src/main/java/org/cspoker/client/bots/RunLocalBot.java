@@ -20,7 +20,9 @@ import org.cspoker.client.communication.embedded.EmbeddedCSPokerServer;
 public class RunLocalBot {
 
 	public static void main(String[] args) {
+
 		new BotRunner(new EmbeddedCSPokerServer());
+
 	}
-	
+
 }

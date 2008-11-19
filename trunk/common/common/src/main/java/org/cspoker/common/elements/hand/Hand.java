@@ -201,9 +201,7 @@ public class Hand implements Iterable<Card>, Comparable<Hand> {
 		Card highestRankCard = cards.get(0);
 		for (int i = 0; i < cards.size(); i++) {
 			final int compareTo = cards.get(i).compareTo(highestRankCard);
-			if ((compareTo == 1)
-					|| ((compareTo == 0) && (cards.get(i).getSuit().getValue() > highestRankCard
-							.getSuit().getValue()))) {
+			if ((compareTo == 1)) {
 				highestRankCard = cards.get(i);
 			}
 		}
