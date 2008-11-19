@@ -1177,6 +1177,18 @@ The mis-actor can be detected and appropriate sanctions can be taken. \\
 \end{itemize}
 \end{itemize}
 
+\section{Simplification}
+To reduce the workload and the documentation, only a cohesive selection of components will be secured. The DFD for the simplified version can be found in figure \ref{fig:dfd_level_0_player_simplified}. This means following components will be omitted for future analysis: Cashier, Lobby and Chat Service. Although some of these components will benefit from the instantiated patterns, potential conflicts could arise if the omitted components would be secured in a future phase.
+
+\begin{figure}[h]
+  \begin{center}
+    \includegraphics[scale=0.8]{dfd_level_0_player_simplified}
+  \end{center}
+  \caption{DFD Level-0 - only player - simplified}\label{fig:dfd_level_0_player_simplified}
+\end{figure}
+
+\chapter{Securing the architecture}
+
 \section{Criticism}
 \begin{itemize}
 \item The classification of the threat three isn't very clear sometimes: e.g. you can tamper with the server process
