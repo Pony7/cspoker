@@ -152,6 +152,10 @@ Only authentic users can gain access at the poker server. \\
 \end{itemize}
 \end{itemize}
 
+\subsection{Third party payment service}
+\subsubsection{Spoofing the third party payment service}
+\subsubsection{Repudiation of the third party payment service}
+
 \subsection{Poker Server}
 \subsubsection{Spoofing the poker server}
 \textbf{Primary mis-actor:}
@@ -346,7 +350,6 @@ The online casino denies a player has won a number of chips or has received cert
 \item The behavior of the mis-actor is influenced by the information disclosure. This altered behavior could be detected by examining the logs.
 \end{itemize}
 \end{itemize}
-
 \subsubsection{DoS against a table}
 \textbf{Summary:} \\
 The mis-actor performs actions leading to a crash or overloading the capacity of the table. As a result, the table can no longer be reached by the users.
@@ -354,14 +357,26 @@ The mis-actor performs actions leading to a crash or overloading the capacity of
 \textbf{Summary:} \\
 The mis-actor performs actions leading to the possibility to do administrator actions. He can achieve this by presenting false credentials, spoofing an administrator or tampering with the lobby or account management.
 \subsection{Chat Service}
+\subsubsection{Spoofing the chat service}
+\subsubsection{Tampering with the chat service}
+\subsubsection{Repudiation of the chat service}
+\subsubsection{Information disclosure at the chat service}
+\subsubsection{DoS against the chat service}
+\subsubsection{Elevation of Privilege at the chat service}
 \subsection{Cashier}
+\subsubsection{Spoofing the cashier}
+\subsubsection{Tampering with the cashier}
+\subsubsection{Repudiation of the cashier}
+\subsubsection{Information disclosure at the casier}
+\subsubsection{DoS against the cashier}
+\subsubsection{Elevation of Privilege at the cashier}
 \subsection{Account Management}
 \subsubsection{Spoofing the account management system}
 \subsubsection{Tampering with the account management system}
 \subsubsection{Repudiation of using the account management system}
 \subsubsection{Information disclosure of the account management system}
 \subsubsection{DoS against the account management system}
-\subsubsection{Elevation of Privilege}
+\subsubsection{Elevation of Privilege at the account management system}
 \subsection{Account Data}
 \subsubsection{Tampering with account data}
 \textbf{Primary mis-actor:}
@@ -880,10 +895,208 @@ Here we choose to reduce the number of data flows from/to the Player because int
 \textbf{Summary:} A malicious player can flood the network of an opponent at a crucial moment so no communication between this opponent and the poker server is possible. This will lead to a time-out of the opponent. Depending on the time-out policy the malicious player can have a huge advantage.
 
 \subsection{Multi player Cheating}
-\subsubsection{Multiple players at a table collaborate}
-\textbf{Summary:} By collaborating they have access to more knowledge than legitimate. With this extra knowledge they have a more accurate view on the outs. They can protect each other, or they can raise each other to force the other players to call higher chip amounts to enlarge the pot.
+\subsubsection{Collusion}
+\textbf{Summary:} Collusion is a secret cooperation of two or more players. By collaborating they have access to more knowledge of hole cards than legitimate. With this extra knowledge they have a more accurate view on the outs. An other advantage that can be achieved through collaboration is the use of a common strategy to maximise their profits. Examples of strategies are: only playing the best hand they have, raise each other to force the other players to call to enlarge the pot. \\
+\textbf{Primary mis-actor:}
+\begin{itemize}
+\item Unskilled outsiders
+\end{itemize}
+\textbf{Basic path:}
+\begin{enumerate}
+\item[bp1.] The mis-actors are sit-in at the same table. 
+\item[bp2.] The mis-actors communicate their hole cards and tactics through some unmonitored channel.
+\item[bp3.] The mis-actors take actions with the extra knowledge.
+\item[bp4.] The mis-actors gain an unfair advantage over the honest players.
+\end{enumerate}
+\textbf{Alternative paths:}
+\begin{itemize}
+\item[ap1.] The mis-actors communicate their hole cards and tactics through a covert channel in a monitored channel. (for bp2.)
+\end{itemize}
+\textbf{Capture points:}
+\begin{itemize}
+\item \textbf{Prevention:}
+\begin{itemize}
+\item All inter player communication happens through a monitored channel where no covert channel is possible. In a monitored channel all messages are accessible to all the players who have joined a table. All the messages are also logged for audit.
+\item Enforcing the use of a webcam is an invasive way to mitigate the use of some unmonitored channels (e.g. phone, same physical location, ...), but it's still possible to use parts of the body that aren't captured to send messages to the other mis-actor or to use a covert channel. It's also possible to spoof the stream of the webcam so countermeasures against this new threat have to be taken into account.
+\item The screen can be periodically captured and analysed to ensure no other communicative application is used. The applicability of this method lies only in the scope of the computer that is used. This countermeasure is broken by using an other independent computer to communicate with the other mis-actors.
+\item A firewall can be placed to disallow all other communication except the poker client, or filter all network packages for suspicious chat messages. This capture point has the same vulnerability as the previous capture point: it's possible to break this countermeasure by using an other independent computer to communicate with the other mis-actors.
+\end{itemize}
+A proper risk analysis is needed to find the right trade-off between cost and risk as absolute mitigation of this threat is practically infeasible. 
+\item \textbf{Detection:}
+\begin{itemize}
+\item The game logs are analysed to detect collusion.
+\item A player can report suspicious behavior that will be investigated by the online casino.
+\end{itemize}
+\end{itemize}
+\textbf{Triggers:}\\
+Always true, i.e., this can happen at any time. \\
+\textbf{Preconditions:}
+\begin{itemize}
+\item The provided chat system is unmonitored.
+\item The covert channel is undetectable in a monitored channel.
+\end{itemize}
+\textbf{Assumptions:}
+\begin{itemize}
+\item The mis-actors have a way to secretly communicate with each other:
+\begin{itemize}
+\item \emph{Online:}
+\begin{itemize}
+\item Instant Messaging
+\item Voice over IP
+\item Covert Channel
+\item Unmonitored chat service
+\end{itemize}
+\item \emph{Offline:}
+\begin{itemize}
+\item Phone
+\item Same physical location
+\end{itemize}
+\end{itemize}
+\end{itemize}
+\textbf{Worst case threat:}\\
+The mis-actors can exchange knowledge and use a global synchronized strategy to maximise their total profit. \\
+\textbf{Prevention Guarantee:} \\
+There is no unmonitored channel available for secret communication. \\
+\textbf{Detection Guarantee:} \\
+The mis-actors can be detected and their account can be blocked. \\
+\textbf{Stakeholders and risks:}
+\begin{itemize}
+\item Honest players: 
+\begin{itemize}
+\item Loss of fairness and as a consequence potential loss of money.
+\end{itemize}
+\end{itemize}
+
 \subsubsection{An admin collaborates with a player to play with full information disclosure}
-\textbf{Summary:} An admin who has access to the pocket cards could pass the secret information to a collaborating player. This collaboration leads to perfect information access and a perfect strategy. The collaboration is an attempt to camouflage the cheating.
+\textbf{Summary:} An admin who has access to the hole cards could pass the secret information to a collaborating player. This collaboration leads to perfect information access and a perfect strategy. The collaboration is an attempt to camouflage the cheating of a single administrator. \\
+\textbf{Primary mis-actor:}
+\begin{itemize}
+\item Insider and a collaborator (malicious player)
+\end{itemize}
+\textbf{Basic path:}
+\begin{enumerate}
+\item[bp1.] The insider joins the table. 
+\item[bp2.] The collaborator is sit-in at the table. 
+\item[bp3.] The insider has access to the hole card info of all players at the table. 
+\item[bp4.] The insider sends the confidential information through an unmonitored channel to the collaborator. 
+\item[bp5.] The collaborator takes actions with this extra knowledge. 
+\item[bp6.] The collaborators gain an unfair advantage over the honest players.
+\end{enumerate}
+\textbf{Alternative paths:}
+\begin{itemize}
+\item[ap1.] The insider communicates the hole cards through a covert channel in a monitored channel. (for bp4.)
+\end{itemize}
+\textbf{Capture points:}
+\begin{itemize}
+\item \textbf{Prevention:}
+\begin{itemize}
+\item The system enforces administrators have only access to the hole cards after the deal.
+\item An administrator can only access the poker server inside the trusted domain of the online casino and he has no means to communicate with the outside world (no phone, firewall, ...).
+\end{itemize}
+\item \textbf{Detection:}
+\begin{itemize}
+\item The game logs are analysed to detect collusion.
+\item A player can report suspicious behavior that will be investigated by the online casino.
+\end{itemize}
+\end{itemize}
+\textbf{Triggers:}\\
+Always true, i.e., this can happen at any time. \\
+\textbf{Preconditions:}
+\begin{itemize}
+\item The insider has access to the hole cards.
+\end{itemize}
+\textbf{Assumptions:}
+\begin{itemize}
+\item The insider and the collaborator have a way to secretly communicate with each other:
+\begin{itemize}
+\item \emph{Online:}
+\begin{itemize}
+\item Instant Messaging
+\item Voice over IP
+\item Covert Channel
+\item Unmonitored chat service
+\end{itemize}
+\item \emph{Offline:}
+\begin{itemize}
+\item Phone
+\item Same physical location
+\end{itemize}
+\end{itemize}
+\end{itemize}
+\textbf{Worst case threat:}\\
+The insider and the collaborator can exchange knowledge and use a global synchronized strategy to maximise their total profit. \\
+\textbf{Prevention Guarantee:} \\
+The hole cards are never exposed to a player at the poker table. \\
+\textbf{Detection Guarantee:} \\
+The insider and the collaborator can be detected and appropriate sanctions can be taken. \\
+\textbf{Stakeholders and risks:}
+\begin{itemize}
+\item Honest players: 
+\begin{itemize}
+\item Loss of fairness and as a consequence potential loss of money.
+\end{itemize}
+\end{itemize}
+
+
+\subsubsection{Chip dumping}
+
+\subsubsection{Spyware on the computer system of honest players}
+
+\subsubsection{Altered client provided to the players}
+
+\subsubsection{Malicious player can predict hole and community cards}
+\textbf{Summary:} A malicious player can predict the hole and community cards of every deal by deducing the next numbers in the random number generator from the observed cards. The security through obscurity approach for application integrity is unfeasible as the code is open source. \\
+\textbf{Primary mis-actor:}
+\begin{itemize}
+\item Skilled outsider
+\end{itemize}
+\textbf{Basic path:}
+\begin{enumerate}
+\item[bp1.] The mis-actor joins the table. 
+\item[bp2.] The mis-actor observes the cards dealt at the table.
+\item[bp3.] The mis-actor uses the observations to make a model of the current dealer.
+\item[bp4.] The mis-actor is sit-in at the table and uses the model to plays with full information access (both hole cards of all players at the table and future community cards).
+\end{enumerate}
+\textbf{Alternative paths:}
+\begin{itemize}
+\item[ap1.] The mis-actor searches for the seed used by the random number generator (for bp3.).
+\item[ap2.] The mis-actor brakes the random number generator (for bp3).
+\end{itemize}
+\textbf{Capture points:}
+\begin{itemize}
+\item \textbf{Prevention:}
+\begin{itemize}
+\item A secure random number generator is used for shuffling the cards.
+\item A secure distributed shuffling algorithm is used.
+\item The seed of the secure random number generation is unpredictable.
+\end{itemize}
+\item \textbf{Detection:}
+\begin{itemize}
+\item The game logs are analysed to detect anomalies. 
+\item A player can report suspicious behavior that will be investigated by the online casino.
+\end{itemize}
+\end{itemize}
+\textbf{Triggers:}\\
+Always true, i.e., this can happen at any time. \\
+\textbf{Preconditions:}
+\begin{itemize}
+\item The seed of the random number generator can be found (e.g. system time, constant value, ...)
+\item No secure method for random number generation is used.
+\end{itemize}
+\textbf{Assumptions:} \\
+\textbf{Worst case threat:}\\
+With all this information the malicious player knows before the hand is played whether he will win or not. This makes it possible to gain a huge amount of chips.\\
+\textbf{Prevention Guarantee:} \\
+No one can predict the hole and community cards from any deal. \\
+\textbf{Detection Guarantee:} \\
+The mis-actor can be detected and appropriate sanctions can be taken. \\
+\textbf{Stakeholders and risks:}
+\begin{itemize}
+\item Honest players: 
+\begin{itemize}
+\item Loss of fairness and as a consequence potential loss of money.
+\end{itemize}
+\end{itemize}
 
 \section{Criticism}
 \begin{itemize}
