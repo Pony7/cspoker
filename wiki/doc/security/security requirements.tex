@@ -2,6 +2,8 @@
 \usepackage{a4wide}
 \usepackage[english]{babel}
 \usepackage{graphicx,subfigure}
+\usepackage[pdftex,pdfauthor={Cedric~Cuypers, Kenzo~Tomita, Guy~Van~den~Broeck},pdftitle={Security Requirements: Poker Application}]{hyperref}
+\usepackage[all]{hypcap}
 \setcounter{secnumdepth}{3} 
 
 
@@ -64,10 +66,42 @@ There are several trust boundaries that can be identified in the DFDs. First of 
 \item There is an internal policy to restrict physical access to the servers. 
 \item There is no protection needed against an administrator with a debugger (can read and alter memory).
 \item Side channels aren't available to mis-actors.
+\item Data flow from a process to a data store is in our case always local and not subject to threats.
 \end{itemize}
+
+\section{Mapping STRIDE to DFD elements}
+\vspace{0.3cm}
+\begin{center}
+\begin{tabular}{| c || c | c | c | c | c | c |}
+  \hline
+  \textbf{DFD Element} 		& S 	& T 	& R 	& I 	& D 	& E	\\\hline
+  \hline
+  Player 		& X 	& 	& X 	&  	&  	& 	\\\hline
+  Admin 		& X 	& 	& X 	&  	&  	& 	\\\hline
+  \hline
+  Poker Server 		& X 	& X	& X 	& X 	& X 	& X	\\\hline
+  Lobby 		& X 	& X	& X 	& X 	& X 	& X	\\\hline
+  Table 		& X 	& X	& X 	& X 	& X 	& X	\\\hline
+  Chat Service 		& X 	& X	& X 	& X 	& X 	& X	\\\hline
+  Cashier 		& X 	& X	& X 	& X 	& X 	& X	\\\hline
+  Account Management 	& X 	& X	& X 	& X 	& X 	& X	\\\hline
+  Logging Engine	& X 	& X	& X 	& X 	& X 	& X	\\\hline
+  \hline
+  Audit Log		& 	& X	& X 	& X 	& X	& 	\\\hline
+  Account Data		& 	& X	&  	& X 	& X	& 	\\\hline
+  \hline
+  Player $\rightarrow$ 
+  Poker Server		&	& X	&	& X	& X	&	\\\hline
+  $\vdots$		&	&	&	&	&	&	\\\hline
+  Table $\rightarrow$ 
+  Logging Engine	&	& X	&	& X	&	&	\\\hline
+  $\vdots$		&	&	&	&	&	&	\\\hline
+\end{tabular}\end{center}
+\vspace{0.3cm}
 
 \section{Architecture based Misuse Cases}
 \subsection{Player}
+\label{PlayerCases}
 \subsubsection{Spoofing a Player}
 \textbf{Summary:} \\
 The mis-actor gains access to the poker server pretending to be a legitimate user. To achieve this goal he can use false credentials or credentials of an existing user. He could also bypass the authentication system to realize the same objective. \\
@@ -157,6 +191,7 @@ Only authentic users can gain access at the poker server. \\
 \subsubsection{Repudiation of the third party payment service}
 
 \subsection{Poker Server}
+\label{PokerServerCases}
 \subsubsection{Spoofing the poker server}
 \textbf{Primary mis-actor:}
 \begin{itemize}
@@ -208,8 +243,32 @@ Only authentic users can gain access at the poker server. \\
 \end{itemize}
 \end{itemize}
 
-\subsubsection{Repudiation of an action at the poker server}
-See section \ref{Repudiation of a Player}.
+\subsubsection{Repudiation of the poker server}
+\textbf{Primary mis-actor:}
+\begin{itemize}
+\item Crook
+\end{itemize}
+\textbf{Basic path:}
+\begin{itemize}
+\item The mis-actor gains access to the poker server.
+\item The mis-actor sends back a response to the player that is misleading.
+\item The mis-actor repudiates having sent the response in question.
+\item The player fails to prove that the server/mis-actor is responsible.
+\end{itemize}
+\textbf{Alternative paths:}
+\begin{itemize}
+\item The mis-actor tampers with the logging process to remove evidence.
+\end{itemize}
+\textbf{Capture points:}
+\begin{itemize}
+\item \textbf{Prevention:}
+\begin{itemize}
+\item Use a strong signature system for messages sent to the player.
+\item Use antireplay defences.
+\item Log all actions and transactions.
+\item Secure access to the logging process
+\end{itemize}
+\end{itemize}
 
 \subsubsection{Information disclosure at the poker server}
 \textbf{Primary mis-actor:}
@@ -298,6 +357,7 @@ See section \ref{Repudiation of a Player}.
 \end{itemize}
 
 \subsection{Lobby}
+\label{LobbyCases}
 \subsubsection{Spoofing a lobby}
 \textbf{Summary:} \\
 The mis-actor prepares a process to spoof the lobby and deploys it on one of the online casino servers or on an external server. Every player connecting to a table through the lobby can be diverted to an untrusted table.
@@ -312,7 +372,9 @@ The mis-actor performs actions leading to a crash or overloading the capacity of
 \subsubsection{Elevation of privilege at the lobby}
 \textbf{Summary:} \\
 The mis-actor performs actions leading to the possibility to do administrator actions. He can achieve this by presenting false credentials, spoofing an administrator or tampering with the lobby or account management.
+
 \subsection{Table}
+\label{TableCases}
 \subsubsection{Spoofing a table}
 \textbf{Summary:} \\
 The mis-actor prepares a process to spoof the table and deploys it on one of the online casino servers or on an external server. Every player connecting to this table can be scammed. The spoofed table could provide the mis-actor with all confidential information or deal crafted hands to maximize the profit of the mis-actor (e.g. deal a full house to an innocent player and deal a four of a kind to himself and lure the innocent player to go all-in).
@@ -356,28 +418,54 @@ The mis-actor performs actions leading to a crash or overloading the capacity of
 \subsubsection{Elevation of Privilege at the table}
 \textbf{Summary:} \\
 The mis-actor performs actions leading to the possibility to do administrator actions. He can achieve this by presenting false credentials, spoofing an administrator or tampering with the lobby or account management.
+
 \subsection{Chat Service}
+
+\label{ChatServiceCases}
+
 \subsubsection{Spoofing the chat service}
 \subsubsection{Tampering with the chat service}
 \subsubsection{Repudiation of the chat service}
 \subsubsection{Information disclosure at the chat service}
 \subsubsection{DoS against the chat service}
 \subsubsection{Elevation of Privilege at the chat service}
+
 \subsection{Cashier}
+\label{CashierCases}
+
 \subsubsection{Spoofing the cashier}
 \subsubsection{Tampering with the cashier}
 \subsubsection{Repudiation of the cashier}
 \subsubsection{Information disclosure at the casier}
 \subsubsection{DoS against the cashier}
 \subsubsection{Elevation of Privilege at the cashier}
+
 \subsection{Account Management}
+\label{AccountManagementCases}
 \subsubsection{Spoofing the account management system}
 \subsubsection{Tampering with the account management system}
 \subsubsection{Repudiation of using the account management system}
 \subsubsection{Information disclosure of the account management system}
 \subsubsection{DoS against the account management system}
 \subsubsection{Elevation of Privilege at the account management system}
+
+\subsection{Logging Engine}
+\label{LoggingEngineCases}
+\subsubsection{Spoofing the logging engine}
+\subsubsection{Tampering with the logging engine}
+\subsubsection{Repudiation of using the logging engine}
+\subsubsection{Information disclosure of the logging engine}
+\subsubsection{DoS against the logging engine}
+\subsubsection{Elevation of Privilege}
+
+\subsection{Audit Log}
+\label{AuditLogCases}
+\subsubsection{Tampering with the audit log}
+\subsubsection{Repudiation of logging something in the audit log}
+\subsubsection{Information disclosure of the audit log}
+
 \subsection{Account Data}
+\label{AccountDataCases}
 \subsubsection{Tampering with account data}
 \textbf{Primary mis-actor:}
 \begin{itemize}
@@ -471,19 +559,9 @@ and the account data store.
 \item The data store is load-balanced.
 \end{itemize}
 \end{itemize}
-\subsection{Logging Engine}
-\subsubsection{Spoofing the logging engine}
-\subsubsection{Tampering with the logging engine}
-\subsubsection{Repudiation of using the logging engine}
-\subsubsection{Information disclosure of the logging engine}
-\subsubsection{DoS against the logging engine}
-\subsubsection{Elevation of Privilege}
-\subsection{Audit Log}
-\subsubsection{Tampering with the audit log}
-\subsubsection{Repudiation of logging something in the audit log}
-\subsubsection{Information disclosure of the audit log}
 
 \subsection{Data Flows from a Player}
+\label{FromPlayerCases}
 
 According to \cite[p117]{1202957}, one of the first concerns before doing threat analysis should be to reduce the number of entities to analyze.
 Here we choose to reduce the number of data flows from/to the Player because interaction between a Player and the different processes is very similar (using the same technology, similar entities with similar confidentiality). We only consider requests for tokens (login actions), actions sent to a process, tokens sent to a Player and events/responses sent to a Player.
@@ -786,6 +864,7 @@ Here we choose to reduce the number of data flows from/to the Player because int
 \end{itemize}
 
 \subsection{Data Flows to Logging Engine}
+\label{ToLoggingEngineCases}
 \subsubsection{Tampering with logging requests}
 \textbf{Primary mis-actor:}
 \begin{itemize}
