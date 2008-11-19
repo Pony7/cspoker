@@ -1471,6 +1471,8 @@ The following patterns address authentication at the architectural level:
 \item Replicated System
 \end{itemize}
 \subsection{Design Phase}
+We don't consider design phase and patterns because it isn't part of the assignment and it would be too
+low level.
 \subsection{System Phase}
 As stated in \cite[p13]{15000}, the architecture of the system is designed using ADD or Attribute-Driven Design,
 meaning it is created based on the non-functional requirements of the application and their relative importance.
@@ -1510,6 +1512,28 @@ No patterns
 
 \subsubsection{Availability}
 No patterns
+\subsection{Selected Patterns}
+To summarize, here is the list of the selected patterns:
+\begin{itemize}
+\item Authentication Enforcer
+\item Authorization Enforcer
+\item Secure Pipe
+\item Full View with Errors
+\item Limited View
+\item Application Firewall
+\item Firewall
+\item Checkpointed System
+\item Audit Interceptor
+\item Secure Access Layer
+\item Load Balancer
+\end{itemize}
+The following patterns were already used in the application:
+\begin{itemize}
+\item Credential Tokenizer
+\item Secure Service Facade
+\item Secure Pipe
+\item Secure Logger
+\end{itemize}
 \section{Criticism}
 \begin{itemize}
 \item The classification of the threat three isn't very clear sometimes: e.g. you can tamper with the server process
@@ -1520,7 +1544,8 @@ DNS records.
 \item The list of labels is incomplete for some security patterns in the catalog: e.g. Secure Pipe should also have
 the confidentiality-label.
 \item Some patterns that are mentioned by other security patterns, aren't listed in the catalog: e.g. Secure Pipe 
-benefits from Security Association, but the latter pattern isn't listed in the catalog.
+benefits from Security Association, but the latter pattern isn't listed in the catalog. Input Guard also isn't
+in the list.
 \end{itemize}
 \section{Log}
 \textbf{30-10-2008}
