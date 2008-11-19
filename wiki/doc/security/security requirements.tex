@@ -1192,20 +1192,8 @@ To reduce the workload and the documentation, only a cohesive selection of compo
 \end{figure}
 
 \chapter{Securing the architecture}
-
-\section{Criticism}
-\begin{itemize}
-\item The classification of the threat three isn't very clear sometimes: e.g. you can tamper with the server process
-to spoof the server and thus tampering with the data.
-\item The threat three isn't complete; for instance there is nothing in it about spoofing by corruption of 
-DNS records.
-\item Some business use cases can't be covered with the list of security patterns in the given catalog
-\item The list of labels is incomplete for some security patterns in the catalog: e.g. Secure Pipe should also have
-the confidentiality-label.
-\item Some patterns that are mentioned by other security patterns, aren't listed in the catalog: e.g. Secure Pipe 
-benefits from Security Association, but the latter pattern isn't listed in the catalog.
-\end{itemize}
 \section{Quality trade-off labels}
+\label{labels}
 By analyzing the business goals, we constructed the following ordered list of quality trade-off labels:
 \begin{enumerate}
 \item Usability: the online casino has to be as easy to use as possible.
@@ -1220,6 +1208,47 @@ determines the maximum profit.
 \item Maintainability: the application should be easy to maintain.
 \end{enumerate}
 These labels will be used to guide the selection of security patterns in the next section.
+\section{Detailed description of the followed steps}
+We will use the security patterns and methodology described in \cite{150002} to select the appropriate patterns
+for this application.
+
+\subsection{Analysis Phase}
+The analysis phase consists of eliciting the security requirements and annotating each 
+security requirement with the security object it belongs to. The requirements have been elicited by the misuse cases
+in \ref{TODO}. The annotations to indicate for each requirement to which security objective it belongs to,
+are in \ref{TODO}. This is very important, since the succes of the selected methodology heavily depends 
+on this list of security requirements.
+\subsection{Architecture Phase}
+As stated in \cite[p13]{15000}, the architecture of the system is designed using ADD or Attribute-Driven Design,
+meaning it is created based on the non-functional requirements of the application and their relative importance.
+Therefore a prioritized list of quality attributes, inspired by the business goals, was formulated under 
+\ref{labels}. Then we iterate over the selection of architectural patterns, as it is stated by the methodology.
+
+\subsubsection{Authentication}
+The authentication requirement covers the most misuse cases so it is selected as the first requirement to cover.
+The following patterns address authentication at the architectural level:
+\begin{itemize}
+\item Authentication Enforcer
+\item Container Managed Security
+\item Authorization Enforcer
+\item Credential Tokenizer
+\item Security Association
+\item Secure Service Facade
+\item Session
+\item Single Access Point
+\end{itemize}
+\section{Criticism}
+\begin{itemize}
+\item The classification of the threat three isn't very clear sometimes: e.g. you can tamper with the server process
+to spoof the server and thus tampering with the data.
+\item The threat three isn't complete; for instance there is nothing in it about spoofing by corruption of 
+DNS records.
+\item Some business use cases can't be covered with the list of security patterns in the given catalog
+\item The list of labels is incomplete for some security patterns in the catalog: e.g. Secure Pipe should also have
+the confidentiality-label.
+\item Some patterns that are mentioned by other security patterns, aren't listed in the catalog: e.g. Secure Pipe 
+benefits from Security Association, but the latter pattern isn't listed in the catalog.
+\end{itemize}
 \section{Log}
 \textbf{30-10-2008}
 \begin{itemize}
@@ -1235,6 +1264,7 @@ at this level. Otherwise the number of misuse cases would explode.
 
 \nocite{1202957}
 \nocite{citeulike:174301}
+\nocite{150000}
 
 \addcontentsline{toc}{chapter}{Bibliography}
 \bibliography{oass2}
