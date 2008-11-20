@@ -18,6 +18,7 @@
 \maketitle 
 % insert the table of contents 
 \tableofcontents 
+\listoffigures
 
 \chapter{Introduction}
 This document starts from an existing architecture of a poker application that was originally designed with only an intuitive idea of security threats for poker applications. By modelling the data flow through the application we try to locate areas that can be subjected to these threats. 
@@ -517,7 +518,8 @@ The logging engine can deny having recieved logging data that didn't make it to 
 \subsubsection{Repudiation of logging something in the audit log}
 \label{AuditLogCasesR}
 \textbf{Summary:} \\
-The mis-actor can modify or obscure data in the audit log to 
+The mis-actor can modify or obscure data in the audit log to be able to repudate certain actions. An auditor will bot be able to deny this allegation.
+Also see section \ref{Criticism} for criticism of this threat.
 
 \subsubsection{Information disclosure of the audit log}
 \label{AuditLogCasesI}
@@ -1436,7 +1438,7 @@ This is not applicable since the code is open source.
 \label{labels}
 By analyzing the business goals, we constructed the following ordered list of quality trade-off labels:
 \begin{enumerate}
-\item Usability: the online casino has to be as easy to use as possible.
+\item Usability: the online casino has to be as easy to use as possible. This quality attribute might seem less important than confidentiality and integrity but in reality cheating will always happen (e.g. collusion) and the loss will be calculated in. When a lot of people play in the online casino because it is te most usable, this cost will be less significant.
 \item Confidentiality: it is of the abmost importance that certain information like the cards of a player, remains
 confidential.
 \item Integrity: no one should be able to compromise the integrity of the application or it's data.
@@ -1444,7 +1446,7 @@ confidential.
 \item Manageability: the application must be easy to manage by an admin.
 \item Cost: the cost of the application should be reasonable to low, so profit will remain solid.
 \item Performance: performance being the possible amount of games played simultaneously, is important because it
-determines the maximum profit.
+determines the maximum profit. It is very easy to come up with solutions to performance problems because of the distributed nature of the application (table are independent).
 \item Maintainability: the application should be easy to maintain.
 \end{enumerate}
 These labels will be used to guide the selection of security patterns in the next section.
@@ -1577,6 +1579,7 @@ The following patterns were already used in the application:
 \item Secure Logger
 \end{itemize}
 \section{Criticism}
+\label{Criticism}
 \begin{itemize}
 \item The classification of the threat tree isn't very clear sometimes: e.g. you can tamper with the server process
 to spoof the server and thus tampering with the data.
