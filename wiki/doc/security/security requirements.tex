@@ -1522,8 +1522,8 @@ Container Managed Security.
 Single Access Point has as labels +Manageability and has no relations with other patterns.
 
 Clearly Authentication Enforcer is the best choice here: it's labels match more with the quality trade-off labels
-than Single Access Point, and it benefits from 2 patterns that already exist in the architecture (Secure Pipe and
-Secure Service Facade).Single Access Point would also lead to a too centralised architecture.Container Managed 
+than Single Access Point, and it benefits from the Secure Service Facade pattern that already exist in the architecture
+.Single Access Point would also lead to a too centralised architecture.Container Managed 
 Security is a system pattern and will later be considered as an
 alternative for Authentication Enforcer.
 
@@ -1613,11 +1613,29 @@ We can now consider the Application Integrity requirement as resolved.
 \end{itemize}
 Secure Logger is already present in the architecture, the Accountability requirement is considered as solved.
 \subsubsection{Data Integrity}
+The following patterns address application integrity at the architectural level:
 \begin{itemize}
 \item Session
 \item Secure Access Layer
 \item Secure Pipe
 \end{itemize}
+
+There are no patterns in this list that conflict with any existing patterns.
+Next, we screen the short descriptions of the selected patterns to see if they are applicable. Both patterns seem
+applicable.
+
+Secure Access Layer has as labels +Maintainability and +Portability, and has no relations with other patterns.
+
+Secure Pipe has no labels in the list, but we believe it should have +Confidentiality and +Integrity. The pattern
+benefits from Secure Association (which by the way is not included in the list, see \ref{criticism}.
+
+Secure Access Layer will be selected because it has only positive labels and has no relation with other patterns.
+Secure Pipe will be selected because confidentiality and integrity are considered important quality labels.
+
+So Secure Access Layer and Secure Pipe are selected and instantiated to deal with the Data Integrityrequirement.
+
+We can now consider the Data Integrity requirement as resolved.
+
 
 \subsubsection{Availability}
 \begin{itemize}
@@ -1684,6 +1702,7 @@ To summarize, here is the list of the selected patterns:
 \end{itemize}
 
 \section{Criticism}
+\label{criticism}
 \begin{itemize}
 \item The classification of the threat tree isn't very clear sometimes: e.g. you can tamper with the server process
 to spoof the server and thus tampering with the data.
