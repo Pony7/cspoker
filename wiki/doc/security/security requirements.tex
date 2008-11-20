@@ -76,7 +76,7 @@ There are several trust boundaries that can be identified in the DFDs. First of 
 
 \section{Mapping STRIDE to DFD elements}
 
-Taking the elements in figure \ref{fig:level_0} and mapping the STRIDE threats to tem results in the following table. The external entities \textit{Admin} and \textit{Payment Service} are subject to a number of threats that we chose not to go in to. Data flows from and to these entities are also not considered here. Similarly, data flows from and to the data stores are omitted.
+Taking the elements in figure \ref{fig:level_0} and mapping the STRIDE threats to them results in the following table. The external entities \textit{Admin} and \textit{Payment Service} are subject to a number of threats that we chose not to go in to detail for. Data flows from and to these entities are also not considered here. Similarly, data flows from and to the data stores are omitted.
 
 \vspace{0.3cm}
 \begin{center}
@@ -119,7 +119,7 @@ Furthermore, the processes \textit{Chat Service} and \textit{Cashier} are not el
 
 The misuse cases are ordered by the entity under threat. Repudiation is an important threat with legal consequences. Information disclosure is also important because it makes cheating very easy. Denial of Service attacks are less profitable for crooks and therefore less likely.
 
-Threats that are located more to the exterior of te system (closer to the Player) are more likely to be feasible and are more important. For this reason we completely specified the threats for the Player and Poker Server. Because there are many data flows we chose to completely specify the threats for the different abstractions in section \ref{PlayerFlowCases} and \ref{LoggingEngineFlowCases}. Between the 2 data stores we chose to go in to detail for the account data.
+Threats that are located more to the exterior of te system (closer to the Player) are more likely to be feasible and are more important. For this reason we completely specified the threats for the Player and Poker Server. Because there are many data flows, we chose to completely specify the threats for the different abstractions in section \ref{PlayerFlowCases} and \ref{LoggingEngineFlowCases}. Between the two data stores we chose to go in to detail for the account data.
 
 \subsection{Player}
 \label{PlayerCases}
