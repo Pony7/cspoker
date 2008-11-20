@@ -1474,24 +1474,24 @@ Application Confidentiality is not applicable since the code is open source.
 \section{Quality trade-off labels}
 \label{labels}
 By analyzing the business goals, we constructed the following ordered list of quality trade-off labels:
-\begin{enumerate}
-\item Usability: the online casino has to be as easy to use as possible.
+\begin{description}
+\item[Usability] The online casino has to be as easy to use as possible.
 This quality attribute might seem less important than confidentiality and
 integrity but in reality cheating will always happen (e.g. collusion) and
 the loss will be calculated in. When a lot of people play in the online
 casino because it is te most usable, this cost will be less significant.
-\item Confidentiality: it is of the abmost importance that certain information like the cards of a player, remains
+\item[Confidentiality] It is of the abmost importance that certain information like the cards of a player, remains
 confidential.
-\item Integrity: no one should be able to compromise the integrity of the application or it's data.
-\item Accountability: no player may be able to repudiate any bets or other actions.
-\item Manageability: the application must be easy to manage by an admin.
-\item Cost: the cost of the application should be reasonable to low, so profit will remain solid.
-\item Performance: performance being the possible amount of games played simultaneously, is important because it
+\item[Integrity] No one should be able to compromise the integrity of the application or it's data.
+\item[Accountability] No player may be able to repudiate any bets or other actions.
+\item[Manageability] The application must be easy to manage by an admin.
+\item[Cost] The cost of the application should be reasonable to low, so profit will remain solid.
+\item[Performance] Performance being the possible amount of games played simultaneously, is important because it
 determines the maximum profit. It is very easy to come up with solutions
 to performance problems because of the distributed nature of the
 application (table are independent).
-\item Maintainability: the application should be easy to maintain.
-\end{enumerate}
+\item[Maintainability] The application should be easy to maintain.
+\end{description}
 These labels will be used to guide the selection of security patterns in the next section.
 \section{Pattern-based Methodology}
 We will use the security patterns and methodology described in \cite{yskout} to select the appropriate patterns
@@ -1684,7 +1684,7 @@ The following patterns address availability at the architectural level:
 \item Replicated System
 \end{itemize}
 
-Checkpointed System has already been instantiated when Application Integrity was considered.
+Checkpointed System has already been selected for use in the Cashier when Application Integrity was considered.
 
 There are no patterns in this list that conflict with any existing patterns.
 Next, we screen the short descriptions of the selected patterns to see if they are applicable. Both patterns seem
@@ -1720,14 +1720,16 @@ The following patterns handle Authentication at the system level:
 \end{itemize}
 
 As mentioned before, Container Managed Security is an alternative to Authentication and Authorization Enforcer.
-So if we decided to select and instantiate Container Managed Security we could backtrack over the choices we made
+If we decided to select and instantiate Container Managed Security we could backtrack over the choices we made
 after the selection of Authentication and Authorization Enforcer.
 
-Container Managed Security has as labels +Manageability, +Portability, +Integrity and is an alternative for
+\begin{itemize}
+\item Container Managed Security has as labels +Manageability, +Portability, +Integrity and is an alternative for
 Authentication and Authorization Enforcer.
+\end{itemize}
 
-Container Managed Security won't be selected because we don't have a J2EE or any other container, and Authentication
-and Authorization Enforcer offer more benefits.
+Container Managed Security won't be selected because we don't have a J2EE or any other container and Authentication
+and Authorization Enforcer offer more benefits and flexibility.
 
 \subsubsection{Authorization}
 The following patters handle Authorization at the system level:
@@ -1741,20 +1743,22 @@ The following patters handle Authorization at the system level:
 \end{itemize}
 
 There is no pattern that conflicts with earlier instantiated patterns.
-Controlled Process Creator isn't applicable because there is a thread pool with worker threads, that limits the
-number of concurrent processes.
+
+Controlled Process Creator isn't really applicable because there are no processes that are created at runtime. At a lower level there are ofcourse thread pools and database connection pools that control the creation of those processes. We will not consider them as instantiations of the Controlled Process Creator pattern here but it might be up for discussion.
+
 Controlled Object Factory depends on Controlled Object Monitor, which was discarded earlier.
 
-Application Firewall has as labels -Performance, +Manageability, +Auditability and has as alternative Input Guard.
-Demilitarized Zone has as labels -Performance, -Cost, -Manageability, -Dependability, +Maintainability and depends
+\begin{itemize}
+\item Application Firewall has as labels -Performance, +Manageability, +Auditability and has as alternative Input Guard.
+\item Demilitarized Zone has as labels -Performance, -Cost, -Manageability, -Dependability, +Maintainability and depends
 on Firewall.
-Firewall has as labels +Accountability, -Performance, -Dependability and benefits from Demilitarized Zone and 
+\item Firewall has as labels +Accountability, -Performance, -Dependability and benefits from Demilitarized Zone and 
 Application Firewall.
+\end{itemize}
 
 Application Firewall is selected and instantiated because auditability is an important quality label compared to
 the performance penalty.
-Demilitarized Zone isn't selected because the cost of building one would be less than the cost of an actual intrusion
-and a demilitarized zone doesn't seem useful if the only task of the front end is to forwards request.
+Demilitarized Zone isn't selected because of the high cost and because a demilitarized zone doesn't seem useful if the only task of the front end is to forward request. The processes that are placed outside of the secure zone should at least be performing some kind of non-trivial computation for them to pose enough of a risk to require a DMZ.
 Firewall is selected and instantiated because Accountability is an important quality label, and the pattern benefits
 from the previously instantiated Application Firewall.
 
@@ -1772,12 +1776,14 @@ The following patterns handle Accountability at the system level:
 
 Audit Interceptor doesn't conflict with any earlier instantiated pattern and seems applicable.
 
-Audit Interceptor has as labels -Performance, +Auditability, +Maintainability, +Manageability and depends on
+\begin{itemize}
+\item Audit Interceptor has as labels -Performance, +Auditability, +Maintainability, +Manageability and depends on
 Secure Logger and benefits from Secure Service Facade.
+\end{itemize}
 
 Audit Interceptor is selected and instantiated because Auditability and Maintainability are important quality
 labels and it benefits from the Secure Service Facade, which was already present. The depends relation with
-Secure Logger is already dealth with because the latter pattern was already present.
+Secure Logger is already dealt with because the latter pattern was already present.
 
 We now consider Accountability at the system level as covered.
 
@@ -1789,8 +1795,10 @@ The following patterns handle Data Integrity at the system level:
 
 Secure Message Router doesn't conflict with any previously instantiated pattern.
 
-Secure Message Router has as labels +Manageability, +Maintainability, +Confidentiality, +Integrity, -Availability
+\begin{itemize}
+\item Secure Message Router has as labels +Manageability, +Maintainability, +Confidentiality, +Integrity, -Availability
 and has no relations with other patterns.
+\end{itemize}
 
 Secure Message Router might be useful if there would be the need to interact safely with an external payment system
 but we don't consider it here, in our simplified version.
@@ -1845,7 +1853,7 @@ the Confidentiality label.
 benefits from Security Association, but the latter pattern isn't listed in the catalog. Input Guard also isn't
 in the list.
 \item Repudiaton of processes/data stores that are internal to the system is very unclear. In the lectures it was said that this was, for instance, the casino denying that it did something. In \cite[p270]{1202957} however it is explained as an external entity tampering with the process/data store to be able to deny having done something. The difference with repudiaton of that external entity is unclear.
-\item Some patterns solve security objectives in a way that doesn't relate to the misuse cases labeled with that objective. For instance, the misuse cases for application integrity listed in section \ref{ApplicationIntegrityMUCs} are not really solved by the patterns provided in section \ref{ArchitecturalApplicationIntegrity}. This mis-mapping might go unnoticed because the patterns are valueable regardless of their correspondance to the misuse cases. They do however put in question te process applied here.
+\item Some patterns solve security objectives in a way that doesn't relate to the misuse cases labeled with that objective. For instance, the misuse cases for application integrity listed in section \ref{ApplicationIntegrityMUCs} are not really solved by the patterns provided in section \ref{ArchitecturalApplicationIntegrity}. This mis-mapping might go unnoticed because the patterns are valueable regardless of their correspondance to the misuse cases. They do however put in question the process applied here.
 \end{itemize}
 \section{Log}
 \textbf{30-10-2008}
