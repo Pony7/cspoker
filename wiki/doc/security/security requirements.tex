@@ -1054,7 +1054,8 @@ Here we choose to reduce the number of data flows from/to the Player because int
 
 \subsection{Single player Cheating}
 \subsubsection{A player uses multiple accounts to access more confidential information}
-\textbf{Summary:} The malicious player uses multiple accounts at the same table. He uses the extra information to  have a more accurate view on the outs\footnote{Any unseen card that, if drawn, will improve a player's hand to one that is likely to win. The number of outs can be converted to the probability of making the hand on the next card.}. He gains an unfair advantage over the other innocent players. \\
+\textbf{Summary:} \\
+The malicious player uses multiple accounts at the same table. He uses the extra information to  have a more accurate view on the outs\footnote{Any unseen card that, if drawn, will improve a player's hand to one that is likely to win. The number of outs can be converted to the probability of making the hand on the next card.}. He gains an unfair advantage over the other innocent players. \\
 \textbf{Primary mis-actor:}
 \begin{itemize}
 \item Crook
@@ -1081,14 +1082,17 @@ Here we choose to reduce the number of data flows from/to the Player because int
 \textbf{Summary:} If an admin has access to the card info of all the players at a table, he can act on perfect knowledge which is a huge advantage.
 
 \subsubsection{A malicious player misuses the right to ask the admin to view the log of the table}
-\textbf{Summary:} The malicious player misuses the possibility to view the table log pretending to be suspicious of collusion. The malicious player can verify the hands of all the opponents, also those who have chosen not to show their cards. By this way he can gain more insight into the strategy of its opponents (whether someone is bluffing or not, ...). Consulting the log is only possible after the game has been played so there is no direct influence, but in the long run gives an unfair advantage and allows profiling of a players behaviour.
+\textbf{Summary:} \\
+The malicious player misuses the possibility to view the table log pretending to be suspicious of collusion. The malicious player can verify the hands of all the opponents, also those who have chosen not to show their cards. By this way he can gain more insight into the strategy of its opponents (whether someone is bluffing or not, ...). Consulting the log is only possible after the game has been played so there is no direct influence, but in the long run gives an unfair advantage and allows profiling of a players behaviour.
 
 \subsubsection{A malicious player can flood the network of another player to force a time-out}
-\textbf{Summary:} A malicious player can flood the network of an opponent at a crucial moment so no communication between this opponent and the poker server is possible. This will lead to a time-out of the opponent. Depending on the time-out policy the malicious player can have a huge advantage.
+\textbf{Summary:} \\
+A malicious player can flood the network of an opponent at a crucial moment so no communication between this opponent and the poker server is possible. This will lead to a time-out of the opponent. Depending on the time-out policy the malicious player can have a huge advantage.
 
 \subsection{Multi player Cheating}
 \subsubsection{Collusion}
-\textbf{Summary:} Collusion is a secret cooperation of two or more players. By collaborating they have access to more knowledge of hole cards than legitimate. With this extra knowledge they have a more accurate view on the outs. An other advantage that can be achieved through collaboration is the use of a common strategy to maximise their profits. Examples of strategies are: only playing the best hand they have, raise each other to force the other players to call to enlarge the pot. \\
+\textbf{Summary:} \\
+Collusion is a secret cooperation of two or more players. By collaborating they have access to more knowledge of hole cards than legitimate. With this extra knowledge they have a more accurate view on the outs. An other advantage that can be achieved through collaboration is the use of a common strategy to maximise their profits. Examples of strategies are: only playing the best hand they have, raise each other to force the other players to call to enlarge the pot. \\
 \textbf{Primary mis-actor:}
 \begin{itemize}
 \item Unskilled outsiders
@@ -1164,7 +1168,8 @@ The mis-actors can be detected and their account can be blocked. \\
 \end{itemize}
 
 \subsubsection{An admin collaborates with a player to play with full information disclosure}
-\textbf{Summary:} An admin who has access to the hole cards could pass the secret information to a collaborating player. This collaboration leads to perfect information access and a perfect strategy. The collaboration is an attempt to camouflage the cheating of a single administrator. \\
+\textbf{Summary:} \\
+An admin who has access to the hole cards could pass the secret information to a collaborating player. This collaboration leads to perfect information access and a perfect strategy. The collaboration is an attempt to camouflage the cheating of a single administrator. \\
 \textbf{Primary mis-actor:}
 \begin{itemize}
 \item Insider and a collaborator (malicious player)
@@ -1238,7 +1243,8 @@ The insider and the collaborator can be detected and appropriate sanctions can b
 \end{itemize}
 
 \subsubsection{Malicious player can predict hole and community cards}
-\textbf{Summary:} A malicious player can predict the hole and community cards of every deal by deducing the next numbers in the random number generator from the observed cards. The security through obscurity approach for application integrity is unfeasible as the code is open source. \\
+\textbf{Summary:} \\
+A malicious player can predict the hole and community cards of every deal by deducing the next numbers in the random number generator from the observed cards. The security through obscurity approach for application integrity is unfeasible as the code is open source. \\
 \textbf{Primary mis-actor:}
 \begin{itemize}
 \item Skilled outsider
@@ -1296,13 +1302,15 @@ The mis-actor can be detected and appropriate sanctions can be taken. \\
 \end{itemize}
 
 \subsubsection{Chip dumping}
-\textbf{Summary:} Chip dumping is the act of deliberately losing chips (most of the time in a heads-up game) to a known opponent. This can be a way to transfer money from a fraudulent account, set-up with stolen credit cards or other stolen funds to a legitimate account. This can also be an attempt to perform money laundry. If chip dumping happens in a tournament, it is a severe form of cheating since the winner is the player who has the highest stack in the end. \\
-
+\textbf{Summary:} \\
+Chip dumping is the act of deliberately losing chips (most of the time in a heads-up game) to a known opponent. This can be a way to transfer money from a fraudulent account, set-up with stolen credit cards or other stolen funds to a legitimate account. This can also be an attempt to perform money laundry. If chip dumping happens in a tournament, it is a severe form of cheating since the winner is the player who has the highest stack in the end.
 \subsubsection{Placing spyware on the computer systems of honest players}
-\textbf{Summary:} A malicious player can put spyware on the computer system of honest players. This spyware observes the hole cards of the player and sends this information to the malicious player. As the malicious player has access to more information, he gains an unfair advantage over the honest players. \\
+\textbf{Summary:} \\
+A malicious player can put spyware on the computer system of honest players. This spyware observes the hole cards of the player and sends this information to the malicious player. As the malicious player has access to more information, he gains an unfair advantage over the honest players.
 
 \subsubsection{Altered client provided to the players}
-\textbf{Summary:} A malicious player provides a modified client on a website. This client is modified to send hole cards information to the computer system of the malicious player. An innocent player could download this modified client to play on the real poker server, unaware that the client is modified. The malicious player gains an unfair advantage when he is sit-in at the same table as the tricked player.
+\textbf{Summary:} \\
+A malicious player provides a modified client on a website. This client is modified to send hole cards information to the computer system of the malicious player. An innocent player could download this modified client to play on the real poker server, unaware that the client is modified. The malicious player gains an unfair advantage when he is sit-in at the same table as the tricked player.
 
 \section{Simplification}
 To reduce the workload and the documentation, only a cohesive selection of components will be secured. The DFD for the simplified version can be found in figure \ref{fig:dfd_level_0_player_simplified}. The simplified deployment view in figure \ref{fig: deployment_simplified}.
