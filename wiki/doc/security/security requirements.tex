@@ -70,6 +70,9 @@ There are several trust boundaries that can be identified in the DFDs. First of 
 \end{itemize}
 
 \section{Mapping STRIDE to DFD elements}
+
+Taking the elements in figure \ref{fig:level_0} and mapping the STRIDE threats to tem results in the following table. The external entities \textit{Admin} and \textit{Payment Service} are subject to a number of threats that we chose not to go in to. Data flows from and to these entities are also not considered here. Similarly, data flows from and to the data stores are omitted.
+
 \vspace{0.3cm}
 \begin{center}
 \begin{tabular}{| c || c || c | c | c | c | c | c |}
@@ -102,7 +105,16 @@ There are several trust boundaries that can be identified in the DFDs. First of 
 \end{tabular}\end{center}
 \vspace{0.3cm}
 
+For the remaining data flows we chose to analyse them as a set of 4 different abstractions. Section \ref{PlayerFlowCases} goes in to more detail.
+
+Furthermore, the processes \textit{Chat Service} and \textit{Cashier} are not elaborated on because they are more independent of other processes and functionality.
+
 \section{Architecture based Misuse Cases}
+
+The misuse cases are ordered by the entity under threat. Repudiation is an important threat with legal consequences. Information disclosure is also important because it makes cheating very easy. Denial of Service attacks are less profitable for crooks and therefore less likely.
+
+Threats that are located more to the exterior of te system (closer to the Player) are more likely to be feasible and are more important. For this reason we completely specified the threats for the Player and Poker Server. Because there are many data flows we chose to completely specify the threats for the different abstractions in section \ref{PlayerFlowCases} and \ref{LoggingEngineCases}. Between the 2 data stores we chose to go in to detail for the account data.
+
 \subsection{Player}
 \label{PlayerCases}
 \subsubsection{Spoofing a Player}
@@ -918,7 +930,7 @@ Here we choose to reduce the number of data flows from/to the Player because int
 \end{itemize}
 \textbf{Capture points:}
 \begin{itemize}
-\item \textbf{Prevention:}S
+\item \textbf{Prevention:}
 \begin{itemize}
 \item Prevent tampering, spoofing and DOS of the endpoints and data flow.
 \item Limit the number of resources the process depends on.
