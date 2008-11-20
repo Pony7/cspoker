@@ -1703,20 +1703,25 @@ We can now consider the Availability requirement as resolved at the architectura
 We don't consider design phase and patterns because it isn't part of the assignment and it would be too
 low level.
 \subsection{System Phase}
-As stated in \cite[p13]{yskout}, the architecture of the system is designed using ADD or Attribute-Driven Design,
-meaning it is created based on the non-functional requirements of the application and their relative importance.
-Therefore a prioritized list of quality attributes, inspired by the business goals, was formulated under 
-\ref{labels}. Then we iterate over the selection of architectural patterns, as it is stated by the methodology.
 
 \subsubsection{Authentication}
-The authentication requirement covers the most misuse cases so it is selected as the first requirement to cover.
-The following patterns address authentication at the architectural level:
+The following patterns handle Authentication at the system level:
 \begin{itemize}
 \item Container Managed Security
 \end{itemize}
 
-\subsubsection{Authorization}
+As mentioned before, Container Managed Security is an alternative to Authentication and Authorization Enforcer.
+So if we decided to select and instantiate Container Managed Security we could backtrack over the choices we made
+after the selection of Authentication and Authorization Enforcer.
 
+Container Managed Security has as labels +Manageability, +Portability, +Integrity and is an alternative for
+Authentication and Authorization Enforcer.
+
+Container Managed Security won't be selected because we don't have a J2EE or any other container, and Authentication
+and Authorization Enforcer offer more benefits.
+
+\subsubsection{Authorization}
+The following patters handle Authorization at the system level:
 \begin{itemize}
 \item Application Firewall
 \item Container Managed Security
@@ -1726,8 +1731,29 @@ The following patterns address authentication at the architectural level:
 \item Firewall
 \end{itemize}
 
+There is no pattern that conflicts with earlier instantiated patterns.
+Controlled Process Creator isn't applicable because there is a thread pool with worker threads, that limits the
+number of concurrent processes.
+Controlled Object Factory depends on Controlled Object Monitor, which was discarded earlier.
+
+Application Firewall has as labels -Performance, +Manageability, +Auditability and has as alternative Input Guard.
+Demilitarized Zone has as labels -Performance, -Cost, -Manageability, -Dependability, +Maintainability and depends
+on Firewall.
+Firewall has as labels +Accountability, -Performance, -Dependability and benefits from Demilitarized Zone and 
+Application Firewall.
+
+Application Firewall is selected and instantiated because auditability is an important quality label compared to
+the performance penalty.
+Demilitarized Zone isn't selected because the cost of building one would be less than the cost of an actual intrusion
+and a demilitarized zone doesn't seem useful if the only task of the front end is to forwards request.
+Firewall is selected and instantiated because Accountability is an important quality label, and the pattern benefits
+from the previously instantiated Application Firewall.
+
+So Application Firewall and Firewall are selected and instantiated to deal with Authorization at the system level.
+
+We now consider Authorization at the system level covered.
 \subsubsection{Application Integrity}
-No patterns
+There are no patterns that deal with application integrity at the system level.
 
 \subsubsection{Accountability}
 \begin{itemize}
