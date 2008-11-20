@@ -1511,6 +1511,7 @@ security checks happen.
 \end{itemize}
 
 \subsubsection{Authentication}
+\label{ArchitectureAuthentication}
 The authentication requirement covers the most misuse cases so it is selected as the first requirement to cover.
 
 The following patterns address authentication at the architectural level:
@@ -1549,10 +1550,9 @@ Single Access Point would also lead to a too centralised architecture. Container
 
 The Authentication Enforcer pattern is selected and instantiated to deal with the Authentication requirement. //TODO
 
-We can now mark the Authentication requirement as resolved.
+We can now mark the Authentication requirement as resolved at the architectural level.
 
 \subsubsection{Authorization}
-For Authorization, we follow the same steps as with Authentication.
 
 The following patterns address authorization at the architectural level:
 \begin{itemize}
@@ -1564,40 +1564,43 @@ The following patterns address authorization at the architectural level:
 \item Single Access Point
 \end{itemize}
 
-Secure Service Facade is already present in the architecture. Single Access Point was already considered under 
-Authentication.
+Secure Service Facade is already present in the architecture. 
+Single Access Point was already considered under Authentication and was not selected.
 
-So the list of selected candidates is Authorization Enforcer, Controlled Object Monitor, Full View With Errors
+The candidates for selection are Authorization Enforcer, Controlled Object Monitor, Full View With Errors
 and Limited View.
 
 There are no patterns in this list that conflict with any existing patterns.
 Next, we screen the short descriptions of the selected patterns to see if they are applicable. Controlled Object
 Monitor isn't applicable because there are few shared objects between processes so there is little need to monitor
-and intercept acces requests from different processes to objects. The other patterns seem applicable.
+and intercept access requests from different processes to objects. The other patterns seem applicable.
 
-Authorization Enforcer has as labels +Maintainability, +Manageability, +Auditability, +Accountability and
-+Portability , and benefits from Authentication Enforcer and Secure Service Facade and has as alternative
+\begin{itemize}
+\item Authorization Enforcer has as labels +Maintainability, +Manageability, +Auditability, +Accountability and
++Portability, benefits from Authentication Enforcer and Secure Service Facade and has as alternative
 Container Managed Security.
 
-Full View With Errors has as labels +Maintainability, -Usability and conflicts with Limited View and has as
+\item Full View With Errors has as labels +Maintainability, -Usability and conflicts with Limited View and has as
 alternative Limited View.
 
-Limited View has as labels +Usability and conflicts with Full View With Errors and has as alternative Full View 
-With Errors.
+\item Limited View has as labels +Usability and conflicts with Full View With Errors and has as alternative Full View 
+With Errors.            
+\end{itemize}
 
 Authorization Enforcer will be selected, because it has many + labels that match the quality trade-off labels and
-it benefits from already instantiated patterns such as Authentication Enforcer and Secure Service Facade. It's
+it benefits from already instantiated patterns such as Authentication Enforcer and Secure Service Facade. Its
 alternative, Container Managed Security, is a system pattern and will be consider later. Maybe we will have to
 backtrack over the choices we made if the alternative appears to be a better choice.
 
 Both Limited View and Full View with Errors will be selected, but for different parts so there is no conflict.
 Limited View will be used for the client side, because Usability for the clients is a major issue. Full View with
-Errors will be used for the server api.
+Errors will be used for the server API because it is technically the only possibility at this level.
 
-So the Authorization Enforcer, Limited View and Full View With Errors are selected and instantiated 
+The Authorization Enforcer, Limited View and Full View With Errors are selected and instantiated 
 to deal with the Authorization requirement.
 
-We can now consider the Authorization requirement as resolved.
+We can now consider the Authorization requirement as resolved at the architectural level.
+
 \subsubsection{Application Integrity}
 The following patterns address application integrity at the architectural level:
 \begin{itemize}
@@ -1612,25 +1615,34 @@ applicable.
 Checkpointed System has as labels +Dependability, -Performance and -Cost , and benefits from Comparator Checked
  Fault Tolerant System and impairs Audit Interceptor.
 
-Comparator-Checked Fault-Tolerant System has as labels -Cost, -Performance, +Dependability and impairs Audit
+\begin{itemize}
+\item Comparator-Checked Fault-Tolerant System has as labels -Cost, -Performance, +Dependability and impairs Audit
 Interceptor and has as alternative Output Guard and benefits from Checkpointed System.
 
-Checkpointed System will be selected, even though it has a negative influence on both the Cost and the Performance,
-because there must be a way to recover from a crash of a critical process such as Cashier. So the Cashier process
+\item Checkpointed System will be selected, even though it has a negative influence on both the Cost and the Performance,
+because there must be a way to recover from a crash of a critical process such as Cashier. The Cashier process
 will be checkpointed: the cashier will reserve the money used in bets of a deal. When the deal ends, the table 
 will tell the cashier the money can be really transfered. If for some reason, the table fails and the deal is 
 cancelled, the money used in that deal will go back to it's owners.
+\end{itemize}
 
-Comparator-Checked Fault-Tolerant System won't be selected because it is considered overkill, and has too little
-advantages compared to it's disadvantages.
 
-So the Checkpointed System pattern is selected and instantiated to deal with the Application Integrity requirement.
-We can now consider the Application Integrity requirement as resolved.
+Comparator-Checked Fault-Tolerant System won't be selected because it is considered overkill (very high cost) and has too few
+advantages compared to its disadvantages.
+
+The Checkpointed System pattern is selected and instantiated to deal with the Application Integrity requirement.
+
+We can now consider the Application Integrity requirement as resolved at the architectural level.
+
 \subsubsection{Accountability}
+
+The following patterns address accountability at the architectural level:
+
 \begin{itemize}
 \item Secure Logger
 \end{itemize}
-Secure Logger is already present in the architecture, the Accountability requirement is considered as solved.
+Secure Logger is already present in the architecture. The Accountability requirement is considered as solved at the architectural level.
+
 \subsubsection{Data Integrity}
 The following patterns address data integrity at the architectural level:
 \begin{itemize}
@@ -1640,20 +1652,23 @@ The following patterns address data integrity at the architectural level:
 \end{itemize}
 
 There are no patterns in this list that conflict with any existing patterns.
-Next, we screen the short descriptions of the selected patterns to see if they are applicable. Both patterns seem
+Next, we screen the short descriptions of the selected patterns to see if they are applicable. Session was already dropped in section \ref{ArchitectureAuthentication} because 
+there is very little shared state. The other patterns seem
 applicable.
 
-Secure Access Layer has as labels +Maintainability and +Portability, and has no relations with other patterns.
+\begin{itemize}
+\item Secure Access Layer has as labels +Maintainability and +Portability, and has no relations with other patterns.
 
-Secure Pipe has no labels in the list, but we believe it should have +Confidentiality and +Integrity. The pattern
+\item Secure Pipe has no labels in the list, but we believe it should have +Confidentiality and +Integrity. The pattern
 benefits from Secure Association (which by the way is not included in the list, see \ref{criticism}).
+\end{itemize}
 
 Secure Access Layer will be selected because it has only positive labels and has no relation with other patterns.
-Secure Pipe will be selected because confidentiality and integrity are considered important quality labels.
+Secure Pipe will also be selected because confidentiality and integrity are considered important quality labels.
 
-So Secure Access Layer and Secure Pipe are selected and instantiated to deal with the Data Integrity requirement.
+Secure Access Layer and Secure Pipe are selected and instantiated to deal with the Data Integrity requirement.
 
-We can now consider the Data Integrity requirement as resolved.
+We can now consider the Data Integrity requirement as resolved at the architectural level.
 \subsubsection{Availability}
 The following patterns address availability at the architectural level:
 \begin{itemize}
@@ -1668,10 +1683,11 @@ There are no patterns in this list that conflict with any existing patterns.
 Next, we screen the short descriptions of the selected patterns to see if they are applicable. Both patterns seem
 applicable.
 
-Load Balancer has as label +Performance, and benefits from Replicated System and Session Failover, it impairs 
+\begin{itemize}
+\item Load Balancer has as label +Performance and benefits from Replicated System and Session Failover. It impairs 
 Session.
-
-Replicated System has as labels -Manageability and -Cost, and depends on Load Balancer.
+\item Replicated System has as labels -Manageability and -Cost and depends on Load Balancer.
+\end{itemize}
 
 Load Balancer is selected, because it has a positive influence on the performance. The nature of the application
 makes it also easy to distribute the load e.g. different tables can be located at different servers and the lobby
@@ -1682,7 +1698,7 @@ to the benefits.
 
 So Load Balancer is selected and instantiated to deal with the Availability requirement.
 
-We can now consider the Availability requirement as resolved.
+We can now consider the Availability requirement as resolved at the architectural level.
 \subsection{Design Phase}
 We don't consider design phase and patterns because it isn't part of the assignment and it would be too
 low level.
