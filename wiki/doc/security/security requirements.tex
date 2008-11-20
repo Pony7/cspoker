@@ -382,7 +382,7 @@ The lobby can deny access to a table for a certain user and deny having done so.
 \subsubsection{Information disclosure at the lobby}
 \label{LobbyCasesI}
 \textbf{Summary:} \\
-
+The mis-actor can obtain private information through spoofing or tampering with the lobby process. He could see private tables or tournament settings.
 
 \subsubsection{DoS against the lobby}
 \label{LobbyCasesD}
@@ -453,7 +453,7 @@ The mis-actor performs actions leading to the possibility to do administrator ac
 \subsubsection{Spoofing the account management system}
 \label{AccountManagementCasesS}
 \textbf{Summary:} \\
-The mis-actor gains access to the account management system or manages to pretend he is the account management system by obtaining or falsifying credentials. By doing so the mis-actor gains control over how incoming requests and data are processed. He can for instance trick other processes in to accepting bad credentials for authentication.
+The mis-actor gains access to the account management system or manages to pretend he is the account management system by obtaining or falsifying credentials. By doing so the mis-actor has control over how incoming requests and data are processed. He can for instance trick other processes in to accepting bad credentials for authentication.
 
 \subsubsection{Tampering with the account management system}
 \label{AccountManagementCasesT}
@@ -468,14 +468,17 @@ The casino can deny access to a user in critical moments and deny having done so
 \subsubsection{Information disclosure of the account management system}
 \label{AccountManagementCasesI}
 \textbf{Summary:} \\
+When the mis-actor corrupts te account management system he can obtain private information such as passwords and credit card numbers. This can be done by through spoofing or tampering with the process.
 
 \subsubsection{DoS against the account management system}
 \label{AccountManagementCasesD}
 \textbf{Summary:} \\
+By sending bad input to the account management system or by sending many requests at once, the mis-user can overload the process. This can result in legitimate users not being able to authenticate with the system or change their account data.
 
 \subsubsection{Elevation of Privilege at the account management system}
 \label{AccountManagementCasesE}
 \textbf{Summary:} \\
+Through spoofing, tampering or exploiting the authorization system, the mis-actor can obtain admin privileges. In the account management system he will be able to e.g. kick or ban opponents.
 
 \subsection{Logging Engine}
 \label{LoggingEngineCases}
@@ -498,14 +501,17 @@ The logging engine can deny having recieved logging data that didn't make it to 
 \subsubsection{Information disclosure of the logging engine}
 \label{LoggingEngineCasesI}
 \textbf{Summary:} \\
+The mis-actor can obtain private information through spoofing or tampering with the logging process. This way he could e.g. see the hidden cards of an opponent.
 
 \subsubsection{DoS against the logging engine}
 \label{LoggingEngineCasesD}
 \textbf{Summary:} \\
+By sending bad data to the logging engine or by sending many requests at once, the mis-user can overload the process. This can result in valid logging data being lost by the process because it can't store the incoming information.
 
-\subsubsection{Elevation of Privilege}
+\subsubsection{Elevation of Privilege at the logging engine}
 \label{LoggingEngineCasesE}
 \textbf{Summary:} \\
+Through spoofing, tampering or exploiting the authorization system, the mis-actor can obtain admin privileges. AS a result he can, for instance, shut down logging.
 
 \subsection{Audit Log}
 \label{AuditLogCases}
@@ -513,7 +519,7 @@ The logging engine can deny having recieved logging data that didn't make it to 
 \subsubsection{Tampering with the audit log}
 \label{AuditLogCasesT}
 \textbf{Summary:} \\
-
+The misuser can tamper with the audit log when he bypasses the protection or monitor, or when he exploits overcapacity failures. The logging data can then be modified or erased.
 
 \subsubsection{Repudiation of logging something in the audit log}
 \label{AuditLogCasesR}
@@ -524,14 +530,15 @@ Also see section \ref{Criticism} for criticism of this threat.
 \subsubsection{Information disclosure of the audit log}
 \label{AuditLogCasesI}
 \textbf{Summary:} \\
+When the mis-actor bypasses te protection scheme and the data is weakly encrypted he might be able to obtain logging information. This can e.g be credit card information, transaction information or private cards. Information leakage can also occur when removed data isn't cleared correctly from the data store or when te mis-actor spoofs an entity that has access to the data store.
 
 \subsubsection{DoS against the audit log}
 \label{AuditLogCasesD}
 \textbf{Summary:} \\
+By sending bad data to the audit log (SQL injecton) or by sending many requests at once, the mis-user can overload the data store. This can result in valid logging data being lost because the data store has e.g. run out of memory or disk space.
 
 \subsection{Account Data}
 \label{AccountDataCases}
-\textbf{Summary:} \\
 
 \subsubsection{Tampering with account data}
 \label{AccountDataCasesT}
