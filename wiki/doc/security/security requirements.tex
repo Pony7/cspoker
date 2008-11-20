@@ -1481,6 +1481,7 @@ security checks happen.
 \end{itemize}
 \subsubsection{Authentication}
 The authentication requirement covers the most misuse cases so it is selected as the first requirement to cover.
+
 The following patterns address authentication at the architectural level:
 \begin{itemize}
 \item Authentication Enforcer
@@ -1517,7 +1518,9 @@ alternative for Authentication Enforcer.
 We can now mark the Authentication requirement as resolved.
 
 \subsubsection{Authorization}
+For Authorization, we follow the same steps as with Authentication.
 
+The following patterns address authorization at the architectural level:
 \begin{itemize}
 \item Authorization Enforcer
 \item Controlled Object Monitor
@@ -1527,13 +1530,60 @@ We can now mark the Authentication requirement as resolved.
 \item Single Access Point
 \end{itemize}
 
-\subsubsection{Application Integrity}
+Secure Service Facade is already present in the architecture. Single Access Point was already considered under 
+Authentication.
 
+So the list of selected candidates is Authorization Enforcer, Controlled Object Monitor, Full View With Errors
+and Limited View.
+
+There are no patterns in this list that conflict with any existing patterns.
+Next, we screen the short descriptions of the selected patterns to see if they are applicable. Controlled Object
+Monitor isn't applicable because there are few shared objects between processes so there is little need to monitor
+and intercept acces requests from different processes to objects. The other patterns seem applicable.
+
+Authorization Enforcer has as labels +Maintainability, +Manageability, +Auditability, +Accountability and
++Portability , and benefits from Authentication Enforcer and Secure Service Facade and has as alternative
+Container Managed Security.
+
+Full View With Errors has as labels +Maintainability, -Usability and conflicts with Limited View and has as
+alternative Limited View.
+
+Limited View has as labels +Usability and conflicts with Full View With Errors and has as alternative Full View 
+With Errors.
+
+Authorization Enforcer will be selected, because it has many + labels that match the quality trade-off labels and
+it benefits from already instantiated patterns such as Authentication Enforcer and Secure Service Facade. It's
+alternative, Container Managed Security, is a system pattern and will be consider later. Maybe we will have to
+backtrack over the choices we made if the alternative appears to be a better choice.
+
+Both Limited View and Full View with Errors will be selected, but for different parts so there is no conflict.
+Limited View will be used for the client side, because Usability for the clients is a major issue. Full View with
+Errors will be used for the server api.
+
+We can now consider the Authorization requirement as resolved.
+\subsubsection{Application Integrity}
+The following patterns address application integrity at the architectural level:
 \begin{itemize}
 \item Checkpointed System
 \item Comparator-Checked Fault-Tolerant System
 \end{itemize}
 
+
+There are no patterns in this list that conflict with any existing patterns.
+Next, we screen the short descriptions of the selected patterns to see if they are applicable. Controlled Object
+Monitor isn't applicable because there are few shared objects between processes so there is little need to monitor
+and intercept acces requests from different processes to objects. The other patterns seem applicable.
+
+
+Checkpointed System has as labels +Dependability, -Performance and -Cost , and benefits from Comparator Checked
+ Fault Tolerant System and impairs Audit Interceptor.
+
+Comparator-Checked Fault-Tolerant System has as labels -Cost, -Performance, +Dependability and impairs Audit
+Interceptor and has as alternative Output Guard and benefits from Checkpointed System.
+
+
+
+We can now consider the Application Integrity requirement as resolved.
 \subsubsection{Accountability}
 \begin{itemize}
 \item Secure Logger
