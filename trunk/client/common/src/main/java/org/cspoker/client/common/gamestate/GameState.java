@@ -15,6 +15,7 @@
  */
 package org.cspoker.client.common.gamestate;
 
+import java.util.EnumSet;
 import java.util.Set;
 
 import net.jcip.annotations.Immutable;
@@ -69,7 +70,7 @@ public interface GameState {
 	
 	public Round getRound();
 	
-	public Set<Card> getCommunityCards();
+	public EnumSet<Card> getCommunityCards();
 	
 	public GameState getPreviousGameState();
 	public HoldemTableTreeEvent getLastEvent();

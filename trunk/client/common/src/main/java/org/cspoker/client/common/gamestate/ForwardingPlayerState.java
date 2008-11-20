@@ -15,7 +15,7 @@
  */
 package org.cspoker.client.common.gamestate;
 
-import java.util.Set;
+import java.util.EnumSet;
 
 import org.cspoker.common.elements.cards.Card;
 import org.cspoker.common.elements.player.PlayerId;
@@ -33,7 +33,7 @@ public abstract class ForwardingPlayerState extends AbstractPlayerState{
 		return playerState.getBet();
 	}
 	
-	public Set<Card> getCards() {
+	public EnumSet<Card> getCards() {
 		return playerState.getCards();
 	}
 	

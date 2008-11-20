@@ -15,7 +15,7 @@
  */
 package org.cspoker.client.bots.bot.search.node.finalround;
 
-import java.util.HashSet;
+import java.util.EnumSet;
 import java.util.Set;
 
 import org.cspoker.client.bots.bot.search.node.GameTreeNode;
@@ -57,18 +57,20 @@ public class ShowdownNode implements GameTreeNode{
 			}
 		});
 		
-		Set<Card> botCards = botState.getCards();
+		EnumSet<Card> botCards = botState.getCards();
 		
-		Set<Card> usedCards = new HashSet<Card>(7);
+		EnumSet<Card> usedCards = EnumSet.noneOf(Card.class);
 		usedCards.addAll(botCards);
 		
-		Set<Card> communityCards = sampleCommunityCards(usedCards,gameState.getCommunityCards());
+		EnumSet<Card> communityCards = sampleCommunityCards(usedCards,gameState.getCommunityCards());
 		usedCards.addAll(communityCards);
 
 		int loseEV = botState.getStack();
 		int winEV = loseEV+gameState.getGamePotSize();
 		
-		int botRank =  new Hand(Sets.union(communityCards, botCards)).getBestFiveRank();
+		EnumSet<Card> allBotCards = EnumSet.copyOf(botCards);
+		allBotCards.addAll(communityCards);
+		int botRank =  new Hand(allBotCards).getBestFiveRank();
 
 		for(int i=0;i<nbSamples;i++){
 			if(winsSample(activeOpponents, usedCards, communityCards,
@@ -81,11 +83,12 @@ public class ShowdownNode implements GameTreeNode{
 	}
 
 	private boolean winsSample(Set<PlayerState> activeOpponents,
-			Set<Card> usedCards, Set<Card> communityCards, int botRank) {
+			EnumSet<Card> usedCards, EnumSet<Card> communityCards, int botRank) {
 		Deck deck = Deck.createWeaklyRandomDeck();
 		for(PlayerState opponent:activeOpponents){
-			Set<Card> opponentCards = sampleOpponentCards(opponent,deck,usedCards);
+			EnumSet<Card> opponentCards = sampleOpponentCards(opponent,deck,usedCards);
 			int opponentRank = new Hand(Sets.union(communityCards, opponentCards)).getBestFiveRank();
+			//TODO handle split pot
 			if(opponentRank<botRank){
 				return false;
 			}
@@ -93,7 +96,7 @@ public class ShowdownNode implements GameTreeNode{
 		return true;
 	}
 
-	private Set<Card> sampleCommunityCards(Set<Card> usedCards, Set<Card> dealtCommunityCards){
+	private EnumSet<Card> sampleCommunityCards(EnumSet<Card> usedCards, EnumSet<Card> dealtCommunityCards){
 		int nbDealt = dealtCommunityCards.size();
 		if(nbDealt==5){
 			return dealtCommunityCards;
@@ -105,10 +108,13 @@ public class ShowdownNode implements GameTreeNode{
 				cards[i] = deck.drawCard();
 			}while(usedCards.contains(cards[i]));
 		}
-		return Sets.union(dealtCommunityCards, ImmutableSet.of(cards));
+		EnumSet<Card> result = EnumSet.noneOf(Card.class);
+		result.addAll(dealtCommunityCards);
+		result.addAll(ImmutableSet.of(cards));
+		return result;
 	}
 
-	private Set<Card> sampleOpponentCards(PlayerState player, Deck deck, Set<Card> usedCards){
+	private EnumSet<Card> sampleOpponentCards(PlayerState player, Deck deck, EnumSet<Card> usedCards){
 		Card one=null, two=null;
 		do{
 			one = deck.drawCard();
@@ -116,7 +122,7 @@ public class ShowdownNode implements GameTreeNode{
 		do{
 			two = deck.drawCard();
 		}while(usedCards.contains(two));
-		return ImmutableSet.of(one,two);
+		return EnumSet.of(one, two);
 	}
 
 	@Override

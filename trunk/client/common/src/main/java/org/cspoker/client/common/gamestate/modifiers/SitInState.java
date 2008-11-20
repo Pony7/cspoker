@@ -15,7 +15,7 @@
  */
 package org.cspoker.client.common.gamestate.modifiers;
 
-import java.util.Collections;
+import java.util.EnumSet;
 import java.util.Set;
 
 import org.cspoker.client.common.gamestate.AbstractPlayerState;
@@ -45,8 +45,8 @@ public class SitInState extends ForwardingGameState {
 				return 0;
 			}
 
-			public Set<Card> getCards() {
-				return Collections.emptySet();
+			public EnumSet<Card> getCards() {
+				return EnumSet.noneOf(Card.class);
 			}
 
 			public PlayerId getPlayerId() {

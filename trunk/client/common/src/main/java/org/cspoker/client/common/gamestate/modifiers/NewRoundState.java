@@ -15,6 +15,7 @@
  */
 package org.cspoker.client.common.gamestate.modifiers;
 
+import java.util.EnumSet;
 import java.util.Set;
 
 import org.cspoker.client.common.gamestate.AbstractGameState;
@@ -59,7 +60,7 @@ public class NewRoundState extends AbstractGameState {
 		for(final PlayerId playerId:playersIds){
 			PlayerState oldPlayerState = gameState.getPlayer(playerId);
 			
-			final Set<Card> cards = oldPlayerState.getCards();
+			final EnumSet<Card> cards = oldPlayerState.getCards();
 			final int stack = oldPlayerState.getStack();
 			final boolean sitsIn = oldPlayerState.sitsIn();
 			final boolean hasFolded = oldPlayerState.hasFolded();
@@ -71,8 +72,8 @@ public class NewRoundState extends AbstractGameState {
 					return 0;
 				}
 
-				public Set<Card> getCards() {
-					return cards;
+				public EnumSet<Card> getCards() {
+					return EnumSet.copyOf(cards);
 				}
 
 				public int getStack() {
@@ -111,8 +112,8 @@ public class NewRoundState extends AbstractGameState {
 		return playerStates.keySet();
 	}
 	
-	public Set<Card> getCommunityCards() {
-		return communityCards;
+	public EnumSet<Card> getCommunityCards() {
+		return EnumSet.copyOf(communityCards);
 	}
 
 	public PlayerId getDealer() {

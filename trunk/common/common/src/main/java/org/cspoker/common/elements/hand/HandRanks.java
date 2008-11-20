@@ -29,7 +29,7 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 import org.apache.oro.text.perl.Perl5Util;
 import org.cspoker.common.elements.cards.Rank;
-import org.cspoker.common.elements.hand.Hand.HandInfo;
+import org.cspoker.common.elements.hand.Hand.UniqueHandHash;
 
 /**
  * @author Craig Motlin
@@ -39,11 +39,11 @@ public final class HandRanks {
 
 	private static HandRanks instance = new HandRanks();
 
-	private final Map<HandInfo, Integer> rankMap = new HashMap<HandInfo, Integer>();
+	private final Map<UniqueHandHash, Integer> rankMap = new HashMap<UniqueHandHash, Integer>();
 
-	private final Map<HandInfo, String> shortDescriptionMap = new HashMap<HandInfo, String>();
+	private final Map<UniqueHandHash, String> shortDescriptionMap = new HashMap<UniqueHandHash, String>();
 
-	private final Map<HandInfo, String> longDescriptionMap = new HashMap<HandInfo, String>();
+	private final Map<UniqueHandHash, String> longDescriptionMap = new HashMap<UniqueHandHash, String>();
 
 	private HandRanks() {
 		loadHandRanks();
@@ -53,19 +53,19 @@ public final class HandRanks {
 		return HandRanks.instance;
 	}
 
-	public Integer getHandRank(final Hand hand) {
-		return rankMap.get(hand.getHandInfo());
+	public int getHandRank(final Hand hand) {
+		return rankMap.get(hand.handHash);
 	}
 
 	public String getShortDescription(final Hand hand) {
-		return shortDescriptionMap.get(hand.getHandInfo());
+		return shortDescriptionMap.get(hand.handHash);
 	}
 
 	public String getLongDescription(final Hand hand) {
-		return longDescriptionMap.get(hand.getHandInfo());
+		return longDescriptionMap.get(hand.handHash);
 	}
 
-	private void addHandRank(final HandInfo handInfo, final Integer rank,
+	private void addHandRank(final UniqueHandHash handInfo, final int rank,
 			final String shortDescription, final String longDescription) {
 		rankMap.put(handInfo, rank);
 		shortDescriptionMap.put(handInfo, shortDescription);
@@ -100,9 +100,9 @@ public final class HandRanks {
 				final String shortDescription = rankStrings.get(5);
 				final String longDescription = rankStrings.get(6);
 
-				final HandInfo handInfo = new HandInfo(product, flush);
+				final UniqueHandHash handInfo = new UniqueHandHash(product, flush);
 
-				addHandRank(handInfo, Integer.valueOf(rank), shortDescription,
+				addHandRank(handInfo, rank, shortDescription,
 						longDescription);
 			}
 

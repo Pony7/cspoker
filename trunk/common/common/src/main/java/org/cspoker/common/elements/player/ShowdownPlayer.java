@@ -15,9 +15,7 @@
  */
 package org.cspoker.common.elements.player;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.EnumSet;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
@@ -30,19 +28,19 @@ public class ShowdownPlayer extends Player {
 
 	@XmlElementWrapper
 	@XmlElement(name = "card")
-	private Set<Card> cards;
+	private EnumSet<Card> cards;
 
 	private String description;
 
 	@XmlElementWrapper
 	@XmlElement(name = "card")
-	private Set<Card> handCards;
+	private EnumSet<Card> handCards;
 
-	public ShowdownPlayer(Player player, Set<Card> cards, Set<Card> handCards,
+	public ShowdownPlayer(Player player, EnumSet<Card> cards, EnumSet<Card> handCards,
 			String description) {
 		super(player);
-		this.handCards = new HashSet<Card>(handCards);
-		this.cards = new HashSet<Card>(cards);
+		this.handCards = EnumSet.copyOf(handCards);
+		this.cards = EnumSet.copyOf(cards);
 		this.description = description;
 	}
 
@@ -55,12 +53,12 @@ public class ShowdownPlayer extends Player {
 		return getName() + " has a " + description;
 	}
 
-	public Set<Card> getAllCards() {
-		return Collections.unmodifiableSet(cards);
+	public EnumSet<Card> getAllCards() {
+		return EnumSet.copyOf(cards);
 	}
 
-	public Set<Card> getHandCards() {
-		return Collections.unmodifiableSet(handCards);
+	public EnumSet<Card> getHandCards() {
+		return EnumSet.copyOf(handCards);
 	}
 
 	public String getHandDescription() {

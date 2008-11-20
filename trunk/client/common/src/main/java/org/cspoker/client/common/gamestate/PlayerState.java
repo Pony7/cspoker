@@ -15,7 +15,7 @@
  */
 package org.cspoker.client.common.gamestate;
 
-import java.util.Set;
+import java.util.EnumSet;
 
 import org.cspoker.common.elements.cards.Card;
 import org.cspoker.common.elements.player.PlayerId;
@@ -27,7 +27,7 @@ public interface PlayerState {
 	
 	SeatId getSeatId();
 	
-	Set<Card> getCards();
+	EnumSet<Card> getCards();
 	
 	int getStack();
 	
