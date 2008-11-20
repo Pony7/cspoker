@@ -1756,17 +1756,37 @@ We now consider Authorization at the system level covered.
 There are no patterns that deal with application integrity at the system level.
 
 \subsubsection{Accountability}
+The following patterns handle Accountability at the system level:
 \begin{itemize}
 \item Audit Interceptor
 \end{itemize}
 
+Audit Interceptor doesn't conflict with any earlier instantiated pattern and seems applicable.
+
+Audit Interceptor has as labels -Performance, +Auditability, +Maintainability, +Manageability and depends on
+Secure Logger and benefits from Secure Service Facade.
+
+Audit Interceptor is selected and instantiated because Auditability and Maintainability are important quality
+labels and it benefits from the Secure Service Facade, which was already present. The depends relation with
+Secure Logger is already dealth with because the latter pattern was already present.
+
+We now consider Accountability at the system level as covered.
+
 \subsubsection{Data Integrity}
+The following patterns handle Data Integrity} at the system level:
 \begin{itemize}
 \item Secure Message Router
 \end{itemize}
 
+Secure Message Router doesn't conflict with any previously instantiated pattern.
+
+Secure Message Router has as labels +Manageability, +Maintainability, +Confidentiality, +Integrity, -Availability
+and has no relations with other patterns.
+
+Secure Message Router might be useful if there would be the need to interact safely with an external payment system
+but we don't consider it here, in our simplified version.
 \subsubsection{Availability}
-No patterns
+There are no patterns who handle availability at the system level.
 \subsection{Selected Patterns}
 To summarize, here is the list of the selected patterns:
 \begin{itemize}
