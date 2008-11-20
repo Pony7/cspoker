@@ -375,8 +375,14 @@ The mis-actor prepares a process to spoof the lobby and deploys it on one of the
 The mis-actor tampers with the lobby to modify its functionality. A player connecting to a table through the lobby can be diverted to an untrusted table. 
 \subsubsection{Repudiation of an action at the lobby}
 \label{LobbyCasesR}
+\textbf{Summary:} \\
+The lobby can deny access to a table for a certain user and deny having done so.
+
 \subsubsection{Information disclosure at the lobby}
 \label{LobbyCasesI}
+\textbf{Summary:} \\
+
+
 \subsubsection{DoS against the lobby}
 \label{LobbyCasesD}
 \textbf{Summary:} \\
@@ -396,7 +402,7 @@ The mis-actor prepares a process to spoof the table and deploys it on one of the
 \label{TableCasesT}
 \textbf{Summary:} \\
 The mis-actor tampers with the lobby to modify its functionality. Every player connecting to this table can be scammed. The tampered table could provide the mis-actor with all confidential information or deal crafted hands to maximize the profit of the mis-actor (e.g. deal a full house to an innocent player and deal a four of a kind to himself and lure the innocent player to go all-in).
-\subsubsection{Repudiation of a table}
+\subsubsection{Repudiation of an action at a table}
 \label{TableCasesR}
 \textbf{Summary:} \\
 The online casino denies a player has won a number of chips or has received certain hole cards. This is possible if there is no log or if the log could be modified. It is also possible that the hand evaluation system has been tampered and this should be detected afterwards. 
@@ -442,47 +448,89 @@ The mis-actor performs actions leading to the possibility to do administrator ac
 
 \subsection{Account Management}
 \label{AccountManagementCases}
+
 \subsubsection{Spoofing the account management system}
 \label{AccountManagementCasesS}
+\textbf{Summary:} \\
+The mis-actor gains access to the account management system or manages to pretend he is the account management system by obtaining or falsifying credentials. By doing so the mis-actor gains control over how incoming requests and data are processed. He can for instance trick other processes in to accepting bad credentials for authentication.
+
 \subsubsection{Tampering with the account management system}
 \label{AccountManagementCasesT}
+\textbf{Summary:} \\
+The mis-actor can tamper with the account management system to always accept credentials for a certain fake user.
+
 \subsubsection{Repudiation of using the account management system}
 \label{AccountManagementCasesR}
+\textbf{Summary:} \\
+The casino can deny access to a user in critical moments and deny having done so. When a user changes his credit card number or other personal information the account management system can deny having received that request. When a payment fails afterwards the user cannot seek compensation from the casino.
+
 \subsubsection{Information disclosure of the account management system}
 \label{AccountManagementCasesI}
+\textbf{Summary:} \\
+
 \subsubsection{DoS against the account management system}
 \label{AccountManagementCasesD}
+\textbf{Summary:} \\
+
 \subsubsection{Elevation of Privilege at the account management system}
 \label{AccountManagementCasesE}
+\textbf{Summary:} \\
 
 \subsection{Logging Engine}
 \label{LoggingEngineCases}
+
 \subsubsection{Spoofing the logging engine}
 \label{LoggingEngineCasesS}
+\textbf{Summary:} \\
+The mis-actor gains access to the logging engine or manages to pretend to be the logging engine by obtaining or falsifying credentials. This way he can stop logging messages from being made persistent by the real logging engine.
+
 \subsubsection{Tampering with the logging engine}
 \label{LoggingEngineCasesT}
+\textbf{Summary:} \\
+The mis-actor can tamper with the logging engine and send different data to the audit log than was received from other processes. Alternatively, he can send logging data to the audit log that is made up.
+
 \subsubsection{Repudiation of using the logging engine}
 \label{LoggingEngineCasesR}
+\textbf{Summary:} \\
+The logging engine can deny having recieved logging data that didn't make it to the physical audit log. The casino can deny that certain audit data was sent from the logging engine and is valid.
+
 \subsubsection{Information disclosure of the logging engine}
 \label{LoggingEngineCasesI}
+\textbf{Summary:} \\
+
 \subsubsection{DoS against the logging engine}
 \label{LoggingEngineCasesD}
+\textbf{Summary:} \\
+
 \subsubsection{Elevation of Privilege}
 \label{LoggingEngineCasesE}
+\textbf{Summary:} \\
 
 \subsection{Audit Log}
 \label{AuditLogCases}
+
 \subsubsection{Tampering with the audit log}
 \label{AuditLogCasesT}
+\textbf{Summary:} \\
+
+
 \subsubsection{Repudiation of logging something in the audit log}
 \label{AuditLogCasesR}
+\textbf{Summary:} \\
+The mis-actor can modify or obscure data in the audit log to 
+
 \subsubsection{Information disclosure of the audit log}
 \label{AuditLogCasesI}
+\textbf{Summary:} \\
+
 \subsubsection{DoS against the audit log}
 \label{AuditLogCasesD}
+\textbf{Summary:} \\
 
 \subsection{Account Data}
 \label{AccountDataCases}
+\textbf{Summary:} \\
+
 \subsubsection{Tampering with account data}
 \label{AccountDataCasesT}
 \textbf{Primary mis-actor:}
@@ -1530,7 +1578,7 @@ The following patterns were already used in the application:
 \end{itemize}
 \section{Criticism}
 \begin{itemize}
-\item The classification of the threat three isn't very clear sometimes: e.g. you can tamper with the server process
+\item The classification of the threat tree isn't very clear sometimes: e.g. you can tamper with the server process
 to spoof the server and thus tampering with the data.
 \item The threat three isn't complete; for instance there is nothing in it about spoofing by corruption of 
 DNS records.
@@ -1540,6 +1588,7 @@ the confidentiality-label.
 \item Some patterns that are mentioned by other security patterns, aren't listed in the catalog: e.g. Secure Pipe 
 benefits from Security Association, but the latter pattern isn't listed in the catalog. Input Guard also isn't
 in the list.
+\item Repudiaton of processes/data stores that are all internal to the system is very unclear. In the lectures it was said that this was, for instance, the casino denying that it did something. In \cite[p270]{1202957} however it is explained as an external entity tampering with the process/data store to be able to deny having done something. The difference with repudiaton of that external entity is unclear.
 \end{itemize}
 \section{Log}
 \textbf{30-10-2008}
