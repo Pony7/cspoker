@@ -1479,8 +1479,8 @@ By analyzing the business goals, we constructed the following ordered list of qu
 This quality attribute might seem less important than confidentiality and
 integrity but in reality cheating will always happen (e.g. collusion) and
 the loss will be calculated in. When a lot of people play in the online
-casino because it is te most usable, this cost will be less significant.
-\item[Confidentiality] It is of the abmost importance that certain information like the cards of a player, remains
+casino because it is the most usable, this cost will be less significant.
+\item[Confidentiality] It is important that certain information like the cards of a player, remains
 confidential.
 \item[Integrity] No one should be able to compromise the integrity of the application or it's data.
 \item[Accountability] No player may be able to repudiate any bets or other actions.
@@ -1492,7 +1492,8 @@ to performance problems because of the distributed nature of the
 application (table are independent).
 \item[Maintainability] The application should be easy to maintain.
 \end{description}
-These labels will be used to guide the selection of security patterns in the next section.
+These labels will be used to guide the selection of security patterns in the next section and to select certain
+patterns that match better with these labels, instead of other patterns.
 \section{Pattern-based Methodology}
 We will use the security patterns and methodology described in \cite{yskout} to select the appropriate patterns
 for this application.
@@ -1515,7 +1516,7 @@ section \ref{labels}. Then we iterate over the selection of architectural patter
 There are some security patterns that are already present in the architecture:
 \begin{itemize}
 \item Credential Tokenizer: The poker server is in a certain way a credential tokenizer: it provides a token to a 
-player that the player can use to authenticate himself with the other processes.
+player, that the player can use to authenticate himself with the other processes.
 \item Secure Service Facade: Every process has it's own facade where all the needed
 security checks happen.
 \item Secure Logger: the Logging Engine performs the tasks of a Secure Logger.
@@ -1582,9 +1583,12 @@ The candidates for selection are Authorization Enforcer, Controlled Object Monit
 and Limited View.
 
 There are no patterns in this list that conflict with any existing patterns.
-Next, we screen the short descriptions of the selected patterns to see if they are applicable. Controlled Object
-Monitor isn't applicable because there are few shared objects between processes so there is little need to monitor
-and intercept access requests from different processes to objects. The other patterns seem applicable.
+Next, we screen the short descriptions of the selected patterns to see if they are applicable.
+\begin{itemize}
+\item Controlled Object Monitor isn't applicable because there are few shared objects between processes so 
+there is little need to monitor and intercept access requests from different processes to objects.
+\item The other patterns seem applicable.
+\end{itemize}  
 
 \begin{itemize}
 \item Authorization Enforcer has as labels +Maintainability, +Manageability, +Auditability, +Accountability and
@@ -1639,7 +1643,7 @@ will tell the cashier the money can be really transfered. If for some reason, th
 cancelled, the money used in that deal will go back to it's owners.
 
 Comparator-Checked Fault-Tolerant System won't be selected because it is considered overkill (very high cost) and has too few
-advantages compared to its disadvantages..
+advantages compared to its disadvantages.
 
 Due to a lack of patterns to tackle the problem, we must leave Application Integrity as it is.
 
