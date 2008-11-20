@@ -1624,7 +1624,7 @@ We can now consider the Application Integrity requirement as resolved.
 \end{itemize}
 Secure Logger is already present in the architecture, the Accountability requirement is considered as solved.
 \subsubsection{Data Integrity}
-The following patterns address application integrity at the architectural level:
+The following patterns address data integrity at the architectural level:
 \begin{itemize}
 \item Session
 \item Secure Access Layer
@@ -1646,14 +1646,35 @@ Secure Pipe will be selected because confidentiality and integrity are considere
 So Secure Access Layer and Secure Pipe are selected and instantiated to deal with the Data Integrityrequirement.
 
 We can now consider the Data Integrity requirement as resolved.
-
-
 \subsubsection{Availability}
+The following patterns address availability at the architectural level:
 \begin{itemize}
 \item Checkpointed System
 \item Load Balancer
 \item Replicated System
 \end{itemize}
+
+Checkpointed System has already been instantiated when Application Integrity was considered.
+
+There are no patterns in this list that conflict with any existing patterns.
+Next, we screen the short descriptions of the selected patterns to see if they are applicable. Both patterns seem
+applicable.
+
+Load Balancer has as label +Performance, and benefits from Replicated System and Session Failover, it impairs 
+Session.
+
+Replicated System has as labels -Manageability and -Cost, and depends on Load Balancer.
+
+Load Balancer is selected, because it has a positive influence on the performance. The nature of the application
+makes it also easy to distribute the load e.g. different tables can be located at different servers and the lobby
+can be used as a central registry.
+
+Replicated System isn't selected, because the cost of replicating all the components would be too great compared
+to the benefits.
+
+So Load Balancer is selected and instantiated to deal with the Availability requirement.
+
+We can now consider the Availability requirement as resolved.
 \subsection{Design Phase}
 We don't consider design phase and patterns because it isn't part of the assignment and it would be too
 low level.
