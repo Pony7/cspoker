@@ -1561,7 +1561,7 @@ Clearly Authentication Enforcer is the better choice here: its labels match bett
 than Single Access Point and it benefits from the Secure Service Facade pattern that already exist in the architecture. 
 Single Access Point would also lead to a too centralised architecture. Container Managed Security is a system pattern and will later be considered as an alternative for Authentication Enforcer.
 
-The Authentication Enforcer pattern is selected and instantiated to deal with the Authentication requirement. //TODO
+The Authentication Enforcer pattern is selected to deal with the Authentication requirement. It is instantiated with a beneficial relationship from the existing security facades. It collaborates with Account Management to perform authentication.
 
 We can now mark the Authentication requirement as resolved at the architectural level.
 
@@ -1612,8 +1612,7 @@ Both Limited View and Full View with Errors will be selected, but for different 
 Limited View will be used for the client side, because Usability for the clients is a major issue. Full View with
 Errors will be used for the server API because it is technically the only possibility at this level.
 
-The Authorization Enforcer, Limited View and Full View With Errors are selected and instantiated 
-to deal with the Authorization requirement.
+The Authorization Enforcer, Limited View and Full View With Errors are selected to deal with the Authorization requirement. The Authorization Enforcer is instantiated with a beneficial relationship from the existing Secure Service Facade. It uses the Authentication Enforcer to authenticate a user. Limited View will be enforced on each client by some certification process or coding guidelines (as anyone can write a client for our server). The server itself will only be able to instantiate the Full View With Errors as it's the only possibility. 
 
 We can now consider the Authorization requirement as resolved at the architectural level.
 
@@ -1642,6 +1641,7 @@ because there must be a way to recover from a crash of a critical process such a
 will be checkpointed: the cashier will reserve the money used in bets of a deal. When the deal ends, the table 
 will tell the cashier the money can be really transfered. If for some reason, the table fails and the deal is 
 cancelled, the money used in that deal will go back to it's owners.
+
 
 Comparator-Checked Fault-Tolerant System won't be selected because it is considered overkill (very high cost) and has too few
 advantages compared to its disadvantages.
@@ -1680,7 +1680,7 @@ benefits from Secure Association (which by the way is not included in the list, 
 Secure Access Layer will be selected because it has only positive labels and has no relation with other patterns.
 Secure Pipe will also be selected because confidentiality and integrity are considered important quality labels.
 
-Secure Access Layer and Secure Pipe are selected and instantiated to deal with the Data Integrity requirement.
+Secure Access Layer and Secure Pipe are selected to deal with the Data Integrity requirement. Secure Access Layer is instantiated before the persistence service to cope with future changes and to provide a uniform interface. Secure Pipes are instantiated wherever communication occurs over the wire.
 
 We can now consider the Data Integrity requirement as resolved at the architectural level.
 \subsubsection{Availability}
@@ -1704,13 +1704,12 @@ Session.
 \end{itemize}
 
 Load Balancer is selected, because it has a positive influence on the performance. The nature of the application
-makes it also easy to distribute the load. Different tables can for instance be located at different servers and the lobby
-can be used as a central registry.
+makes it also easy to distribute the load. Different tables can for instance be located at different servers and the lobby can be used as a central registry.
 
 Replicated System isn't selected, because the cost of replicating all the components would be too great compared
 to the benefits.
 
-Load Balancer is selected and instantiated to deal with the Availability requirement.
+Load Balancer is selected to deal with the Availability requirement. It is instantiated in the poker server and should collaborate with the lobby component, that is omitted for this analysis, to balance the load between all table servers.
 
 We can now consider the Availability requirement as resolved at the architectural level.
 
@@ -1766,10 +1765,10 @@ Application Firewall.
 Application Firewall is selected and instantiated because auditability is an important quality label compared to
 the performance penalty.
 Demilitarized Zone isn't selected because of the high cost and because a demilitarized zone doesn't seem useful if the only task of the front end is to forward request. The processes that are placed outside of the secure zone should at least be performing some kind of non-trivial computation for them to pose enough of a risk to require a DMZ.
-Firewall is selected and instantiated because Accountability is an important quality label, and the pattern benefits
+Firewall is selected and because Accountability is an important quality label, and the pattern benefits
 from the previously instantiated Application Firewall.
 
-So Application Firewall and Firewall are selected and instantiated to deal with Authorization at the system level.
+So Application Firewall and Firewall are selected to deal with Authorization at the system level. Application Firewall is instantiated at the poker server to log all incoming request for auditing and filter out all invalid input. The firewall is instantiated before the poker server to counter flooding and to be able to ban IPs. 
 
 We now consider Authorization at the system level covered.
 \subsubsection{Application Integrity}
@@ -1837,14 +1836,12 @@ By following the steps in the pattern-based approach described in the previous s
   \caption{Decomposition View - Security Enhanced Architecture}\label{fig:decomposition_secured}
 \end{figure}
 
-
 \begin{figure}[htpb]
   \begin{center}
     \includegraphics[angle=90,scale=0.65]{deployment_secured.png}
   \end{center}
   \caption{Deployment View - Security Enhanced Architecture}\label{fig:deployment_secured}
 \end{figure}
-
 
 \section{Criticism}
 \label{Criticism}
