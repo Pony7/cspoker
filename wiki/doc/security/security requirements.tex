@@ -1388,6 +1388,7 @@ This means following components will be omitted for future analysis: Cashier, Lo
 \end{enumerate}
 
 \subsection{Application Integrity (12 MUCs)}
+\label{ApplicationIntegrityMUCs}
 \begin{enumerate}
 \item Tampering with the poker server
 \item Information disclosure at the poker server
@@ -1610,6 +1611,7 @@ to deal with the Authorization requirement.
 We can now consider the Authorization requirement as resolved at the architectural level.
 
 \subsubsection{Application Integrity}
+\label{ArchitecturalApplicationIntegrity}
 The following patterns address application integrity at the architectural level:
 \begin{itemize}
 \item Checkpointed System
@@ -1620,27 +1622,24 @@ There are no patterns in this list that conflict with any existing patterns.
 Next, we screen the short descriptions of the selected patterns to see if they are applicable. Both patterns seem
 applicable.
 
-Checkpointed System has as labels +Dependability, -Performance and -Cost , and benefits from Comparator Checked
+\begin{itemize}
+\item Checkpointed System has as labels +Dependability, -Performance and -Cost , and benefits from Comparator Checked
  Fault Tolerant System and impairs Audit Interceptor.
 
-\begin{itemize}
 \item Comparator-Checked Fault-Tolerant System has as labels -Cost, -Performance, +Dependability and impairs Audit
 Interceptor and has as alternative Output Guard and benefits from Checkpointed System.
+\end{itemize}
 
-\item Checkpointed System will be selected, even though it has a negative influence on both the Cost and the Performance,
+Checkpointed System would be useful to implement in the Cashier process, even though it has a negative influence on both the Cost and the Performance,
 because there must be a way to recover from a crash of a critical process such as Cashier. The Cashier process
 will be checkpointed: the cashier will reserve the money used in bets of a deal. When the deal ends, the table 
 will tell the cashier the money can be really transfered. If for some reason, the table fails and the deal is 
 cancelled, the money used in that deal will go back to it's owners.
-\end{itemize}
-
 
 Comparator-Checked Fault-Tolerant System won't be selected because it is considered overkill (very high cost) and has too few
-advantages compared to its disadvantages.
+advantages compared to its disadvantages..
 
-The Checkpointed System pattern is selected and instantiated to deal with the Application Integrity requirement.
-
-We can now consider the Application Integrity requirement as resolved at the architectural level.
+Due to a lack of patterns to tackle the problem, we must leave Application Integrity as it is.
 
 \subsubsection{Accountability}
 
@@ -1698,18 +1697,20 @@ Session.
 \end{itemize}
 
 Load Balancer is selected, because it has a positive influence on the performance. The nature of the application
-makes it also easy to distribute the load e.g. different tables can be located at different servers and the lobby
+makes it also easy to distribute the load. Different tables can for instance be located at different servers and the lobby
 can be used as a central registry.
 
 Replicated System isn't selected, because the cost of replicating all the components would be too great compared
 to the benefits.
 
-So Load Balancer is selected and instantiated to deal with the Availability requirement.
+Load Balancer is selected and instantiated to deal with the Availability requirement.
 
 We can now consider the Availability requirement as resolved at the architectural level.
+
 \subsection{Design Phase}
-We don't consider design phase and patterns because it isn't part of the assignment and it would be too
+We don't consider design phase patterns because it isn't part of the assignment and it would be too
 low level.
+
 \subsection{System Phase}
 
 \subsubsection{Authentication}
@@ -1781,7 +1782,7 @@ Secure Logger is already dealth with because the latter pattern was already pres
 We now consider Accountability at the system level as covered.
 
 \subsubsection{Data Integrity}
-The following patterns handle Data Integrity} at the system level:
+The following patterns handle Data Integrity at the system level:
 \begin{itemize}
 \item Secure Message Router
 \end{itemize}
@@ -1834,16 +1835,17 @@ By following the steps in the pattern-based approach described in the previous s
 \label{criticism}
 \begin{itemize}
 \item The classification of the threat tree isn't very clear sometimes: e.g. you can tamper with the server process
-to spoof the server and thus tampering with the data.
+to spoof the server and thus tampering with the data. The flat STRIDE classification doesn't feel adequate for those threats.
 \item The threat three isn't complete; for instance there is nothing in it about spoofing by corruption of 
 DNS records.
 \item Some business use cases can't be covered with the list of security patterns in the given catalog
 \item The list of labels is incomplete for some security patterns in the catalog: e.g. Secure Pipe should also have
-the confidentiality-label.
+the Confidentiality label.
 \item Some patterns that are mentioned by other security patterns, aren't listed in the catalog: e.g. Secure Pipe 
 benefits from Security Association, but the latter pattern isn't listed in the catalog. Input Guard also isn't
 in the list.
-\item Repudiaton of processes/data stores that are all internal to the system is very unclear. In the lectures it was said that this was, for instance, the casino denying that it did something. In \cite[p270]{1202957} however it is explained as an external entity tampering with the process/data store to be able to deny having done something. The difference with repudiaton of that external entity is unclear.
+\item Repudiaton of processes/data stores that are internal to the system is very unclear. In the lectures it was said that this was, for instance, the casino denying that it did something. In \cite[p270]{1202957} however it is explained as an external entity tampering with the process/data store to be able to deny having done something. The difference with repudiaton of that external entity is unclear.
+\item Some patterns solve security objectives in a way that doesn't relate to the misuse cases labeled with that objective. For instance, the misuse cases for application integrity listed in section \ref{ApplicationIntegrityMUCs} are not really solved by the patterns provided in section \ref{ArchitecturalApplicationIntegrity}. This mis-mapping might go unnoticed because the patterns are valueable regardless of their correspondance to the misuse cases. They do however put in question te process applied here.
 \end{itemize}
 \section{Log}
 \textbf{30-10-2008}
