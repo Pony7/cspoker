@@ -415,7 +415,7 @@ The mis-actor performs actions leading to the possibility to do administrator ac
 \subsubsection{Spoofing a table}
 \label{TableCasesS}
 \textbf{Summary:} \\
-The mis-actor prepares a process to spoof the table and deploys it on one of the online casino servers or on an external server. Every player connecting to this table can be scammed. The spoofed table could provide the mis-actor with all confidential information or deal crafted hands to maximize the profit of the mis-actor (e.g. deal a full house to an innocent player and deal a four of a kind to himself and lure the innocent player to go all-in).
+The mis-actor prepares a process to spoof the table and deploys it on one of the online casino servers or on an external server. Every player connecting to this table can be scammed.
 \subsubsection{Tampering with a table}
 \label{TableCasesT}
 \textbf{Summary:} \\
@@ -423,7 +423,7 @@ The mis-actor tampers with the lobby to modify its functionality. Every player c
 \subsubsection{Repudiation of an action at a table}
 \label{TableCasesR}
 \textbf{Summary:} \\
-The online casino denies a player has won a number of chips or has received certain hole cards. This is possible if there is no log or if the log could be modified. It is also possible that the hand evaluation system has been tampered and this should be detected afterwards. 
+The online casino denies that a player has won a number of chips or has received certain hole cards. This is possible if there is no log or if the log could be modified. It is also possible that the hand evaluation system has been tampered and this should be detected afterwards. 
 \subsubsection{Information disclosure at a table}
 \label{TableCasesI}
 \textbf{Primary mis-actor:}
@@ -528,7 +528,7 @@ By sending bad data to the logging engine or by sending many requests at once, t
 \subsubsection{Elevation of Privilege at the logging engine}
 \label{LoggingEngineCasesE}
 \textbf{Summary:} \\
-Through spoofing, tampering or exploiting the authorization system, the mis-actor can obtain admin privileges. AS a result he can, for instance, shut down logging.
+Through spoofing, tampering or exploiting the authorization system, the mis-actor can obtain admin privileges. As a result he can, for instance, shut down logging.
 
 \subsection{Audit Log}
 \label{AuditLogCases}
@@ -1346,12 +1346,12 @@ This means following components will be omitted for future analysis: Cashier, Lo
 \item Repudiation of a table 
 \item Information disclosure at a table 
 \item Elevation of Privilege at the table
-\item Spooﬁng the account management system
+\item Spoofing the account management system
 \item Tampering with the account management system
 \item Repudiation of using the account management system
 \item Information disclosure of the account management system
 \item Elevation of Privilege at the account management system
-\item Spooﬁng the logging engine
+\item Spoofing the logging engine
 \item Tampering with the logging engine 
 \item Repudiation of using the logging engine
 \item Information disclosure of the logging engine 
@@ -1840,7 +1840,7 @@ By following the steps in the pattern-based approach described in the previous s
 
 
 \section{Criticism}
-\label{criticism}
+\label{Criticism}
 \begin{itemize}
 \item The classification of the threat tree isn't very clear sometimes: e.g. you can tamper with the server process
 to spoof the server and thus tampering with the data. The flat STRIDE classification doesn't feel adequate for those threats.
