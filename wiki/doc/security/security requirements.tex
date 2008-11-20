@@ -1588,9 +1588,8 @@ Next, we screen the short descriptions of the selected patterns to see if they a
 \begin{itemize}
 \item Controlled Object Monitor isn't applicable because there are few shared objects between processes so 
 there is little need to monitor and intercept access requests from different processes to objects.
-\item The other patterns seem applicable.
 \end{itemize}  
-
+The other patterns seem applicable:
 \begin{itemize}
 \item Authorization Enforcer has as labels +Maintainability, +Manageability, +Auditability, +Accountability and
 +Portability, benefits from Authentication Enforcer and Secure Service Facade and has as alternative
@@ -1666,15 +1665,17 @@ The following patterns address data integrity at the architectural level:
 \end{itemize}
 
 There are no patterns in this list that conflict with any existing patterns.
-Next, we screen the short descriptions of the selected patterns to see if they are applicable. Session was already dropped in section \ref{ArchitectureAuthentication} because 
-there is very little shared state. The other patterns seem
-applicable.
-
+Next, we screen the short descriptions of the selected patterns to see if they are applicable.
+\begin{itemize}
+\item Session was already dropped in section \ref{ArchitectureAuthentication} because there is very little 
+shared state.
+\end{itemize}  
+The other patterns seem applicable:
 \begin{itemize}
 \item Secure Access Layer has as labels +Maintainability and +Portability, and has no relations with other patterns.
 
 \item Secure Pipe has no labels in the list, but we believe it should have +Confidentiality and +Integrity. The pattern
-benefits from Secure Association (which by the way is not included in the list, see \ref{criticism}).
+benefits from Secure Association (which by the way is not included in the list, see \ref{Criticism}).
 \end{itemize}
 
 Secure Access Layer will be selected because it has only positive labels and has no relation with other patterns.
@@ -1749,11 +1750,15 @@ The following patters handle Authorization at the system level:
 \end{itemize}
 
 There is no pattern that conflicts with earlier instantiated patterns.
-
-Controlled Process Creator isn't really applicable because there are no processes that are created at runtime. At a lower level there are ofcourse thread pools and database connection pools that control the creation of those processes. We will not consider them as instantiations of the Controlled Process Creator pattern here but it might be up for discussion.
-
-Controlled Object Factory depends on Controlled Object Monitor, which was discarded earlier.
-
+Some patterns aren't applicable:
+\begin{itemize}
+\item Controlled Process Creator isn't really applicable because there are no processes that are created at runtime.
+At a lower level there are ofcourse thread pools and database connection pools that control the creation of those 
+processes. We will not consider them as instantiations of the Controlled Process Creator pattern here but it 
+might be up for discussion.
+\item Controlled Object Factory depends on Controlled Object Monitor, which was discarded earlier.
+\end{itemize}
+The other patterns seem applicable:
 \begin{itemize}
 \item Application Firewall has as labels -Performance, +Manageability, +Auditability and has as alternative Input Guard.
 \item Demilitarized Zone has as labels -Performance, -Cost, -Manageability, -Dependability, +Maintainability and depends
@@ -1799,7 +1804,7 @@ The following patterns handle Data Integrity at the system level:
 \item Secure Message Router
 \end{itemize}
 
-Secure Message Router doesn't conflict with any previously instantiated pattern.
+Secure Message Router doesn't conflict with any previously instantiated pattern and seems applicable:
 
 \begin{itemize}
 \item Secure Message Router has as labels +Manageability, +Maintainability, +Confidentiality, +Integrity, -Availability
@@ -1811,7 +1816,7 @@ but we don't consider it here, in our simplified version.
 \subsubsection{Availability}
 There are no patterns who handle availability at the system level.
 \subsection{Instantiated Patterns}
-To summarize, here is the list of the instantiated patterns:
+To summarize, here is the list of the instantiated patterns, that weren't present yet in the architecture:
 \begin{itemize}
 \item Authentication Enforcer
 \item Authorization Enforcer
