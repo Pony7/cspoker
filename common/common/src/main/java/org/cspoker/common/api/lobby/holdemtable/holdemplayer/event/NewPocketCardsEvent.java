@@ -15,8 +15,7 @@
  */
 package org.cspoker.common.api.lobby.holdemtable.holdemplayer.event;
 
-import java.util.Collections;
-import java.util.Set;
+import java.util.EnumSet;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
@@ -33,18 +32,18 @@ public class NewPocketCardsEvent extends HoldemPlayerEvent {
 
 	@XmlElementWrapper
 	@XmlElement(name = "card")
-	private final Set<Card> pocketCards;
+	private final EnumSet<Card> pocketCards;
 
-	public NewPocketCardsEvent(Set<Card> pocketCards) {
-		this.pocketCards = Collections.unmodifiableSet(pocketCards);
+	public NewPocketCardsEvent(EnumSet<Card> pocketCards) {
+		this.pocketCards = EnumSet.copyOf(pocketCards);
 	}
 
 	protected NewPocketCardsEvent() {
 		pocketCards = null;
 	}
 
-	public Set<Card> getPocketCards() {
-		return pocketCards;
+	public EnumSet<Card> getPocketCards() {
+		return EnumSet.copyOf(pocketCards);
 	}
 
 	@Override

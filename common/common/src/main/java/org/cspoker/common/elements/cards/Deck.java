@@ -18,6 +18,7 @@ package org.cspoker.common.elements.cards;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.EnumSet;
 import java.util.List;
 
 import org.cspoker.common.util.random.RandomOrgSeededRandomGenerator;
@@ -33,11 +34,11 @@ public class Deck {
 	/*
 	 * Sorted prototype deck for copying
 	 */
-	private static final ImmutableList<Card> PROTO_DECK;
+	private static final EnumSet<Card> PROTO_DECK;
 
 	static {
 		// Initialize prototype deck
-		PROTO_DECK = ImmutableList.of(Card.values());
+		PROTO_DECK = EnumSet.allOf(Card.class);
 	}
 
 	public static Deck createTruelyRandomDeck(){

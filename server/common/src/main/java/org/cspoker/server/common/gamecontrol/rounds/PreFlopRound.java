@@ -91,7 +91,7 @@ extends BettingRound {
 
 			PreFlopRound.logger.info("Dealt to " + player.getName() + " " + player.getPocketCards());
 
-			gameMediator.publishNewPocketCardsEvent(player.getId(), new NewPocketCardsEvent(new HashSet<Card>(player
+			gameMediator.publishNewPocketCardsEvent(player.getId(), new NewPocketCardsEvent(EnumSet.copyOf(player
 					.getPocketCards())));
 		}
 

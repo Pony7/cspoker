@@ -16,6 +16,7 @@
 
 package org.cspoker.common.elements.player;
 
+import java.util.EnumSet;
 import java.util.HashSet;
 
 import org.cspoker.common.elements.cards.Card;
@@ -74,10 +75,9 @@ public class MutableShowdownPlayer implements Comparable<MutableShowdownPlayer> 
 		return bestHand;
 	}
 
+	//TODO remove copyof when internal representation moved to EnumSet
 	public ShowdownPlayer getSavedShowdownPlayer() {
-		return new ShowdownPlayer(player.getMemento(), new HashSet<Card>(
-				getBestHand().getCards()), new HashSet<Card>(player
-				.getPocketCards()), getBestHand().getDescription());
+		return new ShowdownPlayer(player.getMemento(), getBestHand().getCards(), EnumSet.copyOf(player.getPocketCards()), getBestHand().getDescription());
 	}
 
 	/**

@@ -15,7 +15,7 @@
  */
 package org.cspoker.client.common.gamestate.modifiers;
 
-import java.util.Set;
+import java.util.EnumSet;
 
 import org.cspoker.client.common.gamestate.ForwardingGameState;
 import org.cspoker.client.common.gamestate.ForwardingPlayerState;
@@ -37,7 +37,7 @@ public class ShowHandState extends ForwardingGameState {
 		this.playerState = new ForwardingPlayerState(super.getPlayer(event.getShowdownPlayer().getId())){
 			
 			@Override
-			public Set<Card> getCards() {
+			public EnumSet<Card> getCards() {
 				return ShowHandState.this.event.getShowdownPlayer().getHandCards();
 			}
 			

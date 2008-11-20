@@ -15,15 +15,13 @@
  */
 package org.cspoker.client.common.gamestate.modifiers;
 
-import java.util.Set;
+import java.util.EnumSet;
 
 import org.cspoker.client.common.gamestate.ForwardingGameState;
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.common.api.lobby.holdemtable.event.HoldemTableEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.NewCommunityCardsEvent;
 import org.cspoker.common.elements.cards.Card;
-
-import com.google.common.collect.Sets;
 
 public class NewCommunityCardsState extends ForwardingGameState {
 
@@ -35,8 +33,10 @@ public class NewCommunityCardsState extends ForwardingGameState {
 	}
 
 	@Override
-	public Set<Card> getCommunityCards() {
-		return Sets.union(super.getCommunityCards(),event.getCommunityCards());
+	public EnumSet<Card> getCommunityCards() {
+		EnumSet<Card> cards = super.getCommunityCards();
+		cards.addAll(event.getCommunityCards());
+		return cards;
 	}
 	
 	public HoldemTableEvent getLastEvent() {

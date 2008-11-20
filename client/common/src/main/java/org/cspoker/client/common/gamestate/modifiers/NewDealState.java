@@ -16,6 +16,7 @@
 package org.cspoker.client.common.gamestate.modifiers;
 
 import java.util.Collections;
+import java.util.EnumSet;
 import java.util.Set;
 
 import org.cspoker.client.common.gamestate.AbstractGameState;
@@ -57,8 +58,8 @@ public class NewDealState extends AbstractGameState {
 					return 0;
 				}
 
-				public Set<Card> getCards() {
-					return Collections.emptySet();
+				public EnumSet<Card> getCards() {
+					return EnumSet.noneOf(Card.class);
 				}
 
 				public int getStack() {
@@ -96,8 +97,8 @@ public class NewDealState extends AbstractGameState {
 		return playerStates.keySet();
 	}
 	
-	public Set<Card> getCommunityCards() {
-		return Collections.emptySet();
+	public EnumSet<Card> getCommunityCards() {
+		return EnumSet.noneOf(Card.class);
 	}
 
 	public PlayerId getDealer() {
