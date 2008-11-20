@@ -18,7 +18,6 @@
 \maketitle 
 % insert the table of contents 
 \tableofcontents 
-\listoffigures
 
 \chapter{Introduction}
 This document starts from an existing architecture of a poker application that was originally designed with only an intuitive idea of security threats for poker applications. By modelling the data flow through the application we try to locate areas that can be subjected to these threats. 
@@ -524,8 +523,7 @@ The misuser can tamper with the audit log when he bypasses the protection or mon
 \subsubsection{Repudiation of logging something in the audit log}
 \label{AuditLogCasesR}
 \textbf{Summary:} \\
-The mis-actor can modify or obscure data in the audit log to be able to repudate certain actions. An auditor will bot be able to deny this allegation.
-Also see section \ref{Criticism} for criticism of this threat.
+The mis-actor can modify or obscure data in the audit log to 
 
 \subsubsection{Information disclosure of the audit log}
 \label{AuditLogCasesI}
@@ -1445,7 +1443,7 @@ This is not applicable since the code is open source.
 \label{labels}
 By analyzing the business goals, we constructed the following ordered list of quality trade-off labels:
 \begin{enumerate}
-\item Usability: the online casino has to be as easy to use as possible. This quality attribute might seem less important than confidentiality and integrity but in reality cheating will always happen (e.g. collusion) and the loss will be calculated in. When a lot of people play in the online casino because it is te most usable, this cost will be less significant.
+\item Usability: the online casino has to be as easy to use as possible.
 \item Confidentiality: it is of the abmost importance that certain information like the cards of a player, remains
 confidential.
 \item Integrity: no one should be able to compromise the integrity of the application or it's data.
@@ -1453,7 +1451,7 @@ confidential.
 \item Manageability: the application must be easy to manage by an admin.
 \item Cost: the cost of the application should be reasonable to low, so profit will remain solid.
 \item Performance: performance being the possible amount of games played simultaneously, is important because it
-determines the maximum profit. It is very easy to come up with solutions to performance problems because of the distributed nature of the application (table are independent).
+determines the maximum profit.
 \item Maintainability: the application should be easy to maintain.
 \end{enumerate}
 These labels will be used to guide the selection of security patterns in the next section.
@@ -1472,7 +1470,15 @@ As stated in \cite[p13]{yskout}, the architecture of the system is designed usin
 meaning it is created based on the non-functional requirements of the application and their relative importance.
 Therefore a prioritized list of quality attributes, inspired by the business goals, was formulated under 
 \ref{labels}. Then we iterate over the selection of architectural patterns, as it is stated by the methodology.
-
+\subsubsection{Patterns already present}
+There are some security patterns that are already present in the architecture:
+\begin{itemize}
+\item Credential Tokenizer: The poker server is in a certain way a credential tokenizer: it provides a token to a 
+player that the player can use to authenticate himself with the other processes.
+\item Secure Service Facade: Every process has it's own facade, where all the needed
+security checks happen.
+\item Secure Logger: the Logging Engine takes the task of a Secure Logger.
+\end{itemize}
 \subsubsection{Authentication}
 The authentication requirement covers the most misuse cases so it is selected as the first requirement to cover.
 The following patterns address authentication at the architectural level:
@@ -1484,6 +1490,31 @@ The following patterns address authentication at the architectural level:
 \item Session
 \item Single Access Point
 \end{itemize}
+
+Credential Tokenizer and Secure Service Facade are already present in the architecture.
+
+Since these two patterns do not sufficiently cover Authentication, we continue with the set of patterns that aren't
+present yet: Authentication Enforcer, Security Association, Session and Single Access Point.
+
+There are no patterns in this list that conflict with any existing patterns.
+Next, we screen the short descriptions of the selected patterns to see if they are applicable. Security Association
+appears to be missing from the list and is thus discarded. Session won't be selected, because there is too 
+little shared state between the different processes; the state is almost only shared within a process.The other 
+patterns seem applicable.
+
+Authentication Enforcer has as labels +Maintainability, +Manageability, +Auditability, -Anonymity, +Privacy, 
++Accountability, +Portability and benefits from Secure Pipe and Secure Service Facade and has as alternative
+Container Managed Security.
+
+Single Access Point has as labels +Manageability and has no relations with other patterns.
+
+Clearly Authentication Enforcer is the best choice here: it's labels match more with the quality trade-off labels
+than Single Access Point, and it benefits from 2 patterns that already exist in the architecture (Secure Pipe and
+Secure Service Facade).Single Access Point would also lead to a too centralised architecture.Container Managed 
+Security is a system pattern and will later be considered as an
+alternative for Authentication Enforcer.
+
+We can now mark the Authentication requirement as resolved.
 
 \subsubsection{Authorization}
 
@@ -1578,15 +1609,8 @@ To summarize, here is the list of the selected patterns:
 \item Secure Access Layer
 \item Load Balancer
 \end{itemize}
-The following patterns were already used in the application:
-\begin{itemize}
-\item Credential Tokenizer
-\item Secure Service Facade
-\item Secure Pipe
-\item Secure Logger
-\end{itemize}
+
 \section{Criticism}
-\label{Criticism}
 \begin{itemize}
 \item The classification of the threat tree isn't very clear sometimes: e.g. you can tamper with the server process
 to spoof the server and thus tampering with the data.
