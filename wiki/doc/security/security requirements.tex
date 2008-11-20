@@ -1,10 +1,13 @@
 \documentclass[a4paper,11pt]{report}
+
 \usepackage{a4wide}
 \usepackage[english]{babel}
 \usepackage{graphicx,subfigure}
 \usepackage[pdftex,pdfauthor={Cedric~Cuypers, Kenzo~Tomita, Guy~Van~den~Broeck},pdftitle={Security Requirements: Poker Application}]{hyperref}
 \usepackage[all]{hypcap}
+
 \setcounter{secnumdepth}{3} 
+\setlength{\parindent}{0pt} \setlength{\parskip}{1ex plus 0.5ex minus 0.2ex}
 
 
 \author{Cedric~Cuypers, Kenzo~Tomita, Guy~Van~den~Broeck} 
@@ -110,10 +113,11 @@ For the remaining data flows we chose to analyse them as a set of 4 different ab
 Furthermore, the processes \textit{Chat Service} and \textit{Cashier} are not elaborated on because they are more independent of other processes and functionality.
 
 \section{Architecture based Misuse Cases}
+\label{MisUseCases}
 
 The misuse cases are ordered by the entity under threat. Repudiation is an important threat with legal consequences. Information disclosure is also important because it makes cheating very easy. Denial of Service attacks are less profitable for crooks and therefore less likely.
 
-Threats that are located more to the exterior of te system (closer to the Player) are more likely to be feasible and are more important. For this reason we completely specified the threats for the Player and Poker Server. Because there are many data flows we chose to completely specify the threats for the different abstractions in section \ref{PlayerFlowCases} and \ref{LoggingEngineCases}. Between the 2 data stores we chose to go in to detail for the account data.
+Threats that are located more to the exterior of te system (closer to the Player) are more likely to be feasible and are more important. For this reason we completely specified the threats for the Player and Poker Server. Because there are many data flows we chose to completely specify the threats for the different abstractions in section \ref{PlayerFlowCases} and \ref{LoggingEngineFlowCases}. Between the 2 data stores we chose to go in to detail for the account data.
 
 \subsection{Player}
 \label{PlayerCases}
@@ -1313,6 +1317,8 @@ This means following components will be omitted for future analysis: Cashier, Lo
 \end{figure}
 
 \section{Security Objectives}
+\label{MUCLabels}
+
 \subsection{Authentication (26 MUCs)}
 \begin{enumerate}
 \item Spoofing a player
@@ -1447,7 +1453,7 @@ This means following components will be omitted for future analysis: Cashier, Lo
 \end{enumerate}
 
 \subsection{Application Confidentiality}
-This is not applicable since the code is open source.
+Application Confidentiality is not applicable since the code is open source.
 
 \chapter{Securing the architecture}
 
@@ -1473,24 +1479,26 @@ for this application.
 
 \subsection{Analysis Phase}
 The analysis phase consists of eliciting the security requirements and annotating each 
-security requirement with the security object it belongs to. The requirements have been elicited by the misuse cases
-in \ref{TODO}. The annotations to indicate for each requirement to which security objective it belongs to,
-are in \ref{TODO}. This is very important, since the succes of the selected methodology heavily depends 
+security requirement with the security object it belongs to. The security requirements have been elicited by the misuse cases
+in secton \ref{MisUseCases}. The annotations to indicate for each misuse case to which security objective it belongs are given in section \ref{MUCLabels}. This is very important, since the succes of the selected methodology heavily depends 
 on this list of security requirements.
+
 \subsection{Architecture Phase}
-As stated in \cite[p13]{yskout}, the architecture of the system is designed using ADD or Attribute-Driven Design,
+As stated in \cite[p13]{yskout}, the architecture of the system is designed using Attribute-Driven Design or ADD,
 meaning it is created based on the non-functional requirements of the application and their relative importance.
 Therefore a prioritized list of quality attributes, inspired by the business goals, was formulated under 
 \ref{labels}. Then we iterate over the selection of architectural patterns, as it is stated by the methodology.
+
 \subsubsection{Patterns already present}
 There are some security patterns that are already present in the architecture:
 \begin{itemize}
 \item Credential Tokenizer: The poker server is in a certain way a credential tokenizer: it provides a token to a 
 player that the player can use to authenticate himself with the other processes.
-\item Secure Service Facade: Every process has it's own facade, where all the needed
+\item Secure Service Facade: Every process has it's own facade where all the needed
 security checks happen.
-\item Secure Logger: the Logging Engine takes the task of a Secure Logger.
+\item Secure Logger: the Logging Engine performs the tasks of a Secure Logger.
 \end{itemize}
+
 \subsubsection{Authentication}
 The authentication requirement covers the most misuse cases so it is selected as the first requirement to cover.
 
@@ -1510,10 +1518,13 @@ Since these two patterns do not sufficiently cover Authentication, we continue w
 present yet: Authentication Enforcer, Security Association, Session and Single Access Point.
 
 There are no patterns in this list that conflict with any existing patterns.
-Next, we screen the short descriptions of the selected patterns to see if they are applicable. Security Association
-appears to be missing from the list and is thus discarded. Session won't be selected, because there is too 
-little shared state between the different processes; the state is almost only shared within a process.The other 
-patterns seem applicable.
+Next, we screen the short descriptions of the selected patterns to see if they are applicable. 
+\begin{itemize}
+\item Security Association appears to be missing from the list and is therefore discarded. 
+\item Session won't be selected, because there is too 
+little shared state between the different processes; the state is almost only shared within a process.                                                                               \end{itemize}
+
+The other patterns seem applicable.
 
 Authentication Enforcer has as labels +Maintainability, +Manageability, +Auditability, -Anonymity, +Privacy, 
 +Accountability, +Portability and benefits from Secure Pipe and Secure Service Facade and has as alternative
