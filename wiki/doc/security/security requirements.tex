@@ -1497,6 +1497,8 @@ These labels will be used to guide the selection of security patterns in the nex
 We will use the security patterns and methodology described in \cite{yskout} to select the appropriate patterns
 for this application.
 
+The order in which we deal with the different objectives is slightly changed from the order of importance as given in section \ref{MUCLabels}. In accordance to the analysis of the importance of misuse cases in section \ref{MisUseCases}, we chose to move Availability to the lowest priority. The ordering of the other objectives remains unchanged.
+
 \subsection{Analysis Phase}
 The analysis phase consists of eliciting the security requirements and annotating each 
 security requirement with the security object it belongs to. The security requirements have been elicited by the misuse cases
@@ -1507,7 +1509,7 @@ on this list of security requirements.
 As stated in \cite[p13]{yskout}, the architecture of the system is designed using Attribute-Driven Design or ADD,
 meaning it is created based on the non-functional requirements of the application and their relative importance.
 Therefore a prioritized list of quality attributes, inspired by the business goals, was formulated under 
-\ref{labels}. Then we iterate over the selection of architectural patterns, as it is stated by the methodology.
+section \ref{labels}. Then we iterate over the selection of architectural patterns, as it is stated by the methodology.
 
 \subsubsection{Patterns already present}
 There are some security patterns that are already present in the architecture:
