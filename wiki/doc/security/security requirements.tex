@@ -1527,6 +1527,9 @@ Secure Service Facade).Single Access Point would also lead to a too centralised 
 Security is a system pattern and will later be considered as an
 alternative for Authentication Enforcer.
 
+So the Authentication Enforcer pattern is selected and instantiated to deal with the Authentication 
+requirement. //TODO
+
 We can now mark the Authentication requirement as resolved.
 
 \subsubsection{Authorization}
@@ -1572,6 +1575,9 @@ Both Limited View and Full View with Errors will be selected, but for different 
 Limited View will be used for the client side, because Usability for the clients is a major issue. Full View with
 Errors will be used for the server api.
 
+So the Authorization Enforcer, Limited View and Full View With Errors are selected and instantiated 
+to deal with the Authorization requirement.
+
 We can now consider the Authorization requirement as resolved.
 \subsubsection{Application Integrity}
 The following patterns address application integrity at the architectural level:
@@ -1580,12 +1586,9 @@ The following patterns address application integrity at the architectural level:
 \item Comparator-Checked Fault-Tolerant System
 \end{itemize}
 
-
 There are no patterns in this list that conflict with any existing patterns.
-Next, we screen the short descriptions of the selected patterns to see if they are applicable. Controlled Object
-Monitor isn't applicable because there are few shared objects between processes so there is little need to monitor
-and intercept acces requests from different processes to objects. The other patterns seem applicable.
-
+Next, we screen the short descriptions of the selected patterns to see if they are applicable. Both patterns seem
+applicable.
 
 Checkpointed System has as labels +Dependability, -Performance and -Cost , and benefits from Comparator Checked
  Fault Tolerant System and impairs Audit Interceptor.
@@ -1593,14 +1596,22 @@ Checkpointed System has as labels +Dependability, -Performance and -Cost , and b
 Comparator-Checked Fault-Tolerant System has as labels -Cost, -Performance, +Dependability and impairs Audit
 Interceptor and has as alternative Output Guard and benefits from Checkpointed System.
 
+Checkpointed System will be selected, even though it has a negative influence on both the Cost and the Performance,
+because there must be a way to recover from a crash of a critical process such as Cashier. So the Cashier process
+will be checkpointed: the cashier will reserve the money used in bets of a deal. When the deal ends, the table 
+will tell the cashier the money can be really transfered. If for some reason, the table fails and the deal is 
+cancelled, the money used in that deal will go back to it's owners.
 
+Comparator-Checked Fault-Tolerant System won't be selected because it is considered overkill, and has too little
+advantages compared to it's disadvantages.
 
+So the Checkpointed System pattern is selected and instantiated to deal with the Application Integrity requirement.
 We can now consider the Application Integrity requirement as resolved.
 \subsubsection{Accountability}
 \begin{itemize}
 \item Secure Logger
 \end{itemize}
-
+Secure Logger is already present in the architecture, the Accountability requirement is considered as solved.
 \subsubsection{Data Integrity}
 \begin{itemize}
 \item Session
