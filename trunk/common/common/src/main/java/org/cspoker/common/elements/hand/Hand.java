@@ -19,6 +19,8 @@ import java.util.Collection;
 import java.util.EnumSet;
 import java.util.Iterator;
 
+import net.jcip.annotations.Immutable;
+
 import org.cspoker.common.elements.cards.Card;
 import org.cspoker.common.elements.cards.Suit;
 import org.cspoker.common.util.Pair;
@@ -28,6 +30,7 @@ import org.cspoker.common.util.Pair;
  * 
  * @author Cedric
  */
+@Immutable
 public class Hand implements Iterable<Card>, Comparable<Hand> {
 	/***************************************************************************
 	 * Variables
@@ -46,6 +49,11 @@ public class Hand implements Iterable<Card>, Comparable<Hand> {
 	 * Constructors
 	 **************************************************************************/
 
+	public Hand(){
+		cards = EnumSet.noneOf(Card.class);
+		handHash = new UniqueHandHash(1,false);
+	}
+	
 	public Hand(Collection<Card> cardCollection) {
 		if ((cardCollection == null)
 				|| (cardCollection.size() > Hand.MAX_CARDS)) {
@@ -219,6 +227,7 @@ public class Hand implements Iterable<Card>, Comparable<Hand> {
 		return product;
 	}
 
+	@Immutable
 	protected static class UniqueHandHash {
 
 		public final int hashCode;

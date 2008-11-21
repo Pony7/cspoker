@@ -241,8 +241,8 @@ public class TestHandQuality extends TestCase {
 			qualityGreater = (compare == 1);
 			qualitySmaller = (compare == -1);
 			qualityEqual = (compare == 0);
-			quality1 = hand1.getRank().intValue();
-			quality2 = hand2.getRank().intValue();
+			quality1 = hand1.getRank();
+			quality2 = hand2.getRank();
 
 			String rank = hand1.getShortDescription();
 			if (!rankMap.containsKey(rank)) {

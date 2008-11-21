@@ -17,9 +17,7 @@
 package org.cspoker.common.elements.player;
 
 import java.util.EnumSet;
-import java.util.HashSet;
 
-import org.cspoker.common.elements.cards.Card;
 import org.cspoker.common.elements.hand.Hand;
 
 /**

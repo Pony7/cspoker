@@ -15,7 +15,7 @@
  */
 package org.cspoker.common.api.lobby.holdemtable.event;
 
-import java.util.Collections;
+import java.util.EnumSet;
 import java.util.Set;
 
 import javax.xml.bind.annotation.XmlElement;
@@ -37,10 +37,10 @@ public class NewCommunityCardsEvent extends HoldemTableEvent {
 
 	@XmlElementWrapper
 	@XmlElement(name = "card")
-	private final Set<Card> communityCards;
+	private final EnumSet<Card> communityCards;
 
-	public NewCommunityCardsEvent(Set<Card> commonCards) {
-		communityCards = Collections.unmodifiableSet(commonCards);
+	public NewCommunityCardsEvent(EnumSet<Card> commonCards) {
+		communityCards = EnumSet.copyOf(commonCards);
 	}
 
 	protected NewCommunityCardsEvent() {

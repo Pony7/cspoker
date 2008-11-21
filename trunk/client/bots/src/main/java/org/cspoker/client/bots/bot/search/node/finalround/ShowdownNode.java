@@ -25,6 +25,7 @@ import org.cspoker.common.elements.cards.Card;
 import org.cspoker.common.elements.cards.Deck;
 import org.cspoker.common.elements.hand.Hand;
 import org.cspoker.common.elements.player.PlayerId;
+import org.cspoker.common.handeval.stevebrecher.HandEval;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.HashMultiset;
@@ -70,30 +71,30 @@ public class ShowdownNode implements GameTreeNode{
 		
 		EnumSet<Card> allBotCards = EnumSet.copyOf(botCards);
 		allBotCards.addAll(communityCards);
-		int botRank =  new Hand(allBotCards).getBestFiveRank();
+		int botRank =  HandEval.hand7Eval(HandEval.encode(allBotCards));
 
 		for(int i=0;i<nbSamples;i++){
-			if(winsSample(activeOpponents, usedCards, communityCards,
-					botRank)){
-				EVs.add(winEV);
-			}else{
-				EVs.add(0);
-			}
+			winsSample(activeOpponents, usedCards, communityCards,
+					botRank,winEV);
 		}
 	}
 
-	private boolean winsSample(Set<PlayerState> activeOpponents,
-			EnumSet<Card> usedCards, EnumSet<Card> communityCards, int botRank) {
+	private void winsSample(Set<PlayerState> activeOpponents,
+			EnumSet<Card> usedCards, EnumSet<Card> communityCards, int botRank,int winEV) {
 		Deck deck = Deck.createWeaklyRandomDeck();
 		for(PlayerState opponent:activeOpponents){
 			EnumSet<Card> opponentCards = sampleOpponentCards(opponent,deck,usedCards);
-			int opponentRank = new Hand(Sets.union(communityCards, opponentCards)).getBestFiveRank();
-			//TODO handle split pot
+			opponentCards.addAll(communityCards);
+			int opponentRank = HandEval.hand7Eval(HandEval.encode(opponentCards));
 			if(opponentRank<botRank){
-				return false;
+				EVs.add(0);
+				return;
+			}else if(opponentRank==botRank){
+				EVs.add(winEV/2);
+				return;
 			}
 		}
-		return true;
+		EVs.add(winEV);
 	}
 
 	private EnumSet<Card> sampleCommunityCards(EnumSet<Card> usedCards, EnumSet<Card> dealtCommunityCards){

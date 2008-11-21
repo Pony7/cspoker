@@ -23,8 +23,6 @@ import java.util.List;
 
 import org.cspoker.common.util.random.RandomOrgSeededRandomGenerator;
 
-import com.google.common.collect.ImmutableList;
-
 /**
  * A class to represent a deck of cards.
  * 

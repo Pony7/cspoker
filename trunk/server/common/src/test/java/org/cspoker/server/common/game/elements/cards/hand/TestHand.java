@@ -42,18 +42,13 @@ public class TestHand extends TestCase {
 		hand1 = new Hand();
 		hand1.add(testExactCard.getExactCard(Rank.THREE, Suit.HEARTS));
 		assertTrue(hand1.size() == 1);
-		assertTrue(hand1.indexOf(testExactCard.getExactCard(Rank.THREE,
-				Suit.HEARTS)) == 0);
+		assertTrue(hand1.contains(testExactCard.getExactCard(Rank.THREE,
+				Suit.HEARTS)));
 
 		hand1.add(testExactCard.getExactCard(Rank.FOUR, Suit.SPADES));
 		assertTrue(hand1.size() == 2);
-		assertTrue(hand1.indexOf(testExactCard.getExactCard(Rank.THREE,
-				Suit.HEARTS)) == 0);
-
-		assertTrue(hand1.get(0).equals(
-				testExactCard.getExactCard(Rank.THREE, Suit.HEARTS)));
-		assertTrue(hand1.get(1).equals(
-				testExactCard.getExactCard(Rank.FOUR, Suit.SPADES)));
+		assertTrue(hand1.contains(testExactCard.getExactCard(Rank.THREE,
+				Suit.HEARTS)));
 
 		hand1.add(testExactCard.getExactCard(Rank.EIGHT, Suit.CLUBS));
 		assertTrue(hand1.size() == 3);
@@ -63,10 +58,10 @@ public class TestHand extends TestCase {
 
 		hand1.add(testExactCard.getExactCard(Rank.ACE, Suit.HEARTS));
 		assertTrue(hand1.size() == 5);
-		assertTrue(hand1.indexOf(testExactCard.getExactCard(Rank.THREE,
-				Suit.HEARTS)) == 0);
-		assertTrue(hand1.indexOf(testExactCard.getExactCard(Rank.ACE,
-				Suit.HEARTS)) == 4);
+		assertTrue(hand1.contains(testExactCard.getExactCard(Rank.THREE,
+				Suit.HEARTS)));
+		assertTrue(hand1.contains(testExactCard.getExactCard(Rank.ACE,
+				Suit.HEARTS)));
 
 		hand1.add(testExactCard.getExactCard(Rank.KING, Suit.SPADES));
 		assertTrue(hand1.size() == 6);
@@ -120,12 +115,12 @@ public class TestHand extends TestCase {
 
 	public void testIterator() {
 		hand1 = new Hand();
-		hand1.add(testExactCard.getExactCard(Rank.ACE, Suit.CLUBS));
-		hand1.add(testExactCard.getExactCard(Rank.DEUCE, Suit.DIAMONDS));
-		hand1.add(testExactCard.getExactCard(Rank.FOUR, Suit.HEARTS));
-		hand1.add(testExactCard.getExactCard(Rank.EIGHT, Suit.HEARTS));
-		hand1.add(testExactCard.getExactCard(Rank.KING, Suit.HEARTS));
-		hand1.add(testExactCard.getExactCard(Rank.JACK, Suit.HEARTS));
+		hand1 = hand1.add(testExactCard.getExactCard(Rank.ACE, Suit.CLUBS));
+		hand1 = hand1.add(testExactCard.getExactCard(Rank.DEUCE, Suit.DIAMONDS));
+		hand1 = hand1.add(testExactCard.getExactCard(Rank.FOUR, Suit.HEARTS));
+		hand1 = hand1.add(testExactCard.getExactCard(Rank.EIGHT, Suit.HEARTS));
+		hand1 = hand1.add(testExactCard.getExactCard(Rank.KING, Suit.HEARTS));
+		hand1 = hand1.add(testExactCard.getExactCard(Rank.JACK, Suit.HEARTS));
 
 		Iterator<Card> iterator = hand1.iterator();
 
