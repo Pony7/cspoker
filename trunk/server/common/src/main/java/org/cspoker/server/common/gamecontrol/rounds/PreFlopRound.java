@@ -17,7 +17,6 @@
 package org.cspoker.server.common.gamecontrol.rounds;
 
 import java.util.EnumSet;
-import java.util.HashSet;
 
 import org.apache.log4j.Logger;
 import org.cspoker.common.api.lobby.holdemtable.event.NewRoundEvent;

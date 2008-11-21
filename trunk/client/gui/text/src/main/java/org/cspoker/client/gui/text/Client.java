@@ -42,7 +42,6 @@ import org.cspoker.client.gui.text.commands.TableChatCommand;
 import org.cspoker.client.gui.text.eventlistener.PrintListener;
 import org.cspoker.common.RemoteCSPokerServer;
 import org.cspoker.common.api.chat.context.RemoteChatContext;
-import org.cspoker.common.api.shared.context.RemoteServerContext;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.api.shared.listener.UniversalServerListener;
 import org.cspoker.common.elements.table.TableId;

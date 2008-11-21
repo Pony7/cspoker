@@ -15,7 +15,6 @@
  */
 package org.cspoker.client.common.gamestate.modifiers;
 
-import java.util.Collections;
 import java.util.EnumSet;
 import java.util.Set;
 

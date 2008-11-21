@@ -21,7 +21,12 @@ import java.util.Collection;
 import java.util.Hashtable;
 import java.util.prefs.Preferences;
 
-import javax.sound.sampled.*;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.DataLine;
+import javax.sound.sampled.LineEvent;
+import javax.sound.sampled.LineListener;
 
 import org.apache.log4j.Logger;
 import org.cspoker.client.User;
@@ -149,6 +154,7 @@ public class ClientGUI {
 	 * <code>1.5 * PREFERRED_CARD_WIDTH</code>
 	 */
 	public final static int PREFERRED_CARD_HEIGHT = (int) Math.round(PREFERRED_CARD_WIDTH * 1.5);
+	
 	/**
 	 * Final reference for an unknown card (i.e. the image is the back of the
 	 * card)
