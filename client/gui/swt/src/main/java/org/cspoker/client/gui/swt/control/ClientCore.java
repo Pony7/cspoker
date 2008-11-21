@@ -274,12 +274,10 @@ public class ClientCore
 		return communication;
 	}
 	
-	@Override
 	public ChatListener getServerChatListener() {
 		return gui.getLobby();
 	}
 	
-	@Override
 	public ChatListener getTableChatListener(TableId tableID) {
 		return gui.getGameWindow(tableID, false).getUserInputComposite();
 	}

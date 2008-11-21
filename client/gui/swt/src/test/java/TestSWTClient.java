@@ -92,7 +92,6 @@ public abstract class TestSWTClient
 				// Run blocking calls in extra thread
 				displayexecutor.execute(new Runnable() {
 					
-					@Override
 					public void run() {
 						lobby.show();
 						
@@ -103,7 +102,6 @@ public abstract class TestSWTClient
 				// Run blocking calls in extra thread
 				displayexecutor.execute(new Runnable() {
 					
-					@Override
 					public void run() {
 						w.show();
 						

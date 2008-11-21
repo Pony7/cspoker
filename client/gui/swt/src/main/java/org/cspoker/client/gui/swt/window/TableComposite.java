@@ -11,15 +11,12 @@
  */
 package org.cspoker.client.gui.swt.window;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.*;
 import java.util.List;
-import java.util.NavigableMap;
-import java.util.Set;
-import java.util.TreeMap;
 import java.util.Map.Entry;
 
 import org.apache.log4j.Logger;
+import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.client.gui.swt.control.CardPaintListener;
 import org.cspoker.client.gui.swt.control.Chip;
 import org.cspoker.client.gui.swt.control.ClientGUI;
@@ -36,11 +33,7 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Canvas;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.*;
 
 /**
  * The main composite in the game window. Contains the
@@ -54,6 +47,7 @@ public class TableComposite
 	private final static Logger logger = Logger.getLogger(TableComposite.class);
 	
 	private Composite communityCardsComposite;
+	private Collection<Card> communityCards = new ArrayList<Card>();
 	
 	private List<PlayerSeatComposite> playerSeatComposites = new ArrayList<PlayerSeatComposite>();
 	private List<Canvas> playerBetAreas = new ArrayList<Canvas>();
@@ -138,18 +132,15 @@ public class TableComposite
 			 * 
 			 * @see org.eclipse.swt.events.PaintListener#paintControl(org.eclipse.swt.events.PaintEvent)
 			 */
-			@Override
 			public void paintControl(PaintEvent e) {
+				if (getGameState() == null) {
+					return;
+				}
 				Rectangle redrawArea = new Rectangle(e.x, e.y, e.width, e.height);
 				for (PlayerSeatComposite pc : getPlayerSeatComposites(true)) {
-					List<NavigableMap<Chip, Integer>> chipStacks = new ArrayList<NavigableMap<Chip, Integer>>();
-					for (int bet : gameState.getBetPile(pc.getPlayerId())) {
-						chipStacks.add(Chip.getDistribution(bet));
-					}
 					
-					if (gameState.getBetPile(pc.getPlayerId()).size() > 0
-							&& redrawArea.intersects(pc.getChipsArea().getBounds())) {
-						drawChips(e.gc, pc.getChipsArea().getBounds(), chipStacks, false, false);
+					if (getBetPile(pc.getPlayerId()).size() > 0 && redrawArea.intersects(pc.getChipsArea().getBounds())) {
+						drawChips(e.gc, pc.getChipsArea().getBounds(), getBetPile(pc.getPlayerId()), false, false);
 						
 					}
 				}
@@ -160,8 +151,8 @@ public class TableComposite
 					drawChips(e.gc, dealerChipLocation, Arrays.asList(dealerChip), false, true);
 				}
 				if (redrawArea.intersects(potChipsArea.getBounds()) && redrawArea.intersects(potChipsArea.getBounds())) {
-					drawChips(e.gc, potChipsArea.getBounds(), Arrays.asList(Chip.getDistribution(gameState.getPots()
-							.getTotalValue())), true, false);
+					drawChips(e.gc, potChipsArea.getBounds(), Arrays.asList(Chip.getDistribution(getGameState()
+							.getGamePotSize())), true, false);
 				}
 			}
 		});
@@ -196,7 +187,7 @@ public class TableComposite
 		communityCardsLayoutData.minimumHeight = ClientGUI.MINIMUM_CARD_HEIGHT;
 		communityCardsComposite.setLayoutData(communityCardsLayoutData);
 		communityCardsComposite.setBackgroundMode(SWT.INHERIT_NONE);
-		communityCardsComposite.addPaintListener(new CardPaintListener(gameState.getCommunityCards(), 5, SWT.LEFT, 5));
+		communityCardsComposite.addPaintListener(new CardPaintListener(communityCards, 5, SWT.LEFT, 5));
 		return;
 	}
 	
@@ -293,7 +284,7 @@ public class TableComposite
 		
 		// Determine locations of the chip piles on the table
 		for (PlayerSeatComposite pc : allPlayers) {
-			if (gameState.getBetPile(pc.getPlayerId()).size() != 0) {
+			if (getBetPile(pc.getPlayerId()).size() != 0) {
 				playersWithBets.add(pc);
 			}
 		}
@@ -420,6 +411,7 @@ public class TableComposite
 	 * @param commonCards Adds these community cards and displays them
 	 */
 	public void addCommunityCards(Set<Card> commonCards) {
+		communityCards.addAll(commonCards);
 		communityCardsComposite.setVisible(true);
 		communityCardsComposite.redraw();
 	}
@@ -554,12 +546,31 @@ public class TableComposite
 	 * Issue a redraw of the table (when chips have moved etc.)
 	 */
 	public void updateTableGraphics() {
-		for (PlayerSeatComposite psc : getPlayerSeatComposites(true)) {
-			if (psc.getPlayerId().equals(gameState.getDealer())) {
-				dealerChipLocation = psc.getDealerChipLocation();
+		redraw();
+		update();
+	}
+	
+	private List<NavigableMap<Chip, Integer>> getBetPile(PlayerId player) {
+		List<NavigableMap<Chip, Integer>> chipStacks = new ArrayList<NavigableMap<Chip, Integer>>();
+		try {
+			GameState gs = getGameState();
+			
+			while (gs != null && !player.equals(gs.getLastBettor())) {
+				gs = gs.getPreviousGameState();
 			}
-			redraw();
-			update();
+			
+			if (gs == null) {
+				return chipStacks;
+			}
+			do {
+				gs = gs.getPreviousGameState();
+				int diff = gs.getRoundPotSize() - gs.getPreviousRoundsPotSize();
+				chipStacks.add(0, Chip.getDistribution(diff));
+			} while (gs.getPreviousRoundsPotSize() > 0);
+		} catch (Exception e) {
+			logger.error("Unexpected error when getting bet pile", e);
 		}
+		
+		return chipStacks;
 	}
 }

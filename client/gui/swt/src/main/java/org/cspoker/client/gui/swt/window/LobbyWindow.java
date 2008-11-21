@@ -18,6 +18,7 @@ import java.util.prefs.Preferences;
 
 import org.apache.log4j.Logger;
 import org.cspoker.client.User;
+import org.cspoker.client.common.SmartLobbyContext;
 import org.cspoker.client.gui.swt.control.ClientCore;
 import org.cspoker.client.gui.swt.control.ClientGUI;
 import org.cspoker.client.gui.swt.control.DisplayExecutor;
@@ -34,33 +35,17 @@ import org.cspoker.common.api.lobby.listener.AsynchronousLobbyListener;
 import org.cspoker.common.api.lobby.listener.LobbyListener;
 import org.cspoker.common.api.shared.context.RemoteServerContext;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
-import org.cspoker.common.elements.table.DetailedHoldemTable;
+import org.cspoker.common.elements.table.*;
 import org.cspoker.common.elements.table.Table;
-import org.cspoker.common.elements.table.TableConfiguration;
-import org.cspoker.common.elements.table.TableId;
-import org.cspoker.common.elements.table.TableList;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
-import org.eclipse.swt.events.MouseAdapter;
-import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.ShellAdapter;
-import org.eclipse.swt.events.ShellEvent;
+import org.eclipse.swt.events.*;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.MenuItem;
-import org.eclipse.swt.widgets.MessageBox;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.swt.widgets.TableItem;
+import org.eclipse.swt.widgets.*;
 
 /**
  * The main lobby window. Listens to {@link LobbyEvent}s and {@link ChatEvent}s
@@ -72,12 +57,12 @@ public class LobbyWindow
 	
 	private final static Logger logger = Logger.getLogger(LobbyWindow.class);
 	/** {@link LobbyContext} for callbacks to server. */
-	private RemoteLobbyContext context;
+	private SmartLobbyContext context;
 	
 	/**
 	 * @return The {@link LobbyContext} provided by the server at login.
 	 */
-	public RemoteLobbyContext getContext() {
+	public SmartLobbyContext getContext() {
 		return context;
 	}
 	
@@ -145,8 +130,10 @@ public class LobbyWindow
 		if (serverContext == null)
 			throw new IllegalArgumentException("Please provide correct server context");
 		try {
-			this.context = serverContext.getLobbyContext(new AsynchronousLobbyListener(DisplayExecutor.getInstance(),
-					this));
+			RemoteLobbyContext remoteContext = serverContext.getLobbyContext(new AsynchronousLobbyListener(
+					DisplayExecutor.getInstance(), this));
+			
+			this.context = new SmartLobbyContext(remoteContext, getClientCore().getUser().getPlayerId());
 		} catch (RemoteException e) {
 			throw new IllegalArgumentException(e);
 		} catch (IllegalActionException exception) {
@@ -578,7 +565,6 @@ public class LobbyWindow
 		refreshTables();
 	}
 	
-	@Override
 	public void onMessage(MessageEvent messageEvent) {
 	// Nothing to do yet
 	
