@@ -13,24 +13,25 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.client.bots.bot.search.node;
+package org.cspoker.client.bots.bot.search;
 
-import org.cspoker.client.bots.bot.search.OpponentModel;
 import org.cspoker.client.bots.bot.search.action.BetAction;
+import org.cspoker.client.bots.bot.search.action.CallAction;
 import org.cspoker.client.bots.bot.search.action.CheckAction;
+import org.cspoker.client.bots.bot.search.action.FoldAction;
+import org.cspoker.client.bots.bot.search.action.RaiseAction;
 import org.cspoker.client.common.gamestate.GameState;
-import org.cspoker.common.elements.player.PlayerId;
 
-public abstract class BotNoBetNode extends BotActionNode{
+public interface OpponentModel {
 
-	public BotNoBetNode(PlayerId playerId, GameState gameState, OpponentModel opponentModel,int depth) {
-		super(playerId,gameState, opponentModel, depth);
-	}
+	double getBetProbability(BetAction betAction, GameState gameState);
 
-	public void expand(){
-		expandAction(new CheckAction());
-		//if(gameState.isAllowedToRaise(playerId)) -> not needed?
-		expandAction(new BetAction(gameState.getLowerRaiseBound(playerId)));
-		expandAction(new BetAction(Math.min(5*gameState.getLowerRaiseBound(playerId),gameState.getUpperRaiseBound(playerId))));
-	}
+	double getCallProbability(CallAction callAction, GameState gameState);
+
+	double getCheckProbability(CheckAction checkAction, GameState gameState);
+
+	double getFoldProbability(FoldAction foldAction, GameState gameState);
+
+	double getRaiseProbability(RaiseAction raiseAction, GameState gameState);
+	
 }

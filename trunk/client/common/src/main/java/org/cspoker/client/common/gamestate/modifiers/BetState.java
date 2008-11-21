@@ -99,5 +99,10 @@ public class BetState extends ForwardingGameState {
 	public PlayerId getLastBettor() {
 		return event.getPlayerId();
 	}
+	
+	@Override
+	public int getNbRaises() {
+		return 1;
+	}
 
 }

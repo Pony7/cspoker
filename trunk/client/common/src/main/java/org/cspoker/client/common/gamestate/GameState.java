@@ -104,5 +104,7 @@ public interface GameState {
 	public PlayerState previewNextToAct();
 
 	public boolean hasBet();
+
+	public int getNbRaises();
 	
 }

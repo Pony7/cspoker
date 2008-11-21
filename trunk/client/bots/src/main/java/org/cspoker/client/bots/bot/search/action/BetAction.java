@@ -17,6 +17,7 @@ package org.cspoker.client.bots.bot.search.action;
 
 import java.rmi.RemoteException;
 
+import org.cspoker.client.bots.bot.search.OpponentModel;
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.client.common.gamestate.modifiers.BetState;
 import org.cspoker.common.api.lobby.holdemtable.event.BetEvent;
@@ -45,6 +46,11 @@ public class BetAction extends SimulatedBotAction{
 	@Override
 	public String toString() {
 		return "Betting "+amount;
+	}
+
+	public double calculateProbabilityIn(OpponentModel opponentModel,
+			GameState gameState) {
+		return opponentModel.getBetProbability(this, gameState);
 	}
 	
 }

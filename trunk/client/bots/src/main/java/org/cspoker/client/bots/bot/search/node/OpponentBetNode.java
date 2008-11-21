@@ -15,6 +15,7 @@
  */
 package org.cspoker.client.bots.bot.search.node;
 
+import org.cspoker.client.bots.bot.search.OpponentModel;
 import org.cspoker.client.bots.bot.search.action.CallAction;
 import org.cspoker.client.bots.bot.search.action.FoldAction;
 import org.cspoker.client.bots.bot.search.action.RaiseAction;
@@ -24,8 +25,8 @@ import org.cspoker.common.elements.player.PlayerId;
 
 public abstract class OpponentBetNode extends OpponentActionNode{
 
-	public OpponentBetNode(PlayerId botId, PlayerId opponentId, GameState gameState, int depth) {
-		super(botId,opponentId,gameState, depth);
+	public OpponentBetNode(PlayerId botId, PlayerId opponentId, GameState gameState, OpponentModel opponentModel, int depth) {
+		super(botId,opponentId,gameState, opponentModel, depth);
 	}
 
 	public void expand(){

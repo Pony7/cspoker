@@ -44,4 +44,9 @@ public class CheckState extends ForwardingGameState {
 		return null;
 	}
 	
+	@Override
+	public int getNbRaises() {
+		return 0;
+	}
+	
 }

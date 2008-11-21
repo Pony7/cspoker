@@ -147,4 +147,9 @@ public class NewDealState extends AbstractGameState {
 	public int getRoundPotSize() {
 		return 0;
 	}
+	
+	@Override
+	public int getNbRaises() {
+		return 0;
+	}
 }

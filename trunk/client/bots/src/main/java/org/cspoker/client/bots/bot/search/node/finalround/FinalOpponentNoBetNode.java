@@ -16,6 +16,7 @@
 package org.cspoker.client.bots.bot.search.node.finalround;
 
 import org.apache.log4j.Logger;
+import org.cspoker.client.bots.bot.search.OpponentModel;
 import org.cspoker.client.bots.bot.search.node.ActionNode;
 import org.cspoker.client.bots.bot.search.node.OpponentNoBetNode;
 import org.cspoker.client.common.gamestate.GameState;
@@ -26,8 +27,8 @@ public class FinalOpponentNoBetNode extends OpponentNoBetNode{
 	
 	private final static Logger logger = Logger.getLogger(FinalOpponentNoBetNode.class);
 	
-	public FinalOpponentNoBetNode(PlayerId botId, PlayerId opponentId, GameState gameState, int depth) {
-		super(botId,opponentId,gameState, depth);
+	public FinalOpponentNoBetNode(PlayerId botId, PlayerId opponentId, GameState gameState, OpponentModel opponentModel, int depth) {
+		super(botId,opponentId,gameState, opponentModel, depth);
 	}
 
 	protected double doNextPlayer(GameState newGameState, PlayerState nextToAct) {
@@ -41,9 +42,9 @@ public class FinalOpponentNoBetNode extends OpponentNoBetNode{
 			
 		}else{
 			if(newGameState.hasBet()){
-				nextNode = new FinalOpponentBetNode(botId, nextToAct.getPlayerId(),newGameState,depth+1);
+				nextNode = new FinalOpponentBetNode(botId, nextToAct.getPlayerId(),newGameState, opponentModel, depth+1);
 			}else{
-				nextNode = new FinalOpponentNoBetNode(botId, nextToAct.getPlayerId(),newGameState,depth+1);
+				nextNode = new FinalOpponentNoBetNode(botId, nextToAct.getPlayerId(),newGameState, opponentModel, depth+1);
 			}	
 		}
 		nextNode.expand();

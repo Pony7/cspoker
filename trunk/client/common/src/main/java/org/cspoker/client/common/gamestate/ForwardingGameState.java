@@ -87,4 +87,9 @@ public abstract class ForwardingGameState extends AbstractGameState{
 	public TableConfiguration getTableConfiguration() {
 		return gameState.getTableConfiguration();
 	}
+	
+	@Override
+	public int getNbRaises() {
+		return gameState.getNbRaises();
+	}
 }

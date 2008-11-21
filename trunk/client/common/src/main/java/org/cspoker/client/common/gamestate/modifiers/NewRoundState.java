@@ -167,4 +167,9 @@ public class NewRoundState extends AbstractGameState {
 	public int getNbSeats() {
 		return tableConfiguration.getMaxNbPlayers();
 	}
+	
+	@Override
+	public int getNbRaises() {
+		return 0;
+	}
 }

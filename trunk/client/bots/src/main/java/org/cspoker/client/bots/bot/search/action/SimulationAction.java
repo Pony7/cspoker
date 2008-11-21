@@ -15,27 +15,11 @@
  */
 package org.cspoker.client.bots.bot.search.action;
 
-public class SimulatedOpponentAction{
+import org.cspoker.client.bots.bot.search.OpponentModel;
+import org.cspoker.client.common.gamestate.GameState;
 
-	private final SimulatedBotAction action;
-	private final double probability;
+public interface SimulationAction {
 
-	public SimulatedOpponentAction(SimulatedBotAction action, double probability) {
-		this.action = action;
-		this.probability = probability;
-	}
-	
-	public SimulatedBotAction getAction() {
-		return action;
-	}
-	
-	public double getProbability() {
-		return probability;
-	}
-	
-	@Override
-	public String toString() {
-		return action.toString()+" with prob="+probability;
-	}
-	
+	double calculateProbabilityIn(OpponentModel opponentModel, GameState gameState);
+
 }
