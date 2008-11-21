@@ -33,7 +33,7 @@ public class FinalBotBetNode extends BotBetNode{
 	}
 
 	protected double doNextPlayer(GameState newGameState, PlayerState nextToAct) {
-		ActionNode nextNode = new FinalOpponentBetNode(playerId, nextToAct.getPlayerId(),newGameState,depth+1);
+		ActionNode nextNode = new FinalOpponentBetNode(playerId, nextToAct.getPlayerId(),newGameState, opponentModel, depth+1);
 		nextNode.expand();
 		return nextNode.getEV();
 	}

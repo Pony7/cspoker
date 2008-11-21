@@ -35,9 +35,9 @@ public class FinalOpponentNoBetNode extends OpponentNoBetNode{
 		ActionNode nextNode;
 		if(nextToAct.getPlayerId().equals(botId)){
 			if(newGameState.hasBet()){
-				nextNode = new FinalBotBetNode(botId,newGameState,depth+1);
+				nextNode = new FinalBotBetNode(botId,newGameState, opponentModel, depth+1);
 			}else{
-				nextNode = new FinalBotNoBetNode(botId,newGameState,depth+1);
+				nextNode = new FinalBotNoBetNode(botId,newGameState,opponentModel, depth+1);
 			}
 			
 		}else{
