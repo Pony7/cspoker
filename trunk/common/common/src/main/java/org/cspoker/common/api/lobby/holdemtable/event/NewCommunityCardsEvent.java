@@ -35,9 +35,10 @@ public class NewCommunityCardsEvent extends HoldemTableEvent {
 
 	private static final long serialVersionUID = -5063239366087788741L;
 
+	//JAXB doesn't like EnumSets
 	@XmlElementWrapper
 	@XmlElement(name = "card")
-	private final EnumSet<Card> communityCards;
+	private final Set<Card> communityCards;
 
 	public NewCommunityCardsEvent(EnumSet<Card> commonCards) {
 		communityCards = EnumSet.copyOf(commonCards);
@@ -47,8 +48,8 @@ public class NewCommunityCardsEvent extends HoldemTableEvent {
 		communityCards = null;
 	}
 
-	public Set<Card> getCommunityCards() {
-		return communityCards;
+	public EnumSet<Card> getCommunityCards() {
+		return EnumSet.copyOf(communityCards);
 	}
 
 	@Override
