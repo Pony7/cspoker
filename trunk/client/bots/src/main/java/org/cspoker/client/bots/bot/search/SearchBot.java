@@ -24,6 +24,7 @@ import org.cspoker.client.bots.bot.AbstractBot;
 import org.cspoker.client.bots.bot.search.node.BotActionNode;
 import org.cspoker.client.bots.bot.search.node.finalround.FinalBotBetNode;
 import org.cspoker.client.bots.bot.search.node.finalround.FinalBotNoBetNode;
+import org.cspoker.client.bots.bot.search.opponentmodel.FinalRoundModel;
 import org.cspoker.client.bots.listener.BotListener;
 import org.cspoker.client.common.SmartLobbyContext;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
@@ -37,10 +38,13 @@ public class SearchBot
 	
 	Random random = new Random();
 
+	private final FinalRoundModel opponentModelFinal;
+
 	public SearchBot(PlayerId playerId, TableId tableId,
 			SmartLobbyContext lobby, ExecutorService executor,
 			BotListener... botListeners) {
 		super(playerId, tableId, lobby, executor, botListeners);
+		this.opponentModelFinal = new FinalRoundModel();
 	}
 	
 	@Override
@@ -62,9 +66,9 @@ public class SearchBot
 							logger.debug("Searching final round game tree.");
 							BotActionNode actionNode;
 							if(tableContext.getGameState().hasBet()){
-								actionNode = new FinalBotBetNode(playerID, playerContext.getGameState(),0);
+								actionNode = new FinalBotBetNode(playerID, playerContext.getGameState(), opponentModelFinal, 0);
 							}else{
-								actionNode = new FinalBotNoBetNode(playerID, playerContext.getGameState(),0);
+								actionNode = new FinalBotNoBetNode(playerID, playerContext.getGameState(), opponentModelFinal, 0);
 							}
 							actionNode.expand();
 							actionNode.performbestAction(playerContext);
