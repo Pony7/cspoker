@@ -19,28 +19,11 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.cspoker.client.common.SmartHoldemTableListener;
+import org.cspoker.client.common.TableState;
 import org.cspoker.client.gui.swt.control.ClientGUI;
 import org.cspoker.client.gui.swt.control.SWTResourceManager;
 import org.cspoker.client.gui.swt.control.UserSeatedPlayer;
-import org.cspoker.common.api.lobby.holdemtable.event.AllInEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.BetEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.BigBlindEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.CallEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.CheckEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.FoldEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.JoinTableEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.LeaveSeatEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.LeaveTableEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.NewCommunityCardsEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.NewDealEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.NewRoundEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.NextPlayerEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.RaiseEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.ShowHandEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.SitInEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.SitOutEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.SmallBlindEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.WinnerEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.*;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.event.NewPocketCardsEvent;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.listener.HoldemPlayerListener;
 import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
@@ -51,6 +34,7 @@ import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.elements.player.SeatedPlayer;
 import org.cspoker.common.elements.table.DetailedHoldemTable;
 import org.cspoker.common.elements.table.Round;
+import org.cspoker.common.elements.table.TableConfiguration;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
@@ -81,8 +65,10 @@ public class GameWindow
 	public static final int MINIMUM_HEIGHT = 650;
 	
 	private final static Logger logger = Logger.getLogger(GameWindow.class);
+	private DetailedHoldemTable detailedTable;
 	private final UserSeatedPlayer user;
 	private TableUserInputComposite userInputComposite;
+	SmartHoldemTableListener smartListener;
 	TableComposite tableComposite;
 	
 	/**
@@ -96,10 +82,12 @@ public class GameWindow
 	 */
 	public GameWindow(LobbyWindow lobbyWindow, DetailedHoldemTable table) {
 		super(new Shell(lobbyWindow.getDisplay(), SWT.CLOSE | SWT.RESIZE), SWT.NONE, lobbyWindow.getClientCore());
-		SmartHoldemTableListener listener = new SmartHoldemTableListener(this, table);
-		gameState = listener.getTableInformationProvider();
+		TableConfiguration tableConfiguration = table.getTableConfiguration();
+		tableState = new TableState(tableConfiguration);
+		smartListener = new SmartHoldemTableListener(this, tableState);
+		detailedTable = table;
 		try {
-			user = new UserSeatedPlayer(this, getClientCore(), listener);
+			user = new UserSeatedPlayer(this, getClientCore(), smartListener);
 		} catch (IllegalValueException e) {
 			throw new IllegalStateException(e);
 		}
@@ -121,8 +109,8 @@ public class GameWindow
 	 */
 	private void configureShell(final Shell shell) {
 		// Get table info for display purposes
-		shell.setText("Logged in as " + getClientCore().getUser().getUserName() + ", Table " + gameState.getTableName()
-				+ "(Id: " + gameState.getTableId() + ")");
+		shell.setText("Logged in as " + getClientCore().getUser().getUserName() + ", Table " + detailedTable.getName()
+				+ "(Id: " + detailedTable.getId() + ")");
 		shell.setImage(SWTResourceManager.getImage(ClientGUI.Resources.CS_POKER_ICON));
 		shell.setLayout(new GridLayout());
 		logger.debug("gw size: " + getSize());
@@ -275,7 +263,7 @@ public class GameWindow
 		logger.debug("New deal event received");
 		PlayerSeatComposite newDealer = tableComposite.findPlayerSeatCompositeByPlayerId(newDealEvent.getDealer());
 		for (PlayerSeatComposite psc : tableComposite.getPlayerSeatComposites(true)) {
-			if (psc.getPlayerId().equals(gameState.getDealer())) {
+			if (psc.getPlayerId().equals(getGameState().getDealer())) {
 				tableComposite.moveDealerButton(psc, newDealer);
 			}
 			
@@ -348,7 +336,7 @@ public class GameWindow
 			userInputComposite.sitInOutButton.setSelection(true);
 		}
 		tableComposite.findPlayerSeatCompositeBySeatId(sitInEvent.getPlayer().getSeatId()).occupy(
-				gameState.getSnapshot(sitInEvent.getPlayer().getId()));
+				sitInEvent.getPlayer());
 		userInputComposite.showDealerMessage(sitInEvent);
 	}
 	
@@ -387,7 +375,6 @@ public class GameWindow
 	/**
 	 * @see org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener#onAllIn(org.cspoker.common.api.lobby.holdemtable.event.AllInEvent)
 	 */
-	@Override
 	public void onAllIn(AllInEvent allInEvent) {
 		handleActionChangedPot(allInEvent.getAmount(), allInEvent.getPlayerId(), "All In");
 		userInputComposite.showDealerMessage(allInEvent);
@@ -396,7 +383,6 @@ public class GameWindow
 	/**
 	 * @see org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener#onJoinTable(org.cspoker.common.api.lobby.holdemtable.event.JoinTableEvent)
 	 */
-	@Override
 	public void onJoinTable(JoinTableEvent joinTableEvent) {
 		userInputComposite.showDealerMessage(joinTableEvent);
 	}
@@ -404,7 +390,6 @@ public class GameWindow
 	/**
 	 * @see org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener#onLeaveTable(org.cspoker.common.api.lobby.holdemtable.event.LeaveTableEvent)
 	 */
-	@Override
 	public void onLeaveTable(LeaveTableEvent leaveGameEvent) {
 		userInputComposite.showDealerMessage(leaveGameEvent);
 	}
@@ -469,9 +454,12 @@ public class GameWindow
 	 * @param leaveSeatEvent
 	 * @see org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener#onLeaveSeat(org.cspoker.common.api.lobby.holdemtable.event.LeaveSeatEvent)
 	 */
-	@Override
 	public void onLeaveSeat(LeaveSeatEvent leaveSeatEvent) {
 	// TODO Auto-generated method stub
 	
+	}
+	
+	public DetailedHoldemTable getDetailedTable() {
+		return detailedTable;
 	}
 }

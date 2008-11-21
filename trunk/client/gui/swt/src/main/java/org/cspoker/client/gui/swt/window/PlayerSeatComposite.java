@@ -19,6 +19,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
 
 import org.apache.log4j.Logger;
+import org.cspoker.client.common.gamestate.PlayerState;
 import org.cspoker.client.gui.swt.control.CardPaintListener;
 import org.cspoker.client.gui.swt.control.Chip;
 import org.cspoker.client.gui.swt.control.ClientGUI;
@@ -73,13 +74,13 @@ public class PlayerSeatComposite
 			logger.debug("Clicked on PlayerSeatComposite, sit in if empty ...");
 			GameWindow containingGameWindow = getParent().getParent();
 			UserSeatedPlayer user = containingGameWindow.getUser();
-			SeatedPlayer userSnapshot = gameState.getSnapshot(playerId);
-			if (userSnapshot != null && userSnapshot.isSittingIn()) {
+			PlayerState userSnapshot = getGameState().getPlayer(playerId);
+			if (userSnapshot != null && userSnapshot.sitsIn()) {
 				// Dont do anything if the user is already sitting in
 				return;
 			}
-			int amount = new BuyinDialog(getClientCore(), user.getCashierContext(), gameState.getTableConfiguration()
-					.getBigBlind() * 100, true).open();
+			int amount = new BuyinDialog(getClientCore(), user.getCashierContext(), containingGameWindow
+					.getDetailedTable().getTableConfiguration().getBigBlind() * 100, true).open();
 			if (amount <= 0)
 				return;
 			try {
@@ -105,6 +106,7 @@ public class PlayerSeatComposite
 	private PlayerId playerId;
 	
 	private int numberOfHoleCards = 2;
+	private String name;
 	private final SeatId seatId;
 	/** Indicates whether this player is currently to act */
 	private boolean toAct;
@@ -164,7 +166,9 @@ public class PlayerSeatComposite
 	 */
 	public PlayerSeatComposite(TableComposite parent, int style, SeatId seatId) {
 		super(parent, style);
-		numberOfHoleCards = gameState.getNumberOfHoleCards();
+		// numberOfHoleCards = gameState.getNumberOfHoleCards();
+		// TODO Make generic for other games
+		numberOfHoleCards = 2;
 		playerId = null;
 		this.seatId = seatId;
 		initGUI();
@@ -196,7 +200,7 @@ public class PlayerSeatComposite
 		int y = 0;
 		int width = dealerChip.getImageData().width;
 		int height = dealerChip.getImageData().height;
-		switch ((int) seatId.getId()) {
+		switch (seatId.getId()) {
 			case 0:
 			case 5:
 				x = pcLocation.x + pcLocation.width;
@@ -315,10 +319,10 @@ public class PlayerSeatComposite
 		Rectangle chipsArea = getChipsArea().getBounds();
 		getParent().redraw(chipsArea.x, chipsArea.y, chipsArea.width, chipsArea.height, true);
 		getParent().update();
-		SeatedPlayer player = gameState.getSnapshot(playerId);
-		playerStack.setText(ClientGUI.formatBet(player.getStackValue()));
+		PlayerState player = getGameState().getPlayer(playerId);
+		playerStack.setText(ClientGUI.formatBet(player.getStack()));
 		playerStack.pack(true);
-		final String name = player.getName();
+		final String displayedName = name;
 		playerName.setText(action);
 		playerName.setForeground(Display.getDefault().getSystemColor(SWT.COLOR_BLUE));
 		getDisplay().timerExec(3000, new Runnable() {
@@ -331,7 +335,7 @@ public class PlayerSeatComposite
 				// Check because this may have been outdated in the meantime
 				// (sit out etc.)
 				if (!playerName.isDisposed()) {
-					playerName.setText(name);
+					playerName.setText(displayedName);
 					playerName.setForeground(Display.getDefault().getSystemColor(SWT.DEFAULT));
 				}
 			}
@@ -386,9 +390,10 @@ public class PlayerSeatComposite
 		} else {
 			logger.warn("Trying to occupy seat with " + detailedPlayer + ", " + playerId + " already sitting here");
 		}
+		name = detailedPlayer.getName();
 		playerName.setForeground(Display.getDefault().getSystemColor(SWT.DEFAULT));
 		playerName.setVisible(true);
-		playerName.setText(detailedPlayer.getName());
+		playerName.setText(name);
 		playerStack.setVisible(true);
 		playerStack.setText(ClientGUI.formatBet(detailedPlayer.getStackValue()));
 		update();
@@ -399,16 +404,20 @@ public class PlayerSeatComposite
 	 * may be occupied by clicking on it
 	 */
 	public void updatePlayerInfo() {
-		SeatedPlayer player = gameState.getSnapshot(playerId);
-		String displayedName = (player == null) ? "Empty Seat" : player.getName();
-		if (player != null && !player.isSittingIn()) {
+		PlayerState player = null;
+		if (playerId != null) {
+			player = getGameState().getPlayer(playerId);
+		}
+		String displayedName = (name == null) ? "Empty Seat" : name;
+		if (player != null && !player.sitsIn()) {
 			displayedName = displayedName.concat(" (Sitting Out)");
 		}
 		playerName.setText(displayedName);
 		if (player == null) {
+			name = null;
 			return;
 		}
-		playerStack.setText(ClientGUI.formatBet(player.getStackValue()));
+		playerStack.setText(ClientGUI.formatBet(player.getStack()));
 		playerStack.pack(true);
 		holeCardsComposite.redraw();
 		timerAction.cancel(true);
