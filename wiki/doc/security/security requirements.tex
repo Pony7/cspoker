@@ -1639,7 +1639,7 @@ Checkpointed System would be useful to implement in the Cashier process, even th
 because there must be a way to recover from a crash of a critical process such as Cashier. The Cashier process
 will be checkpointed: the cashier will reserve the money used in bets of a deal. When the deal ends, the table 
 will tell the cashier the money can be really transfered. If for some reason, the table fails and the deal is 
-cancelled, the money used in that deal will go back to it's owners.
+cancelled, the money used in that deal will go back to its owners.
 
 
 Comparator-Checked Fault-Tolerant System won't be selected because it is considered overkill (very high cost) and has too few
@@ -1681,7 +1681,7 @@ benefits from Secure Association (which by the way is not included in the list, 
 Secure Access Layer will be selected because it has only positive labels and has no relation with other patterns.
 Secure Pipe will also be selected because confidentiality and integrity are considered important quality labels.
 
-Secure Access Layer and Secure Pipe are selected to deal with the Data Integrity requirement. Secure Access Layer is instantiated before the persistence service to cope with future changes and to provide a uniform interface. Secure Pipes are instantiated wherever communication occurs over the wire.
+Secure Access Layer and Secure Pipe are selected to deal with the Data Integrity requirement. Secure Access Layer is instantiated before the persistence service to cope with future changes and to provide a uniform interface. Secure Pipes are instantiated wherever communication occurs over the wire (e.g. with SSL).
 
 We can now consider the Data Integrity requirement as resolved at the architectural level.
 \subsubsection{Availability}
@@ -1710,7 +1710,7 @@ makes it also easy to distribute the load. Different tables can for instance be 
 Replicated System isn't selected, because the cost of replicating all the components would be too great compared
 to the benefits.
 
-Load Balancer is selected to deal with the Availability requirement. It is instantiated in the poker server and should collaborate with the lobby component, that is omitted for this analysis, to balance the load between all table servers.
+Load Balancer is selected to deal with the Availability requirement. It is instantiated in the poker server and should collaborate with the lobby component, that is omitted for this analysis, to balance the load between all table servers. The table server can easily be spread over multiple servers because most game tables are independent.
 
 We can now consider the Availability requirement as resolved at the architectural level.
 
