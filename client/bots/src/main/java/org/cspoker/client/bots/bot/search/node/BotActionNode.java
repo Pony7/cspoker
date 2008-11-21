@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.cspoker.client.bots.bot.search.OpponentModel;
 import org.cspoker.client.bots.bot.search.action.BotActionEvaluation;
 import org.cspoker.client.bots.bot.search.action.SimulatedBotAction;
 import org.cspoker.client.common.gamestate.GameState;
@@ -36,8 +37,8 @@ public abstract class BotActionNode extends ActionNode{
 	
 	protected final List<BotActionEvaluation> actions = new ArrayList<BotActionEvaluation>();
 
-	public BotActionNode(PlayerId playerId, GameState gameState,int depth) {
-		super(playerId,gameState,depth);
+	public BotActionNode(PlayerId playerId, GameState gameState,OpponentModel opponentModel, int depth) {
+		super(playerId,gameState,opponentModel,depth);
 	}
 
 	public abstract void expand();

@@ -17,6 +17,7 @@ package org.cspoker.client.bots.bot.search.action;
 
 import java.rmi.RemoteException;
 
+import org.cspoker.client.bots.bot.search.OpponentModel;
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.client.common.gamestate.modifiers.FoldState;
 import org.cspoker.common.api.lobby.holdemtable.event.FoldEvent;
@@ -47,6 +48,12 @@ public class FoldAction extends SimulatedBotAction{
 	@Override
 	public String toString() {
 		return "Folding";
+	}
+
+
+	public double calculateProbabilityIn(OpponentModel opponentModel,
+			GameState gameState) {
+		return opponentModel.getFoldProbability(this, gameState);
 	}
 	
 }

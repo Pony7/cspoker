@@ -109,5 +109,14 @@ public class AllInState extends ForwardingGameState {
 	public PlayerId getLastBettor() {
 		return raise>0 ? event.getPlayerId():super.getLastBettor();
 	}
+	
+	@Override
+	public int getNbRaises() {
+		int prevNbRaises = super.getNbRaises();
+		if(raise>0){
+			return prevNbRaises+1;
+		}
+		return prevNbRaises;
+	}
 
 }

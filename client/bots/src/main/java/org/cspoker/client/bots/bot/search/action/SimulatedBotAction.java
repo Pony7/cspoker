@@ -22,7 +22,7 @@ import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.RemoteHolde
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.player.PlayerId;
 
-public abstract class SimulatedBotAction {
+public abstract class SimulatedBotAction implements SimulationAction{
 
 	public abstract void perform(RemoteHoldemPlayerContext context) throws RemoteException, IllegalActionException;
 	

@@ -97,4 +97,9 @@ public class RaiseState extends ForwardingGameState {
 		return event.getPlayerId();
 	}
 	
+	@Override
+	public int getNbRaises() {
+		return super.getNbRaises()+1;
+	}
+	
 }

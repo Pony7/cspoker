@@ -17,6 +17,7 @@ package org.cspoker.client.bots.bot.search.action;
 
 import java.rmi.RemoteException;
 
+import org.cspoker.client.bots.bot.search.OpponentModel;
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.client.common.gamestate.modifiers.CheckState;
 import org.cspoker.common.api.lobby.holdemtable.event.CheckEvent;
@@ -42,5 +43,10 @@ public class CheckAction extends SimulatedBotAction{
 	@Override
 	public String toString() {
 		return "Checking";
+	}
+
+	public double calculateProbabilityIn(OpponentModel opponentModel,
+			GameState gameState) {
+		return opponentModel.getCheckProbability(this, gameState);
 	}
 }

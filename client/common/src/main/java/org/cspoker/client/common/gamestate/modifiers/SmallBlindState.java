@@ -94,5 +94,10 @@ public class SmallBlindState extends ForwardingGameState {
 	public PlayerId getLastBettor() {
 		return event.getPlayerId();
 	}
+	
+	@Override
+	public int getNbRaises() {
+		return 0;
+	}
 
 }
