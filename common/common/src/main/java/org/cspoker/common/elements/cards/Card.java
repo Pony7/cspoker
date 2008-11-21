@@ -11,12 +11,9 @@
  */
 package org.cspoker.common.elements.cards;
 
-import java.io.Serializable;
-
 import javax.xml.bind.annotation.XmlAttribute;
 
-public enum Card
-		implements Comparable<Card>, Serializable {
+public enum Card {
 
 	//ORDER IS IMPORTANT!
 	

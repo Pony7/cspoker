@@ -14,7 +14,6 @@ package org.cspoker.client.gui.swt.window;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import org.cspoker.client.common.TableInformationProvider;
 import org.cspoker.client.gui.swt.control.ClientCore;
 import org.cspoker.client.gui.swt.control.SWTResourceManager;
 import org.eclipse.swt.widgets.Composite;

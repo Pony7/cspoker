@@ -23,7 +23,6 @@ import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.client.common.gamestate.PlayerState;
 import org.cspoker.common.elements.cards.Card;
 import org.cspoker.common.elements.cards.Deck;
-import org.cspoker.common.elements.hand.Hand;
 import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.handeval.stevebrecher.HandEval;
 
