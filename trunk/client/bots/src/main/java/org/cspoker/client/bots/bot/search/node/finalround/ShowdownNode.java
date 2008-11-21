@@ -86,7 +86,7 @@ public class ShowdownNode implements GameTreeNode{
 			EnumSet<Card> opponentCards = sampleOpponentCards(opponent,deck,usedCards);
 			opponentCards.addAll(communityCards);
 			int opponentRank = HandEval.hand7Eval(HandEval.encode(opponentCards));
-			if(opponentRank<botRank){
+			if(opponentRank>botRank){
 				EVs.add(0);
 				return;
 			}else if(opponentRank==botRank){
