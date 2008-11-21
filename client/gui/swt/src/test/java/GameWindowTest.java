@@ -1,4 +1,10 @@
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.EnumSet;
+import java.util.HashSet;
+import java.util.List;
+import java.util.TreeSet;
 
 import junit.framework.TestCase;
 
@@ -7,7 +13,16 @@ import org.cspoker.client.gui.swt.control.ClientCore;
 import org.cspoker.client.gui.swt.window.GameWindow;
 import org.cspoker.client.gui.swt.window.LobbyWindow;
 import org.cspoker.common.api.chat.event.MessageEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.*;
+import org.cspoker.common.api.lobby.holdemtable.event.BetEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.CallEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.FoldEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.NewCommunityCardsEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.NewDealEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.NextPlayerEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.RaiseEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.ShowHandEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.SitInEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.WinnerEvent;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.event.NewPocketCardsEvent;
 import org.cspoker.common.elements.cards.Card;
 import org.cspoker.common.elements.cards.Rank;
@@ -63,12 +78,10 @@ public class GameWindowTest
 					Thread.sleep(MS_ACTION_DELAY);
 					w.onNewDeal(new NewDealEvent(seatedPlayers, player1));
 					Thread.sleep(MS_ACTION_DELAY);
-					w.onNewPocketCards(new NewPocketCardsEvent(new EnumSet<Card>(Arrays.asList(new Card(Rank.QUEEN,
-							Suit.HEARTS), new Card(Rank.ACE, Suit.CLUBS)))));
+					w.onNewPocketCards(new NewPocketCardsEvent(EnumSet.of(Card.QUEEN_HEARTS, Card.ACE_CLUBS)));
 					Thread.sleep(MS_ACTION_DELAY);
-					w.onNewCommunityCards(new NewCommunityCardsEvent(new HashSet<Card>(Arrays.asList(new Card(
-							Rank.QUEEN, Suit.DIAMONDS), new Card(Rank.ACE, Suit.HEARTS),
-							new Card(Rank.SIX, Suit.HEARTS)))));
+					w.onNewCommunityCards(new NewCommunityCardsEvent(new HashSet<Card>(Arrays.asList(Card.QUEEN_DIAMONDS, Card.ACE_HEARTS,
+							Card.SIX_HEARTS))));
 					Thread.sleep(MS_ACTION_DELAY);
 					w.onNextPlayer(new NextPlayerEvent(player1.getId()));
 					Thread.sleep(MS_ACTION_DELAY);

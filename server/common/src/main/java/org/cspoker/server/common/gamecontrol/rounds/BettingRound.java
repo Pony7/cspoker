@@ -17,6 +17,7 @@
 package org.cspoker.server.common.gamecontrol.rounds;
 
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -453,10 +454,8 @@ public abstract class BettingRound extends AbstractRound {
 	protected void drawOpenCardAndPublishCommonCard() {
 		Card card = drawCard();
 		game.addOpenCard(card);
-		Set<Card> cards = new HashSet<Card>(1);
-		cards.add(card);
 		gameMediator.publishNewCommonCardsEvent(new NewCommunityCardsEvent(
-				cards));
+				EnumSet.of(card)));
 	}
 
 	/**
