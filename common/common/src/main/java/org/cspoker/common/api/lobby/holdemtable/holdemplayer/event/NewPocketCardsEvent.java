@@ -16,6 +16,7 @@
 package org.cspoker.common.api.lobby.holdemtable.holdemplayer.event;
 
 import java.util.EnumSet;
+import java.util.Set;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
@@ -30,9 +31,10 @@ public class NewPocketCardsEvent extends HoldemPlayerEvent {
 
 	private static final long serialVersionUID = -3328895783353781276L;
 
+	//JAXB doesn't like EnumSets
 	@XmlElementWrapper
 	@XmlElement(name = "card")
-	private final EnumSet<Card> pocketCards;
+	private final Set<Card> pocketCards;
 
 	public NewPocketCardsEvent(EnumSet<Card> pocketCards) {
 		this.pocketCards = EnumSet.copyOf(pocketCards);
