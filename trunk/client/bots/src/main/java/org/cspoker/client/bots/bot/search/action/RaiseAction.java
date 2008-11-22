@@ -50,7 +50,7 @@ public class RaiseAction extends SimulatedBotAction{
 
 	public double calculateProbabilityIn(OpponentModel opponentModel,
 			GameState gameState) {
-		return opponentModel.getRaiseProbability(this, gameState);
+		return opponentModel.getRaiseProbability(gameState);
 	}
 	
 }

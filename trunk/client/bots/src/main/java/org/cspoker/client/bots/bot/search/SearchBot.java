@@ -29,6 +29,7 @@ import org.cspoker.client.bots.bot.search.node.finalround.ConcurrentFinalBotNoBe
 import org.cspoker.client.bots.bot.search.opponentmodel.FinalRoundModel;
 import org.cspoker.client.bots.listener.BotListener;
 import org.cspoker.client.common.SmartLobbyContext;
+import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.common.api.lobby.holdemtable.event.AllInEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.BetEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.CallEvent;
@@ -138,10 +139,14 @@ extends AbstractBot {
 
 	@Override
 	public void onCall(final CallEvent callEvent) {
-		if(playerContext.getGameState().getRound().equals(Round.FINAL)){
+		final GameState gameState = playerContext.getGameState();
+		if(gameState.getRound().equals(Round.FINAL)){
 			executor.execute(new Runnable() {
 				public void run() {
 					opponentModelsFinal.get(callEvent.getPlayerId()).addCall();
+					if(logger.isTraceEnabled()){
+						logger.trace("Call probability is "+opponentModelsFinal.get(callEvent.getPlayerId()).getCallProbability(gameState));
+					}
 				}
 			});
 		}

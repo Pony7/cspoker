@@ -16,11 +16,6 @@
 package org.cspoker.client.bots.bot.search.opponentmodel;
 
 import org.cspoker.client.bots.bot.search.OpponentModel;
-import org.cspoker.client.bots.bot.search.action.BetAction;
-import org.cspoker.client.bots.bot.search.action.CallAction;
-import org.cspoker.client.bots.bot.search.action.CheckAction;
-import org.cspoker.client.bots.bot.search.action.FoldAction;
-import org.cspoker.client.bots.bot.search.action.RaiseAction;
 import org.cspoker.client.bots.bot.search.action.SimulationAction;
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.client.common.gamestate.modifiers.AllInState;
@@ -28,46 +23,45 @@ import org.cspoker.common.api.lobby.holdemtable.event.AllInEvent;
 
 public class FinalRoundModel implements OpponentModel{
 
-	public double getProbabilityOf(SimulationAction action, GameState gameState){
-		return action.calculateProbabilityIn(this, gameState);
-	}
+	public final static int weightOfPrior=200;
 	
 	//prior derived from data set
 	
-	private int nbCheck = 2303*200/3819;
-	private int nbBet = 1516*200/3819;
-	private int totalNoBet = 200;
+	private int nbCheck = 2303*weightOfPrior/3819;
+	private int nbBet = 1516*weightOfPrior/3819;
+	private int totalNoBet = weightOfPrior;
 	
-	private int nbFold = 641*200/1217;
-	private int nbCall = 408*200/1217;
-	private int nbRaise = 168*200/1217;
-	private int totalBet = 200;
+	private int nbFold = 641*weightOfPrior/1217;
+	private int nbCall = 408*weightOfPrior/1217;
+	private int nbRaise = 168*weightOfPrior/1217;
+	private int totalBet = weightOfPrior;
 
+	public double getProbabilityOf(SimulationAction action, GameState gameState){
+		return action.calculateProbabilityIn(this, gameState);
+	}
 
 	@Override
-	public double getCheckProbability(CheckAction checkAction,
-			GameState gameState) {
+	public double getCheckProbability(GameState gameState) {
 		return nbCheck*1.0/totalNoBet;
 	}
 
 	@Override
-	public double getBetProbability(BetAction betAction, GameState gameState) {
+	public double getBetProbability(GameState gameState) {
 		return nbBet*1.0/totalNoBet;
 	}
 
 	@Override
-	public double getCallProbability(CallAction callAction, GameState gameState) {
+	public double getCallProbability(GameState gameState) {
 		return nbCall*1.0/totalBet;
 	}
 
 	@Override
-	public double getFoldProbability(FoldAction foldAction, GameState gameState) {
+	public double getFoldProbability(GameState gameState) {
 		return nbFold*1.0/totalBet;
 	}
 
 	@Override
-	public double getRaiseProbability(RaiseAction raiseAction,
-			GameState gameState) {
+	public double getRaiseProbability(GameState gameState) {
 		return nbRaise*1.0/totalBet;
 	}
 

@@ -15,25 +15,20 @@
  */
 package org.cspoker.client.bots.bot.search;
 
-import org.cspoker.client.bots.bot.search.action.BetAction;
-import org.cspoker.client.bots.bot.search.action.CallAction;
-import org.cspoker.client.bots.bot.search.action.CheckAction;
-import org.cspoker.client.bots.bot.search.action.FoldAction;
-import org.cspoker.client.bots.bot.search.action.RaiseAction;
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.common.api.lobby.holdemtable.event.AllInEvent;
 
 public interface OpponentModel {
 
-	double getBetProbability(BetAction betAction, GameState gameState);
+	double getBetProbability(GameState gameState);
 
-	double getCallProbability(CallAction callAction, GameState gameState);
+	double getCallProbability(GameState gameState);
 
-	double getCheckProbability(CheckAction checkAction, GameState gameState);
+	double getCheckProbability(GameState gameState);
 
-	double getFoldProbability(FoldAction foldAction, GameState gameState);
+	double getFoldProbability(GameState gameState);
 
-	double getRaiseProbability(RaiseAction raiseAction, GameState gameState);
+	double getRaiseProbability(GameState gameState);
 
 	void addAllIn(GameState gameState, AllInEvent allInEvent);
 	

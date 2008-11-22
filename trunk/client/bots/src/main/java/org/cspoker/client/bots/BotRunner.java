@@ -49,7 +49,7 @@ import org.cspoker.common.util.threading.GlobalThreadPool;
 public class BotRunner
 		implements LobbyListener {
 	
-	private static final int nbGamesPerConfrontation = 100000;
+	private static final int nbGamesPerConfrontation = 30000;
 
 	static {
 		Log4JPropertiesLoader.load("org/cspoker/client/bots/logging/log4j.properties");

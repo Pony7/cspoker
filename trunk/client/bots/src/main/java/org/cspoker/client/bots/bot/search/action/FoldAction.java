@@ -53,7 +53,7 @@ public class FoldAction extends SimulatedBotAction{
 
 	public double calculateProbabilityIn(OpponentModel opponentModel,
 			GameState gameState) {
-		return opponentModel.getFoldProbability(this, gameState);
+		return opponentModel.getFoldProbability(gameState);
 	}
 	
 }
