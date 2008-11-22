@@ -15,6 +15,8 @@
  */
 package org.cspoker.client.bots.bot.search.node;
 
+import java.util.Map;
+
 import org.cspoker.client.bots.bot.search.OpponentModel;
 import org.cspoker.client.bots.bot.search.action.CallAction;
 import org.cspoker.client.bots.bot.search.action.FoldAction;
@@ -25,7 +27,7 @@ import org.cspoker.common.elements.player.PlayerId;
 
 public abstract class OpponentBetNode extends OpponentActionNode{
 
-	public OpponentBetNode(PlayerId botId, PlayerId opponentId, GameState gameState, OpponentModel opponentModel, int depth) {
+	public OpponentBetNode(PlayerId botId, PlayerId opponentId, GameState gameState, Map<PlayerId,OpponentModel> opponentModel, int depth) {
 		super(botId,opponentId,gameState, opponentModel, depth);
 	}
 
@@ -39,12 +41,13 @@ public abstract class OpponentBetNode extends OpponentActionNode{
 				0.6));	
 		if(!gameState.getPlayer(botId).isAllIn()){
 			if(gameState.isAllowedToRaise(playerId)){
-				if(Math.random()<0.2){
+				int nbRaises = gameState.getNbRaises();
+				if(Math.random()<1/(nbRaises*nbRaises)){
 					expandAction(new SimulatedOpponentAction(
 							new RaiseAction(gameState.getLowerRaiseBound(playerId)),
 							0.2));
 				}
-				if(Math.random()<0.1){
+				if(Math.random()<1.1/(nbRaises*nbRaises)){
 					expandAction(new SimulatedOpponentAction(
 							new RaiseAction(Math.min(5*gameState.getLowerRaiseBound(playerId),gameState.getUpperRaiseBound(playerId))),
 							0.1));

@@ -37,7 +37,7 @@ import com.google.common.collect.ImmutableMap.Builder;
 public class NewDealState extends AbstractGameState {
 	
 	private final TableConfiguration tableConfiguration;
-	private NewDealEvent event;
+	private final NewDealEvent event;
 
 	private final ImmutableMap<SeatId, PlayerId> seatPlayer;
 	private final ImmutableMap<PlayerId,PlayerState> playerStates;

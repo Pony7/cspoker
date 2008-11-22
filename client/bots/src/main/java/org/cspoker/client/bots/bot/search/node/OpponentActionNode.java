@@ -17,6 +17,7 @@ package org.cspoker.client.bots.bot.search.node;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.cspoker.client.bots.bot.search.OpponentModel;
@@ -35,7 +36,7 @@ public abstract class OpponentActionNode extends ActionNode{
 	protected final PlayerId botId;
 	protected final List<OpponentActionEvaluation> actions = new ArrayList<OpponentActionEvaluation>();
 
-	public OpponentActionNode(PlayerId botId, PlayerId opponentId, GameState gameState, OpponentModel opponentModel, int depth) {
+	public OpponentActionNode(PlayerId botId, PlayerId opponentId, GameState gameState, Map<PlayerId,OpponentModel> opponentModel, int depth) {
 		super(opponentId,gameState, opponentModel, depth);
 		this.botId = botId;
 	}

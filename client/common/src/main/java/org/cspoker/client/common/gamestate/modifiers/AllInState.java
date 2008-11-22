@@ -119,4 +119,8 @@ public class AllInState extends ForwardingGameState {
 		return prevNbRaises;
 	}
 
+	public int getRaise() {
+		return raise;
+	}
+
 }

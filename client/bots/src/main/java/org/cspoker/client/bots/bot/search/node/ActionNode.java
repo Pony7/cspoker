@@ -15,6 +15,8 @@
  */
 package org.cspoker.client.bots.bot.search.node;
 
+import java.util.Map;
+
 import org.cspoker.client.bots.bot.search.OpponentModel;
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.common.elements.player.PlayerId;
@@ -24,13 +26,13 @@ public abstract class ActionNode implements GameTreeNode{
 	protected final GameState gameState;
 	protected final PlayerId playerId;
 	protected final int depth;
-	protected final OpponentModel opponentModel;
+	protected final Map<PlayerId,OpponentModel> opponentModels;
 
-	public ActionNode(PlayerId playerId, GameState gameState, OpponentModel opponentModel, int depth) {
+	public ActionNode(PlayerId playerId, GameState gameState, Map<PlayerId,OpponentModel> opponentModels, int depth) {
 		this.gameState = gameState;
 		this.playerId = playerId;
 		this.depth = depth;
-		this.opponentModel = opponentModel;
+		this.opponentModels = opponentModels;
 	}
 	
 }

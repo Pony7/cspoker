@@ -17,7 +17,9 @@ package org.cspoker.client.bots.bot.search.node;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.cspoker.client.bots.bot.search.OpponentModel;
@@ -31,19 +33,22 @@ import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.RemoteHolde
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.player.PlayerId;
 
-public abstract class BotActionNode extends ActionNode{
+public abstract class BotActionNode extends ActionNode implements IBotActionNode{
 
 	private final static Logger logger = Logger.getLogger(BotActionNode.class);
 	
-	protected final List<BotActionEvaluation> actions = new ArrayList<BotActionEvaluation>();
+	protected final List<BotActionEvaluation> actions = Collections.synchronizedList(new ArrayList<BotActionEvaluation>());
 
-	public BotActionNode(PlayerId playerId, GameState gameState,OpponentModel opponentModel, int depth) {
+	public BotActionNode(PlayerId playerId, GameState gameState,Map<PlayerId,OpponentModel> opponentModel, int depth) {
 		super(playerId,gameState,opponentModel,depth);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.cspoker.client.bots.bot.search.node.IBotActionNode#expand()
+	 */
 	public abstract void expand();
 
-	protected void expandAction(SimulatedBotAction action) {
+	public void expandAction(SimulatedBotAction action) {
 		StringBuilder spaces = new StringBuilder("");
 		for(int i=0;i<depth;i++){
 			spaces.append("   ");
@@ -75,6 +80,9 @@ public abstract class BotActionNode extends ActionNode{
 
 	protected abstract double doRoundEnd(GameState newGameState);
 
+	/* (non-Javadoc)
+	 * @see org.cspoker.client.bots.bot.search.node.IBotActionNode#getEV()
+	 */
 	@Override
 	public double getEV() {
 		double maxEv=0;
@@ -86,6 +94,9 @@ public abstract class BotActionNode extends ActionNode{
 		return maxEv;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.cspoker.client.bots.bot.search.node.IBotActionNode#performbestAction(org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.RemoteHoldemPlayerContext)
+	 */
 	public void performbestAction(RemoteHoldemPlayerContext context) throws RemoteException,
 	IllegalActionException {
 		double maxEv=Double.NEGATIVE_INFINITY;
