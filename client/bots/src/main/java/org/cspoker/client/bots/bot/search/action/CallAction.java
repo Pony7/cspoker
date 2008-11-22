@@ -47,6 +47,6 @@ public class CallAction extends SimulatedBotAction{
 
 	public double calculateProbabilityIn(OpponentModel opponentModel,
 			GameState gameState) {
-		return opponentModel.getCallProbability(this, gameState);
+		return opponentModel.getCallProbability(gameState);
 	}
 }

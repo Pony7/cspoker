@@ -50,7 +50,7 @@ public class BetAction extends SimulatedBotAction{
 
 	public double calculateProbabilityIn(OpponentModel opponentModel,
 			GameState gameState) {
-		return opponentModel.getBetProbability(this, gameState);
+		return opponentModel.getBetProbability(gameState);
 	}
 	
 }

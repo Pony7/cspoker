@@ -32,25 +32,29 @@ public abstract class OpponentBetNode extends OpponentActionNode{
 	}
 
 	public void expand(){
+		OpponentModel opponentModel = opponentModels.get(playerId);
+
 		//TODO figure out weights
+		FoldAction foldAction = new FoldAction();
+		expandAction(new SimulatedOpponentAction(foldAction, foldAction.calculateProbabilityIn(opponentModel, gameState)));
+
+		CallAction callAction = new CallAction();
 		expandAction(new SimulatedOpponentAction(
-				new FoldAction(),
-				0.1));
-		expandAction(new SimulatedOpponentAction(
-				new CallAction(),
-				0.6));	
+				callAction,callAction.calculateProbabilityIn(opponentModel, gameState)));
+
 		if(!gameState.getPlayer(botId).isAllIn()){
 			if(gameState.isAllowedToRaise(playerId)){
 				int nbRaises = gameState.getNbRaises();
 				if(Math.random()<1/(nbRaises*nbRaises)){
+					RaiseAction raiseAction = new RaiseAction(gameState.getLowerRaiseBound(playerId));
 					expandAction(new SimulatedOpponentAction(
-							new RaiseAction(gameState.getLowerRaiseBound(playerId)),
-							0.2));
+							raiseAction,raiseAction.calculateProbabilityIn(opponentModel, gameState)));
 				}
+
 				if(Math.random()<1.1/(nbRaises*nbRaises)){
+					RaiseAction raiseAction = new RaiseAction(Math.min(5*gameState.getLowerRaiseBound(playerId),gameState.getUpperRaiseBound(playerId)));
 					expandAction(new SimulatedOpponentAction(
-							new RaiseAction(Math.min(5*gameState.getLowerRaiseBound(playerId),gameState.getUpperRaiseBound(playerId))),
-							0.1));
+							raiseAction, raiseAction.calculateProbabilityIn(opponentModel, gameState)));
 				}
 			}
 
