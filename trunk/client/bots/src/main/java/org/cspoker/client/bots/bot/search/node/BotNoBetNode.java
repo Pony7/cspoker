@@ -15,6 +15,8 @@
  */
 package org.cspoker.client.bots.bot.search.node;
 
+import java.util.Map;
+
 import org.cspoker.client.bots.bot.search.OpponentModel;
 import org.cspoker.client.bots.bot.search.action.BetAction;
 import org.cspoker.client.bots.bot.search.action.CheckAction;
@@ -23,14 +25,14 @@ import org.cspoker.common.elements.player.PlayerId;
 
 public abstract class BotNoBetNode extends BotActionNode{
 
-	public BotNoBetNode(PlayerId playerId, GameState gameState, OpponentModel opponentModel,int depth) {
+	public BotNoBetNode(PlayerId playerId, GameState gameState, Map<PlayerId,OpponentModel> opponentModel,int depth) {
 		super(playerId,gameState, opponentModel, depth);
 	}
 
 	public void expand(){
-		expandAction(new CheckAction());
 		//if(gameState.isAllowedToRaise(playerId)) -> not needed?
 		expandAction(new BetAction(gameState.getLowerRaiseBound(playerId)));
 		expandAction(new BetAction(Math.min(5*gameState.getLowerRaiseBound(playerId),gameState.getUpperRaiseBound(playerId))));
+		expandAction(new CheckAction());
 	}
 }

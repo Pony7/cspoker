@@ -69,7 +69,7 @@ public class ForwardingRemoteServerContext implements RemoteServerContext {
 	@Override
 	protected void finalize() throws Throwable {
 		try {
-			logger.debug("Garbage collecting old context: "+this);
+			logger.trace("Garbage collecting old context: "+this);
 		} finally{
 			super.finalize();
 		}

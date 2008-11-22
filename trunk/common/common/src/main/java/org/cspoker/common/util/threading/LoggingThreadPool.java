@@ -15,20 +15,16 @@
  */
 package org.cspoker.common.util.threading;
 
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.apache.log4j.Logger;
 
-public class LoggingThreadPool extends ThreadPoolExecutor {
+public class LoggingThreadPool extends ScheduledThreadPoolExecutor {
 
-	public LoggingThreadPool(int corePoolSize, int maximumPoolSize,
-			long keepAliveTime, TimeUnit unit, BlockingQueue<Runnable> queue,
-			String name) {
-		super(corePoolSize, maximumPoolSize, keepAliveTime, unit, queue);
-		setThreadFactory(new LoggingThreadFactory(name));
+	public LoggingThreadPool(int corePoolSize, String name) {
+		super(corePoolSize, new LoggingThreadFactory(name));
+		setMaximumPoolSize(2*corePoolSize);
 	}
 
 	private final ThreadLocal<Long> startTime = new ThreadLocal<Long>();

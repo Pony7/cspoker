@@ -20,31 +20,26 @@ import java.util.concurrent.AbstractExecutorService;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
-import java.util.concurrent.PriorityBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
 
-public class RequestExecutor extends AbstractExecutorService {
+public class GlobalThreadPool extends AbstractExecutorService {
 
 	private final static Logger logger = Logger
-			.getLogger(RequestExecutor.class);
+			.getLogger(GlobalThreadPool.class);
 
 	private LoggingThreadPool executor;
 
-	private RequestExecutor() {
+	private GlobalThreadPool() {
 		executor = new LoggingThreadPool(Math.max(2, Runtime.getRuntime()
-				.availableProcessors() * 2), Math.max(2, Runtime.getRuntime()
-				.availableProcessors() * 3), 2, TimeUnit.SECONDS,
-				new PriorityBlockingQueue<Runnable>(20,
-						new SocketRunnableComparator()), "CSPoker-Main");
+				.availableProcessors()), "CSPoker-Main");
 		executor
 				.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
 	}
 
 	public void execute(Runnable command) {
-		logger.trace("Received command: " + command);
 		executor.execute(command);
 	}
 
@@ -56,12 +51,12 @@ public class RequestExecutor extends AbstractExecutorService {
 		return executor.getMaximumPoolSize();
 	}
 
-	private static RequestExecutor instance = null;
+	private static GlobalThreadPool instance = null;
 
 	public synchronized static ExecutorService getInstance() {
 		if (instance == null) {
-			instance = new RequestExecutor();
-			logger.trace("Created Request Executor with corePoolSize "
+			instance = new GlobalThreadPool();
+			logger.debug("Created Request Executor with corePoolSize "
 					+ instance.getCorePoolSize() + " and maxPoolSize "
 					+ instance.getMaximumPoolSize());
 		}
@@ -91,19 +86,16 @@ public class RequestExecutor extends AbstractExecutorService {
 
 	@Override
 	public <T> Future<T> submit(Callable<T> task) {
-		logger.trace("Received task: " + task);
 		return executor.submit(task);
 	}
 
 	@Override
 	public Future<?> submit(Runnable task) {
-		logger.trace("Received task: " + task);
 		return executor.submit(task);
 	}
 
 	@Override
 	public <T> Future<T> submit(Runnable task, T result) {
-		logger.trace("Received task: " + task);
 		return executor.submit(task, result);
 	}
 }

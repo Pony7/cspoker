@@ -15,6 +15,8 @@
  */
 package org.cspoker.client.bots.bot.search.node;
 
+import java.util.Map;
+
 import org.cspoker.client.bots.bot.search.OpponentModel;
 import org.cspoker.client.bots.bot.search.action.CallAction;
 import org.cspoker.client.bots.bot.search.action.FoldAction;
@@ -24,17 +26,17 @@ import org.cspoker.common.elements.player.PlayerId;
 
 public abstract class BotBetNode extends BotActionNode{
 
-	public BotBetNode(PlayerId playerId, GameState gameState, OpponentModel opponentModel, int depth) {
+	public BotBetNode(PlayerId playerId, GameState gameState, Map<PlayerId,OpponentModel> opponentModel, int depth) {
 		super(playerId,gameState, opponentModel, depth);
 	}
 
 	public void expand(){
-		// fold will always be better higher up the tree? should remove?
-		expandAction(new FoldAction());
 		expandAction(new CallAction());
 		if(gameState.isAllowedToRaise(playerId)){
 			expandAction(new RaiseAction(gameState.getLowerRaiseBound(playerId)));
 			expandAction(new RaiseAction(Math.min(5*gameState.getLowerRaiseBound(playerId),gameState.getUpperRaiseBound(playerId))));
 		}
+		// fold will always be better higher up the tree? should remove?
+		expandAction(new FoldAction());
 	}
 }

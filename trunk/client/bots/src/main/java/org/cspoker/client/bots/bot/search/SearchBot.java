@@ -16,65 +16,79 @@
 package org.cspoker.client.bots.bot.search;
 
 import java.rmi.RemoteException;
+import java.util.Map;
 import java.util.Random;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 
 import org.apache.log4j.Logger;
 import org.cspoker.client.bots.bot.AbstractBot;
-import org.cspoker.client.bots.bot.search.node.BotActionNode;
-import org.cspoker.client.bots.bot.search.node.finalround.FinalBotBetNode;
-import org.cspoker.client.bots.bot.search.node.finalround.FinalBotNoBetNode;
+import org.cspoker.client.bots.bot.search.node.IBotActionNode;
+import org.cspoker.client.bots.bot.search.node.finalround.ConcurrentFinalBotBetNode;
+import org.cspoker.client.bots.bot.search.node.finalround.ConcurrentFinalBotNoBetNode;
 import org.cspoker.client.bots.bot.search.opponentmodel.FinalRoundModel;
 import org.cspoker.client.bots.listener.BotListener;
 import org.cspoker.client.common.SmartLobbyContext;
+import org.cspoker.common.api.lobby.holdemtable.event.AllInEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.BetEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.CallEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.CheckEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.FoldEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.NewDealEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.RaiseEvent;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
+import org.cspoker.common.elements.player.Player;
 import org.cspoker.common.elements.player.PlayerId;
+import org.cspoker.common.elements.table.Round;
 import org.cspoker.common.elements.table.TableId;
+import org.cspoker.common.util.threading.GlobalThreadPool;
 
 public class SearchBot
-		extends AbstractBot {
-	
+extends AbstractBot {
+
 	private final static Logger logger = Logger.getLogger(SearchBot.class);
-	
+
 	Random random = new Random();
 
-	private final FinalRoundModel opponentModelFinal;
+	private final Map<PlayerId,OpponentModel> opponentModelsFinal;
 
 	public SearchBot(PlayerId playerId, TableId tableId,
 			SmartLobbyContext lobby, ExecutorService executor,
 			BotListener... botListeners) {
 		super(playerId, tableId, lobby, executor, botListeners);
-		this.opponentModelFinal = new FinalRoundModel();
+		this.opponentModelsFinal = new ConcurrentHashMap<PlayerId, OpponentModel>(10);
 	}
-	
+
 	@Override
 	public void doNextAction() {
 		executor.execute(new Runnable() {
 			public void run() {
 				try {
 					switch (tableContext.getGameState().getRound()) {
-						case PREFLOP:
-							playerContext.checkOrCall();
-							break;
-						case FLOP:
-							playerContext.checkOrCall();
-							break;
-						case TURN:
-							playerContext.checkOrCall();
-							break;
-						case FINAL:
-							logger.debug("Searching final round game tree.");
-							BotActionNode actionNode;
-							if(tableContext.getGameState().hasBet()){
-								actionNode = new FinalBotBetNode(playerID, playerContext.getGameState(), opponentModelFinal, 0);
-							}else{
-								actionNode = new FinalBotNoBetNode(playerID, playerContext.getGameState(), opponentModelFinal, 0);
-							}
-							actionNode.expand();
-							actionNode.performbestAction(playerContext);
-							break;
-						default:
-							throw new IllegalStateException("What round are we in?");
+					case PREFLOP:
+						playerContext.checkOrCall();
+						break;
+					case FLOP:
+						playerContext.checkOrCall();
+						break;
+					case TURN:
+						playerContext.checkOrCall();
+						break;
+					case FINAL:
+						logger.debug("Searching final round game tree.");
+						IBotActionNode actionNode;
+						if(tableContext.getGameState().hasBet()){
+							actionNode = new ConcurrentFinalBotBetNode(GlobalThreadPool.getInstance(), 
+									playerID, playerContext.getGameState(), opponentModelsFinal, 0);
+						}else{
+							actionNode = new ConcurrentFinalBotNoBetNode(GlobalThreadPool.getInstance(), 
+									playerID, playerContext.getGameState(), opponentModelsFinal, 0);
+						}
+						actionNode.expand();
+						actionNode.performbestAction(playerContext);
+						break;
+					default:
+						throw new IllegalStateException("What round are we in?");
 					}		
 				} catch (IllegalActionException e) {
 					logger.error(e);
@@ -87,5 +101,87 @@ public class SearchBot
 			}
 		});
 	}
-	
+
+	@Override
+	public void onNewDeal(final NewDealEvent newDealEvent) {
+		for(Player player:newDealEvent.getPlayers()){
+			if(!opponentModelsFinal.containsKey(player.getId())){
+				opponentModelsFinal.put(player.getId(), new FinalRoundModel());
+			}
+		}
+		super.onNewDeal(newDealEvent);
+	}
+
+	@Override
+	public void onAllIn(final AllInEvent allInEvent) {
+		if(playerContext.getGameState().getRound().equals(Round.FINAL)){
+			executor.execute(new Runnable() {
+				public void run() {
+					opponentModelsFinal.get(allInEvent.getPlayerId()).addAllIn(playerContext.getGameState(), allInEvent);
+				}
+			});
+		}
+		super.onAllIn(allInEvent);
+	}
+
+	@Override
+	public void onBet(final BetEvent betEvent) {
+		if(playerContext.getGameState().getRound().equals(Round.FINAL)){
+			executor.execute(new Runnable() {
+				public void run() {
+					opponentModelsFinal.get(betEvent.getPlayerId()).addBet(betEvent.getAmount());
+				}
+			});
+		}
+		super.onBet(betEvent);
+	}
+
+	@Override
+	public void onCall(final CallEvent callEvent) {
+		if(playerContext.getGameState().getRound().equals(Round.FINAL)){
+			executor.execute(new Runnable() {
+				public void run() {
+					opponentModelsFinal.get(callEvent.getPlayerId()).addCall();
+				}
+			});
+		}
+		super.onCall(callEvent);
+	}
+
+	@Override
+	public void onFold(final FoldEvent foldEvent) {
+		if(playerContext.getGameState().getRound().equals(Round.FINAL)){
+			executor.execute(new Runnable() {
+				public void run() {
+					opponentModelsFinal.get(foldEvent.getPlayerId()).addFold();
+				}
+			});
+		}
+		super.onFold(foldEvent);
+	}
+
+	@Override
+	public void onCheck(final CheckEvent checkEvent) {
+		if(playerContext.getGameState().getRound().equals(Round.FINAL)){
+			executor.execute(new Runnable() {
+				public void run() {
+					opponentModelsFinal.get(checkEvent.getPlayerId()).addCheck();
+				}
+			});
+		}
+		super.onCheck(checkEvent);
+	}
+
+	@Override
+	public void onRaise(final RaiseEvent raiseEvent) {
+		if(playerContext.getGameState().getRound().equals(Round.FINAL)){
+			executor.execute(new Runnable() {
+				public void run() {
+					opponentModelsFinal.get(raiseEvent.getPlayerId()).addRaise(raiseEvent.getAmount());
+				}
+			});
+		}
+		super.onRaise(raiseEvent);
+	}
+
 }

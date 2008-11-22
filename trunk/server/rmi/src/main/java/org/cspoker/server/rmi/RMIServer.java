@@ -32,7 +32,7 @@ import org.cspoker.common.api.shared.context.AsynchronousServerContext;
 import org.cspoker.common.api.shared.context.ExternalRemoteServerContext;
 import org.cspoker.common.api.shared.context.RemoteServerContext;
 import org.cspoker.common.api.shared.context.ServerContext;
-import org.cspoker.common.util.threading.RequestExecutor;
+import org.cspoker.common.util.threading.GlobalThreadPool;
 import org.cspoker.server.rmi.export.ExportingServerContext;
 import org.cspoker.server.rmi.unremote.context.UnremoteServerContext;
 
@@ -58,7 +58,7 @@ public class RMIServer
 		ServerContext rootServer = cspokerServer.login(username, password);
 		RemoteServerContext context = new ExportingServerContext(
 				new UnremoteServerContext(new AsynchronousServerContext(
-						new SequencePreservingExecutor(RequestExecutor.getInstance()), rootServer)));
+						new SequencePreservingExecutor(GlobalThreadPool.getInstance()), rootServer)));
 		try {
 			UnicastRemoteObject.unexportObject(context, true);
 		} catch (NoSuchObjectException e) {
@@ -70,7 +70,7 @@ public class RMIServer
 	public void start()
 			throws AccessException, RemoteException {
 		System.setSecurityManager(null);
-		ExecutorService executor = RequestExecutor.getInstance();
+		ExecutorService executor = GlobalThreadPool.getInstance();
 		
 		try {
 			executor.submit(new Callable<Void>() {

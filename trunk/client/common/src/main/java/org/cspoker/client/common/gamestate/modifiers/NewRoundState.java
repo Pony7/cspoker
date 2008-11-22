@@ -35,7 +35,7 @@ import com.google.common.collect.ImmutableMap.Builder;
 
 public class NewRoundState extends AbstractGameState {
 
-	private NewRoundEvent event;
+	private final NewRoundEvent event;
 
 	private final ImmutableMap<SeatId, PlayerId> seatPlayer;
 	private final ImmutableMap<PlayerId,PlayerState> playerStates;

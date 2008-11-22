@@ -16,6 +16,8 @@
 package org.cspoker.client.bots.bot.search.node.finalround;
 
 
+import java.util.Map;
+
 import org.apache.log4j.Logger;
 import org.cspoker.client.bots.bot.search.OpponentModel;
 import org.cspoker.client.bots.bot.search.node.ActionNode;
@@ -28,12 +30,12 @@ public class FinalBotBetNode extends BotBetNode{
 	
 	private final static Logger logger = Logger.getLogger(FinalBotBetNode.class);
 
-	public FinalBotBetNode(PlayerId botId, GameState gameState, OpponentModel opponentModel, int depth) {
+	public FinalBotBetNode(PlayerId botId, GameState gameState, Map<PlayerId,OpponentModel> opponentModel, int depth) {
 		super(botId,gameState, opponentModel, depth);
 	}
 
 	protected double doNextPlayer(GameState newGameState, PlayerState nextToAct) {
-		ActionNode nextNode = new FinalOpponentBetNode(playerId, nextToAct.getPlayerId(),newGameState, opponentModel, depth+1);
+		ActionNode nextNode = new FinalOpponentBetNode(playerId, nextToAct.getPlayerId(),newGameState, opponentModels, depth+1);
 		nextNode.expand();
 		return nextNode.getEV();
 	}

@@ -44,12 +44,12 @@ import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.elements.table.TableConfiguration;
 import org.cspoker.common.elements.table.TableId;
 import org.cspoker.common.util.Log4JPropertiesLoader;
-import org.cspoker.common.util.threading.RequestExecutor;
+import org.cspoker.common.util.threading.GlobalThreadPool;
 
 public class BotRunner
 		implements LobbyListener {
 	
-	private static final int nbGamesPerConfrontation = 30000;
+	private static final int nbGamesPerConfrontation = 100000;
 
 	static {
 		Log4JPropertiesLoader.load("org/cspoker/client/bots/logging/log4j.properties");
@@ -152,7 +152,7 @@ public class BotRunner
 
 	private void shutdown() {
 		executor.shutdown();
-		RequestExecutor.getInstance().shutdown();
+		GlobalThreadPool.getInstance().shutdown();
 	}
 
 	public void onTableCreated(TableCreatedEvent tableCreatedEvent) {

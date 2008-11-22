@@ -49,6 +49,8 @@ public class SequencePreservingExecutor implements Executor {
 			executor.execute(new Runnable(){
 				public void run() {
 					synchronized (queueReaderLock) {
+						// empty the queue
+						readQueue();
 						// allow new runnables of this kind to be submitted
 						taskPending.set(false);
 						// empty the queue

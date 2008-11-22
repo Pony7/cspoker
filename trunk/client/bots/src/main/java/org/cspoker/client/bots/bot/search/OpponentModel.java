@@ -21,6 +21,7 @@ import org.cspoker.client.bots.bot.search.action.CheckAction;
 import org.cspoker.client.bots.bot.search.action.FoldAction;
 import org.cspoker.client.bots.bot.search.action.RaiseAction;
 import org.cspoker.client.common.gamestate.GameState;
+import org.cspoker.common.api.lobby.holdemtable.event.AllInEvent;
 
 public interface OpponentModel {
 
@@ -33,5 +34,16 @@ public interface OpponentModel {
 	double getFoldProbability(FoldAction foldAction, GameState gameState);
 
 	double getRaiseProbability(RaiseAction raiseAction, GameState gameState);
+
+	void addAllIn(GameState gameState, AllInEvent allInEvent);
 	
+	void addCheck();
+	
+	void addBet(int amount);
+
+	void addCall();
+
+	void addRaise(int raise);
+
+	void addFold();
 }

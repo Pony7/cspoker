@@ -27,7 +27,7 @@ import org.cspoker.common.elements.player.PlayerId;
 
 public class RaiseAction extends SimulatedBotAction{
 
-	private int amount;
+	private final int amount;
 
 	public RaiseAction(int amount) {
 		this.amount = amount;

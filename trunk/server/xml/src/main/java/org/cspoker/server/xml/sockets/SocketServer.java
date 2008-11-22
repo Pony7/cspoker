@@ -25,7 +25,7 @@ import java.util.concurrent.Executor;
 
 import org.apache.log4j.Logger;
 import org.cspoker.common.CSPokerServer;
-import org.cspoker.common.util.threading.RequestExecutor;
+import org.cspoker.common.util.threading.GlobalThreadPool;
 import org.cspoker.server.xml.sockets.runnables.WaitForIO;
 
 public class SocketServer {
@@ -62,7 +62,7 @@ public class SocketServer {
 	}
 
 	public void start() {
-		executor = RequestExecutor.getInstance();
+		executor = GlobalThreadPool.getInstance();
 		// Infinite server loop
 		executor.execute(new WaitForIO(executor, selector, server, this.cspokerServer));
 		logger.info("Socket server running on port " + port);

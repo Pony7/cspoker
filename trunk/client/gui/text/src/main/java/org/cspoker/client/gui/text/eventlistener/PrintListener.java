@@ -16,8 +16,6 @@
 package org.cspoker.client.gui.text.eventlistener;
 
 import org.cspoker.client.gui.text.Console;
-import org.cspoker.common.api.shared.event.ServerEvent;
-import org.cspoker.common.api.shared.listener.ServerEventListener;
 
 public class PrintListener implements ServerEventListener {
 

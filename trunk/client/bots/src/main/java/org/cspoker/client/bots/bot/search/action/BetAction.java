@@ -27,7 +27,7 @@ import org.cspoker.common.elements.player.PlayerId;
 
 public class BetAction extends SimulatedBotAction{
 
-	private int amount;
+	private final int amount;
 
 	public BetAction(int amount) {
 		this.amount = amount;
