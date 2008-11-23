@@ -4,6 +4,7 @@
 		<![CDATA[
 			import models.Main;
 			
+			
 			private var main:Main = null;
 			public function launchApp():void{
 				main = new Main(this, lobby, table, connectionBox, registerBox);

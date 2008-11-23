@@ -204,6 +204,12 @@ package models.connection
 						Main.table.tableModel.getPlayerByPlayerId(tempPlayerId1).checkEvent();
 						return;
 						break;
+						
+					case "ns2:callEvent":
+						var tempPlayerId1:int = event["playerId"];
+						Main.table.tableModel.getPlayerByPlayerId(tempPlayerId1).callEvent();
+						return;
+						break;
 					
 					case "ns2:foldEvent":
 						var tempPlayerId2:int = event["playerId"];

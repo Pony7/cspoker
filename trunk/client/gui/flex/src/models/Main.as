@@ -17,7 +17,9 @@ package models
 	{
 		public static var lobby:Lobby = null;
 		public static var table:Table = null;
+		//public static var containerApp:CSPoker = null;
 		public static var containerApp:CSPoker = null;
+		//public static var containerWebApp:CSPokerWeb = null;
 		public static var connectionBox:ConnectionBox = null;
 		public static var registerBox:RegisterBox = null;
 		
@@ -33,6 +35,8 @@ package models
 		public static var detailedTables:Dictionary = new Dictionary;
 		
 		public static var isInTable:Boolean = false;
+		
+		public static var isWebApp:Boolean = false;
 			
 		//public static var newServerConnection:ServerConnectionNew = null;
 		//public static var newMessageCenter:MessageCenterNew = null;
@@ -42,6 +46,8 @@ package models
 			containerApp = passedContainerApp;
 			
 			containerApp.addEventListener(Event.CLOSING,closeHandler)
+			
+			
   
 
 			table = passedTable;
