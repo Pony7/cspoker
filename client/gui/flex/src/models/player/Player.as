@@ -87,18 +87,21 @@ package models.player
 			var maxBet:int = this.getStackSize();
 			
 			Main.table.gamePanel.gamePanelOnTurn.setConstraints(chipsToCall, maxBet);
-			
+			this.playerSeat.turnTimer.startTimer();
 		}
 		
 		private function opponentTurn(callAmount:int):void{
 			chipsToCall = callAmount;
 			Main.clientTurn = false;
 			Main.table.gamePanel.showOffTurn();
+			this.playerSeat.turnTimer.startTimer();
 		}
 		
 		public function checkEvent():void{
 			trace("check event received...");
 			Main.table.dealerBox.dealerMessage(this.getPlayerName() + " checks...");
+			this.playerSeat.turnTimer.stopTimer();
+			//this.playerSeat.turnTimer.visible = false;
 			return;
 		}
 		
@@ -107,6 +110,7 @@ package models.player
 			playerSeat.chipsToBet(chipsToCall);
 			Main.table.dealerBox.dealerMessage(this.getPlayerName() + " calls " + chipsToCall);
 			incrementBetChips(chipsToCall);
+			this.playerSeat.turnTimer.stopTimer();
 			return;
 		}
 		
@@ -115,6 +119,7 @@ package models.player
 			Main.table.dealerBox.dealerMessage(this.getPlayerName() + " bets " + amount);
 			playerSeat.chipsToBet(amount);
 			incrementBetChips(amount);
+			this.playerSeat.turnTimer.stopTimer();
 			return;
 		}
 		
@@ -132,6 +137,7 @@ package models.player
 			trace("fold event received...");
 			Main.table.dealerBox.dealerMessage(this.getPlayerName() + " folds...");
 			playerSeat.showFold();
+			this.playerSeat.turnTimer.stopTimer();
 			return;
 		}
 		
@@ -139,6 +145,7 @@ package models.player
 			trace("all in event received...");
 			Main.table.dealerBox.dealerMessage(this.getPlayerName() + "goes all in!");
 			playerSeat.showAllIn();
+			this.playerSeat.turnTimer.stopTimer();
 		}
 		
 		public function getPlayerName():String{

@@ -15,6 +15,9 @@ package models
 		public static const SPOTLIGHT_RADIUS:int = 100;
 		public static const SPOTLIGHT_ALPHA:Number = 0.5;
 		
+		public static const TIMER_WIDTH:int = 60;
+		public static const TIMER_HEIGHT:int = 10;
+		public static const TIMER_SECONDS:int = 12;
 		
 		//public static const USE_OLD_API:Boolean = true;
 		public function Config()

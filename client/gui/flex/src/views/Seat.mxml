@@ -14,7 +14,7 @@
 			<mx:SetStyle name="themeColor" value="#6C6C6C"/>
 			<mx:SetStyle name="borderColor" value="#6F6F6F"/>
 			<mx:AddChild position="lastChild">
-				<mx:Image x="9" y="8" id="userPhoto" maxHeight="60" maxWidth="60" scaleContent="true" source="images/seat/noimg.jpg"/>
+				<mx:Image x="9" y="15" id="userPhoto" maxHeight="60" maxWidth="60" scaleContent="true" source="images/seat/noimg.jpg"/>
 			</mx:AddChild>
 			<mx:AddChild position="lastChild">
 				<mx:TextArea x="10" y="60" id="userName" text="User Name" maxChars="7" wordWrap="false" editable="false" enabled="true" fontSize="11" textAlign="center" selectable="false" width="62" height="24" fontWeight="bold"/>
@@ -78,6 +78,8 @@
 			private var card1:CardDeck;
 			private var card2:CardDeck;
 			
+			public var turnTimer:TurnTimer;
+			
 
 			public function initEnd():void{
 				
@@ -110,6 +112,13 @@
 				seatItemsContainer = new UIComponent;
 				addChild(seatItemsContainer);
 				
+				turnTimer = new TurnTimer(1000,30000,null);
+				turnTimer.x = 10;
+				turnTimer.y = 4;
+				seatItemsContainer.addChild(turnTimer);
+				
+				
+				
 			}
 			
 			public function showBuyInClicked():void{
@@ -122,8 +131,6 @@
 				if(passedPlayerObj.id == Main.clientPlayerId){
 					Main.clientSeat = this;
 				}
-				
-				
 				var ds:DropShadowFilter = new DropShadowFilter();  
 				ds.distance = 6;  
 				ds.alpha = .6;  
