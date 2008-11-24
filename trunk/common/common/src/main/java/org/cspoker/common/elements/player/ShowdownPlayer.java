@@ -16,6 +16,7 @@
 package org.cspoker.common.elements.player;
 
 import java.util.EnumSet;
+import java.util.Set;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
@@ -28,13 +29,13 @@ public class ShowdownPlayer extends Player {
 
 	@XmlElementWrapper
 	@XmlElement(name = "card")
-	private EnumSet<Card> cards;
+	private Set<Card> cards;
 
 	private String description;
 
 	@XmlElementWrapper
 	@XmlElement(name = "card")
-	private EnumSet<Card> handCards;
+	private Set<Card> handCards;
 
 	public ShowdownPlayer(Player player, EnumSet<Card> cards, EnumSet<Card> handCards,
 			String description) {
