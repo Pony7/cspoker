@@ -4,5 +4,10 @@
 = Introduction = 
 More documentation will follow...
 
-= Player State Diagram =
-[http://cspoker.googlecode.com/svn/wiki/img/player_state_diagram_0.1.png]
+= Requirements =
+  * [PlayerRequirements Player Requirements]
+  * [AdminRequirements Admin Requirements]
+
+= Decomposition View =
+
+= Deployment View =
