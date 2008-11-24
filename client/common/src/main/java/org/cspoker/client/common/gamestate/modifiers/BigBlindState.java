@@ -15,6 +15,9 @@
  */
 package org.cspoker.client.common.gamestate.modifiers;
 
+import java.util.Collections;
+import java.util.List;
+
 import org.cspoker.client.common.gamestate.ForwardingGameState;
 import org.cspoker.client.common.gamestate.ForwardingPlayerState;
 import org.cspoker.client.common.gamestate.GameState;
@@ -23,19 +26,21 @@ import org.cspoker.common.api.lobby.holdemtable.event.BigBlindEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.HoldemTableEvent;
 import org.cspoker.common.elements.player.PlayerId;
 
-public class BigBlindState extends ForwardingGameState {
-
+public class BigBlindState
+		extends ForwardingGameState {
+	
 	private final BigBlindEvent event;
 	private final int newPot;
 	private final PlayerState playerState;
-
+	
 	public BigBlindState(GameState gameState, BigBlindEvent event) {
 		super(gameState);
 		this.event = event;
 		PlayerState oldPlayerState = super.getPlayer(event.getPlayerId());
-		final int newStack = oldPlayerState.getStack()-event.getAmount();
-		this.newPot = super.getRoundPotSize()+event.getAmount();
-		playerState = new ForwardingPlayerState(oldPlayerState){
+		final int newStack = oldPlayerState.getStack() - event.getAmount();
+		this.newPot = super.getRoundPotSize() + event.getAmount();
+		playerState = new ForwardingPlayerState(oldPlayerState) {
+			
 			@Override
 			public int getBet() {
 				return BigBlindState.this.event.getAmount();
@@ -60,27 +65,35 @@ public class BigBlindState extends ForwardingGameState {
 			public PlayerId getPlayerId() {
 				return BigBlindState.this.event.getPlayerId();
 			}
+			
+			/**
+			 * {@inheritDoc}
+			 */
+			@Override
+			public List<Integer> getBetProgression() {
+				return Collections.singletonList(getBet());
+			}
 		};
 	}
 	
 	@Override
 	public PlayerState getPlayer(PlayerId playerId) {
-		if(event.getPlayerId().equals(playerId)){
+		if (event.getPlayerId().equals(playerId)) {
 			return playerState;
 		}
 		return super.getPlayer(playerId);
 	}
-
+	
 	@Override
 	public int getLargestBet() {
 		return event.getAmount();
 	}
-
+	
 	@Override
 	public int getMinNextRaise() {
 		return event.getAmount();
 	}
-
+	
 	@Override
 	public int getRoundPotSize() {
 		return newPot;
@@ -99,5 +112,5 @@ public class BigBlindState extends ForwardingGameState {
 	public int getNbRaises() {
 		return 0;
 	}
-
+	
 }

@@ -15,6 +15,10 @@
  */
 package org.cspoker.client.common.gamestate.modifiers;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import org.cspoker.client.common.gamestate.ForwardingGameState;
 import org.cspoker.client.common.gamestate.ForwardingPlayerState;
 import org.cspoker.client.common.gamestate.GameState;
@@ -23,24 +27,25 @@ import org.cspoker.common.api.lobby.holdemtable.event.CallEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.HoldemTableEvent;
 import org.cspoker.common.elements.player.PlayerId;
 
-public class CallState extends ForwardingGameState {
-
+public class CallState
+		extends ForwardingGameState {
+	
 	private final CallEvent event;
 	private final int newPotSize;
-
+	
 	private final PlayerState playerState;
 	
-	public CallState(GameState gameState, CallEvent event) {
+	public CallState(final GameState gameState, CallEvent event) {
 		super(gameState);
 		this.event = event;
 		
 		final int newBetSize = super.getLargestBet();
 		
-		PlayerState player = super.getPlayer(event.getPlayerId());
-		final int chipsMoved = newBetSize-player.getBet();
-		this.newPotSize = super.getRoundPotSize()+chipsMoved;
+		final PlayerState player = super.getPlayer(event.getPlayerId());
+		final int chipsMoved = newBetSize - player.getBet();
+		this.newPotSize = super.getRoundPotSize() + chipsMoved;
 		
-		playerState = new ForwardingPlayerState(player){
+		playerState = new ForwardingPlayerState(player) {
 			
 			@Override
 			public int getBet() {
@@ -49,7 +54,7 @@ public class CallState extends ForwardingGameState {
 			
 			@Override
 			public int getStack() {
-				return super.getStack()-chipsMoved;
+				return super.getStack() - chipsMoved;
 			}
 			
 			@Override
@@ -67,12 +72,22 @@ public class CallState extends ForwardingGameState {
 				return true;
 			}
 			
+			/**
+			 * {@inheritDoc}
+			 */
+			@Override
+			public List<Integer> getBetProgression() {
+				List<Integer> result = new ArrayList<Integer>();
+				result.addAll(gameState.getPlayer(gameState.getLastBettor()).getBetProgression());
+				return Collections.unmodifiableList(result);
+			}
+			
 		};
 	}
-
+	
 	@Override
 	public PlayerState getPlayer(PlayerId playerId) {
-		if(event.getPlayerId().equals(playerId)){
+		if (event.getPlayerId().equals(playerId)) {
 			return playerState;
 		}
 		return super.getPlayer(playerId);

@@ -15,6 +15,10 @@
  */
 package org.cspoker.client.common.gamestate.modifiers;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import org.cspoker.client.common.gamestate.ForwardingGameState;
 import org.cspoker.client.common.gamestate.ForwardingPlayerState;
 import org.cspoker.client.common.gamestate.GameState;
@@ -23,21 +27,23 @@ import org.cspoker.common.api.lobby.holdemtable.event.HoldemTableEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.RaiseEvent;
 import org.cspoker.common.elements.player.PlayerId;
 
-public class RaiseState extends ForwardingGameState {
-
+public class RaiseState
+		extends ForwardingGameState {
+	
 	private final RaiseEvent event;
 	private final int newBetSize;
 	private final int newPotSize;
 	private final PlayerState playerState;
-
-	public RaiseState(GameState gameState, RaiseEvent event) {
+	
+	public RaiseState(final GameState gameState, final RaiseEvent event) {
 		super(gameState);
 		this.event = event;
-		PlayerState oldPlayerState = super.getPlayer(event.getPlayerId());
-		this.newBetSize = super.getLargestBet()+event.getAmount();
-		final int newStack = oldPlayerState.getStack()-event.getMovedAmount();
-		this.newPotSize = super.getRoundPotSize()+event.getMovedAmount();
-		playerState = new ForwardingPlayerState(oldPlayerState){
+		final PlayerState oldPlayerState = super.getPlayer(event.getPlayerId());
+		this.newBetSize = super.getLargestBet() + event.getAmount();
+		final int newStack = oldPlayerState.getStack() - event.getMovedAmount();
+		this.newPotSize = super.getRoundPotSize() + event.getMovedAmount();
+		playerState = new ForwardingPlayerState(oldPlayerState) {
+			
 			@Override
 			public int getBet() {
 				return RaiseState.this.newBetSize;
@@ -62,27 +68,38 @@ public class RaiseState extends ForwardingGameState {
 			public boolean sitsIn() {
 				return true;
 			}
+			
+			/**
+			 * {@inheritDoc}
+			 */
+			@Override
+			public List<Integer> getBetProgression() {
+				List<Integer> result = new ArrayList<Integer>();
+				result.addAll(gameState.getPlayer(gameState.getLastBettor()).getBetProgression());
+				result.add(event.getAmount());
+				return Collections.unmodifiableList(result);
+			}
 		};
 	}
 	
 	@Override
 	public PlayerState getPlayer(PlayerId playerId) {
-		if(event.getPlayerId().equals(playerId)){
+		if (event.getPlayerId().equals(playerId)) {
 			return playerState;
 		}
 		return super.getPlayer(playerId);
 	}
-
+	
 	@Override
 	public int getLargestBet() {
 		return newBetSize;
 	}
-
+	
 	@Override
 	public int getMinNextRaise() {
 		return event.getAmount();
 	}
-
+	
 	@Override
 	public int getRoundPotSize() {
 		return newPotSize;
@@ -99,7 +116,7 @@ public class RaiseState extends ForwardingGameState {
 	
 	@Override
 	public int getNbRaises() {
-		return super.getNbRaises()+1;
+		return super.getNbRaises() + 1;
 	}
 	
 }

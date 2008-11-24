@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.Map.Entry;
 
 import org.apache.log4j.Logger;
-import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.client.gui.swt.control.CardPaintListener;
 import org.cspoker.client.gui.swt.control.Chip;
 import org.cspoker.client.gui.swt.control.ClientGUI;
@@ -151,8 +150,13 @@ public class TableComposite
 					drawChips(e.gc, dealerChipLocation, Arrays.asList(dealerChip), false, true);
 				}
 				if (redrawArea.intersects(potChipsArea.getBounds()) && redrawArea.intersects(potChipsArea.getBounds())) {
-					drawChips(e.gc, potChipsArea.getBounds(), Arrays.asList(Chip.getDistribution(getGameState()
-							.getGamePotSize())), true, false);
+					int potSize = 0;
+					try {
+						potSize = getGameState().getPreviousRoundsPotSize();
+					} catch (Exception e1) {
+						logger.warn(e1);
+					}
+					drawChips(e.gc, potChipsArea.getBounds(), Arrays.asList(Chip.getDistribution(potSize)), true, false);
 				}
 			}
 		});
@@ -552,25 +556,9 @@ public class TableComposite
 	
 	private List<NavigableMap<Chip, Integer>> getBetPile(PlayerId player) {
 		List<NavigableMap<Chip, Integer>> chipStacks = new ArrayList<NavigableMap<Chip, Integer>>();
-		try {
-			GameState gs = getGameState();
-			
-			while (gs != null && !player.equals(gs.getLastBettor())) {
-				gs = gs.getPreviousGameState();
-			}
-			
-			if (gs == null) {
-				return chipStacks;
-			}
-			do {
-				gs = gs.getPreviousGameState();
-				int diff = gs.getRoundPotSize() - gs.getPreviousRoundsPotSize();
-				chipStacks.add(0, Chip.getDistribution(diff));
-			} while (gs.getPreviousRoundsPotSize() > 0);
-		} catch (Exception e) {
-			logger.error("Unexpected error when getting bet pile", e);
+		for (Integer i : tableState.getGameState().getPlayer(player).getBetProgression()) {
+			chipStacks.add(Chip.getDistribution(i));
 		}
-		
 		return chipStacks;
 	}
 }

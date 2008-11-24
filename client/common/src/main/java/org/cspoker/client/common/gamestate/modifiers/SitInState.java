@@ -15,7 +15,9 @@
  */
 package org.cspoker.client.common.gamestate.modifiers;
 
+import java.util.Collections;
 import java.util.EnumSet;
+import java.util.List;
 import java.util.Set;
 
 import org.cspoker.client.common.gamestate.AbstractPlayerState;
@@ -31,50 +33,59 @@ import org.cspoker.common.elements.table.SeatId;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 
-public class SitInState extends ForwardingGameState {
-
+public class SitInState
+		extends ForwardingGameState {
+	
 	private final SitInEvent event;
 	private final PlayerState playerState;
 	
 	public SitInState(GameState gameState, SitInEvent event) {
 		super(gameState);
 		this.event = event;
-		playerState = new AbstractPlayerState(){
-
+		playerState = new AbstractPlayerState() {
+			
 			public int getBet() {
 				return 0;
 			}
-
+			
 			public EnumSet<Card> getCards() {
 				return EnumSet.noneOf(Card.class);
 			}
-
+			
 			public PlayerId getPlayerId() {
 				return SitInState.this.event.getPlayer().getId();
 			}
-
+			
 			public SeatId getSeatId() {
 				return SitInState.this.event.getPlayer().getSeatId();
 			}
-
+			
 			public int getStack() {
 				return SitInState.this.event.getPlayer().getStackValue();
 			}
-
+			
 			public boolean hasFolded() {
 				return false;
 			}
-
+			
 			public boolean sitsIn() {
 				return true;
 			}
 			
+			/**
+			 * {@inheritDoc}
+			 */
+			@Override
+			public List<Integer> getBetProgression() {
+				return Collections.emptyList();
+			}
+			
 		};
 	}
-
+	
 	@Override
 	public PlayerState getPlayer(PlayerId playerId) {
-		if(event.getPlayer().getId().equals(playerId)){
+		if (event.getPlayer().getId().equals(playerId)) {
 			return playerState;
 		}
 		return super.getPlayer(playerId);
@@ -82,19 +93,19 @@ public class SitInState extends ForwardingGameState {
 	
 	@Override
 	public Set<PlayerId> getAllSeatedPlayerIds() {
-		return Sets.union(super.getAllSeatedPlayerIds(),ImmutableSet.of(event.getPlayer().getId()));
+		return Sets.union(super.getAllSeatedPlayerIds(), ImmutableSet.of(event.getPlayer().getId()));
 	}
 	
 	@Override
 	public PlayerId getPlayerId(SeatId seatId) {
-		if(event.getPlayer().getSeatId().equals(seatId)){
+		if (event.getPlayer().getSeatId().equals(seatId)) {
 			return event.getPlayer().getId();
 		}
 		return super.getPlayerId(seatId);
 	}
-
+	
 	public HoldemTableEvent getLastEvent() {
 		return event;
 	}
-
+	
 }

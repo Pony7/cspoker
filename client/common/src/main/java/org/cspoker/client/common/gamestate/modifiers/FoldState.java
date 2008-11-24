@@ -15,6 +15,8 @@
  */
 package org.cspoker.client.common.gamestate.modifiers;
 
+import java.util.List;
+
 import org.cspoker.client.common.gamestate.ForwardingGameState;
 import org.cspoker.client.common.gamestate.ForwardingPlayerState;
 import org.cspoker.client.common.gamestate.GameState;
@@ -23,15 +25,17 @@ import org.cspoker.common.api.lobby.holdemtable.event.FoldEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.HoldemTableEvent;
 import org.cspoker.common.elements.player.PlayerId;
 
-public class FoldState extends ForwardingGameState {
-
+public class FoldState
+		extends ForwardingGameState {
+	
 	private final FoldEvent event;
 	private final PlayerState playerState;
-
+	
 	public FoldState(GameState gameState, FoldEvent event) {
 		super(gameState);
 		this.event = event;
-		playerState = new ForwardingPlayerState(super.getPlayer(event.getPlayerId())){
+		final PlayerState oldPlayerState = super.getPlayer(event.getPlayerId());
+		playerState = new ForwardingPlayerState(oldPlayerState) {
 			
 			@Override
 			public boolean hasFolded() {
@@ -48,12 +52,20 @@ public class FoldState extends ForwardingGameState {
 				return FoldState.this.event.getPlayerId();
 			}
 			
+			/**
+			 * {@inheritDoc}
+			 */
+			@Override
+			public List<Integer> getBetProgression() {
+				return oldPlayerState.getBetProgression();
+			}
+			
 		};
 	}
 	
 	@Override
 	public PlayerState getPlayer(PlayerId playerId) {
-		if(event.getPlayerId().equals(playerId)){
+		if (event.getPlayerId().equals(playerId)) {
 			return playerState;
 		}
 		return super.getPlayer(playerId);

@@ -224,7 +224,8 @@ public class TableUserInputComposite
 						
 						@Override
 						public void mouseDown(MouseEvent evt) {
-						// setNewBetRaiseAmount(gameState.getPotRaiseAmount(user.getId()));
+							setNewBetRaiseAmount(tableState.getGameState().getGamePotSize()
+									+ tableState.getGameState().getCallValue(user.getId()));
 						}
 					});
 				}

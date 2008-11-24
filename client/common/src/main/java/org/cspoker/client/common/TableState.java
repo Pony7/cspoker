@@ -16,16 +16,18 @@
 package org.cspoker.client.common;
 
 import org.cspoker.client.common.gamestate.GameState;
+import org.cspoker.client.common.gamestate.InitialGameState;
 import org.cspoker.common.elements.table.TableConfiguration;
 
 public class TableState {
-
+	
 	private final TableConfiguration tableConfiguration;
-
+	
 	private GameState gameState;
 	
 	public TableState(TableConfiguration tableConfiguration) {
 		this.tableConfiguration = tableConfiguration;
+		this.gameState = new InitialGameState(tableConfiguration);
 	}
 	
 	public TableConfiguration getTableConfiguration() {

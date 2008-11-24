@@ -29,15 +29,7 @@ import org.cspoker.common.elements.cards.Suit;
 import org.eclipse.swt.SWTException;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
-import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.Cursor;
-import org.eclipse.swt.graphics.Font;
-import org.eclipse.swt.graphics.FontData;
-import org.eclipse.swt.graphics.GC;
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.ImageData;
-import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.Resource;
+import org.eclipse.swt.graphics.*;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Widget;
 
@@ -185,8 +177,9 @@ public class SWTResourceManager {
 	 */
 	public static Image getCardImage(Card card) {
 		Image img = null;
-		if (resources.containsKey(card.toString()))
-			return (Image) resources.get(card.toString());
+		String key = (card != ClientGUI.UNKNOWN_CARD) ? card.toString() : "back";
+		if (resources.containsKey(key))
+			return (Image) resources.get(key);
 		if (ClientGUI.Resources.ACTIVE_DECK_IMG_FILE.isFile()) {
 			Image deck = getImage(ClientGUI.Resources.ACTIVE_DECK_IMG_FILE);
 			img = getCardFromDeck(deck, card);
@@ -194,7 +187,7 @@ public class SWTResourceManager {
 			img = getImage(new File(ClientGUI.Resources.ACTIVE_DECK_IMG_FILE, card.toString() + ".png"));
 		}
 		
-		resources.put(card.toString(), img);
+		resources.put(key, img);
 		return img;
 		
 	}
@@ -202,7 +195,7 @@ public class SWTResourceManager {
 	public static Image getCardFromDeck(Image deck, Card card) {
 		// Calculate drawing values
 		int xLookUp, yLookUp;
-		if (card.getRank() == null || card.getSuit() == null) {
+		if (card == ClientGUI.UNKNOWN_CARD) {
 			xLookUp = 14;
 			yLookUp = 1;
 		} else {
