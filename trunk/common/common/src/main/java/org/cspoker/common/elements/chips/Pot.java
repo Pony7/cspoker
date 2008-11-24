@@ -24,20 +24,21 @@ import net.jcip.annotations.Immutable;
 import org.cspoker.common.elements.player.SeatedPlayer;
 
 @Immutable
-public class Pot implements Serializable {
-
+public class Pot
+		implements Serializable {
+	
 	private static final long serialVersionUID = -6468969689319977981L;
 	
 	private final Set<SeatedPlayer> contributors;
 	
 	private final int value;
 	
-	public Pot(Set<SeatedPlayer> players, int value){
+	public Pot(Set<SeatedPlayer> players, int value) {
 		this.contributors = players;
 		this.value = value;
 	}
 	
-	protected Pot(){
+	protected Pot() {
 		this.contributors = null;
 		this.value = 0;
 	}
@@ -60,8 +61,9 @@ public class Pot implements Serializable {
 		return contributors;
 	}
 	
-	public String toString(){
-		return contributors.toString()+" > "+value+" chips";
+	@Override
+	public String toString() {
+		return contributors.toString() + " > " + value + " chips";
 	}
-
+	
 }

@@ -33,82 +33,95 @@ import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.RemoteHolde
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.player.PlayerId;
 
-public abstract class BotActionNode extends ActionNode implements IBotActionNode{
-
+public abstract class BotActionNode
+		extends ActionNode
+		implements IBotActionNode {
+	
 	private final static Logger logger = Logger.getLogger(BotActionNode.class);
 	
-	protected final List<BotActionEvaluation> actions = Collections.synchronizedList(new ArrayList<BotActionEvaluation>());
-
-	public BotActionNode(PlayerId playerId, GameState gameState,Map<PlayerId,OpponentModel> opponentModel, int depth) {
-		super(playerId,gameState,opponentModel,depth);
+	protected final List<BotActionEvaluation> actions = Collections
+			.synchronizedList(new ArrayList<BotActionEvaluation>());
+	
+	public BotActionNode(PlayerId playerId, GameState gameState, Map<PlayerId, OpponentModel> opponentModel, int depth) {
+		super(playerId, gameState, opponentModel, depth);
 	}
-
-	/* (non-Javadoc)
+	
+	/*
+	 * (non-Javadoc)
 	 * @see org.cspoker.client.bots.bot.search.node.IBotActionNode#expand()
 	 */
 	public abstract void expand();
-
+	
 	public void expandAction(SimulatedBotAction action) {
 		StringBuilder spaces = new StringBuilder("");
-		for(int i=0;i<depth;i++){
+		for (int i = 0; i < depth; i++) {
 			spaces.append("   ");
 		}
-		if(logger.isTraceEnabled()){
-			System.out.println(spaces+"BotAction: "+action);
+		if (logger.isTraceEnabled()) {
+			System.out.println(spaces + "BotAction: " + action);
 		}
 		double EV;
-		if(action.hasSubTree()){
+		if (action.hasSubTree()) {
 			GameState newGameState = action.getNextState(gameState, playerId);
 			PlayerState nextToAct;
-			if((nextToAct=newGameState.previewNextToAct())==null){
+			if ((nextToAct = newGameState.previewNextToAct()) == null) {
 				EV = doRoundEnd(newGameState);
-			}else{
-				newGameState = new NextPlayerState(newGameState,new NextPlayerEvent(nextToAct.getPlayerId()));
+			} else {
+				newGameState = new NextPlayerState(newGameState, new NextPlayerEvent(nextToAct.getPlayerId()));
 				EV = doNextPlayer(newGameState, nextToAct);
 			}
-		}else{
+		} else {
 			EV = gameState.getPlayer(playerId).getStack();
 		}
-		actions.add(new BotActionEvaluation(action,EV));
-
-		if(logger.isTraceEnabled()){
-			System.out.println(spaces+"EV="+EV);
+		actions.add(new BotActionEvaluation(action, EV));
+		
+		if (logger.isTraceEnabled()) {
+			System.out.println(spaces + "EV=" + EV);
 		}
 	}
-
-	protected abstract double doNextPlayer(GameState newGameState, PlayerState nextToAct) ;
-
+	
+	protected abstract double doNextPlayer(GameState newGameState, PlayerState nextToAct);
+	
 	protected abstract double doRoundEnd(GameState newGameState);
-
-	/* (non-Javadoc)
+	
+	/*
+	 * (non-Javadoc)
 	 * @see org.cspoker.client.bots.bot.search.node.IBotActionNode#getEV()
 	 */
 	@Override
 	public double getEV() {
-		double maxEv=0;
-		for(BotActionEvaluation eval : actions){
-			if(eval.getEV()>maxEv){
+		double maxEv = 0;
+		for (BotActionEvaluation eval : actions) {
+			if (eval.getEV() > maxEv) {
 				maxEv = eval.getEV();
 			}
 		}
 		return maxEv;
 	}
-
-	/* (non-Javadoc)
-	 * @see org.cspoker.client.bots.bot.search.node.IBotActionNode#performbestAction(org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.RemoteHoldemPlayerContext)
+	
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * org.cspoker.client.bots.bot.search.node.IBotActionNode#performbestAction
+	 * (org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.
+	 * RemoteHoldemPlayerContext)
 	 */
-	public void performbestAction(RemoteHoldemPlayerContext context) throws RemoteException,
-	IllegalActionException {
-		double maxEv=Double.NEGATIVE_INFINITY;
+	public void performbestAction(RemoteHoldemPlayerContext context)
+			throws RemoteException, IllegalActionException {
+		double maxEv = Double.NEGATIVE_INFINITY;
 		SimulatedBotAction action = null;
-		for(BotActionEvaluation eval : actions){
-			logger.trace("Considering: "+eval.toString());
-			if(eval.getEV()>maxEv){
+		for (BotActionEvaluation eval : actions) {
+			logger.trace("Considering: " + eval.toString());
+			if (eval.getEV() > maxEv) {
 				maxEv = eval.getEV();
 				action = eval.getAction();
 			}
 		}
-		action.perform(context);
+		if (action != null) {
+			action.perform(context);
+		} else {
+			logger.warn("No best action found");
+		}
 	}
-
+	
 }

@@ -23,13 +23,13 @@ import net.jcip.annotations.Immutable;
 
 /**
  * A class to represent seat ids.
- *
  */
 @Immutable
-public class SeatId implements Serializable{
+public class SeatId
+		implements Serializable {
 	
 	private static final long serialVersionUID = -2997117736649022785L;
-
+	
 	@XmlValue
 	private final int seatId;
 	
@@ -37,27 +37,27 @@ public class SeatId implements Serializable{
 		this(0);
 	}
 	
-	public SeatId(int seatId){
+	public SeatId(int seatId) {
 		this.seatId = seatId;
 	}
-
+	
 	public int getId() {
 		return seatId;
 	}
 	
 	@Override
-	public String toString(){
-		return "#"+Long.toString(seatId);
+	public String toString() {
+		return "#" + Long.toString(seatId);
 	}
-
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + (int) (seatId ^ (seatId >>> 32));
+		result = prime * result + (seatId ^ (seatId >>> 32));
 		return result;
 	}
-
+	
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)

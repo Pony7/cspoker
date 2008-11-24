@@ -25,37 +25,43 @@ import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.client.common.gamestate.PlayerState;
 import org.cspoker.common.elements.player.PlayerId;
 
-public class FinalOpponentNoBetNode extends OpponentNoBetNode{
+public class FinalOpponentNoBetNode
+		extends OpponentNoBetNode {
 	
 	private final static Logger logger = Logger.getLogger(FinalOpponentNoBetNode.class);
 	
-	public FinalOpponentNoBetNode(PlayerId botId, PlayerId opponentId, GameState gameState, Map<PlayerId,OpponentModel> opponentModel, int depth) {
-		super(botId,opponentId,gameState, opponentModel, depth);
+	public FinalOpponentNoBetNode(PlayerId botId, PlayerId opponentId, GameState gameState,
+			Map<PlayerId, OpponentModel> opponentModel, int depth) {
+		super(botId, opponentId, gameState, opponentModel, depth);
 	}
-
+	
+	@Override
 	protected double doNextPlayer(GameState newGameState, PlayerState nextToAct) {
 		ActionNode nextNode;
-		if(nextToAct.getPlayerId().equals(botId)){
-			if(newGameState.hasBet()){
-				nextNode = new FinalBotBetNode(botId,newGameState, opponentModels, depth+1);
-			}else{
-				nextNode = new FinalBotNoBetNode(botId,newGameState,opponentModels, depth+1);
+		if (nextToAct.getPlayerId().equals(botId)) {
+			if (newGameState.hasBet()) {
+				nextNode = new FinalBotBetNode(botId, newGameState, opponentModels, depth + 1);
+			} else {
+				nextNode = new FinalBotNoBetNode(botId, newGameState, opponentModels, depth + 1);
 			}
 			
-		}else{
-			if(newGameState.hasBet()){
-				nextNode = new FinalOpponentBetNode(botId, nextToAct.getPlayerId(),newGameState, opponentModels, depth+1);
-			}else{
-				nextNode = new FinalOpponentNoBetNode(botId, nextToAct.getPlayerId(),newGameState, opponentModels, depth+1);
-			}	
+		} else {
+			if (newGameState.hasBet()) {
+				nextNode = new FinalOpponentBetNode(botId, nextToAct.getPlayerId(), newGameState, opponentModels,
+						depth + 1);
+			} else {
+				nextNode = new FinalOpponentNoBetNode(botId, nextToAct.getPlayerId(), newGameState, opponentModels,
+						depth + 1);
+			}
 		}
 		nextNode.expand();
 		return nextNode.getEV();
 	}
-
+	
+	@Override
 	protected double doRoundEnd(GameState newGameState) {
-		//round is over
-		ShowdownNode showdownNode = new ShowdownNode(botId, newGameState,depth+1);
+		// round is over
+		ShowdownNode showdownNode = new ShowdownNode(botId, newGameState, depth + 1);
 		showdownNode.expand();
 		return showdownNode.getEV();
 	}

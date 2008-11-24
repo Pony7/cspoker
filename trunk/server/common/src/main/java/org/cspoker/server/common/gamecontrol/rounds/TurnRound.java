@@ -23,20 +23,22 @@ import org.cspoker.common.elements.table.Round;
 import org.cspoker.server.common.gamecontrol.Game;
 import org.cspoker.server.common.gamecontrol.PokerTable;
 
-public class TurnRound extends BettingRound {
+public class TurnRound
+		extends BettingRound {
+	
 	private static Logger logger = Logger.getLogger(TurnRound.class);
-
+	
 	public TurnRound(PokerTable gameMediator, Game game) {
 		super(gameMediator, game);
 		gameMediator.publishNewRoundEvent(new NewRoundEvent(getRound(), game.getPots().getSnapshot()));
 		drawMuckCard();
 		drawOpenCardAndPublishCommonCard();
 		TurnRound.logger.info("*** TURN *** " + game.getCommunityCards());
-		if (getGame().getCurrentPlayer()!=null && getGame().getNbCurrentDealPlayers() > 1) {
+		if (getGame().getCurrentPlayer() != null && getGame().getNbCurrentDealPlayers() > 1) {
 			gameMediator.publishNextPlayerEvent(new NextPlayerEvent(game.getCurrentPlayer().getId()));
 		}
 	}
-
+	
 	@Override
 	public AbstractRound getNextRound() {
 		if (potsDividedToWinner()) {
@@ -44,23 +46,24 @@ public class TurnRound extends BettingRound {
 		}
 		return new FinalRound(gameMediator, getGame());
 	}
-
+	
 	@Override
 	public boolean isLowBettingRound() {
 		return true;
 	}
-
+	
 	@Override
 	public boolean isHighBettingRound() {
 		return !isLowBettingRound();
 	}
-
+	
 	@Override
 	public String toString() {
 		return "turn round";
 	}
 	
-	public Round getRound(){
+	@Override
+	public Round getRound() {
 		return Round.TURN;
 	}
 }

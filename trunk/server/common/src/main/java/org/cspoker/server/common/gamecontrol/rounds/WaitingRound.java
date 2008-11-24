@@ -102,7 +102,8 @@ public class WaitingRound
 		return "waiting round";
 	}
 	
-	public Round getRound(){
+	@Override
+	public Round getRound() {
 		return Round.WAITING;
 	}
 }

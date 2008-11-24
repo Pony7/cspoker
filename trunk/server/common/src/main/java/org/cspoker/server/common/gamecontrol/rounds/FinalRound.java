@@ -24,22 +24,24 @@ import org.cspoker.server.common.gamecontrol.Game;
 import org.cspoker.server.common.gamecontrol.PokerTable;
 import org.cspoker.server.common.gamecontrol.Showdown;
 
-public class FinalRound extends BettingRound {
+public class FinalRound
+		extends BettingRound {
+	
 	private static Logger logger = Logger.getLogger(FinalRound.class);
-
+	
 	public FinalRound(PokerTable gameMediator, Game game) {
 		super(gameMediator, game);
-
+		
 		gameMediator.publishNewRoundEvent(new NewRoundEvent(getRound(), game.getPots().getSnapshot()));
-
+		
 		drawMuckCard();
 		drawOpenCardAndPublishCommonCard();
 		FinalRound.logger.info("*** RIVER *** " + game.getCommunityCards());
-		if (getGame().getCurrentPlayer()!=null && getGame().getNbCurrentDealPlayers() > 1) {
-			gameMediator.publishNextPlayerEvent(new NextPlayerEvent(game.getCurrentPlayer().getId(),0));
+		if (getGame().getCurrentPlayer() != null && getGame().getNbCurrentDealPlayers() > 1) {
+			gameMediator.publishNextPlayerEvent(new NextPlayerEvent(game.getCurrentPlayer().getId(), 0));
 		}
 	}
-
+	
 	@Override
 	public void endRound() {
 		if (onlyOnePlayerLeft()) {
@@ -53,28 +55,29 @@ public class FinalRound extends BettingRound {
 		removeBrokePlayers();
 		game.initializeForNewHand();
 	}
-
+	
 	@Override
 	public AbstractRound getNextRound() {
 		return getNewDealRound();
 	}
-
+	
 	@Override
 	public boolean isLowBettingRound() {
 		return false;
 	}
-
+	
 	@Override
 	public boolean isHighBettingRound() {
 		return !isLowBettingRound();
 	}
-
+	
 	@Override
 	public String toString() {
 		return "final round";
 	}
-
-	public Round getRound(){
+	
+	@Override
+	public Round getRound() {
 		return Round.FINAL;
 	}
 }
