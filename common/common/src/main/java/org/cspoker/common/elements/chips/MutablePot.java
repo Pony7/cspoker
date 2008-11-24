@@ -25,44 +25,42 @@ import org.cspoker.common.elements.player.SeatedPlayer;
 
 /**
  * A class to represent mutable pots.
- *
  */
 public class MutablePot {
-
+	
 	private Set<MutableSeatedPlayer> players;
-
+	
 	private Chips chips;
 	
 	/**
 	 * Construct a new mutable pot with given players.
 	 * 
-	 * @param players
-	 *        The players who share this pot.
+	 * @param players The players who share this pot.
 	 */
-	public MutablePot(Collection<MutableSeatedPlayer> players){
+	public MutablePot(Collection<MutableSeatedPlayer> players) {
 		this.players = new HashSet<MutableSeatedPlayer>(players);
 		this.chips = new Chips();
 	}
-
-	public synchronized void removeContributor(MutableSeatedPlayer player){
+	
+	public synchronized void removeContributor(MutableSeatedPlayer player) {
 		players.remove(player);
 	}
 	
-	public synchronized int getNbContributors(){
+	public synchronized int getNbContributors() {
 		return players.size();
 	}
 	
-	public synchronized Collection<MutableSeatedPlayer> getContributors(){
+	public synchronized Collection<MutableSeatedPlayer> getContributors() {
 		return Collections.unmodifiableCollection(players);
 	}
-
-	public synchronized void collectAllChips(){
+	
+	public synchronized void collectAllChips() {
 		for (MutableSeatedPlayer player : players) {
 			player.getBetChips().transferAllChipsTo(chips);
 		}
 	}
-
-	public synchronized void collectChips(int amount){
+	
+	public synchronized void collectChips(int amount) {
 		for (MutableSeatedPlayer player : players) {
 			try {
 				player.getBetChips().transferAmountTo(amount, chips);
@@ -72,17 +70,17 @@ public class MutablePot {
 		}
 	}
 	
-	public synchronized void collectAllChips(Collection<Chips> chipsCollection){
+	public synchronized void collectAllChips(Collection<Chips> chipsCollection) {
 		for (Chips sender : chipsCollection) {
 			sender.transferAllChipsTo(chips);
 		}
 	}
 	
-	public Chips getChips(){
+	public Chips getChips() {
 		return chips;
 	}
 	
-	public MutablePot createPot(){
+	public MutablePot createPot() {
 		return new MutablePot(players);
 	}
 	
@@ -91,7 +89,7 @@ public class MutablePot {
 	 * 
 	 * @return An immutable snapshot of this pot.
 	 */
-	public synchronized Pot getSnapshot(){
+	public synchronized Pot getSnapshot() {
 		Set<SeatedPlayer> toReturn = new HashSet<SeatedPlayer>();
 		for (MutableSeatedPlayer seatedPlayer : players) {
 			toReturn.add(seatedPlayer.getMemento());
@@ -99,8 +97,9 @@ public class MutablePot {
 		return new Pot(toReturn, chips.getValue());
 	}
 	
-	public String toString(){
-		return players.toString()+" > "+chips.toString();
+	@Override
+	public String toString() {
+		return players.toString() + " > " + chips.toString();
 	}
-
+	
 }

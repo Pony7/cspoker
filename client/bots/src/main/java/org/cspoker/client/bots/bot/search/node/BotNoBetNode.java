@@ -23,16 +23,19 @@ import org.cspoker.client.bots.bot.search.action.CheckAction;
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.common.elements.player.PlayerId;
 
-public abstract class BotNoBetNode extends BotActionNode{
-
-	public BotNoBetNode(PlayerId playerId, GameState gameState, Map<PlayerId,OpponentModel> opponentModel,int depth) {
-		super(playerId,gameState, opponentModel, depth);
+public abstract class BotNoBetNode
+		extends BotActionNode {
+	
+	public BotNoBetNode(PlayerId playerId, GameState gameState, Map<PlayerId, OpponentModel> opponentModel, int depth) {
+		super(playerId, gameState, opponentModel, depth);
 	}
-
-	public void expand(){
-		//if(gameState.isAllowedToRaise(playerId)) -> not needed?
+	
+	@Override
+	public void expand() {
+		// if(gameState.isAllowedToRaise(playerId)) -> not needed?
 		expandAction(new BetAction(gameState.getLowerRaiseBound(playerId)));
-		expandAction(new BetAction(Math.min(5*gameState.getLowerRaiseBound(playerId),gameState.getUpperRaiseBound(playerId))));
+		expandAction(new BetAction(Math.min(5 * gameState.getLowerRaiseBound(playerId), gameState
+				.getUpperRaiseBound(playerId))));
 		expandAction(new CheckAction());
 	}
 }

@@ -25,40 +25,45 @@ import org.cspoker.client.bots.bot.search.action.SimulatedOpponentAction;
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.common.elements.player.PlayerId;
 
-public abstract class OpponentBetNode extends OpponentActionNode{
-
-	public OpponentBetNode(PlayerId botId, PlayerId opponentId, GameState gameState, Map<PlayerId,OpponentModel> opponentModel, int depth) {
-		super(botId,opponentId,gameState, opponentModel, depth);
+public abstract class OpponentBetNode
+		extends OpponentActionNode {
+	
+	public OpponentBetNode(PlayerId botId, PlayerId opponentId, GameState gameState,
+			Map<PlayerId, OpponentModel> opponentModel, int depth) {
+		super(botId, opponentId, gameState, opponentModel, depth);
 	}
-
-	public void expand(){
+	
+	@Override
+	public void expand() {
 		OpponentModel opponentModel = opponentModels.get(playerId);
-
-		//TODO figure out weights
+		
+		// TODO figure out weights
 		FoldAction foldAction = new FoldAction();
-		expandAction(new SimulatedOpponentAction(foldAction, foldAction.calculateProbabilityIn(opponentModel, gameState)));
-
+		expandAction(new SimulatedOpponentAction(foldAction, foldAction
+				.calculateProbabilityIn(opponentModel, gameState)));
+		
 		CallAction callAction = new CallAction();
-		expandAction(new SimulatedOpponentAction(
-				callAction,callAction.calculateProbabilityIn(opponentModel, gameState)));
-
-		if(!gameState.getPlayer(botId).isAllIn()){
-			if(gameState.isAllowedToRaise(playerId)){
+		expandAction(new SimulatedOpponentAction(callAction, callAction
+				.calculateProbabilityIn(opponentModel, gameState)));
+		
+		if (!gameState.getPlayer(botId).isAllIn()) {
+			if (gameState.isAllowedToRaise(playerId)) {
 				int nbRaises = gameState.getNbRaises();
-				if(Math.random()<1/(nbRaises*nbRaises)){
+				if (Math.random() < 1 / (nbRaises * nbRaises)) {
 					RaiseAction raiseAction = new RaiseAction(gameState.getLowerRaiseBound(playerId));
-					expandAction(new SimulatedOpponentAction(
-							raiseAction,raiseAction.calculateProbabilityIn(opponentModel, gameState)));
+					expandAction(new SimulatedOpponentAction(raiseAction, raiseAction.calculateProbabilityIn(
+							opponentModel, gameState)));
 				}
-
-				if(Math.random()<1.1/(nbRaises*nbRaises)){
-					RaiseAction raiseAction = new RaiseAction(Math.min(5*gameState.getLowerRaiseBound(playerId),gameState.getUpperRaiseBound(playerId)));
-					expandAction(new SimulatedOpponentAction(
-							raiseAction, raiseAction.calculateProbabilityIn(opponentModel, gameState)));
+				
+				if (Math.random() < 1.1 / (nbRaises * nbRaises)) {
+					RaiseAction raiseAction = new RaiseAction(Math.min(5 * gameState.getLowerRaiseBound(playerId),
+							gameState.getUpperRaiseBound(playerId)));
+					expandAction(new SimulatedOpponentAction(raiseAction, raiseAction.calculateProbabilityIn(
+							opponentModel, gameState)));
 				}
 			}
-
+			
 		}
 	}
-
+	
 }

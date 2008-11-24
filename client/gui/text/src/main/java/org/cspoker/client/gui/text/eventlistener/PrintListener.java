@@ -16,9 +16,12 @@
 package org.cspoker.client.gui.text.eventlistener;
 
 import org.cspoker.client.gui.text.Console;
+import org.cspoker.common.api.shared.event.ServerEvent;
+import org.cspoker.common.api.shared.listener.ServerEventListener;
 
-public class PrintListener implements ServerEventListener {
-
+public class PrintListener
+		implements ServerEventListener {
+	
 	private Console console;
 	
 	public PrintListener(Console console) {
@@ -28,5 +31,5 @@ public class PrintListener implements ServerEventListener {
 	public void onServerEvent(ServerEvent event) {
 		console.print(event.toString());
 	}
-
+	
 }

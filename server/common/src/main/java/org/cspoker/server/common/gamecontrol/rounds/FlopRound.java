@@ -27,9 +27,11 @@ import org.cspoker.common.elements.table.Round;
 import org.cspoker.server.common.gamecontrol.Game;
 import org.cspoker.server.common.gamecontrol.PokerTable;
 
-public class FlopRound extends BettingRound {
+public class FlopRound
+		extends BettingRound {
+	
 	private static Logger logger = Logger.getLogger(FlopRound.class);
-
+	
 	public FlopRound(PokerTable gameMediator, Game game) {
 		super(gameMediator, game);
 		gameMediator.publishNewRoundEvent(new NewRoundEvent(getRound(), game.getPots().getSnapshot()));
@@ -41,13 +43,12 @@ public class FlopRound extends BettingRound {
 		cards.addAll(getGame().getCommunityCards());
 		gameMediator.publishNewCommonCardsEvent(new NewCommunityCardsEvent(cards));
 		FlopRound.logger.info("*** FLOP *** " + game.getCommunityCards());
-		if (getGame().getCurrentPlayer()!=null && getGame().getNbCurrentDealPlayers() > 1) {
+		if (getGame().getCurrentPlayer() != null && getGame().getNbCurrentDealPlayers() > 1) {
 			gameMediator.publishNextPlayerEvent(new NextPlayerEvent(game.getCurrentPlayer().getId()));
 		}
 		
-		
 	}
-
+	
 	@Override
 	public AbstractRound getNextRound() {
 		if (potsDividedToWinner()) {
@@ -55,23 +56,24 @@ public class FlopRound extends BettingRound {
 		}
 		return new TurnRound(gameMediator, getGame());
 	}
-
+	
 	@Override
 	public boolean isLowBettingRound() {
 		return true;
 	}
-
+	
 	@Override
 	public boolean isHighBettingRound() {
 		return !isLowBettingRound();
 	}
-
+	
 	@Override
 	public String toString() {
 		return "flop round";
 	}
 	
-	public Round getRound(){
+	@Override
+	public Round getRound() {
 		return Round.FLOP;
 	}
 }

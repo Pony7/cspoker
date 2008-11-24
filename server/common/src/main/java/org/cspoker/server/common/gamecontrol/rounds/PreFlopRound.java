@@ -32,19 +32,19 @@ import org.cspoker.server.common.gamecontrol.Game;
 import org.cspoker.server.common.gamecontrol.PokerTable;
 
 public class PreFlopRound
-extends BettingRound {
-
+		extends BettingRound {
+	
 	private static Logger logger = Logger.getLogger(PreFlopRound.class);
-
+	
 	private boolean bigBlindChecked = false;
-
+	
 	private MutableSeatedPlayer bigBlindPlayer;
-
+	
 	private boolean bigBlindAllIn = false;
-
+	
 	public PreFlopRound(PokerTable gameMediator, Game game) {
 		super(gameMediator, game);
-
+		
 		gameMediator.publishNewRoundEvent(new NewRoundEvent(getRound(), game.getPots().getSnapshot()));
 		
 		try {
@@ -59,7 +59,7 @@ extends BettingRound {
 			goAllIn(getGame().getCurrentPlayer());
 			someoneBigAllIn = false;
 		}
-
+		
 		if (getGame().getNbCurrentDealPlayers() != 1) {
 			try {
 				bigBlindPlayer = getGame().getCurrentPlayer();
@@ -70,68 +70,70 @@ extends BettingRound {
 				bigBlindAllIn = true;
 			}
 		}
-
+		
 		PreFlopRound.logger.info("*** HOLE CARDS ***");
 		for (MutableSeatedPlayer player : getGame().getCurrentDealPlayers()) {
 			player.dealPocketCard(drawCard());
 			player.dealPocketCard(drawCard());
-
+			
 			PreFlopRound.logger.info("Dealt to " + player.getName() + " " + player.getPocketCards());
-
+			
 			EnumSet<Card> cards = EnumSet.noneOf(Card.class);
 			cards.addAll(player.getPocketCards());
 			gameMediator.publishNewPocketCardsEvent(player.getId(), new NewPocketCardsEvent(cards));
 		}
-
+		
 		for (MutableAllInPlayer allInPlayer : allInPlayers) {
 			MutableSeatedPlayer player = allInPlayer.getPlayer();
 			player.dealPocketCard(drawCard());
 			player.dealPocketCard(drawCard());
-
+			
 			PreFlopRound.logger.info("Dealt to " + player.getName() + " " + player.getPocketCards());
-
+			
 			gameMediator.publishNewPocketCardsEvent(player.getId(), new NewPocketCardsEvent(EnumSet.copyOf(player
 					.getPocketCards())));
 		}
-
-		if (game.getCurrentPlayer()!=null && getGame().getNbCurrentDealPlayers() > 1 || !onlyOnePlayerLeftBesidesAllInPlayersAndCalled()) {
-			gameMediator.publishNextPlayerEvent(new NextPlayerEvent(game.getCurrentPlayer().getId(), amountToIncreaseBetPileWith(game.getCurrentPlayer())));
+		
+		if (game.getCurrentPlayer() != null && getGame().getNbCurrentDealPlayers() > 1
+				|| !onlyOnePlayerLeftBesidesAllInPlayersAndCalled()) {
+			gameMediator.publishNextPlayerEvent(new NextPlayerEvent(game.getCurrentPlayer().getId(),
+					amountToIncreaseBetPileWith(game.getCurrentPlayer())));
 		}
 	}
-
+	
 	@Override
 	public void check(MutableSeatedPlayer player)
-	throws IllegalActionException {
+			throws IllegalActionException {
 		if (!onTurn(player)) {
 			throw new IllegalActionException(player.getName() + " it is not your turn to act.");
 		}
-
+		
 		if (game.getLastActionPlayer().getBetChips().getValue() > player.getBetChips().getValue()) {
 			throw new IllegalActionException(player.getName() + " can not check in this round. "
 					+ game.getLastActionPlayer() + " has bet " + game.getLastActionPlayer().getBetChips().getValue()
 					+ " and you have only bet " + player.getBetChips().getValue());
-
+			
 		} else {
 			bigBlindChecked = true;
 		}
 		game.nextPlayer();
-
+		
 	}
-
+	
 	@Override
 	public boolean isRoundEnded() {
 		return ((super.isRoundEnded() && (someoneHasRaised() || bigBlindAllIn() || someoneBigAllIn() || onlyOneActivePlayer()))
 				|| bigBlindChecked() || onlyOnePlayerLeft());
 	}
-
+	
 	private boolean bigBlindAllIn() {
 		return bigBlindAllIn;
 	}
-
+	
 	private boolean bigBlindChecked() {
 		return bigBlindChecked;
 	}
-
+	
 	@Override
 	public AbstractRound getNextRound() {
 		if (potsDividedToWinner()) {
@@ -139,22 +141,23 @@ extends BettingRound {
 		}
 		return new FlopRound(gameMediator, getGame());
 	}
-
+	
 	@Override
 	public boolean isLowBettingRound() {
 		return true;
 	}
-
+	
 	@Override
 	public boolean isHighBettingRound() {
 		return !isLowBettingRound();
 	}
-
+	
 	@Override
 	public String toString() {
 		return "pre-flop round";
 	}
-
+	
+	@Override
 	public Round getRound() {
 		return Round.PREFLOP;
 	}
