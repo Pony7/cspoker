@@ -15,7 +15,7 @@
  */
 package org.cspoker.client.bots.bot.search.action;
 
-import org.cspoker.client.bots.bot.search.OpponentModel;
+import org.cspoker.client.bots.bot.search.opponentmodel.OpponentModel;
 import org.cspoker.client.common.gamestate.GameState;
 
 public interface SimulationAction {

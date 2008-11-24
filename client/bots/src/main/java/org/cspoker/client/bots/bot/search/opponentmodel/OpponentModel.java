@@ -13,10 +13,15 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.client.bots.bot.search;
+package org.cspoker.client.bots.bot.search.opponentmodel;
 
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.common.api.lobby.holdemtable.event.AllInEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.BetEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.CallEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.CheckEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.FoldEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.RaiseEvent;
 
 public interface OpponentModel {
 
@@ -32,13 +37,13 @@ public interface OpponentModel {
 
 	void addAllIn(GameState gameState, AllInEvent allInEvent);
 	
-	void addCheck();
+	void addCheck(GameState gameState, CheckEvent checkEvent);
 	
-	void addBet(int amount);
+	void addBet(GameState gameState, BetEvent betEvent);
 
-	void addCall();
+	void addCall(GameState gameState, CallEvent callEvent);
 
-	void addRaise(int raise);
+	void addRaise(GameState gameState, RaiseEvent raiseEvent);
 
-	void addFold();
+	void addFold(GameState gameState, FoldEvent foldEvent);
 }

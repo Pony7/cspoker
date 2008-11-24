@@ -16,9 +16,7 @@
 package org.cspoker.client.bots.bot.search;
 
 import java.rmi.RemoteException;
-import java.util.Map;
 import java.util.Random;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 
 import org.apache.log4j.Logger;
@@ -26,7 +24,8 @@ import org.cspoker.client.bots.bot.AbstractBot;
 import org.cspoker.client.bots.bot.search.node.IBotActionNode;
 import org.cspoker.client.bots.bot.search.node.finalround.ConcurrentFinalBotBetNode;
 import org.cspoker.client.bots.bot.search.node.finalround.ConcurrentFinalBotNoBetNode;
-import org.cspoker.client.bots.bot.search.opponentmodel.FinalRoundModel;
+import org.cspoker.client.bots.bot.search.opponentmodel.HistogramRoundModel;
+import org.cspoker.client.bots.bot.search.opponentmodel.AllPlayersModel;
 import org.cspoker.client.bots.listener.BotListener;
 import org.cspoker.client.common.SmartLobbyContext;
 import org.cspoker.client.common.gamestate.GameState;
@@ -51,13 +50,14 @@ extends AbstractBot {
 
 	Random random = new Random();
 
-	private final Map<PlayerId,OpponentModel> opponentModelsFinal;
+	private final AllPlayersModel opponentModeler;
 
 	public SearchBot(PlayerId playerId, TableId tableId,
 			SmartLobbyContext lobby, ExecutorService executor,
+			AllPlayersModel opponentModeler,
 			BotListener... botListeners) {
 		super(playerId, tableId, lobby, executor, botListeners);
-		this.opponentModelsFinal = new ConcurrentHashMap<PlayerId, OpponentModel>(10);
+		this.opponentModeler = opponentModeler;
 	}
 
 	@Override
@@ -80,10 +80,10 @@ extends AbstractBot {
 						IBotActionNode actionNode;
 						if(tableContext.getGameState().hasBet()){
 							actionNode = new ConcurrentFinalBotBetNode(GlobalThreadPool.getInstance(), 
-									playerID, playerContext.getGameState(), opponentModelsFinal, 0);
+									playerID, playerContext.getGameState(), opponentModeler, 0);
 						}else{
 							actionNode = new ConcurrentFinalBotNoBetNode(GlobalThreadPool.getInstance(), 
-									playerID, playerContext.getGameState(), opponentModelsFinal, 0);
+									playerID, playerContext.getGameState(), opponentModeler, 0);
 						}
 						actionNode.expand();
 						actionNode.performbestAction(playerContext);
@@ -104,21 +104,12 @@ extends AbstractBot {
 	}
 
 	@Override
-	public void onNewDeal(final NewDealEvent newDealEvent) {
-		for(Player player:newDealEvent.getPlayers()){
-			if(!opponentModelsFinal.containsKey(player.getId())){
-				opponentModelsFinal.put(player.getId(), new FinalRoundModel());
-			}
-		}
-		super.onNewDeal(newDealEvent);
-	}
-
-	@Override
 	public void onAllIn(final AllInEvent allInEvent) {
-		if(playerContext.getGameState().getRound().equals(Round.FINAL)){
+		final GameState gameState = playerContext.getGameState();
+		if(gameState.getRound().equals(Round.FINAL)){
 			executor.execute(new Runnable() {
 				public void run() {
-					opponentModelsFinal.get(allInEvent.getPlayerId()).addAllIn(playerContext.getGameState(), allInEvent);
+					opponentModeler.getModelFor(allInEvent.getPlayerId()).addAllIn(gameState, allInEvent);
 				}
 			});
 		}
@@ -127,10 +118,11 @@ extends AbstractBot {
 
 	@Override
 	public void onBet(final BetEvent betEvent) {
-		if(playerContext.getGameState().getRound().equals(Round.FINAL)){
+		final GameState gameState = playerContext.getGameState();
+		if(gameState.getRound().equals(Round.FINAL)){
 			executor.execute(new Runnable() {
 				public void run() {
-					opponentModelsFinal.get(betEvent.getPlayerId()).addBet(betEvent.getAmount());
+					opponentModeler.getModelFor(betEvent.getPlayerId()).addBet(gameState, betEvent);
 				}
 			});
 		}
@@ -143,10 +135,7 @@ extends AbstractBot {
 		if(gameState.getRound().equals(Round.FINAL)){
 			executor.execute(new Runnable() {
 				public void run() {
-					opponentModelsFinal.get(callEvent.getPlayerId()).addCall();
-					if(logger.isTraceEnabled()){
-						logger.trace("Call probability is "+opponentModelsFinal.get(callEvent.getPlayerId()).getCallProbability(gameState));
-					}
+					opponentModeler.getModelFor(callEvent.getPlayerId()).addCall(gameState, callEvent);
 				}
 			});
 		}
@@ -155,10 +144,11 @@ extends AbstractBot {
 
 	@Override
 	public void onFold(final FoldEvent foldEvent) {
-		if(playerContext.getGameState().getRound().equals(Round.FINAL)){
+		final GameState gameState = playerContext.getGameState();
+		if(gameState.getRound().equals(Round.FINAL)){
 			executor.execute(new Runnable() {
 				public void run() {
-					opponentModelsFinal.get(foldEvent.getPlayerId()).addFold();
+					opponentModeler.getModelFor(foldEvent.getPlayerId()).addFold(gameState, foldEvent);
 				}
 			});
 		}
@@ -167,10 +157,11 @@ extends AbstractBot {
 
 	@Override
 	public void onCheck(final CheckEvent checkEvent) {
-		if(playerContext.getGameState().getRound().equals(Round.FINAL)){
+		final GameState gameState = playerContext.getGameState();
+		if(gameState.getRound().equals(Round.FINAL)){
 			executor.execute(new Runnable() {
 				public void run() {
-					opponentModelsFinal.get(checkEvent.getPlayerId()).addCheck();
+					opponentModeler.getModelFor(checkEvent.getPlayerId()).addCheck(gameState, checkEvent);
 				}
 			});
 		}
@@ -179,10 +170,11 @@ extends AbstractBot {
 
 	@Override
 	public void onRaise(final RaiseEvent raiseEvent) {
-		if(playerContext.getGameState().getRound().equals(Round.FINAL)){
+		final GameState gameState = playerContext.getGameState();
+		if(gameState.getRound().equals(Round.FINAL)){
 			executor.execute(new Runnable() {
 				public void run() {
-					opponentModelsFinal.get(raiseEvent.getPlayerId()).addRaise(raiseEvent.getAmount());
+					opponentModeler.getModelFor(raiseEvent.getPlayerId()).addRaise(gameState,raiseEvent);
 				}
 			});
 		}

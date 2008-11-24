@@ -9,8 +9,9 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
 import org.apache.log4j.Logger;
-import org.cspoker.client.bots.bot.search.OpponentModel;
 import org.cspoker.client.bots.bot.search.action.SimulatedBotAction;
+import org.cspoker.client.bots.bot.search.opponentmodel.OpponentModel;
+import org.cspoker.client.bots.bot.search.opponentmodel.AllPlayersModel;
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.common.elements.player.PlayerId;
 
@@ -22,8 +23,8 @@ public class ConcurrentFinalBotNoBetNode extends FinalBotNoBetNode {
 	private final Queue<Future<?>> futures = new LinkedList<Future<?>>();
 	
 	public ConcurrentFinalBotNoBetNode(ExecutorService executor, PlayerId botId, GameState gameState,
-			Map<PlayerId, OpponentModel> opponentModel, int depth) {
-		super(botId, gameState, opponentModel, depth);
+			AllPlayersModel opponentModeler, int depth) {
+		super(botId, gameState, opponentModeler, depth);
 		this.executor = executor;
 	}
 	

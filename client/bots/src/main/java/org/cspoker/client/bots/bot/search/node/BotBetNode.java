@@ -15,29 +15,24 @@
  */
 package org.cspoker.client.bots.bot.search.node;
 
-import java.util.Map;
-
-import org.cspoker.client.bots.bot.search.OpponentModel;
 import org.cspoker.client.bots.bot.search.action.CallAction;
 import org.cspoker.client.bots.bot.search.action.FoldAction;
 import org.cspoker.client.bots.bot.search.action.RaiseAction;
+import org.cspoker.client.bots.bot.search.opponentmodel.AllPlayersModel;
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.common.elements.player.PlayerId;
 
-public abstract class BotBetNode
-		extends BotActionNode {
-	
-	public BotBetNode(PlayerId playerId, GameState gameState, Map<PlayerId, OpponentModel> opponentModel, int depth) {
-		super(playerId, gameState, opponentModel, depth);
+public abstract class BotBetNode extends BotActionNode{
+
+	public BotBetNode(PlayerId playerId, GameState gameState, AllPlayersModel playersModel, int depth) {
+		super(playerId,gameState, playersModel, depth);
 	}
-	
-	@Override
-	public void expand() {
+
+	public void expand(){
 		expandAction(new CallAction());
-		if (gameState.isAllowedToRaise(playerId)) {
+		if(gameState.isAllowedToRaise(playerId)){
 			expandAction(new RaiseAction(gameState.getLowerRaiseBound(playerId)));
-			expandAction(new RaiseAction(Math.min(5 * gameState.getLowerRaiseBound(playerId), gameState
-					.getUpperRaiseBound(playerId))));
+			expandAction(new RaiseAction(Math.min(5*gameState.getLowerRaiseBound(playerId),gameState.getUpperRaiseBound(playerId))));
 		}
 		// fold will always be better higher up the tree? should remove?
 		expandAction(new FoldAction());

@@ -700,7 +700,7 @@ public final class HandEval {
 	 * @return the 8-or-better low value of the best hand from hole cards and 3 board cards or {@link #NO_8_LOW}.
 	 * @see #ranksMaskLo
 	 */
-	public static int Omaha8LowEval(int holeRanks, int boardRanks) {
+	public static int omaha8LowEval(int holeRanks, int boardRanks) {
 		return loEvalOrNo8Low[lo3RanksMask[boardRanks & ~holeRanks] | holeRanks];
 	}
 

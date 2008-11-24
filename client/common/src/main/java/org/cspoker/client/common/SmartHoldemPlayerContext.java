@@ -53,7 +53,7 @@ public class SmartHoldemPlayerContext
 			if (previous == null) {
 				previous = card;
 			} else {
-				if (previous.getRank().equals(card)) {
+				if (previous.getRank().equals(card.getRank())) {
 					return true;
 				}
 			}

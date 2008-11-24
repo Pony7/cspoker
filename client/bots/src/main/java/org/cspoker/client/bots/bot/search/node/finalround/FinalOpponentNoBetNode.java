@@ -15,12 +15,10 @@
  */
 package org.cspoker.client.bots.bot.search.node.finalround;
 
-import java.util.Map;
-
 import org.apache.log4j.Logger;
-import org.cspoker.client.bots.bot.search.OpponentModel;
 import org.cspoker.client.bots.bot.search.node.ActionNode;
 import org.cspoker.client.bots.bot.search.node.OpponentNoBetNode;
+import org.cspoker.client.bots.bot.search.opponentmodel.AllPlayersModel;
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.client.common.gamestate.PlayerState;
 import org.cspoker.common.elements.player.PlayerId;
@@ -30,29 +28,25 @@ public class FinalOpponentNoBetNode
 	
 	private final static Logger logger = Logger.getLogger(FinalOpponentNoBetNode.class);
 	
-	public FinalOpponentNoBetNode(PlayerId botId, PlayerId opponentId, GameState gameState,
-			Map<PlayerId, OpponentModel> opponentModel, int depth) {
-		super(botId, opponentId, gameState, opponentModel, depth);
+	public FinalOpponentNoBetNode(PlayerId botId, PlayerId opponentId, GameState gameState, AllPlayersModel playersModel, int depth) {
+		super(botId,opponentId,gameState, playersModel, depth);
 	}
 	
 	@Override
 	protected double doNextPlayer(GameState newGameState, PlayerState nextToAct) {
 		ActionNode nextNode;
-		if (nextToAct.getPlayerId().equals(botId)) {
-			if (newGameState.hasBet()) {
-				nextNode = new FinalBotBetNode(botId, newGameState, opponentModels, depth + 1);
-			} else {
-				nextNode = new FinalBotNoBetNode(botId, newGameState, opponentModels, depth + 1);
+		if(nextToAct.getPlayerId().equals(botId)){
+			if(newGameState.hasBet()){
+				nextNode = new FinalBotBetNode(botId,newGameState, opponentModeler, depth+1);
+			}else{
+				nextNode = new FinalBotNoBetNode(botId,newGameState,opponentModeler, depth+1);
 			}
-			
-		} else {
-			if (newGameState.hasBet()) {
-				nextNode = new FinalOpponentBetNode(botId, nextToAct.getPlayerId(), newGameState, opponentModels,
-						depth + 1);
-			} else {
-				nextNode = new FinalOpponentNoBetNode(botId, nextToAct.getPlayerId(), newGameState, opponentModels,
-						depth + 1);
-			}
+		}else{
+			if(newGameState.hasBet()){
+				nextNode = new FinalOpponentBetNode(botId, nextToAct.getPlayerId(),newGameState, opponentModeler, depth+1);
+			}else{
+				nextNode = new FinalOpponentNoBetNode(botId, nextToAct.getPlayerId(),newGameState, opponentModeler, depth+1);
+			}	
 		}
 		nextNode.expand();
 		return nextNode.getEV();
