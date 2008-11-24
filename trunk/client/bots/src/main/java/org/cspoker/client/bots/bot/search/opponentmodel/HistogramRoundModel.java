@@ -15,30 +15,28 @@
  */
 package org.cspoker.client.bots.bot.search.opponentmodel;
 
-import org.cspoker.client.bots.bot.search.OpponentModel;
-import org.cspoker.client.bots.bot.search.action.SimulationAction;
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.client.common.gamestate.modifiers.AllInState;
 import org.cspoker.common.api.lobby.holdemtable.event.AllInEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.BetEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.CallEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.CheckEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.FoldEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.RaiseEvent;
 
-public class FinalRoundModel implements OpponentModel{
+public class HistogramRoundModel implements OpponentModel{
 
 	public final static int weightOfPrior=200;
-	
-	//prior derived from data set
-	
-	private int nbCheck = 2303*weightOfPrior/3819;
-	private int nbBet = 1516*weightOfPrior/3819;
-	private int totalNoBet = weightOfPrior;
-	
-	private int nbFold = 641*weightOfPrior/1217;
-	private int nbCall = 408*weightOfPrior/1217;
-	private int nbRaise = 168*weightOfPrior/1217;
-	private int totalBet = weightOfPrior;
 
-	public double getProbabilityOf(SimulationAction action, GameState gameState){
-		return action.calculateProbabilityIn(this, gameState);
-	}
+	//prior derived from data set
+	private volatile int nbCheck = 2303*weightOfPrior/3819;
+	private volatile int nbBet = 1516*weightOfPrior/3819;
+	private volatile int totalNoBet = weightOfPrior;
+
+	private volatile int nbFold = 641*weightOfPrior/1217;
+	private volatile int nbCall = 408*weightOfPrior/1217;
+	private volatile int nbRaise = 168*weightOfPrior/1217;
+	private volatile int totalBet = weightOfPrior;
 
 	@Override
 	public double getCheckProbability(GameState gameState) {
@@ -70,40 +68,42 @@ public class FinalRoundModel implements OpponentModel{
 		AllInState newState = new AllInState(gameState, allInEvent);
 		if(gameState.hasBet()){
 			if(newState.getRaise()>0){
-				addRaise(newState.getRaise());
+				++nbRaise;
 			}else{
-				addCall();
+				++nbCall;
 			}
+			++totalBet;
 		}else{
-			addBet(allInEvent.getAmount());
+			++nbBet;
+			++totalNoBet;
 		}
 	}
 
-	public void addCheck() {
+	public void addCheck(GameState gameState, CheckEvent checkEvent) {
 		++nbCheck;
 		++totalNoBet;
 	}
-	
-	public void addBet(int amount) {
+
+	public void addBet(GameState gameState, BetEvent betEvent) {
 		++nbBet;
 		++totalNoBet;
 	}
 
-	public void addCall() {
+	public void addCall(GameState gameState, CallEvent callEvent) {
 		++nbCall;
 		++totalBet;
 	}
 
-	public void addRaise(int raise) {
+	public void addRaise(GameState gameState, RaiseEvent raiseEvent) {
 		++nbRaise;
 		++totalBet;
 	}
 
-	public void addFold() {
+	public void addFold(GameState gameState, FoldEvent foldEvent) {
 		++nbFold;
 		++totalBet;
 	}
-	
-	
-	
+
+
+
 }

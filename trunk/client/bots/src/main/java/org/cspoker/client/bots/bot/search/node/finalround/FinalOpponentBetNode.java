@@ -18,39 +18,37 @@ package org.cspoker.client.bots.bot.search.node.finalround;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.cspoker.client.bots.bot.search.OpponentModel;
 import org.cspoker.client.bots.bot.search.node.ActionNode;
 import org.cspoker.client.bots.bot.search.node.OpponentBetNode;
+import org.cspoker.client.bots.bot.search.opponentmodel.OpponentModel;
+import org.cspoker.client.bots.bot.search.opponentmodel.AllPlayersModel;
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.client.common.gamestate.PlayerState;
 import org.cspoker.common.elements.player.PlayerId;
 
-public class FinalOpponentBetNode
-		extends OpponentBetNode {
+public class FinalOpponentBetNode extends OpponentBetNode{
 	
 	private final static Logger logger = Logger.getLogger(FinalOpponentBetNode.class);
 	
-	public FinalOpponentBetNode(PlayerId botId, PlayerId opponentId, GameState gameState,
-			Map<PlayerId, OpponentModel> opponentModel, int depth) {
-		super(botId, opponentId, gameState, opponentModel, depth);
+	public FinalOpponentBetNode(PlayerId botId, PlayerId opponentId, GameState gameState, 
+			AllPlayersModel opponentModeler, int depth) {
+		super(botId,opponentId,gameState, opponentModeler, depth);
 	}
-	
-	@Override
+
 	protected double doNextPlayer(GameState newGameState, PlayerState nextToAct) {
 		ActionNode nextNode;
-		if (nextToAct.getPlayerId().equals(botId)) {
-			nextNode = new FinalBotBetNode(botId, newGameState, opponentModels, depth + 1);
-		} else {
-			nextNode = new FinalOpponentBetNode(botId, nextToAct.getPlayerId(), newGameState, opponentModels, depth + 1);
+		if(nextToAct.getPlayerId().equals(botId)){
+			nextNode = new FinalBotBetNode(botId,newGameState, opponentModeler, depth+1);
+		}else{
+			nextNode = new FinalOpponentBetNode(botId, nextToAct.getPlayerId(), newGameState, opponentModeler, depth+1);
 		}
 		nextNode.expand();
 		return nextNode.getEV();
 	}
-	
-	@Override
+
 	protected double doRoundEnd(GameState newGameState) {
-		// round is over
-		ShowdownNode showdownNode = new ShowdownNode(botId, newGameState, depth + 1);
+		//round is over
+		ShowdownNode showdownNode = new ShowdownNode(botId, newGameState,depth+1);
 		showdownNode.expand();
 		return showdownNode.getEV();
 	}

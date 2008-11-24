@@ -47,14 +47,14 @@ public class TableConfiguration implements Serializable {
 	 * place in the pot
 	 */
 	@XmlAttribute
-	private int smallBlind;
+	private final int smallBlind;
 
 	/**
 	 * The minimum value of chips the second player after the dealer button must
 	 * place in the pot
 	 */
 	@XmlAttribute
-	private int bigBlind;
+	private final int bigBlind;
 
 	/**
 	 * The value of a small bet, used in the first three rounds

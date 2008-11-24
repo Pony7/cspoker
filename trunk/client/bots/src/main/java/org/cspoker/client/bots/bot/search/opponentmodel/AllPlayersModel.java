@@ -13,27 +13,29 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.client.bots.bot.search.node;
+package org.cspoker.client.bots.bot.search.opponentmodel;
 
-import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
-import org.cspoker.client.bots.bot.search.opponentmodel.OpponentModel;
-import org.cspoker.client.bots.bot.search.opponentmodel.AllPlayersModel;
-import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.common.elements.player.PlayerId;
+import org.cspoker.common.util.lazy.IFactory;
 
-public abstract class ActionNode implements GameTreeNode{
+public class AllPlayersModel {
 
-	protected final GameState gameState;
-	protected final PlayerId playerId;
-	protected final int depth;
-	protected final AllPlayersModel opponentModeler;
-
-	public ActionNode(PlayerId playerId, GameState gameState, AllPlayersModel opponentModeler, int depth) {
-		this.gameState = gameState;
-		this.playerId = playerId;
-		this.depth = depth;
-		this.opponentModeler = opponentModeler;
+	private final ConcurrentHashMap<PlayerId, OpponentModel> opponentModels = new ConcurrentHashMap<PlayerId, OpponentModel>();
+	private final IFactory<OpponentModel> factory;
+	
+	public AllPlayersModel(IFactory<OpponentModel> factory) {
+		this.factory = factory;
 	}
 	
+	public OpponentModel getModelFor(PlayerId playerId){
+		OpponentModel model = opponentModels.get(playerId);
+		if(model==null){
+			opponentModels.putIfAbsent(playerId, factory.create());
+			return opponentModels.get(playerId);
+		}
+		return model;
+	}
+
 }

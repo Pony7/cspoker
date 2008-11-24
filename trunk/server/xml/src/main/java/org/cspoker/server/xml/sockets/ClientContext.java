@@ -141,6 +141,7 @@ public class ClientContext {
 			client.close();
 		} catch (IOException exception) {
 		}
+		serverContext.logout();
 		//TODO trigger something
 	}
 

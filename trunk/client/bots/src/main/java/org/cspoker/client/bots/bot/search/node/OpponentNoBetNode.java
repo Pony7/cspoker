@@ -15,36 +15,36 @@
  */
 package org.cspoker.client.bots.bot.search.node;
 
-import java.util.Map;
-
-import org.cspoker.client.bots.bot.search.OpponentModel;
 import org.cspoker.client.bots.bot.search.action.BetAction;
 import org.cspoker.client.bots.bot.search.action.CheckAction;
 import org.cspoker.client.bots.bot.search.action.SimulatedOpponentAction;
+import org.cspoker.client.bots.bot.search.opponentmodel.AllPlayersModel;
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.common.elements.player.PlayerId;
 
-public abstract class OpponentNoBetNode
-		extends OpponentActionNode {
-	
-	public OpponentNoBetNode(PlayerId botId, PlayerId opponentId, GameState gameState,
-			Map<PlayerId, OpponentModel> opponentModel, int depth) {
-		super(botId, opponentId, gameState, opponentModel, depth);
+public abstract class OpponentNoBetNode extends OpponentActionNode{
+
+	public OpponentNoBetNode(PlayerId botId, PlayerId opponentId, GameState gameState, AllPlayersModel playersModel, int depth) {
+		super(botId, opponentId,gameState, playersModel, depth);
 	}
-	
-	@Override
-	public void expand() {
-		// TODO figure out weights
-		expandAction(new SimulatedOpponentAction(new CheckAction(), 0.7));
-		if (!gameState.getPlayer(botId).isAllIn()) {
-			if (Math.random() < 1) {
-				expandAction(new SimulatedOpponentAction(new BetAction(gameState.getLowerRaiseBound(playerId)), 0.2));
+
+	public void expand(){
+		//TODO figure out weights
+		expandAction(new SimulatedOpponentAction(
+				new CheckAction(),
+				0.7));
+		if(!gameState.getPlayer(botId).isAllIn()){
+			if(Math.random()<1){
+				expandAction(new SimulatedOpponentAction(
+						new BetAction(gameState.getLowerRaiseBound(playerId)),
+						0.2));	
 			}
-			if (Math.random() < 1) {
-				expandAction(new SimulatedOpponentAction(new BetAction(Math.min(5 * gameState
-						.getLowerRaiseBound(playerId), gameState.getUpperRaiseBound(playerId))), 0.1));
+			if(Math.random()<1){
+				expandAction(new SimulatedOpponentAction(
+						new BetAction(Math.min(5*gameState.getLowerRaiseBound(playerId),gameState.getUpperRaiseBound(playerId))),
+						0.1));
 			}
 		}
 	}
-	
+
 }

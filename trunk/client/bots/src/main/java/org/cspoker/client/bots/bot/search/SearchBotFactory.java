@@ -16,20 +16,28 @@
  */
 package org.cspoker.client.bots.bot.search;
 
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 
 import org.cspoker.client.bots.bot.Bot;
 import org.cspoker.client.bots.bot.BotFactory;
+import org.cspoker.client.bots.bot.search.opponentmodel.AllPlayersModel;
+import org.cspoker.client.bots.bot.search.opponentmodel.HistogramRoundModel;
+import org.cspoker.client.bots.bot.search.opponentmodel.OpponentModel;
+import org.cspoker.client.bots.bot.search.opponentmodel.PlayerModel;
 import org.cspoker.client.bots.listener.BotListener;
 import org.cspoker.client.common.SmartLobbyContext;
 import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.elements.table.TableId;
+import org.cspoker.common.util.lazy.IFactory;
 
 public class SearchBotFactory implements BotFactory {
 
 	private static int copies = 0;
 	private final int copy;
 
+	private ConcurrentHashMap<PlayerId, AllPlayersModel> opponentModels = new ConcurrentHashMap<PlayerId, AllPlayersModel>();
+	
 	public SearchBotFactory() {
 		this.copy = ++copies;
 	}
@@ -41,7 +49,17 @@ public class SearchBotFactory implements BotFactory {
 			SmartLobbyContext lobby, ExecutorService executor,
 			BotListener... botListeners) {
 		copies++;
-		return new SearchBot(playerId, tableId, lobby, executor, botListeners);
+		opponentModels.putIfAbsent(playerId, new AllPlayersModel(new IFactory<OpponentModel>(){
+			public OpponentModel create() {
+				return new PlayerModel(new IFactory<OpponentModel>(){
+					@Override
+					public OpponentModel create() {
+						return new HistogramRoundModel();
+					}
+				});
+			}
+		}));
+		return new SearchBot(playerId, tableId, lobby, executor, opponentModels.get(playerId),botListeners);
 	}
 
 	@Override
