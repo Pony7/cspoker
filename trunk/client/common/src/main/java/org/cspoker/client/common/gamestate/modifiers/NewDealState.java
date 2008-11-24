@@ -15,7 +15,9 @@
  */
 package org.cspoker.client.common.gamestate.modifiers;
 
+import java.util.ArrayList;
 import java.util.EnumSet;
+import java.util.List;
 import java.util.Set;
 
 import org.cspoker.client.common.gamestate.AbstractGameState;
@@ -34,51 +36,60 @@ import org.cspoker.common.elements.table.TableConfiguration;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
 
-public class NewDealState extends AbstractGameState {
+public class NewDealState
+		extends AbstractGameState {
 	
 	private final TableConfiguration tableConfiguration;
 	private final NewDealEvent event;
-
+	
 	private final ImmutableMap<SeatId, PlayerId> seatPlayer;
-	private final ImmutableMap<PlayerId,PlayerState> playerStates;
+	private final ImmutableMap<PlayerId, PlayerState> playerStates;
 	
 	public NewDealState(TableConfiguration tableConfiguration, NewDealEvent newDealEvent) {
 		this.event = newDealEvent;
 		this.tableConfiguration = tableConfiguration;
-
+		
 		Builder<PlayerId, PlayerState> playerStateBuilder = ImmutableMap.builder();
 		Builder<SeatId, PlayerId> seatPlayerBuilder = ImmutableMap.builder();
 		
-		for(final SeatedPlayer player:newDealEvent.getPlayers()){
+		for (final SeatedPlayer player : newDealEvent.getPlayers()) {
 			seatPlayerBuilder.put(player.getSeatId(), player.getId());
-			AbstractPlayerState playerState = new AbstractPlayerState(){
-
+			AbstractPlayerState playerState = new AbstractPlayerState() {
+				
 				public int getBet() {
 					return 0;
 				}
-
+				
 				public EnumSet<Card> getCards() {
 					return EnumSet.noneOf(Card.class);
 				}
-
+				
 				public int getStack() {
 					return player.getStackValue();
 				}
-
+				
 				public boolean hasFolded() {
 					return false;
 				}
-
+				
 				public boolean sitsIn() {
 					return player.isSittingIn();
 				}
-
+				
 				public PlayerId getPlayerId() {
 					return player.getId();
 				}
-
+				
 				public SeatId getSeatId() {
 					return player.getSeatId();
+				}
+				
+				/**
+				 * {@inheritDoc}
+				 */
+				@Override
+				public List<Integer> getBetProgression() {
+					return new ArrayList<Integer>();
 				}
 				
 			};
@@ -91,7 +102,7 @@ public class NewDealState extends AbstractGameState {
 	public TableConfiguration getTableConfiguration() {
 		return tableConfiguration;
 	}
-
+	
 	public Set<PlayerId> getAllSeatedPlayerIds() {
 		return playerStates.keySet();
 	}
@@ -99,51 +110,51 @@ public class NewDealState extends AbstractGameState {
 	public EnumSet<Card> getCommunityCards() {
 		return EnumSet.noneOf(Card.class);
 	}
-
+	
 	public PlayerId getDealer() {
 		return event.getDealer();
 	}
-
+	
 	public int getLargestBet() {
 		return 0;
 	}
-
+	
 	public PlayerId getLastBettor() {
 		return null;
 	}
-
+	
 	public HoldemTableTreeEvent getLastEvent() {
 		return event;
 	}
-
+	
 	public int getMinNextRaise() {
 		return tableConfiguration.getSmallBet();
 	}
-
+	
 	public PlayerId getNextToAct() {
 		return null;
 	}
-
+	
 	public PlayerState getPlayer(PlayerId playerId) {
 		return playerStates.get(playerId);
 	}
-
+	
 	public PlayerId getPlayerId(SeatId seatId) {
 		return seatPlayer.get(seatId);
 	}
-
+	
 	public GameState getPreviousGameState() {
 		return null;
 	}
-
+	
 	public int getPreviousRoundsPotSize() {
 		return 0;
 	}
-
+	
 	public Round getRound() {
 		return Round.PREFLOP;
 	}
-
+	
 	public int getRoundPotSize() {
 		return 0;
 	}

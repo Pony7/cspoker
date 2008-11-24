@@ -16,15 +16,17 @@
 package org.cspoker.client.common.gamestate;
 
 import java.util.EnumSet;
+import java.util.List;
 
 import org.cspoker.common.elements.cards.Card;
 import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.elements.table.SeatId;
 
-public abstract class ForwardingPlayerState extends AbstractPlayerState{
-
+public abstract class ForwardingPlayerState
+		extends AbstractPlayerState {
+	
 	private final PlayerState playerState;
-
+	
 	public ForwardingPlayerState(PlayerState playerState) {
 		this.playerState = playerState;
 	}
@@ -55,6 +57,14 @@ public abstract class ForwardingPlayerState extends AbstractPlayerState{
 	
 	public PlayerId getPlayerId() {
 		return playerState.getPlayerId();
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public List<Integer> getBetProgression() {
+		return playerState.getBetProgression();
 	}
 	
 }

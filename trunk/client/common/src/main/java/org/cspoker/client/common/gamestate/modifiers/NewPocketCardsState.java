@@ -15,7 +15,9 @@
  */
 package org.cspoker.client.common.gamestate.modifiers;
 
+import java.util.ArrayList;
 import java.util.EnumSet;
+import java.util.List;
 
 import org.cspoker.client.common.gamestate.ForwardingGameState;
 import org.cspoker.client.common.gamestate.ForwardingPlayerState;
@@ -26,8 +28,9 @@ import org.cspoker.common.api.lobby.holdemtable.holdemplayer.event.NewPocketCard
 import org.cspoker.common.elements.cards.Card;
 import org.cspoker.common.elements.player.PlayerId;
 
-public class NewPocketCardsState extends ForwardingGameState {
-
+public class NewPocketCardsState
+		extends ForwardingGameState {
+	
 	private final NewPocketCardsEvent event;
 	private final PlayerState playerState;
 	private final PlayerId playerId;
@@ -36,7 +39,7 @@ public class NewPocketCardsState extends ForwardingGameState {
 		super(gameState);
 		this.event = event;
 		this.playerId = playerId;
-		this.playerState = new ForwardingPlayerState(super.getPlayer(playerId)){
+		this.playerState = new ForwardingPlayerState(super.getPlayer(playerId)) {
 			
 			@Override
 			public EnumSet<Card> getCards() {
@@ -58,19 +61,27 @@ public class NewPocketCardsState extends ForwardingGameState {
 				return true;
 			}
 			
+			/**
+			 * {@inheritDoc}
+			 */
+			@Override
+			public List<Integer> getBetProgression() {
+				return new ArrayList<Integer>();
+			}
+			
 		};
 	}
 	
 	@Override
 	public PlayerState getPlayer(PlayerId playerId) {
-		if(this.playerId.equals(playerId)){
+		if (this.playerId.equals(playerId)) {
 			return playerState;
 		}
 		return super.getPlayer(playerId);
 	}
-
+	
 	public HoldemTableTreeEvent getLastEvent() {
 		return event;
 	}
-
+	
 }

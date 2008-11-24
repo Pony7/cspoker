@@ -16,13 +16,14 @@
 package org.cspoker.client.common.gamestate;
 
 import java.util.EnumSet;
+import java.util.List;
 
 import org.cspoker.common.elements.cards.Card;
 import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.elements.table.SeatId;
 
 public interface PlayerState {
-
+	
 	PlayerId getPlayerId();
 	
 	SeatId getSeatId();
@@ -32,11 +33,22 @@ public interface PlayerState {
 	int getStack();
 	
 	int getBet();
-
+	
+	/**
+	 * @return A list of integers representing all bets/calls/raises in this
+	 *         round. The total amount adds up to getBetChips()
+	 *         <p>
+	 *         This method is supposed to be used to depict the progression of
+	 *         <i>how</i> the player has put the chips in.
+	 *         getBetProgression().size() should also reflect the number of
+	 *         bets/raises in the current round (including the big blind)
+	 */
+	List<Integer> getBetProgression();
+	
 	public boolean hasFolded();
 	
 	public boolean sitsIn();
-
+	
 	/**
 	 * A derived state property that says whether a player is all-in or not.
 	 */
