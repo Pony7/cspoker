@@ -17,8 +17,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.rmi.RemoteException;
 import java.text.NumberFormat;
-import java.util.Collection;
-import java.util.Hashtable;
+import java.util.*;
+import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
 import javax.sound.sampled.*;
@@ -85,6 +85,11 @@ public class ClientGUI {
 		 * Contains FTP card images. May not be available in open-source version
 		 */
 		public static final File FTP_DECK_IMG_FILE = new File(CARDS_IMG_DIR, "Deck_FTP.png");
+		
+		/**
+		 * UNO-style cards
+		 */
+		public static final File UNO_DECK_IMG_FILE = new File(CARDS_IMG_DIR, "Deck_Uno.png");
 		/**
 		 * Contains PokerStars card images. May not be available in open-source
 		 * version
@@ -96,6 +101,12 @@ public class ClientGUI {
 		 * deck-style cards
 		 */
 		public static File ACTIVE_DECK_IMG_FILE;
+		
+		public static final List<File> VALID_DECK_FILES = Collections.unmodifiableList(Arrays.asList(FTP_DECK_IMG_FILE,
+				FOUR_COLOR_DECK_IMG_FILE, UNO_DECK_IMG_FILE));
+		
+		public static final List<File> VALID_CHIP_FILES = Collections.unmodifiableList(Arrays.asList(FTP_DECK_IMG_FILE,
+				EPT_CHIP_IMG_DIR, STARS_CHIP_IMG_DIR, FREE_CHIPS));
 		
 		/** Default table background image */
 		public static final File TABLE_IMAGE = new File(THEMES_IMG_DIR, "table1.jpg");
@@ -184,9 +195,29 @@ public class ClientGUI {
 		betFormatter.setMinimumFractionDigits(0);
 		betFormatter.setMaximumFractionDigits(2);
 		betFormatter.setGroupingUsed(false);
+		try {
+			Preferences.userRoot().clear();
+		} catch (BackingStoreException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		verifyAndInitResources();
+		
+	}
+	
+	/**
+	 * 
+	 */
+	private void verifyAndInitResources() {
 		File cardFile = new File(Preferences.userRoot().get(User.Prefs.CARDS,
 				Resources.FOUR_COLOR_DECK_IMG_FILE.toString()));
 		File chipFile = new File(Preferences.userRoot().get(User.Prefs.CHIPS, Resources.FREE_CHIPS.toString()));
+		if (!Resources.VALID_DECK_FILES.contains(cardFile)) {
+			cardFile = Resources.FOUR_COLOR_DECK_IMG_FILE;
+		}
+		if (!Resources.VALID_CHIP_FILES.contains(chipFile)) {
+			chipFile = Resources.FREE_CHIPS;
+		}
 		try {
 			setActiveCardDeck(cardFile);
 			setActiveChipsStyle(chipFile);
@@ -196,6 +227,7 @@ public class ClientGUI {
 			Preferences.userRoot().remove(User.Prefs.CHIPS);
 			Preferences.userRoot().remove(User.Prefs.CARDS);
 		}
+		
 	}
 	
 	/**
@@ -347,6 +379,7 @@ public class ClientGUI {
 	 */
 	public static void setActiveCardDeck(File cardFileResource)
 			throws FileNotFoundException {
+		
 		if (!cardFileResource.exists()) {
 			throw new FileNotFoundException(cardFileResource.toString());
 		}

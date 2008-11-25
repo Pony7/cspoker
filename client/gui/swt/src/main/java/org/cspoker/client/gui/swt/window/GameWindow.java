@@ -270,7 +270,9 @@ public class GameWindow
 			psc.setHoleCards(Arrays.asList(ClientGUI.UNKNOWN_CARD, ClientGUI.UNKNOWN_CARD));
 		}
 		userInputComposite.showDealerMessage(newDealEvent);
+		tableComposite.clearCommunityCards();
 		tableComposite.redraw();
+		tableComposite.update();
 		logger.debug("New deal event handled");
 		
 	}
@@ -360,7 +362,6 @@ public class GameWindow
 			Thread.currentThread().interrupt();
 		}
 		tableComposite.movePotsToWinners(winnerEvent.getWinners());
-		
 		tableComposite.getCommunityCardsComposite().redraw();
 		tableComposite.getCommunityCardsComposite().setVisible(false);
 		for (PlayerSeatComposite psc : tableComposite.getPlayerSeatComposites(true)) {
