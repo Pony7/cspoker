@@ -16,6 +16,8 @@ import java.util.List;
 import java.util.Map.Entry;
 
 import org.apache.log4j.Logger;
+import org.cspoker.client.common.gamestate.GameState;
+import org.cspoker.client.common.gamestate.PlayerState;
 import org.cspoker.client.gui.swt.control.CardPaintListener;
 import org.cspoker.client.gui.swt.control.Chip;
 import org.cspoker.client.gui.swt.control.ClientGUI;
@@ -50,7 +52,7 @@ public class TableComposite
 	
 	private List<PlayerSeatComposite> playerSeatComposites = new ArrayList<PlayerSeatComposite>();
 	private List<Canvas> playerBetAreas = new ArrayList<Canvas>();
-	private Rectangle dealerChipLocation;
+	private PlayerSeatComposite dealer;
 	private Canvas potChipsArea;
 	
 	/**
@@ -146,8 +148,8 @@ public class TableComposite
 				// Draw dealer chip
 				NavigableMap<Chip, Integer> dealerChip = new TreeMap<Chip, Integer>();
 				dealerChip.put(Chip.DEALER, 1);
-				if (dealerChipLocation != null && redrawArea.intersects(dealerChipLocation)) {
-					drawChips(e.gc, dealerChipLocation, Arrays.asList(dealerChip), false, true);
+				if (dealer != null && redrawArea.intersects(dealer.getDealerChipLocation())) {
+					drawChips(e.gc, dealer.getDealerChipLocation(), Arrays.asList(dealerChip), false, true);
 				}
 				if (redrawArea.intersects(potChipsArea.getBounds()) && redrawArea.intersects(potChipsArea.getBounds())) {
 					int potSize = 0;
@@ -342,7 +344,7 @@ public class TableComposite
 				final double yStep = (double) ((from.y + from.height) - (to.y + to.height)) / steps;
 				Rectangle newBounds = new Rectangle(from.x - (int) (i * xStep), from.y - (int) (i * yStep), from.width,
 						from.height);
-				Rectangle redrawArea = dealerChipLocation.union(newBounds);
+				Rectangle redrawArea = dealer.getDealerChipLocation().union(newBounds);
 				from.x = newBounds.x;
 				from.y = newBounds.y;
 				redraw(redrawArea.x, redrawArea.y, redrawArea.width, redrawArea.height, false);
@@ -421,6 +423,14 @@ public class TableComposite
 	}
 	
 	/**
+	 * @param commonCards Adds these community cards and displays them
+	 */
+	public void clearCommunityCards() {
+		communityCards.clear();
+		communityCardsComposite.redraw();
+	}
+	
+	/**
 	 * Reverse method to {@link #moveBetsToPot()} TODO What if there are more
 	 * than one winner, the bet pile needs to be split accordingly first ...
 	 * 
@@ -480,7 +490,7 @@ public class TableComposite
 		}
 		
 		int xCoord = area.x;
-		int standardXDistance = Chip.ONE_CENT_CHIP.getImage(size).getBounds().width + size;
+		int standardXDistance = Chip.DEALER.getImage(size).getBounds().width + size;
 		int standardYLocation = area.y + area.height - Chip.ONE_CENT_CHIP.getImage(size).getBounds().height;
 		// Iterate over the chip piles.
 		for (NavigableMap<Chip, Integer> chipPile : chipPiles) {
@@ -540,10 +550,11 @@ public class TableComposite
 	public void moveDealerButton(PlayerSeatComposite from, PlayerSeatComposite to) {
 		
 		Rectangle dealerButtonLocation = from.getDealerChipLocation();
-		dealerChipLocation = dealerButtonLocation;
 		Rectangle toLocation = to.getDealerChipLocation();
-		animateChips(dealerButtonLocation, toLocation);
-		dealerChipLocation = toLocation;
+		if (dealer != null) {
+			animateChips(dealerButtonLocation, toLocation);
+		}
+		dealer = to;
 	}
 	
 	/**
@@ -556,7 +567,17 @@ public class TableComposite
 	
 	private List<NavigableMap<Chip, Integer>> getBetPile(PlayerId player) {
 		List<NavigableMap<Chip, Integer>> chipStacks = new ArrayList<NavigableMap<Chip, Integer>>();
-		for (Integer i : tableState.getGameState().getPlayer(player).getBetProgression()) {
+		GameState gs = tableState.getGameState();
+		if (gs == null) {
+			logger.warn("GameState is null");
+			return chipStacks;
+		}
+		PlayerState ps = gs.getPlayer(player);
+		if (ps == null) {
+			logger.warn("Player state for " + player + " is null");
+			return chipStacks;
+		}
+		for (Integer i : ps.getBetProgression()) {
 			chipStacks.add(Chip.getDistribution(i));
 		}
 		return chipStacks;
