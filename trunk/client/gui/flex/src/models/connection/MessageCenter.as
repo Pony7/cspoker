@@ -1,11 +1,11 @@
 package models.connection
 {
 	
-	import cs.*;
+	//import cs.*;
 	
 	import flash.events.*;
 	import flash.net.*;
-	import flash.security.*;
+	//import flash.security.*;
 	import flash.xml.*;
 	
 	import models.*;
@@ -19,8 +19,8 @@ package models.connection
 		private var idAction:int = 0;
 		private var socket:XMLSocket = null;
 		
-		private var mTables:CSTableList = null;
-		private var mTable:CSTable = null;
+		//private var mTables:CSTableList = null;
+		//private var mTable:CSTable = null;
 		
 		public var loginActionId:int = 0;
 		public var joinTableActionId:int = 0;

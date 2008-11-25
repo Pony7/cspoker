@@ -164,10 +164,10 @@
 			}
 			
 			public function dealPocketCardsClient(cards:Object):void{
-				var tempCard1:Object = cards[0];
-				var tempCard2:Object = cards[1];
-				card1.calculateCardGraphics(tempCard1.suit, tempCard1.rank, Config.POCKETCARD_WIDTH,Config.POCKETCARD_HEIGHT,0,0);
-				card2.calculateCardGraphics(tempCard2.suit, tempCard2.rank, Config.POCKETCARD_WIDTH,Config.POCKETCARD_HEIGHT,0+Config.POCKETCARD_WIDTH - 4,0);
+				var tempCard1:String = cards[0];
+				var tempCard2:String = cards[1];
+				card1.calculateCardGraphics(tempCard1, Config.POCKETCARD_WIDTH,Config.POCKETCARD_HEIGHT,0,0);
+				card2.calculateCardGraphics(tempCard2, Config.POCKETCARD_WIDTH,Config.POCKETCARD_HEIGHT,0+Config.POCKETCARD_WIDTH - 4,0);
 			}
 			
 			public function dealPocketCardsOpponent():void{

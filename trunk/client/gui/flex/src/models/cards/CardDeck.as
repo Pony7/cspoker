@@ -21,13 +21,15 @@ package models.cards
 			
 		}
 		
-		public function calculateCardGraphics(suit:String, rank:String, width:int, height:int, x:int=0, y:int=0):void{
-			var imgSource:String = "images/cards/" + CardDeck.getCardGraphicName(suit, rank);
+		public function calculateCardGraphics(cardName:String, width:int, height:int, x:int=0, y:int=0):void{
+			//var imgSource:String = "images/cards/" + CardDeck.getCardGraphicName(suit, rank);
+			var imgSource:String = "images/cards/"+cardName+".swf";
+			
 			cardView.width=width;
 			cardView.height=height;
 			cardView.x = x;
 			cardView.y = y;
-			cardView.displayCard(suit, rank, imgSource, width, height);
+			cardView.displayCard(imgSource, width, height);
 		}
 		
 		public function loadHiddenCard(width:int=50, height:int=75, x:int=0, y:int=0):void{
@@ -35,7 +37,7 @@ package models.cards
 			cardView.height=height;
 			cardView.x = x;
 			cardView.y = y;
-			cardView.displayCard("", "", "images/cards/back.png", width, height);
+			cardView.displayCard("images/cards/back.png", width, height);
 		}
 		
 		public static function getCardGraphicName(suit:String, rank:String):String{
