@@ -33,8 +33,6 @@ import org.cspoker.common.elements.chips.IllegalValueException;
 import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.elements.player.SeatedPlayer;
 import org.cspoker.common.elements.table.DetailedHoldemTable;
-import org.cspoker.common.elements.table.Round;
-import org.cspoker.common.elements.table.TableConfiguration;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
@@ -82,8 +80,7 @@ public class GameWindow
 	 */
 	public GameWindow(LobbyWindow lobbyWindow, DetailedHoldemTable table) {
 		super(new Shell(lobbyWindow.getDisplay(), SWT.CLOSE | SWT.RESIZE), SWT.NONE, lobbyWindow.getClientCore());
-		TableConfiguration tableConfiguration = table.getTableConfiguration();
-		tableState = new TableState(tableConfiguration);
+		tableState = new TableState(table);
 		smartListener = new SmartHoldemTableListener(this, tableState);
 		detailedTable = table;
 		try {
@@ -208,7 +205,9 @@ public class GameWindow
 	public void onCall(CallEvent callEvent) {
 		handleActionChangedPot(0, callEvent.getPlayerId(), "Call");
 		userInputComposite.showDealerMessage(callEvent);
-		
+		if (callEvent.endsRound()) {
+			tableComposite.moveBetsToPot();
+		}
 	}
 	
 	/**
@@ -217,7 +216,9 @@ public class GameWindow
 	public void onCheck(CheckEvent checkEvent) {
 		getPlayerSeatComposite(checkEvent.getPlayerId()).showAction("Check");
 		userInputComposite.showDealerMessage(checkEvent);
-		
+		if (checkEvent.endsRound()) {
+			tableComposite.moveBetsToPot();
+		}
 	}
 	
 	/**
@@ -228,6 +229,9 @@ public class GameWindow
 		Collection<Card> noCards = Collections.emptySet();
 		getPlayerSeatComposite(foldEvent.getPlayerId()).setHoleCards(noCards);
 		userInputComposite.showDealerMessage(foldEvent);
+		if (foldEvent.endsRound()) {
+			tableComposite.moveBetsToPot();
+		}
 	}
 	
 	/**
@@ -288,10 +292,6 @@ public class GameWindow
 	 * @see org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener#onNewRound(org.cspoker.common.api.lobby.holdemtable.event.NewRoundEvent)
 	 */
 	public void onNewRound(NewRoundEvent newRoundEvent) {
-		
-		if (newRoundEvent.getRound() != Round.PREFLOP) {
-			tableComposite.moveBetsToPot();
-		}
 		tableComposite.updateTableGraphics();
 		userInputComposite.showDealerMessage(newRoundEvent);
 	}
@@ -354,7 +354,6 @@ public class GameWindow
 	 * @see org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener#onWinner(org.cspoker.common.api.lobby.holdemtable.event.WinnerEvent)
 	 */
 	public void onWinner(final WinnerEvent winnerEvent) {
-		tableComposite.moveBetsToPot();
 		try {
 			Thread.sleep(1000);
 		} catch (InterruptedException e) {

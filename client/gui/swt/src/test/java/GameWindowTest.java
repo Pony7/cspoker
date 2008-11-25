@@ -37,12 +37,18 @@ public class GameWindowTest
 		ClientCore core = new ClientCore(user);
 		List<SeatedPlayer> players = new ArrayList<SeatedPlayer>();
 		TableConfiguration tconfig = new TableConfiguration(20, 2000);
-		final SeatedPlayer player1 = new SeatedPlayer(new PlayerId(0), new SeatId(0), "TestPlayer 0", 10000, 0, true);
-		final SeatedPlayer player2 = new SeatedPlayer(new PlayerId(1), new SeatId(1), "TestPlayer 1", 20000, 0, true);
-		final SeatedPlayer player3 = new SeatedPlayer(new PlayerId(2), new SeatId(2), "TestPlayer 2", 55550, 0, true);
-		final SeatedPlayer player4 = new SeatedPlayer(new PlayerId(3), new SeatId(3), "TestPlayer 3", 56000, 0, true);
-		final SeatedPlayer player5 = new SeatedPlayer(new PlayerId(4), new SeatId(4), "TestPlayer 4", 569000, 0, true);
-		final SeatedPlayer player6 = new SeatedPlayer(new PlayerId(5), new SeatId(5), "TestPlayer 5", 70003, 0, true);
+		final SeatedPlayer player1 = new SeatedPlayer(new PlayerId(0), new SeatId(0), "TestPlayer 0", 10000, 0, true,
+				true);
+		final SeatedPlayer player2 = new SeatedPlayer(new PlayerId(1), new SeatId(1), "TestPlayer 1", 20000, 0, true,
+				true);
+		final SeatedPlayer player3 = new SeatedPlayer(new PlayerId(2), new SeatId(2), "TestPlayer 2", 55550, 0, true,
+				true);
+		final SeatedPlayer player4 = new SeatedPlayer(new PlayerId(3), new SeatId(3), "TestPlayer 3", 56000, 0, true,
+				true);
+		final SeatedPlayer player5 = new SeatedPlayer(new PlayerId(4), new SeatId(4), "TestPlayer 4", 569000, 0, true,
+				true);
+		final SeatedPlayer player6 = new SeatedPlayer(new PlayerId(5), new SeatId(5), "TestPlayer 5", 70003, 0, true,
+				true);
 		players.addAll(Arrays.asList(player1, player2, player3, player4, player5, player6));
 		final List<SeatedPlayer> seatedPlayers = Collections.unmodifiableList(players);
 		final GameWindow w = new GameWindow(new LobbyWindow(core), new DetailedHoldemTable(new TableId(0), "wurst",
@@ -77,19 +83,19 @@ public class GameWindowTest
 					w.onRaise(new RaiseEvent(player3.getId(), 100, 145));
 					w.onNextPlayer(new NextPlayerEvent(player4.getId()));
 					Thread.sleep(MS_ACTION_DELAY);
-					w.onCall(new CallEvent(player4));
+					w.onCall(new CallEvent(player4, false));
 					w.onNextPlayer(new NextPlayerEvent(player1.getId()));
 					Thread.sleep(MS_ACTION_DELAY);
-					w.onFold(new FoldEvent(player1));
+					w.onFold(new FoldEvent(player1, false));
 					w.onNextPlayer(new NextPlayerEvent(player2.getId()));
 					Thread.sleep(MS_ACTION_DELAY);
 					w.onRaise(new RaiseEvent(player2.getId(), 500, 545));
 					w.onNextPlayer(new NextPlayerEvent(player3.getId()));
 					Thread.sleep(MS_ACTION_DELAY);
-					w.onFold(new FoldEvent(player3));
+					w.onFold(new FoldEvent(player3, false));
 					w.onNextPlayer(new NextPlayerEvent(player4.getId()));
 					Thread.sleep(MS_ACTION_DELAY);
-					w.onCall(new CallEvent(player4));
+					w.onCall(new CallEvent(player4, true));
 					Thread.sleep(MS_ACTION_DELAY);
 					w.onShowHand(new ShowHandEvent(new ShowdownPlayer(player4, EnumSet.of(Card.SIX_CLUBS,
 							Card.SIX_SPADES, Card.SIX_HEARTS, Card.QUEEN_DIAMONDS, Card.ACE_HEARTS), EnumSet.of(

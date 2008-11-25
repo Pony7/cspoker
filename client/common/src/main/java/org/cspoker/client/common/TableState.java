@@ -17,6 +17,7 @@ package org.cspoker.client.common;
 
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.client.common.gamestate.InitialGameState;
+import org.cspoker.common.elements.table.DetailedHoldemTable;
 import org.cspoker.common.elements.table.TableConfiguration;
 
 public class TableState {
@@ -25,9 +26,9 @@ public class TableState {
 	
 	private GameState gameState;
 	
-	public TableState(TableConfiguration tableConfiguration) {
-		this.tableConfiguration = tableConfiguration;
-		this.gameState = new InitialGameState(tableConfiguration);
+	public TableState(DetailedHoldemTable table) {
+		this.tableConfiguration = table.getTableConfiguration();
+		this.gameState = new InitialGameState(table);
 	}
 	
 	public TableConfiguration getTableConfiguration() {

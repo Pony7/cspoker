@@ -26,12 +26,15 @@ import org.cspoker.common.elements.table.SeatId;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 public class SeatedPlayer
-		extends Player {
+		extends Player
+		implements Comparable<SeatId> {
 	
 	private static final long serialVersionUID = -9200622390366978194L;
 	
 	private SeatId seatId;
 	
+	/** Whether the player has cards/is still in a hand */
+	private boolean hasCards;
 	/**
 	 * The stack of this player.
 	 */
@@ -47,12 +50,14 @@ public class SeatedPlayer
 	 */
 	private boolean sittingIn;
 	
-	public SeatedPlayer(PlayerId id, SeatId seatId, String name, int stackValue, int betChipsValue, boolean sittingIn) {
+	public SeatedPlayer(PlayerId id, SeatId seatId, String name, int stackValue, int betChipsValue, boolean sittingIn,
+			boolean hasCards) {
 		super(id, name);
 		this.seatId = seatId;
 		this.stackValue = stackValue;
 		this.betChipsValue = betChipsValue;
 		this.sittingIn = sittingIn;
+		this.hasCards = hasCards;
 	}
 	
 	protected SeatedPlayer() {
@@ -98,6 +103,20 @@ public class SeatedPlayer
 	 */
 	public boolean isSittingIn() {
 		return sittingIn;
+	}
+	
+	public boolean hasCards() {
+		return hasCards;
+	}
+	
+	/**
+	 * @param o
+	 * @return
+	 * @see java.lang.Comparable#compareTo(java.lang.Object)
+	 */
+	@Override
+	public int compareTo(SeatId o) {
+		return 0;
 	}
 	
 }

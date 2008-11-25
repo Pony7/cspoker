@@ -26,39 +26,48 @@ import org.cspoker.common.elements.player.PlayerId;
 
 /**
  * A class to represent fold events.
- * 
  */
 @Immutable
-public class FoldEvent extends HoldemTableEvent {
-
+public class FoldEvent
+		extends HoldemTableEvent {
+	
 	private static final long serialVersionUID = -7805526864154493974L;
-
+	
 	@XmlAttribute
 	private final PlayerId playerId;
-
-	public FoldEvent(PlayerId player) {
+	
+	@XmlAttribute
+	private final boolean endsRound;
+	
+	public FoldEvent(PlayerId player, boolean endsRound) {
 		this.playerId = player;
+		this.endsRound = endsRound;
 	}
-
+	
 	protected FoldEvent() {
 		playerId = null;
+		endsRound = false;
 	}
-
-	public FoldEvent(Player player) {
-		this(player.getId());
+	
+	public FoldEvent(Player player, boolean endsRound) {
+		this(player.getId(), endsRound);
 	}
-
+	
 	@Override
 	public String toString() {
 		return getPlayerId() + " folds.";
 	}
-
+	
 	public PlayerId getPlayerId() {
 		return playerId;
 	}
-
+	
 	@Override
 	public void dispatch(HoldemTableListener holdemTableListener) {
 		holdemTableListener.onFold(this);
+	}
+	
+	public boolean endsRound() {
+		return endsRound;
 	}
 }

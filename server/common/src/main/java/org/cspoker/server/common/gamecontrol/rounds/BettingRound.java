@@ -152,7 +152,7 @@ public abstract class BettingRound
 		// Change to next player
 		game.nextPlayer();
 		
-		gameMediator.publishCallEvent(new CallEvent(player.getId()));
+		gameMediator.publishCallEvent(new CallEvent(player.getId(), isRoundEnded()));
 		BettingRound.logger.info(player.getName() + " calls.");
 	}
 	

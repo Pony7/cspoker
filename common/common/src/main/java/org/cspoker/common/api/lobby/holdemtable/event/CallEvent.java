@@ -16,6 +16,8 @@
 
 package org.cspoker.common.api.lobby.holdemtable.event;
 
+import javax.xml.bind.annotation.XmlAttribute;
+
 import net.jcip.annotations.Immutable;
 
 import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
@@ -24,36 +26,45 @@ import org.cspoker.common.elements.player.PlayerId;
 
 /**
  * A class to represent call events.
- * 
  */
 @Immutable
-public class CallEvent extends HoldemTableEvent {
-
+public class CallEvent
+		extends HoldemTableEvent {
+	
 	private static final long serialVersionUID = -78379299188217626L;
-
+	
 	private final PlayerId playerId;
-
-	public CallEvent(PlayerId player) {
+	
+	@XmlAttribute
+	private final boolean endsRound;
+	
+	public CallEvent(PlayerId player, boolean endsRound) {
 		this.playerId = player;
+		this.endsRound = endsRound;
 	}
-
+	
 	protected CallEvent() {
 		playerId = null;
+		endsRound = false;
 	}
-
-	public CallEvent(Player player) {
-		this(player.getId());
+	
+	public CallEvent(Player player, boolean endsRound) {
+		this(player.getId(), endsRound);
 	}
-
+	
 	@Override
 	public String toString() {
 		return getPlayerId() + " calls.";
 	}
-
+	
 	public PlayerId getPlayerId() {
 		return playerId;
 	}
-
+	
+	public boolean endsRound() {
+		return endsRound;
+	}
+	
 	@Override
 	public void dispatch(HoldemTableListener holdemTableListener) {
 		holdemTableListener.onCall(this);

@@ -24,27 +24,27 @@ import org.cspoker.common.api.lobby.context.RemoteLobbyContext;
 import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.player.PlayerId;
-import org.cspoker.common.elements.table.TableConfiguration;
+import org.cspoker.common.elements.table.DetailedHoldemTable;
 import org.cspoker.common.elements.table.TableId;
 
 @Immutable
-public class SmartLobbyContext extends ForwardingRemoteLobbyContext {
-
+public class SmartLobbyContext
+		extends ForwardingRemoteLobbyContext {
+	
 	private final PlayerId playerId;
-
+	
 	public SmartLobbyContext(RemoteLobbyContext lobbyContext, PlayerId playerId) {
 		super(lobbyContext);
 		this.playerId = playerId;
 	}
 	
 	@Override
-	public SmartHoldemTableContext joinHoldemTable(TableId tableId,
-			HoldemTableListener holdemTableListener) throws RemoteException,
-			IllegalActionException {
-		TableConfiguration tableConfiguration = getHoldemTableInformation(tableId).getTableConfiguration();
-		TableState state = new TableState(tableConfiguration);
+	public SmartHoldemTableContext joinHoldemTable(TableId tableId, HoldemTableListener holdemTableListener)
+			throws RemoteException, IllegalActionException {
+		DetailedHoldemTable table = getHoldemTableInformation(tableId);
+		TableState state = new TableState(table);
 		SmartHoldemTableListener smartListener = new SmartHoldemTableListener(holdemTableListener, state);
-		return new SmartHoldemTableContext(super.joinHoldemTable(tableId, smartListener),state,playerId);
+		return new SmartHoldemTableContext(super.joinHoldemTable(tableId, smartListener), state, playerId);
 	}
-
+	
 }

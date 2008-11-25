@@ -25,34 +25,34 @@ import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.RemoteHolde
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.player.PlayerId;
 
-public class FoldAction extends SimulatedBotAction{
-
-	public FoldAction() {
-	}
+public class FoldAction
+		extends SimulatedBotAction {
+	
+	public FoldAction() {}
 	
 	@Override
-	public void perform(RemoteHoldemPlayerContext context) throws RemoteException, IllegalActionException {
+	public void perform(RemoteHoldemPlayerContext context)
+			throws RemoteException, IllegalActionException {
 		context.fold();
 	}
 	
 	@Override
 	public GameState getNextState(GameState gameState, PlayerId actor) {
-		return new FoldState(gameState, new FoldEvent(actor));
+		boolean isRoundEnded = (gameState.previewNextToAct() == null);
+		return new FoldState(gameState, new FoldEvent(actor, isRoundEnded));
 	}
 	
 	@Override
 	public boolean hasSubTree() {
 		return false;
 	}
-
+	
 	@Override
 	public String toString() {
 		return "Folding";
 	}
-
-
-	public double calculateProbabilityIn(OpponentModel opponentModel,
-			GameState gameState) {
+	
+	public double calculateProbabilityIn(OpponentModel opponentModel, GameState gameState) {
 		return opponentModel.getFoldProbability(gameState);
 	}
 	

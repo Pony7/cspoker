@@ -17,13 +17,13 @@
  */
 package org.cspoker.client.common.gamestate;
 
-import java.util.Collections;
-import java.util.EnumSet;
-import java.util.Set;
+import java.util.*;
 
 import org.cspoker.common.api.lobby.holdemtable.event.HoldemTableTreeEvent;
 import org.cspoker.common.elements.cards.Card;
 import org.cspoker.common.elements.player.PlayerId;
+import org.cspoker.common.elements.player.SeatedPlayer;
+import org.cspoker.common.elements.table.DetailedHoldemTable;
 import org.cspoker.common.elements.table.Round;
 import org.cspoker.common.elements.table.SeatId;
 import org.cspoker.common.elements.table.TableConfiguration;
@@ -32,15 +32,15 @@ import org.cspoker.common.elements.table.TableConfiguration;
  * @author stephans
  */
 public class InitialGameState
-		implements GameState {
+		extends AbstractGameState {
 	
-	private final TableConfiguration tableConfiguration;
+	private final DetailedHoldemTable table;
 	
 	/**
 	 * @param tableConfiguration
 	 */
-	public InitialGameState(TableConfiguration tableConfiguration) {
-		this.tableConfiguration = tableConfiguration;
+	public InitialGameState(DetailedHoldemTable table) {
+		this.table = table;
 	}
 	
 	/**
@@ -49,26 +49,12 @@ public class InitialGameState
 	 */
 	@Override
 	public Set<PlayerId> getAllSeatedPlayerIds() {
-		return Collections.emptySet();
-	}
-	
-	/**
-	 * @return
-	 * @see org.cspoker.client.common.gamestate.GameState#getAllSeatedPlayers()
-	 */
-	@Override
-	public Set<PlayerState> getAllSeatedPlayers() {
-		return Collections.emptySet();
-	}
-	
-	/**
-	 * @param playerId
-	 * @return
-	 * @see org.cspoker.client.common.gamestate.GameState#getCallValue(org.cspoker.common.elements.player.PlayerId)
-	 */
-	@Override
-	public int getCallValue(PlayerId playerId) {
-		return 0;
+		Set<PlayerId> players = new TreeSet<PlayerId>();
+		for (SeatedPlayer player : table.getPlayers()) {
+			players.add(player.getId());
+		}
+		return Collections.unmodifiableSet(players);
+		
 	}
 	
 	/**
@@ -77,7 +63,7 @@ public class InitialGameState
 	 */
 	@Override
 	public EnumSet<Card> getCommunityCards() {
-		return EnumSet.noneOf(Card.class);
+		return EnumSet.copyOf(table.getCommunityCards());
 	}
 	
 	/**
@@ -86,26 +72,7 @@ public class InitialGameState
 	 */
 	@Override
 	public PlayerId getDealer() {
-		return null;
-	}
-	
-	/**
-	 * @param playerId
-	 * @return
-	 * @see org.cspoker.client.common.gamestate.GameState#getDeficit(org.cspoker.common.elements.player.PlayerId)
-	 */
-	@Override
-	public int getDeficit(PlayerId playerId) {
-		return 0;
-	}
-	
-	/**
-	 * @return
-	 * @see org.cspoker.client.common.gamestate.GameState#getGamePotSize()
-	 */
-	@Override
-	public int getGamePotSize() {
-		return 0;
+		return table.getDealer().getId();
 	}
 	
 	/**
@@ -114,15 +81,41 @@ public class InitialGameState
 	 */
 	@Override
 	public int getLargestBet() {
-		return 0;
+		int result = 0;
+		for (SeatedPlayer player : table.getPlayers()) {
+			result = Math.max(result, player.getBetChipsValue());
+		}
+		return result;
 	}
 	
 	/**
+	 * TODO Horribly complicated hack
+	 * 
 	 * @return
 	 * @see org.cspoker.client.common.gamestate.GameState#getLastBettor()
 	 */
 	@Override
 	public PlayerId getLastBettor() {
+		int maxBet = getLargestBet();
+		int dealerSeatId = getPlayer(getDealer()).getSeatId().getId();
+		List<SeatedPlayer> candidates = new ArrayList<SeatedPlayer>();
+		for (SeatedPlayer player : table.getPlayers()) {
+			if (player.getBetChipsValue() == maxBet) {
+				candidates.add(player);
+			}
+		}
+		for (int i = 0; i < table.getTableConfiguration().getMaxNbPlayers(); i++) {
+			for (SeatedPlayer player : candidates) {
+				if (player.getSeatId().getId() == dealerSeatId) {
+					return player.getId();
+				}
+			}
+			dealerSeatId--;
+			if (dealerSeatId < 0) {
+				dealerSeatId += table.getTableConfiguration().getMaxNbPlayers();
+			}
+		}
+		
 		return null;
 	}
 	
@@ -132,17 +125,7 @@ public class InitialGameState
 	 */
 	@Override
 	public HoldemTableTreeEvent getLastEvent() {
-		return null;
-	}
-	
-	/**
-	 * @param playerId
-	 * @return
-	 * @see org.cspoker.client.common.gamestate.GameState#getLowerRaiseBound(org.cspoker.common.elements.player.PlayerId)
-	 */
-	@Override
-	public int getLowerRaiseBound(PlayerId playerId) {
-		return 0;
+		throw new UnsupportedOperationException("Implement this");
 	}
 	
 	/**
@@ -151,12 +134,11 @@ public class InitialGameState
 	 */
 	@Override
 	public int getMinNextRaise() {
-		// TODO Auto-generated method stub
-		return 0;
+		throw new UnsupportedOperationException("Implement this");
 	}
 	
 	/**
-	 * @return
+	 * @return Unknown after initialization, return 0
 	 * @see org.cspoker.client.common.gamestate.GameState#getNbRaises()
 	 */
 	@Override
@@ -170,7 +152,7 @@ public class InitialGameState
 	 */
 	@Override
 	public PlayerId getNextToAct() {
-		return null;
+		throw new UnsupportedOperationException("Implement this");
 	}
 	
 	/**
@@ -180,7 +162,58 @@ public class InitialGameState
 	 */
 	@Override
 	public PlayerState getPlayer(PlayerId playerId) {
-		return null;
+		SeatedPlayer selected = null;
+		for (SeatedPlayer seated : table.getPlayers()) {
+			if (seated.getId().equals(playerId)) {
+				selected = seated;
+			}
+		}
+		if (selected == null) {
+			return null;
+		}
+		final SeatedPlayer player = selected;
+		return new AbstractPlayerState() {
+			
+			@Override
+			public boolean sitsIn() {
+				return player.isSittingIn();
+			}
+			
+			@Override
+			public boolean hasFolded() {
+				return !player.hasCards();
+			}
+			
+			@Override
+			public int getStack() {
+				return player.getStackValue();
+			}
+			
+			@Override
+			public SeatId getSeatId() {
+				return player.getSeatId();
+			}
+			
+			@Override
+			public PlayerId getPlayerId() {
+				return player.getId();
+			}
+			
+			@Override
+			public EnumSet<Card> getCards() {
+				return EnumSet.noneOf(Card.class);
+			}
+			
+			@Override
+			public List<Integer> getBetProgression() {
+				return Collections.singletonList(player.getBetChipsValue());
+			}
+			
+			@Override
+			public int getBet() {
+				return player.getBetChipsValue();
+			}
+		};
 	}
 	
 	/**
@@ -190,16 +223,21 @@ public class InitialGameState
 	 */
 	@Override
 	public PlayerId getPlayerId(SeatId seatId) {
+		for (SeatedPlayer player : table.getPlayers()) {
+			if (player.getSeatId().equals(seatId)) {
+				return player.getId();
+			}
+		}
 		return null;
 	}
 	
 	/**
-	 * @return
+	 * @return Point to yourself ...
 	 * @see org.cspoker.client.common.gamestate.GameState#getPreviousGameState()
 	 */
 	@Override
 	public GameState getPreviousGameState() {
-		return null;
+		return this;
 	}
 	
 	/**
@@ -208,7 +246,7 @@ public class InitialGameState
 	 */
 	@Override
 	public int getPreviousRoundsPotSize() {
-		return 0;
+		return table.getPots().getTotalValue();
 	}
 	
 	/**
@@ -217,7 +255,7 @@ public class InitialGameState
 	 */
 	@Override
 	public Round getRound() {
-		return Round.WAITING;
+		return table.getRound();
 	}
 	
 	/**
@@ -226,7 +264,11 @@ public class InitialGameState
 	 */
 	@Override
 	public int getRoundPotSize() {
-		return 0;
+		int result = 0;
+		for (SeatedPlayer player : table.getPlayers()) {
+			result += player.getBetChipsValue();
+		}
+		return result;
 	}
 	
 	/**
@@ -235,45 +277,6 @@ public class InitialGameState
 	 */
 	@Override
 	public TableConfiguration getTableConfiguration() {
-		return tableConfiguration;
+		return table.getTableConfiguration();
 	}
-	
-	/**
-	 * @param playerId
-	 * @return
-	 * @see org.cspoker.client.common.gamestate.GameState#getUpperRaiseBound(org.cspoker.common.elements.player.PlayerId)
-	 */
-	@Override
-	public int getUpperRaiseBound(PlayerId playerId) {
-		return 0;
-	}
-	
-	/**
-	 * @return
-	 * @see org.cspoker.client.common.gamestate.GameState#hasBet()
-	 */
-	@Override
-	public boolean hasBet() {
-		return false;
-	}
-	
-	/**
-	 * @param playerId
-	 * @return
-	 * @see org.cspoker.client.common.gamestate.GameState#isAllowedToRaise(org.cspoker.common.elements.player.PlayerId)
-	 */
-	@Override
-	public boolean isAllowedToRaise(PlayerId playerId) {
-		return false;
-	}
-	
-	/**
-	 * @return
-	 * @see org.cspoker.client.common.gamestate.GameState#previewNextToAct()
-	 */
-	@Override
-	public PlayerState previewNextToAct() {
-		return null;
-	}
-	
 }
