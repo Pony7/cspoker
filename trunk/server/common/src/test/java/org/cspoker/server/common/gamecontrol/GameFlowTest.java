@@ -528,6 +528,7 @@ public class GameFlowTest extends TestCase {
 	public void testCase1() {
 		PlayingTableState gameControl = new PlayingTableState(pokerTable, table, kenzo);
 		Game game = gameControl.getGame();
+		events.ignore(); //TODO
 		try {
 			gameControl.deal();
 		} catch (IllegalActionException e1) {
@@ -643,6 +644,7 @@ public class GameFlowTest extends TestCase {
 
 	public void testCase2() {
 		PlayingTableState gameControl = new PlayingTableState(pokerTable, table, guy);
+		events.ignore(); //TODO
 		try {
 			gameControl.deal();
 		} catch (IllegalActionException e1) {
@@ -724,6 +726,9 @@ public class GameFlowTest extends TestCase {
 		}
 
 		PlayingTableState gameControl = new PlayingTableState(pokerTable, table, kenzo);
+		
+		events.ignore(); //TODO
+		
 		try {
 			gameControl.deal();
 		} catch (IllegalActionException e1) {
@@ -818,6 +823,8 @@ public class GameFlowTest extends TestCase {
 
 		PlayingTableState gameControl = new PlayingTableState(pokerTable, table);
 
+		events.ignore(); //TODO
+		
 		Game game = gameControl.getGame();
 		try {
 			gameControl.deal();
@@ -838,6 +845,9 @@ public class GameFlowTest extends TestCase {
 	public void testOnlyOneAllInPlayer() {
 
 		PlayingTableState gameControl = new PlayingTableState(pokerTable, table);
+		
+		events.ignore(); //TODO
+		
 		try {
 			gameControl.deal();
 		} catch (IllegalActionException e1) {
@@ -872,6 +882,9 @@ public class GameFlowTest extends TestCase {
 		}
 
 		PlayingTableState gameControl = new PlayingTableState(pokerTable, table, kenzo);
+		
+		events.ignore(); //TODO
+		
 		try {
 			gameControl.deal();
 		} catch (IllegalActionException e1) {
@@ -900,6 +913,9 @@ public class GameFlowTest extends TestCase {
 			table.addPlayer(kenzo);
 			table.addPlayer(cedric);
 			gameControl = new PlayingTableState(pokerTable, table, kenzo);
+			
+			events.ignore(); //TODO
+			
 			try {
 				gameControl.deal();
 			} catch (IllegalActionException e1) {
@@ -940,6 +956,9 @@ public class GameFlowTest extends TestCase {
 			table.addPlayer(kenzo);
 			table.addPlayer(cedric);
 			gameControl = new PlayingTableState(pokerTable, table, kenzo);
+			
+			events.ignore(); //TODO
+			
 			try {
 				gameControl.deal();
 			} catch (IllegalActionException e1) {
@@ -1002,6 +1021,9 @@ public class GameFlowTest extends TestCase {
 			table.addPlayer(kenzo);
 			table.addPlayer(cedric);
 			gameControl = new PlayingTableState(pokerTable, table, kenzo);
+			
+			events.ignore(); //TODO
+			
 			try {
 				gameControl.deal();
 			} catch (IllegalActionException e1) {
@@ -1040,6 +1062,9 @@ public class GameFlowTest extends TestCase {
 		}
 
 		PlayingTableState gameControl = new PlayingTableState(pokerTable, table, guy);
+		
+		events.ignore(); //TODO
+		
 		try {
 			gameControl.deal();
 		} catch (IllegalActionException e1) {
@@ -1056,8 +1081,8 @@ public class GameFlowTest extends TestCase {
 			fail(e.getMessage());
 		}
 	}
-
-	public void testTwoPlayersOneFold() {
+	
+	public void testTwoPlayersPreflopRoundFold() {
 		try {
 
 			kenzo = new MutableSeatedPlayer(factory.createNewPlayer("Kenzo", 500), 500);
@@ -1072,6 +1097,43 @@ public class GameFlowTest extends TestCase {
 			fail(e.getMessage());
 		}
 		PlayingTableState gameControl = new PlayingTableState(pokerTable, table, kenzo);
+		events.ignore();
+		try {
+			gameControl.deal();
+		} catch (IllegalActionException e1) {
+			fail(e1.toString());
+		}
+
+		assertEquals(PreFlopRound.class, gameControl.getRound().getClass());
+
+		try {
+			gameControl.fold(kenzo);
+		} catch (IllegalActionException e) {
+			fail(e.getMessage());
+		}
+	}
+
+	
+	
+
+	public void testTwoPlayersFinalRoundFold() {
+		try {
+
+			kenzo = new MutableSeatedPlayer(factory.createNewPlayer("Kenzo", 500), 500);
+			cedric = new MutableSeatedPlayer(factory.createNewPlayer("Cedric", 500),500);
+
+			table = new ServerTable(8);
+			table.addPlayer(kenzo);
+			table.addPlayer(cedric);
+		} catch (IllegalValueException e) {
+			fail(e.getMessage());
+		} catch (PlayerListFullException e) {
+			fail(e.getMessage());
+		}
+		PlayingTableState gameControl = new PlayingTableState(pokerTable, table, kenzo);
+		
+		events.ignore(); //TODO
+		
 		try {
 			gameControl.deal();
 		} catch (IllegalActionException e1) {
@@ -1131,6 +1193,9 @@ public class GameFlowTest extends TestCase {
 		}
 
 		PlayingTableState gameControl = new PlayingTableState(pokerTable, table, cedric);
+		
+		events.ignore(); //TODO
+		
 		try {
 			gameControl.deal();
 		} catch (IllegalActionException e1) {
@@ -1165,7 +1230,7 @@ public class GameFlowTest extends TestCase {
 		}
 		PlayingTableState gameControl = new PlayingTableState(pokerTable, table, kenzo);
 		
-		events.ignore();
+		events.ignore(); //TODO
 		
 		try {
 			gameControl.deal();
@@ -1224,6 +1289,9 @@ public class GameFlowTest extends TestCase {
 		}
 
 		PlayingTableState gameControl = new PlayingTableState(pokerTable, table, cedric);
+		
+		events.ignore(); //TODO
+		
 		try {
 			gameControl.deal();
 		} catch (IllegalActionException e1) {
@@ -1263,6 +1331,9 @@ public class GameFlowTest extends TestCase {
 		}
 
 		PlayingTableState gameControl = new PlayingTableState(pokerTable, table, cedric);
+		
+		events.ignore(); //TODO
+		
 		try {
 			gameControl.deal();
 		} catch (IllegalActionException e1) {

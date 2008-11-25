@@ -486,7 +486,8 @@ public abstract class BettingRound
 	 * @return True if there is only one player left, False otherwise.
 	 */
 	public boolean onlyOnePlayerLeft() {
-		return (getGame().getNbCurrentDealPlayers() + allInPlayers.size() + getGame().getPots().getNbShowdownPlayers() <= 1);
+		// return (getGame().getNbCurrentDealPlayers() + allInPlayers.size() + getGame().getPots().getNbShowdownPlayers() <= 1);
+		return (getGame().getPots().getNbShowdownPlayers() <= 1);
 	}
 	
 	public boolean currentDealPlayerCalled() {
