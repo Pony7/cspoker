@@ -6,6 +6,8 @@
 			import models.*;
 			import views.*;
 			
+			import mx.controls.Alert;
+			
 			private function doConnect():void{
 				if(txtServer.text != ""){
 					try{
@@ -21,6 +23,7 @@
 			
 			private function doLogin():void{
 				if(txtLoginUser.text != "" && txtLoginPass.text != ""){
+					//Alert.show(txtLoginUser.text);
 					Main.sendLogin(txtLoginUser.text, txtLoginPass.text);
 				}
 			}

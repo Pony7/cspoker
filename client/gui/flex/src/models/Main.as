@@ -18,7 +18,7 @@ package models
 		public static var lobby:Lobby = null;
 		public static var table:Table = null;
 		//public static var containerApp:CSPoker = null;
-		public static var containerApp:CSPoker = null;
+		public static var containerApp:CSPokerWeb = null;
 		//public static var containerWebApp:CSPokerWeb = null;
 		public static var connectionBox:ConnectionBox = null;
 		public static var registerBox:RegisterBox = null;
@@ -41,11 +41,11 @@ package models
 		//public static var newServerConnection:ServerConnectionNew = null;
 		//public static var newMessageCenter:MessageCenterNew = null;
 		
-		public function Main(passedContainerApp:CSPoker, passedLobby:Lobby, passedTable:Table, passedConnectionBox:ConnectionBox, passedRegisterBox:RegisterBox):void{
+		public function Main(passedContainerApp:CSPokerWeb, passedLobby:Lobby, passedTable:Table, passedConnectionBox:ConnectionBox, passedRegisterBox:RegisterBox):void{
 			trace("Launching CS Poker...");
 			containerApp = passedContainerApp;
 			
-			containerApp.addEventListener(Event.CLOSING,closeHandler)
+			//containerApp.addEventListener(Event.CLOSING,closeHandler)
 			
 			
   
@@ -143,7 +143,7 @@ package models
 		
      		if(serverConnection.isConnected()) serverConnection.csLeaveTableAction(table.tableId);
          	trace("closeHandler called, exiting...");
-         	containerApp.exit();
+         	//containerApp.exit();
 		}
 		
 		public static function showServerMessage(message:String) : void

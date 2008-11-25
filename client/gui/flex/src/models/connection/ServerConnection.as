@@ -156,7 +156,7 @@ package models.connection
 			var passwordHash:String = MD5.hash(userPassword);
 			var xml:XML =
 			
-			<ns5:loginAction id={idAction} xmlns:ns5="http://www.cspoker.org/api/2008-11/"><username>kenzo</username><passwordHash>test</passwordHash></ns5:loginAction>;
+			<ns5:loginAction id={idAction} xmlns:ns5="http://www.cspoker.org/api/2008-11/"><username>{userName}</username><passwordHash>{userPassword}</passwordHash></ns5:loginAction>;
 
 			csSendData(xml);
 		}
