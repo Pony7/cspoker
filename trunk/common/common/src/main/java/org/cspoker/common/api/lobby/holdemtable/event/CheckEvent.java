@@ -25,33 +25,42 @@ import org.cspoker.common.elements.player.PlayerId;
 
 /**
  * A class to represent check events.
- * 
  */
 @Immutable
-public class CheckEvent extends HoldemTableEvent {
-
+public class CheckEvent
+		extends HoldemTableEvent {
+	
 	private static final long serialVersionUID = -1128439307716720778L;
-
+	
 	@XmlAttribute
 	private final PlayerId playerId;
-
-	public CheckEvent(PlayerId player) {
+	
+	@XmlAttribute
+	private final boolean endsRound;
+	
+	public CheckEvent(PlayerId player, boolean endsRound) {
 		this.playerId = player;
+		this.endsRound = endsRound;
 	}
-
+	
 	protected CheckEvent() {
 		playerId = null;
+		endsRound = false;
 	}
-
+	
 	@Override
 	public String toString() {
 		return getPlayerId() + " checks.";
 	}
-
+	
 	public PlayerId getPlayerId() {
 		return playerId;
 	}
-
+	
+	public boolean endsRound() {
+		return endsRound;
+	}
+	
 	@Override
 	public void dispatch(HoldemTableListener holdemTableListener) {
 		holdemTableListener.onCheck(this);

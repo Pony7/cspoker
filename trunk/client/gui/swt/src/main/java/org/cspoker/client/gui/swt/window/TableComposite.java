@@ -364,8 +364,6 @@ public class TableComposite
 	}
 	
 	/**
-	 * TODO Redraw certain areas to minimize flicker
-	 * 
 	 * @param pcs
 	 * @param toPot
 	 */

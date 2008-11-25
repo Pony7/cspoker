@@ -46,16 +46,7 @@ public abstract class TestSWTClient
 		setServer();
 		displayexecutor = DisplayExecutor.getInstance();
 		users = new ArrayList<User>();
-		users.addAll(Arrays.asList(new User("Stephan", "test"), new User("dummy", "test")/*
-																						 * ,
-																						 * new
-																						 * User
-																						 * (
-																						 * "test"
-																						 * ,
-																						 * "test"
-																						 * )
-																						 */));
+		users.addAll(Arrays.asList(new User("Stephan", "test"), new User("dummy", "test"), new User("test", "test")));
 	}
 	
 	protected abstract void setServer();

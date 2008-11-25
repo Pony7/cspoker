@@ -69,7 +69,7 @@ public class MutableSeatedPlayer {
 		betChips = new Chips(0);
 		
 		pocketCards = new CopyOnWriteArrayList<Card>();
-		//TODO Kenzo: Why default false??
+		// TODO Kenzo: Why default false??
 		sittingIn = false;
 	}
 	
@@ -151,7 +151,7 @@ public class MutableSeatedPlayer {
 		getStack().transferAmountTo(amount, getBetChips());
 	}
 	
-	public synchronized void transferAllChipsToBetPile(){
+	public synchronized void transferAllChipsToBetPile() {
 		getStack().transferAllChipsTo(getBetChips());
 	}
 	
@@ -184,7 +184,7 @@ public class MutableSeatedPlayer {
 	
 	public synchronized SeatedPlayer getMemento() {
 		return new SeatedPlayer(getId(), getSeatId(), getName(), getStack().getValue(), getBetChips().getValue(),
-				sittingIn);
+				sittingIn, pocketCards.size() > 0);
 	}
 	
 	@Override

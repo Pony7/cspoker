@@ -176,7 +176,7 @@ public class PlayingTableState
 	public synchronized void check(MutableSeatedPlayer player)
 			throws IllegalActionException {
 		round.check(player);
-		mediatingTable.publishCheckEvent(new CheckEvent(player.getId()));
+		mediatingTable.publishCheckEvent(new CheckEvent(player.getId(), round.isRoundEnded()));
 		PlayingTableState.logger.info(player.getName() + " checks.");
 		checkIfEndedAndChangeRound();
 	}
@@ -212,7 +212,7 @@ public class PlayingTableState
 	public synchronized void fold(MutableSeatedPlayer player)
 			throws IllegalActionException {
 		round.fold(player);
-		mediatingTable.publishFoldEvent(new FoldEvent(player.getId()));
+		mediatingTable.publishFoldEvent(new FoldEvent(player.getId(), round.isRoundEnded()));
 		PlayingTableState.logger.info(player.getName() + ": folds");
 		checkIfEndedAndChangeRound();
 	}
@@ -310,7 +310,8 @@ public class PlayingTableState
 		} else {
 			MutableSeatedPlayer player = game.getCurrentPlayer();
 			if (player != null) {
-				mediatingTable.publishNextPlayerEvent(new NextPlayerEvent(player.getId(),round.getBet()-player.getBetChips().getValue()));
+				mediatingTable.publishNextPlayerEvent(new NextPlayerEvent(player.getId(), round.getBet()
+						- player.getBetChips().getValue()));
 			}
 		}
 	}
@@ -399,11 +400,12 @@ public class PlayingTableState
 		sitOut(seated);
 		game.getTable().removePlayer(seated);
 	}
-
+	
 	@Override
 	public DetailedHoldemTable getTableInformation() {
-		return new DetailedHoldemTable(mediatingTable.getTableId(), mediatingTable.getName(), getSeatedPlayers(), isPlaying(),
-				mediatingTable.getTableConfiguration(), getGame().getPots().getSnapshot(), getGame().getDealer().getMemento(), getGame().getCommunityCards(), round.getRound());
+		return new DetailedHoldemTable(mediatingTable.getTableId(), mediatingTable.getName(), getSeatedPlayers(),
+				isPlaying(), mediatingTable.getTableConfiguration(), getGame().getPots().getSnapshot(), getGame()
+						.getDealer().getMemento(), getGame().getCommunityCards(), round.getRound());
 	}
 	
 }

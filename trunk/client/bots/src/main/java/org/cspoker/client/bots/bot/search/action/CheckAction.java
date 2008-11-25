@@ -25,28 +25,29 @@ import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.RemoteHolde
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.player.PlayerId;
 
-public class CheckAction extends SimulatedBotAction{
-
-	public CheckAction() {
-	}
+public class CheckAction
+		extends SimulatedBotAction {
+	
+	public CheckAction() {}
 	
 	@Override
-	public void perform(RemoteHoldemPlayerContext context) throws RemoteException, IllegalActionException {
+	public void perform(RemoteHoldemPlayerContext context)
+			throws RemoteException, IllegalActionException {
 		context.checkOrCall();
 	}
 	
 	@Override
 	public GameState getNextState(GameState gameState, PlayerId actor) {
-		return new CheckState(gameState, new CheckEvent(actor));
+		boolean isRoundEnded = (gameState.previewNextToAct() == null);
+		return new CheckState(gameState, new CheckEvent(actor, isRoundEnded));
 	}
-
+	
 	@Override
 	public String toString() {
 		return "Checking";
 	}
-
-	public double calculateProbabilityIn(OpponentModel opponentModel,
-			GameState gameState) {
+	
+	public double calculateProbabilityIn(OpponentModel opponentModel, GameState gameState) {
 		return opponentModel.getCheckProbability(gameState);
 	}
 }
