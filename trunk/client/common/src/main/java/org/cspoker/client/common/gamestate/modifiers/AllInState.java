@@ -86,7 +86,9 @@ public class AllInState
 			@Override
 			public List<Integer> getBetProgression() {
 				List<Integer> result = new ArrayList<Integer>();
-				result.addAll(gameState.getPlayer(gameState.getLastBettor()).getBetProgression());
+				if (gameState.getLastBettor() != null) {
+					result.addAll(gameState.getPlayer(gameState.getLastBettor()).getBetProgression());
+				}
 				result.add(event.getAmount());
 				return Collections.unmodifiableList(result);
 			}
