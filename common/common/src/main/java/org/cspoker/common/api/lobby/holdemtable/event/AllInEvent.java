@@ -23,41 +23,51 @@ import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
 import org.cspoker.common.elements.player.PlayerId;
 
 @Immutable
-public class AllInEvent extends HoldemTableEvent {
+public class AllInEvent
+		extends HoldemTableEvent {
 	
 	private static final long serialVersionUID = 2029273959014493873L;
-
+	
 	@XmlAttribute
 	private final PlayerId playerId;
 	
+	@XmlAttribute
+	private final boolean endsRound;
+	
 	private final int amount;
 	
-	public AllInEvent(PlayerId player, int amount){
+	public AllInEvent(PlayerId player, int amount, boolean endsRound) {
 		this.playerId = player;
 		this.amount = amount;
+		this.endsRound = endsRound;
 	}
 	
-	protected AllInEvent(){
+	protected AllInEvent() {
 		playerId = null;
 		amount = 0;
+		endsRound = false;
 	}
 	
-	public PlayerId getPlayerId(){
+	public PlayerId getPlayerId() {
 		return playerId;
 	}
 	
-	public int getAmount(){
+	public int getAmount() {
 		return amount;
 	}
-
+	
 	@Override
 	public void dispatch(HoldemTableListener holdemTableListener) {
 		holdemTableListener.onAllIn(this);
 	}
 	
 	@Override
-	public String toString(){
-		return playerId+" is all-in with "+amount+".";
+	public String toString() {
+		return playerId + " is all-in with " + amount + ".";
 	}
-
+	
+	public boolean endsRound() {
+		return endsRound;
+	}
+	
 }

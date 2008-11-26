@@ -18,7 +18,6 @@ import java.io.IOException;
 import java.rmi.RemoteException;
 import java.text.NumberFormat;
 import java.util.*;
-import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
 import javax.sound.sampled.*;
@@ -195,12 +194,6 @@ public class ClientGUI {
 		betFormatter.setMinimumFractionDigits(0);
 		betFormatter.setMaximumFractionDigits(2);
 		betFormatter.setGroupingUsed(false);
-		try {
-			Preferences.userRoot().clear();
-		} catch (BackingStoreException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
 		verifyAndInitResources();
 		
 	}

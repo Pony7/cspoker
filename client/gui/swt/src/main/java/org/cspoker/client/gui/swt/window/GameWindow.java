@@ -378,6 +378,9 @@ public class GameWindow
 	public void onAllIn(AllInEvent allInEvent) {
 		handleActionChangedPot(allInEvent.getAmount(), allInEvent.getPlayerId(), "All In");
 		userInputComposite.showDealerMessage(allInEvent);
+		if (allInEvent.endsRound()) {
+			tableComposite.moveBetsToPot();
+		}
 	}
 	
 	/**

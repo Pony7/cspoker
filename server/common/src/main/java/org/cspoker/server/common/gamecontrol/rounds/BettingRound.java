@@ -258,7 +258,7 @@ public abstract class BettingRound
 			playerMadeEvent(player);
 			someoneBigAllIn = true;
 		}
-		gameMediator.publishAllInEvent(new AllInEvent(player.getId(), amount));
+		gameMediator.publishAllInEvent(new AllInEvent(player.getId(), amount, isRoundEnded()));
 		
 		// TODO put amount of raise
 		BettingRound.logger.info(player.getName() + ": raises to $" + player.getMemento().getBetChipsValue()
@@ -486,7 +486,8 @@ public abstract class BettingRound
 	 * @return True if there is only one player left, False otherwise.
 	 */
 	public boolean onlyOnePlayerLeft() {
-		// return (getGame().getNbCurrentDealPlayers() + allInPlayers.size() + getGame().getPots().getNbShowdownPlayers() <= 1);
+		// return (getGame().getNbCurrentDealPlayers() + allInPlayers.size() +
+		// getGame().getPots().getNbShowdownPlayers() <= 1);
 		return (getGame().getPots().getNbShowdownPlayers() <= 1);
 	}
 	
