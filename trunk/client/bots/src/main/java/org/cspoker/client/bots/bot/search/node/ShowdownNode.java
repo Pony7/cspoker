@@ -56,7 +56,7 @@ public class ShowdownNode{
 	}
 
 	private HashMultiset<Integer> simulateOutcomes() {
-		int nbSamples = 20;
+		int nbSamples = 15;
 		PlayerState botState = gameState.getPlayer(botId);
 		Set<PlayerState> activeOpponents = Sets.filter(gameState.getAllSeatedPlayers(),new Predicate<PlayerState>(){
 			@Override

@@ -36,7 +36,7 @@ public class SamplingExpander extends Expander{
 
 	private final static Logger logger = Logger.getLogger(BotActionNode.class);
 
-	public final static int samples = 10;
+	public final static int samples = 8;
 
 	private final Random random = new Random();
 

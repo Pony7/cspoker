@@ -34,15 +34,22 @@ public class OpponentActionNode extends ActionNode{
 	
 	private final SamplingExpander expander;
 	
+	public OpponentActionNode(PlayerId opponentId, PlayerId botId, GameState gameState, AllPlayersModel playersModel, 
+			String prefix, SamplingExpander expander) {
+		super(opponentId, botId, gameState, playersModel, prefix);
+		this.expander = expander;
+	}
+	
 	public OpponentActionNode(PlayerId opponentId, PlayerId botId, GameState gameState, AllPlayersModel playersModel, String prefix) {
 		super(opponentId, botId, gameState, playersModel, prefix);
 		this.expander = new SamplingExpander(this);
 	}
+
 	
 	@Override
 	public double getEV() {
 		int average = 0;
-		Set<? extends EvaluatedAction<? extends SampledAction>> actions = expander.expand();
+		Set<? extends EvaluatedAction<? extends SampledAction>> actions = getExpander().expand();
 		for(EvaluatedAction<? extends SampledAction> eval : actions){
 			average += eval.getEvaluatedAction().getTimes()*eval.getEV(); 
 		}
@@ -59,11 +66,6 @@ public class OpponentActionNode extends ActionNode{
 		return opponentModeler.getModelFor(playerId).getProbabilityActions(gameState);
 	}
 	
-	@Override
-	public String toString() {
-		return "Opponent "+playerId+" Action Node";
-	}
-	
 	protected <A extends ActionWrapper> EvaluatedAction<A> getFoldEVForBot(A action, GameState nextState) {
 		EvaluatedAction<A> result;
 		//fold action by opponent
@@ -71,6 +73,15 @@ public class OpponentActionNode extends ActionNode{
 		int pots = nextState.getGamePotSize();
 		result = new EvaluatedAction<A>(action, stack+pots);
 		return result;
+	}
+	
+	public SamplingExpander getExpander() {
+		return expander;
+	}
+	
+	@Override
+	public String toString() {
+		return "Opponent "+playerId+" Action Node";
 	}
 	
 }

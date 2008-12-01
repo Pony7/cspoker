@@ -35,7 +35,6 @@ import org.cspoker.common.api.lobby.holdemtable.event.FoldEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.RaiseEvent;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.player.PlayerId;
-import org.cspoker.common.elements.table.Round;
 import org.cspoker.common.elements.table.TableId;
 import org.cspoker.common.util.threading.GlobalThreadPool;
 
@@ -61,21 +60,24 @@ extends AbstractBot {
 		executor.execute(new Runnable() {
 			public void run() {
 				try {
+					BotActionNode actionNode;
 					switch (tableContext.getGameState().getRound()) {
 					case PREFLOP:
 						playerContext.checkOrCall();
 						break;
 					case FLOP:
-						playerContext.checkOrCall();
+						logger.debug("Searching flop round game tree:");
+						actionNode = new ConcurrentBotActionNode(GlobalThreadPool.getInstance(), playerID, playerContext.getGameState(), opponentModeler, "|");
+						actionNode.performbestAction(playerContext);
 						break;
 					case TURN:
-						playerContext.checkOrCall();
+						logger.debug("Searching turn round game tree:");
+						actionNode = new ConcurrentBotActionNode(GlobalThreadPool.getInstance(), playerID, playerContext.getGameState(), opponentModeler, "|");
+						actionNode.performbestAction(playerContext);
 						break;
 					case FINAL:
 						logger.debug("Searching final round game tree:");
-						BotActionNode actionNode;
-						actionNode = new ConcurrentBotActionNode(GlobalThreadPool.getInstance(), 
-									playerID, playerContext.getGameState(), opponentModeler, "|");
+						actionNode = new ConcurrentBotActionNode(GlobalThreadPool.getInstance(), playerID, playerContext.getGameState(), opponentModeler, "|");
 						actionNode.performbestAction(playerContext);
 						break;
 					default:
@@ -96,78 +98,66 @@ extends AbstractBot {
 	@Override
 	public void onAllIn(final AllInEvent allInEvent) {
 		final GameState gameState = playerContext.getGameState();
-		if(gameState.getRound().equals(Round.FINAL)){
-			executor.execute(new Runnable() {
-				public void run() {
-					opponentModeler.getModelFor(allInEvent.getPlayerId()).addAllIn(gameState, allInEvent);
-				}
-			});
-		}
+		executor.execute(new Runnable() {
+			public void run() {
+				opponentModeler.getModelFor(allInEvent.getPlayerId()).addAllIn(gameState, allInEvent);
+			}
+		});
 		super.onAllIn(allInEvent);
 	}
 
 	@Override
 	public void onBet(final BetEvent betEvent) {
 		final GameState gameState = playerContext.getGameState();
-		if(gameState.getRound().equals(Round.FINAL)){
-			executor.execute(new Runnable() {
-				public void run() {
-					opponentModeler.getModelFor(betEvent.getPlayerId()).addBet(gameState, betEvent);
-				}
-			});
-		}
+		executor.execute(new Runnable() {
+			public void run() {
+				opponentModeler.getModelFor(betEvent.getPlayerId()).addBet(gameState, betEvent);
+			}
+		});
 		super.onBet(betEvent);
 	}
 
 	@Override
 	public void onCall(final CallEvent callEvent) {
 		final GameState gameState = playerContext.getGameState();
-		if(gameState.getRound().equals(Round.FINAL)){
-			executor.execute(new Runnable() {
-				public void run() {
-					opponentModeler.getModelFor(callEvent.getPlayerId()).addCall(gameState, callEvent);
-				}
-			});
-		}
+		executor.execute(new Runnable() {
+			public void run() {
+				opponentModeler.getModelFor(callEvent.getPlayerId()).addCall(gameState, callEvent);
+			}
+		});
 		super.onCall(callEvent);
 	}
 
 	@Override
 	public void onFold(final FoldEvent foldEvent) {
 		final GameState gameState = playerContext.getGameState();
-		if(gameState.getRound().equals(Round.FINAL)){
-			executor.execute(new Runnable() {
-				public void run() {
-					opponentModeler.getModelFor(foldEvent.getPlayerId()).addFold(gameState, foldEvent);
-				}
-			});
-		}
+		executor.execute(new Runnable() {
+			public void run() {
+				opponentModeler.getModelFor(foldEvent.getPlayerId()).addFold(gameState, foldEvent);
+			}
+		});
 		super.onFold(foldEvent);
 	}
 
 	@Override
 	public void onCheck(final CheckEvent checkEvent) {
 		final GameState gameState = playerContext.getGameState();
-		if(gameState.getRound().equals(Round.FINAL)){
-			executor.execute(new Runnable() {
-				public void run() {
-					opponentModeler.getModelFor(checkEvent.getPlayerId()).addCheck(gameState, checkEvent);
-				}
-			});
-		}
+		executor.execute(new Runnable() {
+			public void run() {
+				opponentModeler.getModelFor(checkEvent.getPlayerId()).addCheck(gameState, checkEvent);
+			}
+		});
 		super.onCheck(checkEvent);
 	}
 
 	@Override
 	public void onRaise(final RaiseEvent raiseEvent) {
 		final GameState gameState = playerContext.getGameState();
-		if(gameState.getRound().equals(Round.FINAL)){
-			executor.execute(new Runnable() {
-				public void run() {
-					opponentModeler.getModelFor(raiseEvent.getPlayerId()).addRaise(gameState,raiseEvent);
-				}
-			});
-		}
+		executor.execute(new Runnable() {
+			public void run() {
+				opponentModeler.getModelFor(raiseEvent.getPlayerId()).addRaise(gameState,raiseEvent);
+			}
+		});
 		super.onRaise(raiseEvent);
 	}
 
