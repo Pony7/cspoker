@@ -18,6 +18,7 @@ package org.cspoker.client.bots.bot.search.node;
 import org.apache.log4j.Logger;
 import org.cspoker.client.bots.bot.search.action.ActionWrapper;
 import org.cspoker.client.bots.bot.search.action.EvaluatedAction;
+import org.cspoker.client.bots.bot.search.node.expander.Expander;
 import org.cspoker.client.bots.bot.search.opponentmodel.AllPlayersModel;
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.client.common.gamestate.modifiers.FoldState;
@@ -41,7 +42,7 @@ public abstract class ActionNode implements InnerGameTreeNode{
 		this.opponentModeler = opponentModeler;
 		this.botId= botId;
 	}
-
+	
 	public <A extends ActionWrapper> EvaluatedAction<A> expandWith(A action){
 		if(logger.isDebugEnabled()){
 			logger.debug(prefix+"---o "+action+" in "+this);

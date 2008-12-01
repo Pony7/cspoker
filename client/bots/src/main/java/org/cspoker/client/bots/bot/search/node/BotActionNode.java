@@ -40,14 +40,20 @@ public class BotActionNode extends ActionNode{
 
 	private final static Logger logger = Logger.getLogger(BotActionNode.class);
 
-	private final CompleteExpander expander;
-
+	protected final CompleteExpander expander;
+	
 	public BotActionNode(PlayerId botId, GameState gameState,
 			AllPlayersModel opponentModeler, String prefix) {
 		super(botId, botId, gameState, opponentModeler, prefix);
 		this.expander = new CompleteExpander(this);
-	}
+	};
 
+	public BotActionNode(PlayerId botId, GameState gameState,
+			AllPlayersModel opponentModeler, String prefix, CompleteExpander expander) {
+		super(botId, botId, gameState, opponentModeler, prefix);
+		this.expander = expander;
+	}
+	
 	@Override
 	public double getEV() {
 		return getBestEvaluatedAction().getEV();
@@ -62,7 +68,7 @@ public class BotActionNode extends ActionNode{
 	protected EvaluatedAction<? extends SearchBotAction> getBestEvaluatedAction(){
 		double maxEv=Double.NEGATIVE_INFINITY;
 		EvaluatedAction<? extends SearchBotAction> action = null;
-		Set<? extends EvaluatedAction<? extends SearchBotAction>> actions = expander.expand();
+		Set<? extends EvaluatedAction<? extends SearchBotAction>> actions = getExpander().expand();
 		for(EvaluatedAction<? extends SearchBotAction> eval : actions){
 			if(eval.getEV()>maxEv){
 				maxEv = eval.getEV();
@@ -117,6 +123,10 @@ public class BotActionNode extends ActionNode{
 		int stack = nextState.getPlayer(botId).getStack();
 		result = new EvaluatedAction<A>(action, stack);
 		return result;
+	}
+	
+	protected CompleteExpander getExpander() {
+		return expander;
 	}
 	
 	@Override
