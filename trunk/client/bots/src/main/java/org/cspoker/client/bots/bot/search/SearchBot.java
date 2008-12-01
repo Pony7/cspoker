@@ -21,10 +21,8 @@ import java.util.concurrent.ExecutorService;
 
 import org.apache.log4j.Logger;
 import org.cspoker.client.bots.bot.AbstractBot;
-import org.cspoker.client.bots.bot.search.node.IBotActionNode;
-import org.cspoker.client.bots.bot.search.node.finalround.ConcurrentFinalBotBetNode;
-import org.cspoker.client.bots.bot.search.node.finalround.ConcurrentFinalBotNoBetNode;
-import org.cspoker.client.bots.bot.search.opponentmodel.HistogramRoundModel;
+import org.cspoker.client.bots.bot.search.node.BotActionNode;
+import org.cspoker.client.bots.bot.search.node.ConcurrentBotActionNode;
 import org.cspoker.client.bots.bot.search.opponentmodel.AllPlayersModel;
 import org.cspoker.client.bots.listener.BotListener;
 import org.cspoker.client.common.SmartLobbyContext;
@@ -34,10 +32,8 @@ import org.cspoker.common.api.lobby.holdemtable.event.BetEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.CallEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.CheckEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.FoldEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.NewDealEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.RaiseEvent;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
-import org.cspoker.common.elements.player.Player;
 import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.elements.table.Round;
 import org.cspoker.common.elements.table.TableId;
@@ -76,16 +72,10 @@ extends AbstractBot {
 						playerContext.checkOrCall();
 						break;
 					case FINAL:
-						logger.debug("Searching final round game tree.");
-						IBotActionNode actionNode;
-						if(tableContext.getGameState().hasBet()){
-							actionNode = new ConcurrentFinalBotBetNode(GlobalThreadPool.getInstance(), 
-									playerID, playerContext.getGameState(), opponentModeler, 0);
-						}else{
-							actionNode = new ConcurrentFinalBotNoBetNode(GlobalThreadPool.getInstance(), 
-									playerID, playerContext.getGameState(), opponentModeler, 0);
-						}
-						actionNode.expand();
+						logger.debug("Searching final round game tree:");
+						BotActionNode actionNode;
+						actionNode = new ConcurrentBotActionNode(GlobalThreadPool.getInstance(), 
+									playerID, playerContext.getGameState(), opponentModeler, "|");
 						actionNode.performbestAction(playerContext);
 						break;
 					default:

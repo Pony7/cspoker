@@ -13,29 +13,35 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.common.elements.table;
+package org.cspoker.client.bots.bot.search.action;
 
-public enum Round {
-	WAITING("waiting round", Round.PREFLOP),
-	PREFLOP("pre-flop round", Round.FLOP),
-	FLOP("flop round", Round.TURN),
-	TURN("turn round", Round.FINAL),
-	FINAL("final round", null);
+public class SampledAction implements ActionWrapper{
+
+	private final ProbabilityAction action;
+	private int times;
+	private int outof;
+
+	public SampledAction(ProbabilityAction action, int times, int outof) {
+		this.action = action;
+		this.times = times;
+		this.outof = outof;
+	}
 	
-	private final String name;
-	private final Round nextRound;
-
-	private Round(String name, Round nextRound) {
-		this.name = name;
-		this.nextRound = nextRound;
+	public SearchBotAction getAction() {
+		return action.getAction();
+	}
+	
+	public int getTimes() {
+		return times;
+	}
+	
+	public int getOutof() {
+		return outof;
 	}
 	
 	@Override
 	public String toString() {
-		return name;
+		return action.toString()+" sampled "+times+"/"+outof;
 	}
-
-	public Round getNextRound() {
-		return nextRound;
-	}
+	
 }

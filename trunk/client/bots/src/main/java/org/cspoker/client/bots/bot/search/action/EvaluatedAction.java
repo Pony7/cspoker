@@ -15,27 +15,31 @@
  */
 package org.cspoker.client.bots.bot.search.action;
 
-public class SimulatedOpponentAction{
+public class EvaluatedAction<A extends ActionWrapper> implements ActionWrapper{
 
-	private final SimulatedBotAction action;
-	private final double probability;
+	private final A action;
+	private final double EV;
 
-	public SimulatedOpponentAction(SimulatedBotAction action, double probability) {
+	public EvaluatedAction(A action, double EV) {
 		this.action = action;
-		this.probability = probability;
+		this.EV = EV;
 	}
 	
-	public SimulatedBotAction getAction() {
+	public A getEvaluatedAction() {
 		return action;
 	}
 	
-	public double getProbability() {
-		return probability;
+	public SearchBotAction getAction() {
+		return action.getAction();
+	}
+	
+	public double getEV() {
+		return EV;
 	}
 	
 	@Override
 	public String toString() {
-		return action.toString()+" with prob="+probability;
+		return "EV is "+EV+" for "+action.toString();
 	}
 	
 }

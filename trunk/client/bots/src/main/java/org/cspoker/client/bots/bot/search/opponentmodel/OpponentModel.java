@@ -15,6 +15,10 @@
  */
 package org.cspoker.client.bots.bot.search.opponentmodel;
 
+import java.util.Set;
+
+import org.cspoker.client.bots.bot.search.action.ProbabilityAction;
+import org.cspoker.client.bots.bot.search.action.SearchBotAction;
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.common.api.lobby.holdemtable.event.AllInEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.BetEvent;
@@ -22,19 +26,10 @@ import org.cspoker.common.api.lobby.holdemtable.event.CallEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.CheckEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.FoldEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.RaiseEvent;
+import org.cspoker.common.elements.player.PlayerId;
 
 public interface OpponentModel {
-
-	double getBetProbability(GameState gameState);
-
-	double getCallProbability(GameState gameState);
-
-	double getCheckProbability(GameState gameState);
-
-	double getFoldProbability(GameState gameState);
-
-	double getRaiseProbability(GameState gameState);
-
+	
 	void addAllIn(GameState gameState, AllInEvent allInEvent);
 	
 	void addCheck(GameState gameState, CheckEvent checkEvent);
@@ -46,4 +41,15 @@ public interface OpponentModel {
 	void addRaise(GameState gameState, RaiseEvent raiseEvent);
 
 	void addFold(GameState gameState, FoldEvent foldEvent);
+
+	Set<SearchBotAction> getAllPossibleActions(GameState gameState);
+	
+	Set<ProbabilityAction> getProbabilityActions(GameState gameState);
+
+	public static interface Factory{
+		
+		OpponentModel create(PlayerId opponentId);
+		
+	}
+	
 }

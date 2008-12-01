@@ -31,19 +31,19 @@ import org.cspoker.common.elements.table.SeatId;
  * @author guy
  */
 public abstract class AbstractGameState
-		implements GameState {
-	
+implements GameState {
+
 	private final static Logger logger = Logger.getLogger(AbstractGameState.class);
-	
+
 	public final int getDeficit(PlayerId playerId) {
 		return getLargestBet() - getPlayer(playerId).getBet();
 	}
-	
+
 	public final int getCallValue(PlayerId playerId) {
 		PlayerState player = getPlayer(playerId);
 		return Math.min(getLargestBet() - player.getBet(), player.getStack());
 	}
-	
+
 	public final boolean isAllowedToRaise(PlayerId playerId) {
 		PlayerState player = getPlayer(playerId);
 		if (getLargestBet() - player.getBet() >= player.getStack()) {
@@ -58,25 +58,25 @@ public abstract class AbstractGameState
 		}
 		return false;
 	}
-	
+
 	public final int getLowerRaiseBound(PlayerId playerId) {
 		PlayerState player = getPlayer(playerId);
 		return Math.min(getMinNextRaise(), player.getStack());
 	}
-	
+
 	public final int getUpperRaiseBound(PlayerId playerId) {
 		PlayerState player = getPlayer(playerId);
 		return player.getStack() - (getLargestBet() - player.getBet());
 	}
-	
+
 	public final int getGamePotSize() {
 		return getPreviousRoundsPotSize() + getRoundPotSize();
 	}
-	
+
 	public final boolean hasBet() {
 		return getLargestBet() > 0;
 	}
-	
+
 	public final Set<PlayerState> getAllSeatedPlayers() {
 		Set<PlayerId> ids = getAllSeatedPlayerIds();
 		HashSet<PlayerState> states = new HashSet<PlayerState>();
@@ -85,45 +85,67 @@ public abstract class AbstractGameState
 		}
 		return states;
 	}
-	
+
+
+
 	public final PlayerState previewNextToAct() {
 		if (getRound().equals(Round.PREFLOP)) {
 			// TODO implement
 			throw new UnsupportedOperationException("Not yet implemented");
-		} else {
-			PlayerId lastBettor = getLastBettor();
-			PlayerId startId = getNextToAct();
-			
-			PlayerId currentId = startId;
-			PlayerState currentPlayer = getPlayer(currentId);
-			SeatId currentSeat = currentPlayer.getSeatId();
-			PlayerId previousId = null;
-			do {
-				previousId = currentId;
-				currentSeat = new SeatId((currentSeat.getId() + 1) % getTableConfiguration().getMaxNbPlayers());
-				currentId = getPlayerId(currentSeat);
-				
-				if (lastBettor != null) {
-					// somebody has raised
-					if (lastBettor.equals(currentId)) {
-						// everybody has called
-						return null;
-					}
-				} else {
-					// nobody has raised
-					if (getDealer().equals(previousId)) {
-						// everybody checked
-						return null;
-					}
-				}
-				if (startId.equals(currentId)) {
-					// nobody should act apart from the current one
+		}
+		PlayerId lastBettor = getLastBettor();
+		PlayerId startId = getNextToAct();
+		boolean newRound = false;
+		if(startId==null){
+			startId = getDealer();
+			newRound = true;
+		}else if(lastBettor==null && startId.equals(getDealer())){
+			//everybody checked
+			return null;
+		}
+		PlayerState startPlayer = getPlayer(startId);
+		PlayerState nextPlayer;
+		while(true){
+			nextPlayer= getNextActivePlayerAfter(startPlayer.getSeatId());
+			if(nextPlayer==null){
+				if(newRound){
+					//the dealer is the next one to act.
+					PlayerState dealerState = getPlayer(startId);
+					if(dealerState.sitsIn() && !dealerState.isAllIn()){
+						return dealerState;
+					}	
+					//nobody does anything this round
 					return null;
 				}
-				currentPlayer = getPlayer(currentId);
-			} while (currentPlayer == null || !currentPlayer.sitsIn() || currentPlayer.isAllIn());
-			return currentPlayer;
+				//nobody can act
+				return null;
+			}
+			if(nextPlayer.getPlayerId().equals(lastBettor)){
+				//everybody called
+				return null;
+			}
+			return nextPlayer;
 		}
+
 	}
-	
+
+	public final PlayerState getNextActivePlayerAfter(SeatId startSeat) {		
+		SeatId currentSeat = startSeat;
+		PlayerState currentPlayer;
+		int maxNbPlayers = getTableConfiguration().getMaxNbPlayers();
+		do {
+			PlayerId currentId;
+			do{
+				currentSeat = new SeatId((currentSeat.getId() + 1) % maxNbPlayers);
+				currentId = getPlayerId(currentSeat);
+			} while(currentId == null);
+			if (startSeat.equals(currentSeat)) {
+				//we went around the table
+				return null;
+			}
+			currentPlayer = getPlayer(currentId);
+		} while (!currentPlayer.sitsIn() || currentPlayer.isAllIn());
+		return currentPlayer;
+	}
+
 }

@@ -17,18 +17,25 @@ package org.cspoker.client.bots.bot.search.action;
 
 import java.rmi.RemoteException;
 
-import org.cspoker.client.bots.bot.search.opponentmodel.OpponentModel;
 import org.cspoker.client.common.gamestate.GameState;
+import org.cspoker.client.common.gamestate.PlayerState;
+import org.cspoker.client.common.gamestate.modifiers.BetState;
 import org.cspoker.client.common.gamestate.modifiers.CallState;
+import org.cspoker.client.common.gamestate.modifiers.NewRoundState;
+import org.cspoker.client.common.gamestate.modifiers.NextPlayerState;
+import org.cspoker.common.api.lobby.holdemtable.event.BetEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.CallEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.NewRoundEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.NextPlayerEvent;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.RemoteHoldemPlayerContext;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.player.PlayerId;
 
-public class CallAction
-		extends SimulatedBotAction {
-	
-	public CallAction() {}
+public class CallAction extends SearchBotAction{
+
+	public CallAction(GameState gameState, PlayerId actor) {
+		super(gameState, actor);
+	}
 	
 	@Override
 	public void perform(RemoteHoldemPlayerContext context)
@@ -37,17 +44,18 @@ public class CallAction
 	}
 	
 	@Override
-	public GameState getNextState(GameState gameState, PlayerId actor) {
-		boolean isRoundEnded = (gameState.previewNextToAct() == null);
-		return new CallState(gameState, new CallEvent(actor, isRoundEnded));
+	public GameState getStateAfterAction() {
+		CallState callState = new CallState(gameState, new CallEvent(actor, false));
+		PlayerState nextToAct = callState.previewNextToAct();
+		if(nextToAct!=null){
+			return new NextPlayerState(callState,
+					new NextPlayerEvent(nextToAct.getPlayerId()));
+		}
+		return getNewRoundState(callState);
 	}
 	
 	@Override
 	public String toString() {
 		return "Calling";
-	}
-	
-	public double calculateProbabilityIn(OpponentModel opponentModel, GameState gameState) {
-		return opponentModel.getCallProbability(gameState);
 	}
 }

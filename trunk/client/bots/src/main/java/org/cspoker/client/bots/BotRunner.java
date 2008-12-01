@@ -78,7 +78,7 @@ public class BotRunner
 	private volatile BotListener gameLimiter;
 	
 	public BotRunner(RemoteCSPokerServer cspokerServer){
-		this(cspokerServer, new BotFactory[]{new SearchBotFactory(), new CallBotFactory(), new RuleBasedBotFactory()});
+		this(cspokerServer, new BotFactory[]{new SearchBotFactory(),new CallBotFactory(), new RuleBasedBotFactory()});
 	}
 	
 	public BotRunner(RemoteCSPokerServer cspokerServer, BotFactory[] bots) {
@@ -169,7 +169,9 @@ public class BotRunner
 	}
 
 	private void stopRunningBots() {
-		bot1profit += bot1.getProfit();
+		int profit = bot1.getProfit();
+		bot1profit += profit;
+		logger.debug(bot1+" gains "+profit);
 		bot1.stop();
 		bot2.stop();
 	}

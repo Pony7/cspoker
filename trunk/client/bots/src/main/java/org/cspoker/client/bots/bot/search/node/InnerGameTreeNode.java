@@ -13,29 +13,29 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.client.bots.bot.search.action;
+package org.cspoker.client.bots.bot.search.node;
 
-public class BotActionEvaluation {
+import java.util.Set;
 
-	private final SimulatedBotAction action;
-	private final double EV;
+import net.jcip.annotations.Immutable;
 
-	public BotActionEvaluation(SimulatedBotAction action, double EV) {
-		this.action = action;
-		this.EV = EV;
-	}
-	
-	public SimulatedBotAction getAction() {
-		return action;
-	}
-	
-	public double getEV() {
-		return EV;
-	}
-	
-	@Override
-	public String toString() {
-		return action.toString() + " with EV "+EV;
-	}
+import org.cspoker.client.bots.bot.search.action.ActionWrapper;
+import org.cspoker.client.bots.bot.search.action.EvaluatedAction;
+import org.cspoker.client.bots.bot.search.action.ProbabilityAction;
+import org.cspoker.client.bots.bot.search.action.SearchBotAction;
+import org.cspoker.client.common.gamestate.GameState;
+
+@Immutable
+public interface InnerGameTreeNode extends GameTreeNode{
+
+	double getEV();
+
+	<A extends ActionWrapper> EvaluatedAction<A> expandWith(A action);
+
+	GameState getGameState();
+
+	Set<ProbabilityAction> getProbabilityActions();
+
+	Set<SearchBotAction> getAllPossibleActions();
 	
 }

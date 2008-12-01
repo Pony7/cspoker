@@ -18,7 +18,10 @@ package org.cspoker.client.bots.bot.search.opponentmodel;
 import java.util.Collections;
 import java.util.EnumMap;
 import java.util.Map;
+import java.util.Set;
 
+import org.cspoker.client.bots.bot.search.action.ProbabilityAction;
+import org.cspoker.client.bots.bot.search.action.SearchBotAction;
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.common.api.lobby.holdemtable.event.AllInEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.BetEvent;
@@ -26,17 +29,17 @@ import org.cspoker.common.api.lobby.holdemtable.event.CallEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.CheckEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.FoldEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.RaiseEvent;
+import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.elements.table.Round;
-import org.cspoker.common.util.lazy.IFactory;
 
 public class PlayerModel implements OpponentModel{
 
 	private final Map<Round, OpponentModel> roundModels = Collections.synchronizedMap(
 			new EnumMap<Round, OpponentModel>(Round.class));
 	
-	public PlayerModel(IFactory<OpponentModel> factory) {
+	public PlayerModel(OpponentModel.Factory factory, PlayerId playerId) {
 		for(Round round:Round.values()){
-			roundModels.put(round, factory.create());
+			roundModels.put(round, factory.create(playerId));
 		}
 	}
 	
@@ -75,28 +78,13 @@ public class PlayerModel implements OpponentModel{
 	}
 
 	@Override
-	public double getBetProbability(GameState gameState) {
-		return getOpponentModelFor(gameState.getRound()).getBetProbability(gameState);
+	public Set<SearchBotAction> getAllPossibleActions(GameState gameState) {
+		return getOpponentModelFor(gameState.getRound()).getAllPossibleActions(gameState);
 	}
 
 	@Override
-	public double getCallProbability(GameState gameState) {
-		return getOpponentModelFor(gameState.getRound()).getCallProbability(gameState);
-	}
-
-	@Override
-	public double getCheckProbability(GameState gameState) {
-		return getOpponentModelFor(gameState.getRound()).getCheckProbability(gameState);
-	}
-
-	@Override
-	public double getFoldProbability(GameState gameState) {
-		return getOpponentModelFor(gameState.getRound()).getFoldProbability(gameState);
-	}
-
-	@Override
-	public double getRaiseProbability(GameState gameState) {
-		return getOpponentModelFor(gameState.getRound()).getRaiseProbability(gameState);
+	public Set<ProbabilityAction> getProbabilityActions(GameState gameState) {
+		return getOpponentModelFor(gameState.getRound()).getProbabilityActions(gameState);
 	}
 	
 }

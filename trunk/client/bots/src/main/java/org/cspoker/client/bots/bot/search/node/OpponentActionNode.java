@@ -15,75 +15,62 @@
  */
 package org.cspoker.client.bots.bot.search.node;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
-import org.cspoker.client.bots.bot.search.action.OpponentActionEvaluation;
-import org.cspoker.client.bots.bot.search.action.SimulatedOpponentAction;
+import org.cspoker.client.bots.bot.search.action.ActionWrapper;
+import org.cspoker.client.bots.bot.search.action.EvaluatedAction;
+import org.cspoker.client.bots.bot.search.action.ProbabilityAction;
+import org.cspoker.client.bots.bot.search.action.SampledAction;
+import org.cspoker.client.bots.bot.search.action.SearchBotAction;
+import org.cspoker.client.bots.bot.search.node.expander.SamplingExpander;
 import org.cspoker.client.bots.bot.search.opponentmodel.AllPlayersModel;
 import org.cspoker.client.common.gamestate.GameState;
-import org.cspoker.client.common.gamestate.PlayerState;
-import org.cspoker.client.common.gamestate.modifiers.NextPlayerState;
-import org.cspoker.common.api.lobby.holdemtable.event.NextPlayerEvent;
 import org.cspoker.common.elements.player.PlayerId;
 
-public abstract class OpponentActionNode extends ActionNode{
+public class OpponentActionNode extends ActionNode{
 
 	private final static Logger logger = Logger.getLogger(OpponentActionNode.class);
 	
-	protected final PlayerId botId;
-	protected final List<OpponentActionEvaluation> actions = new ArrayList<OpponentActionEvaluation>();
-
-	public OpponentActionNode(PlayerId botId, PlayerId opponentId, GameState gameState, AllPlayersModel playersModel, int depth) {
-		super(opponentId,gameState, playersModel, depth);
-		this.botId = botId;
+	private final SamplingExpander expander;
+	
+	public OpponentActionNode(PlayerId opponentId, PlayerId botId, GameState gameState, AllPlayersModel playersModel, String prefix) {
+		super(opponentId, botId, gameState, playersModel, prefix);
+		this.expander = new SamplingExpander(this);
 	}
 	
-	public abstract void expand();
-
-	public void expandAction(SimulatedOpponentAction action) {
-		StringBuilder spaces = new StringBuilder("");
-		for(int i=0;i<depth;i++){
-			spaces.append("   ");
-		}
-		if(logger.isTraceEnabled()){
-			System.out.println(spaces+"OpponentAction: "+action);
-		}
-		double EV;
-		if(action.getAction().hasSubTree()){
-			GameState newGameState = action.getAction().getNextState(gameState, playerId);
-			PlayerState nextToAct;
-			if((nextToAct=newGameState.previewNextToAct())==null){
-				EV = doRoundEnd(newGameState);
-			}else{
-				newGameState = new NextPlayerState(newGameState,new NextPlayerEvent(nextToAct.getPlayerId()));
-				EV = doNextPlayer(newGameState, nextToAct);
-			}
-		}else{
-			EV = gameState.getPlayer(botId).getStack();
-		}
-		actions.add(new OpponentActionEvaluation(action,EV));
-
-		if(logger.isTraceEnabled()){
-			System.out.println(spaces+"EV="+EV);
-		}
-	}
-
-	protected abstract double doNextPlayer(GameState newGameState, PlayerState nextToAct) ;
-
-	protected abstract double doRoundEnd(GameState newGameState);
-
 	@Override
 	public double getEV() {
-		double average = 0;
-		double totalProbability = 0;
-		for(OpponentActionEvaluation eval : actions){
-			double probability = eval.getOpponentAction().getProbability();
-			totalProbability+=probability;
-			average += probability*eval.getEV(); 
+		int average = 0;
+		Set<? extends EvaluatedAction<? extends SampledAction>> actions = expander.expand();
+		for(EvaluatedAction<? extends SampledAction> eval : actions){
+			average += eval.getEvaluatedAction().getTimes()*eval.getEV(); 
 		}
-		return average/totalProbability;
+		return Double.valueOf(average)/actions.iterator().next().getEvaluatedAction().getOutof();
+	}
+	
+	@Override
+	public Set<SearchBotAction> getAllPossibleActions() {
+		return opponentModeler.getModelFor(playerId).getAllPossibleActions(gameState);
+	}
+
+	@Override
+	public Set<ProbabilityAction> getProbabilityActions() {
+		return opponentModeler.getModelFor(playerId).getProbabilityActions(gameState);
+	}
+	
+	@Override
+	public String toString() {
+		return "Opponent "+playerId+" Action Node";
+	}
+	
+	protected <A extends ActionWrapper> EvaluatedAction<A> getFoldEVForBot(A action, GameState nextState) {
+		EvaluatedAction<A> result;
+		//fold action by opponent
+		int stack = nextState.getPlayer(botId).getStack();
+		int pots = nextState.getGamePotSize();
+		result = new EvaluatedAction<A>(action, stack+pots);
+		return result;
 	}
 	
 }

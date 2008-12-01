@@ -16,98 +16,112 @@
 package org.cspoker.client.bots.bot.search.node;
 
 import java.rmi.RemoteException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
-import org.cspoker.client.bots.bot.search.action.BotActionEvaluation;
-import org.cspoker.client.bots.bot.search.action.SimulatedBotAction;
+import org.cspoker.client.bots.bot.search.action.ActionWrapper;
+import org.cspoker.client.bots.bot.search.action.BetAction;
+import org.cspoker.client.bots.bot.search.action.CallAction;
+import org.cspoker.client.bots.bot.search.action.CheckAction;
+import org.cspoker.client.bots.bot.search.action.EvaluatedAction;
+import org.cspoker.client.bots.bot.search.action.FoldAction;
+import org.cspoker.client.bots.bot.search.action.ProbabilityAction;
+import org.cspoker.client.bots.bot.search.action.RaiseAction;
+import org.cspoker.client.bots.bot.search.action.SearchBotAction;
+import org.cspoker.client.bots.bot.search.node.expander.CompleteExpander;
 import org.cspoker.client.bots.bot.search.opponentmodel.AllPlayersModel;
 import org.cspoker.client.common.gamestate.GameState;
-import org.cspoker.client.common.gamestate.PlayerState;
-import org.cspoker.client.common.gamestate.modifiers.NextPlayerState;
-import org.cspoker.common.api.lobby.holdemtable.event.NextPlayerEvent;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.RemoteHoldemPlayerContext;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.player.PlayerId;
 
-public abstract class BotActionNode extends ActionNode implements IBotActionNode{
+public class BotActionNode extends ActionNode{
 
 	private final static Logger logger = Logger.getLogger(BotActionNode.class);
-	
-	protected final List<BotActionEvaluation> actions = Collections.synchronizedList(new ArrayList<BotActionEvaluation>());
 
-	public BotActionNode(PlayerId playerId, GameState gameState, AllPlayersModel playersModel, int depth) {
-		super(playerId,gameState,playersModel,depth);
+	private final CompleteExpander expander;
+
+	public BotActionNode(PlayerId botId, GameState gameState,
+			AllPlayersModel opponentModeler, String prefix) {
+		super(botId, botId, gameState, opponentModeler, prefix);
+		this.expander = new CompleteExpander(this);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.cspoker.client.bots.bot.search.node.IBotActionNode#expand()
-	 */
-	public abstract void expand();
-
-	public void expandAction(SimulatedBotAction action) {
-		StringBuilder spaces = new StringBuilder("");
-		for(int i=0;i<depth;i++){
-			spaces.append("   ");
-		}
-		if(logger.isTraceEnabled()){
-			System.out.println(spaces+"BotAction: "+action);
-		}
-		double EV;
-		if(action.hasSubTree()){
-			GameState newGameState = action.getNextState(gameState, playerId);
-			PlayerState nextToAct;
-			if((nextToAct=newGameState.previewNextToAct())==null){
-				EV = doRoundEnd(newGameState);
-			}else{
-				newGameState = new NextPlayerState(newGameState,new NextPlayerEvent(nextToAct.getPlayerId()));
-				EV = doNextPlayer(newGameState, nextToAct);
-			}
-		}else{
-			EV = gameState.getPlayer(playerId).getStack();
-		}
-		actions.add(new BotActionEvaluation(action,EV));
-
-		if(logger.isTraceEnabled()){
-			System.out.println(spaces+"EV="+EV);
-		}
-	}
-
-	protected abstract double doNextPlayer(GameState newGameState, PlayerState nextToAct) ;
-
-	protected abstract double doRoundEnd(GameState newGameState);
-
-	/* (non-Javadoc)
-	 * @see org.cspoker.client.bots.bot.search.node.IBotActionNode#getEV()
-	 */
 	@Override
 	public double getEV() {
-		double maxEv=0;
-		for(BotActionEvaluation eval : actions){
-			if(eval.getEV()>maxEv){
-				maxEv = eval.getEV();
-			}
-		}
-		return maxEv;
+		return getBestEvaluatedAction().getEV();
 	}
 
-	/* (non-Javadoc)
-	 * @see org.cspoker.client.bots.bot.search.node.IBotActionNode#performbestAction(org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.RemoteHoldemPlayerContext)
-	 */
+
 	public void performbestAction(RemoteHoldemPlayerContext context) throws RemoteException,
 	IllegalActionException {
+		getBestEvaluatedAction().getAction().perform(context);
+	}
+	
+	protected EvaluatedAction<? extends SearchBotAction> getBestEvaluatedAction(){
 		double maxEv=Double.NEGATIVE_INFINITY;
-		SimulatedBotAction action = null;
-		for(BotActionEvaluation eval : actions){
-			logger.trace("Considering: "+eval.toString());
+		EvaluatedAction<? extends SearchBotAction> action = null;
+		Set<? extends EvaluatedAction<? extends SearchBotAction>> actions = expander.expand();
+		for(EvaluatedAction<? extends SearchBotAction> eval : actions){
 			if(eval.getEV()>maxEv){
 				maxEv = eval.getEV();
-				action = eval.getAction();
+				action = eval;
 			}
 		}
-		action.perform(context);
+		return action;
+	}
+	
+	@Override
+	public Set<SearchBotAction> getAllPossibleActions() {
+		HashSet<SearchBotAction> actions = new HashSet<SearchBotAction>();
+		if(gameState.hasBet()){
+			actions.add(new CallAction(gameState, botId));
+			actions.add(new FoldAction(gameState, botId));
+			if(gameState.isAllowedToRaise(botId)){
+				int lowerRaiseBound = gameState.getLowerRaiseBound(botId);
+				int upperRaiseBound = gameState.getUpperRaiseBound(botId);
+				actions.add(new RaiseAction(gameState, botId, lowerRaiseBound));
+				if(upperRaiseBound>lowerRaiseBound){
+					actions.add(new RaiseAction(gameState, botId, Math.min(5*lowerRaiseBound, upperRaiseBound)));
+				}
+			}
+		}else{
+			actions.add(new CheckAction(gameState, botId));
+			if(gameState.isAllowedToRaise(botId)){
+				int lowerRaiseBound = gameState.getLowerRaiseBound(botId);
+				int upperRaiseBound = gameState.getUpperRaiseBound(botId);
+				actions.add(new BetAction(gameState, botId, lowerRaiseBound));
+				if(upperRaiseBound>lowerRaiseBound){
+					actions.add(new BetAction(gameState, botId, Math.min(5*lowerRaiseBound, upperRaiseBound)));
+				}
+			}
+		}
+		return actions;
+	}
+	
+	@Override
+	public Set<ProbabilityAction> getProbabilityActions() {
+		Set<SearchBotAction> possibleActions = getAllPossibleActions();
+		double probability = 1.0/possibleActions.size();
+		HashSet<ProbabilityAction> probActions = new HashSet<ProbabilityAction>();
+		for(SearchBotAction action:possibleActions){
+			probActions.add(new ProbabilityAction(action,probability));
+		}
+		return probActions;
+	}
+	
+	protected <A extends ActionWrapper> EvaluatedAction<A> getFoldEVForBot(A action, GameState nextState) {
+		EvaluatedAction<A> result;
+		//fold action
+		int stack = nextState.getPlayer(botId).getStack();
+		result = new EvaluatedAction<A>(action, stack);
+		return result;
+	}
+	
+	@Override
+	public String toString() {
+		return "Bot Action Node";
 	}
 
 }

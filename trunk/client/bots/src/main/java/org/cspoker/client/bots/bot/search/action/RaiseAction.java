@@ -17,19 +17,22 @@ package org.cspoker.client.bots.bot.search.action;
 
 import java.rmi.RemoteException;
 
-import org.cspoker.client.bots.bot.search.opponentmodel.OpponentModel;
 import org.cspoker.client.common.gamestate.GameState;
+import org.cspoker.client.common.gamestate.PlayerState;
+import org.cspoker.client.common.gamestate.modifiers.NextPlayerState;
 import org.cspoker.client.common.gamestate.modifiers.RaiseState;
+import org.cspoker.common.api.lobby.holdemtable.event.NextPlayerEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.RaiseEvent;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.RemoteHoldemPlayerContext;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.player.PlayerId;
 
-public class RaiseAction extends SimulatedBotAction{
+public class RaiseAction extends SearchBotAction{
 
 	private final int amount;
 
-	public RaiseAction(int amount) {
+	public RaiseAction(GameState gameState, PlayerId actor, int amount) {
+		super(gameState, actor);
 		this.amount = amount;
 	}
 	
@@ -39,18 +42,18 @@ public class RaiseAction extends SimulatedBotAction{
 	}
 	
 	@Override
-	public GameState getNextState(GameState gameState, PlayerId actor) {
-		return new RaiseState(gameState, new RaiseEvent(actor,amount, gameState.getDeficit(actor)+amount));
+	public GameState getStateAfterAction() {
+		RaiseState raiseState = new RaiseState(gameState, new RaiseEvent(actor,amount, gameState.getDeficit(actor)+amount));
+		PlayerState nextToAct = raiseState.previewNextToAct();
+		if(nextToAct!=null){
+			return new NextPlayerState(raiseState,new NextPlayerEvent(nextToAct.getPlayerId()));
+		}
+		throw new IllegalStateException("Round can't be over after a raise.");
 	}
 	
 	@Override
 	public String toString() {
 		return "Raising with "+amount;
-	}
-
-	public double calculateProbabilityIn(OpponentModel opponentModel,
-			GameState gameState) {
-		return opponentModel.getRaiseProbability(gameState);
 	}
 	
 }

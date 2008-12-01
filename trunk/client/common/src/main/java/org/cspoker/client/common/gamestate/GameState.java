@@ -106,5 +106,8 @@ public interface GameState {
 	public boolean hasBet();
 
 	public int getNbRaises();
+
+	public PlayerState getNextActivePlayerAfter(SeatId startSeat);
+
 	
 }
