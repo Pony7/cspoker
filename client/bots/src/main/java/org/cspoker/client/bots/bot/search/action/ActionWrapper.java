@@ -15,21 +15,8 @@
  */
 package org.cspoker.client.bots.bot.search.action;
 
-import java.rmi.RemoteException;
+public interface ActionWrapper {
 
-import org.cspoker.client.common.gamestate.GameState;
-import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.RemoteHoldemPlayerContext;
-import org.cspoker.common.api.shared.exception.IllegalActionException;
-import org.cspoker.common.elements.player.PlayerId;
-
-public abstract class SimulatedBotAction implements SimulationAction{
-
-	public abstract void perform(RemoteHoldemPlayerContext context) throws RemoteException, IllegalActionException;
-	
-	public abstract GameState getNextState(GameState gameState, PlayerId actor);
-	
-	public boolean hasSubTree(){
-		return true;
-	}
+	SearchBotAction getAction();
 	
 }

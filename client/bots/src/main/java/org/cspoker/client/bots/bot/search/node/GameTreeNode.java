@@ -15,10 +15,11 @@
  */
 package org.cspoker.client.bots.bot.search.node;
 
+import net.jcip.annotations.Immutable;
+
+@Immutable
 public interface GameTreeNode {
 
-	void expand();
-	
 	double getEV();
 	
 }

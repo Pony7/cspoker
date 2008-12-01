@@ -17,7 +17,6 @@ package org.cspoker.client.bots.bot.search.action;
 
 import java.rmi.RemoteException;
 
-import org.cspoker.client.bots.bot.search.opponentmodel.OpponentModel;
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.client.common.gamestate.modifiers.FoldState;
 import org.cspoker.common.api.lobby.holdemtable.event.FoldEvent;
@@ -25,11 +24,13 @@ import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.RemoteHolde
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.player.PlayerId;
 
-public class FoldAction
-		extends SimulatedBotAction {
+public class FoldAction extends SearchBotAction{
+
 	
-	public FoldAction() {}
-	
+	public FoldAction(GameState gameState, PlayerId actor) {
+		super(gameState, actor);
+	}
+
 	@Override
 	public void perform(RemoteHoldemPlayerContext context)
 			throws RemoteException, IllegalActionException {
@@ -37,23 +38,13 @@ public class FoldAction
 	}
 	
 	@Override
-	public GameState getNextState(GameState gameState, PlayerId actor) {
-		boolean isRoundEnded = (gameState.previewNextToAct() == null);
-		return new FoldState(gameState, new FoldEvent(actor, isRoundEnded));
+	public GameState getStateAfterAction() {
+		//No point in going any further
+		return new FoldState(gameState, new FoldEvent(actor, false));
 	}
 	
-	@Override
-	public boolean hasSubTree() {
-		return false;
-	}
-	
-	@Override
 	public String toString() {
 		return "Folding";
-	}
-	
-	public double calculateProbabilityIn(OpponentModel opponentModel, GameState gameState) {
-		return opponentModel.getFoldProbability(gameState);
 	}
 	
 }

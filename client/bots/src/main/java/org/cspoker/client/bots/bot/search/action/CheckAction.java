@@ -17,19 +17,22 @@ package org.cspoker.client.bots.bot.search.action;
 
 import java.rmi.RemoteException;
 
-import org.cspoker.client.bots.bot.search.opponentmodel.OpponentModel;
 import org.cspoker.client.common.gamestate.GameState;
+import org.cspoker.client.common.gamestate.PlayerState;
 import org.cspoker.client.common.gamestate.modifiers.CheckState;
+import org.cspoker.client.common.gamestate.modifiers.NextPlayerState;
 import org.cspoker.common.api.lobby.holdemtable.event.CheckEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.NextPlayerEvent;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.RemoteHoldemPlayerContext;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.player.PlayerId;
 
-public class CheckAction
-		extends SimulatedBotAction {
+public class CheckAction extends SearchBotAction{
 	
-	public CheckAction() {}
-	
+	public CheckAction(GameState gameState, PlayerId actor) {
+		super(gameState, actor);
+	}
+
 	@Override
 	public void perform(RemoteHoldemPlayerContext context)
 			throws RemoteException, IllegalActionException {
@@ -37,9 +40,14 @@ public class CheckAction
 	}
 	
 	@Override
-	public GameState getNextState(GameState gameState, PlayerId actor) {
-		boolean isRoundEnded = (gameState.previewNextToAct() == null);
-		return new CheckState(gameState, new CheckEvent(actor, isRoundEnded));
+	public GameState getStateAfterAction() {
+		CheckState checkState = new CheckState(gameState, new CheckEvent(actor, false));
+		PlayerState nextToAct = checkState.previewNextToAct();
+		if(nextToAct!=null){
+			return new NextPlayerState(checkState,
+					new NextPlayerEvent(nextToAct.getPlayerId()));
+		}
+		return getNewRoundState(checkState);
 	}
 	
 	@Override
@@ -47,7 +55,4 @@ public class CheckAction
 		return "Checking";
 	}
 	
-	public double calculateProbabilityIn(OpponentModel opponentModel, GameState gameState) {
-		return opponentModel.getCheckProbability(gameState);
-	}
 }

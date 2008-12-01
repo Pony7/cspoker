@@ -13,12 +13,12 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.client.bots.bot.search.node.finalround;
+package org.cspoker.client.bots.bot.search.node;
 
 import java.util.EnumSet;
 import java.util.Set;
 
-import org.cspoker.client.bots.bot.search.node.GameTreeNode;
+import org.apache.log4j.Logger;
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.client.common.gamestate.PlayerState;
 import org.cspoker.common.elements.cards.Card;
@@ -29,25 +29,33 @@ import org.cspoker.common.handeval.stevebrecher.HandEval;
 import com.google.common.base.Predicate;
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Multiset;
 import com.google.common.collect.Sets;
 import com.google.common.collect.Multiset.Entry;
 
-public class ShowdownNode implements GameTreeNode{
+public class ShowdownNode{
+
+	private final static Logger logger = Logger.getLogger(ShowdownNode.class);
 
 	private final PlayerId botId;
 	private final GameState gameState;
-	private final Multiset<Integer> EVs = new HashMultiset<Integer>();
-	private final int depth;
 	
-	public ShowdownNode(PlayerId botId, GameState gameState, int depth) {
+	public ShowdownNode(PlayerId botId, GameState gameState) {
 		this.botId = botId;
 		this.gameState = gameState;
-		this.depth = depth;
 	}
 
-	@Override
-	public void expand() {
+	public double getEV() {
+		int EV = 0;
+		int size = 0;
+		HashMultiset<Integer> EVs = simulateOutcomes();
+		for(Entry<Integer> entry:EVs.entrySet()){
+			EV+=entry.getCount()*entry.getElement();
+			size+=entry.getCount();
+		}
+		return gameState.getPlayer(botId).getStack()+Double.valueOf(EV)/size;
+	}
+
+	private HashMultiset<Integer> simulateOutcomes() {
 		int nbSamples = 20;
 		PlayerState botState = gameState.getPlayer(botId);
 		Set<PlayerState> activeOpponents = Sets.filter(gameState.getAllSeatedPlayers(),new Predicate<PlayerState>(){
@@ -64,36 +72,35 @@ public class ShowdownNode implements GameTreeNode{
 		
 		EnumSet<Card> communityCards = sampleCommunityCards(usedCards,gameState.getCommunityCards());
 		usedCards.addAll(communityCards);
-
-		int loseEV = botState.getStack();
-		int winEV = loseEV+gameState.getGamePotSize();
 		
 		EnumSet<Card> allBotCards = EnumSet.copyOf(botCards);
 		allBotCards.addAll(communityCards);
 		int botRank =  HandEval.hand7Eval(HandEval.encode(allBotCards));
 
+		int gamePotSize = gameState.getGamePotSize();
+		HashMultiset<Integer> EVs = new HashMultiset<Integer>();
 		for(int i=0;i<nbSamples;i++){
-			winsSample(activeOpponents, usedCards, communityCards,
-					botRank,winEV);
+			EVs.add(winsSample(activeOpponents, usedCards, communityCards,
+					botRank,gamePotSize));
 		}
+		return EVs;
 	}
 
-	private void winsSample(Set<PlayerState> activeOpponents,
-			EnumSet<Card> usedCards, EnumSet<Card> communityCards, int botRank,int winEV) {
+	private int winsSample(Set<PlayerState> activeOpponents,
+			EnumSet<Card> usedCards, EnumSet<Card> communityCards, int botRank,int gamePotSize) {
 		Deck deck = Deck.createWeaklyRandomDeck();
+		int nbWinners = 1;
 		for(PlayerState opponent:activeOpponents){
 			EnumSet<Card> opponentCards = sampleOpponentCards(opponent,deck,usedCards);
 			opponentCards.addAll(communityCards);
 			int opponentRank = HandEval.hand7Eval(HandEval.encode(opponentCards));
 			if(opponentRank>botRank){
-				EVs.add(0);
-				return;
+				return 0;
 			}else if(opponentRank==botRank){
-				EVs.add(winEV/2);
-				return;
+				++nbWinners;
 			}
 		}
-		EVs.add(winEV);
+		return gamePotSize/nbWinners;
 	}
 
 	private EnumSet<Card> sampleCommunityCards(EnumSet<Card> usedCards, EnumSet<Card> dealtCommunityCards){
@@ -124,16 +131,10 @@ public class ShowdownNode implements GameTreeNode{
 		}while(usedCards.contains(two));
 		return EnumSet.of(one, two);
 	}
-
+	
 	@Override
-	public double getEV() {
-		int EV = 0;
-		int size = 0;
-		for(Entry<Integer> entry:EVs.entrySet()){
-			EV+=entry.getCount()*entry.getElement();
-			size+=entry.getCount();
-		}
-		return ((double)EV)/size;
+	public String toString() {
+		return "Showdown Node";
 	}
 
 }

@@ -25,11 +25,11 @@ import org.cspoker.client.bots.bot.search.opponentmodel.AllPlayersModel;
 import org.cspoker.client.bots.bot.search.opponentmodel.HistogramRoundModel;
 import org.cspoker.client.bots.bot.search.opponentmodel.OpponentModel;
 import org.cspoker.client.bots.bot.search.opponentmodel.PlayerModel;
+import org.cspoker.client.bots.bot.search.opponentmodel.OpponentModel.Factory;
 import org.cspoker.client.bots.listener.BotListener;
 import org.cspoker.client.common.SmartLobbyContext;
 import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.elements.table.TableId;
-import org.cspoker.common.util.lazy.IFactory;
 
 public class SearchBotFactory implements BotFactory {
 
@@ -45,21 +45,21 @@ public class SearchBotFactory implements BotFactory {
 	/**
 	 * @see org.cspoker.client.bots.bot.BotFactory#createBot(org.cspoker.common.elements.player.PlayerId, org.cspoker.common.elements.table.TableId, org.cspoker.client.common.SmartLobbyContext, java.util.concurrent.ExecutorService, org.cspoker.client.bots.listener.BotListener[])
 	 */
-	public Bot createBot(PlayerId playerId, TableId tableId,
+	public Bot createBot(final PlayerId botId, TableId tableId,
 			SmartLobbyContext lobby, ExecutorService executor,
 			BotListener... botListeners) {
 		copies++;
-		opponentModels.putIfAbsent(playerId, new AllPlayersModel(new IFactory<OpponentModel>(){
-			public OpponentModel create() {
-				return new PlayerModel(new IFactory<OpponentModel>(){
+		opponentModels.putIfAbsent(botId, new AllPlayersModel(new Factory(){
+			public OpponentModel create(PlayerId opponentId) {
+				return new PlayerModel(new Factory(){
 					@Override
-					public OpponentModel create() {
-						return new HistogramRoundModel();
+					public OpponentModel create(PlayerId opponentId) {
+						return new HistogramRoundModel(opponentId, botId);
 					}
-				});
+				}, opponentId);
 			}
 		}));
-		return new SearchBot(playerId, tableId, lobby, executor, opponentModels.get(playerId),botListeners);
+		return new SearchBot(botId, tableId, lobby, executor, opponentModels.get(botId),botListeners);
 	}
 
 	@Override

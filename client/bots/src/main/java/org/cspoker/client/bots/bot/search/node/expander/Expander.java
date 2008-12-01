@@ -13,24 +13,23 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.client.bots.bot.search.action;
+package org.cspoker.client.bots.bot.search.node.expander;
 
-public class OpponentActionEvaluation {
+import java.util.Set;
 
-	private final SimulatedOpponentAction action;
-	private final double EV;
+import org.cspoker.client.bots.bot.search.action.ActionWrapper;
+import org.cspoker.client.bots.bot.search.action.EvaluatedAction;
+import org.cspoker.client.bots.bot.search.node.InnerGameTreeNode;
 
-	public OpponentActionEvaluation(SimulatedOpponentAction action, double EV) {
-		this.action = action;
-		this.EV = EV;
+public abstract class Expander {
+
+	protected final InnerGameTreeNode node;
+
+	public Expander(InnerGameTreeNode node) {
+		this.node = node;
 	}
 	
-	public SimulatedOpponentAction getOpponentAction() {
-		return action;
-	}
-	
-	public double getEV() {
-		return EV;
-	}
+	public abstract Set<? extends EvaluatedAction<? extends ActionWrapper>> expand();
+
 	
 }

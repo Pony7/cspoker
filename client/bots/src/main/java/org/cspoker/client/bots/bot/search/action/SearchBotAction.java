@@ -16,46 +16,62 @@
 package org.cspoker.client.bots.bot.search.action;
 
 import java.rmi.RemoteException;
+import java.util.Collections;
+import java.util.List;
 
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.client.common.gamestate.PlayerState;
-import org.cspoker.client.common.gamestate.modifiers.BetState;
 import org.cspoker.client.common.gamestate.modifiers.NewRoundState;
 import org.cspoker.client.common.gamestate.modifiers.NextPlayerState;
-import org.cspoker.common.api.lobby.holdemtable.event.BetEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.NewRoundEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.NextPlayerEvent;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.RemoteHoldemPlayerContext;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
+import org.cspoker.common.elements.chips.Pot;
+import org.cspoker.common.elements.chips.Pots;
 import org.cspoker.common.elements.player.PlayerId;
+import org.cspoker.common.elements.table.Round;
 
-public class BetAction extends SearchBotAction{
+public abstract class SearchBotAction implements ActionWrapper{
 
-	private final int amount;
+	protected final GameState gameState;
+	protected final PlayerId actor;
 
-	public BetAction(GameState gameState, PlayerId actor, int amount) {
-		super(gameState, actor);
-		this.amount = amount;
+	public SearchBotAction(GameState gameState, PlayerId actor) {
+		this.gameState = gameState;
+		this.actor = actor;
 	}
-	
-	@Override
-	public void perform(RemoteHoldemPlayerContext context) throws RemoteException, IllegalActionException {
-		context.betOrRaise(amount);
+
+	public PlayerId getActor() {
+		return actor;
 	}
-	
+
+	public GameState getGameState() {
+		return gameState;
+	}
+
 	@Override
-	public GameState getStateAfterAction() {
-		BetState betState = new BetState(gameState, new BetEvent(actor,amount));
-		PlayerState nextToAct = betState.previewNextToAct();
-		if(nextToAct!=null){
-			return new NextPlayerState(betState,new NextPlayerEvent(nextToAct.getPlayerId()));
+	public SearchBotAction getAction() {
+		return this;
+	}
+
+	public abstract void perform(RemoteHoldemPlayerContext context) throws RemoteException, IllegalActionException;
+
+	public abstract GameState getStateAfterAction();
+
+	protected GameState getNewRoundState(GameState lastState){
+		Round nextRound = lastState.getRound().getNextRound();
+		if(nextRound==null){
+			return lastState;
 		}
-		throw new IllegalStateException("Round can't be over after a bet.");
+		List<Pot> pots = Collections.emptyList();
+		NewRoundState newRoundState = new NewRoundState(lastState, new NewRoundEvent(nextRound, new Pots(pots, lastState.getGamePotSize())));
+		PlayerState firstToAct = newRoundState.previewNextToAct();
+		if(firstToAct==null){
+			return getNewRoundState(newRoundState);
+		}
+		return new NextPlayerState(newRoundState, new NextPlayerEvent(firstToAct.getPlayerId(), 
+				gameState.getCallValue(firstToAct.getPlayerId())));
 	}
-	
-	@Override
-	public String toString() {
-		return "Betting "+amount;
-	}
-	
+
 }
