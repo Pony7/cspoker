@@ -48,6 +48,16 @@ public class ForwardingRemoteHoldemPlayerContext implements RemoteHoldemPlayerCo
 	}
 	
 	@Override
+	public void leaveSeat() throws RemoteException, IllegalActionException {
+		holdemPlayerContext.leaveSeat();
+	}
+
+	@Override
+	public void sitIn() throws RemoteException, IllegalActionException {
+		holdemPlayerContext.sitIn();
+	}
+	
+	@Override
 	protected void finalize() throws Throwable {
 		try {
 			logger.debug("Garbage collecting old context: "+this);
@@ -59,5 +69,7 @@ public class ForwardingRemoteHoldemPlayerContext implements RemoteHoldemPlayerCo
 	public void unreferenced() {
 		logger.debug("No more clients referencing: "+this);
 	}
+
+
 	
 }

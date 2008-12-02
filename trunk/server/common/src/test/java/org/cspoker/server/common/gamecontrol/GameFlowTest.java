@@ -1097,7 +1097,7 @@ public class GameFlowTest extends TestCase {
 			fail(e.getMessage());
 		}
 		PlayingTableState gameControl = new PlayingTableState(pokerTable, table, kenzo);
-		events.ignore();
+		events.addNewDealEvents();
 		try {
 			gameControl.deal();
 		} catch (IllegalActionException e1) {
@@ -1105,7 +1105,10 @@ public class GameFlowTest extends TestCase {
 		}
 
 		assertEquals(PreFlopRound.class, gameControl.getRound().getClass());
-
+		
+		events.add(Events.fold, Events.winner);
+		events.ignore();
+		
 		try {
 			gameControl.fold(kenzo);
 		} catch (IllegalActionException e) {
@@ -1424,6 +1427,10 @@ public class GameFlowTest extends TestCase {
 		 */
 		public synchronized void add(Events...event){
 			eventSequence.addAll(Arrays.asList(event));
+		}
+		
+		public synchronized void addNewDealEvents(){
+			add(newDealEvents);
 		}
 		
 		public synchronized void add(

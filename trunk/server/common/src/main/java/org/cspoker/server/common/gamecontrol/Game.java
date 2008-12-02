@@ -583,6 +583,23 @@ public class Game {
 		return seatId;
 	}
 	
+	public void leaveSeat(MutableSeatedPlayer player, boolean forced){
+		if (!table.hasAsPlayer(player)) {
+			return;
+		}
+        if ((getNextDealer() == null) || getNextDealer().equals(player)) {
+            setNextDealer(initialCurrentHandPlayers.getNextTo(player));
+    }
+    if ((getDealer() == null) || getDealer().equals(player)) {
+            setDealer(getNextDealer());
+    }
+
+    initialCurrentHandPlayers.remove(player);
+    table.removePlayer(player);
+    Game.logger.info(player.getName() + " left the game.");
+
+	}
+	
 	public void sitOut(MutableSeatedPlayer player, boolean forced)
 			throws IllegalActionException {
 		if (!table.hasAsPlayer(player)) {
