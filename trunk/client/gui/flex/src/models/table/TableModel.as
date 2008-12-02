@@ -6,6 +6,7 @@ package models.table
 	import models.chips.*;
 	import models.connection.*;
 	import models.player.Player;
+	import models.utils.TweenLite;
 	
 	import mx.containers.Canvas;
 	
@@ -21,11 +22,83 @@ package models.table
 		public var potSize:int = 0;
 		public var currentRound:String = "WAITING";
 		
+		
 		public function TableModel(table:Table, seatsArray:Array, pot:ChipStack)
 		{
 			this.table = table;
 			this.seatLocations = seatsArray;
 			this.pot = pot;
+		}
+		
+		public function receiveAnnounceWinnersEvent(winners:Object):void{
+			var count:int = 0;
+			var potDescriptionText:String = "";
+			var player:Object;
+			var winningHandDescription:String = "";
+			
+			var endX:int;
+			var endY:int
+			var chipStackTemp:ChipStack;	
+			
+			if(winners.player.hasOwnProperty("seatId")){
+				
+				count++;
+				/* ONE WINNER */
+				
+				if(count == 1) potDescriptionText = "main pot";
+				else potDescriptionText = "side pot";
+				player = winners.player;
+				var winningPlayer:Player = this.getPlayerByPlayerId(player.id);
+				
+				try{
+					winningHandDescription = this.getPlayerByPlayerId(player.id).getHandDescription();
+				}catch(e:Error){
+					trace("Error getting hand description in announce winner: " + e.message);
+				}
+				
+				
+				this.table.tableModel.getPlayerByPlayerId(player.id).updatePlayer(player);
+				this.table.dealerBox.dealerMessage("Player " + player.name + " has won the " 
+					+ potDescriptionText + " of " + winners.gainedAmount + " with a " + winningHandDescription);
+				
+				endX = this.table.tableModel.getPlayerByPlayerId(player.id).playerSeat.chipStack.x;
+				endY = this.table.tableModel.getPlayerByPlayerId(player.id).playerSeat.chipStack.y;
+				chipStackTemp = new ChipStack(this.table);
+				chipStackTemp.calculateGraphics(winners.gainedAmount);
+				
+				TweenLite.to(chipStackTemp, 1, {alpha:1, x:endX, y:endY, delay:.5, visible:false, overwrite:true});
+				
+				/* MOVE THE POT CHIPS TO THE PLAYER ANIMATION */
+				
+			}else{
+				for each(var winner:Object in winners){
+					count++;
+				/* MULTIPLE POTS */
+					if(count == 1) potDescriptionText = "main pot";
+					else potDescriptionText = "side pot";
+					player = winner.player;
+					try{
+						winningHandDescription = this.getPlayerByPlayerId(player.id).getHandDescription();
+					}catch(e:Error){
+						trace("Error getting hand description in announce winner: " + e.message);
+					}
+					
+					this.getPlayerByPlayerId(player.id).updatePlayer(player);
+					this.table.dealerBox.dealerMessage("Player " + player.name + " has won the " 
+					+ potDescriptionText + " of " + winner.gainedAmount + " with a " + winningHandDescription);  
+					
+				
+					endX = this.table.tableModel.getPlayerByPlayerId(player.id).playerSeat.chipStack.x;
+					endY = this.table.tableModel.getPlayerByPlayerId(player.id).playerSeat.chipStack.y;
+					chipStackTemp = new ChipStack(this.table);
+					chipStackTemp.calculateGraphics(winners.gainedAmount);
+				
+					TweenLite.to(chipStackTemp, 1, {alpha:1, x:endX, y:endY, delay:.5, visible:false, overwrite:true});
+				
+					
+				}
+			}
+			this.table.cleanUpTable();
 		}
 		
 		public function mapPlayerToId(playerId:int, player:Player):void{
@@ -90,13 +163,19 @@ package models.table
 			}
 		}
 		
-		public function receiveWinnersEvent(eventObj:Object):void{
-			/* TODO */
-		}
+		
 		
 		public function receiveNewRoundEvent(eventObj:Object):void{
 			trace("receiveNewRoundEvent...");
 			this.currentRound = eventObj.round;
+			
+			var seatCount:int = 0;
+			while(seatCount < seatLocations.length)
+            {
+                seatLocations[seatCount].resetSeatForNewRound();
+                seatCount++;
+            }// end while
+			
 			
 			if(this.currentRound == "PREFLOP"){
 				return;	

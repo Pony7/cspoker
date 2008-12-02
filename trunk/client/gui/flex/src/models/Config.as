@@ -19,6 +19,21 @@ package models
 		public static const TIMER_HEIGHT:int = 10;
 		public static const TIMER_SECONDS:int = 12;
 		
+		public static const AUTOCONNECT:Boolean = true;
+		
+		public static const AUTOLOGIN:Boolean = true;
+		public static const AUTOLOGIN_USER:String = "kenzo";
+		public static const AUTOLOGIN_PASS:String = "test";
+		
+		public static const AUTOJOINGAME:Boolean = false;
+		
+		public static const IS_PRO_CLIENT:Boolean = true;
+		
+		public static const CHAT_BUBBLE_MAX_WIDTH:int = 110;
+		
+		public static const CARD_DECK_WIDTH:int = 50;
+		public static const CARD_DECK_HEIGHT:int = 25;
+
 		//public static const USE_OLD_API:Boolean = true;
 		public function Config()
 		{

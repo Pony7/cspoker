@@ -3,6 +3,7 @@
 	backgroundImage="images/table1.jpg" width="750" height="670" xmlns:views="views.*" creationComplete="init()">
 	<mx:Script>
 		<![CDATA[
+			import mx.effects.IAbstractEffect;
 			import models.player.Player;
 			import models.cards.CardDeck;
 			import models.chips.ChipStack;
@@ -10,8 +11,11 @@
 			import mx.core.UIComponent;
 			import models.lobby.DataGridRow;
 			import models.*;
+			import mx.controls.Image;
+			
 			
 			import views.*;
+			import models.utils.TweenLite;
 			
 			import mx.managers.PopUpManager;
 			
@@ -130,6 +134,7 @@
 			}
 			
 			
+			
 			public function endInit():void{
 				init();
 			}
@@ -222,10 +227,90 @@
         		PopUpManager.addPopUp(buyInBox, this, true);
 			}
 			
+			
+			
 			public function dealAnimation(seatedPlayers:Object):void{
 				trace("deal animation called");
-				/*TODO: FILL IN DEAL ANIMATION WITH TWEENS*/
+				var startX:int = cardDeck.x;
+				var startWidth:int = cardDeck.topCard.width;
+				var startHeight:int = cardDeck.topCard.height;
+				var startRotation:int = cardDeck.topCard.rotation;
+				var startY:int = cardDeck.y;
+				var delayCount:Number = .5;
+				
+				var newCard:Image;
+					
+				var numberDeal:int = seatedPlayers.length;
+				
+				var firstCardCount:int = 1;
+				function onFinishTween(cardImageUsed:Image):void{
+						cardImageUsed.visible = false;
+						//delete newCard;
+				}
+				
+				var endX:Number = 0;
+				var endY:Number = 0;
+				var endRotation:Number = 0;
+					
+				for each(var x:Player in seatedPlayers){
+					
+					endX = x.playerSeat.card1.container.x;
+					endY = x.playerSeat.card1.container.y;
+					endRotation = x.playerSeat.card1.container.rotation;
+					
+					trace("current seat dealing cards to: " + x.id + " card: " + x.playerSeat.card1.container.x + " , " + x.playerSeat.card1.container.y);
+					
+					var newName:String = "container"+x+"card1";
+					
+					newCard = new Image();
+					newCard.x = startX;
+					newCard.y = startY;
+					newCard.width = startWidth;
+					newCard.height = startHeight;
+					newCard.rotation = startRotation;
+					newCard.source = "images/cards/back.png";
+					this.addChild(newCard);
+					var delay1:int = firstCardCount * .25;
+					firstCardCount++;
+					
+					
+					//TweenLite.to(newCard, 1, {alpha:1, x:endX, y:endY, rotation:endRotation, delay:delayCount, visible:false, overwrite:false, onComplete:onFinishTween, onCompleteParams:{newCard:newCard}});
+				    TweenLite.to(newCard, 1, {alpha:1, x:endX, y:endY, rotation:endRotation, delay:delayCount, visible:false, overwrite:true});
+				
+					delayCount = delayCount + .25;
+				}
+				
+				var secondCardCount:int = 1;
+				for each(var y:Player in seatedPlayers){
+					
+					//seatName = seats[x];
+					trace("current seat dealing cards to: " + y.id);
+					
+					endX = y.playerSeat.card1.container.x;
+					endY = y.playerSeat.card1.container.y;
+					endRotation = y.playerSeat.card1.container.rotation;
+					
+					
+					
+					newCard = new Image();
+					newCard.x = startX;
+					newCard.y = startY;
+					newCard.width = startWidth;
+					newCard.height = startHeight;
+					newCard.rotation = startRotation;
+					newCard.source = "images/cards/back.png";
+					
+					this.addChild(newCard);
+					var delay2:int = secondCardCount * .25;
+					secondCardCount++;
+					
+				    TweenLite.to(newCard, 1, {alpha:1, x:endX, y:endY, rotation:endRotation, delay:delayCount, visible:false, overwrite:true});
+				
+					delayCount = delayCount + .25;
+				}
 			}
+			
+			
 			
 			public function cleanTableUpLeaveRoom():void{
 				this.cleanUpTable();
@@ -318,4 +403,5 @@
 	<views:DealerBox id="dealerBox"  x="4" y="522"/>
 	<views:PlayerChatBox id="playerChatBox"  x="486" y="522"/>
 	<views:DealerButton id="dealerButton" x="400" y="400" visible="false" />
+	<views:DealerCardDeck id="cardDeck" x="407.25" y="98.25" />
 </mx:Canvas>
