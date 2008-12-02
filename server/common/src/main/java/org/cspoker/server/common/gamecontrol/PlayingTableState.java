@@ -382,13 +382,13 @@ public class PlayingTableState
 	/**
 	 * @param player
 	 * @throws IllegalActionException
-	 * @see org.cspoker.server.common.gamecontrol.TableState#leave(org.cspoker.common.elements.player.MutableSeatedPlayer)
+	 * @see org.cspoker.server.common.gamecontrol.TableState#leaveSeat(org.cspoker.common.elements.player.MutableSeatedPlayer)
 	 */
 	@Override
-	public void leave(MutablePlayer player) {
-		MutableSeatedPlayer seated = getMutableSeatedPlayer(player.getId());
+	public void leaveSeat(PlayerId id) {
+		MutableSeatedPlayer seated = getMutableSeatedPlayer(id);
 		if (!game.getTable().hasAsPlayer(seated)) {
-			logger.warn(player + " is not seated at the table.");
+			logger.warn(id + " is not seated at the table.");
 			return;
 		}
 		
@@ -397,7 +397,6 @@ public class PlayingTableState
 		} catch (IllegalActionException e) {
 			// no op
 		}
-		sitOut(seated);
 		game.getTable().removePlayer(seated);
 	}
 	

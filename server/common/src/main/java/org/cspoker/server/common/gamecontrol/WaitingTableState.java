@@ -22,7 +22,6 @@ import org.cspoker.common.api.lobby.holdemtable.event.SitInEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.SitOutEvent;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.HoldemPlayerContext;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
-import org.cspoker.common.elements.player.MutablePlayer;
 import org.cspoker.common.elements.player.MutableSeatedPlayer;
 import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.elements.player.SeatedPlayer;
@@ -167,11 +166,11 @@ public class WaitingTableState
 	/**
 	 * @param player
 	 * @throws IllegalActionException
-	 * @see org.cspoker.server.common.gamecontrol.TableState#leave(org.cspoker.common.elements.player.MutablePlayer)
+	 * @see org.cspoker.server.common.gamecontrol.TableState#leaveSeat(org.cspoker.common.elements.player.MutablePlayer)
 	 */
 	@Override
-	public void leave(MutablePlayer player) {
-		MutableSeatedPlayer seated = getMutableSeatedPlayer(player.getId());
+	public void leaveSeat(PlayerId id) {
+		MutableSeatedPlayer seated = getMutableSeatedPlayer(id);
 		serverTable.removePlayer(seated);
 		
 	}
@@ -181,4 +180,5 @@ public class WaitingTableState
 		return new DetailedHoldemTable(mediatingTable.getTableId(), mediatingTable.getName(), getSeatedPlayers(), isPlaying(),
 				mediatingTable.getTableConfiguration());
 	}
+
 }

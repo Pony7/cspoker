@@ -357,7 +357,7 @@ public class PokerTable {
 		HoldemPlayerListener playerListener = sitInPlayers.get(player.getId());
 		HoldemTableListener tableListener = joinedPlayers.remove(player.getId());
 		if (playerListener != null) {
-			tableState.leave(player);
+			tableState.leaveSeat(player.getId());
 			unsubscribeHoldemPlayerListener(player.getId(), playerListener);
 		}
 		
@@ -409,6 +409,10 @@ public class PokerTable {
 		tableState.sitOut(player);
 		unsubscribeHoldemPlayerListener(player.getId(), sitInPlayers.get(player.getId()));
 		sitInPlayers.remove(player.getId());
+	}
+	
+	public synchronized void leaveSeat(MutableSeatedPlayer player){
+		tableState.leaveSeat(player.getId());
 	}
 	
 	public boolean isPlaying() {

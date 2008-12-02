@@ -45,5 +45,14 @@ public class HoldemPlayerContextImpl
 	public void sitOut() {
 		table.sitOut(player);
 	}
+
+	@Override
+	public void leaveSeat() {
+		table.leaveSeat(player);
+	}
+
+	@Override
+	public void sitIn() throws IllegalActionException {
+	}
 	
 }

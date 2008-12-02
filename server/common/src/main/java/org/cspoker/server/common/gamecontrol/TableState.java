@@ -19,7 +19,6 @@ import java.util.List;
 
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.HoldemPlayerContext;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
-import org.cspoker.common.elements.player.MutablePlayer;
 import org.cspoker.common.elements.player.MutableSeatedPlayer;
 import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.elements.player.SeatedPlayer;
@@ -54,13 +53,13 @@ public abstract class TableState {
 	
 	public abstract void allIn(MutableSeatedPlayer player)
 			throws IllegalActionException;
-	
-	public abstract void leave(MutablePlayer player);
-	
+		
 	public abstract HoldemPlayerContext sitIn(SeatId seatId, MutableSeatedPlayer player)
 			throws IllegalActionException;
 	
 	public abstract void sitOut(MutableSeatedPlayer player);
+	
+	public abstract void leaveSeat(PlayerId id);
 	
 	public abstract List<SeatedPlayer> getSeatedPlayers();
 	
