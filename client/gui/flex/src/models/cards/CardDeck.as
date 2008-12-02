@@ -29,7 +29,16 @@ package models.cards
 			cardView.height=height;
 			cardView.x = x;
 			cardView.y = y;
+			cardView.visible = true;
 			cardView.displayCard(imgSource, width, height);
+		}
+		
+		public function resetCardForNewGame():void{
+			this.cardView.rotation = 0;
+			this.cardView.visible = true;
+			this.cardView.alpha = 1.0;
+			return;
+			
 		}
 		
 		public function loadHiddenCard(width:int=50, height:int=75, x:int=0, y:int=0):void{
@@ -37,6 +46,7 @@ package models.cards
 			cardView.height=height;
 			cardView.x = x;
 			cardView.y = y;
+			cardView.visible = true;
 			cardView.displayCard("images/cards/back.png", width, height);
 		}
 		

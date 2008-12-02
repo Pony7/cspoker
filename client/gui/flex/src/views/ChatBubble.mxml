@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" height="28" >
+	<mx:Label text="bleh" id="chatBubbleContent" enabled="true" styleName="defaultSpeechBubbleStyle" horizontalCenter="0" verticalCenter="0" fontWeight="bold" color="0" fontSize="12"/>
+	<mx:Style>
+		.defaultSpeechBubbleStyle{
+			background-color:16579579;
+    		background-alpha:0.95;
+    		border-color:1776668;
+    		corner-radius:8;
+    		border-style:solid;
+    		border-thickness:1;
+		}
+		
+		.foldSpeechBubbleStyle{
+			background-color:16579579;
+    		background-alpha:0.95;
+    		border-color:1776668;
+    		corner-radius:8;
+    		border-style:solid;
+    		border-thickness:1;
+		}
+		
+		.checkcallSpeechBubbleStyle{
+			background-color:16579579;
+    		background-alpha:0.95;
+    		border-color:1776668;
+    		corner-radius:8;
+    		border-style:solid;
+    		border-thickness:1;
+		}
+		
+		.raiseSpeechBubbleStyle{
+			background-color:16579579;
+    		background-alpha:0.95;
+    		border-color:1776668;
+    		corner-radius:8;
+    		border-style:solid;
+    		border-thickness:1;
+		}
+		
+		.winnerSpeechBubbleStyle{
+			background-color:16579579;
+    		background-alpha:0.95;
+    		border-color:1776668;
+    		corner-radius:8;
+    		border-style:solid;
+    		border-thickness:1;
+		}
+	</mx:Style>
+	
+	<mx:Script>
+		<![CDATA[
+			//import views.*;
+			import models.Config;
+			
+			public function setChatBubbleText(message:String=""):void{
+				chatBubbleContent.text = message;
+				chatBubbleContent.width = Config.CHAT_BUBBLE_MAX_WIDTH;
+			}
+			
+			
+		]]>
+	</mx:Script>
+</mx:Canvas>

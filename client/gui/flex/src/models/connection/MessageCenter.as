@@ -234,56 +234,7 @@ package models.connection
 						trace("winner Event received!!!");
 						if(Main.isInTable == false) return;
 						var winners:Object = event.winners;
-
-						
-						var count:int = 0;
-						var potDescriptionText:String = "";
-						var player:Object;
-						if(winners.player.hasOwnProperty("seatId")){
-							
-							count++;
-							/* ONE WINNER */
-							
-							if(count == 1) potDescriptionText = "main pot";
-							else potDescriptionText = "side pot";
-							player = event.winners.player;
-							var winningPlayer:Player = Main.table.tableModel.getPlayerByPlayerId(player.id);
-							
-							Main.table.tableModel.getPlayerByPlayerId(player.id).updatePlayer(player);
-							Main.table.dealerBox.dealerMessage("Player " + player.name + " has won the " 
-								+ potDescriptionText + " of " + event.winners.gainedAmount + " with a " + potDescriptionText);
-							/* MOVE THE POT CHIPS TO THE PLAYER ANIMATION */
-							
-						}else{
-							for each(var winner:Object in event.winners){
-								count++;
-							/* MULTIPLE POTS */
-								if(count == 1) potDescriptionText = "main pot";
-								else potDescriptionText = "side pot";
-								player = winner.player;
-								Main.table.tableModel.getPlayerByPlayerId(player.id).updatePlayer(player);
-								Main.table.dealerBox.dealerMessage("Player " + player.name + " has won the " 
-								+ potDescriptionText + " of " + winner.gainedAmount + " with a " + potDescriptionText);  
-							}
-						}
-						
-						Main.table.cleanUpTable();
-						
-						
-						/*
-						<event xsi:type="ns2:winnerEvent" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-        <winners>
-            <gainedAmount>110</gainedAmount>
-            <player xsi:type="ns2:seatedPlayer" name="guy" id="0">
-                <seatId>2</seatId>
-                <stackValue>145</stackValue>
-                <betChipsValue>0</betChipsValue>
-                <sittingIn>true</sittingIn>
-            </player>
-        </winners>
-    </event>
-    					*/
-
+						Main.table.tableModel.receiveAnnounceWinnersEvent(winners);
 						return;
 						break;
 						

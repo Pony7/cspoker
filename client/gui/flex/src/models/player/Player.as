@@ -23,6 +23,7 @@ package models.player
 			playerSeat = passedSeat;
 		}
 		
+		
 		public function sitInPlayer(playerObj:Object):void{
 			this.id = playerObj.id;	
 			this.playerInformation = new PlayerValueObject(null, playerObj.name, playerObj.stackValue, playerObj.betChipsValue, playerObj.seatId, null);
@@ -50,6 +51,7 @@ package models.player
 			playerInformation.stackSize -= amount;
 			playerInformation.betSize += amount;
 			Main.maxBet = amount;
+			playerSeat.setChatBubbleText("Posts blind: " + amount, "DEFAULT");
 			playerSeat.refresh();
 			return;
 		}
@@ -59,6 +61,7 @@ package models.player
 			playerInformation.stackSize -= amount;
 			playerInformation.betSize += amount;
 			Main.maxBet = amount;
+			playerSeat.setChatBubbleText("Posts blind: " + amount, "DEFAULT");
 			playerSeat.refresh();
 			return;
 		}
@@ -97,10 +100,13 @@ package models.player
 			this.playerSeat.turnTimer.startTimer();
 		}
 		
+		
+		
 		public function checkEvent():void{
 			trace("check event received...");
 			Main.table.dealerBox.dealerMessage(this.getPlayerName() + " checks...");
 			this.playerSeat.turnTimer.stopTimer();
+			playerSeat.setChatBubbleText("CHECK", "CHECK");
 			//this.playerSeat.turnTimer.visible = false;
 			return;
 		}
@@ -109,6 +115,7 @@ package models.player
 			trace("call event received...");
 			playerSeat.chipsToBet(chipsToCall);
 			Main.table.dealerBox.dealerMessage(this.getPlayerName() + " calls " + chipsToCall);
+			playerSeat.setChatBubbleText("Calls $" + chipsToCall, "CALL");
 			incrementBetChips(chipsToCall);
 			this.playerSeat.turnTimer.stopTimer();
 			return;
@@ -118,6 +125,7 @@ package models.player
 			trace("bet event received...");
 			Main.table.dealerBox.dealerMessage(this.getPlayerName() + " bets " + amount);
 			playerSeat.chipsToBet(amount);
+			playerSeat.setChatBubbleText("Bets $" + amount, "BET");
 			incrementBetChips(amount);
 			this.playerSeat.turnTimer.stopTimer();
 			return;
@@ -137,6 +145,7 @@ package models.player
 			trace("fold event received...");
 			Main.table.dealerBox.dealerMessage(this.getPlayerName() + " folds...");
 			playerSeat.showFold();
+			playerSeat.setChatBubbleText("Fold", "FOLD");
 			this.playerSeat.turnTimer.stopTimer();
 			return;
 		}
@@ -144,6 +153,7 @@ package models.player
 		public function allInEvent():void{
 			trace("all in event received...");
 			Main.table.dealerBox.dealerMessage(this.getPlayerName() + "goes all in!");
+			playerSeat.setChatBubbleText("All In", "Raise");
 			playerSeat.showAllIn();
 			this.playerSeat.turnTimer.stopTimer();
 		}
