@@ -33,6 +33,7 @@ By labeling these misuse cases, a set of security objectives is derived. Finally
 
 
 \chapter{Identifying threats}
+\label{IdentifyingThreats}
 \section{DFDs}
 Figure \ref{fig:context} shows the context level of the DFD. Figure \ref{fig:level_0} shows the level-0 DFD. The arrows are not annotated to make the diagram readable. A simplified version with only the player and annotated arrows can be found in figure \ref{fig:level_0_player}. In the following analysis only the interaction with the player will be considered as misuse cases, as those with an administrator as external entity are similar. Although some processes are complex and should be drilled down, we've chosen to do the STRIDE analysis on level-0 because it would already generate sufficient documentation.
 
@@ -133,19 +134,20 @@ The mis-actor gains access to the poker server pretending to be a legitimate use
 \end{itemize}
 \textbf{Basic path:}
 \begin{itemize}
-\item The mis-actor obtains the credentials of a legitimate player.
-\item The mis-actor authenticates with the poker server.
-\item The mis-actor can take actions on behalf of a legitimate player.
+\item The mis-actor finds a way to fake credentials.
+\item The mis-actor authenticates with the poker server with those fake credentials.
+\item The mis-actor can take actions with this fake identity.
 \end{itemize}
 \textbf{Alternative paths:}
 \begin{itemize}
 \item The mis-actor bypasses the authentication system by exploiting a weakness.
-\item The mis-actor finds a way to fake credentials.
+\item The mis-actor obtains the credentials of a legitimate player.
 \end{itemize}
 \textbf{Capture points:}
 \begin{itemize}
 \item \textbf{Prevention:}
 \begin{itemize}
+
 \item Make sure credentials are well protected on the server side.
 \item Transmit credentials over the wire securely.
 \item Test credentials for uniqueness and complexity.
@@ -191,8 +193,8 @@ Only authentic users can gain access at the poker server. \\
 \textbf{Basic path:}
 \begin{itemize}
 \item The mis-actor performs an action or transaction.
-\item The mis-actor repudiates the action or transaction For example, he repudiates his bet when it turns out that another player has a better hand.
-\item The system fails to prove that the mis-actor is responsible.
+\item The mis-actor repudiates the action or transaction. For example, he repudiates his bet when it turns out that another player has a better hand.
+\item The system fails to prove that the mis-actor is responsible because there is no log or the log is not reliable.
 \end{itemize}
 \textbf{Alternative paths:}
 \begin{itemize}
@@ -204,7 +206,7 @@ Only authentic users can gain access at the poker server. \\
 \begin{itemize}
 \item Use a strong signature system for messages originating from the player.
 \item Use antireplay defences.
-\item Log all actions and transactions.
+\item Log all actions and transactions. This logged data is trusted to be real and serves as proof.
 \item Secure access to the logging process.
 \end{itemize}
 \end{itemize}
@@ -268,14 +270,14 @@ Only authentic users can gain access at the poker server. \\
 \label{PokerServerCasesR}
 \textbf{Primary mis-actor:}
 \begin{itemize}
-\item Crook
+\item Malicious Online Casino Admin
 \end{itemize}
 \textbf{Basic path:}
 \begin{itemize}
 \item The mis-actor gains access to the poker server.
 \item The mis-actor sends back a response to the player that is misleading.
 \item The mis-actor repudiates having sent the response in question.
-\item The player fails to prove that the server/mis-actor is responsible.
+\item The player fails to prove that the server/mis-actor is responsible because there is no log or the log is not reliable.
 \end{itemize}
 \textbf{Alternative paths:}
 \begin{itemize}
@@ -288,7 +290,7 @@ Only authentic users can gain access at the poker server. \\
 \item Use a strong signature system for messages sent to the player.
 \item Use antireplay defences.
 \item Log all actions and transactions.
-\item Secure access to the logging process
+\item Secure access to the logging process.
 \end{itemize}
 \end{itemize}
 
@@ -1053,7 +1055,7 @@ Here we choose to reduce the number of data flows from/to the Player because int
 \section{Business Logic Misuse Cases}
 
 \subsection{Single player Cheating}
-\subsubsection{A player uses multiple accounts to access more confidential information}
+\subsubsection{A malicious player uses multiple accounts to access more hidden cards}
 \textbf{Summary:} \\
 The malicious player uses multiple accounts at the same table. He uses the extra information to  have a more accurate view on the outs\footnote{Any unseen card that, if drawn, will improve a player's hand to one that is likely to win. The number of outs can be converted to the probability of making the hand on the next card.}. He gains an unfair advantage over the other innocent players. \\
 \textbf{Primary mis-actor:}
@@ -1078,7 +1080,7 @@ The malicious player uses multiple accounts at the same table. He uses the extra
 \item The behavior of the malicious player is influenced by the extra knowledge. This could lead to inexplicable actions that can only be explained with the knowledge of the pocket cards of the other players. This behavior can be detected by consulting the logs.
 \end{itemize}
 \end{itemize}
-\subsubsection{A malicious player with admin rights uses confidential information in a game and act on it}
+\subsubsection{A malicious player with admin rights misuses his privileges}
 \textbf{Summary:} If an admin has access to the card info of all the players at a table, he can act on perfect knowledge which is a huge advantage.
 
 \subsubsection{A malicious player misuses the right to ask the admin to view the log of the table}
@@ -1847,6 +1849,89 @@ By following the steps in the pattern-based approach described in the previous s
   \end{center}
   \caption{Deployment View - Security Enhanced Architecture}\label{fig:deployment_secured}
 \end{figure}
+
+\section{GAP Analysis: Coverage of Security Patterns vs Misuse Cases}
+In this section we will evaluate the security enhanced architecture to verify how good this new architecture mitigates all threats identified in chapter \ref{IdentifyingThreats}. In tables \ref{table:gap1} and \ref{table:gap2} the coverage of every misuse case is elicited by documenting the security patterns that mitigate the corresponding threat.
+\begin{table}[htpb]
+\begin{center}
+\begin{tabular}{| p{5cm} | p{10,5cm} |}
+\hline
+\textbf{Misuse Case} 	& \textbf{Coverage} \\
+\hline
+\hline
+\textbf{Player} & \\\hline
+Spoofing a player & Authentication enforcer, Credential tokenizer \\\hline
+Repudiation of a Player & Secure logger, Audit interceptor, Secure service facade, Secure Pipe \\\hline
+\textbf{Poker Server} & \\\hline
+Spoofing the poker server & Authentication enforcer, Authorization enforcer, Secure service facade \\\hline
+Tampering with the poker server & Authentication enforcer, Authorization enforcer, Secure service facade, Credential tokenizer, Secure pipe, Application firewall \\\hline
+Repudiation of the poker server & Secure logger, Audit interceptor, Secure pipe, Secure service facade\\\hline
+Information disclosure at the poker server & Secure Pipe, Authentication Enforcer, Authorization Enforcer, Secure Service Facade, Credential tokenizer, Application firewall \\\hline
+DoS against the poker server & Load balancer, Application Firewall, Firewall, Audit interceptor, Secure logger\\\hline
+Elevation of privilege at the poker server & Authentication Enforcer, Authorization Enforcer, Secure Service Facade, Credential Tokenizer, Secure pipe, Application firewall \\\hline
+\textbf{Table} & \\\hline
+Spoofing a table & \\\hline
+Tampering with a table & \\\hline
+Repudiation of an action at a table & \\\hline
+Information disclosure at a table & \\\hline
+DoS against a table & \\\hline
+Elevation of privilege at a table & \\\hline
+\end{tabular}
+\end{center}
+\caption{GAP Analysis - 1}
+\label{table:gap1}
+\end{table}
+
+\begin{table}[htpb]
+\begin{center}
+\begin{tabular}{| p{5cm} | p{10,5cm} |}
+\hline
+\textbf{Misuse Case} 	& \textbf{Coverage} \\
+\hline
+\hline
+\textbf{Account Management} & \\\hline
+Spoofing the account management system & \\\hline
+Tampering with the account management system & \\\hline
+Repudiation of using the account management system & \\\hline
+Information disclosure of the account management system & \\\hline
+DoS against the account management system & \\\hline
+Elevation of privilege at the account management system & \\\hline
+\textbf{Logging Engine} & \\\hline
+Spoofing the logging engine & \\\hline
+Tampering with the logging engine & \\\hline
+Repudiation of using the logging engine & \\\hline
+Information disclosure at the logging engine & \\\hline
+\textbf{Audit Log} & \\\hline
+Tampering with the audit log & \\\hline
+Repudiation of logging something in the audit log & \\\hline
+Information disclosure of the audit log & \\\hline
+DoS against the audit log & \\\hline
+\textbf{Account Data} & \\\hline
+Tampering with account data & \\\hline
+Information disclosure of account data & \\\hline
+DoS against account data & \\\hline
+\end{tabular}
+\end{center}
+\caption{GAP Analysis - 2}
+\label{table:gap2}
+\end{table}
+
+\begin{table}[htpb]
+\begin{center}
+\begin{tabular}{| p{5cm} | p{10,5cm} |}
+\hline
+\textbf{Misuse Case} 	& \textbf{Coverage} \\
+\hline
+\hline
+\textbf{Business Misuse Cases} & \\\hline
+A malicious player uses multiple accounts to access more hidden cards & \\\hline
+A malicious player with admin rights misuses his privileges & \\\hline
+TODO & \\\hline
+\end{tabular}
+\end{center}
+\caption{GAP Analysis - 3}
+\label{table:gap3}
+\end{table}
 
 \section{Criticism}
 \label{Criticism}
