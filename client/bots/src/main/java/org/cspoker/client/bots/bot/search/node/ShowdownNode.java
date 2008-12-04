@@ -38,10 +38,12 @@ public class ShowdownNode{
 
 	private final PlayerId botId;
 	private final GameState gameState;
+	private int tokens;
 	
-	public ShowdownNode(PlayerId botId, GameState gameState) {
+	public ShowdownNode(PlayerId botId, GameState gameState, int tokens) {
 		this.botId = botId;
 		this.gameState = gameState;
+		this.tokens = tokens;
 	}
 
 	public double getEV() {
@@ -56,7 +58,7 @@ public class ShowdownNode{
 	}
 
 	private HashMultiset<Integer> simulateOutcomes() {
-		int nbSamples = 15;
+		int nbSamples = Math.min(100,Math.max(10,tokens*5));
 		PlayerState botState = gameState.getPlayer(botId);
 		Set<PlayerState> activeOpponents = Sets.filter(gameState.getAllSeatedPlayers(),new Predicate<PlayerState>(){
 			@Override

@@ -24,12 +24,21 @@ import org.cspoker.client.bots.bot.search.node.InnerGameTreeNode;
 public abstract class Expander {
 
 	protected final InnerGameTreeNode node;
+	protected final int tokens;
 
-	public Expander(InnerGameTreeNode node) {
+	public Expander(InnerGameTreeNode node, int tokens) {
 		this.node = node;
+		this.tokens = tokens;
 	}
 	
 	public abstract Set<? extends EvaluatedAction<? extends ActionWrapper>> expand();
 
+	public int getTokens() {
+		return tokens;
+	}
+	
+	public InnerGameTreeNode getNode() {
+		return node;
+	}
 	
 }

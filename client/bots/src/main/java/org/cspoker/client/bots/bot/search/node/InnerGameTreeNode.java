@@ -30,12 +30,12 @@ public interface InnerGameTreeNode extends GameTreeNode{
 
 	double getEV();
 
-	<A extends ActionWrapper> EvaluatedAction<A> expandWith(A action);
+	<A extends ActionWrapper> EvaluatedAction<A> expandWith(A action, int tokens);
 
 	GameState getGameState();
 
 	Set<ProbabilityAction> getProbabilityActions();
 
 	Set<SearchBotAction> getAllPossibleActions();
-	
+
 }

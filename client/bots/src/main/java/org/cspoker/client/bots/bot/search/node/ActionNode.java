@@ -18,7 +18,6 @@ package org.cspoker.client.bots.bot.search.node;
 import org.apache.log4j.Logger;
 import org.cspoker.client.bots.bot.search.action.ActionWrapper;
 import org.cspoker.client.bots.bot.search.action.EvaluatedAction;
-import org.cspoker.client.bots.bot.search.node.expander.Expander;
 import org.cspoker.client.bots.bot.search.opponentmodel.AllPlayersModel;
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.client.common.gamestate.modifiers.FoldState;
@@ -43,28 +42,29 @@ public abstract class ActionNode implements InnerGameTreeNode{
 		this.botId= botId;
 	}
 	
-	public <A extends ActionWrapper> EvaluatedAction<A> expandWith(A action){
+	public <A extends ActionWrapper> EvaluatedAction<A> expandWith(A action, int tokens){
 		if(logger.isDebugEnabled()){
-			logger.debug(prefix+"---o "+action+" in "+this);
+			logger.debug(prefix+"---o "+action+" in "+this + " with "+tokens+" token"+(tokens>1? "s":"")+" in " +gameState.getRound());
 		}
 		EvaluatedAction<A> result;
 		GameState nextState = action.getAction().getStateAfterAction();
 		if(nextState instanceof FoldState){
+			//TODO fix for >2 players when opponent folds
 			result = getFoldEVForBot(action, nextState);
 		}else if(nextState instanceof NextPlayerState){
 			PlayerId nextToAct = nextState.getNextToAct();
 			if(nextToAct.equals(botId)){
 				//go to next player node
-				BotActionNode botActionNode = new BotActionNode(botId, nextState, opponentModeler, prefix+"   |");
+				BotActionNode botActionNode = new BotActionNode(botId, nextState, opponentModeler, prefix+"   |",tokens);
 				result = new EvaluatedAction<A>(action, botActionNode.getEV());
 			}else{	
-				OpponentActionNode opponentActionNode = new OpponentActionNode(nextToAct, botId, nextState, opponentModeler, prefix+"   |");
+				OpponentActionNode opponentActionNode = new OpponentActionNode(nextToAct, botId, nextState, opponentModeler, prefix+"   |",tokens);
 				result = new EvaluatedAction<A>(action, opponentActionNode.getEV());
 			}
 		}else{
 			//no active players left
 			//go to showdown
-			ShowdownNode showdownNode = new ShowdownNode(botId, nextState);
+			ShowdownNode showdownNode = new ShowdownNode(botId, nextState, tokens);
 			result = new EvaluatedAction<A>(action, showdownNode.getEV());
 		}
 		if(logger.isDebugEnabled()){

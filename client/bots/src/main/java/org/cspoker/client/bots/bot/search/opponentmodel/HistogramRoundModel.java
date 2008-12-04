@@ -175,11 +175,11 @@ public class HistogramRoundModel implements OpponentModel{
 	}
 
 	public double getFoldProbability(GameState gameState) {
-		return nbFold*1.0/totalBet*(Math.pow(0.7,gameState.getNbRaises()));
+		return nbFold*1.0/totalBet;
 	}
 
 	public double getRaiseProbability(GameState gameState) {
-		return nbRaise*1.0/totalBet*(Math.pow(0.8,gameState.getNbRaises()));
+		return nbRaise*1.0/totalBet;
 	}
 
 }

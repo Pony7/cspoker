@@ -35,14 +35,14 @@ public class OpponentActionNode extends ActionNode{
 	private final SamplingExpander expander;
 	
 	public OpponentActionNode(PlayerId opponentId, PlayerId botId, GameState gameState, AllPlayersModel playersModel, 
-			String prefix, SamplingExpander expander) {
+			String prefix, SamplingExpander expander, int tokens) {
 		super(opponentId, botId, gameState, playersModel, prefix);
 		this.expander = expander;
 	}
 	
-	public OpponentActionNode(PlayerId opponentId, PlayerId botId, GameState gameState, AllPlayersModel playersModel, String prefix) {
+	public OpponentActionNode(PlayerId opponentId, PlayerId botId, GameState gameState, AllPlayersModel playersModel, String prefix, int tokens) {
 		super(opponentId, botId, gameState, playersModel, prefix);
-		this.expander = new SamplingExpander(this);
+		this.expander = new SamplingExpander(this, tokens);
 	}
 
 	
