@@ -24,15 +24,16 @@ import org.cspoker.client.bots.bot.search.node.InnerGameTreeNode;
 
 public class CompleteExpander extends Expander{
 
-	public CompleteExpander(InnerGameTreeNode node) {
-		super(node);
+	public CompleteExpander(InnerGameTreeNode node, int tokens) {
+		super(node, tokens);
 	}
 
 	public Set<? extends EvaluatedAction<? extends SearchBotAction>> expand(){
 		Set<SearchBotAction> actions = node.getAllPossibleActions();
+		int subtreeTokens = Math.max(1,tokens/actions.size());
 		Set<EvaluatedAction<SearchBotAction>> evaluatedActions = new HashSet<EvaluatedAction<SearchBotAction>>(actions.size());
 		for(SearchBotAction action:actions){
-			evaluatedActions.add(node.expandWith(action));
+			evaluatedActions.add(node.expandWith(action, subtreeTokens));
 		}
 		return evaluatedActions;
 	}

@@ -36,36 +36,38 @@ public class ConcurrentBotActionNode extends BotActionNode {
 
 	private final static Logger logger = Logger.getLogger(ConcurrentBotActionNode.class);
 	private final ExecutorService executor;
+	private final int tokens;
 
 	public ConcurrentBotActionNode(ExecutorService executor, PlayerId botId, GameState gameState,
-			AllPlayersModel opponentModeler, String prefix) {
-		super(botId, gameState, opponentModeler, prefix);
+			AllPlayersModel opponentModeler, String prefix, int tokens) {
+		super(botId, gameState, opponentModeler, prefix, tokens);
 		this.executor = executor;
+		this.tokens = tokens;
 	}
 
 	@Override
 	protected CompleteExpander getExpander() {
-		return new ConcurrentCompleteExpander(this,executor);
+		return new ConcurrentCompleteExpander(this,tokens,executor);
 	}
 
 	private static class ConcurrentCompleteExpander extends CompleteExpander{
 
 		private final ExecutorService executor;
 
-		public ConcurrentCompleteExpander(ConcurrentBotActionNode node, ExecutorService executor) {
-			super(node);
+		public ConcurrentCompleteExpander(ConcurrentBotActionNode node, int tokens, ExecutorService executor) {
+			super(node, tokens);
 			this.executor = executor;
 		}
 
 		@Override
 		public Set<? extends EvaluatedAction<? extends SearchBotAction>> expand() {
 			Set<SearchBotAction> actions = node.getAllPossibleActions();
-
+			final int subtreeTokens = Math.max(1,tokens/actions.size());
 			List<Callable<EvaluatedAction<? extends SearchBotAction>>> tasks = new ArrayList<Callable<EvaluatedAction<? extends SearchBotAction>>>(actions.size());
 			for(final SearchBotAction action:actions){
 				Callable<EvaluatedAction<? extends SearchBotAction>> task = new Callable<EvaluatedAction<? extends SearchBotAction>>(){
 					public EvaluatedAction<? extends SearchBotAction> call(){
-						return ConcurrentCompleteExpander.this.node.expandWith(action);
+						return ConcurrentCompleteExpander.this.node.expandWith(action, subtreeTokens);
 					}
 				};
 				tasks.add(task);

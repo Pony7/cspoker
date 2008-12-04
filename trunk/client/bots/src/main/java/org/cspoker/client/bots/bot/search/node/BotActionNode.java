@@ -30,6 +30,7 @@ import org.cspoker.client.bots.bot.search.action.ProbabilityAction;
 import org.cspoker.client.bots.bot.search.action.RaiseAction;
 import org.cspoker.client.bots.bot.search.action.SearchBotAction;
 import org.cspoker.client.bots.bot.search.node.expander.CompleteExpander;
+import org.cspoker.client.bots.bot.search.node.expander.Expander;
 import org.cspoker.client.bots.bot.search.opponentmodel.AllPlayersModel;
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.RemoteHoldemPlayerContext;
@@ -40,20 +41,22 @@ public class BotActionNode extends ActionNode{
 
 	private final static Logger logger = Logger.getLogger(BotActionNode.class);
 
-	protected final CompleteExpander expander;
-	
-	public BotActionNode(PlayerId botId, GameState gameState,
-			AllPlayersModel opponentModeler, String prefix) {
-		super(botId, botId, gameState, opponentModeler, prefix);
-		this.expander = new CompleteExpander(this);
-	};
+	private final Expander expander;
+
+	private final boolean rootNode;
 
 	public BotActionNode(PlayerId botId, GameState gameState,
-			AllPlayersModel opponentModeler, String prefix, CompleteExpander expander) {
-		super(botId, botId, gameState, opponentModeler, prefix);
-		this.expander = expander;
+			AllPlayersModel opponentModeler, String prefix, int tokens) {
+		this(botId, gameState, opponentModeler, prefix, tokens, false);
 	}
 	
+	public BotActionNode(PlayerId botId, GameState gameState,
+			AllPlayersModel opponentModeler, String prefix, int tokens, boolean first) {
+		super(botId, botId, gameState, opponentModeler, prefix);
+		this.expander = new CompleteExpander(this, tokens);
+		this.rootNode = first;
+	}
+
 	@Override
 	public double getEV() {
 		return getBestEvaluatedAction().getEV();
@@ -64,12 +67,12 @@ public class BotActionNode extends ActionNode{
 	IllegalActionException {
 		getBestEvaluatedAction().getAction().perform(context);
 	}
-	
-	protected EvaluatedAction<? extends SearchBotAction> getBestEvaluatedAction(){
+
+	protected EvaluatedAction<? extends ActionWrapper> getBestEvaluatedAction(){
 		double maxEv=Double.NEGATIVE_INFINITY;
-		EvaluatedAction<? extends SearchBotAction> action = null;
-		Set<? extends EvaluatedAction<? extends SearchBotAction>> actions = getExpander().expand();
-		for(EvaluatedAction<? extends SearchBotAction> eval : actions){
+		EvaluatedAction<? extends ActionWrapper> action = null;
+		Set<? extends EvaluatedAction<? extends ActionWrapper>> actions = getExpander().expand();
+		for(EvaluatedAction<? extends ActionWrapper> eval : actions){
 			if(eval.getEV()>maxEv){
 				maxEv = eval.getEV();
 				action = eval;
@@ -77,13 +80,15 @@ public class BotActionNode extends ActionNode{
 		}
 		return action;
 	}
-	
+
 	@Override
 	public Set<SearchBotAction> getAllPossibleActions() {
 		HashSet<SearchBotAction> actions = new HashSet<SearchBotAction>();
 		if(gameState.hasBet()){
 			actions.add(new CallAction(gameState, botId));
-			actions.add(new FoldAction(gameState, botId));
+			if(rootNode){
+				actions.add(new FoldAction(gameState, botId));
+			}
 			if(gameState.isAllowedToRaise(botId)){
 				int lowerRaiseBound = gameState.getLowerRaiseBound(botId);
 				int upperRaiseBound = gameState.getUpperRaiseBound(botId);
@@ -105,7 +110,7 @@ public class BotActionNode extends ActionNode{
 		}
 		return actions;
 	}
-	
+
 	@Override
 	public Set<ProbabilityAction> getProbabilityActions() {
 		Set<SearchBotAction> possibleActions = getAllPossibleActions();
@@ -116,7 +121,7 @@ public class BotActionNode extends ActionNode{
 		}
 		return probActions;
 	}
-	
+
 	protected <A extends ActionWrapper> EvaluatedAction<A> getFoldEVForBot(A action, GameState nextState) {
 		EvaluatedAction<A> result;
 		//fold action
@@ -124,11 +129,11 @@ public class BotActionNode extends ActionNode{
 		result = new EvaluatedAction<A>(action, stack);
 		return result;
 	}
-	
-	protected CompleteExpander getExpander() {
+
+	protected Expander getExpander() {
 		return expander;
 	}
-	
+
 	@Override
 	public String toString() {
 		return "Bot Action Node";

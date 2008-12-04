@@ -66,19 +66,15 @@ extends AbstractBot {
 						playerContext.checkOrCall();
 						break;
 					case FLOP:
-						logger.debug("Searching flop round game tree:");
-						actionNode = new ConcurrentBotActionNode(GlobalThreadPool.getInstance(), playerID, playerContext.getGameState(), opponentModeler, "|");
+						logger.debug("Searching final round game tree:");
+						actionNode = new BotActionNode(playerID, playerContext.getGameState(), opponentModeler, "|", 1000);
 						actionNode.performbestAction(playerContext);
 						break;
 					case TURN:
-						logger.debug("Searching turn round game tree:");
-						actionNode = new ConcurrentBotActionNode(GlobalThreadPool.getInstance(), playerID, playerContext.getGameState(), opponentModeler, "|");
-						actionNode.performbestAction(playerContext);
+						playerContext.checkOrCall();
 						break;
 					case FINAL:
-						logger.debug("Searching final round game tree:");
-						actionNode = new ConcurrentBotActionNode(GlobalThreadPool.getInstance(), playerID, playerContext.getGameState(), opponentModeler, "|");
-						actionNode.performbestAction(playerContext);
+						playerContext.checkOrCall();
 						break;
 					default:
 						throw new IllegalStateException("What round are we in?");

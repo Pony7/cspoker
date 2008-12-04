@@ -36,19 +36,18 @@ public class SamplingExpander extends Expander{
 
 	private final static Logger logger = Logger.getLogger(BotActionNode.class);
 
-	public final static int samples = 8;
-
 	private final Random random = new Random();
 
-	public SamplingExpander(InnerGameTreeNode node) {
-		super(node);
+	public SamplingExpander(InnerGameTreeNode node, int tokens) {
+		super(node, tokens);
 	}
 
 	public Set<? extends EvaluatedAction<? extends SampledAction>> expand(){
 		List<SampledAction> sampledActions = sampleActions();
 		Set<EvaluatedAction<SampledAction>> evaluatedActions = new HashSet<EvaluatedAction<SampledAction>>(sampledActions.size());
 		for(SampledAction sampledAction:sampledActions){
-			evaluatedActions.add(node.expandWith(sampledAction));
+			
+			evaluatedActions.add(node.expandWith(sampledAction, tokens*sampledAction.getTimes()/sampledAction.getOutof()));
 		}
 		return evaluatedActions;
 	}
@@ -69,14 +68,15 @@ public class SamplingExpander extends Expander{
 
 
 		Multiset<ProbabilityAction> samples = Multisets.newHashMultiset();
-		for(int i=0;i<SamplingExpander.samples;i++){
+		int nbSamples = Math.min(100,tokens);
+		for(int i=0;i<nbSamples;i++){
 			samples.add(sampleAction(probActions, cumulProb));
 		}
 
 		Set<Entry<ProbabilityAction>> entrySet = samples.entrySet();
 		List<SampledAction> sampledActions = new ArrayList<SampledAction>(entrySet.size());
 		for(Entry<ProbabilityAction> entry:entrySet){
-			sampledActions.add(new SampledAction(entry.getElement(), entry.getCount(), SamplingExpander.samples));
+			sampledActions.add(new SampledAction(entry.getElement(), entry.getCount(), nbSamples));
 		}
 		return sampledActions;
 	}

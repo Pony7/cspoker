@@ -16,18 +16,16 @@
 package org.cspoker.common.elements.table;
 
 public enum Round {
-	WAITING("waiting round", Round.PREFLOP),
-	PREFLOP("pre-flop round", Round.FLOP),
-	FLOP("flop round", Round.TURN),
-	TURN("turn round", Round.FINAL),
-	FINAL("final round", null);
+	WAITING("waiting round"),
+	PREFLOP("pre-flop round"),
+	FLOP("flop round"),
+	TURN("turn round"),
+	FINAL("final round");
 	
 	private final String name;
-	private final Round nextRound;
 
-	private Round(String name, Round nextRound) {
+	private Round(String name) {
 		this.name = name;
-		this.nextRound = nextRound;
 	}
 	
 	@Override
@@ -36,6 +34,11 @@ public enum Round {
 	}
 
 	public Round getNextRound() {
-		return nextRound;
+		Round[] rounds = values();
+		int nextOrdinal = ordinal()+1;
+		if(nextOrdinal==rounds.length){
+			return null;
+		}
+		return rounds[nextOrdinal];
 	}
 }
