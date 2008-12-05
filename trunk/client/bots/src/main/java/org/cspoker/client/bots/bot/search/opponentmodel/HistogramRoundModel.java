@@ -16,6 +16,7 @@
 package org.cspoker.client.bots.bot.search.opponentmodel;
 
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.cspoker.client.bots.bot.search.action.BetAction;
@@ -47,9 +48,9 @@ public class HistogramRoundModel implements OpponentModel{
 	private volatile int nbBet = 1516*weightOfPrior/3819;
 	private volatile int totalNoBet = weightOfPrior;
 
-	private volatile int nbFold = 641*weightOfPrior/1217;
-	private volatile int nbCall = 408*weightOfPrior/1217;
-	private volatile int nbRaise = 168*weightOfPrior/1217;
+	private volatile int nbFold = 441*weightOfPrior/1017;
+	private volatile int nbCall = 408*weightOfPrior/1017;
+	private volatile int nbRaise = 168*weightOfPrior/1017;
 	private volatile int totalBet = weightOfPrior;
 
 	public HistogramRoundModel(PlayerId playerId, PlayerId botId) {
@@ -100,7 +101,7 @@ public class HistogramRoundModel implements OpponentModel{
 
 	@Override
 	public Set<SearchBotAction> getAllPossibleActions(GameState gameState) {
-		HashSet<SearchBotAction> possibleActions = new HashSet<SearchBotAction>();
+		HashSet<SearchBotAction> possibleActions = new LinkedHashSet<SearchBotAction>();
 		Set<ProbabilityAction> probActions = getProbabilityActions(gameState);
 		for(ProbabilityAction action:probActions){
 			possibleActions.add(action.getAction());
@@ -110,7 +111,7 @@ public class HistogramRoundModel implements OpponentModel{
 
 	@Override
 	public Set<ProbabilityAction> getProbabilityActions(GameState gameState) {
-		HashSet<ProbabilityAction> actions = new HashSet<ProbabilityAction>();
+		HashSet<ProbabilityAction> actions = new LinkedHashSet<ProbabilityAction>();
 		double totalProbability = 0;
 		if(gameState.hasBet()){
 			//call, raise or fold
@@ -175,11 +176,11 @@ public class HistogramRoundModel implements OpponentModel{
 	}
 
 	public double getFoldProbability(GameState gameState) {
-		return nbFold*1.0/totalBet;
+		return nbFold*1.0/totalBet*Math.pow(0.6, gameState.getNbRaises());
 	}
 
 	public double getRaiseProbability(GameState gameState) {
-		return nbRaise*1.0/totalBet;
+		return nbRaise*1.0/totalBet*Math.pow(0.9, gameState.getNbRaises());
 	}
 
 }

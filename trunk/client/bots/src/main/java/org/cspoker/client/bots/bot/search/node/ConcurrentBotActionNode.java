@@ -16,7 +16,7 @@
 package org.cspoker.client.bots.bot.search.node;
 
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.Callable;
@@ -28,6 +28,7 @@ import org.apache.log4j.Logger;
 import org.cspoker.client.bots.bot.search.action.EvaluatedAction;
 import org.cspoker.client.bots.bot.search.action.SearchBotAction;
 import org.cspoker.client.bots.bot.search.node.expander.CompleteExpander;
+import org.cspoker.client.bots.bot.search.node.visitor.NodeVisitor;
 import org.cspoker.client.bots.bot.search.opponentmodel.AllPlayersModel;
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.common.elements.player.PlayerId;
@@ -39,8 +40,8 @@ public class ConcurrentBotActionNode extends BotActionNode {
 	private final int tokens;
 
 	public ConcurrentBotActionNode(ExecutorService executor, PlayerId botId, GameState gameState,
-			AllPlayersModel opponentModeler, String prefix, int tokens) {
-		super(botId, gameState, opponentModeler, prefix, tokens);
+			AllPlayersModel opponentModeler, int tokens, NodeVisitor... visitors) {
+		super(botId, gameState, opponentModeler, tokens, visitors);
 		this.executor = executor;
 		this.tokens = tokens;
 	}
@@ -75,7 +76,7 @@ public class ConcurrentBotActionNode extends BotActionNode {
 
 			try {
 				List<Future<EvaluatedAction<? extends SearchBotAction>>> futures = executor.invokeAll(tasks);
-				Set<EvaluatedAction<? extends SearchBotAction>> evaluatedActions = new HashSet<EvaluatedAction<? extends SearchBotAction>>(actions.size());
+				Set<EvaluatedAction<? extends SearchBotAction>> evaluatedActions = new LinkedHashSet<EvaluatedAction<? extends SearchBotAction>>(actions.size());
 				for(Future<EvaluatedAction<? extends SearchBotAction>> future:futures){
 					evaluatedActions.add(future.get());
 				}

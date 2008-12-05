@@ -39,7 +39,7 @@ public class EvaluatedAction<A extends ActionWrapper> implements ActionWrapper{
 	
 	@Override
 	public String toString() {
-		return "EV is "+EV+" for "+action.toString();
+		return "EV is "+Math.round(EV)+" for "+action.toString();
 	}
 	
 }

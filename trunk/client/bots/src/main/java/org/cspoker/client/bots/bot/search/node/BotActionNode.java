@@ -17,6 +17,7 @@ package org.cspoker.client.bots.bot.search.node;
 
 import java.rmi.RemoteException;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
@@ -31,6 +32,7 @@ import org.cspoker.client.bots.bot.search.action.RaiseAction;
 import org.cspoker.client.bots.bot.search.action.SearchBotAction;
 import org.cspoker.client.bots.bot.search.node.expander.CompleteExpander;
 import org.cspoker.client.bots.bot.search.node.expander.Expander;
+import org.cspoker.client.bots.bot.search.node.visitor.NodeVisitor;
 import org.cspoker.client.bots.bot.search.opponentmodel.AllPlayersModel;
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.RemoteHoldemPlayerContext;
@@ -43,18 +45,18 @@ public class BotActionNode extends ActionNode{
 
 	private final Expander expander;
 
-	private final boolean rootNode;
+	private final boolean isRootNode;
 
 	public BotActionNode(PlayerId botId, GameState gameState,
-			AllPlayersModel opponentModeler, String prefix, int tokens) {
-		this(botId, gameState, opponentModeler, prefix, tokens, false);
+			AllPlayersModel opponentModeler, int tokens, NodeVisitor... visitors) {
+		this(botId, gameState, opponentModeler, tokens, false, visitors);
 	}
 	
 	public BotActionNode(PlayerId botId, GameState gameState,
-			AllPlayersModel opponentModeler, String prefix, int tokens, boolean first) {
-		super(botId, botId, gameState, opponentModeler, prefix);
+			AllPlayersModel opponentModeler, int tokens, boolean isRootNode, NodeVisitor... visitors) {
+		super(botId, botId, gameState, opponentModeler, visitors);
 		this.expander = new CompleteExpander(this, tokens);
-		this.rootNode = first;
+		this.isRootNode = isRootNode;
 	}
 
 	@Override
@@ -65,10 +67,14 @@ public class BotActionNode extends ActionNode{
 
 	public void performbestAction(RemoteHoldemPlayerContext context) throws RemoteException,
 	IllegalActionException {
-		getBestEvaluatedAction().getAction().perform(context);
+		EvaluatedAction<? extends ActionWrapper> bestEvaluatedAction = getBestEvaluatedAction();
+		for(NodeVisitor visitor:visitors){
+			visitor.leaveNode(bestEvaluatedAction);
+		}
+		bestEvaluatedAction.getAction().perform(context);
 	}
 
-	protected EvaluatedAction<? extends ActionWrapper> getBestEvaluatedAction(){
+	public EvaluatedAction<? extends ActionWrapper> getBestEvaluatedAction(){
 		double maxEv=Double.NEGATIVE_INFINITY;
 		EvaluatedAction<? extends ActionWrapper> action = null;
 		Set<? extends EvaluatedAction<? extends ActionWrapper>> actions = getExpander().expand();
@@ -83,12 +89,12 @@ public class BotActionNode extends ActionNode{
 
 	@Override
 	public Set<SearchBotAction> getAllPossibleActions() {
-		HashSet<SearchBotAction> actions = new HashSet<SearchBotAction>();
+		HashSet<SearchBotAction> actions = new LinkedHashSet<SearchBotAction>();
 		if(gameState.hasBet()){
 			actions.add(new CallAction(gameState, botId));
-			if(rootNode){
+			//if(isRootNode){ //TODO fix for multiple checks
 				actions.add(new FoldAction(gameState, botId));
-			}
+			//}
 			if(gameState.isAllowedToRaise(botId)){
 				int lowerRaiseBound = gameState.getLowerRaiseBound(botId);
 				int upperRaiseBound = gameState.getUpperRaiseBound(botId);
@@ -115,7 +121,7 @@ public class BotActionNode extends ActionNode{
 	public Set<ProbabilityAction> getProbabilityActions() {
 		Set<SearchBotAction> possibleActions = getAllPossibleActions();
 		double probability = 1.0/possibleActions.size();
-		HashSet<ProbabilityAction> probActions = new HashSet<ProbabilityAction>();
+		HashSet<ProbabilityAction> probActions = new LinkedHashSet<ProbabilityAction>();
 		for(SearchBotAction action:possibleActions){
 			probActions.add(new ProbabilityAction(action,probability));
 		}

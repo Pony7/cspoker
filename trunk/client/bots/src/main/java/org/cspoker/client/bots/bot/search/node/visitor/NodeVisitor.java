@@ -13,33 +13,16 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.client.bots.bot.search.action;
+package org.cspoker.client.bots.bot.search.node.visitor;
 
-public class ProbabilityAction{
+import org.cspoker.client.bots.bot.search.action.ActionWrapper;
+import org.cspoker.client.bots.bot.search.action.EvaluatedAction;
+import org.cspoker.client.bots.bot.search.node.ActionNode;
 
-	private final ActionWrapper actionWrapper;
-	private final double probability;
-
-	public ProbabilityAction(ActionWrapper action, double probability) {
-		this.actionWrapper = action;
-		this.probability = probability;
-	}
+public interface NodeVisitor {
 	
-	public ActionWrapper getActionWrapper() {
-		return actionWrapper;
-	}
+	void enterNode(ActionNode node, ActionWrapper action, int tokens);
 	
-	public SearchBotAction getAction() {
-		return actionWrapper.getAction();
-	}
-	
-	public double getProbability() {
-		return probability;
-	}
-	
-	@Override
-	public String toString() {
-		return actionWrapper.toString()+" ("+Math.round(probability*100)+"% chance)";
-	}
+	void leaveNode(EvaluatedAction<? extends ActionWrapper> evaluation);
 	
 }

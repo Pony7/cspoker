@@ -18,6 +18,7 @@ package org.cspoker.client.bots.bot.search.node;
 import org.apache.log4j.Logger;
 import org.cspoker.client.bots.bot.search.action.ActionWrapper;
 import org.cspoker.client.bots.bot.search.action.EvaluatedAction;
+import org.cspoker.client.bots.bot.search.node.visitor.NodeVisitor;
 import org.cspoker.client.bots.bot.search.opponentmodel.AllPlayersModel;
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.client.common.gamestate.modifiers.FoldState;
@@ -30,21 +31,22 @@ public abstract class ActionNode implements InnerGameTreeNode{
 
 	protected final GameState gameState;
 	protected final PlayerId playerId;
-	protected final String prefix;
 	protected final AllPlayersModel opponentModeler;
 	protected final PlayerId botId;
 
-	public ActionNode(PlayerId playerId, PlayerId botId, GameState gameState, AllPlayersModel opponentModeler, String prefix) {
+	protected final NodeVisitor[] visitors;
+
+	public ActionNode(PlayerId playerId, PlayerId botId, GameState gameState, AllPlayersModel opponentModeler, NodeVisitor... visitors) {
 		this.gameState = gameState;
 		this.playerId = playerId;
-		this.prefix =  prefix;
+		this.visitors =  visitors;
 		this.opponentModeler = opponentModeler;
 		this.botId= botId;
 	}
 	
 	public <A extends ActionWrapper> EvaluatedAction<A> expandWith(A action, int tokens){
-		if(logger.isDebugEnabled()){
-			logger.debug(prefix+"---o "+action+" in "+this + " with "+tokens+" token"+(tokens>1? "s":"")+" in " +gameState.getRound());
+		for(NodeVisitor visitor:visitors){
+			visitor.enterNode(this, action, tokens);
 		}
 		EvaluatedAction<A> result;
 		GameState nextState = action.getAction().getStateAfterAction();
@@ -55,10 +57,10 @@ public abstract class ActionNode implements InnerGameTreeNode{
 			PlayerId nextToAct = nextState.getNextToAct();
 			if(nextToAct.equals(botId)){
 				//go to next player node
-				BotActionNode botActionNode = new BotActionNode(botId, nextState, opponentModeler, prefix+"   |",tokens);
+				BotActionNode botActionNode = new BotActionNode(botId, nextState, opponentModeler,tokens, visitors);
 				result = new EvaluatedAction<A>(action, botActionNode.getEV());
 			}else{	
-				OpponentActionNode opponentActionNode = new OpponentActionNode(nextToAct, botId, nextState, opponentModeler, prefix+"   |",tokens);
+				OpponentActionNode opponentActionNode = new OpponentActionNode(nextToAct, botId, nextState, opponentModeler,tokens,visitors);
 				result = new EvaluatedAction<A>(action, opponentActionNode.getEV());
 			}
 		}else{
@@ -67,9 +69,8 @@ public abstract class ActionNode implements InnerGameTreeNode{
 			ShowdownNode showdownNode = new ShowdownNode(botId, nextState, tokens);
 			result = new EvaluatedAction<A>(action, showdownNode.getEV());
 		}
-		if(logger.isDebugEnabled()){
-			logger.debug(prefix+"   `"+result);
-			//logger.trace(prefix);
+		for(NodeVisitor visitor:visitors){
+			visitor.leaveNode(result);
 		}
 		return result;
 	}
@@ -93,6 +94,5 @@ public abstract class ActionNode implements InnerGameTreeNode{
 	public String toString() {
 		return "Action Node";
 	}
-
-
+	
 }

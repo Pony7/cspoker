@@ -24,6 +24,7 @@ import org.cspoker.client.bots.bot.search.action.ProbabilityAction;
 import org.cspoker.client.bots.bot.search.action.SampledAction;
 import org.cspoker.client.bots.bot.search.action.SearchBotAction;
 import org.cspoker.client.bots.bot.search.node.expander.SamplingExpander;
+import org.cspoker.client.bots.bot.search.node.visitor.NodeVisitor;
 import org.cspoker.client.bots.bot.search.opponentmodel.AllPlayersModel;
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.common.elements.player.PlayerId;
@@ -34,14 +35,8 @@ public class OpponentActionNode extends ActionNode{
 	
 	private final SamplingExpander expander;
 	
-	public OpponentActionNode(PlayerId opponentId, PlayerId botId, GameState gameState, AllPlayersModel playersModel, 
-			String prefix, SamplingExpander expander, int tokens) {
-		super(opponentId, botId, gameState, playersModel, prefix);
-		this.expander = expander;
-	}
-	
-	public OpponentActionNode(PlayerId opponentId, PlayerId botId, GameState gameState, AllPlayersModel playersModel, String prefix, int tokens) {
-		super(opponentId, botId, gameState, playersModel, prefix);
+	public OpponentActionNode(PlayerId opponentId, PlayerId botId, GameState gameState, AllPlayersModel playersModel, int tokens, NodeVisitor... visitors) {
+		super(opponentId, botId, gameState, playersModel, visitors);
 		this.expander = new SamplingExpander(this, tokens);
 	}
 
