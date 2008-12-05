@@ -16,14 +16,17 @@
 package org.cspoker.client.bots.bot.search.node.expander;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
+import org.cspoker.client.bots.bot.search.action.BetAction;
 import org.cspoker.client.bots.bot.search.action.EvaluatedAction;
 import org.cspoker.client.bots.bot.search.action.ProbabilityAction;
+import org.cspoker.client.bots.bot.search.action.RaiseAction;
 import org.cspoker.client.bots.bot.search.action.SampledAction;
 import org.cspoker.client.bots.bot.search.node.BotActionNode;
 import org.cspoker.client.bots.bot.search.node.InnerGameTreeNode;
@@ -66,8 +69,24 @@ public class SamplingExpander extends Expander{
 			}
 		}
 
-
-		Multiset<ProbabilityAction> samples = Multisets.newHashMultiset();
+		Multiset<ProbabilityAction> samples = Multisets.newTreeMultiset(new Comparator<ProbabilityAction>(){
+			@Override
+			public int compare(ProbabilityAction o1, ProbabilityAction o2) {
+					if(o2.getProbability()<o1.getProbability()){
+						return -1;
+					}
+					if(o2.getProbability()>o1.getProbability()){
+						return 1;
+					}
+					if(o1.getAction() instanceof RaiseAction && o2.getAction() instanceof RaiseAction ){
+						return ((RaiseAction)o1.getAction()).getAmount()-((RaiseAction)o2.getAction()).getAmount();
+					}
+					if(o1.getAction() instanceof RaiseAction && o2.getAction() instanceof RaiseAction ){
+						return ((BetAction)o1.getAction()).getAmount()-((BetAction)o2.getAction()).getAmount();
+					}
+					return 0;
+			}
+		});
 		int nbSamples = Math.min(100,tokens);
 		for(int i=0;i<nbSamples;i++){
 			samples.add(sampleAction(probActions, cumulProb));

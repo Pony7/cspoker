@@ -15,7 +15,7 @@
  */
 package org.cspoker.client.bots.bot.search.node.expander;
 
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.cspoker.client.bots.bot.search.action.EvaluatedAction;
@@ -31,7 +31,7 @@ public class CompleteExpander extends Expander{
 	public Set<? extends EvaluatedAction<? extends SearchBotAction>> expand(){
 		Set<SearchBotAction> actions = node.getAllPossibleActions();
 		int subtreeTokens = Math.max(1,tokens/actions.size());
-		Set<EvaluatedAction<SearchBotAction>> evaluatedActions = new HashSet<EvaluatedAction<SearchBotAction>>(actions.size());
+		Set<EvaluatedAction<SearchBotAction>> evaluatedActions = new LinkedHashSet<EvaluatedAction<SearchBotAction>>(actions.size());
 		for(SearchBotAction action:actions){
 			evaluatedActions.add(node.expandWith(action, subtreeTokens));
 		}

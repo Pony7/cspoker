@@ -17,15 +17,15 @@ package org.cspoker.client.bots.bot.search.opponentmodel;
 
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.cspoker.client.bots.bot.search.opponentmodel.OpponentModel.Factory;
+import org.cspoker.client.bots.bot.search.opponentmodel.OpponentModel.OpponentModelFactory;
 import org.cspoker.common.elements.player.PlayerId;
 
 public class AllPlayersModel {
 
 	private final ConcurrentHashMap<PlayerId, OpponentModel> opponentModels = new ConcurrentHashMap<PlayerId, OpponentModel>();
-	private final Factory factory;
+	private final OpponentModelFactory factory;
 	
-	public AllPlayersModel(Factory factory) {
+	public AllPlayersModel(OpponentModelFactory factory) {
 		this.factory = factory;
 	}
 	

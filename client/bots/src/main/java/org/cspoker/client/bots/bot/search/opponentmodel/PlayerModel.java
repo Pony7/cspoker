@@ -37,7 +37,7 @@ public class PlayerModel implements OpponentModel{
 	private final Map<Round, OpponentModel> roundModels = Collections.synchronizedMap(
 			new EnumMap<Round, OpponentModel>(Round.class));
 	
-	public PlayerModel(OpponentModel.Factory factory, PlayerId playerId) {
+	public PlayerModel(OpponentModel.OpponentModelFactory factory, PlayerId playerId) {
 		for(Round round:Round.values()){
 			roundModels.put(round, factory.create(playerId));
 		}

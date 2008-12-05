@@ -22,7 +22,7 @@ import java.util.concurrent.ExecutorService;
 import org.apache.log4j.Logger;
 import org.cspoker.client.bots.bot.AbstractBot;
 import org.cspoker.client.bots.bot.search.node.BotActionNode;
-import org.cspoker.client.bots.bot.search.node.ConcurrentBotActionNode;
+import org.cspoker.client.bots.bot.search.node.visitor.Log4JOutputVisitor;
 import org.cspoker.client.bots.bot.search.opponentmodel.AllPlayersModel;
 import org.cspoker.client.bots.listener.BotListener;
 import org.cspoker.client.common.SmartLobbyContext;
@@ -36,7 +36,6 @@ import org.cspoker.common.api.lobby.holdemtable.event.RaiseEvent;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.elements.table.TableId;
-import org.cspoker.common.util.threading.GlobalThreadPool;
 
 public class SearchBot
 extends AbstractBot {
@@ -67,7 +66,7 @@ extends AbstractBot {
 						break;
 					case FLOP:
 						logger.debug("Searching final round game tree:");
-						actionNode = new BotActionNode(playerID, playerContext.getGameState(), opponentModeler, "|", 1000);
+						actionNode = new BotActionNode(playerID, playerContext.getGameState(), opponentModeler, 1000, new Log4JOutputVisitor(3));
 						actionNode.performbestAction(playerContext);
 						break;
 					case TURN:

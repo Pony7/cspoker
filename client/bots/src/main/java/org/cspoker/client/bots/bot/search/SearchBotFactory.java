@@ -16,6 +16,7 @@
  */
 package org.cspoker.client.bots.bot.search;
 
+import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 
@@ -25,7 +26,7 @@ import org.cspoker.client.bots.bot.search.opponentmodel.AllPlayersModel;
 import org.cspoker.client.bots.bot.search.opponentmodel.HistogramRoundModel;
 import org.cspoker.client.bots.bot.search.opponentmodel.OpponentModel;
 import org.cspoker.client.bots.bot.search.opponentmodel.PlayerModel;
-import org.cspoker.client.bots.bot.search.opponentmodel.OpponentModel.Factory;
+import org.cspoker.client.bots.bot.search.opponentmodel.OpponentModel.OpponentModelFactory;
 import org.cspoker.client.bots.listener.BotListener;
 import org.cspoker.client.common.SmartLobbyContext;
 import org.cspoker.common.elements.player.PlayerId;
@@ -49,9 +50,9 @@ public class SearchBotFactory implements BotFactory {
 			SmartLobbyContext lobby, ExecutorService executor,
 			BotListener... botListeners) {
 		copies++;
-		opponentModels.putIfAbsent(botId, new AllPlayersModel(new Factory(){
+		opponentModels.putIfAbsent(botId, new AllPlayersModel(new OpponentModelFactory(){
 			public OpponentModel create(PlayerId opponentId) {
-				return new PlayerModel(new Factory(){
+				return new PlayerModel(new OpponentModelFactory(){
 					@Override
 					public OpponentModel create(PlayerId opponentId) {
 						return new HistogramRoundModel(opponentId, botId);

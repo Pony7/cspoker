@@ -46,7 +46,7 @@ public interface OpponentModel {
 	
 	Set<ProbabilityAction> getProbabilityActions(GameState gameState);
 
-	public static interface Factory{
+	public static interface OpponentModelFactory{
 		
 		OpponentModel create(PlayerId opponentId);
 		
