@@ -38,14 +38,14 @@ public class TestHandIterator extends TestCase {
 	protected void setUp() throws Exception {
 		hand1 = new Hand();
 
-		hand1.add(testExactCard.getExactCard(Rank.THREE, Suit.HEARTS));
-		hand1.add(testExactCard.getExactCard(Rank.FOUR, Suit.HEARTS));
-		hand1.add(testExactCard.getExactCard(Rank.FIVE, Suit.HEARTS));
-		hand1.add(testExactCard.getExactCard(Rank.SIX, Suit.HEARTS));
-		hand1.add(testExactCard.getExactCard(Rank.SEVEN, Suit.HEARTS));
+		hand1 = hand1.add(testExactCard.getExactCard(Rank.THREE, Suit.HEARTS));
+		hand1 = hand1.add(testExactCard.getExactCard(Rank.FOUR, Suit.HEARTS));
+		hand1 = hand1.add(testExactCard.getExactCard(Rank.FIVE, Suit.HEARTS));
+		hand1 = hand1.add(testExactCard.getExactCard(Rank.SIX, Suit.HEARTS));
+		hand1 = hand1.add(testExactCard.getExactCard(Rank.SEVEN, Suit.HEARTS));
 
-		hand1.add(testExactCard.getExactCard(Rank.THREE, Suit.SPADES));
-		hand1.add(testExactCard.getExactCard(Rank.ACE, Suit.HEARTS));
+		hand1 = hand1.add(testExactCard.getExactCard(Rank.THREE, Suit.SPADES));
+		hand1 = hand1.add(testExactCard.getExactCard(Rank.ACE, Suit.HEARTS));
 	}
 
 	public void testHandIterator1() {

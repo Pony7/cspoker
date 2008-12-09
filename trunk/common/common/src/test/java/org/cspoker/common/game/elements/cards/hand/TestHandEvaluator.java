@@ -17,13 +17,10 @@ package org.cspoker.common.game.elements.cards.hand;
 
 import junit.framework.TestCase;
 
-import org.apache.log4j.Logger;
-import org.cspoker.common.elements.cards.Deck;
 import org.cspoker.common.elements.cards.Rank;
 import org.cspoker.common.elements.cards.Suit;
 import org.cspoker.common.elements.hand.Hand;
 import org.cspoker.common.elements.hand.HandType;
-import org.cspoker.common.util.Log4JPropertiesLoader;
 
 /**
  * A test class for all the methods in the HandEvaluator class
@@ -32,13 +29,6 @@ import org.cspoker.common.util.Log4JPropertiesLoader;
  * 
  */
 public class TestHandEvaluator extends TestCase {
-
-	static {
-		Log4JPropertiesLoader
-				.load("org/cspoker/server/common/logging/log4j.properties");
-	}
-	
-	private static Logger logger = Logger.getLogger(TestHandEvaluator.class);
 
 	private static TestExactCard testExactCard = new TestExactCard();
 

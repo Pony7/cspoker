@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import junit.framework.TestCase;
+import javax.security.auth.login.LoginException;
 
 import org.cspoker.client.User;
 import org.cspoker.client.gui.swt.control.ClientCore;
@@ -27,82 +27,59 @@ import org.cspoker.common.elements.table.TableConfiguration;
 import org.cspoker.common.elements.table.TableId;
 import org.eclipse.swt.widgets.Display;
 
-public abstract class TestSWTClient
-		extends TestCase {
-	
+public abstract class TestSWTClient {
+
 	private ClientCore client;
 	protected RemoteCSPokerServer server;
 	private DisplayExecutor displayexecutor;
 	private List<User> users;
-	
-	/*
-	 * (non-Javadoc)
-	 * @see junit.framework.TestCase#setUp()
-	 */
-	@Override
-	protected void setUp()
-			throws Exception {
-		super.setUp();
+
+	protected TestSWTClient()
+	throws Exception {
 		setServer();
 		displayexecutor = DisplayExecutor.getInstance();
 		users = new ArrayList<User>();
 		users.addAll(Arrays.asList(new User("Stephan", "test"), new User("dummy", "test"), new User("test", "test")));
 	}
-	
+
 	protected abstract void setServer();
-	
-	/*
-	 * (non-Javadoc)
-	 * @see junit.framework.TestCase#tearDown()
-	 */
-	@Override
-	protected void tearDown()
-			throws Exception {
-		super.tearDown();
-	}
-	
-	public void testPlay() {
+
+	public void testPlay() throws Exception {
 		int seatId = -1;
 		final TableId tableId = new TableId(0);
-		
+
 		int smallBlind = 50;
 		int buyin = smallBlind * 200;
 		int delay = 2000;
 		for (User u : users) {
 			seatId++;
-			try {
-				client = new ClientCore(u);
-				client.login(server);
-				
-				final LobbyWindow lobby = new LobbyWindow(client);
-				lobby.setLobbyContext(client.getCommunication());
-				client.getGui().setLobby(lobby);
-				
-				TableConfiguration tConfig = new TableConfiguration(smallBlind, delay);
-				lobby.getContext().createHoldemTable(u.getUserName() + "'s test table", tConfig);
-				// Run blocking calls in extra thread
-				displayexecutor.execute(new Runnable() {
-					
-					public void run() {
-						lobby.show();
-						
-					}
-				});
-				final GameWindow w = client.getGui().getGameWindow(tableId, true);
-				w.getUser().sitIn(new SeatId(seatId), buyin);
-				// Run blocking calls in extra thread
-				displayexecutor.execute(new Runnable() {
-					
-					public void run() {
-						w.show();
-						
-					}
-				});
-				
-			} catch (Exception e) {
-				e.printStackTrace();
-				fail(e.getMessage());
-			}
+			client = new ClientCore(u);
+			client.login(server);
+
+			final LobbyWindow lobby = new LobbyWindow(client);
+			lobby.setLobbyContext(client.getCommunication());
+			client.getGui().setLobby(lobby);
+
+			TableConfiguration tConfig = new TableConfiguration(smallBlind, delay);
+			lobby.getContext().createHoldemTable(u.getUserName() + "'s test table", tConfig);
+			// Run blocking calls in extra thread
+			displayexecutor.execute(new Runnable() {
+
+				public void run() {
+					lobby.show();
+
+				}
+			});
+			final GameWindow w = client.getGui().getGameWindow(tableId, true);
+			w.getUser().sitIn(new SeatId(seatId), buyin);
+			// Run blocking calls in extra thread
+			displayexecutor.execute(new Runnable() {
+
+				public void run() {
+					w.show();
+
+				}
+			});
 		}
 		// Listen to events#
 		Display display = Display.getDefault();
@@ -110,6 +87,6 @@ public abstract class TestSWTClient
 			if (!display.readAndDispatch())
 				display.sleep();
 		}
-		
+
 	}
 }
