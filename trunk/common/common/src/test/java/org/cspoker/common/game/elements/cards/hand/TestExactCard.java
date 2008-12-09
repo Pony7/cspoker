@@ -17,7 +17,7 @@
 /**
  * 
  */
-package org.cspoker.server.common.game.elements.cards.hand;
+package org.cspoker.common.game.elements.cards.hand;
 
 import java.util.HashMap;
 import java.util.List;

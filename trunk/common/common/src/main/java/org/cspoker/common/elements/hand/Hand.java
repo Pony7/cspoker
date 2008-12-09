@@ -53,11 +53,11 @@ public class Hand implements Iterable<Card>, Comparable<Hand> {
 		cards = EnumSet.noneOf(Card.class);
 		handHash = new UniqueHandHash(1,false);
 	}
-	
+
 	public Hand(Collection<Card> cardCollection) {
 		if ((cardCollection == null)
 				|| (cardCollection.size() > Hand.MAX_CARDS)) {
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("Max number of cards reached.");
 		}
 		cards = EnumSet.copyOf(cardCollection);
 		handHash = new UniqueHandHash(getProduct(), isAllSameSuite());
@@ -85,6 +85,9 @@ public class Hand implements Iterable<Card>, Comparable<Hand> {
 
 	public Hand add(final Card card) {
 		EnumSet<Card> newCards = getCards();
+		if(newCards.size() >= Hand.MAX_CARDS){
+			throw new IllegalArgumentException("Max number of cards reached.");
+		}
 		newCards.add(card);
 		return new Hand(newCards);
 	}
@@ -190,8 +193,10 @@ public class Hand implements Iterable<Card>, Comparable<Hand> {
 	 */
 	public Hand removeCard(final Card card) {
 		EnumSet<Card> newCards = getCards();
-		newCards.remove(card);
-		return new Hand(newCards);
+		if(newCards.remove(card)){
+			return new Hand(newCards);
+		}
+		throw new IllegalArgumentException("Unknown card");
 	}
 
 	/**
