@@ -136,7 +136,6 @@ The mis-actor gains access to the poker server pretending to be a legitimate use
 \begin{itemize}
 \item The mis-actor finds a way to fake credentials.
 \item The mis-actor authenticates with the poker server with those fake credentials.
-\item The mis-actor can take actions with this fake identity.
 \end{itemize}
 \textbf{Alternative paths:}
 \begin{itemize}
@@ -223,7 +222,6 @@ Only authentic users can gain access at the poker server. \\
 \begin{itemize}
 \item The mis-actor prepares the process that can spoof a poker server.
 \item The mis-actor deploys its process on the online casino servers (performed by a skilled insider).
-\item The mis-actor can cheat and steal sensitive data from the users.
 \end{itemize}
 \textbf{Alternative paths:}
 \begin{itemize}
@@ -1496,6 +1494,9 @@ application (tables are independent).
 \end{description}
 These labels will be used to guide the selection of security patterns in the next section and to select certain
 patterns that match better with these labels, instead of other patterns.
+
+The ordering of this list is based on the relative importance of the different business goals.
+
 \section{Pattern-based Methodology}
 We will use the security patterns and methodology described in \cite{yskout} to select the appropriate patterns
 for this application.
@@ -1503,10 +1504,9 @@ for this application.
 \subsection{Analysis Phase}
 The analysis phase consists of eliciting the security requirements and annotating each 
 security requirement with the security object it belongs to. The security requirements have been elicited by the misuse cases
-in secton \ref{MisUseCases}. The annotations to indicate for each misuse case to which security objective it belongs are given in section \ref{MUCLabels}. This is very important, since the succes of the selected methodology heavily depends 
+in secton \ref{MisUseCases}. The annotations to indicate for each misuse case to which security objective it belongs 
+are given in section \ref{MUCLabels}. This is very important, since the succes of the selected methodology heavily depends 
 on this list of security requirements.
-
-The order in which we will now deal with the different objectives is slightly changed from the order of importance as given in section \ref{MUCLabels}. In accordance to the analysis of the importance of misuse cases in section \ref{MisUseCases}, we chose to move Availability to the lowest priority. The ordering of the other objectives remains unchanged.
 
 
 \subsection{Architecture Phase}
