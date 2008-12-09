@@ -7,6 +7,14 @@ import org.cspoker.client.xml.sockets.RemoteSocketServer;
 public class TestSWTwithSockets
 		extends TestSWTClient {
 	
+	protected TestSWTwithSockets() throws Exception {
+		super();
+	}
+
+	public static void main(String[] args) throws Exception {
+		(new TestSWTwithSockets()).testPlay();
+	}
+
 	/**
 	 * @see TestSWTClient#setServer()
 	 */

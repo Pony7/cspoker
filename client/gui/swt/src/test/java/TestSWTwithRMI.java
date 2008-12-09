@@ -7,6 +7,14 @@ import org.cspoker.client.rmi.RemoteRMIServer;
 public class TestSWTwithRMI
 		extends TestSWTClient {
 	
+	protected TestSWTwithRMI() throws Exception {
+		super();
+	}
+
+	public static void main(String[] args) throws Exception {
+		(new TestSWTwithRMI()).testPlay();
+	}
+
 	/**
 	 * @see TestSWTClient#setServer()
 	 */

@@ -7,6 +7,14 @@ import org.cspoker.client.xml.http.RemoteHTTPServer;
 public class TestSWTwithHTTP
 		extends TestSWTClient {
 	
+	protected TestSWTwithHTTP() throws Exception {
+		super();
+	}
+
+	public static void main(String[] args) throws Exception {
+		(new TestSWTwithHTTP()).testPlay();
+	}
+	
 	/**
 	 * @see TestSWTClient#setServer()
 	 */
