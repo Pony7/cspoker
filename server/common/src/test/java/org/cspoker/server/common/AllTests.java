@@ -18,7 +18,7 @@ package org.cspoker.server.common;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import org.cspoker.server.common.game.elements.cards.hand.AllHandTests;
+import org.cspoker.common.game.elements.cards.hand.AllHandTests;
 import org.cspoker.server.common.util.LoopingListTest;
 
 public class AllTests {
@@ -26,7 +26,6 @@ public class AllTests {
 	public static Test suite() {
 		TestSuite suite = new TestSuite("Test for org.cspoker.server.common");
 		// $JUnit-BEGIN$
-		suite.addTest(AllHandTests.suite());
 		suite.addTestSuite(LoopingListTest.class);
 		// $JUnit-END$
 		return suite;

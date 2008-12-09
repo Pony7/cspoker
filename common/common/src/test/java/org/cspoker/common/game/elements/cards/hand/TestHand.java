@@ -13,7 +13,7 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.server.common.game.elements.cards.hand;
+package org.cspoker.common.game.elements.cards.hand;
 
 import java.util.Iterator;
 
@@ -40,37 +40,37 @@ public class TestHand extends TestCase {
 
 	public void test() {
 		hand1 = new Hand();
-		hand1.add(testExactCard.getExactCard(Rank.THREE, Suit.HEARTS));
+		hand1 = hand1.add(testExactCard.getExactCard(Rank.THREE, Suit.HEARTS));
 		assertTrue(hand1.size() == 1);
 		assertTrue(hand1.contains(testExactCard.getExactCard(Rank.THREE,
 				Suit.HEARTS)));
 
-		hand1.add(testExactCard.getExactCard(Rank.FOUR, Suit.SPADES));
+		hand1 = hand1.add(testExactCard.getExactCard(Rank.FOUR, Suit.SPADES));
 		assertTrue(hand1.size() == 2);
 		assertTrue(hand1.contains(testExactCard.getExactCard(Rank.THREE,
 				Suit.HEARTS)));
 
-		hand1.add(testExactCard.getExactCard(Rank.EIGHT, Suit.CLUBS));
+		hand1 = hand1.add(testExactCard.getExactCard(Rank.EIGHT, Suit.CLUBS));
 		assertTrue(hand1.size() == 3);
 
-		hand1.add(testExactCard.getExactCard(Rank.SIX, Suit.DIAMONDS));
+		hand1 = hand1.add(testExactCard.getExactCard(Rank.SIX, Suit.DIAMONDS));
 		assertTrue(hand1.size() == 4);
 
-		hand1.add(testExactCard.getExactCard(Rank.ACE, Suit.HEARTS));
+		hand1 = hand1.add(testExactCard.getExactCard(Rank.ACE, Suit.HEARTS));
 		assertTrue(hand1.size() == 5);
 		assertTrue(hand1.contains(testExactCard.getExactCard(Rank.THREE,
 				Suit.HEARTS)));
 		assertTrue(hand1.contains(testExactCard.getExactCard(Rank.ACE,
 				Suit.HEARTS)));
 
-		hand1.add(testExactCard.getExactCard(Rank.KING, Suit.SPADES));
+		hand1 = hand1.add(testExactCard.getExactCard(Rank.KING, Suit.SPADES));
 		assertTrue(hand1.size() == 6);
 
-		hand1.add(testExactCard.getExactCard(Rank.QUEEN, Suit.CLUBS));
+		hand1 = hand1.add(testExactCard.getExactCard(Rank.QUEEN, Suit.CLUBS));
 		assertTrue(hand1.size() == 7);
 
 		try {
-			hand1.add(testExactCard.getExactCard(Rank.QUEEN, Suit.CLUBS));
+			hand1 = hand1.add(testExactCard.getExactCard(Rank.QUEEN, Suit.CLUBS));
 			fail("Exception Expected.");
 		} catch (IllegalArgumentException e) {
 			assertTrue(hand1.size() == 7);
@@ -82,14 +82,14 @@ public class TestHand extends TestCase {
 				Suit.HEARTS)));
 		assertTrue(hand1.isFull());
 
-		hand1.removeCard(testExactCard.getExactCard(Rank.QUEEN, Suit.CLUBS));
+		hand1 = hand1.removeCard(testExactCard.getExactCard(Rank.QUEEN, Suit.CLUBS));
 		assertFalse(hand1.contains(testExactCard.getExactCard(Rank.QUEEN,
 				Suit.CLUBS)));
 		assertFalse(hand1.isFull());
 		assertTrue(hand1.size() == 6);
 
 		try {
-			hand1
+			hand1 = hand1
 					.removeCard(testExactCard.getExactCard(Rank.QUEEN,
 							Suit.CLUBS));
 			fail("Exception Expected.");
@@ -101,16 +101,9 @@ public class TestHand extends TestCase {
 		}
 
 		assertTrue(testExactCard.getExactCard(Rank.ACE, Suit.CLUBS).compareTo(
-				testExactCard.getExactCard(Rank.KING, Suit.DIAMONDS)) == 1);
+				testExactCard.getExactCard(Rank.KING, Suit.DIAMONDS)) > 0);
 		assertTrue(testExactCard.getExactCard(Rank.DEUCE, Suit.HEARTS)
-				.compareTo(testExactCard.getExactCard(Rank.KING, Suit.SPADES)) == -1);
-		assertTrue(testExactCard.getExactCard(Rank.DEUCE, Suit.DIAMONDS)
-				.compareTo(testExactCard.getExactCard(Rank.DEUCE, Suit.CLUBS)) == 0);
-		assertFalse(testExactCard.getExactCard(Rank.DEUCE, Suit.DIAMONDS)
-				.equals(testExactCard.getExactCard(Rank.DEUCE, Suit.CLUBS)));
-		assertTrue(testExactCard.getExactCard(Rank.DEUCE, Suit.CLUBS).equals(
-				testExactCard.getExactCard(Rank.DEUCE, Suit.CLUBS)));
-
+				.compareTo(testExactCard.getExactCard(Rank.KING, Suit.SPADES)) < 0);
 	}
 
 	public void testIterator() {
