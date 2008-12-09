@@ -19,7 +19,6 @@ import java.util.Iterator;
 
 import junit.framework.TestCase;
 
-import org.apache.log4j.Logger;
 import org.cspoker.common.elements.cards.Card;
 import org.cspoker.common.elements.cards.Rank;
 import org.cspoker.common.elements.cards.Suit;
@@ -32,7 +31,6 @@ import org.cspoker.common.elements.hand.Hand;
  * 
  */
 public class TestHand extends TestCase {
-	private static Logger logger = Logger.getLogger(TestHand.class);
 
 	private static TestExactCard testExactCard = new TestExactCard();
 
@@ -117,8 +115,11 @@ public class TestHand extends TestCase {
 
 		Iterator<Card> iterator = hand1.iterator();
 
+		int n=0;
 		while (iterator.hasNext()) {
-			TestHand.logger.info(iterator.next().toString());
+			assertNotNull(iterator.next());
+			n++;
 		}
+		assertEquals(n, 6);
 	}
 }

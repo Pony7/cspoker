@@ -23,6 +23,8 @@ import org.cspoker.client.xml.common.IDGenerator;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.action.BetOrRaiseAction;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.action.CheckOrCallAction;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.action.FoldAction;
+import org.cspoker.common.api.lobby.holdemtable.holdemplayer.action.LeaveSeatAction;
+import org.cspoker.common.api.lobby.holdemtable.holdemplayer.action.SitInAction;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.action.SitOutAction;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.RemoteHoldemPlayerContext;
 import org.cspoker.common.api.shared.Trigger;
@@ -61,8 +63,21 @@ public class XmlRemoteHoldemPlayerContext implements RemoteHoldemPlayerContext {
 	public void sitOut() throws RemoteException, IllegalActionException {
 		performer.perform(new SitOutAction(generator.getNextID(),
 				tableID));
-		//TODO synchronization needed?
+	}
+
+	@Override
+	public void leaveSeat() throws RemoteException, IllegalActionException {
+		performer.perform(new LeaveSeatAction(generator.getNextID(),
+				tableID));
+		//TODO synchronize?
 		stalePlayerContextTrigger.trigger();
+	}
+
+	@Override
+	public void sitIn() throws RemoteException, IllegalActionException {
+		performer.perform(new SitInAction(generator.getNextID(),
+				tableID));
+		
 	}
 
 }
