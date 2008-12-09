@@ -72,9 +72,9 @@ public class XmlRemoteHoldemTableContext implements RemoteHoldemTableContext {
 			serverListenerTree.getLobbyListenerTree().getHoldemTableListenerTree(tableID).setHoldemPlayerListener(holdemPlayerListener);
 			performer.perform(new SitInAction(generator.getNextID(),tableID,seatId,amount));
 			return playerContext.get();
-		}else{
-			throw new IllegalActionException("Already seated at table #"+tableID+".");
 		}
+		throw new IllegalActionException("Already seated at table #"+tableID+".");
+		
 	}
 
 	public RemoteHoldemPlayerContext sitIn(int amount,
@@ -84,9 +84,8 @@ public class XmlRemoteHoldemTableContext implements RemoteHoldemTableContext {
 			serverListenerTree.getLobbyListenerTree().getHoldemTableListenerTree(tableID).setHoldemPlayerListener(holdemPlayerListener);
 			performer.perform(new SitInAnywhereAction(generator.getNextID(),tableID,amount));
 			return playerContext.get();
-		}else{
-			throw new IllegalActionException("Already seated at table #"+tableID+".");
 		}
+		throw new IllegalActionException("Already seated at table #"+tableID+".");
 	}
 
 }
