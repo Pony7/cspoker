@@ -1867,15 +1867,15 @@ Spoofing the poker server & Authentication enforcer, Authorization enforcer, Sec
 Tampering with the poker server & Authentication enforcer, Authorization enforcer, Secure service facade, Credential tokenizer, Secure pipe, Application firewall \\\hline
 Repudiation of the poker server & Secure logger, Audit interceptor, Secure pipe, Secure service facade\\\hline
 Information disclosure at the poker server & Secure Pipe, Authentication Enforcer, Authorization Enforcer, Secure Service Facade, Credential tokenizer, Application firewall \\\hline
-DoS against the poker server & Load balancer, Application Firewall, Firewall, Audit interceptor, Secure logger\\\hline
+DoS against the poker server & Application Firewall, Firewall, Audit interceptor, Secure logger\\\hline
 Elevation of privilege at the poker server & Authentication Enforcer, Authorization Enforcer, Secure Service Facade, Credential Tokenizer, Secure pipe, Application firewall \\\hline
 \textbf{Table} & \\\hline
-Spoofing a table & \\\hline
-Tampering with a table & \\\hline
-Repudiation of an action at a table & \\\hline
-Information disclosure at a table & \\\hline
-DoS against a table & \\\hline
-Elevation of privilege at a table & \\\hline
+Spoofing a table & Authentication enforcer, Authorization enforcer, Secure service facade \\\hline
+Tampering with a table & Authentication enforcer, Authorization enforcer, Secure service facade, Credential tokenizer, Secure pipe, Application firewall \\\hline
+Repudiation of an action at a table & Secure logger, Audit interceptor, Secure pipe, Secure service facade\\\hline
+Information disclosure at a table & Secure Pipe, Authentication Enforcer, Authorization Enforcer, Secure Service Facade, Credential tokenizer, Application firewall \\\hline
+DoS against a table & Load balancer, Application Firewall, Firewall, Audit interceptor, Secure logger\\\hline
+Elevation of privilege at a table & Authentication Enforcer, Authorization Enforcer, Secure Service Facade, Credential Tokenizer, Secure pipe, Application firewall \\\hline
 \end{tabular}
 \end{center}
 \caption{GAP Analysis - 1}
@@ -1890,26 +1890,26 @@ Elevation of privilege at a table & \\\hline
 \hline
 \hline
 \textbf{Account Management} & \\\hline
-Spoofing the account management system & \\\hline
-Tampering with the account management system & \\\hline
-Repudiation of using the account management system & \\\hline
-Information disclosure of the account management system & \\\hline
-DoS against the account management system & \\\hline
-Elevation of privilege at the account management system & \\\hline
+Spoofing the account management system & Authentication enforcer, Authorization enforcer, Secure service facade \\\hline
+Tampering with the account management system & Authentication enforcer, Authorization enforcer, Secure service facade, Credential tokenizer, Secure pipe, Application firewall \\\hline
+Repudiation of using the account management system & Secure logger, Audit interceptor, Secure pipe, Secure service facade\\\hline
+Information disclosure of the account management system & Secure Pipe, Authentication Enforcer, Authorization Enforcer, Secure Service Facade, Credential tokenizer, Application firewall \\\hline
+DoS against the account management system & Application Firewall, Firewall, Audit interceptor, Secure logger\\\hline
+Elevation of privilege at the account management system & Authentication Enforcer, Authorization Enforcer, Secure Service Facade, Credential Tokenizer, Secure pipe, Application firewall \\\hline
 \textbf{Logging Engine} & \\\hline
-Spoofing the logging engine & \\\hline
-Tampering with the logging engine & \\\hline
-Repudiation of using the logging engine & \\\hline
-Information disclosure at the logging engine & \\\hline
+Spoofing the logging engine & - \\\hline
+Tampering with the logging engine & Authentication enforcer, Authorization enforcer, Secure service facade, Credential tokenizer, Secure pipe, Application firewall \\\hline
+Repudiation of using the logging engine & - \\\hline
+Information disclosure at the logging engine & Authentication Enforcer, Authorization Enforcer, Secure Service Facade, Credential Tokenizer, Secure pipe, Application firewall \\\hline
 \textbf{Audit Log} & \\\hline
-Tampering with the audit log & \\\hline
-Repudiation of logging something in the audit log & \\\hline
-Information disclosure of the audit log & \\\hline
-DoS against the audit log & \\\hline
+Tampering with the audit log & Authentication enforcer, Authorization enforcer, Secure service facade, Credential tokenizer, Secure pipe, Application firewall \\\hline
+Repudiation of logging something in the audit log & - \\\hline
+Information disclosure of the audit log & Secure Pipe, Authentication Enforcer, Authorization Enforcer, Secure Service Facade, Credential tokenizer, Application firewall \\\hline
+DoS against the audit log & Application Firewall, Firewall \\\hline
 \textbf{Account Data} & \\\hline
-Tampering with account data & \\\hline
-Information disclosure of account data & \\\hline
-DoS against account data & \\\hline
+Tampering with account data & Authentication enforcer, Authorization enforcer, Secure service facade, Credential tokenizer, Secure pipe, Application firewall \\\hline
+Information disclosure of account data & Secure Pipe, Authentication Enforcer, Authorization Enforcer, Secure Service Facade, Credential tokenizer, Application firewall \\\hline
+DoS against account data & Application Firewall, Firewall, Audit interceptor, Secure logger\\\hline
 \end{tabular}
 \end{center}
 \caption{GAP Analysis - 2}
@@ -1949,7 +1949,14 @@ in the list.
 \item Repudiaton of processes/data stores that are internal to the system is very unclear. In the lectures it was said that this was, for instance, the casino denying that it did something. In \cite[p270]{1202957} however it is explained as an external entity tampering with the process/data store to be able to deny having done something. The difference with repudiaton of that external entity is unclear.
 \item Some patterns solve security objectives in a way that doesn't relate to the misuse cases labeled with that objective. For instance, the misuse cases for application integrity listed in section \ref{ApplicationIntegrityMUCs} are not really solved by the patterns provided in section \ref{ArchitecturalApplicationIntegrity}. This mis-mapping might go unnoticed because the patterns are valueable regardless of their correspondance to the misuse cases. They do however put in question the process applied here.
 \end{itemize}
-\section{Log}
+
+\chapter{Evaluating the architecture}
+
+\section{Identified Architectural Approaches}
+\section{Quality Attribute Tree}
+\section{Evaluation Templates}
+
+\chapter{Log}
 \textbf{30-10-2008}
 \begin{itemize}
 \item We decided to only consider the RMI protocol as communication protocol for the poker application in this 
