@@ -81,15 +81,18 @@
 			public var turnTimer:TurnTimer;
 
 
-			private var chatBubble:ChatBubble;
+			public var chatBubble:ChatBubble;
 						
 
 			public function initEnd():void{
 			
 			}
 			
+			
+			
 			public function resetForNewGame():void{
-				this.drawStandUp();
+				//this.drawStandUp();
+				
 				this.hideOverlayText();
 				chipStack.clearStack();
 				
@@ -100,6 +103,16 @@
 				card2.clearCard();
 				
 				this.hideOverlayText();
+				this.chatBubble.clearChatBubbleText();
+
+				return;
+			}
+			
+			
+			public function resetForLeaveTable():void{
+				
+				this.drawStandUp();
+				this.resetForNewGame();
 				return;
 			}
 			
@@ -126,6 +139,7 @@
 				turnTimer.y = 4;
 				seatItemsContainer.addChild(turnTimer);
 				
+
 				if(Config.IS_PRO_CLIENT == true){
 					chatBubble = new ChatBubble();
 					chatBubble.visible = false;
@@ -143,43 +157,23 @@
 				return;
 			}
 			
+
 			public function resetSeatForNewRound():void{
 				hideChatBubble();
 				//this.cardsLocation.visible = true;
-				
+				this.alpha = 1.0;
 				//this.cardsLocaiton.alpha = 1;
+				chatBubble.clearChatBubbleText();
 			}
 			
-			public function setChatBubbleText(message:String, type:String):void{
-				if(chatBubble != null){
-					
-					chatBubble.visible = true;
-					chatBubble.chatBubbleContent.text = message;
-					switch(type){
-						case "CHECK":
-						case "CALL":
-							chatBubble.chatBubbleContent.styleName = "checkcallSpeechBubbleStyle";
-							break;
-						case "BET":
-						case "RAISE":
-							chatBubble.chatBubbleContent.styleName= "raiseSpeechBubbleStyle";
-							break;
-						case "FOLD":
-							chatBubble.chatBubbleContent.styleName = "foldSpeechBubbleStyle";
-							break;
-						case "WINNER":
-							chatBubble.chatBubbleContent.styleName = "winnerSpeechBubbleStyle";
-							break;
-						default:
-							chatBubble.chatBubbleContent.styleName = "defaultSpeechBubbleStyle";
-							break;
-					}// end switch statement
-					
-					chatBubble.setChatBubbleText(message);
-				}
-				return;
+			
+			public function setChatBubbleText(message:String="", type:String=""):void{
+				this.chatBubble.setChatBubbleText(message, type);
 			}
 			
+			
+
+
 			public function showBuyInClicked():void{
 				Main.table.showBuyInDialog(this)
 			}
@@ -259,12 +253,14 @@
 			public function showFold():void{
 				/* TODO:  fill in graphics changes for fold */
 				trace("showing fold...");
+
 				TweenLite.to(this, 3, {alpha:.40, delay:.35});
 				TweenLite.to(this.card1.cardView, 3, {alpha:0.35, rotation:45, delay:.5});
 				TweenLite.to(this.card2.cardView, 3, {alpha:0.35, rotation:45, delay:.5});
 				
 				this.showOverlayText("FOLD");
 			}
+			
 			
 			public function showAllIn():void{
 				/* TODO: make graphics changes for allIn playersd */

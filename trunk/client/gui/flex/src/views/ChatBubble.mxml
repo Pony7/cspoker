@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" height="28" >
-	<mx:Label text="bleh" id="chatBubbleContent" enabled="true" styleName="defaultSpeechBubbleStyle" horizontalCenter="0" verticalCenter="0" fontWeight="bold" color="0" fontSize="12"/>
+	<mx:Label text="bleh" id="chatBubbleContent" enabled="true" styleName="foldSpeechBubbleStyle" horizontalCenter="0" verticalCenter="0" fontWeight="bold" color="0" fontSize="12"/>
 	<mx:Style>
 		.defaultSpeechBubbleStyle{
 			background-color:16579579;
@@ -12,12 +12,12 @@
 		}
 		
 		.foldSpeechBubbleStyle{
-			background-color:16579579;
+			background-color:0;
     		background-alpha:0.95;
     		border-color:1776668;
     		corner-radius:8;
     		border-style:solid;
-    		border-thickness:1;
+    		border-thickness:5;
 		}
 		
 		.checkcallSpeechBubbleStyle{
@@ -53,9 +53,41 @@
 			//import views.*;
 			import models.Config;
 			
-			public function setChatBubbleText(message:String=""):void{
+			public function setChatBubbleText(message:String="", type:String=""):void{
+				this.visible = true;
 				chatBubbleContent.text = message;
 				chatBubbleContent.width = Config.CHAT_BUBBLE_MAX_WIDTH;
+				
+				
+				this.visible = true;
+					
+				switch(type){
+					case "CHECK":
+					case "CALL":
+						this.chatBubbleContent.styleName = "checkcallSpeechBubbleStyle";
+						break;
+					case "BET":
+					case "RAISE":
+						this.chatBubbleContent.styleName= "raiseSpeechBubbleStyle";
+						break;
+					case "FOLD":
+						this.chatBubbleContent.styleName = "foldSpeechBubbleStyle";
+						break;
+					case "WINNER":
+						this.chatBubbleContent.styleName = "winnerSpeechBubbleStyle";
+						break;
+					default:
+						this.chatBubbleContent.styleName = "defaultSpeechBubbleStyle";
+						break;
+					}// end switch statement
+				return;
+			}
+			
+			
+			
+			public function clearChatBubbleText():void{
+				chatBubbleContent.text = "";
+				this.visible = false;
 			}
 			
 			

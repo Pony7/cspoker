@@ -113,10 +113,12 @@ package models.player
 		
 		public function callEvent():void{
 			trace("call event received...");
-			playerSeat.chipsToBet(chipsToCall);
+			//playerSeat.chipsToBet(chipsToCall);
 			Main.table.dealerBox.dealerMessage(this.getPlayerName() + " calls " + chipsToCall);
 			playerSeat.setChatBubbleText("Calls $" + chipsToCall, "CALL");
-			incrementBetChips(chipsToCall);
+			incrementBetChips(chipsToCall + this.getBetChips());
+			
+
 			this.playerSeat.turnTimer.stopTimer();
 			return;
 		}
@@ -124,9 +126,10 @@ package models.player
 		public function betEvent(amount:int):void{
 			trace("bet event received...");
 			Main.table.dealerBox.dealerMessage(this.getPlayerName() + " bets " + amount);
-			playerSeat.chipsToBet(amount);
+			//playerSeat.chipsToBet(amount);
 			playerSeat.setChatBubbleText("Bets $" + amount, "BET");
-			incrementBetChips(amount);
+			incrementBetChips(amount + this.getBetChips());
+
 			this.playerSeat.turnTimer.stopTimer();
 			return;
 		}
@@ -155,6 +158,7 @@ package models.player
 			Main.table.dealerBox.dealerMessage(this.getPlayerName() + "goes all in!");
 			playerSeat.setChatBubbleText("All In", "Raise");
 			playerSeat.showAllIn();
+			this.incrementBetChips(this.getStackSize());
 			this.playerSeat.turnTimer.stopTimer();
 		}
 		
@@ -170,6 +174,8 @@ package models.player
 		
 		public function incrementBetChips(amount:int):void{
 			playerInformation.betSize += amount;
+			this.playerSeat.chipStack.addToStack(amount);
+
 			return;
 		}
 		

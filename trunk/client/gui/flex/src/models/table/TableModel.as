@@ -29,7 +29,7 @@ package models.table
 			this.seatLocations = seatsArray;
 			this.pot = pot;
 		}
-		
+
 		public function receiveAnnounceWinnersEvent(winners:Object):void{
 			var count:int = 0;
 			var potDescriptionText:String = "";
@@ -54,12 +54,18 @@ package models.table
 					winningHandDescription = this.getPlayerByPlayerId(player.id).getHandDescription();
 				}catch(e:Error){
 					trace("Error getting hand description in announce winner: " + e.message);
+					
+				}
+				if(winningHandDescription == null){
+					this.table.dealerBox.dealerMessage("Player " + player.name + " has won the " 
+					+ potDescriptionText + " of " + winners.gainedAmount + " (by default)");
+				}else{
+					this.table.dealerBox.dealerMessage("Player " + player.name + " has won the " 
+					+ potDescriptionText + " of " + winners.gainedAmount + " with a " + winningHandDescription);
 				}
 				
 				
 				this.table.tableModel.getPlayerByPlayerId(player.id).updatePlayer(player);
-				this.table.dealerBox.dealerMessage("Player " + player.name + " has won the " 
-					+ potDescriptionText + " of " + winners.gainedAmount + " with a " + winningHandDescription);
 				
 				endX = this.table.tableModel.getPlayerByPlayerId(player.id).playerSeat.chipStack.x;
 				endY = this.table.tableModel.getPlayerByPlayerId(player.id).playerSeat.chipStack.y;
@@ -83,10 +89,15 @@ package models.table
 						trace("Error getting hand description in announce winner: " + e.message);
 					}
 					
-					this.getPlayerByPlayerId(player.id).updatePlayer(player);
-					this.table.dealerBox.dealerMessage("Player " + player.name + " has won the " 
+					if(winningHandDescription == null){
+						this.table.dealerBox.dealerMessage("Player " + player.name + " has won the " 
+					+ potDescriptionText + " of " + winner.gainedAmount + " (by default)");  
+					}else{
+						this.table.dealerBox.dealerMessage("Player " + player.name + " has won the " 
 					+ potDescriptionText + " of " + winner.gainedAmount + " with a " + winningHandDescription);  
+					}
 					
+					this.getPlayerByPlayerId(player.id).updatePlayer(player);
 				
 					endX = this.table.tableModel.getPlayerByPlayerId(player.id).playerSeat.chipStack.x;
 					endY = this.table.tableModel.getPlayerByPlayerId(player.id).playerSeat.chipStack.y;
@@ -94,13 +105,12 @@ package models.table
 					chipStackTemp.calculateGraphics(winners.gainedAmount);
 				
 					TweenLite.to(chipStackTemp, 1, {alpha:1, x:endX, y:endY, delay:.5, visible:false, overwrite:true});
-				
-					
 				}
 			}
-			this.table.cleanUpTable();
+			//this.table.cleanUpTable();
 		}
 		
+
 		public function mapPlayerToId(playerId:int, player:Player):void{
 			playerMap[playerId] = player;
 		}
@@ -121,6 +131,7 @@ package models.table
 		
 		public function receiveNewDealEvent(dealer:int):void{
 			try{
+				this.table.cleanUpTable();
 				var seatNumber:int = this.getPlayerByPlayerId(dealer).playerSeat.seatNumber;
 				var dealerButtonLocation:Canvas = table.dealerButtonLocations[seatNumber];
 				table.dealerButton.moveDealerButton(dealerButtonLocation.x, dealerButtonLocation.y);

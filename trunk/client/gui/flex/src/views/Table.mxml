@@ -150,7 +150,6 @@
 			public function receiveJoinTableSuccess(tableId:int):void{
 				Main.showTable();
 				
-				
 				trace("Table.receiveJoinTableSuccess...");
 				
 				if(tableInitialized == true){
@@ -225,6 +224,8 @@
 				var buyInBox:BuyInDialog = new BuyInDialog();
 				buyInBox.setBuyInSeatId(seat.seatNumber);
         		PopUpManager.addPopUp(buyInBox, this, true);
+        		buyInBox.x = (this.parentApplication.width / 2) - 150;
+        		buyInBox.y = (this.parentApplication.height / 2) - 150;
 			}
 			
 			
