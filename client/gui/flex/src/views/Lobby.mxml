@@ -69,6 +69,8 @@
         	public function showCreateBox():void{
         		var dialogBox:* = new CreateTableBox();
         		PopUpManager.addPopUp(dialogBox, this, true);
+        		dialogBox.x = (this.parentApplication.width / 2) - 150;
+        		dialogBox.y = (this.parentApplication.height / 2) - 150;
         		
             	
         	}

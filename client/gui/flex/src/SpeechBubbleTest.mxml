@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" xmlns:views="views.*" creationComplete="init()">
+	<mx:Script>
+		<![CDATA[
+			import views.*;
+			import models.*;
+			
+			import models.player.Player;
+			import models.*;
+			import models.utils.TweenLite;
+			import views.ChatBubble;
+			
+			public var player1:Player;
+			public var chatBubble:ChatBubble;
+			
+			public function init():void{
+				player1 = new Player(seat1);
+				chatBubble = new ChatBubble();
+				chatBubble.visible = false;
+            	seat1.addChild(chatBubble);
+            	chatBubble.y = 0;
+            	chatBubble.x = 6;
+			}
+			
+			public function btnShowFoldClicked():void{
+				player1.playerSeat.currentState = "filledSeat";
+				//player1.playerSeat.refresh();
+				//player1.playerSeat.setChatBubbleText("Fold", "FOLD");
+				chatBubble.setChatBubbleText("Fold", "FOLD");
+				chatBubble.visible = true;
+				
+			}
+		]]>
+	</mx:Script>
+	
+	
+<views:Seat name="seat1" id="seat1" x="300" y="300"/>
+<mx:Button name="btnShowFold" label="Show Fold" x="100" y="100" id="btnShowFold" click="btnShowFoldClicked()"/>
+</mx:Application>

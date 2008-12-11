@@ -231,6 +231,8 @@ package models.connection
 		{
 						
 			idAction++;
+			// delay == milliseconds per show down player.
+			delay = delay * 1000;
 											
 			var xml:XML =
 			<ns5:createHoldemTableAction id={idAction} xmlns:ns5="http://www.cspoker.org/api/2008-11/">
