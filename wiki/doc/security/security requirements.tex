@@ -1469,8 +1469,21 @@ This means following components will be omitted for future analysis: Cashier, Lo
 \subsection{Application Confidentiality}
 Application Confidentiality is not applicable since the code is open source.
 
-\chapter{Securing the architecture}
+\section{Log}
+\textbf{30-10-2008}
+\begin{itemize}
+\item We decided to only consider the RMI protocol as communication protocol for the poker application in this 
+security analysis, and to not got into depth in the sockets or http protocol. For these protocols, a front-end is added to the architecture that delegates to the different processes also used by RMI.
+\item Table communicates with Cashier instead of with Account Management process to obtain an amount of chips
+of the main stack of a player and bring it to the table stack of that player.
+\item For liability reasons, the log with game details must be made public after a game. This is reflected in some
+business threats where a mis-actor might use this to profile certain players.
+\item We decided to connect complex process in the Level 0 DFD directly to data stores so whe can apply STRIDE
+at this level. Otherwise the number of misuse cases would explode.
+\end{itemize}
 
+\chapter{Securing the architecture}
+\label{SecuringTheArchitecture}
 \section{Quality trade-off labels}
 \label{labels}
 By analyzing the business goals, we constructed the following ordered list of quality trade-off labels:
@@ -1953,21 +1966,61 @@ in the list.
 \chapter{Evaluating the architecture}
 
 \section{Identified Architectural Approaches}
+\subsection{Architectural Patterns}
+\begin{itemize}
+\item \textbf{Layers:} A layered structure can be identified for exception handling and communication.
+\item \textbf{Broker:} The main server can be seen as a broker for the different backend components: lobby, table and account management.
+\item \textbf{Microkernel:} The table is a microkernel to provide different game types e.g. Omaha and Texas Hold'em.
+\item \textbf{Client-Server:} The server handles requests from multiple clients. 
+\item \textbf{Remote Procedure Calls:} Remote Procedure calls are used for the interaction between client and server. 
+\item \textbf{Publish-Subscribe + Message Queuing:} Interested clients can register themselves to receive specific events from the server. If the message can not be sent immediately the event is queued.
+\end{itemize}
+
+\subsection{Security Patterns}
+\begin{itemize}
+\item Authentication Enforcer
+\item Authorization Enforcer
+\item Secure Pipe
+\item Full View with Errors
+\item Limited View
+\item Application Firewall
+\item Firewall
+\item Checkpointed System
+\item Audit Interceptor
+\item Secure Access Layer
+\item Load Balancer
+\item Credential Tokenizer
+\item Secure Service Facade
+\item Secure Logger
+\end{itemize}
+For a more in depth description of these patterns see chapter \ref{SecuringTheArchitecture}.
+
 \section{Quality Attribute Tree}
+\subsection{Availability}
+\begin{table}[htpb]
+\begin{center}
+\begin{tabular}{| p{2,5cm} | p{4cm} | p{5cm} | p{0,4cm} | p{0,4cm} | p{0,4cm} |}
+\hline
+\textbf{Level 2: Quality Attribute} & \textbf{Level 3: Quality Attribute Refinement} & \textbf{Level 4: Quality Attribute Scenario} & \textbf{I} & \textbf{D} & \textbf{S}\\
+\hline
+\hline
+\textbf{Availability} & Failure occurence & Network failure occurence & H & M & H  \\\cline{3-6}
+& & Hardware failure occurence & H & M & H \\\cline{2-6}
+& Detection & Detection of network failure & M & M & M \\\cline{3-6}
+& & Detection of hardware failure & M & M & M \\\cline{2-6}
+& Recovery & Network failure recovery & M & H & H \\\cline{3-6}
+& & Hardware failure recovery & M & H & H \\\hline
+\end{tabular}
+\end{center}
+\caption{Availability}
+\label{QATAvailability}
+\end{table}
+\subsection{Security}
+
+\subsection{Usability}
 \section{Evaluation Templates}
 
-\chapter{Log}
-\textbf{30-10-2008}
-\begin{itemize}
-\item We decided to only consider the RMI protocol as communication protocol for the poker application in this 
-security analysis, and to not got into depth in the sockets or http protocol. For these protocols, a front-end is added to the architecture that delegates to the different processes also used by RMI.
-\item Table communicates with Cashier instead of with Account Management process to obtain an amount of chips
-of the main stack of a player and bring it to the table stack of that player.
-\item For liability reasons, the log with game details must be made public after a game. This is reflected in some
-business threats where a mis-actor might use this to profile certain players.
-\item We decided to connect complex process in the Level 0 DFD directly to data stores so whe can apply STRIDE
-at this level. Otherwise the number of misuse cases would explode.
-\end{itemize}
+\chapter{Discussion and conclusions}
 
 \nocite{1202957}
 \nocite{citeulike:174301}
