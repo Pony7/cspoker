@@ -2000,7 +2000,7 @@ For a more in depth description of these patterns see chapter \ref{SecuringTheAr
 From the business goals identified in the initial architecture, the following important quality attributes are selected:  usability, security and availability. The overview of the quality attribute tree can be found in table \ref{QAT}. In the following sections the rationale for choosing the importance (business perspective) and difficulty (technical perspective) ratings are elaborated.
 \begin{table}[htpb]
 \begin{center}
-\begin{tabular}{| p{2,5cm} | p{4cm} | p{5cm} | p{0,4cm} | p{0,4cm} | p{0,4cm} |}
+\begin{tabular}{| p{2,25cm} | p{4,25cm} | p{5cm} | p{0,4cm} | p{0,4cm} | p{0,4cm} |}
 \hline
 \textbf{Level 2: Quality Attribute} & \textbf{Level 3: Quality Attribute Refinement} & \textbf{Level 4: Quality Attribute Scenario} & \textbf{I} & \textbf{D} & \textbf{S}\\
 \hline
@@ -2011,13 +2011,13 @@ From the business goals identified in the initial architecture, the following im
 & & Detection of hardware failure & M & M & M \\\cline{2-6}
 & Recovery & Network failure recovery & M & H & H \\\cline{3-6}
 & & Hardware failure recovery & M & H & H \\\hline
-\textbf{Security} & Authentication & 99.999\% of all users are correctly authenticated & & &  \\\cline{2-6}
-& Authorization & 99.999\% of all users are correctly authorized  & H & M & H \\\cline{2-6}
-& Storage Confidentiality & All account related data are secure 99.999\% of time & H & L & L  \\\cline{2-6}
-& Transmission Confidentiality & Cards are transmitted secure 99.999\% of time & M & L & L \\\cline{2-6}
-& Transmission Integrity & 99.999\% of all transmitted cards remain unmodified &  &  &  \\\cline{3-6}
-& & 99.999\% of all transmitted actions remain unmodified &  &  &  \\\cline{2-6}
-& Auditing & 99.999\% of actions are logged and kept for 2 years & L & L & L \\\hline
+\textbf{Security} & S1 Authentication & S1.1 99.999\% of all users are correctly authenticated & & &  \\\cline{2-6}
+& S2 Authorization & S2.1 99.999\% of all user actions are correctly authorized & H & M & H \\\cline{2-6}
+& S3 Storage Confidentiality & S3.1 All account related data are secure 99.999\% of time & H & L & L  \\\cline{2-6}
+& S4 Transmission Confidentiality & S4.1 Cards are transmitted secure 99.999\% of time & M & L & L \\\cline{2-6}
+& S5 Transmission Integrity & S5.1 99.999\% of all transmitted cards remain unmodified &  &  &  \\\cline{3-6}
+& & S5.2 99.999\% of all transmitted actions remain unmodified &  &  &  \\\cline{2-6}
+& S6 Auditing & S6.1 99.999\% of actions are logged and kept for 2 years & L & L & L \\\hline
 \textbf{Usability} & & User must be able so seat within 3 clicks & L & L & L \\\cline{3-6}
 & & User must be able to find the correct button within 2 seconds & H & L & L \\\cline{3-6}
 & & User must be able to define default actions & M & L & L \\\cline{3-6}
@@ -2065,20 +2065,38 @@ From the business goals identified in the initial architecture, the following im
 \section{Analysis of the architectural approaches}
 
 \subsection{Template}
-\begin{tabular}{| p{4,5cm} | p{2cm} | p{2cm} | p{2cm} | p{2cm} | }
+\begin{tabular}{| p{4,5cm} | p{2,25cm} | p{2,25cm} | p{2,25cm} | p{2,25cm} | }
 \hline
-\textbf{Scenario \#:} & \multicolumn{4}{| l |}{\textbf{Scenario:} } \\\hline
-\textbf{Attribute(s)} & \multicolumn{4}{| l |}{attribute} \\\hline
-\textbf{Environment} & \multicolumn{4}{| l |}{environment} \\\hline
-\textbf{Stimulus} & \multicolumn{4}{| l |}{stimulus} \\\hline
-\textbf{Response} & \multicolumn{4}{| l |}{response} \\\hline \hline
+\textbf{Scenario \#:} & \multicolumn{4}{| p{9cm} |}{\textbf{Scenario:} } \\\hline
+\textbf{Attribute(s)} & \multicolumn{4}{| p{9cm} |}{attribute} \\\hline
+\textbf{Environment} & \multicolumn{4}{| p{9cm} |}{environment} \\\hline
+\textbf{Stimulus} & \multicolumn{4}{| p{9cm} |}{stimulus} \\\hline
+\textbf{Response} & \multicolumn{4}{| p{9cm} |}{response} \\\hline \hline
 \textbf{Architectural Decision} & \textbf{Sensitivity} & \textbf{Tradeoff} & \textbf{Risk} & \textbf{Nonrisk}\\\hline
 decision & sens & trade & risk & nonrisk  \\\hline \hline
-\textbf{Reasoning} & \multicolumn{4}{| l |}{reasoning} \\\hline
-\textbf{Architecture diagram} & \multicolumn{4}{| l |}{None} \\\hline
+\textbf{Reasoning} & \multicolumn{4}{| p{9cm} |}{reasoning} \\\hline
+\textbf{Architecture diagram} & \multicolumn{4}{| p{9cm} |}{None} \\\hline
 \end{tabular}
 
-\subsection{}
+\subsection{Security}
+\begin{tabular}{| p{4,5cm} | p{2,25cm} | p{2,25cm} | p{2,25cm} | p{2,25cm} | }
+\hline
+\textbf{Scenario \#: S2.1} & \multicolumn{4}{| p{9cm} |}{\textbf{Scenario:} 99.999\% of all user actions are correctly authorized.} \\\hline
+\textbf{Attribute(s)} & \multicolumn{4}{| p{9cm} |}{Security} \\\hline
+\textbf{Environment} & \multicolumn{4}{| p{9cm} |}{Online, connected, open} \\\hline
+\textbf{Stimulus} & \multicolumn{4}{| p{9cm} |}{Tries to perform an action or access data} \\\hline
+\textbf{Response} & \multicolumn{4}{| p{9cm} |}{Authorization is performed before every sensitive operation. The authorization service is available for 99.999\% of all user actions.} \\\hline \hline
+\textbf{Architectural Decision} & \textbf{Sensitivity} & \textbf{Tradeoff} & \textbf{Risk} & \textbf{Nonrisk}\\\hline
+Secure Service Facade before every component & & T1 & &  \\\hline
+Authentication Enforcer & & & R1 &  \\\hline
+Authorization Enforcer & & & R1 &  \\\hline \hline
+\textbf{Reasoning} & \multicolumn{4}{| p{9cm} |}{All actions pass through the secure service facade where the user is authenticated with the authentication enforcer. The authorization is performed on the authenticated subject by the authorization enforcer.} \\\hline
+\textbf{Architecture diagram} & \multicolumn{4}{| p{9cm} |}{None} \\\hline
+\end{tabular}
+\begin{itemize}
+\item \textbf{T1:} Going through the secure service facade for every operation enhances modifiability but imposes a performance cost.
+\item \textbf{R1:} There is only one instance of the authentication and authorization enforcer for the whole system. This is a single point of failure.
+\end{itemize}
 
 \chapter{Discussion and conclusions}
 
