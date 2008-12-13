@@ -1973,7 +1973,8 @@ in the list.
 \item \textbf{Microkernel:} The table is a microkernel to provide different game types e.g. Omaha and Texas Hold'em.
 \item \textbf{Client-Server:} The server handles requests from multiple clients. 
 \item \textbf{Remote Procedure Calls:} Remote Procedure calls are used for the interaction between client and server. 
-\item \textbf{Publish-Subscribe + Message Queuing:} Interested clients can register themselves to receive specific events from the server. If the message can not be sent immediately the event is queued.
+\item \textbf{Publish-Subscribe:} Interested clients can register themselves to receive specific events from the server.
+\item \textbf{Message Queuing:} When an event can not be sent immediately, the event is queued until the receiver can accept it.
 \end{itemize}
 
 \subsection{Security Patterns}
@@ -1996,6 +1997,7 @@ in the list.
 For a more in depth description of these patterns see chapter \ref{SecuringTheArchitecture}.
 
 \section{Quality Attribute Tree}
+From the business goals identified in the initial architecture, the following important quality attributes are selected:  usability, security and availability. The overview of the quality attribute tree can be found in table \ref{QAT}. In the following sections the rationale for choosing the importance (business perspective) and difficulty (technical perspective) ratings are elaborated.
 \begin{table}[htpb]
 \begin{center}
 \begin{tabular}{| p{2,5cm} | p{4cm} | p{5cm} | p{0,4cm} | p{0,4cm} | p{0,4cm} |}
@@ -2027,12 +2029,52 @@ For a more in depth description of these patterns see chapter \ref{SecuringTheAr
 \caption{Quality Attribute Tree}
 \label{QAT}
 \end{table}
+
 \subsection{Availability}
 
 \subsection{Security}
 
 \subsection{Usability}
-\section{Evaluation Templates}
+\begin{itemize}
+\item User must be able to seat with 3 clicks
+\begin{itemize}
+\item Importance:
+\item Difficulty:
+\end{itemize}
+\item User must be able to find the correct button within 2 seconds
+\begin{itemize}
+\item Importance:
+\item Difficulty:
+\end{itemize}
+\item User must be able to define default actions (e.g. default check/fold)
+\begin{itemize}
+\item Importance:
+\item Difficulty:
+\end{itemize}
+\item The user interface must respond to an action within 500ms
+\begin{itemize}
+\item Importance:
+\item Difficulty:
+\end{itemize}
+\item The user interface must be separated to enable easy testing
+\begin{itemize}
+\item Importance:
+\item Difficulty:
+\end{itemize}
+\end{itemize}
+\section{Analysis of the architectural approaches}
+
+\subsection{Template}
+\begin{tabular}{| p{4,5cm} | p{2cm} | p{2cm} | p{2cm} | p{2cm} | }
+\hline
+\textbf{Scenario \#:} & \multicolumn{4}{| l |}{\textbf{Scenario:} } \\\hline
+\textbf{Attribute(s)} & \multicolumn{4}{| l |}{attribute} \\\hline
+\textbf{Environment} & \multicolumn{4}{| l |}{environment} \\\hline
+\textbf{Stimulus} & \multicolumn{4}{| l |}{stimulus} \\\hline
+\textbf{Response} & \multicolumn{4}{| l |}{response} \\\hline \hline
+\textbf{Architectural Decision} & \textbf{Sensitivity} & \textbf{Tradeoff} & \textbf{Risk} & \textbf{Nonrisk}\\\hline
+decision & sens & trade & risk & nonrisk  \\\hline
+\end{tabular}
 
 \chapter{Discussion and conclusions}
 
