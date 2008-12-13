@@ -1996,7 +1996,6 @@ in the list.
 For a more in depth description of these patterns see chapter \ref{SecuringTheArchitecture}.
 
 \section{Quality Attribute Tree}
-\subsection{Availability}
 \begin{table}[htpb]
 \begin{center}
 \begin{tabular}{| p{2,5cm} | p{4cm} | p{5cm} | p{0,4cm} | p{0,4cm} | p{0,4cm} |}
@@ -2004,17 +2003,32 @@ For a more in depth description of these patterns see chapter \ref{SecuringTheAr
 \textbf{Level 2: Quality Attribute} & \textbf{Level 3: Quality Attribute Refinement} & \textbf{Level 4: Quality Attribute Scenario} & \textbf{I} & \textbf{D} & \textbf{S}\\
 \hline
 \hline
-\textbf{Availability} & Failure occurence & Network failure occurence & H & M & H  \\\cline{3-6}
+\textbf{Availability} & Prevention & Network failure occurence & H & M & H  \\\cline{3-6}
 & & Hardware failure occurence & H & M & H \\\cline{2-6}
-& Detection & Detection of network failure & M & M & M \\\cline{3-6}
+& Fault detection & Detection of network failure & M & M & M \\\cline{3-6}
 & & Detection of hardware failure & M & M & M \\\cline{2-6}
 & Recovery & Network failure recovery & M & H & H \\\cline{3-6}
 & & Hardware failure recovery & M & H & H \\\hline
+\textbf{Security} & Authentication & 99.999\% of all users are correctly authenticated & & &  \\\cline{2-6}
+& Authorization & 99.999\% of all users are correctly authorized  & H & M & H \\\cline{2-6}
+& Storage Confidentiality & All account related data are secure 99.999\% of time & H & L & L  \\\cline{2-6}
+& Transmission Confidentiality & Cards are transmitted secure 99.999\% of time & M & L & L \\\cline{2-6}
+& Transmission Integrity & 99.999\% of all transmitted cards remain unmodified &  &  &  \\\cline{3-6}
+& & 99.999\% of all transmitted actions remain unmodified &  &  &  \\\cline{2-6}
+& Auditing & 99.999\% of actions are logged and kept for 2 years & L & L & L \\\hline
+\textbf{Usability} & & User must be able so seat within 3 clicks & L & L & L \\\cline{3-6}
+& & User must be able to find the correct button within 2 seconds & H & L & L \\\cline{3-6}
+& & User must be able to define default actions & M & L & L \\\cline{3-6}
+& & The user interface must respond to an action within 500ms & H & M & H \\\cline{3-6}
+& & The user interface must be separated to enable easy testing & M & M & M \\\hline
+
 \end{tabular}
 \end{center}
-\caption{Availability}
-\label{QATAvailability}
+\caption{Quality Attribute Tree}
+\label{QAT}
 \end{table}
+\subsection{Availability}
+
 \subsection{Security}
 
 \subsection{Usability}
