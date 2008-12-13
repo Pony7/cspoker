@@ -6,28 +6,28 @@
 \usepackage[pdftex,pdfauthor={Cedric~Cuypers, Kenzo~Tomita, Guy~Van~den~Broeck},pdftitle={Security Requirements: Poker Application}]{hyperref}
 \usepackage[all]{hypcap}
 
-\setcounter{secnumdepth}{3} 
+\setcounter{secnumdepth}{3}
 \setlength{\parindent}{0pt} \setlength{\parskip}{1ex plus 0.5ex minus 0.2ex}
 
 
-\author{Cedric~Cuypers, Kenzo~Tomita, Guy~Van~den~Broeck} 
+\author{Cedric~Cuypers, Kenzo~Tomita, Guy~Van~den~Broeck}
 % define title
-\title{Security Requirements: Poker Application} 
+\title{Security Requirements: Poker Application}
 
 \bibliographystyle{alpha}
 
-\begin{document} 
-% generates the title 
-\maketitle 
-% insert the table of contents 
+\begin{document}
+% generates the title
+\maketitle
+% insert the table of contents
 \tableofcontents
- 
+
 \listoffigures
 
 \chapter{Introduction}
-This document starts from an existing architecture of a poker application that was originally designed with only an intuitive idea of security threats for poker applications. By modelling the data flow through the application we try to locate areas that can be subjected to these threats. 
+This document starts from an existing architecture of a poker application that was originally designed with only an intuitive idea of security threats for poker applications. By modelling the data flow through the application we try to locate areas that can be subjected to these threats.
 
-For a subset of entities we apply STRIDE to elicit security threats and we use threat tree patterns to render these threats more concrete. The results are documented as misuse cases. We alse present examples of business threats that cannot be discovered using the STRIDE methodology. 
+For a subset of entities we apply STRIDE to elicit security threats and we use threat tree patterns to render these threats more concrete. The results are documented as misuse cases. We alse present examples of business threats that cannot be discovered using the STRIDE methodology.
 
 By labeling these misuse cases, a set of security objectives is derived. Finally we add architectural and system patterns to the application to attain the security objectives, resulting in a new security enhanced architecture.
 
@@ -37,13 +37,13 @@ By labeling these misuse cases, a set of security objectives is derived. Finally
 \section{DFDs}
 Figure \ref{fig:context} shows the context level of the DFD. Figure \ref{fig:level_0} shows the level-0 DFD. The arrows are not annotated to make the diagram readable. A simplified version with only the player and annotated arrows can be found in figure \ref{fig:level_0_player}. In the following analysis only the interaction with the player will be considered as misuse cases, as those with an administrator as external entity are similar. Although some processes are complex and should be drilled down, we've chosen to do the STRIDE analysis on level-0 because it would already generate sufficient documentation.
 
-There are several trust boundaries that can be identified in the DFDs. First of all there is the trust boundary between the external entities and the processes. All input coming from the external entities should be validated and the data flow from the processes to the external entities should be analyzed for not leaking sensitive, private or confidential data. Inside this trust boundary several smaller trust boundaries can be recognized. These are the processes that deal with sensitive, private data: 
+There are several trust boundaries that can be identified in the DFDs. First of all there is the trust boundary between the external entities and the processes. All input coming from the external entities should be validated and the data flow from the processes to the external entities should be analyzed for not leaking sensitive, private or confidential data. Inside this trust boundary several smaller trust boundaries can be recognized. These are the processes that deal with sensitive, private data:
 \begin{itemize}
-\item \textbf{Account Management:} account data should be protected and all data flowing out of this process should be verified extensively. 
+\item \textbf{Account Management:} account data should be protected and all data flowing out of this process should be verified extensively.
 \item \textbf{Table:} hole cards are confidential data only accessible for the player to whom they belong and the game engine to verify the winner at the end of a deal.
 \item \textbf{Logging Engine:} the logging should happen in a secure way so there is no possibility to alter the log, therefor the log entries arriving at the logging engine should be validated. The log also contains very sensitive data, so the access is only allowed to a very limited number of entities and processes.
 \end{itemize}
- 
+
 
 \begin{figure}[htpb]
   \begin{center}
@@ -69,7 +69,7 @@ There are several trust boundaries that can be identified in the DFDs. First of 
 \section{Rationale}
 \subsection{Assumptions}
 \begin{itemize}
-\item There is an internal policy to restrict physical access to the servers. 
+\item There is an internal policy to restrict physical access to the servers.
 \item There is no protection needed against an administrator with a debugger (can read and alter memory).
 \item Side channels aren't available to mis-actors.
 \item Data flow from a process to a data store is in our case always local and not subject to threats.
@@ -100,12 +100,12 @@ Taking the elements in figure \ref{fig:level_0} and mapping the STRIDE threats t
   Audit Log 		& \ref{AuditLogCases}		& 	& \ref{AuditLogCasesT}	& \ref{AuditLogCasesR} 	& \ref{AuditLogCasesI} 	& \ref{AuditLogCasesD}	& 	\\\hline
   Account Data 		& \ref{AccountDataCases}	& 	& \ref{AccountDataCasesT}	&  	& \ref{AccountDataCasesI} 	& \ref{AccountDataCasesD}	& 	\\\hline
   \hline
-  Player $\leftrightarrow$ 
+  Player $\leftrightarrow$
   Poker Server 		& \ref{PlayerFlowCases}		&	& \ref{PlayerFlowCasesT1}	&	& \ref{PlayerFlowCasesI1}	& \ref{PlayerFlowCasesD1}	&\\
   $\vdots$		& 				&	& \ref{PlayerFlowCasesT2}	&	& \ref{PlayerFlowCasesI2}	& \ref{PlayerFlowCasesD2}	&	\\
   			&				&	& \ref{PlayerFlowCasesT3}	&	& \ref{PlayerFlowCasesI3}	& \ref{PlayerFlowCasesD3}	\\
   			&				&	& \ref{PlayerFlowCasesT4}	&	& \ref{PlayerFlowCasesI4}	& \ref{PlayerFlowCasesD4}	\\\hline
-  Table $\leftrightarrow$ 
+  Table $\leftrightarrow$
   Logging Engine 	& \ref{LoggingEngineFlowCases}	&	& \ref{LoggingEngineFlowCasesT}	&	& \ref{LoggingEngineFlowCasesI}	& \ref{LoggingEngineFlowCasesD}	&	\\
   $\vdots$		& 				&	& 	&	& 	& 	&	\\\hline
 \end{tabular}\end{center}
@@ -172,11 +172,11 @@ The crook can play with the spoofed identity against his own identity and win al
 Only authentic users can gain access at the poker server. \\
 \textbf{Stakeholders and risks:}
 \begin{itemize}
-\item Player: 
+\item Player:
 \begin{itemize}
 \item Potential loss of money if his identity is misused and all chips are transfered to an other account.
 \end{itemize}
-\item Online Casino: 
+\item Online Casino:
 \begin{itemize}
 \item Lost confidence if security problems get publicized.
 \end{itemize}
@@ -247,7 +247,7 @@ Only authentic users can gain access at the poker server. \\
 \textbf{Basic path:}
 \begin{itemize}
 \item The mis-actor sends invalid input to the poker server.
-\item The message corrupts the state of the poker server. 
+\item The message corrupts the state of the poker server.
 \item While the poker server is in the corrupted state, the mis-actor controls the behavior of that poker server.
 \item The mis-actor can cheat and steal sensitive data from the users.
 \end{itemize}
@@ -325,7 +325,7 @@ Only authentic users can gain access at the poker server. \\
 \end{itemize}
 \textbf{Basic path:}
 \begin{itemize}
-\item The mis-actor sends invalid input to the poker server. 
+\item The mis-actor sends invalid input to the poker server.
 \item The poker server crashes.
 \item The poker server becomes unavailable.
 \end{itemize}
@@ -358,14 +358,14 @@ Only authentic users can gain access at the poker server. \\
 \begin{itemize}
 \item The mis-actor logs in.
 \item He activates the role (administrator) with higher privileges.
-\item The mis-actor gains higher privileges. 
+\item The mis-actor gains higher privileges.
 \item The mis-actor misuses the higher privileges.
 \end{itemize}
 \textbf{Alternative paths:}
 \begin{itemize}
 \item The mis-actor spoofs the identity of an other actor (administrator) with higher privileges.
-\item The mis-actor tampers with the poker server to gain more privileges. 
-\item The mis-actor sends invalid input to the poker server. 
+\item The mis-actor tampers with the poker server to gain more privileges.
+\item The mis-actor sends invalid input to the poker server.
 \item The mis-actor has access to the memory and can alter its state (e.g. debugging mode).
 \end{itemize}
 \textbf{Capture points:}
@@ -390,7 +390,7 @@ The mis-actor prepares a process to spoof the lobby and deploys it on one of the
 \subsubsection{Tampering with the lobby}
 \label{LobbyCasesT}
 \textbf{Summary:} \\
-The mis-actor tampers with the lobby to modify its functionality. A player connecting to a table through the lobby can be diverted to an untrusted table. 
+The mis-actor tampers with the lobby to modify its functionality. A player connecting to a table through the lobby can be diverted to an untrusted table.
 \subsubsection{Repudiation of an action at the lobby}
 \label{LobbyCasesR}
 \textbf{Summary:} \\
@@ -423,7 +423,7 @@ The mis-actor tampers with the lobby to modify its functionality. Every player c
 \subsubsection{Repudiation of an action at a table}
 \label{TableCasesR}
 \textbf{Summary:} \\
-The online casino denies that a player has won a number of chips or has received certain hole cards. This is possible if there is no log or if the log could be modified. It is also possible that the hand evaluation system has been tampered and this should be detected afterwards. 
+The online casino denies that a player has won a number of chips or has received certain hole cards. This is possible if there is no log or if the log could be modified. It is also possible that the hand evaluation system has been tampered and this should be detected afterwards.
 \subsubsection{Information disclosure at a table}
 \label{TableCasesI}
 \textbf{Primary mis-actor:}
@@ -573,7 +573,7 @@ By sending bad data to the audit log (SQL injecton) or by sending many requests 
 \textbf{Alternative paths:}
 \begin{itemize}
 \item The mis-actor removes data directly from the data store
-\item There may be overcapacity failures: the mis-actor floods the data store by placing large 
+\item There may be overcapacity failures: the mis-actor floods the data store by placing large
 amounts of data into the data store. As a consequence data in the beginning of the store might be overwritten
 , data written to the store might be discarded or the data store might crash, depending on the implementation of
 the data store.
@@ -586,7 +586,7 @@ the data store.
 \item data store is protected by the internal policies
 \item extra-monitor access is impossible (behind a reliable firewall)
 \item overcapacity failures are handled accordingly
-\item only private or local networks are used for communication between the account management process 
+\item only private or local networks are used for communication between the account management process
 and the account data store.
 \end{itemize}
 \item \textbf{Detection:}
@@ -614,10 +614,10 @@ and the account data store.
 \begin{itemize}
 \item \textbf{Prevention:}
 \begin{itemize}
-\item encrypting the data 
+\item encrypting the data
 \item data store is protected by the internal policies
 \item extra-monitor access is impossible (behind a reliable firewall)
-\item only private or local networks are used for communication between the account management process 
+\item only private or local networks are used for communication between the account management process
 and the account data store.
 \item prevent spoofing of account management process
 \end{itemize}
@@ -637,9 +637,9 @@ and the account data store.
 \end{itemize}
 \textbf{Alternative paths:}
 \begin{itemize}
-\item The mis-actor floods the data store by placing large amounts of data into the data store and exceeds the 
+\item The mis-actor floods the data store by placing large amounts of data into the data store and exceeds the
 capacity of the data store.
-\item The mis-actor consumes application-specific resources (e.g. submit more queries per second that the data 
+\item The mis-actor consumes application-specific resources (e.g. submit more queries per second that the data
 store can handle).
 \item The mis-actor injects malicious SQL queries (or other) to an user of the data store. When this injection reaches the data store it crashes.
 \end{itemize}
@@ -650,7 +650,7 @@ store can handle).
 \item Invalid queries are filtered.
 \item Data store is protected by the internal policies.
 \item Extra-monitor access is impossible (behind a reliable firewall).
-\item Only private or local networks are used for communication between the account management process 
+\item Only private or local networks are used for communication between the account management process
 and the account data store.
 \item The data store is load-balanced.
 \end{itemize}
@@ -725,7 +725,7 @@ Here we choose to reduce the number of data flows from/to the Player because int
 \item The mis-actor find a weakness in the integrity of actions.
 \item The mis-actor changes messages to his advantage, sends fake messages that go undetected or replays messages sent by a Player. For example, the mis-actor can replace the bet amount by a larger number when he has very good cards)
 \end{itemize}
-\textbf{Alternative paths:} 
+\textbf{Alternative paths:}
 \begin{itemize}
 \item The mis-actor violates the integrity of the channel to tamper with the data flow.
 \item The mis-actor spoofs a Player to send fake actions.
@@ -852,7 +852,7 @@ Here we choose to reduce the number of data flows from/to the Player because int
 \textbf{Basic path:}
 \begin{itemize}
 \item The mis-actor finds a weakness in the confidentiality of events/responses and the channel used to send them.
-\item The mis-actor observes events that give him an unfair advantage in the game, like the pocket cards of competitors. 
+\item The mis-actor observes events that give him an unfair advantage in the game, like the pocket cards of competitors.
 \end{itemize}
 \textbf{Alternative paths:}
 \begin{itemize}
@@ -1062,9 +1062,9 @@ The malicious player uses multiple accounts at the same table. He uses the extra
 \end{itemize}
 \textbf{Basic path:}
 \begin{itemize}
-\item The malicious player creates multiple accounts. 
+\item The malicious player creates multiple accounts.
 \item The malicious player is sit-in at a table with different accounts.
-\item The malicious player uses the additional knowledge to make statistically more successful decisions. 
+\item The malicious player uses the additional knowledge to make statistically more successful decisions.
 \end{itemize}
 \textbf{Capture points:}
 \begin{itemize}
@@ -1099,7 +1099,7 @@ Collusion is a secret cooperation of two or more players. By collaborating they 
 \end{itemize}
 \textbf{Basic path:}
 \begin{enumerate}
-\item[bp1.] The mis-actors are sit-in at the same table. 
+\item[bp1.] The mis-actors are sit-in at the same table.
 \item[bp2.] The mis-actors communicate their hole cards and tactics through some unmonitored channel.
 \item[bp3.] The mis-actors take actions with the extra knowledge.
 \item[bp4.] The mis-actors gain an unfair advantage over the honest players.
@@ -1117,7 +1117,7 @@ Collusion is a secret cooperation of two or more players. By collaborating they 
 \item The screen can be periodically captured and analysed to ensure no other communicative application is used. The applicability of this method lies only in the scope of the computer that is used. This countermeasure is broken by using an other independent computer to communicate with the other mis-actors.
 \item A firewall can be placed to disallow all other communication except the poker client, or filter all network packages for suspicious chat messages. This capture point has the same vulnerability as the previous capture point: it's possible to break this countermeasure by using an other independent computer to communicate with the other mis-actors.
 \end{itemize}
-A proper risk analysis is needed to find the right trade-off between cost and risk as absolute mitigation of this threat is practically infeasible. 
+A proper risk analysis is needed to find the right trade-off between cost and risk as absolute mitigation of this threat is practically infeasible.
 \item \textbf{Detection:}
 \begin{itemize}
 \item The game logs are analysed to detect collusion.
@@ -1157,11 +1157,11 @@ There is no unmonitored channel available for secret communication. \\
 The mis-actors can be detected and their account can be blocked. \\
 \textbf{Stakeholders and risks:}
 \begin{itemize}
-\item Honest players: 
+\item Honest players:
 \begin{itemize}
 \item Loss of fairness and as a consequence potential loss of money.
 \end{itemize}
-\item Online casino: 
+\item Online casino:
 \begin{itemize}
 \item Reputation is damaged and as a consequence potential loss of revenue.
 \end{itemize}
@@ -1176,11 +1176,11 @@ An admin who has access to the hole cards could pass the secret information to a
 \end{itemize}
 \textbf{Basic path:}
 \begin{enumerate}
-\item[bp1.] The insider joins the table. 
-\item[bp2.] The collaborator is sit-in at the table. 
-\item[bp3.] The insider has access to the hole card info of all players at the table. 
-\item[bp4.] The insider sends the confidential information through an unmonitored channel to the collaborator. 
-\item[bp5.] The collaborator takes actions with this extra knowledge. 
+\item[bp1.] The insider joins the table.
+\item[bp2.] The collaborator is sit-in at the table.
+\item[bp3.] The insider has access to the hole card info of all players at the table.
+\item[bp4.] The insider sends the confidential information through an unmonitored channel to the collaborator.
+\item[bp5.] The collaborator takes actions with this extra knowledge.
 \item[bp6.] The collaborators gain an unfair advantage over the honest players.
 \end{enumerate}
 \textbf{Alternative paths:}
@@ -1232,11 +1232,11 @@ The hole cards are never exposed to a player at the poker table. \\
 The insider and the collaborator can be detected and appropriate sanctions can be taken. \\
 \textbf{Stakeholders and risks:}
 \begin{itemize}
-\item Honest players: 
+\item Honest players:
 \begin{itemize}
 \item Loss of fairness and as a consequence potential loss of money.
 \end{itemize}
-\item Online casino: 
+\item Online casino:
 \begin{itemize}
 \item Reputation is damaged and as a consequence potential loss of revenue.
 \end{itemize}
@@ -1251,7 +1251,7 @@ A malicious player can predict the hole and community cards of every deal by ded
 \end{itemize}
 \textbf{Basic path:}
 \begin{enumerate}
-\item[bp1.] The mis-actor joins the table. 
+\item[bp1.] The mis-actor joins the table.
 \item[bp2.] The mis-actor observes the cards dealt at the table.
 \item[bp3.] The mis-actor uses the observations to make a model of the current dealer.
 \item[bp4.] The mis-actor is sit-in at the table and uses the model to plays with full information access (both hole cards of all players at the table and future community cards).
@@ -1271,7 +1271,7 @@ A malicious player can predict the hole and community cards of every deal by ded
 \end{itemize}
 \item \textbf{Detection:}
 \begin{itemize}
-\item The game logs are analysed to detect anomalies. 
+\item The game logs are analysed to detect anomalies.
 \item A player can report suspicious behavior that will be investigated by the online casino.
 \end{itemize}
 \end{itemize}
@@ -1291,11 +1291,11 @@ No one can predict the hole and community cards from any deal. \\
 The mis-actor can be detected and appropriate sanctions can be taken. \\
 \textbf{Stakeholders and risks:}
 \begin{itemize}
-\item Honest players: 
+\item Honest players:
 \begin{itemize}
 \item Loss of fairness and as a consequence potential loss of money.
 \end{itemize}
-\item Online casino: 
+\item Online casino:
 \begin{itemize}
 \item Reputation is damaged and as a consequence potential loss of revenue.
 \end{itemize}
@@ -1343,8 +1343,8 @@ This means following components will be omitted for future analysis: Cashier, Lo
 \item Elevation of privilege at the poker server
 \item Spoofing a table
 \item Tampering with a table
-\item Repudiation of a table 
-\item Information disclosure at a table 
+\item Repudiation of a table
+\item Information disclosure at a table
 \item Elevation of Privilege at the table
 \item Spoofing the account management system
 \item Tampering with the account management system
@@ -1352,14 +1352,14 @@ This means following components will be omitted for future analysis: Cashier, Lo
 \item Information disclosure of the account management system
 \item Elevation of Privilege at the account management system
 \item Spoofing the logging engine
-\item Tampering with the logging engine 
+\item Tampering with the logging engine
 \item Repudiation of using the logging engine
-\item Information disclosure of the logging engine 
+\item Information disclosure of the logging engine
 \item Elevation of Privilege at the logging engine
 \item Tampering with the audit log
 \item Information disclosure of the audit log
 \item Tampering with account data
-\item Information disclosure of account data 
+\item Information disclosure of account data
 \end{enumerate}
 
 \subsection{Authorization (21 MUCs)}
@@ -1370,21 +1370,21 @@ This means following components will be omitted for future analysis: Cashier, Lo
 \item Information disclosure at the poker server
 \item Elevation of privilege at the poker server
 \item Tampering with a table
-\item Repudiation of a table 
+\item Repudiation of a table
 \item Information disclosure at a table
 \item Elevation of Privilege at the table
 \item Tampering with the account management system
 \item Repudiation of the account management system
 \item Information disclosure of the account management system
-\item Elevation of Privilege at the account management system 
-\item Tampering with the logging engine 
-\item Repudiation of the logging engine 
-\item Information disclosure of the logging engine 
+\item Elevation of Privilege at the account management system
+\item Tampering with the logging engine
+\item Repudiation of the logging engine
+\item Information disclosure of the logging engine
 \item Elevation of Privilege at the logging engine
 \item Tampering with the audit log
 \item Information disclosure of the audit log
 \item Tampering with account data
-\item Information disclosure of account data 
+\item Information disclosure of account data
 \end{enumerate}
 
 \subsection{Application Integrity (12 MUCs)}
@@ -1394,26 +1394,26 @@ This means following components will be omitted for future analysis: Cashier, Lo
 \item Information disclosure at the poker server
 \item Elevation of privilege at the poker server
 \item Tampering with a table
-\item Information disclosure at a table 
+\item Information disclosure at a table
 \item Elevation of Privilege at the table
 \item Tampering with the account management system
 \item Information disclosure of the account management system
-\item Elevation of Privilege at the account management system 
-\item Tampering with the logging engine 
-\item Information disclosure of the logging engine 
+\item Elevation of Privilege at the account management system
+\item Tampering with the logging engine
+\item Information disclosure of the logging engine
 \item Elevation of Privilege at the logging engine
 \end{enumerate}
 
 \subsection{Availability (10 MUCs)}
 \begin{enumerate}
 \item Denial of Service against the poker server
-\item Denial of Service against a table 
+\item Denial of Service against a table
 \item Denial of Service against the account management system
 \item Denial of Service against the logging engine
 \item Denial of Service against the audit log
 \item Denial of Service against account data
-\item Denial of Service of token requests 
-\item Denial of Service of tokens 
+\item Denial of Service of token requests
+\item Denial of Service of tokens
 \item Denial of Service of actions
 \item Denial of Service of logging requests
 \end{enumerate}
@@ -1424,7 +1424,7 @@ This means following components will be omitted for future analysis: Cashier, Lo
 \item Repudiation of the poker server
 \item Repudiation of a table
 \item Repudiation of the account management system
-\item Repudiation of the logging engine 
+\item Repudiation of the logging engine
 \item Repudiation of the audit log
 \end{enumerate}
 
@@ -1433,8 +1433,8 @@ This means following components will be omitted for future analysis: Cashier, Lo
 \item Tampering with token requests
 \item Tampering with tokens
 \item Tampering with actions
-\item Tampering with responses and events 
-\item Tampering with logging requests 
+\item Tampering with responses and events
+\item Tampering with logging requests
 \end{enumerate}
 
 \subsection{Transmission Confidentiality (5 MUCs)}
@@ -1443,7 +1443,7 @@ This means following components will be omitted for future analysis: Cashier, Lo
 \item Information Disclosure of tokens
 \item Information Disclosure of actions
 \item Information Disclosure of responses and events
-\item Information Disclosure of logging requests 
+\item Information Disclosure of logging requests
 \end{enumerate}
 
 \subsection{Auditing (4 MUCs)}
@@ -1463,7 +1463,7 @@ This means following components will be omitted for future analysis: Cashier, Lo
 \subsection{Storage Confidentiality (2 MUCs)}
 \begin{enumerate}
 \item Information disclosure of the audit log
-\item Information disclosure of account data 
+\item Information disclosure of account data
 \end{enumerate}
 
 \subsection{Application Confidentiality}
@@ -1472,7 +1472,7 @@ Application Confidentiality is not applicable since the code is open source.
 \section{Log}
 \textbf{30-10-2008}
 \begin{itemize}
-\item We decided to only consider the RMI protocol as communication protocol for the poker application in this 
+\item We decided to only consider the RMI protocol as communication protocol for the poker application in this
 security analysis, and to not got into depth in the sockets or http protocol. For these protocols, a front-end is added to the architecture that delegates to the different processes also used by RMI.
 \item Table communicates with Cashier instead of with Account Management process to obtain an amount of chips
 of the main stack of a player and bring it to the table stack of that player.
@@ -1515,23 +1515,23 @@ We will use the security patterns and methodology described in \cite{yskout} to 
 for this application.
 
 \subsection{Analysis Phase}
-The analysis phase consists of eliciting the security requirements and annotating each 
+The analysis phase consists of eliciting the security requirements and annotating each
 security requirement with the security object it belongs to. The security requirements have been elicited by the misuse cases
-in secton \ref{MisUseCases}. The annotations to indicate for each misuse case to which security objective it belongs 
-are given in section \ref{MUCLabels}. This is very important, since the succes of the selected methodology heavily depends 
+in secton \ref{MisUseCases}. The annotations to indicate for each misuse case to which security objective it belongs
+are given in section \ref{MUCLabels}. This is very important, since the succes of the selected methodology heavily depends
 on this list of security requirements.
 
 
 \subsection{Architecture Phase}
 As stated in \cite[p13]{yskout}, the architecture of the system is designed using Attribute-Driven Design or ADD,
 meaning it is created based on the non-functional requirements of the application and their relative importance.
-Therefore a prioritized list of quality attributes, inspired by the business goals, was formulated under 
+Therefore a prioritized list of quality attributes, inspired by the business goals, was formulated under
 section \ref{labels}. Then we iterate over the selection of architectural patterns, as it is stated by the methodology.
 
 \subsubsection{Patterns already present}
 There are some security patterns that are already present in the architecture:
 \begin{itemize}
-\item Credential Tokenizer: The poker server is in a certain way a credential tokenizer: it provides a token to a 
+\item Credential Tokenizer: The poker server is in a certain way a credential tokenizer: it provides a token to a
 player, that the player can use to authenticate himself with the other processes.
 \item Secure Service Facade: Every process has it's own facade where all the needed
 security checks happen.
@@ -1558,22 +1558,22 @@ Since these two patterns do not sufficiently cover Authentication, we continue w
 present yet: Authentication Enforcer, Security Association, Session and Single Access Point.
 
 There are no patterns in this list that conflict with any existing patterns.
-Next, we screen the short descriptions of the selected patterns to see if they are applicable. 
+Next, we screen the short descriptions of the selected patterns to see if they are applicable.
 \begin{itemize}
-\item Security Association appears to be missing from the list and is therefore discarded. 
+\item Security Association appears to be missing from the list and is therefore discarded.
 \item Session won't be selected, because there is too little shared state between the different processes. State is almost only shared within a process. One could consider the use of tokens to maintain an autenticaton state as an instantiation of Session. Because the state in that case is very limited we choose not to.
 \end{itemize}
 
 The other patterns seem applicable:
 \begin{itemize}
-\item Authentication Enforcer has as labels +Maintainability, +Manageability, +Auditability, -Anonymity, +Privacy, 
+\item Authentication Enforcer has as labels +Maintainability, +Manageability, +Auditability, -Anonymity, +Privacy,
 +Accountability, +Portability, benefits from Secure Pipe and Secure Service Facade and has as alternative
 Container Managed Security.
 \item Single Access Point has as labels +Manageability and has no relations with other patterns.
 \end{itemize}
 
 Clearly Authentication Enforcer is the better choice here: its labels match better with the quality trade-off labels
-than Single Access Point and it benefits from the Secure Service Facade pattern that already exist in the architecture. 
+than Single Access Point and it benefits from the Secure Service Facade pattern that already exist in the architecture.
 Single Access Point would also lead to a too centralised architecture. Container Managed Security is a system pattern and will later be considered as an alternative for Authentication Enforcer.
 
 The Authentication Enforcer pattern is selected to deal with the Authentication requirement. It is instantiated with a beneficial relationship from the existing security facades. It collaborates with Account Management to perform authentication.
@@ -1592,7 +1592,7 @@ The following patterns address authorization at the architectural level:
 \item Single Access Point
 \end{itemize}
 
-Secure Service Facade is already present in the architecture. 
+Secure Service Facade is already present in the architecture.
 Single Access Point was already considered under Authentication and was not selected.
 
 The candidates for selection are Authorization Enforcer, Controlled Object Monitor, Full View With Errors
@@ -1601,9 +1601,9 @@ and Limited View.
 There are no patterns in this list that conflict with any existing patterns.
 Next, we screen the short descriptions of the selected patterns to see if they are applicable.
 \begin{itemize}
-\item Controlled Object Monitor isn't applicable because there are few shared objects between processes so 
+\item Controlled Object Monitor isn't applicable because there are few shared objects between processes so
 there is little need to monitor and intercept access requests from different processes to objects.
-\end{itemize}  
+\end{itemize}
 The other patterns seem applicable:
 \begin{itemize}
 \item Authorization Enforcer has as labels +Maintainability, +Manageability, +Auditability, +Accountability and
@@ -1613,8 +1613,8 @@ Container Managed Security.
 \item Full View With Errors has as labels +Maintainability, -Usability and conflicts with Limited View and has as
 alternative Limited View.
 
-\item Limited View has as labels +Usability and conflicts with Full View With Errors and has as alternative Full View 
-With Errors.            
+\item Limited View has as labels +Usability and conflicts with Full View With Errors and has as alternative Full View
+With Errors.
 \end{itemize}
 
 Authorization Enforcer will be selected, because it has many + labels that match the quality trade-off labels and
@@ -1626,7 +1626,7 @@ Both Limited View and Full View with Errors will be selected, but for different 
 Limited View will be used for the client side, because Usability for the clients is a major issue. Full View with
 Errors will be used for the server API because it is technically the only possibility at this level.
 
-The Authorization Enforcer, Limited View and Full View With Errors are selected to deal with the Authorization requirement. The Authorization Enforcer is instantiated with a beneficial relationship from the existing Secure Service Facade. It uses the Authentication Enforcer to authenticate a user. Limited View will be enforced on each client by some certification process or coding guidelines (as anyone can write a client for our server). The server itself will only be able to instantiate the Full View With Errors as it's the only possibility. 
+The Authorization Enforcer, Limited View and Full View With Errors are selected to deal with the Authorization requirement. The Authorization Enforcer is instantiated with a beneficial relationship from the existing Secure Service Facade. It uses the Authentication Enforcer to authenticate a user. Limited View will be enforced on each client by some certification process or coding guidelines (as anyone can write a client for our server). The server itself will only be able to instantiate the Full View With Errors as it's the only possibility.
 
 We can now consider the Authorization requirement as resolved at the architectural level.
 
@@ -1652,8 +1652,8 @@ Interceptor and has as alternative Output Guard and benefits from Checkpointed S
 
 Checkpointed System would be useful to implement in the Cashier process, even though it has a negative influence on both the Cost and the Performance,
 because there must be a way to recover from a crash of a critical process such as Cashier. The Cashier process
-will be checkpointed: the cashier will reserve the money used in bets of a deal. When the deal ends, the table 
-will tell the cashier the money can be really transfered. If for some reason, the table fails and the deal is 
+will be checkpointed: the cashier will reserve the money used in bets of a deal. When the deal ends, the table
+will tell the cashier the money can be really transfered. If for some reason, the table fails and the deal is
 cancelled, the money used in that deal will go back to its owners.
 
 
@@ -1682,9 +1682,9 @@ The following patterns address data integrity at the architectural level:
 There are no patterns in this list that conflict with any existing patterns.
 Next, we screen the short descriptions of the selected patterns to see if they are applicable.
 \begin{itemize}
-\item Session was already dropped in section \ref{ArchitectureAuthentication} because there is very little 
+\item Session was already dropped in section \ref{ArchitectureAuthentication} because there is very little
 shared state.
-\end{itemize}  
+\end{itemize}
 The other patterns seem applicable:
 \begin{itemize}
 \item Secure Access Layer has as labels +Maintainability and +Portability, and has no relations with other patterns.
@@ -1714,7 +1714,7 @@ Next, we screen the short descriptions of the selected patterns to see if they a
 applicable.
 
 \begin{itemize}
-\item Load Balancer has as label +Performance and benefits from Replicated System and Session Failover. It impairs 
+\item Load Balancer has as label +Performance and benefits from Replicated System and Session Failover. It impairs
 Session.
 \item Replicated System has as labels -Manageability and -Cost and depends on Load Balancer.
 \end{itemize}
@@ -1768,8 +1768,8 @@ There is no pattern that conflicts with earlier instantiated patterns.
 Some patterns aren't applicable:
 \begin{itemize}
 \item Controlled Process Creator isn't really applicable because there are no processes that are created at runtime.
-At a lower level there are ofcourse thread pools and database connection pools that control the creation of those 
-processes. We will not consider them as instantiations of the Controlled Process Creator pattern here but it 
+At a lower level there are ofcourse thread pools and database connection pools that control the creation of those
+processes. We will not consider them as instantiations of the Controlled Process Creator pattern here but it
 might be up for discussion.
 \item Controlled Object Factory depends on Controlled Object Monitor, which was discarded earlier.
 \end{itemize}
@@ -1778,7 +1778,7 @@ The other patterns seem applicable:
 \item Application Firewall has as labels -Performance, +Manageability, +Auditability and has as alternative Input Guard.
 \item Demilitarized Zone has as labels -Performance, -Cost, -Manageability, -Dependability, +Maintainability and depends
 on Firewall.
-\item Firewall has as labels +Accountability, -Performance, -Dependability and benefits from Demilitarized Zone and 
+\item Firewall has as labels +Accountability, -Performance, -Dependability and benefits from Demilitarized Zone and
 Application Firewall.
 \end{itemize}
 
@@ -1788,7 +1788,7 @@ Demilitarized Zone isn't selected because of the high cost and because a demilit
 Firewall is selected and because Accountability is an important quality label, and the pattern benefits
 from the previously instantiated Application Firewall.
 
-So Application Firewall and Firewall are selected to deal with Authorization at the system level. Application Firewall is instantiated at the poker server to log all incoming request for auditing and filter out all invalid input. The firewall is instantiated before the poker server to counter flooding and to be able to ban IPs. 
+So Application Firewall and Firewall are selected to deal with Authorization at the system level. Application Firewall is instantiated at the poker server to log all incoming request for auditing and filter out all invalid input. The firewall is instantiated before the poker server to counter flooding and to be able to ban IPs.
 
 We now consider Authorization at the system level covered.
 \subsubsection{Application Integrity}
@@ -1958,12 +1958,12 @@ Altered client provided to the players & Currently not covered (not part of the 
 \begin{itemize}
 \item The classification of the threat tree isn't very clear sometimes: e.g. you can tamper with the server process
 to spoof the server and thus tampering with the data. The flat STRIDE classification doesn't feel adequate for those threats.
-\item The threat three isn't complete; for instance there is nothing in it about spoofing by corruption of 
+\item The threat three isn't complete; for instance there is nothing in it about spoofing by corruption of
 DNS records.
 \item Some business use cases can't be covered with the list of security patterns in the given catalog
 \item The list of labels is incomplete for some security patterns in the catalog: e.g. Secure Pipe should also have
 the Confidentiality label.
-\item Some patterns that are mentioned by other security patterns, aren't listed in the catalog: e.g. Secure Pipe 
+\item Some patterns that are mentioned by other security patterns, aren't listed in the catalog: e.g. Secure Pipe
 benefits from Security Association, but the latter pattern isn't listed in the catalog. Input Guard also isn't
 in the list.
 \item Repudiaton of processes/data stores that are internal to the system is very unclear. In the lectures it was said that this was, for instance, the casino denying that it did something. In \cite[p270]{1202957} however it is explained as an external entity tampering with the process/data store to be able to deny having done something. The difference with repudiaton of that external entity is unclear.
@@ -1978,8 +1978,8 @@ in the list.
 \item \textbf{Layers:} A layered structure can be identified for exception handling and communication.
 \item \textbf{Broker:} The main server can be seen as a broker for the different backend components: lobby, table and account management.
 \item \textbf{Microkernel:} The table is a microkernel to provide different game types e.g. Omaha and Texas Hold'em.
-\item \textbf{Client-Server:} The server handles requests from multiple clients. 
-\item \textbf{Remote Procedure Calls:} Remote Procedure calls are used for the interaction between client and server. 
+\item \textbf{Client-Server:} The server handles requests from multiple clients.
+\item \textbf{Remote Procedure Calls:} Remote Procedure calls are used for the interaction between client and server.
 \item \textbf{Publish-Subscribe:} Interested clients can register themselves to receive specific events from the server.
 \item \textbf{Message Queuing:} When an event can not be sent immediately, the event is queued until the receiver can accept it.
 \end{itemize}
@@ -2004,7 +2004,11 @@ in the list.
 For a more in depth description of these patterns see chapter \ref{SecuringTheArchitecture}.
 
 \section{Quality Attribute Tree}
-From the business goals identified in the initial architecture, the following important quality attributes are selected:  \textbf{usability}, \textbf{security} and \textbf{availability}. The overview of the quality attribute tree can be found in table \ref{QAT}. In the following sections the rationale for choosing the importance (business perspective) and difficulty (technical perspective) ratings are elaborated.
+From the business goals identified in the initial architecture, the following important quality attributes are 
+selected:  \textbf{usability}, \textbf{security} and \textbf{availability}. These three were selected because
+they represent the most important business goals. The overview of the quality attribute 
+tree can be found in table \ref{QAT}. In the following sections the rationale for choosing the importance 
+(business perspective) and difficulty (technical perspective) ratings are elaborated.
 \begin{table}[htpb]
 \begin{center}
 \begin{tabular}{| p{2,2cm} | p{0.35cm} | p{2.5cm} | p{0.65cm} | p{6cm} | p{0,31cm} | p{0,31cm} | }
@@ -2018,18 +2022,18 @@ From the business goals identified in the initial architecture, the following im
 			& &			& A2.1 & Network failure is detected within 5s. & M & M  \\\cline{2-7}
 			& A3 & Recovery 	& A3.2 & Recovery from server hardware failure takes 50s and succeeds 99.99\% of the time. & M & H  \\\cline{4-7}
 			& &			& A3.1 & Recovery from a network failure takes 30s and succeeds 99.99\% of the time. & M & H  \\\hline
-\textbf{Security} 	& S1 & Authentication 	& S1.1 & 99.999\% of all users are correctly authenticated & H & M   \\\cline{2-7}
-			& S2 & Authorization 	& S2.1 & 99.999\% of all user actions are correctly authorized & H & M  \\\cline{2-7}
-			& S3 & Storage\newline Confidentiality & S3.1 & All account related data are secure 99.999\% of time & H & L   \\\cline{2-7}
-			& S4 & Transmission\newline Confidentiality & S4.1 & Cards are transmitted secure 99.999\% of time & M & L  \\\cline{2-7}
-			& S5 & Transmission\newline Integrity & S5.1 & 99.999\% of all transmitted cards remain unmodified & M & L  \\\cline{4-7}
-			& &			& S5.2 & 99.999\% of all transmitted actions remain unmodified & M & L  \\\cline{2-7}
-			& S6 & Auditing 		& S6.1 & 99.999\% of actions are logged and kept for 2 years & L & L  \\\hline
-\textbf{Usability} 	& &			&  &User must be able so seat within 3 clicks & L & L  \\\cline{4-7}
-			& &			&  &User must be able to find the correct button within 2 seconds & H & L  \\\cline{4-7}
-			& &			&  &User must be able to define default actions & M & L  \\\cline{4-7}
-			& &			&  &The user interface must respond to an action within 500ms & H & M  \\\cline{4-7}
-			& &			&  &The user interface must be separated to enable easy testing & M & M  \\\hline
+\textbf{Security} 	& S1 & Authentication 	& S1.1 & 99.999\% of all users are correctly authenticated. & H & M   \\\cline{2-7}
+			& S2 & Authorization 	& S2.1 & 99.999\% of all user actions are correctly authorized. & H & M  \\\cline{2-7}
+			& S3 & Storage\newline Confidentiality & S3.1 & All account related data are secure 99.999\% of time. & H & L   \\\cline{2-7}
+			& S4 & Transmission\newline Confidentiality & S4.1 & Cards are transmitted secure 99.999\% of time. & M & L  \\\cline{2-7}
+			& S5 & Transmission\newline Integrity & S5.1 & 99.999\% of all transmitted cards remain unmodified. & M & L  \\\cline{4-7}
+			& &			& S5.2 & 99.999\% of all transmitted actions remain unmodified. & M & L  \\\cline{2-7}
+			& S6 & Auditing 		& S6.1 & 99.999\% of actions are logged and kept for 2 years. & L & L  \\\hline
+\textbf{Usability} 	& U1 & Learnability & U1.1  & The user must be able to be seated and play at a table within 3 mouse clicks the first time they use the application. & L & L  \\\cline{2-7}
+			&U2 &Efficiency			&U2.1  &At each screen, the user must be able to find the correct button for his action, within 2 seconds. & H & L  \\\cline{2-7}
+			&U3 &Satisfaction			&U3.1  &The user must be able to define default actions for certain situations (e.g. default check/fold as action in the current game).& M & L  \\\cline{4-7}
+			& &			&U3.2  &The user interface must respond to an action of the user within 2 seconds. & H & M  \\\cline{2-7}
+			&U4 &Testability			&U4.1  &The user interface must be separated from the rest of the application to enable fast and easy usability testing. & M & M  \\\hline
 
 \end{tabular}
 \end{center}
@@ -2044,7 +2048,7 @@ From the business goals identified in the initial architecture, the following im
 \item Importance: High. It's more important to prevent failure than recovering from failure.
 \item Difficulty: Medium. Very reliable hardware is available.
 \end{itemize}
-\item[\textbf{A1.2}] Network connections have a MTBF of 1 year. 
+\item[\textbf{A1.2}] Network connections have a MTBF of 1 year.
 \begin{itemize}
 \item Importance: High. It's more important to prevent failure than recovering from failure.
 \item Difficulty: Medium. Very reliable networking hardware is available.
@@ -2052,7 +2056,7 @@ From the business goals identified in the initial architecture, the following im
 \item[\textbf{A2.1}] Server hardware failure is detected within 20s.
 \begin{itemize}
 \item Importance: Medium. It's important, but less important than preventing failures.
-\item Difficulty: Medium. 
+\item Difficulty: Medium.
 \end{itemize}
 \item[\textbf{A2.2}] Network failure is detected within 5s.
 \begin{itemize}
@@ -2073,66 +2077,69 @@ From the business goals identified in the initial architecture, the following im
 
 \subsection{Security}
 \begin{itemize}
-\item[\textbf{S1.1}] 99.999\% of all users are correctly authenticated
+\item[\textbf{S1.1}] 99.999\% of all users are correctly authenticated.
 \begin{itemize}
 \item Importance: High. It's important all users are correctly identified.
-\item Difficulty: Medium. 
+\item Difficulty: Medium.
 \end{itemize}
-\item[\textbf{S2.1}] 99.999\% of all user actions are correctly authorized
+\item[\textbf{S2.1}] 99.999\% of all user actions are correctly authorized.
 \begin{itemize}
 \item Importance: High. It's important users can only do what they are allowed to do.
 \item Difficulty: Medium.
 \end{itemize}
-\item[\textbf{S3.1}] All account related data are secure 99.999\% of time
+\item[\textbf{S3.1}] All account related data are secure 99.999\% of time.
 \begin{itemize}
-\item Importance: High. 
-\item Difficulty: Low. 
+\item Importance: High.
+\item Difficulty: Low.
 \end{itemize}
-\item[\textbf{S4.1}] Cards are transmitted secure 99.999\% of time
+\item[\textbf{S4.1}] Cards are transmitted secure 99.999\% of time.
 \begin{itemize}
-\item Importance: Medium. 
-\item Difficulty: Low. 
+\item Importance: Medium.
+\item Difficulty: Low.
 \end{itemize}
-\item[\textbf{S5.1}] 99.999\% of all transmitted cards remain unmodified
+\item[\textbf{S5.1}] 99.999\% of all transmitted cards remain unmodified.
 \begin{itemize}
-\item Importance: Medium. 
-\item Difficulty: Low. 
+\item Importance: Medium.
+\item Difficulty: Low.
 \end{itemize}
-\item[\textbf{S5.2}] 99.999\% of all transmitted actions remain unmodified
+\item[\textbf{S5.2}] 99.999\% of all transmitted actions remain unmodified.
 \begin{itemize}
-\item Importance: Medium. 
-\item Difficulty: Low. 
+\item Importance: Medium.
+\item Difficulty: Low.
 \end{itemize}
-\item[\textbf{S6.1}] 99.999\% of actions are logged and kept for 2 years
+\item[\textbf{S6.1}] 99.999\% of actions are logged and kept for 2 years.
 \begin{itemize}
-\item Importance: Low. 
-\item Difficulty: Low. 
+\item Importance: Low.
+\item Difficulty: Low.
 \end{itemize}
 \end{itemize}
 
 \subsection{Usability}
 \begin{itemize}
-\item User must be able to seat with 3 clicks
+\item The user must be able to be seated and play at a table within 3 mouse clicks the first time they use
+the application.
 \begin{itemize}
 \item Importance:
 \item Difficulty:
 \end{itemize}
-\item User must be able to find the correct button within 2 seconds
+\item At each screen, the user must be able to find the correct button for his action, within 2 seconds.
 \begin{itemize}
 \item Importance:
 \item Difficulty:
 \end{itemize}
-\item User must be able to define default actions (e.g. default check/fold)
+\item The user must be able to define default actions for certain situations (e.g. default check/fold as action
+in the current game).
 \begin{itemize}
 \item Importance:
 \item Difficulty:
 \end{itemize}
-\item The user interface must respond to an action within 500ms
+\item The user interface must respond to an action of the user within 2 seconds.
 \begin{itemize}
 \item Importance:
 \item Difficulty:
 \end{itemize}
-\item The user interface must be separated to enable easy testing
+\item The user interface must be separated from the rest of the application to enable fast and easy 
+usability testing.
 \begin{itemize}
 \item Importance:
 \item Difficulty:
@@ -2183,4 +2190,4 @@ Authorization Enforcer & & & R1 &  \\\hline \hline
 \addcontentsline{toc}{chapter}{Bibliography}
 \bibliography{oass2}
 
-\end{document} 
+\end{document}
