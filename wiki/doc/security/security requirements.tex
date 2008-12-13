@@ -2000,22 +2000,22 @@ For a more in depth description of these patterns see chapter \ref{SecuringTheAr
 From the business goals identified in the initial architecture, the following important quality attributes are selected:  \textbf{usability}, \textbf{security} and \textbf{availability}. The overview of the quality attribute tree can be found in table \ref{QAT}. In the following sections the rationale for choosing the importance (business perspective) and difficulty (technical perspective) ratings are elaborated.
 \begin{table}[htpb]
 \begin{center}
-\begin{tabular}{| p{2,2cm} | p{0.35cm} | p{4cm} | p{0.65cm} | p{5cm} | p{0,35cm} | p{0,35cm} | }
+\begin{tabular}{| p{2,2cm} | p{0.35cm} | p{2.5cm} | p{0.65cm} | p{6cm} | p{0,31cm} | p{0,31cm} | }
 \hline
-\textbf{Level 2: Quality Attribute} & \multicolumn{2}{p{4.3cm}|}{\textbf{Level 3: Quality Attribute Refinement}} & \multicolumn{2}{p{5.4cm}|}{\textbf{Level 4: Quality Attribute Scenario}} & \textbf{I} & \textbf{D}\\
+\textbf{Level 2:\newline Quality Attribute} & \multicolumn{2}{p{2.85cm}|}{\textbf{Level 3:\newline Quality Attribute Refinement}} & \multicolumn{2}{p{6.65cm}|}{\textbf{Level 4:\newline Quality Attribute Scenario}} & \textbf{I} & \textbf{D}\\
 \hline
 \hline
-\textbf{Availability} 	& A1 & Prevention 	& A1.1 & Network failure occurence & H & M   \\\cline{4-7}
-			& &			& A1.2 & Hardware failure occurence & H & M  \\\cline{2-7}
-			& A2 & Fault detection 	& A2.1 & Detection of network failure & M & M  \\\cline{4-7}
-			& &			& A2.2 & Detection of hardware failure & M & M  \\\cline{2-7}
-			& A3 & Recovery 	& A3.1 & Network failure recovery & M & H  \\\cline{4-7}
-			& &			& A3.2 & Hardware failure recovery & M & H  \\\hline
+\textbf{Availability} 	& A1 & Prevention 	& A1.1 & The MTBF of all the hardware is at least 5 years. & H & M   \\\cline{4-7}
+			& &			& A1.2 & Network connections have a MTBF of 1 year.  & H & M  \\\cline{2-7}
+			& A2 & Fault\newline detection 	& A2.2 & Server hardware failure is detected within 20s. & M & M  \\\cline{4-7}
+			& &			& A2.1 & Network failure is detected within 5s. & M & M  \\\cline{2-7}
+			& A3 & Recovery 	& A3.2 & Recovery from server hardware failure takes 50s and succeeds 99.99\% of the time. & M & H  \\\cline{4-7}
+			& &			& A3.1 & Recovery from a network failure takes 30s and succeeds 99.99\% of the time. & M & H  \\\hline
 \textbf{Security} 	& S1 & Authentication 	& S1.1 & 99.999\% of all users are correctly authenticated & H & M   \\\cline{2-7}
 			& S2 & Authorization 	& S2.1 & 99.999\% of all user actions are correctly authorized & H & M  \\\cline{2-7}
-			& S3 & Storage Confidentiality & S3.1 & All account related data are secure 99.999\% of time & H & L   \\\cline{2-7}
-			& S4 & Transmission Confidentiality & S4.1 & Cards are transmitted secure 99.999\% of time & M & L  \\\cline{2-7}
-			& S5 & Transmission Integrity & S5.1 & 99.999\% of all transmitted cards remain unmodified & M & L  \\\cline{4-7}
+			& S3 & Storage\newline Confidentiality & S3.1 & All account related data are secure 99.999\% of time & H & L   \\\cline{2-7}
+			& S4 & Transmission\newline Confidentiality & S4.1 & Cards are transmitted secure 99.999\% of time & M & L  \\\cline{2-7}
+			& S5 & Transmission\newline Integrity & S5.1 & 99.999\% of all transmitted cards remain unmodified & M & L  \\\cline{4-7}
 			& &			& S5.2 & 99.999\% of all transmitted actions remain unmodified & M & L  \\\cline{2-7}
 			& S6 & Auditing 		& S6.1 & 99.999\% of actions are logged and kept for 2 years & L & L  \\\hline
 \textbf{Usability} 	& &			&  &User must be able so seat within 3 clicks & L & L  \\\cline{4-7}
@@ -2031,40 +2031,72 @@ From the business goals identified in the initial architecture, the following im
 \end{table}
 
 \subsection{Availability}
+\begin{itemize}
+\item[\textbf{A1.1}] The MTBF\footnote{Mean Time Between Failures} of all the hardware is at least 5 years.
+\begin{itemize}
+\item Importance: High
+\item Difficulty: Medium
+\end{itemize}
+\item[\textbf{A1.2}] Network connections have a MTBF of 1 year. 
+\begin{itemize}
+\item Importance: High
+\item Difficulty: Medium
+\end{itemize}
+\item[\textbf{A2.1}] Server hardware failure is detected within 20s.
+\begin{itemize}
+\item Importance: Medium
+\item Difficulty: Medium
+\end{itemize}
+\item[\textbf{A2.2}] Network failure is detected within 5s.
+\begin{itemize}
+\item Importance: Medium
+\item Difficulty: Medium
+\end{itemize}
+\item[\textbf{A3.1}] Recovery from server hardware failure takes 50s and succeeds 99.99\% of the time.
+\begin{itemize}
+\item Importance: Medium
+\item Difficulty: High
+\end{itemize}
+\item[\textbf{A3.2}] Recovery from a network failure takes 30s and succeeds 99.99\% of the time.
+\begin{itemize}
+\item Importance: Medium
+\item Difficulty: High
+\end{itemize}
+\end{itemize}
 
 \subsection{Security}
 \begin{itemize}
-\item S1.1 99.999\% of all users are correctly authenticated
+\item[\textbf{S1.1}] 99.999\% of all users are correctly authenticated
 \begin{itemize}
 \item Importance: 
 \item Difficulty:
 \end{itemize}
-\item S2.1 99.999\% of all user actions are correctly authorized
+\item[\textbf{S2.1}] 99.999\% of all user actions are correctly authorized
 \begin{itemize}
 \item Importance: H, it's important users can only do what they are allowed to do.
 \item Difficulty: M, 
 \end{itemize}
-\item S3.1 All account related data are secure 99.999\% of time
+\item[\textbf{S3.1}] All account related data are secure 99.999\% of time
 \begin{itemize}
 \item Importance:
 \item Difficulty:
 \end{itemize}
-\item S4.1 Cards are transmitted secure 99.999\% of time
+\item[\textbf{S4.1}] Cards are transmitted secure 99.999\% of time
 \begin{itemize}
 \item Importance:
 \item Difficulty:
 \end{itemize}
-\item S5.1 99.999\% of all transmitted cards remain unmodified
+\item[\textbf{S5.1}] 99.999\% of all transmitted cards remain unmodified
 \begin{itemize}
 \item Importance:
 \item Difficulty:
 \end{itemize}
-\item S5.2 99.999\% of all transmitted actions remain unmodified
+\item[\textbf{S5.2}] 99.999\% of all transmitted actions remain unmodified
 \begin{itemize}
 \item Importance:
 \item Difficulty:
 \end{itemize}
-\item S6.1 99.999\% of actions are logged and kept for 2 years
+\item[\textbf{S6.1}] 99.999\% of actions are logged and kept for 2 years
 \begin{itemize}
 \item Importance:
 \item Difficulty:
