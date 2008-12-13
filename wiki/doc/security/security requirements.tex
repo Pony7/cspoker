@@ -1937,9 +1937,16 @@ DoS against account data & Application Firewall, Firewall, Audit interceptor, Se
 \hline
 \hline
 \textbf{Business Misuse Cases} & \\\hline
-A malicious player uses multiple accounts to access more hidden cards & \\\hline
-A malicious player with admin rights misuses his privileges & \\\hline
-TODO & \\\hline
+A malicious player uses multiple accounts to access more hidden cards & Partially covered: authentication enforcer, credential tokenizer \\\hline
+A malicious player with admin rights misuses his privileges & Partially covered: authorization enforcer. Add a policy that makes it impossible to access card data from ongoing game. \\\hline
+A malicious player misuses the right to ask the admin to view the log of the table & Currently not covered (not part of the architecture) \\\hline
+A malicious player can ﬂood the network of another player to force a time-out & Currently not covered (not part of the architecture), but time-out policy should try to minimize possible misuse. \\\hline
+Collusion & Partially covered: Secure logger, Audit interceptor, Secure service facade, Secure Pipe \\\hline
+An admin collaborates with a player to play with full information disclosure & Partially covered: authorization enforcer. Add a policy that makes it impossible to access card data from ongoing game. \\\hline
+Malicious player can predict hole and community cards & Currently not covered (not part of the architecture) \\\hline
+Chip dumping & Partially covered: Secure logger, Audit interceptor, Secure service facade, Secure Pipe \\\hline
+Placing spyware on the computer systems of honest players & Currently not covered (not part of the architecture) \\\hline
+Altered client provided to the players & Currently not covered (not part of the architecture) \\\hline
 \end{tabular}
 \end{center}
 \caption{GAP Analysis - 3}
