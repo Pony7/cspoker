@@ -2034,33 +2034,33 @@ From the business goals identified in the initial architecture, the following im
 \begin{itemize}
 \item[\textbf{A1.1}] The MTBF\footnote{Mean Time Between Failures} of all the hardware is at least 5 years.
 \begin{itemize}
-\item Importance: High
-\item Difficulty: Medium
+\item Importance: High. It's more important to prevent failure than recovering from failure.
+\item Difficulty: Medium. Very reliable hardware is available.
 \end{itemize}
 \item[\textbf{A1.2}] Network connections have a MTBF of 1 year. 
 \begin{itemize}
-\item Importance: High
-\item Difficulty: Medium
+\item Importance: High. It's more important to prevent failure than recovering from failure.
+\item Difficulty: Medium. Very reliable networking hardware is available.
 \end{itemize}
 \item[\textbf{A2.1}] Server hardware failure is detected within 20s.
 \begin{itemize}
-\item Importance: Medium
-\item Difficulty: Medium
+\item Importance: Medium. It's important, but less important than preventing failures.
+\item Difficulty: Medium. 
 \end{itemize}
 \item[\textbf{A2.2}] Network failure is detected within 5s.
 \begin{itemize}
-\item Importance: Medium
-\item Difficulty: Medium
+\item Importance: Medium. It's important, but less important than preventing failures.
+\item Difficulty: Medium. There are several architectural patterns that cover this issue.
 \end{itemize}
 \item[\textbf{A3.1}] Recovery from server hardware failure takes 50s and succeeds 99.99\% of the time.
 \begin{itemize}
-\item Importance: Medium
-\item Difficulty: High
+\item Importance: Medium. Recovery should have the same importance as detection.
+\item Difficulty: High. Some hardware components are difficult to replace.
 \end{itemize}
 \item[\textbf{A3.2}] Recovery from a network failure takes 30s and succeeds 99.99\% of the time.
 \begin{itemize}
-\item Importance: Medium
-\item Difficulty: High
+\item Importance: Medium. Recovery should have the same importance as detection.
+\item Difficulty: High. It's difficult to recover from failure in a distributed system as there are synchronization issues.
 \end{itemize}
 \end{itemize}
 
