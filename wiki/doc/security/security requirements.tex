@@ -2033,7 +2033,7 @@ tree can be found in table \ref{QAT}. In the following sections the rationale fo
 			&U2 &Efficiency			&U2.1  &At each screen, the user must be able to find the correct button for his action, within 2 seconds. & H & L  \\\cline{2-7}
 			&U3 &Satisfaction			&U3.1  &The user must be able to define default actions for certain situations (e.g. default check/fold as action in the current game).& M & L  \\\cline{4-7}
 			& &			&U3.2  &The user interface must respond to an action of the user within 2 seconds. & H & M  \\\cline{2-7}
-			&U4 &Testability			&U4.1  &The user interface must be separated from the rest of the application to enable fast and easy usability testing. & M & M  \\\hline
+			&U4 &Adaptability			&U4.1  &The user interface must be separated from the rest of the application to enable fast and easy usability testing. & M & M  \\\hline
 
 \end{tabular}
 \end{center}
@@ -2119,30 +2119,41 @@ tree can be found in table \ref{QAT}. In the following sections the rationale fo
 \item The user must be able to be seated and play at a table within 3 mouse clicks the first time they use
 the application.
 \begin{itemize}
-\item Importance:
-\item Difficulty:
+\item Importance: High. It is critical that new players easily find their way to the poker tables, or else
+they might prefer other poker applications.
+\item Difficulty: Low. A well designed user interface should accomplish this, it can be easily tested by
+a number of usability tests (such as Think Aloud Protocol etc.).
 \end{itemize}
 \item At each screen, the user must be able to find the correct button for his action, within 2 seconds.
 \begin{itemize}
-\item Importance:
-\item Difficulty:
+\item Importance: Medium. If users have a hard time finding the right buttons, they might get annoyed and 
+switch to other poker applications.
+\item Difficulty: Low. Again a well designed user interface should take care of this, the mean response
+time of a user can be measured by a number of usability tests (such as Think Aloud Protocol etc.).
 \end{itemize}
 \item The user must be able to define default actions for certain situations (e.g. default check/fold as action
 in the current game).
 \begin{itemize}
-\item Importance:
-\item Difficulty:
+\item Importance: Low. Some user that frequently perform the same actions, might want to automate those actions;
+but those people are a smaller group and thus this is less important.
+\item Difficulty: Low. This can be established using check-boxes etc.
 \end{itemize}
 \item The user interface must respond to an action of the user within 2 seconds.
 \begin{itemize}
-\item Importance:
-\item Difficulty:
+\item Importance: High. This quality attribute is very important, because a non-responsive user interface
+will annoy many users, who might use other poker applications as a reaction to this.
+\item Difficulty: Medium. This can be tackled by using a separate listener thread that dispatches the events
+to other threads that handle them; however there can be some pitfalls here (e.g. when the user is playing 
+a lot of different tables at the same time or when network problems occur)
 \end{itemize}
 \item The user interface must be separated from the rest of the application to enable fast and easy 
 usability testing.
 \begin{itemize}
-\item Importance:
-\item Difficulty:
+\item Importance: Medium. Easier usability tests are very usefull to track the effect of small changes to
+the user interface. This iteration will lead to a better user interface.
+\item Difficulty: Medium. The seperation of user interface and system can be handled by some patterns like
+Model-View-Controller; it requires some discipline, insight and experience from the developers to fully
+accomplish this.
 \end{itemize}
 \end{itemize}
 \section{Analysis of the architectural approaches}
