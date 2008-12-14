@@ -35,7 +35,7 @@ public class PolicyFile {
 			InputStream is = ClassLoader
 					.getSystemClassLoader()
 					.getResourceAsStream(
-							"org/cspoker/server/sockets/security/crossdomain.xml");
+							"org/cspoker/server/xml/sockets/security/crossdomain.xml");
 			BufferedReader br = new BufferedReader(new InputStreamReader(is));
 
 			String line = null;
