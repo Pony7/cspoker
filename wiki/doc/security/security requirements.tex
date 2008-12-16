@@ -2018,9 +2018,9 @@ tree can be found in table \ref{QAT}. In the following sections the rationale fo
 \hline
 \textbf{Availability} 	& A1 & Prevention 	& A1.1 & The MTBF of all hard disks is at least 1 month. & H & M   \\\cline{4-7}
 			& &			& A1.2 & Network connections have a MTBF of 3 months.  & H & M  \\\cline{2-7}
-			& A2 & Fault\newline detection 	& A2.1 & Server hardware failure is detected within 20s. & M & M  \\\cline{4-7}
+			& A2 & Fault\newline detection 	& A2.1 & Server hard disk failure is detected within 20s. & M & M  \\\cline{4-7}
 			& &			& A2.2 & Network failure is detected within 5s. & M & M  \\\cline{2-7}
-			& A3 & Recovery 	& A3.1 & Recovery from server hardware failure takes 50s and succeeds 99.99\% of the time. & M & H  \\\cline{4-7}
+			& A3 & Recovery 	& A3.1 & Recovery from server hard disk failure takes 50s and succeeds 99.99\% of the time. & M & H  \\\cline{4-7}
 			& &			& A3.2 & Recovery from a network failure takes 30s and succeeds 99.99\% of the time. & M & H  \\\hline
 \textbf{Security} 	& S1 & Authentication 	& S1.1 & 99.999\% of all users are correctly authenticated. & H & M   \\\cline{2-7}
 			& S2 & Authorization 	& S2.1 & 99.999\% of all user actions are correctly authorized. & H & M  \\\cline{2-7}
@@ -2053,7 +2053,7 @@ tree can be found in table \ref{QAT}. In the following sections the rationale fo
 \item Importance: High. It's more important to prevent failure than recovering from failure.
 \item Difficulty: Medium. Very reliable networking hardware is available.
 \end{itemize}
-\item[\textbf{A2.1}] Server hardware failure is detected within 20s.
+\item[\textbf{A2.1}] Server hard disk failure is detected within 20s.
 \begin{itemize}
 \item Importance: Medium. It's important, but less important than preventing failures.
 \item Difficulty: Medium.
@@ -2063,7 +2063,7 @@ tree can be found in table \ref{QAT}. In the following sections the rationale fo
 \item Importance: Medium. It's important, but less important than preventing failures.
 \item Difficulty: Medium. There are several architectural patterns that cover this issue.
 \end{itemize}
-\item[\textbf{A3.1}] Recovery from server hardware failure takes 50s and succeeds 99.99\% of the time.
+\item[\textbf{A3.1}] Recovery from server hard disk failure takes 50s and succeeds 99.99\% of the time.
 \begin{itemize}
 \item Importance: Medium. Recovery should have the same importance as detection.
 \item Difficulty: High. Some hardware components are difficult to replace.
@@ -2203,39 +2203,70 @@ Application Firewall  & S7 &  & R7 &   \\\hline
 
 \begin{tabular}{| p{4,5cm} | p{2,25cm} | p{2,25cm} | p{2,25cm} | p{2,25cm} | }
 \hline
-\textbf{Scenario \#: A3.1} & \multicolumn{4}{| p{9cm} |}{\textbf{Scenario:} Recovery from server hardware failure
+\textbf{Scenario \#: A3.1} & \multicolumn{4}{| p{9cm} |}{\textbf{Scenario:} Recovery from server hard disk failure
 takes 50s and succeeds 99.99\% of the time.} \\\hline
-\textbf{Attribute(s)} & \multicolumn{4}{| p{9cm} |}{Usability,Performance} \\\hline
-\textbf{Environment} & \multicolumn{4}{| p{9cm} |}{Online, connected, open} \\\hline
-\textbf{Stimulus} & \multicolumn{4}{| p{9cm} |}{User clicks on a button on the screen} \\\hline
-\textbf{Response} & \multicolumn{4}{| p{9cm} |}{The user interface responds accordingly within 2 seconds} \\\hline \hline
+\textbf{Attribute(s)} & \multicolumn{4}{| p{9cm} |}{Availability} \\\hline
+\textbf{Environment} & \multicolumn{4}{| p{9cm} |}{Hard disk failure detected} \\\hline
+\textbf{Stimulus} & \multicolumn{4}{| p{9cm} |}{One of the hard disks of the server crashes} \\\hline
+\textbf{Response} & \multicolumn{4}{| p{9cm} |}{The server recoveres from the hard disk failure within 50s and
+the recovery is succesfull in 99.99\% of the time.} \\\hline \hline
 \textbf{Architectural Decision} & \textbf{Sensitivity} & \textbf{Tradeoff} & \textbf{Risk} & \textbf{Nonrisk}\\\hline
-Secure Service Facade before every component & & T1 & &  \\\hline
-Authentication Enforcer & & & R1 &  \\\hline
-Authorization Enforcer & & & R1 &  \\\hline \hline
+No replicated system & S1 & T1 & R1 &  \\\hline
+Message queueing & & & R2 &  \\\hline
+Authentication enforcer & & & R3 &  \\\hline 
+Checkpointed system & S4 & & & NR4 \\\hline
+No comparator-checked fault-tolerant system & & & R5 &  \\\hline
+Broker & & & & NR6  \\\hline
+\hline
 \textbf{Architecture diagram} & \multicolumn{4}{| p{9cm} |}{See figures \ref{fig:decomposition_secured} and \ref{fig:deployment_secured}} \\\hline
 \end{tabular}
 \begin{itemize}
-\item \textbf{T1:} Going through the secure service facade for every operation enhances modifiability but imposes a performance cost.
-\item \textbf{R1:} There is only one instance of the authentication and authorization enforcer for the whole system. This is a single point of failure.
+\item \textbf{S1 \& R1 :} Replicating the system would make recovery from hard disk failure easier cause the system
+could just be switched with the replica. The degree and form of replication determines how easy recovery would be.
+\item \textbf{T1:} Choosing not to replicate the system, is based on a tradeoff between cost and fault tolerance.
+\item \textbf{R2:} A message queue makes recovery more difficult because the messages in the queue at the time 
+of failure can't be lost.
+\item \textbf{R3:} The authentication enforcer requires authentication informationt to be added and stored
+at runtime. This data must also be recovered when a hard disk crash happens.
+\item \textbf{S4 \& NR4} Having a checkpointed system in the cashier server greatly simplifies the recovery
+from a disk failure of cashier data: the previous checkpoint can be used to revert to the state before the crash.
+If the checkpoints are more fine grained, recovery will be easier.
+\item \textbf{R5:} Having a comparator-checked fault-tolerant system could make recovery easier, so 
+not having one is a risk.
+\item \textbf{NR6:} The broker adds an extra layer of indirection to the system, this facilitates recovery because
+things can be switched and adapted without the clients noticing it.
 \end{itemize}
 
 \begin{tabular}{| p{4,5cm} | p{2,25cm} | p{2,25cm} | p{2,25cm} | p{2,25cm} | }
 \hline
 \textbf{Scenario \#: A3.2} & \multicolumn{4}{| p{9cm} |}{\textbf{Scenario:} Recovery from a network failure takes 30s and succeeds 99.99\% of the time.} \\\hline
-\textbf{Attribute(s)} & \multicolumn{4}{| p{9cm} |}{Usability,Performance} \\\hline
-\textbf{Environment} & \multicolumn{4}{| p{9cm} |}{Online, connected, open} \\\hline
-\textbf{Stimulus} & \multicolumn{4}{| p{9cm} |}{User clicks on a button on the screen} \\\hline
-\textbf{Response} & \multicolumn{4}{| p{9cm} |}{The user interface responds accordingly within 2 seconds} \\\hline \hline
+\textbf{Attribute(s)} & \multicolumn{4}{| p{9cm} |}{Availability} \\\hline
+\textbf{Environment} & \multicolumn{4}{| p{9cm} |}{Network failure detected} \\\hline
+\textbf{Stimulus} & \multicolumn{4}{| p{9cm} |}{One of the network connections of the server crashes} \\\hline
+\textbf{Response} & \multicolumn{4}{| p{9cm} |}{The server recoveres from the network failure within 30s and
+the recovery is succesfull 99.99\% of the time.} \\\hline \hline
 \textbf{Architectural Decision} & \textbf{Sensitivity} & \textbf{Tradeoff} & \textbf{Risk} & \textbf{Nonrisk}\\\hline
-Secure Service Facade before every component & & T1 & &  \\\hline
-Authentication Enforcer & & & R1 &  \\\hline
-Authorization Enforcer & & & R1 &  \\\hline \hline
+Broker & & & & NR1 \\\hline
+Publish-subscriber & & & R2& \\\hline
+Message queueing & & & & NR3  \\\hline
+Load balancer & & & & NR4  \\\hline
+No replicated system & & & R5 &  \\\hline
+Audit interceptor & & & R6 & \\\hline
+\hline
 \textbf{Architecture diagram} & \multicolumn{4}{| p{9cm} |}{See figures \ref{fig:decomposition_secured} and \ref{fig:deployment_secured}} \\\hline
 \end{tabular}
 \begin{itemize}
-\item \textbf{T1:} Going through the secure service facade for every operation enhances modifiability but imposes a performance cost.
-\item \textbf{R1:} There is only one instance of the authentication and authorization enforcer for the whole system. This is a single point of failure.
+\item \textbf{NR1:} The broker adds an extra layer of indirection to the system, this facilitates recovery because
+things can be switched and adapted without the clients noticing it.
+\item \textbf{R2:} With the publish-subscriber approach, there may be events that are lost during transmission due
+to a network failure. Recovery has to deal with these missing events.
+\item \textbf{NR3:} Recovery from a network failure is easier with a message queue, because the messages can just
+be queued further untill the network problem is resolved.
+\item \textbf{NR4:} The load balancer can facilitate recovery by dynamically relocating tables to other servers when
+one server has suffered from network failure.
+\item \textbf{R5:} If there is full replication of the system, recovery would just consist of swapping the existing system
+with it's replica. So not having replication holds a risk.
+\item \textbf{R6:} The audit interceptor must buffer it's information in the case of a network failure.
 \end{itemize}
 
 \subsection{Security}
