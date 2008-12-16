@@ -2027,8 +2027,8 @@ tree can be found in table \ref{QAT}. In the following sections the rationale fo
 			& S3 & Storage\newline Confidentiality & S3.1 & All account related data are secure 99.999\% of time. & H & L   \\\cline{2-7}
 			& S4 & Transmission\newline Confidentiality & S4.1 & Cards are transmitted secure 99.999\% of time. & M & L  \\\cline{2-7}
 			& S5 & Transmission\newline Integrity & S5.1 & 99.999\% of all transmitted cards remain unmodified. & M & L  \\\cline{4-7}
-			& &			& S5.2 & 99.999\% of all transmitted actions remain unmodified. & M & L  \\\cline{2-7}
-			& S6 & Auditing 		& S6.1 & 99.999\% of actions are logged and kept for 2 years. & L & L  \\\hline
+			& &			& S5.2 & 99.999\% of all transmitted actions remain unmodified. & H & L  \\\cline{2-7}
+			& S6 & Auditing 		& S6.1 & 99.999\% of actions are logged and kept for 2 years. & L & M  \\\hline
 \textbf{Usability} 	& U1 & Learnability & U1.1  & The user must be able to be seated and play at a table within 3 mouse clicks the first time they use the application. & L & L  \\\cline{2-7}
 			&U2 &Efficiency			&U2.1  &At each screen, the user must be able to find the correct button for his action, within 2 seconds. & H & L  \\\cline{2-7}
 			&U3 &Satisfaction			&U3.1  &The user must be able to define default actions for certain situations (e.g. default check/fold as action in the current game).& M & L  \\\cline{4-7}
@@ -2080,37 +2080,37 @@ tree can be found in table \ref{QAT}. In the following sections the rationale fo
 \item[\textbf{S1.1}] 99.999\% of all users are correctly authenticated.
 \begin{itemize}
 \item Importance: High. It's important all users are correctly identified.
-\item Difficulty: Medium. 
+\item Difficulty: Medium. There are several reusable components and patterns available for authentication.
 \end{itemize}
 \item[\textbf{S2.1}] 99.999\% of all user actions are correctly authorized.
 \begin{itemize}
 \item Importance: High. It's important users can only do what they are allowed to do.
-\item Difficulty: Medium.
+\item Difficulty: Medium. There are several reusable components and patterns available for authorization.
 \end{itemize}
 \item[\textbf{S3.1}] All account related data are secure 99.999\% of time.
 \begin{itemize}
 \item Importance: High. It's important all sensitive user data are only accessible for authorized persons.
-\item Difficulty: Low.
+\item Difficulty: Low. This relies on the correct authorization discussed in S2.1 and on secure storage.
 \end{itemize}
 \item[\textbf{S4.1}] Cards are transmitted secure 99.999\% of time.
 \begin{itemize}
 \item Importance: Medium. It's important all card info are transmitted secure, but it's less important than correct authorization. 
-\item Difficulty: Low. 
+\item Difficulty: Low. This can easily be achieved through the use of a secure pipe.
 \end{itemize}
 \item[\textbf{S5.1}] 99.999\% of all transmitted cards remain unmodified.
 \begin{itemize}
-\item Importance: Medium.
-\item Difficulty: Low.
+\item Importance: Medium. It's important all card info are transmitted unmodified, but it's less important than correct authorization. 
+\item Difficulty: Low. This can easily be achieved through the use of a secure pipe.
 \end{itemize}
 \item[\textbf{S5.2}] 99.999\% of all transmitted actions remain unmodified.
 \begin{itemize}
-\item Importance: Medium.
-\item Difficulty: Low.
+\item Importance: High. It's important all actions are transmitted unmodified, as it can lead to incorrect authorization.
+\item Difficulty: Low. This can easily be achieved through the use of a secure pipe.
 \end{itemize}
 \item[\textbf{S6.1}] 99.999\% of actions are logged and kept for 2 years.
 \begin{itemize}
-\item Importance: Low.
-\item Difficulty: Low.
+\item Importance: Low. This is a legal constraint and should be available, but it's not critical for providing a good service to the player. 
+\item Difficulty: Medium. This can be implemented with the use of security patterns, but there is a possible feature interaction between logging and confidentiality, so this should be taken care of.
 \end{itemize}
 \end{itemize}
 
