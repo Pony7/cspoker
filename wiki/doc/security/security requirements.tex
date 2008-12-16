@@ -2016,8 +2016,8 @@ tree can be found in table \ref{QAT}. In the following sections the rationale fo
 \textbf{Level 2:\newline Quality\newline Attribute} & \multicolumn{2}{p{2.75cm}|}{\textbf{Level 3:\newline Quality\newline Attribute\newline Refinement}} & \multicolumn{2}{p{6.65cm}|}{\textbf{Level 4:\newline Quality Attribute Scenario}} & \textbf{I} & \textbf{D}\\
 \hline
 \hline
-\textbf{Availability} 	& A1 & Prevention 	& A1.1 & The MTBF of all the hardware is at least 5 years. & H & M   \\\cline{4-7}
-			& &			& A1.2 & Network connections have a MTBF of 1 year.  & H & M  \\\cline{2-7}
+\textbf{Availability} 	& A1 & Prevention 	& A1.1 & The MTBF of all hard disks is at least 1 month. & H & M   \\\cline{4-7}
+			& &			& A1.2 & Network connections have a MTBF of 3 months.  & H & M  \\\cline{2-7}
 			& A2 & Fault\newline detection 	& A2.1 & Server hardware failure is detected within 20s. & M & M  \\\cline{4-7}
 			& &			& A2.2 & Network failure is detected within 5s. & M & M  \\\cline{2-7}
 			& A3 & Recovery 	& A3.1 & Recovery from server hardware failure takes 50s and succeeds 99.99\% of the time. & M & H  \\\cline{4-7}
@@ -2043,12 +2043,12 @@ tree can be found in table \ref{QAT}. In the following sections the rationale fo
 
 \subsection{Availability}
 \begin{itemize}
-\item[\textbf{A1.1}] The MTBF\footnote{Mean Time Between Failures} of all the hardware is at least 5 years.
+\item[\textbf{A1.1}] The MTBF\footnote{Mean Time Between Failures} of all hard disks is at least 1 month.
 \begin{itemize}
 \item Importance: High. It's more important to prevent failure than recovering from failure.
 \item Difficulty: Medium. Very reliable hardware is available.
 \end{itemize}
-\item[\textbf{A1.2}] Network connections have a MTBF of 1 year.
+\item[\textbf{A1.2}] Network connections have a MTBF of 3 months.
 \begin{itemize}
 \item Importance: High. It's more important to prevent failure than recovering from failure.
 \item Difficulty: Medium. Very reliable networking hardware is available.
@@ -2175,15 +2175,31 @@ decision & sens & trade & risk & nonrisk  \\\hline \hline
 
 \begin{tabular}{| p{4,5cm} | p{2,25cm} | p{2,25cm} | p{2,25cm} | p{2,25cm} | }
 \hline
-\textbf{Scenario \#:} & \multicolumn{4}{| p{9cm} |}{\textbf{The MTBF of all the hardware is at least 5 years.} } \\\hline
+\textbf{Scenario \#:} & \multicolumn{4}{| p{9cm} |}{\textbf{The MTBF of all hard disks is at least 1 month.} } \\\hline
 \textbf{Attribute(s)} & \multicolumn{4}{| p{9cm} |}{Availability} \\\hline
 \textbf{Environment} & \multicolumn{4}{| p{9cm} |}{Normal Operations} \\\hline
-\textbf{Stimulus} & \multicolumn{4}{| p{9cm} |}{A single piece of server hardware fails.} \\\hline
-\textbf{Response} & \multicolumn{4}{| p{9cm} |}{Failure only occurs once every 5 years.} \\\hline \hline
+\textbf{Stimulus} & \multicolumn{4}{| p{9cm} |}{A hard disk fails.} \\\hline
+\textbf{Response} & \multicolumn{4}{| p{9cm} |}{Failure only occurs once every month.} \\\hline \hline
 \textbf{Architectural Decision} & \textbf{Sensitivity} & \textbf{Tradeoff} & \textbf{Risk} & \textbf{Nonrisk}\\\hline
-decision & sens & trade & risk & nonrisk  \\\hline \hline
-\textbf{Architecture diagram} & \multicolumn{4}{| p{9cm} |}{None} \\\hline
+Broker  &  &  & R1 &   \\\hline 
+Checkpointed System  & S2 &  & R2 &   \\\hline 
+No Comparator-checked Fault-tolerant System   & S3 &  &  & NR3  \\\hline 
+Load Balancer  & S4 &  & R4 &   \\\hline 
+No Replicated System  & S5 &  &  & NR5  \\\hline 
+Secure Logger  & S6 &  & R6 &   \\\hline 
+Application Firewall  & S7 &  & R7 &   \\\hline 
+\hline
+\textbf{Architecture diagram} & \multicolumn{4}{| p{9cm} |}{See figures \ref{fig:decomposition_secured} and \ref{fig:deployment_secured}} \\\hline
 \end{tabular}
+\begin{itemize}
+\item \textbf{R1:} Adding the level of indirection of a broker requires extra hardware. This adds a new point of failure to the entire system.
+\item \textbf{S2 \& R2:} Having a checkpointed system in the cashier server requires a lot of extra hardware utilization. The more fine grained the checkpoints, the more utilization and the larger the risk.
+\item \textbf{S3 \& NR3:} By not choosing a comparator-checked fault-tolerant system, we do not incur the cost of adding the extra hardware that might also cause failure to occur. If we were to choose it, the number of replicated systems would increase the risk of hard disk failure.
+\item \textbf{S4 \& R4:} Every server in the load balancing setup of the table servers imposes an extra risk of hard disk failure.
+\item \textbf{S5 \& NR5:} Not replicating all the processes in the system reduces the probability that a hard disk will fail somewhere.
+\item \textbf{S6 \& R6:} The secure logger pattern brings with it the need for an extra data source, typically using hard drives for persistent storage. The level of logging detail relates to the disk utilization, which relates to the risk of hard drive failure.
+\item \textbf{S7 \& R7:} An application firewall can be run on a seperate server which adds an extra point of failure.
+\end{itemize}
 
 \begin{tabular}{| p{4,5cm} | p{2,25cm} | p{2,25cm} | p{2,25cm} | p{2,25cm} | }
 \hline
