@@ -2018,10 +2018,10 @@ tree can be found in table \ref{QAT}. In the following sections the rationale fo
 \hline
 \textbf{Availability} 	& A1 & Prevention 	& A1.1 & The MTBF of all the hardware is at least 5 years. & H & M   \\\cline{4-7}
 			& &			& A1.2 & Network connections have a MTBF of 1 year.  & H & M  \\\cline{2-7}
-			& A2 & Fault\newline detection 	& A2.2 & Server hardware failure is detected within 20s. & M & M  \\\cline{4-7}
-			& &			& A2.1 & Network failure is detected within 5s. & M & M  \\\cline{2-7}
-			& A3 & Recovery 	& A3.2 & Recovery from server hardware failure takes 50s and succeeds 99.99\% of the time. & M & H  \\\cline{4-7}
-			& &			& A3.1 & Recovery from a network failure takes 30s and succeeds 99.99\% of the time. & M & H  \\\hline
+			& A2 & Fault\newline detection 	& A2.1 & Server hardware failure is detected within 20s. & M & M  \\\cline{4-7}
+			& &			& A2.2 & Network failure is detected within 5s. & M & M  \\\cline{2-7}
+			& A3 & Recovery 	& A3.1 & Recovery from server hardware failure takes 50s and succeeds 99.99\% of the time. & M & H  \\\cline{4-7}
+			& &			& A3.2 & Recovery from a network failure takes 30s and succeeds 99.99\% of the time. & M & H  \\\hline
 \textbf{Security} 	& S1 & Authentication 	& S1.1 & 99.999\% of all users are correctly authenticated. & H & M   \\\cline{2-7}
 			& S2 & Authorization 	& S2.1 & 99.999\% of all user actions are correctly authorized. & H & M  \\\cline{2-7}
 			& S3 & Storage\newline Confidentiality & S3.1 & All account related data are secure 99.999\% of time. & H & L   \\\cline{2-7}
@@ -2168,7 +2168,6 @@ accomplish this.
 \textbf{Response} & \multicolumn{4}{| p{9cm} |}{response} \\\hline \hline
 \textbf{Architectural Decision} & \textbf{Sensitivity} & \textbf{Tradeoff} & \textbf{Risk} & \textbf{Nonrisk}\\\hline
 decision & sens & trade & risk & nonrisk  \\\hline \hline
-\textbf{Reasoning} & \multicolumn{4}{| p{9cm} |}{reasoning} \\\hline
 \textbf{Architecture diagram} & \multicolumn{4}{| p{9cm} |}{None} \\\hline
 \end{tabular}
 
@@ -2183,9 +2182,45 @@ decision & sens & trade & risk & nonrisk  \\\hline \hline
 \textbf{Response} & \multicolumn{4}{| p{9cm} |}{Failure only occurs once every 5 years.} \\\hline \hline
 \textbf{Architectural Decision} & \textbf{Sensitivity} & \textbf{Tradeoff} & \textbf{Risk} & \textbf{Nonrisk}\\\hline
 decision & sens & trade & risk & nonrisk  \\\hline \hline
-\textbf{Reasoning} & \multicolumn{4}{| p{9cm} |}{reasoning} \\\hline
 \textbf{Architecture diagram} & \multicolumn{4}{| p{9cm} |}{None} \\\hline
 \end{tabular}
+
+\begin{tabular}{| p{4,5cm} | p{2,25cm} | p{2,25cm} | p{2,25cm} | p{2,25cm} | }
+\hline
+\textbf{Scenario \#: A3.1} & \multicolumn{4}{| p{9cm} |}{\textbf{Scenario:} Recovery from server hardware failure
+takes 50s and succeeds 99.99\% of the time.} \\\hline
+\textbf{Attribute(s)} & \multicolumn{4}{| p{9cm} |}{Usability,Performance} \\\hline
+\textbf{Environment} & \multicolumn{4}{| p{9cm} |}{Online, connected, open} \\\hline
+\textbf{Stimulus} & \multicolumn{4}{| p{9cm} |}{User clicks on a button on the screen} \\\hline
+\textbf{Response} & \multicolumn{4}{| p{9cm} |}{The user interface responds accordingly within 2 seconds} \\\hline \hline
+\textbf{Architectural Decision} & \textbf{Sensitivity} & \textbf{Tradeoff} & \textbf{Risk} & \textbf{Nonrisk}\\\hline
+Secure Service Facade before every component & & T1 & &  \\\hline
+Authentication Enforcer & & & R1 &  \\\hline
+Authorization Enforcer & & & R1 &  \\\hline \hline
+\textbf{Architecture diagram} & \multicolumn{4}{| p{9cm} |}{See figures \ref{fig:decomposition_secured} and \ref{fig:deployment_secured}} \\\hline
+\end{tabular}
+\begin{itemize}
+\item \textbf{T1:} Going through the secure service facade for every operation enhances modifiability but imposes a performance cost.
+\item \textbf{R1:} There is only one instance of the authentication and authorization enforcer for the whole system. This is a single point of failure.
+\end{itemize}
+
+\begin{tabular}{| p{4,5cm} | p{2,25cm} | p{2,25cm} | p{2,25cm} | p{2,25cm} | }
+\hline
+\textbf{Scenario \#: A3.2} & \multicolumn{4}{| p{9cm} |}{\textbf{Scenario:} Recovery from a network failure takes 30s and succeeds 99.99\% of the time.} \\\hline
+\textbf{Attribute(s)} & \multicolumn{4}{| p{9cm} |}{Usability,Performance} \\\hline
+\textbf{Environment} & \multicolumn{4}{| p{9cm} |}{Online, connected, open} \\\hline
+\textbf{Stimulus} & \multicolumn{4}{| p{9cm} |}{User clicks on a button on the screen} \\\hline
+\textbf{Response} & \multicolumn{4}{| p{9cm} |}{The user interface responds accordingly within 2 seconds} \\\hline \hline
+\textbf{Architectural Decision} & \textbf{Sensitivity} & \textbf{Tradeoff} & \textbf{Risk} & \textbf{Nonrisk}\\\hline
+Secure Service Facade before every component & & T1 & &  \\\hline
+Authentication Enforcer & & & R1 &  \\\hline
+Authorization Enforcer & & & R1 &  \\\hline \hline
+\textbf{Architecture diagram} & \multicolumn{4}{| p{9cm} |}{See figures \ref{fig:decomposition_secured} and \ref{fig:deployment_secured}} \\\hline
+\end{tabular}
+\begin{itemize}
+\item \textbf{T1:} Going through the secure service facade for every operation enhances modifiability but imposes a performance cost.
+\item \textbf{R1:} There is only one instance of the authentication and authorization enforcer for the whole system. This is a single point of failure.
+\end{itemize}
 
 \subsection{Security}
 \begin{tabular}{| p{4,5cm} | p{2,25cm} | p{2,25cm} | p{2,25cm} | p{2,25cm} | }
@@ -2206,7 +2241,24 @@ Authorization Enforcer & & & R1 &  \\\hline \hline
 \item \textbf{T1:} Going through the secure service facade for every operation enhances modifiability but imposes a performance cost.
 \item \textbf{R1:} There is only one instance of the authentication and authorization enforcer for the whole system. This is a single point of failure.
 \end{itemize}
-
+\subsection{Usability}
+\begin{tabular}{| p{4,5cm} | p{2,25cm} | p{2,25cm} | p{2,25cm} | p{2,25cm} | }
+\hline
+\textbf{Scenario \#: U3.2} & \multicolumn{4}{| p{9cm} |}{\textbf{Scenario:} The user interface must respond to an action of the user within 2 seconds.} \\\hline
+\textbf{Attribute(s)} & \multicolumn{4}{| p{9cm} |}{Usability,Performance} \\\hline
+\textbf{Environment} & \multicolumn{4}{| p{9cm} |}{Online, connected, open} \\\hline
+\textbf{Stimulus} & \multicolumn{4}{| p{9cm} |}{User clicks on a button on the screen} \\\hline
+\textbf{Response} & \multicolumn{4}{| p{9cm} |}{The user interface responds accordingly within 2 seconds} \\\hline \hline
+\textbf{Architectural Decision} & \textbf{Sensitivity} & \textbf{Tradeoff} & \textbf{Risk} & \textbf{Nonrisk}\\\hline
+Secure Service Facade before every component & & T1 & &  \\\hline
+Authentication Enforcer & & & R1 &  \\\hline
+Authorization Enforcer & & & R1 &  \\\hline \hline
+\textbf{Architecture diagram} & \multicolumn{4}{| p{9cm} |}{See figures \ref{fig:decomposition_secured} and \ref{fig:deployment_secured}} \\\hline
+\end{tabular}
+\begin{itemize}
+\item \textbf{T1:} Going through the secure service facade for every operation enhances modifiability but imposes a performance cost.
+\item \textbf{R1:} There is only one instance of the authentication and authorization enforcer for the whole system. This is a single point of failure.
+\end{itemize}
 \chapter{Discussion and conclusions}
 
 \nocite{1202957}
