@@ -1910,13 +1910,13 @@ Information disclosure of the account management system & Secure Pipe, Authentic
 DoS against the account management system & Application Firewall, Firewall, Audit interceptor, Secure logger\\\hline
 Elevation of privilege at the account management system & Authentication Enforcer, Authorization Enforcer, Secure Service Facade, Credential Tokenizer, Secure pipe, Application firewall \\\hline
 \textbf{Logging Engine} & \\\hline
-Spoofing the logging engine & - \\\hline
+Spoofing the logging engine & Authentication enforcer, Authorization enforcer, Secure service facade \\\hline
 Tampering with the logging engine & Authentication enforcer, Authorization enforcer, Secure service facade, Credential tokenizer, Secure pipe, Application firewall \\\hline
-Repudiation of using the logging engine & - \\\hline
+Repudiation of using the logging engine & Secure pipe, Secure service facade \\\hline
 Information disclosure at the logging engine & Authentication Enforcer, Authorization Enforcer, Secure Service Facade, Credential Tokenizer, Secure pipe, Application firewall \\\hline
 \textbf{Audit Log} & \\\hline
 Tampering with the audit log & Authentication enforcer, Authorization enforcer, Secure service facade, Credential tokenizer, Secure pipe, Application firewall \\\hline
-Repudiation of logging something in the audit log & - \\\hline
+Repudiation of logging something in the audit log & Secure pipe, Secure service facade \\\hline
 Information disclosure of the audit log & Secure Pipe, Authentication Enforcer, Authorization Enforcer, Secure Service Facade, Credential tokenizer, Application firewall \\\hline
 DoS against the audit log & Application Firewall, Firewall \\\hline
 \textbf{Account Data} & \\\hline
@@ -2011,9 +2011,9 @@ tree can be found in table \ref{QAT}. In the following sections the rationale fo
 (business perspective) and difficulty (technical perspective) ratings are elaborated.
 \begin{table}[htpb]
 \begin{center}
-\begin{tabular}{| p{2,2cm} | p{0.35cm} | p{2.5cm} | p{0.65cm} | p{6cm} | p{0,31cm} | p{0,31cm} | }
+\begin{tabular}{| p{2,2cm} | p{0.25cm}  p{2.5cm} | p{0.55cm}  p{7cm} | p{0,31cm} | p{0,31cm} | }
 \hline
-\textbf{Level 2:\newline Quality\newline Attribute} & \multicolumn{2}{p{2.85cm}|}{\textbf{Level 3:\newline Quality\newline Attribute\newline Refinement}} & \multicolumn{2}{p{6.65cm}|}{\textbf{Level 4:\newline Quality Attribute Scenario}} & \textbf{I} & \textbf{D}\\
+\textbf{Level 2:\newline Quality\newline Attribute} & \multicolumn{2}{p{2.75cm}|}{\textbf{Level 3:\newline Quality\newline Attribute\newline Refinement}} & \multicolumn{2}{p{6.65cm}|}{\textbf{Level 4:\newline Quality Attribute Scenario}} & \textbf{I} & \textbf{D}\\
 \hline
 \hline
 \textbf{Availability} 	& A1 & Prevention 	& A1.1 & The MTBF of all the hardware is at least 5 years. & H & M   \\\cline{4-7}
@@ -2166,6 +2166,21 @@ accomplish this.
 \textbf{Environment} & \multicolumn{4}{| p{9cm} |}{environment} \\\hline
 \textbf{Stimulus} & \multicolumn{4}{| p{9cm} |}{stimulus} \\\hline
 \textbf{Response} & \multicolumn{4}{| p{9cm} |}{response} \\\hline \hline
+\textbf{Architectural Decision} & \textbf{Sensitivity} & \textbf{Tradeoff} & \textbf{Risk} & \textbf{Nonrisk}\\\hline
+decision & sens & trade & risk & nonrisk  \\\hline \hline
+\textbf{Reasoning} & \multicolumn{4}{| p{9cm} |}{reasoning} \\\hline
+\textbf{Architecture diagram} & \multicolumn{4}{| p{9cm} |}{None} \\\hline
+\end{tabular}
+
+\subsection{Availability}
+
+\begin{tabular}{| p{4,5cm} | p{2,25cm} | p{2,25cm} | p{2,25cm} | p{2,25cm} | }
+\hline
+\textbf{Scenario \#:} & \multicolumn{4}{| p{9cm} |}{\textbf{The MTBF of all the hardware is at least 5 years.} } \\\hline
+\textbf{Attribute(s)} & \multicolumn{4}{| p{9cm} |}{Availability} \\\hline
+\textbf{Environment} & \multicolumn{4}{| p{9cm} |}{Normal Operations} \\\hline
+\textbf{Stimulus} & \multicolumn{4}{| p{9cm} |}{A single piece of server hardware fails.} \\\hline
+\textbf{Response} & \multicolumn{4}{| p{9cm} |}{Failure only occurs once every 5 years.} \\\hline \hline
 \textbf{Architectural Decision} & \textbf{Sensitivity} & \textbf{Tradeoff} & \textbf{Risk} & \textbf{Nonrisk}\\\hline
 decision & sens & trade & risk & nonrisk  \\\hline \hline
 \textbf{Reasoning} & \multicolumn{4}{| p{9cm} |}{reasoning} \\\hline
