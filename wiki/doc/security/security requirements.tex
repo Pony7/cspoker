@@ -1831,6 +1831,7 @@ but we don't consider it here, in our simplified version.
 \subsubsection{Availability}
 There are no patterns who handle availability at the system level.
 \subsection{Instantiated Patterns}
+\label{inst_patterns}
 To summarize, here is the list of the instantiated patterns, that weren't present yet in the architecture:
 \begin{itemize}
 \item Authentication Enforcer
@@ -1974,10 +1975,14 @@ in the list.
 
 \section{Identified Architectural Approaches}
 \subsection{Architectural Patterns}
+Based on \cite{Avgeriou2005}, we identified the following patterns in the architecture:
 \begin{itemize}
 \item \textbf{Layers:} A layered structure can be identified for exception handling and communication.
 \item \textbf{Broker:} The main server can be seen as a broker for the different backend components: lobby, table and account management.
 \item \textbf{Microkernel:} The table is a microkernel to provide different game types e.g. Omaha and Texas Hold'em.
+\item \textbf{Model-View-Controller:} At the client side, we have a variation on MVC: the model part is located
+at the server, the controller consists of the event listeners who adapt the view based on the incoming events and
+the views display the information on the screen.
 \item \textbf{Client-Server:} The server handles requests from multiple clients.
 \item \textbf{Remote Procedure Calls:} Remote Procedure calls are used for the interaction between client and server.
 \item \textbf{Publish-Subscribe:} Interested clients can register themselves to receive specific events from the server.
@@ -1985,6 +1990,7 @@ in the list.
 \end{itemize}
 
 \subsection{Security Patterns}
+The security patterns are just the ones that were instantiated in \ref{inst_patterns}:
 \begin{itemize}
 \item Authentication Enforcer
 \item Authorization Enforcer
