@@ -1958,7 +1958,7 @@ Altered client provided to the players & Currently not covered (not part of the 
 \begin{itemize}
 \item The classification of the threat tree isn't very clear sometimes: e.g. you can tamper with the server process
 to spoof the server and thus tampering with the data. The flat STRIDE classification doesn't feel adequate for those threats.
-\item The threat three isn't complete; for instance there is nothing in it about spoofing by corruption of
+\item The threat tree isn't complete; for instance there is nothing in it about spoofing by corruption of
 DNS records.
 \item Some business use cases can't be covered with the list of security patterns in the given catalog
 \item The list of labels is incomplete for some security patterns in the catalog: e.g. Secure Pipe should also have
@@ -2380,6 +2380,12 @@ Authorization Enforcer & & & R1 &  \\\hline \hline
 \item \textbf{R1:} There is only one instance of the authentication and authorization enforcer for the whole system. This is a single point of failure.
 \end{itemize}
 \chapter{Discussion and conclusions}
+
+One of the problems with the methodology used is that the system under investigation is either so trivial that the methodology is unnecessary or so complex and versatile that it is subject to the exact same threats as any other system. Because there are so few solution patterns for the typical problems, a thorough analysis is superfluous.
+
+In the examples for the quality attribute scenarios, it is said that the system ``works'' 99.99\% of the time. We think this is a weakness of the methodology. A good metric is impossible for some quality attributes and trying to force a number in is not helpful, certainly not with vague concepts as ``works''. We believe a better solution should exist for these quality attributes.
+
+In the quality attribute tree for Usability in \cite{citeulike:174301}, one of the nodes is called ``Seperate User Interface''. This is an example of how Maintainability has a positive influence on other attributes. This can also be observed for other attributes. Good Maintainability will make it easier to do Performance profiling and optimization. More such dependencies exist. Explicitating the dependency for Usability but not for other quality attributes comes across as a rather arbitrary choice.
 
 \nocite{1202957}
 \nocite{citeulike:174301}
