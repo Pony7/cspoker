@@ -2203,6 +2203,35 @@ Application Firewall  & S7 &  & R7 &   \\\hline
 
 \begin{tabular}{| p{4,5cm} | p{2,25cm} | p{2,25cm} | p{2,25cm} | p{2,25cm} | }
 \hline
+\textbf{Scenario \#:} & \multicolumn{4}{| p{9cm} |}{\textbf{Network connections have a MTBF of 3 months.} } \\\hline
+\textbf{Attribute(s)} & \multicolumn{4}{| p{9cm} |}{Availability} \\\hline
+\textbf{Environment} & \multicolumn{4}{| p{9cm} |}{Normal Operations} \\\hline
+\textbf{Stimulus} & \multicolumn{4}{| p{9cm} |}{A switch, router or network connection fails.} \\\hline
+\textbf{Response} & \multicolumn{4}{| p{9cm} |}{Failure only occurs once every 3 months.} \\\hline \hline
+\textbf{Architectural Decision} & \textbf{Sensitivity} & \textbf{Tradeoff} & \textbf{Risk} & \textbf{Nonrisk}\\\hline
+Broker  &  &  & R1 &   \\\hline 
+Client-Server \& RPC  & S2 &  & R2 &   \\\hline 
+Publish-Subscribe  & S3 &  &  & NR3  \\\hline 
+No Comparator-checked Fault-tolerant System   & S4 &  &  & NR4  \\\hline 
+Load Balancer  & S5 &  & R5 &   \\\hline 
+No Replicated System  & S6 &  &  & NR6  \\\hline 
+Secure Logger  & S7 &  & R7 &   \\\hline 
+Application Firewall  & S8 &  & R8 &   \\\hline 
+Audit Interceptor  & S9 &  & R9 &   \\\hline 
+No DMZ  &  &  &  & NR10  \\\hline 
+\hline
+\textbf{Architecture diagram} & \multicolumn{4}{| p{9cm} |}{See figures \ref{fig:decomposition_secured} and \ref{fig:deployment_secured}} \\\hline
+\end{tabular}
+\begin{itemize}
+\item \textbf{S2 \& R2:} By using a client-server architecture, network connections are introduced in the first place. The amount of network traffic generated is sensitive to the type of clients that is used. Thin clients can generate more traffic than fat clients. This also influences the risk of network failure.
+\item \textbf{R1, S5, R5, S7, R7, S8, R8, S9 \& R9:} The introduction of some patterns adds extra network traffic because extra nodes and connections are introduced in the network setup (broker, application firewall, load balancer, secure logger) or because extra network traffic is generated (secure logger, audit interceptor).
+\item \textbf{S3 \& NR3:} The publish-subscribe pattern for client-server communication arguably generates less network traffic than its alternatives. Again, less network traffic reduces the risk.
+\item \textbf{S4, NR4, S6 \& NR6: } Not choosing patterns that replicate server processes has the benefit that no extra network connections are added to the topology. This reduces the risk of network failure to occur in the first place.
+\item \textbf{NR10:} Not choosing a DMZ simplifies the network topology, reducing the risk of network failure to occur.
+\end{itemize}
+
+\begin{tabular}{| p{4,5cm} | p{2,25cm} | p{2,25cm} | p{2,25cm} | p{2,25cm} | }
+\hline
 \textbf{Scenario \#: A3.1} & \multicolumn{4}{| p{9cm} |}{\textbf{Scenario:} Recovery from server hard disk failure
 takes 50s and succeeds 99.99\% of the time.} \\\hline
 \textbf{Attribute(s)} & \multicolumn{4}{| p{9cm} |}{Availability} \\\hline
