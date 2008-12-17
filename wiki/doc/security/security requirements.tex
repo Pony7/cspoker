@@ -2277,6 +2277,45 @@ could just be switched with the replica. The degree and form of replication dete
 \subsection{Security}
 \begin{tabular}{| p{4,5cm} | p{2,25cm} | p{2,25cm} | p{2,25cm} | p{2,25cm} | }
 \hline
+\textbf{Scenario \#: S1.1} & \multicolumn{4}{| p{9cm} |}{\textbf{Scenario:} 99.999\% of all users are correctly authenticated.} \\\hline
+\textbf{Attribute(s)} & \multicolumn{4}{| p{9cm} |}{Security} \\\hline
+\textbf{Environment} & \multicolumn{4}{| p{9cm} |}{Online, connected, open} \\\hline
+\textbf{Stimulus} & \multicolumn{4}{| p{9cm} |}{Tries to perform an action or access data} \\\hline
+\textbf{Response} & \multicolumn{4}{| p{9cm} |}{The authentication service is available for 99.999\% of all user actions.} \\\hline \hline
+\textbf{Architectural Decision} & \textbf{Sensitivity} & \textbf{Tradeoff} & \textbf{Risk} & \textbf{Nonrisk}\\\hline
+Client-Server & & & & NR1 \\\hline
+Authentication Enforcer & & & & NR2 \\\hline
+Credential Tokenizer & S1 & & R1 & NR3 \\\hline
+No Replicated System & & T1 & R2 &  \\\hline
+Secure Pipe & S2 & T2 & R3 & NR4 \\\hline
+Secure Service Facade before every component & & & & NR5 \\\hline
+Application Firewall & & & & NR6 \\\hline
+No Container Managed Security & & & R4 &  \\\hline
+No Demilitarized Zone& & & R5 &  \\\hline
+Firewall & & & &  \\\hline
+\textbf{Architecture diagram} & \multicolumn{4}{| p{9cm} |}{See figures \ref{fig:decomposition_secured} and \ref{fig:deployment_secured}} \\\hline
+\end{tabular}
+\begin{itemize}
+\item \textbf{S1:} Increasing the strength of the token will decrease the risk.
+\item \textbf{S2:} Increasing the strength of the encryption for the channel will decrease the risk.
+\item \textbf{T1:} Using more replication will come with a higher cost.
+\item \textbf{T2:} Using a stronger encryptions negatively affects performance.
+\item \textbf{R1:} Token can be too weak an be broken.
+\item \textbf{R2:} There is no replication of the authentication enforcer. If the authentication enforcer is unavailable, no authentication is possible.
+\item \textbf{R3:} 
+
+
+
+\item \textbf{NR1:} Client-Server is a good choice to provide authentication. If a peer-to-peer poker protocol is chosen authentication will be hard to enforce.
+\item \textbf{NR2:} An authentication enforcer is a good choice to centralize all authentication needs for the whole system.
+\item \textbf{NR3:} A credential tokenizer encapsulates all different types of user credentials. This makes future modifications to stronger security tokens possible.
+\item \textbf{NR4:} A strong secure pipe makes it impossible to eavesdrop and alter credentials. 
+\item \textbf{NR5:} All actions pass through the secure service facade where the authentication is performed.
+\item \textbf{NR6:} The application firewall performs input validation so no tampering is possible to bypass the authentication.
+\end{itemize}
+
+\begin{tabular}{| p{4,5cm} | p{2,25cm} | p{2,25cm} | p{2,25cm} | p{2,25cm} | }
+\hline
 \textbf{Scenario \#: S2.1} & \multicolumn{4}{| p{9cm} |}{\textbf{Scenario:} 99.999\% of all user actions are correctly authorized.} \\\hline
 \textbf{Attribute(s)} & \multicolumn{4}{| p{9cm} |}{Security} \\\hline
 \textbf{Environment} & \multicolumn{4}{| p{9cm} |}{Online, connected, open} \\\hline
