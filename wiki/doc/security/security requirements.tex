@@ -1529,6 +1529,7 @@ Therefore a prioritized list of quality attributes, inspired by the business goa
 section \ref{labels}. Then we iterate over the selection of architectural patterns, as it is stated by the methodology.
 
 \subsubsection{Patterns already present}
+\label{pres_patterns}
 There are some security patterns that are already present in the architecture:
 \begin{itemize}
 \item Credential Tokenizer: The poker server is in a certain way a credential tokenizer: it provides a token to a
@@ -1973,7 +1974,8 @@ the views display the information on the screen.
 \end{itemize}
 
 \subsection{Security Patterns}
-The security patterns are just the ones that were instantiated in \ref{inst_patterns}:
+The security patterns are just the sum of the ones that were already present in the architecture
+(\ref{pres_patterns}) and the ones that were instantiated in \ref{inst_patterns}:
 \begin{itemize}
 \item Authentication Enforcer
 \item Authorization Enforcer
@@ -2376,18 +2378,46 @@ Firewall & & & & NR7  \\\hline
 \hline
 \textbf{Scenario \#: U3.2} & \multicolumn{4}{| p{9cm} |}{\textbf{Scenario:} The user interface must respond to an action of the user within 2 seconds.} \\\hline
 \textbf{Attribute(s)} & \multicolumn{4}{| p{9cm} |}{Usability,Performance} \\\hline
-\textbf{Environment} & \multicolumn{4}{| p{9cm} |}{Online, connected, open} \\\hline
+\textbf{Environment} & \multicolumn{4}{| p{9cm} |}{The client is connected to the server and there are no failures} \\\hline
 \textbf{Stimulus} & \multicolumn{4}{| p{9cm} |}{User clicks on a button on the screen} \\\hline
 \textbf{Response} & \multicolumn{4}{| p{9cm} |}{The user interface responds accordingly within 2 seconds} \\\hline \hline
 \textbf{Architectural Decision} & \textbf{Sensitivity} & \textbf{Tradeoff} & \textbf{Risk} & \textbf{Nonrisk}\\\hline
-Secure Service Facade before every component & & T1 & &  \\\hline
-Authentication Enforcer & & & R1 &  \\\hline
-Authorization Enforcer & & & R1 &  \\\hline \hline
+Model-view-controller & & & & NR1  \\\hline
+Publish-subscribe & S2& & R2& NR2  \\\hline
+Broker & & & R3 &  \\\hline
+Message queueing & & & R4&  \\\hline
+Authentication enforcer & &T5 & R5& \\\hline
+Authorization enforcer & &T6 & R6& \\\hline
+Checkpointed system & &T7 & R7& \\\hline
+Load balancer & & & & NR8\\\hline
+Secure access layer & &T9 & R9& \\\hline
+Secure logger & &T10 & R10& \\\hline
+Secure pipe & &T11 & R11& \\\hline
+Secure service facade& &T12 & R12& \\\hline
+Application firewall & &T13 & R13& \\\hline
+Audit interceptor & &T14 & R14& \\\hline
+\hline
 \textbf{Architecture diagram} & \multicolumn{4}{| p{9cm} |}{See figures \ref{fig:decomposition_secured} and \ref{fig:deployment_secured}} \\\hline
 \end{tabular}
 \begin{itemize}
-\item \textbf{T1:} Going through the secure service facade for every operation enhances modifiability but imposes a performance cost.
-\item \textbf{R1:} There is only one instance of the authentication and authorization enforcer for the whole system. This is a single point of failure.
+\item \textbf{NR1:} ???
+\item \textbf{S2 \& R2 \& NR2:} The publish-subscribe mechanism imposes a risk, there are extra indirections in the
+form of one or more listeners and those may cause extra latency, and a non-risk. Without publish-subscribe, the user
+interface would have to poll the server for updates and that could be very harmfull for responsiveness of the
+user interfaces. If the events are more fine-grained, the user interface may be able to act more quickly.
+\item \textbf{R3:} The broker means an extra layer of indirection and thus also an extra latency.
+\item \textbf{R4:} A message queue implicates extra latency, especially if the ordering of events has to
+be respected, f.i. if one event can't be sent because the receiver has some temporarely network problem, all other
+events in the queue will suffer.
+\item \textbf{R5 \& R6 \& R9 \& R10 \& R11 \& R12 \& R13 \& R14:} Some security patterns add extra latency to the server response, because there are some security
+related operations (such as authentication or authorization checks) that need to be done before the actual action
+can be processed and the server can response.
+\item \textbf{T5 \& T6 \& T10 \& T11 \& T12 \& T13 \& T14:} Some security patterns are typically a tradeoff between the security of the system and the
+performance and usability.
+\item \textbf{T7 \& R6:} Periodically making checkpoints adds additional latency. Checkpointing or not is a tradeoff
+between performance and fault-tolerance.
+\item \textbf{NR8:} The load balancer can allocate new tables to servers with low load, thus improving
+the latency of that table.
 \end{itemize}
 \chapter{Discussion and conclusions}
 
