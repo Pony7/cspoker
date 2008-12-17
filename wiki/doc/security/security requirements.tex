@@ -2248,10 +2248,10 @@ could just be switched with the replica. The degree and form of replication dete
 of failure can't be lost.
 \item \textbf{R3:} The authentication enforcer requires authentication informationt to be added and stored
 at runtime. This data must also be recovered when a hard disk crash happens.
-\item \textbf{S4 \& NR4} Having a checkpointed system in the cashier server greatly simplifies the recovery
+\item \textbf{S4 \& NR4:} Having a checkpointed system in the cashier server greatly simplifies the recovery
 from a disk failure of cashier data: the previous checkpoint can be used to revert to the state before the crash.
 If the checkpoints are more fine grained, recovery will be easier.
-\item \textbf{T4} More finegrained checkpoints means more overhead and cost, but easier recovery from a hard disk failure.
+\item \textbf{T4:} More finegrained checkpoints means more overhead and cost, but easier recovery from a hard disk failure.
 \item \textbf{R5:} Having a comparator-checked fault-tolerant system could make recovery easier, so 
 not having one is a risk.
 \item \textbf{NR6:} The broker adds an extra layer of indirection to the system, this facilitates recovery because
@@ -2282,10 +2282,10 @@ things can be switched and adapted without the clients noticing it.
 \item \textbf{S2 \& R2:} With the publish-subscriber approach, there may be events that are lost during transmission due
 to a network failure. Recovery has to deal with these missing events. More (sorts of) events will also mean
 more difficult recovery.
-\item \textbf{S3 \& NR3 \& T3:} Recovery from a network failure is easier with a message queue, because the messages can just
+\item \textbf{S3, NR3 \& T3:} Recovery from a network failure is easier with a message queue, because the messages can just
 be queued further untill the network problem is resolved. A longer message queue will allow longer downtime untill
 the system has recovered, but it will have greater cost.
-\item \textbf{NR4} The load balancer can facilitate recovery by dynamically relocating tables to other servers when
+\item \textbf{NR4:} The load balancer can facilitate recovery by dynamically relocating tables to other servers when
 one server has suffered from network failure.
 \item \textbf{S5 \& R5 :} Replicating the system would make recovery from network failure easier cause the system
 could just be switched with the replica. The degree and form of replication determines how easy recovery would be.
@@ -2401,7 +2401,7 @@ Audit interceptor & &T14 & R14& \\\hline
 \end{tabular}
 \begin{itemize}
 \item \textbf{NR1:} ???
-\item \textbf{S2 \& R2 \& NR2:} The publish-subscribe mechanism imposes a risk, there are extra indirections in the
+\item \textbf{S2, R2 \& NR2:} The publish-subscribe mechanism imposes a risk, there are extra indirections in the
 form of one or more listeners and those may cause extra latency, and a non-risk. Without publish-subscribe, the user
 interface would have to poll the server for updates and that could be very harmfull for responsiveness of the
 user interfaces. If the events are more fine-grained, the user interface may be able to act more quickly.
@@ -2409,10 +2409,10 @@ user interfaces. If the events are more fine-grained, the user interface may be 
 \item \textbf{R4:} A message queue implicates extra latency, especially if the ordering of events has to
 be respected, f.i. if one event can't be sent because the receiver has some temporarely network problem, all other
 events in the queue will suffer.
-\item \textbf{R5 \& R6 \& R9 \& R10 \& R11 \& R12 \& R13 \& R14:} Some security patterns add extra latency to the server response, because there are some security
+\item \textbf{R5, R6, R9, R10, R11, R12, R13 \& R14:} Some security patterns add extra latency to the server response, because there are some security
 related operations (such as authentication or authorization checks) that need to be done before the actual action
 can be processed and the server can response.
-\item \textbf{T5 \& T6 \& T10 \& T11 \& T12 \& T13 \& T14:} Some security patterns are typically a tradeoff between the security of the system and the
+\item \textbf{T5, T6, T10, T11, T12, T13 \& T14:} Some security patterns are typically a tradeoff between the security of the system and the
 performance and usability.
 \item \textbf{T7 \& R6:} Periodically making checkpoints adds additional latency. Checkpointing or not is a tradeoff
 between performance and fault-tolerance.
