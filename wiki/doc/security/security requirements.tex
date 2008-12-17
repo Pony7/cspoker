@@ -1954,23 +1954,6 @@ Altered client provided to the players & Currently not covered (not part of the 
 \label{table:gap3}
 \end{table}
 
-\section{Criticism}
-\label{Criticism}
-\begin{itemize}
-\item The classification of the threat tree isn't very clear sometimes: e.g. you can tamper with the server process
-to spoof the server and thus tampering with the data. The flat STRIDE classification doesn't feel adequate for those threats.
-\item The threat tree isn't complete; for instance there is nothing in it about spoofing by corruption of
-DNS records.
-\item Some business use cases can't be covered with the list of security patterns in the given catalog
-\item The list of labels is incomplete for some security patterns in the catalog: e.g. Secure Pipe should also have
-the Confidentiality label.
-\item Some patterns that are mentioned by other security patterns, aren't listed in the catalog: e.g. Secure Pipe
-benefits from Security Association, but the latter pattern isn't listed in the catalog. Input Guard also isn't
-in the list.
-\item Repudiaton of processes/data stores that are internal to the system is very unclear. In the lectures it was said that this was, for instance, the casino denying that it did something. In \cite[p270]{1202957} however it is explained as an external entity tampering with the process/data store to be able to deny having done something. The difference with repudiaton of that external entity is unclear.
-\item Some patterns solve security objectives in a way that doesn't relate to the misuse cases labeled with that objective. For instance, the misuse cases for application integrity listed in section \ref{ApplicationIntegrityMUCs} are not really solved by the patterns provided in section \ref{ArchitecturalApplicationIntegrity}. This mis-mapping might go unnoticed because the patterns are valueable regardless of their correspondance to the misuse cases. They do however put in question the process applied here.
-\end{itemize}
-
 \chapter{Evaluating the architecture}
 
 \section{Identified Architectural Approaches}
@@ -2315,7 +2298,7 @@ could just be switched with the replica. The degree and form of replication dete
 \textbf{Scenario \#: S1.1} & \multicolumn{4}{| p{9cm} |}{\textbf{Scenario:} 99.999\% of all users are correctly authenticated.} \\\hline
 \textbf{Attribute(s)} & \multicolumn{4}{| p{9cm} |}{Security} \\\hline
 \textbf{Environment} & \multicolumn{4}{| p{9cm} |}{Online, connected, open} \\\hline
-\textbf{Stimulus} & \multicolumn{4}{| p{9cm} |}{Tries to perform an action or access data} \\\hline
+\textbf{Stimulus} & \multicolumn{4}{| p{9cm} |}{Tries to authenticate himself at the poker server} \\\hline
 \textbf{Response} & \multicolumn{4}{| p{9cm} |}{The authentication service is available for 99.999\% of all user actions.} \\\hline \hline
 \textbf{Architectural Decision} & \textbf{Sensitivity} & \textbf{Tradeoff} & \textbf{Risk} & \textbf{Nonrisk}\\\hline
 Client-Server & & & & NR1 \\\hline
@@ -2327,7 +2310,7 @@ Secure Service Facade before every component & & & & NR5 \\\hline
 Application Firewall & & & & NR6 \\\hline
 No Container Managed Security & & & R4 &  \\\hline
 No Demilitarized Zone& & & R5 &  \\\hline
-Firewall & & & &  \\\hline
+Firewall & & & & NR7  \\\hline
 \textbf{Architecture diagram} & \multicolumn{4}{| p{9cm} |}{See figures \ref{fig:decomposition_secured} and \ref{fig:deployment_secured}} \\\hline
 \end{tabular}
 \begin{itemize}
@@ -2335,18 +2318,18 @@ Firewall & & & &  \\\hline
 \item \textbf{S2:} Increasing the strength of the encryption for the channel will decrease the risk.
 \item \textbf{T1:} Using more replication will come with a higher cost.
 \item \textbf{T2:} Using a stronger encryptions negatively affects performance.
-\item \textbf{R1:} Token can be too weak an be broken.
+\item \textbf{R1:} Token can be too weak and be broken.
 \item \textbf{R2:} There is no replication of the authentication enforcer. If the authentication enforcer is unavailable, no authentication is possible.
-\item \textbf{R3:} 
-
-
-
+\item \textbf{R3:} The encryption of the channel can be weak and be broken.
+\item \textbf{R4:} When the container is responsible for managing authentication, less errors can be made at the application level for correct authentication. Therefor not using a container managed solution poses a risk.
+\item \textbf{R5:} Using a demilitarised zone can make it more difficult to attack the core poker servers. Therefor not using a demilitarized zone is a risk.
 \item \textbf{NR1:} Client-Server is a good choice to provide authentication. If a peer-to-peer poker protocol is chosen authentication will be hard to enforce.
 \item \textbf{NR2:} An authentication enforcer is a good choice to centralize all authentication needs for the whole system.
 \item \textbf{NR3:} A credential tokenizer encapsulates all different types of user credentials. This makes future modifications to stronger security tokens possible.
 \item \textbf{NR4:} A strong secure pipe makes it impossible to eavesdrop and alter credentials. 
 \item \textbf{NR5:} All actions pass through the secure service facade where the authentication is performed.
 \item \textbf{NR6:} The application firewall performs input validation so no tampering is possible to bypass the authentication.
+\item \textbf{NR7:} A firewall can limit the access to the poker server from suspicious clients.
 \end{itemize}
 
 \begin{tabular}{| p{4,5cm} | p{2,25cm} | p{2,25cm} | p{2,25cm} | p{2,25cm} | }
@@ -2355,18 +2338,39 @@ Firewall & & & &  \\\hline
 \textbf{Attribute(s)} & \multicolumn{4}{| p{9cm} |}{Security} \\\hline
 \textbf{Environment} & \multicolumn{4}{| p{9cm} |}{Online, connected, open} \\\hline
 \textbf{Stimulus} & \multicolumn{4}{| p{9cm} |}{Tries to perform an action or access data} \\\hline
-\textbf{Response} & \multicolumn{4}{| p{9cm} |}{Authorization is performed before every sensitive operation. The authorization service is available for 99.999\% of all user actions.} \\\hline \hline
+\textbf{Response} & \multicolumn{4}{| p{9cm} |}{The authorization service is available for 99.999\% of all user actions.} \\\hline \hline
 \textbf{Architectural Decision} & \textbf{Sensitivity} & \textbf{Tradeoff} & \textbf{Risk} & \textbf{Nonrisk}\\\hline
-Secure Service Facade before every component & & T1 & &  \\\hline
-Authentication Enforcer & & & R1 &  \\\hline
-Authorization Enforcer & & & R1 &  \\\hline \hline
-\textbf{Reasoning} & \multicolumn{4}{| p{9cm} |}{All actions pass through the secure service facade where the user is authenticated with the authentication enforcer. The authorization is performed on the authenticated subject by the authorization enforcer.} \\\hline
+Authentication Enforcer & & & & NR1 \\\hline
+Authorization Enforcer & & & & NR2 \\\hline
+Credential Tokenizer & S1 & & R1 & NR3 \\\hline
+No Replicated System & & T1 & R2 &  \\\hline
+Secure Pipe & S2 & T2 & R3 & NR4 \\\hline
+Secure Service Facade before every component & & & & NR5 \\\hline
+Application Firewall & & & & NR6 \\\hline
+No Container Managed Security & & & R4 &  \\\hline
+No Demilitarized Zone& & & R5 &  \\\hline
+Firewall & & & & NR7  \\\hline
 \textbf{Architecture diagram} & \multicolumn{4}{| p{9cm} |}{See figures \ref{fig:decomposition_secured} and \ref{fig:deployment_secured}} \\\hline
 \end{tabular}
 \begin{itemize}
-\item \textbf{T1:} Going through the secure service facade for every operation enhances modifiability but imposes a performance cost.
-\item \textbf{R1:} There is only one instance of the authentication and authorization enforcer for the whole system. This is a single point of failure.
+\item \textbf{S1:} Increasing the strength of the token will decrease the risk.
+\item \textbf{S2:} Increasing the strength of the encryption for the channel will decrease the risk.
+\item \textbf{T1:} Using more replication will come with a higher cost.
+\item \textbf{T2:} Using a stronger encryptions negatively affects performance.
+\item \textbf{R1:} Token can be too weak and be broken.
+\item \textbf{R2:} There is no replication of the authorization enforcer. If the authorization enforcer is unavailable, no authentication is possible.
+\item \textbf{R3:} The encryption of the channel can be weak and be broken.
+\item \textbf{R4:} When the container is responsible for managing authorization, less errors can be made at the application level for correct authorization. Therefor not using a container managed solution poses a risk.
+\item \textbf{R5:} Using a demilitarised zone can make it more difficult to attack the core poker servers. Therefor not using a demilitarized zone is a risk.
+\item \textbf{NR1:} Authentication is required before a correct authorization can be performed.
+\item \textbf{NR2:} An authorization enforcer is a good choice to centralize all access control policies for the whole system.
+\item \textbf{NR3:} A credential tokenizer encapsulates all different types of user credentials. This makes future modifications to stronger security tokens possible.
+\item \textbf{NR4:} A strong secure pipe makes it impossible to eavesdrop and alter credentials and actions.
+\item \textbf{NR5:} All actions pass through the secure service facade where the authorization is performed.
+\item \textbf{NR6:} The application firewall performs input validation so no tampering is possible to bypass the authorization.
+\item \textbf{NR7:} A firewall can limit the access to the poker server from suspicious clients.
 \end{itemize}
+
 \subsection{Usability}
 \begin{tabular}{| p{4,5cm} | p{2,25cm} | p{2,25cm} | p{2,25cm} | p{2,25cm} | }
 \hline
@@ -2388,6 +2392,26 @@ Authorization Enforcer & & & R1 &  \\\hline \hline
 \chapter{Discussion and conclusions}
 
 One of the problems with the methodology used is that the system under investigation is either so trivial that the methodology is unnecessary or so complex and versatile that it is subject to the exact same threats as any other system. Because there are so few solution patterns for the typical problems, a thorough analysis is superfluous.
+
+\section{Criticism}
+\label{Criticism}
+\subsection{Securing the architecture}
+\begin{itemize}
+\item The classification of the threat tree isn't very clear sometimes: e.g. you can tamper with the server process
+to spoof the server and thus tampering with the data. The flat STRIDE classification doesn't feel adequate for those threats.
+\item The threat tree isn't complete; for instance there is nothing in it about spoofing by corruption of
+DNS records.
+\item Some business use cases can't be covered with the list of security patterns in the given catalog
+\item The list of labels is incomplete for some security patterns in the catalog: e.g. Secure Pipe should also have
+the Confidentiality label.
+\item Some patterns that are mentioned by other security patterns, aren't listed in the catalog: e.g. Secure Pipe
+benefits from Security Association, but the latter pattern isn't listed in the catalog. Input Guard also isn't
+in the list.
+\item Repudiaton of processes/data stores that are internal to the system is very unclear. In the lectures it was said that this was, for instance, the casino denying that it did something. In \cite[p270]{1202957} however it is explained as an external entity tampering with the process/data store to be able to deny having done something. The difference with repudiaton of that external entity is unclear.
+\item Some patterns solve security objectives in a way that doesn't relate to the misuse cases labeled with that objective. For instance, the misuse cases for application integrity listed in section \ref{ApplicationIntegrityMUCs} are not really solved by the patterns provided in section \ref{ArchitecturalApplicationIntegrity}. This mis-mapping might go unnoticed because the patterns are valueable regardless of their correspondance to the misuse cases. They do however put in question the process applied here.
+\end{itemize}
+
+\subsection{Evaluating the architecture}
 
 In the examples for the quality attribute scenarios, it is said that the system ``works'' 99.99\% of the time. We think this is a weakness of the methodology. A good metric is impossible for some quality attributes and trying to force a number in is not helpful, certainly not with vague concepts as ``works''. We believe a better solution should exist for these quality attributes.
 
