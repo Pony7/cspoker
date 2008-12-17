@@ -2175,9 +2175,9 @@ decision & sens & trade & risk & nonrisk  \\\hline \hline
 Broker  &  &  & R1 &   \\\hline 
 Checkpointed System  & S2 &  & R2 &   \\\hline 
 No Comparator-checked Fault-tolerant System   & S3 &  &  & NR3  \\\hline 
-Load Balancer  & S4 &  & R4 &   \\\hline 
+Load Balancer  & S4 & T4  & R4 &   \\\hline 
 No Replicated System  & S5 &  &  & NR5  \\\hline 
-Secure Logger  & S6 &  & R6 &   \\\hline 
+Secure Logger  & S6 & T6 & R6 &   \\\hline 
 Application Firewall  & S7 &  & R7 &   \\\hline 
 \hline
 \textbf{Architecture diagram} & \multicolumn{4}{| p{9cm} |}{See figures \ref{fig:decomposition_secured} and \ref{fig:deployment_secured}} \\\hline
@@ -2186,9 +2186,9 @@ Application Firewall  & S7 &  & R7 &   \\\hline
 \item \textbf{R1:} Adding the level of indirection of a broker requires extra hardware. This adds a new point of failure to the entire system.
 \item \textbf{S2 \& R2:} Having a checkpointed system in the cashier server requires a lot of extra hardware utilization. The more fine grained the checkpoints, the more utilization and the larger the risk.
 \item \textbf{S3 \& NR3:} By not choosing a comparator-checked fault-tolerant system, we do not incur the cost of adding the extra hardware that might also cause failure to occur. If we were to choose it, the number of replicated systems would increase the risk of hard disk failure.
-\item \textbf{S4 \& R4:} Every server in the load balancing setup of the table servers imposes an extra risk of hard disk failure.
+\item \textbf{S4, T4 \& R4:} Every server in the load balancing setup of the table servers imposes an extra risk of hard disk failure. There's a tradeoff with the performance advantage the load balancer has.
 \item \textbf{S5 \& NR5:} Not replicating all the processes in the system reduces the probability that a hard disk will fail somewhere.
-\item \textbf{S6 \& R6:} The secure logger pattern brings with it the need for an extra data source, typically using hard drives for persistent storage. The level of logging detail relates to the disk utilization, which relates to the risk of hard drive failure.
+\item \textbf{S6, T6 \& R6:} The secure logger pattern brings with it the need for an extra data source, typically using hard drives for persistent storage. The level of logging detail relates to the disk utilization, which relates to the risk of hard drive failure. There's a tradeoff with the positive impact of a secure logger, e.g. on Maintainability.
 \item \textbf{S7 \& R7:} An application firewall can be run on a seperate server which adds an extra point of failure.
 \end{itemize}
 
@@ -2241,8 +2241,8 @@ Broker & & & & NR6  \\\hline
 \textbf{Architecture diagram} & \multicolumn{4}{| p{9cm} |}{See figures \ref{fig:decomposition_secured} and \ref{fig:deployment_secured}} \\\hline
 \end{tabular}
 \begin{itemize}
-\item \textbf{S1 \& R1 :} Replicating the system would make recovery from hard disk failure easier cause the system
-could just be switched with the replica. The degree and form of replication determines how easy recovery would be.
+\item \textbf{S1 \& R1 :} Replicating the system would make recovery from hard disk failure easier because the system
+could just be replaced by the replica. The degree and form of replication determines how easy recovery would be.
 \item \textbf{T1:} More replication will make recovery easier, but it will increase the cost.
 \item \textbf{R2:} A message queue makes recovery more difficult because the messages in the queue at the time 
 of failure can't be lost.
@@ -2421,7 +2421,7 @@ the latency of that table.
 \end{itemize}
 \chapter{Discussion and conclusions}
 
-One of the problems with the methodology used is that the system under investigation is either so trivial that the methodology is unnecessary or so complex and versatile that it is subject to the exact same threats as any other system. Because there are so few solution patterns for the typical problems, a thorough analysis is superfluous.
+One of the problems with the methodology used is that the system under investigation is either so trivial that the methodology is unnecessary or so complex and versatile that it is subject to the exact same threats as any other system. Because there are so few solution patterns for the typical problems, a thorough MUC analysis is superfluous.
 
 \section{Criticism}
 \label{Criticism}
@@ -2443,9 +2443,11 @@ in the list.
 
 \subsection{Evaluating the architecture}
 
-In the examples for the quality attribute scenarios, it is said that the system ``works'' 99.99\% of the time. We think this is a weakness of the methodology. A good metric is impossible for some quality attributes and trying to force a number in is not helpful, certainly not with vague concepts as ``works''. We believe a better solution should exist for these quality attributes.
+In the examples for the quality attribute scenarios, it is said that the system ``works'' 99.99\% of the time. We think this is a weakness of the methodology. A good metric is impossible for some quality attributes and trying to force a number in is not helpful, certainly not with vague concepts like ``works''. We believe a better solution should exist for these quality attributes.
 
-In the quality attribute tree for Usability in \cite{citeulike:174301}, one of the nodes is called ``Seperate User Interface''. This is an example of how Maintainability has a positive influence on other attributes. This can also be observed for other attributes. Good Maintainability will make it easier to do Performance profiling and optimization. More such dependencies exist. Explicitating the dependency for Usability but not for other quality attributes comes across as a rather arbitrary choice.
+In the quality attribute tree for Usability in \cite{citeulike:174301}, one of the nodes is called ``Seperate User Interface''. This is an example of how Maintainability has a positive influence on other attributes. This can also be observed for other quality attributes. For example, good Maintainability will make it easier to do Performance profiling and optimization. More such dependencies exist. Explicitating the dependency for Usability but not for other quality attributes comes across as a rather arbitrary choice.
+
+The tradeoff column in the quality attribute scenarios is difficult to fill in. Essentially, every architactural decision will have some impact on other attributes, even if it is cost. Every architectural decision should have an entry in this column, which makes it rather useless.
 
 \nocite{1202957}
 \nocite{citeulike:174301}
