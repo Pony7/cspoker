@@ -124,7 +124,7 @@ Furthermore, the processes \textit{Chat Service} and \textit{Cashier} are not el
 
 The misuse cases are ordered by the entity under threat. Not all threats are equally important though. Repudiation is an important threat with legal consequences. Information disclosure is also important because it makes cheating very easy. Denial of Service attacks are less profitable for crooks and therefore less likely.
 
-Threats that are located more to the exterior of te system (closer to the Player) are more likely to be feasible and are more important. For this reason we completely specified the threats for the Player and Poker Server. Because there are many data flows, we chose to completely specify the threats for the different abstractions in section \ref{PlayerFlowCases} and \ref{LoggingEngineFlowCases}. Between the two data stores we chose to go in to detail for the account data.
+Threats that are located more to the exterior of te system (closer to the Player) are more likely to be feasible and are more important. For this reason we completely specified the threats for the Player and Poker Server. Because there are many data flows, we chose to completely specify the threats for the different abstractions in section \ref{PlayerFlowCases} and \ref{LoggingEngineFlowCases}. Between the two data stores we chose to go in to detail for the account data in order to cover all the different element types in the analysis.
 
 \subsection{Player}
 \label{PlayerCases}
@@ -671,14 +671,13 @@ Here we choose to reduce the number of data flows from/to the Player because int
 \end{itemize}
 \textbf{Basic path:}
 \begin{itemize}
-\item The mis-actor find a weakness in the integrity of token requests.
 \item The mis-actor intercepts a token request sent by another Player.
 \item The mis-actor replays the token request to obtain a token.
 \end{itemize}
 \textbf{Alternative paths:}
 \begin{itemize}
 \item The mis-actor spoofs another Player to send fake token requests.
-\item The mis-actor performs a MITM attack and eavesdrop on the token requests sent by a genuine Player.
+\item The mis-actor performs a MITM attack\footnote{Man-in-the-middle attack} and eavesdrops on the token requests sent by a genuine Player.
 \end{itemize}
 \textbf{Capture points:}
 \begin{itemize}
@@ -697,14 +696,13 @@ Here we choose to reduce the number of data flows from/to the Player because int
 \end{itemize}
 \textbf{Basic path:}
 \begin{itemize}
-\item The mis-actor find a weakness in the integrity of tokens sent to the Player.
 \item The mis-actor intercepts a token.
-\item The mis-actor modifies token before sending it to the Player with a MITM attack. The modified token can refer to a process spoofed by the mis-actor..
+\item The mis-actor modifies a token before sending it to the Player in a MITM attack. The modified token can refer to a process spoofed by the mis-actor.
 \end{itemize}
 \textbf{Alternative paths:}
 \begin{itemize}
 \item The mis-actor spoofs the Poker Server to send fake tokens.
-\item The mis-actor modifies or replays tokens.
+\item The mis-actor replays tokens.
 \end{itemize}
 \textbf{Capture points:}
 \begin{itemize}
@@ -723,7 +721,6 @@ Here we choose to reduce the number of data flows from/to the Player because int
 \end{itemize}
 \textbf{Basic path:}
 \begin{itemize}
-\item The mis-actor find a weakness in the integrity of actions.
 \item The mis-actor changes messages to his advantage, sends fake messages that go undetected or replays messages sent by a Player. For example, the mis-actor can replace the bet amount by a larger number when he has very good cards)
 \end{itemize}
 \textbf{Alternative paths:}
@@ -748,8 +745,7 @@ Here we choose to reduce the number of data flows from/to the Player because int
 \end{itemize}
 \textbf{Basic path:}
 \begin{itemize}
-\item The mis-actor find a weakness in the integrity of responses or events.
-\item The mis-actor changes events to his advantage, sends fake events or replays events For example, the mis-actor can replace the pocket cards sent to another player by aces to trick him in to betting excessively.
+\item The mis-actor changes events to his advantage, sends fake events or replays events For example, the mis-actor can replace the pocket cards sent to another player by aces to trick him into betting excessively.
 \end{itemize}
 \textbf{Alternative paths:}
 \begin{itemize}
@@ -780,7 +776,6 @@ Here we choose to reduce the number of data flows from/to the Player because int
 \textbf{Alternative paths:}
 \begin{itemize}
 \item The mis-actor sets up a MITM attack.
-\item The mis-actor observes data through a side channel.
 \end{itemize}
 \textbf{Capture points:}
 \begin{itemize}
@@ -788,7 +783,6 @@ Here we choose to reduce the number of data flows from/to the Player because int
 \begin{itemize}
 \item Use stong message confidentiality.
 \item Use strong channel confidentiality.
-\item Review known side channel vulnerabilities to determine if they apply and fix them.
 \end{itemize}
 \end{itemize}
 
@@ -801,12 +795,11 @@ Here we choose to reduce the number of data flows from/to the Player because int
 \textbf{Basic path:}
 \begin{itemize}
 \item The mis-actor finds a weakness in the confidentiality of token message and the channel used to send them.
-\item The mis-actor observes the tokens and can use them in a spoofing attack.
+\item The mis-actor observes the tokens issued to the Player.
 \end{itemize}
 \textbf{Alternative paths:}
 \begin{itemize}
 \item The mis-actor sets up a MITM attack.
-\item The mis-actor observes data through a side channel.
 \end{itemize}
 \textbf{Capture points:}
 \begin{itemize}
@@ -814,7 +807,6 @@ Here we choose to reduce the number of data flows from/to the Player because int
 \begin{itemize}
 \item Use stong message confidentiality.
 \item Use strong channel confidentiality.
-\item Review known side channel vulnerabilities to determine if they apply and fix them.
 \end{itemize}
 \end{itemize}
 
@@ -832,7 +824,6 @@ Here we choose to reduce the number of data flows from/to the Player because int
 \textbf{Alternative paths:}
 \begin{itemize}
 \item The mis-actor sets up a MITM attack.
-\item The mis-actor observes data through a side channel.
 \end{itemize}
 \textbf{Capture points:}
 \begin{itemize}
@@ -840,7 +831,6 @@ Here we choose to reduce the number of data flows from/to the Player because int
 \begin{itemize}
 \item Use stong message confidentiality.
 \item Use strong channel confidentiality.
-\item Review known side channel vulnerabilities to determine if they apply and fix them.
 \end{itemize}
 \end{itemize}
 
@@ -858,7 +848,6 @@ Here we choose to reduce the number of data flows from/to the Player because int
 \textbf{Alternative paths:}
 \begin{itemize}
 \item The mis-actor sets up a MITM attack.
-\item The mis-actor observes data through a side channel.
 \end{itemize}
 \textbf{Capture points:}
 \begin{itemize}
@@ -866,7 +855,6 @@ Here we choose to reduce the number of data flows from/to the Player because int
 \begin{itemize}
 \item Use stong message confidentiality.
 \item Use strong channel confidentiality.
-\item Review known side channel vulnerabilities to determine if they apply and fix them.
 \end{itemize}
 \end{itemize}
 
@@ -886,7 +874,7 @@ Here we choose to reduce the number of data flows from/to the Player because int
 \begin{itemize}
 \item The mis-actor consumes resources required by the Player or process.
 \item The mis-actor corrupts the token requests.
-\item The mis-actor preplays token requests, making that functionality unavailable for a Player.
+\item The mis-actor pre-plays token requests, making that functionality unavailable for a Player.
 \end{itemize}
 \textbf{Capture points:}
 \begin{itemize}
@@ -936,7 +924,7 @@ Here we choose to reduce the number of data flows from/to the Player because int
 \begin{itemize}
 \item The mis-actor consumes resources required by the Player or process.
 \item The mis-actor corrupts the actions.
-\item The mis-actor preplays actions, making them unavailable for a Player.
+\item The mis-actor pre-plays actions, making them unavailable for a Player.
 \end{itemize}
 \textbf{Capture points:}
 \begin{itemize}
@@ -982,9 +970,8 @@ Here we choose to reduce the number of data flows from/to the Player because int
 \end{itemize}
 \textbf{Basic path:}
 \begin{itemize}
-\item The mis-actor find a weakness in the integrity of logging requests.
 \item The mis-actor intercepts a logging request sent by another process.
-\item The mis-actor replays the logging request to duplicate the thing to be logged.
+\item The mis-actor replays the logging request to duplicate the event to be logged.
 \end{itemize}
 \textbf{Alternative paths:}
 \begin{itemize}
@@ -1014,7 +1001,6 @@ Here we choose to reduce the number of data flows from/to the Player because int
 \textbf{Alternative paths:}
 \begin{itemize}
 \item The mis-actor sets up a MITM attack.
-\item The mis-actor observes data through a side channel.
 \end{itemize}
 \textbf{Capture points:}
 \begin{itemize}
@@ -1022,7 +1008,6 @@ Here we choose to reduce the number of data flows from/to the Player because int
 \begin{itemize}
 \item Use stong message confidentiality.
 \item Use strong channel confidentiality.
-\item Review known side channel vulnerabilities to determine if they apply and fix them.
 \end{itemize}
 \end{itemize}
 \subsubsection{Denial of Service of logging requests}
@@ -1033,12 +1018,12 @@ Here we choose to reduce the number of data flows from/to the Player because int
 \end{itemize}
 \textbf{Basic path:}
 \begin{itemize}
-\item The mis-actor incapacitates the channel by incapacitating the Logging Engine.
-\item No process cannot log things.
+\item The mis-actor incapacitates the channel by incapacitating the Logging Engine or the process sending the logging request.
+\item Logging is not possible.
 \end{itemize}
 \textbf{Alternative paths:}
 \begin{itemize}
-\item The mis-actor consumes resources required by other processes.
+\item The mis-actor consumes resources required by the Logging Engine or the process sending the logging request.
 \item The mis-actor corrupts the logging requests.
 \item The mis-actor preplays logging requests, making that functionality unavailable for other processes.
 \end{itemize}
