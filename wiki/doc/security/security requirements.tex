@@ -140,7 +140,7 @@ Furthermore, the processes \textit{Chat Service} and \textit{Cashier} are not el
 
 The misuse cases are ordered by the entity under threat. Not all threats are equally important though. Repudiation is an important threat with legal consequences. Information disclosure is also important because it makes cheating very easy. Denial of Service attacks are less profitable for crooks and therefore less likely.
 
-Threats that are located more to the exterior of te system (closer to the Player) are more likely to be feasible and are more important. For this reason we completely specified the threats for the Player and Poker Server. Because there are many data flows, we chose to completely specify the threats for the different abstractions in section \ref{PlayerFlowCases} and \ref{LoggingEngineFlowCases}. Between the two data stores we chose to go in to detail for the account data in order to cover all the different element types in the analysis.
+Threats that are located more to the exterior of the system (closer to the Player) are more likely to be feasible and are more important. For this reason we completely specified the threats for the Player and Poker Server. Because there are many data flows, we chose to completely specify the threats for the different abstractions in section \ref{PlayerFlowCases} and \ref{LoggingEngineFlowCases}. Between the two data stores we chose to go in to detail for the account data in order to cover all the different element types in the analysis.
 
 \subsection{Player}
 \label{PlayerCases}
@@ -1469,19 +1469,19 @@ Application Confidentiality is not applicable since the code is open source.
 \label{SecuringTheArchitecture}
 \section{Quality trade-off labels}
 \label{labels}
-By analyzing the business goals, we constructed the following ordered list of quality trade-off labels (the ordering of this list is based on the relative importance of the different business goals):
+By analyzing the business goals, we constructed the following ordered list of quality trade-off labels. The ordering of this list is based on the relative importance of the different business goals as they were descibed in the architectural description:
 \begin{description}
 \item[Usability] The online casino has to be as easy to use as possible.
 This quality attribute might seem less important than confidentiality and
 integrity but in reality cheating will always happen (e.g. collusion) and
 the loss will be calculated in. When a lot of people play in the online
 casino because it is the most usable, this cost will be less significant.
-\item[Confidentiality] It is important that certain information like the cards of a player, remains
+\item[Confidentiality] It is important that certain information, like the cards of a player, remains
 confidential.
-\item[Integrity] No one should be able to compromise the integrity of the application or it's data.
+\item[Integrity] No one should be able to compromise the integrity of the application or its data.
 \item[Accountability] No player may be able to repudiate any bets or other actions.
 \item[Manageability] The application must be easy to manage by an admin.
-\item[Cost] The cost of the application should be reasonable to low, so profit will remain solid.
+\item[Cost] The cost of the application should be reasonably low so profit will remain solid.
 \item[Performance] Performance being the possible amount of games played simultaneously, is important because it
 determines the maximum profit. It is very easy to come up with solutions
 to performance problems because of the distributed nature of the
@@ -1496,16 +1496,17 @@ for this application.
 
 \subsection{Analysis Phase}
 The analysis phase consists of eliciting the security requirements and annotating each
-security requirement with the security object it belongs to. The security requirements have been elicited by the misuse cases
+security requirement with the security objective it belongs to. The security requirements have been elicited by the misuse cases
 in secton \ref{MisUseCases}. The annotations to indicate for each misuse case to which security objective it belongs
 are given in section \ref{MUCLabels}.
-
 
 \subsection{Architecture Phase}
 As stated in \cite[p13]{yskout}, the architecture of the system is designed using Attribute-Driven Design or ADD,
 meaning it is created based on the non-functional requirements of the application and their relative importance.
 Therefore a prioritized list of quality attributes, inspired by the business goals, was formulated under
 section \ref{labels}. Then we iterate over the selection of architectural patterns, as it is stated by the methodology.
+
+The order in which we will now deal with the different objectives is slightly changed from the order of importance as given in section \ref{MUCLabels}. In accordance to the analysis of the importance of misuse cases in section \ref{MisUseCases}, we chose to move Availability to the lowest priority. The ordering of the other objectives remains unchanged.
 
 \subsubsection{Patterns already present}
 \label{pres_patterns}
