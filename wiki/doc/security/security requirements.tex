@@ -2302,22 +2302,25 @@ Credential Tokenizer & S1 & & R1 & NR3 \\\hline
 No Replicated System & & T1 & R2 &  \\\hline
 Secure Pipe & S2 & T2 & R3 & NR4 \\\hline
 Secure Service Facade before every component & & & & NR5 \\\hline
-Application Firewall & & & & NR6 \\\hline
-No Container Managed Security & & & R4 &  \\\hline
-No Demilitarized Zone& & & R5 &  \\\hline
+Application Firewall & S3 & T3 & R4 & NR6 \\\hline
+No Container Managed Security & & & R5 &  \\\hline
+No Demilitarized Zone& & & R6 &  \\\hline
 Firewall & & & & NR7  \\\hline
 \textbf{Architecture diagram} & \multicolumn{4}{| p{9cm} |}{See figures \ref{fig:decomposition_secured} and \ref{fig:deployment_secured}} \\\hline
 \end{tabular}
 \begin{itemize}
 \item \textbf{S1:} Increasing the strength of the token will decrease the risk.
 \item \textbf{S2:} Increasing the strength of the encryption for the channel will decrease the risk.
+\item \textbf{S3:} Increasing the number of input validations will decrease the risk.
 \item \textbf{T1:} Using more replication will come with a higher cost.
 \item \textbf{T2:} Using a stronger encryptions negatively affects performance.
+\item \textbf{T3:} Increasing the number of input validation will enhance security, but affects performance.
 \item \textbf{R1:} Token can be too weak and be broken.
 \item \textbf{R2:} There is no replication of the authentication enforcer. If the authentication enforcer is unavailable, no authentication is possible.
 \item \textbf{R3:} The encryption of the channel can be weak and be broken.
-\item \textbf{R4:} When the container is responsible for managing authentication, less errors can be made at the application level for correct authentication. Therefor not using a container managed solution poses a risk.
-\item \textbf{R5:} Using a demilitarised zone can make it more difficult to attack the core poker servers. Therefor not using a demilitarized zone is a risk.
+\item \textbf{R4:} If there is not enough input validation, some tampering attacks may be possible to alter the authentication behavior.
+\item \textbf{R5:} When the container is responsible for managing authentication, less errors can be made at the application level for correct authentication. Therefor not using a container managed solution poses a risk.
+\item \textbf{R6:} Using a demilitarised zone can make it more difficult to attack the core poker servers. Therefor not using a demilitarized zone is a risk.
 \item \textbf{NR1:} Client-Server is a good choice to provide authentication. If a peer-to-peer poker protocol is chosen authentication will be hard to enforce.
 \item \textbf{NR2:} An authentication enforcer is a good choice to centralize all authentication needs for the whole system.
 \item \textbf{NR3:} A credential tokenizer encapsulates all different types of user credentials. This makes future modifications to stronger security tokens possible.
@@ -2341,22 +2344,24 @@ Credential Tokenizer & S1 & & R1 & NR3 \\\hline
 No Replicated System & & T1 & R2 &  \\\hline
 Secure Pipe & S2 & T2 & R3 & NR4 \\\hline
 Secure Service Facade before every component & & & & NR5 \\\hline
-Application Firewall & & & & NR6 \\\hline
-No Container Managed Security & & & R4 &  \\\hline
-No Demilitarized Zone& & & R5 &  \\\hline
+Application Firewall & S3 & & R4 & NR6 \\\hline
+No Container Managed Security & & & R5 &  \\\hline
+No Demilitarized Zone& & & R6 &  \\\hline
 Firewall & & & & NR7  \\\hline
 \textbf{Architecture diagram} & \multicolumn{4}{| p{9cm} |}{See figures \ref{fig:decomposition_secured} and \ref{fig:deployment_secured}} \\\hline
 \end{tabular}
 \begin{itemize}
 \item \textbf{S1:} Increasing the strength of the token will decrease the risk.
 \item \textbf{S2:} Increasing the strength of the encryption for the channel will decrease the risk.
+\item \textbf{S3:} Increasing the number of input validations will decrease the risk.
 \item \textbf{T1:} Using more replication will come with a higher cost.
 \item \textbf{T2:} Using a stronger encryptions negatively affects performance.
 \item \textbf{R1:} Token can be too weak and be broken.
 \item \textbf{R2:} There is no replication of the authorization enforcer. If the authorization enforcer is unavailable, no authentication is possible.
 \item \textbf{R3:} The encryption of the channel can be weak and be broken.
-\item \textbf{R4:} When the container is responsible for managing authorization, less errors can be made at the application level for correct authorization. Therefor not using a container managed solution poses a risk.
-\item \textbf{R5:} Using a demilitarised zone can make it more difficult to attack the core poker servers. Therefor not using a demilitarized zone is a risk.
+\item \textbf{R4:} If there is not enough input validation, some tampering attacks may be possible to alter the authorization behavior.
+\item \textbf{R5:} When the container is responsible for managing authorization, less errors can be made at the application level for correct authorization. Therefor not using a container managed solution poses a risk.
+\item \textbf{R6:} Using a demilitarised zone can make it more difficult to attack the core poker servers. Therefor not using a demilitarized zone is a risk.
 \item \textbf{NR1:} Authentication is required before a correct authorization can be performed.
 \item \textbf{NR2:} An authorization enforcer is a good choice to centralize all access control policies for the whole system.
 \item \textbf{NR3:} A credential tokenizer encapsulates all different types of user credentials. This makes future modifications to stronger security tokens possible.
