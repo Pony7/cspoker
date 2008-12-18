@@ -25,23 +25,25 @@
 \listoffigures
 
 \chapter{Introduction}
-This document starts from an existing architecture of a poker application that was originally designed with only an intuitive idea of security threats for poker applications. By modelling the data flow through the application we try to locate areas that can be subjected to these threats.
+This document starts from an existing architecture of a poker application that was originally designed with only an intuitive idea of security threats for poker applications. By modelling the data flow through the application in chapter \ref{IdentifyingThreats} we try to locate areas that can be subjected to these threats.
 
-For a subset of entities we apply STRIDE to elicit security threats and we use threat tree patterns to render these threats more concrete. The results are documented as misuse cases. We alse present examples of business threats that cannot be discovered using the STRIDE methodology.
+For a subset of entities we apply STRIDE to elicit security threats. Then we use threat tree patterns to render these threats more concrete. The results are documented as misuse cases. We also present examples of business threats that cannot be discovered using the STRIDE methodology.
 
-By labeling these misuse cases, a set of security objectives is derived. Finally we add architectural and system patterns to the application to attain the security objectives, resulting in a new security enhanced architecture.
+By labeling these misuse cases in chapter \ref{SecuringTheArchitecture}, a set of security objectives is derived. We add architectural and system patterns to the application to attain the security objectives, resulting in a new security enhanced architecture.
+
+Finally we evaluate the enhanced architecture in chapter \ref{Evaluation} using part of the ATAM methodology. The risks that exist in the architecture are uncovered, together with positive decisions and tradeoffs.
 
 
 \chapter{Identifying threats}
 \label{IdentifyingThreats}
 \section{DFDs}
-Figure \ref{fig:context} shows the context level of the DFD. Figure \ref{fig:level_0} shows the level-0 DFD. The arrows are not annotated to make the diagram readable. A simplified version with only the player and annotated arrows can be found in figure \ref{fig:level_0_player}. In the following analysis only the interaction with the player will be considered as misuse cases, as those with an administrator as external entity are similar. Although some processes are complex and should be drilled down, we've chosen to do the STRIDE analysis on level-0 because it would already generate sufficient documentation.
+Figure \ref{fig:context} shows the context level of the DFD\footnote{Data Flow Diagram}. Figure \ref{fig:level_0} shows the level-0 DFD. The arrows are not annotated to make the diagram readable. A simplified version with only the player and annotated arrows can be found in figure \ref{fig:level_0_player}. In the following analysis, only the interaction with the player will be considered as misuse cases as those with an administrator as external entity are similar. Although some processes are complex and should be drilled down, we've chosen to do the STRIDE analysis on level-0 because it would already generate a sufficient amount of documentation.
 
 There are several trust boundaries that can be identified in the DFDs. First of all there is the trust boundary between the external entities and the processes. All input coming from the external entities should be validated and the data flow from the processes to the external entities should be analyzed for not leaking sensitive, private or confidential data. Inside this trust boundary several smaller trust boundaries can be recognized. These are the processes that deal with sensitive, private data:
 \begin{itemize}
-\item \textbf{Account Management:} account data should be protected and all data flowing out of this process should be verified extensively.
-\item \textbf{Table:} hole cards are confidential data only accessible for the player to whom they belong and the game engine to verify the winner at the end of a deal.
-\item \textbf{Logging Engine:} the logging should happen in a secure way so there is no possibility to alter the log, therefor the log entries arriving at the logging engine should be validated. The log also contains very sensitive data, so the access is only allowed to a very limited number of entities and processes.
+\item \textbf{Account Management:} Account data should be protected and all data flowing out of this process should be verified extensively.
+\item \textbf{Table:} Hole cards are confidential data only accessible for the player to whom they belong and the game engine to verify the winner at the end of a deal.
+\item \textbf{Logging Engine:} The logging should happen in a secure way so there is no possibility to alter the log. Therefore, the log entries arriving at the logging engine should be validated. The log also contains very sensitive data so the access is only allowed to a very limited number of entities and processes.
 \end{itemize}
 
 
@@ -68,6 +70,7 @@ There are several trust boundaries that can be identified in the DFDs. First of 
 
 \section{Rationale}
 \subsection{Assumptions}
+Some plausible assumptions can simplify the future analysis:
 \begin{itemize}
 \item There is an internal policy to restrict physical access to the servers.
 \item There is no protection needed against an administrator with a debugger (can read and alter memory).
@@ -77,7 +80,7 @@ There are several trust boundaries that can be identified in the DFDs. First of 
 
 \section{Mapping STRIDE to DFD elements}
 
-Taking the elements in figure \ref{fig:level_0} and mapping the STRIDE threats to them results in the following table. The external entities \textit{Admin} and \textit{Payment Service} are subject to a number of threats that we chose not to go in to detail for. Data flows from and to these entities are also not considered here. Similarly, data flows from and to the data stores are omitted.
+Taking the elements in figure \ref{fig:level_0} and mapping the STRIDE threats to them results in the following table. The external entities \textit{Admin} and \textit{Payment Service} are subject to a number of threats that we chose not to go into detail for. Data flows from and to these entities are also not considered here. Similarly, data flows from and to the data stores are omitted.
 
 \vspace{0.3cm}
 \begin{center}
@@ -108,7 +111,8 @@ Taking the elements in figure \ref{fig:level_0} and mapping the STRIDE threats t
   Table $\leftrightarrow$
   Logging Engine 	& \ref{LoggingEngineFlowCases}	&	& \ref{LoggingEngineFlowCasesT}	&	& \ref{LoggingEngineFlowCasesI}	& \ref{LoggingEngineFlowCasesD}	&	\\
   $\vdots$		& 				&	& 	&	& 	& 	&	\\\hline
-\end{tabular}\end{center}
+\end{tabular}
+\end{center}
 \vspace{0.3cm}
 
 For the remaining data flows we chose to analyse them as a set of 4 different abstractions. Section \ref{PlayerFlowCases} goes in to more detail.
@@ -1956,6 +1960,7 @@ Altered client provided to the players & Currently not covered (not part of the 
 \end{table}
 
 \chapter{Evaluating the architecture}
+\label{Evaluation}
 
 \section{Identified Architectural Approaches}
 \subsection{Architectural Patterns}
@@ -2147,20 +2152,8 @@ Model-View-Controller; it requires some discipline, insight and experience from 
 accomplish this.
 \end{itemize}
 \end{itemize}
-\section{Analysis of the architectural approaches}
 
-\subsection{Template}
-\begin{tabular}{| p{4,5cm} | p{2,25cm} | p{2,25cm} | p{2,25cm} | p{2,25cm} | }
-\hline
-\textbf{Scenario \#:} & \multicolumn{4}{| p{9cm} |}{\textbf{Scenario:} } \\\hline
-\textbf{Attribute(s)} & \multicolumn{4}{| p{9cm} |}{attribute} \\\hline
-\textbf{Environment} & \multicolumn{4}{| p{9cm} |}{environment} \\\hline
-\textbf{Stimulus} & \multicolumn{4}{| p{9cm} |}{stimulus} \\\hline
-\textbf{Response} & \multicolumn{4}{| p{9cm} |}{response} \\\hline \hline
-\textbf{Architectural Decision} & \textbf{Sensitivity} & \textbf{Tradeoff} & \textbf{Risk} & \textbf{Nonrisk}\\\hline
-decision & sens & trade & risk & nonrisk  \\\hline \hline
-\textbf{Architecture diagram} & \multicolumn{4}{| p{9cm} |}{None} \\\hline
-\end{tabular}
+\section{Analysis of the architectural approaches}
 
 \subsection{Availability}
 
