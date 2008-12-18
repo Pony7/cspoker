@@ -69,6 +69,7 @@ There are several trust boundaries that can be identified in the DFDs. First of 
 \end{figure}
 
 \section{Rationale}
+
 \subsection{Assumptions}
 Some plausible assumptions can simplify the future analysis:
 \begin{itemize}
@@ -76,6 +77,20 @@ Some plausible assumptions can simplify the future analysis:
 \item There is no protection needed against an administrator with a debugger (can read and alter memory).
 \item Side channels aren't available to mis-actors.
 \item Data flow from a process to a data store is in our case always local and not subject to threats.
+\end{itemize}
+
+\subsection{Decisions}
+
+We took some decisions that make the analysis easier:
+\begin{itemize}
+\item We decided to only consider the RMI protocol as communication protocol for the poker application in this
+security analysis and not got into depth in the sockets or HTTP protocol. For these protocols, a front-end is added to the architecture that delegates to the different processes also used by RMI.
+\item The Table process communicates with Cashier instead of the Account Management process to move an amount of chips
+from the main stack of a player to the table stack of that player.
+\item For liability reasons, the log with game details must be made public after a game. This is reflected in some
+business threats where a mis-actor might use this to profile certain players.
+\item We decided to connect the complex processes in the Level 0 DFD directly to the data stores so we can apply STRIDE
+at this level. Otherwise the number of misuse cases would explode.
 \end{itemize}
 
 \section{Mapping STRIDE to DFD elements}
@@ -1056,36 +1071,37 @@ The malicious player uses multiple accounts at the same table. He uses the extra
 \begin{itemize}
 \item \textbf{Prevention:}
 \begin{itemize}
-\item Each player can have at most 1 account.
-\item Limit the number of simultaneous connections from 1 ip-address to 1 account.
+\item Enforce the policy that each player can have at most one account.
+\item Limit the number of simultaneous connections from one IP-address.
 \end{itemize}
 \item \textbf{Detection:}
 \begin{itemize}
-\item The behavior of the malicious player is influenced by the extra knowledge. This could lead to inexplicable actions that can only be explained with the knowledge of the pocket cards of the other players. This behavior can be detected by consulting the logs.
+\item The behavior of the malicious player is influenced by the extra knowledge. This could lead to inexplicable actions that can only be explained with the knowledge of the pocket cards of the other players. This behavior can be detected by analyzing the logs for statistical anomalies.
+\item Detect when two accounts frequently play at the same table.
 \end{itemize}
 \end{itemize}
 \subsubsection{A malicious player with admin rights misuses his privileges}
-\textbf{Summary:} If an admin has access to the card info of all the players at a table, he can act on perfect knowledge which is a huge advantage.
+\textbf{Summary:} If an admin has access to the card information of all the players at a table, he can act on perfect knowledge which is a huge advantage.
 
 \subsubsection{A malicious player misuses the right to ask the admin to view the log of the table}
 \textbf{Summary:} \\
-The malicious player misuses the possibility to view the table log pretending to be suspicious of collusion. The malicious player can verify the hands of all the opponents, also those who have chosen not to show their cards. By this way he can gain more insight into the strategy of its opponents (whether someone is bluffing or not, ...). Consulting the log is only possible after the game has been played so there is no direct influence, but in the long run gives an unfair advantage and allows profiling of a players behaviour.
+The malicious player misuses the possibility to view the table log pretending to be suspicious of collusion. The malicious player can verify the hands of all the opponents, also those who have chosen not to show their cards. This way, he can gain more insight into the strategy of his opponents (whether someone is bluffing or not, ...). If consulting the log is only possible after the game has been played, there is no direct threat but in the long run it gives an unfair advantage and allows profiling of a player's behaviour.
 
 \subsubsection{A malicious player can flood the network of another player to force a time-out}
 \textbf{Summary:} \\
 A malicious player can flood the network of an opponent at a crucial moment so no communication between this opponent and the poker server is possible. This will lead to a time-out of the opponent. Depending on the time-out policy the malicious player can have a huge advantage.
 
-\subsection{Multi player Cheating}
+\subsection{Multiplayer Cheating}
 \subsubsection{Collusion}
 \textbf{Summary:} \\
-Collusion is a secret cooperation of two or more players. By collaborating they have access to more knowledge of hole cards than legitimate. With this extra knowledge they have a more accurate view on the outs. An other advantage that can be achieved through collaboration is the use of a common strategy to maximise their profits. Examples of strategies are: only playing the best hand they have, raise each other to force the other players to call to enlarge the pot. \\
+Collusion is a secret cooperation of two or more players. By collaborating they have access to more knowledge of hole cards than legitimate players. With this extra knowledge they have a more accurate view on the outs. Another advantage that can be achieved through collaboration is the use of a common strategy to maximise their profits. Examples of strategies are: only playing the best hand they have or raise each other to force the other players to call to enlarge the pot. \\
 \textbf{Primary mis-actor:}
 \begin{itemize}
 \item Unskilled outsiders
 \end{itemize}
 \textbf{Basic path:}
 \begin{enumerate}
-\item[bp1.] The mis-actors are sit-in at the same table.
+\item[bp1.] The mis-actors sit-in at the same table.
 \item[bp2.] The mis-actors communicate their hole cards and tactics through some unmonitored channel.
 \item[bp3.] The mis-actors take actions with the extra knowledge.
 \item[bp4.] The mis-actors gain an unfair advantage over the honest players.
@@ -1101,7 +1117,7 @@ Collusion is a secret cooperation of two or more players. By collaborating they 
 \item All inter player communication happens through a monitored channel where no covert channel is possible. In a monitored channel all messages are accessible to all the players who have joined a table. All the messages are also logged for audit.
 \item Enforcing the use of a webcam is an invasive way to mitigate the use of some unmonitored channels (e.g. phone, same physical location, ...), but it's still possible to use parts of the body that aren't captured to send messages to the other mis-actor or to use a covert channel. It's also possible to spoof the stream of the webcam so countermeasures against this new threat have to be taken into account.
 \item The screen can be periodically captured and analysed to ensure no other communicative application is used. The applicability of this method lies only in the scope of the computer that is used. This countermeasure is broken by using an other independent computer to communicate with the other mis-actors.
-\item A firewall can be placed to disallow all other communication except the poker client, or filter all network packages for suspicious chat messages. This capture point has the same vulnerability as the previous capture point: it's possible to break this countermeasure by using an other independent computer to communicate with the other mis-actors.
+\item A firewall can be placed to disallow all other communication except the poker client, or filter all network packages for suspicious chat messages. This capture point has the same vulnerability as the previous capture point: it's possible to break this countermeasure by using another independent computer to communicate with the other mis-actors.
 \end{itemize}
 A proper risk analysis is needed to find the right trade-off between cost and risk as absolute mitigation of this threat is practically infeasible.
 \item \textbf{Detection:}
@@ -1139,8 +1155,6 @@ Always true, i.e., this can happen at any time. \\
 The mis-actors can exchange knowledge and use a global synchronized strategy to maximise their total profit. \\
 \textbf{Prevention Guarantee:} \\
 There is no unmonitored channel available for secret communication. \\
-\textbf{Detection Guarantee:} \\
-The mis-actors can be detected and their account can be blocked. \\
 \textbf{Stakeholders and risks:}
 \begin{itemize}
 \item Honest players:
@@ -1177,7 +1191,7 @@ An admin who has access to the hole cards could pass the secret information to a
 \begin{itemize}
 \item \textbf{Prevention:}
 \begin{itemize}
-\item The system enforces administrators have only access to the hole cards after the deal.
+\item The system enforces the policy that administrators only have access to the hole cards after showdown.
 \item An administrator can only access the poker server inside the trusted domain of the online casino and he has no means to communicate with the outside world (no phone, firewall, ...).
 \end{itemize}
 \item \textbf{Detection:}
@@ -1212,10 +1226,6 @@ Always true, i.e., this can happen at any time. \\
 \end{itemize}
 \textbf{Worst case threat:}\\
 The insider and the collaborator can exchange knowledge and use a global synchronized strategy to maximise their total profit. \\
-\textbf{Prevention Guarantee:} \\
-The hole cards are never exposed to a player at the poker table. \\
-\textbf{Detection Guarantee:} \\
-The insider and the collaborator can be detected and appropriate sanctions can be taken. \\
 \textbf{Stakeholders and risks:}
 \begin{itemize}
 \item Honest players:
@@ -1240,7 +1250,7 @@ A malicious player can predict the hole and community cards of every deal by ded
 \item[bp1.] The mis-actor joins the table.
 \item[bp2.] The mis-actor observes the cards dealt at the table.
 \item[bp3.] The mis-actor uses the observations to make a model of the current dealer.
-\item[bp4.] The mis-actor is sit-in at the table and uses the model to plays with full information access (both hole cards of all players at the table and future community cards).
+\item[bp4.] The mis-actor is sit-in at the table and uses the model to play with full information access (both hole cards of all players at the table and future community cards).
 \end{enumerate}
 \textbf{Alternative paths:}
 \begin{itemize}
@@ -1270,11 +1280,9 @@ Always true, i.e., this can happen at any time. \\
 \end{itemize}
 \textbf{Assumptions:} \\
 \textbf{Worst case threat:}\\
-With all this information the malicious player knows before the hand is played whether he will win or not. This makes it possible to gain a huge amount of chips.\\
+With all this information, the malicious player knows before the hand is played whether he will win or not. This makes it possible to gain a huge amount of chips.\\
 \textbf{Prevention Guarantee:} \\
 No one can predict the hole and community cards from any deal. \\
-\textbf{Detection Guarantee:} \\
-The mis-actor can be detected and appropriate sanctions can be taken. \\
 \textbf{Stakeholders and risks:}
 \begin{itemize}
 \item Honest players:
@@ -1289,18 +1297,18 @@ The mis-actor can be detected and appropriate sanctions can be taken. \\
 
 \subsubsection{Chip dumping}
 \textbf{Summary:} \\
-Chip dumping is the act of deliberately losing chips (most of the time in a heads-up game) to a known opponent. This can be a way to transfer money from a fraudulent account, set-up with stolen credit cards or other stolen funds to a legitimate account. This can also be an attempt to perform money laundry. If chip dumping happens in a tournament, it is a severe form of cheating since the winner is the player who has the highest stack in the end.
+Chip dumping is the act of deliberately losing chips (most of the time in a heads-up game) to a known opponent. This can be a way to transfer money from a fraudulent account, set up with stolen credit cards or other stolen funds to a legitimate account. This can also be an attempt to perform money laundering. If chip dumping happens in a tournament, it is a severe form of cheating since the winner is the player who has the highest stack in the end.
 \subsubsection{Placing spyware on the computer systems of honest players}
 \textbf{Summary:} \\
 A malicious player can put spyware on the computer system of honest players. This spyware observes the hole cards of the player and sends this information to the malicious player. As the malicious player has access to more information, he gains an unfair advantage over the honest players.
 
 \subsubsection{Altered client provided to the players}
 \textbf{Summary:} \\
-A malicious player provides a modified client on a website. This client is modified to send hole cards information to the computer system of the malicious player. An innocent player could download this modified client to play on the real poker server, unaware that the client is modified. The malicious player gains an unfair advantage when he is sit-in at the same table as the tricked player.
+A malicious player provides a modified client on a website. This client is modified to send hole cards information to the computer system of the malicious player. An innocent player could download this modified client to play on the real poker server, unaware that the client is modified. The malicious player gains an unfair advantage when he sits in at the same table as the tricked player.
 
 \section{Simplification}
-To reduce the workload and the documentation, only a cohesive selection of components will be secured. The DFD for the simplified version can be found in figure \ref{fig:dfd_level_0_player_simplified}. The simplified deployment view in figure \ref{fig: deployment_simplified}.
-This means following components will be omitted for future analysis: Cashier, Lobby and Chat Service. Although some of these components will benefit from the instantiated patterns, potential conflicts could arise if the omitted components would be secured in a future phase.
+To reduce the workload and the documentation, only a cohesive selection of components will be secured. The DFD for the simplified version can be found in figure \ref{fig:dfd_level_0_player_simplified} together with the simplified deployment view in figure \ref{fig: deployment_simplified}.
+This means the following components will be largely omitted from future analysis: \textit{Cashier}, \textit{Lobby} and \textit{Chat Service}. Although some of these components will benefit from the instantiated patterns, potential conflicts could arise if the omitted components would be secured in a future phase.
 
 \begin{figure}[htpb]
   \begin{center}
@@ -1317,6 +1325,7 @@ This means following components will be omitted for future analysis: Cashier, Lo
 
 \section{Security Objectives}
 \label{MUCLabels}
+In this section, we list all security objectives together with the misuse cases that are associated with them. The objectives are ordered by importance based on the number of associated misuse cases.
 
 \subsection{Authentication (26 MUCs)}
 \begin{enumerate}
@@ -1454,19 +1463,6 @@ This means following components will be omitted for future analysis: Cashier, Lo
 
 \subsection{Application Confidentiality}
 Application Confidentiality is not applicable since the code is open source.
-
-\section{Log}
-\textbf{30-10-2008}
-\begin{itemize}
-\item We decided to only consider the RMI protocol as communication protocol for the poker application in this
-security analysis, and to not got into depth in the sockets or http protocol. For these protocols, a front-end is added to the architecture that delegates to the different processes also used by RMI.
-\item Table communicates with Cashier instead of with Account Management process to obtain an amount of chips
-of the main stack of a player and bring it to the table stack of that player.
-\item For liability reasons, the log with game details must be made public after a game. This is reflected in some
-business threats where a mis-actor might use this to profile certain players.
-\item We decided to connect complex process in the Level 0 DFD directly to data stores so whe can apply STRIDE
-at this level. Otherwise the number of misuse cases would explode.
-\end{itemize}
 
 \chapter{Securing the architecture}
 \label{SecuringTheArchitecture}
