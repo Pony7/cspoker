@@ -115,7 +115,7 @@ Taking the elements in figure \ref{fig:level_0} and mapping the STRIDE threats t
 \end{center}
 \vspace{0.3cm}
 
-For the remaining data flows we chose to analyse them as a set of 4 different abstractions. Section \ref{PlayerFlowCases} goes in to more detail.
+For the remaining data flows we chose to analyse them as a set of 4 different abstractions. Section \ref{PlayerFlowCases} goes into more detail.
 
 Furthermore, the processes \textit{Chat Service} and \textit{Cashier} are not elaborated on because they are more independent of other processes and functionality.
 
@@ -253,7 +253,7 @@ Only authentic users can gain access at the poker server. \\
 \item The mis-actor sends invalid input to the poker server.
 \item The message corrupts the state of the poker server.
 \item While the poker server is in the corrupted state, the mis-actor controls the behavior of that poker server.
-\item The mis-actor can cheat and steal sensitive data from the users.
+\item The mis-actor can cheat by changing the behaviour of the poker server.
 \end{itemize}
 \textbf{Alternative paths:}
 \begin{itemize}
@@ -277,7 +277,7 @@ Only authentic users can gain access at the poker server. \\
 \textbf{Basic path:}
 \begin{itemize}
 \item The mis-actor gains access to the poker server.
-\item The mis-actor sends back a response to the player that is misleading.
+\item The mis-actor sends back a response to the player that is misleading (such as incorrect cards).
 \item The mis-actor repudiates having sent the response in question.
 \item The player fails to prove that the server/mis-actor is responsible because there is no log or the log is not reliable.
 \end{itemize}
