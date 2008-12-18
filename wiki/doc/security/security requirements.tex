@@ -2376,7 +2376,7 @@ Audit interceptor & &T14 & R14& \\\hline
 \textbf{Architecture diagram} & \multicolumn{4}{| p{9cm} |}{See figures \ref{fig:decomposition_secured} and \ref{fig:deployment_secured}} \\\hline
 \end{tabular}
 \begin{itemize}
-\item \textbf{NR1:} 
+\item \textbf{NR1:} Separation between view and model makes it easier to modify the GUI to adapt to the users needs.
 \item \textbf{S2, R2 \& NR2:} The publish-subscribe mechanism imposes a risk, there are extra indirections in the
 form of one or more listeners and those may cause extra latency, and a non-risk. Without publish-subscribe, the user
 interface would have to poll the server for updates and that could be very harmfull for responsiveness of the
