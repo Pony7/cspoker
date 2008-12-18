@@ -2173,10 +2173,10 @@ decision & sens & trade & risk & nonrisk  \\\hline \hline
 \textbf{Response} & \multicolumn{4}{| p{9cm} |}{Failure only occurs once every month.} \\\hline \hline
 \textbf{Architectural Decision} & \textbf{Sensitivity} & \textbf{Tradeoff} & \textbf{Risk} & \textbf{Nonrisk}\\\hline
 Broker  &  &  & R1 &   \\\hline 
-Checkpointed System  & S2 &  & R2 &   \\\hline 
-No Comparator-checked Fault-tolerant System   & S3 &  &  & NR3  \\\hline 
+Checkpointed System  & S2 & T2 & R2 &   \\\hline 
+No Comparator-checked Fault-tolerant System   & S3 & T3 &  & NR3  \\\hline 
 Load Balancer  & S4 & T4  & R4 &   \\\hline 
-No Replicated System  & S5 &  &  & NR5  \\\hline 
+No Replicated System  & S5 & T5 &  & NR5  \\\hline 
 Secure Logger  & S6 & T6 & R6 &   \\\hline 
 Application Firewall  & S7 &  & R7 &   \\\hline 
 \hline
@@ -2184,10 +2184,10 @@ Application Firewall  & S7 &  & R7 &   \\\hline
 \end{tabular}
 \begin{itemize}
 \item \textbf{R1:} Adding the level of indirection of a broker requires extra hardware. This adds a new point of failure to the entire system.
-\item \textbf{S2 \& R2:} Having a checkpointed system in the cashier server requires a lot of extra hardware utilization. The more fine grained the checkpoints, the more utilization and the larger the risk.
-\item \textbf{S3 \& NR3:} By not choosing a comparator-checked fault-tolerant system, we do not incur the cost of adding the extra hardware that might also cause failure to occur. If we were to choose it, the number of replicated systems would increase the risk of hard disk failure.
+\item \textbf{S2, T2 \& R2:} Having a checkpointed system in the cashier server requires a lot of extra hardware utilization. The more fine grained the checkpoints, the more utilization and the larger the risk. There's a tradeoff with Dependability. 
+\item \textbf{S3, T3, \& NR3:} By not choosing a comparator-checked fault-tolerant system, we do not incur the cost of adding the extra hardware that might also cause failure to occur. If we were to choose it, the number of replicated systems would increase the risk of hard disk failure. There's a tradeoff with Dependability.
 \item \textbf{S4, T4 \& R4:} Every server in the load balancing setup of the table servers imposes an extra risk of hard disk failure. There's a tradeoff with the performance advantage the load balancer has.
-\item \textbf{S5 \& NR5:} Not replicating all the processes in the system reduces the probability that a hard disk will fail somewhere.
+\item \textbf{S5, T5 \& NR5:} Not replicating all the processes in the system reduces the probability that a hard disk will fail somewhere. There's a tradeoff with other aspects of Availability.
 \item \textbf{S6, T6 \& R6:} The secure logger pattern brings with it the need for an extra data source, typically using hard drives for persistent storage. The level of logging detail relates to the disk utilization, which relates to the risk of hard drive failure. There's a tradeoff with the positive impact of a secure logger, e.g. on Maintainability.
 \item \textbf{S7 \& R7:} An application firewall can be run on a seperate server which adds an extra point of failure.
 \end{itemize}
@@ -2203,21 +2203,21 @@ Application Firewall  & S7 &  & R7 &   \\\hline
 Broker  &  &  & R1 &   \\\hline 
 Client-Server \& RPC  & S2 &  & R2 &   \\\hline 
 Publish-Subscribe  & S3 &  &  & NR3  \\\hline 
-No Comparator-checked Fault-tolerant System   & S4 &  &  & NR4  \\\hline 
-Load Balancer  & S5 &  & R5 &   \\\hline 
-No Replicated System  & S6 &  &  & NR6  \\\hline 
-Secure Logger  & S7 &  & R7 &   \\\hline 
+No Comparator-checked Fault-tolerant System   & S4 & T4 &  & NR4  \\\hline 
+Load Balancer  & S5 & T5 & R5 &   \\\hline 
+No Replicated System  & S6 & T6 &  & NR6  \\\hline 
+Secure Logger  & S7 & T7 & R7 &   \\\hline 
 Application Firewall  & S8 &  & R8 &   \\\hline 
-Audit Interceptor  & S9 &  & R9 &   \\\hline 
+Audit Interceptor  & S9 & T9 & R9 &   \\\hline 
 No DMZ  &  &  &  & NR10  \\\hline 
 \hline
 \textbf{Architecture diagram} & \multicolumn{4}{| p{9cm} |}{See figures \ref{fig:decomposition_secured} and \ref{fig:deployment_secured}} \\\hline
 \end{tabular}
 \begin{itemize}
 \item \textbf{S2 \& R2:} By using a client-server architecture, network connections are introduced in the first place. The amount of network traffic generated is sensitive to the type of clients that is used. Thin clients can generate more traffic than fat clients. This also influences the risk of network failure.
-\item \textbf{R1, S5, R5, S7, R7, S8, R8, S9 \& R9:} The introduction of some patterns adds extra network traffic because extra nodes and connections are introduced in the network setup (broker, application firewall, load balancer, secure logger) or because extra network traffic is generated (secure logger, audit interceptor).
+\item \textbf{R1, S5, T5, R5, S7, T7, R7, S8, R8, S9, T9 \& R9:} The introduction of some patterns adds extra network traffic because extra nodes and connections are introduced in the network setup (broker, application firewall, load balancer, secure logger) or because extra network traffic is generated (secure logger, audit interceptor). Secure logger has a tradeoff with Maintainability (T7), load balancer with Performance (T5) and audit interceptor with Auditability (T9).
 \item \textbf{S3 \& NR3:} The publish-subscribe pattern for client-server communication arguably generates less network traffic than its alternatives. Again, less network traffic reduces the risk.
-\item \textbf{S4, NR4, S6 \& NR6: } Not choosing patterns that replicate server processes has the benefit that no extra network connections are added to the topology. This reduces the risk of network failure to occur in the first place.
+\item \textbf{S4, T4, NR4, S6, T6 \& NR6: } Not choosing patterns that replicate server processes has the benefit that no extra network connections are added to the topology. This reduces the risk of network failure to occur in the first place. There's a tradeoff with other aspects of Availability.
 \item \textbf{NR10:} Not choosing a DMZ simplifies the network topology, reducing the risk of network failure to occur.
 \end{itemize}
 
@@ -2446,8 +2446,6 @@ in the list.
 In the examples for the quality attribute scenarios, it is said that the system ``works'' 99.99\% of the time. We think this is a weakness of the methodology. A good metric is impossible for some quality attributes and trying to force a number in is not helpful, certainly not with vague concepts like ``works''. We believe a better solution should exist for these quality attributes.
 
 In the quality attribute tree for Usability in \cite{citeulike:174301}, one of the nodes is called ``Seperate User Interface''. This is an example of how Maintainability has a positive influence on other attributes. This can also be observed for other quality attributes. For example, good Maintainability will make it easier to do Performance profiling and optimization. More such dependencies exist. Explicitating the dependency for Usability but not for other quality attributes comes across as a rather arbitrary choice.
-
-The tradeoff column in the quality attribute scenarios is difficult to fill in. Essentially, every architactural decision will have some impact on other attributes, even if it is cost. Every architectural decision should have an entry in this column, which makes it rather useless.
 
 \nocite{1202957}
 \nocite{citeulike:174301}
