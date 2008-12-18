@@ -2020,7 +2020,7 @@ The overview of the quality attribute tree can be found in table \ref{QAT}. In t
 \item[\textbf{A1.1}] The MTBF\footnote{Mean Time Between Failures} of all hard disks is at least 1 month.
 \begin{itemize}
 \item Importance: High. It's more important to prevent failure than recovering from failure.
-\item Difficulty: Medium. Very reliable hardware is available.
+\item Difficulty: Medium. Very reliable storage solutions are available.
 \end{itemize}
 \item[\textbf{A1.2}] Network connections have a MTBF of 3 months.
 \begin{itemize}
@@ -2073,18 +2073,18 @@ The overview of the quality attribute tree can be found in table \ref{QAT}. In t
 \end{itemize}
 \item[\textbf{S5.1}] 99.999\% of all transmitted cards remain unmodified.
 \begin{itemize}
-\item Importance: Medium. It's important all card info are transmitted unmodified, but it's less important than correct authorization. 
+\item Importance: Medium. It's important all card information is transmitted unmodified but it's less important than correct authorization. 
 \item Difficulty: Low. This can easily be achieved through the use of a secure pipe.
 \end{itemize}
 \item[\textbf{S5.2}] 99.999\% of all transmitted actions remain unmodified.
 \begin{itemize}
-\item Importance: High. It's important all actions are transmitted unmodified, as it can lead to incorrect authorization.
+\item Importance: High. It's important that all actions are transmitted unmodified, as it can lead to incorrect authorization.
 \item Difficulty: Low. This can easily be achieved through the use of a secure pipe.
 \end{itemize}
 \item[\textbf{S6.1}] 99.999\% of actions are logged and kept for 2 years.
 \begin{itemize}
 \item Importance: Low. This is a legal constraint and should be available, but it's not critical for providing a good service to the player. 
-\item Difficulty: Medium. This can be implemented with the use of security patterns, but there may be a problem with a feature interaction between logging and confidentiality.
+\item Difficulty: Medium. This can be implemented with the use of security patterns but there may be a problem with a feature interaction between logging and confidentiality.
 \end{itemize}
 \end{itemize}
 
@@ -2101,32 +2101,32 @@ they might prefer other poker applications.
 \begin{itemize}
 \item Importance: Medium. If users have a hard time finding the right buttons, they might get annoyed and 
 switch to other poker applications.
-\item Difficulty: Low. Again a well designed user interface should take care of this, the user response time can be measured by a number of usability tests (such as Think Aloud Protocol etc.).
+\item Difficulty: Low. Again, a well designed user interface should take care of this, the user response time can be measured by a number of usability tests (such as Think Aloud Protocol etc.).
 \end{itemize}
 \item The user must be able to define default actions for certain situations (e.g. default check/fold as action
 in the current game).
 \begin{itemize}
-\item Importance: Low. Some user that frequently perform the same actions, might want to automate those actions;
-but those people are a smaller group and thus this is less important.
-\item Difficulty: Low. This can be established using check-boxes etc.
+\item Importance: Low. Some user that frequently perform the same actions might want to automate those actions but those people are a smaller group and thus this is less important.
+\item Difficulty: Low. This can be established using simple check-boxes.
 \end{itemize}
 \item The user interface must respond to an action of the user within 2 seconds.
 \begin{itemize}
 \item Importance: High. This quality attribute is very important, because a non-responsive user interface
-will annoy many users, who might use other poker applications as a reaction.
+will annoy many users who might use other poker applications as a result.
 \item Difficulty: Medium. This can be tackled by using a separate listener thread that dispatches the events
-to other threads that handle them; however there can be some pitfalls here (e.g. when the user is playing 
-a lot of different tables at the same time or when network problems occur)
+to other threads that handle them. However, there can be some pitfalls here (e.g. when the user is playing 
+a lot of different tables at the same time or when network problems occur).
 \end{itemize}
 \item The user interface must be separated from the rest of the application to enable fast and easy 
 usability testing.
 \begin{itemize}
-\item Importance: Medium. Easier usability tests are very usefull to track the effect of small changes to
+\item Importance: Medium. Easier usability tests are very useful to track the effect of small changes to
 the user interface. This iteration will lead to a better user interface.
 \item Difficulty: Medium. The seperation of user interface and system can be handled by some patterns like
-Model-View-Controller; it requires some discipline, insight and experience from the developers to fully
+Model-View-Controller. It requires some discipline, insight and experience from the developers to fully
 accomplish this.
 \end{itemize}
+Also see section \ref{CriticismEval} for a criticism of this scenario.
 \end{itemize}
 
 \section{Analysis of the architectural approaches}
@@ -2416,7 +2416,7 @@ in the list.
 \end{itemize}
 
 \subsection{Evaluating the architecture}
-
+\label{CriticismEval}
 In the examples for the quality attribute scenarios, it is said that the system ``works'' 99.99\% of the time. We think this is a weakness of the methodology. A good metric is impossible for some quality attributes and trying to force a number in is not helpful, certainly not with vague concepts like ``works''. We believe a better solution should exist for these quality attributes.
 
 In the quality attribute tree for Usability in \cite{citeulike:174301}, one of the nodes is called ``Seperate User Interface''. This is an example of how Maintainability has a positive influence on other attributes. This can also be observed for other quality attributes. For example, good Maintainability will make it easier to do Performance profiling and optimization. More such dependencies exist. Explicitating the dependency for Usability but not for other quality attributes comes across as a rather arbitrary choice.
