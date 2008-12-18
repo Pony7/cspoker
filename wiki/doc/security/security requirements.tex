@@ -2425,6 +2425,33 @@ There are a number of things that could have been done, if we had more time (rem
 \item selecting more quality attributes and elaborating on more scenario's when doing the ATAM. Performance f.i. would have been a good choice. This would have given a more complete view on the impact of all the architectural decisions.
 \end{itemize}
 \section{Pros \& cons of each used methodology}
+
+\begin{tabular}{| p{1.5cm} | p{6cm} | p{6cm} | }
+\hline
+ & \begin{center}\textbf{Pros}\end{center} & \begin{center}\textbf{Cons}\end{center} \\\hline
+\begin{center}\textbf{STRIDE}\end{center} & 
+\begin{itemize}
+\item systematically generates the threats and misuse cases.
+\end{itemize} &
+\begin{itemize}
+\item sometimes the classifcation of the threat tree isn't very clear.
+\item sometimes the threat tree isn't complete.
+\item can't handle business misuse cases.
+\item generates a huge amount of threats and misuse cases.
+\end{itemize} \\\hline
+\begin{center}\textbf{ATAM}\end{center} & 
+\begin{itemize}
+\item helps stakeholders to understand the various trade-offs inherent when selecting between competing priorities.
+\item increased communication among stakeholders.
+\item improved architecture documentation and documented basis for architectural decisions.
+\item forces the team to make quantifiable decisions up front about the desired behaviour of their software.
+\item identifies risks early in the life-cycle, so the impact is smaller.
+\end{itemize} &
+\begin{itemize}
+\item A good metric is impossible for some quality attributes or there are only vague metrics like 99,99\% of the times it ''works".
+\item it consumes a lot of time and resources, which could be spent on other things.
+\end{itemize} \\\hline
+\end{tabular}
 \chapter{Deltas w.r.t. Intermediate 1 and Intermediate 2}
 There is a lot of difference, based on the received feedback, between the first intermediate report and the final report:
 \begin{itemize}
