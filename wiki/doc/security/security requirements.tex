@@ -122,7 +122,7 @@ Furthermore, the processes \textit{Chat Service} and \textit{Cashier} are not el
 \section{Architecture based Misuse Cases}
 \label{MisUseCases}
 
-The misuse cases are ordered by the entity under threat. Repudiation is an important threat with legal consequences. Information disclosure is also important because it makes cheating very easy. Denial of Service attacks are less profitable for crooks and therefore less likely.
+The misuse cases are ordered by the entity under threat. Not all threats are equally important though. Repudiation is an important threat with legal consequences. Information disclosure is also important because it makes cheating very easy. Denial of Service attacks are less profitable for crooks and therefore less likely.
 
 Threats that are located more to the exterior of te system (closer to the Player) are more likely to be feasible and are more important. For this reason we completely specified the threats for the Player and Poker Server. Because there are many data flows, we chose to completely specify the threats for the different abstractions in section \ref{PlayerFlowCases} and \ref{LoggingEngineFlowCases}. Between the two data stores we chose to go in to detail for the account data.
 
@@ -311,7 +311,6 @@ Only authentic users can gain access at the poker server. \\
 \begin{itemize}
 \item Elevation of privilege of the mis-actor leads to information disclosure.
 \item The mis-actor sends invalid input to the poker server.
-\item The mis-actor has access to the memory and can alter its state (e.g. debugging mode).
 \end{itemize}
 \textbf{Capture points:}
 \begin{itemize}
@@ -370,7 +369,6 @@ Only authentic users can gain access at the poker server. \\
 \item The mis-actor spoofs the identity of an other actor (administrator) with higher privileges.
 \item The mis-actor tampers with the poker server to gain more privileges.
 \item The mis-actor sends invalid input to the poker server.
-\item The mis-actor has access to the memory and can alter its state (e.g. debugging mode).
 \end{itemize}
 \textbf{Capture points:}
 \begin{itemize}
@@ -390,7 +388,7 @@ Only authentic users can gain access at the poker server. \\
 \subsubsection{Spoofing a lobby}
 \label{LobbyCasesS}
 \textbf{Summary:} \\
-The mis-actor prepares a process to spoof the lobby and deploys it on one of the online casino servers or on an external server. Every player connecting to a table through the lobby can be diverted to an untrusted table.
+The mis-actor prepares a process to spoof the lobby and deploys it on one of the online casino servers or on an external server. Players can be tricked into connecting with the spoofed lobby.
 \subsubsection{Tampering with the lobby}
 \label{LobbyCasesT}
 \textbf{Summary:} \\
@@ -409,10 +407,11 @@ The mis-actor can obtain private information through spoofing or tampering with 
 \label{LobbyCasesD}
 \textbf{Summary:} \\
 The mis-actor performs actions leading to a crash or overloading the capacity of the lobby. As a result, the lobby can no longer be reached by the users.
+
 \subsubsection{Elevation of privilege at the lobby}
 \label{LobbyCasesE}
 \textbf{Summary:} \\
-The mis-actor performs actions leading to the possibility to do administrator actions. He can achieve this by presenting false credentials, spoofing an administrator or tampering with the lobby or account management.
+The mis-actor can do administrator actions. He can achieve this by presenting false credentials, spoofing an administrator or tampering with the lobby or account management.
 
 \subsection{Table}\
 \label{TableCases}
@@ -423,11 +422,11 @@ The mis-actor prepares a process to spoof the table and deploys it on one of the
 \subsubsection{Tampering with a table}
 \label{TableCasesT}
 \textbf{Summary:} \\
-The mis-actor tampers with the lobby to modify its functionality. Every player connecting to this table can be scammed. The tampered table could provide the mis-actor with all confidential information or deal crafted hands to maximize the profit of the mis-actor (e.g. deal a full house to an innocent player and deal a four of a kind to himself and lure the innocent player to go all-in).
+The mis-actor tampers with the table to modify its functionality. Every player connecting to this table can be scammed. The tampered table could provide the mis-actor with confidential information or deal crafted hands to maximize the profit of the mis-actor (e.g. deal a full house to an innocent player and deal a four of a kind to himself and lure the innocent player to go all-in).
 \subsubsection{Repudiation of an action at a table}
 \label{TableCasesR}
 \textbf{Summary:} \\
-The online casino denies that a player has won a number of chips or has received certain hole cards. This is possible if there is no log or if the log could be modified. It is also possible that the hand evaluation system has been tampered and this should be detected afterwards.
+The online casino denies that a player has won a number of chips or has received certain hole cards. This is possible if there is no log or if the log could be modified. It is also possible that the hand evaluation system has been tampered with. This should be detected afterwards.
 \subsubsection{Information disclosure at a table}
 \label{TableCasesI}
 \textbf{Primary mis-actor:}
@@ -444,7 +443,6 @@ The online casino denies that a player has won a number of chips or has received
 \begin{itemize}
 \item Elevation of privilege of the mis-actor leads to information disclosure.
 \item The mis-actor sends invalid input to the table.
-\item The mis-actor has access to the memory and can alter its state (e.g. debugging mode).
 \end{itemize}
 \textbf{Capture points:}
 \begin{itemize}
@@ -454,7 +452,7 @@ The online casino denies that a player has won a number of chips or has received
 \end{itemize}
 \item \textbf{Detection:}
 \begin{itemize}
-\item The behavior of the mis-actor is influenced by the information disclosure. This altered behavior could be detected by examining the logs.
+\item The behavior of the mis-actor is influenced by the information disclosure. This altered behavior could be detected by examining the logs for statistical anomalies.
 \end{itemize}
 \end{itemize}
 
@@ -466,7 +464,7 @@ The mis-actor performs actions leading to a crash or overloading the capacity of
 \subsubsection{Elevation of Privilege at the table}
 \label{TableCasesE}
 \textbf{Summary:} \\
-The mis-actor performs actions leading to the possibility to do administrator actions. He can achieve this by presenting false credentials, spoofing an administrator or tampering with the lobby or account management.
+The mis-actor can do administrator actions. He can achieve this by presenting false credentials, spoofing an administrator or tampering with the table or account management.
 
 \subsection{Account Management}
 \label{AccountManagementCases}
@@ -474,7 +472,7 @@ The mis-actor performs actions leading to the possibility to do administrator ac
 \subsubsection{Spoofing the account management system}
 \label{AccountManagementCasesS}
 \textbf{Summary:} \\
-The mis-actor gains access to the account management system or manages to pretend he is the account management system by obtaining or falsifying credentials. By doing so the mis-actor has control over how incoming requests and data are processed. He can for instance trick other processes in to accepting bad credentials for authentication.
+The mis-actor gains access to the account management server or manages to pretend he is the account management system by obtaining or falsifying credentials. By doing so, the mis-actor can trick other processes into thinking they're dealing with the real account management system.
 
 \subsubsection{Tampering with the account management system}
 \label{AccountManagementCasesT}
