@@ -1482,10 +1482,10 @@ confidential.
 \item[Accountability] No player may be able to repudiate any bets or other actions.
 \item[Manageability] The application must be easy to manage by an admin.
 \item[Cost] The cost of the application should be reasonably low so profit will remain solid.
-\item[Performance] Performance being the possible amount of games played simultaneously, is important because it
+\item[Performance \& Availability] Performance being the possible amount of games played simultaneously, is important because it
 determines the maximum profit. It is very easy to come up with solutions
 to performance problems because of the distributed nature of the
-application (tables are independent).
+application (tables are independent). Availability has the same characteristics but is more difficult to guarantee.
 \item[Maintainability] The application should be easy to maintain.
 \end{description}
 These labels will be used to guide the selection of security patterns in the next section: only the patterns that match best with these labels, will be selected.
@@ -1752,7 +1752,7 @@ Some patterns aren't applicable:
 At a lower level there are ofcourse thread pools and database connection pools that control the creation of those
 processes. We will not consider them as instantiations of the Controlled Process Creator pattern here but it
 might be up for discussion.
-\item Controlled Object Factory depends on Controlled Object Monitor, which was discarded earlier.
+\item Controlled Object Factory depends on Controlled Object Monitor which was discarded earlier.
 \end{itemize}
 The other patterns seem applicable:
 \begin{itemize}
@@ -1766,7 +1766,7 @@ Application Firewall.
 Application Firewall is selected and instantiated because auditability is an important quality label compared to
 the performance penalty.
 Demilitarized Zone isn't selected because of the high cost and because a demilitarized zone doesn't seem useful if the only task of the front end is to forward request. The processes that are placed outside of the secure zone should at least be performing some kind of non-trivial computation for them to pose enough of a risk to require a DMZ.
-Firewall is selected and because Accountability is an important quality label, and the pattern benefits
+Firewall is selected because Accountability is an important quality label and the pattern benefits
 from the previously instantiated Application Firewall.
 
 So Application Firewall and Firewall are selected to deal with Authorization at the system level. Application Firewall is instantiated at the poker server to log all incoming request for auditing and filter out all invalid input. The firewall is instantiated before the poker server to counter flooding and to be able to ban IPs.
@@ -1807,8 +1807,7 @@ Secure Message Router doesn't conflict with any previously instantiated pattern 
 and has no relations with other patterns.
 \end{itemize}
 
-Secure Message Router might be useful if there would be the need to interact safely with an external payment system
-but we don't consider it here, in our simplified version.
+Secure Message Router might be useful if there would be the need to interact safely with an external payment system but we don't consider it here in our simplified version.
 \subsubsection{Availability}
 There are no patterns who handle availability at the system level.
 \subsection{Instantiated Patterns}
@@ -1829,7 +1828,7 @@ To summarize, here is the list of the instantiated patterns, that weren't presen
 \end{itemize}
 
 \section{Final security enhanced architecture}
-By following the steps in the pattern-based approach described in the previous section the vanilla architecture has been enhanced with security related components. The decomposition view can be found in figure \ref{fig:decomposition_secured}. The deployment view in figure \ref{fig:deployment_secured}.
+By following the steps in the pattern-based approach described in the previous section the vanilla architecture has been enhanced with security related components. The decomposition view can be found in figure \ref{fig:decomposition_secured} together with the deployment view in figure \ref{fig:deployment_secured}.
 
 \begin{figure}[htpb]
   \begin{center}
@@ -1939,6 +1938,9 @@ Altered client provided to the players & Currently not covered (not part of the 
 \label{Evaluation}
 
 \section{Identified Architectural Approaches}
+
+This section stems from a discussion with the system architect about the architectural approaches that were taken. A number of high-level and security related patterns are identified.
+
 \subsection{Architectural Patterns}
 Based on \cite{Avgeriou2005}, we identified the following patterns in the architecture:
 \begin{itemize}
@@ -1955,8 +1957,7 @@ the views display the information on the screen.
 \end{itemize}
 
 \subsection{Security Patterns}
-The security patterns are just the sum of the ones that were already present in the architecture
-(\ref{pres_patterns}) and the ones that were instantiated in \ref{inst_patterns}:
+The security patterns are just the sum of the ones that were already present in the architecture in section \ref{pres_patterns} and the ones that were instantiated in section \ref{inst_patterns}:
 \begin{itemize}
 \item Authentication Enforcer
 \item Authorization Enforcer
@@ -1973,14 +1974,15 @@ The security patterns are just the sum of the ones that were already present in 
 \item Secure Service Facade
 \item Secure Logger
 \end{itemize}
-For a more in depth description of these patterns see chapter \ref{SecuringTheArchitecture}.
+For a more in depth description of these patterns, see chapter \ref{SecuringTheArchitecture}.
 
 \section{Quality Attribute Tree}
 From the business goals identified in the initial architecture, the following important quality attributes are 
 selected:  \textbf{usability}, \textbf{security} and \textbf{availability}. These three were selected because
-they represent the most important business goals. The overview of the quality attribute 
-tree can be found in table \ref{QAT}. In the following sections the rationale for choosing the importance 
-(business perspective) and difficulty (technical perspective) ratings are elaborated.
+they represent the most important business goals. Section \ref{labels} gives an in-depth explanation.
+
+The overview of the quality attribute tree can be found in table \ref{QAT}. In the following sections the rationale for choosing the importance 
+(business perspective) and difficulty (technical perspective) ratings are elaborated. These are the result of a discussion among all stakeholders.
 \begin{table}[htpb]
 \begin{center}
 \begin{tabular}{| p{2,2cm} | p{0.25cm}  p{2.5cm} | p{0.55cm}  p{7cm} | p{0,31cm} | p{0,31cm} | }
@@ -1988,15 +1990,15 @@ tree can be found in table \ref{QAT}. In the following sections the rationale fo
 \textbf{Level 2:\newline Quality\newline Attribute} & \multicolumn{2}{p{2.75cm}|}{\textbf{Level 3:\newline Quality\newline Attribute\newline Refinement}} & \multicolumn{2}{p{6.65cm}|}{\textbf{Level 4:\newline Quality Attribute Scenario}} & \textbf{I} & \textbf{D}\\
 \hline
 \hline
-\textbf{Availability} 	& A1 & Prevention 	& A1.1 & The MTBF of all hard disks is at least 1 month. & H & M   \\\cline{4-7}
+\textbf{Availability} 	& A1 & Fault\newline Prevention 	& A1.1 & The MTBF of all hard disks is at least 1 month. & H & M   \\\cline{4-7}
 			& &			& A1.2 & Network connections have a MTBF of 3 months.  & H & M  \\\cline{2-7}
-			& A2 & Fault\newline detection 	& A2.1 & Server hard disk failure is detected within 20s. & M & M  \\\cline{4-7}
+			& A2 & Fault\newline Detection 	& A2.1 & Server hard disk failure is detected within 20s. & M & M  \\\cline{4-7}
 			& &			& A2.2 & Network failure is detected within 5s. & M & M  \\\cline{2-7}
-			& A3 & Recovery 	& A3.1 & Recovery from server hard disk failure takes 50s and succeeds 99.99\% of the time. & M & H  \\\cline{4-7}
+			& A3 & Fault\newline Recovery 	& A3.1 & Recovery from server hard disk failure takes 50s and succeeds 99.99\% of the time. & M & H  \\\cline{4-7}
 			& &			& A3.2 & Recovery from a network failure takes 30s and succeeds 99.99\% of the time. & M & H  \\\hline
 \textbf{Security} 	& S1 & Authentication 	& S1.1 & 99.999\% of all users are correctly authenticated. & H & M   \\\cline{2-7}
 			& S2 & Authorization 	& S2.1 & 99.999\% of all user actions are correctly authorized. & H & M  \\\cline{2-7}
-			& S3 & Storage\newline Confidentiality & S3.1 & All account related data are secure 99.999\% of time. & H & L   \\\cline{2-7}
+			& S3 & Storage\newline Confidentiality & S3.1 & All account related data is secure 99.999\% of time. & H & L   \\\cline{2-7}
 			& S4 & Transmission\newline Confidentiality & S4.1 & Cards are transmitted secure 99.999\% of time. & M & L  \\\cline{2-7}
 			& S5 & Transmission\newline Integrity & S5.1 & 99.999\% of all transmitted cards remain unmodified. & M & L  \\\cline{4-7}
 			& &			& S5.2 & 99.999\% of all transmitted actions remain unmodified. & H & L  \\\cline{2-7}
