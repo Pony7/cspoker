@@ -1490,7 +1490,7 @@ at this level. Otherwise the number of misuse cases would explode.
 \label{SecuringTheArchitecture}
 \section{Quality trade-off labels}
 \label{labels}
-By analyzing the business goals, we constructed the following ordered list of quality trade-off labels:
+By analyzing the business goals, we constructed the following ordered list of quality trade-off labels (the ordering of this list is based on the relative importance of the different business goals):
 \begin{description}
 \item[Usability] The online casino has to be as easy to use as possible.
 This quality attribute might seem less important than confidentiality and
@@ -1509,10 +1509,7 @@ to performance problems because of the distributed nature of the
 application (tables are independent).
 \item[Maintainability] The application should be easy to maintain.
 \end{description}
-These labels will be used to guide the selection of security patterns in the next section and to select certain
-patterns that match better with these labels, instead of other patterns.
-
-The ordering of this list is based on the relative importance of the different business goals.
+These labels will be used to guide the selection of security patterns in the next section: only the patterns that match best with these labels, will be selected.
 
 \section{Pattern-based Methodology}
 We will use the security patterns and methodology described in \cite{yskout} to select the appropriate patterns
@@ -1522,8 +1519,7 @@ for this application.
 The analysis phase consists of eliciting the security requirements and annotating each
 security requirement with the security object it belongs to. The security requirements have been elicited by the misuse cases
 in secton \ref{MisUseCases}. The annotations to indicate for each misuse case to which security objective it belongs
-are given in section \ref{MUCLabels}. This is very important, since the succes of the selected methodology heavily depends
-on this list of security requirements.
+are given in section \ref{MUCLabels}.
 
 
 \subsection{Architecture Phase}
