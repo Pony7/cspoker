@@ -487,7 +487,7 @@ The casino can deny access to a user in critical moments and deny having done so
 \subsubsection{Information disclosure of the account management system}
 \label{AccountManagementCasesI}
 \textbf{Summary:} \\
-When the mis-actor corrupts te account management system he can obtain private information such as passwords and credit card numbers. This can be done by through spoofing or tampering with the process.
+When the mis-actor compromises the account management system, he can obtain private information such as passwords and credit card numbers. This can be done by spoofing or tampering with the process.
 
 \subsubsection{DoS against the account management system}
 \label{AccountManagementCasesD}
@@ -505,7 +505,7 @@ Through spoofing, tampering or exploiting the authorization system, the mis-acto
 \subsubsection{Spoofing the logging engine}
 \label{LoggingEngineCasesS}
 \textbf{Summary:} \\
-The mis-actor gains access to the logging engine or manages to pretend to be the logging engine by obtaining or falsifying credentials. This way he can stop logging messages from being made persistent by the real logging engine.
+The mis-actor gains access to the logging server or manages to pretend to be the logging engine by obtaining or falsifying credentials. This way other processes can be tricked into sending their logging data to the spoofed process.
 
 \subsubsection{Tampering with the logging engine}
 \label{LoggingEngineCasesT}
@@ -515,12 +515,12 @@ The mis-actor can tamper with the logging engine and send different data to the 
 \subsubsection{Repudiation of using the logging engine}
 \label{LoggingEngineCasesR}
 \textbf{Summary:} \\
-The logging engine can deny having recieved logging data that didn't make it to the physical audit log. The casino can deny that certain audit data was sent from the logging engine and is valid.
+The logging engine can deny having recieved logging data that didn't make it to the physical audit log. The casino can deny that certain valid audit data was sent from the logging engine.
 
 \subsubsection{Information disclosure of the logging engine}
 \label{LoggingEngineCasesI}
 \textbf{Summary:} \\
-The mis-actor can obtain private information through spoofing or tampering with the logging process. This way he could e.g. see the hidden cards of an opponent.
+The mis-actor can obtain private information through spoofing or tampering with the logging process. This way he could e.g. see the hidden cards of an opponent when they are being logged.
 
 \subsubsection{DoS against the logging engine}
 \label{LoggingEngineCasesD}
@@ -544,19 +544,20 @@ The misuser can tamper with the audit log when he bypasses the protection or mon
 \label{AuditLogCasesR}
 \textbf{Summary:} \\
 The mis-actor can modify or obscure data in the audit log to be able to
-repudate certain actions. An auditor will bot be able to deny this
+repudate certain actions. An auditor will not be able to deny this
 allegation.
-Also see section \ref{Criticism} for criticism of this threat.
+
+Also see section \ref{Criticism}, ``Repudiaton of processes/data stores'', for criticism of this threat.
 
 \subsubsection{Information disclosure of the audit log}
 \label{AuditLogCasesI}
 \textbf{Summary:} \\
-When the mis-actor bypasses te protection scheme and the data is weakly encrypted he might be able to obtain logging information. This can e.g be credit card information, transaction information or private cards. Information leakage can also occur when removed data isn't cleared correctly from the data store or when te mis-actor spoofs an entity that has access to the data store.
+When the mis-actor bypasses the protection scheme and the data is weakly encrypted he might be able to obtain logging information. This can e.g be credit card information, transaction information or private cards. Information leakage can also occur when removed data isn't cleared correctly from the data store or when the mis-actor spoofs an entity that has access to the data store.
 
 \subsubsection{DoS against the audit log}
 \label{AuditLogCasesD}
 \textbf{Summary:} \\
-By sending bad data to the audit log (SQL injecton) or by sending many requests at once, the mis-user can overload the data store. This can result in valid logging data being lost because the data store has e.g. run out of memory or disk space.
+By sending bad data to the audit log (e.g. SQL injecton) or by sending many requests at once, the mis-user can overload the data store. This can result in valid logging data being lost because the data store has run out of memory or disk space.
 
 \subsection{Account Data}
 \label{AccountDataCases}
@@ -570,30 +571,29 @@ By sending bad data to the audit log (SQL injecton) or by sending many requests 
 \textbf{Basic path:}
 \begin{itemize}
 \item The mis-actor gains access to the data store
-\item The mis-actor puts data directly in the data store
+\item The mis-actor puts data directly into the data store
 \end{itemize}
 \textbf{Alternative paths:}
 \begin{itemize}
 \item The mis-actor removes data directly from the data store
 \item There may be overcapacity failures: the mis-actor floods the data store by placing large
-amounts of data into the data store. As a consequence data in the beginning of the store might be overwritten
-, data written to the store might be discarded or the data store might crash, depending on the implementation of
+amounts of data into the data store. As a consequence data in the beginning of the store might be overwritten, data written to the store might be discarded or the data store might crash depending on the implementation of
 the data store.
 \end{itemize}
 \textbf{Capture points:}
 \begin{itemize}
 \item \textbf{Prevention:}
 \begin{itemize}
-\item placing and removing of data in the data store is securely logged
-\item data store is protected by the internal policies
-\item extra-monitor access is impossible (behind a reliable firewall)
-\item overcapacity failures are handled accordingly
-\item only private or local networks are used for communication between the account management process
+\item Adding and removing data in the data store is securely logged.
+\item The data store is protected by the internal policies.
+\item Extra-monitor access is impossible (behind a reliable firewall).
+\item Overcapacity failures are handled correctly.
+\item Only private or local networks are used for communication between the account management process
 and the account data store.
 \end{itemize}
 \item \textbf{Detection:}
 \begin{itemize}
-\item logs can be searched for adding of removing falsified data
+\item The logs can be searched for add or remove operations.
 \end{itemize}
 \end{itemize}
 
@@ -616,12 +616,12 @@ and the account data store.
 \begin{itemize}
 \item \textbf{Prevention:}
 \begin{itemize}
-\item encrypting the data
-\item data store is protected by the internal policies
-\item extra-monitor access is impossible (behind a reliable firewall)
-\item only private or local networks are used for communication between the account management process
+\item Encrypting the data
+\item The data store is protected by the internal policies.
+\item Extra-monitor access is impossible (behind a reliable firewall).
+\item Only private or local networks are used for communication between the account management process
 and the account data store.
-\item prevent spoofing of account management process
+\item Prevent spoofing of the account management process.
 \end{itemize}
 \end{itemize}
 
@@ -639,18 +639,17 @@ and the account data store.
 \end{itemize}
 \textbf{Alternative paths:}
 \begin{itemize}
-\item The mis-actor floods the data store by placing large amounts of data into the data store and exceeds the
-capacity of the data store.
+\item The mis-actor floods the data store by placing large amounts of data into the data store, exceeding its capacity.
 \item The mis-actor consumes application-specific resources (e.g. submit more queries per second that the data
 store can handle).
-\item The mis-actor injects malicious SQL queries (or other) to an user of the data store. When this injection reaches the data store it crashes.
+\item The mis-actor injects malicious SQL queries (or others) into a process that uses the data store. When this injection reaches the data store it crashes.
 \end{itemize}
 \textbf{Capture points:}
 \begin{itemize}
 \item \textbf{Prevention:}
 \begin{itemize}
 \item Invalid queries are filtered.
-\item Data store is protected by the internal policies.
+\item The data store is protected by the internal policies.
 \item Extra-monitor access is impossible (behind a reliable firewall).
 \item Only private or local networks are used for communication between the account management process
 and the account data store.
