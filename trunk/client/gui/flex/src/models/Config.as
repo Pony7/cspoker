@@ -33,6 +33,8 @@ package models
 		
 		public static const CARD_DECK_WIDTH:int = 50;
 		public static const CARD_DECK_HEIGHT:int = 25;
+		
+		public static const POLICY_FILE_LOCATION:String = "http://socialholdem.com/crossdomain.xml";
 
 		//public static const USE_OLD_API:Boolean = true;
 		public function Config()

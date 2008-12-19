@@ -36,9 +36,14 @@ package models.connection
 			
 			
 			try{
-				Security.loadPolicyFile("xmlSocket://" + hostName +":" + port ); 
+				
+				Security.loadPolicyFile("xmlSocket://" + hostName +":" + 8081 ); 
+				Security.allowDomain("*");
+				//Security.loadPolicyFile("http://socialholdem.com/flextest/crossdomain.xml");
+				//Security.loadPolicyFile(Config.POLICY_FILE_LOCATION);
+				trace("loaded policy file...");
 			}catch(e:Error){
-				trace("Can't load policy file :: " + hostName +":"+port);
+				trace("Can't load policy file :: " + hostName +":"+port + "," + e.message);
 				return;
 			}
             if (socket != null && socket.connected)
@@ -52,6 +57,7 @@ package models.connection
                 socket.connect(hostName, port);
                 trace("Attempting primary connection to: " + hostName + ":" + port);
                 messageCenter.setSocket(socket);
+                trace("successfully connected...");
             }// end try
             catch (e:Error)
             {

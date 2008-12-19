@@ -54,7 +54,7 @@
 			
 		]]>
 	</mx:Script>	
-          <mx:Label x="10" y="10" text="Login Page"
+          <mx:Label x="10" y="10" text="Login Page -> bleh5"
             fontWeight="bold"/>
           <mx:Label x="10" y="66" text="Username:"/>
           <mx:TextInput x="85" y="64" id="txtLoginUser" text="kenzo"/>

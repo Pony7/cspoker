@@ -104,6 +104,9 @@
 				// hide pot:
 				this.pot.clearStack();
 				
+				
+				
+				
 				// call for data to be cleaned up.
 				this.tableModel.cleanUpTableData();
 			}
@@ -405,4 +408,5 @@
 	<views:PlayerChatBox id="playerChatBox"  x="486" y="522"/>
 	<views:DealerButton id="dealerButton" x="400" y="400" visible="false" />
 	<views:DealerCardDeck id="cardDeck" x="407.25" y="98.25" />
+	<views:GameTableText id="gameTableText" x="235.45" y="146" />
 </mx:Canvas>

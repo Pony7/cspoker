@@ -29,12 +29,13 @@ package models.table
 			this.seatLocations = seatsArray;
 			this.pot = pot;
 		}
-
+		
 		public function receiveAnnounceWinnersEvent(winners:Object):void{
 			var count:int = 0;
 			var potDescriptionText:String = "";
 			var player:Object;
 			var winningHandDescription:String = "";
+			var proNoun:String = "";
 			
 			var endX:int;
 			var endY:int
@@ -56,11 +57,22 @@ package models.table
 					trace("Error getting hand description in announce winner: " + e.message);
 					
 				}
+				
+				
+				/* if playerId == client's id, then we show winner announcement and change pronoun */
+				if(player.id == Main.clientPlayerId){
+					proNoun = "You";
+					Main.table.gameTableText.showWinnerAnimation();
+				}else{
+					proNoun = player.name;
+				}
+				
+				
 				if(winningHandDescription == null){
-					this.table.dealerBox.dealerMessage("Player " + player.name + " has won the " 
+					this.table.dealerBox.dealerMessage(proNoun + " won the " 
 					+ potDescriptionText + " of " + winners.gainedAmount + " (by default)");
 				}else{
-					this.table.dealerBox.dealerMessage("Player " + player.name + " has won the " 
+					this.table.dealerBox.dealerMessage(proNoun + " won the " 
 					+ potDescriptionText + " of " + winners.gainedAmount + " with a " + winningHandDescription);
 				}
 				
@@ -76,6 +88,11 @@ package models.table
 				
 				/* MOVE THE POT CHIPS TO THE PLAYER ANIMATION */
 				
+				
+				
+				
+				
+				
 			}else{
 				for each(var winner:Object in winners){
 					count++;
@@ -89,11 +106,20 @@ package models.table
 						trace("Error getting hand description in announce winner: " + e.message);
 					}
 					
+					/* if playerId == client's id, then we show winner announcement and change pronoun */
+					if(player.id == Main.clientPlayerId){
+						proNoun = "You";
+						Main.table.gameTableText.showWinnerAnimation();
+					}else{
+						proNoun = player.name;
+					}
+					
+					
 					if(winningHandDescription == null){
-						this.table.dealerBox.dealerMessage("Player " + player.name + " has won the " 
+						this.table.dealerBox.dealerMessage(proNoun + " won the " 
 					+ potDescriptionText + " of " + winner.gainedAmount + " (by default)");  
 					}else{
-						this.table.dealerBox.dealerMessage("Player " + player.name + " has won the " 
+						this.table.dealerBox.dealerMessage(proNoun + " won the " 
 					+ potDescriptionText + " of " + winner.gainedAmount + " with a " + winningHandDescription);  
 					}
 					
@@ -110,7 +136,6 @@ package models.table
 			//this.table.cleanUpTable();
 		}
 		
-
 		public function mapPlayerToId(playerId:int, player:Player):void{
 			playerMap[playerId] = player;
 		}
@@ -131,6 +156,7 @@ package models.table
 		
 		public function receiveNewDealEvent(dealer:int):void{
 			try{
+				
 				this.table.cleanUpTable();
 				var seatNumber:int = this.getPlayerByPlayerId(dealer).playerSeat.seatNumber;
 				var dealerButtonLocation:Canvas = table.dealerButtonLocations[seatNumber];
@@ -138,6 +164,8 @@ package models.table
 			}catch(e:Error){
 				trace("error on newDealEvent: " + e.message);
 			}
+			
+				this.table.gameTableText.hideWinnerAnimation();
 		}
 		
 		public function getPlayerByPlayerId(playerId:int):Player{

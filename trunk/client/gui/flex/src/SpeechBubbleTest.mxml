@@ -20,6 +20,8 @@
             	seat1.addChild(chatBubble);
             	chatBubble.y = 0;
             	chatBubble.x = 6;
+            	
+            		
 			}
 			
 			public function btnShowFoldClicked():void{
