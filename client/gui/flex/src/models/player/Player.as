@@ -34,6 +34,7 @@ package models.player
 		public function sitOutPlayer():void{
 			this.playerInformation = null;
 			this.playerSeat.resetForNewGame();
+			
 			Main.table.tableModel.removedMappedPlayer(this.id);
 			return;
 		}
@@ -106,7 +107,7 @@ package models.player
 			trace("check event received...");
 			Main.table.dealerBox.dealerMessage(this.getPlayerName() + " checks...");
 			this.playerSeat.turnTimer.stopTimer();
-			playerSeat.setChatBubbleText("CHECK", "CHECK");
+			this.playerSeat.setChatBubbleText("CHECK", "CHECK");
 			//this.playerSeat.turnTimer.visible = false;
 			return;
 		}
@@ -118,7 +119,6 @@ package models.player
 			playerSeat.setChatBubbleText("Calls $" + chipsToCall, "CALL");
 			incrementBetChips(chipsToCall + this.getBetChips());
 			
-
 			this.playerSeat.turnTimer.stopTimer();
 			return;
 		}
@@ -129,7 +129,6 @@ package models.player
 			//playerSeat.chipsToBet(amount);
 			playerSeat.setChatBubbleText("Bets $" + amount, "BET");
 			incrementBetChips(amount + this.getBetChips());
-
 			this.playerSeat.turnTimer.stopTimer();
 			return;
 		}

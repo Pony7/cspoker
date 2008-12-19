@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="303" height="57">
+	<mx:SWFLoader source="assets/winnerText.swf" id="tableText" name="tableText" creationComplete="init()"/>
+	
+	<mx:Script>
+		<![CDATA[
+		
+			private function init():void{
+				tableText.visible = false;
+			}
+		
+			public function showWinnerAnimation():void{
+				tableText.visible = true;
+				var flashMovie:MovieClip = tableText.content as MovieClip;
+				flashMovie.gotoAndPlay("winnerStartFadeIn");
+			}
+			
+			public function hideWinnerAnimation():void{
+				tableText.visible = false;
+				var flashMovie:MovieClip = tableText.content as MovieClip;
+				flashMovie.gotoAndStop("winnerEndFadeOut");
+			}
+			
+			public function showGameStartingAnimation():void{
+				tableText.visible = true;
+				var flashMovie:MovieClip = tableText.content as MovieClip;
+				flashMovie.gotoAndPlay("gameStartingTextStart");
+			}
+			
+			public function hideGameStartingAnimation():void{
+				tableText.visible = false;
+				var flashMovie:MovieClip = tableText.content as MovieClip;
+				flashMovie.gotoAndStop("gameStartingTextStop");
+			}
+		]]>
+	</mx:Script>
+</mx:Canvas>

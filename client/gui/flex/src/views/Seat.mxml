@@ -14,13 +14,13 @@
 			<mx:SetStyle name="themeColor" value="#6C6C6C"/>
 			<mx:SetStyle name="borderColor" value="#6F6F6F"/>
 			<mx:AddChild position="lastChild">
-				<mx:Image x="9" y="15" id="userPhoto" maxHeight="60" maxWidth="60" scaleContent="true" source="images/seat/noimg.jpg"/>
+				<mx:Image x="9" y="20" id="userPhoto" maxHeight="60" maxWidth="60" scaleContent="true" source="images/seat/noimg.jpg"/>
 			</mx:AddChild>
 			<mx:AddChild position="lastChild">
-				<mx:TextArea x="10" y="60" id="userName" text="User Name" maxChars="7" wordWrap="false" editable="false" enabled="true" fontSize="11" textAlign="center" selectable="false" width="62" height="24" fontWeight="bold"/>
+				<mx:TextArea x="6" y="62" id="userName" text="User Name" maxChars="7" wordWrap="false" editable="false" enabled="true" fontSize="11" textAlign="center" selectable="false" width="62" height="24" fontWeight="bold"/>
 			</mx:AddChild>
 			<mx:AddChild position="lastChild">
-				<mx:TextArea x="10" y="74" id="numChips" text="$" wordWrap="false" width="62" height="24" fontSize="12" editable="false" enabled="true" textAlign="center" fontWeight="bold" selectable="false"/>
+				<mx:TextArea x="6" y="82" id="numChips" text="$" wordWrap="false" width="62" height="24" fontSize="12" editable="false" enabled="true" textAlign="center" fontWeight="bold" selectable="false"/>
 			</mx:AddChild>
 			<mx:AddChild position="lastChild">
 				<mx:TextArea y="15" alpha="0.8" text="" visible="false" id="overlayText" styleName="overlayTextStyle"/>
@@ -104,7 +104,6 @@
 				
 				this.hideOverlayText();
 				this.chatBubble.clearChatBubbleText();
-
 				return;
 			}
 			
@@ -132,23 +131,24 @@
 				chipStack = new ChipStack(betLocation);
 				
 				seatItemsContainer = new UIComponent;
-				addChild(seatItemsContainer);
+				this.addChildAt(seatItemsContainer, 0);
 				
-				turnTimer = new TurnTimer(1000,30000,null);
+				
+				
+				chatBubble = new ChatBubble();
+				chatBubble.visible = false;
+            	//seatItemsContainer.addChild(chatBubble);
+            	
+            	seatItemsContainer.addChild(chatBubble);
+            	chatBubble.y = -5;
+            	chatBubble.x = 6;
+            	
+            	
+            	turnTimer = new TurnTimer(1000,30000,null);
 				turnTimer.x = 10;
 				turnTimer.y = 4;
 				seatItemsContainer.addChild(turnTimer);
-				
-
-				if(Config.IS_PRO_CLIENT == true){
-					chatBubble = new ChatBubble();
-					chatBubble.visible = false;
-            		seatItemsContainer.addChild(chatBubble);
-            		chatBubble.y = 0;
-            		chatBubble.x = 6;
-				}else{
-					chatBubble = null;
-				}	
+					
 			}
 
 
@@ -157,7 +157,6 @@
 				return;
 			}
 			
-
 			public function resetSeatForNewRound():void{
 				hideChatBubble();
 				//this.cardsLocation.visible = true;
@@ -172,8 +171,7 @@
 			}
 			
 			
-
-
+			
 			public function showBuyInClicked():void{
 				Main.table.showBuyInDialog(this)
 			}
@@ -253,10 +251,16 @@
 			public function showFold():void{
 				/* TODO:  fill in graphics changes for fold */
 				trace("showing fold...");
-
-				TweenLite.to(this, 3, {alpha:.40, delay:.35});
-				TweenLite.to(this.card1.cardView, 3, {alpha:0.35, rotation:45, delay:.5});
-				TweenLite.to(this.card2.cardView, 3, {alpha:0.35, rotation:45, delay:.5});
+				//TweenLite.to(this, 3, {alpha:.40, delay:.35});
+				//TweenLite.to(this.card1.cardView, 3, {alpha:0.35, rotation:45, delay:.5});
+				//TweenLite.to(this.card2.cardView, 3, {alpha:0.35, rotation:45, delay:.5});
+				
+				
+				this.alpha = .4;
+				this.card1.cardView.alpha = .35;
+				this.card2.cardView.alpha = .35;
+				this.card1.cardView.rotation = 45;
+				this.card2.cardView.rotation = 45;
 				
 				this.showOverlayText("FOLD");
 			}
