@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute">
+	
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="750" height="580">
+
+	<mx:Script>
+		<![CDATA[
+			import models.*;
+			import views.*;
+			
+			import mx.controls.Alert;
+			import mx.rpc.xml.SimpleXMLDecoder;
+			
+			
+			public var socket:XMLSocket;
+			private var loginActionId:int;
+			private var idAction:int = 0;
+			
+	
+			
+			
+			public function doConnect():void{
+				if(txtServer.text != ""){
+					try{
+						var dataServer:Array =  txtServer.text.split(':');
+	
+						this.traceOuput("attempting connection to: " + dataServer[0] + ",port: " + dataServer[1]);
+						var hostName:String = dataServer[0];
+						var port:int = int(dataServer[1]);
+						
+						
+						/* CONNECTION ALGORITHM */
+						try{
+				
+							Security.loadPolicyFile("xmlSocket://" + hostName +":" + port ); 
+							Security.allowDomain("*");
+							//Security.loadPolicyFile("http://socialholdem.com/flextest/crossdomain.xml");
+							//Security.loadPolicyFile(Config.POLICY_FILE_LOCATION);
+							this.traceOuput("loaded policy file...");
+						}catch(e:Error){
+							this.traceOuput("Can't load policy file :: " + hostName +":"+port + "," + e.message);
+							return;
+						}
+			            if (socket != null && socket.connected)
+			            {
+			                closeConnection();
+			            }// end if
+			            this.socket = new XMLSocket();
+			            configureListeners();
+			            try
+			            {
+			                socket.connect(hostName, port);
+			                this.traceOuput("Attempting primary connection to: " + hostName + ":" + port);
+			                this.traceOuput("successfully connected...");
+			            }// end try
+			            catch (e:Error)
+			            {
+			                this.traceOuput("Table_Connection error: " + e.message);
+			            }// end catch	
+						
+					}catch(e:Error){
+						this.traceOuput("Error sending connection to main: " + e.message);
+					}
+				}
+			}
+
+			public function closeConnection():void{
+				socket.removeEventListener(Event.CLOSE, Main.disconnectHandler);
+                socket.removeEventListener(Event.CONNECT, Main.connectHandler);
+                socket.removeEventListener(DataEvent.DATA, dataHandler);
+                socket.removeEventListener(SecurityErrorEvent.SECURITY_ERROR, securityErrorHandler);
+                socket.close();
+                
+			}			
+			public function doLogin():void{
+				
+				if(txtLoginUser.text != "" && txtLoginPass.text != ""){
+					var userName:String = txtLoginUser.text;
+					var userPassword:String = txtLoginPass.text;
+					//Alert.show(txtLoginUser.text);
+					traceOuput("Attempting to login");
+
+					idAction++;
+					this.loginActionId = idAction;
+					var userAgent:String = "Sockets Client";
+					//var passwordHash:String = MD5.hash(userPassword);
+					var xml:XML =
+					
+					<ns5:loginAction id={idAction} xmlns:ns5="http://www.cspoker.org/api/2008-11/"><username>{userName}</username><passwordHash>{userPassword}</passwordHash></ns5:loginAction>;
+		
+					csSendData(xml);
+
+
+				}
+			}
+			
+			public function endInit():void{
+				showConnectButton();
+			}
+			
+			public function doDisconnect():void{
+				//Main.sendDisconnect();
+				closeConnection();
+				showConnectButton();
+			}
+			
+			public function showConnectButton():void{
+				btnConnect.visible = true;
+				btnConnect.enabled = true;
+				btnDisconnect.visible = false;
+				btnDisconnect.visible = false;
+			}
+			
+			public function showDisconnectButton():void{
+				btnConnect.visible = false;
+				btnConnect.enabled = false;
+				btnDisconnect.visible = true;
+				btnDisconnect.visible = true;
+			}
+			
+			public function traceOuput(message:String):void{
+				txtOutput.text += message + "\n";
+				txtOutput.verticalScrollPosition = txtOutput.maxVerticalScrollPosition + 100;
+			}
+
+			public function configureListeners():void{
+				this.socket.addEventListener(Event.CLOSE, disconnectHandler);
+            	this.socket.addEventListener(Event.CONNECT, connectHandler);
+            	this.socket.addEventListener(DataEvent.DATA, dataHandler);
+            	this.socket.addEventListener(SecurityErrorEvent.SECURITY_ERROR, securityErrorHandler);
+			}
+			
+			private function securityErrorHandler(event:SecurityErrorEvent):void{
+				this.traceOuput("Security error: " + event.text);
+			}			
+			
+			private function dataHandler(event:DataEvent):void{
+				trace("dataHandler: " + event);
+    			this.parseDataIn(event.data);
+			}
+			
+			private function parseDataIn(strIn:String):void{
+				this.traceOuput("data in: " + strIn);
+				var xmlDoc:XMLDocument = new XMLDocument(strIn);
+			
+				var decoder:SimpleXMLDecoder=new SimpleXMLDecoder(true);
+				
+				try{
+					var contentObj:Object=decoder.decodeXML(xmlDoc);			
+				}catch(e:Error){
+					this.traceOutput("error decoding xml: " + strIn);
+					return;
+				}
+				
+				var objAction:Object;
+				var objResult:Object;
+				
+				if (contentObj.hasOwnProperty("actionPerformedEvent") && contentObj.actionPerformedEvent.id == this.loginActionId){
+					this.traceOuput("LOGIN SUCCESSFUL!!!");
+				}
+			}
+			
+			private function connectHandler(event:Event):void{
+				this.traceOuput("Connected!!!");
+				showDisconnectButton();
+			}
+			
+			private function disconnectHandler():void{
+				this.traceOuput("Disconnected!!!");
+			}
+			
+			
+			
+			private function csSendData(xmlOut:XML):void{
+				this.traceOuput("sending... " + xmlOut.toXMLString());
+				socket.send(xmlOut.toXMLString());
+			}
+		
+		]]>
+	</mx:Script>	
+          <mx:Label x="10" y="10" text="Login Page -> bleh5"
+            fontWeight="bold"/>
+          <mx:Label x="10" y="66" text="Username:"/>
+          <mx:TextInput x="85" y="64" id="txtLoginUser" text="kenzo"/>
+          <mx:Label x="10" y="92" text="Password:"/>
+          <mx:TextInput x="85" y="90" id="txtLoginPass" text="test"/>
+          <mx:Button x="123" y="187" label="Login" id="btnLogin" click="doLogin()" width="100" height="20"/>
+          
+          <mx:TextInput x="85" y="37" id="txtServer" text="localhost:8081"/>
+          <mx:Label x="13" y="39" text="Server:" width="61"/>
+          <mx:Button x="22" y="187" label="Connect" id="btnConnect" enabled="true" click="doConnect()" width="100" height="20"/>
+          <mx:Button x="33" y="215" label="Disconnect" id="btnDisconnect" click="doDisconnect()"/>
+          <mx:TextArea x="276" y="38" width="274" height="115" id="txtOutput" wordWrap="true"/>
+          
+</mx:Canvas>
+
+</mx:Application>
