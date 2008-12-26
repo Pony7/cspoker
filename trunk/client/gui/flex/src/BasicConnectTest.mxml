@@ -29,46 +29,39 @@
 						var port:int = int(dataServer[1]);
 						
 						
-						/* CONNECTION ALGORITHM */
-						try{
-				
-							Security.loadPolicyFile("xmlSocket://" + hostName +":" + port ); 
-							Security.allowDomain("*");
-							//Security.loadPolicyFile("http://socialholdem.com/flextest/crossdomain.xml");
-							//Security.loadPolicyFile(Config.POLICY_FILE_LOCATION);
-							this.traceOuput("loaded policy file...");
-						}catch(e:Error){
-							this.traceOuput("Can't load policy file :: " + hostName +":"+port + "," + e.message);
-							return;
-						}
+						//
+						Security.allowDomain("*");
+						//Security.loadPolicyFile("http://socialholdem.com/crossdomain.xml");
+						Security.loadPolicyFile("xmlSocket://" + hostName +":" + port ); 
+						this.traceOuput("loaded policy file...");
+						
 			            if (socket != null && socket.connected)
 			            {
 			                closeConnection();
 			            }// end if
 			            this.socket = new XMLSocket();
 			            configureListeners();
-			            try
-			            {
-			                socket.connect(hostName, port);
-			                this.traceOuput("Attempting primary connection to: " + hostName + ":" + port);
+			           
+			            socket.connect(hostName, port);
+			            this.traceOuput("Attempting primary connection to: " + hostName + ":" + port);
+			            if(socket.connected == true){
 			                this.traceOuput("successfully connected...");
-			            }// end try
-			            catch (e:Error)
-			            {
-			                this.traceOuput("Table_Connection error: " + e.message);
-			            }// end catch	
+			            }
+			            
 						
 					}catch(e:Error){
-						this.traceOuput("Error sending connection to main: " + e.message);
+						this.traceOuput("Error sending connection to server: " + e.message);
 					}
 				}
 			}
 
 			public function closeConnection():void{
-				socket.removeEventListener(Event.CLOSE, Main.disconnectHandler);
-                socket.removeEventListener(Event.CONNECT, Main.connectHandler);
-                socket.removeEventListener(DataEvent.DATA, dataHandler);
-                socket.removeEventListener(SecurityErrorEvent.SECURITY_ERROR, securityErrorHandler);
+				this.socket.removeEventListener(Event.CLOSE, disconnectHandler);
+            	this.socket.removeEventListener(Event.CONNECT, connectHandler);
+            	this.socket.removeEventListener(DataEvent.DATA, dataHandler);
+            	this.socket.removeEventListener(IOErrorEvent.IO_ERROR, ioErrorHandler);
+            	this.socket.removeEventListener(SecurityErrorEvent.SECURITY_ERROR, securityErrorHandler);
+    			
                 socket.close();
                 
 			}			
@@ -119,20 +112,26 @@
 			}
 			
 			public function traceOuput(message:String):void{
+				trace(message);
 				txtOutput.text += message + "\n";
-				txtOutput.verticalScrollPosition = txtOutput.maxVerticalScrollPosition + 100;
+				txtOutput.verticalScrollPosition = txtOutput.maxVerticalScrollPosition;
 			}
 
 			public function configureListeners():void{
 				this.socket.addEventListener(Event.CLOSE, disconnectHandler);
             	this.socket.addEventListener(Event.CONNECT, connectHandler);
             	this.socket.addEventListener(DataEvent.DATA, dataHandler);
+            	socket.addEventListener(IOErrorEvent.IO_ERROR, ioErrorHandler);
             	this.socket.addEventListener(SecurityErrorEvent.SECURITY_ERROR, securityErrorHandler);
 			}
 			
 			private function securityErrorHandler(event:SecurityErrorEvent):void{
 				this.traceOuput("Security error: " + event.text);
 			}			
+			
+			private function ioErrorHandler(event:IOErrorEvent):void{
+				this.traceOuput("ioError: " + event.text);
+			}
 			
 			private function dataHandler(event:DataEvent):void{
 				trace("dataHandler: " + event);
@@ -165,11 +164,9 @@
 				showDisconnectButton();
 			}
 			
-			private function disconnectHandler():void{
-				this.traceOuput("Disconnected!!!");
+			private function disconnectHandler(event:Event):void{
+				this.traceOuput("Disconnected!!!" + event.toString());
 			}
-			
-			
 			
 			private function csSendData(xmlOut:XML):void{
 				this.traceOuput("sending... " + xmlOut.toXMLString());
@@ -178,7 +175,7 @@
 		
 		]]>
 	</mx:Script>	
-          <mx:Label x="10" y="10" text="Login Page -> bleh5"
+          <mx:Label x="10" y="10" text="Login Page -> bleh14"
             fontWeight="bold"/>
           <mx:Label x="10" y="66" text="Username:"/>
           <mx:TextInput x="85" y="64" id="txtLoginUser" text="kenzo"/>
@@ -186,7 +183,7 @@
           <mx:TextInput x="85" y="90" id="txtLoginPass" text="test"/>
           <mx:Button x="123" y="187" label="Login" id="btnLogin" click="doLogin()" width="100" height="20"/>
           
-          <mx:TextInput x="85" y="37" id="txtServer" text="localhost:8081"/>
+          <mx:TextInput x="85" y="37" id="txtServer" text="socialholdem.com:8081"/>
           <mx:Label x="13" y="39" text="Server:" width="61"/>
           <mx:Button x="22" y="187" label="Connect" id="btnConnect" enabled="true" click="doConnect()" width="100" height="20"/>
           <mx:Button x="33" y="215" label="Disconnect" id="btnDisconnect" click="doDisconnect()"/>
