@@ -17,6 +17,7 @@ package org.cspoker.client.common.gamestate.modifiers;
 
 import org.cspoker.client.common.gamestate.ForwardingGameState;
 import org.cspoker.client.common.gamestate.GameState;
+import org.cspoker.client.common.gamestate.GameStateVisitor;
 import org.cspoker.common.api.lobby.holdemtable.event.CheckEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.HoldemTableEvent;
 import org.cspoker.common.elements.player.PlayerId;
@@ -47,6 +48,11 @@ public class CheckState extends ForwardingGameState {
 	@Override
 	public int getNbRaises() {
 		return 0;
+	}
+	
+	@Override
+	public void visitGameState(GameStateVisitor visitor) {
+		visitor.visitCheckState(this);
 	}
 	
 }

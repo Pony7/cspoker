@@ -22,6 +22,7 @@ import java.util.List;
 import org.cspoker.client.common.gamestate.ForwardingGameState;
 import org.cspoker.client.common.gamestate.ForwardingPlayerState;
 import org.cspoker.client.common.gamestate.GameState;
+import org.cspoker.client.common.gamestate.GameStateVisitor;
 import org.cspoker.client.common.gamestate.PlayerState;
 import org.cspoker.common.api.lobby.holdemtable.event.HoldemTableTreeEvent;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.event.NewPocketCardsEvent;
@@ -82,6 +83,11 @@ public class NewPocketCardsState
 	
 	public HoldemTableTreeEvent getLastEvent() {
 		return event;
+	}
+	
+	@Override
+	public void visitGameState(GameStateVisitor visitor) {
+		visitor.visitNewPocketCardsState(this);
 	}
 	
 }

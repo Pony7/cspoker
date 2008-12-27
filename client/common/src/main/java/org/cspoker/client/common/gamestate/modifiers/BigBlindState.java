@@ -21,6 +21,7 @@ import java.util.List;
 import org.cspoker.client.common.gamestate.ForwardingGameState;
 import org.cspoker.client.common.gamestate.ForwardingPlayerState;
 import org.cspoker.client.common.gamestate.GameState;
+import org.cspoker.client.common.gamestate.GameStateVisitor;
 import org.cspoker.client.common.gamestate.PlayerState;
 import org.cspoker.common.api.lobby.holdemtable.event.BigBlindEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.HoldemTableEvent;
@@ -111,6 +112,11 @@ public class BigBlindState
 	@Override
 	public int getNbRaises() {
 		return 0;
+	}
+	
+	@Override
+	public void visitGameState(GameStateVisitor visitor) {
+		visitor.visitBigBlindState(this);
 	}
 	
 }

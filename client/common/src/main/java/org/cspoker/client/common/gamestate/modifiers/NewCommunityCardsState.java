@@ -19,6 +19,7 @@ import java.util.EnumSet;
 
 import org.cspoker.client.common.gamestate.ForwardingGameState;
 import org.cspoker.client.common.gamestate.GameState;
+import org.cspoker.client.common.gamestate.GameStateVisitor;
 import org.cspoker.common.api.lobby.holdemtable.event.HoldemTableEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.NewCommunityCardsEvent;
 import org.cspoker.common.elements.cards.Card;
@@ -43,4 +44,10 @@ public class NewCommunityCardsState extends ForwardingGameState {
 		return event;
 	}
 
+	
+	@Override
+	public void visitGameState(GameStateVisitor visitor) {
+		visitor.visitNewCommunityCardsState(this);
+	}
+	
 }

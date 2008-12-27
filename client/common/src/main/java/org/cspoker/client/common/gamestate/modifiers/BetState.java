@@ -21,6 +21,7 @@ import java.util.List;
 import org.cspoker.client.common.gamestate.ForwardingGameState;
 import org.cspoker.client.common.gamestate.ForwardingPlayerState;
 import org.cspoker.client.common.gamestate.GameState;
+import org.cspoker.client.common.gamestate.GameStateVisitor;
 import org.cspoker.client.common.gamestate.PlayerState;
 import org.cspoker.common.api.lobby.holdemtable.event.BetEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.HoldemTableEvent;
@@ -115,6 +116,11 @@ public class BetState
 	@Override
 	public int getNbRaises() {
 		return 1;
+	}
+	
+	@Override
+	public void visitGameState(GameStateVisitor visitor) {
+		visitor.visitBetState(this);
 	}
 	
 }
