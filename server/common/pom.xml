@@ -10,6 +10,14 @@
 	<artifactId>server-common</artifactId>
 	<packaging>jar</packaging>
 	<name>CSPoker Server-Common</name>
+	<build>
+		<plugins>
+			<plugin>
+			    <groupId>org.codehaus.mojo</groupId>
+                <artifactId>cobertura-maven-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
 	<dependencies>
 		<dependency>
 			<groupId>org.cspoker</groupId>
