@@ -23,6 +23,7 @@ import java.util.Set;
 import org.cspoker.client.common.gamestate.AbstractPlayerState;
 import org.cspoker.client.common.gamestate.ForwardingGameState;
 import org.cspoker.client.common.gamestate.GameState;
+import org.cspoker.client.common.gamestate.GameStateVisitor;
 import org.cspoker.client.common.gamestate.PlayerState;
 import org.cspoker.common.api.lobby.holdemtable.event.HoldemTableEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.SitInEvent;
@@ -106,6 +107,11 @@ public class SitInState
 	
 	public HoldemTableEvent getLastEvent() {
 		return event;
+	}
+	
+	@Override
+	public void visitGameState(GameStateVisitor visitor) {
+		visitor.visitSitInState(this);
 	}
 	
 }

@@ -109,5 +109,8 @@ public interface GameState {
 
 	public PlayerState getNextActivePlayerAfter(SeatId startSeat);
 
+	public void visitGameState(GameStateVisitor visitor, GameState start);
+	
+	public void visitGameState(GameStateVisitor visitor);
 	
 }

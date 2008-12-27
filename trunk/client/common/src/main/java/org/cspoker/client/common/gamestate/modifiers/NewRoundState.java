@@ -23,6 +23,7 @@ import java.util.Set;
 import org.cspoker.client.common.gamestate.AbstractGameState;
 import org.cspoker.client.common.gamestate.AbstractPlayerState;
 import org.cspoker.client.common.gamestate.GameState;
+import org.cspoker.client.common.gamestate.GameStateVisitor;
 import org.cspoker.client.common.gamestate.PlayerState;
 import org.cspoker.common.api.lobby.holdemtable.event.HoldemTableTreeEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.NewRoundEvent;
@@ -47,10 +48,12 @@ public class NewRoundState
 	private final Set<Card> communityCards;
 	
 	private final TableConfiguration tableConfiguration;
+
+	private final GameState previousRoundState;
 	
 	public NewRoundState(GameState gameState, NewRoundEvent event) {
 		this.event = event;
-		
+		this.previousRoundState = gameState;
 		this.tableConfiguration = gameState.getTableConfiguration();
 		this.dealer = gameState.getDealer();
 		this.communityCards = gameState.getCommunityCards();
@@ -160,7 +163,7 @@ public class NewRoundState
 	}
 	
 	public GameState getPreviousGameState() {
-		return null;
+		return previousRoundState;
 	}
 	
 	public int getPreviousRoundsPotSize() {
@@ -182,5 +185,10 @@ public class NewRoundState
 	@Override
 	public int getNbRaises() {
 		return 0;
+	}
+	
+	@Override
+	public void visitGameState(GameStateVisitor visitor) {
+		visitor.visitNewRoundState(this);
 	}
 }

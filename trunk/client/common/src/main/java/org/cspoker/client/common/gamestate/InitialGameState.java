@@ -279,4 +279,16 @@ public class InitialGameState
 	public TableConfiguration getTableConfiguration() {
 		return table.getTableConfiguration();
 	}
+	
+	@Override
+	public void visitGameState(GameStateVisitor visitor, GameState start) {
+		if(start!=this){
+			visitGameState(visitor);
+		}
+	}
+
+	@Override
+	public void visitGameState(GameStateVisitor visitor) {
+		visitor.visitInitialGameState(this);
+	}
 }

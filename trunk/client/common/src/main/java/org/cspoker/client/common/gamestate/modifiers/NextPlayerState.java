@@ -17,6 +17,7 @@ package org.cspoker.client.common.gamestate.modifiers;
 
 import org.cspoker.client.common.gamestate.ForwardingGameState;
 import org.cspoker.client.common.gamestate.GameState;
+import org.cspoker.client.common.gamestate.GameStateVisitor;
 import org.cspoker.common.api.lobby.holdemtable.event.HoldemTableEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.NextPlayerEvent;
 import org.cspoker.common.elements.player.PlayerId;
@@ -39,6 +40,11 @@ public class NextPlayerState extends ForwardingGameState {
 	
 	public HoldemTableEvent getLastEvent() {
 		return event;
+	}
+	
+	@Override
+	public void visitGameState(GameStateVisitor visitor) {
+		visitor.visitNextPlayerState(this);
 	}
 	
 }

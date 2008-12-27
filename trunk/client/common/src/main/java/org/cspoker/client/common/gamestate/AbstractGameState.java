@@ -147,5 +147,13 @@ implements GameState {
 		} while (!currentPlayer.sitsIn() || currentPlayer.isAllIn());
 		return currentPlayer;
 	}
+	
+	@Override
+	public void visitGameState(GameStateVisitor visitor, GameState start) {
+		if(this!=start){
+			getPreviousGameState().visitGameState(visitor, start);
+			visitGameState(visitor);
+		}
+	}
 
 }
