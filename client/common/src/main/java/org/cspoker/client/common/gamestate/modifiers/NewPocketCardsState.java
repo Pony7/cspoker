@@ -86,7 +86,7 @@ public class NewPocketCardsState
 	}
 	
 	@Override
-	public void visitGameState(GameStateVisitor visitor) {
+	public void acceptVisitor(GameStateVisitor visitor) {
 		visitor.visitNewPocketCardsState(this);
 	}
 	

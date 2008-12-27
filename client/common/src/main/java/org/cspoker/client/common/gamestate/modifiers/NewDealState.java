@@ -42,6 +42,8 @@ public class NewDealState
 	
 	private final TableConfiguration tableConfiguration;
 	private final NewDealEvent event;
+	
+	//TODO make weak reference? clean up memory?
 	private final GameState previousGame;
 	
 	private final ImmutableMap<SeatId, PlayerId> seatPlayer;
@@ -168,7 +170,7 @@ public class NewDealState
 	}
 	
 	@Override
-	public void visitGameState(GameStateVisitor visitor) {
+	public void acceptVisitor(GameStateVisitor visitor) {
 		visitor.visitNewDealState(this);
 	}
 }

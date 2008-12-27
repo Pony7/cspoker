@@ -119,8 +119,12 @@ public class BetState
 	}
 	
 	@Override
-	public void visitGameState(GameStateVisitor visitor) {
+	public void acceptVisitor(GameStateVisitor visitor) {
 		visitor.visitBetState(this);
+	}
+	
+	public BetEvent getEvent() {
+		return event;
 	}
 	
 }

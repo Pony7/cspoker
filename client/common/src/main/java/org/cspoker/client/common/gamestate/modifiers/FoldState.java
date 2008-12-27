@@ -77,8 +77,12 @@ public class FoldState
 	}
 	
 	@Override
-	public void visitGameState(GameStateVisitor visitor) {
+	public void acceptVisitor(GameStateVisitor visitor) {
 		visitor.visitFoldState(this);
+	}
+	
+	public FoldEvent getEvent() {
+		return event;
 	}
 	
 }

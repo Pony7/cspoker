@@ -188,7 +188,7 @@ public class NewRoundState
 	}
 	
 	@Override
-	public void visitGameState(GameStateVisitor visitor) {
+	public void acceptVisitor(GameStateVisitor visitor) {
 		visitor.visitNewRoundState(this);
 	}
 }
