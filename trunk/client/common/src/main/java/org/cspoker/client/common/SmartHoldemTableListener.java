@@ -143,7 +143,7 @@ public class SmartHoldemTableListener
 	public void onNewDeal(NewDealEvent newDealEvent) {
 		synchronized (this) {
 			logger.trace(newDealEvent);
-			tableState.setGameState(new NewDealState(tableState.getTableConfiguration(), newDealEvent));
+			tableState.setGameState(new NewDealState(tableState.getTableConfiguration(), newDealEvent, tableState.getGameState()));
 		}
 		super.onNewDeal(newDealEvent);
 	}

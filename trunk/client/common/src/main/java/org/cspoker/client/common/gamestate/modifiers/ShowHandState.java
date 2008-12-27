@@ -63,8 +63,12 @@ public class ShowHandState extends ForwardingGameState {
 	}
 	
 	@Override
-	public void visitGameState(GameStateVisitor visitor) {
+	public void acceptVisitor(GameStateVisitor visitor) {
 		visitor.visitShowHandState(this);
 	}
 
+	public ShowHandEvent getEvent() {
+		return event;
+	}
+	
 }

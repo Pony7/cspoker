@@ -104,8 +104,12 @@ public class CallState
 	}
 	
 	@Override
-	public void visitGameState(GameStateVisitor visitor) {
+	public void acceptVisitor(GameStateVisitor visitor) {
 		visitor.visitCallState(this);
+	}
+	
+	public CallEvent getEvent() {
+		return event;
 	}
 	
 }

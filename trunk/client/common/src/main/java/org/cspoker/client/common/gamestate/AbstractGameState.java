@@ -149,10 +149,10 @@ implements GameState {
 	}
 	
 	@Override
-	public void visitGameState(GameStateVisitor visitor, GameState start) {
+	public void acceptHistoryVisitor(GameStateVisitor visitor, GameState start) {
 		if(this!=start){
-			getPreviousGameState().visitGameState(visitor, start);
-			visitGameState(visitor);
+			getPreviousGameState().acceptHistoryVisitor(visitor, start);
+			acceptVisitor(visitor);
 		}
 	}
 

@@ -35,7 +35,7 @@ public class LeaveTableState extends ForwardingGameState {
 	}
 	
 	@Override
-	public void visitGameState(GameStateVisitor visitor) {
+	public void acceptVisitor(GameStateVisitor visitor) {
 		visitor.visitLeaveTableState(this);
 	}
 	

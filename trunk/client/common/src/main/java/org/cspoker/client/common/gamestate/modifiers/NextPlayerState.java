@@ -43,7 +43,7 @@ public class NextPlayerState extends ForwardingGameState {
 	}
 	
 	@Override
-	public void visitGameState(GameStateVisitor visitor) {
+	public void acceptVisitor(GameStateVisitor visitor) {
 		visitor.visitNextPlayerState(this);
 	}
 	

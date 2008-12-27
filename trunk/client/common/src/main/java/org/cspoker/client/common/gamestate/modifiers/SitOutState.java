@@ -59,7 +59,7 @@ public class SitOutState extends ForwardingGameState {
 	}
 	
 	@Override
-	public void visitGameState(GameStateVisitor visitor) {
+	public void acceptVisitor(GameStateVisitor visitor) {
 		visitor.visitSitOutState(this);
 	}
 	

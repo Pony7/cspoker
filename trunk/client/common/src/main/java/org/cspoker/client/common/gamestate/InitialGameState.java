@@ -281,14 +281,14 @@ public class InitialGameState
 	}
 	
 	@Override
-	public void visitGameState(GameStateVisitor visitor, GameState start) {
+	public void acceptHistoryVisitor(GameStateVisitor visitor, GameState start) {
 		if(start!=this){
-			visitGameState(visitor);
+			acceptVisitor(visitor);
 		}
 	}
 
 	@Override
-	public void visitGameState(GameStateVisitor visitor) {
+	public void acceptVisitor(GameStateVisitor visitor) {
 		visitor.visitInitialGameState(this);
 	}
 }

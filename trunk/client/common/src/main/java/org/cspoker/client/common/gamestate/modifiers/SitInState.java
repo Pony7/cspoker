@@ -110,7 +110,7 @@ public class SitInState
 	}
 	
 	@Override
-	public void visitGameState(GameStateVisitor visitor) {
+	public void acceptVisitor(GameStateVisitor visitor) {
 		visitor.visitSitInState(this);
 	}
 	

@@ -121,8 +121,12 @@ public class RaiseState
 	}
 	
 	@Override
-	public void visitGameState(GameStateVisitor visitor) {
+	public void acceptVisitor(GameStateVisitor visitor) {
 		visitor.visitRaiseState(this);
+	}
+	
+	public RaiseEvent getEvent() {
+		return event;
 	}
 	
 }

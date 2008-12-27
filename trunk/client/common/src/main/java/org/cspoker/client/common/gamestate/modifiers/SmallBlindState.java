@@ -115,8 +115,12 @@ public class SmallBlindState
 	}
 	
 	@Override
-	public void visitGameState(GameStateVisitor visitor) {
+	public void acceptVisitor(GameStateVisitor visitor) {
 		visitor.visitSmallBlindState(this);
+	}
+	
+	public SmallBlindEvent getEvent() {
+		return event;
 	}
 	
 }

@@ -143,8 +143,12 @@ public class AllInState
 	}
 
 	@Override
-	public void visitGameState(GameStateVisitor visitor) {
+	public void acceptVisitor(GameStateVisitor visitor) {
 		visitor.visitAllInState(this);
+	}
+	
+	public AllInEvent getEvent() {
+		return event;
 	}
 	
 }

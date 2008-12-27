@@ -46,8 +46,12 @@ public class NewCommunityCardsState extends ForwardingGameState {
 
 	
 	@Override
-	public void visitGameState(GameStateVisitor visitor) {
+	public void acceptVisitor(GameStateVisitor visitor) {
 		visitor.visitNewCommunityCardsState(this);
+	}
+	
+	public NewCommunityCardsEvent getEvent() {
+		return event;
 	}
 	
 }
