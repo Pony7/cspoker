@@ -15,27 +15,13 @@
  */
 package org.cspoker.client.bots.bot.search.opponentmodel;
 
-import java.util.concurrent.ConcurrentHashMap;
-
-import org.cspoker.client.bots.bot.search.opponentmodel.OpponentModel.OpponentModelFactory;
+import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.common.elements.player.PlayerId;
 
-public class AllPlayersModel {
+public interface AllPlayersModel {
 
-	private final ConcurrentHashMap<PlayerId, OpponentModel> opponentModels = new ConcurrentHashMap<PlayerId, OpponentModel>();
-	private final OpponentModelFactory factory;
-	
-	public AllPlayersModel(OpponentModelFactory factory) {
-		this.factory = factory;
-	}
-	
-	public OpponentModel getModelFor(PlayerId opponentId){
-		OpponentModel model = opponentModels.get(opponentId);
-		if(model==null){
-			opponentModels.putIfAbsent(opponentId, factory.create(opponentId));
-			return opponentModels.get(opponentId);
-		}
-		return model;
-	}
+	OpponentModel getModelFor(PlayerId opponentId);
+
+	void signalNextAction(GameState gameState);
 
 }
