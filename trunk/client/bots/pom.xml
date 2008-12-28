@@ -9,6 +9,14 @@
 	<artifactId>client-bots</artifactId>
 	<packaging>jar</packaging>
 	<name>CSPoker Client-Bots</name>
+	<repositories>
+		<repository>
+			<id>public.cspoker.org</id>
+			<name>CSPoker Repository for Maven</name>
+			<url>http://cspoker.org:8080/nexus/content/groups/public/</url>
+			<layout>default</layout>
+		</repository>
+	</repositories>
 	<dependencies>
 		<dependency>
 			<groupId>org.cspoker</groupId>
@@ -30,6 +38,11 @@
 			<version>0.1-SNAPSHOT</version>
 			<type>jar</type>
 			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.declarativa</groupId>
+			<artifactId>interprolog</artifactId>
+			<version>2.1.2a</version>
 		</dependency>
 	</dependencies>
 </project>
