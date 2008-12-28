@@ -24,7 +24,6 @@ import org.cspoker.client.bots.bot.AbstractBot;
 import org.cspoker.client.bots.bot.search.node.BotActionNode;
 import org.cspoker.client.bots.bot.search.node.visitor.Log4JOutputVisitor;
 import org.cspoker.client.bots.bot.search.opponentmodel.AllPlayersModel;
-import org.cspoker.client.bots.bot.search.opponentmodel.prolog.ToPrologVisitor;
 import org.cspoker.client.bots.listener.BotListener;
 import org.cspoker.client.common.SmartLobbyContext;
 import org.cspoker.client.common.gamestate.GameState;
@@ -47,22 +46,12 @@ extends AbstractBot {
 
 	private final AllPlayersModel opponentModeler;
 
-	private final ToPrologVisitor visitor;
-
 	public SearchBot(PlayerId playerId, TableId tableId,
 			SmartLobbyContext lobby, ExecutorService executor,
 			AllPlayersModel opponentModeler,
 			BotListener... botListeners) {
 		super(playerId, tableId, lobby, executor, botListeners);
 		this.opponentModeler = opponentModeler;
-		this.visitor = new ToPrologVisitor(){
-			
-			@Override
-			protected void addFact(String fact) {
-				logger.info(fact+".");
-			}
-			
-		};
 	}
 
 	@Override
@@ -70,8 +59,8 @@ extends AbstractBot {
 		executor.execute(new Runnable() {
 			public void run() {
 				try {
+					opponentModeler.signalNextAction(tableContext.getGameState());
 					BotActionNode actionNode;
-					visitor.readHistory(tableContext.getGameState());
 					switch (tableContext.getGameState().getRound()) {
 					case PREFLOP:
 						playerContext.checkOrCall();
@@ -80,12 +69,12 @@ extends AbstractBot {
 						playerContext.checkOrCall();
 						break;
 					case TURN:
+						playerContext.checkOrCall();
+						break;
+					case FINAL:
 						logger.debug("Searching final round game tree:");
 						actionNode = new BotActionNode(playerID, playerContext.getGameState(), opponentModeler, 1000, new Log4JOutputVisitor(3));
 						actionNode.performbestAction(playerContext);
-						break;
-					case FINAL:
-						playerContext.checkOrCall();
 						break;
 					default:
 						throw new IllegalStateException("What round are we in?");

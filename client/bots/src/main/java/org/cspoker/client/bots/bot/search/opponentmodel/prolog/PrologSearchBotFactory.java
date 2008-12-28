@@ -14,31 +14,30 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.client.bots.bot.search;
+package org.cspoker.client.bots.bot.search.opponentmodel.prolog;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 
 import org.cspoker.client.bots.bot.Bot;
 import org.cspoker.client.bots.bot.BotFactory;
-import org.cspoker.client.bots.bot.search.opponentmodel.AllPlayersModelFactory;
-import org.cspoker.client.bots.bot.search.opponentmodel.HistogramRoundModel;
-import org.cspoker.client.bots.bot.search.opponentmodel.OpponentModel;
-import org.cspoker.client.bots.bot.search.opponentmodel.PlayerModel;
-import org.cspoker.client.bots.bot.search.opponentmodel.OpponentModel.OpponentModelFactory;
+import org.cspoker.client.bots.bot.search.SearchBot;
+import org.cspoker.client.bots.bot.search.opponentmodel.AllPlayersModel;
 import org.cspoker.client.bots.listener.BotListener;
 import org.cspoker.client.common.SmartLobbyContext;
 import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.elements.table.TableId;
 
-public class SearchBotFactory implements BotFactory {
+import com.declarativa.interprolog.SWISubprocessEngine;
+
+public class PrologSearchBotFactory implements BotFactory {
 
 	private static int copies = 0;
 	private final int copy;
 
-	private ConcurrentHashMap<PlayerId, AllPlayersModelFactory> opponentModels = new ConcurrentHashMap<PlayerId, AllPlayersModelFactory>();
+	private ConcurrentHashMap<PlayerId, AllPlayersModel> opponentModels = new ConcurrentHashMap<PlayerId, AllPlayersModel>();
 	
-	public SearchBotFactory() {
+	public PrologSearchBotFactory() {
 		this.copy = ++copies;
 	}
 	
@@ -49,21 +48,14 @@ public class SearchBotFactory implements BotFactory {
 			SmartLobbyContext lobby, ExecutorService executor,
 			BotListener... botListeners) {
 		copies++;
-		opponentModels.putIfAbsent(botId, new AllPlayersModelFactory(new OpponentModelFactory(){
-			public OpponentModel create(PlayerId opponentId) {
-				return new PlayerModel(new OpponentModelFactory(){
-					@Override
-					public OpponentModel create(PlayerId opponentId) {
-						return new HistogramRoundModel(opponentId, botId);
-					}
-				}, opponentId);
-			}
-		}));
+		opponentModels.putIfAbsent(botId, new PrologAssertingModel(
+				new SWISubprocessEngine("/usr/lib/swi-prolog/bin/i386/swipl",false), 
+				botId));
 		return new SearchBot(botId, tableId, lobby, executor, opponentModels.get(botId),botListeners);
 	}
 
 	@Override
 	public String toString() {
-		return "SearchBotv1-"+copy;
+		return "PrologSearchBotv1-"+copy;
 	}
 }

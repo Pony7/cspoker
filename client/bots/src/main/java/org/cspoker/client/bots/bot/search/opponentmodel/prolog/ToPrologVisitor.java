@@ -16,6 +16,7 @@
 package org.cspoker.client.bots.bot.search.opponentmodel.prolog;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
@@ -61,21 +62,35 @@ public abstract class ToPrologVisitor implements GameStateVisitor {
 	private int subRound;
 	private NewDealState lastDeal = null;
 
-	private HashMap<PlayerId, Integer> nbActionsPerPlayer = new HashMap<PlayerId, Integer>();
+	private final Map<PlayerId, Integer> nbActionsPerPlayer;
 	private int maxNbActions = 0;
 
 	private GameState previousStartState = null;
+	
+	public ToPrologVisitor() {
+		sessionId = (new Random()).nextInt(Integer.MAX_VALUE);
+		nbActionsPerPlayer = new HashMap<PlayerId, Integer>();
+	}
+	
+	public ToPrologVisitor(ToPrologVisitor root) {
+		sessionId =  root.getSessionId();
+		gameId = root.getGameId();
+		actionId = root.getActionId();
+		round = root.getRound();
+		subRound = root.getSubRound();
+		lastDeal = root.getLastDeal();
+		nbActionsPerPlayer = root.getNbActionsPerPlayer();
+		maxNbActions = root.getMaxNbActions();
+		previousStartState = root.getPreviousStartState();
+	}
+	
+
+	protected abstract void addFact(String fact);
 	
 	public void readHistory(GameState gameState){
 		gameState.acceptHistoryVisitor(this, previousStartState);
 		previousStartState = gameState;
 	}
-	
-	public ToPrologVisitor() {
-		sessionId = (new Random()).nextInt(Integer.MAX_VALUE);
-	}
-
-	protected abstract void addFact(String fact);
 
 	protected void signalAction(PlayerId playerId){
 		Integer previousNbActions = nbActionsPerPlayer.get(playerId);
@@ -197,7 +212,7 @@ public abstract class ToPrologVisitor implements GameStateVisitor {
 		Set<PlayerState> players = newDealState.getAllSeatedPlayers();
 		for(PlayerState player:players){
 			addFact("game_player_seat("+gameId+", player_"+player.getPlayerId().getId()+", "+player.getSeatId().getId()+")");
-			addFact("game_player_stack("+gameId+", "+", player_"+player.getPlayerId().getId()+", "+player.getStack()+")");
+			addFact("game_player_stack("+gameId+", player_"+player.getPlayerId().getId()+", "+player.getStack()+")");
 		}
 	}
 
@@ -210,7 +225,7 @@ public abstract class ToPrologVisitor implements GameStateVisitor {
 	public void visitNewRoundState(NewRoundState newRoundState) {
 		subRound=0;
 		maxNbActions=0;
-		nbActionsPerPlayer = new HashMap<PlayerId, Integer>();
+		nbActionsPerPlayer.clear();
 
 		switch(newRoundState.getRound()){
 		case PREFLOP:
@@ -270,6 +285,42 @@ public abstract class ToPrologVisitor implements GameStateVisitor {
 			int profit = winnerState.getPlayer(player.getPlayerId()).getStack()-player.getStack();
 			addFact("game_player_profit("+gameId+", player_"+player.getPlayerId().getId()+", "+profit+")");
 		}
+	}
+
+	int getSessionId() {
+		return sessionId;
+	}
+
+	int getGameId() {
+		return gameId;
+	}
+
+	int getActionId() {
+		return actionId;
+	}
+
+	String getRound() {
+		return round;
+	}
+
+	int getSubRound() {
+		return subRound;
+	}
+
+	NewDealState getLastDeal() {
+		return lastDeal;
+	}
+
+	Map<PlayerId, Integer> getNbActionsPerPlayer() {
+		return new HashMap<PlayerId, Integer>(nbActionsPerPlayer);
+	}
+
+	int getMaxNbActions() {
+		return maxNbActions;
+	}
+
+	GameState getPreviousStartState() {
+		return previousStartState;
 	}
 
 }
