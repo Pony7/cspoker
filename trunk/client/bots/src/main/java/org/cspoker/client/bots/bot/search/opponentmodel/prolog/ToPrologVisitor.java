@@ -242,7 +242,7 @@ public abstract class ToPrologVisitor implements GameStateVisitor {
 			break;
 		case FINAL:
 			round="river";
-			addFact("game_phase_start("+gameId+", final, "+(actionId+1)+")");
+			addFact("game_phase_start("+gameId+", river, "+(actionId+1)+")");
 		default:
 			//do nothing in waiting round...
 		}
