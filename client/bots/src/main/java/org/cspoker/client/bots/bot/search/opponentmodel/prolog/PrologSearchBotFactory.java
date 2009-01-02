@@ -16,9 +16,15 @@
  */
 package org.cspoker.client.bots.bot.search.opponentmodel.prolog;
 
+import java.io.File;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 
+import net.jcip.annotations.ThreadSafe;
+
+import org.apache.log4j.Logger;
+import org.cspoker.client.bots.BotRunner;
 import org.cspoker.client.bots.bot.Bot;
 import org.cspoker.client.bots.bot.BotFactory;
 import org.cspoker.client.bots.bot.search.SearchBot;
@@ -30,28 +36,36 @@ import org.cspoker.common.elements.table.TableId;
 
 import com.declarativa.interprolog.SWISubprocessEngine;
 
+@ThreadSafe
 public class PrologSearchBotFactory implements BotFactory {
-
+	
+	private final static Logger logger = Logger.getLogger(PrologSearchBotFactory.class);
 	private static int copies = 0;
+	
 	private final int copy;
 
-	private ConcurrentHashMap<PlayerId, AllPlayersModel> opponentModels = new ConcurrentHashMap<PlayerId, AllPlayersModel>();
-	
+	private final Map<PlayerId, AllPlayersModel> opponentModels = new ConcurrentHashMap<PlayerId, AllPlayersModel>();
+
 	public PrologSearchBotFactory() {
 		this.copy = ++copies;
 	}
-	
+
 	/**
 	 * @see org.cspoker.client.bots.bot.BotFactory#createBot(org.cspoker.common.elements.player.PlayerId, org.cspoker.common.elements.table.TableId, org.cspoker.client.common.SmartLobbyContext, java.util.concurrent.ExecutorService, org.cspoker.client.bots.listener.BotListener[])
 	 */
-	public Bot createBot(final PlayerId botId, TableId tableId,
+	public synchronized Bot createBot(final PlayerId botId, TableId tableId,
 			SmartLobbyContext lobby, ExecutorService executor,
 			BotListener... botListeners) {
 		copies++;
-		opponentModels.putIfAbsent(botId, new PrologAssertingModel(
-				new SWISubprocessEngine("/usr/lib/swi-prolog/bin/i386/swipl",false), 
-				botId));
-		return new SearchBot(botId, tableId, lobby, executor, opponentModels.get(botId),botListeners);
+		if(opponentModels.get(botId)==null){
+			SWISubprocessEngine prologEngine = new SWISubprocessEngine("/usr/lib/swi-prolog/bin/i386/swipl",logger.isDebugEnabled());
+			File backgroundDir = new File("/home/guy/Werk/thesis/opponentmodel/swified");
+			prologEngine.consultAbsolute(new File(backgroundDir, "background.pl"));
+			prologEngine.consultAbsolute(new File(backgroundDir, "model.pl"));
+			PrologAssertingModel model = new PrologAssertingModel(prologEngine, botId);
+			opponentModels.put(botId, model);
+		}
+		return new SearchBot(botId, tableId, lobby, executor, opponentModels.get(botId), botListeners);
 	}
 
 	@Override

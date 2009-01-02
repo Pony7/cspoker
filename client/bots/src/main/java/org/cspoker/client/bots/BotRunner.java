@@ -28,6 +28,7 @@ import org.cspoker.client.bots.bot.BotFactory;
 import org.cspoker.client.bots.bot.rule.CallBotFactory;
 import org.cspoker.client.bots.bot.rule.RuleBasedBotFactory;
 import org.cspoker.client.bots.bot.search.SearchBotFactory;
+import org.cspoker.client.bots.bot.search.opponentmodel.prolog.PrologSearchBotFactory;
 import org.cspoker.client.bots.listener.BotListener;
 import org.cspoker.client.bots.listener.GameLimitingBotListener;
 import org.cspoker.client.bots.listener.ReSitInBotListener;
@@ -49,7 +50,7 @@ import org.cspoker.common.util.threading.GlobalThreadPool;
 public class BotRunner
 		implements LobbyListener {
 	
-	private static final int nbGamesPerConfrontation = 30000;
+	private static final int nbGamesPerConfrontation = 5000;
 
 	static {
 		Log4JPropertiesLoader.load("org/cspoker/client/bots/logging/log4j.properties");
@@ -78,7 +79,7 @@ public class BotRunner
 	private volatile BotListener gameLimiter;
 	
 	public BotRunner(RemoteCSPokerServer cspokerServer){
-		this(cspokerServer, new BotFactory[]{new SearchBotFactory(),new CallBotFactory(), new RuleBasedBotFactory()});
+		this(cspokerServer, new BotFactory[]{new SearchBotFactory(),new PrologSearchBotFactory()});
 	}
 	
 	public BotRunner(RemoteCSPokerServer cspokerServer, BotFactory[] bots) {
@@ -98,7 +99,7 @@ public class BotRunner
 			
 			executor = Executors.newSingleThreadExecutor();
 			
-			speedMinitor =  new SpeedTestBotListener(2000);
+			speedMinitor =  new SpeedTestBotListener(64);
 		
 			iterateBots();
 			

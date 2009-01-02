@@ -59,7 +59,6 @@ extends AbstractBot {
 		executor.execute(new Runnable() {
 			public void run() {
 				try {
-					opponentModeler.signalNextAction(tableContext.getGameState());
 					BotActionNode actionNode;
 					switch (tableContext.getGameState().getRound()) {
 					case PREFLOP:
@@ -72,8 +71,9 @@ extends AbstractBot {
 						playerContext.checkOrCall();
 						break;
 					case FINAL:
+						opponentModeler.signalNextAction(tableContext.getGameState());
 						logger.debug("Searching final round game tree:");
-						actionNode = new BotActionNode(playerID, playerContext.getGameState(), opponentModeler, 1000, new Log4JOutputVisitor(3));
+						actionNode = new BotActionNode(playerID, playerContext.getGameState(), opponentModeler, 30, new Log4JOutputVisitor(3));
 						actionNode.performbestAction(playerContext);
 						break;
 					default:
