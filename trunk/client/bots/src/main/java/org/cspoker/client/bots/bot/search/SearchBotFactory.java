@@ -21,11 +21,10 @@ import java.util.concurrent.ExecutorService;
 
 import org.cspoker.client.bots.bot.Bot;
 import org.cspoker.client.bots.bot.BotFactory;
-import org.cspoker.client.bots.bot.search.opponentmodel.AllPlayersModelFactory;
-import org.cspoker.client.bots.bot.search.opponentmodel.HistogramRoundModel;
-import org.cspoker.client.bots.bot.search.opponentmodel.OpponentModel;
-import org.cspoker.client.bots.bot.search.opponentmodel.PlayerModel;
-import org.cspoker.client.bots.bot.search.opponentmodel.OpponentModel.OpponentModelFactory;
+import org.cspoker.client.bots.bot.search.node.leaf.ShowdownNode;
+import org.cspoker.client.bots.bot.search.node.leaf.UniformShowdownNode;
+import org.cspoker.client.bots.bot.search.node.leaf.ShowdownNode.Factory;
+import org.cspoker.client.bots.bot.search.opponentmodel.AllPlayersHistogramModel;
 import org.cspoker.client.bots.listener.BotListener;
 import org.cspoker.client.common.SmartLobbyContext;
 import org.cspoker.common.elements.player.PlayerId;
@@ -36,10 +35,16 @@ public class SearchBotFactory implements BotFactory {
 	private static int copies = 0;
 	private final int copy;
 
-	private ConcurrentHashMap<PlayerId, AllPlayersModelFactory> opponentModels = new ConcurrentHashMap<PlayerId, AllPlayersModelFactory>();
+	private ConcurrentHashMap<PlayerId, AllPlayersHistogramModel> opponentModels = new ConcurrentHashMap<PlayerId, AllPlayersHistogramModel>();
+	private Factory showdownNodeFactory;
 	
 	public SearchBotFactory() {
+		this(new UniformShowdownNode.Factory());
+	}
+	
+	public SearchBotFactory(ShowdownNode.Factory showdownNodeFactory) {
 		this.copy = ++copies;
+		this.showdownNodeFactory = showdownNodeFactory;
 	}
 	
 	/**
@@ -49,21 +54,16 @@ public class SearchBotFactory implements BotFactory {
 			SmartLobbyContext lobby, ExecutorService executor,
 			BotListener... botListeners) {
 		copies++;
-		opponentModels.putIfAbsent(botId, new AllPlayersModelFactory(new OpponentModelFactory(){
-			public OpponentModel create(PlayerId opponentId) {
-				return new PlayerModel(new OpponentModelFactory(){
-					@Override
-					public OpponentModel create(PlayerId opponentId) {
-						return new HistogramRoundModel(opponentId, botId);
-					}
-				}, opponentId);
-			}
-		}));
-		return new SearchBot(botId, tableId, lobby, executor, opponentModels.get(botId),botListeners);
+		opponentModels.putIfAbsent(botId, new AllPlayersHistogramModel(botId));
+
+		SearchConfiguration config = new SearchConfiguration(opponentModels.get(botId), 
+				showdownNodeFactory,
+				50,500,1500);
+		return new SearchBot(botId, tableId, lobby, executor, config ,botListeners);
 	}
 
 	@Override
 	public String toString() {
-		return "SearchBotv1-"+copy;
+		return "SearchBot ("+showdownNodeFactory+") v1-"+copy;
 	}
 }

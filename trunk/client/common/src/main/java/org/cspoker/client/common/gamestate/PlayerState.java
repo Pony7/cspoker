@@ -56,4 +56,6 @@ public interface PlayerState {
 	
 	boolean isActivelyPlaying();
 	
+	boolean isInForPot();
+	
 }

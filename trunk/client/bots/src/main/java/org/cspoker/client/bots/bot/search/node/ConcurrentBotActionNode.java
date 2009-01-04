@@ -25,11 +25,11 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
 import org.apache.log4j.Logger;
+import org.cspoker.client.bots.bot.search.SearchConfiguration;
 import org.cspoker.client.bots.bot.search.action.EvaluatedAction;
 import org.cspoker.client.bots.bot.search.action.SearchBotAction;
 import org.cspoker.client.bots.bot.search.node.expander.CompleteExpander;
 import org.cspoker.client.bots.bot.search.node.visitor.NodeVisitor;
-import org.cspoker.client.bots.bot.search.opponentmodel.AllPlayersModel;
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.common.elements.player.PlayerId;
 
@@ -40,8 +40,8 @@ public class ConcurrentBotActionNode extends BotActionNode {
 	private final int tokens;
 
 	public ConcurrentBotActionNode(ExecutorService executor, PlayerId botId, GameState gameState,
-			AllPlayersModel opponentModeler, int tokens, NodeVisitor... visitors) {
-		super(botId, gameState, opponentModeler, tokens, visitors);
+			SearchConfiguration config, int tokens, int searchId, NodeVisitor... visitors) {
+		super(botId, gameState, config, tokens, searchId, visitors);
 		this.executor = executor;
 		this.tokens = tokens;
 	}

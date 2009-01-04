@@ -64,31 +64,8 @@ public class PrologAssertingModel implements AllPlayersModel {
 	}
 	
 	@Override
-	public OpponentModel getModelFor(final PlayerId playerId) {
+	public OpponentModel getModelFor(final PlayerId playerId, GameState gameState) {
 		return new OpponentModel(){
-			@Override
-			public void addAllIn(GameState gameState, AllInEvent allInEvent) {
-			}
-
-			@Override
-			public void addBet(GameState gameState, BetEvent betEvent) {
-			}
-
-			@Override
-			public void addCall(GameState gameState, CallEvent callEvent) {
-			}
-
-			@Override
-			public void addCheck(GameState gameState, CheckEvent checkEvent) {
-			}
-
-			@Override
-			public void addFold(GameState gameState, FoldEvent foldEvent) {
-			}
-
-			@Override
-			public void addRaise(GameState gameState, RaiseEvent raiseEvent) {
-			}
 
 			@Override
 			public Set<SearchBotAction> getAllPossibleActions(GameState gameState) {

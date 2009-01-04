@@ -58,4 +58,8 @@ public class LeaveSeatState extends ForwardingGameState {
 	public void acceptVisitor(GameStateVisitor visitor) {
 		visitor.visitLeaveSeatState(this);
 	}
+	
+	public LeaveSeatEvent getEvent() {
+		return event;
+	}
 }

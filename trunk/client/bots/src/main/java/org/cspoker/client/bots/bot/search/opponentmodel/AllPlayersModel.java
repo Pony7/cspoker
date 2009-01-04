@@ -20,7 +20,7 @@ import org.cspoker.common.elements.player.PlayerId;
 
 public interface AllPlayersModel {
 
-	OpponentModel getModelFor(PlayerId opponentId);
+	OpponentModel getModelFor(PlayerId opponentId, GameState gameState);
 
 	void signalNextAction(GameState gameState);
 

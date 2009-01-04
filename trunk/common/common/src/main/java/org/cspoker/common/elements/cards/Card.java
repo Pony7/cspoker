@@ -113,5 +113,4 @@ public enum Card {
 			return "back"; // We just see the back of the card ...
 		return rank.getShortDescription() + suit.getShortDescription();
 	}
-	
 }

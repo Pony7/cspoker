@@ -20,28 +20,10 @@ import java.util.Set;
 import org.cspoker.client.bots.bot.search.action.ProbabilityAction;
 import org.cspoker.client.bots.bot.search.action.SearchBotAction;
 import org.cspoker.client.common.gamestate.GameState;
-import org.cspoker.common.api.lobby.holdemtable.event.AllInEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.BetEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.CallEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.CheckEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.FoldEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.RaiseEvent;
 import org.cspoker.common.elements.player.PlayerId;
 
 public interface OpponentModel {
 	
-	void addAllIn(GameState gameState, AllInEvent allInEvent);
-	
-	void addCheck(GameState gameState, CheckEvent checkEvent);
-	
-	void addBet(GameState gameState, BetEvent betEvent);
-
-	void addCall(GameState gameState, CallEvent callEvent);
-
-	void addRaise(GameState gameState, RaiseEvent raiseEvent);
-
-	void addFold(GameState gameState, FoldEvent foldEvent);
-
 	Set<SearchBotAction> getAllPossibleActions(GameState gameState);
 	
 	Set<ProbabilityAction> getProbabilityActions(GameState gameState);

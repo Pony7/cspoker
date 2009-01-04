@@ -28,6 +28,8 @@ import org.cspoker.client.bots.BotRunner;
 import org.cspoker.client.bots.bot.Bot;
 import org.cspoker.client.bots.bot.BotFactory;
 import org.cspoker.client.bots.bot.search.SearchBot;
+import org.cspoker.client.bots.bot.search.SearchConfiguration;
+import org.cspoker.client.bots.bot.search.node.leaf.UniformShowdownNode;
 import org.cspoker.client.bots.bot.search.opponentmodel.AllPlayersModel;
 import org.cspoker.client.bots.listener.BotListener;
 import org.cspoker.client.common.SmartLobbyContext;
@@ -58,14 +60,18 @@ public class PrologSearchBotFactory implements BotFactory {
 			BotListener... botListeners) {
 		copies++;
 		if(opponentModels.get(botId)==null){
-			SWISubprocessEngine prologEngine = new SWISubprocessEngine("/usr/lib/swi-prolog/bin/i386/swipl",logger.isDebugEnabled());
+			SWISubprocessEngine prologEngine = new SWISubprocessEngine("/usr/lib/swi-prolog/bin/i386/swipl",
+					logger.isDebugEnabled());
 			File backgroundDir = new File("/home/guy/Werk/thesis/opponentmodel/swified");
 			prologEngine.consultAbsolute(new File(backgroundDir, "background.pl"));
 			prologEngine.consultAbsolute(new File(backgroundDir, "model.pl"));
 			PrologAssertingModel model = new PrologAssertingModel(prologEngine, botId);
 			opponentModels.put(botId, model);
 		}
-		return new SearchBot(botId, tableId, lobby, executor, opponentModels.get(botId), botListeners);
+		SearchConfiguration config = new SearchConfiguration(opponentModels.get(botId), 
+				new UniformShowdownNode.Factory(),
+				100,1000,3000);
+		return new SearchBot(botId, tableId, lobby, executor, config ,botListeners);
 	}
 
 	@Override

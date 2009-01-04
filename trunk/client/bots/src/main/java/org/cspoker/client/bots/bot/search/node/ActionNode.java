@@ -16,8 +16,11 @@
 package org.cspoker.client.bots.bot.search.node;
 
 import org.apache.log4j.Logger;
+import org.cspoker.client.bots.bot.search.SearchConfiguration;
 import org.cspoker.client.bots.bot.search.action.ActionWrapper;
 import org.cspoker.client.bots.bot.search.action.EvaluatedAction;
+import org.cspoker.client.bots.bot.search.node.leaf.ShowdownNode;
+import org.cspoker.client.bots.bot.search.node.leaf.ShowdownNode.Factory;
 import org.cspoker.client.bots.bot.search.node.visitor.NodeVisitor;
 import org.cspoker.client.bots.bot.search.opponentmodel.AllPlayersModel;
 import org.cspoker.client.common.gamestate.GameState;
@@ -31,17 +34,20 @@ public abstract class ActionNode implements InnerGameTreeNode{
 
 	protected final GameState gameState;
 	protected final PlayerId playerId;
-	protected final AllPlayersModel opponentModeler;
 	protected final PlayerId botId;
 
 	protected final NodeVisitor[] visitors;
+	protected final SearchConfiguration config;
+	protected final int searchId;
 
-	public ActionNode(PlayerId playerId, PlayerId botId, GameState gameState, AllPlayersModel opponentModeler, NodeVisitor... visitors) {
+	public ActionNode(PlayerId playerId, PlayerId botId, GameState gameState, 
+			SearchConfiguration config, int searchId, NodeVisitor... visitors) {
 		this.gameState = gameState;
 		this.playerId = playerId;
 		this.visitors =  visitors;
-		this.opponentModeler = opponentModeler;
 		this.botId= botId;
+		this.config = config;
+		this.searchId = searchId;
 	}
 	
 	public <A extends ActionWrapper> EvaluatedAction<A> expandWith(A action, int tokens){
@@ -57,17 +63,17 @@ public abstract class ActionNode implements InnerGameTreeNode{
 			PlayerId nextToAct = nextState.getNextToAct();
 			if(nextToAct.equals(botId)){
 				//go to next player node
-				BotActionNode botActionNode = new BotActionNode(botId, nextState, opponentModeler,tokens, visitors);
+				BotActionNode botActionNode = new BotActionNode(botId, nextState, config, tokens, searchId, visitors);
 				result = new EvaluatedAction<A>(action, botActionNode.getEV());
 			}else{	
-				OpponentActionNode opponentActionNode = new OpponentActionNode(nextToAct, botId, nextState, opponentModeler,tokens,visitors);
+				OpponentActionNode opponentActionNode = new OpponentActionNode(nextToAct, botId, nextState, config, tokens, searchId, visitors);
 				result = new EvaluatedAction<A>(action, opponentActionNode.getEV());
 			}
 		}else{
 			//no active players left
 			//go to showdown
-			ShowdownNode showdownNode = new ShowdownNode(botId, nextState, tokens);
-			result = new EvaluatedAction<A>(action, showdownNode.getEV());
+			ShowdownNode showdownNode = config.getShowdownNodeFactory().create(botId, nextState, tokens, config, searchId);
+			result = new EvaluatedAction<A>(action, showdownNode.getExpectedValue());
 		}
 		for(NodeVisitor visitor:visitors){
 			visitor.leaveNode(result);
@@ -82,7 +88,7 @@ public abstract class ActionNode implements InnerGameTreeNode{
 	}
 
 	public AllPlayersModel getOpponentModeler() {
-		return opponentModeler;
+		return config.getOpponentModeler();
 	}
 
 	@Override
