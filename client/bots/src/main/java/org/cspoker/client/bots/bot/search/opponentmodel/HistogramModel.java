@@ -36,7 +36,7 @@ import org.cspoker.common.api.lobby.holdemtable.event.FoldEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.RaiseEvent;
 import org.cspoker.common.elements.player.PlayerId;
 
-public class HistogramRoundModel implements OpponentModel{
+public class HistogramModel implements OpponentModel{
 
 	public final static int weightOfPrior=200;
 
@@ -44,21 +44,36 @@ public class HistogramRoundModel implements OpponentModel{
 	private final PlayerId botId;
 
 	//prior derived from data set
-	private volatile int nbCheck = 2303*weightOfPrior/3819;
-	private volatile int nbBet = 1516*weightOfPrior/3819;
-	private volatile int totalNoBet = weightOfPrior;
+	private volatile int nbCheck;
+	private volatile int nbBet;
+	private volatile int totalNoBet;
 
-	private volatile int nbFold = 441*weightOfPrior/1017;
-	private volatile int nbCall = 408*weightOfPrior/1017;
-	private volatile int nbRaise = 168*weightOfPrior/1017;
-	private volatile int totalBet = weightOfPrior;
+	private volatile int nbFold;
+	private volatile int nbCall;
+	private volatile int nbRaise;
+	private volatile int totalBet;
 
-	public HistogramRoundModel(PlayerId playerId, PlayerId botId) {
+	public HistogramModel(
+			PlayerId playerId, 
+			PlayerId botId,
+			int nbCheck,
+			int nbBet,
+			int totalNoBet,
+			int nbFold,
+			int nbCall,
+			int nbRaise,
+			int totalBet) {
 		this.playerId = playerId;
 		this.botId = botId;
+		this.nbCheck = nbCheck;
+		this.nbBet = nbBet;
+		this.totalNoBet = totalNoBet;
+		this.nbFold = nbFold;
+		this.nbCall = nbCall;
+		this.nbRaise = nbRaise;
+		this.totalBet = totalBet;
 	}
-	
-	@Override
+
 	public void addAllIn(GameState gameState, AllInEvent allInEvent) {
 		AllInState newState = new AllInState(gameState, allInEvent);
 		if(gameState.hasBet()){
@@ -118,18 +133,18 @@ public class HistogramRoundModel implements OpponentModel{
 			double callProbability = getCallProbability(gameState);
 			totalProbability+=callProbability;
 			actions.add(new ProbabilityAction(new CallAction(gameState, playerId),callProbability));
-			
+
 			double foldProbability = getFoldProbability(gameState);
 			totalProbability+= foldProbability;
 			actions.add(new ProbabilityAction(new FoldAction(gameState, playerId),foldProbability));
-			
+
 			if(!gameState.getPlayer(botId).isAllIn() && gameState.isAllowedToRaise(playerId)){
 				int lowerRaiseBound = gameState.getLowerRaiseBound(playerId);
 				int upperRaiseBound = gameState.getUpperRaiseBound(playerId);
 				double raiseProbability = getRaiseProbability(gameState);
 				totalProbability+=raiseProbability;
 				actions.add(new ProbabilityAction(new RaiseAction(gameState, playerId, lowerRaiseBound),raiseProbability));
-			
+
 				if(upperRaiseBound>lowerRaiseBound){
 					totalProbability+=raiseProbability;
 					actions.add(new ProbabilityAction(new RaiseAction(gameState, playerId, Math.min(5*lowerRaiseBound, upperRaiseBound))
@@ -141,14 +156,14 @@ public class HistogramRoundModel implements OpponentModel{
 			double checkProbability = getCheckProbability(gameState);
 			totalProbability+=checkProbability;
 			actions.add(new ProbabilityAction(new CheckAction(gameState, playerId),checkProbability));
-			
+
 			if(!gameState.getPlayer(botId).isAllIn() && gameState.isAllowedToRaise(playerId)){
 				int lowerRaiseBound = gameState.getLowerRaiseBound(playerId);
 				int upperRaiseBound = gameState.getUpperRaiseBound(playerId);
 				double betProbability = getBetProbability(gameState);
 				totalProbability+=betProbability;
 				actions.add(new ProbabilityAction(new BetAction(gameState, playerId, lowerRaiseBound),betProbability));
-				
+
 				if(upperRaiseBound>lowerRaiseBound){
 					totalProbability+=betProbability;
 					actions.add(new ProbabilityAction(new BetAction(gameState, playerId, Math.min(5*lowerRaiseBound, upperRaiseBound))
@@ -176,11 +191,11 @@ public class HistogramRoundModel implements OpponentModel{
 	}
 
 	public double getFoldProbability(GameState gameState) {
-		return nbFold*1.0/totalBet*Math.pow(0.6, gameState.getNbRaises());
+		return nbFold*1.0/totalBet;
 	}
 
 	public double getRaiseProbability(GameState gameState) {
-		return nbRaise*1.0/totalBet*Math.pow(0.9, gameState.getNbRaises());
+		return nbRaise*1.0/totalBet;
 	}
 
 }

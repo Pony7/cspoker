@@ -13,30 +13,40 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.client.common.gamestate;
+package org.cspoker.common.handeval.spears;
+
+public enum Rank {
+	Deuce	("2"), 
+	Three	("3"), 
+	Four	("4"), 
+	Five	("5"), 
+	Six		("6"),
+	Seven	("7"), 
+	Eight	("8"), 
+	Nine	("9"), 
+	Ten		("T"), 
+	Jack	("J"), 
+	Queen	("Q"), 
+	King	("K"), 
+	Ace		("A");
+	
+	private final String toString;
 
 
-/**
- * Abstract PlayerState partial implementation.
- * Only methods that are a simple combination of other methods should be implemented here.
- * 
- * @author guy
- *
- */
-public abstract class AbstractPlayerState implements PlayerState {
-
-	public final boolean isAllIn() {
-		return getStack()==0;
-	}
-
-	public final boolean isActivelyPlaying(){
-		return sitsIn() && !hasFolded() && !isAllIn();
-	}
-
-	public final boolean isInForPot(){
-		//TODO handle split pot
-		return sitsIn() && !hasFolded();
+	private Rank(String toString) {
+		this.toString = toString;
 	}
 	
+	public String toString() {
+		return toString;
+	}
 	
+	public static Rank parse(String s)  {
+		for (Rank r : Rank.values()) {
+			if(s.equalsIgnoreCase(r.toString)) return r;
+		}
+		throw new RuntimeException("Unrecognized rank: " + s);
+	}
+	
+
 }

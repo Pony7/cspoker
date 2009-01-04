@@ -21,6 +21,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
+import org.cspoker.client.bots.bot.search.SearchConfiguration;
 import org.cspoker.client.bots.bot.search.action.ActionWrapper;
 import org.cspoker.client.bots.bot.search.action.BetAction;
 import org.cspoker.client.bots.bot.search.action.CallAction;
@@ -33,7 +34,6 @@ import org.cspoker.client.bots.bot.search.action.SearchBotAction;
 import org.cspoker.client.bots.bot.search.node.expander.CompleteExpander;
 import org.cspoker.client.bots.bot.search.node.expander.Expander;
 import org.cspoker.client.bots.bot.search.node.visitor.NodeVisitor;
-import org.cspoker.client.bots.bot.search.opponentmodel.AllPlayersModel;
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.RemoteHoldemPlayerContext;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
@@ -44,19 +44,11 @@ public class BotActionNode extends ActionNode{
 	private final static Logger logger = Logger.getLogger(BotActionNode.class);
 
 	private final Expander expander;
-
-	private final boolean isRootNode;
-
-	public BotActionNode(PlayerId botId, GameState gameState,
-			AllPlayersModel opponentModeler, int tokens, NodeVisitor... visitors) {
-		this(botId, gameState, opponentModeler, tokens, false, visitors);
-	}
 	
 	public BotActionNode(PlayerId botId, GameState gameState,
-			AllPlayersModel opponentModeler, int tokens, boolean isRootNode, NodeVisitor... visitors) {
-		super(botId, botId, gameState, opponentModeler, visitors);
+			SearchConfiguration config, int tokens, int searchId, NodeVisitor... visitors) {
+		super(botId, botId, gameState, config, searchId, visitors);
 		this.expander = new CompleteExpander(this, tokens);
-		this.isRootNode = isRootNode;
 	}
 
 	@Override

@@ -18,6 +18,7 @@ package org.cspoker.client.bots.bot.search.node;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
+import org.cspoker.client.bots.bot.search.SearchConfiguration;
 import org.cspoker.client.bots.bot.search.action.ActionWrapper;
 import org.cspoker.client.bots.bot.search.action.EvaluatedAction;
 import org.cspoker.client.bots.bot.search.action.ProbabilityAction;
@@ -25,7 +26,6 @@ import org.cspoker.client.bots.bot.search.action.SampledAction;
 import org.cspoker.client.bots.bot.search.action.SearchBotAction;
 import org.cspoker.client.bots.bot.search.node.expander.SamplingExpander;
 import org.cspoker.client.bots.bot.search.node.visitor.NodeVisitor;
-import org.cspoker.client.bots.bot.search.opponentmodel.AllPlayersModel;
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.common.elements.player.PlayerId;
 
@@ -35,8 +35,8 @@ public class OpponentActionNode extends ActionNode{
 	
 	private final SamplingExpander expander;
 	
-	public OpponentActionNode(PlayerId opponentId, PlayerId botId, GameState gameState, AllPlayersModel playersModel, int tokens, NodeVisitor... visitors) {
-		super(opponentId, botId, gameState, playersModel, visitors);
+	public OpponentActionNode(PlayerId opponentId, PlayerId botId, GameState gameState, SearchConfiguration config, int tokens, int searchId, NodeVisitor... visitors) {
+		super(opponentId, botId, gameState, config, searchId, visitors);
 		this.expander = new SamplingExpander(this, tokens);
 	}
 
@@ -53,12 +53,12 @@ public class OpponentActionNode extends ActionNode{
 	
 	@Override
 	public Set<SearchBotAction> getAllPossibleActions() {
-		return opponentModeler.getModelFor(playerId).getAllPossibleActions(gameState);
+		return config.getOpponentModeler().getModelFor(playerId,gameState).getAllPossibleActions(gameState);
 	}
 
 	@Override
 	public Set<ProbabilityAction> getProbabilityActions() {
-		return opponentModeler.getModelFor(playerId).getProbabilityActions(gameState);
+		return config.getOpponentModeler().getModelFor(playerId,gameState).getProbabilityActions(gameState);
 	}
 	
 	protected <A extends ActionWrapper> EvaluatedAction<A> getFoldEVForBot(A action, GameState nextState) {

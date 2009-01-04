@@ -109,6 +109,10 @@ public class SitInState
 		return event;
 	}
 	
+	public SitInEvent getEvent() {
+		return event;
+	}
+	
 	@Override
 	public void acceptVisitor(GameStateVisitor visitor) {
 		visitor.visitSitInState(this);

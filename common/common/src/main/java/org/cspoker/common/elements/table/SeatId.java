@@ -52,24 +52,12 @@ public class SeatId implements Serializable{
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + seatId;
-		return result;
+		return seatId;
 	}
-
+	
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (!(obj instanceof SeatId))
-			return false;
-		SeatId other = (SeatId) obj;
-		if (seatId != other.seatId)
-			return false;
-		return true;
+		return obj != null && obj instanceof SeatId && ((SeatId) obj).seatId == seatId;
 	}
 	
 }

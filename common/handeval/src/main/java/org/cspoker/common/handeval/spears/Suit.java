@@ -13,30 +13,30 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.client.common.gamestate;
+package org.cspoker.common.handeval.spears;
 
 
-/**
- * Abstract PlayerState partial implementation.
- * Only methods that are a simple combination of other methods should be implemented here.
- * 
- * @author guy
- *
- */
-public abstract class AbstractPlayerState implements PlayerState {
-
-	public final boolean isAllIn() {
-		return getStack()==0;
-	}
-
-	public final boolean isActivelyPlaying(){
-		return sitsIn() && !hasFolded() && !isAllIn();
-	}
-
-	public final boolean isInForPot(){
-		//TODO handle split pot
-		return sitsIn() && !hasFolded();
+public enum Suit {
+	Clubs("c"),
+	Diamonds("d"),
+	Hearts("h"),
+	Spades("s");
+	
+	private final String toString;
+	
+	private Suit(String toString) {
+		this.toString = toString;
 	}
 	
+	public String toString() {
+		return toString;
+	}
 	
+	public static Suit parse(String s)  {
+		for (Suit suit : Suit.values()) {
+			if(suit.toString.equalsIgnoreCase(s)) return suit;
+		}
+		throw new RuntimeException("Unrecognized suit: " + s);
+	}
+
 }

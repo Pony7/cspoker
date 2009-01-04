@@ -16,23 +16,17 @@
 package org.cspoker.client.bots.bot.search;
 
 import java.rmi.RemoteException;
-import java.util.Random;
 import java.util.concurrent.ExecutorService;
 
 import org.apache.log4j.Logger;
 import org.cspoker.client.bots.bot.AbstractBot;
 import org.cspoker.client.bots.bot.search.node.BotActionNode;
+import org.cspoker.client.bots.bot.search.node.CachingNode;
 import org.cspoker.client.bots.bot.search.node.visitor.Log4JOutputVisitor;
-import org.cspoker.client.bots.bot.search.opponentmodel.AllPlayersModel;
 import org.cspoker.client.bots.listener.BotListener;
 import org.cspoker.client.common.SmartLobbyContext;
 import org.cspoker.client.common.gamestate.GameState;
-import org.cspoker.common.api.lobby.holdemtable.event.AllInEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.BetEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.CallEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.CheckEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.FoldEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.RaiseEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.NextPlayerEvent;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.elements.table.TableId;
@@ -42,16 +36,15 @@ extends AbstractBot {
 
 	private final static Logger logger = Logger.getLogger(SearchBot.class);
 
-	Random random = new Random();
-
-	private final AllPlayersModel opponentModeler;
+	private int searchId = 0;
+	private final SearchConfiguration config;
 
 	public SearchBot(PlayerId playerId, TableId tableId,
 			SmartLobbyContext lobby, ExecutorService executor,
-			AllPlayersModel opponentModeler,
+			SearchConfiguration config,
 			BotListener... botListeners) {
 		super(playerId, tableId, lobby, executor, botListeners);
-		this.opponentModeler = opponentModeler;
+		this.config = config;
 	}
 
 	@Override
@@ -60,20 +53,33 @@ extends AbstractBot {
 			public void run() {
 				try {
 					BotActionNode actionNode;
-					switch (tableContext.getGameState().getRound()) {
+					GameState gameState = tableContext.getGameState();
+					//essential to do this with a clean game state from the context
+					config.getOpponentModeler().signalNextAction(gameState);
+					gameState = new CachingNode(gameState);
+					switch (gameState.getRound()) {
 					case PREFLOP:
 						playerContext.checkOrCall();
 						break;
 					case FLOP:
-						playerContext.checkOrCall();
+						logger.debug("Searching flop round game tree:");
+						actionNode = new BotActionNode(playerID, playerContext.getGameState(), 
+								config, config.getFlopTokens(), 
+								searchId++, new Log4JOutputVisitor(3));
+						actionNode.performbestAction(playerContext);
 						break;
 					case TURN:
-						playerContext.checkOrCall();
+						logger.debug("Searching turn round game tree:");
+						actionNode = new BotActionNode(playerID, playerContext.getGameState(), 
+								config, config.getTurnTokens(), 
+								searchId++, new Log4JOutputVisitor(3));
+						actionNode.performbestAction(playerContext);
 						break;
 					case FINAL:
-						opponentModeler.signalNextAction(tableContext.getGameState());
 						logger.debug("Searching final round game tree:");
-						actionNode = new BotActionNode(playerID, playerContext.getGameState(), opponentModeler, 30, new Log4JOutputVisitor(3));
+						actionNode = new BotActionNode(playerID, playerContext.getGameState(), 
+								config, config.getFinalTokens(), 
+								searchId++, new Log4JOutputVisitor(3));
 						actionNode.performbestAction(playerContext);
 						break;
 					default:
@@ -90,71 +96,11 @@ extends AbstractBot {
 			}
 		});
 	}
-
+	
 	@Override
-	public void onAllIn(final AllInEvent allInEvent) {
-		final GameState gameState = playerContext.getGameState();
-		executor.execute(new Runnable() {
-			public void run() {
-				opponentModeler.getModelFor(allInEvent.getPlayerId()).addAllIn(gameState, allInEvent);
-			}
-		});
-		super.onAllIn(allInEvent);
-	}
-
-	@Override
-	public void onBet(final BetEvent betEvent) {
-		final GameState gameState = playerContext.getGameState();
-		executor.execute(new Runnable() {
-			public void run() {
-				opponentModeler.getModelFor(betEvent.getPlayerId()).addBet(gameState, betEvent);
-			}
-		});
-		super.onBet(betEvent);
-	}
-
-	@Override
-	public void onCall(final CallEvent callEvent) {
-		final GameState gameState = playerContext.getGameState();
-		executor.execute(new Runnable() {
-			public void run() {
-				opponentModeler.getModelFor(callEvent.getPlayerId()).addCall(gameState, callEvent);
-			}
-		});
-		super.onCall(callEvent);
-	}
-
-	@Override
-	public void onFold(final FoldEvent foldEvent) {
-		final GameState gameState = playerContext.getGameState();
-		executor.execute(new Runnable() {
-			public void run() {
-				opponentModeler.getModelFor(foldEvent.getPlayerId()).addFold(gameState, foldEvent);
-			}
-		});
-		super.onFold(foldEvent);
-	}
-
-	@Override
-	public void onCheck(final CheckEvent checkEvent) {
-		final GameState gameState = playerContext.getGameState();
-		executor.execute(new Runnable() {
-			public void run() {
-				opponentModeler.getModelFor(checkEvent.getPlayerId()).addCheck(gameState, checkEvent);
-			}
-		});
-		super.onCheck(checkEvent);
-	}
-
-	@Override
-	public void onRaise(final RaiseEvent raiseEvent) {
-		final GameState gameState = playerContext.getGameState();
-		executor.execute(new Runnable() {
-			public void run() {
-				opponentModeler.getModelFor(raiseEvent.getPlayerId()).addRaise(gameState,raiseEvent);
-			}
-		});
-		super.onRaise(raiseEvent);
+	public void onNextPlayer(NextPlayerEvent nextPlayerEvent) {
+		config.getOpponentModeler().signalNextAction(tableContext.getGameState());
+		super.onNextPlayer(nextPlayerEvent);
 	}
 
 }

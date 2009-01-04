@@ -13,29 +13,43 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.client.common.gamestate.modifiers;
+package org.cspoker.client.bots.bot.search.node;
 
 import org.cspoker.client.common.gamestate.ForwardingGameState;
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.client.common.gamestate.GameStateVisitor;
-import org.cspoker.common.api.lobby.holdemtable.event.JoinTableEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.HoldemTableTreeEvent;
+import org.cspoker.common.elements.table.Round;
 
-public class JoinTableState extends ForwardingGameState {
+import com.google.common.base.Supplier;
+import com.google.common.base.Suppliers;
 
-	private final JoinTableEvent event;
+public class CachingNode extends ForwardingGameState {
 
-	public JoinTableState(GameState gameState, JoinTableEvent event) {
-		super(gameState);
-		this.event = event;
-	}
+	private final Supplier<Round> round = Suppliers.memoize(new Supplier<Round>(){
+		public Round get() {
+			return CachingNode.super.getRound();
+		};
+	});
 	
-	public JoinTableEvent getLastEvent() {
-		return event;
+	
+	public CachingNode(GameState gameState) {
+		super(gameState);
+	}
+
+	@Override
+	public void acceptVisitor(GameStateVisitor visitor) {
+		//no op
+	}
+
+	@Override
+	public HoldemTableTreeEvent getLastEvent() {
+		return null;
 	}
 	
 	@Override
-	public void acceptVisitor(GameStateVisitor visitor) {
-		visitor.visitJoinTableState(this);
+	public Round getRound() {
+		return round.get();
 	}
-	
+
 }

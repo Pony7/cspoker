@@ -25,10 +25,11 @@ import org.apache.log4j.Logger;
 import org.cspoker.client.bots.bot.AbstractBot;
 import org.cspoker.client.bots.bot.Bot;
 import org.cspoker.client.bots.bot.BotFactory;
-import org.cspoker.client.bots.bot.rule.CallBotFactory;
 import org.cspoker.client.bots.bot.rule.RuleBasedBotFactory;
 import org.cspoker.client.bots.bot.search.SearchBotFactory;
-import org.cspoker.client.bots.bot.search.opponentmodel.prolog.PrologSearchBotFactory;
+import org.cspoker.client.bots.bot.search.node.leaf.CachedShowdownNodeFactory;
+import org.cspoker.client.bots.bot.search.node.leaf.DistributionShowdownNode;
+import org.cspoker.client.bots.bot.search.node.leaf.UniformShowdownNode;
 import org.cspoker.client.bots.listener.BotListener;
 import org.cspoker.client.bots.listener.GameLimitingBotListener;
 import org.cspoker.client.bots.listener.ReSitInBotListener;
@@ -79,7 +80,11 @@ public class BotRunner
 	private volatile BotListener gameLimiter;
 	
 	public BotRunner(RemoteCSPokerServer cspokerServer){
-		this(cspokerServer, new BotFactory[]{new SearchBotFactory(),new PrologSearchBotFactory()});
+		this(cspokerServer, new BotFactory[]{
+				new RuleBasedBotFactory(),
+				new SearchBotFactory(new CachedShowdownNodeFactory(new DistributionShowdownNode.Factory())),
+				new SearchBotFactory(new CachedShowdownNodeFactory(new UniformShowdownNode.Factory())),
+		});
 	}
 	
 	public BotRunner(RemoteCSPokerServer cspokerServer, BotFactory[] bots) {
@@ -99,7 +104,7 @@ public class BotRunner
 			
 			executor = Executors.newSingleThreadExecutor();
 			
-			speedMinitor =  new SpeedTestBotListener(64);
+			speedMinitor =  new SpeedTestBotListener(128);
 		
 			iterateBots();
 			

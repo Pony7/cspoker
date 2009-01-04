@@ -18,7 +18,6 @@ package org.cspoker.client.common.gamestate.modifiers;
 import org.cspoker.client.common.gamestate.ForwardingGameState;
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.client.common.gamestate.GameStateVisitor;
-import org.cspoker.common.api.lobby.holdemtable.event.HoldemTableEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.LeaveTableEvent;
 
 public class LeaveTableState extends ForwardingGameState {
@@ -30,7 +29,7 @@ public class LeaveTableState extends ForwardingGameState {
 		this.event = event;
 	}
 	
-	public HoldemTableEvent getLastEvent() {
+	public LeaveTableEvent getLastEvent() {
 		return event;
 	}
 	
