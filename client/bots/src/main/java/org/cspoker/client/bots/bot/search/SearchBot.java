@@ -63,17 +63,11 @@ extends AbstractBot {
 						break;
 					case FLOP:
 						logger.debug("Searching flop round game tree:");
-						actionNode = new BotActionNode(playerID, playerContext.getGameState(), 
-								config, config.getFlopTokens(), 
-								searchId++, new Log4JOutputVisitor(3));
-						actionNode.performbestAction(playerContext);
+						playerContext.checkOrCall();
 						break;
 					case TURN:
 						logger.debug("Searching turn round game tree:");
-						actionNode = new BotActionNode(playerID, playerContext.getGameState(), 
-								config, config.getTurnTokens(), 
-								searchId++, new Log4JOutputVisitor(3));
-						actionNode.performbestAction(playerContext);
+						playerContext.checkOrCall();
 						break;
 					case FINAL:
 						logger.debug("Searching final round game tree:");

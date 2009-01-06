@@ -33,12 +33,6 @@ import org.cspoker.client.bots.bot.search.action.SearchBotAction;
 import org.cspoker.client.bots.bot.search.opponentmodel.AllPlayersModel;
 import org.cspoker.client.bots.bot.search.opponentmodel.OpponentModel;
 import org.cspoker.client.common.gamestate.GameState;
-import org.cspoker.common.api.lobby.holdemtable.event.AllInEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.BetEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.CallEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.CheckEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.FoldEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.RaiseEvent;
 import org.cspoker.common.elements.player.PlayerId;
 
 import com.declarativa.interprolog.PrologEngine;

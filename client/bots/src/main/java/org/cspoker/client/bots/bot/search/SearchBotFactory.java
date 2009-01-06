@@ -58,7 +58,7 @@ public class SearchBotFactory implements BotFactory {
 
 		SearchConfiguration config = new SearchConfiguration(opponentModels.get(botId), 
 				showdownNodeFactory,
-				50,500,1500);
+				200,1000,5000);
 		return new SearchBot(botId, tableId, lobby, executor, config ,botListeners);
 	}
 
