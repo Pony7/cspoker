@@ -15,12 +15,16 @@
  */
 package org.cspoker.client.bots.bot.search.opponentmodel.prolog;
 
+import jp.ac.kobe_u.cs.prolog.builtin.PRED_assert_1;
+import jp.ac.kobe_u.cs.prolog.lang.Predicate;
+import jp.ac.kobe_u.cs.prolog.lang.StructureTerm;
+
 import org.apache.log4j.Logger;
 import org.cspoker.client.common.gamestate.GameState;
 
 import com.declarativa.interprolog.PrologEngine;
 
-public class FactAssertingVisitor extends ToPrologVisitor {
+public class FactAssertingVisitor extends ToPrologTermVisitor {
 	
 	private final static Logger logger = Logger.getLogger(FactAssertingVisitor.class);
 
@@ -32,10 +36,10 @@ public class FactAssertingVisitor extends ToPrologVisitor {
 	}
 	
 	@Override
-	protected void addFact(String fact) {
-		fact = "assert("+fact+")";
+	protected void addTerm(StructureTerm term) {
+		Predicate fact = new PRED_assert_1(term,null);
 		if(query==null){
-			query = new StringBuilder(fact);
+			query = new StringBuilder(fact.toString());
 		}else{
 			query.append(", "+fact);
 		}

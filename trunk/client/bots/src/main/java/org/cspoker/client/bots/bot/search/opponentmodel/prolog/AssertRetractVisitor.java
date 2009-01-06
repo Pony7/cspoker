@@ -15,42 +15,43 @@
  */
 package org.cspoker.client.bots.bot.search.opponentmodel.prolog;
 
+import java.util.ArrayDeque;
+import java.util.Deque;
+
+import jp.ac.kobe_u.cs.prolog.builtin.PRED_assert_1;
+import jp.ac.kobe_u.cs.prolog.builtin.PRED_retract_1;
+import jp.ac.kobe_u.cs.prolog.lang.Predicate;
+import jp.ac.kobe_u.cs.prolog.lang.StructureTerm;
+import jp.ac.kobe_u.cs.prolog.lang.Term;
+
 import org.apache.log4j.Logger;
 
-public class AssertRetractVisitor extends ToPrologVisitor {
+public class AssertRetractVisitor extends ToPrologTermVisitor {
 	
 	private final static Logger logger = Logger.getLogger(AssertRetractVisitor.class);
 
-	private StringBuilder assertions = null;
-	private StringBuilder retractions = null;
+	private Deque<Term> stack = new ArrayDeque<Term>();
 	
 	public AssertRetractVisitor() {
 		super();
 	}
 	
-	public AssertRetractVisitor(ToPrologVisitor root) {
+	public AssertRetractVisitor(LoggingVisitor root) {
 		super(root);
 	}
 
 	@Override
-	protected void addFact(String fact) {
-		String assertfact = "assert("+fact+")";
-		if(assertions==null){
-			assertions = new StringBuilder(assertfact);
-		}else{
-			assertions.append(", "+assertfact);
-		}
-		
-		String retractfact = "retract("+fact+")";
-		if(retractions==null){
-			retractions = new StringBuilder(retractfact);
-		}else{
-			retractions.append(", "+retractfact);
-		}
-	}
-	
-	public String wrapGoal(String goal) {
-		return assertions.toString()+", "+goal+", "+retractions.toString();
+	protected void addTerm(StructureTerm term) {
+		stack.push(term);
 	}
 
+	public String wrapGoal(String goal) {
+		for(Term term:stack){
+			Predicate assertPredicate = new PRED_assert_1(term, null);
+			Predicate retractPredicate = new PRED_retract_1(term, null);
+			goal = assertPredicate.toString()+", "+goal+", "+retractPredicate.toString();
+		}
+		return goal;
+	}
+	
 }

@@ -19,13 +19,9 @@ import java.rmi.RemoteException;
 
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.client.common.gamestate.PlayerState;
-import org.cspoker.client.common.gamestate.modifiers.BetState;
 import org.cspoker.client.common.gamestate.modifiers.CallState;
-import org.cspoker.client.common.gamestate.modifiers.NewRoundState;
 import org.cspoker.client.common.gamestate.modifiers.NextPlayerState;
-import org.cspoker.common.api.lobby.holdemtable.event.BetEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.CallEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.NewRoundEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.NextPlayerEvent;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.RemoteHoldemPlayerContext;
 import org.cspoker.common.api.shared.exception.IllegalActionException;

@@ -14,7 +14,7 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.client.bots.bot.search.opponentmodel.prolog;
+package org.cspoker.client.bots.bot.search;
 
 import java.io.File;
 import java.util.Map;
@@ -24,13 +24,11 @@ import java.util.concurrent.ExecutorService;
 import net.jcip.annotations.ThreadSafe;
 
 import org.apache.log4j.Logger;
-import org.cspoker.client.bots.BotRunner;
 import org.cspoker.client.bots.bot.Bot;
 import org.cspoker.client.bots.bot.BotFactory;
-import org.cspoker.client.bots.bot.search.SearchBot;
-import org.cspoker.client.bots.bot.search.SearchConfiguration;
 import org.cspoker.client.bots.bot.search.node.leaf.UniformShowdownNode;
 import org.cspoker.client.bots.bot.search.opponentmodel.AllPlayersModel;
+import org.cspoker.client.bots.bot.search.opponentmodel.prolog.PrologAssertingModel;
 import org.cspoker.client.bots.listener.BotListener;
 import org.cspoker.client.common.SmartLobbyContext;
 import org.cspoker.common.elements.player.PlayerId;
@@ -70,7 +68,7 @@ public class PrologSearchBotFactory implements BotFactory {
 		}
 		SearchConfiguration config = new SearchConfiguration(opponentModels.get(botId), 
 				new UniformShowdownNode.Factory(),
-				100,1000,3000);
+				1,10,100);
 		return new SearchBot(botId, tableId, lobby, executor, config ,botListeners);
 	}
 

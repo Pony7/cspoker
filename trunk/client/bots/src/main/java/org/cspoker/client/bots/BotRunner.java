@@ -26,6 +26,7 @@ import org.cspoker.client.bots.bot.AbstractBot;
 import org.cspoker.client.bots.bot.Bot;
 import org.cspoker.client.bots.bot.BotFactory;
 import org.cspoker.client.bots.bot.rule.RuleBasedBotFactory;
+import org.cspoker.client.bots.bot.search.PrologSearchBotFactory;
 import org.cspoker.client.bots.bot.search.SearchBotFactory;
 import org.cspoker.client.bots.bot.search.node.leaf.CachedShowdownNodeFactory;
 import org.cspoker.client.bots.bot.search.node.leaf.DistributionShowdownNode;
@@ -82,8 +83,9 @@ public class BotRunner
 	public BotRunner(RemoteCSPokerServer cspokerServer){
 		this(cspokerServer, new BotFactory[]{
 				new RuleBasedBotFactory(),
-				new SearchBotFactory(new CachedShowdownNodeFactory(new DistributionShowdownNode.Factory())),
-				new SearchBotFactory(new CachedShowdownNodeFactory(new UniformShowdownNode.Factory())),
+				new PrologSearchBotFactory(),
+				//new SearchBotFactory(new CachedShowdownNodeFactory(new DistributionShowdownNode.Factory())),
+				//new SearchBotFactory(new CachedShowdownNodeFactory(new UniformShowdownNode.Factory())),
 		});
 	}
 	
@@ -104,7 +106,7 @@ public class BotRunner
 			
 			executor = Executors.newSingleThreadExecutor();
 			
-			speedMinitor =  new SpeedTestBotListener(128);
+			speedMinitor =  new SpeedTestBotListener(32);
 		
 			iterateBots();
 			
