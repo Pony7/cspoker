@@ -33,7 +33,6 @@ import org.cspoker.server.xml.sockets.security.PolicyFile;
 public class ProcessXML implements Runnable, Prioritizable {
 
 	private final static Logger logger = Logger.getLogger(ProcessXML.class);
-	public final static char DELIM = (char) 0x00;
 
 	private final String xml;
 	private final ClientContext context;
@@ -52,14 +51,18 @@ public class ProcessXML implements Runnable, Prioritizable {
 				// different host
 				if (xml.startsWith(PolicyFile.request)) {
 					logger.info("handling flash security manager request.");
-					context.send(PolicyFile.POLICY + DELIM);
+					//context.send(PolicyFile.POLICY+ DELIM);
+					context.send(PolicyFile.POLICY);
+					context.killAfterResponse();
 				} else {
 					// Check the credentials
+					logger.info("Checking login.");
 					Unmarshaller um = AllSocketJAXBContexts.context.createUnmarshaller();
 					context.login((LoginAction) um.unmarshal(new StringReader(xml)));
 				}
 			} else {
 				// Perform the other requests
+				logger.info("Handling request from logged in.");
 				Unmarshaller um = ActionJAXBContext.context.createUnmarshaller();
 				DispatchableAction<?> action = (DispatchableAction<?>) um.unmarshal(new StringReader(xml));
 				context.perform(action);

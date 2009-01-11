@@ -28,6 +28,7 @@ import java.nio.charset.CharsetEncoder;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.security.auth.login.LoginException;
 import javax.xml.bind.JAXBException;
@@ -64,8 +65,6 @@ public class ClientContext {
 	private final Selector selector;
 
 	private final Charset charset;
-	// CharsetEncoder is not thread safe!
-	private final CharsetEncoder encoder;
 
 	private final CSPokerServer cspokerServer;
 
@@ -77,7 +76,6 @@ public class ClientContext {
 		this.buffer = new StringBuilder();
 
 		this.charset = Charset.forName("UTF-8");
-		this.encoder = charset.newEncoder();
 		this.cspokerServer = cspokerServer;
 	}
 
@@ -96,8 +94,7 @@ public class ClientContext {
 			Iterator<ByteBuffer> i = writeBuffer.iterator();
 			while (i.hasNext()) {
 				ByteBuffer bytes = i.next();
-				// logger.trace("trying to write " + bytes.remaining()+ "
-				// bytes.");
+				logger.trace("trying to write " + bytes.remaining()+ "bytes.");
 				client.write(bytes);
 				if (bytes.remaining() > 0) {
 					logger.trace("stopping write early because there are "
@@ -105,11 +102,15 @@ public class ClientContext {
 					/* //registerWriteInterest(); //bug workaround? */
 					return;
 				}
-				// logger.trace("removing bytebuffer from the buffer list.");
+				logger.trace("removing bytebuffer from the buffer list.");
 				i.remove();
 			}
 			unregisterWriteInterest();
 			logger.trace("finished entire write operation");
+			if(killAfterResponse){
+				logger.trace("killing connection after write");
+				closeConnection();
+			}
 		}
 	}
 
@@ -141,14 +142,15 @@ public class ClientContext {
 			client.close();
 		} catch (IOException exception) {
 		}
-		serverContext.logout();
+		if(serverContext!= null){
+			serverContext.logout();
+		}
 		//TODO trigger something
 	}
 
 	public void send(String xml) {
 		try {
-			appendToWriteBuffer(encoder.encode(CharBuffer.wrap(xml
-					+ ((char) 0x00))));
+			appendToWriteBuffer(charset.newEncoder().encode(CharBuffer.wrap(xml+ "\u0000")));
 			logger.trace("wrote reply to write buffer list:\n" + xml);
 		} catch (CharacterCodingException e) {
 			logger.error(e.getMessage());
@@ -195,6 +197,12 @@ public class ClientContext {
 		} catch (LoginException exception) {
 			send(new IllegalActionEvent<Void>(action, new IllegalActionException("Bad Login.")));
 		}
+	}
+	
+	private volatile boolean killAfterResponse = false;
+
+	public void killAfterResponse() {
+		killAfterResponse = true;
 	}
 
 }
