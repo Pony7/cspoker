@@ -81,25 +81,27 @@ public class WaitForIO
 			Set<SelectionKey> keys = selector.selectedKeys();
 			Iterator<SelectionKey> i = keys.iterator();
 			
+			logger.trace("Selecting keys");
 			// For each key...
 			while (i.hasNext()) {
 				SelectionKey key = i.next();
 				
-				int kro = key.readyOps();
-				
-				if ((kro & SelectionKey.OP_READ) == SelectionKey.OP_READ) {
+				logger.trace("Selected new key: "+key);
+				if (key.isReadable()) {
 					readSocket(key);
 					logger.trace("read from socket");
 				}
-				if ((kro & SelectionKey.OP_WRITE) == SelectionKey.OP_WRITE) {
+				if (key.isWritable()) {
 					logger.trace("going to write data to socket");
 					getContext(key, (SocketChannel) key.channel()).writeBufferToClient();
 					logger.trace("wrote data to socket");
 				}
-				if ((kro & SelectionKey.OP_ACCEPT) == SelectionKey.OP_ACCEPT) {
+				if (key.isAcceptable()) {
 					acceptConnection();
 					logger.trace("accepted new connection");
 				}
+				logger.trace("Selected key is processed.");
+				
 				i.remove(); // remove the key
 			}
 		} catch (IOException e) {
@@ -120,7 +122,7 @@ public class WaitForIO
 			
 			if (numBytesRead == -1) {
 				// No more bytes can be read from the channel
-				throw new IOException("No more bytes in channel, closing socket");
+				throw new IOException("channel has reached end-of-stream");
 			} else {
 				logger.trace("Reading " + numBytesRead + " bytes from socket");
 				// To read the bytes, flip the buffer
@@ -140,7 +142,7 @@ public class WaitForIO
 				}
 			}
 		} catch (IOException e) {
-			logger.debug("Exception reading from socket, closing socket", e);
+			logger.debug("Exception reading from socket, closing socket: "+e.getMessage());
 			ClientContext context = getContext(key, client);
 			context.closeConnection();
 			// Rethrow exception as declared
