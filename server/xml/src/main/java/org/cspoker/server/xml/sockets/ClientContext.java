@@ -24,11 +24,9 @@ import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
 import java.nio.charset.CharacterCodingException;
 import java.nio.charset.Charset;
-import java.nio.charset.CharsetEncoder;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.security.auth.login.LoginException;
 import javax.xml.bind.JAXBException;
@@ -139,10 +137,12 @@ public class ClientContext {
 
 	public void closeConnection() {
 		try {
+			logger.trace("Disconnecting "+client.socket().getRemoteSocketAddress());
 			client.close();
 		} catch (IOException exception) {
 		}
 		if(serverContext!= null){
+			logger.trace("Logging out disconnected client.");
 			serverContext.logout();
 		}
 		//TODO trigger something

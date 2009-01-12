@@ -34,7 +34,7 @@ import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.elements.player.SeatedPlayer;
 import org.cspoker.common.elements.table.DetailedHoldemTable;
 import org.cspoker.common.elements.table.SeatId;
-import org.cspoker.common.util.threading.ScheduledRequestExecutor;
+import org.cspoker.common.util.threading.SingleThreadRequestExecutor;
 import org.cspoker.server.common.HoldemPlayerContextImpl;
 import org.cspoker.server.common.elements.table.SeatTakenException;
 import org.cspoker.server.common.elements.table.ServerTable;
@@ -339,7 +339,7 @@ public class PlayingTableState
 		long delay = game.getTableConfiguration().getDelay();
 		if (delay > 0) {
 			delay = delay * (Math.min(game.getNbLastShowdown() + 1, 5));
-			ScheduledRequestExecutor.getInstance().schedule(new AutoDealHandler(), delay, TimeUnit.MILLISECONDS);
+			SingleThreadRequestExecutor.getInstance().schedule(new AutoDealHandler(), delay, TimeUnit.MILLISECONDS);
 			logger.info("There were " + game.getNbLastShowdown()
 					+ " showdown players. Auto-deal handler submitted with a delay of " + delay + " ms.");
 		} else {

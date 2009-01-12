@@ -58,7 +58,7 @@ import org.cspoker.common.elements.table.SeatId;
 import org.cspoker.common.elements.table.Table;
 import org.cspoker.common.elements.table.TableConfiguration;
 import org.cspoker.common.elements.table.TableId;
-import org.cspoker.common.util.threading.ScheduledRequestExecutor;
+import org.cspoker.common.util.threading.SingleThreadRequestExecutor;
 import org.cspoker.server.common.HoldemTableContextImpl;
 import org.cspoker.server.common.account.ExtendedAccountContext;
 import org.cspoker.server.common.chat.ChatServer;
@@ -726,7 +726,7 @@ public class PokerTable {
 		currentTimeOut = new PlayerActionTimeOut(player);
 		oldFuture = currentFuture;
 		cancelOldTimeOut();
-		currentFuture = ScheduledRequestExecutor.getInstance().schedule(currentTimeOut, 30, TimeUnit.SECONDS);
+		currentFuture = SingleThreadRequestExecutor.getInstance().schedule(currentTimeOut, 30, TimeUnit.SECONDS);
 		PokerTable.logger.debug("player " + player + " action time out submitted.");
 	}
 	
