@@ -45,7 +45,9 @@ public class LoggingThread extends Thread {
 		try {
 			alive.incrementAndGet();
 			super.run();
-		} finally {
+		}catch(Exception e){
+			logger.error(e);
+		}finally {
 			alive.decrementAndGet();
 			logger.debug("Exiting " + getName());
 		}

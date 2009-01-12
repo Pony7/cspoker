@@ -13,8 +13,6 @@ import java.rmi.RemoteException;
 import org.apache.log4j.Logger;
 
 public class SendPolicyRequest{
-
-	private final static Logger logger = Logger.getLogger(SendPolicyRequest.class);
 	
 	public static void main(String[] args) throws IOException {
 		SendPolicyRequest s = new SendPolicyRequest("localhost",8081);
@@ -43,12 +41,13 @@ public class SendPolicyRequest{
 		while (true) {
 			int b = socket.getInputStream().read();
 			if (b < 0) {
-				throw new IOException("Connection lost");
+				System.out.println("Connection lost");
+				return;
 			}
 			if (b == 0) {
-				logger.trace(sb);
+				System.out.println(sb);
 				sb.setLength(0);
-				logger.trace("Delimiter found");
+				System.out.println("Delimiter found");
 			} else {
 				singleByteBuffer.put((byte) b);
 				singleByteBuffer.flip();

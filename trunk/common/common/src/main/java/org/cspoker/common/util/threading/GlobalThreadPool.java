@@ -28,7 +28,7 @@ import org.apache.log4j.Logger;
 public class GlobalThreadPool extends AbstractExecutorService {
 
 	private final static Logger logger = Logger
-			.getLogger(GlobalThreadPool.class);
+	.getLogger(GlobalThreadPool.class);
 
 	private LoggingThreadPool executor;
 
@@ -36,11 +36,7 @@ public class GlobalThreadPool extends AbstractExecutorService {
 		executor = new LoggingThreadPool(Math.max(2, Runtime.getRuntime()
 				.availableProcessors()), "CSPoker-Main");
 		executor
-				.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
-	}
-
-	public void execute(Runnable command) {
-		executor.execute(command);
+		.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
 	}
 
 	private int getCorePoolSize() {
@@ -64,7 +60,7 @@ public class GlobalThreadPool extends AbstractExecutorService {
 	}
 
 	public boolean awaitTermination(long timeout, TimeUnit unit)
-			throws InterruptedException {
+	throws InterruptedException {
 		return executor.awaitTermination(timeout, unit);
 	}
 
@@ -84,18 +80,84 @@ public class GlobalThreadPool extends AbstractExecutorService {
 		return executor.shutdownNow();
 	}
 
+	public void execute(final Runnable command) {
+		executor.execute(new Runnable(){
+			@Override
+			public void run() {
+				try{
+					command.run();
+				}catch(Exception e){
+					// This normally bad code of catch on Exception is here for a *reason*.
+					// Future *eats* all exceptions *silently*. This clause at least allows
+					// the exception to emit noise for debugging. This is particularly pernicious
+					// if you have something like a NullPointerException
+					logger.error(e);
+					e.printStackTrace();
+					throw new RuntimeException(e);
+				}
+			}
+		});
+	}
+
+
 	@Override
-	public <T> Future<T> submit(Callable<T> task) {
-		return executor.submit(task);
+	public <T> Future<T> submit(final Callable<T> task) {
+		return executor.submit(new Callable<T>(){
+			@Override
+			public T call() throws Exception {
+				try{
+					return task.call();
+				}catch(Exception e){
+					// This normally bad code of catch on Exception is here for a *reason*.
+					// Future *eats* all exceptions *silently*. This clause at least allows
+					// the exception to emit noise for debugging. This is particularly pernicious
+					// if you have something like a NullPointerException
+					logger.error(e);
+					e.printStackTrace();
+					throw e;
+				}
+
+			}
+		});
 	}
 
 	@Override
-	public Future<?> submit(Runnable task) {
-		return executor.submit(task);
+	public Future<?> submit(final Runnable task) {
+		return executor.submit(new Runnable(){
+			@Override
+			public void run() {
+				try{
+					task.run();
+				}catch(Exception e){
+					// This normally bad code of catch on Exception is here for a *reason*.
+					// Future *eats* all exceptions *silently*. This clause at least allows
+					// the exception to emit noise for debugging. This is particularly pernicious
+					// if you have something like a NullPointerException
+					logger.error(e);
+					e.printStackTrace();
+					throw new RuntimeException(e);
+				}
+			}
+		});
 	}
 
 	@Override
-	public <T> Future<T> submit(Runnable task, T result) {
-		return executor.submit(task, result);
+	public <T> Future<T> submit(final Runnable task, final T result) {
+		return executor.submit(new Runnable(){
+			@Override
+			public void run() {
+				try{
+					task.run();
+				}catch(Exception e){
+					// This normally bad code of catch on Exception is here for a *reason*.
+					// Future *eats* all exceptions *silently*. This clause at least allows
+					// the exception to emit noise for debugging. This is particularly pernicious
+					// if you have something like a NullPointerException
+					logger.error(e);
+					e.printStackTrace();
+					throw new RuntimeException(e);
+				}
+			}
+		}, result);
 	}
 }
