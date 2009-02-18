@@ -15,6 +15,7 @@
  */
 package org.cspoker.client.common;
 
+import org.cspoker.client.common.gamestate.CachingNode;
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.client.common.gamestate.InitialGameState;
 import org.cspoker.common.elements.table.DetailedHoldemTable;
@@ -41,6 +42,10 @@ public class TableState {
 	
 	public void setGameState(GameState gameState) {
 		this.gameState = gameState;
+	}
+
+	public void insertCache() {
+		gameState = new CachingNode(gameState);
 	}
 	
 }

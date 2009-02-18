@@ -14,39 +14,39 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.client.bots.bot.search;
+package org.cspoker.client.bots.bot.search.opponentmodel.prolog.cafe;
 
-import java.io.File;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 
+import jp.ac.kobe_u.cs.prolog.lang.PrologControl;
 import net.jcip.annotations.ThreadSafe;
 
 import org.apache.log4j.Logger;
 import org.cspoker.client.bots.bot.Bot;
 import org.cspoker.client.bots.bot.BotFactory;
+import org.cspoker.client.bots.bot.search.SearchBot;
+import org.cspoker.client.bots.bot.search.SearchConfiguration;
+import org.cspoker.client.bots.bot.search.node.leaf.CachedShowdownNodeFactory;
 import org.cspoker.client.bots.bot.search.node.leaf.UniformShowdownNode;
 import org.cspoker.client.bots.bot.search.opponentmodel.AllPlayersModel;
-import org.cspoker.client.bots.bot.search.opponentmodel.prolog.PrologAssertingModel;
 import org.cspoker.client.bots.listener.BotListener;
 import org.cspoker.client.common.SmartLobbyContext;
 import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.elements.table.TableId;
 
-import com.declarativa.interprolog.SWISubprocessEngine;
-
 @ThreadSafe
-public class PrologSearchBotFactory implements BotFactory {
+public class PrologCafeBotFactory implements BotFactory {
 	
-	private final static Logger logger = Logger.getLogger(PrologSearchBotFactory.class);
+	private final static Logger logger = Logger.getLogger(PrologCafeBotFactory.class);
 	private static int copies = 0;
 	
 	private final int copy;
 
 	private final Map<PlayerId, AllPlayersModel> opponentModels = new ConcurrentHashMap<PlayerId, AllPlayersModel>();
 
-	public PrologSearchBotFactory() {
+	public PrologCafeBotFactory() {
 		this.copy = ++copies;
 	}
 
@@ -58,22 +58,21 @@ public class PrologSearchBotFactory implements BotFactory {
 			BotListener... botListeners) {
 		copies++;
 		if(opponentModels.get(botId)==null){
-			SWISubprocessEngine prologEngine = new SWISubprocessEngine("/usr/lib/swi-prolog/bin/i386/swipl",
-					logger.isDebugEnabled());
-			File backgroundDir = new File("/home/guy/Werk/thesis/opponentmodel/swified");
-			prologEngine.consultAbsolute(new File(backgroundDir, "background.pl"));
-			prologEngine.consultAbsolute(new File(backgroundDir, "model.pl"));
-			PrologAssertingModel model = new PrologAssertingModel(prologEngine, botId);
+			PrologControl prolog = new PrologControl();
+//			if(!prolog.execute(new PRED_true_0(), new Term[]{})) assert(false);
+//			prolog.setPredicate(new PRED_$init_0(), new Term[]{});
+//			if(!prolog.call()) throw new IllegalStateException("Failed to initiate background");
+			PrologCafeModel model = new PrologCafeModel(prolog,botId);
 			opponentModels.put(botId, model);
 		}
 		SearchConfiguration config = new SearchConfiguration(opponentModels.get(botId), 
-				new UniformShowdownNode.Factory(),
+				new CachedShowdownNodeFactory(new UniformShowdownNode.Factory()),
 				1,10,100);
 		return new SearchBot(botId, tableId, lobby, executor, config ,botListeners);
 	}
 
 	@Override
 	public String toString() {
-		return "PrologSearchBotv1-"+copy;
+		return "PrologCafeSearchBotv1-"+copy;
 	}
 }

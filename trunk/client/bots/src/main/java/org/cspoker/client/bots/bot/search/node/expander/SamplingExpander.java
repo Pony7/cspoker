@@ -33,6 +33,7 @@ import org.cspoker.client.bots.bot.search.node.InnerGameTreeNode;
 
 import com.google.common.collect.Multiset;
 import com.google.common.collect.Multisets;
+import com.google.common.collect.TreeMultiset;
 import com.google.common.collect.Multiset.Entry;
 
 public class SamplingExpander extends Expander{
@@ -49,8 +50,10 @@ public class SamplingExpander extends Expander{
 		List<SampledAction> sampledActions = sampleActions();
 		Set<EvaluatedAction<SampledAction>> evaluatedActions = new HashSet<EvaluatedAction<SampledAction>>(sampledActions.size());
 		for(SampledAction sampledAction:sampledActions){
-			
-			evaluatedActions.add(node.expandWith(sampledAction, tokens*sampledAction.getTimes()/sampledAction.getOutof()));
+			evaluatedActions.add(
+					node.expandWith(
+							sampledAction, 
+							tokens*sampledAction.getTimes()/sampledAction.getOutof()));
 		}
 		return evaluatedActions;
 	}
@@ -69,22 +72,22 @@ public class SamplingExpander extends Expander{
 			}
 		}
 
-		Multiset<ProbabilityAction> samples = Multisets.newTreeMultiset(new Comparator<ProbabilityAction>(){
+		Multiset<ProbabilityAction> samples = TreeMultiset.create(new Comparator<ProbabilityAction>(){
 			@Override
 			public int compare(ProbabilityAction o1, ProbabilityAction o2) {
-					if(o2.getProbability()<o1.getProbability()){
-						return -1;
-					}
-					if(o2.getProbability()>o1.getProbability()){
-						return 1;
-					}
-					if(o1.getAction() instanceof RaiseAction && o2.getAction() instanceof RaiseAction ){
-						return ((RaiseAction)o1.getAction()).getAmount()-((RaiseAction)o2.getAction()).getAmount();
-					}
-					if(o1.getAction() instanceof RaiseAction && o2.getAction() instanceof RaiseAction ){
-						return ((BetAction)o1.getAction()).getAmount()-((BetAction)o2.getAction()).getAmount();
-					}
-					return 0;
+				if(o2.getProbability()<o1.getProbability()){
+					return -1;
+				}
+				if(o2.getProbability()>o1.getProbability()){
+					return 1;
+				}
+				if(o1.getAction() instanceof RaiseAction && o2.getAction() instanceof RaiseAction ){
+					return ((RaiseAction)o1.getAction()).getAmount()-((RaiseAction)o2.getAction()).getAmount();
+				}
+				if(o1.getAction() instanceof RaiseAction && o2.getAction() instanceof RaiseAction ){
+					return ((BetAction)o1.getAction()).getAmount()-((BetAction)o2.getAction()).getAmount();
+				}
+				return 0;
 			}
 		});
 		int nbSamples = Math.min(100,tokens);

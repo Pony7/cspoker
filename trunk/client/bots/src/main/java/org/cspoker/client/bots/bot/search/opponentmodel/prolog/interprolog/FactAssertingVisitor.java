@@ -13,13 +13,14 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.client.bots.bot.search.opponentmodel.prolog;
+package org.cspoker.client.bots.bot.search.opponentmodel.prolog.interprolog;
 
 import jp.ac.kobe_u.cs.prolog.builtin.PRED_assert_1;
 import jp.ac.kobe_u.cs.prolog.lang.Predicate;
 import jp.ac.kobe_u.cs.prolog.lang.StructureTerm;
 
 import org.apache.log4j.Logger;
+import org.cspoker.client.bots.bot.search.opponentmodel.prolog.ToPrologTermVisitor;
 import org.cspoker.client.common.gamestate.GameState;
 
 import com.declarativa.interprolog.PrologEngine;
@@ -49,7 +50,9 @@ public class FactAssertingVisitor extends ToPrologTermVisitor {
 	public void readHistory(GameState gameState) {
 		super.readHistory(gameState);
 		if (query!=null) {
-			logger.debug("Deterministic Prolog Goal: " + query);
+			if(logger.isDebugEnabled()){
+				logger.debug("Prolog Goal: " + query);
+			}
 			if (!prologEngine.deterministicGoal(query.toString())) {
 				throw new IllegalStateException(
 						"Could not assert game state in Prolog: " + query);

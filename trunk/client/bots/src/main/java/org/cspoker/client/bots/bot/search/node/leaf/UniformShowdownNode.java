@@ -33,7 +33,7 @@ import com.google.common.collect.Sets;
 public class UniformShowdownNode extends AbstractShowdownNode{
 
 	//TODO put in config
-	private static final int MaxNbSamples = 300;
+	private static final int MaxNbSamples = 400;
 
 	private final static Logger logger = Logger.getLogger(UniformShowdownNode.class);
 

@@ -81,7 +81,7 @@ public abstract class ToPrologTermVisitor extends LoggingVisitor {
 				game_round_start, 
 				new Term[]{
 						getGameIdTerm(),
-						getRoundTerm(),
+						round,
 						new IntegerTerm((++subRound)),
 						new IntegerTerm((actionId+1)),
 				}));
@@ -89,10 +89,6 @@ public abstract class ToPrologTermVisitor extends LoggingVisitor {
 
 	private IntegerTerm getGameIdTerm() {
 		return new IntegerTerm(gameId);
-	}
-
-	private SymbolTerm getRoundTerm() {
-		return SymbolTerm.makeSymbol(round);
 	}
 
 	protected void gamePlayerAction(AllInState allInState, PlayerId playerId) {
@@ -274,7 +270,7 @@ public abstract class ToPrologTermVisitor extends LoggingVisitor {
 				game_phase_start,
 				new Term[]{
 						getGameIdTerm(),
-						getRoundTerm(),
+						round,
 						new IntegerTerm(actionId+1),
 				}));
 	}
@@ -318,7 +314,6 @@ public abstract class ToPrologTermVisitor extends LoggingVisitor {
 
 
 	protected void gameSession() {
-		++gameId; //!
 		addTerm(new StructureTerm(
 				game_session,
 				new Term[]{

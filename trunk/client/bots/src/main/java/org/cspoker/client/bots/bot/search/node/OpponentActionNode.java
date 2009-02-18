@@ -43,8 +43,10 @@ public class OpponentActionNode extends ActionNode{
 	
 	@Override
 	public double getEV() {
+		config.getOpponentModeler().assume(gameState);
 		int average = 0;
 		Set<? extends EvaluatedAction<? extends SampledAction>> actions = getExpander().expand();
+		config.getOpponentModeler().forgetAssumption();
 		for(EvaluatedAction<? extends SampledAction> eval : actions){
 			average += eval.getEvaluatedAction().getTimes()*eval.getEV(); 
 		}

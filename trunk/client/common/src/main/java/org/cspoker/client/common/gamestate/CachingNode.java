@@ -13,11 +13,8 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.client.bots.bot.search.node;
+package org.cspoker.client.common.gamestate;
 
-import org.cspoker.client.common.gamestate.ForwardingGameState;
-import org.cspoker.client.common.gamestate.GameState;
-import org.cspoker.client.common.gamestate.GameStateVisitor;
 import org.cspoker.common.api.lobby.holdemtable.event.HoldemTableTreeEvent;
 import org.cspoker.common.elements.table.Round;
 
