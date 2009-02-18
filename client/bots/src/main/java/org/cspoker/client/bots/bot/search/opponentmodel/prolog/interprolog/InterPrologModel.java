@@ -13,13 +13,18 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.client.bots.bot.search.opponentmodel.prolog;
+package org.cspoker.client.bots.bot.search.opponentmodel.prolog.interprolog;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+
+import jp.ac.kobe_u.cs.prolog.builtin.PRED_assert_1;
+import jp.ac.kobe_u.cs.prolog.builtin.PRED_retract_1;
+import jp.ac.kobe_u.cs.prolog.lang.Predicate;
+import jp.ac.kobe_u.cs.prolog.lang.Term;
 
 import org.apache.log4j.Logger;
 import org.cspoker.client.bots.bot.search.action.ActionWrapper;
@@ -32,21 +37,23 @@ import org.cspoker.client.bots.bot.search.action.RaiseAction;
 import org.cspoker.client.bots.bot.search.action.SearchBotAction;
 import org.cspoker.client.bots.bot.search.opponentmodel.AllPlayersModel;
 import org.cspoker.client.bots.bot.search.opponentmodel.OpponentModel;
+import org.cspoker.client.bots.bot.search.opponentmodel.prolog.TermListVisitor;
+import org.cspoker.client.bots.bot.search.opponentmodel.prolog.ToPrologTermVisitor;
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.common.elements.player.PlayerId;
 
 import com.declarativa.interprolog.PrologEngine;
 
-public class PrologAssertingModel implements AllPlayersModel {
+public class InterPrologModel implements AllPlayersModel {
 	
-	private final static Logger logger = Logger.getLogger(PrologAssertingModel.class);
+	private final static Logger logger = Logger.getLogger(InterPrologModel.class);
 
 	private final PrologEngine prologEngine;
-	private final FactAssertingVisitor assertingVisitor;
+	private final ToPrologTermVisitor assertingVisitor;
 	private final PlayerId botId;
 	
 	
-	public PrologAssertingModel(PrologEngine prologEngine, PlayerId botId) {
+	public InterPrologModel(PrologEngine prologEngine, PlayerId botId) {
 		this.prologEngine = prologEngine;
 		this.botId = botId;
 		this.assertingVisitor = new FactAssertingVisitor(prologEngine);
@@ -73,7 +80,7 @@ public class PrologAssertingModel implements AllPlayersModel {
 
 			@Override
 			public Set<ProbabilityAction> getProbabilityActions(GameState gameState) {
-				AssertRetractVisitor visitor = new AssertRetractVisitor(assertingVisitor);
+				TermListVisitor visitor = new TermListVisitor(assertingVisitor);
 				visitor.readHistory(gameState);
 				String goals = "", vars = "[", resultVar;
 				
@@ -134,9 +141,14 @@ public class PrologAssertingModel implements AllPlayersModel {
 				}
 				vars+="]";
 				
-				//goals = "PCall=0.5, PFold=0.1, PRaise1=0.1, PRaise2=0.1, PCheck=0.5, PBet1=0.1, PBet2=0.1";
-				goals = visitor.wrapGoal(goals);
-				logger.trace("Executing Prolog Goal: "+goals+" with vars "+vars);
+				for(Term term:visitor.getTerms()){
+					Predicate assertPredicate = new PRED_assert_1(term, null);
+					Predicate retractPredicate = new PRED_retract_1(term, null);
+					goals = assertPredicate.toString()+", "+goals+", "+retractPredicate.toString();
+				}
+				if(logger.isDebugEnabled()){
+					logger.debug("Prolog Goal: "+goals);
+				}
 				Object[] results = prologEngine.deterministicGoal(goals, vars);
 				
 				HashSet<ProbabilityAction> actions = new LinkedHashSet<ProbabilityAction>();
@@ -147,19 +159,36 @@ public class PrologAssertingModel implements AllPlayersModel {
 					totalProbability += prob;
 				}
 				
+				
 				HashSet<ProbabilityAction> normalizedActions = new HashSet<ProbabilityAction>();
 				for(ProbabilityAction action:actions){
+					if(action.getActionWrapper() instanceof CallAction){
+						System.out.print(action.getProbability());
+					}else if(action.getActionWrapper() instanceof FoldAction){
+						System.out.println(" | "+action.getProbability());
+					}
 					normalizedActions.add(new ProbabilityAction(action.getActionWrapper(), action.getProbability()/totalProbability));
 				}	
 				return normalizedActions;
 			}
 			
 			private String buildGoal(String action, String resultVar,
-					AssertRetractVisitor visitor) {
+					TermListVisitor visitor) {
 				return "prior_action_probability("+visitor.getGameId()+", "+(visitor.getActionId()+1)
 						+", player_"+playerId.getId()+", "+action+", "+visitor.getRound()+", "+resultVar+")";
 			}
 			
 		};
+	}
+
+	@Override
+	public void assume(GameState gameState) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void forgetAssumption() {
+		
 	}
 }

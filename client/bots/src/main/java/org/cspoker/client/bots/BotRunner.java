@@ -17,7 +17,6 @@ package org.cspoker.client.bots;
 
 import java.rmi.RemoteException;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import javax.security.auth.login.LoginException;
 
@@ -25,12 +24,10 @@ import org.apache.log4j.Logger;
 import org.cspoker.client.bots.bot.AbstractBot;
 import org.cspoker.client.bots.bot.Bot;
 import org.cspoker.client.bots.bot.BotFactory;
-import org.cspoker.client.bots.bot.rule.RuleBasedBotFactory;
-import org.cspoker.client.bots.bot.search.PrologSearchBotFactory;
 import org.cspoker.client.bots.bot.search.SearchBotFactory;
 import org.cspoker.client.bots.bot.search.node.leaf.CachedShowdownNodeFactory;
 import org.cspoker.client.bots.bot.search.node.leaf.DistributionShowdownNode;
-import org.cspoker.client.bots.bot.search.node.leaf.UniformShowdownNode;
+import org.cspoker.client.bots.bot.search.opponentmodel.prolog.cafe.PrologCafeBotFactory;
 import org.cspoker.client.bots.listener.BotListener;
 import org.cspoker.client.bots.listener.GameLimitingBotListener;
 import org.cspoker.client.bots.listener.ReSitInBotListener;
@@ -48,11 +45,12 @@ import org.cspoker.common.elements.table.TableConfiguration;
 import org.cspoker.common.elements.table.TableId;
 import org.cspoker.common.util.Log4JPropertiesLoader;
 import org.cspoker.common.util.threading.GlobalThreadPool;
+import org.cspoker.common.util.threading.SingleThreadRequestExecutor;
 
 public class BotRunner
 		implements LobbyListener {
 	
-	private static final int nbGamesPerConfrontation = 5000;
+	private static final int nbGamesPerConfrontation = 1000000;
 
 	static {
 		Log4JPropertiesLoader.load("org/cspoker/client/bots/logging/log4j.properties");
@@ -82,10 +80,13 @@ public class BotRunner
 	
 	public BotRunner(RemoteCSPokerServer cspokerServer){
 		this(cspokerServer, new BotFactory[]{
-				new RuleBasedBotFactory(),
-				new PrologSearchBotFactory(),
-				//new SearchBotFactory(new CachedShowdownNodeFactory(new DistributionShowdownNode.Factory())),
-				//new SearchBotFactory(new CachedShowdownNodeFactory(new UniformShowdownNode.Factory())),
+//				new RuleBasedBotFactory(),
+//				new RuleBasedBotFactory(),
+				new PrologCafeBotFactory(),
+//				new TuPrologBotFactory(),
+//				new InterPrologBotFactory(),
+				new SearchBotFactory(new CachedShowdownNodeFactory(new DistributionShowdownNode.Factory())),
+//				new SearchBotFactory(new CachedShowdownNodeFactory(new UniformShowdownNode.Factory())),
 		});
 	}
 	
@@ -104,9 +105,9 @@ public class BotRunner
 				botIDs[i] = clientContext.getAccountContext().getPlayerID();
 			}
 			
-			executor = Executors.newSingleThreadExecutor();
+			executor = SingleThreadRequestExecutor.getInstance();
 			
-			speedMinitor =  new SpeedTestBotListener(32);
+			speedMinitor =  new SpeedTestBotListener(512, this);
 		
 			iterateBots();
 			
@@ -159,8 +160,8 @@ public class BotRunner
 	}
 
 	private void shutdown() {
-		executor.shutdown();
-		GlobalThreadPool.getInstance().shutdown();
+		executor.shutdownNow();
+		GlobalThreadPool.getInstance().shutdownNow();
 	}
 
 	public void onTableCreated(TableCreatedEvent tableCreatedEvent) {
@@ -190,6 +191,18 @@ public class BotRunner
 		logger.info(bots[botIndex2].toString()+" averages "+(-bot1profit*1.0/AbstractBot.bigBlind/nbGamesPerConfrontation)+" bb/game");
 		bot1profit = 0;
 		iterateBots();
+	}
+	
+	public BotFactory getBot1Factory(){
+		return bots[botIndex1];
+	}
+	
+	public BotFactory getBot2Factory(){
+		return bots[botIndex2];
+	}
+	
+	public double getBot1profit() {
+		return (bot1profit+bot1.getProfit())*1.0/AbstractBot.bigBlind;
 	}
 	
 }

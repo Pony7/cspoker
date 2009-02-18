@@ -188,7 +188,7 @@ public class Showdown {
 		List<MutableShowdownPlayer> players = getShowdownPlayersFromPot(pot);
 		Collections.sort(players);
 		for (MutableShowdownPlayer player : players) {
-			Showdown.logger.info(player);
+			Showdown.logger.debug(player);
 		}
 
 		List<MutableSeatedPlayer> winners = new ArrayList<MutableSeatedPlayer>();

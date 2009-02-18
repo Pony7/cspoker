@@ -16,6 +16,7 @@
 package org.cspoker.client.bots.listener;
 
 import org.apache.log4j.Logger;
+import org.cspoker.client.bots.BotRunner;
 
 public class SpeedTestBotListener extends DealCountingListener{
 
@@ -25,12 +26,15 @@ public class SpeedTestBotListener extends DealCountingListener{
 
 	private final int reportInterval;
 
-	public SpeedTestBotListener() {
-		this(64);
+	private final BotRunner runner;
+
+	public SpeedTestBotListener(BotRunner runner) {
+		this(64, runner);
 	}
 
-	public SpeedTestBotListener(int reportInterval) {
+	public SpeedTestBotListener(int reportInterval, BotRunner runner) {
 		this.reportInterval = reportInterval;
+		this.runner = runner;
 	}
 
 	@Override
@@ -39,7 +43,13 @@ public class SpeedTestBotListener extends DealCountingListener{
 		if(deals%reportInterval==0){
 			long nowTime = System.currentTimeMillis();
 			if(startTime>0){
-				logger.info("deal #"+deals+" at "+(reportInterval*1000.0/(nowTime-startTime))+" games/s");
+				String profit = "(";
+				if(runner.getBot1profit()>0){
+					profit+=runner.getBot1Factory()+" wins "+runner.getBot1profit()/deals+" sb/game)";
+				}else{
+					profit+=runner.getBot2Factory()+" wins "+(-runner.getBot1profit()/deals)+" sb/game)";
+				}
+				logger.info("deal #"+deals+" at "+(reportInterval*1000.0/(nowTime-startTime))+" games/s"+" "+profit);
 			}
 			startTime = nowTime;
 		}

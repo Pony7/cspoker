@@ -541,7 +541,7 @@ public class PokerTable {
 	 * onNewRoundEvent() method.
 	 */
 	public synchronized void publishNewRoundEvent(NewRoundEvent event) {
-		PokerTable.logger.info(event);
+		PokerTable.logger.debug(event);
 		for (HoldemTableListener listener : holdemTableListeners) {
 			listener.onNewRound(event);
 		}

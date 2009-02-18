@@ -24,4 +24,8 @@ public interface AllPlayersModel {
 
 	void signalNextAction(GameState gameState);
 
+	void assume(GameState gameState);
+
+	void forgetAssumption();
+
 }

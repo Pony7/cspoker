@@ -40,7 +40,7 @@ public class DistributionShowdownNode extends AbstractShowdownNode{
 		handRanks = StateTableEvaluator.handRanks;
 	}
 	
-	public static final int MaxNbSamples = 300;
+	public static final int MaxNbSamples = 400;
 	
 	private int tokens;
 	

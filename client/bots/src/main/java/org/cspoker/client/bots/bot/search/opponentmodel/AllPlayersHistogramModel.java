@@ -257,4 +257,14 @@ public class AllPlayersHistogramModel implements AllPlayersModel, GameStateVisit
 		
 	}
 
+	@Override
+	public void assume(GameState gameState) {
+		
+	}
+
+	@Override
+	public void forgetAssumption() {
+		
+	}
+
 }

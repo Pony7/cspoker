@@ -84,9 +84,7 @@ public class BotActionNode extends ActionNode{
 		HashSet<SearchBotAction> actions = new LinkedHashSet<SearchBotAction>();
 		if(gameState.hasBet()){
 			actions.add(new CallAction(gameState, botId));
-			//if(isRootNode){ //TODO fix for multiple checks
-				actions.add(new FoldAction(gameState, botId));
-			//}
+			actions.add(new FoldAction(gameState, botId));
 			if(gameState.isAllowedToRaise(botId)){
 				int lowerRaiseBound = gameState.getLowerRaiseBound(botId);
 				int upperRaiseBound = gameState.getUpperRaiseBound(botId);

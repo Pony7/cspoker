@@ -15,13 +15,12 @@
  */
 package org.cspoker.client.bots.bot.search.node.leaf;
 
+import java.util.concurrent.ConcurrentHashMap;
+
 import org.cspoker.client.bots.bot.search.SearchConfiguration;
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.util.Pair;
-
-import com.google.common.base.ReferenceType;
-import com.google.common.collect.ReferenceMap;
 
 /**
  * Caches leaf nodes when they are independent of the rest of the tree for a given search instance.
@@ -31,8 +30,9 @@ import com.google.common.collect.ReferenceMap;
  */
 public class CachedShowdownNodeFactory implements ShowdownNode.Factory{
 
-	private final ReferenceMap<Pair<SearchConfiguration,Integer>,Double> cache 
-		= new ReferenceMap<Pair<SearchConfiguration,Integer>,Double>(ReferenceType.STRONG, ReferenceType.STRONG);
+	private final ConcurrentHashMap<Pair<SearchConfiguration,Integer>,Double> cache 
+		= new ConcurrentHashMap<Pair<SearchConfiguration,Integer>, Double>();
+	
 	private final AbstractShowdownNode.Factory factory;
 
 	public CachedShowdownNodeFactory(AbstractShowdownNode.Factory factory) {

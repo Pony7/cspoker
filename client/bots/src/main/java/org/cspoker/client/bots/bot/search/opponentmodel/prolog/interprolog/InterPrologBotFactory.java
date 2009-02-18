@@ -14,56 +14,67 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.client.bots.bot.search;
+package org.cspoker.client.bots.bot.search.opponentmodel.prolog.interprolog;
 
+import java.io.File;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 
+import net.jcip.annotations.ThreadSafe;
+
+import org.apache.log4j.Logger;
 import org.cspoker.client.bots.bot.Bot;
 import org.cspoker.client.bots.bot.BotFactory;
-import org.cspoker.client.bots.bot.search.node.leaf.ShowdownNode;
+import org.cspoker.client.bots.bot.search.SearchBot;
+import org.cspoker.client.bots.bot.search.SearchConfiguration;
 import org.cspoker.client.bots.bot.search.node.leaf.UniformShowdownNode;
-import org.cspoker.client.bots.bot.search.node.leaf.ShowdownNode.Factory;
-import org.cspoker.client.bots.bot.search.opponentmodel.AllPlayersHistogramModel;
+import org.cspoker.client.bots.bot.search.opponentmodel.AllPlayersModel;
 import org.cspoker.client.bots.listener.BotListener;
 import org.cspoker.client.common.SmartLobbyContext;
 import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.elements.table.TableId;
 
-public class SearchBotFactory implements BotFactory {
+import com.declarativa.interprolog.SWISubprocessEngine;
 
+@ThreadSafe
+public class InterPrologBotFactory implements BotFactory {
+	
+	private final static Logger logger = Logger.getLogger(InterPrologBotFactory.class);
 	private static int copies = 0;
+	
 	private final int copy;
 
-	private ConcurrentHashMap<PlayerId, AllPlayersHistogramModel> opponentModels = new ConcurrentHashMap<PlayerId, AllPlayersHistogramModel>();
-	private Factory showdownNodeFactory;
-	
-	public SearchBotFactory() {
-		this(new UniformShowdownNode.Factory());
-	}
-	
-	public SearchBotFactory(ShowdownNode.Factory showdownNodeFactory) {
+	private final Map<PlayerId, AllPlayersModel> opponentModels = new ConcurrentHashMap<PlayerId, AllPlayersModel>();
+
+	public InterPrologBotFactory() {
 		this.copy = ++copies;
-		this.showdownNodeFactory = showdownNodeFactory;
 	}
-	
+
 	/**
 	 * @see org.cspoker.client.bots.bot.BotFactory#createBot(org.cspoker.common.elements.player.PlayerId, org.cspoker.common.elements.table.TableId, org.cspoker.client.common.SmartLobbyContext, java.util.concurrent.ExecutorService, org.cspoker.client.bots.listener.BotListener[])
 	 */
-	public Bot createBot(final PlayerId botId, TableId tableId,
+	public synchronized Bot createBot(final PlayerId botId, TableId tableId,
 			SmartLobbyContext lobby, ExecutorService executor,
 			BotListener... botListeners) {
 		copies++;
-		opponentModels.putIfAbsent(botId, new AllPlayersHistogramModel(botId));
-
+		if(opponentModels.get(botId)==null){
+			SWISubprocessEngine prologEngine = new SWISubprocessEngine("/usr/lib/swi-prolog/bin/i386/swipl",
+					logger.isTraceEnabled());
+			File backgroundDir = new File("/home/guy/Werk/thesis/opponentmodel/swified");
+			prologEngine.consultAbsolute(new File(backgroundDir, "background.pl"));
+			prologEngine.consultAbsolute(new File(backgroundDir, "model.pl"));
+			InterPrologModel model = new InterPrologModel(prologEngine, botId);
+			opponentModels.put(botId, model);
+		}
 		SearchConfiguration config = new SearchConfiguration(opponentModels.get(botId), 
-				showdownNodeFactory,
+				new UniformShowdownNode.Factory(),
 				1,10,100);
 		return new SearchBot(botId, tableId, lobby, executor, config ,botListeners);
 	}
 
 	@Override
 	public String toString() {
-		return "SearchBot ("+showdownNodeFactory+") v1-"+copy;
+		return "PrologSearchBotv1-"+copy;
 	}
 }

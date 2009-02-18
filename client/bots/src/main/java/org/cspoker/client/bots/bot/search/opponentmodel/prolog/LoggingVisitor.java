@@ -20,6 +20,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
+import jp.ac.kobe_u.cs.prolog.lang.SymbolTerm;
 import net.jcip.annotations.NotThreadSafe;
 
 import org.cspoker.client.common.gamestate.GameState;
@@ -58,7 +59,7 @@ public abstract class LoggingVisitor implements GameStateVisitor {
 	protected final int sessionId;
 	protected int gameId = 0;
 	protected int actionId = 0;
-	protected String round;
+	protected SymbolTerm round;
 	protected int subRound;
 	private NewDealState lastDeal = null;
 
@@ -197,6 +198,7 @@ public abstract class LoggingVisitor implements GameStateVisitor {
 	public void visitNewDealState(NewDealState newDealState) {
 		lastDeal=newDealState;
 		actionId = 0;
+		++gameId;
 		gameSession(); 
 		TableConfiguration tableConfiguration = newDealState.getTableConfiguration();
 		gameStakes(tableConfiguration);
@@ -216,6 +218,11 @@ public abstract class LoggingVisitor implements GameStateVisitor {
 		// no op
 	}
 
+	public final static SymbolTerm preflop = SymbolTerm.makeSymbol("preflop");
+	public final static SymbolTerm flop = SymbolTerm.makeSymbol("flop");
+	public final static SymbolTerm turn = SymbolTerm.makeSymbol("turn");
+	public final static SymbolTerm river = SymbolTerm.makeSymbol("river");
+
 	@Override
 	public void visitNewRoundState(NewRoundState newRoundState) {
 		subRound=0;
@@ -224,19 +231,19 @@ public abstract class LoggingVisitor implements GameStateVisitor {
 
 		switch(newRoundState.getRound()){
 		case PREFLOP:
-			round="preflop";
+			round=preflop;
 			gamePhaseStart();
 			break;
 		case FLOP:
-			round="flop";
+			round=flop;
 			gamePhaseStart();
 			break;
 		case TURN:
-			round="turn";
+			round=turn;
 			gamePhaseStart();
 			break;
 		case FINAL:
-			round="river";
+			round=river;
 			gamePhaseStart();
 		default:
 			//do nothing in waiting round...
@@ -317,39 +324,39 @@ public abstract class LoggingVisitor implements GameStateVisitor {
 
 	protected abstract void gamePlayerProfit(PlayerState player, int profit);
 
-	int getSessionId() {
+	public int getSessionId() {
 		return sessionId;
 	}
 
-	int getGameId() {
+	public int getGameId() {
 		return gameId;
 	}
 
-	int getActionId() {
+	public int getActionId() {
 		return actionId;
 	}
 
-	String getRound() {
+	public SymbolTerm getRound() {
 		return round;
 	}
 
-	int getSubRound() {
+	public int getSubRound() {
 		return subRound;
 	}
 
-	NewDealState getLastDeal() {
+	public NewDealState getLastDeal() {
 		return lastDeal;
 	}
 
-	Map<PlayerId, Integer> getNbActionsPerPlayer() {
+	public Map<PlayerId, Integer> getNbActionsPerPlayer() {
 		return new HashMap<PlayerId, Integer>(nbActionsPerPlayer);
 	}
 
-	int getMaxNbActions() {
+	public int getMaxNbActions() {
 		return maxNbActions;
 	}
 
-	GameState getPreviousStartState() {
+	public GameState getPreviousStartState() {
 		return previousStartState;
 	}
 

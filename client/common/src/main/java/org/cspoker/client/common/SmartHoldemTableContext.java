@@ -60,5 +60,10 @@ public class SmartHoldemTableContext
 	public GameState getGameState() {
 		return state.getGameState();
 	}
+
+	public void insertCache() {
+		state.insertCache();
+		
+	}
 	
 }
