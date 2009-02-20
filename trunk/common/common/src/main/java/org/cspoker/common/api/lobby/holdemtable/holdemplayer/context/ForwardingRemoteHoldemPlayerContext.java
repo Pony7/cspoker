@@ -58,6 +58,11 @@ public class ForwardingRemoteHoldemPlayerContext implements RemoteHoldemPlayerCo
 	}
 	
 	@Override
+	public void startGame() throws RemoteException, IllegalActionException {
+		holdemPlayerContext.startGame();
+	}
+	
+	@Override
 	protected void finalize() throws Throwable {
 		try {
 			logger.debug("Garbage collecting old context: "+this);
@@ -70,6 +75,4 @@ public class ForwardingRemoteHoldemPlayerContext implements RemoteHoldemPlayerCo
 		logger.debug("No more clients referencing: "+this);
 	}
 
-
-	
 }

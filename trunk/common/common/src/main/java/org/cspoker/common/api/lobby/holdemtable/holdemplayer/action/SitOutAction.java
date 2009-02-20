@@ -21,6 +21,7 @@ import net.jcip.annotations.Immutable;
 
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.HoldemPlayerContext;
 import org.cspoker.common.api.shared.event.EventId;
+import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.table.TableId;
 
 @XmlRootElement
@@ -39,7 +40,7 @@ public class SitOutAction
 	}
 	
 	@Override
-	public Void perform(HoldemPlayerContext holdemPlayerContext) {
+	public Void perform(HoldemPlayerContext holdemPlayerContext) throws IllegalActionException {
 		holdemPlayerContext.sitOut();
 		return null;
 	}
