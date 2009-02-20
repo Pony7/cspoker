@@ -213,19 +213,14 @@ public class PokerTable {
 		return true;
 	}
 	
-	public synchronized void startGame(ExtendedAccountContext accountContext)
-			throws IllegalActionException {
-		if (!creator.equals(accountContext))
-			throw new IllegalActionException("Only the creator of the table can start a game.");
-		if (tableState.isPlaying())
-			throw new IllegalActionException("The game has already started.");
-		tableState = tableState.getNextState();
-	}
-	
 	public synchronized void startGame()
 			throws IllegalActionException {
+		if(configuration.isAutoDeal())
+			throw new IllegalActionException("This functionality is not available in auto-deal games.");
 		if (tableState.isPlaying())
-			throw new IllegalActionException("The game has already started.");
+			throw new IllegalActionException("The game is already started.");
+		if(sitInPlayers.size()<2)
+			throw new IllegalActionException("There should be at least 2 players before a game can start.");
 		tableState = tableState.getNextState();
 	}
 	
@@ -383,9 +378,8 @@ public class PokerTable {
 			HoldemPlayerContext toReturn = tableState.sitIn(seatId, new MutableSeatedPlayer(player, buyIn, true));
 			sitInPlayers.put(player.getId(), holdemPlayerListener);
 			subscribeHoldemPlayerListener(player.getId(), holdemPlayerListener);
-			if (sitInPlayers.size() == 2) {
-				tableState = tableState.getNextState();
-				tableState.deal();
+			if (sitInPlayers.size() == 2 && configuration.isAutoDeal() && !tableState.isPlaying()) {
+					tableState = tableState.getNextState();
 			}
 			return toReturn;
 		} catch (IllegalArgumentException e) {

@@ -54,5 +54,10 @@ public class HoldemPlayerContextImpl
 	@Override
 	public void sitIn() throws IllegalActionException {
 	}
+
+	@Override
+	public void startGame() throws IllegalActionException {
+		table.startGame();
+	}
 	
 }

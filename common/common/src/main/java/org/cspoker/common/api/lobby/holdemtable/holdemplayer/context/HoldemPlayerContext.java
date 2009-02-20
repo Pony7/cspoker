@@ -30,8 +30,10 @@ public interface HoldemPlayerContext extends RemoteHoldemPlayerContext{
 	
 	void sitIn() throws IllegalActionException;
 	
-	void sitOut();
+	void sitOut() throws IllegalActionException;
 	
-	void leaveSeat();
+	void leaveSeat() throws IllegalActionException;
+	
+	void startGame() throws IllegalActionException;
 
 }
