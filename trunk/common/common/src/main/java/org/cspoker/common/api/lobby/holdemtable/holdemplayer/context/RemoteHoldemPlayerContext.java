@@ -35,5 +35,15 @@ public interface RemoteHoldemPlayerContext extends Remote {
 	void sitOut() throws RemoteException, IllegalActionException;
 	
 	void leaveSeat() throws RemoteException, IllegalActionException;
+	
+	/**
+	 * Start the game if the table configuration is not set on 'auto-deal'.
+	 * With this mechanism, players can wait for other players to join the table, before starting the game.
+	 * This is also only allowed when the game not yet started. 
+	 * 
+	 * @throws IllegalActionException The table configuration is on 'auto-deal', there is only one player seated, or the game is already started. 
+	 * 
+	 */
+	void startGame() throws RemoteException, IllegalActionException;
 
 }
