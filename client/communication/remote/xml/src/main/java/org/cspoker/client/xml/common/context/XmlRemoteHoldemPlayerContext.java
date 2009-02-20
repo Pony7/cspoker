@@ -26,6 +26,7 @@ import org.cspoker.common.api.lobby.holdemtable.holdemplayer.action.FoldAction;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.action.LeaveSeatAction;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.action.SitInAction;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.action.SitOutAction;
+import org.cspoker.common.api.lobby.holdemtable.holdemplayer.action.StartGameAction;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.RemoteHoldemPlayerContext;
 import org.cspoker.common.api.shared.Trigger;
 import org.cspoker.common.api.shared.action.ActionPerformer;
@@ -78,6 +79,11 @@ public class XmlRemoteHoldemPlayerContext implements RemoteHoldemPlayerContext {
 		performer.perform(new SitInAction(generator.getNextID(),
 				tableID));
 		
+	}
+
+	@Override
+	public void startGame() throws RemoteException, IllegalActionException {
+		performer.perform(new StartGameAction(generator.getNextID(), tableID));
 	}
 
 }
