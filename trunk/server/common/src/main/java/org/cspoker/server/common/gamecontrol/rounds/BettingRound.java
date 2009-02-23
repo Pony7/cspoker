@@ -254,7 +254,12 @@ public abstract class BettingRound
 		allInPlayers.add(new MutableAllInPlayer(player));
 		getGame().removePlayerFromCurrentDeal(player);
 		if (player.getBetChips().getValue() > getBet()) {
+			if(getBet()>0){
+				getBettingRules().incrementNBRaises();
+			}
 			setBet(player.getBetChips().getValue());
+			getBettingRules().setBetPlaced(true);
+			getBettingRules().setLastBetAmount(amount);
 			playerMadeEvent(player);
 			someoneBigAllIn = true;
 		}
