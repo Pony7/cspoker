@@ -757,7 +757,7 @@ public class PokerTable {
 				
 				if (getCurrentTimeOut() == this && tableState.getGame() != null) {
 					MutableSeatedPlayer gcPlayer = tableState.getGame().getCurrentPlayer();
-					if ((gcPlayer.getId().equals(player.getId()))) {
+					if (gcPlayer!=null && (gcPlayer.getId().equals(player.getId()))) {
 						PokerTable.logger.info("Player " + player + " automatically folded.");
 						tableState.fold(gcPlayer);
 					}
