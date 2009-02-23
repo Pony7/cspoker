@@ -222,6 +222,7 @@ public class PokerTable {
 		if(sitInPlayers.size()<2)
 			throw new IllegalActionException("There should be at least 2 players before a game can start.");
 		tableState = tableState.getNextState();
+		tableState.deal();
 	}
 	
 	/***************************************************************************
@@ -380,6 +381,7 @@ public class PokerTable {
 			subscribeHoldemPlayerListener(player.getId(), holdemPlayerListener);
 			if (sitInPlayers.size() == 2 && configuration.isAutoDeal() && !tableState.isPlaying()) {
 					tableState = tableState.getNextState();
+					tableState.deal();
 			}
 			return toReturn;
 		} catch (IllegalArgumentException e) {
