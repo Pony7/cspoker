@@ -34,8 +34,8 @@ import org.cspoker.common.elements.table.Round;
 import org.cspoker.common.elements.table.SeatId;
 import org.cspoker.common.elements.table.TableConfiguration;
 
+import com.google.common.collect.ImmutableBiMap;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableMap.Builder;
 
 public class NewDealState
 		extends AbstractGameState {
@@ -46,7 +46,7 @@ public class NewDealState
 	//TODO make weak reference? clean up memory?
 	private final GameState previousGame;
 	
-	private final ImmutableMap<SeatId, PlayerId> seatPlayer;
+	private final ImmutableBiMap<SeatId, PlayerId> seatMap;
 	private final ImmutableMap<PlayerId, PlayerState> playerStates;
 	
 	public NewDealState(TableConfiguration tableConfiguration, NewDealEvent newDealEvent, GameState previousGame) {
@@ -54,11 +54,9 @@ public class NewDealState
 		this.event = newDealEvent;
 		this.tableConfiguration = tableConfiguration;
 		
-		Builder<PlayerId, PlayerState> playerStateBuilder = ImmutableMap.builder();
-		Builder<SeatId, PlayerId> seatPlayerBuilder = ImmutableMap.builder();
+		ImmutableMap.Builder<PlayerId, PlayerState> playerStateBuilder = ImmutableMap.builder();
 		
 		for (final SeatedPlayer player : newDealEvent.getPlayers()) {
-			seatPlayerBuilder.put(player.getSeatId(), player.getId());
 			AbstractPlayerState playerState = new AbstractPlayerState() {
 				
 				public int getBet() {
@@ -89,6 +87,28 @@ public class NewDealState
 					return player.getSeatId();
 				}
 				
+				@Override
+				public boolean isPlayingGame() {
+					return player.isSittingIn();
+				}
+				
+				@Override
+				public boolean isSmallBlind() {
+					//starting from SmallBlindEvent
+					return false;
+				}
+				
+				@Override
+				public boolean isBigBlind() {
+					//starting from BigBlindEvent
+					return false;
+				}
+				
+				@Override
+				public boolean hasChecked() {
+					return false;
+				}
+				
 				/**
 				 * {@inheritDoc}
 				 */
@@ -100,7 +120,7 @@ public class NewDealState
 			};
 			playerStateBuilder.put(player.getId(), playerState);
 		}
-		seatPlayer = seatPlayerBuilder.build();
+		seatMap = previousGame.getSeatMap();
 		playerStates = playerStateBuilder.build();
 	}
 	
@@ -144,8 +164,9 @@ public class NewDealState
 		return playerStates.get(playerId);
 	}
 	
-	public PlayerId getPlayerId(SeatId seatId) {
-		return seatPlayer.get(seatId);
+	@Override
+	public ImmutableBiMap<SeatId, PlayerId> getSeatMap() {
+		return seatMap;
 	}
 	
 	public GameState getPreviousGameState() {
@@ -172,5 +193,10 @@ public class NewDealState
 	@Override
 	public void acceptVisitor(GameStateVisitor visitor) {
 		visitor.visitNewDealState(this);
+	}
+	
+	@Override
+	public String toString() {
+		return getLastEvent().toString();
 	}
 }

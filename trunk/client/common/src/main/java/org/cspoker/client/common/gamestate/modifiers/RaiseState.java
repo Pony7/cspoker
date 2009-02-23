@@ -70,6 +70,15 @@ public class RaiseState
 				return true;
 			}
 			
+			public boolean isPlayingGame() {
+				return true;
+			}
+			
+			@Override
+			public boolean hasChecked() {
+				return false;
+			}
+			
 			/**
 			 * {@inheritDoc}
 			 */

@@ -24,7 +24,6 @@ import org.cspoker.client.bots.bot.search.node.BotActionNode;
 import org.cspoker.client.bots.bot.search.node.visitor.Log4JOutputVisitor;
 import org.cspoker.client.bots.listener.BotListener;
 import org.cspoker.client.common.SmartLobbyContext;
-import org.cspoker.client.common.gamestate.CachingNode;
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.player.PlayerId;
@@ -52,7 +51,6 @@ extends AbstractBot {
 			public void run() {
 				try {
 					BotActionNode actionNode;
-					tableContext.insertCache();
 					GameState gameState = tableContext.getGameState();
 					switch (gameState.getRound()) {
 					case PREFLOP:
@@ -62,16 +60,16 @@ extends AbstractBot {
 						logger.debug("Searching flop round game tree:");
 						config.getOpponentModeler().signalNextAction(gameState);
 						actionNode = new BotActionNode(playerID, gameState, 
-								config, config.getFinalTokens(), 
-								searchId++, new Log4JOutputVisitor(3));
+								config, config.getFlopTokens(),
+								searchId++, new Log4JOutputVisitor(100));
 						actionNode.performbestAction(playerContext);
 						break;
 					case TURN:
 						logger.debug("Searching turn round game tree:");
 						config.getOpponentModeler().signalNextAction(gameState);
 						actionNode = new BotActionNode(playerID, gameState, 
-								config, config.getFinalTokens(), 
-								searchId++, new Log4JOutputVisitor(3));
+								config, config.getTurnTokens(), 
+								searchId++, new Log4JOutputVisitor(100));
 						actionNode.performbestAction(playerContext);
 						break;
 					case FINAL:
@@ -80,7 +78,7 @@ extends AbstractBot {
 						config.getOpponentModeler().signalNextAction(gameState);
 						actionNode = new BotActionNode(playerID, gameState, 
 								config, config.getFinalTokens(), 
-								searchId++, new Log4JOutputVisitor(3));
+								searchId++, new Log4JOutputVisitor(100));
 						actionNode.performbestAction(playerContext);
 						break;
 					default:
@@ -89,10 +87,21 @@ extends AbstractBot {
 				} catch (IllegalActionException e) {
 					logger.error(e);
 					throw new IllegalStateException("Action was not allowed.",e);
-				}catch (RemoteException e) {
+				} catch (RemoteException e) {
 					logger.error(e);
 					throw new IllegalStateException("Action failed.",e);
-
+				}catch(StackOverflowError e){
+					e.printStackTrace();
+					logger.error(e);
+					try {
+						playerContext.checkOrCall();
+					} catch (RemoteException e1) {
+						logger.error(e1);
+						throw new IllegalStateException("Action failed.",e1);
+					} catch (IllegalActionException e1) {
+						logger.error(e1);
+						throw new IllegalStateException("Action was not allowed.",e1);
+					}
 				}
 			}
 		});

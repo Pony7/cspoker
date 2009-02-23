@@ -16,6 +16,7 @@
 package org.cspoker.client.bots.bot.search.action;
 
 import java.rmi.RemoteException;
+import java.util.Set;
 
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.client.common.gamestate.PlayerState;
@@ -26,32 +27,53 @@ import org.cspoker.common.api.lobby.holdemtable.event.NextPlayerEvent;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.RemoteHoldemPlayerContext;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.player.PlayerId;
+import org.cspoker.common.elements.table.Round;
 
 public class CallAction extends SearchBotAction{
 
 	public CallAction(GameState gameState, PlayerId actor) {
 		super(gameState, actor);
 	}
-	
+
 	@Override
 	public void perform(RemoteHoldemPlayerContext context)
-			throws RemoteException, IllegalActionException {
+	throws RemoteException, IllegalActionException {
 		context.checkOrCall();
 	}
-	
+
 	@Override
-	public GameState getStateAfterAction() {
-		CallState callState = new CallState(gameState, new CallEvent(actor, false));
-		PlayerState nextToAct = callState.previewNextToAct();
-		if(nextToAct!=null){
-			return new NextPlayerState(callState,
-					new NextPlayerEvent(nextToAct.getPlayerId()));
+	public GameState getStateAfterAction() throws GameEndedException {
+		boolean roundEnds = true;
+		Set<PlayerState> players = gameState.getAllSeatedPlayers();
+		forloop:
+			for(PlayerState player:players){
+				if(player.isActivelyPlaying() && !player.getPlayerId().equals(actor) 
+						&& gameState.getDeficit(player.getPlayerId())>0){
+					roundEnds = false;
+					break forloop;
+				}
+			}
+		if(roundEnds 
+				&& gameState.getRound().equals(Round.PREFLOP) 
+				&& gameState.getPlayer(actor).isSmallBlind() 
+				&& gameState.getLargestBet()<=gameState.getTableConfiguration().getBigBlind()){
+			roundEnds = false;
 		}
-		return getNewRoundState(callState);
+
+		CallState state = new CallState(gameState, new CallEvent(actor, roundEnds));
+		if(roundEnds){
+			return getNewRoundState(state);
+		}else{
+			return new NextPlayerState(state,
+					new NextPlayerEvent(state.getNextActivePlayerAfter(actor).getPlayerId()));
+		}
 	}
-	
+
 	@Override
 	public String toString() {
 		return "Calling";
 	}
+
+
+
 }

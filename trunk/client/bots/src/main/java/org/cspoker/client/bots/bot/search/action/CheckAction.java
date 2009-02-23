@@ -40,10 +40,11 @@ public class CheckAction extends SearchBotAction{
 	}
 	
 	@Override
-	public GameState getStateAfterAction() {
-		CheckState checkState = new CheckState(gameState, new CheckEvent(actor, false));
-		PlayerState nextToAct = checkState.previewNextToAct();
-		if(nextToAct!=null){
+	public GameState getStateAfterAction() throws GameEndedException {
+		PlayerState nextToAct = gameState.getNextActivePlayerAfter(actor);
+		boolean newRound = nextToAct.hasChecked();
+		CheckState checkState = new CheckState(gameState, new CheckEvent(actor, newRound));
+		if(!newRound){
 			return new NextPlayerState(checkState,
 					new NextPlayerEvent(nextToAct.getPlayerId()));
 		}

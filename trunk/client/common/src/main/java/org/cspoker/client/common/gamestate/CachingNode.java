@@ -15,20 +15,41 @@
  */
 package org.cspoker.client.common.gamestate;
 
-import org.cspoker.common.api.lobby.holdemtable.event.HoldemTableTreeEvent;
-import org.cspoker.common.elements.table.Round;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.TimeUnit;
 
-import com.google.common.base.Supplier;
-import com.google.common.base.Suppliers;
+import org.cspoker.common.api.lobby.holdemtable.event.HoldemTableTreeEvent;
+import org.cspoker.common.elements.player.PlayerId;
+import org.cspoker.common.elements.table.Round;
+import org.cspoker.common.elements.table.SeatId;
+import org.cspoker.common.elements.table.TableConfiguration;
+
+import com.google.common.base.Function;
+import com.google.common.collect.ImmutableBiMap;
+import com.google.common.collect.MapMaker;
 
 public class CachingNode extends ForwardingGameState {
 
-	private final Supplier<Round> round = Suppliers.memoize(new Supplier<Round>(){
-		public Round get() {
-			return CachingNode.super.getRound();
-		};
-	});
+	private final static MapMaker mapmaker = new MapMaker()
+	.initialCapacity(8)
+    .concurrencyLevel(3)
+    .expiration(10, TimeUnit.SECONDS);
+
+	private final Round round = super.getRound();
 	
+	private final TableConfiguration tableConfig = super.getTableConfiguration();
+	
+	private final ImmutableBiMap<SeatId, PlayerId> seatMap = super.getSeatMap();
+	
+	private final PlayerId dealer = super.getDealer();
+	
+	private final ConcurrentMap<PlayerId, PlayerState> playerStates = 
+		mapmaker.makeComputingMap( new Function<PlayerId, PlayerState>(){
+			@Override
+			public PlayerState apply(PlayerId playerId) {
+				return CachingNode.super.getPlayer(playerId);
+			}
+		});
 	
 	public CachingNode(GameState gameState) {
 		super(gameState);
@@ -46,7 +67,32 @@ public class CachingNode extends ForwardingGameState {
 	
 	@Override
 	public Round getRound() {
-		return round.get();
+		return round;
+	}
+	
+	@Override
+	public TableConfiguration getTableConfiguration() {
+		return tableConfig;
 	}
 
+	@Override
+	public String toString() {
+		return "(Caching)\n"+getPreviousGameState();
+	}
+	
+	@Override
+	public PlayerState getPlayer(PlayerId playerId) {
+		return playerStates.get(playerId);
+	}
+	
+	@Override
+	public ImmutableBiMap<SeatId, PlayerId> getSeatMap() {
+		return seatMap;
+	}
+	
+	@Override
+	public PlayerId getDealer() {
+		return dealer;
+	}
+	
 }

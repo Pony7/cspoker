@@ -41,4 +41,8 @@ public abstract class Expander {
 		return node;
 	}
 	
+	public static interface Factory{
+		Expander create(InnerGameTreeNode node, int tokens);
+	}
+	
 }

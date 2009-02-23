@@ -38,4 +38,10 @@ public class CompleteExpander extends Expander{
 		return evaluatedActions;
 	}
 	
+	public static class Factory implements Expander.Factory{
+		public CompleteExpander create(InnerGameTreeNode node, int tokens){
+			return new CompleteExpander(node, tokens);
+		}
+	}
+	
 }

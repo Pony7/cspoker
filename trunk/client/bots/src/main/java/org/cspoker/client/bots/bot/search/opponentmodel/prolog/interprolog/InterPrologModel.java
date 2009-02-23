@@ -183,7 +183,6 @@ public class InterPrologModel implements AllPlayersModel {
 
 	@Override
 	public void assume(GameState gameState) {
-		// TODO Auto-generated method stub
 		
 	}
 

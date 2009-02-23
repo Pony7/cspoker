@@ -16,13 +16,14 @@
 package org.cspoker.client.common.gamestate;
 
 import java.util.EnumSet;
-import java.util.Set;
 
 import org.cspoker.common.elements.cards.Card;
 import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.elements.table.Round;
 import org.cspoker.common.elements.table.SeatId;
 import org.cspoker.common.elements.table.TableConfiguration;
+
+import com.google.common.collect.ImmutableBiMap;
 
 public abstract class ForwardingGameState extends AbstractGameState{
 
@@ -76,12 +77,9 @@ public abstract class ForwardingGameState extends AbstractGameState{
 		return gameState.getPlayer(playerId);
 	}
 	
-	public PlayerId getPlayerId(SeatId seatId) {
-		return gameState.getPlayerId(seatId);
-	}
-	
-	public Set<PlayerId> getAllSeatedPlayerIds() {
-		return gameState.getAllSeatedPlayerIds();
+	@Override
+	public ImmutableBiMap<SeatId, PlayerId> getSeatMap() {
+		return gameState.getSeatMap();
 	}
 	
 	public TableConfiguration getTableConfiguration() {
@@ -92,4 +90,5 @@ public abstract class ForwardingGameState extends AbstractGameState{
 	public int getNbRaises() {
 		return gameState.getNbRaises();
 	}
+	
 }

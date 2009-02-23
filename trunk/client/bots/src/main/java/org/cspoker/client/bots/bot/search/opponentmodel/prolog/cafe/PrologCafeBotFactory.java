@@ -28,6 +28,8 @@ import org.cspoker.client.bots.bot.Bot;
 import org.cspoker.client.bots.bot.BotFactory;
 import org.cspoker.client.bots.bot.search.SearchBot;
 import org.cspoker.client.bots.bot.search.SearchConfiguration;
+import org.cspoker.client.bots.bot.search.node.expander.CompleteExpander;
+import org.cspoker.client.bots.bot.search.node.expander.SamplingExpander;
 import org.cspoker.client.bots.bot.search.node.leaf.CachedShowdownNodeFactory;
 import org.cspoker.client.bots.bot.search.node.leaf.UniformShowdownNode;
 import org.cspoker.client.bots.bot.search.opponentmodel.AllPlayersModel;
@@ -59,15 +61,13 @@ public class PrologCafeBotFactory implements BotFactory {
 		copies++;
 		if(opponentModels.get(botId)==null){
 			PrologControl prolog = new PrologControl();
-//			if(!prolog.execute(new PRED_true_0(), new Term[]{})) assert(false);
-//			prolog.setPredicate(new PRED_$init_0(), new Term[]{});
-//			if(!prolog.call()) throw new IllegalStateException("Failed to initiate background");
 			PrologCafeModel model = new PrologCafeModel(prolog,botId);
 			opponentModels.put(botId, model);
 		}
 		SearchConfiguration config = new SearchConfiguration(opponentModels.get(botId), 
 				new CachedShowdownNodeFactory(new UniformShowdownNode.Factory()),
-				1,10,100);
+				new SamplingExpander.Factory(),
+				100,1000,10000);
 		return new SearchBot(botId, tableId, lobby, executor, config ,botListeners);
 	}
 

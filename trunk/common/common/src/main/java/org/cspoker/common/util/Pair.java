@@ -21,6 +21,12 @@ public class Pair<L,R> {
 	private final R right;
 	
 	public Pair(L left, R right) {
+		if(left==null){
+			throw new IllegalArgumentException("Left value is not effective.");
+		}
+		if(right==null){
+			throw new IllegalArgumentException("Right value is not effective.");
+		}
 		this.left =left;
 		this.right = right;
 	}
@@ -64,6 +70,9 @@ public class Pair<L,R> {
 		return true;
 	}
 	
-	
+	@Override
+	public String toString() {
+		return "<"+left.toString()+","+right.toString()+">";
+	}
 	
 }

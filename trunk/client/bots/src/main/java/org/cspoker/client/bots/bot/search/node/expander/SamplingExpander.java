@@ -32,7 +32,6 @@ import org.cspoker.client.bots.bot.search.node.BotActionNode;
 import org.cspoker.client.bots.bot.search.node.InnerGameTreeNode;
 
 import com.google.common.collect.Multiset;
-import com.google.common.collect.Multisets;
 import com.google.common.collect.TreeMultiset;
 import com.google.common.collect.Multiset.Entry;
 
@@ -72,6 +71,7 @@ public class SamplingExpander extends Expander{
 			}
 		}
 
+		//ordening for sexy debugging output
 		Multiset<ProbabilityAction> samples = TreeMultiset.create(new Comparator<ProbabilityAction>(){
 			@Override
 			public int compare(ProbabilityAction o1, ProbabilityAction o2) {
@@ -82,17 +82,21 @@ public class SamplingExpander extends Expander{
 					return 1;
 				}
 				if(o1.getAction() instanceof RaiseAction && o2.getAction() instanceof RaiseAction ){
-					return ((RaiseAction)o1.getAction()).getAmount()-((RaiseAction)o2.getAction()).getAmount();
+					return ((RaiseAction)o1.getAction()).amount-((RaiseAction)o2.getAction()).amount;
 				}
 				if(o1.getAction() instanceof RaiseAction && o2.getAction() instanceof RaiseAction ){
-					return ((BetAction)o1.getAction()).getAmount()-((BetAction)o2.getAction()).getAmount();
+					return ((BetAction)o1.getAction()).amount-((BetAction)o2.getAction()).amount;
 				}
-				return 0;
+				//if probabilities are equal for different classes, objects are NOT equal per se
+				//go alphabetically?
+				return o1.toString().compareTo(o2.toString());
 			}
 		});
+		//Multiset<ProbabilityAction> samples = new HashMultiset<ProbabilityAction>();
 		int nbSamples = Math.min(100,tokens);
 		for(int i=0;i<nbSamples;i++){
-			samples.add(sampleAction(probActions, cumulProb));
+			ProbabilityAction sampledAction = sampleAction(probActions, cumulProb);
+			samples.add(sampledAction);
 		}
 
 		Set<Entry<ProbabilityAction>> entrySet = samples.entrySet();
@@ -115,6 +119,12 @@ public class SamplingExpander extends Expander{
 			}
 		}
 		return probActions.get(probActions.size()-1);
+	}
+	
+	public static class Factory implements Expander.Factory{
+		public SamplingExpander create(InnerGameTreeNode node, int tokens){
+			return new SamplingExpander(node, tokens);
+		}
 	}
 }
 

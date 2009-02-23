@@ -16,8 +16,10 @@
 package org.cspoker.client.common.gamestate.modifiers;
 
 import org.cspoker.client.common.gamestate.ForwardingGameState;
+import org.cspoker.client.common.gamestate.ForwardingPlayerState;
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.client.common.gamestate.GameStateVisitor;
+import org.cspoker.client.common.gamestate.PlayerState;
 import org.cspoker.common.api.lobby.holdemtable.event.CheckEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.HoldemTableEvent;
 import org.cspoker.common.elements.player.PlayerId;
@@ -26,9 +28,62 @@ public class CheckState extends ForwardingGameState {
 
 	private final CheckEvent checkEvent;
 
-	public CheckState(GameState gameState, CheckEvent checkEvent) {
+	private final PlayerState playerState;
+	
+	public CheckState(GameState gameState, final CheckEvent checkEvent) {
 		super(gameState);
 		this.checkEvent = checkEvent;
+		playerState = new ForwardingPlayerState(gameState.getPlayer(checkEvent.getPlayerId())){
+			
+			@Override
+			public boolean isPlayingGame() {
+				return true;
+			}
+			
+			@Override
+			public boolean hasChecked() {
+				return true;
+			}
+			
+			@Override
+			public int getBet() {
+				return 0;
+			}
+			
+			@Override
+			public PlayerId getPlayerId() {
+				return checkEvent.getPlayerId();
+			}
+			
+			@Override
+			public boolean hasFolded() {
+				return false;
+			}
+			
+			@Override
+			public boolean isBigBlind() {
+				return false;
+			}
+			
+			@Override
+			public boolean isSmallBlind() {
+				return false;
+			}
+			
+			@Override
+			public boolean sitsIn() {
+				return true;
+			}
+			
+		};
+	}
+	
+	@Override
+	public PlayerState getPlayer(PlayerId playerId) {
+		if (checkEvent.getPlayerId().equals(playerId)) {
+			return playerState;
+		}
+		return super.getPlayer(playerId);
 	}
 	
 	public HoldemTableEvent getLastEvent() {

@@ -33,6 +33,7 @@ import org.cspoker.common.elements.table.Round;
 import org.cspoker.common.elements.table.SeatId;
 import org.cspoker.common.elements.table.TableConfiguration;
 
+import com.google.common.collect.ImmutableBiMap;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
 
@@ -41,7 +42,7 @@ public class NewRoundState
 	
 	private final NewRoundEvent event;
 	
-	private final ImmutableMap<SeatId, PlayerId> seatPlayer;
+	private final ImmutableBiMap<SeatId, PlayerId> seatMap;
 	private final ImmutableMap<PlayerId, PlayerState> playerStates;
 	
 	private final PlayerId dealer;
@@ -59,9 +60,8 @@ public class NewRoundState
 		this.communityCards = gameState.getCommunityCards();
 		
 		Builder<PlayerId, PlayerState> playerStateBuilder = ImmutableMap.builder();
-		Builder<SeatId, PlayerId> seatPlayerBuilder = ImmutableMap.builder();
 		
-		Set<PlayerId> playersIds = gameState.getAllSeatedPlayerIds();
+		Set<PlayerId> playersIds = gameState.getSeatMap().values();
 		
 		for (final PlayerId playerId : playersIds) {
 			final PlayerState oldPlayerState = gameState.getPlayer(playerId);
@@ -69,8 +69,11 @@ public class NewRoundState
 			final EnumSet<Card> cards = oldPlayerState.getCards();
 			final int stack = oldPlayerState.getStack();
 			final boolean sitsIn = oldPlayerState.sitsIn();
+			final boolean isPlaying = oldPlayerState.isPlayingGame();
 			final boolean hasFolded = oldPlayerState.hasFolded();
 			final SeatId seat = oldPlayerState.getSeatId();
+			final boolean bigBlind = oldPlayerState.isBigBlind();
+			final boolean smallBlind = oldPlayerState.isSmallBlind();
 			
 			PlayerState playerState = new AbstractPlayerState() {
 				
@@ -102,6 +105,26 @@ public class NewRoundState
 					return seat;
 				}
 				
+				@Override
+				public boolean isPlayingGame() {
+					return isPlaying;
+				}
+				
+				@Override
+				public boolean isSmallBlind() {
+					return smallBlind;
+				}
+				
+				@Override
+				public boolean isBigBlind() {
+					return bigBlind;
+				}
+				
+				@Override
+				public boolean hasChecked() {
+					return false;
+				}
+				
 				/**
 				 * {@inheritDoc}
 				 */
@@ -112,9 +135,8 @@ public class NewRoundState
 				
 			};
 			playerStateBuilder.put(playerId, playerState);
-			seatPlayerBuilder.put(oldPlayerState.getSeatId(), playerId);
 		}
-		seatPlayer = seatPlayerBuilder.build();
+		seatMap = previousRoundState.getSeatMap();
 		playerStates = playerStateBuilder.build();
 	}
 	
@@ -158,8 +180,9 @@ public class NewRoundState
 		return playerStates.get(playerId);
 	}
 	
-	public PlayerId getPlayerId(SeatId seatId) {
-		return seatPlayer.get(seatId);
+	@Override
+	public ImmutableBiMap<SeatId, PlayerId> getSeatMap() {
+		return seatMap;
 	}
 	
 	public GameState getPreviousGameState() {

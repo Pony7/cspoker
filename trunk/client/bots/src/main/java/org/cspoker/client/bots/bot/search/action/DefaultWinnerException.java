@@ -13,30 +13,21 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.client.common.gamestate;
+package org.cspoker.client.bots.bot.search.action;
 
+import org.cspoker.client.common.gamestate.PlayerState;
+import org.cspoker.client.common.gamestate.modifiers.FoldState;
 
-/**
- * Abstract PlayerState partial implementation.
- * Only methods that are a simple combination of other methods should be implemented here.
- * 
- * @author guy
- *
- */
-public abstract class AbstractPlayerState implements PlayerState {
+public class DefaultWinnerException extends Exception {
 
-	public final boolean isAllIn() {
-		return getStack()==0;
+	private static final long serialVersionUID = -8669266132424794152L;
+
+	public final PlayerState winner;
+	public final  FoldState foldState;
+
+	public DefaultWinnerException(PlayerState winner, FoldState foldState) {
+		this.winner = winner;
+		this.foldState = foldState;
 	}
-
-	public final boolean isActivelyPlaying(){
-		return isPlayingGame() && !hasFolded() && !isAllIn();
-	}
-
-	public final boolean isInForPot(){
-		//TODO handle split pot
-		return isPlayingGame() && !hasFolded();
-	}
-	
 	
 }

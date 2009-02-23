@@ -62,6 +62,16 @@ public class NewPocketCardsState
 				return true;
 			}
 			
+			@Override
+			public boolean isPlayingGame() {
+				return true;
+			}
+
+			@Override
+			public boolean hasChecked() {
+				return false;
+			}
+			
 			/**
 			 * {@inheritDoc}
 			 */

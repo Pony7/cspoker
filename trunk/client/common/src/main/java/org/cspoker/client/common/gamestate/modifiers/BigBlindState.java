@@ -67,12 +67,27 @@ public class BigBlindState
 				return BigBlindState.this.event.getPlayerId();
 			}
 			
+			@Override
+			public boolean isPlayingGame() {
+				return true;
+			}
+			
+			@Override
+			public boolean isBigBlind() {
+				return true;
+			}
+			
 			/**
 			 * {@inheritDoc}
 			 */
 			@Override
 			public List<Integer> getBetProgression() {
 				return Collections.singletonList(getBet());
+			}
+			
+			@Override
+			public boolean hasChecked() {
+				return false;
 			}
 		};
 	}

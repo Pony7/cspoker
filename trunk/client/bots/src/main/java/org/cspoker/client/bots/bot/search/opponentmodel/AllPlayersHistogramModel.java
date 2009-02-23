@@ -53,6 +53,7 @@ public class AllPlayersHistogramModel implements AllPlayersModel, GameStateVisit
 	
 	private volatile GameState lastKnownState = null;
 	private volatile Round round;
+	private volatile boolean started = false;
 
 	private final PlayerId botId;
 
@@ -66,10 +67,13 @@ public class AllPlayersHistogramModel implements AllPlayersModel, GameStateVisit
 	
 	public HistogramModel getModelFor(PlayerId opponentId, Round round){
 		Pair<PlayerId,Round> key = new Pair<PlayerId, Round>(opponentId, round);
+		if(!opponentModels.containsKey(key)){
+			throw new IllegalStateException("Can't find model for "+key);
+		}
 		return opponentModels.get(key);
 	}
 	
-	private void initialeModelsFor(PlayerId player) {
+	private void initiateModelsFor(PlayerId player) {
 		//check
 		//bet
 		//fold
@@ -152,11 +156,13 @@ public class AllPlayersHistogramModel implements AllPlayersModel, GameStateVisit
 
 	@Override
 	public void visitAllInState(AllInState allInState) {
+		if(started)
 		getModelFor(allInState.getEvent().getPlayerId(),round).addAllIn(allInState, allInState.getEvent());
 	}
 
 	@Override
 	public void visitBetState(BetState betState) {
+		if(started)
 		getModelFor(betState.getEvent().getPlayerId(),round).addBet(betState, betState.getEvent());
 	}
 
@@ -167,29 +173,30 @@ public class AllPlayersHistogramModel implements AllPlayersModel, GameStateVisit
 
 	@Override
 	public void visitCallState(CallState callState) {
+		if(started)
 		getModelFor(callState.getEvent().getPlayerId(),round).addCall(callState, callState.getEvent());
 	}
 
 	@Override
 	public void visitCheckState(CheckState checkState) {
+		if(started)
 		getModelFor(checkState.getEvent().getPlayerId(),round).addCheck(checkState, checkState.getEvent());
 	}
 
 	@Override
 	public void visitFoldState(FoldState foldState) {
+		if(started)
 		getModelFor(foldState.getEvent().getPlayerId(),round).addFold(foldState, foldState.getEvent());
 	}
 
 	@Override
 	public void visitInitialGameState(InitialGameState initialGameState) {
-		for(PlayerId player:initialGameState.getAllSeatedPlayerIds()){
-			initialeModelsFor(player);
-		}
+
 	}
 
 	@Override
 	public void visitJoinTableState(JoinTableState joinTableState) {
-		initialeModelsFor(joinTableState.getLastEvent().getPlayerId());
+		initiateModelsFor(joinTableState.getLastEvent().getPlayerId());
 	}
 
 	@Override
@@ -209,7 +216,12 @@ public class AllPlayersHistogramModel implements AllPlayersModel, GameStateVisit
 
 	@Override
 	public void visitNewDealState(NewDealState newDealState) {
-		
+		if(!started){
+			started = true;
+			for(PlayerId player:newDealState.getAllSeatedPlayerIds()){
+				initiateModelsFor(player);
+			}
+		}
 	}
 
 	@Override
@@ -239,7 +251,7 @@ public class AllPlayersHistogramModel implements AllPlayersModel, GameStateVisit
 
 	@Override
 	public void visitSitInState(SitInState sitInState) {
-		initialeModelsFor(sitInState.getEvent().getPlayer().getId());
+		initiateModelsFor(sitInState.getEvent().getPlayer().getId());
 	}
 
 	@Override

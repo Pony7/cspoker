@@ -29,7 +29,7 @@ import org.cspoker.common.elements.player.PlayerId;
 
 public class BetAction extends SearchBotAction{
 
-	private final int amount;
+	public final int amount;
 
 	public BetAction(GameState gameState, PlayerId actor, int amount) {
 		super(gameState, actor);
@@ -44,7 +44,7 @@ public class BetAction extends SearchBotAction{
 	@Override
 	public GameState getStateAfterAction() {
 		BetState betState = new BetState(gameState, new BetEvent(actor,amount));
-		PlayerState nextToAct = betState.previewNextToAct();
+		PlayerState nextToAct = betState.getNextActivePlayerAfter(actor);
 		if(nextToAct!=null){
 			return new NextPlayerState(betState,new NextPlayerEvent(nextToAct.getPlayerId()));
 		}
@@ -54,32 +54,6 @@ public class BetAction extends SearchBotAction{
 	@Override
 	public String toString() {
 		return "Betting "+amount;
-	}
-	
-	public int getAmount() {
-		return amount;
-	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + amount;
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (!(obj instanceof BetAction))
-			return false;
-		BetAction other = (BetAction) obj;
-		if (amount != other.amount)
-			return false;
-		return true;
 	}
 	
 }

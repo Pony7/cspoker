@@ -27,90 +27,91 @@ import org.cspoker.common.elements.table.Round;
 import org.cspoker.common.elements.table.SeatId;
 import org.cspoker.common.elements.table.TableConfiguration;
 
-@Immutable
+import com.google.common.collect.ImmutableBiMap;
+
 /**
  * States of the game.
  * 
  */
+@Immutable
 public interface GameState {
 	
-	public TableConfiguration getTableConfiguration();
+	TableConfiguration getTableConfiguration();
 	
-	/**
-	 * Returns the PlayerState of the player sitting in the given seat or null
-	 * if the seat is empty;
-	 */
-	public PlayerId getPlayerId(SeatId seatId);
+	ImmutableBiMap<SeatId,PlayerId> getSeatMap();
 	
-	public PlayerState getPlayer(PlayerId playerId);
-
-	public Set<PlayerId> getAllSeatedPlayerIds();
+	PlayerState getPlayer(PlayerId playerId);
 	
-	public Set<PlayerState> getAllSeatedPlayers();
+	Set<PlayerState> getAllSeatedPlayers();
 	
-	public PlayerId getDealer();
+	PlayerId getDealer();
 	
-	public PlayerId getLastBettor();
+	PlayerId getLastBettor();
 	
 	/**
 	 * Returns the ID of the player that is next to act or null if nobody should act.
 	 */
-	public PlayerId getNextToAct();
+	PlayerId getNextToAct();
 
-	public int getPreviousRoundsPotSize();
-	public int getRoundPotSize();	
+	int getPreviousRoundsPotSize();
+	int getRoundPotSize();	
 	
 	/**
 	 * A derived state property that is the sum of the pot this round and previous rounds.
 	 */
-	public int getGamePotSize();
+	int getGamePotSize();
 	
-	public int getLargestBet();
-	public int getMinNextRaise();
+	int getLargestBet();
+	int getMinNextRaise();
 	
-	public Round getRound();
+	Round getRound();
 	
-	public EnumSet<Card> getCommunityCards();
+	EnumSet<Card> getCommunityCards();
 	
-	public GameState getPreviousGameState();
-	public HoldemTableTreeEvent getLastEvent();
+	GameState getPreviousGameState();
+	HoldemTableTreeEvent getLastEvent();
 	
 	/**
 	 * A derived state property that is the difference between the largest bet and the
 	 * current bet of a given player.
 	 */
-	public int getDeficit(PlayerId playerId);	
+	int getDeficit(PlayerId playerId);	
 
 	/**
 	 * A derived state property that is the minimum of the player deficit and stack.
 	 */
-	public int getCallValue(PlayerId playerId);
+	int getCallValue(PlayerId playerId);
 
 	/**
 	 * A derived state property that is the minimum of the minimal raise and stack.
 	 */
-	public int getLowerRaiseBound(PlayerId playerId);
+	int getLowerRaiseBound(PlayerId playerId);
 	
 	/**
 	 * A derived state property that is the minimum of the minimal raise and stack.
 	 */
-	public int getUpperRaiseBound(PlayerId playerId);
+	int getUpperRaiseBound(PlayerId playerId);
 	
 	/**
 	 * A derived state property whether the given player has enough money to raise.
 	 */
-	public boolean isAllowedToRaise(PlayerId playerId);
+	boolean isAllowedToRaise(PlayerId playerId);
 
-	public PlayerState previewNextToAct();
 
-	public boolean hasBet();
+	boolean hasBet();
 
-	public int getNbRaises();
+	int getNbRaises();
 
-	public PlayerState getNextActivePlayerAfter(SeatId startSeat);
+	PlayerState getNextActivePlayerAfter(PlayerId playerId);
+	PlayerState getNextSeatedPlayerAfter(PlayerId playerId);
 
-	public void acceptHistoryVisitor(GameStateVisitor visitor, GameState start);
+	void acceptHistoryVisitor(GameStateVisitor visitor, GameState start);
 	
-	public void acceptVisitor(GameStateVisitor visitor);
+	void acceptVisitor(GameStateVisitor visitor);
+
+	/**
+	 * Get the PlayerState of the only player left for the pot, null if there are multiple left.
+	 */
+	PlayerState getDefaultWinner();
 	
 }

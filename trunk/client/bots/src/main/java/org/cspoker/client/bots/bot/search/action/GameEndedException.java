@@ -3,44 +3,28 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- *
+ * 
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
- *
+ *  
  *  You should have received a copy of the GNU General Public License
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.client.common;
+package org.cspoker.client.bots.bot.search.action;
 
 import org.cspoker.client.common.gamestate.GameState;
-import org.cspoker.client.common.gamestate.InitialGameState;
-import org.cspoker.common.elements.table.DetailedHoldemTable;
-import org.cspoker.common.elements.table.TableConfiguration;
 
-public class TableState {
+public class GameEndedException extends Exception {
+
+	private static final long serialVersionUID = 1231353515815940940L;
 	
-	private final TableConfiguration tableConfiguration;
-	
-	private GameState gameState;
-	
-	public TableState(DetailedHoldemTable table) {
-		this.tableConfiguration = table.getTableConfiguration();
-		this.gameState = new InitialGameState(table);
-	}
-	
-	public TableConfiguration getTableConfiguration() {
-		return tableConfiguration;
-	}
-	
-	public GameState getGameState() {
-		return gameState;
-	}
-	
-	public void setGameState(GameState gameState) {
-		this.gameState = gameState;
+	public final GameState lastState;
+
+	public GameEndedException(GameState lastState) {
+		this.lastState = lastState;
 	}
 	
 }

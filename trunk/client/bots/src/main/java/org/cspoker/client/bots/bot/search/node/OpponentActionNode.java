@@ -63,15 +63,6 @@ public class OpponentActionNode extends ActionNode{
 		return config.getOpponentModeler().getModelFor(playerId,gameState).getProbabilityActions(gameState);
 	}
 	
-	protected <A extends ActionWrapper> EvaluatedAction<A> getFoldEVForBot(A action, GameState nextState) {
-		EvaluatedAction<A> result;
-		//fold action by opponent
-		int stack = nextState.getPlayer(botId).getStack();
-		int pots = nextState.getGamePotSize();
-		result = new EvaluatedAction<A>(action, stack+pots);
-		return result;
-	}
-	
 	public SamplingExpander getExpander() {
 		return expander;
 	}
