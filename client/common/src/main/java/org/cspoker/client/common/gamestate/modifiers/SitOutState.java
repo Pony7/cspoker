@@ -43,6 +43,11 @@ public class SitOutState extends ForwardingGameState {
 				return false;
 			}
 			
+			@Override
+			public boolean isPlayingGame() {
+				return false;
+			}
+			
 		};
 	}
 

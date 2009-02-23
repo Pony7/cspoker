@@ -45,9 +45,15 @@ public interface PlayerState {
 	 */
 	List<Integer> getBetProgression();
 	
-	public boolean hasFolded();
+	boolean hasFolded();
 	
-	public boolean sitsIn();
+	boolean sitsIn();
+	
+	boolean isPlayingGame();
+	
+	boolean isSmallBlind();
+	
+	boolean isBigBlind();
 	
 	/**
 	 * A derived state property that says whether a player is all-in or not.
@@ -57,5 +63,10 @@ public interface PlayerState {
 	boolean isActivelyPlaying();
 	
 	boolean isInForPot();
+
+	/**
+	 * Last action was a check
+	 */
+	boolean hasChecked();
 	
 }

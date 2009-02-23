@@ -28,6 +28,7 @@ import org.cspoker.client.bots.bot.Bot;
 import org.cspoker.client.bots.bot.BotFactory;
 import org.cspoker.client.bots.bot.search.SearchBot;
 import org.cspoker.client.bots.bot.search.SearchConfiguration;
+import org.cspoker.client.bots.bot.search.node.expander.CompleteExpander;
 import org.cspoker.client.bots.bot.search.node.leaf.UniformShowdownNode;
 import org.cspoker.client.bots.bot.search.opponentmodel.AllPlayersModel;
 import org.cspoker.client.bots.listener.BotListener;
@@ -69,15 +70,6 @@ public class TuPrologBotFactory implements BotFactory {
 						.getResourceAsStream(
 								"org/cspoker/client/bots/bot/search/opponentmodel/prolog/tuprolog/theory.pl"));
 			    engine.setTheory(theory1);
-//			    System.out.println(engine.getTheory().toString());
-//			    try {
-//					SolveInfo info = engine.solve("stored_prior_a_if_dmin(turn,fold,P).");
-//					System.out.println(info.getQuery()+" "+info.isSuccess()+":"+info);
-//					info = engine.solve("predict_distribution(ex(1, 8, _, fold, _),player_1,[_,D_star]).");
-//					System.out.println(info.getQuery()+" "+info.isSuccess()+":"+info);
-//				} catch (MalformedGoalException e) {
-//					e.printStackTrace();
-//				}
 			} catch (IOException e1) {
 				throw new IllegalStateException(e1);
 			} catch (InvalidTheoryException e2) {
@@ -88,6 +80,7 @@ public class TuPrologBotFactory implements BotFactory {
 		}
 		SearchConfiguration config = new SearchConfiguration(opponentModels.get(botId), 
 				new UniformShowdownNode.Factory(),
+				new CompleteExpander.Factory(),
 				1,10,100);
 		return new SearchBot(botId, tableId, lobby, executor, config ,botListeners);
 	}

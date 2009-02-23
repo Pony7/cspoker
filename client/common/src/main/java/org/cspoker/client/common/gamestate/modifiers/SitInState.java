@@ -31,6 +31,7 @@ import org.cspoker.common.elements.cards.Card;
 import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.elements.table.SeatId;
 
+import com.google.common.collect.ImmutableBiMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 
@@ -39,6 +40,7 @@ public class SitInState
 	
 	private final SitInEvent event;
 	private final PlayerState playerState;
+	private final ImmutableBiMap<SeatId, PlayerId> seatMap;
 	
 	public SitInState(GameState gameState, SitInEvent event) {
 		super(gameState);
@@ -73,6 +75,26 @@ public class SitInState
 				return true;
 			}
 			
+			@Override
+			public boolean isPlayingGame() {
+				return false;
+			}
+			
+			@Override
+			public boolean isSmallBlind() {
+				return false;
+			}
+			
+			@Override
+			public boolean isBigBlind() {
+				return false;
+			}
+			
+			@Override
+			public boolean hasChecked() {
+				return false;
+			}
+			
 			/**
 			 * {@inheritDoc}
 			 */
@@ -82,6 +104,11 @@ public class SitInState
 			}
 			
 		};
+		
+		seatMap = new ImmutableBiMap.Builder<SeatId,PlayerId>()
+			.putAll(gameState.getSeatMap())
+			.put(event.getPlayer().getSeatId(), event.getPlayer().getId())
+			.build();
 	}
 	
 	@Override
@@ -93,16 +120,8 @@ public class SitInState
 	}
 	
 	@Override
-	public Set<PlayerId> getAllSeatedPlayerIds() {
-		return Sets.union(super.getAllSeatedPlayerIds(), ImmutableSet.of(event.getPlayer().getId()));
-	}
-	
-	@Override
-	public PlayerId getPlayerId(SeatId seatId) {
-		if (event.getPlayer().getSeatId().equals(seatId)) {
-			return event.getPlayer().getId();
-		}
-		return super.getPlayerId(seatId);
+	public ImmutableBiMap<SeatId, PlayerId> getSeatMap() {
+		return seatMap;
 	}
 	
 	public HoldemTableEvent getLastEvent() {

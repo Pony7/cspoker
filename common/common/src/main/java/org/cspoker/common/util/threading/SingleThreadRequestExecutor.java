@@ -72,7 +72,7 @@ public class SingleThreadRequestExecutor extends AbstractExecutorService {
 			public void run() {
 				try{
 					command.run();
-				}catch(Exception e){
+				}catch(Throwable e){
 					// This normally bad code of catch on Exception is here for a *reason*.
 					// Future *eats* all exceptions *silently*. This clause at least allows
 					// the exception to emit noise for debugging. This is particularly pernicious
@@ -93,14 +93,14 @@ public class SingleThreadRequestExecutor extends AbstractExecutorService {
 			public T call() throws Exception {
 				try{
 					return task.call();
-				}catch(Exception e){
+				}catch(Throwable e){
 					// This normally bad code of catch on Exception is here for a *reason*.
 					// Future *eats* all exceptions *silently*. This clause at least allows
 					// the exception to emit noise for debugging. This is particularly pernicious
 					// if you have something like a NullPointerException
 					logger.error(e);
 					e.printStackTrace();
-					throw e;
+					throw new RuntimeException(e);
 				}
 
 			}
@@ -114,7 +114,7 @@ public class SingleThreadRequestExecutor extends AbstractExecutorService {
 			public void run() {
 				try{
 					task.run();
-				}catch(Exception e){
+				}catch(Throwable e){
 					// This normally bad code of catch on Exception is here for a *reason*.
 					// Future *eats* all exceptions *silently*. This clause at least allows
 					// the exception to emit noise for debugging. This is particularly pernicious
@@ -134,7 +134,7 @@ public class SingleThreadRequestExecutor extends AbstractExecutorService {
 			public void run() {
 				try{
 					task.run();
-				}catch(Exception e){
+				}catch(Throwable e){
 					// This normally bad code of catch on Exception is here for a *reason*.
 					// Future *eats* all exceptions *silently*. This clause at least allows
 					// the exception to emit noise for debugging. This is particularly pernicious
@@ -154,7 +154,7 @@ public class SingleThreadRequestExecutor extends AbstractExecutorService {
 			public void run() {
 				try{
 					command.run();
-				}catch(Exception e){
+				}catch(Throwable e){
 					// This normally bad code of catch on Exception is here for a *reason*.
 					// Future *eats* all exceptions *silently*. This clause at least allows
 					// the exception to emit noise for debugging. This is particularly pernicious
@@ -174,14 +174,14 @@ public class SingleThreadRequestExecutor extends AbstractExecutorService {
 			public V call() throws Exception {
 				try{
 					return callable.call();
-				}catch(Exception e){
+				}catch(Throwable e){
 					// This normally bad code of catch on Exception is here for a *reason*.
 					// Future *eats* all exceptions *silently*. This clause at least allows
 					// the exception to emit noise for debugging. This is particularly pernicious
 					// if you have something like a NullPointerException
 					logger.error(e);
 					e.printStackTrace();
-					throw e;
+					throw new RuntimeException(e);
 				}
 
 			}
@@ -196,7 +196,7 @@ public class SingleThreadRequestExecutor extends AbstractExecutorService {
 			public void run() {
 				try{
 					command.run();
-				}catch(Exception e){
+				}catch(Throwable e){
 					// This normally bad code of catch on Exception is here for a *reason*.
 					// Future *eats* all exceptions *silently*. This clause at least allows
 					// the exception to emit noise for debugging. This is particularly pernicious
@@ -216,7 +216,7 @@ public class SingleThreadRequestExecutor extends AbstractExecutorService {
 			public void run() {
 				try{
 					command.run();
-				}catch(Exception e){
+				}catch(Throwable e){
 					// This normally bad code of catch on Exception is here for a *reason*.
 					// Future *eats* all exceptions *silently*. This clause at least allows
 					// the exception to emit noise for debugging. This is particularly pernicious

@@ -20,8 +20,9 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.cspoker.common.elements.player.PlayerId;
-import org.cspoker.common.elements.table.Round;
 import org.cspoker.common.elements.table.SeatId;
+
+import com.google.common.collect.ImmutableBiMap;
 
 /**
  * Abstract GameState partial implementation. Only methods that are a simple
@@ -78,7 +79,7 @@ implements GameState {
 	}
 
 	public final Set<PlayerState> getAllSeatedPlayers() {
-		Set<PlayerId> ids = getAllSeatedPlayerIds();
+		Set<PlayerId> ids = getSeatMap().values();
 		HashSet<PlayerState> states = new HashSet<PlayerState>();
 		for (PlayerId id : ids) {
 			states.add(getPlayer(id));
@@ -86,74 +87,65 @@ implements GameState {
 		return states;
 	}
 
-
-
-	public final PlayerState previewNextToAct() {
-		if (getRound().equals(Round.PREFLOP)) {
-			// TODO implement
-			throw new UnsupportedOperationException("Not yet implemented");
+	@Override
+	public final PlayerState getDefaultWinner() {
+		Set<PlayerId> ids = getSeatMap().values();
+		PlayerState first = null;
+		for (PlayerId id : ids) {
+			PlayerState state = getPlayer(id);
+			if(state.isInForPot()){
+				if(first!=null){
+					return null;
+				}else{
+					first = state;
+				}
+			}
 		}
-		PlayerId lastBettor = getLastBettor();
-		PlayerId startId = getNextToAct();
-		boolean newRound = false;
-		if(startId==null){
-			startId = getDealer();
-			newRound = true;
-		}else if(lastBettor==null && startId.equals(getDealer())){
-			//everybody checked
+		return first;
+	}
+
+	public final PlayerState getNextSeatedPlayerAfter(PlayerId startPlayer) {	
+		ImmutableBiMap<SeatId, PlayerId> seatMap = getSeatMap();	
+		int maxNbPlayers = getTableConfiguration().getMaxNbPlayers();
+		SeatId currentSeat = seatMap.inverse().get(startPlayer);
+		PlayerId currentPlayer;
+		do{
+			currentSeat = new SeatId((currentSeat.getId() + 1) % maxNbPlayers);
+			currentPlayer = seatMap.get(currentSeat);
+		} while(currentPlayer == null);
+		if(currentPlayer.equals(startPlayer)){
 			return null;
 		}
-		PlayerState startPlayer = getPlayer(startId);
-		PlayerState nextPlayer;
-		while(true){
-			nextPlayer= getNextActivePlayerAfter(startPlayer.getSeatId());
-			if(nextPlayer==null){
-				if(newRound){
-					//the dealer is the next one to act.
-					PlayerState dealerState = getPlayer(startId);
-					if(dealerState.sitsIn() && !dealerState.isAllIn()){
-						return dealerState;
-					}	
-					//nobody does anything this round
-					return null;
-				}
-				//nobody can act
-				return null;
-			}
-			if(nextPlayer.getPlayerId().equals(lastBettor)){
-				//everybody called
-				return null;
-			}
-			return nextPlayer;
-		}
-
+		return getPlayer(currentPlayer);
 	}
 
-	public final PlayerState getNextActivePlayerAfter(SeatId startSeat) {		
-		SeatId currentSeat = startSeat;
+	public final PlayerState getNextActivePlayerAfter(PlayerId startPlayerId) {	
 		PlayerState currentPlayer;
-		int maxNbPlayers = getTableConfiguration().getMaxNbPlayers();
-		do {
-			PlayerId currentId;
-			do{
-				currentSeat = new SeatId((currentSeat.getId() + 1) % maxNbPlayers);
-				currentId = getPlayerId(currentSeat);
-			} while(currentId == null);
-			if (startSeat.equals(currentSeat)) {
-				//we went around the table
+		PlayerId currentPlayerId = startPlayerId;
+		do{
+			currentPlayer = getNextSeatedPlayerAfter(currentPlayerId);
+			if(currentPlayer==null){
 				return null;
 			}
-			currentPlayer = getPlayer(currentId);
-		} while (!currentPlayer.sitsIn() || currentPlayer.isAllIn());
+			currentPlayerId = currentPlayer.getPlayerId();
+			if(currentPlayerId.equals(startPlayerId)){
+				return null;
+			}
+		}while(!currentPlayer.isActivelyPlaying());
 		return currentPlayer;
 	}
-	
+
 	@Override
 	public void acceptHistoryVisitor(GameStateVisitor visitor, GameState start) {
 		if(this!=start){
 			getPreviousGameState().acceptHistoryVisitor(visitor, start);
 			acceptVisitor(visitor);
 		}
+	}
+
+	@Override
+	public String toString() {
+		return getLastEvent()+"\n"+getPreviousGameState();
 	}
 
 }

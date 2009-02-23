@@ -67,6 +67,11 @@ public class WinnerState extends ForwardingGameState {
 				return playerId;
 			}
 			
+			@Override
+			public boolean isPlayingGame() {
+				return true;
+			}
+			
 		};
 	}
 	@Override

@@ -28,6 +28,8 @@ import org.cspoker.common.elements.table.Round;
 import org.cspoker.common.elements.table.SeatId;
 import org.cspoker.common.elements.table.TableConfiguration;
 
+import com.google.common.collect.ImmutableBiMap;
+
 /**
  * @author stephans
  */
@@ -35,26 +37,18 @@ public class InitialGameState
 		extends AbstractGameState {
 	
 	private final DetailedHoldemTable table;
+	private final ImmutableBiMap<SeatId, PlayerId> seatMap;
 	
 	/**
 	 * @param tableConfiguration
 	 */
 	public InitialGameState(DetailedHoldemTable table) {
 		this.table = table;
-	}
-	
-	/**
-	 * @return
-	 * @see org.cspoker.client.common.gamestate.GameState#getAllSeatedPlayerIds()
-	 */
-	@Override
-	public Set<PlayerId> getAllSeatedPlayerIds() {
-		Set<PlayerId> players = new TreeSet<PlayerId>();
+		ImmutableBiMap.Builder<SeatId, PlayerId> seatMapBuilder = new ImmutableBiMap.Builder<SeatId, PlayerId>();
 		for (SeatedPlayer player : table.getPlayers()) {
-			players.add(player.getId());
+			seatMapBuilder.put(player.getSeatId(), player.getId());
 		}
-		return Collections.unmodifiableSet(players);
-		
+		this.seatMap = seatMapBuilder.build();
 	}
 	
 	/**
@@ -63,7 +57,11 @@ public class InitialGameState
 	 */
 	@Override
 	public EnumSet<Card> getCommunityCards() {
-		return EnumSet.copyOf(table.getCommunityCards());
+		List<Card> communityCards = table.getCommunityCards();
+		if(communityCards.isEmpty()){
+			return EnumSet.noneOf(Card.class);
+		}
+		return EnumSet.copyOf(communityCards);
 	}
 	
 	/**
@@ -180,6 +178,11 @@ public class InitialGameState
 			}
 			
 			@Override
+			public boolean isPlayingGame() {
+				return false;
+			}
+			
+			@Override
 			public boolean hasFolded() {
 				return !player.hasCards();
 			}
@@ -213,22 +216,27 @@ public class InitialGameState
 			public int getBet() {
 				return player.getBetChipsValue();
 			}
+			
+			@Override
+			public boolean isBigBlind() {
+				return false;
+			}
+			
+			@Override
+			public boolean isSmallBlind() {
+				return false;
+			}
+			
+			@Override
+			public boolean hasChecked() {
+				return false;
+			}
 		};
 	}
 	
-	/**
-	 * @param seatId
-	 * @return
-	 * @see org.cspoker.client.common.gamestate.GameState#getPlayerId(org.cspoker.common.elements.table.SeatId)
-	 */
 	@Override
-	public PlayerId getPlayerId(SeatId seatId) {
-		for (SeatedPlayer player : table.getPlayers()) {
-			if (player.getSeatId().equals(seatId)) {
-				return player.getId();
-			}
-		}
-		return null;
+	public ImmutableBiMap<SeatId, PlayerId> getSeatMap() {
+		return seatMap;
 	}
 	
 	/**
@@ -290,5 +298,10 @@ public class InitialGameState
 	@Override
 	public void acceptVisitor(GameStateVisitor visitor) {
 		visitor.visitInitialGameState(this);
+	}
+	
+	@Override
+	public String toString() {
+		return table.toString();
 	}
 }

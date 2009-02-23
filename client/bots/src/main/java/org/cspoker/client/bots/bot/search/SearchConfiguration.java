@@ -15,6 +15,8 @@
  */
 package org.cspoker.client.bots.bot.search;
 
+import org.cspoker.client.bots.bot.search.node.expander.Expander;
+import org.cspoker.client.bots.bot.search.node.expander.Expander.Factory;
 import org.cspoker.client.bots.bot.search.node.leaf.ShowdownNode;
 import org.cspoker.client.bots.bot.search.opponentmodel.AllPlayersModel;
 
@@ -25,8 +27,12 @@ public class SearchConfiguration {
 	private final int flopTokens;
 	private final int turnTokens;
 	private final int finalTokens;
+	private final Factory botNodeExpanderFactory;
 	
-	public SearchConfiguration(AllPlayersModel opponentModel, ShowdownNode.Factory showdownNodeFactory,
+	public SearchConfiguration(
+			AllPlayersModel opponentModel, 
+			ShowdownNode.Factory showdownNodeFactory, 
+			Expander.Factory botNodeExpanderFactory,
 			int flopTokens,
 			int turnTokens,
 			int finalTokens) {
@@ -35,6 +41,7 @@ public class SearchConfiguration {
 		this.flopTokens=flopTokens;
 		this.turnTokens=turnTokens;
 		this.finalTokens=finalTokens;
+		this.botNodeExpanderFactory = botNodeExpanderFactory;
 	}
 	
 	public AllPlayersModel getOpponentModeler() {
@@ -55,6 +62,10 @@ public class SearchConfiguration {
 	
 	public int getTurnTokens() {
 		return turnTokens;
+	}
+
+	public Expander.Factory getBotNodeExpanderFactory() {
+		return botNodeExpanderFactory;
 	}
 	
 }

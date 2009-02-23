@@ -93,7 +93,7 @@ public class SeatedPlayer
 	
 	@Override
 	public String toString() {
-		return getName() + " (#" + getId() + ")";
+		return getName() + " (" + getId() + ")";
 	}
 	
 	/**

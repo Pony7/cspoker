@@ -53,6 +53,16 @@ public class FoldState
 				return FoldState.this.event.getPlayerId();
 			}
 			
+			@Override
+			public boolean isPlayingGame() {
+				return true;
+			}
+			
+			@Override
+			public boolean hasChecked() {
+				return false;
+			}
+			
 			/**
 			 * {@inheritDoc}
 			 */

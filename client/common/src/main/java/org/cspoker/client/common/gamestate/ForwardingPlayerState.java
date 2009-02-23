@@ -59,6 +59,21 @@ public abstract class ForwardingPlayerState
 		return playerState.getPlayerId();
 	}
 	
+	@Override
+	public boolean isSmallBlind() {
+		return playerState.isSmallBlind();
+	}
+	
+	@Override
+	public boolean isBigBlind() {
+		return playerState.isBigBlind();
+	}
+	
+	@Override
+	public boolean hasChecked() {
+		return playerState.hasChecked();
+	}
+	
 	/**
 	 * {@inheritDoc}
 	 */

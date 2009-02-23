@@ -31,9 +31,9 @@ import org.cspoker.client.bots.bot.search.action.FoldAction;
 import org.cspoker.client.bots.bot.search.action.ProbabilityAction;
 import org.cspoker.client.bots.bot.search.action.RaiseAction;
 import org.cspoker.client.bots.bot.search.action.SearchBotAction;
-import org.cspoker.client.bots.bot.search.node.expander.CompleteExpander;
 import org.cspoker.client.bots.bot.search.node.expander.Expander;
 import org.cspoker.client.bots.bot.search.node.visitor.NodeVisitor;
+import org.cspoker.client.common.gamestate.CachingNode;
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.RemoteHoldemPlayerContext;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
@@ -47,8 +47,8 @@ public class BotActionNode extends ActionNode{
 	
 	public BotActionNode(PlayerId botId, GameState gameState,
 			SearchConfiguration config, int tokens, int searchId, NodeVisitor... visitors) {
-		super(botId, botId, gameState, config, searchId, visitors);
-		this.expander = new CompleteExpander(this, tokens);
+		super(botId, botId, new CachingNode(gameState), config, searchId, visitors);
+		this.expander = config.getBotNodeExpanderFactory().create(this,tokens);
 	}
 
 	@Override
@@ -116,14 +116,6 @@ public class BotActionNode extends ActionNode{
 			probActions.add(new ProbabilityAction(action,probability));
 		}
 		return probActions;
-	}
-
-	protected <A extends ActionWrapper> EvaluatedAction<A> getFoldEVForBot(A action, GameState nextState) {
-		EvaluatedAction<A> result;
-		//fold action
-		int stack = nextState.getPlayer(botId).getStack();
-		result = new EvaluatedAction<A>(action, stack);
-		return result;
 	}
 
 	protected Expander getExpander() {

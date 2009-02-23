@@ -71,12 +71,22 @@ public class BetState
 				return true;
 			}
 			
+			@Override
+			public boolean isPlayingGame() {
+				return true;
+			}
+			
 			/**
 			 * {@inheritDoc}
 			 */
 			@Override
 			public List<Integer> getBetProgression() {
 				return Collections.singletonList(getBet());
+			}
+			
+			@Override
+			public boolean hasChecked() {
+				return false;
 			}
 		};
 	}

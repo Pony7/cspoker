@@ -34,20 +34,12 @@ import org.cspoker.common.elements.table.Round;
 
 public abstract class SearchBotAction implements ActionWrapper{
 
-	protected final GameState gameState;
-	protected final PlayerId actor;
+	public final GameState gameState;
+	public final PlayerId actor;
 
 	public SearchBotAction(GameState gameState, PlayerId actor) {
 		this.gameState = gameState;
 		this.actor = actor;
-	}
-
-	public PlayerId getActor() {
-		return actor;
-	}
-
-	public GameState getGameState() {
-		return gameState;
 	}
 
 	@Override
@@ -57,21 +49,29 @@ public abstract class SearchBotAction implements ActionWrapper{
 
 	public abstract void perform(RemoteHoldemPlayerContext context) throws RemoteException, IllegalActionException;
 
-	public abstract GameState getStateAfterAction();
+	public abstract GameState getStateAfterAction() throws GameEndedException, DefaultWinnerException;
 	
-	protected GameState getNewRoundState(GameState lastState){
+	protected GameState getNewRoundState(GameState lastState) throws GameEndedException{
 		Round nextRound = lastState.getRound().getNextRound();
 		if(nextRound==null){
-			return lastState;
+			throw new GameEndedException(lastState);
 		}
 		List<Pot> pots = Collections.emptyList();
 		NewRoundState newRoundState = new NewRoundState(lastState, new NewRoundEvent(nextRound, new Pots(pots, lastState.getGamePotSize())));
-		PlayerState firstToAct = newRoundState.previewNextToAct();
-		if(firstToAct==null){
+		PlayerState firstToAct = newRoundState.getNextActivePlayerAfter(newRoundState.getDealer());
+		if(firstToAct==null || newRoundState.getNextActivePlayerAfter(firstToAct.getPlayerId())==null){
+			//no one/only one left
 			return getNewRoundState(newRoundState);
 		}
 		return new NextPlayerState(newRoundState, new NextPlayerEvent(firstToAct.getPlayerId(), 
 				gameState.getCallValue(firstToAct.getPlayerId())));
 	}
+
+	public boolean endsInvolvementOf(PlayerId botId) {
+		return false;
+	}
+	
+	//do not define equals or hashcode! 
+	//it will map all actions without extra fields to the same entity
 
 }

@@ -21,6 +21,8 @@ import java.util.concurrent.ExecutorService;
 
 import org.cspoker.client.bots.bot.Bot;
 import org.cspoker.client.bots.bot.BotFactory;
+import org.cspoker.client.bots.bot.search.node.expander.CompleteExpander;
+import org.cspoker.client.bots.bot.search.node.expander.SamplingExpander;
 import org.cspoker.client.bots.bot.search.node.leaf.ShowdownNode;
 import org.cspoker.client.bots.bot.search.node.leaf.UniformShowdownNode;
 import org.cspoker.client.bots.bot.search.node.leaf.ShowdownNode.Factory;
@@ -56,9 +58,11 @@ public class SearchBotFactory implements BotFactory {
 		copies++;
 		opponentModels.putIfAbsent(botId, new AllPlayersHistogramModel(botId));
 
-		SearchConfiguration config = new SearchConfiguration(opponentModels.get(botId), 
+		SearchConfiguration config = new SearchConfiguration(
+				opponentModels.get(botId), 
 				showdownNodeFactory,
-				1,10,100);
+				new SamplingExpander.Factory(),
+				1000,10000,10000);
 		return new SearchBot(botId, tableId, lobby, executor, config ,botListeners);
 	}
 

@@ -29,7 +29,7 @@ import org.cspoker.common.elements.player.PlayerId;
 
 public class RaiseAction extends SearchBotAction{
 
-	private final int amount;
+	public final int amount;
 
 	public RaiseAction(GameState gameState, PlayerId actor, int amount) {
 		super(gameState, actor);
@@ -44,42 +44,11 @@ public class RaiseAction extends SearchBotAction{
 	@Override
 	public GameState getStateAfterAction() {
 		RaiseState raiseState = new RaiseState(gameState, new RaiseEvent(actor,amount, gameState.getDeficit(actor)+amount));
-		PlayerState nextToAct = raiseState.previewNextToAct();
-		if(nextToAct!=null){
-			return new NextPlayerState(raiseState,new NextPlayerEvent(nextToAct.getPlayerId()));
-		}
-		throw new IllegalStateException("Round can't be over after a raise.");
+		return new NextPlayerState(raiseState,new NextPlayerEvent(raiseState.getNextActivePlayerAfter(actor).getPlayerId()));
 	}
 	
 	@Override
 	public String toString() {
 		return "Raising with "+amount;
 	}
-	
-	public int getAmount() {
-		return amount;
-	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + amount;
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (!(obj instanceof RaiseAction))
-			return false;
-		RaiseAction other = (RaiseAction) obj;
-		if (amount != other.amount)
-			return false;
-		return true;
-	}
-	
 }

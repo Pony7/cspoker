@@ -33,17 +33,17 @@ import com.google.common.collect.Sets;
 public class DistributionShowdownNode extends AbstractShowdownNode{
 
 	private final static Logger logger = Logger.getLogger(DistributionShowdownNode.class);
-	
+
 	private final static int[] handRanks;
 	static{
 		StateTableEvaluator.initialize();
 		handRanks = StateTableEvaluator.handRanks;
 	}
-	
+
 	public static final int MaxNbSamples = 400;
-	
+
 	private int tokens;
-	
+
 	DistributionShowdownNode(PlayerId botId, GameState gameState, int tokens) {
 		super(botId, gameState);
 		this.tokens = tokens;
@@ -61,12 +61,14 @@ public class DistributionShowdownNode extends AbstractShowdownNode{
 		EnumSet<Card> fixedCommunityCards = gameState.getCommunityCards();
 		EnumSet<Card> usedFixedCards = EnumSet.copyOf(fixedCommunityCards);
 		usedFixedCards.addAll(botCards);
-		
+
 		int fixedRank = 53;
 		for(Card fixedCommunityCard:fixedCommunityCards){
+			if(logger.isTraceEnabled())
+				logger.trace("Evaluating fixed community card "+fixedCommunityCard);
 			fixedRank = handRanks[fixedCommunityCard.ordinal()+1+fixedRank];
 		}
-		
+
 		int nbFixedCards = fixedCommunityCards.size();
 		int nbMissingCommunityCards = 5-nbFixedCards;
 		int nbSamples = Math.min(MaxNbSamples,Math.max(25,tokens*5));
@@ -91,35 +93,41 @@ public class DistributionShowdownNode extends AbstractShowdownNode{
 					communityCard = getRandomCard();
 				}while(usedCommunityCards.contains(communityCard));
 				usedCommunityCards.add(communityCard);
+				if(logger.isTraceEnabled())
+					logger.trace("Evaluating sampled community card "+communityCard);
 				communitySampleRank = handRanks[communityCard.ordinal()+1+communitySampleRank];
 			}
-			
+
 			for(int j=0;j<nbOpponentSamples;j++){
 				EnumSet<Card> usedOpponentCards = EnumSet.copyOf(usedCommunityCards);
-				int opponentRank = communitySampleRank;
 				int botRank = communitySampleRank;
 				for(Card botCard:botCards){
+					if(logger.isTraceEnabled())
+						logger.trace("Evaluating bot card "+botCard);
 					botRank = handRanks[botCard.ordinal()+1+botRank];
 				}
 				botRank = extractFinalRank(botRank);
-				
+
 				boolean botWins = true;
 				double logProb = 0;
 				for(PlayerState opponent:opponents){
+					int opponentRank = communitySampleRank;
 					Card opponentFirst;
 					do{
 						opponentFirst = getRandomCard();
 					}while(usedOpponentCards.contains(opponentFirst));
 					usedOpponentCards.add(opponentFirst);
 					opponentRank = handRanks[opponentFirst.ordinal()+1+opponentRank];
-					
+
 					Card opponentSecond;
 					do{
 						opponentSecond = getRandomCard();
 					}while(usedOpponentCards.contains(opponentSecond));
 					usedOpponentCards.add(opponentSecond);
 					opponentRank = extractFinalRank(handRanks[opponentSecond.ordinal()+1+opponentRank]);
-					
+
+					if(logger.isTraceEnabled())
+						logger.trace("Evaluating sampled opponent cards "+opponentFirst+" "+opponentSecond);
 					if(opponentRank>=botRank){
 						botWins = false;
 					}//TODO fix for split pot
@@ -145,20 +153,6 @@ public class DistributionShowdownNode extends AbstractShowdownNode{
 		return "Distribution Showdown Node";
 	}
 
-	public static class Factory implements AbstractShowdownNode.Factory{
-		
-		@Override
-		public DistributionShowdownNode create(PlayerId botId, GameState gameState, int tokens
-				, SearchConfiguration config, int searchId) {
-			return new DistributionShowdownNode(botId, gameState, tokens);
-		}
-		
-		@Override
-		public String toString() {
-			return "Distribution Showdown Node factory";
-		}
-	}
-	
 	private static final int[] offsets = new int[] {0, 1277, 4137, 4995, 5853, 5863, 7140, 7296, 7452};
 
 	private int extractFinalRank(int rank){
@@ -172,6 +166,20 @@ public class DistributionShowdownNode extends AbstractShowdownNode{
 
 	protected Card getRandomCard(){
 		return cards[random.nextInt(cards.length)];
+	}
+
+	public static class Factory implements AbstractShowdownNode.Factory{
+
+		@Override
+		public DistributionShowdownNode create(PlayerId botId, GameState gameState, int tokens
+				, SearchConfiguration config, int searchId) {
+			return new DistributionShowdownNode(botId, gameState, tokens);
+		}
+
+		@Override
+		public String toString() {
+			return "Distribution Showdown Node factory";
+		}
 	}
 
 }
