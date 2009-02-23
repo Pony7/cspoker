@@ -51,26 +51,49 @@ public class RuleBasedBot
 					if (tableContext.getGameState().getRound().equals(Round.PREFLOP)) {
 						playerContext.checkOrCall();
 					} else {
-						float betProbability;
-						if (playerContext.haveA(Rank.ACE) || playerContext.havePocketPair()) {
-							betProbability = 0.99F;
-						} else {
-							betProbability = 0.01F;
+						int min,max;
+						if(playerContext.haveA(Rank.QUEEN)){
+							min = 0;
+							max = 2;
+						}else if(playerContext.haveA(Rank.KING)){
+							min = 1;
+							max = 2;
+						}else if(playerContext.haveA(Rank.ACE)){
+							min = 2;
+							max = 3;
+						}else if(playerContext.havePocketPair()){
+							min = 3;
+							max = 5;
+						}else{
+							min = 0;
+							max = 0;
 						}
-						if (random.nextFloat() < betProbability) {
-							playerContext.raiseMaxBetWith(lobbyContext.getHoldemTableInformation(tableID)
-									.getTableConfiguration().getBigBlind());
-						} else {
-							playerContext.raiseMaxBetWith(0);
+						float r = random.nextFloat();
+						if (r < 0.05) {
+							min++;
+						}else if (r < 0.1) {
+							min--;
 						}
+						r = random.nextFloat();
+						if (r < 0.05) {
+							max++;
+						}else if (r < 0.1) {
+							max--;
+						}
+						
+						min = min*playerContext.getGameState().getTableConfiguration().getBigBlind();
+						max = max*playerContext.getGameState().getMinNextRaise();
+						
+						min = Math.max(0,Math.min(max, min));
+						max = Math.max(0, Math.max(max, min));
+						playerContext.raiseMaxBetWith(min,max);
 					}
 				} catch (IllegalActionException e) {
 					logger.error(e);
 					throw new IllegalStateException("Action was not allowed.",e);
-				}catch (RemoteException e) {
+				} catch (RemoteException e) {
 					logger.error(e);
 					throw new IllegalStateException("Action failed.",e);
-
 				}
 			}
 		});

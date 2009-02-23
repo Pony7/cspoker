@@ -21,6 +21,7 @@ import java.util.*;
 
 import org.cspoker.common.api.lobby.holdemtable.event.HoldemTableTreeEvent;
 import org.cspoker.common.elements.cards.Card;
+import org.cspoker.common.elements.chips.Pots;
 import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.elements.player.SeatedPlayer;
 import org.cspoker.common.elements.table.DetailedHoldemTable;
@@ -144,6 +145,12 @@ public class InitialGameState
 		return 0;
 	}
 	
+	@Override
+	public int getNbPlayers() {
+		//TODO fix for sitout?
+		return seatMap.size();
+	}
+	
 	/**
 	 * @return
 	 * @see org.cspoker.client.common.gamestate.GameState#getNextToAct()
@@ -254,7 +261,8 @@ public class InitialGameState
 	 */
 	@Override
 	public int getPreviousRoundsPotSize() {
-		return table.getPots().getTotalValue();
+		Pots pots = table.getPots();
+		return pots.getTotalValue();
 	}
 	
 	/**

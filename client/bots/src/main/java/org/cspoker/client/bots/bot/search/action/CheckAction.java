@@ -26,6 +26,7 @@ import org.cspoker.common.api.lobby.holdemtable.event.NextPlayerEvent;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.RemoteHoldemPlayerContext;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.player.PlayerId;
+import org.cspoker.common.elements.table.Round;
 
 public class CheckAction extends SearchBotAction{
 	
@@ -42,7 +43,9 @@ public class CheckAction extends SearchBotAction{
 	@Override
 	public GameState getStateAfterAction() throws GameEndedException {
 		PlayerState nextToAct = gameState.getNextActivePlayerAfter(actor);
-		boolean newRound = nextToAct.hasChecked();
+		boolean newRound = nextToAct.hasChecked() || (gameState.getRound().equals(Round.PREFLOP) && gameState.getPlayer(actor).isBigBlind() 
+				&& gameState.getLargestBet()<=gameState.getTableConfiguration().getBigBlind());
+		
 		CheckState checkState = new CheckState(gameState, new CheckEvent(actor, newRound));
 		if(!newRound){
 			return new NextPlayerState(checkState,

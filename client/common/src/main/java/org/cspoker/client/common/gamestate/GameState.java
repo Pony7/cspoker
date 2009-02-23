@@ -97,6 +97,7 @@ public interface GameState {
 	 */
 	boolean isAllowedToRaise(PlayerId playerId);
 
+	int getNbPlayers();
 
 	boolean hasBet();
 
