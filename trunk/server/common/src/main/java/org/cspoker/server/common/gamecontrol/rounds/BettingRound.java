@@ -159,9 +159,21 @@ public abstract class BettingRound
 	@Override
 	public void raise(MutableSeatedPlayer player, int amount)
 			throws IllegalActionException {
-		if (!onTurn(player) || !someoneHasBet() || onlyOnePlayerLeft() || onlyOnePlayerLeftBesidesAllInPlayers()) {
+		if (!onTurn(player)) {
 			throw new IllegalActionException(player.getName() + " can not raise with " + amount
-					+ " chips in this round.");
+					+ " chips in this round because it's not his turn.");
+		}
+		if (!someoneHasBet()) {
+			throw new IllegalActionException(player.getName() + " can not raise with " + amount
+					+ " chips in this round because nobody has placed a bet yet.");
+		}
+		if (onlyOnePlayerLeft()) {
+			throw new IllegalActionException(player.getName() + " can not raise with " + amount
+					+ " chips in this round because there's only one player left.");
+		}
+		if (onlyOnePlayerLeftBesidesAllInPlayers()) {
+			throw new IllegalActionException(player.getName() + " can not raise with " + amount
+					+ " chips in this round because there's only one player left who's not all-in.");
 		}
 		
 		// Check whether the raise is valid.

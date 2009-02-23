@@ -191,6 +191,12 @@ public class NewDealState
 	}
 	
 	@Override
+	public int getNbPlayers() {
+		//TODO fix with sitout?
+		return seatMap.size();
+	}
+	
+	@Override
 	public void acceptVisitor(GameStateVisitor visitor) {
 		visitor.visitNewDealState(this);
 	}

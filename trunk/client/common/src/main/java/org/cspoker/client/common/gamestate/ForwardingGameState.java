@@ -91,4 +91,9 @@ public abstract class ForwardingGameState extends AbstractGameState{
 		return gameState.getNbRaises();
 	}
 	
+	@Override
+	public int getNbPlayers() {
+		return gameState.getNbPlayers();
+	}
+	
 }

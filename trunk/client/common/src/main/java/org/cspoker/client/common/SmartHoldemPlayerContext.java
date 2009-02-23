@@ -16,6 +16,7 @@
 package org.cspoker.client.common;
 
 import java.rmi.RemoteException;
+import java.util.EnumSet;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
@@ -47,7 +48,7 @@ public class SmartHoldemPlayerContext
 	}
 	
 	public boolean havePocketPair() {
-		Set<Card> cards = getGameState().getPlayer(playerId).getCards();
+		Set<Card> cards = getPocketCards();
 		Card previous = null;
 		for (Card card : cards) {
 			if (previous == null) {
@@ -62,7 +63,7 @@ public class SmartHoldemPlayerContext
 	}
 	
 	public boolean haveA(Rank rank) {
-		Set<Card> cards = getGameState().getPlayer(playerId).getCards();
+		Set<Card> cards = getPocketCards();
 		for (Card card : cards) {
 			if (card.getRank().equals(rank)) {
 				return true;
@@ -70,17 +71,22 @@ public class SmartHoldemPlayerContext
 		}
 		return false;
 	}
+
+	public EnumSet<Card> getPocketCards() {
+		return getGameState().getPlayer(playerId).getCards();
+	}
 	
-	public void raiseMaxBetWith(int bet)
+	public void raiseMaxBetWith(int bet, int callMax)
 			throws RemoteException, IllegalActionException {
+		callMax = Math.min(callMax, getGameState().getUpperRaiseBound(playerId));
 		int deficit = getGameState().getDeficit(playerId);
-		if (deficit > bet) {
+		if (deficit > callMax) {
 			logger.trace("Folding");
 			fold();
-		} else if (deficit == bet) {
+		} else if ((deficit >= bet && deficit<=callMax) || bet - deficit<getGameState().getLowerRaiseBound(playerId)) {
 			logger.trace("Calling");
 			checkOrCall();
-		} else {
+		} else{
 			logger.trace("Raising with " + (bet - deficit));
 			betOrRaise(bet - deficit);
 		}

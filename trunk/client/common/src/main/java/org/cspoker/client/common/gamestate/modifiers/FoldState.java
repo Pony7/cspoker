@@ -82,6 +82,11 @@ public class FoldState
 		return super.getPlayer(playerId);
 	}
 	
+	@Override
+	public int getNbPlayers() {
+		return super.getNbPlayers()-1;
+	}
+	
 	public HoldemTableEvent getLastEvent() {
 		return event;
 	}

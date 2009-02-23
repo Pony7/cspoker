@@ -16,7 +16,6 @@
 package org.cspoker.client.common.gamestate;
 
 import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.TimeUnit;
 
 import org.cspoker.common.api.lobby.holdemtable.event.HoldemTableTreeEvent;
 import org.cspoker.common.elements.player.PlayerId;
@@ -32,8 +31,7 @@ public class CachingNode extends ForwardingGameState {
 
 	private final static MapMaker mapmaker = new MapMaker()
 	.initialCapacity(8)
-    .concurrencyLevel(3)
-    .expiration(10, TimeUnit.SECONDS);
+    .concurrencyLevel(3);
 
 	private final Round round = super.getRound();
 	

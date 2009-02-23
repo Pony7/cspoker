@@ -25,6 +25,7 @@ import org.cspoker.client.bots.bot.AbstractBot;
 import org.cspoker.client.bots.bot.Bot;
 import org.cspoker.client.bots.bot.BotFactory;
 import org.cspoker.client.bots.bot.rule.RuleBasedBotFactory;
+import org.cspoker.client.bots.bot.rule.RuleBasedBotFactory2;
 import org.cspoker.client.bots.bot.search.SearchBotFactory;
 import org.cspoker.client.bots.bot.search.node.leaf.CachedShowdownNodeFactory;
 import org.cspoker.client.bots.bot.search.node.leaf.DistributionShowdownNode;
@@ -52,7 +53,7 @@ implements LobbyListener {
 
 	public static final int nbGamesPerConfrontation = 10000;
 
-	public static final int nbPlayersPerGame = 3;
+	public static final int nbPlayersPerGame = 5;
 
 	static {
 		Log4JPropertiesLoader.load("org/cspoker/client/bots/logging/log4j.properties");
@@ -83,6 +84,8 @@ implements LobbyListener {
 				//				new RedundantBotFactory(),
 				new RuleBasedBotFactory(),
 				new RuleBasedBotFactory(),
+				new RuleBasedBotFactory2(),
+				new RuleBasedBotFactory2(),
 				//				new RuleBasedBotFactory(),
 				//				new PrologCafeBotFactory(),
 				//				new TuPrologBotFactory(),
