@@ -98,6 +98,23 @@ public abstract class AbstractBot
 		});
 	}
 	
+	public void startGame() {
+		executor.execute(new Runnable() {
+			
+			public void run() {
+				try {
+					playerContext.startGame();
+				} catch (IllegalActionException e) {
+					e.printStackTrace();
+					throw new IllegalStateException("Failed to start game.", e);
+				} catch (RemoteException e) {
+					logger.error(e);
+					throw new IllegalStateException("Failed to start game.", e);
+				}
+			}
+		});
+	}
+	
 	/*
 	 * (non-Javadoc)
 	 * @see org.cspoker.client.bots.Bot#doNextAction()

@@ -216,7 +216,11 @@ public class Showdown {
 			showDownPlayers.add(new MutableShowdownPlayer(player,
 					getBestFiveCardHand(player)));
 		}
-		Showdown.logger.info(showDownPlayers);
+		if(logger.isInfoEnabled()){
+			for(MutableShowdownPlayer player:showDownPlayers){
+				Showdown.logger.info(player+" contesting for "+pot.getChips());
+			}
+		}
 		return showDownPlayers;
 	}
 

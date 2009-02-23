@@ -126,7 +126,11 @@ public class TableConfiguration implements Serializable {
 	public TableConfiguration(int smallBet) {
 		this(smallBet, 0);
 	}
-
+	
+	public TableConfiguration(int smallBet, long delay) {
+		this(smallBet,delay,true);
+	}
+	
 	/**
 	 * Construct a new game property with given small bet and deal delay.
 	 * 
@@ -135,7 +139,7 @@ public class TableConfiguration implements Serializable {
 	 * @param delay
 	 *            The delay between two deals, expressed in milliseconds.
 	 */
-	public TableConfiguration(int smallBet, long delay) {
+	public TableConfiguration(int smallBet, long delay, boolean autoDeal) {
 		if (!canHaveAsSmallBet(smallBet)) {
 			throw new IllegalArgumentException();
 		}
@@ -145,7 +149,7 @@ public class TableConfiguration implements Serializable {
 		bigBet = getSmallBet() * 2;
 		this.delay = delay;
 		maxNbPlayers = 8;
-		autoDeal = true;
+		this.autoDeal = autoDeal;
 		autoBlinds = true;
 	}
 

@@ -31,6 +31,8 @@ import org.cspoker.common.elements.player.PlayerId;
 public class AllInState
 		extends ForwardingGameState {
 	
+	//TODO fix for split pot
+	
 	private final AllInEvent event;
 	
 	private final int newPotSize;
