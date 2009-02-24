@@ -58,7 +58,7 @@ public abstract class AbstractRound {
 		this.game = game;
 		getBettingRules().setBetPlaced(false);
 		getBettingRules().clearNBRaises();
-		
+		getBettingRules().setLastBetAmount(game.getTableConfiguration().getBigBet());
 		game.changeCurrentPlayerToInitial();
 		game.setLastActionPlayer(game.getFirstToActPlayer());
 	}
