@@ -160,25 +160,25 @@ public abstract class BettingRound
 	public void raise(MutableSeatedPlayer player, int amount)
 			throws IllegalActionException {
 		if (!onTurn(player)) {
-			throw new IllegalActionException(player.getName() + " can not raise with " + amount
+			throw new IllegalActionException(player.getName() + " can not raise with $" + amount
 					+ " chips in this round because it's not his turn.");
 		}
 		if (!someoneHasBet()) {
-			throw new IllegalActionException(player.getName() + " can not raise with " + amount
+			throw new IllegalActionException(player.getName() + " can not raise with $" + amount
 					+ " chips in this round because nobody has placed a bet yet.");
 		}
 		if (onlyOnePlayerLeft()) {
-			throw new IllegalActionException(player.getName() + " can not raise with " + amount
+			throw new IllegalActionException(player.getName() + " can not raise with $" + amount
 					+ " chips in this round because there's only one player left.");
 		}
 		if (onlyOnePlayerLeftBesidesAllInPlayers()) {
-			throw new IllegalActionException(player.getName() + " can not raise with " + amount
+			throw new IllegalActionException(player.getName() + " can not raise with $" + amount
 					+ " chips in this round because there's only one player left who's not all-in.");
 		}
 		
 		// Check whether the raise is valid.
 		if (!getBettingRules().isValidRaise(amount, this)) {
-			throw new IllegalActionException(player.toString() + " can not raise. "
+			throw new IllegalActionException(player.toString() + " can not raise with $"+amount+". "
 					+ getBettingRules().getLastRaiseErrorMessage());
 		}
 		
@@ -212,7 +212,7 @@ public abstract class BettingRound
 		game.nextPlayer();
 		
 		gameMediator.publishRaiseEvent(new RaiseEvent(player.getId(), amount, movedAmount));
-		BettingRound.logger.info(player.getName() + ": raises $" + amount + " to $"
+		BettingRound.logger.info(player.getName() + ": raises with $" + amount + " to $"
 				+ player.getMemento().getBetChipsValue());
 	}
 	
@@ -271,7 +271,7 @@ public abstract class BettingRound
 			}
 			setBet(player.getBetChips().getValue());
 			getBettingRules().setBetPlaced(true);
-			getBettingRules().setLastBetAmount(amount);
+			getBettingRules().setLastBetAmount(Math.max(player.getBetChips().getValue()-getBet(), getBettingRules().getLastBetAmount()));
 			playerMadeEvent(player);
 			someoneBigAllIn = true;
 		}
