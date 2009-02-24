@@ -47,6 +47,7 @@ public class FoldAction extends SearchBotAction{
 		Set<PlayerState> players = gameState.getAllSeatedPlayers();
 		PlayerState first = null;
 		boolean noDefaultWinner = false;
+		//TODO use getNbPlayers()
 		forloop:
 			for(PlayerState player:players){
 				if(roundEnds && player.isActivelyPlaying() && !player.getPlayerId().equals(actor) 

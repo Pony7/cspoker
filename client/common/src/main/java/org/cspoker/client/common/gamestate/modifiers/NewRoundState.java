@@ -176,12 +176,13 @@ public class NewRoundState
 		return event;
 	}
 	
-	public int getMinNextRaise() {
-		return tableConfiguration.getSmallBet();
-	}
-	
 	public PlayerId getNextToAct() {
 		return null;
+	}
+	
+	@Override
+	public int getMinNextRaise() {
+		return tableConfiguration.getSmallBet();
 	}
 	
 	public PlayerState getPlayer(PlayerId playerId) {

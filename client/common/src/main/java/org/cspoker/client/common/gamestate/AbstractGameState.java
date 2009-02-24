@@ -62,12 +62,27 @@ implements GameState {
 
 	public final int getLowerRaiseBound(PlayerId playerId) {
 		PlayerState player = getPlayer(playerId);
-		return Math.min(getMinNextRaise(), player.getStack());
+		return Math.max(0, 
+						Math.min(
+								getMinNextRaise(), 
+								player.getStack()-(getLargestBet() - player.getBet())));
 	}
 
 	public final int getUpperRaiseBound(PlayerId playerId) {
 		PlayerState player = getPlayer(playerId);
-		return player.getStack() - (getLargestBet() - player.getBet());
+		PlayerState tempPlayer;
+		PlayerId tempId = playerId;
+		int maxOtherBettableChips=0;
+		loop: do{
+			tempPlayer = getNextActivePlayerAfter(tempId);
+			if(tempPlayer==null){
+				break loop;
+			}
+			tempId = tempPlayer.getPlayerId();
+			maxOtherBettableChips = Math.max(maxOtherBettableChips, tempPlayer.getBet()+tempPlayer.getStack());
+		}while(!tempPlayer.getPlayerId().equals(playerId));
+		int betableChips = Math.min(player.getStack()+player.getBet(),maxOtherBettableChips);
+		return Math.max(0, betableChips - getLargestBet());
 	}
 
 	public final int getGamePotSize() {

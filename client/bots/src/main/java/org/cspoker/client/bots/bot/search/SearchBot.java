@@ -59,7 +59,7 @@ extends AbstractBot {
 					case FLOP:
 						logger.debug("Searching flop round game tree:");
 						config.getOpponentModeler().signalNextAction(gameState);
-						actionNode = new BotActionNode(playerID, gameState, 
+						actionNode = new BotActionNode(playerId, gameState, 
 								config, config.getFlopTokens(),
 								searchId++, new Log4JOutputVisitor(100));
 						actionNode.performbestAction(playerContext);
@@ -67,7 +67,7 @@ extends AbstractBot {
 					case TURN:
 						logger.debug("Searching turn round game tree:");
 						config.getOpponentModeler().signalNextAction(gameState);
-						actionNode = new BotActionNode(playerID, gameState, 
+						actionNode = new BotActionNode(playerId, gameState, 
 								config, config.getTurnTokens(), 
 								searchId++, new Log4JOutputVisitor(100));
 						actionNode.performbestAction(playerContext);
@@ -76,7 +76,7 @@ extends AbstractBot {
 						logger.debug("Searching final round game tree:");
 						//essential to do this with a clean game state from the context, no wrappers
 						config.getOpponentModeler().signalNextAction(gameState);
-						actionNode = new BotActionNode(playerID, gameState, 
+						actionNode = new BotActionNode(playerId, gameState, 
 								config, config.getFinalTokens(), 
 								searchId++, new Log4JOutputVisitor(100));
 						actionNode.performbestAction(playerContext);
@@ -85,6 +85,7 @@ extends AbstractBot {
 						throw new IllegalStateException("What round are we in?");
 					}		
 				} catch (IllegalActionException e) {
+					logger.warn("Raise bounds: "+tableContext.getGameState().getLowerRaiseBound(SearchBot.this.playerId)+" to "+tableContext.getGameState().getUpperRaiseBound(SearchBot.this.playerId));
 					logger.error(e);
 					throw new IllegalStateException("Action was not allowed.",e);
 				} catch (RemoteException e) {

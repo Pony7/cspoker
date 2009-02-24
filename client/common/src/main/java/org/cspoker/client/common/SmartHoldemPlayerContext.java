@@ -81,13 +81,10 @@ public class SmartHoldemPlayerContext
 		callMax = Math.min(callMax, getGameState().getUpperRaiseBound(playerId));
 		int deficit = getGameState().getDeficit(playerId);
 		if (deficit > callMax) {
-			logger.trace("Folding");
 			fold();
-		} else if ((deficit >= bet && deficit<=callMax) || bet - deficit<getGameState().getLowerRaiseBound(playerId)) {
-			logger.trace("Calling");
+		} else if ((deficit >= bet && deficit<=callMax) || bet - deficit < getGameState().getLowerRaiseBound(playerId)) {
 			checkOrCall();
 		} else{
-			logger.trace("Raising with " + (bet - deficit));
 			betOrRaise(bet - deficit);
 		}
 	}

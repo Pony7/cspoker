@@ -262,6 +262,10 @@ public class InitialGameState
 	@Override
 	public int getPreviousRoundsPotSize() {
 		Pots pots = table.getPots();
+		if(pots==null){
+			//TODO check why pots can be null?
+			return 0;
+		}
 		return pots.getTotalValue();
 	}
 	

@@ -23,6 +23,7 @@ import java.util.concurrent.ExecutorService;
 
 import org.apache.log4j.Logger;
 import org.cspoker.client.bots.bot.AbstractBot;
+import org.cspoker.client.bots.bot.search.SearchBot;
 import org.cspoker.client.bots.listener.BotListener;
 import org.cspoker.client.common.SmartLobbyContext;
 import org.cspoker.client.common.gamestate.GameState;
@@ -49,6 +50,7 @@ extends AbstractBot {
 
 			public void run() {
 				GameState gameState = playerContext.getGameState();
+				
 				double winPercentage = getWinPercentage(
 						gameState.getCommunityCards(), 
 						playerContext.getPocketCards(), 
@@ -59,8 +61,18 @@ extends AbstractBot {
 				}
 				double EV = winPercentage*gameState.getGamePotSize();
 				try {
-					playerContext.raiseMaxBetWith((int)EV, (int)EV);
+					if(gameState.getNextActivePlayerAfter(RuleBasedBot2.this.playerId)==null){
+						//can only call or fold
+						if(gameState.getDeficit(RuleBasedBot2.this.playerId)<=EV){
+							playerContext.checkOrCall();
+						}else{
+							playerContext.fold();
+						}
+					}else{
+						playerContext.raiseMaxBetWith((int)EV, (int)EV);
+					}
 				} catch (IllegalActionException e) {
+					logger.warn("Raise bounds: "+tableContext.getGameState().getLowerRaiseBound(RuleBasedBot2.this.playerId)+" to "+tableContext.getGameState().getUpperRaiseBound(RuleBasedBot2.this.playerId));
 					logger.error(e);
 					throw new IllegalStateException("Action was not allowed.",e);
 				} catch (RemoteException e) {

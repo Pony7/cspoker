@@ -22,6 +22,7 @@ import java.util.concurrent.ExecutorService;
 
 import org.apache.log4j.Logger;
 import org.cspoker.client.bots.bot.AbstractBot;
+import org.cspoker.client.bots.bot.search.SearchBot;
 import org.cspoker.client.bots.listener.BotListener;
 import org.cspoker.client.common.SmartLobbyContext;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
@@ -83,12 +84,13 @@ public class RuleBasedBot
 						
 						min = min*playerContext.getGameState().getTableConfiguration().getBigBlind();
 						max = max*playerContext.getGameState().getMinNextRaise();
-						
+						//TODO obfuscate betsize
 						min = Math.max(0,Math.min(max, min));
 						max = Math.max(0, Math.max(max, min));
 						playerContext.raiseMaxBetWith(min,max);
 					}
 				} catch (IllegalActionException e) {
+					logger.warn("Raise bounds: "+tableContext.getGameState().getLowerRaiseBound(RuleBasedBot.this.playerId)+" to "+tableContext.getGameState().getUpperRaiseBound(RuleBasedBot.this.playerId));
 					logger.error(e);
 					throw new IllegalStateException("Action was not allowed.",e);
 				} catch (RemoteException e) {
