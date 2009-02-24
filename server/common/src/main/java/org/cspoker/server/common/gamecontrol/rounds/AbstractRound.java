@@ -238,6 +238,9 @@ public abstract class AbstractRound {
 				try {
 					getGame().sitOut(player, true);
 					gameMediator.publishSitOutEvent(new SitOutEvent(player.getId(), true));
+					if(!game.getTableConfiguration().isAutoDeal()){
+						game.pauzeGame();
+					}
 				} catch (IllegalActionException e) {
 					throw new IllegalStateException();
 				}
