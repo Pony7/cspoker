@@ -323,7 +323,7 @@ public class PlayingTableState
 		round.endRound();
 		round = round.getNextRound();
 		
-		if (round instanceof WaitingRound && game.getNbCurrentDealPlayers() > 1) {
+		if (round instanceof WaitingRound && game.getNbCurrentDealPlayers() > 1 && !game.isPauzed()) {
 			submitAutoDealHandler();
 		}
 		

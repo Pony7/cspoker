@@ -217,11 +217,11 @@ public class PokerTable {
 			throws IllegalActionException {
 		if(configuration.isAutoDeal())
 			throw new IllegalActionException("This functionality is not available in auto-deal games.");
-		if (tableState.isPlaying())
-			throw new IllegalActionException("The game is already started.");
 		if(sitInPlayers.size()<2)
 			throw new IllegalActionException("There should be at least 2 players before a game can start.");
-		tableState = tableState.getNextState();
+		if (!tableState.isPlaying()){
+			tableState = tableState.getNextState();
+		}
 		tableState.deal();
 	}
 	

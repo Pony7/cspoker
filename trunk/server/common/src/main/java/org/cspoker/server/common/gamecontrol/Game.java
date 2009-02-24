@@ -650,4 +650,18 @@ public class Game {
 	public Map<MutableSeatedPlayer, Boolean> getPlayersSittingOutNextRound() {
 		return playersSittingOutNextRound;
 	}
+	
+	private boolean pauze = false;
+
+	public boolean isPauzed() {
+		return pauze;
+	}
+	
+	public void pauzeGame(){
+		pauze = true;
+	}
+
+	public void unpauzeGame() {
+		pauze = false;
+	}
 }

@@ -55,6 +55,7 @@ public class WaitingRound
 		if (!onTurn(player)) {
 			throw new IllegalActionException(player.getName() + " can not deal in this round.");
 		}
+		game.unpauzeGame();
 		for (MutableSeatedPlayer newlySittingOut : game.getPlayersSittingOutNextRound().keySet()) {
 			newlySittingOut.setSittingIn(false);
 			for (Entry<MutableSeatedPlayer, Boolean> sitOutPlayer : game.getPlayersSittingOutNextRound().entrySet()) {
