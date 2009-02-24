@@ -107,7 +107,7 @@ public class RaiseState
 	
 	@Override
 	public int getMinNextRaise() {
-		return event.getAmount();
+		return Math.max(super.getMinNextRaise(),event.getAmount());
 	}
 	
 	@Override

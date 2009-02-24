@@ -53,7 +53,7 @@ implements LobbyListener {
 
 	public static final int nbGamesPerConfrontation = 10000;
 
-	public static final int nbPlayersPerGame = 5;
+	public static final int nbPlayersPerGame = 6;
 
 	static {
 		Log4JPropertiesLoader.load("org/cspoker/client/bots/logging/log4j.properties");
@@ -90,6 +90,7 @@ implements LobbyListener {
 				//				new PrologCafeBotFactory(),
 				//				new TuPrologBotFactory(),
 				//				new InterPrologBotFactory(),
+				new SearchBotFactory(new CachedShowdownNodeFactory(new DistributionShowdownNode.Factory())),
 				new SearchBotFactory(new CachedShowdownNodeFactory(new DistributionShowdownNode.Factory())),
 				//				new SearchBotFactory(new CachedShowdownNodeFactory(new UniformShowdownNode.Factory())),
 		});

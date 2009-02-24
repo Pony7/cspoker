@@ -107,7 +107,7 @@ public class BigBlindState
 	
 	@Override
 	public int getMinNextRaise() {
-		return event.getAmount();
+		return getTableConfiguration().getSmallBet();
 	}
 	
 	@Override

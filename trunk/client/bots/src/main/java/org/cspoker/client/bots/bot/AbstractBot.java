@@ -63,8 +63,8 @@ public abstract class AbstractBot
 	
 	private volatile boolean started = false;
 	
-	protected final TableId tableID;
-	protected final PlayerId playerID;
+	public final TableId tableID;
+	public final PlayerId playerId;
 	
 	private final BotListener[] botListeners;
 	
@@ -72,7 +72,7 @@ public abstract class AbstractBot
 	
 	public AbstractBot(PlayerId playerId, TableId tableId, SmartLobbyContext lobby, ExecutorService executor,
 			BotListener... botListeners) {
-		this.playerID = playerId;
+		this.playerId = playerId;
 		this.tableID = tableId;
 		this.lobbyContext = lobby;
 		this.botListeners = botListeners;
@@ -125,7 +125,7 @@ public abstract class AbstractBot
 	 * @see org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener#onNextPlayer(org.cspoker.common.api.lobby.holdemtable.event.NextPlayerEvent)
 	 */
 	public void onNextPlayer(final NextPlayerEvent nextPlayerEvent) {
-		if (started && nextPlayerEvent.getPlayerId().equals(playerID)) {
+		if (started && nextPlayerEvent.getPlayerId().equals(playerId)) {
 			doNextAction();
 		}
 	}
@@ -174,7 +174,7 @@ public abstract class AbstractBot
 		if(state.getPreviousRoundsPotSize()>0){
 			throw new IllegalStateException("There is a pot from previous rounds ("+state.getPreviousRoundsPotSize()+"). Can't calculate profit.");
 		}
-		PlayerState playerState = state.getPlayer(playerID);
+		PlayerState playerState = state.getPlayer(playerId);
 		return playerState.getStack()+playerState.getBet() - getBuyIn();
 	}
 	
