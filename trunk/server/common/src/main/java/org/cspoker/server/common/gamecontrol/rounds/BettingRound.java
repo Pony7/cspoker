@@ -177,7 +177,7 @@ public abstract class BettingRound
 		}
 		
 		// Check whether the raise is valid.
-		if (!getBettingRules().isValidRaise(amount, this)) {
+		if (!getBettingRules().isValidRaise(amount, this) && !((amount + amountToIncreaseBetPileWith(player)) >= player.getStack().getValue())) {
 			throw new IllegalActionException(player.toString() + " can not raise with $"+amount+". "
 					+ getBettingRules().getLastRaiseErrorMessage());
 		}
