@@ -733,6 +733,9 @@ public class PokerTable {
 	private ScheduledFuture<?> oldFuture;
 	
 	private synchronized void cancelOldTimeOut() {
+		if(currentTimeOut!=null){
+			currentTimeOut.cancel();
+		}
 		if (oldFuture != null) {
 			oldFuture.cancel(false);
 		}
@@ -747,15 +750,21 @@ public class PokerTable {
 		
 		private PlayerId player;
 		
+		private boolean cancelled = false;
+		
 		public PlayerActionTimeOut(PlayerId player) {
 			this.player = player;
 		}
 		
-		public void run() {
+		public synchronized void cancel() {
+			cancelled = true; 
+		}
+		
+		public synchronized void run() {
 			try {
 				PokerTable.logger.info("Player " + player + " auto-fold called.");
 				
-				if (getCurrentTimeOut() == this && tableState.getGame() != null) {
+				if (getCurrentTimeOut() == this && tableState.getGame() != null && !cancelled) {
 					MutableSeatedPlayer gcPlayer = tableState.getGame().getCurrentPlayer();
 					if (gcPlayer!=null && (gcPlayer.getId().equals(player.getId()))) {
 						PokerTable.logger.info("Player " + player + " automatically folded.");
