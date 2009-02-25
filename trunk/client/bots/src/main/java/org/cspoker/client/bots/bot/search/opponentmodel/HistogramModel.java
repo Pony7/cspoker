@@ -147,8 +147,8 @@ public class HistogramModel implements OpponentModel{
 
 				if(upperRaiseBound>lowerRaiseBound){
 					totalProbability+=raiseProbability;
-					actions.add(new ProbabilityAction(new RaiseAction(gameState, playerId, Math.min(5*lowerRaiseBound, upperRaiseBound))
-					,raiseProbability));
+					RaiseAction betAction = new RaiseAction(gameState, playerId, Math.min((int)((1+Math.random()*5)*lowerRaiseBound), upperRaiseBound));
+					actions.add(new ProbabilityAction(betAction,raiseProbability));
 				}
 			}
 		}else{
@@ -166,8 +166,8 @@ public class HistogramModel implements OpponentModel{
 
 				if(upperRaiseBound>lowerRaiseBound){
 					totalProbability+=betProbability;
-					actions.add(new ProbabilityAction(new BetAction(gameState, playerId, Math.min(5*lowerRaiseBound, upperRaiseBound))
-					,betProbability));
+					BetAction betAction = new BetAction(gameState, playerId, Math.min((int)((1+Math.random()*5)*lowerRaiseBound), upperRaiseBound));
+					actions.add(new ProbabilityAction(betAction,betProbability));
 				}
 			}
 		}

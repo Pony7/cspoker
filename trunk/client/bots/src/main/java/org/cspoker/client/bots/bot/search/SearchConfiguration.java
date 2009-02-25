@@ -28,16 +28,19 @@ public class SearchConfiguration {
 	private final int turnTokens;
 	private final int finalTokens;
 	private final Factory botNodeExpanderFactory;
+	private final int preflopTokens;
 	
 	public SearchConfiguration(
 			AllPlayersModel opponentModel, 
 			ShowdownNode.Factory showdownNodeFactory, 
 			Expander.Factory botNodeExpanderFactory,
+			int preflopTokens,
 			int flopTokens,
 			int turnTokens,
 			int finalTokens) {
 		this.opponentModeler = opponentModel;
 		this.showdownNodeFactory = showdownNodeFactory;
+		this.preflopTokens = preflopTokens;
 		this.flopTokens=flopTokens;
 		this.turnTokens=turnTokens;
 		this.finalTokens=finalTokens;
@@ -58,6 +61,10 @@ public class SearchConfiguration {
 	
 	public int getFlopTokens() {
 		return flopTokens;
+	}
+	
+	public int getPreflopTokens() {
+		return preflopTokens;
 	}
 	
 	public int getTurnTokens() {

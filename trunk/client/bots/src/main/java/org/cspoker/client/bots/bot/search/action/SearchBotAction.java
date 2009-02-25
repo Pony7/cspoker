@@ -70,6 +70,10 @@ public abstract class SearchBotAction implements ActionWrapper{
 	public boolean endsInvolvementOf(PlayerId botId) {
 		return false;
 	}
+
+	public double getRiskPenalty() {
+		return 1;
+	}
 	
 	//do not define equals or hashcode! 
 	//it will map all actions without extra fields to the same entity

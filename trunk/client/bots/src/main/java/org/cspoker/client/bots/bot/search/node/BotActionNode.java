@@ -71,7 +71,9 @@ public class BotActionNode extends ActionNode{
 		EvaluatedAction<? extends ActionWrapper> action = null;
 		Set<? extends EvaluatedAction<? extends ActionWrapper>> actions = getExpander().expand();
 		for(EvaluatedAction<? extends ActionWrapper> eval : actions){
-			if(eval.getEV()>maxEv){
+			double ev = eval.getEV();
+			ev = ev*eval.getAction().getRiskPenalty();
+			if(ev>maxEv){
 				maxEv = eval.getEV();
 				action = eval;
 			}
@@ -90,7 +92,7 @@ public class BotActionNode extends ActionNode{
 				int upperRaiseBound = gameState.getUpperRaiseBound(botId);
 				actions.add(new RaiseAction(gameState, botId, lowerRaiseBound));
 				if(upperRaiseBound>lowerRaiseBound){
-					actions.add(new RaiseAction(gameState, botId, Math.min(5*lowerRaiseBound, upperRaiseBound)));
+					actions.add(new RaiseAction(gameState, botId, Math.min((int)((1+Math.random()*5)*lowerRaiseBound), upperRaiseBound)));
 				}
 			}
 		}else{
@@ -100,7 +102,7 @@ public class BotActionNode extends ActionNode{
 				int upperRaiseBound = gameState.getUpperRaiseBound(botId);
 				actions.add(new BetAction(gameState, botId, lowerRaiseBound));
 				if(upperRaiseBound>lowerRaiseBound){
-					actions.add(new BetAction(gameState, botId, Math.min(5*lowerRaiseBound, upperRaiseBound)));
+					actions.add(new BetAction(gameState, botId, Math.min((int)((1+Math.random()*5)*lowerRaiseBound), upperRaiseBound)));
 				}
 			}
 		}

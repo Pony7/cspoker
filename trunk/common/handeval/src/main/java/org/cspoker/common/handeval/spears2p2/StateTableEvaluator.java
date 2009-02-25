@@ -85,7 +85,7 @@ public class StateTableEvaluator {
 
 	private static final String HAND_RANKS_FILE = "handRanks.zip";
 
-	public static void initialize() {
+	static {
 		try {
 			System.out.println("Loading evaluation tables ...");
 			File f = new File(HAND_RANKS_FILE);

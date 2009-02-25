@@ -126,7 +126,7 @@ public abstract class AbstractPrologModel implements AllPlayersModel {
 
 						if(upperRaiseBound>lowerRaiseBound){
 							actions.add(new ProbabilityAction(
-									new RaiseAction(gameState, playerId, Math.min(5*lowerRaiseBound, upperRaiseBound)),
+									new RaiseAction(gameState, playerId, Math.min((int)((1+Math.random()*5)*lowerRaiseBound), upperRaiseBound)),
 									betProb));
 							totalProb += betProb;
 						}
@@ -150,7 +150,7 @@ public abstract class AbstractPrologModel implements AllPlayersModel {
 
 						if(upperRaiseBound>lowerRaiseBound){
 							actions.add(new ProbabilityAction(
-									new BetAction(gameState, playerId, Math.min(5*lowerRaiseBound, upperRaiseBound)),
+									new BetAction(gameState, playerId, Math.min((int)((1+Math.random()*5)*lowerRaiseBound), upperRaiseBound)),
 									betProb));
 							totalProb += betProb;
 						}

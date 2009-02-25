@@ -23,13 +23,13 @@ import java.util.concurrent.ExecutorService;
 
 import org.apache.log4j.Logger;
 import org.cspoker.client.bots.bot.AbstractBot;
-import org.cspoker.client.bots.bot.search.SearchBot;
 import org.cspoker.client.bots.listener.BotListener;
 import org.cspoker.client.common.SmartLobbyContext;
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.cards.Card;
 import org.cspoker.common.elements.player.PlayerId;
+import org.cspoker.common.elements.table.Round;
 import org.cspoker.common.elements.table.TableId;
 import org.cspoker.common.handeval.stevebrecher.HandEval;
 
@@ -50,6 +50,7 @@ extends AbstractBot {
 
 			public void run() {
 				GameState gameState = playerContext.getGameState();
+				int deficit = gameState.getDeficit(RuleBasedBot2.this.playerId);
 				
 				double winPercentage = getWinPercentage(
 						gameState.getCommunityCards(), 
@@ -59,17 +60,21 @@ extends AbstractBot {
 				if(logger.isDebugEnabled()){
 					logger.debug("Win percentage is "+winPercentage+" with "+playerContext.getPocketCards()+" and "+gameState.getCommunityCards()+" and "+(gameState.getNbPlayers()-1)+" opponents.");
 				}
-				double EV = winPercentage*gameState.getGamePotSize();
+				double EV = winPercentage*(gameState.getGamePotSize()+deficit);
+				if(gameState.getRound().equals(Round.PREFLOP)){
+					//be more aggressive on the flop
+					EV += EV;
+				}
 				try {
 					if(gameState.getNextActivePlayerAfter(RuleBasedBot2.this.playerId)==null){
 						//can only call or fold
-						if(gameState.getDeficit(RuleBasedBot2.this.playerId)<=EV){
+						if(deficit<=Math.round(EV)){
 							playerContext.checkOrCall();
 						}else{
 							playerContext.fold();
 						}
 					}else{
-						playerContext.raiseMaxBetWith((int)EV, (int)EV);
+						playerContext.raiseMaxBetWith((int)Math.round(EV*0.5),(int)Math.round(EV));
 					}
 				} catch (IllegalActionException e) {
 					logger.warn("Raise bounds: "+tableContext.getGameState().getLowerRaiseBound(RuleBasedBot2.this.playerId)+" to "+tableContext.getGameState().getUpperRaiseBound(RuleBasedBot2.this.playerId));
@@ -83,6 +88,8 @@ extends AbstractBot {
 		});
 	}
 
+	//Card roll out code
+	
 	public double getWinPercentage(EnumSet<Card> fixedCommunityCards, EnumSet<Card> botCards, int nbSamples, int nbOpponents){
 		EnumSet<Card> usedFixedCards = EnumSet.copyOf(fixedCommunityCards);
 		usedFixedCards.addAll(botCards);
@@ -113,7 +120,7 @@ extends AbstractBot {
 			}
 			for(int j=0;j<nbOpponentSamples;j++){
 				EnumSet<Card> fixedAndCommunityAndOpponentCards = EnumSet.copyOf(fixedAndCommunityCards);
-				//fixedAndCommunityCards coincidentally contain the bot's hand!
+				//fixedAndCommunityCards coincidentally contains the bot's hand!
 				int botRank = getRank(fixedAndCommunityCards);
 				boolean botWins = true;
 				for(int k=0;k<nbOpponents;k++){

@@ -30,13 +30,12 @@ import org.cspoker.common.handeval.spears2p2.StateTableEvaluator;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Sets;
 
-public class DistributionShowdownNode extends AbstractShowdownNode{
+public class DistributionShowdownNode2 extends AbstractShowdownNode{
 
-	private final static Logger logger = Logger.getLogger(DistributionShowdownNode.class);
+	private final static Logger logger = Logger.getLogger(DistributionShowdownNode2.class);
 
 	private final static int[] handRanks;
 	static{
-		StateTableEvaluator.initialize();
 		handRanks = StateTableEvaluator.handRanks;
 	}
 
@@ -44,7 +43,7 @@ public class DistributionShowdownNode extends AbstractShowdownNode{
 
 	private int tokens;
 
-	DistributionShowdownNode(PlayerId botId, GameState gameState, int tokens) {
+	DistributionShowdownNode2(PlayerId botId, GameState gameState, int tokens) {
 		super(botId, gameState);
 		this.tokens = tokens;
 	}
@@ -131,7 +130,7 @@ public class DistributionShowdownNode extends AbstractShowdownNode{
 					if(opponentRank>=botRank){
 						botWins = false;
 					}//TODO fix for split pot
-					float opponentRankProb = getRelativeProbability(opponentRank);
+					float opponentRankProb = getRelativeProbability(opponentRank, gameState.getGamePotSize()/(nbOpponentSamples*gameState.getTableConfiguration().getBigBlind()));
 					logProb += Math.log(opponentRankProb);
 				}
 				double prob = Math.exp(logProb);
@@ -144,13 +143,18 @@ public class DistributionShowdownNode extends AbstractShowdownNode{
 		return totalProfit/totalProb;
 	}
 
-	private float getRelativeProbability(int rank) {
-		return ShowdownRankPredictor.getRelativeProbability(rank);
+	private float getRelativeProbability(int rank, int relativePotSize) {
+		if(relativePotSize<=15){
+			return ShowdownRankPredictor1.getRelativeProbability(rank);
+		}else{
+			return ShowdownRankPredictor2.getRelativeProbability(rank);
+		}
+		
 	}
 
 	@Override
 	public String toString() {
-		return "Distribution Showdown Node";
+		return "Distribution Showdown Node v2";
 	}
 
 	private static final int[] offsets = new int[] {0, 1277, 4137, 4995, 5853, 5863, 7140, 7296, 7452};
@@ -171,14 +175,14 @@ public class DistributionShowdownNode extends AbstractShowdownNode{
 	public static class Factory implements AbstractShowdownNode.Factory{
 
 		@Override
-		public DistributionShowdownNode create(PlayerId botId, GameState gameState, int tokens
+		public DistributionShowdownNode2 create(PlayerId botId, GameState gameState, int tokens
 				, SearchConfiguration config, int searchId) {
-			return new DistributionShowdownNode(botId, gameState, tokens);
+			return new DistributionShowdownNode2(botId, gameState, tokens);
 		}
 
 		@Override
 		public String toString() {
-			return "Distribution Showdown Node factory";
+			return "Distribution Showdown Node v2 factory";
 		}
 	}
 
