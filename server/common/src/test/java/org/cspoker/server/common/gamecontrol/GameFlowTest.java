@@ -707,6 +707,79 @@ public class GameFlowTest extends TestCase {
 		// New Deal
 		assertEquals(PreFlopRound.class, gameControl.getRound().getClass());
 	}
+	
+	public void testMultiplePlayersSmallAllinBetRaise() {
+		try {
+
+			kenzo = new MutableSeatedPlayer(factory.createNewPlayer("Kenzo", 100), 100);
+			cedric = new MutableSeatedPlayer(factory.createNewPlayer("Cedric", 100),18);
+			guy = new MutableSeatedPlayer(factory.createNewPlayer("Guy", 100),100);
+
+			table = new ServerTable(8);
+			table.addPlayer(kenzo);
+			table.addPlayer(cedric);
+			table.addPlayer(guy);
+		} catch (IllegalValueException e) {
+			fail(e.getMessage());
+		} catch (PlayerListFullException e) {
+			fail(e.getMessage());
+		}
+
+		PlayingTableState gameControl = new PlayingTableState(pokerTable, table, kenzo);
+		
+		events.ignore(); //TODO
+		
+		try {
+			gameControl.deal();
+		} catch (IllegalActionException e1) {
+			fail(e1.toString());
+		}
+		Game game = gameControl.getGame();
+
+		try {
+			gameControl.call(game.getCurrentPlayer());
+			gameControl.call(game.getCurrentPlayer());
+			gameControl.check(game.getCurrentPlayer());
+		} catch (IllegalActionException e) {
+			fail(e.getMessage());
+		}
+
+		// Flop Round
+		try {
+			gameControl.bet(game.getCurrentPlayer(),8);
+			gameControl.raise(game.getCurrentPlayer(), 10);
+			gameControl.call(game.getCurrentPlayer());
+		} catch (IllegalActionException e) {
+			fail(e.getMessage());
+		}
+
+		// Turn Round
+		try {
+			gameControl.check(game.getCurrentPlayer());
+			gameControl.check(game.getCurrentPlayer());
+		} catch (IllegalActionException e) {
+			fail(e.getMessage());
+		}
+
+		// Final Round
+		try {
+			System.out.println("final round");
+			gameControl.check(game.getCurrentPlayer());
+			System.out.println("Check 1");
+			gameControl.check(game.getCurrentPlayer());
+			System.out.println("check 2");
+		} catch (IllegalActionException e) {
+			fail(e.getMessage());
+		}
+
+		GameFlowTest.logger.info("Next game...");
+
+		GameFlowTest.logger.info("Current Player:" + game.getCurrentPlayer());
+		GameFlowTest.logger.info("Next Dealer:" + game.getNextDealer());
+		GameFlowTest.logger.info(game.getFirstToActPlayer());
+		GameFlowTest.logger.info("Dealer: " + game.getDealer().getName());
+		GameFlowTest.logger.info(game.getCurrentDealPlayers());
+	}
 
 	public void testMultiplePlayersAllInSmallBlindCase() {
 		try {
