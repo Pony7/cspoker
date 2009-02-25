@@ -109,7 +109,7 @@ public class InterPrologModel implements AllPlayersModel {
 						vars+=", string("+resultVar+")";
 						
 						if(upperRaiseBound>lowerRaiseBound){
-							deterministicActions.add(new RaiseAction(gameState, playerId, Math.min(5*lowerRaiseBound, upperRaiseBound)));
+							deterministicActions.add(new RaiseAction(gameState, playerId, Math.min((int)((1+Math.random()*5)*lowerRaiseBound), upperRaiseBound)));
 							resultVar = "PRaise2";
 							goals+=", "+buildGoal("bet", resultVar, visitor);
 							vars+=", string("+resultVar+")";
@@ -132,7 +132,7 @@ public class InterPrologModel implements AllPlayersModel {
 						vars+=", string("+resultVar+")";
 						
 						if(upperRaiseBound>lowerRaiseBound){
-							deterministicActions.add(new BetAction(gameState, playerId, Math.min(5*lowerRaiseBound, upperRaiseBound)));
+							deterministicActions.add(new BetAction(gameState, playerId, Math.min((int)((1+Math.random()*5)*lowerRaiseBound), upperRaiseBound)));
 							resultVar = "PBet2";
 							goals+=", "+buildGoal("bet", resultVar, visitor);
 							vars+=", string("+resultVar+")";

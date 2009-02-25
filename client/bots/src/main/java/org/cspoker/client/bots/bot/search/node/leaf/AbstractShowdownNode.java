@@ -35,7 +35,7 @@ public abstract class AbstractShowdownNode implements ShowdownNode{
 	}
 
 	public double getExpectedPotValue() {
-		return gameState.getGamePotSize()*getExpectedPotPercentage();
+		return gameState.getGamePotSize()*getExpectedPotPercentage()*2;
 	}
 
 	public abstract double getExpectedPotPercentage();

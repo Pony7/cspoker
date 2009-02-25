@@ -32,7 +32,6 @@ import org.cspoker.client.bots.bot.BotFactory;
 import org.cspoker.client.bots.bot.search.SearchBot;
 import org.cspoker.client.bots.bot.search.SearchConfiguration;
 import org.cspoker.client.bots.bot.search.node.expander.CompleteExpander;
-import org.cspoker.client.bots.bot.search.node.leaf.CachedShowdownNodeFactory;
 import org.cspoker.client.bots.bot.search.node.leaf.UniformShowdownNode;
 import org.cspoker.client.bots.bot.search.opponentmodel.AllPlayersModel;
 import org.cspoker.client.bots.bot.search.opponentmodel.prolog.cafe.PrologCafeModel;
@@ -99,9 +98,9 @@ public class RedundantBotFactory implements BotFactory {
 			opponentModels.put(botId, new RedundantModel(Arrays.asList(model1, model2)));
 		}
 		SearchConfiguration config = new SearchConfiguration(opponentModels.get(botId), 
-				new CachedShowdownNodeFactory(new UniformShowdownNode.Factory()),
+				new UniformShowdownNode.Factory(),
 				new CompleteExpander.Factory(),
-				1,1,1);
+				1,1,1,1);
 		return new SearchBot(botId, tableId, lobby, executor, config ,botListeners);
 	}
 

@@ -22,7 +22,6 @@ import java.util.concurrent.ExecutorService;
 
 import org.apache.log4j.Logger;
 import org.cspoker.client.bots.bot.AbstractBot;
-import org.cspoker.client.bots.bot.search.SearchBot;
 import org.cspoker.client.bots.listener.BotListener;
 import org.cspoker.client.common.SmartLobbyContext;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
@@ -31,13 +30,14 @@ import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.elements.table.Round;
 import org.cspoker.common.elements.table.TableId;
 
-public class RuleBasedBot
+public class RuleBasedBot1
 		extends AbstractBot {
 	
-	private final static Logger logger = Logger.getLogger(RuleBasedBot.class);
-	Random random = new Random();
+	private final static Logger logger = Logger.getLogger(RuleBasedBot1.class);
+	
+	private final Random random = new Random();
 
-	public RuleBasedBot(PlayerId playerId, TableId tableId,
+	public RuleBasedBot1(PlayerId playerId, TableId tableId,
 			SmartLobbyContext lobby, ExecutorService executor,
 			BotListener... botListeners) {
 		super(playerId, tableId, lobby, executor, botListeners);
@@ -82,15 +82,16 @@ public class RuleBasedBot
 							max--;
 						}
 						
-						min = min*playerContext.getGameState().getTableConfiguration().getBigBlind();
-						max = max*playerContext.getGameState().getMinNextRaise();
-						//TODO obfuscate betsize
+						min = (int)((min+(-1+2*random.nextDouble()))*playerContext.getGameState().getTableConfiguration().getBigBlind());
+						max = (int)((max+(-1+2*random.nextDouble()))*playerContext.getGameState().getMinNextRaise());
+
 						min = Math.max(0,Math.min(max, min));
 						max = Math.max(0, Math.max(max, min));
+						
 						playerContext.raiseMaxBetWith(min,max);
 					}
 				} catch (IllegalActionException e) {
-					logger.warn("Raise bounds: "+tableContext.getGameState().getLowerRaiseBound(RuleBasedBot.this.playerId)+" to "+tableContext.getGameState().getUpperRaiseBound(RuleBasedBot.this.playerId));
+					logger.warn("Raise bounds: "+tableContext.getGameState().getLowerRaiseBound(RuleBasedBot1.this.playerId)+" to "+tableContext.getGameState().getUpperRaiseBound(RuleBasedBot1.this.playerId));
 					logger.error(e);
 					throw new IllegalStateException("Action was not allowed.",e);
 				} catch (RemoteException e) {

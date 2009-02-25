@@ -218,7 +218,7 @@ public class Showdown {
 		}
 		if(logger.isInfoEnabled()){
 			for(MutableShowdownPlayer player:showDownPlayers){
-				Showdown.logger.info(player+" contesting for $"+pot.getChips());
+				Showdown.logger.info(player+" for $"+pot.getChips());
 			}
 		}
 		return showDownPlayers;

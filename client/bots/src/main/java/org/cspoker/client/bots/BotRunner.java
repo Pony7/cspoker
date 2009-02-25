@@ -24,11 +24,10 @@ import org.apache.log4j.Logger;
 import org.cspoker.client.bots.bot.AbstractBot;
 import org.cspoker.client.bots.bot.Bot;
 import org.cspoker.client.bots.bot.BotFactory;
-import org.cspoker.client.bots.bot.rule.RuleBasedBotFactory;
+import org.cspoker.client.bots.bot.rule.RuleBasedBotFactory1;
 import org.cspoker.client.bots.bot.rule.RuleBasedBotFactory2;
 import org.cspoker.client.bots.bot.search.SearchBotFactory;
-import org.cspoker.client.bots.bot.search.node.leaf.CachedShowdownNodeFactory;
-import org.cspoker.client.bots.bot.search.node.leaf.DistributionShowdownNode;
+import org.cspoker.client.bots.bot.search.node.leaf.DistributionShowdownNode2;
 import org.cspoker.client.bots.listener.BotListener;
 import org.cspoker.client.bots.listener.GameLimitingBotListener;
 import org.cspoker.client.bots.listener.ReSitInBotListener;
@@ -82,16 +81,18 @@ implements LobbyListener {
 	public BotRunner(RemoteCSPokerServer cspokerServer){
 		this(cspokerServer, new BotFactory[]{
 				//				new RedundantBotFactory(),
-				new RuleBasedBotFactory(),
-				new RuleBasedBotFactory(),
+				new RuleBasedBotFactory1(),
 				new RuleBasedBotFactory2(),
+				new SearchBotFactory(new DistributionShowdownNode2.Factory()),
+				new SearchBotFactory(new DistributionShowdownNode2.Factory()),
+//								new PrologCafeBotFactory(),
+				new RuleBasedBotFactory1(),
 				new RuleBasedBotFactory2(),
+//								new PrologCafeBotFactory(),
 				//				new RuleBasedBotFactory(),
 				//				new PrologCafeBotFactory(),
 				//				new TuPrologBotFactory(),
 				//				new InterPrologBotFactory(),
-				new SearchBotFactory(new CachedShowdownNodeFactory(new DistributionShowdownNode.Factory())),
-				new SearchBotFactory(new CachedShowdownNodeFactory(new DistributionShowdownNode.Factory())),
 				//				new SearchBotFactory(new CachedShowdownNodeFactory(new UniformShowdownNode.Factory())),
 		});
 	}

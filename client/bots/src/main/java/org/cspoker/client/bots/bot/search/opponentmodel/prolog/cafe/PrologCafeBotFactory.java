@@ -28,10 +28,8 @@ import org.cspoker.client.bots.bot.Bot;
 import org.cspoker.client.bots.bot.BotFactory;
 import org.cspoker.client.bots.bot.search.SearchBot;
 import org.cspoker.client.bots.bot.search.SearchConfiguration;
-import org.cspoker.client.bots.bot.search.node.expander.CompleteExpander;
 import org.cspoker.client.bots.bot.search.node.expander.SamplingExpander;
-import org.cspoker.client.bots.bot.search.node.leaf.CachedShowdownNodeFactory;
-import org.cspoker.client.bots.bot.search.node.leaf.UniformShowdownNode;
+import org.cspoker.client.bots.bot.search.node.leaf.DistributionShowdownNode2;
 import org.cspoker.client.bots.bot.search.opponentmodel.AllPlayersModel;
 import org.cspoker.client.bots.listener.BotListener;
 import org.cspoker.client.common.SmartLobbyContext;
@@ -65,9 +63,9 @@ public class PrologCafeBotFactory implements BotFactory {
 			opponentModels.put(botId, model);
 		}
 		SearchConfiguration config = new SearchConfiguration(opponentModels.get(botId), 
-				new CachedShowdownNodeFactory(new UniformShowdownNode.Factory()),
+				new DistributionShowdownNode2.Factory(),
 				new SamplingExpander.Factory(),
-				100,1000,10000);
+				50,100,250,250);
 		return new SearchBot(botId, tableId, lobby, executor, config ,botListeners);
 	}
 

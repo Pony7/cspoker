@@ -46,6 +46,6 @@ public class RuleBasedBotFactory2 implements BotFactory {
 
 	@Override
 	public String toString() {
-		return "RuleBasedBotv2-"+copy;
+		return "RuleBasedBot v2-"+copy;
 	}
 }

@@ -18,7 +18,6 @@ package org.cspoker.client.bots.bot.search.action;
 import java.rmi.RemoteException;
 
 import org.cspoker.client.common.gamestate.GameState;
-import org.cspoker.client.common.gamestate.PlayerState;
 import org.cspoker.client.common.gamestate.modifiers.NextPlayerState;
 import org.cspoker.client.common.gamestate.modifiers.RaiseState;
 import org.cspoker.common.api.lobby.holdemtable.event.NextPlayerEvent;
@@ -51,4 +50,10 @@ public class RaiseAction extends SearchBotAction{
 	public String toString() {
 		return "Raising with "+amount;
 	}
+	
+	@Override
+	public double getRiskPenalty() {
+		return 0.75;
+	}
+	
 }
