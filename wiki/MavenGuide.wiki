@@ -14,13 +14,7 @@ mvn compile
 The class files are compiled in "target/classes/".
 
 == Package to executable Jar ==
-Currently there are 4 executable modules:
-  * server-rmi (server/rmi)
-  * server-allcommunication (server/allcommunication)
-  * client-gui-text (client/gui/text)
-  * client-gui-javafx (client/gui/javafx)
-
-To make 1 executable jar with all dependencies, go to the respective directory and execute:
+To make 1 executable jar with all dependencies, go to a directory of an executable project and execute:
 {{{
 mvn assembly:assembly
 }}}
