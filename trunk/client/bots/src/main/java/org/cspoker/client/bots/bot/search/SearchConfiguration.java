@@ -29,6 +29,7 @@ public class SearchConfiguration {
 	private final int finalTokens;
 	private final Factory botNodeExpanderFactory;
 	private final int preflopTokens;
+	private final boolean useRiskPenalties;
 	
 	public SearchConfiguration(
 			AllPlayersModel opponentModel, 
@@ -37,7 +38,8 @@ public class SearchConfiguration {
 			int preflopTokens,
 			int flopTokens,
 			int turnTokens,
-			int finalTokens) {
+			int finalTokens,
+			boolean useRiskPenalties) {
 		this.opponentModeler = opponentModel;
 		this.showdownNodeFactory = showdownNodeFactory;
 		this.preflopTokens = preflopTokens;
@@ -45,6 +47,7 @@ public class SearchConfiguration {
 		this.turnTokens=turnTokens;
 		this.finalTokens=finalTokens;
 		this.botNodeExpanderFactory = botNodeExpanderFactory;
+		this.useRiskPenalties = useRiskPenalties;
 	}
 	
 	public AllPlayersModel getOpponentModeler() {
@@ -73,6 +76,10 @@ public class SearchConfiguration {
 
 	public Expander.Factory getBotNodeExpanderFactory() {
 		return botNodeExpanderFactory;
+	}
+
+	public boolean useRiskPenalties() {
+		return useRiskPenalties;
 	}
 	
 }

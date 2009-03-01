@@ -100,7 +100,7 @@ public class RedundantBotFactory implements BotFactory {
 		SearchConfiguration config = new SearchConfiguration(opponentModels.get(botId), 
 				new UniformShowdownNode.Factory(),
 				new CompleteExpander.Factory(),
-				1,1,1,1);
+				1,1,1,1,false);
 		return new SearchBot(botId, tableId, lobby, executor, config ,botListeners);
 	}
 

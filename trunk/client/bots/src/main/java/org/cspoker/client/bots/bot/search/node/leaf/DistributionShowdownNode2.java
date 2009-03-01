@@ -15,164 +15,33 @@
  */
 package org.cspoker.client.bots.bot.search.node.leaf;
 
-import java.util.EnumSet;
-import java.util.Random;
-import java.util.Set;
-
-import org.apache.log4j.Logger;
 import org.cspoker.client.bots.bot.search.SearchConfiguration;
+import org.cspoker.client.bots.bot.search.node.leaf.rankdistribution.ShowdownRankPredictor1of2;
+import org.cspoker.client.bots.bot.search.node.leaf.rankdistribution.ShowdownRankPredictor2of2;
 import org.cspoker.client.common.gamestate.GameState;
-import org.cspoker.client.common.gamestate.PlayerState;
-import org.cspoker.common.elements.cards.Card;
 import org.cspoker.common.elements.player.PlayerId;
-import org.cspoker.common.handeval.spears2p2.StateTableEvaluator;
 
-import com.google.common.base.Predicate;
-import com.google.common.collect.Sets;
-
-public class DistributionShowdownNode2 extends AbstractShowdownNode{
-
-	private final static Logger logger = Logger.getLogger(DistributionShowdownNode2.class);
-
-	private final static int[] handRanks;
-	static{
-		handRanks = StateTableEvaluator.handRanks;
-	}
-
-	public static final int MaxNbSamples = 400;
-
-	private int tokens;
+public class DistributionShowdownNode2 extends AbstractDistributionShowdownNode {
 
 	DistributionShowdownNode2(PlayerId botId, GameState gameState, int tokens) {
-		super(botId, gameState);
-		this.tokens = tokens;
+		super(botId, gameState, tokens);
 	}
 
-	public double getExpectedPotPercentage() {
-		PlayerState botState = gameState.getPlayer(botId);
-		Set<PlayerState> opponents = Sets.filter(gameState.getAllSeatedPlayers(),new Predicate<PlayerState>(){
-			@Override
-			public boolean apply(PlayerState state) {
-				return state.isInForPot() && !state.getPlayerId().equals(botId);
-			}
-		});
-		EnumSet<Card> botCards = botState.getCards();
-		EnumSet<Card> fixedCommunityCards = gameState.getCommunityCards();
-		EnumSet<Card> usedFixedCards = EnumSet.copyOf(fixedCommunityCards);
-		usedFixedCards.addAll(botCards);
-
-		int fixedRank = 53;
-		for(Card fixedCommunityCard:fixedCommunityCards){
-			if(logger.isTraceEnabled())
-				logger.trace("Evaluating fixed community card "+fixedCommunityCard);
-			fixedRank = handRanks[fixedCommunityCard.ordinal()+1+fixedRank];
-		}
-
-		int nbFixedCards = fixedCommunityCards.size();
-		int nbMissingCommunityCards = 5-nbFixedCards;
-		int nbSamples = Math.min(MaxNbSamples,Math.max(25,tokens*5));
-		int nbCommunitySamples, nbOpponentSamples;
-		if(nbMissingCommunityCards==0){
-			nbCommunitySamples=1;
-			nbOpponentSamples=nbSamples;
-		}else{
-			double root = Math.sqrt(nbSamples);
-			nbCommunitySamples = (int) (root*nbMissingCommunityCards/2);
-			nbOpponentSamples = (int) (root*2/nbMissingCommunityCards);
-		}
-
-		double totalProb = 0;
-		double totalProfit = 0;
-		for(int i=0;i<nbCommunitySamples;i++){
-			int communitySampleRank = fixedRank;
-			EnumSet<Card> usedCommunityCards = EnumSet.copyOf(usedFixedCards);
-			for(int j=0;j<nbMissingCommunityCards;j++){
-				Card communityCard;
-				do{
-					communityCard = getRandomCard();
-				}while(usedCommunityCards.contains(communityCard));
-				usedCommunityCards.add(communityCard);
-				if(logger.isTraceEnabled())
-					logger.trace("Evaluating sampled community card "+communityCard);
-				communitySampleRank = handRanks[communityCard.ordinal()+1+communitySampleRank];
-			}
-
-			for(int j=0;j<nbOpponentSamples;j++){
-				EnumSet<Card> usedOpponentCards = EnumSet.copyOf(usedCommunityCards);
-				int botRank = communitySampleRank;
-				for(Card botCard:botCards){
-					if(logger.isTraceEnabled())
-						logger.trace("Evaluating bot card "+botCard);
-					botRank = handRanks[botCard.ordinal()+1+botRank];
-				}
-				botRank = extractFinalRank(botRank);
-
-				boolean botWins = true;
-				double logProb = 0;
-				for(PlayerState opponent:opponents){
-					int opponentRank = communitySampleRank;
-					Card opponentFirst;
-					do{
-						opponentFirst = getRandomCard();
-					}while(usedOpponentCards.contains(opponentFirst));
-					usedOpponentCards.add(opponentFirst);
-					opponentRank = handRanks[opponentFirst.ordinal()+1+opponentRank];
-
-					Card opponentSecond;
-					do{
-						opponentSecond = getRandomCard();
-					}while(usedOpponentCards.contains(opponentSecond));
-					usedOpponentCards.add(opponentSecond);
-					opponentRank = extractFinalRank(handRanks[opponentSecond.ordinal()+1+opponentRank]);
-
-					if(logger.isTraceEnabled())
-						logger.trace("Evaluating sampled opponent cards "+opponentFirst+" "+opponentSecond);
-					if(opponentRank>=botRank){
-						botWins = false;
-					}//TODO fix for split pot
-					float opponentRankProb = getRelativeProbability(opponentRank, gameState.getGamePotSize()/(nbOpponentSamples*gameState.getTableConfiguration().getBigBlind()));
-					logProb += Math.log(opponentRankProb);
-				}
-				double prob = Math.exp(logProb);
-				if(botWins){
-					totalProfit += prob;
-				}
-				totalProb += prob;
-			}
-		}
-		return totalProfit/totalProb;
-	}
-
-	private float getRelativeProbability(int rank, int relativePotSize) {
+	protected float getRelativeProbability(int rank, int relativePotSize) {
 		if(relativePotSize<=15){
-			return ShowdownRankPredictor1.getRelativeProbability(rank);
+			return ShowdownRankPredictor1of2.getRelativeProbability(rank);
 		}else{
-			return ShowdownRankPredictor2.getRelativeProbability(rank);
+			return ShowdownRankPredictor2of2.getRelativeProbability(rank);
 		}
 		
 	}
-
 	@Override
 	public String toString() {
-		return "Distribution Showdown Node v2";
+		return "2 Part Distribution Showdown Node";
 	}
 
-	private static final int[] offsets = new int[] {0, 1277, 4137, 4995, 5853, 5863, 7140, 7296, 7452};
 
-	private int extractFinalRank(int rank){
-		int type = (rank >>> 12) - 1;
-		rank = rank & 0xFFF;
-		return offsets[type] + rank - 1;
-	}
-
-	private static Random random = new Random();
-	private static Card[] cards = Card.values();
-
-	protected Card getRandomCard(){
-		return cards[random.nextInt(cards.length)];
-	}
-
-	public static class Factory implements AbstractShowdownNode.Factory{
+	public static class Factory implements AbstractDistributionShowdownNode.Factory{
 
 		@Override
 		public DistributionShowdownNode2 create(PlayerId botId, GameState gameState, int tokens
@@ -182,8 +51,7 @@ public class DistributionShowdownNode2 extends AbstractShowdownNode{
 
 		@Override
 		public String toString() {
-			return "Distribution Showdown Node v2 factory";
+			return "2 Part Distribution Showdown Node factory";
 		}
 	}
-
 }

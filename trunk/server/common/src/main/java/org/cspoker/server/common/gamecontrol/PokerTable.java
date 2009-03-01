@@ -762,12 +762,12 @@ public class PokerTable {
 		
 		public synchronized void run() {
 			try {
-				PokerTable.logger.info("Player " + player + " auto-fold called.");
+				PokerTable.logger.debug("Player " + player + " auto-fold called.");
 				
 				if (getCurrentTimeOut() == this && tableState.getGame() != null && !cancelled) {
 					MutableSeatedPlayer gcPlayer = tableState.getGame().getCurrentPlayer();
 					if (gcPlayer!=null && (gcPlayer.getId().equals(player.getId()))) {
-						PokerTable.logger.info("Player " + player + " automatically folded.");
+						PokerTable.logger.debug("Player " + player + " automatically folded.");
 						tableState.fold(gcPlayer);
 					}
 				}
