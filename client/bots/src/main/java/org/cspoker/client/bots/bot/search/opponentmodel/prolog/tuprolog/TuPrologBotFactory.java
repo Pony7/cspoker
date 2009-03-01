@@ -81,7 +81,7 @@ public class TuPrologBotFactory implements BotFactory {
 		SearchConfiguration config = new SearchConfiguration(opponentModels.get(botId), 
 				new UniformShowdownNode.Factory(),
 				new CompleteExpander.Factory(),
-				1,1,10,100);
+				1,1,10,100,false);
 		return new SearchBot(botId, tableId, lobby, executor, config ,botListeners);
 	}
 

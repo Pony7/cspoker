@@ -44,7 +44,7 @@ public class BotActionNode extends ActionNode{
 	private final static Logger logger = Logger.getLogger(BotActionNode.class);
 
 	private final Expander expander;
-	
+
 	public BotActionNode(PlayerId botId, GameState gameState,
 			SearchConfiguration config, int tokens, int searchId, NodeVisitor... visitors) {
 		super(botId, botId, new CachingNode(gameState), config, searchId, visitors);
@@ -72,7 +72,9 @@ public class BotActionNode extends ActionNode{
 		Set<? extends EvaluatedAction<? extends ActionWrapper>> actions = getExpander().expand();
 		for(EvaluatedAction<? extends ActionWrapper> eval : actions){
 			double ev = eval.getEV();
-			ev = ev*eval.getAction().getRiskPenalty();
+			if(config.useRiskPenalties()){
+				ev = ev*eval.getAction().getRiskPenalty();
+			}
 			if(ev>maxEv){
 				maxEv = eval.getEV();
 				action = eval;

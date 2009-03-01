@@ -53,6 +53,7 @@ public class CallAction extends SearchBotAction{
 					break forloop;
 				}
 			}
+		//what if small or big blind all-in?
 		if(roundEnds 
 				&& gameState.getRound().equals(Round.PREFLOP) 
 				&& gameState.getPlayer(actor).isSmallBlind() 
@@ -64,8 +65,13 @@ public class CallAction extends SearchBotAction{
 		if(roundEnds){
 			return getNewRoundState(state);
 		}else{
+			PlayerState nextActivePlayerAfter = state.getNextActivePlayerAfter(actor);
+			if(nextActivePlayerAfter==null){
+				//BigBlind is all-in
+				return getNewRoundState(state);
+			}
 			return new NextPlayerState(state,
-					new NextPlayerEvent(state.getNextActivePlayerAfter(actor).getPlayerId()));
+					new NextPlayerEvent(nextActivePlayerAfter.getPlayerId()));
 		}
 	}
 

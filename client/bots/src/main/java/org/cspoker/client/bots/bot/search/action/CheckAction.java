@@ -43,6 +43,7 @@ public class CheckAction extends SearchBotAction{
 	@Override
 	public GameState getStateAfterAction() throws GameEndedException {
 		PlayerState nextToAct = gameState.getNextActivePlayerAfter(actor);
+		//if bigblind is all-in, he shouldn't check again, so we're safe
 		boolean newRound = nextToAct.hasChecked() || (gameState.getRound().equals(Round.PREFLOP) && gameState.getPlayer(actor).isBigBlind() 
 				&& gameState.getLargestBet()<=gameState.getTableConfiguration().getBigBlind());
 		

@@ -28,6 +28,12 @@ import org.cspoker.common.api.lobby.holdemtable.event.AllInEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.HoldemTableEvent;
 import org.cspoker.common.elements.player.PlayerId;
 
+/**
+ * State after somebody went all-in.
+ * BEWARE, this can be in stead of a SmallBlindState or BigBlindState!
+ * @author guy
+ *
+ */
 public class AllInState
 		extends ForwardingGameState {
 	
@@ -91,6 +97,16 @@ public class AllInState
 			@Override
 			public boolean hasChecked() {
 				return false;
+			}
+			
+			@Override
+			public boolean isSmallBlind() {
+				return super.isSmallBlind();
+			}
+			
+			@Override
+			public boolean isBigBlind() {
+				return super.isBigBlind();
 			}
 			
 			/**

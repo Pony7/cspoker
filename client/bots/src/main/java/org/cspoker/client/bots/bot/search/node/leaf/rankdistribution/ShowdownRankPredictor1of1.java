@@ -1,4 +1,4 @@
-package org.cspoker.client.bots.bot.search.node.leaf;
+package org.cspoker.client.bots.bot.search.node.leaf.rankdistribution;
 /**
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@ package org.cspoker.client.bots.bot.search.node.leaf;
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-public class ShowdownRankPredictor {
+public class ShowdownRankPredictor1of1 {
 
 	private final static float[] relShowdownProb = new float[7462];
 

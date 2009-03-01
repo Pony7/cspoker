@@ -53,7 +53,7 @@ public class RaiseAction extends SearchBotAction{
 	
 	@Override
 	public double getRiskPenalty() {
-		return 0.75;
+		return 0.70;
 	}
 	
 }
