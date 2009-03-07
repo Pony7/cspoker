@@ -80,9 +80,4 @@ public class CallAction extends SearchBotAction{
 		return "Calling";
 	}
 
-	@Override
-	public double getRiskPenalty() {
-		return 0.99;
-	}
-
 }

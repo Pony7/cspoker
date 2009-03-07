@@ -28,6 +28,7 @@ import org.cspoker.client.common.gamestate.PlayerState;
 import org.cspoker.common.elements.cards.Card;
 import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.handeval.spears2p2.StateTableEvaluator;
+import org.cspoker.common.util.Pair;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Sets;
@@ -50,7 +51,7 @@ public abstract class AbstractDistributionShowdownNode extends AbstractShowdownN
 		this.tokens = tokens;
 	}
 
-	public double getExpectedPotPercentage() {
+	public Pair<Double, Double> getExpectedPotPercentage() {
 		PlayerState botState = gameState.getPlayer(botId);
 		Set<PlayerState> opponents = Sets.filter(gameState.getAllSeatedPlayers(),new Predicate<PlayerState>(){
 			@Override
@@ -144,7 +145,8 @@ public abstract class AbstractDistributionShowdownNode extends AbstractShowdownN
 				totalProb += prob;
 			}
 		}
-		return totalProfit/totalProb;
+		double p = totalProfit/totalProb;
+		return new Pair<Double, Double>(p,p*(1-p));
 	}
 
 	protected abstract float getRelativeProbability(int rank, int relativePotSize);

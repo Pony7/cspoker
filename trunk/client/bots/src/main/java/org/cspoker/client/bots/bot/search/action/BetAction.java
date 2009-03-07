@@ -56,9 +56,4 @@ public class BetAction extends SearchBotAction{
 		return "Betting "+amount;
 	}
 	
-	@Override
-	public double getRiskPenalty() {
-		return 0.95;
-	}
-	
 }

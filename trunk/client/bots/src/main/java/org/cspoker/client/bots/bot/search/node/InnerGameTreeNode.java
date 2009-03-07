@@ -24,11 +24,12 @@ import org.cspoker.client.bots.bot.search.action.EvaluatedAction;
 import org.cspoker.client.bots.bot.search.action.ProbabilityAction;
 import org.cspoker.client.bots.bot.search.action.SearchBotAction;
 import org.cspoker.client.common.gamestate.GameState;
+import org.cspoker.common.util.Pair;
 
 @Immutable
 public interface InnerGameTreeNode extends GameTreeNode{
 
-	double getEV();
+	Pair<Double, Double> getEV();
 
 	<A extends ActionWrapper> EvaluatedAction<A> expandWith(A action, int tokens);
 

@@ -15,14 +15,22 @@
  */
 package org.cspoker.client.bots.bot.search.action;
 
+import org.cspoker.common.util.Pair;
+
 public class EvaluatedAction<A extends ActionWrapper> implements ActionWrapper{
 
 	private final A action;
 	private final double EV;
+	private final double varEV;
 
-	public EvaluatedAction(A action, double EV) {
+	public EvaluatedAction(A action, Pair<Double, Double> EV) {
+		this(action,EV.getLeft(), EV.getRight());
+	}
+	
+	public EvaluatedAction(A action, double EV, double VarEV) {
 		this.action = action;
 		this.EV = EV;
+		this.varEV = VarEV;
 	}
 	
 	public A getEvaluatedAction() {
@@ -37,9 +45,13 @@ public class EvaluatedAction<A extends ActionWrapper> implements ActionWrapper{
 		return EV;
 	}
 	
+	public double getVarEV() {
+		return varEV;
+	}
+	
 	@Override
 	public String toString() {
-		return "EV is "+Math.round(EV)+" for "+action.toString();
+		return "EV is "+Math.round(EV)+" for "+action.toString()+" (Var="+varEV+")";
 	}
 	
 }

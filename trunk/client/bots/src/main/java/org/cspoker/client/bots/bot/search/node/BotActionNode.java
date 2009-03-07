@@ -38,6 +38,7 @@ import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.RemoteHoldemPlayerContext;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.player.PlayerId;
+import org.cspoker.common.util.Pair;
 
 public class BotActionNode extends ActionNode{
 
@@ -52,8 +53,9 @@ public class BotActionNode extends ActionNode{
 	}
 
 	@Override
-	public double getEV() {
-		return getBestEvaluatedAction().getEV();
+	public Pair<Double, Double> getEV() {
+		EvaluatedAction<? extends ActionWrapper> bestEvaluatedAction = getBestEvaluatedAction();
+		return new Pair<Double, Double>(bestEvaluatedAction.getEV(), bestEvaluatedAction.getVarEV());
 	}
 
 
@@ -72,9 +74,6 @@ public class BotActionNode extends ActionNode{
 		Set<? extends EvaluatedAction<? extends ActionWrapper>> actions = getExpander().expand();
 		for(EvaluatedAction<? extends ActionWrapper> eval : actions){
 			double ev = eval.getEV();
-			if(config.useRiskPenalties()){
-				ev = ev*eval.getAction().getRiskPenalty();
-			}
 			if(ev>maxEv){
 				maxEv = eval.getEV();
 				action = eval;
