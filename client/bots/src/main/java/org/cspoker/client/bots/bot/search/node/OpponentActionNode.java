@@ -19,7 +19,6 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.cspoker.client.bots.bot.search.SearchConfiguration;
-import org.cspoker.client.bots.bot.search.action.ActionWrapper;
 import org.cspoker.client.bots.bot.search.action.EvaluatedAction;
 import org.cspoker.client.bots.bot.search.action.ProbabilityAction;
 import org.cspoker.client.bots.bot.search.action.SampledAction;
@@ -28,6 +27,7 @@ import org.cspoker.client.bots.bot.search.node.expander.SamplingExpander;
 import org.cspoker.client.bots.bot.search.node.visitor.NodeVisitor;
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.common.elements.player.PlayerId;
+import org.cspoker.common.util.Pair;
 
 public class OpponentActionNode extends ActionNode{
 
@@ -42,15 +42,20 @@ public class OpponentActionNode extends ActionNode{
 
 	
 	@Override
-	public double getEV() {
+	public Pair<Double,Double> getEV() {
 		config.getOpponentModeler().assume(gameState);
 		int average = 0;
 		Set<? extends EvaluatedAction<? extends SampledAction>> actions = getExpander().expand();
 		config.getOpponentModeler().forgetAssumption();
+		
+		double varEV=0;
 		for(EvaluatedAction<? extends SampledAction> eval : actions){
 			average += eval.getEvaluatedAction().getTimes()*eval.getEV(); 
+			double ratio = ((double)eval.getEvaluatedAction().getTimes())/eval.getEvaluatedAction().getOutof();
+			varEV += ratio*ratio*eval.getVarEV();
 		}
-		return Double.valueOf(average)/actions.iterator().next().getEvaluatedAction().getOutof();
+		double EV = Double.valueOf(average)/actions.iterator().next().getEvaluatedAction().getOutof();
+		return new Pair<Double, Double>(EV,varEV);
 	}
 	
 	@Override

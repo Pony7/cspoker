@@ -18,10 +18,11 @@ package org.cspoker.client.bots.bot.search.node.leaf;
 import org.cspoker.client.bots.bot.search.SearchConfiguration;
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.common.elements.player.PlayerId;
+import org.cspoker.common.util.Pair;
 
 public interface ShowdownNode {
 
-	double getExpectedValue();
+	Pair<Double, Double> getExpectedValue();
 
 	public static interface Factory{
 

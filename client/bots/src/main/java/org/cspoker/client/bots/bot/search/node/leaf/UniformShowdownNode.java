@@ -26,6 +26,7 @@ import org.cspoker.client.common.gamestate.PlayerState;
 import org.cspoker.common.elements.cards.Card;
 import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.handeval.stevebrecher.HandEval;
+import org.cspoker.common.util.Pair;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Sets;
@@ -44,7 +45,7 @@ public class UniformShowdownNode extends AbstractShowdownNode{
 		this.tokens = tokens;
 	}
 
-	public double getExpectedPotPercentage() {
+	public Pair<Double,Double> getExpectedPotPercentage() {
 		PlayerState botState = gameState.getPlayer(botId);
 		Set<PlayerState> opponents = Sets.filter(gameState.getAllSeatedPlayers(),new Predicate<PlayerState>(){
 			@Override
@@ -70,7 +71,7 @@ public class UniformShowdownNode extends AbstractShowdownNode{
 			nbOpponentSamples = (int) (root*2/nbMissingCommunityCards);
 		}
 
-		int totalProfit = 0;
+		int totalNbWins = 0;
 		for(int i=0;i<nbCommunitySamples;i++){
 			EnumSet<Card> fixedAndCommunityCards = EnumSet.copyOf(usedFixedCards);
 			EnumSet<Card> communityCards = EnumSet.copyOf(fixedCommunityCards);
@@ -106,11 +107,12 @@ public class UniformShowdownNode extends AbstractShowdownNode{
 					}//TODO fix for split pot
 				}
 				if(botWins){
-					++totalProfit;
+					++totalNbWins;
 				}
 			}
 		}
-		return ((double)totalProfit)/(nbOpponentSamples*nbCommunitySamples);
+		double p = ((double)totalNbWins)/(nbOpponentSamples*nbCommunitySamples);
+		return new Pair<Double, Double>(p,p*(1-p));
 	}
 
 	private int getRank(EnumSet<Card> cards) {

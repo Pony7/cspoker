@@ -59,7 +59,7 @@ public abstract class ActionNode implements InnerGameTreeNode{
 		if(action.getAction().endsInvolvementOf(botId)){
 			//bot folded
 			int stack = action.getAction().gameState.getPlayer(botId).getStack();
-			result = new EvaluatedAction<A>(action, stack);
+			result = new EvaluatedAction<A>(action, stack,0);
 		}else{
 			try {
 				nextState = action.getAction().getStateAfterAction();
@@ -83,7 +83,7 @@ public abstract class ActionNode implements InnerGameTreeNode{
 					//bot wins
 					int stack = e.winner.getStack();
 					int pots = e.foldState.getGamePotSize();
-					result = new EvaluatedAction<A>(action, stack+pots);
+					result = new EvaluatedAction<A>(action, stack+pots,0);
 				}else{
 					throw new IllegalStateException("Bot should have folded earlier, winner can't be "+e.winner);
 				}
