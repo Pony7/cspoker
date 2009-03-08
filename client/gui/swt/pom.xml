@@ -20,7 +20,7 @@
 					</descriptorRefs>
 					<archive>
 						<manifest>
-							<mainClass> org.cspoker.client.gui.swt.ClientCore </mainClass>
+							<mainClass> org.cspoker.client.gui.swt.control.ClientCore </mainClass>
 						</manifest>
 					</archive>
 					<source>1.6</source>

@@ -194,7 +194,7 @@ public class Game {
 		setFirstToActPlayer(getCurrentPlayer());
 		setNextDealer(getCurrentPlayer());
 		for (MutableSeatedPlayer player : currentHandPlayers.getList()) {
-			logger.warn("New game with "+player);
+			logger.info("New game with "+player);
 		}
 	}
 	
