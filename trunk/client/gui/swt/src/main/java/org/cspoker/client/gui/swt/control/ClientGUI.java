@@ -15,6 +15,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.rmi.RemoteException;
 import java.text.NumberFormat;
 import java.util.*;
@@ -22,6 +23,7 @@ import java.util.prefs.Preferences;
 
 import javax.sound.sampled.*;
 
+import org.apache.derby.impl.sql.compile.GetCurrentConnectionNode;
 import org.apache.log4j.Logger;
 import org.cspoker.client.User;
 import org.cspoker.client.gui.swt.window.GameWindow;
@@ -54,71 +56,74 @@ public class ClientGUI {
 		
 		public static final boolean ADDITIONAL_RESOURCES = true;
 		
-		public static final File BASE_DIR = new File("target/classes");
-		private static final File IMAGE_DIR = new File(BASE_DIR, "images");
+		private static final String IMAGE_DIR = "images/";
 		
 		/** Icon to be used for Shell images */
-		public static final File CS_POKER_ICON = new File(Resources.IMAGE_DIR, "csicon.png");
+		public static final String CS_POKER_ICON = Resources.IMAGE_DIR + "csicon.png";
 		
-		private static final File CHIP_DIR = new File(IMAGE_DIR, "chips");
+		private static final String CHIP_DIR = IMAGE_DIR + "chips/";
+		
 		/**
 		 * Contains PokerStars chip images. May not be available in open-source
 		 * version
 		 */
-		public final static File STARS_CHIP_IMG_DIR = new File(Resources.CHIP_DIR, "stars");
+		public final static String STARS_CHIP_IMG_DIR = Resources.CHIP_DIR + "stars/";
+		
 		/**
 		 * Contains EPT chip images. May not be available in open-source version
 		 */
-		public final static File EPT_CHIP_IMG_DIR = new File(Resources.CHIP_DIR, "ept");
+		public final static String EPT_CHIP_IMG_DIR = Resources.CHIP_DIR + "ept/";
+		
 		/** Contains Chip images from PokerWikia (free!) */
-		public static final File FREE_CHIPS = new File(Resources.CHIP_DIR, "pokerWikia");
+		public static final String FREE_CHIPS = Resources.CHIP_DIR + "pokerWikia/";
+		
 		/**
 		 * Chip resource currently in use (that's where the images are retrieved
 		 * from during play)
 		 */
-		public static File ACTIVE_CHIP_DIR;
+		public static String ACTIVE_CHIP_DIR;
 		
-		private final static File THEMES_IMG_DIR = new File(Resources.IMAGE_DIR, "themes");
-		private final static File CARDS_IMG_DIR = new File(Resources.IMAGE_DIR, "cards");
+		private final static String THEMES_IMG_DIR = Resources.IMAGE_DIR + "themes/";
+		private final static String CARDS_IMG_DIR = Resources.IMAGE_DIR + "cards/";
 		/**
 		 * Contains FTP card images. May not be available in open-source version
 		 */
-		public static final File FTP_DECK_IMG_FILE = new File(CARDS_IMG_DIR, "Deck_FTP.png");
+		public static final String FTP_DECK_IMG_FILE = CARDS_IMG_DIR + "Deck_FTP.png";
 		
 		/**
 		 * UNO-style cards
 		 */
-		public static final File UNO_DECK_IMG_FILE = new File(CARDS_IMG_DIR, "Deck_Uno.png");
+		public static final String UNO_DECK_IMG_FILE = CARDS_IMG_DIR + "Deck_Uno.png";
 		/**
 		 * Contains PokerStars card images. May not be available in open-source
 		 * version
 		 */
-		public static final File FOUR_COLOR_DECK_IMG_FILE = new File(CARDS_IMG_DIR, "Deck_Free_2.png");
+		public static final String FOUR_COLOR_DECK_IMG_FILE = CARDS_IMG_DIR + "Deck_Free_2.png";
 		/**
 		 * Card image resource currently in use (that's where the images are
 		 * retrieved from during play). Initialized to use free Four color
 		 * deck-style cards
 		 */
-		public static File ACTIVE_DECK_IMG_FILE;
+		public static String ACTIVE_DECK_IMG_FILE;
 		
-		public static final List<File> VALID_DECK_FILES = Collections.unmodifiableList(Arrays.asList(FTP_DECK_IMG_FILE,
+		public static final List<String> VALID_DECK_FILES = Collections.unmodifiableList(Arrays.asList(FTP_DECK_IMG_FILE,
 				FOUR_COLOR_DECK_IMG_FILE, UNO_DECK_IMG_FILE));
 		
-		public static final List<File> VALID_CHIP_FILES = Collections.unmodifiableList(Arrays.asList(FTP_DECK_IMG_FILE,
+		public static final List<String> VALID_CHIP_FILES = Collections.unmodifiableList(Arrays.asList(FTP_DECK_IMG_FILE,
 				EPT_CHIP_IMG_DIR, STARS_CHIP_IMG_DIR, FREE_CHIPS));
 		
 		/** Default table background image */
-		public static final File TABLE_IMAGE = new File(THEMES_IMG_DIR, "table1.jpg");
+		public static final String TABLE_IMAGE = THEMES_IMG_DIR + "table1.jpg";
 		
-		private static final File SOUND_DIR = new File(Resources.BASE_DIR, "Snd");
+		private static final String SOUND_DIR = "Snd/";
 		/** Plays a <i>Check</i> sound */
-		public static final File SOUND_FILE_CHECK = new File(SOUND_DIR, "snd4.wav");
+		public static final String SOUND_FILE_CHECK = SOUND_DIR + "snd4.wav";
 		/** Plays a <i>Fold</i> sound */
-		public static final File SOUND_FILE_FOLD = new File(SOUND_DIR, "snd6.wav");
+		public static final String SOUND_FILE_FOLD = SOUND_DIR + "snd6.wav";
 		/** Plays a <i>Chip clink</i> sound */
-		public static final File SOUND_FILE_BETRAISE = new File(SOUND_DIR, "snd5.wav");
+		public static final String SOUND_FILE_BETRAISE = SOUND_DIR + "snd5.wav";
 		/** Plays a <i>Chip sliding</i> sound */
-		public static final File SOUND_FILE_SLIDE_CHIPS = new File(SOUND_DIR, "snd3.wav");
+		public static final String SOUND_FILE_SLIDE_CHIPS = SOUND_DIR + "snd3.wav";
 		
 	}
 	
@@ -202,9 +207,9 @@ public class ClientGUI {
 	 * 
 	 */
 	private void verifyAndInitResources() {
-		File cardFile = new File(Preferences.userRoot().get(User.Prefs.CARDS,
-				Resources.FOUR_COLOR_DECK_IMG_FILE.toString()));
-		File chipFile = new File(Preferences.userRoot().get(User.Prefs.CHIPS, Resources.FREE_CHIPS.toString()));
+		String cardFile = Preferences.userRoot().get(User.Prefs.CARDS,
+				Resources.FOUR_COLOR_DECK_IMG_FILE);
+		String chipFile = Preferences.userRoot().get(User.Prefs.CHIPS, Resources.FREE_CHIPS);
 		if (!Resources.VALID_DECK_FILES.contains(cardFile)) {
 			cardFile = Resources.FOUR_COLOR_DECK_IMG_FILE;
 		}
@@ -324,14 +329,14 @@ public class ClientGUI {
 	/**
 	 * @param file Plays the given audio file
 	 */
-	public static void playAudio(File file) {
+	public static void playAudio(String file) {
 		if (SOUND_ON == false) {
 			return;
 		}
 		AudioInputStream stream = null;
 		Clip clip = null;
 		try {
-			stream = AudioSystem.getAudioInputStream((new FileInputStream(file)));
+			stream = AudioSystem.getAudioInputStream(ClientGUI.getResource(file));
 			DataLine.Info info = new DataLine.Info(Clip.class, stream.getFormat());
 			clip = (Clip) AudioSystem.getLine(info);
 			clip.open(stream);
@@ -370,16 +375,20 @@ public class ClientGUI {
 	 *            single image file containing all images.
 	 * @throws FileNotFoundException If the file resource does not exist
 	 */
-	public static void setActiveCardDeck(File cardFileResource)
+	public static void setActiveCardDeck(String cardFileResource)
 			throws FileNotFoundException {
-		
-		if (!cardFileResource.exists()) {
-			throw new FileNotFoundException(cardFileResource.toString());
-		}
-		Preferences.userRoot().put(User.Prefs.CARDS, cardFileResource.toString());
+		//TODO reintroduce check for correct directory
+//		if (getResource(cardFileResource)==null) {
+//			throw new FileNotFoundException(cardFileResource);
+//		}
+		Preferences.userRoot().put(User.Prefs.CARDS, cardFileResource);
 		SWTResourceManager.dispose();
 		Resources.ACTIVE_DECK_IMG_FILE = cardFileResource;
 		
+	}
+
+	public static InputStream getResource(String path) {
+		return ClientGUI.class.getClassLoader().getResourceAsStream(path);
 	}
 	
 	/**
@@ -393,12 +402,13 @@ public class ClientGUI {
 	 *            single image file containing all images.
 	 * @throws FileNotFoundException If the file resource does not exist
 	 */
-	public static void setActiveChipsStyle(File chipFileResource)
+	public static void setActiveChipsStyle(String chipFileResource)
 			throws FileNotFoundException {
-		if (!chipFileResource.exists()) {
-			throw new FileNotFoundException(chipFileResource.toString());
-		}
-		Preferences.userRoot().put(User.Prefs.CHIPS, chipFileResource.toString());
+		//TODO reintroduce check for correct directory
+//		if (getResource(chipFileResource)==null) {
+//			throw new FileNotFoundException(chipFileResource);
+//		}
+		Preferences.userRoot().put(User.Prefs.CHIPS, chipFileResource);
 		SWTResourceManager.dispose();
 		Resources.ACTIVE_CHIP_DIR = chipFileResource;
 		

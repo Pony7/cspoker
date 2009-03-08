@@ -15,10 +15,12 @@
  */
 package org.cspoker.client.gui.swt.control;
 
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Vector;
 
@@ -29,7 +31,15 @@ import org.cspoker.common.elements.cards.Suit;
 import org.eclipse.swt.SWTException;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
-import org.eclipse.swt.graphics.*;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Cursor;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.FontData;
+import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.ImageData;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Resource;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Widget;
 
@@ -143,19 +153,15 @@ public class SWTResourceManager {
 	 * @param file The file representing an image file
 	 * @return The image contained in the file
 	 */
-	public static Image getImage(File file) {
-		
+	public static Image getImage(String file) {
 		if (resources.containsKey(file.toString()))
 			return (Image) resources.get(file.toString());
 		Image img = null;
-		FileInputStream imgStream = null;
+		InputStream imgStream = null;
 		try {
-			try {
-				imgStream = new FileInputStream(file.getAbsoluteFile());
-			} catch (FileNotFoundException e) {
-				logger.error("File not found", e);
-			}
+			imgStream = new BufferedInputStream(ClientGUI.getResource(file));
 			img = new Image(Display.getDefault(), imgStream);
+			resources.put(file, img);
 		} finally {
 			if (imgStream != null)
 				try {
@@ -163,9 +169,6 @@ public class SWTResourceManager {
 				} catch (IOException ignored) {
 					// Ignore
 				}
-		}
-		if (!file.isDirectory()) {
-			resources.put(file.toString(), img);
 		}
 		return img;
 		
@@ -180,11 +183,13 @@ public class SWTResourceManager {
 		String key = (card != ClientGUI.UNKNOWN_CARD) ? card.toString() : "back";
 		if (resources.containsKey(key))
 			return (Image) resources.get(key);
-		if (ClientGUI.Resources.ACTIVE_DECK_IMG_FILE.isFile()) {
+		if (ClientGUI.Resources.ACTIVE_DECK_IMG_FILE.endsWith(".png") 
+				|| ClientGUI.Resources.ACTIVE_DECK_IMG_FILE.endsWith(".jpg")
+				|| ClientGUI.Resources.ACTIVE_DECK_IMG_FILE.endsWith(".bmp")) {
 			Image deck = getImage(ClientGUI.Resources.ACTIVE_DECK_IMG_FILE);
 			img = getCardFromDeck(deck, card);
 		} else {
-			img = getImage(new File(ClientGUI.Resources.ACTIVE_DECK_IMG_FILE, card.toString() + ".png"));
+			img = getImage(ClientGUI.Resources.ACTIVE_DECK_IMG_FILE + card.toString() + ".png");
 		}
 		
 		resources.put(key, img);
@@ -211,7 +216,7 @@ public class SWTResourceManager {
 	private static Image getChipFromPNG(Chip chip) {
 		if (resources.containsKey(chip.toString()))
 			return (Image) resources.get(chip.toString());
-		Image chipPngImg = getImage(new File(ClientGUI.Resources.FREE_CHIPS, "Chips_Free.png"));
+		Image chipPngImg = getImage(ClientGUI.Resources.FREE_CHIPS + "Chips_Free.png");
 		if (chipPngImg == null)
 			return null;
 		// Calculate drawing values
@@ -227,7 +232,7 @@ public class SWTResourceManager {
 	}
 	
 	/**
-	 * @param chip Teh chip
+	 * @param chip The chip
 	 * @param size Desired size (1-6)
 	 * @return The chip image
 	 * @throws IOException If some kind of error occurs while retrieving the
@@ -243,17 +248,17 @@ public class SWTResourceManager {
 		}
 		if (chipImg != null)
 			return chipImg;
-		if (resources.containsKey(chip.getImageFile(size).toString()))
-			return (Image) resources.get(chip.getImageFile(size).toString());
+		if (resources.containsKey(chip.getImagePath(size)))
+			return (Image) resources.get(chip.getImagePath(size));
 		
 		Image img = null;
 		Image mask = null;
 		Image icon = null;
-		FileInputStream imgStream = null;
-		FileInputStream maskStream = null;
+		InputStream imgStream = null;
+		InputStream maskStream = null;
 		try {
-			imgStream = new FileInputStream(chip.getImageFile(size).getAbsoluteFile());
-			maskStream = new FileInputStream(chip.getMaskImageFile(size).getAbsoluteFile());
+			imgStream = chip.getImageStream(size);
+			maskStream = chip.getMaskImageStream(size);
 			
 			img = new Image(Display.getDefault(), imgStream);
 			mask = new Image(Display.getDefault(), maskStream);
@@ -269,7 +274,7 @@ public class SWTResourceManager {
 		}
 		img.dispose();
 		mask.dispose();
-		resources.put(chip.getImageFile(size).toString(), icon);
+		resources.put(chip.getImagePath(size), icon);
 		return icon;
 	}
 	

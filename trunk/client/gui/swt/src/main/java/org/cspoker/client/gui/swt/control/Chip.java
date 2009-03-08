@@ -13,6 +13,7 @@ package org.cspoker.client.gui.swt.control;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -194,20 +195,18 @@ public class Chip
 		}
 		return amount;
 	}
-	
-	/**
-	 * @param size The desired size
-	 * @return The file location of the image, depending on the
-	 *         {@link ClientGUI.Resources#ACTIVE_CHIP_DIR}
-	 */
-	public File getImageFile(int size) {
-		File chip = new File(ClientGUI.Resources.ACTIVE_CHIP_DIR, size + "/" + fileId + ".bmp");
-		if (!chip.exists()) {
-			chip = new File(ClientGUI.Resources.ACTIVE_CHIP_DIR, fileId + ".bmp");
+
+	public InputStream getImageStream(int size) {
+		String path = getImagePath(size);
+		InputStream stream = ClientGUI.getResource(path);
+		if (stream==null) {
+			stream = ClientGUI.getResource(ClientGUI.Resources.ACTIVE_CHIP_DIR + fileId + ".bmp");
 		}
-		
-		return chip;
-		
+		return stream;
+	}
+
+	public String getImagePath(int size) {
+		return ClientGUI.Resources.ACTIVE_CHIP_DIR + size + "/" + fileId + ".bmp";
 	}
 	
 	/**
@@ -215,12 +214,13 @@ public class Chip
 	 * @return The file location of the mask image, depending on the
 	 *         {@link ClientGUI.Resources#ACTIVE_CHIP_DIR}
 	 */
-	public File getMaskImageFile(int size) {
-		File mask = new File(ClientGUI.Resources.ACTIVE_CHIP_DIR, size + "/" + fileId + ".a.bmp");
-		if (!mask.exists()) {
-			mask = new File(ClientGUI.Resources.ACTIVE_CHIP_DIR, fileId + ".bmp");
+	public InputStream getMaskImageStream(int size) {
+		String path = ClientGUI.Resources.ACTIVE_CHIP_DIR + size + "/" + fileId + ".a.bmp";
+		InputStream stream = ClientGUI.getResource(path);
+		if (stream==null) {
+			stream = ClientGUI.getResource(ClientGUI.Resources.ACTIVE_CHIP_DIR + fileId + ".bmp");
 		}
-		return mask;
+		return stream;
 	}
 	
 	/**
