@@ -71,7 +71,7 @@ public class InterPrologBotFactory implements BotFactory {
 		SearchConfiguration config = new SearchConfiguration(opponentModels.get(botId), 
 				new UniformShowdownNode.Factory(),
 				new CompleteExpander.Factory(),
-				1,1,10,100,false);
+				1,1,10,100,0.5);
 		return new SearchBot(botId, tableId, lobby, executor, config ,botListeners);
 	}
 

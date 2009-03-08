@@ -44,18 +44,22 @@ public class OpponentActionNode extends ActionNode{
 	@Override
 	public Pair<Double,Double> getEV() {
 		config.getOpponentModeler().assume(gameState);
-		int average = 0;
 		Set<? extends EvaluatedAction<? extends SampledAction>> actions = getExpander().expand();
 		config.getOpponentModeler().forgetAssumption();
-		
+
+		//see Variance Estimation and Ranking of Gaussian Mixture Distributions in Target Tracking Applications
+		//Lidija Trailovi ́and Lucy Y. Pao
 		double varEV=0;
+		double EV = 0;
 		for(EvaluatedAction<? extends SampledAction> eval : actions){
-			average += eval.getEvaluatedAction().getTimes()*eval.getEV(); 
-			double ratio = ((double)eval.getEvaluatedAction().getTimes())/eval.getEvaluatedAction().getOutof();
-			varEV += ratio*ratio*eval.getVarEV();
+			double m = eval.getEV();
+			double ss = eval.getVarEV();
+			double w = ((double)eval.getEvaluatedAction().getTimes())/eval.getEvaluatedAction().getOutof();
+			
+			EV += w*m; 
+			varEV += w*(ss+m*m);
 		}
-		double EV = Double.valueOf(average)/actions.iterator().next().getEvaluatedAction().getOutof();
-		return new Pair<Double, Double>(EV,varEV);
+		return new Pair<Double, Double>(EV,Math.max(0,varEV-EV*EV));
 	}
 	
 	@Override
