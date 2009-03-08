@@ -49,9 +49,13 @@ public class EvaluatedAction<A extends ActionWrapper> implements ActionWrapper{
 		return varEV;
 	}
 	
+	public double getDiscountedEV(double discount){
+		return EV-discount*Math.sqrt(varEV);
+	}
+	
 	@Override
 	public String toString() {
-		return "EV is "+Math.round(EV)+" for "+action.toString()+" (Var="+varEV+")";
+		return "EV is "+Math.round(EV)+" for "+action.toString()+" (sigma="+(Math.round(Math.sqrt(varEV)))+")";
 	}
 	
 }

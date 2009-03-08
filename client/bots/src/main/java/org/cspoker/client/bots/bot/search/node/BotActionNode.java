@@ -72,12 +72,16 @@ public class BotActionNode extends ActionNode{
 		double maxEv=Double.NEGATIVE_INFINITY;
 		EvaluatedAction<? extends ActionWrapper> action = null;
 		Set<? extends EvaluatedAction<? extends ActionWrapper>> actions = getExpander().expand();
+		
 		for(EvaluatedAction<? extends ActionWrapper> eval : actions){
-			double ev = eval.getEV();
+			double ev = eval.getDiscountedEV(config.getEVDiscount());
 			if(ev>maxEv){
-				maxEv = eval.getEV();
+				maxEv = ev;
 				action = eval;
 			}
+		}
+		if(action == null){
+			System.out.println();
 		}
 		return action;
 	}

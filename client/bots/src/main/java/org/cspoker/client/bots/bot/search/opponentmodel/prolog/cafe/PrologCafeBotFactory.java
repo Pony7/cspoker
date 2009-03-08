@@ -66,7 +66,7 @@ public class PrologCafeBotFactory implements BotFactory {
 		SearchConfiguration config = new SearchConfiguration(opponentModels.get(botId), 
 				new DistributionShowdownNode2.Factory(),
 				new SamplingExpander.Factory(),
-				50,100,250,250,false);
+				50,100,250,250,0.5);
 		return new SearchBot(botId, tableId, lobby, executor, config ,botListeners);
 	}
 
