@@ -30,7 +30,7 @@ public class EvaluatedAction<A extends ActionWrapper> implements ActionWrapper{
 	public EvaluatedAction(A action, double EV, double VarEV) {
 		this.action = action;
 		this.EV = EV;
-		this.varEV = VarEV;
+		this.varEV = Math.max(0,VarEV);
 	}
 	
 	public A getEvaluatedAction() {
