@@ -11,19 +11,25 @@
  */
 package org.cspoker.client.gui.swt.control;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.rmi.RemoteException;
 import java.text.NumberFormat;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Hashtable;
+import java.util.List;
 import java.util.prefs.Preferences;
 
-import javax.sound.sampled.*;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.DataLine;
+import javax.sound.sampled.LineEvent;
+import javax.sound.sampled.LineListener;
 
-import org.apache.derby.impl.sql.compile.GetCurrentConnectionNode;
 import org.apache.log4j.Logger;
 import org.cspoker.client.User;
 import org.cspoker.client.gui.swt.window.GameWindow;
