@@ -48,7 +48,7 @@ public class OpponentActionNode extends ActionNode{
 		config.getOpponentModeler().forgetAssumption();
 
 		//see Variance Estimation and Ranking of Gaussian Mixture Distributions in Target Tracking Applications
-		//Lidija Trailovi ́and Lucy Y. Pao
+		//Lidija Trailovi and Lucy Y. Pao
 		double varEV=0;
 		double EV = 0;
 		for(EvaluatedAction<? extends SampledAction> eval : actions){
