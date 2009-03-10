@@ -52,13 +52,14 @@ extends AbstractBot {
 				try {
 					BotActionNode actionNode;
 					GameState gameState = tableContext.getGameState();
+					int maxDepth = 2;
 					switch (gameState.getRound()) {
 					case PREFLOP:
 						logger.debug("Searching preflop round game tree:");
 						config.getOpponentModeler().signalNextAction(gameState);
 						actionNode = new BotActionNode(playerId, gameState, 
 								config, config.getPreflopTokens(),
-								searchId++, new Log4JOutputVisitor(3));
+								searchId++, new Log4JOutputVisitor(maxDepth));
 						actionNode.performbestAction(playerContext);
 						break;
 					case FLOP:
@@ -66,7 +67,7 @@ extends AbstractBot {
 						config.getOpponentModeler().signalNextAction(gameState);
 						actionNode = new BotActionNode(playerId, gameState, 
 								config, config.getFlopTokens(),
-								searchId++, new Log4JOutputVisitor(3));
+								searchId++, new Log4JOutputVisitor(maxDepth));
 						actionNode.performbestAction(playerContext);
 						break;
 					case TURN:
@@ -74,7 +75,7 @@ extends AbstractBot {
 						config.getOpponentModeler().signalNextAction(gameState);
 						actionNode = new BotActionNode(playerId, gameState, 
 								config, config.getTurnTokens(), 
-								searchId++, new Log4JOutputVisitor(3));
+								searchId++, new Log4JOutputVisitor(maxDepth));
 						actionNode.performbestAction(playerContext);
 						break;
 					case FINAL:
@@ -83,7 +84,7 @@ extends AbstractBot {
 						config.getOpponentModeler().signalNextAction(gameState);
 						actionNode = new BotActionNode(playerId, gameState, 
 								config, config.getFinalTokens(), 
-								searchId++, new Log4JOutputVisitor(3));
+								searchId++, new Log4JOutputVisitor(maxDepth));
 						actionNode.performbestAction(playerContext);
 						break;
 					default:

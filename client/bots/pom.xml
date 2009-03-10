@@ -28,6 +28,13 @@
 		</dependency>
 		<dependency>
 			<groupId>org.cspoker</groupId>
+			<artifactId>client-gui-swt</artifactId>
+			<version>0.1-SNAPSHOT</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.cspoker</groupId>
 			<artifactId>client-communication-embedded</artifactId>
 			<version>0.1-SNAPSHOT</version>
 			<type>jar</type>

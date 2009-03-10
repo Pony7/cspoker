@@ -29,4 +29,11 @@
 			</plugin>
 		</plugins>
 	</build>
+	<dependencies>
+		<dependency>
+			<groupId>org.cspoker</groupId>
+			<artifactId>client-communication-embedded</artifactId>
+			<version>0.1-SNAPSHOT</version>
+		</dependency>
+	</dependencies>
 </project>

@@ -297,6 +297,8 @@ public class LobbyWindow
 				{
 					uiMenuItem = new MenuItem(menu1, SWT.CASCADE);
 					uiMenuItem.setText("Appearance");
+					//TODO reenable after missing images bug is fixed
+					uiMenuItem.setEnabled(false);
 					{
 						uiMenu = new Menu(uiMenuItem);
 						uiMenuItem.setMenu(uiMenu);
@@ -358,6 +360,7 @@ public class LobbyWindow
 							chipsMenuItem.setText("Chips");
 							
 							chipsMenu = new Menu(chipsMenuItem);
+							
 							chipsMenuItem.setMenu(chipsMenu);
 							starsChipsMenuItem = new MenuItem(chipsMenu, SWT.RADIO);
 							starsChipsMenuItem.setText("Poker Stars");
