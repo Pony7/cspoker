@@ -48,7 +48,7 @@ public class RaiseAction extends SearchBotAction{
 	
 	@Override
 	public String toString() {
-		return "Raising with "+amount;
+		return "Raise "+amount;
 	}
 	
 }

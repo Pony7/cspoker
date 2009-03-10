@@ -20,6 +20,9 @@ import org.cspoker.client.bots.bot.Bot;
 import org.cspoker.client.bots.bot.BotFactory;
 import org.cspoker.client.bots.bot.search.SearchBotFactory;
 import org.cspoker.client.bots.bot.search.node.leaf.DistributionShowdownNode4;
+import org.cspoker.client.bots.bot.search.node.visitor.Log4JOutputVisitor;
+import org.cspoker.client.bots.bot.search.node.visitor.SWTTreeVisitor;
+import org.cspoker.client.bots.listener.DefaultBotListener;
 import org.cspoker.client.common.SmartClientContext;
 import org.cspoker.client.common.SmartLobbyContext;
 import org.cspoker.client.communication.embedded.EmbeddedCSPokerServer;
@@ -28,6 +31,7 @@ import org.cspoker.client.gui.swt.control.DisplayExecutor;
 import org.cspoker.client.gui.swt.window.GameWindow;
 import org.cspoker.client.gui.swt.window.LobbyWindow;
 import org.cspoker.common.CSPokerServer;
+import org.cspoker.common.api.lobby.holdemtable.event.SitOutEvent;
 import org.cspoker.common.api.lobby.listener.DefaultLobbyListener;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.player.PlayerId;
@@ -43,7 +47,7 @@ public class RunHumanVsBot {
 	static {
 		Log4JPropertiesLoader.load("org/cspoker/client/bots/logging/log4j.properties");
 	}
-	
+
 	public static void main(String[] args) throws LoginException, RemoteException, IllegalActionException {
 		(new RunHumanVsBot()).testPlay();
 	}
@@ -51,8 +55,6 @@ public class RunHumanVsBot {
 	private ClientCore client;
 	protected CSPokerServer server;
 	private DisplayExecutor displayexecutor;
-	
-	private BotFactory botFactory = new SearchBotFactory(new DistributionShowdownNode4.Factory());
 
 	public RunHumanVsBot(){
 		server = new EmbeddedCSPokerServer();
@@ -63,8 +65,8 @@ public class RunHumanVsBot {
 		final TableId tableId = new TableId(0);
 
 		int smallBlind = 50;
-		int buyin = smallBlind * 400;
-		int delay = 2000;
+		final int buyin = smallBlind * 400;
+		int delay = 1500;
 		User u = new User("Human","test");
 		client = new ClientCore(u);
 		client.login(server);
@@ -93,16 +95,11 @@ public class RunHumanVsBot {
 
 			}
 		});
+		BotFactory botFactory = new SearchBotFactory(new DistributionShowdownNode4.Factory(), 
+				new Log4JOutputVisitor.Factory(2), new SWTTreeVisitor.Factory(client.getGui().getDisplay()));
 		
-		//Start Bot
-		SmartClientContext clientContext = new SmartClientContext(server.login("Bot", "test"));
-		SmartLobbyContext lobbyContext = clientContext.getLobbyContext(new DefaultLobbyListener());
-		PlayerId botId = clientContext.getAccountContext().getPlayerID();
-		SingleThreadRequestExecutor executor = SingleThreadRequestExecutor.getInstance();
-		Bot bot = botFactory.createBot(botId, tableId, lobbyContext, buyin, executor);
-		bot.start();
-		bot.startGame();
-		
+		startBot(botFactory, tableId, buyin);
+
 		// Listen to events#
 		Display display = Display.getDefault();
 		while (!display.isDisposed()) {
@@ -110,5 +107,34 @@ public class RunHumanVsBot {
 				display.sleep();
 		}
 
+	}
+
+	private int botIndex = 1;
+	
+	private void startBot(BotFactory botFactory, final TableId tableId, final int buyin)
+			throws LoginException, RemoteException, IllegalActionException {
+		//Start Bot
+		SmartClientContext clientContext = new SmartClientContext(server.login("Bot "+(botIndex++), "test"));
+		final SmartLobbyContext lobbyContext = clientContext.getLobbyContext(new DefaultLobbyListener());
+		final PlayerId botId = clientContext.getAccountContext().getPlayerID();
+		final SingleThreadRequestExecutor executor = SingleThreadRequestExecutor.getInstance();
+		Bot bot = botFactory.createBot(botId, tableId, lobbyContext, buyin, executor, new DefaultBotListener(){
+			@Override
+			public void onSitOut(SitOutEvent event) {
+//				if(event.getPlayerId().equals(botId)){
+//					try {
+//						startBot(tableId, buyin);
+//					} catch (LoginException e) {
+//						e.printStackTrace();
+//					} catch (RemoteException e) {
+//						e.printStackTrace();
+//					} catch (IllegalActionException e) {
+//						e.printStackTrace();
+//					}
+//				}
+			}
+		});
+		bot.start();
+		bot.startGame();
 	}
 }

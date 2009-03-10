@@ -69,16 +69,6 @@ public class InterPrologModel implements AllPlayersModel {
 		return new OpponentModel(){
 
 			@Override
-			public Set<SearchBotAction> getAllPossibleActions(GameState gameState) {
-				HashSet<SearchBotAction> possibleActions = new LinkedHashSet<SearchBotAction>();
-				Set<ProbabilityAction> probActions = getProbabilityActions(gameState);
-				for(ProbabilityAction action:probActions){
-					possibleActions.add(action.getAction());
-				}
-				return possibleActions;
-			}
-
-			@Override
 			public Set<ProbabilityAction> getProbabilityActions(GameState gameState) {
 				TermListVisitor visitor = new TermListVisitor(assertingVisitor);
 				visitor.readHistory(gameState);
@@ -97,6 +87,7 @@ public class InterPrologModel implements AllPlayersModel {
 					goals+=", "+buildGoal("fold", resultVar, visitor);
 					vars+=", string("+resultVar+")";
 					
+					//TODO fix raise probability (divide by nbSamples)
 					if(!gameState.getPlayer(botId).isAllIn() && gameState.isAllowedToRaise(playerId)){
 						int lowerRaiseBound = gameState.getLowerRaiseBound(playerId);
 						int upperRaiseBound = gameState.getUpperRaiseBound(playerId);

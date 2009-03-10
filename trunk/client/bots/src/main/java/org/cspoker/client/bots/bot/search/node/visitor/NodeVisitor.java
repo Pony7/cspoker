@@ -25,4 +25,10 @@ public interface NodeVisitor {
 	
 	void leaveNode(EvaluatedAction<? extends ActionWrapper> evaluation);
 	
+	public static interface Factory{
+		
+		NodeVisitor create();
+		
+	}
+	
 }

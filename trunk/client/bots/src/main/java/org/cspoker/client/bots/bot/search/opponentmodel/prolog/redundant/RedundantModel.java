@@ -56,21 +56,6 @@ public class RedundantModel implements AllPlayersModel{
 		return new OpponentModel(){
 			
 			@Override
-			public Set<SearchBotAction> getAllPossibleActions(
-					GameState gameState) {
-				Set<SearchBotAction> actions = null;
-				Set<SearchBotAction> previousActions = null;
-				for(OpponentModel model:opponentModels){
-					actions  = model.getAllPossibleActions(gameState);
-					if(previousActions!= null && !previousActions.equals(actions)){
-						throw new IllegalStateException("Inconsistency: "+previousActions+" "+actions);
-					}
-					previousActions = actions;
-				}
-				return actions;
-			}
-			
-			@Override
 			public Set<ProbabilityAction> getProbabilityActions(
 					GameState gameState) {
 				Set<ProbabilityAction> actions = null;

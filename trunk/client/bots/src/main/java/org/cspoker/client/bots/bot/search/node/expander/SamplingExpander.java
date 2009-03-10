@@ -84,7 +84,7 @@ public class SamplingExpander extends Expander{
 				if(o1.getAction() instanceof RaiseAction && o2.getAction() instanceof RaiseAction ){
 					return ((RaiseAction)o1.getAction()).amount-((RaiseAction)o2.getAction()).amount;
 				}
-				if(o1.getAction() instanceof RaiseAction && o2.getAction() instanceof RaiseAction ){
+				if(o1.getAction() instanceof BetAction && o2.getAction() instanceof BetAction ){
 					return ((BetAction)o1.getAction()).amount-((BetAction)o2.getAction()).amount;
 				}
 				//if probabilities are equal for different classes, objects are NOT equal per se

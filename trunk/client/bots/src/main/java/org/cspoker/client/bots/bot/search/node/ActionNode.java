@@ -15,12 +15,15 @@
  */
 package org.cspoker.client.bots.bot.search.node;
 
+import java.util.Set;
+
 import org.apache.log4j.Logger;
 import org.cspoker.client.bots.bot.search.SearchConfiguration;
 import org.cspoker.client.bots.bot.search.action.ActionWrapper;
 import org.cspoker.client.bots.bot.search.action.DefaultWinnerException;
 import org.cspoker.client.bots.bot.search.action.EvaluatedAction;
 import org.cspoker.client.bots.bot.search.action.GameEndedException;
+import org.cspoker.client.bots.bot.search.action.ProbabilityAction;
 import org.cspoker.client.bots.bot.search.node.leaf.ShowdownNode;
 import org.cspoker.client.bots.bot.search.node.visitor.NodeVisitor;
 import org.cspoker.client.bots.bot.search.opponentmodel.AllPlayersModel;
@@ -101,6 +104,11 @@ public abstract class ActionNode implements InnerGameTreeNode{
 
 	public AllPlayersModel getOpponentModeler() {
 		return config.getOpponentModeler();
+	}
+
+	@Override
+	public Set<ProbabilityAction> getProbabilityActions() {
+		return config.getOpponentModeler().getModelFor(playerId,gameState).getProbabilityActions(gameState);
 	}
 
 	@Override

@@ -33,6 +33,9 @@ import org.cspoker.client.bots.bot.search.SearchBot;
 import org.cspoker.client.bots.bot.search.SearchConfiguration;
 import org.cspoker.client.bots.bot.search.node.expander.CompleteExpander;
 import org.cspoker.client.bots.bot.search.node.leaf.UniformShowdownNode;
+import org.cspoker.client.bots.bot.search.node.visitor.Log4JOutputVisitor;
+import org.cspoker.client.bots.bot.search.node.visitor.NodeVisitor;
+import org.cspoker.client.bots.bot.search.node.visitor.NodeVisitor.Factory;
 import org.cspoker.client.bots.bot.search.opponentmodel.AllPlayersModel;
 import org.cspoker.client.bots.bot.search.opponentmodel.prolog.cafe.PrologCafeModel;
 import org.cspoker.client.bots.bot.search.opponentmodel.prolog.interprolog.InterPrologModel;
@@ -101,7 +104,8 @@ public class RedundantBotFactory implements BotFactory {
 				new UniformShowdownNode.Factory(),
 				new CompleteExpander.Factory(),
 				1,1,1,1,0.5);
-		return new SearchBot(botId, tableId, lobby, executor, config, buyIn, botListeners);
+		Factory[] nodeVisitorFactories = new NodeVisitor.Factory[]{new Log4JOutputVisitor.Factory(2)};
+		return new SearchBot(botId, tableId, lobby, executor, config, buyIn, nodeVisitorFactories, botListeners);
 	}
 
 	@Override

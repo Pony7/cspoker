@@ -17,6 +17,7 @@ package org.cspoker.client.bots.listener;
 
 import org.apache.log4j.Logger;
 import org.cspoker.client.bots.BotRunner;
+import org.cspoker.common.api.lobby.holdemtable.event.SitOutEvent;
 
 public class ReSitInBotListener extends DefaultBotListener{
 
@@ -29,7 +30,7 @@ public class ReSitInBotListener extends DefaultBotListener{
 	}
 	
 	@Override
-	public void onSitOut() {
+	public void onSitOut(SitOutEvent event) {
 		runner.respawnBots();
 	}
 	

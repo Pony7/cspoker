@@ -25,6 +25,8 @@ import org.cspoker.client.bots.bot.search.node.expander.SamplingExpander;
 import org.cspoker.client.bots.bot.search.node.leaf.ShowdownNode;
 import org.cspoker.client.bots.bot.search.node.leaf.UniformShowdownNode;
 import org.cspoker.client.bots.bot.search.node.leaf.ShowdownNode.Factory;
+import org.cspoker.client.bots.bot.search.node.visitor.Log4JOutputVisitor;
+import org.cspoker.client.bots.bot.search.node.visitor.NodeVisitor;
 import org.cspoker.client.bots.bot.search.opponentmodel.AllPlayersHistogramModel;
 import org.cspoker.client.bots.listener.BotListener;
 import org.cspoker.client.common.SmartLobbyContext;
@@ -36,16 +38,18 @@ public class SearchBotFactory implements BotFactory {
 	private static int copies = 0;
 	private final int copy;
 
-	private ConcurrentHashMap<PlayerId, AllPlayersHistogramModel> opponentModels = new ConcurrentHashMap<PlayerId, AllPlayersHistogramModel>();
-	private Factory showdownNodeFactory;
+	private final ConcurrentHashMap<PlayerId, AllPlayersHistogramModel> opponentModels = new ConcurrentHashMap<PlayerId, AllPlayersHistogramModel>();
+	private final Factory showdownNodeFactory;
+	private final org.cspoker.client.bots.bot.search.node.visitor.NodeVisitor.Factory[] nodeVisitorFactories;
 	
 	public SearchBotFactory() {
-		this(new UniformShowdownNode.Factory());
+		this(new UniformShowdownNode.Factory(), new NodeVisitor.Factory[]{new Log4JOutputVisitor.Factory(2)});
 	}
 	
-	public SearchBotFactory(ShowdownNode.Factory showdownNodeFactory) {
+	public SearchBotFactory(ShowdownNode.Factory showdownNodeFactory, NodeVisitor.Factory... nodeVisitorFactories) {
 		this.copy = ++copies;
 		this.showdownNodeFactory = showdownNodeFactory;
+		this.nodeVisitorFactories = nodeVisitorFactories;
 	}
 	
 	/**
@@ -61,8 +65,8 @@ public class SearchBotFactory implements BotFactory {
 				opponentModels.get(botId), 
 				showdownNodeFactory,
 				new SamplingExpander.Factory(),
-				500,1000,5000,10000,0.1);
-		return new SearchBot(botId, tableId, lobby, executor, config, buyIn ,botListeners);
+				1000,2000,5000,10000,0.3);
+		return new SearchBot(botId, tableId, lobby, executor, config, buyIn, nodeVisitorFactories ,botListeners);
 	}
 
 	@Override

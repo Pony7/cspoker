@@ -27,6 +27,10 @@ public class SampledAction implements ActionWrapper{
 		this.outof = outof;
 	}
 	
+	public ProbabilityAction getProbabilityAction(){
+		return action;
+	}
+	
 	public SearchBotAction getAction() {
 		return action.getAction();
 	}
@@ -43,5 +47,4 @@ public class SampledAction implements ActionWrapper{
 	public String toString() {
 		return action.toString()+" sampled "+times+"/"+outof;
 	}
-	
 }

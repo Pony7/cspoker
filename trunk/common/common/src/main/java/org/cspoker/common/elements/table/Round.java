@@ -16,11 +16,11 @@
 package org.cspoker.common.elements.table;
 
 public enum Round {
-	WAITING("waiting round"),
-	PREFLOP("pre-flop round"),
-	FLOP("flop round"),
-	TURN("turn round"),
-	FINAL("final round");
+	WAITING("waiting"),
+	PREFLOP("pre-flop"),
+	FLOP("flop"),
+	TURN("turn"),
+	FINAL("final");
 	
 	private final String name;
 
@@ -28,9 +28,13 @@ public enum Round {
 		this.name = name;
 	}
 	
+	public String getName() {
+		return name;
+	}
+	
 	@Override
 	public String toString() {
-		return name;
+		return name+" round";
 	}
 
 	public Round getNextRound() {

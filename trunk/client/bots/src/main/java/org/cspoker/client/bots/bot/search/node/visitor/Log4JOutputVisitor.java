@@ -18,6 +18,7 @@ package org.cspoker.client.bots.bot.search.node.visitor;
 import org.apache.log4j.Logger;
 import org.cspoker.client.bots.bot.search.action.ActionWrapper;
 import org.cspoker.client.bots.bot.search.action.EvaluatedAction;
+import org.cspoker.client.bots.bot.search.action.SampledAction;
 import org.cspoker.client.bots.bot.search.node.ActionNode;
 
 public class Log4JOutputVisitor extends TextOutputVisitor {
@@ -49,6 +50,21 @@ public class Log4JOutputVisitor extends TextOutputVisitor {
 	@Override
 	protected void output(String line) {
 		logger.debug(line);
+	}
+	
+	public static class Factory implements NodeVisitor.Factory{
+
+		private final int maxDepth;
+
+		public Factory(int maxDepth) {
+			this.maxDepth = maxDepth;
+		}
+		
+		@Override
+		public Log4JOutputVisitor create() {
+			return new Log4JOutputVisitor(maxDepth);
+		}
+		
 	}
 
 }
