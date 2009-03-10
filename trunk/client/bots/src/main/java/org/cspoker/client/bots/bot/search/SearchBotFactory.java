@@ -61,7 +61,7 @@ public class SearchBotFactory implements BotFactory {
 				opponentModels.get(botId), 
 				showdownNodeFactory,
 				new SamplingExpander.Factory(),
-				100,500,1000,10000,0.0);
+				500,1000,5000,10000,0.3);
 		return new SearchBot(botId, tableId, lobby, executor, config ,botListeners);
 	}
 

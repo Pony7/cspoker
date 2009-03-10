@@ -50,6 +50,8 @@ import org.cspoker.common.util.threading.SingleThreadRequestExecutor;
 public class BotRunner
 implements LobbyListener {
 
+	private static final TableConfiguration config = new TableConfiguration(AbstractBot.bigBlind,0,false);
+
 	public static final int nbGamesPerConfrontation = 10000;
 
 	public static final int nbPlayersPerGame = 6;
@@ -168,7 +170,7 @@ implements LobbyListener {
 				tableName += " vs "+bots[botIndex[i]].toString();
 			}
 			TableId tableId = directorLobby.createHoldemTable(tableName, 
-					new TableConfiguration(AbstractBot.bigBlind,0,false)).getId();
+					config).getId();
 
 			bot[0] = bots[botIndex[0]].createBot(botIDs[botIndex[0]], tableId, botLobbies[botIndex[0]], executor, 
 					new ReSitInBotListener(this), speedMinitor,gameLimiter);

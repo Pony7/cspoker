@@ -363,7 +363,7 @@ public class TableUserInputComposite
 	}
 	
 	void prepareForUserInput() {
-		logger.info("Users turn");
+		logger.trace("Users turn");
 		boolean toCallAllIn = getUser().getStack() <= getGameState().getCallValue(user.getId());
 		updateCheckCallButton(toCallAllIn);
 		if (!toCallAllIn) {
