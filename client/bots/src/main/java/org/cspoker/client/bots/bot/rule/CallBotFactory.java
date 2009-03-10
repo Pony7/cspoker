@@ -42,10 +42,10 @@ public class CallBotFactory
 	 *      java.util.concurrent.ExecutorService,
 	 *      org.cspoker.client.bots.listener.BotListener[])
 	 */
-	public Bot createBot(PlayerId playerId, TableId tableId, SmartLobbyContext lobby, ExecutorService executor,
+	public Bot createBot(PlayerId playerId, TableId tableId, SmartLobbyContext lobby, int buyIn, ExecutorService executor,
 			BotListener... botListeners) {
 		copies++;
-		return new CallBot(playerId, tableId, lobby, executor, botListeners);
+		return new CallBot(playerId, tableId, lobby, buyIn, executor, botListeners);
 	}
 	
 	@Override

@@ -55,7 +55,7 @@ public class PrologCafeBotFactory implements BotFactory {
 	 * @see org.cspoker.client.bots.bot.BotFactory#createBot(org.cspoker.common.elements.player.PlayerId, org.cspoker.common.elements.table.TableId, org.cspoker.client.common.SmartLobbyContext, java.util.concurrent.ExecutorService, org.cspoker.client.bots.listener.BotListener[])
 	 */
 	public synchronized Bot createBot(final PlayerId botId, TableId tableId,
-			SmartLobbyContext lobby, ExecutorService executor,
+			SmartLobbyContext lobby, int buyIn,ExecutorService executor,
 			BotListener... botListeners) {
 		copies++;
 		if(opponentModels.get(botId)==null){
@@ -67,7 +67,7 @@ public class PrologCafeBotFactory implements BotFactory {
 				new DistributionShowdownNode2.Factory(),
 				new SamplingExpander.Factory(),
 				50,100,250,250,0.5);
-		return new SearchBot(botId, tableId, lobby, executor, config ,botListeners);
+		return new SearchBot(botId, tableId, lobby, executor, config, buyIn ,botListeners);
 	}
 
 	@Override

@@ -54,9 +54,6 @@ public abstract class AbstractBot
 	
 	private final static Logger logger = Logger.getLogger(AbstractBot.class);
 	
-	public static final int bigBlind = 10;
-	public static final int bigBlindBuyIn = 500;
-	
 	protected final SmartLobbyContext lobbyContext;
 	protected volatile SmartHoldemTableContext tableContext;
 	protected volatile SmartHoldemPlayerContext playerContext;
@@ -69,13 +66,16 @@ public abstract class AbstractBot
 	private final BotListener[] botListeners;
 	
 	protected final ExecutorService executor;
+
+	private final int buyIn;
 	
-	public AbstractBot(PlayerId playerId, TableId tableId, SmartLobbyContext lobby, ExecutorService executor,
+	public AbstractBot(PlayerId playerId, TableId tableId, SmartLobbyContext lobby, int buyIn, ExecutorService executor,
 			BotListener... botListeners) {
 		this.playerId = playerId;
 		this.tableID = tableId;
 		this.lobbyContext = lobby;
 		this.botListeners = botListeners;
+		this.buyIn = buyIn;
 		this.executor = executor;
 	}
 	
@@ -86,7 +86,7 @@ public abstract class AbstractBot
 				try {
 					started = true;
 					tableContext = lobbyContext.joinHoldemTable(tableID, AbstractBot.this);
-					playerContext = tableContext.sitIn(getBuyIn(), AbstractBot.this);
+					playerContext = tableContext.sitIn(buyIn, AbstractBot.this);
 				} catch (IllegalActionException e) {
 					e.printStackTrace();
 					throw new IllegalStateException("Failed to join table.", e);
@@ -162,10 +162,6 @@ public abstract class AbstractBot
 		});
 	}
 	
-	private int getBuyIn() {
-		return bigBlindBuyIn * bigBlind;
-	}
-	
 	/**
 	 * @see org.cspoker.client.bots.bot.Bot#getProfit()
 	 */
@@ -175,7 +171,7 @@ public abstract class AbstractBot
 			throw new IllegalStateException("There is a pot from previous rounds ("+state.getPreviousRoundsPotSize()+"). Can't calculate profit.");
 		}
 		PlayerState playerState = state.getPlayer(playerId);
-		return playerState.getStack()+playerState.getBet() - getBuyIn();
+		return playerState.getStack()+playerState.getBet() - buyIn;
 	}
 	
 	public void onAllIn(AllInEvent allInEvent) {

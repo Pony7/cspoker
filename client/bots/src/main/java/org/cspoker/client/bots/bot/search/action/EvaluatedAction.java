@@ -55,7 +55,7 @@ public class EvaluatedAction<A extends ActionWrapper> implements ActionWrapper{
 	
 	@Override
 	public String toString() {
-		return "EV is "+Math.round(EV)+" for "+action.toString()+" (sigma="+(Math.round(Math.sqrt(varEV)))+")";
+		return "EV is "+Math.round(EV)+" for "+action.toString()+" (σ="+(Math.round(Math.sqrt(varEV)))+")";
 	}
 	
 }

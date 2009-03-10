@@ -84,60 +84,60 @@ public class AllPlayersHistogramModel implements AllPlayersModel, GameStateVisit
 				new HistogramModel(
 						player,
 						botId,
-						(int)100,
+						(int)10,
 						(int)0,
-						(int)100,
-						(int)Math.round(37556539.0/53203232.0*100),
-						(int)Math.round(7410418.0/53203232.0*100),
-						(int)Math.round(8236275.0/53203232.0*100),
-						(int)(Math.round(37556539.0/53203232.0*100)+
-								Math.round(7410418.0/53203232.0*100)+
-								Math.round(8236275.0/53203232.0*100))
+						(int)10,
+						(int)Math.round(37556539.0/53203232.0*10),
+						(int)Math.round(7410418.0/53203232.0*10),
+						(int)Math.round(8236275.0/53203232.0*10),
+						(int)(Math.round(37556539.0/53203232.0*10)+
+								Math.round(7410418.0/53203232.0*10)+
+								Math.round(8236275.0/53203232.0*10))
 						));
 		opponentModels.put(new Pair<PlayerId,Round>(player,Round.FLOP), 
 				new HistogramModel(
 						player,
 						botId,
-						(int)Math.round(5643188.0/9067525.0*90),
-						(int)Math.round(3424337.0/9067525.0*90),
-						(int)(Math.round(5643188.0/9067525.0*90)+
-								Math.round(3424337.0/9067525.0*90)),
-						(int)Math.round(3012394.0/5085650.0*80),
-						(int)Math.round(1493533.0/5085650.0*80),
-						(int)Math.round(579723.0/5085650.0*80),
-						(int)(Math.round(3012394.0/5085650.0*80)+
-								Math.round(1493533.0/5085650.0*80)+
-								Math.round(579723.0/5085650.0*80))
+						(int)Math.round(5643188.0/9067525.0*10),
+						(int)Math.round(3424337.0/9067525.0*10),
+						(int)(Math.round(5643188.0/9067525.0*10)+
+								Math.round(3424337.0/9067525.0*10)),
+						(int)Math.round(3012394.0/5085650.0*10),
+						(int)Math.round(1493533.0/5085650.0*10),
+						(int)Math.round(579723.0/5085650.0*10),
+						(int)(Math.round(3012394.0/5085650.0*10)+
+								Math.round(1493533.0/5085650.0*10)+
+								Math.round(579723.0/5085650.0*10))
 						));
 		opponentModels.put(new Pair<PlayerId,Round>(player,Round.TURN), 
 				new HistogramModel(
 						player,
 						botId,
-						(int)Math.round(2969602.0/4635236.0*80),
-						(int)Math.round(1665634.0/4635236.0*80),
-						(int)(Math.round(2969602.0/4635236.0*80)+
-								Math.round(1665634.0/4635236.0*80)),
-						(int)Math.round(1152214.0/2172745.0*70),
-						(int)Math.round(814117.0/2172745.0*70),
-						(int)Math.round(206414.0/2172745.0*70),
-						(int)(Math.round(1152214.0/2172745.0*70)+
-								Math.round(814117.0/2172745.0*70)+
-								Math.round(206414.0/2172745.0*70))
+						(int)Math.round(2969602.0/4635236.0*10),
+						(int)Math.round(1665634.0/4635236.0*10),
+						(int)(Math.round(2969602.0/4635236.0*10)+
+								Math.round(1665634.0/4635236.0*10)),
+						(int)Math.round(1152214.0/2172745.0*10),
+						(int)Math.round(814117.0/2172745.0*10),
+						(int)Math.round(206414.0/2172745.0*10),
+						(int)(Math.round(1152214.0/2172745.0*10)+
+								Math.round(814117.0/2172745.0*10)+
+								Math.round(206414.0/2172745.0*10))
 						));
 		opponentModels.put(new Pair<PlayerId,Round>(player,Round.FINAL), 
 				new HistogramModel(
 						player,
 						botId,
-						(int)Math.round(1863381.0/2843076.0*70),
-						(int)Math.round(979695.0/2843076.0*70),
-						(int)(Math.round(1863381.0/2843076.0*70)+
-								Math.round(979695.0/2843076.0*70)),
-						(int)Math.round(653301.0/1150533.0*60),
-						(int)Math.round(407975.0/1150533.0*60),
-						(int)Math.round(89257.0/1150533.0*60),
-						(int)(Math.round(653301.0/1150533.0*60)+
-								Math.round(407975.0/1150533.0*60)+
-								Math.round(89257.0/1150533.0*60))
+						(int)Math.round(1863381.0/2843076.0*10),
+						(int)Math.round(979695.0/2843076.0*10),
+						(int)(Math.round(1863381.0/2843076.0*10)+
+								Math.round(979695.0/2843076.0*10)),
+						(int)Math.round(653301.0/1150533.0*10),
+						(int)Math.round(407975.0/1150533.0*10),
+						(int)Math.round(89257.0/1150533.0*10),
+						(int)(Math.round(653301.0/1150533.0*10)+
+								Math.round(407975.0/1150533.0*10)+
+								Math.round(89257.0/1150533.0*10))
 						));
 	}
 	

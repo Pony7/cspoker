@@ -37,6 +37,9 @@ import org.cspoker.common.api.shared.context.RemoteServerContext;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.table.*;
 import org.cspoker.common.elements.table.Table;
+import org.cspoker.common.util.threading.GlobalThreadPool;
+import org.cspoker.common.util.threading.LoggingThreadPool;
+import org.cspoker.common.util.threading.SingleThreadRequestExecutor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
@@ -52,24 +55,24 @@ import org.eclipse.swt.widgets.*;
  * from the Server.
  */
 public class LobbyWindow
-		extends ClientComposite
-		implements LobbyListener, ChatListener {
-	
+extends ClientComposite
+implements LobbyListener, ChatListener {
+
 	private final static Logger logger = Logger.getLogger(LobbyWindow.class);
 	/** {@link LobbyContext} for callbacks to server. */
 	private SmartLobbyContext context;
-	
+
 	/**
 	 * @return The {@link LobbyContext} provided by the server at login.
 	 */
 	public SmartLobbyContext getContext() {
 		return context;
 	}
-	
+
 	// ************************************************************
 	// SWT Member Variables
 	// ************************************************************
-	
+
 	private Menu menu1;
 	private Button createTableButton;
 	private TableItem tableItem1;
@@ -90,22 +93,22 @@ public class LobbyWindow
 	private MenuItem newFileMenuItem;
 	private Menu lobbyMenu;
 	private MenuItem lobbyMenuItem;
-	
+
 	private MenuItem uiMenuItem;
 	private Menu uiMenu;
 	private MenuItem soundMenuItem;
 	private MenuItem cardsMenuItem;
 	private MenuItem chipsMenuItem;
-	
+
 	private Menu cardsMenu;
 	private Menu chipsMenu;
-	
+
 	private MenuItem fourColorDeckMenuItem;
 	private MenuItem ftpCardsMenuItem;
 	private MenuItem starsChipsMenuItem;
 	private MenuItem eptChipsMenuItem;
 	private MenuItem pokerWikiaChipsMenuItem;
-	
+
 	/**
 	 * Creates and initializes the SWT components of the Lobby.
 	 * 
@@ -114,14 +117,14 @@ public class LobbyWindow
 	 *             {@link RemoteLobbyContext} for callbacks failed
 	 */
 	public LobbyWindow(ClientCore core)
-			throws IllegalArgumentException {
+	throws IllegalArgumentException {
 		super(new Shell(core.getGui().getDisplay()), SWT.NONE, core);
 		initGUI();
 		// Register as a resource user - SWTResourceManager will
 		// handle the obtaining and disposing of resources
 		SWTResourceManager.registerResourceUser(this);
 	}
-	
+
 	/**
 	 * @param serverContext The {@link RemoteServerContext} needed to retrieve
 	 *            the corresponding {@link RemoteLobbyContext}
@@ -132,7 +135,7 @@ public class LobbyWindow
 		try {
 			RemoteLobbyContext remoteContext = serverContext.getLobbyContext(new AsynchronousLobbyListener(
 					DisplayExecutor.getInstance(), this));
-			
+
 			this.context = new SmartLobbyContext(remoteContext, getClientCore().getUser().getPlayerId());
 		} catch (RemoteException e) {
 			throw new IllegalArgumentException(e);
@@ -141,7 +144,7 @@ public class LobbyWindow
 			exception.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * Initializes the GUI. SWT stuff.
 	 */
@@ -149,7 +152,7 @@ public class LobbyWindow
 		try {
 			setSize(new Point(400, 300));
 			setLayout(new FillLayout(SWT.HORIZONTAL));
-			
+
 			{
 				tableFolder = new CTabFolder(this, SWT.NONE);
 				tableFolder.setLayout(new FillLayout());
@@ -174,7 +177,7 @@ public class LobbyWindow
 							availableGameTables.setHeaderVisible(true);
 							availableGameTables.setLinesVisible(true);
 							availableGameTables.addMouseListener(new MouseAdapter() {
-								
+
 								@Override
 								public void mouseDoubleClick(MouseEvent evt) {
 									logger.info("Opening table");
@@ -182,20 +185,20 @@ public class LobbyWindow
 									if (selectedItems.length == 1) {
 										// Open selected table
 										TableId tid = new TableId(Long.parseLong(selectedItems[0].getText(1)));
-										
+
 										final GameWindow w = getClientCore().getGui().getGameWindow(tid, true);
 										getDisplay().asyncExec(new Runnable() {
-											
+
 											public void run() {
 												w.show();
 											}
 										});
-										
+
 									}
 								}
 							});
 							availableGameTables.addSelectionListener(new SelectionAdapter() {
-								
+
 								@Override
 								public void widgetSelected(SelectionEvent evt) {
 									logger.debug("table1.widgetSelected, event=" + evt);
@@ -242,7 +245,7 @@ public class LobbyWindow
 							createTableButton.setLayoutData(createTableButtonLData);
 							createTableButton.setText("Create Your Own Table");
 							createTableButton.addMouseListener(new MouseAdapter() {
-								
+
 								@Override
 								public void mouseDown(MouseEvent evt) {
 									logger.info("Table creation requested ...");
@@ -257,7 +260,7 @@ public class LobbyWindow
 			{
 				menu1 = new Menu(getShell(), SWT.BAR);
 				getShell().setMenuBar(menu1);
-				
+
 				{
 					lobbyMenuItem = new MenuItem(menu1, SWT.CASCADE);
 					lobbyMenuItem.setText("Lobby");
@@ -267,7 +270,7 @@ public class LobbyWindow
 							newFileMenuItem = new MenuItem(lobbyMenu, SWT.CASCADE);
 							newFileMenuItem.setText("Login ...");
 							newFileMenuItem.addSelectionListener(new SelectionAdapter() {
-								
+
 								@Override
 								public void widgetSelected(SelectionEvent evt) {
 									logger.debug("newFileMenuItem.widgetSelected, event=" + evt);
@@ -280,20 +283,20 @@ public class LobbyWindow
 							exitMenuItem = new MenuItem(lobbyMenu, SWT.CASCADE);
 							exitMenuItem.setText("Exit");
 							exitMenuItem.addSelectionListener(new SelectionAdapter() {
-								
+
 								@Override
 								public void widgetSelected(SelectionEvent evt) {
 									logger.debug("exitMenuItem.widgetSelected, event=" + evt);
-									getShell().getDisplay().close();
 									// TODO Leave all open tables
 									// TODO Log out (via AccountListener??)
+									exit();
 								}
 							});
 						}
 						lobbyMenuItem.setMenu(lobbyMenu);
 					}
 				}
-				
+
 				{
 					uiMenuItem = new MenuItem(menu1, SWT.CASCADE);
 					uiMenuItem.setText("Appearance");
@@ -302,26 +305,26 @@ public class LobbyWindow
 					{
 						uiMenu = new Menu(uiMenuItem);
 						uiMenuItem.setMenu(uiMenu);
-						
+
 						{
 							soundMenuItem = new MenuItem(uiMenu, SWT.CHECK);
 							soundMenuItem.setText("Play Sound");
 							soundMenuItem.addSelectionListener(new SelectionAdapter() {
-								
+
 								@Override
 								public void widgetSelected(SelectionEvent evt) {
-									
+
 									ClientGUI.SOUND_ON = soundMenuItem.getSelection();
 									Preferences.userRoot().put(User.Prefs.SOUND, Boolean.toString(ClientGUI.SOUND_ON));
 								}
 							});
 						}
-						
+
 						{
 							cardsMenuItem = new MenuItem(uiMenu, SWT.CASCADE);
 							cardsMenuItem.setText("Cards");
 						}
-						
+
 						cardsMenu = new Menu(cardsMenuItem);
 						cardsMenuItem.setMenu(cardsMenu);
 						fourColorDeckMenuItem = new MenuItem(cardsMenu, SWT.RADIO);
@@ -329,7 +332,7 @@ public class LobbyWindow
 						fourColorDeckMenuItem.setSelection(ClientGUI.Resources.ACTIVE_DECK_IMG_FILE
 								.equals(ClientGUI.Resources.FOUR_COLOR_DECK_IMG_FILE));
 						fourColorDeckMenuItem.addSelectionListener(new SelectionAdapter() {
-							
+
 							@Override
 							public void widgetSelected(SelectionEvent evt) {
 								try {
@@ -345,7 +348,7 @@ public class LobbyWindow
 						ftpCardsMenuItem.setSelection(ClientGUI.Resources.ACTIVE_DECK_IMG_FILE
 								.equals(ClientGUI.Resources.FTP_DECK_IMG_FILE));
 						ftpCardsMenuItem.addSelectionListener(new SelectionAdapter() {
-							
+
 							@Override
 							public void widgetSelected(SelectionEvent evt) {
 								try {
@@ -358,9 +361,9 @@ public class LobbyWindow
 						{
 							chipsMenuItem = new MenuItem(uiMenu, SWT.CASCADE);
 							chipsMenuItem.setText("Chips");
-							
+
 							chipsMenu = new Menu(chipsMenuItem);
-							
+
 							chipsMenuItem.setMenu(chipsMenu);
 							starsChipsMenuItem = new MenuItem(chipsMenu, SWT.RADIO);
 							starsChipsMenuItem.setText("Poker Stars");
@@ -368,7 +371,7 @@ public class LobbyWindow
 							starsChipsMenuItem.setSelection(ClientGUI.Resources.ACTIVE_CHIP_DIR
 									.equals(ClientGUI.Resources.STARS_CHIP_IMG_DIR));
 							starsChipsMenuItem.addSelectionListener(new SelectionAdapter() {
-								
+
 								@Override
 								public void widgetSelected(SelectionEvent evt) {
 									try {
@@ -384,7 +387,7 @@ public class LobbyWindow
 							eptChipsMenuItem.setSelection(ClientGUI.Resources.ACTIVE_CHIP_DIR
 									.equals(ClientGUI.Resources.EPT_CHIP_IMG_DIR));
 							eptChipsMenuItem.addSelectionListener(new SelectionAdapter() {
-								
+
 								@Override
 								public void widgetSelected(SelectionEvent evt) {
 									try {
@@ -394,13 +397,13 @@ public class LobbyWindow
 									}
 								}
 							});
-							
+
 							pokerWikiaChipsMenuItem = new MenuItem(chipsMenu, SWT.RADIO);
 							pokerWikiaChipsMenuItem.setText("Poker Wikia (Free) Chips");
 							pokerWikiaChipsMenuItem.setSelection(ClientGUI.Resources.ACTIVE_CHIP_DIR
 									.equals(ClientGUI.Resources.FREE_CHIPS));
 							pokerWikiaChipsMenuItem.addSelectionListener(new SelectionAdapter() {
-								
+
 								@Override
 								public void widgetSelected(SelectionEvent evt) {
 									try {
@@ -413,7 +416,7 @@ public class LobbyWindow
 						}
 					}
 				}
-				
+
 				{
 					helpMenuItem = new MenuItem(menu1, SWT.CASCADE);
 					helpMenuItem.setText("Help");
@@ -427,7 +430,7 @@ public class LobbyWindow
 							aboutMenuItem = new MenuItem(helpMenu, SWT.CASCADE);
 							aboutMenuItem.setText("About");
 							aboutMenuItem.addSelectionListener(new SelectionAdapter() {
-								
+
 								@Override
 								public void widgetSelected(SelectionEvent evt) {
 									MessageBox aboutInfo = new MessageBox(getShell());
@@ -447,7 +450,7 @@ public class LobbyWindow
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * Opens this {@link LobbyWindow} in a new shell and listens to the OS event
 	 * queue until this window's shell is disposed.
@@ -459,7 +462,7 @@ public class LobbyWindow
 		shell.setLayout(new FillLayout());
 		shell.setSize(getSize());
 		shell.addShellListener(new ShellAdapter() {
-			
+
 			/**
 			 * Upon close, the display is disposed. This will stop all Game
 			 * windows from listening to events and initiate their shutdown hook
@@ -476,11 +479,12 @@ public class LobbyWindow
 				// Lobby has been closed
 				// Dispose of the display entirely so all GameWindows are closed
 				// as well
-				if (e.doit)
-					display.dispose();
+				if (e.doit){
+					exit();
+				}
 			}
 		});
-		
+
 		shell.open();
 		refreshTables();
 		while (!shell.isDisposed() && !this.isDisposed()) {
@@ -488,7 +492,7 @@ public class LobbyWindow
 				display.sleep();
 		}
 		logger.info("Logging out");
-		
+
 		try {
 			getClientCore().getCommunication().logout();
 		} catch (RemoteException e) {
@@ -497,7 +501,13 @@ public class LobbyWindow
 			logger.error("This should not happen", e);
 		}
 	}
-	
+
+	private void exit() {
+		getShell().getDisplay().dispose();
+		GlobalThreadPool.getInstance().shutdownNow();
+		SingleThreadRequestExecutor.getInstance().shutdownNow();
+	}
+
 	/**
 	 * Asks the server for an updated snapshot of all available tables, and
 	 * updates its display status according to the received {@link TableList}.
@@ -518,12 +528,12 @@ public class LobbyWindow
 			// TODO handle
 			exception.printStackTrace();
 		}
-		
+
 		for (DetailedHoldemTable t : tables) {
 			insertInformation(t);
 		}
 	}
-	
+
 	/**
 	 * Very simply just refreshs all tables for now TODO Slim down
 	 * 
@@ -532,7 +542,7 @@ public class LobbyWindow
 	public void onTableCreated(TableCreatedEvent tableCreatedEvent) {
 		refreshTables();
 	}
-	
+
 	/**
 	 * Helper method to insert the information for a given table into the
 	 * {@link #availableGameTables}
@@ -557,7 +567,7 @@ public class LobbyWindow
 				"Holdem No Limit", Integer.toString(t.getNbPlayers()) + "/" + tInfo.getMaxNbPlayers() });
 		item.setData(t);
 	}
-	
+
 	/**
 	 * Looks for the given table and removes them from the list displayed in the
 	 * UI
@@ -567,9 +577,9 @@ public class LobbyWindow
 	public void onTableRemoved(TableRemovedEvent tableRemovedEvent) {
 		refreshTables();
 	}
-	
+
 	public void onMessage(MessageEvent messageEvent) {
-	// Nothing to do yet
-	
+		// Nothing to do yet
+
 	}
 }

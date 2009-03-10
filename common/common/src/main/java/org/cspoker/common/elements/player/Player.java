@@ -43,7 +43,7 @@ public class Player
 	}
 	
 	protected Player() {
-	// NO OP
+		// NO OP
 	}
 	
 	public PlayerId getId() {

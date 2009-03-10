@@ -56,7 +56,7 @@ public class InterPrologBotFactory implements BotFactory {
 	 * @see org.cspoker.client.bots.bot.BotFactory#createBot(org.cspoker.common.elements.player.PlayerId, org.cspoker.common.elements.table.TableId, org.cspoker.client.common.SmartLobbyContext, java.util.concurrent.ExecutorService, org.cspoker.client.bots.listener.BotListener[])
 	 */
 	public synchronized Bot createBot(final PlayerId botId, TableId tableId,
-			SmartLobbyContext lobby, ExecutorService executor,
+			SmartLobbyContext lobby, int buyIn, ExecutorService executor,
 			BotListener... botListeners) {
 		copies++;
 		if(opponentModels.get(botId)==null){
@@ -72,7 +72,7 @@ public class InterPrologBotFactory implements BotFactory {
 				new UniformShowdownNode.Factory(),
 				new CompleteExpander.Factory(),
 				1,1,10,100,0.5);
-		return new SearchBot(botId, tableId, lobby, executor, config ,botListeners);
+		return new SearchBot(botId, tableId, lobby, executor, config, buyIn, botListeners);
 	}
 
 	@Override

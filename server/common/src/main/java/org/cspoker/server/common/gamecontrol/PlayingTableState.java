@@ -346,7 +346,7 @@ extends TableState {
 		if (delay > 0) {
 			delay = delay * (Math.min(game.getNbLastShowdown() + 1, 5));
 			SingleThreadRequestExecutor.getInstance().schedule(new AutoDealHandler(), delay, TimeUnit.MILLISECONDS);
-			logger.info("There were " + game.getNbLastShowdown()
+			logger.debug("There were " + game.getNbLastShowdown()
 					+ " showdown players. Auto-deal handler submitted with a delay of " + delay + " ms.");
 		} else {
 			try {
