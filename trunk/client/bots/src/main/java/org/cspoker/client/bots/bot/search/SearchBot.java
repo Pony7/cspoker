@@ -40,8 +40,9 @@ extends AbstractBot {
 	public SearchBot(PlayerId playerId, TableId tableId,
 			SmartLobbyContext lobby, ExecutorService executor,
 			SearchConfiguration config,
+			int buyIn,
 			BotListener... botListeners) {
-		super(playerId, tableId, lobby, executor, botListeners);
+		super(playerId, tableId, lobby, buyIn, executor, botListeners);
 		this.config = config;
 	}
 

@@ -748,9 +748,9 @@ public class PokerTable {
 	private class PlayerActionTimeOut
 			implements Runnable {
 		
-		private PlayerId player;
+		private final PlayerId player;
 		
-		private boolean cancelled = false;
+		private volatile boolean cancelled = false;
 		
 		public PlayerActionTimeOut(PlayerId player) {
 			this.player = player;
@@ -761,9 +761,8 @@ public class PokerTable {
 		}
 		
 		public synchronized void run() {
+			PokerTable.logger.debug("Player " + player + " auto-fold called.");
 			try {
-				PokerTable.logger.debug("Player " + player + " auto-fold called.");
-				
 				if (getCurrentTimeOut() == this && tableState.getGame() != null && !cancelled) {
 					MutableSeatedPlayer gcPlayer = tableState.getGame().getCurrentPlayer();
 					if (gcPlayer!=null && (gcPlayer.getId().equals(player.getId()))) {
@@ -771,7 +770,10 @@ public class PokerTable {
 						tableState.fold(gcPlayer);
 					}
 				}
-			} catch (IllegalActionException e) {}
+				
+			} catch (IllegalActionException e) {
+				throw new IllegalStateException(e);
+			}
 		}
 	}
 }

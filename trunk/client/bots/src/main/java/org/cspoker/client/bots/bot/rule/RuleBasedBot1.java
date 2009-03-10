@@ -38,9 +38,9 @@ public class RuleBasedBot1
 	private final Random random = new Random();
 
 	public RuleBasedBot1(PlayerId playerId, TableId tableId,
-			SmartLobbyContext lobby, ExecutorService executor,
+			SmartLobbyContext lobby, int buyIn, ExecutorService executor,
 			BotListener... botListeners) {
-		super(playerId, tableId, lobby, executor, botListeners);
+		super(playerId, tableId, lobby, buyIn, executor, botListeners);
 	}
 	
 	@Override

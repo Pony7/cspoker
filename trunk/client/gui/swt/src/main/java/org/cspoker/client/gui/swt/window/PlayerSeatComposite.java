@@ -239,7 +239,7 @@ public class PlayerSeatComposite
 			player1NameLData.minimumWidth = 55;
 			player1NameLData.grabExcessHorizontalSpace = true;
 			playerName.setLayoutData(player1NameLData);
-			playerName.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
+			playerName.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_GRAY));
 		}
 		{
 			playerStack = new Label(this, SWT.SHADOW_NONE | SWT.CENTER | SWT.BORDER);
@@ -248,7 +248,7 @@ public class PlayerSeatComposite
 			player1StackLData.grabExcessHorizontalSpace = true;
 			player1StackLData.minimumWidth = 55;
 			playerStack.setLayoutData(player1StackLData);
-			playerStack.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
+			playerStack.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_GRAY));
 		}
 		{
 			GridData timeLeftBarLData = new GridData(SWT.DEFAULT, SWT.DEFAULT);

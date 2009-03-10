@@ -392,8 +392,8 @@ public class TableComposite
 					
 					Rectangle newBounds = new Rectangle(fromBounds.x - (int) (i * xStep), fromBounds.y
 							- (int) (i * yStep), fromBounds.width, fromBounds.height);
-					from.setBounds(newBounds);
 					Rectangle redrawArea = fromBounds.union(newBounds);
+					from.setBounds(newBounds);
 					redraw(redrawArea.x, redrawArea.y, redrawArea.width, redrawArea.height, false);
 				}
 				update();
@@ -443,8 +443,12 @@ public class TableComposite
 			winnerPCs.add(winnerPC);
 			
 		}
-		animateChips(winnerPCs, false);
 		getPotChipsArea().setVisible(true);
+		//doesn't work
+		for (Canvas betArea : playerBetAreas) {
+			betArea.setVisible(true);
+		}
+		animateChips(winnerPCs, false);
 		redraw();
 		update();
 	}
@@ -531,8 +535,8 @@ public class TableComposite
 			xCoord += standardXDistance;
 		}
 		// Annotate the chip pile image with a textual display of the bet amount
-		gc.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_BLACK));
-		gc.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_YELLOW));
+		gc.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_GRAY));
+		gc.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_BLACK));
 		if (!dealerButton) {
 			gc.drawText(ClientGUI.formatBet(amount), xCoord, standardYLocation);
 		}

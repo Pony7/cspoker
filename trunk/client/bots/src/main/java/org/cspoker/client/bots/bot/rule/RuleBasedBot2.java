@@ -39,9 +39,9 @@ extends AbstractBot {
 	private final static Logger logger = Logger.getLogger(RuleBasedBot2.class);
 
 	public RuleBasedBot2(PlayerId playerId, TableId tableId,
-			SmartLobbyContext lobby, ExecutorService executor,
+			SmartLobbyContext lobby, int buyIn, ExecutorService executor,
 			BotListener... botListeners) {
-		super(playerId, tableId, lobby, executor, botListeners);
+		super(playerId, tableId, lobby, buyIn, executor, botListeners);
 	}
 
 	@Override

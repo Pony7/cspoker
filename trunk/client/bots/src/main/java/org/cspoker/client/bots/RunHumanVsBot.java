@@ -99,7 +99,7 @@ public class RunHumanVsBot {
 		SmartLobbyContext lobbyContext = clientContext.getLobbyContext(new DefaultLobbyListener());
 		PlayerId botId = clientContext.getAccountContext().getPlayerID();
 		SingleThreadRequestExecutor executor = SingleThreadRequestExecutor.getInstance();
-		Bot bot = botFactory.createBot(botId, tableId, lobbyContext, executor);
+		Bot bot = botFactory.createBot(botId, tableId, lobbyContext, buyin, executor);
 		bot.start();
 		bot.startGame();
 		

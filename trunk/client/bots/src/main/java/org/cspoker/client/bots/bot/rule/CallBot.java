@@ -33,9 +33,9 @@ public class CallBot
 	private final static Logger logger = Logger.getLogger(CallBot.class);
 	
 	public CallBot(PlayerId playerId, TableId tableId,
-			SmartLobbyContext lobby, ExecutorService executor,
+			SmartLobbyContext lobby, int buyIn, ExecutorService executor,
 			BotListener... botListeners) {
-		super(playerId, tableId, lobby, executor, botListeners);
+		super(playerId, tableId, lobby, buyIn, executor, botListeners);
 	}
 	
 	@Override

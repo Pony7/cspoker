@@ -192,7 +192,7 @@ public class TableUserInputComposite
 			gameActionGroupLData.heightHint = 150;
 			gameActionGroupLData.widthHint = 300;
 			gameActionGroupLData.minimumHeight = 80;
-			gameActionGroupLData.minimumWidth = 200;
+			gameActionGroupLData.minimumWidth = 250;
 			gameActionGroup.setLayoutData(gameActionGroupLData);
 			gameActionGroup.setVisible(false);
 			{
@@ -207,7 +207,7 @@ public class TableUserInputComposite
 					betSlider = new Slider(manualEnterBetGroup, SWT.NONE);
 					betSlider.setIncrement(smallBlind);
 					betSlider.setPageIncrement(betSlider.getIncrement() * 5);
-					betSlider.setLayoutData(new GridData(100, 20));
+					betSlider.setLayoutData(new GridData(130, 30));
 					betSlider.addSelectionListener(new SelectionAdapter() {
 						
 						@Override
@@ -219,7 +219,7 @@ public class TableUserInputComposite
 				{
 					potButton = new Button(manualEnterBetGroup, SWT.PUSH | SWT.CENTER);
 					potButton.setText("Pot");
-					potButton.setLayoutData(new GridData(30, 30));
+					potButton.setLayoutData(new GridData(40, 30));
 					potButton.addMouseListener(new MouseAdapter() {
 						
 						@Override
@@ -231,7 +231,7 @@ public class TableUserInputComposite
 				}
 				{
 					betAmountTextField = new Text(manualEnterBetGroup, SWT.CENTER | SWT.BORDER);
-					betAmountTextField.setLayoutData(new GridData(30, 20));
+					betAmountTextField.setLayoutData(new GridData(70, 20));
 					betAmountTextField.setText(ClientGUI.formatBet(0));
 					betAmountTextField.addKeyListener(new KeyAdapter() {
 						
@@ -258,17 +258,17 @@ public class TableUserInputComposite
 			}
 			{
 				foldCallRaiseButtonGroup = new Composite(gameActionGroup, SWT.NONE);
-				FillLayout foldCallRaiseLayout = new FillLayout(SWT.HORIZONTAL);
-				foldCallRaiseLayout.spacing = 5;
+				GridLayout foldCallRaiseLayout = new GridLayout(3, false);
 				foldCallRaiseButtonGroup.setLayout(foldCallRaiseLayout);
 				GridData foldCallRaiseLData = new GridData(SWT.FILL, SWT.CENTER, true, true);
 				foldCallRaiseLData.minimumHeight = 30;
-				foldCallRaiseLData.minimumWidth = 200;
+				foldCallRaiseLData.minimumWidth = 250;
 				foldCallRaiseLData.heightHint = 40;
-				foldCallRaiseLData.widthHint = 250;
+				foldCallRaiseLData.widthHint = 300;
 				foldCallRaiseButtonGroup.setLayoutData(foldCallRaiseLData);
 				{
 					foldButton = new Button(foldCallRaiseButtonGroup, SWT.PUSH | SWT.CENTER);
+					foldButton.setLayoutData(new GridData(50, 30));
 					foldButton.setText("Fold");
 					foldButton.addMouseListener(new MouseAdapter() {
 						
@@ -280,6 +280,7 @@ public class TableUserInputComposite
 				}
 				{
 					checkCallButton = new Button(foldCallRaiseButtonGroup, SWT.PUSH | SWT.CENTER);
+					checkCallButton.setLayoutData(new GridData(90, 30));
 					checkCallButton.setText("Call");
 					checkCallButton.addMouseListener(new MouseAdapter() {
 						
@@ -291,6 +292,7 @@ public class TableUserInputComposite
 				}
 				{
 					betRaiseButton = new Button(foldCallRaiseButtonGroup, SWT.PUSH | SWT.CENTER);
+					betRaiseButton.setLayoutData(new GridData(130, 30));
 					betRaiseButton.setText("Raise");
 					betRaiseButton.addMouseListener(new MouseAdapter() {
 						
@@ -490,7 +492,7 @@ public class TableUserInputComposite
 				+ messageEvent.getMessage());
 		int end = gameInfoText.getCharCount();
 		
-		gameInfoText.setTopIndex(gameInfoText.getLineCount() - 5);
+		gameInfoText.setTopIndex(gameInfoText.getLineCount());
 		gameInfoText.update();
 		gameInfoText.setStyleRange(new StyleRange(start, end - start, color, Display.getDefault().getSystemColor(
 				SWT.COLOR_WIDGET_BACKGROUND)));
@@ -504,7 +506,7 @@ public class TableUserInputComposite
 	 *            dealer message for
 	 */
 	public void showDealerMessage(HoldemTableEvent event) {
-		onMessage(new MessageEvent(new Player(new PlayerId(-1), "Dealer"), event.toString()));
+		onMessage(new MessageEvent(new Dealer(), event.toString()));
 	}
 	
 	public PlayerState getUser() {

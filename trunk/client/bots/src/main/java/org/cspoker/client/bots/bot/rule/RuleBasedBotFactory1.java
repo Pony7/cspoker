@@ -38,10 +38,10 @@ public class RuleBasedBotFactory1 implements BotFactory {
 	 * @see org.cspoker.client.bots.bot.BotFactory#createBot(org.cspoker.common.elements.player.PlayerId, org.cspoker.common.elements.table.TableId, org.cspoker.client.common.SmartLobbyContext, java.util.concurrent.ExecutorService, org.cspoker.client.bots.listener.BotListener[])
 	 */
 	public Bot createBot(PlayerId playerId, TableId tableId,
-			SmartLobbyContext lobby, ExecutorService executor,
+			SmartLobbyContext lobby, int buyIn, ExecutorService executor,
 			BotListener... botListeners) {
 		copies++;
-		return new RuleBasedBot1(playerId, tableId, lobby, executor, botListeners);
+		return new RuleBasedBot1(playerId, tableId, lobby, buyIn, executor, botListeners);
 	}
 
 	@Override

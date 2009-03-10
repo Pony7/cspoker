@@ -21,7 +21,6 @@ import java.util.concurrent.ExecutorService;
 import javax.security.auth.login.LoginException;
 
 import org.apache.log4j.Logger;
-import org.cspoker.client.bots.bot.AbstractBot;
 import org.cspoker.client.bots.bot.Bot;
 import org.cspoker.client.bots.bot.BotFactory;
 import org.cspoker.client.bots.bot.rule.RuleBasedBotFactory1;
@@ -50,7 +49,7 @@ import org.cspoker.common.util.threading.SingleThreadRequestExecutor;
 public class BotRunner
 implements LobbyListener {
 
-	private static final TableConfiguration config = new TableConfiguration(AbstractBot.bigBlind,0,false);
+	private static final TableConfiguration config = new TableConfiguration(10,0,false);
 
 	public static final int nbGamesPerConfrontation = 10000;
 
@@ -172,11 +171,11 @@ implements LobbyListener {
 			TableId tableId = directorLobby.createHoldemTable(tableName, 
 					config).getId();
 
-			bot[0] = bots[botIndex[0]].createBot(botIDs[botIndex[0]], tableId, botLobbies[botIndex[0]], executor, 
+			bot[0] = bots[botIndex[0]].createBot(botIDs[botIndex[0]], tableId, botLobbies[botIndex[0]], 5000,executor, 
 					new ReSitInBotListener(this), speedMinitor,gameLimiter);
 			bot[0].start();
 			for(int i=1;i<nbPlayersPerGame;i++){
-				bot[i] = bots[botIndex[i]].createBot(botIDs[botIndex[i]], tableId, botLobbies[botIndex[i]], executor);
+				bot[i] = bots[botIndex[i]].createBot(botIDs[botIndex[i]], tableId, botLobbies[botIndex[i]], 5000, executor);
 				bot[i].start();
 			}
 			bot[0].startGame();
@@ -219,7 +218,7 @@ implements LobbyListener {
 	public void moveToNextCombination() {
 		stopRunningBots();
 		for(int i=0;i<nbPlayersPerGame;i++){
-			logger.info(bots[botIndex[i]].toString()+" averages "+(botProfit[i]*1.0/AbstractBot.bigBlind/nbGamesPerConfrontation)+" bb/game");
+			logger.info(bots[botIndex[i]].toString()+" averages "+(botProfit[i]*1.0/config.getBigBlind()/nbGamesPerConfrontation)+" bb/game");
 			botProfit[i]=0;
 		}
 		iterateBots();
@@ -230,7 +229,7 @@ implements LobbyListener {
 	}
 
 	public double getBotProfit(int i) {
-		return (botProfit[i]+bot[i].getProfit())*1.0/AbstractBot.bigBlind;
+		return (botProfit[i]+bot[i].getProfit())*1.0/config.getBigBlind();
 	}
 
 }

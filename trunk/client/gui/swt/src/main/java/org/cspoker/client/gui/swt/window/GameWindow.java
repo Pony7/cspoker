@@ -264,6 +264,7 @@ public class GameWindow
 	 * @see org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener#onNewDeal(org.cspoker.common.api.lobby.holdemtable.event.NewDealEvent)
 	 */
 	public void onNewDeal(NewDealEvent newDealEvent) {
+		clearTable();
 		logger.debug("New deal event received");
 		PlayerSeatComposite newDealer = tableComposite.findPlayerSeatCompositeByPlayerId(newDealEvent.getDealer());
 		for (PlayerSeatComposite psc : tableComposite.getPlayerSeatComposites(true)) {
@@ -354,13 +355,11 @@ public class GameWindow
 	 * @see org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener#onWinner(org.cspoker.common.api.lobby.holdemtable.event.WinnerEvent)
 	 */
 	public void onWinner(final WinnerEvent winnerEvent) {
-		try {
-			Thread.sleep(1000);
-		} catch (InterruptedException e) {
-			logger.warn("Sleep interrupted", e);
-			Thread.currentThread().interrupt();
-		}
 		tableComposite.movePotsToWinners(winnerEvent.getWinners());
+		userInputComposite.showDealerMessage(winnerEvent);
+	}
+
+	private void clearTable() {
 		tableComposite.getCommunityCardsComposite().redraw();
 		tableComposite.getCommunityCardsComposite().setVisible(false);
 		for (PlayerSeatComposite psc : tableComposite.getPlayerSeatComposites(true)) {
@@ -369,7 +368,6 @@ public class GameWindow
 			psc.setActive(false);
 			psc.updatePlayerInfo();
 		}
-		userInputComposite.showDealerMessage(winnerEvent);
 	}
 	
 	/**

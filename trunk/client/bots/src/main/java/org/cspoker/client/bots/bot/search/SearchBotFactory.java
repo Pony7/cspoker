@@ -52,7 +52,7 @@ public class SearchBotFactory implements BotFactory {
 	 * @see org.cspoker.client.bots.bot.BotFactory#createBot(org.cspoker.common.elements.player.PlayerId, org.cspoker.common.elements.table.TableId, org.cspoker.client.common.SmartLobbyContext, java.util.concurrent.ExecutorService, org.cspoker.client.bots.listener.BotListener[])
 	 */
 	public Bot createBot(final PlayerId botId, TableId tableId,
-			SmartLobbyContext lobby, ExecutorService executor,
+			SmartLobbyContext lobby, int buyIn, ExecutorService executor,
 			BotListener... botListeners) {
 		copies++;
 		opponentModels.putIfAbsent(botId, new AllPlayersHistogramModel(botId));
@@ -61,8 +61,8 @@ public class SearchBotFactory implements BotFactory {
 				opponentModels.get(botId), 
 				showdownNodeFactory,
 				new SamplingExpander.Factory(),
-				500,1000,5000,10000,0.3);
-		return new SearchBot(botId, tableId, lobby, executor, config ,botListeners);
+				500,1000,5000,10000,0.1);
+		return new SearchBot(botId, tableId, lobby, executor, config, buyIn ,botListeners);
 	}
 
 	@Override
