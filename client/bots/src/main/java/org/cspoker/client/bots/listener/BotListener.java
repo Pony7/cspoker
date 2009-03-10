@@ -15,10 +15,12 @@
  */
 package org.cspoker.client.bots.listener;
 
+import org.cspoker.common.api.lobby.holdemtable.event.SitOutEvent;
+
 public interface BotListener {
 
 	void onNewDeal();
 
-	void onSitOut();
+	void onSitOut(SitOutEvent sitOutEvent);
 
 }

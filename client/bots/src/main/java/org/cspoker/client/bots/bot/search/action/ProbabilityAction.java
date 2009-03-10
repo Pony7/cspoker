@@ -15,7 +15,7 @@
  */
 package org.cspoker.client.bots.bot.search.action;
 
-public class ProbabilityAction{
+public class ProbabilityAction implements ActionWrapper{
 
 	private final ActionWrapper actionWrapper;
 	private final double probability;

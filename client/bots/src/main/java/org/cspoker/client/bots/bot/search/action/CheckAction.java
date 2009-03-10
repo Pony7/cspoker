@@ -57,7 +57,7 @@ public class CheckAction extends SearchBotAction{
 	
 	@Override
 	public String toString() {
-		return "Checking";
+		return "Check";
 	}
 	
 }

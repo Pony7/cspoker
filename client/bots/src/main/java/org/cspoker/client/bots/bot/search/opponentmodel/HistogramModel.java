@@ -17,6 +17,7 @@ package org.cspoker.client.bots.bot.search.opponentmodel;
 
 import java.util.HashSet;
 import java.util.LinkedHashSet;
+import java.util.Random;
 import java.util.Set;
 
 import org.cspoker.client.bots.bot.search.action.BetAction;
@@ -25,7 +26,6 @@ import org.cspoker.client.bots.bot.search.action.CheckAction;
 import org.cspoker.client.bots.bot.search.action.FoldAction;
 import org.cspoker.client.bots.bot.search.action.ProbabilityAction;
 import org.cspoker.client.bots.bot.search.action.RaiseAction;
-import org.cspoker.client.bots.bot.search.action.SearchBotAction;
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.client.common.gamestate.modifiers.AllInState;
 import org.cspoker.common.api.lobby.holdemtable.event.AllInEvent;
@@ -38,7 +38,9 @@ import org.cspoker.common.elements.player.PlayerId;
 
 public class HistogramModel implements OpponentModel{
 
+	public static final int nbBetSizeSamples = 3;
 	public final static int weightOfPrior=200;
+	private final static Random r = new Random();
 
 	private final PlayerId playerId;
 	private final PlayerId botId;
@@ -113,17 +115,7 @@ public class HistogramModel implements OpponentModel{
 		++nbFold;
 		++totalBet;
 	}
-
-	@Override
-	public Set<SearchBotAction> getAllPossibleActions(GameState gameState) {
-		HashSet<SearchBotAction> possibleActions = new LinkedHashSet<SearchBotAction>();
-		Set<ProbabilityAction> probActions = getProbabilityActions(gameState);
-		for(ProbabilityAction action:probActions){
-			possibleActions.add(action.getAction());
-		}
-		return possibleActions;
-	}
-
+	
 	@Override
 	public Set<ProbabilityAction> getProbabilityActions(GameState gameState) {
 		HashSet<ProbabilityAction> actions = new LinkedHashSet<ProbabilityAction>();
@@ -139,16 +131,19 @@ public class HistogramModel implements OpponentModel{
 			actions.add(new ProbabilityAction(new FoldAction(gameState, playerId),foldProbability));
 
 			if(!gameState.getPlayer(botId).isAllIn() && gameState.isAllowedToRaise(playerId)){
+				double raiseProbability = getRaiseProbability(gameState);
 				int lowerRaiseBound = gameState.getLowerRaiseBound(playerId);
 				int upperRaiseBound = gameState.getUpperRaiseBound(playerId);
-				double raiseProbability = getRaiseProbability(gameState);
-				totalProbability+=raiseProbability;
-				actions.add(new ProbabilityAction(new RaiseAction(gameState, playerId, lowerRaiseBound),raiseProbability));
-
-				if(upperRaiseBound>lowerRaiseBound){
-					totalProbability+=raiseProbability;
-					RaiseAction betAction = new RaiseAction(gameState, playerId, Math.min((int)((1+Math.random()*5)*lowerRaiseBound), upperRaiseBound));
-					actions.add(new ProbabilityAction(betAction,raiseProbability));
+				int n = upperRaiseBound>lowerRaiseBound? nbBetSizeSamples:1;
+				actions.add(new ProbabilityAction(new RaiseAction(gameState, playerId, lowerRaiseBound),raiseProbability/n));
+				totalProbability+=raiseProbability/n;
+				if(n>1){
+					double[] betSizeSamples = getLogarithmicSamples(n-1);
+					for (int i = 0; i < betSizeSamples.length; i++) {
+						RaiseAction raiseAction = new RaiseAction(gameState, playerId, (int)Math.round(lowerRaiseBound+betSizeSamples[i]*(upperRaiseBound-lowerRaiseBound)));
+						actions.add(new ProbabilityAction(raiseAction,raiseProbability/n));
+						totalProbability+=raiseProbability/n;
+					}
 				}
 			}
 		}else{
@@ -158,16 +153,19 @@ public class HistogramModel implements OpponentModel{
 			actions.add(new ProbabilityAction(new CheckAction(gameState, playerId),checkProbability));
 
 			if(!gameState.getPlayer(botId).isAllIn() && gameState.isAllowedToRaise(playerId)){
+				double betProbability = getBetProbability(gameState);
 				int lowerRaiseBound = gameState.getLowerRaiseBound(playerId);
 				int upperRaiseBound = gameState.getUpperRaiseBound(playerId);
-				double betProbability = getBetProbability(gameState);
-				totalProbability+=betProbability;
-				actions.add(new ProbabilityAction(new BetAction(gameState, playerId, lowerRaiseBound),betProbability));
-
-				if(upperRaiseBound>lowerRaiseBound){
-					totalProbability+=betProbability;
-					BetAction betAction = new BetAction(gameState, playerId, Math.min((int)((1+Math.random()*5)*lowerRaiseBound), upperRaiseBound));
-					actions.add(new ProbabilityAction(betAction,betProbability));
+				int n = upperRaiseBound>lowerRaiseBound? 3:1;
+				actions.add(new ProbabilityAction(new BetAction(gameState, playerId, lowerRaiseBound),betProbability/n));
+				totalProbability+=betProbability/n;
+				if(n>1){
+					double[] betSizeSamples = getLogarithmicSamples(n-1);
+					for (int i = 0; i < betSizeSamples.length; i++) {
+						BetAction betAction = new BetAction(gameState, playerId, (int)Math.round(lowerRaiseBound+betSizeSamples[i]*(upperRaiseBound-lowerRaiseBound)));
+						actions.add(new ProbabilityAction(betAction,betProbability/n));
+						totalProbability+=betProbability/n;
+					}
 				}
 			}
 		}
@@ -198,4 +196,14 @@ public class HistogramModel implements OpponentModel{
 		return nbRaise*1.0/totalBet;
 	}
 
+	public static double[] getLogarithmicSamples(int n){
+		double[] samples = new double[n];
+		samples[0] = r.nextDouble()/Math.pow(2, n-1);
+		for(int i=1;i<samples.length;i++){
+			double p = 1/Math.pow(2, n-i);
+			samples[i] = p+r.nextDouble()*p;
+		}
+		return samples;
+	}
+	
 }

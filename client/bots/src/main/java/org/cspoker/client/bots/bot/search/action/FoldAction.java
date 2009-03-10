@@ -90,7 +90,7 @@ public class FoldAction extends SearchBotAction{
 	}
 	
 	public String toString() {
-		return "Folding";
+		return "Fold";
 	}
 	
 }

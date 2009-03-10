@@ -62,16 +62,6 @@ public class OpponentActionNode extends ActionNode{
 		return new Pair<Double, Double>(EV,Math.max(0,varEV-EV*EV));
 	}
 	
-	@Override
-	public Set<SearchBotAction> getAllPossibleActions() {
-		return config.getOpponentModeler().getModelFor(playerId,gameState).getAllPossibleActions(gameState);
-	}
-
-	@Override
-	public Set<ProbabilityAction> getProbabilityActions() {
-		return config.getOpponentModeler().getModelFor(playerId,gameState).getProbabilityActions(gameState);
-	}
-	
 	public SamplingExpander getExpander() {
 		return expander;
 	}

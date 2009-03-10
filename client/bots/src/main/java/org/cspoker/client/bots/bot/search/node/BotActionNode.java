@@ -86,45 +86,6 @@ public class BotActionNode extends ActionNode{
 		return action;
 	}
 
-	@Override
-	public Set<SearchBotAction> getAllPossibleActions() {
-		HashSet<SearchBotAction> actions = new LinkedHashSet<SearchBotAction>();
-		if(gameState.hasBet()){
-			actions.add(new CallAction(gameState, botId));
-			actions.add(new FoldAction(gameState, botId));
-			if(gameState.isAllowedToRaise(botId)){
-				int lowerRaiseBound = gameState.getLowerRaiseBound(botId);
-				int upperRaiseBound = gameState.getUpperRaiseBound(botId);
-				actions.add(new RaiseAction(gameState, botId, lowerRaiseBound));
-				if(upperRaiseBound>lowerRaiseBound){
-					actions.add(new RaiseAction(gameState, botId, Math.min((int)((1+Math.random()*5)*lowerRaiseBound), upperRaiseBound)));
-				}
-			}
-		}else{
-			actions.add(new CheckAction(gameState, botId));
-			if(gameState.isAllowedToRaise(botId)){
-				int lowerRaiseBound = gameState.getLowerRaiseBound(botId);
-				int upperRaiseBound = gameState.getUpperRaiseBound(botId);
-				actions.add(new BetAction(gameState, botId, lowerRaiseBound));
-				if(upperRaiseBound>lowerRaiseBound){
-					actions.add(new BetAction(gameState, botId, Math.min((int)((1+Math.random()*5)*lowerRaiseBound), upperRaiseBound)));
-				}
-			}
-		}
-		return actions;
-	}
-
-	@Override
-	public Set<ProbabilityAction> getProbabilityActions() {
-		Set<SearchBotAction> possibleActions = getAllPossibleActions();
-		double probability = 1.0/possibleActions.size();
-		HashSet<ProbabilityAction> probActions = new LinkedHashSet<ProbabilityAction>();
-		for(SearchBotAction action:possibleActions){
-			probActions.add(new ProbabilityAction(action,probability));
-		}
-		return probActions;
-	}
-
 	protected Expander getExpander() {
 		return expander;
 	}

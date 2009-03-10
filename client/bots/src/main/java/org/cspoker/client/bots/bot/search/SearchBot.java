@@ -21,7 +21,8 @@ import java.util.concurrent.ExecutorService;
 import org.apache.log4j.Logger;
 import org.cspoker.client.bots.bot.AbstractBot;
 import org.cspoker.client.bots.bot.search.node.BotActionNode;
-import org.cspoker.client.bots.bot.search.node.visitor.Log4JOutputVisitor;
+import org.cspoker.client.bots.bot.search.node.visitor.NodeVisitor;
+import org.cspoker.client.bots.bot.search.node.visitor.NodeVisitor.Factory;
 import org.cspoker.client.bots.listener.BotListener;
 import org.cspoker.client.common.SmartLobbyContext;
 import org.cspoker.client.common.gamestate.GameState;
@@ -37,13 +38,17 @@ extends AbstractBot {
 	private int searchId = 0;
 	private final SearchConfiguration config;
 
+	private final Factory[] nodeVisitorFactories;
+
 	public SearchBot(PlayerId playerId, TableId tableId,
 			SmartLobbyContext lobby, ExecutorService executor,
 			SearchConfiguration config,
 			int buyIn,
+			NodeVisitor.Factory[] nodeVisitorFactories,
 			BotListener... botListeners) {
 		super(playerId, tableId, lobby, buyIn, executor, botListeners);
 		this.config = config;
+		this.nodeVisitorFactories = nodeVisitorFactories;
 	}
 
 	@Override
@@ -51,16 +56,19 @@ extends AbstractBot {
 		executor.execute(new Runnable() {
 			public void run() {
 				try {
+					NodeVisitor[] visitors = new NodeVisitor[nodeVisitorFactories.length];
+					for (int i = 0; i < visitors.length; i++) {
+						visitors[i] = nodeVisitorFactories[i].create();
+					}
 					BotActionNode actionNode;
 					GameState gameState = tableContext.getGameState();
-					int maxDepth = 2;
 					switch (gameState.getRound()) {
 					case PREFLOP:
 						logger.debug("Searching preflop round game tree:");
 						config.getOpponentModeler().signalNextAction(gameState);
 						actionNode = new BotActionNode(playerId, gameState, 
 								config, config.getPreflopTokens(),
-								searchId++, new Log4JOutputVisitor(maxDepth));
+								searchId++, visitors);
 						actionNode.performbestAction(playerContext);
 						break;
 					case FLOP:
@@ -68,7 +76,7 @@ extends AbstractBot {
 						config.getOpponentModeler().signalNextAction(gameState);
 						actionNode = new BotActionNode(playerId, gameState, 
 								config, config.getFlopTokens(),
-								searchId++, new Log4JOutputVisitor(maxDepth));
+								searchId++, visitors);
 						actionNode.performbestAction(playerContext);
 						break;
 					case TURN:
@@ -76,7 +84,7 @@ extends AbstractBot {
 						config.getOpponentModeler().signalNextAction(gameState);
 						actionNode = new BotActionNode(playerId, gameState, 
 								config, config.getTurnTokens(), 
-								searchId++, new Log4JOutputVisitor(maxDepth));
+								searchId++, visitors);
 						actionNode.performbestAction(playerContext);
 						break;
 					case FINAL:
@@ -85,7 +93,7 @@ extends AbstractBot {
 						config.getOpponentModeler().signalNextAction(gameState);
 						actionNode = new BotActionNode(playerId, gameState, 
 								config, config.getFinalTokens(), 
-								searchId++, new Log4JOutputVisitor(maxDepth));
+								searchId++, visitors);
 						actionNode.performbestAction(playerContext);
 						break;
 					default:

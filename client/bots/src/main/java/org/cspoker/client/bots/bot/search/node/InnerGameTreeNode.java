@@ -22,7 +22,6 @@ import net.jcip.annotations.Immutable;
 import org.cspoker.client.bots.bot.search.action.ActionWrapper;
 import org.cspoker.client.bots.bot.search.action.EvaluatedAction;
 import org.cspoker.client.bots.bot.search.action.ProbabilityAction;
-import org.cspoker.client.bots.bot.search.action.SearchBotAction;
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.common.util.Pair;
 
@@ -36,7 +35,5 @@ public interface InnerGameTreeNode extends GameTreeNode{
 	GameState getGameState();
 
 	Set<ProbabilityAction> getProbabilityActions();
-
-	Set<SearchBotAction> getAllPossibleActions();
 
 }

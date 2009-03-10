@@ -77,7 +77,7 @@ public class CallAction extends SearchBotAction{
 
 	@Override
 	public String toString() {
-		return "Calling";
+		return "Call";
 	}
 
 }

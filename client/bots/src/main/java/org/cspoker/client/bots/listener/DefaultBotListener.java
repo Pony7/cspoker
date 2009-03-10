@@ -15,6 +15,8 @@
  */
 package org.cspoker.client.bots.listener;
 
+import org.cspoker.common.api.lobby.holdemtable.event.SitOutEvent;
+
 public class DefaultBotListener
 		implements BotListener {
 	
@@ -32,8 +34,9 @@ public class DefaultBotListener
 	 * 
 	 * @see org.cspoker.client.bots.listener.BotListener#onSitOut()
 	 */
-	public void onSitOut() {
-	// no op
+	@Override
+	public void onSitOut(SitOutEvent sitOutEvent) {
+		// no op
 	}
 	
 }

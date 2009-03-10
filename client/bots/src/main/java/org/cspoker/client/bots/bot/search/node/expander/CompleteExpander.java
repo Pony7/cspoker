@@ -19,7 +19,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.cspoker.client.bots.bot.search.action.EvaluatedAction;
-import org.cspoker.client.bots.bot.search.action.SearchBotAction;
+import org.cspoker.client.bots.bot.search.action.ProbabilityAction;
 import org.cspoker.client.bots.bot.search.node.InnerGameTreeNode;
 
 public class CompleteExpander extends Expander{
@@ -28,11 +28,11 @@ public class CompleteExpander extends Expander{
 		super(node, tokens);
 	}
 
-	public Set<? extends EvaluatedAction<? extends SearchBotAction>> expand(){
-		Set<SearchBotAction> actions = node.getAllPossibleActions();
+	public Set<? extends EvaluatedAction<? extends ProbabilityAction>> expand(){
+		Set<ProbabilityAction> actions = node.getProbabilityActions();
 		int subtreeTokens = Math.max(1,tokens/actions.size());
-		Set<EvaluatedAction<SearchBotAction>> evaluatedActions = new LinkedHashSet<EvaluatedAction<SearchBotAction>>(actions.size());
-		for(SearchBotAction action:actions){
+		Set<EvaluatedAction<ProbabilityAction>> evaluatedActions = new LinkedHashSet<EvaluatedAction<ProbabilityAction>>(actions.size());
+		for(ProbabilityAction action:actions){
 			evaluatedActions.add(node.expandWith(action, subtreeTokens));
 		}
 		return evaluatedActions;

@@ -34,6 +34,7 @@ import org.cspoker.client.bots.bot.search.action.ProbabilityAction;
 import org.cspoker.client.bots.bot.search.action.RaiseAction;
 import org.cspoker.client.bots.bot.search.action.SearchBotAction;
 import org.cspoker.client.bots.bot.search.opponentmodel.AllPlayersModel;
+import org.cspoker.client.bots.bot.search.opponentmodel.HistogramModel;
 import org.cspoker.client.bots.bot.search.opponentmodel.OpponentModel;
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.common.elements.player.PlayerId;
@@ -79,16 +80,7 @@ public abstract class AbstractPrologModel implements AllPlayersModel {
 	@Override
 	public OpponentModel getModelFor(final PlayerId playerId, GameState gameState) {
 		return new OpponentModel(){
-			@Override
-			public Set<SearchBotAction> getAllPossibleActions(GameState gameState) {
-				HashSet<SearchBotAction> possibleActions = new LinkedHashSet<SearchBotAction>();
-				Set<ProbabilityAction> probActions = getProbabilityActions(gameState);
-				for(ProbabilityAction action:probActions){
-					possibleActions.add(action.getAction());
-				}
-				return possibleActions;
-			}
-
+			
 			@Override
 			public Set<ProbabilityAction> getProbabilityActions(GameState gameState) {
 				HashSet<ProbabilityAction> actions = new LinkedHashSet<ProbabilityAction>();
@@ -116,19 +108,16 @@ public abstract class AbstractPrologModel implements AllPlayersModel {
 					if(!gameState.getPlayer(botId).isAllIn() && gameState.isAllowedToRaise(playerId)){
 						int lowerRaiseBound = gameState.getLowerRaiseBound(playerId);
 						int upperRaiseBound = gameState.getUpperRaiseBound(playerId);
-
-						actions.add(new ProbabilityAction(
-								new RaiseAction(gameState, playerId, lowerRaiseBound),
-								//raise is no target, bet is! 
-								//TODO fix in prolog
-								betProb));
-						totalProb += betProb;
-
-						if(upperRaiseBound>lowerRaiseBound){
-							actions.add(new ProbabilityAction(
-									new RaiseAction(gameState, playerId, Math.min((int)((1+Math.random()*5)*lowerRaiseBound), upperRaiseBound)),
-									betProb));
-							totalProb += betProb;
+						int n = upperRaiseBound>lowerRaiseBound? HistogramModel.nbBetSizeSamples:1;
+						actions.add(new ProbabilityAction(new RaiseAction(gameState, playerId, lowerRaiseBound),betProb/n));
+						totalProb+=betProb/n;
+						if(n>1){
+							double[] betSizeSamples = HistogramModel.getLogarithmicSamples(n-1);
+							for (int i = 0; i < betSizeSamples.length; i++) {
+								RaiseAction raiseAction = new RaiseAction(gameState, playerId, (int)Math.round(lowerRaiseBound+betSizeSamples[i]*(upperRaiseBound-lowerRaiseBound)));
+								actions.add(new ProbabilityAction(raiseAction,betProb/n));
+								totalProb+=betProb/n;
+							}
 						}
 					}
 				}else{
@@ -142,17 +131,16 @@ public abstract class AbstractPrologModel implements AllPlayersModel {
 					if(!gameState.getPlayer(botId).isAllIn() && gameState.isAllowedToRaise(playerId)){
 						int lowerRaiseBound = gameState.getLowerRaiseBound(playerId);
 						int upperRaiseBound = gameState.getUpperRaiseBound(playerId);
-
-						actions.add(new ProbabilityAction(
-								new BetAction(gameState, playerId, lowerRaiseBound),
-								betProb));
-						totalProb += betProb;
-
-						if(upperRaiseBound>lowerRaiseBound){
-							actions.add(new ProbabilityAction(
-									new BetAction(gameState, playerId, Math.min((int)((1+Math.random()*5)*lowerRaiseBound), upperRaiseBound)),
-									betProb));
-							totalProb += betProb;
+						int n = upperRaiseBound>lowerRaiseBound? HistogramModel.nbBetSizeSamples:1;
+						actions.add(new ProbabilityAction(new BetAction(gameState, playerId, lowerRaiseBound),betProb/n));
+						totalProb+=betProb/n;
+						if(n>1){
+							double[] betSizeSamples = HistogramModel.getLogarithmicSamples(n-1);
+							for (int i = 0; i < betSizeSamples.length; i++) {
+								BetAction raiseAction = new BetAction(gameState, playerId, (int)Math.round(lowerRaiseBound+betSizeSamples[i]*(upperRaiseBound-lowerRaiseBound)));
+								actions.add(new ProbabilityAction(raiseAction,betProb/n));
+								totalProb+=betProb/n;
+							}
 						}
 					}
 				}

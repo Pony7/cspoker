@@ -55,5 +55,10 @@ public class SitOutEvent extends HoldemTableEvent {
 	public void dispatch(HoldemTableListener holdemTableListener) {
 		holdemTableListener.onSitOut(this);
 	}
+	
+	@Override
+	public String toString() {
+		return playerId + " sits out.";
+	}
 
 }

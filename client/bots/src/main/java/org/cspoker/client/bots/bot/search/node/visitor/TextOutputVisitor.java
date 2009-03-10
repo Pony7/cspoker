@@ -20,6 +20,7 @@ import java.util.Deque;
 
 import org.cspoker.client.bots.bot.search.action.ActionWrapper;
 import org.cspoker.client.bots.bot.search.action.EvaluatedAction;
+import org.cspoker.client.bots.bot.search.action.SampledAction;
 import org.cspoker.client.bots.bot.search.node.ActionNode;
 
 public abstract class TextOutputVisitor implements NodeVisitor{

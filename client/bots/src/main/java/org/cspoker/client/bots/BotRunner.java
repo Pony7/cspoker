@@ -27,6 +27,7 @@ import org.cspoker.client.bots.bot.rule.RuleBasedBotFactory1;
 import org.cspoker.client.bots.bot.rule.RuleBasedBotFactory2;
 import org.cspoker.client.bots.bot.search.SearchBotFactory;
 import org.cspoker.client.bots.bot.search.node.leaf.DistributionShowdownNode4;
+import org.cspoker.client.bots.bot.search.node.visitor.Log4JOutputVisitor;
 import org.cspoker.client.bots.listener.BotListener;
 import org.cspoker.client.bots.listener.GameLimitingBotListener;
 import org.cspoker.client.bots.listener.ReSitInBotListener;
@@ -84,8 +85,8 @@ implements LobbyListener {
 				// ML bots
 								new RuleBasedBotFactory1(),
 								new RuleBasedBotFactory2(),
-								new SearchBotFactory(new DistributionShowdownNode4.Factory()),
-								new SearchBotFactory(new DistributionShowdownNode4.Factory()),
+								new SearchBotFactory(new DistributionShowdownNode4.Factory(), new Log4JOutputVisitor.Factory(2)),
+								new SearchBotFactory(new DistributionShowdownNode4.Factory(), new Log4JOutputVisitor.Factory(2)),
 								new RuleBasedBotFactory1(),
 								new RuleBasedBotFactory2(),
 

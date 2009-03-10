@@ -229,7 +229,7 @@ public abstract class AbstractBot
 	public void onSitOut(SitOutEvent sitOutEvent) {
 		if (started) {
 			for (BotListener botListener : botListeners) {
-				botListener.onSitOut();
+				botListener.onSitOut(sitOutEvent);
 			}
 		}
 	}
