@@ -23,6 +23,7 @@ import org.apache.log4j.Logger;
 import org.cspoker.client.bots.bot.search.SearchConfiguration;
 import org.cspoker.client.bots.bot.search.node.leaf.rankdistribution.ShowdownRankPredictor1of2;
 import org.cspoker.client.bots.bot.search.node.leaf.rankdistribution.ShowdownRankPredictor2of2;
+import org.cspoker.client.bots.bot.search.node.visitor.NodeVisitor;
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.client.common.gamestate.PlayerState;
 import org.cspoker.common.elements.cards.Card;
@@ -46,8 +47,8 @@ public abstract class AbstractDistributionShowdownNode extends AbstractShowdownN
 
 	private int tokens;
 
-	AbstractDistributionShowdownNode(PlayerId botId, GameState gameState, int tokens) {
-		super(botId, gameState);
+	AbstractDistributionShowdownNode(PlayerId botId, GameState gameState, int tokens, NodeVisitor...nodeVisitors) {
+		super(botId, gameState, nodeVisitors);
 		this.tokens = tokens;
 	}
 
@@ -174,7 +175,7 @@ public abstract class AbstractDistributionShowdownNode extends AbstractShowdownN
 	public static interface Factory extends AbstractShowdownNode.Factory{
 
 		AbstractDistributionShowdownNode create(PlayerId botId, GameState gameState, int tokens
-				, SearchConfiguration config, int searchId);
+				, SearchConfiguration config, int searchId, NodeVisitor...nodeVisitors);
 	}
 
 }

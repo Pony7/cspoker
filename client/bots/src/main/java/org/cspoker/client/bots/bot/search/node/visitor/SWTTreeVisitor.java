@@ -80,24 +80,25 @@ public class SWTTreeVisitor implements NodeVisitor{
 					throw new IllegalStateException("What action is this? "+action);
 				}
 				String actor = (node instanceof BotActionNode) ? "Bot": "Player "+node.getPlayerId();
+				Round round = node.getGameState().getRound();
 				newItem.setText(new String[] { 
 						actor, 
 						action.getAction().toString(), 
-						node.getGameState().getRound().getName(),
+						round.getName(),
 						Math.round(100*probAction.getProbability())+"%" , 
 						samples,
 						"?", 
 						"?", 
 						""+tokens 
 				});
-				if(node.getGameState().getRound()==Round.FINAL){
-					newItem.setBackground(2,new Color(display, 255,30,30));
-				}else if(node.getGameState().getRound()==Round.TURN){
-					newItem.setBackground(2,new Color(display, 255,100,100));;	
-				}else if(node.getGameState().getRound()==Round.FLOP){
-					newItem.setBackground(2,new Color(display, 255,170,170));
-				}else if(node.getGameState().getRound()==Round.PREFLOP){
-					newItem.setBackground(2,new Color(display, 255,240,240));
+				if(round==Round.FINAL){
+					newItem.setBackground(2,new Color(display, 30,30,255));
+				}else if(round==Round.TURN){
+					newItem.setBackground(2,new Color(display, 100,100,255));;	
+				}else if(round==Round.FLOP){
+					newItem.setBackground(2,new Color(display, 170,170,255));
+				}else if(round==Round.PREFLOP){
+					newItem.setBackground(2,new Color(display, 240,240,255));
 				}
 				items.push(newItem);
 			}
@@ -118,6 +119,58 @@ public class SWTTreeVisitor implements NodeVisitor{
 				} catch (NoSuchElementException e) {
 					tree.redraw();
 				}
+			}
+		});
+	}
+
+	@Override
+	public void visitLoseNode(final int ev, final double p) {
+		display.syncExec(new Runnable(){
+			public void run(){
+				TreeItem item = items.peek();
+				TreeItem newItem;
+				if(item==null){
+					newItem = new TreeItem(tree, SWT.NONE);
+				}else{
+					newItem = new TreeItem(item, SWT.NONE);
+				}
+				newItem.setText(new String[] { 
+						"", 
+						"Lose", 
+						"showdown",
+						Math.round(100*p)+"%" , 
+						"",
+						""+Math.round(ev),
+						"", 
+						"" 
+				});
+				newItem.setBackground(1,new Color(display, 255,00,00));
+			}
+		});
+	}
+
+	@Override
+	public void visitWinNode(final int ev, final double p) {
+		display.syncExec(new Runnable(){
+			public void run(){
+				TreeItem item = items.peek();
+				TreeItem newItem;
+				if(item==null){
+					newItem = new TreeItem(tree, SWT.NONE);
+				}else{
+					newItem = new TreeItem(item, SWT.NONE);
+				}
+				newItem.setText(new String[] { 
+						"", 
+						"Win", 
+						"showdown",
+						Math.round(100*p)+"%" , 
+						"",
+						""+Math.round(ev),
+						"", 
+						"" 
+				});
+				newItem.setBackground(1,new Color(display, 00,255,00));
 			}
 		});
 	}
@@ -155,7 +208,7 @@ public class SWTTreeVisitor implements NodeVisitor{
 					
 					column = new TreeColumn(tree, SWT.CENTER);
 					column.setText("Round");
-					column.setWidth(50);
+					column.setWidth(70);
 
 					column = new TreeColumn(tree, SWT.CENTER);
 					column.setText("P(Action)");

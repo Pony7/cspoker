@@ -20,8 +20,10 @@ import java.util.Set;
 
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.client.common.gamestate.PlayerState;
+import org.cspoker.client.common.gamestate.modifiers.AllInState;
 import org.cspoker.client.common.gamestate.modifiers.CallState;
 import org.cspoker.client.common.gamestate.modifiers.NextPlayerState;
+import org.cspoker.common.api.lobby.holdemtable.event.AllInEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.CallEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.NextPlayerEvent;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.RemoteHoldemPlayerContext;
@@ -54,14 +56,22 @@ public class CallAction extends SearchBotAction{
 				}
 			}
 		//what if small or big blind all-in?
+		PlayerState actorState = gameState.getPlayer(actor);
+		int largestBet = gameState.getLargestBet();
 		if(roundEnds 
 				&& gameState.getRound().equals(Round.PREFLOP) 
-				&& gameState.getPlayer(actor).isSmallBlind() 
-				&& gameState.getLargestBet()<=gameState.getTableConfiguration().getBigBlind()){
+				&& actorState.isSmallBlind() 
+				&& largestBet<=gameState.getTableConfiguration().getBigBlind()){
 			roundEnds = false;
 		}
 
-		CallState state = new CallState(gameState, new CallEvent(actor, roundEnds));
+		GameState state;
+		int stack = actorState.getStack();
+		if(stack<=largestBet){
+			state = new AllInState(gameState, new AllInEvent(actor,stack,roundEnds));
+		}else{
+			state= new CallState(gameState, new CallEvent(actor, roundEnds));
+		}
 		if(roundEnds){
 			return getNewRoundState(state);
 		}else{

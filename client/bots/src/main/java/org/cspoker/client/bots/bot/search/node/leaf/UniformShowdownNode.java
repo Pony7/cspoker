@@ -21,6 +21,7 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.cspoker.client.bots.bot.search.SearchConfiguration;
+import org.cspoker.client.bots.bot.search.node.visitor.NodeVisitor;
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.client.common.gamestate.PlayerState;
 import org.cspoker.common.elements.cards.Card;
@@ -40,8 +41,8 @@ public class UniformShowdownNode extends AbstractShowdownNode{
 
 	private int tokens;
 
-	UniformShowdownNode(PlayerId botId, GameState gameState, int tokens) {
-		super(botId, gameState);
+	UniformShowdownNode(PlayerId botId, GameState gameState, int tokens, NodeVisitor...nodeVisitors) {
+		super(botId, gameState, nodeVisitors);
 		this.tokens = tokens;
 	}
 
@@ -126,8 +127,8 @@ public class UniformShowdownNode extends AbstractShowdownNode{
 
 	public static class Factory implements AbstractShowdownNode.Factory{
 		@Override
-		public UniformShowdownNode create(PlayerId botId, GameState gameState, int tokens, SearchConfiguration config, int searchId) {
-			return new UniformShowdownNode(botId, gameState, tokens);
+		public UniformShowdownNode create(PlayerId botId, GameState gameState, int tokens, SearchConfiguration config, int searchId, NodeVisitor...nodeVisitors) {
+			return new UniformShowdownNode(botId, gameState, tokens, nodeVisitors);
 		}
 
 		@Override

@@ -19,8 +19,10 @@ import java.rmi.RemoteException;
 
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.client.common.gamestate.PlayerState;
+import org.cspoker.client.common.gamestate.modifiers.AllInState;
 import org.cspoker.client.common.gamestate.modifiers.BetState;
 import org.cspoker.client.common.gamestate.modifiers.NextPlayerState;
+import org.cspoker.common.api.lobby.holdemtable.event.AllInEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.BetEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.NextPlayerEvent;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.RemoteHoldemPlayerContext;
@@ -43,7 +45,12 @@ public class BetAction extends SearchBotAction{
 	
 	@Override
 	public GameState getStateAfterAction() {
-		BetState betState = new BetState(gameState, new BetEvent(actor,amount));
+		GameState betState;
+		if(gameState.getPlayer(actor).getStack()<=amount){
+			betState = new AllInState(gameState, new AllInEvent(actor,amount,false));
+		}else{
+			betState = new BetState(gameState, new BetEvent(actor,amount));
+		}
 		PlayerState nextToAct = betState.getNextActivePlayerAfter(actor);
 		if(nextToAct!=null){
 			return new NextPlayerState(betState,new NextPlayerEvent(nextToAct.getPlayerId()));

@@ -36,6 +36,13 @@ public class AllInEvent
 	
 	private final int amount;
 	
+	/**
+	 * 
+	 * @param player
+	 * @param amount
+	 * 		  The amount of chips moved in addition to the existing bet by the player.
+	 * @param endsRound
+	 */
 	public AllInEvent(PlayerId player, int amount, boolean endsRound) {
 		this.playerId = player;
 		this.amount = amount;

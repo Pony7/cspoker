@@ -18,13 +18,14 @@ package org.cspoker.client.bots.bot.search.node.leaf;
 import org.cspoker.client.bots.bot.search.SearchConfiguration;
 import org.cspoker.client.bots.bot.search.node.leaf.rankdistribution.ShowdownRankPredictor1of2;
 import org.cspoker.client.bots.bot.search.node.leaf.rankdistribution.ShowdownRankPredictor2of2;
+import org.cspoker.client.bots.bot.search.node.visitor.NodeVisitor;
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.common.elements.player.PlayerId;
 
 public class DistributionShowdownNode2 extends AbstractDistributionShowdownNode {
 
-	DistributionShowdownNode2(PlayerId botId, GameState gameState, int tokens) {
-		super(botId, gameState, tokens);
+	DistributionShowdownNode2(PlayerId botId, GameState gameState, int tokens, NodeVisitor... nodeVisitors) {
+		super(botId, gameState, tokens, nodeVisitors);
 	}
 
 	protected float getRelativeProbability(int rank, int relativePotSize) {
@@ -45,8 +46,8 @@ public class DistributionShowdownNode2 extends AbstractDistributionShowdownNode 
 
 		@Override
 		public DistributionShowdownNode2 create(PlayerId botId, GameState gameState, int tokens
-				, SearchConfiguration config, int searchId) {
-			return new DistributionShowdownNode2(botId, gameState, tokens);
+				, SearchConfiguration config, int searchId, NodeVisitor...nodeVisitors) {
+			return new DistributionShowdownNode2(botId, gameState, tokens, nodeVisitors);
 		}
 
 		@Override
