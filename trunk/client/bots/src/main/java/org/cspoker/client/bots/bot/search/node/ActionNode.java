@@ -79,7 +79,7 @@ public abstract class ActionNode implements InnerGameTreeNode{
 			} catch (GameEndedException e) {
 				//no active players left
 				//go to showdown
-				ShowdownNode showdownNode = config.getShowdownNodeFactory().create(botId, e.lastState, tokens, config, searchId);
+				ShowdownNode showdownNode = config.getShowdownNodeFactory().create(botId, e.lastState, tokens, config, searchId, visitors);
 				result = new EvaluatedAction<A>(action, showdownNode.getExpectedValue());
 			} catch (DefaultWinnerException e) {
 				if(e.winner.getPlayerId().equals(botId)){

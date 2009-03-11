@@ -24,6 +24,10 @@ public interface NodeVisitor {
 	void enterNode(ActionNode node, ActionWrapper action, int tokens);
 	
 	void leaveNode(EvaluatedAction<? extends ActionWrapper> evaluation);
+
+	void visitWinNode(int ev, double p);
+	
+	void visitLoseNode(int ev, double p);
 	
 	public static interface Factory{
 		

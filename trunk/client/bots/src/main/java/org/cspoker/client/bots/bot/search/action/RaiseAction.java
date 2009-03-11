@@ -18,8 +18,11 @@ package org.cspoker.client.bots.bot.search.action;
 import java.rmi.RemoteException;
 
 import org.cspoker.client.common.gamestate.GameState;
+import org.cspoker.client.common.gamestate.PlayerState;
+import org.cspoker.client.common.gamestate.modifiers.AllInState;
 import org.cspoker.client.common.gamestate.modifiers.NextPlayerState;
 import org.cspoker.client.common.gamestate.modifiers.RaiseState;
+import org.cspoker.common.api.lobby.holdemtable.event.AllInEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.NextPlayerEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.RaiseEvent;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.RemoteHoldemPlayerContext;
@@ -34,21 +37,34 @@ public class RaiseAction extends SearchBotAction{
 		super(gameState, actor);
 		this.amount = amount;
 	}
-	
+
 	@Override
 	public void perform(RemoteHoldemPlayerContext context) throws RemoteException, IllegalActionException {
 		context.betOrRaise(amount);
 	}
-	
+
 	@Override
 	public GameState getStateAfterAction() {
-		RaiseState raiseState = new RaiseState(gameState, new RaiseEvent(actor,amount, gameState.getDeficit(actor)+amount));
+		GameState raiseState;
+
+		PlayerState actorState = gameState.getPlayer(actor);
+		int stack = actorState.getStack();
+		int oldBet = actorState.getBet();
+		int largestBet = gameState.getLargestBet();
+		int movedAmount = largestBet-oldBet+amount;
+		int deficit = largestBet-oldBet;
+		
+		if(amount>=stack-deficit){
+			raiseState = new AllInState(gameState, new AllInEvent(actor,movedAmount,false));
+		}else{
+			raiseState = new RaiseState(gameState, new RaiseEvent(actor,amount, movedAmount));
+		}
 		return new NextPlayerState(raiseState,new NextPlayerEvent(raiseState.getNextActivePlayerAfter(actor).getPlayerId()));
 	}
-	
+
 	@Override
 	public String toString() {
 		return "Raise "+amount;
 	}
-	
+
 }

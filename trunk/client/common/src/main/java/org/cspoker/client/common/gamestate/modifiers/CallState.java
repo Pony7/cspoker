@@ -43,7 +43,9 @@ public class CallState
 		final int newBetSize = super.getLargestBet();
 		
 		final PlayerState player = super.getPlayer(event.getPlayerId());
-		final int chipsMoved = newBetSize - player.getBet();
+		int chipsMoved = newBetSize - player.getBet();
+		final int newStack = player.getStack() - chipsMoved;
+		
 		this.newPotSize = super.getRoundPotSize() + chipsMoved;
 		
 		playerState = new ForwardingPlayerState(player) {
@@ -55,7 +57,7 @@ public class CallState
 			
 			@Override
 			public int getStack() {
-				return super.getStack() - chipsMoved;
+				return newStack;
 			}
 			
 			@Override

@@ -16,6 +16,7 @@
 package org.cspoker.client.bots.bot.search.node.leaf;
 
 import org.cspoker.client.bots.bot.search.SearchConfiguration;
+import org.cspoker.client.bots.bot.search.node.visitor.NodeVisitor;
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.util.Pair;
@@ -26,7 +27,7 @@ public interface ShowdownNode {
 
 	public static interface Factory{
 
-		ShowdownNode create(PlayerId botId, GameState gameState, int tokens, SearchConfiguration config, int searchId);
+		ShowdownNode create(PlayerId botId, GameState gameState, int tokens, SearchConfiguration config, int searchId, NodeVisitor...nodeVisitors);
 		
 	}
 	
