@@ -20,7 +20,10 @@
  */
 package org.cspoker.common.handeval.stevebrecher;
 
+import java.util.EnumSet;
+
 import org.cspoker.common.elements.cards.Card;
+
 
 /**
  * Non-instantiable class containing a variety of static poker hand evaluation and related utility methods.
@@ -34,13 +37,17 @@ import org.cspoker.common.elements.cards.Card;
  * denotes the ranks present in one of the suits. The ordering of the
  * 13-bit suit fields is immaterial.
  * <p>
+ * A hand parameter can be built by encoding a {@link CardSet} or by bitwise
+ * OR-ing, or adding, the encoded values of individual {@link Card}s.  These
+ * encodings are returned by an {@link #encode encode} method.
+ * <p>
  * Different methods are called for high and for lowball evaluation.  The
  * return value format below is the same except:&nbsp;&nbsp;For low evaluation, as for
  * wheels in high evaluation, Ace is rank 1 and its mask bit is the LS bit;
  * otherwise Ace is rank 14, mask bit 0x1000, and the deuce's mask bit is
  * the LS bit.  8-or-better low evaluation methods may also return {@link #NO_8_LOW}.
  * <p>
- * For high evaluation, if results R1 > R2 then hand 1 beats hand 2;<br>
+ * For high evaulation, if results R1 > R2 then hand 1 beats hand 2;<br>
  * For low evaluation, if results R1 > R2 then hand 2 beats hand 1.
  * <p>
  * Each evaluation method's return value is an int; 32 bits = 0x0VTBKKKK
@@ -60,67 +67,119 @@ import org.cspoker.common.elements.cards.Card;
  *              1 bit set for pair within full house or kicker with quads
  *                            or kicker with two pair
  *              or 0 otherwise</pre>
- * @version 2006Dec05.0
+ * @version 2008Apr27.0
  * @author Steve Brecher
  *
  */
+// 2008Apr27.0
+//		fix hand6Eval's calls to flushAndOrStraight6
+// 2006Dec05.0
+//		original Java release, ported from C
+
 public final class HandEval {
 
-	private HandEval() {}	// no instances
-	
+	private HandEval() {
+	} // no instances
+
 	/**
-	 * Returns a value which can be used in building a parameter to one of the HandEval evaluation methods.
-	 * @param card a {@link Card}
-	 * @return a value which may be bitwise OR'ed or added to other such
-	 * values to build a parameter to one of the HandEval evaluation methods.
+	 * Calculate the rank of the given hand.
+	 * Larger numbers are better.
 	 */
-	public static long encode(final Card card) {
-		return 0x1L << (card.getSuit().ordinal()*13 + card.getRank().ordinal());
+	public static int getRank(EnumSet<Card> cards) {
+		int nbCards = cards.size();
+		if(nbCards==7){
+			return hand7Eval(encode(cards));
+		}else if(nbCards==6){
+			return hand6Eval(encode(cards));
+		}else if(nbCards==5){
+			return hand5Eval(encode(cards));
+		}else throw new IllegalArgumentException("Unsupported number of cards: "+nbCards);
 	}
 
-  /**
-	 * Returns a value which can be used as a parameter to one of the HandEval evaluation methods.
-	 * @param cs a {@link CardSet}
-	 * @return a value which can be used as a parameter to one of the HandEval evaluation methods.
-	 * The value may also be bitwise OR'ed or added to other such
-	 * values to build an evaluation method parameter.
+	/**
+	 * Returns a value which can be used as a parameter to one of the HandEval
+	 * evaluation methods.
+	 * 
+	 * @return a value which can be used as a parameter to one of the HandEval
+	 *         evaluation methods. The value may also be bitwise OR'ed or added
+	 *         to other such values to build an evaluation method parameter.
 	 */
-	
 	public static long encode(final Iterable<Card> cards) {
 		long result = 0;
-		for (Card c : cards)
+		for (Card c : cards) {
 			result |= encode(c);
+		}
 		return result;
 	}
 
-	public static long encode(Card[] cs) {
+	/**
+	 * Returns a value which can be used as a parameter to one of the HandEval
+	 * evaluation methods.
+	 * 
+	 * @return a value which can be used as a parameter to one of the HandEval
+	 *         evaluation methods. The value may also be bitwise OR'ed or added
+	 *         to other such values to build an evaluation method parameter.
+	 */
+	public static long encode(Card... cs) {
 		long result = 0;
-		for (int i = 0; i < cs.length; i++)
-			result |= encode(cs[i]);
+		for (Card element : cs) {
+			result |= encode(element);
+		}
 		return result;
 	}
 
-	public static long encode(int[] cs) {
+	/**
+	 * Returns a value which can be used as a parameter to one of the HandEval
+	 * evaluation methods.
+	 * 
+	 * @return a value which can be used as a parameter to one of the HandEval
+	 *         evaluation methods. The value may also be bitwise OR'ed or added
+	 *         to other such values to build an evaluation method parameter.
+	 */
+	public static long encode(int... cs) {
 		long result = 0;
-		for (int i = 0; i < cs.length; i++)
-			//result |= (0x1L << (card.suitOf().ordinal()*13 + card.rankOf().ordinal()););
-			result |= (0x1L << (cs[i]));
+		for (int element : cs) {
+			// result |= (0x1L << (card.suitOf().ordinal()*13 +
+			// card.rankOf().ordinal()););
+			result |= 0x1L << element;
+		}
 		return result;
 	}
-  
-  public static long encode7(int[] cs) {
-    long result = 0;
-    result |= (0x1L << (cs[0]));
-    result |= (0x1L << (cs[1]));
-    result |= (0x1L << (cs[2]));
-    result |= (0x1L << (cs[3]));
-    result |= (0x1L << (cs[4]));
-    result |= (0x1L << (cs[5]));
-    result |= (0x1L << (cs[6]));
-    return result;
-  }
 
-  public static enum HandCategory { NO_PAIR, PAIR, TWO_PAIR, THREE_OF_A_KIND, STRAIGHT,
+	/**
+	 * Returns a value which can be used as a parameter to one of the HandEval
+	 * evaluation methods.
+	 * 
+	 * @return a value which can be used as a parameter to one of the HandEval
+	 *         evaluation methods. The value may also be bitwise OR'ed or added
+	 *         to other such values to build an evaluation method parameter.
+	 */
+	public static long encode7(int... cs) {
+		long result = 0;
+		result |= 0x1L << cs[0];
+		result |= 0x1L << cs[1];
+		result |= 0x1L << cs[2];
+		result |= 0x1L << cs[3];
+		result |= 0x1L << cs[4];
+		result |= 0x1L << cs[5];
+		result |= 0x1L << cs[6];
+		return result;
+	}
+
+	/**
+	 * Returns a value which can be used in building a parameter to one of the
+	 * HandEval evaluation methods.
+	 * 
+	 * @param card
+	 *        a {@link Card}
+	 * @return a value which may be bitwise OR'ed or added to other such values
+	 *         to build a parameter to one of the HandEval evaluation methods.
+	 */
+	public static long encode(final Card card) {
+		return 0x1L << card.getSuit().ordinal() * 13 + card.getRank().ordinal();
+	}
+
+	public static enum HandCategory { NO_PAIR, PAIR, TWO_PAIR, THREE_OF_A_KIND, STRAIGHT,
 							FLUSH, FULL_HOUSE, FOUR_OF_A_KIND, STRAIGHT_FLUSH; }
 
 	private static final int   BOT_SHIFT	= 16;
@@ -139,7 +198,7 @@ public final class HandEval {
 	private static final int   STRAIGHT_FLUSH	= HandCategory.STRAIGHT_FLUSH.ordinal() << VALUE_SHIFT;
 
 	/* Arrays for which index is bit mask of card ranks in hand: */
-	public static final int   ARRAY_SIZE		= 0x1FC0 + 1;			// all combos of up to 7 of LS 13 bits on
+	private static final int   ARRAY_SIZE		= 0x1FC0 + 1;			// all combos of up to 7 of LS 13 bits on
 
 	private static final int[] straightValue	= new int[ARRAY_SIZE];	// STRAIGHT | (straight's high card rank (5..14) << BOT_SHIFT); 0 if no straight
 	private static final int[] nbrOfRanks		= new int[ARRAY_SIZE];	// count of bits set
@@ -507,12 +566,14 @@ public final class HandEval {
 			case 5:	/* flush and/or straight,
 					   or one pair and three kickers and
 					    one non-playing singleton */
-					flushAndOrStraight6(ranks, c, d, h, s);
+				if ((i = flushAndOrStraight6(ranks, c, d, h, s)) != 0)
+					return i;
 	                i = c ^ d ^ h ^ s; /* the bits of the four singletons */
 	                return PAIR | hiBotRank[ranks ^ i] | hi3RanksMask[i];
 
 			case 6:	/* flush and/or straight or no pair */
-					flushAndOrStraight6(ranks, c, d, h, s);
+				if ((i = flushAndOrStraight6(ranks, c, d, h, s)) != 0)
+					return i;
 	                return /* NO_PAIR | */ hi5RanksMask[ranks];
 
 	        } /* end switch */
@@ -700,7 +761,7 @@ public final class HandEval {
 	 * @return the 8-or-better low value of the best hand from hole cards and 3 board cards or {@link #NO_8_LOW}.
 	 * @see #ranksMaskLo
 	 */
-	public static int omaha8LowEval(int holeRanks, int boardRanks) {
+	public static int Omaha8LowEval(int holeRanks, int boardRanks) {
 		return loEvalOrNo8Low[lo3RanksMask[boardRanks & ~holeRanks] | holeRanks];
 	}
 
