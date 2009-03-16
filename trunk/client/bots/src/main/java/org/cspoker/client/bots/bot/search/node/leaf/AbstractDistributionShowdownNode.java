@@ -146,8 +146,11 @@ public abstract class AbstractDistributionShowdownNode extends AbstractShowdownN
 				totalProb += prob;
 			}
 		}
+		double n = nbOpponentSamples*nbCommunitySamples;
 		double p = totalProfit/totalProb;
-		return new Pair<Double, Double>(p,p*(1-p));
+		//use sample variance because variance of samples is smaller than real variance
+		double varp = p*(1-p)*n/(n-1);
+		return new Pair<Double, Double>(p,varp);
 	}
 
 	protected abstract float getRelativeProbability(int rank, int relativePotSize);
