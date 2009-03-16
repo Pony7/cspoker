@@ -112,12 +112,14 @@ public class UniformShowdownNode extends AbstractShowdownNode{
 				}
 			}
 		}
-		double p = ((double)totalNbWins)/(nbOpponentSamples*nbCommunitySamples);
-		return new Pair<Double, Double>(p,p*(1-p));
+		double n = nbOpponentSamples*nbCommunitySamples;
+		double p = totalNbWins/n;
+		double varp = p*(1-p)*n/(n-1);
+		return new Pair<Double, Double>(p,varp);
 	}
 
 	private int getRank(EnumSet<Card> cards) {
-		return HandEval.hand7Eval(HandEval.encode(cards));
+		return HandEval.getRank(cards);
 	}
 
 	@Override
