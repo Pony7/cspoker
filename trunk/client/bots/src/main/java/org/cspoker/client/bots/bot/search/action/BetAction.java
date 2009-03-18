@@ -60,7 +60,7 @@ public class BetAction extends SearchBotAction{
 	
 	@Override
 	public String toString() {
-		return "Bet "+amount;
+		return "Bet "+parseDollars(amount);
 	}
 	
 }

@@ -27,7 +27,7 @@ public class ForwardingExternalRemoteLobbyContext extends ForwardingRemoteLobbyC
 
 	protected final ExternalRemoteLobbyContext lobbyContext;
 
-	public ForwardingExternalRemoteLobbyContext(ExternalRemoteLobbyContext lobbyContext) throws RemoteException {
+	public ForwardingExternalRemoteLobbyContext(ExternalRemoteLobbyContext lobbyContext) {
 		super(lobbyContext);
 		this.lobbyContext  = lobbyContext;
 	}

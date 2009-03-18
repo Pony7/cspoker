@@ -17,6 +17,7 @@
 		<module>client</module>
 		<module>common</module>
 		<module>server</module>
+		<module>external</module>
 	</modules>
 	<repositories>
 		<repository>

@@ -18,8 +18,9 @@ package org.cspoker.client.bots.bot.search.node.visitor;
 import org.apache.log4j.Logger;
 import org.cspoker.client.bots.bot.search.action.ActionWrapper;
 import org.cspoker.client.bots.bot.search.action.EvaluatedAction;
-import org.cspoker.client.bots.bot.search.action.SampledAction;
 import org.cspoker.client.bots.bot.search.node.ActionNode;
+import org.cspoker.client.common.gamestate.GameState;
+import org.cspoker.common.elements.player.PlayerId;
 
 public class Log4JOutputVisitor extends TextOutputVisitor {
 
@@ -61,7 +62,7 @@ public class Log4JOutputVisitor extends TextOutputVisitor {
 		}
 		
 		@Override
-		public Log4JOutputVisitor create() {
+		public Log4JOutputVisitor create(GameState gameState, PlayerId actor) {
 			return new Log4JOutputVisitor(maxDepth);
 		}
 		

@@ -41,6 +41,8 @@ import com.sun.net.httpserver.HttpHandler;
  * A HttpHandler that supports Exceptions over Http.
  * 
  */
+
+@SuppressWarnings("restriction")
 public abstract class AbstractHttpHandler implements HttpHandler {
 
 	private final static Logger logger = Logger

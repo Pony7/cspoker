@@ -18,7 +18,6 @@ package org.cspoker.client.common.gamestate.modifiers;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
-import java.util.Set;
 
 import org.cspoker.client.common.gamestate.AbstractPlayerState;
 import org.cspoker.client.common.gamestate.ForwardingGameState;
@@ -32,8 +31,6 @@ import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.elements.table.SeatId;
 
 import com.google.common.collect.ImmutableBiMap;
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Sets;
 
 public class SitInState
 		extends ForwardingGameState {

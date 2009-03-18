@@ -9,7 +9,8 @@
 
 package policyserver;
 
-import java.net.*;
+import java.net.ServerSocket;
+import java.net.Socket;
 
 /**
  * The PolicyServer waits for client connections and uses PolicyServerConnections to handle policy requests.

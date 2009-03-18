@@ -19,7 +19,6 @@ import java.rmi.RemoteException;
 import java.util.EnumSet;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.ForwardingRemoteHoldemPlayerContext;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.RemoteHoldemPlayerContext;
@@ -31,7 +30,6 @@ import org.cspoker.common.elements.player.PlayerId;
 public class SmartHoldemPlayerContext
 		extends ForwardingRemoteHoldemPlayerContext {
 	
-	private final static Logger logger = Logger.getLogger(SmartHoldemPlayerContext.class);
 	private final TableState state;
 	private final PlayerId playerId;
 	

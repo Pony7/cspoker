@@ -21,6 +21,12 @@ import org.cspoker.client.bots.bot.search.action.ProbabilityAction;
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.common.elements.player.PlayerId;
 
+/**
+ * An opponent model for a single opponent.
+ * 
+ * @author guy
+ *
+ */
 public interface OpponentModel {
 	
 	Set<ProbabilityAction> getProbabilityActions(GameState gameState);

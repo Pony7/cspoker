@@ -75,14 +75,20 @@ public class TuPrologModel extends AbstractPrologModel {
 
 	protected double priorActionProbability(SymbolTerm action, PlayerId playerId) {
 		TermListVisitor visitor = getTopVisitor();
+		IntegerTerm gameId = new IntegerTerm(visitor.getGameId());
+		IntegerTerm actionId = new IntegerTerm(visitor.getActionId()+1);
+		SymbolTerm player = SymbolTerm.makeSymbol("player_"+playerId.getId());
+		SymbolTerm round = visitor.getRound();
 		VariableTerm p = new VariableTerm();
-		String goal = (new PRED_prior_action_probability_6(new IntegerTerm(visitor.getGameId()),
-				new IntegerTerm(visitor.getActionId()+1),
-				SymbolTerm.makeSymbol("player_"+playerId.getId()),
+		PRED_prior_action_probability_6 pedicate = new PRED_prior_action_probability_6(
+				gameId,
+				actionId,
+				player,
 				action,
-				visitor.getRound(),
+				round,
 				p, 
-				null)).toString();
+				null);
+		String goal = pedicate.toString();
 		goal = goal.replace(p.toString(), "P")+".";
 		if(logger.isDebugEnabled()){
 			logger.debug(goal);

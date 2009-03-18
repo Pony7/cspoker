@@ -26,7 +26,7 @@ public class ForwardingExternalRemoteHoldemTableContext extends ForwardingRemote
 
 	private ExternalRemoteHoldemTableContext holdemTableContext;
 
-	public ForwardingExternalRemoteHoldemTableContext(ExternalRemoteHoldemTableContext holdemTableContext) throws RemoteException {
+	public ForwardingExternalRemoteHoldemTableContext(ExternalRemoteHoldemTableContext holdemTableContext) {
 		super(holdemTableContext);
 		this.holdemTableContext  = holdemTableContext;
 	}

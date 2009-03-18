@@ -28,6 +28,7 @@ import org.cspoker.server.xml.http.handler.CrossDomain;
 /**
  * Creates a new web server and starts it.
  */
+@SuppressWarnings("restriction")
 public class HttpServer {
 	private static Logger logger = Logger.getLogger(HttpServer.class);
 

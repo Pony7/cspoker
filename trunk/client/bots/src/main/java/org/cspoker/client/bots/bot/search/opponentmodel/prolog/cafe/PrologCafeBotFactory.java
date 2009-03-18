@@ -29,7 +29,8 @@ import org.cspoker.client.bots.bot.BotFactory;
 import org.cspoker.client.bots.bot.search.SearchBot;
 import org.cspoker.client.bots.bot.search.SearchConfiguration;
 import org.cspoker.client.bots.bot.search.node.expander.SamplingExpander;
-import org.cspoker.client.bots.bot.search.node.leaf.DistributionShowdownNode2;
+import org.cspoker.client.bots.bot.search.node.leaf.ShowdownNode;
+import org.cspoker.client.bots.bot.search.node.leaf.UniformShowdownNode;
 import org.cspoker.client.bots.bot.search.node.visitor.Log4JOutputVisitor;
 import org.cspoker.client.bots.bot.search.node.visitor.NodeVisitor;
 import org.cspoker.client.bots.bot.search.node.visitor.NodeVisitor.Factory;
@@ -48,9 +49,17 @@ public class PrologCafeBotFactory implements BotFactory {
 	private final int copy;
 
 	private final Map<PlayerId, AllPlayersModel> opponentModels = new ConcurrentHashMap<PlayerId, AllPlayersModel>();
+	private final org.cspoker.client.bots.bot.search.node.leaf.ShowdownNode.Factory showdownNodeFactory;
+	private final Factory[] nodeVisitorFactories;
 
 	public PrologCafeBotFactory() {
+		this(new UniformShowdownNode.Factory(), new NodeVisitor.Factory[]{new Log4JOutputVisitor.Factory(2)});
+	}
+	
+	public PrologCafeBotFactory(ShowdownNode.Factory showdownNodeFactory, NodeVisitor.Factory... nodeVisitorFactories) {
 		this.copy = ++copies;
+		this.showdownNodeFactory = showdownNodeFactory;
+		this.nodeVisitorFactories = nodeVisitorFactories;
 	}
 
 	/**
@@ -65,11 +74,11 @@ public class PrologCafeBotFactory implements BotFactory {
 			PrologCafeModel model = new PrologCafeModel(prolog,botId);
 			opponentModels.put(botId, model);
 		}
-		SearchConfiguration config = new SearchConfiguration(opponentModels.get(botId), 
-				new DistributionShowdownNode2.Factory(),
+		SearchConfiguration config = new SearchConfiguration(
+				opponentModels.get(botId), 
+				showdownNodeFactory,
 				new SamplingExpander.Factory(),
-				50,100,250,250,0.5);
-		Factory[] nodeVisitorFactories = new NodeVisitor.Factory[]{new Log4JOutputVisitor.Factory(2)};
+				50,100,250,250,0.3);
 		return new SearchBot(botId, tableId, lobby, executor, config, buyIn, nodeVisitorFactories ,botListeners);
 	}
 

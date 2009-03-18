@@ -16,7 +16,6 @@
 package org.cspoker.common.util;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -44,7 +43,7 @@ import org.cspoker.common.jaxbcontext.AllJAXBContexts;
  */
 public class SchemaInstance {
 
-	public static void main(String[] args) throws IOException, JAXBException {
+	public static void main(String[] args) throws JAXBException {
 		File baseDir = new File(new File("schema"),"instances");
 		baseDir.mkdirs();
 		

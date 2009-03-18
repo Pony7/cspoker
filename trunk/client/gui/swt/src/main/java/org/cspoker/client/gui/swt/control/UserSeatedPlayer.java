@@ -17,6 +17,7 @@ import java.util.concurrent.Executor;
 import org.apache.log4j.Logger;
 import org.cspoker.client.User;
 import org.cspoker.client.common.SmartHoldemTableListener;
+import org.cspoker.client.common.TableState;
 import org.cspoker.client.gui.swt.window.GameWindow;
 import org.cspoker.common.api.cashier.context.RemoteCashierContext;
 import org.cspoker.common.api.chat.context.RemoteChatContext;

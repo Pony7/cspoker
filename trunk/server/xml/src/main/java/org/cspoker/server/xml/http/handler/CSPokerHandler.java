@@ -44,6 +44,7 @@ import org.xml.sax.InputSource;
 
 import com.sun.net.httpserver.HttpExchange;
 
+@SuppressWarnings("restriction")
 public class CSPokerHandler extends AbstractHttpHandler {
 
 	private final static Logger logger = Logger.getLogger(CSPokerHandler.class);

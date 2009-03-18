@@ -100,14 +100,14 @@ public class TestHand extends TestCase {
 
 		assertTrue(testExactCard.getExactCard(Rank.ACE, Suit.CLUBS).compareTo(
 				testExactCard.getExactCard(Rank.KING, Suit.DIAMONDS)) > 0);
-		assertTrue(testExactCard.getExactCard(Rank.DEUCE, Suit.HEARTS)
+		assertTrue(testExactCard.getExactCard(Rank.TWO, Suit.HEARTS)
 				.compareTo(testExactCard.getExactCard(Rank.KING, Suit.SPADES)) < 0);
 	}
 
 	public void testIterator() {
 		hand1 = new Hand();
 		hand1 = hand1.add(testExactCard.getExactCard(Rank.ACE, Suit.CLUBS));
-		hand1 = hand1.add(testExactCard.getExactCard(Rank.DEUCE, Suit.DIAMONDS));
+		hand1 = hand1.add(testExactCard.getExactCard(Rank.TWO, Suit.DIAMONDS));
 		hand1 = hand1.add(testExactCard.getExactCard(Rank.FOUR, Suit.HEARTS));
 		hand1 = hand1.add(testExactCard.getExactCard(Rank.EIGHT, Suit.HEARTS));
 		hand1 = hand1.add(testExactCard.getExactCard(Rank.KING, Suit.HEARTS));

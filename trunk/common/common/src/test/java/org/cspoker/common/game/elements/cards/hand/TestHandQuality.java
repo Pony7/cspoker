@@ -164,7 +164,7 @@ public class TestHandQuality extends TestCase {
 		hand1 = hand1.add(testExactCard.getExactCard(Rank.KING, Suit.SPADES));
 		hand1 = hand1.add(testExactCard.getExactCard(Rank.EIGHT, Suit.SPADES));
 		hand1 = hand1.add(testExactCard.getExactCard(Rank.THREE, Suit.SPADES));
-		hand1 = hand1.add(testExactCard.getExactCard(Rank.DEUCE, Suit.SPADES));
+		hand1 = hand1.add(testExactCard.getExactCard(Rank.TWO, Suit.SPADES));
 		assertTrue(hand1.getShortDescription().equals(
 				HandType.FLUSH.getDescription()));
 		TestHandQuality.logger.info(hand1.getShortDescription());
@@ -187,7 +187,7 @@ public class TestHandQuality extends TestCase {
 		hand1 = hand1.add(testExactCard.getExactCard(Rank.FOUR, Suit.CLUBS));
 		hand1 = hand1.add(testExactCard.getExactCard(Rank.FIVE, Suit.SPADES));
 		hand1 = hand1.add(testExactCard.getExactCard(Rank.THREE, Suit.SPADES));
-		hand1 = hand1.add(testExactCard.getExactCard(Rank.DEUCE, Suit.SPADES));
+		hand1 = hand1.add(testExactCard.getExactCard(Rank.TWO, Suit.SPADES));
 		assertTrue(hand1.getShortDescription().equals(
 				HandType.STRAIGHT.getDescription()));
 		TestHandQuality.logger.info(hand1.getShortDescription());

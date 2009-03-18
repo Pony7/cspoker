@@ -18,7 +18,6 @@ package org.cspoker.client.common.gamestate;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
 import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.elements.table.SeatId;
 
@@ -33,8 +32,6 @@ import com.google.common.collect.ImmutableBiMap;
  */
 public abstract class AbstractGameState
 implements GameState {
-
-	private final static Logger logger = Logger.getLogger(AbstractGameState.class);
 
 	public final int getDeficit(PlayerId playerId) {
 		return getLargestBet() - getPlayer(playerId).getBet();
@@ -63,9 +60,9 @@ implements GameState {
 	public final int getLowerRaiseBound(PlayerId playerId) {
 		PlayerState player = getPlayer(playerId);
 		return Math.max(0, 
-						Math.min(
-								getMinNextRaise(), 
-								player.getStack()-(getLargestBet() - player.getBet())));
+				Math.min(
+						getMinNextRaise(), 
+						player.getStack()-(getLargestBet() - player.getBet())));
 	}
 
 	public final int getUpperRaiseBound(PlayerId playerId) {
@@ -79,8 +76,12 @@ implements GameState {
 				break loop;
 			}
 			tempId = tempPlayer.getPlayerId();
-			maxOtherBettableChips = Math.max(maxOtherBettableChips, tempPlayer.getBet()+tempPlayer.getStack());
-		}while(!tempPlayer.getPlayerId().equals(playerId));
+			if(!tempPlayer.getPlayerId().equals(playerId)){
+				maxOtherBettableChips = Math.max(maxOtherBettableChips, tempPlayer.getBet()+tempPlayer.getStack());
+			}else{
+				break loop;
+			}
+		}while(true);
 		int betableChips = Math.min(player.getStack()+player.getBet(),maxOtherBettableChips);
 		return Math.max(0, betableChips - getLargestBet());
 	}
@@ -160,7 +161,7 @@ implements GameState {
 
 	@Override
 	public String toString() {
-		return getLastEvent()+"\n"+getPreviousGameState();
+		return getLastEvent()+" AFTER "+getPreviousGameState();
 	}
 
 }

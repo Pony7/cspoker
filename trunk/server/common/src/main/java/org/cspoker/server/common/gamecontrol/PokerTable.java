@@ -72,6 +72,7 @@ public class PokerTable {
 	
 	private final static ChatServer chatServer = ChatServer.getInstance();
 	
+	@SuppressWarnings("unused")
 	private TableChatRoom chatRoom;
 	
 	private static Logger logger = Logger.getLogger(PokerTable.class);
@@ -82,6 +83,7 @@ public class PokerTable {
 	
 	private transient TableState tableState;
 	
+	@SuppressWarnings("unused")
 	private final ExtendedAccountContext creator;
 	
 	private TableConfiguration configuration;

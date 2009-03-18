@@ -15,7 +15,11 @@
  */
 package org.cspoker.common.elements.chips;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 
 import org.cspoker.common.elements.player.MutableAllInPlayer;
 import org.cspoker.common.elements.player.MutableSeatedPlayer;

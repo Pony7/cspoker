@@ -32,7 +32,6 @@ import org.cspoker.client.bots.bot.search.action.CheckAction;
 import org.cspoker.client.bots.bot.search.action.FoldAction;
 import org.cspoker.client.bots.bot.search.action.ProbabilityAction;
 import org.cspoker.client.bots.bot.search.action.RaiseAction;
-import org.cspoker.client.bots.bot.search.action.SearchBotAction;
 import org.cspoker.client.bots.bot.search.opponentmodel.AllPlayersModel;
 import org.cspoker.client.bots.bot.search.opponentmodel.HistogramModel;
 import org.cspoker.client.bots.bot.search.opponentmodel.OpponentModel;

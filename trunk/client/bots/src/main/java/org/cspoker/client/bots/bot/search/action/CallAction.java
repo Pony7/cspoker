@@ -55,9 +55,12 @@ public class CallAction extends SearchBotAction{
 					break forloop;
 				}
 			}
-		//what if small or big blind all-in?
+		
 		PlayerState actorState = gameState.getPlayer(actor);
 		int largestBet = gameState.getLargestBet();
+		int stack = actorState.getStack();
+		
+		//what if small or big blind all-in?
 		if(roundEnds 
 				&& gameState.getRound().equals(Round.PREFLOP) 
 				&& actorState.isSmallBlind() 
@@ -66,7 +69,6 @@ public class CallAction extends SearchBotAction{
 		}
 
 		GameState state;
-		int stack = actorState.getStack();
 		if(stack<=largestBet){
 			state = new AllInState(gameState, new AllInEvent(actor,stack,roundEnds));
 		}else{
@@ -80,7 +82,8 @@ public class CallAction extends SearchBotAction{
 				//BigBlind is all-in
 				return getNewRoundState(state);
 			}
-			return new NextPlayerState(state,
+			return new NextPlayerState(
+					state,
 					new NextPlayerEvent(nextActivePlayerAfter.getPlayerId()));
 		}
 	}
