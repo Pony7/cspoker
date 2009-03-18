@@ -16,10 +16,21 @@
 
 package org.cspoker.server.common.gamecontrol.rounds;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.EnumSet;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
-import org.cspoker.common.api.lobby.holdemtable.event.*;
+import org.cspoker.common.api.lobby.holdemtable.event.AllInEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.BetEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.BigBlindEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.CallEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.NewCommunityCardsEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.RaiseEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.SmallBlindEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.WinnerEvent;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.cards.Card;
 import org.cspoker.common.elements.chips.Chips;
@@ -97,11 +108,7 @@ public abstract class BettingRound
 			return;
 		}
 		
-		try {
-			player.transferAmountToBetPile(amountToIncreaseBetPileWith(player) + amount);
-		} catch (IllegalValueException e) {
-			throw new IllegalActionException(player.toString() + " can not  bet. " + e.getMessage());
-		}
+		player.transferAmountToBetPile(amountToIncreaseBetPileWith(player) + amount);
 		raiseBetWith(amount);
 		getBettingRules().setBetPlaced(true);
 		getBettingRules().setLastBetAmount(amount);
@@ -135,11 +142,7 @@ public abstract class BettingRound
 		}
 		
 		// Try to transfer the amount to the bet pile.
-		try {
-			player.transferAmountToBetPile(amountToIncreaseBetPileWith(player));
-		} catch (IllegalValueException e) {
-			throw new IllegalActionException(player.getMemento().toString() + " can not call." + e.getMessage());
-		}
+		player.transferAmountToBetPile(amountToIncreaseBetPileWith(player));
 		
 		/**
 		 * If the last event player is an all-in player, change the last event
@@ -200,11 +203,7 @@ public abstract class BettingRound
 		
 		int movedAmount = amountToIncreaseBetPileWith(player) + amount;
 		
-		try {
-			player.transferAmountToBetPile(movedAmount);
-		} catch (IllegalValueException e) {
-			throw new IllegalActionException(player.toString() + " can not raise." + e.getMessage());
-		}
+		player.transferAmountToBetPile(movedAmount);
 		raiseBetWith(amount);
 		getBettingRules().incrementNBRaises();
 		getBettingRules().setLastBetAmount(amount);

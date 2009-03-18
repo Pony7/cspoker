@@ -17,10 +17,10 @@ public enum Card {
 
 	//ORDER IS IMPORTANT!
 	
-	TWO_CLUBS(Rank.DEUCE,Suit.CLUBS),
-	TWO_DIAMONDS(Rank.DEUCE,Suit.DIAMONDS),
-	TWO_HEARTS(Rank.DEUCE,Suit.HEARTS),
-	TWO_SPADES(Rank.DEUCE,Suit.SPADES),
+	TWO_CLUBS(Rank.TWO,Suit.CLUBS),
+	TWO_DIAMONDS(Rank.TWO,Suit.DIAMONDS),
+	TWO_HEARTS(Rank.TWO,Suit.HEARTS),
+	TWO_SPADES(Rank.TWO,Suit.SPADES),
 	
 	THREE_CLUBS(Rank.THREE,Suit.CLUBS),
 	THREE_DIAMONDS(Rank.THREE,Suit.DIAMONDS),
@@ -81,8 +81,8 @@ public enum Card {
 	ACE_DIAMONDS(Rank.ACE,Suit.DIAMONDS),
 	ACE_HEARTS(Rank.ACE,Suit.HEARTS),
 	ACE_SPADES(Rank.ACE,Suit.SPADES),
-
 	;
+	
 	@XmlAttribute
 	private final Rank rank;
 	

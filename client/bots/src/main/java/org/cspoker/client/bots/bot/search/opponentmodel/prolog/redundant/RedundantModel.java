@@ -21,12 +21,12 @@ import java.util.List;
 import java.util.Set;
 
 import org.cspoker.client.bots.bot.search.action.ProbabilityAction;
-import org.cspoker.client.bots.bot.search.action.SearchBotAction;
 import org.cspoker.client.bots.bot.search.opponentmodel.AllPlayersModel;
 import org.cspoker.client.bots.bot.search.opponentmodel.OpponentModel;
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.common.elements.player.PlayerId;
 
+@Deprecated
 public class RedundantModel implements AllPlayersModel{
 
 	private final Collection<? extends AllPlayersModel> models;

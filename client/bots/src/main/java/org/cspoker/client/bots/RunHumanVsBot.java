@@ -65,7 +65,7 @@ public class RunHumanVsBot {
 		final TableId tableId = new TableId(0);
 
 		int smallBlind = 50;
-		final int buyin = smallBlind * 400;
+		final int buyin = smallBlind * 200;
 		int delay = 1500;
 		User u = new User("Human","test");
 		client = new ClientCore(u);
@@ -97,6 +97,8 @@ public class RunHumanVsBot {
 		});
 		BotFactory botFactory = new SearchBotFactory(new DistributionShowdownNode4.Factory(), 
 				new Log4JOutputVisitor.Factory(2), new SWTTreeVisitor.Factory(client.getGui().getDisplay()));
+//		BotFactory botFactory = new PrologCafeBotFactory(new DistributionShowdownNode4.Factory(), 
+//				new Log4JOutputVisitor.Factory(2), new SWTTreeVisitor.Factory(client.getGui().getDisplay()));
 		
 		startBot(botFactory, tableId, buyin);
 

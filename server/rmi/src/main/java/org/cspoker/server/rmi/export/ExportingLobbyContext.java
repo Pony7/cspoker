@@ -32,7 +32,7 @@ public class ExportingLobbyContext extends ForwardingExternalRemoteLobbyContext 
 
 	private final static Logger logger = Logger.getLogger(ExportingLobbyContext.class);
 
-	public ExportingLobbyContext(ExternalRemoteLobbyContext lobbyContext) throws RemoteException {
+	public ExportingLobbyContext(ExternalRemoteLobbyContext lobbyContext) {
 		super(lobbyContext);
 	}
 

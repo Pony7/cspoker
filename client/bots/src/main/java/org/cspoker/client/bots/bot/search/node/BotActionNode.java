@@ -16,21 +16,12 @@
 package org.cspoker.client.bots.bot.search.node;
 
 import java.rmi.RemoteException;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.cspoker.client.bots.bot.search.SearchConfiguration;
 import org.cspoker.client.bots.bot.search.action.ActionWrapper;
-import org.cspoker.client.bots.bot.search.action.BetAction;
-import org.cspoker.client.bots.bot.search.action.CallAction;
-import org.cspoker.client.bots.bot.search.action.CheckAction;
 import org.cspoker.client.bots.bot.search.action.EvaluatedAction;
-import org.cspoker.client.bots.bot.search.action.FoldAction;
-import org.cspoker.client.bots.bot.search.action.ProbabilityAction;
-import org.cspoker.client.bots.bot.search.action.RaiseAction;
-import org.cspoker.client.bots.bot.search.action.SearchBotAction;
 import org.cspoker.client.bots.bot.search.node.expander.Expander;
 import org.cspoker.client.bots.bot.search.node.visitor.NodeVisitor;
 import org.cspoker.client.common.gamestate.CachingNode;
@@ -71,7 +62,10 @@ public class BotActionNode extends ActionNode{
 	public EvaluatedAction<? extends ActionWrapper> getBestEvaluatedAction(){
 		double maxEv=Double.NEGATIVE_INFINITY;
 		EvaluatedAction<? extends ActionWrapper> action = null;
+
+		config.getOpponentModeler().assume(gameState);
 		Set<? extends EvaluatedAction<? extends ActionWrapper>> actions = getExpander().expand();
+		config.getOpponentModeler().forgetAssumption();
 		
 		for(EvaluatedAction<? extends ActionWrapper> eval : actions){
 			double ev = eval.getDiscountedEV(config.getEVDiscount());

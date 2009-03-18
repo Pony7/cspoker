@@ -17,8 +17,8 @@
 package org.cspoker.client.bots.bot.search.opponentmodel.prolog.tuprolog;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 
 import net.jcip.annotations.ThreadSafe;
@@ -51,7 +51,7 @@ public class TuPrologBotFactory implements BotFactory {
 	
 	private final int copy;
 
-	private final Map<PlayerId, AllPlayersModel> opponentModels = new ConcurrentHashMap<PlayerId, AllPlayersModel>();
+	private final Map<PlayerId, AllPlayersModel> opponentModels = new HashMap<PlayerId, AllPlayersModel>();
 
 	public TuPrologBotFactory() {
 		this.copy = ++copies;

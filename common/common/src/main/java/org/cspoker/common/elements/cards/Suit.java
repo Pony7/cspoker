@@ -26,8 +26,10 @@ package org.cspoker.common.elements.cards;
  */
 public enum Suit {
 
-	CLUBS("Clubs", "c"), DIAMONDS("Diamonds", "d"), HEARTS("Hearts", "h"), SPADES(
-			"Spades", "s");
+	CLUBS("Clubs", "c"), 
+	DIAMONDS("Diamonds", "d"), 
+	HEARTS("Hearts", "h"), 
+	SPADES("Spades", "s");
 
 	private String longDescription;
 	private String shortDescription;

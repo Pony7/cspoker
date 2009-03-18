@@ -56,24 +56,25 @@ extends AbstractBot {
 		executor.execute(new Runnable() {
 			public void run() {
 				try {
+					GameState gameState = tableContext.getGameState();
 					NodeVisitor[] visitors = new NodeVisitor[nodeVisitorFactories.length];
 					for (int i = 0; i < visitors.length; i++) {
-						visitors[i] = nodeVisitorFactories[i].create();
+						visitors[i] = nodeVisitorFactories[i].create(gameState, playerId);
 					}
 					BotActionNode actionNode;
-					GameState gameState = tableContext.getGameState();
+					//essential to do this with a clean game state from the context, no wrappers
+					config.getOpponentModeler().signalNextAction(gameState);
 					switch (gameState.getRound()) {
 					case PREFLOP:
 						logger.debug("Searching preflop round game tree:");
-						config.getOpponentModeler().signalNextAction(gameState);
-						actionNode = new BotActionNode(playerId, gameState, 
-								config, config.getPreflopTokens(),
-								searchId++, visitors);
-						actionNode.performbestAction(playerContext);
+//						actionNode = new BotActionNode(playerId, gameState, 
+//								config, config.getPreflopTokens(),
+//								searchId++, visitors);
+//						actionNode.performbestAction(playerContext);
+						playerContext.checkOrCall();//TODO remove temp
 						break;
 					case FLOP:
 						logger.debug("Searching flop round game tree:");
-						config.getOpponentModeler().signalNextAction(gameState);
 						actionNode = new BotActionNode(playerId, gameState, 
 								config, config.getFlopTokens(),
 								searchId++, visitors);
@@ -81,7 +82,6 @@ extends AbstractBot {
 						break;
 					case TURN:
 						logger.debug("Searching turn round game tree:");
-						config.getOpponentModeler().signalNextAction(gameState);
 						actionNode = new BotActionNode(playerId, gameState, 
 								config, config.getTurnTokens(), 
 								searchId++, visitors);
@@ -89,8 +89,6 @@ extends AbstractBot {
 						break;
 					case FINAL:
 						logger.debug("Searching final round game tree:");
-						//essential to do this with a clean game state from the context, no wrappers
-						config.getOpponentModeler().signalNextAction(gameState);
 						actionNode = new BotActionNode(playerId, gameState, 
 								config, config.getFinalTokens(), 
 								searchId++, visitors);

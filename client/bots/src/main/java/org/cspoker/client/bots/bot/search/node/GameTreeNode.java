@@ -15,9 +15,9 @@
  */
 package org.cspoker.client.bots.bot.search.node;
 
-import org.cspoker.common.util.Pair;
-
 import net.jcip.annotations.Immutable;
+
+import org.cspoker.common.util.Pair;
 
 @Immutable
 public interface GameTreeNode {

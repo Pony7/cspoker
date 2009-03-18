@@ -18,6 +18,8 @@ package org.cspoker.client.bots.bot.search.node.visitor;
 import org.cspoker.client.bots.bot.search.action.ActionWrapper;
 import org.cspoker.client.bots.bot.search.action.EvaluatedAction;
 import org.cspoker.client.bots.bot.search.node.ActionNode;
+import org.cspoker.client.common.gamestate.GameState;
+import org.cspoker.common.elements.player.PlayerId;
 
 public interface NodeVisitor {
 	
@@ -31,7 +33,7 @@ public interface NodeVisitor {
 	
 	public static interface Factory{
 		
-		NodeVisitor create();
+		NodeVisitor create(GameState gameState, PlayerId actor);
 		
 	}
 	

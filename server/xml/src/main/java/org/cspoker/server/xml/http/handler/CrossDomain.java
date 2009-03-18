@@ -22,6 +22,7 @@ import org.apache.log4j.Logger;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
+@SuppressWarnings("restriction")
 public class CrossDomain implements HttpHandler {
 
 	private final static Logger logger = Logger.getLogger(CrossDomain.class);

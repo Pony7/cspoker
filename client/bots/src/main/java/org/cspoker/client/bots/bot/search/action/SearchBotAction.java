@@ -70,6 +70,15 @@ public abstract class SearchBotAction implements ActionWrapper{
 	public boolean endsInvolvementOf(PlayerId botId) {
 		return false;
 	}
+
+	public static String parseDollars(int intAmount) {
+		if(intAmount<0){
+			return "-"+parseDollars(-intAmount);
+		}
+		int cents = intAmount%100;
+		int dollars = intAmount/100;
+		return intAmount==0?"$0":"$"+dollars+"."+(cents>=10?cents:"0"+cents);
+	}
 	
 	//do not define equals or hashcode! 
 	//it will map all actions without extra fields to the same entity

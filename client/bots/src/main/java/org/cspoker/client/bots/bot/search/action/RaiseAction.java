@@ -51,10 +51,10 @@ public class RaiseAction extends SearchBotAction{
 		int stack = actorState.getStack();
 		int oldBet = actorState.getBet();
 		int largestBet = gameState.getLargestBet();
-		int movedAmount = largestBet-oldBet+amount;
 		int deficit = largestBet-oldBet;
+		int movedAmount = deficit+amount;
 		
-		if(amount>=stack-deficit){
+		if(movedAmount>=stack){
 			raiseState = new AllInState(gameState, new AllInEvent(actor,movedAmount,false));
 		}else{
 			raiseState = new RaiseState(gameState, new RaiseEvent(actor,amount, movedAmount));
@@ -64,7 +64,7 @@ public class RaiseAction extends SearchBotAction{
 
 	@Override
 	public String toString() {
-		return "Raise "+amount;
+		return "Raise "+parseDollars(amount);
 	}
 
 }

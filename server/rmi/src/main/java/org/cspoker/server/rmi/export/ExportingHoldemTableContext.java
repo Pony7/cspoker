@@ -32,7 +32,7 @@ public class ExportingHoldemTableContext extends ForwardingExternalRemoteHoldemT
 
 	private final static Logger logger = Logger.getLogger(ExportingHoldemTableContext.class);
 
-	public ExportingHoldemTableContext(ExternalRemoteHoldemTableContext holdemTableContext) throws RemoteException {
+	public ExportingHoldemTableContext(ExternalRemoteHoldemTableContext holdemTableContext) {
 		super(holdemTableContext);
 	}
 

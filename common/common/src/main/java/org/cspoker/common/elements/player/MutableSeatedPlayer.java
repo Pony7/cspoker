@@ -22,7 +22,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.cspoker.common.elements.cards.Card;
 import org.cspoker.common.elements.chips.Chips;
-import org.cspoker.common.elements.chips.IllegalValueException;
 import org.cspoker.common.elements.table.SeatId;
 
 /**
@@ -146,8 +145,7 @@ public class MutableSeatedPlayer {
 		return betChips;
 	}
 	
-	public synchronized void transferAmountToBetPile(int amount)
-			throws IllegalValueException {
+	public synchronized void transferAmountToBetPile(int amount) {
 		getStack().transferAmountTo(amount, getBetChips());
 	}
 	

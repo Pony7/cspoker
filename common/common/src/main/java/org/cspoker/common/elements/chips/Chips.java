@@ -157,9 +157,9 @@ public class Chips {
 	 * @effect Decrease this pile with given amount. |decreaseWith(amount)
 	 * @effect Increase the receiving pile with given amount.
 	 *         |receiver.increaseWith(amount)
-	 * @throws IllegalValueException [must] This pile of chips can not have the
+	 * @throws IllegalArgumentException [must] This pile of chips can not have the
 	 *             new value as its value. | !canHaveAsValue(new.getValue())
-	 * @throws IllegalValueException [must] This given pile of chips can not
+	 * @throws IllegalArgumentException [must] This given pile of chips can not
 	 *             have the new value as its value. |
 	 *             !canHaveAsValue(new.receiver.getValue())
 	 * @note This method should be synchronized because it is an atomic

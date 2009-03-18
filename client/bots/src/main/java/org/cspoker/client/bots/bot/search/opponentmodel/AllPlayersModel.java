@@ -18,14 +18,30 @@ package org.cspoker.client.bots.bot.search.opponentmodel;
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.common.elements.player.PlayerId;
 
+/**
+ * A collection of opponent models related to the same game.
+ * @author guy
+ *
+ */
 public interface AllPlayersModel {
 
 	OpponentModel getModelFor(PlayerId opponentId, GameState gameState);
 
+	/**
+	 * Assume the given game state permanently.
+	 * @param gameState
+	 */
 	void signalNextAction(GameState gameState);
 
+	/**
+	 * Assume the given game state temporarily.
+	 * @param gameState
+	 */
 	void assume(GameState gameState);
 
+	/**
+	 * Forget the last assumption.
+	 */
 	void forgetAssumption();
 
 }

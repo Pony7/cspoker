@@ -23,8 +23,11 @@ import org.cspoker.client.bots.bot.search.action.ActionWrapper;
 import org.cspoker.client.bots.bot.search.action.EvaluatedAction;
 import org.cspoker.client.bots.bot.search.action.ProbabilityAction;
 import org.cspoker.client.bots.bot.search.action.SampledAction;
+import org.cspoker.client.bots.bot.search.action.SearchBotAction;
 import org.cspoker.client.bots.bot.search.node.ActionNode;
 import org.cspoker.client.bots.bot.search.node.BotActionNode;
+import org.cspoker.client.common.gamestate.GameState;
+import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.elements.table.Round;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ShellAdapter;
@@ -43,11 +46,13 @@ public class SWTTreeVisitor implements NodeVisitor{
 	private final Display display;
 	private final Shell shell;
 	private final Tree tree;
+	private final int relStackSize;
 
-	public SWTTreeVisitor(Display display, Shell shell, final Tree tree) {
+	public SWTTreeVisitor(Display display, Shell shell, final Tree tree, int relStackSize) {
 		this.display = display;
 		this.shell = shell;
 		this.tree = tree;
+		this.relStackSize = relStackSize;
 		display.syncExec(new Runnable(){
 			public void run(){
 				tree.removeAll();
@@ -114,8 +119,8 @@ public class SWTTreeVisitor implements NodeVisitor{
 			public void run() {
 				try {
 					TreeItem item = items.pop();
-					item.setText(5, ""+Math.round(evaluation.getEV()));
-					item.setText(6, ""+Math.round(Math.sqrt(evaluation.getVarEV())));
+					item.setText(5, SearchBotAction.parseDollars((int)Math.round(evaluation.getEV()-relStackSize)));
+					item.setText(6, SearchBotAction.parseDollars((int)Math.round(Math.sqrt(evaluation.getVarEV()))));
 				} catch (NoSuchElementException e) {
 					tree.redraw();
 				}
@@ -140,8 +145,8 @@ public class SWTTreeVisitor implements NodeVisitor{
 						"showdown",
 						Math.round(100*p)+"%" , 
 						"",
-						""+Math.round(ev),
-						"", 
+						SearchBotAction.parseDollars(ev-relStackSize),
+						"$0", 
 						"" 
 				});
 				newItem.setBackground(1,new Color(display, 255,00,00));
@@ -166,8 +171,8 @@ public class SWTTreeVisitor implements NodeVisitor{
 						"showdown",
 						Math.round(100*p)+"%" , 
 						"",
-						""+Math.round(ev),
-						"", 
+						SearchBotAction.parseDollars(ev-relStackSize),
+						"$0", 
 						"" 
 				});
 				newItem.setBackground(1,new Color(display, 00,255,00));
@@ -175,6 +180,8 @@ public class SWTTreeVisitor implements NodeVisitor{
 		});
 	}
 
+
+	
 	public static class Factory implements NodeVisitor.Factory{
 
 		private final Display display;
@@ -193,6 +200,7 @@ public class SWTTreeVisitor implements NodeVisitor{
 						}
 					});
 					shell.setSize(600, 400);
+					shell.setMinimumSize(500, 400);
 					shell.setLayout(new FillLayout());
 					shell.setText("Game Tree Browser");
 					tree = new Tree(shell, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
@@ -238,8 +246,9 @@ public class SWTTreeVisitor implements NodeVisitor{
 		}
 
 		@Override
-		public NodeVisitor create() {
-			return new SWTTreeVisitor(display, shell, tree);
+		public NodeVisitor create(GameState gameState, PlayerId actor) {
+			SWTTreeVisitor visitor = new SWTTreeVisitor(display, shell, tree, gameState.getPlayer(actor).getStack());
+			return visitor;
 		}
 
 	}

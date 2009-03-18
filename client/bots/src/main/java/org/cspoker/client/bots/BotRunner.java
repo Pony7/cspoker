@@ -24,10 +24,7 @@ import org.apache.log4j.Logger;
 import org.cspoker.client.bots.bot.Bot;
 import org.cspoker.client.bots.bot.BotFactory;
 import org.cspoker.client.bots.bot.rule.RuleBasedBotFactory1;
-import org.cspoker.client.bots.bot.rule.RuleBasedBotFactory2;
-import org.cspoker.client.bots.bot.search.SearchBotFactory;
-import org.cspoker.client.bots.bot.search.node.leaf.DistributionShowdownNode4;
-import org.cspoker.client.bots.bot.search.node.visitor.Log4JOutputVisitor;
+import org.cspoker.client.bots.bot.search.opponentmodel.prolog.cafe.PrologCafeBotFactory;
 import org.cspoker.client.bots.listener.BotListener;
 import org.cspoker.client.bots.listener.GameLimitingBotListener;
 import org.cspoker.client.bots.listener.ReSitInBotListener;
@@ -54,7 +51,7 @@ implements LobbyListener {
 
 	public static final int nbGamesPerConfrontation = 10000;
 
-	public static final int nbPlayersPerGame = 6;
+	public final int nbPlayersPerGame;
 
 	static {
 		Log4JPropertiesLoader.load("org/cspoker/client/bots/logging/log4j.properties");
@@ -71,11 +68,11 @@ implements LobbyListener {
 
 	private final ExecutorService executor;
 
-	private volatile Bot[] bot = new Bot[nbPlayersPerGame];
+	private volatile Bot[] bot;
 
-	private volatile int[] botProfit = new int[nbPlayersPerGame];
+	private volatile int[] botProfit;
 
-	private volatile int[] botIndex = new int[nbPlayersPerGame];
+	private volatile int[] botIndex;
 
 	private final BotListener speedMinitor;
 	private volatile BotListener gameLimiter;
@@ -84,11 +81,11 @@ implements LobbyListener {
 		this(cspokerServer, new BotFactory[]{
 				// ML bots
 								new RuleBasedBotFactory1(),
-								new RuleBasedBotFactory2(),
-								new SearchBotFactory(new DistributionShowdownNode4.Factory(), new Log4JOutputVisitor.Factory(2)),
-								new SearchBotFactory(new DistributionShowdownNode4.Factory(), new Log4JOutputVisitor.Factory(2)),
-								new RuleBasedBotFactory1(),
-								new RuleBasedBotFactory2(),
+//								new RuleBasedBotFactory2(),
+//								new SearchBotFactory(new DistributionShowdownNode4.Factory(), new Log4JOutputVisitor.Factory(2)),
+//								new SearchBotFactory(new DistributionShowdownNode4.Factory(), new Log4JOutputVisitor.Factory(2)),
+//								new RuleBasedBotFactory1(),
+//								new RuleBasedBotFactory2(),
 
 
 //								new SearchBotFactory(new DistributionShowdownNode1.Factory()),
@@ -96,8 +93,8 @@ implements LobbyListener {
 //								new SearchBotFactory(new DistributionShowdownNode4.Factory()),
 				//				new PrologCafeBotFactory(),
 				//				new RuleBasedBotFactory(),
-				//				new PrologCafeBotFactory(),
-				//				new TuPrologBotFactory(),
+								new PrologCafeBotFactory(),
+//								new TuPrologBotFactory(),
 				//				new InterPrologBotFactory(),
 //								new SearchBotFactory(new CachedShowdownNodeFactory(new UniformShowdownNode.Factory())),
 		});
@@ -106,6 +103,11 @@ implements LobbyListener {
 	public BotRunner(RemoteCSPokerServer cspokerServer, BotFactory[] bots) {
 		try {
 			this.bots = bots;
+			this.nbPlayersPerGame = bots.length;//or a constant
+			bot = new Bot[nbPlayersPerGame];
+			botProfit = new int[nbPlayersPerGame];
+			botIndex = new int[nbPlayersPerGame];
+			
 			botLobbies = new SmartLobbyContext[bots.length];
 			botIDs = new PlayerId[bots.length];
 

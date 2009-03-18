@@ -48,6 +48,7 @@ public class Pair<L,R> {
 		return result;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -56,7 +57,7 @@ public class Pair<L,R> {
 			return false;
 		if (!(obj instanceof Pair))
 			return false;
-		Pair other = (Pair) obj;
+		Pair<L,R> other = (Pair<L,R>) obj;
 		if (left == null) {
 			if (other.left != null)
 				return false;

@@ -10,12 +10,10 @@ import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
 import java.rmi.RemoteException;
 
-import org.apache.log4j.Logger;
-
 public class SendPolicyRequest{
 	
 	public static void main(String[] args) throws IOException {
-		SendPolicyRequest s = new SendPolicyRequest("localhost",8081);
+		new SendPolicyRequest("localhost",8081);
 	}
 	
 	private final Socket socket;

@@ -149,15 +149,15 @@ extends AbstractBot {
 		return ((double)nbWins)/(nbOpponentSamples*nbCommunitySamples);
 	}
 
+	private int getRank(EnumSet<Card> cards) {
+		return HandEval.getRank(cards);
+	}
+
 	private static Random random = new Random();
 	private static Card[] cards = Card.values();
 
-	protected Card getRandomCard(){
+	protected static Card getRandomCard(){
 		return cards[random.nextInt(cards.length)];
-	}
-
-	private static int getRank(EnumSet<Card> cards) {
-		return HandEval.hand7Eval(HandEval.encode(cards));
 	}
 
 }
