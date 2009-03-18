@@ -17,6 +17,7 @@ package org.cspoker.common.game.elements.cards.hand;
 
 import junit.framework.TestCase;
 
+import org.apache.log4j.BasicConfigurator;
 import org.cspoker.common.elements.cards.Rank;
 import org.cspoker.common.elements.cards.Suit;
 import org.cspoker.common.elements.hand.Hand;
@@ -30,8 +31,18 @@ import org.cspoker.common.elements.hand.HandType;
  */
 public class TestHandEvaluator extends TestCase {
 
+	@Override
+	protected void setUp(){
+		BasicConfigurator.configure(); 
+	}
+	
+	@Override
+	protected void tearDown(){
+		BasicConfigurator.resetConfiguration();
+	}
+	
 	private static TestExactCard testExactCard = new TestExactCard();
-
+	
 	public void testHighCardHands() {
 		Hand hand1 = new Hand();
 		Hand hand2 = new Hand();

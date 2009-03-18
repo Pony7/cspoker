@@ -35,6 +35,7 @@ import org.cspoker.common.elements.hand.Hand.UniqueHandHash;
  * @author Craig Motlin
  */
 public final class HandRanks {
+	
 	private static Logger logger = Logger.getLogger(HandRanks.class);
 
 	private static HandRanks instance = new HandRanks();

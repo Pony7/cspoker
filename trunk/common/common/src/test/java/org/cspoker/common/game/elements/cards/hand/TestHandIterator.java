@@ -21,14 +21,13 @@ import java.util.NoSuchElementException;
 
 import junit.framework.TestCase;
 
-import org.apache.log4j.Logger;
+import org.apache.log4j.BasicConfigurator;
 import org.cspoker.common.elements.cards.Card;
 import org.cspoker.common.elements.cards.Rank;
 import org.cspoker.common.elements.cards.Suit;
 import org.cspoker.common.elements.hand.Hand;
 
 public class TestHandIterator extends TestCase {
-	private static Logger logger = Logger.getLogger(TestHandIterator.class);
 
 	private static TestExactCard testExactCard = new TestExactCard();
 
@@ -36,6 +35,8 @@ public class TestHandIterator extends TestCase {
 
 	@Override
 	protected void setUp() throws Exception {
+		BasicConfigurator.configure(); 
+		
 		hand1 = new Hand();
 
 		hand1 = hand1.add(testExactCard.getExactCard(Rank.THREE, Suit.HEARTS));
@@ -47,11 +48,16 @@ public class TestHandIterator extends TestCase {
 		hand1 = hand1.add(testExactCard.getExactCard(Rank.THREE, Suit.SPADES));
 		hand1 = hand1.add(testExactCard.getExactCard(Rank.ACE, Suit.HEARTS));
 	}
-
+	
+	@Override
+	protected void tearDown(){
+		BasicConfigurator.resetConfiguration();
+	}
+	
 	public void testHandIterator1() {
 		Iterator<Card> iterator = hand1.iterator();
 		while (iterator.hasNext()) {
-			TestHandIterator.logger.info(iterator.next().toString());
+			iterator.next().toString();
 		}
 		try {
 			iterator.next();
@@ -63,7 +69,7 @@ public class TestHandIterator extends TestCase {
 	public void testHandIterator2() {
 		Iterator<Card> iterator = hand1.getBestFive().iterator();
 		while (iterator.hasNext()) {
-			TestHandIterator.logger.info(iterator.next().toString());
+			iterator.next().toString();
 		}
 		try {
 			iterator.next();
