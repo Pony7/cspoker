@@ -64,7 +64,7 @@
 		</dependency>
 		<dependency>
 			<groupId>jp.ac.kobe_u.cs.prolog</groupId>
-			<artifactId>plcafe</artifactId>
+			<artifactId>external-plcafe</artifactId>
 			<version>1.2.5-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
