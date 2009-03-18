@@ -22,6 +22,7 @@ import java.util.Map.Entry;
 
 import junit.framework.TestCase;
 
+import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 import org.cspoker.common.elements.cards.Deck;
 import org.cspoker.common.elements.cards.Rank;
@@ -40,6 +41,16 @@ public class TestHandQuality extends TestCase {
 
 	private static TestExactCard testExactCard = new TestExactCard();
 
+	@Override
+	protected void setUp(){
+		BasicConfigurator.configure(); 
+	}
+	
+	@Override
+	protected void tearDown(){
+		BasicConfigurator.resetConfiguration();
+	}
+	
 	public void testHighCardHand() {
 		Hand hand1 = new Hand();
 		Hand hand2 = new Hand();
