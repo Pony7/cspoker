@@ -52,19 +52,33 @@ public class PrologCafeModel extends AbstractPrologModel {
 		if(logger.isDebugEnabled()){
 			logger.debug("+"+term);
 		}
-		Term termWithPackage = term;//new StructureTerm(delimiter,new Term[]{packageName, term});
-		if(!prolog.execute(new PRED_assert_1(), new Term[]{termWithPackage})){
-			throw new IllegalStateException("Failed to assert "+termWithPackage);
+		//Term termWithPackage = term;//new StructureTerm(delimiter,new Term[]{packageName, term});
+		if(!executeGoal(new PRED_assert_1(), term)){
+			throw new IllegalStateException("Failed to assert "+term);
 		}
+	}
+
+
+	private boolean executeGoal(Predicate predicate, Term... terms) {
+		long startTime=0;
+		boolean traceEnabled = logger.isTraceEnabled();
+		if(traceEnabled){
+			startTime=System.nanoTime();
+		}
+		boolean success = prolog.execute(predicate, terms);
+		if(traceEnabled){
+			logger.trace("Executing "+predicate+" took "+((System.nanoTime()-startTime)/1000000.0)+" ms");
+		}
+		return success;
 	}
 
 	protected void retractTerm(StructureTerm term) {
 		if(logger.isDebugEnabled()){
 			logger.debug("-"+term);
 		}
-		Term termWithPackage = new StructureTerm(delimiter,new Term[]{packageName, term});
-		if(!prolog.execute(new PRED_retract_1(), new Term[]{termWithPackage})){
-			throw new IllegalStateException("Failed to retract "+termWithPackage);
+		term = new StructureTerm(delimiter,new Term[]{packageName, term});
+		if(!executeGoal(new PRED_retract_1(), term)){
+			throw new IllegalStateException("Failed to retract "+term);
 		}
 	}
 
@@ -96,7 +110,7 @@ public class PrologCafeModel extends AbstractPrologModel {
 					p,null
 			));
 		}
-		if(!PrologCafeModel.this.prolog.execute(prior_action_probability, args)){
+		if(!executeGoal(prior_action_probability, args)){
 			throw new IllegalStateException("Failed to call "+prior_action_probability);
 		}
 		return (Double)p.toJava();

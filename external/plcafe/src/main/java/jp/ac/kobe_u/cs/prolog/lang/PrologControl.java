@@ -165,7 +165,7 @@ public class PrologControl implements Runnable, Serializable {
 	 * 
 	 * @see #run
 	 */
-	public boolean execute(Predicate p, Term[] args) {
+	public boolean execute(Predicate p, Term... args) {
 		engine.init();
 		code = p;
 		code.setArgument(args, new Success(this));

@@ -17,6 +17,7 @@ package org.cspoker.client.bots.bot.search.node.visitor;
 
 import java.util.LinkedList;
 import java.util.NoSuchElementException;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.apache.log4j.Logger;
 import org.cspoker.client.bots.bot.search.action.ActionWrapper;
@@ -47,17 +48,14 @@ public class SWTTreeVisitor implements NodeVisitor{
 	private final Shell shell;
 	private final Tree tree;
 	private final int relStackSize;
+	private final AtomicBoolean newDecision = new AtomicBoolean(true);
 
 	public SWTTreeVisitor(Display display, Shell shell, final Tree tree, int relStackSize) {
 		this.display = display;
 		this.shell = shell;
 		this.tree = tree;
 		this.relStackSize = relStackSize;
-		display.syncExec(new Runnable(){
-			public void run(){
-				tree.removeAll();
-			}
-		});
+
 	}
 
 	private final LinkedList<TreeItem> items = new LinkedList<TreeItem>();
@@ -69,6 +67,9 @@ public class SWTTreeVisitor implements NodeVisitor{
 				TreeItem item = items.peek();
 				TreeItem newItem;
 				if(item==null){
+					if(newDecision.compareAndSet(true, false)){
+						tree.removeAll();
+					}
 					newItem = new TreeItem(tree, SWT.NONE);
 				}else{
 					newItem = new TreeItem(item, SWT.NONE);
@@ -181,7 +182,7 @@ public class SWTTreeVisitor implements NodeVisitor{
 	}
 
 
-	
+
 	public static class Factory implements NodeVisitor.Factory{
 
 		private final Display display;
@@ -213,7 +214,7 @@ public class SWTTreeVisitor implements NodeVisitor{
 					column = new TreeColumn(tree, SWT.CENTER);
 					column.setText("Action");
 					column.setWidth(100);
-					
+
 					column = new TreeColumn(tree, SWT.CENTER);
 					column.setText("Round");
 					column.setWidth(70);
@@ -221,7 +222,7 @@ public class SWTTreeVisitor implements NodeVisitor{
 					column = new TreeColumn(tree, SWT.CENTER);
 					column.setText("P(Action)");
 					column.setWidth(70);
-					
+
 					column = new TreeColumn(tree, SWT.CENTER);
 					column.setText("Samples");
 					column.setWidth(70);

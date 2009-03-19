@@ -28,7 +28,8 @@ import org.cspoker.client.bots.bot.Bot;
 import org.cspoker.client.bots.bot.BotFactory;
 import org.cspoker.client.bots.bot.search.SearchBot;
 import org.cspoker.client.bots.bot.search.SearchConfiguration;
-import org.cspoker.client.bots.bot.search.node.expander.CompleteExpander;
+import org.cspoker.client.bots.bot.search.node.expander.SamplingExpander;
+import org.cspoker.client.bots.bot.search.node.leaf.ShowdownNode;
 import org.cspoker.client.bots.bot.search.node.leaf.UniformShowdownNode;
 import org.cspoker.client.bots.bot.search.node.visitor.Log4JOutputVisitor;
 import org.cspoker.client.bots.bot.search.node.visitor.NodeVisitor;
@@ -52,9 +53,17 @@ public class TuPrologBotFactory implements BotFactory {
 	private final int copy;
 
 	private final Map<PlayerId, AllPlayersModel> opponentModels = new HashMap<PlayerId, AllPlayersModel>();
+	private final org.cspoker.client.bots.bot.search.node.leaf.ShowdownNode.Factory showdownNodeFactory;
+	private final Factory[] nodeVisitorFactories;
 
 	public TuPrologBotFactory() {
+		this(new UniformShowdownNode.Factory(), new NodeVisitor.Factory[]{new Log4JOutputVisitor.Factory(2)});
+	}
+	
+	public TuPrologBotFactory(ShowdownNode.Factory showdownNodeFactory, NodeVisitor.Factory... nodeVisitorFactories) {
 		this.copy = ++copies;
+		this.showdownNodeFactory = showdownNodeFactory;
+		this.nodeVisitorFactories = nodeVisitorFactories;
 	}
 
 	/**
@@ -81,16 +90,16 @@ public class TuPrologBotFactory implements BotFactory {
 			TuPrologModel model = new TuPrologModel(engine,botId);
 			opponentModels.put(botId, model);
 		}
-		SearchConfiguration config = new SearchConfiguration(opponentModels.get(botId), 
-				new UniformShowdownNode.Factory(),
-				new CompleteExpander.Factory(),
-				1,1,10,100,0.5);
-		Factory[] nodeVisitorFactories = new NodeVisitor.Factory[]{new Log4JOutputVisitor.Factory(2)};
+		SearchConfiguration config = new SearchConfiguration(
+				opponentModels.get(botId), 
+				showdownNodeFactory,
+				new SamplingExpander.Factory(),
+				50,100,250,250,0.25);
 		return new SearchBot(botId, tableId, lobby, executor, config, buyIn, nodeVisitorFactories, botListeners);
 	}
 
 	@Override
 	public String toString() {
-		return "PrologSearchBotv1-"+copy;
+		return "TuPrologSearchBotv1-"+copy;
 	}
 }

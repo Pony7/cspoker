@@ -18,10 +18,10 @@ import javax.security.auth.login.LoginException;
 import org.cspoker.client.User;
 import org.cspoker.client.bots.bot.Bot;
 import org.cspoker.client.bots.bot.BotFactory;
-import org.cspoker.client.bots.bot.search.SearchBotFactory;
 import org.cspoker.client.bots.bot.search.node.leaf.DistributionShowdownNode4;
 import org.cspoker.client.bots.bot.search.node.visitor.Log4JOutputVisitor;
 import org.cspoker.client.bots.bot.search.node.visitor.SWTTreeVisitor;
+import org.cspoker.client.bots.bot.search.opponentmodel.prolog.cafe.PrologCafeBotFactory;
 import org.cspoker.client.bots.listener.DefaultBotListener;
 import org.cspoker.client.common.SmartClientContext;
 import org.cspoker.client.common.SmartLobbyContext;
@@ -95,10 +95,10 @@ public class RunHumanVsBot {
 
 			}
 		});
-		BotFactory botFactory = new SearchBotFactory(new DistributionShowdownNode4.Factory(), 
-				new Log4JOutputVisitor.Factory(2), new SWTTreeVisitor.Factory(client.getGui().getDisplay()));
-//		BotFactory botFactory = new PrologCafeBotFactory(new DistributionShowdownNode4.Factory(), 
+//		BotFactory botFactory = new SearchBotFactory(new DistributionShowdownNode4.Factory(), 
 //				new Log4JOutputVisitor.Factory(2), new SWTTreeVisitor.Factory(client.getGui().getDisplay()));
+		BotFactory botFactory = new PrologCafeBotFactory(new DistributionShowdownNode4.Factory(), 
+				new Log4JOutputVisitor.Factory(2), new SWTTreeVisitor.Factory(client.getGui().getDisplay()));
 		
 		startBot(botFactory, tableId, buyin);
 

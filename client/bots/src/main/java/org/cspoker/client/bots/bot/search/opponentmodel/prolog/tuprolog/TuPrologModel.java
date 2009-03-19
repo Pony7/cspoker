@@ -50,7 +50,7 @@ public class TuPrologModel extends AbstractPrologModel {
 			logger.debug("+"+term);
 		}
 		try {
-			SolveInfo info = TuPrologModel.this.engine.solve((new PRED_assert_1(term, null)+"."));
+			SolveInfo info = executeGoal(new PRED_assert_1(term, null)+".");
 			if(!info.isSuccess()){
 				throw new IllegalStateException("Failed to assert "+term);
 			}
@@ -59,12 +59,27 @@ public class TuPrologModel extends AbstractPrologModel {
 		}
 	}
 
+	private SolveInfo executeGoal(String goal)
+			throws MalformedGoalException {
+		long startTime=0;
+		boolean traceEnabled = logger.isTraceEnabled();
+		if(traceEnabled){
+			startTime=System.nanoTime();
+		}
+		SolveInfo result = TuPrologModel.this.engine.solve(goal);
+		if(traceEnabled){
+			logger.trace("Executing "+goal+" took "+((System.nanoTime()-startTime)/1000000.0)+" ms");
+			
+		}
+		return result;
+	}
+
 	protected void retractTerm(jp.ac.kobe_u.cs.prolog.lang.StructureTerm term) {
 		if(logger.isDebugEnabled()){
 			logger.debug("-"+term);
 		}
 		try {
-			SolveInfo info = TuPrologModel.this.engine.solve((new PRED_retract_1(term, null)+"."));
+			SolveInfo info = executeGoal(new PRED_retract_1(term, null)+".");
 			if(!info.isSuccess()){
 				throw new IllegalStateException("Failed to assert "+term);
 			}
@@ -95,7 +110,7 @@ public class TuPrologModel extends AbstractPrologModel {
 		}
 		SolveInfo info;
 		try {
-			info = TuPrologModel.this.engine.solve((goal));
+			info = executeGoal(goal);
 		} catch (MalformedGoalException e) {
 			throw new IllegalStateException(e);
 		}
