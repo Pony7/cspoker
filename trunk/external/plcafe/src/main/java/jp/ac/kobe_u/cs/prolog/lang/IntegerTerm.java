@@ -100,7 +100,7 @@ public class IntegerTerm extends NumberTerm {
 	/** Returns a string representation of this <code>IntegerTerm</code>. */
 	@Override
 	public String toString() {
-		return Integer.toString(val);
+		return String.valueOf(val);
 	}
 
 	/**

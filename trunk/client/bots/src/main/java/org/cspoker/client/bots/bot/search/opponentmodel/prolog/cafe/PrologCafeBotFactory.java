@@ -78,7 +78,7 @@ public class PrologCafeBotFactory implements BotFactory {
 				opponentModels.get(botId), 
 				showdownNodeFactory,
 				new SamplingExpander.Factory(),
-				50,100,250,250,0.3);
+				50,100,250,250,0.25);
 		return new SearchBot(botId, tableId, lobby, executor, config, buyIn, nodeVisitorFactories ,botListeners);
 	}
 

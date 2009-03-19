@@ -82,7 +82,7 @@ public class DoubleTerm extends NumberTerm {
 	/** Returns a string representation of this <code>DoubleTerm</code>. */
 	@Override
 	public String toString() {
-		return Double.toString(val);
+		return String.valueOf(val);
 	}
 
 	/**

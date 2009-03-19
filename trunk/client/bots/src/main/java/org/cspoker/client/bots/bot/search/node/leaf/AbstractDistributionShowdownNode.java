@@ -38,7 +38,7 @@ public abstract class AbstractDistributionShowdownNode extends AbstractShowdownN
 
 	private final static int[] handRanks;
 	static{
-		handRanks = StateTableEvaluator.handRanks;
+		handRanks = StateTableEvaluator.getInstance().handRanks;
 	}
 
 	public static final int MaxNbSamples = 400;

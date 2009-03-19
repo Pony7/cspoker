@@ -46,7 +46,7 @@ import org.cspoker.common.elements.cards.Card;
  */
 public class StateTableEvaluator {
 
-	private static final int HAND_RANKS_SIZE = 32487834;
+	private final int HAND_RANKS_SIZE = 32487834;
 	/*
 	 * Card to integer conversions: 2c = 1 2d = 2 2h = 3 2s = 4 3c = 5 3d = 6 3h
 	 * = 7 3s = 8 4c = 9 4d = 10 4h = 11 4s = 12 5c = 13 5d = 14 5h = 15 5s = 16
@@ -56,59 +56,70 @@ public class StateTableEvaluator {
 	 * Qs = 44 Kc = 45 Kd = 46 Kh = 47 Ks = 48 Ac = 49 Ad = 50 Ah = 51 As = 52
 	 */
 
-	private final static int NUM_SUITS = 4;
-	private final static int NUM_RANKS = 13;
+	private final int NUM_SUITS = 4;
+	private final int NUM_RANKS = 13;
 
-	public static int[] handRanks = new int[HAND_RANKS_SIZE]; // array to hold
-																// hand rank
-																// lookup table
-	private static boolean verbose = true; // toggles verbose mode
+	public int[] handRanks = new int[HAND_RANKS_SIZE]; // array to hold hand
+														// rank lookup table
+	private final boolean verbose = true; // toggles verbose mode
 
-	private static int[] hand; // re-usable array to hold cards in a hand
-	private static int size = 612978; // lookup table size
-	private static long[] keys = new long[size]; // array to hold key lookup
-													// table
-	private static int numKeys = 1; // counter for number of defined keys in key
-									// array
-	private static long maxKey = 0; // holds current maximum key value
-	private static int numCards = 0; // re-usable counter for number of cards in
-										// a hand
-	private static int cardIndex = 0; // re-usable index for cards in a hands
-	private static int maxHandRankIndex = 0;
+	private int[] hand; // re-usable array to hold cards in a hand
+	private final int size = 612978; // lookup table size
+	private final long[] keys = new long[size]; // array to hold key lookup
+												// table
+	private int numKeys = 1; // counter for number of defined keys in key array
+	private long maxKey = 0; // holds current maximum key value
+	private int numCards = 0; // re-usable counter for number of cards in a hand
+	private int cardIndex = 0; // re-usable index for cards in a hands
+	private int maxHandRankIndex = 0;
 
-	private static long startTimer;
-	private static long stopTimer;
+	private long startTimer;
+	private long stopTimer;
 
-	private static final String HAND_RANKS_FILE = "handRanks.zip";
+	private final String HAND_RANKS_FILE = "handRanks.zip";
 
-	static {
-		try {
-			System.out.println("Loading evaluation tables ...");
-			File f = new File(HAND_RANKS_FILE);
-			if (!f.exists()) {
-				System.out
-						.println("Evaluation tables do not exist, this is first time run. Generating them ...");
-				handRanks = new int[HAND_RANKS_SIZE];
-				generateTables();
-				saveTables();
-				System.out.println("Loading evaluation tables (again) ...");
-			}
-			long t = System.currentTimeMillis();
-			ZipInputStream zipStream = new ZipInputStream(new FileInputStream(
-					HAND_RANKS_FILE));
-			zipStream.getNextEntry();
-			ObjectInputStream s = new ObjectInputStream(zipStream);
-			handRanks = (int[]) s.readObject();
-			t = System.currentTimeMillis() - t;
-			System.out.println("Evaluation tables loaded in " + t / 1000.0
-					+ " seconds");
-		} catch (Exception e) {
-			e.printStackTrace();
+	private StateTableEvaluator() throws FileNotFoundException, IOException,
+			ClassNotFoundException {
+		System.out.println("Loading evaluation tables ...");
+		File f = new File(HAND_RANKS_FILE);
+		if (!f.exists()) {
+			System.out
+					.println("Evaluation tables do not exist, this is first time run. Generating them ...");
+			handRanks = new int[HAND_RANKS_SIZE];
+			generateTables();
+			saveTables();
+			System.out.println("Loading evaluation tables (again) ...");
 		}
+		long t = System.currentTimeMillis();
+		ZipInputStream zipStream = new ZipInputStream(new FileInputStream(
+				HAND_RANKS_FILE));
+		zipStream.getNextEntry();
+		ObjectInputStream s = new ObjectInputStream(zipStream);
+		handRanks = (int[]) s.readObject();
+		t = System.currentTimeMillis() - t;
+		System.out.println("Evaluation tables loaded in " + t / 1000.0
+				+ " seconds");
+	}
+
+	private static StateTableEvaluator instance = null;
+
+	public synchronized static StateTableEvaluator getInstance() {
+		if (instance == null) {
+			try {
+				instance = new StateTableEvaluator();
+			} catch (FileNotFoundException e) {
+				throw new IllegalStateException(e);
+			} catch (IOException e) {
+				throw new IllegalStateException(e);
+			} catch (ClassNotFoundException e) {
+				throw new IllegalStateException(e);
+			}
+		}
+		return instance;
 	}
 
 	// Inserts a key into the key array and returns the insertion index.
-	private static int insertKey(long key) {
+	private int insertKey(long key) {
 
 		// check to see if key is valid
 		if (key == 0) {
@@ -154,7 +165,7 @@ public class StateTableEvaluator {
 	// Returns a key for the hand created by adding a new card to the hand
 	// represented by the given key. Returns 0 if new card already appears in
 	// hand.
-	private static long makeKey(long baseKey, int newCard) {
+	private long makeKey(long baseKey, int newCard) {
 
 		int[] suitCount = new int[NUM_SUITS + 1]; // number of times a suit
 													// appears in a hand
@@ -219,7 +230,7 @@ public class StateTableEvaluator {
 	} // END makeKey method
 
 	// Formats and returns a card in 8-bit packed representation.
-	private static int formatCard8bit(int card) {
+	private int formatCard8bit(int card) {
 
 		// 8-Bit Packed Card Representation
 		// +--------+
@@ -235,7 +246,7 @@ public class StateTableEvaluator {
 	} // END formatCard8bit method
 
 	// Sorts the hand using Bose-Nelson Sorting Algorithm (N = 7).
-	private static void sortHand() {
+	private void sortHand() {
 		swapCard(0, 4);
 		swapCard(1, 5);
 		swapCard(2, 6);
@@ -255,7 +266,7 @@ public class StateTableEvaluator {
 	} // End sortHand method
 
 	// Swaps card i with card j.
-	private static void swapCard(int i, int j) {
+	private void swapCard(int i, int j) {
 		if (hand[i] < hand[j]) {
 			hand[i] ^= hand[j];
 			hand[j] ^= hand[i];
@@ -265,7 +276,7 @@ public class StateTableEvaluator {
 
 	// Determines the relative strength of a hand (the hand is given by its
 	// unique key value).
-	private static int getHandRank(long key) {
+	private int getHandRank(long key) {
 
 		// The following method implements a modified version of "Cactus Kev's
 		// Five-Card
@@ -444,10 +455,10 @@ public class StateTableEvaluator {
 
 	} // END getHandRank method
 
-	static int[] offsets = new int[] { 0, 1277, 4137, 4995, 5853, 5863, 7140,
-			7296, 7452 };
+	private final int[] offsets = new int[] { 0, 1277, 4137, 4995, 5853, 5863,
+			7140, 7296, 7452 };
 
-	private static int getIndex(int key) {
+	private int getIndex(int key) {
 
 		// use binary search to find key
 		int low = -1;
@@ -468,7 +479,7 @@ public class StateTableEvaluator {
 
 	} // END getIndex method
 
-	private static int eval_5hand(int c1, int c2, int c3, int c4, int c5) {
+	private int eval_5hand(int c1, int c2, int c3, int c4, int c5) {
 		int q = (c1 | c2 | c3 | c4 | c5) >> 16;
 		short s;
 
@@ -489,7 +500,7 @@ public class StateTableEvaluator {
 
 	} // END eval_5hand method
 
-	private static void generateTables() {
+	private void generateTables() {
 
 		int card;
 		int handRank;
@@ -566,7 +577,7 @@ public class StateTableEvaluator {
 
 	} // END generateTables method
 
-	private static void saveTables() throws FileNotFoundException, IOException {
+	private void saveTables() throws FileNotFoundException, IOException {
 		ZipOutputStream zipStream = new ZipOutputStream(new FileOutputStream(
 				HAND_RANKS_FILE));
 		zipStream.setLevel(Deflater.BEST_COMPRESSION);
@@ -577,12 +588,15 @@ public class StateTableEvaluator {
 		s.close();
 	}
 
-	public static int getRank(Card[] cards) {
+	public int getRank(Card[] cards) {
+		// System.out.println("Getting rank..");
+		// Card[] cards = sevenCardHand.toCards();
 		int rank = 53;
 		for (Card card : cards) {
 			int c = card.ordinal() + 1;
 			rank = handRanks[c + rank];
 		}
+		// System.out.println("Got rank");
 		int type = (rank >>> 12) - 1;
 		rank = rank & 0xFFF;
 
