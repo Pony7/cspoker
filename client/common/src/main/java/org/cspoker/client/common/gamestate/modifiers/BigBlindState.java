@@ -48,13 +48,13 @@ public class BigBlindState
 			}
 			
 			@Override
-			public int getStack() {
-				return newStack;
+			public int getTotalInvestment() {
+				return getBet();
 			}
 			
 			@Override
-			public boolean sitsIn() {
-				return true;
+			public int getStack() {
+				return newStack;
 			}
 			
 			@Override
@@ -65,11 +65,6 @@ public class BigBlindState
 			@Override
 			public PlayerId getPlayerId() {
 				return BigBlindState.this.event.getPlayerId();
-			}
-			
-			@Override
-			public boolean isPlayingGame() {
-				return true;
 			}
 			
 			@Override

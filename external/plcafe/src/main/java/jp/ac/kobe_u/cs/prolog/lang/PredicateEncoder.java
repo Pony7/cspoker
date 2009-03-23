@@ -33,6 +33,8 @@ import java.util.regex.Pattern;
  */
 public class PredicateEncoder {
 
+	public final static Pattern pattern = Pattern.compile("([^a-zA-Z0-9_'$'])");
+	
 	/**
 	 * Returns a string representation of class for the predicate with the given
 	 * arguments.
@@ -48,8 +50,7 @@ public class PredicateEncoder {
 	 */
 	public static String encode(String pkg, String functor, int arity) {
 		String x = functor;
-		Pattern p = Pattern.compile("([^a-zA-Z0-9_'$'])");
-		Matcher m = p.matcher(x);
+		Matcher m = pattern.matcher(x);
 		StringBuffer sb = new StringBuffer();
 		boolean result = m.find();
 		while (result) {

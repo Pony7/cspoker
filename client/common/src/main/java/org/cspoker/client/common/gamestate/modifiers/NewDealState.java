@@ -38,169 +38,166 @@ import com.google.common.collect.ImmutableBiMap;
 import com.google.common.collect.ImmutableMap;
 
 public class NewDealState
-		extends AbstractGameState {
-	
+extends AbstractGameState {
+
 	private final TableConfiguration tableConfiguration;
 	private final NewDealEvent event;
-	
+
 	//TODO make weak reference? clean up memory?
 	private final GameState previousGame;
-	
+
 	private final ImmutableBiMap<SeatId, PlayerId> seatMap;
 	private final ImmutableMap<PlayerId, PlayerState> playerStates;
-	
+
 	public NewDealState(TableConfiguration tableConfiguration, NewDealEvent newDealEvent, GameState previousGame) {
 		this.previousGame = previousGame;
 		this.event = newDealEvent;
 		this.tableConfiguration = tableConfiguration;
-		
+
 		ImmutableMap.Builder<PlayerId, PlayerState> playerStateBuilder = ImmutableMap.builder();
-		
+		ImmutableBiMap.Builder<SeatId, PlayerId> seatMapBuilder = ImmutableBiMap.builder();
+
 		for (final SeatedPlayer player : newDealEvent.getPlayers()) {
-			AbstractPlayerState playerState = new AbstractPlayerState() {
-				
-				public int getBet() {
-					return 0;
-				}
-				
-				public EnumSet<Card> getCards() {
-					return EnumSet.noneOf(Card.class);
-				}
-				
-				public int getStack() {
-					return player.getStackValue();
-				}
-				
-				public boolean hasFolded() {
-					return false;
-				}
-				
-				public boolean sitsIn() {
-					return player.isSittingIn();
-				}
-				
-				public PlayerId getPlayerId() {
-					return player.getId();
-				}
-				
-				public SeatId getSeatId() {
-					return player.getSeatId();
-				}
-				
-				@Override
-				public boolean isPlayingGame() {
-					return player.isSittingIn();
-				}
-				
-				@Override
-				public boolean isSmallBlind() {
-					//starting from SmallBlindEvent
-					return false;
-				}
-				
-				@Override
-				public boolean isBigBlind() {
-					//starting from BigBlindEvent
-					return false;
-				}
-				
-				@Override
-				public boolean hasChecked() {
-					return false;
-				}
-				
-				/**
-				 * {@inheritDoc}
-				 */
-				@Override
-				public List<Integer> getBetProgression() {
-					return new ArrayList<Integer>();
-				}
-				
-			};
-			playerStateBuilder.put(player.getId(), playerState);
+			if(player.isSittingIn()){
+				AbstractPlayerState playerState = new AbstractPlayerState() {
+
+					public int getBet() {
+						return 0;
+					}
+
+					@Override
+					public int getTotalInvestment() {
+						return 0;
+					}
+
+					public EnumSet<Card> getCards() {
+						return EnumSet.noneOf(Card.class);
+					}
+
+					public int getStack() {
+						return player.getStackValue();
+					}
+
+					public boolean hasFolded() {
+						return false;
+					}
+
+					public PlayerId getPlayerId() {
+						return player.getId();
+					}
+
+					public SeatId getSeatId() {
+						return player.getSeatId();
+					}
+
+					@Override
+					public boolean isSmallBlind() {
+						//starting from SmallBlindEvent
+						return false;
+					}
+
+					@Override
+					public boolean isBigBlind() {
+						//starting from BigBlindEvent
+						return false;
+					}
+
+					@Override
+					public boolean hasChecked() {
+						return false;
+					}
+
+					@Override
+					public List<Integer> getBetProgression() {
+						return new ArrayList<Integer>();
+					}
+
+				};
+				seatMapBuilder.put(player.getSeatId(), player.getId());
+				playerStateBuilder.put(player.getId(), playerState);
+			}
 		}
-		seatMap = previousGame.getSeatMap();
+		seatMap = seatMapBuilder.build();
 		playerStates = playerStateBuilder.build();
 	}
-	
+
 	public TableConfiguration getTableConfiguration() {
 		return tableConfiguration;
 	}
-	
+
 	public Set<PlayerId> getAllSeatedPlayerIds() {
 		return playerStates.keySet();
 	}
-	
+
 	public EnumSet<Card> getCommunityCards() {
 		return EnumSet.noneOf(Card.class);
 	}
-	
+
 	public PlayerId getDealer() {
 		return event.getDealer();
 	}
-	
+
 	public int getLargestBet() {
 		return 0;
 	}
-	
+
 	public PlayerId getLastBettor() {
 		return null;
 	}
-	
+
 	public HoldemTableTreeEvent getLastEvent() {
 		return event;
 	}
-	
+
 	public int getMinNextRaise() {
 		return tableConfiguration.getSmallBet();
 	}
-	
+
 	public PlayerId getNextToAct() {
 		return null;
 	}
-	
+
 	public PlayerState getPlayer(PlayerId playerId) {
 		return playerStates.get(playerId);
 	}
-	
+
 	@Override
 	public ImmutableBiMap<SeatId, PlayerId> getSeatMap() {
 		return seatMap;
 	}
-	
+
 	public GameState getPreviousGameState() {
 		return previousGame;
 	}
-	
+
 	public int getPreviousRoundsPotSize() {
 		return 0;
 	}
-	
+
 	public Round getRound() {
 		return Round.PREFLOP;
 	}
-	
+
 	public int getRoundPotSize() {
 		return 0;
 	}
-	
+
 	@Override
 	public int getNbRaises() {
 		return 0;
 	}
-	
+
 	@Override
 	public int getNbPlayers() {
 		//TODO fix with sitout?
 		return seatMap.size();
 	}
-	
+
 	@Override
 	public void acceptVisitor(GameStateVisitor visitor) {
 		visitor.visitNewDealState(this);
 	}
-	
+
 	@Override
 	public String toString() {
 		return getLastEvent().toString();

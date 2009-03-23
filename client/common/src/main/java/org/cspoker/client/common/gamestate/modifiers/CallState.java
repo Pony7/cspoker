@@ -43,7 +43,7 @@ public class CallState
 		final int newBetSize = super.getLargestBet();
 		
 		final PlayerState player = super.getPlayer(event.getPlayerId());
-		int chipsMoved = newBetSize - player.getBet();
+		final int chipsMoved = newBetSize - player.getBet();
 		final int newStack = player.getStack() - chipsMoved;
 		
 		this.newPotSize = super.getRoundPotSize() + chipsMoved;
@@ -53,6 +53,11 @@ public class CallState
 			@Override
 			public int getBet() {
 				return newBetSize;
+			}
+			
+			@Override
+			public int getTotalInvestment() {
+				return super.getTotalInvestment()+chipsMoved;
 			}
 			
 			@Override
@@ -68,16 +73,6 @@ public class CallState
 			@Override
 			public boolean hasFolded() {
 				return false;
-			}
-			
-			@Override
-			public boolean sitsIn() {
-				return true;
-			}
-
-			@Override
-			public boolean isPlayingGame() {
-				return true;
 			}
 			
 			@Override

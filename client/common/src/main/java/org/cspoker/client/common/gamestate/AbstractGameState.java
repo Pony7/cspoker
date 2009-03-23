@@ -109,7 +109,7 @@ implements GameState {
 		PlayerState first = null;
 		for (PlayerId id : ids) {
 			PlayerState state = getPlayer(id);
-			if(state.isInForPot()){
+			if(!state.hasFolded()){
 				if(first!=null){
 					return null;
 				}else{

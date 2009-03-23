@@ -130,7 +130,17 @@ public class SWTTreeVisitor implements NodeVisitor{
 	}
 
 	@Override
-	public void visitLoseNode(final int ev, final double p) {
+	public void visitLeafNode(final int winnings, final double probability,
+			final int minWinnable, final int maxWinnable) {
+		final String text;
+		if(winnings == minWinnable){
+			text = "Lose";
+		}else if(winnings == maxWinnable){
+			text = "Win";
+		}else{
+			text = "Split Pot";
+		}
+		final double winPercentage = (winnings-minWinnable)/((double)(maxWinnable-minWinnable));
 		display.syncExec(new Runnable(){
 			public void run(){
 				TreeItem item = items.peek();
@@ -142,46 +152,18 @@ public class SWTTreeVisitor implements NodeVisitor{
 				}
 				newItem.setText(new String[] { 
 						"", 
-						"Lose", 
+						text, 
 						"showdown",
-						Math.round(100*p)+"%" , 
+						Math.round(100*probability)+"%" , 
 						"",
-						SearchBotAction.parseDollars(ev-relStackSize),
+						SearchBotAction.parseDollars(winnings-relStackSize),
 						"$0", 
 						"" 
 				});
-				newItem.setBackground(1,new Color(display, 255,00,00));
+				newItem.setBackground(1,new Color(display, (int)Math.round((1-winPercentage)*255),(int)Math.round(winPercentage*255),00));
 			}
 		});
 	}
-
-	@Override
-	public void visitWinNode(final int ev, final double p) {
-		display.syncExec(new Runnable(){
-			public void run(){
-				TreeItem item = items.peek();
-				TreeItem newItem;
-				if(item==null){
-					newItem = new TreeItem(tree, SWT.NONE);
-				}else{
-					newItem = new TreeItem(item, SWT.NONE);
-				}
-				newItem.setText(new String[] { 
-						"", 
-						"Win", 
-						"showdown",
-						Math.round(100*p)+"%" , 
-						"",
-						SearchBotAction.parseDollars(ev-relStackSize),
-						"$0", 
-						"" 
-				});
-				newItem.setBackground(1,new Color(display, 00,255,00));
-			}
-		});
-	}
-
-
 
 	public static class Factory implements NodeVisitor.Factory{
 

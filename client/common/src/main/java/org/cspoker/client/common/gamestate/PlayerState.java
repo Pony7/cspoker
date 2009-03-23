@@ -34,6 +34,8 @@ public interface PlayerState {
 	
 	int getBet();
 	
+	int getTotalInvestment();
+	
 	/**
 	 * @return A list of integers representing all bets/calls/raises in this
 	 *         round. The total amount adds up to getBetChips()
@@ -47,10 +49,6 @@ public interface PlayerState {
 	
 	boolean hasFolded();
 	
-	boolean sitsIn();
-	
-	boolean isPlayingGame();
-	
 	boolean isSmallBlind();
 	
 	boolean isBigBlind();
@@ -61,8 +59,6 @@ public interface PlayerState {
 	boolean isAllIn();
 	
 	boolean isActivelyPlaying();
-	
-	boolean isInForPot();
 
 	/**
 	 * Last action was a check

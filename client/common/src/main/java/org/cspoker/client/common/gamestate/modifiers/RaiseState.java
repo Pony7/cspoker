@@ -51,6 +51,11 @@ public class RaiseState
 			}
 			
 			@Override
+			public int getTotalInvestment() {
+				return super.getTotalInvestment()+event.getMovedAmount();
+			}
+			
+			@Override
 			public PlayerId getPlayerId() {
 				return RaiseState.this.event.getPlayerId();
 			}
@@ -63,15 +68,6 @@ public class RaiseState
 			@Override
 			public boolean hasFolded() {
 				return false;
-			}
-			
-			@Override
-			public boolean sitsIn() {
-				return true;
-			}
-			
-			public boolean isPlayingGame() {
-				return true;
 			}
 			
 			@Override

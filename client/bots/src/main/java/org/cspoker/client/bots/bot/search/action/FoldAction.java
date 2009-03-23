@@ -54,7 +54,7 @@ public class FoldAction extends SearchBotAction{
 						&& gameState.getDeficit(player.getPlayerId())>0){
 					roundEnds = false;
 				}
-				if(!noDefaultWinner && !player.getPlayerId().equals(actor) && player.isInForPot()){
+				if(!noDefaultWinner && !player.getPlayerId().equals(actor) && !player.hasFolded()){
 					if(first!=null){
 						noDefaultWinner = true;
 					}else{

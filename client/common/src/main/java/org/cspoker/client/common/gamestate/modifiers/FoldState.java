@@ -44,18 +44,8 @@ public class FoldState
 			}
 			
 			@Override
-			public boolean sitsIn() {
-				return true;
-			}
-			
-			@Override
 			public PlayerId getPlayerId() {
 				return FoldState.this.event.getPlayerId();
-			}
-			
-			@Override
-			public boolean isPlayingGame() {
-				return true;
 			}
 			
 			@Override

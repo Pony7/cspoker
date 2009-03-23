@@ -71,17 +71,21 @@ public class NewRoundState
 			
 			final EnumSet<Card> cards = oldPlayerState.getCards();
 			final int stack = oldPlayerState.getStack();
-			final boolean sitsIn = oldPlayerState.sitsIn();
-			final boolean isPlaying = oldPlayerState.isPlayingGame();
 			final boolean hasFolded = oldPlayerState.hasFolded();
 			final SeatId seat = oldPlayerState.getSeatId();
 			final boolean bigBlind = oldPlayerState.isBigBlind();
 			final boolean smallBlind = oldPlayerState.isSmallBlind();
+			final int investment = oldPlayerState.getTotalInvestment();
 			
 			PlayerState playerState = new AbstractPlayerState() {
 				
 				public int getBet() {
 					return 0;
+				}
+				
+				@Override
+				public int getTotalInvestment() {
+					return investment;
 				}
 				
 				public EnumSet<Card> getCards() {
@@ -96,21 +100,12 @@ public class NewRoundState
 					return hasFolded;
 				}
 				
-				public boolean sitsIn() {
-					return sitsIn;
-				}
-				
 				public PlayerId getPlayerId() {
 					return playerId;
 				}
 				
 				public SeatId getSeatId() {
 					return seat;
-				}
-				
-				@Override
-				public boolean isPlayingGame() {
-					return isPlaying;
 				}
 				
 				@Override

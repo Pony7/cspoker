@@ -35,6 +35,11 @@ public abstract class ForwardingPlayerState
 		return playerState.getBet();
 	}
 	
+	@Override
+	public int getTotalInvestment() {
+		return playerState.getTotalInvestment();
+	}
+	
 	public EnumSet<Card> getCards() {
 		return playerState.getCards();
 	}
@@ -45,10 +50,6 @@ public abstract class ForwardingPlayerState
 	
 	public boolean hasFolded() {
 		return playerState.hasFolded();
-	}
-	
-	public boolean sitsIn() {
-		return playerState.sitsIn();
 	}
 	
 	public SeatId getSeatId() {
@@ -74,9 +75,6 @@ public abstract class ForwardingPlayerState
 		return playerState.hasChecked();
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public List<Integer> getBetProgression() {
 		return playerState.getBetProgression();
