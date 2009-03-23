@@ -58,16 +58,6 @@ public class NewPocketCardsState
 			}
 			
 			@Override
-			public boolean sitsIn() {
-				return true;
-			}
-			
-			@Override
-			public boolean isPlayingGame() {
-				return true;
-			}
-
-			@Override
 			public boolean hasChecked() {
 				return false;
 			}

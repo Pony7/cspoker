@@ -27,14 +27,12 @@ public interface NodeVisitor {
 	
 	void leaveNode(EvaluatedAction<? extends ActionWrapper> evaluation);
 
-	void visitWinNode(int ev, double p);
-	
-	void visitLoseNode(int ev, double p);
-	
 	public static interface Factory{
 		
 		NodeVisitor create(GameState gameState, PlayerId actor);
 		
 	}
+
+	void visitLeafNode(int winnings, double probability, int minWinnable, int maxWinnable);
 	
 }

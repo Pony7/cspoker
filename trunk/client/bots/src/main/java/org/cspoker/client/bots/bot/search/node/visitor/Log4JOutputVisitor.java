@@ -67,15 +67,11 @@ public class Log4JOutputVisitor extends TextOutputVisitor {
 		}
 		
 	}
-
+	
 	@Override
-	public void visitLoseNode(int ev, double p) {
-		
-	}
-
-	@Override
-	public void visitWinNode(int ev, double p) {
-		
+	public void visitLeafNode(int winnings, double probability,
+			int minWinnable, int maxWinnable) {
+		// no op
 	}
 
 }

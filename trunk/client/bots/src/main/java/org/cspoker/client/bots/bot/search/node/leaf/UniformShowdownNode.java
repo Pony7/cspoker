@@ -15,121 +15,32 @@
  */
 package org.cspoker.client.bots.bot.search.node.leaf;
 
-import java.util.EnumSet;
-import java.util.Random;
-import java.util.Set;
-
-import org.apache.log4j.Logger;
 import org.cspoker.client.bots.bot.search.SearchConfiguration;
+import org.cspoker.client.bots.bot.search.node.leaf.rankdistribution.ShowdownRankPredictor1of1;
 import org.cspoker.client.bots.bot.search.node.visitor.NodeVisitor;
 import org.cspoker.client.common.gamestate.GameState;
-import org.cspoker.client.common.gamestate.PlayerState;
-import org.cspoker.common.elements.cards.Card;
 import org.cspoker.common.elements.player.PlayerId;
-import org.cspoker.common.handeval.stevebrecher.HandEval;
-import org.cspoker.common.util.Pair;
 
-import com.google.common.base.Predicate;
-import com.google.common.collect.Sets;
-
-public class UniformShowdownNode extends AbstractShowdownNode{
-
-	//TODO put in config
-	private static final int MaxNbSamples = 400;
-
-	private final static Logger logger = Logger.getLogger(UniformShowdownNode.class);
-
-	private int tokens;
+public class UniformShowdownNode extends AbstractDistributionShowdownNode{
 
 	UniformShowdownNode(PlayerId botId, GameState gameState, int tokens, NodeVisitor...nodeVisitors) {
-		super(botId, gameState, nodeVisitors);
-		this.tokens = tokens;
+		super(botId, gameState, tokens, nodeVisitors);
 	}
 
-	public Pair<Double,Double> getExpectedPotPercentage() {
-		PlayerState botState = gameState.getPlayer(botId);
-		Set<PlayerState> opponents = Sets.filter(gameState.getAllSeatedPlayers(),new Predicate<PlayerState>(){
-			@Override
-			public boolean apply(PlayerState state) {
-				return state.isInForPot() && !state.getPlayerId().equals(botId);
-			}
-		});
-		EnumSet<Card> botCards = botState.getCards();
-		EnumSet<Card> fixedCommunityCards = gameState.getCommunityCards();
-		EnumSet<Card> usedFixedCards = EnumSet.copyOf(fixedCommunityCards);
-		usedFixedCards.addAll(botCards);
-
-		int nbFixedCards = fixedCommunityCards.size();
-		int nbMissingCommunityCards = 5-nbFixedCards;
-		int nbSamples = Math.min(MaxNbSamples,Math.max(25,tokens*5));
-		int nbCommunitySamples, nbOpponentSamples;
-		if(nbMissingCommunityCards==0){
-			nbCommunitySamples=1;
-			nbOpponentSamples=nbSamples;
-		}else{
-			double root = Math.sqrt(nbSamples);
-			nbCommunitySamples = (int) (root*nbMissingCommunityCards/2);
-			nbOpponentSamples = (int) (root*2/nbMissingCommunityCards);
-		}
-
-		int totalNbWins = 0;
-		for(int i=0;i<nbCommunitySamples;i++){
-			EnumSet<Card> fixedAndCommunityCards = EnumSet.copyOf(usedFixedCards);
-			EnumSet<Card> communityCards = EnumSet.copyOf(fixedCommunityCards);
-			for(int j=0;j<nbMissingCommunityCards;j++){
-				Card communityCard;
-				do{
-					communityCard = getRandomCard();
-				}while(fixedAndCommunityCards.contains(communityCard));
-				fixedAndCommunityCards.add(communityCard);
-				communityCards.add(communityCard);
-			}
-			for(int j=0;j<nbOpponentSamples;j++){
-				EnumSet<Card> fixedAndCommunityAndOpponentCards = EnumSet.copyOf(fixedAndCommunityCards);
-				//fixedAndCommunityCards coincidentally contain the bot's hand!
-				int botRank = getRank(fixedAndCommunityCards);
-				boolean botWins = true;
-				for(PlayerState opponent:opponents){
-					Card opponentFirst;
-					do{
-						opponentFirst = getRandomCard();
-					}while(fixedAndCommunityAndOpponentCards.contains(opponentFirst));
-					fixedAndCommunityAndOpponentCards.add(opponentFirst);
-					Card opponentSecond;
-					do{
-						opponentSecond = getRandomCard();
-					}while(fixedAndCommunityAndOpponentCards.contains(opponentSecond));
-					fixedAndCommunityAndOpponentCards.add(opponentSecond);
-					EnumSet<Card> particularOpponentHand = EnumSet.of(opponentFirst, opponentSecond);
-					particularOpponentHand.addAll(communityCards);
-					int opponentRank = getRank(particularOpponentHand);
-					if(opponentRank>=botRank){
-						botWins = false;
-					}//TODO fix for split pot
-				}
-				if(botWins){
-					++totalNbWins;
-				}
-			}
-		}
-		double n = nbOpponentSamples*nbCommunitySamples;
-		double p = totalNbWins/n;
-		double varp = p*(1-p)*n/(n-1);
-		return new Pair<Double, Double>(p,varp);
+	protected float getRelativeProbability(int rank, int relativePotSize) {
+		return 1;
 	}
-
-	private int getRank(EnumSet<Card> cards) {
-		return HandEval.getRank(cards);
-	}
-
 	@Override
 	public String toString() {
 		return "Uniform Showdown Node";
 	}
 
-	public static class Factory implements AbstractShowdownNode.Factory{
+
+	public static class Factory implements AbstractDistributionShowdownNode.Factory{
+
 		@Override
-		public UniformShowdownNode create(PlayerId botId, GameState gameState, int tokens, SearchConfiguration config, int searchId, NodeVisitor...nodeVisitors) {
+		public UniformShowdownNode create(PlayerId botId, GameState gameState, int tokens
+				, SearchConfiguration config, int searchId, NodeVisitor...nodeVisitors) {
 			return new UniformShowdownNode(botId, gameState, tokens, nodeVisitors);
 		}
 
@@ -137,12 +48,5 @@ public class UniformShowdownNode extends AbstractShowdownNode{
 		public String toString() {
 			return "Uniform Showdown Node factory";
 		}
-	}
-	
-	private static Random random = new Random();
-	private static Card[] cards = Card.values();
-
-	protected Card getRandomCard(){
-		return cards[random.nextInt(cards.length)];
 	}
 }

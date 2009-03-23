@@ -66,7 +66,12 @@ public class AllInState
 			
 			@Override
 			public int getBet() {
-				return AllInState.this.newBetSize;
+				return newBetSize;
+			}
+			
+			@Override
+			public int getTotalInvestment() {
+				return super.getTotalInvestment()+event.getAmount();
 			}
 			
 			@Override
@@ -76,7 +81,7 @@ public class AllInState
 			
 			@Override
 			public PlayerId getPlayerId() {
-				return AllInState.this.event.getPlayerId();
+				return event.getPlayerId();
 			}
 			
 			@Override
@@ -85,28 +90,8 @@ public class AllInState
 			}
 			
 			@Override
-			public boolean sitsIn() {
-				return true;
-			}
-			
-			@Override
-			public boolean isPlayingGame() {
-				return true;
-			}
-			
-			@Override
 			public boolean hasChecked() {
 				return false;
-			}
-			
-			@Override
-			public boolean isSmallBlind() {
-				return super.isSmallBlind();
-			}
-			
-			@Override
-			public boolean isBigBlind() {
-				return super.isBigBlind();
 			}
 			
 			/**

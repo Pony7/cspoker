@@ -19,7 +19,6 @@ import org.cspoker.client.bots.bot.search.SearchConfiguration;
 import org.cspoker.client.bots.bot.search.node.visitor.NodeVisitor;
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.common.elements.player.PlayerId;
-import org.cspoker.common.util.Pair;
 
 public abstract class AbstractShowdownNode implements ShowdownNode{
 
@@ -32,25 +31,6 @@ public abstract class AbstractShowdownNode implements ShowdownNode{
 		this.gameState = gameState;
 		this.nodeVisitors = nodeVisitors;
 	}
-	
-	@Override
-	public Pair<Double, Double> getExpectedValue() {
-		Pair<Double, Double> expectedPotPercentage = getExpectedPotPercentage();
-		int stack = gameState.getPlayer(botId).getStack();
-		if(stack<0){
-			throw new IllegalStateException();
-		}
-		int gamePotSize = gameState.getGamePotSize();
-		double ev = stack+gamePotSize*expectedPotPercentage.getLeft();
-		double varev = gamePotSize*gamePotSize*expectedPotPercentage.getRight();
-		for (NodeVisitor visitor : nodeVisitors) {
-			visitor.visitWinNode(stack+gamePotSize,expectedPotPercentage.getLeft());
-			visitor.visitLoseNode(stack,1-expectedPotPercentage.getLeft());
-		}
-		return new Pair<Double, Double>(ev,varev);
-	}
-
-	public abstract Pair<Double, Double> getExpectedPotPercentage();
 	
 	public interface Factory extends ShowdownNode.Factory{
 		

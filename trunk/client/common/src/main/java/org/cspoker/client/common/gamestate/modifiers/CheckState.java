@@ -36,11 +36,6 @@ public class CheckState extends ForwardingGameState {
 		playerState = new ForwardingPlayerState(gameState.getPlayer(checkEvent.getPlayerId())){
 			
 			@Override
-			public boolean isPlayingGame() {
-				return true;
-			}
-			
-			@Override
 			public boolean hasChecked() {
 				return true;
 			}
@@ -68,11 +63,6 @@ public class CheckState extends ForwardingGameState {
 			@Override
 			public boolean isSmallBlind() {
 				return false;
-			}
-			
-			@Override
-			public boolean sitsIn() {
-				return true;
 			}
 			
 		};

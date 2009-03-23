@@ -57,6 +57,11 @@ public class BetState
 			}
 			
 			@Override
+			public int getTotalInvestment() {
+				return super.getTotalInvestment()+getBet();
+			}
+			
+			@Override
 			public PlayerId getPlayerId() {
 				return BetState.this.event.getPlayerId();
 			}
@@ -64,16 +69,6 @@ public class BetState
 			@Override
 			public boolean hasFolded() {
 				return false;
-			}
-			
-			@Override
-			public boolean sitsIn() {
-				return true;
-			}
-			
-			@Override
-			public boolean isPlayingGame() {
-				return true;
 			}
 			
 			/**

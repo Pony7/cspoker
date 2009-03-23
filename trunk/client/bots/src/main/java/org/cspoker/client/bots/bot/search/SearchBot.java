@@ -67,11 +67,10 @@ extends AbstractBot {
 					switch (gameState.getRound()) {
 					case PREFLOP:
 						logger.debug("Searching preflop round game tree:");
-//						actionNode = new BotActionNode(playerId, gameState, 
-//								config, config.getPreflopTokens(),
-//								searchId++, visitors);
-//						actionNode.performbestAction(playerContext);
-						playerContext.checkOrCall();//TODO remove temp
+						actionNode = new BotActionNode(playerId, gameState, 
+								config, config.getPreflopTokens(),
+								searchId++, visitors);
+						actionNode.performbestAction(playerContext);
 						break;
 					case FLOP:
 						logger.debug("Searching flop round game tree:");

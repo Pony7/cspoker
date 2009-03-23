@@ -59,6 +59,7 @@ public class CallAction extends SearchBotAction{
 		PlayerState actorState = gameState.getPlayer(actor);
 		int largestBet = gameState.getLargestBet();
 		int stack = actorState.getStack();
+		int bet = actorState.getBet();
 		
 		//what if small or big blind all-in?
 		if(roundEnds 
@@ -69,7 +70,7 @@ public class CallAction extends SearchBotAction{
 		}
 
 		GameState state;
-		if(stack<=largestBet){
+		if(stack<=largestBet-bet){
 			state = new AllInState(gameState, new AllInEvent(actor,stack,roundEnds));
 		}else{
 			state= new CallState(gameState, new CallEvent(actor, roundEnds));

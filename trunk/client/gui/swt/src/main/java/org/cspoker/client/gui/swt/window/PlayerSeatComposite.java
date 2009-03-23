@@ -75,7 +75,7 @@ public class PlayerSeatComposite
 			GameWindow containingGameWindow = getParent().getParent();
 			UserSeatedPlayer user = containingGameWindow.getUser();
 			PlayerState userSnapshot = getGameState().getPlayer(playerId);
-			if (userSnapshot != null && userSnapshot.sitsIn()) {
+			if (userSnapshot != null) {
 				// Dont do anything if the user is already sitting in
 				return;
 			}
@@ -409,7 +409,7 @@ public class PlayerSeatComposite
 			player = getGameState().getPlayer(playerId);
 		}
 		String displayedName = (name == null) ? "Empty Seat" : name;
-		if (player != null && !player.sitsIn()) {
+		if (player != null && false ) {//TODO !player.sitsIn()
 			displayedName = displayedName.concat(" (Sitting Out)");
 		}
 		playerName.setText(displayedName);

@@ -176,21 +176,11 @@ public class InitialGameState
 				selected = seated;
 			}
 		}
-		if (selected == null) {
+		if (selected == null || !selected.isSittingIn()) {
 			return null;
 		}
 		final SeatedPlayer player = selected;
 		return new AbstractPlayerState() {
-			
-			@Override
-			public boolean sitsIn() {
-				return player.isSittingIn();
-			}
-			
-			@Override
-			public boolean isPlayingGame() {
-				return false;
-			}
 			
 			@Override
 			public boolean hasFolded() {
@@ -224,6 +214,11 @@ public class InitialGameState
 			
 			@Override
 			public int getBet() {
+				return player.getBetChipsValue();
+			}
+			
+			@Override
+			public int getTotalInvestment() {
 				return player.getBetChipsValue();
 			}
 			

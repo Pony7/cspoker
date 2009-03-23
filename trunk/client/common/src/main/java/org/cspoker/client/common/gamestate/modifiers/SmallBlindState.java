@@ -57,18 +57,8 @@ public class SmallBlindState
 			}
 			
 			@Override
-			public boolean sitsIn() {
-				return true;
-			}
-			
-			@Override
 			public boolean hasFolded() {
 				return false;
-			}
-			
-			@Override
-			public boolean isPlayingGame() {
-				return true;
 			}
 			
 			@Override
@@ -79,6 +69,11 @@ public class SmallBlindState
 			@Override
 			public boolean hasChecked() {
 				return false;
+			}
+			
+			@Override
+			public int getTotalInvestment() {
+				return getBet();
 			}
 			
 			/**
