@@ -67,14 +67,14 @@ public abstract class LoggingVisitor implements GameStateVisitor {
 	private int maxNbActions = 0;
 
 	private GameState previousStartState = null;
-	
+
 	public LoggingVisitor() {
-		sessionId = (new Random()).nextInt(Integer.MAX_VALUE);
+		sessionId = new Random().nextInt(Integer.MAX_VALUE);
 		nbActionsPerPlayer = new HashMap<PlayerId, Integer>();
 	}
-	
+
 	public LoggingVisitor(LoggingVisitor root) {
-		sessionId =  root.getSessionId();
+		sessionId = root.getSessionId();
 		gameId = root.getGameId();
 		actionId = root.getActionId();
 		round = root.getRound();
@@ -84,20 +84,19 @@ public abstract class LoggingVisitor implements GameStateVisitor {
 		maxNbActions = root.getMaxNbActions();
 		previousStartState = root.getPreviousStartState();
 	}
-	
 
-	public void readHistory(GameState gameState){
+	public void readHistory(GameState gameState) {
 		gameState.acceptHistoryVisitor(this, previousStartState);
 		previousStartState = gameState;
 	}
 
-	protected void signalAction(PlayerId playerId){
+	protected void signalAction(PlayerId playerId) {
 		Integer previousNbActions = nbActionsPerPlayer.get(playerId);
-		if(previousNbActions==null){
+		if (previousNbActions == null) {
 			previousNbActions = 0;
 		}
-		int nbActions = previousNbActions+1;
-		if(nbActions>maxNbActions){
+		int nbActions = previousNbActions + 1;
+		if (nbActions > maxNbActions) {
 			maxNbActions = nbActions;
 			gameRoundStart();
 		}
@@ -156,39 +155,42 @@ public abstract class LoggingVisitor implements GameStateVisitor {
 
 	@Override
 	public void visitInitialGameState(InitialGameState initialGameState) {
-		//no op
+		// no op
 	}
 
 	@Override
 	public void visitJoinTableState(JoinTableState joinTableState) {
-		//no op
+		// no op
 	}
 
 	@Override
 	public void visitLeaveSeatState(LeaveSeatState leaveSeatState) {
-		//no op
+		// no op
 	}
 
 	@Override
 	public void visitLeaveTableState(LeaveTableState leaveTableState) {
-		//no op
+		// no op
 	}
 
 	@Override
 	public void visitNewCommunityCardsState(
 			NewCommunityCardsState newCommunityCardsState) {
-		if("flop".equals(round)){
+		if ("flop".equals(round)) {
 			int cardNumber = 0;
-			for(Card card:newCommunityCardsState.getEvent().getCommunityCards()){
+			for (Card card : newCommunityCardsState.getEvent()
+					.getCommunityCards()) {
 				++cardNumber;
 				gameFlop(cardNumber, card);
 			}
-		}else if("turn".equals(round)){
-			for(Card card:newCommunityCardsState.getEvent().getCommunityCards()){
+		} else if ("turn".equals(round)) {
+			for (Card card : newCommunityCardsState.getEvent()
+					.getCommunityCards()) {
 				gameTurn(card);
 			}
-		}else if("river".equals(round)){
-			for(Card card:newCommunityCardsState.getEvent().getCommunityCards()){
+		} else if ("river".equals(round)) {
+			for (Card card : newCommunityCardsState.getEvent()
+					.getCommunityCards()) {
 				gameRiver(card);
 			}
 		}
@@ -196,14 +198,15 @@ public abstract class LoggingVisitor implements GameStateVisitor {
 
 	@Override
 	public void visitNewDealState(NewDealState newDealState) {
-		lastDeal=newDealState;
+		lastDeal = newDealState;
 		actionId = 0;
 		++gameId;
-		gameSession(); 
-		TableConfiguration tableConfiguration = newDealState.getTableConfiguration();
+		gameSession();
+		TableConfiguration tableConfiguration = newDealState
+				.getTableConfiguration();
 		gameStakes(tableConfiguration);
 		Set<PlayerState> players = newDealState.getAllSeatedPlayers();
-		for(PlayerState player:players){
+		for (PlayerState player : players) {
 			gamePlayerSeat(player);
 			gamePlayerStack(player);
 		}
@@ -225,28 +228,28 @@ public abstract class LoggingVisitor implements GameStateVisitor {
 
 	@Override
 	public void visitNewRoundState(NewRoundState newRoundState) {
-		subRound=0;
-		maxNbActions=0;
+		subRound = 0;
+		maxNbActions = 0;
 		nbActionsPerPlayer.clear();
 
-		switch(newRoundState.getRound()){
+		switch (newRoundState.getRound()) {
 		case PREFLOP:
-			round=preflop;
+			round = preflop;
 			gamePhaseStart();
 			break;
 		case FLOP:
-			round=flop;
+			round = flop;
 			gamePhaseStart();
 			break;
 		case TURN:
-			round=turn;
+			round = turn;
 			gamePhaseStart();
 			break;
 		case FINAL:
-			round=river;
+			round = river;
 			gamePhaseStart();
 		default:
-			//do nothing in waiting round...
+			// do nothing in waiting round...
 		}
 	}
 
@@ -258,8 +261,9 @@ public abstract class LoggingVisitor implements GameStateVisitor {
 	@Override
 	public void visitShowHandState(ShowHandState showHandState) {
 		int cardNumber = 0;
-		ShowdownPlayer showdownPlayer = showHandState.getEvent().getShowdownPlayer();
-		for(Card card:showdownPlayer.getHandCards()){
+		ShowdownPlayer showdownPlayer = showHandState.getEvent()
+				.getShowdownPlayer();
+		for (Card card : showdownPlayer.getHandCards()) {
 			++cardNumber;
 			gamePlayerHoleCards(cardNumber, showdownPlayer, card);
 		}
@@ -284,27 +288,34 @@ public abstract class LoggingVisitor implements GameStateVisitor {
 	@Override
 	public void visitWinnerState(WinnerState winnerState) {
 		Set<PlayerState> players = lastDeal.getAllSeatedPlayers();
-		for(PlayerState player:players){
-			int profit = winnerState.getPlayer(player.getPlayerId()).getStack()-player.getStack();
+		for (PlayerState player : players) {
+			int profit = winnerState.getPlayer(player.getPlayerId()).getStack()
+					- player.getStack();
 			gamePlayerProfit(player, profit);
 		}
 	}
-	
+
 	protected abstract void gameRoundStart();
 
-	protected abstract void gamePlayerAction(AllInState allInState, PlayerId playerId);
+	protected abstract void gamePlayerAction(AllInState allInState,
+			PlayerId playerId);
 
-	protected abstract void gamePlayerAction(BetState betState, PlayerId playerId);
+	protected abstract void gamePlayerAction(BetState betState,
+			PlayerId playerId);
 
 	protected abstract void gamePlayerBigBlind(PlayerId playerId);
 
-	protected abstract void gamePlayerAction(CallState callState, PlayerId playerId);
+	protected abstract void gamePlayerAction(CallState callState,
+			PlayerId playerId);
 
-	protected abstract void gamePlayerAction(CheckState checkState, PlayerId playerId);
+	protected abstract void gamePlayerAction(CheckState checkState,
+			PlayerId playerId);
 
-	protected abstract void gamePlayerAction(FoldState foldState, PlayerId playerId);
+	protected abstract void gamePlayerAction(FoldState foldState,
+			PlayerId playerId);
 
-	protected abstract void gamePlayerAction(RaiseState raiseState, PlayerId playerId);
+	protected abstract void gamePlayerAction(RaiseState raiseState,
+			PlayerId playerId);
 
 	protected abstract void gameRiver(Card card);
 
@@ -318,7 +329,8 @@ public abstract class LoggingVisitor implements GameStateVisitor {
 
 	protected abstract void gamePhaseStart();
 
-	protected abstract void gamePlayerHoleCards(int cardNumber, ShowdownPlayer showdownPlayer, Card card);
+	protected abstract void gamePlayerHoleCards(int cardNumber,
+			ShowdownPlayer showdownPlayer, Card card);
 
 	protected abstract void gamePlayerSmallBlind(SmallBlindState smallBlindState);
 

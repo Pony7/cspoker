@@ -24,15 +24,16 @@ import jp.ac.kobe_u.cs.prolog.lang.StructureTerm;
 import org.apache.log4j.Logger;
 
 public class TermListVisitor extends ToPrologTermVisitor {
-	
-	private final static Logger logger = Logger.getLogger(TermListVisitor.class);
 
-	private List<StructureTerm> terms = new ArrayList<StructureTerm>();
-	
+	private final static Logger logger = Logger
+			.getLogger(TermListVisitor.class);
+
+	private final List<StructureTerm> terms = new ArrayList<StructureTerm>();
+
 	public TermListVisitor() {
 		super();
 	}
-	
+
 	public TermListVisitor(LoggingVisitor root) {
 		super(root);
 	}

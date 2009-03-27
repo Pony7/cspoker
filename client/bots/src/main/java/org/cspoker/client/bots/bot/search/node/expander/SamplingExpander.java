@@ -35,7 +35,7 @@ import com.google.common.collect.Multiset;
 import com.google.common.collect.TreeMultiset;
 import com.google.common.collect.Multiset.Entry;
 
-public class SamplingExpander extends Expander{
+public class SamplingExpander extends Expander {
 
 	private final static Logger logger = Logger.getLogger(BotActionNode.class);
 
@@ -45,64 +45,78 @@ public class SamplingExpander extends Expander{
 		super(node, tokens);
 	}
 
-	public Set<? extends EvaluatedAction<? extends SampledAction>> expand(){
+	@Override
+	public Set<? extends EvaluatedAction<? extends SampledAction>> expand() {
 		List<SampledAction> sampledActions = sampleActions();
-		Set<EvaluatedAction<SampledAction>> evaluatedActions = new HashSet<EvaluatedAction<SampledAction>>(sampledActions.size());
-		for(SampledAction sampledAction:sampledActions){
-			evaluatedActions.add(
-					node.expandWith(
-							sampledAction, 
-							tokens*sampledAction.getTimes()/sampledAction.getOutof()));
+		Set<EvaluatedAction<SampledAction>> evaluatedActions = new HashSet<EvaluatedAction<SampledAction>>(
+				sampledActions.size());
+		for (SampledAction sampledAction : sampledActions) {
+			evaluatedActions.add(node.expandWith(sampledAction, tokens
+					* sampledAction.getTimes() / sampledAction.getOutof()));
 		}
 		return evaluatedActions;
 	}
 
 	private List<SampledAction> sampleActions() {
-		List<ProbabilityAction> probActions = new ArrayList<ProbabilityAction>(getProbabilityActions());
+		List<ProbabilityAction> probActions = new ArrayList<ProbabilityAction>(
+				getProbabilityActions());
 		double[] cumulProb = new double[probActions.size()];
 
-		for(int i=0;i<probActions.size();i++){
-			cumulProb[i] = (i>0?cumulProb[i-1]:0)+probActions.get(i).getProbability();
+		for (int i = 0; i < probActions.size(); i++) {
+			cumulProb[i] = (i > 0 ? cumulProb[i - 1] : 0)
+					+ probActions.get(i).getProbability();
 		}
-		if(logger.isTraceEnabled()){
-			for(int i=0;i<probActions.size();i++){
-				logger.trace("cumulProb["+i+"]="+cumulProb[i] +" for action "+probActions.get(i));
+		if (logger.isTraceEnabled()) {
+			for (int i = 0; i < probActions.size(); i++) {
+				logger.trace("cumulProb[" + i + "]=" + cumulProb[i]
+						+ " for action " + probActions.get(i));
 
 			}
 		}
 
-		//ordening for sexy debugging output
-		Multiset<ProbabilityAction> samples = TreeMultiset.create(new Comparator<ProbabilityAction>(){
-			@Override
-			public int compare(ProbabilityAction o1, ProbabilityAction o2) {
-				if(o2.getProbability()<o1.getProbability()){
-					return -1;
-				}
-				if(o2.getProbability()>o1.getProbability()){
-					return 1;
-				}
-				if(o1.getAction() instanceof RaiseAction && o2.getAction() instanceof RaiseAction ){
-					return ((RaiseAction)o1.getAction()).amount-((RaiseAction)o2.getAction()).amount;
-				}
-				if(o1.getAction() instanceof BetAction && o2.getAction() instanceof BetAction ){
-					return ((BetAction)o1.getAction()).amount-((BetAction)o2.getAction()).amount;
-				}
-				//if probabilities are equal for different classes, objects are NOT equal per se
-				//go alphabetically?
-				return o1.toString().compareTo(o2.toString());
-			}
-		});
-		//Multiset<ProbabilityAction> samples = new HashMultiset<ProbabilityAction>();
-		int nbSamples = Math.min(100,tokens);
-		for(int i=0;i<nbSamples;i++){
-			ProbabilityAction sampledAction = sampleAction(probActions, cumulProb);
+		// ordening for sexy debugging output
+		Multiset<ProbabilityAction> samples = TreeMultiset
+				.create(new Comparator<ProbabilityAction>() {
+					@Override
+					public int compare(ProbabilityAction o1,
+							ProbabilityAction o2) {
+						if (o2.getProbability() < o1.getProbability()) {
+							return -1;
+						}
+						if (o2.getProbability() > o1.getProbability()) {
+							return 1;
+						}
+						if (o1.getAction() instanceof RaiseAction
+								&& o2.getAction() instanceof RaiseAction) {
+							return ((RaiseAction) o1.getAction()).amount
+									- ((RaiseAction) o2.getAction()).amount;
+						}
+						if (o1.getAction() instanceof BetAction
+								&& o2.getAction() instanceof BetAction) {
+							return ((BetAction) o1.getAction()).amount
+									- ((BetAction) o2.getAction()).amount;
+						}
+						// if probabilities are equal for different classes,
+						// objects are NOT equal per se
+						// go alphabetically?
+						return o1.toString().compareTo(o2.toString());
+					}
+				});
+		// Multiset<ProbabilityAction> samples = new
+		// HashMultiset<ProbabilityAction>();
+		int nbSamples = Math.min(100, tokens);
+		for (int i = 0; i < nbSamples; i++) {
+			ProbabilityAction sampledAction = sampleAction(probActions,
+					cumulProb);
 			samples.add(sampledAction);
 		}
 
 		Set<Entry<ProbabilityAction>> entrySet = samples.entrySet();
-		List<SampledAction> sampledActions = new ArrayList<SampledAction>(entrySet.size());
-		for(Entry<ProbabilityAction> entry:entrySet){
-			sampledActions.add(new SampledAction(entry.getElement(), entry.getCount(), nbSamples));
+		List<SampledAction> sampledActions = new ArrayList<SampledAction>(
+				entrySet.size());
+		for (Entry<ProbabilityAction> entry : entrySet) {
+			sampledActions.add(new SampledAction(entry.getElement(), entry
+					.getCount(), nbSamples));
 		}
 		return sampledActions;
 	}
@@ -110,21 +124,21 @@ public class SamplingExpander extends Expander{
 	private ProbabilityAction sampleAction(List<ProbabilityAction> probActions,
 			double[] cumulProb) {
 		double randDouble = random.nextDouble();
-		for(int i=0;i<cumulProb.length;i++){
-			if(randDouble<cumulProb[i]){
-				if(logger.isTraceEnabled()){
-					logger.trace("random "+randDouble+" assigned to "+probActions.get(i));
+		for (int i = 0; i < cumulProb.length; i++) {
+			if (randDouble < cumulProb[i]) {
+				if (logger.isTraceEnabled()) {
+					logger.trace("random " + randDouble + " assigned to "
+							+ probActions.get(i));
 				}
 				return probActions.get(i);
 			}
 		}
-		return probActions.get(probActions.size()-1);
+		return probActions.get(probActions.size() - 1);
 	}
-	
-	public static class Factory implements Expander.Factory{
-		public SamplingExpander create(InnerGameTreeNode node, int tokens){
+
+	public static class Factory implements Expander.Factory {
+		public SamplingExpander create(InnerGameTreeNode node, int tokens) {
 			return new SamplingExpander(node, tokens);
 		}
 	}
 }
-

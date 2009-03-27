@@ -39,73 +39,69 @@ public class TuPrologModel extends AbstractPrologModel {
 	private final static Logger logger = Logger.getLogger(TuPrologModel.class);
 
 	private final Prolog engine;
-	
-	public TuPrologModel(Prolog engine, PlayerId botId) {
-		super(botId);
+
+	public TuPrologModel(Prolog engine) {
 		this.engine = engine;
 	}
 
+	@Override
 	protected void assertTerm(jp.ac.kobe_u.cs.prolog.lang.StructureTerm term) {
-		if(logger.isDebugEnabled()){
-			logger.debug("+"+term);
+		if (logger.isDebugEnabled()) {
+			logger.debug("+" + term);
 		}
 		try {
-			SolveInfo info = executeGoal(new PRED_assert_1(term, null)+".");
-			if(!info.isSuccess()){
-				throw new IllegalStateException("Failed to assert "+term);
+			SolveInfo info = executeGoal(new PRED_assert_1(term, null) + ".");
+			if (!info.isSuccess()) {
+				throw new IllegalStateException("Failed to assert " + term);
 			}
 		} catch (MalformedGoalException e) {
 			throw new IllegalStateException(e);
 		}
 	}
 
-	private SolveInfo executeGoal(String goal)
-			throws MalformedGoalException {
-		long startTime=0;
+	private SolveInfo executeGoal(String goal) throws MalformedGoalException {
+		long startTime = 0;
 		boolean traceEnabled = logger.isTraceEnabled();
-		if(traceEnabled){
-			startTime=System.nanoTime();
+		if (traceEnabled) {
+			startTime = System.nanoTime();
 		}
-		SolveInfo result = TuPrologModel.this.engine.solve(goal);
-		if(traceEnabled){
-			logger.trace("Executing "+goal+" took "+((System.nanoTime()-startTime)/1000000.0)+" ms");
-			
+		SolveInfo result = engine.solve(goal);
+		if (traceEnabled) {
+			logger.trace("Executing " + goal + " took "
+					+ (System.nanoTime() - startTime) / 1000000.0 + " ms");
+
 		}
 		return result;
 	}
 
+	@Override
 	protected void retractTerm(jp.ac.kobe_u.cs.prolog.lang.StructureTerm term) {
-		if(logger.isDebugEnabled()){
-			logger.debug("-"+term);
+		if (logger.isDebugEnabled()) {
+			logger.debug("-" + term);
 		}
 		try {
-			SolveInfo info = executeGoal(new PRED_retract_1(term, null)+".");
-			if(!info.isSuccess()){
-				throw new IllegalStateException("Failed to assert "+term);
+			SolveInfo info = executeGoal(new PRED_retract_1(term, null) + ".");
+			if (!info.isSuccess()) {
+				throw new IllegalStateException("Failed to assert " + term);
 			}
 		} catch (MalformedGoalException e) {
 			throw new IllegalStateException(e);
 		}
 	}
 
+	@Override
 	protected double priorActionProbability(SymbolTerm action, PlayerId playerId) {
 		TermListVisitor visitor = getTopVisitor();
 		IntegerTerm gameId = new IntegerTerm(visitor.getGameId());
-		IntegerTerm actionId = new IntegerTerm(visitor.getActionId()+1);
-		SymbolTerm player = SymbolTerm.makeSymbol("player_"+playerId.getId());
+		IntegerTerm actionId = new IntegerTerm(visitor.getActionId() + 1);
+		SymbolTerm player = SymbolTerm.makeSymbol("player_" + playerId.getId());
 		SymbolTerm round = visitor.getRound();
 		VariableTerm p = new VariableTerm();
 		PRED_prior_action_probability_6 pedicate = new PRED_prior_action_probability_6(
-				gameId,
-				actionId,
-				player,
-				action,
-				round,
-				p, 
-				null);
+				gameId, actionId, player, action, round, p, null);
 		String goal = pedicate.toString();
-		goal = goal.replace(p.toString(), "P")+".";
-		if(logger.isDebugEnabled()){
+		goal = goal.replace(p.toString(), "P") + ".";
+		if (logger.isDebugEnabled()) {
 			logger.debug(goal);
 		}
 		SolveInfo info;
@@ -114,18 +110,18 @@ public class TuPrologModel extends AbstractPrologModel {
 		} catch (MalformedGoalException e) {
 			throw new IllegalStateException(e);
 		}
-		if(!info.isSuccess()){
-			throw new IllegalStateException("Failed to call "+goal);
+		if (!info.isSuccess()) {
+			throw new IllegalStateException("Failed to call " + goal);
 		}
 		Term binding;
 		try {
 			binding = info.getTerm("P");
 		} catch (NoSolutionException e) {
-			throw new IllegalStateException("Failed to call "+goal,e);
+			throw new IllegalStateException("Failed to call " + goal, e);
 		} catch (UnknownVarException e) {
-			throw new IllegalStateException("Failed to call "+goal,e);
+			throw new IllegalStateException("Failed to call " + goal, e);
 		}
-		return ((alice.tuprolog.Number)binding).doubleValue();
+		return ((alice.tuprolog.Number) binding).doubleValue();
 	}
-	
+
 }

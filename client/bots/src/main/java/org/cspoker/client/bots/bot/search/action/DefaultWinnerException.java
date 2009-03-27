@@ -23,11 +23,11 @@ public class DefaultWinnerException extends Exception {
 	private static final long serialVersionUID = -8669266132424794152L;
 
 	public final PlayerState winner;
-	public final  FoldState foldState;
+	public final FoldState foldState;
 
 	public DefaultWinnerException(PlayerState winner, FoldState foldState) {
 		this.winner = winner;
 		this.foldState = foldState;
 	}
-	
+
 }

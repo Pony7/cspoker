@@ -31,50 +31,53 @@ import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.util.Pair;
 
-public class BotActionNode extends ActionNode{
+public class BotActionNode extends ActionNode {
 
 	private final static Logger logger = Logger.getLogger(BotActionNode.class);
 
 	private final Expander expander;
 
 	public BotActionNode(PlayerId botId, GameState gameState,
-			SearchConfiguration config, int tokens, int searchId, NodeVisitor... visitors) {
-		super(botId, botId, new CachingNode(gameState), config, searchId, visitors);
-		this.expander = config.getBotNodeExpanderFactory().create(this,tokens);
+			SearchConfiguration config, int tokens, int searchId,
+			NodeVisitor... visitors) {
+		super(botId, botId, new CachingNode(gameState), config, searchId,
+				visitors);
+		expander = config.getBotNodeExpanderFactory().create(this, tokens);
 	}
 
 	@Override
 	public Pair<Double, Double> getValueDistribution() {
 		EvaluatedAction<? extends ActionWrapper> bestEvaluatedAction = getBestEvaluatedAction();
-		return new Pair<Double, Double>(bestEvaluatedAction.getEV(), bestEvaluatedAction.getVarEV());
+		return new Pair<Double, Double>(bestEvaluatedAction.getEV(),
+				bestEvaluatedAction.getVarEV());
 	}
 
-
-	public void performbestAction(RemoteHoldemPlayerContext context) throws RemoteException,
-	IllegalActionException {
+	public void performbestAction(RemoteHoldemPlayerContext context)
+			throws RemoteException, IllegalActionException {
 		EvaluatedAction<? extends ActionWrapper> bestEvaluatedAction = getBestEvaluatedAction();
-		for(NodeVisitor visitor:visitors){
+		for (NodeVisitor visitor : visitors) {
 			visitor.leaveNode(bestEvaluatedAction);
 		}
 		bestEvaluatedAction.getAction().perform(context);
 	}
 
-	public EvaluatedAction<? extends ActionWrapper> getBestEvaluatedAction(){
-		double maxEv=Double.NEGATIVE_INFINITY;
+	public EvaluatedAction<? extends ActionWrapper> getBestEvaluatedAction() {
+		double maxEv = Double.NEGATIVE_INFINITY;
 		EvaluatedAction<? extends ActionWrapper> action = null;
 
-		config.getOpponentModeler().assume(gameState);
-		Set<? extends EvaluatedAction<? extends ActionWrapper>> actions = getExpander().expand();
-		config.getOpponentModeler().forgetAssumption();
-		
-		for(EvaluatedAction<? extends ActionWrapper> eval : actions){
+		config.getOpponentModeler().assumeTemporarily(gameState);
+		Set<? extends EvaluatedAction<? extends ActionWrapper>> actions = getExpander()
+				.expand();
+		config.getOpponentModeler().forgetLastAssumption();
+
+		for (EvaluatedAction<? extends ActionWrapper> eval : actions) {
 			double ev = eval.getDiscountedEV(config.getEVDiscount());
-			if(ev>maxEv){
+			if (ev > maxEv) {
 				maxEv = ev;
 				action = eval;
 			}
 		}
-		if(action == null){
+		if (action == null) {
 			System.out.println();
 		}
 		return action;

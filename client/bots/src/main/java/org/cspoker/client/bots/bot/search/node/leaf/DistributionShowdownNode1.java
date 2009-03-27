@@ -21,27 +21,32 @@ import org.cspoker.client.bots.bot.search.node.visitor.NodeVisitor;
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.common.elements.player.PlayerId;
 
-public class DistributionShowdownNode1 extends AbstractDistributionShowdownNode{
+public class DistributionShowdownNode1 extends AbstractDistributionShowdownNode {
 
-	DistributionShowdownNode1(PlayerId botId, GameState gameState, int tokens, NodeVisitor...nodeVisitors) {
+	DistributionShowdownNode1(PlayerId botId, GameState gameState, int tokens,
+			NodeVisitor... nodeVisitors) {
 		super(botId, gameState, tokens, nodeVisitors);
 	}
 
+	@Override
 	protected float getRelativeProbability(int rank, int relativePotSize) {
 		return ShowdownRankPredictor1of1.getRelativeProbability(rank);
 	}
+
 	@Override
 	public String toString() {
 		return "1 Part Distribution Showdown Node";
 	}
 
-
-	public static class Factory implements AbstractDistributionShowdownNode.Factory{
+	public static class Factory implements
+			AbstractDistributionShowdownNode.Factory {
 
 		@Override
-		public DistributionShowdownNode1 create(PlayerId botId, GameState gameState, int tokens
-				, SearchConfiguration config, int searchId, NodeVisitor...nodeVisitors) {
-			return new DistributionShowdownNode1(botId, gameState, tokens, nodeVisitors);
+		public DistributionShowdownNode1 create(PlayerId botId,
+				GameState gameState, int tokens, SearchConfiguration config,
+				int searchId, NodeVisitor... nodeVisitors) {
+			return new DistributionShowdownNode1(botId, gameState, tokens,
+					nodeVisitors);
 		}
 
 		@Override

@@ -29,7 +29,7 @@ import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.RemoteHolde
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.player.PlayerId;
 
-public class BetAction extends SearchBotAction{
+public class BetAction extends SearchBotAction {
 
 	public final int amount;
 
@@ -37,30 +37,33 @@ public class BetAction extends SearchBotAction{
 		super(gameState, actor);
 		this.amount = amount;
 	}
-	
+
 	@Override
-	public void perform(RemoteHoldemPlayerContext context) throws RemoteException, IllegalActionException {
+	public void perform(RemoteHoldemPlayerContext context)
+			throws RemoteException, IllegalActionException {
 		context.betOrRaise(amount);
 	}
-	
+
 	@Override
 	public GameState getStateAfterAction() {
 		GameState betState;
-		if(gameState.getPlayer(actor).getStack()<=amount){
-			betState = new AllInState(gameState, new AllInEvent(actor,amount,false));
-		}else{
-			betState = new BetState(gameState, new BetEvent(actor,amount));
+		if (gameState.getPlayer(actor).getStack() <= amount) {
+			betState = new AllInState(gameState, new AllInEvent(actor, amount,
+					false));
+		} else {
+			betState = new BetState(gameState, new BetEvent(actor, amount));
 		}
 		PlayerState nextToAct = betState.getNextActivePlayerAfter(actor);
-		if(nextToAct!=null){
-			return new NextPlayerState(betState,new NextPlayerEvent(nextToAct.getPlayerId()));
+		if (nextToAct != null) {
+			return new NextPlayerState(betState, new NextPlayerEvent(nextToAct
+					.getPlayerId()));
 		}
 		throw new IllegalStateException("Round can't be over after a bet.");
 	}
-	
+
 	@Override
 	public String toString() {
-		return "Bet "+parseDollars(amount);
+		return "Bet " + parseDollars(amount);
 	}
-	
+
 }

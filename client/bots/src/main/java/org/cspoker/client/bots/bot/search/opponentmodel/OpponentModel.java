@@ -21,21 +21,37 @@ import org.cspoker.common.util.Pair;
 import org.cspoker.common.util.Triple;
 
 /**
- * An opponent model for a single opponent.
+ * A collection of opponent models related to the same game.
  * 
  * @author guy
- *
+ * 
  */
 public interface OpponentModel {
 
-	Pair<Double, Double> getCheckBetProbabilities(GameState gameState, PlayerId actor);
-	
-	Triple<Double, Double, Double> getFoldCallRaiseProbabilities(GameState gameState, PlayerId actor);
-	
-	static interface OpponentModelFactory{
-		
+	Pair<Double, Double> getCheckBetProbabilities(GameState gameState,
+			PlayerId actor);
+
+	Triple<Double, Double, Double> getFoldCallRaiseProbabilities(
+			GameState gameState, PlayerId actor);
+
+	/**
+	 * Assume the given game state permanently.
+	 */
+	void assumePermanently(GameState gameState);
+
+	/**
+	 * Assume the given game state temporarily.
+	 */
+	void assumeTemporarily(GameState gameState);
+
+	/**
+	 * Forget the last assumption.
+	 */
+	void forgetLastAssumption();
+
+	static interface OpponentModelFactory {
+
 		OpponentModel create(PlayerId opponentId);
-		
+
 	}
-	
 }

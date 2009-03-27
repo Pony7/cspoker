@@ -49,43 +49,44 @@ import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.elements.table.TableId;
 
-public abstract class AbstractBot
-		implements Bot {
-	
+public abstract class AbstractBot implements Bot {
+
 	private final static Logger logger = Logger.getLogger(AbstractBot.class);
-	
+
 	protected final SmartLobbyContext lobbyContext;
 	protected volatile SmartHoldemTableContext tableContext;
 	protected volatile SmartHoldemPlayerContext playerContext;
-	
+
 	private volatile boolean started = false;
-	
+
 	public final TableId tableID;
 	public final PlayerId playerId;
-	
+
 	private final BotListener[] botListeners;
-	
+
 	protected final ExecutorService executor;
 
 	private final int buyIn;
-	
-	public AbstractBot(PlayerId playerId, TableId tableId, SmartLobbyContext lobby, int buyIn, ExecutorService executor,
+
+	public AbstractBot(PlayerId playerId, TableId tableId,
+			SmartLobbyContext lobby, int buyIn, ExecutorService executor,
 			BotListener... botListeners) {
 		this.playerId = playerId;
-		this.tableID = tableId;
-		this.lobbyContext = lobby;
+		tableID = tableId;
+		lobbyContext = lobby;
 		this.botListeners = botListeners;
 		this.buyIn = buyIn;
 		this.executor = executor;
 	}
-	
+
 	public void start() {
 		executor.execute(new Runnable() {
-			
+
 			public void run() {
 				try {
 					started = true;
-					tableContext = lobbyContext.joinHoldemTable(tableID, AbstractBot.this);
+					tableContext = lobbyContext.joinHoldemTable(tableID,
+							AbstractBot.this);
 					playerContext = tableContext.sitIn(buyIn, AbstractBot.this);
 				} catch (IllegalActionException e) {
 					e.printStackTrace();
@@ -97,10 +98,10 @@ public abstract class AbstractBot
 			}
 		});
 	}
-	
+
 	public void startGame() {
 		executor.execute(new Runnable() {
-			
+
 			public void run() {
 				try {
 					playerContext.startGame();
@@ -114,13 +115,14 @@ public abstract class AbstractBot
 			}
 		});
 	}
-	
+
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see org.cspoker.client.bots.Bot#doNextAction()
 	 */
 	public abstract void doNextAction();
-	
+
 	/**
 	 * @see org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener#onNextPlayer(org.cspoker.common.api.lobby.holdemtable.event.NextPlayerEvent)
 	 */
@@ -129,7 +131,7 @@ public abstract class AbstractBot
 			doNextAction();
 		}
 	}
-	
+
 	/**
 	 * @see org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener#onNewDeal(org.cspoker.common.api.lobby.holdemtable.event.NewDealEvent)
 	 */
@@ -140,14 +142,14 @@ public abstract class AbstractBot
 			}
 		}
 	}
-	
+
 	/**
 	 * @see org.cspoker.client.bots.bot.Bot#stop()
 	 */
 	public void stop() {
 		started = false;
 		executor.execute(new Runnable() {
-			
+
 			public void run() {
 				try {
 					tableContext.leaveTable();
@@ -161,71 +163,75 @@ public abstract class AbstractBot
 			}
 		});
 	}
-	
+
 	/**
 	 * @see org.cspoker.client.bots.bot.Bot#getProfit()
 	 */
 	public int getProfit() {
 		GameState state = tableContext.getGameState();
-		if(state.getPreviousRoundsPotSize()>0){
-			throw new IllegalStateException("There is a pot from previous rounds ("+state.getPreviousRoundsPotSize()+"). Can't calculate profit.");
+		if (state.getPreviousRoundsPotSize() > 0) {
+			throw new IllegalStateException(
+					"There is a pot from previous rounds ("
+							+ state.getPreviousRoundsPotSize()
+							+ "). Can't calculate profit.");
 		}
 		PlayerState playerState = state.getPlayer(playerId);
-		return playerState.getStack()+playerState.getBet() - buyIn;
+		return playerState.getStack() + playerState.getBet() - buyIn;
 	}
-	
+
 	public void onAllIn(AllInEvent allInEvent) {
 
 	}
-	
+
 	public void onBet(BetEvent betEvent) {
 
 	}
-	
+
 	public void onBigBlind(BigBlindEvent bigBlindEvent) {
 
 	}
-	
+
 	public void onCall(CallEvent callEvent) {
 
 	}
-	
+
 	public void onCheck(CheckEvent checkEvent) {
 
 	}
-	
+
 	public void onFold(FoldEvent foldEvent) {
 
 	}
-	
+
 	public void onJoinTable(JoinTableEvent joinTableEvent) {
 
 	}
-	
+
 	public void onLeaveTable(LeaveTableEvent leaveGameEvent) {
 
 	}
-	
-	public void onNewCommunityCards(NewCommunityCardsEvent newCommunityCardsEvent) {
+
+	public void onNewCommunityCards(
+			NewCommunityCardsEvent newCommunityCardsEvent) {
 
 	}
-	
+
 	public void onNewRound(NewRoundEvent newRoundEvent) {
 
 	}
-	
+
 	public void onRaise(RaiseEvent raiseEvent) {
 
 	}
-	
+
 	public void onShowHand(ShowHandEvent showHandEvent) {
 
 	}
-	
+
 	public void onSitIn(SitInEvent sitInEvent) {
 
 	}
-	
+
 	public void onSitOut(SitOutEvent sitOutEvent) {
 		if (started) {
 			for (BotListener botListener : botListeners) {
@@ -233,21 +239,21 @@ public abstract class AbstractBot
 			}
 		}
 	}
-	
+
 	public void onSmallBlind(SmallBlindEvent smallBlindEvent) {
 
 	}
-	
+
 	public void onWinner(WinnerEvent winnerEvent) {
 
 	}
-	
+
 	public void onNewPocketCards(NewPocketCardsEvent newPocketCardsEvent) {
 
 	}
-	
-	public void onLeaveSeat(LeaveSeatEvent leaveSeatEvent){
-		
+
+	public void onLeaveSeat(LeaveSeatEvent leaveSeatEvent) {
+
 	}
-	
+
 }

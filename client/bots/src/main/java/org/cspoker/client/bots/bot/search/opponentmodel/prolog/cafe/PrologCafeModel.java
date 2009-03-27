@@ -34,85 +34,83 @@ import org.cspoker.common.elements.player.PlayerId;
 
 public class PrologCafeModel extends AbstractPrologModel {
 
-	private final static Logger logger = Logger.getLogger(PrologCafeModel.class);
+	private final static Logger logger = Logger
+			.getLogger(PrologCafeModel.class);
 
-	public final static SymbolTerm delimiter = SymbolTerm.makeSymbol(":",2);
-	public final static SymbolTerm packageName = SymbolTerm.makeSymbol("jp.ac.kobe_u.cs.prolog.builtin");
+	public final static SymbolTerm delimiter = SymbolTerm.makeSymbol(":", 2);
+	public final static SymbolTerm packageName = SymbolTerm
+			.makeSymbol("jp.ac.kobe_u.cs.prolog.builtin");
 
 	private final PrologControl prolog;
 
-
-	public PrologCafeModel(PrologControl prolog, PlayerId botId) {
-		super(botId);
+	public PrologCafeModel(PrologControl prolog) {
 		this.prolog = prolog;
 	}
 
-
+	@Override
 	protected void assertTerm(StructureTerm term) {
-		if(logger.isDebugEnabled()){
-			logger.debug("+"+term);
+		if (logger.isDebugEnabled()) {
+			logger.debug("+" + term);
 		}
-		//Term termWithPackage = term;//new StructureTerm(delimiter,new Term[]{packageName, term});
-		if(!executeGoal(new PRED_assert_1(), term)){
-			throw new IllegalStateException("Failed to assert "+term);
+		// Term termWithPackage = term;//new StructureTerm(delimiter,new
+		// Term[]{packageName, term});
+		if (!executeGoal(new PRED_assert_1(), term)) {
+			throw new IllegalStateException("Failed to assert " + term);
 		}
 	}
 
-
 	private boolean executeGoal(Predicate predicate, Term... terms) {
-		long startTime=0;
+		long startTime = 0;
 		boolean traceEnabled = logger.isTraceEnabled();
-		if(traceEnabled){
-			startTime=System.nanoTime();
+		if (traceEnabled) {
+			startTime = System.nanoTime();
 		}
 		boolean success = prolog.execute(predicate, terms);
-		if(traceEnabled){
-			logger.trace("Executing "+predicate+" took "+((System.nanoTime()-startTime)/1000000.0)+" ms");
+		if (traceEnabled) {
+			logger.trace("Executing " + predicate + " took "
+					+ (System.nanoTime() - startTime) / 1000000.0 + " ms");
 		}
 		return success;
 	}
 
+	@Override
 	protected void retractTerm(StructureTerm term) {
-		if(logger.isDebugEnabled()){
-			logger.debug("-"+term);
+		if (logger.isDebugEnabled()) {
+			logger.debug("-" + term);
 		}
-		term = new StructureTerm(delimiter,new Term[]{packageName, term});
-		if(!executeGoal(new PRED_retract_1(), term)){
-			throw new IllegalStateException("Failed to retract "+term);
+		term = new StructureTerm(delimiter, new Term[] { packageName, term });
+		if (!executeGoal(new PRED_retract_1(), term)) {
+			throw new IllegalStateException("Failed to retract " + term);
 		}
 	}
 
-	protected boolean isAsserted(StructureTerm term){
-		Term termWithPackage = term;//new StructureTerm(delimiter,new Term[]{packageName, term});
+	protected boolean isAsserted(StructureTerm term) {
+		Term termWithPackage = term;// new StructureTerm(delimiter,new
+									// Term[]{packageName, term});
 		VariableTerm dontcare = new VariableTerm();
-		return prolog.execute(new PRED_clause_2(), new Term[]{termWithPackage,dontcare});
+		return prolog.execute(new PRED_clause_2(), new Term[] {
+				termWithPackage, dontcare });
 	}
 
+	@Override
 	protected double priorActionProbability(SymbolTerm action, PlayerId playerId) {
-	    ToPrologTermVisitor visitor = getTopVisitor();
+		ToPrologTermVisitor visitor = getTopVisitor();
 		Predicate prior_action_probability = new PRED_prior_action_probability_6();
 		VariableTerm p = new VariableTerm();
-		Term[] args = {
-				new IntegerTerm(visitor.getGameId()),
-				new IntegerTerm(visitor.getActionId()+1),
-				SymbolTerm.makeSymbol("player_"+playerId.getId()),
-				action,
-				visitor.getRound(),
-				p
-		};
-		if(logger.isDebugEnabled()){
-			logger.debug(new PRED_prior_action_probability_6(						
-					new IntegerTerm(visitor.getGameId()),
-					new IntegerTerm(visitor.getActionId()+1),
-					SymbolTerm.makeSymbol("player_"+playerId.getId()),
-					action,
-					visitor.getRound(),
-					p,null
-			));
+		Term[] args = { new IntegerTerm(visitor.getGameId()),
+				new IntegerTerm(visitor.getActionId() + 1),
+				SymbolTerm.makeSymbol("player_" + playerId.getId()), action,
+				visitor.getRound(), p };
+		if (logger.isDebugEnabled()) {
+			logger.debug(new PRED_prior_action_probability_6(new IntegerTerm(
+					visitor.getGameId()), new IntegerTerm(
+					visitor.getActionId() + 1), SymbolTerm.makeSymbol("player_"
+					+ playerId.getId()), action, visitor.getRound(), p, null));
 		}
-		if(!executeGoal(prior_action_probability, args)){
-			throw new IllegalStateException("Failed to call "+prior_action_probability);
+		if (!executeGoal(prior_action_probability, args)) {
+			throw new IllegalStateException("Failed to call "
+					+ prior_action_probability);
 		}
-		return (Double)p.toJava();
+		return (Double) p.toJava();
 	}
 }

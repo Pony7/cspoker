@@ -20,24 +20,25 @@ import org.cspoker.client.bots.bot.search.node.visitor.NodeVisitor;
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.common.elements.player.PlayerId;
 
-public abstract class AbstractShowdownNode implements ShowdownNode{
+public abstract class AbstractShowdownNode implements ShowdownNode {
 
 	protected final GameState gameState;
 	protected final PlayerId botId;
 	protected final NodeVisitor[] nodeVisitors;
 
-	public AbstractShowdownNode(PlayerId botId, GameState gameState, NodeVisitor... nodeVisitors) {
+	public AbstractShowdownNode(PlayerId botId, GameState gameState,
+			NodeVisitor... nodeVisitors) {
 		this.botId = botId;
 		this.gameState = gameState;
 		this.nodeVisitors = nodeVisitors;
 	}
-	
-	public interface Factory extends ShowdownNode.Factory{
-		
+
+	public interface Factory extends ShowdownNode.Factory {
+
 		@Override
 		public AbstractShowdownNode create(PlayerId botId, GameState gameState,
-				int tokens, SearchConfiguration config, int searchId, NodeVisitor...nodeVisitors);
-		
-		
+				int tokens, SearchConfiguration config, int searchId,
+				NodeVisitor... nodeVisitors);
+
 	}
 }

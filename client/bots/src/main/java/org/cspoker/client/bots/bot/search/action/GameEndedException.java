@@ -20,11 +20,11 @@ import org.cspoker.client.common.gamestate.GameState;
 public class GameEndedException extends Exception {
 
 	private static final long serialVersionUID = 1231353515815940940L;
-	
+
 	public final GameState lastState;
 
 	public GameEndedException(GameState lastState) {
 		this.lastState = lastState;
 	}
-	
+
 }

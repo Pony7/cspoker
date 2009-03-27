@@ -15,36 +15,36 @@
  */
 package org.cspoker.client.bots.bot.search.action;
 
-public class SampledAction implements ActionWrapper{
+public class SampledAction implements ActionWrapper {
 
 	private final ProbabilityAction action;
-	private int times;
-	private int outof;
+	private final int times;
+	private final int outof;
 
 	public SampledAction(ProbabilityAction action, int times, int outof) {
 		this.action = action;
 		this.times = times;
 		this.outof = outof;
 	}
-	
-	public ProbabilityAction getProbabilityAction(){
+
+	public ProbabilityAction getProbabilityAction() {
 		return action;
 	}
-	
+
 	public SearchBotAction getAction() {
 		return action.getAction();
 	}
-	
+
 	public int getTimes() {
 		return times;
 	}
-	
+
 	public int getOutof() {
 		return outof;
 	}
-	
+
 	@Override
 	public String toString() {
-		return action.toString()+" sampled "+times+"/"+outof;
+		return action.toString() + " sampled " + times + "/" + outof;
 	}
 }

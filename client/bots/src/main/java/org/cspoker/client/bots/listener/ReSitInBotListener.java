@@ -19,19 +19,19 @@ import org.apache.log4j.Logger;
 import org.cspoker.client.bots.BotRunner;
 import org.cspoker.common.api.lobby.holdemtable.event.SitOutEvent;
 
-public class ReSitInBotListener extends DefaultBotListener{
+public class ReSitInBotListener extends DefaultBotListener {
 
-	private final static Logger logger = Logger.getLogger(ReSitInBotListener.class);
+	private final static Logger logger = Logger
+			.getLogger(ReSitInBotListener.class);
 	private final BotRunner runner;
-	
-	
+
 	public ReSitInBotListener(BotRunner runner) {
 		this.runner = runner;
 	}
-	
+
 	@Override
 	public void onSitOut(SitOutEvent event) {
 		runner.respawnBots();
 	}
-	
+
 }

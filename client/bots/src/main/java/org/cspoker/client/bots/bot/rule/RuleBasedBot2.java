@@ -33,8 +33,7 @@ import org.cspoker.common.elements.table.Round;
 import org.cspoker.common.elements.table.TableId;
 import org.cspoker.common.handeval.stevebrecher.HandEval;
 
-public class RuleBasedBot2
-extends AbstractBot {
+public class RuleBasedBot2 extends AbstractBot {
 
 	private final static Logger logger = Logger.getLogger(RuleBasedBot2.class);
 
@@ -51,102 +50,119 @@ extends AbstractBot {
 			public void run() {
 				GameState gameState = playerContext.getGameState();
 				int deficit = gameState.getDeficit(RuleBasedBot2.this.playerId);
-				
-				double winPercentage = getWinPercentage(
-						gameState.getCommunityCards(), 
-						playerContext.getPocketCards(), 
-						100,
-						gameState.getNbPlayers()-1);
-				if(logger.isDebugEnabled()){
-					logger.debug("Win percentage is "+winPercentage+" with "+playerContext.getPocketCards()+" and "+gameState.getCommunityCards()+" and "+(gameState.getNbPlayers()-1)+" opponents.");
+
+				double winPercentage = getWinPercentage(gameState
+						.getCommunityCards(), playerContext.getPocketCards(),
+						100, gameState.getNbPlayers() - 1);
+				if (logger.isDebugEnabled()) {
+					logger.debug("Win percentage is " + winPercentage
+							+ " with " + playerContext.getPocketCards()
+							+ " and " + gameState.getCommunityCards() + " and "
+							+ (gameState.getNbPlayers() - 1) + " opponents.");
 				}
-				double EV = winPercentage*(gameState.getGamePotSize()+deficit);
-				if(gameState.getRound().equals(Round.PREFLOP)){
-					//be more aggressive on the flop
+				double EV = winPercentage
+						* (gameState.getGamePotSize() + deficit);
+				if (gameState.getRound().equals(Round.PREFLOP)) {
+					// be more aggressive on the flop
 					EV += EV;
 				}
 				try {
-					if(gameState.getNextActivePlayerAfter(RuleBasedBot2.this.playerId)==null){
-						//can only call or fold
-						if(deficit<=Math.round(EV)){
+					if (gameState
+							.getNextActivePlayerAfter(RuleBasedBot2.this.playerId) == null) {
+						// can only call or fold
+						if (deficit <= Math.round(EV)) {
 							playerContext.checkOrCall();
-						}else{
+						} else {
 							playerContext.fold();
 						}
-					}else{
-						playerContext.raiseMaxBetWith((int)Math.round(EV*0.5),(int)Math.round(EV));
+					} else {
+						playerContext.raiseMaxBetWith((int) Math
+								.round(EV * 0.5), (int) Math.round(EV));
 					}
 				} catch (IllegalActionException e) {
-					logger.warn("Raise bounds: "+tableContext.getGameState().getLowerRaiseBound(RuleBasedBot2.this.playerId)+" to "+tableContext.getGameState().getUpperRaiseBound(RuleBasedBot2.this.playerId));
+					logger.warn("Raise bounds: "
+							+ tableContext.getGameState().getLowerRaiseBound(
+									RuleBasedBot2.this.playerId)
+							+ " to "
+							+ tableContext.getGameState().getUpperRaiseBound(
+									RuleBasedBot2.this.playerId));
 					logger.error(e);
-					throw new IllegalStateException("Action was not allowed.",e);
+					throw new IllegalStateException("Action was not allowed.",
+							e);
 				} catch (RemoteException e) {
 					logger.error(e);
-					throw new IllegalStateException("Action failed.",e);
+					throw new IllegalStateException("Action failed.", e);
 				}
-			}			
+			}
 		});
 	}
 
-	//Card roll out code
-	
-	public double getWinPercentage(EnumSet<Card> fixedCommunityCards, EnumSet<Card> botCards, int nbSamples, int nbOpponents){
+	// Card roll out code
+
+	public double getWinPercentage(EnumSet<Card> fixedCommunityCards,
+			EnumSet<Card> botCards, int nbSamples, int nbOpponents) {
 		EnumSet<Card> usedFixedCards = EnumSet.copyOf(fixedCommunityCards);
 		usedFixedCards.addAll(botCards);
 
 		int nbFixedCards = fixedCommunityCards.size();
-		int nbMissingCommunityCards = 5-nbFixedCards;
+		int nbMissingCommunityCards = 5 - nbFixedCards;
 		int nbCommunitySamples, nbOpponentSamples;
-		if(nbMissingCommunityCards==0){
-			nbCommunitySamples=1;
-			nbOpponentSamples=nbSamples;
-		}else{
+		if (nbMissingCommunityCards == 0) {
+			nbCommunitySamples = 1;
+			nbOpponentSamples = nbSamples;
+		} else {
 			double root = Math.sqrt(nbSamples);
-			nbCommunitySamples = (int) (root*nbMissingCommunityCards/2);
-			nbOpponentSamples = (int) (root*2/nbMissingCommunityCards);
+			nbCommunitySamples = (int) (root * nbMissingCommunityCards / 2);
+			nbOpponentSamples = (int) (root * 2 / nbMissingCommunityCards);
 		}
 
 		int nbWins = 0;
-		for(int i=0;i<nbCommunitySamples;i++){
-			EnumSet<Card> fixedAndCommunityCards = EnumSet.copyOf(usedFixedCards);
+		for (int i = 0; i < nbCommunitySamples; i++) {
+			EnumSet<Card> fixedAndCommunityCards = EnumSet
+					.copyOf(usedFixedCards);
 			EnumSet<Card> communityCards = EnumSet.copyOf(fixedCommunityCards);
-			for(int j=0;j<nbMissingCommunityCards;j++){
+			for (int j = 0; j < nbMissingCommunityCards; j++) {
 				Card communityCard;
-				do{
+				do {
 					communityCard = getRandomCard();
-				}while(fixedAndCommunityCards.contains(communityCard));
+				} while (fixedAndCommunityCards.contains(communityCard));
 				fixedAndCommunityCards.add(communityCard);
 				communityCards.add(communityCard);
 			}
-			for(int j=0;j<nbOpponentSamples;j++){
-				EnumSet<Card> fixedAndCommunityAndOpponentCards = EnumSet.copyOf(fixedAndCommunityCards);
-				//fixedAndCommunityCards coincidentally contains the bot's hand!
+			for (int j = 0; j < nbOpponentSamples; j++) {
+				EnumSet<Card> fixedAndCommunityAndOpponentCards = EnumSet
+						.copyOf(fixedAndCommunityCards);
+				// fixedAndCommunityCards coincidentally contains the bot's
+				// hand!
 				int botRank = getRank(fixedAndCommunityCards);
 				boolean botWins = true;
-				for(int k=0;k<nbOpponents;k++){
+				for (int k = 0; k < nbOpponents; k++) {
 					Card opponentFirst;
-					do{
+					do {
 						opponentFirst = getRandomCard();
-					}while(fixedAndCommunityAndOpponentCards.contains(opponentFirst));
+					} while (fixedAndCommunityAndOpponentCards
+							.contains(opponentFirst));
 					fixedAndCommunityAndOpponentCards.add(opponentFirst);
 					Card opponentSecond;
-					do{
+					do {
 						opponentSecond = getRandomCard();
-					}while(fixedAndCommunityAndOpponentCards.contains(opponentSecond));
+					} while (fixedAndCommunityAndOpponentCards
+							.contains(opponentSecond));
 					fixedAndCommunityAndOpponentCards.add(opponentSecond);
-					EnumSet<Card> particularOpponentHand = EnumSet.of(opponentFirst, opponentSecond);
+					EnumSet<Card> particularOpponentHand = EnumSet.of(
+							opponentFirst, opponentSecond);
 					particularOpponentHand.addAll(communityCards);
 					int opponentRank = getRank(particularOpponentHand);
-					if(opponentRank>=botRank){
+					if (opponentRank >= botRank) {
 						botWins = false;
-					}//TODO fix for split pot
+					}// TODO fix for split pot
 				}
-				if(botWins){
+				if (botWins) {
 					++nbWins;
 				}
 			}
 		}
-		return ((double)nbWins)/(nbOpponentSamples*nbCommunitySamples);
+		return (double) nbWins / (nbOpponentSamples * nbCommunitySamples);
 	}
 
 	private int getRank(EnumSet<Card> cards) {
@@ -156,7 +172,7 @@ extends AbstractBot {
 	private static Random random = new Random();
 	private static Card[] cards = Card.values();
 
-	protected static Card getRandomCard(){
+	protected static Card getRandomCard() {
 		return cards[random.nextInt(cards.length)];
 	}
 

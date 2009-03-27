@@ -27,21 +27,19 @@ import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.elements.table.TableId;
 
-public class CallBot
-		extends AbstractBot {
-	
+public class CallBot extends AbstractBot {
+
 	private final static Logger logger = Logger.getLogger(CallBot.class);
-	
-	public CallBot(PlayerId playerId, TableId tableId,
-			SmartLobbyContext lobby, int buyIn, ExecutorService executor,
-			BotListener... botListeners) {
+
+	public CallBot(PlayerId playerId, TableId tableId, SmartLobbyContext lobby,
+			int buyIn, ExecutorService executor, BotListener... botListeners) {
 		super(playerId, tableId, lobby, buyIn, executor, botListeners);
 	}
-	
+
 	@Override
 	public void doNextAction() {
 		executor.execute(new Runnable() {
-			
+
 			public void run() {
 				try {
 					playerContext.checkOrCall();
@@ -55,5 +53,5 @@ public class CallBot
 			}
 		});
 	}
-	
+
 }

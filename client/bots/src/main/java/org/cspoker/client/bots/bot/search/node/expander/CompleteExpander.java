@@ -22,26 +22,28 @@ import org.cspoker.client.bots.bot.search.action.EvaluatedAction;
 import org.cspoker.client.bots.bot.search.action.ProbabilityAction;
 import org.cspoker.client.bots.bot.search.node.InnerGameTreeNode;
 
-public class CompleteExpander extends Expander{
+public class CompleteExpander extends Expander {
 
 	public CompleteExpander(InnerGameTreeNode node, int tokens) {
 		super(node, tokens);
 	}
 
-	public Set<? extends EvaluatedAction<? extends ProbabilityAction>> expand(){
+	@Override
+	public Set<? extends EvaluatedAction<? extends ProbabilityAction>> expand() {
 		Set<ProbabilityAction> actions = getProbabilityActions();
-		int subtreeTokens = Math.max(1,tokens/actions.size());
-		Set<EvaluatedAction<ProbabilityAction>> evaluatedActions = new LinkedHashSet<EvaluatedAction<ProbabilityAction>>(actions.size());
-		for(ProbabilityAction action:actions){
+		int subtreeTokens = Math.max(1, tokens / actions.size());
+		Set<EvaluatedAction<ProbabilityAction>> evaluatedActions = new LinkedHashSet<EvaluatedAction<ProbabilityAction>>(
+				actions.size());
+		for (ProbabilityAction action : actions) {
 			evaluatedActions.add(node.expandWith(action, subtreeTokens));
 		}
 		return evaluatedActions;
 	}
-	
-	public static class Factory implements Expander.Factory{
-		public CompleteExpander create(InnerGameTreeNode node, int tokens){
+
+	public static class Factory implements Expander.Factory {
+		public CompleteExpander create(InnerGameTreeNode node, int tokens) {
 			return new CompleteExpander(node, tokens);
 		}
 	}
-	
+
 }

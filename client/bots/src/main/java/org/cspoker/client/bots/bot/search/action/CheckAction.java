@@ -28,8 +28,8 @@ import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.elements.table.Round;
 
-public class CheckAction extends SearchBotAction{
-	
+public class CheckAction extends SearchBotAction {
+
 	public CheckAction(GameState gameState, PlayerId actor) {
 		super(gameState, actor);
 	}
@@ -39,25 +39,29 @@ public class CheckAction extends SearchBotAction{
 			throws RemoteException, IllegalActionException {
 		context.checkOrCall();
 	}
-	
+
 	@Override
 	public GameState getStateAfterAction() throws GameEndedException {
 		PlayerState nextToAct = gameState.getNextActivePlayerAfter(actor);
-		//if bigblind is all-in, he shouldn't check again, so we're safe
-		boolean newRound = nextToAct.hasChecked() || (gameState.getRound().equals(Round.PREFLOP) && gameState.getPlayer(actor).isBigBlind() 
-				&& gameState.getLargestBet()<=gameState.getTableConfiguration().getBigBlind());
-		
-		CheckState checkState = new CheckState(gameState, new CheckEvent(actor, newRound));
-		if(!newRound){
-			return new NextPlayerState(checkState,
-					new NextPlayerEvent(nextToAct.getPlayerId()));
+		// if bigblind is all-in, he shouldn't check again, so we're safe
+		boolean newRound = nextToAct.hasChecked()
+				|| gameState.getRound().equals(Round.PREFLOP)
+				&& gameState.getPlayer(actor).isBigBlind()
+				&& gameState.getLargestBet() <= gameState
+						.getTableConfiguration().getBigBlind();
+
+		CheckState checkState = new CheckState(gameState, new CheckEvent(actor,
+				newRound));
+		if (!newRound) {
+			return new NextPlayerState(checkState, new NextPlayerEvent(
+					nextToAct.getPlayerId()));
 		}
 		return getNewRoundState(checkState);
 	}
-	
+
 	@Override
 	public String toString() {
 		return "Check";
 	}
-	
+
 }

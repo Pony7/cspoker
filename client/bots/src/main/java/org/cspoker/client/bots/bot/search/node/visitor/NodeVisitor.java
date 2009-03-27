@@ -22,17 +22,18 @@ import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.common.elements.player.PlayerId;
 
 public interface NodeVisitor {
-	
+
 	void enterNode(ActionNode node, ActionWrapper action, int tokens);
-	
+
 	void leaveNode(EvaluatedAction<? extends ActionWrapper> evaluation);
 
-	public static interface Factory{
-		
+	public static interface Factory {
+
 		NodeVisitor create(GameState gameState, PlayerId actor);
-		
+
 	}
 
-	void visitLeafNode(int winnings, double probability, int minWinnable, int maxWinnable);
-	
+	void visitLeafNode(int winnings, double probability, int minWinnable,
+			int maxWinnable);
+
 }

@@ -34,7 +34,7 @@ import org.cspoker.client.bots.bot.search.node.leaf.UniformShowdownNode;
 import org.cspoker.client.bots.bot.search.node.visitor.Log4JOutputVisitor;
 import org.cspoker.client.bots.bot.search.node.visitor.NodeVisitor;
 import org.cspoker.client.bots.bot.search.node.visitor.NodeVisitor.Factory;
-import org.cspoker.client.bots.bot.search.opponentmodel.OpponentModels;
+import org.cspoker.client.bots.bot.search.opponentmodel.OpponentModel;
 import org.cspoker.client.bots.listener.BotListener;
 import org.cspoker.client.common.SmartLobbyContext;
 import org.cspoker.common.elements.player.PlayerId;
@@ -46,60 +46,67 @@ import alice.tuprolog.Theory;
 
 @ThreadSafe
 public class TuPrologBotFactory implements BotFactory {
-	
-	private final static Logger logger = Logger.getLogger(TuPrologBotFactory.class);
+
+	private final static Logger logger = Logger
+			.getLogger(TuPrologBotFactory.class);
 	private static int copies = 0;
-	
+
 	private final int copy;
 
-	private final Map<PlayerId, OpponentModels> opponentModels = new HashMap<PlayerId, OpponentModels>();
+	private final Map<PlayerId, OpponentModel> opponentModels = new HashMap<PlayerId, OpponentModel>();
 	private final org.cspoker.client.bots.bot.search.node.leaf.ShowdownNode.Factory showdownNodeFactory;
 	private final Factory[] nodeVisitorFactories;
 
 	public TuPrologBotFactory() {
-		this(new UniformShowdownNode.Factory(), new NodeVisitor.Factory[]{new Log4JOutputVisitor.Factory(2)});
+		this(new UniformShowdownNode.Factory(),
+				new NodeVisitor.Factory[] { new Log4JOutputVisitor.Factory(2) });
 	}
-	
-	public TuPrologBotFactory(ShowdownNode.Factory showdownNodeFactory, NodeVisitor.Factory... nodeVisitorFactories) {
-		this.copy = ++copies;
+
+	public TuPrologBotFactory(ShowdownNode.Factory showdownNodeFactory,
+			NodeVisitor.Factory... nodeVisitorFactories) {
+		copy = ++copies;
 		this.showdownNodeFactory = showdownNodeFactory;
 		this.nodeVisitorFactories = nodeVisitorFactories;
 	}
 
 	/**
-	 * @see org.cspoker.client.bots.bot.BotFactory#createBot(org.cspoker.common.elements.player.PlayerId, org.cspoker.common.elements.table.TableId, org.cspoker.client.common.SmartLobbyContext, java.util.concurrent.ExecutorService, org.cspoker.client.bots.listener.BotListener[])
+	 * @see org.cspoker.client.bots.bot.BotFactory#createBot(org.cspoker.common.elements.player.PlayerId,
+	 *      org.cspoker.common.elements.table.TableId,
+	 *      org.cspoker.client.common.SmartLobbyContext,
+	 *      java.util.concurrent.ExecutorService,
+	 *      org.cspoker.client.bots.listener.BotListener[])
 	 */
 	public synchronized Bot createBot(final PlayerId botId, TableId tableId,
 			SmartLobbyContext lobby, int buyIn, ExecutorService executor,
 			BotListener... botListeners) {
 		copies++;
-		if(opponentModels.get(botId)==null){
+		if (opponentModels.get(botId) == null) {
 			Prolog engine = new Prolog();
 			try {
-				Theory theory1 = new Theory(this
-						.getClass()
-						.getClassLoader()
-						.getResourceAsStream(
-								"org/cspoker/client/bots/bot/search/opponentmodel/prolog/tuprolog/theory.pl"));
-			    engine.setTheory(theory1);
+				Theory theory1 = new Theory(
+						this
+								.getClass()
+								.getClassLoader()
+								.getResourceAsStream(
+										"org/cspoker/client/bots/bot/search/opponentmodel/prolog/tuprolog/theory.pl"));
+				engine.setTheory(theory1);
 			} catch (IOException e1) {
 				throw new IllegalStateException(e1);
 			} catch (InvalidTheoryException e2) {
 				throw new IllegalStateException(e2);
 			}
-			TuPrologModel model = new TuPrologModel(engine,botId);
+			TuPrologModel model = new TuPrologModel(engine);
 			opponentModels.put(botId, model);
 		}
-		SearchConfiguration config = new SearchConfiguration(
-				opponentModels.get(botId), 
-				showdownNodeFactory,
-				new SamplingExpander.Factory(),
-				50,100,250,250,0.25);
-		return new SearchBot(botId, tableId, lobby, executor, config, buyIn, nodeVisitorFactories, botListeners);
+		SearchConfiguration config = new SearchConfiguration(opponentModels
+				.get(botId), showdownNodeFactory,
+				new SamplingExpander.Factory(), 50, 100, 250, 250, 0.25);
+		return new SearchBot(botId, tableId, lobby, executor, config, buyIn,
+				nodeVisitorFactories, botListeners);
 	}
 
 	@Override
 	public String toString() {
-		return "TuPrologSearchBotv1-"+copy;
+		return "TuPrologSearchBotv1-" + copy;
 	}
 }

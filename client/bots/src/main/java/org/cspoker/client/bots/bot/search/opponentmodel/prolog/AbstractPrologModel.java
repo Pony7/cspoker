@@ -24,15 +24,15 @@ import jp.ac.kobe_u.cs.prolog.lang.SymbolTerm;
 
 import org.apache.log4j.Logger;
 import org.cspoker.client.bots.bot.search.opponentmodel.OpponentModel;
-import org.cspoker.client.bots.bot.search.opponentmodel.OpponentModels;
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.util.Pair;
 import org.cspoker.common.util.Triple;
 
-public abstract class AbstractPrologModel implements OpponentModels {
+public abstract class AbstractPrologModel implements OpponentModel {
 
-	private final static Logger logger = Logger.getLogger(AbstractPrologModel.class);
+	private final static Logger logger = Logger
+			.getLogger(AbstractPrologModel.class);
 
 	public final static SymbolTerm fold = SymbolTerm.makeSymbol("fold");
 	public final static SymbolTerm call = SymbolTerm.makeSymbol("call");
@@ -41,13 +41,11 @@ public abstract class AbstractPrologModel implements OpponentModels {
 	public final static SymbolTerm raise = SymbolTerm.makeSymbol("bet");
 
 	private final ToPrologTermVisitor assertingVisitor;
-	private final PlayerId botId;
 
 	private final Deque<TermListVisitor> visitors = new ArrayDeque<TermListVisitor>();
 
-	public AbstractPrologModel(PlayerId botId) {
-		this.botId = botId;
-		this.assertingVisitor = new ToPrologTermVisitor(){
+	public AbstractPrologModel() {
+		assertingVisitor = new ToPrologTermVisitor() {
 			@Override
 			protected void addTerm(StructureTerm term) {
 				assertTerm(term);
@@ -55,74 +53,69 @@ public abstract class AbstractPrologModel implements OpponentModels {
 		};
 	}
 
-	protected abstract void assertTerm(jp.ac.kobe_u.cs.prolog.lang.StructureTerm term);
+	protected abstract void assertTerm(
+			jp.ac.kobe_u.cs.prolog.lang.StructureTerm term);
 
-	protected abstract void retractTerm(jp.ac.kobe_u.cs.prolog.lang.StructureTerm term);
+	protected abstract void retractTerm(
+			jp.ac.kobe_u.cs.prolog.lang.StructureTerm term);
 
-	protected abstract double priorActionProbability(SymbolTerm action, PlayerId playerId);
+	protected abstract double priorActionProbability(SymbolTerm action,
+			PlayerId playerId);
 
 	@Override
-	public void signalNextAction(GameState gameState) {
-		if(logger.isDebugEnabled()){
-			logger.debug("Signalling "+gameState);
+	public Pair<Double, Double> getCheckBetProbabilities(GameState gameState,
+			PlayerId actor) {
+		return new Pair<Double, Double>(priorActionProbability(check, actor),
+				priorActionProbability(bet, actor));
+	}
+
+	@Override
+	public Triple<Double, Double, Double> getFoldCallRaiseProbabilities(
+			GameState gameState, PlayerId actor) {
+		return new Triple<Double, Double, Double>(priorActionProbability(fold,
+				actor), priorActionProbability(call, actor),
+				priorActionProbability(raise, actor));
+	}
+
+	@Override
+	public void assumePermanently(GameState gameState) {
+		if (logger.isDebugEnabled()) {
+			logger.debug("Signalling " + gameState);
 		}
 		assertingVisitor.readHistory(gameState);
 	}
 
 	@Override
-	public OpponentModel getModelFor(GameState gameState, final PlayerId playerId) {
-		return new OpponentModel(){
-			
-			@Override
-			public Pair<Double, Double> getCheckBetProbabilities(
-					GameState gameState, PlayerId actor) {
-				return new Pair<Double,Double>(
-						priorActionProbability(check, playerId),
-						priorActionProbability(bet, playerId)
-				);		
-			}
-			
-			@Override
-			public Triple<Double, Double, Double> getFoldCallRaiseProbabilities(
-					GameState gameState, PlayerId actor) {
-				return new Triple<Double,Double,Double>(
-						priorActionProbability(fold, playerId),
-						priorActionProbability(call, playerId),
-						priorActionProbability(raise, playerId)
-				);	
-			}
-
-		};
-	}
-
-	@Override
-	public void assume(GameState gameState) {
-		if(logger.isDebugEnabled()){
-			logger.debug("Assuming "+gameState);
+	public void assumeTemporarily(GameState gameState) {
+		if (logger.isDebugEnabled()) {
+			logger.debug("Assuming " + gameState);
 		}
-		LoggingVisitor root = visitors.isEmpty()?assertingVisitor:visitors.peek();
+		LoggingVisitor root = visitors.isEmpty() ? assertingVisitor : visitors
+				.peek();
 		TermListVisitor visitor = new TermListVisitor(root);
 		visitor.readHistory(gameState);
-		List<jp.ac.kobe_u.cs.prolog.lang.StructureTerm> terms = visitor.getTerms();
-		for(jp.ac.kobe_u.cs.prolog.lang.StructureTerm term:terms){
+		List<jp.ac.kobe_u.cs.prolog.lang.StructureTerm> terms = visitor
+				.getTerms();
+		for (jp.ac.kobe_u.cs.prolog.lang.StructureTerm term : terms) {
 			assertTerm(term);
 		}
 		visitors.push(visitor);
 	}
 
 	@Override
-	public void forgetAssumption() {
+	public void forgetLastAssumption() {
 		TermListVisitor visitor = visitors.pop();
-		if(logger.isDebugEnabled()){
-			logger.debug("Forgetting "+visitor);
+		if (logger.isDebugEnabled()) {
+			logger.debug("Forgetting " + visitor);
 		}
-		List<jp.ac.kobe_u.cs.prolog.lang.StructureTerm> terms = visitor.getTerms();
-		for(int i=terms.size()-1;i>=0;i--){
+		List<jp.ac.kobe_u.cs.prolog.lang.StructureTerm> terms = visitor
+				.getTerms();
+		for (int i = terms.size() - 1; i >= 0; i--) {
 			retractTerm(terms.get(i));
 		}
 	}
-	
-	protected TermListVisitor getTopVisitor(){
+
+	protected TermListVisitor getTopVisitor() {
 		return visitors.peek();
 	}
 }

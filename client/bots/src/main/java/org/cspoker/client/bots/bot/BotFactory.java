@@ -24,6 +24,7 @@ import org.cspoker.common.elements.table.TableId;
 
 public interface BotFactory {
 
-	Bot createBot(PlayerId playerId, TableId tableId, SmartLobbyContext lobby, int buyIn, ExecutorService executor, BotListener ... botListeners);
-	
+	Bot createBot(PlayerId playerId, TableId tableId, SmartLobbyContext lobby,
+			int buyIn, ExecutorService executor, BotListener... botListeners);
+
 }

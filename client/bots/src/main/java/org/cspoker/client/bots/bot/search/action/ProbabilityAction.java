@@ -15,31 +15,32 @@
  */
 package org.cspoker.client.bots.bot.search.action;
 
-public class ProbabilityAction implements ActionWrapper{
+public class ProbabilityAction implements ActionWrapper {
 
 	private final ActionWrapper actionWrapper;
 	private final double probability;
 
 	public ProbabilityAction(ActionWrapper action, double probability) {
-		this.actionWrapper = action;
+		actionWrapper = action;
 		this.probability = probability;
 	}
-	
+
 	public ActionWrapper getActionWrapper() {
 		return actionWrapper;
 	}
-	
+
 	public SearchBotAction getAction() {
 		return actionWrapper.getAction();
 	}
-	
+
 	public double getProbability() {
 		return probability;
 	}
-	
+
 	@Override
 	public String toString() {
-		return actionWrapper.toString()+" ("+Math.round(probability*100)+"% chance)";
+		return actionWrapper.toString() + " (" + Math.round(probability * 100)
+				+ "% chance)";
 	}
-	
+
 }

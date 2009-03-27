@@ -1,4 +1,5 @@
 package org.cspoker.client.bots;
+
 /**
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -45,29 +46,32 @@ import org.eclipse.swt.widgets.Display;
 public class RunHumanVsBot {
 
 	static {
-		Log4JPropertiesLoader.load("org/cspoker/client/bots/logging/log4j.properties");
+		Log4JPropertiesLoader
+				.load("org/cspoker/client/bots/logging/log4j.properties");
 	}
 
-	public static void main(String[] args) throws LoginException, RemoteException, IllegalActionException {
-		(new RunHumanVsBot()).testPlay();
+	public static void main(String[] args) throws LoginException,
+			RemoteException, IllegalActionException {
+		new RunHumanVsBot().testPlay();
 	}
 
 	private ClientCore client;
 	protected CSPokerServer server;
-	private DisplayExecutor displayexecutor;
+	private final DisplayExecutor displayexecutor;
 
-	public RunHumanVsBot(){
+	public RunHumanVsBot() {
 		server = new EmbeddedCSPokerServer();
 		displayexecutor = DisplayExecutor.getInstance();
 	}
 
-	public void testPlay() throws IllegalActionException, LoginException, RemoteException {
+	public void testPlay() throws IllegalActionException, LoginException,
+			RemoteException {
 		final TableId tableId = new TableId(0);
 
 		int smallBlind = 50;
 		final int buyin = smallBlind * 200;
 		int delay = 1500;
-		User u = new User("Human","test");
+		User u = new User("Human", "test");
 		client = new ClientCore(u);
 		client.login(server);
 
@@ -75,8 +79,10 @@ public class RunHumanVsBot {
 		lobby.setLobbyContext(client.getCommunication());
 		client.getGui().setLobby(lobby);
 
-		TableConfiguration tConfig = new TableConfiguration(smallBlind, delay, false);
-		lobby.getContext().createHoldemTable(u.getUserName() + "'s test table", tConfig);
+		TableConfiguration tConfig = new TableConfiguration(smallBlind, delay,
+				false);
+		lobby.getContext().createHoldemTable(u.getUserName() + "'s test table",
+				tConfig);
 		// Run blocking calls in extra thread
 		displayexecutor.execute(new Runnable() {
 
@@ -86,7 +92,7 @@ public class RunHumanVsBot {
 			}
 		});
 		final GameWindow w = client.getGui().getGameWindow(tableId, true);
-		w.getUser().sitIn(new SeatId(0),buyin);
+		w.getUser().sitIn(new SeatId(0), buyin);
 		// Run blocking calls in extra thread
 		displayexecutor.execute(new Runnable() {
 
@@ -95,47 +101,57 @@ public class RunHumanVsBot {
 
 			}
 		});
-		BotFactory botFactory = new SearchBotFactory(new DistributionShowdownNode4.Factory(), 
-				new Log4JOutputVisitor.Factory(2), new SWTTreeVisitor.Factory(client.getGui().getDisplay()));
-//		BotFactory botFactory = new PrologCafeBotFactory(new DistributionShowdownNode4.Factory(), 
-//				new Log4JOutputVisitor.Factory(2), new SWTTreeVisitor.Factory(client.getGui().getDisplay()));
-		
+		BotFactory botFactory = new SearchBotFactory(
+				new DistributionShowdownNode4.Factory(),
+				new Log4JOutputVisitor.Factory(2), new SWTTreeVisitor.Factory(
+						client.getGui().getDisplay()));
+		// BotFactory botFactory = new PrologCafeBotFactory(new
+		// DistributionShowdownNode4.Factory(),
+		// new Log4JOutputVisitor.Factory(2), new
+		// SWTTreeVisitor.Factory(client.getGui().getDisplay()));
+
 		startBot(botFactory, tableId, buyin);
 
 		// Listen to events#
 		Display display = Display.getDefault();
 		while (!display.isDisposed()) {
-			if (!display.readAndDispatch())
+			if (!display.readAndDispatch()) {
 				display.sleep();
+			}
 		}
 
 	}
 
 	private int botIndex = 1;
-	
-	private void startBot(BotFactory botFactory, final TableId tableId, final int buyin)
-			throws LoginException, RemoteException, IllegalActionException {
-		//Start Bot
-		SmartClientContext clientContext = new SmartClientContext(server.login("Bot "+(botIndex++), "test"));
-		final SmartLobbyContext lobbyContext = clientContext.getLobbyContext(new DefaultLobbyListener());
+
+	private void startBot(BotFactory botFactory, final TableId tableId,
+			final int buyin) throws LoginException, RemoteException,
+			IllegalActionException {
+		// Start Bot
+		SmartClientContext clientContext = new SmartClientContext(server.login(
+				"Bot " + botIndex++, "test"));
+		final SmartLobbyContext lobbyContext = clientContext
+				.getLobbyContext(new DefaultLobbyListener());
 		final PlayerId botId = clientContext.getAccountContext().getPlayerID();
-		final SingleThreadRequestExecutor executor = SingleThreadRequestExecutor.getInstance();
-		Bot bot = botFactory.createBot(botId, tableId, lobbyContext, buyin, executor, new DefaultBotListener(){
-			@Override
-			public void onSitOut(SitOutEvent event) {
-//				if(event.getPlayerId().equals(botId)){
-//					try {
-//						startBot(tableId, buyin);
-//					} catch (LoginException e) {
-//						e.printStackTrace();
-//					} catch (RemoteException e) {
-//						e.printStackTrace();
-//					} catch (IllegalActionException e) {
-//						e.printStackTrace();
-//					}
-//				}
-			}
-		});
+		final SingleThreadRequestExecutor executor = SingleThreadRequestExecutor
+				.getInstance();
+		Bot bot = botFactory.createBot(botId, tableId, lobbyContext, buyin,
+				executor, new DefaultBotListener() {
+					@Override
+					public void onSitOut(SitOutEvent event) {
+						// if(event.getPlayerId().equals(botId)){
+						// try {
+						// startBot(tableId, buyin);
+						// } catch (LoginException e) {
+						// e.printStackTrace();
+						// } catch (RemoteException e) {
+						// e.printStackTrace();
+						// } catch (IllegalActionException e) {
+						// e.printStackTrace();
+						// }
+						// }
+					}
+				});
 		bot.start();
 		bot.startGame();
 	}

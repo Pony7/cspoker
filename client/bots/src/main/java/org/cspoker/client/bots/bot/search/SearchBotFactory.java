@@ -27,7 +27,7 @@ import org.cspoker.client.bots.bot.search.node.leaf.UniformShowdownNode;
 import org.cspoker.client.bots.bot.search.node.leaf.ShowdownNode.Factory;
 import org.cspoker.client.bots.bot.search.node.visitor.Log4JOutputVisitor;
 import org.cspoker.client.bots.bot.search.node.visitor.NodeVisitor;
-import org.cspoker.client.bots.bot.search.opponentmodel.simple.AllPlayersHistogramModel;
+import org.cspoker.client.bots.bot.search.opponentmodel.simple.HistogramModel;
 import org.cspoker.client.bots.listener.BotListener;
 import org.cspoker.client.common.SmartLobbyContext;
 import org.cspoker.common.elements.player.PlayerId;
@@ -38,39 +38,44 @@ public class SearchBotFactory implements BotFactory {
 	private static int copies = 0;
 	private final int copy;
 
-	private final ConcurrentHashMap<PlayerId, AllPlayersHistogramModel> opponentModels = new ConcurrentHashMap<PlayerId, AllPlayersHistogramModel>();
+	private final ConcurrentHashMap<PlayerId, HistogramModel> opponentModels = new ConcurrentHashMap<PlayerId, HistogramModel>();
 	private final Factory showdownNodeFactory;
 	private final org.cspoker.client.bots.bot.search.node.visitor.NodeVisitor.Factory[] nodeVisitorFactories;
-	
+
 	public SearchBotFactory() {
-		this(new UniformShowdownNode.Factory(), new NodeVisitor.Factory[]{new Log4JOutputVisitor.Factory(2)});
+		this(new UniformShowdownNode.Factory(),
+				new NodeVisitor.Factory[] { new Log4JOutputVisitor.Factory(2) });
 	}
-	
-	public SearchBotFactory(ShowdownNode.Factory showdownNodeFactory, NodeVisitor.Factory... nodeVisitorFactories) {
-		this.copy = ++copies;
+
+	public SearchBotFactory(ShowdownNode.Factory showdownNodeFactory,
+			NodeVisitor.Factory... nodeVisitorFactories) {
+		copy = ++copies;
 		this.showdownNodeFactory = showdownNodeFactory;
 		this.nodeVisitorFactories = nodeVisitorFactories;
 	}
-	
+
 	/**
-	 * @see org.cspoker.client.bots.bot.BotFactory#createBot(org.cspoker.common.elements.player.PlayerId, org.cspoker.common.elements.table.TableId, org.cspoker.client.common.SmartLobbyContext, java.util.concurrent.ExecutorService, org.cspoker.client.bots.listener.BotListener[])
+	 * @see org.cspoker.client.bots.bot.BotFactory#createBot(org.cspoker.common.elements.player.PlayerId,
+	 *      org.cspoker.common.elements.table.TableId,
+	 *      org.cspoker.client.common.SmartLobbyContext,
+	 *      java.util.concurrent.ExecutorService,
+	 *      org.cspoker.client.bots.listener.BotListener[])
 	 */
 	public Bot createBot(final PlayerId botId, TableId tableId,
 			SmartLobbyContext lobby, int buyIn, ExecutorService executor,
 			BotListener... botListeners) {
 		copies++;
-		opponentModels.putIfAbsent(botId, new AllPlayersHistogramModel(botId));
+		opponentModels.putIfAbsent(botId, new HistogramModel(botId));
 
-		SearchConfiguration config = new SearchConfiguration(
-				opponentModels.get(botId), 
-				showdownNodeFactory,
-				new SamplingExpander.Factory(),
-				5000,10000,10000,10000,0.25);
-		return new SearchBot(botId, tableId, lobby, executor, config, buyIn, nodeVisitorFactories ,botListeners);
+		SearchConfiguration config = new SearchConfiguration(opponentModels
+				.get(botId), showdownNodeFactory,
+				new SamplingExpander.Factory(), 5000, 10000, 10000, 10000, 0.25);
+		return new SearchBot(botId, tableId, lobby, executor, config, buyIn,
+				nodeVisitorFactories, botListeners);
 	}
 
 	@Override
 	public String toString() {
-		return "SearchBot ("+showdownNodeFactory+") v1-"+copy;
+		return "SearchBot (" + showdownNodeFactory + ") v1-" + copy;
 	}
 }

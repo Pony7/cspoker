@@ -31,21 +31,26 @@ public class RuleBasedBotFactory2 implements BotFactory {
 	private final int copy;
 
 	public RuleBasedBotFactory2() {
-		this.copy = ++copies;
+		copy = ++copies;
 	}
-	
+
 	/**
-	 * @see org.cspoker.client.bots.bot.BotFactory#createBot(org.cspoker.common.elements.player.PlayerId, org.cspoker.common.elements.table.TableId, org.cspoker.client.common.SmartLobbyContext, java.util.concurrent.ExecutorService, org.cspoker.client.bots.listener.BotListener[])
+	 * @see org.cspoker.client.bots.bot.BotFactory#createBot(org.cspoker.common.elements.player.PlayerId,
+	 *      org.cspoker.common.elements.table.TableId,
+	 *      org.cspoker.client.common.SmartLobbyContext,
+	 *      java.util.concurrent.ExecutorService,
+	 *      org.cspoker.client.bots.listener.BotListener[])
 	 */
 	public Bot createBot(PlayerId playerId, TableId tableId,
 			SmartLobbyContext lobby, int buyIn, ExecutorService executor,
 			BotListener... botListeners) {
 		copies++;
-		return new RuleBasedBot2(playerId, tableId, lobby, buyIn, executor, botListeners);
+		return new RuleBasedBot2(playerId, tableId, lobby, buyIn, executor,
+				botListeners);
 	}
 
 	@Override
 	public String toString() {
-		return "RuleBasedBot v2-"+copy;
+		return "RuleBasedBot v2-" + copy;
 	}
 }

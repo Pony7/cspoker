@@ -17,45 +17,46 @@ package org.cspoker.client.bots.bot.search.action;
 
 import org.cspoker.common.util.Pair;
 
-public class EvaluatedAction<A extends ActionWrapper> implements ActionWrapper{
+public class EvaluatedAction<A extends ActionWrapper> implements ActionWrapper {
 
 	private final A action;
 	private final double EV;
 	private final double varEV;
 
 	public EvaluatedAction(A action, Pair<Double, Double> EV) {
-		this(action,EV.getLeft(), EV.getRight());
+		this(action, EV.getLeft(), EV.getRight());
 	}
-	
+
 	public EvaluatedAction(A action, double EV, double VarEV) {
 		this.action = action;
 		this.EV = EV;
-		this.varEV = Math.max(0,VarEV);
+		this.varEV = Math.max(0, VarEV);
 	}
-	
+
 	public A getEvaluatedAction() {
 		return action;
 	}
-	
+
 	public SearchBotAction getAction() {
 		return action.getAction();
 	}
-	
+
 	public double getEV() {
 		return EV;
 	}
-	
+
 	public double getVarEV() {
 		return varEV;
 	}
-	
-	public double getDiscountedEV(double discount){
-		return EV-discount*Math.sqrt(varEV);
+
+	public double getDiscountedEV(double discount) {
+		return EV - discount * Math.sqrt(varEV);
 	}
-	
+
 	@Override
 	public String toString() {
-		return "EV is "+Math.round(EV)+" for "+action.toString()+" (σ="+(Math.round(Math.sqrt(varEV)))+")";
+		return "EV is " + Math.round(EV) + " for " + action.toString() + " (σ="
+				+ Math.round(Math.sqrt(varEV)) + ")";
 	}
-	
+
 }

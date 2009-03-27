@@ -29,8 +29,8 @@ import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.elements.table.Round;
 
-public class FoldAction extends SearchBotAction{
-	
+public class FoldAction extends SearchBotAction {
+
 	public FoldAction(GameState gameState, PlayerId actor) {
 		super(gameState, actor);
 	}
@@ -40,57 +40,63 @@ public class FoldAction extends SearchBotAction{
 			throws RemoteException, IllegalActionException {
 		context.fold();
 	}
-	
+
 	@Override
-	public GameState getStateAfterAction() throws GameEndedException, DefaultWinnerException {
+	public GameState getStateAfterAction() throws GameEndedException,
+			DefaultWinnerException {
 		boolean roundEnds = true;
 		Set<PlayerState> players = gameState.getAllSeatedPlayers();
 		PlayerState first = null;
 		boolean noDefaultWinner = false;
-		//TODO use getNbPlayers()
-		forloop:
-			for(PlayerState player:players){
-				if(roundEnds && player.isActivelyPlaying() && !player.getPlayerId().equals(actor) 
-						&& gameState.getDeficit(player.getPlayerId())>0){
-					roundEnds = false;
-				}
-				if(!noDefaultWinner && !player.getPlayerId().equals(actor) && !player.hasFolded()){
-					if(first!=null){
-						noDefaultWinner = true;
-					}else{
-						first = player;
-					}
-				}
-				if(noDefaultWinner && !roundEnds){
-					break forloop;
+		// TODO use getNbPlayers()
+		forloop: for (PlayerState player : players) {
+			if (roundEnds && player.isActivelyPlaying()
+					&& !player.getPlayerId().equals(actor)
+					&& gameState.getDeficit(player.getPlayerId()) > 0) {
+				roundEnds = false;
+			}
+			if (!noDefaultWinner && !player.getPlayerId().equals(actor)
+					&& !player.hasFolded()) {
+				if (first != null) {
+					noDefaultWinner = true;
+				} else {
+					first = player;
 				}
 			}
-		if(!noDefaultWinner){
-			throw new DefaultWinnerException(first, new FoldState(gameState, new FoldEvent(actor, false)));
+			if (noDefaultWinner && !roundEnds) {
+				break forloop;
+			}
 		}
-		if(roundEnds 
-				&& gameState.getRound().equals(Round.PREFLOP) 
-				&& gameState.getPlayer(actor).isSmallBlind() 
-				&& gameState.getLargestBet()<=gameState.getTableConfiguration().getBigBlind()){
+		if (!noDefaultWinner) {
+			throw new DefaultWinnerException(first, new FoldState(gameState,
+					new FoldEvent(actor, false)));
+		}
+		if (roundEnds
+				&& gameState.getRound().equals(Round.PREFLOP)
+				&& gameState.getPlayer(actor).isSmallBlind()
+				&& gameState.getLargestBet() <= gameState
+						.getTableConfiguration().getBigBlind()) {
 			roundEnds = false;
 		}
-		
-		FoldState foldState = new FoldState(gameState, new FoldEvent(actor, roundEnds));
-		
-		if(!roundEnds){
-			return new NextPlayerState(foldState,
-					new NextPlayerEvent(foldState.getNextActivePlayerAfter(actor).getPlayerId()));
+
+		FoldState foldState = new FoldState(gameState, new FoldEvent(actor,
+				roundEnds));
+
+		if (!roundEnds) {
+			return new NextPlayerState(foldState, new NextPlayerEvent(foldState
+					.getNextActivePlayerAfter(actor).getPlayerId()));
 		}
 		return getNewRoundState(foldState);
 	}
-	
+
 	@Override
 	public boolean endsInvolvementOf(PlayerId botId) {
 		return actor.equals(botId);
 	}
-	
+
+	@Override
 	public String toString() {
 		return "Fold";
 	}
-	
+
 }

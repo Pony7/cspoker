@@ -18,29 +18,30 @@ package org.cspoker.client.bots.listener;
 import org.apache.log4j.Logger;
 import org.cspoker.client.bots.BotRunner;
 
-public class GameLimitingBotListener extends DealCountingListener{
+public class GameLimitingBotListener extends DealCountingListener {
 
-	private final static Logger logger = Logger.getLogger(GameLimitingBotListener.class);
+	private final static Logger logger = Logger
+			.getLogger(GameLimitingBotListener.class);
 
 	private final int maxNbGames;
 
 	private final BotRunner botRunner;
-	
+
 	public GameLimitingBotListener(BotRunner botRunner) {
-		this(botRunner,10000);
+		this(botRunner, 10000);
 	}
-	
+
 	public GameLimitingBotListener(BotRunner botRunner, int maxNbGames) {
 		this.maxNbGames = maxNbGames;
 		this.botRunner = botRunner;
 	}
-	
+
 	@Override
 	public void onNewDeal() {
-		if(getDeals()==maxNbGames){
+		if (getDeals() == maxNbGames) {
 			botRunner.moveToNextCombination();
 		}
 		super.onNewDeal();
 	}
-	
+
 }

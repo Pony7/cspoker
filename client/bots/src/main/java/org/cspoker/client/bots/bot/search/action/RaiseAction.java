@@ -29,7 +29,7 @@ import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.RemoteHolde
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.player.PlayerId;
 
-public class RaiseAction extends SearchBotAction{
+public class RaiseAction extends SearchBotAction {
 
 	public final int amount;
 
@@ -39,7 +39,8 @@ public class RaiseAction extends SearchBotAction{
 	}
 
 	@Override
-	public void perform(RemoteHoldemPlayerContext context) throws RemoteException, IllegalActionException {
+	public void perform(RemoteHoldemPlayerContext context)
+			throws RemoteException, IllegalActionException {
 		context.betOrRaise(amount);
 	}
 
@@ -51,20 +52,23 @@ public class RaiseAction extends SearchBotAction{
 		int stack = actorState.getStack();
 		int oldBet = actorState.getBet();
 		int largestBet = gameState.getLargestBet();
-		int deficit = largestBet-oldBet;
-		int movedAmount = deficit+amount;
-		
-		if(movedAmount>=stack){
-			raiseState = new AllInState(gameState, new AllInEvent(actor,movedAmount,false));
-		}else{
-			raiseState = new RaiseState(gameState, new RaiseEvent(actor,amount, movedAmount));
+		int deficit = largestBet - oldBet;
+		int movedAmount = deficit + amount;
+
+		if (movedAmount >= stack) {
+			raiseState = new AllInState(gameState, new AllInEvent(actor,
+					movedAmount, false));
+		} else {
+			raiseState = new RaiseState(gameState, new RaiseEvent(actor,
+					amount, movedAmount));
 		}
-		return new NextPlayerState(raiseState,new NextPlayerEvent(raiseState.getNextActivePlayerAfter(actor).getPlayerId()));
+		return new NextPlayerState(raiseState, new NextPlayerEvent(raiseState
+				.getNextActivePlayerAfter(actor).getPlayerId()));
 	}
 
 	@Override
 	public String toString() {
-		return "Raise "+parseDollars(amount);
+		return "Raise " + parseDollars(amount);
 	}
 
 }

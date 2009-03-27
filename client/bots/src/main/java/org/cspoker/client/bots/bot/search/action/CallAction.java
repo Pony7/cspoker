@@ -31,7 +31,7 @@ import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.elements.table.Round;
 
-public class CallAction extends SearchBotAction{
+public class CallAction extends SearchBotAction {
 
 	public CallAction(GameState gameState, PlayerId actor) {
 		super(gameState, actor);
@@ -39,7 +39,7 @@ public class CallAction extends SearchBotAction{
 
 	@Override
 	public void perform(RemoteHoldemPlayerContext context)
-	throws RemoteException, IllegalActionException {
+			throws RemoteException, IllegalActionException {
 		context.checkOrCall();
 	}
 
@@ -47,45 +47,47 @@ public class CallAction extends SearchBotAction{
 	public GameState getStateAfterAction() throws GameEndedException {
 		boolean roundEnds = true;
 		Set<PlayerState> players = gameState.getAllSeatedPlayers();
-		forloop:
-			for(PlayerState player:players){
-				if(player.isActivelyPlaying() && !player.getPlayerId().equals(actor) 
-						&& gameState.getDeficit(player.getPlayerId())>0){
-					roundEnds = false;
-					break forloop;
-				}
+		forloop: for (PlayerState player : players) {
+			if (player.isActivelyPlaying()
+					&& !player.getPlayerId().equals(actor)
+					&& gameState.getDeficit(player.getPlayerId()) > 0) {
+				roundEnds = false;
+				break forloop;
 			}
-		
+		}
+
 		PlayerState actorState = gameState.getPlayer(actor);
 		int largestBet = gameState.getLargestBet();
 		int stack = actorState.getStack();
 		int bet = actorState.getBet();
-		
-		//what if small or big blind all-in?
-		if(roundEnds 
-				&& gameState.getRound().equals(Round.PREFLOP) 
-				&& actorState.isSmallBlind() 
-				&& largestBet<=gameState.getTableConfiguration().getBigBlind()){
+
+		// what if small or big blind all-in?
+		if (roundEnds
+				&& gameState.getRound().equals(Round.PREFLOP)
+				&& actorState.isSmallBlind()
+				&& largestBet <= gameState.getTableConfiguration()
+						.getBigBlind()) {
 			roundEnds = false;
 		}
 
 		GameState state;
-		if(stack<=largestBet-bet){
-			state = new AllInState(gameState, new AllInEvent(actor,stack,roundEnds));
-		}else{
-			state= new CallState(gameState, new CallEvent(actor, roundEnds));
+		if (stack <= largestBet - bet) {
+			state = new AllInState(gameState, new AllInEvent(actor, stack,
+					roundEnds));
+		} else {
+			state = new CallState(gameState, new CallEvent(actor, roundEnds));
 		}
-		if(roundEnds){
+		if (roundEnds) {
 			return getNewRoundState(state);
-		}else{
-			PlayerState nextActivePlayerAfter = state.getNextActivePlayerAfter(actor);
-			if(nextActivePlayerAfter==null){
-				//BigBlind is all-in
+		} else {
+			PlayerState nextActivePlayerAfter = state
+					.getNextActivePlayerAfter(actor);
+			if (nextActivePlayerAfter == null) {
+				// BigBlind is all-in
 				return getNewRoundState(state);
 			}
-			return new NextPlayerState(
-					state,
-					new NextPlayerEvent(nextActivePlayerAfter.getPlayerId()));
+			return new NextPlayerState(state, new NextPlayerEvent(
+					nextActivePlayerAfter.getPlayerId()));
 		}
 	}
 

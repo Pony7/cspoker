@@ -15,18 +15,18 @@
  */
 package org.cspoker.client.bots.listener;
 
-public class DealCountingListener extends DefaultBotListener{
-	
+public class DealCountingListener extends DefaultBotListener {
+
 	private volatile int deals = 0;
-	
+
 	@Override
 	public void onNewDeal() {
 		++deals;
 		super.onNewDeal();
 	}
-	
+
 	public int getDeals() {
 		return deals;
 	}
-	
+
 }

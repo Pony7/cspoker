@@ -311,6 +311,7 @@ public abstract class AbstractDistributionShowdownNode extends
 		usedFixedCommunityAndBotCards.add(botCard2);
 		return usedFixedCommunityAndBotCards;
 	}
+
 	private void informListeners(TreeMap<Integer, MutableDouble> values,
 			double totalProb, int gamePotSize, int stackSize) {
 		for (Entry<Integer, MutableDouble> value : values.entrySet()) {

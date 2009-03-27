@@ -41,18 +41,17 @@ import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
 
-public class SWTTreeVisitor implements NodeVisitor{
+public class SWTTreeVisitor implements NodeVisitor {
 
 	private final static Logger logger = Logger.getLogger(SWTTreeVisitor.class);
 	private final Display display;
-	private final Shell shell;
 	private final Tree tree;
 	private final int relStackSize;
 	private final AtomicBoolean newDecision = new AtomicBoolean(true);
 
-	public SWTTreeVisitor(Display display, Shell shell, final Tree tree, int relStackSize) {
+	public SWTTreeVisitor(Display display, Shell shell, final Tree tree,
+			int relStackSize) {
 		this.display = display;
-		this.shell = shell;
 		this.tree = tree;
 		this.relStackSize = relStackSize;
 
@@ -61,67 +60,67 @@ public class SWTTreeVisitor implements NodeVisitor{
 	private final LinkedList<TreeItem> items = new LinkedList<TreeItem>();
 
 	@Override
-	public void enterNode(final ActionNode node, final ActionWrapper action, final int tokens) {
-		display.syncExec(new Runnable(){
-			public void run(){
+	public void enterNode(final ActionNode node, final ActionWrapper action,
+			final int tokens) {
+		display.syncExec(new Runnable() {
+			public void run() {
 				TreeItem item = items.peek();
 				TreeItem newItem;
-				if(item==null){
-					if(newDecision.compareAndSet(true, false)){
+				if (item == null) {
+					if (newDecision.compareAndSet(true, false)) {
 						tree.removeAll();
 					}
 					newItem = new TreeItem(tree, SWT.NONE);
-				}else{
+				} else {
 					newItem = new TreeItem(item, SWT.NONE);
 				}
 				ProbabilityAction probAction;
 				String samples = "n/a";
-				if(action instanceof SampledAction){
-					SampledAction sampledAction = (SampledAction)action;
+				if (action instanceof SampledAction) {
+					SampledAction sampledAction = (SampledAction) action;
 					probAction = sampledAction.getProbabilityAction();
-					samples = sampledAction.getTimes()+"/"+sampledAction.getOutof();
-				}else if(action instanceof ProbabilityAction){
-					probAction = ((ProbabilityAction)action);
-				}else{
-					throw new IllegalStateException("What action is this? "+action);
+					samples = sampledAction.getTimes() + "/"
+							+ sampledAction.getOutof();
+				} else if (action instanceof ProbabilityAction) {
+					probAction = (ProbabilityAction) action;
+				} else {
+					throw new IllegalStateException("What action is this? "
+							+ action);
 				}
-				String actor = (node instanceof BotActionNode) ? "Bot": "Player "+node.getPlayerId();
+				String actor = node instanceof BotActionNode ? "Bot"
+						: "Player " + node.getPlayerId();
 				Round round = node.getGameState().getRound();
-				newItem.setText(new String[] { 
-						actor, 
-						action.getAction().toString(), 
-						round.getName(),
-						Math.round(100*probAction.getProbability())+"%" , 
-						samples,
-						"?", 
-						"?", 
-						""+tokens 
-				});
-				if(round==Round.FINAL){
-					newItem.setBackground(2,new Color(display, 30,30,255));
-				}else if(round==Round.TURN){
-					newItem.setBackground(2,new Color(display, 100,100,255));;	
-				}else if(round==Round.FLOP){
-					newItem.setBackground(2,new Color(display, 170,170,255));
-				}else if(round==Round.PREFLOP){
-					newItem.setBackground(2,new Color(display, 240,240,255));
+				newItem.setText(new String[] { actor,
+						action.getAction().toString(), round.getName(),
+						Math.round(100 * probAction.getProbability()) + "%",
+						samples, "?", "?", "" + tokens });
+				if (round == Round.FINAL) {
+					newItem.setBackground(2, new Color(display, 30, 30, 255));
+				} else if (round == Round.TURN) {
+					newItem.setBackground(2, new Color(display, 100, 100, 255));
+					;
+				} else if (round == Round.FLOP) {
+					newItem.setBackground(2, new Color(display, 170, 170, 255));
+				} else if (round == Round.PREFLOP) {
+					newItem.setBackground(2, new Color(display, 240, 240, 255));
 				}
 				items.push(newItem);
 			}
 		});
 	}
 
-
-
 	@Override
-	public void leaveNode(final EvaluatedAction<? extends ActionWrapper> evaluation) {
-		display.syncExec(new Runnable(){
+	public void leaveNode(
+			final EvaluatedAction<? extends ActionWrapper> evaluation) {
+		display.syncExec(new Runnable() {
 			@Override
 			public void run() {
 				try {
 					TreeItem item = items.pop();
-					item.setText(5, SearchBotAction.parseDollars((int)Math.round(evaluation.getEV()-relStackSize)));
-					item.setText(6, SearchBotAction.parseDollars((int)Math.round(Math.sqrt(evaluation.getVarEV()))));
+					item.setText(5, SearchBotAction.parseDollars((int) Math
+							.round(evaluation.getEV() - relStackSize)));
+					item.setText(6, SearchBotAction.parseDollars((int) Math
+							.round(Math.sqrt(evaluation.getVarEV()))));
 				} catch (NoSuchElementException e) {
 					tree.redraw();
 				}
@@ -133,39 +132,36 @@ public class SWTTreeVisitor implements NodeVisitor{
 	public void visitLeafNode(final int winnings, final double probability,
 			final int minWinnable, final int maxWinnable) {
 		final String text;
-		if(winnings == minWinnable){
+		if (winnings == minWinnable) {
 			text = "Lose";
-		}else if(winnings == maxWinnable){
+		} else if (winnings == maxWinnable) {
 			text = "Win";
-		}else{
+		} else {
 			text = "Split Pot";
 		}
-		final double winPercentage = (winnings-minWinnable)/((double)(maxWinnable-minWinnable));
-		display.syncExec(new Runnable(){
-			public void run(){
+		final double winPercentage = (winnings - minWinnable)
+				/ (double) (maxWinnable - minWinnable);
+		display.syncExec(new Runnable() {
+			public void run() {
 				TreeItem item = items.peek();
 				TreeItem newItem;
-				if(item==null){
+				if (item == null) {
 					newItem = new TreeItem(tree, SWT.NONE);
-				}else{
+				} else {
 					newItem = new TreeItem(item, SWT.NONE);
 				}
-				newItem.setText(new String[] { 
-						"", 
-						text, 
-						"showdown",
-						Math.round(100*probability)+"%" , 
-						"",
-						SearchBotAction.parseDollars(winnings-relStackSize),
-						"$0", 
-						"" 
-				});
-				newItem.setBackground(1,new Color(display, (int)Math.round((1-winPercentage)*255),(int)Math.round(winPercentage*255),00));
+				newItem.setText(new String[] { "", text, "showdown",
+						Math.round(100 * probability) + "%", "",
+						SearchBotAction.parseDollars(winnings - relStackSize),
+						"$0", "" });
+				newItem.setBackground(1, new Color(display, (int) Math
+						.round((1 - winPercentage) * 255), (int) Math
+						.round(winPercentage * 255), 00));
 			}
 		});
 	}
 
-	public static class Factory implements NodeVisitor.Factory{
+	public static class Factory implements NodeVisitor.Factory {
 
 		private final Display display;
 		private Shell shell;
@@ -173,11 +169,12 @@ public class SWTTreeVisitor implements NodeVisitor{
 
 		public Factory(final Display display) {
 			this.display = display;
-			display.syncExec(new Runnable(){
+			display.syncExec(new Runnable() {
 
-				public void run(){
+				public void run() {
 					shell = new Shell(display);
 					shell.addShellListener(new ShellAdapter() {
+						@Override
 						public void shellClosed(ShellEvent e) {
 							e.doit = false;
 						}
@@ -186,7 +183,8 @@ public class SWTTreeVisitor implements NodeVisitor{
 					shell.setMinimumSize(500, 400);
 					shell.setLayout(new FillLayout());
 					shell.setText("Game Tree Browser");
-					tree = new Tree(shell, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
+					tree = new Tree(shell, SWT.BORDER | SWT.H_SCROLL
+							| SWT.V_SCROLL);
 					tree.setHeaderVisible(true);
 
 					TreeColumn column = new TreeColumn(tree, SWT.LEFT);
@@ -230,11 +228,11 @@ public class SWTTreeVisitor implements NodeVisitor{
 
 		@Override
 		public NodeVisitor create(GameState gameState, PlayerId actor) {
-			SWTTreeVisitor visitor = new SWTTreeVisitor(display, shell, tree, gameState.getPlayer(actor).getStack());
+			SWTTreeVisitor visitor = new SWTTreeVisitor(display, shell, tree,
+					gameState.getPlayer(actor).getStack());
 			return visitor;
 		}
 
 	}
 
 }
-
