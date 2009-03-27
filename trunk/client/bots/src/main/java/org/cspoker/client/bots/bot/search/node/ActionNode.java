@@ -15,20 +15,19 @@
  */
 package org.cspoker.client.bots.bot.search.node;
 
-import java.util.Set;
-
 import org.apache.log4j.Logger;
 import org.cspoker.client.bots.bot.search.SearchConfiguration;
 import org.cspoker.client.bots.bot.search.action.ActionWrapper;
 import org.cspoker.client.bots.bot.search.action.DefaultWinnerException;
 import org.cspoker.client.bots.bot.search.action.EvaluatedAction;
 import org.cspoker.client.bots.bot.search.action.GameEndedException;
-import org.cspoker.client.bots.bot.search.action.ProbabilityAction;
 import org.cspoker.client.bots.bot.search.node.leaf.ShowdownNode;
 import org.cspoker.client.bots.bot.search.node.visitor.NodeVisitor;
-import org.cspoker.client.bots.bot.search.opponentmodel.AllPlayersModel;
+import org.cspoker.client.bots.bot.search.opponentmodel.OpponentModels;
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.common.elements.player.PlayerId;
+import org.cspoker.common.util.Pair;
+import org.cspoker.common.util.Triple;
 
 public abstract class ActionNode implements InnerGameTreeNode{
 
@@ -71,10 +70,10 @@ public abstract class ActionNode implements InnerGameTreeNode{
 				if(nextToAct.equals(botId)){
 					//go to next player node
 					BotActionNode botActionNode = new BotActionNode(botId, nextState, config, tokens, searchId, visitors);
-					result = new EvaluatedAction<A>(action, botActionNode.getEV());
+					result = new EvaluatedAction<A>(action, botActionNode.getValueDistribution());
 				}else{	
 					OpponentActionNode opponentActionNode = new OpponentActionNode(nextToAct, botId, nextState, config, tokens, searchId, visitors);
-					result = new EvaluatedAction<A>(action, opponentActionNode.getEV());
+					result = new EvaluatedAction<A>(action, opponentActionNode.getValueDistribution());
 				}
 			} catch (GameEndedException e) {
 				//no active players left
@@ -97,18 +96,30 @@ public abstract class ActionNode implements InnerGameTreeNode{
 		}
 		return result;
 	}
+	
+	@Override
+	public Triple<Double, Double, Double> getFoldCallRaiseProbabilities() {
+		return config.getOpponentModeler().getModelFor(gameState, playerId).getFoldCallRaiseProbabilities(gameState, playerId);
+	}
+	
+	@Override
+	public Pair<Double, Double> getCheckBetProbabilities() {
+		return config.getOpponentModeler().getModelFor(gameState, playerId).getCheckBetProbabilities(gameState, playerId);
+	}
+
 
 	public PlayerId getPlayerId() {
 		return playerId;
 	}
-
-	public AllPlayersModel getOpponentModeler() {
-		return config.getOpponentModeler();
+	
+	
+	@Override
+	public PlayerId getBotId() {
+		return botId;
 	}
 
-	@Override
-	public Set<ProbabilityAction> getProbabilityActions() {
-		return config.getOpponentModeler().getModelFor(playerId,gameState).getProbabilityActions(gameState);
+	public OpponentModels getOpponentModeler() {
+		return config.getOpponentModeler();
 	}
 
 	@Override

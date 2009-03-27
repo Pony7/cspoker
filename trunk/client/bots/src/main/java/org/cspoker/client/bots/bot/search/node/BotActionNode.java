@@ -44,7 +44,7 @@ public class BotActionNode extends ActionNode{
 	}
 
 	@Override
-	public Pair<Double, Double> getEV() {
+	public Pair<Double, Double> getValueDistribution() {
 		EvaluatedAction<? extends ActionWrapper> bestEvaluatedAction = getBestEvaluatedAction();
 		return new Pair<Double, Double>(bestEvaluatedAction.getEV(), bestEvaluatedAction.getVarEV());
 	}

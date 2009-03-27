@@ -13,7 +13,7 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.client.bots.bot.search.opponentmodel;
+package org.cspoker.client.bots.bot.search.opponentmodel.simple;
 
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -26,6 +26,7 @@ import org.cspoker.client.bots.bot.search.action.CheckAction;
 import org.cspoker.client.bots.bot.search.action.FoldAction;
 import org.cspoker.client.bots.bot.search.action.ProbabilityAction;
 import org.cspoker.client.bots.bot.search.action.RaiseAction;
+import org.cspoker.client.bots.bot.search.opponentmodel.OpponentModel;
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.client.common.gamestate.modifiers.AllInState;
 import org.cspoker.common.api.lobby.holdemtable.event.AllInEvent;
@@ -35,15 +36,10 @@ import org.cspoker.common.api.lobby.holdemtable.event.CheckEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.FoldEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.RaiseEvent;
 import org.cspoker.common.elements.player.PlayerId;
+import org.cspoker.common.util.Pair;
+import org.cspoker.common.util.Triple;
 
 public class HistogramModel implements OpponentModel{
-
-	public static final int nbBetSizeSamples = 3;
-	public final static int weightOfPrior=200;
-	private final static Random r = new Random();
-
-	private final PlayerId playerId;
-	private final PlayerId botId;
 
 	//prior derived from data set
 	private volatile int nbCheck;
@@ -56,8 +52,6 @@ public class HistogramModel implements OpponentModel{
 	private volatile int totalBet;
 
 	public HistogramModel(
-			PlayerId playerId, 
-			PlayerId botId,
 			int nbCheck,
 			int nbBet,
 			int totalNoBet,
@@ -65,8 +59,6 @@ public class HistogramModel implements OpponentModel{
 			int nbCall,
 			int nbRaise,
 			int totalBet) {
-		this.playerId = playerId;
-		this.botId = botId;
 		this.nbCheck = nbCheck;
 		this.nbBet = nbBet;
 		this.totalNoBet = totalNoBet;
@@ -74,6 +66,25 @@ public class HistogramModel implements OpponentModel{
 		this.nbCall = nbCall;
 		this.nbRaise = nbRaise;
 		this.totalBet = totalBet;
+	}
+
+	@Override
+	public Pair<Double, Double> getCheckBetProbabilities(GameState gameState,
+			PlayerId actor) {
+		return new Pair<Double,Double>(
+				getCheckProbability(gameState),
+				getBetProbability(gameState)
+		);
+	}
+
+	@Override
+	public Triple<Double, Double, Double> getFoldCallRaiseProbabilities(
+			GameState gameState, PlayerId actor) {
+		return new Triple<Double, Double, Double>(
+				getFoldProbability(gameState), 
+				getCallProbability(gameState), 
+				getRaiseProbability(gameState)
+		);
 	}
 
 	public void addAllIn(GameState gameState, AllInEvent allInEvent) {
@@ -115,66 +126,6 @@ public class HistogramModel implements OpponentModel{
 		++nbFold;
 		++totalBet;
 	}
-	
-	@Override
-	public Set<ProbabilityAction> getProbabilityActions(GameState gameState) {
-		HashSet<ProbabilityAction> actions = new LinkedHashSet<ProbabilityAction>();
-		double totalProbability = 0;
-		if(gameState.hasBet()){
-			//call, raise or fold
-			double callProbability = getCallProbability(gameState);
-			totalProbability+=callProbability;
-			actions.add(new ProbabilityAction(new CallAction(gameState, playerId),callProbability));
-
-			double foldProbability = getFoldProbability(gameState);
-			totalProbability+= foldProbability;
-			actions.add(new ProbabilityAction(new FoldAction(gameState, playerId),foldProbability));
-
-			if(!gameState.getPlayer(botId).isAllIn() && gameState.isAllowedToRaise(playerId)){
-				double raiseProbability = getRaiseProbability(gameState);
-				int lowerRaiseBound = gameState.getLowerRaiseBound(playerId);
-				int upperRaiseBound = gameState.getUpperRaiseBound(playerId);
-				int n = upperRaiseBound>lowerRaiseBound? nbBetSizeSamples:1;
-				actions.add(new ProbabilityAction(new RaiseAction(gameState, playerId, lowerRaiseBound),raiseProbability/n));
-				totalProbability+=raiseProbability/n;
-				if(n>1){
-					double[] betSizeSamples = getLogarithmicSamples(n-1);
-					for (int i = 0; i < betSizeSamples.length; i++) {
-						RaiseAction raiseAction = new RaiseAction(gameState, playerId, (int)Math.round(lowerRaiseBound+betSizeSamples[i]*(upperRaiseBound-lowerRaiseBound)));
-						actions.add(new ProbabilityAction(raiseAction,raiseProbability/n));
-						totalProbability+=raiseProbability/n;
-					}
-				}
-			}
-		}else{
-			//check or bet
-			double checkProbability = getCheckProbability(gameState);
-			totalProbability+=checkProbability;
-			actions.add(new ProbabilityAction(new CheckAction(gameState, playerId),checkProbability));
-
-			if(!gameState.getPlayer(botId).isAllIn() && gameState.isAllowedToRaise(playerId)){
-				double betProbability = getBetProbability(gameState);
-				int lowerRaiseBound = gameState.getLowerRaiseBound(playerId);
-				int upperRaiseBound = gameState.getUpperRaiseBound(playerId);
-				int n = upperRaiseBound>lowerRaiseBound? 3:1;
-				actions.add(new ProbabilityAction(new BetAction(gameState, playerId, lowerRaiseBound),betProbability/n));
-				totalProbability+=betProbability/n;
-				if(n>1){
-					double[] betSizeSamples = getLogarithmicSamples(n-1);
-					for (int i = 0; i < betSizeSamples.length; i++) {
-						BetAction betAction = new BetAction(gameState, playerId, (int)Math.round(lowerRaiseBound+betSizeSamples[i]*(upperRaiseBound-lowerRaiseBound)));
-						actions.add(new ProbabilityAction(betAction,betProbability/n));
-						totalProbability+=betProbability/n;
-					}
-				}
-			}
-		}
-		HashSet<ProbabilityAction> normalizedActions = new HashSet<ProbabilityAction>();
-		for(ProbabilityAction action:actions){
-			normalizedActions.add(new ProbabilityAction(action.getActionWrapper(), action.getProbability()/totalProbability));
-		}	
-		return normalizedActions;
-	}
 
 	public double getCheckProbability(GameState gameState) {
 		return nbCheck*1.0/totalNoBet;
@@ -196,14 +147,4 @@ public class HistogramModel implements OpponentModel{
 		return nbRaise*1.0/totalBet;
 	}
 
-	public static double[] getLogarithmicSamples(int n){
-		double[] samples = new double[n];
-		samples[0] = r.nextDouble()/Math.pow(2, n-1);
-		for(int i=1;i<samples.length;i++){
-			double p = 1/Math.pow(2, n-i);
-			samples[i] = p+r.nextDouble()*p;
-		}
-		return samples;
-	}
-	
 }

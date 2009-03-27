@@ -29,7 +29,7 @@ public class CompleteExpander extends Expander{
 	}
 
 	public Set<? extends EvaluatedAction<? extends ProbabilityAction>> expand(){
-		Set<ProbabilityAction> actions = node.getProbabilityActions();
+		Set<ProbabilityAction> actions = getProbabilityActions();
 		int subtreeTokens = Math.max(1,tokens/actions.size());
 		Set<EvaluatedAction<ProbabilityAction>> evaluatedActions = new LinkedHashSet<EvaluatedAction<ProbabilityAction>>(actions.size());
 		for(ProbabilityAction action:actions){

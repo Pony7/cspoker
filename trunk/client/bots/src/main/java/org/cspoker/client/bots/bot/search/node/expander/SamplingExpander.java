@@ -58,7 +58,7 @@ public class SamplingExpander extends Expander{
 	}
 
 	private List<SampledAction> sampleActions() {
-		List<ProbabilityAction> probActions = new ArrayList<ProbabilityAction>(node.getProbabilityActions());
+		List<ProbabilityAction> probActions = new ArrayList<ProbabilityAction>(getProbabilityActions());
 		double[] cumulProb = new double[probActions.size()];
 
 		for(int i=0;i<probActions.size();i++){

@@ -36,9 +36,8 @@ import org.cspoker.client.bots.bot.search.node.leaf.UniformShowdownNode;
 import org.cspoker.client.bots.bot.search.node.visitor.Log4JOutputVisitor;
 import org.cspoker.client.bots.bot.search.node.visitor.NodeVisitor;
 import org.cspoker.client.bots.bot.search.node.visitor.NodeVisitor.Factory;
-import org.cspoker.client.bots.bot.search.opponentmodel.AllPlayersModel;
+import org.cspoker.client.bots.bot.search.opponentmodel.OpponentModels;
 import org.cspoker.client.bots.bot.search.opponentmodel.prolog.cafe.PrologCafeModel;
-import org.cspoker.client.bots.bot.search.opponentmodel.prolog.interprolog.InterPrologModel;
 import org.cspoker.client.bots.bot.search.opponentmodel.prolog.tuprolog.TuPrologModel;
 import org.cspoker.client.bots.listener.BotListener;
 import org.cspoker.client.common.SmartLobbyContext;
@@ -49,9 +48,8 @@ import alice.tuprolog.InvalidTheoryException;
 import alice.tuprolog.Prolog;
 import alice.tuprolog.Theory;
 
-import com.declarativa.interprolog.SWISubprocessEngine;
-
 @ThreadSafe
+@Deprecated
 public class RedundantBotFactory implements BotFactory {
 	
 	private final static Logger logger = Logger.getLogger(RedundantBotFactory.class);
@@ -59,7 +57,7 @@ public class RedundantBotFactory implements BotFactory {
 	
 	private final int copy;
 
-	private final Map<PlayerId, AllPlayersModel> opponentModels = new ConcurrentHashMap<PlayerId, AllPlayersModel>();
+	private final Map<PlayerId, OpponentModels> opponentModels = new ConcurrentHashMap<PlayerId, OpponentModels>();
 
 	public RedundantBotFactory() {
 		this.copy = ++copies;
@@ -90,13 +88,6 @@ public class RedundantBotFactory implements BotFactory {
 				throw new IllegalStateException(e2);
 			}
 			TuPrologModel model2 = new TuPrologModel(engine,botId);
-			
-			SWISubprocessEngine prologEngine = new SWISubprocessEngine("/usr/lib/swi-prolog/bin/i386/swipl",
-					logger.isTraceEnabled());
-			File backgroundDir = new File("/home/guy/Werk/thesis/opponentmodel/swified");
-			prologEngine.consultAbsolute(new File(backgroundDir, "background.pl"));
-			prologEngine.consultAbsolute(new File(backgroundDir, "model.pl"));
-			InterPrologModel model3 = new InterPrologModel(prologEngine, botId);
 			
 			opponentModels.put(botId, new RedundantModel(Arrays.asList(model1, model2)));
 		}

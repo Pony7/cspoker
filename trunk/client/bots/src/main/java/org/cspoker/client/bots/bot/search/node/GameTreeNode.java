@@ -22,6 +22,6 @@ import org.cspoker.common.util.Pair;
 @Immutable
 public interface GameTreeNode {
 
-	Pair<Double, Double> getEV();
+	Pair<Double, Double> getValueDistribution();
 	
 }

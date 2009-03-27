@@ -18,56 +18,69 @@ package org.cspoker.client.bots.bot.search.opponentmodel.prolog.redundant;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
-import org.cspoker.client.bots.bot.search.action.ProbabilityAction;
-import org.cspoker.client.bots.bot.search.opponentmodel.AllPlayersModel;
 import org.cspoker.client.bots.bot.search.opponentmodel.OpponentModel;
+import org.cspoker.client.bots.bot.search.opponentmodel.OpponentModels;
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.common.elements.player.PlayerId;
+import org.cspoker.common.util.Pair;
+import org.cspoker.common.util.Triple;
 
 @Deprecated
-public class RedundantModel implements AllPlayersModel{
+public class RedundantModel implements OpponentModels{
 
-	private final Collection<? extends AllPlayersModel> models;
+	private final Collection<? extends OpponentModels> models;
 
-	public RedundantModel(Collection<? extends AllPlayersModel> models) {
+	public RedundantModel(Collection<? extends OpponentModels> models) {
 		this.models = models;
 	}
 
 	@Override
 	public void assume(GameState gameState) {
-		for(AllPlayersModel model:models)
+		for(OpponentModels model:models)
 			model.assume(gameState);
 	}
 
 	@Override
 	public void forgetAssumption() {
-		for(AllPlayersModel model:models)
+		for(OpponentModels model:models)
 			model.forgetAssumption();
 	}
 
 	@Override
-	public OpponentModel getModelFor(PlayerId opponentId, GameState gameState) {
+	public OpponentModel getModelFor(GameState gameState, PlayerId opponentId) {
 		final List<OpponentModel> opponentModels = new ArrayList<OpponentModel>(models.size());
-		for(AllPlayersModel model:models){
-			opponentModels.add(model.getModelFor(opponentId, gameState));
+		for(OpponentModels model:models){
+			opponentModels.add(model.getModelFor(gameState, opponentId));
 		}
 		return new OpponentModel(){
 			
 			@Override
-			public Set<ProbabilityAction> getProbabilityActions(
-					GameState gameState) {
-				Set<ProbabilityAction> actions = null;
-				Set<ProbabilityAction> previousActions = null;
-				for(OpponentModel model:opponentModels){
-					actions  = model.getProbabilityActions(gameState);
-					if(previousActions!= null && !previousActions.equals(actions)){
-						throw new IllegalStateException("Inconsistency: "+previousActions+" "+actions);
+			public Pair<Double, Double> getCheckBetProbabilities(
+					GameState gameState, PlayerId actor) {
+				Pair<Double,Double> previous = null;
+				for (OpponentModel opponentModel : opponentModels) {
+					Pair<Double,Double> current = opponentModel.getCheckBetProbabilities(gameState, actor);
+					if(previous!=null && !previous.equals(current)){
+						throw new IllegalStateException("Inconsistentcy in models: "+previous+" vs "+current);
 					}
-					previousActions = actions;
+					previous = current;
 				}
-				return actions;
+				return previous;
+			}
+			
+			@Override
+			public Triple<Double, Double, Double> getFoldCallRaiseProbabilities(
+					GameState gameState, PlayerId actor) {
+				Triple<Double, Double, Double> previous = null;
+				for (OpponentModel opponentModel : opponentModels) {
+					Triple<Double, Double, Double> current = opponentModel.getFoldCallRaiseProbabilities(gameState, actor);
+					if(previous!=null && !previous.equals(current)){
+						throw new IllegalStateException("Inconsistentcy in models: "+previous+" vs "+current);
+					}
+					previous = current;
+				}
+				return previous;
 			}
 			
 		};
@@ -75,7 +88,7 @@ public class RedundantModel implements AllPlayersModel{
 
 	@Override
 	public void signalNextAction(GameState gameState) {
-		for(AllPlayersModel model:models)
+		for(OpponentModels model:models)
 			model.signalNextAction(gameState);
 	}
 

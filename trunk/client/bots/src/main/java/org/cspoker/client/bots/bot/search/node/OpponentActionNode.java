@@ -40,7 +40,7 @@ public class OpponentActionNode extends ActionNode{
 
 	
 	@Override
-	public Pair<Double,Double> getEV() {
+	public Pair<Double,Double> getValueDistribution() {
 		config.getOpponentModeler().assume(gameState);
 		Set<? extends EvaluatedAction<? extends SampledAction>> actions = getExpander().expand();
 		config.getOpponentModeler().forgetAssumption();

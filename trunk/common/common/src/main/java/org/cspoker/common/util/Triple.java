@@ -15,19 +15,24 @@
  */
 package org.cspoker.common.util;
 
-public class Pair<L,R> {
+public class Triple<L,M,R> {
 
 	private final L left;
+	private final M middle;
 	private final R right;
 	
-	public Pair(L left, R right) {
+	public Triple(L left, M middle, R right) {
 		if(left==null){
 			throw new IllegalArgumentException("Left value is not effective.");
+		}
+		if(middle==null){
+			throw new IllegalArgumentException("Middle value is not effective.");
 		}
 		if(right==null){
 			throw new IllegalArgumentException("Right value is not effective.");
 		}
 		this.left =left;
+		this.middle = middle;
 		this.right = right;
 	}
 	
@@ -35,15 +40,20 @@ public class Pair<L,R> {
 		return this.left;
 	}
 	
+	public M getMiddle() {
+		return this.middle;
+	}
+	
 	public R getRight() {
 		return this.right;
 	}
-
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((left == null) ? 0 : left.hashCode());
+		result = prime * result + ((middle == null) ? 0 : middle.hashCode());
 		result = prime * result + ((right == null) ? 0 : right.hashCode());
 		return result;
 	}
@@ -55,13 +65,18 @@ public class Pair<L,R> {
 			return true;
 		if (obj == null)
 			return false;
-		if (!(obj instanceof Pair))
+		if (getClass() != obj.getClass())
 			return false;
-		Pair<Object, Object> other = (Pair<Object, Object>) obj;
+		Triple<Object, Object, Object> other = (Triple<Object, Object, Object>) obj;
 		if (left == null) {
 			if (other.left != null)
 				return false;
 		} else if (!left.equals(other.left))
+			return false;
+		if (middle == null) {
+			if (other.middle != null)
+				return false;
+		} else if (!middle.equals(other.middle))
 			return false;
 		if (right == null) {
 			if (other.right != null)
@@ -70,10 +85,10 @@ public class Pair<L,R> {
 			return false;
 		return true;
 	}
-	
+
 	@Override
 	public String toString() {
-		return "<"+left.toString()+","+right.toString()+">";
+		return "<"+left+","+middle+","+right+">";
 	}
 	
 }
