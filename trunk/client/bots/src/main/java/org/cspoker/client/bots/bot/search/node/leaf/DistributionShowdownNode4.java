@@ -26,34 +26,39 @@ import org.cspoker.common.elements.player.PlayerId;
 
 public class DistributionShowdownNode4 extends AbstractDistributionShowdownNode {
 
-	DistributionShowdownNode4(PlayerId botId, GameState gameState, int tokens, NodeVisitor...nodeVisitors) {
+	DistributionShowdownNode4(PlayerId botId, GameState gameState, int tokens,
+			NodeVisitor... nodeVisitors) {
 		super(botId, gameState, tokens, nodeVisitors);
 	}
 
+	@Override
 	protected float getRelativeProbability(int rank, int relativePotSize) {
-		if(relativePotSize<=4){
+		if (relativePotSize <= 4) {
 			return ShowdownRankPredictor1of4.getRelativeProbability(rank);
-		}else if(relativePotSize<=15){
+		} else if (relativePotSize <= 15) {
 			return ShowdownRankPredictor2of4.getRelativeProbability(rank);
-		}else if(relativePotSize<=30){
+		} else if (relativePotSize <= 30) {
 			return ShowdownRankPredictor3of4.getRelativeProbability(rank);
-		}else{
+		} else {
 			return ShowdownRankPredictor4of4.getRelativeProbability(rank);
 		}
-		
+
 	}
+
 	@Override
 	public String toString() {
 		return "4 Part Distribution Showdown Node";
 	}
 
-
-	public static class Factory implements AbstractDistributionShowdownNode.Factory{
+	public static class Factory implements
+			AbstractDistributionShowdownNode.Factory {
 
 		@Override
-		public DistributionShowdownNode4 create(PlayerId botId, GameState gameState, int tokens
-				, SearchConfiguration config, int searchId, NodeVisitor...nodeVisitors) {
-			return new DistributionShowdownNode4(botId, gameState, tokens, nodeVisitors);
+		public DistributionShowdownNode4 create(PlayerId botId,
+				GameState gameState, int tokens, SearchConfiguration config,
+				int searchId, NodeVisitor... nodeVisitors) {
+			return new DistributionShowdownNode4(botId, gameState, tokens,
+					nodeVisitors);
 		}
 
 		@Override

@@ -23,13 +23,13 @@ import org.cspoker.client.bots.bot.search.action.EvaluatedAction;
 import org.cspoker.client.bots.bot.search.action.GameEndedException;
 import org.cspoker.client.bots.bot.search.node.leaf.ShowdownNode;
 import org.cspoker.client.bots.bot.search.node.visitor.NodeVisitor;
-import org.cspoker.client.bots.bot.search.opponentmodel.OpponentModels;
+import org.cspoker.client.bots.bot.search.opponentmodel.OpponentModel;
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.util.Pair;
 import org.cspoker.common.util.Triple;
 
-public abstract class ActionNode implements InnerGameTreeNode{
+public abstract class ActionNode implements InnerGameTreeNode {
 
 	private final static Logger logger = Logger.getLogger(ActionNode.class);
 
@@ -41,84 +41,96 @@ public abstract class ActionNode implements InnerGameTreeNode{
 	protected final SearchConfiguration config;
 	protected final int searchId;
 
-	public ActionNode(PlayerId playerId, PlayerId botId, GameState gameState, 
+	public ActionNode(PlayerId playerId, PlayerId botId, GameState gameState,
 			SearchConfiguration config, int searchId, NodeVisitor... visitors) {
 		this.gameState = gameState;
 		this.playerId = playerId;
-		this.visitors =  visitors;
-		this.botId= botId;
+		this.visitors = visitors;
+		this.botId = botId;
 		this.config = config;
 		this.searchId = searchId;
 	}
 
-	public <A extends ActionWrapper> EvaluatedAction<A> expandWith(A action, int tokens){
-		for(NodeVisitor visitor:visitors){
+	public <A extends ActionWrapper> EvaluatedAction<A> expandWith(A action,
+			int tokens) {
+		for (NodeVisitor visitor : visitors) {
 			visitor.enterNode(this, action, tokens);
 		}
 		EvaluatedAction<A> result;
 		GameState nextState;
 
-		if(action.getAction().endsInvolvementOf(botId)){
-			//bot folded
-			int stack = action.getAction().gameState.getPlayer(botId).getStack();
-			result = new EvaluatedAction<A>(action, stack,0);
-		}else{
+		if (action.getAction().endsInvolvementOf(botId)) {
+			// bot folded
+			int stack = action.getAction().gameState.getPlayer(botId)
+					.getStack();
+			result = new EvaluatedAction<A>(action, stack, 0);
+		} else {
 			try {
 				nextState = action.getAction().getStateAfterAction();
-				//expand further
+				// expand further
 				PlayerId nextToAct = nextState.getNextToAct();
-				if(nextToAct.equals(botId)){
-					//go to next player node
-					BotActionNode botActionNode = new BotActionNode(botId, nextState, config, tokens, searchId, visitors);
-					result = new EvaluatedAction<A>(action, botActionNode.getValueDistribution());
-				}else{	
-					OpponentActionNode opponentActionNode = new OpponentActionNode(nextToAct, botId, nextState, config, tokens, searchId, visitors);
-					result = new EvaluatedAction<A>(action, opponentActionNode.getValueDistribution());
+				if (nextToAct.equals(botId)) {
+					// go to next player node
+					BotActionNode botActionNode = new BotActionNode(botId,
+							nextState, config, tokens, searchId, visitors);
+					result = new EvaluatedAction<A>(action, botActionNode
+							.getValueDistribution());
+				} else {
+					OpponentActionNode opponentActionNode = new OpponentActionNode(
+							nextToAct, botId, nextState, config, tokens,
+							searchId, visitors);
+					result = new EvaluatedAction<A>(action, opponentActionNode
+							.getValueDistribution());
 				}
 			} catch (GameEndedException e) {
-				//no active players left
-				//go to showdown
-				ShowdownNode showdownNode = config.getShowdownNodeFactory().create(botId, e.lastState, tokens, config, searchId, visitors);
-				result = new EvaluatedAction<A>(action, showdownNode.getExpectedValue());
+				// no active players left
+				// go to showdown
+				ShowdownNode showdownNode = config.getShowdownNodeFactory()
+						.create(botId, e.lastState, tokens, config, searchId,
+								visitors);
+				result = new EvaluatedAction<A>(action, showdownNode
+						.getExpectedValue());
 			} catch (DefaultWinnerException e) {
-				if(e.winner.getPlayerId().equals(botId)){
-					//bot wins
+				if (e.winner.getPlayerId().equals(botId)) {
+					// bot wins
 					int stack = e.winner.getStack();
 					int pots = e.foldState.getGamePotSize();
-					result = new EvaluatedAction<A>(action, stack+pots,0);
-				}else{
-					throw new IllegalStateException("Bot should have folded earlier, winner can't be "+e.winner);
+					result = new EvaluatedAction<A>(action, stack + pots, 0);
+				} else {
+					throw new IllegalStateException(
+							"Bot should have folded earlier, winner can't be "
+									+ e.winner);
 				}
-			} 
+			}
 		}
-		for(NodeVisitor visitor:visitors){
+		for (NodeVisitor visitor : visitors) {
 			visitor.leaveNode(result);
 		}
 		return result;
 	}
-	
+
 	@Override
 	public Triple<Double, Double, Double> getFoldCallRaiseProbabilities() {
-		return config.getOpponentModeler().getModelFor(gameState, playerId).getFoldCallRaiseProbabilities(gameState, playerId);
-	}
-	
-	@Override
-	public Pair<Double, Double> getCheckBetProbabilities() {
-		return config.getOpponentModeler().getModelFor(gameState, playerId).getCheckBetProbabilities(gameState, playerId);
+		return config.getOpponentModeler().getFoldCallRaiseProbabilities(
+				gameState, playerId);
 	}
 
+	@Override
+	public Pair<Double, Double> getCheckBetProbabilities() {
+		return config.getOpponentModeler().getCheckBetProbabilities(gameState,
+				playerId);
+	}
 
 	public PlayerId getPlayerId() {
 		return playerId;
 	}
-	
-	
+
 	@Override
 	public PlayerId getBotId() {
 		return botId;
 	}
 
-	public OpponentModels getOpponentModeler() {
+	public OpponentModel getOpponentModeler() {
 		return config.getOpponentModeler();
 	}
 

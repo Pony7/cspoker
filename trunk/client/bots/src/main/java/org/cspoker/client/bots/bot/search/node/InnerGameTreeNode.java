@@ -25,7 +25,7 @@ import org.cspoker.common.util.Pair;
 import org.cspoker.common.util.Triple;
 
 @Immutable
-public interface InnerGameTreeNode extends GameTreeNode{
+public interface InnerGameTreeNode extends GameTreeNode {
 
 	Pair<Double, Double> getValueDistribution();
 
@@ -34,12 +34,11 @@ public interface InnerGameTreeNode extends GameTreeNode{
 	GameState getGameState();
 
 	Triple<Double, Double, Double> getFoldCallRaiseProbabilities();
-	
+
 	Pair<Double, Double> getCheckBetProbabilities();
 
 	PlayerId getPlayerId();
 
 	PlayerId getBotId();
-
 
 }

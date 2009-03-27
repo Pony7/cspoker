@@ -23,5 +23,5 @@ import org.cspoker.common.util.Pair;
 public interface GameTreeNode {
 
 	Pair<Double, Double> getValueDistribution();
-	
+
 }

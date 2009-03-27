@@ -15,8 +15,8 @@
  */
 package org.cspoker.client.bots.bot.search.action;
 
-public interface ActionWrapper{
+public interface ActionWrapper {
 
 	SearchBotAction getAction();
-	
+
 }

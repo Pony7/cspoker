@@ -25,10 +25,12 @@ public interface ShowdownNode {
 
 	Pair<Double, Double> getExpectedValue();
 
-	public static interface Factory{
+	public static interface Factory {
 
-		ShowdownNode create(PlayerId botId, GameState gameState, int tokens, SearchConfiguration config, int searchId, NodeVisitor...nodeVisitors);
-		
+		ShowdownNode create(PlayerId botId, GameState gameState, int tokens,
+				SearchConfiguration config, int searchId,
+				NodeVisitor... nodeVisitors);
+
 	}
-	
+
 }

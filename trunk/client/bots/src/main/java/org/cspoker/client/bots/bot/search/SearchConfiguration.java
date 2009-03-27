@@ -18,11 +18,11 @@ package org.cspoker.client.bots.bot.search;
 import org.cspoker.client.bots.bot.search.node.expander.Expander;
 import org.cspoker.client.bots.bot.search.node.expander.Expander.Factory;
 import org.cspoker.client.bots.bot.search.node.leaf.ShowdownNode;
-import org.cspoker.client.bots.bot.search.opponentmodel.OpponentModels;
+import org.cspoker.client.bots.bot.search.opponentmodel.OpponentModel;
 
 public class SearchConfiguration {
-	
-	private final OpponentModels opponentModeler;
+
+	private final OpponentModel opponentModeler;
 	private final ShowdownNode.Factory showdownNodeFactory;
 	private final int flopTokens;
 	private final int turnTokens;
@@ -30,46 +30,41 @@ public class SearchConfiguration {
 	private final Factory botNodeExpanderFactory;
 	private final int preflopTokens;
 	private final double evDiscount;
-	
-	public SearchConfiguration(
-			OpponentModels opponentModel, 
-			ShowdownNode.Factory showdownNodeFactory, 
-			Expander.Factory botNodeExpanderFactory,
-			int preflopTokens,
-			int flopTokens,
-			int turnTokens,
-			int finalTokens,
-			double evDiscount) {
-		this.opponentModeler = opponentModel;
+
+	public SearchConfiguration(OpponentModel opponentModel,
+			ShowdownNode.Factory showdownNodeFactory,
+			Expander.Factory botNodeExpanderFactory, int preflopTokens,
+			int flopTokens, int turnTokens, int finalTokens, double evDiscount) {
+		opponentModeler = opponentModel;
 		this.showdownNodeFactory = showdownNodeFactory;
 		this.preflopTokens = preflopTokens;
-		this.flopTokens=flopTokens;
-		this.turnTokens=turnTokens;
-		this.finalTokens=finalTokens;
+		this.flopTokens = flopTokens;
+		this.turnTokens = turnTokens;
+		this.finalTokens = finalTokens;
 		this.botNodeExpanderFactory = botNodeExpanderFactory;
 		this.evDiscount = evDiscount;
 	}
-	
-	public OpponentModels getOpponentModeler() {
+
+	public OpponentModel getOpponentModeler() {
 		return opponentModeler;
 	}
-	
+
 	public ShowdownNode.Factory getShowdownNodeFactory() {
 		return showdownNodeFactory;
 	}
-	
+
 	public int getFinalTokens() {
 		return finalTokens;
 	}
-	
+
 	public int getFlopTokens() {
 		return flopTokens;
 	}
-	
+
 	public int getPreflopTokens() {
 		return preflopTokens;
 	}
-	
+
 	public int getTurnTokens() {
 		return turnTokens;
 	}
@@ -81,5 +76,5 @@ public class SearchConfiguration {
 	public double getEVDiscount() {
 		return evDiscount;
 	}
-	
+
 }

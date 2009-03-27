@@ -23,9 +23,10 @@ import org.cspoker.client.xml.http.RemoteHTTPServer;
 public class RunHTTPBot {
 
 	public static BotRunner runner;
-	
-	public static void main(String[] args) throws RemoteException, NotBoundException {
+
+	public static void main(String[] args) throws RemoteException,
+			NotBoundException {
 		runner = new BotRunner(new RemoteHTTPServer());
 	}
-	
+
 }

@@ -15,81 +15,75 @@
  */
 package org.cspoker.client.bots.bot.search.opponentmodel.prolog.redundant;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 import org.cspoker.client.bots.bot.search.opponentmodel.OpponentModel;
-import org.cspoker.client.bots.bot.search.opponentmodel.OpponentModels;
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.util.Pair;
 import org.cspoker.common.util.Triple;
 
 @Deprecated
-public class RedundantModel implements OpponentModels{
+public class RedundantModel implements OpponentModel {
 
-	private final Collection<? extends OpponentModels> models;
+	private final Collection<? extends OpponentModel> models;
 
-	public RedundantModel(Collection<? extends OpponentModels> models) {
+	public RedundantModel(Collection<? extends OpponentModel> models) {
 		this.models = models;
 	}
 
 	@Override
-	public void assume(GameState gameState) {
-		for(OpponentModels model:models)
-			model.assume(gameState);
-	}
-
-	@Override
-	public void forgetAssumption() {
-		for(OpponentModels model:models)
-			model.forgetAssumption();
-	}
-
-	@Override
-	public OpponentModel getModelFor(GameState gameState, PlayerId opponentId) {
-		final List<OpponentModel> opponentModels = new ArrayList<OpponentModel>(models.size());
-		for(OpponentModels model:models){
-			opponentModels.add(model.getModelFor(gameState, opponentId));
+	public void assumeTemporarily(GameState gameState) {
+		for (OpponentModel model : models) {
+			model.assumeTemporarily(gameState);
 		}
-		return new OpponentModel(){
-			
-			@Override
-			public Pair<Double, Double> getCheckBetProbabilities(
-					GameState gameState, PlayerId actor) {
-				Pair<Double,Double> previous = null;
-				for (OpponentModel opponentModel : opponentModels) {
-					Pair<Double,Double> current = opponentModel.getCheckBetProbabilities(gameState, actor);
-					if(previous!=null && !previous.equals(current)){
-						throw new IllegalStateException("Inconsistentcy in models: "+previous+" vs "+current);
-					}
-					previous = current;
-				}
-				return previous;
-			}
-			
-			@Override
-			public Triple<Double, Double, Double> getFoldCallRaiseProbabilities(
-					GameState gameState, PlayerId actor) {
-				Triple<Double, Double, Double> previous = null;
-				for (OpponentModel opponentModel : opponentModels) {
-					Triple<Double, Double, Double> current = opponentModel.getFoldCallRaiseProbabilities(gameState, actor);
-					if(previous!=null && !previous.equals(current)){
-						throw new IllegalStateException("Inconsistentcy in models: "+previous+" vs "+current);
-					}
-					previous = current;
-				}
-				return previous;
-			}
-			
-		};
 	}
 
 	@Override
-	public void signalNextAction(GameState gameState) {
-		for(OpponentModels model:models)
-			model.signalNextAction(gameState);
+	public void forgetLastAssumption() {
+		for (OpponentModel model : models) {
+			model.forgetLastAssumption();
+		}
+	}
+
+	@Override
+	public void assumePermanently(GameState gameState) {
+		for (OpponentModel model : models) {
+			model.assumePermanently(gameState);
+		}
+	}
+
+	@Override
+	public Pair<Double, Double> getCheckBetProbabilities(GameState gameState,
+			PlayerId actor) {
+		Pair<Double, Double> previous = null;
+		for (OpponentModel opponentModel : models) {
+			Pair<Double, Double> current = opponentModel
+					.getCheckBetProbabilities(gameState, actor);
+			if (previous != null && !previous.equals(current)) {
+				throw new IllegalStateException("Inconsistentcy in models: "
+						+ previous + " vs " + current);
+			}
+			previous = current;
+		}
+		return previous;
+
+	}
+
+	@Override
+	public Triple<Double, Double, Double> getFoldCallRaiseProbabilities(
+			GameState gameState, PlayerId actor) {
+		Triple<Double, Double, Double> previous = null;
+		for (OpponentModel opponentModel : models) {
+			Triple<Double, Double, Double> current = opponentModel
+					.getFoldCallRaiseProbabilities(gameState, actor);
+			if (previous != null && !previous.equals(current)) {
+				throw new IllegalStateException("Inconsistentcy in models: "
+						+ previous + " vs " + current);
+			}
+			previous = current;
+		}
+		return previous;
 	}
 
 }

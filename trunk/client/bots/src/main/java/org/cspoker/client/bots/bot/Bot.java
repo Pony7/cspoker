@@ -18,16 +18,16 @@ package org.cspoker.client.bots.bot;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.listener.HoldemPlayerListener;
 import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
 
-public interface Bot extends HoldemTableListener, HoldemPlayerListener{
+public interface Bot extends HoldemTableListener, HoldemPlayerListener {
 
 	void doNextAction();
 
 	void start();
-	
+
 	void startGame();
 
 	void stop();
-	
+
 	int getProfit();
 
 }

@@ -32,7 +32,7 @@ import org.cspoker.common.elements.chips.Pots;
 import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.elements.table.Round;
 
-public abstract class SearchBotAction implements ActionWrapper{
+public abstract class SearchBotAction implements ActionWrapper {
 
 	public final GameState gameState;
 	public final PlayerId actor;
@@ -47,24 +47,33 @@ public abstract class SearchBotAction implements ActionWrapper{
 		return this;
 	}
 
-	public abstract void perform(RemoteHoldemPlayerContext context) throws RemoteException, IllegalActionException;
+	public abstract void perform(RemoteHoldemPlayerContext context)
+			throws RemoteException, IllegalActionException;
 
-	public abstract GameState getStateAfterAction() throws GameEndedException, DefaultWinnerException;
-	
-	protected GameState getNewRoundState(GameState lastState) throws GameEndedException{
+	public abstract GameState getStateAfterAction() throws GameEndedException,
+			DefaultWinnerException;
+
+	protected GameState getNewRoundState(GameState lastState)
+			throws GameEndedException {
 		Round nextRound = lastState.getRound().getNextRound();
-		if(nextRound==null){
+		if (nextRound == null) {
 			throw new GameEndedException(lastState);
 		}
 		List<Pot> pots = Collections.emptyList();
-		NewRoundState newRoundState = new NewRoundState(lastState, new NewRoundEvent(nextRound, new Pots(pots, lastState.getGamePotSize())));
-		PlayerState firstToAct = newRoundState.getNextActivePlayerAfter(newRoundState.getDealer());
-		if(firstToAct==null || newRoundState.getNextActivePlayerAfter(firstToAct.getPlayerId())==null){
-			//no one/only one left
+		NewRoundState newRoundState = new NewRoundState(lastState,
+				new NewRoundEvent(nextRound, new Pots(pots, lastState
+						.getGamePotSize())));
+		PlayerState firstToAct = newRoundState
+				.getNextActivePlayerAfter(newRoundState.getDealer());
+		if (firstToAct == null
+				|| newRoundState.getNextActivePlayerAfter(firstToAct
+						.getPlayerId()) == null) {
+			// no one/only one left
 			return getNewRoundState(newRoundState);
 		}
-		return new NextPlayerState(newRoundState, new NextPlayerEvent(firstToAct.getPlayerId(), 
-				gameState.getCallValue(firstToAct.getPlayerId())));
+		return new NextPlayerState(newRoundState, new NextPlayerEvent(
+				firstToAct.getPlayerId(), gameState.getCallValue(firstToAct
+						.getPlayerId())));
 	}
 
 	public boolean endsInvolvementOf(PlayerId botId) {
@@ -72,15 +81,16 @@ public abstract class SearchBotAction implements ActionWrapper{
 	}
 
 	public static String parseDollars(int intAmount) {
-		if(intAmount<0){
-			return "-"+parseDollars(-intAmount);
+		if (intAmount < 0) {
+			return "-" + parseDollars(-intAmount);
 		}
-		int cents = intAmount%100;
-		int dollars = intAmount/100;
-		return intAmount==0?"$0":"$"+dollars+"."+(cents>=10?cents:"0"+cents);
+		int cents = intAmount % 100;
+		int dollars = intAmount / 100;
+		return intAmount == 0 ? "$0" : "$" + dollars + "."
+				+ (cents >= 10 ? cents : "0" + cents);
 	}
-	
-	//do not define equals or hashcode! 
-	//it will map all actions without extra fields to the same entity
+
+	// do not define equals or hashcode!
+	// it will map all actions without extra fields to the same entity
 
 }

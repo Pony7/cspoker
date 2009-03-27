@@ -23,9 +23,10 @@ import org.cspoker.client.rmi.RemoteRMIServer;
 public class RunRMIBot {
 
 	public static BotRunner runner;
-	
-	public static void main(String[] args) throws RemoteException, NotBoundException {
+
+	public static void main(String[] args) throws RemoteException,
+			NotBoundException {
 		runner = new BotRunner(new RemoteRMIServer());
 	}
-	
+
 }

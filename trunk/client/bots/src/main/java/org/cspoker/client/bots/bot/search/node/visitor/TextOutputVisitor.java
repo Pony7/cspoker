@@ -22,13 +22,12 @@ import org.cspoker.client.bots.bot.search.action.ActionWrapper;
 import org.cspoker.client.bots.bot.search.action.EvaluatedAction;
 import org.cspoker.client.bots.bot.search.node.ActionNode;
 
-public abstract class TextOutputVisitor implements NodeVisitor{
+public abstract class TextOutputVisitor implements NodeVisitor {
 
 	Deque<String> stack = new ArrayDeque<String>();
 
 	private final int maxDepth;
-	private int depth=0;
-
+	private int depth = 0;
 
 	public TextOutputVisitor() {
 		this(Integer.MAX_VALUE);
@@ -43,26 +42,30 @@ public abstract class TextOutputVisitor implements NodeVisitor{
 	@Override
 	public void enterNode(ActionNode node, ActionWrapper action, int tokens) {
 		depth++;
-		if(depth<=maxDepth){
+		if (depth <= maxDepth) {
 			String prefix = stack.peek();
-			output(prefix+getNewNodePrefix()+getNodeDescription(node,action,tokens));
-			stack.push(prefix+getPrefixElement());
+			output(prefix + getNewNodePrefix()
+					+ getNodeDescription(node, action, tokens));
+			stack.push(prefix + getPrefixElement());
 		}
 	}
 
 	@Override
 	public void leaveNode(EvaluatedAction<? extends ActionWrapper> evaluation) {
-		if(depth<=maxDepth){
+		if (depth <= maxDepth) {
 			stack.pop();
 			String prefix = stack.peek();
-			output(prefix+getNodeEndPrefix()+getEndNodeDescription(evaluation));
+			output(prefix + getNodeEndPrefix()
+					+ getEndNodeDescription(evaluation));
 		}
 		depth--;
 	}
 
 	protected String getNodeDescription(ActionNode node, ActionWrapper action,
 			int tokens) {
-		return action+" in "+node + " with "+tokens+" token"+(tokens>1? "s":"")+" in " +node.getGameState().getRound();
+		return action + " in " + node + " with " + tokens + " token"
+				+ (tokens > 1 ? "s" : "") + " in "
+				+ node.getGameState().getRound();
 	}
 
 	protected String getEndNodeDescription(
@@ -81,8 +84,7 @@ public abstract class TextOutputVisitor implements NodeVisitor{
 	protected String getNodeEndPrefix() {
 		return "   `";
 	}
-	
-	protected abstract void output(String line);
 
+	protected abstract void output(String line);
 
 }

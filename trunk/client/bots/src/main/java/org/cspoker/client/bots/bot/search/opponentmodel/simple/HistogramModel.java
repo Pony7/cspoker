@@ -15,136 +15,272 @@
  */
 package org.cspoker.client.bots.bot.search.opponentmodel.simple;
 
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.Random;
-import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
-import org.cspoker.client.bots.bot.search.action.BetAction;
-import org.cspoker.client.bots.bot.search.action.CallAction;
-import org.cspoker.client.bots.bot.search.action.CheckAction;
-import org.cspoker.client.bots.bot.search.action.FoldAction;
-import org.cspoker.client.bots.bot.search.action.ProbabilityAction;
-import org.cspoker.client.bots.bot.search.action.RaiseAction;
+import net.jcip.annotations.NotThreadSafe;
+
 import org.cspoker.client.bots.bot.search.opponentmodel.OpponentModel;
 import org.cspoker.client.common.gamestate.GameState;
+import org.cspoker.client.common.gamestate.GameStateVisitor;
+import org.cspoker.client.common.gamestate.InitialGameState;
 import org.cspoker.client.common.gamestate.modifiers.AllInState;
-import org.cspoker.common.api.lobby.holdemtable.event.AllInEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.BetEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.CallEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.CheckEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.FoldEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.RaiseEvent;
+import org.cspoker.client.common.gamestate.modifiers.BetState;
+import org.cspoker.client.common.gamestate.modifiers.BigBlindState;
+import org.cspoker.client.common.gamestate.modifiers.CallState;
+import org.cspoker.client.common.gamestate.modifiers.CheckState;
+import org.cspoker.client.common.gamestate.modifiers.FoldState;
+import org.cspoker.client.common.gamestate.modifiers.JoinTableState;
+import org.cspoker.client.common.gamestate.modifiers.LeaveSeatState;
+import org.cspoker.client.common.gamestate.modifiers.LeaveTableState;
+import org.cspoker.client.common.gamestate.modifiers.NewCommunityCardsState;
+import org.cspoker.client.common.gamestate.modifiers.NewDealState;
+import org.cspoker.client.common.gamestate.modifiers.NewPocketCardsState;
+import org.cspoker.client.common.gamestate.modifiers.NewRoundState;
+import org.cspoker.client.common.gamestate.modifiers.NextPlayerState;
+import org.cspoker.client.common.gamestate.modifiers.RaiseState;
+import org.cspoker.client.common.gamestate.modifiers.ShowHandState;
+import org.cspoker.client.common.gamestate.modifiers.SitInState;
+import org.cspoker.client.common.gamestate.modifiers.SitOutState;
+import org.cspoker.client.common.gamestate.modifiers.SmallBlindState;
+import org.cspoker.client.common.gamestate.modifiers.WinnerState;
 import org.cspoker.common.elements.player.PlayerId;
+import org.cspoker.common.elements.table.Round;
 import org.cspoker.common.util.Pair;
 import org.cspoker.common.util.Triple;
 
-public class HistogramModel implements OpponentModel{
+@NotThreadSafe
+public class HistogramModel implements OpponentModel,
+		GameStateVisitor {
 
-	//prior derived from data set
-	private volatile int nbCheck;
-	private volatile int nbBet;
-	private volatile int totalNoBet;
+	private final ConcurrentHashMap<Pair<PlayerId, Round>, PlayerRoundHistogram> opponentModels = new ConcurrentHashMap<Pair<PlayerId, Round>, PlayerRoundHistogram>();
 
-	private volatile int nbFold;
-	private volatile int nbCall;
-	private volatile int nbRaise;
-	private volatile int totalBet;
+	private volatile GameState lastKnownState = null;
+	private volatile Round round;
+	private volatile boolean started = false;
 
-	public HistogramModel(
-			int nbCheck,
-			int nbBet,
-			int totalNoBet,
-			int nbFold,
-			int nbCall,
-			int nbRaise,
-			int totalBet) {
-		this.nbCheck = nbCheck;
-		this.nbBet = nbBet;
-		this.totalNoBet = totalNoBet;
-		this.nbFold = nbFold;
-		this.nbCall = nbCall;
-		this.nbRaise = nbRaise;
-		this.totalBet = totalBet;
+	public HistogramModel(PlayerId botId) {
 	}
 
 	@Override
 	public Pair<Double, Double> getCheckBetProbabilities(GameState gameState,
 			PlayerId actor) {
-		return new Pair<Double,Double>(
-				getCheckProbability(gameState),
-				getBetProbability(gameState)
-		);
+		return getModelFor(actor, gameState.getRound())
+				.getCheckBetProbabilities(gameState, actor);
 	}
 
 	@Override
 	public Triple<Double, Double, Double> getFoldCallRaiseProbabilities(
 			GameState gameState, PlayerId actor) {
-		return new Triple<Double, Double, Double>(
-				getFoldProbability(gameState), 
-				getCallProbability(gameState), 
-				getRaiseProbability(gameState)
-		);
+		return getModelFor(actor, gameState.getRound())
+				.getFoldCallRaiseProbabilities(gameState, actor);
 	}
 
-	public void addAllIn(GameState gameState, AllInEvent allInEvent) {
-		AllInState newState = new AllInState(gameState, allInEvent);
-		if(gameState.hasBet()){
-			if(newState.getRaise()>0){
-				++nbRaise;
-			}else{
-				++nbCall;
-			}
-			++totalBet;
-		}else{
-			++nbBet;
-			++totalNoBet;
+	public PlayerRoundHistogram getModelFor(PlayerId opponentId, Round round) {
+		Pair<PlayerId, Round> key = new Pair<PlayerId, Round>(opponentId, round);
+		if (!opponentModels.containsKey(key)) {
+			throw new IllegalStateException("Can't find model for " + key);
+		}
+		return opponentModels.get(key);
+	}
+
+	private void initiateModelsFor(PlayerId player) {
+		// check
+		// bet
+		// fold
+		// call
+		// raise
+		opponentModels.put(new Pair<PlayerId, Round>(player, Round.PREFLOP),
+				new PlayerRoundHistogram(10, 1, 11, (int) Math
+						.round(37556539.0 / 53203232.0 * 10), (int) Math
+						.round(7410418.0 / 53203232.0 * 10), (int) Math
+						.round(8236275.0 / 53203232.0 * 10), (int) (Math
+						.round(37556539.0 / 53203232.0 * 10)
+						+ Math.round(7410418.0 / 53203232.0 * 10) + Math
+						.round(8236275.0 / 53203232.0 * 10))));
+		opponentModels.put(new Pair<PlayerId, Round>(player, Round.FLOP),
+				new PlayerRoundHistogram(
+						(int) Math.round(5643188.0 / 9067525.0 * 10),
+						(int) Math.round(3424337.0 / 9067525.0 * 10),
+						(int) (Math.round(5643188.0 / 9067525.0 * 10) + Math
+								.round(3424337.0 / 9067525.0 * 10)), (int) Math
+								.round(3012394.0 / 5085650.0 * 10), (int) Math
+								.round(1493533.0 / 5085650.0 * 10), (int) Math
+								.round(579723.0 / 5085650.0 * 10), (int) (Math
+								.round(3012394.0 / 5085650.0 * 10)
+								+ Math.round(1493533.0 / 5085650.0 * 10) + Math
+								.round(579723.0 / 5085650.0 * 10))));
+		opponentModels.put(new Pair<PlayerId, Round>(player, Round.TURN),
+				new PlayerRoundHistogram(
+						(int) Math.round(2969602.0 / 4635236.0 * 10),
+						(int) Math.round(1665634.0 / 4635236.0 * 10),
+						(int) (Math.round(2969602.0 / 4635236.0 * 10) + Math
+								.round(1665634.0 / 4635236.0 * 10)), (int) Math
+								.round(1152214.0 / 2172745.0 * 10), (int) Math
+								.round(814117.0 / 2172745.0 * 10), (int) Math
+								.round(206414.0 / 2172745.0 * 10), (int) (Math
+								.round(1152214.0 / 2172745.0 * 10)
+								+ Math.round(814117.0 / 2172745.0 * 10) + Math
+								.round(206414.0 / 2172745.0 * 10))));
+		opponentModels.put(new Pair<PlayerId, Round>(player, Round.FINAL),
+				new PlayerRoundHistogram(
+						(int) Math.round(1863381.0 / 2843076.0 * 10),
+						(int) Math.round(979695.0 / 2843076.0 * 10),
+						(int) (Math.round(1863381.0 / 2843076.0 * 10) + Math
+								.round(979695.0 / 2843076.0 * 10)), (int) Math
+								.round(653301.0 / 1150533.0 * 10), (int) Math
+								.round(407975.0 / 1150533.0 * 10), (int) Math
+								.round(89257.0 / 1150533.0 * 10), (int) (Math
+								.round(653301.0 / 1150533.0 * 10)
+								+ Math.round(407975.0 / 1150533.0 * 10) + Math
+								.round(89257.0 / 1150533.0 * 10))));
+	}
+
+	private void forgetModelsFor(PlayerId player) {
+		opponentModels.remove(new Pair<PlayerId, Round>(player, Round.FINAL));
+		opponentModels.remove(new Pair<PlayerId, Round>(player, Round.FLOP));
+		opponentModels.remove(new Pair<PlayerId, Round>(player, Round.PREFLOP));
+		opponentModels.remove(new Pair<PlayerId, Round>(player, Round.TURN));
+	}
+
+	@Override
+	public void assumePermanently(GameState gameState) {
+		gameState.acceptHistoryVisitor(this, lastKnownState);
+		lastKnownState = gameState;
+	}
+
+	@Override
+	public void visitAllInState(AllInState allInState) {
+		if (started) {
+			getModelFor(allInState.getEvent().getPlayerId(), round).addAllIn(
+					allInState, allInState.getEvent());
 		}
 	}
 
-	public void addCheck(GameState gameState, CheckEvent checkEvent) {
-		++nbCheck;
-		++totalNoBet;
+	@Override
+	public void visitBetState(BetState betState) {
+		if (started) {
+			getModelFor(betState.getEvent().getPlayerId(), round).addBet(
+					betState, betState.getEvent());
+		}
 	}
 
-	public void addBet(GameState gameState, BetEvent betEvent) {
-		++nbBet;
-		++totalNoBet;
+	@Override
+	public void visitBigBlindState(BigBlindState bigBlindState) {
+
 	}
 
-	public void addCall(GameState gameState, CallEvent callEvent) {
-		++nbCall;
-		++totalBet;
+	@Override
+	public void visitCallState(CallState callState) {
+		if (started) {
+			getModelFor(callState.getEvent().getPlayerId(), round).addCall(
+					callState, callState.getEvent());
+		}
 	}
 
-	public void addRaise(GameState gameState, RaiseEvent raiseEvent) {
-		++nbRaise;
-		++totalBet;
+	@Override
+	public void visitCheckState(CheckState checkState) {
+		if (started) {
+			getModelFor(checkState.getEvent().getPlayerId(), round).addCheck(
+					checkState, checkState.getEvent());
+		}
 	}
 
-	public void addFold(GameState gameState, FoldEvent foldEvent) {
-		++nbFold;
-		++totalBet;
+	@Override
+	public void visitFoldState(FoldState foldState) {
+		if (started) {
+			getModelFor(foldState.getEvent().getPlayerId(), round).addFold(
+					foldState, foldState.getEvent());
+		}
 	}
 
-	public double getCheckProbability(GameState gameState) {
-		return nbCheck*1.0/totalNoBet;
+	@Override
+	public void visitInitialGameState(InitialGameState initialGameState) {
+
 	}
 
-	public double getBetProbability(GameState gameState) {
-		return nbBet*1.0/totalNoBet;
+	@Override
+	public void visitJoinTableState(JoinTableState joinTableState) {
+		initiateModelsFor(joinTableState.getLastEvent().getPlayerId());
 	}
 
-	public double getCallProbability(GameState gameState) {
-		return nbCall*1.0/totalBet;
+	@Override
+	public void visitLeaveSeatState(LeaveSeatState leaveSeatState) {
 	}
 
-	public double getFoldProbability(GameState gameState) {
-		return nbFold*1.0/totalBet;
+	@Override
+	public void visitLeaveTableState(LeaveTableState leaveTableState) {
+		forgetModelsFor(leaveTableState.getLastEvent().getPlayerId());
 	}
 
-	public double getRaiseProbability(GameState gameState) {
-		return nbRaise*1.0/totalBet;
+	@Override
+	public void visitNewCommunityCardsState(
+			NewCommunityCardsState newCommunityCardsState) {
+
+	}
+
+	@Override
+	public void visitNewDealState(NewDealState newDealState) {
+		if (!started) {
+			started = true;
+			for (PlayerId player : newDealState.getAllSeatedPlayerIds()) {
+				initiateModelsFor(player);
+			}
+		}
+	}
+
+	@Override
+	public void visitNewPocketCardsState(NewPocketCardsState newPocketCardsState) {
+
+	}
+
+	@Override
+	public void visitNewRoundState(NewRoundState newRoundState) {
+		round = newRoundState.getRound();
+	}
+
+	@Override
+	public void visitNextPlayerState(NextPlayerState nextPlayerState) {
+
+	}
+
+	@Override
+	public void visitRaiseState(RaiseState raiseState) {
+
+	}
+
+	@Override
+	public void visitShowHandState(ShowHandState showHandState) {
+
+	}
+
+	@Override
+	public void visitSitInState(SitInState sitInState) {
+		initiateModelsFor(sitInState.getEvent().getPlayer().getId());
+	}
+
+	@Override
+	public void visitSitOutState(SitOutState sitOutState) {
+
+	}
+
+	@Override
+	public void visitSmallBlindState(SmallBlindState smallBlindState) {
+
+	}
+
+	@Override
+	public void visitWinnerState(WinnerState winnerState) {
+
+	}
+
+	@Override
+	public void assumeTemporarily(GameState gameState) {
+
+	}
+
+	@Override
+	public void forgetLastAssumption() {
+
 	}
 
 }

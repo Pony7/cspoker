@@ -16,7 +16,6 @@
  */
 package org.cspoker.client.bots.bot.search.opponentmodel.prolog.redundant;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Map;
@@ -36,7 +35,7 @@ import org.cspoker.client.bots.bot.search.node.leaf.UniformShowdownNode;
 import org.cspoker.client.bots.bot.search.node.visitor.Log4JOutputVisitor;
 import org.cspoker.client.bots.bot.search.node.visitor.NodeVisitor;
 import org.cspoker.client.bots.bot.search.node.visitor.NodeVisitor.Factory;
-import org.cspoker.client.bots.bot.search.opponentmodel.OpponentModels;
+import org.cspoker.client.bots.bot.search.opponentmodel.OpponentModel;
 import org.cspoker.client.bots.bot.search.opponentmodel.prolog.cafe.PrologCafeModel;
 import org.cspoker.client.bots.bot.search.opponentmodel.prolog.tuprolog.TuPrologModel;
 import org.cspoker.client.bots.listener.BotListener;
@@ -51,56 +50,64 @@ import alice.tuprolog.Theory;
 @ThreadSafe
 @Deprecated
 public class RedundantBotFactory implements BotFactory {
-	
-	private final static Logger logger = Logger.getLogger(RedundantBotFactory.class);
+
+	private final static Logger logger = Logger
+			.getLogger(RedundantBotFactory.class);
 	private static int copies = 0;
-	
+
 	private final int copy;
 
-	private final Map<PlayerId, OpponentModels> opponentModels = new ConcurrentHashMap<PlayerId, OpponentModels>();
+	private final Map<PlayerId, OpponentModel> opponentModels = new ConcurrentHashMap<PlayerId, OpponentModel>();
 
 	public RedundantBotFactory() {
-		this.copy = ++copies;
+		copy = ++copies;
 	}
 
 	/**
-	 * @see org.cspoker.client.bots.bot.BotFactory#createBot(org.cspoker.common.elements.player.PlayerId, org.cspoker.common.elements.table.TableId, org.cspoker.client.common.SmartLobbyContext, java.util.concurrent.ExecutorService, org.cspoker.client.bots.listener.BotListener[])
+	 * @see org.cspoker.client.bots.bot.BotFactory#createBot(org.cspoker.common.elements.player.PlayerId,
+	 *      org.cspoker.common.elements.table.TableId,
+	 *      org.cspoker.client.common.SmartLobbyContext,
+	 *      java.util.concurrent.ExecutorService,
+	 *      org.cspoker.client.bots.listener.BotListener[])
 	 */
 	public synchronized Bot createBot(final PlayerId botId, TableId tableId,
 			SmartLobbyContext lobby, int buyIn, ExecutorService executor,
 			BotListener... botListeners) {
 		copies++;
-		if(opponentModels.get(botId)==null){
+		if (opponentModels.get(botId) == null) {
 			PrologControl prolog = new PrologControl();
-			PrologCafeModel model1 = new PrologCafeModel(prolog,botId);
-			
+			PrologCafeModel model1 = new PrologCafeModel(prolog);
+
 			Prolog engine = new Prolog();
 			try {
-				Theory theory1 = new Theory(this
-						.getClass()
-						.getClassLoader()
-						.getResourceAsStream(
-								"org/cspoker/client/bots/bot/search/opponentmodel/prolog/tuprolog/theory.pl"));
-			    engine.setTheory(theory1);
+				Theory theory1 = new Theory(
+						this
+								.getClass()
+								.getClassLoader()
+								.getResourceAsStream(
+										"org/cspoker/client/bots/bot/search/opponentmodel/prolog/tuprolog/theory.pl"));
+				engine.setTheory(theory1);
 			} catch (IOException e1) {
 				throw new IllegalStateException(e1);
 			} catch (InvalidTheoryException e2) {
 				throw new IllegalStateException(e2);
 			}
-			TuPrologModel model2 = new TuPrologModel(engine,botId);
-			
-			opponentModels.put(botId, new RedundantModel(Arrays.asList(model1, model2)));
+			TuPrologModel model2 = new TuPrologModel(engine);
+
+			opponentModels.put(botId, new RedundantModel(Arrays.asList(model1,
+					model2)));
 		}
-		SearchConfiguration config = new SearchConfiguration(opponentModels.get(botId), 
-				new UniformShowdownNode.Factory(),
-				new CompleteExpander.Factory(),
-				1,1,1,1,0.5);
-		Factory[] nodeVisitorFactories = new NodeVisitor.Factory[]{new Log4JOutputVisitor.Factory(2)};
-		return new SearchBot(botId, tableId, lobby, executor, config, buyIn, nodeVisitorFactories, botListeners);
+		SearchConfiguration config = new SearchConfiguration(opponentModels
+				.get(botId), new UniformShowdownNode.Factory(),
+				new CompleteExpander.Factory(), 1, 1, 1, 1, 0.5);
+		Factory[] nodeVisitorFactories = new NodeVisitor.Factory[] { new Log4JOutputVisitor.Factory(
+				2) };
+		return new SearchBot(botId, tableId, lobby, executor, config, buyIn,
+				nodeVisitorFactories, botListeners);
 	}
 
 	@Override
 	public String toString() {
-		return "ReduendantBotv1-"+copy;
+		return "ReduendantBotv1-" + copy;
 	}
 }

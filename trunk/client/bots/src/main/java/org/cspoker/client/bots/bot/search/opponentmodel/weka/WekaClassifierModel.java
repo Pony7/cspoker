@@ -37,4 +37,22 @@ public class WekaClassifierModel implements OpponentModel {
 		return null;
 	}
 
+	@Override
+	public void assumePermanently(GameState gameState) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void assumeTemporarily(GameState gameState) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void forgetLastAssumption() {
+		// TODO Auto-generated method stub
+
+	}
+
 }

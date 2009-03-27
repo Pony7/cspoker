@@ -27,46 +27,51 @@ import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.util.Pair;
 
-public class OpponentActionNode extends ActionNode{
+public class OpponentActionNode extends ActionNode {
 
-	private final static Logger logger = Logger.getLogger(OpponentActionNode.class);
-	
+	private final static Logger logger = Logger
+			.getLogger(OpponentActionNode.class);
+
 	private final SamplingExpander expander;
-	
-	public OpponentActionNode(PlayerId opponentId, PlayerId botId, GameState gameState, SearchConfiguration config, int tokens, int searchId, NodeVisitor... visitors) {
+
+	public OpponentActionNode(PlayerId opponentId, PlayerId botId,
+			GameState gameState, SearchConfiguration config, int tokens,
+			int searchId, NodeVisitor... visitors) {
 		super(opponentId, botId, gameState, config, searchId, visitors);
-		this.expander = new SamplingExpander(this, tokens);
+		expander = new SamplingExpander(this, tokens);
 	}
 
-	
 	@Override
-	public Pair<Double,Double> getValueDistribution() {
-		config.getOpponentModeler().assume(gameState);
-		Set<? extends EvaluatedAction<? extends SampledAction>> actions = getExpander().expand();
-		config.getOpponentModeler().forgetAssumption();
+	public Pair<Double, Double> getValueDistribution() {
+		config.getOpponentModeler().assumeTemporarily(gameState);
+		Set<? extends EvaluatedAction<? extends SampledAction>> actions = getExpander()
+				.expand();
+		config.getOpponentModeler().forgetLastAssumption();
 
-		//see Variance Estimation and Ranking of Gaussian Mixture Distributions in Target Tracking Applications
-		//Lidija Trailovi and Lucy Y. Pao
-		double varEV=0;
+		// see Variance Estimation and Ranking of Gaussian Mixture Distributions
+		// in Target Tracking Applications
+		// Lidija Trailovi and Lucy Y. Pao
+		double varEV = 0;
 		double EV = 0;
-		for(EvaluatedAction<? extends SampledAction> eval : actions){
+		for (EvaluatedAction<? extends SampledAction> eval : actions) {
 			double m = eval.getEV();
 			double ss = eval.getVarEV();
-			double w = ((double)eval.getEvaluatedAction().getTimes())/eval.getEvaluatedAction().getOutof();
-			
-			EV += w*m; 
-			varEV += w*(ss+m*m);
+			double w = (double) eval.getEvaluatedAction().getTimes()
+					/ eval.getEvaluatedAction().getOutof();
+
+			EV += w * m;
+			varEV += w * (ss + m * m);
 		}
-		return new Pair<Double, Double>(EV,Math.max(0,varEV-EV*EV));
+		return new Pair<Double, Double>(EV, Math.max(0, varEV - EV * EV));
 	}
-	
+
 	public SamplingExpander getExpander() {
 		return expander;
 	}
-	
+
 	@Override
 	public String toString() {
-		return "Opponent "+playerId+" Action Node";
+		return "Opponent " + playerId + " Action Node";
 	}
-	
+
 }

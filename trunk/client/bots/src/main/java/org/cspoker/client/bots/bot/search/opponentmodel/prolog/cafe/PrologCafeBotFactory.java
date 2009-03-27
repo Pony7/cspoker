@@ -34,7 +34,7 @@ import org.cspoker.client.bots.bot.search.node.leaf.UniformShowdownNode;
 import org.cspoker.client.bots.bot.search.node.visitor.Log4JOutputVisitor;
 import org.cspoker.client.bots.bot.search.node.visitor.NodeVisitor;
 import org.cspoker.client.bots.bot.search.node.visitor.NodeVisitor.Factory;
-import org.cspoker.client.bots.bot.search.opponentmodel.OpponentModels;
+import org.cspoker.client.bots.bot.search.opponentmodel.OpponentModel;
 import org.cspoker.client.bots.listener.BotListener;
 import org.cspoker.client.common.SmartLobbyContext;
 import org.cspoker.common.elements.player.PlayerId;
@@ -42,48 +42,54 @@ import org.cspoker.common.elements.table.TableId;
 
 @ThreadSafe
 public class PrologCafeBotFactory implements BotFactory {
-	
-	private final static Logger logger = Logger.getLogger(PrologCafeBotFactory.class);
+
+	private final static Logger logger = Logger
+			.getLogger(PrologCafeBotFactory.class);
 	private static int copies = 0;
-	
+
 	private final int copy;
 
-	private final Map<PlayerId, OpponentModels> opponentModels = new ConcurrentHashMap<PlayerId, OpponentModels>();
+	private final Map<PlayerId, OpponentModel> opponentModels = new ConcurrentHashMap<PlayerId, OpponentModel>();
 	private final org.cspoker.client.bots.bot.search.node.leaf.ShowdownNode.Factory showdownNodeFactory;
 	private final Factory[] nodeVisitorFactories;
 
 	public PrologCafeBotFactory() {
-		this(new UniformShowdownNode.Factory(), new NodeVisitor.Factory[]{new Log4JOutputVisitor.Factory(2)});
+		this(new UniformShowdownNode.Factory(),
+				new NodeVisitor.Factory[] { new Log4JOutputVisitor.Factory(2) });
 	}
-	
-	public PrologCafeBotFactory(ShowdownNode.Factory showdownNodeFactory, NodeVisitor.Factory... nodeVisitorFactories) {
-		this.copy = ++copies;
+
+	public PrologCafeBotFactory(ShowdownNode.Factory showdownNodeFactory,
+			NodeVisitor.Factory... nodeVisitorFactories) {
+		copy = ++copies;
 		this.showdownNodeFactory = showdownNodeFactory;
 		this.nodeVisitorFactories = nodeVisitorFactories;
 	}
 
 	/**
-	 * @see org.cspoker.client.bots.bot.BotFactory#createBot(org.cspoker.common.elements.player.PlayerId, org.cspoker.common.elements.table.TableId, org.cspoker.client.common.SmartLobbyContext, java.util.concurrent.ExecutorService, org.cspoker.client.bots.listener.BotListener[])
+	 * @see org.cspoker.client.bots.bot.BotFactory#createBot(org.cspoker.common.elements.player.PlayerId,
+	 *      org.cspoker.common.elements.table.TableId,
+	 *      org.cspoker.client.common.SmartLobbyContext,
+	 *      java.util.concurrent.ExecutorService,
+	 *      org.cspoker.client.bots.listener.BotListener[])
 	 */
 	public synchronized Bot createBot(final PlayerId botId, TableId tableId,
-			SmartLobbyContext lobby, int buyIn,ExecutorService executor,
+			SmartLobbyContext lobby, int buyIn, ExecutorService executor,
 			BotListener... botListeners) {
 		copies++;
-		if(opponentModels.get(botId)==null){
+		if (opponentModels.get(botId) == null) {
 			PrologControl prolog = new PrologControl();
-			PrologCafeModel model = new PrologCafeModel(prolog,botId);
+			PrologCafeModel model = new PrologCafeModel(prolog);
 			opponentModels.put(botId, model);
 		}
-		SearchConfiguration config = new SearchConfiguration(
-				opponentModels.get(botId), 
-				showdownNodeFactory,
-				new SamplingExpander.Factory(),
-				50,100,250,250,0.25);
-		return new SearchBot(botId, tableId, lobby, executor, config, buyIn, nodeVisitorFactories ,botListeners);
+		SearchConfiguration config = new SearchConfiguration(opponentModels
+				.get(botId), showdownNodeFactory,
+				new SamplingExpander.Factory(), 50, 100, 250, 250, 0.25);
+		return new SearchBot(botId, tableId, lobby, executor, config, buyIn,
+				nodeVisitorFactories, botListeners);
 	}
 
 	@Override
 	public String toString() {
-		return "PrologCafeSearchBotv1-"+copy;
+		return "PrologCafeSearchBotv1-" + copy;
 	}
 }

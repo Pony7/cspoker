@@ -46,17 +46,18 @@ import org.cspoker.common.util.Log4JPropertiesLoader;
 import org.cspoker.common.util.threading.GlobalThreadPool;
 import org.cspoker.common.util.threading.SingleThreadRequestExecutor;
 
-public class BotRunner
-implements LobbyListener {
+public class BotRunner implements LobbyListener {
 
-	private static final TableConfiguration config = new TableConfiguration(10,0,false);
+	private static final TableConfiguration config = new TableConfiguration(10,
+			0, false);
 
 	public static final int nbGamesPerConfrontation = 1000;
 
 	public final int nbPlayersPerGame;
 
 	static {
-		Log4JPropertiesLoader.load("org/cspoker/client/bots/logging/log4j.properties");
+		Log4JPropertiesLoader
+				.load("org/cspoker/client/bots/logging/log4j.properties");
 	}
 
 	private final static Logger logger = Logger.getLogger(BotRunner.class);
@@ -79,63 +80,76 @@ implements LobbyListener {
 	private final BotListener speedMinitor;
 	private volatile BotListener gameLimiter;
 
-	public BotRunner(RemoteCSPokerServer cspokerServer){
-		this(cspokerServer, new BotFactory[]{
-				// ML bots
-//								new RuleBasedBotFactory1(),
-								new RuleBasedBotFactory2(),
-//								new SearchBotFactory(new DistributionShowdownNode4.Factory(), new Log4JOutputVisitor.Factory(2)),
-//								new SearchBotFactory(new DistributionShowdownNode4.Factory(), new Log4JOutputVisitor.Factory(2)),
-//								new RuleBasedBotFactory1(),
-//								new RuleBasedBotFactory2(),
+	public BotRunner(RemoteCSPokerServer cspokerServer) {
+		this(cspokerServer,
+				new BotFactory[] {
+						// ML bots
+						// new RuleBasedBotFactory1(),
+						new RuleBasedBotFactory2(),
+						// new SearchBotFactory(new
+						// DistributionShowdownNode4.Factory(), new
+						// Log4JOutputVisitor.Factory(2)),
+						// new SearchBotFactory(new
+						// DistributionShowdownNode4.Factory(), new
+						// Log4JOutputVisitor.Factory(2)),
+						// new RuleBasedBotFactory1(),
+						// new RuleBasedBotFactory2(),
 
-
-//								new SearchBotFactory(new DistributionShowdownNode1.Factory()),
-//								new SearchBotFactory(new DistributionShowdownNode2.Factory()),
-//								new SearchBotFactory(new DistributionShowdownNode4.Factory()),
-				//				new PrologCafeBotFactory(),
-//								new RuleBasedBotFactory(),
-								new PrologCafeBotFactory(new DistributionShowdownNode4.Factory()),
-								new TuPrologBotFactory(new DistributionShowdownNode4.Factory()),
-				//				new InterPrologBotFactory(),
-//								new SearchBotFactory(new CachedShowdownNodeFactory(new UniformShowdownNode.Factory())),
-		});
+						// new SearchBotFactory(new
+						// DistributionShowdownNode1.Factory()),
+						// new SearchBotFactory(new
+						// DistributionShowdownNode2.Factory()),
+						// new SearchBotFactory(new
+						// DistributionShowdownNode4.Factory()),
+						// new PrologCafeBotFactory(),
+						// new RuleBasedBotFactory(),
+						new PrologCafeBotFactory(
+								new DistributionShowdownNode4.Factory()),
+						new TuPrologBotFactory(
+								new DistributionShowdownNode4.Factory()),
+				// new InterPrologBotFactory(),
+				// new SearchBotFactory(new CachedShowdownNodeFactory(new
+				// UniformShowdownNode.Factory())),
+				});
 	}
 
 	public BotRunner(RemoteCSPokerServer cspokerServer, BotFactory[] bots) {
 		try {
 			this.bots = bots;
-			this.nbPlayersPerGame = 2;//bots.length;//or a constant
+			nbPlayersPerGame = 2;// bots.length;//or a constant
 			bot = new Bot[nbPlayersPerGame];
 			botProfit = new int[nbPlayersPerGame];
 			botIndex = new int[nbPlayersPerGame];
-			
+
 			botLobbies = new SmartLobbyContext[bots.length];
 			botIDs = new PlayerId[bots.length];
 
-			SmartClientContext director = new SmartClientContext(cspokerServer.login("director", "test"));
+			SmartClientContext director = new SmartClientContext(cspokerServer
+					.login("director", "test"));
 			directorLobby = director.getLobbyContext(BotRunner.this);
 
-			for(int i=0;i<bots.length;i++){
-				SmartClientContext clientContext = new SmartClientContext(cspokerServer.login(bots[i].toString(), "test"));
-				botLobbies[i] = clientContext.getLobbyContext(new DefaultLobbyListener());
+			for (int i = 0; i < bots.length; i++) {
+				SmartClientContext clientContext = new SmartClientContext(
+						cspokerServer.login(bots[i].toString(), "test"));
+				botLobbies[i] = clientContext
+						.getLobbyContext(new DefaultLobbyListener());
 				botIDs[i] = clientContext.getAccountContext().getPlayerID();
 			}
 
 			executor = SingleThreadRequestExecutor.getInstance();
 
-			speedMinitor =  new SpeedTestBotListener(64, this);
+			speedMinitor = new SpeedTestBotListener(64, this);
 
-			//set start indexes
-			for(int i=0;i<nbPlayersPerGame-1;i++){
+			// set start indexes
+			for (int i = 0; i < nbPlayersPerGame - 1; i++) {
 				botIndex[i] = i;
 			}
-			botIndex[nbPlayersPerGame-1] = nbPlayersPerGame-2;
+			botIndex[nbPlayersPerGame - 1] = nbPlayersPerGame - 2;
 
 			iterateBots();
 
 		} catch (LoginException e) {
-			throw new IllegalStateException("Login Failed",e);
+			throw new IllegalStateException("Login Failed", e);
 		} catch (RemoteException e) {
 			logger.error(e);
 			throw new IllegalStateException("Server setup failed.", e);
@@ -147,12 +161,12 @@ implements LobbyListener {
 	}
 
 	private void iterateBots() {
-		if(botIndex[nbPlayersPerGame-1]<bots.length-1){
-			botIndex[nbPlayersPerGame-1]++;
+		if (botIndex[nbPlayersPerGame - 1] < bots.length - 1) {
+			botIndex[nbPlayersPerGame - 1]++;
 			resetStateAndStartPlay();
-		}else{ 
-			for(int i=nbPlayersPerGame-2;i>=0;i--){
-				if(botIndex[i]+1<botIndex[i+1]){
+		} else {
+			for (int i = nbPlayersPerGame - 2; i >= 0; i--) {
+				if (botIndex[i] + 1 < botIndex[i + 1]) {
 					botIndex[i]++;
 					resetStateAndStartPlay();
 					return;
@@ -162,25 +176,27 @@ implements LobbyListener {
 		}
 	}
 
-	private void resetStateAndStartPlay(){
-		gameLimiter = new GameLimitingBotListener(this,nbGamesPerConfrontation);
+	private void resetStateAndStartPlay() {
+		gameLimiter = new GameLimitingBotListener(this, nbGamesPerConfrontation);
 		playOnNewtable();
 	}
 
 	private void playOnNewtable() {
 		try {
-			String tableName = bots[botIndex[0]].toString(); 
-			for(int i=1;i<nbPlayersPerGame;i++){
-				tableName += " vs "+bots[botIndex[i]].toString();
+			String tableName = bots[botIndex[0]].toString();
+			for (int i = 1; i < nbPlayersPerGame; i++) {
+				tableName += " vs " + bots[botIndex[i]].toString();
 			}
-			TableId tableId = directorLobby.createHoldemTable(tableName, 
-					config).getId();
+			TableId tableId = directorLobby
+					.createHoldemTable(tableName, config).getId();
 
-			bot[0] = bots[botIndex[0]].createBot(botIDs[botIndex[0]], tableId, botLobbies[botIndex[0]], 5000,executor, 
-					new ReSitInBotListener(this), speedMinitor,gameLimiter);
+			bot[0] = bots[botIndex[0]].createBot(botIDs[botIndex[0]], tableId,
+					botLobbies[botIndex[0]], 5000, executor,
+					new ReSitInBotListener(this), speedMinitor, gameLimiter);
 			bot[0].start();
-			for(int i=1;i<nbPlayersPerGame;i++){
-				bot[i] = bots[botIndex[i]].createBot(botIDs[botIndex[i]], tableId, botLobbies[botIndex[i]], 5000, executor);
+			for (int i = 1; i < nbPlayersPerGame; i++) {
+				bot[i] = bots[botIndex[i]].createBot(botIDs[botIndex[i]],
+						tableId, botLobbies[botIndex[i]], 5000, executor);
 				bot[i].start();
 			}
 			bot[0].startGame();
@@ -199,11 +215,13 @@ implements LobbyListener {
 	}
 
 	public void onTableCreated(TableCreatedEvent tableCreatedEvent) {
-		logger.debug(tableCreatedEvent.getTable().getName()+" table created.");
+		logger
+				.debug(tableCreatedEvent.getTable().getName()
+						+ " table created.");
 	}
 
 	public void onTableRemoved(TableRemovedEvent tableRemovedEvent) {
-		logger.debug("Table " + tableRemovedEvent.getTableId()+" removed.");
+		logger.debug("Table " + tableRemovedEvent.getTableId() + " removed.");
 	}
 
 	public void respawnBots() {
@@ -212,29 +230,31 @@ implements LobbyListener {
 	}
 
 	private void stopRunningBots() {
-		for(int i=0;i<nbPlayersPerGame;i++){
+		for (int i = 0; i < nbPlayersPerGame; i++) {
 			int profit = bot[i].getProfit();
 			botProfit[i] += profit;
-			logger.debug(bot[i]+" gains "+profit);
+			logger.debug(bot[i] + " gains " + profit);
 			bot[i].stop();
 		}
 	}
 
 	public void moveToNextCombination() {
 		stopRunningBots();
-		for(int i=0;i<nbPlayersPerGame;i++){
-			logger.info(bots[botIndex[i]].toString()+" averages "+(botProfit[i]*1.0/config.getBigBlind()/nbGamesPerConfrontation)+" bb/game");
-			botProfit[i]=0;
+		for (int i = 0; i < nbPlayersPerGame; i++) {
+			logger.info(bots[botIndex[i]].toString() + " averages "
+					+ botProfit[i] * 1.0 / config.getBigBlind()
+					/ nbGamesPerConfrontation + " bb/game");
+			botProfit[i] = 0;
 		}
 		iterateBots();
 	}
 
-	public BotFactory getBotFactory(int i){
+	public BotFactory getBotFactory(int i) {
 		return bots[botIndex[i]];
 	}
 
 	public double getBotProfit(int i) {
-		return (botProfit[i]+bot[i].getProfit())*1.0/config.getBigBlind();
+		return (botProfit[i] + bot[i].getProfit()) * 1.0 / config.getBigBlind();
 	}
 
 }

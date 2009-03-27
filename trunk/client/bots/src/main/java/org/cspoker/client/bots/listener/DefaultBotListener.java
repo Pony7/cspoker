@@ -17,18 +17,17 @@ package org.cspoker.client.bots.listener;
 
 import org.cspoker.common.api.lobby.holdemtable.event.SitOutEvent;
 
-public class DefaultBotListener
-		implements BotListener {
-	
+public class DefaultBotListener implements BotListener {
+
 	/**
 	 * <code>no op</code>
 	 * 
 	 * @see org.cspoker.client.bots.listener.BotListener#onNewDeal()
 	 */
 	public void onNewDeal() {
-	// no op
+		// no op
 	}
-	
+
 	/**
 	 * <code>no op</code>
 	 * 
@@ -38,5 +37,5 @@ public class DefaultBotListener
 	public void onSitOut(SitOutEvent sitOutEvent) {
 		// no op
 	}
-	
+
 }

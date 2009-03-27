@@ -24,26 +24,27 @@ import org.cspoker.common.elements.player.PlayerId;
 
 public class Log4JOutputVisitor extends TextOutputVisitor {
 
-	private final static Logger logger = Logger.getLogger(Log4JOutputVisitor.class);
+	private final static Logger logger = Logger
+			.getLogger(Log4JOutputVisitor.class);
 
 	public Log4JOutputVisitor() {
 		super();
 	}
-	
+
 	public Log4JOutputVisitor(int maxDepth) {
 		super(maxDepth);
 	}
-	
+
 	@Override
 	public void enterNode(ActionNode node, ActionWrapper action, int tokens) {
-		if(logger.isDebugEnabled()){
+		if (logger.isDebugEnabled()) {
 			super.enterNode(node, action, tokens);
 		}
 	}
 
 	@Override
 	public void leaveNode(EvaluatedAction<? extends ActionWrapper> evaluation) {
-		if(logger.isDebugEnabled()){
+		if (logger.isDebugEnabled()) {
 			super.leaveNode(evaluation);
 		}
 	}
@@ -52,22 +53,22 @@ public class Log4JOutputVisitor extends TextOutputVisitor {
 	protected void output(String line) {
 		logger.debug(line);
 	}
-	
-	public static class Factory implements NodeVisitor.Factory{
+
+	public static class Factory implements NodeVisitor.Factory {
 
 		private final int maxDepth;
 
 		public Factory(int maxDepth) {
 			this.maxDepth = maxDepth;
 		}
-		
+
 		@Override
 		public Log4JOutputVisitor create(GameState gameState, PlayerId actor) {
 			return new Log4JOutputVisitor(maxDepth);
 		}
-		
+
 	}
-	
+
 	@Override
 	public void visitLeafNode(int winnings, double probability,
 			int minWinnable, int maxWinnable) {

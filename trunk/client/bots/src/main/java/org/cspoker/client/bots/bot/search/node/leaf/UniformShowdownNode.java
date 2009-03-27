@@ -16,32 +16,36 @@
 package org.cspoker.client.bots.bot.search.node.leaf;
 
 import org.cspoker.client.bots.bot.search.SearchConfiguration;
-import org.cspoker.client.bots.bot.search.node.leaf.rankdistribution.ShowdownRankPredictor1of1;
 import org.cspoker.client.bots.bot.search.node.visitor.NodeVisitor;
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.common.elements.player.PlayerId;
 
-public class UniformShowdownNode extends AbstractDistributionShowdownNode{
+public class UniformShowdownNode extends AbstractDistributionShowdownNode {
 
-	UniformShowdownNode(PlayerId botId, GameState gameState, int tokens, NodeVisitor...nodeVisitors) {
+	UniformShowdownNode(PlayerId botId, GameState gameState, int tokens,
+			NodeVisitor... nodeVisitors) {
 		super(botId, gameState, tokens, nodeVisitors);
 	}
 
+	@Override
 	protected float getRelativeProbability(int rank, int relativePotSize) {
 		return 1;
 	}
+
 	@Override
 	public String toString() {
 		return "Uniform Showdown Node";
 	}
 
-
-	public static class Factory implements AbstractDistributionShowdownNode.Factory{
+	public static class Factory implements
+			AbstractDistributionShowdownNode.Factory {
 
 		@Override
-		public UniformShowdownNode create(PlayerId botId, GameState gameState, int tokens
-				, SearchConfiguration config, int searchId, NodeVisitor...nodeVisitors) {
-			return new UniformShowdownNode(botId, gameState, tokens, nodeVisitors);
+		public UniformShowdownNode create(PlayerId botId, GameState gameState,
+				int tokens, SearchConfiguration config, int searchId,
+				NodeVisitor... nodeVisitors) {
+			return new UniformShowdownNode(botId, gameState, tokens,
+					nodeVisitors);
 		}
 
 		@Override
