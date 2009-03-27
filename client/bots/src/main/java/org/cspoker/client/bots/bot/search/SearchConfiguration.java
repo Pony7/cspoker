@@ -18,11 +18,11 @@ package org.cspoker.client.bots.bot.search;
 import org.cspoker.client.bots.bot.search.node.expander.Expander;
 import org.cspoker.client.bots.bot.search.node.expander.Expander.Factory;
 import org.cspoker.client.bots.bot.search.node.leaf.ShowdownNode;
-import org.cspoker.client.bots.bot.search.opponentmodel.AllPlayersModel;
+import org.cspoker.client.bots.bot.search.opponentmodel.OpponentModels;
 
 public class SearchConfiguration {
 	
-	private final AllPlayersModel opponentModeler;
+	private final OpponentModels opponentModeler;
 	private final ShowdownNode.Factory showdownNodeFactory;
 	private final int flopTokens;
 	private final int turnTokens;
@@ -32,7 +32,7 @@ public class SearchConfiguration {
 	private final double evDiscount;
 	
 	public SearchConfiguration(
-			AllPlayersModel opponentModel, 
+			OpponentModels opponentModel, 
 			ShowdownNode.Factory showdownNodeFactory, 
 			Expander.Factory botNodeExpanderFactory,
 			int preflopTokens,
@@ -50,7 +50,7 @@ public class SearchConfiguration {
 		this.evDiscount = evDiscount;
 	}
 	
-	public AllPlayersModel getOpponentModeler() {
+	public OpponentModels getOpponentModeler() {
 		return opponentModeler;
 	}
 	

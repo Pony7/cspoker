@@ -23,19 +23,20 @@ import org.cspoker.common.elements.player.PlayerId;
  * @author guy
  *
  */
-public interface AllPlayersModel {
+public interface OpponentModels {
 
-	OpponentModel getModelFor(PlayerId opponentId, GameState gameState);
+	/**
+	 * Get the opponent model for the given player in the given game state.
+	 */
+	OpponentModel getModelFor(GameState gameState, PlayerId opponentId);
 
 	/**
 	 * Assume the given game state permanently.
-	 * @param gameState
 	 */
 	void signalNextAction(GameState gameState);
 
 	/**
 	 * Assume the given game state temporarily.
-	 * @param gameState
 	 */
 	void assume(GameState gameState);
 

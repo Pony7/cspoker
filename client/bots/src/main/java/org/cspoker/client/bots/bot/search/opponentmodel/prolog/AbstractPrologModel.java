@@ -17,35 +17,28 @@ package org.cspoker.client.bots.bot.search.opponentmodel.prolog;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 
 import jp.ac.kobe_u.cs.prolog.lang.StructureTerm;
 import jp.ac.kobe_u.cs.prolog.lang.SymbolTerm;
 
 import org.apache.log4j.Logger;
-import org.cspoker.client.bots.bot.search.action.BetAction;
-import org.cspoker.client.bots.bot.search.action.CallAction;
-import org.cspoker.client.bots.bot.search.action.CheckAction;
-import org.cspoker.client.bots.bot.search.action.FoldAction;
-import org.cspoker.client.bots.bot.search.action.ProbabilityAction;
-import org.cspoker.client.bots.bot.search.action.RaiseAction;
-import org.cspoker.client.bots.bot.search.opponentmodel.AllPlayersModel;
-import org.cspoker.client.bots.bot.search.opponentmodel.HistogramModel;
 import org.cspoker.client.bots.bot.search.opponentmodel.OpponentModel;
+import org.cspoker.client.bots.bot.search.opponentmodel.OpponentModels;
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.common.elements.player.PlayerId;
+import org.cspoker.common.util.Pair;
+import org.cspoker.common.util.Triple;
 
-public abstract class AbstractPrologModel implements AllPlayersModel {
+public abstract class AbstractPrologModel implements OpponentModels {
 
 	private final static Logger logger = Logger.getLogger(AbstractPrologModel.class);
 
 	public final static SymbolTerm fold = SymbolTerm.makeSymbol("fold");
 	public final static SymbolTerm call = SymbolTerm.makeSymbol("call");
-	public final static SymbolTerm bet = SymbolTerm.makeSymbol("bet");
 	public final static SymbolTerm check = SymbolTerm.makeSymbol("check");
+	public final static SymbolTerm bet = SymbolTerm.makeSymbol("bet");
+	public final static SymbolTerm raise = SymbolTerm.makeSymbol("bet");
 
 	private final ToPrologTermVisitor assertingVisitor;
 	private final PlayerId botId;
@@ -77,79 +70,26 @@ public abstract class AbstractPrologModel implements AllPlayersModel {
 	}
 
 	@Override
-	public OpponentModel getModelFor(final PlayerId playerId, GameState gameState) {
+	public OpponentModel getModelFor(GameState gameState, final PlayerId playerId) {
 		return new OpponentModel(){
 			
 			@Override
-			public Set<ProbabilityAction> getProbabilityActions(GameState gameState) {
-				HashSet<ProbabilityAction> actions = new LinkedHashSet<ProbabilityAction>();
-				double betProb = priorActionProbability(bet, playerId);
-				double totalProb = 0;
-
-				if(gameState.hasBet()){
-					//call, raise or fold
-
-					double callProb = priorActionProbability(call, playerId);
-					actions.add(new ProbabilityAction(
-							new CallAction(gameState, playerId), 
-							callProb));
-					totalProb += callProb;
-
-					double foldProb = priorActionProbability(fold, playerId);
-					actions.add(new ProbabilityAction(
-							new FoldAction(gameState, playerId),
-							foldProb));
-					totalProb += foldProb;
-
-					if(logger.isDebugEnabled()){
-						logger.debug(callProb+" | "+foldProb);
-					}
-					if(!gameState.getPlayer(botId).isAllIn() && gameState.isAllowedToRaise(playerId)){
-						int lowerRaiseBound = gameState.getLowerRaiseBound(playerId);
-						int upperRaiseBound = gameState.getUpperRaiseBound(playerId);
-						int n = upperRaiseBound>lowerRaiseBound? HistogramModel.nbBetSizeSamples:1;
-						actions.add(new ProbabilityAction(new RaiseAction(gameState, playerId, lowerRaiseBound),betProb/n));
-						totalProb+=betProb/n;
-						if(n>1){
-							double[] betSizeSamples = HistogramModel.getLogarithmicSamples(n-1);
-							for (int i = 0; i < betSizeSamples.length; i++) {
-								RaiseAction raiseAction = new RaiseAction(gameState, playerId, (int)Math.round(lowerRaiseBound+betSizeSamples[i]*(upperRaiseBound-lowerRaiseBound)));
-								actions.add(new ProbabilityAction(raiseAction,betProb/n));
-								totalProb+=betProb/n;
-							}
-						}
-					}
-				}else{
-					//check or bet
-					double checkprob = priorActionProbability(check, playerId);
-					actions.add(new ProbabilityAction(
-							new CheckAction(gameState, playerId),
-							checkprob));
-					totalProb += checkprob;
-
-					if(!gameState.getPlayer(botId).isAllIn() && gameState.isAllowedToRaise(playerId)){
-						int lowerRaiseBound = gameState.getLowerRaiseBound(playerId);
-						int upperRaiseBound = gameState.getUpperRaiseBound(playerId);
-						int n = upperRaiseBound>lowerRaiseBound? HistogramModel.nbBetSizeSamples:1;
-						actions.add(new ProbabilityAction(new BetAction(gameState, playerId, lowerRaiseBound),betProb/n));
-						totalProb+=betProb/n;
-						if(n>1){
-							double[] betSizeSamples = HistogramModel.getLogarithmicSamples(n-1);
-							for (int i = 0; i < betSizeSamples.length; i++) {
-								BetAction raiseAction = new BetAction(gameState, playerId, (int)Math.round(lowerRaiseBound+betSizeSamples[i]*(upperRaiseBound-lowerRaiseBound)));
-								actions.add(new ProbabilityAction(raiseAction,betProb/n));
-								totalProb+=betProb/n;
-							}
-						}
-					}
-				}
-
-				HashSet<ProbabilityAction> normalizedActions = new HashSet<ProbabilityAction>();
-				for(ProbabilityAction action:actions){
-					normalizedActions.add(new ProbabilityAction(action.getActionWrapper(), action.getProbability()/totalProb));
-				}	
-
-				return normalizedActions;
+			public Pair<Double, Double> getCheckBetProbabilities(
+					GameState gameState, PlayerId actor) {
+				return new Pair<Double,Double>(
+						priorActionProbability(check, playerId),
+						priorActionProbability(bet, playerId)
+				);		
+			}
+			
+			@Override
+			public Triple<Double, Double, Double> getFoldCallRaiseProbabilities(
+					GameState gameState, PlayerId actor) {
+				return new Triple<Double,Double,Double>(
+						priorActionProbability(fold, playerId),
+						priorActionProbability(call, playerId),
+						priorActionProbability(raise, playerId)
+				);	
 			}
 
 		};

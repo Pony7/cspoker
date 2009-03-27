@@ -13,29 +13,28 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.client.bots.bot.search.opponentmodel;
+package org.cspoker.client.bots.bot.search.opponentmodel.weka;
 
+import org.cspoker.client.bots.bot.search.opponentmodel.OpponentModel;
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.util.Pair;
 import org.cspoker.common.util.Triple;
 
-/**
- * An opponent model for a single opponent.
- * 
- * @author guy
- *
- */
-public interface OpponentModel {
+public class WekaClassifierModel implements OpponentModel {
 
-	Pair<Double, Double> getCheckBetProbabilities(GameState gameState, PlayerId actor);
-	
-	Triple<Double, Double, Double> getFoldCallRaiseProbabilities(GameState gameState, PlayerId actor);
-	
-	static interface OpponentModelFactory{
-		
-		OpponentModel create(PlayerId opponentId);
-		
+	@Override
+	public Pair<Double, Double> getCheckBetProbabilities(GameState gameState,
+			PlayerId actor) {
+		// TODO Auto-generated method stub
+		return null;
 	}
-	
+
+	@Override
+	public Triple<Double, Double, Double> getFoldCallRaiseProbabilities(
+			GameState gameState, PlayerId actor) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

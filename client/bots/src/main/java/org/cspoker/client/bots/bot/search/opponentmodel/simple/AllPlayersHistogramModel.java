@@ -13,12 +13,13 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.client.bots.bot.search.opponentmodel;
+package org.cspoker.client.bots.bot.search.opponentmodel.simple;
 
 import java.util.concurrent.ConcurrentHashMap;
 
 import net.jcip.annotations.NotThreadSafe;
 
+import org.cspoker.client.bots.bot.search.opponentmodel.OpponentModels;
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.client.common.gamestate.GameStateVisitor;
 import org.cspoker.client.common.gamestate.InitialGameState;
@@ -47,7 +48,7 @@ import org.cspoker.common.elements.table.Round;
 import org.cspoker.common.util.Pair;
 
 @NotThreadSafe
-public class AllPlayersHistogramModel implements AllPlayersModel, GameStateVisitor {
+public class AllPlayersHistogramModel implements OpponentModels, GameStateVisitor {
 
 	private final ConcurrentHashMap<Pair<PlayerId,Round>, HistogramModel> opponentModels = new ConcurrentHashMap<Pair<PlayerId,Round>, HistogramModel>();
 	
@@ -61,7 +62,7 @@ public class AllPlayersHistogramModel implements AllPlayersModel, GameStateVisit
 		this.botId = botId;
 	}
 	
-	public HistogramModel getModelFor(PlayerId opponentId, GameState gameState){
+	public HistogramModel getModelFor(GameState gameState, PlayerId opponentId){
 		return getModelFor(opponentId, gameState.getRound());
 	}
 	
@@ -82,11 +83,9 @@ public class AllPlayersHistogramModel implements AllPlayersModel, GameStateVisit
 		opponentModels.put(
 				new Pair<PlayerId,Round>(player,Round.PREFLOP), 
 				new HistogramModel(
-						player,
-						botId,
 						(int)10,
-						(int)0,
-						(int)10,
+						(int)1,
+						(int)11,
 						(int)Math.round(37556539.0/53203232.0*10),
 						(int)Math.round(7410418.0/53203232.0*10),
 						(int)Math.round(8236275.0/53203232.0*10),
@@ -96,8 +95,6 @@ public class AllPlayersHistogramModel implements AllPlayersModel, GameStateVisit
 						));
 		opponentModels.put(new Pair<PlayerId,Round>(player,Round.FLOP), 
 				new HistogramModel(
-						player,
-						botId,
 						(int)Math.round(5643188.0/9067525.0*10),
 						(int)Math.round(3424337.0/9067525.0*10),
 						(int)(Math.round(5643188.0/9067525.0*10)+
@@ -111,8 +108,6 @@ public class AllPlayersHistogramModel implements AllPlayersModel, GameStateVisit
 						));
 		opponentModels.put(new Pair<PlayerId,Round>(player,Round.TURN), 
 				new HistogramModel(
-						player,
-						botId,
 						(int)Math.round(2969602.0/4635236.0*10),
 						(int)Math.round(1665634.0/4635236.0*10),
 						(int)(Math.round(2969602.0/4635236.0*10)+
@@ -126,8 +121,6 @@ public class AllPlayersHistogramModel implements AllPlayersModel, GameStateVisit
 						));
 		opponentModels.put(new Pair<PlayerId,Round>(player,Round.FINAL), 
 				new HistogramModel(
-						player,
-						botId,
 						(int)Math.round(1863381.0/2843076.0*10),
 						(int)Math.round(979695.0/2843076.0*10),
 						(int)(Math.round(1863381.0/2843076.0*10)+
