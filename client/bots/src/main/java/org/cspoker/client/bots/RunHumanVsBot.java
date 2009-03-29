@@ -23,6 +23,8 @@ import org.cspoker.client.bots.bot.search.SearchBotFactory;
 import org.cspoker.client.bots.bot.search.node.leaf.DistributionShowdownNode4;
 import org.cspoker.client.bots.bot.search.node.visitor.Log4JOutputVisitor;
 import org.cspoker.client.bots.bot.search.node.visitor.SWTTreeVisitor;
+import org.cspoker.client.bots.bot.search.opponentmodel.weka.WekaBotFactory;
+import org.cspoker.client.bots.bot.search.opponentmodel.weka.WekaClassifierModel;
 import org.cspoker.client.bots.listener.DefaultBotListener;
 import org.cspoker.client.common.SmartClientContext;
 import org.cspoker.client.common.SmartLobbyContext;
@@ -101,7 +103,11 @@ public class RunHumanVsBot {
 
 			}
 		});
-		BotFactory botFactory = new SearchBotFactory(
+//		BotFactory botFactory = new SearchBotFactory(
+//				new DistributionShowdownNode4.Factory(),
+//				new Log4JOutputVisitor.Factory(2), new SWTTreeVisitor.Factory(
+//						client.getGui().getDisplay()));
+		BotFactory botFactory = new WekaBotFactory(
 				new DistributionShowdownNode4.Factory(),
 				new Log4JOutputVisitor.Factory(2), new SWTTreeVisitor.Factory(
 						client.getGui().getDisplay()));

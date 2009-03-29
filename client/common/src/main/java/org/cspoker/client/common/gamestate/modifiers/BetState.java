@@ -109,7 +109,7 @@ public class BetState
 		return newPotSize;
 	}
 	
-	public HoldemTableEvent getLastEvent() {
+	public BetEvent getLastEvent() {
 		return event;
 	}
 	

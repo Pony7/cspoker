@@ -47,4 +47,9 @@ public class NextPlayerState extends ForwardingGameState {
 		visitor.visitNextPlayerState(this);
 	}
 	
+	@Override
+	public String toString() {
+		return ""+getPreviousGameState();
+	}
+	
 }

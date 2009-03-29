@@ -75,7 +75,7 @@ public class CachingNode extends ForwardingGameState {
 
 	@Override
 	public String toString() {
-		return "(Caching) AFTER "+getPreviousGameState();
+		return "(Cached) "+getPreviousGameState();
 	}
 	
 	@Override
