@@ -110,7 +110,7 @@ public class BigBlindState
 		return newPot;
 	}
 	
-	public HoldemTableEvent getLastEvent() {
+	public BigBlindEvent getLastEvent() {
 		return event;
 	}
 	

@@ -133,7 +133,7 @@ public class AllInState
 		return newPotSize;
 	}
 	
-	public HoldemTableEvent getLastEvent() {
+	public AllInEvent getLastEvent() {
 		return event;
 	}
 	

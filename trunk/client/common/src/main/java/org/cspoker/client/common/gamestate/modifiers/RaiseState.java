@@ -111,7 +111,7 @@ public class RaiseState
 		return newPotSize;
 	}
 	
-	public HoldemTableEvent getLastEvent() {
+	public RaiseEvent getLastEvent() {
 		return event;
 	}
 	

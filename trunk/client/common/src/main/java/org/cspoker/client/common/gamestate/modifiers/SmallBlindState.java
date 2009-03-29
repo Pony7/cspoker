@@ -110,7 +110,7 @@ public class SmallBlindState
 		return event.getAmount();
 	}
 	
-	public HoldemTableEvent getLastEvent() {
+	public SmallBlindEvent getLastEvent() {
 		return event;
 	}
 	

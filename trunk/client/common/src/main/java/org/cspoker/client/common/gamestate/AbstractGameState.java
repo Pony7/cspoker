@@ -161,7 +161,7 @@ implements GameState {
 
 	@Override
 	public String toString() {
-		return getLastEvent()+" AFTER "+getPreviousGameState();
+		return getLastEvent()+"\n"+getPreviousGameState();
 	}
 
 }

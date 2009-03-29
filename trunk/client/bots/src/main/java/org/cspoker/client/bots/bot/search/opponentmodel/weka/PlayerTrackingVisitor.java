@@ -15,8 +15,11 @@
  */
 package org.cspoker.client.bots.bot.search.opponentmodel.weka;
 
+import org.apache.log4j.Logger;
+import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.client.common.gamestate.GameStateVisitor;
 import org.cspoker.client.common.gamestate.InitialGameState;
+import org.cspoker.client.common.gamestate.PlayerState;
 import org.cspoker.client.common.gamestate.modifiers.AllInState;
 import org.cspoker.client.common.gamestate.modifiers.BetState;
 import org.cspoker.client.common.gamestate.modifiers.BigBlindState;
@@ -37,42 +40,72 @@ import org.cspoker.client.common.gamestate.modifiers.SitInState;
 import org.cspoker.client.common.gamestate.modifiers.SitOutState;
 import org.cspoker.client.common.gamestate.modifiers.SmallBlindState;
 import org.cspoker.client.common.gamestate.modifiers.WinnerState;
+import org.cspoker.common.elements.table.Round;
 
-public class PlayerTrackingVisitor implements GameStateVisitor {
+public class PlayerTrackingVisitor implements GameStateVisitor, Cloneable {
 
+	private final static Logger logger = Logger.getLogger(PlayerTrackingVisitor.class);
+	
+	private GameState previousStartState;
+	private Propositionalizer propz = new Propositionalizer();
+	
+	public void readHistory(GameState gameState) {
+		gameState.acceptHistoryVisitor(this, previousStartState);
+		previousStartState = gameState;
+	}
+	
+	@Override
+	protected PlayerTrackingVisitor clone() {
+		try {
+			PlayerTrackingVisitor clone = (PlayerTrackingVisitor)super.clone();
+			clone.setPropz(clone.getPropz().clone());
+			return clone;
+		} catch (CloneNotSupportedException e) {
+			throw new IllegalStateException(e);
+		}
+	}
+	
+	public void setPropz(Propositionalizer propz) {
+		this.propz = propz;
+	}
+	
+	public Propositionalizer getPropz() {
+		return propz;
+	}
+	
 	@Override
 	public void visitAllInState(AllInState allInState) {
-
+		propz.signalAllIn(allInState.getEvent().getPlayerId(), allInState.getEvent().getAmount());
 	}
 
 	@Override
 	public void visitBetState(BetState betState) {
-
+		propz.signalBet(false, betState.getLastEvent().getPlayerId(), betState.getLargestBet());
 	}
 
 	@Override
 	public void visitBigBlindState(BigBlindState bigBlindState) {
-
+		propz.signalBigBlind(false, bigBlindState.getLastEvent().getPlayerId());
 	}
 
 	@Override
 	public void visitCallState(CallState callState) {
-
+		propz.signalCall(false, callState.getEvent().getPlayerId());
 	}
 
 	@Override
 	public void visitCheckState(CheckState checkState) {
-
+		propz.signalCheck(checkState.getEvent().getPlayerId());
 	}
 
 	@Override
 	public void visitFoldState(FoldState foldState) {
-
+		propz.signalFold(foldState.getEvent().getPlayerId());
 	}
 
 	@Override
 	public void visitInitialGameState(InitialGameState initialGameState) {
-
+		
 	}
 
 	@Override
@@ -98,7 +131,10 @@ public class PlayerTrackingVisitor implements GameStateVisitor {
 
 	@Override
 	public void visitNewDealState(NewDealState newDealState) {
-
+		propz.signalNewGame(newDealState.getTableConfiguration().getBigBlind());
+		for(PlayerState player: newDealState.getAllSeatedPlayers()){
+			propz.signalSeatedPlayer(player.getStack(), player.getPlayerId());
+		}
 	}
 
 	@Override
@@ -108,7 +144,13 @@ public class PlayerTrackingVisitor implements GameStateVisitor {
 
 	@Override
 	public void visitNewRoundState(NewRoundState newRoundState) {
-
+		if(newRoundState.getRound()==Round.FLOP){
+			propz.signalFlop();
+		}else if(newRoundState.getRound()==Round.TURN){
+			propz.signalTurn();
+		}else if(newRoundState.getRound()==Round.FINAL){
+			propz.signalRiver();
+		}
 	}
 
 	@Override
@@ -118,7 +160,7 @@ public class PlayerTrackingVisitor implements GameStateVisitor {
 
 	@Override
 	public void visitRaiseState(RaiseState raiseState) {
-
+		propz.signalRaise(raiseState.getLastEvent().getPlayerId(), false, raiseState.getLargestBet());
 	}
 
 	@Override
@@ -138,7 +180,7 @@ public class PlayerTrackingVisitor implements GameStateVisitor {
 
 	@Override
 	public void visitSmallBlindState(SmallBlindState smallBlindState) {
-
+		propz.signalSmallBlind(false, smallBlindState.getLastEvent().getPlayerId());
 	}
 
 	@Override
