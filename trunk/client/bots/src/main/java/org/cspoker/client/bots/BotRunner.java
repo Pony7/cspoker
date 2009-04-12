@@ -20,13 +20,14 @@ import java.util.concurrent.ExecutorService;
 
 import javax.security.auth.login.LoginException;
 
+import net.jcip.annotations.NotThreadSafe;
+
 import org.apache.log4j.Logger;
 import org.cspoker.client.bots.bot.Bot;
 import org.cspoker.client.bots.bot.BotFactory;
-import org.cspoker.client.bots.bot.rule.RuleBasedBotFactory2;
+import org.cspoker.client.bots.bot.search.SearchBotFactory;
 import org.cspoker.client.bots.bot.search.node.leaf.DistributionShowdownNode4;
 import org.cspoker.client.bots.bot.search.opponentmodel.prolog.cafe.PrologCafeBotFactory;
-import org.cspoker.client.bots.bot.search.opponentmodel.prolog.tuprolog.TuPrologBotFactory;
 import org.cspoker.client.bots.listener.BotListener;
 import org.cspoker.client.bots.listener.GameLimitingBotListener;
 import org.cspoker.client.bots.listener.ReSitInBotListener;
@@ -46,18 +47,21 @@ import org.cspoker.common.util.Log4JPropertiesLoader;
 import org.cspoker.common.util.threading.GlobalThreadPool;
 import org.cspoker.common.util.threading.SingleThreadRequestExecutor;
 
+@NotThreadSafe
 public class BotRunner implements LobbyListener {
 
 	private static final TableConfiguration config = new TableConfiguration(10,
 			0, false);
 
-	public static final int nbGamesPerConfrontation = 1000;
+	public static final int nbGamesPerConfrontation = 10000;
+
+	public static final int reportInterval = 2;
 
 	public final int nbPlayersPerGame;
 
 	static {
 		Log4JPropertiesLoader
-				.load("org/cspoker/client/bots/logging/log4j.properties");
+		.load("org/cspoker/client/bots/logging/log4j.properties");
 	}
 
 	private final static Logger logger = Logger.getLogger(BotRunner.class);
@@ -77,40 +81,52 @@ public class BotRunner implements LobbyListener {
 
 	private volatile int[] botIndex;
 
-	private final BotListener speedMinitor;
+	private BotListener speedMonitor;
 	private volatile BotListener gameLimiter;
 
 	public BotRunner(RemoteCSPokerServer cspokerServer) {
 		this(cspokerServer,
 				new BotFactory[] {
-						// ML bots
-						// new RuleBasedBotFactory1(),
-						new RuleBasedBotFactory2(),
-						// new SearchBotFactory(new
-						// DistributionShowdownNode4.Factory(), new
-						// Log4JOutputVisitor.Factory(2)),
-						// new SearchBotFactory(new
-						// DistributionShowdownNode4.Factory(), new
-						// Log4JOutputVisitor.Factory(2)),
-						// new RuleBasedBotFactory1(),
-						// new RuleBasedBotFactory2(),
+				// ML bots
+				//						 new RuleBasedBotFactory1(),
+//				new RuleBasedBotFactory2(),
+				new SearchBotFactory(new DistributionShowdownNode4.Factory()),
+//				 new SearchBotFactory(new
+//				 DistributionShowdownNode4.Factory()),
+				// new RuleBasedBotFactory1(),
+				// new RuleBasedBotFactory2(),
 
-						// new SearchBotFactory(new
-						// DistributionShowdownNode1.Factory()),
-						// new SearchBotFactory(new
-						// DistributionShowdownNode2.Factory()),
-						// new SearchBotFactory(new
-						// DistributionShowdownNode4.Factory()),
-						// new PrologCafeBotFactory(),
-						// new RuleBasedBotFactory(),
-						new PrologCafeBotFactory(
-								new DistributionShowdownNode4.Factory()),
-						new TuPrologBotFactory(
-								new DistributionShowdownNode4.Factory()),
-				// new InterPrologBotFactory(),
+				// new SearchBotFactory(new
+				// DistributionShowdownNode1.Factory()),
+				// new SearchBotFactory(new
+				// DistributionShowdownNode2.Factory()),
+				// new SearchBotFactory(new
+				// DistributionShowdownNode4.Factory()),
+				// new RuleBasedBotFactory(),
+				//						new PrologCafeBotFactory(
+				//								new DistributionShowdownNode4.Factory()),
+//				new WekaClassificationBotFactory(
+//						new DistributionShowdownNode4.Factory(),
+//						"/home/guy/Bureaublad/weka-3-6-0/J48-c-cb.model",
+//						"/home/guy/Bureaublad/weka-3-6-0/J48-c-fcr.model"
+//				),
+//				new WekaClassificationBotFactory(
+//						new DistributionShowdownNode4.Factory(),
+//						"/home/guy/Bureaublad/weka-3-6-0/ANN-c-cb.model",
+//						"/home/guy/Bureaublad/weka-3-6-0/ANN-c-fcr.model"
+//				),
+				//				new WekaRegressionBotFactory(
+				//						new DistributionShowdownNode4.Factory(),
+				//						 "/home/guy/Bureaublad/weka-3-6-0/M5P-r-b.model",
+				//						 "/home/guy/Bureaublad/weka-3-6-0/M5P-r-f.model",
+				//						 "/home/guy/Bureaublad/weka-3-6-0/M5P-r-c.model",
+				//						 "/home/guy/Bureaublad/weka-3-6-0/M5P-r-r.model"
+				//				),
+
+				new PrologCafeBotFactory(),
 				// new SearchBotFactory(new CachedShowdownNodeFactory(new
 				// UniformShowdownNode.Factory())),
-				});
+		});
 	}
 
 	public BotRunner(RemoteCSPokerServer cspokerServer, BotFactory[] bots) {
@@ -132,13 +148,13 @@ public class BotRunner implements LobbyListener {
 				SmartClientContext clientContext = new SmartClientContext(
 						cspokerServer.login(bots[i].toString(), "test"));
 				botLobbies[i] = clientContext
-						.getLobbyContext(new DefaultLobbyListener());
+				.getLobbyContext(new DefaultLobbyListener());
 				botIDs[i] = clientContext.getAccountContext().getPlayerID();
 			}
 
 			executor = SingleThreadRequestExecutor.getInstance();
 
-			speedMinitor = new SpeedTestBotListener(64, this);
+			speedMonitor = new SpeedTestBotListener(reportInterval, this);
 
 			// set start indexes
 			for (int i = 0; i < nbPlayersPerGame - 1; i++) {
@@ -178,6 +194,7 @@ public class BotRunner implements LobbyListener {
 
 	private void resetStateAndStartPlay() {
 		gameLimiter = new GameLimitingBotListener(this, nbGamesPerConfrontation);
+		speedMonitor = new SpeedTestBotListener(reportInterval, this);
 		playOnNewtable();
 	}
 
@@ -188,11 +205,11 @@ public class BotRunner implements LobbyListener {
 				tableName += " vs " + bots[botIndex[i]].toString();
 			}
 			TableId tableId = directorLobby
-					.createHoldemTable(tableName, config).getId();
+			.createHoldemTable(tableName, config).getId();
 
 			bot[0] = bots[botIndex[0]].createBot(botIDs[botIndex[0]], tableId,
 					botLobbies[botIndex[0]], 5000, executor,
-					new ReSitInBotListener(this), speedMinitor, gameLimiter);
+					new ReSitInBotListener(this), speedMonitor, gameLimiter);
 			bot[0].start();
 			for (int i = 1; i < nbPlayersPerGame; i++) {
 				bot[i] = bots[botIndex[i]].createBot(botIDs[botIndex[i]],
@@ -216,8 +233,8 @@ public class BotRunner implements LobbyListener {
 
 	public void onTableCreated(TableCreatedEvent tableCreatedEvent) {
 		logger
-				.debug(tableCreatedEvent.getTable().getName()
-						+ " table created.");
+		.debug(tableCreatedEvent.getTable().getName()
+				+ " table created.");
 	}
 
 	public void onTableRemoved(TableRemovedEvent tableRemovedEvent) {

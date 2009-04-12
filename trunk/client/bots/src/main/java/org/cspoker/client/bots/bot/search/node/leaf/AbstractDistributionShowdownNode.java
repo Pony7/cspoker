@@ -28,6 +28,7 @@ import java.util.Map.Entry;
 
 import org.apache.log4j.Logger;
 import org.cspoker.client.bots.bot.search.SearchConfiguration;
+import org.cspoker.client.bots.bot.search.node.Distribution;
 import org.cspoker.client.bots.bot.search.node.visitor.NodeVisitor;
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.client.common.gamestate.PlayerState;
@@ -35,7 +36,6 @@ import org.cspoker.common.elements.cards.Card;
 import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.handeval.spears2p2.StateTableEvaluator;
 import org.cspoker.common.util.MutableDouble;
-import org.cspoker.common.util.Pair;
 
 public abstract class AbstractDistributionShowdownNode extends
 		AbstractShowdownNode {
@@ -49,7 +49,6 @@ public abstract class AbstractDistributionShowdownNode extends
 
 	private final static Logger logger = Logger
 			.getLogger(AbstractDistributionShowdownNode.class);
-	private final static int[] handRanks;
 
 	public static final int MaxNbSamples = 400;
 
@@ -60,16 +59,29 @@ public abstract class AbstractDistributionShowdownNode extends
 
 	private static Card[] cards = Card.values();
 
+	private final static int[] handRanks;
 	static {
 		handRanks = StateTableEvaluator.getInstance().handRanks;
 	}
 
-	private final int tokens;
+	private final int nbTokens;
+	private Distribution valueDistribution = null;
 
 	AbstractDistributionShowdownNode(PlayerId botId, GameState gameState,
 			int tokens, NodeVisitor... nodeVisitors) {
 		super(botId, gameState, nodeVisitors);
-		this.tokens = tokens;
+		this.nbTokens = tokens;
+	}
+	
+	@Override
+	public int getNbTokens() {
+		return nbTokens;
+	}
+	
+	@Override
+	public double getUpperWinBound() {
+		PlayerState botState = gameState.getPlayer(botId);
+		return gameState.getGamePotSize()+botState.getStack();
 	}
 
 	private int calcAmountWon(PlayerState botState, int maxOpponentWin,
@@ -136,7 +148,7 @@ public abstract class AbstractDistributionShowdownNode extends
 		var /= totalProb;
 		// use sample variance because variance of samples is smaller than real
 		// variance
-		var *= (double) nbSamples / (nbSamples - 1);
+		var *=  nbSamples / (double)(nbSamples - 1);
 		return var;
 	}
 
@@ -184,7 +196,8 @@ public abstract class AbstractDistributionShowdownNode extends
 		return opponentsThatCanWin;
 	}
 
-	public Pair<Double, Double> getExpectedValue() {
+	public Distribution getValueDistribution(double lowerBound) {
+		if(valueDistribution==null){
 		PlayerState botState = gameState.getPlayer(botId);
 
 		Set<PlayerState> allPlayers = gameState.getAllSeatedPlayers();
@@ -215,7 +228,7 @@ public abstract class AbstractDistributionShowdownNode extends
 		}
 
 		int nbMissingCommunityCards = 5 - usedFixedCommunityCards.size();
-		int nbSamplesEst = Math.min(MaxNbSamples, Math.max(25, tokens * 5));
+		int nbSamplesEst = Math.min(MaxNbSamples, Math.max(25, nbTokens * 5));
 		int nbCommunitySamples, nbOpponentSamples;
 		if (nbMissingCommunityCards == 0) {
 			nbCommunitySamples = 1;
@@ -291,9 +304,11 @@ public abstract class AbstractDistributionShowdownNode extends
 		}
 		int stackSize = botState.getStack();
 		informListeners(values, totalProb, gamePotSize, stackSize);
-		double mean = stackSize + calcMean(totalProb, values);
+		double mean = calcMean(totalProb, values);
 		double var = calcVariance(mean, totalProb, nbSamples, values);
-		return new Pair<Double, Double>(mean, var);
+		valueDistribution = new Distribution(stackSize + mean, var);
+		}
+		return valueDistribution;
 	}
 
 	private Card getRandomCard() {

@@ -5,45 +5,80 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.EnumSet;
+import java.util.HashMap;
 
 import org.cspoker.client.bots.bot.search.opponentmodel.weka.PlayerData;
 import org.cspoker.client.bots.bot.search.opponentmodel.weka.Propositionalizer;
+import org.cspoker.common.elements.cards.Card;
 
-public class PropositionalDataSetgenerator extends Propositionalizer {
+public class PropositionalDataSetGenerator extends Propositionalizer {
 
 	protected static final String hole = "*** HOLE";
 	protected static final String flop = "*** FLOP";
 	protected static final String turn = "*** TURN";
 	protected static final String river = "*** RIVER";
-	
-	protected final FileWriter foldProb;
-	protected final FileWriter callProb;
-	protected final FileWriter raiseProb;
-	protected final FileWriter betProb;
-	protected final FileWriter callRaiseAction;
-	protected final FileWriter checkBetAction;
-	
+
+	protected final FileWriter preFoldProb;
+	protected final FileWriter preCallProb;
+	protected final FileWriter preRaiseProb;
+	protected final FileWriter preBetProb;
+	protected final FileWriter preCallRaiseAction;
+	protected final FileWriter preCheckBetAction;	
+
+	protected final FileWriter postFoldProb;
+	protected final FileWriter postCallProb;
+	protected final FileWriter postRaiseProb;
+	protected final FileWriter postBetProb;
+	protected final FileWriter postCallRaiseAction;
+	protected final FileWriter postCheckBetAction;
+
 	private boolean forgetCurrentGame = false;
 
-	public PropositionalDataSetgenerator() throws IOException {
-		foldProb = new FileWriter("output/FoldProb.arff");
-		foldProb.write("@relation FoldProb\n" + callRaiseHeader
+	private final HashMap<String, Card> cards = new HashMap<String, Card>();
+
+	public PropositionalDataSetGenerator() throws IOException {
+		preFoldProb = new FileWriter("output/PreFoldProb2.arff");
+		preFoldProb.write("@relation PreFoldProb\n" + callRaiseHeader
 				+ "@attribute probability real\n" + "@data\n");
-		callProb = new FileWriter("output/CallProb.arff");
-		callProb.write("@relation CallProb\n" + callRaiseHeader
+		preCallProb = new FileWriter("output/PreCallProb2.arff");
+		preCallProb.write("@relation PreCallProb\n" + callRaiseHeader
 				+ "@attribute probability real\n" + "@data\n");
-		raiseProb = new FileWriter("output/RaiseProb.arff");
-		raiseProb.write("@relation RaiseProb\n" + callRaiseHeader
+		preRaiseProb = new FileWriter("output/PreRaiseProb2.arff");
+		preRaiseProb.write("@relation PreRaiseProb\n" + callRaiseHeader
 				+ "@attribute probability real\n" + "@data\n");
-		betProb = new FileWriter("output/BetProb.arff");
-		betProb.write("@relation BetProb\n" + checkBetHeader
+		preBetProb = new FileWriter("output/PreBetProb2.arff");
+		preBetProb.write("@relation PreBetProb\n" + checkBetHeader
 				+ "@attribute probability real\n" + "@data\n");
-		callRaiseAction = new FileWriter("output/CallRaiseAction.arff");
-		callRaiseAction.write("@relation CallRaiseAction\n" + callRaiseHeader
+		preCallRaiseAction = new FileWriter("output/PreCallRaiseAction2.arff");
+		preCallRaiseAction.write("@relation PreCallRaiseAction\n" + callRaiseHeader
 				+ "@attribute action {fold,call,raise}\n" + "@data\n");
-		checkBetAction = new FileWriter("output/CheckBetAction.arff");
-		checkBetAction.write("@relation CheckBetAction\n" + checkBetHeader
+		preCheckBetAction = new FileWriter("output/PreCheckBetAction2.arff");
+		preCheckBetAction.write("@relation PreCheckBetAction\n" + checkBetHeader
 				+ "@attribute action {check,bet}\n" + "@data\n");
+
+		postFoldProb = new FileWriter("output/PostFoldProb2.arff");
+		postFoldProb.write("@relation PostFoldProb\n" + callRaiseHeader
+				+ "@attribute probability real\n" + "@data\n");
+		postCallProb = new FileWriter("output/PostCallProb2.arff");
+		postCallProb.write("@relation PostCallProb\n" + callRaiseHeader
+				+ "@attribute probability real\n" + "@data\n");
+		postRaiseProb = new FileWriter("output/PostRaiseProb2.arff");
+		postRaiseProb.write("@relation PostRaiseProb\n" + callRaiseHeader
+				+ "@attribute probability real\n" + "@data\n");
+		postBetProb = new FileWriter("output/PostBetProb2.arff");
+		postBetProb.write("@relation PostBetProb\n" + checkBetHeader
+				+ "@attribute probability real\n" + "@data\n");
+		postCallRaiseAction = new FileWriter("output/PostCallRaiseAction2.arff");
+		postCallRaiseAction.write("@relation PostCallRaiseAction\n" + callRaiseHeader
+				+ "@attribute action {fold,call,raise}\n" + "@data\n");
+		postCheckBetAction = new FileWriter("output/PostCheckBetAction2.arff");
+		postCheckBetAction.write("@relation PostCheckBetAction\n" + checkBetHeader
+				+ "@attribute action {check,bet}\n" + "@data\n");
+
+		for(Card c:Card.values()){
+			cards.put(c.getShortDescription(), c);
+		}
 
 	}
 
@@ -53,12 +88,19 @@ public class PropositionalDataSetgenerator extends Propositionalizer {
 		+ "@attribute round {preflop,flop,turn,river}\n"
 		+ "@attribute gameCount integer\n"
 		+ "@attribute somebodyActedThisRound {true,false}\n"
+		+ "@attribute nbActionsThisRound integer\n"
 		+
 		// Amounts
 		"@attribute potSize real\n"
 		+ "@attribute deficit real\n"
 		+ "@attribute potOdds real\n"
 		+ "@attribute stack real\n"
+		+
+		// CommunityCards
+		"@attribute minRank integer\n"
+		+ "@attribute maxRank integer\n"
+		+ "@attribute avgRank integer\n"
+		+ "@attribute sigmaRank real\n"
 		+
 		// Player count
 		"@attribute nbSeatedPlayers integer\n"
@@ -91,10 +133,17 @@ public class PropositionalDataSetgenerator extends Propositionalizer {
 		+ "@attribute round {preflop,flop,turn,river}\n"
 		+ "@attribute gameCount integer\n"
 		+ "@attribute somebodyActedThisRound {true,false}\n"
+		+ "@attribute nbActionsThisRound integer\n"
 		+
 		// Amounts
 		"@attribute potSize real\n"
 		+ "@attribute stack real\n"
+		+
+		// CommunityCards
+		"@attribute minRank integer\n"
+		+ "@attribute maxRank integer\n"
+		+ "@attribute avgRank integer\n"
+		+ "@attribute sigmaRank real\n"
 		+
 		// Player count
 		"@attribute nbSeatedPlayers integer\n"
@@ -119,62 +168,121 @@ public class PropositionalDataSetgenerator extends Propositionalizer {
 		+ "@attribute AF real\n" + "@attribute WtSD real\n";
 
 	private void close() throws IOException {
-		foldProb.close();
-		callProb.close();
-		raiseProb.close();
-		betProb.close();
-		callRaiseAction.close();
-		checkBetAction.close();
+		preFoldProb.close();
+		preCallProb.close();
+		preRaiseProb.close();
+		preBetProb.close();
+		preCallRaiseAction.close();
+		preCheckBetAction.close();
+		postFoldProb.close();
+		postCallProb.close();
+		postRaiseProb.close();
+		postBetProb.close();
+		postCallRaiseAction.close();
+		postCheckBetAction.close();
 	}
 
 	protected void logFold(PlayerData p) {
-		try {
-			callRaiseInstance(p, "1", foldProb);
-			callRaiseInstance(p, "0", callProb);
-			callRaiseInstance(p, "0", raiseProb);
-			callRaiseInstance(p, "fold", callRaiseAction);
-		} catch (IOException e) {
-			throw new IllegalStateException(e);
-		}
+		if(getRound().equals("preflop")){
+			try {
+				callRaiseInstance(p, "1", preFoldProb);
+				callRaiseInstance(p, "0", preCallProb);
+				callRaiseInstance(p, "0", preRaiseProb);
+				callRaiseInstance(p, "fold", preCallRaiseAction);
+			} catch (IOException e) {
+				throw new IllegalStateException(e);
+			}
+		}else{
+			try {
+				callRaiseInstance(p, "1", postFoldProb);
+				callRaiseInstance(p, "0", postCallProb);
+				callRaiseInstance(p, "0", postRaiseProb);
+				callRaiseInstance(p, "fold", postCallRaiseAction);
+			} catch (IOException e) {
+				throw new IllegalStateException(e);
+			}
+		}		
 	}
 
 	protected void logCall(PlayerData p) {
-		try {
-			callRaiseInstance(p, "0", foldProb);
-			callRaiseInstance(p, "1", callProb);
-			callRaiseInstance(p, "0", raiseProb);
-			callRaiseInstance(p, "call", callRaiseAction);
-		} catch (IOException e) {
-			throw new IllegalStateException(e);
+		if(getRound().equals("preflop")){
+			try {
+				callRaiseInstance(p, "0", preFoldProb);
+				callRaiseInstance(p, "1", preCallProb);
+				callRaiseInstance(p, "0", preRaiseProb);
+				callRaiseInstance(p, "call", preCallRaiseAction);
+			} catch (IOException e) {
+				throw new IllegalStateException(e);
+			}
+		}else{
+			try {
+				callRaiseInstance(p, "0", postFoldProb);
+				callRaiseInstance(p, "1", postCallProb);
+				callRaiseInstance(p, "0", postRaiseProb);
+				callRaiseInstance(p, "call", postCallRaiseAction);
+			} catch (IOException e) {
+				throw new IllegalStateException(e);
+			}
+
 		}
 	}
 
 	protected void logCheck(PlayerData p) {
-		try {
-			checkBetInstance(p, "0", betProb);
-			checkBetInstance(p, "check", checkBetAction);
-		} catch (IOException e) {
-			throw new IllegalStateException(e);
+		if(getRound().equals("preflop")){
+			try {
+				checkBetInstance(p, "0", preBetProb);
+				checkBetInstance(p, "check", preCheckBetAction);
+			} catch (IOException e) {
+				throw new IllegalStateException(e);
+			}
+		}else{
+			try {
+				checkBetInstance(p, "0", postBetProb);
+				checkBetInstance(p, "check", postCheckBetAction);
+			} catch (IOException e) {
+				throw new IllegalStateException(e);
+			}			
 		}
 	}
 
 	protected void logRaise(PlayerData p) {
-		try {
-			callRaiseInstance(p, "0", foldProb);
-			callRaiseInstance(p, "0", callProb);
-			callRaiseInstance(p, "1", raiseProb);
-			callRaiseInstance(p, "raise", callRaiseAction);
-		} catch (IOException e) {
-			throw new IllegalStateException(e);
+		if(getRound().equals("preflop")){
+			try {
+				callRaiseInstance(p, "0", preFoldProb);
+				callRaiseInstance(p, "0", preCallProb);
+				callRaiseInstance(p, "1", preRaiseProb);
+				callRaiseInstance(p, "raise", preCallRaiseAction);
+			} catch (IOException e) {
+				throw new IllegalStateException(e);
+			}	
+		}else{
+			try {
+				callRaiseInstance(p, "0", postFoldProb);
+				callRaiseInstance(p, "0", postCallProb);
+				callRaiseInstance(p, "1", postRaiseProb);
+				callRaiseInstance(p, "raise", postCallRaiseAction);
+			} catch (IOException e) {
+				throw new IllegalStateException(e);
+			}
 		}
+
 	}
 
 	protected void logBet(PlayerData p) {
-		try {
-			checkBetInstance(p, "1", betProb);
-			checkBetInstance(p, "bet", checkBetAction);
-		} catch (IOException e) {
-			throw new IllegalStateException(e);
+		if(getRound().equals("preflop")){
+			try {
+				checkBetInstance(p, "1", preBetProb);
+				checkBetInstance(p, "bet", preCheckBetAction);
+			} catch (IOException e) {
+				throw new IllegalStateException(e);
+			}
+		}else{
+			try {
+				checkBetInstance(p, "1", postBetProb);
+				checkBetInstance(p, "bet", postCheckBetAction);
+			} catch (IOException e) {
+				throw new IllegalStateException(e);
+			}
 		}
 	}
 
@@ -187,11 +295,17 @@ public class PropositionalDataSetgenerator extends Propositionalizer {
 		file.write(getRound() + ",");
 		file.write(p.getGameCount() + ",");
 		file.write(isSomebodyActedThisRound() + ",");
+		file.write(getNbActionsThisRound() + ",");
 		// Amounts
 		file.write(getPotSize() + ",");
 		file.write(p.getDeficit(this) + ",");
 		file.write(p.getPotOdds(this) + ",");
 		file.write(p.getStackSize(this) + ",");
+		// CommunityCards
+		file.write(getMinRank() + ",");
+		file.write(getMaxRank() + ",");
+		file.write(getAverageRank() + ",");
+		file.write(getSigmaRank() + ",");
 		// Player count
 		file.write(getNbSeatedPlayers() + ",");
 		file.write(getNbActivePlayers() + ",");
@@ -230,9 +344,15 @@ public class PropositionalDataSetgenerator extends Propositionalizer {
 		file.write(getRound() + ",");
 		file.write(p.getGameCount() + ",");
 		file.write(isSomebodyActedThisRound() + ",");
+		file.write(getNbActionsThisRound() + ",");
 		// Amounts
 		file.write(getPotSize() + ",");
 		file.write(p.getStackSize(this) + ",");
+		// CommunityCards
+		file.write(getMinRank() + ",");
+		file.write(getMaxRank() + ",");
+		file.write(getAverageRank() + ",");
+		file.write(getSigmaRank() + ",");
 		// Player count
 		file.write(getNbSeatedPlayers() + ",");
 		file.write(getNbActivePlayers() + ",");
@@ -322,12 +442,24 @@ public class PropositionalDataSetgenerator extends Propositionalizer {
 					forgetCurrentGame = true;
 					signalShowdown();
 				} else {
+					if(line.startsWith(hole)){
+						signalCommunityCards(EnumSet.noneOf(Card.class));
+					}
 					if (line.startsWith(flop)) {
 						signalFlop();
+						String[] cardsString = line.substring(line.indexOf("[")).replaceAll("\\[", "").replaceAll("\\]", "").split(" ");
+						EnumSet<Card> cardsSet = EnumSet.of(cards.get(cardsString[0]),cards.get(cardsString[1]),cards.get(cardsString[2]));
+						signalCommunityCards(cardsSet);
 					} else if (line.startsWith(turn)) {
 						signalTurn();
+						String[] cardsString = line.substring(line.indexOf("[")).replaceAll("\\[", "").replaceAll("\\]", "").split(" ");
+						EnumSet<Card> cardsSet = EnumSet.of(cards.get(cardsString[0]),cards.get(cardsString[1]),cards.get(cardsString[2]),cards.get(cardsString[3]));
+						signalCommunityCards(cardsSet);
 					} else if (line.startsWith(river)) {
 						signalRiver();
+						String[] cardsString = line.substring(line.indexOf("[")).replaceAll("\\[", "").replaceAll("\\]", "").split(" ");
+						EnumSet<Card> cardsSet = EnumSet.of(cards.get(cardsString[0]),cards.get(cardsString[1]),cards.get(cardsString[2]),cards.get(cardsString[3]),cards.get(cardsString[4]));
+						signalCommunityCards(cardsSet);
 					}
 				}
 			} else if (line.contains(":")) {
@@ -388,7 +520,8 @@ public class PropositionalDataSetgenerator extends Propositionalizer {
 	}
 
 
+
 	public static void main(String[] args) throws IOException {
-		new PropositionalDataSetgenerator().run();
+		new PropositionalDataSetGenerator().run();
 	}
 }

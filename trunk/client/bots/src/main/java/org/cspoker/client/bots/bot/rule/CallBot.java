@@ -38,20 +38,15 @@ public class CallBot extends AbstractBot {
 
 	@Override
 	public void doNextAction() {
-		executor.execute(new Runnable() {
-
-			public void run() {
-				try {
-					playerContext.checkOrCall();
-				} catch (IllegalActionException e) {
-					logger.error(e);
-					throw new IllegalStateException("Call was not allowed.", e);
-				} catch (RemoteException e) {
-					logger.error(e);
-					throw new IllegalStateException("Call failed.", e);
-				}
-			}
-		});
+		try {
+			playerContext.checkOrCall();
+		} catch (IllegalActionException e) {
+			logger.error(e);
+			throw new IllegalStateException("Call was not allowed.", e);
+		} catch (RemoteException e) {
+			logger.error(e);
+			throw new IllegalStateException("Call failed.", e);
+		}
 	}
 
 }

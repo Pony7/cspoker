@@ -128,7 +128,15 @@ public abstract class AbstractBot implements Bot {
 	 */
 	public void onNextPlayer(final NextPlayerEvent nextPlayerEvent) {
 		if (started && nextPlayerEvent.getPlayerId().equals(playerId)) {
-			doNextAction();
+			executor.execute(new Runnable(){
+				@Override
+				public void run() {
+					doNextAction();
+					for (BotListener botListener : botListeners) {
+						botListener.onActionPerformed();
+					}
+				}
+			});
 		}
 	}
 
@@ -137,9 +145,14 @@ public abstract class AbstractBot implements Bot {
 	 */
 	public void onNewDeal(NewDealEvent newDealEvent) {
 		if (started) {
-			for (BotListener botListener : botListeners) {
-				botListener.onNewDeal();
-			}
+			executor.execute(new Runnable(){
+				@Override
+				public void run() {
+					for (BotListener botListener : botListeners) {
+						botListener.onNewDeal();
+					}
+				}
+			});
 		}
 	}
 
@@ -169,13 +182,17 @@ public abstract class AbstractBot implements Bot {
 	 */
 	public int getProfit() {
 		GameState state = tableContext.getGameState();
+		PlayerState playerState = state.getPlayer(playerId);
+		if(playerState==null){
+			//sitting out because we're broke
+			return (-buyIn);
+		}
 		if (state.getPreviousRoundsPotSize() > 0) {
 			throw new IllegalStateException(
 					"There is a pot from previous rounds ("
 							+ state.getPreviousRoundsPotSize()
 							+ "). Can't calculate profit.");
 		}
-		PlayerState playerState = state.getPlayer(playerId);
 		return playerState.getStack() + playerState.getBet() - buyIn;
 	}
 
@@ -232,11 +249,16 @@ public abstract class AbstractBot implements Bot {
 
 	}
 
-	public void onSitOut(SitOutEvent sitOutEvent) {
+	public void onSitOut(final SitOutEvent sitOutEvent) {
 		if (started) {
-			for (BotListener botListener : botListeners) {
-				botListener.onSitOut(sitOutEvent);
-			}
+			executor.execute(new Runnable(){
+				@Override
+				public void run() {
+					for (BotListener botListener : botListeners) {
+						botListener.onSitOut(sitOutEvent);
+					}
+				}
+			});
 		}
 	}
 

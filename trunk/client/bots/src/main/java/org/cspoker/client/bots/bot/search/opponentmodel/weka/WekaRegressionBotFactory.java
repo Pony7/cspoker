@@ -14,9 +14,11 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.client.bots.bot.search.opponentmodel.prolog.tuprolog;
+package org.cspoker.client.bots.bot.search.opponentmodel.weka;
 
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
@@ -30,8 +32,6 @@ import org.cspoker.client.bots.bot.search.SearchBot;
 import org.cspoker.client.bots.bot.search.SearchConfiguration;
 import org.cspoker.client.bots.bot.search.node.expander.SamplingExpander;
 import org.cspoker.client.bots.bot.search.node.leaf.ShowdownNode;
-import org.cspoker.client.bots.bot.search.node.leaf.UniformShowdownNode;
-import org.cspoker.client.bots.bot.search.node.visitor.Log4JOutputVisitor;
 import org.cspoker.client.bots.bot.search.node.visitor.NodeVisitor;
 import org.cspoker.client.bots.bot.search.node.visitor.NodeVisitor.Factory;
 import org.cspoker.client.bots.bot.search.opponentmodel.OpponentModel;
@@ -40,15 +40,18 @@ import org.cspoker.client.common.SmartLobbyContext;
 import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.elements.table.TableId;
 
-import alice.tuprolog.InvalidTheoryException;
-import alice.tuprolog.Prolog;
-import alice.tuprolog.Theory;
+import weka.classifiers.Classifier;
 
 @ThreadSafe
-public class TuPrologBotFactory implements BotFactory {
+public class WekaRegressionBotFactory implements BotFactory {
 
+	private final String bModel;
+	private final String fModel;
+	private final String cModel;
+	private final String rModel;
+	
 	private final static Logger logger = Logger
-			.getLogger(TuPrologBotFactory.class);
+			.getLogger(WekaRegressionBotFactory.class);
 	private static int copies = 0;
 
 	private final int copy;
@@ -57,56 +60,60 @@ public class TuPrologBotFactory implements BotFactory {
 	private final org.cspoker.client.bots.bot.search.node.leaf.ShowdownNode.Factory showdownNodeFactory;
 	private final Factory[] nodeVisitorFactories;
 
-	public TuPrologBotFactory() {
-		this(new UniformShowdownNode.Factory(),
-				new NodeVisitor.Factory[] { new Log4JOutputVisitor.Factory(2) });
-	}
-
-	public TuPrologBotFactory(ShowdownNode.Factory showdownNodeFactory,
+	public WekaRegressionBotFactory(ShowdownNode.Factory showdownNodeFactory, 
+			String bModel, 
+			String fModel,
+			String cModel,
+			String rModel,
 			NodeVisitor.Factory... nodeVisitorFactories) {
 		copy = ++copies;
 		this.showdownNodeFactory = showdownNodeFactory;
 		this.nodeVisitorFactories = nodeVisitorFactories;
+		this.bModel = bModel;
+		this.fModel = fModel;
+		this.cModel = cModel;
+		this.rModel = rModel;
 	}
 
-	/**
-	 * @see org.cspoker.client.bots.bot.BotFactory#createBot(org.cspoker.common.elements.player.PlayerId,
-	 *      org.cspoker.common.elements.table.TableId,
-	 *      org.cspoker.client.common.SmartLobbyContext,
-	 *      java.util.concurrent.ExecutorService,
-	 *      org.cspoker.client.bots.listener.BotListener[])
-	 */
 	public synchronized Bot createBot(final PlayerId botId, TableId tableId,
 			SmartLobbyContext lobby, int buyIn, ExecutorService executor,
 			BotListener... botListeners) {
 		copies++;
 		if (opponentModels.get(botId) == null) {
-			Prolog engine = new Prolog();
+			Classifier betModel;
+			Classifier foldModel;
+			Classifier callModel;
+			Classifier raiseModel;
 			try {
-				Theory theory1 = new Theory(
-						this
-								.getClass()
-								.getClassLoader()
-								.getResourceAsStream(
-										"org/cspoker/client/bots/bot/search/opponentmodel/prolog/tuprolog/theory.pl"));
-				engine.setTheory(theory1);
-			} catch (IOException e1) {
-				throw new IllegalStateException(e1);
-			} catch (InvalidTheoryException e2) {
-				throw new IllegalStateException(e2);
+				ObjectInputStream in = new ObjectInputStream(new FileInputStream(bModel));
+				betModel = (Classifier)in.readObject();
+				in.close();
+				in = new ObjectInputStream(new FileInputStream(fModel));
+				foldModel = (Classifier)in.readObject();
+				in.close();
+				in = new ObjectInputStream(new FileInputStream(cModel));
+				callModel = (Classifier)in.readObject();
+				in.close();
+				in = new ObjectInputStream(new FileInputStream(rModel));
+				raiseModel = (Classifier)in.readObject();
+				in.close();
+				WekaRegressionModel model = new WekaRegressionModel(betModel,foldModel,callModel,raiseModel);
+				opponentModels.put(botId, model);
+			} catch (IOException e) {
+				throw new IllegalStateException(e);
+			} catch (ClassNotFoundException e) {
+				throw new IllegalStateException(e);
 			}
-			TuPrologModel model = new TuPrologModel(engine);
-			opponentModels.put(botId, model);
 		}
 		SearchConfiguration config = new SearchConfiguration(opponentModels
 				.get(botId), showdownNodeFactory,
-				new SamplingExpander.Factory(), 50, 100, 250, 250, 0.25, false);
+				new SamplingExpander.Factory(), 1000, 2000, 4000, 8000, 0.5, false);
 		return new SearchBot(botId, tableId, lobby, executor, config, buyIn,
 				nodeVisitorFactories, botListeners);
 	}
 
 	@Override
 	public String toString() {
-		return "TuPrologSearchBotv1-" + copy;
+		return "WekaRegressionSearchBotv1-" + copy;
 	}
 }

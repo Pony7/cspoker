@@ -69,7 +69,7 @@ public class SearchBotFactory implements BotFactory {
 
 		SearchConfiguration config = new SearchConfiguration(opponentModels
 				.get(botId), showdownNodeFactory,
-				new SamplingExpander.Factory(), 5000, 10000, 10000, 10000, 0.25);
+				new SamplingExpander.Factory(), 20000, 40000, 80000, 160000, 0.25, false);
 		return new SearchBot(botId, tableId, lobby, executor, config, buyIn,
 				nodeVisitorFactories, botListeners);
 	}

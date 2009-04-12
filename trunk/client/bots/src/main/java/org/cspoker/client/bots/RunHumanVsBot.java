@@ -16,6 +16,7 @@ import java.rmi.RemoteException;
 
 import javax.security.auth.login.LoginException;
 
+import org.apache.log4j.Logger;
 import org.cspoker.client.User;
 import org.cspoker.client.bots.bot.Bot;
 import org.cspoker.client.bots.bot.BotFactory;
@@ -23,8 +24,8 @@ import org.cspoker.client.bots.bot.search.SearchBotFactory;
 import org.cspoker.client.bots.bot.search.node.leaf.DistributionShowdownNode4;
 import org.cspoker.client.bots.bot.search.node.visitor.Log4JOutputVisitor;
 import org.cspoker.client.bots.bot.search.node.visitor.SWTTreeVisitor;
-import org.cspoker.client.bots.bot.search.opponentmodel.weka.WekaBotFactory;
-import org.cspoker.client.bots.bot.search.opponentmodel.weka.WekaClassifierModel;
+import org.cspoker.client.bots.bot.search.node.visitor.StatisticsVisitor;
+import org.cspoker.client.bots.bot.search.node.visitor.StatisticsVisitor.Factory;
 import org.cspoker.client.bots.listener.DefaultBotListener;
 import org.cspoker.client.common.SmartClientContext;
 import org.cspoker.client.common.SmartLobbyContext;
@@ -45,6 +46,8 @@ import org.cspoker.common.util.Log4JPropertiesLoader;
 import org.cspoker.common.util.threading.SingleThreadRequestExecutor;
 import org.eclipse.swt.widgets.Display;
 
+import weka.classifiers.trees.j48.Stats;
+
 public class RunHumanVsBot {
 
 	static {
@@ -52,6 +55,8 @@ public class RunHumanVsBot {
 				.load("org/cspoker/client/bots/logging/log4j.properties");
 	}
 
+	private final static Logger logger = Logger.getLogger(RunHumanVsBot.class);
+	
 	public static void main(String[] args) throws LoginException,
 			RemoteException, IllegalActionException {
 		new RunHumanVsBot().testPlay();
@@ -60,6 +65,7 @@ public class RunHumanVsBot {
 	private ClientCore client;
 	protected CSPokerServer server;
 	private final DisplayExecutor displayexecutor;
+	private Factory stats;
 
 	public RunHumanVsBot() {
 		server = new EmbeddedCSPokerServer();
@@ -103,14 +109,28 @@ public class RunHumanVsBot {
 
 			}
 		});
-//		BotFactory botFactory = new SearchBotFactory(
+		stats = new StatisticsVisitor.Factory();
+		BotFactory botFactory = new SearchBotFactory(
+				new DistributionShowdownNode4.Factory(),
+				new Log4JOutputVisitor.Factory(2), new SWTTreeVisitor.Factory(client.getGui().getDisplay()), stats
+				);
+		
+//		BotFactory botFactory = new WekaClassificationBotFactory(
 //				new DistributionShowdownNode4.Factory(),
+//				 "/home/guy/Bureaublad/weka-3-6-0/ANN-c-cb.model",
+//				 "/home/guy/Bureaublad/weka-3-6-0/J48-c-fcr.model",
 //				new Log4JOutputVisitor.Factory(2), new SWTTreeVisitor.Factory(
 //						client.getGui().getDisplay()));
-		BotFactory botFactory = new WekaBotFactory(
-				new DistributionShowdownNode4.Factory(),
-				new Log4JOutputVisitor.Factory(2), new SWTTreeVisitor.Factory(
-						client.getGui().getDisplay()));
+		
+//		BotFactory botFactory = new WekaRegressionBotFactory(
+//				new DistributionShowdownNode4.Factory(),
+//				 "/home/guy/Bureaublad/weka-3-6-0/M5P-r-b.model",
+//				 "/home/guy/Bureaublad/weka-3-6-0/M5P-r-f.model",
+//				 "/home/guy/Bureaublad/weka-3-6-0/M5P-r-c.model",
+//				 "/home/guy/Bureaublad/weka-3-6-0/M5P-r-r.model",
+//				new Log4JOutputVisitor.Factory(2), new SWTTreeVisitor.Factory(
+//						client.getGui().getDisplay()));
+		
 		// BotFactory botFactory = new PrologCafeBotFactory(new
 		// DistributionShowdownNode4.Factory(),
 		// new Log4JOutputVisitor.Factory(2), new
@@ -156,6 +176,14 @@ public class RunHumanVsBot {
 						// e.printStackTrace();
 						// }
 						// }
+					}
+					
+					@Override
+					public void onActionPerformed() {
+						StatisticsVisitor statistics = stats.getStatistics();
+						logger.info("NbNodes="+statistics.getNbNodes());
+						logger.info("NbPrunedSubTrees="+statistics.getNbPrunedSubtrees());
+						logger.info("NbPrunedTokens="+statistics.getNbPrunedTokens());
 					}
 				});
 		bot.start();

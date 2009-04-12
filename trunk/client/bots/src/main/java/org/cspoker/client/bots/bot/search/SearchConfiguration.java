@@ -30,11 +30,13 @@ public class SearchConfiguration {
 	private final Factory botNodeExpanderFactory;
 	private final int preflopTokens;
 	private final double evDiscount;
+	private final boolean uniformBotActionTokens;
 
 	public SearchConfiguration(OpponentModel opponentModel,
 			ShowdownNode.Factory showdownNodeFactory,
 			Expander.Factory botNodeExpanderFactory, int preflopTokens,
-			int flopTokens, int turnTokens, int finalTokens, double evDiscount) {
+			int flopTokens, int turnTokens, int finalTokens, double evDiscount, 
+			boolean uniformBotActionTokens) {
 		opponentModeler = opponentModel;
 		this.showdownNodeFactory = showdownNodeFactory;
 		this.preflopTokens = preflopTokens;
@@ -43,6 +45,7 @@ public class SearchConfiguration {
 		this.finalTokens = finalTokens;
 		this.botNodeExpanderFactory = botNodeExpanderFactory;
 		this.evDiscount = evDiscount;
+		this.uniformBotActionTokens = uniformBotActionTokens;
 	}
 
 	public OpponentModel getOpponentModeler() {
@@ -75,6 +78,10 @@ public class SearchConfiguration {
 
 	public double getEVDiscount() {
 		return evDiscount;
+	}
+
+	public boolean isUniformBotActionTokens() {
+		return uniformBotActionTokens;
 	}
 
 }

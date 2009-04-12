@@ -15,19 +15,18 @@
  */
 package org.cspoker.client.bots.bot.search.node.expander;
 
-import java.util.HashSet;
-import java.util.LinkedHashSet;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
-import java.util.Set;
 
 import org.cspoker.client.bots.bot.search.action.ActionWrapper;
 import org.cspoker.client.bots.bot.search.action.BetAction;
 import org.cspoker.client.bots.bot.search.action.CallAction;
 import org.cspoker.client.bots.bot.search.action.CheckAction;
-import org.cspoker.client.bots.bot.search.action.EvaluatedAction;
 import org.cspoker.client.bots.bot.search.action.FoldAction;
 import org.cspoker.client.bots.bot.search.action.ProbabilityAction;
 import org.cspoker.client.bots.bot.search.action.RaiseAction;
+import org.cspoker.client.bots.bot.search.node.GameTreeNode;
 import org.cspoker.client.bots.bot.search.node.InnerGameTreeNode;
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.common.util.Pair;
@@ -46,8 +45,6 @@ public abstract class Expander {
 		this.tokens = tokens;
 	}
 
-	public abstract Set<? extends EvaluatedAction<? extends ActionWrapper>> expand();
-
 	public int getTokens() {
 		return tokens;
 	}
@@ -55,10 +52,12 @@ public abstract class Expander {
 	public InnerGameTreeNode getNode() {
 		return node;
 	}
+	
+	public abstract List<Pair<ActionWrapper,GameTreeNode>> getChildren(boolean uniformTokens);
 
-	protected Set<ProbabilityAction> getProbabilityActions() {
+	protected List<ProbabilityAction> getProbabilityActions() {
 		GameState gameState = node.getGameState();
-		HashSet<ProbabilityAction> actions = new LinkedHashSet<ProbabilityAction>();
+		List<ProbabilityAction> actions = new ArrayList<ProbabilityAction>(2+nbBetSizeSamples);
 		double totalProbability = 0;
 		if (gameState.hasBet()) {
 			// call, raise or fold
@@ -136,7 +135,7 @@ public abstract class Expander {
 				}
 			}
 		}
-		HashSet<ProbabilityAction> normalizedActions = new HashSet<ProbabilityAction>();
+		List<ProbabilityAction> normalizedActions = new ArrayList<ProbabilityAction>(2+nbBetSizeSamples);
 		for (ProbabilityAction action : actions) {
 			normalizedActions.add(new ProbabilityAction(action
 					.getActionWrapper(), action.getProbability()

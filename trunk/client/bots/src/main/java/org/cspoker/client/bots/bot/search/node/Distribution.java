@@ -13,38 +13,34 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.client.bots.bot.search.action;
+package org.cspoker.client.bots.bot.search.node;
 
-public class SampledAction implements ActionWrapper {
+public class Distribution {
 
-	private final ProbabilityAction action;
-	private final int times;
-	private final int outof;
-
-	public SampledAction(ProbabilityAction action, int times, int outof) {
-		this.action = action;
-		this.times = times;
-		this.outof = outof;
+	private final double variance;
+	private final double mean;
+	private final boolean isUpperBound;
+	
+	public Distribution(double mean, double variance, boolean isUpperBound) {
+		this.mean = mean;
+		this.variance = variance;
+		this.isUpperBound = isUpperBound;
 	}
-
-	public ProbabilityAction getProbabilityAction() {
-		return action;
+	
+	
+	public Distribution(double mean, double variance) {
+		this(mean,variance,false);
 	}
-
-	public SearchBotAction getAction() {
-		return action.getAction();
+	
+	public double getMean() {
+		return mean;
 	}
-
-	public int getTimes() {
-		return times;
+	
+	public double getVariance() {
+		return variance;
 	}
-
-	public int getOutof() {
-		return outof;
-	}
-
-	@Override
-	public String toString() {
-		return action.toString() + " sampled " + times + "/" + outof;
+	
+	public boolean isUpperBound() {
+		return isUpperBound;
 	}
 }

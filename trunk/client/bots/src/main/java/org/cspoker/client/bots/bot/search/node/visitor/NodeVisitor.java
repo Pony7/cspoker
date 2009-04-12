@@ -16,24 +16,27 @@
 package org.cspoker.client.bots.bot.search.node.visitor;
 
 import org.cspoker.client.bots.bot.search.action.ActionWrapper;
-import org.cspoker.client.bots.bot.search.action.EvaluatedAction;
-import org.cspoker.client.bots.bot.search.node.ActionNode;
+import org.cspoker.client.bots.bot.search.node.Distribution;
+import org.cspoker.client.bots.bot.search.node.GameTreeNode;
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.common.elements.player.PlayerId;
+import org.cspoker.common.util.Pair;
 
 public interface NodeVisitor {
 
-	void enterNode(ActionNode node, ActionWrapper action, int tokens);
+	void enterNode(Pair<ActionWrapper,GameTreeNode> node);
 
-	void leaveNode(EvaluatedAction<? extends ActionWrapper> evaluation);
+	void leaveNode(Pair<ActionWrapper,GameTreeNode> node, Distribution distribution);
+	
+	void pruneSubTree(Pair<ActionWrapper,GameTreeNode> node, Distribution distribution);
+
+	void visitLeafNode(int winnings, double probability, int minWinnable,
+			int maxWinnable);
 
 	public static interface Factory {
 
 		NodeVisitor create(GameState gameState, PlayerId actor);
 
 	}
-
-	void visitLeafNode(int winnings, double probability, int minWinnable,
-			int maxWinnable);
 
 }
