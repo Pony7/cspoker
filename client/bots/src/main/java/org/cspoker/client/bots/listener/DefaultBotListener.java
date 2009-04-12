@@ -15,8 +15,11 @@
  */
 package org.cspoker.client.bots.listener;
 
+import net.jcip.annotations.NotThreadSafe;
+
 import org.cspoker.common.api.lobby.holdemtable.event.SitOutEvent;
 
+@NotThreadSafe
 public class DefaultBotListener implements BotListener {
 
 	/**
@@ -36,6 +39,11 @@ public class DefaultBotListener implements BotListener {
 	@Override
 	public void onSitOut(SitOutEvent sitOutEvent) {
 		// no op
+	}
+	
+	@Override
+	public void onActionPerformed() {
+		//no op
 	}
 
 }

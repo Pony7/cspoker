@@ -17,8 +17,7 @@ package org.cspoker.client.bots.bot.search.node;
 
 import net.jcip.annotations.Immutable;
 
-import org.cspoker.client.bots.bot.search.action.ActionWrapper;
-import org.cspoker.client.bots.bot.search.action.EvaluatedAction;
+import org.cspoker.client.bots.bot.search.action.ProbabilityAction;
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.util.Pair;
@@ -27,9 +26,7 @@ import org.cspoker.common.util.Triple;
 @Immutable
 public interface InnerGameTreeNode extends GameTreeNode {
 
-	Pair<Double, Double> getValueDistribution();
-
-	<A extends ActionWrapper> EvaluatedAction<A> expandWith(A action, int tokens);
+	Distribution getValueDistribution(double lowerBound);
 
 	GameState getGameState();
 
@@ -40,5 +37,7 @@ public interface InnerGameTreeNode extends GameTreeNode {
 	PlayerId getPlayerId();
 
 	PlayerId getBotId();
+
+	GameTreeNode getChildAfter(ProbabilityAction action, int subtreeTokens);
 
 }

@@ -16,12 +16,11 @@
 package org.cspoker.client.bots.bot.search.node;
 
 import java.rmi.RemoteException;
-import java.util.Set;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.cspoker.client.bots.bot.search.SearchConfiguration;
 import org.cspoker.client.bots.bot.search.action.ActionWrapper;
-import org.cspoker.client.bots.bot.search.action.EvaluatedAction;
 import org.cspoker.client.bots.bot.search.node.expander.Expander;
 import org.cspoker.client.bots.bot.search.node.visitor.NodeVisitor;
 import org.cspoker.client.common.gamestate.CachingNode;
@@ -30,12 +29,14 @@ import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.RemoteHolde
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.util.Pair;
+import org.cspoker.common.util.Triple;
 
 public class BotActionNode extends ActionNode {
 
 	private final static Logger logger = Logger.getLogger(BotActionNode.class);
 
 	private final Expander expander;
+	private Triple<ActionWrapper,GameTreeNode,Distribution> best = null;
 
 	public BotActionNode(PlayerId botId, GameState gameState,
 			SearchConfiguration config, int tokens, int searchId,
@@ -46,45 +47,68 @@ public class BotActionNode extends ActionNode {
 	}
 
 	@Override
-	public Pair<Double, Double> getValueDistribution() {
-		EvaluatedAction<? extends ActionWrapper> bestEvaluatedAction = getBestEvaluatedAction();
-		return new Pair<Double, Double>(bestEvaluatedAction.getEV(),
-				bestEvaluatedAction.getVarEV());
+	public Distribution getValueDistribution(double lowerBound) {
+		getBestEvaluatedAction(lowerBound);
+		return best.getRight();
 	}
 
 	public void performbestAction(RemoteHoldemPlayerContext context)
-			throws RemoteException, IllegalActionException {
-		EvaluatedAction<? extends ActionWrapper> bestEvaluatedAction = getBestEvaluatedAction();
-		for (NodeVisitor visitor : visitors) {
-			visitor.leaveNode(bestEvaluatedAction);
-		}
-		bestEvaluatedAction.getAction().perform(context);
+	throws RemoteException, IllegalActionException {
+		getBestEvaluatedAction(0.0);
+		//		for (NodeVisitor visitor : visitors) {
+		//			visitor.leaveNode(bestEvaluatedAction);
+		//		}
+		best.getLeft().getAction().perform(context);
 	}
 
-	public EvaluatedAction<? extends ActionWrapper> getBestEvaluatedAction() {
-		double maxEv = Double.NEGATIVE_INFINITY;
-		EvaluatedAction<? extends ActionWrapper> action = null;
-
-		config.getOpponentModeler().assumeTemporarily(gameState);
-		Set<? extends EvaluatedAction<? extends ActionWrapper>> actions = getExpander()
-				.expand();
-		config.getOpponentModeler().forgetLastAssumption();
-
-		for (EvaluatedAction<? extends ActionWrapper> eval : actions) {
-			double ev = eval.getDiscountedEV(config.getEVDiscount());
-			if (ev > maxEv) {
-				maxEv = ev;
-				action = eval;
+	public Triple<ActionWrapper,GameTreeNode,Distribution> getBestEvaluatedAction(double lowerBound) {
+		if(best==null){
+			double maxEv = Double.NEGATIVE_INFINITY;
+			config.getOpponentModeler().assumeTemporarily(gameState);
+			List<Pair<ActionWrapper,GameTreeNode>> children = getExpander().getChildren(config.isUniformBotActionTokens());
+			for (int i=0;i<children.size();i++) {
+				Pair<ActionWrapper,GameTreeNode> pair = children.get(i);
+				GameTreeNode child = pair.getRight();
+				double upperWinBound = child.getUpperWinBound();
+				if(upperWinBound<Math.max(lowerBound,maxEv)){
+					//prune
+					Distribution distribution = new Distribution(upperWinBound,0,true);
+					if(upperWinBound>maxEv){
+						//take the best insufficient child as an upper bound
+						maxEv = upperWinBound;
+						best = new Triple<ActionWrapper, GameTreeNode, Distribution>(pair.getLeft(),pair.getRight(),distribution);
+					}
+					for (NodeVisitor visitor : visitors) {
+						visitor.pruneSubTree(pair, distribution);
+					}
+					continue;
+				}
+				for (NodeVisitor visitor : visitors) {
+					visitor.enterNode(pair);
+				}
+				Distribution valueDistribution = child.getValueDistribution(Math.max(lowerBound,maxEv));
+				for (NodeVisitor visitor : visitors) {
+					visitor.leaveNode(pair, valueDistribution);
+				}
+				if(valueDistribution.getMean()>maxEv){
+					maxEv = valueDistribution.getMean();
+					best = new Triple<ActionWrapper, GameTreeNode, Distribution>(pair.getLeft(), pair.getRight(), valueDistribution);
+				}
 			}
+			if(best==null){
+				throw new IllegalStateException();
+			}
+			config.getOpponentModeler().forgetLastAssumption();
 		}
-		if (action == null) {
-			System.out.println();
-		}
-		return action;
+		return best;
 	}
 
 	protected Expander getExpander() {
 		return expander;
+	}
+
+	public int getNbTokens() {
+		return expander.getTokens();
 	}
 
 	@Override

@@ -51,8 +51,6 @@ public class SearchBot extends AbstractBot {
 
 	@Override
 	public void doNextAction() {
-		executor.execute(new Runnable() {
-			public void run() {
 				try {
 					GameState gameState = tableContext.getGameState();
 					NodeVisitor[] visitors = new NodeVisitor[nodeVisitorFactories.length];
@@ -123,8 +121,6 @@ public class SearchBot extends AbstractBot {
 								"Action was not allowed.", e1);
 					}
 				}
-			}
-		});
 	}
 
 }

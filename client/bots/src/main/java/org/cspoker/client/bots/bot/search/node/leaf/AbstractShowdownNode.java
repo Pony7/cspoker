@@ -33,6 +33,10 @@ public abstract class AbstractShowdownNode implements ShowdownNode {
 		this.nodeVisitors = nodeVisitors;
 	}
 
+	public GameState getGameState() {
+		return gameState;
+	}
+	
 	public interface Factory extends ShowdownNode.Factory {
 
 		@Override

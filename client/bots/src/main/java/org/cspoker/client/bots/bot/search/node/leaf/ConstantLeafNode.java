@@ -13,21 +13,43 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.client.bots.bot.search.node;
+package org.cspoker.client.bots.bot.search.node.leaf;
 
-import net.jcip.annotations.Immutable;
-
+import org.cspoker.client.bots.bot.search.node.Distribution;
 import org.cspoker.client.common.gamestate.GameState;
 
-@Immutable
-public interface GameTreeNode {
+public class ConstantLeafNode implements LeafNode{
 
-	Distribution getValueDistribution(double lowerBound);
-
-	double getUpperWinBound();
-
-	GameState getGameState();
+	private final double EV;
+	private final double varEV;
+	private final GameState gameState;
+	private final int nbTokens;
 	
-	int getNbTokens();
+	public ConstantLeafNode(GameState gameState, double EV, double varEV, int tokens) {
+		this.EV = EV;
+		this.varEV = varEV;
+		this.gameState = gameState;
+		this.nbTokens = tokens;
+	}
 	
+	@Override
+	public Distribution getValueDistribution(double lowerBound) {
+		return new Distribution(EV, varEV);
+	}
+
+	@Override
+	public double getUpperWinBound() {
+		return EV;
+	}
+
+	@Override
+	public GameState getGameState() {
+		return gameState;
+	}
+	
+	@Override
+	public int getNbTokens() {
+		return nbTokens;
+	}
+
 }

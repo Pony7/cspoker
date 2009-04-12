@@ -15,12 +15,14 @@
  */
 package org.cspoker.client.bots.bot.search.node.expander;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.cspoker.client.bots.bot.search.action.EvaluatedAction;
+import org.cspoker.client.bots.bot.search.action.ActionWrapper;
 import org.cspoker.client.bots.bot.search.action.ProbabilityAction;
+import org.cspoker.client.bots.bot.search.node.GameTreeNode;
 import org.cspoker.client.bots.bot.search.node.InnerGameTreeNode;
+import org.cspoker.common.util.Pair;
 
 public class CompleteExpander extends Expander {
 
@@ -28,18 +30,19 @@ public class CompleteExpander extends Expander {
 		super(node, tokens);
 	}
 
-	@Override
-	public Set<? extends EvaluatedAction<? extends ProbabilityAction>> expand() {
-		Set<ProbabilityAction> actions = getProbabilityActions();
-		int subtreeTokens = Math.max(1, tokens / actions.size());
-		Set<EvaluatedAction<ProbabilityAction>> evaluatedActions = new LinkedHashSet<EvaluatedAction<ProbabilityAction>>(
-				actions.size());
-		for (ProbabilityAction action : actions) {
-			evaluatedActions.add(node.expandWith(action, subtreeTokens));
+	public List<Pair<ActionWrapper,GameTreeNode>> getChildren(boolean uniformTokens) {
+		if(!uniformTokens){
+			throw new IllegalArgumentException("Only uniform tokens are allowed.");
 		}
-		return evaluatedActions;
+		List<ProbabilityAction> actions = getProbabilityActions();
+		int subtreeTokens = Math.max(1, tokens / actions.size());
+		List<Pair<ActionWrapper,GameTreeNode>> children = new ArrayList<Pair<ActionWrapper,GameTreeNode>>(actions.size());
+		for (ProbabilityAction action : actions) {
+			children.add(new Pair<ActionWrapper, GameTreeNode>(action,node.getChildAfter(action, subtreeTokens)));
+		}
+		return children;
 	}
-
+	
 	public static class Factory implements Expander.Factory {
 		public CompleteExpander create(InnerGameTreeNode node, int tokens) {
 			return new CompleteExpander(node, tokens);

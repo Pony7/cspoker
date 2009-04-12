@@ -17,19 +17,19 @@ package org.cspoker.client.bots.bot.search.node.expander;
 
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
+import org.cspoker.client.bots.bot.search.action.ActionWrapper;
 import org.cspoker.client.bots.bot.search.action.BetAction;
-import org.cspoker.client.bots.bot.search.action.EvaluatedAction;
 import org.cspoker.client.bots.bot.search.action.ProbabilityAction;
 import org.cspoker.client.bots.bot.search.action.RaiseAction;
-import org.cspoker.client.bots.bot.search.action.SampledAction;
 import org.cspoker.client.bots.bot.search.node.BotActionNode;
+import org.cspoker.client.bots.bot.search.node.GameTreeNode;
 import org.cspoker.client.bots.bot.search.node.InnerGameTreeNode;
+import org.cspoker.common.util.Pair;
 
 import com.google.common.collect.Multiset;
 import com.google.common.collect.TreeMultiset;
@@ -46,62 +46,60 @@ public class SamplingExpander extends Expander {
 	}
 
 	@Override
-	public Set<? extends EvaluatedAction<? extends SampledAction>> expand() {
-		List<SampledAction> sampledActions = sampleActions();
-		Set<EvaluatedAction<SampledAction>> evaluatedActions = new HashSet<EvaluatedAction<SampledAction>>(
-				sampledActions.size());
-		for (SampledAction sampledAction : sampledActions) {
-			evaluatedActions.add(node.expandWith(sampledAction, tokens
-					* sampledAction.getTimes() / sampledAction.getOutof()));
+	public List<Pair<ActionWrapper,GameTreeNode>> getChildren(boolean uniformTokens) {
+		List<Pair<ActionWrapper,WeightedNode>> weightedChildren = getWeightedChildren(uniformTokens);
+		List<Pair<ActionWrapper,GameTreeNode>> children = new ArrayList<Pair<ActionWrapper,GameTreeNode>>(weightedChildren.size());
+		for (Pair<ActionWrapper,WeightedNode> wpair : weightedChildren) {
+			children.add(new Pair<ActionWrapper,GameTreeNode>(wpair.getLeft(),wpair.getRight().getNode()));
 		}
-		return evaluatedActions;
+		return children;
 	}
 
-	private List<SampledAction> sampleActions() {
+	public List<Pair<ActionWrapper,WeightedNode>> getWeightedChildren(boolean uniformTokens) {
 		List<ProbabilityAction> probActions = new ArrayList<ProbabilityAction>(
 				getProbabilityActions());
 		double[] cumulProb = new double[probActions.size()];
 
 		for (int i = 0; i < probActions.size(); i++) {
 			cumulProb[i] = (i > 0 ? cumulProb[i - 1] : 0)
-					+ probActions.get(i).getProbability();
+			+ probActions.get(i).getProbability();
 		}
 		if (logger.isTraceEnabled()) {
 			for (int i = 0; i < probActions.size(); i++) {
 				logger.trace("cumulProb[" + i + "]=" + cumulProb[i]
-						+ " for action " + probActions.get(i));
+				                                                 + " for action " + probActions.get(i));
 
 			}
 		}
 
 		// ordening for sexy debugging output
 		Multiset<ProbabilityAction> samples = TreeMultiset
-				.create(new Comparator<ProbabilityAction>() {
-					@Override
-					public int compare(ProbabilityAction o1,
-							ProbabilityAction o2) {
-						if (o2.getProbability() < o1.getProbability()) {
-							return -1;
-						}
-						if (o2.getProbability() > o1.getProbability()) {
-							return 1;
-						}
-						if (o1.getAction() instanceof RaiseAction
-								&& o2.getAction() instanceof RaiseAction) {
-							return ((RaiseAction) o1.getAction()).amount
-									- ((RaiseAction) o2.getAction()).amount;
-						}
-						if (o1.getAction() instanceof BetAction
-								&& o2.getAction() instanceof BetAction) {
-							return ((BetAction) o1.getAction()).amount
-									- ((BetAction) o2.getAction()).amount;
-						}
-						// if probabilities are equal for different classes,
-						// objects are NOT equal per se
-						// go alphabetically?
-						return o1.toString().compareTo(o2.toString());
-					}
-				});
+		.create(new Comparator<ProbabilityAction>() {
+			@Override
+			public int compare(ProbabilityAction o1,
+					ProbabilityAction o2) {
+				if (o2.getProbability() < o1.getProbability()) {
+					return -1;
+				}
+				if (o2.getProbability() > o1.getProbability()) {
+					return 1;
+				}
+				if (o1.getAction() instanceof RaiseAction
+						&& o2.getAction() instanceof RaiseAction) {
+					return ((RaiseAction) o2.getAction()).amount
+					- ((RaiseAction) o1.getAction()).amount;
+				}
+				if (o1.getAction() instanceof BetAction
+						&& o2.getAction() instanceof BetAction) {
+					return ((BetAction) o2.getAction()).amount
+					- ((BetAction) o1.getAction()).amount;
+				}
+				// if probabilities are equal for different classes,
+				// objects are NOT equal per se
+				// go alphabetically?
+				return o1.toString().compareTo(o2.toString());
+			}
+		});
 		// Multiset<ProbabilityAction> samples = new
 		// HashMultiset<ProbabilityAction>();
 		int nbSamples = Math.min(100, tokens);
@@ -112,13 +110,18 @@ public class SamplingExpander extends Expander {
 		}
 
 		Set<Entry<ProbabilityAction>> entrySet = samples.entrySet();
-		List<SampledAction> sampledActions = new ArrayList<SampledAction>(
-				entrySet.size());
+		List<Pair<ActionWrapper,WeightedNode>> children = 
+			new ArrayList<Pair<ActionWrapper,WeightedNode>>(entrySet.size());
 		for (Entry<ProbabilityAction> entry : entrySet) {
-			sampledActions.add(new SampledAction(entry.getElement(), entry
-					.getCount(), nbSamples));
+			int tokensShare = uniformTokens? tokens / children.size() : 
+				tokens* entry.getCount() / nbSamples;
+			//			
+			children.add(new Pair<ActionWrapper,WeightedNode>(
+					entry.getElement(),
+					new WeightedNode(node.getChildAfter(entry.getElement(),tokensShare), entry.getCount() / (double)nbSamples)
+			));
 		}
-		return sampledActions;
+		return children;
 	}
 
 	private ProbabilityAction sampleAction(List<ProbabilityAction> probActions,
@@ -141,4 +144,5 @@ public class SamplingExpander extends Expander {
 			return new SamplingExpander(node, tokens);
 		}
 	}
+
 }

@@ -21,15 +21,14 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.apache.log4j.Logger;
 import org.cspoker.client.bots.bot.search.action.ActionWrapper;
-import org.cspoker.client.bots.bot.search.action.EvaluatedAction;
 import org.cspoker.client.bots.bot.search.action.ProbabilityAction;
-import org.cspoker.client.bots.bot.search.action.SampledAction;
 import org.cspoker.client.bots.bot.search.action.SearchBotAction;
-import org.cspoker.client.bots.bot.search.node.ActionNode;
-import org.cspoker.client.bots.bot.search.node.BotActionNode;
+import org.cspoker.client.bots.bot.search.node.Distribution;
+import org.cspoker.client.bots.bot.search.node.GameTreeNode;
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.elements.table.Round;
+import org.cspoker.common.util.Pair;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ShellAdapter;
 import org.eclipse.swt.events.ShellEvent;
@@ -48,22 +47,23 @@ public class SWTTreeVisitor implements NodeVisitor {
 	private final Tree tree;
 	private final int relStackSize;
 	private final AtomicBoolean newDecision = new AtomicBoolean(true);
+	private final PlayerId botId;
 
 	public SWTTreeVisitor(Display display, Shell shell, final Tree tree,
-			int relStackSize) {
+			GameState gameState, PlayerId botId) {
 		this.display = display;
 		this.tree = tree;
-		this.relStackSize = relStackSize;
-
+		this.relStackSize = gameState.getPlayer(botId).getStack();
+		this.botId = botId;
 	}
 
 	private final LinkedList<TreeItem> items = new LinkedList<TreeItem>();
 
 	@Override
-	public void enterNode(final ActionNode node, final ActionWrapper action,
-			final int tokens) {
+	public void enterNode(final Pair<ActionWrapper,GameTreeNode> pair) {
 		display.syncExec(new Runnable() {
 			public void run() {
+				ActionWrapper action = pair.getLeft();
 				TreeItem item = items.peek();
 				TreeItem newItem;
 				if (item == null) {
@@ -75,25 +75,21 @@ public class SWTTreeVisitor implements NodeVisitor {
 					newItem = new TreeItem(item, SWT.NONE);
 				}
 				ProbabilityAction probAction;
-				String samples = "n/a";
-				if (action instanceof SampledAction) {
-					SampledAction sampledAction = (SampledAction) action;
-					probAction = sampledAction.getProbabilityAction();
-					samples = sampledAction.getTimes() + "/"
-							+ sampledAction.getOutof();
-				} else if (action instanceof ProbabilityAction) {
+				String samples = "?";
+				if (action instanceof ProbabilityAction) {
 					probAction = (ProbabilityAction) action;
 				} else {
 					throw new IllegalStateException("What action is this? "
 							+ action);
 				}
-				String actor = node instanceof BotActionNode ? "Bot"
-						: "Player " + node.getPlayerId();
+				GameTreeNode node = pair.getRight();
 				Round round = node.getGameState().getRound();
+				String actor = action.getAction().actor.equals(botId)?"Bot":"Player "+action.getAction().actor;
 				newItem.setText(new String[] { actor,
 						action.getAction().toString(), round.getName(),
 						Math.round(100 * probAction.getProbability()) + "%",
-						samples, "?", "?", "" + tokens });
+						samples, "?", "?", "" + node.getNbTokens() 
+				});
 				if (round == Round.FINAL) {
 					newItem.setBackground(2, new Color(display, 30, 30, 255));
 				} else if (round == Round.TURN) {
@@ -110,22 +106,34 @@ public class SWTTreeVisitor implements NodeVisitor {
 	}
 
 	@Override
-	public void leaveNode(
-			final EvaluatedAction<? extends ActionWrapper> evaluation) {
+	public void leaveNode(final Pair<ActionWrapper,GameTreeNode> pair, final Distribution distribution) {
 		display.syncExec(new Runnable() {
 			@Override
 			public void run() {
 				try {
 					TreeItem item = items.pop();
-					item.setText(5, SearchBotAction.parseDollars((int) Math
-							.round(evaluation.getEV() - relStackSize)));
+					if(distribution.isUpperBound()){
+						item.setText(5, "<"+SearchBotAction.parseDollars((int) Math
+								.round(distribution.getMean() - relStackSize)));
+						item.setBackground(5, new Color(display, 255, 0, 0));
+					}else{
+						item.setText(5, SearchBotAction.parseDollars((int) Math
+								.round(distribution.getMean() - relStackSize)));
+					}
 					item.setText(6, SearchBotAction.parseDollars((int) Math
-							.round(Math.sqrt(evaluation.getVarEV()))));
+							.round(Math.sqrt(distribution.getVariance()))));
 				} catch (NoSuchElementException e) {
 					tree.redraw();
 				}
 			}
 		});
+	}
+	
+	@Override
+	public void pruneSubTree(Pair<ActionWrapper, GameTreeNode> node,
+			Distribution distribution) {
+		enterNode(node);
+		leaveNode(node, distribution);
 	}
 
 	@Override
@@ -140,7 +148,7 @@ public class SWTTreeVisitor implements NodeVisitor {
 			text = "Split Pot";
 		}
 		final double winPercentage = (winnings - minWinnable)
-				/ (double) (maxWinnable - minWinnable);
+		/ (double) (maxWinnable - minWinnable);
 		display.syncExec(new Runnable() {
 			public void run() {
 				TreeItem item = items.peek();
@@ -228,8 +236,7 @@ public class SWTTreeVisitor implements NodeVisitor {
 
 		@Override
 		public NodeVisitor create(GameState gameState, PlayerId actor) {
-			SWTTreeVisitor visitor = new SWTTreeVisitor(display, shell, tree,
-					gameState.getPlayer(actor).getStack());
+			SWTTreeVisitor visitor = new SWTTreeVisitor(display, shell, tree, gameState, actor);
 			return visitor;
 		}
 

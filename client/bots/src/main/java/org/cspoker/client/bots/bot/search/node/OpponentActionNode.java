@@ -15,13 +15,14 @@
  */
 package org.cspoker.client.bots.bot.search.node;
 
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.cspoker.client.bots.bot.search.SearchConfiguration;
-import org.cspoker.client.bots.bot.search.action.EvaluatedAction;
-import org.cspoker.client.bots.bot.search.action.SampledAction;
+import org.cspoker.client.bots.bot.search.action.ActionWrapper;
 import org.cspoker.client.bots.bot.search.node.expander.SamplingExpander;
+import org.cspoker.client.bots.bot.search.node.expander.WeightedNode;
 import org.cspoker.client.bots.bot.search.node.visitor.NodeVisitor;
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.common.elements.player.PlayerId;
@@ -30,9 +31,10 @@ import org.cspoker.common.util.Pair;
 public class OpponentActionNode extends ActionNode {
 
 	private final static Logger logger = Logger
-			.getLogger(OpponentActionNode.class);
+	.getLogger(OpponentActionNode.class);
 
 	private final SamplingExpander expander;
+	private Distribution valueDistribution = null;
 
 	public OpponentActionNode(PlayerId opponentId, PlayerId botId,
 			GameState gameState, SearchConfiguration config, int tokens,
@@ -42,36 +44,117 @@ public class OpponentActionNode extends ActionNode {
 	}
 
 	@Override
-	public Pair<Double, Double> getValueDistribution() {
-		config.getOpponentModeler().assumeTemporarily(gameState);
-		Set<? extends EvaluatedAction<? extends SampledAction>> actions = getExpander()
-				.expand();
-		config.getOpponentModeler().forgetLastAssumption();
-
-		// see Variance Estimation and Ranking of Gaussian Mixture Distributions
-		// in Target Tracking Applications
-		// Lidija Trailovi and Lucy Y. Pao
-		double varEV = 0;
-		double EV = 0;
-		for (EvaluatedAction<? extends SampledAction> eval : actions) {
-			double m = eval.getEV();
-			double ss = eval.getVarEV();
-			double w = (double) eval.getEvaluatedAction().getTimes()
-					/ eval.getEvaluatedAction().getOutof();
-
-			EV += w * m;
-			varEV += w * (ss + m * m);
+	public Distribution getValueDistribution(double lowerBound) {
+		if(valueDistribution==null){
+			config.getOpponentModeler().assumeTemporarily(gameState);
+			List<Pair<ActionWrapper, WeightedNode>> children = getExpander().getWeightedChildren(config.isUniformBotActionTokens());
+			double percentageDone = 0;
+			double valueDone = 0;
+			double maxToDo = 0;
+			List<Distribution> valueDistributions = new ArrayList<Distribution>(children.size());
+			for (Pair<ActionWrapper, WeightedNode> pair : children) {
+				WeightedNode child = pair.getRight();
+				double prob = child.getWeight();
+				double upperWinBound = child.getNode().getUpperWinBound();
+				maxToDo += prob*upperWinBound;
+			}
+			for (int i=0;i<children.size();i++) {
+				Pair<ActionWrapper, WeightedNode> pair = children.get(i);
+				WeightedNode child = pair.getRight();
+				double upperWinBound = child.getNode().getUpperWinBound();
+				double prob = child.getWeight();
+				maxToDo -= prob*upperWinBound;
+				int requiredFromSubtree = (int)((lowerBound-valueDone-maxToDo)/prob);
+				if(requiredFromSubtree>upperWinBound){
+					//prune
+					for(int j=i;j<children.size();j++){
+						for (NodeVisitor visitor : visitors) {
+							Pair<ActionWrapper,WeightedNode> skipped = children.get(j);
+							Pair<ActionWrapper, GameTreeNode> node = new Pair<ActionWrapper, GameTreeNode>(skipped.getLeft(), skipped.getRight().getNode());
+							visitor.pruneSubTree(node, new Distribution(node.getRight().getUpperWinBound(),0,true));
+						}
+					}
+					valueDistribution = new Distribution(valueDone+prob*upperWinBound+maxToDo,0.0, true);
+					return valueDistribution;
+				}
+				percentageDone += prob;
+				for (NodeVisitor visitor : visitors) {
+					visitor.enterNode(new Pair<ActionWrapper, GameTreeNode>(pair.getLeft(), pair.getRight().getNode()));
+				}
+				Distribution valueDistribution = child.getNode().getValueDistribution(requiredFromSubtree);
+				for (NodeVisitor visitor : visitors) {
+					visitor.leaveNode(new Pair<ActionWrapper, GameTreeNode>(pair.getLeft(), pair.getRight().getNode()), valueDistribution);
+				}
+				valueDone += prob*valueDistribution.getMean();
+				valueDistributions.add(valueDistribution);
+			}
+			config.getOpponentModeler().forgetLastAssumption();
+			// see Variance Estimation and Ranking of Gaussian Mixture Distributions
+			// in Target Tracking Applications
+			// Lidija Trailovi and Lucy Y. Pao
+			double varEV = 0;
+			for (int i=0;i<valueDistributions.size();i++) {
+				Distribution valueDistribution = valueDistributions.get(i);
+				double m = valueDistribution.getMean();
+				double var = valueDistribution.getVariance();
+				double w = children.get(i).getRight().getWeight();
+				varEV += w * (var + m * m);
+			}
+			valueDistribution = new Distribution(valueDone, Math.max(0, varEV - valueDone));
 		}
-		return new Pair<Double, Double>(EV, Math.max(0, varEV - EV * EV));
+		return valueDistribution;
 	}
 
 	public SamplingExpander getExpander() {
 		return expander;
+	}
+	
+	public int getNbTokens() {
+		return expander.getTokens();
 	}
 
 	@Override
 	public String toString() {
 		return "Opponent " + playerId + " Action Node";
 	}
+
+
+	//	@Override
+	//	public Set<? extends EvaluatedAction<? extends SampledAction>> expand(boolean uniformTokens, double lowerBound) {
+	//		List<SampledAction> sampledActions = sampleActions();
+	//		Set<EvaluatedAction<SampledAction>> evaluatedActions = new HashSet<EvaluatedAction<SampledAction>>(
+	//				sampledActions.size());
+	//		double percentageDone = 0;
+	//		double valueDone = 0;
+	//		double maxToDo = 0;
+	//		for (SampledAction sampledAction : sampledActions) {
+	//			double prob = sampledAction.getTimes()/(double)sampledAction.getOutof();
+	//			int upperWinBound = node.getUpperWinBound(sampledAction);
+	//			maxToDo += prob*upperWinBound;
+	//		}
+	//		for (int i=0;i<sampledActions.size();i++) {
+	//			SampledAction sampledAction = sampledActions.get(i);
+	//			double prob = sampledAction.getTimes()/(double)sampledAction.getOutof();
+	//			int upperWinBound = node.getUpperWinBound(sampledAction);
+	//			maxToDo -= prob*upperWinBound;
+	//			int requiredFromSubtree = (int)((lowerBound-valueDone-maxToDo)/prob);
+	//			if(requiredFromSubtree>upperWinBound){
+	//				//prune
+	//				evaluatedActions.add(new EvaluatedAction<SampledAction>(sampledAction,upperWinBound,0, true));
+	//				for(int j=i+1;j<sampledActions.size();j++){
+	//					SampledAction sampledAction2 = sampledActions.get(j);
+	//					int upperWinBound2 = node.getUpperWinBound(sampledAction2);
+	//					evaluatedActions.add(new EvaluatedAction<SampledAction>(sampledAction2,upperWinBound2,0, true));
+	//				}
+	//				return evaluatedActions;
+	//			}
+	//			int tokensShare = uniformTokens? tokens / sampledActions.size() : tokens* sampledAction.getTimes() / sampledAction.getOutof();
+	//			EvaluatedAction<SampledAction> expanded = node.expandWith(sampledAction, tokensShare, requiredFromSubtree);
+	//			percentageDone += prob;
+	//			valueDone += prob*expanded.getEV();
+	//			evaluatedActions.add(expanded);
+	//		}
+	//		return evaluatedActions;
+	//	}
 
 }

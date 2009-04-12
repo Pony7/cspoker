@@ -44,71 +44,66 @@ public class RuleBasedBot1 extends AbstractBot {
 
 	@Override
 	public void doNextAction() {
-		executor.execute(new Runnable() {
+		try {
+			if (tableContext.getGameState().getRound().equals(
+					Round.PREFLOP)) {
+				playerContext.checkOrCall();
+			} else {
+				int min, max;
+				if (playerContext.haveA(Rank.QUEEN)) {
+					min = 0;
+					max = 2;
+				} else if (playerContext.haveA(Rank.KING)) {
+					min = 1;
+					max = 2;
+				} else if (playerContext.haveA(Rank.ACE)) {
+					min = 2;
+					max = 3;
+				} else if (playerContext.havePocketPair()) {
+					min = 3;
+					max = 5;
+				} else {
+					min = 0;
+					max = 0;
+				}
+				float r = random.nextFloat();
+				if (r < 0.05) {
+					min++;
+				} else if (r < 0.1) {
+					min--;
+				}
+				r = random.nextFloat();
+				if (r < 0.05) {
+					max++;
+				} else if (r < 0.1) {
+					max--;
+				}
 
-			public void run() {
-				try {
-					if (tableContext.getGameState().getRound().equals(
-							Round.PREFLOP)) {
-						playerContext.checkOrCall();
-					} else {
-						int min, max;
-						if (playerContext.haveA(Rank.QUEEN)) {
-							min = 0;
-							max = 2;
-						} else if (playerContext.haveA(Rank.KING)) {
-							min = 1;
-							max = 2;
-						} else if (playerContext.haveA(Rank.ACE)) {
-							min = 2;
-							max = 3;
-						} else if (playerContext.havePocketPair()) {
-							min = 3;
-							max = 5;
-						} else {
-							min = 0;
-							max = 0;
-						}
-						float r = random.nextFloat();
-						if (r < 0.05) {
-							min++;
-						} else if (r < 0.1) {
-							min--;
-						}
-						r = random.nextFloat();
-						if (r < 0.05) {
-							max++;
-						} else if (r < 0.1) {
-							max--;
-						}
+				min = (int) ((min + (-1 + 2 * random.nextDouble())) * playerContext
+						.getGameState().getTableConfiguration()
+						.getBigBlind());
+				max = (int) ((max + (-1 + 2 * random.nextDouble())) * playerContext
+						.getGameState().getMinNextRaise());
 
-						min = (int) ((min + (-1 + 2 * random.nextDouble())) * playerContext
-								.getGameState().getTableConfiguration()
-								.getBigBlind());
-						max = (int) ((max + (-1 + 2 * random.nextDouble())) * playerContext
-								.getGameState().getMinNextRaise());
+				min = Math.max(0, Math.min(max, min));
+				max = Math.max(0, Math.max(max, min));
 
-						min = Math.max(0, Math.min(max, min));
-						max = Math.max(0, Math.max(max, min));
-
-						playerContext.raiseMaxBetWith(min, max);
-					}
-				} catch (IllegalActionException e) {
-					logger.warn("Raise bounds: "
-							+ tableContext.getGameState().getLowerRaiseBound(
-									RuleBasedBot1.this.playerId)
+				playerContext.raiseMaxBetWith(min, max);
+			}
+		} catch (IllegalActionException e) {
+			logger.warn("Raise bounds: "
+					+ tableContext.getGameState().getLowerRaiseBound(
+							RuleBasedBot1.this.playerId)
 							+ " to "
 							+ tableContext.getGameState().getUpperRaiseBound(
 									RuleBasedBot1.this.playerId));
-					logger.error(e);
-					throw new IllegalStateException("Action was not allowed.",
-							e);
-				} catch (RemoteException e) {
-					logger.error(e);
-					throw new IllegalStateException("Action failed.", e);
-				}
-			}
-		});
+			logger.error(e);
+			throw new IllegalStateException("Action was not allowed.",
+					e);
+		} catch (RemoteException e) {
+			logger.error(e);
+			throw new IllegalStateException("Action failed.", e);
+		}
 	}
 
 }

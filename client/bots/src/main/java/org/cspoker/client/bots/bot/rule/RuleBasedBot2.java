@@ -45,56 +45,51 @@ public class RuleBasedBot2 extends AbstractBot {
 
 	@Override
 	public void doNextAction() {
-		executor.execute(new Runnable() {
+		GameState gameState = playerContext.getGameState();
+		int deficit = gameState.getDeficit(RuleBasedBot2.this.playerId);
 
-			public void run() {
-				GameState gameState = playerContext.getGameState();
-				int deficit = gameState.getDeficit(RuleBasedBot2.this.playerId);
-
-				double winPercentage = getWinPercentage(gameState
-						.getCommunityCards(), playerContext.getPocketCards(),
-						100, gameState.getNbPlayers() - 1);
-				if (logger.isDebugEnabled()) {
-					logger.debug("Win percentage is " + winPercentage
-							+ " with " + playerContext.getPocketCards()
-							+ " and " + gameState.getCommunityCards() + " and "
-							+ (gameState.getNbPlayers() - 1) + " opponents.");
+		double winPercentage = getWinPercentage(gameState
+				.getCommunityCards(), playerContext.getPocketCards(),
+				100, gameState.getNbPlayers() - 1);
+		if (logger.isDebugEnabled()) {
+			logger.debug("Win percentage is " + winPercentage
+					+ " with " + playerContext.getPocketCards()
+					+ " and " + gameState.getCommunityCards() + " and "
+					+ (gameState.getNbPlayers() - 1) + " opponents.");
+		}
+		double EV = winPercentage
+		* (gameState.getGamePotSize() + deficit);
+		if (gameState.getRound().equals(Round.PREFLOP)) {
+			// be more aggressive on the flop
+			EV += EV;
+		}
+		try {
+			if (gameState
+					.getNextActivePlayerAfter(RuleBasedBot2.this.playerId) == null) {
+				// can only call or fold
+				if (deficit <= Math.round(EV)) {
+					playerContext.checkOrCall();
+				} else {
+					playerContext.fold();
 				}
-				double EV = winPercentage
-						* (gameState.getGamePotSize() + deficit);
-				if (gameState.getRound().equals(Round.PREFLOP)) {
-					// be more aggressive on the flop
-					EV += EV;
-				}
-				try {
-					if (gameState
-							.getNextActivePlayerAfter(RuleBasedBot2.this.playerId) == null) {
-						// can only call or fold
-						if (deficit <= Math.round(EV)) {
-							playerContext.checkOrCall();
-						} else {
-							playerContext.fold();
-						}
-					} else {
-						playerContext.raiseMaxBetWith((int) Math
-								.round(EV * 0.5), (int) Math.round(EV));
-					}
-				} catch (IllegalActionException e) {
-					logger.warn("Raise bounds: "
-							+ tableContext.getGameState().getLowerRaiseBound(
-									RuleBasedBot2.this.playerId)
+			} else {
+				playerContext.raiseMaxBetWith((int) Math
+						.round(EV * 0.5), (int) Math.round(EV));
+			}
+		} catch (IllegalActionException e) {
+			logger.warn("Raise bounds: "
+					+ tableContext.getGameState().getLowerRaiseBound(
+							RuleBasedBot2.this.playerId)
 							+ " to "
 							+ tableContext.getGameState().getUpperRaiseBound(
 									RuleBasedBot2.this.playerId));
-					logger.error(e);
-					throw new IllegalStateException("Action was not allowed.",
-							e);
-				} catch (RemoteException e) {
-					logger.error(e);
-					throw new IllegalStateException("Action failed.", e);
-				}
-			}
-		});
+			logger.error(e);
+			throw new IllegalStateException("Action was not allowed.",
+					e);
+		} catch (RemoteException e) {
+			logger.error(e);
+			throw new IllegalStateException("Action failed.", e);
+		}
 	}
 
 	// Card roll out code
@@ -119,7 +114,7 @@ public class RuleBasedBot2 extends AbstractBot {
 		int nbWins = 0;
 		for (int i = 0; i < nbCommunitySamples; i++) {
 			EnumSet<Card> fixedAndCommunityCards = EnumSet
-					.copyOf(usedFixedCards);
+			.copyOf(usedFixedCards);
 			EnumSet<Card> communityCards = EnumSet.copyOf(fixedCommunityCards);
 			for (int j = 0; j < nbMissingCommunityCards; j++) {
 				Card communityCard;
@@ -131,7 +126,7 @@ public class RuleBasedBot2 extends AbstractBot {
 			}
 			for (int j = 0; j < nbOpponentSamples; j++) {
 				EnumSet<Card> fixedAndCommunityAndOpponentCards = EnumSet
-						.copyOf(fixedAndCommunityCards);
+				.copyOf(fixedAndCommunityCards);
 				// fixedAndCommunityCards coincidentally contains the bot's
 				// hand!
 				int botRank = getRank(fixedAndCommunityCards);

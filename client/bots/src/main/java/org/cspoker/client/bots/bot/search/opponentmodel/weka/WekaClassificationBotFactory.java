@@ -17,7 +17,6 @@
 package org.cspoker.client.bots.bot.search.opponentmodel.weka;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.HashMap;
@@ -33,8 +32,6 @@ import org.cspoker.client.bots.bot.search.SearchBot;
 import org.cspoker.client.bots.bot.search.SearchConfiguration;
 import org.cspoker.client.bots.bot.search.node.expander.SamplingExpander;
 import org.cspoker.client.bots.bot.search.node.leaf.ShowdownNode;
-import org.cspoker.client.bots.bot.search.node.leaf.UniformShowdownNode;
-import org.cspoker.client.bots.bot.search.node.visitor.Log4JOutputVisitor;
 import org.cspoker.client.bots.bot.search.node.visitor.NodeVisitor;
 import org.cspoker.client.bots.bot.search.node.visitor.NodeVisitor.Factory;
 import org.cspoker.client.bots.bot.search.opponentmodel.OpponentModel;
@@ -45,15 +42,14 @@ import org.cspoker.common.elements.table.TableId;
 
 import weka.classifiers.Classifier;
 
-import alice.tuprolog.InvalidTheoryException;
-import alice.tuprolog.Prolog;
-import alice.tuprolog.Theory;
-
 @ThreadSafe
-public class WekaBotFactory implements BotFactory {
-
+public class WekaClassificationBotFactory implements BotFactory {
+	
+	private final String cbModel;
+	private final String fcr_model ;
+	
 	private final static Logger logger = Logger
-			.getLogger(WekaBotFactory.class);
+			.getLogger(WekaClassificationBotFactory.class);
 	private static int copies = 0;
 
 	private final int copy;
@@ -62,16 +58,13 @@ public class WekaBotFactory implements BotFactory {
 	private final org.cspoker.client.bots.bot.search.node.leaf.ShowdownNode.Factory showdownNodeFactory;
 	private final Factory[] nodeVisitorFactories;
 
-	public WekaBotFactory() {
-		this(new UniformShowdownNode.Factory(),
-				new NodeVisitor.Factory[] { new Log4JOutputVisitor.Factory(2) });
-	}
-
-	public WekaBotFactory(ShowdownNode.Factory showdownNodeFactory,
+	public WekaClassificationBotFactory(ShowdownNode.Factory showdownNodeFactory, String cbModel, String fcrModel,
 			NodeVisitor.Factory... nodeVisitorFactories) {
 		copy = ++copies;
 		this.showdownNodeFactory = showdownNodeFactory;
 		this.nodeVisitorFactories = nodeVisitorFactories;
+		this.cbModel = cbModel;
+		this.fcr_model = fcrModel;
 	}
 
 	public synchronized Bot createBot(final PlayerId botId, TableId tableId,
@@ -82,13 +75,13 @@ public class WekaBotFactory implements BotFactory {
 			Classifier callRaiseClassifier;
 			Classifier checkBetClassifier;
 			try {
-				ObjectInputStream in = new ObjectInputStream(new FileInputStream("/home/guy/Bureaublad/weka-3-6-0/ANN-c-fcr.model"));
+				ObjectInputStream in = new ObjectInputStream(new FileInputStream(fcr_model));
 				callRaiseClassifier = (Classifier)in.readObject();
 				in.close();
-				in = new ObjectInputStream(new FileInputStream("/home/guy/Bureaublad/weka-3-6-0/ANN-c-cb.model"));
+				in = new ObjectInputStream(new FileInputStream(cbModel));
 				checkBetClassifier = (Classifier)in.readObject();
 				in.close();
-				WekaClassifierModel model = new WekaClassifierModel(checkBetClassifier,callRaiseClassifier);
+				WekaClassificationModel model = new WekaClassificationModel(checkBetClassifier,callRaiseClassifier);
 				opponentModels.put(botId, model);
 			} catch (IOException e) {
 				throw new IllegalStateException(e);
@@ -98,13 +91,13 @@ public class WekaBotFactory implements BotFactory {
 		}
 		SearchConfiguration config = new SearchConfiguration(opponentModels
 				.get(botId), showdownNodeFactory,
-				new SamplingExpander.Factory(), 2000, 80000, 10000, 25000, 0.25);
+				new SamplingExpander.Factory(), 2000, 4000, 8000, 16000, 0.25, false);
 		return new SearchBot(botId, tableId, lobby, executor, config, buyIn,
 				nodeVisitorFactories, botListeners);
 	}
 
 	@Override
 	public String toString() {
-		return "TuPrologSearchBotv1-" + copy;
+		return "WekaClasificationSearchBotv1-" + copy;
 	}
 }

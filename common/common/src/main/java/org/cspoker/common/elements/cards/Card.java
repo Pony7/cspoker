@@ -11,6 +11,8 @@
  */
 package org.cspoker.common.elements.cards;
 
+import java.util.HashMap;
+
 import javax.xml.bind.annotation.XmlAttribute;
 
 public enum Card {
@@ -113,4 +115,10 @@ public enum Card {
 			return "back"; // We just see the back of the card ...
 		return rank.getShortDescription() + suit.getShortDescription();
 	}
+
+
+	public String getShortDescription() {
+		return rank.getShortDescription()+suit.getShortDescription();
+	}
+
 }

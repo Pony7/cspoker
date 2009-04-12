@@ -13,16 +13,10 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.client.bots.listener;
+package org.cspoker.client.bots.bot.search.node.leaf;
 
-import org.cspoker.common.api.lobby.holdemtable.event.SitOutEvent;
+import org.cspoker.client.bots.bot.search.node.GameTreeNode;
 
-public interface BotListener {
-
-	void onNewDeal();
-
-	void onSitOut(SitOutEvent sitOutEvent);
-	
-	void onActionPerformed();
+public interface LeafNode extends GameTreeNode {
 
 }

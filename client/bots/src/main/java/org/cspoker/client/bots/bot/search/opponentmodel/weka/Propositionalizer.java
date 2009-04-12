@@ -15,10 +15,20 @@
  */
 package org.cspoker.client.bots.bot.search.opponentmodel.weka;
 
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
+import java.util.Map.Entry;
+
+import org.cspoker.common.elements.cards.Card;
+import org.cspoker.common.handeval.spears2p2.StateTableEvaluator;
+import org.cspoker.common.util.MutableDouble;
+
+import com.google.common.collect.HashMultiset;
+import com.google.common.collect.Multiset;
 
 public class Propositionalizer implements Cloneable {
 
@@ -27,11 +37,17 @@ public class Propositionalizer implements Cloneable {
 	float bigBlind = 0;
 	float maxBet = 0;
 	boolean somebodyActedThisRound = false;
+	int nbActionsThisRound = 0;
 	String round = "preflop";
 	float totalPot = 0;
 	int nbRaisesThisGame = 0;
 	int roundCompletion = 0;
 	int nbSeatedPlayers = 0;
+	EnumSet<Card> cards;
+	int minRank=0;
+	int maxRank=0;
+	int averageRank=0;
+	float sigmaRank=0;
 
 	public Propositionalizer() {
 	}
@@ -92,6 +108,7 @@ public class Propositionalizer implements Cloneable {
 			maxBet = maxBetParsed;
 			totalPot += maxBet;
 			++nbRaisesThisGame;
+			++nbActionsThisRound;
 			roundCompletion = 0;
 			somebodyActedThisRound = true;
 
@@ -129,6 +146,7 @@ public class Propositionalizer implements Cloneable {
 		logCheck(p);
 
 		++roundCompletion;
+		++nbActionsThisRound;
 		somebodyActedThisRound = true;
 
 		p.lastActionWasRaise = false;
@@ -149,6 +167,7 @@ public class Propositionalizer implements Cloneable {
 			float movedAmount = maxBet - p.bet;
 			totalPot += movedAmount;
 			++nbRaisesThisGame;
+			++nbActionsThisRound;
 			somebodyActedThisRound = true;
 
 			p.bet = maxBet;
@@ -168,6 +187,7 @@ public class Propositionalizer implements Cloneable {
 			double movedAmount = maxBet - p.bet;
 			totalPot += movedAmount;
 			++nbRaisesThisGame;
+			++nbActionsThisRound;
 			somebodyActedThisRound = true;
 
 			p.bet = maxBet;
@@ -197,6 +217,7 @@ public class Propositionalizer implements Cloneable {
 		totalPot += movedAmount;
 		++roundCompletion;
 		somebodyActedThisRound = true;
+		++nbActionsThisRound;
 
 		p.bet += movedAmount;
 		p.stack -= movedAmount;
@@ -212,6 +233,7 @@ public class Propositionalizer implements Cloneable {
 
 		activePlayers.remove(p);
 		somebodyActedThisRound = true;
+		++nbActionsThisRound;
 
 		p.lastActionWasRaise = false;
 		p.addFold(this);
@@ -266,6 +288,64 @@ public class Propositionalizer implements Cloneable {
 			}
 		}
 	}
+	
+	public void signalCommunityCards(EnumSet<Card> cardsSet) {
+		this.cards =cardsSet;
+		updateER();
+	}
+
+	private final static int[] handRanks;
+	static {
+		handRanks = StateTableEvaluator.getInstance().handRanks;
+	}
+	private static final int[] offsets = new int[] { 0, 1277, 4137, 4995, 5853,
+		5863, 7140, 7296, 7452 };
+	private Random random = new Random();
+	
+	private void updateER() {
+		Multiset<Integer> ranks = new HashMultiset<Integer>();
+		minRank = Integer.MAX_VALUE;
+		maxRank = Integer.MIN_VALUE;
+		int sum = 0;
+		int n = 100;
+		
+		int startRank = 53;
+		for (Card card:cards) {
+			startRank = handRanks[card.ordinal() + 1 + startRank];
+		}
+		for(int i=0;i<n;i++){
+			EnumSet<Card> sample = EnumSet.copyOf(cards);
+			int rank = startRank;
+			while(sample.size()<7){
+				Card sampleCard;
+				do{
+					sampleCard = Card.values()[random.nextInt(Card.values().length)];
+				}while(sample.contains(sampleCard));
+				sample.add(sampleCard);
+				rank = handRanks[sampleCard.ordinal() + 1 + rank];
+			}
+			int type = (rank >>> 12) - 1;
+			rank = rank & 0xFFF;
+			rank = offsets[type] + rank - 1;
+			ranks.add(rank);
+			if(rank<minRank){
+				minRank = rank;
+			}
+			if(rank>maxRank){
+				maxRank = rank;
+			}
+			sum += rank;
+		}
+		double var = 0;
+		double mean = sum/n;
+		for (Multiset.Entry<Integer> entry : ranks.entrySet()) {
+			double diff = mean - entry.getElement();
+			var += diff * diff * entry.getCount();
+		}
+		var /= (n-1);
+		averageRank = (int)Math.round(mean);
+		sigmaRank = Math.round(Math.sqrt(var));
+	}
 
 	public void signalShowdown() {
 		if (round.equals("flop") || round.equals("turn")
@@ -295,6 +375,7 @@ public class Propositionalizer implements Cloneable {
 		nbRaisesThisGame = 0;
 		roundCompletion = 0;
 		nbSeatedPlayers = 0;
+		nbActionsThisRound = 0;
 		activePlayers.clear();
 	}
 
@@ -304,6 +385,7 @@ public class Propositionalizer implements Cloneable {
 		}
 		roundCompletion = 0;
 		maxBet = 0;
+		nbActionsThisRound = 0;
 		somebodyActedThisRound = false;
 	}
 
@@ -325,6 +407,22 @@ public class Propositionalizer implements Cloneable {
 
 	public float getMaxBet() {
 		return maxBet;
+	}
+	
+	public int getAverageRank() {
+		return averageRank;
+	}
+	
+	public int getMaxRank() {
+		return maxRank;
+	}
+	
+	public int getMinRank() {
+		return minRank;
+	}
+	
+	public float getSigmaRank() {
+		return sigmaRank;
 	}
 
 	public float getBigBlind() {
@@ -364,6 +462,10 @@ public class Propositionalizer implements Cloneable {
 
 	public int getPlayersActed() {
 		return roundCompletion;
+	}
+	
+	public int getNbActionsThisRound() {
+		return nbActionsThisRound;
 	}
 
 	public float getRoundCompletion() {

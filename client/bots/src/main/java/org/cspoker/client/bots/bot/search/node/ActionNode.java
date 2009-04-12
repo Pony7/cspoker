@@ -15,16 +15,18 @@
  */
 package org.cspoker.client.bots.bot.search.node;
 
+import java.util.Set;
+
 import org.apache.log4j.Logger;
 import org.cspoker.client.bots.bot.search.SearchConfiguration;
-import org.cspoker.client.bots.bot.search.action.ActionWrapper;
 import org.cspoker.client.bots.bot.search.action.DefaultWinnerException;
-import org.cspoker.client.bots.bot.search.action.EvaluatedAction;
 import org.cspoker.client.bots.bot.search.action.GameEndedException;
-import org.cspoker.client.bots.bot.search.node.leaf.ShowdownNode;
+import org.cspoker.client.bots.bot.search.action.ProbabilityAction;
+import org.cspoker.client.bots.bot.search.node.leaf.ConstantLeafNode;
 import org.cspoker.client.bots.bot.search.node.visitor.NodeVisitor;
 import org.cspoker.client.bots.bot.search.opponentmodel.OpponentModel;
 import org.cspoker.client.common.gamestate.GameState;
+import org.cspoker.client.common.gamestate.PlayerState;
 import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.util.Pair;
 import org.cspoker.common.util.Triple;
@@ -50,52 +52,40 @@ public abstract class ActionNode implements InnerGameTreeNode {
 		this.config = config;
 		this.searchId = searchId;
 	}
-
-	public <A extends ActionWrapper> EvaluatedAction<A> expandWith(A action,
+	
+	@Override
+	public GameTreeNode getChildAfter(ProbabilityAction action,
 			int tokens) {
-		for (NodeVisitor visitor : visitors) {
-			visitor.enterNode(this, action, tokens);
-		}
-		EvaluatedAction<A> result;
-		GameState nextState;
-
 		if (action.getAction().endsInvolvementOf(botId)) {
 			// bot folded
-			int stack = action.getAction().gameState.getPlayer(botId)
-					.getStack();
-			result = new EvaluatedAction<A>(action, stack, 0);
+			return new ConstantLeafNode(gameState,action.getAction().gameState.getPlayer(botId)
+					.getStack(),0, tokens);
 		} else {
 			try {
-				nextState = action.getAction().getStateAfterAction();
+				GameState nextState = action.getAction().getStateAfterAction();
 				// expand further
 				PlayerId nextToAct = nextState.getNextToAct();
 				if (nextToAct.equals(botId)) {
 					// go to next player node
-					BotActionNode botActionNode = new BotActionNode(botId,
+					return new BotActionNode(botId,
 							nextState, config, tokens, searchId, visitors);
-					result = new EvaluatedAction<A>(action, botActionNode
-							.getValueDistribution());
 				} else {
-					OpponentActionNode opponentActionNode = new OpponentActionNode(
+					return  new OpponentActionNode(
 							nextToAct, botId, nextState, config, tokens,
 							searchId, visitors);
-					result = new EvaluatedAction<A>(action, opponentActionNode
-							.getValueDistribution());
 				}
 			} catch (GameEndedException e) {
 				// no active players left
 				// go to showdown
-				ShowdownNode showdownNode = config.getShowdownNodeFactory()
+				return config.getShowdownNodeFactory()
 						.create(botId, e.lastState, tokens, config, searchId,
 								visitors);
-				result = new EvaluatedAction<A>(action, showdownNode
-						.getExpectedValue());
 			} catch (DefaultWinnerException e) {
 				if (e.winner.getPlayerId().equals(botId)) {
 					// bot wins
 					int stack = e.winner.getStack();
 					int pots = e.foldState.getGamePotSize();
-					result = new EvaluatedAction<A>(action, stack + pots, 0);
+					return new ConstantLeafNode(gameState, stack + pots,0, tokens);
 				} else {
 					throw new IllegalStateException(
 							"Bot should have folded earlier, winner can't be "
@@ -103,10 +93,19 @@ public abstract class ActionNode implements InnerGameTreeNode {
 				}
 			}
 		}
-		for (NodeVisitor visitor : visitors) {
-			visitor.leaveNode(result);
+	}
+	
+	public double getUpperWinBound(){
+		int sum = 0;
+		int botStack = gameState.getPlayer(botId).getStack();
+		//TODO check what if bot allin and 2 other players?
+		Set<PlayerState> players = gameState.getAllSeatedPlayers();
+		for(PlayerState p:players){
+			if(p.isActivelyPlaying() && !p.getPlayerId().equals(botId)){
+				sum += Math.min(botStack, p.getStack());
+			}
 		}
-		return result;
+		return botStack+sum+gameState.getGamePotSize();
 	}
 
 	@Override
@@ -138,7 +137,7 @@ public abstract class ActionNode implements InnerGameTreeNode {
 	public GameState getGameState() {
 		return gameState;
 	}
-
+	
 	@Override
 	public String toString() {
 		return "Action Node";

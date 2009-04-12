@@ -19,8 +19,9 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 
 import org.cspoker.client.bots.bot.search.action.ActionWrapper;
-import org.cspoker.client.bots.bot.search.action.EvaluatedAction;
-import org.cspoker.client.bots.bot.search.node.ActionNode;
+import org.cspoker.client.bots.bot.search.node.Distribution;
+import org.cspoker.client.bots.bot.search.node.GameTreeNode;
+import org.cspoker.common.util.Pair;
 
 public abstract class TextOutputVisitor implements NodeVisitor {
 
@@ -40,37 +41,64 @@ public abstract class TextOutputVisitor implements NodeVisitor {
 	}
 
 	@Override
-	public void enterNode(ActionNode node, ActionWrapper action, int tokens) {
+	public void enterNode(Pair<ActionWrapper,GameTreeNode> pair) {
 		depth++;
 		if (depth <= maxDepth) {
 			String prefix = stack.peek();
 			output(prefix + getNewNodePrefix()
-					+ getNodeDescription(node, action, tokens));
+					+ getNodeDescription(pair, pair.getRight().getNbTokens()));
 			stack.push(prefix + getPrefixElement());
 		}
 	}
 
 	@Override
-	public void leaveNode(EvaluatedAction<? extends ActionWrapper> evaluation) {
+	public void leaveNode(Pair<ActionWrapper,GameTreeNode> node, Distribution distr) {
 		if (depth <= maxDepth) {
 			stack.pop();
 			String prefix = stack.peek();
 			output(prefix + getNodeEndPrefix()
-					+ getEndNodeDescription(evaluation));
+					+ getEndNodeDescription(node, distr));
 		}
 		depth--;
 	}
 
-	protected String getNodeDescription(ActionNode node, ActionWrapper action,
-			int tokens) {
-		return action + " in " + node + " with " + tokens + " token"
-				+ (tokens > 1 ? "s" : "") + " in "
-				+ node.getGameState().getRound();
+	@Override
+	public void pruneSubTree(Pair<ActionWrapper, GameTreeNode> node,
+			Distribution distribution) {
+		enterNode(node);
+		leaveNode(node, distribution);
+	}
+	
+	@Override
+	public void visitLeafNode(int winnings, double probability,
+			int minWinnable, int maxWinnable) {
+		if (depth+1 <= maxDepth) {
+			String prefix = stack.peek();
+			output(prefix + getNewNodePrefix()
+					+ getNodeDescription(winnings, probability, minWinnable, maxWinnable));
+		}
 	}
 
-	protected String getEndNodeDescription(
-			EvaluatedAction<? extends ActionWrapper> evaluation) {
-		return evaluation.toString();
+	protected String getNodeDescription(int winnings, double probability,
+			int minWinnable, int maxWinnable) {
+		if(winnings==maxWinnable){
+			return "Win, "+winnings+" ("+Math.round(100 * probability) + "%)";
+		}else if(winnings==minWinnable){
+			return "Lose, "+winnings+" ("+Math.round(100 * probability) + "%)";
+		}else return "Draw, "+winnings+" ("+Math.round(100 * probability) + "%)";
+	}
+
+	protected String getNodeDescription(Pair<ActionWrapper,GameTreeNode> node, int tokens) {
+		return node.getLeft() + " in " + node.getRight() + " with " + tokens + " token"
+				+ (tokens > 1 ? "s" : "") + " in "
+				+ node.getRight().getGameState().getRound();
+	}
+
+	protected String getEndNodeDescription(Pair<ActionWrapper,GameTreeNode> node, Distribution value) {
+		String bound = value.isUpperBound()?"<":"";
+		return "EV is "+bound + Math.round(value.getMean()) + " for " + node.getRight().toString() + " (σ="
+        + Math.round(Math.sqrt(value.getVariance())) + ")";
+
 	}
 
 	protected String getPrefixElement() {

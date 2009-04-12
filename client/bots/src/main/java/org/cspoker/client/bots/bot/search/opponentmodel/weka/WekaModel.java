@@ -21,53 +21,42 @@ import java.util.Deque;
 import org.apache.log4j.Logger;
 import org.cspoker.client.bots.bot.search.opponentmodel.OpponentModel;
 import org.cspoker.client.common.gamestate.GameState;
-import org.cspoker.common.elements.player.Player;
 import org.cspoker.common.elements.player.PlayerId;
-import org.cspoker.common.util.Pair;
-import org.cspoker.common.util.Triple;
 
-import weka.classifiers.Classifier;
 import weka.core.Instance;
 import weka.core.Instances;
 import weka.core.converters.ConverterUtils.DataSource;
 
-public class WekaClassifierModel implements OpponentModel {
+public abstract class WekaModel implements OpponentModel{
 
-	private final static Logger logger = Logger.getLogger(WekaClassifierModel.class);
+	protected static final Logger logger = Logger.getLogger(WekaClassificationModel.class);
+	protected final PlayerTrackingVisitor visitor;
+	protected final Instances callRaiseDataSet;
+	protected final Instances checkBetDataSet;
+	private final Deque<PlayerTrackingVisitor> visitors = new ArrayDeque<PlayerTrackingVisitor>();
 
-	private final PlayerTrackingVisitor visitor;
-
-	private final Classifier checkBetClassifier;
-	private final Classifier callRaiseClassifier;
-
-	private final Instances callRaiseDataSet;
-	private final Instances checkBetDataSet;
-
-
-	public WekaClassifierModel(Classifier checkBetClassifier, Classifier callRaiseClassifier) {
+	public WekaModel() {
 		this.visitor = new PlayerTrackingVisitor();
-		this.checkBetClassifier = checkBetClassifier;
-		this.callRaiseClassifier = callRaiseClassifier;
 		try {
 			this.callRaiseDataSet = new DataSource(
 					getClass().
 					getClassLoader().
 					getResourceAsStream("org/cspoker/client/bots/bot/search/opponentmodel/weka/CallRaiseActionHeader.arff")
 			).getStructure();
+			callRaiseDataSet.setClassIndex(28);
 			this.checkBetDataSet = new DataSource(
 					getClass().
 					getClassLoader().
 					getResourceAsStream("org/cspoker/client/bots/bot/search/opponentmodel/weka/CheckBetActionHeader.arff")
 			).getStructure();
+			checkBetDataSet.setClassIndex(22);
 		} catch (Exception e) {
 			//stupid Weka
 			throw new IllegalStateException(e);
 		}
 	}
-
-	@Override
-	public Pair<Double, Double> getCheckBetProbabilities(GameState gameState,
-			PlayerId actor) {
+	
+	protected Instance getCheckBetInstance(PlayerId actor) {
 		Propositionalizer prop = getTopVisitor().getPropz();
 		PlayerData p = prop.getPlayers().get(actor);
 		Instance instance = new Instance(23);
@@ -101,21 +90,10 @@ public class WekaClassifierModel implements OpponentModel {
 		instance.setValue(19,p.getPFR());
 		instance.setValue(20,p.getAF());
 		instance.setValue(21,p.getWtSD());
-		try {
-			double[] prob = checkBetClassifier.distributionForInstance(instance);
-			Pair<Double, Double> result = new Pair<Double, Double>(Math.max(0, prob[0]), Math.max(0, prob[1]));
-			if(logger.isTraceEnabled()){
-				logger.trace(instance+": "+result);
-			}
-			return result;
-		} catch (Exception e) {
-			throw new IllegalStateException(e);
-		}
+		return instance;
 	}
 
-	@Override
-	public Triple<Double, Double, Double> getFoldCallRaiseProbabilities(
-			GameState gameState, PlayerId actor) {
+	protected Instance getFoldCallRaiseInstance(PlayerId actor) {
 		Propositionalizer prop = getTopVisitor().getPropz();
 		PlayerData p = prop.getPlayers().get(actor);
 		Instance instance = new Instance(29);
@@ -124,9 +102,6 @@ public class WekaClassifierModel implements OpponentModel {
 		instance.setValue(0,prop.getRoundCompletion());
 		instance.setValue(1,prop.getPlayersActed());
 		instance.setValue(2,prop.getPlayersToAct());
-		//		if(prop.getPlayersToAct()<0){
-		//			throw new IllegalStateException();
-		//		}
 		instance.setValue(3,prop.getRound());
 		instance.setValue(4,p.getGameCount());
 		instance.setValue(5,prop.isSomebodyActedThisRound()+"");
@@ -158,25 +133,13 @@ public class WekaClassifierModel implements OpponentModel {
 		instance.setValue(25,p.getPFR());
 		instance.setValue(26,p.getAF());
 		instance.setValue(27,p.getWtSD());
-		try {
-			double[] prob = callRaiseClassifier.distributionForInstance(instance);
-			Triple<Double, Double, Double> result = new Triple<Double, Double, Double>(Math.max(0, prob[0]),Math.max(0, prob[1]),Math.max(0, prob[2]));
-			if(logger.isTraceEnabled()){
-				logger.trace(instance+": "+result);
-			}
-			return result;
-		} catch (Exception e) {
-			throw new IllegalStateException(e);
-		}
+		return instance;
 	}
 
 	@Override
 	public void assumePermanently(GameState gameState) {
 		visitor.readHistory(gameState);
 	}
-
-	private final Deque<PlayerTrackingVisitor> visitors = new ArrayDeque<PlayerTrackingVisitor>();
-
 
 	@Override
 	public void assumeTemporarily(GameState gameState) {

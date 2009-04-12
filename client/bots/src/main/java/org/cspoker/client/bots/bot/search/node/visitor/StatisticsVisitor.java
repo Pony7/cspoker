@@ -15,7 +15,6 @@
  */
 package org.cspoker.client.bots.bot.search.node.visitor;
 
-import org.apache.log4j.Logger;
 import org.cspoker.client.bots.bot.search.action.ActionWrapper;
 import org.cspoker.client.bots.bot.search.node.Distribution;
 import org.cspoker.client.bots.bot.search.node.GameTreeNode;
@@ -23,59 +22,61 @@ import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.util.Pair;
 
-public class Log4JOutputVisitor extends TextOutputVisitor {
+public class StatisticsVisitor implements NodeVisitor {
 
-	private final static Logger logger = Logger
-			.getLogger(Log4JOutputVisitor.class);
-
-	public Log4JOutputVisitor() {
-		super();
-	}
-
-	public Log4JOutputVisitor(int maxDepth) {
-		super(maxDepth);
+	private int nbNodes = 0;
+	private int nbPrunedSubtrees = 0;
+	private int nbPrunedTokens = 0;
+	
+	@Override
+	public void enterNode(Pair<ActionWrapper, GameTreeNode> node) {
+		nbNodes++;
 	}
 
 	@Override
-	public void enterNode(Pair<ActionWrapper,GameTreeNode> node) {
-		if (logger.isDebugEnabled()) {
-			super.enterNode(node);
-		}
+	public void leaveNode(Pair<ActionWrapper, GameTreeNode> node,
+			Distribution distribution) {
+		
 	}
 
 	@Override
-	public void leaveNode(Pair<ActionWrapper,GameTreeNode> node, Distribution distr) {
-		if (logger.isDebugEnabled()) {
-			super.leaveNode(node, distr);
-		}
+	public void visitLeafNode(int winnings, double probability,
+			int minWinnable, int maxWinnable) {
 	}
-
+	
 	@Override
 	public void pruneSubTree(Pair<ActionWrapper, GameTreeNode> node,
 			Distribution distribution) {
-		if (logger.isDebugEnabled()) {
-			super.pruneSubTree(node, distribution);
-		}
+		nbPrunedSubtrees++;
+		nbPrunedTokens += node.getRight().getNbTokens();
 	}
-
-	@Override
-	protected void output(String line) {
-		logger.debug(line);
+	
+	public int getNbNodes() {
+		return nbNodes;
 	}
-
-	public static class Factory implements NodeVisitor.Factory {
-
-		private final int maxDepth;
-
-		public Factory(int maxDepth) {
-			this.maxDepth = maxDepth;
-		}
-
+	
+	public int getNbPrunedSubtrees() {
+		return nbPrunedSubtrees;
+	}
+	
+	public int getNbPrunedTokens() {
+		return nbPrunedTokens;
+	}
+	
+	
+	public static class Factory implements NodeVisitor.Factory{
+		
+		private StatisticsVisitor statistics;
+		
 		@Override
-		public Log4JOutputVisitor create(GameState gameState, PlayerId actor) {
-			return new Log4JOutputVisitor(maxDepth);
+		public NodeVisitor create(GameState gameState, PlayerId actor) {
+			statistics = new StatisticsVisitor();
+			return statistics;
 		}
-
+		
+		public StatisticsVisitor getStatistics() {
+			return statistics;
+		}
 	}
 
 }

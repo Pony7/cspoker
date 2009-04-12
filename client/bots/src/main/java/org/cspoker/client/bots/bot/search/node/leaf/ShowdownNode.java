@@ -16,14 +16,15 @@
 package org.cspoker.client.bots.bot.search.node.leaf;
 
 import org.cspoker.client.bots.bot.search.SearchConfiguration;
+import org.cspoker.client.bots.bot.search.node.Distribution;
+import org.cspoker.client.bots.bot.search.node.GameTreeNode;
 import org.cspoker.client.bots.bot.search.node.visitor.NodeVisitor;
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.common.elements.player.PlayerId;
-import org.cspoker.common.util.Pair;
 
-public interface ShowdownNode {
+public interface ShowdownNode extends LeafNode{
 
-	Pair<Double, Double> getExpectedValue();
+	Distribution getValueDistribution(double lowerBound);
 
 	public static interface Factory {
 

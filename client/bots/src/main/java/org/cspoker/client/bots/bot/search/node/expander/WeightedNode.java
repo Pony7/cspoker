@@ -13,16 +13,25 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.client.bots.listener;
+package org.cspoker.client.bots.bot.search.node.expander;
 
-import org.cspoker.common.api.lobby.holdemtable.event.SitOutEvent;
+import org.cspoker.client.bots.bot.search.node.GameTreeNode;
 
-public interface BotListener {
+public class WeightedNode {
 
-	void onNewDeal();
+	private GameTreeNode node;
+	private double weight;
 
-	void onSitOut(SitOutEvent sitOutEvent);
+	public WeightedNode(GameTreeNode node, double weight) {
+		this.node = node;
+		this.weight = weight;
+	}
 	
-	void onActionPerformed();
-
+	public double getWeight() {
+		return weight;
+	}
+	
+	public GameTreeNode getNode() {
+		return node;
+	}
 }
