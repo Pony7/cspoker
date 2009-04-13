@@ -41,7 +41,7 @@ public abstract class TextOutputVisitor implements NodeVisitor {
 	}
 
 	@Override
-	public void enterNode(Pair<ActionWrapper,GameTreeNode> pair) {
+	public void enterNode(Pair<ActionWrapper,GameTreeNode> pair, double lowerBound) {
 		depth++;
 		if (depth <= maxDepth) {
 			String prefix = stack.peek();
@@ -64,8 +64,8 @@ public abstract class TextOutputVisitor implements NodeVisitor {
 
 	@Override
 	public void pruneSubTree(Pair<ActionWrapper, GameTreeNode> node,
-			Distribution distribution) {
-		enterNode(node);
+			Distribution distribution, double lowerBound) {
+		enterNode(node, lowerBound);
 		leaveNode(node, distribution);
 	}
 	
@@ -79,6 +79,11 @@ public abstract class TextOutputVisitor implements NodeVisitor {
 		}
 	}
 
+	@Override
+	public void callOpponentModel() {
+		// no op
+	}
+	
 	protected String getNodeDescription(int winnings, double probability,
 			int minWinnable, int maxWinnable) {
 		if(winnings==maxWinnable){

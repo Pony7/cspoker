@@ -88,7 +88,11 @@ public abstract class Expander {
 						/ n));
 				totalProbability += raiseProbability / n;
 				if (n > 1) {
-					double[] betSizeSamples = getLogarithmicSamples(n - 1);
+					actions.add(new ProbabilityAction(new RaiseAction(gameState,
+							node.getPlayerId(), upperRaiseBound), raiseProbability
+							/ n));
+					totalProbability += raiseProbability / n;
+					double[] betSizeSamples = getLogarithmicSamples(n - 2);
 					for (double betSizeSample : betSizeSamples) {
 						RaiseAction raiseAction = new RaiseAction(gameState,
 								node.getPlayerId(),
@@ -117,12 +121,15 @@ public abstract class Expander {
 						.getPlayerId());
 				int upperRaiseBound = gameState.getUpperRaiseBound(node
 						.getPlayerId());
-				int n = upperRaiseBound > lowerRaiseBound ? 3 : 1;
+				int n = upperRaiseBound > lowerRaiseBound ? nbBetSizeSamples : 1;
 				actions.add(new ProbabilityAction(new BetAction(gameState, node
 						.getPlayerId(), lowerRaiseBound), betProbability / n));
 				totalProbability += betProbability / n;
 				if (n > 1) {
-					double[] betSizeSamples = getLogarithmicSamples(n - 1);
+					actions.add(new ProbabilityAction(new BetAction(gameState, node
+							.getPlayerId(), upperRaiseBound), betProbability / n));
+					totalProbability += betProbability / n;
+					double[] betSizeSamples = getLogarithmicSamples(n - 2);
 					for (double betSizeSample : betSizeSamples) {
 						BetAction betAction = new BetAction(gameState, node
 								.getPlayerId(), (int) Math

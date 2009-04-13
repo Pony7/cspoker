@@ -50,17 +50,25 @@ public class SWTTreeVisitor implements NodeVisitor {
 	private final PlayerId botId;
 
 	public SWTTreeVisitor(Display display, Shell shell, final Tree tree,
-			GameState gameState, PlayerId botId) {
+			final GameState gameState, PlayerId botId) {
 		this.display = display;
 		this.tree = tree;
 		this.relStackSize = gameState.getPlayer(botId).getStack();
 		this.botId = botId;
+		display.syncExec(new Runnable() {
+			public void run() {
+				items  = new LinkedList<TreeItem>();
+				rounds = new LinkedList<Round>();
+				rounds.push(gameState.getRound());
+			}
+		});
 	}
 
-	private final LinkedList<TreeItem> items = new LinkedList<TreeItem>();
+	private LinkedList<TreeItem> items;
+	private LinkedList<Round> rounds;
 
 	@Override
-	public void enterNode(final Pair<ActionWrapper,GameTreeNode> pair) {
+	public void enterNode(final Pair<ActionWrapper,GameTreeNode> pair, final double lowerBound) {
 		display.syncExec(new Runnable() {
 			public void run() {
 				ActionWrapper action = pair.getLeft();
@@ -83,12 +91,16 @@ public class SWTTreeVisitor implements NodeVisitor {
 							+ action);
 				}
 				GameTreeNode node = pair.getRight();
-				Round round = node.getGameState().getRound();
+				Round round = rounds.peek();
+				rounds.push(node.getGameState().getRound());
 				String actor = action.getAction().actor.equals(botId)?"Bot":"Player "+action.getAction().actor;
 				newItem.setText(new String[] { actor,
 						action.getAction().toString(), round.getName(),
 						Math.round(100 * probAction.getProbability()) + "%",
-						samples, "?", "?", "" + node.getNbTokens() 
+						samples, "?", "?", "" + node.getNbTokens() , 
+						""+SearchBotAction.parseDollars((int)Math.round(node.getUpperWinBound() - relStackSize)),
+						""+SearchBotAction.parseDollars(node.getGameState().getGamePotSize()),
+						""+SearchBotAction.parseDollars((int)Math.round(lowerBound - relStackSize))
 				});
 				if (round == Round.FINAL) {
 					newItem.setBackground(2, new Color(display, 30, 30, 255));
@@ -115,25 +127,32 @@ public class SWTTreeVisitor implements NodeVisitor {
 					if(distribution.isUpperBound()){
 						item.setText(5, "<"+SearchBotAction.parseDollars((int) Math
 								.round(distribution.getMean() - relStackSize)));
+						item.setText(6, "");
 						item.setBackground(5, new Color(display, 255, 0, 0));
 					}else{
 						item.setText(5, SearchBotAction.parseDollars((int) Math
 								.round(distribution.getMean() - relStackSize)));
+						item.setText(6, SearchBotAction.parseDollars((int) Math
+								.round(Math.sqrt(distribution.getVariance()))));
 					}
-					item.setText(6, SearchBotAction.parseDollars((int) Math
-							.round(Math.sqrt(distribution.getVariance()))));
+					rounds.pop();
 				} catch (NoSuchElementException e) {
 					tree.redraw();
 				}
 			}
 		});
 	}
-	
+
 	@Override
 	public void pruneSubTree(Pair<ActionWrapper, GameTreeNode> node,
-			Distribution distribution) {
-		enterNode(node);
+			Distribution distribution, double lowerBound) {
+		enterNode(node, lowerBound);
 		leaveNode(node, distribution);
+	}
+
+	@Override
+	public void callOpponentModel() {
+		// no op
 	}
 
 	@Override
@@ -161,7 +180,7 @@ public class SWTTreeVisitor implements NodeVisitor {
 				newItem.setText(new String[] { "", text, "showdown",
 						Math.round(100 * probability) + "%", "",
 						SearchBotAction.parseDollars(winnings - relStackSize),
-						"$0", "" });
+						"$0", "" , "", "", ""});
 				newItem.setBackground(1, new Color(display, (int) Math
 						.round((1 - winPercentage) * 255), (int) Math
 						.round(winPercentage * 255), 00));
@@ -197,11 +216,11 @@ public class SWTTreeVisitor implements NodeVisitor {
 
 					TreeColumn column = new TreeColumn(tree, SWT.LEFT);
 					column.setText("Actor");
-					column.setWidth(200);
+					column.setWidth(210);
 
 					column = new TreeColumn(tree, SWT.CENTER);
 					column.setText("Action");
-					column.setWidth(100);
+					column.setWidth(120);
 
 					column = new TreeColumn(tree, SWT.CENTER);
 					column.setText("Round");
@@ -226,6 +245,18 @@ public class SWTTreeVisitor implements NodeVisitor {
 					column = new TreeColumn(tree, SWT.CENTER);
 					column.setText("Tokens");
 					column.setWidth(50);
+
+					column = new TreeColumn(tree, SWT.CENTER);
+					column.setText("Max");
+					column.setWidth(80);
+
+					column = new TreeColumn(tree, SWT.CENTER);
+					column.setText("Pot");
+					column.setWidth(80);
+
+					column = new TreeColumn(tree, SWT.CENTER);
+					column.setText("LowerBound");
+					column.setWidth(80);
 
 					shell.pack();
 					shell.open();

@@ -40,14 +40,12 @@ public class RaiseAction extends SearchBotAction {
 
 	@Override
 	public void perform(RemoteHoldemPlayerContext context)
-			throws RemoteException, IllegalActionException {
+	throws RemoteException, IllegalActionException {
 		context.betOrRaise(amount);
 	}
 
 	@Override
 	public GameState getStateAfterAction() {
-		GameState raiseState;
-
 		PlayerState actorState = gameState.getPlayer(actor);
 		int stack = actorState.getStack();
 		int oldBet = actorState.getBet();
@@ -55,6 +53,7 @@ public class RaiseAction extends SearchBotAction {
 		int deficit = largestBet - oldBet;
 		int movedAmount = deficit + amount;
 
+		GameState raiseState;
 		if (movedAmount >= stack) {
 			raiseState = new AllInState(gameState, new AllInEvent(actor,
 					movedAmount, false));
@@ -68,7 +67,18 @@ public class RaiseAction extends SearchBotAction {
 
 	@Override
 	public String toString() {
-		return "Raise " + parseDollars(amount);
+		PlayerState actorState = gameState.getPlayer(actor);
+		int stack = actorState.getStack();
+		int oldBet = actorState.getBet();
+		int largestBet = gameState.getLargestBet();
+		int deficit = largestBet - oldBet;
+		int movedAmount = deficit + amount;
+
+		if (movedAmount >= stack) {
+			return "Raise " + parseDollars(amount)+ " (all-in)";
+		}else{
+			return "Raise " + parseDollars(amount);
+		}
 	}
 
 }

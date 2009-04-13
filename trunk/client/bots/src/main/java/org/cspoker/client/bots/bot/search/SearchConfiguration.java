@@ -31,12 +31,14 @@ public class SearchConfiguration {
 	private final int preflopTokens;
 	private final double evDiscount;
 	private final boolean uniformBotActionTokens;
+	private final boolean useAlphaBetaPruning;
 
 	public SearchConfiguration(OpponentModel opponentModel,
 			ShowdownNode.Factory showdownNodeFactory,
 			Expander.Factory botNodeExpanderFactory, int preflopTokens,
 			int flopTokens, int turnTokens, int finalTokens, double evDiscount, 
-			boolean uniformBotActionTokens) {
+			boolean uniformBotActionTokens,
+			boolean useAlphaBetaPruning) {
 		opponentModeler = opponentModel;
 		this.showdownNodeFactory = showdownNodeFactory;
 		this.preflopTokens = preflopTokens;
@@ -46,6 +48,7 @@ public class SearchConfiguration {
 		this.botNodeExpanderFactory = botNodeExpanderFactory;
 		this.evDiscount = evDiscount;
 		this.uniformBotActionTokens = uniformBotActionTokens;
+		this.useAlphaBetaPruning = useAlphaBetaPruning;
 	}
 
 	public OpponentModel getOpponentModeler() {
@@ -82,6 +85,10 @@ public class SearchConfiguration {
 
 	public boolean isUniformBotActionTokens() {
 		return uniformBotActionTokens;
+	}
+	
+	public boolean isUseAlphaBetaPruning() {
+		return useAlphaBetaPruning;
 	}
 
 }

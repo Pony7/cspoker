@@ -51,7 +51,7 @@ import org.cspoker.common.util.threading.SingleThreadRequestExecutor;
 public class BotRunner implements LobbyListener {
 
 	private static final TableConfiguration config = new TableConfiguration(10,
-			0, false);
+			0, false, true);
 
 	public static final int nbGamesPerConfrontation = 10000;
 

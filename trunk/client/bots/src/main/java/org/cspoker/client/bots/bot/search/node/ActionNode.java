@@ -96,26 +96,35 @@ public abstract class ActionNode implements InnerGameTreeNode {
 	}
 	
 	public double getUpperWinBound(){
-		int sum = 0;
-		int botStack = gameState.getPlayer(botId).getStack();
+		PlayerState bot = gameState.getPlayer(botId);
+		int botStack = bot.getStack();
 		//TODO check what if bot allin and 2 other players?
+		int stealable = 0;
 		Set<PlayerState> players = gameState.getAllSeatedPlayers();
 		for(PlayerState p:players){
-			if(p.isActivelyPlaying() && !p.getPlayerId().equals(botId)){
-				sum += Math.min(botStack, p.getStack());
+			PlayerId opponent = p.getPlayerId();
+			if(p.isActivelyPlaying() && !opponent.equals(botId)){
+				int callValue = gameState.getCallValue(opponent);
+				stealable += Math.min(botStack, p.getStack()-callValue)+callValue;
 			}
 		}
-		return botStack+sum+gameState.getGamePotSize();
+		return botStack+stealable+gameState.getGamePotSize();
 	}
 
 	@Override
 	public Triple<Double, Double, Double> getFoldCallRaiseProbabilities() {
+		for (NodeVisitor visitor : visitors) {
+			visitor.callOpponentModel();
+		}
 		return config.getOpponentModeler().getFoldCallRaiseProbabilities(
 				gameState, playerId);
 	}
 
 	@Override
 	public Pair<Double, Double> getCheckBetProbabilities() {
+		for (NodeVisitor visitor : visitors) {
+			visitor.callOpponentModel();
+		}
 		return config.getOpponentModeler().getCheckBetProbabilities(gameState,
 				playerId);
 	}
