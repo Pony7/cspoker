@@ -154,7 +154,6 @@ public class Game {
 		currentHandPlayers = new LoopingList<MutableSeatedPlayer>(players);
 		initialCurrentHandPlayers = new LoopingList<MutableSeatedPlayer>(players);
 		playersSittingOutNextRound = new ConcurrentHashMap<MutableSeatedPlayer, Boolean>();
-		deck = Deck.createTruelyRandomDeck();
 		communityCards = new ArrayList<Card>();
 		pots = new MutablePots(players);
 		changeDealer(dealer);
@@ -173,7 +172,6 @@ public class Game {
 	public void dealNewHand() {
 		nbShowdownPlayers = 0;
 		communityCards = new ArrayList<Card>();
-		deck = Deck.createTruelyRandomDeck();
 		List<MutableSeatedPlayer> players = new ArrayList<MutableSeatedPlayer>();
 		players.addAll(table.getMutableSeatedPlayers());
 		players.removeAll(playersSittingOutNextRound.keySet());
@@ -189,12 +187,28 @@ public class Game {
 		for (MutableSeatedPlayer player : currentHandPlayers.getList()) {
 			player.clearPocketCards();
 		}
+		shuffleDeck();
 		setCurrentPlayer(dealer);
 		nextPlayer();
 		setFirstToActPlayer(getCurrentPlayer());
 		setNextDealer(getCurrentPlayer());
 		for (MutableSeatedPlayer player : currentHandPlayers.getList()) {
 			logger.info("New game with "+player);
+		}
+	}
+
+	private void shuffleDeck() {
+		if(configuration.isStratifiedCards()){
+			if(table.getNbDeckIterations()<currentHandPlayers.size()){
+				deck = table.getPreviousDeck();
+				table.setNbDeckIterations(table.getNbDeckIterations()+1);
+			}else{
+				deck = Deck.createTruelyRandomDeck();
+				table.setPreviousDeck(deck);
+				table.setNbDeckIterations(1);
+			}
+		}else{
+			deck = Deck.createTruelyRandomDeck();
 		}
 	}
 	
@@ -522,7 +536,7 @@ public class Game {
 	 */
 	public void addMuckCard(Card card) {
 	// only for formalism :)
-	// it does what is says it does...
+	// it does what is said it does...
 	}
 	
 	/**

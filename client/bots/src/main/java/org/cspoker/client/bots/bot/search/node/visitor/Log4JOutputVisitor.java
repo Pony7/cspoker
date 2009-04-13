@@ -37,9 +37,9 @@ public class Log4JOutputVisitor extends TextOutputVisitor {
 	}
 
 	@Override
-	public void enterNode(Pair<ActionWrapper,GameTreeNode> node) {
+	public void enterNode(Pair<ActionWrapper,GameTreeNode> node, double lowerBound) {
 		if (logger.isDebugEnabled()) {
-			super.enterNode(node);
+			super.enterNode(node, lowerBound);
 		}
 	}
 
@@ -52,9 +52,9 @@ public class Log4JOutputVisitor extends TextOutputVisitor {
 
 	@Override
 	public void pruneSubTree(Pair<ActionWrapper, GameTreeNode> node,
-			Distribution distribution) {
+			Distribution distribution, double lowerBound) {
 		if (logger.isDebugEnabled()) {
-			super.pruneSubTree(node, distribution);
+			super.pruneSubTree(node, distribution, lowerBound);
 		}
 	}
 

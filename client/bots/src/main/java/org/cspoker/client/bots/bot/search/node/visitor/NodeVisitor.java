@@ -24,14 +24,16 @@ import org.cspoker.common.util.Pair;
 
 public interface NodeVisitor {
 
-	void enterNode(Pair<ActionWrapper,GameTreeNode> node);
+	void enterNode(Pair<ActionWrapper,GameTreeNode> node, double lowerBound);
 
 	void leaveNode(Pair<ActionWrapper,GameTreeNode> node, Distribution distribution);
 	
-	void pruneSubTree(Pair<ActionWrapper,GameTreeNode> node, Distribution distribution);
+	void pruneSubTree(Pair<ActionWrapper,GameTreeNode> node, Distribution distribution, double lowerBound);
 
 	void visitLeafNode(int winnings, double probability, int minWinnable,
 			int maxWinnable);
+	
+	void callOpponentModel();
 
 	public static interface Factory {
 

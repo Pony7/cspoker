@@ -46,8 +46,6 @@ import org.cspoker.common.util.Log4JPropertiesLoader;
 import org.cspoker.common.util.threading.SingleThreadRequestExecutor;
 import org.eclipse.swt.widgets.Display;
 
-import weka.classifiers.trees.j48.Stats;
-
 public class RunHumanVsBot {
 
 	static {
@@ -88,7 +86,7 @@ public class RunHumanVsBot {
 		client.getGui().setLobby(lobby);
 
 		TableConfiguration tConfig = new TableConfiguration(smallBlind, delay,
-				false);
+				false, true);
 		lobby.getContext().createHoldemTable(u.getUserName() + "'s test table",
 				tConfig);
 		// Run blocking calls in extra thread
@@ -184,6 +182,7 @@ public class RunHumanVsBot {
 						logger.info("NbNodes="+statistics.getNbNodes());
 						logger.info("NbPrunedSubTrees="+statistics.getNbPrunedSubtrees());
 						logger.info("NbPrunedTokens="+statistics.getNbPrunedTokens());
+						logger.info("NbOpponentModelCalls="+statistics.getNbOpponentModelCalls());
 					}
 				});
 		bot.start();

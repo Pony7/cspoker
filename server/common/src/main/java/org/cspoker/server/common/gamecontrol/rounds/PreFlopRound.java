@@ -72,15 +72,17 @@ public class PreFlopRound
 		}
 		
 		PreFlopRound.logger.info("*** HOLE CARDS ***");
+		
+		//Start dealing after dealer seat, to enable card stratification
 		for (MutableSeatedPlayer player : getGame().getCurrentDealPlayers()) {
-			player.dealPocketCard(drawCard());
-			player.dealPocketCard(drawCard());
-			
-			PreFlopRound.logger.info("Dealt to " + player.getName() + " " + player.getPocketCards());
-			
-			EnumSet<Card> cards = EnumSet.noneOf(Card.class);
-			cards.addAll(player.getPocketCards());
-			gameMediator.publishNewPocketCardsEvent(player.getId(), new NewPocketCardsEvent(cards));
+			if(player.getSeatId().getId()>game.getDealer().getSeatId().getId()){
+			dealPlayerCards(gameMediator, player);
+			}
+		}
+		for (MutableSeatedPlayer player : getGame().getCurrentDealPlayers()) {
+			if(player.getSeatId().getId()<=game.getDealer().getSeatId().getId()){
+				dealPlayerCards(gameMediator, player);
+			}
 		}
 		
 		for (MutableAllInPlayer allInPlayer : allInPlayers) {
@@ -99,6 +101,18 @@ public class PreFlopRound
 			gameMediator.publishNextPlayerEvent(new NextPlayerEvent(game.getCurrentPlayer().getId(),
 					amountToIncreaseBetPileWith(game.getCurrentPlayer())));
 		}
+	}
+
+	private void dealPlayerCards(PokerTable gameMediator,
+			MutableSeatedPlayer player) {
+		player.dealPocketCard(drawCard());
+		player.dealPocketCard(drawCard());
+		
+		PreFlopRound.logger.info("Dealt to " + player.getName() + " " + player.getPocketCards());
+		
+		EnumSet<Card> cards = EnumSet.noneOf(Card.class);
+		cards.addAll(player.getPocketCards());
+		gameMediator.publishNewPocketCardsEvent(player.getId(), new NewPocketCardsEvent(cards));
 	}
 	
 	@Override

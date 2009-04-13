@@ -70,7 +70,8 @@ public class BotActionNode extends ActionNode {
 				Pair<ActionWrapper,GameTreeNode> pair = children.get(i);
 				GameTreeNode child = pair.getRight();
 				double upperWinBound = child.getUpperWinBound();
-				if(upperWinBound<Math.max(lowerBound,maxEv)){
+				double nextLowerBound = Math.max(lowerBound,maxEv);
+				if(config.isUseAlphaBetaPruning() && upperWinBound<nextLowerBound){
 					//prune
 					Distribution distribution = new Distribution(upperWinBound,0,true);
 					if(upperWinBound>maxEv){
@@ -79,14 +80,14 @@ public class BotActionNode extends ActionNode {
 						best = new Triple<ActionWrapper, GameTreeNode, Distribution>(pair.getLeft(),pair.getRight(),distribution);
 					}
 					for (NodeVisitor visitor : visitors) {
-						visitor.pruneSubTree(pair, distribution);
+						visitor.pruneSubTree(pair, distribution, nextLowerBound);
 					}
 					continue;
 				}
 				for (NodeVisitor visitor : visitors) {
-					visitor.enterNode(pair);
+					visitor.enterNode(pair, nextLowerBound);
 				}
-				Distribution valueDistribution = child.getValueDistribution(Math.max(lowerBound,maxEv));
+				Distribution valueDistribution = child.getValueDistribution(nextLowerBound);
 				for (NodeVisitor visitor : visitors) {
 					visitor.leaveNode(pair, valueDistribution);
 				}

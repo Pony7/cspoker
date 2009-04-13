@@ -21,7 +21,9 @@ import java.util.concurrent.ExecutorService;
 import org.apache.log4j.Logger;
 import org.cspoker.client.bots.bot.AbstractBot;
 import org.cspoker.client.bots.bot.search.node.BotActionNode;
+import org.cspoker.client.bots.bot.search.node.expander.SamplingExpander;
 import org.cspoker.client.bots.bot.search.node.visitor.NodeVisitor;
+import org.cspoker.client.bots.bot.search.node.visitor.StatisticsVisitor;
 import org.cspoker.client.bots.bot.search.node.visitor.NodeVisitor.Factory;
 import org.cspoker.client.bots.listener.BotListener;
 import org.cspoker.client.common.SmartLobbyContext;
@@ -53,11 +55,7 @@ public class SearchBot extends AbstractBot {
 	public void doNextAction() {
 				try {
 					GameState gameState = tableContext.getGameState();
-					NodeVisitor[] visitors = new NodeVisitor[nodeVisitorFactories.length];
-					for (int i = 0; i < visitors.length; i++) {
-						visitors[i] = nodeVisitorFactories[i].create(gameState,
-								playerId);
-					}
+					NodeVisitor[] visitors = createVisitors(gameState);
 					BotActionNode actionNode;
 					// essential to do this with a clean game state from the
 					// context, no wrappers
@@ -65,10 +63,32 @@ public class SearchBot extends AbstractBot {
 					switch (gameState.getRound()) {
 					case PREFLOP:
 						logger.debug("Searching preflop round game tree:");
+						SearchConfiguration config2 = new SearchConfiguration(config.getOpponentModeler(), 
+								config.getShowdownNodeFactory(),
+								config.getBotNodeExpanderFactory(), 20000, 40000, 80000, 160000, 0.25, false, false);
+						BotActionNode temp = new BotActionNode(playerId, gameState,
+								config2, config.getPreflopTokens(), searchId++,
+								visitors);
+						temp.getValueDistribution(0);
+
+						logger.info("Without pruning:");
+						logger.info("NbNodes="+((StatisticsVisitor)visitors[visitors.length-1]).getNbNodes());
+						logger.info("NbPrunedSubTrees="+((StatisticsVisitor)visitors[visitors.length-1]).getNbPrunedSubtrees());
+						logger.info("NbPrunedTokens="+((StatisticsVisitor)visitors[visitors.length-1]).getNbPrunedTokens());
+						logger.info("NbOpponentModelCalls="+((StatisticsVisitor)visitors[visitors.length-1]).getNbOpponentModelCalls());
+						visitors = createVisitors(gameState);
+						
 						actionNode = new BotActionNode(playerId, gameState,
 								config, config.getPreflopTokens(), searchId++,
 								visitors);
 						actionNode.performbestAction(playerContext);
+
+						logger.info("With pruning:");
+						logger.info("NbNodes="+((StatisticsVisitor)visitors[visitors.length-1]).getNbNodes());
+						logger.info("NbPrunedSubTrees="+((StatisticsVisitor)visitors[visitors.length-1]).getNbPrunedSubtrees());
+						logger.info("NbPrunedTokens="+((StatisticsVisitor)visitors[visitors.length-1]).getNbPrunedTokens());
+						logger.info("NbOpponentModelCalls="+((StatisticsVisitor)visitors[visitors.length-1]).getNbOpponentModelCalls());
+					
 						break;
 					case FLOP:
 						logger.debug("Searching flop round game tree:");
@@ -121,6 +141,17 @@ public class SearchBot extends AbstractBot {
 								"Action was not allowed.", e1);
 					}
 				}
+	}
+
+	private NodeVisitor[] createVisitors(GameState gameState) {
+		NodeVisitor[] visitors = new NodeVisitor[nodeVisitorFactories.length+1];
+		StatisticsVisitor stats = new StatisticsVisitor();
+		for (int i = 0; i < nodeVisitorFactories.length; i++) {
+			visitors[i] = nodeVisitorFactories[i].create(gameState,
+					playerId);
+		}
+		visitors[nodeVisitorFactories.length] = stats;
+		return visitors;
 	}
 
 }

@@ -37,6 +37,8 @@ import com.google.common.collect.Multiset.Entry;
 
 public class SamplingExpander extends Expander {
 
+	private static final int Max_Granularity = 300;
+
 	private final static Logger logger = Logger.getLogger(BotActionNode.class);
 
 	private final Random random = new Random();
@@ -102,7 +104,7 @@ public class SamplingExpander extends Expander {
 		});
 		// Multiset<ProbabilityAction> samples = new
 		// HashMultiset<ProbabilityAction>();
-		int nbSamples = Math.min(100, tokens);
+		int nbSamples = Math.min(Max_Granularity, tokens);
 		for (int i = 0; i < nbSamples; i++) {
 			ProbabilityAction sampledAction = sampleAction(probActions,
 					cumulProb);

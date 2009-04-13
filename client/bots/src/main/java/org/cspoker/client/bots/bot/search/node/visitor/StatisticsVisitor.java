@@ -27,9 +27,10 @@ public class StatisticsVisitor implements NodeVisitor {
 	private int nbNodes = 0;
 	private int nbPrunedSubtrees = 0;
 	private int nbPrunedTokens = 0;
+	private int nbOpponentModelCalls = 0;
 	
 	@Override
-	public void enterNode(Pair<ActionWrapper, GameTreeNode> node) {
+	public void enterNode(Pair<ActionWrapper, GameTreeNode> node, double lowerBound) {
 		nbNodes++;
 	}
 
@@ -46,9 +47,14 @@ public class StatisticsVisitor implements NodeVisitor {
 	
 	@Override
 	public void pruneSubTree(Pair<ActionWrapper, GameTreeNode> node,
-			Distribution distribution) {
+			Distribution distribution, double lowerBound) {
 		nbPrunedSubtrees++;
 		nbPrunedTokens += node.getRight().getNbTokens();
+	}
+
+	@Override
+	public void callOpponentModel() {
+		nbOpponentModelCalls++;
 	}
 	
 	public int getNbNodes() {
@@ -63,6 +69,9 @@ public class StatisticsVisitor implements NodeVisitor {
 		return nbPrunedTokens;
 	}
 	
+	public int getNbOpponentModelCalls() {
+		return nbOpponentModelCalls;
+	}
 	
 	public static class Factory implements NodeVisitor.Factory{
 		

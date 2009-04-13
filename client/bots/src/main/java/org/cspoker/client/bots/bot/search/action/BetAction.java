@@ -47,12 +47,12 @@ public class BetAction extends SearchBotAction {
 	@Override
 	public GameState getStateAfterAction() {
 		GameState betState;
-		if (gameState.getPlayer(actor).getStack() <= amount) {
+		if (gameState.getPlayer(actor).getStack() == amount) {
 			betState = new AllInState(gameState, new AllInEvent(actor, amount,
 					false));
-		} else {
+		} else if (gameState.getPlayer(actor).getStack() > amount) {
 			betState = new BetState(gameState, new BetEvent(actor, amount));
-		}
+		} else throw new IllegalStateException("Bad amount: "+amount);
 		PlayerState nextToAct = betState.getNextActivePlayerAfter(actor);
 		if (nextToAct != null) {
 			return new NextPlayerState(betState, new NextPlayerEvent(nextToAct
@@ -63,7 +63,11 @@ public class BetAction extends SearchBotAction {
 
 	@Override
 	public String toString() {
-		return "Bet " + parseDollars(amount);
+		if(gameState.getPlayer(actor).getStack() == amount){
+			return "Bet " + parseDollars(amount)+ " (all-in)";
+		}else{
+			return "Bet " + parseDollars(amount);
+		}
 	}
 
 }

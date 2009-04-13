@@ -79,6 +79,12 @@ public class TableConfiguration implements Serializable {
 	 */
 	@XmlAttribute
 	private final boolean autoBlinds;
+	
+	/**
+	 * Whether different players get the same cards in different rounds.
+	 */
+	@XmlAttribute
+	private final boolean stratifiedCards;
 
 	/**
 	 * The maximum number of players in a game
@@ -128,7 +134,7 @@ public class TableConfiguration implements Serializable {
 	}
 	
 	public TableConfiguration(int smallBet, long delay) {
-		this(smallBet,delay,true);
+		this(smallBet,delay,true, false);
 	}
 	
 	/**
@@ -139,7 +145,7 @@ public class TableConfiguration implements Serializable {
 	 * @param delay
 	 *            The delay between two deals, expressed in milliseconds.
 	 */
-	public TableConfiguration(int smallBet, long delay, boolean autoDeal) {
+	public TableConfiguration(int smallBet, long delay, boolean autoDeal, boolean stratifiedCards) {
 		if (!canHaveAsSmallBet(smallBet)) {
 			throw new IllegalArgumentException();
 		}
@@ -151,6 +157,7 @@ public class TableConfiguration implements Serializable {
 		maxNbPlayers = 8;
 		this.autoDeal = autoDeal;
 		autoBlinds = true;
+		this.stratifiedCards = stratifiedCards;
 	}
 
 	/***************************************************************************
@@ -261,6 +268,10 @@ public class TableConfiguration implements Serializable {
 
 	public boolean isAutoDeal() {
 		return autoDeal;
+	}
+	
+	public boolean isStratifiedCards() {
+		return stratifiedCards;
 	}
 
 }

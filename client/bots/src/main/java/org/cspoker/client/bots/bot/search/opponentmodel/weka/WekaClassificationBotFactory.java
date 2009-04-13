@@ -91,7 +91,7 @@ public class WekaClassificationBotFactory implements BotFactory {
 		}
 		SearchConfiguration config = new SearchConfiguration(opponentModels
 				.get(botId), showdownNodeFactory,
-				new SamplingExpander.Factory(), 2000, 4000, 8000, 16000, 0.25, false);
+				new SamplingExpander.Factory(), 2000, 4000, 8000, 16000, 0.25, false, true);
 		return new SearchBot(botId, tableId, lobby, executor, config, buyIn,
 				nodeVisitorFactories, botListeners);
 	}

@@ -23,6 +23,7 @@ import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.cspoker.common.api.shared.exception.IllegalActionException;
+import org.cspoker.common.elements.cards.Deck;
 import org.cspoker.common.elements.player.MutableSeatedPlayer;
 import org.cspoker.common.elements.player.SeatedPlayer;
 import org.cspoker.common.elements.table.SeatId;
@@ -43,7 +44,10 @@ public class ServerTable {
 	private final ConcurrentHashMap<SeatId, MutableSeatedPlayer> players;
 
 	private int maxNbPlayers;
+	
+	private Deck previousDeck = null;
 
+	private int nbDeckIterations = Integer.MAX_VALUE;
 
 	/***************************************************************************
 	 * Constructor
@@ -60,6 +64,22 @@ public class ServerTable {
 			throw new IllegalArgumentException("The given maximum number of players is invalid.");
 		this.maxNbPlayers = maxNbPlayers;
 		players = new ConcurrentHashMap<SeatId, MutableSeatedPlayer>(maxNbPlayers);
+	}
+	
+	public void setPreviousDeck(Deck previousDeck) {
+		this.previousDeck = new Deck(previousDeck);
+	}
+	
+	public Deck getPreviousDeck() {
+		return new Deck(previousDeck);
+	}
+	
+	public int getNbDeckIterations() {
+		return nbDeckIterations;
+	}
+	
+	public void setNbDeckIterations(int nbDeckIterations) {
+		this.nbDeckIterations = nbDeckIterations;
 	}
 	
 	/***************************************************************************

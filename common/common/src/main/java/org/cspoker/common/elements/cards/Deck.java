@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Set;
 
 import org.cspoker.common.util.random.RandomOrgSeededRandomGenerator;
 
@@ -32,11 +33,11 @@ public class Deck {
 	/*
 	 * Sorted prototype deck for copying
 	 */
-	private static final EnumSet<Card> PROTO_DECK;
+	private static final Set<Card> PROTO_DECK;
 
 	static {
 		// Initialize prototype deck
-		PROTO_DECK = EnumSet.allOf(Card.class);
+		PROTO_DECK = Collections.unmodifiableSet(EnumSet.allOf(Card.class));
 	}
 
 	public static Deck createTruelyRandomDeck(){
@@ -65,6 +66,10 @@ public class Deck {
 		this.cards = cards;
 	}
 
+	public Deck(Deck copy) {
+		this(new ArrayList<Card>(copy.cards));
+	}
+
 	/**
 	 * Returns a list of Cards removed from the deck. This method is not
 	 * thread-safe. Since the deck is modified, it is important to synchronize
@@ -81,8 +86,7 @@ public class Deck {
 		handView.clear();
 		return hand;
 	}
-
-	// TODO delete this method
+	
 	/**
 	 * Draw the card on the top of this deck.
 	 * 
@@ -92,7 +96,7 @@ public class Deck {
 	public synchronized Card drawCard() {
 		return deal(1).get(0);
 	}
-
+	
 	/**
 	 * Returns the textual representation of this deck.
 	 */

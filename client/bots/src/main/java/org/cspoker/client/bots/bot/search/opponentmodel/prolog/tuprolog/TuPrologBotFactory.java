@@ -100,7 +100,7 @@ public class TuPrologBotFactory implements BotFactory {
 		}
 		SearchConfiguration config = new SearchConfiguration(opponentModels
 				.get(botId), showdownNodeFactory,
-				new SamplingExpander.Factory(), 50, 100, 250, 250, 0.25, false);
+				new SamplingExpander.Factory(), 50, 100, 250, 250, 0.25, false, true);
 		return new SearchBot(botId, tableId, lobby, executor, config, buyIn,
 				nodeVisitorFactories, botListeners);
 	}

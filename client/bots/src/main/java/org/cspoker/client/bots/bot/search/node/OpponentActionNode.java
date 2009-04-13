@@ -65,13 +65,13 @@ public class OpponentActionNode extends ActionNode {
 				double prob = child.getWeight();
 				maxToDo -= prob*upperWinBound;
 				int requiredFromSubtree = (int)((lowerBound-valueDone-maxToDo)/prob);
-				if(requiredFromSubtree>upperWinBound){
+				if(config.isUseAlphaBetaPruning() && requiredFromSubtree>upperWinBound){
 					//prune
 					for(int j=i;j<children.size();j++){
 						for (NodeVisitor visitor : visitors) {
 							Pair<ActionWrapper,WeightedNode> skipped = children.get(j);
 							Pair<ActionWrapper, GameTreeNode> node = new Pair<ActionWrapper, GameTreeNode>(skipped.getLeft(), skipped.getRight().getNode());
-							visitor.pruneSubTree(node, new Distribution(node.getRight().getUpperWinBound(),0,true));
+							visitor.pruneSubTree(node, new Distribution(node.getRight().getUpperWinBound(),0,true), requiredFromSubtree);
 						}
 					}
 					valueDistribution = new Distribution(valueDone+prob*upperWinBound+maxToDo,0.0, true);
@@ -79,7 +79,7 @@ public class OpponentActionNode extends ActionNode {
 				}
 				percentageDone += prob;
 				for (NodeVisitor visitor : visitors) {
-					visitor.enterNode(new Pair<ActionWrapper, GameTreeNode>(pair.getLeft(), pair.getRight().getNode()));
+					visitor.enterNode(new Pair<ActionWrapper, GameTreeNode>(pair.getLeft(), pair.getRight().getNode()), requiredFromSubtree);
 				}
 				Distribution valueDistribution = child.getNode().getValueDistribution(requiredFromSubtree);
 				for (NodeVisitor visitor : visitors) {
