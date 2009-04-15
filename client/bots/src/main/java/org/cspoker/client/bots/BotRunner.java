@@ -25,9 +25,10 @@ import net.jcip.annotations.NotThreadSafe;
 import org.apache.log4j.Logger;
 import org.cspoker.client.bots.bot.Bot;
 import org.cspoker.client.bots.bot.BotFactory;
-import org.cspoker.client.bots.bot.search.SearchBotFactory;
-import org.cspoker.client.bots.bot.search.node.leaf.DistributionShowdownNode4;
-import org.cspoker.client.bots.bot.search.opponentmodel.prolog.cafe.PrologCafeBotFactory;
+import org.cspoker.client.bots.bot.gametree.opponentmodel.prolog.cafe.PrologCafeBotFactory;
+import org.cspoker.client.bots.bot.gametree.rollout.DistributionRollout4;
+import org.cspoker.client.bots.bot.gametree.search.SearchBotFactory;
+import org.cspoker.client.bots.bot.gametree.search.ShowdownRolloutNode;
 import org.cspoker.client.bots.listener.BotListener;
 import org.cspoker.client.bots.listener.GameLimitingBotListener;
 import org.cspoker.client.bots.listener.ReSitInBotListener;
@@ -90,7 +91,7 @@ public class BotRunner implements LobbyListener {
 				// ML bots
 				//						 new RuleBasedBotFactory1(),
 //				new RuleBasedBotFactory2(),
-				new SearchBotFactory(new DistributionShowdownNode4.Factory()),
+				new SearchBotFactory(new ShowdownRolloutNode.Factory(new DistributionRollout4.Factory())),
 //				 new SearchBotFactory(new
 //				 DistributionShowdownNode4.Factory()),
 				// new RuleBasedBotFactory1(),
@@ -123,7 +124,7 @@ public class BotRunner implements LobbyListener {
 				//						 "/home/guy/Bureaublad/weka-3-6-0/M5P-r-r.model"
 				//				),
 
-				new PrologCafeBotFactory(),
+				new PrologCafeBotFactory(new ShowdownRolloutNode.Factory(new DistributionRollout4.Factory())),
 				// new SearchBotFactory(new CachedShowdownNodeFactory(new
 				// UniformShowdownNode.Factory())),
 		});

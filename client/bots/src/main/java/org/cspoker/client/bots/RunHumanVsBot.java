@@ -20,12 +20,12 @@ import org.apache.log4j.Logger;
 import org.cspoker.client.User;
 import org.cspoker.client.bots.bot.Bot;
 import org.cspoker.client.bots.bot.BotFactory;
-import org.cspoker.client.bots.bot.search.SearchBotFactory;
-import org.cspoker.client.bots.bot.search.node.leaf.DistributionShowdownNode4;
-import org.cspoker.client.bots.bot.search.node.visitor.Log4JOutputVisitor;
-import org.cspoker.client.bots.bot.search.node.visitor.SWTTreeVisitor;
-import org.cspoker.client.bots.bot.search.node.visitor.StatisticsVisitor;
-import org.cspoker.client.bots.bot.search.node.visitor.StatisticsVisitor.Factory;
+import org.cspoker.client.bots.bot.gametree.rollout.DistributionRollout4;
+import org.cspoker.client.bots.bot.gametree.search.SearchBotFactory;
+import org.cspoker.client.bots.bot.gametree.search.ShowdownRolloutNode;
+import org.cspoker.client.bots.bot.gametree.search.nodevisitor.Log4JOutputVisitor;
+import org.cspoker.client.bots.bot.gametree.search.nodevisitor.SWTTreeVisitor;
+import org.cspoker.client.bots.bot.gametree.search.nodevisitor.StatisticsVisitor;
 import org.cspoker.client.bots.listener.DefaultBotListener;
 import org.cspoker.client.common.SmartClientContext;
 import org.cspoker.client.common.SmartLobbyContext;
@@ -63,7 +63,7 @@ public class RunHumanVsBot {
 	private ClientCore client;
 	protected CSPokerServer server;
 	private final DisplayExecutor displayexecutor;
-	private Factory stats;
+	private StatisticsVisitor.Factory stats;
 
 	public RunHumanVsBot() {
 		server = new EmbeddedCSPokerServer();
@@ -109,7 +109,7 @@ public class RunHumanVsBot {
 		});
 		stats = new StatisticsVisitor.Factory();
 		BotFactory botFactory = new SearchBotFactory(
-				new DistributionShowdownNode4.Factory(),
+				new ShowdownRolloutNode.Factory(new DistributionRollout4.Factory()),
 				new Log4JOutputVisitor.Factory(2), new SWTTreeVisitor.Factory(client.getGui().getDisplay()), stats
 				);
 		

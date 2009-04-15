@@ -8,8 +8,8 @@ import java.io.IOException;
 import java.util.EnumSet;
 import java.util.HashMap;
 
-import org.cspoker.client.bots.bot.search.opponentmodel.weka.PlayerData;
-import org.cspoker.client.bots.bot.search.opponentmodel.weka.Propositionalizer;
+import org.cspoker.client.bots.bot.gametree.opponentmodel.weka.PlayerData;
+import org.cspoker.client.bots.bot.gametree.opponentmodel.weka.Propositionalizer;
 import org.cspoker.common.elements.cards.Card;
 
 public class PropositionalDataSetGenerator extends Propositionalizer {
