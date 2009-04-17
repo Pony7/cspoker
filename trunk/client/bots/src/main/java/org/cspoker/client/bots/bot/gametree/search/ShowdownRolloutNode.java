@@ -28,21 +28,6 @@ import org.cspoker.common.util.MutableDouble;
 
 public class ShowdownRolloutNode implements ShowdownNode {
 
-	public static class Factory implements ShowdownNode.Factory{
-
-		private final AbstractDistributionRollout.Factory rolloutFactory;
-
-		public Factory(AbstractDistributionRollout.Factory rolloutFactory) {
-			this.rolloutFactory = rolloutFactory;
-		}
-		
-		public ShowdownRolloutNode create(PlayerId botId,
-				GameState gameState, int tokens, SearchConfiguration config,
-				int searchId, NodeVisitor... nodeVisitors){
-			return new ShowdownRolloutNode(botId,gameState,rolloutFactory.create(gameState,botId),tokens, nodeVisitors);
-		}
-	}
-
 	private final static Logger logger = Logger
 	.getLogger(ShowdownRolloutNode.class);
 
@@ -120,7 +105,27 @@ public class ShowdownRolloutNode implements ShowdownNode {
 
 	@Override
 	public String toString() {
-		return "Showdown  Rollout Node";
+		return "Showdown Rollout Node";
+	}
+	
+	public static class Factory implements ShowdownNode.Factory{
+
+		private final AbstractDistributionRollout.Factory rolloutFactory;
+
+		public Factory(AbstractDistributionRollout.Factory rolloutFactory) {
+			this.rolloutFactory = rolloutFactory;
+		}
+		
+		public ShowdownRolloutNode create(PlayerId botId,
+				GameState gameState, int tokens, SearchConfiguration config,
+				int searchId, NodeVisitor... nodeVisitors){
+			return new ShowdownRolloutNode(botId,gameState,rolloutFactory.create(gameState,botId),tokens, nodeVisitors);
+		}
+		
+		@Override
+		public String toString() {
+			return "Showdown Rollout Node";
+		}
 	}
 
 }

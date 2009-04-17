@@ -178,7 +178,7 @@ public abstract class AbstractDistributionRollout {
 			// won something, no draw
 			if (maxOpponentWin == 0 && !botState.isAllIn()) {
 				// just win everything
-				return gameState.getGamePotSize();
+				return gamePotSize;
 			} else {
 				// Calculate from individual contributions
 				int totalToDistribute = 0;

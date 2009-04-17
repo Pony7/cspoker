@@ -13,21 +13,13 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.client.bots.bot.gametree.mcts;
+package org.cspoker.client.bots.bot.gametree.mcts.strategies;
 
-public abstract class LeafNode extends AbstractNode {
-	
-	public LeafNode(InnerNode parent) {
-		super(parent);
-	}
-	
-	@Override
-	public INode select(SelectionStrategy strategy) {
-		return this;
-	}
-	
-	@Override
-	public void backPropagate(int value) {
-		throw new UnsupportedOperationException("Can't backpropagate in leaf node");
-	}
+import org.cspoker.client.bots.bot.gametree.mcts.nodes.INode;
+import org.cspoker.client.bots.bot.gametree.mcts.nodes.InnerNode;
+
+public interface SelectionStrategy {
+
+	public INode select(InnerNode innerNode);
+
 }

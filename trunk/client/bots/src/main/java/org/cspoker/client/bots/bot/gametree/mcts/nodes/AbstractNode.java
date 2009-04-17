@@ -13,18 +13,37 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.client.bots.bot.gametree.mcts;
+package org.cspoker.client.bots.bot.gametree.mcts.nodes;
+
+import org.cspoker.client.bots.bot.gametree.action.ProbabilityAction;
 
 
 public abstract class AbstractNode implements INode {
-	
+
 	//parent
 	protected final InnerNode parent;
+	protected final ProbabilityAction lastAction;
 
-	protected boolean inTree = false;
-	
-	public AbstractNode(InnerNode parent) {
+	protected int nbSamples = 0;
+
+	public AbstractNode(InnerNode parent, ProbabilityAction lastAction) {
 		this.parent = parent;
+		this.lastAction = lastAction;
+	}
+
+	@Override
+	public InnerNode getParent() {
+		return parent;
+	}
+
+	@Override
+	public int getNbSamples() {
+		return nbSamples;
+	}
+
+	@Override
+	public ProbabilityAction getLastAction() {
+		return lastAction;
 	}
 
 }

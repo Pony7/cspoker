@@ -155,6 +155,9 @@ public abstract class WekaModel implements OpponentModel{
 	}
 
 	protected PlayerTrackingVisitor getTopVisitor() {
+		if(visitors.isEmpty()){
+			return visitor;
+		}
 		return visitors.peek();
 	}
 

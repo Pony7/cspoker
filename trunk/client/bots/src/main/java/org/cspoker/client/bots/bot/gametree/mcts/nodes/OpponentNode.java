@@ -13,12 +13,24 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.client.bots.bot.gametree.mcts;
+package org.cspoker.client.bots.bot.gametree.mcts.nodes;
 
-import java.util.List;
+import org.cspoker.client.bots.bot.gametree.action.ProbabilityAction;
+import org.cspoker.client.bots.bot.gametree.mcts.strategies.SelectionStrategy;
+import org.cspoker.client.bots.bot.gametree.opponentmodel.OpponentModel;
+import org.cspoker.client.common.gamestate.GameState;
+import org.cspoker.common.elements.player.PlayerId;
 
-public interface SelectionStrategy {
+public class OpponentNode extends InnerNode{
 
-	public INode select(List<INode> children);
+	public OpponentNode(InnerNode parent, ProbabilityAction probAction,
+			GameState gameState, PlayerId bot, OpponentModel model) {
+		super(parent, probAction, gameState, bot, model);
+	}
 
+	@Override
+	public INode selectChild(SelectionStrategy strategy) {
+		return getRandomChild();
+	}	
+	
 }

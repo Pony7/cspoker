@@ -60,7 +60,7 @@ public abstract class AbstractBot implements Bot {
 	private volatile boolean started = false;
 
 	public final TableId tableID;
-	public final PlayerId playerId;
+	public final PlayerId botId;
 
 	private final BotListener[] botListeners;
 
@@ -68,10 +68,10 @@ public abstract class AbstractBot implements Bot {
 
 	private final int buyIn;
 
-	public AbstractBot(PlayerId playerId, TableId tableId,
+	public AbstractBot(PlayerId botId, TableId tableId,
 			SmartLobbyContext lobby, int buyIn, ExecutorService executor,
 			BotListener... botListeners) {
-		this.playerId = playerId;
+		this.botId = botId;
 		tableID = tableId;
 		lobbyContext = lobby;
 		this.botListeners = botListeners;
@@ -121,17 +121,45 @@ public abstract class AbstractBot implements Bot {
 	 * 
 	 * @see org.cspoker.client.bots.Bot#doNextAction()
 	 */
-	public abstract void doNextAction();
+	public abstract void doNextAction() throws RemoteException, IllegalActionException;
 
 	/**
 	 * @see org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener#onNextPlayer(org.cspoker.common.api.lobby.holdemtable.event.NextPlayerEvent)
 	 */
 	public void onNextPlayer(final NextPlayerEvent nextPlayerEvent) {
-		if (started && nextPlayerEvent.getPlayerId().equals(playerId)) {
+		if (started && nextPlayerEvent.getPlayerId().equals(botId)) {
 			executor.execute(new Runnable(){
 				@Override
 				public void run() {
-					doNextAction();
+					try {
+						doNextAction();
+					} catch (IllegalActionException e) {
+						logger.warn("Raise bounds: "
+								+ tableContext.getGameState().getLowerRaiseBound(
+										botId)
+								+ " to "
+								+ tableContext.getGameState().getUpperRaiseBound(
+										botId));
+						logger.error(e);
+						throw new IllegalStateException("Action was not allowed.",
+								e);
+					} catch (RemoteException e) {
+						logger.error(e);
+						throw new IllegalStateException("Action failed.", e);
+					} catch (StackOverflowError e) {
+						e.printStackTrace();
+						logger.error(e);
+						try {
+							playerContext.checkOrCall();
+						} catch (RemoteException e1) {
+							logger.error(e1);
+							throw new IllegalStateException("Action failed.", e1);
+						} catch (IllegalActionException e1) {
+							logger.error(e1);
+							throw new IllegalStateException(
+									"Action was not allowed.", e1);
+						}
+					}
 					for (BotListener botListener : botListeners) {
 						botListener.onActionPerformed();
 					}
@@ -182,7 +210,7 @@ public abstract class AbstractBot implements Bot {
 	 */
 	public int getProfit() {
 		GameState state = tableContext.getGameState();
-		PlayerState playerState = state.getPlayer(playerId);
+		PlayerState playerState = state.getPlayer(botId);
 		if(playerState==null){
 			//sitting out because we're broke
 			return (-buyIn);

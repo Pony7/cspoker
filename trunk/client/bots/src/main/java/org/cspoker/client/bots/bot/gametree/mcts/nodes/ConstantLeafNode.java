@@ -3,34 +3,48 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- *
+ * 
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
- *
+ *  
  *  You should have received a copy of the GNU General Public License
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.client.bots.bot;
+package org.cspoker.client.bots.bot.gametree.mcts.nodes;
 
-import java.rmi.RemoteException;
+import org.cspoker.client.bots.bot.gametree.action.ProbabilityAction;
+import org.cspoker.client.common.gamestate.GameState;
 
-import org.cspoker.common.api.lobby.holdemtable.holdemplayer.listener.HoldemPlayerListener;
-import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
-import org.cspoker.common.api.shared.exception.IllegalActionException;
+public class ConstantLeafNode extends LeafNode {
 
-public interface Bot extends HoldemTableListener, HoldemPlayerListener {
+	public final int value;
+	
+	public ConstantLeafNode(InnerNode parent, ProbabilityAction lastAction, int value) {
+		super(parent, lastAction);
+		this.value = value;
+	}
+	
+	@Override
+	public double getAverage() {
+		return value;
+	}
+	
+	@Override
+	public double simulate() {
+		return value;
+	}
+	
+	@Override
+	public void backPropagate(double value) {
+		++nbSamples;
+		parent.backPropagate(value);
+	}
 
-	void doNextAction() throws RemoteException, IllegalActionException;
-
-	void start();
-
-	void startGame();
-
-	void stop();
-
-	int getProfit();
-
+	@Override
+	public GameState getGameState() {
+		return parent.gameState;
+	}
 }

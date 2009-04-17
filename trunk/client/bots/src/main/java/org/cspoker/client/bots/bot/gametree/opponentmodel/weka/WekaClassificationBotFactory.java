@@ -72,14 +72,12 @@ public class WekaClassificationBotFactory implements BotFactory {
 			BotListener... botListeners) {
 		copies++;
 		if (opponentModels.get(botId) == null) {
-			Classifier callRaiseClassifier;
-			Classifier checkBetClassifier;
-			try {
+			try{
 				ObjectInputStream in = new ObjectInputStream(new FileInputStream(fcr_model));
-				callRaiseClassifier = (Classifier)in.readObject();
+				Classifier callRaiseClassifier = (Classifier)in.readObject();
 				in.close();
 				in = new ObjectInputStream(new FileInputStream(cbModel));
-				checkBetClassifier = (Classifier)in.readObject();
+				Classifier checkBetClassifier = (Classifier)in.readObject();
 				in.close();
 				WekaClassificationModel model = new WekaClassificationModel(checkBetClassifier,callRaiseClassifier);
 				opponentModels.put(botId, model);
