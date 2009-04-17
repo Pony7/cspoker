@@ -93,10 +93,10 @@ public class RuleBasedBot1 extends AbstractBot {
 		} catch (IllegalActionException e) {
 			logger.warn("Raise bounds: "
 					+ tableContext.getGameState().getLowerRaiseBound(
-							RuleBasedBot1.this.playerId)
+							RuleBasedBot1.this.botId)
 							+ " to "
 							+ tableContext.getGameState().getUpperRaiseBound(
-									RuleBasedBot1.this.playerId));
+									RuleBasedBot1.this.botId));
 			logger.error(e);
 			throw new IllegalStateException("Action was not allowed.",
 					e);

@@ -107,7 +107,7 @@ public class WekaRegressionBotFactory implements BotFactory {
 		}
 		SearchConfiguration config = new SearchConfiguration(opponentModels
 				.get(botId), showdownNodeFactory,
-				new SamplingExpander.Factory(), 1000, 2000, 4000, 8000, 0.5, false, true);
+				new SamplingExpander.Factory(), 10000, 20000, 40000, 80000, 0, false, true);
 		return new SearchBot(botId, tableId, lobby, executor, config, buyIn,
 				nodeVisitorFactories, botListeners);
 	}

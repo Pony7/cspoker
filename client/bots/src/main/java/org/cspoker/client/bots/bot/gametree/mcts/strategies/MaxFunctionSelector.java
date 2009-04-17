@@ -13,16 +13,30 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.client.bots.bot.gametree.mcts;
+package org.cspoker.client.bots.bot.gametree.mcts.strategies;
 
-public interface INode {
+import org.cspoker.client.bots.bot.gametree.mcts.nodes.INode;
+import org.cspoker.client.bots.bot.gametree.mcts.nodes.InnerNode;
 
-	INode select(SelectionStrategy strategy);
+import com.google.common.collect.ImmutableList;
 
-	void expand();
+public abstract class MaxFunctionSelector implements SelectionStrategy {
 
-	double simulate();
+	@Override
+	public INode select(InnerNode innerNode) {
+		ImmutableList<INode> children = innerNode.getChildren();
+		INode maxNode = null;
+		double maxValue = Double.NEGATIVE_INFINITY;
+		for (INode node : children) {
+			double value = evaluate(node);
+			if(value>maxValue){
+				maxValue = value;
+				maxNode = node;
+			}
+		}
+		return maxNode;
+	}
 
-	void backPropagate(int value);
+	protected abstract double evaluate(INode node);
 
 }

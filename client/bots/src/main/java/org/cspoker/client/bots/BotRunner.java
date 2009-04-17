@@ -25,9 +25,9 @@ import net.jcip.annotations.NotThreadSafe;
 import org.apache.log4j.Logger;
 import org.cspoker.client.bots.bot.Bot;
 import org.cspoker.client.bots.bot.BotFactory;
-import org.cspoker.client.bots.bot.gametree.opponentmodel.prolog.cafe.PrologCafeBotFactory;
+import org.cspoker.client.bots.bot.gametree.mcts.MCTSBotFactory;
+import org.cspoker.client.bots.bot.gametree.opponentmodel.weka.WekaClassificationBotFactory;
 import org.cspoker.client.bots.bot.gametree.rollout.DistributionRollout4;
-import org.cspoker.client.bots.bot.gametree.search.SearchBotFactory;
 import org.cspoker.client.bots.bot.gametree.search.ShowdownRolloutNode;
 import org.cspoker.client.bots.listener.BotListener;
 import org.cspoker.client.bots.listener.GameLimitingBotListener;
@@ -51,7 +51,7 @@ import org.cspoker.common.util.threading.SingleThreadRequestExecutor;
 @NotThreadSafe
 public class BotRunner implements LobbyListener {
 
-	private static final TableConfiguration config = new TableConfiguration(10,
+	private static final TableConfiguration config = new TableConfiguration(100,
 			0, false, true);
 
 	public static final int nbGamesPerConfrontation = 10000;
@@ -90,10 +90,11 @@ public class BotRunner implements LobbyListener {
 				new BotFactory[] {
 				// ML bots
 				//						 new RuleBasedBotFactory1(),
-//				new RuleBasedBotFactory2(),
-				new SearchBotFactory(new ShowdownRolloutNode.Factory(new DistributionRollout4.Factory())),
-//				 new SearchBotFactory(new
-//				 DistributionShowdownNode4.Factory()),
+				//				new RuleBasedBotFactory2(),
+				//				new SearchBotFactory(new ShowdownRolloutNode.Factory(new DistributionRollout4.Factory())),
+				new MCTSBotFactory(),
+				//				 new SearchBotFactory(new
+				//				 DistributionShowdownNode4.Factory()),
 				// new RuleBasedBotFactory1(),
 				// new RuleBasedBotFactory2(),
 
@@ -106,25 +107,25 @@ public class BotRunner implements LobbyListener {
 				// new RuleBasedBotFactory(),
 				//						new PrologCafeBotFactory(
 				//								new DistributionShowdownNode4.Factory()),
-//				new WekaClassificationBotFactory(
-//						new DistributionShowdownNode4.Factory(),
-//						"/home/guy/Bureaublad/weka-3-6-0/J48-c-cb.model",
-//						"/home/guy/Bureaublad/weka-3-6-0/J48-c-fcr.model"
-//				),
-//				new WekaClassificationBotFactory(
-//						new DistributionShowdownNode4.Factory(),
-//						"/home/guy/Bureaublad/weka-3-6-0/ANN-c-cb.model",
-//						"/home/guy/Bureaublad/weka-3-6-0/ANN-c-fcr.model"
-//				),
-				//				new WekaRegressionBotFactory(
+				new WekaClassificationBotFactory(
+						new ShowdownRolloutNode.Factory(new DistributionRollout4.Factory()),
+						"/home/guy/Werk/thesis/weka-3-6-0/J48-c-cb.model",
+						"/home/guy/Werk/thesis/weka-3-6-0/J48-c-fcr.model"
+				),
+				//				new WekaClassificationBotFactory(
 				//						new DistributionShowdownNode4.Factory(),
-				//						 "/home/guy/Bureaublad/weka-3-6-0/M5P-r-b.model",
-				//						 "/home/guy/Bureaublad/weka-3-6-0/M5P-r-f.model",
-				//						 "/home/guy/Bureaublad/weka-3-6-0/M5P-r-c.model",
-				//						 "/home/guy/Bureaublad/weka-3-6-0/M5P-r-r.model"
+				//						"/home/guy/Bureaublad/weka-3-6-0/ANN-c-cb.model",
+				//						"/home/guy/Bureaublad/weka-3-6-0/ANN-c-fcr.model"
+				//				),
+				//				new WekaRegressionBotFactory(
+				//						new ShowdownRolloutNode.Factory(new DistributionRollout4.Factory()),
+				//						"/home/guy/Werk/thesis/weka-3-6-0/M5P-r-b.model",
+				//						"/home/guy/Werk/thesis/weka-3-6-0/M5P-r-f.model",
+				//						"/home/guy/Werk/thesis/weka-3-6-0/M5P-r-c.model",
+				//						"/home/guy/Werk/thesis/weka-3-6-0/M5P-r-r.model"
 				//				),
 
-				new PrologCafeBotFactory(new ShowdownRolloutNode.Factory(new DistributionRollout4.Factory())),
+				//				new PrologCafeBotFactory(new ShowdownRolloutNode.Factory(new DistributionRollout4.Factory())),
 				// new SearchBotFactory(new CachedShowdownNodeFactory(new
 				// UniformShowdownNode.Factory())),
 		});
@@ -209,7 +210,7 @@ public class BotRunner implements LobbyListener {
 			.createHoldemTable(tableName, config).getId();
 
 			bot[0] = bots[botIndex[0]].createBot(botIDs[botIndex[0]], tableId,
-					botLobbies[botIndex[0]], 5000, executor,
+					botLobbies[botIndex[0]], 20000, executor,
 					new ReSitInBotListener(this), speedMonitor, gameLimiter);
 			bot[0].start();
 			for (int i = 1; i < nbPlayersPerGame; i++) {

@@ -13,27 +13,21 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.client.bots.bot.gametree.mcts;
+package org.cspoker.client.bots.bot.gametree.mcts.listeners;
 
-public class ConstantLeafNode extends LeafNode {
+import org.cspoker.client.bots.bot.gametree.mcts.nodes.RootNode;
+import org.cspoker.client.common.gamestate.GameState;
+import org.cspoker.common.elements.player.PlayerId;
 
-	public final int value;
-	private int nbSamples = 0;
+public interface MCTSListener {
+
+	void onMCTS(RootNode node);
 	
-	public ConstantLeafNode(InnerNode parent, int value) {
-		super(parent);
-		this.value = value;
+	static interface Factory{
+		
+		MCTSListener create(GameState gameState, PlayerId actor);
+		
 	}
-	
-	@Override
-	public void expand() {
-		inTree = true;
-	}
-	
-	@Override
-	public double simulate() {
-		++nbSamples;
-		return value;
-	}
+
 
 }

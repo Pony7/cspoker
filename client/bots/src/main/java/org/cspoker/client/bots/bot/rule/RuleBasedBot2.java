@@ -46,7 +46,7 @@ public class RuleBasedBot2 extends AbstractBot {
 	@Override
 	public void doNextAction() {
 		GameState gameState = playerContext.getGameState();
-		int deficit = gameState.getDeficit(RuleBasedBot2.this.playerId);
+		int deficit = gameState.getDeficit(RuleBasedBot2.this.botId);
 
 		double winPercentage = getWinPercentage(gameState
 				.getCommunityCards(), playerContext.getPocketCards(),
@@ -65,7 +65,7 @@ public class RuleBasedBot2 extends AbstractBot {
 		}
 		try {
 			if (gameState
-					.getNextActivePlayerAfter(RuleBasedBot2.this.playerId) == null) {
+					.getNextActivePlayerAfter(RuleBasedBot2.this.botId) == null) {
 				// can only call or fold
 				if (deficit <= Math.round(EV)) {
 					playerContext.checkOrCall();
@@ -79,10 +79,10 @@ public class RuleBasedBot2 extends AbstractBot {
 		} catch (IllegalActionException e) {
 			logger.warn("Raise bounds: "
 					+ tableContext.getGameState().getLowerRaiseBound(
-							RuleBasedBot2.this.playerId)
+							RuleBasedBot2.this.botId)
 							+ " to "
 							+ tableContext.getGameState().getUpperRaiseBound(
-									RuleBasedBot2.this.playerId));
+									RuleBasedBot2.this.botId));
 			logger.error(e);
 			throw new IllegalStateException("Action was not allowed.",
 					e);

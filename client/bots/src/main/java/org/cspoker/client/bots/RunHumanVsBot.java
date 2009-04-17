@@ -20,6 +20,9 @@ import org.apache.log4j.Logger;
 import org.cspoker.client.User;
 import org.cspoker.client.bots.bot.Bot;
 import org.cspoker.client.bots.bot.BotFactory;
+import org.cspoker.client.bots.bot.gametree.mcts.MCTSBot;
+import org.cspoker.client.bots.bot.gametree.mcts.MCTSBotFactory;
+import org.cspoker.client.bots.bot.gametree.mcts.listeners.SWTTreeListener;
 import org.cspoker.client.bots.bot.gametree.rollout.DistributionRollout4;
 import org.cspoker.client.bots.bot.gametree.search.SearchBotFactory;
 import org.cspoker.client.bots.bot.gametree.search.ShowdownRolloutNode;
@@ -50,13 +53,13 @@ public class RunHumanVsBot {
 
 	static {
 		Log4JPropertiesLoader
-				.load("org/cspoker/client/bots/logging/log4j.properties");
+		.load("org/cspoker/client/bots/logging/log4j.properties");
 	}
 
 	private final static Logger logger = Logger.getLogger(RunHumanVsBot.class);
-	
+
 	public static void main(String[] args) throws LoginException,
-			RemoteException, IllegalActionException {
+	RemoteException, IllegalActionException {
 		new RunHumanVsBot().testPlay();
 	}
 
@@ -71,11 +74,11 @@ public class RunHumanVsBot {
 	}
 
 	public void testPlay() throws IllegalActionException, LoginException,
-			RemoteException {
+	RemoteException {
 		final TableId tableId = new TableId(0);
 
-		int smallBlind = 50;
-		final int buyin = smallBlind * 200;
+		int smallBet = 100;
+		final int buyin = smallBet * 200;
 		int delay = 1500;
 		User u = new User("Human", "test");
 		client = new ClientCore(u);
@@ -85,7 +88,7 @@ public class RunHumanVsBot {
 		lobby.setLobbyContext(client.getCommunication());
 		client.getGui().setLobby(lobby);
 
-		TableConfiguration tConfig = new TableConfiguration(smallBlind, delay,
+		TableConfiguration tConfig = new TableConfiguration(smallBet, delay,
 				false, true);
 		lobby.getContext().createHoldemTable(u.getUserName() + "'s test table",
 				tConfig);
@@ -108,27 +111,29 @@ public class RunHumanVsBot {
 			}
 		});
 		stats = new StatisticsVisitor.Factory();
-		BotFactory botFactory = new SearchBotFactory(
-				new ShowdownRolloutNode.Factory(new DistributionRollout4.Factory()),
-				new Log4JOutputVisitor.Factory(2), new SWTTreeVisitor.Factory(client.getGui().getDisplay()), stats
-				);
-		
-//		BotFactory botFactory = new WekaClassificationBotFactory(
-//				new DistributionShowdownNode4.Factory(),
-//				 "/home/guy/Bureaublad/weka-3-6-0/ANN-c-cb.model",
-//				 "/home/guy/Bureaublad/weka-3-6-0/J48-c-fcr.model",
-//				new Log4JOutputVisitor.Factory(2), new SWTTreeVisitor.Factory(
-//						client.getGui().getDisplay()));
-		
-//		BotFactory botFactory = new WekaRegressionBotFactory(
-//				new DistributionShowdownNode4.Factory(),
-//				 "/home/guy/Bureaublad/weka-3-6-0/M5P-r-b.model",
-//				 "/home/guy/Bureaublad/weka-3-6-0/M5P-r-f.model",
-//				 "/home/guy/Bureaublad/weka-3-6-0/M5P-r-c.model",
-//				 "/home/guy/Bureaublad/weka-3-6-0/M5P-r-r.model",
-//				new Log4JOutputVisitor.Factory(2), new SWTTreeVisitor.Factory(
-//						client.getGui().getDisplay()));
-		
+		//		BotFactory botFactory = new SearchBotFactory(
+		//				new ShowdownRolloutNode.Factory(new DistributionRollout4.Factory()),
+		//				new Log4JOutputVisitor.Factory(2), new SWTTreeVisitor.Factory(client.getGui().getDisplay()), stats
+		//				);
+
+		BotFactory botFactory = new MCTSBotFactory(new SWTTreeListener.Factory(client.getGui().getDisplay()));
+
+		//		BotFactory botFactory = new WekaClassificationBotFactory(
+		//				new DistributionShowdownNode4.Factory(),
+		//				 "/home/guy/Bureaublad/weka-3-6-0/ANN-c-cb.model",
+		//				 "/home/guy/Bureaublad/weka-3-6-0/J48-c-fcr.model",
+		//				new Log4JOutputVisitor.Factory(2), new SWTTreeVisitor.Factory(
+		//						client.getGui().getDisplay()));
+
+		//		BotFactory botFactory = new WekaRegressionBotFactory(
+		//				new DistributionShowdownNode4.Factory(),
+		//				 "/home/guy/Bureaublad/weka-3-6-0/M5P-r-b.model",
+		//				 "/home/guy/Bureaublad/weka-3-6-0/M5P-r-f.model",
+		//				 "/home/guy/Bureaublad/weka-3-6-0/M5P-r-c.model",
+		//				 "/home/guy/Bureaublad/weka-3-6-0/M5P-r-r.model",
+		//				new Log4JOutputVisitor.Factory(2), new SWTTreeVisitor.Factory(
+		//						client.getGui().getDisplay()));
+
 		// BotFactory botFactory = new PrologCafeBotFactory(new
 		// DistributionShowdownNode4.Factory(),
 		// new Log4JOutputVisitor.Factory(2), new
@@ -155,36 +160,38 @@ public class RunHumanVsBot {
 		SmartClientContext clientContext = new SmartClientContext(server.login(
 				"Bot " + botIndex++, "test"));
 		final SmartLobbyContext lobbyContext = clientContext
-				.getLobbyContext(new DefaultLobbyListener());
+		.getLobbyContext(new DefaultLobbyListener());
 		final PlayerId botId = clientContext.getAccountContext().getPlayerID();
 		final SingleThreadRequestExecutor executor = SingleThreadRequestExecutor
-				.getInstance();
+		.getInstance();
 		Bot bot = botFactory.createBot(botId, tableId, lobbyContext, buyin,
 				executor, new DefaultBotListener() {
-					@Override
-					public void onSitOut(SitOutEvent event) {
-						// if(event.getPlayerId().equals(botId)){
-						// try {
-						// startBot(tableId, buyin);
-						// } catch (LoginException e) {
-						// e.printStackTrace();
-						// } catch (RemoteException e) {
-						// e.printStackTrace();
-						// } catch (IllegalActionException e) {
-						// e.printStackTrace();
-						// }
-						// }
-					}
-					
-					@Override
-					public void onActionPerformed() {
-						StatisticsVisitor statistics = stats.getStatistics();
-						logger.info("NbNodes="+statistics.getNbNodes());
-						logger.info("NbPrunedSubTrees="+statistics.getNbPrunedSubtrees());
-						logger.info("NbPrunedTokens="+statistics.getNbPrunedTokens());
-						logger.info("NbOpponentModelCalls="+statistics.getNbOpponentModelCalls());
-					}
-				});
+			@Override
+			public void onSitOut(SitOutEvent event) {
+				// if(event.getPlayerId().equals(botId)){
+				// try {
+				// startBot(tableId, buyin);
+				// } catch (LoginException e) {
+				// e.printStackTrace();
+				// } catch (RemoteException e) {
+				// e.printStackTrace();
+				// } catch (IllegalActionException e) {
+				// e.printStackTrace();
+				// }
+				// }
+			}
+
+			@Override
+			public void onActionPerformed() {
+				StatisticsVisitor statistics = stats.getStatistics();
+				if(statistics!=null){
+					logger.info("NbNodes="+statistics.getNbNodes());
+					logger.info("NbPrunedSubTrees="+statistics.getNbPrunedSubtrees());
+					logger.info("NbPrunedTokens="+statistics.getNbPrunedTokens());
+					logger.info("NbOpponentModelCalls="+statistics.getNbOpponentModelCalls());
+				}
+			}
+		});
 		bot.start();
 		bot.startGame();
 	}
