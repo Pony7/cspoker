@@ -17,35 +17,41 @@ package org.cspoker.client.bots.bot.gametree.opponentmodel.weka;
 
 import java.util.EnumSet;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+
+import javax.swing.text.html.HTMLDocument.HTMLReader.IsindexAction;
 
 import org.cspoker.common.elements.cards.Card;
 import org.cspoker.common.handeval.spears2p2.StateTableEvaluator;
 
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Multiset;
+import com.google.common.collect.TreeMultiset;
 
 public class Propositionalizer implements Cloneable {
 
-	Map<Object, PlayerData> players = new HashMap<Object, PlayerData>();
-	List<PlayerData> activePlayers = new LinkedList<PlayerData>();
-	float bigBlind = 0;
-	float maxBet = 0;
-	boolean somebodyActedThisRound = false;
-	int nbActionsThisRound = 0;
-	String round = "preflop";
-	float totalPot = 0;
-	int nbRaisesThisGame = 0;
-	int roundCompletion = 0;
-	int nbSeatedPlayers = 0;
-	EnumSet<Card> cards;
-	int minRank=0;
-	int maxRank=0;
-	int averageRank=0;
-	float sigmaRank=0;
+	private Map<Object, PlayerData> players = new HashMap<Object, PlayerData>();
+	private List<PlayerData> activePlayers = new LinkedList<PlayerData>();
+	
+	private float maxBet = 0;
+	private float gameRaiseAmount = 0;
+	private boolean somebodyActedThisRound = false;
+	
+	private BetStatistics gameStats = new BetStatistics();
+	private String round = "preflop";
+	private float totalPot = 0;
+
+	private int nbPlayersDoneThisRound = 0;
+	private int nbSeatedPlayers = 0;
+	private EnumSet<Card> cards;
+	private int minRank=0;
+	private int maxRank=0;
+	private int averageRank=0;
+	private float sigmaRank=0;
 
 	public Propositionalizer() {
 	}
@@ -55,7 +61,7 @@ public class Propositionalizer implements Cloneable {
 		try {
 			Propositionalizer clone = (Propositionalizer)super.clone();
 			Map<Object, PlayerData> playersClone = new HashMap<Object, PlayerData>(clone.getPlayers());
-			
+
 			List<PlayerData> activePlayers = clone.getActivePlayers();
 			List<PlayerData> activePlayersClone = new LinkedList<PlayerData>();
 			for (PlayerData player : activePlayers) {
@@ -63,18 +69,18 @@ public class Propositionalizer implements Cloneable {
 				activePlayersClone.add(playerClone);
 				playersClone.put(playerClone.getId(), playerClone);
 			}
-			
+
 			clone.players = playersClone;
 			clone.activePlayers = activePlayersClone;
+			clone.gameStats = gameStats.clone();
 			return clone;
 		} catch (CloneNotSupportedException e) {
 			throw new IllegalStateException(e);
 		}
 	}
 
-
 	public void signalAllIn(Object id, int chipsMoved) {
-		if(round.equals("preflop") && !somebodyActedThisRound){
+		if(inPreFlopRound() && !somebodyActedThisRound){
 			if(maxBet==0){
 				signalSmallBlind(true, id);
 			}else{
@@ -92,66 +98,36 @@ public class Propositionalizer implements Cloneable {
 		}
 	}
 
-	public void signalBet(boolean isAllIn, Object id, float maxBetParsed) {
+	public void signalBet(boolean isAllIn, Object id, float newMaxBet) {
 		PlayerData p = players.get(id);
 		if(p.getBet()>0){
 			//Bet/Raise on the big blind
-			signalRaise(id, isAllIn, maxBetParsed);
+			signalRaise(id, isAllIn, newMaxBet);
 		}else{
 			logBet(p);
 			if(isAllIn) {
 				activePlayers.remove(p);
 			}
 
-			maxBet = maxBetParsed;
+			maxBet = newMaxBet;
+			gameRaiseAmount += newMaxBet;
 			totalPot += maxBet;
-			++nbRaisesThisGame;
-			++nbActionsThisRound;
-			roundCompletion = 0;
+			nbPlayersDoneThisRound = 0;
 			somebodyActedThisRound = true;
-
-			p.bet = maxBet;
-			p.stack -= maxBet;
-			p.comitted = true;
-			p.lastActionWasRaise = true;
-			p.addBet(this);
-			++p.nbPlayerRaisesThisGame;
+			gameStats.addBet(this, newMaxBet);
+			p.signalBet(this,newMaxBet);
 		}
 	}
-
-	protected void logBet(PlayerData p){
-		// no op
-	}
-
-	protected void logRaise(PlayerData p){
-		// no op
-	}
-
-	protected void logFold(PlayerData p){
-		// no op
-	}
-
-	protected void logCall(PlayerData p){
-		// no op
-	}
-
-	protected void logCheck(PlayerData p){
-		// no op
-	}
-
+	
 	public void signalCheck(Object id) {
 		PlayerData p = players.get(id);
 		logCheck(p);
 
-		++roundCompletion;
-		++nbActionsThisRound;
+		++nbPlayersDoneThisRound;
+		gameStats.addCheck(this);
 		somebodyActedThisRound = true;
-
-		p.lastActionWasRaise = false;
-		p.addCheck(this);
+		p.signalCheck(this);
 	}
-	
-	
 
 	public void signalRaise(Object id, boolean isAllIn, float maxBetParsed) {
 		PlayerData p = players.get(id);
@@ -161,49 +137,36 @@ public class Propositionalizer implements Cloneable {
 			if(isAllIn) {
 				activePlayers.remove(p);
 			}
+			float raiseAmount = maxBetParsed-maxBet;
 			maxBet = maxBetParsed;
-			float movedAmount = maxBet - p.bet;
+			float movedAmount = maxBet - p.getBet();
+			gameRaiseAmount += raiseAmount;
 			totalPot += movedAmount;
-			++nbRaisesThisGame;
-			++nbActionsThisRound;
 			somebodyActedThisRound = true;
+			gameStats.addBBBet(this, (movedAmount-raiseAmount),raiseAmount);
+			p.signalBBBet(this, raiseAmount, movedAmount);
 
-			p.bet = maxBet;
-			p.stack -= movedAmount;
-			p.lastActionWasRaise = true;
-			p.addBet(this);
-			p.updateVPIP(this);
-			p.updatePFR(this);
-			++p.nbPlayerRaisesThisGame;
-			p.comitted = true;
 		} else {
 			logRaise(p);
 			if(isAllIn) {
 				activePlayers.remove(p);
 			}
+			float raiseAmount = maxBetParsed-maxBet;
 			maxBet = maxBetParsed;
-			double movedAmount = maxBet - p.bet;
+			float movedAmount = maxBet - p.getBet();
+			gameRaiseAmount += raiseAmount;
 			totalPot += movedAmount;
-			++nbRaisesThisGame;
-			++nbActionsThisRound;
 			somebodyActedThisRound = true;
-
-			p.bet = maxBet;
-			p.stack -= movedAmount;
-			p.addRaise(this);
-			p.updateVPIP(this);
-			p.updatePFR(this);
-			++p.nbPlayerRaisesThisGame;
-			p.lastActionWasRaise = true;
-			p.comitted = true;
+			gameStats.addRaise(this, movedAmount-raiseAmount, raiseAmount);
+			p.signalRaise(this,raiseAmount, movedAmount);
 		}
-		roundCompletion = 0;
+		nbPlayersDoneThisRound = 0;
 	}
 
 
 	public void signalCall(boolean isAllIn, Object id) {
 		PlayerData p = players.get(id);
-		signalCall(isAllIn, id, Math.min(p.stack, maxBet-p.bet));
+		signalCall(isAllIn, id, Math.min(p.getStack(), maxBet-p.getBet()));
 	}
 	public void signalCall(boolean isAllIn, Object id, float movedAmount) {
 		PlayerData p = players.get(id);
@@ -213,54 +176,41 @@ public class Propositionalizer implements Cloneable {
 			activePlayers.remove(p);
 		}
 		totalPot += movedAmount;
-		++roundCompletion;
+		++nbPlayersDoneThisRound;
 		somebodyActedThisRound = true;
-		++nbActionsThisRound;
-
-		p.bet += movedAmount;
-		p.stack -= movedAmount;
-		p.lastActionWasRaise = false;
-		p.updateVPIP(this);
-		p.comitted = true;
-		p.addCall(this);
+		gameStats.addCall(this, movedAmount);
+		p.signalCall(this,movedAmount);
 	}
 
 	public void signalFold(Object id) {
 		PlayerData p = players.get(id);
-		logFold(p);
+		if(p.getDeficit(this)>0.001) logFold(p);
 
 		activePlayers.remove(p);
 		somebodyActedThisRound = true;
-		++nbActionsThisRound;
-
-		p.lastActionWasRaise = false;
-		p.addFold(this);
+		gameStats.addFold(this);
+		p.signalFold(this);
 	}
 
 	public void signalBigBlind(boolean isAllIn, Object id) {
 		PlayerData p = players.get(id);
 
-		maxBet = bigBlind;
-		totalPot += bigBlind;
+		maxBet = 1;
+		totalPot += 1;
 		if (isAllIn) {
 			activePlayers.remove(p);
 		}
-
-		p.bet = bigBlind;
-		p.stack -= bigBlind;
-		p.comitted = true;
+		p.signalBB();
 	}
 
 	public void signalSmallBlind(boolean isAllIn, Object id) {
 		PlayerData p = players.get(id);
-		maxBet = bigBlind / 2;
-		totalPot = bigBlind / 2;
+		maxBet = 0.5F;
+		totalPot = 0.5F;
 		if (isAllIn) {
 			activePlayers.remove(p);
 		}
-		p.bet = bigBlind / 2;
-		p.stack -= bigBlind / 2;
-		p.comitted = true;
+		p.signalSB();
 	}
 
 	public void signalRiver() {
@@ -282,14 +232,99 @@ public class Propositionalizer implements Cloneable {
 			round = "flop";
 			startNewRound();
 			for (PlayerData p : activePlayers) {
-				++p.flopCount;
+				p.signalFlop();
 			}
 		}
 	}
-	
+
 	public void signalCommunityCards(EnumSet<Card> cardsSet) {
 		this.cards =cardsSet;
-		updateER();
+		//updateER();
+	}
+
+	public void signalCardShowdown(String id, Card card1, Card card2) {
+		PlayerData p = players.get(id);
+		if(cards.size()==5){
+			//showdown after river
+			Multiset<Integer> ranks = new TreeMultiset<Integer>();
+			int minSampleRank = Integer.MAX_VALUE;
+			int maxSampleRank = Integer.MIN_VALUE;
+			int sum = 0;
+			int n = 99;
+
+			int startRank = 53;
+			for (Card card:cards) {
+				startRank = handRanks[card.ordinal() + 1 + startRank];
+			}
+
+			//add real rank
+			int realRank = startRank;
+			realRank = handRanks[card1.ordinal() + 1 + realRank];
+			realRank = handRanks[card2.ordinal() + 1 + realRank];
+			int realType = (realRank >>> 12) - 1;
+			realRank = realRank & 0xFFF;
+			realRank = offsets[realType] + realRank - 1;
+			ranks.add(realRank);
+
+			//take 99 more rank samples
+			for(int i=0;i<n;i++){
+				EnumSet<Card> sample = EnumSet.copyOf(cards);
+				int rank = startRank;
+				Card sampleCard;
+				do{
+					sampleCard = Card.values()[random.nextInt(Card.values().length)];
+				}while(sample.contains(sampleCard));
+				sample.add(sampleCard);
+				rank = handRanks[sampleCard.ordinal() + 1 + rank];do{
+					sampleCard = Card.values()[random.nextInt(Card.values().length)];
+				}while(sample.contains(sampleCard));
+				sample.add(sampleCard);
+				rank = handRanks[sampleCard.ordinal() + 1 + rank];
+
+				int type = (rank >>> 12) - 1;
+				rank = rank & 0xFFF;
+				rank = offsets[type] + rank - 1;
+
+				ranks.add(rank);
+
+				if(rank<minSampleRank){
+					minSampleRank = rank;
+				}
+				if(rank>maxSampleRank){
+					maxSampleRank = rank;
+				}
+				sum += rank;
+			}
+			double var = 0;
+			double mean = ((double)sum)/n;
+			for (Multiset.Entry<Integer> entry : ranks.entrySet()) {
+				double diff = mean - entry.getElement();
+				var += diff * diff * entry.getCount();
+			}
+			var /= (n-1);
+			int averageSampleRank = (int) Math.round(mean);
+			int sigmaSampleRank = (int) Math.round(Math.sqrt(var));
+			int[] partitionCounts = new int[10];
+			Iterator<Integer> iter = ranks.iterator();
+			for(int partition=0;partition<10;partition++){
+				for (int i = 0; i < 10; i++) {
+					int rank = iter.next();
+					if(rank==realRank){
+						++partitionCounts[partition];
+					}
+				}
+			}
+			float[] partitionDistr = new float[10];
+			float realRankCount = ranks.count(realRank);
+			int partitionSum = 0;
+			for (int i = 0; i < 10; i++) {
+				partitionDistr[i] = partitionCounts[i]/realRankCount;
+				partitionSum += partitionCounts[i]*i;
+			}
+			logShowdown(p,partitionDistr, Math.round(partitionSum/realRankCount), minSampleRank, maxSampleRank, averageSampleRank, sigmaSampleRank);
+		}else{
+			//everybody went all-in before the river
+		}
 	}
 
 	private final static int[] handRanks;
@@ -298,15 +333,15 @@ public class Propositionalizer implements Cloneable {
 	}
 	private static final int[] offsets = new int[] { 0, 1277, 4137, 4995, 5853,
 		5863, 7140, 7296, 7452 };
-	private Random random = new Random();
-	
-	private void updateER() {
+	private Random random = new Random(0);
+
+	private void updateExpectedRank() {
 		Multiset<Integer> ranks = new HashMultiset<Integer>();
 		minRank = Integer.MAX_VALUE;
 		maxRank = Integer.MIN_VALUE;
 		int sum = 0;
 		int n = 100;
-		
+
 		int startRank = 53;
 		for (Card card:cards) {
 			startRank = handRanks[card.ordinal() + 1 + startRank];
@@ -349,7 +384,7 @@ public class Propositionalizer implements Cloneable {
 		if (round.equals("flop") || round.equals("turn")
 				|| round.equals("river")) {
 			for (PlayerData p : activePlayers) {
-				++p.showdownCount;
+				p.signalShowdown();
 			}
 		}
 	}
@@ -363,27 +398,25 @@ public class Propositionalizer implements Cloneable {
 		activePlayers.add(p);
 		++nbSeatedPlayers;
 		p.startNewGame();
-		p.stack = stack;
+		p.resetStack(stack);
 	}
 
-	public void signalNewGame(float bb) {
-		bigBlind = bb;
+	public void signalNewGame() {
 		round = "preflop";
 		somebodyActedThisRound = false;
-		nbRaisesThisGame = 0;
-		roundCompletion = 0;
+		gameStats = new BetStatistics();
+		nbPlayersDoneThisRound = 0;
 		nbSeatedPlayers = 0;
-		nbActionsThisRound = 0;
 		activePlayers.clear();
+		gameRaiseAmount = 0;
 	}
 
 	protected void startNewRound() {
 		for (PlayerData player : activePlayers) {
 			player.startNewRound();
 		}
-		roundCompletion = 0;
+		nbPlayersDoneThisRound = 0;
 		maxBet = 0;
-		nbActionsThisRound = 0;
 		somebodyActedThisRound = false;
 	}
 
@@ -406,33 +439,25 @@ public class Propositionalizer implements Cloneable {
 	public float getMaxBet() {
 		return maxBet;
 	}
-	
+
 	public int getAverageRank() {
 		return averageRank;
 	}
-	
+
 	public int getMaxRank() {
 		return maxRank;
 	}
 	
+	public BetStatistics getTableGameStats() {
+		return gameStats;
+	}
+
 	public int getMinRank() {
 		return minRank;
 	}
-	
+
 	public float getSigmaRank() {
 		return sigmaRank;
-	}
-
-	public float getBigBlind() {
-		return bigBlind;
-	}
-
-	public int getNbRaisesThisGame() {
-		return nbRaisesThisGame;
-	}
-
-	protected int getNbGameRaises() {
-		return nbRaisesThisGame;
 	}
 
 	protected int getNbSeatedPlayers() {
@@ -448,22 +473,18 @@ public class Propositionalizer implements Cloneable {
 	}
 
 	public float getPotSize() {
-		return totalPot / bigBlind;
+		return totalPot;
 	}
 
 	public int getPlayersToAct() {
 		if (somebodyActedThisRound) {
-			return getNbActivePlayers() - roundCompletion - 1;
+			return getNbActivePlayers() - nbPlayersDoneThisRound - 1;
 		}
-		return getNbActivePlayers() - roundCompletion;
+		return getNbActivePlayers() - nbPlayersDoneThisRound;
 	}
 
 	public int getPlayersActed() {
-		return roundCompletion;
-	}
-	
-	public int getNbActionsThisRound() {
-		return nbActionsThisRound;
+		return nbPlayersDoneThisRound;
 	}
 
 	public float getRoundCompletion() {
@@ -471,13 +492,111 @@ public class Propositionalizer implements Cloneable {
 			if (getNbActivePlayers() <= 1) {
 				return 0;
 			}
-			return roundCompletion / (float) (getNbActivePlayers() - 1);
+			return nbPlayersDoneThisRound / (float) (getNbActivePlayers() - 1);
 		}
-		return roundCompletion / (float) getNbActivePlayers();
+		return nbPlayersDoneThisRound / (float) getNbActivePlayers();
+	}
+
+	protected float getAverageAF(PlayerData p, int memory) {
+		double sum = 0;
+		for (PlayerData player : activePlayers) {
+			if(!p.equals(player)) sum += player.getGlobalStats().getAF(memory);
+		}
+		return (float) (sum/(activePlayers.size()-1));
+	}
+
+	protected float getAverageVPIP(PlayerData p, int memory) {
+		double sum = 0;
+		for (PlayerData player : activePlayers) {
+			if(!p.equals(player)) sum += player.getVPIP(memory);
+		}
+		return (float) (sum/(activePlayers.size()-1));
+	}
+
+	protected float getAveragePFR(PlayerData p, int memory) {
+		double sum = 0;
+		for (PlayerData player : activePlayers) {
+			if(!p.equals(player)) sum += player.getPFR(memory);
+		}
+		return (float) (sum/(activePlayers.size()-1));
+	}
+
+	protected float getAverageAFq(PlayerData p, int memory) {
+		double sum = 0;
+		for (PlayerData player : activePlayers) {
+			if(!p.equals(player)) sum += player.getGlobalStats().getAFq(memory);
+		}
+		return (float) (sum/(activePlayers.size()-1));
+	}
+
+	protected float getAverageAFAmount(PlayerData p, int memory) {
+		double sum = 0;
+		for (PlayerData player : activePlayers) {
+			if(!p.equals(player)) sum += Math.log(player.getGlobalStats().getAFAmount(memory));
+		}
+		return (float) (sum/(activePlayers.size()-1));
+	}
+
+	protected float getAverageWtSD(PlayerData p, int memory) {
+		double sum = 0;
+		for (PlayerData player : activePlayers) {
+			if(!p.equals(player)) sum += player.getWtSD(memory);
+		}
+		return (float) (sum/(activePlayers.size()-1));
 	}
 
 	public String getRound() {
 		return round;
 	}
 
+	public boolean inPreFlopRound() {
+		return "preflop".equals(round);
+	}
+
+	public boolean inFlopRound() {
+		return "flop".equals(round);
+	}
+
+	public boolean inTurnRound() {
+		return "turn".equals(round);
+	}
+
+	public boolean inRiverRound() {
+		return "river".equals(round);
+	}
+	
+	protected void logBet(PlayerData p){
+		// no op
+	}
+
+	protected void logRaise(PlayerData p){
+		// no op
+	}
+
+	protected void logFold(PlayerData p){
+		// no op
+	}
+
+	protected void logCall(PlayerData p){
+		// no op
+	}
+
+	protected void logCheck(PlayerData p){
+		// no op
+	}
+
+	protected void logShowdown(PlayerData p, float[] partitionDistr, int average, int minrank, int maxrank, int avgrank, int sigmarank) {
+		// no op
+	}
+	
+	public float rel(float up, float down) {
+		if(down==0) return 0;
+		return up/down;
+	}
+	
+	public float rel(double up, double down) {
+		if(down==0) return 0;
+		return (float) (up/down);
+	}
+	
 }

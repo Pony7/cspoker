@@ -16,6 +16,7 @@
  */
 package org.cspoker.client.bots.bot.gametree.mcts;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -25,12 +26,12 @@ import java.util.concurrent.ExecutorService;
 import org.cspoker.client.bots.bot.Bot;
 import org.cspoker.client.bots.bot.BotFactory;
 import org.cspoker.client.bots.bot.gametree.mcts.listeners.MCTSListener;
-import org.cspoker.client.bots.bot.gametree.mcts.strategies.MaxSampleSelector;
+import org.cspoker.client.bots.bot.gametree.mcts.strategies.SampleProportionateSelector;
 import org.cspoker.client.bots.bot.gametree.mcts.strategies.SamplingToFunctionSelector;
 import org.cspoker.client.bots.bot.gametree.mcts.strategies.SelectionStrategy;
 import org.cspoker.client.bots.bot.gametree.mcts.strategies.UCTSelector;
 import org.cspoker.client.bots.bot.gametree.opponentmodel.OpponentModel;
-import org.cspoker.client.bots.bot.gametree.opponentmodel.weka.WekaClassificationModel;
+import org.cspoker.client.bots.bot.gametree.opponentmodel.weka.WekaRegressionModel;
 import org.cspoker.client.bots.listener.BotListener;
 import org.cspoker.client.common.SmartLobbyContext;
 import org.cspoker.common.elements.player.PlayerId;
@@ -58,14 +59,34 @@ public class MCTSBotFactory implements BotFactory {
 			BotListener... botListeners) {
 		copies++;
 		if (opponentModels.get(botId) == null) {
+			File modelDir = new File("/home/guy/Werk/thesis/weka-3-6-0/model1/");
+			Classifier preBetModel, preFoldModel, preCallModel, preRaiseModel, postBetModel, postFoldModel, postCallModel, postRaiseModel;
 			try {
-				ObjectInputStream in = new ObjectInputStream(new FileInputStream("/home/guy/Werk/thesis/weka-3-6-0/J48-c-fcr.model"));
-				Classifier callRaiseClassifier = (Classifier)in.readObject();
+				ObjectInputStream in = new ObjectInputStream(new FileInputStream(new File(modelDir,"preBet.model")));
+				preBetModel = (Classifier)in.readObject();
 				in.close();
-				in = new ObjectInputStream(new FileInputStream("/home/guy/Werk/thesis/weka-3-6-0/J48-c-cb.model"));
-				Classifier checkBetClassifier = (Classifier)in.readObject();
+				in = new ObjectInputStream(new FileInputStream(new File(modelDir,"preFold.model")));
+				preFoldModel = (Classifier)in.readObject();
 				in.close();
-				WekaClassificationModel model = new WekaClassificationModel(checkBetClassifier,callRaiseClassifier);
+				in = new ObjectInputStream(new FileInputStream(new File(modelDir,"preCall.model")));
+				preCallModel = (Classifier)in.readObject();
+				in.close();
+				in = new ObjectInputStream(new FileInputStream(new File(modelDir,"preRaise.model")));
+				preRaiseModel = (Classifier)in.readObject();
+				in.close();
+				in = new ObjectInputStream(new FileInputStream(new File(modelDir,"postBet.model")));
+				postBetModel = (Classifier)in.readObject();
+				in.close();
+				in = new ObjectInputStream(new FileInputStream(new File(modelDir,"postFold.model")));
+				postFoldModel = (Classifier)in.readObject();
+				in.close();
+				in = new ObjectInputStream(new FileInputStream(new File(modelDir,"postCall.model")));
+				postCallModel = (Classifier)in.readObject();
+				in.close();
+				in = new ObjectInputStream(new FileInputStream(new File(modelDir,"postRaise.model")));
+				postRaiseModel = (Classifier)in.readObject();
+				in.close();
+				WekaRegressionModel model = new WekaRegressionModel(preBetModel, preFoldModel, preCallModel, preRaiseModel, postBetModel, postFoldModel, postCallModel, postRaiseModel);
 				opponentModels.put(botId, model);
 			} catch (IOException e) {
 				throw new IllegalStateException(e);
@@ -74,7 +95,7 @@ public class MCTSBotFactory implements BotFactory {
 			}
 		}
 		SelectionStrategy selectionStrategy = new SamplingToFunctionSelector(new UCTSelector(40000));
-		SelectionStrategy moveSelectionStrategy = new MaxSampleSelector();
+		SelectionStrategy moveSelectionStrategy = new SampleProportionateSelector();
 		return new MCTSBot(botId, tableId, lobby, executor, buyIn,
 				opponentModels.get(botId),
 				selectionStrategy,

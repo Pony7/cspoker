@@ -1,26 +1,27 @@
-@relation CheckBetAction
+@relation PreCheckBetAction
 @attribute roundCompletion real
 @attribute playersActed integer
 @attribute playersToAct integer
-@attribute round {preflop,flop,turn,river}
 @attribute gameCount integer
-@attribute somebodyActedThisRound {true,false}
+@attribute nbActionsThisRound integer
 @attribute potSize real
-@attribute stack real
+@attribute stackSize real
 @attribute nbSeatedPlayers integer
 @attribute nbActivePlayers integer
 @attribute activePlayerRatio real
 @attribute betFrequency real
 @attribute betFrequencyRound real
-@attribute isComitted {true,false}
-@attribute nbAllPlayerRaises integer
-@attribute nbPlayerRaises integer
-@attribute gameRaisePercentage real
-@attribute lastActionWasRaise {true,false}
 @attribute VPIP real
 @attribute PFR real
 @attribute AF real
+@attribute AFq real
+@attribute AFAmount real
 @attribute WtSD real
-@attribute action {check,bet}
+@attribute opponentVPIP real
+@attribute opponentPFR real
+@attribute opponentAF real
+@attribute opponentAFq real
+@attribute opponentLogAFAmount real
+@attribute opponentWtSD real
+@attribute probability real
 @data
-

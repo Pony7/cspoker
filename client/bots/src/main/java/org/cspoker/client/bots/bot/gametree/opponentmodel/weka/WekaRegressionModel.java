@@ -18,48 +18,109 @@ package org.cspoker.client.bots.bot.gametree.opponentmodel.weka;
 
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.common.elements.player.PlayerId;
+import org.cspoker.common.elements.table.Round;
 import org.cspoker.common.util.Pair;
 import org.cspoker.common.util.Triple;
 
 import weka.classifiers.Classifier;
+import weka.core.Instance;
 
 public class WekaRegressionModel extends WekaModel {
 
-	protected final Classifier betModel;
-	protected final Classifier foldModel;
-	protected final Classifier callModel;
-	protected final Classifier raiseModel;
-	
-	public WekaRegressionModel(Classifier betModel, Classifier foldModel, Classifier callModel, Classifier raiseModel) {
-		this.betModel = betModel;
-		this.foldModel = foldModel;
-		this.callModel = callModel;
-		this.raiseModel = raiseModel;
+	protected final Classifier preBetModel;
+	protected final Classifier preFoldModel;
+	protected final Classifier preCallModel;
+	protected final Classifier preRaiseModel;
+	protected final Classifier postBetModel;
+	protected final Classifier postFoldModel;
+	protected final Classifier postCallModel;
+	protected final Classifier postRaiseModel;
+
+	public WekaRegressionModel(
+			Classifier preBetModel, Classifier preFoldModel, Classifier preCallModel, Classifier preRaiseModel,
+			Classifier postBetModel, Classifier postFoldModel, Classifier postCallModel, Classifier postRaiseModel) {
+		this.preBetModel = preBetModel;
+		this.preFoldModel = preFoldModel;
+		this.preCallModel = preCallModel;
+		this.preRaiseModel = preRaiseModel;
+		this.postBetModel = postBetModel;
+		this.postFoldModel = postFoldModel;
+		this.postCallModel = postCallModel;
+		this.postRaiseModel = postRaiseModel;
 
 	}
 
 	@Override
 	public Pair<Double, Double> getCheckBetProbabilities(GameState gameState,
 			PlayerId actor) {
+		Instance instance;
+		if(Round.PREFLOP.equals(gameState.getRound())){
+			instance = getPreCheckBetInstance(actor);
+		}else{
+			instance = getPostCheckBetInstance(actor);
+		}
 		try {
-			double prob = Math.max(0, betModel.classifyInstance(getCheckBetInstance(actor)));
+			double prediction;
+			if(Round.PREFLOP.equals(gameState.getRound())){
+				prediction = preBetModel.classifyInstance(instance);
+			}else{
+				prediction = postBetModel.classifyInstance(instance);
+			}
+			double prob = Math.min(1,Math.max(0, prediction));
 			Pair<Double, Double> result = new Pair<Double, Double>(1-prob,prob);
 			if(logger.isTraceEnabled()){
-				logger.trace(getCheckBetInstance(actor)+": "+result);
+				if(Round.PREFLOP.equals(gameState.getRound())){
+					logger.trace(instance+": "+result);
+				}else{
+					logger.trace(instance+": "+result);
+				}
 			}
 			return result;
 		} catch (Exception e) {
-			throw new IllegalStateException(getCheckBetInstance(actor).toString(), e);
+			if(Round.PREFLOP.equals(gameState.getRound())){
+				throw new IllegalStateException(instance.toString(), e);
+			}else{
+				throw new IllegalStateException(instance.toString(), e);
+			}
+
 		}
 	}
 
 	@Override
 	public Triple<Double, Double, Double> getFoldCallRaiseProbabilities(
 			GameState gameState, PlayerId actor) {
+		Instance instance;
+		if(Round.PREFLOP.equals(gameState.getRound())){
+			instance = getPreFoldCallRaiseInstance(actor);
+		}else{
+			instance = getPostFoldCallRaiseInstance(actor);
+		}
 		try {
-			double probFold = Math.max(0, foldModel.classifyInstance(getFoldCallRaiseInstance(actor)));
-			double probCall = Math.max(0, callModel.classifyInstance(getFoldCallRaiseInstance(actor)));
-			double probRaise = Math.max(0, raiseModel.classifyInstance(getFoldCallRaiseInstance(actor)));
+			
+			double probFold;
+			if(Round.PREFLOP.equals(gameState.getRound())){
+				probFold = preFoldModel.classifyInstance(instance);
+			}else{
+				probFold = postFoldModel.classifyInstance(instance);
+			}
+			probFold = Math.min(1,Math.max(0, probFold));
+			
+			double probCall;
+			if(Round.PREFLOP.equals(gameState.getRound())){
+				probCall = preCallModel.classifyInstance(instance);
+			}else{
+				probCall = postCallModel.classifyInstance(instance);
+			}
+			probCall = Math.min(1,Math.max(0, probCall));
+			
+			double probRaise;
+			if(Round.PREFLOP.equals(gameState.getRound())){
+				probRaise = preRaiseModel.classifyInstance(instance);
+			}else{
+				probRaise = postRaiseModel.classifyInstance(instance);
+			}
+			probRaise = Math.min(1,Math.max(0, probRaise));
+			
 			double sum = probFold + probCall + probRaise;
 			if(sum==0){
 				probFold = probCall = probRaise = 1/3;
@@ -67,11 +128,20 @@ public class WekaRegressionModel extends WekaModel {
 			}
 			Triple<Double, Double, Double> result = new Triple<Double, Double, Double>(probFold/sum,probCall/sum,probRaise/sum);
 			if(logger.isTraceEnabled()){
-				logger.trace(getFoldCallRaiseInstance(actor)+": "+result);
+				if(Round.PREFLOP.equals(gameState.getRound())){
+					logger.trace(instance+": "+result);
+				}else{
+					logger.trace(instance+": "+result);
+				}
 			}
 			return result;
 		} catch (Exception e) {
-			throw new IllegalStateException(getFoldCallRaiseInstance(actor).toString(), e);
+			if(Round.PREFLOP.equals(gameState.getRound())){
+				throw new IllegalStateException(instance.toString(), e);
+			}else{
+				throw new IllegalStateException(instance.toString(), e);
+			}
+
 		}
 	}
 

@@ -1,14 +1,15 @@
-@relation CallRaiseAction
+@relation PostCallRaiseAction
 @attribute roundCompletion real
 @attribute playersActed integer
 @attribute playersToAct integer
-@attribute round {preflop,flop,turn,river}
+@attribute round {flop,turn,river}
 @attribute gameCount integer
-@attribute somebodyActedThisRound {true,false}
+@attribute nbActionsThisRound integer
 @attribute potSize real
+@attribute stackSize real
 @attribute deficit real
 @attribute potOdds real
-@attribute stack real
+@attribute maxbet real
 @attribute nbSeatedPlayers integer
 @attribute nbActivePlayers integer
 @attribute activePlayerRatio real
@@ -18,14 +19,25 @@
 @attribute foldFrequencyRound real
 @attribute callFrequencyRound real
 @attribute raiseFrequencyRound real
-@attribute isComitted {true,false}
+@attribute isComitted {false,true}
 @attribute nbAllPlayerRaises integer
 @attribute nbPlayerRaises integer
+@attribute nbPlayerRoundRaises integer
 @attribute gameRaisePercentage real
-@attribute lastActionWasRaise {true,false}
+@attribute gameRaiseAmount real
+@attribute gameRaiseAmountRatio real
+@attribute lastActionWasRaise {false,true}
 @attribute VPIP real
 @attribute PFR real
 @attribute AF real
+@attribute AFq real
+@attribute AFAmount real
 @attribute WtSD real
-@attribute action {fold,call,raise}
+@attribute opponentVPIP real
+@attribute opponentPFR real
+@attribute opponentAF real
+@attribute opponentAFq real
+@attribute opponentLogAFAmount real
+@attribute opponentWtSD real
+@attribute probability real
 @data

@@ -16,6 +16,7 @@
  */
 package org.cspoker.client.bots.bot.gametree.opponentmodel.weka;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -45,10 +46,7 @@ import weka.classifiers.Classifier;
 @ThreadSafe
 public class WekaRegressionBotFactory implements BotFactory {
 
-	private final String bModel;
-	private final String fModel;
-	private final String cModel;
-	private final String rModel;
+	private final File modelDir;
 	
 	private final static Logger logger = Logger
 			.getLogger(WekaRegressionBotFactory.class);
@@ -61,18 +59,12 @@ public class WekaRegressionBotFactory implements BotFactory {
 	private final Factory[] nodeVisitorFactories;
 
 	public WekaRegressionBotFactory(ShowdownNode.Factory showdownNodeFactory, 
-			String bModel, 
-			String fModel,
-			String cModel,
-			String rModel,
+			String modelDir,
 			NodeVisitor.Factory... nodeVisitorFactories) {
 		copy = ++copies;
 		this.showdownNodeFactory = showdownNodeFactory;
 		this.nodeVisitorFactories = nodeVisitorFactories;
-		this.bModel = bModel;
-		this.fModel = fModel;
-		this.cModel = cModel;
-		this.rModel = rModel;
+		this.modelDir = new File(modelDir);
 	}
 
 	public synchronized Bot createBot(final PlayerId botId, TableId tableId,
@@ -80,24 +72,33 @@ public class WekaRegressionBotFactory implements BotFactory {
 			BotListener... botListeners) {
 		copies++;
 		if (opponentModels.get(botId) == null) {
-			Classifier betModel;
-			Classifier foldModel;
-			Classifier callModel;
-			Classifier raiseModel;
+			Classifier preBetModel, preFoldModel, preCallModel, preRaiseModel, postBetModel, postFoldModel, postCallModel, postRaiseModel;
 			try {
-				ObjectInputStream in = new ObjectInputStream(new FileInputStream(bModel));
-				betModel = (Classifier)in.readObject();
+				ObjectInputStream in = new ObjectInputStream(new FileInputStream(new File(modelDir,"preBet.model")));
+				preBetModel = (Classifier)in.readObject();
 				in.close();
-				in = new ObjectInputStream(new FileInputStream(fModel));
-				foldModel = (Classifier)in.readObject();
+				in = new ObjectInputStream(new FileInputStream(new File(modelDir,"preFold.model")));
+				preFoldModel = (Classifier)in.readObject();
 				in.close();
-				in = new ObjectInputStream(new FileInputStream(cModel));
-				callModel = (Classifier)in.readObject();
+				in = new ObjectInputStream(new FileInputStream(new File(modelDir,"preCall.model")));
+				preCallModel = (Classifier)in.readObject();
 				in.close();
-				in = new ObjectInputStream(new FileInputStream(rModel));
-				raiseModel = (Classifier)in.readObject();
+				in = new ObjectInputStream(new FileInputStream(new File(modelDir,"preRaise.model")));
+				preRaiseModel = (Classifier)in.readObject();
 				in.close();
-				WekaRegressionModel model = new WekaRegressionModel(betModel,foldModel,callModel,raiseModel);
+				in = new ObjectInputStream(new FileInputStream(new File(modelDir,"postBet.model")));
+				postBetModel = (Classifier)in.readObject();
+				in.close();
+				in = new ObjectInputStream(new FileInputStream(new File(modelDir,"postFold.model")));
+				postFoldModel = (Classifier)in.readObject();
+				in.close();
+				in = new ObjectInputStream(new FileInputStream(new File(modelDir,"postCall.model")));
+				postCallModel = (Classifier)in.readObject();
+				in.close();
+				in = new ObjectInputStream(new FileInputStream(new File(modelDir,"postRaise.model")));
+				postRaiseModel = (Classifier)in.readObject();
+				in.close();
+				WekaRegressionModel model = new WekaRegressionModel(preBetModel, preFoldModel, preCallModel, preRaiseModel, postBetModel, postFoldModel, postCallModel, postRaiseModel);
 				opponentModels.put(botId, model);
 			} catch (IOException e) {
 				throw new IllegalStateException(e);
@@ -107,7 +108,7 @@ public class WekaRegressionBotFactory implements BotFactory {
 		}
 		SearchConfiguration config = new SearchConfiguration(opponentModels
 				.get(botId), showdownNodeFactory,
-				new SamplingExpander.Factory(), 10000, 20000, 40000, 80000, 0, false, true);
+				new SamplingExpander.Factory(), 500, 1000, 5000, 10000, 0, false, true);
 		return new SearchBot(botId, tableId, lobby, executor, config, buyIn,
 				nodeVisitorFactories, botListeners);
 	}
