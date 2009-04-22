@@ -26,9 +26,6 @@ import org.apache.log4j.Logger;
 import org.cspoker.client.bots.bot.Bot;
 import org.cspoker.client.bots.bot.BotFactory;
 import org.cspoker.client.bots.bot.gametree.mcts.MCTSBotFactory;
-import org.cspoker.client.bots.bot.gametree.opponentmodel.weka.WekaClassificationBotFactory;
-import org.cspoker.client.bots.bot.gametree.rollout.DistributionRollout4;
-import org.cspoker.client.bots.bot.gametree.search.ShowdownRolloutNode;
 import org.cspoker.client.bots.listener.BotListener;
 import org.cspoker.client.bots.listener.GameLimitingBotListener;
 import org.cspoker.client.bots.listener.ReSitInBotListener;
@@ -107,11 +104,6 @@ public class BotRunner implements LobbyListener {
 				// new RuleBasedBotFactory(),
 				//						new PrologCafeBotFactory(
 				//								new DistributionShowdownNode4.Factory()),
-				new WekaClassificationBotFactory(
-						new ShowdownRolloutNode.Factory(new DistributionRollout4.Factory()),
-						"/home/guy/Werk/thesis/weka-3-6-0/J48-c-cb.model",
-						"/home/guy/Werk/thesis/weka-3-6-0/J48-c-fcr.model"
-				),
 				//				new WekaClassificationBotFactory(
 				//						new DistributionShowdownNode4.Factory(),
 				//						"/home/guy/Bureaublad/weka-3-6-0/ANN-c-cb.model",

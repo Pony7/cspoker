@@ -89,6 +89,9 @@ public class SWTTreeListener implements MCTSListener {
 		display.syncExec(new Runnable(){
 			@Override
 			public void run() {
+				if(previous==null){
+					System.out.println("a");
+				}
 				TreeItem newItem = previous==null? new TreeItem(tree, SWT.NONE):new TreeItem(previous, SWT.NONE);
 				holder.item = newItem;
 				newItem.setText(new String[] { actor,

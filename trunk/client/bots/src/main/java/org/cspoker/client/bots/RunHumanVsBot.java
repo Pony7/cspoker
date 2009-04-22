@@ -20,14 +20,8 @@ import org.apache.log4j.Logger;
 import org.cspoker.client.User;
 import org.cspoker.client.bots.bot.Bot;
 import org.cspoker.client.bots.bot.BotFactory;
-import org.cspoker.client.bots.bot.gametree.mcts.MCTSBot;
 import org.cspoker.client.bots.bot.gametree.mcts.MCTSBotFactory;
 import org.cspoker.client.bots.bot.gametree.mcts.listeners.SWTTreeListener;
-import org.cspoker.client.bots.bot.gametree.rollout.DistributionRollout4;
-import org.cspoker.client.bots.bot.gametree.search.SearchBotFactory;
-import org.cspoker.client.bots.bot.gametree.search.ShowdownRolloutNode;
-import org.cspoker.client.bots.bot.gametree.search.nodevisitor.Log4JOutputVisitor;
-import org.cspoker.client.bots.bot.gametree.search.nodevisitor.SWTTreeVisitor;
 import org.cspoker.client.bots.bot.gametree.search.nodevisitor.StatisticsVisitor;
 import org.cspoker.client.bots.listener.DefaultBotListener;
 import org.cspoker.client.common.SmartClientContext;
@@ -118,21 +112,11 @@ public class RunHumanVsBot {
 
 		BotFactory botFactory = new MCTSBotFactory(new SWTTreeListener.Factory(client.getGui().getDisplay()));
 
-		//		BotFactory botFactory = new WekaClassificationBotFactory(
-		//				new DistributionShowdownNode4.Factory(),
-		//				 "/home/guy/Bureaublad/weka-3-6-0/ANN-c-cb.model",
-		//				 "/home/guy/Bureaublad/weka-3-6-0/J48-c-fcr.model",
-		//				new Log4JOutputVisitor.Factory(2), new SWTTreeVisitor.Factory(
-		//						client.getGui().getDisplay()));
-
-		//		BotFactory botFactory = new WekaRegressionBotFactory(
-		//				new DistributionShowdownNode4.Factory(),
-		//				 "/home/guy/Bureaublad/weka-3-6-0/M5P-r-b.model",
-		//				 "/home/guy/Bureaublad/weka-3-6-0/M5P-r-f.model",
-		//				 "/home/guy/Bureaublad/weka-3-6-0/M5P-r-c.model",
-		//				 "/home/guy/Bureaublad/weka-3-6-0/M5P-r-r.model",
-		//				new Log4JOutputVisitor.Factory(2), new SWTTreeVisitor.Factory(
-		//						client.getGui().getDisplay()));
+//				BotFactory botFactory = new WekaRegressionBotFactory(
+//						new ShowdownRolloutNode.Factory(new DistributionRollout4.Factory()),
+//						 "/home/guy/Werk/thesis/weka-3-6-0/model1",
+//						new Log4JOutputVisitor.Factory(2), new SWTTreeVisitor.Factory(
+//								client.getGui().getDisplay()));
 
 		// BotFactory botFactory = new PrologCafeBotFactory(new
 		// DistributionShowdownNode4.Factory(),

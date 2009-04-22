@@ -48,6 +48,8 @@ public class PlayerTrackingVisitor implements GameStateVisitor, Cloneable {
 	
 	private GameState previousStartState;
 	private Propositionalizer propz = new Propositionalizer();
+
+	private int bb;
 	
 	public void readHistory(GameState gameState) {
 		gameState.acceptHistoryVisitor(this, previousStartState);
@@ -131,7 +133,8 @@ public class PlayerTrackingVisitor implements GameStateVisitor, Cloneable {
 
 	@Override
 	public void visitNewDealState(NewDealState newDealState) {
-		propz.signalNewGame(newDealState.getTableConfiguration().getBigBlind());
+		bb = newDealState.getTableConfiguration().getBigBlind();
+		propz.signalNewGame();
 		for(PlayerState player: newDealState.getAllSeatedPlayers()){
 			propz.signalSeatedPlayer(player.getStack(), player.getPlayerId());
 		}

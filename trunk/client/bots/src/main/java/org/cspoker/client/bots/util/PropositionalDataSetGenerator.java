@@ -19,62 +19,254 @@ public class PropositionalDataSetGenerator extends Propositionalizer {
 	protected static final String turn = "*** TURN";
 	protected static final String river = "*** RIVER";
 
-	protected final FileWriter preFoldProb;
-	protected final FileWriter preCallProb;
-	protected final FileWriter preRaiseProb;
-	protected final FileWriter preBetProb;
 	protected final FileWriter preCallRaiseAction;
 	protected final FileWriter preCheckBetAction;	
 
-	protected final FileWriter postFoldProb;
-	protected final FileWriter postCallProb;
-	protected final FileWriter postRaiseProb;
-	protected final FileWriter postBetProb;
 	protected final FileWriter postCallRaiseAction;
 	protected final FileWriter postCheckBetAction;
+
+	protected final FileWriter showdownPartitions;
 
 	private boolean forgetCurrentGame = false;
 
 	private final HashMap<String, Card> cards = new HashMap<String, Card>();
 
 	public PropositionalDataSetGenerator() throws IOException {
-		preFoldProb = new FileWriter("output/PreFoldProb2.arff");
-		preFoldProb.write("@relation PreFoldProb\n" + callRaiseHeader
-				+ "@attribute probability real\n" + "@data\n");
-		preCallProb = new FileWriter("output/PreCallProb2.arff");
-		preCallProb.write("@relation PreCallProb\n" + callRaiseHeader
-				+ "@attribute probability real\n" + "@data\n");
-		preRaiseProb = new FileWriter("output/PreRaiseProb2.arff");
-		preRaiseProb.write("@relation PreRaiseProb\n" + callRaiseHeader
-				+ "@attribute probability real\n" + "@data\n");
-		preBetProb = new FileWriter("output/PreBetProb2.arff");
-		preBetProb.write("@relation PreBetProb\n" + checkBetHeader
-				+ "@attribute probability real\n" + "@data\n");
 		preCallRaiseAction = new FileWriter("output/PreCallRaiseAction2.arff");
-		preCallRaiseAction.write("@relation PreCallRaiseAction\n" + callRaiseHeader
-				+ "@attribute action {fold,call,raise}\n" + "@data\n");
-		preCheckBetAction = new FileWriter("output/PreCheckBetAction2.arff");
-		preCheckBetAction.write("@relation PreCheckBetAction\n" + checkBetHeader
-				+ "@attribute action {check,bet}\n" + "@data\n");
+		preCallRaiseAction.write(
+				"@relation PreCallRaiseAction\n"
+				+ "@attribute roundCompletion real\n"
+				+ "@attribute playersActed integer\n"
+				+ "@attribute playersToAct integer\n"
+				+ "@attribute gameCount integer\n"
+				+ "@attribute somebodyActedThisRound {false,true}\n"
+				+ "@attribute nbActionsThisRound integer\n"
+				// Amounts
+				+ "@attribute potSize real\n"
+				+ "@attribute stackSize real\n"
+				+ "@attribute deficit real\n"
+				+ "@attribute potOdds real\n"
+				+ "@attribute maxbet real\n"
+				//				// CommunityCards
+				//				+ "@attribute minRank integer\n"
+				//				+ "@attribute maxRank integer\n"
+				//				+ "@attribute avgRank integer\n"
+				//				+ "@attribute sigmaRank real\n"
+				// Player count
+				+ "@attribute nbSeatedPlayers integer\n"
+				+ "@attribute nbActivePlayers integer\n"
+				+ "@attribute activePlayerRatio real\n"
+				+
+				// Global player frequencies
+				"@attribute foldFrequency real\n"
+				+ "@attribute callFrequency real\n"
+				+ "@attribute raiseFrequency real\n"
+				+
+				// Per-round player frequencies
+				"@attribute foldFrequencyRound real\n"
+				+ "@attribute callFrequencyRound real\n"
+				+ "@attribute raiseFrequencyRound real\n"
+				+
+				// Game betting behaviour
+				"@attribute isComitted {false,true}\n"
+				+ "@attribute nbAllPlayerRaises integer\n"
+				+ "@attribute nbPlayerRaises integer\n"
+				+ "@attribute gameRaisePercentage real\n"
+				+ "@attribute gameRaiseAmount real\n"
+				+ "@attribute gameRaiseAmountRatio real\n"
+				+ "@attribute lastActionWasRaise {false,true}\n"
+				// PT Stats
+				+ "@attribute VPIP real\n" 
+				+ "@attribute PFR real\n"
+				+ "@attribute AF real\n" 
+				+ "@attribute AFq real\n" 
+				+ "@attribute AFAmount real\n" 
+				+ "@attribute WtSD real\n"
+				// Table PT stat averages
+				+ "@attribute opponentVPIP real\n"
+				+ "@attribute opponentPFR real\n"
+				+ "@attribute opponentAF real\n"
+				+ "@attribute opponentAFq real\n"
+				+ "@attribute opponentLogAFAmount real\n"
+				+ "@attribute opponentWtSD real\n"
+				// Targets
+				+ "@attribute foldProb real\n"
+				+ "@attribute callProb real\n"
+				+ "@attribute raiseProb real\n"
+				+ "@attribute action {fold,call,raise}\n"
+				+ "@data\n"
+		);
 
-		postFoldProb = new FileWriter("output/PostFoldProb2.arff");
-		postFoldProb.write("@relation PostFoldProb\n" + callRaiseHeader
-				+ "@attribute probability real\n" + "@data\n");
-		postCallProb = new FileWriter("output/PostCallProb2.arff");
-		postCallProb.write("@relation PostCallProb\n" + callRaiseHeader
-				+ "@attribute probability real\n" + "@data\n");
-		postRaiseProb = new FileWriter("output/PostRaiseProb2.arff");
-		postRaiseProb.write("@relation PostRaiseProb\n" + callRaiseHeader
-				+ "@attribute probability real\n" + "@data\n");
-		postBetProb = new FileWriter("output/PostBetProb2.arff");
-		postBetProb.write("@relation PostBetProb\n" + checkBetHeader
-				+ "@attribute probability real\n" + "@data\n");
 		postCallRaiseAction = new FileWriter("output/PostCallRaiseAction2.arff");
-		postCallRaiseAction.write("@relation PostCallRaiseAction\n" + callRaiseHeader
-				+ "@attribute action {fold,call,raise}\n" + "@data\n");
+		postCallRaiseAction.write(
+				"@relation PostCallRaiseAction\n"
+				+ "@attribute roundCompletion real\n"
+				+ "@attribute playersActed integer\n"
+				+ "@attribute playersToAct integer\n"
+				+ "@attribute round {flop,turn,river}\n"
+				+ "@attribute gameCount integer\n"
+				+ "@attribute nbActionsThisRound integer\n"
+				// Amounts
+				+ "@attribute potSize real\n"
+				+ "@attribute stackSize real\n"
+				+ "@attribute deficit real\n"
+				+ "@attribute potOdds real\n"
+				+ "@attribute maxbet real\n"
+				//				// CommunityCards
+				//				+ "@attribute minRank integer\n"
+				//				+ "@attribute maxRank integer\n"
+				//				+ "@attribute avgRank integer\n"
+				//				+ "@attribute sigmaRank real\n"
+				// Player count
+				+ "@attribute nbSeatedPlayers integer\n"
+				+ "@attribute nbActivePlayers integer\n"
+				+ "@attribute activePlayerRatio real\n"
+				+
+				// Global player frequencies
+				"@attribute foldFrequency real\n"
+				+ "@attribute callFrequency real\n"
+				+ "@attribute raiseFrequency real\n"
+				+
+				// Per-round player frequencies
+				"@attribute foldFrequencyRound real\n"
+				+ "@attribute callFrequencyRound real\n"
+				+ "@attribute raiseFrequencyRound real\n"
+				+
+				// Game betting behaviour
+				"@attribute isComitted {false,true}\n"
+				+ "@attribute nbAllPlayerRaises integer\n"
+				+ "@attribute nbPlayerRaises integer\n"
+				+ "@attribute nbPlayerRoundRaises integer\n"
+				+ "@attribute gameRaisePercentage real\n"
+				+ "@attribute gameRaiseAmount real\n"
+				+ "@attribute gameRaiseAmountRatio real\n"
+				+ "@attribute lastActionWasRaise {false,true}\n"
+				// PT Stats
+				+ "@attribute VPIP real\n" 
+				+ "@attribute PFR real\n"
+				+ "@attribute AF real\n" 
+				+ "@attribute AFq real\n" 
+				+ "@attribute AFAmount real\n" 
+				+ "@attribute WtSD real\n"
+				// Table PT stat averages
+				+ "@attribute opponentVPIP real\n"
+				+ "@attribute opponentPFR real\n"
+				+ "@attribute opponentAF real\n"
+				+ "@attribute opponentAFq real\n"
+				+ "@attribute opponentLogAFAmount real\n"
+				+ "@attribute opponentWtSD real\n"
+				// Targets
+				+ "@attribute foldProb real\n"
+				+ "@attribute callProb real\n"
+				+ "@attribute raiseProb real\n"
+				+ "@attribute action {fold,call,raise}\n"
+				+ "@data\n"
+		);
+
+		preCheckBetAction = new FileWriter("output/PreCheckBetAction2.arff");
+		preCheckBetAction.write(
+				"@relation PreCheckBetAction\n" 
+				+ "@attribute roundCompletion real\n"
+				+ "@attribute playersActed integer\n"
+				+ "@attribute playersToAct integer\n"
+				+ "@attribute gameCount integer\n"
+				+ "@attribute nbActionsThisRound integer\n"
+				// Amounts
+				+ "@attribute potSize real\n"
+				+ "@attribute stackSize real\n"
+				//				// CommunityCards
+				//				+ "@attribute minRank integer\n"
+				//				+ "@attribute maxRank integer\n"
+				//				+ "@attribute avgRank integer\n"
+				//				+ "@attribute sigmaRank real\n"
+				// Player count
+				+ "@attribute nbSeatedPlayers integer\n"
+				+ "@attribute nbActivePlayers integer\n"
+				+ "@attribute activePlayerRatio real\n"
+				+
+				// Global player frequencies
+				"@attribute betFrequency real\n"
+				+
+				// Per-round player frequencies
+				"@attribute betFrequencyRound real\n"
+				// PT Stats
+				+ "@attribute VPIP real\n" 
+				+ "@attribute PFR real\n"
+				+ "@attribute AF real\n" 
+				+ "@attribute AFq real\n" 
+				+ "@attribute AFAmount real\n" 
+				+ "@attribute WtSD real\n"
+				// Table PT stat averages
+				+ "@attribute opponentVPIP real\n"
+				+ "@attribute opponentPFR real\n"
+				+ "@attribute opponentAF real\n"
+				+ "@attribute opponentAFq real\n"
+				+ "@attribute opponentLogAFAmount real\n"
+				+ "@attribute opponentWtSD real\n"
+				// Targets
+				+ "@attribute betProb real\n"
+				+ "@attribute action {check, bet}\n"
+				+ "@data\n"
+		);
+
 		postCheckBetAction = new FileWriter("output/PostCheckBetAction2.arff");
-		postCheckBetAction.write("@relation PostCheckBetAction\n" + checkBetHeader
-				+ "@attribute action {check,bet}\n" + "@data\n");
+		postCheckBetAction.write(
+				"@relation PostCheckBetAction\n" 
+				+ "@attribute roundCompletion real\n"
+				+ "@attribute playersActed integer\n"
+				+ "@attribute playersToAct integer\n"
+				+ "@attribute round {flop,turn,river}\n"
+				+ "@attribute gameCount integer\n"
+				+ "@attribute somebodyActedThisRound {false,true}\n"
+				+ "@attribute nbActionsThisRound integer\n"
+				// Amounts
+				+ "@attribute potSize real\n"
+				+ "@attribute stackSize real\n"
+				//				// CommunityCards
+				//				+ "@attribute minRank integer\n"
+				//				+ "@attribute maxRank integer\n"
+				//				+ "@attribute avgRank integer\n"
+				//				+ "@attribute sigmaRank real\n"
+				// Player count
+				+ "@attribute nbSeatedPlayers integer\n"
+				+ "@attribute nbActivePlayers integer\n"
+				+ "@attribute activePlayerRatio real\n"
+				+
+				// Global player frequencies
+				"@attribute betFrequency real\n"
+				+
+				// Per-round player frequencies
+				"@attribute betFrequencyRound real\n"
+				// Game betting behaviour
+				+ "@attribute nbAllPlayerRaises integer\n"
+				+ "@attribute nbPlayerRaises integer\n"
+				+ "@attribute gameRaisePercentage real\n"
+				+ "@attribute gameRaiseAmount real\n"
+				+ "@attribute gameRaiseAmountRatio real\n"
+				+ "@attribute lastActionWasRaise {false,true}\n"
+				// PT Stats
+				+ "@attribute VPIP real\n" 
+				+ "@attribute PFR real\n"
+				+ "@attribute AF real\n" 
+				+ "@attribute AFq real\n" 
+				+ "@attribute AFAmount real\n" 
+				+ "@attribute WtSD real\n"
+				// Table PT stat averages
+				+ "@attribute opponentVPIP real\n"
+				+ "@attribute opponentPFR real\n"
+				+ "@attribute opponentAF real\n"
+				+ "@attribute opponentAFq real\n"
+				+ "@attribute opponentLogAFAmount real\n"
+				+ "@attribute opponentWtSD real\n"
+				// Targets
+				+ "@attribute betProb real\n"
+				+ "@attribute action {check, bet}\n"
+				+ "@data\n"
+		);
+
+
+		showdownPartitions = new FileWriter("output/ShowdownPartitions.arff");
+		showdownHeader();
 
 		for(Card c:Card.values()){
 			cards.put(c.getShortDescription(), c);
@@ -82,300 +274,525 @@ public class PropositionalDataSetGenerator extends Propositionalizer {
 
 	}
 
-	protected static final String callRaiseHeader = "@attribute roundCompletion real\n"
-		+ "@attribute playersActed integer\n"
-		+ "@attribute playersToAct integer\n"
-		+ "@attribute round {preflop,flop,turn,river}\n"
-		+ "@attribute gameCount integer\n"
-		+ "@attribute somebodyActedThisRound {true,false}\n"
-		+ "@attribute nbActionsThisRound integer\n"
-		+
+	private void preCallRaiseInstance(PlayerData p, String target)
+	throws IOException {
+		FileWriter file = preCallRaiseAction;
+		// Timing
+		file.write(getRoundCompletion() + ",");
+		file.write(getPlayersActed() + ",");
+		file.write(getPlayersToAct() + ",");
+		file.write(p.getGameCount() + ",");
+		file.write(isSomebodyActedThisRound() + ",");
+		file.write(getTableGameStats().getNbRoundActions(this) + ",");
 		// Amounts
-		"@attribute potSize real\n"
-		+ "@attribute deficit real\n"
-		+ "@attribute potOdds real\n"
-		+ "@attribute stack real\n"
-		+
-		// CommunityCards
-		"@attribute minRank integer\n"
-		+ "@attribute maxRank integer\n"
-		+ "@attribute avgRank integer\n"
-		+ "@attribute sigmaRank real\n"
-		+
+		file.write(getPotSize() + ",");
+		file.write(p.getStack() + ",");
+		file.write((float)Math.log(p.getDeficit(this)) + ",");
+		file.write(p.getPotOdds(this) + ",");
+		file.write((float)Math.log(getMaxBet())+ ",");
+		//		// CommunityCards
+		//		file.write(getMinRank() + ",");
+		//		file.write(getMaxRank() + ",");
+		//		file.write(getAverageRank() + ",");
+		//		file.write(getSigmaRank() + ",");
 		// Player count
-		"@attribute nbSeatedPlayers integer\n"
-		+ "@attribute nbActivePlayers integer\n"
-		+ "@attribute activePlayerRatio real\n"
-		+
+		file.write(getNbSeatedPlayers() + ",");
+		file.write(getNbActivePlayers() + ",");
+		file.write(getActivePlayerRatio() + ",");
 		// Global player frequencies
-		"@attribute foldFrequency real\n"
-		+ "@attribute callFrequency real\n"
-		+ "@attribute raiseFrequency real\n"
-		+
+		file.write(p.getGlobalStats().getFoldFrequency(4) + ",");
+		file.write(p.getGlobalStats().getCallFrequency(4) + ",");
+		file.write(p.getGlobalStats().getRaiseFrequency(4) + ",");
 		// Per-round player frequencies
-		"@attribute foldFrequencyRound real\n"
-		+ "@attribute callFrequencyRound real\n"
-		+ "@attribute raiseFrequencyRound real\n"
-		+
+		file.write(p.getGlobalStats().getRoundFoldFrequency(this,4) + ",");
+		file.write(p.getGlobalStats().getRoundCallFrequency(this,4) + ",");
+		file.write(p.getGlobalStats().getRoundRaiseFrequency(this,4) + ",");
 		// Game betting behaviour
-		"@attribute isComitted {true,false}\n"
-		+ "@attribute nbAllPlayerRaises integer\n"
-		+ "@attribute nbPlayerRaises integer\n"
-		+ "@attribute gameRaisePercentage real\n"
-		+ "@attribute lastActionWasRaise {true,false}\n"
-		+
+		file.write(p.isComitted() + ",");
+		file.write(getTableGameStats().getNbBetsRaises() + ",");
+		file.write(p.getGameStats().getNbBetsRaises() + ",");
+		file.write(rel(p.getGameStats().getNbBetsRaises(),getTableGameStats().getNbBetsRaises()) + ",");
+		file.write((float)Math.log1p(p.getGameStats().getTotalBetRaiseAmount()) + ",");
+		file.write(rel(p.getGameStats().getTotalBetRaiseAmount(),getTableGameStats().getTotalBetRaiseAmount()) + ",");
+		file.write(p.isLastActionWasRaise() + ",");
 		// PT Stats
-		"@attribute VPIP real\n" + "@attribute PFR real\n"
-		+ "@attribute AF real\n" + "@attribute WtSD real\n";
-	protected static final String checkBetHeader = "@attribute roundCompletion real\n"
-		+ "@attribute playersActed integer\n"
-		+ "@attribute playersToAct integer\n"
-		+ "@attribute round {preflop,flop,turn,river}\n"
-		+ "@attribute gameCount integer\n"
-		+ "@attribute somebodyActedThisRound {true,false}\n"
-		+ "@attribute nbActionsThisRound integer\n"
-		+
+		file.write(p.getVPIP(4) + ",");
+		file.write(p.getPFR(4) + ",");
+		file.write(p.getGlobalStats().getAF(5) + ",");
+		file.write(p.getGlobalStats().getAFq(5) + ",");
+		file.write((float)Math.log(p.getGlobalStats().getAFAmount(5)) + ",");
+		file.write(p.getWtSD(4) + ",");
+		// Table PT stat averages
+		file.write(getAverageVPIP(p,4) + ",");
+		file.write(getAveragePFR(p,4) + ",");
+		file.write(getAverageAF(p,5) + ",");
+		file.write(getAverageAFq(p,5) + ",");
+		file.write(getAverageAFAmount(p,5) + ",");
+		file.write(getAverageWtSD(p,4) + ",");
+		// "@attribute W$SD real\n"+
+		// Target
+		file.write(target + "\n");
+		file.flush();
+	}
+
+	private void postCallRaiseInstance(PlayerData p, String target)
+	throws IOException {
+		FileWriter file = postCallRaiseAction;
+		// Timing
+		file.write(getRoundCompletion() + ",");
+		file.write(getPlayersActed() + ",");
+		file.write(getPlayersToAct() + ",");
+		file.write(getRound() + ",");
+		file.write(p.getGameCount() + ",");
+		file.write(getTableGameStats().getNbRoundActions(this) + ",");
 		// Amounts
-		"@attribute potSize real\n"
-		+ "@attribute stack real\n"
-		+
-		// CommunityCards
-		"@attribute minRank integer\n"
-		+ "@attribute maxRank integer\n"
-		+ "@attribute avgRank integer\n"
-		+ "@attribute sigmaRank real\n"
-		+
+		file.write(getPotSize() + ",");
+		file.write(p.getStack() + ",");
+		file.write((float)Math.log(p.getDeficit(this)) + ",");
+		file.write(p.getPotOdds(this) + ",");
+		file.write((float)Math.log(getMaxBet())+ ",");
+		//		// CommunityCards
+		//		file.write(getMinRank() + ",");
+		//		file.write(getMaxRank() + ",");
+		//		file.write(getAverageRank() + ",");
+		//		file.write(getSigmaRank() + ",");
 		// Player count
-		"@attribute nbSeatedPlayers integer\n"
-		+ "@attribute nbActivePlayers integer\n"
-		+ "@attribute activePlayerRatio real\n"
-		+
+		file.write(getNbSeatedPlayers() + ",");
+		file.write(getNbActivePlayers() + ",");
+		file.write(getActivePlayerRatio() + ",");
 		// Global player frequencies
-		"@attribute betFrequency real\n"
-		+
+		// Global player frequencies
+		file.write(p.getGlobalStats().getFoldFrequency(4) + ",");
+		file.write(p.getGlobalStats().getCallFrequency(4) + ",");
+		file.write(p.getGlobalStats().getRaiseFrequency(4) + ",");
 		// Per-round player frequencies
-		"@attribute betFrequencyRound real\n"
-		+
+		file.write(p.getGlobalStats().getRoundFoldFrequency(this,4) + ",");
+		file.write(p.getGlobalStats().getRoundCallFrequency(this,4) + ",");
+		file.write(p.getGlobalStats().getRoundRaiseFrequency(this,4) + ",");
 		// Game betting behaviour
-		"@attribute isComitted {true,false}\n"
-		+ "@attribute nbAllPlayerRaises integer\n"
-		+ "@attribute nbPlayerRaises integer\n"
-		+ "@attribute gameRaisePercentage real\n"
-		+ "@attribute lastActionWasRaise {true,false}\n"
-		+
+		file.write(p.isComitted() + ",");
+		file.write(getTableGameStats().getNbBetsRaises() + ",");
+		file.write(p.getGameStats().getNbBetsRaises() + ",");
+		file.write(p.getGameStats().getNbRoundBetsRaises(this) + ",");
+		file.write(rel(p.getGameStats().getNbBetsRaises(),getTableGameStats().getNbBetsRaises()) + ",");
+		file.write((float)Math.log1p(p.getGameStats().getTotalBetRaiseAmount()) + ",");
+		file.write(rel(p.getGameStats().getTotalBetRaiseAmount(),getTableGameStats().getTotalBetRaiseAmount()) + ",");
+		file.write(p.isLastActionWasRaise() + ",");
 		// PT Stats
-		"@attribute VPIP real\n" + "@attribute PFR real\n"
-		+ "@attribute AF real\n" + "@attribute WtSD real\n";
+		file.write(p.getVPIP(4) + ",");
+		file.write(p.getPFR(4) + ",");
+		file.write(p.getGlobalStats().getAF(5) + ",");
+		file.write(p.getGlobalStats().getAFq(5) + ",");
+		file.write((float)Math.log(p.getGlobalStats().getAFAmount(5)) + ",");
+		file.write(p.getWtSD(4) + ",");
+		// Table PT stat averages
+		file.write(getAverageVPIP(p,4) + ",");
+		file.write(getAveragePFR(p,4) + ",");
+		file.write(getAverageAF(p,5) + ",");
+		file.write(getAverageAFq(p,5) + ",");
+		file.write(getAverageAFAmount(p,5) + ",");
+		file.write(getAverageWtSD(p,4) + ",");
+		// "@attribute W$SD real\n"+
+		// Target
+		file.write(target + "\n");
+		file.flush();
+	}
+
+	private void preCheckBetInstance(PlayerData p, String target)
+	throws IOException {
+		FileWriter file = preCheckBetAction;
+		// Timing
+		file.write(getRoundCompletion() + ",");
+		file.write(getPlayersActed() + ",");
+		file.write(getPlayersToAct() + ",");
+		file.write(p.getGameCount() + ",");
+		file.write(getTableGameStats().getNbRoundActions(this) + ",");
+		// Amounts
+		file.write(getPotSize() + ",");
+		file.write(p.getStack() + ",");
+		//		// CommunityCards
+		//		file.write(getMinRank() + ",");
+		//		file.write(getMaxRank() + ",");
+		//		file.write(getAverageRank() + ",");
+		//		file.write(getSigmaRank() + ",");
+		// Player count
+		file.write(getNbSeatedPlayers() + ",");
+		file.write(getNbActivePlayers() + ",");
+		file.write(getActivePlayerRatio() + ",");
+		// Global player frequencies
+		file.write(p.getGlobalStats().getBetFrequency(4) + ",");
+		// Per-round player frequencies
+		file.write(p.getGlobalStats().getRoundBetFrequency(this,4) + ",");
+		// PT Stats
+		file.write(p.getVPIP(4) + ",");
+		file.write(p.getPFR(4) + ",");
+		file.write(p.getGlobalStats().getAF(5) + ",");
+		file.write(p.getGlobalStats().getAFq(5) + ",");
+		file.write((float)Math.log(p.getGlobalStats().getAFAmount(5)) + ",");
+		file.write(p.getWtSD(4) + ",");
+		// Table PT stat averages
+		file.write(getAverageVPIP(p,4) + ",");
+		file.write(getAveragePFR(p,4) + ",");
+		file.write(getAverageAF(p,5) + ",");
+		file.write(getAverageAFq(p,5) + ",");
+		file.write(getAverageAFAmount(p,5) + ",");
+		file.write(getAverageWtSD(p,4) + ",");
+		// "@attribute W$SD real\n"+
+		// Target
+		file.write(target + "\n");
+		file.flush();
+	}
+
+	private void postCheckBetInstance(PlayerData p, String target)
+	throws IOException {
+		FileWriter file = postCheckBetAction;
+		// Timing
+		file.write(getRoundCompletion() + ",");
+		file.write(getPlayersActed() + ",");
+		file.write(getPlayersToAct() + ",");
+		file.write(getRound() + ",");
+		file.write(p.getGameCount() + ",");
+		file.write(isSomebodyActedThisRound() + ",");
+		file.write(getTableGameStats().getNbRoundActions(this) + ",");
+		// Amounts
+		file.write(getPotSize() + ",");
+		file.write(p.getStack() + ",");
+		//		// CommunityCards
+		//		file.write(getMinRank() + ",");
+		//		file.write(getMaxRank() + ",");
+		//		file.write(getAverageRank() + ",");
+		//		file.write(getSigmaRank() + ",");
+		// Player count
+		file.write(getNbSeatedPlayers() + ",");
+		file.write(getNbActivePlayers() + ",");
+		file.write(getActivePlayerRatio() + ",");
+		// Global player frequencies
+		file.write(p.getGlobalStats().getBetFrequency(4) + ",");
+		// Per-round player frequencies
+		file.write(p.getGlobalStats().getRoundBetFrequency(this,4) + ",");
+		// Game betting behaviour
+		file.write(getTableGameStats().getNbBetsRaises() + ",");
+		file.write(p.getGameStats().getNbBetsRaises() + ",");
+		file.write(rel(p.getGameStats().getNbBetsRaises(),getTableGameStats().getNbBetsRaises()) + ",");
+		file.write((float)Math.log1p(p.getGameStats().getTotalBetRaiseAmount()) + ",");
+		file.write(rel(p.getGameStats().getTotalBetRaiseAmount(),getTableGameStats().getTotalBetRaiseAmount()) + ",");
+		file.write(p.isLastActionWasRaise() + ",");
+		// PT Stats
+		file.write(p.getVPIP(4) + ",");
+		file.write(p.getPFR(4) + ",");
+		file.write(p.getGlobalStats().getAF(5) + ",");
+		file.write(p.getGlobalStats().getAFq(5) + ",");
+		file.write((float)Math.log(p.getGlobalStats().getAFAmount(5)) + ",");
+		file.write(p.getWtSD(4) + ",");
+		// Table PT stat averages
+		file.write(getAverageVPIP(p,4) + ",");
+		file.write(getAveragePFR(p,4) + ",");
+		file.write(getAverageAF(p,5) + ",");
+		file.write(getAverageAFq(p,5) + ",");
+		file.write(getAverageAFAmount(p,5) + ",");
+		file.write(getAverageWtSD(p,4) + ",");
+		// "@attribute W$SD real\n"+
+		// Target
+		file.write(target + "\n");
+		file.flush();
+	}
+
+
+	private void showdownHeader() throws IOException {
+		showdownPartitions.write(
+				  "@relation ShowdownPartitions\n"
+				+ "@attribute gameCount integer\n"
+				// Amounts
+				+ "@attribute potSize real\n"
+				+ "@attribute logPotSize real\n"
+				+ "@attribute stackSize real\n"
+				+ "@attribute log1pStackSize real\n"
+				// Player count
+				+ "@attribute nbSeatedPlayers integer\n"
+				+ "@attribute nbActivePlayers integer\n"
+				+ "@attribute activePlayerRatio real\n"
+				// Global player frequencies
+				+ "@attribute betFrequency real\n"
+				+ "@attribute foldFrequency real\n"
+				+ "@attribute callFrequency real\n"
+				+ "@attribute raiseFrequency real\n"
+				// BetRaise counts
+				+ "@attribute nbAllPlayerBetRaise integer\n"
+				+ "@attribute nbPlayerBetRaise integer\n"
+				+ "@attribute nbPlayerPreFlopBetRaise integer\n"
+				+ "@attribute nbPlayerPostFlopBetRaise integer\n"
+				+ "@attribute nbPlayerFlopBetRaise integer\n"
+				+ "@attribute nbPlayerTurnBetRaise integer\n"
+				+ "@attribute nbPlayerRiverBetRaise integer\n"
+				// BetRaise amounts
+				+ "@attribute allPlayerBetRaiseAmount integer\n"
+				+ "@attribute playerBetRaiseAmount integer\n"
+				+ "@attribute playerPreFlopBetRaiseAmount integer\n"
+				+ "@attribute playerPostFlopBetRaiseAmount integer\n"
+				+ "@attribute playerFlopBetRaiseAmount integer\n"
+				+ "@attribute playerTurnBetRaiseAmount integer\n"
+				+ "@attribute playerRiverBetRaiseAmount integer\n"
+				//Bet amounts
+				+ "@attribute allPlayerBetsAmount integer\n"
+				+ "@attribute playerBetsAmount integer\n"
+				+ "@attribute playerPreFlopBetsAmount integer\n"
+				+ "@attribute playerPostFlopBetsAmount integer\n"
+				+ "@attribute playerFlopBetsAmount integer\n"
+				+ "@attribute playerTuretsAmount integer\n"
+				+ "@attribute playerRiverBetsAmount integer\n"
+				//Raise amounts
+				+ "@attribute allPlayerRaisesAmount integer\n"
+				+ "@attribute playerRaisesAmount integer\n"
+				+ "@attribute playerPreFlopRaisesAmount integer\n"
+				+ "@attribute playerPostFlopRaisesAmount integer\n"
+				+ "@attribute playerFlopRaisesAmount integer\n"
+				+ "@attribute playerTurnRaisesAmount integer\n"
+				+ "@attribute playerRiverRaisesAmount integer\n"
+				//Relative BetRaise counts
+				+ "@attribute relNbPlayerBetRaise integer\n"
+				+ "@attribute relNbPlayerPreFlopBetRaise integer\n"
+				+ "@attribute relNbPlayerPostFlopBetRaise integer\n"
+				+ "@attribute relNbPlayerFlopBetRaise integer\n"
+				+ "@attribute relNbPlayerTurnBetRaise integer\n"
+				+ "@attribute relNbPlayerRiverBetRaise integer\n"
+				//Relative BetRaise amounts
+				+ "@attribute relPlayerBetRaiseAmount integer\n"
+				+ "@attribute relPlayerPreFlopBetRaiseAmount integer\n"
+				+ "@attribute relPlayerPostFlopBetRaiseAmount integer\n"
+				+ "@attribute relPlayerFlopBetRaiseAmount integer\n"
+				+ "@attribute relPlayerTurnBetRaiseAmount integer\n"
+				+ "@attribute relPlayerRiverBetRaiseAmount integer\n"
+				// Table BetRaise counts
+				+ "@attribute nbPlayerPreFlopBetRaiseTable integer\n"
+				+ "@attribute nbPlayerPostFlopBetRaiseTable integer\n"
+				+ "@attribute nbPlayerFlopBetRaiseTable integer\n"
+				+ "@attribute nbPlayerTurnBetRaiseTable integer\n"
+				+ "@attribute nbPlayerRiverBetRaiseTable integer\n"
+				// Table BetRaise amounts
+				+ "@attribute playerPreFlopBetRaiseAmountTable integer\n"
+				+ "@attribute playerPostFlopBetRaiseAmountTable integer\n"
+				+ "@attribute playerFlopBetRaiseAmountTable integer\n"
+				+ "@attribute playerTurnBetRaiseAmountTable integer\n"
+				+ "@attribute playerRiverBetRaiseAmountTable integer\n"
+				//Other
+				+ "@attribute lastActionWasBetRaise {false,true}\n"
+				// PT Stats
+				+ "@attribute VPIP real\n" 
+				+ "@attribute PFR real\n"
+				+ "@attribute AF real\n" 
+				+ "@attribute AFq real\n" 
+				+ "@attribute logAFAmount real\n" 
+				+ "@attribute WtSD real\n"
+				// Table PT stat averages
+				+ "@attribute opponentVPIP real\n"
+				+ "@attribute opponentPFR real\n"
+				+ "@attribute opponentAF real\n"
+				+ "@attribute opponentAFq real\n"
+				+ "@attribute opponentLogAFAmount real\n"
+				+ "@attribute opponentWtSD real\n"
+				// CommunityCards
+				+ "@attribute minRank integer\n"
+				+ "@attribute maxRank integer\n"
+				+ "@attribute avgRank integer\n"
+				+ "@attribute sigmaRank real\n"
+				+ "@attribute rankSpan real\n"
+				// Targets
+				+ "@attribute part0Prob real\n"
+				+ "@attribute part1Prob real\n"
+				+ "@attribute part2Prob real\n"
+				+ "@attribute part3Prob real\n"
+				+ "@attribute part4Prob real\n"
+				+ "@attribute part5Prob real\n"
+				+ "@attribute part6Prob real\n"
+				+ "@attribute part7Prob real\n"
+				+ "@attribute part8Prob real\n"
+				+ "@attribute part9Prob real\n"
+				+ "@attribute avgPartition {0,1,2,3,4,5,6,7,8,9}\n"
+				+ "@data\n"
+		);
+	}
+	
+	private void showdownInstance(PlayerData p, float[] partitionDistr,
+			int average, int minrank, int maxrank, int avgrank, int sigmarank) throws IOException {
+		FileWriter file = showdownPartitions;
+		// Timing
+		file.write(p.getGameCount() + ",");
+		// Amounts
+		file.write(getPotSize() + ",");
+		file.write((float)Math.log(getPotSize()) + ",");
+		file.write(p.getStack() + ",");
+		file.write((float)Math.log1p(p.getStack()) + ",");
+		// Player count
+		file.write(getNbSeatedPlayers() + ",");
+		file.write(getNbActivePlayers() + ",");
+		file.write(getActivePlayerRatio() + ",");
+		// Global player frequencies
+		file.write(p.getGlobalStats().getBetFrequency(4) + ",");
+		file.write(p.getGlobalStats().getFoldFrequency(4) + ",");
+		file.write(p.getGlobalStats().getCallFrequency(4) + ",");
+		file.write(p.getGlobalStats().getRaiseFrequency(4) + ",");
+		//BetRaise counts
+		file.write(getTableGameStats().getNbBetsRaises() + ",");
+		file.write(p.getGameStats().getNbBetsRaises() + ",");
+		file.write(p.getGameStats().getNbBetsRaisesPreFlop() + ",");
+		file.write(p.getGameStats().getNbBetsRaisesPostFlop() + ",");
+		file.write(p.getGameStats().getNbBetsRaisesFlop() + ",");
+		file.write(p.getGameStats().getNbBetsRaisesTurn() + ",");
+		file.write(p.getGameStats().getNbBetsRaisesRiver() + ",");
+		//BetRaise amount
+		file.write((float)getTableGameStats().getTotalBetRaiseAmount() + ",");
+		file.write((float)p.getGameStats().getTotalBetRaiseAmount() + ",");
+		file.write((float)p.getGameStats().getBetRaiseAmountPreFlop() + ",");
+		file.write((float)p.getGameStats().getBetRaiseAmountPostFlop() + ",");
+		file.write((float)p.getGameStats().getBetRaiseAmountFlop() + ",");
+		file.write((float)p.getGameStats().getBetRaiseAmountTurn() + ",");
+		file.write((float)p.getGameStats().getBetRaiseAmountRiver() + ",");
+		//Bet amount
+		file.write((float)getTableGameStats().getTotalBetAmount() + ",");
+		file.write((float)p.getGameStats().getTotalBetAmount() + ",");
+		file.write((float)p.getGameStats().getBetAmountPreFlop() + ",");
+		file.write((float)p.getGameStats().getBetAmountPostFlop() + ",");
+		file.write((float)p.getGameStats().getBetAmountFlop() + ",");
+		file.write((float)p.getGameStats().getBetAmountTurn() + ",");
+		file.write((float)p.getGameStats().getBetAmountRiver() + ",");
+		//Raise amount
+		file.write((float)getTableGameStats().getTotalRaiseAmount() + ",");
+		file.write((float)p.getGameStats().getTotalRaiseAmount() + ",");
+		file.write((float)p.getGameStats().getRaiseAmountPreFlop() + ",");
+		file.write((float)p.getGameStats().getRaiseAmountPostFlop() + ",");
+		file.write((float)p.getGameStats().getRaiseAmountFlop() + ",");
+		file.write((float)p.getGameStats().getRaiseAmountTurn() + ",");
+		file.write((float)p.getGameStats().getRaiseAmountRiver() + ",");
+		// Relative BetRaise counts
+		file.write(rel(p.getGameStats().getNbBetsRaises(),getTableGameStats().getNbBetsRaises()) + ",");
+		file.write(rel(p.getGameStats().getNbBetsRaisesPreFlop(),getTableGameStats().getNbBetsRaisesPreFlop()) + ",");
+		file.write(rel(p.getGameStats().getNbBetsRaisesPostFlop(),getTableGameStats().getNbBetsRaisesPostFlop()) + ",");
+		file.write(rel(p.getGameStats().getNbBetsRaisesFlop(),getTableGameStats().getNbBetsRaisesFlop()) + ",");
+		file.write(rel(p.getGameStats().getNbBetsRaisesTurn(),getTableGameStats().getNbBetsRaisesTurn()) + ",");
+		file.write(rel(p.getGameStats().getNbBetsRaisesRiver(),getTableGameStats().getNbBetsRaisesRiver()) + ",");
+		// Relative BetRaise amounts
+		file.write(rel(p.getGameStats().getTotalBetRaiseAmount(),getTableGameStats().getTotalBetRaiseAmount()) + ",");
+		file.write(rel(p.getGameStats().getBetRaiseAmountPreFlop(),getTableGameStats().getBetRaiseAmountPreFlop()) + ",");
+		file.write(rel(p.getGameStats().getBetRaiseAmountPostFlop(),getTableGameStats().getBetRaiseAmountPostFlop()) + ",");
+		file.write(rel(p.getGameStats().getBetRaiseAmountFlop(),getTableGameStats().getBetRaiseAmountFlop()) + ",");
+		file.write(rel(p.getGameStats().getBetRaiseAmountTurn(),getTableGameStats().getBetRaiseAmountTurn()) + ",");
+		file.write(rel(p.getGameStats().getBetRaiseAmountRiver(),getTableGameStats().getBetRaiseAmountRiver()) + ",");
+		//Table BetRaise counts
+		file.write(getTableGameStats().getNbBetsRaisesPreFlop() + ",");
+		file.write(getTableGameStats().getNbBetsRaisesPostFlop() + ",");
+		file.write(getTableGameStats().getNbBetsRaisesFlop() + ",");
+		file.write(getTableGameStats().getNbBetsRaisesTurn() + ",");
+		file.write(getTableGameStats().getNbBetsRaisesRiver() + ",");
+		//Table BetRaise amount
+		file.write((float)getTableGameStats().getBetRaiseAmountPreFlop() + ",");
+		file.write((float)getTableGameStats().getBetRaiseAmountPostFlop() + ",");
+		file.write((float)getTableGameStats().getBetRaiseAmountFlop() + ",");
+		file.write((float)getTableGameStats().getBetRaiseAmountTurn() + ",");
+		file.write((float)getTableGameStats().getBetRaiseAmountRiver() + ",");
+		// Other
+		file.write(p.isLastActionWasRaise() + ",");
+		// PT Stats
+		file.write(p.getVPIP(4) + ",");
+		file.write(p.getPFR(4) + ",");
+		file.write(p.getGlobalStats().getAF(5) + ",");
+		file.write(p.getGlobalStats().getAFq(5) + ",");
+		file.write((float)Math.log(p.getGlobalStats().getAFAmount(5)) + ",");
+		file.write(p.getWtSD(4) + ",");
+		// Table PT stat averages
+		file.write(getAverageVPIP(p,4) + ",");
+		file.write(getAveragePFR(p,4) + ",");
+		file.write(getAverageAF(p,5) + ",");
+		file.write(getAverageAFq(p,5) + ",");
+		file.write(getAverageAFAmount(p,5) + ",");
+		file.write(getAverageWtSD(p,4) + ",");
+		// CommunityCards
+		file.write(minrank + ",");
+		file.write(maxrank + ",");
+		file.write(avgrank + ",");
+		file.write(sigmarank + ",");
+		file.write((maxrank-minrank) + ",");
+		// Target
+		for (float f : partitionDistr) {
+			file.write(f + ",");
+		}
+		file.write(average + "\n");
+		file.flush();
+	}
 
 	private void close() throws IOException {
-		preFoldProb.close();
-		preCallProb.close();
-		preRaiseProb.close();
-		preBetProb.close();
 		preCallRaiseAction.close();
 		preCheckBetAction.close();
-		postFoldProb.close();
-		postCallProb.close();
-		postRaiseProb.close();
-		postBetProb.close();
 		postCallRaiseAction.close();
 		postCheckBetAction.close();
 	}
 
 	protected void logFold(PlayerData p) {
-		if(getRound().equals("preflop")){
-			try {
-				callRaiseInstance(p, "1", preFoldProb);
-				callRaiseInstance(p, "0", preCallProb);
-				callRaiseInstance(p, "0", preRaiseProb);
-				callRaiseInstance(p, "fold", preCallRaiseAction);
-			} catch (IOException e) {
-				throw new IllegalStateException(e);
-			}
-		}else{
-			try {
-				callRaiseInstance(p, "1", postFoldProb);
-				callRaiseInstance(p, "0", postCallProb);
-				callRaiseInstance(p, "0", postRaiseProb);
-				callRaiseInstance(p, "fold", postCallRaiseAction);
-			} catch (IOException e) {
-				throw new IllegalStateException(e);
-			}
-		}		
+		try {
+			if(getRound().equals("preflop")){
+				preCallRaiseInstance(p, "1,0,0,fold");
+			}else{
+				postCallRaiseInstance(p, "1,0,0,fold");
+			}	
+		} catch (IOException e) {
+			throw new IllegalStateException(e);
+		}	
 	}
 
 	protected void logCall(PlayerData p) {
-		if(getRound().equals("preflop")){
-			try {
-				callRaiseInstance(p, "0", preFoldProb);
-				callRaiseInstance(p, "1", preCallProb);
-				callRaiseInstance(p, "0", preRaiseProb);
-				callRaiseInstance(p, "call", preCallRaiseAction);
-			} catch (IOException e) {
-				throw new IllegalStateException(e);
-			}
-		}else{
-			try {
-				callRaiseInstance(p, "0", postFoldProb);
-				callRaiseInstance(p, "1", postCallProb);
-				callRaiseInstance(p, "0", postRaiseProb);
-				callRaiseInstance(p, "call", postCallRaiseAction);
-			} catch (IOException e) {
-				throw new IllegalStateException(e);
-			}
-
-		}
-	}
-
-	protected void logCheck(PlayerData p) {
-		if(getRound().equals("preflop")){
-			try {
-				checkBetInstance(p, "0", preBetProb);
-				checkBetInstance(p, "check", preCheckBetAction);
-			} catch (IOException e) {
-				throw new IllegalStateException(e);
-			}
-		}else{
-			try {
-				checkBetInstance(p, "0", postBetProb);
-				checkBetInstance(p, "check", postCheckBetAction);
-			} catch (IOException e) {
-				throw new IllegalStateException(e);
-			}			
+		try {
+			if(getRound().equals("preflop")){
+				preCallRaiseInstance(p, "0,1,0,call");
+			}else{
+				postCallRaiseInstance(p, "0,1,0,call");
+			}	
+		} catch (IOException e) {
+			throw new IllegalStateException(e);
 		}
 	}
 
 	protected void logRaise(PlayerData p) {
-		if(getRound().equals("preflop")){
-			try {
-				callRaiseInstance(p, "0", preFoldProb);
-				callRaiseInstance(p, "0", preCallProb);
-				callRaiseInstance(p, "1", preRaiseProb);
-				callRaiseInstance(p, "raise", preCallRaiseAction);
-			} catch (IOException e) {
-				throw new IllegalStateException(e);
+		try {
+			if(getRound().equals("preflop")){
+				preCallRaiseInstance(p, "0,0,1,raise");
+			}else{
+				postCallRaiseInstance(p, "0,0,1,raise");
 			}	
-		}else{
-			try {
-				callRaiseInstance(p, "0", postFoldProb);
-				callRaiseInstance(p, "0", postCallProb);
-				callRaiseInstance(p, "1", postRaiseProb);
-				callRaiseInstance(p, "raise", postCallRaiseAction);
-			} catch (IOException e) {
-				throw new IllegalStateException(e);
-			}
+		} catch (IOException e) {
+			throw new IllegalStateException(e);
 		}
+	}
 
+	protected void logCheck(PlayerData p) {
+		try {
+			if(getRound().equals("preflop")){
+				preCheckBetInstance(p, "0,check");
+			}else{
+				postCheckBetInstance(p, "0,check");
+			}	
+		} catch (IOException e) {
+			throw new IllegalStateException(e);
+		}
 	}
 
 	protected void logBet(PlayerData p) {
-		if(getRound().equals("preflop")){
-			try {
-				checkBetInstance(p, "1", preBetProb);
-				checkBetInstance(p, "bet", preCheckBetAction);
-			} catch (IOException e) {
-				throw new IllegalStateException(e);
-			}
-		}else{
-			try {
-				checkBetInstance(p, "1", postBetProb);
-				checkBetInstance(p, "bet", postCheckBetAction);
-			} catch (IOException e) {
-				throw new IllegalStateException(e);
-			}
+		try {
+			if(getRound().equals("preflop")){
+				preCheckBetInstance(p, "1,bet");
+			}else{
+				postCheckBetInstance(p, "1,bet");
+			}	
+		} catch (IOException e) {
+			throw new IllegalStateException(e);
 		}
 	}
 
-	private void callRaiseInstance(PlayerData p, String target, FileWriter file)
-	throws IOException {
-		// Timing
-		file.write(getRoundCompletion() + ",");
-		file.write(getPlayersActed() + ",");
-		file.write(getPlayersToAct() + ",");
-		file.write(getRound() + ",");
-		file.write(p.getGameCount() + ",");
-		file.write(isSomebodyActedThisRound() + ",");
-		file.write(getNbActionsThisRound() + ",");
-		// Amounts
-		file.write(getPotSize() + ",");
-		file.write(p.getDeficit(this) + ",");
-		file.write(p.getPotOdds(this) + ",");
-		file.write(p.getStackSize(this) + ",");
-		// CommunityCards
-		file.write(getMinRank() + ",");
-		file.write(getMaxRank() + ",");
-		file.write(getAverageRank() + ",");
-		file.write(getSigmaRank() + ",");
-		// Player count
-		file.write(getNbSeatedPlayers() + ",");
-		file.write(getNbActivePlayers() + ",");
-		file.write(getActivePlayerRatio() + ",");
-		// Global player frequencies
-		file.write(p.getFoldFrequency() + ",");
-		file.write(p.getCallFrequency() + ",");
-		file.write(p.getRaiseFrequency() + ",");
-		// Per-round player frequencies
-		file.write(p.getRoundFoldFrequency(this) + ",");
-		file.write(p.getRoundCallFrequency(this) + ",");
-		file.write(p.getRoundRaiseFrequency(this) + ",");
-		// Game betting behaviour
-		file.write(p.isComitted() + ",");
-		file.write(getNbGameRaises() + ",");
-		file.write(p.getNbPlayerRaises() + ",");
-		file.write(p.getGameRaisePercentage(this) + ",");
-		file.write(p.isLastActionWasRaise() + ",");
-		// PT Stats
-		file.write(p.getVPIP() + ",");
-		file.write(p.getPFR() + ",");
-		file.write(p.getAF() + ",");
-		file.write(p.getWtSD() + ",");
-		// "@attribute W$SD real\n"+
-		// Target
-		file.write(target + "\n");
-		file.flush();
-	}
-
-	private void checkBetInstance(PlayerData p, String target, FileWriter file)
-	throws IOException {
-		// Timing
-		file.write(getRoundCompletion() + ",");
-		file.write(getPlayersActed() + ",");
-		file.write(getPlayersToAct() + ",");
-		file.write(getRound() + ",");
-		file.write(p.getGameCount() + ",");
-		file.write(isSomebodyActedThisRound() + ",");
-		file.write(getNbActionsThisRound() + ",");
-		// Amounts
-		file.write(getPotSize() + ",");
-		file.write(p.getStackSize(this) + ",");
-		// CommunityCards
-		file.write(getMinRank() + ",");
-		file.write(getMaxRank() + ",");
-		file.write(getAverageRank() + ",");
-		file.write(getSigmaRank() + ",");
-		// Player count
-		file.write(getNbSeatedPlayers() + ",");
-		file.write(getNbActivePlayers() + ",");
-		file.write(getActivePlayerRatio() + ",");
-		// Global player frequencies
-		file.write(p.getBetFrequency() + ",");
-		// Per-round player frequencies
-		file.write(p.getRoundBetFrequency(this) + ",");
-		// Game betting behaviour
-		file.write(p.isComitted() + ",");
-		file.write(getNbGameRaises() + ",");
-		file.write(p.getNbPlayerRaises() + ",");
-		file.write(p.getGameRaisePercentage(this) + ",");
-		file.write(p.isLastActionWasRaise() + ",");
-		// PT Stats
-		file.write(p.getVPIP() + ",");
-		file.write(p.getPFR() + ",");
-		file.write(p.getAF() + ",");
-		file.write(p.getWtSD() + ",");
-		// "@attribute W$SD real\n"+
-		// Target
-		file.write(target + "\n");
-		file.flush();
+	@Override
+	protected void logShowdown(PlayerData p, float[] partitionDistr, int average, int minrank, int maxrank, int avgrank, int sigmarank) {
+		try {
+			showdownInstance(p, partitionDistr, average, minrank, maxrank, avgrank, sigmarank);	
+		} catch (IOException e) {
+			throw new IllegalStateException(e);
+		}
 	}
 
 	public void run() throws IOException {
@@ -412,6 +829,7 @@ public class PropositionalDataSetGenerator extends Propositionalizer {
 		}
 	}
 
+	private float bb;
 
 	private void doLine(String line) throws IOException {
 		// inputRaise.write(line+"\n");
@@ -419,10 +837,10 @@ public class PropositionalDataSetGenerator extends Propositionalizer {
 		// System.out.println(line);
 		if (line.startsWith("Full Tilt Poker Game ")) {
 			int temp = line.indexOf("/");
-			float bb = Float.parseFloat(line.substring(temp + 2,
+			bb = Float.parseFloat(line.substring(temp + 2,
 					line.indexOf(" ", temp + 2)).replaceAll(",", ""));
 			forgetCurrentGame = false;
-			signalNewGame(bb);
+			signalNewGame();
 		} else if (!forgetCurrentGame) {
 			if (line.startsWith("Seat ")) {
 				if (line.endsWith("(0)")) {
@@ -435,7 +853,7 @@ public class PropositionalDataSetGenerator extends Propositionalizer {
 							line.indexOf(")", startDollar)).replaceAll(
 									",", ""));
 					String name = line.substring(startName, startDollar - 1);
-					signalSeatedPlayer(stack, name);
+					signalSeatedPlayer(stack/bb, name);
 				}
 			} else if (line.startsWith("*** ")) {
 				if (line.startsWith("*** SUMMARY ***")) {
@@ -488,7 +906,7 @@ public class PropositionalDataSetGenerator extends Propositionalizer {
 					.substring(0, line.indexOf(" calls"));
 					float movedAmount = Float.parseFloat(line.substring(
 							line.indexOf("$") + 1, allinIndex).replaceAll(",", ""));
-					signalCall(isAllIn, id, movedAmount);
+					signalCall(isAllIn, id, movedAmount/bb);
 				} else if (line.contains(" raises")) {
 					int allinIndex = line.lastIndexOf(", and is all in");
 					if (allinIndex <= 0) {
@@ -499,7 +917,7 @@ public class PropositionalDataSetGenerator extends Propositionalizer {
 							""));
 					String id = line.substring(0, line
 							.indexOf(" raises"));
-					signalRaise(id, isAllIn, maxBetParsed);
+					signalRaise(id, isAllIn, maxBetParsed/bb);
 				} else if (line.endsWith(" checks")) {
 					String id = line.substring(0, line
 							.indexOf(" checks"));
@@ -513,13 +931,19 @@ public class PropositionalDataSetGenerator extends Propositionalizer {
 					float maxBetParsed = Float.parseFloat(line.substring(line.indexOf("$") + 1,
 							allinIndex).replaceAll(",", ""));
 
-					signalBet(isAllIn, id, maxBetParsed);
+					signalBet(isAllIn, id, maxBetParsed/bb);
+				} else if (line.contains(" shows [")){
+					int showsIndex = line
+					.indexOf(" shows [");
+					String id = line.substring(0, showsIndex);
+
+					int start = showsIndex+8;
+					String[] cardStrings = line.substring(start, line.indexOf("]",start)).split(" ");
+					signalCardShowdown(id,cards.get(cardStrings[0]),cards.get(cardStrings[1]));
 				}
 			}
 		}
 	}
-
-
 
 	public static void main(String[] args) throws IOException {
 		new PropositionalDataSetGenerator().run();
