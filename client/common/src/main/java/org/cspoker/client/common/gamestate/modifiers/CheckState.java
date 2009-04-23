@@ -23,51 +23,67 @@ import org.cspoker.client.common.gamestate.PlayerState;
 import org.cspoker.common.api.lobby.holdemtable.event.CheckEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.HoldemTableEvent;
 import org.cspoker.common.elements.player.PlayerId;
+import org.cspoker.common.elements.table.Round;
 
 public class CheckState extends ForwardingGameState {
 
 	private final CheckEvent checkEvent;
 
 	private final PlayerState playerState;
-	
-	public CheckState(GameState gameState, final CheckEvent checkEvent) {
+
+	private final boolean bigBlindNoRaiseCase;
+
+	private final int newPotSize;
+
+	public CheckState(final GameState gameState, final CheckEvent checkEvent) {
 		super(gameState);
 		this.checkEvent = checkEvent;
-		playerState = new ForwardingPlayerState(gameState.getPlayer(checkEvent.getPlayerId())){
-			
+		final PlayerState player = gameState.getPlayer(checkEvent.getPlayerId());
+
+		//case if big blind checks after all opponents called
+		bigBlindNoRaiseCase = Round.PREFLOP.equals(gameState.getRound()) 
+		&& player.isBigBlind() && gameState.getDeficit(checkEvent.getPlayerId())<=0;
+
+		this.newPotSize = super.getRoundPotSize();
+
+		playerState = new ForwardingPlayerState(player){
+
 			@Override
 			public boolean hasChecked() {
 				return true;
 			}
-			
+
 			@Override
 			public int getBet() {
+				if(bigBlindNoRaiseCase) return super.getBet();
 				return 0;
 			}
-			
+
 			@Override
 			public PlayerId getPlayerId() {
 				return checkEvent.getPlayerId();
 			}
-			
+
 			@Override
 			public boolean hasFolded() {
 				return false;
 			}
-			
+
 			@Override
 			public boolean isBigBlind() {
+				if(bigBlindNoRaiseCase) return true;
 				return false;
 			}
-			
+
 			@Override
 			public boolean isSmallBlind() {
 				return false;
 			}
-			
+
 		};
+
 	}
-	
+
 	@Override
 	public PlayerState getPlayer(PlayerId playerId) {
 		if (checkEvent.getPlayerId().equals(playerId)) {
@@ -75,33 +91,43 @@ public class CheckState extends ForwardingGameState {
 		}
 		return super.getPlayer(playerId);
 	}
-	
+
 	public HoldemTableEvent getLastEvent() {
 		return checkEvent;
 	}
-	
+
 	@Override
 	public int getLargestBet() {
-		return 0;
+		if(bigBlindNoRaiseCase){
+			return super.getLargestBet();
+		}else{
+			return 0;
+		}
 	}
-	
+
 	@Override
 	public PlayerId getLastBettor() {
+		if(bigBlindNoRaiseCase) return super.getLastBettor();
 		return null;
 	}
-	
+
 	@Override
 	public int getNbRaises() {
 		return 0;
 	}
-	
+
 	@Override
 	public void acceptVisitor(GameStateVisitor visitor) {
 		visitor.visitCheckState(this);
 	}
-	
+
 	public CheckEvent getEvent() {
 		return checkEvent;
 	}
-	
+
+	@Override
+	public int getRoundPotSize() {
+		return newPotSize;
+	}
+
 }

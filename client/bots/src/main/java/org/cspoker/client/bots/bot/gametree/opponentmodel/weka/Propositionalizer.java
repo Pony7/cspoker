@@ -23,8 +23,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-import javax.swing.text.html.HTMLDocument.HTMLReader.IsindexAction;
-
 import org.cspoker.common.elements.cards.Card;
 import org.cspoker.common.handeval.spears2p2.StateTableEvaluator;
 
@@ -36,11 +34,12 @@ public class Propositionalizer implements Cloneable {
 
 	private Map<Object, PlayerData> players = new HashMap<Object, PlayerData>();
 	private List<PlayerData> activePlayers = new LinkedList<PlayerData>();
-	
+	private List<PlayerData> allinPlayers = new LinkedList<PlayerData>();
+
 	private float maxBet = 0;
 	private float gameRaiseAmount = 0;
 	private boolean somebodyActedThisRound = false;
-	
+
 	private BetStatistics gameStats = new BetStatistics();
 	private String round = "preflop";
 	private float totalPot = 0;
@@ -62,14 +61,13 @@ public class Propositionalizer implements Cloneable {
 			Propositionalizer clone = (Propositionalizer)super.clone();
 			Map<Object, PlayerData> playersClone = new HashMap<Object, PlayerData>(clone.getPlayers());
 
-			List<PlayerData> activePlayers = clone.getActivePlayers();
 			List<PlayerData> activePlayersClone = new LinkedList<PlayerData>();
 			for (PlayerData player : activePlayers) {
 				PlayerData playerClone = player.clone();
 				activePlayersClone.add(playerClone);
 				playersClone.put(playerClone.getId(), playerClone);
 			}
-
+			//no need to copy allinPlayers, is immutable
 			clone.players = playersClone;
 			clone.activePlayers = activePlayersClone;
 			clone.gameStats = gameStats.clone();
@@ -79,7 +77,7 @@ public class Propositionalizer implements Cloneable {
 		}
 	}
 
-	public void signalAllIn(Object id, int chipsMoved) {
+	public void signalAllIn(Object id, float chipsMoved) {
 		if(inPreFlopRound() && !somebodyActedThisRound){
 			if(maxBet==0){
 				signalSmallBlind(true, id);
@@ -98,31 +96,25 @@ public class Propositionalizer implements Cloneable {
 		}
 	}
 
-	public void signalBet(boolean isAllIn, Object id, float newMaxBet) {
+	public void signalBet(boolean isAllIn, Object id, float movedAmount) {
 		PlayerData p = players.get(id);
-		if(p.getBet()>0){
-			//Bet/Raise on the big blind
-			signalRaise(id, isAllIn, newMaxBet);
-		}else{
-			logBet(p);
-			if(isAllIn) {
-				activePlayers.remove(p);
-			}
-
-			maxBet = newMaxBet;
-			gameRaiseAmount += newMaxBet;
-			totalPot += maxBet;
-			nbPlayersDoneThisRound = 0;
-			somebodyActedThisRound = true;
-			gameStats.addBet(this, newMaxBet);
-			p.signalBet(this,newMaxBet);
+		logBet(p);
+		// consider raise by big blind, treat kinda like bet
+		if(isAllIn) {
+			activePlayers.remove(p);
+			allinPlayers.add(p);
 		}
+		maxBet += movedAmount;
+		gameRaiseAmount += movedAmount;
+		totalPot += movedAmount;
+		somebodyActedThisRound = true;
+		gameStats.addBet(this,movedAmount);
+		p.signalBet(this, movedAmount);
 	}
-	
+
 	public void signalCheck(Object id) {
 		PlayerData p = players.get(id);
 		logCheck(p);
-
 		++nbPlayersDoneThisRound;
 		gameStats.addCheck(this);
 		somebodyActedThisRound = true;
@@ -131,27 +123,15 @@ public class Propositionalizer implements Cloneable {
 
 	public void signalRaise(Object id, boolean isAllIn, float maxBetParsed) {
 		PlayerData p = players.get(id);
-		if (p.getDeficit(this) <= 0) {
-			// raise by big blind, treat kinda like bet
-			logBet(p);
-			if(isAllIn) {
-				activePlayers.remove(p);
-			}
-			float raiseAmount = maxBetParsed-maxBet;
-			maxBet = maxBetParsed;
-			float movedAmount = maxBet - p.getBet();
-			gameRaiseAmount += raiseAmount;
-			totalPot += movedAmount;
-			somebodyActedThisRound = true;
-			gameStats.addBBBet(this, (movedAmount-raiseAmount),raiseAmount);
-			p.signalBBBet(this, raiseAmount, movedAmount);
-
+		float raiseAmount = maxBetParsed-maxBet;
+		if (p.getDeficit(this) <= 0.001) {
+			signalBet(isAllIn, id, raiseAmount);
 		} else {
 			logRaise(p);
 			if(isAllIn) {
 				activePlayers.remove(p);
+				allinPlayers.add(p);
 			}
-			float raiseAmount = maxBetParsed-maxBet;
 			maxBet = maxBetParsed;
 			float movedAmount = maxBet - p.getBet();
 			gameRaiseAmount += raiseAmount;
@@ -166,7 +146,11 @@ public class Propositionalizer implements Cloneable {
 
 	public void signalCall(boolean isAllIn, Object id) {
 		PlayerData p = players.get(id);
-		signalCall(isAllIn, id, Math.min(p.getStack(), maxBet-p.getBet()));
+		if(p.getDeficit(this)<=0.001){
+			signalCheck(id);
+		}else{
+			signalCall(isAllIn, id, Math.min(p.getStack(), maxBet-p.getBet()));
+		}
 	}
 	public void signalCall(boolean isAllIn, Object id, float movedAmount) {
 		PlayerData p = players.get(id);
@@ -174,6 +158,7 @@ public class Propositionalizer implements Cloneable {
 
 		if(isAllIn){
 			activePlayers.remove(p);
+			allinPlayers.add(p);
 		}
 		totalPot += movedAmount;
 		++nbPlayersDoneThisRound;
@@ -199,6 +184,7 @@ public class Propositionalizer implements Cloneable {
 		totalPot += 1;
 		if (isAllIn) {
 			activePlayers.remove(p);
+			allinPlayers.add(p);
 		}
 		p.signalBB();
 	}
@@ -209,6 +195,7 @@ public class Propositionalizer implements Cloneable {
 		totalPot = 0.5F;
 		if (isAllIn) {
 			activePlayers.remove(p);
+			allinPlayers.add(p);
 		}
 		p.signalSB();
 	}
@@ -408,6 +395,7 @@ public class Propositionalizer implements Cloneable {
 		nbPlayersDoneThisRound = 0;
 		nbSeatedPlayers = 0;
 		activePlayers.clear();
+		allinPlayers.clear();
 		gameRaiseAmount = 0;
 	}
 
@@ -447,7 +435,7 @@ public class Propositionalizer implements Cloneable {
 	public int getMaxRank() {
 		return maxRank;
 	}
-	
+
 	public BetStatistics getTableGameStats() {
 		return gameStats;
 	}
@@ -498,51 +486,81 @@ public class Propositionalizer implements Cloneable {
 	}
 
 	protected float getAverageAF(PlayerData p, int memory) {
+		List<PlayerData> opponents = activePlayers.size()>1? activePlayers:allinPlayers; 
 		double sum = 0;
-		for (PlayerData player : activePlayers) {
-			if(!p.equals(player)) sum += player.getGlobalStats().getAF(memory);
+		int n = 0;
+		for (PlayerData player : opponents) {
+			if(!p.equals(player)) {
+				sum += player.getGlobalStats().getAF(memory);
+				++n;
+			}
 		}
-		return (float) (sum/(activePlayers.size()-1));
+		return (float) (sum/n);
 	}
 
 	protected float getAverageVPIP(PlayerData p, int memory) {
+		List<PlayerData> opponents = activePlayers.size()>1? activePlayers:allinPlayers; 
 		double sum = 0;
-		for (PlayerData player : activePlayers) {
-			if(!p.equals(player)) sum += player.getVPIP(memory);
+		int n = 0;
+		for (PlayerData player : opponents) {
+			if(!p.equals(player)) {
+				sum += player.getVPIP(memory);
+				++n;
+			}
 		}
-		return (float) (sum/(activePlayers.size()-1));
+		return (float) (sum/n);
 	}
 
 	protected float getAveragePFR(PlayerData p, int memory) {
+		List<PlayerData> opponents = activePlayers.size()>1? activePlayers:allinPlayers; 
 		double sum = 0;
-		for (PlayerData player : activePlayers) {
-			if(!p.equals(player)) sum += player.getPFR(memory);
+		int n = 0;
+		for (PlayerData player : opponents) {
+			if(!p.equals(player)) {
+				sum += player.getPFR(memory);
+				++n;
+			}
 		}
-		return (float) (sum/(activePlayers.size()-1));
+		return (float) (sum/n);
 	}
 
 	protected float getAverageAFq(PlayerData p, int memory) {
+		List<PlayerData> opponents = activePlayers.size()>1? activePlayers:allinPlayers; 
 		double sum = 0;
-		for (PlayerData player : activePlayers) {
-			if(!p.equals(player)) sum += player.getGlobalStats().getAFq(memory);
+		int n = 0;
+		for (PlayerData player : opponents) {
+			if(!p.equals(player)) {
+				sum += player.getGlobalStats().getAFq(memory);
+				++n;
+			}
 		}
-		return (float) (sum/(activePlayers.size()-1));
+		return (float) (sum/n);
 	}
 
 	protected float getAverageAFAmount(PlayerData p, int memory) {
+		List<PlayerData> opponents = activePlayers.size()>1? activePlayers:allinPlayers; 
 		double sum = 0;
-		for (PlayerData player : activePlayers) {
-			if(!p.equals(player)) sum += Math.log(player.getGlobalStats().getAFAmount(memory));
+		int n = 0;
+		for (PlayerData player : opponents) {
+			if(!p.equals(player)) {
+				sum += Math.log(player.getGlobalStats().getAFAmount(memory));
+				++n;
+			}
 		}
-		return (float) (sum/(activePlayers.size()-1));
+		return (float) (sum/n);
 	}
 
 	protected float getAverageWtSD(PlayerData p, int memory) {
+		List<PlayerData> opponents = activePlayers.size()>1? activePlayers:allinPlayers; 
 		double sum = 0;
-		for (PlayerData player : activePlayers) {
-			if(!p.equals(player)) sum += player.getWtSD(memory);
+		int n = 0;
+		for (PlayerData player : opponents) {
+			if(!p.equals(player)) {
+				sum += player.getWtSD(memory);
+				++n;
+			}
 		}
-		return (float) (sum/(activePlayers.size()-1));
+		return (float) (sum/n);
 	}
 
 	public String getRound() {
@@ -564,7 +582,7 @@ public class Propositionalizer implements Cloneable {
 	public boolean inRiverRound() {
 		return "river".equals(round);
 	}
-	
+
 	protected void logBet(PlayerData p){
 		// no op
 	}
@@ -588,15 +606,15 @@ public class Propositionalizer implements Cloneable {
 	protected void logShowdown(PlayerData p, float[] partitionDistr, int average, int minrank, int maxrank, int avgrank, int sigmarank) {
 		// no op
 	}
-	
+
 	public float rel(float up, float down) {
 		if(down==0) return 0;
 		return up/down;
 	}
-	
+
 	public float rel(double up, double down) {
 		if(down==0) return 0;
 		return (float) (up/down);
 	}
-	
+
 }

@@ -67,6 +67,10 @@ public class WekaRegressionModel extends WekaModel {
 				prediction = postBetModel.classifyInstance(instance);
 			}
 			double prob = Math.min(1,Math.max(0, prediction));
+
+			if(Double.isNaN(prob) || Double.isInfinite(prob)){
+				throw new IllegalStateException("Bad probability:"+prob);
+			}
 			Pair<Double, Double> result = new Pair<Double, Double>(1-prob,prob);
 			if(logger.isTraceEnabled()){
 				if(Round.PREFLOP.equals(gameState.getRound())){
@@ -77,12 +81,7 @@ public class WekaRegressionModel extends WekaModel {
 			}
 			return result;
 		} catch (Exception e) {
-			if(Round.PREFLOP.equals(gameState.getRound())){
-				throw new IllegalStateException(instance.toString(), e);
-			}else{
-				throw new IllegalStateException(instance.toString(), e);
-			}
-
+			throw new IllegalStateException(instance.toString(), e);
 		}
 	}
 
@@ -90,7 +89,8 @@ public class WekaRegressionModel extends WekaModel {
 	public Triple<Double, Double, Double> getFoldCallRaiseProbabilities(
 			GameState gameState, PlayerId actor) {
 		Instance instance;
-		if(Round.PREFLOP.equals(gameState.getRound())){
+		boolean preflop = Round.PREFLOP.equals(gameState.getRound());
+		if(preflop){
 			instance = getPreFoldCallRaiseInstance(actor);
 		}else{
 			instance = getPostFoldCallRaiseInstance(actor);
@@ -98,7 +98,7 @@ public class WekaRegressionModel extends WekaModel {
 		try {
 			
 			double probFold;
-			if(Round.PREFLOP.equals(gameState.getRound())){
+			if(preflop){
 				probFold = preFoldModel.classifyInstance(instance);
 			}else{
 				probFold = postFoldModel.classifyInstance(instance);
@@ -106,7 +106,7 @@ public class WekaRegressionModel extends WekaModel {
 			probFold = Math.min(1,Math.max(0, probFold));
 			
 			double probCall;
-			if(Round.PREFLOP.equals(gameState.getRound())){
+			if(preflop){
 				probCall = preCallModel.classifyInstance(instance);
 			}else{
 				probCall = postCallModel.classifyInstance(instance);
@@ -114,7 +114,7 @@ public class WekaRegressionModel extends WekaModel {
 			probCall = Math.min(1,Math.max(0, probCall));
 			
 			double probRaise;
-			if(Round.PREFLOP.equals(gameState.getRound())){
+			if(preflop){
 				probRaise = preRaiseModel.classifyInstance(instance);
 			}else{
 				probRaise = postRaiseModel.classifyInstance(instance);
@@ -122,13 +122,12 @@ public class WekaRegressionModel extends WekaModel {
 			probRaise = Math.min(1,Math.max(0, probRaise));
 			
 			double sum = probFold + probCall + probRaise;
-			if(sum==0){
-				probFold = probCall = probRaise = 1/3;
-				sum = 1;
+			if(Double.isNaN(sum) || sum==0 || Double.isInfinite(sum)){
+				throw new IllegalStateException("Bad probabilities:"+probFold+", "+probCall+", "+probRaise);
 			}
 			Triple<Double, Double, Double> result = new Triple<Double, Double, Double>(probFold/sum,probCall/sum,probRaise/sum);
 			if(logger.isTraceEnabled()){
-				if(Round.PREFLOP.equals(gameState.getRound())){
+				if(preflop){
 					logger.trace(instance+": "+result);
 				}else{
 					logger.trace(instance+": "+result);
@@ -136,12 +135,7 @@ public class WekaRegressionModel extends WekaModel {
 			}
 			return result;
 		} catch (Exception e) {
-			if(Round.PREFLOP.equals(gameState.getRound())){
-				throw new IllegalStateException(instance.toString(), e);
-			}else{
-				throw new IllegalStateException(instance.toString(), e);
-			}
-
+			throw new IllegalStateException(instance.toString(), e);
 		}
 	}
 

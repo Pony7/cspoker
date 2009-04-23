@@ -15,7 +15,6 @@
  */
 package org.cspoker.client.bots.bot.gametree.opponentmodel.weka;
 
-import org.cspoker.client.bots.util.PropositionalDataSetGenerator;
 
 /**
  * A number of statistics about betting behavior. 
@@ -506,28 +505,6 @@ public class BetStatistics implements Cloneable {
 			throw new IllegalStateException();
 		}
 	}
-
-	protected void addBBBet(Propositionalizer p, float called, float raised) {
-			if (p.inPreFlopRound()) {
-				++nbBetsPreFlop;
-				callAmountPreFlop += called;
-				raiseAmountPreFlop += raised;
-			} else if (p.inFlopRound()) {
-				++nbBetsFlop;
-				callAmountFlop += called;
-				raiseAmountFlop += raised;
-			} else if (p.inTurnRound()) {
-				++nbBetsTurn;
-				callAmountTurn += called;
-				raiseAmountTurn += raised;
-			} else if (p.inRiverRound()) {
-				++nbBetsRiver;
-				callAmountRiver += called;
-				raiseAmountRiver += raised;
-			} else {
-				throw new IllegalStateException();
-			}
-		}
 
 	public int getNbRoundActions(Propositionalizer p) {
 		if (p.inPreFlopRound()) {

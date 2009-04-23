@@ -142,10 +142,12 @@ public class PlayerData implements Cloneable{
 	}
 
 	public void signalBet(Propositionalizer p, float amount) {
-		bet = amount;
+		bet += amount;
 		stack -= amount;
 		comitted = true;
 		lastActionWasRaise = true;
+		updateVPIP(p);
+		updatePFR(p); //before gameStats
 		gameStats.addBet(p,amount);
 		globalStats.addBet(p, amount);
 	}
@@ -154,18 +156,6 @@ public class PlayerData implements Cloneable{
 		lastActionWasRaise = false;
 		gameStats.addCheck(p);
 		globalStats.addCheck(p);
-	}
-
-	public void signalBBBet(Propositionalizer p,
-			float raiseAmount, float movedAmount) {
-		bet += movedAmount;
-		stack -= movedAmount;
-		lastActionWasRaise = true;
-		updateVPIP(p);
-		updatePFR(p);
-		comitted = true;
-		gameStats.addBBBet(p,(movedAmount-raiseAmount),raiseAmount);
-		globalStats.addBBBet(p,(movedAmount-raiseAmount),raiseAmount);
 	}
 
 	public void signalRaise(Propositionalizer p,

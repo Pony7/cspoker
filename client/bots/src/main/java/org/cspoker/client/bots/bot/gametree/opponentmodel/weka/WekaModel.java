@@ -29,7 +29,7 @@ import weka.core.converters.ConverterUtils.DataSource;
 
 public abstract class WekaModel implements OpponentModel{
 
-	protected static final Logger logger = Logger.getLogger(WekaModel.class);
+	protected static final Logger logger = Logger.getLogger(WekaRegressionModel.class);
 	protected final PlayerTrackingVisitor visitor;
 	
 	protected final Instances preFoldCallRaiseDataSet;

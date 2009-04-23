@@ -15,7 +15,6 @@
  */
 package org.cspoker.client.bots.bot.gametree.search.expander;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -29,10 +28,12 @@ import org.cspoker.client.bots.bot.gametree.opponentmodel.OpponentModel;
 import org.cspoker.client.bots.bot.gametree.search.InnerGameTreeNode;
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.common.elements.player.PlayerId;
+import org.cspoker.common.elements.table.Round;
 import org.cspoker.common.util.Pair;
 import org.cspoker.common.util.Triple;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 
 public class Expander {
 
@@ -52,11 +53,16 @@ public class Expander {
 	}
 
 	public ImmutableList<ProbabilityAction> getProbabilityActions() {
-		List<ProbabilityAction> actions = new ArrayList<ProbabilityAction>(2+nbBetSizeSamples);
+		List<ProbabilityAction> actions = Lists.newArrayListWithExpectedSize(2+nbBetSizeSamples);
 		double totalProbability = 0;
-		if (gameState.hasBet()) {
+		if (gameState.hasBet() 
+				//case if big blind can check/bet in stead of fold/call/raise
+				&& !(Round.PREFLOP.equals(gameState.getRound()) 
+						&& gameState.getPlayer(actor).isBigBlind() 
+						&& gameState.getDeficit(actor)<=0)) {
 			// call, raise or fold
-			Triple<Double, Double, Double> probabilities = model.getFoldCallRaiseProbabilities(gameState, actor);
+			Triple<Double, Double, Double> probabilities;
+			probabilities = model.getFoldCallRaiseProbabilities(gameState, actor);
 
 			double foldProbability = probabilities.getLeft();
 			totalProbability += foldProbability;
@@ -82,7 +88,7 @@ public class Expander {
 							actor, upperRaiseBound), raiseProbability
 							/ n));
 					totalProbability += raiseProbability / n;
-					double[] betSizeSamples = getLogarithmicSamples(n - 2);
+					double[] betSizeSamples = getLinearSamples(n - 2);
 					for (double betSizeSample : betSizeSamples) {
 						RaiseAction raiseAction = new RaiseAction(gameState,
 								actor,
@@ -113,10 +119,10 @@ public class Expander {
 				if (n > 1) {
 					actions.add(new ProbabilityAction(new BetAction(gameState, actor, upperRaiseBound), betProbability / n));
 					totalProbability += betProbability / n;
-					double[] betSizeSamples = getLogarithmicSamples(n - 2);
+					double[] betSizeSamples = getLinearSamples(n - 2);
 					for (double betSizeSample : betSizeSamples) {
 						BetAction betAction = new BetAction(gameState, actor, (int) Math.round(lowerRaiseBound + betSizeSample
-										* (upperRaiseBound - lowerRaiseBound)));
+								* (upperRaiseBound - lowerRaiseBound)));
 						actions.add(new ProbabilityAction(betAction,
 								betProbability / n));
 						totalProbability += betProbability / n;
@@ -131,6 +137,15 @@ public class Expander {
 					/ totalProbability));
 		}
 		return normalizedActionsBuilder.build();
+	}
+
+	public static double[] getLinearSamples(int n) {
+		double[] samples = new double[n];
+		samples[0] = r.nextDouble() / n;
+		for (int i = 1; i < samples.length; i++) {
+			samples[i] = samples[i-1]+1.0/n;
+		}
+		return samples;
 	}
 
 	public static double[] getLogarithmicSamples(int n) {
