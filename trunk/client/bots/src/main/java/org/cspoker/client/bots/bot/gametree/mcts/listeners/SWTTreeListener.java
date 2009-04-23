@@ -89,9 +89,6 @@ public class SWTTreeListener implements MCTSListener {
 		display.syncExec(new Runnable(){
 			@Override
 			public void run() {
-				if(previous==null){
-					System.out.println("a");
-				}
 				TreeItem newItem = previous==null? new TreeItem(tree, SWT.NONE):new TreeItem(previous, SWT.NONE);
 				holder.item = newItem;
 				newItem.setText(new String[] { actor,
@@ -125,8 +122,8 @@ public class SWTTreeListener implements MCTSListener {
 			final int min = snode.stackSize;
 			int potsize = snode.rollout.gamePotSize;
 			final int max = min+potsize;
-			final double losePercentage = (snode.getAverage()-min)/potsize;
-			final double winPercentage = 1-losePercentage;
+			final double winPercentage = (snode.getAverage()-min)/potsize;
+			final double losePercentage = 1-winPercentage;
 			display.syncExec(new Runnable(){
 				@Override
 				public void run() {
@@ -191,7 +188,7 @@ public class SWTTreeListener implements MCTSListener {
 
 					column = new TreeColumn(tree, SWT.CENTER);
 					column.setText("Action");
-					column.setWidth(120);
+					column.setWidth(140);
 
 					column = new TreeColumn(tree, SWT.CENTER);
 					column.setText("Round");

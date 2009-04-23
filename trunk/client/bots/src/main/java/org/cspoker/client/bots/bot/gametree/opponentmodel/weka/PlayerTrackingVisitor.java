@@ -49,7 +49,7 @@ public class PlayerTrackingVisitor implements GameStateVisitor, Cloneable {
 	private GameState previousStartState;
 	private Propositionalizer propz = new Propositionalizer();
 
-	private int bb;
+	private float bb;
 	
 	public void readHistory(GameState gameState) {
 		gameState.acceptHistoryVisitor(this, previousStartState);
@@ -77,12 +77,12 @@ public class PlayerTrackingVisitor implements GameStateVisitor, Cloneable {
 	
 	@Override
 	public void visitAllInState(AllInState allInState) {
-		propz.signalAllIn(allInState.getEvent().getPlayerId(), allInState.getEvent().getAmount());
+		propz.signalAllIn(allInState.getEvent().getPlayerId(), allInState.getEvent().getAmount()/bb);
 	}
 
 	@Override
 	public void visitBetState(BetState betState) {
-		propz.signalBet(false, betState.getLastEvent().getPlayerId(), betState.getLargestBet());
+		propz.signalBet(false, betState.getLastEvent().getPlayerId(), betState.getEvent().getAmount()/bb);
 	}
 
 	@Override
@@ -136,7 +136,7 @@ public class PlayerTrackingVisitor implements GameStateVisitor, Cloneable {
 		bb = newDealState.getTableConfiguration().getBigBlind();
 		propz.signalNewGame();
 		for(PlayerState player: newDealState.getAllSeatedPlayers()){
-			propz.signalSeatedPlayer(player.getStack(), player.getPlayerId());
+			propz.signalSeatedPlayer(player.getStack()/bb, player.getPlayerId());
 		}
 	}
 
@@ -163,7 +163,7 @@ public class PlayerTrackingVisitor implements GameStateVisitor, Cloneable {
 
 	@Override
 	public void visitRaiseState(RaiseState raiseState) {
-		propz.signalRaise(raiseState.getLastEvent().getPlayerId(), false, raiseState.getLargestBet());
+		propz.signalRaise(raiseState.getLastEvent().getPlayerId(), false, raiseState.getLargestBet()/bb);
 	}
 
 	@Override

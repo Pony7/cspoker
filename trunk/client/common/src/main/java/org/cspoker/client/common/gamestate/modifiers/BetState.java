@@ -15,6 +15,7 @@
  */
 package org.cspoker.client.common.gamestate.modifiers;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -24,68 +25,85 @@ import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.client.common.gamestate.GameStateVisitor;
 import org.cspoker.client.common.gamestate.PlayerState;
 import org.cspoker.common.api.lobby.holdemtable.event.BetEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.HoldemTableEvent;
 import org.cspoker.common.elements.player.PlayerId;
+import org.cspoker.common.elements.table.Round;
 
 public class BetState
-		extends ForwardingGameState {
-	
+extends ForwardingGameState {
+
 	private final BetEvent event;
-	
+
 	private final int newPotSize;
-	
+
 	private final PlayerState playerState;
-	
-	public BetState(GameState gameState, BetEvent event) {
+
+	private final boolean bigBlindNoRaiseCase;
+
+	public BetState(final GameState gameState, final BetEvent event) {
 		super(gameState);
 		this.event = event;
-		
+
 		PlayerState oldPlayerState = super.getPlayer(event.getPlayerId());
-		
+
+		bigBlindNoRaiseCase = Round.PREFLOP.equals(gameState.getRound()) 
+		&& oldPlayerState.isBigBlind() && gameState.getDeficit(event.getPlayerId())<=0;
+
 		final int newStack = oldPlayerState.getStack() - event.getAmount();
 		this.newPotSize = super.getRoundPotSize() + event.getAmount();
 		this.playerState = new ForwardingPlayerState(oldPlayerState) {
-			
+
 			@Override
 			public int getStack() {
 				return newStack;
 			}
-			
+
 			@Override
 			public int getBet() {
+				if(bigBlindNoRaiseCase){
+					return super.getBet()+BetState.this.event.getAmount();
+				}
 				return BetState.this.event.getAmount();
 			}
-			
+
 			@Override
 			public int getTotalInvestment() {
 				return super.getTotalInvestment()+getBet();
 			}
-			
+
 			@Override
 			public PlayerId getPlayerId() {
 				return BetState.this.event.getPlayerId();
 			}
-			
+
 			@Override
 			public boolean hasFolded() {
 				return false;
 			}
-			
+
 			/**
 			 * {@inheritDoc}
 			 */
-			@Override
-			public List<Integer> getBetProgression() {
-				return Collections.singletonList(getBet());
-			}
-			
-			@Override
-			public boolean hasChecked() {
-				return false;
-			}
+			 @Override
+			 public List<Integer> getBetProgression() {
+				 if(bigBlindNoRaiseCase){
+					 List<Integer> result = new ArrayList<Integer>();
+					 PlayerId lastBettorId = gameState.getLastBettor();
+					 PlayerState lastBettor = gameState.getPlayer(lastBettorId);
+					 List<Integer> previousBetProgression = lastBettor.getBetProgression();
+					 result.addAll(previousBetProgression);
+					 result.add(event.getAmount());
+					 return Collections.unmodifiableList(result);
+				 }
+				 return Collections.singletonList(getBet());
+			 }
+
+			 @Override
+			 public boolean hasChecked() {
+				 return false;
+			 }
 		};
 	}
-	
+
 	@Override
 	public PlayerState getPlayer(PlayerId playerId) {
 		if (event.getPlayerId().equals(playerId)) {
@@ -93,43 +111,46 @@ public class BetState
 		}
 		return super.getPlayer(playerId);
 	}
-	
+
 	@Override
 	public int getLargestBet() {
+		if(bigBlindNoRaiseCase){
+			return super.getLargestBet()+event.getAmount();
+		}
 		return event.getAmount();
 	}
-	
+
 	@Override
 	public int getMinNextRaise() {
 		return event.getAmount();
 	}
-	
+
 	@Override
 	public int getRoundPotSize() {
 		return newPotSize;
 	}
-	
+
 	public BetEvent getLastEvent() {
 		return event;
 	}
-	
+
 	@Override
 	public PlayerId getLastBettor() {
 		return event.getPlayerId();
 	}
-	
+
 	@Override
 	public int getNbRaises() {
 		return 1;
 	}
-	
+
 	@Override
 	public void acceptVisitor(GameStateVisitor visitor) {
 		visitor.visitBetState(this);
 	}
-	
+
 	public BetEvent getEvent() {
 		return event;
 	}
-	
+
 }

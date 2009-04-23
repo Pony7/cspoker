@@ -930,7 +930,7 @@ public class PropositionalDataSetGenerator extends Propositionalizer {
 					}
 					float maxBetParsed = Float.parseFloat(line.substring(line.indexOf("$") + 1,
 							allinIndex).replaceAll(",", ""));
-
+					//cannot be bet by big blind, is raise in dataset
 					signalBet(isAllIn, id, maxBetParsed/bb);
 				} else if (line.contains(" shows [")){
 					int showsIndex = line

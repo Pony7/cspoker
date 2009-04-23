@@ -22,7 +22,6 @@ import org.cspoker.client.bots.bot.gametree.action.DefaultWinnerException;
 import org.cspoker.client.bots.bot.gametree.action.GameEndedException;
 import org.cspoker.client.bots.bot.gametree.action.ProbabilityAction;
 import org.cspoker.client.bots.bot.gametree.action.SearchBotAction;
-import org.cspoker.client.bots.bot.gametree.mcts.listeners.MCTSListener;
 import org.cspoker.client.bots.bot.gametree.mcts.strategies.SelectionStrategy;
 import org.cspoker.client.bots.bot.gametree.opponentmodel.OpponentModel;
 import org.cspoker.client.bots.bot.gametree.search.expander.Expander;
@@ -71,12 +70,13 @@ public abstract class InnerNode extends AbstractNode {
 	}
 
 	public double simulate(){
-		if(children==null){
+		boolean needsChildExpansion = (children==null);
+		if(needsChildExpansion){
 			model.assumeTemporarily(gameState);
 			expandChildren();
 		}
 		double result = getRandomChild().simulate();
-		if(children==null){
+		if(needsChildExpansion){
 			model.forgetLastAssumption();
 		}
 		return result;
