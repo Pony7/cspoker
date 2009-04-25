@@ -277,7 +277,7 @@ public abstract class BettingRound
 		gameMediator.publishAllInEvent(new AllInEvent(player.getId(), amount, isRoundEnded()));
 		
 		// TODO put amount of raise
-		BettingRound.logger.info(player.getName() + ": "+"goes is all-in with $"+player.getMemento().getBetChipsValue());
+		BettingRound.logger.info(player.getName() + ": "+"goes all-in with $"+player.getMemento().getBetChipsValue());
 	}
 	
 	/**

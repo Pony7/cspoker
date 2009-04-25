@@ -63,7 +63,7 @@ public class BotActionNode extends ActionNode {
 	public Triple<ActionWrapper,GameTreeNode,Distribution> getBestEvaluatedAction(double lowerBound) {
 		if(best==null){
 			double maxEv = Double.NEGATIVE_INFINITY;
-			config.getOpponentModeler().assumeTemporarily(gameState);
+			config.getOpponentModel().assumeTemporarily(gameState);
 			List<Pair<ActionWrapper,GameTreeNode>> children = getExpander().getChildren(config.isUniformBotActionTokens());
 			for (int i=0;i<children.size();i++) {
 				Pair<ActionWrapper,GameTreeNode> pair = children.get(i);
@@ -98,7 +98,7 @@ public class BotActionNode extends ActionNode {
 			if(best==null){
 				throw new IllegalStateException();
 			}
-			config.getOpponentModeler().forgetLastAssumption();
+			config.getOpponentModel().forgetLastAssumption();
 		}
 		return best;
 	}

@@ -58,9 +58,6 @@ public class HistogramModel implements OpponentModel,
 	private volatile Round round;
 	private volatile boolean started = false;
 
-	public HistogramModel(PlayerId botId) {
-	}
-
 	@Override
 	public Pair<Double, Double> getCheckBetProbabilities(GameState gameState,
 			PlayerId actor) {
@@ -75,6 +72,13 @@ public class HistogramModel implements OpponentModel,
 				.getFoldCallRaiseProbabilities(gameState, actor);
 	}
 
+	@Override
+	public double[] getShowdownProbabilities(GameState gameState,
+			PlayerId actor, int minrank, int maxrank, int avgrank, int sigmarank, double[] weights)
+			throws UnsupportedOperationException {
+		throw new UnsupportedOperationException();
+	}
+	
 	public PlayerRoundHistogram getModelFor(PlayerId opponentId, Round round) {
 		Pair<PlayerId, Round> key = new Pair<PlayerId, Round>(opponentId, round);
 		if (!opponentModels.containsKey(key)) {

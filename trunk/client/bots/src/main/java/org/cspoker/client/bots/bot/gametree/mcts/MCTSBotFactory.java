@@ -16,29 +16,21 @@
  */
 package org.cspoker.client.bots.bot.gametree.mcts;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 
 import org.cspoker.client.bots.bot.Bot;
 import org.cspoker.client.bots.bot.BotFactory;
 import org.cspoker.client.bots.bot.gametree.mcts.listeners.MCTSListener;
-import org.cspoker.client.bots.bot.gametree.mcts.strategies.SampleProportionateSelector;
-import org.cspoker.client.bots.bot.gametree.mcts.strategies.SamplingToFunctionSelector;
+import org.cspoker.client.bots.bot.gametree.mcts.nodes.Config;
+import org.cspoker.client.bots.bot.gametree.mcts.nodes.ShowdownNode;
 import org.cspoker.client.bots.bot.gametree.mcts.strategies.SelectionStrategy;
-import org.cspoker.client.bots.bot.gametree.mcts.strategies.UCTSelector;
 import org.cspoker.client.bots.bot.gametree.opponentmodel.OpponentModel;
-import org.cspoker.client.bots.bot.gametree.opponentmodel.weka.WekaRegressionModel;
 import org.cspoker.client.bots.listener.BotListener;
 import org.cspoker.client.common.SmartLobbyContext;
 import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.elements.table.TableId;
 import org.cspoker.common.handeval.spears2p2.StateTableEvaluator;
-
-import weka.classifiers.Classifier;
 
 public class MCTSBotFactory implements BotFactory {
 
@@ -47,10 +39,23 @@ public class MCTSBotFactory implements BotFactory {
 
 	private final ConcurrentHashMap<PlayerId, OpponentModel> opponentModels = new ConcurrentHashMap<PlayerId, OpponentModel>();
 	private final MCTSListener.Factory[] listeners;
+	private final OpponentModel.Factory opponentModelFactory;
+	private final SelectionStrategy selectionStrategy;
+	private final SelectionStrategy moveSelectionStrategy;
+	private final ShowdownNode.Factory showdownNodeFactory;
 
-	public MCTSBotFactory(MCTSListener.Factory... listeners) {
+	public MCTSBotFactory(
+			OpponentModel.Factory opponentModelFactory, 
+			SelectionStrategy selectionStrategy,
+			SelectionStrategy moveSelectionStrategy,
+			ShowdownNode.Factory showdownNodeFactory,
+			MCTSListener.Factory... listeners) {
 		copy = ++copies;
 		this.listeners = listeners;
+		this.opponentModelFactory = opponentModelFactory;
+		this.selectionStrategy=selectionStrategy;
+		this.moveSelectionStrategy = moveSelectionStrategy;
+		this.showdownNodeFactory = showdownNodeFactory;
 		StateTableEvaluator.getInstance();
 	}
 
@@ -58,48 +63,14 @@ public class MCTSBotFactory implements BotFactory {
 			SmartLobbyContext lobby, int buyIn, ExecutorService executor,
 			BotListener... botListeners) {
 		copies++;
-		if (opponentModels.get(botId) == null) {
-			File modelDir = new File("/home/guy/Werk/thesis/weka-3-6-0/model1/");
-			Classifier preBetModel, preFoldModel, preCallModel, preRaiseModel, postBetModel, postFoldModel, postCallModel, postRaiseModel;
-			try {
-				ObjectInputStream in = new ObjectInputStream(new FileInputStream(new File(modelDir,"preBet.model")));
-				preBetModel = (Classifier)in.readObject();
-				in.close();
-				in = new ObjectInputStream(new FileInputStream(new File(modelDir,"preFold.model")));
-				preFoldModel = (Classifier)in.readObject();
-				in.close();
-				in = new ObjectInputStream(new FileInputStream(new File(modelDir,"preCall.model")));
-				preCallModel = (Classifier)in.readObject();
-				in.close();
-				in = new ObjectInputStream(new FileInputStream(new File(modelDir,"preRaise.model")));
-				preRaiseModel = (Classifier)in.readObject();
-				in.close();
-				in = new ObjectInputStream(new FileInputStream(new File(modelDir,"postBet.model")));
-				postBetModel = (Classifier)in.readObject();
-				in.close();
-				in = new ObjectInputStream(new FileInputStream(new File(modelDir,"postFold.model")));
-				postFoldModel = (Classifier)in.readObject();
-				in.close();
-				in = new ObjectInputStream(new FileInputStream(new File(modelDir,"postCall.model")));
-				postCallModel = (Classifier)in.readObject();
-				in.close();
-				in = new ObjectInputStream(new FileInputStream(new File(modelDir,"postRaise.model")));
-				postRaiseModel = (Classifier)in.readObject();
-				in.close();
-				WekaRegressionModel model = new WekaRegressionModel(preBetModel, preFoldModel, preCallModel, preRaiseModel, postBetModel, postFoldModel, postCallModel, postRaiseModel);
-				opponentModels.put(botId, model);
-			} catch (IOException e) {
-				throw new IllegalStateException(e);
-			} catch (ClassNotFoundException e) {
-				throw new IllegalStateException(e);
-			}
+		OpponentModel opponentModel = opponentModels.get(botId);
+		if(opponentModel==null){
+			opponentModel = opponentModelFactory.create();
+			opponentModels.put(botId, opponentModel);
 		}
-		SelectionStrategy selectionStrategy = new SamplingToFunctionSelector(new UCTSelector(40000));
-		SelectionStrategy moveSelectionStrategy = new SampleProportionateSelector();
+		Config config = new Config(opponentModel, showdownNodeFactory, selectionStrategy, moveSelectionStrategy);
 		return new MCTSBot(botId, tableId, lobby, executor, buyIn,
-				opponentModels.get(botId),
-				selectionStrategy,
-				moveSelectionStrategy,
+				config,
 				listeners,
 				botListeners);
 	}

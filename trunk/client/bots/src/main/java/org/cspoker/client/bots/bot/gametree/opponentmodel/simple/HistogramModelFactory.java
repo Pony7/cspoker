@@ -13,25 +13,16 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.client.bots.bot.gametree.mcts.nodes;
+package org.cspoker.client.bots.bot.gametree.opponentmodel.simple;
 
-import org.cspoker.client.bots.bot.gametree.action.ProbabilityAction;
-import org.cspoker.client.bots.bot.gametree.mcts.strategies.SelectionStrategy;
+import org.cspoker.client.bots.bot.gametree.opponentmodel.OpponentModel;
+import org.cspoker.common.elements.player.PlayerId;
 
-public abstract class LeafNode extends AbstractNode {
-
-	public LeafNode(InnerNode parent, ProbabilityAction probAction) {
-		super(parent, probAction);
-	}
+public class HistogramModelFactory implements OpponentModel.Factory{
 
 	@Override
-	public INode selectRecursively(SelectionStrategy strategy) {
-		return this;
+	public OpponentModel create() {
+		return new HistogramModel();
 	}
-	
-	@Override
-	public final void expand() {
-		// no op
-	}
-	
+
 }

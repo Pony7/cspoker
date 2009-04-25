@@ -67,7 +67,7 @@ extends ForwardingGameState {
 
 			@Override
 			public int getTotalInvestment() {
-				return super.getTotalInvestment()+getBet();
+				return super.getTotalInvestment()+BetState.this.event.getAmount();
 			}
 
 			@Override

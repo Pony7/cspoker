@@ -78,6 +78,13 @@ public abstract class AbstractPrologModel implements OpponentModel {
 	}
 
 	@Override
+	public double[] getShowdownProbabilities(GameState gameState,
+			PlayerId actor, int minrank, int maxrank, int avgrank, int sigmarank, double[] weights)
+			throws UnsupportedOperationException {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
 	public void assumePermanently(GameState gameState) {
 		if (logger.isDebugEnabled()) {
 			logger.debug("Signalling " + gameState);

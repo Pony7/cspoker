@@ -21,7 +21,7 @@ public class RunLocalBot {
 
 	public static void main(String[] args) {
 
-		new BotRunner(new EmbeddedCSPokerServer());
+		BotRunner.create(new EmbeddedCSPokerServer());
 
 	}
 

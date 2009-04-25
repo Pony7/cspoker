@@ -12,6 +12,7 @@ package org.cspoker.client.bots;
  * 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
+import java.io.IOException;
 import java.rmi.RemoteException;
 
 import javax.security.auth.login.LoginException;
@@ -22,6 +23,11 @@ import org.cspoker.client.bots.bot.Bot;
 import org.cspoker.client.bots.bot.BotFactory;
 import org.cspoker.client.bots.bot.gametree.mcts.MCTSBotFactory;
 import org.cspoker.client.bots.bot.gametree.mcts.listeners.SWTTreeListener;
+import org.cspoker.client.bots.bot.gametree.mcts.nodes.MCTSBucketShowdownNode;
+import org.cspoker.client.bots.bot.gametree.mcts.strategies.SampleProportionateSelector;
+import org.cspoker.client.bots.bot.gametree.mcts.strategies.SamplingToFunctionSelector;
+import org.cspoker.client.bots.bot.gametree.mcts.strategies.UCTSelector;
+import org.cspoker.client.bots.bot.gametree.opponentmodel.weka.WekaRegressionModelFactory;
 import org.cspoker.client.bots.bot.gametree.search.nodevisitor.StatisticsVisitor;
 import org.cspoker.client.bots.listener.DefaultBotListener;
 import org.cspoker.client.common.SmartClientContext;
@@ -83,7 +89,7 @@ public class RunHumanVsBot {
 		client.getGui().setLobby(lobby);
 
 		TableConfiguration tConfig = new TableConfiguration(smallBet, delay,
-				false, true);
+				false, false);
 		lobby.getContext().createHoldemTable(u.getUserName() + "'s test table",
 				tConfig);
 		// Run blocking calls in extra thread
@@ -105,12 +111,35 @@ public class RunHumanVsBot {
 			}
 		});
 		stats = new StatisticsVisitor.Factory();
-		//		BotFactory botFactory = new SearchBotFactory(
-		//				new ShowdownRolloutNode.Factory(new DistributionRollout4.Factory()),
-		//				new Log4JOutputVisitor.Factory(2), new SWTTreeVisitor.Factory(client.getGui().getDisplay()), stats
-		//				);
+		
+		BotFactory botFactory;
+		try {
+//			botFactory = new SearchBotFactory(
+//					new WekaRegressionModelFactory("/home/guy/Werk/thesis/weka-3-6-0/model1"),
+//					new ShowdownRolloutNode.Factory(new DistributionRollout4.Factory()),
+//					new Log4JOutputVisitor.Factory(2), new SWTTreeVisitor.Factory(client.getGui().getDisplay()), stats
+//					);
+			
+//			botFactory = new SearchBotFactory(
+//					new WekaRegressionModelFactory("/home/guy/Werk/thesis/weka-3-6-0/model1"),
+//					new ShowdownBucketRolloutNode.Factory(),
+//					new Log4JOutputVisitor.Factory(2), new SWTTreeVisitor.Factory(client.getGui().getDisplay()), stats
+//					);
+				
 
-		BotFactory botFactory = new MCTSBotFactory(new SWTTreeListener.Factory(client.getGui().getDisplay()));
+//			botFactory = new MCTSBotFactory(
+//					new WekaRegressionModelFactory("/home/guy/Werk/thesis/weka-3-6-0/model1"),
+//					new SamplingToFunctionSelector(new UCTSelector(40000)),
+//					new SampleProportionateSelector(),
+//					new MCTSShowdownRollOutNode.Factory(),
+//					new SWTTreeListener.Factory(client.getGui().getDisplay()));
+//			
+			botFactory = new MCTSBotFactory(
+					new WekaRegressionModelFactory("/home/guy/Werk/thesis/weka-3-6-0/model1"),
+					new SamplingToFunctionSelector(new UCTSelector(40000)),
+					new SampleProportionateSelector(),
+					new MCTSBucketShowdownNode.Factory(),
+					new SWTTreeListener.Factory(client.getGui().getDisplay()));
 
 //				BotFactory botFactory = new WekaRegressionBotFactory(
 //						new ShowdownRolloutNode.Factory(new DistributionRollout4.Factory()),
@@ -123,6 +152,11 @@ public class RunHumanVsBot {
 		// new Log4JOutputVisitor.Factory(2), new
 		// SWTTreeVisitor.Factory(client.getGui().getDisplay()));
 
+		} catch (IOException e) {
+			throw new IllegalStateException(e);
+		} catch (ClassNotFoundException e) {
+			throw new IllegalStateException(e);
+		}
 		startBot(botFactory, tableId, buyin);
 
 		// Listen to events#

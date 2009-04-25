@@ -15,22 +15,39 @@
  */
 package org.cspoker.client.bots.bot.gametree.mcts.nodes;
 
-import org.cspoker.client.bots.bot.gametree.action.ProbabilityAction;
+import org.cspoker.client.bots.bot.gametree.mcts.nodes.ShowdownNode.Factory;
 import org.cspoker.client.bots.bot.gametree.mcts.strategies.SelectionStrategy;
 import org.cspoker.client.bots.bot.gametree.opponentmodel.OpponentModel;
-import org.cspoker.client.common.gamestate.GameState;
-import org.cspoker.common.elements.player.PlayerId;
 
-public class OpponentNode extends InnerNode{
+public class Config {
 
-	public OpponentNode(InnerNode parent, ProbabilityAction probAction,
-			GameState gameState, PlayerId bot, Config config) {
-		super(parent, probAction, gameState, bot, config);
+	private final Factory showdownNodeFactory;
+	private final OpponentModel model;
+	private final SelectionStrategy selectionStrategy;
+	private final SelectionStrategy moveSelectionStrategy;
+
+	public Config(OpponentModel model, ShowdownNode.Factory showdownNodeFactory, 
+			SelectionStrategy selectionStrategy, SelectionStrategy moveSelectionStrategy) {
+		this.model = model;
+		this.showdownNodeFactory = showdownNodeFactory;
+		this.selectionStrategy=selectionStrategy;
+		this.moveSelectionStrategy=moveSelectionStrategy;
 	}
-
-	@Override
-	public INode selectChild(SelectionStrategy strategy) {
-		return getRandomChild();
-	}	
+	
+	public OpponentModel getModel() {
+		return model;
+	}
+	
+	public Factory getShowdownNodeFactory() {
+		return showdownNodeFactory;
+	}
+	
+	public SelectionStrategy getMoveSelectionStrategy() {
+		return moveSelectionStrategy;
+	}
+	
+	public SelectionStrategy getSelectionStrategy() {
+		return selectionStrategy;
+	}
 	
 }

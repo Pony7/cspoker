@@ -110,7 +110,7 @@ public abstract class ActionNode implements InnerGameTreeNode {
 		for (NodeVisitor visitor : visitors) {
 			visitor.callOpponentModel();
 		}
-		return config.getOpponentModeler().getFoldCallRaiseProbabilities(
+		return config.getOpponentModel().getFoldCallRaiseProbabilities(
 				gameState, playerId);
 	}
 
@@ -119,7 +119,7 @@ public abstract class ActionNode implements InnerGameTreeNode {
 		for (NodeVisitor visitor : visitors) {
 			visitor.callOpponentModel();
 		}
-		return config.getOpponentModeler().getCheckBetProbabilities(gameState,
+		return config.getOpponentModel().getCheckBetProbabilities(gameState,
 				playerId);
 	}
 
@@ -134,7 +134,7 @@ public abstract class ActionNode implements InnerGameTreeNode {
 
 	@Override
 	public OpponentModel getOpponentModel() {
-		return config.getOpponentModeler();
+		return config.getOpponentModel();
 	}
 
 	@Override

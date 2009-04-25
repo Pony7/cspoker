@@ -237,7 +237,6 @@ public class Propositionalizer implements Cloneable {
 			int minSampleRank = Integer.MAX_VALUE;
 			int maxSampleRank = Integer.MIN_VALUE;
 			int sum = 0;
-			int n = 99;
 
 			int startRank = 53;
 			for (Card card:cards) {
@@ -251,22 +250,23 @@ public class Propositionalizer implements Cloneable {
 			int realType = (realRank >>> 12) - 1;
 			realRank = realRank & 0xFFF;
 			realRank = offsets[realType] + realRank - 1;
-			ranks.add(realRank);
 
-			//take 99 more rank samples
+			//take 100 rank samples
+			int n = 100;
 			for(int i=0;i<n;i++){
-				EnumSet<Card> sample = EnumSet.copyOf(cards);
+				
 				int rank = startRank;
-				Card sampleCard;
+				Card sampleCard1;
 				do{
-					sampleCard = Card.values()[random.nextInt(Card.values().length)];
-				}while(sample.contains(sampleCard));
-				sample.add(sampleCard);
-				rank = handRanks[sampleCard.ordinal() + 1 + rank];do{
-					sampleCard = Card.values()[random.nextInt(Card.values().length)];
-				}while(sample.contains(sampleCard));
-				sample.add(sampleCard);
-				rank = handRanks[sampleCard.ordinal() + 1 + rank];
+					sampleCard1 = Card.values()[random.nextInt(Card.values().length)];
+				}while(cards.contains(sampleCard1));
+				rank = handRanks[sampleCard1.ordinal() + 1 + rank];
+				
+				Card sampleCard2;
+				do{
+					sampleCard2 = Card.values()[random.nextInt(Card.values().length)];
+				}while(cards.contains(sampleCard2) || sampleCard2.equals(sampleCard1));
+				rank = handRanks[sampleCard2.ordinal() + 1 + rank];
 
 				int type = (rank >>> 12) - 1;
 				rank = rank & 0xFFF;
@@ -291,24 +291,43 @@ public class Propositionalizer implements Cloneable {
 			var /= (n-1);
 			int averageSampleRank = (int) Math.round(mean);
 			int sigmaSampleRank = (int) Math.round(Math.sqrt(var));
-			int[] partitionCounts = new int[10];
+			int[] bucketCounts = new int[10];
 			Iterator<Integer> iter = ranks.iterator();
-			for(int partition=0;partition<10;partition++){
-				for (int i = 0; i < 10; i++) {
-					int rank = iter.next();
-					if(rank==realRank){
-						++partitionCounts[partition];
+			float realRankCount = ranks.count(realRank);
+			int avgBucket = -1;
+			float[] bucketDistr = new float[10];
+			if(realRankCount>0){
+				for(int bucket=0;bucket<10;bucket++){
+					for (int i = 0; i < 10; i++) {
+						int rank = iter.next();
+						if(rank==realRank){
+							++bucketCounts[bucket];
+						}
 					}
 				}
+				int partitionSum = 0;
+				for (int i = 0; i < 10; i++) {
+					bucketDistr[i] = bucketCounts[i]/realRankCount;
+					partitionSum += bucketCounts[i]*i;
+				}
+				avgBucket = Math.round(partitionSum/realRankCount);
+			}else{
+				boolean found = false;
+				findPartition: for (int i = 9; i < 90; i+=10) {
+					int rank = iter.next();
+					if(rank>realRank){
+						bucketCounts[i%10]=1;
+						avgBucket = i%10;
+						found = true;
+						break findPartition;
+					}
+				}
+				if(!found){
+					bucketCounts[9]=1;
+					avgBucket = 9;
+				}
 			}
-			float[] partitionDistr = new float[10];
-			float realRankCount = ranks.count(realRank);
-			int partitionSum = 0;
-			for (int i = 0; i < 10; i++) {
-				partitionDistr[i] = partitionCounts[i]/realRankCount;
-				partitionSum += partitionCounts[i]*i;
-			}
-			logShowdown(p,partitionDistr, Math.round(partitionSum/realRankCount), minSampleRank, maxSampleRank, averageSampleRank, sigmaSampleRank);
+			logShowdown(p,bucketDistr, avgBucket, minSampleRank, maxSampleRank, averageSampleRank, sigmaSampleRank);
 		}else{
 			//everybody went all-in before the river
 		}

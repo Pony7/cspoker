@@ -15,6 +15,7 @@
  */
 package org.cspoker.client.bots;
 
+import java.io.IOException;
 import java.rmi.RemoteException;
 import java.util.concurrent.ExecutorService;
 
@@ -26,6 +27,12 @@ import org.apache.log4j.Logger;
 import org.cspoker.client.bots.bot.Bot;
 import org.cspoker.client.bots.bot.BotFactory;
 import org.cspoker.client.bots.bot.gametree.mcts.MCTSBotFactory;
+import org.cspoker.client.bots.bot.gametree.mcts.listeners.SWTTreeListener;
+import org.cspoker.client.bots.bot.gametree.mcts.nodes.MCTSBucketShowdownNode;
+import org.cspoker.client.bots.bot.gametree.mcts.strategies.SampleProportionateSelector;
+import org.cspoker.client.bots.bot.gametree.mcts.strategies.SamplingToFunctionSelector;
+import org.cspoker.client.bots.bot.gametree.mcts.strategies.UCTSelector;
+import org.cspoker.client.bots.bot.gametree.opponentmodel.weka.WekaRegressionModelFactory;
 import org.cspoker.client.bots.listener.BotListener;
 import org.cspoker.client.bots.listener.GameLimitingBotListener;
 import org.cspoker.client.bots.listener.ReSitInBotListener;
@@ -82,45 +89,61 @@ public class BotRunner implements LobbyListener {
 	private BotListener speedMonitor;
 	private volatile BotListener gameLimiter;
 
-	public BotRunner(RemoteCSPokerServer cspokerServer) {
-		this(cspokerServer,
-				new BotFactory[] {
-				// ML bots
-				//						 new RuleBasedBotFactory1(),
-				//				new RuleBasedBotFactory2(),
-				//				new SearchBotFactory(new ShowdownRolloutNode.Factory(new DistributionRollout4.Factory())),
-				new MCTSBotFactory(),
-				//				 new SearchBotFactory(new
-				//				 DistributionShowdownNode4.Factory()),
-				// new RuleBasedBotFactory1(),
-				// new RuleBasedBotFactory2(),
+	public static BotRunner create(RemoteCSPokerServer cspokerServer) {
+		try {
+			return new BotRunner(cspokerServer,
+					new BotFactory[] {
+					new MCTSBotFactory(
+							new WekaRegressionModelFactory("/home/guy/Werk/thesis/weka-3-6-0/model1"),
+							new SamplingToFunctionSelector(new UCTSelector(40000)),
+							new SampleProportionateSelector(),
+							new MCTSBucketShowdownNode.Factory()),
+					new MCTSBotFactory(
+							new WekaRegressionModelFactory("/home/guy/Werk/thesis/weka-3-6-0/model1"),
+							new SamplingToFunctionSelector(new UCTSelector(40000)),
+							new SampleProportionateSelector(),
+							new MCTSBucketShowdownNode.Factory()),
+					// ML bots
+					//						 new RuleBasedBotFactory1(),
+					//				new RuleBasedBotFactory2(),
+					//				new SearchBotFactory(new ShowdownRolloutNode.Factory(new DistributionRollout4.Factory())),
+//				new MCTSBotFactory(),
+					//				 new SearchBotFactory(new
+					//				 DistributionShowdownNode4.Factory()),
+					// new RuleBasedBotFactory1(),
+					// new RuleBasedBotFactory2(),
 
-				// new SearchBotFactory(new
-				// DistributionShowdownNode1.Factory()),
-				// new SearchBotFactory(new
-				// DistributionShowdownNode2.Factory()),
-				// new SearchBotFactory(new
-				// DistributionShowdownNode4.Factory()),
-				// new RuleBasedBotFactory(),
-				//						new PrologCafeBotFactory(
-				//								new DistributionShowdownNode4.Factory()),
-				//				new WekaClassificationBotFactory(
-				//						new DistributionShowdownNode4.Factory(),
-				//						"/home/guy/Bureaublad/weka-3-6-0/ANN-c-cb.model",
-				//						"/home/guy/Bureaublad/weka-3-6-0/ANN-c-fcr.model"
-				//				),
-				//				new WekaRegressionBotFactory(
-				//						new ShowdownRolloutNode.Factory(new DistributionRollout4.Factory()),
-				//						"/home/guy/Werk/thesis/weka-3-6-0/M5P-r-b.model",
-				//						"/home/guy/Werk/thesis/weka-3-6-0/M5P-r-f.model",
-				//						"/home/guy/Werk/thesis/weka-3-6-0/M5P-r-c.model",
-				//						"/home/guy/Werk/thesis/weka-3-6-0/M5P-r-r.model"
-				//				),
+					// new SearchBotFactory(new
+					// DistributionShowdownNode1.Factory()),
+					// new SearchBotFactory(new
+					// DistributionShowdownNode2.Factory()),
+					// new SearchBotFactory(new
+					// DistributionShowdownNode4.Factory()),
+					// new RuleBasedBotFactory(),
+					//						new PrologCafeBotFactory(
+					//								new DistributionShowdownNode4.Factory()),
+					//				new WekaClassificationBotFactory(
+					//						new DistributionShowdownNode4.Factory(),
+					//						"/home/guy/Bureaublad/weka-3-6-0/ANN-c-cb.model",
+					//						"/home/guy/Bureaublad/weka-3-6-0/ANN-c-fcr.model"
+					//				),
+					//				new WekaRegressionBotFactory(
+					//						new ShowdownRolloutNode.Factory(new DistributionRollout4.Factory()),
+					//						"/home/guy/Werk/thesis/weka-3-6-0/M5P-r-b.model",
+					//						"/home/guy/Werk/thesis/weka-3-6-0/M5P-r-f.model",
+					//						"/home/guy/Werk/thesis/weka-3-6-0/M5P-r-c.model",
+					//						"/home/guy/Werk/thesis/weka-3-6-0/M5P-r-r.model"
+					//				),
 
-				//				new PrologCafeBotFactory(new ShowdownRolloutNode.Factory(new DistributionRollout4.Factory())),
-				// new SearchBotFactory(new CachedShowdownNodeFactory(new
-				// UniformShowdownNode.Factory())),
-		});
+					//				new PrologCafeBotFactory(new ShowdownRolloutNode.Factory(new DistributionRollout4.Factory())),
+					// new SearchBotFactory(new CachedShowdownNodeFactory(new
+					// UniformShowdownNode.Factory())),
+			});
+		} catch (IOException e) {
+			throw new IllegalStateException(e);
+		} catch (ClassNotFoundException e) {
+			throw new IllegalStateException(e);
+		}
 	}
 
 	public BotRunner(RemoteCSPokerServer cspokerServer, BotFactory[] bots) {

@@ -15,16 +15,15 @@
  */
 package org.cspoker.client.bots.bot.gametree.mcts.nodes;
 
-import org.cspoker.client.bots.bot.gametree.opponentmodel.OpponentModel;
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.common.elements.player.PlayerId;
 
 public class RootNode extends DecisionNode{
 
-	public RootNode(GameState gameState, PlayerId bot, OpponentModel model) {
-		super(null, null, gameState, bot, model);
+	public RootNode(GameState gameState, PlayerId bot, Config config) {
+		super(null, null, gameState, bot, config);
 		inTree = true;
-		model.assumePermanently(gameState);
+		config.getModel().assumePermanently(gameState);
 		expandChildren();
 	}
 
