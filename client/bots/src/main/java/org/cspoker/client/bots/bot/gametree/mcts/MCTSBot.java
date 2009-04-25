@@ -21,10 +21,10 @@ import java.util.concurrent.ExecutorService;
 import org.apache.log4j.Logger;
 import org.cspoker.client.bots.bot.AbstractBot;
 import org.cspoker.client.bots.bot.gametree.mcts.listeners.MCTSListener;
+import org.cspoker.client.bots.bot.gametree.mcts.nodes.Config;
 import org.cspoker.client.bots.bot.gametree.mcts.nodes.INode;
 import org.cspoker.client.bots.bot.gametree.mcts.nodes.RootNode;
 import org.cspoker.client.bots.bot.gametree.mcts.strategies.SelectionStrategy;
-import org.cspoker.client.bots.bot.gametree.opponentmodel.OpponentModel;
 import org.cspoker.client.bots.listener.BotListener;
 import org.cspoker.client.common.SmartLobbyContext;
 import org.cspoker.client.common.gamestate.GameState;
@@ -35,46 +35,58 @@ import org.cspoker.common.elements.table.TableId;
 public class MCTSBot extends AbstractBot {
 
 	private final static Logger logger = Logger.getLogger(MCTSBot.class);
-	private final OpponentModel model;
-	private final SelectionStrategy selectionStrategy;
-	private final SelectionStrategy moveSelectionStrategy;
+	private final Config config;
 	private final MCTSListener.Factory[] MCTSlistenerFactories;
 
 	public MCTSBot(PlayerId botId, TableId tableId,
 			SmartLobbyContext lobby, ExecutorService executor, int buyIn, 
-			OpponentModel model, 
-			SelectionStrategy selectionStrategy,
-			SelectionStrategy moveSelectionStrategy,
+			Config config,
 			MCTSListener.Factory[] MCTSlisteners, 
 			BotListener... botListeners) {
 		super(botId, tableId, lobby, buyIn, executor, botListeners);
-		this.model = model;
-		this.selectionStrategy = selectionStrategy;
-		this.moveSelectionStrategy = moveSelectionStrategy;
+		this.config = config;
 		this.MCTSlistenerFactories = MCTSlisteners;
 	}
 
 	@Override
 	public void doNextAction() throws RemoteException, IllegalActionException {
-		GameState gameState = tableContext.getGameState();	
-		RootNode root = new RootNode(gameState,botId,model);
 		long endTime = System.currentTimeMillis()+950;
-		int nbIterations = 0;
+		GameState gameState = tableContext.getGameState();	
+		RootNode root = new RootNode(gameState,botId,config);
 		do{
-			INode selectedLeaf = root.selectRecursively(selectionStrategy);
-			selectedLeaf.expand();
-			double value = selectedLeaf.simulate();
-			selectedLeaf.backPropagate(value);
-			++nbIterations;
+			iterate(root);
+			iterate(root);
+			iterate(root);
+			iterate(root);
+			iterate(root);
+			iterate(root);
+			iterate(root);
+			iterate(root);
+			iterate(root);
+			iterate(root);
+			iterate(root);
+			iterate(root);
+			iterate(root);
+			iterate(root);
+			iterate(root);
+			iterate(root);
+			iterate(root);
 		}while(System.currentTimeMillis()<endTime);
 		if(logger.isInfoEnabled()){
-			logger.info("Stopped MCTS after "+nbIterations+" iterations.");
+			logger.info("Stopped MCTS.");
 		}
-		root.selectChild(moveSelectionStrategy).getLastAction().getAction().perform(playerContext);
+		root.selectChild(config.getMoveSelectionStrategy()).getLastAction().getAction().perform(playerContext);
 		MCTSListener[] listeners = createListeners(gameState, botId);
 		for (MCTSListener listener : listeners) {
 			listener.onMCTS(root);
 		}
+	}
+
+	private void iterate(RootNode root) {
+		INode selectedLeaf = root.selectRecursively(config.getSelectionStrategy());
+		selectedLeaf.expand();
+		double value = selectedLeaf.simulate();
+		selectedLeaf.backPropagate(value);
 	}
 
 	private MCTSListener[] createListeners(GameState gameState, PlayerId actor) {

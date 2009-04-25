@@ -45,7 +45,7 @@ public class OpponentActionNode extends ActionNode {
 	@Override
 	public Distribution getValueDistribution(double lowerBound) {
 		if(valueDistribution==null){
-			config.getOpponentModeler().assumeTemporarily(gameState);
+			config.getOpponentModel().assumeTemporarily(gameState);
 			List<Pair<ActionWrapper, WeightedNode>> children = getExpander().getWeightedChildren(config.isUniformBotActionTokens());
 			double percentageDone = 0;
 			double valueDone = 0;
@@ -87,7 +87,7 @@ public class OpponentActionNode extends ActionNode {
 				valueDone += prob*valueDistribution.getMean();
 				valueDistributions.add(valueDistribution);
 			}
-			config.getOpponentModeler().forgetLastAssumption();
+			config.getOpponentModel().forgetLastAssumption();
 			// see Variance Estimation and Ranking of Gaussian Mixture Distributions
 			// in Target Tracking Applications
 			// Lidija Trailovi and Lucy Y. Pao

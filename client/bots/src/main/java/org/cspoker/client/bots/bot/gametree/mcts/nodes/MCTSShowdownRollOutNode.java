@@ -16,33 +16,39 @@
 package org.cspoker.client.bots.bot.gametree.mcts.nodes;
 
 import org.cspoker.client.bots.bot.gametree.action.ProbabilityAction;
+import org.cspoker.client.bots.bot.gametree.rollout.DistributionRollout4;
 import org.cspoker.client.common.gamestate.GameState;
 
-public abstract class ShowdownNode extends LeafNode {
+public class MCTSShowdownRollOutNode extends ShowdownNode {
 
-	//stats
-	protected double totalValue = 0;
+	public final DistributionRollout4 rollout;
+
+	public final int stackSize;
 	
-	public ShowdownNode(InnerNode parent, ProbabilityAction probAction) {
+	public MCTSShowdownRollOutNode(GameState gameState, InnerNode parent, ProbabilityAction probAction) {
 		super(parent, probAction);
+		this.rollout = new DistributionRollout4(gameState,parent.bot);
+		this.stackSize = rollout.botState.getStack();
+	}
+	
+	@Override
+	public double simulate() {
+		return stackSize + rollout.doRollOut(2, 2).getMean();
 	}
 
 	@Override
-	public double getAverage() {
-		return totalValue/nbSamples;
+	public GameState getGameState() {
+		return rollout.gameState;
 	}
 	
-	@Override
-	public void backPropagate(double value) {
-		totalValue+=value;
-		++nbSamples;
-		parent.backPropagate(value);
-	}
-	
-	public static interface Factory{
+	public static class Factory implements ShowdownNode.Factory{
 		
-		LeafNode create(GameState gameState, InnerNode parent, ProbabilityAction probAction);
+		@Override
+		public MCTSShowdownRollOutNode create(GameState gameState, InnerNode parent, ProbabilityAction probAction) {
+			return new MCTSShowdownRollOutNode(gameState,parent,probAction);
+		}
 		
 	}
+	                                                      
 
 }

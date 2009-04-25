@@ -17,15 +17,14 @@ package org.cspoker.client.bots.bot.gametree.mcts.nodes;
 
 import org.cspoker.client.bots.bot.gametree.action.ProbabilityAction;
 import org.cspoker.client.bots.bot.gametree.mcts.strategies.SelectionStrategy;
-import org.cspoker.client.bots.bot.gametree.opponentmodel.OpponentModel;
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.common.elements.player.PlayerId;
 
 public class DecisionNode extends InnerNode{
 
 	public DecisionNode(InnerNode parent, ProbabilityAction probAction,
-			GameState gameState, PlayerId bot, OpponentModel model) {
-		super(parent, probAction, gameState, bot, model);
+			GameState gameState, PlayerId bot, Config config) {
+		super(parent, probAction, gameState, bot, config);
 	}
 
 	@Override

@@ -16,33 +16,40 @@
 package org.cspoker.client.bots.bot.gametree.mcts.nodes;
 
 import org.cspoker.client.bots.bot.gametree.action.ProbabilityAction;
+import org.cspoker.client.bots.bot.gametree.opponentmodel.OpponentModel;
+import org.cspoker.client.bots.bot.gametree.rollout.BucketRollOut;
 import org.cspoker.client.common.gamestate.GameState;
 
-public abstract class ShowdownNode extends LeafNode {
+public class MCTSBucketShowdownNode extends ShowdownNode {
 
-	//stats
-	protected double totalValue = 0;
+	public final BucketRollOut rollout;
+
+	public final int stackSize;
 	
-	public ShowdownNode(InnerNode parent, ProbabilityAction probAction) {
+	public MCTSBucketShowdownNode(GameState gameState, InnerNode parent, ProbabilityAction probAction, OpponentModel model) {
 		super(parent, probAction);
+		this.rollout = new BucketRollOut(gameState,parent.bot,model);
+		this.stackSize = rollout.botState.getStack();
+	}
+	
+	@Override
+	public double simulate() {
+		return stackSize + rollout.doRollOut(2);
 	}
 
 	@Override
-	public double getAverage() {
-		return totalValue/nbSamples;
+	public GameState getGameState() {
+		return rollout.gameState;
 	}
 	
-	@Override
-	public void backPropagate(double value) {
-		totalValue+=value;
-		++nbSamples;
-		parent.backPropagate(value);
-	}
-	
-	public static interface Factory{
+	public static class Factory implements ShowdownNode.Factory{
 		
-		LeafNode create(GameState gameState, InnerNode parent, ProbabilityAction probAction);
+		@Override
+		public MCTSBucketShowdownNode create(GameState gameState, InnerNode parent, ProbabilityAction probAction) {
+			return new MCTSBucketShowdownNode(gameState,parent,probAction,parent.getConfig().getModel());
+		}
 		
 	}
+	                                                      
 
 }

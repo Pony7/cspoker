@@ -18,18 +18,23 @@ package org.cspoker.client.bots.bot.gametree.search;
 import java.util.SortedMap;
 import java.util.Map.Entry;
 
-import org.cspoker.client.bots.bot.gametree.rollout.AbstractDistributionRollout;
+import org.apache.log4j.Logger;
+import org.cspoker.client.bots.bot.gametree.opponentmodel.OpponentModel;
+import org.cspoker.client.bots.bot.gametree.rollout.BucketRollOut;
 import org.cspoker.client.bots.bot.gametree.rollout.RolloutResult;
 import org.cspoker.client.bots.bot.gametree.search.nodevisitor.NodeVisitor;
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.util.MutableDouble;
 
-public class ShowdownRolloutNode implements ShowdownNode {
+public class ShowdownBucketRolloutNode implements ShowdownNode {
 
-	public static final int MaxNbSamples = 400;
+	private final static Logger logger = Logger
+	.getLogger(ShowdownBucketRolloutNode.class);
 
 	private Distribution valueDistribution = null;
+
+	private final PlayerId botId;
 
 	private final GameState gameState;
 
@@ -37,35 +42,26 @@ public class ShowdownRolloutNode implements ShowdownNode {
 
 	private final int nbTokens;
 
-	private final AbstractDistributionRollout rollout;
+	private final OpponentModel model;
 
-	ShowdownRolloutNode(PlayerId botId, GameState gameState, AbstractDistributionRollout rollout, int tokens, NodeVisitor... nodeVisitors) {
+	private final BucketRollOut rollout;
+
+	ShowdownBucketRolloutNode(PlayerId botId, GameState gameState, OpponentModel model, int tokens, NodeVisitor... nodeVisitors) {
+		this.botId = botId;
 		this.gameState = gameState;
 		this.nodeVisitors = nodeVisitors;
 		this.nbTokens = tokens;
-		this.rollout = rollout;
+		this.model = model;
+		this.rollout = new BucketRollOut(gameState,botId,model);
 	}
 
 	public Distribution getValueDistribution(double lowerBound) {
 		if(valueDistribution==null){
-			int nbSamplesEst = Math.min(MaxNbSamples, Math.max(25, nbTokens * 5));
-			int nbCommunitySamples, nbOpponentSamples;
-			if (rollout.nbMissingCommunityCards == 0) {
-				nbCommunitySamples = 1;
-				nbOpponentSamples = nbSamplesEst;
-			} else {
-				double root = Math.sqrt(nbSamplesEst);
-				nbCommunitySamples = (int) (root * rollout.nbMissingCommunityCards / 2);
-				nbOpponentSamples = (int) (root * 2 / rollout.nbMissingCommunityCards);
-			}
-
-			RolloutResult result = rollout.doRollOut(nbCommunitySamples, nbOpponentSamples);
+			int nbSamplesEst = Math.min(30, Math.max(5, nbTokens));
+			double result = rollout.doRollOut(nbSamplesEst);
 
 			int stackSize = rollout.botState.getStack();
-			informListeners(result.values, result.totalProb, rollout.gamePotSize, stackSize);
-			double mean = result.getMean();
-			double var = result.getVariance(mean, nbOpponentSamples * nbCommunitySamples);
-			valueDistribution = new Distribution(stackSize + mean, var);
+			valueDistribution = new Distribution(stackSize + result, 0);
 		}
 		return valueDistribution;
 	}
@@ -85,39 +81,22 @@ public class ShowdownRolloutNode implements ShowdownNode {
 		return gameState;
 	}
 
-	private void informListeners(SortedMap<Integer,MutableDouble> sortedMap,
-			double totalProb, int gamePotSize, int stackSize) {
-		for (Entry<Integer, MutableDouble> value : sortedMap.entrySet()) {
-			for (NodeVisitor nodeVisitor : nodeVisitors) {
-				nodeVisitor.visitLeafNode(stackSize + value.getKey(), value
-						.getValue().getValue()
-						/ totalProb, stackSize, stackSize + gamePotSize);
-			}
-		}
-	}
-
 	@Override
 	public String toString() {
 		return "Showdown Rollout Node";
 	}
 	
 	public static class Factory implements ShowdownNode.Factory{
-
-		private final AbstractDistributionRollout.Factory rolloutFactory;
-
-		public Factory(AbstractDistributionRollout.Factory rolloutFactory) {
-			this.rolloutFactory = rolloutFactory;
-		}
 		
-		public ShowdownRolloutNode create(PlayerId botId,
+		public ShowdownBucketRolloutNode create(PlayerId botId,
 				GameState gameState, int tokens, SearchConfiguration config,
 				int searchId, NodeVisitor... nodeVisitors){
-			return new ShowdownRolloutNode(botId,gameState,rolloutFactory.create(gameState,botId),tokens, nodeVisitors);
+			return new ShowdownBucketRolloutNode(botId,gameState,config.getOpponentModel(),tokens, nodeVisitors);
 		}
 		
 		@Override
 		public String toString() {
-			return "Showdown Rollout Node";
+			return "Showdown Bucket Rollout Node";
 		}
 	}
 

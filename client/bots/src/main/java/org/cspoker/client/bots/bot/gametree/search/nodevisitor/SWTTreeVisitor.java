@@ -166,8 +166,10 @@ public class SWTTreeVisitor implements NodeVisitor {
 		} else {
 			text = "Split Pot";
 		}
-		final double winPercentage = (winnings - minWinnable)
-		/ (double) (maxWinnable - minWinnable);
+		if(winnings<minWinnable || winnings>maxWinnable){
+			throw new IllegalArgumentException(winnings +" in "+ minWinnable +" to " + maxWinnable);
+		}
+		final double winPercentage = (winnings - minWinnable) / (double) (maxWinnable - minWinnable);
 		display.syncExec(new Runnable() {
 			public void run() {
 				TreeItem item = items.peek();
@@ -181,9 +183,17 @@ public class SWTTreeVisitor implements NodeVisitor {
 						Math.round(100 * probability) + "%", "",
 						SearchBotAction.parseDollars(winnings - relStackSize),
 						"$0", "" , "", "", ""});
-				newItem.setBackground(1, new Color(display, (int) Math
-						.round((1 - winPercentage) * 255), (int) Math
-						.round(winPercentage * 255), 00));
+				try {
+					newItem.setBackground(1, new Color(display, (int) Math
+							.round((1 - winPercentage) * 255), (int) Math
+							.round(winPercentage * 255), 00));
+				} catch (Exception e) {
+					e.printStackTrace();
+					System.out.println((int) Math
+						.round((1 - winPercentage) * 255)+", "+ (int) Math
+						.round(winPercentage * 255)+ ", "+ 00);
+					System.out.println(winnings +" in "+ minWinnable +" to " + maxWinnable);
+				}
 			}
 		});
 	}

@@ -21,7 +21,7 @@ import org.cspoker.client.bots.bot.gametree.action.SearchBotAction;
 import org.cspoker.client.bots.bot.gametree.mcts.nodes.INode;
 import org.cspoker.client.bots.bot.gametree.mcts.nodes.InnerNode;
 import org.cspoker.client.bots.bot.gametree.mcts.nodes.RootNode;
-import org.cspoker.client.bots.bot.gametree.mcts.nodes.ShowdownNode;
+import org.cspoker.client.bots.bot.gametree.mcts.nodes.MCTSShowdownRollOutNode;
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.elements.table.Round;
@@ -117,8 +117,8 @@ public class SWTTreeListener implements MCTSListener {
 					visitNode(node2, holder.item);
 				}
 			}
-		}else if(node instanceof ShowdownNode && node.getNbSamples()>0){
-			ShowdownNode snode = (ShowdownNode)node;
+		}else if(node instanceof MCTSShowdownRollOutNode && node.getNbSamples()>0){
+			MCTSShowdownRollOutNode snode = (MCTSShowdownRollOutNode)node;
 			final int min = snode.stackSize;
 			int potsize = snode.rollout.gamePotSize;
 			final int max = min+potsize;

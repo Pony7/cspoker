@@ -35,7 +35,7 @@ public abstract class InnerNode extends AbstractNode {
 	private final static Random random = new Random();
 
 	//config
-	private final OpponentModel model;
+	private final Config config;
 
 	//parent
 	public final GameState gameState;
@@ -50,11 +50,11 @@ public abstract class InnerNode extends AbstractNode {
 
 	protected boolean inTree = false;
 
-	public InnerNode(InnerNode parent, ProbabilityAction probAction, GameState gameState, PlayerId bot, OpponentModel model) {
+	public InnerNode(InnerNode parent, ProbabilityAction probAction, GameState gameState, PlayerId bot, Config config) {
 		super(parent,probAction);
 		this.bot = bot;
 		this.gameState = gameState;
-		this.model = model;
+		this.config = config;
 	}
 
 	public INode selectRecursively(SelectionStrategy strategy){
@@ -72,12 +72,12 @@ public abstract class InnerNode extends AbstractNode {
 	public double simulate(){
 		boolean needsChildExpansion = (children==null);
 		if(needsChildExpansion){
-			model.assumeTemporarily(gameState);
+			config.getModel().assumeTemporarily(gameState);
 			expandChildren();
 		}
 		double result = getRandomChild().simulate();
 		if(needsChildExpansion){
-			model.forgetLastAssumption();
+			config.getModel().forgetLastAssumption();
 		}
 		return result;
 	}
@@ -116,10 +116,14 @@ public abstract class InnerNode extends AbstractNode {
 	public GameState getGameState() {
 		return gameState;
 	}
+	
+	public Config getConfig() {
+		return config;
+	}
 
 	protected void expandChildren(){
 		if(children == null){
-			Expander expander = new Expander(gameState, model, gameState.getNextToAct(), bot);
+			Expander expander = new Expander(gameState, config.getModel(), gameState.getNextToAct(), bot);
 			List<ProbabilityAction> actions = expander.getProbabilityActions();
 			ImmutableList.Builder<INode> childrenBuilder = ImmutableList.builder();
 			cumulativeActionProbability = new double[actions.size()];
@@ -145,14 +149,14 @@ public abstract class InnerNode extends AbstractNode {
 				GameState nextState = action.getStateAfterAction();
 				// expand further
 				if(nextState.getNextToAct().equals(bot)){
-					return new DecisionNode(this, probAction, nextState, bot, model);
+					return new DecisionNode(this, probAction, nextState, bot, config);
 				}else{
-					return new OpponentNode(this, probAction, nextState, bot, model);
+					return new OpponentNode(this, probAction, nextState, bot, config);
 				}
 			} catch (GameEndedException e) {
 				// no active players left
 				// go to showdown
-				return new ShowdownNode(e.lastState,this, probAction);
+				return new MCTSShowdownRollOutNode(e.lastState,this, probAction);
 			} catch (DefaultWinnerException e) {
 				assert e.winner.getPlayerId().equals(bot) : "Bot should have folded earlier, winner can't be " + e.winner;
 				// bot wins

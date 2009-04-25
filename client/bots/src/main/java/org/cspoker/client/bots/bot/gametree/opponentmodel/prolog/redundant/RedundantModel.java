@@ -86,4 +86,10 @@ public class RedundantModel implements OpponentModel {
 		return previous;
 	}
 
+	@Override
+	public double[] getShowdownProbabilities(GameState gameState,
+			PlayerId actor, int minrank, int maxrank, int avgrank, int sigmarank, double[] weights)
+			throws UnsupportedOperationException {
+		throw new UnsupportedOperationException();
+	}
 }

@@ -49,7 +49,7 @@ public class SearchConfiguration {
 		this.useAlphaBetaPruning = useAlphaBetaPruning;
 	}
 
-	public OpponentModel getOpponentModeler() {
+	public OpponentModel getOpponentModel() {
 		return opponentModeler;
 	}
 

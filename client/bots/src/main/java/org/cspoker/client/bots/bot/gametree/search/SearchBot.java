@@ -55,11 +55,11 @@ public class SearchBot extends AbstractBot {
 		BotActionNode actionNode;
 		// essential to do this with a clean game state from the
 		// context, no wrappers
-		config.getOpponentModeler().assumePermanently(gameState);
+		config.getOpponentModel().assumePermanently(gameState);
 		switch (gameState.getRound()) {
 		case PREFLOP:
 			logger.debug("Searching preflop round game tree:");
-			SearchConfiguration config2 = new SearchConfiguration(config.getOpponentModeler(), 
+			SearchConfiguration config2 = new SearchConfiguration(config.getOpponentModel(), 
 					config.getShowdownNodeFactory(),
 					config.getBotNodeExpanderFactory(), 20000, 40000, 80000, 160000, 0.25, false, false);
 			BotActionNode temp = new BotActionNode(botId, gameState,

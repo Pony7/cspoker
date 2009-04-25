@@ -1,4 +1,5 @@
 /**
+
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -13,25 +14,25 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.client.bots.bot.gametree.mcts.nodes;
+package org.cspoker.client.bots.bot.gametree.opponentmodel.prolog.cafe;
 
-import org.cspoker.client.bots.bot.gametree.action.ProbabilityAction;
-import org.cspoker.client.bots.bot.gametree.mcts.strategies.SelectionStrategy;
+import jp.ac.kobe_u.cs.prolog.lang.PrologControl;
+import net.jcip.annotations.ThreadSafe;
 
-public abstract class LeafNode extends AbstractNode {
+import org.cspoker.client.bots.bot.gametree.opponentmodel.OpponentModel;
+import org.cspoker.common.elements.player.PlayerId;
 
-	public LeafNode(InnerNode parent, ProbabilityAction probAction) {
-		super(parent, probAction);
-	}
+@ThreadSafe
+public class PrologCafeModelFactory implements OpponentModel.Factory {
 
 	@Override
-	public INode selectRecursively(SelectionStrategy strategy) {
-		return this;
+	public OpponentModel create() {
+		PrologControl prolog = new PrologControl();
+		return new PrologCafeModel(prolog);
 	}
 	
 	@Override
-	public final void expand() {
-		// no op
+	public String toString() {
+		return "PrologCafeModel";
 	}
-	
 }

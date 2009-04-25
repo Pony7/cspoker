@@ -16,12 +16,12 @@
  */
 package org.cspoker.client.bots.bot.gametree.search;
 
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.HashMap;
 import java.util.concurrent.ExecutorService;
 
 import org.cspoker.client.bots.bot.Bot;
 import org.cspoker.client.bots.bot.BotFactory;
-import org.cspoker.client.bots.bot.gametree.opponentmodel.simple.HistogramModel;
+import org.cspoker.client.bots.bot.gametree.opponentmodel.OpponentModel;
 import org.cspoker.client.bots.bot.gametree.search.expander.SamplingExpander;
 import org.cspoker.client.bots.bot.gametree.search.nodevisitor.NodeVisitor;
 import org.cspoker.client.bots.listener.BotListener;
@@ -34,15 +34,18 @@ public class SearchBotFactory implements BotFactory {
 	private static int copies = 0;
 	private final int copy;
 
-	private final ConcurrentHashMap<PlayerId, HistogramModel> opponentModels = new ConcurrentHashMap<PlayerId, HistogramModel>();
-	private final ShowdownNode.Factory showdownNodeFactory;
+	private final HashMap<PlayerId, OpponentModel> opponentModels = new HashMap<PlayerId, OpponentModel>();
 	private final NodeVisitor.Factory[] nodeVisitorFactories;
+	private final OpponentModel.Factory modelFactory;
+	private final ShowdownNode.Factory showdownNodeFactory;
 
-	public SearchBotFactory(ShowdownNode.Factory showdownNodeFactory,
+	public SearchBotFactory(OpponentModel.Factory modelFactory, 
+			ShowdownNode.Factory showdownNodeFactory,
 			NodeVisitor.Factory... nodeVisitorFactories) {
 		copy = ++copies;
-		this.showdownNodeFactory = showdownNodeFactory;
+		this.modelFactory = modelFactory;
 		this.nodeVisitorFactories = nodeVisitorFactories;
+		this.showdownNodeFactory = showdownNodeFactory;
 	}
 
 	/**
@@ -52,21 +55,24 @@ public class SearchBotFactory implements BotFactory {
 	 *      java.util.concurrent.ExecutorService,
 	 *      org.cspoker.client.bots.listener.BotListener[])
 	 */
-	public Bot createBot(final PlayerId botId, TableId tableId,
+	public synchronized Bot createBot(final PlayerId botId, TableId tableId,
 			SmartLobbyContext lobby, int buyIn, ExecutorService executor,
 			BotListener... botListeners) {
 		copies++;
-		opponentModels.putIfAbsent(botId, new HistogramModel(botId));
 
-		SearchConfiguration config = new SearchConfiguration(opponentModels
-				.get(botId), showdownNodeFactory,
-				new SamplingExpander.Factory(), 20000, 40000, 80000, 160000, 0, false, true);
+		OpponentModel opponentModel = opponentModels.get(botId);
+		if(opponentModel==null){
+			opponentModel = modelFactory.create();
+			opponentModels.put(botId, opponentModel);
+		}
+		SearchConfiguration config = new SearchConfiguration(opponentModel, showdownNodeFactory,
+				new SamplingExpander.Factory(), 500, 1000, 2000, 5000, 0, false, true);
 		return new SearchBot(botId, tableId, lobby, executor, config, buyIn,
 				nodeVisitorFactories, botListeners);
 	}
 
 	@Override
 	public String toString() {
-		return "SearchBot (" + showdownNodeFactory + ") v1-" + copy;
+		return "SearchBot v2-" + copy;
 	}
 }
