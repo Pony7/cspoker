@@ -17,6 +17,7 @@
 package org.cspoker.server.common.gamecontrol.rounds;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.List;
@@ -87,7 +88,7 @@ public abstract class BettingRound
 	@Override
 	public void bet(MutableSeatedPlayer player, int amount)
 			throws IllegalActionException {
-		if (!onTurn(player) || someoneHasBet() || onlyOnePlayerLeft() || onlyOnePlayerLeftBesidesAllInPlayers()) {
+		if (!onTurn(player) || someoneHasBet() || onlyOneShowdownPlayerLeft() || onlyOnePlayerLeftBesidesAllInPlayers()) {
 			throw new IllegalActionException(player.getName() + " can not bet " + amount + " chips in this round.");
 		}
 		
@@ -170,7 +171,7 @@ public abstract class BettingRound
 			throw new IllegalActionException(player.getName() + " can not raise with $" + amount
 					+ " chips in this round because nobody has placed a bet yet.");
 		}
-		if (onlyOnePlayerLeft()) {
+		if (onlyOneShowdownPlayerLeft()) {
 			throw new IllegalActionException(player.getName() + " can not raise with $" + amount
 					+ " chips in this round because there's only one player left.");
 		}
@@ -487,8 +488,7 @@ public abstract class BettingRound
 		BettingRound.logger.info("Winner: " + winner.getName() + " wins " + pots.getTotalValue() + " chips");
 		
 		int gainedChipsValue = pots.getMainPot().getChips().getValue();
-		Set<Winner> savedWinner = new HashSet<Winner>(1);
-		savedWinner.add(new Winner(winner.getMemento(), gainedChipsValue));
+		Set<Winner> savedWinner = Collections.singleton(new Winner(winner.getMemento(), gainedChipsValue));
 		pots.getMainPot().getChips().transferAllChipsTo(winner.getStack());
 		
 		gameMediator.publishWinnerEvent(new WinnerEvent(savedWinner));
@@ -498,11 +498,8 @@ public abstract class BettingRound
 	 * Returns true if there is only one player left, false otherwise. This also
 	 * implies there are no all-in players, otherwise there will be a showdown.
 	 * 
-	 * @return True if there is only one player left, False otherwise.
 	 */
-	public boolean onlyOnePlayerLeft() {
-		// return (getGame().getNbCurrentDealPlayers() + allInPlayers.size() +
-		// getGame().getPots().getNbShowdownPlayers() <= 1);
+	public boolean onlyOneShowdownPlayerLeft() {
 		return (getGame().getPots().getNbShowdownPlayers() <= 1);
 	}
 	
@@ -574,7 +571,7 @@ public abstract class BettingRound
 	public void endRound() {
 		collectChips();
 		// if there are no all-in players and only one active player left
-		if (onlyOnePlayerLeft()) {
+		if (onlyOneShowdownPlayerLeft()) {
 			winner(game.getPots());
 			game.initializeForNewHand();
 		}
