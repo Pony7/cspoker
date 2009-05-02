@@ -44,7 +44,7 @@ public class FinalRound
 	
 	@Override
 	public void endRound() {
-		if (onlyOnePlayerLeft()) {
+		if (onlyOneShowdownPlayerLeft()) {
 			super.endRound();
 		} else {
 			collectChips();

@@ -234,7 +234,7 @@ public abstract class AbstractRound {
 	
 	protected void removeBrokePlayers() {
 		for (MutableSeatedPlayer player : getGame().getTable().getMutableSeatedPlayers()) {
-			if (player.getStack().getValue() == 0) {
+			if (player.isBroke()) {
 				try {
 					getGame().sitOut(player, true);
 					gameMediator.publishSitOutEvent(new SitOutEvent(player.getId(), true));

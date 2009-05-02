@@ -137,7 +137,7 @@ public class PreFlopRound
 	@Override
 	public boolean isRoundEnded() {
 		return ((super.isRoundEnded() && (someoneHasRaised() || bigBlindAllIn() || someoneBigAllIn() || onlyOneActivePlayer()))
-				|| bigBlindChecked() || onlyOnePlayerLeft());
+				|| bigBlindChecked() || onlyOneShowdownPlayerLeft());
 	}
 	
 	private boolean bigBlindAllIn() {
