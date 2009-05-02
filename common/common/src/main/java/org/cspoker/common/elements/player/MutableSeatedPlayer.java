@@ -153,6 +153,10 @@ public class MutableSeatedPlayer {
 		getStack().transferAllChipsTo(getBetChips());
 	}
 	
+	public synchronized boolean isBroke(){
+		return player.getStack().getValue() <= 0;
+	}
+	
 	/***************************************************************************
 	 * Cards
 	 **************************************************************************/
