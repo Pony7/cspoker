@@ -27,6 +27,7 @@ import org.cspoker.common.elements.cards.Deck;
 import org.cspoker.common.elements.player.MutableSeatedPlayer;
 import org.cspoker.common.elements.player.SeatedPlayer;
 import org.cspoker.common.elements.table.SeatId;
+import org.cspoker.common.elements.table.TableConfiguration;
 
 /**
  * A class to represent players at the table.
@@ -43,11 +44,11 @@ public class ServerTable {
 	 */
 	private final ConcurrentHashMap<SeatId, MutableSeatedPlayer> players;
 
-	private int maxNbPlayers;
-	
 	private Deck previousDeck = null;
 
 	private int nbDeckIterations = Integer.MAX_VALUE;
+
+	private final TableConfiguration tableConfiguration;
 
 	/***************************************************************************
 	 * Constructor
@@ -56,40 +57,40 @@ public class ServerTable {
 	/**
 	 * Construct a new table with given maximum number of players.
 	 * 
-	 * @param 	maxNbPlayers
+	 * @param 	tableConfiguration.getMaxNbPlayers()
 	 * 			The maximum number of players.
 	 */
-	public ServerTable(int maxNbPlayers) {
-		if(maxNbPlayers<=1)
+	public ServerTable(TableConfiguration tableConfiguration) {
+		if(tableConfiguration.getMaxNbPlayers()<=1)
 			throw new IllegalArgumentException("The given maximum number of players is invalid.");
-		this.maxNbPlayers = maxNbPlayers;
-		players = new ConcurrentHashMap<SeatId, MutableSeatedPlayer>(maxNbPlayers);
+		this.tableConfiguration = tableConfiguration;
+		players = new ConcurrentHashMap<SeatId, MutableSeatedPlayer>(tableConfiguration.getMaxNbPlayers());
 	}
-	
+
 	public void setPreviousDeck(Deck previousDeck) {
 		this.previousDeck = new Deck(previousDeck);
 	}
-	
+
 	public Deck getPreviousDeck() {
 		return new Deck(previousDeck);
 	}
-	
+
 	public int getNbDeckIterations() {
 		return nbDeckIterations;
 	}
-	
+
 	public void setNbDeckIterations(int nbDeckIterations) {
 		this.nbDeckIterations = nbDeckIterations;
 	}
-	
+
 	/***************************************************************************
 	 * Max number of players
 	 **************************************************************************/
 
 	public int getMaxNbPlayers(){
-		return maxNbPlayers;
+		return tableConfiguration.getMaxNbPlayers();
 	}
-	
+
 	/***************************************************************************
 	 * Add/Remove Players to/from the table.
 	 **************************************************************************/
@@ -132,7 +133,7 @@ public class ServerTable {
 	 * @post The given player is seated at this table. | new.hasAsPlayer(player)
 	 */
 	public synchronized SeatId addPlayer(MutableSeatedPlayer player)
-			throws PlayerListFullException {
+	throws PlayerListFullException {
 		if (player == null) {
 			throw new IllegalArgumentException("player should be effective.");
 		}
@@ -141,8 +142,15 @@ public class ServerTable {
 			throw new IllegalArgumentException(player
 					+ " is already seated at this table.");
 		}
-		if (player.getStack().getValue() == 0) {
-			throw new IllegalArgumentException(player + " has no chips to bet.");
+		if(!tableConfiguration.isDoylesGame()){
+			if (player.getStack().getValue() == 0 ) {
+				throw new IllegalArgumentException(player + " has no chips to bet.");
+			}
+		}else{
+			if (player.getStack().getValue() != 0 ) {
+				throw new IllegalArgumentException(player + " can't choose his stack size in Doyle's Game.");
+			}
+			player.getStack().setValue(tableConfiguration.getDoylesGameStackSize());
 		}
 
 		SeatId seatId = new SeatId(0);
@@ -165,22 +173,33 @@ public class ServerTable {
 	 * @throws SeatTakenException
 	 */
 	public synchronized void addPlayer(SeatId seatId, MutableSeatedPlayer player)
-			throws IllegalActionException, SeatTakenException {
+	throws IllegalActionException, SeatTakenException {
 		if (!isValidSeatId(seatId)) {
 			throw new IllegalArgumentException(
-					"The given seat id should be valid.");
+			"The given seat id should be valid.");
 		}
-		
+
 		if (player == null) {
 			throw new IllegalArgumentException(
-					"The given player should be valid.");
+			"The given player should be valid.");
 		}
-		
+
 		if (hasAsPlayer(player)) {
 			throw new IllegalActionException(player
 					+ " is already seated at this table.");
 		}
-		
+
+		if(!tableConfiguration.isDoylesGame()){
+			if (player.getStack().getValue() == 0 ) {
+				throw new IllegalArgumentException(player + " has no chips to bet.");
+			}
+		}else{
+			if (player.getStack().getValue() != 0 ) {
+				throw new IllegalArgumentException(player + " can't choose his stack size in Doyle's Game.");
+			}
+			player.getStack().setValue(tableConfiguration.getDoylesGameStackSize());
+		}
+
 		if (players.putIfAbsent(seatId, player) != null) {
 			throw new SeatTakenException(seatId);
 		}
@@ -189,7 +208,7 @@ public class ServerTable {
 
 	public boolean isValidSeatId(SeatId seatId) {
 		return seatId != null
-				&& seatId.getId() < getMaxNbPlayers();
+		&& seatId.getId() < getMaxNbPlayers();
 	}
 
 	/**
@@ -244,7 +263,7 @@ public class ServerTable {
 		}
 		return Collections.unmodifiableList(toReturn);
 	}
-	
+
 	/**
 	 * Returns a random player seated at this table.
 	 * 
@@ -263,4 +282,10 @@ public class ServerTable {
 	public int getNbPlayers() {
 		return players.size();
 	}
+	
+	public TableConfiguration getTableConfiguration() {
+		return tableConfiguration;
+	}
+	
+	
 }

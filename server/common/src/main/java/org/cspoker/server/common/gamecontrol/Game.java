@@ -554,6 +554,11 @@ public class Game {
 	
 	public void seatInitalDealPlayers() {
 		currentHandPlayers = initialCurrentHandPlayers;
+		if(table.getTableConfiguration().isDoylesGame()){
+			for (MutableSeatedPlayer player : currentHandPlayers) {
+				player.getStack().setValue(table.getTableConfiguration().getDoylesGameStackSize());
+			}
+		}
 	}
 	
 	/**

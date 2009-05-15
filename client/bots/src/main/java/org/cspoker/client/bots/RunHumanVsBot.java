@@ -78,7 +78,6 @@ public class RunHumanVsBot {
 		final TableId tableId = new TableId(0);
 
 		int smallBet = 100;
-		final int buyin = smallBet * 200;
 		int delay = 1500;
 		User u = new User("Human", "test");
 		client = new ClientCore(u);
@@ -89,7 +88,7 @@ public class RunHumanVsBot {
 		client.getGui().setLobby(lobby);
 
 		TableConfiguration tConfig = new TableConfiguration(smallBet, delay,
-				false, false);
+				false, true, true);
 		lobby.getContext().createHoldemTable(u.getUserName() + "'s test table",
 				tConfig);
 		// Run blocking calls in extra thread
@@ -101,7 +100,7 @@ public class RunHumanVsBot {
 			}
 		});
 		final GameWindow w = client.getGui().getGameWindow(tableId, true);
-		w.getUser().sitIn(new SeatId(0), buyin);
+		w.getUser().sitIn(new SeatId(0), 0);
 		// Run blocking calls in extra thread
 		displayexecutor.execute(new Runnable() {
 
@@ -157,7 +156,7 @@ public class RunHumanVsBot {
 		} catch (ClassNotFoundException e) {
 			throw new IllegalStateException(e);
 		}
-		startBot(botFactory, tableId, buyin);
+		startBot(botFactory, tableId, 0);
 
 		// Listen to events#
 		Display display = Display.getDefault();
