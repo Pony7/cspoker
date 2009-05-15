@@ -27,7 +27,6 @@ import org.apache.log4j.Logger;
 import org.cspoker.client.bots.bot.Bot;
 import org.cspoker.client.bots.bot.BotFactory;
 import org.cspoker.client.bots.bot.gametree.mcts.MCTSBotFactory;
-import org.cspoker.client.bots.bot.gametree.mcts.listeners.SWTTreeListener;
 import org.cspoker.client.bots.bot.gametree.mcts.nodes.MCTSBucketShowdownNode;
 import org.cspoker.client.bots.bot.gametree.mcts.strategies.SampleProportionateSelector;
 import org.cspoker.client.bots.bot.gametree.mcts.strategies.SamplingToFunctionSelector;
@@ -56,7 +55,7 @@ import org.cspoker.common.util.threading.SingleThreadRequestExecutor;
 public class BotRunner implements LobbyListener {
 
 	private static final TableConfiguration config = new TableConfiguration(100,
-			0, false, true);
+			0, false, true, true);
 
 	public static final int nbGamesPerConfrontation = 10000;
 

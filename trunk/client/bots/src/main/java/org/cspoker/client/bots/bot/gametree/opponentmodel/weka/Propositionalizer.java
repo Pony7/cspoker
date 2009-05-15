@@ -37,6 +37,7 @@ public class Propositionalizer implements Cloneable {
 	private List<PlayerData> allinPlayers = new LinkedList<PlayerData>();
 
 	private float maxBet = 0;
+	private float lastRaise = 0;
 	private float gameRaiseAmount = 0;
 	private boolean somebodyActedThisRound = false;
 
@@ -98,13 +99,14 @@ public class Propositionalizer implements Cloneable {
 
 	public void signalBet(boolean isAllIn, Object id, float movedAmount) {
 		PlayerData p = players.get(id);
-		logBet(p);
+		logBet(p, movedAmount);
 		// consider raise by big blind, treat kinda like bet
 		if(isAllIn) {
 			activePlayers.remove(p);
 			allinPlayers.add(p);
 		}
 		maxBet += movedAmount;
+		lastRaise = Math.max(lastRaise, movedAmount);
 		gameRaiseAmount += movedAmount;
 		totalPot += movedAmount;
 		somebodyActedThisRound = true;
@@ -127,14 +129,16 @@ public class Propositionalizer implements Cloneable {
 		if (p.getDeficit(this) <= 0.001) {
 			signalBet(isAllIn, id, raiseAmount);
 		} else {
-			logRaise(p);
+			logRaise(p,raiseAmount);
 			if(isAllIn) {
 				activePlayers.remove(p);
 				allinPlayers.add(p);
 			}
 			maxBet = maxBetParsed;
+			lastRaise = Math.max(lastRaise, raiseAmount);
 			float movedAmount = maxBet - p.getBet();
 			gameRaiseAmount += raiseAmount;
+			
 			totalPot += movedAmount;
 			somebodyActedThisRound = true;
 			gameStats.addRaise(this, movedAmount-raiseAmount, raiseAmount);
@@ -416,6 +420,7 @@ public class Propositionalizer implements Cloneable {
 		activePlayers.clear();
 		allinPlayers.clear();
 		gameRaiseAmount = 0;
+		startNewRound();
 	}
 
 	protected void startNewRound() {
@@ -424,6 +429,7 @@ public class Propositionalizer implements Cloneable {
 		}
 		nbPlayersDoneThisRound = 0;
 		maxBet = 0;
+		lastRaise = 1;
 		somebodyActedThisRound = false;
 	}
 
@@ -482,6 +488,35 @@ public class Propositionalizer implements Cloneable {
 	public float getPotSize() {
 		return totalPot;
 	}
+	
+	public float getMaxMaxBet(){
+		float maxBet1 = 0;
+		float maxBet2 = 0;
+		
+		for (PlayerData player : activePlayers) {
+			float maxMaxPlayerBet = player.getStack()+player.getBet();
+			if(maxMaxPlayerBet>maxBet1){
+				maxBet2 = maxBet1;
+				maxBet1 = maxMaxPlayerBet;
+			}else if(maxMaxPlayerBet > maxBet2){
+				maxBet2 = maxMaxPlayerBet;
+			}
+		}
+		
+		return maxBet2;
+	}
+
+
+	public float getMaxRaise(PlayerData p) {
+		float amountLeftToRaiseWith = p.getStack()-p.getDeficit(this);
+		float maxRaise = Math.max(0, getMaxMaxBet()-getMaxBet());
+		return Math.min(amountLeftToRaiseWith, maxRaise);
+	}
+	
+	public float getMinRaise(PlayerData p) {
+		return Math.min(lastRaise, getMaxRaise(p));
+	}
+
 
 	public int getPlayersToAct() {
 		if (somebodyActedThisRound) {
@@ -602,11 +637,11 @@ public class Propositionalizer implements Cloneable {
 		return "river".equals(round);
 	}
 
-	protected void logBet(PlayerData p){
+	protected void logBet(PlayerData p, float movedAmount){
 		// no op
 	}
 
-	protected void logRaise(PlayerData p){
+	protected void logRaise(PlayerData p, float raiseAmount){
 		// no op
 	}
 

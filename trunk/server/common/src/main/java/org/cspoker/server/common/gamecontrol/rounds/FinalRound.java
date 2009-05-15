@@ -52,7 +52,9 @@ public class FinalRound
 			showdown.determineWinners();
 			game.showdownOccured(showdown.getNbShowdownPlayers());
 		}
-		removeBrokePlayers();
+		if(!game.getTableConfiguration().isDoylesGame()){
+			removeBrokePlayers();
+		}
 		game.initializeForNewHand();
 	}
 	

@@ -43,7 +43,7 @@ public class WaitingTableState
 	
 	public WaitingTableState(PokerTable table) {
 		super(table);
-		serverTable = new ServerTable(table.getTableConfiguration().getMaxNbPlayers());
+		serverTable = new ServerTable(table.getTableConfiguration());
 	}
 	
 	/**

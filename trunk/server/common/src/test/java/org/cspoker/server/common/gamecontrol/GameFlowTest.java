@@ -90,8 +90,9 @@ public class GameFlowTest extends TestCase {
 	@Override
 	public void setUp(){
 		events = new EventSequenceChecker();
-		table = new ServerTable(8);
-		pokerTable = new PokerTable(new TableId(0), "table", new TableConfiguration(), new ExtendedAccountContext(){
+		TableConfiguration configuration = new TableConfiguration();
+		table = new ServerTable(configuration);
+		pokerTable = new PokerTable(new TableId(0), "table", configuration, new ExtendedAccountContext(){
 
 			public void changePassword(String passwordHash) {
 
@@ -143,7 +144,8 @@ public class GameFlowTest extends TestCase {
 			kenzo = new MutableSeatedPlayer(factory.createNewPlayer("Kenzo", 100), 100);
 			cedric = new MutableSeatedPlayer(factory.createNewPlayer("Cedric", 100),100);
 			guy = new MutableSeatedPlayer(factory.createNewPlayer("Guy", 200),200);
-			table = new ServerTable(8);
+			TableConfiguration configuration = new TableConfiguration();
+			table = new ServerTable(configuration);
 			table.addPlayer(kenzo);
 			table.addPlayer(cedric);
 			table.addPlayer(guy);
@@ -191,7 +193,8 @@ public class GameFlowTest extends TestCase {
 			cedric = new MutableSeatedPlayer(factory.createNewPlayer("Cedric", 100),100);
 			guy = new MutableSeatedPlayer(factory.createNewPlayer("Guy", 150),150);
 
-			table = new ServerTable(8);
+			TableConfiguration configuration = new TableConfiguration();
+			table = new ServerTable(configuration);
 			table.addPlayer(kenzo);
 			table.addPlayer(cedric);
 			table.addPlayer(guy);
@@ -261,7 +264,8 @@ public class GameFlowTest extends TestCase {
 			cedric = new MutableSeatedPlayer(factory.createNewPlayer("Cedric", 100),100);
 			guy = new MutableSeatedPlayer(factory.createNewPlayer("Guy", 100),9);
 
-			table = new ServerTable(8);
+			TableConfiguration configuration = new TableConfiguration();
+			table = new ServerTable(configuration);
 			table.addPlayer(kenzo);
 			table.addPlayer(cedric);
 			table.addPlayer(guy);
@@ -343,7 +347,8 @@ public class GameFlowTest extends TestCase {
 			cedric = new MutableSeatedPlayer(factory.createNewPlayer("Cedric", 220),220);
 			guy = new MutableSeatedPlayer(factory.createNewPlayer("Guy", 100),100);
 
-			table = new ServerTable(8);
+			TableConfiguration configuration = new TableConfiguration();
+			table = new ServerTable(configuration);
 
 			table.addPlayer(kenzo);
 			table.addPlayer(cedric);
@@ -491,7 +496,8 @@ public class GameFlowTest extends TestCase {
 			cedric = new MutableSeatedPlayer(factory.createNewPlayer("Cedric", 100),4);
 			guy = new MutableSeatedPlayer(factory.createNewPlayer("Guy", 100),9);
 
-			table = new ServerTable(8);
+			TableConfiguration configuration = new TableConfiguration();
+			table = new ServerTable(configuration);
 			table.addPlayer(kenzo);
 			table.addPlayer(cedric);
 			table.addPlayer(guy);
@@ -715,7 +721,8 @@ public class GameFlowTest extends TestCase {
 			cedric = new MutableSeatedPlayer(factory.createNewPlayer("Cedric", 100),18);
 			guy = new MutableSeatedPlayer(factory.createNewPlayer("Guy", 100),100);
 
-			table = new ServerTable(8);
+			TableConfiguration configuration = new TableConfiguration();
+			table = new ServerTable(configuration);
 			table.addPlayer(kenzo);
 			table.addPlayer(cedric);
 			table.addPlayer(guy);
@@ -788,7 +795,8 @@ public class GameFlowTest extends TestCase {
 			cedric = new MutableSeatedPlayer(factory.createNewPlayer("Cedric", 100),4);
 			guy = new MutableSeatedPlayer(factory.createNewPlayer("Guy", 100),100);
 
-			table = new ServerTable(8);
+			TableConfiguration configuration = new TableConfiguration();
+			table = new ServerTable(configuration);
 			table.addPlayer(kenzo);
 			table.addPlayer(cedric);
 			table.addPlayer(guy);
@@ -944,7 +952,8 @@ public class GameFlowTest extends TestCase {
 			cedric = new MutableSeatedPlayer(factory.createNewPlayer("Cedric", 200),200);
 			guy = new MutableSeatedPlayer(factory.createNewPlayer("Guy", 200),200);
 
-			table = new ServerTable(8);
+			TableConfiguration configuration = new TableConfiguration();
+			table = new ServerTable(configuration);
 			table.addPlayer(kenzo);
 			table.addPlayer(cedric);
 			table.addPlayer(guy);
@@ -978,7 +987,9 @@ public class GameFlowTest extends TestCase {
 	}
 
 	public void testTwoPlayersDealerChecksCase(){
-		table = new ServerTable(8);
+
+		TableConfiguration configuration = new TableConfiguration();
+		table = new ServerTable(configuration);
 		PlayingTableState gameControl;
 		try {
 			kenzo = new MutableSeatedPlayer(factory.createNewPlayer("kenzo", 100), 50);
@@ -1021,7 +1032,9 @@ public class GameFlowTest extends TestCase {
 	}
 
 	public void testTwoPlayersNormalCase(){
-		table = new ServerTable(8);
+
+		TableConfiguration configuration = new TableConfiguration();
+		table = new ServerTable(configuration);
 		PlayingTableState gameControl;
 		try {
 			kenzo = new MutableSeatedPlayer(factory.createNewPlayer("kenzo", 100), 100);
@@ -1086,7 +1099,8 @@ public class GameFlowTest extends TestCase {
 	}
 
 	public void testTwoPlayersDealerRaisesCase(){
-		table = new ServerTable(8);
+		TableConfiguration configuration = new TableConfiguration();
+		table = new ServerTable(configuration);
 		PlayingTableState gameControl;
 		try {
 			kenzo = new MutableSeatedPlayer(factory.createNewPlayer("kenzo", 100), 100);
@@ -1125,7 +1139,8 @@ public class GameFlowTest extends TestCase {
 		try {
 			guy = new MutableSeatedPlayer(factory.createNewPlayer("Guy", 100),100);
 			craig = new MutableSeatedPlayer(factory.createNewPlayer("Craig", 100),100);
-			table = new ServerTable(8);
+			TableConfiguration configuration = new TableConfiguration();
+			table = new ServerTable(configuration);
 			table.addPlayer(guy);
 			table.addPlayer(craig);
 		} catch (IllegalValueException e) {
@@ -1160,8 +1175,9 @@ public class GameFlowTest extends TestCase {
 
 			kenzo = new MutableSeatedPlayer(factory.createNewPlayer("Kenzo", 500), 500);
 			cedric = new MutableSeatedPlayer(factory.createNewPlayer("Cedric", 500),500);
-
-			table = new ServerTable(8);
+			
+			TableConfiguration configuration = new TableConfiguration();
+			table = new ServerTable(configuration);
 			table.addPlayer(kenzo);
 			table.addPlayer(cedric);
 		} catch (IllegalValueException e) {
@@ -1198,7 +1214,8 @@ public class GameFlowTest extends TestCase {
 			kenzo = new MutableSeatedPlayer(factory.createNewPlayer("Kenzo", 500), 500);
 			cedric = new MutableSeatedPlayer(factory.createNewPlayer("Cedric", 500),500);
 
-			table = new ServerTable(8);
+			TableConfiguration configuration = new TableConfiguration();
+			table = new ServerTable(configuration);
 			table.addPlayer(kenzo);
 			table.addPlayer(cedric);
 		} catch (IllegalValueException e) {
@@ -1259,7 +1276,8 @@ public class GameFlowTest extends TestCase {
 			kenzo = new MutableSeatedPlayer(factory.createNewPlayer("Kenzo", 100), 100);
 			cedric = new MutableSeatedPlayer(factory.createNewPlayer("Cedric", 100),4);
 
-			table = new ServerTable(8);
+			TableConfiguration configuration = new TableConfiguration();
+			table = new ServerTable(configuration);
 			table.addPlayer(kenzo);
 			table.addPlayer(cedric);
 		} catch (IllegalValueException e) {
@@ -1296,7 +1314,8 @@ public class GameFlowTest extends TestCase {
 			cedric = new MutableSeatedPlayer(factory.createNewPlayer("Cedric", 500),500);
 
 
-			table = new ServerTable(8);
+			TableConfiguration configuration = new TableConfiguration();
+			table = new ServerTable(configuration);
 			table.addPlayer(kenzo);
 			table.addPlayer(cedric);
 		} catch (IllegalValueException e) {
@@ -1355,7 +1374,8 @@ public class GameFlowTest extends TestCase {
 			kenzo = new MutableSeatedPlayer(factory.createNewPlayer("Kenzo", 100), 8);
 			cedric = new MutableSeatedPlayer(factory.createNewPlayer("Cedric", 100),100);
 
-			table = new ServerTable(8);
+			TableConfiguration configuration = new TableConfiguration();
+			table = new ServerTable(configuration);
 			table.addPlayer(kenzo);
 			table.addPlayer(cedric);
 		} catch (IllegalValueException e) {
@@ -1397,7 +1417,8 @@ public class GameFlowTest extends TestCase {
 			kenzo = new MutableSeatedPlayer(factory.createNewPlayer("Kenzo", 100), 4);
 			cedric = new MutableSeatedPlayer(factory.createNewPlayer("Cedric", 100),100);
 
-			table = new ServerTable(8);
+			TableConfiguration configuration = new TableConfiguration();
+			table = new ServerTable(configuration);
 			table.addPlayer(kenzo);
 			table.addPlayer(cedric);
 		} catch (IllegalValueException e) {

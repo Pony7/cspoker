@@ -99,7 +99,7 @@ public class Chips {
 	 * @throws IllegalArgumentException [must] The given value is not a legal
 	 *             value for the chips. | !canHaveAsValue(value)
 	 */
-	private void setValue(int value) {
+	public void setValue(int value) {
 		if (!canHaveAsValue(value)) {
 			throw new IllegalArgumentException("Can not set chips to value" + value);
 		}

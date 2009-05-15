@@ -98,6 +98,13 @@ public class TableConfiguration implements Serializable {
 	@XmlAttribute
 	private final long delay;
 
+	/**
+	 * Play Doyle's Game. 
+	 * @see http://www.cs.ualberta.ca/~pokert/2009/rules.php
+	 */
+	@XmlAttribute
+	private final boolean doylesGame;
+
 	/***************************************************************************
 	 * Constructors
 	 **************************************************************************/
@@ -134,7 +141,7 @@ public class TableConfiguration implements Serializable {
 	}
 	
 	public TableConfiguration(int smallBet, long delay) {
-		this(smallBet,delay,true, false);
+		this(smallBet,delay,true, false, false);
 	}
 	
 	/**
@@ -145,7 +152,7 @@ public class TableConfiguration implements Serializable {
 	 * @param delay
 	 *            The delay between two deals, expressed in milliseconds.
 	 */
-	public TableConfiguration(int smallBet, long delay, boolean autoDeal, boolean stratifiedCards) {
+	public TableConfiguration(int smallBet, long delay, boolean autoDeal, boolean stratifiedCards, boolean doylesGame) {
 		if (!canHaveAsSmallBet(smallBet)) {
 			throw new IllegalArgumentException();
 		}
@@ -158,6 +165,7 @@ public class TableConfiguration implements Serializable {
 		this.autoDeal = autoDeal;
 		autoBlinds = true;
 		this.stratifiedCards = stratifiedCards;
+		this.doylesGame = doylesGame;
 	}
 
 	/***************************************************************************
@@ -273,5 +281,13 @@ public class TableConfiguration implements Serializable {
 	public boolean isStratifiedCards() {
 		return stratifiedCards;
 	}
+	
+	public boolean isDoylesGame() {
+		return doylesGame;
+	}
 
+	public int getDoylesGameStackSize(){
+		return 200*getBigBlind();
+	}
+	
 }

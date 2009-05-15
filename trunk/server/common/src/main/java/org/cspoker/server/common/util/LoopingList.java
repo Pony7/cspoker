@@ -18,6 +18,7 @@ package org.cspoker.server.common.util;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -33,7 +34,7 @@ import java.util.List;
  * 
  * @note This implementation is not thread-safe.
  */
-public class LoopingList<T> {
+public class LoopingList<T> implements Iterable<T>{
 
 	/**
 	 * The internal representation of the looping list.
@@ -228,5 +229,13 @@ public class LoopingList<T> {
 	 */
 	public List<T> getList() {
 		return Collections.unmodifiableList(list);
+	}
+
+	/**
+	 * Iteration does not start with current!
+	 */
+	@Override
+	public Iterator<T> iterator() {
+		return list.iterator();
 	}
 }
