@@ -25,6 +25,7 @@ import org.cspoker.client.bots.bot.gametree.mcts.nodes.MCTSShowdownRollOutNode;
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.elements.table.Round;
+import org.cspoker.common.util.Util;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ShellAdapter;
 import org.eclipse.swt.events.ShellEvent;
@@ -85,7 +86,10 @@ public class SWTTreeListener implements MCTSListener {
 		final String actor = action.getAction().actor.equals(botId)?"Bot":"Player "+action.getAction().actor;
 		final TreeItemHolder holder = new TreeItemHolder();
 		final int nbSamples = node.getNbSamples();
-		final double average = node.getAverage();
+		final double average = node.getEV();
+		final double stddev = node.getStdDev();
+		final int nbSamplesInMean = node.getNbSamplesInMean();
+		final double evStadDev = node.getEVStdDev();
 		display.syncExec(new Runnable(){
 			@Override
 			public void run() {
@@ -96,7 +100,10 @@ public class SWTTreeListener implements MCTSListener {
 						round.getName(),
 						Math.round(100 * action.getProbability()) + "%",
 						""+nbSamples,
-						""+SearchBotAction.parseDollars((int)Math.round(average - relStackSize)),
+						""+Util.parseDollars(average - relStackSize),
+						""+Util.parseDollars(stddev),
+						""+nbSamplesInMean,
+						""+Util.parseDollars(evStadDev),
 				});
 				if (round == Round.FINAL) {
 					newItem.setBackground(2, new Color(display, 30, 30, 255));
@@ -122,7 +129,7 @@ public class SWTTreeListener implements MCTSListener {
 			final int min = snode.stackSize;
 			int potsize = snode.rollout.gamePotSize;
 			final int max = min+potsize;
-			final double winPercentage = (snode.getAverage()-min)/potsize;
+			final double winPercentage = (snode.getEV()-min)/potsize;
 			final double losePercentage = 1-winPercentage;
 			display.syncExec(new Runnable(){
 				@Override
@@ -133,7 +140,10 @@ public class SWTTreeListener implements MCTSListener {
 							"",
 							Math.round(100 * winPercentage) + "%",
 							"",
-							""+SearchBotAction.parseDollars(max - relStackSize),
+							""+Util.parseDollars(max - relStackSize),
+							"",
+							"",
+							""
 					});
 					newItem.setBackground(1, new Color(display,0, 255, 0));
 					newItem = new TreeItem(holder.item, SWT.NONE);
@@ -142,7 +152,10 @@ public class SWTTreeListener implements MCTSListener {
 							"",
 							Math.round(100 * losePercentage) + "%",
 							"",
-							""+SearchBotAction.parseDollars(min - relStackSize),
+							""+Util.parseDollars(min - relStackSize),
+							"",
+							"",
+							""
 					});
 					newItem.setBackground(1, new Color(display,255, 0, 0));
 				}
@@ -204,6 +217,18 @@ public class SWTTreeListener implements MCTSListener {
 
 					column = new TreeColumn(tree, SWT.CENTER);
 					column.setText("Value");
+					column.setWidth(80);
+
+					column = new TreeColumn(tree, SWT.CENTER);
+					column.setText("StdDev");
+					column.setWidth(80);
+
+					column = new TreeColumn(tree, SWT.CENTER);
+					column.setText("NbSamplesInMean");
+					column.setWidth(100);
+
+					column = new TreeColumn(tree, SWT.CENTER);
+					column.setText("MeanStdDev");
 					column.setWidth(80);
 
 					shell.pack();

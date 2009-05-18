@@ -28,6 +28,7 @@ import org.cspoker.common.api.lobby.holdemtable.event.NextPlayerEvent;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.RemoteHoldemPlayerContext;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.player.PlayerId;
+import org.cspoker.common.util.Util;
 
 public class BetAction extends SearchBotAction {
 
@@ -65,9 +66,9 @@ public class BetAction extends SearchBotAction {
 	@Override
 	public String toString() {
 		if(gameState.getPlayer(actor).getStack() == amount){
-			return "Bet " + parseDollars(amount)+ " (all-in)";
+			return "Bet " + Util.parseDollars(amount)+ " (all-in)";
 		}else{
-			return "Bet " + parseDollars(amount);
+			return "Bet " + Util.parseDollars(amount);
 		}
 	}
 

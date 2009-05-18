@@ -15,6 +15,7 @@
  */
 package org.cspoker.client.bots.bot.gametree.mcts.nodes;
 
+import org.cspoker.client.bots.bot.gametree.mcts.strategies.selection.SelectionStrategy;
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.common.elements.player.PlayerId;
 
@@ -22,14 +23,14 @@ public class RootNode extends DecisionNode{
 
 	public RootNode(GameState gameState, PlayerId bot, Config config) {
 		super(null, null, gameState, bot, config);
-		inTree = true;
+		//inTree = true;
 		config.getModel().assumePermanently(gameState);
 		expandChildren();
 	}
 
 	@Override
 	public void backPropagate(double value){
-		addSample(value);
+		backPropStrategy.onBackPropagate(value);
 		//no parent to call
 	}
 

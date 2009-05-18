@@ -34,24 +34,24 @@ public class AllInEvent
 	@XmlAttribute
 	private final boolean endsRound;
 	
-	private final int amount;
+	private final int movedAmount;
 	
 	/**
 	 * 
 	 * @param player
-	 * @param amount
+	 * @param movedAmount
 	 * 		  The amount of chips moved in addition to the existing bet by the player.
 	 * @param endsRound
 	 */
-	public AllInEvent(PlayerId player, int amount, boolean endsRound) {
+	public AllInEvent(PlayerId player, int movedAmount, boolean endsRound) {
 		this.playerId = player;
-		this.amount = amount;
+		this.movedAmount = movedAmount;
 		this.endsRound = endsRound;
 	}
 	
 	protected AllInEvent() {
 		playerId = null;
-		amount = 0;
+		movedAmount = 0;
 		endsRound = false;
 	}
 	
@@ -59,8 +59,8 @@ public class AllInEvent
 		return playerId;
 	}
 	
-	public int getAmount() {
-		return amount;
+	public int getMovedAmount() {
+		return movedAmount;
 	}
 	
 	@Override
@@ -70,7 +70,7 @@ public class AllInEvent
 	
 	@Override
 	public String toString() {
-		return playerId + " is all-in with " + amount + ".";
+		return playerId + " is all-in with " + movedAmount + ".";
 	}
 	
 	public boolean endsRound() {

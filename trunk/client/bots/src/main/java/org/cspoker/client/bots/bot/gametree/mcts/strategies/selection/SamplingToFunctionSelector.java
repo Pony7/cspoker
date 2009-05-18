@@ -13,36 +13,28 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.client.bots.bot.gametree.mcts.nodes;
+package org.cspoker.client.bots.bot.gametree.mcts.strategies.selection;
 
-import org.cspoker.client.bots.bot.gametree.action.ProbabilityAction;
-import org.cspoker.client.common.gamestate.GameState;
+import org.cspoker.client.bots.bot.gametree.mcts.nodes.INode;
+import org.cspoker.client.bots.bot.gametree.mcts.nodes.InnerNode;
 
-public interface INode {
+public class SamplingToFunctionSelector implements SelectionStrategy {
 
-	INode selectRecursively();
+	private final MaxFunctionSelector functionSelector;
+	private final int threshold;
+	
+	public SamplingToFunctionSelector(int threshold, MaxFunctionSelector functionSelector) {
+		this.threshold = threshold;
+		this.functionSelector = functionSelector;
+	}
+	
+	@Override
+	public INode select(InnerNode innerNode) {
+		if(innerNode.getNbSamples()<threshold){
+			return innerNode.getRandomChild();
+		}else{
+			return functionSelector.select(innerNode);
+		}
+	}
 
-	void expand();
-	
-	double simulate();
-
-	void backPropagate(double value);
-
-	InnerNode getParent();
-	
-	ProbabilityAction getLastAction();
-
-	double getEV();
-	
-	double getStdDev();
-	
-	double getEVStdDev();
-	
-	int getNbSamplesInMean();
-	
-	double getVariance();
-	
-	int getNbSamples();
-	
-	GameState getGameState();
 }

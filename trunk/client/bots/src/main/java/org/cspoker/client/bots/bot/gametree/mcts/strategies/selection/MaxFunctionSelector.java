@@ -13,7 +13,7 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.client.bots.bot.gametree.mcts.strategies;
+package org.cspoker.client.bots.bot.gametree.mcts.strategies.selection;
 
 import org.cspoker.client.bots.bot.gametree.mcts.nodes.INode;
 import org.cspoker.client.bots.bot.gametree.mcts.nodes.InnerNode;
@@ -33,6 +33,10 @@ public abstract class MaxFunctionSelector implements SelectionStrategy {
 				maxValue = value;
 				maxNode = node;
 			}
+		}
+		if(maxNode==null){
+			//fall back on max value selector which can't fail;
+			return (new MaxValueSelector()).select(innerNode);
 		}
 		return maxNode;
 	}

@@ -152,18 +152,18 @@ THREE, THREE, THREE, THREE, SIX, 4K, Four Treys, false, 151
 THREE, THREE, THREE, THREE, FIVE, 4K, Four Treys, false, 152 
 THREE, THREE, THREE, THREE, FOUR, 4K, Four Treys, false, 153 
 THREE, THREE, THREE, THREE, TWO, 4K, Four Treys, false, 154 
-TWO, TWO, TWO, TWO, ACE, 4K, Four TWOs, false, 155 
-TWO, TWO, TWO, TWO, KING, 4K, Four TWOs, false, 156 
-TWO, TWO, TWO, TWO, QUEEN, 4K, Four TWOs, false, 157 
-TWO, TWO, TWO, TWO, JACK, 4K, Four TWOs, false, 158 
-TWO, TWO, TWO, TWO, TEN, 4K, Four TWOs, false, 159 
-TWO, TWO, TWO, TWO, NINE, 4K, Four TWOs, false, 160 
-TWO, TWO, TWO, TWO, EIGHT, 4K, Four TWOs, false, 161 
-TWO, TWO, TWO, TWO, SEVEN, 4K, Four TWOs, false, 162 
-TWO, TWO, TWO, TWO, SIX, 4K, Four TWOs, false, 163 
-TWO, TWO, TWO, TWO, FIVE, 4K, Four TWOs, false, 164 
-TWO, TWO, TWO, TWO, FOUR, 4K, Four TWOs, false, 165 
-TWO, TWO, TWO, TWO, THREE, 4K, Four TWOs, false, 166 
+TWO, TWO, TWO, TWO, ACE, 4K, Four Twos, false, 155 
+TWO, TWO, TWO, TWO, KING, 4K, Four Twos, false, 156 
+TWO, TWO, TWO, TWO, QUEEN, 4K, Four Twos, false, 157 
+TWO, TWO, TWO, TWO, JACK, 4K, Four Twos, false, 158 
+TWO, TWO, TWO, TWO, TEN, 4K, Four Twos, false, 159 
+TWO, TWO, TWO, TWO, NINE, 4K, Four Twos, false, 160 
+TWO, TWO, TWO, TWO, EIGHT, 4K, Four Twos, false, 161 
+TWO, TWO, TWO, TWO, SEVEN, 4K, Four Twos, false, 162 
+TWO, TWO, TWO, TWO, SIX, 4K, Four Twos, false, 163 
+TWO, TWO, TWO, TWO, FIVE, 4K, Four Twos, false, 164 
+TWO, TWO, TWO, TWO, FOUR, 4K, Four Twos, false, 165 
+TWO, TWO, TWO, TWO, THREE, 4K, Four Twos, false, 166 
 ACE, ACE, ACE, KING, KING, FH, Aces Full over Kings, false, 167 
 ACE, ACE, ACE, QUEEN, QUEEN, FH, Aces Full over Queens, false, 168 
 ACE, ACE, ACE, JACK, JACK, FH, Aces Full over Jacks, false, 169 
@@ -175,7 +175,7 @@ ACE, ACE, ACE, SIX, SIX, FH, Aces Full over Sixes, false, 174
 ACE, ACE, ACE, FIVE, FIVE, FH, Aces Full over Fives, false, 175 
 ACE, ACE, ACE, FOUR, FOUR, FH, Aces Full over Fours, false, 176 
 ACE, ACE, ACE, THREE, THREE, FH, Aces Full over Treys, false, 177 
-ACE, ACE, ACE, TWO, TWO, FH, Aces Full over TWOs, false, 178 
+ACE, ACE, ACE, TWO, TWO, FH, Aces Full over Twos, false, 178 
 KING, KING, KING, ACE, ACE, FH, Kings Full over Aces, false, 179 
 KING, KING, KING, QUEEN, QUEEN, FH, Kings Full over Queens, false, 180 
 KING, KING, KING, JACK, JACK, FH, Kings Full over Jacks, false, 181 
@@ -187,7 +187,7 @@ KING, KING, KING, SIX, SIX, FH, Kings Full over Sixes, false, 186
 KING, KING, KING, FIVE, FIVE, FH, Kings Full over Fives, false, 187 
 KING, KING, KING, FOUR, FOUR, FH, Kings Full over Fours, false, 188 
 KING, KING, KING, THREE, THREE, FH, Kings Full over Treys, false, 189 
-KING, KING, KING, TWO, TWO, FH, Kings Full over TWOs, false, 190 
+KING, KING, KING, TWO, TWO, FH, Kings Full over Twos, false, 190 
 QUEEN, QUEEN, QUEEN, ACE, ACE, FH, Queens Full over Aces, false, 191 
 QUEEN, QUEEN, QUEEN, KING, KING, FH, Queens Full over Kings, false, 192 
 QUEEN, QUEEN, QUEEN, JACK, JACK, FH, Queens Full over Jacks, false, 193 
@@ -199,7 +199,7 @@ QUEEN, QUEEN, QUEEN, SIX, SIX, FH, Queens Full over Sixes, false, 198
 QUEEN, QUEEN, QUEEN, FIVE, FIVE, FH, Queens Full over Fives, false, 199 
 QUEEN, QUEEN, QUEEN, FOUR, FOUR, FH, Queens Full over Fours, false, 200 
 QUEEN, QUEEN, QUEEN, THREE, THREE, FH, Queens Full over Treys, false, 201 
-QUEEN, QUEEN, QUEEN, TWO, TWO, FH, Queens Full over TWOs, false, 202 
+QUEEN, QUEEN, QUEEN, TWO, TWO, FH, Queens Full over Twos, false, 202 
 JACK, JACK, JACK, ACE, ACE, FH, Jacks Full over Aces, false, 203 
 JACK, JACK, JACK, KING, KING, FH, Jacks Full over Kings, false, 204 
 JACK, JACK, JACK, QUEEN, QUEEN, FH, Jacks Full over Queens, false, 205 
@@ -211,7 +211,7 @@ JACK, JACK, JACK, SIX, SIX, FH, Jacks Full over Sixes, false, 210
 JACK, JACK, JACK, FIVE, FIVE, FH, Jacks Full over Fives, false, 211 
 JACK, JACK, JACK, FOUR, FOUR, FH, Jacks Full over Fours, false, 212 
 JACK, JACK, JACK, THREE, THREE, FH, Jacks Full over Treys, false, 213 
-JACK, JACK, JACK, TWO, TWO, FH, Jacks Full over TWOs, false, 214 
+JACK, JACK, JACK, TWO, TWO, FH, Jacks Full over Twos, false, 214 
 TEN, TEN, TEN, ACE, ACE, FH, Tens Full over Aces, false, 215 
 TEN, TEN, TEN, KING, KING, FH, Tens Full over Kings, false, 216 
 TEN, TEN, TEN, QUEEN, QUEEN, FH, Tens Full over Queens, false, 217 
@@ -223,7 +223,7 @@ TEN, TEN, TEN, SIX, SIX, FH, Tens Full over Sixes, false, 222
 TEN, TEN, TEN, FIVE, FIVE, FH, Tens Full over Fives, false, 223 
 TEN, TEN, TEN, FOUR, FOUR, FH, Tens Full over Fours, false, 224 
 TEN, TEN, TEN, THREE, THREE, FH, Tens Full over Treys, false, 225 
-TEN, TEN, TEN, TWO, TWO, FH, Tens Full over TWOs, false, 226 
+TEN, TEN, TEN, TWO, TWO, FH, Tens Full over Twos, false, 226 
 NINE, NINE, NINE, ACE, ACE, FH, Nines Full over Aces, false, 227 
 NINE, NINE, NINE, KING, KING, FH, Nines Full over Kings, false, 228 
 NINE, NINE, NINE, QUEEN, QUEEN, FH, Nines Full over Queens, false, 229 
@@ -235,7 +235,7 @@ NINE, NINE, NINE, SIX, SIX, FH, Nines Full over Sixes, false, 234
 NINE, NINE, NINE, FIVE, FIVE, FH, Nines Full over Fives, false, 235 
 NINE, NINE, NINE, FOUR, FOUR, FH, Nines Full over Fours, false, 236 
 NINE, NINE, NINE, THREE, THREE, FH, Nines Full over Treys, false, 237 
-NINE, NINE, NINE, TWO, TWO, FH, Nines Full over TWOs, false, 238 
+NINE, NINE, NINE, TWO, TWO, FH, Nines Full over Twos, false, 238 
 EIGHT, EIGHT, EIGHT, ACE, ACE, FH, Eights Full over Aces, false, 239 
 EIGHT, EIGHT, EIGHT, KING, KING, FH, Eights Full over Kings, false, 240 
 EIGHT, EIGHT, EIGHT, QUEEN, QUEEN, FH, Eights Full over Queens, false, 241 
@@ -247,7 +247,7 @@ EIGHT, EIGHT, EIGHT, SIX, SIX, FH, Eights Full over Sixes, false, 246
 EIGHT, EIGHT, EIGHT, FIVE, FIVE, FH, Eights Full over Fives, false, 247 
 EIGHT, EIGHT, EIGHT, FOUR, FOUR, FH, Eights Full over Fours, false, 248 
 EIGHT, EIGHT, EIGHT, THREE, THREE, FH, Eights Full over Treys, false, 249 
-EIGHT, EIGHT, EIGHT, TWO, TWO, FH, Eights Full over TWOs, false, 250 
+EIGHT, EIGHT, EIGHT, TWO, TWO, FH, Eights Full over Twos, false, 250 
 SEVEN, SEVEN, SEVEN, ACE, ACE, FH, Sevens Full over Aces, false, 251 
 SEVEN, SEVEN, SEVEN, KING, KING, FH, Sevens Full over Kings, false, 252 
 SEVEN, SEVEN, SEVEN, QUEEN, QUEEN, FH, Sevens Full over Queens, false, 253 
@@ -259,7 +259,7 @@ SEVEN, SEVEN, SEVEN, SIX, SIX, FH, Sevens Full over Sixes, false, 258
 SEVEN, SEVEN, SEVEN, FIVE, FIVE, FH, Sevens Full over Fives, false, 259 
 SEVEN, SEVEN, SEVEN, FOUR, FOUR, FH, Sevens Full over Fours, false, 260 
 SEVEN, SEVEN, SEVEN, THREE, THREE, FH, Sevens Full over Treys, false, 261 
-SEVEN, SEVEN, SEVEN, TWO, TWO, FH, Sevens Full over TWOs, false, 262 
+SEVEN, SEVEN, SEVEN, TWO, TWO, FH, Sevens Full over Twos, false, 262 
 SIX, SIX, SIX, ACE, ACE, FH, Sixes Full over Aces, false, 263 
 SIX, SIX, SIX, KING, KING, FH, Sixes Full over Kings, false, 264 
 SIX, SIX, SIX, QUEEN, QUEEN, FH, Sixes Full over Queens, false, 265 
@@ -271,7 +271,7 @@ SIX, SIX, SIX, SEVEN, SEVEN, FH, Sixes Full over Sevens, false, 270
 SIX, SIX, SIX, FIVE, FIVE, FH, Sixes Full over Fives, false, 271 
 SIX, SIX, SIX, FOUR, FOUR, FH, Sixes Full over Fours, false, 272 
 SIX, SIX, SIX, THREE, THREE, FH, Sixes Full over Treys, false, 273 
-SIX, SIX, SIX, TWO, TWO, FH, Sixes Full over TWOs, false, 274 
+SIX, SIX, SIX, TWO, TWO, FH, Sixes Full over Twos, false, 274 
 FIVE, FIVE, FIVE, ACE, ACE, FH, Fives Full over Aces, false, 275 
 FIVE, FIVE, FIVE, KING, KING, FH, Fives Full over Kings, false, 276 
 FIVE, FIVE, FIVE, QUEEN, QUEEN, FH, Fives Full over Queens, false, 277 
@@ -283,7 +283,7 @@ FIVE, FIVE, FIVE, SEVEN, SEVEN, FH, Fives Full over Sevens, false, 282
 FIVE, FIVE, FIVE, SIX, SIX, FH, Fives Full over Sixes, false, 283 
 FIVE, FIVE, FIVE, FOUR, FOUR, FH, Fives Full over Fours, false, 284 
 FIVE, FIVE, FIVE, THREE, THREE, FH, Fives Full over Treys, false, 285 
-FIVE, FIVE, FIVE, TWO, TWO, FH, Fives Full over TWOs, false, 286 
+FIVE, FIVE, FIVE, TWO, TWO, FH, Fives Full over Twos, false, 286 
 FOUR, FOUR, FOUR, ACE, ACE, FH, Fours Full over Aces, false, 287 
 FOUR, FOUR, FOUR, KING, KING, FH, Fours Full over Kings, false, 288 
 FOUR, FOUR, FOUR, QUEEN, QUEEN, FH, Fours Full over Queens, false, 289 
@@ -295,7 +295,7 @@ FOUR, FOUR, FOUR, SEVEN, SEVEN, FH, Fours Full over Sevens, false, 294
 FOUR, FOUR, FOUR, SIX, SIX, FH, Fours Full over Sixes, false, 295 
 FOUR, FOUR, FOUR, FIVE, FIVE, FH, Fours Full over Fives, false, 296 
 FOUR, FOUR, FOUR, THREE, THREE, FH, Fours Full over Treys, false, 297 
-FOUR, FOUR, FOUR, TWO, TWO, FH, Fours Full over TWOs, false, 298 
+FOUR, FOUR, FOUR, TWO, TWO, FH, Fours Full over Twos, false, 298 
 THREE, THREE, THREE, ACE, ACE, FH, Treys Full over Aces, false, 299 
 THREE, THREE, THREE, KING, KING, FH, Treys Full over Kings, false, 300 
 THREE, THREE, THREE, QUEEN, QUEEN, FH, Treys Full over Queens, false, 301 
@@ -307,19 +307,19 @@ THREE, THREE, THREE, SEVEN, SEVEN, FH, Treys Full over Sevens, false, 306
 THREE, THREE, THREE, SIX, SIX, FH, Treys Full over Sixes, false, 307 
 THREE, THREE, THREE, FIVE, FIVE, FH, Treys Full over Fives, false, 308 
 THREE, THREE, THREE, FOUR, FOUR, FH, Treys Full over Fours, false, 309 
-THREE, THREE, THREE, TWO, TWO, FH, Treys Full over TWOs, false, 310 
-TWO, TWO, TWO, ACE, ACE, FH, TWOs Full over Aces, false, 311 
-TWO, TWO, TWO, KING, KING, FH, TWOs Full over Kings, false, 312 
-TWO, TWO, TWO, QUEEN, QUEEN, FH, TWOs Full over Queens, false, 313 
-TWO, TWO, TWO, JACK, JACK, FH, TWOs Full over Jacks, false, 314 
-TWO, TWO, TWO, TEN, TEN, FH, TWOs Full over Tens, false, 315 
-TWO, TWO, TWO, NINE, NINE, FH, TWOs Full over Nines, false, 316 
-TWO, TWO, TWO, EIGHT, EIGHT, FH, TWOs Full over Eights, false, 317 
-TWO, TWO, TWO, SEVEN, SEVEN, FH, TWOs Full over Sevens, false, 318 
-TWO, TWO, TWO, SIX, SIX, FH, TWOs Full over Sixes, false, 319 
-TWO, TWO, TWO, FIVE, FIVE, FH, TWOs Full over Fives, false, 320 
-TWO, TWO, TWO, FOUR, FOUR, FH, TWOs Full over Fours, false, 321 
-TWO, TWO, TWO, THREE, THREE, FH, TWOs Full over Treys, false, 322 
+THREE, THREE, THREE, TWO, TWO, FH, Treys Full over Twos, false, 310 
+TWO, TWO, TWO, ACE, ACE, FH, Twos Full over Aces, false, 311 
+TWO, TWO, TWO, KING, KING, FH, Twos Full over Kings, false, 312 
+TWO, TWO, TWO, QUEEN, QUEEN, FH, Twos Full over Queens, false, 313 
+TWO, TWO, TWO, JACK, JACK, FH, Twos Full over Jacks, false, 314 
+TWO, TWO, TWO, TEN, TEN, FH, Twos Full over Tens, false, 315 
+TWO, TWO, TWO, NINE, NINE, FH, Twos Full over Nines, false, 316 
+TWO, TWO, TWO, EIGHT, EIGHT, FH, Twos Full over Eights, false, 317 
+TWO, TWO, TWO, SEVEN, SEVEN, FH, Twos Full over Sevens, false, 318 
+TWO, TWO, TWO, SIX, SIX, FH, Twos Full over Sixes, false, 319 
+TWO, TWO, TWO, FIVE, FIVE, FH, Twos Full over Fives, false, 320 
+TWO, TWO, TWO, FOUR, FOUR, FH, Twos Full over Fours, false, 321 
+TWO, TWO, TWO, THREE, THREE, FH, Twos Full over Treys, false, 322 
 ACE, KING, QUEEN, JACK, NINE, F, Ace-High Flush, true, 323 
 ACE, KING, QUEEN, JACK, EIGHT, F, Ace-High Flush, true, 324 
 ACE, KING, QUEEN, JACK, SEVEN, F, Ace-High Flush, true, 325 
@@ -2399,72 +2399,72 @@ THREE, THREE, THREE, SIX, TWO, 3K, Three Treys, false, 2398
 THREE, THREE, THREE, FIVE, FOUR, 3K, Three Treys, false, 2399 
 THREE, THREE, THREE, FIVE, TWO, 3K, Three Treys, false, 2400 
 THREE, THREE, THREE, FOUR, TWO, 3K, Three Treys, false, 2401 
-TWO, TWO, TWO, ACE, KING, 3K, Three TWOs, false, 2402 
-TWO, TWO, TWO, ACE, QUEEN, 3K, Three TWOs, false, 2403 
-TWO, TWO, TWO, ACE, JACK, 3K, Three TWOs, false, 2404 
-TWO, TWO, TWO, ACE, TEN, 3K, Three TWOs, false, 2405 
-TWO, TWO, TWO, ACE, NINE, 3K, Three TWOs, false, 2406 
-TWO, TWO, TWO, ACE, EIGHT, 3K, Three TWOs, false, 2407 
-TWO, TWO, TWO, ACE, SEVEN, 3K, Three TWOs, false, 2408 
-TWO, TWO, TWO, ACE, SIX, 3K, Three TWOs, false, 2409 
-TWO, TWO, TWO, ACE, FIVE, 3K, Three TWOs, false, 2410 
-TWO, TWO, TWO, ACE, FOUR, 3K, Three TWOs, false, 2411 
-TWO, TWO, TWO, ACE, THREE, 3K, Three TWOs, false, 2412 
-TWO, TWO, TWO, KING, QUEEN, 3K, Three TWOs, false, 2413 
-TWO, TWO, TWO, KING, JACK, 3K, Three TWOs, false, 2414 
-TWO, TWO, TWO, KING, TEN, 3K, Three TWOs, false, 2415 
-TWO, TWO, TWO, KING, NINE, 3K, Three TWOs, false, 2416 
-TWO, TWO, TWO, KING, EIGHT, 3K, Three TWOs, false, 2417 
-TWO, TWO, TWO, KING, SEVEN, 3K, Three TWOs, false, 2418 
-TWO, TWO, TWO, KING, SIX, 3K, Three TWOs, false, 2419 
-TWO, TWO, TWO, KING, FIVE, 3K, Three TWOs, false, 2420 
-TWO, TWO, TWO, KING, FOUR, 3K, Three TWOs, false, 2421 
-TWO, TWO, TWO, KING, THREE, 3K, Three TWOs, false, 2422 
-TWO, TWO, TWO, QUEEN, JACK, 3K, Three TWOs, false, 2423 
-TWO, TWO, TWO, QUEEN, TEN, 3K, Three TWOs, false, 2424 
-TWO, TWO, TWO, QUEEN, NINE, 3K, Three TWOs, false, 2425 
-TWO, TWO, TWO, QUEEN, EIGHT, 3K, Three TWOs, false, 2426 
-TWO, TWO, TWO, QUEEN, SEVEN, 3K, Three TWOs, false, 2427 
-TWO, TWO, TWO, QUEEN, SIX, 3K, Three TWOs, false, 2428 
-TWO, TWO, TWO, QUEEN, FIVE, 3K, Three TWOs, false, 2429 
-TWO, TWO, TWO, QUEEN, FOUR, 3K, Three TWOs, false, 2430 
-TWO, TWO, TWO, QUEEN, THREE, 3K, Three TWOs, false, 2431 
-TWO, TWO, TWO, JACK, TEN, 3K, Three TWOs, false, 2432 
-TWO, TWO, TWO, JACK, NINE, 3K, Three TWOs, false, 2433 
-TWO, TWO, TWO, JACK, EIGHT, 3K, Three TWOs, false, 2434 
-TWO, TWO, TWO, JACK, SEVEN, 3K, Three TWOs, false, 2435 
-TWO, TWO, TWO, JACK, SIX, 3K, Three TWOs, false, 2436 
-TWO, TWO, TWO, JACK, FIVE, 3K, Three TWOs, false, 2437 
-TWO, TWO, TWO, JACK, FOUR, 3K, Three TWOs, false, 2438 
-TWO, TWO, TWO, JACK, THREE, 3K, Three TWOs, false, 2439 
-TWO, TWO, TWO, TEN, NINE, 3K, Three TWOs, false, 2440 
-TWO, TWO, TWO, TEN, EIGHT, 3K, Three TWOs, false, 2441 
-TWO, TWO, TWO, TEN, SEVEN, 3K, Three TWOs, false, 2442 
-TWO, TWO, TWO, TEN, SIX, 3K, Three TWOs, false, 2443 
-TWO, TWO, TWO, TEN, FIVE, 3K, Three TWOs, false, 2444 
-TWO, TWO, TWO, TEN, FOUR, 3K, Three TWOs, false, 2445 
-TWO, TWO, TWO, TEN, THREE, 3K, Three TWOs, false, 2446 
-TWO, TWO, TWO, NINE, EIGHT, 3K, Three TWOs, false, 2447 
-TWO, TWO, TWO, NINE, SEVEN, 3K, Three TWOs, false, 2448 
-TWO, TWO, TWO, NINE, SIX, 3K, Three TWOs, false, 2449 
-TWO, TWO, TWO, NINE, FIVE, 3K, Three TWOs, false, 2450 
-TWO, TWO, TWO, NINE, FOUR, 3K, Three TWOs, false, 2451 
-TWO, TWO, TWO, NINE, THREE, 3K, Three TWOs, false, 2452 
-TWO, TWO, TWO, EIGHT, SEVEN, 3K, Three TWOs, false, 2453 
-TWO, TWO, TWO, EIGHT, SIX, 3K, Three TWOs, false, 2454 
-TWO, TWO, TWO, EIGHT, FIVE, 3K, Three TWOs, false, 2455 
-TWO, TWO, TWO, EIGHT, FOUR, 3K, Three TWOs, false, 2456 
-TWO, TWO, TWO, EIGHT, THREE, 3K, Three TWOs, false, 2457 
-TWO, TWO, TWO, SEVEN, SIX, 3K, Three TWOs, false, 2458 
-TWO, TWO, TWO, SEVEN, FIVE, 3K, Three TWOs, false, 2459 
-TWO, TWO, TWO, SEVEN, FOUR, 3K, Three TWOs, false, 2460 
-TWO, TWO, TWO, SEVEN, THREE, 3K, Three TWOs, false, 2461 
-TWO, TWO, TWO, SIX, FIVE, 3K, Three TWOs, false, 2462 
-TWO, TWO, TWO, SIX, FOUR, 3K, Three TWOs, false, 2463 
-TWO, TWO, TWO, SIX, THREE, 3K, Three TWOs, false, 2464 
-TWO, TWO, TWO, FIVE, FOUR, 3K, Three TWOs, false, 2465 
-TWO, TWO, TWO, FIVE, THREE, 3K, Three TWOs, false, 2466 
-TWO, TWO, TWO, FOUR, THREE, 3K, Three TWOs, false, 2467 
+TWO, TWO, TWO, ACE, KING, 3K, Three Twos, false, 2402 
+TWO, TWO, TWO, ACE, QUEEN, 3K, Three Twos, false, 2403 
+TWO, TWO, TWO, ACE, JACK, 3K, Three Twos, false, 2404 
+TWO, TWO, TWO, ACE, TEN, 3K, Three Twos, false, 2405 
+TWO, TWO, TWO, ACE, NINE, 3K, Three Twos, false, 2406 
+TWO, TWO, TWO, ACE, EIGHT, 3K, Three Twos, false, 2407 
+TWO, TWO, TWO, ACE, SEVEN, 3K, Three Twos, false, 2408 
+TWO, TWO, TWO, ACE, SIX, 3K, Three Twos, false, 2409 
+TWO, TWO, TWO, ACE, FIVE, 3K, Three Twos, false, 2410 
+TWO, TWO, TWO, ACE, FOUR, 3K, Three Twos, false, 2411 
+TWO, TWO, TWO, ACE, THREE, 3K, Three Twos, false, 2412 
+TWO, TWO, TWO, KING, QUEEN, 3K, Three Twos, false, 2413 
+TWO, TWO, TWO, KING, JACK, 3K, Three Twos, false, 2414 
+TWO, TWO, TWO, KING, TEN, 3K, Three Twos, false, 2415 
+TWO, TWO, TWO, KING, NINE, 3K, Three Twos, false, 2416 
+TWO, TWO, TWO, KING, EIGHT, 3K, Three Twos, false, 2417 
+TWO, TWO, TWO, KING, SEVEN, 3K, Three Twos, false, 2418 
+TWO, TWO, TWO, KING, SIX, 3K, Three Twos, false, 2419 
+TWO, TWO, TWO, KING, FIVE, 3K, Three Twos, false, 2420 
+TWO, TWO, TWO, KING, FOUR, 3K, Three Twos, false, 2421 
+TWO, TWO, TWO, KING, THREE, 3K, Three Twos, false, 2422 
+TWO, TWO, TWO, QUEEN, JACK, 3K, Three Twos, false, 2423 
+TWO, TWO, TWO, QUEEN, TEN, 3K, Three Twos, false, 2424 
+TWO, TWO, TWO, QUEEN, NINE, 3K, Three Twos, false, 2425 
+TWO, TWO, TWO, QUEEN, EIGHT, 3K, Three Twos, false, 2426 
+TWO, TWO, TWO, QUEEN, SEVEN, 3K, Three Twos, false, 2427 
+TWO, TWO, TWO, QUEEN, SIX, 3K, Three Twos, false, 2428 
+TWO, TWO, TWO, QUEEN, FIVE, 3K, Three Twos, false, 2429 
+TWO, TWO, TWO, QUEEN, FOUR, 3K, Three Twos, false, 2430 
+TWO, TWO, TWO, QUEEN, THREE, 3K, Three Twos, false, 2431 
+TWO, TWO, TWO, JACK, TEN, 3K, Three Twos, false, 2432 
+TWO, TWO, TWO, JACK, NINE, 3K, Three Twos, false, 2433 
+TWO, TWO, TWO, JACK, EIGHT, 3K, Three Twos, false, 2434 
+TWO, TWO, TWO, JACK, SEVEN, 3K, Three Twos, false, 2435 
+TWO, TWO, TWO, JACK, SIX, 3K, Three Twos, false, 2436 
+TWO, TWO, TWO, JACK, FIVE, 3K, Three Twos, false, 2437 
+TWO, TWO, TWO, JACK, FOUR, 3K, Three Twos, false, 2438 
+TWO, TWO, TWO, JACK, THREE, 3K, Three Twos, false, 2439 
+TWO, TWO, TWO, TEN, NINE, 3K, Three Twos, false, 2440 
+TWO, TWO, TWO, TEN, EIGHT, 3K, Three Twos, false, 2441 
+TWO, TWO, TWO, TEN, SEVEN, 3K, Three Twos, false, 2442 
+TWO, TWO, TWO, TEN, SIX, 3K, Three Twos, false, 2443 
+TWO, TWO, TWO, TEN, FIVE, 3K, Three Twos, false, 2444 
+TWO, TWO, TWO, TEN, FOUR, 3K, Three Twos, false, 2445 
+TWO, TWO, TWO, TEN, THREE, 3K, Three Twos, false, 2446 
+TWO, TWO, TWO, NINE, EIGHT, 3K, Three Twos, false, 2447 
+TWO, TWO, TWO, NINE, SEVEN, 3K, Three Twos, false, 2448 
+TWO, TWO, TWO, NINE, SIX, 3K, Three Twos, false, 2449 
+TWO, TWO, TWO, NINE, FIVE, 3K, Three Twos, false, 2450 
+TWO, TWO, TWO, NINE, FOUR, 3K, Three Twos, false, 2451 
+TWO, TWO, TWO, NINE, THREE, 3K, Three Twos, false, 2452 
+TWO, TWO, TWO, EIGHT, SEVEN, 3K, Three Twos, false, 2453 
+TWO, TWO, TWO, EIGHT, SIX, 3K, Three Twos, false, 2454 
+TWO, TWO, TWO, EIGHT, FIVE, 3K, Three Twos, false, 2455 
+TWO, TWO, TWO, EIGHT, FOUR, 3K, Three Twos, false, 2456 
+TWO, TWO, TWO, EIGHT, THREE, 3K, Three Twos, false, 2457 
+TWO, TWO, TWO, SEVEN, SIX, 3K, Three Twos, false, 2458 
+TWO, TWO, TWO, SEVEN, FIVE, 3K, Three Twos, false, 2459 
+TWO, TWO, TWO, SEVEN, FOUR, 3K, Three Twos, false, 2460 
+TWO, TWO, TWO, SEVEN, THREE, 3K, Three Twos, false, 2461 
+TWO, TWO, TWO, SIX, FIVE, 3K, Three Twos, false, 2462 
+TWO, TWO, TWO, SIX, FOUR, 3K, Three Twos, false, 2463 
+TWO, TWO, TWO, SIX, THREE, 3K, Three Twos, false, 2464 
+TWO, TWO, TWO, FIVE, FOUR, 3K, Three Twos, false, 2465 
+TWO, TWO, TWO, FIVE, THREE, 3K, Three Twos, false, 2466 
+TWO, TWO, TWO, FOUR, THREE, 3K, Three Twos, false, 2467 
 ACE, ACE, KING, KING, QUEEN, 2P, Aces and Kings, false, 2468 
 ACE, ACE, KING, KING, JACK, 2P, Aces and Kings, false, 2469 
 ACE, ACE, KING, KING, TEN, 2P, Aces and Kings, false, 2470 
@@ -2586,17 +2586,17 @@ ACE, ACE, THREE, THREE, SIX, 2P, Aces and Treys, false, 2585
 ACE, ACE, THREE, THREE, FIVE, 2P, Aces and Treys, false, 2586 
 ACE, ACE, THREE, THREE, FOUR, 2P, Aces and Treys, false, 2587 
 ACE, ACE, THREE, THREE, TWO, 2P, Aces and Treys, false, 2588 
-ACE, ACE, TWO, TWO, KING, 2P, Aces and TWOs, false, 2589 
-ACE, ACE, TWO, TWO, QUEEN, 2P, Aces and TWOs, false, 2590 
-ACE, ACE, TWO, TWO, JACK, 2P, Aces and TWOs, false, 2591 
-ACE, ACE, TWO, TWO, TEN, 2P, Aces and TWOs, false, 2592 
-ACE, ACE, TWO, TWO, NINE, 2P, Aces and TWOs, false, 2593 
-ACE, ACE, TWO, TWO, EIGHT, 2P, Aces and TWOs, false, 2594 
-ACE, ACE, TWO, TWO, SEVEN, 2P, Aces and TWOs, false, 2595 
-ACE, ACE, TWO, TWO, SIX, 2P, Aces and TWOs, false, 2596 
-ACE, ACE, TWO, TWO, FIVE, 2P, Aces and TWOs, false, 2597 
-ACE, ACE, TWO, TWO, FOUR, 2P, Aces and TWOs, false, 2598 
-ACE, ACE, TWO, TWO, THREE, 2P, Aces and TWOs, false, 2599 
+ACE, ACE, TWO, TWO, KING, 2P, Aces and Twos, false, 2589 
+ACE, ACE, TWO, TWO, QUEEN, 2P, Aces and Twos, false, 2590 
+ACE, ACE, TWO, TWO, JACK, 2P, Aces and Twos, false, 2591 
+ACE, ACE, TWO, TWO, TEN, 2P, Aces and Twos, false, 2592 
+ACE, ACE, TWO, TWO, NINE, 2P, Aces and Twos, false, 2593 
+ACE, ACE, TWO, TWO, EIGHT, 2P, Aces and Twos, false, 2594 
+ACE, ACE, TWO, TWO, SEVEN, 2P, Aces and Twos, false, 2595 
+ACE, ACE, TWO, TWO, SIX, 2P, Aces and Twos, false, 2596 
+ACE, ACE, TWO, TWO, FIVE, 2P, Aces and Twos, false, 2597 
+ACE, ACE, TWO, TWO, FOUR, 2P, Aces and Twos, false, 2598 
+ACE, ACE, TWO, TWO, THREE, 2P, Aces and Twos, false, 2599 
 KING, KING, QUEEN, QUEEN, ACE, 2P, Kings and Queens, false, 2600 
 KING, KING, QUEEN, QUEEN, JACK, 2P, Kings and Queens, false, 2601 
 KING, KING, QUEEN, QUEEN, TEN, 2P, Kings and Queens, false, 2602 
@@ -2707,17 +2707,17 @@ KING, KING, THREE, THREE, SIX, 2P, Kings and Treys, false, 2706
 KING, KING, THREE, THREE, FIVE, 2P, Kings and Treys, false, 2707 
 KING, KING, THREE, THREE, FOUR, 2P, Kings and Treys, false, 2708 
 KING, KING, THREE, THREE, TWO, 2P, Kings and Treys, false, 2709 
-KING, KING, TWO, TWO, ACE, 2P, Kings and TWOs, false, 2710 
-KING, KING, TWO, TWO, QUEEN, 2P, Kings and TWOs, false, 2711 
-KING, KING, TWO, TWO, JACK, 2P, Kings and TWOs, false, 2712 
-KING, KING, TWO, TWO, TEN, 2P, Kings and TWOs, false, 2713 
-KING, KING, TWO, TWO, NINE, 2P, Kings and TWOs, false, 2714 
-KING, KING, TWO, TWO, EIGHT, 2P, Kings and TWOs, false, 2715 
-KING, KING, TWO, TWO, SEVEN, 2P, Kings and TWOs, false, 2716 
-KING, KING, TWO, TWO, SIX, 2P, Kings and TWOs, false, 2717 
-KING, KING, TWO, TWO, FIVE, 2P, Kings and TWOs, false, 2718 
-KING, KING, TWO, TWO, FOUR, 2P, Kings and TWOs, false, 2719 
-KING, KING, TWO, TWO, THREE, 2P, Kings and TWOs, false, 2720 
+KING, KING, TWO, TWO, ACE, 2P, Kings and Twos, false, 2710 
+KING, KING, TWO, TWO, QUEEN, 2P, Kings and Twos, false, 2711 
+KING, KING, TWO, TWO, JACK, 2P, Kings and Twos, false, 2712 
+KING, KING, TWO, TWO, TEN, 2P, Kings and Twos, false, 2713 
+KING, KING, TWO, TWO, NINE, 2P, Kings and Twos, false, 2714 
+KING, KING, TWO, TWO, EIGHT, 2P, Kings and Twos, false, 2715 
+KING, KING, TWO, TWO, SEVEN, 2P, Kings and Twos, false, 2716 
+KING, KING, TWO, TWO, SIX, 2P, Kings and Twos, false, 2717 
+KING, KING, TWO, TWO, FIVE, 2P, Kings and Twos, false, 2718 
+KING, KING, TWO, TWO, FOUR, 2P, Kings and Twos, false, 2719 
+KING, KING, TWO, TWO, THREE, 2P, Kings and Twos, false, 2720 
 QUEEN, QUEEN, JACK, JACK, ACE, 2P, Queens and Jacks, false, 2721 
 QUEEN, QUEEN, JACK, JACK, KING, 2P, Queens and Jacks, false, 2722 
 QUEEN, QUEEN, JACK, JACK, TEN, 2P, Queens and Jacks, false, 2723 
@@ -2817,17 +2817,17 @@ QUEEN, QUEEN, THREE, THREE, SIX, 2P, Queens and Treys, false, 2816
 QUEEN, QUEEN, THREE, THREE, FIVE, 2P, Queens and Treys, false, 2817 
 QUEEN, QUEEN, THREE, THREE, FOUR, 2P, Queens and Treys, false, 2818 
 QUEEN, QUEEN, THREE, THREE, TWO, 2P, Queens and Treys, false, 2819 
-QUEEN, QUEEN, TWO, TWO, ACE, 2P, Queens and TWOs, false, 2820 
-QUEEN, QUEEN, TWO, TWO, KING, 2P, Queens and TWOs, false, 2821 
-QUEEN, QUEEN, TWO, TWO, JACK, 2P, Queens and TWOs, false, 2822 
-QUEEN, QUEEN, TWO, TWO, TEN, 2P, Queens and TWOs, false, 2823 
-QUEEN, QUEEN, TWO, TWO, NINE, 2P, Queens and TWOs, false, 2824 
-QUEEN, QUEEN, TWO, TWO, EIGHT, 2P, Queens and TWOs, false, 2825 
-QUEEN, QUEEN, TWO, TWO, SEVEN, 2P, Queens and TWOs, false, 2826 
-QUEEN, QUEEN, TWO, TWO, SIX, 2P, Queens and TWOs, false, 2827 
-QUEEN, QUEEN, TWO, TWO, FIVE, 2P, Queens and TWOs, false, 2828 
-QUEEN, QUEEN, TWO, TWO, FOUR, 2P, Queens and TWOs, false, 2829 
-QUEEN, QUEEN, TWO, TWO, THREE, 2P, Queens and TWOs, false, 2830 
+QUEEN, QUEEN, TWO, TWO, ACE, 2P, Queens and Twos, false, 2820 
+QUEEN, QUEEN, TWO, TWO, KING, 2P, Queens and Twos, false, 2821 
+QUEEN, QUEEN, TWO, TWO, JACK, 2P, Queens and Twos, false, 2822 
+QUEEN, QUEEN, TWO, TWO, TEN, 2P, Queens and Twos, false, 2823 
+QUEEN, QUEEN, TWO, TWO, NINE, 2P, Queens and Twos, false, 2824 
+QUEEN, QUEEN, TWO, TWO, EIGHT, 2P, Queens and Twos, false, 2825 
+QUEEN, QUEEN, TWO, TWO, SEVEN, 2P, Queens and Twos, false, 2826 
+QUEEN, QUEEN, TWO, TWO, SIX, 2P, Queens and Twos, false, 2827 
+QUEEN, QUEEN, TWO, TWO, FIVE, 2P, Queens and Twos, false, 2828 
+QUEEN, QUEEN, TWO, TWO, FOUR, 2P, Queens and Twos, false, 2829 
+QUEEN, QUEEN, TWO, TWO, THREE, 2P, Queens and Twos, false, 2830 
 JACK, JACK, TEN, TEN, ACE, 2P, Jacks and Tens, false, 2831 
 JACK, JACK, TEN, TEN, KING, 2P, Jacks and Tens, false, 2832 
 JACK, JACK, TEN, TEN, QUEEN, 2P, Jacks and Tens, false, 2833 
@@ -2916,17 +2916,17 @@ JACK, JACK, THREE, THREE, SIX, 2P, Jacks and Treys, false, 2915
 JACK, JACK, THREE, THREE, FIVE, 2P, Jacks and Treys, false, 2916 
 JACK, JACK, THREE, THREE, FOUR, 2P, Jacks and Treys, false, 2917 
 JACK, JACK, THREE, THREE, TWO, 2P, Jacks and Treys, false, 2918 
-JACK, JACK, TWO, TWO, ACE, 2P, Jacks and TWOs, false, 2919 
-JACK, JACK, TWO, TWO, KING, 2P, Jacks and TWOs, false, 2920 
-JACK, JACK, TWO, TWO, QUEEN, 2P, Jacks and TWOs, false, 2921 
-JACK, JACK, TWO, TWO, TEN, 2P, Jacks and TWOs, false, 2922 
-JACK, JACK, TWO, TWO, NINE, 2P, Jacks and TWOs, false, 2923 
-JACK, JACK, TWO, TWO, EIGHT, 2P, Jacks and TWOs, false, 2924 
-JACK, JACK, TWO, TWO, SEVEN, 2P, Jacks and TWOs, false, 2925 
-JACK, JACK, TWO, TWO, SIX, 2P, Jacks and TWOs, false, 2926 
-JACK, JACK, TWO, TWO, FIVE, 2P, Jacks and TWOs, false, 2927 
-JACK, JACK, TWO, TWO, FOUR, 2P, Jacks and TWOs, false, 2928 
-JACK, JACK, TWO, TWO, THREE, 2P, Jacks and TWOs, false, 2929 
+JACK, JACK, TWO, TWO, ACE, 2P, Jacks and Twos, false, 2919 
+JACK, JACK, TWO, TWO, KING, 2P, Jacks and Twos, false, 2920 
+JACK, JACK, TWO, TWO, QUEEN, 2P, Jacks and Twos, false, 2921 
+JACK, JACK, TWO, TWO, TEN, 2P, Jacks and Twos, false, 2922 
+JACK, JACK, TWO, TWO, NINE, 2P, Jacks and Twos, false, 2923 
+JACK, JACK, TWO, TWO, EIGHT, 2P, Jacks and Twos, false, 2924 
+JACK, JACK, TWO, TWO, SEVEN, 2P, Jacks and Twos, false, 2925 
+JACK, JACK, TWO, TWO, SIX, 2P, Jacks and Twos, false, 2926 
+JACK, JACK, TWO, TWO, FIVE, 2P, Jacks and Twos, false, 2927 
+JACK, JACK, TWO, TWO, FOUR, 2P, Jacks and Twos, false, 2928 
+JACK, JACK, TWO, TWO, THREE, 2P, Jacks and Twos, false, 2929 
 TEN, TEN, NINE, NINE, ACE, 2P, Tens and Nines, false, 2930 
 TEN, TEN, NINE, NINE, KING, 2P, Tens and Nines, false, 2931 
 TEN, TEN, NINE, NINE, QUEEN, 2P, Tens and Nines, false, 2932 
@@ -3004,17 +3004,17 @@ TEN, TEN, THREE, THREE, SIX, 2P, Tens and Treys, false, 3003
 TEN, TEN, THREE, THREE, FIVE, 2P, Tens and Treys, false, 3004 
 TEN, TEN, THREE, THREE, FOUR, 2P, Tens and Treys, false, 3005 
 TEN, TEN, THREE, THREE, TWO, 2P, Tens and Treys, false, 3006 
-TEN, TEN, TWO, TWO, ACE, 2P, Tens and TWOs, false, 3007 
-TEN, TEN, TWO, TWO, KING, 2P, Tens and TWOs, false, 3008 
-TEN, TEN, TWO, TWO, QUEEN, 2P, Tens and TWOs, false, 3009 
-TEN, TEN, TWO, TWO, JACK, 2P, Tens and TWOs, false, 3010 
-TEN, TEN, TWO, TWO, NINE, 2P, Tens and TWOs, false, 3011 
-TEN, TEN, TWO, TWO, EIGHT, 2P, Tens and TWOs, false, 3012 
-TEN, TEN, TWO, TWO, SEVEN, 2P, Tens and TWOs, false, 3013 
-TEN, TEN, TWO, TWO, SIX, 2P, Tens and TWOs, false, 3014 
-TEN, TEN, TWO, TWO, FIVE, 2P, Tens and TWOs, false, 3015 
-TEN, TEN, TWO, TWO, FOUR, 2P, Tens and TWOs, false, 3016 
-TEN, TEN, TWO, TWO, THREE, 2P, Tens and TWOs, false, 3017 
+TEN, TEN, TWO, TWO, ACE, 2P, Tens and Twos, false, 3007 
+TEN, TEN, TWO, TWO, KING, 2P, Tens and Twos, false, 3008 
+TEN, TEN, TWO, TWO, QUEEN, 2P, Tens and Twos, false, 3009 
+TEN, TEN, TWO, TWO, JACK, 2P, Tens and Twos, false, 3010 
+TEN, TEN, TWO, TWO, NINE, 2P, Tens and Twos, false, 3011 
+TEN, TEN, TWO, TWO, EIGHT, 2P, Tens and Twos, false, 3012 
+TEN, TEN, TWO, TWO, SEVEN, 2P, Tens and Twos, false, 3013 
+TEN, TEN, TWO, TWO, SIX, 2P, Tens and Twos, false, 3014 
+TEN, TEN, TWO, TWO, FIVE, 2P, Tens and Twos, false, 3015 
+TEN, TEN, TWO, TWO, FOUR, 2P, Tens and Twos, false, 3016 
+TEN, TEN, TWO, TWO, THREE, 2P, Tens and Twos, false, 3017 
 NINE, NINE, EIGHT, EIGHT, ACE, 2P, Nines and Eights, false, 3018 
 NINE, NINE, EIGHT, EIGHT, KING, 2P, Nines and Eights, false, 3019 
 NINE, NINE, EIGHT, EIGHT, QUEEN, 2P, Nines and Eights, false, 3020 
@@ -3081,17 +3081,17 @@ NINE, NINE, THREE, THREE, SIX, 2P, Nines and Treys, false, 3080
 NINE, NINE, THREE, THREE, FIVE, 2P, Nines and Treys, false, 3081 
 NINE, NINE, THREE, THREE, FOUR, 2P, Nines and Treys, false, 3082 
 NINE, NINE, THREE, THREE, TWO, 2P, Nines and Treys, false, 3083 
-NINE, NINE, TWO, TWO, ACE, 2P, Nines and TWOs, false, 3084 
-NINE, NINE, TWO, TWO, KING, 2P, Nines and TWOs, false, 3085 
-NINE, NINE, TWO, TWO, QUEEN, 2P, Nines and TWOs, false, 3086 
-NINE, NINE, TWO, TWO, JACK, 2P, Nines and TWOs, false, 3087 
-NINE, NINE, TWO, TWO, TEN, 2P, Nines and TWOs, false, 3088 
-NINE, NINE, TWO, TWO, EIGHT, 2P, Nines and TWOs, false, 3089 
-NINE, NINE, TWO, TWO, SEVEN, 2P, Nines and TWOs, false, 3090 
-NINE, NINE, TWO, TWO, SIX, 2P, Nines and TWOs, false, 3091 
-NINE, NINE, TWO, TWO, FIVE, 2P, Nines and TWOs, false, 3092 
-NINE, NINE, TWO, TWO, FOUR, 2P, Nines and TWOs, false, 3093 
-NINE, NINE, TWO, TWO, THREE, 2P, Nines and TWOs, false, 3094 
+NINE, NINE, TWO, TWO, ACE, 2P, Nines and Twos, false, 3084 
+NINE, NINE, TWO, TWO, KING, 2P, Nines and Twos, false, 3085 
+NINE, NINE, TWO, TWO, QUEEN, 2P, Nines and Twos, false, 3086 
+NINE, NINE, TWO, TWO, JACK, 2P, Nines and Twos, false, 3087 
+NINE, NINE, TWO, TWO, TEN, 2P, Nines and Twos, false, 3088 
+NINE, NINE, TWO, TWO, EIGHT, 2P, Nines and Twos, false, 3089 
+NINE, NINE, TWO, TWO, SEVEN, 2P, Nines and Twos, false, 3090 
+NINE, NINE, TWO, TWO, SIX, 2P, Nines and Twos, false, 3091 
+NINE, NINE, TWO, TWO, FIVE, 2P, Nines and Twos, false, 3092 
+NINE, NINE, TWO, TWO, FOUR, 2P, Nines and Twos, false, 3093 
+NINE, NINE, TWO, TWO, THREE, 2P, Nines and Twos, false, 3094 
 EIGHT, EIGHT, SEVEN, SEVEN, ACE, 2P, Eights and Sevens, false, 3095 
 EIGHT, EIGHT, SEVEN, SEVEN, KING, 2P, Eights and Sevens, false, 3096 
 EIGHT, EIGHT, SEVEN, SEVEN, QUEEN, 2P, Eights and Sevens, false, 3097 
@@ -3147,17 +3147,17 @@ EIGHT, EIGHT, THREE, THREE, SIX, 2P, Eights and Treys, false, 3146
 EIGHT, EIGHT, THREE, THREE, FIVE, 2P, Eights and Treys, false, 3147 
 EIGHT, EIGHT, THREE, THREE, FOUR, 2P, Eights and Treys, false, 3148 
 EIGHT, EIGHT, THREE, THREE, TWO, 2P, Eights and Treys, false, 3149 
-EIGHT, EIGHT, TWO, TWO, ACE, 2P, Eights and TWOs, false, 3150 
-EIGHT, EIGHT, TWO, TWO, KING, 2P, Eights and TWOs, false, 3151 
-EIGHT, EIGHT, TWO, TWO, QUEEN, 2P, Eights and TWOs, false, 3152 
-EIGHT, EIGHT, TWO, TWO, JACK, 2P, Eights and TWOs, false, 3153 
-EIGHT, EIGHT, TWO, TWO, TEN, 2P, Eights and TWOs, false, 3154 
-EIGHT, EIGHT, TWO, TWO, NINE, 2P, Eights and TWOs, false, 3155 
-EIGHT, EIGHT, TWO, TWO, SEVEN, 2P, Eights and TWOs, false, 3156 
-EIGHT, EIGHT, TWO, TWO, SIX, 2P, Eights and TWOs, false, 3157 
-EIGHT, EIGHT, TWO, TWO, FIVE, 2P, Eights and TWOs, false, 3158 
-EIGHT, EIGHT, TWO, TWO, FOUR, 2P, Eights and TWOs, false, 3159 
-EIGHT, EIGHT, TWO, TWO, THREE, 2P, Eights and TWOs, false, 3160 
+EIGHT, EIGHT, TWO, TWO, ACE, 2P, Eights and Twos, false, 3150 
+EIGHT, EIGHT, TWO, TWO, KING, 2P, Eights and Twos, false, 3151 
+EIGHT, EIGHT, TWO, TWO, QUEEN, 2P, Eights and Twos, false, 3152 
+EIGHT, EIGHT, TWO, TWO, JACK, 2P, Eights and Twos, false, 3153 
+EIGHT, EIGHT, TWO, TWO, TEN, 2P, Eights and Twos, false, 3154 
+EIGHT, EIGHT, TWO, TWO, NINE, 2P, Eights and Twos, false, 3155 
+EIGHT, EIGHT, TWO, TWO, SEVEN, 2P, Eights and Twos, false, 3156 
+EIGHT, EIGHT, TWO, TWO, SIX, 2P, Eights and Twos, false, 3157 
+EIGHT, EIGHT, TWO, TWO, FIVE, 2P, Eights and Twos, false, 3158 
+EIGHT, EIGHT, TWO, TWO, FOUR, 2P, Eights and Twos, false, 3159 
+EIGHT, EIGHT, TWO, TWO, THREE, 2P, Eights and Twos, false, 3160 
 SEVEN, SEVEN, SIX, SIX, ACE, 2P, Sevens and Sixes, false, 3161 
 SEVEN, SEVEN, SIX, SIX, KING, 2P, Sevens and Sixes, false, 3162 
 SEVEN, SEVEN, SIX, SIX, QUEEN, 2P, Sevens and Sixes, false, 3163 
@@ -3202,17 +3202,17 @@ SEVEN, SEVEN, THREE, THREE, SIX, 2P, Sevens and Treys, false, 3201
 SEVEN, SEVEN, THREE, THREE, FIVE, 2P, Sevens and Treys, false, 3202 
 SEVEN, SEVEN, THREE, THREE, FOUR, 2P, Sevens and Treys, false, 3203 
 SEVEN, SEVEN, THREE, THREE, TWO, 2P, Sevens and Treys, false, 3204 
-SEVEN, SEVEN, TWO, TWO, ACE, 2P, Sevens and TWOs, false, 3205 
-SEVEN, SEVEN, TWO, TWO, KING, 2P, Sevens and TWOs, false, 3206 
-SEVEN, SEVEN, TWO, TWO, QUEEN, 2P, Sevens and TWOs, false, 3207 
-SEVEN, SEVEN, TWO, TWO, JACK, 2P, Sevens and TWOs, false, 3208 
-SEVEN, SEVEN, TWO, TWO, TEN, 2P, Sevens and TWOs, false, 3209 
-SEVEN, SEVEN, TWO, TWO, NINE, 2P, Sevens and TWOs, false, 3210 
-SEVEN, SEVEN, TWO, TWO, EIGHT, 2P, Sevens and TWOs, false, 3211 
-SEVEN, SEVEN, TWO, TWO, SIX, 2P, Sevens and TWOs, false, 3212 
-SEVEN, SEVEN, TWO, TWO, FIVE, 2P, Sevens and TWOs, false, 3213 
-SEVEN, SEVEN, TWO, TWO, FOUR, 2P, Sevens and TWOs, false, 3214 
-SEVEN, SEVEN, TWO, TWO, THREE, 2P, Sevens and TWOs, false, 3215 
+SEVEN, SEVEN, TWO, TWO, ACE, 2P, Sevens and Twos, false, 3205 
+SEVEN, SEVEN, TWO, TWO, KING, 2P, Sevens and Twos, false, 3206 
+SEVEN, SEVEN, TWO, TWO, QUEEN, 2P, Sevens and Twos, false, 3207 
+SEVEN, SEVEN, TWO, TWO, JACK, 2P, Sevens and Twos, false, 3208 
+SEVEN, SEVEN, TWO, TWO, TEN, 2P, Sevens and Twos, false, 3209 
+SEVEN, SEVEN, TWO, TWO, NINE, 2P, Sevens and Twos, false, 3210 
+SEVEN, SEVEN, TWO, TWO, EIGHT, 2P, Sevens and Twos, false, 3211 
+SEVEN, SEVEN, TWO, TWO, SIX, 2P, Sevens and Twos, false, 3212 
+SEVEN, SEVEN, TWO, TWO, FIVE, 2P, Sevens and Twos, false, 3213 
+SEVEN, SEVEN, TWO, TWO, FOUR, 2P, Sevens and Twos, false, 3214 
+SEVEN, SEVEN, TWO, TWO, THREE, 2P, Sevens and Twos, false, 3215 
 SIX, SIX, FIVE, FIVE, ACE, 2P, Sixes and Fives, false, 3216 
 SIX, SIX, FIVE, FIVE, KING, 2P, Sixes and Fives, false, 3217 
 SIX, SIX, FIVE, FIVE, QUEEN, 2P, Sixes and Fives, false, 3218 
@@ -3246,17 +3246,17 @@ SIX, SIX, THREE, THREE, SEVEN, 2P, Sixes and Treys, false, 3245
 SIX, SIX, THREE, THREE, FIVE, 2P, Sixes and Treys, false, 3246 
 SIX, SIX, THREE, THREE, FOUR, 2P, Sixes and Treys, false, 3247 
 SIX, SIX, THREE, THREE, TWO, 2P, Sixes and Treys, false, 3248 
-SIX, SIX, TWO, TWO, ACE, 2P, Sixes and TWOs, false, 3249 
-SIX, SIX, TWO, TWO, KING, 2P, Sixes and TWOs, false, 3250 
-SIX, SIX, TWO, TWO, QUEEN, 2P, Sixes and TWOs, false, 3251 
-SIX, SIX, TWO, TWO, JACK, 2P, Sixes and TWOs, false, 3252 
-SIX, SIX, TWO, TWO, TEN, 2P, Sixes and TWOs, false, 3253 
-SIX, SIX, TWO, TWO, NINE, 2P, Sixes and TWOs, false, 3254 
-SIX, SIX, TWO, TWO, EIGHT, 2P, Sixes and TWOs, false, 3255 
-SIX, SIX, TWO, TWO, SEVEN, 2P, Sixes and TWOs, false, 3256 
-SIX, SIX, TWO, TWO, FIVE, 2P, Sixes and TWOs, false, 3257 
-SIX, SIX, TWO, TWO, FOUR, 2P, Sixes and TWOs, false, 3258 
-SIX, SIX, TWO, TWO, THREE, 2P, Sixes and TWOs, false, 3259 
+SIX, SIX, TWO, TWO, ACE, 2P, Sixes and Twos, false, 3249 
+SIX, SIX, TWO, TWO, KING, 2P, Sixes and Twos, false, 3250 
+SIX, SIX, TWO, TWO, QUEEN, 2P, Sixes and Twos, false, 3251 
+SIX, SIX, TWO, TWO, JACK, 2P, Sixes and Twos, false, 3252 
+SIX, SIX, TWO, TWO, TEN, 2P, Sixes and Twos, false, 3253 
+SIX, SIX, TWO, TWO, NINE, 2P, Sixes and Twos, false, 3254 
+SIX, SIX, TWO, TWO, EIGHT, 2P, Sixes and Twos, false, 3255 
+SIX, SIX, TWO, TWO, SEVEN, 2P, Sixes and Twos, false, 3256 
+SIX, SIX, TWO, TWO, FIVE, 2P, Sixes and Twos, false, 3257 
+SIX, SIX, TWO, TWO, FOUR, 2P, Sixes and Twos, false, 3258 
+SIX, SIX, TWO, TWO, THREE, 2P, Sixes and Twos, false, 3259 
 FIVE, FIVE, FOUR, FOUR, ACE, 2P, Fives and Fours, false, 3260 
 FIVE, FIVE, FOUR, FOUR, KING, 2P, Fives and Fours, false, 3261 
 FIVE, FIVE, FOUR, FOUR, QUEEN, 2P, Fives and Fours, false, 3262 
@@ -3279,17 +3279,17 @@ FIVE, FIVE, THREE, THREE, SEVEN, 2P, Fives and Treys, false, 3278
 FIVE, FIVE, THREE, THREE, SIX, 2P, Fives and Treys, false, 3279 
 FIVE, FIVE, THREE, THREE, FOUR, 2P, Fives and Treys, false, 3280 
 FIVE, FIVE, THREE, THREE, TWO, 2P, Fives and Treys, false, 3281 
-FIVE, FIVE, TWO, TWO, ACE, 2P, Fives and TWOs, false, 3282 
-FIVE, FIVE, TWO, TWO, KING, 2P, Fives and TWOs, false, 3283 
-FIVE, FIVE, TWO, TWO, QUEEN, 2P, Fives and TWOs, false, 3284 
-FIVE, FIVE, TWO, TWO, JACK, 2P, Fives and TWOs, false, 3285 
-FIVE, FIVE, TWO, TWO, TEN, 2P, Fives and TWOs, false, 3286 
-FIVE, FIVE, TWO, TWO, NINE, 2P, Fives and TWOs, false, 3287 
-FIVE, FIVE, TWO, TWO, EIGHT, 2P, Fives and TWOs, false, 3288 
-FIVE, FIVE, TWO, TWO, SEVEN, 2P, Fives and TWOs, false, 3289 
-FIVE, FIVE, TWO, TWO, SIX, 2P, Fives and TWOs, false, 3290 
-FIVE, FIVE, TWO, TWO, FOUR, 2P, Fives and TWOs, false, 3291 
-FIVE, FIVE, TWO, TWO, THREE, 2P, Fives and TWOs, false, 3292 
+FIVE, FIVE, TWO, TWO, ACE, 2P, Fives and Twos, false, 3282 
+FIVE, FIVE, TWO, TWO, KING, 2P, Fives and Twos, false, 3283 
+FIVE, FIVE, TWO, TWO, QUEEN, 2P, Fives and Twos, false, 3284 
+FIVE, FIVE, TWO, TWO, JACK, 2P, Fives and Twos, false, 3285 
+FIVE, FIVE, TWO, TWO, TEN, 2P, Fives and Twos, false, 3286 
+FIVE, FIVE, TWO, TWO, NINE, 2P, Fives and Twos, false, 3287 
+FIVE, FIVE, TWO, TWO, EIGHT, 2P, Fives and Twos, false, 3288 
+FIVE, FIVE, TWO, TWO, SEVEN, 2P, Fives and Twos, false, 3289 
+FIVE, FIVE, TWO, TWO, SIX, 2P, Fives and Twos, false, 3290 
+FIVE, FIVE, TWO, TWO, FOUR, 2P, Fives and Twos, false, 3291 
+FIVE, FIVE, TWO, TWO, THREE, 2P, Fives and Twos, false, 3292 
 FOUR, FOUR, THREE, THREE, ACE, 2P, Fours and Treys, false, 3293 
 FOUR, FOUR, THREE, THREE, KING, 2P, Fours and Treys, false, 3294 
 FOUR, FOUR, THREE, THREE, QUEEN, 2P, Fours and Treys, false, 3295 
@@ -3301,28 +3301,28 @@ FOUR, FOUR, THREE, THREE, SEVEN, 2P, Fours and Treys, false, 3300
 FOUR, FOUR, THREE, THREE, SIX, 2P, Fours and Treys, false, 3301 
 FOUR, FOUR, THREE, THREE, FIVE, 2P, Fours and Treys, false, 3302 
 FOUR, FOUR, THREE, THREE, TWO, 2P, Fours and Treys, false, 3303 
-FOUR, FOUR, TWO, TWO, ACE, 2P, Fours and TWOs, false, 3304 
-FOUR, FOUR, TWO, TWO, KING, 2P, Fours and TWOs, false, 3305 
-FOUR, FOUR, TWO, TWO, QUEEN, 2P, Fours and TWOs, false, 3306 
-FOUR, FOUR, TWO, TWO, JACK, 2P, Fours and TWOs, false, 3307 
-FOUR, FOUR, TWO, TWO, TEN, 2P, Fours and TWOs, false, 3308 
-FOUR, FOUR, TWO, TWO, NINE, 2P, Fours and TWOs, false, 3309 
-FOUR, FOUR, TWO, TWO, EIGHT, 2P, Fours and TWOs, false, 3310 
-FOUR, FOUR, TWO, TWO, SEVEN, 2P, Fours and TWOs, false, 3311 
-FOUR, FOUR, TWO, TWO, SIX, 2P, Fours and TWOs, false, 3312 
-FOUR, FOUR, TWO, TWO, FIVE, 2P, Fours and TWOs, false, 3313 
-FOUR, FOUR, TWO, TWO, THREE, 2P, Fours and TWOs, false, 3314 
-THREE, THREE, TWO, TWO, ACE, 2P, Treys and TWOs, false, 3315 
-THREE, THREE, TWO, TWO, KING, 2P, Treys and TWOs, false, 3316 
-THREE, THREE, TWO, TWO, QUEEN, 2P, Treys and TWOs, false, 3317 
-THREE, THREE, TWO, TWO, JACK, 2P, Treys and TWOs, false, 3318 
-THREE, THREE, TWO, TWO, TEN, 2P, Treys and TWOs, false, 3319 
-THREE, THREE, TWO, TWO, NINE, 2P, Treys and TWOs, false, 3320 
-THREE, THREE, TWO, TWO, EIGHT, 2P, Treys and TWOs, false, 3321 
-THREE, THREE, TWO, TWO, SEVEN, 2P, Treys and TWOs, false, 3322 
-THREE, THREE, TWO, TWO, SIX, 2P, Treys and TWOs, false, 3323 
-THREE, THREE, TWO, TWO, FIVE, 2P, Treys and TWOs, false, 3324 
-THREE, THREE, TWO, TWO, FOUR, 2P, Treys and TWOs, false, 3325 
+FOUR, FOUR, TWO, TWO, ACE, 2P, Fours and Twos, false, 3304 
+FOUR, FOUR, TWO, TWO, KING, 2P, Fours and Twos, false, 3305 
+FOUR, FOUR, TWO, TWO, QUEEN, 2P, Fours and Twos, false, 3306 
+FOUR, FOUR, TWO, TWO, JACK, 2P, Fours and Twos, false, 3307 
+FOUR, FOUR, TWO, TWO, TEN, 2P, Fours and Twos, false, 3308 
+FOUR, FOUR, TWO, TWO, NINE, 2P, Fours and Twos, false, 3309 
+FOUR, FOUR, TWO, TWO, EIGHT, 2P, Fours and Twos, false, 3310 
+FOUR, FOUR, TWO, TWO, SEVEN, 2P, Fours and Twos, false, 3311 
+FOUR, FOUR, TWO, TWO, SIX, 2P, Fours and Twos, false, 3312 
+FOUR, FOUR, TWO, TWO, FIVE, 2P, Fours and Twos, false, 3313 
+FOUR, FOUR, TWO, TWO, THREE, 2P, Fours and Twos, false, 3314 
+THREE, THREE, TWO, TWO, ACE, 2P, Treys and Twos, false, 3315 
+THREE, THREE, TWO, TWO, KING, 2P, Treys and Twos, false, 3316 
+THREE, THREE, TWO, TWO, QUEEN, 2P, Treys and Twos, false, 3317 
+THREE, THREE, TWO, TWO, JACK, 2P, Treys and Twos, false, 3318 
+THREE, THREE, TWO, TWO, TEN, 2P, Treys and Twos, false, 3319 
+THREE, THREE, TWO, TWO, NINE, 2P, Treys and Twos, false, 3320 
+THREE, THREE, TWO, TWO, EIGHT, 2P, Treys and Twos, false, 3321 
+THREE, THREE, TWO, TWO, SEVEN, 2P, Treys and Twos, false, 3322 
+THREE, THREE, TWO, TWO, SIX, 2P, Treys and Twos, false, 3323 
+THREE, THREE, TWO, TWO, FIVE, 2P, Treys and Twos, false, 3324 
+THREE, THREE, TWO, TWO, FOUR, 2P, Treys and Twos, false, 3325 
 ACE, ACE, KING, QUEEN, JACK, 1P, Pair of Aces, false, 3326 
 ACE, ACE, KING, QUEEN, TEN, 1P, Pair of Aces, false, 3327 
 ACE, ACE, KING, QUEEN, NINE, 1P, Pair of Aces, false, 3328 
@@ -5963,226 +5963,226 @@ THREE, THREE, SIX, FIVE, FOUR, 1P, Pair of Treys, false, 5962
 THREE, THREE, SIX, FIVE, TWO, 1P, Pair of Treys, false, 5963 
 THREE, THREE, SIX, FOUR, TWO, 1P, Pair of Treys, false, 5964 
 THREE, THREE, FIVE, FOUR, TWO, 1P, Pair of Treys, false, 5965 
-TWO, TWO, ACE, KING, QUEEN, 1P, Pair of TWOs, false, 5966 
-TWO, TWO, ACE, KING, JACK, 1P, Pair of TWOs, false, 5967 
-TWO, TWO, ACE, KING, TEN, 1P, Pair of TWOs, false, 5968 
-TWO, TWO, ACE, KING, NINE, 1P, Pair of TWOs, false, 5969 
-TWO, TWO, ACE, KING, EIGHT, 1P, Pair of TWOs, false, 5970 
-TWO, TWO, ACE, KING, SEVEN, 1P, Pair of TWOs, false, 5971 
-TWO, TWO, ACE, KING, SIX, 1P, Pair of TWOs, false, 5972 
-TWO, TWO, ACE, KING, FIVE, 1P, Pair of TWOs, false, 5973 
-TWO, TWO, ACE, KING, FOUR, 1P, Pair of TWOs, false, 5974 
-TWO, TWO, ACE, KING, THREE, 1P, Pair of TWOs, false, 5975 
-TWO, TWO, ACE, QUEEN, JACK, 1P, Pair of TWOs, false, 5976 
-TWO, TWO, ACE, QUEEN, TEN, 1P, Pair of TWOs, false, 5977 
-TWO, TWO, ACE, QUEEN, NINE, 1P, Pair of TWOs, false, 5978 
-TWO, TWO, ACE, QUEEN, EIGHT, 1P, Pair of TWOs, false, 5979 
-TWO, TWO, ACE, QUEEN, SEVEN, 1P, Pair of TWOs, false, 5980 
-TWO, TWO, ACE, QUEEN, SIX, 1P, Pair of TWOs, false, 5981 
-TWO, TWO, ACE, QUEEN, FIVE, 1P, Pair of TWOs, false, 5982 
-TWO, TWO, ACE, QUEEN, FOUR, 1P, Pair of TWOs, false, 5983 
-TWO, TWO, ACE, QUEEN, THREE, 1P, Pair of TWOs, false, 5984 
-TWO, TWO, ACE, JACK, TEN, 1P, Pair of TWOs, false, 5985 
-TWO, TWO, ACE, JACK, NINE, 1P, Pair of TWOs, false, 5986 
-TWO, TWO, ACE, JACK, EIGHT, 1P, Pair of TWOs, false, 5987 
-TWO, TWO, ACE, JACK, SEVEN, 1P, Pair of TWOs, false, 5988 
-TWO, TWO, ACE, JACK, SIX, 1P, Pair of TWOs, false, 5989 
-TWO, TWO, ACE, JACK, FIVE, 1P, Pair of TWOs, false, 5990 
-TWO, TWO, ACE, JACK, FOUR, 1P, Pair of TWOs, false, 5991 
-TWO, TWO, ACE, JACK, THREE, 1P, Pair of TWOs, false, 5992 
-TWO, TWO, ACE, TEN, NINE, 1P, Pair of TWOs, false, 5993 
-TWO, TWO, ACE, TEN, EIGHT, 1P, Pair of TWOs, false, 5994 
-TWO, TWO, ACE, TEN, SEVEN, 1P, Pair of TWOs, false, 5995 
-TWO, TWO, ACE, TEN, SIX, 1P, Pair of TWOs, false, 5996 
-TWO, TWO, ACE, TEN, FIVE, 1P, Pair of TWOs, false, 5997 
-TWO, TWO, ACE, TEN, FOUR, 1P, Pair of TWOs, false, 5998 
-TWO, TWO, ACE, TEN, THREE, 1P, Pair of TWOs, false, 5999 
-TWO, TWO, ACE, NINE, EIGHT, 1P, Pair of TWOs, false, 6000 
-TWO, TWO, ACE, NINE, SEVEN, 1P, Pair of TWOs, false, 6001 
-TWO, TWO, ACE, NINE, SIX, 1P, Pair of TWOs, false, 6002 
-TWO, TWO, ACE, NINE, FIVE, 1P, Pair of TWOs, false, 6003 
-TWO, TWO, ACE, NINE, FOUR, 1P, Pair of TWOs, false, 6004 
-TWO, TWO, ACE, NINE, THREE, 1P, Pair of TWOs, false, 6005 
-TWO, TWO, ACE, EIGHT, SEVEN, 1P, Pair of TWOs, false, 6006 
-TWO, TWO, ACE, EIGHT, SIX, 1P, Pair of TWOs, false, 6007 
-TWO, TWO, ACE, EIGHT, FIVE, 1P, Pair of TWOs, false, 6008 
-TWO, TWO, ACE, EIGHT, FOUR, 1P, Pair of TWOs, false, 6009 
-TWO, TWO, ACE, EIGHT, THREE, 1P, Pair of TWOs, false, 6010 
-TWO, TWO, ACE, SEVEN, SIX, 1P, Pair of TWOs, false, 6011 
-TWO, TWO, ACE, SEVEN, FIVE, 1P, Pair of TWOs, false, 6012 
-TWO, TWO, ACE, SEVEN, FOUR, 1P, Pair of TWOs, false, 6013 
-TWO, TWO, ACE, SEVEN, THREE, 1P, Pair of TWOs, false, 6014 
-TWO, TWO, ACE, SIX, FIVE, 1P, Pair of TWOs, false, 6015 
-TWO, TWO, ACE, SIX, FOUR, 1P, Pair of TWOs, false, 6016 
-TWO, TWO, ACE, SIX, THREE, 1P, Pair of TWOs, false, 6017 
-TWO, TWO, ACE, FIVE, FOUR, 1P, Pair of TWOs, false, 6018 
-TWO, TWO, ACE, FIVE, THREE, 1P, Pair of TWOs, false, 6019 
-TWO, TWO, ACE, FOUR, THREE, 1P, Pair of TWOs, false, 6020 
-TWO, TWO, KING, QUEEN, JACK, 1P, Pair of TWOs, false, 6021 
-TWO, TWO, KING, QUEEN, TEN, 1P, Pair of TWOs, false, 6022 
-TWO, TWO, KING, QUEEN, NINE, 1P, Pair of TWOs, false, 6023 
-TWO, TWO, KING, QUEEN, EIGHT, 1P, Pair of TWOs, false, 6024 
-TWO, TWO, KING, QUEEN, SEVEN, 1P, Pair of TWOs, false, 6025 
-TWO, TWO, KING, QUEEN, SIX, 1P, Pair of TWOs, false, 6026 
-TWO, TWO, KING, QUEEN, FIVE, 1P, Pair of TWOs, false, 6027 
-TWO, TWO, KING, QUEEN, FOUR, 1P, Pair of TWOs, false, 6028 
-TWO, TWO, KING, QUEEN, THREE, 1P, Pair of TWOs, false, 6029 
-TWO, TWO, KING, JACK, TEN, 1P, Pair of TWOs, false, 6030 
-TWO, TWO, KING, JACK, NINE, 1P, Pair of TWOs, false, 6031 
-TWO, TWO, KING, JACK, EIGHT, 1P, Pair of TWOs, false, 6032 
-TWO, TWO, KING, JACK, SEVEN, 1P, Pair of TWOs, false, 6033 
-TWO, TWO, KING, JACK, SIX, 1P, Pair of TWOs, false, 6034 
-TWO, TWO, KING, JACK, FIVE, 1P, Pair of TWOs, false, 6035 
-TWO, TWO, KING, JACK, FOUR, 1P, Pair of TWOs, false, 6036 
-TWO, TWO, KING, JACK, THREE, 1P, Pair of TWOs, false, 6037 
-TWO, TWO, KING, TEN, NINE, 1P, Pair of TWOs, false, 6038 
-TWO, TWO, KING, TEN, EIGHT, 1P, Pair of TWOs, false, 6039 
-TWO, TWO, KING, TEN, SEVEN, 1P, Pair of TWOs, false, 6040 
-TWO, TWO, KING, TEN, SIX, 1P, Pair of TWOs, false, 6041 
-TWO, TWO, KING, TEN, FIVE, 1P, Pair of TWOs, false, 6042 
-TWO, TWO, KING, TEN, FOUR, 1P, Pair of TWOs, false, 6043 
-TWO, TWO, KING, TEN, THREE, 1P, Pair of TWOs, false, 6044 
-TWO, TWO, KING, NINE, EIGHT, 1P, Pair of TWOs, false, 6045 
-TWO, TWO, KING, NINE, SEVEN, 1P, Pair of TWOs, false, 6046 
-TWO, TWO, KING, NINE, SIX, 1P, Pair of TWOs, false, 6047 
-TWO, TWO, KING, NINE, FIVE, 1P, Pair of TWOs, false, 6048 
-TWO, TWO, KING, NINE, FOUR, 1P, Pair of TWOs, false, 6049 
-TWO, TWO, KING, NINE, THREE, 1P, Pair of TWOs, false, 6050 
-TWO, TWO, KING, EIGHT, SEVEN, 1P, Pair of TWOs, false, 6051 
-TWO, TWO, KING, EIGHT, SIX, 1P, Pair of TWOs, false, 6052 
-TWO, TWO, KING, EIGHT, FIVE, 1P, Pair of TWOs, false, 6053 
-TWO, TWO, KING, EIGHT, FOUR, 1P, Pair of TWOs, false, 6054 
-TWO, TWO, KING, EIGHT, THREE, 1P, Pair of TWOs, false, 6055 
-TWO, TWO, KING, SEVEN, SIX, 1P, Pair of TWOs, false, 6056 
-TWO, TWO, KING, SEVEN, FIVE, 1P, Pair of TWOs, false, 6057 
-TWO, TWO, KING, SEVEN, FOUR, 1P, Pair of TWOs, false, 6058 
-TWO, TWO, KING, SEVEN, THREE, 1P, Pair of TWOs, false, 6059 
-TWO, TWO, KING, SIX, FIVE, 1P, Pair of TWOs, false, 6060 
-TWO, TWO, KING, SIX, FOUR, 1P, Pair of TWOs, false, 6061 
-TWO, TWO, KING, SIX, THREE, 1P, Pair of TWOs, false, 6062 
-TWO, TWO, KING, FIVE, FOUR, 1P, Pair of TWOs, false, 6063 
-TWO, TWO, KING, FIVE, THREE, 1P, Pair of TWOs, false, 6064 
-TWO, TWO, KING, FOUR, THREE, 1P, Pair of TWOs, false, 6065 
-TWO, TWO, QUEEN, JACK, TEN, 1P, Pair of TWOs, false, 6066 
-TWO, TWO, QUEEN, JACK, NINE, 1P, Pair of TWOs, false, 6067 
-TWO, TWO, QUEEN, JACK, EIGHT, 1P, Pair of TWOs, false, 6068 
-TWO, TWO, QUEEN, JACK, SEVEN, 1P, Pair of TWOs, false, 6069 
-TWO, TWO, QUEEN, JACK, SIX, 1P, Pair of TWOs, false, 6070 
-TWO, TWO, QUEEN, JACK, FIVE, 1P, Pair of TWOs, false, 6071 
-TWO, TWO, QUEEN, JACK, FOUR, 1P, Pair of TWOs, false, 6072 
-TWO, TWO, QUEEN, JACK, THREE, 1P, Pair of TWOs, false, 6073 
-TWO, TWO, QUEEN, TEN, NINE, 1P, Pair of TWOs, false, 6074 
-TWO, TWO, QUEEN, TEN, EIGHT, 1P, Pair of TWOs, false, 6075 
-TWO, TWO, QUEEN, TEN, SEVEN, 1P, Pair of TWOs, false, 6076 
-TWO, TWO, QUEEN, TEN, SIX, 1P, Pair of TWOs, false, 6077 
-TWO, TWO, QUEEN, TEN, FIVE, 1P, Pair of TWOs, false, 6078 
-TWO, TWO, QUEEN, TEN, FOUR, 1P, Pair of TWOs, false, 6079 
-TWO, TWO, QUEEN, TEN, THREE, 1P, Pair of TWOs, false, 6080 
-TWO, TWO, QUEEN, NINE, EIGHT, 1P, Pair of TWOs, false, 6081 
-TWO, TWO, QUEEN, NINE, SEVEN, 1P, Pair of TWOs, false, 6082 
-TWO, TWO, QUEEN, NINE, SIX, 1P, Pair of TWOs, false, 6083 
-TWO, TWO, QUEEN, NINE, FIVE, 1P, Pair of TWOs, false, 6084 
-TWO, TWO, QUEEN, NINE, FOUR, 1P, Pair of TWOs, false, 6085 
-TWO, TWO, QUEEN, NINE, THREE, 1P, Pair of TWOs, false, 6086 
-TWO, TWO, QUEEN, EIGHT, SEVEN, 1P, Pair of TWOs, false, 6087 
-TWO, TWO, QUEEN, EIGHT, SIX, 1P, Pair of TWOs, false, 6088 
-TWO, TWO, QUEEN, EIGHT, FIVE, 1P, Pair of TWOs, false, 6089 
-TWO, TWO, QUEEN, EIGHT, FOUR, 1P, Pair of TWOs, false, 6090 
-TWO, TWO, QUEEN, EIGHT, THREE, 1P, Pair of TWOs, false, 6091 
-TWO, TWO, QUEEN, SEVEN, SIX, 1P, Pair of TWOs, false, 6092 
-TWO, TWO, QUEEN, SEVEN, FIVE, 1P, Pair of TWOs, false, 6093 
-TWO, TWO, QUEEN, SEVEN, FOUR, 1P, Pair of TWOs, false, 6094 
-TWO, TWO, QUEEN, SEVEN, THREE, 1P, Pair of TWOs, false, 6095 
-TWO, TWO, QUEEN, SIX, FIVE, 1P, Pair of TWOs, false, 6096 
-TWO, TWO, QUEEN, SIX, FOUR, 1P, Pair of TWOs, false, 6097 
-TWO, TWO, QUEEN, SIX, THREE, 1P, Pair of TWOs, false, 6098 
-TWO, TWO, QUEEN, FIVE, FOUR, 1P, Pair of TWOs, false, 6099 
-TWO, TWO, QUEEN, FIVE, THREE, 1P, Pair of TWOs, false, 6100 
-TWO, TWO, QUEEN, FOUR, THREE, 1P, Pair of TWOs, false, 6101 
-TWO, TWO, JACK, TEN, NINE, 1P, Pair of TWOs, false, 6102 
-TWO, TWO, JACK, TEN, EIGHT, 1P, Pair of TWOs, false, 6103 
-TWO, TWO, JACK, TEN, SEVEN, 1P, Pair of TWOs, false, 6104 
-TWO, TWO, JACK, TEN, SIX, 1P, Pair of TWOs, false, 6105 
-TWO, TWO, JACK, TEN, FIVE, 1P, Pair of TWOs, false, 6106 
-TWO, TWO, JACK, TEN, FOUR, 1P, Pair of TWOs, false, 6107 
-TWO, TWO, JACK, TEN, THREE, 1P, Pair of TWOs, false, 6108 
-TWO, TWO, JACK, NINE, EIGHT, 1P, Pair of TWOs, false, 6109 
-TWO, TWO, JACK, NINE, SEVEN, 1P, Pair of TWOs, false, 6110 
-TWO, TWO, JACK, NINE, SIX, 1P, Pair of TWOs, false, 6111 
-TWO, TWO, JACK, NINE, FIVE, 1P, Pair of TWOs, false, 6112 
-TWO, TWO, JACK, NINE, FOUR, 1P, Pair of TWOs, false, 6113 
-TWO, TWO, JACK, NINE, THREE, 1P, Pair of TWOs, false, 6114 
-TWO, TWO, JACK, EIGHT, SEVEN, 1P, Pair of TWOs, false, 6115 
-TWO, TWO, JACK, EIGHT, SIX, 1P, Pair of TWOs, false, 6116 
-TWO, TWO, JACK, EIGHT, FIVE, 1P, Pair of TWOs, false, 6117 
-TWO, TWO, JACK, EIGHT, FOUR, 1P, Pair of TWOs, false, 6118 
-TWO, TWO, JACK, EIGHT, THREE, 1P, Pair of TWOs, false, 6119 
-TWO, TWO, JACK, SEVEN, SIX, 1P, Pair of TWOs, false, 6120 
-TWO, TWO, JACK, SEVEN, FIVE, 1P, Pair of TWOs, false, 6121 
-TWO, TWO, JACK, SEVEN, FOUR, 1P, Pair of TWOs, false, 6122 
-TWO, TWO, JACK, SEVEN, THREE, 1P, Pair of TWOs, false, 6123 
-TWO, TWO, JACK, SIX, FIVE, 1P, Pair of TWOs, false, 6124 
-TWO, TWO, JACK, SIX, FOUR, 1P, Pair of TWOs, false, 6125 
-TWO, TWO, JACK, SIX, THREE, 1P, Pair of TWOs, false, 6126 
-TWO, TWO, JACK, FIVE, FOUR, 1P, Pair of TWOs, false, 6127 
-TWO, TWO, JACK, FIVE, THREE, 1P, Pair of TWOs, false, 6128 
-TWO, TWO, JACK, FOUR, THREE, 1P, Pair of TWOs, false, 6129 
-TWO, TWO, TEN, NINE, EIGHT, 1P, Pair of TWOs, false, 6130 
-TWO, TWO, TEN, NINE, SEVEN, 1P, Pair of TWOs, false, 6131 
-TWO, TWO, TEN, NINE, SIX, 1P, Pair of TWOs, false, 6132 
-TWO, TWO, TEN, NINE, FIVE, 1P, Pair of TWOs, false, 6133 
-TWO, TWO, TEN, NINE, FOUR, 1P, Pair of TWOs, false, 6134 
-TWO, TWO, TEN, NINE, THREE, 1P, Pair of TWOs, false, 6135 
-TWO, TWO, TEN, EIGHT, SEVEN, 1P, Pair of TWOs, false, 6136 
-TWO, TWO, TEN, EIGHT, SIX, 1P, Pair of TWOs, false, 6137 
-TWO, TWO, TEN, EIGHT, FIVE, 1P, Pair of TWOs, false, 6138 
-TWO, TWO, TEN, EIGHT, FOUR, 1P, Pair of TWOs, false, 6139 
-TWO, TWO, TEN, EIGHT, THREE, 1P, Pair of TWOs, false, 6140 
-TWO, TWO, TEN, SEVEN, SIX, 1P, Pair of TWOs, false, 6141 
-TWO, TWO, TEN, SEVEN, FIVE, 1P, Pair of TWOs, false, 6142 
-TWO, TWO, TEN, SEVEN, FOUR, 1P, Pair of TWOs, false, 6143 
-TWO, TWO, TEN, SEVEN, THREE, 1P, Pair of TWOs, false, 6144 
-TWO, TWO, TEN, SIX, FIVE, 1P, Pair of TWOs, false, 6145 
-TWO, TWO, TEN, SIX, FOUR, 1P, Pair of TWOs, false, 6146 
-TWO, TWO, TEN, SIX, THREE, 1P, Pair of TWOs, false, 6147 
-TWO, TWO, TEN, FIVE, FOUR, 1P, Pair of TWOs, false, 6148 
-TWO, TWO, TEN, FIVE, THREE, 1P, Pair of TWOs, false, 6149 
-TWO, TWO, TEN, FOUR, THREE, 1P, Pair of TWOs, false, 6150 
-TWO, TWO, NINE, EIGHT, SEVEN, 1P, Pair of TWOs, false, 6151 
-TWO, TWO, NINE, EIGHT, SIX, 1P, Pair of TWOs, false, 6152 
-TWO, TWO, NINE, EIGHT, FIVE, 1P, Pair of TWOs, false, 6153 
-TWO, TWO, NINE, EIGHT, FOUR, 1P, Pair of TWOs, false, 6154 
-TWO, TWO, NINE, EIGHT, THREE, 1P, Pair of TWOs, false, 6155 
-TWO, TWO, NINE, SEVEN, SIX, 1P, Pair of TWOs, false, 6156 
-TWO, TWO, NINE, SEVEN, FIVE, 1P, Pair of TWOs, false, 6157 
-TWO, TWO, NINE, SEVEN, FOUR, 1P, Pair of TWOs, false, 6158 
-TWO, TWO, NINE, SEVEN, THREE, 1P, Pair of TWOs, false, 6159 
-TWO, TWO, NINE, SIX, FIVE, 1P, Pair of TWOs, false, 6160 
-TWO, TWO, NINE, SIX, FOUR, 1P, Pair of TWOs, false, 6161 
-TWO, TWO, NINE, SIX, THREE, 1P, Pair of TWOs, false, 6162 
-TWO, TWO, NINE, FIVE, FOUR, 1P, Pair of TWOs, false, 6163 
-TWO, TWO, NINE, FIVE, THREE, 1P, Pair of TWOs, false, 6164 
-TWO, TWO, NINE, FOUR, THREE, 1P, Pair of TWOs, false, 6165 
-TWO, TWO, EIGHT, SEVEN, SIX, 1P, Pair of TWOs, false, 6166 
-TWO, TWO, EIGHT, SEVEN, FIVE, 1P, Pair of TWOs, false, 6167 
-TWO, TWO, EIGHT, SEVEN, FOUR, 1P, Pair of TWOs, false, 6168 
-TWO, TWO, EIGHT, SEVEN, THREE, 1P, Pair of TWOs, false, 6169 
-TWO, TWO, EIGHT, SIX, FIVE, 1P, Pair of TWOs, false, 6170 
-TWO, TWO, EIGHT, SIX, FOUR, 1P, Pair of TWOs, false, 6171 
-TWO, TWO, EIGHT, SIX, THREE, 1P, Pair of TWOs, false, 6172 
-TWO, TWO, EIGHT, FIVE, FOUR, 1P, Pair of TWOs, false, 6173 
-TWO, TWO, EIGHT, FIVE, THREE, 1P, Pair of TWOs, false, 6174 
-TWO, TWO, EIGHT, FOUR, THREE, 1P, Pair of TWOs, false, 6175 
-TWO, TWO, SEVEN, SIX, FIVE, 1P, Pair of TWOs, false, 6176 
-TWO, TWO, SEVEN, SIX, FOUR, 1P, Pair of TWOs, false, 6177 
-TWO, TWO, SEVEN, SIX, THREE, 1P, Pair of TWOs, false, 6178 
-TWO, TWO, SEVEN, FIVE, FOUR, 1P, Pair of TWOs, false, 6179 
-TWO, TWO, SEVEN, FIVE, THREE, 1P, Pair of TWOs, false, 6180 
-TWO, TWO, SEVEN, FOUR, THREE, 1P, Pair of TWOs, false, 6181 
-TWO, TWO, SIX, FIVE, FOUR, 1P, Pair of TWOs, false, 6182 
-TWO, TWO, SIX, FIVE, THREE, 1P, Pair of TWOs, false, 6183 
-TWO, TWO, SIX, FOUR, THREE, 1P, Pair of TWOs, false, 6184 
-TWO, TWO, FIVE, FOUR, THREE, 1P, Pair of TWOs, false, 6185 
+TWO, TWO, ACE, KING, QUEEN, 1P, Pair of Twos, false, 5966 
+TWO, TWO, ACE, KING, JACK, 1P, Pair of Twos, false, 5967 
+TWO, TWO, ACE, KING, TEN, 1P, Pair of Twos, false, 5968 
+TWO, TWO, ACE, KING, NINE, 1P, Pair of Twos, false, 5969 
+TWO, TWO, ACE, KING, EIGHT, 1P, Pair of Twos, false, 5970 
+TWO, TWO, ACE, KING, SEVEN, 1P, Pair of Twos, false, 5971 
+TWO, TWO, ACE, KING, SIX, 1P, Pair of Twos, false, 5972 
+TWO, TWO, ACE, KING, FIVE, 1P, Pair of Twos, false, 5973 
+TWO, TWO, ACE, KING, FOUR, 1P, Pair of Twos, false, 5974 
+TWO, TWO, ACE, KING, THREE, 1P, Pair of Twos, false, 5975 
+TWO, TWO, ACE, QUEEN, JACK, 1P, Pair of Twos, false, 5976 
+TWO, TWO, ACE, QUEEN, TEN, 1P, Pair of Twos, false, 5977 
+TWO, TWO, ACE, QUEEN, NINE, 1P, Pair of Twos, false, 5978 
+TWO, TWO, ACE, QUEEN, EIGHT, 1P, Pair of Twos, false, 5979 
+TWO, TWO, ACE, QUEEN, SEVEN, 1P, Pair of Twos, false, 5980 
+TWO, TWO, ACE, QUEEN, SIX, 1P, Pair of Twos, false, 5981 
+TWO, TWO, ACE, QUEEN, FIVE, 1P, Pair of Twos, false, 5982 
+TWO, TWO, ACE, QUEEN, FOUR, 1P, Pair of Twos, false, 5983 
+TWO, TWO, ACE, QUEEN, THREE, 1P, Pair of Twos, false, 5984 
+TWO, TWO, ACE, JACK, TEN, 1P, Pair of Twos, false, 5985 
+TWO, TWO, ACE, JACK, NINE, 1P, Pair of Twos, false, 5986 
+TWO, TWO, ACE, JACK, EIGHT, 1P, Pair of Twos, false, 5987 
+TWO, TWO, ACE, JACK, SEVEN, 1P, Pair of Twos, false, 5988 
+TWO, TWO, ACE, JACK, SIX, 1P, Pair of Twos, false, 5989 
+TWO, TWO, ACE, JACK, FIVE, 1P, Pair of Twos, false, 5990 
+TWO, TWO, ACE, JACK, FOUR, 1P, Pair of Twos, false, 5991 
+TWO, TWO, ACE, JACK, THREE, 1P, Pair of Twos, false, 5992 
+TWO, TWO, ACE, TEN, NINE, 1P, Pair of Twos, false, 5993 
+TWO, TWO, ACE, TEN, EIGHT, 1P, Pair of Twos, false, 5994 
+TWO, TWO, ACE, TEN, SEVEN, 1P, Pair of Twos, false, 5995 
+TWO, TWO, ACE, TEN, SIX, 1P, Pair of Twos, false, 5996 
+TWO, TWO, ACE, TEN, FIVE, 1P, Pair of Twos, false, 5997 
+TWO, TWO, ACE, TEN, FOUR, 1P, Pair of Twos, false, 5998 
+TWO, TWO, ACE, TEN, THREE, 1P, Pair of Twos, false, 5999 
+TWO, TWO, ACE, NINE, EIGHT, 1P, Pair of Twos, false, 6000 
+TWO, TWO, ACE, NINE, SEVEN, 1P, Pair of Twos, false, 6001 
+TWO, TWO, ACE, NINE, SIX, 1P, Pair of Twos, false, 6002 
+TWO, TWO, ACE, NINE, FIVE, 1P, Pair of Twos, false, 6003 
+TWO, TWO, ACE, NINE, FOUR, 1P, Pair of Twos, false, 6004 
+TWO, TWO, ACE, NINE, THREE, 1P, Pair of Twos, false, 6005 
+TWO, TWO, ACE, EIGHT, SEVEN, 1P, Pair of Twos, false, 6006 
+TWO, TWO, ACE, EIGHT, SIX, 1P, Pair of Twos, false, 6007 
+TWO, TWO, ACE, EIGHT, FIVE, 1P, Pair of Twos, false, 6008 
+TWO, TWO, ACE, EIGHT, FOUR, 1P, Pair of Twos, false, 6009 
+TWO, TWO, ACE, EIGHT, THREE, 1P, Pair of Twos, false, 6010 
+TWO, TWO, ACE, SEVEN, SIX, 1P, Pair of Twos, false, 6011 
+TWO, TWO, ACE, SEVEN, FIVE, 1P, Pair of Twos, false, 6012 
+TWO, TWO, ACE, SEVEN, FOUR, 1P, Pair of Twos, false, 6013 
+TWO, TWO, ACE, SEVEN, THREE, 1P, Pair of Twos, false, 6014 
+TWO, TWO, ACE, SIX, FIVE, 1P, Pair of Twos, false, 6015 
+TWO, TWO, ACE, SIX, FOUR, 1P, Pair of Twos, false, 6016 
+TWO, TWO, ACE, SIX, THREE, 1P, Pair of Twos, false, 6017 
+TWO, TWO, ACE, FIVE, FOUR, 1P, Pair of Twos, false, 6018 
+TWO, TWO, ACE, FIVE, THREE, 1P, Pair of Twos, false, 6019 
+TWO, TWO, ACE, FOUR, THREE, 1P, Pair of Twos, false, 6020 
+TWO, TWO, KING, QUEEN, JACK, 1P, Pair of Twos, false, 6021 
+TWO, TWO, KING, QUEEN, TEN, 1P, Pair of Twos, false, 6022 
+TWO, TWO, KING, QUEEN, NINE, 1P, Pair of Twos, false, 6023 
+TWO, TWO, KING, QUEEN, EIGHT, 1P, Pair of Twos, false, 6024 
+TWO, TWO, KING, QUEEN, SEVEN, 1P, Pair of Twos, false, 6025 
+TWO, TWO, KING, QUEEN, SIX, 1P, Pair of Twos, false, 6026 
+TWO, TWO, KING, QUEEN, FIVE, 1P, Pair of Twos, false, 6027 
+TWO, TWO, KING, QUEEN, FOUR, 1P, Pair of Twos, false, 6028 
+TWO, TWO, KING, QUEEN, THREE, 1P, Pair of Twos, false, 6029 
+TWO, TWO, KING, JACK, TEN, 1P, Pair of Twos, false, 6030 
+TWO, TWO, KING, JACK, NINE, 1P, Pair of Twos, false, 6031 
+TWO, TWO, KING, JACK, EIGHT, 1P, Pair of Twos, false, 6032 
+TWO, TWO, KING, JACK, SEVEN, 1P, Pair of Twos, false, 6033 
+TWO, TWO, KING, JACK, SIX, 1P, Pair of Twos, false, 6034 
+TWO, TWO, KING, JACK, FIVE, 1P, Pair of Twos, false, 6035 
+TWO, TWO, KING, JACK, FOUR, 1P, Pair of Twos, false, 6036 
+TWO, TWO, KING, JACK, THREE, 1P, Pair of Twos, false, 6037 
+TWO, TWO, KING, TEN, NINE, 1P, Pair of Twos, false, 6038 
+TWO, TWO, KING, TEN, EIGHT, 1P, Pair of Twos, false, 6039 
+TWO, TWO, KING, TEN, SEVEN, 1P, Pair of Twos, false, 6040 
+TWO, TWO, KING, TEN, SIX, 1P, Pair of Twos, false, 6041 
+TWO, TWO, KING, TEN, FIVE, 1P, Pair of Twos, false, 6042 
+TWO, TWO, KING, TEN, FOUR, 1P, Pair of Twos, false, 6043 
+TWO, TWO, KING, TEN, THREE, 1P, Pair of Twos, false, 6044 
+TWO, TWO, KING, NINE, EIGHT, 1P, Pair of Twos, false, 6045 
+TWO, TWO, KING, NINE, SEVEN, 1P, Pair of Twos, false, 6046 
+TWO, TWO, KING, NINE, SIX, 1P, Pair of Twos, false, 6047 
+TWO, TWO, KING, NINE, FIVE, 1P, Pair of Twos, false, 6048 
+TWO, TWO, KING, NINE, FOUR, 1P, Pair of Twos, false, 6049 
+TWO, TWO, KING, NINE, THREE, 1P, Pair of Twos, false, 6050 
+TWO, TWO, KING, EIGHT, SEVEN, 1P, Pair of Twos, false, 6051 
+TWO, TWO, KING, EIGHT, SIX, 1P, Pair of Twos, false, 6052 
+TWO, TWO, KING, EIGHT, FIVE, 1P, Pair of Twos, false, 6053 
+TWO, TWO, KING, EIGHT, FOUR, 1P, Pair of Twos, false, 6054 
+TWO, TWO, KING, EIGHT, THREE, 1P, Pair of Twos, false, 6055 
+TWO, TWO, KING, SEVEN, SIX, 1P, Pair of Twos, false, 6056 
+TWO, TWO, KING, SEVEN, FIVE, 1P, Pair of Twos, false, 6057 
+TWO, TWO, KING, SEVEN, FOUR, 1P, Pair of Twos, false, 6058 
+TWO, TWO, KING, SEVEN, THREE, 1P, Pair of Twos, false, 6059 
+TWO, TWO, KING, SIX, FIVE, 1P, Pair of Twos, false, 6060 
+TWO, TWO, KING, SIX, FOUR, 1P, Pair of Twos, false, 6061 
+TWO, TWO, KING, SIX, THREE, 1P, Pair of Twos, false, 6062 
+TWO, TWO, KING, FIVE, FOUR, 1P, Pair of Twos, false, 6063 
+TWO, TWO, KING, FIVE, THREE, 1P, Pair of Twos, false, 6064 
+TWO, TWO, KING, FOUR, THREE, 1P, Pair of Twos, false, 6065 
+TWO, TWO, QUEEN, JACK, TEN, 1P, Pair of Twos, false, 6066 
+TWO, TWO, QUEEN, JACK, NINE, 1P, Pair of Twos, false, 6067 
+TWO, TWO, QUEEN, JACK, EIGHT, 1P, Pair of Twos, false, 6068 
+TWO, TWO, QUEEN, JACK, SEVEN, 1P, Pair of Twos, false, 6069 
+TWO, TWO, QUEEN, JACK, SIX, 1P, Pair of Twos, false, 6070 
+TWO, TWO, QUEEN, JACK, FIVE, 1P, Pair of Twos, false, 6071 
+TWO, TWO, QUEEN, JACK, FOUR, 1P, Pair of Twos, false, 6072 
+TWO, TWO, QUEEN, JACK, THREE, 1P, Pair of Twos, false, 6073 
+TWO, TWO, QUEEN, TEN, NINE, 1P, Pair of Twos, false, 6074 
+TWO, TWO, QUEEN, TEN, EIGHT, 1P, Pair of Twos, false, 6075 
+TWO, TWO, QUEEN, TEN, SEVEN, 1P, Pair of Twos, false, 6076 
+TWO, TWO, QUEEN, TEN, SIX, 1P, Pair of Twos, false, 6077 
+TWO, TWO, QUEEN, TEN, FIVE, 1P, Pair of Twos, false, 6078 
+TWO, TWO, QUEEN, TEN, FOUR, 1P, Pair of Twos, false, 6079 
+TWO, TWO, QUEEN, TEN, THREE, 1P, Pair of Twos, false, 6080 
+TWO, TWO, QUEEN, NINE, EIGHT, 1P, Pair of Twos, false, 6081 
+TWO, TWO, QUEEN, NINE, SEVEN, 1P, Pair of Twos, false, 6082 
+TWO, TWO, QUEEN, NINE, SIX, 1P, Pair of Twos, false, 6083 
+TWO, TWO, QUEEN, NINE, FIVE, 1P, Pair of Twos, false, 6084 
+TWO, TWO, QUEEN, NINE, FOUR, 1P, Pair of Twos, false, 6085 
+TWO, TWO, QUEEN, NINE, THREE, 1P, Pair of Twos, false, 6086 
+TWO, TWO, QUEEN, EIGHT, SEVEN, 1P, Pair of Twos, false, 6087 
+TWO, TWO, QUEEN, EIGHT, SIX, 1P, Pair of Twos, false, 6088 
+TWO, TWO, QUEEN, EIGHT, FIVE, 1P, Pair of Twos, false, 6089 
+TWO, TWO, QUEEN, EIGHT, FOUR, 1P, Pair of Twos, false, 6090 
+TWO, TWO, QUEEN, EIGHT, THREE, 1P, Pair of Twos, false, 6091 
+TWO, TWO, QUEEN, SEVEN, SIX, 1P, Pair of Twos, false, 6092 
+TWO, TWO, QUEEN, SEVEN, FIVE, 1P, Pair of Twos, false, 6093 
+TWO, TWO, QUEEN, SEVEN, FOUR, 1P, Pair of Twos, false, 6094 
+TWO, TWO, QUEEN, SEVEN, THREE, 1P, Pair of Twos, false, 6095 
+TWO, TWO, QUEEN, SIX, FIVE, 1P, Pair of Twos, false, 6096 
+TWO, TWO, QUEEN, SIX, FOUR, 1P, Pair of Twos, false, 6097 
+TWO, TWO, QUEEN, SIX, THREE, 1P, Pair of Twos, false, 6098 
+TWO, TWO, QUEEN, FIVE, FOUR, 1P, Pair of Twos, false, 6099 
+TWO, TWO, QUEEN, FIVE, THREE, 1P, Pair of Twos, false, 6100 
+TWO, TWO, QUEEN, FOUR, THREE, 1P, Pair of Twos, false, 6101 
+TWO, TWO, JACK, TEN, NINE, 1P, Pair of Twos, false, 6102 
+TWO, TWO, JACK, TEN, EIGHT, 1P, Pair of Twos, false, 6103 
+TWO, TWO, JACK, TEN, SEVEN, 1P, Pair of Twos, false, 6104 
+TWO, TWO, JACK, TEN, SIX, 1P, Pair of Twos, false, 6105 
+TWO, TWO, JACK, TEN, FIVE, 1P, Pair of Twos, false, 6106 
+TWO, TWO, JACK, TEN, FOUR, 1P, Pair of Twos, false, 6107 
+TWO, TWO, JACK, TEN, THREE, 1P, Pair of Twos, false, 6108 
+TWO, TWO, JACK, NINE, EIGHT, 1P, Pair of Twos, false, 6109 
+TWO, TWO, JACK, NINE, SEVEN, 1P, Pair of Twos, false, 6110 
+TWO, TWO, JACK, NINE, SIX, 1P, Pair of Twos, false, 6111 
+TWO, TWO, JACK, NINE, FIVE, 1P, Pair of Twos, false, 6112 
+TWO, TWO, JACK, NINE, FOUR, 1P, Pair of Twos, false, 6113 
+TWO, TWO, JACK, NINE, THREE, 1P, Pair of Twos, false, 6114 
+TWO, TWO, JACK, EIGHT, SEVEN, 1P, Pair of Twos, false, 6115 
+TWO, TWO, JACK, EIGHT, SIX, 1P, Pair of Twos, false, 6116 
+TWO, TWO, JACK, EIGHT, FIVE, 1P, Pair of Twos, false, 6117 
+TWO, TWO, JACK, EIGHT, FOUR, 1P, Pair of Twos, false, 6118 
+TWO, TWO, JACK, EIGHT, THREE, 1P, Pair of Twos, false, 6119 
+TWO, TWO, JACK, SEVEN, SIX, 1P, Pair of Twos, false, 6120 
+TWO, TWO, JACK, SEVEN, FIVE, 1P, Pair of Twos, false, 6121 
+TWO, TWO, JACK, SEVEN, FOUR, 1P, Pair of Twos, false, 6122 
+TWO, TWO, JACK, SEVEN, THREE, 1P, Pair of Twos, false, 6123 
+TWO, TWO, JACK, SIX, FIVE, 1P, Pair of Twos, false, 6124 
+TWO, TWO, JACK, SIX, FOUR, 1P, Pair of Twos, false, 6125 
+TWO, TWO, JACK, SIX, THREE, 1P, Pair of Twos, false, 6126 
+TWO, TWO, JACK, FIVE, FOUR, 1P, Pair of Twos, false, 6127 
+TWO, TWO, JACK, FIVE, THREE, 1P, Pair of Twos, false, 6128 
+TWO, TWO, JACK, FOUR, THREE, 1P, Pair of Twos, false, 6129 
+TWO, TWO, TEN, NINE, EIGHT, 1P, Pair of Twos, false, 6130 
+TWO, TWO, TEN, NINE, SEVEN, 1P, Pair of Twos, false, 6131 
+TWO, TWO, TEN, NINE, SIX, 1P, Pair of Twos, false, 6132 
+TWO, TWO, TEN, NINE, FIVE, 1P, Pair of Twos, false, 6133 
+TWO, TWO, TEN, NINE, FOUR, 1P, Pair of Twos, false, 6134 
+TWO, TWO, TEN, NINE, THREE, 1P, Pair of Twos, false, 6135 
+TWO, TWO, TEN, EIGHT, SEVEN, 1P, Pair of Twos, false, 6136 
+TWO, TWO, TEN, EIGHT, SIX, 1P, Pair of Twos, false, 6137 
+TWO, TWO, TEN, EIGHT, FIVE, 1P, Pair of Twos, false, 6138 
+TWO, TWO, TEN, EIGHT, FOUR, 1P, Pair of Twos, false, 6139 
+TWO, TWO, TEN, EIGHT, THREE, 1P, Pair of Twos, false, 6140 
+TWO, TWO, TEN, SEVEN, SIX, 1P, Pair of Twos, false, 6141 
+TWO, TWO, TEN, SEVEN, FIVE, 1P, Pair of Twos, false, 6142 
+TWO, TWO, TEN, SEVEN, FOUR, 1P, Pair of Twos, false, 6143 
+TWO, TWO, TEN, SEVEN, THREE, 1P, Pair of Twos, false, 6144 
+TWO, TWO, TEN, SIX, FIVE, 1P, Pair of Twos, false, 6145 
+TWO, TWO, TEN, SIX, FOUR, 1P, Pair of Twos, false, 6146 
+TWO, TWO, TEN, SIX, THREE, 1P, Pair of Twos, false, 6147 
+TWO, TWO, TEN, FIVE, FOUR, 1P, Pair of Twos, false, 6148 
+TWO, TWO, TEN, FIVE, THREE, 1P, Pair of Twos, false, 6149 
+TWO, TWO, TEN, FOUR, THREE, 1P, Pair of Twos, false, 6150 
+TWO, TWO, NINE, EIGHT, SEVEN, 1P, Pair of Twos, false, 6151 
+TWO, TWO, NINE, EIGHT, SIX, 1P, Pair of Twos, false, 6152 
+TWO, TWO, NINE, EIGHT, FIVE, 1P, Pair of Twos, false, 6153 
+TWO, TWO, NINE, EIGHT, FOUR, 1P, Pair of Twos, false, 6154 
+TWO, TWO, NINE, EIGHT, THREE, 1P, Pair of Twos, false, 6155 
+TWO, TWO, NINE, SEVEN, SIX, 1P, Pair of Twos, false, 6156 
+TWO, TWO, NINE, SEVEN, FIVE, 1P, Pair of Twos, false, 6157 
+TWO, TWO, NINE, SEVEN, FOUR, 1P, Pair of Twos, false, 6158 
+TWO, TWO, NINE, SEVEN, THREE, 1P, Pair of Twos, false, 6159 
+TWO, TWO, NINE, SIX, FIVE, 1P, Pair of Twos, false, 6160 
+TWO, TWO, NINE, SIX, FOUR, 1P, Pair of Twos, false, 6161 
+TWO, TWO, NINE, SIX, THREE, 1P, Pair of Twos, false, 6162 
+TWO, TWO, NINE, FIVE, FOUR, 1P, Pair of Twos, false, 6163 
+TWO, TWO, NINE, FIVE, THREE, 1P, Pair of Twos, false, 6164 
+TWO, TWO, NINE, FOUR, THREE, 1P, Pair of Twos, false, 6165 
+TWO, TWO, EIGHT, SEVEN, SIX, 1P, Pair of Twos, false, 6166 
+TWO, TWO, EIGHT, SEVEN, FIVE, 1P, Pair of Twos, false, 6167 
+TWO, TWO, EIGHT, SEVEN, FOUR, 1P, Pair of Twos, false, 6168 
+TWO, TWO, EIGHT, SEVEN, THREE, 1P, Pair of Twos, false, 6169 
+TWO, TWO, EIGHT, SIX, FIVE, 1P, Pair of Twos, false, 6170 
+TWO, TWO, EIGHT, SIX, FOUR, 1P, Pair of Twos, false, 6171 
+TWO, TWO, EIGHT, SIX, THREE, 1P, Pair of Twos, false, 6172 
+TWO, TWO, EIGHT, FIVE, FOUR, 1P, Pair of Twos, false, 6173 
+TWO, TWO, EIGHT, FIVE, THREE, 1P, Pair of Twos, false, 6174 
+TWO, TWO, EIGHT, FOUR, THREE, 1P, Pair of Twos, false, 6175 
+TWO, TWO, SEVEN, SIX, FIVE, 1P, Pair of Twos, false, 6176 
+TWO, TWO, SEVEN, SIX, FOUR, 1P, Pair of Twos, false, 6177 
+TWO, TWO, SEVEN, SIX, THREE, 1P, Pair of Twos, false, 6178 
+TWO, TWO, SEVEN, FIVE, FOUR, 1P, Pair of Twos, false, 6179 
+TWO, TWO, SEVEN, FIVE, THREE, 1P, Pair of Twos, false, 6180 
+TWO, TWO, SEVEN, FOUR, THREE, 1P, Pair of Twos, false, 6181 
+TWO, TWO, SIX, FIVE, FOUR, 1P, Pair of Twos, false, 6182 
+TWO, TWO, SIX, FIVE, THREE, 1P, Pair of Twos, false, 6183 
+TWO, TWO, SIX, FOUR, THREE, 1P, Pair of Twos, false, 6184 
+TWO, TWO, FIVE, FOUR, THREE, 1P, Pair of Twos, false, 6185 
 ACE, KING, QUEEN, JACK, NINE, HC, Ace-High, false, 6186 
 ACE, KING, QUEEN, JACK, EIGHT, HC, Ace-High, false, 6187 
 ACE, KING, QUEEN, JACK, SEVEN, HC, Ace-High, false, 6188 

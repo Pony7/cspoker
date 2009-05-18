@@ -28,6 +28,7 @@ import org.cspoker.common.api.lobby.holdemtable.event.RaiseEvent;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.RemoteHoldemPlayerContext;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.player.PlayerId;
+import org.cspoker.common.util.Util;
 
 public class RaiseAction extends SearchBotAction {
 
@@ -75,9 +76,9 @@ public class RaiseAction extends SearchBotAction {
 		int movedAmount = deficit + amount;
 
 		if (movedAmount >= stack) {
-			return "Raise " + parseDollars(amount)+ " (all-in)";
+			return "Raise " + Util.parseDollars(amount)+ " (all-in)";
 		}else{
-			return "Raise " + parseDollars(amount);
+			return "Raise " + Util.parseDollars(amount);
 		}
 	}
 

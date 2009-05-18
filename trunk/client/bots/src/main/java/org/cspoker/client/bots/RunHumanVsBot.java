@@ -24,12 +24,23 @@ import org.cspoker.client.bots.bot.BotFactory;
 import org.cspoker.client.bots.bot.gametree.mcts.MCTSBotFactory;
 import org.cspoker.client.bots.bot.gametree.mcts.listeners.SWTTreeListener;
 import org.cspoker.client.bots.bot.gametree.mcts.nodes.MCTSBucketShowdownNode;
-import org.cspoker.client.bots.bot.gametree.mcts.strategies.SampleProportionateSelector;
-import org.cspoker.client.bots.bot.gametree.mcts.strategies.SamplingToFunctionSelector;
-import org.cspoker.client.bots.bot.gametree.mcts.strategies.UCTSelector;
+import org.cspoker.client.bots.bot.gametree.mcts.strategies.backpropagation.MixtureBackPropStrategy;
+import org.cspoker.client.bots.bot.gametree.mcts.strategies.backpropagation.SampleWeightedBackPropStrategy;
+import org.cspoker.client.bots.bot.gametree.mcts.strategies.selection.MaxSampleSelector;
+import org.cspoker.client.bots.bot.gametree.mcts.strategies.selection.MaxUnderValueSelector;
+import org.cspoker.client.bots.bot.gametree.mcts.strategies.selection.MaxValueSelector;
+import org.cspoker.client.bots.bot.gametree.mcts.strategies.selection.MinValueSelector;
+import org.cspoker.client.bots.bot.gametree.mcts.strategies.selection.MixedSelectionStrategy;
+import org.cspoker.client.bots.bot.gametree.mcts.strategies.selection.SampleProportionateSelector;
+import org.cspoker.client.bots.bot.gametree.mcts.strategies.selection.SamplingSelector;
+import org.cspoker.client.bots.bot.gametree.mcts.strategies.selection.SamplingToFunctionSelector;
+import org.cspoker.client.bots.bot.gametree.mcts.strategies.selection.UCTPlusSelector;
+import org.cspoker.client.bots.bot.gametree.mcts.strategies.selection.UCTSelector;
 import org.cspoker.client.bots.bot.gametree.opponentmodel.weka.WekaRegressionModelFactory;
 import org.cspoker.client.bots.bot.gametree.search.nodevisitor.StatisticsVisitor;
 import org.cspoker.client.bots.listener.DefaultBotListener;
+import org.cspoker.client.bots.listener.ProfitCalculator;
+import org.cspoker.client.bots.listener.ProfitListener;
 import org.cspoker.client.common.SmartClientContext;
 import org.cspoker.client.common.SmartLobbyContext;
 import org.cspoker.client.communication.embedded.EmbeddedCSPokerServer;
@@ -49,7 +60,7 @@ import org.cspoker.common.util.Log4JPropertiesLoader;
 import org.cspoker.common.util.threading.SingleThreadRequestExecutor;
 import org.eclipse.swt.widgets.Display;
 
-public class RunHumanVsBot {
+public class RunHumanVsBot{
 
 	static {
 		Log4JPropertiesLoader
@@ -67,6 +78,7 @@ public class RunHumanVsBot {
 	protected CSPokerServer server;
 	private final DisplayExecutor displayexecutor;
 	private StatisticsVisitor.Factory stats;
+	private TableConfiguration tConfig;
 
 	public RunHumanVsBot() {
 		server = new EmbeddedCSPokerServer();
@@ -87,10 +99,9 @@ public class RunHumanVsBot {
 		lobby.setLobbyContext(client.getCommunication());
 		client.getGui().setLobby(lobby);
 
-		TableConfiguration tConfig = new TableConfiguration(smallBet, delay,
-				false, true, true);
-		lobby.getContext().createHoldemTable(u.getUserName() + "'s test table",
-				tConfig);
+		tConfig = new TableConfiguration(smallBet, delay,
+				false, false, true);
+		lobby.getContext().createHoldemTable(u.getUserName() + "'s test table", tConfig);
 		// Run blocking calls in extra thread
 		displayexecutor.execute(new Runnable() {
 
@@ -134,10 +145,14 @@ public class RunHumanVsBot {
 //					new SWTTreeListener.Factory(client.getGui().getDisplay()));
 //			
 			botFactory = new MCTSBotFactory(
+					"Bot 5000",
 					new WekaRegressionModelFactory("/home/guy/Werk/thesis/weka-3-6-0/model1"),
-					new SamplingToFunctionSelector(new UCTSelector(40000)),
-					new SampleProportionateSelector(),
+					new SamplingToFunctionSelector(20,new UCTPlusSelector(40000,3)),
+					new MixedSelectionStrategy(new SamplingSelector(), new MinValueSelector(),0.95),
+					new MaxValueSelector(),
 					new MCTSBucketShowdownNode.Factory(),
+					new MixtureBackPropStrategy.Factory(new MaxUnderValueSelector(2)),
+					1000,
 					new SWTTreeListener.Factory(client.getGui().getDisplay()));
 
 //				BotFactory botFactory = new WekaRegressionBotFactory(
@@ -169,6 +184,7 @@ public class RunHumanVsBot {
 	}
 
 	private int botIndex = 1;
+	private Bot bot;
 
 	private void startBot(BotFactory botFactory, final TableId tableId,
 			final int buyin) throws LoginException, RemoteException,
@@ -181,8 +197,22 @@ public class RunHumanVsBot {
 		final PlayerId botId = clientContext.getAccountContext().getPlayerID();
 		final SingleThreadRequestExecutor executor = SingleThreadRequestExecutor
 		.getInstance();
-		Bot bot = botFactory.createBot(botId, tableId, lobbyContext, buyin,
-				executor, new DefaultBotListener() {
+		bot = botFactory.createBot(botId, tableId, lobbyContext, buyin,
+				executor, 
+				new ProfitListener(1,new ProfitCalculator(){
+					
+					@Override
+					public double getProfit() {
+						return bot.getProfit()*1.0/tConfig.getSmallBet();
+					}
+					
+					@Override
+					public String toString() {
+						return "Bot";
+					}
+					
+				}), 
+				new DefaultBotListener() {
 			@Override
 			public void onSitOut(SitOutEvent event) {
 				// if(event.getPlayerId().equals(botId)){
@@ -212,4 +242,5 @@ public class RunHumanVsBot {
 		bot.start();
 		bot.startGame();
 	}
+	
 }

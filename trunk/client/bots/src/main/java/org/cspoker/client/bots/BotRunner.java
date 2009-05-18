@@ -28,9 +28,20 @@ import org.cspoker.client.bots.bot.Bot;
 import org.cspoker.client.bots.bot.BotFactory;
 import org.cspoker.client.bots.bot.gametree.mcts.MCTSBotFactory;
 import org.cspoker.client.bots.bot.gametree.mcts.nodes.MCTSBucketShowdownNode;
-import org.cspoker.client.bots.bot.gametree.mcts.strategies.SampleProportionateSelector;
-import org.cspoker.client.bots.bot.gametree.mcts.strategies.SamplingToFunctionSelector;
-import org.cspoker.client.bots.bot.gametree.mcts.strategies.UCTSelector;
+import org.cspoker.client.bots.bot.gametree.mcts.nodes.MCTSShowdownRollOutNode;
+import org.cspoker.client.bots.bot.gametree.mcts.strategies.backpropagation.MixtureBackPropStrategy;
+import org.cspoker.client.bots.bot.gametree.mcts.strategies.backpropagation.SampleWeightedBackPropStrategy;
+import org.cspoker.client.bots.bot.gametree.mcts.strategies.selection.MaxFunctionSelector;
+import org.cspoker.client.bots.bot.gametree.mcts.strategies.selection.MaxSampleSelector;
+import org.cspoker.client.bots.bot.gametree.mcts.strategies.selection.MaxUnderValueSelector;
+import org.cspoker.client.bots.bot.gametree.mcts.strategies.selection.MaxValueSelector;
+import org.cspoker.client.bots.bot.gametree.mcts.strategies.selection.MinValueSelector;
+import org.cspoker.client.bots.bot.gametree.mcts.strategies.selection.MixedSelectionStrategy;
+import org.cspoker.client.bots.bot.gametree.mcts.strategies.selection.SampleProportionateSelector;
+import org.cspoker.client.bots.bot.gametree.mcts.strategies.selection.SamplingSelector;
+import org.cspoker.client.bots.bot.gametree.mcts.strategies.selection.SamplingToFunctionSelector;
+import org.cspoker.client.bots.bot.gametree.mcts.strategies.selection.UCTPlusSelector;
+import org.cspoker.client.bots.bot.gametree.mcts.strategies.selection.UCTSelector;
 import org.cspoker.client.bots.bot.gametree.opponentmodel.weka.WekaRegressionModelFactory;
 import org.cspoker.client.bots.listener.BotListener;
 import org.cspoker.client.bots.listener.GameLimitingBotListener;
@@ -54,12 +65,13 @@ import org.cspoker.common.util.threading.SingleThreadRequestExecutor;
 @NotThreadSafe
 public class BotRunner implements LobbyListener {
 
+	private static final int nbBigBlindsBuyIn = 0;
 	private static final TableConfiguration config = new TableConfiguration(100,
 			0, false, true, true);
 
-	public static final int nbGamesPerConfrontation = 10000;
+	public static final int nbGamesPerConfrontation = 100000;
 
-	public static final int reportInterval = 2;
+	public static final int reportInterval = 10;
 
 	public final int nbPlayersPerGame;
 
@@ -93,20 +105,37 @@ public class BotRunner implements LobbyListener {
 			return new BotRunner(cspokerServer,
 					new BotFactory[] {
 					new MCTSBotFactory(
+							"Bot 1",
 							new WekaRegressionModelFactory("/home/guy/Werk/thesis/weka-3-6-0/model1"),
-							new SamplingToFunctionSelector(new UCTSelector(40000)),
-							new SampleProportionateSelector(),
-							new MCTSBucketShowdownNode.Factory()),
+							new SamplingToFunctionSelector(10,new UCTSelector(5000)),
+							new MixedSelectionStrategy(new SamplingSelector(), new MinValueSelector(),0.95),
+							new MaxUnderValueSelector(2),
+							new MCTSBucketShowdownNode.Factory(),
+							new MixtureBackPropStrategy.Factory(new MaxUnderValueSelector(2)),
+							250
+					),
 					new MCTSBotFactory(
+							"Bot 2",
 							new WekaRegressionModelFactory("/home/guy/Werk/thesis/weka-3-6-0/model1"),
-							new SamplingToFunctionSelector(new UCTSelector(40000)),
-							new SampleProportionateSelector(),
-							new MCTSBucketShowdownNode.Factory()),
+							new SamplingToFunctionSelector(10,new UCTPlusSelector(5000,0.5)),
+							new MixedSelectionStrategy(new SamplingSelector(), new MinValueSelector(),0.95),
+							new MaxUnderValueSelector(2),
+							new MCTSBucketShowdownNode.Factory(),
+							new MixtureBackPropStrategy.Factory(new MaxUnderValueSelector(2)),
+							250
+					),
+					//					new MCTSBotFactory(
+					//							"Bot B",
+					//							new WekaRegressionModelFactory("/home/guy/Werk/thesis/weka-3-6-0/model1"),
+					//							new SamplingToFunctionSelector(new UCTSelector(5000)),
+					//							new SampleProportionateSelector(),
+					//							new MCTSBucketShowdownNode.Factory(),
+					//							50),
 					// ML bots
 					//						 new RuleBasedBotFactory1(),
 					//				new RuleBasedBotFactory2(),
 					//				new SearchBotFactory(new ShowdownRolloutNode.Factory(new DistributionRollout4.Factory())),
-//				new MCTSBotFactory(),
+					//				new MCTSBotFactory(),
 					//				 new SearchBotFactory(new
 					//				 DistributionShowdownNode4.Factory()),
 					// new RuleBasedBotFactory1(),
@@ -220,16 +249,16 @@ public class BotRunner implements LobbyListener {
 			for (int i = 1; i < nbPlayersPerGame; i++) {
 				tableName += " vs " + bots[botIndex[i]].toString();
 			}
-			TableId tableId = directorLobby
-			.createHoldemTable(tableName, config).getId();
+			TableId tableId = directorLobby.createHoldemTable(tableName, config).getId();
+			int buyIn = nbBigBlindsBuyIn*config.getBigBlind();
 
 			bot[0] = bots[botIndex[0]].createBot(botIDs[botIndex[0]], tableId,
-					botLobbies[botIndex[0]], 20000, executor,
+					botLobbies[botIndex[0]], buyIn, executor,
 					new ReSitInBotListener(this), speedMonitor, gameLimiter);
 			bot[0].start();
 			for (int i = 1; i < nbPlayersPerGame; i++) {
 				bot[i] = bots[botIndex[i]].createBot(botIDs[botIndex[i]],
-						tableId, botLobbies[botIndex[i]], 5000, executor);
+						tableId, botLobbies[botIndex[i]], buyIn, executor);
 				bot[i].start();
 			}
 			bot[0].startGame();
@@ -287,7 +316,7 @@ public class BotRunner implements LobbyListener {
 	}
 
 	public double getBotProfit(int i) {
-		return (botProfit[i] + bot[i].getProfit()) * 1.0 / config.getBigBlind();
+		return (botProfit[i] + bot[i].getProfit()) * 1.0 / config.getSmallBet();
 	}
 
 }

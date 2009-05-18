@@ -13,15 +13,16 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.client.bots.bot.gametree.mcts.strategies;
+package org.cspoker.client.bots.bot.gametree.mcts.strategies.selection;
 
 import org.cspoker.client.bots.bot.gametree.mcts.nodes.INode;
+import org.cspoker.client.bots.bot.gametree.mcts.nodes.InnerNode;
 
-public class MaxSampleSelector extends MaxFunctionSelector {
+public class SamplingSelector implements SelectionStrategy {
 
 	@Override
-	protected double evaluate(INode node) {
-		return node.getNbSamples();
+	public INode select(InnerNode innerNode) {
+		return innerNode.getRandomChild();
 	}
 
 }

@@ -22,13 +22,13 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import org.apache.log4j.Logger;
 import org.cspoker.client.bots.bot.gametree.action.ActionWrapper;
 import org.cspoker.client.bots.bot.gametree.action.ProbabilityAction;
-import org.cspoker.client.bots.bot.gametree.action.SearchBotAction;
 import org.cspoker.client.bots.bot.gametree.search.Distribution;
 import org.cspoker.client.bots.bot.gametree.search.GameTreeNode;
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.elements.table.Round;
 import org.cspoker.common.util.Pair;
+import org.cspoker.common.util.Util;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ShellAdapter;
 import org.eclipse.swt.events.ShellEvent;
@@ -98,9 +98,9 @@ public class SWTTreeVisitor implements NodeVisitor {
 						action.getAction().toString(), round.getName(),
 						Math.round(100 * probAction.getProbability()) + "%",
 						samples, "?", "?", "" + node.getNbTokens() , 
-						""+SearchBotAction.parseDollars((int)Math.round(node.getUpperWinBound() - relStackSize)),
-						""+SearchBotAction.parseDollars(node.getGameState().getGamePotSize()),
-						""+SearchBotAction.parseDollars((int)Math.round(lowerBound - relStackSize))
+						""+Util.parseDollars(node.getUpperWinBound() - relStackSize),
+						""+Util.parseDollars(node.getGameState().getGamePotSize()),
+						""+Util.parseDollars(lowerBound - relStackSize)
 				});
 				if (round == Round.FINAL) {
 					newItem.setBackground(2, new Color(display, 30, 30, 255));
@@ -125,15 +125,13 @@ public class SWTTreeVisitor implements NodeVisitor {
 				try {
 					TreeItem item = items.pop();
 					if(distribution.isUpperBound()){
-						item.setText(5, "<"+SearchBotAction.parseDollars((int) Math
+						item.setText(5, "<"+Util.parseDollars((int) Math
 								.round(distribution.getMean() - relStackSize)));
 						item.setText(6, "");
 						item.setBackground(5, new Color(display, 255, 0, 0));
 					}else{
-						item.setText(5, SearchBotAction.parseDollars((int) Math
-								.round(distribution.getMean() - relStackSize)));
-						item.setText(6, SearchBotAction.parseDollars((int) Math
-								.round(Math.sqrt(distribution.getVariance()))));
+						item.setText(5, Util.parseDollars(distribution.getMean() - relStackSize));
+						item.setText(6, Util.parseDollars(Math.sqrt(distribution.getVariance())));
 					}
 					rounds.pop();
 				} catch (NoSuchElementException e) {
@@ -181,7 +179,7 @@ public class SWTTreeVisitor implements NodeVisitor {
 				}
 				newItem.setText(new String[] { "", text, "showdown",
 						Math.round(100 * probability) + "%", "",
-						SearchBotAction.parseDollars(winnings - relStackSize),
+						Util.parseDollars(winnings - relStackSize),
 						"$0", "" , "", "", ""});
 				try {
 					newItem.setBackground(1, new Color(display, (int) Math

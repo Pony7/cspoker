@@ -16,26 +16,51 @@
 package org.cspoker.client.bots.bot.gametree.mcts.nodes;
 
 import org.cspoker.client.bots.bot.gametree.action.ProbabilityAction;
+import org.cspoker.client.bots.util.RunningStats;
 import org.cspoker.client.common.gamestate.GameState;
 
 public abstract class ShowdownNode extends LeafNode {
 
 	//stats
-	protected double totalValue = 0;
+	protected final RunningStats stats = new RunningStats();
 	
 	public ShowdownNode(InnerNode parent, ProbabilityAction probAction) {
 		super(parent, probAction);
 	}
 
 	@Override
-	public double getAverage() {
-		return totalValue/nbSamples;
+	public double getEV() {
+		return stats.getMean();
+	}
+	
+	@Override
+	public double getStdDev() {
+		return stats.getStdDev();
+	}
+	
+	@Override
+	public double getVariance() {
+		return stats.getVariance();
+	}
+	
+	@Override
+	public int getNbSamples() {
+		return stats.getNbSamples();
+	}
+	
+	@Override
+	public double getEVStdDev() {
+		return stats.getEVStdDev();
+	}
+	
+	@Override
+	public int getNbSamplesInMean() {
+		return stats.getNbSamples();
 	}
 	
 	@Override
 	public void backPropagate(double value) {
-		totalValue+=value;
-		++nbSamples;
+		stats.add(value);
 		parent.backPropagate(value);
 	}
 	

@@ -392,7 +392,7 @@ public class GameWindow
 	 * @see org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener#onAllIn(org.cspoker.common.api.lobby.holdemtable.event.AllInEvent)
 	 */
 	public void onAllIn(AllInEvent allInEvent) {
-		handleActionChangedPot(allInEvent.getAmount(), allInEvent.getPlayerId(), "All In");
+		handleActionChangedPot(allInEvent.getMovedAmount(), allInEvent.getPlayerId(), "All In");
 		userInputComposite.showDealerMessage(allInEvent);
 		if (allInEvent.endsRound()) {
 			tableComposite.moveBetsToPot();

@@ -54,9 +54,9 @@ public class AllInState
 		this.event = event;
 		
 		final PlayerState player = super.getPlayer(event.getPlayerId());
-		this.newPotSize = super.getRoundPotSize() + event.getAmount();
+		this.newPotSize = super.getRoundPotSize() + event.getMovedAmount();
 		
-		this.newBetSize = player.getBet() + event.getAmount();
+		this.newBetSize = player.getBet() + event.getMovedAmount();
 		int buildingRaise = newBetSize - super.getLargestBet();
 		if (buildingRaise < 0) {
 			buildingRaise = 0;
@@ -71,7 +71,7 @@ public class AllInState
 			
 			@Override
 			public int getTotalInvestment() {
-				return super.getTotalInvestment()+event.getAmount();
+				return super.getTotalInvestment()+event.getMovedAmount();
 			}
 			
 			@Override
@@ -103,7 +103,7 @@ public class AllInState
 				if (gameState.getLastBettor() != null) {
 					result.addAll(gameState.getPlayer(gameState.getLastBettor()).getBetProgression());
 				}
-				result.add(event.getAmount());
+				result.add(event.getMovedAmount());
 				return Collections.unmodifiableList(result);
 			}
 			

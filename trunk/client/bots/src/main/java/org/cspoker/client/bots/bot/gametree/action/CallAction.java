@@ -75,7 +75,7 @@ public class CallAction extends SearchBotAction {
 			state = new AllInState(gameState, new AllInEvent(actor, stack,
 					roundEnds));
 		} else {
-			state = new CallState(gameState, new CallEvent(actor, roundEnds));
+			state = new CallState(gameState, new CallEvent(actor, largestBet - bet, roundEnds));
 		}
 		if (roundEnds) {
 			return getNewRoundState(state);
