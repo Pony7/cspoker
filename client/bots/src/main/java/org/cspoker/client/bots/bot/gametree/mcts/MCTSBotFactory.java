@@ -24,7 +24,9 @@ import org.cspoker.client.bots.bot.BotFactory;
 import org.cspoker.client.bots.bot.gametree.mcts.listeners.MCTSListener;
 import org.cspoker.client.bots.bot.gametree.mcts.nodes.Config;
 import org.cspoker.client.bots.bot.gametree.mcts.nodes.ShowdownNode;
-import org.cspoker.client.bots.bot.gametree.mcts.strategies.SelectionStrategy;
+import org.cspoker.client.bots.bot.gametree.mcts.strategies.backpropagation.BackPropagationStrategy;
+import org.cspoker.client.bots.bot.gametree.mcts.strategies.backpropagation.BackPropagationStrategy.Factory;
+import org.cspoker.client.bots.bot.gametree.mcts.strategies.selection.SelectionStrategy;
 import org.cspoker.client.bots.bot.gametree.opponentmodel.OpponentModel;
 import org.cspoker.client.bots.listener.BotListener;
 import org.cspoker.client.common.SmartLobbyContext;
@@ -40,22 +42,34 @@ public class MCTSBotFactory implements BotFactory {
 	private final ConcurrentHashMap<PlayerId, OpponentModel> opponentModels = new ConcurrentHashMap<PlayerId, OpponentModel>();
 	private final MCTSListener.Factory[] listeners;
 	private final OpponentModel.Factory opponentModelFactory;
-	private final SelectionStrategy selectionStrategy;
+	private final SelectionStrategy decisionNodeSelectionStrategy;
+	private final SelectionStrategy opponentNodeSelectionStrategy;
 	private final SelectionStrategy moveSelectionStrategy;
 	private final ShowdownNode.Factory showdownNodeFactory;
+	private final int decisionTime;
+	private final String name;
+	private final BackPropagationStrategy.Factory backPropStratFactory;
 
 	public MCTSBotFactory(
+			String name,
 			OpponentModel.Factory opponentModelFactory, 
-			SelectionStrategy selectionStrategy,
+			SelectionStrategy decisionNodeSelectionStrategy,
+			SelectionStrategy opponentNodeSelectionStrategy,
 			SelectionStrategy moveSelectionStrategy,
 			ShowdownNode.Factory showdownNodeFactory,
+			BackPropagationStrategy.Factory backPropStratFactory,
+			int decisionTime,
 			MCTSListener.Factory... listeners) {
 		copy = ++copies;
+		this.name = name;
 		this.listeners = listeners;
 		this.opponentModelFactory = opponentModelFactory;
-		this.selectionStrategy=selectionStrategy;
+		this.decisionNodeSelectionStrategy=decisionNodeSelectionStrategy;
+		this.opponentNodeSelectionStrategy=opponentNodeSelectionStrategy;
 		this.moveSelectionStrategy = moveSelectionStrategy;
 		this.showdownNodeFactory = showdownNodeFactory;
+		this.backPropStratFactory = backPropStratFactory;
+		this.decisionTime = decisionTime;
 		StateTableEvaluator.getInstance();
 	}
 
@@ -68,7 +82,7 @@ public class MCTSBotFactory implements BotFactory {
 			opponentModel = opponentModelFactory.create();
 			opponentModels.put(botId, opponentModel);
 		}
-		Config config = new Config(opponentModel, showdownNodeFactory, selectionStrategy, moveSelectionStrategy);
+		Config config = new Config(opponentModel, showdownNodeFactory, decisionNodeSelectionStrategy, opponentNodeSelectionStrategy, moveSelectionStrategy, backPropStratFactory, decisionTime);
 		return new MCTSBot(botId, tableId, lobby, executor, buyIn,
 				config,
 				listeners,
@@ -77,6 +91,6 @@ public class MCTSBotFactory implements BotFactory {
 
 	@Override
 	public String toString() {
-		return "MCTS bot v1-" + copy;
+		return name;//"MCTS bot v1-" + copy;
 	}
 }

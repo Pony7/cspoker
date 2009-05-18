@@ -110,7 +110,7 @@ public abstract class ToPrologTermVisitor extends LoggingVisitor {
 				getIncrementedActionIdTerm(),
 				getPlayerTerm(playerId),
 				new StructureTerm(allin, new Term[] { new IntegerTerm(
-						allInState.getEvent().getAmount()) }),
+						allInState.getEvent().getMovedAmount()) }),
 				new IntegerTerm(allInState.getPreviousGameState().getDeficit(
 						playerId)),
 				new IntegerTerm(allInState.getGamePotSize()), }));

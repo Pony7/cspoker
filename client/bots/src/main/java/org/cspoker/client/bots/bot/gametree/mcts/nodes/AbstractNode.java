@@ -24,8 +24,6 @@ public abstract class AbstractNode implements INode {
 	protected final InnerNode parent;
 	protected final ProbabilityAction lastAction;
 
-	protected int nbSamples = 0;
-
 	public AbstractNode(InnerNode parent, ProbabilityAction lastAction) {
 		this.parent = parent;
 		this.lastAction = lastAction;
@@ -34,11 +32,6 @@ public abstract class AbstractNode implements INode {
 	@Override
 	public InnerNode getParent() {
 		return parent;
-	}
-
-	@Override
-	public int getNbSamples() {
-		return nbSamples;
 	}
 
 	@Override

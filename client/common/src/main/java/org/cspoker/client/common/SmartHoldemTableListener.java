@@ -74,161 +74,121 @@ public class SmartHoldemTableListener
 	}
 	
 	public GameState getGameState() {
-		synchronized (this) {
-			return tableState.getGameState();
-		}
+		return tableState.getGameState();
 	}
 	
 	@Override
 	public void onBet(BetEvent betEvent) {
-		synchronized (this) {
-			tableState.setGameState(new BetState(tableState.getGameState(), betEvent));
-		}
+		tableState.setGameState(new BetState(tableState.getGameState(), betEvent));
 		super.onBet(betEvent);
 	}
 	
 	@Override
 	public void onRaise(RaiseEvent raiseEvent) {
-		synchronized (this) {
-			tableState.setGameState(new RaiseState(tableState.getGameState(), raiseEvent));
-		}
+		tableState.setGameState(new RaiseState(tableState.getGameState(), raiseEvent));
 		super.onRaise(raiseEvent);
 	}
 	
 	@Override
 	public void onCheck(CheckEvent checkEvent) {
-		synchronized (this) {
-			tableState.setGameState(new CheckState(tableState.getGameState(), checkEvent));
-		}
+		tableState.setGameState(new CheckState(tableState.getGameState(), checkEvent));
 		super.onCheck(checkEvent);
 	}
 	
 	@Override
 	public void onCall(CallEvent callEvent) {
-		synchronized (this) {
-			tableState.setGameState(new CallState(tableState.getGameState(), callEvent));
-		}
+		tableState.setGameState(new CallState(tableState.getGameState(), callEvent));
 		super.onCall(callEvent);
 	}
 	
 	@Override
 	public void onAllIn(AllInEvent allInEvent) {
-		synchronized (this) {
-			tableState.setGameState(new AllInState(tableState.getGameState(), allInEvent));
-		}
+		tableState.setGameState(new AllInState(tableState.getGameState(), allInEvent));
 		super.onAllIn(allInEvent);
 	}
 	
 	@Override
 	public void onSmallBlind(SmallBlindEvent smallBlindEvent) {
-		synchronized (this) {
-			tableState.setGameState(new SmallBlindState(tableState.getGameState(), smallBlindEvent));
-		}
+		tableState.setGameState(new SmallBlindState(tableState.getGameState(), smallBlindEvent));
 		super.onSmallBlind(smallBlindEvent);
 	}
 	
 	@Override
 	public void onBigBlind(BigBlindEvent bigBlindEvent) {
-		synchronized (this) {
-			tableState.setGameState(new BigBlindState(tableState.getGameState(), bigBlindEvent));
-		}
+		tableState.setGameState(new BigBlindState(tableState.getGameState(), bigBlindEvent));
 		super.onBigBlind(bigBlindEvent);
 	}
 	
 	@Override
 	public void onFold(FoldEvent foldEvent) {
-		synchronized (this) {
-			tableState.setGameState(new FoldState(tableState.getGameState(), foldEvent));
-		}
+		tableState.setGameState(new FoldState(tableState.getGameState(), foldEvent));
 		super.onFold(foldEvent);
 	}
 	
 	@Override
 	public void onSitOut(SitOutEvent sitOutEvent) {
-		synchronized (this) {
-			tableState.setGameState(new SitOutState(tableState.getGameState(), sitOutEvent));
-		}
+		tableState.setGameState(new SitOutState(tableState.getGameState(), sitOutEvent));
 		super.onSitOut(sitOutEvent);
 	}
 	
 	@Override
 	public void onSitIn(SitInEvent sitInEvent) {
-		synchronized (this) {
-			tableState.setGameState(new SitInState(tableState.getGameState(), sitInEvent));
-		}
+		tableState.setGameState(new SitInState(tableState.getGameState(), sitInEvent));
 		super.onSitIn(sitInEvent);
 	}
 	
 	@Override
 	public void onShowHand(ShowHandEvent showHandEvent) {
-		synchronized (this) {
-			tableState.setGameState(new ShowHandState(tableState.getGameState(), showHandEvent));
-		}
+		tableState.setGameState(new ShowHandState(tableState.getGameState(), showHandEvent));
 		super.onShowHand(showHandEvent);
 	}
 	
 	@Override
 	public void onNewRound(NewRoundEvent newRoundEvent) {
-		synchronized (this) {
-			tableState.setGameState(new NewRoundState(tableState.getGameState(), newRoundEvent));
-		}
+		tableState.setGameState(new NewRoundState(tableState.getGameState(), newRoundEvent));
 		super.onNewRound(newRoundEvent);
 	}
 	
 	@Override
 	public void onNewDeal(NewDealEvent newDealEvent) {
-		synchronized (this) {
-			logger.trace(newDealEvent);
-			tableState.setGameState(new NewDealState(tableState.getTableConfiguration(), newDealEvent, tableState.getGameState()));
-		}
+		logger.trace(newDealEvent);
+		tableState.setGameState(new NewDealState(tableState.getTableConfiguration(), newDealEvent, tableState.getGameState()));
 		super.onNewDeal(newDealEvent);
 	}
 	
 	@Override
 	public void onLeaveSeat(LeaveSeatEvent leaveSeatEvent) {
-		synchronized (this) {
-			tableState.setGameState(new LeaveSeatState(tableState.getGameState(), leaveSeatEvent));
-		}
+		tableState.setGameState(new LeaveSeatState(tableState.getGameState(), leaveSeatEvent));
 		super.onLeaveSeat(leaveSeatEvent);
 	}
 	
 	@Override
 	public void onNewCommunityCards(NewCommunityCardsEvent newCommunityCardsEvent) {
-		synchronized (this) {
-			tableState.setGameState(new NewCommunityCardsState(tableState.getGameState(), newCommunityCardsEvent));
-		}
+		tableState.setGameState(new NewCommunityCardsState(tableState.getGameState(), newCommunityCardsEvent));
 		super.onNewCommunityCards(newCommunityCardsEvent);
 	}
 	
 	@Override
 	public void onNextPlayer(NextPlayerEvent nextPlayerEvent) {
-		synchronized (this) {
-			tableState.setGameState(new NextPlayerState(tableState.getGameState(), nextPlayerEvent));
-		}
+		tableState.setGameState(new NextPlayerState(tableState.getGameState(), nextPlayerEvent));
 		super.onNextPlayer(nextPlayerEvent);
 	}
 	
 	@Override
 	public void onWinner(WinnerEvent winnerEvent) {
-		synchronized (this) {
-			tableState.setGameState(new WinnerState(tableState.getGameState(), winnerEvent));
-		}
+		tableState.setGameState(new WinnerState(tableState.getGameState(), winnerEvent));
 		super.onWinner(winnerEvent);
 	}
 	
 	@Override
 	public void onLeaveTable(LeaveTableEvent leaveGameEvent) {
-		synchronized (this) {
-			tableState.setGameState(new LeaveTableState(tableState.getGameState(), leaveGameEvent));
-		}
+		tableState.setGameState(new LeaveTableState(tableState.getGameState(), leaveGameEvent));
 		super.onLeaveTable(leaveGameEvent);
 	}
 	
 	@Override
 	public void onJoinTable(JoinTableEvent joinTableEvent) {
-		synchronized (this) {
-			tableState.setGameState(new JoinTableState(tableState.getGameState(), joinTableEvent));
-		}
+		tableState.setGameState(new JoinTableState(tableState.getGameState(), joinTableEvent));
 		super.onJoinTable(joinTableEvent);
 	}
 }

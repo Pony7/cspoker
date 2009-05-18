@@ -15,23 +15,38 @@
  */
 package org.cspoker.client.bots.bot.gametree.mcts.nodes;
 
+import net.jcip.annotations.Immutable;
+
 import org.cspoker.client.bots.bot.gametree.mcts.nodes.ShowdownNode.Factory;
-import org.cspoker.client.bots.bot.gametree.mcts.strategies.SelectionStrategy;
+import org.cspoker.client.bots.bot.gametree.mcts.strategies.backpropagation.BackPropagationStrategy;
+import org.cspoker.client.bots.bot.gametree.mcts.strategies.selection.SelectionStrategy;
 import org.cspoker.client.bots.bot.gametree.opponentmodel.OpponentModel;
 
+@Immutable
 public class Config {
 
 	private final Factory showdownNodeFactory;
 	private final OpponentModel model;
-	private final SelectionStrategy selectionStrategy;
+	private final SelectionStrategy decisionNodeSelectionStrategy;
+	private final SelectionStrategy opponentNodeSelectionStrategy;
 	private final SelectionStrategy moveSelectionStrategy;
+	private final int decisionTime;
+	private final BackPropagationStrategy.Factory backPropStratFactory;
 
-	public Config(OpponentModel model, ShowdownNode.Factory showdownNodeFactory, 
-			SelectionStrategy selectionStrategy, SelectionStrategy moveSelectionStrategy) {
+	public Config(OpponentModel model, 
+			ShowdownNode.Factory showdownNodeFactory, 
+			SelectionStrategy decisionNodeSelectionStrategy, 
+			SelectionStrategy opponentNodeSelectionStrategy, 
+			SelectionStrategy moveSelectionStrategy, 
+			BackPropagationStrategy.Factory backPropStratFactory, 
+			int decisionTime) {
 		this.model = model;
 		this.showdownNodeFactory = showdownNodeFactory;
-		this.selectionStrategy=selectionStrategy;
+		this.decisionNodeSelectionStrategy=decisionNodeSelectionStrategy;
+		this.opponentNodeSelectionStrategy = opponentNodeSelectionStrategy;
 		this.moveSelectionStrategy=moveSelectionStrategy;
+		this.backPropStratFactory = backPropStratFactory;
+		this.decisionTime = decisionTime;
 	}
 	
 	public OpponentModel getModel() {
@@ -46,8 +61,23 @@ public class Config {
 		return moveSelectionStrategy;
 	}
 	
-	public SelectionStrategy getSelectionStrategy() {
-		return selectionStrategy;
+	public SelectionStrategy getDecisionNodeSelectionStrategy() {
+		return decisionNodeSelectionStrategy;
+	}
+	
+	public BackPropagationStrategy.Factory getBackPropStratFactory() {
+		return backPropStratFactory;
+	}
+	
+	/**
+	 * Decision time in milliseconds.
+	 */
+	public int getDecisionTime() {
+		return decisionTime;
+	}
+
+	public SelectionStrategy getOpponentNodeSelectionStrategy() {
+		return opponentNodeSelectionStrategy;
 	}
 	
 }

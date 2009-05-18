@@ -23,8 +23,6 @@ import org.cspoker.client.bots.listener.BotListener;
 import org.cspoker.client.common.SmartHoldemPlayerContext;
 import org.cspoker.client.common.SmartHoldemTableContext;
 import org.cspoker.client.common.SmartLobbyContext;
-import org.cspoker.client.common.gamestate.GameState;
-import org.cspoker.client.common.gamestate.PlayerState;
 import org.cspoker.common.api.lobby.holdemtable.event.AllInEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.BetEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.BigBlindEvent;
@@ -47,7 +45,9 @@ import org.cspoker.common.api.lobby.holdemtable.event.WinnerEvent;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.event.NewPocketCardsEvent;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.player.PlayerId;
+import org.cspoker.common.elements.player.Winner;
 import org.cspoker.common.elements.table.TableId;
+import org.cspoker.common.util.Util;
 
 public abstract class AbstractBot implements Bot {
 
@@ -61,12 +61,14 @@ public abstract class AbstractBot implements Bot {
 
 	public final TableId tableID;
 	public final PlayerId botId;
+	private final int buyIn;
 
 	private final BotListener[] botListeners;
 
 	protected final ExecutorService executor;
 
-	private final int buyIn;
+	private int profit = 0;
+	private int gameInvested = 0;
 
 	public AbstractBot(PlayerId botId, TableId tableId,
 			SmartLobbyContext lobby, int buyIn, ExecutorService executor,
@@ -115,17 +117,9 @@ public abstract class AbstractBot implements Bot {
 			}
 		});
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.cspoker.client.bots.Bot#doNextAction()
-	 */
+	
 	public abstract void doNextAction() throws RemoteException, IllegalActionException;
 
-	/**
-	 * @see org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener#onNextPlayer(org.cspoker.common.api.lobby.holdemtable.event.NextPlayerEvent)
-	 */
 	public void onNextPlayer(final NextPlayerEvent nextPlayerEvent) {
 		if (started && nextPlayerEvent.getPlayerId().equals(botId)) {
 			executor.execute(new Runnable(){
@@ -137,9 +131,9 @@ public abstract class AbstractBot implements Bot {
 						logger.warn("Raise bounds: "
 								+ tableContext.getGameState().getLowerRaiseBound(
 										botId)
-								+ " to "
-								+ tableContext.getGameState().getUpperRaiseBound(
-										botId));
+										+ " to "
+										+ tableContext.getGameState().getUpperRaiseBound(
+												botId));
 						logger.error(e);
 						throw new IllegalStateException("Action was not allowed.",
 								e);
@@ -209,35 +203,31 @@ public abstract class AbstractBot implements Bot {
 	 * @see org.cspoker.client.bots.bot.Bot#getProfit()
 	 */
 	public int getProfit() {
-		GameState state = tableContext.getGameState();
-		PlayerState playerState = state.getPlayer(botId);
-		if(playerState==null){
-			//sitting out because we're broke
-			return (-buyIn);
-		}
-		if (state.getPreviousRoundsPotSize() > 0) {
-			throw new IllegalStateException(
-					"There is a pot from previous rounds ("
-							+ state.getPreviousRoundsPotSize()
-							+ "). Can't calculate profit.");
-		}
-		return playerState.getStack() + playerState.getBet() - buyIn;
+		return profit;
 	}
 
 	public void onAllIn(AllInEvent allInEvent) {
-
+		if(allInEvent.getPlayerId().equals(botId)){
+			incrementGameInvestment(allInEvent.getMovedAmount());
+		}
 	}
 
 	public void onBet(BetEvent betEvent) {
-
+		if(betEvent.getPlayerId().equals(botId)){
+			incrementGameInvestment(betEvent.getAmount());
+		}
 	}
 
 	public void onBigBlind(BigBlindEvent bigBlindEvent) {
-
+		if(bigBlindEvent.getPlayerId().equals(botId)){
+			incrementGameInvestment(bigBlindEvent.getAmount());
+		}
 	}
 
 	public void onCall(CallEvent callEvent) {
-
+		if(callEvent.getPlayerId().equals(botId)){
+			incrementGameInvestment(callEvent.getMovedAmount());
+		}
 	}
 
 	public void onCheck(CheckEvent checkEvent) {
@@ -266,7 +256,9 @@ public abstract class AbstractBot implements Bot {
 	}
 
 	public void onRaise(RaiseEvent raiseEvent) {
-
+		if(raiseEvent.getPlayerId().equals(botId)){
+			incrementGameInvestment(raiseEvent.getMovedAmount());
+		}
 	}
 
 	public void onShowHand(ShowHandEvent showHandEvent) {
@@ -291,11 +283,32 @@ public abstract class AbstractBot implements Bot {
 	}
 
 	public void onSmallBlind(SmallBlindEvent smallBlindEvent) {
-
+		if(smallBlindEvent.getPlayerId().equals(botId)){
+			incrementGameInvestment(smallBlindEvent.getAmount());
+		}
 	}
 
 	public void onWinner(WinnerEvent winnerEvent) {
-
+		boolean done = false;
+		for(Winner winner: winnerEvent.getWinners()){
+			if(winner.getPlayer().getId().equals(botId)){
+				//check if one can be a winner more than once (split pot?)
+				if(done) throw new IllegalStateException();
+				profit += winner.getGainedAmount()-gameInvested;
+				if(logger.isDebugEnabled()){
+					logger.debug("Incrementing profit for "+this+" with "+Util.parseDollars(winner.getGainedAmount()-gameInvested));
+				}
+				gameInvested = 0;
+				done = true;
+			}
+		}
+		if(!done){
+			profit -= gameInvested;
+			if(logger.isDebugEnabled()){
+				logger.debug("Incrementing profit for "+this+" with "+Util.parseDollars(-gameInvested));
+			}
+			gameInvested = 0;
+		}
 	}
 
 	public void onNewPocketCards(NewPocketCardsEvent newPocketCardsEvent) {
@@ -305,5 +318,16 @@ public abstract class AbstractBot implements Bot {
 	public void onLeaveSeat(LeaveSeatEvent leaveSeatEvent) {
 
 	}
+	
+	private void incrementGameInvestment(int amount){
+		gameInvested += amount;
+		if(logger.isDebugEnabled()){
+			logger.debug("Incrementing game investment for "+this+" with "+Util.parseDollars(amount)+ " to "+Util.parseDollars(gameInvested));
+		}
+	}
 
+	@Override
+	public String toString() {
+		return "Abstract bot "+botId;
+	}
 }

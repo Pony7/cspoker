@@ -40,6 +40,7 @@ import org.cspoker.common.elements.chips.MutablePots;
 import org.cspoker.common.elements.player.MutableAllInPlayer;
 import org.cspoker.common.elements.player.MutableSeatedPlayer;
 import org.cspoker.common.elements.player.Winner;
+import org.cspoker.common.util.Util;
 import org.cspoker.server.common.gamecontrol.Game;
 import org.cspoker.server.common.gamecontrol.PokerTable;
 
@@ -116,7 +117,7 @@ public abstract class BettingRound
 		playerMadeEvent(player);
 		game.nextPlayer();
 		gameMediator.publishBetEvent(new BetEvent(player.getId(), amount));
-		BettingRound.logger.info(player.getName() + " bets " + amount + ".");
+		BettingRound.logger.info(player.getName() + " bets " + Util.parseDollars(amount) + ".");
 	}
 	
 	@Override
@@ -137,13 +138,14 @@ public abstract class BettingRound
 		
 		// Check whether the amount with which the bet chips pile
 		// is increased exceeds the player's stack.
-		if (amountToIncreaseBetPileWith(player) >= player.getStack().getValue()) {
+		int movedAmount = amountToIncreaseBetPileWith(player);
+		if (movedAmount >= player.getStack().getValue()) {
 			allIn(player);
 			return;
 		}
 		
 		// Try to transfer the amount to the bet pile.
-		player.transferAmountToBetPile(amountToIncreaseBetPileWith(player));
+		player.transferAmountToBetPile(movedAmount);
 		
 		/**
 		 * If the last event player is an all-in player, change the last event
@@ -156,7 +158,7 @@ public abstract class BettingRound
 		// Change to next player
 		game.nextPlayer();
 		
-		gameMediator.publishCallEvent(new CallEvent(player.getId(), isRoundEnded()));
+		gameMediator.publishCallEvent(new CallEvent(player.getId(),movedAmount, isRoundEnded()));
 		BettingRound.logger.info(player.getName() + " calls.");
 	}
 	
@@ -212,8 +214,8 @@ public abstract class BettingRound
 		game.nextPlayer();
 		
 		gameMediator.publishRaiseEvent(new RaiseEvent(player.getId(), amount, movedAmount));
-		BettingRound.logger.info(player.getName() + ": raises with $" + amount + " to $"
-				+ player.getMemento().getBetChipsValue());
+		BettingRound.logger.info(player.getName() + ": raises with " + Util.parseDollars(amount) + " to "
+				+ Util.parseDollars(player.getMemento().getBetChipsValue()));
 	}
 	
 	@Override
@@ -277,8 +279,7 @@ public abstract class BettingRound
 		}
 		gameMediator.publishAllInEvent(new AllInEvent(player.getId(), amount, isRoundEnded()));
 		
-		// TODO put amount of raise
-		BettingRound.logger.info(player.getName() + ": "+"goes all-in with $"+player.getMemento().getBetChipsValue());
+		BettingRound.logger.info(player.getName() + ": "+" goes all-in with " + Util.parseDollars(player.getMemento().getBetChipsValue()));
 	}
 	
 	/**
@@ -374,8 +375,8 @@ public abstract class BettingRound
 		playerMadeEvent(player);
 		gameMediator.publishSmallBlindEvent(new SmallBlindEvent(player.getId(), getGame().getTableConfiguration()
 				.getSmallBlind()));
-		BettingRound.logger.info(player.getName() + ": posts small blind $"
-				+ getGame().getTableConfiguration().getSmallBlind());
+		BettingRound.logger.info(player.getName() + ": posts small blind "
+				+ Util.parseDollars(getGame().getTableConfiguration().getSmallBlind()));
 		
 	}
 	
@@ -397,8 +398,8 @@ public abstract class BettingRound
 		playerMadeEvent(player);
 		gameMediator.publishBigBlindEvent(new BigBlindEvent(player.getId(), getGame().getTableConfiguration()
 				.getBigBlind()));
-		BettingRound.logger.info(getGame().getCurrentPlayer().getName() + ": posts big blind $"
-				+ getGame().getTableConfiguration().getBigBlind());
+		BettingRound.logger.info(getGame().getCurrentPlayer().getName() + ": posts big blind "
+				+ Util.parseDollars(getGame().getTableConfiguration().getBigBlind()));
 	}
 	
 	/**
@@ -485,7 +486,7 @@ public abstract class BettingRound
 		
 		MutableSeatedPlayer winner = pots.getMainPot().getContributors().iterator().next();
 		
-		BettingRound.logger.info("Winner: " + winner.getName() + " wins " + pots.getTotalValue() + " chips");
+		BettingRound.logger.info("Winner: " + winner.getName() + " wins " + Util.parseDollars(pots.getTotalValue()));
 		
 		int gainedChipsValue = pots.getMainPot().getChips().getValue();
 		Set<Winner> savedWinner = Collections.singleton(new Winner(winner.getMemento(), gainedChipsValue));

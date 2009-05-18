@@ -77,7 +77,7 @@ public class PlayerTrackingVisitor implements GameStateVisitor, Cloneable {
 	
 	@Override
 	public void visitAllInState(AllInState allInState) {
-		propz.signalAllIn(allInState.getEvent().getPlayerId(), allInState.getEvent().getAmount()/bb);
+		propz.signalAllIn(allInState.getEvent().getPlayerId(), allInState.getEvent().getMovedAmount()/bb);
 	}
 
 	@Override

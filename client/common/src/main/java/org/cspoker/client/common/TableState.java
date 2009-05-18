@@ -24,7 +24,7 @@ public class TableState {
 	
 	private final TableConfiguration tableConfiguration;
 	
-	private GameState gameState;
+	private volatile GameState gameState;
 	
 	public TableState(DetailedHoldemTable table) {
 		this.tableConfiguration = table.getTableConfiguration();

@@ -13,26 +13,13 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.client.bots.bot.gametree.mcts.strategies;
+package org.cspoker.client.bots.listener;
 
-import org.cspoker.client.bots.bot.gametree.mcts.nodes.INode;
-import org.cspoker.client.bots.bot.gametree.mcts.nodes.InnerNode;
+public interface ProfitCalculator {
 
-public class SamplingToFunctionSelector implements SelectionStrategy {
-
-	private final MaxFunctionSelector functionSelector;
-
-	public SamplingToFunctionSelector(MaxFunctionSelector functionSelector) {
-		this.functionSelector = functionSelector;
-	}
+	/**
+	 * Profit in small bets.
+	 */
+	double getProfit();
 	
-	@Override
-	public INode select(InnerNode innerNode) {
-		if(innerNode.getNbSamples()<100){
-			return innerNode.getRandomChild();
-		}else{
-			return functionSelector.select(innerNode);
-		}
-	}
-
 }

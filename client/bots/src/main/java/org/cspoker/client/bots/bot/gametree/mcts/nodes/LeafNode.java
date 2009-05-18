@@ -16,7 +16,6 @@
 package org.cspoker.client.bots.bot.gametree.mcts.nodes;
 
 import org.cspoker.client.bots.bot.gametree.action.ProbabilityAction;
-import org.cspoker.client.bots.bot.gametree.mcts.strategies.SelectionStrategy;
 
 public abstract class LeafNode extends AbstractNode {
 
@@ -25,7 +24,7 @@ public abstract class LeafNode extends AbstractNode {
 	}
 
 	@Override
-	public INode selectRecursively(SelectionStrategy strategy) {
+	public INode selectRecursively() {
 		return this;
 	}
 	

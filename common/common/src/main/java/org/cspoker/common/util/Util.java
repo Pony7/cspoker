@@ -13,15 +13,27 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.client.bots.bot.gametree.mcts.strategies;
+package org.cspoker.common.util;
 
-import org.cspoker.client.bots.bot.gametree.mcts.nodes.INode;
+public class Util {
 
-public class BestValueSelector extends MaxFunctionSelector {
-
-	@Override
-	protected double evaluate(INode node) {
-		return node.getAverage();
+	private Util() {
+		
+	}
+	
+	public static String parseDollars(double amount) {
+		if(Double.isNaN(amount) || Double.isInfinite(amount)) return (new Double(amount)).toString();
+		return parseDollars((int)Math.round(amount));
 	}
 
+	public static String parseDollars(int amount) {
+		if (amount < 0) {
+			return "-" + parseDollars(-amount);
+		}
+		int cents = amount % 100;
+		int dollars = amount / 100;
+		return amount == 0 ? "$0" : "$" + dollars + "."
+				+ (cents >= 10 ? cents : "0" + cents);
+	}
+	
 }

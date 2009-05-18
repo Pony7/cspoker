@@ -17,6 +17,7 @@
 package org.cspoker.common.elements.chips;
 
 import org.apache.log4j.Logger;
+import org.cspoker.common.util.Util;
 
 /**
  * A class to represent chips.
@@ -207,7 +208,7 @@ public class Chips {
 	
 	@Override
 	public String toString() {
-		return Integer.valueOf(getValue()).toString();
+		return Util.parseDollars(getValue());
 	}
 	
 	public void discard() {

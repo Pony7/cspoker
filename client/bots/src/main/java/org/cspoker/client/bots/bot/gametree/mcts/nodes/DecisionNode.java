@@ -16,7 +16,7 @@
 package org.cspoker.client.bots.bot.gametree.mcts.nodes;
 
 import org.cspoker.client.bots.bot.gametree.action.ProbabilityAction;
-import org.cspoker.client.bots.bot.gametree.mcts.strategies.SelectionStrategy;
+import org.cspoker.client.bots.bot.gametree.mcts.strategies.backpropagation.BackPropagationStrategy;
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.common.elements.player.PlayerId;
 
@@ -27,9 +27,13 @@ public class DecisionNode extends InnerNode{
 		super(parent, probAction, gameState, bot, config);
 	}
 
-	@Override
-	public INode selectChild(SelectionStrategy strategy) {
-		return strategy.select(this);
+	public INode selectChild() {
+		return config.getDecisionNodeSelectionStrategy().select(this);
 	}	
+	
+	@Override
+	protected BackPropagationStrategy createBackPropStrategy() {
+		return config.getBackPropStratFactory().createForDecisionNode(this);
+	}
 	
 }

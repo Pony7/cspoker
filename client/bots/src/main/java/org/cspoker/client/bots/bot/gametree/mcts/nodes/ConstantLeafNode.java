@@ -21,6 +21,7 @@ import org.cspoker.client.common.gamestate.GameState;
 public class ConstantLeafNode extends LeafNode {
 
 	public final int value;
+	private int nbSamples=0;
 	
 	public ConstantLeafNode(InnerNode parent, ProbabilityAction lastAction, int value) {
 		super(parent, lastAction);
@@ -28,8 +29,33 @@ public class ConstantLeafNode extends LeafNode {
 	}
 	
 	@Override
-	public double getAverage() {
+	public double getEV() {
 		return value;
+	}
+	
+	@Override
+	public double getStdDev() {
+		return 0;
+	}
+	
+	@Override
+	public double getEVStdDev() {
+		return 0;
+	}
+	
+	@Override
+	public double getVariance() {
+		return 0;
+	}
+	
+	@Override
+	public int getNbSamples() {
+		return nbSamples;
+	}
+	
+	@Override
+	public int getNbSamplesInMean() {
+		return nbSamples;
 	}
 	
 	@Override

@@ -22,8 +22,8 @@ import org.cspoker.client.bots.bot.gametree.action.DefaultWinnerException;
 import org.cspoker.client.bots.bot.gametree.action.GameEndedException;
 import org.cspoker.client.bots.bot.gametree.action.ProbabilityAction;
 import org.cspoker.client.bots.bot.gametree.action.SearchBotAction;
-import org.cspoker.client.bots.bot.gametree.mcts.strategies.SelectionStrategy;
-import org.cspoker.client.bots.bot.gametree.opponentmodel.OpponentModel;
+import org.cspoker.client.bots.bot.gametree.mcts.strategies.backpropagation.BackPropagationStrategy;
+import org.cspoker.client.bots.bot.gametree.mcts.strategies.selection.SelectionStrategy;
 import org.cspoker.client.bots.bot.gametree.search.expander.Expander;
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.common.elements.player.PlayerId;
@@ -35,77 +35,104 @@ public abstract class InnerNode extends AbstractNode {
 	private final static Random random = new Random();
 
 	//config
-	private final Config config;
+	protected final Config config;
 
 	//parent
 	public final GameState gameState;
 	public final PlayerId bot;
 
 	//children
-	private double[] cumulativeActionProbability = null;
+	private double[] probabilities = null;
+	private double[] cumulativeProbability = null;
 	private ImmutableList<INode> children = null;
 
-	//stats
-	protected double totalValue = 0;
+	//protected boolean inTree = false;
 
-	protected boolean inTree = false;
+	protected final BackPropagationStrategy backPropStrategy;
 
 	public InnerNode(InnerNode parent, ProbabilityAction probAction, GameState gameState, PlayerId bot, Config config) {
 		super(parent,probAction);
 		this.bot = bot;
 		this.gameState = gameState;
 		this.config = config;
+		this.backPropStrategy = createBackPropStrategy();
 	}
 
-	public INode selectRecursively(SelectionStrategy strategy){
-		if(!inTree) return this;
-		return selectChild(strategy).selectRecursively(strategy);
-	}
+	protected abstract BackPropagationStrategy createBackPropStrategy();
 
-	public abstract INode selectChild(SelectionStrategy strategy);
-
-	@Override
-	public void expand() {
-		inTree = true;
-	}
-
-	public double simulate(){
+	public INode selectRecursively(){
+		//if(!inTree) return this;
 		boolean needsChildExpansion = (children==null);
 		if(needsChildExpansion){
 			config.getModel().assumeTemporarily(gameState);
 			expandChildren();
 		}
-		double result = getRandomChild().simulate();
+		INode selectedChild = selectChild().selectRecursively();
 		if(needsChildExpansion){
 			config.getModel().forgetLastAssumption();
 		}
-		return result;
+		return selectedChild;
+	}
+
+	public abstract INode selectChild();
+
+	public INode selectChild(SelectionStrategy selectionStrategy) {
+		return selectionStrategy.select(this);
+	}
+	
+	@Override
+	public void expand() {
+		//inTree = true;
+	}
+
+	public double simulate(){
+		throw new IllegalStateException("Selected node must ne leaf.");
 	}
 
 	public INode getRandomChild() {
 		double randomNumber = random.nextDouble();
 		ImmutableList<INode> children = getChildren();
-		for(int i=0;i<cumulativeActionProbability.length-1;i++){
-			if(randomNumber<cumulativeActionProbability[i]){
+		for(int i=0;i<cumulativeProbability.length-1;i++){
+			if(randomNumber<cumulativeProbability[i]){
 				return children.get(i);
 			}
 		}
-		return children.get(cumulativeActionProbability.length-1);
+		return children.get(cumulativeProbability.length-1);
 	}
 
 	public void backPropagate(double value){
-		addSample(value);
+		backPropStrategy.onBackPropagate(value);
 		parent.backPropagate(value);
 	}
 
-	protected void addSample(double value) {
-		++nbSamples;
-		totalValue+=value;
-	}
-
 	@Override
-	public double getAverage() {
-		return totalValue/nbSamples;
+	public double getEV() {
+		return backPropStrategy.getEV();
+	}
+	
+	@Override
+	public int getNbSamples() {
+		return backPropStrategy.getNbSamples();
+	}
+	
+	@Override
+	public double getStdDev() {
+		return backPropStrategy.getStdDev();
+	}
+	
+	@Override
+	public double getEVStdDev() {
+		return backPropStrategy.getEVStdDev();
+	}
+	
+	@Override
+	public double getVariance() {
+		return backPropStrategy.getVariance();
+	}
+	
+	@Override
+	public int getNbSamplesInMean() {
+		return backPropStrategy.getNbSamplesInMean();
 	}
 
 	public ImmutableList<INode> getChildren(){
@@ -126,14 +153,16 @@ public abstract class InnerNode extends AbstractNode {
 			Expander expander = new Expander(gameState, config.getModel(), gameState.getNextToAct(), bot);
 			List<ProbabilityAction> actions = expander.getProbabilityActions();
 			ImmutableList.Builder<INode> childrenBuilder = ImmutableList.builder();
-			cumulativeActionProbability = new double[actions.size()];
+			probabilities = new double[actions.size()];
+			cumulativeProbability = new double[actions.size()];
 			double cumul = 0;
 			for (int i=0;i<actions.size();i++) {
 				ProbabilityAction action = actions.get(i);
 				double probability = action.getProbability();
 				childrenBuilder.add(getChildAfter(action));
 				cumul += probability;
-				cumulativeActionProbability[i] = cumul;
+				cumulativeProbability[i] = cumul;
+				probabilities[i] = probability;
 			}
 			children = childrenBuilder.build();
 		}
@@ -163,6 +192,14 @@ public abstract class InnerNode extends AbstractNode {
 				return new ConstantLeafNode(this, probAction, e.winner.getStack() + e.foldState.getGamePotSize());
 			}
 		}
+	}
+	
+	public double[] getCumulativeProbability() {
+		return cumulativeProbability;
+	}
+	
+	public double[] getProbabilities() {
+		return probabilities;
 	}
 
 }

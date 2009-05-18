@@ -13,36 +13,30 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.client.bots.bot.gametree.mcts.strategies;
+package org.cspoker.client.bots.bot.gametree.mcts.strategies.selection;
 
 import java.util.Random;
 
 import org.cspoker.client.bots.bot.gametree.mcts.nodes.INode;
 import org.cspoker.client.bots.bot.gametree.mcts.nodes.InnerNode;
 
-import com.google.common.collect.ImmutableList;
+public class MixedSelectionStrategy implements SelectionStrategy {
 
-public class SampleProportionateSelector implements SelectionStrategy {
-
-	private final static Random random = new Random();
+	private final static Random r = new Random();
+	private final SelectionStrategy strat1;
+	private final SelectionStrategy strat2;
+	private final double prob1;
+	
+	public MixedSelectionStrategy(SelectionStrategy strat1, SelectionStrategy strat2, double prob1) {
+		this.strat1 = strat1;
+		this.strat2 = strat2;
+		this.prob1 = prob1;
+	}
 	
 	@Override
 	public INode select(InnerNode innerNode) {
-		ImmutableList<INode> children = innerNode.getChildren();
-		int[] cumulSums = new int[children.size()];
-		int cumulSum = 0;
-		for (int i=0;i<children.size();i++) {
-			int nbSamples = children.get(i).getNbSamples();
-			cumulSum+=nbSamples;
-			cumulSums[i]= cumulSum;
-		}
-		int randVar = random.nextInt(cumulSum);
-		for (int i = 0; i < cumulSums.length; i++) {
-			if(randVar<cumulSums[i]){
-				return children.get(i);
-			}
-		}
-		return children.get(cumulSums.length-1);
+		if(r.nextDouble()<prob1) return strat1.select(innerNode);
+		else return strat2.select(innerNode);
 	}
 
 }

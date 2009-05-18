@@ -24,7 +24,6 @@ import org.cspoker.client.bots.bot.gametree.mcts.listeners.MCTSListener;
 import org.cspoker.client.bots.bot.gametree.mcts.nodes.Config;
 import org.cspoker.client.bots.bot.gametree.mcts.nodes.INode;
 import org.cspoker.client.bots.bot.gametree.mcts.nodes.RootNode;
-import org.cspoker.client.bots.bot.gametree.mcts.strategies.SelectionStrategy;
 import org.cspoker.client.bots.listener.BotListener;
 import org.cspoker.client.common.SmartLobbyContext;
 import org.cspoker.client.common.gamestate.GameState;
@@ -50,10 +49,28 @@ public class MCTSBot extends AbstractBot {
 
 	@Override
 	public void doNextAction() throws RemoteException, IllegalActionException {
-		long endTime = System.currentTimeMillis()+950;
+		long endTime = System.currentTimeMillis()+config.getDecisionTime();
 		GameState gameState = tableContext.getGameState();	
 		RootNode root = new RootNode(gameState,botId,config);
 		do{
+			iterate(root);
+			iterate(root);
+			iterate(root);
+			iterate(root);
+			iterate(root);
+			iterate(root);
+			iterate(root);
+			iterate(root);
+			iterate(root);
+			iterate(root);
+			iterate(root);
+			iterate(root);
+			iterate(root);
+			iterate(root);
+			iterate(root);
+			iterate(root);
+			iterate(root);
+			iterate(root);
 			iterate(root);
 			iterate(root);
 			iterate(root);
@@ -83,7 +100,7 @@ public class MCTSBot extends AbstractBot {
 	}
 
 	private void iterate(RootNode root) {
-		INode selectedLeaf = root.selectRecursively(config.getSelectionStrategy());
+		INode selectedLeaf = root.selectRecursively();
 		selectedLeaf.expand();
 		double value = selectedLeaf.simulate();
 		selectedLeaf.backPropagate(value);
