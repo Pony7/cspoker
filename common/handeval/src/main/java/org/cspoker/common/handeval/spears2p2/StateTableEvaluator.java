@@ -36,10 +36,8 @@ import org.cspoker.common.elements.cards.Card;
 
 /**
  * 
- * http://forumserver.twoplustwo.com/showthreaded.php?Cat=0&Number=9765615&page=
- * 0&vc=1
- * http://forumserver.twoplustwo.com/showthreaded.php?Cat=0&Number=9774228
- * &page=0&vc=1
+ * http://forumserver.twoplustwo.com/showthreaded.php?Cat=0&Number=9765615&page=0&vc=1
+ * http://forumserver.twoplustwo.com/showthreaded.php?Cat=0&Number=9774228&page=0&vc=1
  * 
  * To evaluate 6 card hand make the last card a zero.
  * 

@@ -38,14 +38,31 @@ public class SearchBotFactory implements BotFactory {
 	private final NodeVisitor.Factory[] nodeVisitorFactories;
 	private final OpponentModel.Factory modelFactory;
 	private final ShowdownNode.Factory showdownNodeFactory;
+	private final int preflopTokens;
+	private final int flopTokens;
+	private final int turnTokens;
+	private final int finalTokens;
+	private final double evDiscount;
+	private final boolean uniformBotActionTokens;
+	private final boolean useAlphaBetaPruning;
 
 	public SearchBotFactory(OpponentModel.Factory modelFactory, 
-			ShowdownNode.Factory showdownNodeFactory,
+			ShowdownNode.Factory showdownNodeFactory, int preflopTokens,
+			int flopTokens, int turnTokens, int finalTokens, double evDiscount, 
+			boolean uniformBotActionTokens,
+			boolean useAlphaBetaPruning,
 			NodeVisitor.Factory... nodeVisitorFactories) {
 		copy = ++copies;
 		this.modelFactory = modelFactory;
 		this.nodeVisitorFactories = nodeVisitorFactories;
 		this.showdownNodeFactory = showdownNodeFactory;
+		this.preflopTokens = preflopTokens;
+		this.flopTokens = flopTokens;
+		this.turnTokens = turnTokens;
+		this.finalTokens = finalTokens;
+		this.evDiscount = evDiscount;
+		this.uniformBotActionTokens = uniformBotActionTokens;
+		this.useAlphaBetaPruning = useAlphaBetaPruning;
 	}
 
 	/**
@@ -66,7 +83,7 @@ public class SearchBotFactory implements BotFactory {
 			opponentModels.put(botId, opponentModel);
 		}
 		SearchConfiguration config = new SearchConfiguration(opponentModel, showdownNodeFactory,
-				new SamplingExpander.Factory(), 500, 1000, 2000, 5000, 0, false, true);
+				new SamplingExpander.Factory(), preflopTokens, flopTokens, turnTokens, finalTokens, evDiscount, uniformBotActionTokens, useAlphaBetaPruning );
 		return new SearchBot(botId, tableId, lobby, executor, config, buyIn,
 				nodeVisitorFactories, botListeners);
 	}
