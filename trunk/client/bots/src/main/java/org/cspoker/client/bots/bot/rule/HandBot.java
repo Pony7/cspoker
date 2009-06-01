@@ -33,11 +33,11 @@ import org.cspoker.common.elements.table.Round;
 import org.cspoker.common.elements.table.TableId;
 import org.cspoker.common.handeval.stevebrecher.HandEval;
 
-public class RuleBasedBot2 extends AbstractBot {
+public class HandBot extends AbstractBot {
 
-	private final static Logger logger = Logger.getLogger(RuleBasedBot2.class);
+	private final static Logger logger = Logger.getLogger(HandBot.class);
 
-	public RuleBasedBot2(PlayerId playerId, TableId tableId,
+	HandBot(PlayerId playerId, TableId tableId,
 			SmartLobbyContext lobby, int buyIn, ExecutorService executor,
 			BotListener... botListeners) {
 		super(playerId, tableId, lobby, buyIn, executor, botListeners);
@@ -46,7 +46,7 @@ public class RuleBasedBot2 extends AbstractBot {
 	@Override
 	public void doNextAction() {
 		GameState gameState = playerContext.getGameState();
-		int deficit = gameState.getDeficit(RuleBasedBot2.this.botId);
+		int deficit = gameState.getDeficit(HandBot.this.botId);
 
 		double winPercentage = getWinPercentage(gameState
 				.getCommunityCards(), playerContext.getPocketCards(),
@@ -65,7 +65,7 @@ public class RuleBasedBot2 extends AbstractBot {
 		}
 		try {
 			if (gameState
-					.getNextActivePlayerAfter(RuleBasedBot2.this.botId) == null) {
+					.getNextActivePlayerAfter(HandBot.this.botId) == null) {
 				// can only call or fold
 				if (deficit <= Math.round(EV)) {
 					playerContext.checkOrCall();
@@ -79,10 +79,10 @@ public class RuleBasedBot2 extends AbstractBot {
 		} catch (IllegalActionException e) {
 			logger.warn("Raise bounds: "
 					+ tableContext.getGameState().getLowerRaiseBound(
-							RuleBasedBot2.this.botId)
+							HandBot.this.botId)
 							+ " to "
 							+ tableContext.getGameState().getUpperRaiseBound(
-									RuleBasedBot2.this.botId));
+									HandBot.this.botId));
 			logger.error(e);
 			throw new IllegalStateException("Action was not allowed.",
 					e);

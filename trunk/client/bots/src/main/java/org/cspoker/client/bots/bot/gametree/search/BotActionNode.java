@@ -110,7 +110,7 @@ public class BotActionNode extends ActionNode {
 	public int getNbTokens() {
 		return expander.tokens;
 	}
-	
+
 	@Override
 	public String toString() {
 		return "Bot Action Node";

@@ -52,7 +52,13 @@ public class PlayerTrackingVisitor implements GameStateVisitor, Cloneable {
 	private float bb;
 	
 	public void readHistory(GameState gameState) {
-		gameState.acceptHistoryVisitor(this, previousStartState);
+		try{
+			gameState.acceptHistoryVisitor(this, previousStartState);
+		}catch(StackOverflowError e){
+			logger.error("Previous:" + previousStartState);
+			logger.error("Current:" + gameState);
+			throw e;
+		}
 		previousStartState = gameState;
 	}
 	

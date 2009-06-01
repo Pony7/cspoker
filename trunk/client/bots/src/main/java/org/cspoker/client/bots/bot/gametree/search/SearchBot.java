@@ -59,20 +59,20 @@ public class SearchBot extends AbstractBot {
 		switch (gameState.getRound()) {
 		case PREFLOP:
 			logger.debug("Searching preflop round game tree:");
-			SearchConfiguration config2 = new SearchConfiguration(config.getOpponentModel(), 
-					config.getShowdownNodeFactory(),
-					config.getBotNodeExpanderFactory(), 20000, 40000, 80000, 160000, 0.25, false, false);
-			BotActionNode temp = new BotActionNode(botId, gameState,
-					config2, config.getPreflopTokens(), searchId++,
-					visitors);
-			temp.getValueDistribution(0);
-
-			logger.info("Without pruning:");
-			logger.info("NbNodes="+((StatisticsVisitor)visitors[visitors.length-1]).getNbNodes());
-			logger.info("NbPrunedSubTrees="+((StatisticsVisitor)visitors[visitors.length-1]).getNbPrunedSubtrees());
-			logger.info("NbPrunedTokens="+((StatisticsVisitor)visitors[visitors.length-1]).getNbPrunedTokens());
-			logger.info("NbOpponentModelCalls="+((StatisticsVisitor)visitors[visitors.length-1]).getNbOpponentModelCalls());
-			visitors = createVisitors(gameState);
+//			SearchConfiguration config2 = new SearchConfiguration(config.getOpponentModel(), 
+//					config.getShowdownNodeFactory(),
+//					config.getBotNodeExpanderFactory(), 20000, 40000, 80000, 160000, 0.25, false, false);
+//			BotActionNode temp = new BotActionNode(botId, gameState,
+//					config2, config.getPreflopTokens(), searchId++,
+//					visitors);
+//			temp.getValueDistribution(0);
+//
+//			logger.info("Without pruning:");
+//			logger.info("NbNodes="+((StatisticsVisitor)visitors[visitors.length-1]).getNbNodes());
+//			logger.info("NbPrunedSubTrees="+((StatisticsVisitor)visitors[visitors.length-1]).getNbPrunedSubtrees());
+//			logger.info("NbPrunedTokens="+((StatisticsVisitor)visitors[visitors.length-1]).getNbPrunedTokens());
+//			logger.info("NbOpponentModelCalls="+((StatisticsVisitor)visitors[visitors.length-1]).getNbOpponentModelCalls());
+//			visitors = createVisitors(gameState);
 
 			actionNode = new BotActionNode(botId, gameState,
 					config, config.getPreflopTokens(), searchId++,

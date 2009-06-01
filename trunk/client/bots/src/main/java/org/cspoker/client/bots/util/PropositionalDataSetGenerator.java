@@ -743,139 +743,139 @@ public class PropositionalDataSetGenerator extends Propositionalizer {
 	}
 
 	private void betSizeHeaders() throws IOException {
-		String str = "@relation BetSize\n"
-		+ "@attribute roundCompletion real\n"
-		+ "@attribute playersActed integer\n"
-		+ "@attribute playersToAct integer\n"
-		+ "@attribute round {preflop, flop, turn, river}\n"
-		+ "@attribute gameCount integer\n"
-		+ "@attribute nbActionsThisRound integer\n"
-		// Amounts
-		+ "@attribute potSize real\n"
-		+ "@attribute stackSize real\n"
-		+ "@attribute deficit real\n"
-		+ "@attribute potOdds real\n"
-		+ "@attribute maxbet real\n"
-		//				// CommunityCards
-		//				+ "@attribute minRank integer\n"
-		//				+ "@attribute maxRank integer\n"
-		//				+ "@attribute avgRank integer\n"
-		//				+ "@attribute sigmaRank real\n"
-		// Player count
-		+ "@attribute nbSeatedPlayers integer\n"
-		+ "@attribute nbActivePlayers integer\n"
-		+ "@attribute activePlayerRatio real\n"
-		// Global player frequencies
-		+ "@attribute betFrequency real\n"
-		+ "@attribute raiseFrequency real\n"
-		// Per-round player frequencies
-		+ "@attribute betFrequencyRound real\n"
-		+ "@attribute raiseFrequencyRound real\n"
-		// Game betting behaviour
-		+ "@attribute isComitted {false,true}\n"
-		+ "@attribute nbAllPlayerRaises integer\n"
-		+ "@attribute nbPlayerRaises integer\n"
-		+ "@attribute nbPlayerRoundRaises integer\n"
-		+ "@attribute gameRaisePercentage real\n"
-		+ "@attribute gameRaiseAmount real\n"
-		+ "@attribute gameRaiseAmountRatio real\n"
-		+ "@attribute lastActionWasRaise {false,true}\n"
-		// PT Stats
-		+ "@attribute VPIP real\n" 
-		+ "@attribute PFR real\n"
-		+ "@attribute AF real\n" 
-		+ "@attribute AFq real\n" 
-		+ "@attribute AFAmount real\n" 
-		+ "@attribute WtSD real\n"
-		// Table PT stat averages
-		+ "@attribute opponentVPIP real\n"
-		+ "@attribute opponentPFR real\n"
-		+ "@attribute opponentAF real\n"
-		+ "@attribute opponentAFq real\n"
-		+ "@attribute opponentLogAFAmount real\n"
-		+ "@attribute opponentWtSD real\n"
-		// Raise Boundaries
-		+ "@attribute minRaise real\n"
-		+ "@attribute maxRaise real\n"
-		+ "@attribute raiseSpan real\n"
-		;
-		betSizeClass.write(str// Targets
-				+ "@attribute betSize real\n"
-				+ "@attribute logBetSize real\n"
-				+ "@attribute relBetSize real\n"
-				+ "@attribute pMinBet real\n"
-				+ "@attribute pAvgBet real\n"
-				+ "@attribute pAllin real\n"
-				+ "@attribute class {minBet,avg,allin}\n"
-				+ "@data\n");
-		betSize.write(str// Targets
-				+ "@attribute betSize real\n"
-				+ "@attribute logBetSize real\n"
-				+ "@attribute relBetSize real\n"
-				+ "@attribute logRelBetSize real\n"
-				+ "@data\n");
+//		String str = "@relation BetSize\n"
+//		+ "@attribute roundCompletion real\n"
+//		+ "@attribute playersActed integer\n"
+//		+ "@attribute playersToAct integer\n"
+//		+ "@attribute round {preflop, flop, turn, river}\n"
+//		+ "@attribute gameCount integer\n"
+//		+ "@attribute nbActionsThisRound integer\n"
+//		// Amounts
+//		+ "@attribute potSize real\n"
+//		+ "@attribute stackSize real\n"
+//		+ "@attribute deficit real\n"
+//		+ "@attribute potOdds real\n"
+//		+ "@attribute maxbet real\n"
+//		//				// CommunityCards
+//		//				+ "@attribute minRank integer\n"
+//		//				+ "@attribute maxRank integer\n"
+//		//				+ "@attribute avgRank integer\n"
+//		//				+ "@attribute sigmaRank real\n"
+//		// Player count
+//		+ "@attribute nbSeatedPlayers integer\n"
+//		+ "@attribute nbActivePlayers integer\n"
+//		+ "@attribute activePlayerRatio real\n"
+//		// Global player frequencies
+//		+ "@attribute betFrequency real\n"
+//		+ "@attribute raiseFrequency real\n"
+//		// Per-round player frequencies
+//		+ "@attribute betFrequencyRound real\n"
+//		+ "@attribute raiseFrequencyRound real\n"
+//		// Game betting behaviour
+//		+ "@attribute isComitted {false,true}\n"
+//		+ "@attribute nbAllPlayerRaises integer\n"
+//		+ "@attribute nbPlayerRaises integer\n"
+//		+ "@attribute nbPlayerRoundRaises integer\n"
+//		+ "@attribute gameRaisePercentage real\n"
+//		+ "@attribute gameRaiseAmount real\n"
+//		+ "@attribute gameRaiseAmountRatio real\n"
+//		+ "@attribute lastActionWasRaise {false,true}\n"
+//		// PT Stats
+//		+ "@attribute VPIP real\n" 
+//		+ "@attribute PFR real\n"
+//		+ "@attribute AF real\n" 
+//		+ "@attribute AFq real\n" 
+//		+ "@attribute AFAmount real\n" 
+//		+ "@attribute WtSD real\n"
+//		// Table PT stat averages
+//		+ "@attribute opponentVPIP real\n"
+//		+ "@attribute opponentPFR real\n"
+//		+ "@attribute opponentAF real\n"
+//		+ "@attribute opponentAFq real\n"
+//		+ "@attribute opponentLogAFAmount real\n"
+//		+ "@attribute opponentWtSD real\n"
+//		// Raise Boundaries
+//		+ "@attribute minRaise real\n"
+//		+ "@attribute maxRaise real\n"
+//		+ "@attribute raiseSpan real\n"
+//		;
+//		betSizeClass.write(str// Targets
+//				+ "@attribute betSize real\n"
+//				+ "@attribute logBetSize real\n"
+//				+ "@attribute relBetSize real\n"
+//				+ "@attribute pMinBet real\n"
+//				+ "@attribute pAvgBet real\n"
+//				+ "@attribute pAllin real\n"
+//				+ "@attribute class {minBet,avg,allin}\n"
+//				+ "@data\n");
+//		betSize.write(str// Targets
+//				+ "@attribute betSize real\n"
+//				+ "@attribute logBetSize real\n"
+//				+ "@attribute relBetSize real\n"
+//				+ "@attribute logRelBetSize real\n"
+//				+ "@data\n");
 	}
 	
 	private void betSizeInstance(PlayerData p, float minRaise, float maxRaise, String target, FileWriter file)
 	throws IOException {
 		// Timing
-		file.write(getRoundCompletion() + ",");
-		file.write(getPlayersActed() + ",");
-		file.write(getPlayersToAct() + ",");
-		file.write(getRound() + ",");
-		file.write(p.getGameCount() + ",");
-		file.write(getTableGameStats().getNbRoundActions(this) + ",");
-		// Amounts
-		file.write(getPotSize() + ",");
-		file.write(p.getStack() + ",");
-		file.write(p.getDeficit(this) + ",");
-		file.write(p.getPotOdds(this) + ",");
-		file.write(getMaxBet()+ ",");
-		//		// CommunityCards
-		//		file.write(getMinRank() + ",");
-		//		file.write(getMaxRank() + ",");
-		//		file.write(getAverageRank() + ",");
-		//		file.write(getSigmaRank() + ",");
-		// Player count
-		file.write(getNbSeatedPlayers() + ",");
-		file.write(getNbActivePlayers() + ",");
-		file.write(getActivePlayerRatio() + ",");
-		// Global player frequencies
-		// Global player frequencies
-		file.write(p.getGlobalStats().getBetFrequency(4) + ",");
-		file.write(p.getGlobalStats().getRaiseFrequency(4) + ",");
-		// Per-round player frequencies
-		file.write(p.getGlobalStats().getRoundBetFrequency(this,4) + ",");
-		file.write(p.getGlobalStats().getRoundRaiseFrequency(this,4) + ",");
-		// Game betting behaviour
-		file.write(p.isComitted() + ",");
-		file.write(getTableGameStats().getNbBetsRaises() + ",");
-		file.write(p.getGameStats().getNbBetsRaises() + ",");
-		file.write(p.getGameStats().getNbRoundBetsRaises(this) + ",");
-		file.write(rel(p.getGameStats().getNbBetsRaises(),getTableGameStats().getNbBetsRaises()) + ",");
-		file.write((float)Math.log1p(p.getGameStats().getTotalBetRaiseAmount()) + ",");
-		file.write(rel(p.getGameStats().getTotalBetRaiseAmount(),getTableGameStats().getTotalBetRaiseAmount()) + ",");
-		file.write(p.isLastActionWasRaise() + ",");
-		// PT Stats
-		file.write(p.getVPIP(4) + ",");
-		file.write(p.getPFR(4) + ",");
-		file.write(p.getGlobalStats().getAF(5) + ",");
-		file.write(p.getGlobalStats().getAFq(5) + ",");
-		file.write((float)Math.log(p.getGlobalStats().getAFAmount(5)) + ",");
-		file.write(p.getWtSD(4) + ",");
-		// Table PT stat averages
-		file.write(getAverageVPIP(p,4) + ",");
-		file.write(getAveragePFR(p,4) + ",");
-		file.write(getAverageAF(p,5) + ",");
-		file.write(getAverageAFq(p,5) + ",");
-		file.write(getAverageAFAmount(p,5) + ",");
-		file.write(getAverageWtSD(p,4) + ",");
-		// "@attribute W$SD real\n"+
-		// Raise Boundaries
-		file.write(minRaise + ",");
-		file.write(maxRaise + ",");
-		file.write(maxRaise-minRaise + ",");
-		// Target
+//		file.write(getRoundCompletion() + ",");
+//		file.write(getPlayersActed() + ",");
+//		file.write(getPlayersToAct() + ",");
+//		file.write(getRound() + ",");
+//		file.write(p.getGameCount() + ",");
+//		file.write(getTableGameStats().getNbRoundActions(this) + ",");
+//		// Amounts
+//		file.write(getPotSize() + ",");
+//		file.write(p.getStack() + ",");
+//		file.write(p.getDeficit(this) + ",");
+//		file.write(p.getPotOdds(this) + ",");
+//		file.write(getMaxBet()+ ",");
+//		//		// CommunityCards
+//		//		file.write(getMinRank() + ",");
+//		//		file.write(getMaxRank() + ",");
+//		//		file.write(getAverageRank() + ",");
+//		//		file.write(getSigmaRank() + ",");
+//		// Player count
+//		file.write(getNbSeatedPlayers() + ",");
+//		file.write(getNbActivePlayers() + ",");
+//		file.write(getActivePlayerRatio() + ",");
+//		// Global player frequencies
+//		// Global player frequencies
+//		file.write(p.getGlobalStats().getBetFrequency(4) + ",");
+//		file.write(p.getGlobalStats().getRaiseFrequency(4) + ",");
+//		// Per-round player frequencies
+//		file.write(p.getGlobalStats().getRoundBetFrequency(this,4) + ",");
+//		file.write(p.getGlobalStats().getRoundRaiseFrequency(this,4) + ",");
+//		// Game betting behaviour
+//		file.write(p.isComitted() + ",");
+//		file.write(getTableGameStats().getNbBetsRaises() + ",");
+//		file.write(p.getGameStats().getNbBetsRaises() + ",");
+//		file.write(p.getGameStats().getNbRoundBetsRaises(this) + ",");
+//		file.write(rel(p.getGameStats().getNbBetsRaises(),getTableGameStats().getNbBetsRaises()) + ",");
+//		file.write((float)Math.log1p(p.getGameStats().getTotalBetRaiseAmount()) + ",");
+//		file.write(rel(p.getGameStats().getTotalBetRaiseAmount(),getTableGameStats().getTotalBetRaiseAmount()) + ",");
+//		file.write(p.isLastActionWasRaise() + ",");
+//		// PT Stats
+//		file.write(p.getVPIP(4) + ",");
+//		file.write(p.getPFR(4) + ",");
+//		file.write(p.getGlobalStats().getAF(5) + ",");
+//		file.write(p.getGlobalStats().getAFq(5) + ",");
+//		file.write((float)Math.log(p.getGlobalStats().getAFAmount(5)) + ",");
+//		file.write(p.getWtSD(4) + ",");
+//		// Table PT stat averages
+//		file.write(getAverageVPIP(p,4) + ",");
+//		file.write(getAveragePFR(p,4) + ",");
+//		file.write(getAverageAF(p,5) + ",");
+//		file.write(getAverageAFq(p,5) + ",");
+//		file.write(getAverageAFAmount(p,5) + ",");
+//		file.write(getAverageWtSD(p,4) + ",");
+//		// "@attribute W$SD real\n"+
+//		// Raise Boundaries
+//		file.write(minRaise + ",");
+//		file.write(maxRaise + ",");
+//		file.write(maxRaise-minRaise + ",");
+//		// Target
 		file.write(target + "\n");
 		file.flush();
 	}
@@ -970,17 +970,20 @@ public class PropositionalDataSetGenerator extends Propositionalizer {
 		if(Math.abs(minRaise-maxRaise)>0.6) //only when we have a choice
 		{
 			if(Math.abs(minRaise-raiseAmount)<0.6) {
-				betSizeInstance(p, minRaise, maxRaise, raiseAmount+","+logBetSize+",0,1,0,0,minBet", betSizeClass);
+//				betSizeInstance(p, minRaise, maxRaise, raiseAmount+","+logBetSize+",0,1,0,0,minBet", betSizeClass);
+				betSizeInstance(p, minRaise, maxRaise, 0+"", betSizeClass);
 			}else if(Math.abs(maxRaise-raiseAmount)<0.6) {
-				betSizeInstance(p, minRaise, maxRaise, raiseAmount+","+logBetSize+",1,0,0,1,allin", betSizeClass);
+//				betSizeInstance(p, minRaise, maxRaise, raiseAmount+","+logBetSize+",1,0,0,1,allin", betSizeClass);
+				betSizeInstance(p, minRaise, maxRaise, 1+"", betSizeClass);
 			}else{
 				if(raiseAmount<minRaise || minRaise>maxRaise){
 					System.out.println("Skipping illegal bet");
 					return;
 				}
 				float relBetSize = (raiseAmount-minRaise)/(maxRaise-minRaise);
-				betSizeInstance(p, minRaise, maxRaise, raiseAmount+","+logBetSize+","+relBetSize+",0,1,0,avg", betSizeClass);
-				betSizeInstance(p, minRaise, maxRaise, raiseAmount+","+logBetSize+","+relBetSize+","+(float)Math.log(relBetSize), betSize);
+//				betSizeInstance(p, minRaise, maxRaise, raiseAmount+","+logBetSize+","+relBetSize+",0,1,0,avg", betSizeClass);
+				betSizeInstance(p, minRaise, maxRaise, relBetSize+"", betSizeClass);
+//				betSizeInstance(p, minRaise, maxRaise, raiseAmount+","+logBetSize+","+relBetSize+","+(float)Math.log(relBetSize), betSize);
 			}
 		}
 	}
@@ -1069,7 +1072,6 @@ public class PropositionalDataSetGenerator extends Propositionalizer {
 						EnumSet<Card> cardsSet = EnumSet.of(cards.get(cardsString[0]),cards.get(cardsString[1]),cards.get(cardsString[2]),cards.get(cardsString[3]));
 						signalCommunityCards(cardsSet);
 					} else if (line.startsWith(river)) {
-						if(getNbSeatedPlayers()==4) throw new IllegalStateException(line);
 						signalRiver();
 						String[] cardsString = line.substring(line.indexOf("[")).replaceAll("\\[", "").replaceAll("\\]", "").split(" ");
 						EnumSet<Card> cardsSet = EnumSet.of(cards.get(cardsString[0]),cards.get(cardsString[1]),cards.get(cardsString[2]),cards.get(cardsString[3]),cards.get(cardsString[4]));

@@ -31,7 +31,7 @@ public class CallBot extends AbstractBot {
 
 	private final static Logger logger = Logger.getLogger(CallBot.class);
 
-	public CallBot(PlayerId playerId, TableId tableId, SmartLobbyContext lobby,
+	CallBot(PlayerId playerId, TableId tableId, SmartLobbyContext lobby,
 			int buyIn, ExecutorService executor, BotListener... botListeners) {
 		super(playerId, tableId, lobby, buyIn, executor, botListeners);
 	}

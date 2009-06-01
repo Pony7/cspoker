@@ -30,13 +30,13 @@ import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.elements.table.Round;
 import org.cspoker.common.elements.table.TableId;
 
-public class RuleBasedBot1 extends AbstractBot {
+public class CardBot extends AbstractBot {
 
-	private final static Logger logger = Logger.getLogger(RuleBasedBot1.class);
+	private final static Logger logger = Logger.getLogger(CardBot.class);
 
 	private final Random random = new Random();
 
-	public RuleBasedBot1(PlayerId playerId, TableId tableId,
+	CardBot(PlayerId playerId, TableId tableId,
 			SmartLobbyContext lobby, int buyIn, ExecutorService executor,
 			BotListener... botListeners) {
 		super(playerId, tableId, lobby, buyIn, executor, botListeners);
@@ -93,10 +93,10 @@ public class RuleBasedBot1 extends AbstractBot {
 		} catch (IllegalActionException e) {
 			logger.warn("Raise bounds: "
 					+ tableContext.getGameState().getLowerRaiseBound(
-							RuleBasedBot1.this.botId)
+							CardBot.this.botId)
 							+ " to "
 							+ tableContext.getGameState().getUpperRaiseBound(
-									RuleBasedBot1.this.botId));
+									CardBot.this.botId));
 			logger.error(e);
 			throw new IllegalStateException("Action was not allowed.",
 					e);

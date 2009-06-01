@@ -28,7 +28,6 @@ public class PlotAvgProfit {
 	public static void main(String[] args) throws IOException {
 		Scanner s = new Scanner(System.in);
 		FileWriter f = new FileWriter("output/avgprofit.csv");
-		int botIndex = 0;
 		int lastDeal = 0;
 		while(s.hasNextLine()){
 			String line = s.nextLine();
@@ -36,15 +35,15 @@ public class PlotAvgProfit {
 			if(line.contains("deal #")){
 				int start = line.indexOf("deal #")+6;
 				lastDeal = Integer.parseInt(line.substring(start, line.indexOf(" ", start)));
-				botIndex = 0;
 				System.out.println("Deal "+lastDeal);
-			}else if(botIndex == 0 && line.contains("wins ")){
-				int start = line.indexOf("wins ")+5;
-				double avgProfit = Double.parseDouble(line.substring(start, line.indexOf(" ", start)));
-				System.out.println("Won "+avgProfit+" after "+lastDeal+" deals");
-				f.write(lastDeal+","+avgProfit+"\n");
+				f.write("\n"+lastDeal);
 				f.flush();
-				botIndex++;
+			}else if(line.contains("wins ")){
+					int start = line.indexOf("wins ")+5;
+					double avgProfit = Double.parseDouble(line.substring(start, line.indexOf(" ", start)));
+					System.out.println("Won "+avgProfit+" after "+lastDeal+" deals");
+					f.write(","+avgProfit);
+					f.flush();
 			}else{
 				
 			}

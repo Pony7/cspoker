@@ -1,5 +1,4 @@
 /**
-
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -25,13 +24,15 @@ import org.cspoker.client.common.SmartLobbyContext;
 import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.elements.table.TableId;
 
-public class RuleBasedBotFactory2 implements BotFactory {
+public class HandBotFactory implements BotFactory {
 
 	private static int copies = 0;
 	private final int copy;
+	private final String name;
 
-	public RuleBasedBotFactory2() {
+	public HandBotFactory(String name) {
 		copy = ++copies;
+		this.name = name;
 	}
 
 	/**
@@ -45,12 +46,12 @@ public class RuleBasedBotFactory2 implements BotFactory {
 			SmartLobbyContext lobby, int buyIn, ExecutorService executor,
 			BotListener... botListeners) {
 		copies++;
-		return new RuleBasedBot2(playerId, tableId, lobby, buyIn, executor,
+		return new HandBot(playerId, tableId, lobby, buyIn, executor,
 				botListeners);
 	}
 
 	@Override
 	public String toString() {
-		return "RuleBasedBot v2-" + copy;
+		return name;//"RuleBasedBot v2-" + copy;
 	}
 }

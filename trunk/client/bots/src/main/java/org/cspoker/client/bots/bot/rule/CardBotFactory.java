@@ -25,13 +25,15 @@ import org.cspoker.client.common.SmartLobbyContext;
 import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.elements.table.TableId;
 
-public class RuleBasedBotFactory1 implements BotFactory {
+public class CardBotFactory implements BotFactory {
 
 	private static int copies = 0;
 	private final int copy;
+	private final String name;
 
-	public RuleBasedBotFactory1() {
+	public CardBotFactory(String name) {
 		copy = ++copies;
+		this.name = name;
 	}
 
 	/**
@@ -45,12 +47,12 @@ public class RuleBasedBotFactory1 implements BotFactory {
 			SmartLobbyContext lobby, int buyIn, ExecutorService executor,
 			BotListener... botListeners) {
 		copies++;
-		return new RuleBasedBot1(playerId, tableId, lobby, buyIn, executor,
+		return new CardBot(playerId, tableId, lobby, buyIn, executor,
 				botListeners);
 	}
 
 	@Override
 	public String toString() {
-		return "RuleBasedBot v1-" + copy;
+		return name;//"RuleBasedBot v1-" + copy;
 	}
 }

@@ -74,6 +74,8 @@ public class OpponentActionNode extends ActionNode {
 						}
 					}
 					valueDistribution = new Distribution(valueDone+prob*upperWinBound+maxToDo,0.0, true);
+					//forget last game state!
+					config.getOpponentModel().forgetLastAssumption();
 					return valueDistribution;
 				}
 				percentageDone += prob;
