@@ -31,6 +31,8 @@ public interface BackPropagationStrategy {
 	int getNbSamples();
 
 	double getEVStdDev();
+	
+	double getEVVar();
 
 	int getNbSamplesInMean();
 	
@@ -41,6 +43,7 @@ public interface BackPropagationStrategy {
 		BackPropagationStrategy createForOpponentNode(OpponentNode node);
 		
 	}
+
 
 	
 }

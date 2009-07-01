@@ -15,14 +15,18 @@
  */
 package org.cspoker.client.bots.listener;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+
 import org.apache.log4j.Logger;
 import org.cspoker.client.bots.BotRunner;
 import org.cspoker.client.bots.util.RunningStats;
 
-public class SpeedTestBotListener extends DealCountingListener {
+public class CSVLogListener extends DealCountingListener {
 
 	private final static Logger logger = Logger
-			.getLogger(SpeedTestBotListener.class);
+			.getLogger(CSVLogListener.class);
 
 	private volatile long startTime;
 
@@ -30,13 +34,20 @@ public class SpeedTestBotListener extends DealCountingListener {
 
 	private final BotRunner runner;
 
-	public SpeedTestBotListener(BotRunner runner) {
+	private final FileWriter file;
+
+	public CSVLogListener(BotRunner runner) {
 		this(64, runner);
 	}
 
-	public SpeedTestBotListener(int reportInterval, BotRunner runner) {
+	public CSVLogListener(int reportInterval, BotRunner runner) {
 		this.reportInterval = reportInterval;
 		this.runner = runner;
+		try {
+			this.file = new FileWriter("logs/bots.csv");
+		} catch (IOException e) {
+			throw new IllegalStateException(e);
+		}
 	}
 
 	@Override
@@ -47,11 +58,28 @@ public class SpeedTestBotListener extends DealCountingListener {
 			if (startTime > 0) {
 				logger.info("deal #" + deals + " at " + reportInterval * 1000.0
 						/ (nowTime - startTime) + " games/s");
+				try {
+					file.write(deals+"");
+				} catch (IOException e) {
+					throw new IllegalStateException(e);
+				}
 				for (int i = 0; i < runner.nbPlayersPerGame; i++) {
 					RunningStats profit = runner.getBot(i).getProfit();
-					logger.info("(" + runner.getBotFactory(i) + " wins "
-							+ profit.getMean() / runner.getConfig().getSmallBet() + " sb/game) "
-							+ " +- "+profit.getEVStdDev()/ runner.getConfig().getSmallBet());
+					int smallBet = BotRunner.getConfig().getSmallBet();
+					double mean = profit.getMean() / smallBet;
+					double stdDevMean = profit.getEVStdDev()/ smallBet;
+					try {
+						file.write(","+mean+","+stdDevMean);
+					} catch (IOException e) {
+						throw new IllegalStateException(e);
+					}
+				}
+
+				try {
+					file.write("\n");
+					file.flush();
+				} catch (IOException e) {
+					throw new IllegalStateException(e);
 				}
 			}
 			startTime = nowTime;

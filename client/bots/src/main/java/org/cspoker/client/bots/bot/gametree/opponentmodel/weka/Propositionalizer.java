@@ -60,17 +60,24 @@ public class Propositionalizer implements Cloneable {
 	public Propositionalizer clone() {
 		try {
 			Propositionalizer clone = (Propositionalizer)super.clone();
+
+			//clone player map (is this needed?)
 			Map<Object, PlayerData> playersClone = new HashMap<Object, PlayerData>(clone.getPlayers());
 
+			//clone the active players at this table. they are mutable
 			List<PlayerData> activePlayersClone = new LinkedList<PlayerData>();
 			for (PlayerData player : activePlayers) {
 				PlayerData playerClone = player.clone();
 				activePlayersClone.add(playerClone);
 				playersClone.put(playerClone.getId(), playerClone);
 			}
-			//no need to copy allinPlayers, is immutable
+
+			//no need to clone contents of allinPlayers, is immutable
+			//do need to clone the list itself
+			List<PlayerData> allinplayersClone = new LinkedList<PlayerData>(clone.getAllinPlayers());
 			clone.players = playersClone;
 			clone.activePlayers = activePlayersClone;
+			clone.allinPlayers = allinplayersClone;
 			clone.gameStats = gameStats.clone();
 			return clone;
 		} catch (CloneNotSupportedException e) {
@@ -79,21 +86,22 @@ public class Propositionalizer implements Cloneable {
 	}
 
 	public void signalAllIn(Object id, float chipsMoved) {
-		if(inPreFlopRound() && !somebodyActedThisRound){
+		if(inPreFlopRound() && maxBet<=0.75){
 			if(maxBet==0){
 				signalSmallBlind(true, id);
 			}else{
 				signalBigBlind(true, id);
 			}
-		}
-		PlayerData p = players.get(id);
-		//call raise or bet
-		if(p.getBet()==0){
-			signalBet(true, id, chipsMoved);
-		}else if(p.getDeficit(this)<chipsMoved){
-			signalRaise(id, true, p.getBet()+chipsMoved);
 		}else{
-			signalCall(true, id, chipsMoved);
+			PlayerData p = players.get(id);
+			//call raise or bet
+			if(p.getBet()==0){
+				signalBet(true, id, chipsMoved);
+			}else if(p.getDeficit(this)<chipsMoved){
+				signalRaise(id, true, p.getBet()+chipsMoved);
+			}else{
+				signalCall(true, id, chipsMoved);
+			}
 		}
 	}
 
@@ -138,7 +146,7 @@ public class Propositionalizer implements Cloneable {
 			lastRaise = Math.max(lastRaise, raiseAmount);
 			float movedAmount = maxBet - p.getBet();
 			gameRaiseAmount += raiseAmount;
-			
+
 			totalPot += movedAmount;
 			somebodyActedThisRound = true;
 			gameStats.addRaise(this, movedAmount-raiseAmount, raiseAmount);
@@ -184,6 +192,7 @@ public class Propositionalizer implements Cloneable {
 	public void signalBigBlind(boolean isAllIn, Object id) {
 		PlayerData p = players.get(id);
 
+		//TODO change amount when allin
 		maxBet = 1;
 		totalPot += 1;
 		if (isAllIn) {
@@ -195,6 +204,8 @@ public class Propositionalizer implements Cloneable {
 
 	public void signalSmallBlind(boolean isAllIn, Object id) {
 		PlayerData p = players.get(id);
+		
+		//TODO change amount when allin
 		maxBet = 0.5F;
 		totalPot = 0.5F;
 		if (isAllIn) {
@@ -258,14 +269,14 @@ public class Propositionalizer implements Cloneable {
 			//take 100 rank samples
 			int n = 100;
 			for(int i=0;i<n;i++){
-				
+
 				int rank = startRank;
 				Card sampleCard1;
 				do{
 					sampleCard1 = Card.values()[random.nextInt(Card.values().length)];
 				}while(cards.contains(sampleCard1));
 				rank = handRanks[sampleCard1.ordinal() + 1 + rank];
-				
+
 				Card sampleCard2;
 				do{
 					sampleCard2 = Card.values()[random.nextInt(Card.values().length)];
@@ -445,6 +456,10 @@ public class Propositionalizer implements Cloneable {
 		return players;
 	}
 
+	public List<PlayerData> getAllinPlayers() {
+		return allinPlayers;
+	}
+
 	public float getTotalPot() {
 		return totalPot;
 	}
@@ -488,11 +503,11 @@ public class Propositionalizer implements Cloneable {
 	public float getPotSize() {
 		return totalPot;
 	}
-	
+
 	public float getMaxMaxBet(){
 		float maxBet1 = 0;
 		float maxBet2 = 0;
-		
+
 		for (PlayerData player : activePlayers) {
 			float maxMaxPlayerBet = player.getStack()+player.getBet();
 			if(maxMaxPlayerBet>maxBet1){
@@ -502,7 +517,7 @@ public class Propositionalizer implements Cloneable {
 				maxBet2 = maxMaxPlayerBet;
 			}
 		}
-		
+
 		return maxBet2;
 	}
 
@@ -512,7 +527,7 @@ public class Propositionalizer implements Cloneable {
 		float maxRaise = Math.max(0, getMaxMaxBet()-getMaxBet());
 		return Math.min(amountLeftToRaiseWith, maxRaise);
 	}
-	
+
 	public float getMinRaise(PlayerData p) {
 		return Math.min(lastRaise, getMaxRaise(p));
 	}

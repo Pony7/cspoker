@@ -16,8 +16,6 @@
  */
 package org.cspoker.client.bots.bot.gametree.opponentmodel.weka;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 
@@ -37,60 +35,60 @@ public class WekaRegressionModelFactory implements OpponentModel.Factory {
 	private final static Logger logger = Logger
 	.getLogger(WekaRegressionModelFactory.class);
 
-	public WekaRegressionModelFactory(String modelDirPath) throws IOException, ClassNotFoundException {
-		File modelDir = new File(modelDirPath);
-		ObjectInputStream in = new ObjectInputStream(new FileInputStream(new File(modelDir,"preBet.model")));
+	public WekaRegressionModelFactory(String models) throws IOException, ClassNotFoundException {
+		ClassLoader classLoader = this.getClass().getClassLoader();
+		ObjectInputStream in = new ObjectInputStream(classLoader.getResourceAsStream(models+"preBet.model"));
 		preBetModel = (Classifier)in.readObject();
 		in.close();
-		in = new ObjectInputStream(new FileInputStream(new File(modelDir,"preFold.model")));
+		in = new ObjectInputStream(classLoader.getResourceAsStream(models+"preFold.model"));
 		preFoldModel = (Classifier)in.readObject();
 		in.close();
-		in = new ObjectInputStream(new FileInputStream(new File(modelDir,"preCall.model")));
+		in = new ObjectInputStream(classLoader.getResourceAsStream(models+"preCall.model"));
 		preCallModel = (Classifier)in.readObject();
 		in.close();
-		in = new ObjectInputStream(new FileInputStream(new File(modelDir,"preRaise.model")));
+		in = new ObjectInputStream(classLoader.getResourceAsStream(models+"preRaise.model"));
 		preRaiseModel = (Classifier)in.readObject();
 		in.close();
-		in = new ObjectInputStream(new FileInputStream(new File(modelDir,"postBet.model")));
+		in = new ObjectInputStream(classLoader.getResourceAsStream(models+"postBet.model"));
 		postBetModel = (Classifier)in.readObject();
 		in.close();
-		in = new ObjectInputStream(new FileInputStream(new File(modelDir,"postFold.model")));
+		in = new ObjectInputStream(classLoader.getResourceAsStream(models+"postFold.model"));
 		postFoldModel = (Classifier)in.readObject();
 		in.close();
-		in = new ObjectInputStream(new FileInputStream(new File(modelDir,"postCall.model")));
+		in = new ObjectInputStream(classLoader.getResourceAsStream(models+"postCall.model"));
 		postCallModel = (Classifier)in.readObject();
 		in.close();
-		in = new ObjectInputStream(new FileInputStream(new File(modelDir,"postRaise.model")));
+		in = new ObjectInputStream(classLoader.getResourceAsStream(models+"postRaise.model"));
 		postRaiseModel = (Classifier)in.readObject();
 		in.close();
-		in = new ObjectInputStream(new FileInputStream(new File(modelDir,"showdown0.model")));
+		in = new ObjectInputStream(classLoader.getResourceAsStream(models+"showdown0.model"));
 		showdown0Model = (Classifier)in.readObject();
 		in.close();
-		in = new ObjectInputStream(new FileInputStream(new File(modelDir,"showdown1.model")));
+		in = new ObjectInputStream(classLoader.getResourceAsStream(models+"showdown1.model"));
 		showdown1Model = (Classifier)in.readObject();
 		in.close();
-		in = new ObjectInputStream(new FileInputStream(new File(modelDir,"showdown2.model")));
+		in = new ObjectInputStream(classLoader.getResourceAsStream(models+"showdown2.model"));
 		showdown2Model = (Classifier)in.readObject();
 		in.close();
-		in = new ObjectInputStream(new FileInputStream(new File(modelDir,"showdown3.model")));
+		in = new ObjectInputStream(classLoader.getResourceAsStream(models+"showdown3.model"));
 		showdown3Model = (Classifier)in.readObject();
 		in.close();
-		in = new ObjectInputStream(new FileInputStream(new File(modelDir,"showdown4.model")));
+		in = new ObjectInputStream(classLoader.getResourceAsStream(models+"showdown4.model"));
 		showdown4Model = (Classifier)in.readObject();
 		in.close();
-		in = new ObjectInputStream(new FileInputStream(new File(modelDir,"showdown5.model")));
+		in = new ObjectInputStream(classLoader.getResourceAsStream(models+"showdown5.model"));
 		showdown5Model = (Classifier)in.readObject();
 		in.close();
-		in = new ObjectInputStream(new FileInputStream(new File(modelDir,"showdown6.model")));
+		in = new ObjectInputStream(classLoader.getResourceAsStream(models+"showdown6.model"));
 		showdown6Model = (Classifier)in.readObject();
 		in.close();
-		in = new ObjectInputStream(new FileInputStream(new File(modelDir,"showdown7.model")));
+		in = new ObjectInputStream(classLoader.getResourceAsStream(models+"showdown7.model"));
 		showdown7Model = (Classifier)in.readObject();
 		in.close();
-		in = new ObjectInputStream(new FileInputStream(new File(modelDir,"showdown8.model")));
+		in = new ObjectInputStream(classLoader.getResourceAsStream(models+"showdown8.model"));
 		showdown8Model = (Classifier)in.readObject();
 		in.close();
-		in = new ObjectInputStream(new FileInputStream(new File(modelDir,"showdown9.model")));
+		in = new ObjectInputStream(classLoader.getResourceAsStream(models+"showdown9.model"));
 		showdown9Model = (Classifier)in.readObject();
 		in.close();
 	}

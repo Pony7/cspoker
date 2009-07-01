@@ -30,9 +30,10 @@ public class UCTPlusSelector extends MaxFunctionSelector {
 	@Override
 	protected double evaluate(INode node) {
 		int nbSamples = node.getNbSamples();
+		if(nbSamples==0) return 0;
 		int nbParentSamples = node.getParent().getNbSamples();
-		double stdDev = node.getStdDev();
-		return node.getEV()+C1*Math.sqrt(Math.log(nbParentSamples)/nbSamples)+C2*stdDev/Math.sqrt(nbSamples);
+		double stdDev = node.getEVStdDev();
+		return node.getEV()+C1*Math.sqrt(Math.log(nbParentSamples)/nbSamples)+C2*stdDev;
 	}
 
 }

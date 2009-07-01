@@ -97,15 +97,12 @@ public class PrologCafeModel extends AbstractPrologModel {
 		ToPrologTermVisitor visitor = getTopVisitor();
 		Predicate prior_action_probability = new PRED_prior_action_probability_6();
 		VariableTerm p = new VariableTerm();
-		Term[] args = { new IntegerTerm(visitor.getGameId()),
-				new IntegerTerm(visitor.getActionId() + 1),
-				SymbolTerm.makeSymbol("player_" + playerId.getId()), action,
-				visitor.getRound(), p };
+		IntegerTerm gameId = new IntegerTerm(visitor.getGameId());
+		IntegerTerm actionId = new IntegerTerm(visitor.getActionId() + 1);
+		SymbolTerm playerName = SymbolTerm.makeSymbol("player_" + playerId.getId());
+		Term[] args = { gameId, actionId, playerName, action, visitor.getRound(), p };
 		if (logger.isDebugEnabled()) {
-			logger.debug(new PRED_prior_action_probability_6(new IntegerTerm(
-					visitor.getGameId()), new IntegerTerm(
-					visitor.getActionId() + 1), SymbolTerm.makeSymbol("player_"
-					+ playerId.getId()), action, visitor.getRound(), p, null));
+			logger.debug(new PRED_prior_action_probability_6(gameId, actionId, playerName, action, visitor.getRound(), p, null));
 		}
 		if (!executeGoal(prior_action_probability, args)) {
 			throw new IllegalStateException("Failed to call "

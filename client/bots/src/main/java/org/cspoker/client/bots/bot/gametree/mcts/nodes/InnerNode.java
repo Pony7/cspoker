@@ -121,6 +121,11 @@ public abstract class InnerNode extends AbstractNode {
 	}
 	
 	@Override
+	public double getEVVar() {
+		return backPropStrategy.getEVVar();
+	}
+	
+	@Override
 	public double getEVStdDev() {
 		return backPropStrategy.getEVStdDev();
 	}

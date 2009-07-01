@@ -21,20 +21,18 @@ import org.apache.log4j.Logger;
 import org.cspoker.client.User;
 import org.cspoker.client.bots.bot.Bot;
 import org.cspoker.client.bots.bot.BotFactory;
+import org.cspoker.client.bots.bot.gametree.mcts.FixedSampleMCTSBotFactory;
 import org.cspoker.client.bots.bot.gametree.mcts.MCTSBotFactory;
 import org.cspoker.client.bots.bot.gametree.mcts.listeners.SWTTreeListener;
 import org.cspoker.client.bots.bot.gametree.mcts.nodes.MCTSBucketShowdownNode;
-import org.cspoker.client.bots.bot.gametree.mcts.strategies.backpropagation.MixtureBackPropStrategy;
+import org.cspoker.client.bots.bot.gametree.mcts.strategies.backpropagation.MaxDistributionBackPropStrategy;
+import org.cspoker.client.bots.bot.gametree.mcts.strategies.backpropagation.MaxDistributionPlusBackPropStrategy;
+import org.cspoker.client.bots.bot.gametree.mcts.strategies.backpropagation.MixedBackPropStrategy;
 import org.cspoker.client.bots.bot.gametree.mcts.strategies.backpropagation.SampleWeightedBackPropStrategy;
-import org.cspoker.client.bots.bot.gametree.mcts.strategies.selection.MaxSampleSelector;
-import org.cspoker.client.bots.bot.gametree.mcts.strategies.selection.MaxUnderValueSelector;
 import org.cspoker.client.bots.bot.gametree.mcts.strategies.selection.MaxValueSelector;
-import org.cspoker.client.bots.bot.gametree.mcts.strategies.selection.MinValueSelector;
-import org.cspoker.client.bots.bot.gametree.mcts.strategies.selection.MixedSelectionStrategy;
-import org.cspoker.client.bots.bot.gametree.mcts.strategies.selection.SampleProportionateSelector;
 import org.cspoker.client.bots.bot.gametree.mcts.strategies.selection.SamplingSelector;
 import org.cspoker.client.bots.bot.gametree.mcts.strategies.selection.SamplingToFunctionSelector;
-import org.cspoker.client.bots.bot.gametree.mcts.strategies.selection.UCTPlusSelector;
+import org.cspoker.client.bots.bot.gametree.mcts.strategies.selection.UCTPlusPlusSelector;
 import org.cspoker.client.bots.bot.gametree.mcts.strategies.selection.UCTSelector;
 import org.cspoker.client.bots.bot.gametree.opponentmodel.weka.WekaRegressionModelFactory;
 import org.cspoker.client.bots.bot.gametree.search.nodevisitor.StatisticsVisitor;
@@ -124,11 +122,20 @@ public class RunHumanVsBot{
 		
 		BotFactory botFactory;
 		try {
-//			botFactory = new SearchBotFactory(
-//					new WekaRegressionModelFactory("/home/guy/Werk/thesis/weka-3-6-0/model1"),
-//					new ShowdownRolloutNode.Factory(new DistributionRollout4.Factory()),
-//					new Log4JOutputVisitor.Factory(2), new SWTTreeVisitor.Factory(client.getGui().getDisplay()), stats
-//					);
+			botFactory = new FixedSampleMCTSBotFactory(
+					"Plus Bot",
+					new WekaRegressionModelFactory("org/cspoker/client/bots/bot/search/opponentmodel/weka/model1/"),
+					new SamplingToFunctionSelector(50,new UCTSelector(40000)),
+					new SamplingToFunctionSelector(50,new UCTPlusPlusSelector()),
+					new MaxValueSelector(),
+					new MCTSBucketShowdownNode.Factory(),
+					new MixedBackPropStrategy.Factory(
+							50,
+							new SampleWeightedBackPropStrategy.Factory(),
+							new MaxDistributionPlusBackPropStrategy.Factory()
+					),
+					20000,40000,80000,100000,
+					new SWTTreeListener.Factory(client.getGui().getDisplay()));
 			
 //			botFactory = new SearchBotFactory(
 //					new WekaRegressionModelFactory("/home/guy/Werk/thesis/weka-3-6-0/model1"),
@@ -144,16 +151,16 @@ public class RunHumanVsBot{
 //					new MCTSShowdownRollOutNode.Factory(),
 //					new SWTTreeListener.Factory(client.getGui().getDisplay()));
 //			
-			botFactory = new MCTSBotFactory(
-					"Bot 5000",
-					new WekaRegressionModelFactory("/home/guy/Werk/thesis/weka-3-6-0/model1"),
-					new SamplingToFunctionSelector(20,new UCTPlusSelector(40000,3)),
-					new MixedSelectionStrategy(new SamplingSelector(), new MinValueSelector(),0.95),
-					new MaxValueSelector(),
-					new MCTSBucketShowdownNode.Factory(),
-					new MixtureBackPropStrategy.Factory(new MaxUnderValueSelector(2)),
-					1000,
-					new SWTTreeListener.Factory(client.getGui().getDisplay()));
+//			botFactory = new MCTSBotFactory(
+//					"Bot 5000",
+//					new WekaRegressionModelFactory("/home/guy/Werk/thesis/weka-3-6-0/model1"),
+//					new SamplingToFunctionSelector(20,new UCTPlusSelector(40000,3)),
+//					new MixedSelectionStrategy(new SamplingSelector(), new MinValueSelector(),0.95),
+//					new MaxValueSelector(),
+//					new MCTSBucketShowdownNode.Factory(),
+//					new MixtureBackPropStrategy.Factory(new MaxUnderValueSelector(2)),
+//					1000,
+//					new SWTTreeListener.Factory(client.getGui().getDisplay()));
 
 //				BotFactory botFactory = new WekaRegressionBotFactory(
 //						new ShowdownRolloutNode.Factory(new DistributionRollout4.Factory()),
@@ -203,7 +210,7 @@ public class RunHumanVsBot{
 					
 					@Override
 					public double getProfit() {
-						return bot.getProfit()*1.0/tConfig.getSmallBet();
+						return bot.getProfit().getMean()*1.0/tConfig.getSmallBet();
 					}
 					
 					@Override

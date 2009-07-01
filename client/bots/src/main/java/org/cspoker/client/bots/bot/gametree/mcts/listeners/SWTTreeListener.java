@@ -87,8 +87,20 @@ public class SWTTreeListener implements MCTSListener {
 		final TreeItemHolder holder = new TreeItemHolder();
 		final int nbSamples = node.getNbSamples();
 		final double average = node.getEV();
-		final double stddev = node.getStdDev();
-		final int nbSamplesInMean = node.getNbSamplesInMean();
+		String stddev;
+		try {
+			stddev = ""+Util.parseDollars(node.getStdDev());
+		} catch (UnsupportedOperationException e) {
+			stddev = "?";
+		}
+		final String stddevf = stddev;
+		String nbSamplesInMean;
+		try {
+			nbSamplesInMean = node.getNbSamplesInMean()+"";
+		} catch (UnsupportedOperationException e) {
+			nbSamplesInMean = "?";
+		}
+		final String nbSamplesInMeanf = nbSamplesInMean;
 		final double evStadDev = node.getEVStdDev();
 		display.syncExec(new Runnable(){
 			@Override
@@ -101,8 +113,8 @@ public class SWTTreeListener implements MCTSListener {
 						Math.round(100 * action.getProbability()) + "%",
 						""+nbSamples,
 						""+Util.parseDollars(average - relStackSize),
-						""+Util.parseDollars(stddev),
-						""+nbSamplesInMean,
+						stddevf,
+						nbSamplesInMeanf,
 						""+Util.parseDollars(evStadDev),
 				});
 				if (round == Round.FINAL) {

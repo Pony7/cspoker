@@ -97,8 +97,7 @@ public abstract class AbstractPrologModel implements OpponentModel {
 		if (logger.isDebugEnabled()) {
 			logger.debug("Assuming " + gameState);
 		}
-		LoggingVisitor root = visitors.isEmpty() ? assertingVisitor : visitors
-				.peek();
+		LoggingVisitor root = getTopVisitor();
 		TermListVisitor visitor = new TermListVisitor(root);
 		visitor.readHistory(gameState);
 		List<jp.ac.kobe_u.cs.prolog.lang.StructureTerm> terms = visitor
@@ -121,8 +120,9 @@ public abstract class AbstractPrologModel implements OpponentModel {
 			retractTerm(terms.get(i));
 		}
 	}
+	
 
-	protected TermListVisitor getTopVisitor() {
-		return visitors.peek();
+	protected ToPrologTermVisitor getTopVisitor() {
+		return visitors.isEmpty() ? assertingVisitor : visitors.peek();
 	}
 }

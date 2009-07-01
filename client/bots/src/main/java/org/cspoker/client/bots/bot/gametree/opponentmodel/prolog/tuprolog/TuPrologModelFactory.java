@@ -21,7 +21,6 @@ import java.io.IOException;
 import net.jcip.annotations.ThreadSafe;
 
 import org.cspoker.client.bots.bot.gametree.opponentmodel.OpponentModel;
-import org.cspoker.common.elements.player.PlayerId;
 
 import alice.tuprolog.InvalidTheoryException;
 import alice.tuprolog.Prolog;
