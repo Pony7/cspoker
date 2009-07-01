@@ -20,7 +20,6 @@ import jp.ac.kobe_u.cs.prolog.lang.PrologControl;
 import net.jcip.annotations.ThreadSafe;
 
 import org.cspoker.client.bots.bot.gametree.opponentmodel.OpponentModel;
-import org.cspoker.common.elements.player.PlayerId;
 
 @ThreadSafe
 public class PrologCafeModelFactory implements OpponentModel.Factory {

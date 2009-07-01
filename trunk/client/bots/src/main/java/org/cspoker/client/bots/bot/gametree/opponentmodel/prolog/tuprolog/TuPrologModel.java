@@ -24,7 +24,7 @@ import jp.ac.kobe_u.cs.prolog.lang.VariableTerm;
 
 import org.apache.log4j.Logger;
 import org.cspoker.client.bots.bot.gametree.opponentmodel.prolog.AbstractPrologModel;
-import org.cspoker.client.bots.bot.gametree.opponentmodel.prolog.TermListVisitor;
+import org.cspoker.client.bots.bot.gametree.opponentmodel.prolog.ToPrologTermVisitor;
 import org.cspoker.common.elements.player.PlayerId;
 
 import alice.tuprolog.MalformedGoalException;
@@ -91,7 +91,7 @@ public class TuPrologModel extends AbstractPrologModel {
 
 	@Override
 	protected double priorActionProbability(SymbolTerm action, PlayerId playerId) {
-		TermListVisitor visitor = getTopVisitor();
+		ToPrologTermVisitor visitor = getTopVisitor();
 		IntegerTerm gameId = new IntegerTerm(visitor.getGameId());
 		IntegerTerm actionId = new IntegerTerm(visitor.getActionId() + 1);
 		SymbolTerm player = SymbolTerm.makeSymbol("player_" + playerId.getId());

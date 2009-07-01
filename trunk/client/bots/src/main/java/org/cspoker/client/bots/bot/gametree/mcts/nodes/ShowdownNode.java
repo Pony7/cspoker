@@ -54,6 +54,11 @@ public abstract class ShowdownNode extends LeafNode {
 	}
 	
 	@Override
+	public double getEVVar() {
+		return stats.getEVStdDev();
+	}
+	
+	@Override
 	public int getNbSamplesInMean() {
 		return stats.getNbSamples();
 	}

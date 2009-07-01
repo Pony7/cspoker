@@ -18,26 +18,23 @@ package org.cspoker.client.bots.bot.gametree.mcts.strategies.backpropagation;
 import org.cspoker.client.bots.bot.gametree.mcts.nodes.DecisionNode;
 import org.cspoker.client.bots.bot.gametree.mcts.nodes.INode;
 import org.cspoker.client.bots.bot.gametree.mcts.nodes.OpponentNode;
-import org.cspoker.client.bots.bot.gametree.mcts.strategies.selection.SelectionStrategy;
+import org.cspoker.client.bots.util.Gaussian;
 
 import com.google.common.collect.ImmutableList;
 
-public abstract class MixtureBackPropStrategy implements BackPropagationStrategy{
+public abstract class MaxDistributionBackPropStrategy implements BackPropagationStrategy{
 
-	private MixtureBackPropStrategy() {
+	private static final Gaussian startGaussian = new Gaussian(0, 0);
+	
+	private MaxDistributionBackPropStrategy() {
+	
 	}
-
+	
 	public static class Factory implements BackPropagationStrategy.Factory{
 
-		private final SelectionStrategy selector;
-
-		public Factory(SelectionStrategy selector) {
-			this.selector = selector;
-		}
-		
 		@Override
 		public DecisionStrategy createForDecisionNode(DecisionNode node) {
-			return new DecisionStrategy(node, selector);
+			return new DecisionStrategy(node);
 		}
 
 		@Override
@@ -47,15 +44,14 @@ public abstract class MixtureBackPropStrategy implements BackPropagationStrategy
 
 	}
 
-	private static class OpponentStrategy extends MixtureBackPropStrategy{
+	private static class OpponentStrategy extends MaxDistributionBackPropStrategy{
+
 
 		private final OpponentNode node;
 
 		private int nbSamples = 0;
-		private int nbSamplesInMean = 0;
-		
-		private double EV = 0;
-		private double variance = 0;
+
+		private Gaussian EVGaussian = startGaussian;
 
 		public OpponentStrategy(OpponentNode node) {
 			this.node = node;
@@ -63,7 +59,7 @@ public abstract class MixtureBackPropStrategy implements BackPropagationStrategy
 
 		@Override
 		public double getEV() {
-			return EV;
+			return EVGaussian.mean;
 		}
 
 		@Override
@@ -78,22 +74,22 @@ public abstract class MixtureBackPropStrategy implements BackPropagationStrategy
 
 		@Override
 		public double getVariance() {
-			return variance;
+			throw new UnsupportedOperationException();
 		}
 		
 		@Override
 		public double getEVStdDev() {
-			return Math.sqrt(variance/nbSamplesInMean);
+			return EVGaussian.getStdDev();
 		}
 		
 		@Override
 		public double getEVVar() {
-			return variance/nbSamplesInMean;
+			return EVGaussian.variance;
 		}
 		
 		@Override
 		public int getNbSamplesInMean() {
-			return nbSamplesInMean;
+			throw new UnsupportedOperationException();
 		}
 
 		@Override
@@ -102,55 +98,48 @@ public abstract class MixtureBackPropStrategy implements BackPropagationStrategy
 
 			ImmutableList<INode> children = node.getChildren();
 			double[] probabilities = node.getProbabilities();
-			EV = 0;
-			variance = 0;
-			nbSamplesInMean = 0;
+			double EV = 0;
+			double EVVar = 0;
 			for (int i = 0; i < probabilities.length; i++) {
 				INode child = children.get(i);
 				int childN = child.getNbSamples();
 				if (childN>0) {
-					nbSamplesInMean+=child.getNbSamplesInMean();
 					double childEV = child.getEV();
 					EV += childN * childEV;
-					double childVariance = child.getVariance();
-					variance += childN * (childVariance + childEV * childEV);
+					double childVariance = child.getEVVar();
+					EVVar += childN * (childVariance );//+ childEV * childEV);
 				}
 			}
 			EV /= nbSamples;
-			variance /= nbSamples;
-			variance -= EV*EV;
-			if(variance<0){
-				if(variance>-0.001){
-					variance = 0;
-				}else{
-					throw new IllegalStateException();
+			EVVar /= nbSamples;
+			//EVVar -= EV*EV;
+			
+			if(EVVar<0){
+				if(EVVar<-0.001){
+					throw new IllegalStateException("Rounding error is too big.");
 				}
+				EVVar = 0;
 			}
-			if(Double.isNaN(variance) || Double.isInfinite(variance)) {
-				throw new IllegalStateException();
-			}
+			
+			this.EVGaussian = new Gaussian(EV,EVVar);
 		}
 
 	}
 
-	private static class DecisionStrategy extends MixtureBackPropStrategy{
+	private static class DecisionStrategy extends MaxDistributionBackPropStrategy{
 
 		private final DecisionNode node;
-		private final SelectionStrategy selectionStrategy;
 
 		private int nbSamples = 0;
-		private int nbSamplesInMean = 0;
-		private double EV = 0;
-		private double variance = 0;
+		private Gaussian EVGaussian = startGaussian;
 
-		public DecisionStrategy(DecisionNode node, SelectionStrategy selectionStrategy) {
+		public DecisionStrategy(DecisionNode node) {
 			this.node = node;
-			this.selectionStrategy = selectionStrategy;
 		}
 
 		@Override
 		public double getEV() {
-			return EV;
+			return EVGaussian.mean;
 		}
 
 		@Override
@@ -160,43 +149,40 @@ public abstract class MixtureBackPropStrategy implements BackPropagationStrategy
 
 		@Override
 		public double getStdDev() {
-			return Math.sqrt(getVariance());
+			throw new UnsupportedOperationException();
 		}
 
 		@Override
 		public double getVariance() {
-			return variance;
+			throw new UnsupportedOperationException();
 		}
 		
 		@Override
 		public double getEVStdDev() {
-			return Math.sqrt(variance/nbSamplesInMean);
+			return EVGaussian.getStdDev();
 		}
 		
 		@Override
 		public double getEVVar() {
-			return variance/nbSamplesInMean;
+			return EVGaussian.variance;
 		}
 		
 		@Override
 		public int getNbSamplesInMean() {
-			return nbSamplesInMean;
+			throw new UnsupportedOperationException();
 		}
 
 		@Override
 		public void onBackPropagate(double value) {
-			INode selection = selectionStrategy.select(node);
-
-			//TODO decide
-			//this.nbSamples = selection.getNbSamples();
 			++this.nbSamples;
-
-			this.EV = selection.getEV();
-			this.variance = selection.getVariance();
-			this.nbSamplesInMean = selection.getNbSamplesInMean();
-			if(Double.isNaN(variance) || Double.isInfinite(variance) || variance<0) {
-				throw new IllegalStateException();
+			
+			ImmutableList<INode> children = node.getChildren();
+			Gaussian[] gaussians = new Gaussian[children.size()];
+			for (int i = 0; i < children.size(); i++) {
+				INode child = children.get(i);
+				gaussians[i] = new Gaussian(child.getEV(),child.getEVVar());
 			}
+			EVGaussian = Gaussian.maxOf(gaussians);
 		}
 	}
 }

@@ -20,6 +20,7 @@ import java.util.concurrent.ExecutorService;
 
 import org.apache.log4j.Logger;
 import org.cspoker.client.bots.listener.BotListener;
+import org.cspoker.client.bots.util.RunningStats;
 import org.cspoker.client.common.SmartHoldemPlayerContext;
 import org.cspoker.client.common.SmartHoldemTableContext;
 import org.cspoker.client.common.SmartLobbyContext;
@@ -67,7 +68,7 @@ public abstract class AbstractBot implements Bot {
 
 	protected final ExecutorService executor;
 
-	private int profit = 0;
+	private RunningStats profit = new RunningStats();
 	private int gameInvested = 0;
 
 	public AbstractBot(PlayerId botId, TableId tableId,
@@ -202,7 +203,7 @@ public abstract class AbstractBot implements Bot {
 	/**
 	 * @see org.cspoker.client.bots.bot.Bot#getProfit()
 	 */
-	public int getProfit() {
+	public RunningStats getProfit() {
 		return profit;
 	}
 
@@ -294,7 +295,7 @@ public abstract class AbstractBot implements Bot {
 			if(winner.getPlayer().getId().equals(botId)){
 				//check if one can be a winner more than once (split pot?)
 				if(done) throw new IllegalStateException();
-				profit += winner.getGainedAmount()-gameInvested;
+				addProfit(winner.getGainedAmount()-gameInvested);
 				if(logger.isDebugEnabled()){
 					logger.debug("Incrementing profit for "+this+" with "+Util.parseDollars(winner.getGainedAmount()-gameInvested));
 				}
@@ -303,12 +304,16 @@ public abstract class AbstractBot implements Bot {
 			}
 		}
 		if(!done){
-			profit -= gameInvested;
+			addProfit(-gameInvested);
 			if(logger.isDebugEnabled()){
 				logger.debug("Incrementing profit for "+this+" with "+Util.parseDollars(-gameInvested));
 			}
 			gameInvested = 0;
 		}
+	}
+
+	private void addProfit(int p) {
+		profit.add(p);
 	}
 
 	public void onNewPocketCards(NewPocketCardsEvent newPocketCardsEvent) {

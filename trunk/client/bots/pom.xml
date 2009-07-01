@@ -10,6 +10,25 @@
 	<artifactId>client-bots</artifactId>
 	<packaging>jar</packaging>
 	<name>CSPoker Client-Bots</name>
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<configuration>
+					<descriptorRefs>
+						<descriptorRef>jar-with-dependencies</descriptorRef>
+					</descriptorRefs>
+					<archive>
+						<manifest>
+							<mainClass>org.cspoker.client.bots.experiments.RunExperimentD</mainClass>
+						</manifest>
+					</archive>
+					<source>1.6</source>
+					<target>1.6</target>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
 	<repositories>
 		<repository>
 			<id>public.cspoker.org</id>
@@ -66,6 +85,13 @@
 			<groupId>cs.waikato.ac.nz</groupId>
 			<artifactId>weka</artifactId>
 			<version>3.6.0</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-math</groupId>
+			<artifactId>commons-math</artifactId>
+			<version>1.2</version>
+			<type>jar</type>
+			<scope>compile</scope>
 		</dependency>
 	</dependencies>
 </project>

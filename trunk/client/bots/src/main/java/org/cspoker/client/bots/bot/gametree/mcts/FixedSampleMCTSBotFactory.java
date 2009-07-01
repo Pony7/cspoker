@@ -33,7 +33,7 @@ import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.elements.table.TableId;
 import org.cspoker.common.handeval.spears2p2.StateTableEvaluator;
 
-public class MCTSBotFactory implements BotFactory {
+public class FixedSampleMCTSBotFactory implements BotFactory {
 
 	private static int copies = 0;
 	private final int copy;
@@ -45,11 +45,14 @@ public class MCTSBotFactory implements BotFactory {
 	private final SelectionStrategy opponentNodeSelectionStrategy;
 	private final SelectionStrategy moveSelectionStrategy;
 	private final ShowdownNode.Factory showdownNodeFactory;
-	private final int decisionTime;
 	private final String name;
 	private final BackPropagationStrategy.Factory backPropStratFactory;
+	private final int samplesPreFlop;
+	private final int samplesFlop;
+	private final int samplesTurn;
+	private final int samplesRiver;
 
-	public MCTSBotFactory(
+	public FixedSampleMCTSBotFactory(
 			String name,
 			OpponentModel.Factory opponentModelFactory, 
 			SelectionStrategy decisionNodeSelectionStrategy,
@@ -57,7 +60,10 @@ public class MCTSBotFactory implements BotFactory {
 			SelectionStrategy moveSelectionStrategy,
 			ShowdownNode.Factory showdownNodeFactory,
 			BackPropagationStrategy.Factory backPropStratFactory,
-			int decisionTime,
+			int samplesPreFlop,
+			int samplesFlop,
+			int samplesTurn,
+			int samplesRiver,
 			MCTSListener.Factory... listeners) {
 		copy = ++copies;
 		this.name = name;
@@ -68,7 +74,10 @@ public class MCTSBotFactory implements BotFactory {
 		this.moveSelectionStrategy = moveSelectionStrategy;
 		this.showdownNodeFactory = showdownNodeFactory;
 		this.backPropStratFactory = backPropStratFactory;
-		this.decisionTime = decisionTime;
+		this.samplesPreFlop = samplesPreFlop;
+		this.samplesFlop = samplesFlop;
+		this.samplesTurn = samplesTurn;
+		this.samplesRiver = samplesRiver;
 		StateTableEvaluator.getInstance();
 	}
 
@@ -82,9 +91,12 @@ public class MCTSBotFactory implements BotFactory {
 			opponentModels.put(botId, opponentModel);
 		}
 		Config config = new Config(opponentModel, showdownNodeFactory, decisionNodeSelectionStrategy, opponentNodeSelectionStrategy, moveSelectionStrategy, backPropStratFactory);
-		return new MCTSBot(botId, tableId, lobby, executor, buyIn,
+		return new FixedSampleMCTSBot(botId, tableId, lobby, executor, buyIn,
 				config,
-				decisionTime,
+				samplesPreFlop,
+				samplesFlop,
+				samplesTurn,
+				samplesRiver,
 				listeners,
 				botListeners);
 	}

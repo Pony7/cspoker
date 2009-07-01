@@ -171,7 +171,7 @@ public class WekaRegressionModel extends WekaModel {
 
 			double sum = prob[0]+prob[1]+prob[2]+prob[3]+prob[4]+prob[5]+prob[6]+prob[7]+prob[8]+prob[9];
 			if(Double.isNaN(sum) || sum==0 || Double.isInfinite(sum)){
-				throw new IllegalStateException("Bad probabilities:"+prob);
+				throw new IllegalStateException("Bad probabilities:"+sum+" = "+prob[0]+"+"+prob[1]+"+"+prob[2]+"+"+prob[3]+"+"+prob[4]+"+"+prob[5]+"+"+prob[6]+"+"+prob[7]+"+"+prob[8]+"+"+prob[9]);
 			}
 			double invSum = 1/sum;
 			for (int i = 0; i < prob.length; i++) {

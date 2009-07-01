@@ -15,26 +15,35 @@
  */
 package org.cspoker.client.bots.bot.gametree.mcts.strategies.selection;
 
+import java.util.Random;
+
 import org.cspoker.client.bots.bot.gametree.mcts.nodes.INode;
 import org.cspoker.client.bots.bot.gametree.mcts.nodes.InnerNode;
 
-public class SamplingToFunctionSelector implements SelectionStrategy {
+import com.google.common.collect.ImmutableList;
 
-	private final SelectionStrategy functionSelector;
-	private final int threshold;
-	
-	public SamplingToFunctionSelector(int threshold, SelectionStrategy functionSelector) {
-		this.threshold = threshold;
-		this.functionSelector = functionSelector;
-	}
+public class UCTPlusPlusSelector implements SelectionStrategy {
+
+	private final static Random random = new Random();
 	
 	@Override
 	public INode select(InnerNode innerNode) {
-		if(innerNode.getNbSamples()<threshold){
-			return innerNode.getRandomChild();
-		}else{
-			return functionSelector.select(innerNode);
+		ImmutableList<INode> children = innerNode.getChildren();
+		double[] probabilities = innerNode.getProbabilities();
+		double[] cumulSums = new double[children.size()];
+		double cumulSum = 0;
+		for (int i=0;i<children.size();i++) {
+			double weight = probabilities[i]*children.get(i).getEVStdDev();
+			cumulSum += weight;
+			cumulSums[i]= cumulSum;
 		}
+		double randVar = random.nextDouble()*cumulSum;
+		for (int i = 0; i < cumulSums.length; i++) {
+			if(randVar<cumulSums[i]){
+				return children.get(i);
+			}
+		}
+		return children.get(cumulSums.length-1);
 	}
 
 }

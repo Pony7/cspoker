@@ -44,6 +44,11 @@ public class ConstantLeafNode extends LeafNode {
 	}
 	
 	@Override
+	public double getEVVar() {
+		return 0;
+	}
+	
+	@Override
 	public double getVariance() {
 		return 0;
 	}

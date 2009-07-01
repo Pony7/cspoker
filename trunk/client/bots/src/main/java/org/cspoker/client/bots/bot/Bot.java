@@ -17,6 +17,7 @@ package org.cspoker.client.bots.bot;
 
 import java.rmi.RemoteException;
 
+import org.cspoker.client.bots.util.RunningStats;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.listener.HoldemPlayerListener;
 import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
@@ -31,6 +32,6 @@ public interface Bot extends HoldemTableListener, HoldemPlayerListener{
 
 	void stop();
 
-	int getProfit();
+	RunningStats getProfit();
 
 }

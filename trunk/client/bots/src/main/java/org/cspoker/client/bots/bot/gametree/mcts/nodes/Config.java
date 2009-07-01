@@ -30,7 +30,6 @@ public class Config {
 	private final SelectionStrategy decisionNodeSelectionStrategy;
 	private final SelectionStrategy opponentNodeSelectionStrategy;
 	private final SelectionStrategy moveSelectionStrategy;
-	private final int decisionTime;
 	private final BackPropagationStrategy.Factory backPropStratFactory;
 
 	public Config(OpponentModel model, 
@@ -38,15 +37,14 @@ public class Config {
 			SelectionStrategy decisionNodeSelectionStrategy, 
 			SelectionStrategy opponentNodeSelectionStrategy, 
 			SelectionStrategy moveSelectionStrategy, 
-			BackPropagationStrategy.Factory backPropStratFactory, 
-			int decisionTime) {
+			BackPropagationStrategy.Factory backPropStratFactory
+			) {
 		this.model = model;
 		this.showdownNodeFactory = showdownNodeFactory;
 		this.decisionNodeSelectionStrategy=decisionNodeSelectionStrategy;
 		this.opponentNodeSelectionStrategy = opponentNodeSelectionStrategy;
 		this.moveSelectionStrategy=moveSelectionStrategy;
 		this.backPropStratFactory = backPropStratFactory;
-		this.decisionTime = decisionTime;
 	}
 	
 	public OpponentModel getModel() {
@@ -67,13 +65,6 @@ public class Config {
 	
 	public BackPropagationStrategy.Factory getBackPropStratFactory() {
 		return backPropStratFactory;
-	}
-	
-	/**
-	 * Decision time in milliseconds.
-	 */
-	public int getDecisionTime() {
-		return decisionTime;
 	}
 
 	public SelectionStrategy getOpponentNodeSelectionStrategy() {

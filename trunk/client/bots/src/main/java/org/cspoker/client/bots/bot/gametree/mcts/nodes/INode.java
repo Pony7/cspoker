@@ -45,4 +45,6 @@ public interface INode {
 	int getNbSamples();
 	
 	GameState getGameState();
+
+	double getEVVar();
 }

@@ -31,30 +31,46 @@ import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.elements.table.TableId;
 
-public class MCTSBot extends AbstractBot {
+public class FixedSampleMCTSBot extends AbstractBot {
 
-	private final static Logger logger = Logger.getLogger(MCTSBot.class);
+	private final static Logger logger = Logger.getLogger(FixedSampleMCTSBot.class);
 	private final Config config;
 	private final MCTSListener.Factory[] MCTSlistenerFactories;
-	private final int decisionTime;
+	private final int samplesPreFlop;
+	private final int samplesFlop;
+	private final int samplesTurn;
+	private final int samplesRiver;
 
-	public MCTSBot(PlayerId botId, TableId tableId,
+	public FixedSampleMCTSBot(PlayerId botId, TableId tableId,
 			SmartLobbyContext lobby, ExecutorService executor, int buyIn, 
 			Config config,
-			int decisionTime,
+			int samplesPreFlop,
+			int samplesFlop,
+			int samplesTurn,
+			int samplesRiver,
 			MCTSListener.Factory[] MCTSlisteners, 
 			BotListener... botListeners) {
 		super(botId, tableId, lobby, buyIn, executor, botListeners);
 		this.config = config;
 		this.MCTSlistenerFactories = MCTSlisteners;
-		this.decisionTime = decisionTime;
+		this.samplesPreFlop = samplesPreFlop;
+		this.samplesFlop = samplesFlop;
+		this.samplesTurn = samplesTurn;
+		this.samplesRiver = samplesRiver;
 	}
 
 	@Override
 	public void doNextAction() throws RemoteException, IllegalActionException {
-		long endTime = System.currentTimeMillis()+decisionTime;
 		GameState gameState = tableContext.getGameState();	
 		RootNode root = new RootNode(gameState,botId,config);
+		int nbSamples;
+		switch (gameState.getRound()) {
+		case PREFLOP: nbSamples = samplesPreFlop; break;
+		case FLOP: nbSamples = samplesFlop; break;
+		case TURN: nbSamples = samplesTurn; break;
+		case FINAL: nbSamples = samplesRiver; break;
+		default: throw new IllegalStateException(gameState.getRound().toString());
+		}
 		do{
 			iterate(root);
 			iterate(root);
@@ -91,11 +107,10 @@ public class MCTSBot extends AbstractBot {
 			iterate(root);
 			iterate(root);
 			iterate(root);
-		}while(System.currentTimeMillis()<endTime);
+		}while(root.getNbSamples()<nbSamples);
 		if(logger.isInfoEnabled()){
 			logger.info("Stopped MCTS.");
 		}
-//		System.out.println(config.getBackPropStratFactory()+": "+root.getNbSamples());
 		root.selectChild(config.getMoveSelectionStrategy()).getLastAction().getAction().perform(playerContext);
 		MCTSListener[] listeners = createListeners(gameState, botId);
 		for (MCTSListener listener : listeners) {

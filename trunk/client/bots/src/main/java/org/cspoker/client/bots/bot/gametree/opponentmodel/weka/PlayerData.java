@@ -143,13 +143,21 @@ public class PlayerData implements Cloneable{
 
 	public void signalBet(Propositionalizer p, float amount) {
 		bet += amount;
-		stack -= amount;
+		decreaseStack(amount);
 		comitted = true;
 		lastActionWasRaise = true;
 		updateVPIP(p);
 		updatePFR(p); //before gameStats
 		gameStats.addBet(p,amount);
 		globalStats.addBet(p, amount);
+	}
+
+	private void decreaseStack(float amount) {
+		stack -= amount;
+		if(Math.abs(stack)<0.001) stack = 0;
+		if(stack<0) {
+			throw new IllegalStateException("Bad stack: "+stack);
+		}
 	}
 
 	public void signalCheck(Propositionalizer p) {
@@ -161,7 +169,7 @@ public class PlayerData implements Cloneable{
 	public void signalRaise(Propositionalizer p,
 			float raiseAmount, float movedAmount) {
 		bet += movedAmount;
-		stack -= movedAmount;
+		decreaseStack(movedAmount);
 		updateVPIP(p);
 		updatePFR(p);
 		lastActionWasRaise = true;
@@ -173,7 +181,7 @@ public class PlayerData implements Cloneable{
 	public void signalCall(Propositionalizer p,
 			float movedAmount) {
 		bet += movedAmount;
-		stack -= movedAmount;
+		decreaseStack(movedAmount);
 		lastActionWasRaise = false;
 		updateVPIP(p);
 		comitted = true;
@@ -189,13 +197,13 @@ public class PlayerData implements Cloneable{
 
 	public void signalBB() {
 		bet = 1;
-		stack -= 1;
+		decreaseStack(1);
 		comitted = true;
 	}
 
 	public void signalSB() {
 		bet = 0.5F;
-		stack -= 0.5F;
+		decreaseStack(0.5F);
 		comitted = true;
 	}
 
@@ -209,6 +217,14 @@ public class PlayerData implements Cloneable{
 
 	public void resetStack(float stack) {
 		this.stack = stack;
+		if(stack<0) {
+			throw new IllegalStateException("Bad stack: "+stack);
+		}
 	}
 
+	@Override
+	public String toString() {
+		return "PlayerData "+Long.toHexString(hashCode())+" for "+id.toString();
+	}
+	
 }

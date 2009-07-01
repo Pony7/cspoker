@@ -47,6 +47,11 @@ public class SampleWeightedBackPropStrategy implements BackPropagationStrategy{
 	}
 	
 	@Override
+	public double getEVVar() {
+		return stats.getEVVar();
+	}
+	
+	@Override
 	public double getVariance() {
 		return stats.getVariance();
 	}
