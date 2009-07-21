@@ -124,7 +124,7 @@ public class RunHumanVsBot{
 		try {
 			botFactory = new FixedSampleMCTSBotFactory(
 					"Plus Bot",
-					new WekaRegressionModelFactory("org/cspoker/client/bots/bot/search/opponentmodel/weka/model1/"),
+					WekaRegressionModelFactory.createForZip("org/cspoker/client/bots/bot/search/opponentmodel/weka/models/model1.zip"),
 					new SamplingToFunctionSelector(50,new UCTSelector(40000)),
 					new SamplingToFunctionSelector(50,new UCTPlusPlusSelector()),
 					new MaxValueSelector(),

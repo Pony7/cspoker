@@ -34,6 +34,7 @@ import org.cspoker.client.bots.bot.rule.CardBotFactory;
 import org.cspoker.client.bots.bot.rule.HandBotFactory;
 import org.cspoker.client.communication.embedded.EmbeddedCSPokerServer;
 
+@Deprecated
 public class RunExperimentF {
 
 	public static void main(String[] args) throws IOException, ClassNotFoundException {
@@ -54,7 +55,7 @@ public class RunExperimentF {
 						new HandBotFactory("HandBot"),
 						new MCTSBotFactory(
 								"MaxDistribution Bot",
-								new WekaRegressionModelFactory("org/cspoker/client/bots/bot/search/opponentmodel/weka/model1/"),
+								WekaRegressionModelFactory.createForZip("org/cspoker/client/bots/bot/search/opponentmodel/weka/models/model1.zip"),
 								new SamplingToFunctionSelector(treshold1,new UCTSelector(C)),
 								new SamplingSelector(),
 								new MaxValueSelector(),
@@ -88,7 +89,7 @@ public class RunExperimentF {
 						new HandBotFactory("HandBot"),
 						new FixedSampleMCTSBotFactory(
 								"MaxDistribution Bot",
-								new WekaRegressionModelFactory("org/cspoker/client/bots/bot/search/opponentmodel/weka/model1/"),
+								WekaRegressionModelFactory.createForZip("org/cspoker/client/bots/bot/search/opponentmodel/weka/models/model1.zip"),
 								new SamplingToFunctionSelector(treshold1,new UCTSelector(C)),
 								new SamplingSelector(),
 								new MaxValueSelector(),

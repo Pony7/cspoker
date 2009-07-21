@@ -112,7 +112,7 @@ public class BotRunner implements LobbyListener {
 //					new HandBotFactory("HandBot"),
 					new MCTSBotFactory(
 							"Plus Bot",
-							new WekaRegressionModelFactory("org/cspoker/client/bots/bot/search/opponentmodel/weka/model1/"),
+							WekaRegressionModelFactory.createForZip("org/cspoker/client/bots/bot/search/opponentmodel/weka/models/model1.zip"),
 							new SamplingToFunctionSelector(50,new UCTSelector(40000)),
 							new SamplingToFunctionSelector(250,new UCTPlusPlusSelector()),
 							new MaxValueSelector(),
@@ -126,7 +126,7 @@ public class BotRunner implements LobbyListener {
 					),
 					new MCTSBotFactory(
 							"MaxDistribution Bot",
-							new WekaRegressionModelFactory("org/cspoker/client/bots/bot/search/opponentmodel/weka/model1/"),
+							WekaRegressionModelFactory.createForZip("org/cspoker/client/bots/bot/search/opponentmodel/weka/models/model1.zip"),
 							new SamplingToFunctionSelector(50,new UCTSelector(40000)),
 							new SamplingSelector(),
 							new MaxValueSelector(),
