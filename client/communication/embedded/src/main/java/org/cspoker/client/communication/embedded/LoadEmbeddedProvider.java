@@ -16,7 +16,7 @@
 package org.cspoker.client.communication.embedded;
 
 import org.cspoker.client.common.CommunicationProvider;
-import org.cspoker.server.common.CSPokerServerImpl;
+import org.cspoker.server.CSPokerServerImpl;
 
 public class LoadEmbeddedProvider {
 	

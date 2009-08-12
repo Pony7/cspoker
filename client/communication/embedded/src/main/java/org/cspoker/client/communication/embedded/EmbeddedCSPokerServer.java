@@ -19,7 +19,7 @@ import javax.security.auth.login.LoginException;
 
 import org.cspoker.common.CSPokerServer;
 import org.cspoker.common.api.shared.context.ServerContext;
-import org.cspoker.server.common.CSPokerServerImpl;
+import org.cspoker.server.CSPokerServerImpl;
 
 public class EmbeddedCSPokerServer implements CSPokerServer {
 

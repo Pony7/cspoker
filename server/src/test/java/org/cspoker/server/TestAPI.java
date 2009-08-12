@@ -33,7 +33,7 @@ public class TestAPI extends TestCase {
 	
 	static {
 		Log4JPropertiesLoader
-				.load("org/cspoker/server/common/logging/log4j.properties");
+				.load("org/cspoker/server/logging/log4j.properties");
 	}
 	
 	private ServerContext kenzo;
