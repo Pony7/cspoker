@@ -13,7 +13,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>org.cspoker</groupId>
-			<artifactId>server-common</artifactId>
+			<artifactId>server</artifactId>
 			<version>0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
