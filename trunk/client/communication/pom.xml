@@ -12,6 +12,5 @@
 	<name>CSPoker Client-Communication</name>
 	<modules>
 		<module>embedded</module>
-		<module>remote</module>
 	</modules>
 </project>
