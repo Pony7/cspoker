@@ -11,7 +11,6 @@
 	<packaging>pom</packaging>
 	<name>CSPoker Client-GUI</name>
 	<modules>
-		<module>text</module>
 		<module>swt</module>
 	</modules>
 	<dependencies>

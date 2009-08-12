@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml">
-	<mx:CheckBox x="10" y="30" label="Check/Fold" id="chkCheckFold"/>
-	<mx:CheckBox x="10" y="55" label="Fold" id="chkFold"/>
-	<mx:CheckBox x="10" y="6" label="Check" id="chkCheck"/>
-	<mx:CheckBox x="10" y="78" label="Call Any" id="chkCall"/>
-	
-</mx:Canvas>
