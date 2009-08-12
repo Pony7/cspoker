@@ -12,9 +12,6 @@
 	<name>CSPoker Server</name>
 	<modules>
 		<module>common</module>
-		<module>xml</module>
-		<module>rmi</module>
-		<module>allcommunication</module>
 	</modules>
 	<dependencies>
 		<dependency>

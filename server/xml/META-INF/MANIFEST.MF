@@ -1,4 +1,0 @@
-Manifest-Version: 1.0
-Sealed: true
-Class-Path: ../cfg/ cspoker-server-common.jar cspoker-common-common.jar cspoker-common-xml.jar log4j-1.2.14.jar jakarta-oro-2.0.8.jar
-Main-Class: org.cspoker.server.xml.http.RunHttpServer
