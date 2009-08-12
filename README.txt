@@ -1,10 +1,5 @@
 The build system requires Maven 2 to be installed.
 
-For the JavaFX client 2 third-party artifacts have to be added to the local Maven repository. 
-Go to the directory with the artifacts (client/gui/javafx/lib) and execute:
-  mvn install:install-file -DgroupId=net.java.javafx -DartifactId=javafxrt -Dversion=1.0 -Dpackaging=jar -DgeneratePom=true -Dfile=javafxrt-1.0.jar 
-  mvn install:install-file -DgroupId=javafx.netbeans.fxuserlib -DartifactId=javafx-netbeans-fxuserlib -Dversion=1.0 -Dpackaging=jar -DgeneratePom=true -Dfile=javafx-netbeans-fxuserlib-1.0.jar
-
 Build:
 ======
 Execute:
