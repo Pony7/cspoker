@@ -21,8 +21,8 @@ import java.net.MalformedURLException;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONSerializer;
 
-import org.cspoker.client.communication.pokersource.beans.Login;
-import org.cspoker.client.communication.pokersource.beans.Ping;
+import org.cspoker.client.communication.pokersource.beans.commands.Login;
+import org.cspoker.client.communication.pokersource.beans.commands.Ping;
 
 public class PokersourceConnection extends RESTConnection{
 

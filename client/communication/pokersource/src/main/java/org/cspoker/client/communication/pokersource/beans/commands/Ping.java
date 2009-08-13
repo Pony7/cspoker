@@ -13,17 +13,14 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.client.communication.pokersource.beans;
+package org.cspoker.client.communication.pokersource.beans.commands;
 
-import net.sf.json.JSONObject;
-import net.sf.json.JSONSerializer;
+import org.cspoker.client.communication.pokersource.beans.JSONBean;
 
-public abstract class JSONBean {
-
-	public JSONObject toJSONObject(){
-		return (JSONObject) JSONSerializer.toJSON( this );
-	}
+public class Ping extends JSONBean{
 	
-	public abstract String getType();  
+	public String getType() {
+		return "PacketPing";
+	}
 	
 }

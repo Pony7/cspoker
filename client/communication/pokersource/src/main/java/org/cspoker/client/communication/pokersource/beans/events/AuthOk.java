@@ -13,12 +13,14 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.client.communication.pokersource.beans;
+package org.cspoker.client.communication.pokersource.beans.events;
 
-public class Ping extends JSONBean{
+import org.cspoker.client.communication.pokersource.beans.JSONBean;
+
+public class AuthOk extends JSONBean{
 	
 	public String getType() {
-		return "PacketPing";
+		return "PacketAuthOk";
 	}
 	
 }
