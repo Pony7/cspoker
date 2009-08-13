@@ -13,41 +13,29 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.client.communication.pokersource.beans.events;
+package org.cspoker.client.communication.pokersource.commands;
 
 
-public class Serial extends JSONEvent{
-
-	public String getType() {
-		return getStaticType();
+public class TableJoin extends JSONCommand{
+	
+	public TableJoin(int serial, int game_id) {
+		this.serial = serial;
+		this.game_id = game_id;
 	}
 	
-	public static String getStaticType() {
-		return "PacketSerial";
-	}
+	private final int serial;
+	private final int game_id;
 	
-	private String cookie;
-	private int serial;
-
-	public String getCookie() {
-		return cookie;
-	}
-
-	public void setCookie(String cookie) {
-		this.cookie = cookie;
-	}
-
 	public int getSerial() {
 		return serial;
 	}
 
-	public void setSerial(int serial) {
-		this.serial = serial;
+	public int getGame_id() {
+		return game_id;
 	}
 
-	@Override
-	public void signal(EventListener listener) {
-		listener.onSerial(this);
+	public String getType() {
+		return "PacketTableJoin";
 	}
 	
 }

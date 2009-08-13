@@ -13,22 +13,13 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.client.communication.pokersource.beans.events;
+package org.cspoker.client.communication.pokersource.commands;
 
 
-public class AuthOk extends JSONEvent{
+public class Ping extends JSONCommand{
 	
 	public String getType() {
-		return getStaticType();
-	}
-	
-	public static String getStaticType() {
-		return "PacketAuthOk";
-	}
-	
-	@Override
-	public void signal(EventListener listener) {
-		listener.onAuthOk(this);
+		return "PacketPing";
 	}
 	
 }

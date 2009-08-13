@@ -13,10 +13,29 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.client.communication.pokersource.beans.commands;
+package org.cspoker.client.communication.pokersource.commands;
 
-import org.cspoker.client.communication.pokersource.beans.JSONBean;
 
-public abstract class JSONCommand extends JSONBean{
+public class Login extends JSONCommand{
+	
+	public Login(String user, String password) {
+		this.user = user;
+		this.password = password;
+	}
+	
+	private final String user;
+	private final String password;
 
+	public String getUser() {
+		return user;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public String getType() {
+		return "PacketLogin";
+	}
+	
 }
