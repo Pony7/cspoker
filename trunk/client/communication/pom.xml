@@ -12,5 +12,6 @@
 	<name>CSPoker Client-Communication</name>
 	<modules>
 		<module>embedded</module>
+		<module>pokersource</module>
 	</modules>
 </project>
