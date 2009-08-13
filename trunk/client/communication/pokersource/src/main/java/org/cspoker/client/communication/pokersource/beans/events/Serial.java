@@ -13,17 +13,33 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.client.communication.pokersource.beans;
+package org.cspoker.client.communication.pokersource.beans.events;
 
-import net.sf.json.JSONObject;
-import net.sf.json.JSONSerializer;
+import org.cspoker.client.communication.pokersource.beans.JSONBean;
 
-public abstract class JSONBean {
+public class Serial extends JSONBean{
 
-	public JSONObject toJSONObject(){
-		return (JSONObject) JSONSerializer.toJSON( this );
+	private String cookie;
+	private int serial;
+
+	public String getCookie() {
+		return cookie;
 	}
-	
-	public abstract String getType();  
+
+	public void setCookie(String cookie) {
+		this.cookie = cookie;
+	}
+
+	public int getSerial() {
+		return serial;
+	}
+
+	public void setSerial(int serial) {
+		this.serial = serial;
+	}
+
+	public String getType() {
+		return "PacketAuthOk";
+	}
 	
 }
