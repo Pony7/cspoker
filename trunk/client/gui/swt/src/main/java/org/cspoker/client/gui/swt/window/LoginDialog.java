@@ -18,9 +18,6 @@ import org.cspoker.client.User;
 import org.cspoker.client.gui.swt.control.ClientCore;
 import org.cspoker.client.gui.swt.control.ClientGUI;
 import org.cspoker.client.gui.swt.control.SWTResourceManager;
-import org.cspoker.client.rmi.RemoteRMIServer;
-import org.cspoker.client.xml.http.RemoteHTTPServer;
-import org.cspoker.client.xml.sockets.RemoteSocketServer;
 import org.cspoker.common.RemoteCSPokerServer;
 import org.cspoker.common.api.shared.context.RemoteServerContext;
 import org.eclipse.swt.SWT;
@@ -179,27 +176,27 @@ public class LoginDialog
 				 */
 				@Override
 				public void widgetSelected(SelectionEvent evt) {
-					try {
+//					try {
 						// RemoteCSPokerServer server =
 						// CommunicationProvider.global_provider.getProviders().get(0);
 						clientCore.setUser(new User(userNameText.getText(), passwordText.getText()));
 						String communicationType = communicationCombo.getText();
 						RemoteCSPokerServer server = null;
-						if (communicationType.equalsIgnoreCase("RMI")) {
-							server = new RemoteRMIServer(ClientCore.DEFAULT_URL, ClientCore.DEFAULT_PORT_RMI);
-						} else if (communicationType.equalsIgnoreCase("HTTP")) {
-							server = new RemoteHTTPServer(ClientCore.DEFAULT_URL, ClientCore.DEFAULT_PORT_HTTP);
-						} else if (communicationType.equalsIgnoreCase("SOCKETS")) {
-							server = new RemoteSocketServer(ClientCore.DEFAULT_URL, ClientCore.DEFAULT_PORT_SOCKET);
-						} else {
+//						if (communicationType.equalsIgnoreCase("RMI")) {
+//							server = new RemoteRMIServer(ClientCore.DEFAULT_URL, ClientCore.DEFAULT_PORT_RMI);
+//						} else if (communicationType.equalsIgnoreCase("HTTP")) {
+//							server = new RemoteHTTPServer(ClientCore.DEFAULT_URL, ClientCore.DEFAULT_PORT_HTTP);
+//						} else if (communicationType.equalsIgnoreCase("SOCKETS")) {
+//							server = new RemoteSocketServer(ClientCore.DEFAULT_URL, ClientCore.DEFAULT_PORT_SOCKET);
+//						} else {
 							throw new IllegalArgumentException("No communication specified");
-						}
-						result = clientCore.login(server);
-						assert (result != null) : "No exception thrown but still no Server Context?!";
-						getParent().close();
-					} catch (LoginException e) {
-						ClientGUI.displayException(e);
-					}
+//						}
+//						result = clientCore.login(server);
+//						assert (result != null) : "No exception thrown but still no Server Context?!";
+//						getParent().close();
+//					} catch (LoginException e) {
+//						ClientGUI.displayException(e);
+//					}
 					// Make sure we do have a RemoteServerContext before exiting
 					// the LoginDialog
 					

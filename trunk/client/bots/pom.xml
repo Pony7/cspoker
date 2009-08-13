@@ -20,7 +20,7 @@
 					</descriptorRefs>
 					<archive>
 						<manifest>
-							<mainClass>org.cspoker.client.bots.experiments.RunExperimentD</mainClass>
+							<mainClass>org.cspoker.client.bots.RunHumanVsBot</mainClass>
 						</manifest>
 					</archive>
 					<source>1.6</source>
@@ -38,13 +38,6 @@
 		</repository>
 	</repositories>
 	<dependencies>
-		<dependency>
-			<groupId>org.cspoker</groupId>
-			<artifactId>client-communication-remote-all</artifactId>
-			<version>0.1-SNAPSHOT</version>
-			<type>jar</type>
-			<scope>compile</scope>
-		</dependency>
 		<dependency>
 			<groupId>org.cspoker</groupId>
 			<artifactId>client-gui-swt</artifactId>
