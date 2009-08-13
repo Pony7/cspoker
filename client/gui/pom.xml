@@ -16,7 +16,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>org.cspoker</groupId>
-			<artifactId>client-communication-remote-all</artifactId>
+			<artifactId>client-common</artifactId>
 			<version>0.1-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
