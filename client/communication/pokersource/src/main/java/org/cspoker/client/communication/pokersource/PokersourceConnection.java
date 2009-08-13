@@ -25,45 +25,28 @@ import net.sf.json.JSONObject;
 import net.sf.json.JSONSerializer;
 import net.sf.json.JsonConfig;
 
-import org.cspoker.client.communication.pokersource.beans.commands.JSONCommand;
-import org.cspoker.client.communication.pokersource.beans.commands.Login;
-import org.cspoker.client.communication.pokersource.beans.commands.Ping;
-import org.cspoker.client.communication.pokersource.beans.events.AuthOk;
-import org.cspoker.client.communication.pokersource.beans.events.DefaultListener;
-import org.cspoker.client.communication.pokersource.beans.events.EventListener;
-import org.cspoker.client.communication.pokersource.beans.events.JSONEvent;
-import org.cspoker.client.communication.pokersource.beans.events.Serial;
+import org.apache.log4j.Logger;
+import org.cspoker.client.communication.pokersource.commands.JSONCommand;
+import org.cspoker.client.communication.pokersource.events.AuthOk;
+import org.cspoker.client.communication.pokersource.events.EventListener;
+import org.cspoker.client.communication.pokersource.events.JSONEvent;
+import org.cspoker.client.communication.pokersource.events.Serial;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
 
 public class PokersourceConnection extends RESTConnection{
-
-	public static void main(String[] args) throws IOException {
-		PokersourceConnection conn = new PokersourceConnection("http://pokersource.eu/POKER_REST");
-		conn.addListener(new DefaultListener(){
-			
-			@Override
-			public void onAuthOk(AuthOk authOk) {
-				System.out.println(authOk.toJSONObject().toString());
-			}
-			
-			@Override
-			public void onSerial(Serial serial) {
-				System.out.println(serial.toJSONObject().toString());
-			}
-			
-		});
-		conn.send(new Ping());
-		conn.send(new Login("foobar", "foobar"));
-	}
+	
+	private final static Logger logger = Logger.getLogger(PokersourceConnection.class);
 	
 	public PokersourceConnection(String server) throws MalformedURLException {
 		super(server);
 	}
 
 	public void send(JSONCommand command) throws IOException{
+		logger.info(command.toJSONObject());
 		String response = put(command.toJSONObject().toString());
+		logger.info(response);
 		JSONArray jsonResponse = (JSONArray) JSONSerializer.toJSON( response );
 		for(int i=0; i<jsonResponse.size();i++){
 			JSONObject jsonEvent = jsonResponse.getJSONObject(i);

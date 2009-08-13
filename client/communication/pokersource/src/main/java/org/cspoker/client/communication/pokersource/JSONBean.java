@@ -13,14 +13,21 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.client.communication.pokersource.beans.events;
+package org.cspoker.client.communication.pokersource;
 
-import org.cspoker.client.communication.pokersource.beans.JSONBean;
+import net.sf.json.JSONObject;
+import net.sf.json.JSONSerializer;
 
-abstract public class JSONEvent extends JSONBean{
+public abstract class JSONBean {
 
+	public JSONObject toJSONObject(){
+		return (JSONObject) JSONSerializer.toJSON( this );
+	}
 	
+	public void setType(String type){
+		if(!getType().equals(type)) throw new IllegalStateException(type+" should be "+getType());
+	}
 	
-	public abstract void signal(EventListener listener);
+	public abstract String getType();  
 	
 }

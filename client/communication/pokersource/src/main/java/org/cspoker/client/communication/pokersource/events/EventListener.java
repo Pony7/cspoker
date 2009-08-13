@@ -13,13 +13,12 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.client.communication.pokersource.beans.commands;
+package org.cspoker.client.communication.pokersource.events;
 
+public interface EventListener {
 
-public class Ping extends JSONCommand{
-	
-	public String getType() {
-		return "PacketPing";
-	}
-	
+	void onAuthOk(AuthOk authOk);
+
+	void onSerial(Serial serial);
+
 }

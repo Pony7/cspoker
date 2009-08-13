@@ -13,16 +13,10 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.client.communication.pokersource.beans.events;
+package org.cspoker.client.communication.pokersource.commands;
 
-public class DefaultListener implements EventListener{
+import org.cspoker.client.communication.pokersource.JSONBean;
 
-	@Override
-	public void onAuthOk(AuthOk authOk) {
-	}
-
-	@Override
-	public void onSerial(Serial serial) {
-	}
+public abstract class JSONCommand extends JSONBean{
 
 }
