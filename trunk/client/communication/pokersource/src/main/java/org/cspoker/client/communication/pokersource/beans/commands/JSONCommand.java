@@ -15,27 +15,8 @@
  */
 package org.cspoker.client.communication.pokersource.beans.commands;
 
+import org.cspoker.client.communication.pokersource.beans.JSONBean;
 
-public class Login extends JSONCommand{
-	
-	public Login(String user, String password) {
-		this.user = user;
-		this.password = password;
-	}
-	
-	private final String user;
-	private final String password;
+public abstract class JSONCommand extends JSONBean{
 
-	public String getUser() {
-		return user;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public String getType() {
-		return "PacketLogin";
-	}
-	
 }

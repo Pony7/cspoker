@@ -15,10 +15,17 @@
  */
 package org.cspoker.client.communication.pokersource.beans.events;
 
-import org.cspoker.client.communication.pokersource.beans.JSONBean;
 
-public class Serial extends JSONBean{
+public class Serial extends JSONEvent{
 
+	public String getType() {
+		return getStaticType();
+	}
+	
+	public static String getStaticType() {
+		return "PacketSerial";
+	}
+	
 	private String cookie;
 	private int serial;
 
@@ -38,8 +45,9 @@ public class Serial extends JSONBean{
 		this.serial = serial;
 	}
 
-	public String getType() {
-		return "PacketAuthOk";
+	@Override
+	public void signal(EventListener listener) {
+		listener.onSerial(this);
 	}
 	
 }
