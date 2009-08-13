@@ -15,12 +15,20 @@
  */
 package org.cspoker.client.communication.pokersource.beans.events;
 
-import org.cspoker.client.communication.pokersource.beans.JSONBean;
 
-public class AuthOk extends JSONBean{
+public class AuthOk extends JSONEvent{
 	
 	public String getType() {
+		return getStaticType();
+	}
+	
+	public static String getStaticType() {
 		return "PacketAuthOk";
+	}
+	
+	@Override
+	public void signal(EventListener listener) {
+		listener.onAuthOk(this);
 	}
 	
 }

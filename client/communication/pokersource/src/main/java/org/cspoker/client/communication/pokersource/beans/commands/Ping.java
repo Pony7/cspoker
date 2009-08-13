@@ -15,9 +15,8 @@
  */
 package org.cspoker.client.communication.pokersource.beans.commands;
 
-import org.cspoker.client.communication.pokersource.beans.JSONBean;
 
-public class Ping extends JSONBean{
+public class Ping extends JSONCommand{
 	
 	public String getType() {
 		return "PacketPing";
