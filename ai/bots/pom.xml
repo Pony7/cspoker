@@ -10,48 +10,7 @@
 	<artifactId>ai-bots</artifactId>
 	<packaging>jar</packaging>
 	<name>CSPoker AI-Bots</name>
-	<build>
-		<plugins>
-			<plugin>
-				<artifactId>maven-assembly-plugin</artifactId>
-				<configuration>
-					<descriptorRefs>
-						<descriptorRef>jar-with-dependencies</descriptorRef>
-					</descriptorRefs>
-					<archive>
-						<manifest>
-							<mainClass>org.cspoker.client.bots.RunHumanVsBot</mainClass>
-						</manifest>
-					</archive>
-					<source>1.6</source>
-					<target>1.6</target>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
-	<repositories>
-		<repository>
-			<id>public.cspoker.org</id>
-			<name>CSPoker Repository for Maven</name>
-			<url>http://cspoker.org:8080/nexus/content/groups/public/</url>
-			<layout>default</layout>
-		</repository>
-	</repositories>
 	<dependencies>
-		<dependency>
-			<groupId>org.cspoker</groupId>
-			<artifactId>client-gui-swt</artifactId>
-			<version>0.1-SNAPSHOT</version>
-			<type>jar</type>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.cspoker</groupId>
-			<artifactId>client-communication-embedded</artifactId>
-			<version>0.1-SNAPSHOT</version>
-			<type>jar</type>
-			<scope>compile</scope>
-		</dependency>
 		<dependency>
 			<groupId>org.cspoker</groupId>
 			<artifactId>common-handeval</artifactId>
@@ -60,24 +19,11 @@
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
-			<groupId>it.unibo.tuProlog</groupId>
-			<artifactId>tuProlog</artifactId>
-			<version>2.1.1</version>
-		</dependency>
-		<dependency>
-			<groupId>org.cspoker.client.bots</groupId>
-			<artifactId>prologmodel</artifactId>
-			<version>0.9</version>
-		</dependency>
-		<dependency>
-			<groupId>jp.ac.kobe_u.cs.prolog</groupId>
-			<artifactId>external-plcafe</artifactId>
-			<version>1.2.5-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>cs.waikato.ac.nz</groupId>
-			<artifactId>weka</artifactId>
-			<version>3.6.0</version>
+			<groupId>org.cspoker</groupId>
+			<artifactId>client-common</artifactId>
+			<version>0.1-SNAPSHOT</version>
+			<type>jar</type>
+			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>commons-math</groupId>

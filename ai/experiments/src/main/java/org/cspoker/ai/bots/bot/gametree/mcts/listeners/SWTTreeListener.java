@@ -17,7 +17,6 @@ package org.cspoker.ai.bots.bot.gametree.mcts.listeners;
 
 import org.apache.log4j.Logger;
 import org.cspoker.ai.bots.bot.gametree.action.ProbabilityAction;
-import org.cspoker.ai.bots.bot.gametree.action.SearchBotAction;
 import org.cspoker.ai.bots.bot.gametree.mcts.nodes.INode;
 import org.cspoker.ai.bots.bot.gametree.mcts.nodes.InnerNode;
 import org.cspoker.ai.bots.bot.gametree.mcts.nodes.MCTSShowdownRollOutNode;
@@ -56,8 +55,6 @@ public class SWTTreeListener implements MCTSListener {
 		this.botId = botId;
 		this.startRound = gameState.getRound();
 	}
-
-
 
 	@Override
 	public void onMCTS(RootNode node) {
