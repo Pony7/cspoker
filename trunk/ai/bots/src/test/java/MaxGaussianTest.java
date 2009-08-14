@@ -1,4 +1,4 @@
-import org.cspoker.client.bots.util.Gaussian;
+import org.cspoker.ai.bots.util.Gaussian;
 
 import junit.framework.TestCase;
 
