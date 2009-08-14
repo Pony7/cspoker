@@ -10,29 +10,6 @@
 	<artifactId>client-communication-pokersource</artifactId>
 	<packaging>jar</packaging>
 	<name>CSPoker Pokersource Adaptor</name>
-	<build>
-		<plugins>
-			<plugin>
-			    <groupId>org.codehaus.mojo</groupId>
-                <artifactId>cobertura-maven-plugin</artifactId>
-			</plugin>
-			<plugin>
-				<artifactId>maven-assembly-plugin</artifactId>
-				<configuration>
-					<descriptorRefs>
-						<descriptorRef>jar-with-dependencies</descriptorRef>
-					</descriptorRefs>
-					<archive>
-						<manifest>
-							<mainClass>org.cspoker.client.communication.pokersource.TestScenario</mainClass>
-						</manifest>
-					</archive>
-					<source>1.6</source>
-					<target>1.6</target>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
 	<dependencies>
 		<dependency>
 			<groupId>net.sf.json-lib</groupId>
