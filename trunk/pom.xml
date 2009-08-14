@@ -32,7 +32,13 @@
 			<url>http://download.java.net/maven/1</url>
 			<layout>legacy</layout>
 		</repository>
-	</repositories>
+		<repository>
+			<id>public.cspoker.org</id>
+			<name>CSPoker Repository for Maven</name>
+			<url>http://cspoker.org:8080/nexus/content/groups/public/</url>
+			<layout>default</layout>
+		</repository>
+		</repositories>
 	<build>
 		<defaultGoal>install</defaultGoal>
 		<pluginManagement>

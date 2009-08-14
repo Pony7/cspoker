@@ -13,7 +13,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.ai.bots.experiments;
+package org.cspoker.ai.experiments;
 
 import java.io.IOException;
 
@@ -28,44 +28,35 @@ import org.cspoker.ai.bots.bot.gametree.mcts.strategies.backpropagation.SampleWe
 import org.cspoker.ai.bots.bot.gametree.mcts.strategies.selection.MaxValueSelector;
 import org.cspoker.ai.bots.bot.gametree.mcts.strategies.selection.SamplingSelector;
 import org.cspoker.ai.bots.bot.gametree.mcts.strategies.selection.SamplingToFunctionSelector;
-import org.cspoker.ai.bots.bot.gametree.mcts.strategies.selection.UCTPlusSelector;
 import org.cspoker.ai.bots.bot.gametree.mcts.strategies.selection.UCTSelector;
+import org.cspoker.ai.bots.bot.rule.CardBotFactory;
+import org.cspoker.ai.bots.bot.rule.HandBotFactory;
 import org.cspoker.ai.opponentmodels.weka.WekaRegressionModelFactory;
 import org.cspoker.client.communication.embedded.EmbeddedCSPokerServer;
 
 @Deprecated
-public class RunExperimentC {
+public class RunExperimentF {
 
 	public static void main(String[] args) throws IOException, ClassNotFoundException {
 
 		if(args[0].equals("time")){
 
 			int time = Integer.parseInt(args[1]);
-
+			
 			int C = Integer.parseInt(args[2]);
-			int C2 = Integer.parseInt(args[3]);
+			int treshold1 = Integer.parseInt(args[3]);
 			
-			int treshold1 = Integer.parseInt(args[4]);
-			
-			int treshold2 = Integer.parseInt(args[5]);
+			int treshold2 = Integer.parseInt(args[4]);
 
 			new BotRunner(
 					new EmbeddedCSPokerServer(),
 					new BotFactory[] {
-						new MCTSBotFactory(
-								"Standard Bot",
-								WekaRegressionModelFactory.createForZip("org/cspoker/client/bots/bot/search/opponentmodel/weka/models/model1.zip"),
-								new SamplingToFunctionSelector(treshold1,new UCTSelector(C)),
-								new SamplingSelector(),
-								new MaxValueSelector(),
-								new MCTSBucketShowdownNode.Factory(),
-								new SampleWeightedBackPropStrategy.Factory(),
-								time
-						),
+						new CardBotFactory("CardBot"),
+						new HandBotFactory("HandBot"),
 						new MCTSBotFactory(
 								"MaxDistribution Bot",
 								WekaRegressionModelFactory.createForZip("org/cspoker/client/bots/bot/search/opponentmodel/weka/models/model1.zip"),
-								new SamplingToFunctionSelector(treshold1,new UCTPlusSelector(C, C2)),
+								new SamplingToFunctionSelector(treshold1,new UCTSelector(C)),
 								new SamplingSelector(),
 								new MaxValueSelector(),
 								new MCTSBucketShowdownNode.Factory(),
@@ -86,29 +77,20 @@ public class RunExperimentC {
 			int r = Integer.parseInt(args[4]);
 			
 			int C = Integer.parseInt(args[5]);
-			double C2 = Double.parseDouble(args[6]);
-			int treshold1 = Integer.parseInt(args[7]);
+			int treshold1 = Integer.parseInt(args[6]);
 
-			int treshold2 = Integer.parseInt(args[8]);
+			int treshold2 = Integer.parseInt(args[7]);
 
 
 			new BotRunner(
 					new EmbeddedCSPokerServer(),
 					new BotFactory[] {
-						new FixedSampleMCTSBotFactory(
-								"Standard Bot",
-								WekaRegressionModelFactory.createForZip("org/cspoker/client/bots/bot/search/opponentmodel/weka/models/model1.zip"),
-								new SamplingToFunctionSelector(treshold1,new UCTSelector(C)),
-								new SamplingSelector(),
-								new MaxValueSelector(),
-								new MCTSBucketShowdownNode.Factory(),
-								new SampleWeightedBackPropStrategy.Factory(),
-								p,f,t,r
-						),
+						new CardBotFactory("CardBot"),
+						new HandBotFactory("HandBot"),
 						new FixedSampleMCTSBotFactory(
 								"MaxDistribution Bot",
 								WekaRegressionModelFactory.createForZip("org/cspoker/client/bots/bot/search/opponentmodel/weka/models/model1.zip"),
-								new SamplingToFunctionSelector(treshold1,new UCTPlusSelector(C, C2)),
+								new SamplingToFunctionSelector(treshold1,new UCTSelector(C)),
 								new SamplingSelector(),
 								new MaxValueSelector(),
 								new MCTSBucketShowdownNode.Factory(),
