@@ -20,7 +20,7 @@ import net.jcip.annotations.Immutable;
 import org.cspoker.ai.bots.bot.gametree.mcts.nodes.ShowdownNode.Factory;
 import org.cspoker.ai.bots.bot.gametree.mcts.strategies.backpropagation.BackPropagationStrategy;
 import org.cspoker.ai.bots.bot.gametree.mcts.strategies.selection.SelectionStrategy;
-import org.cspoker.ai.bots.bot.gametree.opponentmodel.OpponentModel;
+import org.cspoker.ai.opponentmodels.OpponentModel;
 
 @Immutable
 public class Config {

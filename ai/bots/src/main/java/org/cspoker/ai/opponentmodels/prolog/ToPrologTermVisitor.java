@@ -13,7 +13,7 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.ai.bots.bot.gametree.opponentmodel.prolog;
+package org.cspoker.ai.opponentmodels.prolog;
 
 import jp.ac.kobe_u.cs.prolog.lang.IntegerTerm;
 import jp.ac.kobe_u.cs.prolog.lang.StructureTerm;

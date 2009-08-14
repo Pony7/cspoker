@@ -33,11 +33,11 @@ import org.cspoker.ai.bots.bot.gametree.mcts.strategies.selection.SamplingSelect
 import org.cspoker.ai.bots.bot.gametree.mcts.strategies.selection.SamplingToFunctionSelector;
 import org.cspoker.ai.bots.bot.gametree.mcts.strategies.selection.UCTPlusPlusSelector;
 import org.cspoker.ai.bots.bot.gametree.mcts.strategies.selection.UCTSelector;
-import org.cspoker.ai.bots.bot.gametree.opponentmodel.weka.WekaRegressionModelFactory;
 import org.cspoker.ai.bots.bot.gametree.search.nodevisitor.StatisticsVisitor;
 import org.cspoker.ai.bots.listener.DefaultBotListener;
 import org.cspoker.ai.bots.listener.ProfitCalculator;
 import org.cspoker.ai.bots.listener.ProfitListener;
+import org.cspoker.ai.opponentmodels.weka.WekaRegressionModelFactory;
 import org.cspoker.client.User;
 import org.cspoker.client.common.SmartClientContext;
 import org.cspoker.client.common.SmartLobbyContext;

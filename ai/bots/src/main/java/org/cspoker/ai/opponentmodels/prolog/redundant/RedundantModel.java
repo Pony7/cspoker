@@ -13,11 +13,11 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.ai.bots.bot.gametree.opponentmodel.prolog.redundant;
+package org.cspoker.ai.opponentmodels.prolog.redundant;
 
 import java.util.Collection;
 
-import org.cspoker.ai.bots.bot.gametree.opponentmodel.OpponentModel;
+import org.cspoker.ai.opponentmodels.OpponentModel;
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.util.Pair;

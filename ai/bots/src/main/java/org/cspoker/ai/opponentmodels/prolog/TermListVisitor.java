@@ -1,5 +1,4 @@
 /**
-
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -14,24 +13,37 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.ai.bots.bot.gametree.opponentmodel.prolog.cafe;
+package org.cspoker.ai.opponentmodels.prolog;
 
-import jp.ac.kobe_u.cs.prolog.lang.PrologControl;
-import net.jcip.annotations.ThreadSafe;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
-import org.cspoker.ai.bots.bot.gametree.opponentmodel.OpponentModel;
+import jp.ac.kobe_u.cs.prolog.lang.StructureTerm;
 
-@ThreadSafe
-public class PrologCafeModelFactory implements OpponentModel.Factory {
+import org.apache.log4j.Logger;
 
-	@Override
-	public OpponentModel create() {
-		PrologControl prolog = new PrologControl();
-		return new PrologCafeModel(prolog);
+public class TermListVisitor extends ToPrologTermVisitor {
+
+	private final static Logger logger = Logger
+			.getLogger(TermListVisitor.class);
+
+	private final List<StructureTerm> terms = new ArrayList<StructureTerm>();
+
+	public TermListVisitor() {
+		super();
 	}
-	
+
+	public TermListVisitor(LoggingVisitor root) {
+		super(root);
+	}
+
 	@Override
-	public String toString() {
-		return "PrologCafeModel";
+	protected void addTerm(StructureTerm term) {
+		terms.add(term);
+	}
+
+	public List<StructureTerm> getTerms() {
+		return Collections.unmodifiableList(terms);
 	}
 }

@@ -15,8 +15,8 @@
  */
 package org.cspoker.ai.bots.bot.gametree.search;
 
-import org.cspoker.ai.bots.bot.gametree.opponentmodel.OpponentModel;
 import org.cspoker.ai.bots.bot.gametree.search.expander.TokenExpander;
+import org.cspoker.ai.opponentmodels.OpponentModel;
 
 public class SearchConfiguration {
 

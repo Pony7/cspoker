@@ -36,13 +36,13 @@ import org.cspoker.ai.bots.bot.gametree.mcts.strategies.selection.SamplingSelect
 import org.cspoker.ai.bots.bot.gametree.mcts.strategies.selection.SamplingToFunctionSelector;
 import org.cspoker.ai.bots.bot.gametree.mcts.strategies.selection.UCTPlusPlusSelector;
 import org.cspoker.ai.bots.bot.gametree.mcts.strategies.selection.UCTSelector;
-import org.cspoker.ai.bots.bot.gametree.opponentmodel.weka.WekaRegressionModelFactory;
 import org.cspoker.ai.bots.listener.BotListener;
 import org.cspoker.ai.bots.listener.CSVLogListener;
 import org.cspoker.ai.bots.listener.GameLimitingBotListener;
 import org.cspoker.ai.bots.listener.ReSitInBotListener;
 import org.cspoker.ai.bots.listener.SpeedTestBotListener;
 import org.cspoker.ai.bots.util.CombinationGenerator;
+import org.cspoker.ai.opponentmodels.weka.WekaRegressionModelFactory;
 import org.cspoker.client.common.SmartClientContext;
 import org.cspoker.client.common.SmartLobbyContext;
 import org.cspoker.common.RemoteCSPokerServer;
