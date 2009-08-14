@@ -16,8 +16,8 @@
 package org.cspoker.ai.bots.bot.gametree.mcts.nodes;
 
 import org.cspoker.ai.bots.bot.gametree.action.ProbabilityAction;
-import org.cspoker.ai.bots.bot.gametree.opponentmodel.OpponentModel;
 import org.cspoker.ai.bots.bot.gametree.rollout.BucketRollOut;
+import org.cspoker.ai.opponentmodels.OpponentModel;
 import org.cspoker.client.common.gamestate.GameState;
 
 public class MCTSBucketShowdownNode extends ShowdownNode {

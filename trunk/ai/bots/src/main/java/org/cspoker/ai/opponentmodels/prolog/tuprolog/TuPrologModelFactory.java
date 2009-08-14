@@ -14,53 +14,42 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.ai.bots.bot.gametree.opponentmodel.prolog.redundant;
+package org.cspoker.ai.opponentmodels.prolog.tuprolog;
 
 import java.io.IOException;
-import java.util.Arrays;
 
-import jp.ac.kobe_u.cs.prolog.lang.PrologControl;
 import net.jcip.annotations.ThreadSafe;
 
-import org.cspoker.ai.bots.bot.gametree.opponentmodel.OpponentModel;
-import org.cspoker.ai.bots.bot.gametree.opponentmodel.prolog.cafe.PrologCafeModel;
-import org.cspoker.ai.bots.bot.gametree.opponentmodel.prolog.tuprolog.TuPrologModel;
-import org.cspoker.common.elements.player.PlayerId;
+import org.cspoker.ai.opponentmodels.OpponentModel;
 
 import alice.tuprolog.InvalidTheoryException;
 import alice.tuprolog.Prolog;
 import alice.tuprolog.Theory;
 
 @ThreadSafe
-@Deprecated
-public class RedundantModelFactory implements OpponentModel.Factory {
+public class TuPrologModelFactory implements OpponentModel.Factory {
 
 	@Override
 	public OpponentModel create() {
-		PrologControl prolog = new PrologControl();
-		PrologCafeModel model1 = new PrologCafeModel(prolog);
-
 		Prolog engine = new Prolog();
 		try {
 			Theory theory1 = new Theory(
 					this
-					.getClass()
-					.getClassLoader()
-					.getResourceAsStream(
-							"org/cspoker/client/bots/bot/search/opponentmodel/prolog/tuprolog/theory.pl"));
+							.getClass()
+							.getClassLoader()
+							.getResourceAsStream(
+									"org/cspoker/client/bots/bot/search/opponentmodel/prolog/tuprolog/theory.pl"));
 			engine.setTheory(theory1);
 		} catch (IOException e1) {
 			throw new IllegalStateException(e1);
 		} catch (InvalidTheoryException e2) {
 			throw new IllegalStateException(e2);
 		}
-		TuPrologModel model2 = new TuPrologModel(engine);
-
-		return new RedundantModel(Arrays.asList(model1,model2));
+		return new TuPrologModel(engine);
 	}
-
+			
 	@Override
 	public String toString() {
-		return "RedundantModel";
+		return "TuPrologModel";
 	}
 }

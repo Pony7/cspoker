@@ -13,7 +13,7 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.ai.bots.bot.gametree.opponentmodel.prolog;
+package org.cspoker.ai.opponentmodels.prolog;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
@@ -23,7 +23,7 @@ import jp.ac.kobe_u.cs.prolog.lang.StructureTerm;
 import jp.ac.kobe_u.cs.prolog.lang.SymbolTerm;
 
 import org.apache.log4j.Logger;
-import org.cspoker.ai.bots.bot.gametree.opponentmodel.OpponentModel;
+import org.cspoker.ai.opponentmodels.OpponentModel;
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.util.Pair;

@@ -21,10 +21,10 @@ import java.util.concurrent.ExecutorService;
 
 import org.cspoker.ai.bots.bot.Bot;
 import org.cspoker.ai.bots.bot.BotFactory;
-import org.cspoker.ai.bots.bot.gametree.opponentmodel.OpponentModel;
 import org.cspoker.ai.bots.bot.gametree.search.expander.SamplingExpander;
 import org.cspoker.ai.bots.bot.gametree.search.nodevisitor.NodeVisitor;
 import org.cspoker.ai.bots.listener.BotListener;
+import org.cspoker.ai.opponentmodels.OpponentModel;
 import org.cspoker.client.common.SmartLobbyContext;
 import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.elements.table.TableId;

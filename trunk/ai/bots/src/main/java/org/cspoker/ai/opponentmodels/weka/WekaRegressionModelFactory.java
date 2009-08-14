@@ -14,7 +14,7 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.ai.bots.bot.gametree.opponentmodel.weka;
+package org.cspoker.ai.opponentmodels.weka;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -27,7 +27,7 @@ import java.util.zip.ZipInputStream;
 import net.jcip.annotations.ThreadSafe;
 
 import org.apache.log4j.Logger;
-import org.cspoker.ai.bots.bot.gametree.opponentmodel.OpponentModel;
+import org.cspoker.ai.opponentmodels.OpponentModel;
 
 import weka.classifiers.Classifier;
 

@@ -20,7 +20,7 @@ import java.util.Iterator;
 import java.util.TreeMap;
 
 import org.apache.log4j.Logger;
-import org.cspoker.ai.bots.bot.gametree.opponentmodel.OpponentModel;
+import org.cspoker.ai.opponentmodels.OpponentModel;
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.client.common.gamestate.PlayerState;
 import org.cspoker.common.elements.cards.Card;

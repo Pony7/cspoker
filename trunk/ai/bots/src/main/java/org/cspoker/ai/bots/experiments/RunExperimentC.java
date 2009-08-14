@@ -30,7 +30,7 @@ import org.cspoker.ai.bots.bot.gametree.mcts.strategies.selection.SamplingSelect
 import org.cspoker.ai.bots.bot.gametree.mcts.strategies.selection.SamplingToFunctionSelector;
 import org.cspoker.ai.bots.bot.gametree.mcts.strategies.selection.UCTPlusSelector;
 import org.cspoker.ai.bots.bot.gametree.mcts.strategies.selection.UCTSelector;
-import org.cspoker.ai.bots.bot.gametree.opponentmodel.weka.WekaRegressionModelFactory;
+import org.cspoker.ai.opponentmodels.weka.WekaRegressionModelFactory;
 import org.cspoker.client.communication.embedded.EmbeddedCSPokerServer;
 
 @Deprecated

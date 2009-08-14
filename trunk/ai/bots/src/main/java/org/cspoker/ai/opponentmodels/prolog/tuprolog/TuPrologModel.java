@@ -13,7 +13,7 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.ai.bots.bot.gametree.opponentmodel.prolog.tuprolog;
+package org.cspoker.ai.opponentmodels.prolog.tuprolog;
 
 import jp.ac.kobe_u.cs.prolog.builtin.PRED_assert_1;
 import jp.ac.kobe_u.cs.prolog.builtin.PRED_prior_action_probability_6;
@@ -23,8 +23,8 @@ import jp.ac.kobe_u.cs.prolog.lang.SymbolTerm;
 import jp.ac.kobe_u.cs.prolog.lang.VariableTerm;
 
 import org.apache.log4j.Logger;
-import org.cspoker.ai.bots.bot.gametree.opponentmodel.prolog.AbstractPrologModel;
-import org.cspoker.ai.bots.bot.gametree.opponentmodel.prolog.ToPrologTermVisitor;
+import org.cspoker.ai.opponentmodels.prolog.AbstractPrologModel;
+import org.cspoker.ai.opponentmodels.prolog.ToPrologTermVisitor;
 import org.cspoker.common.elements.player.PlayerId;
 
 import alice.tuprolog.MalformedGoalException;
