@@ -4,12 +4,12 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.cspoker</groupId>
-		<artifactId>client</artifactId>
+		<artifactId>ai</artifactId>
 		<version>0.1-SNAPSHOT</version>
 	</parent>
-	<artifactId>client-bots</artifactId>
+	<artifactId>ai-bots</artifactId>
 	<packaging>jar</packaging>
-	<name>CSPoker Client-Bots</name>
+	<name>CSPoker AI-Bots</name>
 	<build>
 		<plugins>
 			<plugin>
