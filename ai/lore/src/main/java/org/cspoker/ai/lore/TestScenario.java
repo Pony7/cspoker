@@ -13,11 +13,12 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.client.communication.pokersource;
+package org.cspoker.ai.lore;
 
 import java.io.IOException;
 
 import org.apache.log4j.Logger;
+import org.cspoker.client.communication.pokersource.PokersourceConnection;
 import org.cspoker.client.communication.pokersource.commands.Login;
 import org.cspoker.client.communication.pokersource.commands.Ping;
 import org.cspoker.client.communication.pokersource.commands.TableJoin;
@@ -30,7 +31,7 @@ public class TestScenario {
 	
 	static {
 		Log4JPropertiesLoader
-		.load("org/cspoker/client/communication/pokersource/logging/log4j.properties");
+		.load("org/cspoker/ai/lore/logging/log4j.properties");
 	}
 	
 	private final static Logger logger = Logger.getLogger(TestScenario.class);

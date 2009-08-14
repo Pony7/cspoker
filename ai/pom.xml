@@ -14,6 +14,7 @@
 		<module>bots</module>
 		<module>opponentmodels</module>
 		<module>experiments</module>
+		<module>lore</module>
 	</modules>
 	<dependencies>
 		<dependency>
