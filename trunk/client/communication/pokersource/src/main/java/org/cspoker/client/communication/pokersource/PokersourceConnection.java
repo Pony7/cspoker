@@ -27,11 +27,27 @@ import net.sf.json.JsonConfig;
 
 import org.apache.log4j.Logger;
 import org.cspoker.client.communication.pokersource.commands.JSONCommand;
-import org.cspoker.client.communication.pokersource.events.AuthOk;
-import org.cspoker.client.communication.pokersource.events.EventListener;
+import org.cspoker.client.communication.pokersource.commands.Logout;
+import org.cspoker.client.communication.pokersource.eventlisteners.all.AllEventListener;
 import org.cspoker.client.communication.pokersource.events.JSONEvent;
-import org.cspoker.client.communication.pokersource.events.PokerPlayerInfo;
-import org.cspoker.client.communication.pokersource.events.Serial;
+import org.cspoker.client.communication.pokersource.events.general.AuthOk;
+import org.cspoker.client.communication.pokersource.events.general.Serial;
+import org.cspoker.client.communication.pokersource.events.poker.AutoBlindAnte;
+import org.cspoker.client.communication.pokersource.events.poker.BatchMode;
+import org.cspoker.client.communication.pokersource.events.poker.BuyInLimits;
+import org.cspoker.client.communication.pokersource.events.poker.PlayerArrive;
+import org.cspoker.client.communication.pokersource.events.poker.PlayerChips;
+import org.cspoker.client.communication.pokersource.events.poker.PlayerInfo;
+import org.cspoker.client.communication.pokersource.events.poker.PlayerLeave;
+import org.cspoker.client.communication.pokersource.events.poker.PlayerStats;
+import org.cspoker.client.communication.pokersource.events.poker.Seat;
+import org.cspoker.client.communication.pokersource.events.poker.Seats;
+import org.cspoker.client.communication.pokersource.events.poker.Sit;
+import org.cspoker.client.communication.pokersource.events.poker.StreamMode;
+import org.cspoker.client.communication.pokersource.events.poker.Table;
+import org.cspoker.client.communication.pokersource.events.poker.UserInfo;
+import org.cspoker.client.communication.pokersource.events.poker.client.ClientPlayerChips;
+import org.cspoker.client.communication.pokersource.events.poker.client.CurrentGames;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
@@ -45,33 +61,61 @@ public class PokersourceConnection extends RESTConnection{
 	}
 
 	public void send(JSONCommand command) throws IOException{
-		logger.info(command.toJSONObject());
-		String response = put(command.toJSONObject().toString());
-		logger.info(response);
+		logger.info("Sending: "+command.getClass().getSimpleName()+": "+command);
+		String response = put(command.toString());
+		logger.info("Received: "+response);
 		JSONArray jsonResponse = (JSONArray) JSONSerializer.toJSON( response );
+		signalEvents(jsonResponse);
+	}
+
+	private void signalEvents(JSONArray jsonResponse) {
 		for(int i=0; i<jsonResponse.size();i++){
 			JSONObject jsonEvent = jsonResponse.getJSONObject(i);
 			JsonConfig jsonConfig = new JsonConfig();  
-			jsonConfig.setRootClass( eventTypes.get(jsonEvent.get("type")) );  
-			JSONEvent event = (JSONEvent) JSONSerializer.toJava( jsonEvent, jsonConfig );  
-			signal(event);
+			jsonConfig.setRootClass( eventTypes.get(jsonEvent.get("type")) ); 
+			try {
+				JSONEvent event = (JSONEvent) JSONSerializer.toJava( jsonEvent, jsonConfig );  
+				signal(event);
+			} catch (ClassCastException e) {
+				throw new IllegalStateException("Couldn't unmarshall: "+jsonEvent,e);
+			}
 		}
 	}
 	
-	private final List<EventListener> listeners = new CopyOnWriteArrayList<EventListener>();
+	private final List<AllEventListener> listeners = new CopyOnWriteArrayList<AllEventListener>();
 	
-	public void addListener(EventListener listener){
+	public void addListener(AllEventListener listener){
 		listeners.add(listener);
 	}
 	
 	private void signal(JSONEvent event) {
-		for(EventListener listener:listeners) event.signal(listener);
+		for(AllEventListener listener:listeners) event.signal(listener);
+	}
+
+	public void close() throws IOException {
+		send(new Logout());
+		super.close();
 	}
 
 	private final static ImmutableMap<String, Class<? extends JSONEvent>> eventTypes = 
 		(new Builder<String, Class<? extends JSONEvent>>())
 		.put(AuthOk.getStaticType(), AuthOk.class)
 		.put(Serial.getStaticType(), Serial.class)
-		.put(PokerPlayerInfo.getStaticType(), PokerPlayerInfo.class)
+		.put(PlayerInfo.getStaticType(), PlayerInfo.class)
+		.put(Table.getStaticType(), Table.class)
+		.put(CurrentGames.getStaticType(), CurrentGames.class)
+		.put(BuyInLimits.getStaticType(), BuyInLimits.class)
+		.put(BatchMode.getStaticType(), BatchMode.class)
+		.put(PlayerLeave.getStaticType(), PlayerLeave.class)
+		.put(PlayerArrive.getStaticType(), PlayerArrive.class)
+		.put(Seats.getStaticType(), Seats.class)
+		.put(PlayerStats.getStaticType(), PlayerStats.class)
+		.put(PlayerChips.getStaticType(), PlayerChips.class)
+		.put(ClientPlayerChips.getStaticType(), ClientPlayerChips.class)
+		.put(Sit.getStaticType(), Sit.class)
+		.put(StreamMode.getStaticType(), StreamMode.class)
+		.put(UserInfo.getStaticType(), UserInfo.class)
+		.put(AutoBlindAnte.getStaticType(), AutoBlindAnte.class)
+		.put(Seat.getStaticType(), Seat.class)
 		.build();
 }

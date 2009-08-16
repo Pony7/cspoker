@@ -13,14 +13,15 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.client.communication.pokersource.events;
+package org.cspoker.client.communication.pokersource.eventlisteners.general;
 
-public interface EventListener {
+import org.cspoker.client.communication.pokersource.events.general.AuthOk;
+import org.cspoker.client.communication.pokersource.events.general.Serial;
+
+public interface GeneralEventListener {
 
 	void onAuthOk(AuthOk authOk);
 
 	void onSerial(Serial serial);
-
-	void onPokerPlayerInfo(PokerPlayerInfo pokerPlayerInfo);
-
+	
 }

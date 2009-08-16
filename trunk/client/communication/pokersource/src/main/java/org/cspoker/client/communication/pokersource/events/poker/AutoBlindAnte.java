@@ -13,20 +13,24 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.client.communication.pokersource.events;
+package org.cspoker.client.communication.pokersource.events.poker;
 
-public class DefaultListener implements EventListener{
+import org.cspoker.client.communication.pokersource.eventlisteners.poker.PokerEventListener;
 
-	@Override
-	public void onAuthOk(AuthOk authOk) {
+
+public class AutoBlindAnte extends Id{
+
+	public String getType() {
+		return getStaticType();
 	}
-
-	@Override
-	public void onSerial(Serial serial) {
+	
+	public static String getStaticType() {
+		return "PacketPokerAutoBlindAnte";
 	}
 	
 	@Override
-	public void onPokerPlayerInfo(PokerPlayerInfo pokerPlayerInfo) {
+	public void signal(PokerEventListener listener) {
+		listener.onAutoBlindAnte(this);
 	}
 
 }

@@ -13,17 +13,27 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.client.communication.pokersource.events;
+package org.cspoker.client.communication.pokersource.events.general;
 
-import org.cspoker.client.communication.pokersource.JSONBean;
 import org.cspoker.client.communication.pokersource.eventlisteners.all.AllEventListener;
 import org.cspoker.client.communication.pokersource.eventlisteners.general.GeneralEventListener;
 import org.cspoker.client.communication.pokersource.eventlisteners.poker.PokerEventListener;
+import org.cspoker.client.communication.pokersource.events.JSONEvent;
 
-abstract public class JSONEvent extends JSONBean{
+abstract public class GeneralEvent extends JSONEvent{
 
-	public abstract void signal(GeneralEventListener generalListener, PokerEventListener pokerListener);
+	public abstract void signal(GeneralEventListener listener);
 	
-	public abstract void signal(AllEventListener listener);
+	@Override
+	public void signal(AllEventListener listener) {
+		//why is this even needed???
+		signal((GeneralEventListener)listener);
+	}
+	
+	@Override
+	public void signal(GeneralEventListener generalListener, PokerEventListener pokerListener) {
+		signal(generalListener);
+	}
+	
 	
 }

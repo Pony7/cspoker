@@ -13,22 +13,20 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.client.communication.pokersource.events;
+package snippet;
 
+import java.util.HashMap;
+import java.util.Map;
 
-public class AuthOk extends JSONEvent{
-	
-	public String getType() {
-		return getStaticType();
+import net.sf.json.JSONObject;
+
+public class Snippet {
+	public static void main(String[] args) {
+		Map list = new HashMap();  
+		list.put( "first", 0 );  
+		list.put( "second",1 );  
+		JSONObject jsonArray = JSONObject.fromObject( list );  
+		System.out.println( jsonArray );  
 	}
-	
-	public static String getStaticType() {
-		return "PacketAuthOk";
-	}
-	
-	@Override
-	public void signal(EventListener listener) {
-		listener.onAuthOk(this);
-	}
-	
 }
+

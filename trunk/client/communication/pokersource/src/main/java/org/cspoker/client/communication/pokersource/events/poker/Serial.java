@@ -13,26 +13,27 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.client.communication.pokersource;
+package org.cspoker.client.communication.pokersource.events.poker;
 
-import net.sf.json.JSONObject;
-import net.sf.json.JSONSerializer;
+public abstract class Serial extends PokerEvent{
+	
+	private String cookie;
+	private int serial;
+	
+	public String getCookie() {
+		return cookie;
+	}
 
-public abstract class JSONBean {
-
-	@Override
-	public String toString() {
-		return toJSONObject().toString();
+	public void setCookie(String cookie) {
+		this.cookie = cookie;
 	}
 	
-	public JSONObject toJSONObject(){
-		return (JSONObject) JSONSerializer.toJSON( this );
+	public int getSerial() {
+		return serial;
 	}
-	
-	public void setType(String type){
-		if(!getType().equals(type)) throw new IllegalStateException(type+" should be "+getType());
+
+	public void setSerial(int serial) {
+		this.serial = serial;
 	}
-	
-	public abstract String getType();  
-	
+
 }

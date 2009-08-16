@@ -13,26 +13,33 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.client.communication.pokersource;
+package org.cspoker.client.communication.pokersource.commands.poker;
 
-import net.sf.json.JSONObject;
-import net.sf.json.JSONSerializer;
-
-public abstract class JSONBean {
-
-	@Override
-	public String toString() {
-		return toJSONObject().toString();
+public class TablePicker extends PokerCommand{
+	
+	public TablePicker(int serial, boolean auto_blind_ante) {
+		this.serial = serial;
+		this.auto_blind_ante = auto_blind_ante;
 	}
 	
-	public JSONObject toJSONObject(){
-		return (JSONObject) JSONSerializer.toJSON( this );
+	public String getType() {
+		return "PacketPokerTablePicker";
 	}
 	
-	public void setType(String type){
-		if(!getType().equals(type)) throw new IllegalStateException(type+" should be "+getType());
-	}
+	private int serial;
+	private boolean auto_blind_ante;
 	
-	public abstract String getType();  
+	public int getSerial() {
+		return serial;
+	}
+	public void setSerial(int serial) {
+		this.serial = serial;
+	}
+	public boolean isAuto_blind_ante() {
+		return auto_blind_ante;
+	}
+	public void setAuto_blind_ante(boolean auto_blind_ante) {
+		this.auto_blind_ante = auto_blind_ante;
+	}
 	
 }

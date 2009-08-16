@@ -13,28 +13,24 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.client.communication.pokersource.commands;
+package org.cspoker.client.communication.pokersource.events.poker;
 
-public class TableJoin extends JSONCommand{
-	
-	public TableJoin(int serial, int game_id) {
-		this.serial = serial;
-		this.game_id = game_id;
-	}
-	
-	private final int serial;
-	private final int game_id;
-	
-	public int getSerial() {
-		return serial;
-	}
+import org.cspoker.client.communication.pokersource.eventlisteners.poker.PokerEventListener;
 
-	public int getGame_id() {
-		return game_id;
-	}
+
+public class Sit extends Id{
 
 	public String getType() {
-		return "PacketTableJoin";
+		return getStaticType();
+	}
+	
+	public static String getStaticType() {
+		return "PacketPokerSit";
+	}
+
+	@Override
+	public void signal(PokerEventListener listener) {
+		listener.onSit(this);
 	}
 	
 }

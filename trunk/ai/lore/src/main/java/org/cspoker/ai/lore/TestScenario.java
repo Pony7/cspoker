@@ -19,14 +19,14 @@ import java.io.IOException;
 
 import org.apache.log4j.Logger;
 import org.cspoker.client.communication.pokersource.PokersourceConnection;
-import org.cspoker.client.communication.pokersource.commands.GetPlayerInfo;
 import org.cspoker.client.communication.pokersource.commands.Login;
 import org.cspoker.client.communication.pokersource.commands.Ping;
-import org.cspoker.client.communication.pokersource.commands.TableJoin;
-import org.cspoker.client.communication.pokersource.events.AuthOk;
-import org.cspoker.client.communication.pokersource.events.DefaultListener;
-import org.cspoker.client.communication.pokersource.events.PokerPlayerInfo;
-import org.cspoker.client.communication.pokersource.events.Serial;
+import org.cspoker.client.communication.pokersource.commands.poker.GetPlayerInfo;
+import org.cspoker.client.communication.pokersource.commands.poker.TablePicker;
+import org.cspoker.client.communication.pokersource.eventlisteners.all.AllEventListener;
+import org.cspoker.client.communication.pokersource.eventlisteners.all.LoggingListener;
+import org.cspoker.client.communication.pokersource.events.JSONEvent;
+import org.cspoker.client.communication.pokersource.events.general.Serial;
 import org.cspoker.common.util.Log4JPropertiesLoader;
 
 public class TestScenario {
@@ -40,33 +40,40 @@ public class TestScenario {
 	
 	public static void main(String[] args) throws IOException {
 		final PokersourceConnection conn = new PokersourceConnection("http://pokersource.eu/POKER_REST");
-		DefaultListener listener = new DefaultListener(){
-			
-			@Override
-			public void onAuthOk(AuthOk authOk) {
-				logger.info(authOk.toJSONObject().toString());
-			}
-			
-			@Override
-			public void onSerial(Serial serial) {
-				logger.info(serial.toJSONObject().toString());
+		try {
+			AllEventListener listener = new LoggingListener(){
+				
+				@Override
+				protected void log(JSONEvent event) {
+					logger.info(event.getClass().getSimpleName()+": "+event.toJSONObject().toString());
+				}
+				
+				@Override
+				public void onSerial(Serial serial) {
+					super.onSerial(serial);
+					try {
+						conn.send(new TablePicker(serial.getSerial(), true));
+						conn.send(new GetPlayerInfo());
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+				
+			};
+			conn.addListener(listener);
+			conn.send(new Ping());
+			conn.send(new Login("foobar", "foobar"));
+			for (int i = 0; i < 20; i++) {
 				try {
-					conn.send(new TableJoin(serial.getSerial(), 100));
-					conn.send(new GetPlayerInfo());
-				} catch (IOException e) {
+					conn.send(new Ping());
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
 			}
-			
-			@Override
-			public void onPokerPlayerInfo(PokerPlayerInfo pokerPlayerInfo) {
-				logger.info(pokerPlayerInfo.toJSONObject().toString());
-			}
-			
-		};
-		conn.addListener(listener);
-		conn.send(new Ping());
-		conn.send(new Login("foobar", "foobar"));
+		} finally{
+			conn.close();
+		}
 	}
 	
 }
