@@ -13,26 +13,28 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.client.communication.pokersource;
+package org.cspoker.client.communication.pokersource.commands.poker;
 
-import net.sf.json.JSONObject;
-import net.sf.json.JSONSerializer;
-
-public abstract class JSONBean {
-
-	@Override
-	public String toString() {
-		return toJSONObject().toString();
+public class TableJoin extends PokerCommand{
+	
+	public TableJoin(int serial, int game_id) {
+		this.serial = serial;
+		this.game_id = game_id;
 	}
 	
-	public JSONObject toJSONObject(){
-		return (JSONObject) JSONSerializer.toJSON( this );
-	}
+	private final int serial;
+	private final int game_id;
 	
-	public void setType(String type){
-		if(!getType().equals(type)) throw new IllegalStateException(type+" should be "+getType());
+	public int getSerial() {
+		return serial;
 	}
-	
-	public abstract String getType();  
+
+	public int getGame_id() {
+		return game_id;
+	}
+
+	public String getType() {
+		return "PacketPokerTableJoin";
+	}
 	
 }

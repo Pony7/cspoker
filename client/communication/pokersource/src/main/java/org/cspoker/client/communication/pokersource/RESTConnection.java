@@ -45,7 +45,6 @@ public class RESTConnection {
 		}
 	}
 
-	
 	private final URL url;
 
 	public RESTConnection(String server) throws MalformedURLException {
@@ -101,6 +100,10 @@ public class RESTConnection {
 			is.close();
 		}
 		return sb.toString();
+	}
+
+	public void close() throws IOException {
+		// no op
 	}
 }
 

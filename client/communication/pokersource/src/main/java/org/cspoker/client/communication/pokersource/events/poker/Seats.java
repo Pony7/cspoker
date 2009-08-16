@@ -13,13 +13,43 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.client.communication.pokersource.commands;
+package org.cspoker.client.communication.pokersource.events.poker;
+
+import org.cspoker.client.communication.pokersource.eventlisteners.poker.PokerEventListener;
 
 
-public class GetPlayerInfo extends JSONCommand{
-	
+public class Seats extends PokerEvent{
+
 	public String getType() {
-		return "PacketPokerGetPlayerInfo";
+		return getStaticType();
+	}
+	
+	public static String getStaticType() {
+		return "PacketPokerSeats";
+	}
+	
+	private int game_id;
+	private int[] seats;
+
+	@Override
+	public void signal(PokerEventListener listener) {
+		listener.onSeats(this);
+	}
+
+	public int getGame_id() {
+		return game_id;
+	}
+
+	public void setGame_id(int game_id) {
+		this.game_id = game_id;
+	}
+
+	public int[] getSeats() {
+		return seats;
+	}
+
+	public void setSeats(int[] seats) {
+		this.seats = seats;
 	}
 	
 }
