@@ -19,11 +19,13 @@ import java.io.IOException;
 
 import org.apache.log4j.Logger;
 import org.cspoker.client.communication.pokersource.PokersourceConnection;
+import org.cspoker.client.communication.pokersource.commands.GetPlayerInfo;
 import org.cspoker.client.communication.pokersource.commands.Login;
 import org.cspoker.client.communication.pokersource.commands.Ping;
 import org.cspoker.client.communication.pokersource.commands.TableJoin;
 import org.cspoker.client.communication.pokersource.events.AuthOk;
 import org.cspoker.client.communication.pokersource.events.DefaultListener;
+import org.cspoker.client.communication.pokersource.events.PokerPlayerInfo;
 import org.cspoker.client.communication.pokersource.events.Serial;
 import org.cspoker.common.util.Log4JPropertiesLoader;
 
@@ -50,9 +52,15 @@ public class TestScenario {
 				logger.info(serial.toJSONObject().toString());
 				try {
 					conn.send(new TableJoin(serial.getSerial(), 100));
+					conn.send(new GetPlayerInfo());
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
+			}
+			
+			@Override
+			public void onPokerPlayerInfo(PokerPlayerInfo pokerPlayerInfo) {
+				logger.info(pokerPlayerInfo.toJSONObject().toString());
 			}
 			
 		};

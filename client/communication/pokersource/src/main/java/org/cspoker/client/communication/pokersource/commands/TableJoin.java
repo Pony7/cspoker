@@ -15,7 +15,6 @@
  */
 package org.cspoker.client.communication.pokersource.commands;
 
-
 public class TableJoin extends JSONCommand{
 	
 	public TableJoin(int serial, int game_id) {
