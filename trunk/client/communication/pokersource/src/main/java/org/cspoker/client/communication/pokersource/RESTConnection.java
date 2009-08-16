@@ -22,13 +22,31 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.net.CookieHandler;
+import java.net.CookieManager;
+import java.net.CookiePolicy;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import org.apache.log4j.Logger;
+
 public class RESTConnection {
 
-	private URL url;
+	private final static Logger logger = Logger.getLogger(PokersourceConnection.class);
+	
+	static{
+		if(CookieHandler.getDefault() == null){
+			logger.info("Setting default cookie handler.");
+			CookieManager manager = new CookieManager();
+			CookieHandler.setDefault(manager);
+			//ORIGINAL_DOMAIN doesn't work for some reason.
+			manager.setCookiePolicy(CookiePolicy.ACCEPT_ALL);
+		}
+	}
+
+	
+	private final URL url;
 
 	public RESTConnection(String server) throws MalformedURLException {
 		url = new URL(server);
@@ -38,12 +56,12 @@ public class RESTConnection {
 		HttpURLConnection urlc = (HttpURLConnection)url.openConnection();
 		urlc.setRequestMethod("PUT");
 		urlc.setDoOutput(true);
-		
 		write(content, urlc.getOutputStream());
-		return request(urlc);
+		return response(urlc);
 	}
 
-	private String request(HttpURLConnection urlc) throws IOException {
+
+	private String response(HttpURLConnection urlc) throws IOException {
 		try {
 			InputStream is = urlc.getInputStream();
 			return read(is);
@@ -59,7 +77,7 @@ public class RESTConnection {
 			}
 		}
 	}
-
+	
 	private void write(String content, OutputStream outputStream)
 			throws IOException {
 		Writer writer = new OutputStreamWriter(outputStream);

@@ -30,6 +30,7 @@ import org.cspoker.client.communication.pokersource.commands.JSONCommand;
 import org.cspoker.client.communication.pokersource.events.AuthOk;
 import org.cspoker.client.communication.pokersource.events.EventListener;
 import org.cspoker.client.communication.pokersource.events.JSONEvent;
+import org.cspoker.client.communication.pokersource.events.PokerPlayerInfo;
 import org.cspoker.client.communication.pokersource.events.Serial;
 
 import com.google.common.collect.ImmutableMap;
@@ -71,5 +72,6 @@ public class PokersourceConnection extends RESTConnection{
 		(new Builder<String, Class<? extends JSONEvent>>())
 		.put(AuthOk.getStaticType(), AuthOk.class)
 		.put(Serial.getStaticType(), Serial.class)
+		.put(PokerPlayerInfo.getStaticType(), PokerPlayerInfo.class)
 		.build();
 }

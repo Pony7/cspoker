@@ -24,5 +24,9 @@ public class DefaultListener implements EventListener{
 	@Override
 	public void onSerial(Serial serial) {
 	}
+	
+	@Override
+	public void onPokerPlayerInfo(PokerPlayerInfo pokerPlayerInfo) {
+	}
 
 }
