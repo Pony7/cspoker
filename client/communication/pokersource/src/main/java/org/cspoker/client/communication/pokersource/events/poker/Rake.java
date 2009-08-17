@@ -16,24 +16,43 @@
 package org.cspoker.client.communication.pokersource.events.poker;
 
 import org.cspoker.client.communication.pokersource.PokerPacket;
+import org.cspoker.client.communication.pokersource.eventlisteners.poker.PokerEventListener;
 
-public abstract class Serial extends PokerPacket{
-	
-	public Serial() {
+
+public class Rake extends PokerPacket{
+
+	public String getType() {
+		return getStaticType();
 	}
 	
-	public Serial(int serial) {
-		this.serial = serial;
+	public static String getStaticType() {
+		return "PacketPokerRake";
 	}
 	
-	private int serial;
+	private int value;
+	private int game_id;
 	
-	public int getSerial() {
-		return serial;
+	@Override
+	public void signal(PokerEventListener listener) {
+		listener.onRake(this);
 	}
 
-	public void setSerial(int serial) {
-		this.serial = serial;
+	public int getValue() {
+		return value;
 	}
 
+	public void setValue(int value) {
+		this.value = value;
+	}
+
+	public int getGame_id() {
+		return game_id;
+	}
+
+	public void setGame_id(int game_id) {
+		this.game_id = game_id;
+	}
+
+	
+	
 }

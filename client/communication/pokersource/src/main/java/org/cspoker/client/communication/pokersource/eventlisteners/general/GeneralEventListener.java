@@ -15,8 +15,8 @@
  */
 package org.cspoker.client.communication.pokersource.eventlisteners.general;
 
-import org.cspoker.client.communication.pokersource.events.general.AuthOk;
-import org.cspoker.client.communication.pokersource.events.general.Serial;
+import org.cspoker.client.communication.pokersource.events.AuthOk;
+import org.cspoker.client.communication.pokersource.events.Serial;
 
 public interface GeneralEventListener {
 

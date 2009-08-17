@@ -13,27 +13,32 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.client.communication.pokersource.events.poker;
+package org.cspoker.client.communication.pokersource.commands.poker;
 
-import org.cspoker.client.communication.pokersource.PokerPacket;
+import org.cspoker.client.communication.pokersource.eventlisteners.poker.PokerEventListener;
+import org.cspoker.client.communication.pokersource.events.poker.Id;
 
-public abstract class Serial extends PokerPacket{
-	
-	public Serial() {
+
+public class Call extends Id{
+
+	public Call() {
 	}
 	
-	public Serial(int serial) {
-		this.serial = serial;
+	public Call(int serial, int game_id) {
+		super(serial, game_id);
 	}
 	
-	private int serial;
+	public String getType() {
+		return getStaticType();
+	}
 	
-	public int getSerial() {
-		return serial;
+	public static String getStaticType() {
+		return "PacketPokerCall";
 	}
-
-	public void setSerial(int serial) {
-		this.serial = serial;
+	
+	@Override
+	public void signal(PokerEventListener listener) {
+		listener.onCall(this);
 	}
-
+	
 }

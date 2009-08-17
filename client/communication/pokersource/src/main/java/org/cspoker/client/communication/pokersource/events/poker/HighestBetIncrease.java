@@ -13,42 +13,26 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.client.communication.pokersource.events.general;
+package org.cspoker.client.communication.pokersource.events.poker;
 
-import org.cspoker.client.communication.pokersource.eventlisteners.general.GeneralEventListener;
+import org.cspoker.client.communication.pokersource.eventlisteners.poker.PokerEventListener;
 
-public class Serial extends GeneralEvent{
+
+public class HighestBetIncrease extends Id{
 
 	public String getType() {
 		return getStaticType();
 	}
 	
 	public static String getStaticType() {
-		return "PacketSerial";
+		return "PacketPokerHighestBetIncrease";
 	}
 	
-	private String cookie;
-	private int serial;
-
-	public String getCookie() {
-		return cookie;
-	}
-
-	public void setCookie(String cookie) {
-		this.cookie = cookie;
-	}
-
-	public int getSerial() {
-		return serial;
-	}
-
-	public void setSerial(int serial) {
-		this.serial = serial;
-	}
-
 	@Override
-	public void signal(GeneralEventListener listener) {
-		listener.onSerial(this);
+	public void signal(PokerEventListener listener) {
+		listener.onHighestBetIncrease(this);
 	}
+	
+	
 	
 }

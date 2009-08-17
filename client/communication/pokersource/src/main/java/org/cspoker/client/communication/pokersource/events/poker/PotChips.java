@@ -15,25 +15,42 @@
  */
 package org.cspoker.client.communication.pokersource.events.poker;
 
-import org.cspoker.client.communication.pokersource.PokerPacket;
+import org.cspoker.client.communication.pokersource.eventlisteners.poker.PokerEventListener;
 
-public abstract class Serial extends PokerPacket{
-	
-	public Serial() {
+
+public class PotChips extends Id{
+
+	public String getType() {
+		return getStaticType();
 	}
 	
-	public Serial(int serial) {
-		this.serial = serial;
+	public static String getStaticType() {
+		return "PacketPokerPotChips";
 	}
 	
-	private int serial;
+	private int index;
+	private int[] bet;
 	
-	public int getSerial() {
-		return serial;
+	@Override
+	public void signal(PokerEventListener listener) {
+		listener.onPotChips(this);
 	}
 
-	public void setSerial(int serial) {
-		this.serial = serial;
+	public int getIndex() {
+		return index;
 	}
 
+	public void setIndex(int index) {
+		this.index = index;
+	}
+
+	public int[] getBet() {
+		return bet;
+	}
+
+	public void setBet(int[] bet) {
+		this.bet = bet;
+	}
+	
+	
 }

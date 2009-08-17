@@ -15,29 +15,29 @@
  */
 package org.cspoker.client.communication.pokersource.events.poker;
 
-import org.cspoker.client.communication.pokersource.PokerPacket;
 import org.cspoker.client.communication.pokersource.eventlisteners.poker.PokerEventListener;
 
 
-public class BuyInLimits extends PokerPacket{
+public class BetLimit extends Id{
 
 	public String getType() {
 		return getStaticType();
 	}
 	
 	public static String getStaticType() {
-		return "PacketPokerBuyInLimits";
+		return "PacketPokerBetLimit";
 	}
 	
 	private int min;
 	private int max;
-	private int rebuy_min;
-	private int game_id;
-	private int best; 
+	private int pot;
+	private int step;
+	private int allin;
+	private int call;
 	
 	@Override
 	public void signal(PokerEventListener listener) {
-		listener.onBuyInLimits(this);
+		listener.onBetLimit(this);
 	}
 
 	public int getMin() {
@@ -56,30 +56,36 @@ public class BuyInLimits extends PokerPacket{
 		this.max = max;
 	}
 
-	public int getRebuy_min() {
-		return rebuy_min;
+	public int getPot() {
+		return pot;
 	}
 
-	public void setRebuy_min(int rebuy_min) {
-		this.rebuy_min = rebuy_min;
+	public void setPot(int pot) {
+		this.pot = pot;
 	}
 
-	public int getGame_id() {
-		return game_id;
+	public int getStep() {
+		return step;
 	}
 
-	public void setGame_id(int game_id) {
-		this.game_id = game_id;
+	public void setStep(int step) {
+		this.step = step;
 	}
 
-	public int getBest() {
-		return best;
+	public int getAllin() {
+		return allin;
 	}
 
-	public void setBest(int best) {
-		this.best = best;
+	public void setAllin(int allin) {
+		this.allin = allin;
 	}
-	
-	
+
+	public int getCall() {
+		return call;
+	}
+
+	public void setCall(int call) {
+		this.call = call;
+	}
 	
 }

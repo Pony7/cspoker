@@ -13,10 +13,36 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.client.communication.pokersource.commands;
+package org.cspoker.client.communication.pokersource.events.poker;
 
-import org.cspoker.client.communication.pokersource.JSONBean;
+import org.cspoker.client.communication.pokersource.eventlisteners.poker.PokerEventListener;
 
-public abstract class JSONCommand extends JSONBean{
 
+public class SelfInPosition extends Id{
+
+	public String getType() {
+		return getStaticType();
+	}
+	
+	public static String getStaticType() {
+		return "PacketPokerSelfInPosition";
+	}
+	
+	private int position;
+	
+	@Override
+	public void signal(PokerEventListener listener) {
+		listener.onSelfInPosition(this);
+	}
+
+	public int getPosition() {
+		return position;
+	}
+
+	public void setPosition(int position) {
+		this.position = position;
+	}
+	
+	
+	
 }

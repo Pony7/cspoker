@@ -15,25 +15,32 @@
  */
 package org.cspoker.client.communication.pokersource.events.poker;
 
-import org.cspoker.client.communication.pokersource.PokerPacket;
+import org.cspoker.client.communication.pokersource.eventlisteners.poker.PokerEventListener;
 
-public abstract class Serial extends PokerPacket{
-	
-	public Serial() {
+
+public class SelfLostPosition extends Id{
+
+	public String getType() {
+		return getStaticType();
 	}
 	
-	public Serial(int serial) {
-		this.serial = serial;
+	public static String getStaticType() {
+		return "PacketPokerSelfLostPosition";
 	}
 	
-	private int serial;
+	private int position;
 	
-	public int getSerial() {
-		return serial;
+	@Override
+	public void signal(PokerEventListener listener) {
+		listener.onSelfLostPosition(this);
 	}
 
-	public void setSerial(int serial) {
-		this.serial = serial;
+	public int getPosition() {
+		return position;
 	}
 
+	public void setPosition(int position) {
+		this.position = position;
+	}
+	
 }

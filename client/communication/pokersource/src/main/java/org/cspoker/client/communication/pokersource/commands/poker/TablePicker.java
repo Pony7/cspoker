@@ -15,10 +15,13 @@
  */
 package org.cspoker.client.communication.pokersource.commands.poker;
 
-public class TablePicker extends PokerCommand{
+import org.cspoker.client.communication.pokersource.eventlisteners.poker.PokerEventListener;
+import org.cspoker.client.communication.pokersource.events.poker.Serial;
+
+public class TablePicker extends Serial{
 	
 	public TablePicker(int serial, boolean auto_blind_ante) {
-		this.serial = serial;
+		super(serial);
 		this.auto_blind_ante = auto_blind_ante;
 	}
 	
@@ -26,15 +29,13 @@ public class TablePicker extends PokerCommand{
 		return "PacketPokerTablePicker";
 	}
 	
-	private int serial;
 	private boolean auto_blind_ante;
 	
-	public int getSerial() {
-		return serial;
+	@Override
+	public void signal(PokerEventListener listener) {
+		throw new IllegalStateException("This is not an event");
 	}
-	public void setSerial(int serial) {
-		this.serial = serial;
-	}
+	
 	public boolean isAuto_blind_ante() {
 		return auto_blind_ante;
 	}

@@ -15,11 +15,11 @@
  */
 package org.cspoker.client.communication.pokersource.events.poker.client;
 
+import org.cspoker.client.communication.pokersource.PokerPacket;
 import org.cspoker.client.communication.pokersource.eventlisteners.poker.PokerEventListener;
-import org.cspoker.client.communication.pokersource.events.poker.PokerEvent;
 
 
-public class CurrentGames extends PokerEvent{
+public class CurrentGames extends PokerPacket{
 
 	public String getType() {
 		return getStaticType();
@@ -31,7 +31,6 @@ public class CurrentGames extends PokerEvent{
 	
 	private int count;
 	private int[] game_ids;
-	private int length;
 	
 	@Override
 	public void signal(PokerEventListener listener) {
@@ -53,14 +52,5 @@ public class CurrentGames extends PokerEvent{
 	public void setGame_ids(int[] game_ids) {
 		this.game_ids = game_ids;
 	}
-
-	public int getLength() {
-		return length;
-	}
-
-	public void setLength(int length) {
-		this.length = length;
-	}
-	
 	
 }

@@ -15,26 +15,22 @@
  */
 package org.cspoker.client.communication.pokersource.commands.poker;
 
-public class TableJoin extends PokerCommand{
+import org.cspoker.client.communication.pokersource.eventlisteners.poker.PokerEventListener;
+import org.cspoker.client.communication.pokersource.events.poker.Id;
+
+public class TableJoin extends Id{
 	
 	public TableJoin(int serial, int game_id) {
-		this.serial = serial;
-		this.game_id = game_id;
+		super(serial, game_id);
 	}
 	
-	private final int serial;
-	private final int game_id;
-	
-	public int getSerial() {
-		return serial;
-	}
-
-	public int getGame_id() {
-		return game_id;
-	}
-
 	public String getType() {
 		return "PacketPokerTableJoin";
+	}
+	
+	@Override
+	public void signal(PokerEventListener listener) {
+		throw new IllegalStateException("This is not an event");
 	}
 	
 }

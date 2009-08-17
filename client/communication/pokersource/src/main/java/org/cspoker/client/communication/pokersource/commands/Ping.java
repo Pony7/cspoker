@@ -15,11 +15,19 @@
  */
 package org.cspoker.client.communication.pokersource.commands;
 
+import org.cspoker.client.communication.pokersource.GeneralPacket;
+import org.cspoker.client.communication.pokersource.eventlisteners.general.GeneralEventListener;
 
-public class Ping extends JSONCommand{
+
+public class Ping extends GeneralPacket{
 	
 	public String getType() {
 		return "PacketPing";
+	}
+	
+	@Override
+	public void signal(GeneralEventListener listener) {
+		throw new IllegalStateException("This is not an event");
 	}
 	
 }

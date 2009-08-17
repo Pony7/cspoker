@@ -15,11 +15,11 @@
  */
 package org.cspoker.client.communication.pokersource.events.poker.client;
 
+import org.cspoker.client.communication.pokersource.PokerPacket;
 import org.cspoker.client.communication.pokersource.eventlisteners.poker.PokerEventListener;
-import org.cspoker.client.communication.pokersource.events.poker.PokerEvent;
 
 
-public class ClientPlayerChips extends PokerEvent{
+public class ClientPlayerChips extends PokerPacket{
 
 	public String getType() {
 		return getStaticType();
@@ -30,7 +30,6 @@ public class ClientPlayerChips extends PokerEvent{
 	}
 
     private int[] money;
-    private int length;
     private int game_id;
     private int serial;
     private int[] bet; 
@@ -46,14 +45,6 @@ public class ClientPlayerChips extends PokerEvent{
 
 	public void setMoney(int[] money) {
 		this.money = money;
-	}
-
-	public int getLength() {
-		return length;
-	}
-
-	public void setLength(int length) {
-		this.length = length;
 	}
 
 	public int getGame_id() {
