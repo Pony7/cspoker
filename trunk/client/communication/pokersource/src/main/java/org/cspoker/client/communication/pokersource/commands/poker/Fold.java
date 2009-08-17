@@ -13,24 +13,32 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.client.communication.pokersource.events.general;
+package org.cspoker.client.communication.pokersource.commands.poker;
 
-import org.cspoker.client.communication.pokersource.eventlisteners.general.GeneralEventListener;
+import org.cspoker.client.communication.pokersource.eventlisteners.poker.PokerEventListener;
+import org.cspoker.client.communication.pokersource.events.poker.Id;
 
 
-public class AuthOk extends GeneralEvent{
+public class Fold extends Id{
+
+	public Fold() {
+	}
+	
+	public Fold(int serial, int game_id) {
+		super(serial, game_id);
+	}
 	
 	public String getType() {
 		return getStaticType();
 	}
 	
 	public static String getStaticType() {
-		return "PacketAuthOk";
+		return "PacketPokerFold";
 	}
 	
 	@Override
-	public void signal(GeneralEventListener listener) {
-		listener.onAuthOk(this);
+	public void signal(PokerEventListener listener) {
+		listener.onFold(this);
 	}
 	
 }

@@ -15,11 +15,19 @@
  */
 package org.cspoker.client.communication.pokersource.commands;
 
+import org.cspoker.client.communication.pokersource.GeneralPacket;
+import org.cspoker.client.communication.pokersource.eventlisteners.general.GeneralEventListener;
 
-public class Logout extends JSONCommand{
+
+public class Logout extends GeneralPacket{
 	
 	public String getType() {
 		return "PacketLogout";
+	}
+
+	@Override
+	public void signal(GeneralEventListener listener) {
+		throw new IllegalStateException("This is not an event");
 	}
 	
 }

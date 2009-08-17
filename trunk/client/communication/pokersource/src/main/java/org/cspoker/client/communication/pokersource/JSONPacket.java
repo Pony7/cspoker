@@ -18,8 +18,12 @@ package org.cspoker.client.communication.pokersource;
 import net.sf.json.JSONObject;
 import net.sf.json.JSONSerializer;
 
-public abstract class JSONBean {
+import org.cspoker.client.communication.pokersource.eventlisteners.all.AllEventListener;
+import org.cspoker.client.communication.pokersource.eventlisteners.general.GeneralEventListener;
+import org.cspoker.client.communication.pokersource.eventlisteners.poker.PokerEventListener;
 
+abstract public class JSONPacket{
+	
 	@Override
 	public String toString() {
 		return toJSONObject().toString();
@@ -34,5 +38,9 @@ public abstract class JSONBean {
 	}
 	
 	public abstract String getType();  
+
+	public abstract void signal(GeneralEventListener generalListener, PokerEventListener pokerListener);
+	
+	public abstract void signal(AllEventListener listener);
 	
 }

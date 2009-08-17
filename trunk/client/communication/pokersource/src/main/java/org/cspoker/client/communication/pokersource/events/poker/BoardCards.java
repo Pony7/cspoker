@@ -15,25 +15,34 @@
  */
 package org.cspoker.client.communication.pokersource.events.poker;
 
-import org.cspoker.client.communication.pokersource.eventlisteners.all.AllEventListener;
-import org.cspoker.client.communication.pokersource.eventlisteners.general.GeneralEventListener;
 import org.cspoker.client.communication.pokersource.eventlisteners.poker.PokerEventListener;
-import org.cspoker.client.communication.pokersource.events.JSONEvent;
 
-abstract public class PokerEvent extends JSONEvent{
 
-	public abstract void signal(PokerEventListener listener);
-	
-	@Override
-	public void signal(AllEventListener listener) {
-		//why is this even needed???
-		signal((PokerEventListener)listener);
+public class BoardCards extends Id{
+
+	public String getType() {
+		return getStaticType();
 	}
 	
-	@Override
-	public void signal(GeneralEventListener generalListener, PokerEventListener pokerListener) {
-		signal(pokerListener);
+	public static String getStaticType() {
+		return "PacketPokerBoardCards";
 	}
+	
+	private int[] cards;
+	
+	@Override
+	public void signal(PokerEventListener listener) {
+		listener.onBoardCards(this);
+	}
+
+	public int[] getCards() {
+		return cards;
+	}
+
+	public void setCards(int[] cards) {
+		this.cards = cards;
+	}
+
 	
 	
 }

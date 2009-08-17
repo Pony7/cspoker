@@ -15,10 +15,11 @@
  */
 package org.cspoker.client.communication.pokersource.events.poker;
 
+import org.cspoker.client.communication.pokersource.PokerPacket;
 import org.cspoker.client.communication.pokersource.eventlisteners.poker.PokerEventListener;
 
 
-public class Seats extends PokerEvent{
+public class Seats extends PokerPacket{
 
 	public String getType() {
 		return getStaticType();

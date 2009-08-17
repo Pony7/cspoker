@@ -16,24 +16,53 @@
 package org.cspoker.client.communication.pokersource.events.poker;
 
 import org.cspoker.client.communication.pokersource.PokerPacket;
+import org.cspoker.client.communication.pokersource.eventlisteners.poker.PokerEventListener;
 
-public abstract class Serial extends PokerPacket{
-	
-	public Serial() {
+
+public class Dealer extends PokerPacket{
+
+	public String getType() {
+		return getStaticType();
 	}
 	
-	public Serial(int serial) {
-		this.serial = serial;
+	public static String getStaticType() {
+		return "PacketPokerDealer";
 	}
 	
-	private int serial;
+	private int game_id;
+	private int dealer;
+	private int previous_dealer;
 	
-	public int getSerial() {
-		return serial;
+	@Override
+	public void signal(PokerEventListener listener) {
+		listener.onDealer(this);
 	}
 
-	public void setSerial(int serial) {
-		this.serial = serial;
+	public int getGame_id() {
+		return game_id;
 	}
 
+	public void setGame_id(int game_id) {
+		this.game_id = game_id;
+	}
+
+	public int getDealer() {
+		return dealer;
+	}
+
+	public void setDealer(int dealer) {
+		this.dealer = dealer;
+	}
+
+	public int getPrevious_dealer() {
+		return previous_dealer;
+	}
+
+	public void setPrevious_dealer(int previous_dealer) {
+		this.previous_dealer = previous_dealer;
+	}
+	
+	
+
+	
 }

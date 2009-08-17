@@ -13,17 +13,43 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.client.communication.pokersource.events;
+package org.cspoker.client.communication.pokersource.commands.poker;
 
-import org.cspoker.client.communication.pokersource.JSONBean;
-import org.cspoker.client.communication.pokersource.eventlisteners.all.AllEventListener;
-import org.cspoker.client.communication.pokersource.eventlisteners.general.GeneralEventListener;
 import org.cspoker.client.communication.pokersource.eventlisteners.poker.PokerEventListener;
+import org.cspoker.client.communication.pokersource.events.poker.Id;
 
-abstract public class JSONEvent extends JSONBean{
 
-	public abstract void signal(GeneralEventListener generalListener, PokerEventListener pokerListener);
+public class Raise extends Id{
+
+	public Raise() {
+	}
 	
-	public abstract void signal(AllEventListener listener);
+	public Raise(int serial, int game_id, int amount) {
+		super(serial, game_id);
+		this.amount = amount;
+	}
+	
+	public String getType() {
+		return getStaticType();
+	}
+	
+	public static String getStaticType() {
+		return "PacketPokerRaise";
+	}
+
+	private int amount;
+	
+	@Override
+	public void signal(PokerEventListener listener) {
+		listener.onRaise(this);
+	}
+	
+	public int getAmount() {
+		return amount;
+	}
+	
+	public void setAmount(int amount) {
+		this.amount = amount;
+	}
 	
 }

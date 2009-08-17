@@ -18,19 +18,31 @@ package org.cspoker.client.communication.pokersource.events.poker;
 import org.cspoker.client.communication.pokersource.eventlisteners.poker.PokerEventListener;
 
 
-public class Sit extends Id{
+public class PlayerHandStrength extends Id{
 
 	public String getType() {
 		return getStaticType();
 	}
 	
 	public static String getStaticType() {
-		return "PacketPokerSit";
+		return "PacketPokerPlayerHandStrength";
 	}
-
+	
+	private String hand;
+	
 	@Override
 	public void signal(PokerEventListener listener) {
-		listener.onSit(this);
+		listener.onPlayerHandStrength(this);
 	}
+
+	public String getHand() {
+		return hand;
+	}
+
+	public void setHand(String hand) {
+		this.hand = hand;
+	}
+	
+	
 	
 }

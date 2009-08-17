@@ -13,10 +13,26 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.client.communication.pokersource.commands.poker;
+package org.cspoker.client.communication.pokersource;
 
-import org.cspoker.client.communication.pokersource.commands.JSONCommand;
+import org.cspoker.client.communication.pokersource.eventlisteners.all.AllEventListener;
+import org.cspoker.client.communication.pokersource.eventlisteners.general.GeneralEventListener;
+import org.cspoker.client.communication.pokersource.eventlisteners.poker.PokerEventListener;
 
-public abstract class PokerCommand extends JSONCommand{
+abstract public class PokerPacket extends JSONPacket{
 
+	public abstract void signal(PokerEventListener listener);
+	
+	@Override
+	public void signal(AllEventListener listener) {
+		//why is this even needed???
+		signal((PokerEventListener)listener);
+	}
+	
+	@Override
+	public void signal(GeneralEventListener generalListener, PokerEventListener pokerListener) {
+		signal(pokerListener);
+	}
+	
+	
 }

@@ -15,8 +15,13 @@
  */
 package org.cspoker.client.communication.pokersource.commands;
 
+import org.cspoker.client.communication.pokersource.GeneralPacket;
+import org.cspoker.client.communication.pokersource.JSONPacket;
+import org.cspoker.client.communication.pokersource.eventlisteners.general.GeneralEventListener;
+import org.cspoker.client.communication.pokersource.eventlisteners.poker.PokerEventListener;
 
-public class Login extends JSONCommand{
+
+public class Login extends GeneralPacket{
 	
 	public Login(String user, String password) {
 		this.user = user;
@@ -25,7 +30,12 @@ public class Login extends JSONCommand{
 	
 	private final String user;
 	private final String password;
-
+	
+	@Override
+	public void signal(GeneralEventListener listener) {
+		throw new IllegalStateException("This is not an event");
+	}
+	
 	public String getUser() {
 		return user;
 	}

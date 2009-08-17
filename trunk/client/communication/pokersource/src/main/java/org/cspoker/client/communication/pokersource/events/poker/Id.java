@@ -17,6 +17,14 @@ package org.cspoker.client.communication.pokersource.events.poker;
 
 public abstract class Id extends Serial{
 
+	public Id() {
+	}
+	
+	public Id(int serial, int game_id) {
+		super(serial);
+		this.game_id = game_id;
+	}
+	
 	private int game_id;
 	
 	public int getGame_id() {

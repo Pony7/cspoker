@@ -15,25 +15,32 @@
  */
 package org.cspoker.client.communication.pokersource.events.poker;
 
-import org.cspoker.client.communication.pokersource.PokerPacket;
+import org.cspoker.client.communication.pokersource.eventlisteners.poker.PokerEventListener;
 
-public abstract class Serial extends PokerPacket{
-	
-	public Serial() {
+
+public class WaitFor extends Id{
+
+	public String getType() {
+		return getStaticType();
 	}
 	
-	public Serial(int serial) {
-		this.serial = serial;
+	public static String getStaticType() {
+		return "PacketPokerWaitFor";
 	}
 	
-	private int serial;
+	private String reason;
 	
-	public int getSerial() {
-		return serial;
+	@Override
+	public void signal(PokerEventListener listener) {
+		listener.onWaitFor(this);
 	}
 
-	public void setSerial(int serial) {
-		this.serial = serial;
+	public String getReason() {
+		return reason;
 	}
 
+	public void setReason(String reason) {
+		this.reason = reason;
+	}
+	
 }

@@ -15,10 +15,18 @@
  */
 package org.cspoker.client.communication.pokersource.commands.poker;
 
-public class GetPlayerInfo extends PokerCommand{
+import org.cspoker.client.communication.pokersource.PokerPacket;
+import org.cspoker.client.communication.pokersource.eventlisteners.poker.PokerEventListener;
+
+public class GetPlayerInfo extends PokerPacket{
 	
 	public String getType() {
 		return "PacketPokerGetPlayerInfo";
+	}
+	
+	@Override
+	public void signal(PokerEventListener listener) {
+		throw new IllegalStateException("This is not an event");
 	}
 	
 }

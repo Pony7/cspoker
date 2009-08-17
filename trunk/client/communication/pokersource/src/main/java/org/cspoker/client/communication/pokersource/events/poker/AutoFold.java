@@ -15,25 +15,22 @@
  */
 package org.cspoker.client.communication.pokersource.events.poker;
 
-import org.cspoker.client.communication.pokersource.PokerPacket;
+import org.cspoker.client.communication.pokersource.eventlisteners.poker.PokerEventListener;
 
-public abstract class Serial extends PokerPacket{
-	
-	public Serial() {
-	}
-	
-	public Serial(int serial) {
-		this.serial = serial;
-	}
-	
-	private int serial;
-	
-	public int getSerial() {
-		return serial;
-	}
 
-	public void setSerial(int serial) {
-		this.serial = serial;
-	}
+public class AutoFold extends Id{
 
+	public String getType() {
+		return getStaticType();
+	}
+	
+	public static String getStaticType() {
+		return "PacketPokerAutoFold";
+	}
+	
+	@Override
+	public void signal(PokerEventListener listener) {
+		listener.onAutoFold(this);
+	}
+	
 }

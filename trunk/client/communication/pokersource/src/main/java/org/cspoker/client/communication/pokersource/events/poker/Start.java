@@ -15,71 +15,59 @@
  */
 package org.cspoker.client.communication.pokersource.events.poker;
 
-import org.cspoker.client.communication.pokersource.PokerPacket;
 import org.cspoker.client.communication.pokersource.eventlisteners.poker.PokerEventListener;
 
 
-public class BuyInLimits extends PokerPacket{
+public class Start extends Id{
 
 	public String getType() {
 		return getStaticType();
 	}
 	
 	public static String getStaticType() {
-		return "PacketPokerBuyInLimits";
+		return "PacketPokerStart";
 	}
 	
-	private int min;
-	private int max;
-	private int rebuy_min;
-	private int game_id;
-	private int best; 
+	private int level; 
+	private int hand_serial;
+	private int hands_count;
+	private double time;
 	
 	@Override
 	public void signal(PokerEventListener listener) {
-		listener.onBuyInLimits(this);
+		listener.onStart(this);
 	}
 
-	public int getMin() {
-		return min;
+	public int getLevel() {
+		return level;
 	}
 
-	public void setMin(int min) {
-		this.min = min;
+	public void setLevel(int level) {
+		this.level = level;
 	}
 
-	public int getMax() {
-		return max;
+	public int getHand_serial() {
+		return hand_serial;
 	}
 
-	public void setMax(int max) {
-		this.max = max;
+	public void setHand_serial(int hand_serial) {
+		this.hand_serial = hand_serial;
 	}
 
-	public int getRebuy_min() {
-		return rebuy_min;
+	public int getHands_count() {
+		return hands_count;
 	}
 
-	public void setRebuy_min(int rebuy_min) {
-		this.rebuy_min = rebuy_min;
+	public void setHands_count(int hands_count) {
+		this.hands_count = hands_count;
 	}
 
-	public int getGame_id() {
-		return game_id;
+	public double getTime() {
+		return time;
 	}
 
-	public void setGame_id(int game_id) {
-		this.game_id = game_id;
+	public void setTime(double time) {
+		this.time = time;
 	}
-
-	public int getBest() {
-		return best;
-	}
-
-	public void setBest(int best) {
-		this.best = best;
-	}
-	
-	
 	
 }
