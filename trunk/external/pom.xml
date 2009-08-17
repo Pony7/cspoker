@@ -12,5 +12,6 @@
 	<name>CSPoker External</name>
 	<modules>
 		<module>plcafe</module>
+		<module>pokersource</module>
 	</modules>
 </project>

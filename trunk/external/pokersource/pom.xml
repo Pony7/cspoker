@@ -4,12 +4,12 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.cspoker</groupId>
-		<artifactId>client</artifactId>
+		<artifactId>external</artifactId>
 		<version>0.1-SNAPSHOT</version>
 	</parent>
-	<artifactId>client-communication-pokersource</artifactId>
+	<artifactId>external-pokersource</artifactId>
 	<packaging>jar</packaging>
-	<name>CSPoker Pokersource Adaptor</name>
+	<name>Pokersource Client Library</name>
 	<dependencies>
 		<dependency>
 			<groupId>net.sf.json-lib</groupId>
