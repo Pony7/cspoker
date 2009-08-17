@@ -42,7 +42,7 @@
 		</dependency>
 		<dependency>
 			<groupId>org.cspoker</groupId>
-			<artifactId>client-communication-pokersource</artifactId>
+			<artifactId>client-pokersource</artifactId>
 			<version>0.1-SNAPSHOT</version>
 			<type>jar</type>
 			<scope>compile</scope>
