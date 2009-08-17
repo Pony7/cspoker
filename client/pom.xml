@@ -13,7 +13,6 @@
 	<modules>
 		<module>common</module>
 		<module>gui</module>
-		<module>pokersource</module>
 	</modules>
 	<dependencies>
 		<dependency>
