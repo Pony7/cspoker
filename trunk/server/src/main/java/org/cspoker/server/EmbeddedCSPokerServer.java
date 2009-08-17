@@ -13,27 +13,20 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.client.communication.pokersource.events.poker;
+package org.cspoker.server;
 
-import org.cspoker.client.communication.pokersource.PokerPacket;
+import javax.security.auth.login.LoginException;
 
-public abstract class Serial extends PokerPacket{
-	
-	public Serial() {
-	}
-	
-	public Serial(int serial) {
-		this.serial = serial;
-	}
-	
-	private int serial;
-	
-	public int getSerial() {
-		return serial;
-	}
+import org.cspoker.common.CSPokerServer;
+import org.cspoker.common.api.shared.context.ServerContext;
 
-	public void setSerial(int serial) {
-		this.serial = serial;
+public class EmbeddedCSPokerServer implements CSPokerServer {
+
+	private final CSPokerServer server = new CSPokerServerImpl();
+	
+	public ServerContext login(String username, String password)
+			throws LoginException {
+		return server.login(username, password);
 	}
 
 }

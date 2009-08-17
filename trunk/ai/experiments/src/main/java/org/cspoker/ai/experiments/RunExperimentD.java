@@ -31,7 +31,7 @@ import org.cspoker.ai.bots.bot.gametree.mcts.strategies.selection.SamplingToFunc
 import org.cspoker.ai.bots.bot.gametree.mcts.strategies.selection.UCTPlusSelector;
 import org.cspoker.ai.bots.bot.gametree.mcts.strategies.selection.UCTSelector;
 import org.cspoker.ai.opponentmodels.weka.WekaRegressionModelFactory;
-import org.cspoker.client.communication.embedded.EmbeddedCSPokerServer;
+import org.cspoker.server.EmbeddedCSPokerServer;
 
 @Deprecated
 public class RunExperimentD {

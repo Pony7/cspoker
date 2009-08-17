@@ -15,7 +15,7 @@
  */
 package org.cspoker.ai.bots;
 
-import org.cspoker.client.communication.embedded.EmbeddedCSPokerServer;
+import org.cspoker.server.EmbeddedCSPokerServer;
 
 public class RunLocalBot {
 
