@@ -41,7 +41,6 @@ import org.cspoker.ai.opponentmodels.weka.WekaRegressionModelFactory;
 import org.cspoker.client.User;
 import org.cspoker.client.common.SmartClientContext;
 import org.cspoker.client.common.SmartLobbyContext;
-import org.cspoker.client.communication.embedded.EmbeddedCSPokerServer;
 import org.cspoker.client.gui.swt.control.ClientCore;
 import org.cspoker.client.gui.swt.control.DisplayExecutor;
 import org.cspoker.client.gui.swt.window.GameWindow;
@@ -56,6 +55,7 @@ import org.cspoker.common.elements.table.TableConfiguration;
 import org.cspoker.common.elements.table.TableId;
 import org.cspoker.common.util.Log4JPropertiesLoader;
 import org.cspoker.common.util.threading.SingleThreadRequestExecutor;
+import org.cspoker.server.EmbeddedCSPokerServer;
 import org.eclipse.swt.widgets.Display;
 
 public class RunHumanVsBot{

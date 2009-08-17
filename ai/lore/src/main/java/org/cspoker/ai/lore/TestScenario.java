@@ -16,6 +16,8 @@
 package org.cspoker.ai.lore;
 
 import java.io.IOException;
+import java.util.LinkedList;
+import java.util.Queue;
 
 import org.apache.log4j.Logger;
 import org.cspoker.client.communication.pokersource.JSONPacket;
@@ -34,66 +36,95 @@ import org.cspoker.client.communication.pokersource.events.poker.Table;
 import org.cspoker.common.util.Log4JPropertiesLoader;
 
 public class TestScenario {
-	
+
 	static {
 		Log4JPropertiesLoader
 		.load("org/cspoker/ai/lore/logging/log4j.properties");
 	}
-	
+
 	private final static Logger logger = Logger.getLogger(TestScenario.class);
 
-	
+
 	public static void main(String[] args) throws IOException {
 		(new TestScenario()).run();
 	}
-	
+
 	private int serial;
 	private int game_id;
-	private boolean inPosition = false;
 	private boolean running = true;
-	
+
+	private Queue<Runnable> todos = new LinkedList<Runnable>();
+
 	private void run() throws IOException {
 		final PokersourceConnection conn = new PokersourceConnection("http://pokersource.eu/POKER_REST");
 		try {
 			AllEventListener listener = new LoggingListener(){
-				
+
 				@Override
 				protected void log(JSONPacket event) {
 					logger.info(event.getClass().getSimpleName()+": "+event.toJSONObject().toString());
 				}
-				
+
 				@Override
 				public void onSerial(Serial serial2) {
 					super.onSerial(serial2);
 					serial = serial2.getSerial();
 				}
-				
+
 				@Override
 				public void onTable(Table table) {
 					super.onTable(table);
 					game_id = table.getId();
 				}
-				
+
 				@Override
 				public void onSelfInPosition(SelfInPosition selfInPosition) {
 					super.onSelfInPosition(selfInPosition);
-					inPosition = true;
+					todos.add(new Runnable(){
+						@Override
+						public void run() {
+							try {
+								conn.send(new Call(serial, game_id));
+							} catch (IOException e) {
+								throw new IllegalStateException(e);
+							}
+						}
+					});
 				}
-				
+
+				@Override
+				public void onSitOut(SitOut sitOut) {
+					super.onSitOut(sitOut);
+					if(sitOut.getGame_id()==game_id && sitOut.getSerial() == serial){
+						todos.add(new Runnable(){
+							@Override
+							public void run() {
+								try {
+									conn.send(new Sit(serial, game_id));
+								} catch (IOException e) {
+									throw new IllegalStateException(e);
+								}
+							}
+						});
+					}
+				}
+
 			};
 			conn.addListener(listener);
 			conn.send(new Login("foobar", "foobar"));
 			conn.send(new TablePicker(serial, true));
 			conn.send(new SitOut(serial, game_id));
 			conn.send(new Sit(serial, game_id));
-			
+
 			while (running) {
-				try {
+				if(todos.isEmpty()){
 					conn.send(new Poll(game_id,0));
-					while(inPosition) {
-						inPosition = false;
-						conn.send(new Call(serial, game_id));
+				}else{
+					while(!todos.isEmpty()) {
+						todos.poll().run();
 					}
+				}
+				try {
 					Thread.sleep(1000);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
@@ -102,7 +133,7 @@ public class TestScenario {
 		} finally{
 			conn.close();
 		}
-	
+
 	}
-	
+
 }
