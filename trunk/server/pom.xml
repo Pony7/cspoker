@@ -8,20 +8,18 @@
 		<version>0.1-SNAPSHOT</version>
 	</parent>
 	<artifactId>server</artifactId>
-	<packaging>jar</packaging>
+	<packaging>pom</packaging>
 	<name>CSPoker Server</name>
-	<build>
-		<plugins>
-			<plugin>
-			    <groupId>org.codehaus.mojo</groupId>
-                <artifactId>cobertura-maven-plugin</artifactId>
-			</plugin>
-		</plugins>
-	</build>
+	<modules>
+		<module>embedded</module>
+		<module>xml</module>
+		<module>rmi</module>
+		<module>all</module>
+	</modules>
 	<dependencies>
 		<dependency>
 			<groupId>org.cspoker</groupId>
-			<artifactId>common-handeval</artifactId>
+			<artifactId>common-common</artifactId>
 			<version>0.1-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
