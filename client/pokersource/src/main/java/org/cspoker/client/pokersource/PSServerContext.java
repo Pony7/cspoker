@@ -22,14 +22,14 @@ import org.cspoker.common.api.account.context.AccountContext;
 import org.cspoker.common.api.cashier.context.CashierContext;
 import org.cspoker.common.api.chat.context.ChatContext;
 import org.cspoker.common.api.chat.listener.ChatListener;
-import org.cspoker.common.api.lobby.context.LobbyContext;
+import org.cspoker.common.api.lobby.context.RemoteLobbyContext;
 import org.cspoker.common.api.lobby.listener.LobbyListener;
-import org.cspoker.common.api.shared.context.ServerContext;
+import org.cspoker.common.api.shared.context.RemoteServerContext;
 import org.cspoker.common.elements.table.TableId;
 import org.cspoker.external.pokersource.PokersourceConnection;
 import org.cspoker.external.pokersource.commands.Logout;
 
-public class PSServerContext implements ServerContext {
+public class PSServerContext implements RemoteServerContext {
 
 	private final static Logger logger = Logger.getLogger(TestScenario.class);
 	
@@ -52,8 +52,8 @@ public class PSServerContext implements ServerContext {
 	}
 
 	@Override
-	public LobbyContext getLobbyContext(LobbyListener lobbyListener) {
-		return new PSLobbyContext(conn, serial);
+	public RemoteLobbyContext getLobbyContext(LobbyListener lobbyListener) {
+		return new PSLobbyContext(conn, serial, lobbyListener);
 	}
 
 	@Override

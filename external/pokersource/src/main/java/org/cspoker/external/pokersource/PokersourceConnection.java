@@ -126,9 +126,17 @@ public class PokersourceConnection extends RESTConnection{
 	public void addListener(AllEventListener listener){
 		listeners.add(listener);
 	}
+	public void addListeners(AllEventListener... listeners){
+		for(AllEventListener listener:listeners)
+			this.listeners.add(listener);
+	}
 
 	public void removeListener(AllEventListener listener) {
 		listeners.remove(listener);
+	}
+	public void removeListeners(AllEventListener... listeners){
+		for(AllEventListener listener:listeners)
+			this.listeners.remove(listener);
 	}
 
 	private void signal(JSONPacket event) {

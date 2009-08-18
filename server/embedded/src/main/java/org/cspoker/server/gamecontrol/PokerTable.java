@@ -409,10 +409,6 @@ public class PokerTable {
 		sitInPlayers.remove(player.getId());
 	}
 	
-	public synchronized void leaveSeat(MutableSeatedPlayer player){
-		tableState.leaveSeat(player.getId());
-	}
-	
 	public boolean isPlaying() {
 		return tableState.isPlaying();
 	}

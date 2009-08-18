@@ -19,16 +19,14 @@ import java.io.IOException;
 
 import javax.security.auth.login.LoginException;
 
-import org.cspoker.common.CSPokerServer;
-import org.cspoker.common.api.shared.context.ServerContext;
+import org.cspoker.client.pokersource.listeners.ErrorListener;
+import org.cspoker.client.pokersource.listeners.SerialListener;
+import org.cspoker.common.RemoteCSPokerServer;
+import org.cspoker.common.api.shared.context.RemoteServerContext;
 import org.cspoker.external.pokersource.PokersourceConnection;
 import org.cspoker.external.pokersource.commands.Login;
-import org.cspoker.external.pokersource.eventlisteners.all.DefaultListener;
-import org.cspoker.external.pokersource.events.AuthOk;
-import org.cspoker.external.pokersource.events.Error;
-import org.cspoker.external.pokersource.events.Serial;
 
-public class PokersourceServer implements CSPokerServer {
+public class PokersourceServer implements RemoteCSPokerServer {
 
 	private final String server;
 
@@ -37,40 +35,20 @@ public class PokersourceServer implements CSPokerServer {
 	}
 	
 	@Override
-	public ServerContext login(String username, String password) throws LoginException {
+	public RemoteServerContext login(String username, String password) throws LoginException {
 		try {
 			final PokersourceConnection conn = new PokersourceConnection(server);
-			class LoginResult extends DefaultListener{
-				
-				private boolean success = false;
-				private String msg;
-				private int serial;
-				
-				@Override
-				public void onAuthOk(AuthOk authOk) {
-					success = true;
-				}
-				
-				@Override
-				public void onError(Error error) {
-					msg = error.getMessage();
-				}
-				
-				@Override
-				public void onSerial(Serial serial) {
-					this.serial = serial.getSerial();
-				}
-				
-				private ServerContext getResult() throws LoginException {
-					if(!success) throw new LoginException(msg);
-					conn.removeListener(this);
-					return new PSServerContext(conn,serial);
-				}
-			}
-			LoginResult listener = new LoginResult();
-			conn.addListener(listener);
+			
+			ErrorListener error = new ErrorListener();
+			SerialListener serial = new SerialListener();
+			
+			conn.addListeners(error, serial);
 			conn.send(new Login(username, password));
-			return listener.getResult();
+			conn.removeListeners(error, serial);
+			if(error.isError()) {
+				throw new LoginException(error.getMsg());
+			}
+			return new PSServerContext(conn, serial.getSerial());
 		} catch (IOException e) {
 			throw new LoginException(e.getMessage());
 		}
