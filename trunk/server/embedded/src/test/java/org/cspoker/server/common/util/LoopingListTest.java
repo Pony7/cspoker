@@ -19,9 +19,9 @@ package org.cspoker.server.common.util;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.cspoker.server.util.LoopingList;
-
 import junit.framework.TestCase;
+
+import org.cspoker.server.util.LoopingList;
 
 public class LoopingListTest extends TestCase {
 

@@ -11,8 +11,6 @@
  */
 package org.cspoker.client.gui.swt.window;
 
-import javax.security.auth.login.LoginException;
-
 import org.apache.log4j.Logger;
 import org.cspoker.client.User;
 import org.cspoker.client.gui.swt.control.ClientCore;

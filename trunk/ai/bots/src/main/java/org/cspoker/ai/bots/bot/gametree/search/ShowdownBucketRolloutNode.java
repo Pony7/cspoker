@@ -15,17 +15,12 @@
  */
 package org.cspoker.ai.bots.bot.gametree.search;
 
-import java.util.SortedMap;
-import java.util.Map.Entry;
-
 import org.apache.log4j.Logger;
 import org.cspoker.ai.bots.bot.gametree.rollout.BucketRollOut;
-import org.cspoker.ai.bots.bot.gametree.rollout.RolloutResult;
 import org.cspoker.ai.bots.bot.gametree.search.nodevisitor.NodeVisitor;
 import org.cspoker.ai.opponentmodels.OpponentModel;
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.common.elements.player.PlayerId;
-import org.cspoker.common.util.MutableDouble;
 
 public class ShowdownBucketRolloutNode implements ShowdownNode {
 

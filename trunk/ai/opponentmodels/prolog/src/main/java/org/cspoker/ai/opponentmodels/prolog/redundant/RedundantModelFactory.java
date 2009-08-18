@@ -25,7 +25,6 @@ import net.jcip.annotations.ThreadSafe;
 import org.cspoker.ai.opponentmodels.OpponentModel;
 import org.cspoker.ai.opponentmodels.prolog.cafe.PrologCafeModel;
 import org.cspoker.ai.opponentmodels.prolog.tuprolog.TuPrologModel;
-import org.cspoker.common.elements.player.PlayerId;
 
 import alice.tuprolog.InvalidTheoryException;
 import alice.tuprolog.Prolog;

@@ -15,7 +15,6 @@
  */
 package org.cspoker.ai.bots.bot.gametree.mcts.nodes;
 
-import org.cspoker.ai.bots.bot.gametree.mcts.strategies.selection.SelectionStrategy;
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.common.elements.player.PlayerId;
 

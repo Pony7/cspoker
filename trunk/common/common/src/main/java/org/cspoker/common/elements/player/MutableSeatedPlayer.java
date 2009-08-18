@@ -23,7 +23,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import org.cspoker.common.elements.cards.Card;
 import org.cspoker.common.elements.chips.Chips;
 import org.cspoker.common.elements.table.SeatId;
-import org.cspoker.common.util.Util;
 
 /**
  * A class to represent players.
