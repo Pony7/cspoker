@@ -17,6 +17,7 @@ package org.cspoker.ai.bots;
 
 import org.cspoker.server.EmbeddedCSPokerServer;
 
+
 public class RunLocalBot {
 
 	public static void main(String[] args) {

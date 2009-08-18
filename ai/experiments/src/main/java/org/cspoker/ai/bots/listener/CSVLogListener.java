@@ -15,7 +15,6 @@
  */
 package org.cspoker.ai.bots.listener;
 
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 

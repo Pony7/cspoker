@@ -1,6 +1,6 @@
-import org.cspoker.ai.bots.util.Gaussian;
-
 import junit.framework.TestCase;
+
+import org.cspoker.ai.bots.util.Gaussian;
 
 /**
  * This program is free software; you can redistribute it and/or modify

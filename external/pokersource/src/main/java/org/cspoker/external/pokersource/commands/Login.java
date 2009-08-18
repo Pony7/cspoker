@@ -16,9 +16,7 @@
 package org.cspoker.external.pokersource.commands;
 
 import org.cspoker.external.pokersource.GeneralPacket;
-import org.cspoker.external.pokersource.JSONPacket;
 import org.cspoker.external.pokersource.eventlisteners.general.GeneralEventListener;
-import org.cspoker.external.pokersource.eventlisteners.poker.PokerEventListener;
 
 
 public class Login extends GeneralPacket{

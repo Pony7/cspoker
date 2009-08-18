@@ -13,6 +13,9 @@
 	<modules>
 		<module>common</module>
 		<module>gui</module>
+		<module>pokersource</module>
+		<module>rmi</module>
+		<module>xml</module>
 	</modules>
 	<dependencies>
 		<dependency>

@@ -16,7 +16,6 @@
 package org.cspoker.ai.opponentmodels.simple;
 
 import org.cspoker.ai.opponentmodels.OpponentModel;
-import org.cspoker.common.elements.player.PlayerId;
 
 public class HistogramModelFactory implements OpponentModel.Factory{
 

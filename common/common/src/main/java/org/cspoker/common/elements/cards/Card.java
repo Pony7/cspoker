@@ -11,8 +11,6 @@
  */
 package org.cspoker.common.elements.cards;
 
-import java.util.HashMap;
-
 import javax.xml.bind.annotation.XmlAttribute;
 
 public enum Card {

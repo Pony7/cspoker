@@ -37,7 +37,7 @@
 		</dependency>
 		<dependency>
 			<groupId>org.cspoker</groupId>
-			<artifactId>server</artifactId>
+			<artifactId>server-embedded</artifactId>
 			<version>0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
