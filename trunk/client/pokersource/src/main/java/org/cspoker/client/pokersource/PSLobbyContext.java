@@ -15,9 +15,12 @@
  */
 package org.cspoker.client.pokersource;
 
-import org.cspoker.common.api.lobby.context.LobbyContext;
-import org.cspoker.common.api.lobby.holdemtable.context.HoldemTableContext;
+import java.rmi.RemoteException;
+
+import org.cspoker.common.api.lobby.context.RemoteLobbyContext;
+import org.cspoker.common.api.lobby.holdemtable.context.RemoteHoldemTableContext;
 import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
+import org.cspoker.common.api.lobby.listener.LobbyListener;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.table.DetailedHoldemTable;
 import org.cspoker.common.elements.table.TableConfiguration;
@@ -25,14 +28,16 @@ import org.cspoker.common.elements.table.TableId;
 import org.cspoker.common.elements.table.TableList;
 import org.cspoker.external.pokersource.PokersourceConnection;
 
-public class PSLobbyContext implements LobbyContext {
+public class PSLobbyContext implements RemoteLobbyContext {
 
 	private final PokersourceConnection conn;
 	private final int serial;
+	private final LobbyListener lobbyListener;
 
-	public PSLobbyContext(PokersourceConnection conn, int serial) {
+	public PSLobbyContext(PokersourceConnection conn, int serial, LobbyListener lobbyListener) {
 		this.conn = conn;
 		this.serial = serial;
+		this.lobbyListener = lobbyListener;
 	}
 
 	@Override
@@ -52,10 +57,10 @@ public class PSLobbyContext implements LobbyContext {
 	}
 
 	@Override
-	public HoldemTableContext joinHoldemTable(TableId tableId,
+	public RemoteHoldemTableContext joinHoldemTable(TableId tableId,
 			HoldemTableListener holdemTableListener)
-			throws IllegalActionException {
-		throw new UnsupportedOperationException();
+			throws IllegalActionException, RemoteException {
+		return new PSTableContext(conn, serial, holdemTableListener);
 	}
 
 }

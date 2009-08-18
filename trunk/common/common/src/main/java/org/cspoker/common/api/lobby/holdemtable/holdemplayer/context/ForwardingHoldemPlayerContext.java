@@ -42,16 +42,6 @@ public class ForwardingHoldemPlayerContext implements HoldemPlayerContext{
 	}
 
 	@Override
-	public void leaveSeat() throws IllegalActionException {
-		holdemPlayerContext.leaveSeat();
-	}
-
-	@Override
-	public void sitIn() throws IllegalActionException {
-		holdemPlayerContext.sitIn();
-	}
-
-	@Override
 	public void startGame() throws IllegalActionException {
 		holdemPlayerContext.startGame();
 	}

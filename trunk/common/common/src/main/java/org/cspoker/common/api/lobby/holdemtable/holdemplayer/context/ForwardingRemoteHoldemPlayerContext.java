@@ -48,16 +48,6 @@ public class ForwardingRemoteHoldemPlayerContext implements RemoteHoldemPlayerCo
 	}
 	
 	@Override
-	public void leaveSeat() throws RemoteException, IllegalActionException {
-		holdemPlayerContext.leaveSeat();
-	}
-
-	@Override
-	public void sitIn() throws RemoteException, IllegalActionException {
-		holdemPlayerContext.sitIn();
-	}
-	
-	@Override
 	public void startGame() throws RemoteException, IllegalActionException {
 		holdemPlayerContext.startGame();
 	}
