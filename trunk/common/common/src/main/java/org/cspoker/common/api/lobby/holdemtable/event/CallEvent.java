@@ -37,18 +37,13 @@ public class CallEvent
 	@XmlAttribute
 	private final int movedAmount;
 	
-	@XmlAttribute
-	private final boolean endsRound;
-	
-	public CallEvent(PlayerId player, int movedAmount, boolean endsRound) {
+	public CallEvent(PlayerId player, int movedAmount) {
 		this.playerId = player;
-		this.endsRound = endsRound;
 		this.movedAmount = movedAmount;
 	}
 	
 	protected CallEvent() {
 		playerId = null;
-		endsRound = false;
 		movedAmount = 0;
 	}
 	
@@ -59,10 +54,6 @@ public class CallEvent
 	
 	public PlayerId getPlayerId() {
 		return playerId;
-	}
-	
-	public boolean endsRound() {
-		return endsRound;
 	}
 	
 	public int getMovedAmount() {

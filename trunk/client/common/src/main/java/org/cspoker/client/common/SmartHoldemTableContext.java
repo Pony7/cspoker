@@ -32,10 +32,10 @@ import org.cspoker.common.elements.table.SeatId;
 public class SmartHoldemTableContext
 		extends ForwardingRemoteHoldemTableContext {
 	
-	private final TableState state;
+	private final GameStateContainer state;
 	private final PlayerId playerId;
 
-	public SmartHoldemTableContext(RemoteHoldemTableContext holdemTableContext, TableState state, PlayerId playerId) {
+	public SmartHoldemTableContext(RemoteHoldemTableContext holdemTableContext, GameStateContainer state, PlayerId playerId) {
 		super(holdemTableContext);
 		this.state = state;
 		this.playerId = playerId;

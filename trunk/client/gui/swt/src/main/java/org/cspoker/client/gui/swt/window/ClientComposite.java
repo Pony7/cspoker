@@ -14,7 +14,7 @@ package org.cspoker.client.gui.swt.window;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import org.cspoker.client.common.TableState;
+import org.cspoker.client.common.GameStateContainer;
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.client.gui.swt.control.ClientCore;
 import org.cspoker.client.gui.swt.control.SWTResourceManager;
@@ -37,7 +37,7 @@ public abstract class ClientComposite
 	/** ExecutorService for the GameWindow and its children. */
 	public static final ExecutorService executor = Executors.newCachedThreadPool();
 	
-	protected TableState tableState;
+	protected GameStateContainer tableState;
 	
 	/***************************************************************************
 	 * Constructor
@@ -79,7 +79,7 @@ public abstract class ClientComposite
 	/**
 	 * @return
 	 */
-	private TableState getTableState() {
+	private GameStateContainer getTableState() {
 		return tableState;
 	}
 	

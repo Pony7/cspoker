@@ -64,9 +64,9 @@ public class SmartHoldemTableListener
 	
 	private final static Logger logger = Logger.getLogger(SmartHoldemTableListener.class);
 	
-	private final TableState tableState;
+	private final GameStateContainer tableState;
 	
-	public SmartHoldemTableListener(HoldemTableListener holdemTableListener, TableState tableState) {
+	public SmartHoldemTableListener(HoldemTableListener holdemTableListener, GameStateContainer tableState) {
 		super(holdemTableListener);
 		this.tableState = tableState;
 	}
@@ -150,7 +150,7 @@ public class SmartHoldemTableListener
 	@Override
 	public void onNewDeal(NewDealEvent newDealEvent) {
 		logger.trace(newDealEvent);
-		tableState.setGameState(new NewDealState(tableState.getTableConfiguration(), newDealEvent, tableState.getGameState()));
+		tableState.setGameState(new NewDealState(newDealEvent, tableState.getGameState()));
 		super.onNewDeal(newDealEvent);
 	}
 	

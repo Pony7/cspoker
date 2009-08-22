@@ -23,10 +23,10 @@ import org.cspoker.common.elements.player.PlayerId;
 
 public class SmartHoldemPlayerListener extends ForwardingHoldemPlayerListener {
 
-	private final TableState tableState;
+	private final GameStateContainer tableState;
 	private final PlayerId playerId;
 
-	public SmartHoldemPlayerListener(HoldemPlayerListener holdemPlayerListener,TableState tableState, PlayerId playerId) {
+	public SmartHoldemPlayerListener(HoldemPlayerListener holdemPlayerListener,GameStateContainer tableState, PlayerId playerId) {
 		super(holdemPlayerListener);
 		this.tableState = tableState;
 		this.playerId = playerId;

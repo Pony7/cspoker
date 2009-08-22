@@ -157,7 +157,7 @@ public abstract class BettingRound
 		// Change to next player
 		game.nextPlayer();
 		
-		gameMediator.publishCallEvent(new CallEvent(player.getId(),movedAmount, isRoundEnded()));
+		gameMediator.publishCallEvent(new CallEvent(player.getId(),movedAmount));
 		BettingRound.logger.info(player.getName() + " calls.");
 	}
 	
@@ -276,7 +276,7 @@ public abstract class BettingRound
 			playerMadeEvent(player);
 			someoneBigAllIn = true;
 		}
-		gameMediator.publishAllInEvent(new AllInEvent(player.getId(), amount, isRoundEnded()));
+		gameMediator.publishAllInEvent(new AllInEvent(player.getId(), amount));
 		
 		BettingRound.logger.info(player.getName() + ": "+" goes all-in with " + Util.parseDollars(player.getMemento().getBetChipsValue()));
 	}

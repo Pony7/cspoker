@@ -181,7 +181,7 @@ extends TableState {
 	public synchronized void check(MutableSeatedPlayer player)
 	throws IllegalActionException {
 		round.check(player);
-		mediatingTable.publishCheckEvent(new CheckEvent(player.getId(), round.isRoundEnded()));
+		mediatingTable.publishCheckEvent(new CheckEvent(player.getId()));
 		PlayingTableState.logger.info(player.getName() + " checks.");
 		checkIfEndedAndChangeRound();
 	}
@@ -217,7 +217,7 @@ extends TableState {
 	public synchronized void fold(MutableSeatedPlayer player)
 	throws IllegalActionException {
 		round.fold(player);
-		mediatingTable.publishFoldEvent(new FoldEvent(player.getId(), round.isRoundEnded()));
+		mediatingTable.publishFoldEvent(new FoldEvent(player.getId()));
 		PlayingTableState.logger.info(player.getName() + ": folds");
 		checkIfEndedAndChangeRound();
 	}

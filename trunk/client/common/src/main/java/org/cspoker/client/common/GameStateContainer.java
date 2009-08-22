@@ -18,21 +18,13 @@ package org.cspoker.client.common;
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.client.common.gamestate.InitialGameState;
 import org.cspoker.common.elements.table.DetailedHoldemTable;
-import org.cspoker.common.elements.table.TableConfiguration;
 
-public class TableState {
-	
-	private final TableConfiguration tableConfiguration;
+public class GameStateContainer {
 	
 	private volatile GameState gameState;
 	
-	public TableState(DetailedHoldemTable table) {
-		this.tableConfiguration = table.getTableConfiguration();
+	public GameStateContainer(DetailedHoldemTable table) {
 		this.gameState = new InitialGameState(table);
-	}
-	
-	public TableConfiguration getTableConfiguration() {
-		return tableConfiguration;
 	}
 	
 	public GameState getGameState() {

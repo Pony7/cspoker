@@ -16,5 +16,10 @@
 			<artifactId>external-pokersource</artifactId>
 			<version>0.1-SNAPSHOT</version>
 		</dependency>
+		<dependency>
+			<groupId>org.cspoker</groupId>
+			<artifactId>client-common</artifactId>
+			<version>0.1-SNAPSHOT</version>
+		</dependency>
 	</dependencies>
 </project>
