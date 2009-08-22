@@ -56,11 +56,9 @@ public class RaiseAction extends SearchBotAction {
 
 		GameState raiseState;
 		if (movedAmount >= stack) {
-			raiseState = new AllInState(gameState, new AllInEvent(actor,
-					movedAmount, false));
+			raiseState = new AllInState(gameState, new AllInEvent(actor, movedAmount));
 		} else {
-			raiseState = new RaiseState(gameState, new RaiseEvent(actor,
-					amount, movedAmount));
+			raiseState = new RaiseState(gameState, new RaiseEvent(actor, amount, movedAmount));
 		}
 		return new NextPlayerState(raiseState, new NextPlayerEvent(raiseState
 				.getNextActivePlayerAfter(actor).getPlayerId()));

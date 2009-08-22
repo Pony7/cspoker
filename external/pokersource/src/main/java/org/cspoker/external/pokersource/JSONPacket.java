@@ -15,6 +15,7 @@
  */
 package org.cspoker.external.pokersource;
 
+import net.sf.json.JSONException;
 import net.sf.json.JSONObject;
 import net.sf.json.JSONSerializer;
 
@@ -42,5 +43,9 @@ abstract public class JSONPacket{
 	public abstract void signal(GeneralEventListener generalListener, PokerEventListener pokerListener);
 	
 	public abstract void signal(AllEventListener listener);
+	
+	public void checkException() throws JSONException {
+		// no op
+	}
 	
 }

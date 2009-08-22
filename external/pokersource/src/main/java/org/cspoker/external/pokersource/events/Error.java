@@ -15,6 +15,8 @@
  */
 package org.cspoker.external.pokersource.events;
 
+import net.sf.json.JSONException;
+
 import org.cspoker.external.pokersource.GeneralPacket;
 import org.cspoker.external.pokersource.eventlisteners.general.GeneralEventListener;
 
@@ -61,6 +63,11 @@ public class Error extends GeneralPacket{
 
 	public void setOther_type(int other_type) {
 		this.other_type = other_type;
+	}
+	
+	@Override
+	public void checkException() throws JSONException {
+		throw new JSONException(message);
 	}
 	
 }

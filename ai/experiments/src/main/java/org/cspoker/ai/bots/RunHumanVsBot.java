@@ -59,7 +59,7 @@ public class RunHumanVsBot{
 
 	static {
 		Log4JPropertiesLoader
-		.load("org/cspoker/client/bots/logging/log4j.properties");
+		.load("org/cspoker/ai/experiments/logging/log4j.properties");
 	}
 
 	private final static Logger logger = Logger.getLogger(RunHumanVsBot.class);
@@ -121,7 +121,7 @@ public class RunHumanVsBot{
 		try {
 			botFactory = new FixedSampleMCTSBotFactory(
 					"Plus Bot",
-					WekaRegressionModelFactory.createForZip("org/cspoker/client/bots/bot/search/opponentmodel/weka/models/model1.zip"),
+					WekaRegressionModelFactory.createForZip("org/cspoker/ai/opponentmodels/weka/models/model1.zip"),
 					new SamplingToFunctionSelector(50,new UCTSelector(40000)),
 					new SamplingToFunctionSelector(50,new UCTPlusPlusSelector()),
 					new MaxValueSelector(),

@@ -18,6 +18,7 @@ package org.cspoker.client.pokersource;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.concurrent.ExecutionException;
 
 import org.apache.log4j.Logger;
 import org.cspoker.common.util.Log4JPropertiesLoader;
@@ -46,13 +47,12 @@ public class TestScenario {
 	private final static Logger logger = Logger.getLogger(TestScenario.class);
 
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws IOException, InterruptedException, ExecutionException {
 		(new TestScenario()).run();
 	}
 
 	private int serial;
 	private int game_id;
-	private boolean running = true;
 
 	private Queue<Runnable> todos = new LinkedList<Runnable>();
 
@@ -77,91 +77,51 @@ public class TestScenario {
 					super.onTable(table);
 					game_id = table.getId();
 				}
-				
+
 				@Override
 				public void onError(Error error) {
 					super.onError(error);
-					running = false;
+					try {
+						conn.close();
+					} catch (IOException e) {
+						logger.error(e);
+					}
 				}
 
 				@Override
 				public void onSelfInPosition(SelfInPosition selfInPosition) {
 					super.onSelfInPosition(selfInPosition);
-					todos.add(new Runnable(){
-						@Override
-						public void run() {
-							try {
-								conn.send(new Call(serial, game_id));
-							} catch (IOException e) {
-								throw new IllegalStateException(e);
-							}
-						}
-					});
+					try {
+						conn.send(new Call(serial, game_id));
+					} catch (IOException e) {
+						throw new IllegalStateException(e);
+					}
 				}
 
 				@Override
 				public void onSitOut(SitOut sitOut) {
 					super.onSitOut(sitOut);
 					if(sitOut.getGame_id()==game_id && sitOut.getSerial() == serial){
-						todos.add(new Runnable(){
-							@Override
-							public void run() {
-								try {
-									conn.send(new Sit(serial, game_id));
-								} catch (IOException e) {
-									throw new IllegalStateException(e);
-								}
-							}
-						});
+						try {
+							conn.send(new Sit(serial, game_id));
+						} catch (IOException e) {
+							throw new IllegalStateException(e);
+						}
 					}
 				}
 
 			};
 			conn.addListener(listener);
+
+			conn.send(new Login("foobar", "foobar")).await();
+			conn.send(new TablePicker(serial, true)).await();
+			conn.startPolling(game_id);
+			conn.send(new SitOut(serial, game_id));
 			
-			todos.add(new Runnable(){
-				@Override
-				public void run() {
-					try {
-						conn.send(new Login("foobar", "foobar"));
-					} catch (IOException e) {
-						throw new IllegalStateException(e);
-					}
-				}
-			});
-			todos.add(new Runnable(){
-				@Override
-				public void run() {
-					try {
-						conn.send(new TablePicker(serial, true));
-					} catch (IOException e) {
-						throw new IllegalStateException(e);
-					}
-				}
-			});
-			todos.add(new Runnable(){
-				@Override
-				public void run() {
-					try {
-						conn.send(new SitOut(serial, game_id));
-					} catch (IOException e) {
-						throw new IllegalStateException(e);
-					}
-				}
-			});
-			while (running) {
-				if(todos.isEmpty()){
-					conn.send(new Poll(game_id,0));
-				}else{
-					while(running && !todos.isEmpty()) {
-						todos.poll().run();
-					}
-				}
-				try {
-					Thread.sleep(1000);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
+			try {
+				Thread.sleep(30000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
 			}
 		} finally{
 			conn.close();

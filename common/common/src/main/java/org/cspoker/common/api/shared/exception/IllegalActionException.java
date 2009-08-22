@@ -28,6 +28,10 @@ public class IllegalActionException
 		super(message);
 	}
 	
+	public IllegalActionException(Throwable e) {
+		super(e);
+	}
+	
 	public IllegalActionException(String message, Throwable e) {
 		super(message, e);
 	}

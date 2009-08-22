@@ -47,6 +47,16 @@ public class HoldemPlayerContextImpl
 	}
 
 	@Override
+	public void stopPlaying() {
+		table.stopPlaying(player);
+	}
+
+	@Override
+	public void reSitIn() throws IllegalActionException {
+		throw new IllegalActionException("Unsupported Operation");
+	}
+
+	@Override
 	public void startGame() throws IllegalActionException {
 		table.startGame();
 	}

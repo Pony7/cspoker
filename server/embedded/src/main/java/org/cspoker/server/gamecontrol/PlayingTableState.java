@@ -387,10 +387,10 @@ extends TableState {
 	/**
 	 * @param player
 	 * @throws IllegalActionException
-	 * @see org.cspoker.server.gamecontrol.TableState#leaveSeat(org.cspoker.common.elements.player.MutableSeatedPlayer)
+	 * @see org.cspoker.server.gamecontrol.TableState#stopPlaying(org.cspoker.common.elements.player.MutableSeatedPlayer)
 	 */
 	@Override
-	public void leaveSeat(PlayerId id) {
+	public void stopPlaying(PlayerId id) {
 		MutableSeatedPlayer seated = getMutableSeatedPlayer(id);
 		if (!game.getTable().hasAsPlayer(seated)) {
 			logger.warn(id + " is not seated at the table.");
