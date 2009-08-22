@@ -21,8 +21,9 @@ import java.util.concurrent.CountDownLatch;
 import net.sf.json.JSONException;
 
 import org.apache.log4j.Logger;
+import org.cspoker.client.common.GameStateContainer;
+import org.cspoker.client.common.gamestate.InitialGameState;
 import org.cspoker.common.api.lobby.holdemtable.context.RemoteHoldemTableContext;
-import org.cspoker.common.api.lobby.holdemtable.event.CallEvent;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.HoldemPlayerContext;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.RemoteHoldemPlayerContext;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.listener.HoldemPlayerListener;
@@ -30,6 +31,7 @@ import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.elements.table.SeatId;
+import org.cspoker.common.elements.table.TableConfiguration;
 import org.cspoker.external.pokersource.PokersourceConnection;
 import org.cspoker.external.pokersource.commands.poker.Call;
 import org.cspoker.external.pokersource.commands.poker.TablePicker;
@@ -51,6 +53,7 @@ public class PSTableContext implements RemoteHoldemTableContext {
 		this.serial = serial;
 		this.tableListener = holdemTableListener;
 		this.transListener = new TranslatingListener();
+		this.gameState = null;
 		
 		this.conn.addListeners(transListener);
 		try {
@@ -84,19 +87,25 @@ public class PSTableContext implements RemoteHoldemTableContext {
 		return new PSPlayerContext(conn, serial, this, holdemPlayerListener);
 	}
 	
+	
+
 	volatile int game_id;
-	
 	volatile int potsize;
+	final CountDownLatch game_idObtained = new CountDownLatch(1);
 	
-	private final CountDownLatch game_idObtained = new CountDownLatch(1);
+	volatile TableConfiguration config;
+	volatile GameStateContainer gameState;
 	
 	private class TranslatingListener extends DefaultListener{
-		
+
 		@Override
 		public void onTable(Table table) {
 			game_id = table.getId();
 			game_idObtained.countDown();
 			conn.startPolling(game_id);
+			String bettingStruct = table.getBetting_structure();
+			config = new TableConfiguration(Integer.parseInt(bettingStruct.split("-")[1]));
+			
 		}
 		
 		@Override

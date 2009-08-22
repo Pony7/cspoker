@@ -42,7 +42,7 @@ public class SmartLobbyContext
 	public SmartHoldemTableContext joinHoldemTable(TableId tableId, HoldemTableListener holdemTableListener)
 			throws RemoteException, IllegalActionException {
 		DetailedHoldemTable table = getHoldemTableInformation(tableId);
-		TableState state = new TableState(table);
+		GameStateContainer state = new GameStateContainer(table);
 		SmartHoldemTableListener smartListener = new SmartHoldemTableListener(holdemTableListener, state);
 		return new SmartHoldemTableContext(super.joinHoldemTable(tableId, smartListener), state, playerId);
 	}

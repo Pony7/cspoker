@@ -36,21 +36,16 @@ public class FoldEvent
 	@XmlAttribute
 	private final PlayerId playerId;
 	
-	@XmlAttribute
-	private final boolean endsRound;
-	
-	public FoldEvent(PlayerId player, boolean endsRound) {
+	public FoldEvent(PlayerId player) {
 		this.playerId = player;
-		this.endsRound = endsRound;
 	}
 	
 	protected FoldEvent() {
 		playerId = null;
-		endsRound = false;
 	}
 	
-	public FoldEvent(Player player, boolean endsRound) {
-		this(player.getId(), endsRound);
+	public FoldEvent(Player player) {
+		this(player.getId());
 	}
 	
 	@Override
@@ -65,9 +60,5 @@ public class FoldEvent
 	@Override
 	public void dispatch(HoldemTableListener holdemTableListener) {
 		holdemTableListener.onFold(this);
-	}
-	
-	public boolean endsRound() {
-		return endsRound;
 	}
 }

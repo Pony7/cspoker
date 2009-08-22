@@ -49,10 +49,10 @@ extends AbstractGameState {
 	private final ImmutableBiMap<SeatId, PlayerId> seatMap;
 	private final ImmutableMap<PlayerId, PlayerState> playerStates;
 
-	public NewDealState(TableConfiguration tableConfiguration, NewDealEvent newDealEvent, GameState previousGame) {
+	public NewDealState(NewDealEvent newDealEvent, GameState previousGame) {
 		this.previousGame = previousGame;
 		this.event = newDealEvent;
-		this.tableConfiguration = tableConfiguration;
+		this.tableConfiguration = previousGame.getTableConfiguration();
 
 		ImmutableMap.Builder<PlayerId, PlayerState> playerStateBuilder = ImmutableMap.builder();
 		ImmutableBiMap.Builder<SeatId, PlayerId> seatMapBuilder = ImmutableBiMap.builder();

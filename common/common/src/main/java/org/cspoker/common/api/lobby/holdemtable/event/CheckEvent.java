@@ -35,17 +35,12 @@ public class CheckEvent
 	@XmlAttribute
 	private final PlayerId playerId;
 	
-	@XmlAttribute
-	private final boolean endsRound;
-	
-	public CheckEvent(PlayerId player, boolean endsRound) {
+	public CheckEvent(PlayerId player) {
 		this.playerId = player;
-		this.endsRound = endsRound;
 	}
 	
 	protected CheckEvent() {
 		playerId = null;
-		endsRound = false;
 	}
 	
 	@Override
@@ -55,10 +50,6 @@ public class CheckEvent
 	
 	public PlayerId getPlayerId() {
 		return playerId;
-	}
-	
-	public boolean endsRound() {
-		return endsRound;
 	}
 	
 	@Override

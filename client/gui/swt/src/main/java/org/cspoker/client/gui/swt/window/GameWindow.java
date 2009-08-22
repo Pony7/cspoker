@@ -19,7 +19,7 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.cspoker.client.common.SmartHoldemTableListener;
-import org.cspoker.client.common.TableState;
+import org.cspoker.client.common.GameStateContainer;
 import org.cspoker.client.gui.swt.control.ClientGUI;
 import org.cspoker.client.gui.swt.control.SWTResourceManager;
 import org.cspoker.client.gui.swt.control.UserSeatedPlayer;
@@ -97,7 +97,7 @@ public class GameWindow
 	 */
 	public GameWindow(LobbyWindow lobbyWindow, DetailedHoldemTable table) {
 		super(new Shell(lobbyWindow.getDisplay(), SWT.CLOSE | SWT.RESIZE), SWT.NONE, lobbyWindow.getClientCore());
-		tableState = new TableState(table);
+		tableState = new GameStateContainer(table);
 		smartListener = new SmartHoldemTableListener(this, tableState);
 		detailedTable = table;
 		try {
@@ -222,9 +222,6 @@ public class GameWindow
 	public void onCall(CallEvent callEvent) {
 		handleActionChangedPot(0, callEvent.getPlayerId(), "Call");
 		userInputComposite.showDealerMessage(callEvent);
-		if (callEvent.endsRound()) {
-			tableComposite.moveBetsToPot();
-		}
 	}
 	
 	/**
@@ -233,9 +230,6 @@ public class GameWindow
 	public void onCheck(CheckEvent checkEvent) {
 		getPlayerSeatComposite(checkEvent.getPlayerId()).showAction("Check");
 		userInputComposite.showDealerMessage(checkEvent);
-		if (checkEvent.endsRound()) {
-			tableComposite.moveBetsToPot();
-		}
 	}
 	
 	/**
@@ -246,9 +240,6 @@ public class GameWindow
 		Collection<Card> noCards = Collections.emptySet();
 		getPlayerSeatComposite(foldEvent.getPlayerId()).setHoleCards(noCards);
 		userInputComposite.showDealerMessage(foldEvent);
-		if (foldEvent.endsRound()) {
-			tableComposite.moveBetsToPot();
-		}
 	}
 	
 	/**
@@ -310,6 +301,7 @@ public class GameWindow
 	 * @see org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener#onNewRound(org.cspoker.common.api.lobby.holdemtable.event.NewRoundEvent)
 	 */
 	public void onNewRound(NewRoundEvent newRoundEvent) {
+		tableComposite.moveBetsToPot();
 		tableComposite.updateTableGraphics();
 		userInputComposite.showDealerMessage(newRoundEvent);
 	}
@@ -393,9 +385,6 @@ public class GameWindow
 	public void onAllIn(AllInEvent allInEvent) {
 		handleActionChangedPot(allInEvent.getMovedAmount(), allInEvent.getPlayerId(), "All In");
 		userInputComposite.showDealerMessage(allInEvent);
-		if (allInEvent.endsRound()) {
-			tableComposite.moveBetsToPot();
-		}
 	}
 	
 	/**
