@@ -119,4 +119,19 @@ public enum Card {
 		return rank.getShortDescription()+suit.getShortDescription();
 	}
 
+
+	private static Card[] cards = new Card[52];
+	static{
+		for(Card card: Card.values()){
+			if(card.getSuit() == Suit.HEARTS) cards[card.getRank().getValue()-2 + 0] = card;
+			else if(card.getSuit() == Suit.DIAMONDS) cards[card.getRank().getValue()-2 + 13] = card;
+			else if(card.getSuit() == Suit.CLUBS) cards[card.getRank().getValue()-2 + 26] = card;
+			else if(card.getSuit() == Suit.SPADES) cards[card.getRank().getValue()-2 + 39] = card;
+		}
+	}
+	
+	public static Card fromPokersourceInt(int i){
+		return cards[i];
+	}
+	
 }

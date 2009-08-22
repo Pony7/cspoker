@@ -50,8 +50,7 @@ public class BetAction extends SearchBotAction {
 		GameState betState;
 		int stack = gameState.getPlayer(actor).getStack();
 		if (stack == amount) {
-			betState = new AllInState(gameState, new AllInEvent(actor, amount,
-					false));
+			betState = new AllInState(gameState, new AllInEvent(actor, amount));
 		} else if (stack > amount) {
 			betState = new BetState(gameState, new BetEvent(actor, amount));
 		} else throw new IllegalStateException("Bad amount: "+amount);

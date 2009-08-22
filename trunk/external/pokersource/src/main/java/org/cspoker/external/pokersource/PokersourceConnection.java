@@ -17,12 +17,21 @@ package org.cspoker.external.pokersource;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.rmi.RemoteException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 import net.sf.json.JSONArray;
+import net.sf.json.JSONException;
 import net.sf.json.JSONObject;
 import net.sf.json.JSONSerializer;
 import net.sf.json.JsonConfig;
@@ -32,6 +41,7 @@ import org.cspoker.external.pokersource.commands.Logout;
 import org.cspoker.external.pokersource.commands.poker.Call;
 import org.cspoker.external.pokersource.commands.poker.Check;
 import org.cspoker.external.pokersource.commands.poker.Fold;
+import org.cspoker.external.pokersource.commands.poker.Poll;
 import org.cspoker.external.pokersource.commands.poker.Raise;
 import org.cspoker.external.pokersource.commands.poker.Sit;
 import org.cspoker.external.pokersource.commands.poker.SitOut;
@@ -96,34 +106,77 @@ public class PokersourceConnection extends RESTConnection{
 	public PokersourceConnection(String server) throws MalformedURLException {
 		super(server);
 	}
+	
+	public EventRunner sendRemote(JSONPacket command) throws RemoteException, JSONException{
+		try {
+			return send(command);
+		} catch (IOException e) {
+			throw new RemoteException(e.getMessage(),e);
+		}
+	}
 
-	public synchronized void send(JSONPacket command) throws IOException{
+	public synchronized EventRunner send(JSONPacket command) throws JSONException,IOException{
 		logger.info("Sending: "+command.getClass().getSimpleName()+": "+command);
 		String response = put(command.toString());
 		logger.info("Received: "+response);
 		JsonConfig jsonConfig = new JsonConfig();
 		jsonConfig.setExcludes(new String[]{"cookie", "length"});
-		JSONArray jsonResponse = (JSONArray) JSONSerializer.toJSON(response,jsonConfig);
-		signalEvents(jsonResponse);
+		final JSONArray jsonResponse = (JSONArray) JSONSerializer.toJSON(response,jsonConfig);
+		return signalEvents(jsonResponse);
+	}
+	
+	public static class EventRunner{
+		
+		private final Future<?> done;
+
+		public EventRunner(Future<?> done) {
+			this.done = done;
+		}
+		
+		public void await() {
+			try {
+				done.get();
+			} catch (InterruptedException e) {
+				logger.error(e);
+				throw new IllegalStateException(e);
+			} catch (ExecutionException e) {
+				logger.error(e);
+				throw new IllegalStateException(e);
+			}
+		}
+		
 	}
 
-	private void signalEvents(JSONArray jsonResponse) {
+	private EventRunner signalEvents(JSONArray jsonResponse) throws JSONException{
+		final JSONPacket[] events = new JSONPacket[jsonResponse.size()];
 		for(int i=0; i<jsonResponse.size();i++){
 			JSONObject jsonEvent = jsonResponse.getJSONObject(i);
 			JsonConfig jsonConfig = new JsonConfig();
 			jsonConfig.setRootClass( eventTypes.get(jsonEvent.get("type")) ); 
 			try {
-				JSONPacket event = (JSONPacket) JSONObject.toBean( jsonEvent, jsonConfig );  
-				signal(event);
+				events[i]=(JSONPacket) JSONObject.toBean( jsonEvent, jsonConfig );
 			} catch (ClassCastException e) {
 				throw new IllegalStateException("Couldn't unmarshall: "+jsonEvent,e);
 			}
 		}
+		EventRunner runner = new EventRunner(executor.submit(new Runnable(){
+			@Override
+			public void run() {
+				try {
+					for(JSONPacket event:events) signal(event);
+				} catch (Exception e) {
+					logger.error(e);
+					throw new RuntimeException(e);
+				}
+			}
+		}));
+		for(JSONPacket event:events) event.checkException();
+		return runner;
 	}
 
-	private final List<AllEventListener> listeners = new CopyOnWriteArrayList<AllEventListener>();
+	private final List<AllEventListener> listeners = new ArrayList<AllEventListener>();
 
-	public void addListener(AllEventListener listener){
+	public synchronized void addListener(AllEventListener listener){
 		listeners.add(listener);
 	}
 	public void addListeners(AllEventListener... listeners){
@@ -131,9 +184,10 @@ public class PokersourceConnection extends RESTConnection{
 			this.listeners.add(listener);
 	}
 
-	public void removeListener(AllEventListener listener) {
+	public synchronized void removeListener(AllEventListener listener) {
 		listeners.remove(listener);
 	}
+	
 	public void removeListeners(AllEventListener... listeners){
 		for(AllEventListener listener:listeners)
 			this.listeners.remove(listener);
@@ -145,7 +199,36 @@ public class PokersourceConnection extends RESTConnection{
 
 	public void close() throws IOException {
 		send(new Logout());
+		for (ScheduledFuture<?> future : pollers.values()) {
+			future.cancel(false);
+		}
+		executor.shutdown();
 		super.close();
+	}
+	
+	private final Map<Integer, ScheduledFuture<?>> pollers = new ConcurrentHashMap<Integer, ScheduledFuture<?>>();
+
+	private final ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
+	
+	public void startPolling(final int game_id){
+		pollers.put(game_id, executor.scheduleAtFixedRate(new Runnable(){
+			
+			@Override
+			public void run() {
+				try {
+					send(new Poll(game_id, 0));
+				} catch(Exception e){
+					//catch and rethrow to avoid ScheduledExecutorService eating it silently.
+					logger.error(e);
+					throw new RuntimeException(e);
+				}
+			}
+			
+		}, 0,1, TimeUnit.SECONDS));
+	}
+	
+	public void stopPolling(int game_id){
+		pollers.remove(game_id).cancel(false);
 	}
 
 	private final static Map<String, Class<? extends JSONPacket>> eventTypes = new HashMap<String, Class<? extends JSONPacket>>();

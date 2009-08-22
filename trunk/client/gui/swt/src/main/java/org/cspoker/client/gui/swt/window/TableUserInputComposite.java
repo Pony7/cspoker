@@ -360,7 +360,7 @@ public class TableUserInputComposite
 	void leaveButtonWidgetSelected(SelectionEvent evt) {
 		logger.debug("Leave button pressed");
 		try {
-			user.getPlayerContext().sitOut();
+			user.getPlayerContext().stopPlaying();
 			user.getTableContext().leaveTable();
 		} catch (RemoteException e) {
 			getClientCore().handleRemoteException(e);
@@ -427,7 +427,7 @@ public class TableUserInputComposite
 				user.sitIn(getUser().getSeatId(), getUser().getStack());
 				sitInOutButton.setText("Sit Out");
 			} else {
-				user.getPlayerContext().sitOut();
+				user.getPlayerContext().stopPlaying();
 				sitInOutButton.setText("Sit In");
 			}
 		} catch (RemoteException e) {

@@ -46,35 +46,35 @@ public abstract class WekaModel implements OpponentModel{
 			this.preFoldCallRaiseDataSet = new DataSource(
 					getClass().
 					getClassLoader().
-					getResourceAsStream("org/cspoker/client/bots/bot/search/opponentmodel/weka/PreFoldCallRaiseHeader.arff")
+					getResourceAsStream("org/cspoker/ai/opponentmodels/weka/PreFoldCallRaiseHeader.arff")
 			).getStructure();
 			preFoldCallRaiseDataSet.setClassIndex(39);
 			
 			this.postFoldCallRaiseDataSet = new DataSource(
 					getClass().
 					getClassLoader().
-					getResourceAsStream("org/cspoker/client/bots/bot/search/opponentmodel/weka/PostFoldCallRaiseHeader.arff")
+					getResourceAsStream("org/cspoker/ai/opponentmodels/weka/PostFoldCallRaiseHeader.arff")
 			).getStructure();
 			postFoldCallRaiseDataSet.setClassIndex(40);
 
 			this.preCheckBetDataSet = new DataSource(
 					getClass().
 					getClassLoader().
-					getResourceAsStream("org/cspoker/client/bots/bot/search/opponentmodel/weka/PreCheckBetHeader.arff")
+					getResourceAsStream("org/cspoker/ai/opponentmodels/weka/PreCheckBetHeader.arff")
 			).getStructure();
 			preCheckBetDataSet.setClassIndex(24);
 
 			this.postCheckBetDataSet = new DataSource(
 					getClass().
 					getClassLoader().
-					getResourceAsStream("org/cspoker/client/bots/bot/search/opponentmodel/weka/PostCheckBetHeader.arff")
+					getResourceAsStream("org/cspoker/ai/opponentmodels/weka/PostCheckBetHeader.arff")
 			).getStructure();
 			postCheckBetDataSet.setClassIndex(32);
 
 			this.showdownDataSet = new DataSource(
 					getClass().
 					getClassLoader().
-					getResourceAsStream("org/cspoker/client/bots/bot/search/opponentmodel/weka/ShowdownHeader.arff")
+					getResourceAsStream("org/cspoker/ai/opponentmodels/weka/ShowdownHeader.arff")
 			).getStructure();
 			showdownDataSet.setClassIndex(80);
 		} catch (Exception e) {

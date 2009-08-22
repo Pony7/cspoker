@@ -37,8 +37,18 @@ public class ForwardingHoldemPlayerContext implements HoldemPlayerContext{
 		holdemPlayerContext.fold();
 	}
 
+	public void stopPlaying() throws IllegalActionException {
+		holdemPlayerContext.stopPlaying();
+	}
+
+	@Override
 	public void sitOut() throws IllegalActionException {
 		holdemPlayerContext.sitOut();
+	}
+
+	@Override
+	public void reSitIn() throws IllegalActionException {
+		holdemPlayerContext.reSitIn();
 	}
 
 	@Override

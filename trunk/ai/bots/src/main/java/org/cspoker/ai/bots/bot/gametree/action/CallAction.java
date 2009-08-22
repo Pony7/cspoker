@@ -72,10 +72,9 @@ public class CallAction extends SearchBotAction {
 
 		GameState state;
 		if (stack <= largestBet - bet) {
-			state = new AllInState(gameState, new AllInEvent(actor, stack,
-					roundEnds));
+			state = new AllInState(gameState, new AllInEvent(actor, stack));
 		} else {
-			state = new CallState(gameState, new CallEvent(actor, largestBet - bet, roundEnds));
+			state = new CallState(gameState, new CallEvent(actor, largestBet - bet));
 		}
 		if (roundEnds) {
 			return getNewRoundState(state);

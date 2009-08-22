@@ -43,8 +43,18 @@ public class ForwardingRemoteHoldemPlayerContext implements RemoteHoldemPlayerCo
 		holdemPlayerContext.fold();
 	}
 
+	public void stopPlaying() throws RemoteException, IllegalActionException {
+		holdemPlayerContext.stopPlaying();
+	}
+	
+	@Override
 	public void sitOut() throws RemoteException, IllegalActionException {
 		holdemPlayerContext.sitOut();
+	}
+
+	@Override
+	public void reSitIn() throws RemoteException, IllegalActionException {
+		holdemPlayerContext.reSitIn();
 	}
 	
 	@Override

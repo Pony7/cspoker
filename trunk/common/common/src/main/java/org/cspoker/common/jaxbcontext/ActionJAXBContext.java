@@ -38,7 +38,7 @@ import org.cspoker.common.api.lobby.holdemtable.action.SitInAnywhereAction;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.action.BetOrRaiseAction;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.action.CheckOrCallAction;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.action.FoldAction;
-import org.cspoker.common.api.lobby.holdemtable.holdemplayer.action.SitOutAction;
+import org.cspoker.common.api.lobby.holdemtable.holdemplayer.action.StopPlayingAction;
 import org.cspoker.common.api.shared.action.LogoutAction;
 import org.cspoker.common.api.shared.action.ServerChatInterestAction;
 import org.cspoker.common.api.shared.action.TableChatInterestAction;
@@ -79,7 +79,7 @@ public class ActionJAXBContext {
 				//table
 				LeaveTableAction.class,SitInAction.class,SitInAnywhereAction.class,
 				//player
-				BetOrRaiseAction.class, CheckOrCallAction.class, FoldAction.class, SitOutAction.class,
+				BetOrRaiseAction.class, CheckOrCallAction.class, FoldAction.class, StopPlayingAction.class,
 				//server
 				ServerChatInterestAction.class, TableChatInterestAction.class, LogoutAction.class
 				};

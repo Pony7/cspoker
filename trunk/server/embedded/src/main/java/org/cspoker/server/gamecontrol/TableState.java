@@ -59,7 +59,7 @@ public abstract class TableState {
 	
 	public abstract void sitOut(MutableSeatedPlayer player);
 	
-	public abstract void leaveSeat(PlayerId id);
+	public abstract void stopPlaying(PlayerId id);
 	
 	public abstract List<SeatedPlayer> getSeatedPlayers();
 	
