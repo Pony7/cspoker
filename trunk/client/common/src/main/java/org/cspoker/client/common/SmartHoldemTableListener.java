@@ -26,7 +26,6 @@ import org.cspoker.client.common.gamestate.modifiers.CallState;
 import org.cspoker.client.common.gamestate.modifiers.CheckState;
 import org.cspoker.client.common.gamestate.modifiers.FoldState;
 import org.cspoker.client.common.gamestate.modifiers.JoinTableState;
-import org.cspoker.client.common.gamestate.modifiers.LeaveSeatState;
 import org.cspoker.client.common.gamestate.modifiers.LeaveTableState;
 import org.cspoker.client.common.gamestate.modifiers.NewCommunityCardsState;
 import org.cspoker.client.common.gamestate.modifiers.NewDealState;
@@ -45,7 +44,6 @@ import org.cspoker.common.api.lobby.holdemtable.event.CallEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.CheckEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.FoldEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.JoinTableEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.LeaveSeatEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.LeaveTableEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.NewCommunityCardsEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.NewDealEvent;
@@ -154,12 +152,6 @@ public class SmartHoldemTableListener
 		logger.trace(newDealEvent);
 		tableState.setGameState(new NewDealState(tableState.getTableConfiguration(), newDealEvent, tableState.getGameState()));
 		super.onNewDeal(newDealEvent);
-	}
-	
-	@Override
-	public void onLeaveSeat(LeaveSeatEvent leaveSeatEvent) {
-		tableState.setGameState(new LeaveSeatState(tableState.getGameState(), leaveSeatEvent));
-		super.onLeaveSeat(leaveSeatEvent);
 	}
 	
 	@Override

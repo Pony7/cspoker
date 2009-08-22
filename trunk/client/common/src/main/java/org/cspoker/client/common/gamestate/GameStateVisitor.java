@@ -22,7 +22,6 @@ import org.cspoker.client.common.gamestate.modifiers.CallState;
 import org.cspoker.client.common.gamestate.modifiers.CheckState;
 import org.cspoker.client.common.gamestate.modifiers.FoldState;
 import org.cspoker.client.common.gamestate.modifiers.JoinTableState;
-import org.cspoker.client.common.gamestate.modifiers.LeaveSeatState;
 import org.cspoker.client.common.gamestate.modifiers.LeaveTableState;
 import org.cspoker.client.common.gamestate.modifiers.NewCommunityCardsState;
 import org.cspoker.client.common.gamestate.modifiers.NewDealState;
@@ -53,8 +52,6 @@ public interface GameStateVisitor {
 	void visitFoldState(FoldState foldState);
 
 	void visitJoinTableState(JoinTableState joinTableState);
-
-	void visitLeaveSeatState(LeaveSeatState leaveSeatState);
 
 	void visitLeaveTableState(LeaveTableState leaveTableState);
 
