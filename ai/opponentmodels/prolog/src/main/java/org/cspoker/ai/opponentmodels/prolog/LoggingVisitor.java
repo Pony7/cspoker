@@ -34,7 +34,6 @@ import org.cspoker.client.common.gamestate.modifiers.CallState;
 import org.cspoker.client.common.gamestate.modifiers.CheckState;
 import org.cspoker.client.common.gamestate.modifiers.FoldState;
 import org.cspoker.client.common.gamestate.modifiers.JoinTableState;
-import org.cspoker.client.common.gamestate.modifiers.LeaveSeatState;
 import org.cspoker.client.common.gamestate.modifiers.LeaveTableState;
 import org.cspoker.client.common.gamestate.modifiers.NewCommunityCardsState;
 import org.cspoker.client.common.gamestate.modifiers.NewDealState;
@@ -160,11 +159,6 @@ public abstract class LoggingVisitor implements GameStateVisitor {
 
 	@Override
 	public void visitJoinTableState(JoinTableState joinTableState) {
-		// no op
-	}
-
-	@Override
-	public void visitLeaveSeatState(LeaveSeatState leaveSeatState) {
 		// no op
 	}
 

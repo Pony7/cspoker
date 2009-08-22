@@ -30,7 +30,6 @@ import org.cspoker.common.api.lobby.holdemtable.event.CallEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.CheckEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.FoldEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.JoinTableEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.LeaveSeatEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.LeaveTableEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.NewCommunityCardsEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.NewDealEvent;
@@ -1643,10 +1642,6 @@ public class GameFlowTest extends TestCase {
 		public synchronized void onWinner(WinnerEvent winnerEvent) {
 			GameFlowTest.logger.info(winnerEvent);
 			verifyEvent(winnerEvent);
-		}
-
-		public void onLeaveSeat(LeaveSeatEvent leaveSeatEvent) {
-			GameFlowTest.logger.info(leaveSeatEvent);
 		}
 	}
 }
