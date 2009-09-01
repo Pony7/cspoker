@@ -31,7 +31,7 @@ import org.cspoker.external.pokersource.commands.Logout;
 
 public class PSServerContext implements RemoteServerContext {
 
-	private final static Logger logger = Logger.getLogger(TestScenario.class);
+	private final static Logger logger = Logger.getLogger(PSServerContext.class);
 	
 	private final int serial;
 	private final PokersourceConnection conn;
