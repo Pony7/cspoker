@@ -9,14 +9,17 @@ The class files are compiled in "target/classes/".
 
 Package to executable jar:
 ==========================
-Currently there are 4 executable modules:
-  * server-rmi (server/rmi)
-  * server-allcommunication (server/allcommunication)
-  * client-gui-text (client/gui/text)
-  * client-gui-javafx (client/gui/javafx)
+Currently there are 5 executable modules:
+  * server-rmi
+  * server-xml
+  * server-allcommunication
+  * client-gui-swt
+  * ai-experiments
  
 
-To make 1 executable jar with all dependencies, go to the respective directory and execute:
+To make 1 executable jar with all dependencies, do 
+	mvn install
+, go to the respective directory and execute:
 	mvn assembly:assembly
 The executable jar can be found in "target/*-jar-with-dependencies.jar".
 
