@@ -20,7 +20,7 @@
 					</descriptorRefs>
 					<archive>
 						<manifest>
-							<mainClass>org.cspoker.client.bots.RunHumanVsBot</mainClass>
+							<mainClass>org.cspoker.ai.bots.RunHumanVsBot</mainClass>
 						</manifest>
 					</archive>
 					<source>1.6</source>
