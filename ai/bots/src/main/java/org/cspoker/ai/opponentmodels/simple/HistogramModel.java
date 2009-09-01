@@ -20,9 +20,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import net.jcip.annotations.NotThreadSafe;
 
 import org.cspoker.ai.opponentmodels.OpponentModel;
+import org.cspoker.client.common.gamestate.DetailedHoldemTableState;
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.client.common.gamestate.GameStateVisitor;
-import org.cspoker.client.common.gamestate.DetailedHoldemTableState;
 import org.cspoker.client.common.gamestate.modifiers.AllInState;
 import org.cspoker.client.common.gamestate.modifiers.BetState;
 import org.cspoker.client.common.gamestate.modifiers.BigBlindState;
@@ -30,7 +30,6 @@ import org.cspoker.client.common.gamestate.modifiers.CallState;
 import org.cspoker.client.common.gamestate.modifiers.CheckState;
 import org.cspoker.client.common.gamestate.modifiers.FoldState;
 import org.cspoker.client.common.gamestate.modifiers.JoinTableState;
-import org.cspoker.client.common.gamestate.modifiers.LeaveSeatState;
 import org.cspoker.client.common.gamestate.modifiers.LeaveTableState;
 import org.cspoker.client.common.gamestate.modifiers.NewCommunityCardsState;
 import org.cspoker.client.common.gamestate.modifiers.NewDealState;
@@ -205,10 +204,6 @@ public class HistogramModel implements OpponentModel,
 	@Override
 	public void visitJoinTableState(JoinTableState joinTableState) {
 		initiateModelsFor(joinTableState.getLastEvent().getPlayerId());
-	}
-
-	@Override
-	public void visitLeaveSeatState(LeaveSeatState leaveSeatState) {
 	}
 
 	@Override

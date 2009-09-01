@@ -92,8 +92,8 @@ public class MCTSBot extends AbstractBot {
 			iterate(root);
 			iterate(root);
 		}while(System.currentTimeMillis()<endTime);
-		if(logger.isInfoEnabled()){
-			logger.info("Stopped MCTS.");
+		if(logger.isDebugEnabled()){
+			logger.debug("Stopped MCTS.");
 		}
 //		System.out.println(config.getBackPropStratFactory()+": "+root.getNbSamples());
 		root.selectChild(config.getMoveSelectionStrategy()).getLastAction().getAction().perform(playerContext);

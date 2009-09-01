@@ -69,7 +69,7 @@ public class FoldAction extends SearchBotAction {
 		}
 		if (!noDefaultWinner) {
 			throw new DefaultWinnerException(first, new FoldState(gameState,
-					new FoldEvent(actor, false)));
+					new FoldEvent(actor)));
 		}
 		if (roundEnds
 				&& gameState.getRound().equals(Round.PREFLOP)
@@ -79,8 +79,7 @@ public class FoldAction extends SearchBotAction {
 			roundEnds = false;
 		}
 
-		FoldState foldState = new FoldState(gameState, new FoldEvent(actor,
-				roundEnds));
+		FoldState foldState = new FoldState(gameState, new FoldEvent(actor));
 
 		if (!roundEnds) {
 			return new NextPlayerState(foldState, new NextPlayerEvent(foldState

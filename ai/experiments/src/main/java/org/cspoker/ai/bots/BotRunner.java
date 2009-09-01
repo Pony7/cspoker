@@ -72,7 +72,7 @@ public class BotRunner implements LobbyListener {
 
 	static {
 		Log4JPropertiesLoader
-		.load("org/cspoker/client/bots/logging/log4j.properties");
+		.load("org/cspoker/ai/experiments/logging/log4j.properties");
 	}
 
 	private final static Logger logger = Logger.getLogger(BotRunner.class);
@@ -112,7 +112,7 @@ public class BotRunner implements LobbyListener {
 //					new HandBotFactory("HandBot"),
 					new MCTSBotFactory(
 							"Plus Bot",
-							WekaRegressionModelFactory.createForZip("org/cspoker/client/bots/bot/search/opponentmodel/weka/models/model1.zip"),
+							WekaRegressionModelFactory.createForZip("org/cspoker/ai/opponentmodels/weka/models/model1.zip"),
 							new SamplingToFunctionSelector(50,new UCTSelector(40000)),
 							new SamplingToFunctionSelector(250,new UCTPlusPlusSelector()),
 							new MaxValueSelector(),
@@ -126,7 +126,7 @@ public class BotRunner implements LobbyListener {
 					),
 					new MCTSBotFactory(
 							"MaxDistribution Bot",
-							WekaRegressionModelFactory.createForZip("org/cspoker/client/bots/bot/search/opponentmodel/weka/models/model1.zip"),
+							WekaRegressionModelFactory.createForZip("org/cspoker/ai/opponentmodels/weka/models/model1.zip"),
 							new SamplingToFunctionSelector(50,new UCTSelector(40000)),
 							new SamplingSelector(),
 							new MaxValueSelector(),
