@@ -37,7 +37,7 @@ import org.cspoker.client.common.gamestate.modifiers.WinnerState;
 
 public interface GameStateVisitor {
 
-	void visitInitialGameState(InitialGameState initialGameState);
+	void visitInitialGameState(DetailedHoldemTableState initialGameState);
 
 	void visitAllInState(AllInState allInState);
 

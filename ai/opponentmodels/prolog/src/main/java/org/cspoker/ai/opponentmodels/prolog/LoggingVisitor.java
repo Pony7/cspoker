@@ -25,7 +25,7 @@ import net.jcip.annotations.NotThreadSafe;
 
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.client.common.gamestate.GameStateVisitor;
-import org.cspoker.client.common.gamestate.InitialGameState;
+import org.cspoker.client.common.gamestate.DetailedHoldemTableState;
 import org.cspoker.client.common.gamestate.PlayerState;
 import org.cspoker.client.common.gamestate.modifiers.AllInState;
 import org.cspoker.client.common.gamestate.modifiers.BetState;
@@ -153,7 +153,7 @@ public abstract class LoggingVisitor implements GameStateVisitor {
 	}
 
 	@Override
-	public void visitInitialGameState(InitialGameState initialGameState) {
+	public void visitInitialGameState(DetailedHoldemTableState initialGameState) {
 		// no op
 	}
 

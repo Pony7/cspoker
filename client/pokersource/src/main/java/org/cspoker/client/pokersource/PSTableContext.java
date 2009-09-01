@@ -22,7 +22,7 @@ import net.sf.json.JSONException;
 
 import org.apache.log4j.Logger;
 import org.cspoker.client.common.GameStateContainer;
-import org.cspoker.client.common.gamestate.InitialGameState;
+import org.cspoker.client.common.gamestate.DetailedHoldemTableState;
 import org.cspoker.common.api.lobby.holdemtable.context.RemoteHoldemTableContext;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.HoldemPlayerContext;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.RemoteHoldemPlayerContext;
