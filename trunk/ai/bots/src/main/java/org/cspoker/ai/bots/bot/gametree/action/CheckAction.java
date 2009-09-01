@@ -50,8 +50,7 @@ public class CheckAction extends SearchBotAction {
 				&& gameState.getLargestBet() <= gameState
 						.getTableConfiguration().getBigBlind();
 
-		CheckState checkState = new CheckState(gameState, new CheckEvent(actor,
-				newRound));
+		CheckState checkState = new CheckState(gameState, new CheckEvent(actor));
 		if (!newRound) {
 			return new NextPlayerState(checkState, new NextPlayerEvent(
 					nextToAct.getPlayerId()));
