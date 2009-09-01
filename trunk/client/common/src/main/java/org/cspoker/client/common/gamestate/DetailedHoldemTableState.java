@@ -37,7 +37,7 @@ import com.google.common.collect.ImmutableBiMap;
 /**
  * @author stephans
  */
-public class InitialGameState
+public class DetailedHoldemTableState
 		extends AbstractGameState {
 	
 	private final DetailedHoldemTable table;
@@ -46,7 +46,7 @@ public class InitialGameState
 	/**
 	 * @param tableConfiguration
 	 */
-	public InitialGameState(DetailedHoldemTable table) {
+	public DetailedHoldemTableState(DetailedHoldemTable table) {
 		this.table = table;
 		ImmutableBiMap.Builder<SeatId, PlayerId> seatMapBuilder = new ImmutableBiMap.Builder<SeatId, PlayerId>();
 		for (SeatedPlayer player : table.getPlayers()) {
