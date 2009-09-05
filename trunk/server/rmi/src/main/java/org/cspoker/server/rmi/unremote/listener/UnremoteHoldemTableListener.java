@@ -20,6 +20,7 @@ import org.cspoker.common.api.lobby.holdemtable.event.BetEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.BigBlindEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.CallEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.CheckEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.ConfigChangeEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.FoldEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.JoinTableEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.LeaveTableEvent;
@@ -241,6 +242,18 @@ public class UnremoteHoldemTableListener extends ForwardingListener<RemoteHoldem
 		try {
 			for (RemoteHoldemTableListener listener : listeners) {
 				listener.onSitOut(sitOutEvent);
+			}
+		} catch (Exception exception) {
+			logger.debug("Caught exception from Remote listener", exception);
+			connection.trigger();
+		}
+	}
+
+	@Override
+	public void onConfigChange(ConfigChangeEvent configChangeEvent) {
+		try {
+			for (RemoteHoldemTableListener listener : listeners) {
+				listener.onConfigChange(configChangeEvent);
 			}
 		} catch (Exception exception) {
 			logger.debug("Caught exception from Remote listener", exception);

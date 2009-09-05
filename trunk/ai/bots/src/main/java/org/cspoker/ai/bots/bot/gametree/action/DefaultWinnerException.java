@@ -15,8 +15,8 @@
  */
 package org.cspoker.ai.bots.bot.gametree.action;
 
-import org.cspoker.client.common.gamestate.PlayerState;
 import org.cspoker.client.common.gamestate.modifiers.FoldState;
+import org.cspoker.client.common.playerstate.PlayerState;
 
 public class DefaultWinnerException extends Exception {
 

@@ -21,10 +21,10 @@ import java.util.List;
 import java.util.Set;
 
 import org.cspoker.client.common.gamestate.AbstractGameState;
-import org.cspoker.client.common.gamestate.AbstractPlayerState;
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.client.common.gamestate.GameStateVisitor;
-import org.cspoker.client.common.gamestate.PlayerState;
+import org.cspoker.client.common.playerstate.AbstractPlayerState;
+import org.cspoker.client.common.playerstate.PlayerState;
 import org.cspoker.common.api.lobby.holdemtable.event.HoldemTableTreeEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.NewRoundEvent;
 import org.cspoker.common.elements.cards.Card;
@@ -78,6 +78,11 @@ public class NewRoundState
 			final int investment = oldPlayerState.getTotalInvestment();
 			
 			PlayerState playerState = new AbstractPlayerState() {
+				
+				@Override
+				public String getName() {
+					return oldPlayerState.getName();
+				}
 				
 				public int getBet() {
 					return 0;

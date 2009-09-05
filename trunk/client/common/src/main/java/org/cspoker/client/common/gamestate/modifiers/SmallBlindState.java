@@ -19,10 +19,10 @@ import java.util.Collections;
 import java.util.List;
 
 import org.cspoker.client.common.gamestate.ForwardingGameState;
-import org.cspoker.client.common.gamestate.ForwardingPlayerState;
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.client.common.gamestate.GameStateVisitor;
-import org.cspoker.client.common.gamestate.PlayerState;
+import org.cspoker.client.common.playerstate.ForwardingPlayerState;
+import org.cspoker.client.common.playerstate.PlayerState;
 import org.cspoker.common.api.lobby.holdemtable.event.SmallBlindEvent;
 import org.cspoker.common.elements.player.PlayerId;
 

@@ -28,6 +28,7 @@ import org.cspoker.client.common.gamestate.modifiers.BetState;
 import org.cspoker.client.common.gamestate.modifiers.BigBlindState;
 import org.cspoker.client.common.gamestate.modifiers.CallState;
 import org.cspoker.client.common.gamestate.modifiers.CheckState;
+import org.cspoker.client.common.gamestate.modifiers.ConfigChangeState;
 import org.cspoker.client.common.gamestate.modifiers.FoldState;
 import org.cspoker.client.common.gamestate.modifiers.JoinTableState;
 import org.cspoker.client.common.gamestate.modifiers.LeaveTableState;
@@ -280,6 +281,11 @@ public class HistogramModel implements OpponentModel,
 	@Override
 	public void forgetLastAssumption() {
 
+	}
+	
+	@Override
+	public void visitConfigChangeState(ConfigChangeState configChangeState) {
+	
 	}
 
 }

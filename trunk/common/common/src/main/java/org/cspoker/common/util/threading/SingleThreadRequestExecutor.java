@@ -38,7 +38,7 @@ public class SingleThreadRequestExecutor extends AbstractExecutorService {
 	private static final SingleThreadRequestExecutor scheduledRequestExecutor = new SingleThreadRequestExecutor();
 
 	private SingleThreadRequestExecutor() {
-		executor = Executors.newScheduledThreadPool(1);
+		executor = Executors.newSingleThreadScheduledExecutor();
 	}
 
 	public static SingleThreadRequestExecutor getInstance() {

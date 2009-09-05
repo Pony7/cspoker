@@ -19,9 +19,9 @@ import java.rmi.RemoteException;
 import java.util.Set;
 
 import org.cspoker.client.common.gamestate.GameState;
-import org.cspoker.client.common.gamestate.PlayerState;
 import org.cspoker.client.common.gamestate.modifiers.FoldState;
 import org.cspoker.client.common.gamestate.modifiers.NextPlayerState;
+import org.cspoker.client.common.playerstate.PlayerState;
 import org.cspoker.common.api.lobby.holdemtable.event.FoldEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.NextPlayerEvent;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.RemoteHoldemPlayerContext;

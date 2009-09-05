@@ -159,12 +159,16 @@ public class PokersourceConnection extends RESTConnection{
 				throw new IllegalStateException("Couldn't unmarshall: "+jsonEvent,e);
 			}
 		}
+		if(logger.isDebugEnabled())
+			logger.debug("Submitting task to fire "+events.length+" events.");
 		EventRunner runner = new EventRunner(executor.submit(new Runnable(){
 			@Override
 			public void run() {
 				try {
+					logger.debug("Firing "+events.length+" events.");
 					for(JSONPacket event:events) signal(event);
 				} catch (Exception e) {
+					e.printStackTrace();
 					logger.error(e);
 					throw new RuntimeException(e);
 				}
@@ -174,18 +178,43 @@ public class PokersourceConnection extends RESTConnection{
 		return runner;
 	}
 
+	/**
+	 * Every access to this list should be done from the executor thread to avoid ConcurrentModificationExceptions
+	 */
 	private final List<AllEventListener> listeners = new ArrayList<AllEventListener>();
 
-	public synchronized void addListener(AllEventListener listener){
-		listeners.add(listener);
+	public synchronized void addListener(final AllEventListener listener){
+		executor.submit(new Runnable(){
+			@Override
+			public void run() {
+				try {
+					listeners.add(listener);
+				} catch (Exception e) {
+					e.printStackTrace();
+					logger.error(e);
+					throw new RuntimeException(e);
+				}
+			}
+		});
 	}
 	public void addListeners(AllEventListener... listeners){
 		for(AllEventListener listener:listeners)
-			this.listeners.add(listener);
+			addListener(listener);
 	}
 
-	public synchronized void removeListener(AllEventListener listener) {
-		listeners.remove(listener);
+	public synchronized void removeListener(final AllEventListener listener) {
+		executor.submit(new Runnable(){
+			@Override
+			public void run() {
+				try {
+					removeListener(listener);
+				} catch (Exception e) {
+					e.printStackTrace();
+					logger.error(e);
+					throw new RuntimeException(e);
+				}
+			}
+		});
 	}
 	
 	public void removeListeners(AllEventListener... listeners){
@@ -208,7 +237,7 @@ public class PokersourceConnection extends RESTConnection{
 	
 	private final Map<Integer, ScheduledFuture<?>> pollers = new ConcurrentHashMap<Integer, ScheduledFuture<?>>();
 
-	private final ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
+	private final ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
 	
 	public void startPolling(final int game_id){
 		pollers.put(game_id, executor.scheduleAtFixedRate(new Runnable(){
@@ -224,7 +253,7 @@ public class PokersourceConnection extends RESTConnection{
 				}
 			}
 			
-		}, 0,1, TimeUnit.SECONDS));
+		}, 1,1, TimeUnit.SECONDS));
 	}
 	
 	public void stopPolling(int game_id){

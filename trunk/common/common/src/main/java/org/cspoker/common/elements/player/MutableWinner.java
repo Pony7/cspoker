@@ -41,7 +41,7 @@ public class MutableWinner {
 	}
 
 	public Winner getSavedWinner() {
-		return new Winner(winner.getMemento(), chips.getValue());
+		return new Winner(winner.getId(), chips.getValue());
 	}
 
 	@Override

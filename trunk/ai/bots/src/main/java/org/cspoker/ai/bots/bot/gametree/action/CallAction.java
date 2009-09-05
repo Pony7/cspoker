@@ -19,10 +19,10 @@ import java.rmi.RemoteException;
 import java.util.Set;
 
 import org.cspoker.client.common.gamestate.GameState;
-import org.cspoker.client.common.gamestate.PlayerState;
 import org.cspoker.client.common.gamestate.modifiers.AllInState;
 import org.cspoker.client.common.gamestate.modifiers.CallState;
 import org.cspoker.client.common.gamestate.modifiers.NextPlayerState;
+import org.cspoker.client.common.playerstate.PlayerState;
 import org.cspoker.common.api.lobby.holdemtable.event.AllInEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.CallEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.NextPlayerEvent;

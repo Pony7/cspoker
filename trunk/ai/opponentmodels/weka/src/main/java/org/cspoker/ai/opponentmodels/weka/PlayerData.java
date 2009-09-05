@@ -24,8 +24,8 @@ package org.cspoker.ai.opponentmodels.weka;
 public class PlayerData implements Cloneable{
 
 	private final Object id;
-	private float stack;
-	private float bet;
+	private double stack;
+	private double bet;
 	private boolean comitted;
 	
 	private boolean lastActionWasRaise;
@@ -59,11 +59,11 @@ public class PlayerData implements Cloneable{
 		return id;
 	}
 
-	public float getStack() {
+	public double getStack() {
 		return stack;
 	}
 
-	public float getBet() {
+	public double getBet() {
 		return bet;
 	}
 
@@ -79,28 +79,28 @@ public class PlayerData implements Cloneable{
 		return globalStats;
 	}
 
-	public float getDeficit(Propositionalizer p) {
+	public double getDeficit(Propositionalizer p) {
 		return Math.min(stack, (p.getMaxBet() - bet));
 	}
 
-	public float getPotOdds(Propositionalizer p) {
-		float potSize = p.getPotSize();
-		float deficit = getDeficit(p);
+	public double getPotOdds(Propositionalizer p) {
+		double potSize = p.getPotSize();
+		double deficit = getDeficit(p);
 		return deficit / (deficit + potSize);
 	}
 
 	// "@attribute VPIP real\n"+
-	public float getVPIP(int memory) {
+	public double getVPIP(int memory) {
 		return (0.3F * memory + VPIPCount) / (memory + gameCount);
 	}
 
 	// "@attribute PFR real\n"+
-	public float getPFR(int memory) {
+	public double getPFR(int memory) {
 		return (0.16F * memory + PFRCount) / (memory + gameCount);
 	}
 
 	// "@attribute WtSD real\n"+
-	public float getWtSD(int memory) {
+	public double getWtSD(int memory) {
 		return (0.57F * memory + showdownCount) / (memory + flopCount);
 	}
 
@@ -141,7 +141,7 @@ public class PlayerData implements Cloneable{
 		}
 	}
 
-	public void signalBet(Propositionalizer p, float amount) {
+	public void signalBet(Propositionalizer p, double amount) {
 		bet += amount;
 		decreaseStack(amount);
 		comitted = true;
@@ -152,11 +152,11 @@ public class PlayerData implements Cloneable{
 		globalStats.addBet(p, amount);
 	}
 
-	private void decreaseStack(float amount) {
+	private void decreaseStack(double amount) {
 		stack -= amount;
-		if(Math.abs(stack)<0.001) stack = 0;
+		if(Math.abs(stack)<0.0001) stack = 0;
 		if(stack<0) {
-			throw new IllegalStateException("Bad stack: "+stack);
+			throw new IllegalStateException("Bad stack: "+stack+" when decreasing by "+amount);
 		}
 	}
 
@@ -167,7 +167,7 @@ public class PlayerData implements Cloneable{
 	}
 
 	public void signalRaise(Propositionalizer p,
-			float raiseAmount, float movedAmount) {
+			double raiseAmount, double movedAmount) {
 		bet += movedAmount;
 		decreaseStack(movedAmount);
 		updateVPIP(p);
@@ -179,7 +179,7 @@ public class PlayerData implements Cloneable{
 	}
 
 	public void signalCall(Propositionalizer p,
-			float movedAmount) {
+			double movedAmount) {
 		bet += movedAmount;
 		decreaseStack(movedAmount);
 		lastActionWasRaise = false;
@@ -215,7 +215,7 @@ public class PlayerData implements Cloneable{
 		++showdownCount;
 	}
 
-	public void resetStack(float stack) {
+	public void resetStack(double stack) {
 		this.stack = stack;
 		if(stack<0) {
 			throw new IllegalStateException("Bad stack: "+stack);

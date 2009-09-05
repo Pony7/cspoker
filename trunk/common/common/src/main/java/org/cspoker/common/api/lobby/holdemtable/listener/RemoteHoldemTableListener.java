@@ -23,6 +23,7 @@ import org.cspoker.common.api.lobby.holdemtable.event.BetEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.BigBlindEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.CallEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.CheckEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.ConfigChangeEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.FoldEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.JoinTableEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.LeaveTableEvent;
@@ -74,5 +75,8 @@ public interface RemoteHoldemTableListener extends EventListener, Remote{
 
 	void onSmallBlind(SmallBlindEvent smallBlindEvent) throws RemoteException;
 
-	void onWinner(WinnerEvent winnerEvent) throws RemoteException;	
+	void onWinner(WinnerEvent winnerEvent) throws RemoteException;
+	
+	void onConfigChange(ConfigChangeEvent configChangeEvent) throws RemoteException;
+	
 }

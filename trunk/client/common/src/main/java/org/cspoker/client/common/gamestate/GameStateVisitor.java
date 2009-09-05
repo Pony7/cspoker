@@ -20,6 +20,7 @@ import org.cspoker.client.common.gamestate.modifiers.BetState;
 import org.cspoker.client.common.gamestate.modifiers.BigBlindState;
 import org.cspoker.client.common.gamestate.modifiers.CallState;
 import org.cspoker.client.common.gamestate.modifiers.CheckState;
+import org.cspoker.client.common.gamestate.modifiers.ConfigChangeState;
 import org.cspoker.client.common.gamestate.modifiers.FoldState;
 import org.cspoker.client.common.gamestate.modifiers.JoinTableState;
 import org.cspoker.client.common.gamestate.modifiers.LeaveTableState;
@@ -77,5 +78,7 @@ public interface GameStateVisitor {
 	void visitSmallBlindState(SmallBlindState smallBlindState);
 
 	void visitWinnerState(WinnerState winnerState);
+
+	void visitConfigChangeState(ConfigChangeState configChangeState);
 
 }

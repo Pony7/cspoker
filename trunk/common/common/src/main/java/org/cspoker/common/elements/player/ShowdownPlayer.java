@@ -23,13 +23,9 @@ import javax.xml.bind.annotation.XmlElementWrapper;
 
 import org.cspoker.common.elements.cards.Card;
 
-public class ShowdownPlayer extends Player {
+public class ShowdownPlayer {
 
 	private static final long serialVersionUID = -1618593137613219527L;
-
-	@XmlElementWrapper
-	@XmlElement(name = "card")
-	private Set<Card> cards;
 
 	private String description;
 
@@ -37,11 +33,12 @@ public class ShowdownPlayer extends Player {
 	@XmlElement(name = "card")
 	private Set<Card> handCards;
 
-	public ShowdownPlayer(Player player, EnumSet<Card> cards, EnumSet<Card> handCards,
+	private PlayerId playerId;
+
+	public ShowdownPlayer(PlayerId playerId, EnumSet<Card> handCards,
 			String description) {
-		super(player);
+		this.playerId = playerId;
 		this.handCards = EnumSet.copyOf(handCards);
-		this.cards = EnumSet.copyOf(cards);
 		this.description = description;
 	}
 
@@ -51,11 +48,11 @@ public class ShowdownPlayer extends Player {
 
 	@Override
 	public String toString() {
-		return getName() + " has a " + description;
+		return getPlayerId() + " has a " + description;
 	}
-
-	public EnumSet<Card> getAllCards() {
-		return EnumSet.copyOf(cards);
+	
+	public PlayerId getPlayerId() {
+		return playerId;
 	}
 
 	public EnumSet<Card> getHandCards() {

@@ -18,6 +18,7 @@ package org.cspoker.client.common.gamestate;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.cspoker.client.common.playerstate.PlayerState;
 import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.elements.table.SeatId;
 

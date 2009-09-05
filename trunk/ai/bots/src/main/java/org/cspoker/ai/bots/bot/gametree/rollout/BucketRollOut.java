@@ -22,7 +22,7 @@ import java.util.TreeMap;
 import org.apache.log4j.Logger;
 import org.cspoker.ai.opponentmodels.OpponentModel;
 import org.cspoker.client.common.gamestate.GameState;
-import org.cspoker.client.common.gamestate.PlayerState;
+import org.cspoker.client.common.playerstate.PlayerState;
 import org.cspoker.common.elements.cards.Card;
 import org.cspoker.common.elements.player.PlayerId;
 

@@ -25,9 +25,7 @@ import org.cspoker.common.elements.table.SeatId;
  * A class of immutable players.
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-public class SeatedPlayer
-		extends Player
-		implements Comparable<SeatId> {
+public class SeatedPlayer extends Player {
 	
 	private static final long serialVersionUID = -9200622390366978194L;
 	
@@ -64,6 +62,10 @@ public class SeatedPlayer
 	// no op
 	}
 	
+	public SeatedPlayer(SeatedPlayer clone, int stack, int bet) {
+		this(clone.getId(), clone.getSeatId(), clone.getName(), stack, bet, clone.isSittingIn(), clone.hasCards());
+	}
+
 	/**
 	 * Returns the seat id of this player.
 	 * 
@@ -107,16 +109,6 @@ public class SeatedPlayer
 	
 	public boolean hasCards() {
 		return hasCards;
-	}
-	
-	/**
-	 * @param o
-	 * @return
-	 * @see java.lang.Comparable#compareTo(java.lang.Object)
-	 */
-	@Override
-	public int compareTo(SeatId o) {
-		return 0;
 	}
 	
 }

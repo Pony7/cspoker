@@ -16,8 +16,8 @@
 
 package org.cspoker.common.api.lobby.holdemtable.event;
 
+import java.util.Collection;
 import java.util.Collections;
-import java.util.Set;
 
 import net.jcip.annotations.Immutable;
 
@@ -33,17 +33,17 @@ public class WinnerEvent extends HoldemTableEvent {
 
 	private static final long serialVersionUID = -2384964708734525969L;
 
-	private final Set<Winner> winners;
+	private final Collection<Winner> winners;
 
-	public WinnerEvent(Set<Winner> winners) {
-		this.winners = Collections.unmodifiableSet(winners);
+	public WinnerEvent(Collection<Winner> winners) {
+		this.winners = Collections.unmodifiableCollection(winners);
 	}
 
 	protected WinnerEvent() {
 		winners = null;
 	}
 
-	public Set<Winner> getWinners() {
+	public Collection<Winner> getWinners() {
 		return winners;
 	}
 

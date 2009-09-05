@@ -29,26 +29,17 @@ public class SitOutEvent extends HoldemTableEvent {
 
 	@XmlAttribute
 	private final PlayerId playerId;
-
-	@XmlAttribute
-	private final boolean forced;
 	
-	public SitOutEvent(PlayerId player, boolean forced){
+	public SitOutEvent(PlayerId player){
 		this.playerId = player;
-		this.forced = forced;
 	}
 	
 	protected SitOutEvent(){
 		playerId = null;
-		forced = false;
 	}
 	
 	public PlayerId getPlayerId(){
 		return playerId;
-	}
-	
-	public boolean isForced(){
-		 return forced;
 	}
 
 	@Override

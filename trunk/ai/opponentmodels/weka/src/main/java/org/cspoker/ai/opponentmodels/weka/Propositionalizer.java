@@ -36,14 +36,14 @@ public class Propositionalizer implements Cloneable {
 	private List<PlayerData> activePlayers = new LinkedList<PlayerData>();
 	private List<PlayerData> allinPlayers = new LinkedList<PlayerData>();
 
-	private float maxBet = 0;
-	private float lastRaise = 0;
-	private float gameRaiseAmount = 0;
+	private double maxBet = 0;
+	private double lastRaise = 0;
+	private double gameRaiseAmount = 0;
 	private boolean somebodyActedThisRound = false;
 
 	private BetStatistics gameStats = new BetStatistics();
 	private String round = "preflop";
-	private float totalPot = 0;
+	private double totalPot = 0;
 
 	private int nbPlayersDoneThisRound = 0;
 	private int nbSeatedPlayers = 0;
@@ -51,7 +51,7 @@ public class Propositionalizer implements Cloneable {
 	private int minRank=0;
 	private int maxRank=0;
 	private int averageRank=0;
-	private float sigmaRank=0;
+	private double sigmaRank=0;
 
 	public Propositionalizer() {
 	}
@@ -85,7 +85,7 @@ public class Propositionalizer implements Cloneable {
 		}
 	}
 
-	public void signalAllIn(Object id, float chipsMoved) {
+	public void signalAllIn(Object id, double chipsMoved) {
 		if(inPreFlopRound() && maxBet<=0.75){
 			if(maxBet==0){
 				signalSmallBlind(true, id);
@@ -95,7 +95,7 @@ public class Propositionalizer implements Cloneable {
 		}else{
 			PlayerData p = players.get(id);
 			//call raise or bet
-			if(p.getBet()==0){
+			if(maxBet==0){
 				signalBet(true, id, chipsMoved);
 			}else if(p.getDeficit(this)<chipsMoved){
 				signalRaise(id, true, p.getBet()+chipsMoved);
@@ -105,7 +105,7 @@ public class Propositionalizer implements Cloneable {
 		}
 	}
 
-	public void signalBet(boolean isAllIn, Object id, float movedAmount) {
+	public void signalBet(boolean isAllIn, Object id, double movedAmount) {
 		PlayerData p = players.get(id);
 		logBet(p, movedAmount);
 		// consider raise by big blind, treat kinda like bet
@@ -131,9 +131,9 @@ public class Propositionalizer implements Cloneable {
 		p.signalCheck(this);
 	}
 
-	public void signalRaise(Object id, boolean isAllIn, float maxBetParsed) {
+	public void signalRaise(Object id, boolean isAllIn, double maxBetParsed) {
 		PlayerData p = players.get(id);
-		float raiseAmount = maxBetParsed-maxBet;
+		double raiseAmount = maxBetParsed-maxBet;
 		if (p.getDeficit(this) <= 0.001) {
 			signalBet(isAllIn, id, raiseAmount);
 		} else {
@@ -144,7 +144,7 @@ public class Propositionalizer implements Cloneable {
 			}
 			maxBet = maxBetParsed;
 			lastRaise = Math.max(lastRaise, raiseAmount);
-			float movedAmount = maxBet - p.getBet();
+			double movedAmount = maxBet - p.getBet();
 			gameRaiseAmount += raiseAmount;
 
 			totalPot += movedAmount;
@@ -164,7 +164,7 @@ public class Propositionalizer implements Cloneable {
 			signalCall(isAllIn, id, Math.min(p.getStack(), maxBet-p.getBet()));
 		}
 	}
-	public void signalCall(boolean isAllIn, Object id, float movedAmount) {
+	public void signalCall(boolean isAllIn, Object id, double movedAmount) {
 		PlayerData p = players.get(id);
 		logCall(p);
 
@@ -308,9 +308,9 @@ public class Propositionalizer implements Cloneable {
 			int sigmaSampleRank = (int) Math.round(Math.sqrt(var));
 			int[] bucketCounts = new int[10];
 			Iterator<Integer> iter = ranks.iterator();
-			float realRankCount = ranks.count(realRank);
-			int avgBucket = -1;
-			float[] bucketDistr = new float[10];
+			double realRankCount = ranks.count(realRank);
+			long avgBucket = -1;
+			double[] bucketDistr = new double[10];
 			if(realRankCount>0){
 				for(int bucket=0;bucket<10;bucket++){
 					for (int i = 0; i < 10; i++) {
@@ -342,7 +342,7 @@ public class Propositionalizer implements Cloneable {
 					avgBucket = 9;
 				}
 			}
-			logShowdown(p,bucketDistr, avgBucket, minSampleRank, maxSampleRank, averageSampleRank, sigmaSampleRank);
+			logShowdown(p,bucketDistr, (int)avgBucket, minSampleRank, maxSampleRank, averageSampleRank, sigmaSampleRank);
 		}else{
 			//everybody went all-in before the river
 		}
@@ -410,7 +410,7 @@ public class Propositionalizer implements Cloneable {
 		}
 	}
 
-	public void signalSeatedPlayer(float stack, Object id) {
+	public void signalSeatedPlayer(double stack, Object id) {
 		PlayerData p = players.get(id);
 		if (p == null) {
 			p = new PlayerData(id);
@@ -460,11 +460,11 @@ public class Propositionalizer implements Cloneable {
 		return allinPlayers;
 	}
 
-	public float getTotalPot() {
+	public double getTotalPot() {
 		return totalPot;
 	}
 
-	public float getMaxBet() {
+	public double getMaxBet() {
 		return maxBet;
 	}
 
@@ -484,7 +484,7 @@ public class Propositionalizer implements Cloneable {
 		return minRank;
 	}
 
-	public float getSigmaRank() {
+	public double getSigmaRank() {
 		return sigmaRank;
 	}
 
@@ -496,20 +496,20 @@ public class Propositionalizer implements Cloneable {
 		return activePlayers.size();
 	}
 
-	public float getActivePlayerRatio() {
-		return (float) getNbActivePlayers() / (float) getNbSeatedPlayers();
+	public double getActivePlayerRatio() {
+		return (double) getNbActivePlayers() / (double) getNbSeatedPlayers();
 	}
 
-	public float getPotSize() {
+	public double getPotSize() {
 		return totalPot;
 	}
 
-	public float getMaxMaxBet(){
-		float maxBet1 = 0;
-		float maxBet2 = 0;
+	public double getMaxMaxBet(){
+		double maxBet1 = 0;
+		double maxBet2 = 0;
 
 		for (PlayerData player : activePlayers) {
-			float maxMaxPlayerBet = player.getStack()+player.getBet();
+			double maxMaxPlayerBet = player.getStack()+player.getBet();
 			if(maxMaxPlayerBet>maxBet1){
 				maxBet2 = maxBet1;
 				maxBet1 = maxMaxPlayerBet;
@@ -522,13 +522,13 @@ public class Propositionalizer implements Cloneable {
 	}
 
 
-	public float getMaxRaise(PlayerData p) {
-		float amountLeftToRaiseWith = p.getStack()-p.getDeficit(this);
-		float maxRaise = Math.max(0, getMaxMaxBet()-getMaxBet());
+	public double getMaxRaise(PlayerData p) {
+		double amountLeftToRaiseWith = p.getStack()-p.getDeficit(this);
+		double maxRaise = Math.max(0, getMaxMaxBet()-getMaxBet());
 		return Math.min(amountLeftToRaiseWith, maxRaise);
 	}
 
-	public float getMinRaise(PlayerData p) {
+	public double getMinRaise(PlayerData p) {
 		return Math.min(lastRaise, getMaxRaise(p));
 	}
 
@@ -544,17 +544,17 @@ public class Propositionalizer implements Cloneable {
 		return nbPlayersDoneThisRound;
 	}
 
-	public float getRoundCompletion() {
+	public double getRoundCompletion() {
 		if (isSomebodyActedThisRound()) {
 			if (getNbActivePlayers() <= 1) {
 				return 0;
 			}
-			return nbPlayersDoneThisRound / (float) (getNbActivePlayers() - 1);
+			return nbPlayersDoneThisRound / (double) (getNbActivePlayers() - 1);
 		}
-		return nbPlayersDoneThisRound / (float) getNbActivePlayers();
+		return nbPlayersDoneThisRound / (double) getNbActivePlayers();
 	}
 
-	protected float getAverageAF(PlayerData p, int memory) {
+	protected double getAverageAF(PlayerData p, int memory) {
 		List<PlayerData> opponents = activePlayers.size()>1? activePlayers:allinPlayers; 
 		double sum = 0;
 		int n = 0;
@@ -564,10 +564,10 @@ public class Propositionalizer implements Cloneable {
 				++n;
 			}
 		}
-		return (float) (sum/n);
+		return (double) (sum/n);
 	}
 
-	protected float getAverageVPIP(PlayerData p, int memory) {
+	protected double getAverageVPIP(PlayerData p, int memory) {
 		List<PlayerData> opponents = activePlayers.size()>1? activePlayers:allinPlayers; 
 		double sum = 0;
 		int n = 0;
@@ -577,10 +577,10 @@ public class Propositionalizer implements Cloneable {
 				++n;
 			}
 		}
-		return (float) (sum/n);
+		return (double) (sum/n);
 	}
 
-	protected float getAveragePFR(PlayerData p, int memory) {
+	protected double getAveragePFR(PlayerData p, int memory) {
 		List<PlayerData> opponents = activePlayers.size()>1? activePlayers:allinPlayers; 
 		double sum = 0;
 		int n = 0;
@@ -590,10 +590,10 @@ public class Propositionalizer implements Cloneable {
 				++n;
 			}
 		}
-		return (float) (sum/n);
+		return (double) (sum/n);
 	}
 
-	protected float getAverageAFq(PlayerData p, int memory) {
+	protected double getAverageAFq(PlayerData p, int memory) {
 		List<PlayerData> opponents = activePlayers.size()>1? activePlayers:allinPlayers; 
 		double sum = 0;
 		int n = 0;
@@ -603,10 +603,10 @@ public class Propositionalizer implements Cloneable {
 				++n;
 			}
 		}
-		return (float) (sum/n);
+		return (double) (sum/n);
 	}
 
-	protected float getAverageAFAmount(PlayerData p, int memory) {
+	protected double getAverageAFAmount(PlayerData p, int memory) {
 		List<PlayerData> opponents = activePlayers.size()>1? activePlayers:allinPlayers; 
 		double sum = 0;
 		int n = 0;
@@ -616,10 +616,10 @@ public class Propositionalizer implements Cloneable {
 				++n;
 			}
 		}
-		return (float) (sum/n);
+		return (double) (sum/n);
 	}
 
-	protected float getAverageWtSD(PlayerData p, int memory) {
+	protected double getAverageWtSD(PlayerData p, int memory) {
 		List<PlayerData> opponents = activePlayers.size()>1? activePlayers:allinPlayers; 
 		double sum = 0;
 		int n = 0;
@@ -629,7 +629,7 @@ public class Propositionalizer implements Cloneable {
 				++n;
 			}
 		}
-		return (float) (sum/n);
+		return (double) (sum/n);
 	}
 
 	public String getRound() {
@@ -652,11 +652,11 @@ public class Propositionalizer implements Cloneable {
 		return "river".equals(round);
 	}
 
-	protected void logBet(PlayerData p, float movedAmount){
+	protected void logBet(PlayerData p, double movedAmount){
 		// no op
 	}
 
-	protected void logRaise(PlayerData p, float raiseAmount){
+	protected void logRaise(PlayerData p, double raiseAmount){
 		// no op
 	}
 
@@ -672,18 +672,13 @@ public class Propositionalizer implements Cloneable {
 		// no op
 	}
 
-	protected void logShowdown(PlayerData p, float[] partitionDistr, int average, int minrank, int maxrank, int avgrank, int sigmarank) {
+	protected void logShowdown(PlayerData p, double[] partitionDistr, int average, int minrank, int maxrank, int avgrank, int sigmarank) {
 		// no op
 	}
 
-	public float rel(float up, float down) {
+	public double rel(double up, double down) {
 		if(down==0) return 0;
 		return up/down;
-	}
-
-	public float rel(double up, double down) {
-		if(down==0) return 0;
-		return (float) (up/down);
 	}
 
 }

@@ -108,8 +108,8 @@ public class FixedSampleMCTSBot extends AbstractBot {
 			iterate(root);
 			iterate(root);
 		}while(root.getNbSamples()<nbSamples);
-		if(logger.isInfoEnabled()){
-			logger.info("Stopped MCTS.");
+		if(logger.isDebugEnabled()){
+			logger.debug("Stopped MCTS.");
 		}
 		root.selectChild(config.getMoveSelectionStrategy()).getLastAction().getAction().perform(playerContext);
 		MCTSListener[] listeners = createListeners(gameState, botId);

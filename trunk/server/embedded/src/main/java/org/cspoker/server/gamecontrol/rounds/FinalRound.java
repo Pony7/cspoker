@@ -38,7 +38,7 @@ public class FinalRound
 		drawOpenCardAndPublishCommonCard();
 		FinalRound.logger.info("*** RIVER *** " + game.getCommunityCards());
 		if (getGame().getCurrentPlayer() != null && getGame().getNbCurrentDealPlayers() > 1) {
-			gameMediator.publishNextPlayerEvent(new NextPlayerEvent(game.getCurrentPlayer().getId(), 0));
+			gameMediator.publishNextPlayerEvent(new NextPlayerEvent(game.getCurrentPlayer().getId()));
 		}
 	}
 	

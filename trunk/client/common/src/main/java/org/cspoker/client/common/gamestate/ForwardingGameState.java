@@ -17,6 +17,7 @@ package org.cspoker.client.common.gamestate;
 
 import java.util.EnumSet;
 
+import org.cspoker.client.common.playerstate.PlayerState;
 import org.cspoker.common.elements.cards.Card;
 import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.elements.table.Round;
@@ -32,7 +33,7 @@ public abstract class ForwardingGameState extends AbstractGameState{
 	public ForwardingGameState(GameState gameState) {
 		this.gameState = gameState;
 	}
-
+	
 	public int getLargestBet() {
 		return gameState.getLargestBet();
 	}

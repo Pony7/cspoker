@@ -14,7 +14,7 @@ package org.cspoker.client.gui.swt.window;
 import java.rmi.RemoteException;
 
 import org.apache.log4j.Logger;
-import org.cspoker.client.common.gamestate.PlayerState;
+import org.cspoker.client.common.playerstate.PlayerState;
 import org.cspoker.client.gui.swt.control.ClientGUI;
 import org.cspoker.client.gui.swt.control.UserSeatedPlayer;
 import org.cspoker.common.api.chat.event.MessageEvent;

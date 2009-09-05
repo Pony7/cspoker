@@ -20,6 +20,7 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 import org.cspoker.client.common.SmartHoldemTableListener;
 import org.cspoker.client.common.GameStateContainer;
+import org.cspoker.client.common.gamestate.DetailedHoldemTableState;
 import org.cspoker.client.gui.swt.control.ClientGUI;
 import org.cspoker.client.gui.swt.control.SWTResourceManager;
 import org.cspoker.client.gui.swt.control.UserSeatedPlayer;
@@ -28,6 +29,7 @@ import org.cspoker.common.api.lobby.holdemtable.event.BetEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.BigBlindEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.CallEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.CheckEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.ConfigChangeEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.FoldEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.JoinTableEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.LeaveTableEvent;
@@ -97,7 +99,7 @@ public class GameWindow
 	 */
 	public GameWindow(LobbyWindow lobbyWindow, DetailedHoldemTable table) {
 		super(new Shell(lobbyWindow.getDisplay(), SWT.CLOSE | SWT.RESIZE), SWT.NONE, lobbyWindow.getClientCore());
-		tableState = new GameStateContainer(table);
+		tableState = new GameStateContainer(new DetailedHoldemTableState(table));
 		smartListener = new SmartHoldemTableListener(this, tableState);
 		detailedTable = table;
 		try {
@@ -332,7 +334,7 @@ public class GameWindow
 	 * @see org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener#onShowHand(org.cspoker.common.api.lobby.holdemtable.event.ShowHandEvent)
 	 */
 	public void onShowHand(ShowHandEvent showHandEvent) {
-		getPlayerSeatComposite(showHandEvent.getShowdownPlayer().getId()).setHoleCards(
+		getPlayerSeatComposite(showHandEvent.getShowdownPlayer().getPlayerId()).setHoleCards(
 				showHandEvent.getShowdownPlayer().getHandCards());
 		userInputComposite.showDealerMessage(showHandEvent);
 	}
@@ -459,5 +461,10 @@ public class GameWindow
 	
 	public DetailedHoldemTable getDetailedTable() {
 		return detailedTable;
+	}
+
+	@Override
+	public void onConfigChange(ConfigChangeEvent configChangeEvent) {
+		throw new UnsupportedOperationException();
 	}
 }

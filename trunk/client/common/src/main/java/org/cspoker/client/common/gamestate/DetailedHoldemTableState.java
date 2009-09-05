@@ -18,10 +18,11 @@
 package org.cspoker.client.common.gamestate;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
 
+import org.cspoker.client.common.playerstate.PlayerState;
+import org.cspoker.client.common.playerstate.SeatedPlayerState;
 import org.cspoker.common.api.lobby.holdemtable.event.HoldemTableTreeEvent;
 import org.cspoker.common.elements.cards.Card;
 import org.cspoker.common.elements.chips.Pots;
@@ -179,64 +180,7 @@ public class DetailedHoldemTableState
 		if (selected == null || !selected.isSittingIn()) {
 			return null;
 		}
-		final SeatedPlayer player = selected;
-		return new AbstractPlayerState() {
-			
-			@Override
-			public boolean hasFolded() {
-				return !player.hasCards();
-			}
-			
-			@Override
-			public int getStack() {
-				return player.getStackValue();
-			}
-			
-			@Override
-			public SeatId getSeatId() {
-				return player.getSeatId();
-			}
-			
-			@Override
-			public PlayerId getPlayerId() {
-				return player.getId();
-			}
-			
-			@Override
-			public EnumSet<Card> getCards() {
-				return EnumSet.noneOf(Card.class);
-			}
-			
-			@Override
-			public List<Integer> getBetProgression() {
-				return Collections.singletonList(player.getBetChipsValue());
-			}
-			
-			@Override
-			public int getBet() {
-				return player.getBetChipsValue();
-			}
-			
-			@Override
-			public int getTotalInvestment() {
-				return player.getBetChipsValue();
-			}
-			
-			@Override
-			public boolean isBigBlind() {
-				return false;
-			}
-			
-			@Override
-			public boolean isSmallBlind() {
-				return false;
-			}
-			
-			@Override
-			public boolean hasChecked() {
-				return false;
-			}
-		};
+		return new SeatedPlayerState(selected);
 	}
 	
 	@Override

@@ -27,10 +27,10 @@ public class Winner implements Serializable {
 
 	private int gainedAmount;
 
-	private Player player;
+	private PlayerId playerId;
 
-	public Winner(Player player, int gainedAmount) {
-		this.player = player;
+	public Winner(PlayerId playerId, int gainedAmount) {
+		this.playerId = playerId;
 		this.gainedAmount = gainedAmount;
 	}
 
@@ -42,20 +42,20 @@ public class Winner implements Serializable {
 		return gainedAmount;
 	}
 
-	public Player getPlayer() {
-		return player;
+	public PlayerId getPlayerId() {
+		return playerId;
 	}
 
 	@Override
 	public String toString() {
-		return player.getName() + " has gained " + gainedAmount + " chips.";
+		return playerId + " has gained " + gainedAmount + " chips.";
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((player == null) ? 0 : player.hashCode());
+		result = prime * result + ((playerId == null) ? 0 : playerId.hashCode());
 		return result;
 	}
 
@@ -68,10 +68,10 @@ public class Winner implements Serializable {
 		if (!(obj instanceof Winner))
 			return false;
 		Winner other = (Winner) obj;
-		if (player == null) {
-			if (other.player != null)
+		if (playerId == null) {
+			if (other.playerId != null)
 				return false;
-		} else if (!player.equals(other.player))
+		} else if (!playerId.equals(other.playerId))
 			return false;
 		return true;
 	}

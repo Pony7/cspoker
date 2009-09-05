@@ -37,7 +37,7 @@ from pokernetwork.pokerpackets import *
 def chips2amount(chips):
     amount = 0
     for i in xrange(len(chips) / 2):
-        amount += chips[i*2] * chips[i*2 + 1]
+        amount += chips[i * 2] * chips[i * 2 + 1]
     return amount
 
 class PokerClientPacketJSON(simplejson.JSONEncoder):
@@ -56,7 +56,7 @@ class PokerClientPacketJSON(simplejson.JSONEncoder):
                 if something[0] == 'Cards':
                     return PokerCards(something[1:])
                 elif something[0] == 'Chips':
-                    return PokerChips([1],[something[1]])
+                    return PokerChips([1], [something[1]])
             else:
                 return map(PokerClientPacketJSON.decode_objects, something)
         elif type(something) is types.DictType:
@@ -74,7 +74,7 @@ class PokerClientPackets:
             chips = (1, amount)
         else:
             chips = []
-        return ( block[4:], chips )
+        return (block[4:], chips)
     
 Packet.format_info['c'] = {
     'pack': lambda data: pack('!I', chips2amount(data)),
@@ -120,7 +120,7 @@ serial: integer uniquely identifying a player.
 game_id: integer uniquely identifying a game.
 """
 
-    info = PacketPokerCards.info + ( ("side", "", 's'),
+    info = PacketPokerCards.info + (("side", "", 's'),
                                      ("hand", "", 's'),
                                      ("bestcards", [], 'Bl'),
                                      ("board", [], 'Bl'),
@@ -145,7 +145,7 @@ index: integer uniquely identifying a side pot in the range [0,10[
 game_id: integer uniquely identifying a game.
 """
 
-    info = Packet.info + ( ("game_id", 0, 'I'),
+    info = Packet.info + (("game_id", 0, 'I'),
                            ("index", 0, 'B'),
                            ("bet", [], 'c'),
                            )
@@ -161,7 +161,7 @@ class PacketPokerClientAction(PacketPokerId):
     
     """
 
-    info = PacketPokerId.info + ( ("display", 0, 'B'),
+    info = PacketPokerId.info + (("display", 0, 'B'),
                                   ("action", "", 's'),
                                   )
 
@@ -192,7 +192,7 @@ pot: the amount in the pot.
 game_id: integer uniquely identifying a game.
 """
 
-    info = PacketPokerId.info + ( ("min", 0, 'I'),
+    info = PacketPokerId.info + (("min", 0, 'I'),
                                   ("max", 0, 'I'),
                                   ("step", 0, 'I'),
                                   ("call", 0, 'I'),
@@ -241,7 +241,7 @@ game_id: integer uniquely identifying a game.
 """
 
     info = PacketPokerId.info + (
-        ('chips', [], 'c' ),
+        ('chips', [], 'c'),
         )
     
 Packet.infoDeclare(globals(), PacketPokerChipsPlayer2Bet, PacketPokerId, 'POKER_CHIPS_PLAYER2BET', 176) # 0xb0 # %SEQ%
@@ -268,8 +268,8 @@ serial: integer uniquely identifying a player.
 game_id: integer uniquely identifying a game.
 """
     info = PacketPokerId.info + (
-        ('chips', [], 'c' ),
-        ('pot', -1, 'b' ),
+        ('chips', [], 'c'),
+        ('pot', -1, 'b'),
         )
     
 Packet.infoDeclare(globals(), PacketPokerChipsBet2Pot, PacketPokerId, 'POKER_CHIPS_BET2POT', 177) # 0xb1 # %SEQ%
@@ -304,9 +304,9 @@ game_id: integer uniquely identifying a game.
 """
 
     info = PacketPokerId.info + (
-        ('chips', [], 'c' ),
-        ('pot', -1, 'b' ),
-        ('reason', '', 's' ),
+        ('chips', [], 'c'),
+        ('pot', -1, 'b'),
+        ('reason', '', 's'),
         )
 
 Packet.infoDeclare(globals(), PacketPokerChipsPot2Player, PacketPokerId, 'POKER_CHIPS_POT2PLAYER', 178) # 0xb2 # %SEQ%
@@ -330,8 +330,8 @@ game_id: integer uniquely identifying a game.
 """
 
     info = PacketPokerId.info + (
-        ('sources', [], 'Bl' ),
-        ('destination', 0, 'B' ),
+        ('sources', [], 'Bl'),
+        ('destination', 0, 'B'),
         )
 
 Packet.infoDeclare(globals(), PacketPokerChipsPotMerge, PacketPokerId, 'POKER_CHIPS_POT_MERGE', 179) # 0xb3 # %SEQ%
@@ -816,7 +816,7 @@ the board cards until after the muck phase of the game.
 
 game_id: integer uniquely identifying a game.
 """
-    info = Packet.info + ( ( 'game_id', 0, 'I'), )
+    info = Packet.info + (('game_id', 0, 'I'),)
 
 Packet.infoDeclare(globals(), PacketPokerAllinShowdown, Packet, "POKER_ALLIN_SHOWDOWN", 209) # 0xd1 # %SEQ%
 
@@ -847,7 +847,7 @@ hand: readable player best hand.
 
 Packet.infoDeclare(globals(), PacketPokerPlayerHandStrength, PacketPokerId, "POKER_PLAYER_HAND_STRENGTH", 210) # 0xd2 # %SEQ%
 
-_TYPES = range(170,254)
+_TYPES = range(170, 254)
 
 # Interpreted by emacs
 # Local Variables:

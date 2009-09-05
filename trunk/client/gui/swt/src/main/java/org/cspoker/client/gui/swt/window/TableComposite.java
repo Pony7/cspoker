@@ -22,7 +22,7 @@ import java.util.Map.Entry;
 
 import org.apache.log4j.Logger;
 import org.cspoker.client.common.gamestate.GameState;
-import org.cspoker.client.common.gamestate.PlayerState;
+import org.cspoker.client.common.playerstate.PlayerState;
 import org.cspoker.client.gui.swt.control.CardPaintListener;
 import org.cspoker.client.gui.swt.control.Chip;
 import org.cspoker.client.gui.swt.control.ClientGUI;
@@ -443,11 +443,11 @@ public class TableComposite
 	 * 
 	 * @param winners The winners in the hand
 	 */
-	public void movePotsToWinners(final Set<Winner> winners) {
+	public void movePotsToWinners(final Collection<Winner> winners) {
 		List<PlayerSeatComposite> winnerPCs = new ArrayList<PlayerSeatComposite>();
 		// Ship it
 		for (Winner winner : winners) {
-			PlayerSeatComposite winnerPC = findPlayerSeatCompositeByPlayerId(winner.getPlayer().getId());
+			PlayerSeatComposite winnerPC = findPlayerSeatCompositeByPlayerId(winner.getPlayerId());
 			ClientGUI.playAudio(ClientGUI.Resources.SOUND_FILE_SLIDE_CHIPS);
 			winnerPCs.add(winnerPC);
 			

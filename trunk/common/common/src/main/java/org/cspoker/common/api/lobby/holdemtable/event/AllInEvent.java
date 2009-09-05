@@ -21,6 +21,7 @@ import net.jcip.annotations.Immutable;
 
 import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
 import org.cspoker.common.elements.player.PlayerId;
+import org.cspoker.common.util.Util;
 
 @Immutable
 public class AllInEvent
@@ -65,6 +66,6 @@ public class AllInEvent
 	
 	@Override
 	public String toString() {
-		return playerId + " is all-in with " + movedAmount + ".";
+		return playerId + " is all-in with " + Util.parseDollars(movedAmount) + ".";
 	}
 }

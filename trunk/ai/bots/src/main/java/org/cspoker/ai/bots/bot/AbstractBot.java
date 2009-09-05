@@ -29,9 +29,9 @@ import org.cspoker.common.api.lobby.holdemtable.event.BetEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.BigBlindEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.CallEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.CheckEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.ConfigChangeEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.FoldEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.JoinTableEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.SitOutEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.LeaveTableEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.NewCommunityCardsEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.NewDealEvent;
@@ -292,7 +292,7 @@ public abstract class AbstractBot implements Bot {
 	public void onWinner(WinnerEvent winnerEvent) {
 		boolean done = false;
 		for(Winner winner: winnerEvent.getWinners()){
-			if(winner.getPlayer().getId().equals(botId)){
+			if(winner.getPlayerId().equals(botId)){
 				//check if one can be a winner more than once (split pot?)
 				if(done) throw new IllegalStateException();
 				addProfit(winner.getGainedAmount()-gameInvested);
@@ -322,6 +322,11 @@ public abstract class AbstractBot implements Bot {
 
 	public void onLeaveSeat(SitOutEvent leaveSeatEvent) {
 
+	}
+
+	@Override
+	public void onConfigChange(ConfigChangeEvent configChangeEvent) {
+	
 	}
 	
 	private void incrementGameInvestment(int amount){

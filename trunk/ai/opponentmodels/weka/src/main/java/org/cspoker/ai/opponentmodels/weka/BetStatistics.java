@@ -420,7 +420,7 @@ public class BetStatistics implements Cloneable {
 	
 	//mutators
 	
-	protected void addRaise(Propositionalizer p, float called, float raised) {
+	protected void addRaise(Propositionalizer p, double called, double raised) {
 		if (p.inPreFlopRound()) {
 			++nbRaisesPreFlop;
 			callAmountPreFlop += called;
@@ -442,7 +442,7 @@ public class BetStatistics implements Cloneable {
 		}
 	}
 
-	protected void addCall(Propositionalizer p, float called) {
+	protected void addCall(Propositionalizer p, double called) {
 		if (p.inPreFlopRound()) {
 			++nbCallsPreFlop;
 			callAmountPreFlop += called;
@@ -474,7 +474,7 @@ public class BetStatistics implements Cloneable {
 		}
 	}
 
-	protected void addBet(Propositionalizer p, float betAmount) {
+	protected void addBet(Propositionalizer p, double betAmount) {
 		if (p.inPreFlopRound()) {
 			++nbBetsPreFlop;
 			betAmountPreFlop += betAmount;

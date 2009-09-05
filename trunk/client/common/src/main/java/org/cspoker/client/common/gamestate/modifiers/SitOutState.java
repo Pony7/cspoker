@@ -15,19 +15,53 @@
  */
 package org.cspoker.client.common.gamestate.modifiers;
 
+import java.util.Map;
+
 import org.cspoker.client.common.gamestate.ForwardingGameState;
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.client.common.gamestate.GameStateVisitor;
+import org.cspoker.client.common.playerstate.PlayerState;
 import org.cspoker.common.api.lobby.holdemtable.event.HoldemTableEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.SitOutEvent;
+import org.cspoker.common.elements.player.PlayerId;
+import org.cspoker.common.elements.table.SeatId;
+
+import com.google.common.collect.ImmutableBiMap;
 
 public class SitOutState extends ForwardingGameState {
 
 	private final SitOutEvent event;
+	private final PlayerId playerId;
+	private final ImmutableBiMap<SeatId, PlayerId> seatMap;
 
 	public SitOutState(GameState gameState, SitOutEvent event) {
 		super(gameState);
 		this.event = event;
+		this.playerId = event.getPlayerId();
+
+		ImmutableBiMap.Builder<SeatId, PlayerId> seatMapBuilder = new ImmutableBiMap.Builder<SeatId, PlayerId>();
+		for(Map.Entry<SeatId, PlayerId> entry: super.getSeatMap().entrySet()){
+			if(!entry.getValue().equals(playerId)){
+				seatMapBuilder.put(entry.getKey(), entry.getValue());
+			}
+		}
+		seatMap = seatMapBuilder.build();
+	}
+	
+	@Override
+	public PlayerState getPlayer(PlayerId playerId) {
+		if(this.playerId.equals(playerId)) return null;
+		return super.getPlayer(playerId);
+	}
+	
+	@Override
+	public ImmutableBiMap<SeatId, PlayerId> getSeatMap() {
+		return seatMap;
+	}
+	
+	@Override
+	public int getNbPlayers() {
+		return super.getNbPlayers()-1;
 	}
 	
 	public HoldemTableEvent getLastEvent() {

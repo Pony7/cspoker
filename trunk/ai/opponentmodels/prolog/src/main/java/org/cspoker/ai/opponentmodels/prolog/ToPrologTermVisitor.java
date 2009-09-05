@@ -20,7 +20,6 @@ import jp.ac.kobe_u.cs.prolog.lang.StructureTerm;
 import jp.ac.kobe_u.cs.prolog.lang.SymbolTerm;
 import jp.ac.kobe_u.cs.prolog.lang.Term;
 
-import org.cspoker.client.common.gamestate.PlayerState;
 import org.cspoker.client.common.gamestate.modifiers.AllInState;
 import org.cspoker.client.common.gamestate.modifiers.BetState;
 import org.cspoker.client.common.gamestate.modifiers.CallState;
@@ -28,6 +27,7 @@ import org.cspoker.client.common.gamestate.modifiers.CheckState;
 import org.cspoker.client.common.gamestate.modifiers.FoldState;
 import org.cspoker.client.common.gamestate.modifiers.RaiseState;
 import org.cspoker.client.common.gamestate.modifiers.SmallBlindState;
+import org.cspoker.client.common.playerstate.PlayerState;
 import org.cspoker.common.elements.cards.Card;
 import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.elements.player.ShowdownPlayer;
@@ -273,7 +273,7 @@ public abstract class ToPrologTermVisitor extends LoggingVisitor {
 					+ cardNumber);
 		}
 		addTerm(new StructureTerm(term, new Term[] { getGameIdTerm(),
-				getPlayerTerm(showdownPlayer.getId()), getCardTerm(card), }));
+				getPlayerTerm(showdownPlayer.getPlayerId()), getCardTerm(card), }));
 	}
 
 	@Override

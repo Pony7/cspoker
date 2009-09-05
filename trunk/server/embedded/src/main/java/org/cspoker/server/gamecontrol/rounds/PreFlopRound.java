@@ -98,8 +98,7 @@ public class PreFlopRound
 		
 		if (game.getCurrentPlayer() != null && getGame().getNbCurrentDealPlayers() > 1
 				|| !onlyOnePlayerLeftBesidesAllInPlayersAndCalled()) {
-			gameMediator.publishNextPlayerEvent(new NextPlayerEvent(game.getCurrentPlayer().getId(),
-					amountToIncreaseBetPileWith(game.getCurrentPlayer())));
+			gameMediator.publishNextPlayerEvent(new NextPlayerEvent(game.getCurrentPlayer().getId()));
 		}
 	}
 

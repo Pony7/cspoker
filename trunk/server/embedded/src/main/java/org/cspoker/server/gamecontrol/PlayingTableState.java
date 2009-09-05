@@ -315,8 +315,7 @@ extends TableState {
 		} else {
 			MutableSeatedPlayer player = game.getCurrentPlayer();
 			if (player != null) {
-				mediatingTable.publishNextPlayerEvent(new NextPlayerEvent(player.getId(), round.getBet()
-						- player.getBetChips().getValue()));
+				mediatingTable.publishNextPlayerEvent(new NextPlayerEvent(player.getId()));
 			}
 		}
 	}

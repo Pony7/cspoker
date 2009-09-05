@@ -22,6 +22,7 @@ import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.RemoteHolde
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.listener.HoldemPlayerListener;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.table.SeatId;
+import org.cspoker.common.elements.table.TableId;
 
 public interface RemoteHoldemTableContext extends Remote {
 

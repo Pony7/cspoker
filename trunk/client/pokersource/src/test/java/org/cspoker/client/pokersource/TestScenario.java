@@ -26,7 +26,6 @@ import org.cspoker.external.pokersource.JSONPacket;
 import org.cspoker.external.pokersource.PokersourceConnection;
 import org.cspoker.external.pokersource.commands.Login;
 import org.cspoker.external.pokersource.commands.poker.Call;
-import org.cspoker.external.pokersource.commands.poker.Poll;
 import org.cspoker.external.pokersource.commands.poker.Sit;
 import org.cspoker.external.pokersource.commands.poker.SitOut;
 import org.cspoker.external.pokersource.commands.poker.TablePicker;
@@ -47,7 +46,7 @@ public class TestScenario {
 	private final static Logger logger = Logger.getLogger(TestScenario.class);
 
 
-	public static void main(String[] args) throws IOException, InterruptedException, ExecutionException {
+	public static void main(String[] args) throws IOException {
 		(new TestScenario()).run();
 	}
 
