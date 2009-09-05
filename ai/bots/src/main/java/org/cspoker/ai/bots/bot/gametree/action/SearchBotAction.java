@@ -20,9 +20,9 @@ import java.util.Collections;
 import java.util.List;
 
 import org.cspoker.client.common.gamestate.GameState;
-import org.cspoker.client.common.gamestate.PlayerState;
 import org.cspoker.client.common.gamestate.modifiers.NewRoundState;
 import org.cspoker.client.common.gamestate.modifiers.NextPlayerState;
+import org.cspoker.client.common.playerstate.PlayerState;
 import org.cspoker.common.api.lobby.holdemtable.event.NewRoundEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.NextPlayerEvent;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.RemoteHoldemPlayerContext;
@@ -61,7 +61,7 @@ public abstract class SearchBotAction implements ActionWrapper {
 		}
 		List<Pot> pots = Collections.emptyList();
 		NewRoundState newRoundState = new NewRoundState(lastState,
-				new NewRoundEvent(nextRound, new Pots(pots, lastState
+				new NewRoundEvent(nextRound, new Pots(lastState
 						.getGamePotSize())));
 		PlayerState firstToAct = newRoundState
 				.getNextActivePlayerAfter(newRoundState.getDealer());
@@ -72,8 +72,7 @@ public abstract class SearchBotAction implements ActionWrapper {
 			return getNewRoundState(newRoundState);
 		}
 		return new NextPlayerState(newRoundState, new NextPlayerEvent(
-				firstToAct.getPlayerId(), gameState.getCallValue(firstToAct
-						.getPlayerId())));
+				firstToAct.getPlayerId()));
 	}
 
 	public boolean endsInvolvementOf(PlayerId botId) {

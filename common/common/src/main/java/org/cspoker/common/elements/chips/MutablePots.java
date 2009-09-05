@@ -102,7 +102,7 @@ public class MutablePots {
 			toReturn.add(pot.getSnapshot());
 			value += pot.getChips().getValue();
 		}
-		return new Pots(toReturn, value);
+		return new Pots(value);
 	}
 	
 	@Override

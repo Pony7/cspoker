@@ -25,7 +25,7 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.cspoker.client.common.gamestate.GameState;
-import org.cspoker.client.common.gamestate.PlayerState;
+import org.cspoker.client.common.playerstate.PlayerState;
 import org.cspoker.common.elements.cards.Card;
 import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.handeval.spears2p2.StateTableEvaluator;

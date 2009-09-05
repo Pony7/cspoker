@@ -35,33 +35,16 @@ public class NextPlayerEvent extends HoldemTableEvent {
 	@XmlAttribute
 	private final PlayerId playerId;
 	
-	private final int callAmount;
-	
-	public NextPlayerEvent(PlayerId player) {
-		this(player,0);
-	}
-
-	public NextPlayerEvent(PlayerId player, int callAmount) {
-		this.playerId = player;
-		this.callAmount = callAmount;
+	public NextPlayerEvent(PlayerId playerId) {
+		this.playerId = playerId;
 	}
 
 	protected NextPlayerEvent() {
 		playerId = null;
-		callAmount = 0;
 	}
 
 	public PlayerId getPlayerId() {
 		return playerId;
-	}
-	
-	/**
-	 * Returns the amount of chips that is needed to call the current bet amount.
-	 * 
-	 * @return The amount of chips that is needed to call the current bet amount.
-	 */
-	public int getCallAmount(){
-		return callAmount;
 	}
 
 	@Override

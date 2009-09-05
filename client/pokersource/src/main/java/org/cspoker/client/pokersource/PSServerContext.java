@@ -25,25 +25,34 @@ import org.cspoker.common.api.chat.listener.ChatListener;
 import org.cspoker.common.api.lobby.context.RemoteLobbyContext;
 import org.cspoker.common.api.lobby.listener.LobbyListener;
 import org.cspoker.common.api.shared.context.RemoteServerContext;
+import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.elements.table.TableId;
+import org.cspoker.external.pokersource.JSONPacket;
 import org.cspoker.external.pokersource.PokersourceConnection;
 import org.cspoker.external.pokersource.commands.Logout;
+import org.cspoker.external.pokersource.eventlisteners.all.LoggingListener;
 
 public class PSServerContext implements RemoteServerContext {
 
 	private final static Logger logger = Logger.getLogger(PSServerContext.class);
-	
+
 	private final int serial;
 	private final PokersourceConnection conn;
 
 	public PSServerContext(PokersourceConnection conn, int serial) {
 		this.conn = conn;
 		this.serial = serial;
+		conn.addListener(new LoggingListener(){
+			@Override
+			protected void log(JSONPacket event) {
+				logger.info(event.getClass().getSimpleName()+": "+event.toJSONObject().toString());
+			}
+		});
 	}
 
 	@Override
 	public AccountContext getAccountContext() {
-		throw new UnsupportedOperationException();
+		return new PSAccountContext(new PlayerId(serial));
 	}
 
 	@Override

@@ -13,7 +13,7 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.client.common.gamestate;
+package org.cspoker.client.common.playerstate;
 
 import java.util.EnumSet;
 import java.util.List;
@@ -33,6 +33,11 @@ public abstract class ForwardingPlayerState
 	
 	public int getBet() {
 		return playerState.getBet();
+	}
+	
+	@Override
+	public String getName() {
+		return playerState.getName();
 	}
 	
 	@Override

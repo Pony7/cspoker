@@ -32,6 +32,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
+import org.apache.log4j.Logger;
 import org.cspoker.common.elements.cards.Card;
 
 /**
@@ -43,6 +44,8 @@ import org.cspoker.common.elements.cards.Card;
  * 
  */
 public class StateTableEvaluator {
+	
+	private final static Logger logger = Logger.getLogger(StateTableEvaluator.class);
 
 	private final int HAND_RANKS_SIZE = 32487834;
 	/*
@@ -78,15 +81,14 @@ public class StateTableEvaluator {
 
 	private StateTableEvaluator() throws FileNotFoundException, IOException,
 			ClassNotFoundException {
-		System.out.println("Loading evaluation tables ...");
+		logger.info("Loading evaluation tables ...");
 		File f = new File(HAND_RANKS_FILE);
 		if (!f.exists()) {
-			System.out
-					.println("Evaluation tables do not exist, this is first time run. Generating them ...");
+			logger.info("Evaluation tables do not exist, this is first time run. Generating them ...");
 			handRanks = new int[HAND_RANKS_SIZE];
 			generateTables();
 			saveTables();
-			System.out.println("Loading evaluation tables (again) ...");
+			logger.info("Loading evaluation tables (again) ...");
 		}
 		long t = System.currentTimeMillis();
 		ZipInputStream zipStream = new ZipInputStream(new FileInputStream(
@@ -95,7 +97,7 @@ public class StateTableEvaluator {
 		ObjectInputStream s = new ObjectInputStream(zipStream);
 		handRanks = (int[]) s.readObject();
 		t = System.currentTimeMillis() - t;
-		System.out.println("Evaluation tables loaded in " + t / 1000.0
+		logger.info("Evaluation tables loaded in " + t / 1000.0
 				+ " seconds");
 	}
 
@@ -395,7 +397,7 @@ public class StateTableEvaluator {
 
 			default:
 
-				System.out.println("ERROR: Invalid hand in GetRank method.");
+				logger.error("ERROR: Invalid hand in GetRank method.");
 				break;
 
 			}
@@ -506,13 +508,13 @@ public class StateTableEvaluator {
 		long key;
 
 		if (verbose) {
-			System.out.print("\nGenerating and sorting keys...");
+			logger.info("\nGenerating and sorting keys...");
 			startTimer = System.currentTimeMillis();
 		}
 
 		for (keyIndex = 0; keys[keyIndex] != 0 || keyIndex == 0; keyIndex++) {
 			if (keyIndex % (size / 100) == 0) {
-				System.out.println(keyIndex / (size / 100) + "% generated.");
+				logger.info(keyIndex / (size / 100) + "% generated.");
 			}
 
 			for (card = 1; card < 53; card++) { // add a card to each previously
@@ -528,17 +530,13 @@ public class StateTableEvaluator {
 
 		if (verbose) {
 			stopTimer = System.currentTimeMillis();
-			System.out.printf("done.\n\n%35s %d\n",
-					"Number of Keys Generated:", (keyIndex + 1));
-			System.out.printf("%35s %f seconds\n\n", "Time Required:",
-					((stopTimer - startTimer) / 1000.0));
-			System.out.print("Generating hand ranks...");
+			logger.info("Generating hand ranks...");
 			startTimer = System.currentTimeMillis();
 		}
 
 		for (keyIndex = 0; keys[keyIndex] != 0 || keyIndex == 0; keyIndex++) {
 			if (keyIndex % (size / 100) == 0) {
-				System.out.println(keyIndex / (size / 100) + "% generated.");
+				logger.info(keyIndex / (size / 100) + "% generated.");
 			}
 
 			for (card = 1; card < 53; card++) {
@@ -565,12 +563,6 @@ public class StateTableEvaluator {
 				// insert the hand rank into the hand rank lookup table
 				handRanks[keyIndex * 53 + 53] = getHandRank(keys[keyIndex]);
 			}
-		}
-
-		if (verbose) {
-			stopTimer = System.currentTimeMillis();
-			System.out.printf("done.\n\n%35s %f seconds\n\n", "Time Required:",
-					((stopTimer - startTimer) / 1000.0));
 		}
 
 	} // END generateTables method

@@ -75,7 +75,7 @@ public class MutableShowdownPlayer implements Comparable<MutableShowdownPlayer> 
 
 	//TODO remove copyof when internal representation moved to EnumSet
 	public ShowdownPlayer getSavedShowdownPlayer() {
-		return new ShowdownPlayer(player.getMemento(), getBestHand().getCards(), EnumSet.copyOf(player.getPocketCards()), getBestHand().getDescription());
+		return new ShowdownPlayer(player.getId(), EnumSet.copyOf(player.getPocketCards()), getBestHand().getDescription());
 	}
 
 	/**

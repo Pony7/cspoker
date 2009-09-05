@@ -19,6 +19,7 @@ import java.rmi.RemoteException;
 
 import net.jcip.annotations.Immutable;
 
+import org.cspoker.client.common.gamestate.DetailedHoldemTableState;
 import org.cspoker.common.api.lobby.context.ForwardingRemoteLobbyContext;
 import org.cspoker.common.api.lobby.context.RemoteLobbyContext;
 import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
@@ -42,7 +43,7 @@ public class SmartLobbyContext
 	public SmartHoldemTableContext joinHoldemTable(TableId tableId, HoldemTableListener holdemTableListener)
 			throws RemoteException, IllegalActionException {
 		DetailedHoldemTable table = getHoldemTableInformation(tableId);
-		GameStateContainer state = new GameStateContainer(table);
+		GameStateContainer state = new GameStateContainer(new DetailedHoldemTableState(table));
 		SmartHoldemTableListener smartListener = new SmartHoldemTableListener(holdemTableListener, state);
 		return new SmartHoldemTableContext(super.joinHoldemTable(tableId, smartListener), state, playerId);
 	}

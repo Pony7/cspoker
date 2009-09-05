@@ -17,7 +17,8 @@
 package org.cspoker.common.elements.chips;
 
 import java.io.Serializable;
-import java.util.List;
+
+import org.cspoker.common.util.Util;
 
 import net.jcip.annotations.Immutable;
 
@@ -29,24 +30,12 @@ public class Pots
 	
 	private final int totalValue;
 	
-	private final List<Pot> pots;
-	
-	public Pots(List<Pot> pots, int totalValue) {
-		this.pots = pots;
+	public Pots(int totalValue) {
 		this.totalValue = totalValue;
 	}
 	
 	protected Pots() {
-		this.pots = null;
 		totalValue = 0;
-	}
-	
-	public Pot getActivePot() {
-		return pots.get(0);
-	}
-	
-	public List<Pot> getAllPots() {
-		return pots;
 	}
 	
 	public int getTotalValue() {
@@ -55,7 +44,7 @@ public class Pots
 	
 	@Override
 	public String toString() {
-		return "pots:" + pots.toString() + " total value:" + totalValue + " chips";
+		return "total value in pot:" + Util.parseDollars(totalValue);
 	}
 	
 }

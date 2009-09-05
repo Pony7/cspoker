@@ -22,6 +22,7 @@ import org.cspoker.common.api.lobby.holdemtable.event.BetEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.BigBlindEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.CallEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.CheckEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.ConfigChangeEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.FoldEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.JoinTableEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.LeaveTableEvent;
@@ -186,6 +187,15 @@ public class AsynchronousHoldemTableListener implements HoldemTableListener{
 		executor.execute(new Runnable() {
 			public void run() {
 				holdemTableListener.onSitOut(sitOutEvent);
+			}
+		});
+	}
+	
+	@Override
+	public void onConfigChange(final ConfigChangeEvent configChangeEvent) {
+		executor.execute(new Runnable() {
+			public void run() {
+				holdemTableListener.onConfigChange(configChangeEvent);
 			}
 		});
 	}

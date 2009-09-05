@@ -20,6 +20,7 @@ import java.util.Set;
 
 import net.jcip.annotations.Immutable;
 
+import org.cspoker.client.common.playerstate.PlayerState;
 import org.cspoker.common.api.lobby.holdemtable.event.HoldemTableTreeEvent;
 import org.cspoker.common.elements.cards.Card;
 import org.cspoker.common.elements.player.PlayerId;

@@ -26,12 +26,12 @@ import net.jcip.annotations.NotThreadSafe;
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.client.common.gamestate.GameStateVisitor;
 import org.cspoker.client.common.gamestate.DetailedHoldemTableState;
-import org.cspoker.client.common.gamestate.PlayerState;
 import org.cspoker.client.common.gamestate.modifiers.AllInState;
 import org.cspoker.client.common.gamestate.modifiers.BetState;
 import org.cspoker.client.common.gamestate.modifiers.BigBlindState;
 import org.cspoker.client.common.gamestate.modifiers.CallState;
 import org.cspoker.client.common.gamestate.modifiers.CheckState;
+import org.cspoker.client.common.gamestate.modifiers.ConfigChangeState;
 import org.cspoker.client.common.gamestate.modifiers.FoldState;
 import org.cspoker.client.common.gamestate.modifiers.JoinTableState;
 import org.cspoker.client.common.gamestate.modifiers.LeaveTableState;
@@ -46,6 +46,7 @@ import org.cspoker.client.common.gamestate.modifiers.SitInState;
 import org.cspoker.client.common.gamestate.modifiers.SitOutState;
 import org.cspoker.client.common.gamestate.modifiers.SmallBlindState;
 import org.cspoker.client.common.gamestate.modifiers.WinnerState;
+import org.cspoker.client.common.playerstate.PlayerState;
 import org.cspoker.common.api.lobby.holdemtable.event.RaiseEvent;
 import org.cspoker.common.elements.cards.Card;
 import org.cspoker.common.elements.player.PlayerId;
@@ -154,6 +155,11 @@ public abstract class LoggingVisitor implements GameStateVisitor {
 
 	@Override
 	public void visitInitialGameState(DetailedHoldemTableState initialGameState) {
+		// no op
+	}
+	
+	@Override
+	public void visitConfigChangeState(ConfigChangeState configChangeState) {
 		// no op
 	}
 

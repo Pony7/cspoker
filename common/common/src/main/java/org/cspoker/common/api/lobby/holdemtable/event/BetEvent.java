@@ -23,6 +23,7 @@ import net.jcip.annotations.Immutable;
 import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
 import org.cspoker.common.elements.player.Player;
 import org.cspoker.common.elements.player.PlayerId;
+import org.cspoker.common.util.Util;
 
 /**
  * A class to represent bet events.
@@ -54,7 +55,7 @@ public class BetEvent extends HoldemTableEvent {
 
 	@Override
 	public String toString() {
-		return getPlayerId() + " bets " + getAmount() + " chips.";
+		return getPlayerId() + " bets " + Util.parseDollars(getAmount()) + ".";
 	}
 
 	public int getAmount() {

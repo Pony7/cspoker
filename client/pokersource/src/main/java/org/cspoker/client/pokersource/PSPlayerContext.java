@@ -20,11 +20,14 @@ import java.util.EnumSet;
 
 import net.sf.json.JSONException;
 
+import org.cspoker.client.common.GameStateContainer;
+import org.cspoker.client.common.SmartHoldemPlayerListener;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.RemoteHoldemPlayerContext;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.event.NewPocketCardsEvent;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.listener.HoldemPlayerListener;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.cards.Card;
+import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.external.pokersource.PokersourceConnection;
 import org.cspoker.external.pokersource.commands.poker.Call;
 import org.cspoker.external.pokersource.commands.poker.Check;
@@ -42,18 +45,19 @@ public class PSPlayerContext implements RemoteHoldemPlayerContext {
 	private final int serial;
 	private final int game_id;
 	private final org.cspoker.client.pokersource.PSPlayerContext.TranslatingListener transListener;
-	private final HoldemPlayerListener holdemPlayerListener;
+	private final SmartHoldemPlayerListener smartListener;
 	private final PSTableContext tableContext;
+	private final GameStateContainer gameStateContainer;
 
 	public PSPlayerContext(PokersourceConnection conn, int serial, PSTableContext tableContext,
-			HoldemPlayerListener holdemPlayerListener) throws RemoteException, IllegalActionException {
+			HoldemPlayerListener holdemPlayerListener, GameStateContainer gameStateContainer) throws RemoteException, IllegalActionException {
 		this.conn = conn;
 		this.serial = serial;
 		this.game_id = tableContext.game_id;
 		this.tableContext = tableContext;
-		this.holdemPlayerListener = holdemPlayerListener;
+		this.smartListener = new SmartHoldemPlayerListener(holdemPlayerListener, gameStateContainer, new PlayerId(serial));
 		this.transListener = new TranslatingListener();
-		
+		this.gameStateContainer = gameStateContainer;
 		this.conn.addListeners(transListener);
 		//TODO fix dirty hack here after pokersource bugfix
 		conn.sendRemote(new SitOut(serial, game_id));
@@ -63,7 +67,8 @@ public class PSPlayerContext implements RemoteHoldemPlayerContext {
 	@Override
 	public void betOrRaise(int amount) throws IllegalActionException, RemoteException {
 		try {
-			conn.sendRemote(new Raise(serial, game_id, amount));
+			int callValue = gameStateContainer.getGameState().getCallValue(new PlayerId(serial));
+			conn.sendRemote(new Raise(serial, game_id, callValue+amount));
 		} catch (JSONException e) {
 			throw new IllegalActionException(e);
 		}
@@ -109,22 +114,25 @@ public class PSPlayerContext implements RemoteHoldemPlayerContext {
 	@Override
 	public void sitOut() throws RemoteException, IllegalActionException {
 	}
-	
+
 	private volatile int betLimitCall = 0;
 
 	private class TranslatingListener extends DefaultListener{
-		
+
 		@Override
 		public void onBetLimit(BetLimit betLimit) {
 			betLimitCall = betLimit.getCall();
 		}
-		
+
 		@Override
 		public void onPlayerCards(PlayerCards playerCards) {
-			Card card0 = Card.fromPokersourceInt(playerCards.getCards()[0]);
-			Card card1 = Card.fromPokersourceInt(playerCards.getCards()[1]);
-			holdemPlayerListener.onNewPocketCards(new NewPocketCardsEvent(EnumSet.of(card0, card1)));
+			//don't consider card 255 which is a hidden card
+			if(playerCards.getSerial() == serial){
+				Card card0 = Card.fromPokersourceInt(playerCards.getCards()[0]);
+				Card card1 = Card.fromPokersourceInt(playerCards.getCards()[1]);
+				smartListener.onNewPocketCards(new NewPocketCardsEvent(EnumSet.of(card0, card1)));
+			}
 		}
-		
+
 	}
 }

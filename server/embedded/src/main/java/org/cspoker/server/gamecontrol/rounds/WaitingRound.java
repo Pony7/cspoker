@@ -60,7 +60,7 @@ public class WaitingRound
 			newlySittingOut.setSittingIn(false);
 			for (Entry<MutableSeatedPlayer, Boolean> sitOutPlayer : game.getPlayersSittingOutNextRound().entrySet()) {
 				gameMediator
-						.publishSitOutEvent(new SitOutEvent(sitOutPlayer.getKey().getId(), sitOutPlayer.getValue()));
+						.publishSitOutEvent(new SitOutEvent(sitOutPlayer.getKey().getId()));
 			}
 		}
 		

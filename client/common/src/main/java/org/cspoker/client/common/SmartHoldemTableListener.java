@@ -24,6 +24,7 @@ import org.cspoker.client.common.gamestate.modifiers.BetState;
 import org.cspoker.client.common.gamestate.modifiers.BigBlindState;
 import org.cspoker.client.common.gamestate.modifiers.CallState;
 import org.cspoker.client.common.gamestate.modifiers.CheckState;
+import org.cspoker.client.common.gamestate.modifiers.ConfigChangeState;
 import org.cspoker.client.common.gamestate.modifiers.FoldState;
 import org.cspoker.client.common.gamestate.modifiers.JoinTableState;
 import org.cspoker.client.common.gamestate.modifiers.LeaveTableState;
@@ -42,6 +43,7 @@ import org.cspoker.common.api.lobby.holdemtable.event.BetEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.BigBlindEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.CallEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.CheckEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.ConfigChangeEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.FoldEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.JoinTableEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.LeaveTableEvent;
@@ -182,5 +184,11 @@ public class SmartHoldemTableListener
 	public void onJoinTable(JoinTableEvent joinTableEvent) {
 		tableState.setGameState(new JoinTableState(tableState.getGameState(), joinTableEvent));
 		super.onJoinTable(joinTableEvent);
+	}
+	
+	@Override
+	public void onConfigChange(ConfigChangeEvent configChangeEvent) {
+		tableState.setGameState(new ConfigChangeState(tableState.getGameState(), configChangeEvent));
+		super.onConfigChange(configChangeEvent);
 	}
 }

@@ -21,10 +21,10 @@ import java.util.List;
 import java.util.Set;
 
 import org.cspoker.client.common.gamestate.AbstractGameState;
-import org.cspoker.client.common.gamestate.AbstractPlayerState;
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.client.common.gamestate.GameStateVisitor;
-import org.cspoker.client.common.gamestate.PlayerState;
+import org.cspoker.client.common.playerstate.AbstractPlayerState;
+import org.cspoker.client.common.playerstate.PlayerState;
 import org.cspoker.common.api.lobby.holdemtable.event.HoldemTableTreeEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.NewDealEvent;
 import org.cspoker.common.elements.cards.Card;
@@ -61,6 +61,11 @@ extends AbstractGameState {
 			if(player.isSittingIn()){
 				AbstractPlayerState playerState = new AbstractPlayerState() {
 
+					@Override
+					public String getName() {
+						return player.getName();
+					}
+					
 					public int getBet() {
 						return 0;
 					}

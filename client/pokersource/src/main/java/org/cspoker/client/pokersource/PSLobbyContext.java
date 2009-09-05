@@ -48,7 +48,8 @@ public class PSLobbyContext implements RemoteLobbyContext {
 
 	@Override
 	public DetailedHoldemTable getHoldemTableInformation(TableId tableId) {
-		throw new UnsupportedOperationException();
+		// we only know config AFTER the joing, null for now;
+		return new DetailedHoldemTable(tableId, null);
 	}
 
 	@Override
@@ -60,7 +61,7 @@ public class PSLobbyContext implements RemoteLobbyContext {
 	public RemoteHoldemTableContext joinHoldemTable(TableId tableId,
 			HoldemTableListener holdemTableListener)
 			throws IllegalActionException, RemoteException {
-		return new PSTableContext(conn, serial, holdemTableListener);
+		return new PSTableContext(conn, serial, tableId, holdemTableListener);
 	}
 
 }

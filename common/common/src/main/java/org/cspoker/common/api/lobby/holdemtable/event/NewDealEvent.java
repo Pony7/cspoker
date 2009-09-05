@@ -16,8 +16,8 @@
 
 package org.cspoker.common.api.lobby.holdemtable.event;
 
+import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 
 import net.jcip.annotations.Immutable;
 
@@ -25,6 +25,7 @@ import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
 import org.cspoker.common.elements.player.Player;
 import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.elements.player.SeatedPlayer;
+import org.cspoker.common.util.Util;
 
 /**
  * A class to represent new deal events.
@@ -35,12 +36,12 @@ public class NewDealEvent extends HoldemTableEvent {
 
 	private static final long serialVersionUID = 8048593844056212117L;
 
-	private final List<SeatedPlayer> players;
+	private final Collection<SeatedPlayer> players;
 
 	private final PlayerId dealerId;
 
-	public NewDealEvent(List<SeatedPlayer> players, PlayerId dealerId) {
-		this.players = Collections.unmodifiableList(players);
+	public NewDealEvent(Collection<SeatedPlayer> players, PlayerId dealerId) {
+		this.players = Collections.unmodifiableCollection(players);
 		this.dealerId = dealerId;
 	}
 
@@ -49,7 +50,7 @@ public class NewDealEvent extends HoldemTableEvent {
 		dealerId = null;
 	}
 
-	public NewDealEvent(List<SeatedPlayer> players, Player dealer) {
+	public NewDealEvent(Collection<SeatedPlayer> players, Player dealer) {
 		this(players, dealer.getId());
 	}
 
@@ -57,7 +58,7 @@ public class NewDealEvent extends HoldemTableEvent {
 		return dealerId;
 	}
 	
-	public List<SeatedPlayer> getPlayers() {
+	public Collection<SeatedPlayer> getPlayers() {
 		return players;
 	}
 
@@ -65,10 +66,10 @@ public class NewDealEvent extends HoldemTableEvent {
 	public String toString() {
 		String toReturn = "A new deal with ";
 		for (SeatedPlayer player : players) {
-			toReturn += player.getName();
+			toReturn += player;
 			toReturn += " (";
-			toReturn += player.getStackValue();
-			toReturn += " chips), ";
+			toReturn += Util.parseDollars(player.getStackValue());
+			toReturn += "), ";
 		}
 		return toReturn.substring(0, toReturn.length() - 2)
 				+ " as initial players of this table. " 

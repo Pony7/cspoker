@@ -16,6 +16,7 @@
 package org.cspoker.common.elements.table;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlElement;
@@ -24,6 +25,7 @@ import javax.xml.bind.annotation.XmlElementWrapper;
 import net.jcip.annotations.Immutable;
 
 import org.cspoker.common.elements.cards.Card;
+import org.cspoker.common.elements.chips.Pot;
 import org.cspoker.common.elements.chips.Pots;
 import org.cspoker.common.elements.player.SeatedPlayer;
 
@@ -53,6 +55,8 @@ public class DetailedHoldemTable extends Table {
 	private final List<Card> communityCards;
 	
 	private final Round round;
+	
+	
 
 	public DetailedHoldemTable(TableId id, String name, List<SeatedPlayer> players,
 			boolean playing, TableConfiguration property, Pots pots, SeatedPlayer dealer, List<Card> communityCards, Round round) {
@@ -79,6 +83,16 @@ public class DetailedHoldemTable extends Table {
 		this.dealer = null;
 		this.communityCards = null;
 		this.round = null;
+	}
+
+	public DetailedHoldemTable(TableId tableId, TableConfiguration config) {
+		this.players = Collections.emptyList();;
+		this.playing = false;
+		this.property = config;
+		this.pots = new Pots(0);
+		this.dealer = null;
+		this.communityCards = Collections.emptyList();
+		this.round = Round.WAITING;
 	}
 
 	/**

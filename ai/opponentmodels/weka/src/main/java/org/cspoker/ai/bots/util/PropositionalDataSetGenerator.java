@@ -979,8 +979,8 @@ public class PropositionalDataSetGenerator extends Propositionalizer {
 
 	private void logRaiseAmount(PlayerData p, float raiseAmount)
 			throws IOException {
-		float minRaise = getMinRaise(p);
-		float maxRaise = getMaxRaise(p);
+		float minRaise = (float)getMinRaise(p);
+		float maxRaise = (float)getMaxRaise(p);
 		raiseAmount = Math.min(raiseAmount, maxRaise);
 		float logBetSize = (float)Math.log(raiseAmount);
 		if(Math.abs(minRaise-maxRaise)>0.6) //only when we have a choice

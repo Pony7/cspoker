@@ -237,7 +237,7 @@ public abstract class AbstractRound {
 			if (player.isBroke()) {
 				try {
 					getGame().sitOut(player, true);
-					gameMediator.publishSitOutEvent(new SitOutEvent(player.getId(), true));
+					gameMediator.publishSitOutEvent(new SitOutEvent(player.getId()));
 					if(!game.getTableConfiguration().isAutoDeal()){
 						game.pauzeGame();
 					}

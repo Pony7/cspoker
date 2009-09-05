@@ -13,6 +13,8 @@ package org.cspoker.common.elements.cards;
 
 import javax.xml.bind.annotation.XmlAttribute;
 
+import org.apache.log4j.Logger;
+
 public enum Card {
 
 	//ORDER IS IMPORTANT!
@@ -83,6 +85,8 @@ public enum Card {
 	ACE_SPADES(Rank.ACE,Suit.SPADES),
 	;
 	
+	private final static Logger logger = Logger.getLogger(Card.class);
+	
 	@XmlAttribute
 	private final Rank rank;
 	
@@ -131,7 +135,13 @@ public enum Card {
 	}
 	
 	public static Card fromPokersourceInt(int i){
-		return cards[i];
+		int bitmask = 1+2+4+8+16+32;
+		try {
+			return cards[i & bitmask];
+		} catch (ArrayIndexOutOfBoundsException e) {
+			logger.error("Bad int:"+i+" "+e);
+			throw e;
+		}
 	}
 	
 }

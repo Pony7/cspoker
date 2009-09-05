@@ -37,6 +37,7 @@ public class Raise extends Id{
 		return "PacketPokerRaise";
 	}
 
+	// is MOVEDAMOUNT!
 	private int amount;
 	
 	@Override
@@ -44,6 +45,7 @@ public class Raise extends Id{
 		listener.onRaise(this);
 	}
 	
+	// is MOVEDAMOUNT!
 	public int getAmount() {
 		return amount;
 	}

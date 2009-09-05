@@ -488,7 +488,7 @@ public abstract class BettingRound
 		BettingRound.logger.info("Winner: " + winner.getName() + " wins " + Util.parseDollars(pots.getTotalValue()));
 		
 		int gainedChipsValue = pots.getMainPot().getChips().getValue();
-		Set<Winner> savedWinner = Collections.singleton(new Winner(winner.getMemento(), gainedChipsValue));
+		Set<Winner> savedWinner = Collections.singleton(new Winner(winner.getId(), gainedChipsValue));
 		pots.getMainPot().getChips().transferAllChipsTo(winner.getStack());
 		
 		gameMediator.publishWinnerEvent(new WinnerEvent(savedWinner));

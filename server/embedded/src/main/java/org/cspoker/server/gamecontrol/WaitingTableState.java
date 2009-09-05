@@ -146,7 +146,7 @@ public class WaitingTableState
 	@Override
 	public void sitOut(MutableSeatedPlayer player) {
 		player.setSittingIn(false);
-		mediatingTable.publishSitOutEvent(new SitOutEvent(player.getId(), false));
+		mediatingTable.publishSitOutEvent(new SitOutEvent(player.getId()));
 	}
 	
 	@Override
