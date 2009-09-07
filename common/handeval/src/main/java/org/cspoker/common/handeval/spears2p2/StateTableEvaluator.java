@@ -508,7 +508,7 @@ public class StateTableEvaluator {
 		long key;
 
 		if (verbose) {
-			logger.info("\nGenerating and sorting keys...");
+			logger.info("Generating and sorting keys...");
 			startTimer = System.currentTimeMillis();
 		}
 

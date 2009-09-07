@@ -21,7 +21,7 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
-import org.cspoker.server.util.LoopingList;
+import org.cspoker.server.embedded.util.LoopingList;
 
 public class LoopingListTest extends TestCase {
 
