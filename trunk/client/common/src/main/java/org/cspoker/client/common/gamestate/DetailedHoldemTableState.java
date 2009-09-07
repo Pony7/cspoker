@@ -149,12 +149,6 @@ public class DetailedHoldemTableState
 		return 0;
 	}
 	
-	@Override
-	public int getNbPlayers() {
-		//TODO fix for sitout?
-		return seatMap.size();
-	}
-	
 	/**
 	 * @return
 	 * @see org.cspoker.client.common.gamestate.GameState#getNextToAct()

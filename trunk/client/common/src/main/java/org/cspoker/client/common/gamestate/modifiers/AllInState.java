@@ -93,6 +93,11 @@ public class AllInState
 				return false;
 			}
 			
+			@Override
+			public boolean hasBeenDealt() {
+				return true;
+			}
+			
 			/**
 			 * {@inheritDoc}
 			 */

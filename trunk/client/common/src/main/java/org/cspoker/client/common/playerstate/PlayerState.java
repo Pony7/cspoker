@@ -51,6 +51,8 @@ public interface PlayerState {
 	
 	boolean hasFolded();
 	
+	boolean hasBeenDealt();
+	
 	boolean isSmallBlind();
 	
 	boolean isBigBlind();

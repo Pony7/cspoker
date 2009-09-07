@@ -15,6 +15,7 @@
  */
 package org.cspoker.client.pokersource;
 
+import java.nio.channels.IllegalSelectorException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -89,6 +90,7 @@ import org.cspoker.external.pokersource.events.poker.Dealer;
 import org.cspoker.external.pokersource.events.poker.EndRound;
 import org.cspoker.external.pokersource.events.poker.EndRoundLast;
 import org.cspoker.external.pokersource.events.poker.Id;
+import org.cspoker.external.pokersource.events.poker.InGame;
 import org.cspoker.external.pokersource.events.poker.PlayerArrive;
 import org.cspoker.external.pokersource.events.poker.PlayerCards;
 import org.cspoker.external.pokersource.events.poker.PlayerChips;
@@ -349,10 +351,9 @@ public class PSTableContext implements RemoteHoldemTableContext {
 					dispatch(new WinnerEvent(ImmutableSet.of(new Winner(id,playerChips.getMoney()-prevStack))));
 				}
 			}
-			///update
 			player = getGameState().getPlayer(id);
+			//sanity checks
 			if(player!=null){
-				//sanity checks
 				if(player.getStack()!=playerChips.getMoney()){
 					String msg = "Stack of "+id+" is "+player.getStack()+" but should be "+playerChips.getMoney();
 					throw new IllegalStateException(msg);
@@ -362,6 +363,7 @@ public class PSTableContext implements RemoteHoldemTableContext {
 					throw new IllegalStateException(msg);
 				}
 			}
+			///update arrivedPlayers
 			ListIterator<SeatedPlayer> iter = arrivedPlayers.listIterator();
 			while(iter.hasNext()){
 				SeatedPlayer prevPlayer = iter.next();
@@ -376,11 +378,17 @@ public class PSTableContext implements RemoteHoldemTableContext {
 
 		@Override
 		public void onSit(Sit sit) {
+			PlayerId id = getId(sit);
+			if(getGameState().getSeatMap().containsValue(id)){
+				logger.warn("Ignoring superfluous "+sit+" because player is already sitting in.");
+				return;
+			}
 			Iterator<SeatedPlayer> iter = arrivedPlayers.iterator();
 			while(iter.hasNext()){
 				SeatedPlayer sitter = iter.next();
-				if(sitter.getId().getId() == sit.getSerial()) {
-					dispatch(new SitInEvent(sitter));
+				if(sitter.getId().equals(id)) {
+					// set the sitting in flag to true
+					dispatch(new SitInEvent(new SeatedPlayer(sitter, true)));
 					return;
 				}
 			}
@@ -403,17 +411,27 @@ public class PSTableContext implements RemoteHoldemTableContext {
 			if(cards.size()>0)
 				dispatch(new NewCommunityCardsEvent(cards));
 		}
+		
+		private volatile int[] dealtTo = new int[]{};
+		
+		@Override
+		public void onInGame(InGame inGame) {
+			dealtTo = inGame.getPlayers();
+		}
 
 		@Override
 		public void onDealer(Dealer dealer) {
 			List<SeatedPlayer> players = new ArrayList<SeatedPlayer>();
-			PlayerId dealerId=null;
-			for(PlayerState p:getGameState().getAllSeatedPlayers()){
+			PlayerId dealerId = null;
+			//only send players that actually sit in AND are ingame in the new deal event.
+			for(int i:dealtTo){
+				PlayerState p = getGameState().getPlayer(new PlayerId(i));
 				players.add(new SeatedPlayer(p.getPlayerId(),p.getSeatId(),p.getName(),p.getStack(), p.getBet(), true, false));
 				if(p.getSeatId().getId() == dealer.getDealer()){
 					dealerId = p.getPlayerId();
 				}
 			}
+			if(dealerId == null) throw new IllegalSelectorException();
 			blindsDone.set(false);
 			endLastRound.set(false);
 			dispatch(new NewDealEvent(players, dealerId));

@@ -48,8 +48,6 @@ public class PlayerTrackingVisitor implements GameStateVisitor, Cloneable {
 	
 	private GameState previousStartState;
 	private Propositionalizer propz = new Propositionalizer();
-
-	private float bb;
 	
 	public void readHistory(GameState gameState) {
 		try{
@@ -83,12 +81,12 @@ public class PlayerTrackingVisitor implements GameStateVisitor, Cloneable {
 	
 	@Override
 	public void visitAllInState(AllInState allInState) {
-		propz.signalAllIn(allInState.getEvent().getPlayerId(), allInState.getEvent().getMovedAmount()/bb);
+		propz.signalAllIn(allInState.getEvent().getPlayerId(), allInState.getEvent().getMovedAmount());
 	}
 
 	@Override
 	public void visitBetState(BetState betState) {
-		propz.signalBet(false, betState.getLastEvent().getPlayerId(), betState.getEvent().getAmount()/bb);
+		propz.signalBet(false, betState.getLastEvent().getPlayerId(), betState.getEvent().getAmount());
 	}
 
 	@Override
@@ -134,10 +132,10 @@ public class PlayerTrackingVisitor implements GameStateVisitor, Cloneable {
 
 	@Override
 	public void visitNewDealState(NewDealState newDealState) {
-		bb = newDealState.getTableConfiguration().getBigBlind();
+		propz.signalBBAmount(newDealState.getTableConfiguration().getBigBlind());
 		propz.signalNewGame();
 		for(PlayerState player: newDealState.getAllSeatedPlayers()){
-			propz.signalSeatedPlayer(player.getStack()/bb, player.getPlayerId());
+			propz.signalSeatedPlayer(player.getStack(), player.getPlayerId());
 		}
 	}
 
@@ -164,7 +162,7 @@ public class PlayerTrackingVisitor implements GameStateVisitor, Cloneable {
 
 	@Override
 	public void visitRaiseState(RaiseState raiseState) {
-		propz.signalRaise(raiseState.getLastEvent().getPlayerId(), false, raiseState.getLargestBet()/bb);
+		propz.signalRaise(raiseState.getLastEvent().getPlayerId(), false, raiseState.getLargestBet());
 	}
 
 	@Override
@@ -194,6 +192,6 @@ public class PlayerTrackingVisitor implements GameStateVisitor, Cloneable {
 
 	@Override
 	public void visitConfigChangeState(ConfigChangeState configChangeState) {
-	
+		propz.signalBBAmount(configChangeState.getLastEvent().getTableConfig().getBigBlind());
 	}
 }

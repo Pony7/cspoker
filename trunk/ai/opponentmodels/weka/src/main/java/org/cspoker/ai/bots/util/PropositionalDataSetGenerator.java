@@ -28,6 +28,7 @@ import org.cspoker.ai.opponentmodels.weka.PlayerData;
 import org.cspoker.ai.opponentmodels.weka.Propositionalizer;
 import org.cspoker.common.elements.cards.Card;
 
+//TODO fix log methods to handle absolute amounts in stead of relative ones.
 public class PropositionalDataSetGenerator extends Propositionalizer {
 
 	protected static final String hole = "*** HOLE";
@@ -1043,18 +1044,17 @@ public class PropositionalDataSetGenerator extends Propositionalizer {
 		}
 	}
 
-	private float bb;
-
 	private void doLine(String line) throws IOException {
 		// inputRaise.write(line+"\n");
 		// foldFile.write(line+"\n");
 		// System.out.println(line);
 		if (line.startsWith("Full Tilt Poker Game ")) {
 			int temp = line.indexOf("/");
-			bb = Float.parseFloat(line.substring(temp + 2,
-					line.indexOf(" ", temp + 2)).replaceAll(",", ""));
+			int bb = (int)(100*Float.parseFloat(line.substring(temp + 2,
+					line.indexOf(" ", temp + 2)).replaceAll(",", "")));
 			forgetCurrentGame = false;
 			signalNewGame();
+			signalBBAmount(bb);
 		} else if (!forgetCurrentGame) {
 			if (line.startsWith("Seat ")) {
 				if (line.endsWith("(0)")) {
@@ -1062,12 +1062,12 @@ public class PropositionalDataSetGenerator extends Propositionalizer {
 				} else {
 					int startName = line.indexOf(":") + 2;
 					int startDollar = line.indexOf("(", startName);
-					float stack = Float
+					int stack = (int)(100*Float
 					.parseFloat(line.substring(startDollar + 2,
 							line.indexOf(")", startDollar)).replaceAll(
-									",", ""));
+									",", "")));
 					String name = line.substring(startName, startDollar - 1);
-					signalSeatedPlayer(stack/bb, name);
+					signalSeatedPlayer(stack, name);
 				}
 			} else if (line.startsWith("*** ")) {
 				if (line.startsWith("*** SUMMARY ***")) {
@@ -1118,20 +1118,20 @@ public class PropositionalDataSetGenerator extends Propositionalizer {
 					}
 					String id = line
 					.substring(0, line.indexOf(" calls"));
-					float movedAmount = Float.parseFloat(line.substring(
-							line.indexOf("$") + 1, allinIndex).replaceAll(",", ""));
-					signalCall(isAllIn, id, movedAmount/bb);
+					int movedAmount = (int)(100*Float.parseFloat(line.substring(
+							line.indexOf("$") + 1, allinIndex).replaceAll(",", "")));
+					signalCall(isAllIn, id, movedAmount);
 				} else if (line.contains(" raises")) {
 					int allinIndex = line.lastIndexOf(", and is all in");
 					if (allinIndex <= 0) {
 						allinIndex = line.length();
 					}
-					float maxBetParsed = Float.parseFloat(line.substring(
+					int maxBetParsed = (int)(100*Float.parseFloat(line.substring(
 							line.indexOf("$") + 1, allinIndex).replaceAll(",",
-							""));
+							"")));
 					String id = line.substring(0, line
 							.indexOf(" raises"));
-					signalRaise(id, isAllIn, maxBetParsed/bb);
+					signalRaise(id, isAllIn, maxBetParsed);
 				} else if (line.endsWith(" checks")) {
 					String id = line.substring(0, line
 							.indexOf(" checks"));
@@ -1142,10 +1142,10 @@ public class PropositionalDataSetGenerator extends Propositionalizer {
 					if (allinIndex <= 0) {
 						allinIndex = line.length();
 					}
-					float maxBetParsed = Float.parseFloat(line.substring(line.indexOf("$") + 1,
-							allinIndex).replaceAll(",", ""));
+					int maxBetParsed = (int)(100*Float.parseFloat(line.substring(line.indexOf("$") + 1,
+							allinIndex).replaceAll(",", "")));
 					//cannot be bet by big blind, is raise in dataset
-					signalBet(isAllIn, id, maxBetParsed/bb);
+					signalBet(isAllIn, id, maxBetParsed);
 				} else if (line.contains(" shows [")){
 					int showsIndex = line
 					.indexOf(" shows [");

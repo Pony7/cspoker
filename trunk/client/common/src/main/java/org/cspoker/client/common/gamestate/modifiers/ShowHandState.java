@@ -47,6 +47,11 @@ public class ShowHandState extends ForwardingGameState {
 				return ShowHandState.this.event.getShowdownPlayer().getPlayerId();
 			}
 			
+			@Override
+			public boolean hasBeenDealt() {
+				return true;
+			}
+			
 		};
 	}
 	

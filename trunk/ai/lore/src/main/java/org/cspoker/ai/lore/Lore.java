@@ -72,7 +72,7 @@ public class Lore {
 								new SampleWeightedBackPropStrategy.Factory(),
 								new MaxDistributionPlusBackPropStrategy.Factory()
 						),
-						2000);
+						2500);
 	}
 	
 	private void start() throws RemoteException, LoginException, IllegalActionException {

@@ -48,7 +48,7 @@ public class ShowdownPlayer {
 
 	@Override
 	public String toString() {
-		return getPlayerId() + " has a " + description;
+		return getPlayerId() + " has a " + description +" with " + handCards;
 	}
 	
 	public PlayerId getPlayerId() {

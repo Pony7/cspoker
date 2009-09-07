@@ -55,6 +55,11 @@ public class BigBlindState
 			public int getStack() {
 				return newStack;
 			}
+
+			@Override
+			public boolean hasBeenDealt() {
+				return true;
+			}
 			
 			@Override
 			public boolean hasFolded() {

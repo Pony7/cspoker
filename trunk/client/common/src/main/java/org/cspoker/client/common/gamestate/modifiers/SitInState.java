@@ -43,20 +43,10 @@ public class SitInState
 		super(gameState);
 		this.event = event;
 		playerState = new SeatedPlayerState(event.getPlayer());
-		ImmutableBiMap<SeatId, PlayerId> seats;
-		try {
-			seats = (new ImmutableBiMap.Builder<SeatId, PlayerId>())
+		seatMap = (new ImmutableBiMap.Builder<SeatId, PlayerId>())
 			.putAll(super.getSeatMap())
 			.put(playerState.getSeatId(), playerState.getPlayerId())
 			.build();
-		} catch (Exception e) {
-			logger.error("A player sits in that already sits in, ignoring. Is this a pokersource bug?");
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//			throw new RuntimeException(e);
-			seats = super.getSeatMap();
-		}
-		seatMap = seats;
 	}
 	
 	@Override
@@ -64,11 +54,6 @@ public class SitInState
 		if(playerState.getPlayerId().equals(playerId))
 			return playerState;
 		else return super.getPlayer(playerId);
-	}
-	
-	@Override
-	public int getNbPlayers() {
-		return super.getNbPlayers()+1;
 	}
 	
 	@Override

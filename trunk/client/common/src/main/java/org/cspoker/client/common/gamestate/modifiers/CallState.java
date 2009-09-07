@@ -61,6 +61,11 @@ public class CallState
 			}
 			
 			@Override
+			public boolean hasBeenDealt() {
+				return true;
+			}
+			
+			@Override
 			public int getStack() {
 				return newStack;
 			}

@@ -20,6 +20,8 @@ package org.cspoker.ai.opponentmodels.weka;
  * A number of statistics about betting behavior. 
  * Action types and bet sizes are kept score of.
  * 
+ * All amounts are relative to the big blind.
+ * 
  * @author guy
  *
  */

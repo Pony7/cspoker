@@ -70,6 +70,11 @@ public class CheckState extends ForwardingGameState {
 			}
 
 			@Override
+			public boolean hasBeenDealt() {
+				return true;
+			}
+
+			@Override
 			public boolean isBigBlind() {
 				if(bigBlindNoRaiseCase) return true;
 				return false;

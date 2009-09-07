@@ -26,6 +26,7 @@ import org.cspoker.ai.bots.bot.AbstractBot;
 import org.cspoker.ai.bots.listener.BotListener;
 import org.cspoker.client.common.SmartLobbyContext;
 import org.cspoker.client.common.gamestate.GameState;
+import org.cspoker.client.common.playerstate.PlayerState;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.cards.Card;
 import org.cspoker.common.elements.player.PlayerId;
@@ -48,14 +49,19 @@ public class HandBot extends AbstractBot {
 		GameState gameState = playerContext.getGameState();
 		int deficit = gameState.getDeficit(HandBot.this.botId);
 
+		int nbPlayers = 0;
+		for(PlayerState p: gameState.getAllSeatedPlayers()){
+			if(p.isActivelyPlaying()) nbPlayers++;
+		}
+		
 		double winPercentage = getWinPercentage(gameState
 				.getCommunityCards(), playerContext.getPocketCards(),
-				100, gameState.getNbPlayers() - 1);
+				100, nbPlayers - 1);
 		if (logger.isDebugEnabled()) {
 			logger.debug("Win percentage is " + winPercentage
 					+ " with " + playerContext.getPocketCards()
 					+ " and " + gameState.getCommunityCards() + " and "
-					+ (gameState.getNbPlayers() - 1) + " opponents.");
+					+ (nbPlayers - 1) + " opponents.");
 		}
 		double EV = winPercentage
 		* (gameState.getGamePotSize() + deficit);

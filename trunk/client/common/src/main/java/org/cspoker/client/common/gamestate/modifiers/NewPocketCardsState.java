@@ -58,6 +58,11 @@ public class NewPocketCardsState
 			}
 			
 			@Override
+			public boolean hasBeenDealt() {
+				return true;
+			}
+			
+			@Override
 			public boolean hasChecked() {
 				return false;
 			}

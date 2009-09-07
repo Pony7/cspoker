@@ -54,6 +54,11 @@ public class WinnerState extends ForwardingGameState {
 			}
 			
 			@Override
+			public boolean hasBeenDealt() {
+				return true;
+			}
+			
+			@Override
 			public int getStack() {
 				Integer gainedValue;
 				if((gainedValue = gained.get(playerId))!=null){

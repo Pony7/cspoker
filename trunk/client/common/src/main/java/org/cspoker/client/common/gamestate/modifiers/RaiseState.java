@@ -74,6 +74,11 @@ public class RaiseState
 				return false;
 			}
 			
+			@Override
+			public boolean hasBeenDealt() {
+				return true;
+			}
+			
 			/**
 			 * {@inheritDoc}
 			 */
