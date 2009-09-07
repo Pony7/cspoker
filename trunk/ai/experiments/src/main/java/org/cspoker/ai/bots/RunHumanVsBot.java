@@ -52,7 +52,7 @@ import org.cspoker.common.elements.table.TableConfiguration;
 import org.cspoker.common.elements.table.TableId;
 import org.cspoker.common.util.Log4JPropertiesLoader;
 import org.cspoker.common.util.threading.SingleThreadRequestExecutor;
-import org.cspoker.server.EmbeddedCSPokerServer;
+import org.cspoker.server.embedded.EmbeddedCSPokerServer;
 import org.eclipse.swt.widgets.Display;
 
 public class RunHumanVsBot{

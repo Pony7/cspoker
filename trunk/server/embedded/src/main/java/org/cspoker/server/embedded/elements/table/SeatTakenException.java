@@ -13,14 +13,28 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.server.common.gamecontrol;
+package org.cspoker.server.embedded.elements.table;
 
-import org.cspoker.server.embedded.player.PlayerFactory;
+import org.cspoker.common.elements.table.SeatId;
 
-class DummyPlayerFactory extends PlayerFactory{
-	
-	public DummyPlayerFactory(){
-		
+
+
+/**
+ * A class to represent seat taken exceptions.
+ * 
+ */
+public class SeatTakenException extends Exception {
+
+	private static final long serialVersionUID = -6106738788749975623L;
+
+	private final SeatId seatId;
+
+	public SeatTakenException(SeatId seatId) {
+		super("The seat " + seatId.toString() + " on this table is already taken.");
+		this.seatId = seatId;
 	}
 
+	public SeatId getSeatId() {
+		return seatId;
+	}
 }

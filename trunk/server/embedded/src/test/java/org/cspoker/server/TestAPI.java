@@ -27,6 +27,7 @@ import org.cspoker.common.api.lobby.listener.LobbyListener;
 import org.cspoker.common.api.shared.context.ServerContext;
 import org.cspoker.common.elements.table.TableConfiguration;
 import org.cspoker.common.util.Log4JPropertiesLoader;
+import org.cspoker.server.embedded.ServerContextImpl;
 
 public class TestAPI extends TestCase {
 	

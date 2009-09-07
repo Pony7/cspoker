@@ -53,17 +53,17 @@ import org.cspoker.common.elements.table.SeatId;
 import org.cspoker.common.elements.table.TableConfiguration;
 import org.cspoker.common.elements.table.TableId;
 import org.cspoker.common.util.Log4JPropertiesLoader;
-import org.cspoker.server.account.ExtendedAccountContext;
-import org.cspoker.server.elements.table.PlayerListFullException;
-import org.cspoker.server.elements.table.ServerTable;
-import org.cspoker.server.gamecontrol.Game;
-import org.cspoker.server.gamecontrol.PlayingTableState;
-import org.cspoker.server.gamecontrol.PokerTable;
-import org.cspoker.server.gamecontrol.rounds.FinalRound;
-import org.cspoker.server.gamecontrol.rounds.FlopRound;
-import org.cspoker.server.gamecontrol.rounds.PreFlopRound;
-import org.cspoker.server.gamecontrol.rounds.TurnRound;
-import org.cspoker.server.gamecontrol.rounds.WaitingRound;
+import org.cspoker.server.embedded.account.ExtendedAccountContext;
+import org.cspoker.server.embedded.elements.table.PlayerListFullException;
+import org.cspoker.server.embedded.elements.table.ServerTable;
+import org.cspoker.server.embedded.gamecontrol.Game;
+import org.cspoker.server.embedded.gamecontrol.PlayingTableState;
+import org.cspoker.server.embedded.gamecontrol.PokerTable;
+import org.cspoker.server.embedded.gamecontrol.rounds.FinalRound;
+import org.cspoker.server.embedded.gamecontrol.rounds.FlopRound;
+import org.cspoker.server.embedded.gamecontrol.rounds.PreFlopRound;
+import org.cspoker.server.embedded.gamecontrol.rounds.TurnRound;
+import org.cspoker.server.embedded.gamecontrol.rounds.WaitingRound;
 
 public class GameFlowTest extends TestCase {
 

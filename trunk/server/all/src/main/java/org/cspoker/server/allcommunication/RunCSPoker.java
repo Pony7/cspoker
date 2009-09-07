@@ -23,7 +23,7 @@ import java.rmi.RemoteException;
 import org.apache.log4j.Logger;
 import org.cspoker.common.CSPokerServer;
 import org.cspoker.common.util.Log4JPropertiesLoader;
-import org.cspoker.server.CSPokerServerImpl;
+import org.cspoker.server.embedded.CSPokerServerImpl;
 import org.cspoker.server.rmi.RMIServer;
 import org.cspoker.server.xml.http.HttpServer;
 import org.cspoker.server.xml.sockets.SocketServer;

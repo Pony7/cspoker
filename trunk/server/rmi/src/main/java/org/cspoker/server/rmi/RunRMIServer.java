@@ -19,7 +19,7 @@ import java.io.IOException;
 
 import org.apache.log4j.Logger;
 import org.cspoker.common.util.Log4JPropertiesLoader;
-import org.cspoker.server.CSPokerServerImpl;
+import org.cspoker.server.embedded.CSPokerServerImpl;
 
 public class RunRMIServer {
 
