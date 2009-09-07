@@ -58,12 +58,7 @@ public class SitOutState extends ForwardingGameState {
 	public ImmutableBiMap<SeatId, PlayerId> getSeatMap() {
 		return seatMap;
 	}
-	
-	@Override
-	public int getNbPlayers() {
-		return super.getNbPlayers()-1;
-	}
-	
+
 	public HoldemTableEvent getLastEvent() {
 		return event;
 	}

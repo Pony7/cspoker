@@ -39,7 +39,7 @@ public class SeatedPlayerState extends AbstractPlayerState {
 	
 	@Override
 	public boolean hasFolded() {
-		return !player.hasCards();
+		return false;
 	}
 	
 	@Override
@@ -84,6 +84,11 @@ public class SeatedPlayerState extends AbstractPlayerState {
 	
 	@Override
 	public boolean isSmallBlind() {
+		return false;
+	}
+	
+	@Override
+	public boolean hasBeenDealt() {
 		return false;
 	}
 	

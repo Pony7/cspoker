@@ -24,8 +24,10 @@ package org.cspoker.ai.opponentmodels.weka;
 public class PlayerData implements Cloneable{
 
 	private final Object id;
-	private double stack;
-	private double bet;
+	
+	private int bb;
+	private int stack;
+	private int bet;
 	private boolean comitted;
 	
 	private boolean lastActionWasRaise;
@@ -55,16 +57,28 @@ public class PlayerData implements Cloneable{
 		}
 	}
 
+	public void signalBBAmount(int bb) {
+		this.bb = bb;
+	}
+	
 	public Object getId() {
 		return id;
 	}
 
-	public double getStack() {
+	public int getStack() {
 		return stack;
 	}
 
-	public double getBet() {
+	public double getRelativeStack() {
+		return stack/(double)bb;
+	}
+
+	public int getBet() {
 		return bet;
+	}
+
+	public double getRelativeBet() {
+		return bet/(double)bb;
 	}
 
 	public int getGameCount() {
@@ -79,14 +93,18 @@ public class PlayerData implements Cloneable{
 		return globalStats;
 	}
 
-	public double getDeficit(Propositionalizer p) {
+	public int getDeficit(Propositionalizer p) {
 		return Math.min(stack, (p.getMaxBet() - bet));
+	}
+	
+	public double getRelativeDeficit(Propositionalizer p) {
+		return getDeficit(p)/(double)bb;
 	}
 
 	public double getPotOdds(Propositionalizer p) {
-		double potSize = p.getPotSize();
-		double deficit = getDeficit(p);
-		return deficit / (deficit + potSize);
+		int potSize = p.getPotSize();
+		int deficit = getDeficit(p);
+		return deficit / (double)(deficit + potSize);
 	}
 
 	// "@attribute VPIP real\n"+
@@ -141,20 +159,19 @@ public class PlayerData implements Cloneable{
 		}
 	}
 
-	public void signalBet(Propositionalizer p, double amount) {
+	public void signalBet(Propositionalizer p, int amount) {
 		bet += amount;
 		decreaseStack(amount);
 		comitted = true;
 		lastActionWasRaise = true;
 		updateVPIP(p);
 		updatePFR(p); //before gameStats
-		gameStats.addBet(p,amount);
-		globalStats.addBet(p, amount);
+		gameStats.addBet(p,amount/(double)bb);
+		globalStats.addBet(p, amount/(double)bb);
 	}
 
-	private void decreaseStack(double amount) {
+	private void decreaseStack(int amount) {
 		stack -= amount;
-		if(Math.abs(stack)<0.0001) stack = 0;
 		if(stack<0) {
 			throw new IllegalStateException("Bad stack: "+stack+" when decreasing by "+amount);
 		}
@@ -167,26 +184,26 @@ public class PlayerData implements Cloneable{
 	}
 
 	public void signalRaise(Propositionalizer p,
-			double raiseAmount, double movedAmount) {
+			int raiseAmount, int movedAmount) {
 		bet += movedAmount;
 		decreaseStack(movedAmount);
 		updateVPIP(p);
 		updatePFR(p);
 		lastActionWasRaise = true;
 		comitted = true;
-		gameStats.addRaise(p, (movedAmount-raiseAmount), raiseAmount);
-		globalStats.addRaise(p, (movedAmount-raiseAmount), raiseAmount);
+		gameStats.addRaise(p, (movedAmount-raiseAmount)/(double)bb, raiseAmount/(double)bb);
+		globalStats.addRaise(p, (movedAmount-raiseAmount)/(double)bb, raiseAmount/(double)bb);
 	}
 
 	public void signalCall(Propositionalizer p,
-			double movedAmount) {
+			int movedAmount) {
 		bet += movedAmount;
 		decreaseStack(movedAmount);
 		lastActionWasRaise = false;
 		updateVPIP(p);
 		comitted = true;
-		gameStats.addCall(p, movedAmount);
-		globalStats.addCall(p, movedAmount);
+		gameStats.addCall(p, movedAmount/(double)bb);
+		globalStats.addCall(p, movedAmount/(double)bb);
 	}
 
 	public void signalFold(Propositionalizer p) {
@@ -196,14 +213,14 @@ public class PlayerData implements Cloneable{
 	}
 
 	public void signalBB() {
-		bet = 1;
-		decreaseStack(1);
+		bet = bb;
+		decreaseStack(bb);
 		comitted = true;
 	}
 
 	public void signalSB() {
-		bet = 0.5F;
-		decreaseStack(0.5F);
+		bet = bb/2;
+		decreaseStack(bb/2);
 		comitted = true;
 	}
 
@@ -215,7 +232,7 @@ public class PlayerData implements Cloneable{
 		++showdownCount;
 	}
 
-	public void resetStack(double stack) {
+	public void resetStack(int stack) {
 		this.stack = stack;
 		if(stack<0) {
 			throw new IllegalStateException("Bad stack: "+stack);

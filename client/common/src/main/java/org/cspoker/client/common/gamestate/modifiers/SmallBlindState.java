@@ -75,6 +75,11 @@ public class SmallBlindState
 				return getBet();
 			}
 			
+			@Override
+			public boolean hasBeenDealt() {
+				return true;
+			}
+			
 			/**
 			 * {@inheritDoc}
 			 */

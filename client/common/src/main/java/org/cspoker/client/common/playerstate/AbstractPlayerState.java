@@ -26,11 +26,11 @@ package org.cspoker.client.common.playerstate;
 public abstract class AbstractPlayerState implements PlayerState {
 
 	public final boolean isAllIn() {
-		return getStack()==0;
+		return hasBeenDealt() && getStack()==0;
 	}
 
 	public final boolean isActivelyPlaying(){
-		return !hasFolded() && !isAllIn();
+		return hasBeenDealt() && !hasFolded() && !isAllIn();
 	}
 	
 	

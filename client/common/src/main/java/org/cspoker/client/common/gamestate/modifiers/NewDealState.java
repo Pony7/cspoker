@@ -24,6 +24,7 @@ import org.cspoker.client.common.gamestate.AbstractGameState;
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.client.common.gamestate.GameStateVisitor;
 import org.cspoker.client.common.playerstate.AbstractPlayerState;
+import org.cspoker.client.common.playerstate.ForwardingPlayerState;
 import org.cspoker.client.common.playerstate.PlayerState;
 import org.cspoker.common.api.lobby.holdemtable.event.HoldemTableTreeEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.NewDealEvent;
@@ -53,9 +54,9 @@ extends AbstractGameState {
 		this.previousGame = previousGame;
 		this.event = newDealEvent;
 		this.tableConfiguration = previousGame.getTableConfiguration();
+		this.seatMap = previousGame.getSeatMap();
 
 		ImmutableMap.Builder<PlayerId, PlayerState> playerStateBuilder = ImmutableMap.builder();
-		ImmutableBiMap.Builder<SeatId, PlayerId> seatMapBuilder = ImmutableBiMap.builder();
 
 		for (final SeatedPlayer player : newDealEvent.getPlayers()) {
 			if(player.isSittingIn()){
@@ -111,6 +112,11 @@ extends AbstractGameState {
 					public boolean hasChecked() {
 						return false;
 					}
+					
+					@Override
+					public boolean hasBeenDealt() {
+						return true;
+					}
 
 					@Override
 					public List<Integer> getBetProgression() {
@@ -118,11 +124,23 @@ extends AbstractGameState {
 					}
 
 				};
-				seatMapBuilder.put(player.getSeatId(), player.getId());
 				playerStateBuilder.put(player.getId(), playerState);
 			}
 		}
-		seatMap = seatMapBuilder.build();
+		//also add players that are not being dealt a card.
+		ImmutableMap<PlayerId, PlayerState> playerStatesInEvent = playerStateBuilder.build();
+		for(PlayerState p: previousGame.getAllSeatedPlayers()){
+			if(!playerStatesInEvent.containsKey(p.getPlayerId())){
+				playerStateBuilder.put(p.getPlayerId(), new ForwardingPlayerState(p) {
+					
+					@Override
+					public boolean hasBeenDealt() {
+						return false;
+					}
+					
+				});
+			}
+		}
 		playerStates = playerStateBuilder.build();
 	}
 
@@ -163,7 +181,11 @@ extends AbstractGameState {
 	}
 
 	public PlayerState getPlayer(PlayerId playerId) {
-		return playerStates.get(playerId);
+		try {
+			return playerStates.get(playerId);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	@Override
@@ -190,12 +212,6 @@ extends AbstractGameState {
 	@Override
 	public int getNbRaises() {
 		return 0;
-	}
-
-	@Override
-	public int getNbPlayers() {
-		//TODO fix with sitout?
-		return seatMap.size();
 	}
 
 	@Override

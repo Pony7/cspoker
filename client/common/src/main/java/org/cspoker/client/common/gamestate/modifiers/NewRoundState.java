@@ -52,15 +52,12 @@ public class NewRoundState
 
 	private final GameState previousRoundState;
 	
-	private final int nbPlayers;
-	
 	public NewRoundState(GameState gameState, NewRoundEvent event) {
 		this.event = event;
 		this.previousRoundState = gameState;
 		this.tableConfiguration = gameState.getTableConfiguration();
 		this.dealer = gameState.getDealer();
 		this.communityCards = gameState.getCommunityCards();
-		this.nbPlayers = gameState.getNbPlayers();
 		
 		Builder<PlayerId, PlayerState> playerStateBuilder = ImmutableMap.builder();
 		
@@ -72,6 +69,7 @@ public class NewRoundState
 			final EnumSet<Card> cards = oldPlayerState.getCards();
 			final int stack = oldPlayerState.getStack();
 			final boolean hasFolded = oldPlayerState.hasFolded();
+			final boolean hasBeenDealt = oldPlayerState.hasBeenDealt();
 			final SeatId seat = oldPlayerState.getSeatId();
 			final boolean bigBlind = oldPlayerState.isBigBlind();
 			final boolean smallBlind = oldPlayerState.isSmallBlind();
@@ -103,6 +101,11 @@ public class NewRoundState
 				
 				public boolean hasFolded() {
 					return hasFolded;
+				}
+				
+				@Override
+				public boolean hasBeenDealt() {
+					return hasBeenDealt;
 				}
 				
 				public PlayerId getPlayerId() {
@@ -153,11 +156,6 @@ public class NewRoundState
 	
 	public EnumSet<Card> getCommunityCards() {
 		return EnumSet.copyOf(communityCards);
-	}
-	
-	@Override
-	public int getNbPlayers() {
-		return nbPlayers;
 	}
 	
 	public PlayerId getDealer() {

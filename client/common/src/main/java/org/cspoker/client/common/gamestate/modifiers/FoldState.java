@@ -53,6 +53,11 @@ public class FoldState
 				return false;
 			}
 			
+			@Override
+			public boolean hasBeenDealt() {
+				return true;
+			}
+			
 			/**
 			 * {@inheritDoc}
 			 */
@@ -70,11 +75,6 @@ public class FoldState
 			return playerState;
 		}
 		return super.getPlayer(playerId);
-	}
-	
-	@Override
-	public int getNbPlayers() {
-		return super.getNbPlayers()-1;
 	}
 	
 	public HoldemTableEvent getLastEvent() {

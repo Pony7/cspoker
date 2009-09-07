@@ -65,6 +65,11 @@ public class SeatedPlayer extends Player {
 	public SeatedPlayer(SeatedPlayer clone, int stack, int bet) {
 		this(clone.getId(), clone.getSeatId(), clone.getName(), stack, bet, clone.isSittingIn(), clone.hasCards());
 	}
+	
+	
+	public SeatedPlayer(SeatedPlayer clone, boolean isSittingIn) {
+		this(clone.getId(), clone.getSeatId(), clone.getName(), clone.getStackValue(), clone.getBetChipsValue(), isSittingIn, clone.hasCards());
+	}
 
 	/**
 	 * Returns the seat id of this player.

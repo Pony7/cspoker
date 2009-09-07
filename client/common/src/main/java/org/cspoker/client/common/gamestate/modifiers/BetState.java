@@ -79,6 +79,11 @@ extends ForwardingGameState {
 			public boolean hasFolded() {
 				return false;
 			}
+			
+			@Override
+			public boolean hasBeenDealt() {
+				return true;
+			}
 
 			/**
 			 * {@inheritDoc}
