@@ -101,6 +101,24 @@ public abstract class AbstractBot implements Bot {
 			}
 		});
 	}
+	
+	public void reSitIn() {
+		executor.execute(new Runnable() {
+
+			public void run() {
+				try {
+					started = true;
+					tableContext.sitIn(buyIn, AbstractBot.this);
+				} catch (IllegalActionException e) {
+					e.printStackTrace();
+					throw new IllegalStateException("Failed to join table.", e);
+				} catch (RemoteException e) {
+					logger.error(e);
+					throw new IllegalStateException("Failed to join table.", e);
+				}
+			}
+		});
+	}
 
 	public void startGame() {
 		executor.execute(new Runnable() {

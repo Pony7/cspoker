@@ -70,7 +70,6 @@ public class PSPlayerContext implements RemoteHoldemPlayerContext {
 		this.transListener = new TranslatingListener();
 		this.gameStateContainer = gameStateContainer;
 		this.conn.addListeners(transListener);
-		//TODO fix dirty hack here after pokersource bugfix
 		conn.sendRemote(new SitOut(serial, game_id));
 		conn.sendRemote(new Sit(serial, game_id));
 	}
@@ -104,7 +103,7 @@ public class PSPlayerContext implements RemoteHoldemPlayerContext {
 		}
 	}
 
-	void signalLeaveTable() {
+	void signalSitOut() {
 		conn.removeListeners(transListener);
 	}
 

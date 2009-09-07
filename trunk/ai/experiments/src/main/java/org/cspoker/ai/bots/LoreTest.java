@@ -13,7 +13,7 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-package org.cspoker.ai.lore;
+package org.cspoker.ai.bots;
 
 import java.rmi.RemoteException;
 
@@ -23,6 +23,7 @@ import org.apache.log4j.Logger;
 import org.cspoker.ai.bots.bot.Bot;
 import org.cspoker.ai.bots.bot.BotFactory;
 import org.cspoker.ai.bots.bot.gametree.mcts.MCTSBotFactory;
+import org.cspoker.ai.bots.bot.gametree.mcts.listeners.SWTTreeListener;
 import org.cspoker.ai.bots.bot.gametree.mcts.nodes.MCTSBucketShowdownNode;
 import org.cspoker.ai.bots.bot.gametree.mcts.strategies.backpropagation.MaxDistributionPlusBackPropStrategy;
 import org.cspoker.ai.bots.bot.gametree.mcts.strategies.backpropagation.MixedBackPropStrategy;
@@ -45,26 +46,29 @@ import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.elements.table.TableId;
 import org.cspoker.common.util.Log4JPropertiesLoader;
 import org.cspoker.common.util.threading.SingleThreadRequestExecutor;
+import org.eclipse.swt.widgets.Display;
 
-public class Lore {
+public class LoreTest {
 
 	static {
 		Log4JPropertiesLoader
-		.load("org/cspoker/ai/lore/logging/log4j.properties");
+		.load("org/cspoker/ai/experiments/logging/log4j.properties");
 	}
 
-	private final static Logger logger = Logger.getLogger(Lore.class);
+	private final static Logger logger = Logger.getLogger(LoreTest.class);
 
 	public static void main(String[] args) throws Exception {
-		(new Lore(new PokersourceServer("http://pokersource.eu/POKER_REST"))).start();
+		(new LoreTest(new PokersourceServer("http://pokersource.eu/POKER_REST"))).start();
 	}
 
 	private final RemoteCSPokerServer server;
 	private final BotFactory botFactory;
 	private Bot bot;
+	private Display display;
 
-	public Lore(RemoteCSPokerServer server) throws Exception {
+	public LoreTest(RemoteCSPokerServer server) throws Exception {
 		this.server = server;
+		display = new Display();
 		this.botFactory = 
 			//			 new CallBotFactory();
 			new MCTSBotFactory(
@@ -79,7 +83,8 @@ public class Lore {
 							new SampleWeightedBackPropStrategy.Factory(),
 							new MaxDistributionPlusBackPropStrategy.Factory()
 					),
-					1500);
+					1500,
+					new SWTTreeListener.Factory(display));
 	}
 
 	private void start() throws RemoteException, LoginException, IllegalActionException {
@@ -98,6 +103,12 @@ public class Lore {
 			}
 		});
 		bot.start();
+		
+		while (!display.isDisposed()) {
+			if (!display.readAndDispatch()) {
+				display.sleep();
+			}
+		}
 	}
 
 

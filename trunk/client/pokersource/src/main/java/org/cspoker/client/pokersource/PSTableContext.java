@@ -85,6 +85,7 @@ import org.cspoker.external.pokersource.eventlisteners.all.DefaultListener;
 import org.cspoker.external.pokersource.events.poker.BeginRound;
 import org.cspoker.external.pokersource.events.poker.Blind;
 import org.cspoker.external.pokersource.events.poker.BoardCards;
+import org.cspoker.external.pokersource.events.poker.BuyInLimits;
 import org.cspoker.external.pokersource.events.poker.ChipsPotReset;
 import org.cspoker.external.pokersource.events.poker.Dealer;
 import org.cspoker.external.pokersource.events.poker.EndRound;
@@ -112,105 +113,107 @@ public class PSTableContext implements RemoteHoldemTableContext {
 	private final TranslatingListener transListener;
 
 	final TableId tableId;
-	
+
+	private PSPlayerContext psPlayerContext = null;
+
 	public PSTableContext(PokersourceConnection conn, int serial, TableId tableId, HoldemTableListener holdemTableListener) throws IllegalActionException, RemoteException {
 		this.conn = conn;
 		this.serial = serial;
 		this.tableId=tableId;
 		this.transListener = new TranslatingListener();
 		this.holdemTableListener = new ForwardingHoldemTableListener(ImmutableList.of(holdemTableListener, new HoldemTableListener() {
-			
+
 			@Override
 			public void onWinner(WinnerEvent winnerEvent) {
 				logger.info(winnerEvent);
 			}
-			
+
 			@Override
 			public void onSmallBlind(SmallBlindEvent smallBlindEvent) {
 				logger.info(smallBlindEvent);
 			}
-			
+
 			@Override
 			public void onSitOut(SitOutEvent sitOutEvent) {
 				logger.info(sitOutEvent);
 			}
-			
+
 			@Override
 			public void onSitIn(SitInEvent sitInEvent) {
 				logger.info(sitInEvent);
 			}
-			
+
 			@Override
 			public void onShowHand(ShowHandEvent showHandEvent) {
 				logger.info(showHandEvent);
 			}
-			
+
 			@Override
 			public void onRaise(RaiseEvent raiseEvent) {
 				logger.info(raiseEvent);
 			}
-			
+
 			@Override
 			public void onNextPlayer(NextPlayerEvent nextPlayerEvent) {
 				logger.info(nextPlayerEvent);
 			}
-			
+
 			@Override
 			public void onNewRound(NewRoundEvent newRoundEvent) {
 				logger.info(newRoundEvent);
 			}
-			
+
 			@Override
 			public void onNewDeal(NewDealEvent newDealEvent) {
 				logger.info(newDealEvent);
 			}
-			
+
 			@Override
 			public void onNewCommunityCards(
 					NewCommunityCardsEvent newCommunityCardsEvent) {
 				logger.info(newCommunityCardsEvent);
 			}
-			
+
 			@Override
 			public void onLeaveTable(LeaveTableEvent leaveTableEvent) {
 				logger.info(leaveTableEvent);
 			}
-			
+
 			@Override
 			public void onJoinTable(JoinTableEvent joinTableEvent) {
 				logger.info(joinTableEvent);
 			}
-			
+
 			@Override
 			public void onFold(FoldEvent foldEvent) {
 				logger.info(foldEvent);
 			}
-			
+
 			@Override
 			public void onConfigChange(ConfigChangeEvent configChangeEvent) {
 				logger.info(configChangeEvent);
 			}
-			
+
 			@Override
 			public void onCheck(CheckEvent checkEvent) {
 				logger.info(checkEvent);
 			}
-			
+
 			@Override
 			public void onCall(CallEvent callEvent) {
 				logger.info(callEvent);
 			}
-			
+
 			@Override
 			public void onBigBlind(BigBlindEvent bigBlindEvent) {
 				logger.info(bigBlindEvent);
 			}
-			
+
 			@Override
 			public void onBet(BetEvent betEvent) {
 				logger.info(betEvent);
 			}
-			
+
 			@Override
 			public void onAllIn(AllInEvent allInEvent) {
 				logger.info(allInEvent);
@@ -220,12 +223,15 @@ public class PSTableContext implements RemoteHoldemTableContext {
 		try {
 			conn.sendRemote(new TablePicker(serial, true));
 			tableInfoObtained.await();
+			conn.sendRemote(new SitOut(serial, game_id));
 		} catch (JSONException e) {
 			throw new IllegalActionException(e.getMessage());
 		} catch (InterruptedException e) {
 			throw new IllegalStateException(e);
 		}
 	}
+
+	private volatile boolean isPastFirstFakeSitOut = false;
 
 	@Override
 	public void leaveTable() throws RemoteException {
@@ -245,7 +251,9 @@ public class PSTableContext implements RemoteHoldemTableContext {
 	public RemoteHoldemPlayerContext sitIn(int buyIn,
 			HoldemPlayerListener holdemPlayerListener)
 	throws IllegalActionException, RemoteException {
-		return new PSPlayerContext(conn, serial, this, holdemPlayerListener, gameState);
+		if(psPlayerContext!=null) throw new IllegalActionException("Can't sit in twice");
+		psPlayerContext = new PSPlayerContext(conn, serial, this, holdemPlayerListener, gameState);
+		return psPlayerContext;
 	}
 
 	volatile int game_id;
@@ -397,7 +405,17 @@ public class PSTableContext implements RemoteHoldemTableContext {
 
 		@Override
 		public void onSitOut(SitOut sitOut) {
-			dispatch(new SitOutEvent(new PlayerId(sitOut.getSerial())));
+			if(isPastFirstFakeSitOut || sitOut.getSerial()!=serial){
+				if(sitOut.getSerial() == serial && psPlayerContext!=null){
+					psPlayerContext.signalSitOut();
+					psPlayerContext = null;
+				}
+				dispatch(new SitOutEvent(new PlayerId(sitOut.getSerial())));
+			}else{
+				if(sitOut.getSerial()==serial){
+					isPastFirstFakeSitOut = true;
+				}
+			}
 		}
 
 		@Override
@@ -411,9 +429,9 @@ public class PSTableContext implements RemoteHoldemTableContext {
 			if(cards.size()>0)
 				dispatch(new NewCommunityCardsEvent(cards));
 		}
-		
+
 		private volatile int[] dealtTo = new int[]{};
-		
+
 		@Override
 		public void onInGame(InGame inGame) {
 			dealtTo = inGame.getPlayers();
@@ -437,7 +455,7 @@ public class PSTableContext implements RemoteHoldemTableContext {
 			dispatch(new NewDealEvent(players, dealerId));
 			dispatch(new NewRoundEvent(Round.PREFLOP, new Pots(0)));
 		}
-		
+
 		final AtomicBoolean blindsDone = new AtomicBoolean(false);
 
 		@Override
@@ -455,14 +473,14 @@ public class PSTableContext implements RemoteHoldemTableContext {
 				blindsDone.set(true);
 			}
 		}
-		
+
 		@Override
 		public void onEndRound(EndRound endRound) {
 			dispatch(new NewRoundEvent(getGameState().getRound().getNextRound(),new Pots(getGameState().getGamePotSize())));
 		}
-		
+
 		final AtomicBoolean endLastRound = new AtomicBoolean(false);
-		
+
 		@Override
 		public void onEndRoundLast(EndRoundLast endRoundLast) {
 			endLastRound.set(true);
@@ -480,14 +498,14 @@ public class PSTableContext implements RemoteHoldemTableContext {
 			}
 			dispatch(new ShowHandEvent(new ShowdownPlayer(new PlayerId(playerCards.getSerial()), cards, "(Unknown)")));
 		}
-		
+
 		private AtomicBoolean inWinnerZone = new AtomicBoolean(false);
-		
+
 		@Override
 		public void onWin(Win win) {
 			inWinnerZone.set(true);
 		}
-		
+
 		@Override
 		public void onChipsPotReset(ChipsPotReset chipsPotReset) {
 			inWinnerZone.set(false);
