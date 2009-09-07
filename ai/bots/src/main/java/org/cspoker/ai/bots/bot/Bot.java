@@ -27,6 +27,8 @@ public interface Bot extends HoldemTableListener, HoldemPlayerListener{
 	void doNextAction() throws RemoteException, IllegalActionException;
 
 	void start();
+	
+	void reSitIn();
 
 	void startGame();
 

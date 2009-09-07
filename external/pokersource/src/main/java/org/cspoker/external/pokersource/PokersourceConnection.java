@@ -118,7 +118,7 @@ public class PokersourceConnection extends RESTConnection{
 	public synchronized EventRunner send(JSONPacket command) throws JSONException,IOException{
 		logger.info("Sending: "+command.getClass().getSimpleName()+": "+command);
 		String response = put(command.toString());
-		logger.info("Received: "+response);
+		logger.info("Received: "+response+" after "+command.getClass().getSimpleName());
 		JsonConfig jsonConfig = new JsonConfig();
 		jsonConfig.setExcludes(new String[]{"cookie", "length"});
 		final JSONArray jsonResponse = (JSONArray) JSONSerializer.toJSON(response,jsonConfig);
@@ -219,7 +219,7 @@ public class PokersourceConnection extends RESTConnection{
 	
 	public void removeListeners(AllEventListener... listeners){
 		for(AllEventListener listener:listeners)
-			this.listeners.remove(listener);
+			removeListener(listener);
 	}
 
 	private void signal(JSONPacket event) {
@@ -248,6 +248,7 @@ public class PokersourceConnection extends RESTConnection{
 					send(new Poll(game_id, 0));
 				} catch(Exception e){
 					//catch and rethrow to avoid ScheduledExecutorService eating it silently.
+					e.printStackTrace();
 					logger.error(e);
 					throw new RuntimeException(e);
 				}

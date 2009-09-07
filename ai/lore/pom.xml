@@ -20,7 +20,7 @@
 					</descriptorRefs>
 					<archive>
 						<manifest>
-							<mainClass>org.cspoker.ai.lore.TestScenario</mainClass>
+							<mainClass>org.cspoker.ai.lore.Lore</mainClass>
 						</manifest>
 					</archive>
 					<source>1.6</source>
