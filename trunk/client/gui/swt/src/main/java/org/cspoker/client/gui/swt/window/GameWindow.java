@@ -18,15 +18,15 @@ import java.util.Collections;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
-import org.cspoker.client.common.SmartHoldemTableListener;
 import org.cspoker.client.common.GameStateContainer;
+import org.cspoker.client.common.SmartHoldemTableListener;
 import org.cspoker.client.common.gamestate.DetailedHoldemTableState;
 import org.cspoker.client.gui.swt.control.ClientGUI;
 import org.cspoker.client.gui.swt.control.SWTResourceManager;
 import org.cspoker.client.gui.swt.control.UserSeatedPlayer;
 import org.cspoker.common.api.lobby.holdemtable.event.AllInEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.BetEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.BigBlindEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.BlindEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.CallEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.CheckEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.ConfigChangeEvent;
@@ -41,7 +41,6 @@ import org.cspoker.common.api.lobby.holdemtable.event.RaiseEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.ShowHandEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.SitInEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.SitOutEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.SmallBlindEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.WinnerEvent;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.event.NewPocketCardsEvent;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.listener.HoldemPlayerListener;
@@ -213,8 +212,8 @@ public class GameWindow
 	/**
 	 * @see org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener#onBigBlind(org.cspoker.common.api.lobby.holdemtable.event.BigBlindEvent)
 	 */
-	public void onBigBlind(final BigBlindEvent event) {
-		handleActionChangedPot(event.getAmount(), event.getPlayerId(), "Big Blind");
+	public void onBlind(final BlindEvent event) {
+		handleActionChangedPot(event.getAmount(), event.getPlayerId(), "Blind");
 		userInputComposite.showDealerMessage(event);
 	}
 	
@@ -352,14 +351,6 @@ public class GameWindow
 		tableComposite.findPlayerSeatCompositeBySeatId(sitInEvent.getPlayer().getSeatId()).occupy(
 				sitInEvent.getPlayer());
 		userInputComposite.showDealerMessage(sitInEvent);
-	}
-	
-	/**
-	 * @see org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener#onSmallBlind(org.cspoker.common.api.lobby.holdemtable.event.SmallBlindEvent)
-	 */
-	public void onSmallBlind(SmallBlindEvent smallBlindEvent) {
-		handleActionChangedPot(smallBlindEvent.getAmount(), smallBlindEvent.getPlayerId(), "Small Blind");
-		userInputComposite.showDealerMessage(smallBlindEvent);
 	}
 	
 	/**

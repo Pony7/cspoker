@@ -20,7 +20,7 @@ import java.rmi.RemoteException;
 
 import org.cspoker.common.api.lobby.holdemtable.event.AllInEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.BetEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.BigBlindEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.BlindEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.CallEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.CheckEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.ConfigChangeEvent;
@@ -35,7 +35,6 @@ import org.cspoker.common.api.lobby.holdemtable.event.RaiseEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.ShowHandEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.SitInEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.SitOutEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.SmallBlindEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.WinnerEvent;
 import org.cspoker.common.api.shared.listener.EventListener;
 
@@ -45,7 +44,7 @@ public interface RemoteHoldemTableListener extends EventListener, Remote{
 
 	void onBet(BetEvent betEvent) throws RemoteException;
 
-	void onBigBlind(BigBlindEvent bigBlindEvent) throws RemoteException;
+	void onBlind(BlindEvent blindEvent) throws RemoteException;
 
 	void onCall(CallEvent callEvent) throws RemoteException;
 
@@ -72,8 +71,6 @@ public interface RemoteHoldemTableListener extends EventListener, Remote{
 	void onSitIn(SitInEvent sitInEvent) throws RemoteException;
 	
 	void onSitOut(SitOutEvent sitOutEvent) throws RemoteException;
-
-	void onSmallBlind(SmallBlindEvent smallBlindEvent) throws RemoteException;
 
 	void onWinner(WinnerEvent winnerEvent) throws RemoteException;
 	

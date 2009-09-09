@@ -237,6 +237,16 @@ public class DetailedHoldemTableState
 	}
 	
 	@Override
+	public PlayerId getBigBlind() {
+		return null;
+	}
+
+	@Override
+	public PlayerId getSmallBlind() {
+		return null;
+	}
+	
+	@Override
 	public void acceptHistoryVisitor(GameStateVisitor visitor, GameState start) {
 		if(start!=this){
 			acceptVisitor(visitor);
@@ -252,4 +262,5 @@ public class DetailedHoldemTableState
 	public String toString() {
 		return table.toString();
 	}
+
 }

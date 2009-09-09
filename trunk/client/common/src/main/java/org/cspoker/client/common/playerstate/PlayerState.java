@@ -18,6 +18,7 @@ package org.cspoker.client.common.playerstate;
 import java.util.EnumSet;
 import java.util.List;
 
+import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.common.elements.cards.Card;
 import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.elements.table.SeatId;
@@ -52,10 +53,6 @@ public interface PlayerState {
 	boolean hasFolded();
 	
 	boolean hasBeenDealt();
-	
-	boolean isSmallBlind();
-	
-	boolean isBigBlind();
 	
 	/**
 	 * A derived state property that says whether a player is all-in or not.

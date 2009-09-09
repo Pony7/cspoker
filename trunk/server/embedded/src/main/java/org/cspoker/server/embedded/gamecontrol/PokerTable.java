@@ -29,7 +29,7 @@ import org.apache.log4j.Logger;
 import org.cspoker.common.api.lobby.holdemtable.context.HoldemTableContext;
 import org.cspoker.common.api.lobby.holdemtable.event.AllInEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.BetEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.BigBlindEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.BlindEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.CallEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.CheckEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.FoldEvent;
@@ -43,7 +43,6 @@ import org.cspoker.common.api.lobby.holdemtable.event.RaiseEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.ShowHandEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.SitInEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.SitOutEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.SmallBlindEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.WinnerEvent;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.HoldemPlayerContext;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.event.NewPocketCardsEvent;
@@ -512,24 +511,13 @@ public class PokerTable {
 	}
 	
 	/**
-	 * Inform all subscribed small blind listeners a small blind event has
-	 * occurred. Each subscribed small blind listener is updated by calling
-	 * their onSmallBlind() method.
+	 * Inform all subscribed blind listeners a blind event has
+	 * occurred. Each subscribed blind listener is updated by calling
+	 * their onBlind() method.
 	 */
-	public synchronized void publishSmallBlindEvent(SmallBlindEvent event) {
+	public synchronized void publishBlindEvent(BlindEvent event) {
 		for (HoldemTableListener listener : holdemTableListeners) {
-			listener.onSmallBlind(event);
-		}
-	}
-	
-	/**
-	 * Inform all subscribed big blind listeners a big blind event has occurred.
-	 * Each subscribed big blind listener is updated by calling their
-	 * onBigBlind() method.
-	 */
-	public synchronized void publishBigBlindEvent(BigBlindEvent event) {
-		for (HoldemTableListener listener : holdemTableListeners) {
-			listener.onBigBlind(event);
+			listener.onBlind(event);
 		}
 	}
 	

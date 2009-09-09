@@ -97,18 +97,6 @@ extends AbstractGameState {
 					}
 
 					@Override
-					public boolean isSmallBlind() {
-						//starting from SmallBlindEvent
-						return false;
-					}
-
-					@Override
-					public boolean isBigBlind() {
-						//starting from BigBlindEvent
-						return false;
-					}
-
-					@Override
 					public boolean hasChecked() {
 						return false;
 					}
@@ -212,6 +200,16 @@ extends AbstractGameState {
 	@Override
 	public int getNbRaises() {
 		return 0;
+	}
+	
+	@Override
+	public PlayerId getBigBlind() {
+		return null;
+	}
+	
+	@Override
+	public PlayerId getSmallBlind() {
+		return null;
 	}
 
 	@Override

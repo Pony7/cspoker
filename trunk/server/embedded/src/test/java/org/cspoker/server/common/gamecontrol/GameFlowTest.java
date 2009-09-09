@@ -25,7 +25,7 @@ import junit.framework.TestCase;
 import org.apache.log4j.Logger;
 import org.cspoker.common.api.lobby.holdemtable.event.AllInEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.BetEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.BigBlindEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.BlindEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.CallEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.CheckEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.ConfigChangeEvent;
@@ -40,7 +40,6 @@ import org.cspoker.common.api.lobby.holdemtable.event.RaiseEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.ShowHandEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.SitInEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.SitOutEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.SmallBlindEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.WinnerEvent;
 import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
 import org.cspoker.common.api.shared.event.Event;
@@ -1568,11 +1567,6 @@ public class GameFlowTest extends TestCase {
 			verifyEvent(betEvent);
 		}
 
-		public synchronized void onBigBlind(BigBlindEvent bigBlindEvent) {
-			GameFlowTest.logger.info(bigBlindEvent);
-			verifyEvent(bigBlindEvent);
-		}
-
 		public synchronized void onCall(CallEvent callEvent) {
 			GameFlowTest.logger.info(callEvent);
 			verifyEvent(callEvent);
@@ -1635,9 +1629,9 @@ public class GameFlowTest extends TestCase {
 			GameFlowTest.logger.info(sitOutEvent);
 		}
 
-		public synchronized void onSmallBlind(SmallBlindEvent smallBlindEvent) {
-			GameFlowTest.logger.info(smallBlindEvent);
-			verifyEvent(smallBlindEvent);
+		public synchronized void onBlind(BlindEvent blindEvent) {
+			GameFlowTest.logger.info(blindEvent);
+			verifyEvent(blindEvent);
 		}
 
 		public synchronized void onWinner(WinnerEvent winnerEvent) {

@@ -211,16 +211,10 @@ public class PlayerData implements Cloneable{
 		gameStats.addFold(p);
 		globalStats.addFold(p);
 	}
-
-	public void signalBB() {
-		bet = bb;
-		decreaseStack(bb);
-		comitted = true;
-	}
-
-	public void signalSB() {
-		bet = bb/2;
-		decreaseStack(bb/2);
+	
+	public void signalBlind(int amount) {
+		bet = amount;
+		decreaseStack(amount);
 		comitted = true;
 	}
 

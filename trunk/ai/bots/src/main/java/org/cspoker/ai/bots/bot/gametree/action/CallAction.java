@@ -64,7 +64,7 @@ public class CallAction extends SearchBotAction {
 		// what if small or big blind all-in?
 		if (roundEnds
 				&& gameState.getRound().equals(Round.PREFLOP)
-				&& actorState.isSmallBlind()
+				&& actor.equals(gameState.getSmallBlind())
 				&& largestBet <= gameState.getTableConfiguration()
 						.getBigBlind()) {
 			roundEnds = false;

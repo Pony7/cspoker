@@ -23,12 +23,12 @@ import java.util.Set;
 import jp.ac.kobe_u.cs.prolog.lang.SymbolTerm;
 import net.jcip.annotations.NotThreadSafe;
 
+import org.cspoker.client.common.gamestate.DetailedHoldemTableState;
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.client.common.gamestate.GameStateVisitor;
-import org.cspoker.client.common.gamestate.DetailedHoldemTableState;
 import org.cspoker.client.common.gamestate.modifiers.AllInState;
 import org.cspoker.client.common.gamestate.modifiers.BetState;
-import org.cspoker.client.common.gamestate.modifiers.BigBlindState;
+import org.cspoker.client.common.gamestate.modifiers.BlindState;
 import org.cspoker.client.common.gamestate.modifiers.CallState;
 import org.cspoker.client.common.gamestate.modifiers.CheckState;
 import org.cspoker.client.common.gamestate.modifiers.ConfigChangeState;
@@ -44,7 +44,6 @@ import org.cspoker.client.common.gamestate.modifiers.RaiseState;
 import org.cspoker.client.common.gamestate.modifiers.ShowHandState;
 import org.cspoker.client.common.gamestate.modifiers.SitInState;
 import org.cspoker.client.common.gamestate.modifiers.SitOutState;
-import org.cspoker.client.common.gamestate.modifiers.SmallBlindState;
 import org.cspoker.client.common.gamestate.modifiers.WinnerState;
 import org.cspoker.client.common.playerstate.PlayerState;
 import org.cspoker.common.api.lobby.holdemtable.event.RaiseEvent;
@@ -118,10 +117,14 @@ public abstract class LoggingVisitor implements GameStateVisitor {
 	}
 
 	@Override
-	public void visitBigBlindState(BigBlindState bigBlindState) {
-		PlayerId playerId = bigBlindState.getEvent().getPlayerId();
+	public void visitBlindState(BlindState blindState) {
+		PlayerId playerId = blindState.getEvent().getPlayerId();
 		signalAction(playerId);
-		gamePlayerBigBlind(playerId);
+		if(playerId.equals(blindState.getBigBlind())){
+			gamePlayerBigBlind(playerId);
+		}else if(playerId.equals(blindState.getSmallBlind())){
+			gamePlayerSmallBlind(playerId);
+		}else throw new UnsupportedOperationException("Can't handle additional blinds in Prolog model.");
 	}
 
 	@Override
@@ -278,13 +281,7 @@ public abstract class LoggingVisitor implements GameStateVisitor {
 	public void visitSitOutState(SitOutState sitOutState) {
 		// no op
 	}
-
-	@Override
-	public void visitSmallBlindState(SmallBlindState smallBlindState) {
-		signalAction(smallBlindState.getEvent().getPlayerId());
-		gamePlayerSmallBlind(smallBlindState);
-	}
-
+	
 	@Override
 	public void visitWinnerState(WinnerState winnerState) {
 		Set<PlayerState> players = lastDeal.getAllSeatedPlayers();
@@ -332,7 +329,7 @@ public abstract class LoggingVisitor implements GameStateVisitor {
 	protected abstract void gamePlayerHoleCards(int cardNumber,
 			ShowdownPlayer showdownPlayer, Card card);
 
-	protected abstract void gamePlayerSmallBlind(SmallBlindState smallBlindState);
+	protected abstract void gamePlayerSmallBlind(PlayerId playerId);
 
 	protected abstract void gamePlayerProfit(PlayerState player, int profit);
 

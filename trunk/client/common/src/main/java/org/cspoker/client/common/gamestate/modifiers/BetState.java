@@ -46,7 +46,8 @@ extends ForwardingGameState {
 		PlayerState oldPlayerState = super.getPlayer(event.getPlayerId());
 
 		bigBlindNoRaiseCase = Round.PREFLOP.equals(gameState.getRound()) 
-		&& oldPlayerState.isBigBlind() && gameState.getDeficit(event.getPlayerId())<=0;
+		&& oldPlayerState.getPlayerId().equals(super.getBigBlind()) 
+		&& gameState.getDeficit(event.getPlayerId())<=0;
 
 		final int newStack = oldPlayerState.getStack() - event.getAmount();
 		this.newPotSize = super.getRoundPotSize() + event.getAmount();

@@ -25,11 +25,10 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 import org.cspoker.common.api.lobby.holdemtable.event.AllInEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.BetEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.BigBlindEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.BlindEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.CallEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.NewCommunityCardsEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.RaiseEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.SmallBlindEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.WinnerEvent;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.cards.Card;
@@ -372,7 +371,7 @@ public abstract class BettingRound
 		getBettingRules().setBetPlaced(true);
 		getBettingRules().setLastBetAmount(getGame().getTableConfiguration().getSmallBlind());
 		playerMadeEvent(player);
-		gameMediator.publishSmallBlindEvent(new SmallBlindEvent(player.getId(), getGame().getTableConfiguration()
+		gameMediator.publishBlindEvent(new BlindEvent(player.getId(), getGame().getTableConfiguration()
 				.getSmallBlind()));
 		BettingRound.logger.info(player.getName() + ": posts small blind "
 				+ Util.parseDollars(getGame().getTableConfiguration().getSmallBlind()));
@@ -395,7 +394,7 @@ public abstract class BettingRound
 		getBettingRules().setLastBetAmount(getGame().getTableConfiguration().getBigBlind());
 		setBet(getGame().getTableConfiguration().getBigBlind());
 		playerMadeEvent(player);
-		gameMediator.publishBigBlindEvent(new BigBlindEvent(player.getId(), getGame().getTableConfiguration()
+		gameMediator.publishBlindEvent(new BlindEvent(player.getId(), getGame().getTableConfiguration()
 				.getBigBlind()));
 		BettingRound.logger.info(getGame().getCurrentPlayer().getName() + ": posts big blind "
 				+ Util.parseDollars(getGame().getTableConfiguration().getBigBlind()));

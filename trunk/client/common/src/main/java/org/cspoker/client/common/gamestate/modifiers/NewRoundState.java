@@ -51,6 +51,9 @@ public class NewRoundState
 	private final TableConfiguration tableConfiguration;
 
 	private final GameState previousRoundState;
+
+	private final PlayerId sb;
+	private final PlayerId bb;
 	
 	public NewRoundState(GameState gameState, NewRoundEvent event) {
 		this.event = event;
@@ -58,6 +61,8 @@ public class NewRoundState
 		this.tableConfiguration = gameState.getTableConfiguration();
 		this.dealer = gameState.getDealer();
 		this.communityCards = gameState.getCommunityCards();
+		this.sb = gameState.getSmallBlind();
+		this.bb = gameState.getBigBlind();
 		
 		Builder<PlayerId, PlayerState> playerStateBuilder = ImmutableMap.builder();
 		
@@ -71,8 +76,6 @@ public class NewRoundState
 			final boolean hasFolded = oldPlayerState.hasFolded();
 			final boolean hasBeenDealt = oldPlayerState.hasBeenDealt();
 			final SeatId seat = oldPlayerState.getSeatId();
-			final boolean bigBlind = oldPlayerState.isBigBlind();
-			final boolean smallBlind = oldPlayerState.isSmallBlind();
 			final int investment = oldPlayerState.getTotalInvestment();
 			
 			PlayerState playerState = new AbstractPlayerState() {
@@ -114,16 +117,6 @@ public class NewRoundState
 				
 				public SeatId getSeatId() {
 					return seat;
-				}
-				
-				@Override
-				public boolean isSmallBlind() {
-					return smallBlind;
-				}
-				
-				@Override
-				public boolean isBigBlind() {
-					return bigBlind;
 				}
 				
 				@Override
@@ -215,6 +208,16 @@ public class NewRoundState
 	@Override
 	public int getNbRaises() {
 		return 0;
+	}
+
+	@Override
+	public PlayerId getBigBlind() {
+		return bb;
+	}
+
+	@Override
+	public PlayerId getSmallBlind() {
+		return sb;
 	}
 	
 	@Override

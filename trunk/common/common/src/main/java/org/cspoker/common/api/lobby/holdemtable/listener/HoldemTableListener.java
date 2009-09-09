@@ -17,7 +17,7 @@ package org.cspoker.common.api.lobby.holdemtable.listener;
 
 import org.cspoker.common.api.lobby.holdemtable.event.AllInEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.BetEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.BigBlindEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.BlindEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.CallEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.CheckEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.ConfigChangeEvent;
@@ -32,7 +32,6 @@ import org.cspoker.common.api.lobby.holdemtable.event.RaiseEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.ShowHandEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.SitInEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.SitOutEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.SmallBlindEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.WinnerEvent;
 
 
@@ -41,8 +40,6 @@ public interface HoldemTableListener extends RemoteHoldemTableListener {
 	void onAllIn(AllInEvent allInEvent);
 
 	void onBet(BetEvent betEvent);
-
-	void onBigBlind(BigBlindEvent bigBlindEvent);
 
 	void onCall(CallEvent callEvent);
 
@@ -70,10 +67,10 @@ public interface HoldemTableListener extends RemoteHoldemTableListener {
 	
 	void onSitOut(SitOutEvent sitOutEvent);
 
-	void onSmallBlind(SmallBlindEvent smallBlindEvent);
-
 	void onWinner(WinnerEvent winnerEvent);
 
 	void onConfigChange(ConfigChangeEvent configChangeEvent);
+
+	void onBlind(BlindEvent blindEvent);
 	
 }
