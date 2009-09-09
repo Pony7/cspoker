@@ -37,7 +37,7 @@ import org.cspoker.client.common.playerstate.PlayerState;
 import org.cspoker.common.api.lobby.holdemtable.context.RemoteHoldemTableContext;
 import org.cspoker.common.api.lobby.holdemtable.event.AllInEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.BetEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.BigBlindEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.BlindEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.CallEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.CheckEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.ConfigChangeEvent;
@@ -53,7 +53,6 @@ import org.cspoker.common.api.lobby.holdemtable.event.RaiseEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.ShowHandEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.SitInEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.SitOutEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.SmallBlindEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.WinnerEvent;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.HoldemPlayerContext;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.RemoteHoldemPlayerContext;
@@ -85,7 +84,6 @@ import org.cspoker.external.pokersource.eventlisteners.all.DefaultListener;
 import org.cspoker.external.pokersource.events.poker.BeginRound;
 import org.cspoker.external.pokersource.events.poker.Blind;
 import org.cspoker.external.pokersource.events.poker.BoardCards;
-import org.cspoker.external.pokersource.events.poker.BuyInLimits;
 import org.cspoker.external.pokersource.events.poker.ChipsPotReset;
 import org.cspoker.external.pokersource.events.poker.Dealer;
 import org.cspoker.external.pokersource.events.poker.EndRound;
@@ -126,11 +124,6 @@ public class PSTableContext implements RemoteHoldemTableContext {
 			@Override
 			public void onWinner(WinnerEvent winnerEvent) {
 				logger.info(winnerEvent);
-			}
-
-			@Override
-			public void onSmallBlind(SmallBlindEvent smallBlindEvent) {
-				logger.info(smallBlindEvent);
 			}
 
 			@Override
@@ -205,8 +198,8 @@ public class PSTableContext implements RemoteHoldemTableContext {
 			}
 
 			@Override
-			public void onBigBlind(BigBlindEvent bigBlindEvent) {
-				logger.info(bigBlindEvent);
+			public void onBlind(BlindEvent blindEvent) {
+				logger.info(blindEvent);
 			}
 
 			@Override
@@ -315,13 +308,11 @@ public class PSTableContext implements RemoteHoldemTableContext {
 		public void onBlind(Blind blind) {
 			PlayerId id = getId(blind);
 			int amount = blind.getAmount();
+//			if(getGameState().get)
 			if(amount == getGameState().getPlayer(id).getStack())
 				dispatch(new AllInEvent(id, amount));
-			else if(amount==config.getSmallBlind())
-				dispatch(new SmallBlindEvent(id, amount));
-			else if(amount==config.getBigBlind()){
-				dispatch(new BigBlindEvent(id, amount));
-			}
+			else if(amount==config.getSmallBlind() || amount==config.getBigBlind())
+				dispatch(new BlindEvent(id, amount));
 			else throw new IllegalStateException("Unknown blind amount: "+amount+" (sb="+config.getSmallBet()+")");
 		}
 
@@ -413,6 +404,7 @@ public class PSTableContext implements RemoteHoldemTableContext {
 				dispatch(new SitOutEvent(new PlayerId(sitOut.getSerial())));
 			}else{
 				if(sitOut.getSerial()==serial){
+					logger.info("Ignoring first fake sitout.");
 					isPastFirstFakeSitOut = true;
 				}
 			}

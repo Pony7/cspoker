@@ -73,7 +73,7 @@ public class FoldAction extends SearchBotAction {
 		}
 		if (roundEnds
 				&& gameState.getRound().equals(Round.PREFLOP)
-				&& gameState.getPlayer(actor).isSmallBlind()
+				&& actor.equals(gameState.getSmallBlind())
 				&& gameState.getLargestBet() <= gameState
 						.getTableConfiguration().getBigBlind()) {
 			roundEnds = false;

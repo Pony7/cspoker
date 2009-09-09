@@ -17,7 +17,7 @@ package org.cspoker.server.rmi.unremote.listener;
 import org.apache.log4j.Logger;
 import org.cspoker.common.api.lobby.holdemtable.event.AllInEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.BetEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.BigBlindEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.BlindEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.CallEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.CheckEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.ConfigChangeEvent;
@@ -32,7 +32,6 @@ import org.cspoker.common.api.lobby.holdemtable.event.RaiseEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.ShowHandEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.SitInEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.SitOutEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.SmallBlindEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.WinnerEvent;
 import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
 import org.cspoker.common.api.lobby.holdemtable.listener.RemoteHoldemTableListener;
@@ -61,10 +60,10 @@ public class UnremoteHoldemTableListener extends ForwardingListener<RemoteHoldem
 		}
 	}
 
-	public void onBigBlind(BigBlindEvent bigBlindEvent) {
+	public void onBlind(BlindEvent blindEvent) {
 		try {
 			for (RemoteHoldemTableListener listener : listeners) {
-				listener.onBigBlind(bigBlindEvent);
+				listener.onBlind(blindEvent);
 			}
 		} catch (Exception exception) {
 			logger.debug("Caught exception from Remote listener", exception);
@@ -176,17 +175,6 @@ public class UnremoteHoldemTableListener extends ForwardingListener<RemoteHoldem
 		try {
 			for (RemoteHoldemTableListener listener : listeners) {
 				listener.onSitIn(sitInEvent);
-			}
-		} catch (Exception exception) {
-			logger.debug("Caught exception from Remote listener", exception);
-			connection.trigger();
-		}
-	}
-
-	public void onSmallBlind(SmallBlindEvent smallBlindEvent) {
-		try {
-			for (RemoteHoldemTableListener listener : listeners) {
-				listener.onSmallBlind(smallBlindEvent);
 			}
 		} catch (Exception exception) {
 			logger.debug("Caught exception from Remote listener", exception);

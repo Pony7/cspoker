@@ -58,7 +58,7 @@ public class Expander {
 		if (gameState.hasBet() 
 				//case if big blind can check/bet in stead of fold/call/raise
 				&& !(Round.PREFLOP.equals(gameState.getRound()) 
-						&& gameState.getPlayer(actor).isBigBlind() 
+						&& actor.equals(gameState.getBigBlind()) 
 						&& gameState.getDeficit(actor)<=0)) {
 			// call, raise or fold
 			Triple<Double, Double, Double> probabilities;

@@ -23,51 +23,28 @@ import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.client.common.gamestate.GameStateVisitor;
 import org.cspoker.client.common.playerstate.ForwardingPlayerState;
 import org.cspoker.client.common.playerstate.PlayerState;
-import org.cspoker.common.api.lobby.holdemtable.event.SmallBlindEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.BlindEvent;
 import org.cspoker.common.elements.player.PlayerId;
 
-public class SmallBlindState
+public class BlindState
 		extends ForwardingGameState {
 	
-	private final SmallBlindEvent event;
+	private final BlindEvent event;
+	private final int newPot;
 	private final PlayerState playerState;
 	
-	public SmallBlindState(GameState gameState, SmallBlindEvent event) {
+	public BlindState(GameState gameState, BlindEvent event) {
 		super(gameState);
 		this.event = event;
 		PlayerState oldPlayerState = super.getPlayer(event.getPlayerId());
 		final int newStack = oldPlayerState.getStack() - event.getAmount();
-		;
+		this.newPot = super.getRoundPotSize() + event.getAmount();
+		
 		playerState = new ForwardingPlayerState(oldPlayerState) {
 			
 			@Override
 			public int getBet() {
-				return SmallBlindState.this.event.getAmount();
-			}
-			
-			@Override
-			public PlayerId getPlayerId() {
-				return SmallBlindState.this.event.getPlayerId();
-			}
-			
-			@Override
-			public int getStack() {
-				return newStack;
-			}
-			
-			@Override
-			public boolean hasFolded() {
-				return false;
-			}
-			
-			@Override
-			public boolean isSmallBlind() {
-				return true;
-			}
-			
-			@Override
-			public boolean hasChecked() {
-				return false;
+				return BlindState.this.event.getAmount();
 			}
 			
 			@Override
@@ -76,18 +53,35 @@ public class SmallBlindState
 			}
 			
 			@Override
+			public int getStack() {
+				return newStack;
+			}
+
+			@Override
 			public boolean hasBeenDealt() {
 				return true;
 			}
 			
-			/**
-			 * {@inheritDoc}
-			 */
+			@Override
+			public boolean hasFolded() {
+				return false;
+			}
+			
+			@Override
+			public PlayerId getPlayerId() {
+				return BlindState.this.event.getPlayerId();
+			}
+			
 			@Override
 			public List<Integer> getBetProgression() {
 				return Collections.singletonList(getBet());
 			}
 			
+			@Override
+			public boolean hasChecked() {
+				return false;
+			}
+
 		};
 	}
 	
@@ -103,7 +97,7 @@ public class SmallBlindState
 	public int getLargestBet() {
 		return event.getAmount();
 	}
-
+	
 	@Override
 	public int getMinNextRaise() {
 		return getTableConfiguration().getSmallBet();
@@ -111,10 +105,10 @@ public class SmallBlindState
 	
 	@Override
 	public int getRoundPotSize() {
-		return event.getAmount();
+		return newPot;
 	}
 	
-	public SmallBlindEvent getLastEvent() {
+	public BlindEvent getLastEvent() {
 		return event;
 	}
 	
@@ -127,14 +121,29 @@ public class SmallBlindState
 	public int getNbRaises() {
 		return 0;
 	}
+
+	//BEWARE! Sometime blinds can be posted by other people than the BB or SB! (dead blinds?)
+	
+	@Override
+	public PlayerId getBigBlind() {
+		if(super.getBigBlind() == null && getTableConfiguration().getBigBlind()==BlindState.this.event.getAmount()) 
+		return playerState.getPlayerId();
+		else return super.getBigBlind();
+	}
+	
+	@Override
+	public PlayerId getSmallBlind() {
+		if(super.getBigBlind() == null && getTableConfiguration().getSmallBlind()==BlindState.this.event.getAmount()) 
+			return playerState.getPlayerId();
+			else return super.getSmallBlind();
+	}
 	
 	@Override
 	public void acceptVisitor(GameStateVisitor visitor) {
-		visitor.visitSmallBlindState(this);
+		visitor.visitBlindState(this);
 	}
 	
-	public SmallBlindEvent getEvent() {
+	public BlindEvent getEvent() {
 		return event;
 	}
-	
 }

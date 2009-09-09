@@ -19,7 +19,7 @@ import java.util.List;
 
 import org.cspoker.common.api.lobby.holdemtable.event.AllInEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.BetEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.BigBlindEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.BlindEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.CallEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.CheckEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.ConfigChangeEvent;
@@ -34,7 +34,6 @@ import org.cspoker.common.api.lobby.holdemtable.event.RaiseEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.ShowHandEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.SitInEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.SitOutEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.SmallBlindEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.WinnerEvent;
 import org.cspoker.common.api.shared.listener.ForwardingListener;
 
@@ -58,9 +57,9 @@ public class ForwardingHoldemTableListener extends ForwardingListener<HoldemTabl
 		}
 	}
 
-	public void onBigBlind(BigBlindEvent bigBlindEvent) {
+	public void onBlind(BlindEvent blindEvent) {
 		for(HoldemTableListener listener:listeners){
-			listener.onBigBlind(bigBlindEvent);
+			listener.onBlind(blindEvent);
 		}
 	}
 
@@ -122,12 +121,6 @@ public class ForwardingHoldemTableListener extends ForwardingListener<HoldemTabl
 	public void onSitIn(SitInEvent sitInEvent) {
 		for(HoldemTableListener listener:listeners){
 			listener.onSitIn(sitInEvent);
-		}
-	}
-
-	public void onSmallBlind(SmallBlindEvent smallBlindEvent) {
-		for(HoldemTableListener listener:listeners){
-			listener.onSmallBlind(smallBlindEvent);
 		}
 	}
 

@@ -114,4 +114,8 @@ public interface GameState {
 	 */
 	PlayerState getDefaultWinner();
 	
+	PlayerId getBigBlind();
+	
+	PlayerId getSmallBlind();
+	
 }

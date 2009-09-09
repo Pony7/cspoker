@@ -17,7 +17,7 @@ package org.cspoker.server.common.gamecontrol;
 
 import org.cspoker.common.api.lobby.holdemtable.event.AllInEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.BetEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.BigBlindEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.BlindEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.CallEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.CheckEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.FoldEvent;
@@ -32,7 +32,6 @@ import org.cspoker.common.api.lobby.holdemtable.event.RaiseEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.ShowHandEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.SitInEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.SitOutEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.SmallBlindEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.WinnerEvent;
 
 enum Events {
@@ -54,7 +53,7 @@ enum Events {
  		bigBlind {
 			@Override
 			public Class<? extends HoldemTableEvent> getEventClass() {
-				return BigBlindEvent.class;
+				return BlindEvent.class;
 			}
 		},
  		
@@ -152,7 +151,7 @@ enum Events {
  		smallBlind {
 			@Override
 			public Class<? extends HoldemTableEvent> getEventClass() {
-				return SmallBlindEvent.class;
+				return BlindEvent.class;
 			}
 		},
  		

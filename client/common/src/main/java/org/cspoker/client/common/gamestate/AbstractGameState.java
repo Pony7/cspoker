@@ -72,6 +72,7 @@ implements GameState {
 		PlayerId tempId = playerId;
 		int maxOtherBettableChips=0;
 		loop: do{
+			//TODO fix infinite loop on double BB
 			tempPlayer = getNextActivePlayerAfter(tempId);
 			if(tempPlayer==null){
 				break loop;

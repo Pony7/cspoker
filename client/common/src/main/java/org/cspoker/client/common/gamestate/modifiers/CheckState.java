@@ -31,7 +31,7 @@ public class CheckState extends ForwardingGameState {
 
 	private final PlayerState playerState;
 
-	private final boolean bigBlindNoRaiseCase;
+	private final boolean checkAfterBlindCase;
 
 	private final int newPotSize;
 
@@ -41,21 +41,23 @@ public class CheckState extends ForwardingGameState {
 		final PlayerState player = gameState.getPlayer(checkEvent.getPlayerId());
 
 		//case if big blind checks after all opponents called
-		bigBlindNoRaiseCase = Round.PREFLOP.equals(gameState.getRound()) 
-		&& player.isBigBlind() && gameState.getDeficit(checkEvent.getPlayerId())<=0;
-
+		//OR if additional blind checks
+		checkAfterBlindCase = Round.PREFLOP.equals(gameState.getRound());
+		if(checkAfterBlindCase && gameState.getDeficit(checkEvent.getPlayerId())>0)
+			throw new IllegalStateException("Can't check in the preflop round when you have a deficit to pay.");
 		this.newPotSize = super.getRoundPotSize();
 
 		playerState = new ForwardingPlayerState(player){
 
 			@Override
 			public boolean hasChecked() {
+				//don't mind checkAfterBlindCase because hasChecked isn't used in the preflop round?
 				return true;
 			}
 
 			@Override
 			public int getBet() {
-				if(bigBlindNoRaiseCase) return super.getBet();
+				if(checkAfterBlindCase) return super.getBet();
 				return 0;
 			}
 
@@ -72,17 +74,6 @@ public class CheckState extends ForwardingGameState {
 			@Override
 			public boolean hasBeenDealt() {
 				return true;
-			}
-
-			@Override
-			public boolean isBigBlind() {
-				if(bigBlindNoRaiseCase) return true;
-				return false;
-			}
-
-			@Override
-			public boolean isSmallBlind() {
-				return false;
 			}
 
 		};
@@ -103,7 +94,7 @@ public class CheckState extends ForwardingGameState {
 
 	@Override
 	public int getLargestBet() {
-		if(bigBlindNoRaiseCase){
+		if(checkAfterBlindCase){
 			return super.getLargestBet();
 		}else{
 			return 0;
@@ -112,7 +103,7 @@ public class CheckState extends ForwardingGameState {
 
 	@Override
 	public PlayerId getLastBettor() {
-		if(bigBlindNoRaiseCase) return super.getLastBettor();
+		if(checkAfterBlindCase) return super.getLastBettor();
 		return null;
 	}
 

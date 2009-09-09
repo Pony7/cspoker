@@ -50,6 +50,7 @@ public class PropositionalDataSetGenerator extends Propositionalizer {
 	private boolean forgetCurrentGame = false;
 
 	private final HashMap<String, Card> cards = new HashMap<String, Card>();
+	private int bb;
 
 	public PropositionalDataSetGenerator() throws IOException {
 		preCallRaiseAction = new FileWriter("output/PreCallRaiseAction2.arff");
@@ -1050,7 +1051,7 @@ public class PropositionalDataSetGenerator extends Propositionalizer {
 		// System.out.println(line);
 		if (line.startsWith("Full Tilt Poker Game ")) {
 			int temp = line.indexOf("/");
-			int bb = (int)(100*Float.parseFloat(line.substring(temp + 2,
+			this.bb = (int)(100*Float.parseFloat(line.substring(temp + 2,
 					line.indexOf(" ", temp + 2)).replaceAll(",", "")));
 			forgetCurrentGame = false;
 			signalNewGame();
@@ -1102,11 +1103,11 @@ public class PropositionalDataSetGenerator extends Propositionalizer {
 					String id = line.substring(0, line
 							.indexOf(" posts the small blind"));
 
-					signalSmallBlind(isAllIn, id);
+					signalBlind(isAllIn, id, bb/2);
 				} else if (line.contains(" posts the big blind")) {
 					String id = line.substring(0, line
 							.indexOf(" posts the big blind"));
-					signalBigBlind(isAllIn, id);
+					signalBlind(isAllIn, id, bb);
 				} else if (line.endsWith(" folds")) {
 					String id = line
 					.substring(0, line.indexOf(" folds"));

@@ -25,7 +25,7 @@ import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.client.common.gamestate.GameStateVisitor;
 import org.cspoker.client.common.gamestate.modifiers.AllInState;
 import org.cspoker.client.common.gamestate.modifiers.BetState;
-import org.cspoker.client.common.gamestate.modifiers.BigBlindState;
+import org.cspoker.client.common.gamestate.modifiers.BlindState;
 import org.cspoker.client.common.gamestate.modifiers.CallState;
 import org.cspoker.client.common.gamestate.modifiers.CheckState;
 import org.cspoker.client.common.gamestate.modifiers.ConfigChangeState;
@@ -41,7 +41,6 @@ import org.cspoker.client.common.gamestate.modifiers.RaiseState;
 import org.cspoker.client.common.gamestate.modifiers.ShowHandState;
 import org.cspoker.client.common.gamestate.modifiers.SitInState;
 import org.cspoker.client.common.gamestate.modifiers.SitOutState;
-import org.cspoker.client.common.gamestate.modifiers.SmallBlindState;
 import org.cspoker.client.common.gamestate.modifiers.WinnerState;
 import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.elements.table.Round;
@@ -169,11 +168,6 @@ public class HistogramModel implements OpponentModel,
 	}
 
 	@Override
-	public void visitBigBlindState(BigBlindState bigBlindState) {
-
-	}
-
-	@Override
 	public void visitCallState(CallState callState) {
 		if (started) {
 			getModelFor(callState.getEvent().getPlayerId(), round).addCall(
@@ -264,7 +258,7 @@ public class HistogramModel implements OpponentModel,
 	}
 
 	@Override
-	public void visitSmallBlindState(SmallBlindState smallBlindState) {
+	public void visitBlindState(BlindState blindState) {
 
 	}
 

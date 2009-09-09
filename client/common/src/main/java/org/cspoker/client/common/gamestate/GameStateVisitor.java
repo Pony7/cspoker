@@ -17,7 +17,7 @@ package org.cspoker.client.common.gamestate;
 
 import org.cspoker.client.common.gamestate.modifiers.AllInState;
 import org.cspoker.client.common.gamestate.modifiers.BetState;
-import org.cspoker.client.common.gamestate.modifiers.BigBlindState;
+import org.cspoker.client.common.gamestate.modifiers.BlindState;
 import org.cspoker.client.common.gamestate.modifiers.CallState;
 import org.cspoker.client.common.gamestate.modifiers.CheckState;
 import org.cspoker.client.common.gamestate.modifiers.ConfigChangeState;
@@ -33,7 +33,6 @@ import org.cspoker.client.common.gamestate.modifiers.RaiseState;
 import org.cspoker.client.common.gamestate.modifiers.ShowHandState;
 import org.cspoker.client.common.gamestate.modifiers.SitInState;
 import org.cspoker.client.common.gamestate.modifiers.SitOutState;
-import org.cspoker.client.common.gamestate.modifiers.SmallBlindState;
 import org.cspoker.client.common.gamestate.modifiers.WinnerState;
 
 public interface GameStateVisitor {
@@ -43,8 +42,6 @@ public interface GameStateVisitor {
 	void visitAllInState(AllInState allInState);
 
 	void visitBetState(BetState betState);
-
-	void visitBigBlindState(BigBlindState bigBlindState);
 
 	void visitCallState(CallState callState);
 
@@ -75,10 +72,10 @@ public interface GameStateVisitor {
 
 	void visitSitOutState(SitOutState sitOutState);
 
-	void visitSmallBlindState(SmallBlindState smallBlindState);
-
 	void visitWinnerState(WinnerState winnerState);
 
 	void visitConfigChangeState(ConfigChangeState configChangeState);
+
+	void visitBlindState(BlindState blindState);
 
 }

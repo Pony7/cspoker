@@ -88,6 +88,16 @@ public abstract class ForwardingGameState extends AbstractGameState{
 	}
 	
 	@Override
+	public PlayerId getBigBlind() {
+		return gameState.getBigBlind();
+	}
+	
+	@Override
+	public PlayerId getSmallBlind() {
+		return gameState.getSmallBlind();
+	}
+	
+	@Override
 	public int getNbRaises() {
 		return gameState.getNbRaises();
 	}

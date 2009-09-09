@@ -16,12 +16,12 @@
 package org.cspoker.ai.opponentmodels.weka;
 
 import org.apache.log4j.Logger;
+import org.cspoker.client.common.gamestate.DetailedHoldemTableState;
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.client.common.gamestate.GameStateVisitor;
-import org.cspoker.client.common.gamestate.DetailedHoldemTableState;
 import org.cspoker.client.common.gamestate.modifiers.AllInState;
 import org.cspoker.client.common.gamestate.modifiers.BetState;
-import org.cspoker.client.common.gamestate.modifiers.BigBlindState;
+import org.cspoker.client.common.gamestate.modifiers.BlindState;
 import org.cspoker.client.common.gamestate.modifiers.CallState;
 import org.cspoker.client.common.gamestate.modifiers.CheckState;
 import org.cspoker.client.common.gamestate.modifiers.ConfigChangeState;
@@ -37,7 +37,6 @@ import org.cspoker.client.common.gamestate.modifiers.RaiseState;
 import org.cspoker.client.common.gamestate.modifiers.ShowHandState;
 import org.cspoker.client.common.gamestate.modifiers.SitInState;
 import org.cspoker.client.common.gamestate.modifiers.SitOutState;
-import org.cspoker.client.common.gamestate.modifiers.SmallBlindState;
 import org.cspoker.client.common.gamestate.modifiers.WinnerState;
 import org.cspoker.client.common.playerstate.PlayerState;
 import org.cspoker.common.elements.table.Round;
@@ -87,11 +86,6 @@ public class PlayerTrackingVisitor implements GameStateVisitor, Cloneable {
 	@Override
 	public void visitBetState(BetState betState) {
 		propz.signalBet(false, betState.getLastEvent().getPlayerId(), betState.getEvent().getAmount());
-	}
-
-	@Override
-	public void visitBigBlindState(BigBlindState bigBlindState) {
-		propz.signalBigBlind(false, bigBlindState.getLastEvent().getPlayerId());
 	}
 
 	@Override
@@ -181,8 +175,8 @@ public class PlayerTrackingVisitor implements GameStateVisitor, Cloneable {
 	}
 
 	@Override
-	public void visitSmallBlindState(SmallBlindState smallBlindState) {
-		propz.signalSmallBlind(false, smallBlindState.getLastEvent().getPlayerId());
+	public void visitBlindState(BlindState blindState) {
+		propz.signalBlind(false, blindState.getLastEvent().getPlayerId(), blindState.getLastEvent().getAmount());
 	}
 
 	@Override

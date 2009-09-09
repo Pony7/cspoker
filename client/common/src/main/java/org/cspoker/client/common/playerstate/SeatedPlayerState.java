@@ -78,16 +78,6 @@ public class SeatedPlayerState extends AbstractPlayerState {
 	}
 	
 	@Override
-	public boolean isBigBlind() {
-		return false;
-	}
-	
-	@Override
-	public boolean isSmallBlind() {
-		return false;
-	}
-	
-	@Override
 	public boolean hasBeenDealt() {
 		return false;
 	}

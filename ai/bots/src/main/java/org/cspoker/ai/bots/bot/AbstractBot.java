@@ -26,7 +26,7 @@ import org.cspoker.client.common.SmartHoldemTableContext;
 import org.cspoker.client.common.SmartLobbyContext;
 import org.cspoker.common.api.lobby.holdemtable.event.AllInEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.BetEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.BigBlindEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.BlindEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.CallEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.CheckEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.ConfigChangeEvent;
@@ -41,7 +41,6 @@ import org.cspoker.common.api.lobby.holdemtable.event.RaiseEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.ShowHandEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.SitInEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.SitOutEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.SmallBlindEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.WinnerEvent;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.event.NewPocketCardsEvent;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
@@ -97,6 +96,10 @@ public abstract class AbstractBot implements Bot {
 				} catch (RemoteException e) {
 					logger.error(e);
 					throw new IllegalStateException("Failed to join table.", e);
+				} catch(Exception e){
+					logger.error(e);
+					e.printStackTrace();
+					throw new RuntimeException(e);
 				}
 			}
 		});
@@ -115,6 +118,10 @@ public abstract class AbstractBot implements Bot {
 				} catch (RemoteException e) {
 					logger.error(e);
 					throw new IllegalStateException("Failed to join table.", e);
+				} catch(Exception e){
+					logger.error(e);
+					e.printStackTrace();
+					throw new RuntimeException(e);
 				}
 			}
 		});
@@ -132,6 +139,10 @@ public abstract class AbstractBot implements Bot {
 				} catch (RemoteException e) {
 					logger.error(e);
 					throw new IllegalStateException("Failed to start game.", e);
+				} catch(Exception e){
+					logger.error(e);
+					e.printStackTrace();
+					throw new RuntimeException(e);
 				}
 			}
 		});
@@ -172,6 +183,10 @@ public abstract class AbstractBot implements Bot {
 							throw new IllegalStateException(
 									"Action was not allowed.", e1);
 						}
+					} catch(Exception e){
+						logger.error(e);
+						e.printStackTrace();
+						throw new RuntimeException(e);
 					}
 					for (BotListener botListener : botListeners) {
 						botListener.onActionPerformed();
@@ -213,6 +228,10 @@ public abstract class AbstractBot implements Bot {
 				} catch (RemoteException e) {
 					logger.error(e);
 					throw new IllegalStateException("Failed to leave table.", e);
+				} catch(Exception e){
+					logger.error(e);
+					e.printStackTrace();
+					throw new RuntimeException(e);
 				}
 			}
 		});
@@ -237,9 +256,9 @@ public abstract class AbstractBot implements Bot {
 		}
 	}
 
-	public void onBigBlind(BigBlindEvent bigBlindEvent) {
-		if(bigBlindEvent.getPlayerId().equals(botId)){
-			incrementGameInvestment(bigBlindEvent.getAmount());
+	public void onBlind(BlindEvent blindEvent) {
+		if(blindEvent.getPlayerId().equals(botId)){
+			incrementGameInvestment(blindEvent.getAmount());
 		}
 	}
 
@@ -298,12 +317,6 @@ public abstract class AbstractBot implements Bot {
 					}
 				}
 			});
-		}
-	}
-
-	public void onSmallBlind(SmallBlindEvent smallBlindEvent) {
-		if(smallBlindEvent.getPlayerId().equals(botId)){
-			incrementGameInvestment(smallBlindEvent.getAmount());
 		}
 	}
 

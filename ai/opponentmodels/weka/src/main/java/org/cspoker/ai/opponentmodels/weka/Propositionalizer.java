@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.Random;
 
 import org.cspoker.common.elements.cards.Card;
+import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.handeval.spears2p2.StateTableEvaluator;
 
 import com.google.common.collect.HashMultiset;
@@ -94,10 +95,8 @@ public class Propositionalizer implements Cloneable {
 	}
 
 	public void signalAllIn(Object id, int chipsMoved) {
-		if(inPreFlopRound() && maxBet==0){
-			signalSmallBlind(true, id);
-		}else if(inPreFlopRound() && maxBet<bb && chipsMoved <= bb){
-			signalBigBlind(true, id);
+		if(inPreFlopRound() && maxBet<bb && chipsMoved <= bb){
+			signalBlind(true, id, chipsMoved);
 		}else{
 			PlayerData p = players.get(id);
 			//call raise or bet
@@ -197,31 +196,20 @@ public class Propositionalizer implements Cloneable {
 		p.signalFold(this);
 	}
 
-	public void signalBigBlind(boolean isAllIn, Object id) {
-		PlayerData p = players.get(id);
+
+	public void signalBlind(boolean isAllIn, Object playerId, int amount) {
+		PlayerData p = players.get(playerId);
 
 		//TODO change amount when allin
-		maxBet = bb;
-		totalPot += bb;
+		maxBet = amount;
+		totalPot += amount;
 		if (isAllIn) {
 			activePlayers.remove(p);
 			allinPlayers.add(p);
 		}
-		p.signalBB();
+		p.signalBlind(amount);
 	}
 
-	public void signalSmallBlind(boolean isAllIn, Object id) {
-		PlayerData p = players.get(id);
-
-		//TODO change amount when allin
-		maxBet = bb/2;
-		totalPot = bb/2;
-		if (isAllIn) {
-			activePlayers.remove(p);
-			allinPlayers.add(p);
-		}
-		p.signalSB();
-	}
 
 	public void signalRiver() {
 		if(!activePlayers.isEmpty()){

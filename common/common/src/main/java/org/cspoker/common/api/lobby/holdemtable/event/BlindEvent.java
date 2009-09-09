@@ -25,11 +25,11 @@ import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.util.Util;
 
 /**
- * A class to represent big blind events.
+ * A class to represent blind events.
  * 
  */
 @Immutable
-public class BigBlindEvent extends HoldemTableEvent {
+public class BlindEvent extends HoldemTableEvent {
 
 	private static final long serialVersionUID = -7908022421547219241L;
 
@@ -39,19 +39,19 @@ public class BigBlindEvent extends HoldemTableEvent {
 	@XmlAttribute
 	private final int amount;
 
-	public BigBlindEvent(PlayerId player, int amount) {
+	public BlindEvent(PlayerId player, int amount) {
 		this.playerId = player;
 		this.amount = amount;
 	}
 
-	protected BigBlindEvent() {
+	protected BlindEvent() {
 		playerId = null;
 		amount = 0;
 	}
 
 	@Override
 	public String toString() {
-		return getPlayerId() + " bets the big blind of " + Util.parseDollars(getAmount())+ ".";
+		return getPlayerId() + " bets the blind of " + Util.parseDollars(getAmount())+ ".";
 	}
 
 	public int getAmount() {
@@ -64,6 +64,6 @@ public class BigBlindEvent extends HoldemTableEvent {
 
 	@Override
 	public void dispatch(HoldemTableListener holdemTableListener) {
-		holdemTableListener.onBigBlind(this);
+		holdemTableListener.onBlind(this);
 	}
 }

@@ -21,7 +21,7 @@ import org.apache.log4j.Logger;
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.client.common.gamestate.modifiers.AllInState;
 import org.cspoker.client.common.gamestate.modifiers.BetState;
-import org.cspoker.client.common.gamestate.modifiers.BigBlindState;
+import org.cspoker.client.common.gamestate.modifiers.BlindState;
 import org.cspoker.client.common.gamestate.modifiers.CallState;
 import org.cspoker.client.common.gamestate.modifiers.CheckState;
 import org.cspoker.client.common.gamestate.modifiers.ConfigChangeState;
@@ -36,11 +36,10 @@ import org.cspoker.client.common.gamestate.modifiers.RaiseState;
 import org.cspoker.client.common.gamestate.modifiers.ShowHandState;
 import org.cspoker.client.common.gamestate.modifiers.SitInState;
 import org.cspoker.client.common.gamestate.modifiers.SitOutState;
-import org.cspoker.client.common.gamestate.modifiers.SmallBlindState;
 import org.cspoker.client.common.gamestate.modifiers.WinnerState;
 import org.cspoker.common.api.lobby.holdemtable.event.AllInEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.BetEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.BigBlindEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.BlindEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.CallEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.CheckEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.ConfigChangeEvent;
@@ -55,7 +54,6 @@ import org.cspoker.common.api.lobby.holdemtable.event.RaiseEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.ShowHandEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.SitInEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.SitOutEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.SmallBlindEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.WinnerEvent;
 import org.cspoker.common.api.lobby.holdemtable.listener.ForwardingHoldemTableListener;
 import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
@@ -108,15 +106,9 @@ public class SmartHoldemTableListener
 	}
 	
 	@Override
-	public void onSmallBlind(SmallBlindEvent smallBlindEvent) {
-		tableState.setGameState(new SmallBlindState(tableState.getGameState(), smallBlindEvent));
-		super.onSmallBlind(smallBlindEvent);
-	}
-	
-	@Override
-	public void onBigBlind(BigBlindEvent bigBlindEvent) {
-		tableState.setGameState(new BigBlindState(tableState.getGameState(), bigBlindEvent));
-		super.onBigBlind(bigBlindEvent);
+	public void onBlind(BlindEvent blindEvent) {
+		tableState.setGameState(new BlindState(tableState.getGameState(), blindEvent));
+		super.onBlind(blindEvent);
 	}
 	
 	@Override

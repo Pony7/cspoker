@@ -26,7 +26,6 @@ import org.cspoker.client.common.gamestate.modifiers.CallState;
 import org.cspoker.client.common.gamestate.modifiers.CheckState;
 import org.cspoker.client.common.gamestate.modifiers.FoldState;
 import org.cspoker.client.common.gamestate.modifiers.RaiseState;
-import org.cspoker.client.common.gamestate.modifiers.SmallBlindState;
 import org.cspoker.client.common.playerstate.PlayerState;
 import org.cspoker.common.elements.cards.Card;
 import org.cspoker.common.elements.player.PlayerId;
@@ -191,10 +190,10 @@ public abstract class ToPrologTermVisitor extends LoggingVisitor {
 	}
 
 	@Override
-	protected void gamePlayerSmallBlind(SmallBlindState smallBlindState) {
+	protected void gamePlayerSmallBlind(PlayerId playerId) {
 		addTerm(new StructureTerm(game_player_small_blind, new Term[] {
 				getGameIdTerm(),
-				getPlayerTerm(smallBlindState.getEvent().getPlayerId()), }));
+				getPlayerTerm(playerId), }));
 	}
 
 	@Override

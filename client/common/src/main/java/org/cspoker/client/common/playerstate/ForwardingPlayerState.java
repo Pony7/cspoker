@@ -66,16 +66,6 @@ public abstract class ForwardingPlayerState
 	}
 	
 	@Override
-	public boolean isSmallBlind() {
-		return playerState.isSmallBlind();
-	}
-	
-	@Override
-	public boolean isBigBlind() {
-		return playerState.isBigBlind();
-	}
-	
-	@Override
 	public boolean hasChecked() {
 		return playerState.hasChecked();
 	}

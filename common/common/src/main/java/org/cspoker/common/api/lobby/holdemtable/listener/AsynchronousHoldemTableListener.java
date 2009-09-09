@@ -19,7 +19,7 @@ import java.util.concurrent.Executor;
 
 import org.cspoker.common.api.lobby.holdemtable.event.AllInEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.BetEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.BigBlindEvent;
+import org.cspoker.common.api.lobby.holdemtable.event.BlindEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.CallEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.CheckEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.ConfigChangeEvent;
@@ -34,7 +34,6 @@ import org.cspoker.common.api.lobby.holdemtable.event.RaiseEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.ShowHandEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.SitInEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.SitOutEvent;
-import org.cspoker.common.api.lobby.holdemtable.event.SmallBlindEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.WinnerEvent;
 
 public class AsynchronousHoldemTableListener implements HoldemTableListener{
@@ -54,10 +53,10 @@ public class AsynchronousHoldemTableListener implements HoldemTableListener{
 		});
 	}
 
-	public void onBigBlind(final BigBlindEvent bigBlindEvent) {
+	public void onBlind(final BlindEvent blindEvent) {
 		executor.execute(new Runnable() {
 			public void run() {
-				holdemTableListener.onBigBlind(bigBlindEvent);
+				holdemTableListener.onBlind(blindEvent);
 			}
 		});
 	}
@@ -139,14 +138,6 @@ public class AsynchronousHoldemTableListener implements HoldemTableListener{
 		executor.execute(new Runnable() {
 			public void run() {
 				holdemTableListener.onSitIn(sitInEvent);
-			}
-		});
-	}
-
-	public void onSmallBlind(final SmallBlindEvent smallBlindEvent) {
-		executor.execute(new Runnable() {
-			public void run() {
-				holdemTableListener.onSmallBlind(smallBlindEvent);
 			}
 		});
 	}
