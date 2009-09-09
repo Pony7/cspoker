@@ -55,11 +55,7 @@ public class Expander {
 	public ImmutableList<ProbabilityAction> getProbabilityActions() {
 		List<ProbabilityAction> actions = Lists.newArrayListWithExpectedSize(2+nbBetSizeSamples);
 		double totalProbability = 0;
-		if (gameState.hasBet() 
-				//case if big blind can check/bet in stead of fold/call/raise
-				&& !(Round.PREFLOP.equals(gameState.getRound()) 
-						&& actor.equals(gameState.getBigBlind()) 
-						&& gameState.getDeficit(actor)<=0)) {
+		if (gameState.getDeficit(actor)>0) {
 			// call, raise or fold
 			Triple<Double, Double, Double> probabilities;
 			probabilities = model.getFoldCallRaiseProbabilities(gameState, actor);

@@ -31,12 +31,12 @@ import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.cards.Card;
 import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.external.pokersource.PokersourceConnection;
+import org.cspoker.external.pokersource.commands.poker.BuyIn;
 import org.cspoker.external.pokersource.commands.poker.Call;
 import org.cspoker.external.pokersource.commands.poker.Check;
 import org.cspoker.external.pokersource.commands.poker.Fold;
 import org.cspoker.external.pokersource.commands.poker.Raise;
 import org.cspoker.external.pokersource.commands.poker.Sit;
-import org.cspoker.external.pokersource.commands.poker.SitOut;
 import org.cspoker.external.pokersource.eventlisteners.all.DefaultListener;
 import org.cspoker.external.pokersource.events.poker.BetLimit;
 import org.cspoker.external.pokersource.events.poker.PlayerCards;
@@ -54,8 +54,9 @@ public class PSPlayerContext implements RemoteHoldemPlayerContext {
 	private final SmartHoldemPlayerListener smartListener;
 	private final GameStateContainer gameStateContainer;
 
+	
 	public PSPlayerContext(PokersourceConnection conn, int serial, PSTableContext tableContext,
-			HoldemPlayerListener holdemPlayerListener, GameStateContainer gameStateContainer) throws RemoteException {
+			HoldemPlayerListener holdemPlayerListener, GameStateContainer gameStateContainer, int buyIn) throws RemoteException {
 		this.conn = conn;
 		this.serial = serial;
 		this.game_id = tableContext.game_id;
@@ -70,7 +71,13 @@ public class PSPlayerContext implements RemoteHoldemPlayerContext {
 		this.transListener = new TranslatingListener();
 		this.gameStateContainer = gameStateContainer;
 		this.conn.addListeners(transListener);
-		conn.sendRemote(new SitOut(serial, game_id));
+		if(tableContext.pastInitialBuyIn){
+			conn.sendRemote(new BuyIn(serial, game_id, buyIn));
+		}else{
+			logger.warn("Ignoring buyin because tablepicker already bought in for us.");
+			tableContext.pastInitialBuyIn = true;
+		}
+		
 		conn.sendRemote(new Sit(serial, game_id));
 	}
 
