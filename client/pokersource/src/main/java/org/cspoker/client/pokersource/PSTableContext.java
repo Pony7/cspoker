@@ -245,7 +245,7 @@ public class PSTableContext implements RemoteHoldemTableContext {
 			HoldemPlayerListener holdemPlayerListener)
 	throws IllegalActionException, RemoteException {
 		if(psPlayerContext!=null) throw new IllegalActionException("Can't sit in twice");
-		psPlayerContext = new PSPlayerContext(conn, serial, this, holdemPlayerListener, gameState);
+		psPlayerContext = new PSPlayerContext(conn, serial, this, holdemPlayerListener, gameState, buyIn);
 		return psPlayerContext;
 	}
 
@@ -256,6 +256,8 @@ public class PSTableContext implements RemoteHoldemTableContext {
 	volatile TableConfiguration config;
 	volatile GameStateContainer gameState;
 	private SmartHoldemTableListener smartListener;
+
+	volatile boolean pastInitialBuyIn = false;
 
 	private class TranslatingListener extends DefaultListener{
 
