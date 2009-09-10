@@ -37,7 +37,7 @@ extends ForwardingGameState {
 
 	private final PlayerState playerState;
 
-	private final boolean bigBlindNoRaiseCase;
+	private final boolean betAfterBlindCase;
 
 	public BetState(final GameState gameState, final BetEvent event) {
 		super(gameState);
@@ -45,9 +45,10 @@ extends ForwardingGameState {
 
 		PlayerState oldPlayerState = super.getPlayer(event.getPlayerId());
 
-		bigBlindNoRaiseCase = Round.PREFLOP.equals(gameState.getRound()) 
-		&& oldPlayerState.getPlayerId().equals(super.getBigBlind()) 
-		&& gameState.getDeficit(event.getPlayerId())<=0;
+		betAfterBlindCase = Round.PREFLOP.equals(gameState.getRound());
+		if(betAfterBlindCase && gameState.getDeficit(event.getPlayerId())>0)
+			throw new IllegalStateException("Can't bet in the preflop round when you have a deficit to pay.");
+		
 
 		final int newStack = oldPlayerState.getStack() - event.getAmount();
 		this.newPotSize = super.getRoundPotSize() + event.getAmount();
@@ -60,7 +61,7 @@ extends ForwardingGameState {
 
 			@Override
 			public int getBet() {
-				if(bigBlindNoRaiseCase){
+				if(betAfterBlindCase){
 					return super.getBet()+BetState.this.event.getAmount();
 				}
 				return BetState.this.event.getAmount();
@@ -91,7 +92,7 @@ extends ForwardingGameState {
 			 */
 			 @Override
 			 public List<Integer> getBetProgression() {
-				 if(bigBlindNoRaiseCase){
+				 if(betAfterBlindCase){
 					 List<Integer> result = new ArrayList<Integer>();
 					 PlayerId lastBettorId = gameState.getLastBettor();
 					 PlayerState lastBettor = gameState.getPlayer(lastBettorId);
@@ -120,7 +121,7 @@ extends ForwardingGameState {
 
 	@Override
 	public int getLargestBet() {
-		if(bigBlindNoRaiseCase){
+		if(betAfterBlindCase){
 			return super.getLargestBet()+event.getAmount();
 		}
 		return event.getAmount();
