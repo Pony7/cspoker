@@ -93,7 +93,7 @@ public class LoreTest {
 		final SmartLobbyContext lobbyContext = clientContext.getLobbyContext(new DefaultLobbyListener());
 		final PlayerId botId = clientContext.getAccountContext().getPlayerID();
 		final SingleThreadRequestExecutor executor = SingleThreadRequestExecutor.getInstance();
-		bot = botFactory.createBot(botId, new TableId(0), lobbyContext, 500000, executor, new DefaultBotListener() {
+		bot = botFactory.createBot(botId, new TableId(0), lobbyContext, 200000, executor, new DefaultBotListener() {
 			@Override
 			public void onSitOut(SitOutEvent sitOutEvent) {
 				if(botId.equals(sitOutEvent.getPlayerId())){
