@@ -344,14 +344,17 @@ public class PSTableContext implements RemoteHoldemTableContext {
 
 		@Override
 		public void onPlayerChips(PlayerChips playerChips) {
+			//update sitting players
 			PlayerId id = getId(playerChips);
 			PlayerState player = getGameState().getPlayer(id);
-			if(inWinnerZone.get()){
+			if(player!= null && inWinnerZone.get()){
 				int prevStack = player.getStack();
 				if(prevStack != playerChips.getMoney()){
 					dispatch(new WinnerEvent(ImmutableSet.of(new Winner(id,playerChips.getMoney()-prevStack))));
 				}
 			}
+		
+			//refresh state
 			player = getGameState().getPlayer(id);
 			//sanity checks
 			if(player!=null){
@@ -364,6 +367,7 @@ public class PSTableContext implements RemoteHoldemTableContext {
 					throw new IllegalStateException(msg);
 				}
 			}
+			
 			///update arrivedPlayers
 			ListIterator<SeatedPlayer> iter = arrivedPlayers.listIterator();
 			while(iter.hasNext()){

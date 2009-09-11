@@ -31,11 +31,11 @@ import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.cards.Card;
 import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.external.pokersource.PokersourceConnection;
-import org.cspoker.external.pokersource.commands.poker.BuyIn;
 import org.cspoker.external.pokersource.commands.poker.Call;
 import org.cspoker.external.pokersource.commands.poker.Check;
 import org.cspoker.external.pokersource.commands.poker.Fold;
 import org.cspoker.external.pokersource.commands.poker.Raise;
+import org.cspoker.external.pokersource.commands.poker.Rebuy;
 import org.cspoker.external.pokersource.commands.poker.Sit;
 import org.cspoker.external.pokersource.eventlisteners.all.DefaultListener;
 import org.cspoker.external.pokersource.events.poker.BetLimit;
@@ -72,7 +72,7 @@ public class PSPlayerContext implements RemoteHoldemPlayerContext {
 		this.gameStateContainer = gameStateContainer;
 		this.conn.addListeners(transListener);
 		if(tableContext.pastInitialBuyIn){
-			conn.sendRemote(new BuyIn(serial, game_id, buyIn));
+			conn.sendRemote(new Rebuy(serial, game_id, buyIn));
 		}else{
 			logger.warn("Ignoring buyin because tablepicker already bought in for us.");
 			tableContext.pastInitialBuyIn = true;
