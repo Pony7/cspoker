@@ -15,11 +15,15 @@
  */
 package org.cspoker.ai.bots.listener;
 
-public interface ProfitCalculator {
+import org.cspoker.ai.bots.util.RunningStats;
+import org.cspoker.common.elements.table.TableConfiguration;
 
-	/**
-	 * Profit in small bets.
-	 */
-	double getProfit();
+public interface ProfitInfo {
+
+	RunningStats getProfit();
+	
+	TableConfiguration getTableConfiguration();
+	
+	String getBotName();
 	
 }

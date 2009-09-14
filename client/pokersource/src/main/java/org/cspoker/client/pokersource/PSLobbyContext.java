@@ -48,20 +48,26 @@ public class PSLobbyContext implements RemoteLobbyContext {
 
 	@Override
 	public DetailedHoldemTable getHoldemTableInformation(TableId tableId) {
-		// we only know config AFTER the joing, null for now;
-		return new DetailedHoldemTable(tableId, null);
+		if(config == null) return new DetailedHoldemTable(tableId, null);
+		else return new DetailedHoldemTable(tableId, config);
 	}
 
 	@Override
 	public TableList getTableList() {
 		throw new UnsupportedOperationException();
 	}
+	
+	volatile TableConfiguration config = null;
 
+	private volatile boolean joined = false;
+	
 	@Override
 	public RemoteHoldemTableContext joinHoldemTable(TableId tableId,
 			HoldemTableListener holdemTableListener)
 			throws IllegalActionException, RemoteException {
-		return new PSTableContext(conn, serial, tableId, holdemTableListener);
+		if(joined) throw new UnsupportedOperationException("Mutitabling is not supported.");
+		joined = true;
+		return new PSTableContext(conn, serial, tableId, holdemTableListener, this);
 	}
 
 }

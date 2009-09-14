@@ -32,7 +32,7 @@ import org.cspoker.ai.bots.bot.gametree.mcts.strategies.selection.UCTPlusPlusSel
 import org.cspoker.ai.bots.bot.gametree.mcts.strategies.selection.UCTSelector;
 import org.cspoker.ai.bots.bot.gametree.search.nodevisitor.StatisticsVisitor;
 import org.cspoker.ai.bots.listener.DefaultBotListener;
-import org.cspoker.ai.bots.listener.ProfitCalculator;
+import org.cspoker.ai.bots.listener.ProfitInfo;
 import org.cspoker.ai.bots.listener.ProfitListener;
 import org.cspoker.ai.opponentmodels.weka.WekaRegressionModelFactory;
 import org.cspoker.client.User;
@@ -202,21 +202,7 @@ public class RunHumanVsBot{
 		final SingleThreadRequestExecutor executor = SingleThreadRequestExecutor
 		.getInstance();
 		bot = botFactory.createBot(botId, tableId, lobbyContext, buyin,
-				executor, 
-				new ProfitListener(1,new ProfitCalculator(){
-					
-					@Override
-					public double getProfit() {
-						return bot.getProfit().getMean()*1.0/tConfig.getSmallBet();
-					}
-					
-					@Override
-					public String toString() {
-						return "Bot";
-					}
-					
-				}), 
-				new DefaultBotListener() {
+				executor,new DefaultBotListener() {
 			@Override
 			public void onSitOut(SitOutEvent event) {
 				// if(event.getPlayerId().equals(botId)){

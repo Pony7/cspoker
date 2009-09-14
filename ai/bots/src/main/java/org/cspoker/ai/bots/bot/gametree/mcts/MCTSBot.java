@@ -20,6 +20,7 @@ import java.util.concurrent.ExecutorService;
 
 import org.apache.log4j.Logger;
 import org.cspoker.ai.bots.bot.AbstractBot;
+import org.cspoker.ai.bots.bot.gametree.action.SearchBotAction;
 import org.cspoker.ai.bots.bot.gametree.mcts.listeners.MCTSListener;
 import org.cspoker.ai.bots.bot.gametree.mcts.nodes.Config;
 import org.cspoker.ai.bots.bot.gametree.mcts.nodes.INode;
@@ -55,6 +56,7 @@ public class MCTSBot extends AbstractBot {
 		long endTime = System.currentTimeMillis()+decisionTime;
 		GameState gameState = tableContext.getGameState();	
 		RootNode root = new RootNode(gameState,botId,config);
+		logger.info("Starting MCTS iterations.");
 		do{
 			iterate(root);
 			iterate(root);
@@ -92,11 +94,9 @@ public class MCTSBot extends AbstractBot {
 			iterate(root);
 			iterate(root);
 		}while(System.currentTimeMillis()<endTime);
-		if(logger.isDebugEnabled()){
-			logger.debug("Stopped MCTS.");
-		}
-//		System.out.println(config.getBackPropStratFactory()+": "+root.getNbSamples());
-		root.selectChild(config.getMoveSelectionStrategy()).getLastAction().getAction().perform(playerContext);
+		SearchBotAction action = root.selectChild(config.getMoveSelectionStrategy()).getLastAction().getAction();
+		if(logger.isInfoEnabled()) logger.info("Stopped MCTS after "+root.getNbSamples()+" samples and choosing "+action);
+		action.perform(playerContext);
 		MCTSListener[] listeners = createListeners(gameState, botId);
 		for (MCTSListener listener : listeners) {
 			listener.onMCTS(root);

@@ -151,10 +151,13 @@ public abstract class AbstractBot implements Bot {
 	public abstract void doNextAction() throws RemoteException, IllegalActionException;
 
 	public void onNextPlayer(final NextPlayerEvent nextPlayerEvent) {
+		logger.info("Next player is "+nextPlayerEvent.getPlayerId());
 		if (started && nextPlayerEvent.getPlayerId().equals(botId)) {
+			logger.info("Submitting task to run bot.");
 			executor.execute(new Runnable(){
 				@Override
 				public void run() {
+					logger.info("Running bot now!");
 					try {
 						doNextAction();
 					} catch (IllegalActionException e) {
