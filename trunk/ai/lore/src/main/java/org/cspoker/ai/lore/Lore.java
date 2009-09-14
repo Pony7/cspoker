@@ -32,6 +32,9 @@ import org.cspoker.ai.bots.bot.gametree.mcts.strategies.selection.SamplingToFunc
 import org.cspoker.ai.bots.bot.gametree.mcts.strategies.selection.UCTPlusPlusSelector;
 import org.cspoker.ai.bots.bot.gametree.mcts.strategies.selection.UCTSelector;
 import org.cspoker.ai.bots.listener.DefaultBotListener;
+import org.cspoker.ai.bots.listener.ProfitInfo;
+import org.cspoker.ai.bots.listener.ProfitListener;
+import org.cspoker.ai.bots.util.RunningStats;
 import org.cspoker.ai.opponentmodels.weka.WekaRegressionModelFactory;
 import org.cspoker.client.common.SmartClientContext;
 import org.cspoker.client.common.SmartLobbyContext;
@@ -42,6 +45,7 @@ import org.cspoker.common.api.lobby.listener.DefaultLobbyListener;
 import org.cspoker.common.api.shared.context.RemoteServerContext;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.player.PlayerId;
+import org.cspoker.common.elements.table.TableConfiguration;
 import org.cspoker.common.elements.table.TableId;
 import org.cspoker.common.util.Log4JPropertiesLoader;
 import org.cspoker.common.util.threading.SingleThreadRequestExecutor;
@@ -88,7 +92,8 @@ public class Lore {
 		final SmartLobbyContext lobbyContext = clientContext.getLobbyContext(new DefaultLobbyListener());
 		final PlayerId botId = clientContext.getAccountContext().getPlayerID();
 		final SingleThreadRequestExecutor executor = SingleThreadRequestExecutor.getInstance();
-		bot = botFactory.createBot(botId, new TableId(0), lobbyContext, 200000, executor, new DefaultBotListener() {
+		final TableId tableId = new TableId(0);
+		bot = botFactory.createBot(botId, tableId, lobbyContext, 200000, executor, new DefaultBotListener() {
 			@Override
 			public void onSitOut(SitOutEvent sitOutEvent) {
 				if(botId.equals(sitOutEvent.getPlayerId())){
@@ -96,7 +101,34 @@ public class Lore {
 					bot.reSitIn();
 				}
 			}
-		});
+		}, new ProfitListener(1,new ProfitInfo(){
+
+			@Override
+			public RunningStats getProfit() {
+				return bot.getProfit();
+			}
+			
+			@Override
+			public String getBotName() {
+				return botFactory.toString();
+			}
+			
+			@Override
+			public TableConfiguration getTableConfiguration() {
+				try {
+					return lobbyContext.getHoldemTableInformation(tableId).getTableConfiguration();
+				} catch (RemoteException e) {
+					e.printStackTrace();
+					logger.error(e);
+					throw new RuntimeException(e);
+				} catch (IllegalActionException e) {
+					e.printStackTrace();
+					logger.error(e);
+					throw new RuntimeException(e);
+				}
+			}
+			
+		}));
 		bot.start();
 	}
 

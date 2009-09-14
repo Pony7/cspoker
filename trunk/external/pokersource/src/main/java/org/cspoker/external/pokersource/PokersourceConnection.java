@@ -118,7 +118,7 @@ public class PokersourceConnection extends RESTConnection{
 	public synchronized EventRunner send(JSONPacket command) throws JSONException,IOException{
 		logger.info("Sending: "+command.getClass().getSimpleName()+": "+command);
 		String response = put(command.toString());
-		logger.info("Received: "+response+" after "+command.getClass().getSimpleName());
+		logger.info("Received: "+response.trim()+" after "+command.getClass().getSimpleName());
 		JsonConfig jsonConfig = new JsonConfig();
 		jsonConfig.setExcludes(new String[]{"cookie", "length"});
 		final JSONArray jsonResponse = (JSONArray) JSONSerializer.toJSON(response,jsonConfig);
@@ -207,7 +207,7 @@ public class PokersourceConnection extends RESTConnection{
 			@Override
 			public void run() {
 				try {
-					removeListener(listener);
+					listeners.remove(listener);
 				} catch (Exception e) {
 					e.printStackTrace();
 					logger.error(e);

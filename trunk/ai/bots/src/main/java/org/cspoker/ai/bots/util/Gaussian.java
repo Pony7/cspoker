@@ -81,6 +81,7 @@ public class Gaussian {
 	private final static NormalDistributionImpl defaultNormal = new NormalDistributionImpl();
 	
 	public final static double bigPhi(double x){
+		//TODO tabulate
 		if(x<-4.5) return 0;
 		if(x>4.5) return 1;
 		try {

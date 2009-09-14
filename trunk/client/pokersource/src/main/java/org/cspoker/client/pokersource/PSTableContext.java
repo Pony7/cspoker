@@ -114,11 +114,14 @@ public class PSTableContext implements RemoteHoldemTableContext {
 
 	private PSPlayerContext psPlayerContext = null;
 
-	public PSTableContext(PokersourceConnection conn, int serial, TableId tableId, HoldemTableListener holdemTableListener) throws IllegalActionException, RemoteException {
+	private final PSLobbyContext psLobbyContext;
+
+	public PSTableContext(PokersourceConnection conn, int serial, TableId tableId, HoldemTableListener holdemTableListener, PSLobbyContext psLobbyContext) throws IllegalActionException, RemoteException {
 		this.conn = conn;
 		this.serial = serial;
 		this.tableId=tableId;
 		this.transListener = new TranslatingListener();
+		this.psLobbyContext = psLobbyContext;
 		this.holdemTableListener = new ForwardingHoldemTableListener(ImmutableList.of(holdemTableListener, new HoldemTableListener() {
 
 			@Override
@@ -266,11 +269,16 @@ public class PSTableContext implements RemoteHoldemTableContext {
 			game_id = table.getId();
 			conn.startPolling(game_id);
 			String bettingStruct = table.getBetting_structure();
-			config = new TableConfiguration(100*Integer.parseInt(bettingStruct.split("-")[1]));
+			changeConfig(new TableConfiguration(100*Integer.parseInt(bettingStruct.split("-")[1])));
 			gameState = new GameStateContainer(new DetailedHoldemTableState(new DetailedHoldemTable(tableId, config)));
 			smartListener = new SmartHoldemTableListener(holdemTableListener, gameState);
 			tableInfoObtained.countDown();
 			dispatch(new ConfigChangeEvent(config));
+		}
+
+		private void changeConfig(TableConfiguration tableConfiguration) {
+			config = tableConfiguration;
+			psLobbyContext.config = config;
 		}
 
 		@Override

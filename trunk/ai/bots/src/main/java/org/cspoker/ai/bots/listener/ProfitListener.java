@@ -16,6 +16,8 @@
 package org.cspoker.ai.bots.listener;
 
 import org.apache.log4j.Logger;
+import org.cspoker.ai.bots.util.Gaussian;
+import org.cspoker.ai.bots.util.RunningStats;
 
 public class ProfitListener extends DealCountingListener {
 
@@ -26,15 +28,15 @@ public class ProfitListener extends DealCountingListener {
 
 	private final int reportInterval;
 
-	private final ProfitCalculator profitCalculator;
+	private final ProfitInfo profitInfo;
 
-	public ProfitListener(ProfitCalculator profitCalculator) {
+	public ProfitListener(ProfitInfo profitCalculator) {
 		this(64, profitCalculator);
 	}
 
-	public ProfitListener(int reportInterval, ProfitCalculator profitCalculator) {
+	public ProfitListener(int reportInterval, ProfitInfo profitInfo) {
 		this.reportInterval = reportInterval;
-		this.profitCalculator = profitCalculator;
+		this.profitInfo = profitInfo;
 	}
 
 	@Override
@@ -45,8 +47,14 @@ public class ProfitListener extends DealCountingListener {
 			if (startTime > 0) {
 				logger.info("deal #" + deals + " at " + reportInterval * 1000.0
 						/ (nowTime - startTime) + " games/s");
-				logger.info("(" + profitCalculator + " wins "
-						+ profitCalculator.getProfit() / deals + " sb/game)");
+				RunningStats profit = profitInfo.getProfit();
+				int smallBet = profitInfo.getTableConfiguration().getSmallBet();
+				double avgProfit = (profit.getMean() / smallBet);
+				double stdDev = (profit.getEVStdDev()/ smallBet);
+				double prob = Gaussian.bigPhi(avgProfit/stdDev);
+				logger.info("(" + profitInfo.getBotName() + " wins "
+						+ (float)avgProfit + " sb/game) "
+						+ " +- "+(float)stdDev+" ("+(float)prob+"% profitable)");
 			}
 			startTime = nowTime;
 		}
