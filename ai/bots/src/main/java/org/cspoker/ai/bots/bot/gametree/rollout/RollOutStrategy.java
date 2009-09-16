@@ -30,7 +30,7 @@ import org.cspoker.common.elements.cards.Card;
 import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.handeval.spears2p2.StateTableEvaluator;
 
-public class RollOutStrategy {
+public abstract class RollOutStrategy {
 
 	private final static Logger logger = Logger.getLogger(RollOutStrategy.class);
 

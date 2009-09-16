@@ -95,7 +95,7 @@ public class RunHumanVsBot{
 		client.getGui().setLobby(lobby);
 
 		tConfig = new TableConfiguration(smallBet, delay,
-				false, false, true);
+				false, false, true,0);
 		lobby.getContext().createHoldemTable(u.getUserName() + "'s test table", tConfig);
 		// Run blocking calls in extra thread
 		displayexecutor.execute(new Runnable() {

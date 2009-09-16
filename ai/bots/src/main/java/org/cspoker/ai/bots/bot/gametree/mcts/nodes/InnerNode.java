@@ -190,11 +190,13 @@ public abstract class InnerNode extends AbstractNode {
 			} catch (GameEndedException e) {
 				// no active players left
 				// go to showdown
-				return new MCTSShowdownRollOutNode(e.lastState,this, probAction);
+				return config.getShowdownNodeFactory().create(e.lastState, this, probAction);
 			} catch (DefaultWinnerException e) {
 				assert e.winner.getPlayerId().equals(bot) : "Bot should have folded earlier, winner can't be " + e.winner;
 				// bot wins
-				return new ConstantLeafNode(this, probAction, e.winner.getStack() + e.foldState.getGamePotSize());
+				return new ConstantLeafNode(this, probAction, 
+						gameState.getPlayer(bot).getStack() 
+						+ (int)(e.foldState.getGamePotSize()*(1-gameState.getTableConfiguration().getRake())));
 			}
 		}
 	}

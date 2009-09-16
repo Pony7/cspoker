@@ -19,16 +19,25 @@ import java.util.Collections;
 import java.util.SortedMap;
 import java.util.Map.Entry;
 
+import org.apache.log4j.Logger;
 import org.cspoker.common.util.MutableDouble;
 
 public class RolloutResult {
-	
-	public final SortedMap<Integer, MutableDouble> values;
-	public final double totalProb;
 
-	public RolloutResult(SortedMap<Integer, MutableDouble> values, double totalProb) {
+	private final static Logger logger = Logger.getLogger(RolloutResult.class);
+	
+	private final SortedMap<Integer, MutableDouble> values;
+	private final double totalProb;
+	private final double rakeFactor;
+
+	public RolloutResult(SortedMap<Integer, MutableDouble> values, double totalProb, double rakeFactor) {
+		if(Double.isNaN(totalProb) ||Double.isInfinite(totalProb) || totalProb==0) {
+			logger.error("Bad total probability: "+totalProb);
+			throw new IllegalStateException();
+		}
 		this.values = Collections.unmodifiableSortedMap(values);
 		this.totalProb = totalProb;
+		this.rakeFactor = rakeFactor;
 	}
 	
 	public double getMean() {
@@ -37,13 +46,13 @@ public class RolloutResult {
 			mean += entry.getKey() * entry.getValue().getValue();
 		}
 		mean /= totalProb;
-		return mean;
+		return mean*rakeFactor;
 	}
 
 	public double getVariance(double mean, int nbSamples) {
 		double var = 0;
 		for (Entry<Integer, MutableDouble> entry : values.entrySet()) {
-			double diff = mean - entry.getKey();
+			double diff = mean - entry.getKey()*rakeFactor;
 			var += diff * diff * entry.getValue().getValue();
 		}
 		var /= totalProb;
@@ -51,6 +60,18 @@ public class RolloutResult {
 		// variance
 		var *=  nbSamples / (double)(nbSamples - 1);
 		return var;
+	}
+	
+	public double getTotalProb() {
+		return totalProb;
+	}
+	
+	public SortedMap<Integer, MutableDouble> getValues() {
+		return values;
+	}
+	
+	public double getRakeFactor() {
+		return rakeFactor;
 	}
 	
 }

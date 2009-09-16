@@ -84,7 +84,8 @@ public abstract class ActionNode implements InnerGameTreeNode {
 				// bot wins
 				int stack = e.winner.getStack();
 				int pots = e.foldState.getGamePotSize();
-				return new ConstantLeafNode(gameState, stack + pots,0, tokens);
+				double rakeFactor = 1-gameState.getTableConfiguration().getRake();
+				return new ConstantLeafNode(gameState, stack + rakeFactor*pots,0, tokens);
 			}
 		}
 	}
@@ -95,14 +96,16 @@ public abstract class ActionNode implements InnerGameTreeNode {
 		//TODO check what if bot allin and 2 other players?
 		int stealable = 0;
 		Set<PlayerState> players = gameState.getAllSeatedPlayers();
+		double rakeFactor = 1-gameState.getTableConfiguration().getRake();
 		for(PlayerState p:players){
 			PlayerId opponent = p.getPlayerId();
 			if(p.isActivelyPlaying() && !opponent.equals(botId)){
 				int callValue = gameState.getCallValue(opponent);
-				stealable += Math.min(botStack, p.getStack()-callValue)+callValue;
+				stealable += rakeFactor*(Math.min(botStack, p.getStack()-callValue)+callValue);
 			}
 		}
-		return botStack+stealable+gameState.getGamePotSize();
+		return botStack+stealable
+			+rakeFactor*gameState.getGamePotSize();
 	}
 
 	@Override

@@ -30,11 +30,11 @@ public class Gaussian {
 	public Gaussian(double mean, double variance) {
 		if(Double.isInfinite(mean) || Double.isNaN(mean)){
 			logger.error("Bad mean: "+mean);
-//			throw new IllegalArgumentException("Bad mean: "+mean);
+			throw new IllegalArgumentException("Bad mean: "+mean);
 		}
 		if(Double.isInfinite(variance) || Double.isNaN(variance) || variance<0){
 			logger.error("Bad variance: "+variance);
-//			throw new IllegalArgumentException("Bad variance: "+variance);
+			throw new IllegalArgumentException("Bad variance: "+variance);
 		}
 		this.mean = mean;
 		this.variance = variance;

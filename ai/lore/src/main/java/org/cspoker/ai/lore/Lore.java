@@ -23,13 +23,12 @@ import org.apache.log4j.Logger;
 import org.cspoker.ai.bots.bot.Bot;
 import org.cspoker.ai.bots.bot.BotFactory;
 import org.cspoker.ai.bots.bot.gametree.mcts.MCTSBotFactory;
+import org.cspoker.ai.bots.bot.gametree.mcts.listeners.MCTSListener.Factory;
 import org.cspoker.ai.bots.bot.gametree.mcts.nodes.MCTSBucketShowdownNode;
-import org.cspoker.ai.bots.bot.gametree.mcts.strategies.backpropagation.MaxDistributionPlusBackPropStrategy;
-import org.cspoker.ai.bots.bot.gametree.mcts.strategies.backpropagation.MixedBackPropStrategy;
 import org.cspoker.ai.bots.bot.gametree.mcts.strategies.backpropagation.SampleWeightedBackPropStrategy;
 import org.cspoker.ai.bots.bot.gametree.mcts.strategies.selection.MaxValueSelector;
+import org.cspoker.ai.bots.bot.gametree.mcts.strategies.selection.SamplingSelector;
 import org.cspoker.ai.bots.bot.gametree.mcts.strategies.selection.SamplingToFunctionSelector;
-import org.cspoker.ai.bots.bot.gametree.mcts.strategies.selection.UCTPlusPlusSelector;
 import org.cspoker.ai.bots.bot.gametree.mcts.strategies.selection.UCTSelector;
 import org.cspoker.ai.bots.listener.DefaultBotListener;
 import org.cspoker.ai.bots.listener.ProfitInfo;
@@ -72,21 +71,21 @@ public class Lore {
 		this.botFactory = 
 			//			 new CallBotFactory();
 			new MCTSBotFactory(
-					"Plus Bot",
+					"MCTSBucketShowdownNode Bot",
 					WekaRegressionModelFactory.createForZip("org/cspoker/ai/opponentmodels/weka/models/model1.zip"),
-					new SamplingToFunctionSelector(50,new UCTSelector(1000000)),
-					new SamplingToFunctionSelector(50,new UCTPlusPlusSelector()),
+					new SamplingToFunctionSelector(50,new UCTSelector(500000)),
+					new SamplingSelector(),
 					new MaxValueSelector(),
 					new MCTSBucketShowdownNode.Factory(),
-					new MixedBackPropStrategy.Factory(
-							50,
-							new SampleWeightedBackPropStrategy.Factory(),
-							new MaxDistributionPlusBackPropStrategy.Factory()
-					),
-					1500);
+					new SampleWeightedBackPropStrategy.Factory(),
+					300,getListeners());
 	}
 
-	private void start() throws RemoteException, LoginException, IllegalActionException {
+	protected Factory[] getListeners() {
+		return new Factory[]{};
+	}
+
+	protected void start() throws RemoteException, LoginException, IllegalActionException {
 		RemoteServerContext conn = server.login("foobar", "foobar");
 		SmartClientContext clientContext = new SmartClientContext(conn);
 		final SmartLobbyContext lobbyContext = clientContext.getLobbyContext(new DefaultLobbyListener());

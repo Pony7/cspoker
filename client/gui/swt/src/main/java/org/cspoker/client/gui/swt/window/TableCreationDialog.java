@@ -177,7 +177,7 @@ public class TableCreationDialog
 					try {
 						int smallBlind = (int) ((Double.parseDouble(stakeCombo.getText().substring(0,
 								stakeCombo.getText().indexOf("/")))) * 100);
-						TableConfiguration tConfig = new TableConfiguration(smallBlind * 2, 2000);
+						TableConfiguration tConfig = new TableConfiguration(smallBlind * 2, 2000,0);
 						
 						try {
 							lobby.getContext().createHoldemTable(nameInput.getText(), tConfig);

@@ -3383,6 +3383,7 @@ public class ShowdownRankPredictor1of4 {
 		relShowdownProb[6027] = 0.94198793F;
 		relShowdownProb[6028] = 0.7177051F;
 		relShowdownProb[6029] = 0.5949397F;
+		relShowdownProb[6030] = 0.5949397F; // manually added because missing?
 		relShowdownProb[6031] = 0.75359035F;
 		relShowdownProb[6032] = 0.793253F;
 		relShowdownProb[6033] = 0.56519276F;

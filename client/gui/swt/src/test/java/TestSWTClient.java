@@ -58,7 +58,7 @@ public abstract class TestSWTClient {
 			lobby.setLobbyContext(client.getCommunication());
 			client.getGui().setLobby(lobby);
 
-			TableConfiguration tConfig = new TableConfiguration(smallBlind, delay);
+			TableConfiguration tConfig = new TableConfiguration(smallBlind, delay,0);
 			lobby.getContext().createHoldemTable(u.getUserName() + "'s test table", tConfig);
 			// Run blocking calls in extra thread
 			displayexecutor.execute(new Runnable() {

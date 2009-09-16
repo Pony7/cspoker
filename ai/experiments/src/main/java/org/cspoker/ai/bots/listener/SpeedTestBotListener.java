@@ -17,6 +17,7 @@ package org.cspoker.ai.bots.listener;
 
 import org.apache.log4j.Logger;
 import org.cspoker.ai.bots.BotRunner;
+import org.cspoker.ai.bots.util.Gaussian;
 import org.cspoker.ai.bots.util.RunningStats;
 
 public class SpeedTestBotListener extends DealCountingListener {
@@ -49,9 +50,13 @@ public class SpeedTestBotListener extends DealCountingListener {
 						/ (nowTime - startTime) + " games/s");
 				for (int i = 0; i < runner.nbPlayersPerGame; i++) {
 					RunningStats profit = runner.getBot(i).getProfit();
+					int smallBet = runner.getConfig().getSmallBet();
+					double avgProfit = (profit.getMean() / smallBet);
+					double stdDev = (profit.getEVStdDev()/ smallBet);
+					double prob = Gaussian.bigPhi(avgProfit/stdDev);
 					logger.info("(" + runner.getBotFactory(i) + " wins "
-							+ profit.getMean() / runner.getConfig().getSmallBet() + " sb/game) "
-							+ " +- "+profit.getEVStdDev()/ runner.getConfig().getSmallBet());
+							+ (float)avgProfit + " sb/game) "
+							+ " +- "+(float)stdDev+" ("+(float)prob+"% profitable)");
 				}
 			}
 			startTime = nowTime;
