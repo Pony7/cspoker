@@ -130,7 +130,7 @@ public class BucketRollOut extends RollOutStrategy {
 			totalEV += sampleEV;
 		}
 		model.forgetLastAssumption();
-		return totalEV/nbCommunitySamples;
+		return (1-gameState.getTableConfiguration().getRake())*(totalEV/nbCommunitySamples);
 	}
 
 	private TreeMap<PlayerState, WinDistribution> calcOpponentWinDistributionMap(

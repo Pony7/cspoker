@@ -28,6 +28,7 @@ import org.cspoker.ai.bots.bot.Bot;
 import org.cspoker.ai.bots.bot.BotFactory;
 import org.cspoker.ai.bots.bot.gametree.mcts.MCTSBotFactory;
 import org.cspoker.ai.bots.bot.gametree.mcts.nodes.MCTSBucketShowdownNode;
+import org.cspoker.ai.bots.bot.gametree.mcts.nodes.MCTSShowdownRollOutNode;
 import org.cspoker.ai.bots.bot.gametree.mcts.strategies.backpropagation.MaxDistributionPlusBackPropStrategy;
 import org.cspoker.ai.bots.bot.gametree.mcts.strategies.backpropagation.MixedBackPropStrategy;
 import org.cspoker.ai.bots.bot.gametree.mcts.strategies.backpropagation.SampleWeightedBackPropStrategy;
@@ -63,7 +64,7 @@ public class BotRunner implements LobbyListener {
 
 	private static final int nbBigBlindsBuyIn = 0; //0 for Doyle's Game -> 200
 	private static final TableConfiguration config = new TableConfiguration(100,
-			0, false, true, true);
+			0, false, true, true,0);
 
 	public static final int nbGamesPerConfrontation = 1000000;
 	public final int nbPlayersPerGame;
@@ -111,21 +112,17 @@ public class BotRunner implements LobbyListener {
 //					new CardBotFactory("CardBot"),
 //					new HandBotFactory("HandBot"),
 					new MCTSBotFactory(
-							"Plus Bot",
+							"MCTSShowdownRollOutNode Bot",
 							WekaRegressionModelFactory.createForZip("org/cspoker/ai/opponentmodels/weka/models/model1.zip"),
 							new SamplingToFunctionSelector(50,new UCTSelector(40000)),
-							new SamplingToFunctionSelector(250,new UCTPlusPlusSelector()),
+							new SamplingSelector(),
 							new MaxValueSelector(),
-							new MCTSBucketShowdownNode.Factory(),
-							new MixedBackPropStrategy.Factory(
-									100,
-									new SampleWeightedBackPropStrategy.Factory(),
-									new MaxDistributionPlusBackPropStrategy.Factory()
-							),
+							new MCTSShowdownRollOutNode.Factory(),
+							new SampleWeightedBackPropStrategy.Factory(),
 							300
 					),
 					new MCTSBotFactory(
-							"MaxDistribution Bot",
+							"MCTSBucketShowdownNode Bot",
 							WekaRegressionModelFactory.createForZip("org/cspoker/ai/opponentmodels/weka/models/model1.zip"),
 							new SamplingToFunctionSelector(50,new UCTSelector(40000)),
 							new SamplingSelector(),

@@ -62,7 +62,7 @@ public class ShowdownRolloutNode implements ShowdownNode {
 			RolloutResult result = rollout.doRollOut(nbCommunitySamples, nbOpponentSamples);
 
 			int stackSize = rollout.botState.getStack();
-			informListeners(result.values, result.totalProb, rollout.gamePotSize, stackSize);
+			informListeners(result.getValues(), result.getTotalProb(), rollout.gamePotSize, stackSize);
 			double mean = result.getMean();
 			double var = result.getVariance(mean, nbOpponentSamples * nbCommunitySamples);
 			valueDistribution = new Distribution(stackSize + mean, var);

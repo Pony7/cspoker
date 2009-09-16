@@ -4632,7 +4632,6 @@ public class ShowdownRankPredictor4of4 {
 		relShowdownProb[7242] = 2.7465787F;
 		relShowdownProb[7243] = 3.598754F;
 		relShowdownProb[7244] = 3.9615998F;
-		relShowdownProb[7245] = 3.7762444F;
 		relShowdownProb[7246] = 3.5688114F;
 		relShowdownProb[7247] = 3.679765F;
 		relShowdownProb[7248] = 2.6658022F;

@@ -264,12 +264,14 @@ public class PSTableContext implements RemoteHoldemTableContext {
 
 	private class TranslatingListener extends DefaultListener{
 
+		private static final double default_rake = 0.05;
+
 		@Override
 		public void onTable(Table table) {
 			game_id = table.getId();
 			conn.startPolling(game_id);
 			String bettingStruct = table.getBetting_structure();
-			changeConfig(new TableConfiguration(100*Integer.parseInt(bettingStruct.split("-")[1])));
+			changeConfig(new TableConfiguration(100*Integer.parseInt(bettingStruct.split("-")[1]),0,default_rake));
 			gameState = new GameStateContainer(new DetailedHoldemTableState(new DetailedHoldemTable(tableId, config)));
 			smartListener = new SmartHoldemTableListener(holdemTableListener, gameState);
 			tableInfoObtained.countDown();

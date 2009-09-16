@@ -53,7 +53,7 @@ public class PSPlayerContext implements RemoteHoldemPlayerContext {
 	private final org.cspoker.client.pokersource.PSPlayerContext.TranslatingListener transListener;
 	private final SmartHoldemPlayerListener smartListener;
 	private final GameStateContainer gameStateContainer;
-
+	private volatile boolean isSittingIn = false;
 	
 	public PSPlayerContext(PokersourceConnection conn, int serial, PSTableContext tableContext,
 			HoldemPlayerListener holdemPlayerListener, GameStateContainer gameStateContainer, int buyIn) throws RemoteException {
@@ -77,12 +77,16 @@ public class PSPlayerContext implements RemoteHoldemPlayerContext {
 			logger.warn("Ignoring buyin because tablepicker already bought in for us.");
 			tableContext.pastInitialBuyIn = true;
 		}
-		
+
+		isSittingIn = true;
 		conn.sendRemote(new Sit(serial, game_id));
 	}
 
 	@Override
 	public void betOrRaise(int amount) throws IllegalActionException, RemoteException {
+		if(!isSittingIn) {
+			throw new IllegalActionException("Can't act when not sitting in.");
+		}
 		try {
 			int callValue = gameStateContainer.getGameState().getCallValue(new PlayerId(serial));
 			conn.sendRemote(new Raise(serial, game_id, callValue+amount));
@@ -93,6 +97,9 @@ public class PSPlayerContext implements RemoteHoldemPlayerContext {
 
 	@Override
 	public void checkOrCall() throws IllegalActionException, RemoteException {
+		if(!isSittingIn) {
+			throw new IllegalActionException("Can't act when not sitting in.");
+		}
 		try {
 			if(betLimitCall==0) conn.sendRemote(new Check(serial, game_id));
 			else conn.sendRemote(new Call(serial, game_id));
@@ -103,6 +110,9 @@ public class PSPlayerContext implements RemoteHoldemPlayerContext {
 
 	@Override
 	public void fold() throws IllegalActionException, RemoteException {
+		if(!isSittingIn) {
+			throw new IllegalActionException("Can't act when not sitting in.");
+		}
 		try {
 			conn.sendRemote(new Fold(serial, game_id));
 		} catch (JSONException e) {
@@ -111,12 +121,14 @@ public class PSPlayerContext implements RemoteHoldemPlayerContext {
 	}
 
 	void signalSitOut() {
+		logger.info("Removing translating listener after sitout.");
+		isSittingIn = false;
 		conn.removeListeners(transListener);
 	}
 
 	@Override
 	public void stopPlaying() throws RemoteException, IllegalActionException {
-		this.conn.removeListeners(transListener);
+		signalSitOut();
 	}
 
 	@Override
@@ -139,6 +151,7 @@ public class PSPlayerContext implements RemoteHoldemPlayerContext {
 		@Override
 		public void onBetLimit(BetLimit betLimit) {
 			betLimitCall = betLimit.getCall();
+			logger.info("Setting call amount to "+betLimitCall);
 		}
 
 		@Override

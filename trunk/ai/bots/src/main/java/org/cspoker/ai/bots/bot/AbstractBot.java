@@ -111,7 +111,7 @@ public abstract class AbstractBot implements Bot {
 			public void run() {
 				try {
 					started = true;
-					tableContext.sitIn(buyIn, AbstractBot.this);
+					playerContext = tableContext.sitIn(buyIn, AbstractBot.this);
 				} catch (IllegalActionException e) {
 					e.printStackTrace();
 					throw new IllegalStateException("Failed to join table.", e);
@@ -311,6 +311,9 @@ public abstract class AbstractBot implements Bot {
 	}
 
 	public void onSitOut(final SitOutEvent sitOutEvent) {
+		if(sitOutEvent.getPlayerId().equals(this.botId)){
+			playerContext = null;
+		}
 		if (started) {
 			executor.execute(new Runnable(){
 				@Override

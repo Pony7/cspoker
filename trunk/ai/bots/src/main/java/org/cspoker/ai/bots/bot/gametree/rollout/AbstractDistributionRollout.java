@@ -84,8 +84,7 @@ public abstract class AbstractDistributionRollout extends RollOutStrategy {
 					} else if (opponentRank == botRank) {
 						drawers.add(opponentThatCanWin);
 					}
-					float opponentRankProb = getRelativeProbability(
-							opponentRank, relPotSize);
+					float opponentRankProb = getRelativeNearestProbability(opponentRank, relPotSize);
 					logProb += Math.log(opponentRankProb);
 				}
 				double prob = Math.exp(logProb);
@@ -100,7 +99,18 @@ public abstract class AbstractDistributionRollout extends RollOutStrategy {
 				totalProb += prob;
 			}
 		}
-		return new RolloutResult(values, totalProb);
+		return new RolloutResult(values, totalProb, (1-gameState.getTableConfiguration().getRake()));
+	}
+	
+	protected float getRelativeNearestProbability(int rank, int relativePotSize){
+		float prob = getRelativeProbability(rank, relPotSize);
+		if(prob == 0){
+			prob = getRelativeNearestProbability(rank-1, relativePotSize);
+		}
+		if(Float.isInfinite(prob) || Float.isNaN(prob) || prob==0){
+			throw new IllegalStateException("Bad opponentRankProb: "+prob);
+		}
+		return prob;
 	}
 	
 	protected abstract float getRelativeProbability(int rank,
