@@ -24,10 +24,8 @@ import java.util.Map;
 import java.util.Random;
 
 import org.cspoker.common.elements.cards.Card;
-import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.handeval.spears2p2.StateTableEvaluator;
 
-import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Multiset;
 import com.google.common.collect.TreeMultiset;
 
@@ -112,7 +110,7 @@ public class Propositionalizer implements Cloneable {
 
 	public void signalBet(boolean isAllIn, Object id, int movedAmount) {
 		PlayerData p = players.get(id);
-		logBet(p, movedAmount);
+		logBet(id, movedAmount/(double)bb);
 		if(isAllIn) {
 			activePlayers.remove(p);
 			allinPlayers.add(p);
@@ -130,7 +128,7 @@ public class Propositionalizer implements Cloneable {
 
 	public void signalCheck(Object id) {
 		PlayerData p = players.get(id);
-		logCheck(p);
+		logCheck(id);
 		++nbPlayersDoneThisRound;
 		gameStats.addCheck(this);
 		somebodyActedThisRound = true;
@@ -143,7 +141,7 @@ public class Propositionalizer implements Cloneable {
 		if (p.getDeficit(this) == 0) {
 			signalBet(isAllIn, id, raiseAmount);
 		} else {
-			logRaise(p,raiseAmount);
+			logRaise(id,raiseAmount/(double)bb);
 			if(isAllIn) {
 				activePlayers.remove(p);
 				allinPlayers.add(p);
@@ -170,10 +168,10 @@ public class Propositionalizer implements Cloneable {
 			signalCall(isAllIn, id, Math.min(p.getStack(), maxBet-p.getBet()));
 		}
 	}
-	
+
 	public void signalCall(boolean isAllIn, Object id, int movedAmount) {
 		PlayerData p = players.get(id);
-		logCall(p);
+		logCall(id);
 
 		if(isAllIn){
 			activePlayers.remove(p);
@@ -188,7 +186,7 @@ public class Propositionalizer implements Cloneable {
 
 	public void signalFold(Object id) {
 		PlayerData p = players.get(id);
-		if(p.getDeficit(this)>0) logFold(p);
+		if(p.getDeficit(this)>0) logFold(id);
 
 		activePlayers.remove(p);
 		somebodyActedThisRound = true;
@@ -245,9 +243,9 @@ public class Propositionalizer implements Cloneable {
 		if(cards.size()==5){
 			//showdown after river
 			Multiset<Integer> ranks = new TreeMultiset<Integer>();
-			int minSampleRank = Integer.MAX_VALUE;
-			int maxSampleRank = Integer.MIN_VALUE;
-			int sum = 0;
+			//			int minSampleRank = Integer.MAX_VALUE;
+			//			int maxSampleRank = Integer.MIN_VALUE;
+			//			int sum = 0;
 
 			int startRank = 53;
 			for (Card card:cards) {
@@ -262,9 +260,11 @@ public class Propositionalizer implements Cloneable {
 			realRank = realRank & 0xFFF;
 			realRank = offsets[realType] + realRank - 1;
 
-			//take 100 rank samples
-			int n = 100;
-			for(int i=0;i<n;i++){
+			//take rank samples
+			int nbBuckets = 6;
+			int nbSamplesPerBucket = 6;
+			int nbSamples = nbBuckets*nbSamplesPerBucket;
+			for(int i=0;i<nbSamples;i++){
 
 				int rank = startRank;
 				Card sampleCard1;
@@ -285,31 +285,31 @@ public class Propositionalizer implements Cloneable {
 
 				ranks.add(rank);
 
-				if(rank<minSampleRank){
-					minSampleRank = rank;
-				}
-				if(rank>maxSampleRank){
-					maxSampleRank = rank;
-				}
-				sum += rank;
+				//				if(rank<minSampleRank){
+				//					minSampleRank = rank;
+				//				}
+				//				if(rank>maxSampleRank){
+				//					maxSampleRank = rank;
+				//				}
+				//				sum += rank;
 			}
-			double var = 0;
-			double mean = ((double)sum)/n;
-			for (Multiset.Entry<Integer> entry : ranks.entrySet()) {
-				double diff = mean - entry.getElement();
-				var += diff * diff * entry.getCount();
-			}
-			var /= (n-1);
-			int averageSampleRank = (int) Math.round(mean);
-			int sigmaSampleRank = (int) Math.round(Math.sqrt(var));
-			int[] bucketCounts = new int[10];
+			//			double var = 0;
+			//			double mean = ((double)sum)/nbSamples;
+			//			for (Multiset.Entry<Integer> entry : ranks.entrySet()) {
+			//				double diff = mean - entry.getElement();
+			//				var += diff * diff * entry.getCount();
+			//			}
+			//			var /= (nbSamples-1);
+			//			int averageSampleRank = (int) Math.round(mean);
+			//			int sigmaSampleRank = (int) Math.round(Math.sqrt(var));
+			int[] bucketCounts = new int[nbBuckets];
 			Iterator<Integer> iter = ranks.iterator();
 			double realRankCount = ranks.count(realRank);
-			long avgBucket = -1;
-			double[] bucketDistr = new double[10];
+			//			long avgBucket = -1;
+			double[] bucketDistr = new double[nbBuckets];
 			if(realRankCount>0){
-				for(int bucket=0;bucket<10;bucket++){
-					for (int i = 0; i < 10; i++) {
+				for(int bucket=0;bucket<nbBuckets;bucket++){
+					for (int i = 0; i < nbSamplesPerBucket; i++) {
 						int rank = iter.next();
 						if(rank==realRank){
 							++bucketCounts[bucket];
@@ -317,30 +317,33 @@ public class Propositionalizer implements Cloneable {
 					}
 				}
 				int partitionSum = 0;
-				for (int i = 0; i < 10; i++) {
+				for (int i = 0; i < nbBuckets; i++) {
 					bucketDistr[i] = bucketCounts[i]/realRankCount;
 					partitionSum += bucketCounts[i]*i;
 				}
-				avgBucket = Math.round(partitionSum/realRankCount);
+				//			avgBucket = Math.round(partitionSum/realRankCount);
 			}else{
 				boolean found = false;
-				findPartition: for (int i = 9; i < 90; i+=10) {
-					int rank = iter.next();
-					if(rank>realRank){
-						bucketCounts[i%10]=1;
-						avgBucket = i%10;
-						found = true;
-						break findPartition;
+				bucketIteration: for(int bucket=0;bucket<nbBuckets;bucket++){
+					for (int i = 0; i < nbSamplesPerBucket; i++) {
+						int rank = iter.next();
+						if(rank>realRank){
+							bucketDistr[bucket]=1;
+							//				avgBucket = bucket;
+							found = true;
+							break bucketIteration;
+						}
 					}
 				}
 				if(!found){
-					bucketCounts[9]=1;
-					avgBucket = 9;
+					bucketCounts[nbBuckets-1]=1;
+					//				avgBucket = nbBuckets-1;
 				}
 			}
-			logShowdown(p,bucketDistr, (int)avgBucket, minSampleRank, maxSampleRank, averageSampleRank, sigmaSampleRank);
+			logShowdown(id,bucketDistr);
 		}else{
-			//everybody went all-in before the river
+			//ignore
+			//throw new IllegalStateException("everybody went all-in before the river");
 		}
 	}
 
@@ -351,51 +354,51 @@ public class Propositionalizer implements Cloneable {
 	private static final int[] offsets = new int[] { 0, 1277, 4137, 4995, 5853,
 		5863, 7140, 7296, 7452 };
 	private Random random = new Random(0);
-
-	private void updateExpectedRank() {
-		Multiset<Integer> ranks = new HashMultiset<Integer>();
-		minRank = Integer.MAX_VALUE;
-		maxRank = Integer.MIN_VALUE;
-		int sum = 0;
-		int n = 100;
-
-		int startRank = 53;
-		for (Card card:cards) {
-			startRank = handRanks[card.ordinal() + 1 + startRank];
-		}
-		for(int i=0;i<n;i++){
-			EnumSet<Card> sample = EnumSet.copyOf(cards);
-			int rank = startRank;
-			while(sample.size()<7){
-				Card sampleCard;
-				do{
-					sampleCard = Card.values()[random.nextInt(Card.values().length)];
-				}while(sample.contains(sampleCard));
-				sample.add(sampleCard);
-				rank = handRanks[sampleCard.ordinal() + 1 + rank];
-			}
-			int type = (rank >>> 12) - 1;
-			rank = rank & 0xFFF;
-			rank = offsets[type] + rank - 1;
-			ranks.add(rank);
-			if(rank<minRank){
-				minRank = rank;
-			}
-			if(rank>maxRank){
-				maxRank = rank;
-			}
-			sum += rank;
-		}
-		double var = 0;
-		double mean = ((double)sum)/n;
-		for (Multiset.Entry<Integer> entry : ranks.entrySet()) {
-			double diff = mean - entry.getElement();
-			var += diff * diff * entry.getCount();
-		}
-		var /= (n-1);
-		averageRank = (int)Math.round(mean);
-		sigmaRank = Math.round(Math.sqrt(var));
-	}
+	//
+	//	private void updateExpectedRank() {
+	//		Multiset<Integer> ranks = new HashMultiset<Integer>();
+	//		minRank = Integer.MAX_VALUE;
+	//		maxRank = Integer.MIN_VALUE;
+	//		int sum = 0;
+	//		int n = 100;
+	//
+	//		int startRank = 53;
+	//		for (Card card:cards) {
+	//			startRank = handRanks[card.ordinal() + 1 + startRank];
+	//		}
+	//		for(int i=0;i<n;i++){
+	//			EnumSet<Card> sample = EnumSet.copyOf(cards);
+	//			int rank = startRank;
+	//			while(sample.size()<7){
+	//				Card sampleCard;
+	//				do{
+	//					sampleCard = Card.values()[random.nextInt(Card.values().length)];
+	//				}while(sample.contains(sampleCard));
+	//				sample.add(sampleCard);
+	//				rank = handRanks[sampleCard.ordinal() + 1 + rank];
+	//			}
+	//			int type = (rank >>> 12) - 1;
+	//			rank = rank & 0xFFF;
+	//			rank = offsets[type] + rank - 1;
+	//			ranks.add(rank);
+	//			if(rank<minRank){
+	//				minRank = rank;
+	//			}
+	//			if(rank>maxRank){
+	//				maxRank = rank;
+	//			}
+	//			sum += rank;
+	//		}
+	//		double var = 0;
+	//		double mean = ((double)sum)/n;
+	//		for (Multiset.Entry<Integer> entry : ranks.entrySet()) {
+	//			double diff = mean - entry.getElement();
+	//			var += diff * diff * entry.getCount();
+	//		}
+	//		var /= (n-1);
+	//		averageRank = (int)Math.round(mean);
+	//		sigmaRank = Math.round(Math.sqrt(var));
+	//	}
 
 	public void signalShowdown() {
 		if (round.equals("flop") || round.equals("turn")
@@ -464,7 +467,7 @@ public class Propositionalizer implements Cloneable {
 	public int getMaxBet() {
 		return maxBet;
 	}
-	
+
 	public double getRelativeMaxBet() {
 		return maxBet/(double)bb;
 	}
@@ -489,7 +492,7 @@ public class Propositionalizer implements Cloneable {
 		return sigmaRank;
 	}
 
-	protected int getNbSeatedPlayers() {
+	public int getNbSeatedPlayers() {
 		return nbSeatedPlayers;
 	}
 
@@ -558,7 +561,7 @@ public class Propositionalizer implements Cloneable {
 		return nbPlayersDoneThisRound / (double) getNbActivePlayers();
 	}
 
-	protected double getAverageAF(PlayerData p, int memory) {
+	public double getAverageAF(PlayerData p, int memory) {
 		List<PlayerData> opponents = activePlayers.size()>1? activePlayers:allinPlayers; 
 		double sum = 0;
 		int n = 0;
@@ -571,7 +574,7 @@ public class Propositionalizer implements Cloneable {
 		return (sum/n);
 	}
 
-	protected double getAverageVPIP(PlayerData p, int memory) {
+	public double getAverageVPIP(PlayerData p, int memory) {
 		List<PlayerData> opponents = activePlayers.size()>1? activePlayers:allinPlayers; 
 		double sum = 0;
 		int n = 0;
@@ -584,7 +587,7 @@ public class Propositionalizer implements Cloneable {
 		return (sum/n);
 	}
 
-	protected double getAveragePFR(PlayerData p, int memory) {
+	public double getAveragePFR(PlayerData p, int memory) {
 		List<PlayerData> opponents = activePlayers.size()>1? activePlayers:allinPlayers; 
 		double sum = 0;
 		int n = 0;
@@ -597,7 +600,7 @@ public class Propositionalizer implements Cloneable {
 		return (sum/n);
 	}
 
-	protected double getAverageAFq(PlayerData p, int memory) {
+	public double getAverageAFq(PlayerData p, int memory) {
 		List<PlayerData> opponents = activePlayers.size()>1? activePlayers:allinPlayers; 
 		double sum = 0;
 		int n = 0;
@@ -610,7 +613,7 @@ public class Propositionalizer implements Cloneable {
 		return (sum/n);
 	}
 
-	protected double getAverageAFAmount(PlayerData p, int memory) {
+	public double getAverageAFAmount(PlayerData p, int memory) {
 		List<PlayerData> opponents = activePlayers.size()>1? activePlayers:allinPlayers; 
 		double sum = 0;
 		int n = 0;
@@ -623,7 +626,7 @@ public class Propositionalizer implements Cloneable {
 		return (sum/n);
 	}
 
-	protected double getAverageWtSD(PlayerData p, int memory) {
+	public double getAverageWtSD(PlayerData p, int memory) {
 		List<PlayerData> opponents = activePlayers.size()>1? activePlayers:allinPlayers; 
 		double sum = 0;
 		int n = 0;
@@ -656,27 +659,27 @@ public class Propositionalizer implements Cloneable {
 		return "river".equals(round);
 	}
 
-	protected void logBet(PlayerData p, int movedAmount){
+	protected void logBet(Object actorId, double raiseAmount){
 		// no op
 	}
 
-	protected void logRaise(PlayerData p, int raiseAmount){
+	protected void logRaise(Object actorId, double raiseAmount){
 		// no op
 	}
 
-	protected void logFold(PlayerData p){
+	protected void logFold(Object actorId){
 		// no op
 	}
 
-	protected void logCall(PlayerData p){
+	protected void logCall(Object actorId){
 		// no op
 	}
 
-	protected void logCheck(PlayerData p){
+	protected void logCheck(Object actorId){
 		// no op
 	}
 
-	protected void logShowdown(PlayerData p, double[] partitionDistr, int average, int minrank, int maxrank, int avgrank, int sigmarank) {
+	protected void logShowdown(Object actorId, double[] partitionDistr) {
 		// no op
 	}
 

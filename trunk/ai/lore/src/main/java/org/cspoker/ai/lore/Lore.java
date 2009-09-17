@@ -71,14 +71,14 @@ public class Lore {
 		this.botFactory = 
 			//			 new CallBotFactory();
 			new MCTSBotFactory(
-					"MCTSBucketShowdownNode Bot",
+					"CSPoker Bot",
 					WekaRegressionModelFactory.createForZip("org/cspoker/ai/opponentmodels/weka/models/model1.zip"),
-					new SamplingToFunctionSelector(50,new UCTSelector(500000)),
+					new SamplingToFunctionSelector(50,new UCTSelector(2000000)),
 					new SamplingSelector(),
 					new MaxValueSelector(),
 					new MCTSBucketShowdownNode.Factory(),
 					new SampleWeightedBackPropStrategy.Factory(),
-					300,getListeners());
+					1500,getListeners());
 	}
 
 	protected Factory[] getListeners() {

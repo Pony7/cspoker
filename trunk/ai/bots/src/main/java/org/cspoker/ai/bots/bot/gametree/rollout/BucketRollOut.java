@@ -17,6 +17,7 @@ package org.cspoker.ai.bots.bot.gametree.rollout;
 
 import java.util.EnumSet;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.TreeMap;
 
 import org.apache.log4j.Logger;
@@ -26,8 +27,10 @@ import org.cspoker.client.common.playerstate.PlayerState;
 import org.cspoker.common.elements.cards.Card;
 import org.cspoker.common.elements.player.PlayerId;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Multiset;
 import com.google.common.collect.TreeMultiset;
+import com.google.common.collect.ImmutableMap.Builder;
 
 public class BucketRollOut extends RollOutStrategy {
 
@@ -35,11 +38,25 @@ public class BucketRollOut extends RollOutStrategy {
 
 	private final OpponentModel model;
 
+	private final Map<PlayerId, double[]> bucketProbs;
+
+	private final static int nbBuckets = 6;
+	private final static int nbSamplesPerBucket = 6;
+	
+
 	public BucketRollOut(GameState gameState, PlayerId botId, OpponentModel model) {
 		super(gameState, botId);
 		this.model = model;
+		Builder<PlayerId, double[]> builder = new ImmutableMap.Builder<PlayerId, double[]>();
+		for (PlayerState opponentThatCanWin : activeOpponents) {
+			PlayerId playerId = opponentThatCanWin.getPlayerId();
+			double[] bucketProbs = model.getShowdownProbabilities(gameState, playerId);
+			builder.put(playerId, bucketProbs);
+		}
+		bucketProbs = builder.build();
 	}
 
+	//TODO optimize
 	public double doRollOut(int nbCommunitySamples) {
 		boolean traceEnabled = logger.isTraceEnabled();
 		double totalEV = 0;
@@ -64,9 +81,9 @@ public class BucketRollOut extends RollOutStrategy {
 			}
 			int botRank = getFinalRank(communitySampleRank, botCard1, botCard2);
 
-			int minSampleRank = Integer.MAX_VALUE;
-			int maxSampleRank = Integer.MIN_VALUE;
-			int sum = 0;
+			//			int minSampleRank = Integer.MAX_VALUE;
+			//			int maxSampleRank = Integer.MIN_VALUE;
+			//			int sum = 0;
 			Multiset<Integer> ranks = new TreeMultiset<Integer>();
 			Multiset<Integer> deadRanks = new TreeMultiset<Integer>();
 			int n = 100;
@@ -80,26 +97,25 @@ public class BucketRollOut extends RollOutStrategy {
 						|| botCard2.equals(sampleCard1) || botCard2.equals(sampleCard2)){
 					deadRanks.add(sampleRank);
 				}	
-				if(sampleRank<minSampleRank){
-					minSampleRank = sampleRank;
-				}
-				if(sampleRank>maxSampleRank){
-					maxSampleRank = sampleRank;
-				}
-				sum += sampleRank;
+				//				if(sampleRank<minSampleRank){
+				//					minSampleRank = sampleRank;
+				//				}
+				//				if(sampleRank>maxSampleRank){
+				//					maxSampleRank = sampleRank;
+				//				}
+				//				sum += sampleRank;
 			}
-			double mean = ((double)sum)/n;
-			double var = calcVariance(ranks, mean);
-			int averageSampleRank = (int) Math.round(mean);
-			int sigmaSampleRank = (int) Math.round(Math.sqrt(var));
+			//			double mean = ((double)sum)/n;
+			//			double var = calcVariance(ranks, mean);
+			//			int averageSampleRank = (int) Math.round(mean);
+			//			int sigmaSampleRank = (int) Math.round(Math.sqrt(var));
 
 			WinDistribution[] winProbs = calcWinDistributions(botRank, ranks, deadRanks);
 			double[] deadCardWeights = calcDeadCardWeights(ranks, deadRanks);
 
 			TreeMap<PlayerState, WinDistribution> winDistributions = calcOpponentWinDistributionMap(
-					winProbs, deadCardWeights, minSampleRank, maxSampleRank,
-					averageSampleRank, sigmaSampleRank);
-			
+					winProbs, deadCardWeights);
+
 			int maxDistributed = 0;
 			int botInvestment = botState.getTotalInvestment();
 			double sampleEV = 0;
@@ -134,15 +150,34 @@ public class BucketRollOut extends RollOutStrategy {
 	}
 
 	private TreeMap<PlayerState, WinDistribution> calcOpponentWinDistributionMap(
-			WinDistribution[] winProbs, double[] deadCardWeights,
-			int minSampleRank, int maxSampleRank, int averageSampleRank,
-			int sigmaSampleRank) {
+			WinDistribution[] winProbs, double[] deadCardWeights) {
 		TreeMap<PlayerState,WinDistribution> winDistributions= new TreeMap<PlayerState,WinDistribution>(playerComparatorByInvestment);
 		for (PlayerState opponentThatCanWin : activeOpponents) {
-			double[] bucketProbs = model.getShowdownProbabilities(gameState, opponentThatCanWin.getPlayerId(), minSampleRank, maxSampleRank, averageSampleRank, sigmaSampleRank, deadCardWeights);
-			winDistributions.put(opponentThatCanWin, calcOpponentWinDistr(winProbs, bucketProbs));
+			double[] bucketProb = bucketProbs.get(opponentThatCanWin.getPlayerId());
+			bucketProb = normalize(multiply(deadCardWeights,bucketProb));
+			winDistributions.put(opponentThatCanWin, calcOpponentWinDistr(winProbs, bucketProb));
 		}
 		return winDistributions;
+	}
+
+	private double[] multiply(double[] a, double[] b) {
+		double[] c = new double[a.length];
+		for(int i=0;i<a.length;i++) c[i] = a[i]* b[i];
+		return c;
+	}
+
+	private double[] normalize(double[] a){
+		double[] c = new double[a.length];
+		double sum = 0;
+		for(int i=0;i<a.length;i++) sum += a[i];
+		if(Double.isNaN(sum) || sum==0 || Double.isInfinite(sum)){
+			throw new IllegalStateException("Bad probabilities:"+sum+" = "+a);
+		}
+		double invSum = 1/sum;
+		for (int i = 0; i < a.length; i++) {
+			c[i] =  a[i]*invSum;
+		}
+		return c;
 	}
 
 	private WinDistribution calcOpponentWinDistr(WinDistribution[] winProbs,
@@ -162,20 +197,20 @@ public class BucketRollOut extends RollOutStrategy {
 			Multiset<Integer> ranks, Multiset<Integer> deadRanks) {
 		Iterator<Integer> iter = ranks.iterator();
 		WinDistribution[] winProbs = new WinDistribution[10];
-		for(int bucket=0;bucket<10;bucket++){
+		for(int bucket=0;bucket<nbBuckets;bucket++){
 			double winWeight = 0;
 			double drawWeight = 0;
 			double loseWeight = 0;
-			for (int j = 0; j < 10; j++) {
+			for (int j = 0; j < nbSamplesPerBucket; j++) {
 				int rank = iter.next();
 				double weight = 1-deadRanks.count(rank)/ranks.count(rank);
 				if(rank<botRank){
-						winWeight+=weight;
-					}else if(rank>botRank){
-						loseWeight+=weight;
-					}else{
-						drawWeight+=weight;
-					}
+					winWeight+=weight;
+				}else if(rank>botRank){
+					loseWeight+=weight;
+				}else{
+					drawWeight+=weight;
+				}
 			}
 			double nbSamples = winWeight+drawWeight+loseWeight;
 			if(nbSamples==0) nbSamples = 1;
@@ -183,38 +218,38 @@ public class BucketRollOut extends RollOutStrategy {
 		}
 		return winProbs;
 	}
-	
+
 	public static class WinDistribution{
 
 		//from the perspective of the bot
 		public final double pWin, pDraw, pLose;
-		
+
 		public WinDistribution(double pWin, double pDraw, double pLose) {
 			this.pWin = pWin;
 			this.pDraw = pDraw;
 			this.pLose = pLose;
 		}
-		
+
 		@Override
 		public String toString() {
 			return pWin+"/"+pDraw+"/"+pLose;
 		}
-		
+
 	}
 
 	private double[] calcDeadCardWeights(Multiset<Integer> ranks,
 			Multiset<Integer> deadRanks) {
 		Iterator<Integer> iter = ranks.iterator();
-		double[] deadCardWeights = new double[10];
-		for(int bucket=0;bucket<10;bucket++){
+		double[] deadCardWeights = new double[nbBuckets];
+		for(int bucket=0;bucket<nbBuckets;bucket++){
 			double nbDead = 0;
-			for (int j = 0; j < 10; j++) {
+			for (int j = 0; j < nbSamplesPerBucket; j++) {
 				int rank = iter.next();
 				double count = ranks.count(rank);
 				double deadCount = deadRanks.count(rank);
 				nbDead += deadCount/count;
 			}
-			deadCardWeights[bucket] = ((10.0-nbDead)/10.0);
+			deadCardWeights[bucket] = ((nbSamplesPerBucket-nbDead)/nbSamplesPerBucket);
 		}
 		return deadCardWeights;
 	}

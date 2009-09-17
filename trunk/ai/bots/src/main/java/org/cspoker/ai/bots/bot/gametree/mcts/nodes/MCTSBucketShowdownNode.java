@@ -34,7 +34,7 @@ public class MCTSBucketShowdownNode extends ShowdownNode {
 	
 	@Override
 	public double simulate() {
-		return stackSize + rollout.doRollOut(2);
+		return stackSize + rollout.doRollOut(4);
 	}
 
 	@Override
