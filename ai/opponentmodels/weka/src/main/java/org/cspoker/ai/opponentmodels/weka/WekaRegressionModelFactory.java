@@ -55,7 +55,7 @@ public class WekaRegressionModelFactory implements OpponentModel.Factory {
 		fis.close();
 		
 		return new WekaRegressionModelFactory(classifiers.get("preBet.model"), classifiers.get("preFold.model"), classifiers.get("preCall.model"), classifiers.get("preRaise.model"), classifiers.get("postBet.model"), classifiers.get("postFold.model"), classifiers.get("postCall.model"), classifiers.get("postRaise.model"),
-				classifiers.get("showdown0.model"), classifiers.get("showdown1.model"), classifiers.get("showdown2.model"), classifiers.get("showdown3.model"), classifiers.get("showdown4.model"), classifiers.get("showdown5.model"), classifiers.get("showdown6.model"), classifiers.get("showdown7.model"), classifiers.get("showdown8.model"), classifiers.get("showdown9.model"));
+				classifiers.get("showdown0.model"), classifiers.get("showdown1.model"), classifiers.get("showdown2.model"), classifiers.get("showdown3.model"), classifiers.get("showdown4.model"), classifiers.get("showdown5.model"));
 	}
 
 	private final static Logger logger = Logger
@@ -107,28 +107,15 @@ public class WekaRegressionModelFactory implements OpponentModel.Factory {
 		in = new ObjectInputStream(classLoader.getResourceAsStream(models+"showdown5.model"));
 		showdown5Model = (Classifier)in.readObject();
 		in.close();
-		in = new ObjectInputStream(classLoader.getResourceAsStream(models+"showdown6.model"));
-		showdown6Model = (Classifier)in.readObject();
-		in.close();
-		in = new ObjectInputStream(classLoader.getResourceAsStream(models+"showdown7.model"));
-		showdown7Model = (Classifier)in.readObject();
-		in.close();
-		in = new ObjectInputStream(classLoader.getResourceAsStream(models+"showdown8.model"));
-		showdown8Model = (Classifier)in.readObject();
-		in.close();
-		in = new ObjectInputStream(classLoader.getResourceAsStream(models+"showdown9.model"));
-		showdown9Model = (Classifier)in.readObject();
-		in.close();
 		return new WekaRegressionModelFactory(preBetModel, preFoldModel, preCallModel, preRaiseModel, postBetModel, postFoldModel, postCallModel, postRaiseModel,
-				showdown0Model, showdown1Model, showdown2Model, showdown3Model, showdown4Model, showdown5Model, showdown6Model, showdown7Model, showdown8Model, showdown9Model);
+				showdown0Model, showdown1Model, showdown2Model, showdown3Model, showdown4Model, showdown5Model);
 	}
 	
 	public WekaRegressionModelFactory(
 			Classifier preBetModel, Classifier preFoldModel, Classifier preCallModel, Classifier preRaiseModel,
 			Classifier postBetModel, Classifier postFoldModel, Classifier postCallModel, Classifier postRaiseModel,
 			Classifier showdown0Model, Classifier showdown1Model, Classifier showdown2Model, Classifier showdown3Model,
-			Classifier showdown4Model, Classifier showdown5Model, Classifier showdown6Model, Classifier showdown7Model, 
-			Classifier showdown8Model, Classifier showdown9Model) {
+			Classifier showdown4Model, Classifier showdown5Model) {
 		this.preBetModel = preBetModel;
 		this.preFoldModel = preFoldModel;
 		this.preCallModel = preCallModel;
@@ -143,20 +130,16 @@ public class WekaRegressionModelFactory implements OpponentModel.Factory {
 		this.showdown3Model = showdown3Model;
 		this.showdown4Model = showdown4Model;
 		this.showdown5Model = showdown5Model;
-		this.showdown6Model = showdown6Model;
-		this.showdown7Model = showdown7Model;
-		this.showdown8Model = showdown8Model;
-		this.showdown9Model = showdown9Model;
 	}
 
 	private final Classifier preBetModel, preFoldModel, preCallModel, preRaiseModel, postBetModel, postFoldModel, postCallModel, postRaiseModel,
-	showdown0Model, showdown1Model, showdown2Model, showdown3Model, showdown4Model, showdown5Model, showdown6Model, showdown7Model, showdown8Model, showdown9Model;
+	showdown0Model, showdown1Model, showdown2Model, showdown3Model, showdown4Model, showdown5Model;
 
 
 	@Override
 	public OpponentModel create() {
 		return new WekaRegressionModel(preBetModel, preFoldModel, preCallModel, preRaiseModel, postBetModel, postFoldModel, postCallModel, postRaiseModel,
-				showdown0Model, showdown1Model, showdown2Model, showdown3Model, showdown4Model, showdown5Model, showdown6Model, showdown7Model, showdown8Model, showdown9Model);
+				showdown0Model, showdown1Model, showdown2Model, showdown3Model, showdown4Model, showdown5Model);
 	}
 
 	@Override

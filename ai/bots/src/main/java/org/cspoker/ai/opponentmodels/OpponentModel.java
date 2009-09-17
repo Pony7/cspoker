@@ -34,8 +34,7 @@ public interface OpponentModel {
 	Triple<Double, Double, Double> getFoldCallRaiseProbabilities(
 			GameState gameState, PlayerId actor);
 
-	double[] getShowdownProbabilities(GameState gameState, PlayerId actor, 
-			int minrank, int maxrank, int avgrank, int sigmarank, double[] weights) throws UnsupportedOperationException;
+	double[] getShowdownProbabilities(GameState gameState, PlayerId actor) throws UnsupportedOperationException;
 	
 	/**
 	 * Assume the given game state permanently.

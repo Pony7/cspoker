@@ -119,7 +119,7 @@ public class BotRunner implements LobbyListener {
 							new MaxValueSelector(),
 							new MCTSShowdownRollOutNode.Factory(),
 							new SampleWeightedBackPropStrategy.Factory(),
-							300
+							500
 					),
 					new MCTSBotFactory(
 							"MCTSBucketShowdownNode Bot",
@@ -129,7 +129,7 @@ public class BotRunner implements LobbyListener {
 							new MaxValueSelector(),
 							new MCTSBucketShowdownNode.Factory(),
 							new SampleWeightedBackPropStrategy.Factory(),
-							300
+							500
 					),
 					//					new CallBotFactory(),
 					//					new CardBotFactory("CardBot"),

@@ -41,17 +41,12 @@ public class WekaRegressionModel extends WekaModel {
 	protected final Classifier showdown3Model;
 	protected final Classifier showdown4Model;
 	protected final Classifier showdown5Model;
-	protected final Classifier showdown6Model;
-	protected final Classifier showdown7Model;
-	protected final Classifier showdown8Model;
-	protected final Classifier showdown9Model;
 
 	public WekaRegressionModel(
 			Classifier preBetModel, Classifier preFoldModel, Classifier preCallModel, Classifier preRaiseModel,
 			Classifier postBetModel, Classifier postFoldModel, Classifier postCallModel, Classifier postRaiseModel,
 			Classifier showdown0Model, Classifier showdown1Model, Classifier showdown2Model, Classifier showdown3Model,
-			Classifier showdown4Model, Classifier showdown5Model, Classifier showdown6Model, Classifier showdown7Model, 
-			Classifier showdown8Model, Classifier showdown9Model) {
+			Classifier showdown4Model, Classifier showdown5Model) {
 		this.preBetModel = preBetModel;
 		this.preFoldModel = preFoldModel;
 		this.preCallModel = preCallModel;
@@ -66,10 +61,6 @@ public class WekaRegressionModel extends WekaModel {
 		this.showdown3Model = showdown3Model;
 		this.showdown4Model = showdown4Model;
 		this.showdown5Model = showdown5Model;
-		this.showdown6Model = showdown6Model;
-		this.showdown7Model = showdown7Model;
-		this.showdown8Model = showdown8Model;
-		this.showdown9Model = showdown9Model;
 	}
 
 	@Override
@@ -153,30 +144,17 @@ public class WekaRegressionModel extends WekaModel {
 		}
 	}
 
-	public double[] getShowdownProbabilities(GameState gameState, PlayerId actor, int minrank, int maxrank, int avgrank, int sigmarank, double[] weights) {
-		Instance instance = getShowdownInstance(actor, minrank, maxrank, avgrank, sigmarank);
+	public double[] getShowdownProbabilities(GameState gameState, PlayerId actor) {
+		Instance instance = getShowdownInstance(actor);
 		try {
 			double[] prob = {
-					Math.min(1,Math.max(0, showdown0Model.classifyInstance(instance)*weights[0])),
-					Math.min(1,Math.max(0, showdown1Model.classifyInstance(instance)*weights[1])),
-					Math.min(1,Math.max(0, showdown2Model.classifyInstance(instance)*weights[2])),
-					Math.min(1,Math.max(0, showdown3Model.classifyInstance(instance)*weights[3])),
-					Math.min(1,Math.max(0, showdown4Model.classifyInstance(instance)*weights[4])),
-					Math.min(1,Math.max(0, showdown5Model.classifyInstance(instance)*weights[5])),
-					Math.min(1,Math.max(0, showdown6Model.classifyInstance(instance)*weights[6])),
-					Math.min(1,Math.max(0, showdown7Model.classifyInstance(instance)*weights[7])),
-					Math.min(1,Math.max(0, showdown8Model.classifyInstance(instance)*weights[8])),
-					Math.min(1,Math.max(0, showdown9Model.classifyInstance(instance)*weights[9])),
+					Math.min(1,Math.max(0, showdown0Model.classifyInstance(instance))),
+					Math.min(1,Math.max(0, showdown1Model.classifyInstance(instance))),
+					Math.min(1,Math.max(0, showdown2Model.classifyInstance(instance))),
+					Math.min(1,Math.max(0, showdown3Model.classifyInstance(instance))),
+					Math.min(1,Math.max(0, showdown4Model.classifyInstance(instance))),
+					Math.min(1,Math.max(0, showdown5Model.classifyInstance(instance))),
 			};
-
-			double sum = prob[0]+prob[1]+prob[2]+prob[3]+prob[4]+prob[5]+prob[6]+prob[7]+prob[8]+prob[9];
-			if(Double.isNaN(sum) || sum==0 || Double.isInfinite(sum)){
-				throw new IllegalStateException("Bad probabilities:"+sum+" = "+prob[0]+"+"+prob[1]+"+"+prob[2]+"+"+prob[3]+"+"+prob[4]+"+"+prob[5]+"+"+prob[6]+"+"+prob[7]+"+"+prob[8]+"+"+prob[9]);
-			}
-			double invSum = 1/sum;
-			for (int i = 0; i < prob.length; i++) {
-				prob[i] *= invSum;
-			}
 			if(logger.isTraceEnabled()){
 				logger.trace(instance+": "+prob);
 			}

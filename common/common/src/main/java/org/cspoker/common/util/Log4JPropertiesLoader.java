@@ -40,17 +40,16 @@ public final class Log4JPropertiesLoader {
 			} catch (final IOException e) {
 				// logger will log to the default logger and write a warning to the
 				// error stream?
-				logger.error("Could not load log4j properties. " + e.getMessage(),
-						e);
 				e.printStackTrace();
+				throw new IllegalStateException(e);
 			} catch (final NullPointerException e) {
 				// logger will log to the default logger and write a warning to the
 				// error stream?
-				logger.error("Could not load log4j properties. " + e.getMessage(),
-						e);
 				e.printStackTrace();
+				throw new IllegalStateException(e);
 			}
 			PropertyConfigurator.configure(properties);
+			logger.info("Configured Log4J correctly");
 		}
 	}
 }

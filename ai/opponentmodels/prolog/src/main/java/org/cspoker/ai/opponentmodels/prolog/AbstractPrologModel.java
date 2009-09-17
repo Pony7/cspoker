@@ -78,8 +78,7 @@ public abstract class AbstractPrologModel implements OpponentModel {
 	}
 
 	@Override
-	public double[] getShowdownProbabilities(GameState gameState,
-			PlayerId actor, int minrank, int maxrank, int avgrank, int sigmarank, double[] weights)
+	public double[] getShowdownProbabilities(GameState gameState,PlayerId actor)
 			throws UnsupportedOperationException {
 		throw new UnsupportedOperationException();
 	}
