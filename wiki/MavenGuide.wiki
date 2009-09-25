@@ -13,6 +13,8 @@ mvn compile
 }}}
 The class files are compiled in "target/classes/".
 
+If the build process fails, this most likely means than the cspoker maven server has crashed. Please notify the mailing list if you experience this problem.
+
 == Package to executable Jar ==
 To make 1 executable jar with all dependencies, go to a directory of an executable project and execute:
 {{{
