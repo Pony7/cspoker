@@ -320,7 +320,7 @@ public class PSTableContext implements RemoteHoldemTableContext {
 		public void onBlind(Blind blind) {
 			PlayerId id = getId(blind);
 			int amount = blind.getAmount();
-//			if(getGameState().get)
+			//			if(getGameState().get)
 			if(amount == getGameState().getPlayer(id).getStack())
 				dispatch(new AllInEvent(id, amount));
 			else if(amount==config.getSmallBlind() || amount==config.getBigBlind())
@@ -354,41 +354,46 @@ public class PSTableContext implements RemoteHoldemTableContext {
 
 		@Override
 		public void onPlayerChips(PlayerChips playerChips) {
-			//update sitting players
-			PlayerId id = getId(playerChips);
-			PlayerState player = getGameState().getPlayer(id);
-			if(player!= null && inWinnerZone.get()){
-				int prevStack = player.getStack();
-				if(prevStack != playerChips.getMoney()){
-					dispatch(new WinnerEvent(ImmutableSet.of(new Winner(id,playerChips.getMoney()-prevStack))));
+			try {
+				//update sitting players
+				PlayerId id = getId(playerChips);
+				PlayerState player = getGameState().getPlayer(id);
+				if(player!= null && inWinnerZone.get()){
+					int prevStack = player.getStack();
+					if(prevStack != playerChips.getMoney()){
+						dispatch(new WinnerEvent(ImmutableSet.of(new Winner(id,playerChips.getMoney()-prevStack))));
+					}
 				}
+
+				//refresh state
+				player = getGameState().getPlayer(id);
+				//sanity checks
+				if(player!=null){
+					if(player.getStack()!=playerChips.getMoney()){
+						String msg = "Stack of "+id+" is "+player.getStack()+" but should be "+playerChips.getMoney();
+						throw new IllegalStateException(msg);
+					}
+					if(!endLastRound.get() && player.getBet()!=playerChips.getBet()){
+						String msg = "Bet of "+id+" is "+player.getBet()+" but should be "+playerChips.getBet();
+						throw new IllegalStateException(msg);
+					}
+				}
+
+				///update arrivedPlayers
+				ListIterator<SeatedPlayer> iter = arrivedPlayers.listIterator();
+				while(iter.hasNext()){
+					SeatedPlayer prevPlayer = iter.next();
+					if(prevPlayer.getId().equals(id)){
+						iter.remove();
+						iter.add(new SeatedPlayer(prevPlayer, playerChips.getMoney(), playerChips.getBet()));
+						return;
+					}
+				}
+				throw new IllegalStateException();
+			} catch (NullPointerException e) {
+				e.printStackTrace();
+				throw new RuntimeException(e);
 			}
-		
-			//refresh state
-			player = getGameState().getPlayer(id);
-			//sanity checks
-			if(player!=null){
-				if(player.getStack()!=playerChips.getMoney()){
-					String msg = "Stack of "+id+" is "+player.getStack()+" but should be "+playerChips.getMoney();
-					throw new IllegalStateException(msg);
-				}
-				if(!endLastRound.get() && player.getBet()!=playerChips.getBet()){
-					String msg = "Bet of "+id+" is "+player.getBet()+" but should be "+playerChips.getBet();
-					throw new IllegalStateException(msg);
-				}
-			}
-			
-			///update arrivedPlayers
-			ListIterator<SeatedPlayer> iter = arrivedPlayers.listIterator();
-			while(iter.hasNext()){
-				SeatedPlayer prevPlayer = iter.next();
-				if(prevPlayer.getId().equals(id)){
-					iter.remove();
-					iter.add(new SeatedPlayer(prevPlayer, playerChips.getMoney(), playerChips.getBet()));
-					return;
-				}
-			}
-			throw new IllegalStateException();
 		}
 
 		@Override

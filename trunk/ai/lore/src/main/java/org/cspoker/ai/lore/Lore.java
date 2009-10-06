@@ -25,6 +25,7 @@ import org.cspoker.ai.bots.bot.BotFactory;
 import org.cspoker.ai.bots.bot.gametree.mcts.MCTSBotFactory;
 import org.cspoker.ai.bots.bot.gametree.mcts.listeners.MCTSListener.Factory;
 import org.cspoker.ai.bots.bot.gametree.mcts.nodes.MCTSBucketShowdownNode;
+import org.cspoker.ai.bots.bot.gametree.mcts.nodes.MCTSShowdownRollOutNode;
 import org.cspoker.ai.bots.bot.gametree.mcts.strategies.backpropagation.SampleWeightedBackPropStrategy;
 import org.cspoker.ai.bots.bot.gametree.mcts.strategies.selection.MaxValueSelector;
 import org.cspoker.ai.bots.bot.gametree.mcts.strategies.selection.SamplingSelector;
@@ -76,7 +77,8 @@ public class Lore {
 					new SamplingToFunctionSelector(50,new UCTSelector(2000000)),
 					new SamplingSelector(),
 					new MaxValueSelector(),
-					new MCTSBucketShowdownNode.Factory(),
+					//new MCTSBucketShowdownNode.Factory(),
+					new MCTSShowdownRollOutNode.Factory(),
 					new SampleWeightedBackPropStrategy.Factory(),
 					1500,getListeners());
 	}
