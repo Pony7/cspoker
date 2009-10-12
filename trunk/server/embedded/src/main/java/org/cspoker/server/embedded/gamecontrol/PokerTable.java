@@ -16,6 +16,7 @@
 
 package org.cspoker.server.embedded.gamecontrol;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -361,6 +362,8 @@ public class PokerTable {
 		if (tableListener != null) {
 			unsubscribeHoldemTableListener(tableListener);
 		}
+
+                publishLeaveTableEvent( new LeaveTableEvent( player.getId() ) );
 		
 	}
 	
@@ -709,9 +712,9 @@ public class PokerTable {
 	private final ConcurrentMap<PlayerId, List<HoldemPlayerListener>> holdemPlayerListeners = new ConcurrentHashMap<PlayerId, List<HoldemPlayerListener>>();
 	
 	private synchronized void submitTimeOutHandler(PlayerId player) {
+                oldFuture = currentFuture;
+                cancelOldTimeOut();
 		currentTimeOut = new PlayerActionTimeOut(player);
-		oldFuture = currentFuture;
-		cancelOldTimeOut();
 		currentFuture = SingleThreadRequestExecutor.getInstance().schedule(currentTimeOut, 30, TimeUnit.SECONDS);
 		PokerTable.logger.debug("player " + player + " action time out submitted.");
 	}
@@ -755,7 +758,7 @@ public class PokerTable {
 			try {
 				if (getCurrentTimeOut() == this && tableState.getGame() != null && !cancelled) {
 					MutableSeatedPlayer gcPlayer = tableState.getGame().getCurrentPlayer();
-					if (gcPlayer!=null && (gcPlayer.getId().equals(player.getId()))) {
+					if (gcPlayer!=null && (gcPlayer.getId().equals(player))) {
 						PokerTable.logger.debug("Player " + player + " automatically folded.");
 						tableState.fold(gcPlayer);
 					}
