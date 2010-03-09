@@ -21,14 +21,15 @@ import org.cspoker.ai.bots.bot.gametree.action.ActionWrapper;
 import org.cspoker.ai.bots.bot.gametree.action.ProbabilityAction;
 import org.cspoker.ai.bots.bot.gametree.search.GameTreeNode;
 import org.cspoker.ai.bots.bot.gametree.search.InnerGameTreeNode;
+import org.cspoker.ai.bots.bot.gametree.search.expander.sampling.Sampler;
 import org.cspoker.common.util.Pair;
 
 import com.google.common.collect.ImmutableList;
 
 public class CompleteExpander extends TokenExpander {
 
-	public CompleteExpander(InnerGameTreeNode node, int tokens) {
-		super(node, tokens);
+	public CompleteExpander(InnerGameTreeNode node, int tokens, Sampler sampler) {
+		super(node, tokens, sampler);
 	}
 
 	public List<Pair<ActionWrapper,GameTreeNode>> getChildren(boolean uniformTokens) {
@@ -45,8 +46,8 @@ public class CompleteExpander extends TokenExpander {
 	}
 	
 	public static class Factory implements TokenExpander.Factory {
-		public CompleteExpander create(InnerGameTreeNode node, int tokens) {
-			return new CompleteExpander(node, tokens);
+		public CompleteExpander create(InnerGameTreeNode node, int tokens, Sampler sampler) {
+			return new CompleteExpander(node, tokens, sampler);
 		}
 	}
 

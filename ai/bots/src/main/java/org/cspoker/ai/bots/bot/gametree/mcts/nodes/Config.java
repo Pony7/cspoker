@@ -20,6 +20,7 @@ import net.jcip.annotations.Immutable;
 import org.cspoker.ai.bots.bot.gametree.mcts.nodes.ShowdownNode.Factory;
 import org.cspoker.ai.bots.bot.gametree.mcts.strategies.backpropagation.BackPropagationStrategy;
 import org.cspoker.ai.bots.bot.gametree.mcts.strategies.selection.SelectionStrategy;
+import org.cspoker.ai.bots.bot.gametree.search.expander.sampling.Sampler;
 import org.cspoker.ai.opponentmodels.OpponentModel;
 
 @Immutable
@@ -31,13 +32,15 @@ public class Config {
 	private final SelectionStrategy opponentNodeSelectionStrategy;
 	private final SelectionStrategy moveSelectionStrategy;
 	private final BackPropagationStrategy.Factory backPropStratFactory;
+	private final Sampler sampler;
 
 	public Config(OpponentModel model, 
 			ShowdownNode.Factory showdownNodeFactory, 
 			SelectionStrategy decisionNodeSelectionStrategy, 
 			SelectionStrategy opponentNodeSelectionStrategy, 
 			SelectionStrategy moveSelectionStrategy, 
-			BackPropagationStrategy.Factory backPropStratFactory
+			BackPropagationStrategy.Factory backPropStratFactory,
+			Sampler sampler
 			) {
 		this.model = model;
 		this.showdownNodeFactory = showdownNodeFactory;
@@ -45,6 +48,7 @@ public class Config {
 		this.opponentNodeSelectionStrategy = opponentNodeSelectionStrategy;
 		this.moveSelectionStrategy=moveSelectionStrategy;
 		this.backPropStratFactory = backPropStratFactory;
+		this.sampler = sampler;
 	}
 	
 	public OpponentModel getModel() {
@@ -69,6 +73,10 @@ public class Config {
 
 	public SelectionStrategy getOpponentNodeSelectionStrategy() {
 		return opponentNodeSelectionStrategy;
+	}
+
+	public Sampler getSampler() {
+		return sampler;
 	}
 	
 }

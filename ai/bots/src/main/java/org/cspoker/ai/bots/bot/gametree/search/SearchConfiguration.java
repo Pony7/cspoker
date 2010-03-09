@@ -16,12 +16,14 @@
 package org.cspoker.ai.bots.bot.gametree.search;
 
 import org.cspoker.ai.bots.bot.gametree.search.expander.TokenExpander;
+import org.cspoker.ai.bots.bot.gametree.search.expander.sampling.Sampler;
 import org.cspoker.ai.opponentmodels.OpponentModel;
 
 public class SearchConfiguration {
 
 	private final OpponentModel opponentModeler;
 	private final ShowdownNode.Factory showdownNodeFactory;
+	private final Sampler sampler;
 	private final int flopTokens;
 	private final int turnTokens;
 	private final int finalTokens;
@@ -33,12 +35,14 @@ public class SearchConfiguration {
 
 	public SearchConfiguration(OpponentModel opponentModel,
 			ShowdownNode.Factory showdownNodeFactory,
-			TokenExpander.Factory botNodeExpanderFactory, int preflopTokens,
+			TokenExpander.Factory botNodeExpanderFactory, 
+			Sampler sampler, int preflopTokens,
 			int flopTokens, int turnTokens, int finalTokens, double evDiscount, 
 			boolean uniformBotActionTokens,
 			boolean useAlphaBetaPruning) {
 		opponentModeler = opponentModel;
 		this.showdownNodeFactory = showdownNodeFactory;
+		this.sampler = sampler;
 		this.preflopTokens = preflopTokens;
 		this.flopTokens = flopTokens;
 		this.turnTokens = turnTokens;
@@ -87,6 +91,10 @@ public class SearchConfiguration {
 	
 	public boolean isUseAlphaBetaPruning() {
 		return useAlphaBetaPruning;
+	}
+	
+	public Sampler getSampler() {
+		return sampler;
 	}
 
 }

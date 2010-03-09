@@ -29,6 +29,7 @@ import org.cspoker.ai.bots.bot.gametree.mcts.strategies.selection.MaxValueSelect
 import org.cspoker.ai.bots.bot.gametree.mcts.strategies.selection.SamplingSelector;
 import org.cspoker.ai.bots.bot.gametree.mcts.strategies.selection.SamplingToFunctionSelector;
 import org.cspoker.ai.bots.bot.gametree.mcts.strategies.selection.UCTSelector;
+import org.cspoker.ai.bots.bot.gametree.search.expander.sampling.*;
 import org.cspoker.ai.bots.bot.rule.CardBotFactory;
 import org.cspoker.ai.bots.bot.rule.HandBotFactory;
 import org.cspoker.ai.opponentmodels.weka.WekaRegressionModelFactory;
@@ -65,6 +66,7 @@ public class RunExperimentF {
 										new SampleWeightedBackPropStrategy.Factory(),
 										new MaxDistributionBackPropStrategy.Factory()
 								),
+								new StochasticUniversalSampler(),
 								time
 						)
 					}
@@ -99,6 +101,7 @@ public class RunExperimentF {
 										new SampleWeightedBackPropStrategy.Factory(),
 										new MaxDistributionBackPropStrategy.Factory()
 								),
+								new StochasticUniversalSampler(),
 								p,f,t,r
 						)
 					}

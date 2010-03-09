@@ -31,6 +31,7 @@ import org.cspoker.common.util.Triple;
 
 public abstract class ActionNode implements InnerGameTreeNode {
 
+	@SuppressWarnings("unused")
 	private final static Logger logger = Logger.getLogger(ActionNode.class);
 
 	protected final GameState gameState;
@@ -66,10 +67,10 @@ public abstract class ActionNode implements InnerGameTreeNode {
 				if (nextToAct.equals(botId)) {
 					// go to next player node
 					return new BotActionNode(botId,
-							nextState, config, tokens, searchId, visitors);
+							nextState, config, config.getSampler(), tokens, searchId, visitors);
 				} else {
 					return  new OpponentActionNode(
-							nextToAct, botId, nextState, config, tokens,
+							nextToAct, botId, nextState, config, config.getSampler(), tokens,
 							searchId, visitors);
 				}
 			} catch (GameEndedException e) {

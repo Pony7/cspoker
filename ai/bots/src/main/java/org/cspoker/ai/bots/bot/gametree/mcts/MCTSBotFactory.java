@@ -26,6 +26,7 @@ import org.cspoker.ai.bots.bot.gametree.mcts.nodes.Config;
 import org.cspoker.ai.bots.bot.gametree.mcts.nodes.ShowdownNode;
 import org.cspoker.ai.bots.bot.gametree.mcts.strategies.backpropagation.BackPropagationStrategy;
 import org.cspoker.ai.bots.bot.gametree.mcts.strategies.selection.SelectionStrategy;
+import org.cspoker.ai.bots.bot.gametree.search.expander.sampling.Sampler;
 import org.cspoker.ai.bots.listener.BotListener;
 import org.cspoker.ai.opponentmodels.OpponentModel;
 import org.cspoker.client.common.SmartLobbyContext;
@@ -35,9 +36,6 @@ import org.cspoker.common.handeval.spears2p2.StateTableEvaluator;
 
 public class MCTSBotFactory implements BotFactory {
 
-	private static int copies = 0;
-	private final int copy;
-
 	private final ConcurrentHashMap<PlayerId, OpponentModel> opponentModels = new ConcurrentHashMap<PlayerId, OpponentModel>();
 	private final MCTSListener.Factory[] listeners;
 	private final OpponentModel.Factory opponentModelFactory;
@@ -45,6 +43,7 @@ public class MCTSBotFactory implements BotFactory {
 	private final SelectionStrategy opponentNodeSelectionStrategy;
 	private final SelectionStrategy moveSelectionStrategy;
 	private final ShowdownNode.Factory showdownNodeFactory;
+	private final Sampler sampler;
 	private final int decisionTime;
 	private final String name;
 	private final BackPropagationStrategy.Factory backPropStratFactory;
@@ -57,9 +56,9 @@ public class MCTSBotFactory implements BotFactory {
 			SelectionStrategy moveSelectionStrategy,
 			ShowdownNode.Factory showdownNodeFactory,
 			BackPropagationStrategy.Factory backPropStratFactory,
+			Sampler sampler,
 			int decisionTime,
 			MCTSListener.Factory... listeners) {
-		copy = ++copies;
 		this.name = name;
 		this.listeners = listeners;
 		this.opponentModelFactory = opponentModelFactory;
@@ -68,6 +67,7 @@ public class MCTSBotFactory implements BotFactory {
 		this.moveSelectionStrategy = moveSelectionStrategy;
 		this.showdownNodeFactory = showdownNodeFactory;
 		this.backPropStratFactory = backPropStratFactory;
+		this.sampler = sampler;
 		this.decisionTime = decisionTime;
 		StateTableEvaluator.getInstance();
 	}
@@ -75,13 +75,14 @@ public class MCTSBotFactory implements BotFactory {
 	public Bot createBot(final PlayerId botId, TableId tableId,
 			SmartLobbyContext lobby, int buyIn, ExecutorService executor,
 			BotListener... botListeners) {
-		copies++;
 		OpponentModel opponentModel = opponentModels.get(botId);
 		if(opponentModel==null){
 			opponentModel = opponentModelFactory.create();
 			opponentModels.put(botId, opponentModel);
 		}
-		Config config = new Config(opponentModel, showdownNodeFactory, decisionNodeSelectionStrategy, opponentNodeSelectionStrategy, moveSelectionStrategy, backPropStratFactory);
+		Config config = new Config(opponentModel, showdownNodeFactory, 
+				decisionNodeSelectionStrategy, opponentNodeSelectionStrategy, 
+				moveSelectionStrategy, backPropStratFactory, sampler);
 		return new MCTSBot(botId, tableId, lobby, executor, buyIn,
 				config,
 				decisionTime,
@@ -91,6 +92,6 @@ public class MCTSBotFactory implements BotFactory {
 
 	@Override
 	public String toString() {
-		return name;//"MCTS bot v1-" + copy;
+		return name;
 	}
 }

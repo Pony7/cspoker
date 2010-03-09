@@ -75,7 +75,7 @@ public class SearchBot extends AbstractBot {
 //			visitors = createVisitors(gameState);
 
 			actionNode = new BotActionNode(botId, gameState,
-					config, config.getPreflopTokens(), searchId++,
+					config, config.getSampler(), config.getPreflopTokens(), searchId++,
 					visitors);
 			actionNode.performbestAction(playerContext);
 
@@ -89,21 +89,21 @@ public class SearchBot extends AbstractBot {
 		case FLOP:
 			logger.debug("Searching flop round game tree:");
 			actionNode = new BotActionNode(botId, gameState,
-					config, config.getFlopTokens(), searchId++,
+					config, config.getSampler(), config.getFlopTokens(), searchId++,
 					visitors);
 			actionNode.performbestAction(playerContext);
 			break;
 		case TURN:
 			logger.debug("Searching turn round game tree:");
 			actionNode = new BotActionNode(botId, gameState,
-					config, config.getTurnTokens(), searchId++,
+					config, config.getSampler(), config.getTurnTokens(), searchId++,
 					visitors);
 			actionNode.performbestAction(playerContext);
 			break;
 		case FINAL:
 			logger.debug("Searching final round game tree:");
 			actionNode = new BotActionNode(botId, gameState,
-					config, config.getFinalTokens(), searchId++,
+					config, config.getSampler(), config.getFinalTokens(), searchId++,
 					visitors);
 			actionNode.performbestAction(playerContext);
 			break;

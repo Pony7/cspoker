@@ -26,17 +26,14 @@ import net.jcip.annotations.NotThreadSafe;
 import org.apache.log4j.Logger;
 import org.cspoker.ai.bots.bot.Bot;
 import org.cspoker.ai.bots.bot.BotFactory;
-import org.cspoker.ai.bots.bot.gametree.mcts.MCTSBotFactory;
-import org.cspoker.ai.bots.bot.gametree.mcts.nodes.MCTSBucketShowdownNode;
-import org.cspoker.ai.bots.bot.gametree.mcts.nodes.MCTSShowdownRollOutNode;
-import org.cspoker.ai.bots.bot.gametree.mcts.strategies.backpropagation.MaxDistributionPlusBackPropStrategy;
-import org.cspoker.ai.bots.bot.gametree.mcts.strategies.backpropagation.MixedBackPropStrategy;
-import org.cspoker.ai.bots.bot.gametree.mcts.strategies.backpropagation.SampleWeightedBackPropStrategy;
-import org.cspoker.ai.bots.bot.gametree.mcts.strategies.selection.MaxValueSelector;
-import org.cspoker.ai.bots.bot.gametree.mcts.strategies.selection.SamplingSelector;
-import org.cspoker.ai.bots.bot.gametree.mcts.strategies.selection.SamplingToFunctionSelector;
-import org.cspoker.ai.bots.bot.gametree.mcts.strategies.selection.UCTPlusPlusSelector;
-import org.cspoker.ai.bots.bot.gametree.mcts.strategies.selection.UCTSelector;
+import org.cspoker.ai.bots.bot.gametree.mcts.*;
+import org.cspoker.ai.bots.bot.gametree.mcts.nodes.*;
+import org.cspoker.ai.bots.bot.gametree.mcts.strategies.backpropagation.*;
+import org.cspoker.ai.bots.bot.gametree.mcts.strategies.selection.*;
+import org.cspoker.ai.bots.bot.gametree.rollout.*;
+import org.cspoker.ai.bots.bot.gametree.search.*;
+import org.cspoker.ai.bots.bot.gametree.search.expander.sampling.*;
+import org.cspoker.ai.bots.bot.rule.*;
 import org.cspoker.ai.bots.listener.BotListener;
 import org.cspoker.ai.bots.listener.CSVLogListener;
 import org.cspoker.ai.bots.listener.GameLimitingBotListener;
@@ -66,11 +63,15 @@ public class BotRunner implements LobbyListener {
 	private static final TableConfiguration config = new TableConfiguration(100,
 			0, false, true, true,0);
 
-	public static final int nbGamesPerConfrontation = 1000000;
+	public static final int nbGamesPerConfrontation = 10;
 	public final int nbPlayersPerGame;
 
-	public static final int reportInterval = 10;
-
+	public static final int reportInterval = 1;
+	
+	public final String expName;
+	public final int nbExperiments = 1;
+	public static int currentExperiment = 1;
+	
 	static {
 		Log4JPropertiesLoader
 		.load("org/cspoker/ai/experiments/logging/log4j.properties");
@@ -99,46 +100,46 @@ public class BotRunner implements LobbyListener {
 
 	public static BotRunner create(RemoteCSPokerServer cspokerServer) {
 		try {
-			if(false){
-				//hide compiler warnings
-				throw new IOException();
-			}
-			if(false){
-				throw new ClassNotFoundException();
-			}
-			return new BotRunner(cspokerServer,
+//			if(false){
+//				//hide compiler warnings
+//				throw new IOException();
+//			}
+//			if(false){
+//				throw new ClassNotFoundException();
+//			}
+			Sampler s = new SmartSampler();
+			return new BotRunner(cspokerServer, "test",
 					new BotFactory[] {
-//					new CallBotFactory(),
-//					new CardBotFactory("CardBot"),
-//					new HandBotFactory("HandBot"),
-					new MCTSBotFactory(
-							"MCTSShowdownRollOutNode Bot",
+					new CallBotFactory("CallBot"),
+					new CardBotFactory("CardBot"),
+					new HandBotFactory("HandBot"),
+//					new FixedSampleMCTSBotFactory("MCTSBot",
+//							WekaRegressionModelFactory.createForZip("org/cspoker/ai/opponentmodels/weka/models/model1.zip"),
+//							new SamplingToFunctionSelector(50,new UCTSelector(40000)),
+//							new SamplingToFunctionSelector(50,new UCTPlusPlusSelector()),
+//							new MaxValueSelector(),
+//							new MCTSBucketShowdownNode.Factory(),
+//							new MixedBackPropStrategy.Factory(
+//									50,
+//									new SampleWeightedBackPropStrategy.Factory(),
+//									new MaxDistributionPlusBackPropStrategy.Factory()
+//							),s,
+//							1000,1000,1000,1000),
+					new MCTSBotFactory("MCTSBot",
 							WekaRegressionModelFactory.createForZip("org/cspoker/ai/opponentmodels/weka/models/model1.zip"),
-							new SamplingToFunctionSelector(50,new UCTSelector(40000)),
+							new SamplingToFunctionSelector(50,new UCTSelector(2000)),
 							new SamplingSelector(),
 							new MaxValueSelector(),
 							new MCTSShowdownRollOutNode.Factory(),
 							new SampleWeightedBackPropStrategy.Factory(),
-							500
+							s,
+							250
 					),
-					new MCTSBotFactory(
-							"MCTSBucketShowdownNode Bot",
-							WekaRegressionModelFactory.createForZip("org/cspoker/ai/opponentmodels/weka/models/model1.zip"),
-							new SamplingToFunctionSelector(50,new UCTSelector(40000)),
-							new SamplingSelector(),
-							new MaxValueSelector(),
-							new MCTSBucketShowdownNode.Factory(),
-							new SampleWeightedBackPropStrategy.Factory(),
-							500
-					),
-					//					new CallBotFactory(),
-					//					new CardBotFactory("CardBot"),
-					//					new HandBotFactory("HandBot"),
-					//					new SearchBotFactory(
-					//							new WekaRegressionModelFactory("/home/guy/Werk/thesis/weka-3-6-0/model1"),
-					//							new ShowdownBucketRolloutNode.Factory(),
-					//							200, 600, 1000, 3000, 0, false, true
-					//					),
+//					new SearchBotFactory(
+//							WekaRegressionModelFactory.createForZip("org/cspoker/ai/opponentmodels/weka/models/model1.zip"),
+//							new ShowdownRolloutNode.Factory(new DistributionRollout4.Factory()), s,												
+//							200, 600, 1000, 3000, 0.0, false, true
+//					)
 					//					new MCTSBotFactory(
 					//							"MCTS Bot",
 					//							new WekaRegressionModelFactory("/home/guy/Werk/thesis/weka-3-6-0/model1"),
@@ -186,41 +187,6 @@ public class BotRunner implements LobbyListener {
 					//							new SampleProportionateSelector(),
 					//							new MCTSBucketShowdownNode.Factory(),
 					//							50),
-					// ML bots
-					//						 new RuleBasedBotFactory1(),
-					//				new RuleBasedBotFactory2(),
-					//				new SearchBotFactory(new ShowdownRolloutNode.Factory(new DistributionRollout4.Factory())),
-					//				new MCTSBotFactory(),
-					//				 new SearchBotFactory(new
-					//				 DistributionShowdownNode4.Factory()),
-					// new RuleBasedBotFactory1(),
-					// new RuleBasedBotFactory2(),
-
-					// new SearchBotFactory(new
-					// DistributionShowdownNode1.Factory()),
-					// new SearchBotFactory(new
-					// DistributionShowdownNode2.Factory()),
-					// new SearchBotFactory(new
-					// DistributionShowdownNode4.Factory()),
-					// new RuleBasedBotFactory(),
-					//						new PrologCafeBotFactory(
-					//								new DistributionShowdownNode4.Factory()),
-					//				new WekaClassificationBotFactory(
-					//						new DistributionShowdownNode4.Factory(),
-					//						"/home/guy/Bureaublad/weka-3-6-0/ANN-c-cb.model",
-					//						"/home/guy/Bureaublad/weka-3-6-0/ANN-c-fcr.model"
-					//				),
-					//				new WekaRegressionBotFactory(
-					//						new ShowdownRolloutNode.Factory(new DistributionRollout4.Factory()),
-					//						"/home/guy/Werk/thesis/weka-3-6-0/M5P-r-b.model",
-					//						"/home/guy/Werk/thesis/weka-3-6-0/M5P-r-f.model",
-					//						"/home/guy/Werk/thesis/weka-3-6-0/M5P-r-c.model",
-					//						"/home/guy/Werk/thesis/weka-3-6-0/M5P-r-r.model"
-					//				),
-
-					//				new PrologCafeBotFactory(new ShowdownRolloutNode.Factory(new DistributionRollout4.Factory())),
-					// new SearchBotFactory(new CachedShowdownNodeFactory(new
-					// UniformShowdownNode.Factory())),
 			});
 		} catch (IOException e) {
 			throw new IllegalStateException(e);
@@ -230,6 +196,10 @@ public class BotRunner implements LobbyListener {
 	}
 
 	public BotRunner(RemoteCSPokerServer cspokerServer, BotFactory[] bots) {
+		this(cspokerServer, "bots", bots);
+	}
+	
+	public BotRunner(RemoteCSPokerServer cspokerServer, String expName, BotFactory[] bots) {
 		try {
 			this.botFactories = bots;
 			nbPlayersPerGame = bots.length;//or a constant
@@ -238,6 +208,8 @@ public class BotRunner implements LobbyListener {
 
 			botLobbies = new SmartLobbyContext[bots.length];
 			botIDs = new PlayerId[bots.length];
+			
+			this.expName = expName;
 
 			SmartClientContext director = new SmartClientContext(cspokerServer
 					.login("director", "test"));
@@ -246,15 +218,11 @@ public class BotRunner implements LobbyListener {
 			for (int i = 0; i < bots.length; i++) {
 				SmartClientContext clientContext = new SmartClientContext(
 						cspokerServer.login(bots[i].toString(), "test"));
-				botLobbies[i] = clientContext
-				.getLobbyContext(new DefaultLobbyListener());
+				botLobbies[i] = clientContext.getLobbyContext(new DefaultLobbyListener());
 				botIDs[i] = clientContext.getAccountContext().getPlayerID();
 			}
 
 			executor = SingleThreadRequestExecutor.getInstance();
-
-			speedMonitor = new SpeedTestBotListener(reportInterval, this);
-			csvLogger = new CSVLogListener(reportInterval,this);
 
 			combinationgenerator = new CombinationGenerator(bots.length, nbPlayersPerGame);
 			iterateBots();
@@ -281,9 +249,11 @@ public class BotRunner implements LobbyListener {
 	}
 
 	private void resetStateAndStartPlay() {
+		logger.info("Experiment " + expName + "-" + currentExperiment + " ("
+				+ nbGamesPerConfrontation + " deals) starting...");
 		gameLimiter = new GameLimitingBotListener(this, nbGamesPerConfrontation);
 		speedMonitor = new SpeedTestBotListener(reportInterval, this);
-		csvLogger = new CSVLogListener(reportInterval,this);
+		csvLogger = new CSVLogListener(reportInterval,this, expName+"-"+currentExperiment++);
 		playOnNewtable();
 	}
 
@@ -298,7 +268,8 @@ public class BotRunner implements LobbyListener {
 
 			bot[0] = botFactories[botIndex[0]].createBot(botIDs[botIndex[0]], tableId,
 					botLobbies[botIndex[0]], buyIn, executor,
-					new ReSitInBotListener(this), csvLogger, speedMonitor, gameLimiter);
+//					new ReSitInBotListener(this), csvLogger, speedMonitor, gameLimiter);
+					new ReSitInBotListener(this), csvLogger, gameLimiter);
 			bot[0].start();
 			for (int i = 1; i < nbPlayersPerGame; i++) {
 				bot[i] = botFactories[botIndex[i]].createBot(botIDs[botIndex[i]],
@@ -316,8 +287,14 @@ public class BotRunner implements LobbyListener {
 	}
 
 	private void shutdown() {
-		executor.shutdownNow();
-		GlobalThreadPool.getInstance().shutdownNow();
+		logger.info("Experiment " + expName + "-" + (currentExperiment - 1)
+				+ " successfully ended!");
+		if (currentExperiment <= nbExperiments) {
+			resetStateAndStartPlay();
+		} else {
+			executor.shutdownNow();
+			GlobalThreadPool.getInstance().shutdownNow();
+		}
 	}
 
 	public void onTableCreated(TableCreatedEvent tableCreatedEvent) {

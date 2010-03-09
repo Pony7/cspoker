@@ -20,6 +20,7 @@ import java.util.List;
 import org.cspoker.ai.bots.bot.gametree.action.ActionWrapper;
 import org.cspoker.ai.bots.bot.gametree.search.GameTreeNode;
 import org.cspoker.ai.bots.bot.gametree.search.InnerGameTreeNode;
+import org.cspoker.ai.bots.bot.gametree.search.expander.sampling.Sampler;
 import org.cspoker.common.util.Pair;
 
 public abstract class TokenExpander extends Expander{
@@ -27,8 +28,8 @@ public abstract class TokenExpander extends Expander{
 	public final int tokens;
 	protected final InnerGameTreeNode node;
 	
-	public TokenExpander(InnerGameTreeNode node, int tokens) {
-		super(node.getGameState(), node.getOpponentModel(), node.getPlayerId(), node.getBotId());
+	public TokenExpander(InnerGameTreeNode node, int tokens, Sampler sampler) {
+		super(node.getGameState(), node.getOpponentModel(), node.getPlayerId(), node.getBotId(), sampler);
 		this.tokens = tokens;
 		this.node = node;
 	}
@@ -37,6 +38,6 @@ public abstract class TokenExpander extends Expander{
 
 
 	public static interface Factory extends Expander.Factory {
-		TokenExpander create(InnerGameTreeNode node, int tokens);
+		TokenExpander create(InnerGameTreeNode node, int tokens, Sampler sampler);
 	}
 }

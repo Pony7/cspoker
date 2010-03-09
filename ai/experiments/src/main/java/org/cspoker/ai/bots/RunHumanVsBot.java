@@ -30,10 +30,10 @@ import org.cspoker.ai.bots.bot.gametree.mcts.strategies.selection.MaxValueSelect
 import org.cspoker.ai.bots.bot.gametree.mcts.strategies.selection.SamplingToFunctionSelector;
 import org.cspoker.ai.bots.bot.gametree.mcts.strategies.selection.UCTPlusPlusSelector;
 import org.cspoker.ai.bots.bot.gametree.mcts.strategies.selection.UCTSelector;
+import org.cspoker.ai.bots.bot.gametree.search.expander.sampling.StochasticSampler;
+import org.cspoker.ai.bots.bot.gametree.search.expander.sampling.SmartSampler;
 import org.cspoker.ai.bots.bot.gametree.search.nodevisitor.StatisticsVisitor;
 import org.cspoker.ai.bots.listener.DefaultBotListener;
-import org.cspoker.ai.bots.listener.ProfitInfo;
-import org.cspoker.ai.bots.listener.ProfitListener;
 import org.cspoker.ai.opponentmodels.weka.WekaRegressionModelFactory;
 import org.cspoker.client.User;
 import org.cspoker.client.common.SmartClientContext;
@@ -70,6 +70,7 @@ public class RunHumanVsBot{
 	}
 
 	private ClientCore client;
+	private ClientCore client2;
 	protected CSPokerServer server;
 	private final DisplayExecutor displayexecutor;
 	private StatisticsVisitor.Factory stats;
@@ -84,18 +85,24 @@ public class RunHumanVsBot{
 	RemoteException {
 		final TableId tableId = new TableId(0);
 
-		int smallBet = 100;
+		int smallBet = 1000;
 		int delay = 1500;
+		
 		User u = new User("Human", "test");
 		client = new ClientCore(u);
-		client.login(server);
+		client.login(server);		
+		User u2 = new User("Human2", "test");
+		client2 = new ClientCore(u2);
+		client2.login(server);
 
 		final LobbyWindow lobby = new LobbyWindow(client);
 		lobby.setLobbyContext(client.getCommunication());
 		client.getGui().setLobby(lobby);
+		final LobbyWindow lobby2 = new LobbyWindow(client2);
+		lobby2.setLobbyContext(client2.getCommunication());
+		client2.getGui().setLobby(lobby2);
 
-		tConfig = new TableConfiguration(smallBet, delay,
-				false, false, true,0);
+		tConfig = new TableConfiguration(smallBet, delay, false, false, true,0);
 		lobby.getContext().createHoldemTable(u.getUserName() + "'s test table", tConfig);
 		// Run blocking calls in extra thread
 		displayexecutor.execute(new Runnable() {
@@ -104,9 +111,17 @@ public class RunHumanVsBot{
 				lobby.show();
 
 			}
+		});displayexecutor.execute(new Runnable() {
+
+			public void run() {
+				lobby2.show();
+
+			}
 		});
 		final GameWindow w = client.getGui().getGameWindow(tableId, true);
 		w.getUser().sitIn(new SeatId(0), 0);
+		final GameWindow w2 = client2.getGui().getGameWindow(tableId, true);
+		w2.getUser().sitIn(new SeatId(2), 0);
 		// Run blocking calls in extra thread
 		displayexecutor.execute(new Runnable() {
 
@@ -114,8 +129,14 @@ public class RunHumanVsBot{
 				w.show();
 
 			}
+		});displayexecutor.execute(new Runnable() {
+
+			public void run() {
+				w2.show();
+
+			}
 		});
-		stats = new StatisticsVisitor.Factory();
+		stats = new StatisticsVisitor.Factory();		
 		
 		BotFactory botFactory;
 		try {
@@ -131,6 +152,7 @@ public class RunHumanVsBot{
 							new SampleWeightedBackPropStrategy.Factory(),
 							new MaxDistributionPlusBackPropStrategy.Factory()
 					),
+					new SmartSampler(),
 					20000,40000,80000,100000,
 					new SWTTreeListener.Factory(client.getGui().getDisplay()));
 			

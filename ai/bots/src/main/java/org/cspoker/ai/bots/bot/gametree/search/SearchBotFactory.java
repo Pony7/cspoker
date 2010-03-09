@@ -22,6 +22,7 @@ import java.util.concurrent.ExecutorService;
 import org.cspoker.ai.bots.bot.Bot;
 import org.cspoker.ai.bots.bot.BotFactory;
 import org.cspoker.ai.bots.bot.gametree.search.expander.SamplingExpander;
+import org.cspoker.ai.bots.bot.gametree.search.expander.sampling.Sampler;
 import org.cspoker.ai.bots.bot.gametree.search.nodevisitor.NodeVisitor;
 import org.cspoker.ai.bots.listener.BotListener;
 import org.cspoker.ai.opponentmodels.OpponentModel;
@@ -45,9 +46,11 @@ public class SearchBotFactory implements BotFactory {
 	private final double evDiscount;
 	private final boolean uniformBotActionTokens;
 	private final boolean useAlphaBetaPruning;
+	private final Sampler sampler;
 
 	public SearchBotFactory(OpponentModel.Factory modelFactory, 
-			ShowdownNode.Factory showdownNodeFactory, int preflopTokens,
+			ShowdownNode.Factory showdownNodeFactory, 
+			Sampler sampler, int preflopTokens,
 			int flopTokens, int turnTokens, int finalTokens, double evDiscount, 
 			boolean uniformBotActionTokens,
 			boolean useAlphaBetaPruning,
@@ -63,6 +66,7 @@ public class SearchBotFactory implements BotFactory {
 		this.evDiscount = evDiscount;
 		this.uniformBotActionTokens = uniformBotActionTokens;
 		this.useAlphaBetaPruning = useAlphaBetaPruning;
+		this.sampler = sampler;
 	}
 
 	/**
@@ -83,7 +87,7 @@ public class SearchBotFactory implements BotFactory {
 			opponentModels.put(botId, opponentModel);
 		}
 		SearchConfiguration config = new SearchConfiguration(opponentModel, showdownNodeFactory,
-				new SamplingExpander.Factory(), preflopTokens, flopTokens, turnTokens, finalTokens, evDiscount, uniformBotActionTokens, useAlphaBetaPruning );
+				new SamplingExpander.Factory(), sampler, preflopTokens, flopTokens, turnTokens, finalTokens, evDiscount, uniformBotActionTokens, useAlphaBetaPruning );
 		return new SearchBot(botId, tableId, lobby, executor, config, buyIn,
 				nodeVisitorFactories, botListeners);
 	}

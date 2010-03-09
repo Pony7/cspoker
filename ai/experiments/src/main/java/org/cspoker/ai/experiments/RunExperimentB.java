@@ -29,6 +29,7 @@ import org.cspoker.ai.bots.bot.gametree.mcts.strategies.selection.MaxValueSelect
 import org.cspoker.ai.bots.bot.gametree.mcts.strategies.selection.SamplingSelector;
 import org.cspoker.ai.bots.bot.gametree.mcts.strategies.selection.SamplingToFunctionSelector;
 import org.cspoker.ai.bots.bot.gametree.mcts.strategies.selection.UCTSelector;
+import org.cspoker.ai.bots.bot.gametree.search.expander.sampling.*;
 import org.cspoker.ai.opponentmodels.weka.WekaRegressionModelFactory;
 import org.cspoker.server.embedded.EmbeddedCSPokerServer;
 
@@ -51,12 +52,13 @@ public class RunExperimentB {
 					new BotFactory[] {
 						new MCTSBotFactory(
 								"Standard Bot",
-								WekaRegressionModelFactory.createForZip("org/cspoker/client/bots/bot/search/opponentmodel/weka/models/model1.zip"),
+								WekaRegressionModelFactory.createForZip("org/cspoker/ai/opponentmodels/weka/models/model1.zip"),
 								new SamplingToFunctionSelector(treshold1,new UCTSelector(C)),
 								new SamplingSelector(),
 								new MaxValueSelector(),
 								new MCTSBucketShowdownNode.Factory(),
 								new SampleWeightedBackPropStrategy.Factory(),
+								new StochasticUniversalSampler(),
 								time
 						),
 						new MCTSBotFactory(
@@ -71,6 +73,7 @@ public class RunExperimentB {
 										new SampleWeightedBackPropStrategy.Factory(),
 										new MaxDistributionBackPropStrategy.Factory()
 								),
+								new StochasticUniversalSampler(),
 								time
 						)
 					}
@@ -99,6 +102,7 @@ public class RunExperimentB {
 								new MaxValueSelector(),
 								new MCTSBucketShowdownNode.Factory(),
 								new SampleWeightedBackPropStrategy.Factory(),
+								new StochasticUniversalSampler(),
 								p,f,t,r
 						),
 						new FixedSampleMCTSBotFactory(
@@ -113,6 +117,7 @@ public class RunExperimentB {
 										new SampleWeightedBackPropStrategy.Factory(),
 										new MaxDistributionBackPropStrategy.Factory()
 								),
+								new StochasticUniversalSampler(),
 								p,f,t,r
 						)
 					}

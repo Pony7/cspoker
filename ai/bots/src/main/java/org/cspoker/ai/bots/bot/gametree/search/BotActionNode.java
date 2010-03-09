@@ -21,6 +21,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.cspoker.ai.bots.bot.gametree.action.ActionWrapper;
 import org.cspoker.ai.bots.bot.gametree.search.expander.TokenExpander;
+import org.cspoker.ai.bots.bot.gametree.search.expander.sampling.Sampler;
 import org.cspoker.ai.bots.bot.gametree.search.nodevisitor.NodeVisitor;
 import org.cspoker.client.common.gamestate.CachingNode;
 import org.cspoker.client.common.gamestate.GameState;
@@ -32,17 +33,18 @@ import org.cspoker.common.util.Triple;
 
 public class BotActionNode extends ActionNode {
 
+	@SuppressWarnings("unused")
 	private final static Logger logger = Logger.getLogger(BotActionNode.class);
 
 	private final TokenExpander expander;
 	private Triple<ActionWrapper,GameTreeNode,Distribution> best = null;
 
 	public BotActionNode(PlayerId botId, GameState gameState,
-			SearchConfiguration config, int tokens, int searchId,
+			SearchConfiguration config, Sampler sampler, int tokens, int searchId,
 			NodeVisitor... visitors) {
 		super(botId, botId, new CachingNode(gameState), config, searchId,
 				visitors);
-		expander = config.getBotNodeExpanderFactory().create(this, tokens);
+		expander = config.getBotNodeExpanderFactory().create(this, tokens, sampler);
 	}
 
 	@Override

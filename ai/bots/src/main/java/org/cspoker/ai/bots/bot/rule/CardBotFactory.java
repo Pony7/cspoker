@@ -27,12 +27,9 @@ import org.cspoker.common.elements.table.TableId;
 
 public class CardBotFactory implements BotFactory {
 
-	private static int copies = 0;
-	private final int copy;
 	private final String name;
 
 	public CardBotFactory(String name) {
-		copy = ++copies;
 		this.name = name;
 	}
 
@@ -46,13 +43,12 @@ public class CardBotFactory implements BotFactory {
 	public Bot createBot(PlayerId playerId, TableId tableId,
 			SmartLobbyContext lobby, int buyIn, ExecutorService executor,
 			BotListener... botListeners) {
-		copies++;
 		return new CardBot(playerId, tableId, lobby, buyIn, executor,
 				botListeners);
 	}
 
 	@Override
 	public String toString() {
-		return name;//"RuleBasedBot v1-" + copy;
+		return name;
 	}
 }
