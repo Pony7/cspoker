@@ -254,14 +254,14 @@ public class BucketRollOut extends RollOutStrategy {
 		return deadCardWeights;
 	}
 
-	private double calcVariance(Multiset<Integer> ranks, double mean) {
-		double var = 0;
-		for (Multiset.Entry<Integer> entry : ranks.entrySet()) {
-			double diff = mean - entry.getElement();
-			var += diff * diff * entry.getCount();
-		}
-		var /= (ranks.size()-1);
-		return var;
-	}
+//	private double calcVariance(Multiset<Integer> ranks, double mean) {
+//		double var = 0;
+//		for (Multiset.Entry<Integer> entry : ranks.entrySet()) {
+//			double diff = mean - entry.getElement();
+//			var += diff * diff * entry.getCount();
+//		}
+//		var /= (ranks.size()-1);
+//		return var;
+//	}
 
 }

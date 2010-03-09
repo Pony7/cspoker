@@ -155,7 +155,7 @@ public abstract class InnerNode extends AbstractNode {
 
 	protected void expandChildren(){
 		if(children == null){
-			Expander expander = new Expander(gameState, config.getModel(), gameState.getNextToAct(), bot);
+			Expander expander = new Expander(gameState, config.getModel(), gameState.getNextToAct(), bot, config.getSampler());
 			List<ProbabilityAction> actions = expander.getProbabilityActions();
 			ImmutableList.Builder<INode> childrenBuilder = ImmutableList.builder();
 			probabilities = new double[actions.size()];

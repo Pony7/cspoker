@@ -53,7 +53,7 @@ public class BetAction extends SearchBotAction {
 			betState = new AllInState(gameState, new AllInEvent(actor, amount));
 		} else if (stack > amount) {
 			betState = new BetState(gameState, new BetEvent(actor, amount));
-		} else throw new IllegalStateException("Bad amount: "+amount);
+		} else throw new IllegalStateException("Can't bet amount: "+amount+", with stack: " + stack);
 		PlayerState nextToAct = betState.getNextActivePlayerAfter(actor);
 		if (nextToAct != null) {
 			return new NextPlayerState(betState, new NextPlayerEvent(nextToAct

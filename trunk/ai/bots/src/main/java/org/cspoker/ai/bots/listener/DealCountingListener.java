@@ -18,7 +18,7 @@ package org.cspoker.ai.bots.listener;
 public class DealCountingListener extends DefaultBotListener {
 
 	private volatile int deals = 0;
-
+	
 	@Override
 	public void onNewDeal() {
 		++deals;

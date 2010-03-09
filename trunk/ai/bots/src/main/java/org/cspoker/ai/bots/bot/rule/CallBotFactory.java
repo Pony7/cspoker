@@ -27,11 +27,10 @@ import org.cspoker.common.elements.table.TableId;
 
 public class CallBotFactory implements BotFactory {
 
-	private static int copies = 0;
-	private final int copy;
+	private final String name;
 
-	public CallBotFactory() {
-		copy = ++copies;
+	public CallBotFactory(String name) {
+		this.name = name;
 	}
 
 	/**
@@ -44,13 +43,12 @@ public class CallBotFactory implements BotFactory {
 	public Bot createBot(PlayerId playerId, TableId tableId,
 			SmartLobbyContext lobby, int buyIn, ExecutorService executor,
 			BotListener... botListeners) {
-		copies++;
 		return new CallBot(playerId, tableId, lobby, buyIn, executor,
 				botListeners);
 	}
 
 	@Override
 	public String toString() {
-		return "CallBotv1-" + copy;
+		return name;
 	}
 }

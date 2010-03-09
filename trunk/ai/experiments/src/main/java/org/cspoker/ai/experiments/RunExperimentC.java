@@ -30,6 +30,7 @@ import org.cspoker.ai.bots.bot.gametree.mcts.strategies.selection.SamplingSelect
 import org.cspoker.ai.bots.bot.gametree.mcts.strategies.selection.SamplingToFunctionSelector;
 import org.cspoker.ai.bots.bot.gametree.mcts.strategies.selection.UCTPlusSelector;
 import org.cspoker.ai.bots.bot.gametree.mcts.strategies.selection.UCTSelector;
+import org.cspoker.ai.bots.bot.gametree.search.expander.sampling.*;
 import org.cspoker.ai.opponentmodels.weka.WekaRegressionModelFactory;
 import org.cspoker.server.embedded.EmbeddedCSPokerServer;
 
@@ -60,6 +61,7 @@ public class RunExperimentC {
 								new MaxValueSelector(),
 								new MCTSBucketShowdownNode.Factory(),
 								new SampleWeightedBackPropStrategy.Factory(),
+								new StochasticUniversalSampler(),
 								time
 						),
 						new MCTSBotFactory(
@@ -74,6 +76,7 @@ public class RunExperimentC {
 										new SampleWeightedBackPropStrategy.Factory(),
 										new MaxDistributionBackPropStrategy.Factory()
 								),
+								new StochasticUniversalSampler(),
 								time
 						)
 					}
@@ -103,6 +106,7 @@ public class RunExperimentC {
 								new MaxValueSelector(),
 								new MCTSBucketShowdownNode.Factory(),
 								new SampleWeightedBackPropStrategy.Factory(),
+								new StochasticUniversalSampler(),
 								p,f,t,r
 						),
 						new FixedSampleMCTSBotFactory(
@@ -117,6 +121,7 @@ public class RunExperimentC {
 										new SampleWeightedBackPropStrategy.Factory(),
 										new MaxDistributionBackPropStrategy.Factory()
 								),
+								new StochasticUniversalSampler(),
 								p,f,t,r
 						)
 					}

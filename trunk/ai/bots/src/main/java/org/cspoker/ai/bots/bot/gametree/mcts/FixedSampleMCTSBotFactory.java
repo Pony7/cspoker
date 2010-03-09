@@ -26,6 +26,7 @@ import org.cspoker.ai.bots.bot.gametree.mcts.nodes.Config;
 import org.cspoker.ai.bots.bot.gametree.mcts.nodes.ShowdownNode;
 import org.cspoker.ai.bots.bot.gametree.mcts.strategies.backpropagation.BackPropagationStrategy;
 import org.cspoker.ai.bots.bot.gametree.mcts.strategies.selection.SelectionStrategy;
+import org.cspoker.ai.bots.bot.gametree.search.expander.sampling.Sampler;
 import org.cspoker.ai.bots.listener.BotListener;
 import org.cspoker.ai.opponentmodels.OpponentModel;
 import org.cspoker.client.common.SmartLobbyContext;
@@ -36,7 +37,6 @@ import org.cspoker.common.handeval.spears2p2.StateTableEvaluator;
 public class FixedSampleMCTSBotFactory implements BotFactory {
 
 	private static int copies = 0;
-	private final int copy;
 
 	private final ConcurrentHashMap<PlayerId, OpponentModel> opponentModels = new ConcurrentHashMap<PlayerId, OpponentModel>();
 	private final MCTSListener.Factory[] listeners;
@@ -45,6 +45,7 @@ public class FixedSampleMCTSBotFactory implements BotFactory {
 	private final SelectionStrategy opponentNodeSelectionStrategy;
 	private final SelectionStrategy moveSelectionStrategy;
 	private final ShowdownNode.Factory showdownNodeFactory;
+	private final Sampler sampler;
 	private final String name;
 	private final BackPropagationStrategy.Factory backPropStratFactory;
 	private final int samplesPreFlop;
@@ -60,12 +61,12 @@ public class FixedSampleMCTSBotFactory implements BotFactory {
 			SelectionStrategy moveSelectionStrategy,
 			ShowdownNode.Factory showdownNodeFactory,
 			BackPropagationStrategy.Factory backPropStratFactory,
+			Sampler sampler,
 			int samplesPreFlop,
 			int samplesFlop,
 			int samplesTurn,
 			int samplesRiver,
 			MCTSListener.Factory... listeners) {
-		copy = ++copies;
 		this.name = name;
 		this.listeners = listeners;
 		this.opponentModelFactory = opponentModelFactory;
@@ -74,6 +75,7 @@ public class FixedSampleMCTSBotFactory implements BotFactory {
 		this.moveSelectionStrategy = moveSelectionStrategy;
 		this.showdownNodeFactory = showdownNodeFactory;
 		this.backPropStratFactory = backPropStratFactory;
+		this.sampler = sampler;
 		this.samplesPreFlop = samplesPreFlop;
 		this.samplesFlop = samplesFlop;
 		this.samplesTurn = samplesTurn;
@@ -90,7 +92,9 @@ public class FixedSampleMCTSBotFactory implements BotFactory {
 			opponentModel = opponentModelFactory.create();
 			opponentModels.put(botId, opponentModel);
 		}
-		Config config = new Config(opponentModel, showdownNodeFactory, decisionNodeSelectionStrategy, opponentNodeSelectionStrategy, moveSelectionStrategy, backPropStratFactory);
+		Config config = new Config(opponentModel, showdownNodeFactory, 
+				decisionNodeSelectionStrategy, opponentNodeSelectionStrategy, 
+				moveSelectionStrategy, backPropStratFactory, sampler);
 		return new FixedSampleMCTSBot(botId, tableId, lobby, executor, buyIn,
 				config,
 				samplesPreFlop,
@@ -103,6 +107,6 @@ public class FixedSampleMCTSBotFactory implements BotFactory {
 
 	@Override
 	public String toString() {
-		return name;//"MCTS bot v1-" + copy;
+		return name;
 	}
 }

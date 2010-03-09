@@ -22,6 +22,7 @@ import org.apache.log4j.Logger;
 import org.cspoker.ai.bots.bot.gametree.action.ActionWrapper;
 import org.cspoker.ai.bots.bot.gametree.search.expander.SamplingExpander;
 import org.cspoker.ai.bots.bot.gametree.search.expander.WeightedNode;
+import org.cspoker.ai.bots.bot.gametree.search.expander.sampling.Sampler;
 import org.cspoker.ai.bots.bot.gametree.search.nodevisitor.NodeVisitor;
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.common.elements.player.PlayerId;
@@ -29,17 +30,17 @@ import org.cspoker.common.util.Pair;
 
 public class OpponentActionNode extends ActionNode {
 
-	private final static Logger logger = Logger
-	.getLogger(OpponentActionNode.class);
+	@SuppressWarnings("unused")
+	private final static Logger logger = Logger.getLogger(OpponentActionNode.class);
 
 	private final SamplingExpander expander;
 	private Distribution valueDistribution = null;
 
 	public OpponentActionNode(PlayerId opponentId, PlayerId botId,
-			GameState gameState, SearchConfiguration config, int tokens,
+			GameState gameState, SearchConfiguration config, Sampler sampler, int tokens,
 			int searchId, NodeVisitor... visitors) {
 		super(opponentId, botId, gameState, config, searchId, visitors);
-		expander = new SamplingExpander(this, tokens);
+		expander = new SamplingExpander(this, tokens, sampler);
 	}
 
 	@Override

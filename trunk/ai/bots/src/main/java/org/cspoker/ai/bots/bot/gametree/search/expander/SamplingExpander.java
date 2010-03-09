@@ -29,6 +29,7 @@ import org.cspoker.ai.bots.bot.gametree.action.RaiseAction;
 import org.cspoker.ai.bots.bot.gametree.search.BotActionNode;
 import org.cspoker.ai.bots.bot.gametree.search.GameTreeNode;
 import org.cspoker.ai.bots.bot.gametree.search.InnerGameTreeNode;
+import org.cspoker.ai.bots.bot.gametree.search.expander.sampling.Sampler;
 import org.cspoker.common.util.Pair;
 
 import com.google.common.collect.ImmutableList;
@@ -44,8 +45,8 @@ public class SamplingExpander extends TokenExpander {
 
 	private final Random random = new Random();
 
-	public SamplingExpander(InnerGameTreeNode node, int tokens) {
-		super(node, tokens);
+	public SamplingExpander(InnerGameTreeNode node, int tokens, Sampler sampler) {
+		super(node, tokens, sampler);
 	}
 
 	@Override
@@ -142,8 +143,8 @@ public class SamplingExpander extends TokenExpander {
 	}
 
 	public static class Factory implements TokenExpander.Factory {
-		public SamplingExpander create(InnerGameTreeNode node, int tokens) {
-			return new SamplingExpander(node, tokens);
+		public SamplingExpander create(InnerGameTreeNode node, int tokens, Sampler sampler) {
+			return new SamplingExpander(node, tokens, sampler);
 		}
 	}
 

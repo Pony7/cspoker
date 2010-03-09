@@ -21,9 +21,7 @@ import org.cspoker.server.embedded.EmbeddedCSPokerServer;
 public class RunLocalBot {
 
 	public static void main(String[] args) {
-
 		BotRunner.create(new EmbeddedCSPokerServer());
-
 	}
 
 }

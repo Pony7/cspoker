@@ -20,6 +20,8 @@ import java.io.IOException;
 
 import org.apache.log4j.Logger;
 import org.cspoker.ai.bots.BotRunner;
+import org.cspoker.ai.bots.bot.gametree.mcts.FixedSampleMCTSBot;
+import org.cspoker.ai.bots.bot.gametree.mcts.MCTSBot;
 import org.cspoker.ai.bots.util.RunningStats;
 
 public class CSVLogListener extends DealCountingListener {
@@ -36,14 +38,14 @@ public class CSVLogListener extends DealCountingListener {
 	private final FileWriter file;
 
 	public CSVLogListener(BotRunner runner) {
-		this(64, runner);
+		this(64, runner, "bots");
 	}
 
-	public CSVLogListener(int reportInterval, BotRunner runner) {
+	public CSVLogListener(int reportInterval, BotRunner runner, String logName) {
 		this.reportInterval = reportInterval;
 		this.runner = runner;
 		try {
-			this.file = new FileWriter("logs/bots.csv");
+			this.file = new FileWriter("logs/" + logName + ".csv");
 		} catch (IOException e) {
 			throw new IllegalStateException(e);
 		}
@@ -55,6 +57,11 @@ public class CSVLogListener extends DealCountingListener {
 		if (deals % reportInterval == 0) {
 			long nowTime = System.currentTimeMillis();
 			if (startTime > 0) {
+// for testing convergence EV
+//				if (deals==100) {
+//					MCTSBot.printed = true;
+//					FixedSampleMCTSBot.printed = true;
+//				}
 				logger.info("deal #" + deals + " at " + reportInterval * 1000.0
 						/ (nowTime - startTime) + " games/s");
 				try {
