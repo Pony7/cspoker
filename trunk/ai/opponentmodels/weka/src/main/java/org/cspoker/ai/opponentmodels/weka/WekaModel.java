@@ -44,8 +44,8 @@ public abstract class WekaModel implements OpponentModel{
 	private final PostFoldCallRaiseInstances postFoldCallRaiseInstance;
 	private final ShowdownInstances showdownInstance;
 	
-	public WekaModel() {
-		this.visitor = new ActionTrackingVisitor();
+	public WekaModel(boolean overwrite) {
+		this.visitor = new ActionTrackingVisitor(overwrite);
 		
 		this.preCheckBetInstance = new PreCheckBetInstances("PreCheckBet", "@attribute prob real"+InstancesBuilder.nl);
 		this.postCheckBetInstance = new PostCheckBetInstances("PostCheckBet", "@attribute prob real"+InstancesBuilder.nl);

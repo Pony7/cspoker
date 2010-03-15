@@ -108,13 +108,14 @@ public class BotRunner implements LobbyListener {
 //				throw new ClassNotFoundException();
 //			}
 			Sampler s = new SmartSampler();
+			boolean overwrite = false;
 			return new BotRunner(cspokerServer, "test",
 					new BotFactory[] {
 					new CallBotFactory("CallBot"),
 					new CardBotFactory("CardBot"),
 					new HandBotFactory("HandBot"),
 //					new FixedSampleMCTSBotFactory("MCTSBot",
-//							WekaRegressionModelFactory.createForZip("org/cspoker/ai/opponentmodels/weka/models/model1.zip"),
+//							WekaRegressionModelFactory.createForZip(overwrite, "org/cspoker/ai/opponentmodels/weka/models/model1.zip"),
 //							new SamplingToFunctionSelector(50,new UCTSelector(40000)),
 //							new SamplingToFunctionSelector(50,new UCTPlusPlusSelector()),
 //							new MaxValueSelector(),
@@ -126,7 +127,7 @@ public class BotRunner implements LobbyListener {
 //							),s,
 //							1000,1000,1000,1000),
 					new MCTSBotFactory("MCTSBot",
-							WekaRegressionModelFactory.createForZip("org/cspoker/ai/opponentmodels/weka/models/model1.zip"),
+							WekaRegressionModelFactory.createForZip(overwrite, "org/cspoker/ai/opponentmodels/weka/models/model1.zip"),
 							new SamplingToFunctionSelector(50,new UCTSelector(2000)),
 							new SamplingSelector(),
 							new MaxValueSelector(),
@@ -136,7 +137,7 @@ public class BotRunner implements LobbyListener {
 							250
 					),
 //					new SearchBotFactory(
-//							WekaRegressionModelFactory.createForZip("org/cspoker/ai/opponentmodels/weka/models/model1.zip"),
+//							WekaRegressionModelFactory.createForZip(overwrite, "org/cspoker/ai/opponentmodels/weka/models/model1.zip"),
 //							new ShowdownRolloutNode.Factory(new DistributionRollout4.Factory()), s,												
 //							200, 600, 1000, 3000, 0.0, false, true
 //					)

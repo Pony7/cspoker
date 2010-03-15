@@ -74,7 +74,7 @@ public class Lore {
 			//			 new CallBotFactory();
 			new MCTSBotFactory(
 					"CSPoker Bot",
-					WekaRegressionModelFactory.createForZip("org/cspoker/ai/opponentmodels/weka/models/model1.zip"),
+					WekaRegressionModelFactory.createForZip(true, "org/cspoker/ai/opponentmodels/weka/models/model1.zip"),
 					new SamplingToFunctionSelector(50,new UCTSelector(2000000)),
 					new SamplingSelector(),
 					new MaxValueSelector(),
