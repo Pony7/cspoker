@@ -30,7 +30,6 @@ import org.cspoker.client.common.SmartLobbyContext;
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.player.PlayerId;
-import org.cspoker.common.elements.table.Round;
 import org.cspoker.common.elements.table.TableId;
 
 public class MCTSBot extends AbstractBot {
@@ -41,8 +40,6 @@ public class MCTSBot extends AbstractBot {
 	private final int decisionTime;
 
 	long startTime = System.currentTimeMillis();
-	
-	private static int currentHand = 0;
 	
 	public MCTSBot(PlayerId botId, TableId tableId,
 			SmartLobbyContext lobby, ExecutorService executor, int buyIn, 
@@ -105,7 +102,6 @@ public class MCTSBot extends AbstractBot {
 		SearchBotAction action = root.selectChild(config.getMoveSelectionStrategy()).getLastAction().getAction();
 		if(logger.isInfoEnabled()) logger.info("Stopped MCTS after "+root.getNbSamples()+" samples and choosing "+action);
 		action.perform(playerContext);
-		System.out.println(tableContext.getGameState().getGamePotSize() + " " + action);
 		MCTSListener[] listeners = createListeners(gameState, botId);
 		for (MCTSListener listener : listeners) {
 			listener.onMCTS(root);

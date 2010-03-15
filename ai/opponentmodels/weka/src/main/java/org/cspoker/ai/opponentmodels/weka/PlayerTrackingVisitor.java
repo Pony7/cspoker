@@ -46,7 +46,8 @@ public class PlayerTrackingVisitor implements GameStateVisitor, Cloneable {
 	private final static Logger logger = Logger.getLogger(PlayerTrackingVisitor.class);
 	
 	private GameState previousStartState;
-	private Propositionalizer propz = new Propositionalizer();
+	
+	protected Propositionalizer propz = new Propositionalizer();
 	
 	public void readHistory(GameState gameState) {
 		try{
@@ -85,7 +86,7 @@ public class PlayerTrackingVisitor implements GameStateVisitor, Cloneable {
 
 	@Override
 	public void visitBetState(BetState betState) {
-		propz.signalBet(false, betState.getLastEvent().getPlayerId(), betState.getEvent().getAmount());
+		propz.signalBet(false, betState.getEvent().getPlayerId(), betState.getEvent().getAmount());
 	}
 
 	@Override
@@ -156,12 +157,11 @@ public class PlayerTrackingVisitor implements GameStateVisitor, Cloneable {
 
 	@Override
 	public void visitRaiseState(RaiseState raiseState) {
-		propz.signalRaise(raiseState.getLastEvent().getPlayerId(), false, raiseState.getLargestBet());
+		propz.signalRaise(false, raiseState.getLastEvent().getPlayerId(), raiseState.getLargestBet());
 	}
 
 	@Override
 	public void visitShowHandState(ShowHandState showHandState) {
-
 	}
 
 	@Override
@@ -181,7 +181,6 @@ public class PlayerTrackingVisitor implements GameStateVisitor, Cloneable {
 
 	@Override
 	public void visitWinnerState(WinnerState winnerState) {
-
 	}
 
 	@Override

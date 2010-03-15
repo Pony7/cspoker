@@ -94,6 +94,7 @@ public class RunCSPoker {
 					throws SAXException {
 				if (localName.equals("server")) {
 					int port = Integer.parseInt(attributes.getValue("port"));
+					String host = attributes.getValue("host");
 					String type = attributes.getValue("type");
 					if (type.equals("rmi")) {
 						try {

@@ -76,13 +76,10 @@ public class GameFlowTest extends TestCase {
 	private DummyPlayerFactory factory = new DummyPlayerFactory();
 
 	private MutableSeatedPlayer cedric;
-
 	private MutableSeatedPlayer guy;
-
 	private MutableSeatedPlayer kenzo;
 
 	private PokerTable pokerTable;
-
 	private ServerTable table;
 	
 	private EventSequenceChecker events;

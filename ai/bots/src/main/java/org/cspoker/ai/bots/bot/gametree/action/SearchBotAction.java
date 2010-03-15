@@ -16,8 +16,6 @@
 package org.cspoker.ai.bots.bot.gametree.action;
 
 import java.rmi.RemoteException;
-import java.util.Collections;
-import java.util.List;
 
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.client.common.gamestate.modifiers.NewRoundState;
@@ -27,7 +25,6 @@ import org.cspoker.common.api.lobby.holdemtable.event.NewRoundEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.NextPlayerEvent;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.context.RemoteHoldemPlayerContext;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
-import org.cspoker.common.elements.chips.Pot;
 import org.cspoker.common.elements.chips.Pots;
 import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.elements.table.Round;
@@ -59,7 +56,7 @@ public abstract class SearchBotAction implements ActionWrapper {
 		if (nextRound == null) {
 			throw new GameEndedException(lastState);
 		}
-		List<Pot> pots = Collections.emptyList();
+//		List<Pot> pots = Collections.emptyList();
 		NewRoundState newRoundState = new NewRoundState(lastState,
 				new NewRoundEvent(nextRound, new Pots(lastState
 						.getGamePotSize())));

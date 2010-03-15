@@ -17,7 +17,6 @@ package org.cspoker.ai.opponentmodels.weka.instances;
 
 import org.cspoker.ai.opponentmodels.weka.PlayerData;
 import org.cspoker.ai.opponentmodels.weka.Propositionalizer;
-import org.cspoker.common.elements.player.PlayerId;
 
 import weka.core.Instance;
 

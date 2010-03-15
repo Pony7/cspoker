@@ -63,7 +63,7 @@ public class WekaRegressionModelFactory implements OpponentModel.Factory {
 
 	public static WekaRegressionModelFactory createForDir(String models) throws IOException, ClassNotFoundException {
 		Classifier preBetModel, preFoldModel, preCallModel, preRaiseModel, postBetModel, postFoldModel, postCallModel, postRaiseModel,
-		showdown0Model, showdown1Model, showdown2Model, showdown3Model, showdown4Model, showdown5Model, showdown6Model, showdown7Model, showdown8Model, showdown9Model;
+		showdown0Model, showdown1Model, showdown2Model, showdown3Model, showdown4Model, showdown5Model;
 		ClassLoader classLoader = WekaRegressionModelFactory.class.getClassLoader();
 		ObjectInputStream in = new ObjectInputStream(classLoader.getResourceAsStream(models+"preBet.model"));
 		preBetModel = (Classifier)in.readObject();

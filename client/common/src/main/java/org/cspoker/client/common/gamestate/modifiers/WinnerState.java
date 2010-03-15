@@ -20,7 +20,6 @@ import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.client.common.gamestate.GameStateVisitor;
 import org.cspoker.client.common.playerstate.ForwardingPlayerState;
 import org.cspoker.client.common.playerstate.PlayerState;
-import org.cspoker.common.api.lobby.holdemtable.event.HoldemTableEvent;
 import org.cspoker.common.api.lobby.holdemtable.event.WinnerEvent;
 import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.elements.player.Winner;
@@ -84,7 +83,7 @@ public class WinnerState extends ForwardingGameState {
 		return 0;
 	}
 	
-	public HoldemTableEvent getLastEvent() {
+	public WinnerEvent getLastEvent() {
 		return event;
 	}
 	

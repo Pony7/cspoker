@@ -3,12 +3,10 @@ package org.cspoker.ai.bots.bot.gametree.search.expander.sampling;
 import java.util.List;
 import java.util.Random;
 
-import org.cspoker.ai.bots.bot.gametree.action.BetAction;
 import org.cspoker.ai.bots.bot.gametree.action.CallAction;
 import org.cspoker.ai.bots.bot.gametree.action.CheckAction;
 import org.cspoker.ai.bots.bot.gametree.action.FoldAction;
 import org.cspoker.ai.bots.bot.gametree.action.ProbabilityAction;
-import org.cspoker.ai.bots.bot.gametree.action.RaiseAction;
 import org.cspoker.ai.opponentmodels.OpponentModel;
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.common.elements.player.PlayerId;

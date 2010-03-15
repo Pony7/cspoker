@@ -101,7 +101,7 @@ public class Propositionalizer implements Cloneable {
 			if(maxBet==0){
 				signalBet(true, id, chipsMoved);
 			}else if(p.getDeficit(this)<chipsMoved){
-				signalRaise(id, true, p.getBet()+chipsMoved);
+				signalRaise(true, id, p.getBet()+chipsMoved);
 			}else{
 				signalCall(true, id, chipsMoved);
 			}
@@ -135,7 +135,7 @@ public class Propositionalizer implements Cloneable {
 		p.signalCheck(this);
 	}
 
-	public void signalRaise(Object id, boolean isAllIn, int maxBetParsed) {
+	public void signalRaise(boolean isAllIn, Object id, int maxBetParsed) {
 		PlayerData p = players.get(id);
 		int raiseAmount = maxBetParsed-maxBet;
 		if (p.getDeficit(this) == 0) {
@@ -238,8 +238,8 @@ public class Propositionalizer implements Cloneable {
 		//updateER();
 	}
 
-	public void signalCardShowdown(String id, Card card1, Card card2) {
-		PlayerData p = players.get(id);
+	public void signalCardShowdown(Object id, Card card1, Card card2) {
+//		PlayerData p = players.get(id);
 		if(cards.size()==5){
 			//showdown after river
 			Multiset<Integer> ranks = new TreeMultiset<Integer>();

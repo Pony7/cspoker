@@ -180,8 +180,16 @@ public abstract class BettingRound
 					+ " chips in this round because there's only one player left who's not all-in.");
 		}
 		
+		// If the total number of chips needed for this raise,
+		// exceeds or equals the stack of the player, the player should
+		// go all-in.
+		if ((amount + amountToIncreaseBetPileWith(player)) >= player.getStack().getValue()) {
+			allIn(player);
+			return;
+		}
+		
 		// Check whether the raise is valid.
-		if (!getBettingRules().isValidRaise(amount, this) && !((amount + amountToIncreaseBetPileWith(player)) >= player.getStack().getValue())) {
+		if (!getBettingRules().isValidRaise(amount, this)) {
 			throw new IllegalActionException(player.toString() + " can not raise with $"+amount+". "
 					+ getBettingRules().getLastRaiseErrorMessage());
 		}
@@ -190,14 +198,6 @@ public abstract class BettingRound
 		if (amount == 0) {
 			throw new IllegalActionException(player.toString() + " can not raise. "
 					+ "Can not raise with 0 chips. Did you mean call?");
-		}
-		
-		// If the total number of chips needed for this raise,
-		// exceeds or equals the stack of the player, the player should
-		// go all-in.
-		if ((amount + amountToIncreaseBetPileWith(player)) >= player.getStack().getValue()) {
-			allIn(player);
-			return;
 		}
 		
 		// Try to transfer the amount to the bet pile.
