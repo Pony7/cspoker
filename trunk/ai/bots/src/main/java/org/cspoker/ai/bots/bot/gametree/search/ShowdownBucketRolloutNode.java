@@ -15,7 +15,7 @@
  */
 package org.cspoker.ai.bots.bot.gametree.search;
 
-import org.apache.log4j.Logger;
+//import org.apache.log4j.Logger;
 import org.cspoker.ai.bots.bot.gametree.rollout.BucketRollOut;
 import org.cspoker.ai.bots.bot.gametree.search.nodevisitor.NodeVisitor;
 import org.cspoker.ai.opponentmodels.OpponentModel;
@@ -24,29 +24,23 @@ import org.cspoker.common.elements.player.PlayerId;
 
 public class ShowdownBucketRolloutNode implements ShowdownNode {
 
-	private final static Logger logger = Logger
-	.getLogger(ShowdownBucketRolloutNode.class);
+//	private final static Logger logger = Logger
+//	.getLogger(ShowdownBucketRolloutNode.class);
 
 	private Distribution valueDistribution = null;
 
-	private final PlayerId botId;
-
 	private final GameState gameState;
 
-	private final NodeVisitor[] nodeVisitors;
+//	private final NodeVisitor[] nodeVisitors;
 
 	private final int nbTokens;
-
-	private final OpponentModel model;
 
 	private final BucketRollOut rollout;
 
 	ShowdownBucketRolloutNode(PlayerId botId, GameState gameState, OpponentModel model, int tokens, NodeVisitor... nodeVisitors) {
-		this.botId = botId;
 		this.gameState = gameState;
-		this.nodeVisitors = nodeVisitors;
+//		this.nodeVisitors = nodeVisitors;
 		this.nbTokens = tokens;
-		this.model = model;
 		this.rollout = new BucketRollOut(gameState,botId,model);
 	}
 

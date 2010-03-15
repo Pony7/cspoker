@@ -25,9 +25,10 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.EnumSet;
 import java.util.HashMap;
-import java.util.zip.GZIPOutputStream;
 
+import org.cspoker.ai.opponentmodels.weka.PlayerData;
 import org.cspoker.ai.opponentmodels.weka.Propositionalizer;
+import org.cspoker.ai.opponentmodels.weka.instances.EmptyInstance;
 import org.cspoker.ai.opponentmodels.weka.instances.InstancesBuilder;
 import org.cspoker.ai.opponentmodels.weka.instances.PostCheckBetInstances;
 import org.cspoker.ai.opponentmodels.weka.instances.PostFoldCallRaiseInstances;
@@ -38,8 +39,6 @@ import org.cspoker.common.elements.cards.Card;
 
 import weka.core.Instance;
 
-
-
 public class PropositionalDataSetGenerator extends Propositionalizer {
 
 	private static final String nl = InstancesBuilder.nl;
@@ -48,33 +47,54 @@ public class PropositionalDataSetGenerator extends Propositionalizer {
 	protected static final String flop = "*** FLOP";
 	protected static final String turn = "*** TURN";
 	protected static final String river = "*** RIVER";
+	
+	// if you want all files in 'unzipped' then make folder empty string
+	protected static final String folder = "FTP_NLH50"; 
 
 	protected final Writer preCheckBetFile;
 	protected final Writer postCheckBetFile;	
 	protected final Writer preFoldCallRaiseFile;
 	protected final Writer postFoldCallRaiseFile;
 	protected final Writer showdownFile;
-
-	//	protected final FileWriter betSizeClass;
-	//	protected final FileWriter betSize;
-
+	
+	protected final Writer preBetSizeFile;
+	protected final Writer postBetSizeFile;
+	protected final Writer betSizeFile;
+	
 	private boolean forgetCurrentGame = false;
 
 	private final HashMap<String, Card> cards = new HashMap<String, Card>();
 	private int bb;
 
-	private final PostCheckBetInstances postCheckBetInstance;
 	private final PreCheckBetInstances preCheckBetInstance;
+	private final PostCheckBetInstances postCheckBetInstance;
 	private final PreFoldCallRaiseInstances preFoldCallRaiseInstance;
 	private final PostFoldCallRaiseInstances postFoldCallRaiseInstance;
 	private final ShowdownInstances showdownInstance;
+	
+	private final EmptyInstance preBetSizeInstance;
+	private final EmptyInstance postBetSizeInstance;
+	private final EmptyInstance betSizeInstance;
 
 	public PropositionalDataSetGenerator() throws IOException {
-		preCheckBetFile = new OutputStreamWriter(new GZIPOutputStream(new FileOutputStream("output/PreCheckBet.arff.gz")));
-		postCheckBetFile = new OutputStreamWriter(new GZIPOutputStream(new FileOutputStream("output/PostCheckBet.arff.gz")));
-		preFoldCallRaiseFile = new OutputStreamWriter(new GZIPOutputStream(new FileOutputStream("output/PreFoldCallRaise.arff.gz")));
-		postFoldCallRaiseFile = new OutputStreamWriter(new GZIPOutputStream(new FileOutputStream("output/PostFoldCallRaise.arff.gz")));
-		showdownFile = new OutputStreamWriter(new GZIPOutputStream(new FileOutputStream("output/Showdown.arff.gz")));
+		String tmpFolder = folder + (folder.equals("")?"":"/");
+		preCheckBetFile = new OutputStreamWriter(
+				new FileOutputStream("output/"+ tmpFolder + "PreCheckBet.arff"));
+		postCheckBetFile = new OutputStreamWriter(
+				new FileOutputStream("output/"+ tmpFolder + "PostCheckBet.arff"));
+		preFoldCallRaiseFile = new OutputStreamWriter(
+				new FileOutputStream("output/"+ tmpFolder + "PreFoldCallRaise.arff"));
+		postFoldCallRaiseFile = new OutputStreamWriter(
+				new FileOutputStream("output/"+ tmpFolder + "PostFoldCallRaise.arff"));
+		showdownFile = new OutputStreamWriter(
+				new FileOutputStream("output/"+ tmpFolder + "Showdown.arff"));
+		
+		preBetSizeFile = new OutputStreamWriter(
+				new FileOutputStream("output/"+ tmpFolder + "PreBetSize.arff"));
+		postBetSizeFile = new OutputStreamWriter(
+				new FileOutputStream("output/"+ tmpFolder + "PostBetSize.arff"));
+		betSizeFile = new OutputStreamWriter(
+				new FileOutputStream("output/"+ tmpFolder + "BetSize.arff"));
 
 		this.preCheckBetInstance = new PreCheckBetInstances("PreCheckBet",
 				"@attribute betProb real"+nl+
@@ -110,9 +130,28 @@ public class PropositionalDataSetGenerator extends Propositionalizer {
 				"@attribute avgPartition {0,1,2,3,4,5}"+nl);
 		showdownFile.write(showdownInstance.toString());
 
-		//		betSizeClass = new FileWriter("output/BetSizeClass.arff");
-		//		betSize = new FileWriter("output/BetSize.arff");
-		//		betSizeHeaders();
+		this.preBetSizeInstance = new EmptyInstance("PreBetSize",  
+				"@attribute minRaise real"+nl+
+				"@attribute maxRaise real"+nl+
+				"@attribute relBetSize real"+nl+
+				"@attribute blindRelBetSize real"+nl);
+		preBetSizeFile.write(preBetSizeInstance.toString());
+		
+		this.postBetSizeInstance = new EmptyInstance("PostBetSize",  
+				"@attribute minRaise real"+nl+
+				"@attribute maxRaise real"+nl+ 
+				"@attribute relBetSize real"+nl+
+				"@attribute blindRelBetSize real"+nl);
+		postBetSizeFile.write(postBetSizeInstance.toString());
+		
+		this.betSizeInstance = new EmptyInstance("BetSize",  
+//				"@attribute minRaise real"+nl+
+//				"@attribute maxRaise real"+nl+ 
+				"@attribute relBetSize real"+nl
+//				"@attribute blindRelBetSize real"+nl
+				);
+		betSizeFile.write(betSizeInstance.toString());
+		
 		for(Card c:Card.values()){
 			cards.put(c.getShortDescription(), c);
 		}
@@ -125,8 +164,9 @@ public class PropositionalDataSetGenerator extends Propositionalizer {
 		preFoldCallRaiseFile.close();
 		postFoldCallRaiseFile.close();
 		showdownFile.close();
-		//		betSizeClass.close();
-		//		betSize.close();
+		preBetSizeFile.close();
+		postBetSizeFile.close();
+		betSizeFile.close();
 	}
 
 	private void write(Writer writer, Instance instance) {
@@ -172,7 +212,7 @@ public class PropositionalDataSetGenerator extends Propositionalizer {
 //			write(postFoldCallRaiseFile, 
 //					postFoldCallRaiseInstance.getClassifiedInstance(this, actorId, new Object[]{0,0,1,"raise"}));
 //		}
-//		logRaiseAmount(actorId, raiseAmount);
+		logRaiseAmount(actorId, raiseAmount);
 	}
 
 	protected void logCheck(Object actorId) {
@@ -193,56 +233,72 @@ public class PropositionalDataSetGenerator extends Propositionalizer {
 //			write(postCheckBetFile, 
 //					postCheckBetInstance.getClassifiedInstance(this, actorId, new Object[]{1,"bet"}));
 //		}	
-//		logRaiseAmount(actorId, raiseAmount);
+		logRaiseAmount(actorId, raiseAmount);
 	}
 
 	@Override
 	protected void logShowdown(Object actorId, double[] partitionDistr) {
-		Object[] targets = new Object[partitionDistr.length+1];
-		double avgBucket = 0;
-		for(int i=0;i<partitionDistr.length;i++){
-			targets[i]=partitionDistr[i];
-			avgBucket += i*partitionDistr[i];
-		}
-		targets[partitionDistr.length] = (int)Math.round(avgBucket);
-		write(showdownFile, 
-				showdownInstance.getClassifiedInstance(this, actorId, targets));
+//		Object[] targets = new Object[partitionDistr.length+1];
+//		double avgBucket = 0;
+//		for(int i=0;i<partitionDistr.length;i++){
+//			targets[i]=partitionDistr[i];
+//			avgBucket += i*partitionDistr[i];
+//		}
+//		targets[partitionDistr.length] = (int)Math.round(avgBucket);
+//		write(showdownFile, 
+//				showdownInstance.getClassifiedInstance(this, actorId, targets));
 	}
 
-
+	private void writeRaise(Object actorId, double minRaise, double maxRaise, 
+			double blindRelRaiseAmount, double relRaiseAmount) {
+		if (getRound().equals("preflop")) {
+			write(preBetSizeFile, preBetSizeInstance.getClassifiedInstance(this, actorId, 
+					new Object[]{minRaise, maxRaise, relRaiseAmount, blindRelRaiseAmount}));
+		} else {
+			write(postBetSizeFile, postBetSizeInstance.getClassifiedInstance(this, actorId, 
+					new Object[]{minRaise, maxRaise, relRaiseAmount, blindRelRaiseAmount}));
+		}
+		write(betSizeFile, betSizeInstance.getClassifiedInstance(this, actorId, 
+//					new Object[]{minRaise, maxRaise, relRaiseAmount, blindRelRaiseAmount}));
+					new Object[]{relRaiseAmount}));		
+	}
+	
 	private void logRaiseAmount(Object actorId, double raiseAmount){
-		//		float minRaise = (float)getMinRaise(p);
-		//		float maxRaise = (float)getMaxRaise(p);
-		//		raiseAmount = Math.min(raiseAmount, maxRaise);
-		//		float logBetSize = (float)Math.log(raiseAmount);
-		//		if(Math.abs(minRaise-maxRaise)>0.6) //only when we have a choice
-		//		{
-		//			if(Math.abs(minRaise-raiseAmount)<0.6) {
-		////				betSizeInstance(p, minRaise, maxRaise, raiseAmount+","+logBetSize+",0,1,0,0,minBet", betSizeClass);
-		//				betSizeInstance(p, minRaise, maxRaise, 0+"", betSizeClass);
-		//			}else if(Math.abs(maxRaise-raiseAmount)<0.6) {
-		////				betSizeInstance(p, minRaise, maxRaise, raiseAmount+","+logBetSize+",1,0,0,1,allin", betSizeClass);
-		//				betSizeInstance(p, minRaise, maxRaise, 1+"", betSizeClass);
-		//			}else{
-		//				if(raiseAmount<minRaise || minRaise>maxRaise){
-		//					System.out.println("Skipping illegal bet");
-		//					return;
-		//				}
-		//				float relBetSize = (raiseAmount-minRaise)/(maxRaise-minRaise);
-		////				betSizeInstance(p, minRaise, maxRaise, raiseAmount+","+logBetSize+","+relBetSize+",0,1,0,avg", betSizeClass);
-		//				betSizeInstance(p, minRaise, maxRaise, relBetSize+"", betSizeClass);
-		////				betSizeInstance(p, minRaise, maxRaise, raiseAmount+","+logBetSize+","+relBetSize+","+(float)Math.log(relBetSize), betSize);
-		//			}
-		//		}
+		PlayerData p = this.getPlayers().get(actorId);
+		double bb = p.getBB();
+		double relAmount = raiseAmount;
+		raiseAmount = raiseAmount * bb;
+		double minRaise = (double)getMinRaise(p);
+		double maxRaise = (double)getMaxRaise(p);
+		raiseAmount = Math.min(raiseAmount, maxRaise);
+//		float logBetSize = (float)Math.log(raiseAmount);
+		if(Math.abs(minRaise-maxRaise)>0.6) //only when we have a choice
+		{
+			if(Math.abs(minRaise-raiseAmount)<0.6) {
+//				betSizeInstance(p, minRaise, maxRaise, raiseAmount+","+logBetSize+",0,1,0,0,minBet", betSizeClass);
+				writeRaise(actorId, minRaise, maxRaise, 0, 0);
+			}else if(Math.abs(maxRaise-raiseAmount)<0.6) {
+//				betSizeInstance(p, minRaise, maxRaise, raiseAmount+","+logBetSize+",1,0,0,1,allin", betSizeClass);
+				writeRaise(actorId, minRaise, maxRaise, Double.NaN, 1);
+			}else{
+				if(raiseAmount<minRaise || minRaise>maxRaise){
+					System.out.println("Skipping illegal bet");
+					return;
+				}
+				double relBetSize = (raiseAmount-minRaise)/(maxRaise-minRaise);
+//				betSizeInstance(p, minRaise, maxRaise, raiseAmount+","+logBetSize+","+relBetSize+",0,1,0,avg", betSizeClass);
+				writeRaise(actorId, minRaise, maxRaise, relAmount, relBetSize);
+//				betSizeInstance(p, minRaise, maxRaise, raiseAmount+","+logBetSize+","+relBetSize+","+(float)Math.log(relBetSize), betSize);
+			}
+		}
 	}
 
 	public void run() throws Exception {
 		try {
 			int nbFiles = 0;
-			final int maxNbFiles = 1000;
-			String line;
-			File dir1 = new File(
-			"/home/guy/Werk/thesis/opponentmodel/data2/unzipped");
+			final int maxNbFiles = 100;
+			String line;			
+			File dir1 = new File("../../../data/unzipped");
 			String[] children1 = dir1.list();
 			if (children1 == null) {
 				// Either dir does not exist or is not a directory
@@ -254,22 +310,24 @@ public class PropositionalDataSetGenerator extends Propositionalizer {
 						// Either dir does not exist or is not a directory
 					} else {
 						for (String element2 : children2) {
-							// Get filename of file or directory
-							System.out.println("Starting file #"+(nbFiles+1)+"/"+maxNbFiles+": " + element
-									+ "/" + element2);
-							BufferedReader r = new BufferedReader(
-									new FileReader(new File(child1, element2)));
-							while ((line = r.readLine()) != null) {
-								try {
-									doLine(line);
-								} catch (Exception e) {
-									System.out.println(line);
-									throw e;
+							if (element.equals(folder) || folder.equals("")) {
+								// Get filename of file or directory
+								System.out.println("Starting file #"+(nbFiles+1)+"/"+maxNbFiles+": " + element
+										+ "/" + element2);
+								BufferedReader r = new BufferedReader(
+										new FileReader(new File(child1, element2)));
+								while ((line = r.readLine()) != null) {
+									try {
+										doLine(line);
+									} catch (Exception e) {
+										System.out.println(line);
+										throw e;
+									}
 								}
+								r.close();
+								nbFiles ++;
+								if(nbFiles>=maxNbFiles) break for1;
 							}
-							r.close();
-							nbFiles ++;
-							if(nbFiles>=maxNbFiles) break for1;
 						}
 					}
 				}
@@ -357,7 +415,7 @@ public class PropositionalDataSetGenerator extends Propositionalizer {
 					int movedAmount = parseAmount(line.substring(
 							line.indexOf("$") + 1, allinIndex));
 					signalCall(isAllIn, id, movedAmount);
-				} else if (line.contains(" raises")) {
+				} else if (line.contains(" raises to")) {
 					int allinIndex = line.lastIndexOf(", and is all in");
 					if (allinIndex <= 0) {
 						allinIndex = line.length();
@@ -365,13 +423,13 @@ public class PropositionalDataSetGenerator extends Propositionalizer {
 					int maxBetParsed = parseAmount(line.substring(
 							line.indexOf("$") + 1, allinIndex));
 					String id = line.substring(0, line
-							.indexOf(" raises"));
-					signalRaise(id, isAllIn, maxBetParsed);
+							.indexOf(" raises to"));
+					signalRaise(isAllIn, id, maxBetParsed);
 				} else if (line.endsWith(" checks")) {
 					String id = line.substring(0, line
 							.indexOf(" checks"));
 					signalCheck(id);
-				} else if (line.contains(" bets ")) {
+				} else if (line.contains(" bets ") && !line.contains("bo bets all")) {
 					String id = line.substring(0, line.indexOf(" bets"));
 					int allinIndex = line.lastIndexOf(", and is all in");
 					if (allinIndex <= 0) {

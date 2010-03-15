@@ -257,6 +257,10 @@ public class ClientGUI {
 		return result;
 	}
 	
+	public static int roundToBlind(double bet, double blind) {
+		return (int) (blind * Math.round(bet/blind));
+	}
+	
 	/**
 	 * Formatting bets by hand since {@link NumberFormat#getCurrencyInstance()}s
 	 * from Java sucks

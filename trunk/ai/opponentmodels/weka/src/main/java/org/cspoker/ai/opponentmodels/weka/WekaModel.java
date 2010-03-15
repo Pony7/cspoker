@@ -45,7 +45,7 @@ public abstract class WekaModel implements OpponentModel{
 	private final ShowdownInstances showdownInstance;
 	
 	public WekaModel() {
-		this.visitor = new PlayerTrackingVisitor();
+		this.visitor = new ActionTrackingVisitor();
 		
 		this.preCheckBetInstance = new PreCheckBetInstances("PreCheckBet", "@attribute prob real"+InstancesBuilder.nl);
 		this.postCheckBetInstance = new PostCheckBetInstances("PostCheckBet", "@attribute prob real"+InstancesBuilder.nl);
@@ -61,7 +61,7 @@ public abstract class WekaModel implements OpponentModel{
 
 	@Override
 	public void assumeTemporarily(GameState gameState) {
-		PlayerTrackingVisitor root = visitors.isEmpty() ? visitor : getTopVisitor();
+		PlayerTrackingVisitor root = getTopVisitor();
 		PlayerTrackingVisitor clonedTopVisitor = root.clone();
 		clonedTopVisitor.readHistory(gameState);
 		visitors.push(clonedTopVisitor);

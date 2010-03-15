@@ -82,7 +82,7 @@ public class WekaRegressionModel extends WekaModel {
 			double prob = Math.min(1,Math.max(0, prediction));
 
 			if(Double.isNaN(prob) || Double.isInfinite(prob)){
-				throw new IllegalStateException("Bad probability:"+prob);
+				throw new IllegalStateException("Bad probability: "+prob);
 			}
 			Pair<Double, Double> result = new Pair<Double, Double>(1-prob,prob);
 			if(logger.isTraceEnabled()){
@@ -105,7 +105,6 @@ public class WekaRegressionModel extends WekaModel {
 			instance = getPostFoldCallRaiseInstance(actor);
 		}
 		try {
-
 			double probFold;
 			if(preshowdown){
 				probFold = preFoldModel.classifyInstance(instance);
@@ -132,7 +131,7 @@ public class WekaRegressionModel extends WekaModel {
 
 			double sum = probFold + probCall + probRaise;
 			if(Double.isNaN(sum) || sum==0 || Double.isInfinite(sum)){
-				throw new IllegalStateException("Bad probabilities:"+probFold+", "+probCall+", "+probRaise);
+				throw new IllegalStateException("Bad probabilities: "+probFold+" (probFold), "+probCall+" (probCall), "+probRaise+" (probRaise)");
 			}
 			Triple<Double, Double, Double> result = new Triple<Double, Double, Double>(probFold/sum,probCall/sum,probRaise/sum);
 			if(logger.isTraceEnabled()){
@@ -140,7 +139,7 @@ public class WekaRegressionModel extends WekaModel {
 			}
 			return result;
 		} catch (Exception e) {
-			throw new IllegalStateException(instance.toString(), e);
+			throw new IllegalStateException(gameState.getRound() + " " + instance.toString(), e);
 		}
 	}
 

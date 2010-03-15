@@ -32,6 +32,7 @@ import org.cspoker.common.api.shared.context.ServerContext;
 import org.cspoker.common.api.shared.listener.ServerListenerTree;
 import org.cspoker.common.elements.table.TableId;
 import org.cspoker.common.util.Log4JPropertiesLoader;
+import org.cspoker.server.embedded.EmbeddedCSPokerServer;
 
 /**
  * The core of the SWT client which manages the windows, the remote
@@ -144,6 +145,7 @@ public class ClientCore
 	 * 
 	 * @see java.lang.Runnable#run()
 	 */
+	private static CSPokerServer server = new EmbeddedCSPokerServer();
 	public void run() {
 		// CommunicationProvider communicationProvider = new
 		// CommunicationProvider();
@@ -152,7 +154,9 @@ public class ClientCore
 		// Run the whole GUI inside a try-catch for now so we can catch
 		// unexpected failures
 		try {
-			gui.createNewLoginDialog().open();
+			// TODO fix login on server
+			//gui.createNewLoginDialog().open();
+			login(server);
 			// TODO Make sure we register to receive events from the server
 			// communication.subscribe(this);
 			final LobbyWindow lobby = new LobbyWindow(this);

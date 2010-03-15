@@ -15,8 +15,6 @@
  */
 package org.cspoker.ai.bots.util;
 
-import java.io.IOException;
-
 import org.cspoker.common.util.Log4JPropertiesLoader;
 
 public class RunPropositionalDataSetGenerator {

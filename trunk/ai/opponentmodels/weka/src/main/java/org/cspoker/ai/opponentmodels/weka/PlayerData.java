@@ -72,6 +72,10 @@ public class PlayerData implements Cloneable{
 	public double getRelativeStack() {
 		return stack/(double)bb;
 	}
+	
+	public int getBB() {
+		return bb;
+	}
 
 	public int getBet() {
 		return bet;

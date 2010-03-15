@@ -137,6 +137,7 @@ extends ForwardingGameState {
 		return newPotSize;
 	}
 
+	@Override
 	public BetEvent getLastEvent() {
 		return event;
 	}
@@ -159,5 +160,4 @@ extends ForwardingGameState {
 	public BetEvent getEvent() {
 		return event;
 	}
-
 }

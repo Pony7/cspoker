@@ -48,7 +48,7 @@ public abstract class InstancesBuilder {
 			e.printStackTrace();
 			throw new IllegalStateException(e);
 		}
-		dataset.setClassIndex(length-1);
+		dataset.setClassIndex((length>0?length-1:0));
 	}
 
 	public abstract Instance getUnclassifiedInstance(Propositionalizer prop, Object actorId);

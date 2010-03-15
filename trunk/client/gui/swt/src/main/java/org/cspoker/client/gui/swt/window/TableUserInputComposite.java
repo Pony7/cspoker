@@ -93,8 +93,8 @@ public class TableUserInputComposite
 	public TableUserInputComposite(GameWindow parent, int style) {
 		super(parent, style);
 		user = parent.getUser();
-		initGUI();
 		smallBlind = parent.getDetailedTable().getTableConfiguration().getSmallBlind();
+		initGUI();
 	}
 	
 	void betRaiseButtonMouseDown(MouseEvent evt) {
@@ -415,7 +415,8 @@ public class TableUserInputComposite
 		updateBetSlider();
 		updateBetRaiseButton();
 		if (!betAmountTextField.isFocusControl()) {
-			betAmountTextField.setText(ClientGUI.formatBet(betRaiseAmount + getGameState().getLargestBet()));
+			betAmountTextField.setText(ClientGUI.formatBet((int) 
+				ClientGUI.roundToBlind(betRaiseAmount + getGameState().getLargestBet(),smallBlind)));
 		}
 	}
 	
@@ -446,14 +447,14 @@ public class TableUserInputComposite
 		if (extras != 0) {
 			betSlider.setMaximum(betSlider.getMaximum() + extras);
 		}
-		betSlider.setMinimum(getGameState().getMinNextRaise() + getGameState().getLargestBet());
-		betSlider.setSelection(betRaiseAmount + getGameState().getLargestBet());
+		betSlider.setMinimum(ClientGUI.roundToBlind(getGameState().getMinNextRaise() + getGameState().getLargestBet(), smallBlind));
+		betSlider.setSelection(ClientGUI.roundToBlind(betRaiseAmount + getGameState().getLargestBet(), smallBlind));
 	}
 	
 	void updateBetRaiseButton() {
 		int totalBetRaiseAmount = betRaiseAmount + getGameState().getLargestBet();
 		boolean isAllIn = (getGameState().getDeficit(user.getId()) + betRaiseAmount == getUser().getStack());
-		String amountAsString = ClientGUI.formatBet(totalBetRaiseAmount);
+		String amountAsString = ClientGUI.formatBet(ClientGUI.roundToBlind(totalBetRaiseAmount, smallBlind));
 		String text = (getGameState().getDeficit(user.getId()) != 0) ? "Raise to " : "Bet ";
 		betRaiseButton.setText(text + amountAsString);
 		if (isAllIn) {
