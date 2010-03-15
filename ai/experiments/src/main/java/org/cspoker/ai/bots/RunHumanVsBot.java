@@ -30,7 +30,6 @@ import org.cspoker.ai.bots.bot.gametree.mcts.strategies.selection.MaxValueSelect
 import org.cspoker.ai.bots.bot.gametree.mcts.strategies.selection.SamplingToFunctionSelector;
 import org.cspoker.ai.bots.bot.gametree.mcts.strategies.selection.UCTPlusPlusSelector;
 import org.cspoker.ai.bots.bot.gametree.mcts.strategies.selection.UCTSelector;
-import org.cspoker.ai.bots.bot.gametree.search.expander.sampling.StochasticSampler;
 import org.cspoker.ai.bots.bot.gametree.search.expander.sampling.SmartSampler;
 import org.cspoker.ai.bots.bot.gametree.search.nodevisitor.StatisticsVisitor;
 import org.cspoker.ai.bots.listener.DefaultBotListener;
@@ -142,7 +141,7 @@ public class RunHumanVsBot{
 		try {
 			botFactory = new FixedSampleMCTSBotFactory(
 					"Plus Bot",
-					WekaRegressionModelFactory.createForZip("org/cspoker/ai/opponentmodels/weka/models/model1.zip"),
+					WekaRegressionModelFactory.createForZip(true, "org/cspoker/ai/opponentmodels/weka/models/model1.zip"),
 					new SamplingToFunctionSelector(50,new UCTSelector(40000)),
 					new SamplingToFunctionSelector(50,new UCTPlusPlusSelector()),
 					new MaxValueSelector(),

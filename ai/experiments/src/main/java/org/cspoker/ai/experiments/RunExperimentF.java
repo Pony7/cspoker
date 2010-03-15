@@ -45,9 +45,9 @@ public class RunExperimentF {
 			int time = Integer.parseInt(args[1]);
 			
 			int C = Integer.parseInt(args[2]);
-			int treshold1 = Integer.parseInt(args[3]);
-			
+			int treshold1 = Integer.parseInt(args[3]);			
 			int treshold2 = Integer.parseInt(args[4]);
+			boolean overwrite = Boolean.parseBoolean(args[5]);
 
 			new BotRunner(
 					new EmbeddedCSPokerServer(),
@@ -56,7 +56,7 @@ public class RunExperimentF {
 						new HandBotFactory("HandBot"),
 						new MCTSBotFactory(
 								"MaxDistribution Bot",
-								WekaRegressionModelFactory.createForZip("org/cspoker/client/bots/bot/search/opponentmodel/weka/models/model1.zip"),
+								WekaRegressionModelFactory.createForZip(overwrite,"org/cspoker/client/bots/bot/search/opponentmodel/weka/models/model1.zip"),
 								new SamplingToFunctionSelector(treshold1,new UCTSelector(C)),
 								new SamplingSelector(),
 								new MaxValueSelector(),
@@ -80,8 +80,9 @@ public class RunExperimentF {
 			
 			int C = Integer.parseInt(args[5]);
 			int treshold1 = Integer.parseInt(args[6]);
-
 			int treshold2 = Integer.parseInt(args[7]);
+			
+			boolean overwrite = Boolean.parseBoolean(args[8]);
 
 
 			new BotRunner(
@@ -91,7 +92,7 @@ public class RunExperimentF {
 						new HandBotFactory("HandBot"),
 						new FixedSampleMCTSBotFactory(
 								"MaxDistribution Bot",
-								WekaRegressionModelFactory.createForZip("org/cspoker/client/bots/bot/search/opponentmodel/weka/models/model1.zip"),
+								WekaRegressionModelFactory.createForZip(overwrite,"org/cspoker/client/bots/bot/search/opponentmodel/weka/models/model1.zip"),
 								new SamplingToFunctionSelector(treshold1,new UCTSelector(C)),
 								new SamplingSelector(),
 								new MaxValueSelector(),

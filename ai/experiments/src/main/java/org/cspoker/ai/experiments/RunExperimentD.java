@@ -46,16 +46,16 @@ public class RunExperimentD {
 			int C = Integer.parseInt(args[2]);
 			double C2 = Double.parseDouble(args[3]);
 			
-			int treshold1 = Integer.parseInt(args[4]);
-			
+			int treshold1 = Integer.parseInt(args[4]);			
 			int treshold2 = Integer.parseInt(args[5]);
+			boolean overwrite = Boolean.parseBoolean(args[6]);
 
 			new BotRunner(
 					new EmbeddedCSPokerServer(),
 					new BotFactory[] {
 						new MCTSBotFactory(
 								"Standard Bot",
-								WekaRegressionModelFactory.createForZip("org/cspoker/client/bots/bot/search/opponentmodel/weka/models/model1.zip"),
+								WekaRegressionModelFactory.createForZip(overwrite,"org/cspoker/client/bots/bot/search/opponentmodel/weka/models/model1.zip"),
 								new SamplingToFunctionSelector(treshold1,new UCTSelector(C)),
 								new SamplingSelector(),
 								new MaxValueSelector(),
@@ -70,7 +70,7 @@ public class RunExperimentD {
 						),
 						new MCTSBotFactory(
 								"MaxDistribution Bot",
-								WekaRegressionModelFactory.createForZip("org/cspoker/client/bots/bot/search/opponentmodel/weka/models/model1.zip"),
+								WekaRegressionModelFactory.createForZip(overwrite,"org/cspoker/client/bots/bot/search/opponentmodel/weka/models/model1.zip"),
 								new SamplingToFunctionSelector(treshold1,new UCTPlusSelector(C, C2)),
 								new SamplingSelector(),
 								new MaxValueSelector(),
@@ -95,8 +95,8 @@ public class RunExperimentD {
 			int C = Integer.parseInt(args[5]);
 			double C2 = Double.parseDouble(args[6]);
 			int treshold1 = Integer.parseInt(args[7]);
-
 			int treshold2 = Integer.parseInt(args[8]);
+			boolean overwrite = Boolean.parseBoolean(args[9]);
 
 
 			new BotRunner(
@@ -104,7 +104,7 @@ public class RunExperimentD {
 					new BotFactory[] {
 						new FixedSampleMCTSBotFactory(
 								"Standard Bot",
-								WekaRegressionModelFactory.createForZip("org/cspoker/client/bots/bot/search/opponentmodel/weka/models/model1.zip"),
+								WekaRegressionModelFactory.createForZip(overwrite,"org/cspoker/client/bots/bot/search/opponentmodel/weka/models/model1.zip"),
 								new SamplingToFunctionSelector(treshold1,new UCTSelector(C)),
 								new SamplingSelector(),
 								new MaxValueSelector(),
@@ -119,7 +119,7 @@ public class RunExperimentD {
 						),
 						new FixedSampleMCTSBotFactory(
 								"MaxDistribution Bot",
-								WekaRegressionModelFactory.createForZip("org/cspoker/client/bots/bot/search/opponentmodel/weka/models/model1.zip"),
+								WekaRegressionModelFactory.createForZip(overwrite,"org/cspoker/client/bots/bot/search/opponentmodel/weka/models/model1.zip"),
 								new SamplingToFunctionSelector(treshold1,new UCTPlusSelector(C, C2)),
 								new SamplingSelector(),
 								new MaxValueSelector(),

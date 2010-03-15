@@ -31,9 +31,9 @@ public class ActionTrackingVisitor extends PlayerTrackingVisitor {
 	
 	private final static Logger logger = Logger.getLogger(ARFFPropositionalizer.class);
 	
-	public ActionTrackingVisitor() {
+	public ActionTrackingVisitor(boolean overwrite) {
 		try {
-			this.propz = new ARFFPropositionalizer();
+			this.propz = new ARFFPropositionalizer(overwrite);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

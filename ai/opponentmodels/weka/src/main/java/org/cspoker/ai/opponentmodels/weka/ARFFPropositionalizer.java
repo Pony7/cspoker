@@ -28,8 +28,10 @@ public class ARFFPropositionalizer extends Propositionalizer {
 	private final ShowdownInstances showdownInstance;
 	
 	private boolean newDeal = false;
+	private boolean overwrite;
 	
-	public ARFFPropositionalizer() throws IOException {
+	public ARFFPropositionalizer(boolean overwrite) throws IOException {
+		this.overwrite = overwrite;
 		this.preCheckBetInstance = getPreCheckBetInstance();
 		this.postCheckBetInstance = getPostCheckBetInstance();
 		this.preFoldCallRaiseInstance = getPreFoldCallRaiseInstance();
@@ -91,7 +93,7 @@ public class ARFFPropositionalizer extends Propositionalizer {
 			return arffFiles.get(actorId);
 		else {
 			try {
-				ARFFFile f = new ARFFFile(actorId, false);
+				ARFFFile f = new ARFFFile(actorId, overwrite);
 				arffFiles.put(actorId, f);
 				return f;
 			} catch (IOException e) {

@@ -42,11 +42,12 @@ public class WekaRegressionModel extends WekaModel {
 	protected final Classifier showdown4Model;
 	protected final Classifier showdown5Model;
 
-	public WekaRegressionModel(
+	public WekaRegressionModel(boolean overwrite,
 			Classifier preBetModel, Classifier preFoldModel, Classifier preCallModel, Classifier preRaiseModel,
 			Classifier postBetModel, Classifier postFoldModel, Classifier postCallModel, Classifier postRaiseModel,
 			Classifier showdown0Model, Classifier showdown1Model, Classifier showdown2Model, Classifier showdown3Model,
 			Classifier showdown4Model, Classifier showdown5Model) {
+		super(overwrite);
 		this.preBetModel = preBetModel;
 		this.preFoldModel = preFoldModel;
 		this.preCallModel = preCallModel;
