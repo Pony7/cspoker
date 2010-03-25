@@ -101,7 +101,7 @@ public abstract class TextOutputVisitor implements NodeVisitor {
 
 	protected String getEndNodeDescription(Pair<ActionWrapper,GameTreeNode> node, Distribution value) {
 		String bound = value.isUpperBound()?"<":"";
-		return "EV is "+bound + Math.round(value.getMean()) + " for " + node.getRight().toString() + " (σ="
+		return "EV is "+bound + Math.round(value.getMean()) + " for " + node.getRight().toString() + " s="
         + Math.round(Math.sqrt(value.getVariance())) + ")";
 
 	}
