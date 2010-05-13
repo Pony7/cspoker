@@ -17,9 +17,9 @@ public class ARFFPropositionalizer extends Propositionalizer {
 //	private final static Logger logger = Logger.getLogger(ARFFPropositionalizer.class);
 	
 	private static final String nl = InstancesBuilder.nl;	
+	private static HashMap<Object, ARFFPlayer> arffFiles = new HashMap<Object, ARFFPlayer>();
 	
 	private final HashMap<String, Card> cards = new HashMap<String, Card>();
-	private HashMap<Object, ARFFFile> arffFiles = new HashMap<Object, ARFFFile>();
 	
 	private final PreCheckBetInstances preCheckBetInstance;
 	private final PostCheckBetInstances postCheckBetInstance;
@@ -28,10 +28,10 @@ public class ARFFPropositionalizer extends Propositionalizer {
 	private final ShowdownInstances showdownInstance;
 	
 	private boolean newDeal = false;
-	private boolean overwrite;
+	private final WekaRegressionModel baseModel;
 	
-	public ARFFPropositionalizer(boolean overwrite) throws IOException {
-		this.overwrite = overwrite;
+	public ARFFPropositionalizer(WekaRegressionModel baseModel) throws IOException {
+		this.baseModel = baseModel;
 		this.preCheckBetInstance = getPreCheckBetInstance();
 		this.postCheckBetInstance = getPostCheckBetInstance();
 		this.preFoldCallRaiseInstance = getPreFoldCallRaiseInstance();
@@ -42,14 +42,7 @@ public class ARFFPropositionalizer extends Propositionalizer {
 			cards.put(c.getShortDescription(), c);
 		}
 	}
-	
-	@Override
-	public ARFFPropositionalizer clone() {
-		ARFFPropositionalizer clone = (ARFFPropositionalizer)super.clone();
-		clone.arffFiles = new HashMap<Object, ARFFFile>(arffFiles);
-		return clone;
-	}
-	
+
 	public static PreCheckBetInstances getPreCheckBetInstance() {
 		return new PreCheckBetInstances("PreCheckBet",
 				"@attribute betProb real" + nl
@@ -88,12 +81,12 @@ public class ARFFPropositionalizer extends Propositionalizer {
 				+ "@attribute avgPartition {0,1,2,3,4,5}" + nl);
 	}
 	
-	private ARFFFile getARFF(Object actorId) {
+	private ARFFPlayer getARFF(Object actorId) {
 		if (arffFiles.containsKey(actorId))
 			return arffFiles.get(actorId);
 		else {
 			try {
-				ARFFFile f = new ARFFFile(actorId, overwrite);
+				ARFFPlayer f = new ARFFPlayer(actorId, baseModel);
 				arffFiles.put(actorId, f);
 				return f;
 			} catch (IOException e) {

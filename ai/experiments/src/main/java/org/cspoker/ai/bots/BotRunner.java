@@ -27,6 +27,8 @@ import org.apache.log4j.Logger;
 import org.cspoker.ai.bots.bot.Bot;
 import org.cspoker.ai.bots.bot.BotFactory;
 import org.cspoker.ai.bots.bot.gametree.mcts.*;
+import org.cspoker.ai.bots.bot.gametree.mcts.listeners.SWTTreeListener;
+import org.cspoker.ai.bots.bot.gametree.mcts.listeners.TextTreeListener;
 import org.cspoker.ai.bots.bot.gametree.mcts.nodes.*;
 import org.cspoker.ai.bots.bot.gametree.mcts.strategies.backpropagation.*;
 import org.cspoker.ai.bots.bot.gametree.mcts.strategies.selection.*;
@@ -40,6 +42,7 @@ import org.cspoker.ai.bots.listener.GameLimitingBotListener;
 import org.cspoker.ai.bots.listener.ReSitInBotListener;
 import org.cspoker.ai.bots.listener.SpeedTestBotListener;
 import org.cspoker.ai.experiments.util.CombinationGenerator;
+import org.cspoker.ai.opponentmodels.weka.WekaOptions;
 import org.cspoker.ai.opponentmodels.weka.WekaRegressionModelFactory;
 import org.cspoker.client.common.SmartClientContext;
 import org.cspoker.client.common.SmartLobbyContext;
@@ -55,6 +58,7 @@ import org.cspoker.common.elements.table.TableId;
 import org.cspoker.common.util.Log4JPropertiesLoader;
 import org.cspoker.common.util.threading.GlobalThreadPool;
 import org.cspoker.common.util.threading.SingleThreadRequestExecutor;
+import org.eclipse.swt.widgets.Display;
 
 @NotThreadSafe
 public class BotRunner implements LobbyListener {
@@ -63,13 +67,13 @@ public class BotRunner implements LobbyListener {
 	private static final TableConfiguration config = new TableConfiguration(100,
 			0, false, true, true,0);
 
-	public static final int nbGamesPerConfrontation = 10;
+	public static final int nbGamesPerConfrontation = 2000;
 	public final int nbPlayersPerGame;
 
-	public static final int reportInterval = 1;
+	public static final int reportInterval = 50;
 	
 	public final String expName;
-	public final int nbExperiments = 1;
+	public final int nbExperiments = 3;
 	public static int currentExperiment = 1;
 	
 	static {
@@ -107,13 +111,13 @@ public class BotRunner implements LobbyListener {
 //			if(false){
 //				throw new ClassNotFoundException();
 //			}
-			Sampler s = new SmartSampler();
-			boolean overwrite = false;
-			return new BotRunner(cspokerServer, "test",
+//			WekaOptions.setArffPersistency(false);
+			Sampler s = new StochasticUniversalSampler(5);
+			return new BotRunner(cspokerServer, "testLearning",
 					new BotFactory[] {
 					new CallBotFactory("CallBot"),
-					new CardBotFactory("CardBot"),
-					new HandBotFactory("HandBot"),
+//					new CardBotFactory("CardBot"),
+//					new HandBotFactory("HandBot"),
 //					new FixedSampleMCTSBotFactory("MCTSBot",
 //							WekaRegressionModelFactory.createForZip(overwrite, "org/cspoker/ai/opponentmodels/weka/models/model1.zip"),
 //							new SamplingToFunctionSelector(50,new UCTSelector(40000)),
@@ -127,7 +131,7 @@ public class BotRunner implements LobbyListener {
 //							),s,
 //							1000,1000,1000,1000),
 					new MCTSBotFactory("MCTSBot",
-							WekaRegressionModelFactory.createForZip(overwrite, "org/cspoker/ai/opponentmodels/weka/models/model1.zip"),
+							WekaRegressionModelFactory.createForZip("org/cspoker/ai/opponentmodels/weka/models/model1.zip"),
 							new SamplingToFunctionSelector(50,new UCTSelector(2000)),
 							new SamplingSelector(),
 							new MaxValueSelector(),
@@ -269,8 +273,8 @@ public class BotRunner implements LobbyListener {
 
 			bot[0] = botFactories[botIndex[0]].createBot(botIDs[botIndex[0]], tableId,
 					botLobbies[botIndex[0]], buyIn, executor,
-//					new ReSitInBotListener(this), csvLogger, speedMonitor, gameLimiter);
-					new ReSitInBotListener(this), csvLogger, gameLimiter);
+					new ReSitInBotListener(this), csvLogger, speedMonitor, gameLimiter);
+//					new ReSitInBotListener(this), csvLogger, gameLimiter);
 			bot[0].start();
 			for (int i = 1; i < nbPlayersPerGame; i++) {
 				bot[i] = botFactories[botIndex[i]].createBot(botIDs[botIndex[i]],
