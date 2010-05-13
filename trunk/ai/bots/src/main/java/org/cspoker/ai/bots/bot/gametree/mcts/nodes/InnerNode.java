@@ -25,6 +25,7 @@ import org.cspoker.ai.bots.bot.gametree.action.SearchBotAction;
 import org.cspoker.ai.bots.bot.gametree.mcts.strategies.backpropagation.BackPropagationStrategy;
 import org.cspoker.ai.bots.bot.gametree.mcts.strategies.selection.SelectionStrategy;
 import org.cspoker.ai.bots.bot.gametree.search.expander.Expander;
+import org.cspoker.ai.opponentmodels.OpponentModelPool;
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.common.elements.player.PlayerId;
 
@@ -62,15 +63,19 @@ public abstract class InnerNode extends AbstractNode {
 
 	public INode selectRecursively(){
 		//if(!inTree) return this;
+//		long size = config.getModel().getVisitorSize();
 		boolean needsChildExpansion = (children==null);
 		if(needsChildExpansion){
-			config.getModel().assumeTemporarily(gameState);
+			OpponentModelPool.getInstance().assumeTemporarily(gameState);
+//			config.getModel().assumeTemporarily(gameState);
 			expandChildren();
 		}
 		INode selectedChild = selectChild().selectRecursively();
 		if(needsChildExpansion){
-			config.getModel().forgetLastAssumption();
+//			config.getModel().forgetLastAssumption();
+			OpponentModelPool.getInstance().forgetLastAssumption();
 		}
+//		if (size != config.getModel().getVisitorSize()) throw new IllegalStateException("Model didn't forget last assumption");
 		return selectedChild;
 	}
 
@@ -155,7 +160,7 @@ public abstract class InnerNode extends AbstractNode {
 
 	protected void expandChildren(){
 		if(children == null){
-			Expander expander = new Expander(gameState, config.getModel(), gameState.getNextToAct(), bot, config.getSampler());
+			Expander expander = new Expander(gameState, gameState.getNextToAct(), bot, config.getSampler());
 			List<ProbabilityAction> actions = expander.getProbabilityActions();
 			ImmutableList.Builder<INode> childrenBuilder = ImmutableList.builder();
 			probabilities = new double[actions.size()];

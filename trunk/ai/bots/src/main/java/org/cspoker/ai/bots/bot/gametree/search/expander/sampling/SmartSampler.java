@@ -24,11 +24,16 @@ public class SmartSampler extends Sampler {
 	public ImmutableList<ProbabilityAction> getProbabilityActions(
 			GameState gameState, OpponentModel model, PlayerId actor,
 			PlayerId bot) {
+//		long size;
 		List<ProbabilityAction> actions = Lists.newArrayListWithExpectedSize(2+relBetSizeSamples.length);
 		if (gameState.getDeficit(actor)>0) {
 			// call, raise or fold
-			Triple<Double, Double, Double> probabilities;
-			probabilities = model.getFoldCallRaiseProbabilities(gameState, actor);
+//			size = model.getVisitorSize();
+			model.assumeTemporarily(gameState);
+			Triple<Double, Double, Double> probabilities = 
+				model.getFoldCallRaiseProbabilities(gameState, actor);
+			model.forgetLastAssumption();
+//			if (size != model.getVisitorSize()) throw new IllegalStateException("Model didn't forget last assumption");
 
 			double foldProbability = probabilities.getLeft();
 			actions.add(new ProbabilityAction(new FoldAction(gameState, actor), foldProbability));
@@ -44,7 +49,12 @@ public class SmartSampler extends Sampler {
 			}
 		} else {
 			// check or bet
+//			size = model.getVisitorSize();
+			model.assumeTemporarily(gameState);
 			Pair<Double, Double> probabilities = model.getCheckBetProbabilities(gameState, actor);
+			model.forgetLastAssumption();
+//			if (size != model.getVisitorSize()) throw new IllegalStateException("Model didn't forget last assumption");
+			
 			double checkProbability = probabilities.getLeft();
 			actions.add(new ProbabilityAction(new CheckAction(gameState, actor), checkProbability));
 

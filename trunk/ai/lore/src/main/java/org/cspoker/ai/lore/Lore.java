@@ -24,8 +24,7 @@ import org.cspoker.ai.bots.bot.Bot;
 import org.cspoker.ai.bots.bot.BotFactory;
 import org.cspoker.ai.bots.bot.gametree.mcts.MCTSBotFactory;
 import org.cspoker.ai.bots.bot.gametree.mcts.listeners.MCTSListener.Factory;
-import org.cspoker.ai.bots.bot.gametree.mcts.nodes.MCTSBucketShowdownNode;
-import org.cspoker.ai.bots.bot.gametree.mcts.nodes.MCTSShowdownRollOutNode;
+import org.cspoker.ai.bots.bot.gametree.mcts.nodes.*;
 import org.cspoker.ai.bots.bot.gametree.mcts.strategies.backpropagation.SampleWeightedBackPropStrategy;
 import org.cspoker.ai.bots.bot.gametree.mcts.strategies.selection.MaxValueSelector;
 import org.cspoker.ai.bots.bot.gametree.mcts.strategies.selection.SamplingSelector;
@@ -74,7 +73,7 @@ public class Lore {
 			//			 new CallBotFactory();
 			new MCTSBotFactory(
 					"CSPoker Bot",
-					WekaRegressionModelFactory.createForZip(true, "org/cspoker/ai/opponentmodels/weka/models/model1.zip"),
+					WekaRegressionModelFactory.createForZip("org/cspoker/ai/opponentmodels/weka/models/model1.zip"),
 					new SamplingToFunctionSelector(50,new UCTSelector(2000000)),
 					new SamplingSelector(),
 					new MaxValueSelector(),

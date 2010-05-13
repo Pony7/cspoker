@@ -22,15 +22,19 @@ import org.apache.log4j.Logger;
 import org.cspoker.ai.bots.bot.AbstractBot;
 import org.cspoker.ai.bots.bot.gametree.action.SearchBotAction;
 import org.cspoker.ai.bots.bot.gametree.mcts.listeners.MCTSListener;
+import org.cspoker.ai.bots.bot.gametree.mcts.listeners.SWTTreeListener;
+import org.cspoker.ai.bots.bot.gametree.mcts.listeners.TextTreeListener;
 import org.cspoker.ai.bots.bot.gametree.mcts.nodes.Config;
 import org.cspoker.ai.bots.bot.gametree.mcts.nodes.INode;
 import org.cspoker.ai.bots.bot.gametree.mcts.nodes.RootNode;
 import org.cspoker.ai.bots.listener.BotListener;
+import org.cspoker.ai.opponentmodels.OpponentModelPool;
 import org.cspoker.client.common.SmartLobbyContext;
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.elements.table.TableId;
+import org.eclipse.swt.widgets.Display;
 
 public class MCTSBot extends AbstractBot {
 
@@ -106,6 +110,13 @@ public class MCTSBot extends AbstractBot {
 		for (MCTSListener listener : listeners) {
 			listener.onMCTS(root);
 		}
+//		if (OpponentModelPool.getInstance().size() > 1) {
+//			TextTreeListener.Factory factory = new TextTreeListener.Factory();
+////			SWTTreeListener.Factory factory = new SWTTreeListener.Factory(Display.getDefault());
+//			MCTSListener listener = factory.create(gameState, botId);
+//			listener.onMCTS(root);
+//			System.out.println("Tree printed");
+//		}
 	}
 
 //	long currentCount = 0;

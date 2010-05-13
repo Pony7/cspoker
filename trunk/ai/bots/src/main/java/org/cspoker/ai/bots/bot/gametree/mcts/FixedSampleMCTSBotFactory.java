@@ -16,7 +16,6 @@
  */
 package org.cspoker.ai.bots.bot.gametree.mcts;
 
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 
 import org.cspoker.ai.bots.bot.Bot;
@@ -29,6 +28,7 @@ import org.cspoker.ai.bots.bot.gametree.mcts.strategies.selection.SelectionStrat
 import org.cspoker.ai.bots.bot.gametree.search.expander.sampling.Sampler;
 import org.cspoker.ai.bots.listener.BotListener;
 import org.cspoker.ai.opponentmodels.OpponentModel;
+import org.cspoker.ai.opponentmodels.OpponentModelPool;
 import org.cspoker.client.common.SmartLobbyContext;
 import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.elements.table.TableId;
@@ -38,7 +38,6 @@ public class FixedSampleMCTSBotFactory implements BotFactory {
 
 	private static int copies = 0;
 
-	private final ConcurrentHashMap<PlayerId, OpponentModel> opponentModels = new ConcurrentHashMap<PlayerId, OpponentModel>();
 	private final MCTSListener.Factory[] listeners;
 	private final OpponentModel.Factory opponentModelFactory;
 	private final SelectionStrategy decisionNodeSelectionStrategy;
@@ -87,10 +86,10 @@ public class FixedSampleMCTSBotFactory implements BotFactory {
 			SmartLobbyContext lobby, int buyIn, ExecutorService executor,
 			BotListener... botListeners) {
 		copies++;
-		OpponentModel opponentModel = opponentModels.get(botId);
+		OpponentModel opponentModel = OpponentModelPool.getInstance().getModel(botId);
 		if(opponentModel==null){
 			opponentModel = opponentModelFactory.create();
-			opponentModels.put(botId, opponentModel);
+			OpponentModelPool.getInstance().addModel(botId, opponentModel);
 		}
 		Config config = new Config(opponentModel, showdownNodeFactory, 
 				decisionNodeSelectionStrategy, opponentNodeSelectionStrategy, 
