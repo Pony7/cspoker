@@ -31,6 +31,7 @@ import org.cspoker.ai.bots.bot.gametree.mcts.strategies.selection.SamplingToFunc
 import org.cspoker.ai.bots.bot.gametree.mcts.strategies.selection.UCTPlusSelector;
 import org.cspoker.ai.bots.bot.gametree.mcts.strategies.selection.UCTSelector;
 import org.cspoker.ai.bots.bot.gametree.search.expander.sampling.*;
+import org.cspoker.ai.opponentmodels.weka.WekaOptions;
 import org.cspoker.ai.opponentmodels.weka.WekaRegressionModelFactory;
 import org.cspoker.server.embedded.EmbeddedCSPokerServer;
 
@@ -38,6 +39,9 @@ import org.cspoker.server.embedded.EmbeddedCSPokerServer;
 public class RunExperimentD {
 
 	public static void main(String[] args) throws IOException, ClassNotFoundException {
+
+		WekaOptions config = new WekaOptions();
+		config.setUseOnlineLearning(false);
 		
 		if(args[0].equals("time")){
 
@@ -54,7 +58,7 @@ public class RunExperimentD {
 					new BotFactory[] {
 						new MCTSBotFactory(
 								"Standard Bot",
-								WekaRegressionModelFactory.createForZip("org/cspoker/client/bots/bot/search/opponentmodel/weka/models/model1.zip"),
+								WekaRegressionModelFactory.createForZip("org/cspoker/client/bots/bot/search/opponentmodel/weka/models/model1.zip", config),
 								new SamplingToFunctionSelector(treshold1,new UCTSelector(C)),
 								new SamplingSelector(),
 								new MaxValueSelector(),
@@ -69,7 +73,7 @@ public class RunExperimentD {
 						),
 						new MCTSBotFactory(
 								"MaxDistribution Bot",
-								WekaRegressionModelFactory.createForZip("org/cspoker/client/bots/bot/search/opponentmodel/weka/models/model1.zip"),
+								WekaRegressionModelFactory.createForZip("org/cspoker/client/bots/bot/search/opponentmodel/weka/models/model1.zip", config),
 								new SamplingToFunctionSelector(treshold1,new UCTPlusSelector(C, C2)),
 								new SamplingSelector(),
 								new MaxValueSelector(),
@@ -101,7 +105,7 @@ public class RunExperimentD {
 					new BotFactory[] {
 						new FixedSampleMCTSBotFactory(
 								"Standard Bot",
-								WekaRegressionModelFactory.createForZip("org/cspoker/client/bots/bot/search/opponentmodel/weka/models/model1.zip"),
+								WekaRegressionModelFactory.createForZip("org/cspoker/client/bots/bot/search/opponentmodel/weka/models/model1.zip", config),
 								new SamplingToFunctionSelector(treshold1,new UCTSelector(C)),
 								new SamplingSelector(),
 								new MaxValueSelector(),
@@ -116,7 +120,7 @@ public class RunExperimentD {
 						),
 						new FixedSampleMCTSBotFactory(
 								"MaxDistribution Bot",
-								WekaRegressionModelFactory.createForZip("org/cspoker/client/bots/bot/search/opponentmodel/weka/models/model1.zip"),
+								WekaRegressionModelFactory.createForZip("org/cspoker/client/bots/bot/search/opponentmodel/weka/models/model1.zip", config),
 								new SamplingToFunctionSelector(treshold1,new UCTPlusSelector(C, C2)),
 								new SamplingSelector(),
 								new MaxValueSelector(),

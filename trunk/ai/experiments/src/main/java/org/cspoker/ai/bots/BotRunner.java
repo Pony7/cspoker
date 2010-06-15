@@ -39,6 +39,7 @@ import org.cspoker.ai.bots.bot.rule.*;
 import org.cspoker.ai.bots.listener.BotListener;
 import org.cspoker.ai.bots.listener.CSVLogListener;
 import org.cspoker.ai.bots.listener.GameLimitingBotListener;
+import org.cspoker.ai.bots.listener.KullbackLeiblerListener;
 import org.cspoker.ai.bots.listener.ReSitInBotListener;
 import org.cspoker.ai.bots.listener.SpeedTestBotListener;
 import org.cspoker.ai.experiments.util.CombinationGenerator;
@@ -67,14 +68,12 @@ public class BotRunner implements LobbyListener {
 	private static final TableConfiguration config = new TableConfiguration(100,
 			0, false, true, true,0);
 
-	public static final int nbGamesPerConfrontation = 2000;
-	public final int nbPlayersPerGame;
-
-	public static final int reportInterval = 50;
+	public static final int nbGamesPerConfrontation = 300;
+	public static final int reportInterval = 1;	
+	public final int nbExperiments = 1;
 	
-	public final String expName;
-	public final int nbExperiments = 3;
 	public static int currentExperiment = 1;
+	public int nbPlayersPerGame;
 	
 	static {
 		Log4JPropertiesLoader
@@ -83,14 +82,14 @@ public class BotRunner implements LobbyListener {
 
 	private final static Logger logger = Logger.getLogger(BotRunner.class);
 
-	private final BotFactory[] botFactories;
+	private BotFactory[] botFactories;
 
-	private final SmartLobbyContext[] botLobbies;
-	private final PlayerId[] botIDs;
+	private SmartLobbyContext[] botLobbies;
+	private PlayerId[] botIDs;
 
-	protected final SmartLobbyContext directorLobby;
+	protected SmartLobbyContext directorLobby;
 
-	private final ExecutorService executor;
+	private ExecutorService executor;
 
 	private volatile Bot[] bot;
 
@@ -99,10 +98,18 @@ public class BotRunner implements LobbyListener {
 	private BotListener speedMonitor;
 	private CSVLogListener csvLogger;
 	private volatile BotListener gameLimiter;
-
-	private final CombinationGenerator combinationgenerator;
-
-	public static BotRunner create(RemoteCSPokerServer cspokerServer) {
+	private static KullbackLeiblerListener kullbackLeibler;
+	
+	private CombinationGenerator combinationgenerator;
+	private final String expName;
+	private final RemoteCSPokerServer cspokerServer;
+	
+	public static void create(RemoteCSPokerServer cspokerServer) {		
+//		new BotRunner(cspokerServer, "bucketSampler0.01VsRulebots");
+		new BotRunner(cspokerServer, "testBucket", getBots());
+	}
+	
+	public static BotFactory[] getBots() {
 		try {
 //			if(false){
 //				//hide compiler warnings
@@ -111,127 +118,154 @@ public class BotRunner implements LobbyListener {
 //			if(false){
 //				throw new ClassNotFoundException();
 //			}
-//			WekaOptions.setArffPersistency(false);
-			Sampler s = new StochasticUniversalSampler(5);
-			return new BotRunner(cspokerServer, "testLearning",
-					new BotFactory[] {
-					new CallBotFactory("CallBot"),
-//					new CardBotFactory("CardBot"),
-//					new HandBotFactory("HandBot"),
-//					new FixedSampleMCTSBotFactory("MCTSBot",
-//							WekaRegressionModelFactory.createForZip(overwrite, "org/cspoker/ai/opponentmodels/weka/models/model1.zip"),
-//							new SamplingToFunctionSelector(50,new UCTSelector(40000)),
-//							new SamplingToFunctionSelector(50,new UCTPlusPlusSelector()),
-//							new MaxValueSelector(),
-//							new MCTSBucketShowdownNode.Factory(),
-//							new MixedBackPropStrategy.Factory(
-//									50,
-//									new SampleWeightedBackPropStrategy.Factory(),
-//									new MaxDistributionPlusBackPropStrategy.Factory()
-//							),s,
-//							1000,1000,1000,1000),
-					new MCTSBotFactory("MCTSBot",
-							WekaRegressionModelFactory.createForZip("org/cspoker/ai/opponentmodels/weka/models/model1.zip"),
-							new SamplingToFunctionSelector(50,new UCTSelector(2000)),
-							new SamplingSelector(),
-							new MaxValueSelector(),
-							new MCTSShowdownRollOutNode.Factory(),
-							new SampleWeightedBackPropStrategy.Factory(),
-							s,
-							250
-					),
-//					new SearchBotFactory(
-//							WekaRegressionModelFactory.createForZip(overwrite, "org/cspoker/ai/opponentmodels/weka/models/model1.zip"),
-//							new ShowdownRolloutNode.Factory(new DistributionRollout4.Factory()), s,												
-//							200, 600, 1000, 3000, 0.0, false, true
-//					)
-					//					new MCTSBotFactory(
-					//							"MCTS Bot",
-					//							new WekaRegressionModelFactory("/home/guy/Werk/thesis/weka-3-6-0/model1"),
-					//							new SamplingToFunctionSelector(20,new UCTSelector(40000)),
-					//							new SamplingSelector(),
-					//							new MaxValueSelector(),
-					//							new MCTSBucketShowdownNode.Factory(),
-					//							new SampleWeightedBackPropStrategy.Factory(),
-					//							2000
-					//					),
-					//					new MCTSBotFactory(
-					//							"Bot 2",
-					//							new WekaRegressionModelFactory("/home/guy/Werk/thesis/weka-3-6-0/model1"),
-					//							new SamplingToFunctionSelector(10,new UCTPlusSelector(2000,0.5)),
-					//							new MixedSelectionStrategy(new SamplingSelector(), new MinValueSelector(),0.95),
-					//							new MaxUnderValueSelector(2),
-					//							new MCTSBucketShowdownNode.Factory(),
-					//							new MixtureBackPropStrategy.Factory(new MaxUnderValueSelector(2)),
-					//							250
-					//					),
-					//					new MCTSBotFactory(
-					//							"Bot 3",
-					//							new WekaRegressionModelFactory("/home/guy/Werk/thesis/weka-3-6-0/model1"),
-					//							new SamplingToFunctionSelector(10,new UCTSelector(20000)),
-					//							new MixedSelectionStrategy(new SamplingSelector(), new MinValueSelector(),0.95),
-					//							new MaxUnderValueSelector(2),
-					//							new MCTSBucketShowdownNode.Factory(),
-					//							new MixtureBackPropStrategy.Factory(new MaxUnderValueSelector(2)),
-					//							250
-					//					),
-					//					new MCTSBotFactory(
-					//							"Bot 4",
-					//							new WekaRegressionModelFactory("/home/guy/Werk/thesis/weka-3-6-0/model1"),
-					//							new SamplingToFunctionSelector(10,new UCTPlusSelector(20000,0.5)),
-					//							new MixedSelectionStrategy(new SamplingSelector(), new MinValueSelector(),0.95),
-					//							new MaxUnderValueSelector(2),
-					//							new MCTSBucketShowdownNode.Factory(),
-					//							new MixtureBackPropStrategy.Factory(new MaxUnderValueSelector(2)),
-					//							250
-					//					),
-					//					new MCTSBotFactory(
-					//							"Bot B",
-					//							new WekaRegressionModelFactory("/home/guy/Werk/thesis/weka-3-6-0/model1"),
-					//							new SamplingToFunctionSelector(new UCTSelector(5000)),
-					//							new SampleProportionateSelector(),
-					//							new MCTSBucketShowdownNode.Factory(),
-					//							50),
-			});
+			WekaOptions configNoPersist = new WekaOptions();
+			configNoPersist.setUseOnlineLearning(false);
+			WekaOptions configPersist = new WekaOptions();
+			configPersist.setContinuousLearning(true);
+			configPersist.setModelCreationTreshold(1000);
+//			configPersist.setContinueAfterCreation(true);
+			Sampler s = new BucketSampler(0.01);
+//			Sampler s = new StochasticUniversalSampler(9);
+//			Sampler s = new RouletteWheelSampler(9);
+//			Sampler s = new RandomSampler(9);
+			kullbackLeibler = new KullbackLeiblerListener(reportInterval); 
+			
+			return new BotFactory[] {
+//				new CallBotFactory("CallBot"),
+				new CardBotFactory("CardBot"),
+//				new HandBotFactory("HandBot"),
+//				new FixedSampleMCTSBotFactory("MCTSBot",
+//						WekaRegressionModelFactory.createForZip("org/cspoker/ai/opponentmodels/weka/models/model1.zip",
+//								configNoPersist),
+//						new SamplingToFunctionSelector(50,new UCTSelector(40000)),
+//						new SamplingToFunctionSelector(50,new UCTPlusPlusSelector()),
+//						new MaxValueSelector(),
+//						new MCTSBucketShowdownNode.Factory(),
+//						new MixedBackPropStrategy.Factory(
+//								50,
+//								new SampleWeightedBackPropStrategy.Factory(),
+//								new MaxDistributionPlusBackPropStrategy.Factory()
+//						),s,
+//						200,500,1000,3000),
+//				new MCTSBotFactory("MCTSBot",
+//						WekaRegressionModelFactory.createForZip(
+//								"org/cspoker/ai/opponentmodels/weka/models/model1.zip", configNoPersist),
+//						new SamplingToFunctionSelector(50,new UCTSelector(2000)),
+//						new SamplingSelector(),
+//						new MaxValueSelector(),
+//						new MCTSShowdownRollOutNode.Factory(),
+//						new SampleWeightedBackPropStrategy.Factory(),
+//						s,
+//						500
+//				),
+				new MCTSBotFactory("MCTSBot",
+						WekaRegressionModelFactory.createForZip(
+								"org/cspoker/ai/opponentmodels/weka/models/model1.zip", configPersist, kullbackLeibler),
+						new SamplingToFunctionSelector(50,new UCTSelector(2000)),
+						new SamplingSelector(),
+						new MaxValueSelector(),
+						new MCTSShowdownRollOutNode.Factory(),
+						new SampleWeightedBackPropStrategy.Factory(),
+						s,
+						250
+				),
+//				new SearchBotFactory(
+//						WekaRegressionModelFactory.createForZip("org/cspoker/ai/opponentmodels/weka/models/model1.zip", configNoPersist),
+//						new ShowdownRolloutNode.Factory(new DistributionRollout4.Factory()), s,												
+//						200, 600, 1000, 3000, 0.0, false, true
+//				)
+				//					new MCTSBotFactory(
+				//							"MCTS Bot",
+				//							new WekaRegressionModelFactory("/home/guy/Werk/thesis/weka-3-6-0/model1"),
+				//							new SamplingToFunctionSelector(20,new UCTSelector(40000)),
+				//							new SamplingSelector(),
+				//							new MaxValueSelector(),
+				//							new MCTSBucketShowdownNode.Factory(),
+				//							new SampleWeightedBackPropStrategy.Factory(),
+				//							2000
+				//					),
+				//					new MCTSBotFactory(
+				//							"Bot 2",
+				//							new WekaRegressionModelFactory("/home/guy/Werk/thesis/weka-3-6-0/model1"),
+				//							new SamplingToFunctionSelector(10,new UCTPlusSelector(2000,0.5)),
+				//							new MixedSelectionStrategy(new SamplingSelector(), new MinValueSelector(),0.95),
+				//							new MaxUnderValueSelector(2),
+				//							new MCTSBucketShowdownNode.Factory(),
+				//							new MixtureBackPropStrategy.Factory(new MaxUnderValueSelector(2)),
+				//							250
+				//					),
+				//					new MCTSBotFactory(
+				//							"Bot 3",
+				//							new WekaRegressionModelFactory("/home/guy/Werk/thesis/weka-3-6-0/model1"),
+				//							new SamplingToFunctionSelector(10,new UCTSelector(20000)),
+				//							new MixedSelectionStrategy(new SamplingSelector(), new MinValueSelector(),0.95),
+				//							new MaxUnderValueSelector(2),
+				//							new MCTSBucketShowdownNode.Factory(),
+				//							new MixtureBackPropStrategy.Factory(new MaxUnderValueSelector(2)),
+				//							250
+				//					),
+				//					new MCTSBotFactory(
+				//							"Bot 4",
+				//							new WekaRegressionModelFactory("/home/guy/Werk/thesis/weka-3-6-0/model1"),
+				//							new SamplingToFunctionSelector(10,new UCTPlusSelector(20000,0.5)),
+				//							new MixedSelectionStrategy(new SamplingSelector(), new MinValueSelector(),0.95),
+				//							new MaxUnderValueSelector(2),
+				//							new MCTSBucketShowdownNode.Factory(),
+				//							new MixtureBackPropStrategy.Factory(new MaxUnderValueSelector(2)),
+				//							250
+				//					),
+				//					new MCTSBotFactory(
+				//							"Bot B",
+				//							new WekaRegressionModelFactory("/home/guy/Werk/thesis/weka-3-6-0/model1"),
+				//							new SamplingToFunctionSelector(new UCTSelector(5000)),
+				//							new SampleProportionateSelector(),
+				//							new MCTSBucketShowdownNode.Factory(),
+				//							50),
+			};
+					
 		} catch (IOException e) {
 			throw new IllegalStateException(e);
 		} catch (ClassNotFoundException e) {
 			throw new IllegalStateException(e);
 		}
 	}
-
+	
 	public BotRunner(RemoteCSPokerServer cspokerServer, BotFactory[] bots) {
 		this(cspokerServer, "bots", bots);
 	}
 	
 	public BotRunner(RemoteCSPokerServer cspokerServer, String expName, BotFactory[] bots) {
+		this.expName = expName;
+		this.cspokerServer = cspokerServer;
+		this.botFactories = bots;
+		
+		prepareBots();
+		iterateBots();
+	}
+	
+	private void prepareBots() {
 		try {
-			this.botFactories = bots;
-			nbPlayersPerGame = bots.length;//or a constant
+			nbPlayersPerGame = botFactories.length;//or a constant
 			bot = new Bot[nbPlayersPerGame];
 			botIndex = new int[nbPlayersPerGame];
-
-			botLobbies = new SmartLobbyContext[bots.length];
-			botIDs = new PlayerId[bots.length];
+	
+			botLobbies = new SmartLobbyContext[botFactories.length];
+			botIDs = new PlayerId[botFactories.length];
 			
-			this.expName = expName;
-
 			SmartClientContext director = new SmartClientContext(cspokerServer
 					.login("director", "test"));
 			directorLobby = director.getLobbyContext(BotRunner.this);
-
-			for (int i = 0; i < bots.length; i++) {
+	
+			for (int i = 0; i < botFactories.length; i++) {
 				SmartClientContext clientContext = new SmartClientContext(
-						cspokerServer.login(bots[i].toString(), "test"));
+						cspokerServer.login(botFactories[i].toString(), "test"));
 				botLobbies[i] = clientContext.getLobbyContext(new DefaultLobbyListener());
 				botIDs[i] = clientContext.getAccountContext().getPlayerID();
 			}
-
+	
 			executor = SingleThreadRequestExecutor.getInstance();
-
-			combinationgenerator = new CombinationGenerator(bots.length, nbPlayersPerGame);
-			iterateBots();
-
+	
+			combinationgenerator = new CombinationGenerator(botFactories.length, nbPlayersPerGame);
 		} catch (LoginException e) {
 			throw new IllegalStateException("Login Failed", e);
 		} catch (RemoteException e) {
@@ -241,7 +275,6 @@ public class BotRunner implements LobbyListener {
 			logger.error(e);
 			throw new IllegalStateException("Server setup failed.", e);
 		}
-
 	}
 
 	private void iterateBots() {
@@ -273,8 +306,7 @@ public class BotRunner implements LobbyListener {
 
 			bot[0] = botFactories[botIndex[0]].createBot(botIDs[botIndex[0]], tableId,
 					botLobbies[botIndex[0]], buyIn, executor,
-					new ReSitInBotListener(this), csvLogger, speedMonitor, gameLimiter);
-//					new ReSitInBotListener(this), csvLogger, gameLimiter);
+					new ReSitInBotListener(this), /*csvLogger, speedMonitor,*/ gameLimiter, kullbackLeibler);
 			bot[0].start();
 			for (int i = 1; i < nbPlayersPerGame; i++) {
 				bot[i] = botFactories[botIndex[i]].createBot(botIDs[botIndex[i]],
@@ -295,7 +327,8 @@ public class BotRunner implements LobbyListener {
 		logger.info("Experiment " + expName + "-" + (currentExperiment - 1)
 				+ " successfully ended!");
 		if (currentExperiment <= nbExperiments) {
-			resetStateAndStartPlay();
+			prepareBots();
+			iterateBots();
 		} else {
 			executor.shutdownNow();
 			GlobalThreadPool.getInstance().shutdownNow();
@@ -336,7 +369,7 @@ public class BotRunner implements LobbyListener {
 		return bot[i];
 	}
 
-	public static TableConfiguration getConfig() {
+	public TableConfiguration getConfig() {
 		return config;
 	}
 

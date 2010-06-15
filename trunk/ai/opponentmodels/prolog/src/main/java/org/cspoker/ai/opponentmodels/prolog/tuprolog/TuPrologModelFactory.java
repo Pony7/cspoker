@@ -21,6 +21,7 @@ import java.io.IOException;
 import net.jcip.annotations.ThreadSafe;
 
 import org.cspoker.ai.opponentmodels.OpponentModel;
+import org.cspoker.common.elements.player.PlayerId;
 
 import alice.tuprolog.InvalidTheoryException;
 import alice.tuprolog.Prolog;
@@ -30,7 +31,7 @@ import alice.tuprolog.Theory;
 public class TuPrologModelFactory implements OpponentModel.Factory {
 
 	@Override
-	public OpponentModel create() {
+	public OpponentModel create(PlayerId actor) {
 		Prolog engine = new Prolog();
 		try {
 			Theory theory1 = new Theory(

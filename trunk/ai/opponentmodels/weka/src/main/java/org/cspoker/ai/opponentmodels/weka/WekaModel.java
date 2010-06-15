@@ -15,94 +15,61 @@
  */
 package org.cspoker.ai.opponentmodels.weka;
 
-import java.util.ArrayDeque;
-import java.util.Deque;
-
 import org.apache.log4j.Logger;
-import org.cspoker.ai.opponentmodels.OpponentModel;
 import org.cspoker.ai.opponentmodels.weka.instances.InstancesBuilder;
 import org.cspoker.ai.opponentmodels.weka.instances.PostCheckBetInstances;
 import org.cspoker.ai.opponentmodels.weka.instances.PostFoldCallRaiseInstances;
 import org.cspoker.ai.opponentmodels.weka.instances.PreCheckBetInstances;
 import org.cspoker.ai.opponentmodels.weka.instances.PreFoldCallRaiseInstances;
 import org.cspoker.ai.opponentmodels.weka.instances.ShowdownInstances;
-import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.common.elements.player.PlayerId;
+
+import org.cspoker.ai.opponentmodels.weka.Propositionalizer;
+import org.cspoker.ai.opponentmodels.weka.WekaRegressionModel;
 
 import weka.core.Instance;
 
-public abstract class WekaModel implements OpponentModel{
+public abstract class WekaModel {
 
 	protected static final Logger logger = Logger.getLogger(WekaRegressionModel.class);
-	
-	protected PlayerTrackingVisitor visitor;
-	private final Deque<PlayerTrackingVisitor> visitors = new ArrayDeque<PlayerTrackingVisitor>();
-	
+
 	private final PostCheckBetInstances postCheckBetInstance;
 	private final PreCheckBetInstances preCheckBetInstance;
 	private final PreFoldCallRaiseInstances preFoldCallRaiseInstance;
 	private final PostFoldCallRaiseInstances postFoldCallRaiseInstance;
 	private final ShowdownInstances showdownInstance;
-	
+
 	public WekaModel() {
-		this.visitor = new PlayerTrackingVisitor();
-		
-		this.preCheckBetInstance = new PreCheckBetInstances("PreCheckBet", "@attribute prob real"+InstancesBuilder.nl);
-		this.postCheckBetInstance = new PostCheckBetInstances("PostCheckBet", "@attribute prob real"+InstancesBuilder.nl);
-		this.preFoldCallRaiseInstance = new PreFoldCallRaiseInstances("PreFoldCallRaise", "@attribute prob real"+InstancesBuilder.nl);
-		this.postFoldCallRaiseInstance = new PostFoldCallRaiseInstances("PostFoldCallRaise", "@attribute prob real"+InstancesBuilder.nl);
-		this.showdownInstance = new ShowdownInstances("Showdown", "@attribute prob real"+InstancesBuilder.nl);
+		this.preCheckBetInstance = new PreCheckBetInstances("PreCheckBet", "@attribute prob real" + InstancesBuilder.nl);
+		this.postCheckBetInstance = new PostCheckBetInstances("PostCheckBet", "@attribute prob real" + InstancesBuilder.nl);
+		this.preFoldCallRaiseInstance = new PreFoldCallRaiseInstances("PreFoldCallRaise", "@attribute prob real" + InstancesBuilder.nl);
+		this.postFoldCallRaiseInstance = new PostFoldCallRaiseInstances("PostFoldCallRaise", "@attribute prob real" + InstancesBuilder.nl);
+		this.showdownInstance = new ShowdownInstances("Showdown", "@attribute prob real" + InstancesBuilder.nl);
 	}
 
-//	public long getVisitorSize() {
-//		System.out.print("<" + visitors.size() + ">");
-//		return visitors.size();
-//	}
-	
-	@Override
-	public void assumePermanently(GameState gameState) {
-		visitor.readHistory(gameState);
+	//	public long getVisitorSize() {
+	//		System.out.print("<" + visitors.size() + ">");
+	//		return visitors.size();
+	//	}
+
+	protected Instance getPreCheckBetInstance(PlayerId actor, Propositionalizer props) {
+		return preCheckBetInstance.getUnclassifiedInstance(props, actor);
 	}
 
-	@Override
-	public void assumeTemporarily(GameState gameState) {
-		PlayerTrackingVisitor root = getTopVisitor();
-		PlayerTrackingVisitor clonedTopVisitor = root.clone();
-		clonedTopVisitor.readHistory(gameState);
-		visitors.push(clonedTopVisitor);
+	protected Instance getPostCheckBetInstance(PlayerId actor, Propositionalizer props) {
+		return postCheckBetInstance.getUnclassifiedInstance(props, actor);
 	}
 
-	@Override
-	public void forgetLastAssumption() {
-		if(!visitors.isEmpty())
-			visitors.pop();
+	protected Instance getPostFoldCallRaiseInstance(PlayerId actor, Propositionalizer props) {
+		return postFoldCallRaiseInstance.getUnclassifiedInstance(props, actor);
 	}
 
-	protected PlayerTrackingVisitor getTopVisitor() {
-		if(visitors.isEmpty()){
-			return visitor;
-		}
-		return visitors.peek();
-	}
-	
-	protected Instance getPreCheckBetInstance(PlayerId actor) {
-		return preCheckBetInstance.getUnclassifiedInstance(getTopVisitor().getPropz(), actor);
+	protected Instance getPreFoldCallRaiseInstance(PlayerId actor, Propositionalizer props) {
+		return preFoldCallRaiseInstance.getUnclassifiedInstance(props, actor);
 	}
 
-	protected Instance getPostCheckBetInstance(PlayerId actor) {
-		return postCheckBetInstance.getUnclassifiedInstance(getTopVisitor().getPropz(), actor);
-	}
-
-	protected Instance getPostFoldCallRaiseInstance(PlayerId actor) {
-		return postFoldCallRaiseInstance.getUnclassifiedInstance(getTopVisitor().getPropz(), actor);
-	}
-
-	protected Instance getPreFoldCallRaiseInstance(PlayerId actor) {
-		return preFoldCallRaiseInstance.getUnclassifiedInstance(getTopVisitor().getPropz(), actor);
-	}
-
-	protected Instance getShowdownInstance(PlayerId actor) {
-		return showdownInstance.getUnclassifiedInstance(getTopVisitor().getPropz(), actor);
+	protected Instance getShowdownInstance(PlayerId actor, Propositionalizer props) {
+		return showdownInstance.getUnclassifiedInstance(props, actor);
 	}
 
 }

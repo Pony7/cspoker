@@ -15,11 +15,13 @@
  */
 package org.cspoker.ai.opponentmodels.weka;
 
-import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.common.elements.player.PlayerId;
-import org.cspoker.common.elements.table.Round;
 import org.cspoker.common.util.Pair;
 import org.cspoker.common.util.Triple;
+
+import org.cspoker.ai.opponentmodels.weka.Propositionalizer;
+import org.cspoker.ai.opponentmodels.weka.WekaModel;
+import org.cspoker.ai.opponentmodels.weka.WekaRegressionModel;
 
 import weka.classifiers.Classifier;
 import weka.core.Instance;
@@ -41,11 +43,9 @@ public class WekaRegressionModel extends WekaModel {
 	protected Classifier showdown4Model;
 	protected Classifier showdown5Model;
 
-	public WekaRegressionModel(
-			Classifier preBetModel, Classifier preFoldModel, Classifier preCallModel, Classifier preRaiseModel,
-			Classifier postBetModel, Classifier postFoldModel, Classifier postCallModel, Classifier postRaiseModel,
-			Classifier showdown0Model, Classifier showdown1Model, Classifier showdown2Model, Classifier showdown3Model,
-			Classifier showdown4Model, Classifier showdown5Model) {
+	public WekaRegressionModel(Classifier preBetModel, Classifier preFoldModel, Classifier preCallModel, Classifier preRaiseModel, Classifier postBetModel,
+			Classifier postFoldModel, Classifier postCallModel, Classifier postRaiseModel, Classifier showdown0Model, Classifier showdown1Model,
+			Classifier showdown2Model, Classifier showdown3Model, Classifier showdown4Model, Classifier showdown5Model) {
 		this.preBetModel = preBetModel;
 		this.preFoldModel = preFoldModel;
 		this.preCallModel = preCallModel;
@@ -60,10 +60,8 @@ public class WekaRegressionModel extends WekaModel {
 		this.showdown3Model = showdown3Model;
 		this.showdown4Model = showdown4Model;
 		this.showdown5Model = showdown5Model;
-		if (WekaOptions.isArffPersistency())
-			this.visitor = new ActionTrackingVisitor(this);
 	}
-	
+
 	public WekaRegressionModel(WekaRegressionModel model) {
 		this.preBetModel = model.preBetModel;
 		this.preFoldModel = model.preFoldModel;
@@ -80,17 +78,17 @@ public class WekaRegressionModel extends WekaModel {
 		this.showdown4Model = model.showdown4Model;
 		this.showdown5Model = model.showdown5Model;
 	}
-	
+
 	@Override
 	public String toString() {
 		String str = "";
-		str += "preBetModel " + preBetModel.toString().length(); // (preBetModel == null?"NULL":"OK");
-		str += "\npreFoldModel " + preFoldModel.toString().length(); // (preFoldModel == null?"NULL":"OK");
-		str += "\npreCallModel " + preCallModel.toString().length(); // (preCallModel == null?"NULL":"OK");
-		str += "\npreRaiseModel " + preRaiseModel.toString().length(); // (preRaiseModel == null?"NULL":"OK");
-		str += "\npostBetModel " + postBetModel.toString().length(); // (postBetModel == null?"NULL":"OK");
-		str += "\npostFoldModel " + postFoldModel.toString().length(); // (postFoldModel == null?"NULL":"OK");
-		str += "\npostCallModel " + postCallModel.toString().length(); // (postCallModel == null?"NULL":"OK");
+		str += "preBetModel " + preBetModel.toString(); // (preBetModel == null?"NULL":"OK");
+		str += "\npreFoldModel " + preFoldModel.toString(); // (preFoldModel == null?"NULL":"OK");
+		str += "\npreCallModel " + preCallModel.toString(); // (preCallModel == null?"NULL":"OK");
+		str += "\npreRaiseModel " + preRaiseModel.toString(); // (preRaiseModel == null?"NULL":"OK");
+		str += "\npostBetModel " + postBetModel.toString(); // (postBetModel == null?"NULL":"OK");
+		str += "\npostFoldModel " + postFoldModel.toString(); // (postFoldModel == null?"NULL":"OK");
+		str += "\npostCallModel " + postCallModel.toString(); // (postCallModel == null?"NULL":"OK");
 		str += "\npostRaiseModel " + postRaiseModel.toString().length(); // (postRaiseModel == null?"NULL":"OK");
 		str += "\nshowdown0Model " + showdown0Model.toString().length(); // (showdown0Model == null?"NULL":"OK");
 		str += "\nshowdown1Model " + showdown1Model.toString().length(); // (showdown1Model == null?"NULL":"OK");
@@ -100,97 +98,101 @@ public class WekaRegressionModel extends WekaModel {
 		str += "\nshowdown5Model " + showdown5Model.toString().length(); // (showdown5Model == null?"NULL":"OK");
 		return str;
 	}
-
-	@Override
-	public Pair<Double, Double> getCheckBetProbabilities(GameState gameState,
-			PlayerId actor) {
+	
+	public Pair<Double, Double> getCheckBetProbabilities(PlayerId actor, Propositionalizer props) {
 		Instance instance;
-		if(Round.PREFLOP.equals(gameState.getRound())){
-			instance = getPreCheckBetInstance(actor);
-		}else{
-			instance = getPostCheckBetInstance(actor);
+		if ("preflop".equals(props.getRound())) {
+			instance = getPreCheckBetInstance(actor, props);
+		} else {
+			instance = getPostCheckBetInstance(actor, props);
 		}
 		try {
 			double prediction;
-			if(Round.PREFLOP.equals(gameState.getRound())){
-				if (preBetModel == null) System.out.println(this);
+			if ("preflop".equals(props.getRound())) {
+				if (preBetModel == null)
+					System.out.println(this);
 				prediction = preBetModel.classifyInstance(instance);
-			}else{
-				if (postBetModel == null) System.out.println(this);
+			} else {
+				if (postBetModel == null)
+					System.out.println(this);
 				prediction = postBetModel.classifyInstance(instance);
 			}
-			double prob = Math.min(1,Math.max(0, prediction));
+			double prob = Math.min(1, Math.max(0, prediction));
 
-			if(Double.isNaN(prob) || Double.isInfinite(prob)){
-				throw new IllegalStateException("Bad probability: "+prob);
+			if (Double.isNaN(prob) || Double.isInfinite(prob)) {
+				throw new IllegalStateException("Bad probability: " + prob);
 			}
-			Pair<Double, Double> result = new Pair<Double, Double>(1-prob,prob);
-			if(logger.isTraceEnabled()){
-				logger.trace(instance+": "+result);
+			Pair<Double, Double> result = new Pair<Double, Double>(1 - prob, prob);
+			if (logger.isTraceEnabled()) {
+				logger.trace(instance + ": " + result);
 			}
 			return result;
 		} catch (Exception e) {
-			throw new IllegalStateException(e.toString() + "\n" + actor + " " + gameState.getRound() + ": " + instance.toString(), e);
+			throw new IllegalStateException(e.toString() + "\n" + actor + " " + props.getRound() + ": " + instance.toString(), e);
 		}
 	}
 
-	@Override
-	public Triple<Double, Double, Double> getFoldCallRaiseProbabilities(
-			GameState gameState, PlayerId actor) {
+	public Triple<Double, Double, Double> getFoldCallRaiseProbabilities(PlayerId actor, Propositionalizer props) {
 		Instance instance;
-		boolean preshowdown = Round.PREFLOP.equals(gameState.getRound());
-		if(preshowdown){
-			instance = getPreFoldCallRaiseInstance(actor);
-		}else{
-			instance = getPostFoldCallRaiseInstance(actor);
+		boolean preflop = "preflop".equals(props.getRound());
+		if (preflop) {
+			instance = getPreFoldCallRaiseInstance(actor, props);
+		} else {
+			instance = getPostFoldCallRaiseInstance(actor, props);
 		}
 		try {
 			double probFold;
-			if(preshowdown){
-				if (preFoldModel == null) System.out.println(this);
+			if (preflop) {
+				if (preFoldModel == null)
+					System.out.println(this);
 				probFold = preFoldModel.classifyInstance(instance);
-			}else{
-				if (postFoldModel == null) System.out.println(this);
+			} else {
+				if (postFoldModel == null)
+					System.out.println(this);
 				probFold = postFoldModel.classifyInstance(instance);
 			}
-			probFold = Math.min(1,Math.max(0, probFold));
+			probFold = Math.min(1, Math.max(0, probFold));
 
 			double probCall;
-			if(preshowdown){
-				if (preCallModel == null) System.out.println(this);
+			if (preflop) {
+				if (preCallModel == null)
+					System.out.println(this);
 				probCall = preCallModel.classifyInstance(instance);
-			}else{
-				if (postCallModel == null) System.out.println(this);
+			} else {
+				if (postCallModel == null)
+					System.out.println(this);
 				probCall = postCallModel.classifyInstance(instance);
 			}
-			probCall = Math.min(1,Math.max(0, probCall));
+			probCall = Math.min(1, Math.max(0, probCall));
 
 			double probRaise;
-			if(preshowdown){
-				if (preRaiseModel == null) System.out.println(this);
+			if (preflop) {
+				if (preRaiseModel == null)
+					System.out.println(this);
 				probRaise = preRaiseModel.classifyInstance(instance);
-			}else{
-				if (postRaiseModel == null) System.out.println(this);
+			} else {
+				if (postRaiseModel == null)
+					System.out.println(this);
 				probRaise = postRaiseModel.classifyInstance(instance);
 			}
-			probRaise = Math.min(1,Math.max(0, probRaise));
+			probRaise = Math.min(1, Math.max(0, probRaise));
 
 			double sum = probFold + probCall + probRaise;
-			if(Double.isNaN(sum) || sum==0 || Double.isInfinite(sum)){
-				throw new IllegalStateException("Bad probabilities: "+probFold+" (probFold), "+probCall+" (probCall), "+probRaise+" (probRaise)");
+			if (Double.isNaN(sum) || sum == 0 || Double.isInfinite(sum)) {
+				throw new IllegalStateException("Bad probabilities: " + probFold + " (probFold), " + probCall + " (probCall), " + probRaise + " (probRaise)");
 			}
-			Triple<Double, Double, Double> result = new Triple<Double, Double, Double>(probFold/sum,probCall/sum,probRaise/sum);
-			if(logger.isTraceEnabled()){
-				logger.trace(instance+": "+result);
+			Triple<Double, Double, Double> result = new Triple<Double, Double, Double>(probFold / sum, probCall / sum, probRaise / sum);
+			if (logger.isTraceEnabled()) {
+				logger.trace(instance + ": " + result);
 			}
 			return result;
 		} catch (Exception e) {
-			throw new IllegalStateException(e.toString() + "\n" + actor + " " + gameState.getRound() + ": " + instance.toString(), e);
+			throw new IllegalStateException(e.toString() + "\n" + actor + " " + props.getRound() + ": " + instance.toString(), e);
 		}
 	}
 
-	public double[] getShowdownProbabilities(GameState gameState, PlayerId actor) {
-		Instance instance = getShowdownInstance(actor);
+	public double[] getShowdownProbabilities(PlayerId actor, Propositionalizer props) {
+		Instance instance = getShowdownInstance(actor, props);
 		try {
 			double[] prob = {
 					Math.min(1,Math.max(0, showdown0Model.classifyInstance(instance))),
@@ -200,8 +202,8 @@ public class WekaRegressionModel extends WekaModel {
 					Math.min(1,Math.max(0, showdown4Model.classifyInstance(instance))),
 					Math.min(1,Math.max(0, showdown5Model.classifyInstance(instance))),
 			};
-			if(logger.isTraceEnabled()){
-				logger.trace(instance+": "+prob);
+			if (logger.isTraceEnabled()) {
+				logger.trace(instance + ": " + prob);
 			}
 			return prob;
 		} catch (Exception e) {

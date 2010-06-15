@@ -21,12 +21,7 @@ import java.util.List;
 
 import jp.ac.kobe_u.cs.prolog.lang.StructureTerm;
 
-import org.apache.log4j.Logger;
-
 public class TermListVisitor extends ToPrologTermVisitor {
-
-	private final static Logger logger = Logger
-			.getLogger(TermListVisitor.class);
 
 	private final List<StructureTerm> terms = new ArrayList<StructureTerm>();
 

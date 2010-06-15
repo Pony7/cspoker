@@ -29,8 +29,8 @@ import org.cspoker.client.common.SmartLobbyContext;
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.player.PlayerId;
-import org.cspoker.common.elements.table.Round;
 import org.cspoker.common.elements.table.TableId;
+//import org.cspoker.common.elements.table.Round;
 
 public class FixedSampleMCTSBot extends AbstractBot {
 
@@ -62,6 +62,7 @@ public class FixedSampleMCTSBot extends AbstractBot {
 
 	@Override
 	public void doNextAction() throws RemoteException, IllegalActionException {
+//		long startTime = System.currentTimeMillis();
 		GameState gameState = tableContext.getGameState();	
 		RootNode root = new RootNode(gameState,botId,config);
 		switch (gameState.getRound()) {
@@ -107,9 +108,12 @@ public class FixedSampleMCTSBot extends AbstractBot {
 			iterate(root);
 			iterate(root);
 			iterate(root);
-		}while(root.getNbSamples()<nbSamples);
-		if (printed && tableContext.getGameState().getRound() == r)
-			printed = false;
+		}while(root.getNbSamples()<nbSamples);		
+		
+		// to calculate efficiency of sampling algorithms
+//		if (tableContext.getGameState().getRound() == Round.FINAL)
+//			System.out.println(System.currentTimeMillis()-startTime);
+		
 		if(logger.isDebugEnabled()){
 			logger.debug("Stopped MCTS.");
 		}
@@ -121,24 +125,9 @@ public class FixedSampleMCTSBot extends AbstractBot {
 		}
 	}
 
-	public static boolean printed = false;
 	long nbSamples;
-	long currentCount = 0;
-	long lastCount = 0;
-	private final static Round r = Round.PREFLOP;
 
 	private void iterate(RootNode root) {
-		Round round = tableContext.getGameState().getRound();
-		if (printed && round == r){
-			currentCount = root.getNbSamples();
-			if (currentCount-lastCount!=1) {
-				for (long i = lastCount+1; i <= currentCount; i++)
-					System.out.println(i + " - " + root.getEV() + " - " + root.getEVStdDev());
-			} else {
-				System.out.println(currentCount + " - " + root.getEV() + " - " + root.getEVStdDev());
-			}
-			lastCount = currentCount;
-		}
 		INode selectedLeaf = root.selectRecursively();
 		selectedLeaf.expand();
 		double value = selectedLeaf.simulate();

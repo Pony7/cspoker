@@ -151,6 +151,16 @@ public class HistogramModel implements OpponentModel,
 	}
 
 	@Override
+	public OpponentModel clone() {
+		HistogramModel hist = new HistogramModel();
+		hist.opponentModels.putAll(this.opponentModels);
+		hist.lastKnownState = this.lastKnownState;
+		hist.round = this.round;
+		hist.started = this.started;
+		return hist;
+	}
+	
+	@Override
 	public void visitAllInState(AllInState allInState) {
 		if (started) {
 			getModelFor(allInState.getEvent().getPlayerId(), round).addAllIn(

@@ -28,7 +28,6 @@ import org.cspoker.ai.bots.bot.gametree.mcts.strategies.selection.SelectionStrat
 import org.cspoker.ai.bots.bot.gametree.search.expander.sampling.Sampler;
 import org.cspoker.ai.bots.listener.BotListener;
 import org.cspoker.ai.opponentmodels.OpponentModel;
-import org.cspoker.ai.opponentmodels.OpponentModelPool;
 import org.cspoker.client.common.SmartLobbyContext;
 import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.elements.table.TableId;
@@ -74,11 +73,8 @@ public class MCTSBotFactory implements BotFactory {
 	public Bot createBot(final PlayerId botId, TableId tableId,
 			SmartLobbyContext lobby, int buyIn, ExecutorService executor,
 			BotListener... botListeners) {
-		OpponentModel opponentModel = OpponentModelPool.getInstance().getModel(botId);
-		if(opponentModel==null){
-			opponentModel = opponentModelFactory.create();
-			OpponentModelPool.getInstance().addModel(botId, opponentModel);
-		}
+		OpponentModel opponentModel = opponentModelFactory.create(botId);
+
 		Config config = new Config(opponentModel, showdownNodeFactory, 
 				decisionNodeSelectionStrategy, opponentNodeSelectionStrategy, 
 				moveSelectionStrategy, backPropStratFactory, sampler);

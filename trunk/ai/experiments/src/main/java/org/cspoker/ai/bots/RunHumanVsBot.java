@@ -21,18 +21,23 @@ import org.apache.log4j.Logger;
 import org.cspoker.ai.bots.bot.Bot;
 import org.cspoker.ai.bots.bot.BotFactory;
 import org.cspoker.ai.bots.bot.gametree.mcts.FixedSampleMCTSBotFactory;
+import org.cspoker.ai.bots.bot.gametree.mcts.MCTSBotFactory;
 import org.cspoker.ai.bots.bot.gametree.mcts.listeners.SWTTreeListener;
 import org.cspoker.ai.bots.bot.gametree.mcts.nodes.MCTSBucketShowdownNode;
+import org.cspoker.ai.bots.bot.gametree.mcts.nodes.MCTSShowdownRollOutNode;
 import org.cspoker.ai.bots.bot.gametree.mcts.strategies.backpropagation.MaxDistributionPlusBackPropStrategy;
 import org.cspoker.ai.bots.bot.gametree.mcts.strategies.backpropagation.MixedBackPropStrategy;
 import org.cspoker.ai.bots.bot.gametree.mcts.strategies.backpropagation.SampleWeightedBackPropStrategy;
 import org.cspoker.ai.bots.bot.gametree.mcts.strategies.selection.MaxValueSelector;
+import org.cspoker.ai.bots.bot.gametree.mcts.strategies.selection.SamplingSelector;
 import org.cspoker.ai.bots.bot.gametree.mcts.strategies.selection.SamplingToFunctionSelector;
 import org.cspoker.ai.bots.bot.gametree.mcts.strategies.selection.UCTPlusPlusSelector;
 import org.cspoker.ai.bots.bot.gametree.mcts.strategies.selection.UCTSelector;
+import org.cspoker.ai.bots.bot.gametree.search.expander.sampling.BucketSampler;
 import org.cspoker.ai.bots.bot.gametree.search.expander.sampling.SmartSampler;
 import org.cspoker.ai.bots.bot.gametree.search.nodevisitor.StatisticsVisitor;
 import org.cspoker.ai.bots.listener.DefaultBotListener;
+import org.cspoker.ai.opponentmodels.weka.WekaOptions;
 import org.cspoker.ai.opponentmodels.weka.WekaRegressionModelFactory;
 import org.cspoker.client.User;
 import org.cspoker.client.common.SmartClientContext;
@@ -69,7 +74,7 @@ public class RunHumanVsBot{
 	}
 
 	private ClientCore client;
-	private ClientCore client2;
+//	private ClientCore client2;
 	protected CSPokerServer server;
 	private final DisplayExecutor displayexecutor;
 	private StatisticsVisitor.Factory stats;
@@ -90,16 +95,16 @@ public class RunHumanVsBot{
 		User u = new User("Human", "test");
 		client = new ClientCore(u);
 		client.login(server);		
-		User u2 = new User("Human2", "test");
-		client2 = new ClientCore(u2);
-		client2.login(server);
+//		User u2 = new User("Human2", "test");
+//		client2 = new ClientCore(u2);
+//		client2.login(server);
 
 		final LobbyWindow lobby = new LobbyWindow(client);
 		lobby.setLobbyContext(client.getCommunication());
 		client.getGui().setLobby(lobby);
-		final LobbyWindow lobby2 = new LobbyWindow(client2);
-		lobby2.setLobbyContext(client2.getCommunication());
-		client2.getGui().setLobby(lobby2);
+//		final LobbyWindow lobby2 = new LobbyWindow(client2);
+//		lobby2.setLobbyContext(client2.getCommunication());
+//		client2.getGui().setLobby(lobby2);
 
 		tConfig = new TableConfiguration(smallBet, delay, false, false, true,0);
 		lobby.getContext().createHoldemTable(u.getUserName() + "'s test table", tConfig);
@@ -110,17 +115,18 @@ public class RunHumanVsBot{
 				lobby.show();
 
 			}
-		});displayexecutor.execute(new Runnable() {
-
-			public void run() {
-				lobby2.show();
-
-			}
 		});
+//			displayexecutor.execute(new Runnable() {
+//
+//			public void run() {
+//				lobby2.show();
+//
+//			}
+//		});
 		final GameWindow w = client.getGui().getGameWindow(tableId, true);
 		w.getUser().sitIn(new SeatId(0), 0);
-		final GameWindow w2 = client2.getGui().getGameWindow(tableId, true);
-		w2.getUser().sitIn(new SeatId(2), 0);
+//		final GameWindow w2 = client2.getGui().getGameWindow(tableId, true);
+//		w2.getUser().sitIn(new SeatId(2), 0);
 		// Run blocking calls in extra thread
 		displayexecutor.execute(new Runnable() {
 
@@ -128,32 +134,48 @@ public class RunHumanVsBot{
 				w.show();
 
 			}
-		});displayexecutor.execute(new Runnable() {
-
-			public void run() {
-				w2.show();
-
-			}
 		});
+//		displayexecutor.execute(new Runnable() {
+//
+//			public void run() {
+//				w2.show();
+//
+//			}
+//		});
 		stats = new StatisticsVisitor.Factory();		
 		
 		BotFactory botFactory;
 		try {
-			botFactory = new FixedSampleMCTSBotFactory(
-					"Plus Bot",
-					WekaRegressionModelFactory.createForZip("org/cspoker/ai/opponentmodels/weka/models/model1.zip"),
-					new SamplingToFunctionSelector(50,new UCTSelector(40000)),
-					new SamplingToFunctionSelector(50,new UCTPlusPlusSelector()),
+			WekaOptions configPersist = new WekaOptions();
+			configPersist.setContinuousLearning(true);
+			configPersist.setModelCreationTreshold(1);
+			botFactory = new MCTSBotFactory("MCTSBot",
+					WekaRegressionModelFactory.createForZip(
+							"org/cspoker/ai/opponentmodels/weka/models/model1.zip", configPersist/*, kullbackLeibler*/),
+					new SamplingToFunctionSelector(50,new UCTSelector(2000)),
+					new SamplingSelector(),
 					new MaxValueSelector(),
-					new MCTSBucketShowdownNode.Factory(),
-					new MixedBackPropStrategy.Factory(
-							50,
-							new SampleWeightedBackPropStrategy.Factory(),
-							new MaxDistributionPlusBackPropStrategy.Factory()
-					),
-					new SmartSampler(),
-					20000,40000,80000,100000,
-					new SWTTreeListener.Factory(client.getGui().getDisplay()));
+					new MCTSShowdownRollOutNode.Factory(),
+					new SampleWeightedBackPropStrategy.Factory(),
+					new BucketSampler(0.01),
+					250,
+					new SWTTreeListener.Factory(client.getGui().getDisplay())
+			);
+//			botFactory = new FixedSampleMCTSBotFactory(
+//					"Plus Bot",
+//					WekaRegressionModelFactory.createForZip("org/cspoker/ai/opponentmodels/weka/models/model1.zip", configPersist),
+//					new SamplingToFunctionSelector(50,new UCTSelector(40000)),
+//					new SamplingToFunctionSelector(50,new UCTPlusPlusSelector()),
+//					new MaxValueSelector(),
+//					new MCTSBucketShowdownNode.Factory(),
+//					new MixedBackPropStrategy.Factory(
+//							50,
+//							new SampleWeightedBackPropStrategy.Factory(),
+//							new MaxDistributionPlusBackPropStrategy.Factory()
+//					),
+//					new BucketSampler(0.01),
+//					250,500,1000,2000,
+//					new SWTTreeListener.Factory(client.getGui().getDisplay()));
 			
 //			botFactory = new SearchBotFactory(
 //					new WekaRegressionModelFactory("/home/guy/Werk/thesis/weka-3-6-0/model1"),

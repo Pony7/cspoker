@@ -31,6 +31,8 @@ public class SpeedTestBotListener extends DealCountingListener {
 
 	private final BotRunner runner;
 
+	private long overallStartTime;
+
 	public SpeedTestBotListener(BotRunner runner) {
 		this(64, runner);
 	}
@@ -45,9 +47,12 @@ public class SpeedTestBotListener extends DealCountingListener {
 		int deals = getDeals();
 		if (deals % reportInterval == 0) {
 			long nowTime = System.currentTimeMillis();
+			if (deals == 1)
+				overallStartTime = startTime;
 			if (startTime > 0) {
 				logger.info("deal #" + deals + " at " + reportInterval * 1000.0
-						/ (nowTime - startTime) + " games/s");
+						/ (nowTime - startTime) + " games/s (overall speed: " +
+						deals * 1000.0/ (nowTime - overallStartTime)+ " games/s)");
 				for (int i = 0; i < runner.nbPlayersPerGame; i++) {
 					RunningStats profit = runner.getBot(i).getProfit();
 					int smallBet = runner.getConfig().getSmallBet();

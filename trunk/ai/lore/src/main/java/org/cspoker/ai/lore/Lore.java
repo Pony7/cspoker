@@ -35,6 +35,7 @@ import org.cspoker.ai.bots.listener.DefaultBotListener;
 import org.cspoker.ai.bots.listener.ProfitInfo;
 import org.cspoker.ai.bots.listener.ProfitListener;
 import org.cspoker.ai.bots.util.RunningStats;
+import org.cspoker.ai.opponentmodels.weka.WekaOptions;
 import org.cspoker.ai.opponentmodels.weka.WekaRegressionModelFactory;
 import org.cspoker.client.common.SmartClientContext;
 import org.cspoker.client.common.SmartLobbyContext;
@@ -68,12 +69,14 @@ public class Lore {
 	private Bot bot;
 
 	public Lore(RemoteCSPokerServer server) throws Exception {
+		WekaOptions config = new WekaOptions();
+		config.setUseOnlineLearning(false);
 		this.server = server;
 		this.botFactory = 
 			//			 new CallBotFactory();
 			new MCTSBotFactory(
 					"CSPoker Bot",
-					WekaRegressionModelFactory.createForZip("org/cspoker/ai/opponentmodels/weka/models/model1.zip"),
+					WekaRegressionModelFactory.createForZip("org/cspoker/ai/opponentmodels/weka/models/model1.zip", config),
 					new SamplingToFunctionSelector(50,new UCTSelector(2000000)),
 					new SamplingSelector(),
 					new MaxValueSelector(),

@@ -20,8 +20,6 @@ import java.io.IOException;
 
 import org.apache.log4j.Logger;
 import org.cspoker.ai.bots.BotRunner;
-import org.cspoker.ai.bots.bot.gametree.mcts.FixedSampleMCTSBot;
-import org.cspoker.ai.bots.bot.gametree.mcts.MCTSBot;
 import org.cspoker.ai.bots.util.RunningStats;
 
 public class CSVLogListener extends DealCountingListener {
@@ -36,6 +34,8 @@ public class CSVLogListener extends DealCountingListener {
 	private final BotRunner runner;
 
 	private final FileWriter file;
+
+	private long overallStartTime;
 
 	public CSVLogListener(BotRunner runner) {
 		this(64, runner, "bots");
@@ -56,12 +56,9 @@ public class CSVLogListener extends DealCountingListener {
 		int deals = getDeals();
 		if (deals % reportInterval == 0) {
 			long nowTime = System.currentTimeMillis();
+			if (deals == 1)
+				overallStartTime = startTime;
 			if (startTime > 0) {
-// for testing convergence EV
-//				if (deals==100) {
-//					MCTSBot.printed = true;
-//					FixedSampleMCTSBot.printed = true;
-//				}
 				logger.info("deal #" + deals + " at " + reportInterval * 1000.0
 						/ (nowTime - startTime) + " games/s");
 				try {
@@ -71,7 +68,7 @@ public class CSVLogListener extends DealCountingListener {
 				}
 				for (int i = 0; i < runner.nbPlayersPerGame; i++) {
 					RunningStats profit = runner.getBot(i).getProfit();
-					int smallBet = BotRunner.getConfig().getSmallBet();
+					int smallBet = runner.getConfig().getSmallBet();
 					double mean = profit.getMean() / smallBet;
 					double stdDevMean = profit.getEVStdDev()/ smallBet;
 					try {
@@ -82,6 +79,7 @@ public class CSVLogListener extends DealCountingListener {
 				}
 
 				try {
+					file.write("," + deals * 1000.0/ (nowTime - overallStartTime));
 					file.write("\n");
 					file.flush();
 				} catch (IOException e) {

@@ -21,80 +21,75 @@ public class ARFFFile {
 	private final String name;
 
 	private Writer file;
-	private double count;
-
-	private boolean modelReady;
+	private long count = 0;
+	private WekaOptions config;
 
 	public ARFFFile(String path, Object player, String name, String attributes,
-			boolean overwrite) throws IOException {
+			WekaOptions config) throws IOException {
 		this.path = path;
 		this.player = player;
 		this.name = name;
+		this.config = config;
 
-		boolean fileExists = fileExists();
-		file = new BufferedWriter(new FileWriter(path + player + name, !overwrite));
-
-		if (overwrite || !fileExists) {
-			file.write(attributes);
-			file.flush();
-		}
-
-		count = countDataLines();
-		if (count >= WekaOptions.getModelCreationTreshold())
-			modelReady = true;
+		// TODO: false => !config.arffOverwrite()
+		file = new BufferedWriter(new FileWriter(path + player + name, false));
+		file.write(attributes);
+		file.flush();
 	}
 
-	private double countDataLines() throws IOException {
-		InputStream is = new BufferedInputStream(new FileInputStream(path + player + name));
-		byte[] c = new byte[1024];
-		int count = 0;
-		int readChars = 0;
-		boolean startReading = false;
-		while ((readChars = is.read(c)) != -1) {
-			for (int i = 0; i < readChars; ++i) {
-				if (c[i] == '\n' && startReading)
-					++count;
-				else if (!startReading && i >= 4 && c[i - 4] == '@'
-						&& c[i - 3] == 'd' && c[i - 2] == 'a'
-						&& c[i - 1] == 't' && c[i] == 'a')
-					startReading = true;
-			}
-		}
-		is.close();
-		return count + (count > 0 ? -1 : 0);
-	}
-
-	private boolean fileExists() throws FileNotFoundException {
-		return new File(path + player + name).exists();
-	}
+//	private double countDataLines() {
+//		InputStream is;
+//		try {
+//			is = new BufferedInputStream(new FileInputStream(path + player + name));
+//			byte[] c = new byte[1024];
+//			int count = 0;
+//			int readChars = 0;
+//			boolean startReading = false;
+//			while ((readChars = is.read(c)) != -1) {
+//				for (int i = 0; i < readChars; ++i) {
+//					if (c[i] == '\n' && startReading)
+//						++count;
+//					else if (!startReading && i >= 4 && c[i - 4] == '@'
+//							&& c[i - 3] == 'd' && c[i - 2] == 'a'
+//							&& c[i - 1] == 't' && c[i] == 'a')
+//						startReading = true;
+//				}
+//			}
+//			is.close();
+//			return count + (count > 0 ? -1 : 0);
+//		} catch (FileNotFoundException e) {
+//			e.printStackTrace();
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+//		return 0;
+//	}
+//
+//	private boolean fileExists() throws FileNotFoundException {
+//		return new File(path + player + name).exists();
+//	}
 
 	public void close() throws IOException {
 		file.close();
 	}
 
 	public void write(Instance instance) {
+//		System.out.println("Writing instance " + (count +1) + " in file " + player + name);
 		try {
+			count++;
 			file.write(instance.toString() + nl);
 			file.flush();
-			count++;
-			if (count >= WekaOptions.getModelCreationTreshold())
-				modelReady = true;
 		} catch (IOException e) {
-			e.printStackTrace();
 			throw new IllegalStateException(e);
-		} catch (ArrayIndexOutOfBoundsException e) {
-			e.printStackTrace();
-			throw new IllegalStateException(e);
-		}
+		} 
 	}
 
 	public boolean isModelReady() {
-		return modelReady;
+		return count > config.getMinimalLearnExamples();
 	}
 	
 	public Classifier createModel(String fileName, String attribute, String[] rmAttributes) throws Exception {
-		if (!modelReady)  throw new IllegalStateException("Model didn't reach threshold for creation!");
-		
+//		System.out.println("Creating model for " + player + name);
 		DataSource source = new DataSource(path + player + name);
 	    Instances data = source.getDataSet();
 	    if (rmAttributes.length > 0) {
@@ -122,7 +117,7 @@ public class ARFFFile {
 	    cl.buildClassifier(data);
 	    
 	    // save model + header
-	    if (WekaOptions.isModelPersistency())
+	    if (config.modelPersistency())
 	    	SerializationHelper.write(path + "../" + player + fileName + ".model", cl);
 	    
 	    return cl;

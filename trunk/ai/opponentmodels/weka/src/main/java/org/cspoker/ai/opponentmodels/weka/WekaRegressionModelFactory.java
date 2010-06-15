@@ -28,13 +28,21 @@ import net.jcip.annotations.ThreadSafe;
 
 import org.apache.log4j.Logger;
 import org.cspoker.ai.opponentmodels.OpponentModel;
+import org.cspoker.ai.opponentmodels.listener.OpponentModelListener;
+
+import org.cspoker.ai.opponentmodels.weka.WekaLearningModel;
+import org.cspoker.ai.opponentmodels.weka.WekaRegressionModel;
+import org.cspoker.common.elements.player.PlayerId;
 
 import weka.classifiers.Classifier;
 
 @ThreadSafe
 public class WekaRegressionModelFactory implements OpponentModel.Factory {
 	
-	public static WekaRegressionModelFactory createForZip(String zippedModel) throws IOException, ClassNotFoundException {
+	private OpponentModelListener[] listeners = {};
+	private WekaOptions config;
+	
+	public static WekaRegressionModelFactory createForZip(String zippedModel, WekaOptions config, OpponentModelListener... listeners) throws IOException, ClassNotFoundException {
 		ZipInputStream zis = null;
 		ClassLoader classLoader = WekaRegressionModelFactory.class.getClassLoader();
 
@@ -54,14 +62,14 @@ public class WekaRegressionModelFactory implements OpponentModel.Factory {
 		zis.close();
 		fis.close();
 		
-		return new WekaRegressionModelFactory(classifiers.get("preBet.model"), classifiers.get("preFold.model"), classifiers.get("preCall.model"), classifiers.get("preRaise.model"), classifiers.get("postBet.model"), classifiers.get("postFold.model"), classifiers.get("postCall.model"), classifiers.get("postRaise.model"),
+		return new WekaRegressionModelFactory(config, listeners, classifiers.get("preBet.model"), classifiers.get("preFold.model"), classifiers.get("preCall.model"), classifiers.get("preRaise.model"), classifiers.get("postBet.model"), classifiers.get("postFold.model"), classifiers.get("postCall.model"), classifiers.get("postRaise.model"),
 				classifiers.get("showdown0.model"), classifiers.get("showdown1.model"), classifiers.get("showdown2.model"), classifiers.get("showdown3.model"), classifiers.get("showdown4.model"), classifiers.get("showdown5.model"));
 	}
 
 	private final static Logger logger = Logger
 	.getLogger(WekaRegressionModelFactory.class);
 
-	public static WekaRegressionModelFactory createForDir(String models) throws IOException, ClassNotFoundException {
+	public static WekaRegressionModelFactory createForDir(String models, WekaOptions config, OpponentModelListener... listeners) throws IOException, ClassNotFoundException {
 		Classifier preBetModel, preFoldModel, preCallModel, preRaiseModel, postBetModel, postFoldModel, postCallModel, postRaiseModel,
 		showdown0Model, showdown1Model, showdown2Model, showdown3Model, showdown4Model, showdown5Model;
 		ClassLoader classLoader = WekaRegressionModelFactory.class.getClassLoader();
@@ -107,15 +115,16 @@ public class WekaRegressionModelFactory implements OpponentModel.Factory {
 		in = new ObjectInputStream(classLoader.getResourceAsStream(models+"showdown5.model"));
 		showdown5Model = (Classifier)in.readObject();
 		in.close();
-		return new WekaRegressionModelFactory(preBetModel, preFoldModel, preCallModel, preRaiseModel, postBetModel, postFoldModel, postCallModel, postRaiseModel,
+		return new WekaRegressionModelFactory(config, listeners, preBetModel, preFoldModel, preCallModel, preRaiseModel, postBetModel, postFoldModel, postCallModel, postRaiseModel,
 				showdown0Model, showdown1Model, showdown2Model, showdown3Model, showdown4Model, showdown5Model);
 	}
-	
-	public WekaRegressionModelFactory(
+
+	public WekaRegressionModelFactory(WekaOptions config, OpponentModelListener[] listeners,
 			Classifier preBetModel, Classifier preFoldModel, Classifier preCallModel, Classifier preRaiseModel,
 			Classifier postBetModel, Classifier postFoldModel, Classifier postCallModel, Classifier postRaiseModel,
 			Classifier showdown0Model, Classifier showdown1Model, Classifier showdown2Model, Classifier showdown3Model,
 			Classifier showdown4Model, Classifier showdown5Model) {
+		this.listeners = listeners;
 		this.preBetModel = preBetModel;
 		this.preFoldModel = preFoldModel;
 		this.preCallModel = preCallModel;
@@ -130,6 +139,7 @@ public class WekaRegressionModelFactory implements OpponentModel.Factory {
 		this.showdown3Model = showdown3Model;
 		this.showdown4Model = showdown4Model;
 		this.showdown5Model = showdown5Model;
+		this.config = config;
 	}
 
 	private final Classifier preBetModel, preFoldModel, preCallModel, preRaiseModel, postBetModel, postFoldModel, postCallModel, postRaiseModel,
@@ -137,9 +147,9 @@ public class WekaRegressionModelFactory implements OpponentModel.Factory {
 
 
 	@Override
-	public OpponentModel create() {
-		return new WekaRegressionModel(preBetModel, preFoldModel, preCallModel, preRaiseModel, postBetModel, postFoldModel, postCallModel, postRaiseModel,
-				showdown0Model, showdown1Model, showdown2Model, showdown3Model, showdown4Model, showdown5Model);
+	public OpponentModel create(PlayerId bot) {
+		return new WekaLearningModel(bot, new WekaRegressionModel(preBetModel, preFoldModel, preCallModel, preRaiseModel, postBetModel, postFoldModel, postCallModel, postRaiseModel,
+			showdown0Model, showdown1Model, showdown2Model, showdown3Model, showdown4Model, showdown5Model), config, listeners);
 	}
 
 	@Override

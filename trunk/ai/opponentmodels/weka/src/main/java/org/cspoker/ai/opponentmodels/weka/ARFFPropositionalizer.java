@@ -3,46 +3,46 @@ package org.cspoker.ai.opponentmodels.weka;
 import java.io.IOException;
 import java.util.HashMap;
 
-//import org.apache.log4j.Logger;
 import org.cspoker.ai.opponentmodels.weka.instances.InstancesBuilder;
 import org.cspoker.ai.opponentmodels.weka.instances.PostCheckBetInstances;
 import org.cspoker.ai.opponentmodels.weka.instances.PostFoldCallRaiseInstances;
 import org.cspoker.ai.opponentmodels.weka.instances.PreCheckBetInstances;
 import org.cspoker.ai.opponentmodels.weka.instances.PreFoldCallRaiseInstances;
 import org.cspoker.ai.opponentmodels.weka.instances.ShowdownInstances;
-import org.cspoker.common.elements.cards.Card;
+import org.cspoker.common.elements.player.PlayerId;
 
+/**
+ * This ARFFPropositionalizer will be called on important GameEvents.
+ * It manages the {@link ARFFPlayer}-instances for each villain, creates
+ * classified Weka-Instances and delegates to the corresponding {@link ARFFPlayer} 
+ *
+ */
 public class ARFFPropositionalizer extends Propositionalizer {
 
 //	private final static Logger logger = Logger.getLogger(ARFFPropositionalizer.class);
 	
-	private static final String nl = InstancesBuilder.nl;	
-	private static HashMap<Object, ARFFPlayer> arffFiles = new HashMap<Object, ARFFPlayer>();
+	private static final String nl = InstancesBuilder.nl;
+
+	private HashMap<Object, ARFFPlayer> arffFiles = new HashMap<Object, ARFFPlayer>();
 	
-	private final HashMap<String, Card> cards = new HashMap<String, Card>();
-	
+
 	private final PreCheckBetInstances preCheckBetInstance;
 	private final PostCheckBetInstances postCheckBetInstance;
 	private final PreFoldCallRaiseInstances preFoldCallRaiseInstance;
 	private final PostFoldCallRaiseInstances postFoldCallRaiseInstance;
 	private final ShowdownInstances showdownInstance;
 	
-	private boolean newDeal = false;
-	private final WekaRegressionModel baseModel;
+	private final PlayerId bot;
 	
-	public ARFFPropositionalizer(WekaRegressionModel baseModel) throws IOException {
-		this.baseModel = baseModel;
+	public ARFFPropositionalizer(PlayerId bot) throws IOException {
 		this.preCheckBetInstance = getPreCheckBetInstance();
 		this.postCheckBetInstance = getPostCheckBetInstance();
 		this.preFoldCallRaiseInstance = getPreFoldCallRaiseInstance();
 		this.postFoldCallRaiseInstance = getPostFoldCallRaiseInstance();
 		this.showdownInstance = getShowdownInstance();
-
-		for(Card c:Card.values()){
-			cards.put(c.getShortDescription(), c);
-		}
+		this.bot = bot;
 	}
-
+	
 	public static PreCheckBetInstances getPreCheckBetInstance() {
 		return new PreCheckBetInstances("PreCheckBet",
 				"@attribute betProb real" + nl
@@ -85,28 +85,21 @@ public class ARFFPropositionalizer extends Propositionalizer {
 		if (arffFiles.containsKey(actorId))
 			return arffFiles.get(actorId);
 		else {
-			try {
-				ARFFPlayer f = new ARFFPlayer(actorId, baseModel);
-				arffFiles.put(actorId, f);
-				return f;
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			throw new IllegalStateException("no arff-player for " + actorId + " registered yet");
 		}
-		return null;
 	}
 	
-	public void setNewDeal(boolean deal) {
-		newDeal = deal;
+	public void addPlayer(Object actorID, ARFFPlayer arffPlayer) {
+		if (arffFiles.containsKey(actorID)) {
+			throw new IllegalStateException("arffPlayer for actor " + actorID + " registered twice");
+		} else {
+			arffFiles.put(actorID, arffPlayer);
+		}
 	}
-	
-	public boolean isNewDeal() {
-		return newDeal;
-	}
-	
+
 	@Override
 	protected void logFold(Object actorId) {
-		if (!newDeal) return;
+		if (actorId.equals(bot)) return;
 		if (getRound().equals("preflop")) {
 			getARFF(actorId).writePreFoldCallRaise(
 					preFoldCallRaiseInstance.getClassifiedInstance(this,
@@ -121,7 +114,7 @@ public class ARFFPropositionalizer extends Propositionalizer {
 
 	@Override
 	protected void logCall(Object actorId) {
-		if (!newDeal) return;
+		if (actorId.equals(bot)) return;
 		if (getRound().equals("preflop")) {
 			getARFF(actorId).writePreFoldCallRaise(
 					preFoldCallRaiseInstance.getClassifiedInstance(this,
@@ -135,7 +128,7 @@ public class ARFFPropositionalizer extends Propositionalizer {
 
 	@Override
 	protected void logRaise(Object actorId, double raiseAmount) {
-		if (!newDeal) return;
+		if (actorId.equals(bot)) return;
 		if (getRound().equals("preflop")) {
 			getARFF(actorId).writePreFoldCallRaise(
 					preFoldCallRaiseInstance.getClassifiedInstance(this,
@@ -149,7 +142,7 @@ public class ARFFPropositionalizer extends Propositionalizer {
 
 	@Override
 	protected void logCheck(Object actorId) {
-		if (!newDeal) return;
+		if (actorId.equals(bot)) return;
 		if (getRound().equals("preflop")) {
 			getARFF(actorId).writePreCheckBet(
 					preCheckBetInstance.getClassifiedInstance(this, actorId,
@@ -163,7 +156,7 @@ public class ARFFPropositionalizer extends Propositionalizer {
 
 	@Override
 	protected void logBet(Object actorId, double raiseAmount) {
-		if (!newDeal) return;
+		if (actorId.equals(bot)) return;
 		if (getRound().equals("preflop")) {
 			getARFF(actorId).writePreCheckBet(
 					preCheckBetInstance.getClassifiedInstance(this, actorId,
@@ -177,7 +170,7 @@ public class ARFFPropositionalizer extends Propositionalizer {
 
 	@Override
 	protected void logShowdown(Object actorId, double[] partitionDistr) {
-		if (!newDeal) return;
+		if (actorId.equals(bot)) return;
 		Object[] targets = new Object[partitionDistr.length + 1];
 		double avgBucket = 0;
 		for (int i = 0; i < partitionDistr.length; i++) {

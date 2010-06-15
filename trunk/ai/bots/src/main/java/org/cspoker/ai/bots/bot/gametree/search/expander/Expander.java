@@ -19,7 +19,6 @@ import org.cspoker.ai.bots.bot.gametree.action.ProbabilityAction;
 import org.cspoker.ai.bots.bot.gametree.search.InnerGameTreeNode;
 import org.cspoker.ai.bots.bot.gametree.search.expander.sampling.Sampler;
 import org.cspoker.ai.opponentmodels.OpponentModel;
-import org.cspoker.ai.opponentmodels.OpponentModelPool;
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.common.elements.player.PlayerId;
 import com.google.common.collect.ImmutableList;
@@ -32,19 +31,19 @@ public class Expander {
 	private final PlayerId actor;
 	private final PlayerId bot;
 	private final Sampler sampler;
+	private final OpponentModel model;
 
-	public Expander(GameState gameState, 
+	public Expander(GameState gameState, OpponentModel model, 
 			PlayerId actor, PlayerId bot, Sampler sampler) {
 		this.gameState = gameState;
 		this.actor = actor;
 		this.bot = bot;
 		this.sampler = sampler;
+		this.model = model;
 	}
 
 	public ImmutableList<ProbabilityAction> getProbabilityActions() {
-		OpponentModel actorModel = OpponentModelPool.getInstance().getModel(actor);
-		if (actorModel == null) actorModel = OpponentModelPool.getInstance().getModel(bot);
-		return sampler.getProbabilityActions(gameState, actorModel, actor, bot);		
+		return sampler.getProbabilityActions(gameState, model, actor, bot);		
 	}
 
 	public static interface Factory {
