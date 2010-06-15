@@ -15,13 +15,9 @@
  */
 package org.cspoker.ai.bots.listener;
 
-import org.apache.log4j.Logger;
 import org.cspoker.ai.bots.BotRunner;
 
 public class GameLimitingBotListener extends DealCountingListener {
-
-	private final static Logger logger = Logger
-			.getLogger(GameLimitingBotListener.class);
 
 	private final int maxNbGames;
 

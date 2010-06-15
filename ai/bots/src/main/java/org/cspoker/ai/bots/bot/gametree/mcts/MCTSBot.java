@@ -22,19 +22,17 @@ import org.apache.log4j.Logger;
 import org.cspoker.ai.bots.bot.AbstractBot;
 import org.cspoker.ai.bots.bot.gametree.action.SearchBotAction;
 import org.cspoker.ai.bots.bot.gametree.mcts.listeners.MCTSListener;
-import org.cspoker.ai.bots.bot.gametree.mcts.listeners.SWTTreeListener;
-import org.cspoker.ai.bots.bot.gametree.mcts.listeners.TextTreeListener;
 import org.cspoker.ai.bots.bot.gametree.mcts.nodes.Config;
 import org.cspoker.ai.bots.bot.gametree.mcts.nodes.INode;
 import org.cspoker.ai.bots.bot.gametree.mcts.nodes.RootNode;
 import org.cspoker.ai.bots.listener.BotListener;
-import org.cspoker.ai.opponentmodels.OpponentModelPool;
 import org.cspoker.client.common.SmartLobbyContext;
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.elements.table.TableId;
-import org.eclipse.swt.widgets.Display;
+
+//import org.cspoker.common.elements.table.Round;
 
 public class MCTSBot extends AbstractBot {
 
@@ -101,40 +99,32 @@ public class MCTSBot extends AbstractBot {
 			iterate(root);
 			iterate(root);
 		}while(System.currentTimeMillis()<endTime);
-//		if (printed && tableContext.getGameState().getRound() == r)
-//			printed = false;
 		SearchBotAction action = root.selectChild(config.getMoveSelectionStrategy()).getLastAction().getAction();
-		if(logger.isInfoEnabled()) logger.info("Stopped MCTS after "+root.getNbSamples()+" samples and choosing "+action);
+		if(logger.isInfoEnabled()) 
+			logger.info("Stopped MCTS after "+root.getNbSamples()+" samples and choosing "+action);
+		
+		// to calculate efficiency of sampling algorithms
+//		if (tableContext.getGameState().getRound() == Round.PREFLOP)
+//			System.out.print(root.getNbSamples());
+//		System.out.print("\t");
+//		if (tableContext.getGameState().getRound() == Round.FLOP)
+//			System.out.print(root.getNbSamples());
+//		System.out.print("\t");
+//		if (tableContext.getGameState().getRound() == Round.TURN)
+//			System.out.print(root.getNbSamples());
+//		System.out.print("\t");
+//		if (tableContext.getGameState().getRound() == Round.FINAL)
+//			System.out.print(root.getNbSamples());
+//		System.out.println("");
+		
 		action.perform(playerContext);
 		MCTSListener[] listeners = createListeners(gameState, botId);
 		for (MCTSListener listener : listeners) {
 			listener.onMCTS(root);
 		}
-//		if (OpponentModelPool.getInstance().size() > 1) {
-//			TextTreeListener.Factory factory = new TextTreeListener.Factory();
-////			SWTTreeListener.Factory factory = new SWTTreeListener.Factory(Display.getDefault());
-//			MCTSListener listener = factory.create(gameState, botId);
-//			listener.onMCTS(root);
-//			System.out.println("Tree printed");
-//		}
 	}
 
-//	long currentCount = 0;
-//	private final static Round r = Round.FLOP;
-//	public static boolean printed = false;
-	
 	private void iterate(RootNode root) {
-//		long currentTime = (System.currentTimeMillis()-startTime);
-//		Round round = tableContext.getGameState().getRound();
-//		if (printed && currentCount<currentTime && round == r){
-//			if (currentTime-currentCount!=1) {
-//				for (long i = currentCount+1; i <= currentTime; i++)
-//					System.out.println(i + " - " + root.getEV() + " - " + root.getEVStdDev());
-//			} else {
-//				System.out.println(currentTime + " - " + root.getEV() + " - " + root.getEVStdDev());
-//			}
-//			currentCount = currentTime;
-//		}
 		INode selectedLeaf = root.selectRecursively();
 		selectedLeaf.expand();
 		double value = selectedLeaf.simulate();
@@ -144,7 +134,6 @@ public class MCTSBot extends AbstractBot {
 	private MCTSListener[] createListeners(GameState gameState, PlayerId actor) {
 		MCTSListener[] listeners = new MCTSListener[MCTSlistenerFactories.length];
 		for (int i=0;i<MCTSlistenerFactories.length;i++) {
-			System.out.println((i+1) + " listener");
 			listeners[i] = MCTSlistenerFactories[i].create(gameState, actor);
 		}
 		return listeners;

@@ -16,12 +16,12 @@
 package org.cspoker.ai.opponentmodels.simple;
 
 import org.cspoker.ai.opponentmodels.OpponentModel;
+import org.cspoker.common.elements.player.PlayerId;
 
 public class HistogramModelFactory implements OpponentModel.Factory{
 
 	@Override
-	public OpponentModel create() {
+	public OpponentModel create(PlayerId botId) {
 		return new HistogramModel();
 	}
-
 }

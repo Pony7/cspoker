@@ -74,7 +74,7 @@ public class PreFoldCallRaiseInstances extends InstancesBuilder{
 	public Instance getUnclassifiedInstance(Propositionalizer prop, Object actor) {
 		PlayerData p = prop.getPlayers().get(actor);
 		Instance instance = new Instance(length);
-
+		if (p==null) p = new PlayerData(actor);
 		instance.setDataset(dataset);
 
 		instance.setValue(0, prop.getRoundCompletion());

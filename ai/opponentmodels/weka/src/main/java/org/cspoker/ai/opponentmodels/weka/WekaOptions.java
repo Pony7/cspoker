@@ -2,49 +2,99 @@ package org.cspoker.ai.opponentmodels.weka;
 
 public class WekaOptions {
 	
-	private static boolean arffPersistency = true;
-	private static boolean arffOverwrite = true;
-	private static long modelCreationTreshold = 500;
-	private static boolean continueAfterCreation = false;
-	private static boolean modelPersistency = true;
+	private boolean useOnlineLearning = true;
+	private boolean continuousLearning = true; // if false, we need a treshold value => modelCreationTreshold
+	
+	/** if continuousLearning is false, a new model will be learned
+	 * after X actions by an opponent, where X is modelCreationTreshold	*/
+	private long modelCreationTreshold = 500; 
+	private long minimalLearnExamples = 1;
+	
+	/** continuousLearning must be true for using solveConceptDrift */
+	private boolean solveConceptDrift = true; // 
+	/** if solveConceptDrift is false, a new model must be learned at intervals
+	 * based on the number of reported actions	*/
+	private long learningInterval = 1;
+	
+	// TODO: keep files of previous online learning
+	private boolean arffOverwrite = true;
+	/** only available when continuousLearning if false */
+	private boolean continueAfterCreation = true; 
 
-	public static boolean isArffPersistency() {
-		return arffPersistency;
+	private boolean modelPersistency = true;
+	
+	public boolean useOnlineLearning() {
+		return useOnlineLearning;
 	}
 
-	public static void setArffPersistency(boolean arffPersistency) {
-		WekaOptions.arffPersistency = arffPersistency;
+	public void setUseOnlineLearning(boolean useOnlineLearning) {
+		this.useOnlineLearning = useOnlineLearning;
 	}
 
-	public static boolean isArffOverwrite() {
-		return arffOverwrite;
+	public boolean continuousLearning() {
+		return continuousLearning;
 	}
 
-	public static void setArffOverwrite(boolean arffOverwrite) {
-		WekaOptions.arffOverwrite = arffOverwrite;
+	public void setContinuousLearning(boolean continuousLearning) {
+		this.continuousLearning = continuousLearning;
 	}
 
-	public static long getModelCreationTreshold() {
+	public long modelCreationTreshold() {
 		return modelCreationTreshold;
 	}
 
-	public static void setModelCreationTreshold(long modelCreationTreshold) {
-		WekaOptions.modelCreationTreshold = modelCreationTreshold;
+	public void setModelCreationTreshold(long modelCreationTreshold) {
+		this.modelCreationTreshold = modelCreationTreshold;
 	}
 
-	public static boolean isContinueAfterCreation() {
+	public long getMinimalLearnExamples() {
+		return minimalLearnExamples;
+	}
+
+	public void setMinimalLearnExamples(long minimalLearnExamples) {
+		this.minimalLearnExamples = minimalLearnExamples;
+	}
+
+	public boolean solveConceptDrift() {
+		return solveConceptDrift;
+	}
+
+	public void setSolveConceptDrift(boolean solveConceptDrift) {
+		if (!continuousLearning && solveConceptDrift)
+			throw new IllegalStateException("Cannot use concept drift solver without continuous learning!");
+		this.solveConceptDrift = solveConceptDrift;
+	}
+	
+	
+	public long getLearningInterval() {
+		return learningInterval;
+	}
+
+	public void setLearningInterval(long learningInterval) {
+		this.learningInterval = learningInterval;
+	}
+
+	public boolean arffOverwrite() {
+		return arffOverwrite;
+	}
+
+	public void setArffOverwrite(boolean arffOverwrite) {
+		this.arffOverwrite = arffOverwrite;
+	}
+
+	public boolean continueAfterCreation() {
 		return continueAfterCreation;
 	}
 
-	public static void setContinueAfterCreation(boolean continueAfterCreation) {
-		WekaOptions.continueAfterCreation = continueAfterCreation;
+	public void setContinueAfterCreation(boolean continueAfterCreation) {
+		this.continueAfterCreation = continueAfterCreation;
 	}
 
-	public static boolean isModelPersistency() {
+	public boolean modelPersistency() {
 		return modelPersistency;
 	}
 
-	public static void setModelPersistency(boolean modelPersistency) {
-		WekaOptions.modelPersistency = modelPersistency;
-	}		
+	public void setModelPersistency(boolean modelPersistency) {
+		this.modelPersistency = modelPersistency;
+	}
 }

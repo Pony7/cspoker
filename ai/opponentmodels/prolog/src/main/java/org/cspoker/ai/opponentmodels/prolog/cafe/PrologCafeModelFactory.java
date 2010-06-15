@@ -20,12 +20,13 @@ import jp.ac.kobe_u.cs.prolog.lang.PrologControl;
 import net.jcip.annotations.ThreadSafe;
 
 import org.cspoker.ai.opponentmodels.OpponentModel;
+import org.cspoker.common.elements.player.PlayerId;
 
 @ThreadSafe
 public class PrologCafeModelFactory implements OpponentModel.Factory {
 
 	@Override
-	public OpponentModel create() {
+	public OpponentModel create(PlayerId actor) {
 		PrologControl prolog = new PrologControl();
 		return new PrologCafeModel(prolog);
 	}

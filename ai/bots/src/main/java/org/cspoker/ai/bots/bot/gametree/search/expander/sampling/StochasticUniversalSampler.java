@@ -16,8 +16,9 @@ public class StochasticUniversalSampler extends RouletteWheelSampler {
 		RelativeBetDistribution distr = new RelativeBetDistribution();
 		double[] samples = new double[n];
 		double sample = r.nextDouble() / n;
-		for (int i = 0; i < n; i++) 
+		for (int i = 0; i < n; i++) {
 			samples[i] = distr.inverseCdf(sample + (double) i/n);
+		}
 		Arrays.sort(samples);
 		return samples;
 	}

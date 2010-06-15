@@ -91,10 +91,8 @@ public abstract class StochasticSampler extends Sampler {
 		double totalProbability = 0;
 		if (gameState.getDeficit(actor)>0) {
 			// call, raise or fold
-//			model.assumeTemporarily(gameState);
 			Triple<Double, Double, Double> probabilities = 
 				model.getFoldCallRaiseProbabilities(gameState, actor);
-//			model.forgetLastAssumption();
 
 			double foldProbability = probabilities.getLeft();
 			totalProbability += foldProbability;
@@ -121,9 +119,7 @@ public abstract class StochasticSampler extends Sampler {
 			}
 		} else {
 			// check or bet
-//			model.assumeTemporarily(gameState);
 			Pair<Double, Double> probabilities = model.getCheckBetProbabilities(gameState, actor);
-//			model.forgetLastAssumption();
 			double checkProbability = probabilities.getLeft();
 			totalProbability += checkProbability;
 			actions.add(new ProbabilityAction(new CheckAction(gameState, actor), checkProbability));

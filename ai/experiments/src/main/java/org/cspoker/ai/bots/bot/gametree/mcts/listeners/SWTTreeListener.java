@@ -15,7 +15,6 @@
  */
 package org.cspoker.ai.bots.bot.gametree.mcts.listeners;
 
-import org.apache.log4j.Logger;
 import org.cspoker.ai.bots.bot.gametree.action.ProbabilityAction;
 import org.cspoker.ai.bots.bot.gametree.mcts.nodes.INode;
 import org.cspoker.ai.bots.bot.gametree.mcts.nodes.InnerNode;
@@ -40,7 +39,6 @@ import com.google.common.collect.ImmutableList;
 
 public class SWTTreeListener implements MCTSListener {
 
-	private final static Logger logger = Logger.getLogger(SWTTreeListener.class);
 	private final Display display;
 	private final Tree tree;
 	private final int relStackSize;

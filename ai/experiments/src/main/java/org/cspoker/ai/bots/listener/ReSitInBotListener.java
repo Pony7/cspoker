@@ -15,14 +15,11 @@
  */
 package org.cspoker.ai.bots.listener;
 
-import org.apache.log4j.Logger;
 import org.cspoker.ai.bots.BotRunner;
 import org.cspoker.common.api.lobby.holdemtable.event.SitOutEvent;
 
 public class ReSitInBotListener extends DefaultBotListener {
 
-	private final static Logger logger = Logger
-			.getLogger(ReSitInBotListener.class);
 	private final BotRunner runner;
 
 	public ReSitInBotListener(BotRunner runner) {

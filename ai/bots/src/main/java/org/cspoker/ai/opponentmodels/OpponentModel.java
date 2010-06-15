@@ -50,10 +50,15 @@ public interface OpponentModel {
 	 * Forget the last assumption.
 	 */
 	void forgetLastAssumption();
+	
+//	/**
+//	 * Return a clone of opponentmodel
+//	 */
+//	OpponentModel clone();
 
 	static interface Factory {
 
-		OpponentModel create();
+		OpponentModel create(PlayerId bot);
 
 	}
 }
