@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
+import org.cspoker.ai.bots.bot.gametree.mcts.nodes.INode;
 import org.cspoker.ai.opponentmodels.OpponentModel;
 import org.cspoker.ai.opponentmodels.listener.OpponentModelListener;
 import org.cspoker.client.common.gamestate.GameState;
@@ -36,10 +37,11 @@ public class WekaLearningModel implements OpponentModel {
 	private final PlayerId bot;
 	
 	private final OpponentModelListener[] listeners;
+	private INode node;
 	
 	public WekaLearningModel(PlayerId botId, WekaRegressionModel defaultModel, WekaOptions config, 
 			OpponentModelListener... listeners) {
-		this.permanentVisitor = new PlayerTrackingVisitor();
+		this.permanentVisitor = new PlayerTrackingVisitor(this);
 		this.visitors.add(permanentVisitor);
 		this.defaultModel = defaultModel;
 		this.config = config;
@@ -48,7 +50,7 @@ public class WekaLearningModel implements OpponentModel {
 		for (int i = 0; i < listeners.length; i++)
 			listeners[i].setOpponentModel(this);
 		if (config.useOnlineLearning()) {
-			this.actionTrackingVisitor = new ActionTrackingVisitor(bot);
+			this.actionTrackingVisitor = new ActionTrackingVisitor(this, bot);
 		}
 	}
 	
@@ -56,7 +58,7 @@ public class WekaLearningModel implements OpponentModel {
 		return config;
 	}
 	
-	// thse methods are used by KullbackLeiblerListener
+	// these methods are used by KullbackLeiblerListener
 	// TODO: better design (this is messy)
 	public Map<PlayerId, WekaRegressionModel> getOpponentModels() {
 		return opponentModels;
@@ -153,5 +155,28 @@ public class WekaLearningModel implements OpponentModel {
 //		else System.out.println(")");
 		return list;		
 	}
+
+	/**
+	 * Saves the node with the last move played by {@link MCTSBot}.
+	 * Is used to get probabilities of the opponents moves in order
+	 * to calculate the accuracy of predictions by the opponentmodel.
+	 * @param node INode containing last action by MCTSBot
+	 */
+	@Override
+	public void setChosenNode(INode node) {
+		this.node = node;		
+	}
+	
+	@Override
+	public INode getChosenNode() {
+		return this.node;
+	}
+
+	@Override
+	public PlayerId getBotId() {
+		return bot;
+	}
+
+	
 
 }

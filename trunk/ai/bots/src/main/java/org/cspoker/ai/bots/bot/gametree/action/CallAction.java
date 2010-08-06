@@ -42,6 +42,22 @@ public class CallAction extends SearchBotAction {
 			throws RemoteException, IllegalActionException {
 		context.checkOrCall();
 	}
+	
+	@Override
+	public GameState getUnwrappedStateAfterAction() {		
+		PlayerState actorState = gameState.getPlayer(actor);
+		int largestBet = gameState.getLargestBet();
+		int stack = actorState.getStack();
+		int bet = actorState.getBet();		
+
+		GameState state;
+		if (stack <= largestBet - bet) {
+			state = new AllInState(gameState, new AllInEvent(actor, stack));
+		} else {
+			state = new CallState(gameState, new CallEvent(actor, largestBet - bet));
+		}
+		return state;
+	}
 
 	@Override
 	public GameState getStateAfterAction() throws GameEndedException {
@@ -55,12 +71,10 @@ public class CallAction extends SearchBotAction {
 				break forloop;
 			}
 		}
-
-		PlayerState actorState = gameState.getPlayer(actor);
+		
+		GameState state = getUnwrappedStateAfterAction();
 		int largestBet = gameState.getLargestBet();
-		int stack = actorState.getStack();
-		int bet = actorState.getBet();
-
+		
 		// what if small or big blind all-in?
 		if (roundEnds
 				&& gameState.getRound().equals(Round.PREFLOP)
@@ -69,13 +83,7 @@ public class CallAction extends SearchBotAction {
 						.getBigBlind()) {
 			roundEnds = false;
 		}
-
-		GameState state;
-		if (stack <= largestBet - bet) {
-			state = new AllInState(gameState, new AllInEvent(actor, stack));
-		} else {
-			state = new CallState(gameState, new CallEvent(actor, largestBet - bet));
-		}
+		
 		if (roundEnds) {
 			return getNewRoundState(state);
 		} else {

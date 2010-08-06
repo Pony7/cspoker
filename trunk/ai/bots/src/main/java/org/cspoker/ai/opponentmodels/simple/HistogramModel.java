@@ -19,6 +19,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import net.jcip.annotations.NotThreadSafe;
 
+import org.cspoker.ai.bots.bot.gametree.mcts.nodes.INode;
 import org.cspoker.ai.opponentmodels.OpponentModel;
 import org.cspoker.client.common.gamestate.DetailedHoldemTableState;
 import org.cspoker.client.common.gamestate.GameState;
@@ -289,6 +290,21 @@ public class HistogramModel implements OpponentModel,
 	@Override
 	public void visitConfigChangeState(ConfigChangeState configChangeState) {
 	
+	}
+
+	@Override
+	public void setChosenNode(INode node) {
+		
+	}
+
+	@Override
+	public INode getChosenNode() {
+		return null;
+	}
+
+	@Override
+	public PlayerId getBotId() {
+		return null;
 	}
 
 }

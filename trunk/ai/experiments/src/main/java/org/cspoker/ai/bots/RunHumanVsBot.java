@@ -147,8 +147,8 @@ public class RunHumanVsBot{
 		BotFactory botFactory;
 		try {
 			WekaOptions configPersist = new WekaOptions();
-			configPersist.setContinuousLearning(true);
-			configPersist.setModelCreationTreshold(1);
+			configPersist.setContinuousLearning(false);
+			configPersist.setModelCreationTreshold(100);
 			botFactory = new MCTSBotFactory("MCTSBot",
 					WekaRegressionModelFactory.createForZip(
 							"org/cspoker/ai/opponentmodels/weka/models/model1.zip", configPersist/*, kullbackLeibler*/),

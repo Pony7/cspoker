@@ -42,6 +42,11 @@ public class FoldAction extends SearchBotAction {
 	}
 
 	@Override
+	public GameState getUnwrappedStateAfterAction() {
+		return new FoldState(gameState, new FoldEvent(actor));
+	}
+
+	@Override
 	public GameState getStateAfterAction() throws GameEndedException,
 			DefaultWinnerException {
 		boolean roundEnds = true;
@@ -79,7 +84,7 @@ public class FoldAction extends SearchBotAction {
 			roundEnds = false;
 		}
 
-		FoldState foldState = new FoldState(gameState, new FoldEvent(actor));
+		GameState foldState = getUnwrappedStateAfterAction();
 
 		if (!roundEnds) {
 			return new NextPlayerState(foldState, new NextPlayerEvent(foldState

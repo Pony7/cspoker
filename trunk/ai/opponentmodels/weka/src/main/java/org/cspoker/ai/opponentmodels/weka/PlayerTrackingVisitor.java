@@ -16,6 +16,7 @@
 package org.cspoker.ai.opponentmodels.weka;
 
 import org.apache.log4j.Logger;
+import org.cspoker.ai.opponentmodels.OpponentModel;
 import org.cspoker.client.common.gamestate.DetailedHoldemTableState;
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.client.common.gamestate.GameStateVisitor;
@@ -39,6 +40,7 @@ import org.cspoker.client.common.gamestate.modifiers.SitInState;
 import org.cspoker.client.common.gamestate.modifiers.SitOutState;
 import org.cspoker.client.common.gamestate.modifiers.WinnerState;
 import org.cspoker.client.common.playerstate.PlayerState;
+import org.cspoker.common.elements.cards.Card;
 import org.cspoker.common.elements.table.Round;
 
 public class PlayerTrackingVisitor implements GameStateVisitor, Cloneable {
@@ -49,6 +51,16 @@ public class PlayerTrackingVisitor implements GameStateVisitor, Cloneable {
 	
 	protected Propositionalizer propz = new Propositionalizer();
 	
+	protected OpponentModel parentOpponentModel;
+	
+	public PlayerTrackingVisitor(OpponentModel opponentModel) {
+		this.parentOpponentModel = opponentModel;
+	}
+	
+	protected OpponentModel getOpponentModel() {
+		return this.parentOpponentModel;
+	}
+
 	public void readHistory(GameState gameState) {
 		try{
 			gameState.acceptHistoryVisitor(this, previousStartState);
@@ -79,29 +91,44 @@ public class PlayerTrackingVisitor implements GameStateVisitor, Cloneable {
 		return propz;
 	}
 	
+	protected String getPlayerName(GameState gameState) {
+		return "(" + gameState.getPlayer(gameState.getNextToAct()).getName() + ")";
+	}
+	
 	@Override
 	public void visitAllInState(AllInState allInState) {
+		logger.trace("(" + allInState.getPlayer(allInState.getNextToAct()).getName() + ") AllInState: " + allInState.getRound());
 		propz.signalAllIn(allInState.getEvent().getPlayerId(), allInState.getEvent().getMovedAmount());
 	}
 
 	@Override
 	public void visitBetState(BetState betState) {
+		logger.trace("(" + betState.getPlayer(betState.getNextToAct()).getName() + ") BetState: " + betState.getEvent().getAmount());
 		propz.signalBet(false, betState.getEvent().getPlayerId(), betState.getEvent().getAmount());
 	}
 
 	@Override
 	public void visitCallState(CallState callState) {
+		logger.trace("(" + callState.getPlayer(callState.getNextToAct()).getName() + ") CallState");
 		propz.signalCall(false, callState.getEvent().getPlayerId());
 	}
 
 	@Override
 	public void visitCheckState(CheckState checkState) {
+		logger.trace("(" + checkState.getPlayer(checkState.getNextToAct()).getName() + ") CheckState");
 		propz.signalCheck(checkState.getEvent().getPlayerId());
 	}
 
 	@Override
 	public void visitFoldState(FoldState foldState) {
+		logger.trace("(" + foldState.getPlayer(foldState.getNextToAct()).getName() + ") FoldState");
 		propz.signalFold(foldState.getEvent().getPlayerId());
+	}
+
+	@Override
+	public void visitRaiseState(RaiseState raiseState) {
+		logger.trace("(" + raiseState.getPlayer(raiseState.getNextToAct()).getName() + ") RaiseState: " + raiseState.getLargestBet());
+		propz.signalRaise(false, raiseState.getLastEvent().getPlayerId(), raiseState.getLargestBet());
 	}
 
 	@Override
@@ -122,25 +149,31 @@ public class PlayerTrackingVisitor implements GameStateVisitor, Cloneable {
 	@Override
 	public void visitNewCommunityCardsState(
 			NewCommunityCardsState newCommunityCardsState) {
-
+		logger.trace("NewCommunityCardsState: " + newCommunityCardsState.getRound() + " ");
+		logger.trace("   " + newCommunityCardsState.getCommunityCards());
+		propz.signalCommunityCards(newCommunityCardsState.getCommunityCards());
 	}
 
 	@Override
 	public void visitNewDealState(NewDealState newDealState) {
+		logger.trace("(" + newDealState.getPlayer(newDealState.getDealer()).getName() + ") NewDealState");
 		propz.signalBBAmount(newDealState.getTableConfiguration().getBigBlind());
 		propz.signalNewGame();
-		for(PlayerState player: newDealState.getAllSeatedPlayers()){
+		for (PlayerState player : newDealState.getAllSeatedPlayers()) {
 			propz.signalSeatedPlayer(player.getStack(), player.getPlayerId());
 		}
 	}
 
 	@Override
 	public void visitNewPocketCardsState(NewPocketCardsState newPocketCardsState) {
-
+//		System.out.println("--------------------");
+//		System.out.print("(" + newPocketCardsState.getPlayer().getName() + ") Pocket cards: ");
+		newPocketCardsState.getPlayerCards();
 	}
 
 	@Override
 	public void visitNewRoundState(NewRoundState newRoundState) {
+		logger.trace("NewRoundState: " + newRoundState.getRound());
 		if(newRoundState.getRound()==Round.FLOP){
 			propz.signalFlop();
 		}else if(newRoundState.getRound()==Round.TURN){
@@ -156,12 +189,16 @@ public class PlayerTrackingVisitor implements GameStateVisitor, Cloneable {
 	}
 
 	@Override
-	public void visitRaiseState(RaiseState raiseState) {
-		propz.signalRaise(false, raiseState.getLastEvent().getPlayerId(), raiseState.getLargestBet());
-	}
-
-	@Override
 	public void visitShowHandState(ShowHandState showHandState) {
+		Card[] cardset = new Card[]{};
+		cardset = showHandState.getLastEvent().getShowdownPlayer()
+				.getHandCards().toArray(cardset);
+		logger.trace("("
+				+ showHandState.getPlayer(
+						showHandState.getLastEvent().getShowdownPlayer()
+								.getPlayerId()).getName() + ") ShowHandState: "
+				+ cardset[0] + ", " + cardset[1]);
+		propz.signalCardShowdown(showHandState.getLastEvent().getShowdownPlayer().getPlayerId(), cardset[0], cardset[1]);
 	}
 
 	@Override
@@ -176,11 +213,13 @@ public class PlayerTrackingVisitor implements GameStateVisitor, Cloneable {
 
 	@Override
 	public void visitBlindState(BlindState blindState) {
+		logger.trace("(" + blindState.getPlayer(blindState.getLastEvent().getPlayerId()).getName() + ") BlindState: " + blindState.getRound());
 		propz.signalBlind(false, blindState.getLastEvent().getPlayerId(), blindState.getLastEvent().getAmount());
 	}
 
 	@Override
 	public void visitWinnerState(WinnerState winnerState) {
+		logger.trace("(" + winnerState.getLastEvent() + ") WinnerState: " + winnerState.getRound());
 	}
 
 	@Override

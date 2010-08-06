@@ -109,12 +109,8 @@ public class WekaRegressionModel extends WekaModel {
 		try {
 			double prediction;
 			if ("preflop".equals(props.getRound())) {
-				if (preBetModel == null)
-					System.out.println(this);
 				prediction = preBetModel.classifyInstance(instance);
 			} else {
-				if (postBetModel == null)
-					System.out.println(this);
 				prediction = postBetModel.classifyInstance(instance);
 			}
 			double prob = Math.min(1, Math.max(0, prediction));
@@ -143,36 +139,24 @@ public class WekaRegressionModel extends WekaModel {
 		try {
 			double probFold;
 			if (preflop) {
-				if (preFoldModel == null)
-					System.out.println(this);
 				probFold = preFoldModel.classifyInstance(instance);
 			} else {
-				if (postFoldModel == null)
-					System.out.println(this);
 				probFold = postFoldModel.classifyInstance(instance);
 			}
 			probFold = Math.min(1, Math.max(0, probFold));
 
 			double probCall;
 			if (preflop) {
-				if (preCallModel == null)
-					System.out.println(this);
 				probCall = preCallModel.classifyInstance(instance);
 			} else {
-				if (postCallModel == null)
-					System.out.println(this);
 				probCall = postCallModel.classifyInstance(instance);
 			}
 			probCall = Math.min(1, Math.max(0, probCall));
 
 			double probRaise;
 			if (preflop) {
-				if (preRaiseModel == null)
-					System.out.println(this);
 				probRaise = preRaiseModel.classifyInstance(instance);
 			} else {
-				if (postRaiseModel == null)
-					System.out.println(this);
 				probRaise = postRaiseModel.classifyInstance(instance);
 			}
 			probRaise = Math.min(1, Math.max(0, probRaise));

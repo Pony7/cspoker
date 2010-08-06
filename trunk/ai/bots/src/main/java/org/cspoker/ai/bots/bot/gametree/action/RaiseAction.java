@@ -46,7 +46,7 @@ public class RaiseAction extends SearchBotAction {
 	}
 
 	@Override
-	public GameState getStateAfterAction() {
+	public GameState getUnwrappedStateAfterAction() {
 		PlayerState actorState = gameState.getPlayer(actor);
 		int stack = actorState.getStack();
 		int oldBet = actorState.getBet();
@@ -60,6 +60,12 @@ public class RaiseAction extends SearchBotAction {
 		} else {
 			raiseState = new RaiseState(gameState, new RaiseEvent(actor, amount, movedAmount));
 		}
+		return raiseState;
+	}
+
+	@Override
+	public GameState getStateAfterAction() {
+		GameState raiseState = getUnwrappedStateAfterAction();
 		return new NextPlayerState(raiseState, new NextPlayerEvent(raiseState
 				.getNextActivePlayerAfter(actor).getPlayerId()));
 	}

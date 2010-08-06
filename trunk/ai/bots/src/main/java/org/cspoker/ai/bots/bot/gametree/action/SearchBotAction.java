@@ -47,6 +47,8 @@ public abstract class SearchBotAction implements ActionWrapper {
 	public abstract void perform(RemoteHoldemPlayerContext context)
 			throws RemoteException, IllegalActionException;
 
+	public abstract GameState getUnwrappedStateAfterAction();		
+		
 	public abstract GameState getStateAfterAction() throws GameEndedException,
 			DefaultWinnerException;
 
