@@ -17,6 +17,7 @@ package org.cspoker.ai.opponentmodels.prolog.redundant;
 
 import java.util.Collection;
 
+import org.cspoker.ai.bots.bot.gametree.mcts.nodes.INode;
 import org.cspoker.ai.opponentmodels.OpponentModel;
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.common.elements.player.PlayerId;
@@ -90,5 +91,20 @@ public class RedundantModel implements OpponentModel {
 	public double[] getShowdownProbabilities(GameState gameState,PlayerId actor)
 			throws UnsupportedOperationException {
 		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public void setChosenNode(INode node) {
+		
+	}
+
+	@Override
+	public INode getChosenNode() {
+		return null;
+	}
+
+	@Override
+	public PlayerId getBotId() {
+		return null;
 	}
 }

@@ -46,7 +46,7 @@ public class BetAction extends SearchBotAction {
 	}
 
 	@Override
-	public GameState getStateAfterAction() {
+	public GameState getUnwrappedStateAfterAction() {
 		GameState betState;
 		int stack = gameState.getPlayer(actor).getStack();
 		if (stack == amount) {
@@ -54,6 +54,12 @@ public class BetAction extends SearchBotAction {
 		} else if (stack > amount) {
 			betState = new BetState(gameState, new BetEvent(actor, amount));
 		} else throw new IllegalStateException("Can't bet amount: "+amount+", with stack: " + stack);
+		return betState;
+	}
+
+	@Override
+	public GameState getStateAfterAction() {
+		GameState betState = getUnwrappedStateAfterAction();
 		PlayerState nextToAct = betState.getNextActivePlayerAfter(actor);
 		if (nextToAct != null) {
 			return new NextPlayerState(betState, new NextPlayerEvent(nextToAct
@@ -70,5 +76,4 @@ public class BetAction extends SearchBotAction {
 			return "Bet " + Util.parseDollars(amount);
 		}
 	}
-
 }

@@ -23,6 +23,7 @@ import jp.ac.kobe_u.cs.prolog.lang.SymbolTerm;
 import jp.ac.kobe_u.cs.prolog.lang.VariableTerm;
 
 import org.apache.log4j.Logger;
+import org.cspoker.ai.bots.bot.gametree.mcts.nodes.INode;
 import org.cspoker.ai.opponentmodels.prolog.AbstractPrologModel;
 import org.cspoker.ai.opponentmodels.prolog.ToPrologTermVisitor;
 import org.cspoker.common.elements.player.PlayerId;
@@ -122,6 +123,21 @@ public class TuPrologModel extends AbstractPrologModel {
 			throw new IllegalStateException("Failed to call " + goal, e);
 		}
 		return ((alice.tuprolog.Number) binding).doubleValue();
+	}
+
+	@Override
+	public void setChosenNode(INode node) {
+		
+	}
+
+	@Override
+	public INode getChosenNode() {
+		return null;
+	}
+
+	@Override
+	public PlayerId getBotId() {
+		return null;
 	}
 
 }

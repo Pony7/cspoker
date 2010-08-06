@@ -78,6 +78,14 @@ public class NewPocketCardsState
 		};
 	}
 	
+	public EnumSet<Card> getPlayerCards() {
+		return playerState.getCards();
+	}
+	
+	public PlayerState getPlayer() {
+		return playerState;
+	}
+	
 	@Override
 	public PlayerState getPlayer(PlayerId playerId) {
 		if (this.playerId.equals(playerId)) {

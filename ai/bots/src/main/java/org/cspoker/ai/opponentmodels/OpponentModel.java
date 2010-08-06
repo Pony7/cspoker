@@ -15,6 +15,7 @@
  */
 package org.cspoker.ai.opponentmodels;
 
+import org.cspoker.ai.bots.bot.gametree.mcts.nodes.INode;
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.util.Pair;
@@ -35,6 +36,10 @@ public interface OpponentModel {
 			GameState gameState, PlayerId actor);
 
 	double[] getShowdownProbabilities(GameState gameState, PlayerId actor) throws UnsupportedOperationException;
+
+	void setChosenNode(INode node);
+	
+	INode getChosenNode();
 	
 	/**
 	 * Assume the given game state permanently.
@@ -50,6 +55,11 @@ public interface OpponentModel {
 	 * Forget the last assumption.
 	 */
 	void forgetLastAssumption();
+	
+	/**
+	 * Get id of bot
+	 */
+	PlayerId getBotId();
 	
 //	/**
 //	 * Return a clone of opponentmodel

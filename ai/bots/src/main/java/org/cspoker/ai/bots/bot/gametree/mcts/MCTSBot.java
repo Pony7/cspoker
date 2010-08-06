@@ -20,17 +20,24 @@ import java.util.concurrent.ExecutorService;
 
 import org.apache.log4j.Logger;
 import org.cspoker.ai.bots.bot.AbstractBot;
+import org.cspoker.ai.bots.bot.gametree.action.DefaultWinnerException;
+import org.cspoker.ai.bots.bot.gametree.action.GameEndedException;
 import org.cspoker.ai.bots.bot.gametree.action.SearchBotAction;
 import org.cspoker.ai.bots.bot.gametree.mcts.listeners.MCTSListener;
 import org.cspoker.ai.bots.bot.gametree.mcts.nodes.Config;
 import org.cspoker.ai.bots.bot.gametree.mcts.nodes.INode;
+import org.cspoker.ai.bots.bot.gametree.mcts.nodes.InnerNode;
 import org.cspoker.ai.bots.bot.gametree.mcts.nodes.RootNode;
 import org.cspoker.ai.bots.listener.BotListener;
 import org.cspoker.client.common.SmartLobbyContext;
+import org.cspoker.client.common.gamestate.AbstractGameState;
+import org.cspoker.client.common.gamestate.ForwardingGameState;
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
 import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.elements.table.TableId;
+
+import com.google.common.collect.ImmutableList;
 
 //import org.cspoker.common.elements.table.Round;
 
@@ -99,7 +106,21 @@ public class MCTSBot extends AbstractBot {
 			iterate(root);
 			iterate(root);
 		}while(System.currentTimeMillis()<endTime);
-		SearchBotAction action = root.selectChild(config.getMoveSelectionStrategy()).getLastAction().getAction();
+		INode node = root.selectChild(config.getMoveSelectionStrategy());
+		config.getModel().setChosenNode(node);
+//		try {
+//		ImmutableList<INode> children = ((InnerNode) node).getChildren();
+//		for (INode n: children) {
+//			String str = " <last action> ";
+//			str = "" + n.getLastAction().getAction().getUnwrappedStateAfterAction().getClass();
+//			System.out.println("Child " +  str
+//					+ " with action " + n.getLastAction().getAction() + " with probability " +
+//					n.getLastAction().getProbability());
+//		}
+//		} catch (ClassCastException e) {
+//			System.out.println("-------------\nNO CLASS CAST\n-------------"); // do nothing
+//		}
+		SearchBotAction action = node.getLastAction().getAction();
 		if(logger.isInfoEnabled()) 
 			logger.info("Stopped MCTS after "+root.getNbSamples()+" samples and choosing "+action);
 		
@@ -110,7 +131,7 @@ public class MCTSBot extends AbstractBot {
 //		if (tableContext.getGameState().getRound() == Round.FLOP)
 //			System.out.print(root.getNbSamples());
 //		System.out.print("\t");
-//		if (tableContext.getGameState().getRound() == Round.TURN)
+//		if (tableContext.getGameState().getRound() == Round.TURN)= 
 //			System.out.print(root.getNbSamples());
 //		System.out.print("\t");
 //		if (tableContext.getGameState().getRound() == Round.FINAL)

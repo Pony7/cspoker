@@ -41,6 +41,11 @@ public class CheckAction extends SearchBotAction {
 	}
 
 	@Override
+	public GameState getUnwrappedStateAfterAction() {
+		return new CheckState(gameState, new CheckEvent(actor));
+	}
+	
+	@Override
 	public GameState getStateAfterAction() throws GameEndedException {
 		PlayerState nextToAct = gameState.getNextActivePlayerAfter(actor);
 		// if bigblind is all-in, he shouldn't check again, so we're safe
@@ -50,7 +55,7 @@ public class CheckAction extends SearchBotAction {
 				&& gameState.getLargestBet() <= gameState
 						.getTableConfiguration().getBigBlind();
 
-		CheckState checkState = new CheckState(gameState, new CheckEvent(actor));
+		GameState checkState = getUnwrappedStateAfterAction();
 		if (!newRound) {
 			return new NextPlayerState(checkState, new NextPlayerEvent(
 					nextToAct.getPlayerId()));
@@ -62,5 +67,4 @@ public class CheckAction extends SearchBotAction {
 	public String toString() {
 		return "Check";
 	}
-
 }
