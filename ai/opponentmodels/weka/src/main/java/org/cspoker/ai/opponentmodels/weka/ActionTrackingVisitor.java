@@ -51,11 +51,7 @@ public class ActionTrackingVisitor extends PlayerTrackingVisitor {
 		return (ARFFPropositionalizer) this.propz;
 	}
 	
-	private InnerNode getNode(GameState state) {
-		// This method is only called after MCTSBot has acted
-		if (parentOpponentModel.getChosenNode() == null)
-			throw new IllegalStateException("MCTSBot hasn't acted yet!");
-		
+	private InnerNode getNode(GameState state) {		
 		try {
 			return (InnerNode) parentOpponentModel.getChosenNode();
 		} catch (ClassCastException e) {
@@ -99,6 +95,10 @@ public class ActionTrackingVisitor extends PlayerTrackingVisitor {
 	 */
 	private String str = "";
 	private Prediction getProbability(GameState gameState, double raiseAmount) {
+		// This method should only be called after MCTSBot has acted
+		if (parentOpponentModel.getChosenNode() == null)
+			return new Prediction(null, 1, 0);
+		
 		HashMap<Class<?>, Double> probs = new HashMap<Class<?>, Double>();
 		Class<?> cProb = null;
 		RaiseAction raiseAction = null;
@@ -172,7 +172,7 @@ public class ActionTrackingVisitor extends PlayerTrackingVisitor {
 		// chosen node of opponentmodel should have changed
 		if (parentOpponentModel.getChosenNode() == node) {
 			System.err.println(str);
-			throw new IllegalStateException("You should always chose a child node!");
+			throw new IllegalStateException("You should always choose a child node!");
 		}
 		
 		return new Prediction(parentOpponentModel.getChosenNode().getLastAction().getAction(),
