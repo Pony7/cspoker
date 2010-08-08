@@ -4,37 +4,17 @@ import java.io.IOException;
 import java.util.HashMap;
 
 import org.apache.log4j.Logger;
-import org.cspoker.client.common.gamestate.DetailedHoldemTableState;
 import org.cspoker.client.common.gamestate.GameState;
 import org.cspoker.client.common.gamestate.modifiers.AllInState;
 import org.cspoker.client.common.gamestate.modifiers.BetState;
-import org.cspoker.client.common.gamestate.modifiers.BlindState;
 import org.cspoker.client.common.gamestate.modifiers.CallState;
 import org.cspoker.client.common.gamestate.modifiers.CheckState;
-import org.cspoker.client.common.gamestate.modifiers.ConfigChangeState;
 import org.cspoker.client.common.gamestate.modifiers.FoldState;
-import org.cspoker.client.common.gamestate.modifiers.JoinTableState;
-import org.cspoker.client.common.gamestate.modifiers.LeaveTableState;
-import org.cspoker.client.common.gamestate.modifiers.NewCommunityCardsState;
-import org.cspoker.client.common.gamestate.modifiers.NewDealState;
-import org.cspoker.client.common.gamestate.modifiers.NewPocketCardsState;
-import org.cspoker.client.common.gamestate.modifiers.NewRoundState;
-import org.cspoker.client.common.gamestate.modifiers.NextPlayerState;
 import org.cspoker.client.common.gamestate.modifiers.RaiseState;
-import org.cspoker.client.common.gamestate.modifiers.ShowHandState;
-import org.cspoker.client.common.gamestate.modifiers.SitInState;
-import org.cspoker.client.common.gamestate.modifiers.SitOutState;
-import org.cspoker.client.common.gamestate.modifiers.WinnerState;
-import org.cspoker.client.common.playerstate.PlayerState;
-import org.cspoker.common.elements.cards.Card;
 import org.cspoker.common.elements.player.PlayerId;
-import org.cspoker.common.elements.table.Round;
 import org.cspoker.common.util.Util;
 
 import org.cspoker.ai.bots.bot.gametree.action.BetAction;
-import org.cspoker.ai.bots.bot.gametree.action.CallAction;
-import org.cspoker.ai.bots.bot.gametree.action.CheckAction;
-import org.cspoker.ai.bots.bot.gametree.action.FoldAction;
 import org.cspoker.ai.bots.bot.gametree.action.RaiseAction;
 import org.cspoker.ai.bots.bot.gametree.mcts.nodes.INode;
 import org.cspoker.ai.bots.bot.gametree.mcts.nodes.InnerNode;
@@ -72,11 +52,13 @@ public class ActionTrackingVisitor extends PlayerTrackingVisitor {
 	}
 	
 	private InnerNode getNode(GameState state) {
+		// This method is only called after MCTSBot has acted
+		if (parentOpponentModel.getChosenNode() == null)
+			throw new IllegalStateException("MCTSBot hasn't acted yet!");
+		
 		try {
 			return (InnerNode) parentOpponentModel.getChosenNode();
 		} catch (ClassCastException e) {
-//			System.out.println("-------------\nNO CLASS CAST " + state.getLastEvent() + "\n-------------"); 
-			// do nothing
 			return null;
 		}
 	}
@@ -115,6 +97,7 @@ public class ActionTrackingVisitor extends PlayerTrackingVisitor {
 	 * <br>
 	 *         TODO: grouping probalities of raises could be improved.
 	 */
+	private String str = "";
 	private Prediction getProbability(GameState gameState, double raiseAmount) {
 		HashMap<Class<?>, Double> probs = new HashMap<Class<?>, Double>();
 		Class<?> cProb = null;
@@ -122,7 +105,7 @@ public class ActionTrackingVisitor extends PlayerTrackingVisitor {
 		BetAction betAction = null;
 		InnerNode node = getNode(gameState);
 		if (node != null) {
-//			System.out.println(">-----------------------------");
+			str = (">-----------------------------");
 			ImmutableList<INode> children = node.getChildren();
 			if (children != null) {
 				for (INode n : children) {
@@ -132,18 +115,23 @@ public class ActionTrackingVisitor extends PlayerTrackingVisitor {
 						probs.put(c, n.getLastAction().getProbability());
 					else
 						probs.put(c, n.getLastAction().getProbability() + probs.get(c));
-	
+					
 					if (gameState.getClass().equals(
 							n.getLastAction().getAction()
-									.getUnwrappedStateAfterAction().getClass())) {
+									.getUnwrappedStateAfterAction().getClass()) ||
+						// TODO: you shouldn't get BetAction in RaiseState (but it does happen somehow...)
+						(gameState.getClass().equals(RaiseState.class) && 
+								n.getLastAction().getAction().getClass().equals(BetAction.class))) {
+						if (cProb == null) {
+							str += "\n Setting chosen node with action " + n.getLastAction().getAction();
+							parentOpponentModel.setChosenNode(n);
+						}
 						cProb = c;
 						if (raiseAction == null && c.equals(RaiseAction.class))
 							raiseAction = (RaiseAction) n.getLastAction().getAction();
 						else if (betAction == null && c.equals(BetAction.class))
 							betAction = (BetAction) n.getLastAction().getAction(); 
-						else if (!c.equals(RaiseAction.class) && !c.equals(BetAction.class))
-							parentOpponentModel.setChosenNode(n);
-					}
+					} 
 					
 					// Correct child node is chosen for bet/raise
 					if (cProb != null) {
@@ -152,6 +140,7 @@ public class ActionTrackingVisitor extends PlayerTrackingVisitor {
 							if (Math.abs(newRaiseAction.amount - raiseAmount) < 
 									Math.abs(raiseAction.amount - raiseAmount)) {
 								raiseAction = newRaiseAction;
+								str += "\n Setting chosen node with action " + n.getLastAction().getAction();
 								parentOpponentModel.setChosenNode(n);
 							} 
 						}
@@ -160,23 +149,30 @@ public class ActionTrackingVisitor extends PlayerTrackingVisitor {
 							if (Math.abs(newBetAction.amount - raiseAmount) < 
 									Math.abs(betAction.amount - raiseAmount)) {
 								betAction = newBetAction;
+								str += "\n Setting chosen node with action " + n.getLastAction().getAction();
 								parentOpponentModel.setChosenNode(n);
 							}
 						}
 					}
-//					System.out.println("State "
-//							+ gameState.getClass()
-//							+ " with action "
-//							+ n.getLastAction().getAction()
-//							+ "\t with probability "
-//							+ (double) Math.round(n.getLastAction().getProbability() * 10000) / 100
-//							+ "% and totalProb "
-//							+ (double) Math.round(probs.get(c) * 10000) / 100 + "%");
+					str += ("\nState "
+							+ gameState.getClass()
+							+ " with action "
+							+ n.getLastAction().getAction()
+							+ "\t with probability "
+							+ (double) Math.round(n.getLastAction().getProbability() * 10000) / 100
+							+ "% and totalProb "
+							+ (double) Math.round(probs.get(c) * 10000) / 100 + "%");
 				}
-//				System.out.println("> Chosen child with action " + 
-//						parentOpponentModel.getChosenNode().getLastAction().getAction());
+				str += ("\n> Chosen child with action " + 
+						parentOpponentModel.getChosenNode().getLastAction().getAction());
 			}
-//			System.out.println("-----------------------------<");
+			str += ("\n-----------------------------<");
+		}
+		
+		// chosen node of opponentmodel should have changed
+		if (parentOpponentModel.getChosenNode() == node) {
+			System.err.println(str);
+			throw new IllegalStateException("You should always chose a child node!");
 		}
 		
 		return new Prediction(parentOpponentModel.getChosenNode().getLastAction().getAction(),
@@ -196,11 +192,8 @@ public class ActionTrackingVisitor extends PlayerTrackingVisitor {
 		InnerNode node = getNode(callState);
 		if (node != null && !callState.getNextToAct().equals(parentOpponentModel.getBotId())) {
 			Prediction p = getProbability(callState);
-			if (p.getAction() instanceof CallAction) {
-				assimilatePrediction(p);
-				logger.trace(getPlayerName(callState) + " " + p);
-			} else 
-				System.err.println(getPlayerName(callState) + " CallState != " + p.getAction());
+			assimilatePrediction(p);
+			logger.trace(getPlayerName(callState) + " " + p);
 		} else {
 			logger.trace(getPlayerName(callState) + " CallState");
 		}
@@ -212,14 +205,10 @@ public class ActionTrackingVisitor extends PlayerTrackingVisitor {
 		InnerNode node = getNode(raiseState);
 		if (node != null && !raiseState.getNextToAct().equals(parentOpponentModel.getBotId())) {
 			Prediction p = getProbability(raiseState,raiseState.getLargestBet());
-			if (p.getAction() instanceof RaiseAction) {
-				assimilatePrediction(p);
-				logger.trace(getPlayerName(raiseState) +
-					" Raise " + Util.parseDollars(raiseState.getLargestBet()) + 
-					" - with <" + p + ">");
-			} else
-				System.err.println(getPlayerName(raiseState) + " RaiseState: " + 
-						Util.parseDollars(raiseState.getLargestBet()) + " != " + p.getAction());
+			assimilatePrediction(p);
+			logger.trace(getPlayerName(raiseState) +
+				" Raise " + Util.parseDollars(raiseState.getLargestBet()) + 
+				" - with <" + p + ">");
 		} else {
 			logger.trace(getPlayerName(raiseState) + " RaiseState: " + Util.parseDollars(raiseState.getLargestBet()));
 		}
@@ -231,11 +220,8 @@ public class ActionTrackingVisitor extends PlayerTrackingVisitor {
 		InnerNode node = getNode(foldState);
 		if (node != null && !foldState.getNextToAct().equals(parentOpponentModel.getBotId())) {
 			Prediction p = getProbability(foldState);
-			if (p.getAction() instanceof FoldAction) {
-				assimilatePrediction(p);
-				logger.trace(getPlayerName(foldState) + " " + p);
-			} else 
-				System.err.println(getPlayerName(foldState) + " FoldState" + " != " + p.getAction());
+			assimilatePrediction(p);
+			logger.trace(getPlayerName(foldState) + " " + p);
 		} else {
 			logger.trace(getPlayerName(foldState) + " FoldState");
 		}
@@ -247,11 +233,8 @@ public class ActionTrackingVisitor extends PlayerTrackingVisitor {
 		InnerNode node = getNode(checkState);
 		if (node != null && !checkState.getNextToAct().equals(parentOpponentModel.getBotId())) {
 			Prediction p = getProbability(checkState);
-			if (p.getAction() instanceof CheckAction) {
-				assimilatePrediction(p);
-				logger.trace(getPlayerName(checkState) + " " + p);
-			} else 
-				System.err.println(getPlayerName(checkState) + "CheckState" + " != " + p.getAction());
+			assimilatePrediction(p);
+			logger.trace(getPlayerName(checkState) + " " + p);
 		} else {
 			logger.trace(getPlayerName(checkState) + " CheckState");
 		}
@@ -263,14 +246,10 @@ public class ActionTrackingVisitor extends PlayerTrackingVisitor {
 		InnerNode node = getNode(betState);
 		if (node != null && !betState.getNextToAct().equals(parentOpponentModel.getBotId())) {
 			Prediction p = getProbability(betState, betState.getEvent().getAmount());
-			if (p.getAction() instanceof BetAction) {
-				assimilatePrediction(p);
-				logger.trace(getPlayerName(betState) +
-					" Bet " + Util.parseDollars(betState.getEvent().getAmount()) + 
-					" - with <" + p + ">");
-			} else
-				System.err.println(getPlayerName(betState) + " BetState: " + 
-						Util.parseDollars(betState.getEvent().getAmount()) + " != " + p.getAction());
+			assimilatePrediction(p);
+			logger.trace(getPlayerName(betState) +
+				" Bet " + Util.parseDollars(betState.getEvent().getAmount()) + 
+				" - with <" + p + ">");
 		} else {
 			logger.trace(getPlayerName(betState) + " BetState: " + Util.parseDollars(betState.getEvent().getAmount()));
 		}
@@ -282,114 +261,13 @@ public class ActionTrackingVisitor extends PlayerTrackingVisitor {
 		InnerNode node = getNode(allInState);
 		if (node != null && !allInState.getNextToAct().equals(parentOpponentModel.getBotId())) {
 			Prediction p = getProbability(allInState, allInState.getEvent().getMovedAmount());
-			if (p.getAction() instanceof BetAction ||
-					p.getAction() instanceof RaiseAction||
-					p.getAction() instanceof CallAction) {
-				assimilatePrediction(p);
-				logger.trace(getPlayerName(allInState) +
-					" All-in " + Util.parseDollars(allInState.getEvent().getMovedAmount()) + 
-					" - with <" + p + ">");
-			} else
-				System.err.println(getPlayerName(allInState) + " AllInState" + " != " + p.getAction());
+			assimilatePrediction(p);
+			logger.trace(getPlayerName(allInState) +
+				" All-in " + Util.parseDollars(allInState.getEvent().getMovedAmount()) + 
+				" - with <" + p + ">");
 		} else {
 			logger.trace(getPlayerName(allInState) + " AllInState");
 		}
 		propz.signalAllIn(allInState.getEvent().getPlayerId(), allInState.getEvent().getMovedAmount());
-	}
-	
-//	@Override
-//	public void visitInitialGameState(DetailedHoldemTableState initialGameState) {
-//		
-//	}
-//
-//	@Override
-//	public void visitJoinTableState(JoinTableState joinTableState) {
-//
-//	}
-//
-//	@Override
-//	public void visitLeaveTableState(LeaveTableState leaveTableState) {
-//
-//	}
-//
-//	@Override
-//	public void visitNewCommunityCardsState(
-//			NewCommunityCardsState newCommunityCardsState) {
-//		System.out.println("NewCommunityCardsState: " + newCommunityCardsState.getRound() + " ");
-//		System.out.println("   " + newCommunityCardsState.getCommunityCards());
-//		propz.signalCommunityCards(newCommunityCardsState.getCommunityCards());
-//	}
-//
-//	@Override
-//	public void visitNewDealState(NewDealState newDealState) {
-//		System.out.println("(" + newDealState.getPlayer(newDealState.getDealer()).getName() + ") NewDealState");
-//		propz.signalBBAmount(newDealState.getTableConfiguration().getBigBlind());
-//		propz.signalNewGame();
-//		for (PlayerState player : newDealState.getAllSeatedPlayers()) {
-//			propz.signalSeatedPlayer(player.getStack(), player.getPlayerId());
-//		}
-//	}
-//
-//	@Override
-//	public void visitNewPocketCardsState(NewPocketCardsState newPocketCardsState) {
-////		System.out.println("--------------------");
-////		System.out.print("(" + newPocketCardsState.getPlayer().getName() + ") Pocket cards: ");
-//		newPocketCardsState.getPlayerCards();
-//	}
-//
-//	@Override
-//	public void visitNewRoundState(NewRoundState newRoundState) {
-//		System.out.println("NewRoundState: " + newRoundState.getRound());
-//		if(newRoundState.getRound()==Round.FLOP){
-//			propz.signalFlop();
-//		}else if(newRoundState.getRound()==Round.TURN){
-//			propz.signalTurn();
-//		}else if(newRoundState.getRound()==Round.FINAL){
-//			propz.signalRiver();
-//		}
-//	}
-//
-//	@Override
-//	public void visitNextPlayerState(NextPlayerState nextPlayerState) {
-//
-//	}
-//
-//	@Override
-//	public void visitShowHandState(ShowHandState showHandState) {
-//		Card[] cardset = new Card[]{};
-//		cardset = showHandState.getLastEvent().getShowdownPlayer()
-//				.getHandCards().toArray(cardset);
-//		System.out.println("("
-//				+ showHandState.getPlayer(
-//						showHandState.getLastEvent().getShowdownPlayer()
-//								.getPlayerId()).getName() + ") ShowHandState: "
-//				+ cardset[0] + ", " + cardset[1]);
-//		propz.signalCardShowdown(showHandState.getLastEvent().getShowdownPlayer().getPlayerId(), cardset[0], cardset[1]);
-//	}
-//
-//	@Override
-//	public void visitSitInState(SitInState sitInState) {
-//
-//	}
-//
-//	@Override
-//	public void visitSitOutState(SitOutState sitOutState) {
-//
-//	}
-//
-//	@Override
-//	public void visitBlindState(BlindState blindState) {
-//		System.out.println("(" + blindState.getPlayer(blindState.getLastEvent().getPlayerId()).getName() + ") BlindState: " + blindState.getRound());
-//		propz.signalBlind(false, blindState.getLastEvent().getPlayerId(), blindState.getLastEvent().getAmount());
-//	}
-//
-//	@Override
-//	public void visitWinnerState(WinnerState winnerState) {
-//		System.out.println("(" + winnerState.getLastEvent() + ") WinnerState: " + winnerState.getRound());
-//	}
-//
-//	@Override
-//	public void visitConfigChangeState(ConfigChangeState configChangeState) {
-//		propz.signalBBAmount(configChangeState.getLastEvent().getTableConfig().getBigBlind());
-//	}
+	}	
 }
