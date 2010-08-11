@@ -9,10 +9,16 @@ public class Prediction {
 	private double probHypothesis;
 
 	public Prediction(SearchBotAction action, double probActual, double probHypothesis) {
+//		if (!checkProbability(probActual))
+//			throw new IllegalArgumentException("Incorrect probability of actual action => " + probActual);
+//		if (!checkProbability(probHypothesis))
+//			throw new IllegalArgumentException("Incorrect probability of hypothesis action => " + probHypothesis);
+		
+		// TODO: why are probabilities wrong? then put IllegalArgumentException back
 		if (!checkProbability(probActual))
-			throw new IllegalArgumentException("Incorrect probability of actual action => " + probActual);
+			probActual = correctProb(probActual);
 		if (!checkProbability(probHypothesis))
-			throw new IllegalArgumentException("Incorrect probability of hypothesis action => " + probHypothesis);
+			probHypothesis = correctProb(probHypothesis);
 		
 		this.action = action;
 		this.probActual = probActual;
@@ -21,6 +27,15 @@ public class Prediction {
 	
 	private boolean checkProbability(double prob) {
 		return (prob >= 0.0 && prob <= 1.0);
+	}
+	
+	private double correctProb(double prob) {
+//		System.err.println("Probability " + prob + " corrected to " + (prob < 0.0?"0.0":"1.0"));
+		if (prob < 0.0)
+			return 0.0;
+		if (prob > 1.0)
+			return 1.0;
+		return prob;
 	}
 	
 	public SearchBotAction getAction() {

@@ -74,7 +74,7 @@ public class ARFFFile {
 	}
 
 	public void write(Instance instance) {
-//		System.out.println("Writing instance " + (count +1) + " in file " + player + name);
+//		System.out.println("Writing instance " + (count +1) + " in file " + name);
 		try {
 			count++;
 			file.write(instance.toString() + nl);
@@ -86,6 +86,14 @@ public class ARFFFile {
 
 	public boolean isModelReady() {
 		return count > config.getMinimalLearnExamples();
+	}
+	
+	public long getNrExamples() {
+		return count;
+	}
+	
+	public String getName() {
+		return name;
 	}
 	
 	public Classifier createModel(String fileName, String attribute, String[] rmAttributes) throws Exception {

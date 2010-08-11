@@ -92,7 +92,7 @@ public class PlayerTrackingVisitor implements GameStateVisitor, Cloneable {
 	}
 	
 	protected String getPlayerName(GameState gameState) {
-		return "(" + gameState.getPlayer(gameState.getNextToAct()).getName() + ")";
+		return gameState.getRound() + " - (" + gameState.getPlayer(gameState.getNextToAct()).getName() + ")";
 	}
 	
 	@Override
