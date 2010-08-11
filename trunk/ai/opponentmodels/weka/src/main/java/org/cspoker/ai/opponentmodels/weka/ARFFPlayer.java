@@ -64,33 +64,47 @@ public class ARFFPlayer {
 		}
 	}
 	
+	private String msgModelNotReady(ARFFFile file) {
+		return file.getName().substring(0,file.getName().indexOf(".")) + " is not ready to be learned " + 
+			"(learning examples: " + file.getNrExamples() + 
+			" < " + config.getMinimalLearnExamples() + " required)";
+	}
 	public void learnNewModel() {
-		if (!(preCheckBetFile.isModelReady() && postCheckBetFile.isModelReady() && preFoldCallRaiseFile.isModelReady() 
-				&& postFoldCallRaiseFile.isModelReady() && showdownFile.isModelReady()))
-			return;
+//		if (!(preCheckBetFile.isModelReady() && postCheckBetFile.isModelReady() && preFoldCallRaiseFile.isModelReady() 
+//				&& postFoldCallRaiseFile.isModelReady() && showdownFile.isModelReady())) {
+//			System.out.println("\n MODEL NOT READY \n");			
+//			return;
+//		}
 		System.out.println("");
 		logger.info("Learning new opponentModel for player " + player);
-		System.out.println("");
 		modelCreated = true;
 		
 		// learning preCheckBetModel
-		learnPreCheckBet();
+		if (preCheckBetFile.isModelReady()) learnPreCheckBet();
+		else logger.info(msgModelNotReady(preCheckBetFile));
 		// learning postCheckBetModel
-		learnPostCheckBet();
+		if (postCheckBetFile.isModelReady()) learnPostCheckBet();
+		else logger.info(msgModelNotReady(postCheckBetFile));
 		// learning preFoldCallRaiseModel
-		learnPreFoldCallRaise();
+		if (preFoldCallRaiseFile.isModelReady()) learnPreFoldCallRaise();
+		else logger.info(msgModelNotReady(preFoldCallRaiseFile));
 		// learning postFoldCallRaiseModel
-		learnPostFoldCallRaise();
+		if (postFoldCallRaiseFile.isModelReady()) learnPostFoldCallRaise();
+		else logger.info(msgModelNotReady(postFoldCallRaiseFile));
 		// learning showdownModel
-		learnShowdown();
+		if (showdownFile.isModelReady()) learnShowdown();
+		else logger.info(msgModelNotReady(showdownFile));
+		
+		System.out.println("");
 	}
 	
 	public boolean writeAllowed() {
-		return config.continuousLearning() || !modelCreated || (modelCreated && config.continueAfterCreation());
+		return !modelCreated || (modelCreated && (config.continuousLearning() || config.continueAfterCreation()));
 	}
 	
 	public boolean learningAllowed() {
-		return config.continuousLearning() || (!modelCreated && (writeCounter >= config.modelCreationTreshold()));
+		return (modelCreated && config.continuousLearning()) || 
+				(!modelCreated && (writeCounter >= config.modelCreationTreshold()));
 	}
 	
 	public void writePreCheckBet(Instance instance) {
@@ -98,7 +112,7 @@ public class ARFFPlayer {
 			preCheckBetFile.write(instance);
 			incrementWriteCounter();
 			if (learningAllowed()) {
-				if (config.continuousLearning()) 
+				if (modelCreated) 
 					learnPreCheckBet();
 				else 
 					learnNewModel();
@@ -120,7 +134,7 @@ public class ARFFPlayer {
 			postCheckBetFile.write(instance);
 			incrementWriteCounter();
 			if (learningAllowed()) {
-				if (config.continuousLearning()) 
+				if (modelCreated) 
 					learnPostCheckBet();
 				else 
 					learnNewModel();
@@ -142,7 +156,7 @@ public class ARFFPlayer {
 			preFoldCallRaiseFile.write(instance);
 			incrementWriteCounter();
 			if (learningAllowed()) {
-				if (config.continuousLearning()) 
+				if (modelCreated) 
 					learnPreFoldCallRaise();
 				else 
 					learnNewModel();
@@ -168,7 +182,7 @@ public class ARFFPlayer {
 			postFoldCallRaiseFile.write(instance);
 			incrementWriteCounter();
 			if (learningAllowed()) {
-				if (config.continuousLearning()) 
+				if (modelCreated) 
 					learnPostFoldCallRaise();
 				else 
 					learnNewModel();
@@ -195,7 +209,7 @@ public class ARFFPlayer {
 			showdownFile.write(instance);
 			incrementWriteCounter();
 			if (learningAllowed()) {
-				if (config.continuousLearning()) 
+				if (modelCreated) 
 					learnShowdown();
 				else 
 					learnNewModel();

@@ -68,9 +68,9 @@ public class BotRunner implements LobbyListener {
 	private static final TableConfiguration config = new TableConfiguration(100,
 			0, false, true, true,0);
 
-	public static final int nbGamesPerConfrontation = 1000;
-	public static final int reportInterval = 25;	
-	public final int nbExperiments = 3;
+	public static final int nbGamesPerConfrontation = 2000;
+	public static final int reportInterval = 2000;	
+	public final int nbExperiments = 1;
 	
 	public static int currentExperiment = 1;
 	public int nbPlayersPerGame;
@@ -121,19 +121,20 @@ public class BotRunner implements LobbyListener {
 //			}
 			WekaOptions configNoPersist = new WekaOptions();
 			configNoPersist.setUseOnlineLearning(false);
+			
 			WekaOptions configPersist = new WekaOptions();
-			configPersist.setContinuousLearning(false);
-			configPersist.setModelCreationTreshold(100000);
+			configPersist.setContinuousLearning(true);
+			configPersist.setModelCreationTreshold(1500);
 			configPersist.setContinueAfterCreation(false);
-//			configPersist.setContinueAfterCreation(true);
+			
 			Sampler s = new BucketSampler(0.01);
 //			Sampler s = new StochasticUniversalSampler(9);
 //			Sampler s = new RouletteWheelSampler(9);
 //			Sampler s = new RandomSampler(9);
 			
 			return new BotFactory[] {
-//				new CallBotFactory("CallBot"), // 62% accuracy
-//				new CardBotFactory("CardBot"), // 62% accuracy
+				new CallBotFactory("CallBot"), // 62% precision, 71% accuracy
+//				new CardBotFactory("CardBot"), // 60% precision, 71% accuracy
 //				new HandBotFactory("HandBot"), // 41% accuracy
 //				new FixedSampleMCTSBotFactory("MCTSBot",
 //						WekaRegressionModelFactory.createForZip("org/cspoker/ai/opponentmodels/weka/models/model1.zip",
@@ -148,17 +149,17 @@ public class BotRunner implements LobbyListener {
 //								new MaxDistributionPlusBackPropStrategy.Factory()
 //						),s,
 //						200,500,1000,3000),
-				new MCTSBotFactory("MCTSBot NO LEARNING",
-						WekaRegressionModelFactory.createForZip(
-								"org/cspoker/ai/opponentmodels/weka/models/model1.zip", configNoPersist),
-						new SamplingToFunctionSelector(50,new UCTSelector(2000)),
-						new SamplingSelector(),
-						new MaxValueSelector(),
-						new MCTSShowdownRollOutNode.Factory(),
-						new SampleWeightedBackPropStrategy.Factory(),
-						s,
-						250
-				),
+//				new MCTSBotFactory("MCTSBot NO LEARNING",
+//						WekaRegressionModelFactory.createForZip(
+//								"org/cspoker/ai/opponentmodels/weka/models/model1.zip", configNoPersist),
+//						new SamplingToFunctionSelector(50,new UCTSelector(2000)),
+//						new SamplingSelector(),
+//						new MaxValueSelector(),
+//						new MCTSShowdownRollOutNode.Factory(),
+//						new SampleWeightedBackPropStrategy.Factory(),
+//						s,
+//						500
+//				),
 				new MCTSBotFactory("MCTSBot",
 						WekaRegressionModelFactory.createForZip(
 								"org/cspoker/ai/opponentmodels/weka/models/model1.zip", configPersist/*, kullbackLeibler*/),
@@ -307,7 +308,7 @@ public class BotRunner implements LobbyListener {
 
 			bot[0] = botFactories[botIndex[0]].createBot(botIDs[botIndex[0]], tableId,
 					botLobbies[botIndex[0]], buyIn, executor,
-					new ReSitInBotListener(this), csvLogger,  /*speedMonitor,*/ gameLimiter, kullbackLeibler);
+					new ReSitInBotListener(this), csvLogger,  /*speedMonitor,*/ gameLimiter /*, kullbackLeibler*/);
 			bot[0].start();
 			for (int i = 1; i < nbPlayersPerGame; i++) {
 				bot[i] = botFactories[botIndex[i]].createBot(botIDs[botIndex[i]],

@@ -3,7 +3,8 @@ package org.cspoker.ai.opponentmodels.weka;
 public class WekaOptions {
 	
 	private boolean useOnlineLearning = true;
-	private boolean continuousLearning = true; // if false, we need a treshold value => modelCreationTreshold
+	/** Continuous learning will start after threshold */
+	private boolean continuousLearning = true; 
 	
 	/** if continuousLearning is false, a new model will be learned
 	 * after X actions by an opponent, where X is modelCreationTreshold	*/
@@ -11,7 +12,7 @@ public class WekaOptions {
 	private long minimalLearnExamples = 1;
 	
 	/** continuousLearning must be true for using solveConceptDrift */
-	private boolean solveConceptDrift = true; // 
+	private boolean solveConceptDrift = true;
 	/** if solveConceptDrift is false, a new model must be learned at intervals
 	 * based on the number of reported actions	*/
 	private long learningInterval = 1;

@@ -117,43 +117,21 @@ public class WekaLearningModel implements OpponentModel {
 	public Pair<Double, Double> getCheckBetProbabilities(GameState gameState, PlayerId actor) {
 		for (int i = 0; i < listeners.length; i++)
 			listeners[i].onGetCheckProbabilities(gameState, actor);
-//		if (actor.equals(bot)) System.out.println("botAction - " + getWekaModel(actor).toString().length());
-//		else System.out.println("opponentAction - " + getWekaModel(actor).toString().length());
-		Pair<Double, Double> pair = getWekaModel(actor).getCheckBetProbabilities(actor, getCurrentGamePropositionalizer());
-//		if (actor.equals(bot)) System.out.println("botAction - (" + pair.getLeft() + "," + pair.getRight() + ")");
-//		else System.out.println("opponentAction - (" + pair.getLeft() + "," + pair.getRight() + ")");
-		return pair;
+		return getWekaModel(actor).getCheckBetProbabilities(actor, getCurrentGamePropositionalizer());
 	}
 
 	@Override
 	public Triple<Double, Double, Double> getFoldCallRaiseProbabilities(GameState gameState, PlayerId actor) {
 		for (int i = 0; i < listeners.length; i++)
 			listeners[i].onGetFoldCallRaiseProbabilities(gameState, actor);
-//		if (actor.equals(bot)) System.out.println("botAction - " + getWekaModel(actor).toString().length());
-//		else System.out.println("opponentAction" + getWekaModel(actor).toString().length());
-		Triple<Double, Double, Double> triple = 
-			getWekaModel(actor).getFoldCallRaiseProbabilities(actor, getCurrentGamePropositionalizer());
-//		if (actor.equals(bot)) System.out.println("botAction - (" + triple.getLeft() + "," + triple.getMiddle() + "," + triple.getRight() + ")");
-//		else System.out.println("opponentAction - (" + triple.getLeft() + "," + triple.getMiddle() + "," + triple.getRight() + ")");
-		return triple;
+		return getWekaModel(actor).getFoldCallRaiseProbabilities(actor, getCurrentGamePropositionalizer());
 	}
 
 	@Override
 	public double[] getShowdownProbabilities(GameState gameState, PlayerId actor) throws UnsupportedOperationException {
 		for (int i = 0; i < listeners.length; i++)
 			listeners[i].onGetShowdownProbilities(gameState, actor);
-//		if (actor.equals(bot)) System.out.println("botAction - " + getWekaModel(actor).toString().length());
-//		else System.out.println("opponentAction" + getWekaModel(actor).toString().length());
-		double[] list = getWekaModel(actor).getShowdownProbabilities(actor, getCurrentGamePropositionalizer());
-//		if (actor.equals(bot)) System.out.print("botAction - (");
-//		else System.out.print("opponentAction - (");
-//		for (int i = 0; i < list.length; i++) {
-//			if (actor.equals(bot)) System.out.print(list[i] + ",");
-//			else System.out.print(list[i] + ",");
-//		}
-//		if (actor.equals(bot)) System.out.println(")");
-//		else System.out.println(")");
-		return list;		
+		return getWekaModel(actor).getShowdownProbabilities(actor, getCurrentGamePropositionalizer());
 	}
 
 	/**
@@ -176,7 +154,4 @@ public class WekaLearningModel implements OpponentModel {
 	public PlayerId getBotId() {
 		return bot;
 	}
-
-	
-
 }
