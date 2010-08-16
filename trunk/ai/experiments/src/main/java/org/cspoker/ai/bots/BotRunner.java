@@ -69,7 +69,7 @@ public class BotRunner implements LobbyListener {
 			0, false, true, true,0);
 
 	public static final int nbGamesPerConfrontation = 2000;
-	public static final int reportInterval = 2000;	
+	public static final int reportInterval = 1;	
 	public final int nbExperiments = 1;
 	
 	public static int currentExperiment = 1;
@@ -107,7 +107,7 @@ public class BotRunner implements LobbyListener {
 	public static void create(RemoteCSPokerServer cspokerServer) {	
 		kullbackLeibler = new KullbackLeiblerListener(reportInterval); 	
 //		new BotRunner(cspokerServer, "bucketSampler0.01VsRulebots");
-		new BotRunner(cspokerServer, "test", getBots());
+		new BotRunner(cspokerServer, "CardBotAccuracy2", getBots());
 	}
 	
 	public static BotFactory[] getBots() {
@@ -123,8 +123,8 @@ public class BotRunner implements LobbyListener {
 			configNoPersist.setUseOnlineLearning(false);
 			
 			WekaOptions configPersist = new WekaOptions();
-			configPersist.setContinuousLearning(true);
-			configPersist.setModelCreationTreshold(1500);
+			configPersist.setContinuousLearning(false);
+			configPersist.setModelCreationTreshold(2000);
 			configPersist.setContinueAfterCreation(false);
 			
 			Sampler s = new BucketSampler(0.01);
@@ -134,8 +134,8 @@ public class BotRunner implements LobbyListener {
 			
 			return new BotFactory[] {
 				new CallBotFactory("CallBot"), // 62% precision, 71% accuracy
-//				new CardBotFactory("CardBot"), // 60% precision, 71% accuracy
-//				new HandBotFactory("HandBot"), // 41% accuracy
+				new CardBotFactory("CardBot"), // 60% precision, 71% accuracy
+				new HandBotFactory("HandBot"), // 41% accuracy
 //				new FixedSampleMCTSBotFactory("MCTSBot",
 //						WekaRegressionModelFactory.createForZip("org/cspoker/ai/opponentmodels/weka/models/model1.zip",
 //								configNoPersist),
@@ -169,7 +169,7 @@ public class BotRunner implements LobbyListener {
 						new MCTSShowdownRollOutNode.Factory(),
 						new SampleWeightedBackPropStrategy.Factory(),
 						s,
-						250
+						500
 				),
 //				new SearchBotFactory( // 42,5% accuracy
 //						WekaRegressionModelFactory.createForZip("org/cspoker/ai/opponentmodels/weka/models/model1.zip", configNoPersist),

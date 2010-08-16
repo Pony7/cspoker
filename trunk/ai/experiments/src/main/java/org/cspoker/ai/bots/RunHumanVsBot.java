@@ -68,9 +68,19 @@ public class RunHumanVsBot{
 
 	private final static Logger logger = Logger.getLogger(RunHumanVsBot.class);
 
-	public static void main(String[] args) throws LoginException,
-	RemoteException, IllegalActionException {
-		new RunHumanVsBot().testPlay();
+	public static void main(String[] args) { 
+		try {
+			new RunHumanVsBot().testPlay();
+		} catch (LoginException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalActionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	private ClientCore client;

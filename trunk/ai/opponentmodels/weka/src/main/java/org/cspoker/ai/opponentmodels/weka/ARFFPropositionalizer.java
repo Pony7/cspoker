@@ -81,7 +81,7 @@ public class ARFFPropositionalizer extends Propositionalizer {
 				+ "@attribute avgPartition {0,1,2,3,4,5}" + nl);
 	}
 	
-	private ARFFPlayer getARFF(Object actorId) {
+	public ARFFPlayer getARFF(Object actorId) {
 		if (arffFiles.containsKey(actorId))
 			return arffFiles.get(actorId);
 		else {

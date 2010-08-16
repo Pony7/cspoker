@@ -17,10 +17,18 @@ package org.cspoker.ai.bots.listener;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.cspoker.ai.bots.BotRunner;
+import org.cspoker.ai.bots.bot.gametree.mcts.MCTSBot;
+import org.cspoker.ai.bots.bot.gametree.mcts.nodes.Config;
 import org.cspoker.ai.bots.util.RunningStats;
+import org.cspoker.ai.opponentmodels.weka.ARFFPlayer;
+import org.cspoker.ai.opponentmodels.weka.WekaLearningModel;
+import org.cspoker.ai.opponentmodels.weka.WekaRegressionModel;
+import org.cspoker.common.elements.player.PlayerId;
 
 public class CSVLogListener extends DealCountingListener {
 
@@ -59,27 +67,31 @@ public class CSVLogListener extends DealCountingListener {
 			if (deals == 1)
 				overallStartTime = startTime;
 			if (startTime > 0) {
-				logger.info("deal #" + deals + " at " + reportInterval * 1000.0
-						/ (nowTime - startTime) + " games/s");
+//				logger.info("deal #" + deals + " at " + reportInterval * 1000.0
+//						/ (nowTime - startTime) + " games/s");
 				try {
 					file.write(deals+"");
 				} catch (IOException e) {
 					throw new IllegalStateException(e);
 				}
 				for (int i = 0; i < runner.nbPlayersPerGame; i++) {
-					RunningStats profit = runner.getBot(i).getProfit();
-					int smallBet = runner.getConfig().getSmallBet();
-					double mean = profit.getMean() / smallBet;
-					double stdDevMean = profit.getEVStdDev()/ smallBet;
 					try {
-						file.write(","+mean+","+stdDevMean);
+						if (modelCreated(runner.getBot(i).getId()))
+							file.write("\tMODELCREATED");
+						else
+							file.write("\t");
+						RunningStats profit = runner.getBot(i).getProfit();
+						int smallBet = runner.getConfig().getSmallBet();
+						double mean = profit.getMean() / smallBet;
+						double stdDevMean = profit.getEVStdDev()/ smallBet;
+						file.write("\t"+mean+"\t"+stdDevMean);
 					} catch (IOException e) {
 						throw new IllegalStateException(e);
 					}
 				}
 
 				try {
-					file.write("," + deals * 1000.0/ (nowTime - overallStartTime));
+					file.write("\t" + deals * 1000.0/ (nowTime - overallStartTime));
 					file.write("\n");
 					file.flush();
 				} catch (IOException e) {
@@ -89,6 +101,39 @@ public class CSVLogListener extends DealCountingListener {
 			startTime = nowTime;
 		}
 		super.onNewDeal();
+	}
+	
+	private static MCTSBot bot = null;
+	
+	private MCTSBot getLearningMCTSBot() {
+		if (bot != null) return bot;
+		
+		for (int i = 0; i < runner.nbPlayersPerGame; i++) {
+			try {
+				bot = (MCTSBot) runner.getBot(i);
+				Config config = bot.getConfig();
+				WekaLearningModel model = (WekaLearningModel) config.getModel();
+				if (model.getConfig().useOnlineLearning())
+					return bot;
+			} catch (Exception e) {
+				bot = null;
+			}
+		}
+		return null;
+	}
+	
+	private boolean modelCreated(PlayerId actor) {
+		try {
+			MCTSBot bot = getLearningMCTSBot();
+			if (bot.getId().equals(actor)) return false;
+			Config config = bot.getConfig();
+			WekaLearningModel model = (WekaLearningModel) config.getModel();
+			ARFFPlayer player = model.getPlayer(actor);
+			return player.learningAllowed();
+		} catch (Exception e) {
+			System.err.println(e);
+			return false;
+		}
 	}
 
 }

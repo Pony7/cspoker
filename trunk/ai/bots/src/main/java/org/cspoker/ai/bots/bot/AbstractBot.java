@@ -80,6 +80,10 @@ public abstract class AbstractBot implements Bot {
 		this.buyIn = buyIn;
 		this.executor = executor;
 	}
+	
+	public PlayerId getId() {
+		return botId;
+	}
 
 	public void start() {
 		executor.execute(new Runnable() {
